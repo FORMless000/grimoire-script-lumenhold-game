@@ -4,6 +4,8 @@
 > Part II (§T1–§T3) is **TENTATIVE**: minigames, crafting and live generation. These are directions only, **not to be implemented** until they're reviewed after the Phase 4 playtests. The only part of them built earlier is the small set of *hooks* in the event format (§12), so content written now never needs rewriting.
 >
 > Numbers marked *(tunable)* are starting values. Balance is settled by human play and telemetry, not by the simulator (§8.8).
+>
+> **Naming note (rev. 4a).** Parts of Phase 0 already existed in v0.2 under other names. This note uses those names: `grim query` (not `grim find`), the run record and its `hist` entries (not `runs` / `cards` / `feedback` tables), file storage under `data/` (not SQLite), `tools/rewrite.js`, and the existing feedback bar. Items marked **(exists)** are already built.
 
 ---
 
@@ -24,7 +26,7 @@ The game goes from *a monthly deck of random cards* to *a day in the life, with 
 - **Card selection becomes a real system** (the director): novelty, relevance, variety, quotas, scheduled pushes, and radiant casting with multiple roles.
 - **A worldbook** (the world as data) grounds all content production.
 - **The event format (schema v1) freezes after Phase 2.** All existing events are rewritten once. Content production then runs continuously.
-- **A self-hosted server** replaces the standalone `index.html`, so saves, telemetry and an admin page live in one place.
+- **A self-hosted server** joins the standalone `index.html`, so saves, telemetry and an admin page live in one place.
 
 ### 0.2 How content gets made
 
@@ -55,18 +57,22 @@ All three share one authoring spec, one worldbook and one set of validators. The
 
 ### 1.1 Shape
 
-- `npm start` runs a Node server: Node ≥ 22, built-in `http`, a small router, and no framework.
+- `npm start` runs a Node server: Node ≥ 20, built-in `http`, a small router, no framework and no dependencies.
 - It binds to `127.0.0.1:4173` by default; `HOST` and `PORT` override that.
 - If it binds to anything other than localhost, `/admin` and the write APIs need `ADMIN_TOKEN`.
 
 ```
 server/
-  index.js          # boot, router, static files
-  db.js             # SQLite access (node:sqlite if available, else better-sqlite3)
-  routes/content.js saves.js log.js feedback.js admin.js
-  admin/            # admin pages (plain HTML + the game's CSS)
-data/lumenhold.db   # gitignored
+  index.js          # boot, router, static files, live content bundle
+  store.js          # file storage: atomic JSON writes, append-only NDJSON
+  routes.js         # content, saves, log, seen, admin
+data/               # gitignored
+  runs/<runId>.ndjson   # one run: meta line + hist entries (re-appended when feedback changes)
+  saves/<slot>.json     # auto, 1, 2, 3
+  seen.json             # cross-run "seen" counters
 ```
+
+Storage is plain files rather than SQLite, so the project keeps zero runtime dependencies on Node 20. Reports read the files; if volume ever makes that slow, `store.js` is the one place to swap in SQLite.
 
 ### 1.2 Routes
 
@@ -75,27 +81,31 @@ data/lumenhold.db   # gitignored
 | `/` | GET | game client (`index.html`, `src/`, `build/`) |
 | `/api/content?lang=` | GET | content bundle (chunking is tentative, §T3) |
 | `/api/saves` / `/api/saves/:slot` | GET / PUT / DELETE | 3 manual slots + autosave |
-| `/api/log` | POST | batched telemetry (§1.4) |
-| `/api/feedback` | POST | card 👍 / 👎 / "felt wrong", end-of-run survey |
+| `/api/health` | GET | lets the client detect the server |
+| `/api/log` | POST | batched run-history entries (§1.4), including feedback and the end-of-run survey |
 | `/api/seen` | GET / POST | cross-run "seen" counters for the director (§5.2) |
 | `/admin` | GET | runs, per-event statistics, `grim report` view, worldbook browser |
 
 **Client.** The client detects the server. Without one (static build), it falls back to localStorage saves, no telemetry, and local "seen" counters. `grim build --static` still produces a standalone `index.html` for demos.
 
-### 1.3 Tables
+### 1.3 Records (exists)
 
-| Table | Columns |
+The engine already records every run completely (`s.hist`), and `Engine.exportRun()` produces the **run record** (format `lumenhold-run`). The server stores exactly that; there are no separate tables.
+
+| Design concept | Where it lives |
 |---|---|
-| `runs` | `id` PK, `started_at`, `ended_at`, `seed`, `content_version` (bundle hash), `lang`, `source` (`human` / `sim:<policy>`), `ending` JSON, `last_turn`, `abandoned` |
-| `cards` | `id` PK, `run_id`, `seq`, `turn`, `slot`, `place`, `event_id`, `class`, `cast` JSON, `options` JSON (keys + previews), `choice`, `outcome` JSON, `ms_to_decide`, `state` JSON (bars, skills, crowns, GPA), `at` |
-| `feedback` | `id` PK, `run_id`, `card_id` nullable, `kind`, `payload` JSON, `at` |
-| `saves` | `slot` PK, `run_id`, `version`, `data` JSON, `updated_at` |
-| `seen` | `event_id` PK, `runs_seen`, `last_run`, `last_at` |
+| run | run record: `runId`, `startedAt`, `updatedAt`, `seed`, `contentHash` (content version), `lang`, `sim` (absent for human runs, else the play style), `ended {id, turn}`, `turn`, `feedback` (count) |
+| card | `hist` entry `t:'card'`: `n` (seq), `turn`, `id` (event), `actor` (cast), `src`, `type`, `title`, `text`, `options` (keys, labels, checks), `choice`, `label`, `out` (outcome), `vals` (state after), `at`, `chosenAt` (`ms_to_decide = chosenAt − at`). `slot`, `place`, `class` and full `cast` are added when those systems land (2a/2b). |
+| month, ending | `hist` entries `t:'month'` (start-of-month effects) and `t:'end'` |
+| feedback | `fb {rating: up/down, comment, at}` on the card or ending entry it refers to. "Felt wrong" is a 👎 with a comment. The end-of-run survey is a `t:'survey'` entry. |
+| save | `data/saves/<slot>.json`: the engine save (`version`, full state) |
+| seen | `data/seen.json`: `{event_id: {runs_seen, last_run, last_at}}` |
 
 ### 1.4 Telemetry
 
-- The client queues one record per card resolved and per menu choice, and POSTs them in batches at each month end and on page hide.
-- The simulator can optionally log with `source = sim:<policy>`, so reports can separate simulated runs from human ones.
+- The client sends the `hist` entries added (or whose feedback changed) since the last acknowledged batch, at each month screen and on page hide.
+- Rating (👍 / 👎) and comments on the current or previous card already exist: the feedback bar, the F dialog and the Journal (**exists**).
+- The simulator logs runs in the same format with `grim sim --log DIR`, tagging them `sim: <policy>` (**exists**).
 - Everything is local and single-owner. There's no external analytics.
 
 ---
@@ -104,14 +114,16 @@ data/lumenhold.db   # gitignored
 
 | Tool | Behaviour |
 |---|---|
-| **Line rewriter** (`tools/lib/rewrite.js`) | Uses the parser's recorded file and line positions. Applies edits bottom-up per file, re-parses to verify, and refuses to run if a file changed since it was read. Comments and formatting survive. |
-| `grim find <query>` | Queries: statement patterns (`check lore *`, `gold +>20`), expressions (`expr:"year == 3"`), properties (`prop:actor=any`), text (`text:/crowns/`), combined with `and`. Prints `file:line block`; `--json` gives a worklist. |
+| `grim fmt` (**exists**) | Lossless canonical formatter; refuses any change in meaning. `--check` for CI. |
+| **Line rewriter** (`tools/rewrite.js`) | Uses the parser's recorded file and line positions. Applies edits bottom-up per file, re-parses to verify, and refuses to run if a file changed since it was read. Comments and formatting survive. |
+| `grim query NODE [WHERE]` (**exists**) | Finds blocks, options and statements; `WHERE` is a Grimoire expression over the row's fields, e.g. `query check 'skill == "lore"'`, `query delta 'name == "gold" and amount > 20'`, `query event 'actor == "any"'`, `query say --grep crowns`. Prints `file:line block/option source`; `--json` gives a worklist, `--group FIELD` counts. |
 | `grim rename <kind> <old> <new>` | Kinds: event, state, npc, flag, var, place, track, spell, fact, arc. Updates `.grim` references, `.lang` block headers and keys (including `@npc` overrides). |
-| `grim migrate [--dry-run]` | Runs `tools/migrations/NNNN-name.js` in order and records them in `content/.migrations.json`. A migration exports `{ id, description, run(ctx) }`, where `ctx` offers `find`, `edit`, `insertAfter`, `remove` and `report`. Safe to run twice. |
+| `grim migrate [--dry-run]` | Runs `tools/migrations/NNNN-name.js` in order and records them in `content/.migrations.json`. A migration exports `{ id, description, run(ctx) }`, where `ctx` offers `query`, `edit`, `insertAfter`, `remove` and `report`. Safe to run twice. |
 | **Simulator play styles** | existing `random`, `cautious`, `social`, plus `balanced`, `focused:<skill>`, `aggressive`, `moneymaxx`, `caster`, `social:<npc>`, `truant`. A play style is a scoring function over the option previews. |
 | `grim balance` | Runs each play style (100 games by default). **Invariants fail the run; alarms warn** (§8.8). Writes `build/balance-report.json`. |
 | `grim snapshot` / `grim diff` | Simulates on fixed "golden" seeds and saves coverage, endings and average resources. `diff` compares two snapshots; a pure refactor must show none. |
-| **Save versioning** | `@game schema:` plus the save version. Saves from an older version are refused with a friendly message (saves may break until 1.0). |
+| **Save versioning** | `@game schema:` plus the save version. The save is at version 2 and migrates v1 (**exists**). From version 3 on, saves from an older version are refused with a friendly message (saves may break until 1.0). |
+| `grim feedback` (**exists**) | Aggregates exported or server-stored run logs per event (👍 / 👎 / comments); the seed of `grim report` (§11.2). |
 | `npm run verify` | build + lint + invariants + e2e, against the server |
 
 ---
@@ -962,7 +974,7 @@ Loop per batch (a typical batch is 20–40 events around one brief):
 
 ### 11.2 Path 3: feedback tuning (from Phase 3)
 
-`grim report` reads telemetry (human runs first, simulated runs separately):
+`grim report` extends the existing `grim feedback` and reads the stored run records (human runs first, simulated runs separately):
 
 | Signal | Suggests |
 |---|---|
@@ -1037,11 +1049,11 @@ Every batch and every tuning pass runs `i18n zh-CN` and translates per the gloss
 
 ### Phase 0: Platform and safety net
 
+- **Already done (v0.2+):** git; full run logging (`s.hist`, run records, `sim --log`); rating and comments (feedback bar, Journal, export, `grim feedback`); `grim query`; `grim fmt`; save version 2.
 - **Deliverables:**
-  - git
-  - the server (§1): client hosting, saves, telemetry, feedback, `/api/seen`, a skeleton `/admin`
-  - client changes: server saves with a localStorage fallback, telemetry queue, rating buttons on outcome cards
-  - the tools in §2
+  - the server (§1): client hosting, saves, telemetry, `/api/seen`, a skeleton `/admin`
+  - client changes: server saves with a localStorage fallback and 3 manual slots, telemetry queue (sends the existing run history)
+  - the remaining tools in §2 (rewriter, `rename`, `migrate`, play styles, `balance`, `snapshot` / `diff`)
   - simulator play styles
   - `grim balance` (invariants and alarms that apply today)
   - golden-seed snapshot
@@ -1049,7 +1061,7 @@ Every batch and every tuning pass runs `i18n zh-CN` and translates per the gloss
 - **Exit:**
   - the game runs from the server in both languages, with saves and telemetry rows;
   - e2e passes against the server;
-  - `find`, `rename` and `migrate` are covered by tests;
+  - `query`, `rename` and `migrate` are covered by tests;
   - the snapshot diff against v0.2 shows **no gameplay change**.
 - **Risk:** low.
 
