@@ -1,6 +1,6 @@
 # Event classes
 
-> **Status: phase 2a.** `class:` and `tone:` become required fields in schema v1. Write events with a class in mind now; phase 3 annotates the existing corpus.
+> **Live (phase 2a).** Every new event declares `class:` and `tone:`; lint checks the class budgets with the preview engine. Existing events without a class are legacy until phase 3 annotates them.
 
 | Class | Rule | Measured |
 |---|---|---|

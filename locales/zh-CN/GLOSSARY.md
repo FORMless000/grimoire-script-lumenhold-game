@@ -113,3 +113,5 @@ Clubs and jobs: Duelling Circle 决斗社 · The Lumen Ledger 《流明纪事报
 Spells (咒语): Flame 火焰 · Tide 潮涌 · Foresight 预见 · Starlight 星光 · Mend 愈合 · Purify 净化 · Glamour 魅影 · Mirror 镜像 · Haste 疾速 · Beast-speech 兽语 · Ward 护界 · Shadowstep 影步.
 
 Factions and arcs: the Wardens 守护者 · the Hollow cult 空洞教团 · the Hollow Star 空洞之星 · the Faculty 教职员 · Second Place 第二名 · Thaw 解冻 · The Girl in White Furs 白裘少女.
+
+Numbers and options (v0.3): Mana 法力 · Alignment 立场 (Lumen 光明 / Hollow 空洞) · spark (romantic interest) 心动 · challenge 挑战: duel 决斗, negotiation 交涉, deception 欺瞒, exam 考试, research 研究, brewing 调制, enchanting 附魔; outcomes 胜 / 小胜 / 负.

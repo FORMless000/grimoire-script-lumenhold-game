@@ -18,7 +18,14 @@
   };
   const DEFAULT_PRIORITY = { queued: 60, auto: 50, social: 20, random: 10 };
   const ANY_EVENT_REST = 2;
-  const SAVE_VERSION = 2;
+  const SAVE_VERSION = 3;
+  // Defaults when content has no @balance block (design §8.4).
+  const TIER_INDEX = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4 };
+  const DEFAULT_SIZES = { _: [2, 4, 7, 12, 20], gold: [3, 8, 15, 30, 60], renown: [1, 3, 6, 10, 16], mana: [3, 6, 10, 16, 25], xp: [1, 2, 4, 7, 12], rel: [2, 4, 7, 12, 20], spark: [3, 6, 10, 15, 25] };
+  const DEFAULT_DIFFICULTY = { trivial: -15, easy: -7, medium: 0, hard: 8, heroic: 16 };
+  // Which skill a challenge rolls (design §9.2); `using <skill>` overrides.
+  const CHALLENGE_SKILLS = { duel: ['vigor', 'arcana'], negotiate: ['charm'], deceive: ['guile'], research: ['lore'], brew: ['alchemy'], enchant: ['alchemy'], exam: ['lore'] };
+  class SaveVersionError extends Error { constructor(v) { super('This save is from an older version of the game (save version ' + v + ', now ' + SAVE_VERSION + ') and can no longer be loaded.'); this.code = 'SAVE_VERSION'; this.saveVersion = v; } }
   const now = () => Date.now();
   const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
   // Display name used by {npc}: the npc's `short:` if given, else the first word of `name`.
@@ -53,8 +60,9 @@
       for (const e of this.events) for (const o of e.options) {
         const set = new Set();
         G.walkEffects(o.effects, (st) => { if ((st.t === 'delta' || st.t === 'assign') && content.resources[st.name]) set.add(st.name); });
+        o.firstCheck = o.effects.find((st) => st.t === 'check' || st.t === 'challenge') || null;
+        if (o.spell) set.add(content.game.spell_resource || 'mana');
         o.affects = [...set];
-        o.firstCheck = o.effects.find((st) => st.t === 'check') || null;
       }
     }
 
@@ -83,21 +91,22 @@
         vals: {}, flags: {}, states: {}, npcs: {}, seen: {}, last: {}, lastBy: {}, choices: {},
         queue: [], deck: [], cur: null, log: [], ended: null, pending: [], cardsThisMonth: 0,
         runId: opts.runId || newRunId(seed), hist: [], seq: 0,
+        spells: {}, facts: {}, memories: [], npcRel: {},
       };
       s.hist.push({ t: 'start', at: now(), seed, name: s.name });
       for (const id of this.c.order.resources) s.vals[id] = this.c.resources[id].start ?? 50;
       for (const id of this.c.order.skills) s.vals[id] = this.c.skills[id].start ?? 0;
-      for (const id of this.c.order.npcs) s.npcs[id] = { met: false, rel: this.c.npcs[id].start_rel || 0, love: 0, bond: 'none' };
+      for (const id of this.c.order.npcs) s.npcs[id] = { met: false, rel: this.c.npcs[id].start_rel || 0, spark: 0, bond: 'none', touched: 0, sparked: 0, lowSpark: 0 };
       this.runHooks('game_start');
       return this.beginMonth();
     }
     save() { return JSON.stringify(this.s); }
     load(json) {
-      const s = this.s = typeof json === 'string' ? JSON.parse(json) : json;
-      // v1 saves predate the run history: start one now, marked as resumed mid-run.
-      if (!s.hist) { s.hist = [{ t: 'start', at: now(), seed: s.seed, name: s.name, resumedAt: s.turn }]; s.seq = 0; }
-      if (!s.runId) s.runId = newRunId(s.seed);
-      s.version = SAVE_VERSION;
+      const s = typeof json === 'string' ? JSON.parse(json) : json;
+      // Saves may break until 1.0 (design §13): older versions are refused, not migrated.
+      // The UI archives the old run's log (s.hist) before discarding it.
+      if ((s.version || 1) < SAVE_VERSION) throw new SaveVersionError(s.version || 1);
+      this.s = s;
       return this;
     }
 
@@ -143,6 +152,43 @@
       };
     }
 
+    /* ---------------- Numbers (design §8) ---------------- */
+    // Amount for a tier word on a row: a resource, 'xp' for skills, 'rel', 'spark' or 'alignment'.
+    tierAmount(row, tier) {
+      const sizes = (this.c.balance && this.c.balance.sizes) || {};
+      const r = sizes[row] || (this.c.skills[row] ? sizes.xp : null) || DEFAULT_SIZES[row] || (this.c.skills[row] ? DEFAULT_SIZES.xp : DEFAULT_SIZES._);
+      return r[TIER_INDEX[tier]];
+    }
+    // Expected skill of a balanced player at a turn (the @balance curve; a straight line until it's fitted).
+    expectedSkill(turn = this.s.turn) {
+      const c = this.c.balance && this.c.balance.curve;
+      if (c && c.length) return c[clamp(turn - 1, 0, c.length - 1)];
+      return 9 + turn * 1.1;
+    }
+    difficulty(tier) { const d = (this.c.balance && this.c.balance.difficulty) || DEFAULT_DIFFICULTY; return d[tier] != null ? d[tier] : DEFAULT_DIFFICULTY[tier]; }
+    resMax(def) { return def.max == null ? 100 : typeof def.max === 'object' ? this.value(def.max, null, 100) : def.max; }
+    statOf(who, stat, actor) {
+      const id = who === 'npc' ? actor : who;
+      if (!id) return 0;
+      if (stat === 'rel' || stat === 'spark') return this.s.npcs[id] ? this.s.npcs[id][stat] : 0;
+      const d = this.c.npcs[id];
+      return d && d.stats && d.stats[stat] != null ? d.stats[stat] : this.expectedSkill();
+    }
+    // Challenge odds (design §8.6, §9.2): {skill value, dc, win %, partial-or-better %}
+    challengeOdds(st, actor) {
+      const skills = st.using ? [st.using] : (CHALLENGE_SKILLS[st.kind] || ['lore']);
+      const sv = skills.reduce((a, k) => a + (this.s.vals[k] || 0), 0) / skills.length;
+      const e = this.expectedSkill();
+      const DT = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
+      const tier = this._variant === 'hard' ? DT[Math.min(4, DT.indexOf(st.tier) + 1)] : st.tier;
+      let dc = e + this.difficulty(tier);
+      if (st.vs) dc += clamp(this.statOf(st.vs.who, st.vs.stat, actor) - e, -15, 15);
+      const odds = (x) => clamp(Math.round(50 + 2.5 * (sv - x)), 8, 92);
+      return st.partial ? { skill: skills.join('+'), value: sv, dc, win: odds(dc + 5), atLeastPartial: odds(dc - 5) } : { skill: skills.join('+'), value: sv, dc, win: odds(dc), atLeastPartial: odds(dc) };
+    }
+    spellCost(id, level) { const d = this.c.spells && this.c.spells[id]; return d && d.cost ? d.cost[clamp((level || 1) - 1, 0, d.cost.length - 1)] : 0; }
+    get spellResource() { return this.c.game.spell_resource || 'mana'; }
+
     /* ---------------- Calendar ---------------- */
     get turn() { return this.s.turn; }
     monthIndex(turn = this.s.turn) { return ((turn - 1) % this.months.length) + 1; }
@@ -164,6 +210,7 @@
             case 'max_turns': return eng.maxTurns;
             case 'cards_this_month': return s.cardsThisMonth;
           }
+          if (n.includes('.')) { const [who, stat] = n.split('.'); return eng.statOf(who, stat, actor); }
           const v = s.vals[n];
           return v == null ? 0 : v;
         },
@@ -173,7 +220,10 @@
             case 'flag': return !!s.flags[a[0]];
             case 'left': { const st = s.states[a[0]]; return st ? (st.left == null ? 99 : st.left) : 0; }
             case 'rel': return s.npcs[a[0]] ? s.npcs[a[0]].rel : 0;
-            case 'love': return s.npcs[a[0]] ? s.npcs[a[0]].love : 0;
+            case 'love': case 'spark': return s.npcs[a[0]] ? s.npcs[a[0]].spark : 0;
+            case 'spell_level': return (s.spells || {})[a[0]] || 0;
+            case 'knows': return !!(s.facts || {})[a[0]];
+            case 'npc_rel': return eng.npcRel(a[0] === 'npc' ? actor : a[0], a[1] === 'npc' ? actor : a[1]);
             case 'bond': return s.npcs[a[0]] ? s.npcs[a[0]].bond : 'none';
             case 'met': return !!(s.npcs[a[0]] && s.npcs[a[0]].met);
             case 'npc_is': return actor === a[0];
@@ -211,9 +261,49 @@
     }
 
     /* ---------------- Text ---------------- */
-    interp(text, actor) {
+    // Inline variation (design §12, Ink-style): {~a|b} one at random, {&a|b} cycle, {a|b} sequence (stays on the
+    // last), {cond: a|b} conditional. `key` is the event id: cycles and sequences follow how often it was seen.
+    // Deterministic and RNG-free (a hash of seed, turn and text), so it never changes what happens.
+    vary(text, actor, key) {
+      if (!/\{[^{}]*[|:]/.test(text)) return text;
+      let out = '', i = 0;
+      while (i < text.length) {
+        if (text[i] !== '{') { out += text[i++]; continue; }
+        let d = 0, j = i;
+        for (; j < text.length; j++) { if (text[j] === '{') d++; else if (text[j] === '}' && --d === 0) break; }
+        if (j >= text.length) { out += text.slice(i); break; }
+        const res = this.variant(text.slice(i + 1, j), actor, key);
+        out += res == null ? text.slice(i, j + 1) : this.vary(res, actor, key);
+        i = j + 1;
+      }
+      return out;
+    }
+    variant(inner, actor, key) {
+      if (inner[0] === '=') return null;
+      const parts = []; let d = 0, start = 0;
+      for (let k = 0; k < inner.length; k++) { const ch = inner[k]; if (ch === '{') d++; else if (ch === '}') d--; else if (ch === '|' && !d) { parts.push(inner.slice(start, k)); start = k + 1; } }
+      parts.push(inner.slice(start));
+      let colon = -1; d = 0;
+      for (let k = 0; k < parts[0].length; k++) { const ch = parts[0][k]; if (ch === '{') d++; else if (ch === '}') d--; else if (ch === ':' && !d) { colon = k; break; } }
+      if (colon > 0) {
+        const src = parts[0].slice(0, colon).trim();
+        let ex; try { ex = this._exprCache['?' + src] || (this._exprCache['?' + src] = G.expr(src)); } catch (e) { return null; }
+        return this.test(ex, actor) ? parts[0].slice(colon + 1).replace(/^ /, '') : (parts[1] || '').replace(/^ /, '');
+      }
+      if (parts.length < 2) return null;
+      const s = this.s, mode = inner[0] === '~' ? 'shuffle' : inner[0] === '&' ? 'cycle' : 'seq';
+      if (mode !== 'seq') parts[0] = parts[0].slice(1);
+      const seen = Math.max(1, (key && s.seen[key]) || 1);
+      if (mode === 'cycle') return parts[(seen - 1) % parts.length];
+      if (mode === 'seq') return parts[Math.min(seen - 1, parts.length - 1)];
+      let h = 2166136261; const str = s.seed + ':' + s.turn + ':' + (key || '') + ':' + inner;
+      for (let k = 0; k < str.length; k++) { h ^= str.charCodeAt(k); h = Math.imul(h, 16777619); }
+      return parts[(h >>> 0) % parts.length];
+    }
+    interp(text, actor, key) {
       if (!text) return '';
       const s = this.s;
+      text = this.vary(text, actor, key);
       return text.replace(/\{([^{}]+)\}/g, (m, k) => {
         k = k.trim();
         if (k === 'player') return s.name;
@@ -245,16 +335,17 @@
     }
 
     /* ---------------- Effects ---------------- */
-    newCtx(actor, label) { return { actor, label, deltas: {}, say: [], sayIds: [], notes: [], checks: [], zeroed: [], nowIdx: 0 }; }
+    newCtx(actor, label, key) { return { actor, label, key: key || null, deltas: {}, say: [], sayIds: [], notes: [], checks: [], zeroed: [], nowIdx: 0 }; }
 
     change(name, amount, ctx) {
       const s = this.s, c = this.c;
       const def = c.resources[name] || c.skills[name];
       const old = s.vals[name] == null ? 0 : s.vals[name];
+      if (def && def.drag && amount > 0 && old < def.drag.below) amount *= def.drag.factor;
       let nv = old + amount;
       if (def) {
         const min = def.min == null ? 0 : def.min;
-        const max = def.max == null ? 100 : def.max;
+        const max = this.resMax(def);
         nv = clamp(nv, min, max);
         if (c.resources[name] && nv <= min && old > min) ctx.zeroed.push(name);
       }
@@ -268,8 +359,35 @@
     touchNpc(id, ctx) {
       const n = this.s.npcs[id];
       if (!n) return null;
-      if (!n.met) { n.met = true; ctx.notes.push({ kind: 'meet', npc: id, text: 'You met ' + this.c.npcs[id].name + '.' }); }
+      n.touched = this.s.turn;
+      if (!n.met) {
+        n.met = true;
+        ctx.notes.push({ kind: 'meet', npc: id, text: 'You met ' + this.c.npcs[id].name + '.' });
+        // Surface facts are known on meeting (design §10.1).
+        for (const f of Object.values(this.c.facts || {})) if (f.tier === 'surface' && f.id.startsWith(id + '.')) this.s.facts[f.id] = this.s.turn;
+      }
       return n;
+    }
+    // NPC-to-NPC relationship (design §10.3): a's view of b, seeded from `relations:`.
+    npcRel(a, b) {
+      const v = (this.s.npcRel || {})[a + '>' + b];
+      if (v != null) return v;
+      const d = this.c.npcs[a];
+      return d && d.relations && d.relations[b] != null ? d.relations[b] : 0;
+    }
+    amountOf(st, row) {
+      // A card drawn as its `variant: hard` (design §8.6): rewards ×1.5 (the director chooses when, in phase 2b).
+      if (st.tier) return st.sign * this.tierAmount(row, st.tier) * (this._variant === 'hard' && st.sign > 0 ? 1.5 : 1);
+      if (this._oracle && st.min !== st.max) return this._oracle.amount(st.min, st.max);
+      return this.randInt(st.min, st.max);
+    }
+    // A random branch: with a preview oracle, the oracle decides (probabilities in percent, one per outcome).
+    pick(kind, probs, label) {
+      if (this._oracle) return this._oracle.branch(kind, probs, label);
+      const r = this.rand() * 100;
+      let acc = 0;
+      for (let i = 0; i < probs.length; i++) { acc += probs[i]; if (r < acc) return i; }
+      return probs.length - 1;
     }
 
     run(effects, ctx) {
@@ -278,14 +396,14 @@
       for (const st of effects) {
         if (s.ended && st.t !== 'say') return;
         switch (st.t) {
-          case 'delta': this.change(st.name, this.randInt(st.min, st.max), ctx); break;
+          case 'delta': this.change(st.name, this.amountOf(st, st.name), ctx); break;
           case 'assign': {
             const v = this.value(st.expr, ctx.actor);
             if (st.op === '=') this.change(st.name, v - (s.vals[st.name] || 0), ctx);
             else this.change(st.name, st.op === '+=' ? v : -v, ctx);
             break;
           }
-          case 'say': ctx.say.push(this.interp(st.text, ctx.actor)); if (st.sid) ctx.sayIds.push(st.sid); break;
+          case 'say': ctx.say.push(this.interp(st.text, ctx.actor, ctx.key)); if (st.sid) ctx.sayIds.push(st.sid); break;
           case 'flag': st.names.forEach((n) => { s.flags[n] = true; }); break;
           case 'unflag': st.names.forEach((n) => { delete s.flags[n]; }); break;
           case 'gain': this.addState(st.state, st.dur ? this.value(st.dur, ctx.actor) : null, ctx); break;
@@ -301,14 +419,42 @@
             }
             break;
           }
-          case 'rel': case 'love': {
+          case 'rel': case 'spark': {
             const id = this.npcOf(st.npc, ctx); const n = this.touchNpc(id, ctx);
             if (!n) break;
-            const amt = this.randInt(st.min, st.max);
+            const amt = this.amountOf(st, st.t);
             const old = n[st.t];
             n[st.t] = st.t === 'rel' ? clamp(old + amt, -100, 100) : clamp(old + amt, 0, 100);
+            if (st.t === 'spark' && amt > 0) n.sparked = s.turn;
             const key = st.t + ':' + id;
             if (n[st.t] !== old) ctx.deltas[key] = (ctx.deltas[key] || 0) + (n[st.t] - old);
+            break;
+          }
+          case 'npc_rel': {
+            const a = this.npcOf(st.a, ctx), b = this.npcOf(st.b, ctx);
+            if (!this.c.npcs[a] || !this.c.npcs[b]) break;
+            const amt = st.tier ? st.sign * this.tierAmount('rel', st.tier) : st.min;
+            s.npcRel = s.npcRel || {};
+            for (const [x, y] of [[a, b], [b, a]]) s.npcRel[x + '>' + y] = clamp(this.npcRel(x, y) + amt, -100, 100);
+            break;
+          }
+          case 'learn': {
+            s.facts = s.facts || {};
+            if (!s.facts[st.fact]) { s.facts[st.fact] = s.turn; ctx.notes.push({ kind: 'fact', fact: st.fact }); }
+            break;
+          }
+          case 'learn_spell': {
+            s.spells = s.spells || {};
+            const lv = st.level || Math.min(3, (s.spells[st.spell] || 0) + 1);
+            if (lv > (s.spells[st.spell] || 0)) { s.spells[st.spell] = lv; ctx.notes.push({ kind: 'spell', spell: st.spell, level: lv }); }
+            break;
+          }
+          case 'challenge': {
+            const o = this.challengeOdds(st, ctx.actor);
+            const probs = [o.win, st.partial ? o.atLeastPartial - o.win : 0, 100 - o.atLeastPartial];
+            const result = ['win', 'partial', 'lose'][this.pick('challenge', probs, { challenge: st.kind })];
+            ctx.checks.push({ challenge: st.kind, skill: o.skill, p: o.win, partial: st.partial ? o.atLeastPartial - o.win : null, result, ok: result !== 'lose' });
+            this.run(st[result], ctx);
             break;
           }
           case 'bond': {
@@ -326,13 +472,13 @@
             break;
           }
           case 'chance': {
-            const p = this.value(st.p, ctx.actor);
-            this.run(this.rand() * 100 < p ? st.body : st.else, ctx);
+            const p = clamp(this.value(st.p, ctx.actor), 0, 100);
+            this.run(this.pick('chance', [p, 100 - p], { p }) === 0 ? st.body : st.else, ctx);
             break;
           }
           case 'check': {
             const p = this.checkChance(st.skill, this.value(st.dc, ctx.actor));
-            const ok = this.rand() * 100 < p;
+            const ok = this.pick('check', [p, 100 - p], { skill: st.skill }) === 0;
             ctx.checks.push({ skill: st.skill, p, ok });
             this.run(ok ? st.body : st.else, ctx);
             break;
@@ -406,11 +552,39 @@
         this.handleZeroed(ctx);
         if (Object.keys(ctx.deltas).length || ctx.notes.length || ctx.say.length) summary.push(this.summaryItem(ctx, def.hidden ? null : (def.name || id)));
       }
+      this.relationshipDrift(summary);
+      this.unlockFacts();
       this.runHooks('month_start', summary);
       if (!s.ended) this.buildDeck();
       const shown = summary.filter((x) => Object.keys(x.deltas).length || x.notes.length || x.say.length);
       s.hist.push({ t: 'month', turn: s.turn, year: this.yearOf(), month: this.monthIndex(), summary: shown, deck: s.deck.map((d) => d.id), vals: { ...s.vals }, at: now() });
       return { kind: 'month', turn: s.turn, month: this.monthName(), monthIndex: this.monthIndex(), year: this.yearOf(), maxTurns: this.maxTurns, summary: shown, deckSize: s.deck.length, ended: !!s.ended };
+    }
+
+    // Design §8.2: friendship fades after 6 months without contact (−2 a month toward 0); spark fades
+    // 15% a month without a romantic moment; a partnership ends after 2 months below spark 20.
+    relationshipDrift(summary) {
+      const s = this.s;
+      for (const [id, n] of Object.entries(s.npcs)) {
+        if (!n.met) continue;
+        const notes = [], deltas = {};
+        if (s.turn - (n.touched || 0) > 6 && n.rel !== 0) { const d = n.rel > 0 ? -Math.min(2, n.rel) : Math.min(2, -n.rel); n.rel += d; deltas['rel:' + id] = d; }
+        if (n.spark > 0 && n.sparked !== s.turn - 1) { const nv = Math.floor(n.spark * 0.85); if (nv !== n.spark) { deltas['spark:' + id] = nv - n.spark; n.spark = nv; } }
+        if (n.bond === 'partner') {
+          n.lowSpark = n.spark < 20 ? (n.lowSpark || 0) + 1 : 0;
+          if (n.lowSpark >= 2) { n.bond = 'ex'; n.lowSpark = 0; notes.push({ kind: 'bond', npc: id, status: 'ex', text: shortName(this.c.npcs[id]) + ': ex' }); }
+        }
+        if (notes.length || Object.keys(deltas).length) summary.push({ label: null, deltas, notes, say: [] });
+      }
+    }
+    unlockFacts() {
+      const s = this.s;
+      s.facts = s.facts || {};
+      for (const f of Object.values(this.c.facts || {})) {
+        if (s.facts[f.id] || !f.unlock) continue;
+        const npc = s.npcs[f.id.split('.')[0]];
+        if (npc && npc.met && this.test(f.unlock, null)) s.facts[f.id] = s.turn;
+      }
     }
 
     // once / repeat bookkeeping. For `actor: any` events it is per person:
@@ -446,7 +620,7 @@
       // For `actor: any`, people you're closer to (or at war with) turn up more often,
       // while the event's total weight stays what the author wrote.
       if (e.actor === 'any' && out.length > 1) {
-        const aff = (x) => { const n = this.s.npcs[x.actor]; return 1 + Math.abs(n.rel) / 20 + n.love / 15 + (n.bond !== 'none' ? 1 : 0); };
+        const aff = (x) => { const n = this.s.npcs[x.actor]; return 1 + Math.abs(n.rel) / 20 + n.spark / 15 + (n.bond !== 'none' ? 1 : 0); };
         let sum = 0; out.forEach((x) => { x.aff = aff(x); sum += x.aff; });
         out.forEach((x) => { x.w = x.w * x.aff / sum; });
       }
@@ -528,7 +702,7 @@
         if (item.actor) { s.lastBy = s.lastBy || {}; s.lastBy[e.id + '@' + item.actor] = s.turn; }
         s.cardsThisMonth++;
         let onShow = null;
-        if (e.on_show) { const ctx = this.newCtx(item.actor); this.run(e.on_show, ctx); this.handleZeroed(ctx); onShow = this.outcome(ctx); }
+        if (e.on_show) { const ctx = this.newCtx(item.actor, null, e.id); this.run(e.on_show, ctx); this.handleZeroed(ctx); onShow = this.outcome(ctx); }
         const view = this.view(item);
         item.n = ++s.seq;
         s.hist.push({
@@ -548,15 +722,21 @@
       const npc = a && this.c.npcs[a];
       return {
         id: e.id, type: e.type, src: item.src,
-        title: this.interp(e.title, a), text: this.interp(e.text, a),
-        art: e.art || null, scene: e.scene ? this.interp(e.scene, a) : null, tags: e.tags || [],
+        title: this.interp(e.title, a, e.id), text: this.interp(e.text, a, e.id),
+        art: e.art || null, scene: e.scene ? this.interp(e.scene, a, e.id) : null, tags: e.tags || [],
         actor: npc ? { id: a, name: npc.name, title: npc.title, color: npc.color, house: npc.house, ...this.s.npcs[a] } : null,
-        options: e.options.map((o) => ({
-          key: o.key, label: this.interp(o.label, a), hint: o.hint ? this.interp(o.hint, a) : null,
-          disabled: o.when ? !this.test(o.when, a) : false,
-          affects: o.affects,
-          check: o.firstCheck ? { skill: o.firstCheck.skill, p: this.checkChance(o.firstCheck.skill, this.value(o.firstCheck.dc, a)) } : null,
-        })),
+        options: e.options.filter((o) => !o.spell || (this.s.spells || {})[o.spell]).map((o) => {
+          const lv = o.spell ? this.s.spells[o.spell] : 0;
+          const cost = o.spell ? this.spellCost(o.spell, lv) : 0;
+          const short = o.spell && (this.s.vals[this.spellResource] || 0) < cost;
+          return {
+            key: o.key, label: this.interp(o.label, a, e.id), hint: o.hint ? this.interp(o.hint, a, e.id) : null,
+            disabled: (o.when ? !this.test(o.when, a) : false) || short,
+            affects: o.affects,
+            spell: o.spell ? { id: o.spell, level: lv, cost, short } : null,
+            check: o.firstCheck ? (o.firstCheck.t === 'challenge' ? { skill: o.firstCheck.kind, p: this.challengeOdds(o.firstCheck, a).win, challenge: true } : { skill: o.firstCheck.skill, p: this.checkChance(o.firstCheck.skill, this.value(o.firstCheck.dc, a)) }) : null,
+          };
+        }),
       };
     }
 
@@ -567,9 +747,23 @@
       const opt = e.options.find((o) => o.key === key);
       if (!opt) throw new Error('no option ' + key + ' on ' + e.id);
       if (opt.when && !this.test(opt.when, item.actor)) throw new Error('option ' + key + ' is not available');
-      const ctx = this.newCtx(item.actor);
+      const ctx = this.newCtx(item.actor, null, e.id);
+      this._variant = item.variant || null;
+      if (opt.spell) {
+        const lv = (s.spells || {})[opt.spell];
+        if (!lv) throw new Error('spell ' + opt.spell + ' is not known');
+        const cost = this.spellCost(opt.spell, lv);
+        if ((s.vals[this.spellResource] || 0) < cost) throw new Error('not enough ' + this.spellResource + ' for ' + opt.spell);
+        this.change(this.spellResource, -cost, ctx);
+      }
       this.run(opt.effects, ctx);
       this.handleZeroed(ctx);
+      this._variant = null;
+      if (opt.memory) {
+        const who = opt.memory.who === 'npc' ? item.actor : opt.memory.who;
+        if (who && this.c.npcs[who]) { s.memories = s.memories || []; s.memories.push({ npc: who, event: e.id, kind: opt.memory.kind, turn: s.turn }); if (s.memories.length > 400) s.memories.shift(); }
+      }
+      if (item.actor && s.npcs[item.actor]) s.npcs[item.actor].touched = s.turn;
       s.choices[e.id] = key;
       s.cur = null;
       const out = this.outcome(ctx);
@@ -578,6 +772,93 @@
       s.log.push({ n: item.n, turn: s.turn, id: e.id, key, title: this.interp(e.title, item.actor), choice: this.interp(opt.label, item.actor), say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null });
       if (s.log.length > 400) s.log.shift();
       return out;
+    }
+    /* ---------------- Previews (design §8.3) ---------------- */
+    // Every way an option can turn out, by running its effects on a scratch copy of the state for each path
+    // through its chances, checks and challenges, with random amounts at both ends of their range. Nothing
+    // in the real state (or the RNG) changes. Paths more than 2 branches deep are merged into ranges.
+    //   -> { paths: [{p, labels, deltas: {key: [lo, hi]}, follows}], deltas (envelope), follows, cost }
+    preview(eventId, key, actor) {
+      const e = this.c.events[eventId];
+      const opt = e && e.options.find((o) => o.key === key);
+      if (!opt) throw new Error('no option ' + key + ' on ' + eventId);
+      const s = this.s;
+      const cost = opt.spell ? this.spellCost(opt.spell, (s.spells || {})[opt.spell] || 1) : 0;
+      const KEYS = ['vals', 'flags', 'states', 'npcs', 'queue', 'deck', 'ended', 'spells', 'facts', 'memories', 'npcRel', 'rng', 'cur'];
+      const runOnce = (prefix, mode) => {
+        const saved = {}; for (const k of KEYS) saved[k] = s[k];
+        s.vals = { ...saved.vals }; s.flags = { ...saved.flags }; s.spells = { ...(saved.spells || {}) }; s.facts = { ...(saved.facts || {}) };
+        s.npcRel = { ...(saved.npcRel || {}) }; s.memories = (saved.memories || []).slice(); s.queue = saved.queue.slice(); s.deck = saved.deck.slice();
+        s.states = {}; for (const [k, v] of Object.entries(saved.states)) s.states[k] = { ...v };
+        s.npcs = {}; for (const [k, v] of Object.entries(saved.npcs)) s.npcs[k] = { ...v };
+        const decisions = [];
+        this._oracle = {
+          branch: (kind, probs, label) => {
+            const i = decisions.length;
+            const choice = i < prefix.length ? prefix[i] : probs.findIndex((x) => x > 0);
+            decisions.push({ kind, probs, label, choice: choice < 0 ? 0 : choice });
+            return decisions[i].choice;
+          },
+          amount: (a, b) => (mode === 'min' ? Math.min(a, b) : Math.max(a, b)),
+        };
+        const ctx = this.newCtx(actor, null, eventId);
+        this._variant = s.cur && s.cur.id === eventId ? s.cur.variant || null : null;
+        try {
+          if (opt.spell) this.change(this.spellResource, -cost, ctx);
+          this.run(opt.effects, ctx);
+          this.handleZeroed(ctx);
+        } finally {
+          const follows = ctx.notes.length > 0 || s.queue.length !== saved.queue.length || s.deck.length !== saved.deck.length || !!s.ended !== !!saved.ended ||
+            Object.keys(s.flags).length !== Object.keys(saved.flags).length || Object.keys(s.flags).some((k) => !saved.flags[k]);
+          this._oracle = null; this._variant = null;
+          for (const k of KEYS) s[k] = saved[k];
+          runOnce.last = { decisions, deltas: ctx.deltas, follows };
+        }
+        return runOnce.last;
+      };
+      const paths = [];
+      const queue = [[]];
+      while (queue.length && paths.length < 64) {
+        const prefix = queue.shift();
+        const lo = runOnce(prefix, 'min'), hi = runOnce(lo.decisions.map((d) => d.choice), 'max');
+        const deltas = {};
+        for (const k of new Set([...Object.keys(lo.deltas), ...Object.keys(hi.deltas)])) { const a = lo.deltas[k] || 0, b = hi.deltas[k] || 0; deltas[k] = [Math.min(a, b), Math.max(a, b)]; }
+        let p = 1;
+        lo.decisions.forEach((d) => { p *= (d.probs[d.choice] || 0) / 100; });
+        paths.push({ p, decisions: lo.decisions.map((d) => ({ kind: d.kind, choice: d.choice, label: d.label })), deltas, follows: lo.follows || hi.follows });
+        for (let i = prefix.length; i < lo.decisions.length; i++) {
+          lo.decisions[i].probs.forEach((x, a) => { if (x > 0 && a !== lo.decisions[i].choice) queue.push(lo.decisions.slice(0, i).map((d) => d.choice).concat([a])); });
+        }
+      }
+      // Merge paths beyond 2 branches deep into ranges.
+      const merged = new Map();
+      for (const pth of paths) {
+        const head = pth.decisions.slice(0, 2);
+        const k = head.map((d) => d.kind + d.choice).join('/');
+        const m = merged.get(k);
+        if (!m) { merged.set(k, { p: pth.p, labels: head, deltas: { ...pth.deltas }, follows: pth.follows }); continue; }
+        m.p += pth.p; m.follows = m.follows || pth.follows;
+        for (const key2 of new Set([...Object.keys(m.deltas), ...Object.keys(pth.deltas)])) {
+          const a = m.deltas[key2] || [0, 0], b = pth.deltas[key2] || [0, 0];
+          m.deltas[key2] = [Math.min(a[0], b[0]), Math.max(a[1], b[1])];
+        }
+      }
+      const out = [...merged.values()];
+      const envelope = {};
+      for (const pth of out) for (const [k, [a, b]] of Object.entries(pth.deltas)) { const cur = envelope[k] || [Infinity, -Infinity]; envelope[k] = [Math.min(cur[0], a), Math.max(cur[1], b)]; }
+      for (const pth of out) for (const k of Object.keys(envelope)) if (!pth.deltas[k]) { envelope[k] = [Math.min(envelope[k][0], 0), Math.max(envelope[k][1], 0)]; }
+      return { paths: out, deltas: envelope, follows: out.some((x) => x.follows), cost, spell: opt.spell || null };
+    }
+    // Does a real outcome fit one of the preview's paths? (The preview property test, design §8.3.)
+    static fits(preview, deltas) {
+      const keys = (d) => Object.keys(d).filter((k) => d[k]);
+      return preview.paths.some((pth) => {
+        for (const k of new Set([...keys(deltas), ...Object.keys(pth.deltas)])) {
+          const v = deltas[k] || 0, r = pth.deltas[k] || [0, 0];
+          if (v < r[0] - 1e-9 || v > r[1] + 1e-9) return false;
+        }
+        return true;
+      });
     }
     outcome(ctx) { return { say: ctx.say.join(' '), deltas: ctx.deltas, notes: ctx.notes, checks: ctx.checks, ended: !!this.s.ended }; }
 
@@ -600,7 +881,8 @@
       return {
         name: s.name, turn: s.turn, maxTurns: this.maxTurns, month: this.monthName(), monthIndex: this.monthIndex(), year: this.yearOf(), years: this.years,
         deckLeft: s.deck.length, cardsThisMonth: s.cardsThisMonth,
-        resources: c.order.resources.map((id) => ({ id, ...pick(c.resources[id], ['name', 'icon', 'color', 'min', 'max', 'desc']), value: s.vals[id] })),
+        resources: c.order.resources.map((id) => ({ id, ...pick(c.resources[id], ['name', 'icon', 'color', 'min', 'desc', 'display', 'warn_below']), maxNow: this.resMax(c.resources[id]), value: s.vals[id] })),
+        spells: Object.entries(s.spells || {}).filter(([id]) => c.spells && c.spells[id]).map(([id, level]) => ({ id, level, ...pick(c.spells[id], ['name', 'desc', 'art']), cost: this.spellCost(id, level) })),
         skills: c.order.skills.map((id) => ({ id, ...pick(c.skills[id], ['name', 'icon', 'color', 'max', 'desc']), value: s.vals[id] })),
         states: Object.keys(s.states).filter((id) => c.states[id] && !c.states[id].hidden).map((id) => ({ id, name: c.states[id].name || id, desc: this.interp(c.states[id].desc || ''), art: c.states[id].art, kind: c.states[id].kind || null, group: c.states[id].group || null, left: s.states[id].left })),
         npcs: c.order.npcs.filter((id) => s.npcs[id].met).map((id) => ({ id, ...pick(c.npcs[id], ['name', 'short', 'title', 'house', 'desc', 'color', 'romance', 'pronouns', 'look']), ...s.npcs[id] })),
@@ -612,5 +894,7 @@
   function pick(o, keys) { const r = {}; for (const k of keys) if (o[k] != null) r[k] = o[k]; return r; }
 
   Engine.shortName = shortName;
+  Engine.SAVE_VERSION = SAVE_VERSION;
+  Engine.SaveVersionError = SaveVersionError;
   return Engine;
 });

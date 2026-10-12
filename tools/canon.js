@@ -63,9 +63,31 @@ function texts(content) {
   return out;
 }
 
+// Inline variations ({~a|b}, {cond: a|b}) become their alternatives as separate sentences; other tokens go.
+function flatten(text) {
+  let out = '', i = 0;
+  while (i < text.length) {
+    if (text[i] !== '{') { out += text[i++]; continue; }
+    let d = 0, j = i;
+    for (; j < text.length; j++) { if (text[j] === '{') d++; else if (text[j] === '}' && --d === 0) break; }
+    const inner = text.slice(i + 1, j);
+    const parts = []; let dd = 0, start = 0;
+    for (let k = 0; k < inner.length; k++) { const ch = inner[k]; if (ch === '{') dd++; else if (ch === '}') dd--; else if (ch === '|' && !dd) { parts.push(inner.slice(start, k)); start = k + 1; } }
+    parts.push(inner.slice(start));
+    const colon = parts[0].indexOf(':');
+    if (inner[0] !== '=' && (parts.length > 1 || colon > 0)) {
+      if (colon > 0) parts[0] = parts[0].slice(colon + 1);
+      else if (inner[0] === '~' || inner[0] === '&') parts[0] = parts[0].slice(1);
+      out += ' ' + parts.map((p) => flatten(p)).join('. ') + ' ';
+    } else out += ' ';
+    i = j + 1;
+  }
+  return out;
+}
+
 // Runs of capitalised words in a text, with whether they start a sentence.
 function candidates(text) {
-  const clean = text.replace(/\{[^{}]*\}/g, ' ').replace(/[“”"]/g, ' " ');
+  const clean = flatten(text).replace(/[“”"]/g, ' " ');
   const toks = clean.match(/[A-Za-z][A-Za-z'’]*|&|[.!?:;"—–,()]/g) || [];
   const out = [];
   let run = [], start = true, runStart = false;

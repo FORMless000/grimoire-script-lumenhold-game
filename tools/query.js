@@ -12,7 +12,7 @@
 const G = require('../src/grimoire.js');
 
 const BLOCKS = ['event', 'state', 'npc', 'ending', 'hook', 'resource', 'skill', 'place', 'track', 'spell', 'fact', 'archetype', 'faction', 'arc', 'lore', 'timeline', 'vocab'];
-const STATEMENTS = ['say', 'if', 'chance', 'check', 'flag', 'unflag', 'gain', 'lose', 'queue', 'rel', 'love', 'bond', 'meet', 'end', 'delta', 'assign'];
+const STATEMENTS = ['say', 'if', 'chance', 'check', 'challenge', 'flag', 'unflag', 'gain', 'lose', 'queue', 'rel', 'spark', 'npc_rel', 'learn', 'learn_spell', 'bond', 'meet', 'end', 'delta', 'assign'];
 const COLLECTIONS = { event: 'events', state: 'states', npc: 'npcs', ending: 'endings', hook: 'hooks', resource: 'resources', skill: 'skills',
   place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', lore: 'lore', timeline: 'timeline', vocab: 'vocab' };
 const EFFECT_SLOTS = ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero'];
@@ -21,7 +21,7 @@ const EFFECT_SLOTS = ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do
 const FIELDS = {
   '(every row)': 'node file line block (id of the enclosing block) block_kind tags (use has(x))',
   '(statements)': 'option (key, or "" outside options) slot ("option", "on_show", "tick", "do", …) depth (0 = top level) trigger actor (of the enclosing event)',
-  event: 'id title text_len trigger type actor weight weight_src repeat priority chain when_src options',
+  event: 'id title text_len trigger type actor weight weight_src repeat priority chain when_src options class tone',
   state: 'id name kind group duration hidden',
   npc: 'id name romance start_rel age role year voice (has(trait) also matches traits and interests)',
   place: 'id name region map x y kind track discover_src',
@@ -38,7 +38,8 @@ const FIELDS = {
   check: 'skill dc (null unless constant) dc_src scales (dc mentions year/turn) has_else',
   chance: 'p (null unless constant) p_src has_else',
   if: 'branches cond_src has_else',
-  'delta, rel, love': 'name (resource/skill, or npc for rel/love) npc min max amount',
+  'delta, rel, spark': 'name (resource/skill, or npc for rel/spark) npc min max amount (null for tier words) tier legacy (spark written as love)',
+  challenge: 'kind tier using vs has_partial',
   assign: 'name op expr_src',
   say: 'text len',
   'flag, unflag': 'name (first) count',
@@ -68,8 +69,12 @@ function statementFields(st) {
     case 'check': return { skill: st.skill, dc: constant(st.dc), dc_src: st.dc.src, scales: mentions(st.dc, ['year', 'turn']), has_else: !!st.else };
     case 'chance': return { p: constant(st.p), p_src: st.p.src, has_else: !!st.else };
     case 'if': return { branches: st.branches.length, cond_src: st.branches[0].cond.src, has_else: !!st.else };
-    case 'delta': return { name: st.name, min: st.min, max: st.max, amount: (st.min + st.max) / 2 };
-    case 'rel': case 'love': return { name: st.npc, npc: st.npc, min: st.min, max: st.max, amount: (st.min + st.max) / 2 };
+    case 'delta': return { name: st.name, min: st.min, max: st.max, amount: st.tier ? null : (st.min + st.max) / 2, tier: st.tier || null };
+    case 'rel': case 'spark': return { name: st.npc, npc: st.npc, min: st.min, max: st.max, amount: st.tier ? null : (st.min + st.max) / 2, tier: st.tier || null, legacy: !!st.legacy };
+    case 'challenge': return { kind: st.kind, tier: st.tier, using: st.using, vs: st.vs ? st.vs.who + '.' + st.vs.stat : null, has_partial: !!st.partial };
+    case 'npc_rel': return { a: st.a, b: st.b, tier: st.tier || null };
+    case 'learn': return { fact: st.fact };
+    case 'learn_spell': return { spell: st.spell, level: st.level };
     case 'assign': return { name: st.name, op: st.op, expr_src: st.expr.src };
     case 'flag': case 'unflag': return { name: st.names[0], count: st.names.length };
     case 'gain': return { state: st.state, dur_src: st.dur ? st.dur.src : null };
@@ -85,7 +90,7 @@ function statementFields(st) {
 function blockFields(kind, d) {
   const base = { id: d.id };
   switch (kind) {
-    case 'event': return { ...base, title: d.title, text_len: (d.text || '').length, trigger: d.trigger, type: d.type, actor: d.actor || null, weight: d.weight ? constant(d.weight) : 10, weight_src: d.weight ? d.weight.src : null, repeat: d.repeat || 0, priority: d.priority == null ? null : d.priority, chain: d.chain || null, when_src: d.when ? d.when.src : null, options: d.options.length };
+    case 'event': return { ...base, title: d.title, text_len: (d.text || '').length, trigger: d.trigger, type: d.type, actor: d.actor || null, weight: d.weight ? constant(d.weight) : 10, weight_src: d.weight ? d.weight.src : null, repeat: d.repeat || 0, priority: d.priority == null ? null : d.priority, chain: d.chain || null, when_src: d.when ? d.when.src : null, options: d.options.length, class: d.class || null, tone: d.tone || null };
     case 'state': return { ...base, name: d.name, kind: d.kind || null, group: d.group || null, duration: d.duration == null ? null : d.duration, hidden: !!d.hidden };
     case 'npc': return { ...base, name: d.name, romance: !!d.romance, start_rel: d.start_rel || 0 };
     case 'ending': return { ...base, title: d.title, kind: d.kind || null, priority: d.priority || 0, when_src: d.when ? d.when.src : null };
@@ -113,6 +118,7 @@ function rows(content) {
         for (const st of effects || []) {
           out.push({ node: st.t, line: st.line, ...ctx, option, slot, depth, ...statementFields(st) });
           if (st.t === 'if') { st.branches.forEach((b) => walk(b.body, slot, option, depth + 1)); walk(st.else, slot, option, depth + 1); }
+          else if (st.t === 'challenge') { for (const k of ['win', 'partial', 'lose']) walk(st[k], slot, option, depth + 1); }
           else if (st.body) { walk(st.body, slot, option, depth + 1); walk(st.else, slot, option, depth + 1); }
         }
       };

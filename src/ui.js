@@ -69,7 +69,7 @@
       if (store.get(RESUME_KEY)) {
         store.del(RESUME_KEY);
         const saved = store.get(SAVE_KEY);
-        if (saved) { try { eng = new Engine(content).load(saved); buildGame(); return step(eng.advance()); } catch (e) { console.warn(e); } }
+        if (saved) { try { eng = new Engine(content).load(saved); buildGame(); return step(eng.advance()); } catch (e) { if (e.code === 'SAVE_VERSION') retireOldSave(saved); else console.warn(e); eng = null; } }
       }
       titleScreen();
     });
@@ -99,10 +99,24 @@
   }
 
   /* ------------------------------------------------------------------ title */
+  // Saves from an older version can't be loaded (design: saves may break until 1.0). Their run log is
+  // kept: in the local archive without a server (the server already has it).
+  function retireOldSave(raw) {
+    try {
+      const o = JSON.parse(raw);
+      if (o && o.hist && !Net.available) {
+        const meta = runMeta();
+        archiveRecord({ format: 'lumenhold-run', v: 1, runId: o.runId || 'old-' + Date.now().toString(36), name: o.name, seed: o.seed, startedAt: o.hist[0] && o.hist[0].at, updatedAt: Date.now(), turn: o.turn, ended: null, feedback: o.hist.filter((h) => h.fb).length, ...meta, retired: 'save version ' + (o.version || 1), hist: o.hist });
+      }
+    } catch (e) { console.warn(e); }
+    store.del(SAVE_KEY);
+    ui.notice = t('title.oldSave');
+  }
   function titleScreen() {
     ui.mode = 'title';
     closeOverlay(); closeFeedback(); removeFeedbackBar();
-    const saved = store.get(SAVE_KEY);
+    let saved = store.get(SAVE_KEY);
+    if (saved) { try { new Engine(content).load(saved); } catch (e) { if (e.code === 'SAVE_VERSION') { retireOldSave(saved); saved = null; } } }
     let savedInfo = '';
     if (saved) { try { const s = JSON.parse(saved); const e = new Engine(content).load(s); savedInfo = t('title.saveInfo', { name: esc(s.name), month: esc(e.monthName()), year: e.yearOf() }); } catch (e) { savedInfo = ''; } }
     const g = content.game;
@@ -119,8 +133,10 @@
       '<div class="row"><button class="btn primary grow" id="begin">' + esc(t('title.begin')) + '</button>' +
       (savedInfo ? '<button class="btn grow" id="cont">' + esc(t('title.continue', { info: '' })) + savedInfo + '</button>' : '') + '</div>' +
       '<div class="row"><button class="btn ghost-btn grow" id="slotsBtn">' + esc(t('slots.heading')) + '</button></div>' +
+      (ui.notice ? '<div class="notice">' + esc(ui.notice) + '</div>' : '') +
       '<div class="howto">' + t('title.howto_html') + '</div>' + runLogLine() +
       '</div></div></div>';
+    ui.notice = null;
     document.querySelectorAll('.lang-btn').forEach((b) => { b.onclick = () => { if (b.dataset.lang !== cur) switchLang(b.dataset.lang, false); }; });
     document.getElementById('begin').onclick = () => {
       const name = document.getElementById('pname').value.trim() || t('title.defaultName');
@@ -178,7 +194,7 @@
     document.getElementById('sideToggle').onclick = () => { ui.sideOpen = !ui.sideOpen; document.getElementById('side').classList.toggle('open', ui.sideOpen); };
     document.getElementById('tabs').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; ui.tab = b.dataset.tab; renderSide(); };
     const meters = document.getElementById('meters');
-    meters.innerHTML = content.order.resources.map((id) => {
+    meters.innerHTML = content.order.resources.filter((id) => content.resources[id].display !== 'panel').map((id) => {
       const r = content.resources[id];
       return '<div class="meter" id="m-' + id + '" style="--c:' + esc(r.color || '#888') + '" title="' + esc(r.name + ' — ' + (r.desc || '')) + '">' +
         '<span class="dot"></span><div class="orb"><div class="fill"></div>' + Art.icon(r.icon || 'star', 20) + '</div>' +
@@ -204,12 +220,15 @@
     document.getElementById('timeline').innerHTML = tl;
     for (const r of snap.resources) {
       const el = document.getElementById('m-' + r.id); if (!el) continue;
-      const min = r.min == null ? 0 : r.min, max = r.max == null ? 100 : r.max;
-      const scaleMax = r.id === 'gold' ? Math.max(100, Math.min(max, 200)) : max;
-      const pct = Math.max(0, Math.min(100, ((r.value - min) / (scaleMax - min)) * 100));
-      el.querySelector('.fill').style.height = pct + '%';
+      const min = r.min == null ? 0 : r.min, max = r.maxNow;
+      const fill = el.querySelector('.fill');
+      if (min < 0) {   // bipolar (Alignment): fill grows up or down from the middle
+        const half = Math.min(50, (Math.abs(r.value) / Math.max(max, -min)) * 50);
+        fill.style.height = half + '%'; fill.style.bottom = r.value >= 0 ? '50%' : (50 - half) + '%';
+        el.classList.toggle('neg', r.value < 0);
+      } else fill.style.height = Math.max(0, Math.min(100, ((r.value - min) / (max - min)) * 100)) + '%';
       el.querySelector('.val').textContent = Math.round(r.value);
-      el.classList.toggle('low', r.id !== 'renown' && r.id !== 'gold' ? r.value <= 20 : (r.id === 'gold' && r.value <= 5));
+      el.classList.toggle('low', r.warn_below != null && r.value <= r.warn_below);
     }
     const pips = document.getElementById('pips');
     if (pips) {
@@ -230,6 +249,12 @@
     let h = '';
     if (ui.tab === 'you') {
       h += '<div class="sec-h">' + esc(snap.name) + '</div>';
+      const panel = snap.resources.filter((r) => r.display === 'panel');
+      if (panel.length) h += '<div class="panel-res">' + panel.map((r) => '<div class="pres' + (r.warn_below != null && r.value <= r.warn_below ? ' low' : '') + '" title="' + esc(r.desc || '') + '">' + Art.icon(r.icon || 'star', 16) + '<span>' + esc(r.name) + '</span><b>' + Math.round(r.value) + '</b></div>').join('') + '</div>';
+      if (snap.spells.length) {
+        h += '<div class="sec-h">' + esc(t('side.spells')) + '</div>';
+        for (const sp of snap.spells) h += '<div class="state spell">' + Art.icon(sp.art || 'wand', 20) + '<div><b>' + esc(sp.name) + ' ' + ['', 'I', 'II', 'III'][sp.level] + '</b><p>' + esc(sp.desc || '') + '</p></div><span class="left">' + esc(t('side.spellCost', { n: sp.cost })) + '</span></div>';
+      }
       for (const s of snap.skills) {
         const pct = Math.min(100, (s.value / 60) * 100);
         h += '<div class="skill" title="' + esc(s.desc || '') + '">' + Art.icon(s.icon || 'star', 18) + '<div><div class="nm">' + esc(s.name) + '</div><div class="bar"><b style="width:' + pct + '%"></b></div></div><div class="v">' + Math.round(s.value) + '</div></div>';
@@ -248,8 +273,8 @@
         h += '<div class="person" data-id="' + esc(n.id) + '">' + Art.avatar(n, 44) + '<div class="info"><div class="nm">' + esc(n.name) + (n.bond !== 'none' ? '<span class="bond-badge bond-' + esc(n.bond) + '">' + esc(bondLabel(n.bond)) + '</span>' : '') + '</div>' +
           '<div class="ttl">' + esc(n.title || '') + '</div>' +
           '<div class="relbar" title="' + esc(t('side.relationship', { n: rel })) + '"><b style="left:' + left + '%;width:' + w + '%;background:' + col + '"></b></div>' +
-          (n.romance && n.love > 0 ? '<div class="lovebar" title="' + esc(t('side.romance', { n: n.love })) + '"><b style="width:' + n.love + '%"></b></div>' : '') +
-          '<div class="desc">' + esc(n.desc || '') + '<br><br>' + esc(t('side.relationship', { n: rel })) + (n.romance ? ' · ' + esc(t('side.romance', { n: n.love })) : '') + '</div></div></div>';
+          (n.romance && n.spark > 0 ? '<div class="lovebar" title="' + esc(t('side.romance', { n: n.spark })) + '"><b style="width:' + n.spark + '%"></b></div>' : '') +
+          '<div class="desc">' + esc(n.desc || '') + '<br><br>' + esc(t('side.relationship', { n: rel })) + (n.romance ? ' · ' + esc(t('side.romance', { n: n.spark })) : '') + '</div></div></div>';
       }
     } else {
       const log = snap.log.slice().reverse();
@@ -326,7 +351,7 @@
     if (out.say || out.notes.length || out.checks.length || hasVisibleDeltas(out.deltas)) showOutcome(out);
     else next();
   }
-  function hasVisibleDeltas(d) { return Object.keys(d).some((k) => content.skills[k] || k.startsWith('rel:') || k.startsWith('love:')); }
+  function hasVisibleDeltas(d) { return Object.keys(d).some((k) => content.skills[k] || k.startsWith('rel:') || k.startsWith('spark:') || (content.resources[k] && content.resources[k].display === 'panel')); }
 
   /* ------------------------------------------------------------------ card */
   const TAGLINE_TAGS = ['class', 'club', 'job', 'social', 'romance', 'study', 'mystery', 'danger', 'crisis', 'festival', 'money', 'nature', 'home', 'rival', 'exam', 'story', 'magic'];
@@ -366,13 +391,16 @@
       v.art, v.tags, v.id);
     card.querySelector('.card-art').insertAdjacentHTML('beforeend', '<span class="tagline">' + esc(cardTagline(v)) + '</span>' + (v.src === 'queued' && !(v.tags || []).includes('story') ? '<span class="src">' + esc(t('card.consequence')) + '</span>' : ''));
     const choices = document.getElementById('choices');
-    const chk = (o) => o.check ? '<span class="chk">' + esc(checkText(o.check)) + '</span>' : (o.hint ? '<span class="chk">' + esc(o.hint) + '</span>' : '');
+    const pv = (o) => previewHtml(v, o);
+    const chk = (o) => (o.hint ? '<span class="chk">' + esc(o.hint) + '</span>' : '') + pv(o);
     if (story) {
       choices.innerHTML = '<button class="choice single" data-k="' + esc(L.key) + '"><span>' + esc(L.label) + chk(L) + '</span></button>';
     } else {
       const lock = (o) => o.disabled ? ' disabled title="' + esc(o.hint || t('card.notAvailable')) + '"' : '';
+      const U = v.options.find((o) => o.key === 'up');
       choices.innerHTML = '<button class="choice left" data-k="left"' + lock(L) + '><span class="arrow">' + (L.disabled ? '🔒' : '←') + '</span><span>' + esc(L.label) + chk(L) + '</span></button>' +
-        '<button class="choice right" data-k="right"' + lock(R) + '><span>' + esc(R.label) + chk(R) + '</span><span class="arrow">' + (R.disabled ? '🔒' : '→') + '</span></button>';
+        '<button class="choice right" data-k="right"' + lock(R) + '><span>' + esc(R.label) + chk(R) + '</span><span class="arrow">' + (R.disabled ? '🔒' : '→') + '</span></button>' +
+        (U ? '<button class="choice up" data-k="up"' + (U.disabled ? ' disabled title="' + esc(t('spell.short')) + '"' : '') + '><span class="arrow">' + (U.disabled ? '🔒' : '↑') + '</span><span>' + esc(U.label) + '<span class="chk">' + esc(t('spell.button', { spell: spellName(U.spell.id), level: ['', 'I', 'II', 'III'][U.spell.level], cost: U.spell.cost })) + '</span>' + pv(U) + '</span></button>' : '');
     }
     choices.querySelectorAll('.choice').forEach((b) => {
       const opt = v.options.find((o) => o.key === b.dataset.k);
@@ -380,6 +408,7 @@
       b.onmouseleave = () => setPreview(null);
       b.onclick = () => commitCard(story ? 'right' : b.dataset.k);
     });
+    const UP = v.options.find((o) => o.key === 'up');
     attachSwipe(card, {
       move(dx) {
         const side = dx < 0 ? 'left' : 'right';
@@ -389,10 +418,37 @@
         setPreview(Math.abs(dx) > 25 ? (side === 'left' ? L : R).affects : null);
       },
       commit(dir) { resolveCardDir(dir); },
-      allow(dir) { return story || !(dir === 'left' ? L : R).disabled; },
+      allow(dir) { if (dir === 'up') return !!UP && !UP.disabled; return story || !(dir === 'left' ? L : R).disabled; },
     });
   }
   function skillName(id) { return (content.skills[id] && content.skills[id].name) || id; }
+  function spellName(id) { return (content.spells[id] && content.spells[id].name) || id; }
+  // Exact outcome preview (design §8.3) for one option: one line of changes, or one line per outcome.
+  function previewHtml(v, o) {
+    let pv;
+    try { pv = eng.preview(v.id, o.key, v.actor ? v.actor.id : null); } catch (e) { return ''; }
+    const amt = (k, r) => {
+      const sign = (x) => (x > 0 ? '+' : x < 0 ? '−' : '') + Math.abs(Math.round(x * 10) / 10);
+      const val = r[0] === r[1] ? sign(r[0]) : (r[0] < 0 && r[1] <= 0 ? '−' + Math.abs(Math.round(r[1])) + '~' + Math.abs(Math.round(r[0])) : sign(r[0]) + '~' + Math.abs(Math.round(r[1])));
+      let icon = 'star', title = k;
+      if (content.resources[k]) { icon = content.resources[k].icon; title = content.resources[k].name; }
+      else if (content.skills[k]) { icon = content.skills[k].icon; title = content.skills[k].name; }
+      else if (k.startsWith('rel:') || k.startsWith('spark:')) { const [kind, id] = k.split(':'); icon = kind === 'spark' ? 'heart' : 'group'; title = shortName(id); }
+      else return '';
+      return '<i class="' + (r[1] > 0 ? 'pos' : r[0] < 0 ? 'neg' : '') + '" title="' + esc(title) + '">' + Art.icon(icon, 12) + val + '</i>';
+    };
+    const line = (d) => Object.entries(d).filter(([, r]) => r[0] || r[1]).map(([k, r]) => amt(k, r)).join('');
+    const label = (pth) => {
+      const d = pth.labels[0]; if (!d) return '';
+      if (d.kind === 'check') return (d.choice === 0 ? '✓ ' : '✗ ');
+      if (d.kind === 'challenge') return t('challenge.' + ['win', 'partial', 'lose'][d.choice]) + ' ';
+      return '';
+    };
+    const more = pv.follows ? '<i class="more" title="' + esc(t('preview.follows')) + '">…</i>' : '';
+    if (pv.paths.length <= 1) { const l = line(pv.deltas); return l || more ? '<span class="pv">' + l + more + '</span>' : ''; }
+    const paths = pv.paths.slice().sort((a, b) => b.p - a.p);
+    return '<span class="pv multi">' + paths.slice(0, 3).map((pth) => '<span class="pvl"><b>' + esc(label(pth)) + Math.round(pth.p * 100) + '%</b>' + (line(pth.deltas) || '—') + (pth.follows ? '<i class="more">…</i>' : '') + '</span>').join('') + (paths.length > 3 ? '<span class="pvl">…</span>' : '') + '</span>';
+  }
   function commitCard(dir) {
     if (ui.busy || ui.mode !== 'card') return;
     const card = document.querySelector('#deck .card');
@@ -416,7 +472,7 @@
   function flyOut(card, dir) {
     const s = dir === 'left' ? -1 : 1;
     card.classList.remove('dragging');
-    card.style.transform = 'translate(' + (s * (window.innerWidth * 0.9)) + 'px, 40px) rotate(' + (s * 24) + 'deg)';
+    card.style.transform = dir === 'up' ? 'translate(0, -' + Math.round(window.innerHeight * 0.9) + 'px)' : 'translate(' + (s * (window.innerWidth * 0.9)) + 'px, 40px) rotate(' + (s * 24) + 'deg)';
     card.style.opacity = '0';
   }
 
@@ -429,16 +485,18 @@
     });
     card.addEventListener('pointermove', (e) => {
       if (!down) return;
-      dx = e.clientX - x0; const dy = (e.clientY - y0) * 0.25;
+      dx = e.clientX - x0; const dy = (e.clientY - y0) * (h.allow && h.allow('up') ? 0.7 : 0.25);
       if (Math.abs(dx) > 4) moved = true;
       card.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + (dx / 16) + 'deg)';
       if (h.move) h.move(dx);
     });
+    let dy = 0;
+    card.addEventListener('pointermove', (e) => { if (down) dy = e.clientY - y0; });
     const end = () => {
       if (!down) return; down = false;
       card.classList.remove('dragging');
-      const dir = dx < 0 ? 'left' : 'right';
-      if (Math.abs(dx) > 100 && (!h.allow || h.allow(dir))) { flyOut(card, dir); h.commit(dir); }
+      const dir = dy < -100 && Math.abs(dx) < 80 ? 'up' : dx < 0 ? 'left' : 'right';
+      if ((dir === 'up' || Math.abs(dx) > 100) && (!h.allow || h.allow(dir))) { flyOut(card, dir); h.commit(dir); }
       else {
         card.style.transform = '';
         if (h.move) h.move(0);
@@ -454,20 +512,25 @@
     if (n.kind === 'meet') return t('note.meet', { name: content.npcs[n.npc] ? content.npcs[n.npc].name : n.npc });
     if (n.kind === 'bond') return t('note.bond', { name: shortName(n.npc), status: bondLabel(n.status) });
     if (n.kind === 'gain' || n.kind === 'lose') return t('note.' + n.kind, { state: content.states[n.state] ? content.states[n.state].name : n.state });
+    if (n.kind === 'spell') return t('note.spell', { spell: spellName(n.spell), level: ['', 'I', 'II', 'III'][n.level] || n.level });
+    if (n.kind === 'fact') return t('note.fact', { name: shortName(n.fact.split('.')[0]) });
     return n.text || '';
   }
   function chipsFor(out) {
     let h = '';
-    for (const c of out.checks || []) h += '<span class="chip ' + (c.ok ? 'check-ok' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.chip', { skill: skillName(c.skill), p: c.p, result: t(c.ok ? 'check.success' : 'check.failed') })) + '</span>';
+    for (const c of out.checks || []) {
+      if (c.challenge) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.challengeChip', { kind: t('challenge.' + c.challenge), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
+      else h += '<span class="chip ' + (c.ok ? 'check-ok' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.chip', { skill: skillName(c.skill), p: c.p, result: t(c.ok ? 'check.success' : 'check.failed') })) + '</span>';
+    }
     for (const [k, v] of Object.entries(out.deltas || {})) {
       if (!v) continue;
       const sign = (v > 0 ? '+' : '') + Math.round(v * 10) / 10;
       const cls = v > 0 ? 'pos' : 'neg';
       if (content.resources[k]) h += '<span class="chip ' + cls + '">' + Art.icon(content.resources[k].icon, 14) + esc(content.resources[k].name) + ' ' + sign + '</span>';
       else if (content.skills[k]) h += '<span class="chip ' + cls + '">' + Art.icon(content.skills[k].icon, 14) + esc(content.skills[k].name) + ' ' + sign + '</span>';
-      else if (k.startsWith('rel:') || k.startsWith('love:')) {
+      else if (k.startsWith('rel:') || k.startsWith('spark:')) {
         const [kind, id] = k.split(':'); if (!content.npcs[id]) continue;
-        h += '<span class="chip ' + cls + '">' + Art.icon(kind === 'love' ? 'heart' : 'group', 14) + esc(t(kind === 'love' ? 'chip.love' : 'chip.rel', { name: shortName(id), delta: sign })) + '</span>';
+        h += '<span class="chip ' + cls + '">' + Art.icon(kind === 'spark' ? 'heart' : 'group', 14) + esc(t(kind === 'spark' ? 'chip.love' : 'chip.rel', { name: shortName(id), delta: sign })) + '</span>';
       }
     }
     for (const n of out.notes || []) h += '<span class="chip note">' + esc(noteText(n)) + '</span>';
@@ -497,8 +560,7 @@
     const opts = v.options.map((o, i) => {
       const aff = o.affects.map((id) => content.resources[id] ? Art.icon(content.resources[id].icon, 14) : '').join('');
       return '<button class="opt" data-k="' + esc(o.key) + '"' + (o.disabled ? ' disabled' : '') + '><span class="num">' + (i < 9 ? i + 1 : '') + '</span><b>' + esc(o.label) + '</b>' +
-        (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') + (o.check ? '<small>' + esc(checkText(o.check)) + '</small>' : '') +
-        (aff ? '<span class="aff">' + aff + '</span>' : '') + '</button>';
+        (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') + (previewHtml(v, o) || (aff ? '<span class="aff">' + aff + '</span>' : '')) + '</button>';
     }).join('');
     openOverlay('<div class="modal dark"><div class="modal-art">' + Art.scene(v.art, v.tags, v.id) + '</div><div class="modal-body">' + (v.actor ? actorRow(v.actor).replace('actor-row', 'actor-row" style="color:var(--text)') : '') +
       '<h2>' + esc(v.title) + '</h2><p class="text">' + esc(v.text) + '</p>' + (settings.notes ? sceneNote(v.scene) : '') +
@@ -586,6 +648,7 @@
     if (ui.mode === 'card') {
       const v = ui.view; const story = v.type === 'story' || v.options.length === 1;
       if (e.key === 'ArrowLeft') { e.preventDefault(); commitCard(story ? 'right' : 'left'); }
+      else if (e.key === 'ArrowUp' && v.options.some((o) => o.key === 'up' && !o.disabled)) { e.preventDefault(); commitCard('up'); }
       else if (e.key === 'ArrowRight') { e.preventDefault(); commitCard('right'); }
       else if (story && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); commitCard('right'); }
     } else if (ui.mode === 'outcome') {
@@ -612,7 +675,9 @@
   // Upsert a run into the archive (oldest first). When full, drop the oldest runs without feedback first.
   function archiveRun(engine) {
     if (!engine || !engine.s || !engine.s.hist || params.get('event') || Net.available) return;
-    const rec = engine.exportRun(runMeta());
+    archiveRecord(engine.exportRun(runMeta()));
+  }
+  function archiveRecord(rec) {
     const runs = loadRuns().filter((r) => r.runId !== rec.runId);
     runs.push(rec);
     const dropOne = () => {
@@ -632,7 +697,9 @@
     const saved = store.get(SAVE_KEY);
     if (saved) {
       try {
-        const rec = new Engine(content).load(saved).exportRun(Object.assign(runMeta(), { inProgress: true }));
+        let rec;
+        try { rec = new Engine(content).load(saved).exportRun(Object.assign(runMeta(), { inProgress: true })); } catch (e) { rec = null; }
+        if (!rec) throw new Error('old save');
         const i = runs.findIndex((r) => r.runId === rec.runId);
         if (i >= 0) runs[i] = rec; else runs.push(rec);
       } catch (e) { console.warn(e); }
@@ -792,6 +859,7 @@
       rows.querySelectorAll('[data-load]').forEach((b) => { b.onclick = async () => {
         let data; try { data = await slotData(b.dataset.load); } catch (e) { render({ slot: b.dataset.load, text: e.message }); return; }
         if (!data) return;
+        if ((data.version || 1) < Engine.SAVE_VERSION) { render({ slot: b.dataset.load, text: t('slots.tooOld') }); return; }
         if (eng && eng.s && !eng.s.ended && ui.mode !== 'title') { save(true); Net.flush(eng, runRecordMeta(), { final: true }); archiveRun(eng); }
         eng = new Engine(content).load(JSON.parse(JSON.stringify(data)));
         if (b.dataset.load !== 'auto') eng.forkRun();

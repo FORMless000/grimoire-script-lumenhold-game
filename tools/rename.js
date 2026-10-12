@@ -42,7 +42,8 @@ function references(content) {
         if (a.t !== 'sym') return;
         const k = kinds[i];
         if (k === 'flagOrState') add(content.states[a.v] ? 'state' : 'flag', a.v);
-        else if (k === 'flag' || k === 'state' || k === 'npc' || k === 'event' || k === 'track') add(k, a.v);
+        else if (k === 'flag' || k === 'state' || k === 'npc' || k === 'event' || k === 'track' || k === 'spell') add(k, a.v);
+        else if (k === 'fact') add('npc', a.v.split('.')[0]);
       });
     });
   };
@@ -64,8 +65,12 @@ function references(content) {
       case 'gain': add('state', st.state); scanExpr(st.dur); break;
       case 'lose': add('state', st.state); break;
       case 'queue': add('event', st.event); if (st.with && st.with !== 'npc') add('npc', st.with); scanExpr(st.delay); break;
-      case 'rel': case 'love': case 'bond': case 'meet': if (st.npc !== 'npc') add('npc', st.npc); break;
+      case 'rel': case 'spark': case 'bond': case 'meet': if (st.npc !== 'npc') add('npc', st.npc); break;
       case 'end': add('ending', st.ending); break;
+      case 'learn_spell': add('spell', st.spell); break;
+      case 'learn': add('npc', st.fact.split('.')[0]); break;
+      case 'npc_rel': for (const x of [st.a, st.b]) if (x !== 'npc') add('npc', x); break;
+      case 'challenge': if (st.vs && st.vs.who !== 'npc') add('npc', st.vs.who); break;
       case 'if': st.branches.forEach((b) => scanExpr(b.cond)); break;
       case 'chance': scanExpr(st.p); break;
       case 'check': scanExpr(st.dc); break;
@@ -91,7 +96,11 @@ function references(content) {
       scanExpr(d.when); scanExpr(d.weight);
       if (d.actor && !['any', 'npc'].includes(d.actor)) add('npc', d.actor);
       for (const f of ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero']) scanEffects(d[f]);
-      for (const o of d.options || []) { scanText(o.label); scanText(o.hint); scanExpr(o.when); scanEffects(o.effects); }
+      for (const o of d.options || []) {
+        scanText(o.label); scanText(o.hint); scanExpr(o.when); scanEffects(o.effects);
+        if (o.spell) add('spell', o.spell);
+        if (o.memory && o.memory.who !== 'npc') add('npc', o.memory.who);
+      }
     }
   }
   return out;
@@ -129,7 +138,7 @@ function planGrim(text, kind, from, to) {
       region = null; optionBase = null;
       let m;
       if ((m = c.match(/^@([a-z]+)(\s+)([a-z_][a-z0-9_.]*)\s*$/))) { blockKind = m[1]; if (m[1] === kind && m[3] === from) next = '@' + m[1] + m[2] + to; else if (kind === 'npc' && m[1] === 'fact' && m[3].startsWith(from + '.')) next = '@fact' + m[2] + to + m[3].slice(from.length); }
-      else if (c[0] === '>') { region = 'option'; next = raw.replace(/^(>\s*[a-z_][a-z0-9_]*\s*:)(.*)$/, (x, head, label) => head + replaceTokens(label, from, to)); }
+      else if (c[0] === '>') { region = 'option'; next = raw.replace(/^(>\s*[a-z_][a-z0-9_]*)(\[[a-z_][a-z0-9_]*\])?(\s*:)(.*)$/, (x, head, sp, colon, label) => head + (sp ? replaceCode(sp, from, to) : '') + colon + replaceTokens(label, from, to)); }
       else if ((m = raw.match(/^([a-z_][a-z0-9_]*)(\s*:)(.*)$/))) {
         const schema = G.SCHEMA[blockKind];
         if (schema && schema.effects.includes(m[1])) { region = 'effects'; next = m[1] + m[2] + statement(m[3]); }
@@ -140,8 +149,9 @@ function planGrim(text, kind, from, to) {
     else if (region === 'code') next = replaceCode(raw, from, to);
     else {
       if (region === 'option' && optionBase == null) optionBase = indent;
-      const pm = region === 'option' && indent === optionBase && c.match(/^(when|hint)\s*:/);
+      const pm = region === 'option' && indent === optionBase && c.match(/^(when|hint|memory)\s*:/);
       if (pm && pm[1] === 'hint') next = replaceTokens(raw, from, to);
+      else if (pm && pm[1] === 'memory') next = replaceCode(raw, from, to);
       else next = statement(raw);
     }
     if (next !== raw) edits.push([i + 1, next]);

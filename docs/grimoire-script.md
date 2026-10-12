@@ -361,6 +361,46 @@ trigger: queued
 
 ---
 
+## 6a. Numbers and options (schema v1, phase 2a)
+
+These constructs are the new event format. Older forms keep working through a compatibility layer and are counted as **legacy** by lint (`lint --legacy` lists them; phase 3 migrates them).
+
+**Size tiers.** Write amounts as tier words: `mood +medium`, `gold -small`, `rel npc +large`, `spark lyra +tiny`, `arcana +small` (skills use the `xp` row). Amounts come from `@balance sizes` in `content/core/balance.grim`: tiny, small, medium, large, huge. Raw numbers (`mood +5`) are legacy.
+
+**Presets.** Named groups of effects defined with `@preset` (`params:` and a `do:` body using `$param`), used as a statement: `grind arcana`, `rest`, `social npc`, `work`, `splurge`, `risk renown`. They expand at compile time.
+
+**Challenges** replace `check` (legacy):
+
+```grim
+challenge duel vs lyra.arcana hard:     # duel | negotiate | deceive | exam | research | brew | enchant
+  win:
+    renown +medium
+  partial:                              # optional: a band of ±5 around the DC
+    renown +small
+  lose:
+    health -medium
+```
+
+The skill is mapped from the kind (duel: (vigor + arcana) / 2; negotiate: charm; deceive: guile; research and exam: lore; brew and enchant: alchemy), or set with `using <skill>`. DC = `E(turn)` (the `@balance curve`) + the difficulty tier (trivial −15, easy −7, medium 0, hard +8, heroic +16) + `vs <who>.<stat>` (that character's stat minus E(turn), capped at ±15). Odds = clamp(50 + 2.5 × (skill − DC), 8, 92). A card drawn as its `variant: hard` is one tier harder and pays positive tier rewards ×1.5 (the director chooses when, phase 2b).
+
+**Spells.** `learn_spell ward` (level +1, max 3) or `learn_spell ward 2`; `spell_level(ward)` in conditions. On a card, `> up[ward]: Raise a ward` is the swipe-up / ↑ option: hidden until the spell is known, disabled when mana is short; its mana cost (`@spell cost`, per level) is paid automatically and shown in the preview. `@game spell_resource` names the resource (default `mana`).
+
+**Option properties.** `memory: <kind> <who>` (kind from `@vocab memory_kinds`; who is `npc` or a character id) records a memory when the option is chosen (recall arrives in phase 4).
+
+**Facts and relations.** `learn lyra.mother` reveals a fact (`@fact` `unlock:` conditions also reveal them at month start; surface facts are known on meeting); `knows(lyra.mother)` tests it. `npc_rel lyra kael ±n` (or a tier) changes how two characters feel about each other (both directions); `npc_rel(lyra, kael)` reads it, seeded from `relations:`. `<npc>.<stat>` in expressions reads a character's stat (`lyra.charm`, `npc.wealth`).
+
+**Relationships.** `spark` replaces `love` (legacy alias): it fades 15% a month without a romantic moment; a partnership ends after two months below 20. Friendship (`rel`) fades by 2 a month toward 0 after 6 months without contact.
+
+**Event fields.** `class:` (routine, milestone, incident, windfall, story, crisis; see `docs/authoring/classes.md`) and `tone:` (from `@vocab tones`). Lint checks each class's budget with the preview engine, in medium-equivalents (`@balance weights` × change ÷ medium size): a routine option must cost or risk something and stay within ±1.5; milestones allow 2 large changes, windfalls 1; incidents need at least two options.
+
+**Resources.** `max:` may be an expression (`max: 40 + arcana / 2`); `display: panel` moves a resource from the top bars to the You panel; `warn_below: N` marks it low; `drag: -50 0.5` halves increases while below −50.
+
+**Inline text variation** (Ink-style; in any text, including `say:`): `{~a|b|c}` one of them (deterministic per seed, turn and event), `{&a|b}` cycles each time the event is seen, `{a|b|c}` runs through them and stays on the last, `{cond: a|b}` picks by a condition (`{gold > 20: rich|poor}`). Alternatives may contain other tokens. Translations keep the same structure.
+
+**Previews.** Every option's outcome is previewed exactly on the buttons: the engine runs the option's effects on a scratch copy of the state for each path through its chances, checks and challenges. Lint rejects `rand()` in option effects (use a chance or a range). `grim balance` asserts, over 1,000 random games, that every real outcome lies within its preview.
+
+---
+
 ## 6b. The worldbook (`content/world/`)
 
 Worldbook blocks are **data**: canon for authors, briefs and lint. Until phase 2b the engine doesn't play them (and `passed()` / `clue()` are always false). The full property table is generated in `docs/authoring/schema.md`.

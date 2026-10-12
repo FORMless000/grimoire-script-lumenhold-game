@@ -46,7 +46,7 @@ function format(text) {
       if ((m = c.match(RE_OPTION))) { region = 'option'; out = '> ' + m[1] + ': ' + m[2].trim(); }
       else if ((m = c.match(RE_PROP))) {
         const schema = G.SCHEMA[blockKind];
-        const effects = !!schema && schema.effects.includes(m[1]);
+        const effects = !!schema && (schema.effects.includes(m[1]) || (schema.raw || []).includes(m[1]));
         region = effects ? 'effects' : 'text';
         const v = m[2].trim();
         out = m[1] + ':' + (v ? ' ' + (effects ? normStatement(v) : v) : '');

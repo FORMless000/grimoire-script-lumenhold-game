@@ -22,13 +22,13 @@
 
   // Functions whose bare-identifier arguments are names (not variables).
   // `npc` is always resolved to the bound actor's id.
-  const SYMBOLIC = new Set(['has', 'flag', 'left', 'rel', 'love', 'bond', 'met', 'seen', 'since', 'chosen', 'bonds', 'npc_is', 'romanceable', 'tagged', 'passed', 'clue']);
+  const SYMBOLIC = new Set(['has', 'flag', 'left', 'rel', 'love', 'spark', 'bond', 'met', 'seen', 'since', 'chosen', 'bonds', 'npc_is', 'romanceable', 'tagged', 'passed', 'clue', 'spell_level', 'knows', 'npc_rel']);
   const FUNCS = new Set([...SYMBOLIC, 'rand', 'min', 'max', 'abs', 'floor', 'round', 'clamp', 'known', 'chance_of']);
   // Reference kinds for linting: which argument of which function refers to what.
   const FUNC_REFS = {
     has: ['flagOrState'], flag: ['flag'], left: ['state'], rel: ['npc'], love: ['npc'], bond: ['npc'],
     met: ['npc'], seen: ['event'], since: ['event'], chosen: ['event', null], npc_is: ['npc'], bonds: [null], romanceable: ['npc'], tagged: ['npc', null],
-    passed: ['track', null], clue: ['clue'],
+    passed: ['track', null], clue: ['clue'], spark: ['npc'], spell_level: ['spell'], knows: ['fact'], npc_rel: ['npc', 'npc'],
   };
 
   function tokenize(s, file, line) {
@@ -42,6 +42,8 @@
       }
       if (/[A-Za-z_]/.test(c)) {
         let j = i; while (j < s.length && /[A-Za-z0-9_]/.test(s[j])) j++;
+        // Dotted names: a fact (lyra.mother) or a character's stat (lyra.charm).
+        while (s[j] === '.' && /[A-Za-z_]/.test(s[j + 1] || '')) { j++; while (j < s.length && /[A-Za-z0-9_]/.test(s[j])) j++; }
         const w = s.slice(i, j); i = j;
         if (w === 'and') toks.push({ t: 'op', v: '&&' });
         else if (w === 'or') toks.push({ t: 'op', v: '||' });
@@ -165,12 +167,16 @@
    * ------------------------------------------------------------------ */
 
   const SCHEMA = {
-    game: { noId: true, props: ['title', 'subtitle', 'years', 'months', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'intro', 'summer_months'], effects: [] },
-    resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc'], effects: ['on_zero'] },
+    game: { noId: true, props: ['title', 'subtitle', 'years', 'months', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'intro', 'summer_months', 'spell_resource'], effects: [] },
+    // Numbers (design §8.4): size and difficulty tiers, option-value weights, the expected-skill curve.
+    balance: { noId: true, props: ['sizes', 'difficulty', 'weights', 'curve', 'desc'], effects: [] },
+    // A named group of effects, used as a statement: `grind arcana`. Its body may use $params.
+    preset: { props: ['params', 'desc'], effects: [], raw: ['do'] },
+    resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
     skill: { props: ['name', 'icon', 'start', 'max', 'desc', 'color'], effects: [] },
     npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel', 'age', 'role', 'year', 'traits', 'interests', 'stats', 'schedule', 'relations', 'voice'], effects: [] },
     state: { props: ['name', 'desc', 'art', 'tags', 'group', 'duration', 'hidden', 'kind'], effects: ['tick', 'on_add', 'on_expire', 'on_remove'] },
-    event: { props: ['title', 'text', 'art', 'scene', 'tags', 'when', 'weight', 'trigger', 'actor', 'repeat', 'priority', 'type', 'chain'], effects: ['on_show'], options: true },
+    event: { props: ['title', 'text', 'art', 'scene', 'tags', 'when', 'weight', 'trigger', 'actor', 'repeat', 'priority', 'type', 'chain', 'class', 'tone', 'variant'], effects: ['on_show'], options: true },
     ending: { props: ['title', 'text', 'art', 'scene', 'when', 'priority', 'tags', 'kind'], effects: [] },
     hook: { props: ['on', 'when', 'desc', 'label'], effects: ['do'] },
     // Worldbook (design §3): data for briefs, lint and later phases. The engine doesn't play these yet.
@@ -186,8 +192,11 @@
     timeline: { props: ['date', 'kind', 'event', 'text'], effects: [] },
   };
   const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'discover', 'hinted_when', 'unlock', 'prereq']);
-  const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment']);
-  const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'cast']);
+  const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment', 'warn_below']);
+  const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'cast', 'params']);
+  const TIERS = ['tiny', 'small', 'medium', 'large', 'huge'];
+  const DIFFICULTIES = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
+  const CLASSES = ['routine', 'milestone', 'incident', 'windfall', 'story', 'crisis'];
   const BOOL_PROPS = new Set(['romance', 'hidden']);
   // Structured worldbook values, parsed at compile time. Each returns the parsed value or throws a message.
   const ID_RE = /^[a-z_][a-z0-9_]*$/;
@@ -219,8 +228,16 @@
     keys(t) { return t.split(/\s*,\s*/).map((x) => x.trim()).filter(Boolean); },
     // A track's skill: one or more skill ids.
     skill(t) { const w = words(t); return w.length === 1 ? w[0] : w; },
+    // "health 2 4 7 12 20 | gold 3 8 15 30 60" -> {health: [2, 4, 7, 12, 20], …}
+    sizes(t) { const o = {}; for (const part of t.split('|')) { const w = words(part); if (!w.length) continue; if (w.length !== 6) throw 'sizes: "' + part.trim() + '" needs a name and 5 amounts (tiny small medium large huge)'; o[w[0]] = w.slice(1).map((x) => toNum(x, 'sizes ' + w[0])); } return o; },
+    // "trivial -15 easy -7 medium 0 hard 8 heroic 16"
+    difficulty(t) { const w = words(t), o = {}; for (let i = 0; i < w.length; i += 2) { if (!DIFFICULTIES.includes(w[i])) throw 'difficulty: unknown tier "' + w[i] + '"'; o[w[i]] = toNum(w[i + 1], 'difficulty ' + w[i]); } return o; },
+    weights(t) { const w = words(t), o = {}; if (w.length % 2) throw 'weights: expected "name value" pairs'; for (let i = 0; i < w.length; i += 2) o[w[i]] = toNum(w[i + 1], 'weights ' + w[i]); return o; },
+    curve(t) { return words(t).map((x) => toNum(x, 'curve')); },
+    // "-50 0.5": below -50, increases are halved
+    drag(t) { const w = words(t); if (w.length !== 2) throw 'drag: expected "<below> <factor>"'; return { below: toNum(w[0], 'drag'), factor: toNum(w[1], 'drag') }; },
   };
-  const OPTION_PROPS = new Set(['when', 'hint']);
+  const OPTION_PROPS = new Set(['when', 'hint', 'memory']);
 
   /* ------------------------------------------------------------------ *
    * Effects
@@ -239,7 +256,14 @@
     gain: new RegExp('^gain\\s+(' + ID + ')(?:\\s+(.+))?$'),
     lose: new RegExp('^lose\\s+(' + ID + ')$'),
     queue: new RegExp('^queue\\s+(' + ID + ')(?:\\s+(now|in\\s+.+?))?(?:\\s+with\\s+(' + ID + '))?$'),
-    social: new RegExp('^(rel|love)\\s+(' + ID + ')\\s*([+-])\\s*(\\d+)(?:\\s*~\\s*(\\d+))?$'),
+    social: new RegExp('^(rel|love|spark)\\s+(' + ID + ')\\s*([+-])\\s*(\\d+)(?:\\s*~\\s*(\\d+))?$'),
+    socialTier: new RegExp('^(rel|love|spark)\\s+(' + ID + ')\\s*([+-])\\s*(tiny|small|medium|large|huge)$'),
+    deltaTier: new RegExp('^(' + ID + ')\\s*([+-])\\s*(tiny|small|medium|large|huge)$'),
+    npcRel: new RegExp('^npc_rel\\s+(' + ID + ')\\s+(' + ID + ')\\s*([+-])\\s*(\\d+|tiny|small|medium|large|huge)$'),
+    learn: new RegExp('^learn\\s+(' + ID + '\\.' + ID + ')$'),
+    learnSpell: new RegExp('^learn_spell\\s+(' + ID + ')(?:\\s+([123]))?$'),
+    challenge: new RegExp('^challenge\\s+(' + ID + ')(?:\\s+using\\s+(' + ID + '))?(?:\\s+vs\\s+(' + ID + ')\\.(' + ID + '))?\\s+(trivial|easy|medium|hard|heroic)\\s*:$'),
+    preset: new RegExp('^(' + ID + ')((?:\\s+' + ID + ')*)$'),
     bond: new RegExp('^bond\\s+(' + ID + ')\\s+(' + ID + ')$'),
     meet: new RegExp('^meet\\s+(' + ID + ')$'),
     end: new RegExp('^end\\s+(' + ID + ')$'),
@@ -256,6 +280,7 @@
     if ((m = content.match(RE.else))) return { t: 'else', line, block: true };
     if ((m = content.match(RE.chance))) return { t: 'chance', p: E(m[1]), body: [], else: null, line, block: true };
     if ((m = content.match(RE.check))) return { t: 'check', skill: m[1], dc: E(m[2]), body: [], else: null, line, block: true };
+    if ((m = content.match(RE.challenge))) return { t: 'challenge', kind: m[1], using: m[2] || null, vs: m[3] ? { who: m[3], stat: m[4] } : null, tier: m[5], win: null, partial: null, lose: null, line, block: true, outcomes: true };
     if (content.endsWith(':')) throw new GrimError('unknown block statement "' + content + '" (expected if/elif/else/chance/check)', file, line);
     if ((m = content.match(RE.flag))) return { t: 'flag', names: m[1].split(/\s+/), line };
     if ((m = content.match(RE.unflag))) return { t: 'unflag', names: m[1].split(/\s+/), line };
@@ -267,10 +292,19 @@
       else if (m[2]) st.delay = E(m[2].replace(/^in\s+/, ''));
       return st;
     }
+    // `love` is the v0.2 name of spark (kept as a legacy alias until phase 3).
     if ((m = content.match(RE.social))) {
       const a = +m[4], b = m[5] != null ? +m[5] : a, s = m[3] === '-' ? -1 : 1;
-      return { t: m[1], npc: m[2], min: Math.min(a, b) * s, max: Math.max(a, b) * s, line };
+      return { t: m[1] === 'rel' ? 'rel' : 'spark', npc: m[2], min: Math.min(a, b) * s, max: Math.max(a, b) * s, line, legacy: m[1] === 'love' || undefined };
     }
+    if ((m = content.match(RE.socialTier))) return { t: m[1] === 'rel' ? 'rel' : 'spark', npc: m[2], sign: m[3] === '-' ? -1 : 1, tier: m[4], line, legacy: m[1] === 'love' || undefined };
+    if ((m = content.match(RE.npcRel))) {
+      const st = { t: 'npc_rel', a: m[1], b: m[2], sign: m[3] === '-' ? -1 : 1, line };
+      if (TIERS.includes(m[4])) st.tier = m[4]; else { st.min = st.max = +m[4] * st.sign; }
+      return st;
+    }
+    if ((m = content.match(RE.learn))) return { t: 'learn', fact: m[1], line };
+    if ((m = content.match(RE.learnSpell))) return { t: 'learn_spell', spell: m[1], level: m[2] ? +m[2] : null, line };
     if ((m = content.match(RE.bond))) return { t: 'bond', npc: m[1], status: m[2], line };
     if ((m = content.match(RE.meet))) return { t: 'meet', npc: m[1], line };
     if ((m = content.match(RE.end))) return { t: 'end', ending: m[1], line };
@@ -278,7 +312,10 @@
       const a = +m[3], b = m[4] != null ? +m[4] : a, s = m[2] === '-' ? -1 : 1;
       return { t: 'delta', name: m[1], min: Math.min(a, b) * s, max: Math.max(a, b) * s, line };
     }
+    if ((m = content.match(RE.deltaTier))) return { t: 'delta', name: m[1], sign: m[2] === '-' ? -1 : 1, tier: m[3], line };
     if ((m = content.match(RE.assign))) return { t: 'assign', name: m[1], op: m[2], expr: E(m[3]), line };
+    // Anything else shaped like `name arg arg` is a preset use, checked and expanded by compile().
+    if ((m = content.match(RE.preset))) return { t: 'preset', name: m[1], args: m[2].trim() ? m[2].trim().split(/\s+/) : [], line };
     throw new GrimError('unknown statement "' + content + '"', file, line);
   }
 
@@ -294,6 +331,24 @@
         pos++;
         const st = parseStatement(L.content, file, L.line);
         let body = [];
+        if (st.outcomes) {
+          if (!(pos < lines.length && lines[pos].indent > indent)) throw new GrimError('"' + L.content + '" needs win:/lose: outcomes', file, L.line);
+          const oi = lines[pos].indent;
+          while (pos < lines.length && lines[pos].indent === oi) {
+            const O = lines[pos];
+            const om = O.content.match(/^(win|partial|lose)\s*:\s*(.*)$/);
+            if (!om) throw new GrimError('expected win:, partial: or lose: under challenge, got "' + O.content + '"', file, O.line);
+            if (st[om[1]]) throw new GrimError('duplicate ' + om[1] + ': in challenge', file, O.line);
+            pos++;
+            const first = om[2].trim() ? [parseStatement(om[2].trim(), file, O.line)] : [];
+            if (first.length && first[0].block) throw new GrimError('put block statements on their own line under ' + om[1] + ':', file, O.line);
+            const rest = pos < lines.length && lines[pos].indent > oi ? block(lines[pos].indent) : [];
+            st[om[1]] = first.concat(rest);
+          }
+          if (!st.win || !st.lose) throw new GrimError('challenge needs both win: and lose:', file, L.line);
+          out.push(st);
+          continue;
+        }
         if (st.block) {
           if (pos < lines.length && lines[pos].indent > indent) body = block(lines[pos].indent);
           else throw new GrimError('"' + L.content + '" needs an indented body', file, L.line);
@@ -324,6 +379,7 @@
     for (const st of effects) {
       visit(st);
       if (st.t === 'if') { st.branches.forEach((b) => walkEffects(b.body, visit)); walkEffects(st.else, visit); }
+      else if (st.t === 'challenge') { walkEffects(st.win, visit); walkEffects(st.partial, visit); walkEffects(st.lose, visit); }
       else if (st.body) { walkEffects(st.body, visit); walkEffects(st.else, visit); }
     }
   }
@@ -390,9 +446,11 @@
       i++;
       if (L.content.startsWith('>')) {
         if (!schema.options) throw new GrimError('options (">") are only allowed in @event', file, L.line);
-        const m = L.content.match(/^>\s*([a-z_][a-z0-9_]*)\s*:\s*(.*)$/);
+        const m = L.content.match(/^>\s*([a-z_][a-z0-9_]*)(?:\[([a-z_][a-z0-9_]*)\])?\s*:\s*(.*)$/);
         if (!m) throw new GrimError('bad option header "' + L.content + '" (expected "> key: Label")', file, L.line);
-        const opt = { key: m[1], label: m[2].trim(), when: null, hint: null, effects: [], line: L.line };
+        if (m[2] && m[1] !== 'up') throw new GrimError('only the "up" option takes a spell: > up[' + m[2] + ']:', file, L.line);
+        if (m[1] === 'up' && !m[2]) throw new GrimError('the "up" option needs a spell: > up[ward]: Label', file, L.line);
+        const opt = { key: m[1], spell: m[2] || null, label: m[3].trim(), when: null, hint: null, memory: null, effects: [], line: L.line };
         if (def.options.some((o) => o.key === opt.key)) throw new GrimError('duplicate option key "' + opt.key + '"', file, L.line);
         const sub = takeIndented().filter((x) => !x.blank);
         const eff = [];
@@ -401,7 +459,11 @@
           const pm = S.indent === base && S.content.match(/^([a-z_]+)\s*:\s*(.*)$/);
           if (pm && OPTION_PROPS.has(pm[1])) {
             if (pm[1] === 'when') opt.when = expr(pm[2], file, S.line);
-            else opt.hint = pm[2].trim();
+            else if (pm[1] === 'memory') {
+              const mm = pm[2].trim().match(/^([a-z_][a-z0-9_]*)\s+([a-z_][a-z0-9_]*)$/);
+              if (!mm) throw new GrimError('memory: expected "<kind> <who>", e.g. memory: helped npc', file, S.line);
+              opt.memory = { kind: mm[1], who: mm[2] };
+            } else opt.hint = pm[2].trim();
           } else eff.push(S);
         }
         if (eff.length && eff[0].indent !== base) throw new GrimError('unexpected indentation', file, eff[0].line);
@@ -413,6 +475,11 @@
       if (!m) throw new GrimError('expected "key: value", "> option: Label" or "@block", got "' + L.content + '"', file, L.line);
       const key = m[1], val = m[2];
       const sub = takeIndented();
+      if (schema.raw && schema.raw.includes(key)) {
+        // Kept as lines; parsed when the preset is used, after $params are substituted.
+        def[key] = (val.trim() ? [{ indent: 1000, content: val.trim(), line: L.line }] : []).concat(sub.filter((x) => !x.blank));
+        continue;
+      }
       if (schema.effects.includes(key)) {
         const effLines = [];
         if (val.trim()) effLines.push({ indent: 1000, content: val.trim(), line: L.line });
@@ -426,7 +493,7 @@
       const text = joinText(val, sub);
       if (STRUCT_PROPS[key] && !(key === 'skill' && b.kind !== 'track')) {
         try { def[key] = STRUCT_PROPS[key](text); } catch (e) { throw new GrimError(typeof e === 'string' ? e : e.message, file, L.line); }
-      } else if (EXPR_PROPS.has(key)) def[key] = expr(text, file, L.line);
+      } else if (EXPR_PROPS.has(key) || (key === 'max' && b.kind === 'resource' && !isFinite(Number(text)))) def[key] = expr(text, file, L.line);
       else if (NUM_PROPS.has(key)) {
         const n = Number(text);
         if (!isFinite(n)) throw new GrimError('property "' + key + '" must be a number, got "' + text + '"', file, L.line);
@@ -442,9 +509,9 @@
    * Content assembly
    * ------------------------------------------------------------------ */
 
-  const COLLECTION = { resource: 'resources', skill: 'skills', npc: 'npcs', state: 'states', event: 'events', ending: 'endings', hook: 'hooks',
+  const COLLECTION = { preset: 'presets', resource: 'resources', skill: 'skills', npc: 'npcs', state: 'states', event: 'events', ending: 'endings', hook: 'hooks',
     vocab: 'vocab', place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', lore: 'lore', timeline: 'timeline' };
-  const WORLD_COLLECTIONS = ['vocab', 'places', 'tracks', 'spells', 'facts', 'archetypes', 'factions', 'arcs', 'lore', 'timeline'];
+  const WORLD_COLLECTIONS = ['presets', 'vocab', 'places', 'tracks', 'spells', 'facts', 'archetypes', 'factions', 'arcs', 'lore', 'timeline'];
 
   // sources: [{path, text}] -> {content, errors}
   function compile(sources) {
@@ -457,31 +524,100 @@
       content.files.push(src.path);
       for (const d of defs) {
         if (d.block === 'game') { Object.assign(content.game, d); continue; }
+        if (d.block === 'balance') { content.balance = d; continue; }
         const col = content[COLLECTION[d.block]];
         if (col[d.id]) { errors.push(new GrimError('duplicate @' + d.block + ' id "' + d.id + '" (first defined in ' + col[d.id].file + ':' + col[d.id].line + ')', d.file, d.line)); continue; }
         col[d.id] = d;
         if (content.order[COLLECTION[d.block]]) content.order[COLLECTION[d.block]].push(d.id);
-        if (d.block === 'event') finalizeEvent(d, errors);
       }
     }
+    expandPresets(content, errors);
+    for (const e of Object.values(content.events)) finalizeEvent(e, errors);
     return { content, errors };
   }
+
+  // Replace every `preset arg …` statement with the preset's body ($params substituted), recursively.
+  function expandPresets(content, errors) {
+    const expand = (effects, file, depth) => {
+      if (!effects) return effects;
+      const out = [];
+      for (const st of effects) {
+        if (st.t === 'preset') {
+          const p = content.presets[st.name];
+          if (!p) { errors.push(new GrimError('unknown statement or preset "' + st.name + (st.args.length ? ' ' + st.args.join(' ') : '') + '"', file, st.line)); continue; }
+          const params = p.params || [];
+          if (st.args.length !== params.length) { errors.push(new GrimError('preset ' + st.name + ' takes ' + (params.length ? params.join(', ') : 'no arguments') + ', got ' + (st.args.join(' ') || 'none'), file, st.line)); continue; }
+          if (depth > 5) { errors.push(new GrimError('presets nested too deeply (' + st.name + ')', file, st.line)); continue; }
+          const lines = (p.do || []).map((L) => ({ indent: L.indent, line: st.line, content: L.content.replace(/\$([a-z_][a-z0-9_]*)/g, (mm, k) => (params.includes(k) ? st.args[params.indexOf(k)] : mm)) }));
+          try {
+            const body = parseEffectLines(lines, file);
+            G_walk(body, (x) => { x.preset = st.name; });
+            out.push(...expand(body, file, depth + 1));
+          } catch (e) { errors.push(new GrimError('preset ' + st.name + ': ' + (e.raw || e.message), file, st.line)); }
+          continue;
+        }
+        if (st.t === 'if') { st.branches.forEach((b) => { b.body = expand(b.body, file, depth); }); st.else = expand(st.else, file, depth); }
+        else if (st.t === 'challenge') { st.win = expand(st.win, file, depth); st.partial = expand(st.partial, file, depth); st.lose = expand(st.lose, file, depth); }
+        else if (st.body) { st.body = expand(st.body, file, depth); st.else = expand(st.else, file, depth); }
+        out.push(st);
+      }
+      return out;
+    };
+    for (const col of ['events', 'states', 'hooks', 'resources']) {
+      for (const d of Object.values(content[col])) {
+        for (const k of ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero']) if (Array.isArray(d[k])) d[k] = expand(d[k], d.file, 0);
+        for (const o of d.options || []) o.effects = expand(o.effects, d.file, 0);
+      }
+    }
+  }
+  function G_walk(effects, visit) { walkEffects(effects, visit); }
 
   function finalizeEvent(e, errors) {
     if (!e.type) {
       if (e.options.length === 0) e.options.push({ key: 'ok', label: 'Continue', effects: [], when: null, hint: null, line: e.line });
-      e.type = e.options.length === 1 ? 'story' : (e.options.length === 2 && e.options.some((o) => o.key === 'left') ? 'card' : 'menu');
+      const keys = e.options.map((o) => o.key).sort().join(',');
+      e.type = e.options.length === 1 ? 'story' : (keys === 'left,right' || keys === 'left,right,up') ? 'card' : 'menu';
     }
     if (!['card', 'story', 'menu'].includes(e.type)) errors.push(new GrimError('type must be card, story or menu', e.file, e.line));
     if (e.type === 'card') {
       const keys = e.options.map((o) => o.key).sort().join(',');
-      if (keys !== 'left,right') errors.push(new GrimError('card events need exactly "> left:" and "> right:" options (got ' + keys + ')', e.file, e.line));
+      if (keys !== 'left,right' && keys !== 'left,right,up') errors.push(new GrimError('card events need "> left:" and "> right:" options, and optionally "> up[spell]:" (got ' + keys + ')', e.file, e.line));
     }
     if (!e.trigger) e.trigger = e.actor === 'any' ? 'social' : 'random';
     if (!['random', 'auto', 'social', 'queued'].includes(e.trigger)) errors.push(new GrimError('trigger must be random, auto, social or queued', e.file, e.line));
     if (!e.title) errors.push(new GrimError('event needs a title', e.file, e.line));
     if (!e.text) errors.push(new GrimError('event needs text', e.file, e.line));
+    if (e.variant && e.variant !== 'hard') errors.push(new GrimError('variant: the only variant is "hard"', e.file, e.line));
+    if (e.class && !CLASSES.includes(e.class)) errors.push(new GrimError('class must be one of ' + CLASSES.join(', '), e.file, e.line));
+    if (e.type !== 'card' && e.options.some((o) => o.key === 'up')) errors.push(new GrimError('"> up[spell]:" is only for two-choice cards', e.file, e.line));
   }
 
-  return { parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS };
+  // The {tokens} of a text, looking inside inline variations ({~a|b}, {&a|b}, {a|b}, {cond: a|b}):
+  // -> { tokens: ['npc', 'lyra.their', '=gold*2'], conds: ['gold > 10'] }
+  function textTokens(text) {
+    const tokens = [], conds = [];
+    const scan = (t) => {
+      let i = 0;
+      while (i < t.length) {
+        if (t[i] !== '{') { i++; continue; }
+        let d = 0, j = i;
+        for (; j < t.length; j++) { if (t[j] === '{') d++; else if (t[j] === '}' && --d === 0) break; }
+        if (j >= t.length) return;
+        const inner = t.slice(i + 1, j);
+        const parts = []; let dd = 0, start = 0;
+        for (let k = 0; k < inner.length; k++) { const ch = inner[k]; if (ch === '{') dd++; else if (ch === '}') dd--; else if (ch === '|' && !dd) { parts.push(inner.slice(start, k)); start = k + 1; } }
+        parts.push(inner.slice(start));
+        let colon = -1; dd = 0;
+        if (inner[0] !== '=') for (let k = 0; k < parts[0].length; k++) { const ch = parts[0][k]; if (ch === '{') dd++; else if (ch === '}') dd--; else if (ch === ':' && !dd) { colon = k; break; } }
+        if (colon > 0) { conds.push(parts[0].slice(0, colon).trim()); scan(parts[0].slice(colon + 1)); parts.slice(1).forEach(scan); }
+        else if (parts.length > 1) { if (inner[0] === '~' || inner[0] === '&') parts[0] = parts[0].slice(1); parts.forEach(scan); }
+        else tokens.push(inner.trim());
+        i = j + 1;
+      }
+    };
+    scan(String(text || ''));
+    return { tokens, conds };
+  }
+
+  return { textTokens, parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES };
 });

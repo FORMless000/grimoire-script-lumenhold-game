@@ -79,6 +79,14 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `min_random_per_month` | number |  |
 |  | `intro` | text | yes |
 |  | `summer_months` | list |  |
+|  | `spell_resource` | text |  |
+| `@balance` | `sizes` | structured |  |
+|  | `difficulty` | structured |  |
+|  | `weights` | structured |  |
+|  | `curve` | structured |  |
+|  | `desc` | text |  |
+| `@preset id` | `params` | text |  |
+|  | `desc` | text |  |
 | `@resource id` | `name` | text | yes |
 |  | `icon` | text |  |
 |  | `min` | number |  |
@@ -86,6 +94,9 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `start` | number |  |
 |  | `color` | text |  |
 |  | `desc` | text | yes |
+|  | `display` | text |  |
+|  | `warn_below` | text |  |
+|  | `drag` | structured |  |
 | | `on_zero:` | effects | `say:` lines |
 | `@skill id` | `name` | text | yes |
 |  | `icon` | text |  |
@@ -138,6 +149,9 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `priority` | number |  |
 |  | `type` | text |  |
 |  | `chain` | text |  |
+|  | `class` | text |  |
+|  | `tone` | text |  |
+|  | `variant` | text |  |
 | | `on_show:` | effects | `say:` lines |
 | | `> key: Label` | option (`when:`, `hint:`, effects) | label, hint, `say:` |
 | `@ending id` | `title` | text | yes |
@@ -223,5 +237,5 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 
 ### Functions in expressions
 
-`abs()` · `bond()` · `bonds()` · `chance_of()` · `chosen()` · `clamp()` · `clue()` · `flag()` · `floor()` · `has()` · `known()` · `left()` · `love()` · `max()` · `met()` · `min()` · `npc_is()` · `passed()` · `rand()` · `rel()` · `romanceable()` · `round()` · `seen()` · `since()` · `tagged()`
+`abs()` · `bond()` · `bonds()` · `chance_of()` · `chosen()` · `clamp()` · `clue()` · `flag()` · `floor()` · `has()` · `known()` · `knows()` · `left()` · `love()` · `max()` · `met()` · `min()` · `npc_is()` · `npc_rel()` · `passed()` · `rand()` · `rel()` · `romanceable()` · `round()` · `seen()` · `since()` · `spark()` · `spell_level()` · `tagged()`
 <!-- END GENERATED: schema -->

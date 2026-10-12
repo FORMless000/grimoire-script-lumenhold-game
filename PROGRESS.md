@@ -10,6 +10,14 @@
   - Tools: canon lint (0 unknown names across existing content), `grim brief`, `grim lorebook`, `grim docs`.
   - `docs/authoring/` (with 5 sample briefs); skills `write-academy-events` (rebuilt) and `distill-lore`.
   - **Your step:** review `content/world/` in git and promote soft lore to `lore/hard/` (`canon: hard`).
+- **Phase 2a (numbers and options): done.**
+  - Resources: the top bars are Health · Mood · Mana · Renown · Alignment; Crowns and Standing are in the You panel; renown decay; mana regeneration. Relationships: spark, with friendship and spark decay.
+  - `content/core/balance.grim`: size and difficulty tiers, weights, a fitted E(turn) curve, presets.
+  - Event format: `class:`/`tone:` with budget lint, `challenge` (partial results, `vs`), spells and the swipe-up option, inline text variation, `learn`/`knows`, `memory:`, `npc_rel`, `variant: hard`.
+  - Exact previews on every option; the property test passes (0 misses).
+  - Compatibility layer: lint counts 2,325 legacy uses, the phase 3 worklist.
+  - Vertical slice: 10 events plus the Ward and Flame spells, in en and zh.
+  - Save version 3: older saves are refused, and their logs kept.
 
 **v0.2.** Engine, UI, toolchain, docs and agent skill are done.
 - **Localization:** a key-based module (`src/i18n.js`, `locales/`) with English and a complete Simplified Chinese translation (3,126 content strings plus the UI), switchable in-game.

@@ -1,6 +1,6 @@
 # Presets and size tiers
 
-> **Status: phase 2a.** Until `content/core/balance.grim` exists, write raw numbers using the balance table in `AGENTS.md`. Phase 3 converts them to the nearest tier mechanically.
+> **Live (phase 2a).** Tiers, presets and weights are defined in `content/core/balance.grim`; new content uses tier words and presets. Raw numbers still work and are counted as legacy until phase 3 converts them.
 
 ## Size tiers (design §8.4, tunable)
 

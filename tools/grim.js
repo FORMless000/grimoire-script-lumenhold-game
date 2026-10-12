@@ -22,7 +22,10 @@
  *   node tools/grim.js migrate [--dry-run]
  *                                       run new scripts in tools/migrations/ (recorded in content/.migrations.json)
  *   node tools/grim.js balance [--quick] [--games N]
- *                                       play every play style; invariants fail (exit 1), alarms warn
+ *                                       play every play style; invariants fail (exit 1), alarms warn; includes the
+ *                                       preview property test (every outcome within its preview; 1000 games, 100 with --quick)
+ *   node tools/grim.js curve [--games N] [--write]
+ *                                       fit the expected-skill curve E(turn) from the balanced play style
  *   node tools/grim.js snapshot [NAME] [--out FILE]
  *                                       play the golden seeds and save endings, choices, final values, coverage
  *   node tools/grim.js diff [A] [B]     compare two snapshots (default: test/golden/baseline.json vs a fresh one);
@@ -85,7 +88,7 @@ const PRONOUN_KEYS = new Set(['they', 'them', 'their', 'theirs', 'are', 's', 'na
 
 function analyze(content) {
   // Collect everything that is set / referenced, with locations.
-  const A = { flagsSet: {}, flagsRead: {}, varsSet: {}, varsRead: {}, queued: {}, statesRef: {}, npcsRef: {}, endingsRef: {}, eventsRef: {}, problems: [] };
+  const A = { flagsSet: {}, flagsRead: {}, varsSet: {}, varsRead: {}, queued: {}, statesRef: {}, npcsRef: {}, endingsRef: {}, eventsRef: {}, problems: [], legacy: [] };
   const add = (map, k, where) => { (map[k] = map[k] || []).push(where); };
   const P = (level, where, msg) => A.problems.push({ level, where, msg });
 
@@ -123,8 +126,9 @@ function analyze(content) {
   }
   function scanText(text, where, hasActor) {
     if (!text) return;
-    for (const m of text.matchAll(/\{([^{}]+)\}/g)) {
-      const k = m[1].trim();
+    const tt = G.textTokens(text);
+    for (const c of tt.conds) { try { scanExpr(G.expr(c), where, hasActor); } catch (e) { P('error', where, 'bad condition in {' + c + ': …}: ' + e.message); } }
+    for (const k of tt.tokens) {
       if (['player', 'month', 'year'].includes(k)) continue;
       if (k[0] === '=') { try { const ex = G.expr(k.slice(1)); scanExpr(ex, where, hasActor); } catch (e) { P('error', where, 'bad {=expr}: ' + e.message); } continue; }
       if (content.npcs[k]) { add(A.npcsRef, k, where); continue; }
@@ -137,6 +141,14 @@ function analyze(content) {
   function scanEffects(effects, where, hasActor) {
     G.walkEffects(effects, (st) => {
       const w = where.replace(/:\d+$/, '') + ':' + st.line;
+      if (st.tier && !st.preset && ['delta', 'rel', 'spark', 'npc_rel'].includes(st.t)) {
+        const row = st.t === 'delta' ? (content.skills[st.name] ? 'xp' : st.name) : st.t === 'npc_rel' ? 'rel' : st.t;
+        if (content.balance && content.balance.sizes && !content.balance.sizes[row]) P('error', w, 'no size tiers for "' + row + '" in @balance sizes');
+      }
+      if (!st.tier && !st.preset && ['delta', 'rel', 'spark'].includes(st.t) && st.min != null) A.legacy.push({ where: w, what: 'raw number (use a size tier)' });
+      if (st.legacy) A.legacy.push({ where: w, what: '"love" (now "spark")' });
+      if (st.t === 'check') A.legacy.push({ where: w, what: '"check" (use "challenge")' });
+      if ((st.t === 'delta' || st.t === 'assign') && st.name === 'grades') A.legacy.push({ where: w, what: 'Standing ("grades"; GPA replaces it in phase 2b)' });
       switch (st.t) {
         case 'delta': case 'assign':
           if (!content.resources[st.name] && !content.skills[st.name]) add(A.varsSet, st.name, w);
@@ -154,14 +166,25 @@ function analyze(content) {
           else if (st.with && st.with !== 'npc' && !content.npcs[st.with]) P('error', w, 'queue ... with: unknown npc "' + st.with + '"');
           if (st.delay) scanExpr(st.delay, w, hasActor);
           break;
-        case 'rel': case 'love': case 'bond': case 'meet':
+        case 'rel': case 'spark': case 'bond': case 'meet':
           if (st.npc === 'npc') { if (!hasActor) P('error', w, st.t + ' npc: block has no actor'); }
           else if (!content.npcs[st.npc]) P('error', w, st.t + ': unknown npc "' + st.npc + '"');
           else add(A.npcsRef, st.npc, w);
           if (st.t === 'bond' && !KNOWN_BONDS.has(st.status)) P('warn', w, 'unknown bond status "' + st.status + '" (known: ' + [...KNOWN_BONDS].join(', ') + ')');
-          if (st.t === 'love') { const id = st.npc === 'npc' ? null : st.npc; if (id && content.npcs[id] && !content.npcs[id].romance) P('warn', w, 'love change on non-romanceable npc "' + id + '"'); }
+          if (st.t === 'spark') { const id = st.npc === 'npc' ? null : st.npc; if (id && content.npcs[id] && !content.npcs[id].romance) P('warn', w, 'spark change on non-romanceable npc "' + id + '"'); }
           break;
         case 'end': if (!content.endings[st.ending]) P('error', w, 'end: unknown ending "' + st.ending + '"'); add(A.endingsRef, st.ending, w); break;
+        case 'learn': if (!content.facts[st.fact]) P('error', w, 'learn: unknown fact "' + st.fact + '"'); break;
+        case 'learn_spell': if (!content.spells[st.spell]) P('error', w, 'learn_spell: unknown spell "' + st.spell + '"'); break;
+        case 'npc_rel': for (const x of [st.a, st.b]) { if (x === 'npc') { if (!hasActor) P('error', w, 'npc_rel npc: block has no actor'); } else if (!content.npcs[x]) P('error', w, 'npc_rel: unknown npc "' + x + '"'); } break;
+        case 'challenge':
+          if (!['duel', 'negotiate', 'deceive', 'exam', 'research', 'brew', 'enchant'].includes(st.kind)) P('error', w, 'challenge: unknown kind "' + st.kind + '" (duel negotiate deceive exam research brew enchant)');
+          if (st.using && !content.skills[st.using]) P('error', w, 'challenge using: unknown skill "' + st.using + '"');
+          if (st.vs) {
+            if (st.vs.who === 'npc' ? !hasActor : !content.npcs[st.vs.who]) P('error', w, 'challenge vs: unknown character "' + st.vs.who + '"');
+            if (!content.skills[st.vs.stat] && !['wealth', 'rel', 'spark'].includes(st.vs.stat)) P('error', w, 'challenge vs: "' + st.vs.stat + '" is not a skill, wealth, rel or spark');
+          }
+          break;
         case 'if': st.branches.forEach((b) => scanExpr(b.cond, w, hasActor)); break;
         case 'chance': scanExpr(st.p, w, hasActor); break;
         case 'check': if (!content.skills[st.skill]) P('error', w, 'check: unknown skill "' + st.skill + '"'); scanExpr(st.dc, w, hasActor); break;
@@ -181,8 +204,19 @@ function analyze(content) {
     scanText(e.title, w, hasActor); scanText(e.text, w, hasActor); scanText(e.scene, w, hasActor);
     if (e.text && e.text.length > 480) P('warn', w, 'card text is long (' + e.text.length + ' chars; aim for < 400)');
     scanEffects(e.on_show, w, hasActor);
+    if (e.actor === 'any') A.legacy.push({ where: w, what: '"actor: any" (becomes a cast role in phase 2b)' });
+    if (!e.class) A.legacy.push({ where: w, what: 'no class: (routine, milestone, incident, windfall, story, crisis)' });
+    if (e.tone && content.vocab.tones && !content.vocab.tones.values.includes(e.tone)) P('error', w, 'tone "' + e.tone + '" is not in @vocab tones');
+    if (e.class) budgetCheck(e, content, (lvl, msg) => P(lvl, w, msg));
     for (const o of e.options) {
       const ow = e.file + ':' + o.line;
+      if (o.spell && !content.spells[o.spell]) P('error', ow, 'up[' + o.spell + ']: unknown spell');
+      // Previews must be exact (design §8.3): no rand() in an option's effects.
+      G.walkEffects(o.effects, (st) => { const ex = st.expr || st.p || st.dc || st.delay; if (ex && /\brand\(/.test(ex.src)) P('error', e.file + ':' + st.line, 'rand() in an option can\'t be previewed: use a chance or a range (a~b)'); });
+      if (o.memory) {
+        if (content.vocab.memory_kinds && !content.vocab.memory_kinds.values.includes(o.memory.kind)) P('error', ow, 'memory: "' + o.memory.kind + '" is not in @vocab memory_kinds');
+        if (o.memory.who === 'npc' ? !hasActor : !content.npcs[o.memory.who]) P('error', ow, 'memory: unknown character "' + o.memory.who + '"');
+      }
       scanText(o.label, ow, hasActor); scanText(o.hint, ow, hasActor); scanExpr(o.when, ow, hasActor);
       if (o.label.length > 42) P('warn', ow, 'option label is long (' + o.label.length + ' chars; aim for < 36)');
       scanEffects(o.effects, ow, hasActor);
@@ -210,6 +244,33 @@ function analyze(content) {
 }
 
 // Worldbook blocks (design §3): references, vocabularies, structured values, adults-only romance.
+// Event classes (design §8.7). Option values come from the preview engine on a fresh game state, in
+// medium-equivalents: Σ weight × change / medium-size, using @balance weights and sizes.
+function budgetCheck(e, content, P) {
+  const bal = content.balance || {};
+  const weights = bal.weights || {};
+  const eng = budgetCheck.eng = budgetCheck.eng || (() => { const x = new Engine(content); x.newGame({ seed: 1, name: 'Lint' }); return x; })();
+  const actor = e.actor && !['any', 'npc'].includes(e.actor) ? e.actor : e.actor ? Object.keys(content.npcs)[0] : null;
+  const row = (k) => (content.skills[k] ? 'xp' : k.split(':')[0]);
+  const medium = (k) => eng.tierAmount(row(k) === 'xp' ? Object.keys(content.skills)[0] : row(k), 'medium') || 7;
+  const weight = (k) => weights[row(k)] != null ? weights[row(k)] : 0.5;
+  let larges = 0;
+  for (const o of e.options) {
+    let pv; try { pv = eng.preview(e.id, o.key, actor); } catch (err) { continue; }
+    const value = (d) => Object.entries(d).reduce((a, [k, r]) => a + weight(k) * ((r[0] + r[1]) / 2) / medium(k), 0);
+    const exp = pv.paths.reduce((a, p) => a + p.p * value(p.deltas), 0);
+    const hasCost = pv.paths.length > 1 || Object.values(pv.deltas).some((r) => r[0] < 0);
+    for (const [k, r] of Object.entries(pv.deltas)) if (Math.max(Math.abs(r[0]), Math.abs(r[1])) >= eng.tierAmount(row(k) === 'xp' ? Object.keys(content.skills)[0] : row(k), 'large')) larges++;
+    if (e.class === 'routine') {
+      if (!hasCost) P('warn', 'routine option "' + o.key + '" has no cost or risk (every option should trade something)');
+      if (Math.abs(exp) > 1.5) P('warn', 'routine option "' + o.key + '" is worth ' + exp.toFixed(1) + ' medium-equivalents (budget ±1.5)');
+    }
+  }
+  if (e.class === 'milestone' && larges > 2) P('warn', 'milestone has ' + larges + ' large changes (cap 2)');
+  if (e.class === 'windfall' && larges > 1) P('warn', 'windfall has ' + larges + ' large changes (cap 1)');
+  if (e.class === 'incident' && e.options.length < 2) P('warn', 'an incident must offer agency: at least two options');
+}
+
 function analyzeWorld(content, P, scanExpr, scanText) {
   const loc = (d) => d.file + ':' + d.line;
   const vocab = (id) => (content.vocab[id] ? new Set(content.vocab[id].values || []) : null);
@@ -299,7 +360,8 @@ function lint(opts = {}) {
   by.error.forEach((p) => console.error(C.r + 'error ' + C.x + p.where + ': ' + p.msg));
   by.warn.forEach((p) => console.error(C.y + 'warn  ' + C.x + p.where + ': ' + p.msg));
   if (opts.verbose) by.info.forEach((p) => console.error(C.d + 'info  ' + p.where + ': ' + p.msg + C.x));
-  console.log((by.error.length ? C.r : C.g) + 'lint: ' + by.error.length + ' error(s), ' + by.warn.length + ' warning(s), ' + by.info.length + ' info' + C.x + ' — ' + Object.keys(content.events).length + ' events, ' + Object.keys(content.states).length + ' states, ' + Object.keys(content.npcs).length + ' npcs, ' + Object.keys(content.endings).length + ' endings');
+  if (opts.legacy) A.legacy.forEach((l) => console.error(C.d + 'legacy ' + l.where + ': ' + l.what + C.x));
+  console.log((by.error.length ? C.r : C.g) + 'lint: ' + by.error.length + ' error(s), ' + by.warn.length + ' warning(s), ' + by.info.length + ' info' + C.x + C.d + ', ' + A.legacy.length + ' legacy (phase 3 migrates; --legacy lists)' + C.x + ' — ' + Object.keys(content.events).length + ' events, ' + Object.keys(content.states).length + ' states, ' + Object.keys(content.npcs).length + ' npcs, ' + Object.keys(content.endings).length + ' endings');
   if (by.error.length && !opts.noExit) process.exit(1);
   return !by.error.length;
 }
@@ -312,7 +374,7 @@ function canonCheck(content) {
 
 /* ------------------------------------------------------------------ i18n */
 const PRONOUN_TOKENS = new Set(['they', 'them', 'their', 'theirs', 'are', 's']);
-function tokensOf(s) { return [...String(s).matchAll(/\{([^{}]+)\}/g)].map((m) => m[1].trim()); }
+function tokensOf(s) { const t = G.textTokens(s); return t.tokens.concat(t.conds.map((c) => '=' + c)); }
 // A token is "named" if it carries information the translation must keep (names, values).
 function namedTokens(s) { return tokensOf(s).filter((k) => !PRONOUN_TOKENS.has(k.toLowerCase()) && !(k.includes('.') && PRONOUN_TOKENS.has(k.split('.')[1].toLowerCase()))).map((k) => (k[0] === '=' ? '{=…}' : '{' + k + '}')).sort(); }
 function badToken(content, k) {
@@ -444,7 +506,7 @@ function i18nSync(lang) {
 /* ------------------------------------------------------------------ sim */
 // Play one game to its ending with a play style (tools/policies.js). Everything that happened is in
 // eng.s.hist. Throws on a soft-lock (a card with no available option) or a game that never ends.
-function playGame(content, { seed, style, runId, name = 'Sim', onLog = null }) {
+function playGame(content, { seed, style, runId, name = 'Sim', onLog = null, previews = null }) {
   const eng = new Engine(content);
   let r = eng.newGame({ seed, name, runId });
   let steps = 0;
@@ -454,7 +516,11 @@ function playGame(content, { seed, style, runId, name = 'Sim', onLog = null }) {
       if (r.kind === 'month') { r = eng.advance(); continue; }
       const v = r.view;
       if (!v.options.some((o) => !o.disabled)) throw new Error('soft-lock: no available options on ' + v.id);
-      eng.choose(style.pick(eng, v));
+      const key = style.pick(eng, v);
+      // Preview property test (design §8.3): every real outcome lies within its preview.
+      const pv = previews ? eng.preview(v.id, key, v.actor ? v.actor.id : null) : null;
+      const out = eng.choose(key);
+      if (previews) { previews.cards++; if (!Engine.fits(pv, out.deltas)) previews.misses.push({ event: v.id, key, turn: eng.s.turn, actual: out.deltas, paths: pv.paths.map((p) => p.deltas) }); }
       r = eng.advance();
     }
   } finally { if (onLog) onLog(eng); }
@@ -531,13 +597,21 @@ function balance(opts = {}) {
   const { content, errors } = compileAll();
   if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
   const games = opts.games || (opts.quick ? 30 : 100);
-  const styles = opts.quick ? ['random', 'balanced', 'social', 'aggressive'] : ['random', 'cautious', 'social', 'balanced', 'aggressive', 'moneymaxx', 'focused:arcana', 'focused:lore', 'social:lyra'];
+  const styles = opts.quick ? ['random', 'balanced', 'social', 'aggressive'] : ['random', 'cautious', 'social', 'balanced', 'aggressive', 'moneymaxx', 'caster', 'focused:arcana', 'focused:lore', 'social:lyra'];
   const report = { format: 'lumenhold-balance', v: 1, contentHash: contentHash(), createdAt: new Date().toISOString(), games, styles: {}, invariants: [], alarms: [] };
   const fail = (msg) => report.invariants.push(msg), alarm = (msg) => report.alarms.push(msg);
   // Static invariants
   for (const e of Object.values(content.events)) {
     if (e.type === 'menu' && e.options.every((o) => o.when)) fail('menu ' + e.id + ' (' + e.file + ':' + e.line + '): every option has a "when", so it can be empty');
   }
+  // Hard invariant: previews contain the outcomes (random play, many games).
+  const pt = { cards: 0, misses: [] };
+  const ptGames = opts.quick ? 100 : 1000;
+  for (let g = 0; g < ptGames && pt.misses.length < 20; g++) {
+    try { playGame(content, { seed: 99 + g * 104729, style: Policies.get('random'), runId: 'preview-test', previews: pt }); } catch (e) { /* crashes are reported below */ }
+  }
+  report.previewTest = { games: ptGames, cards: pt.cards, misses: pt.misses.length };
+  for (const m of pt.misses.slice(0, 5)) fail('preview miss: ' + m.event + '/' + m.key + ' turn ' + m.turn + ': actual ' + JSON.stringify(m.actual) + ' not within ' + JSON.stringify(m.paths));
   const seenAll = {};
   const origWarn = console.warn; const warns = {}; console.warn = (...a) => { const k = a.join(' '); warns[k] = (warns[k] || 0) + 1; };
   for (const name of styles) {
@@ -571,7 +645,7 @@ function balance(opts = {}) {
   if (never.length) alarm(never.length + ' event(s) never seen by any play style: ' + never.join(', '));
   fs.mkdirSync(path.join(ROOT, 'build'), { recursive: true });
   fs.writeFileSync(path.join(ROOT, 'build', 'balance-report.json'), JSON.stringify(report, null, 1) + '\n');
-  console.log(C.b + 'balance: ' + styles.length + ' play styles × ' + games + ' games' + C.x);
+  console.log(C.b + 'balance: ' + styles.length + ' play styles × ' + games + ' games' + C.x + C.d + ' · preview test: ' + pt.cards + ' choices in ' + ptGames + ' games, ' + pt.misses.length + ' outside their preview' + C.x);
   for (const [name, st] of Object.entries(report.styles)) {
     const top = Object.entries(st.endings).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => k.replace(/^ending_/, '') + ' ' + Math.round(100 * v / Math.max(1, st.games)) + '%').join(', ');
     console.log('  ' + name.padEnd(15) + ' early ' + String(Math.round(100 * st.early / Math.max(1, st.games))).padStart(3) + '%  ' + C.d + top + C.x);
@@ -580,6 +654,35 @@ function balance(opts = {}) {
   report.alarms.forEach((m) => console.log(C.y + 'alarm     ' + C.x + m));
   console.log((report.invariants.length ? C.r : C.g) + report.invariants.length + ' invariant failure(s)' + C.x + ', ' + report.alarms.length + ' alarm(s) — build/balance-report.json');
   return report.invariants.length === 0;
+}
+
+/* ------------------------------------------------------------------ curve */
+// Fits the expected-skill curve E(turn) (design §8.6): the mean skill of the balanced play style at the
+// start of each turn. --write puts it in @balance curve (content/core/balance.grim).
+function curve(opts = {}) {
+  const { content, errors } = compileAll();
+  if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+  const games = opts.games || 100, sums = [], counts = [];
+  for (let g = 0; g < games; g++) {
+    const { eng } = playGame(content, { seed: 31337 + g * 7919, style: Policies.get('balanced'), runId: 'curve' });
+    for (const h of eng.s.hist) if (h.t === 'month' && h.vals) {
+      const sk = content.order.skills.map((k) => h.vals[k] || 0);
+      sums[h.turn - 1] = (sums[h.turn - 1] || 0) + sk.reduce((a, b) => a + b, 0) / sk.length; counts[h.turn - 1] = (counts[h.turn - 1] || 0) + 1;
+    }
+  }
+  const c = sums.map((x, i) => Math.round(x / counts[i]));
+  console.log('E(turn) over ' + games + ' balanced games: ' + c.join(' '));
+  if (opts.write) {
+    const { Rewriter } = require('./rewrite.js');
+    const file = 'content/core/balance.grim';
+    const rw = new Rewriter(ROOT);
+    const n = rw.lines(file).findIndex((l) => /^curve\s*:/.test(l));
+    if (n < 0) { console.error('no curve: line in ' + file); process.exit(1); }
+    rw.edit(file, n + 1, 'curve: ' + c.join(' '));
+    rw.apply();
+    console.log('written to ' + file + ' — rebuild, and refresh the golden baseline if gameplay changed intentionally');
+  }
+  return c;
 }
 
 /* ------------------------------------------------------------------ snapshot / diff */
@@ -786,7 +889,7 @@ const [cmd, ...rest] = process.argv.slice(2);
 const flag = (name) => { const i = rest.indexOf('--' + name); return i >= 0 ? (rest[i + 1] && !rest[i + 1].startsWith('--') ? rest[i + 1] : true) : null; };
 switch (cmd) {
   case 'build': if (build({ check: !!flag('check') }) === false) process.exit(1); break;
-  case 'lint': lint({ verbose: !!flag('verbose') }); break;
+  case 'lint': lint({ verbose: !!flag('verbose'), legacy: !!flag('legacy') }); break;
   case 'sim': { const ok = sim(Number(rest.find((x) => /^\d+$/.test(x))) || 300, { seed: flag('seed') != null ? Number(flag('seed')) : undefined, policy: flag('policy'), lang: flag('lang'), verbose: !!flag('verbose'), log: typeof flag('log') === 'string' ? path.resolve(flag('log')) : null }); if (!ok) process.exit(1); break; }
   case 'i18n': if (rest[0]) i18nSync(rest[0]); else i18nStatus(); break;
   case 'stats': stats(); break;
@@ -809,6 +912,7 @@ switch (cmd) {
     if (ran.length && !flag('dry-run')) console.log('Next: node tools/grim.js build && node tools/grim.js lint && node tools/grim.js diff');
     break;
   }
+  case 'curve': curve({ games: Number(flag('games')) || 100, write: !!flag('write') }); break;
   case 'balance': if (!balance({ quick: !!flag('quick'), games: Number(flag('games')) || 0 })) process.exit(1); break;
   case 'snapshot': snapshot(path.resolve(flag('out') || path.join(ROOT, 'build', 'snapshots', (rest.find((x) => !x.startsWith('--') && rest[rest.indexOf(x) - 1] !== '--out') || 'latest') + '.json'))); break;
   case 'diff': {

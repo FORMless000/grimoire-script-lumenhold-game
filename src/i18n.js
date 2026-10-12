@@ -57,7 +57,9 @@
     'side.monthsLeft': '{n} mo',
     'side.noPeople': "You haven't really met anyone yet.",
     'side.relationship': 'Relationship {n}',
-    'side.romance': 'Romance {n}',
+    'side.romance': 'Spark {n}',
+    'side.spells': 'Spells',
+    'side.spellCost': '{n} mana',
     'side.emptyJournal': 'Your story is yet unwritten.',
     'journal.when': '{month} · Y{year}',
 
@@ -95,11 +97,29 @@
     'check.success': 'success',
     'check.failed': 'failed',
     'chip.rel': '{name} {delta}',
-    'chip.love': '{name} (romance) {delta}',
+    'chip.love': '{name} (spark) {delta}',
     'note.meet': 'You met {name}.',
     'note.bond': '{name}: {status}',
     'note.gain': '+ {state}',
     'note.lose': '− {state}',
+    'note.spell': 'New spell: {spell} {level}',
+    'note.fact': 'You learned something about {name}.',
+    'check.challengeChip': '{kind} ({p}%) · {result}',
+    'challenge.duel': 'Duel',
+    'challenge.negotiate': 'Negotiation',
+    'challenge.deceive': 'Deception',
+    'challenge.exam': 'Exam',
+    'challenge.research': 'Research',
+    'challenge.brew': 'Brewing',
+    'challenge.enchant': 'Enchanting',
+    'challenge.win': 'win',
+    'challenge.partial': 'partial',
+    'challenge.lose': 'lose',
+    'spell.button': '{spell} {level} · {cost} mana',
+    'spell.short': 'Not enough mana',
+    'preview.follows': 'Something follows from this.',
+    'title.oldSave': 'Your saved game was from an older version of the game and can no longer be loaded. Its run log was kept.',
+    'slots.tooOld': 'From an older version; can’t be loaded',
     'outcome.tap': 'tap or swipe to continue',
     'outcome.continue': 'Continue',
 
@@ -249,6 +269,7 @@
     for (const st of effects) {
       if (st.t === 'say') fn(st);
       if (st.t === 'if') { st.branches.forEach((b) => walkSays(b.body, fn)); walkSays(st.else, fn); }
+      else if (st.t === 'challenge') { walkSays(st.win, fn); walkSays(st.partial, fn); walkSays(st.lose, fn); }
       else if (st.body) { walkSays(st.body, fn); walkSays(st.else, fn); }
     }
   }

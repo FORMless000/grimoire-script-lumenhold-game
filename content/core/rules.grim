@@ -16,7 +16,9 @@ social_per_month: 1
 min_random_per_month: 1
 intro: The sky-barge lurches. Below, the lake glitters; above, the seven towers of Lumenhold Academy pierce the clouds. You have a trunk, a borrowed wand and a letter of acceptance with your name spelled wrong. Three years begin now.
 
-# ---------------- Resources (meters at the top of the screen) ----------------
+# ---------------- Resources ----------------
+# The top bars (design §8.1) are Health · Mood · Mana · Renown · Alignment, in this order;
+# `display: panel` resources (Crowns, Standing) are shown in the You panel instead.
 
 @resource health
 name: Health
@@ -26,6 +28,7 @@ max: 100
 start: 70
 color: #d9606a
 desc: Your body. At zero you collapse.
+warn_below: 20
 on_zero:
   queue crisis_collapse now
 
@@ -37,16 +40,48 @@ max: 100
 start: 60
 color: #e6b84a
 desc: Your spirits. At zero, despair takes hold.
+warn_below: 20
 on_zero:
   queue crisis_despair now
 
+@resource mana
+name: Mana
+icon: sparkle
+min: 0
+max: 40 + arcana / 2
+start: 30
+color: #5fa8e8
+desc: The magic you can spend on spells. Refills each month, faster the stronger your Arcana.
+warn_below: 8
+
+@resource renown
+name: Renown
+icon: star
+min: 0
+max: 100
+start: 5
+color: #b58ae0
+desc: How much the academy talks about you — for better or worse. Fades a little every month.
+
+@resource alignment
+name: Alignment
+icon: moon
+min: -100
+max: 100
+start: 0
+color: #c9b8ff
+drag: -50 0.5
+desc: Lumen or Hollow: the light you serve, or the dark that has noticed you. Deep in the Hollow, the way back is slow.
+
 @resource gold
-name: Gold
+name: Crowns
 icon: coin
 min: 0
-max: 999
+max: 99999
 start: 30
 color: #d7a948
+display: panel
+warn_below: 6
 desc: Crowns in your purse. Rent is due every month.
 on_zero:
   flag broke
@@ -58,18 +93,11 @@ min: 0
 max: 100
 start: 50
 color: #6aa0e0
+display: panel
+warn_below: 20
 desc: Your academic standing. At zero you face the disciplinary board.
 on_zero:
   queue crisis_probation now
-
-@resource renown
-name: Renown
-icon: star
-min: 0
-max: 100
-start: 5
-color: #b58ae0
-desc: How much the academy talks about you — for better or worse.
 
 # ---------------- Skills ----------------
 
@@ -173,9 +201,16 @@ do:
 @hook fame_fades
 on: month_start
 label: Fading gossip
-when: renown > 40 and turn % 3 == 0
+when: turn > 1 and renown >= 5
 do:
-  renown -2
+  renown -= floor(renown * 0.2)
+
+@hook mana_regen
+on: month_start
+label: Mana returns
+when: turn > 1
+do:
+  mana += 10 + arcana / 10
 
 # ---------------- Game start ----------------
 

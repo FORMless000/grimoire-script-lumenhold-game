@@ -1,0 +1,261 @@
+# ============================================================
+#  Phase 2a vertical slice (design §13): ten events that use every
+#  construct of the new event format — classes and tones, size
+#  tiers and presets, challenges with partial results and `vs`,
+#  spells and the swipe-up option, inline text variation, facts,
+#  memories and relations between characters — and teach two
+#  spells, Ward and Flame.
+# ============================================================
+
+@event slice_ward_lesson
+title: The First Ward
+class: milestone
+tone: warm
+actor: thorne
+when: met(thorne) and turn >= 3 and spell_level(ward) == 0
+weight: 24
+art: shield
+tags: class study magic
+scene: An office lit by one lamp, an old professor holding a pale shell of light between his palms like a soap bubble.
+text: Professor Thorne holds up a hand and the lamplight bends around it into a pale shell. "A ward," he says. "{~It stops one blow.|One blow. That's all it ever stops.} Learn it properly or not at all."
+> left: Practise until it holds
+  grind arcana
+  learn_spell ward
+  rel thorne +small
+  memory: confided thorne
+  say: By midnight your shell holds for a full breath. Thorne says "Hm," which from him is a standing ovation.
+> right: Ask about the theory first
+  lore +small
+  mood -tiny
+  rel thorne +tiny
+  say: He talks for an hour about lattices and intent. You understand perhaps a third of it. "Come back when the third is a half," he says.
+
+@event slice_candle_flame
+title: Borrowed Fire
+class: milestone
+tone: light
+actor: lyra
+when: met(lyra) and turn >= 4 and spell_level(flame) == 0
+weight: 24
+art: flame
+tags: class magic rival
+scene: A crimson-haired student balancing a flame on one fingertip while another student squints at a sputtering candle.
+text: Lyra watches you fail to light a candle for the third time. "You're asking it," she says. "Fire doesn't want to be asked. {rel(lyra) >= 20: Here — watch my hand.|Watch, if you can keep up.}"
+> left: Watch her hand
+  learn_spell flame
+  rel lyra +small
+  spark lyra +tiny
+  learn lyra.prodigy
+  say: She doesn't explain. She just does it, slowly, twice. On the third try your candle catches, and so, very briefly, does your sleeve.
+> right: Challenge her to teach you properly
+  challenge duel vs lyra.arcana medium:
+    win:
+      learn_spell flame
+      rel lyra +medium
+      renown +small
+      say: You hold your own long enough that she stops and actually explains. "Fine," she says. "You'll do."
+    partial:
+      learn_spell flame
+      health -small
+      say: She wins, but she shows you the trick on the way out, as if it were nothing.
+    lose:
+      health -small
+      mood -small
+      say: You end up on the floor with singed eyebrows. Lyra steps over you. "Ask better," she says.
+
+@event slice_stray_cold
+title: The Drift
+class: incident
+tone: eerie
+when: turn >= 5 and hollow >= 0
+weight: 16
+art: snow
+tags: mystery danger
+scene: A corridor at night where frost spreads across the flagstones toward a student holding a candle.
+text: Cold drifts down the corridor like a tide coming in, and the torches lean away from it. {spell_level(ward) > 0: Your ward prickles at your fingertips.|You have nothing to hold it back.}
+> left: Run for the stairs
+  health -small
+  mood -small
+  say: You make the stairs with frost in your hair. Behind you, the corridor sighs and is just a corridor again.
+> right: Stand and study it
+  challenge research hard:
+    win:
+      lore +medium
+      alignment +small
+      say: It's not weather. It's attention: something under the lake, looking. You write down everything before your hands warm up.
+    lose:
+      health -medium
+      say: You learn exactly one thing, which is how cold cold can be. Sister Amaranth wraps you in four blankets.
+> up[ward]: Raise a ward
+  mood +small
+  alignment +tiny
+  say: Your ward flares, pale and steady. The cold breaks against it and slides away, the way a wave gives up on a rock.
+
+@event slice_late_lamps
+title: The Last Lamp
+class: routine
+tone: light
+when: turn >= 2
+weight: 14
+repeat: 6
+art: candle
+tags: study
+scene: The library at closing time, one desk still lit, a cat asleep on an open book.
+text: {&The library is emptying.|The library is emptying again.|The library empties around you, as usual.} Footnote is asleep on the book you need, and the last lamp is yours if you want it.
+> left: Keep the lamp
+  grind lore
+  say: {~You read until the words swim.|You read until Footnote leaves in protest.|You read until the night porter coughs pointedly.}
+> right: Go to bed
+  rest
+  gold -tiny
+  say: You buy a cocoa on the way and sleep like a stone. The book will still be there. So, probably, will Footnote.
+
+@event slice_quarrel
+title: A Quarrel in the Snow
+class: routine
+tone: tense
+actor: kael
+when: met(kael) and met(lyra) and turn >= 6
+weight: 16
+art: snow
+tags: social rival
+scene: Two students facing each other in a snowy courtyard, one breathing frost, the other with sparks at her fingertips.
+text: Kael and Lyra are facing each other in the courtyard, and the snow between them is half melted, half frozen. "Say it again," Lyra says. Kael doesn't. He just looks at you.
+> left: Step between them
+  npc_rel lyra kael +small
+  rel kael +small
+  health -tiny
+  memory: protected kael
+  say: Lyra's sparks catch your sleeve, Kael's frost puts it out. They both stare at you. The fight, somehow, is over.
+> right: Walk past
+  npc_rel lyra kael -medium
+  rel kael -small
+  mood -tiny
+  say: Behind you, something cracks: ice, or temper. At dinner they sit at opposite ends of the hall.
+
+@event slice_burned_letter
+title: Ashes in the Grate
+class: routine
+tone: tense
+actor: lyra
+when: rel(lyra) >= 10 and not knows(lyra.mother)
+weight: 18
+art: letter
+tags: social
+scene: A fireplace where the corner of a letter with a black seal is curling into flame.
+text: Lyra is feeding a letter into the common-room fire, a corner at a time. Black seal. She doesn't look round. "It says 'well done'," she says. "It doesn't. I'm checking whether it burns better if I pretend."
+> left: Sit with her
+  learn lyra.mother
+  rel lyra +medium
+  mood -small
+  memory: confided lyra
+  say: You watch it burn together. "She's never said it," Lyra says, to the fire. "Not once." You don't say anything, and that seems to be right.
+> right: Make a joke
+  rel lyra -small
+  mood +tiny
+  say: She almost smiles. Then she puts the rest of the letter in at once and leaves you with the smoke.
+
+@event slice_hollow_whisper
+title: A Voice in the Water
+class: story
+tone: eerie
+when: turn >= 7
+weight: 12
+art: wave
+tags: mystery hollowstar
+chain: hollowstar
+scene: A student kneeling at the edge of a still lake at night, their reflection smiling when they are not.
+text: At the lakeshore your reflection speaks before you do. "You're running low," it says, kindly. "{mana < 15: I could fill you up.|I could make you stronger.} Just say yes. Saying yes costs nothing."
+> left: Say yes
+  mana +large
+  alignment -medium
+  say: Cold pours into you, generous and endless. When you stand, your reflection is a little slower to stand with you.
+> right: Walk away
+  alignment +small
+  mood -small
+  say: The reflection's smile stays on the water after you've gone. You don't look back. You can feel it not minding.
+
+@event slice_market_haggle
+title: The Spice Stall
+class: routine
+tone: light
+when: turn >= 3
+weight: 12
+repeat: 8
+art: coin
+tags: money
+scene: A crowded village market stall heaped with jars of glowing spices and a stall-holder with an enormous moustache.
+text: The stall-holder in the village market wants twenty crowns for a jar of starpepper. Mabel swears by it for colds. The stall-holder swears by his prices.
+> left: Haggle
+  challenge negotiate easy:
+    win:
+      gold -small
+      health +small
+      say: Twelve crowns and a compliment on your persistence. Mabel says you've been robbed, but only slightly.
+    partial:
+      gold -medium
+      health +small
+      say: Fifteen crowns. He throws in a free sneeze's worth of pepper, which you did not want.
+    lose:
+      gold -large
+      mood -tiny
+      say: You pay full price and somehow agree to a second jar. He waves you off like a nephew.
+> right: Leave it
+  mood -tiny
+  say: You walk on. You catch a cold the next week, out of spite.
+
+@event slice_wager
+title: The Tower Wager
+class: windfall
+tone: light
+when: renown >= 3 and turn >= 4
+weight: 10
+art: dice
+tags: social
+scene: A knot of students around a table where coins and a pocket watch are being stacked as bets.
+text: Half the common room is betting on whether you can climb the clock tower before the bell. Corvin is holding the purse, which is either reassuring or not.
+> left: Climb
+  risk renown
+  vigor +tiny
+  say: {~You make it with a heartbeat to spare.|The bell rings as your hand touches the top.} Whatever happens next, they'll tell it differently.
+> right: Decline politely
+  renown -tiny
+  say: The crowd groans. Corvin pockets the purse thoughtfully and you decide not to ask.
+
+@event slice_frost_duel
+title: Frost Against Fire
+class: milestone
+tone: tense
+actor: kael
+when: met(kael) and rel(kael) >= 15 and turn >= 8
+weight: 20
+art: duel
+tags: duel social
+scene: A duelling ring at dawn, frost spreading from one side and a faint warmth glowing from the other.
+text: Kael asks for a practice duel, which for him is an astonishing number of words. "Not to win," he adds. "I want to see what you do when it's cold."
+> left: Duel him straight
+  memory: fought kael
+  challenge duel vs kael.arcana hard:
+    win:
+      renown +small
+      rel kael +medium
+      spark kael +small
+      say: You win by a whisker, breathing steam. Kael bows, and his hands, for once, are warm when he shakes yours.
+    partial:
+      rel kael +small
+      health -small
+      say: A draw, of sorts: you're both on the ground. He laughs, a short surprised sound, and helps you up.
+    lose:
+      health -medium
+      rel kael +small
+      say: He wins, gently. "You stopped when it got cold," he says. "Don't."
+> right: Decline; offer him tea instead
+  rel kael +small
+  mood +tiny
+  say: He thinks about this for a long time. "Tea," he says. It freezes in his cup. You make him another.
+> up[flame]: Answer with fire
+  rel kael +medium
+  spark kael +small
+  renown +small
+  memory: fought kael
+  say: Your flame meets his frost in a column of steam that fills the ring. When it clears, Kael is smiling at you, properly, for the first time.

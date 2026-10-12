@@ -295,6 +295,27 @@ details.adv input { margin-top: 8px; }
 .linkish { background: none; border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; font-size: 12px; color: var(--gold-2); }
 .linkish:hover { border-color: var(--gold); }
 
+/* ---------------- Previews, spells, bars (v0.3) ---------------- */
+.pv { display: flex; flex-wrap: wrap; gap: 2px 6px; margin-top: 3px; font-size: 11px; font-weight: 600; opacity: .92; }
+.pv i { font-style: normal; display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
+.pv i.pos { color: var(--good); } .pv i.neg { color: var(--bad); } .pv i.more { color: var(--muted); }
+.pv .ico { width: 12px; height: 12px; }
+.pv.multi { flex-direction: column; gap: 1px; }
+.pvl { display: flex; flex-wrap: wrap; gap: 2px 6px; align-items: center; }
+.pvl b { font-weight: 700; color: var(--gold-2); margin-right: 2px; }
+.opt .pv { justify-content: flex-start; }
+.choices { flex-wrap: wrap; }
+.choice.up { flex: 1 1 100%; justify-content: center; border-color: rgba(120, 170, 255, .45); background: linear-gradient(180deg, rgba(60, 90, 160, .35), rgba(30, 40, 90, .35)); }
+.choice.up:hover:not(:disabled) { border-color: #8fb8ff; }
+.chip.check-part { background: rgba(230, 184, 74, .18); color: var(--gold-2); }
+.meter.neg .fill { background: #7a5ac8; }
+.panel-res { display: flex; gap: 8px; margin: 2px 0 10px; flex-wrap: wrap; }
+.pres { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 10px; font-size: 13px; color: var(--muted); }
+.pres b { color: var(--text); font-variant-numeric: tabular-nums; }
+.pres.low { border-color: var(--bad); }
+.state.spell .left { color: #8fb8ff; }
+.title-form .notice { margin-top: 14px; padding: 10px 12px; border: 1px solid rgba(255, 138, 128, .4); border-radius: 10px; font-size: 13px; color: var(--text); background: rgba(255, 138, 128, .08); }
+
 /* ---------------- Saved games ---------------- */
 .btn.ghost-btn { background: transparent; }
 .slot-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }

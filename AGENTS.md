@@ -164,6 +164,8 @@ Minor named figures you may reuse: Professor Marisol (Tidecalling), Professor Ve
 
 ## Balance guidelines
 
+**New content uses size tiers and presets** (`content/core/balance.grim`, `docs/authoring/presets.md`), `class:`/`tone:`, and `challenge` instead of `check`; raw numbers below still apply to legacy content until phase 3.
+
 | Change | Small | Typical | Big (rare, earned) |
 |---|---|---|---|
 | health / mood | ±2–4 | ±5–8 | ±10–20 |
