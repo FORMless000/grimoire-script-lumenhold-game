@@ -1,0 +1,36 @@
+# Facts about Lyra Vaneshade (design §10.1). Tiers: surface (known on meeting),
+# personal (closeness), secret (specific events). Shown in the People panel in phase 4.
+
+@fact lyra.prodigy
+tier: surface
+text: The pyromancy prodigy of House Vaneshade. Everyone knows the name, and she makes sure of it.
+
+@fact lyra.toast
+tier: personal
+unlock: seen(lyra_toast) > 0
+text: She can incinerate a target at forty paces. She cannot make toast.
+
+@fact lyra.mother
+tier: personal
+unlock: rel(lyra) >= 30
+text: Her mother has never once told her "well done".
+
+@fact lyra.second_place
+tier: personal
+unlock: seen(lyra_letter) > 0
+text: She came second in the Winter Trials once. Her mother wrote to ask who beat her.
+
+@fact lyra.burnout
+tier: secret
+unlock: seen(lyra_burnout) > 0
+text: She studies until she collapses, and begs you not to let her mother find out.
+
+@fact lyra.rival
+tier: personal
+unlock: bond(lyra) == "rival"
+text: You are the only person here who makes her better. She hates it. She doesn't want it to stop.
+
+@fact lyra.inheritance
+tier: secret
+unlock: seen(lyra_family_ultimatum) > 0
+text: Her mother threatened her inheritance over you. She set the letter on fire.

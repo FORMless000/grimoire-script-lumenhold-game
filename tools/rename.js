@@ -1,8 +1,8 @@
 /*
  * Rename an id everywhere it is referenced: `node tools/grim.js rename <kind> <old> <new> [--dry-run]`.
  *
- * Kinds: event, state, npc, flag, var, ending. (place, track, spell, fact and arc join when those
- * blocks exist.) Content (.grim) and translation (.lang) files are rewritten line by line:
+ * Kinds: event, state, npc, flag, var, ending, place, track, spell, arc. Content (.grim) and translation
+ * (.lang) files are rewritten line by line:
  *   - block headers `@kind old`, and `.lang` block headers;
  *   - code: statements, `actor:`, `when:` / `weight:`, conditions, delays (whole words, not in strings);
  *   - text: only inside {tokens} ({old}, {old.their}, {=… old …}); prose is never touched;
@@ -20,10 +20,11 @@ const I18n = require('../src/i18n.js');
 const { project } = require('./project.js');
 const { Rewriter } = require('./rewrite.js');
 
-const KINDS = ['event', 'state', 'npc', 'flag', 'var', 'ending'];
-const HEADER_KINDS = { event: 'events', state: 'states', npc: 'npcs', ending: 'endings' };
+const KINDS = ['event', 'state', 'npc', 'flag', 'var', 'ending', 'place', 'track', 'spell', 'arc'];
+const HEADER_KINDS = { event: 'events', state: 'states', npc: 'npcs', ending: 'endings', place: 'places', track: 'tracks', spell: 'spells', arc: 'arcs' };
 const SPECIAL = new Set(['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month']);
-const CODE_PROPS = new Set(['actor', 'when', 'weight']);
+// Properties whose values are ids or expressions (renamed as whole words); everything else is text.
+const CODE_PROPS = new Set(['actor', 'when', 'weight', 'track', 'place', 'teaches', 'discipline', 'schedule', 'relations', 'members', 'lead', 'npc', 'cast', 'event', 'discover', 'closed_when', 'hinted_when', 'unlock', 'prereq', 'clues', 'key_clues']);
 const PRONOUNS = new Set(['they', 'them', 'their', 'theirs', 'are', 's', 'name', 'fullname', 'title', 'house']);
 
 // Every reference in compiled content, as [kind, id] pairs (definitions included).
@@ -41,7 +42,7 @@ function references(content) {
         if (a.t !== 'sym') return;
         const k = kinds[i];
         if (k === 'flagOrState') add(content.states[a.v] ? 'state' : 'flag', a.v);
-        else if (k === 'flag' || k === 'state' || k === 'npc' || k === 'event') add(k, a.v);
+        else if (k === 'flag' || k === 'state' || k === 'npc' || k === 'event' || k === 'track') add(k, a.v);
       });
     });
   };
@@ -71,6 +72,19 @@ function references(content) {
     }
   });
   for (const [kind, col] of Object.entries(HEADER_KINDS)) for (const id of Object.keys(content[col])) add(kind, id);
+  // Worldbook references in data properties
+  for (const d of Object.values(content.places || {})) { if (d.track) add('track', d.track); }
+  for (const d of Object.values(content.tracks || {})) { if (d.place) add('place', d.place); if (d.lead) add('npc', d.lead); (d.teaches || []).forEach((x) => add('spell', x.spell)); scanExpr(d.prereq); }
+  for (const d of Object.values(content.spells || {})) if (d.discipline) add('track', d.discipline);
+  for (const d of Object.values(content.facts || {})) { add('npc', d.npc || d.id.split('.')[0]); scanExpr(d.unlock); }
+  for (const d of Object.values(content.factions || {})) (d.members || []).forEach((m) => add('npc', m));
+  for (const d of Object.values(content.arcs || {})) (d.cast || []).forEach((m) => add('npc', m));
+  for (const d of Object.values(content.timeline || {})) if (d.event) add('event', d.event);
+  for (const d of Object.values(content.places || {})) { scanExpr(d.discover); scanExpr(d.closed_when); scanExpr(d.hinted_when); }
+  for (const n of Object.values(content.npcs)) {
+    (n.schedule || []).forEach((x) => add('place', x.place));
+    Object.keys(n.relations || {}).forEach((id) => add('npc', id));
+  }
   for (const col of ['events', 'states', 'npcs', 'endings', 'hooks', 'resources']) {
     for (const d of Object.values(content[col])) {
       for (const f of ['title', 'text', 'scene', 'desc', 'name', 'label']) if (typeof d[f] === 'string') scanText(d[f]);
@@ -114,7 +128,7 @@ function planGrim(text, kind, from, to) {
     if (indent === 0) {
       region = null; optionBase = null;
       let m;
-      if ((m = c.match(/^@([a-z]+)(\s+)([a-z_][a-z0-9_]*)\s*$/))) { blockKind = m[1]; if (m[1] === kind && m[3] === from) next = '@' + m[1] + m[2] + to; }
+      if ((m = c.match(/^@([a-z]+)(\s+)([a-z_][a-z0-9_.]*)\s*$/))) { blockKind = m[1]; if (m[1] === kind && m[3] === from) next = '@' + m[1] + m[2] + to; else if (kind === 'npc' && m[1] === 'fact' && m[3].startsWith(from + '.')) next = '@fact' + m[2] + to + m[3].slice(from.length); }
       else if (c[0] === '>') { region = 'option'; next = raw.replace(/^(>\s*[a-z_][a-z0-9_]*\s*:)(.*)$/, (x, head, label) => head + replaceTokens(label, from, to)); }
       else if ((m = raw.match(/^([a-z_][a-z0-9_]*)(\s*:)(.*)$/))) {
         const schema = G.SCHEMA[blockKind];
@@ -179,9 +193,10 @@ function rename(root, kind, from, to, { dryRun = false } = {}) {
       src.text.split('\n').forEach((raw, i) => {
         const c = raw.trim();
         let next = raw, m;
-        if ((m = c.match(/^@([a-z]+)(?:\s+([a-z_][a-z0-9_]*))?$/))) {
+        if ((m = c.match(/^@([a-z]+)(?:\s+([a-z_][a-z0-9_.]*))?$/))) {
           block = m[1] + (m[2] ? ':' + m[2] : '');
           if (blockOld && block === blockOld) { next = raw.replace(new RegExp('(@' + kind + '\\s+)' + from + '\\b'), '$1' + to); block = kind + ':' + to; }
+          else if (kind === 'npc' && m[1] === 'fact' && m[2] && m[2].startsWith(from + '.')) { const nid = to + m[2].slice(from.length); next = raw.replace('@fact ' + m[2], '@fact ' + nid); block = 'fact:' + nid; }
         } else if (c.startsWith('# en:')) next = replaceTokens(raw, from, to);
         else if ((m = raw.match(/^(\s*)([A-Za-z0-9_.@-]+)(\s+\[([0-9a-f]{6})\])?(\s*=\s?)(.*)$/))) {
           let key = m[2];

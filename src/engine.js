@@ -192,6 +192,9 @@
             case 'floor': return Math.floor(a[0]);
             case 'round': return Math.round(a[0]);
             case 'clamp': return clamp(a[0], a[1], a[2]);
+            // Tracks and arc clues arrive in phase 2b (design §7, §10.6); until then nothing is passed or found.
+            case 'passed': return false;
+            case 'clue': return false;
           }
           return 0;
         },

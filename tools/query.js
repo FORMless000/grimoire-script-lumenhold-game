@@ -11,9 +11,10 @@
 'use strict';
 const G = require('../src/grimoire.js');
 
-const BLOCKS = ['event', 'state', 'npc', 'ending', 'hook', 'resource', 'skill'];
+const BLOCKS = ['event', 'state', 'npc', 'ending', 'hook', 'resource', 'skill', 'place', 'track', 'spell', 'fact', 'archetype', 'faction', 'arc', 'lore', 'timeline', 'vocab'];
 const STATEMENTS = ['say', 'if', 'chance', 'check', 'flag', 'unflag', 'gain', 'lose', 'queue', 'rel', 'love', 'bond', 'meet', 'end', 'delta', 'assign'];
-const COLLECTIONS = { event: 'events', state: 'states', npc: 'npcs', ending: 'endings', hook: 'hooks', resource: 'resources', skill: 'skills' };
+const COLLECTIONS = { event: 'events', state: 'states', npc: 'npcs', ending: 'endings', hook: 'hooks', resource: 'resources', skill: 'skills',
+  place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', lore: 'lore', timeline: 'timeline', vocab: 'vocab' };
 const EFFECT_SLOTS = ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero'];
 
 // Documented per node kind (printed by `grim query --fields`).
@@ -22,7 +23,13 @@ const FIELDS = {
   '(statements)': 'option (key, or "" outside options) slot ("option", "on_show", "tick", "do", …) depth (0 = top level) trigger actor (of the enclosing event)',
   event: 'id title text_len trigger type actor weight weight_src repeat priority chain when_src options',
   state: 'id name kind group duration hidden',
-  npc: 'id name romance start_rel',
+  npc: 'id name romance start_rel age role year voice (has(trait) also matches traits and interests)',
+  place: 'id name region map x y kind track discover_src',
+  track: 'id name kind skill levels place lead due hidden',
+  spell: 'id name discipline',
+  fact: 'id npc tier unlock_src text len',
+  'lore': 'id canon keys (has(key) matches a key) text len',
+  'arc, faction, archetype, timeline, vocab': 'id name canon kind date event',
   ending: 'id title kind priority when_src',
   hook: 'id on when_src',
   resource: 'id name min max start',
@@ -85,6 +92,12 @@ function blockFields(kind, d) {
     case 'hook': return { ...base, on: d.on, when_src: d.when ? d.when.src : null };
     case 'resource': return { ...base, name: d.name, min: d.min == null ? 0 : d.min, max: d.max == null ? 100 : d.max, start: d.start };
     case 'skill': return { ...base, name: d.name, start: d.start || 0, max: d.max == null ? 100 : d.max };
+    case 'place': return { ...base, name: d.name, region: d.region || null, map: d.map ? d.map.map : null, x: d.map ? d.map.x : null, y: d.map ? d.map.y : null, kind: d.kind || 'public', track: d.track || null, discover_src: d.discover ? d.discover.src : null };
+    case 'track': return { ...base, name: d.name, kind: d.kind, skill: [].concat(d.skill || []).join(' '), levels: d.levels || null, place: d.place || null, lead: d.lead || null, due: d.due || null, hidden: !!d.hidden };
+    case 'spell': return { ...base, name: d.name, discipline: d.discipline || null };
+    case 'fact': return { ...base, npc: d.npc || d.id.split('.')[0], tier: d.tier || null, unlock_src: d.unlock ? d.unlock.src : null, text: d.text, len: (d.text || '').length };
+    case 'lore': return { ...base, canon: d.canon || null, keys: (d.keys || []).join(', '), text: d.text, len: (d.text || '').length };
+    case 'arc': case 'faction': case 'archetype': case 'timeline': case 'vocab': return { ...base, name: d.name || null, canon: d.canon || null, kind: d.kind || null, date: d.date || null, event: d.event || null };
   }
   return base;
 }
@@ -93,7 +106,7 @@ function rows(content) {
   const out = [];
   for (const kind of BLOCKS) {
     for (const d of Object.values(content[COLLECTIONS[kind]])) {
-      const common = { file: d.file, block: d.id, block_kind: kind, tags: d.tags || [] };
+      const common = { file: d.file, block: d.id, block_kind: kind, tags: [].concat(d.tags || [], d.traits || [], d.interests || [], kind === 'lore' ? d.keys || [] : []) };
       out.push({ node: kind, line: d.line, ...common, ...blockFields(kind, d) });
       const ctx = { ...common, trigger: d.trigger || null, actor: d.actor || null };
       const walk = (effects, slot, option, depth) => {

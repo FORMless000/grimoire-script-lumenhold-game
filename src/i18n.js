@@ -187,7 +187,7 @@
     String(text).replace(/\r\n?/g, '\n').split('\n').forEach((raw, i) => {
       const line = raw.trim();
       if (!line || line.startsWith('#')) return;
-      let m = line.match(/^@([a-z]+)(?:\s+([a-z_][a-z0-9_]*))?$/);
+      let m = line.match(/^@([a-z]+)(?:\s+([a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)?))?$/);
       if (m) {
         cur = m[1] + (m[2] ? ':' + m[2] : '');
         if (!out.blocks[cur]) { out.blocks[cur] = {}; out.order.push(cur); }
@@ -234,6 +234,13 @@
     event: ['title', 'text', 'scene'],
     ending: ['title', 'text', 'scene'],
     hook: ['label'],
+    // Worldbook text players will see (lore, vocab, archetypes and timeline are authoring context only).
+    place: ['name', 'desc', 'hint'],
+    track: ['name', 'level_names', 'ranks', 'desc'],
+    spell: ['name', 'desc'],
+    fact: ['text'],
+    faction: ['name', 'desc'],
+    arc: ['name', 'desc'],
   };
   const EFFECT_FIELDS = { resource: ['on_zero'], state: ['on_add', 'tick', 'on_expire', 'on_remove'], hook: ['do'], event: ['on_show'] };
 
@@ -250,7 +257,7 @@
     const defs = [];
     const g = content.game || {};
     defs.push(g.block ? g : Object.assign({ block: 'game', id: 'game' }, g));
-    for (const col of ['resources', 'skills', 'npcs', 'states', 'events', 'endings', 'hooks']) defs.push(...Object.values(content[col] || {}));
+    for (const col of ['resources', 'skills', 'npcs', 'states', 'events', 'endings', 'hooks', 'places', 'tracks', 'spells', 'facts', 'factions', 'arcs']) defs.push(...Object.values(content[col] || {}));
     defs.sort((a, b) => (a.file || '').localeCompare(b.file || '') || (a.line || 0) - (b.line || 0));
     for (const d of defs) {
       const kind = d.block || 'game';

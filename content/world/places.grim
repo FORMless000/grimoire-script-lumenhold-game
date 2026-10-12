@@ -1,0 +1,427 @@
+# ============================================================
+#  Places (design §6.1). Positions are on the campus map
+#  (960 × 680, see docs/map-concept.svg): the castle stands on the
+#  north shore of the Mirror Lake, the village to the south-east,
+#  the Whisperwood to the west. Data only until phase 2b.
+#
+#  open:      the slots a place can be visited in
+#  discover:  when it becomes visible (omit for places open from the start)
+#  hint:      teaser shown while hinted (hinted_when) but not yet discovered
+# ============================================================
+
+# ---------------- Public from the start ----------------
+
+@place courtyard
+name: The Courtyard
+region: castle
+map: campus 585,278
+kind: public
+open: morning noon afternoon evening night
+art: tower
+desc: Flagstones worn smooth by three centuries of students, a fountain that freezes when it shouldn't, and the best gossip in the castle.
+
+@place library
+name: The Library
+region: castle
+map: campus 380,275
+kind: public
+track: library_assistant
+open: morning noon afternoon evening night
+art: book
+desc: Seven floors of shelves that rearrange themselves when nobody is looking. Footnote the cat keeps order.
+
+@place refectory
+name: The Refectory
+region: castle
+map: campus 470,278
+kind: public
+open: morning noon evening
+art: meal
+desc: Long tables, longer benches, and soup that tastes faintly of whatever you're homesick for.
+
+@place lakeshore
+name: The Lakeshore
+region: grounds
+map: campus 480,505
+kind: public
+open: morning noon afternoon evening night midnight
+art: wave
+desc: The Mirror Lake lies so still it shows the towers upside down. On some nights it shows other things.
+
+@place village
+name: The Village
+region: village
+map: campus 720,520
+kind: public
+open: afternoon evening
+art: house
+desc: A barge ride across the lake: crooked roofs, a market square and shopkeepers who have seen every kind of student.
+
+# ---------------- Castle ----------------
+
+@place lecture_tower
+name: The Lecture Tower
+region: castle
+map: campus 420,180
+kind: public
+open: morning noon afternoon
+art: scroll
+desc: Spiral lecture halls stacked one above another. Evocation on the lower floors, where scorch marks are expected; Umbral Theory at the top, where the lamps burn dim.
+
+@place observatory
+name: The Observatory
+region: castle
+map: campus 600,175
+kind: public
+open: evening night midnight
+art: planet
+desc: A brass dome at the top of the east tower. The great telescope points wherever it likes; usually that is the right place.
+
+@place great_hall
+name: The Great Hall
+region: castle
+map: campus 455,215
+kind: public
+open: noon evening
+art: crown
+desc: Floating candles, a vaulted ceiling that shows tomorrow's weather, and the stage where the choir rehearses and the Midwinter Ball is held.
+
+@place infirmary
+name: The Infirmary
+region: castle
+map: campus 530,200
+kind: public
+open: morning noon afternoon evening night midnight
+art: potion
+desc: Clean white beds, a cupboard of tonics and Sister Amaranth, who has seen every kind of injury and believes none of the excuses.
+
+@place alchemy_lab
+name: The Alchemy Laboratory
+region: castle
+map: campus 555,240
+kind: public
+open: morning afternoon
+art: cauldron
+desc: Long benches, cauldrons in every size, and a ventilation charm that has given up on the third floor.
+
+@place workshop
+name: Mira's Workshop
+region: castle
+map: campus 615,235
+kind: public
+open: afternoon evening night
+discover: met(mira)
+hint: Something clanks and hums behind the west-wing tapestry.
+hinted_when: turn >= 2
+art: gear
+desc: A former classroom full of springs, gears, half-finished machines and the smell of solder. Fire buckets by the door, on the faculty's orders.
+
+@place job_board
+name: The Job Board
+region: castle
+map: campus 520,262
+kind: public
+open: morning noon afternoon
+art: paper
+desc: A cork board in the entrance hall layered with notices: jobs, lost familiars, club recruitment and the occasional ransom note for a sock.
+
+@place ledger_office
+name: The Lumen Ledger Office
+region: castle
+map: campus 395,230
+kind: club
+track: lumen_ledger
+open: afternoon evening night
+discover: has(club_ledger) or met(nessa)
+art: paper
+desc: A cramped room under the library stairs, walls papered with old front pages. The printing press groans like a dragon on deadline night.
+
+@place headmistress_tower
+name: The Headmistress's Tower
+region: castle
+map: campus 500,130
+kind: public
+open: afternoon evening
+discover: rel(isolde) >= 20 or flag(warden_trial)
+hint: A spiral stair guarded by a stone owl that only opens its eyes for some students.
+hinted_when: met(isolde)
+art: crown
+desc: Books, tea and a board of crystal towers by the window. You are only here because she wants you here.
+
+@place restricted_section
+name: The Restricted Section
+region: castle
+map: campus 352,245
+kind: public
+open: night midnight
+discover: seen(forbidden_section_1) > 0
+hint: A door at the back of the library that is always locked, and always slightly warm.
+hinted_when: turn >= 2
+art: lock
+desc: Black-bound books that breathe in the dark. Some of them read you back.
+
+@place gargoyle_passage
+name: The Third Gargoyle
+region: castle
+map: campus 418,135
+kind: club
+track: cartographers
+open: night midnight
+discover: has(club_cartographers)
+hint: Corvin keeps glancing at a particular gargoyle.
+hinted_when: met(corvin)
+art: map
+desc: Behind the third gargoyle on the north parapet, a passage that isn't on any map. Except theirs.
+
+@place seventh_tower
+name: The Seventh Tower
+region: castle
+map: campus 500,72
+kind: public
+open: night midnight
+discover: hollow >= 3
+hint: A locked stair that leads up into a tower nobody admits is there.
+hinted_when: hollow >= 1
+art: key
+desc: Locked for a century. At the very top, one room of dust and moonlight, and a star-shaped hollow in the wall.
+
+@place thesis_lab
+name: The Thesis Laboratory
+region: castle
+map: campus 565,160
+kind: thesis
+track: thesis
+open: morning afternoon evening
+discover: year >= 4
+art: study
+desc: Rows of carrels where final-year students and their advisors argue about footnotes until the candles give out.
+
+# ---------------- Grounds ----------------
+
+@place duel_hall
+name: The Duelling Hall
+region: grounds
+map: campus 660,150
+kind: club
+track: duelling
+open: afternoon evening
+discover: has(club_dueling) or rel(lyra) >= 15
+hint: Steel rings somewhere above the east stair.
+hinted_when: met(lyra)
+art: duel
+desc: Scorched floorboards and a ceiling that has seen things. The practice dummies have names, and grudges.
+
+@place greenhouses
+name: The Greenhouses
+region: grounds
+map: campus 740,235
+kind: club
+track: verdant
+open: morning afternoon
+discover: has(club_garden) or met(tobias) or met(maud)
+art: leaf
+desc: Glass houses that steam even in winter. The moonflowers bloom once every eleven years; the mandrakes have opinions every day.
+
+@place flight_field
+name: The Flight Field
+region: grounds
+map: campus 850,300
+kind: public
+open: morning afternoon
+art: broom
+desc: A long green field with hoops at either end and a wind that cheats. Broom lessons, races and spectacular landings.
+
+@place stables
+name: The Familiar Stables
+region: grounds
+map: campus 845,385
+kind: public
+open: morning afternoon evening
+art: paw
+desc: Hippogriffs, a sulky griffon chick, owls in the rafters and Professor Brask, who talks to all of them more kindly than to students.
+
+@place boathouse
+name: The Boathouse
+region: grounds
+map: campus 610,440
+kind: public
+open: afternoon evening night midnight
+art: wave
+desc: An old wooden boathouse and a jetty out over the water. People come here to say the things they can't say indoors.
+
+@place orchard
+name: The Orchard
+region: grounds
+map: campus 790,165
+kind: public
+open: morning noon afternoon
+art: tree
+desc: Apple and pear trees older than the towers. In spring the blossom falls like snow; once, it was snow.
+
+@place maud_cottage
+name: Old Maud's Cottage
+region: grounds
+map: campus 700,330
+kind: public
+open: morning noon afternoon evening
+discover: met(maud)
+art: house
+desc: A thatched cottage with chickens on the doorstep, bees in the eaves, a goat called Bartholomew and a kettle that is always nearly boiling.
+
+@place secret_garden
+name: The Secret Garden
+region: grounds
+map: campus 735,355
+kind: public
+open: morning afternoon evening
+discover: seen(garden_maud_secret) > 0
+hint: A door in the wall behind the potting shed that you keep walking past.
+hinted_when: met(maud)
+art: flower
+desc: Glowing ferns, silver bees and a pear tree that hums. It only exists for people Maud has shown it to.
+
+@place courier_loft
+name: The Courier Loft
+region: grounds
+map: campus 880,230
+kind: job
+track: broom_courier
+open: morning afternoon evening
+discover: turn >= 3
+art: letter
+desc: A draughty loft full of parcels, pigeonholes and brooms in various states of repair. The dispatch bell rings at all hours.
+
+# ---------------- Village ----------------
+
+@place gilded_newt
+name: The Gilded Newt
+region: village
+map: campus 800,480
+kind: job
+track: tavern
+open: evening night
+art: cup
+desc: The village tavern: low beams, a fire that never goes out, and a landlady who remembers every student's tab to the penny.
+
+@place mabels
+name: Mabel's Tea Shop
+region: village
+map: campus 725,565
+kind: public
+open: morning noon afternoon
+art: cup
+desc: Forty kinds of tea, three kinds of cake and Mabel, who reads your mood from the way you open the door.
+
+@place grimsbys_books
+name: Grimsby's Books
+region: village
+map: campus 680,600
+kind: public
+open: noon afternoon
+art: book
+desc: A bookshop so crowded the shelves lean on each other for support. Mr Grimsby will find anything except what you came in for.
+
+@place pell_apothecary
+name: Pell & Daughters
+region: village
+map: campus 770,600
+kind: job
+track: apothecary_clerk
+open: morning afternoon
+art: bottle
+desc: An apothecary of a thousand labelled drawers. Old Pell taught three generations to count drops; his daughters taught him to smile at customers.
+
+@place bakery
+name: The Bakery
+region: village
+map: campus 640,555
+kind: public
+open: morning noon
+art: meal
+desc: The same family has baked here for two hundred years. The buns are famous; so, in certain circles, is a letter that arrived very late.
+
+# ---------------- Wilds ----------------
+
+@place whisperwood
+name: The Whisperwood
+region: wilds
+map: campus 185,340
+kind: public
+open: morning afternoon evening night midnight
+discover: met(maud) or flag(fox_met)
+hint: Fog sits on the western woods even at noon.
+hinted_when: turn >= 2
+art: tree
+desc: An old forest that talks in its sleep. Moonpetal grows in its clearings; so do things that are better left there.
+
+# ---------------- Internship hosts (one map each; design §7.5) ----------------
+
+@place royal_library_archives
+name: The Royal Library Archives
+region: internship:royal_library
+map: royal_library 480,300
+kind: internship
+track: intern_royal_library
+open: morning afternoon
+art: book
+desc: Miles of stacks beneath the capital, where the oldest records of the realm are kept in temperature-controlled silence.
+
+@place conclave_laboratory
+name: The Conclave Laboratory
+region: internship:conclave
+map: conclave 480,300
+kind: internship
+track: intern_conclave
+open: morning afternoon evening
+art: wand
+desc: The research laboratory of the Conclave of the Seven Towers, where new spells are tested behind very thick walls.
+
+@place alchemists_works
+name: The Guild Works
+region: internship:alchemists
+map: alchemists 480,300
+kind: internship
+track: intern_alchemists
+open: morning afternoon
+art: cauldron
+desc: The Guild of Alchemists' great works by the river: vats, chimneys and a strict rule about naked flames.
+
+@place observatory_camp
+name: The Expedition Camp
+region: internship:expedition
+map: expedition 480,300
+kind: internship
+track: intern_expedition
+open: afternoon evening night
+art: planet
+desc: Tents on a high plateau where the air is thin and the stars are close enough to argue with.
+
+@place field_station
+name: The Beastcraft Field Station
+region: internship:field_station
+map: field_station 480,300
+kind: internship
+track: intern_field_station
+open: morning afternoon evening
+art: paw
+desc: A cabin on the moors, ringed with paddocks and nesting towers, where injured creatures are mended and wild ones are counted.
+
+@place thornwick_lab
+name: The Thornwick Exchange Lab
+region: internship:thornwick
+map: thornwick 480,300
+kind: internship
+track: intern_thornwick
+open: morning afternoon evening
+art: mask
+desc: A guest laboratory at Thornwick Academy, the rival school, where the illusionists are excellent and the hospitality is suspicious.
+
+@place unseen_office
+name: The Office of Unseen Affairs
+region: internship:unseen_office
+map: unseen_office 480,300
+kind: internship
+track: intern_unseen_office
+open: evening night
+art: eye
+desc: The Crown's Office of Unseen Affairs. It has no sign, no address, and a very good coffee machine.

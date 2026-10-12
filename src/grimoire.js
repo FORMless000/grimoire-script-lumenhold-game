@@ -22,12 +22,13 @@
 
   // Functions whose bare-identifier arguments are names (not variables).
   // `npc` is always resolved to the bound actor's id.
-  const SYMBOLIC = new Set(['has', 'flag', 'left', 'rel', 'love', 'bond', 'met', 'seen', 'since', 'chosen', 'bonds', 'npc_is', 'romanceable', 'tagged']);
+  const SYMBOLIC = new Set(['has', 'flag', 'left', 'rel', 'love', 'bond', 'met', 'seen', 'since', 'chosen', 'bonds', 'npc_is', 'romanceable', 'tagged', 'passed', 'clue']);
   const FUNCS = new Set([...SYMBOLIC, 'rand', 'min', 'max', 'abs', 'floor', 'round', 'clamp', 'known', 'chance_of']);
   // Reference kinds for linting: which argument of which function refers to what.
   const FUNC_REFS = {
     has: ['flagOrState'], flag: ['flag'], left: ['state'], rel: ['npc'], love: ['npc'], bond: ['npc'],
-    met: ['npc'], seen: ['event'], since: ['event'], chosen: ['event', null], npc_is: ['npc'], bonds: [null], romanceable: ['npc'], tagged: ['npc', null]
+    met: ['npc'], seen: ['event'], since: ['event'], chosen: ['event', null], npc_is: ['npc'], bonds: [null], romanceable: ['npc'], tagged: ['npc', null],
+    passed: ['track', null], clue: ['clue'],
   };
 
   function tokenize(s, file, line) {
@@ -167,16 +168,58 @@
     game: { noId: true, props: ['title', 'subtitle', 'years', 'months', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'intro', 'summer_months'], effects: [] },
     resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc'], effects: ['on_zero'] },
     skill: { props: ['name', 'icon', 'start', 'max', 'desc', 'color'], effects: [] },
-    npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel'], effects: [] },
+    npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel', 'age', 'role', 'year', 'traits', 'interests', 'stats', 'schedule', 'relations', 'voice'], effects: [] },
     state: { props: ['name', 'desc', 'art', 'tags', 'group', 'duration', 'hidden', 'kind'], effects: ['tick', 'on_add', 'on_expire', 'on_remove'] },
     event: { props: ['title', 'text', 'art', 'scene', 'tags', 'when', 'weight', 'trigger', 'actor', 'repeat', 'priority', 'type', 'chain'], effects: ['on_show'], options: true },
     ending: { props: ['title', 'text', 'art', 'scene', 'when', 'priority', 'tags', 'kind'], effects: [] },
     hook: { props: ['on', 'when', 'desc', 'label'], effects: ['do'] },
+    // Worldbook (design §3): data for briefs, lint and later phases. The engine doesn't play these yet.
+    vocab: { props: ['values', 'desc'], effects: [] },
+    place: { props: ['name', 'region', 'map', 'kind', 'track', 'open', 'season', 'closed_when', 'discover', 'hint', 'hinted_when', 'desc', 'art'], effects: [] },
+    track: { props: ['kind', 'name', 'skill', 'levels', 'level_names', 'place', 'teaches', 'hidden', 'prereq', 'ranks', 'pay', 'due', 'lead', 'desc'], effects: [] },
+    spell: { props: ['name', 'discipline', 'cost', 'power', 'desc', 'art'], effects: [] },
+    fact: { dotted: true, props: ['npc', 'tier', 'unlock', 'text'], effects: [] },
+    archetype: { props: ['names', 'age', 'traits', 'pronouns', 'house', 'role', 'desc'], effects: [] },
+    faction: { props: ['name', 'desc', 'members', 'alignment', 'stance'], effects: [] },
+    arc: { props: ['name', 'canon', 'acts', 'clock', 'beats', 'clues', 'key_clues', 'cast', 'desc'], effects: [] },
+    lore: { props: ['keys', 'canon', 'text'], effects: [] },
+    timeline: { props: ['date', 'kind', 'event', 'text'], effects: [] },
   };
-  const EXPR_PROPS = new Set(['when', 'weight']);
-  const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel']);
-  const LIST_PROPS = new Set(['tags', 'months', 'summer_months']);
+  const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'discover', 'hinted_when', 'unlock', 'prereq']);
+  const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment']);
+  const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'cast']);
   const BOOL_PROPS = new Set(['romance', 'hidden']);
+  // Structured worldbook values, parsed at compile time. Each returns the parsed value or throws a message.
+  const ID_RE = /^[a-z_][a-z0-9_]*$/;
+  const toNum = (x, what) => { const n = Number(x); if (!isFinite(n) || x === '') throw what + ': "' + x + '" is not a number'; return n; };
+  const words = (t) => t.split(/[\s,]+/).filter(Boolean);
+  const STRUCT_PROPS = {
+    // "arcana 34 lore 22 wealth 5" -> {arcana: 34, lore: 22, wealth: 5}
+    stats(t) { const w = words(t), o = {}; if (w.length % 2) throw 'stats: expected "name value" pairs'; for (let i = 0; i < w.length; i += 2) o[w[i]] = toNum(w[i + 1], 'stats ' + w[i]); return o; },
+    // "duel_hall@afternoon,evening library@night" -> [{place, slots: [...]}]
+    schedule(t) { return t.split(/\s+/).filter(Boolean).map((x) => { const m = x.match(/^([a-z_][a-z0-9_]*)@([a-z,]+)$/); if (!m) throw 'schedule: expected place@slot,slot, got "' + x + '"'; return { place: m[1], slots: m[2].split(',').filter(Boolean) }; }); },
+    // "kael:-20 tobias:5" -> {kael: -20, tobias: 5}
+    relations(t) { const o = {}; for (const x of words(t)) { const m = x.match(/^([a-z_][a-z0-9_]*):(-?\d+)$/); if (!m) throw 'relations: expected npc:value, got "' + x + '"'; o[m[1]] = +m[2]; } return o; },
+    // "flame@1 tide@2" -> [{spell, level}]
+    teaches(t) { return words(t).map((x) => { const m = x.match(/^([a-z_][a-z0-9_]*)@(\d+)$/); if (!m) throw 'teaches: expected spell@level, got "' + x + '"'; return { spell: m[1], level: +m[2] }; }); },
+    // "campus 660,150" -> {map, x, y}
+    map(t) { const m = t.match(/^([a-z_][a-z0-9_]*)\s+(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/); if (!m) throw 'map: expected "<map> x,y", got "' + t + '"'; return { map: m[1], x: +m[2], y: +m[3] }; },
+    pay(t) { return words(t).map((x) => toNum(x, 'pay')); },
+    cost(t) { return words(t).map((x) => toNum(x, 'cost')); },
+    power(t) { return words(t).map((x) => toNum(x, 'power')); },
+    // "18..22" -> {min, max}; "19" -> 19
+    age(t) { const m = t.match(/^(\d+)\s*\.\.\s*(\d+)$/); return m ? { min: +m[1], max: +m[2] } : toNum(t, 'age'); },
+    clock(t) { const m = t.match(/^(-?\d+)\s*\.\.\s*(-?\d+)$/); if (!m) throw 'clock: expected "min..max"'; return { min: +m[1], max: +m[2] }; },
+    // "omens@y1 investigation@y2" -> [{name, year}]
+    acts(t) { return words(t).map((x) => { const m = x.match(/^([a-z_][a-z0-9_]*)@y(\d+)$/); if (!m) throw 'acts: expected name@yN, got "' + x + '"'; return { name: m[1], year: +m[2] }; }); },
+    // "2@y1m3 3@y1m9" -> [{clock, year, month}]
+    beats(t) { return words(t).map((x) => { const m = x.match(/^(\d+)@y(\d+)m(\d+)$/); if (!m) throw 'beats: expected clock@yNmM, got "' + x + '"'; return { clock: +m[1], year: +m[2], month: +m[3] }; }); },
+    // Comma-separated when commas are present (multi-word values), else whitespace-separated.
+    values(t) { return (t.includes(',') ? t.split(/\s*,\s*/) : t.split(/\s+/)).map((x) => x.trim()).filter(Boolean); },
+    keys(t) { return t.split(/\s*,\s*/).map((x) => x.trim()).filter(Boolean); },
+    // A track's skill: one or more skill ids.
+    skill(t) { const w = words(t); return w.length === 1 ? w[0] : w; },
+  };
   const OPTION_PROPS = new Set(['when', 'hint']);
 
   /* ------------------------------------------------------------------ *
@@ -313,10 +356,12 @@
     const blocks = []; let cur = null;
     for (const L of lines) {
       if (!L.blank && L.indent === 0 && L.content.startsWith('@')) {
-        const m = L.content.match(/^@([a-z]+)(?:\s+([a-z_][a-z0-9_]*))?\s*$/);
+        const m = L.content.match(/^@([a-z]+)(?:\s+([a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)?))?\s*$/);
         if (!m) throw new GrimError('bad block header "' + L.content + '" (expected "@kind id", ids are lower_snake_case)', file, L.line);
         const kind = m[1];
         if (!SCHEMA[kind]) throw new GrimError('unknown block kind "@' + kind + '"', file, L.line);
+        if (m[2] && m[2].includes('.') && !SCHEMA[kind].dotted) throw new GrimError('ids of @' + kind + ' can\'t contain "." (only @fact ids are npc.key)', file, L.line);
+        if (SCHEMA[kind].dotted && m[2] && !m[2].includes('.')) throw new GrimError('@' + kind + ' ids are npc.key (e.g. lyra.mother)', file, L.line);
         if (!SCHEMA[kind].noId && !m[2]) throw new GrimError('@' + kind + ' needs an id', file, L.line);
         cur = { kind, id: m[2] || kind, file, line: L.line, body: [] };
         blocks.push(cur);
@@ -379,7 +424,9 @@
       if (!schema.props.includes(key)) throw new GrimError('unknown property "' + key + '" for @' + b.kind + ' (allowed: ' + schema.props.concat(schema.effects).join(', ') + ')', file, L.line);
       if (key in def && key !== 'options') throw new GrimError('duplicate property "' + key + '"', file, L.line);
       const text = joinText(val, sub);
-      if (EXPR_PROPS.has(key)) def[key] = expr(text, file, L.line);
+      if (STRUCT_PROPS[key] && !(key === 'skill' && b.kind !== 'track')) {
+        try { def[key] = STRUCT_PROPS[key](text); } catch (e) { throw new GrimError(typeof e === 'string' ? e : e.message, file, L.line); }
+      } else if (EXPR_PROPS.has(key)) def[key] = expr(text, file, L.line);
       else if (NUM_PROPS.has(key)) {
         const n = Number(text);
         if (!isFinite(n)) throw new GrimError('property "' + key + '" must be a number, got "' + text + '"', file, L.line);
@@ -395,11 +442,14 @@
    * Content assembly
    * ------------------------------------------------------------------ */
 
-  const COLLECTION = { resource: 'resources', skill: 'skills', npc: 'npcs', state: 'states', event: 'events', ending: 'endings', hook: 'hooks' };
+  const COLLECTION = { resource: 'resources', skill: 'skills', npc: 'npcs', state: 'states', event: 'events', ending: 'endings', hook: 'hooks',
+    vocab: 'vocab', place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', lore: 'lore', timeline: 'timeline' };
+  const WORLD_COLLECTIONS = ['vocab', 'places', 'tracks', 'spells', 'facts', 'archetypes', 'factions', 'arcs', 'lore', 'timeline'];
 
   // sources: [{path, text}] -> {content, errors}
   function compile(sources) {
     const content = { game: {}, resources: {}, skills: {}, npcs: {}, states: {}, events: {}, endings: {}, hooks: {}, order: { resources: [], skills: [], npcs: [] }, files: [] };
+    for (const c of WORLD_COLLECTIONS) content[c] = {};
     const errors = [];
     for (const src of sources) {
       let defs;
@@ -433,5 +483,5 @@
     if (!e.text) errors.push(new GrimError('event needs text', e.file, e.line));
   }
 
-  return { parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC };
+  return { parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS };
 });

@@ -15,7 +15,7 @@
 const G = require('../src/grimoire.js');
 
 const ID = '[a-z_][a-z0-9_]*';
-const RE_HEADER = /^@([a-z]+)(?:\s+([a-z_][a-z0-9_]*))?\s*$/;
+const RE_HEADER = /^@([a-z]+)(?:\s+([a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)?))?\s*$/;
 const RE_OPTION = /^>\s*([a-z_][a-z0-9_]*)\s*:\s*(.*)$/;
 const RE_PROP = /^([a-z_][a-z0-9_]*)\s*:\s*(.*)$/;
 const RE_AMOUNT = new RegExp('^(?:(rel|love)\\s+)?(' + ID + ')\\s*([+-])\\s*(\\d+)(?:\\s*~\\s*(\\d+))?$');

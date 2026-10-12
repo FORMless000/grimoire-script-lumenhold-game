@@ -100,6 +100,8 @@ function analyze(content) {
           else if (kind === 'state') add(A.statesRef, a.v, where);
           else if (kind === 'npc') add(A.npcsRef, a.v, where);
           else if (kind === 'event') add(A.eventsRef, a.v, where);
+          else if (kind === 'track') { if (!content.tracks[a.v]) P('error', where, n.n + '(): unknown track "' + a.v + '"'); }
+          else if (kind === 'clue') { if (!Object.values(content.arcs).some((arc) => (arc.clues || []).includes(a.v))) P('error', where, 'clue(' + a.v + '): not a clue of any @arc'); }
           if (n.n === 'bonds' && !KNOWN_BONDS.has(a.v)) P('warn', where, 'unknown bond status "' + a.v + '"');
         });
         if (n.n === 'chosen' && n.args[0] && n.args[0].t === 'sym' && n.args[1] && n.args[1].t === 'sym') {
@@ -187,6 +189,8 @@ function analyze(content) {
   for (const en of Object.values(content.endings)) { scanExpr(en.when, loc(en), false); scanText(en.text, loc(en), false); }
   for (const n of Object.values(content.npcs)) { if (!n.name) P('error', loc(n), 'npc needs a name'); if (n.pronouns && !/^(she|he|they)\b/.test(n.pronouns)) P('warn', loc(n), 'pronouns should start with she/he/they'); }
 
+  analyzeWorld(content, P, scanExpr, scanText);
+
   // Cross-reference results
   for (const [f, ws] of Object.entries(A.flagsRead)) if (!A.flagsSet[f]) P('warn', ws[0], 'flag "' + f + '" is read but never set (typo?)' + (ws.length > 1 ? ' [+' + (ws.length - 1) + ' more]' : ''));
   for (const [v, ws] of Object.entries(A.varsRead)) if (!A.varsSet[v]) P('warn', ws[0], 'identifier "' + v + '" is not a resource/skill and is never assigned (typo?)');
@@ -197,6 +201,84 @@ function analyze(content) {
   for (const st of Object.values(content.states)) if (!A.statesRef[st.id]) P('info', loc(st), 'state "' + st.id + '" is never gained');
   if (!Object.keys(content.endings).length) P('error', '-', 'no @ending defined');
   return A;
+}
+
+// Worldbook blocks (design §3): references, vocabularies, structured values, adults-only romance.
+function analyzeWorld(content, P, scanExpr, scanText) {
+  const loc = (d) => d.file + ':' + d.line;
+  const vocab = (id) => (content.vocab[id] ? new Set(content.vocab[id].values || []) : null);
+  const inVocab = (list, id, d, what) => { const v = vocab(id); if (!v) return; for (const x of [].concat(list || [])) if (!v.has(x)) P('error', loc(d), what + ' "' + x + '" is not in @vocab ' + id); };
+  const slots = vocab('slots');
+  const isSkill = (x) => !!content.skills[x];
+  for (const n of Object.values(content.npcs)) {
+    if (n.age == null) P('error', loc(n), '@npc ' + n.id + ' needs an age (every character is an adult)');
+    else if (typeof n.age !== 'number') P('error', loc(n), '@npc age must be a single number');
+    if (n.romance && !(n.age >= 18)) P('error', loc(n), 'romance: true needs age 18 or over');
+    inVocab(n.traits, 'traits', n, 'trait'); inVocab(n.interests, 'interests', n, 'interest');
+    if (n.role) inVocab(n.role, 'roles', n, 'role');
+    for (const k of Object.keys(n.stats || {})) if (!isSkill(k) && k !== 'wealth') P('error', loc(n), 'stats: "' + k + '" is not a skill (or wealth)');
+    if (n.stats && n.stats.wealth != null && !(n.stats.wealth >= 1 && n.stats.wealth <= 5)) P('error', loc(n), 'stats: wealth is 1–5');
+    for (const x of n.schedule || []) {
+      if (!content.places[x.place]) P('error', loc(n), 'schedule: unknown place "' + x.place + '"');
+      if (slots) for (const sl of x.slots) if (!slots.has(sl)) P('error', loc(n), 'schedule: unknown slot "' + sl + '"');
+    }
+    for (const id of Object.keys(n.relations || {})) if (!content.npcs[id]) P('error', loc(n), 'relations: unknown npc "' + id + '"');
+  }
+  const PLACE_KINDS = new Set(['public', 'club', 'job', 'thesis', 'internship', 'plan']);
+  for (const d of Object.values(content.places)) {
+    if (!d.name) P('error', loc(d), '@place needs a name');
+    if (!d.map) P('warn', loc(d), '@place has no map position');
+    if (d.region && !(vocab('regions') || new Set([d.region.split(':')[0]])).has(d.region.split(':')[0])) P('error', loc(d), 'region "' + d.region + '" is not in @vocab regions');
+    if (d.kind && !PLACE_KINDS.has(d.kind)) P('error', loc(d), 'kind must be one of ' + [...PLACE_KINDS].join(', '));
+    if (d.track && !content.tracks[d.track]) P('error', loc(d), 'track: unknown track "' + d.track + '"');
+    if (['club', 'job', 'thesis', 'internship'].includes(d.kind) && !d.track) P('warn', loc(d), d.kind + ' place without a track');
+    if (slots) for (const sl of d.open || []) if (!slots.has(sl)) P('error', loc(d), 'open: unknown slot "' + sl + '"');
+    scanExpr(d.discover, loc(d), false); scanExpr(d.closed_when, loc(d), false); scanExpr(d.hinted_when, loc(d), false);
+  }
+  const TRACK_KINDS = new Set(['course', 'club', 'job', 'internship', 'thesis']);
+  for (const d of Object.values(content.tracks)) {
+    if (!TRACK_KINDS.has(d.kind)) P('error', loc(d), '@track kind must be one of ' + [...TRACK_KINDS].join(', '));
+    if (!d.name) P('error', loc(d), '@track needs a name');
+    for (const sk of [].concat(d.skill || [])) if (!isSkill(sk)) P('error', loc(d), 'skill: unknown skill "' + sk + '"');
+    if (d.place && !content.places[d.place]) P('error', loc(d), 'place: unknown place "' + d.place + '"');
+    if (d.lead && !content.npcs[d.lead]) P('error', loc(d), 'lead: unknown npc "' + d.lead + '"');
+    for (const t of d.teaches || []) { if (!content.spells[t.spell]) P('error', loc(d), 'teaches: unknown spell "' + t.spell + '"'); if (d.levels && t.level > d.levels) P('error', loc(d), 'teaches ' + t.spell + '@' + t.level + ': the track has ' + d.levels + ' level(s)'); }
+    if (d.level_names && d.levels && d.level_names.split(/\s*,\s*/).length !== d.levels) P('error', loc(d), 'level_names should list ' + d.levels + ' names');
+    if (d.pay && d.ranks && d.pay.length !== d.ranks.split(/\s*,\s*/).length) P('error', loc(d), 'pay should have one amount per rank');
+    if (d.kind === 'course' && !d.levels) P('error', loc(d), 'a course needs levels:');
+    scanExpr(d.prereq, loc(d), false);
+  }
+  for (const d of Object.values(content.spells)) {
+    if (!d.name) P('error', loc(d), '@spell needs a name');
+    if (d.discipline && !(content.tracks[d.discipline] && content.tracks[d.discipline].kind === 'course')) P('error', loc(d), 'discipline: "' + d.discipline + '" is not a course @track');
+    for (const k of ['cost', 'power']) if (!d[k] || d[k].length !== 3) P('error', loc(d), k + ': three values, one per spell level');
+  }
+  for (const d of Object.values(content.facts)) {
+    const npc = d.id.split('.')[0];
+    if (!content.npcs[npc]) P('error', loc(d), '@fact ' + d.id + ': unknown npc "' + npc + '"');
+    if (d.npc && d.npc !== npc) P('error', loc(d), 'npc: ' + d.npc + ' doesn\'t match the id ' + d.id);
+    if (!['surface', 'personal', 'secret'].includes(d.tier)) P('error', loc(d), 'tier must be surface, personal or secret');
+    if (!d.text) P('error', loc(d), '@fact needs text');
+    scanExpr(d.unlock, loc(d), false); scanText(d.text, loc(d), false);
+  }
+  for (const d of Object.values(content.factions)) for (const m of d.members || []) if (!content.npcs[m]) P('error', loc(d), 'members: unknown npc "' + m + '"');
+  for (const d of Object.values(content.arcs)) {
+    if (d.canon && !['hard', 'soft'].includes(d.canon)) P('error', loc(d), 'canon must be hard or soft');
+    for (const k of d.key_clues || []) if (!(d.clues || []).includes(k)) P('error', loc(d), 'key clue "' + k + '" is not in clues');
+    for (const m of d.cast || []) if (!content.npcs[m]) P('error', loc(d), 'cast: unknown npc "' + m + '"');
+    for (const b of d.beats || []) if (d.clock && (b.clock < d.clock.min || b.clock > d.clock.max)) P('error', loc(d), 'beat ' + b.clock + ' is outside the clock');
+  }
+  for (const d of Object.values(content.lore)) {
+    if (!['hard', 'soft'].includes(d.canon)) P('error', loc(d), '@lore canon must be hard or soft');
+    if (!d.keys || !d.keys.length) P('error', loc(d), '@lore needs keys');
+    if (!d.text) P('error', loc(d), '@lore needs text');
+  }
+  for (const d of Object.values(content.timeline)) {
+    if (!['history', 'beat'].includes(d.kind)) P('error', loc(d), '@timeline kind must be history or beat');
+    if (d.event && !content.events[d.event]) P('error', loc(d), 'event: unknown event "' + d.event + '"');
+    if (!d.text) P('error', loc(d), '@timeline needs text');
+  }
+  for (const d of Object.values(content.archetypes)) if (d.age != null && typeof d.age === 'object' && (d.age.min < 18)) P('error', loc(d), 'archetype ages start at 18 (every character is an adult)');
 }
 
 function lint(opts = {}) {
