@@ -97,6 +97,7 @@ const SPECIAL_IDS = new Set(G.IDENTS);
 const PRONOUN_KEYS = new Set(['they', 'them', 'their', 'theirs', 'are', 's', 'name', 'fullname', 'title', 'house']);
 
 let ROLES = new Set();   // cast role names of the event being scanned (valid character references)
+let IN_EVENT = false;    // scanning an event's effects (raw amounts are legacy there)
 function analyze(content) {
   // Collect everything that is set / referenced, with locations.
   const A = { flagsSet: {}, flagsRead: {}, varsSet: {}, varsRead: {}, queued: {}, statesRef: {}, npcsRef: {}, endingsRef: {}, eventsRef: {}, problems: [], legacy: [] };
@@ -158,7 +159,8 @@ function analyze(content) {
         const row = st.t === 'delta' ? (content.skills[st.name] ? 'xp' : st.name) : st.t === 'npc_rel' ? 'rel' : st.t;
         if (content.balance && content.balance.sizes && !content.balance.sizes[row]) P('error', w, 'no size tiers for "' + row + '" in @balance sizes');
       }
-      if (!st.tier && !st.preset && ['delta', 'rel', 'spark'].includes(st.t) && st.min != null) A.legacy.push({ where: w, what: 'raw number (use a size tier)' });
+      // Raw amounts are legacy in events only, and only for tiered rows (custom counters like `hollow +1` stay raw).
+      if (IN_EVENT && !st.tier && !st.preset && ['delta', 'rel', 'spark'].includes(st.t) && st.min != null && (st.t !== 'delta' || content.resources[st.name] || content.skills[st.name])) A.legacy.push({ where: w, what: 'raw number (use a size tier)' });
       if (st.legacy) A.legacy.push({ where: w, what: '"love" (now "spark")' });
       if (st.t === 'check') A.legacy.push({ where: w, what: '"check" (use "challenge")' });
       if ((st.t === 'delta' || st.t === 'assign') && st.name === 'grades') A.legacy.push({ where: w, what: 'Standing ("grades"; GPA replaces it in phase 2b)' });
@@ -220,7 +222,7 @@ function analyze(content) {
   const loc = (d) => d.file + ':' + d.line;
   for (const e of Object.values(content.events)) {
     const hasActor = !!e.actor || !!e.cast;
-    ROLES = new Set((e.cast || []).map((r) => r.role));
+    ROLES = new Set((e.cast || []).map((r) => r.role)); IN_EVENT = true;
     const w = loc(e);
     if (e.actor && !['any', 'npc'].includes(e.actor) && !content.npcs[e.actor]) P('error', w, 'actor: unknown npc "' + e.actor + '"');
     if (e.trigger === 'social' && !e.actor) P('warn', w, 'social event without actor');
@@ -259,7 +261,7 @@ function analyze(content) {
       scanEffects(o.effects, ow, hasActor);
     }
     if (e.options.length > 1 && e.options.every((o) => o.when)) P('warn', w, 'every option has a "when" — the card can soft-lock if none are available');
-    ROLES = new Set();
+    ROLES = new Set(); IN_EVENT = false;
   }
   for (const s of Object.values(content.states)) ['tick', 'on_add', 'on_expire', 'on_remove'].forEach((k) => scanEffects(s[k], loc(s), false));
   for (const h of Object.values(content.hooks)) { scanExpr(h.when, loc(h), false); scanEffects(h.do, loc(h), false); if (!['game_start', 'month_start', 'month_end', 'term_start', 'term_end'].includes(h.on)) P('error', loc(h), 'hook "on" must be game_start, month_start, month_end, term_start or term_end'); }
