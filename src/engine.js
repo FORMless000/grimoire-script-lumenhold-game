@@ -864,13 +864,13 @@
     // and the event as a whole rests for ANY_EVENT_REST months so it doesn't recur back-to-back.
     eligible(e, used) {
       if (used.has(e.id)) return false;
-      if (e.actor === 'any') return this.s.last[e.id] == null || (this.s.turn - this.s.last[e.id]) >= ANY_EVENT_REST;
+      if (e.actor === 'any' || e.per) return this.s.last[e.id] == null || (this.s.turn - this.s.last[e.id]) >= ANY_EVENT_REST;
       const seen = this.s.seen[e.id] || 0;
       if (!e.repeat) return seen === 0;
       return seen === 0 || (this.s.turn - this.s.last[e.id]) >= e.repeat;
     }
     eligibleFor(e, actor) {
-      if (e.actor !== 'any') return true;
+      if (e.actor !== 'any' && !e.per) return true;
       const last = (this.s.lastBy || {})[e.id + '@' + actor];
       if (last == null) return true;
       return !!e.repeat && (this.s.turn - last) >= e.repeat;
@@ -889,7 +889,7 @@
       const fill = (i, cast) => {
         if (i === roles.length) { const prev = this._cast; this._cast = cast; const ok = this.test(e.when, cast.npc || null); this._cast = prev; return ok ? { ...cast } : null; }
         const r = roles[i];
-        let opts = pool(r).filter((id) => !Object.values(cast).includes(id));
+        let opts = pool(r).filter((id) => !Object.values(cast).includes(id) && (r.role !== e.per || this.eligibleFor(e, id)));
         opts = opts.filter((id) => { if (!r.where) return true; const prev = this._cast; this._cast = { ...cast, [r.role]: id }; const ok = this.test(r.where, cast.npc || id); this._cast = prev; return ok; });
         // weighted order
         const order = [];
@@ -905,7 +905,7 @@
         const cast = this.fillCast(e);
         if (!cast) return [];
         const actor = cast.npc || Object.values(cast)[0] || null;
-        if (actor && !this.eligibleFor(e, actor)) return [];
+        if (!e.per && actor && !this.eligibleFor(e, actor)) return [];
         const prev = this._cast; this._cast = cast;
         const w = e.weight ? this.value(e.weight, actor, 10) : 10;
         this._cast = prev;
@@ -1015,7 +1015,8 @@
         s.cur = item;
         s.seen[e.id] = (s.seen[e.id] || 0) + 1;
         s.last[e.id] = s.turn;
-        if (item.actor) { s.lastBy = s.lastBy || {}; s.lastBy[e.id + '@' + item.actor] = s.turn; }
+        const who = e.per && item.cast ? item.cast[e.per] : item.actor;
+        if (who) { s.lastBy = s.lastBy || {}; s.lastBy[e.id + '@' + who] = s.turn; }
         s.cardsThisMonth++;
         let onShow = null;
         this.withContext(item, () => { if (e.on_show) { const ctx = this.newCtx(item.actor, null, e.id); ctx.cast = item.cast; ctx.track = item.track; this.run(e.on_show, ctx); this.handleZeroed(ctx); onShow = this.outcome(ctx); } });

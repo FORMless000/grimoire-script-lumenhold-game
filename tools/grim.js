@@ -236,6 +236,7 @@ function analyze(content) {
     if (e.arc && !content.arcs[e.arc]) P('error', w, 'arc: unknown arc "' + e.arc + '"');
     if (e.plan && !content.states['plan_' + e.plan]) P('error', w, 'plan: no @state plan_' + e.plan);
     if (e.replaces && !e.place) P('error', w, 'replaces: needs a place:');
+    if (e.per && !(e.cast || []).some((r) => r.role === e.per)) P('error', w, 'per: "' + e.per + '" is not one of this event\'s cast roles');
     for (const r of e.cast || []) {
       if (r.pool === 'fixed' && !content.npcs[r.npc]) P('error', w, 'cast ' + r.role + ': unknown character "' + r.npc + '"');
       if (r.pool === 'present' && r.place && r.place !== 'place' && !content.places[r.place]) P('error', w, 'cast ' + r.role + ': unknown place "' + r.place + '"');

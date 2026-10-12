@@ -176,6 +176,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `offers` | text |  |
 |  | `pick` | text |  |
 |  | `scope` | text |  |
+|  | `per` | text |  |
 | | `on_show:` | effects | `say:` lines |
 | | `> key: Label` | option (`when:`, `hint:`, effects) | label, hint, `say:` |
 | `@ending id` | `title` | text | yes |
