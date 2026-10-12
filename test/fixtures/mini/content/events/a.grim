@@ -1,0 +1,39 @@
+# Events that reference lyra in every way the rename tool knows.
+@event lyra_meet
+title: Meeting {lyra}
+actor: lyra
+art: book
+tags: social
+text: {lyra} looks up. "Lyra" is written on her book, and {=rel(lyra)} is your standing.
+> left: Nod at {lyra}
+  rel lyra +2
+  say: {lyra} nods back. Lyra the person, not the token.
+> right: Ask about lyra
+  when: met(lyra) or has(lyra_seen)
+  flag lyra_seen
+  queue lyra_later in 1
+  check lore 10 + rel(lyra) / 10:
+    gold +5
+    say: Correct. {They} smile{s}.
+  else:
+    gain sick
+    say: Wrong. {lyra.their} eyes narrow.
+
+@event lyra_later
+title: Later
+trigger: queued
+text: Some time passes.
+> ok: Continue
+  if has(lyra_seen) and bond(lyra) == "none":
+    bond lyra friend
+    say: Friends now.
+
+@event quiet
+title: Quiet
+text: Nothing happens. A tobias-shaped silence.
+> left: Wait
+  health +1
+  say: You wait.
+> right: Leave
+  gold -1
+  say: You leave.
