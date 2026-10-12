@@ -27,6 +27,12 @@
  *                                       play the golden seeds and save endings, choices, final values, coverage
  *   node tools/grim.js diff [A] [B]     compare two snapshots (default: test/golden/baseline.json vs a fresh one);
  *                                       a pure refactor shows "no gameplay change" (exit 1 otherwise)
+ *   node tools/grim.js lorebook [--out FILE]
+ *                                       export the worldbook as JSON (default build/lorebook.json)
+ *   node tools/grim.js brief [--cast a,b] [--place P] [--track T] [--arc A] [--topic "…"] [--tier T] [--out FILE]
+ *                                       a ~6k-token context pack for writing events (design §3.4)
+ *   node tools/grim.js docs [--check]   regenerate the block table in docs/authoring/schema.md
+ *   node tools/grim.js canon            proper nouns in player-visible text that the worldbook doesn't know
  *   node tools/grim.js feedback [PATH…] [--event ID] [--json]
  *                                       summarise playtest feedback from exported run logs (default: feedback/)
  *   node tools/grim.js i18n [lang]      no lang: translation coverage per language.
@@ -286,6 +292,7 @@ function lint(opts = {}) {
   errors.forEach((e) => console.error(C.r + 'error ' + C.x + e.message));
   if (errors.length) { console.error(C.r + errors.length + ' parse error(s)' + C.x); if (!opts.noExit) process.exit(1); return false; }
   const A = analyze(content);
+  for (const u of canonCheck(content)) A.problems.push({ level: /^content\/batches\//.test(u.where[0]) ? 'error' : 'warn', where: u.where[0], msg: 'unknown proper noun "' + u.name + '" (add it to the worldbook, a @lore key or @vocab canon_allowlist)' + (u.where.length > 1 ? ' [+' + (u.where.length - 1) + ' more]' : '') });
   for (const lang of localeLangs()) lintLocale(content, lang, A.problems, opts);
   const by = { error: [], warn: [], info: [] };
   A.problems.forEach((p) => by[p.level].push(p));
@@ -295,6 +302,12 @@ function lint(opts = {}) {
   console.log((by.error.length ? C.r : C.g) + 'lint: ' + by.error.length + ' error(s), ' + by.warn.length + ' warning(s), ' + by.info.length + ' info' + C.x + ' — ' + Object.keys(content.events).length + ' events, ' + Object.keys(content.states).length + ' states, ' + Object.keys(content.npcs).length + ' npcs, ' + Object.keys(content.endings).length + ' endings');
   if (by.error.length && !opts.noExit) process.exit(1);
   return !by.error.length;
+}
+
+// Canon lint (tools/canon.js): known names include every glossary's English column.
+function canonCheck(content) {
+  const glossaries = localeLangs().map((l) => path.join(ROOT, 'locales', l, 'GLOSSARY.md')).filter((f) => fs.existsSync(f)).map((f) => fs.readFileSync(f, 'utf8')).join('\n');
+  return require('./canon.js').unknownNames(content, glossaries);
 }
 
 /* ------------------------------------------------------------------ i18n */
@@ -736,6 +749,38 @@ function ids(kind) {
   for (const k of kinds) { if (!map[k]) { console.log('unknown kind ' + k); continue; } console.log(C.b + k + C.x + ': ' + Object.keys(map[k]).sort().join(' ')); }
 }
 
+/* ------------------------------------------------------------------ docs */
+// Regenerates the block/property table in docs/authoring/schema.md from the parser's SCHEMA.
+function genDocs(opts = {}) {
+  const file = path.join(ROOT, 'docs', 'authoring', 'schema.md');
+  const text = fs.readFileSync(file, 'utf8');
+  const begin = '<!-- BEGIN GENERATED: schema (node tools/grim.js docs) -->', end = '<!-- END GENERATED: schema -->';
+  const type = (kind, p) => {
+    if (G.STRUCT_PROPS[p] && !(p === 'skill' && kind !== 'track')) return 'structured';
+    if (['when', 'weight', 'closed_when', 'discover', 'hinted_when', 'unlock', 'prereq'].includes(p)) return 'expression';
+    if (['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment'].includes(p)) return 'number';
+    if (['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'cast'].includes(p)) return 'list';
+    if (['romance', 'hidden'].includes(p)) return 'yes/no';
+    return 'text';
+  };
+  const I18nFields = require('../src/i18n.js').FIELDS || {};
+  const rows = ['', '### Blocks and properties', '', '| Block | Property | Type | Translated |', '|---|---|---|---|'];
+  for (const [kind, sc] of Object.entries(G.SCHEMA)) {
+    const tr = new Set(I18nFields[kind] || []);
+    sc.props.forEach((p, i) => rows.push('| ' + (i ? '' : '`@' + kind + (sc.noId ? '' : sc.dotted ? ' npc.key' : ' id') + '`') + ' | `' + p + '` | ' + type(kind, p) + ' | ' + (tr.has(p) ? 'yes' : '') + ' |'));
+    sc.effects.forEach((p) => rows.push('| | `' + p + ':` | effects | `say:` lines |'));
+    if (sc.options) rows.push('| | `> key: Label` | option (`when:`, `hint:`, effects) | label, hint, `say:` |');
+  }
+  rows.push('', '### Functions in expressions', '', [...G.FUNCS].sort().map((f) => '`' + f + '()`').join(' · '), '');
+  const gen = rows.join('\n');
+  const i = text.indexOf(begin), j = text.indexOf(end);
+  if (i < 0 || j < 0) { console.error('schema.md: generated markers missing'); return false; }
+  const next = text.slice(0, i + begin.length) + gen + text.slice(j);
+  if (opts.check) { const ok = next === text; console.log(ok ? 'docs: schema.md is up to date' : C.r + 'docs: schema.md is stale' + C.x + ' — run node tools/grim.js docs'); return ok; }
+  if (next !== text) { fs.writeFileSync(file, next); console.log('docs: schema.md regenerated'); } else console.log('docs: schema.md is up to date');
+  return true;
+}
+
 /* ------------------------------------------------------------------ main */
 const [cmd, ...rest] = process.argv.slice(2);
 const flag = (name) => { const i = rest.indexOf('--' + name); return i >= 0 ? (rest[i + 1] && !rest[i + 1].startsWith('--') ? rest[i + 1] : true) : null; };
@@ -772,6 +817,40 @@ switch (cmd) {
     let b = files[1];
     if (!b) { b = path.join(ROOT, 'build', 'snapshots', 'latest.json'); snapshot(b); }
     if (!snapDiff(a, b)) process.exit(1);
+    break;
+  }
+  case 'lorebook': {
+    const { content, errors } = compileAll();
+    if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+    const book = require('./worldbook.js').lorebook(content);
+    const out = path.resolve(flag('out') || path.join(ROOT, 'build', 'lorebook.json'));
+    fs.mkdirSync(path.dirname(out), { recursive: true });
+    fs.writeFileSync(out, JSON.stringify(book, null, 1) + '\n');
+    const by = {}; book.forEach((e) => { by[e.kind] = (by[e.kind] || 0) + 1; });
+    console.log('lorebook: ' + book.length + ' entries (' + Object.entries(by).map(([k, v]) => v + ' ' + k).join(', ') + ') → ' + rel(out));
+    break;
+  }
+  case 'brief': {
+    const { content, sources, errors } = compileAll();
+    if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+    const list = (x) => (typeof x === 'string' ? x.split(',').map((y) => y.trim()).filter(Boolean) : []);
+    const rulesFile = path.join(ROOT, 'docs', 'authoring', 'checklist.md');
+    let res;
+    try {
+      res = require('./worldbook.js').brief(content, sources, { cast: list(flag('cast')), place: flag('place') || null, track: flag('track') || null, arc: flag('arc') || null, topic: typeof flag('topic') === 'string' ? flag('topic') : '', tier: flag('tier') || 'personal', budget: Number(flag('budget')) || 24000, rules: fs.existsSync(rulesFile) ? fs.readFileSync(rulesFile, 'utf8').replace(/^# .*\n/, '') : '' });
+    } catch (e) { console.error(C.r + 'brief: ' + C.x + e.message); process.exit(1); }
+    if (flag('out')) { fs.mkdirSync(path.dirname(path.resolve(flag('out'))), { recursive: true }); fs.writeFileSync(path.resolve(flag('out')), res.text); console.error('brief: ' + res.chars + ' chars (~' + Math.round(res.chars / 4) + ' tokens), ' + res.lore + ' lore, ' + res.examples + ' example(s) → ' + flag('out')); }
+    else process.stdout.write(res.text);
+    break;
+  }
+  case 'docs': if (!genDocs({ check: !!flag('check') })) process.exit(1); break;
+  case 'canon': {
+    const { content, errors } = compileAll();
+    if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+    const u = canonCheck(content);
+    u.forEach((x) => console.log(C.y + x.name + C.x + '  ' + C.d + x.where.join(' ') + C.x));
+    console.log('canon: ' + u.length + ' unknown proper noun(s)');
+    if (u.length) process.exit(1);
     break;
   }
   case 'fmt': if (!fmt(rest.filter((x) => !x.startsWith('--')), { check: !!flag('check') })) process.exit(1); break;

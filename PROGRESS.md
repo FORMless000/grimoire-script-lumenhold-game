@@ -5,6 +5,11 @@
   - Server (`npm start`): saves and slots, run-log telemetry, seen counters, `/admin`. File storage, no dependencies.
   - Tools: play styles, `balance`, `snapshot` / `diff` with a golden baseline, `rename`, `migrate`, `npm test`, `npm run verify`.
   - Browser tests run against the server.
+- **Phase 1 (worldbook and authoring spec): done, pending your curation.**
+  - `content/world/`: the extended cast (ages, voice, stats, schedules, relations), 72 facts, 40 places with campus map positions, the reduced track list (25 tracks), 12 spells, arcs, factions, archetypes, a timeline and 72 soft lore drafts. All of it is translated.
+  - Tools: canon lint (0 unknown names across existing content), `grim brief`, `grim lorebook`, `grim docs`.
+  - `docs/authoring/` (with 5 sample briefs); skills `write-academy-events` (rebuilt) and `distill-lore`.
+  - **Your step:** review `content/world/` in git and promote soft lore to `lore/hard/` (`canon: hard`).
 
 **v0.2.** Engine, UI, toolchain, docs and agent skill are done.
 - **Localization:** a key-based module (`src/i18n.js`, `locales/`) with English and a complete Simplified Chinese translation (3,126 content strings plus the UI), switchable in-game.

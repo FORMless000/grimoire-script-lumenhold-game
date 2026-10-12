@@ -1,0 +1,27 @@
+# Exemplar: a main-plot clue (story class), from content/events/chain_hollowstar.grim.
+# Why it works: tense, concrete discovery; the safe option costs the clue; the risky option
+# is a skill check whose failure still gives something (and a hint); the clue sets a flag
+# and advances the plot counter. Only hard-canon events may grant key clues like this one.
+
+@event hs_founders_records
+title: The Founders' Ledger
+# Reachable once the mystery has started; once only.
+when: hollow >= 1 and not flag(knows_founders_seal)
+weight: 12
+art: book
+tags: mystery hollowstar study
+chain: hollowstar
+scene: A dusty archive vault, a giant ledger open on a lectern, one page carefully razored out.
+text: In the archive vault you find the Founders' Ledger, three hundred years old. The entry for the academy's founding year has been cut out with a razor. But the page beneath still holds the impression of the pen.
+> left: Leave it — this feels dangerous
+  mood +1
+  say: You close the ledger. The dust settles. Some doors are better left alone. Probably.
+> right: Rub charcoal over the page
+  check lore 18:
+    flag knows_founders_seal
+    hollow +1
+    lore +2
+    say: Ghostly letters emerge: "Seven towers, seven locks. The Star sleeps beneath the water. The key is a star that holds no light." The founders built the academy as a seal.
+  else:
+    lore +1
+    say: The impression is too faint. You make out only three words: "...beneath the water..."

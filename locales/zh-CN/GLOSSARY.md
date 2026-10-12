@@ -101,3 +101,15 @@ The Hollow Star 空洞之星 · the door beneath the lake 湖底之门 · the fo
 ## 关系
 
 friend 朋友 · close 挚友 · rival 对手 · nemesis 宿敌 · partner 恋人 · ex 前任 · relationship 关系 · romance 恋慕
+
+## 世界书（v0.3）：地点、课程与社团、咒语、阵营
+
+Places: The Courtyard 庭院 · The Library 图书馆 · The Refectory 膳堂 · The Lakeshore 湖岸 · The Lecture Tower 讲堂塔 · The Observatory 观星台 · The Great Hall 大礼堂 · The Alchemy Laboratory 炼金实验室 · Mira's Workshop 米拉的工坊 · The Job Board 招工告示板 · The Lumen Ledger Office 《流明纪事报》编辑部 · The Headmistress's Tower 院长塔 · The Third Gargoyle 第三座石像鬼 · The Seventh Tower 第七塔 · The Thesis Laboratory 论文实验室 · The Duelling Hall 决斗厅 · The Greenhouses 温室 · The Flight Field 飞行场 · The Familiar Stables 使魔马厩 · The Boathouse 船屋 · The Orchard 果园 · Old Maud's Cottage 老莫德的小屋 · The Secret Garden 秘密花园 · The Courier Loft 信使阁楼 · The Bakery 面包房 · the Mirror Lake 镜湖 · the Sorting Mirror 分院镜 · the Spire Library 尖塔图书馆.
+
+Courses (课程): Evocation 塑能术 · Astromancy & Divination 星象与占卜 · Alchemy & Healing 炼金与治愈 · Illusion & Glamour 幻术与魅影 · Beastcraft & Flight 驭兽与飞行 · Umbral Theory 暗影理论 · Artifice 奇械术 · Starcalling 唤星术 · Hollow Studies 空洞研究 · Thesis 毕业论文. Level names use 、 between levels (塑能术 I、塑能术 II、高等塑能术).
+
+Clubs and jobs: Duelling Circle 决斗社 · The Lumen Ledger 《流明纪事报》社 · Verdant Circle 青翠社 · Midnight Cartographers 午夜制图社 · Library Assistant 图书馆助理 · Server at the Gilded Newt 镀金蝾螈酒馆侍应 · Apothecary Clerk 药铺店员 · Broom Courier 飞帚信使. Ranks are separated by 、.
+
+Spells (咒语): Flame 火焰 · Tide 潮涌 · Foresight 预见 · Starlight 星光 · Mend 愈合 · Purify 净化 · Glamour 魅影 · Mirror 镜像 · Haste 疾速 · Beast-speech 兽语 · Ward 护界 · Shadowstep 影步.
+
+Factions and arcs: the Wardens 守护者 · the Hollow cult 空洞教团 · the Hollow Star 空洞之星 · the Faculty 教职员 · Second Place 第二名 · Thaw 解冻 · The Girl in White Furs 白裘少女.

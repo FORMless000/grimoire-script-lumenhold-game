@@ -361,6 +361,25 @@ trigger: queued
 
 ---
 
+## 6b. The worldbook (`content/world/`)
+
+Worldbook blocks are **data**: canon for authors, briefs and lint. Until phase 2b the engine doesn't play them (and `passed()` / `clue()` are always false). The full property table is generated in `docs/authoring/schema.md`.
+
+| Block | What it is | Structured values |
+|---|---|---|
+| `@npc` (extended) | `age` (required; romance needs 18+), `role`, `year`, `traits` / `interests` (from `@vocab`), `voice` | `stats: arcana 34 lore 22 wealth 5` · `schedule: place@slot,slot …` · `relations: npc:value …` |
+| `@fact npc.key` | what can be learned about a character: `tier` surface / personal / secret, `unlock` (expression), `text` | |
+| `@place` | `region`, `kind` (public, club, job, thesis, internship, plan), `track`, `open` slots, `discover` / `closed_when` / `hinted_when` (expressions), `hint`, `desc` | `map: campus x,y` |
+| `@track` | `kind` (course, club, job, internship, thesis), `skill`, `levels` + `level_names`, `place`, `hidden`, `prereq`, `ranks`, `due`, `lead` | `teaches: spell@level …` · `pay: 8, 12, 18` |
+| `@spell` | `discipline` (a course track) | `cost: 8, 6, 5` · `power: 1, 2, 3` |
+| `@arc` | `canon`, `clues`, `key_clues`, `cast` | `acts: name@yN …` · `clock: 0..12` · `beats: clock@yNmM …` |
+| `@lore` | `keys` (comma-separated), `canon` hard / soft, `text` (not translated) | |
+| `@faction`, `@archetype`, `@timeline`, `@vocab` | members and stance; spawn templates (`age: 18..22`); dated history and calendar beats; controlled vocabularies (`values:`) | |
+
+Translated worldbook fields: place name, desc and hint; track name, level names, ranks and desc; spell name and desc; fact text; faction and arc name and desc. Lists that are shown to players (`level_names`, `ranks`) are kept as text; in Chinese, separate them with 、.
+
+---
+
 ## 7. Errors the toolchain catches
 
 `node tools/grim.js lint` reports:
@@ -371,6 +390,8 @@ trigger: queued
 - **Typos:** a flag that is read but never set; a variable that is read but never assigned.
 - **Orphans:** queued events nobody queues.
 - **Style:** text that is too long, a long label, unknown art key, unknown bond status, love on a non-romanceable NPC.
+- **Worldbook:** unknown places, tracks, spells and npcs in worldbook blocks; values outside `@vocab`; a character without an age, or romance under 18; malformed structured values.
+- **Canon:** proper nouns in player-visible text that no worldbook entry, `@lore` key, glossary or `@vocab canon_allowlist` knows (a warning; an error for batch content under `content/batches/`). `node tools/grim.js canon` lists them.
 
 `node tools/grim.js sim 300` plays 300 random games and reports crashes, soft-locks, ending distribution, never-seen events and average final values. Add `--policy social` to play a relationship-focused player, or `--policy cautious` to avoid draining low resources.
 

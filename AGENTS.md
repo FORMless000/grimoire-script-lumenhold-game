@@ -2,7 +2,7 @@
 
 Lumenhold Academy is a card-swipe life sim set at a magical academy. It runs in the browser: open `index.html` directly (no install), or run `npm start` for the local server, which adds server saves, run logs and an admin page. The v0.3 redesign is planned in `docs/design-v0.3.md`. Content lives in a custom scripting language, Grimoire Script (`.grim`), which agents can extend without touching the engine.
 
-**Adding events, characters, states or chains?** Follow `skills/write-academy-events/SKILL.md` and use `docs/grimoire-script.md` as the language reference. Every change must pass `node tools/grim.js check` (quick) and, before you finish a larger change, `npm run verify`. Content is written in English; translations live in `locales/` (see **Localization** below).
+**Adding events, characters, states or chains?** Follow `skills/write-academy-events/SKILL.md` (built from `docs/authoring/`) and use `docs/grimoire-script.md` as the language reference. Canon lives in the worldbook, `content/world/`: get a brief (`node tools/grim.js brief …`) before writing, and extend the worldbook with `skills/distill-lore/SKILL.md`. Every change must pass `node tools/grim.js check` (quick) and, before you finish a larger change, `npm run verify`. Content is written in English; translations live in `locales/` (see **Localization** below).
 
 ---
 
@@ -24,15 +24,20 @@ tools/format.js, query.js  canonical formatter (grim fmt) and structural search 
 tools/rewrite.js           verified line edits; used by rename.js (grim rename) and migrate.js (grim migrate)
 tools/migrations/          NNNN-name.js content migrations; applied ids in content/.migrations.json
 tools/policies.js          simulator play styles; tools/runlog.js reads run logs and aggregates feedback
+tools/canon.js             canon lint (unknown proper nouns); tools/worldbook.js: lorebook export and briefs
 tools/e2e.js               browser tests (Playwright): from file:// or --server
 test/                      node:test suite (npm test), fixtures/, golden/baseline.json (snapshot for grim diff)
 build/content.bundle.js    GENERATED — all .grim sources + .lang files as one JS file (so file:// works). Never edit by hand.
 content/core/rules.grim    @game, resources, skills, global hooks (rent, drift, start)
-content/npcs/cast.grim     the 12 characters
+content/world/              the worldbook (design §3): cast.grim (the 12 characters: age, voice, stats, schedules,
+                           relations), facts/<npc>.grim, places.grim (campus map positions), tracks.grim, spells.grim,
+                           arcs.grim, factions.grim, archetypes.grim, timeline.grim, vocabulary.grim, lore/{hard,soft}/
 content/states/states.grim origins, electives, clubs, jobs, conditions
 content/endings.grim       early (game-over) and graduation endings
 content/events/*.grim      events, grouped by theme (see below)
 docs/grimoire-script.md    language reference (includes the .lang format)
+docs/authoring/            the authoring spec (style, schema, checklist, presets, classes, examples, sample briefs);
+                           skills/write-academy-events and skills/distill-lore are built from it
 locales/<lang>/            translations: one .lang per .grim file, plus ui.lang and GLOSSARY.md
 ```
 
@@ -81,6 +86,10 @@ node tools/grim.js sim 50 --log build/runs   # also write every simulated game's
 node tools/grim.js sim 100 --policy balanced # play styles: random cautious social balanced aggressive moneymaxx focused:<skill> social:<npc>
 node tools/grim.js balance    # every play style: invariants fail the run, alarms warn (--quick: fewer styles and games)
 node tools/grim.js diff       # golden-seed snapshot vs test/golden/baseline.json: "no gameplay change" or what changed
+node tools/grim.js brief --cast lyra,kael --place library --topic "…"   # ~6k-token context pack for writing events
+node tools/grim.js canon      # proper nouns the worldbook doesn't know (also part of lint)
+node tools/grim.js lorebook   # export the worldbook as build/lorebook.json
+node tools/grim.js docs       # regenerate the block table in docs/authoring/schema.md (verify checks it)
 node tools/grim.js rename npc kael kael_dumont   # verified rename across content and translations (--dry-run)
 node tools/grim.js migrate    # run new scripts in tools/migrations/ (--dry-run shows the diff)
 npm test                      # unit tests: tools and server
