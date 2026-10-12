@@ -51,11 +51,23 @@ async function playthrough(browser, lang) {
   const visible = () => p.evaluate(() => (document.querySelector('#deck .card') || document.querySelector('#overlay') || {}).innerText || '');
   const scan = async () => { if (lang === 'en') return; for (const m of (await visible()).match(ENGLISH_RUN) || []) english.add(m); };
   let steps = 0, ended = false;
-  const n = { menu: 0, card: 0, outcome: 0, month: 0 };
-  while (steps++ < 1200) {
+  const n = { menu: 0, multi: 0, map: 0, card: 0, outcome: 0, month: 0 };
+  let idle = 0;
+  while (steps++ < 5000) {
+    if (await p.$('#deck .card, .opt, #mapGo, #contBtn, #beginMonth, #again')) idle = 0;
     if (await p.$('#again')) { ended = true; break; }
     if (await p.$('#beginMonth')) { n.month++; await scan(); await p.click('#beginMonth'); await p.waitForTimeout(80); continue; }
-    if (await p.$('.opt')) { n.menu++; await scan(); const o = await p.$$('.opt:not([disabled])'); await o[steps % o.length].click(); await p.waitForTimeout(120); continue; }
+    if (await p.$('#mapGo')) { n.map++; await scan(); if (!(await mapPick(p, steps))) break; await p.waitForTimeout(200); continue; }
+    if (await p.$('.opt')) {
+      n.menu++; await scan();
+      const o = await p.$$('.opt:not([disabled])'); await o[steps % o.length].click(); await p.waitForTimeout(120);
+      if (await p.$('#multiGo')) {   // pick: N menus: add a second option when there is one, then confirm
+        n.multi++;
+        const rest = await p.$$('.opt:not([disabled]):not(.sel)'); if (rest.length) { await rest[0].click(); await p.waitForTimeout(80); }
+        await p.click('#multiGo'); await p.waitForTimeout(120);
+      }
+      continue;
+    }
     if (await p.$('#contBtn')) { n.outcome++; await scan(); await p.keyboard.press('Enter'); await p.waitForTimeout(240); continue; }
     if (await p.$('#deck .card')) {
       n.card++; await scan();
@@ -63,17 +75,34 @@ async function playthrough(browser, lang) {
       if (n.card === 5) await p.click('#fbBar .fb-r.down');
       const bt = await p.$$('#choices .choice:not([disabled])'); await bt[steps % bt.length].click(); await p.waitForTimeout(320); continue;
     }
-    await p.waitForTimeout(150);
+    // Nothing to act on: wait, but report a screen that stays stuck.
+    if (++idle > 40) { console.log('  stuck on: ' + (await p.evaluate(() => (document.querySelector('#overlay') || document.body).innerText.slice(0, 300).replace(/\s+/g, ' ')))); break; }
+    await p.waitForTimeout(150); continue;
   }
   if (SHOTS) await p.screenshot({ path: path.join(OUT, lang + '_ending.png') });
   let serverOk = true;
   if (SERVER && ended) serverOk = await checkServer(p, lang, errs);
   await p.close();
   const ok = ended && serverOk && !errs.length && !english.size;
-  console.log((ok ? 'PASS' : 'FAIL') + ` playthrough [${lang}]: ended=${ended} months=${n.month} cards=${n.card} menus=${n.menu}`);
+  console.log((ok ? 'PASS' : 'FAIL') + ` playthrough [${lang}]: ended=${ended} months=${n.month} days=${n.map} cards=${n.card} menus=${n.menu} (multi-pick ${n.multi})`);
+  if (!n.map || !n.multi) { console.log('  expected at least one map screen and one multi-pick menu'); return false; }
   if (english.size) console.log('  English text in ' + lang + ': ' + [...english].slice(0, 8).join(' | '));
   errs.forEach((e) => console.log('  error: ' + e));
   return ok;
+}
+
+// The map screen: fill every free visit slot with an open place (a different one each day), then begin the day.
+async function mapPick(p, steps) {
+  // Click the dots (the markers' only hit area); a place closed in the slot being filled just shows a
+  // status line, so keep trying others until both visits are set.
+  for (let i = 0; i < 40; i++) {
+    const go = await p.$('#mapGo:not([disabled])'); if (go) { if (SHOTS && steps < 40) await p.screenshot({ path: path.join(OUT, 'map.png') }); await go.click(); return true; }
+    const open = await p.$$('#mapRoot .mk.st-open:not(.picked) .mk-dot, #mapRoot .ml-row.st-open:not(.picked)');
+    if (!open.length) break;
+    await open[(steps + i * 7) % open.length].click(); await p.waitForTimeout(40);
+  }
+  console.log('  map: could not fill the visits; ' + (await p.evaluate(() => [...document.querySelectorAll('#mapRoot .pick-chip, #mapRoot .map-status')].map((b) => b.innerText).join(' | '))));
+  return false;
 }
 
 // After a finished game on the server: the run is stored complete, with its feedback, seen counters

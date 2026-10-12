@@ -80,11 +80,21 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `intro` | text | yes |
 |  | `summer_months` | list |  |
 |  | `spell_resource` | text |  |
+|  | `schema` | text |  |
+|  | `last_month` | text |  |
+|  | `calendar` | structured |  |
+|  | `seasons` | structured |  |
+|  | `day_term` | structured |  |
+|  | `day_break` | structured |  |
+|  | `max_cards_per_day` | text |  |
 | `@balance` | `sizes` | structured |  |
 |  | `difficulty` | structured |  |
 |  | `weights` | structured |  |
 |  | `curve` | structured |  |
 |  | `desc` | text |  |
+|  | `xp_cost` | structured |  |
+|  | `rank_xp` | structured |  |
+|  | `performance` | structured |  |
 | `@preset id` | `params` | text |  |
 |  | `desc` | text |  |
 | `@resource id` | `name` | text | yes |
@@ -152,6 +162,20 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `class` | text |  |
 |  | `tone` | text |  |
 |  | `variant` | text |  |
+|  | `place` | text |  |
+|  | `slot` | text |  |
+|  | `replaces` | text |  |
+|  | `track` | text |  |
+|  | `level` | text |  |
+|  | `rank` | text |  |
+|  | `lesson` | text |  |
+|  | `arc` | text |  |
+|  | `beat` | text |  |
+|  | `plan` | text |  |
+|  | `cast` | list |  |
+|  | `offers` | text |  |
+|  | `pick` | text |  |
+|  | `scope` | text |  |
 | | `on_show:` | effects | `say:` lines |
 | | `> key: Label` | option (`when:`, `hint:`, effects) | label, hint, `say:` |
 | `@ending id` | `title` | text | yes |
@@ -162,6 +186,8 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `priority` | number |  |
 |  | `tags` | list |  |
 |  | `kind` | text |  |
+|  | `slot` | text |  |
+|  | `excludes` | text |  |
 | `@hook id` | `on` | text |  |
 |  | `when` | expression |  |
 |  | `desc` | text |  |
@@ -182,6 +208,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `hinted_when` | expression |  |
 |  | `desc` | text | yes |
 |  | `art` | text |  |
+|  | `draws` | text |  |
 | `@track id` | `kind` | text |  |
 |  | `name` | text | yes |
 |  | `skill` | structured |  |
@@ -196,6 +223,8 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `due` | number |  |
 |  | `lead` | text |  |
 |  | `desc` | text | yes |
+|  | `legacy` | text |  |
+|  | `opens` | text |  |
 | `@spell id` | `name` | text | yes |
 |  | `discipline` | text |  |
 |  | `cost` | structured |  |
@@ -237,5 +266,5 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 
 ### Functions in expressions
 
-`abs()` · `bond()` · `bonds()` · `chance_of()` · `chosen()` · `clamp()` · `clue()` · `flag()` · `floor()` · `has()` · `known()` · `knows()` · `left()` · `love()` · `max()` · `met()` · `min()` · `npc_is()` · `npc_rel()` · `passed()` · `rand()` · `rel()` · `romanceable()` · `round()` · `seen()` · `since()` · `spark()` · `spell_level()` · `tagged()`
+`abs()` · `act()` · `applied()` · `bond()` · `bonds()` · `cast_as()` · `chance_of()` · `chosen()` · `clamp()` · `clock()` · `clue()` · `discovered()` · `due()` · `enrolled()` · `flag()` · `floor()` · `has()` · `known()` · `knows()` · `left()` · `level()` · `love()` · `max()` · `member()` · `met()` · `min()` · `npc_is()` · `npc_rel()` · `passed()` · `performance()` · `plan()` · `present()` · `progress()` · `rand()` · `rank()` · `rel()` · `romanceable()` · `round()` · `seen()` · `since()` · `spark()` · `spell_level()` · `tagged()` · `visits()`
 <!-- END GENERATED: schema -->

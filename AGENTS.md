@@ -11,7 +11,9 @@ Lumenhold Academy is a card-swipe life sim set at a magical academy. It runs in 
 ```
 index.html                 entry point; loads src/* and build/content.bundle.js
 src/grimoire.js            parser + expression compiler (UMD: browser + Node)
-src/engine.js              DOM-free game logic (turns, deck, effects, states, relationships, endings)
+src/engine.js              DOM-free game logic (turns, effects, states, relationships, tracks, endings)
+src/director.js            DOM-free day builder (design §5): day recipes, slots, map view, scoring, push windows
+src/map.js                 the map screen (markers, list view, keyboard); presentation only
 src/i18n.js                 localization: .lang parser, string extraction, applyContent, UI string table (UI_EN), t()
 src/art.js                 SVG icon library, card scene composer, procedural portraits
 src/net.js                 optional server client: detection, telemetry batches, server saves, seen counters
@@ -30,9 +32,11 @@ test/                      node:test suite (npm test), fixtures/, golden/baselin
 build/content.bundle.js    GENERATED — all .grim sources + .lang files as one JS file (so file:// works). Never edit by hand.
 content/core/rules.grim    @game, resources, skills, global hooks (rent, drift, start)
 content/world/              the worldbook (design §3): cast.grim (the 12 characters: age, voice, stats, schedules,
-                           relations), facts/<npc>.grim, places.grim (campus map positions), tracks.grim, spells.grim,
-                           arcs.grim, factions.grim, archetypes.grim, timeline.grim, vocabulary.grim, lore/{hard,soft}/
-content/states/states.grim origins, electives, clubs, jobs, conditions
+                           relations), facts/<npc>.grim, places.grim (map positions, hours), tracks.grim (courses,
+                           clubs, jobs, internships, thesis), spells.grim, arcs.grim (clocks, beats), factions.grim,
+                           archetypes.grim, timeline.grim, vocabulary.grim, lore/{hard,soft}/, maps/*.svg (map art)
+content/core/balance.grim  @balance (size and difficulty tiers, XP, the E(turn) curve) and @preset blocks
+content/states/states.grim origins, electives, clubs, jobs (v0.2 states, granted by tracks' legacy:), conditions, plan_* break plans
 content/endings.grim       early (game-over) and graduation endings
 content/events/*.grim      events, grouped by theme (see below)
 docs/grimoire-script.md    language reference (includes the .lang format)
@@ -47,7 +51,10 @@ The engine is content-agnostic. Only touch `src/` when you need a new language f
 
 | File | Contents | Triggers |
 |---|---|---|
-| `calendar.grim` | The year's fixed beats: intro, origin, elective/club/job menus, festivals, exams, summer, graduation | mostly `auto` |
+| `calendar_2b.grim` | The four-year loop's fixed beats: enrolment (`offers: courses`, `pick: 2`), Club Fair, Job Board, break plans, track notices, internship, thesis, Lantern Night, year four | auto, place, queued |
+| `slice_2a.grim` | Phase 2a vertical slice: tiers, presets, challenges, spells, variation | mixed |
+| `slice_2b.grim` | Phase 2b vertical slice: Evocation I–III, Duelling Circle, Library Assistant, campus places, break plans, the internship stub, thesis, the_bell arc | place, track, plan, arc |
+| `calendar.grim` | v0.2 fixed beats: intro, origin, festivals, graduation (its menus and exams are retired by migration 0001) | mostly `auto` |
 | `classes.grim` | 3 events per elective, gated on `has(class_x)` | random, weight 16 |
 | `clubs.grim` | 3 per club, gated on `has(club_x)` | random, weight 14 |
 | `jobs.grim` | 3 per job, gated on `has(job_x)` | random, weight 14 |
@@ -118,24 +125,24 @@ The engine records every run in full in `s.hist`: each month's start-of-month ef
 
 **Setting.** Lumenhold Academy is seven towers joined by bridges of light, standing above a mirror-still lake. A village lies below, reached by barge. The Whisperwood forest is nearby. Rival school: Thornwick Academy. Currency: crowns (`gold`). The tone is warm, witty and slightly melancholy, like a cosy fantasy novel. Humour comes from specifics, not from winking at the reader. There is no gore, and nothing explicit.
 
-**Calendar** (`month` 1–12; 3 years = 36 turns):
+**Calendar** (`month` 1–12; 4 years = 47 turns, ending in Goldenhaze of year 4; each month is one day):
 
-| # | Month | Fixed beats |
-|---|---|---|
-| 1 | Harvestmoon | new year, elective menu, Harvest Feast |
-| 2 | Emberwane | Club Fair, Lantern Night |
-| 3 | Mistveil | Job Board |
-| 4 | Frostcall | Winter Trials (exam) |
-| 5 | Deepwinter | Midwinter Ball |
-| 6 | Thawmoon | second-term elective menu |
-| 7 | Stormbloom | — |
-| 8 | Greenrise | Spring Tournament |
-| 9 | Blossomtide | Job Board; year-3 Hollow Star finale |
-| 10 | Highsun | Grand Examinations |
-| 11 | Goldenhaze | summer recess, summer plans menu |
-| 12 | Starfall | Starfall festival; graduation eve in year 3 |
+| # | Month | Phase | Fixed beats |
+|---|---|---|---|
+| 1 | Harvestmoon | term 1 | enrolment (pick two courses), Harvest Feast |
+| 2 | Emberwane | term 1 | Club Fair, Lantern Night (takes the evening visit) |
+| 3 | Mistveil | term 1 | — (the Job Board is a place: visit it to change jobs) |
+| 4 | Frostcall | term 1 | term end: course exams → GPA, obligations checked |
+| 5 | Deepwinter | winter break | break plan (castle, home, work, internship), Midwinter Ball |
+| 6 | Thawmoon | winter break | — |
+| 7 | Stormbloom | term 2 | enrolment; internship applications (years 2–3) |
+| 8 | Greenrise | term 2 | Spring Tournament |
+| 9 | Blossomtide | term 2 | internship offers; year-3 Hollow Star finale (v0.2 gate, moves to year 4 in phase 3) |
+| 10 | Highsun | term 2 | term end; thesis topic (year 3), thesis defence (year 4) |
+| 11 | Goldenhaze | summer break | break plan; the run ends here in year 4 |
+| 12 | Starfall | summer break | Starfall festival |
 
-**Player.** Five resources (top meters): `health`, `mood`, `gold`, `grades` (shown as "Standing"), `renown`. Six skills: `arcana lore alchemy charm vigor guile`. Origins (`origin_*` states) are picked at the start.
+**Player.** Top bars: `health`, `mood`, `mana`, `renown`, `alignment`; `gold` (Crowns) and `grades` (Standing, legacy) are in the You panel, with the GPA, tracks and spells. Six skills: `arcana lore alchemy charm vigor guile`. Origins (`origin_*` states) are picked at the start.
 
 **Cast.**
 

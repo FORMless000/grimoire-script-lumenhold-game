@@ -436,7 +436,10 @@ function lintLocale(content, lang, problems, opts = {}) {
     if (!e || e.text === '') { missing++; continue; }
     const w = where(s.block, s.key);
     if (e.hash && e.hash !== s.hash) { stale++; if (opts.verbose) P('info', w, 'stale translation (English changed): ' + s.block + ' ' + s.key); }
-    for (const k of tokensOf(e.text)) { const b = badToken(content, k); if (b) P('error', w, '[' + lang + '] ' + b); }
+    // Tokens the (already linted) English uses, plus the event's cast roles, are valid here too.
+    const ev = s.block.startsWith('event ') && content.events[s.block.slice(6)];
+    const ok = new Set(tokensOf(s.text).concat(['track', 'place'], ((ev && ev.cast) || []).map((r) => r.role)));
+    for (const k of tokensOf(e.text)) { if (ok.has(k) || ok.has(k.split('.')[0])) continue; const b = badToken(content, k); if (b) P('error', w, '[' + lang + '] ' + b); }
     const a = namedTokens(s.text).join(' '), b = namedTokens(e.text).join(' ');
     if (a !== b) P('warn', w, '[' + lang + '] tokens differ from English (' + (a || 'none') + ' vs ' + (b || 'none') + ')');
   }

@@ -18,7 +18,8 @@
     const { t, esc, Art } = o;
     const picks = view.slots.map((sl) => { const l = view.locked.find((x) => x.slot === sl); return l ? l.place : null; });
     const lockedAt = (i) => !!view.locked.find((x) => x.slot === view.slots[i]);
-    let listMode = false, status = '';
+    // On phones the campus is too dense for 44 px targets: start in the list view (the map is one tap away).
+    let listMode = !!(typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 600px)').matches), status = '';
     const byId = Object.fromEntries(view.places.map((p) => [p.id, p]));
     const order = view.places.slice().sort((a, b) => a.y - b.y || a.x - b.x);
 

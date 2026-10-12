@@ -333,8 +333,9 @@ details.adv input { margin-top: 8px; }
 .map-tint { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: soft-light; }
 .season-autumn .map-tint { background: rgba(214, 140, 60, .22); } .season-winter .map-tint { background: rgba(190, 215, 255, .25); }
 .season-spring .map-tint { background: rgba(240, 170, 210, .16); } .season-summer .map-tint { background: rgba(240, 210, 110, .2); }
-.mk { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: 0; padding: 4px; min-width: 44px; min-height: 44px; color: var(--text); }
-.mk-dot { position: relative; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: rgba(28, 34, 64, .92); border: 2px solid #c7cbe6; box-shadow: 0 3px 10px rgba(0, 0, 0, .5); font-weight: 700; }
+/* The dot sits on the place's position and is the only hit area; labels, badges and pins never block a neighbour. */
+.mk { position: absolute; transform: translate(-50%, -21px); pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: 0; padding: 4px; min-width: 44px; min-height: 44px; color: var(--text); }
+.mk-dot { pointer-events: auto; position: relative; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: rgba(28, 34, 64, .92); border: 2px solid #c7cbe6; box-shadow: 0 3px 10px rgba(0, 0, 0, .5); font-weight: 700; }
 .mk-label { font-family: var(--serif); font-size: 13px; text-shadow: 0 1px 3px #000, 0 0 6px #000; white-space: nowrap; }
 .mk.st-closed .mk-dot { opacity: .5; border-color: #8a8fae; } .mk.st-closed .mk-label { opacity: .6; }
 .mk.st-hinted .mk-dot { border-style: dashed; border-color: #b9bde0; background: rgba(28, 34, 64, .6); color: #cfd3f0; }
@@ -342,6 +343,7 @@ details.adv input { margin-top: 8px; }
 .mk.mine.k-job .mk-dot { border-color: #e8875a; box-shadow: 0 0 0 3px rgba(232, 135, 90, .25), 0 3px 10px rgba(0, 0, 0, .5); }
 .mk.fest .mk-dot { border-color: #f2c46d; box-shadow: 0 0 14px 4px rgba(242, 196, 109, .55); }
 .mk.picked .mk-dot { background: var(--gold); color: #23190a; }
+.mk:hover, .mk:focus-visible { z-index: 2; }
 .mk:focus-visible .mk-dot { outline: 2px solid var(--gold-2); outline-offset: 2px; }
 .mk-n { position: absolute; top: -8px; right: -10px; background: var(--gold-2); color: #23190a; border-radius: 999px; font-size: 10px; padding: 0 5px; }
 .mk-news { position: absolute; top: -9px; left: -9px; font-style: normal; color: #fff4c2; text-shadow: 0 0 6px #f2c46d; }
@@ -349,7 +351,7 @@ details.adv input { margin-top: 8px; }
 .mk.k-job .mk-badge { background: #e8875a; } .mk-badge.urgent { background: #ff8a80; }
 .mk-pins { display: flex; gap: 2px; } .mk-pins .pin { display: inline-block; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 1px #000; } .mk-pins .more { font-size: 10px; padding: 0 3px; background: #333a5c; border-radius: 6px; }
 .map-list { display: flex; flex-direction: column; gap: 4px; max-height: 60vh; overflow: auto; }
-.ml-row { position: static; transform: none; flex-direction: row; justify-content: flex-start; gap: 10px; text-align: left; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; min-height: 44px; }
+.ml-row { position: static; transform: none; pointer-events: auto; flex-direction: row; justify-content: flex-start; gap: 10px; text-align: left; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; min-height: 44px; }
 .ml-row b { min-width: 180px; } .ml-row span { color: var(--muted); font-size: 13px; } .ml-row em { margin-left: auto; color: var(--gold-2); font-style: normal; font-size: 13px; }
 .ml-row.picked { border-color: var(--gold); }
 .map-status { min-height: 18px; font-size: 13px; color: var(--gold-2); }
@@ -369,7 +371,7 @@ details.adv input { margin-top: 8px; }
 
 /* ---------------- Responsive ---------------- */
 @media (max-width: 900px) {
-  .game { grid-template-columns: 1fr; grid-template-areas: "top" "meters" "stage"; }
+  .game { grid-template-columns: minmax(0, 1fr); grid-template-areas: "top" "meters" "stage"; }
   .side { position: fixed; inset: 0 0 0 auto; width: min(380px, 92vw); z-index: 15; transform: translateX(100%); transition: transform .3s cubic-bezier(.2, .8, .2, 1); background: #10142b; box-shadow: -20px 0 60px rgba(0, 0, 0, .5); }
   .side.open { transform: none; }
   .side-toggle { display: grid; }
@@ -379,6 +381,12 @@ details.adv input { margin-top: 8px; }
   .overlay { padding-bottom: 64px; }
 }
 @media (max-width: 520px) {
+  .top { gap: 8px; padding: 8px 12px; }
+  .top-actions { gap: 4px; }
+  .icon-btn { width: 34px; height: 34px; }
+  .date .when { font-size: 17px; }
+  .date .when small { display: block; margin-left: 0; }
+  .meters { gap: 6px; padding: 10px 8px 2px; }
   .meter { width: 52px; }
   .meter .orb { width: 40px; height: 40px; }
   .meter .lbl { font-size: 9px; letter-spacing: .04em; }

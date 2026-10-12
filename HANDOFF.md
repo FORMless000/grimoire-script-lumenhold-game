@@ -6,6 +6,8 @@ Once you've taken this in, you can delete this file or fold its useful parts int
 
 ---
 
+> **Update (October 12, 2026):** v0.3 Phases 0–2b are done and the project is in git. The game is now a four-year, day-based loop with a map, tracks and a director, waiting for human playtest #1. For the current state read `PROGRESS.md` and `docs/playtest-1.md`; sections 1–4 below describe v0.2 and are kept for the reasoning behind it.
+
 ## 1. Where things stand (v0.2)
 
 A swipe-card life sim set at a magical academy. It runs from `index.html` with no server and no install. Everything below is done and verified:

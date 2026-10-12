@@ -19,6 +19,18 @@
   - Vertical slice: 10 events plus the Ward and Flame spells, in en and zh.
   - Save version 3: older saves are refused, and their logs kept.
 
+- **Phase 2b (the world loop): done, ready for human playtest #1** (`docs/playtest-1.md`).
+  - Calendar: four years, 47 months, terms and breaks, seasons. Each month is one day.
+  - The director (`src/director.js`): day recipes and slots, weighted drawing (novelty, relevance, variety), priorities and overflow, push windows (`queue … within` / `by month`, `unqueue`).
+  - The map (`src/map.js`): two visits a day (one on breaks), opening hours, discovery, festivals that take a visit, club/job markers, who's there, a list view.
+  - Tracks: enrolment menus (`offers:`, `pick: 2`), term exams → GPA, spells taught on passing, clubs and jobs with obligations, performance, warnings, ranks and pay; internship applications; the thesis.
+  - Cast roles and `say[npc]`; arcs with clocks, beats and clues; break plans (castle, home, work, internship); the XP model and rust.
+  - Migration 0001 retired the v0.2 calendar menus and exams. Old content runs in compatibility mode (legacy states granted by tracks, `draws:` for places).
+  - Vertical slice: Evocation I–III, the Duelling Circle, the Library Assistant job, campus and home places, the Royal Library internship stub, the thesis and the four-beat `the_bell` arc, about 50 events, in en and zh.
+  - Tests for the calendar, director, map, tracks, cast and arcs; the browser test plays full four-year runs through the map and multi-pick menus.
+  - **Known gaps** (phase 3): skewed endings, unreachable romance, short days (about 7 cards against 11). See the playtest guide.
+- **Your step:** play it (`npm start`) and leave feedback; then the schema freezes and phase 3 starts.
+
 **v0.2.** Engine, UI, toolchain, docs and agent skill are done.
 - **Localization:** a key-based module (`src/i18n.js`, `locales/`) with English and a complete Simplified Chinese translation (3,126 content strings plus the UI), switchable in-game.
 - **Content:** 354 events (100 added in v0.2: final-year careers, summer recess, faculty arcs, Ilse Dumont's chain, more character, social, life and class events), 55 states, 12 characters, 19 endings.

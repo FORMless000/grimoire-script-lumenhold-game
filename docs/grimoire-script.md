@@ -211,9 +211,10 @@ Used in `when`, `weight`, `if`, `chance`, `check`, assignments and `{=…}`.
 | Name | Value |
 |---|---|
 | any resource or skill id | its current value (`gold`, `arcana` …) |
-| `turn` | 1…36 (months elapsed) |
-| `month` | 1…12 within the year (1 Harvestmoon … 10 Highsun, 11–12 summer) |
-| `year` | 1…3 |
+| `turn` | 1…47 (months elapsed; each month is one day) |
+| `month` | 1…12 within the year (1 Harvestmoon … 4 Frostcall term, 5–6 winter break, 7–10 term, 11–12 summer break) |
+| `year` | 1…4 |
+| `term` `break` `season` `final_year` `term_index` `gpa` `slot` | the calendar and tracks (§6c) |
 | `turns_left`, `max_turns`, `cards_this_month` | as named |
 | `npc` | the bound actor's id (only in events with `actor`) |
 | anything else | a custom variable (default 0), set with `name +1` / `name = …` |
@@ -278,6 +279,8 @@ Avoid contractions that break with "they" (`{they}'s`, `{they}'ve`).
 ---
 
 ## 5. How a month is built
+
+> This is the v0.2 deck, still used by content with no `day_term` in `@game`. Lumenhold now builds each month as one day; see §6c.
 
 1. **State ticks**, then `month_start` hooks (shown in the month summary).
 2. The deck is assembled:
@@ -419,6 +422,63 @@ Worldbook blocks are **data**: canon for authors, briefs and lint. Until phase 2
 Translated worldbook fields: place name, desc and hint; track name, level names, ranks and desc; spell name and desc; fact text; faction and arc name and desc. Lists that are shown to players (`level_names`, `ranks`) are kept as text; in Chinese, separate them with 、.
 
 ---
+
+## 6c. The world loop (phase 2b)
+
+From phase 2b a run is **four years, 47 months, and each month is one day** (design §4). `@game` sets the shape:
+
+```
+years: 4
+last_month: 11                       # the run ends in Goldenhaze of year 4 (turn 47)
+calendar: term=1-4 break=5-6 term=7-10 break=11-12
+seasons: autumn=1-3 winter=4-6 spring=7-9 summer=10-12
+day_term: morning=courses noon=social:1-2 afternoon=visit evening=visit night=world:1-2 midnight=special:0-1
+day_break: morning=plan afternoon=visit night=world:1
+max_cards_per_day: 14
+```
+
+**A day** (`src/director.js`). After the month's start effects, the player picks the visit slots on the **map** (two in term, one on a break). Then the director fills each slot from its source: `courses` (events of enrolled courses), `social` (`trigger: social`), `visit` (events with `place:` the player picked), `world` (random events with no place), `special`, `plan` (events for the active break plan). `:1-2` is how many cards a slot draws. Each candidate scores `weight × novelty × relevance × variety`. Pushed cards (queued, auto, arc beats, track notices) go into their `slot:` (else morning). When the day is over `max_cards_per_day`, priority decides (story > track > pushed > social > ambient) and pushed cards that don't fit move to the next day. `when` is checked again as each card is drawn.
+
+**Identifiers:** `term` and `break` (booleans), `season` (`"autumn"` …), `final_year`, `term_index` (1–8), `gpa` (0–4), `slot` (the slot being drawn). `month` is 1–12 within the academic year; `year` is 1–4; `turn` is 1–47.
+
+**Event fields**
+
+| Field | Meaning |
+|---|---|
+| `place: library` | Drawn when the player visits that place. `replaces: visit1` (or `visit2`) makes it a festival that takes that visit: the map locks the slot to the place. |
+| `slot: night` | The slot a pushed or arc event lands in (`morning noon afternoon evening night midnight`). |
+| `track: evocation` · `level: 2` · `rank: 1` | An event of that course level or club/job rank; drawn in the course's morning or at its place. |
+| `plan: castle` | Drawn on a break with that plan (`plan_castle` state). |
+| `arc: the_bell` · `beat: 3` | A plot card, eligible once the arc's clock reaches the beat. One plot card a month, two in a beat month. |
+| `offers: courses` · `pick: 2` | A generated menu: one option per course (club, job) on offer, plus the event's own options. `pick: N` lets the player choose up to N (multi-select). |
+| `cast:` | Roles filled from the cast (below). |
+| `lesson:` · `scope:` · ending `slot:` / `excludes:` | Parsed and stored; used from phase 3. |
+
+**Cast roles.** One role per line under `cast:`:
+
+```
+cast:
+  friend: any where rel(friend) >= 10      # any met character for whom the condition holds
+  stranger: anyone                         # met or not
+  gossip: present(place)                   # someone whose schedule puts them here now
+  keeper: maud                             # a fixed character
+```
+
+Roles are filled on a scratch copy of the RNG, with backtracking, favouring stronger relationships. In text use `{friend}`, `{friend.their}`; in effects `rel friend +small`, `spark friend +tiny`; in challenges `vs friend.duel`. Inside a role's event, plain `{they}` / `{them}` refer to the first role. `actor: any` still works as a one-role cast. `say[lyra]: …` right after a `say:` line replaces it when that role is Lyra (its translation key gets the suffix `@lyra`).
+
+**Tracks** (`@track` in `content/world/tracks.grim`). Statements: `enrol evocation` (or `enrol evocation 2`), `join duelling`, `leave duelling` (`leave job` / `leave club`: whichever you have), `apply intern_royal_library`, `promote track`, `perform track +small`, `rank_xp track +small`, `progress thesis +medium`. Inside a track notice, `track` means the track that triggered it, and `{track}` prints its name. Functions: `enrolled(t) member(t) applied(t) level(t) passed(t, n) rank(t) performance(t) progress(t) due(t) visits(t)`.
+
+- **Courses:** enrolment menus (`offers: courses`, `pick: 2`) at each term start; `opens: 2` delays a course to term 2. At term end each enrolled course sits an exam (a challenge at the course level's difficulty, easier for study), graded A/B/C/F; the grades make the **GPA**. Passing a level teaches its spells (`teaches: flame@1 tide@2`). `legacy:` lists v0.2 states that enrolling grants, so old class events keep firing.
+- **Clubs and jobs:** one of each at a time. Each term asks for `due:` visits to the track's place. Visits raise performance and rank XP; jobs pay `pay:` per visit (double on breaks). Missed visits cost performance (and standing with the `lead:`). Below 40 a `track_warning` follows, at 0 you are dropped, and with enough rank XP and performance ≥ 70 a `track_promotion` is offered.
+- **Internships and the thesis** use the same statements: `apply`, then a letter event that `join`s or `leave`s; the thesis is `join thesis` with progress from visits and `progress thesis +…`.
+
+**Hooks:** `on: term_start` and `on: term_end` run at the first and last month of each term (rules use them for tuition, term marks and probation).
+
+**Places** (`@place`): `map: campus 585,278` positions the marker; `open:` lists the slots it is open in; `season:`, `closed_when:` close it; `discover:` (a condition) finds it, else it starts found unless `hinted_when:` shows it as "?"; `track:` makes it a club or job place; `draws:` lets old tag-only random events be drawn there. Statements: `discover library`. Functions: `discovered(p)`, `present(p)` (who is there now).
+
+**Arcs** (`@arc` in `content/world/arcs.grim`): `clock: 0..12` and `beats: 1@y1m3 2@y1m9 …` advance the clock on schedule whatever the player does. Statements: `find bell_rope` (a clue), `advance hollowstar +1`. Functions: `clue(x)`, `clock(arc)`, `act(arc)` (the current act by year).
+
+**Push windows** (design §5.3): `queue x within 2..4` (some month 2–4 months from now) and `queue x by month 6` (before the next month 6 is over). Each month in the window the card is pushed with a rising chance (1 / months left), and on the last month for certain. `unqueue x` drops a pending one.
 
 ## 7. Errors the toolchain catches
 

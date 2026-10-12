@@ -115,3 +115,13 @@ Spells (咒语): Flame 火焰 · Tide 潮涌 · Foresight 预见 · Starlight �
 Factions and arcs: the Wardens 守护者 · the Hollow cult 空洞教团 · the Hollow Star 空洞之星 · the Faculty 教职员 · Second Place 第二名 · Thaw 解冻 · The Girl in White Furs 白裘少女.
 
 Numbers and options (v0.3): Mana 法力 · Alignment 立场 (Lumen 光明 / Hollow 空洞) · spark (romantic interest) 心动 · challenge 挑战: duel 决斗, negotiation 交涉, deception 欺瞒, exam 考试, research 研究, brewing 调制, enchanting 附魔; outcomes 胜 / 小胜 / 负.
+
+## 四年制循环（v0.3 phase 2b）
+
+Calendar: term 学期中 · break 假期（winter break 冬假 · summer break 暑假）· Year 4 / final year 最后一年 · time slots 清晨 / 正午 / 午后 / 傍晚 / 夜晚 / 午夜.
+
+Tracks: Enrolment 选课 · course fees 课程费 · GPA（保留英文）· term marks 学期成绩 · academic probation 学业察看 · grades A–F（保留字母）· obligation (practice / shift / session) 练习 / 班次 / 课时 · promotion 晋升 · dropped 除名 · application 申请 · internship 实习 · supervisor 导师 · stipend 津贴 · thesis 毕业论文 · proposal 开题 · defence 答辩 · distinction 优等 · resubmit 重交.
+
+Break plans: Stay at the castle 留在城堡 · Go home 回家 · Work full-time 全职打工 · Board at the castle 城堡食宿. Home places: The Family Cottage 老家小屋 · The Fields 田野 · The Market Town 集镇.
+
+Arcs: The Bell Under the Water 水下的钟 · the drowned bell 沉钟 · bell-rope 钟绳.
