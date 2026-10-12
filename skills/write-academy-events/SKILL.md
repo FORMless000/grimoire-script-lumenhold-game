@@ -21,11 +21,15 @@ Content is data, not code: you write `.grim` blocks under `content/`, then forma
 
 For each event decide:
 - **Trigger:** `random` (everyday, gated by `when`), `social` (about a character, drawn from the relationship slot), `auto` (forced when `when` holds: calendar beats, chain climaxes; tight `when` plus `repeat`), or `queued` (only reachable by `queue`).
-- **Who:** `actor:` an npc id, `any` (the engine picks a met character), or `npc` (inherited via `queue … with npc`).
+- **Where it is drawn** (the director, `docs/grimoire-script.md` §6c): `place: <id>` (a map visit), `track: <id>` with `level:` (course mornings) or `rank:` (club practice, job shifts), `plan: castle|home|work|internship` (break mornings), or no place (the night's world slot). Most everyday content belongs to a place or track now.
+- **Who:** `cast:` roles (`friend: any where rel(friend) >= 10`, `here: present(place)`, `keeper: maud`), or `actor:` a fixed npc id. Don't write `actor: any` (legacy since schema v1).
 - **When:** `when` on state, flags, relationship, month, year.
 - **Class in mind** (`docs/authoring/classes.md`): routine, milestone, incident, windfall, story.
 - **The trade:** every option costs or risks something; use the magnitudes in the AGENTS.md balance table (tiers arrive in phase 2a: `presets.md`).
-- **What it leaves behind:** flags, states, queued follow-ups, `hollow +1` for main-mystery clues (hard-canon events only).
+- **What it leaves behind:** flags, states, queued follow-ups. Clues (`find <clue>`) and arc clocks (`advance <arc> +1`) only in hard-canon story events.
+- **Use tiers and presets, never raw numbers:** `mood -small`, `grind arcana`, `study evocation +small` (exam preparation; never `grades`), `perform duelling +small`, `spark lyra +tiny` (never `love`). Use `challenge <kind> [using <skill>] <tier>:` with `win:` / `partial:` / `lose:`, never `check`.
+
+**Repeatable pool events** (places, class days, practice, shifts, plans) have `class: routine`, `repeat: 4`–`6` (the cooldown in months), and must read differently each time: at least 3 inline variants (`{~a|b|c}`) across text and says, plus `{season=autumn: …|winter: …|…}` or `{final_year: …|…}` lines where they fit. Don't hinge a repeatable on a one-time surprise.
 
 For a **chain**, sketch the graph first: every queued event must be queued by something, and every flag tested must be set somewhere (lint enforces both).
 
@@ -33,7 +37,7 @@ For a **chain**, sketch the graph first: every queued event must be queued by so
 
 Use the shapes in `docs/authoring/schema.md` and the annotated `docs/authoring/examples/`. Stay in canon: names, places and facts from the brief and the worldbook. **A new proper noun needs a soft `@lore` entry** in `content/world/lore/soft/` (canon lint rejects unknown names otherwise). New characters go in `content/world/cast.grim` with `age` (adults only), traits and interests from `@vocab`, `voice`, and 5–8 `@fact`s in `content/world/facts/<id>.grim` (see `skills/distill-lore`).
 
-New class, club or job (until tracks become playable in phase 2b): a `@state` in `content/states/states.grim` (`group: elective|club|job`), an option in the matching menu in `calendar.grim`, about 3 events gated on `has(<state>)`. New ending: `content/endings.grim`, with a `priority` that slots it correctly.
+New course, club or job: a `@track` in `content/world/tracks.grim` (with its `@place`), then events with `track:` and `level:`/`rank:`. New ending: `content/endings.grim`, with a `priority` that slots it correctly.
 
 ## 3. Verify (required)
 
@@ -56,6 +60,10 @@ If a new event never appears, its `when` is too narrow, its `weight` too low, or
 3. Fill the `.lang` lines (or stage them in `locales/zh-CN/_in/` and re-run `i18n zh-CN`). Keep `{npc}` `{player}` `{lyra}` `{=…}`; drop `{s}` and `{are}`; full-width punctuation; labels ≤ 14 characters.
 4. `node tools/grim.js i18n` until 100%, then `lint` and `sim 100 --lang zh-CN`.
 
-## 5. Critic pass, then report
+## 5. Batch, critic, then report
 
-Re-read the batch against `docs/authoring/checklist.md` as if someone else wrote it (or have a subagent do it without your notes). Then report: how many events in which files; new flags, states, characters, facts and lore; the chain graph; lint, sim and balance results (coverage, ending distribution); translation status.
+1. `node tools/grim.js batch <name> --files content/events/pools/<file>.grim` runs every validator on the batch (build, lint, balance --quick, dupes, canon, zh coverage) and writes `build/batches/<name>.json`.
+2. The critic (`skills/critic/SKILL.md`, ideally a separate subagent without your notes) writes `build/batches/<name>.critic.json`. Fix its issues and re-run `batch` (at most two rounds).
+3. `node tools/grim.js report --gaps` shows what the pools still lack.
+
+Then report: how many events in which files; new flags, states, characters, facts and lore; the chain graph; lint, sim and balance results (coverage, ending distribution); translation status.

@@ -45,3 +45,25 @@ test('visits_to(place) counts every picked visit; runs_completed comes from newG
   assert.equal(eng.s.visitsTo[id], picked.filter((x) => x === id).length);
   assert.equal(eng.test(expr('visits_to(' + id + ') >= 1'), null), true);
 });
+
+test('dupes: a copied event is flagged, the real content has no near-duplicates', () => {
+  const D = require('../tools/dupes.js');
+  assert.deepEqual(D.dupes(content), []);
+  const c2 = Object.assign({}, content, { events: Object.assign({}, content.events, { copy: Object.assign({}, content.events.evo_first_spark, { id: 'copy' }) }) });
+  const d = D.dupes(c2, { only: new Set(['copy']) });
+  assert.equal(d.length, 1);
+  assert.ok(d[0].score > 0.9);
+});
+
+test('report --gaps: a row for every draw source, and usage from run histories', () => {
+  const R = require('../tools/report.js');
+  const rows = R.pools(content);
+  for (const p of Object.values(content.places)) if (p.kind !== 'internship') assert.ok(rows.find((r) => r.kind === 'place' && r.id === p.id), p.id);
+  for (const t of Object.values(content.tracks)) if (t.kind === 'club' || t.kind === 'job') assert.ok(rows.find((r) => r.id === t.id), t.id);
+  assert.ok(rows.find((r) => r.kind === 'plan' && r.id === 'castle'));
+  const run = { hist: [{ t: 'pick', turn: 3, picks: ['courtyard', 'library'] }, { t: 'card', turn: 3, month: 3, id: 'x', slot: 'afternoon', place: 'courtyard' }] };
+  const u = R.usage(content, [run]);
+  assert.equal(u.visits, 2);
+  assert.equal(u.empty, 1);
+  assert.equal(u.places.library.empty, 1);
+});

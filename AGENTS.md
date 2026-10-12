@@ -2,7 +2,7 @@
 
 Lumenhold Academy is a card-swipe life sim set at a magical academy. It runs in the browser: open `index.html` directly (no install), or run `npm start` for the local server, which adds server saves, run logs and an admin page. The v0.3 redesign is planned in `docs/design-v0.3.md`. Content lives in a custom scripting language, Grimoire Script (`.grim`), which agents can extend without touching the engine.
 
-**Adding events, characters, states or chains?** Follow `skills/write-academy-events/SKILL.md` (built from `docs/authoring/`) and use `docs/grimoire-script.md` as the language reference. Canon lives in the worldbook, `content/world/`: get a brief (`node tools/grim.js brief …`) before writing, and extend the worldbook with `skills/distill-lore/SKILL.md`. Every change must pass `node tools/grim.js check` (quick) and, before you finish a larger change, `npm run verify`. Content is written in English; translations live in `locales/` (see **Localization** below).
+**Adding events, characters, states or chains?** Follow `skills/write-academy-events/SKILL.md` (built from `docs/authoring/`; batches are reviewed with `skills/critic/SKILL.md`) and use `docs/grimoire-script.md` as the language reference. Canon lives in the worldbook, `content/world/`: get a brief (`node tools/grim.js brief …`) before writing, and extend the worldbook with `skills/distill-lore/SKILL.md`. Every change must pass `node tools/grim.js check` (quick) and, before you finish a larger change, `npm run verify`. Content is written in English; translations live in `locales/` (see **Localization** below).
 
 ---
 
@@ -25,6 +25,7 @@ tools/project.js           shared loaders (sources, locales, bundle, content has
 tools/format.js, query.js  canonical formatter (grim fmt) and structural search (grim query)
 tools/rewrite.js           verified line edits; used by rename.js (grim rename) and migrate.js (grim migrate)
 tools/migrations/          NNNN-name.js content migrations; applied ids in content/.migrations.json
+tools/schema-manifest.js   the frozen format (test/golden/schema-v1.json); tools/report.js, dupes.js: gap report, duplicates
 tools/policies.js          simulator play styles; tools/runlog.js reads run logs and aggregates feedback
 tools/canon.js             canon lint (unknown proper nouns); tools/worldbook.js: lorebook export and briefs
 tools/e2e.js               browser tests (Playwright): from file:// or --server
@@ -100,6 +101,9 @@ node tools/grim.js canon      # proper nouns the worldbook doesn't know (also pa
 node tools/grim.js lorebook   # export the worldbook as build/lorebook.json
 node tools/grim.js docs       # regenerate the block table in docs/authoring/schema.md (verify checks it)
 node tools/grim.js schema     # check the frozen format v1 (--update records additions)
+node tools/grim.js report --gaps        # pools per place / course level / club & job / plan vs floors and depth targets
+node tools/grim.js dupes [FILE…]        # near-duplicate events (shingled Jaccard ≥ 0.6)
+node tools/grim.js batch NAME --files a.grim,b.grim   # validate an authoring batch → build/batches/NAME.json (/admin: Batches)
 node tools/grim.js rename npc kael kael_dumont   # verified rename across content and translations (--dry-run)
 node tools/grim.js migrate    # run new scripts in tools/migrations/ (--dry-run shows the diff)
 npm test                      # unit tests: tools and server

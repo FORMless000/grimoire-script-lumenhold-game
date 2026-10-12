@@ -100,3 +100,17 @@ test('feedback aggregation counts inherited feedback of a forked run once', () =
   assert.equal(RunLog.aggregateFeedback([a, b]).total, 2);
   assert.equal(RunLog.aggregateFeedback([b]).total, 2, 'origin missing: inherited feedback counts');
 });
+
+test('batches: lists the reports grim batch wrote, newest first, without critic files', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'lumenhold-root-'));
+  const dir = path.join(root, 'build', 'batches');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'a.json'), JSON.stringify({ name: 'a', at: 1, files: [], events: [], validators: {}, spotCheck: [] }));
+  fs.writeFileSync(path.join(dir, 'b.json'), JSON.stringify({ name: 'b', at: 2, files: [], events: [], validators: {}, spotCheck: [] }));
+  fs.writeFileSync(path.join(dir, 'b.critic.json'), JSON.stringify({ accept: true, issues: [] }));
+  const s = await start({ root });
+  try {
+    const r = await s.call('GET', '/api/batches');
+    assert.deepEqual(r.json.map((b) => b.name), ['b', 'a']);
+  } finally { s.close(); fs.rmSync(root, { recursive: true, force: true }); }
+});

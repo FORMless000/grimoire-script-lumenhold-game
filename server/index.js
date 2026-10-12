@@ -86,6 +86,14 @@ function createServer({ root = ROOT, dataDir = path.join(root, 'data'), token = 
       const { total, rows } = RunLog.aggregateFeedback(runs, { contentHash: bundle().hash });
       return send(res, 200, { runs: runs.length, feedback: total, contentHash: bundle().hash, events: rows });
     }
+    // Authoring batches (design §11.1): the reports `grim batch` writes to build/batches/.
+    if (p === '/api/batches' && req.method === 'GET') {
+      const dir = path.join(root, 'build', 'batches');
+      const list = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith('.json') && !f.endsWith('.critic.json')) : [];
+      const out = [];
+      for (const f of list) { try { out.push(JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'))); } catch (e) { /* skip a torn file */ } }
+      return send(res, 200, out.sort((a, b) => (b.at || 0) - (a.at || 0)));
+    }
     if (p.startsWith('/api/')) throw httpError(404, 'no such API');
 
     // ---- Pages and static files

@@ -35,6 +35,13 @@
  *   node tools/grim.js brief [--cast a,b] [--place P] [--track T] [--arc A] [--topic "…"] [--tier T] [--out FILE]
  *                                       a ~6k-token context pack for writing events (design §3.4)
  *   node tools/grim.js docs [--check]   regenerate the block table in docs/authoring/schema.md
+ *   node tools/grim.js report --gaps [--games N] [--policy P] [--all] [--json]
+ *                                       pools per draw source vs floors and depth targets; empty draws and cards per day
+ *   node tools/grim.js dupes [FILE…] [--threshold 0.6] [--strict]
+ *                                       near-duplicate events (5-word shingle Jaccard); with files, only pairs touching them
+ *   node tools/grim.js batch NAME --files a.grim,b.grim [--critic FILE] [--skip-balance]
+ *                                       validate an authoring batch: build, lint, balance --quick, dupes, canon,
+ *                                       i18n zh-CN, the critic's verdict; writes build/batches/NAME.json
  *   node tools/grim.js schema [--update]
  *                                       check the format against the frozen manifest (test/golden/schema-v1.json):
  *                                       removals fail, additions are listed (--update records them)
@@ -428,6 +435,85 @@ function badToken(content, k) {
   if (!PRONOUN_KEYS.has(key.toLowerCase())) return 'unknown token {' + k + '}';
   return null;
 }
+// grim report --gaps: pools per draw source against floors and depth targets, with empty-draw rates from sim runs.
+function report(opts = {}) {
+  const { content, errors } = compileAll();
+  if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+  const R = require('./report.js');
+  const style = Policies.get(opts.policy);
+  const runs = [];
+  const w = console.warn; console.warn = () => {};
+  try { for (let g = 0; g < opts.games; g++) runs.push(playGame(content, { seed: 4242 + g * 7919, style, runId: 'report-' + g }).eng.s); } finally { console.warn = w; }
+  const { rows, usage } = R.gaps(content, runs);
+  if (opts.json) { console.log(JSON.stringify({ rows, usage }, null, 2)); return; }
+  console.log(C.b + 'pacing' + C.x + ' (' + opts.games + ' ' + style.name + ' games): term day ' + usage.termDay.toFixed(1) + ' cards, break day ' + usage.breakDay.toFixed(1) + ', empty visits ' + (usage.emptyShare * 100).toFixed(0) + '% of ' + usage.visits);
+  const pct = (x) => (x == null ? '   –' : String(Math.round(x * 100)).padStart(3) + '%');
+  let short = 0;
+  for (const kind of ['place', 'course', 'club', 'job', 'plan', 'thesis', 'internship', 'slot']) {
+    const rs = rows.filter((r) => r.kind === kind);
+    if (!rs.length) continue;
+    console.log('\n' + C.b + kind + C.x + C.d + '  (floor ' + R.FLOOR[kind] + ', target ' + R.TARGET[kind] + ')' + C.x);
+    for (const r of rs) {
+      if (!opts.all && !r.short && r.events >= r.target) continue;
+      short += r.short;
+      const extra = [r.track ? '+' + r.track + ' track' : '', r.compat ? r.compat + ' compat' : '', r.ranks ? 'ranks ' + r.ranks.join('/') : '', r.hidden ? 'hidden' : ''].filter(Boolean).join(', ');
+      console.log('  ' + (r.short ? C.r : r.events < r.target ? C.y : C.g) + r.id.padEnd(24) + C.x + String(r.events).padStart(3) + ' events ' + String(r.repeatable).padStart(3) + ' repeatable' + (kind === 'place' ? '  empty ' + pct(r.emptyShare) + ' of ' + String(r.visits || 0).padStart(4) + ' visits' : '') + (r.short ? C.r + '  short ' + r.short + C.x : '') + (extra ? C.d + '  ' + extra + C.x : ''));
+    }
+  }
+  console.log('\n' + (short ? C.y : C.g) + 'gaps: ' + short + ' event(s) below the floors' + C.x + C.d + ' (--all lists sources at target too; --json for machines)' + C.x);
+}
+
+// grim batch NAME --files a.grim,b.grim [--critic verdict.json] [--skip-balance]
+// Runs the validators on one authoring batch (design §11.1) and writes build/batches/NAME.json:
+// build, lint (problems in the batch's files), balance --quick, dupes, canon, i18n zh-CN coverage,
+// the critic's verdict ({accept, issues}) and a 10% spot-check sample. Accepted = all pass + critic accepts.
+function batch(name, opts = {}) {
+  const { spawnSync } = require('child_process');
+  if (!name || !/^[a-z0-9_-]+$/i.test(name)) { console.error('usage: grim batch NAME --files a.grim,b.grim [--critic FILE]'); process.exit(2); }
+  const files = String(opts.files || '').split(',').map((f) => f.trim()).filter(Boolean).map((f) => path.relative(ROOT, path.resolve(f)));
+  if (!files.length) { console.error('batch: --files is required'); process.exit(2); }
+  const inBatch = (where) => files.some((f) => String(where || '').startsWith(f));
+  const run = (args) => { const r = spawnSync(process.execPath, [__filename, ...args], { cwd: ROOT, encoding: 'utf8', env: Object.assign({}, process.env, { FORCE_COLOR: '0' }) }); return { code: r.status, out: (r.stdout || '') + (r.stderr || '') }; };
+  const v = {};
+  const b = run(['build']); v.build = { ok: b.code === 0 };
+  const l = run(['lint']);
+  const probs = l.out.split('\n').map((x) => x.match(/^(error|warn)\s+(\S+?):\s(.*)$/)).filter(Boolean).map((m) => ({ level: m[1], where: m[2], msg: m[3] }));
+  v.lint = { ok: l.code === 0 && !probs.some((p) => p.level === 'error'), errors: probs.filter((p) => p.level === 'error'), warnings: probs.filter((p) => p.level === 'warn' && inBatch(p.where)) };
+  const { content } = compileAll();
+  const events = Object.values(content.events).filter((e) => inBatch(e.file)).map((e) => e.id);
+  const ids = new Set(events);
+  if (opts.balance !== false) { const bal = run(['balance', '--quick']); v.balance = { ok: bal.code === 0, alarms: bal.out.split('\n').filter((x) => /^alarm/.test(x)).map((x) => x.replace(/^alarm\s+/, '')) }; }
+  else v.balance = { ok: true, skipped: true };
+  const pairs = require('./dupes.js').dupes(content, { only: ids });
+  v.dupes = { ok: !pairs.length, pairs };
+  const unknown = canonCheck(content).filter((u) => u.where.some(inBatch)).map((u) => u.name);
+  v.canon = { ok: !unknown.length, unknown };
+  run(['i18n', 'zh-CN']);
+  const loc = I18n.loadLocale('zh-CN', loadLocaleSources('zh-CN').filter((x) => !x.path.endsWith('/_obsolete.lang')));
+  const strings = I18n.extract(content).filter((x) => inBatch(x.file));
+  const done = strings.filter((x) => { const e = loc.blocks[x.block] && loc.blocks[x.block][x.key]; return e && e.text !== ''; }).length;
+  v.i18n = { ok: done === strings.length, translated: done, total: strings.length };
+  // The critic's verdict: --critic FILE, else build/batches/NAME.critic.json if the critic wrote one.
+  const dir = path.join(ROOT, 'build', 'batches');
+  fs.mkdirSync(dir, { recursive: true });
+  const criticFile = opts.critic ? path.resolve(opts.critic) : path.join(dir, name + '.critic.json');
+  const critic = readJSONFile(criticFile);
+  // A deterministic 10% sample for optional human spot-checks (decision D5).
+  let h = 0; for (const c of name) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const spot = events.slice().sort((a, b2) => { const ha = [...a].reduce((x, c) => (x * 33 + c.charCodeAt(0) + h) >>> 0, 7); const hb = [...b2].reduce((x, c) => (x * 33 + c.charCodeAt(0) + h) >>> 0, 7); return ha - hb; }).slice(0, Math.max(1, Math.ceil(events.length / 10)));
+  const valid = Object.values(v).every((x) => x.ok);
+  const rec = { name, at: Date.now(), files, events, contentHash: contentHash(), validators: v, critic: critic || null, spotCheck: events.length ? spot : [], accepted: valid && !!(critic && critic.accept) };
+  fs.writeFileSync(path.join(dir, name + '.json'), JSON.stringify(rec, null, 2) + '\n');
+  for (const [k, x] of Object.entries(v)) {
+    const detail = k === 'lint' ? x.errors.length + ' error(s), ' + x.warnings.length + ' warning(s) in batch' : k === 'dupes' ? x.pairs.map((p) => p.a + '~' + p.b + ' ' + p.score).join(', ') : k === 'canon' ? x.unknown.join(', ') : k === 'i18n' ? x.translated + '/' + x.total + ' zh' : k === 'balance' ? (x.skipped ? 'skipped' : x.alarms.length + ' alarm(s)') : '';
+    console.log((x.ok ? C.g + 'pass ' : C.r + 'FAIL ') + C.x + k.padEnd(8) + C.d + detail + C.x);
+  }
+  for (const p of v.lint.errors.concat(v.lint.warnings).slice(0, 30)) console.log('  ' + p.level + ' ' + p.where + ': ' + p.msg);
+  console.log((critic ? (critic.accept ? C.g + 'pass ' : C.r + 'FAIL ') : C.y + 'wait ') + C.x + 'critic  ' + C.d + (critic ? (critic.issues || []).length + ' issue(s)' : 'no verdict yet (' + path.relative(ROOT, criticFile) + ')') + C.x);
+  console.log((rec.accepted ? C.g + 'batch ' + name + ': accepted' : C.y + 'batch ' + name + ': not accepted') + C.x + ' — ' + events.length + ' event(s), spot-check ' + rec.spotCheck.join(', ') + C.d + ' → build/batches/' + name + '.json' + C.x);
+  return rec;
+}
+
 // The content declares the format version it is written for (design §12); the parser must know it.
 function schemaLint(content, problems) {
   const frozen = readJSONFile(SCHEMA_FILE);
@@ -1029,6 +1115,19 @@ switch (cmd) {
     } catch (e) { console.error(C.r + 'brief: ' + C.x + e.message); process.exit(1); }
     if (flag('out')) { fs.mkdirSync(path.dirname(path.resolve(flag('out'))), { recursive: true }); fs.writeFileSync(path.resolve(flag('out')), res.text); console.error('brief: ' + res.chars + ' chars (~' + Math.round(res.chars / 4) + ' tokens), ' + res.lore + ' lore, ' + res.examples + ' example(s) → ' + flag('out')); }
     else process.stdout.write(res.text);
+    break;
+  }
+  case 'report': report({ gaps: !!flag('gaps'), games: Number(flag('games')) || 30, policy: flag('policy') || 'balanced', json: !!flag('json'), all: !!flag('all') }); break;
+  case 'batch': { const rec = batch(rest.find((x, i) => !x.startsWith('--') && !['--files', '--critic'].includes(rest[i - 1])), { files: flag('files'), critic: flag('critic'), balance: !flag('skip-balance') }); if (!Object.values(rec.validators).every((x) => x.ok)) process.exit(1); break; }
+  case 'dupes': {
+    const { content } = compileAll();
+    const t = flag('threshold') != null ? Number(flag('threshold')) : 0.6;
+    const files = rest.filter((x, i) => !x.startsWith('--') && rest[i - 1] !== '--threshold');
+    const only = files.length ? new Set(Object.values(content.events).filter((e) => files.some((f) => (e.file || '').includes(f))).map((e) => e.id)) : null;
+    const d = require('./dupes.js').dupes(content, { only, threshold: t });
+    d.forEach((p) => console.log(C.y + p.score.toFixed(2) + C.x + '  ' + p.a + '  ~  ' + p.b));
+    console.log((d.length ? C.y : C.g) + 'dupes: ' + d.length + ' pair(s) at Jaccard ≥ ' + t + C.x + (only ? C.d + ' (pairs touching ' + only.size + ' event(s) in ' + files.join(', ') + ')' + C.x : ''));
+    if (d.length && flag('strict')) process.exit(1);
     break;
   }
   case 'schema': if (!schemaCmd({ update: !!flag('update') })) process.exit(1); break;

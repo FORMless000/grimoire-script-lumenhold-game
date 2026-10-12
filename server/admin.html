@@ -33,6 +33,7 @@
   <nav>
     <button class="btn on" data-view="feedback">Feedback by event</button>
     <button class="btn" data-view="runs">Runs</button>
+    <button class="btn" data-view="batches">Batches</button>
     <label class="muted" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="sim"> include simulated runs</label>
   </nav>
   <div id="view"></div>
@@ -58,6 +59,22 @@ async function render() {
       el.innerHTML = '<div class="wrap"><table><tr><th>Event</th><th class="num">👍</th><th class="num">👎</th><th>Notes</th></tr>' + r.events.map(([key, b]) =>
         '<tr><td><b>' + esc(key) + '</b></td><td class="num up">' + b.up + '</td><td class="num down">' + b.down + '</td><td>' + b.notes.map((n) =>
           '<div><span class="' + (n.rating || '') + '">' + (n.rating === 'up' ? '👍' : n.rating === 'down' ? '👎' : '·') + '</span> <span class="muted">turn ' + n.turn + (n.choice ? ' → ' + esc(n.choice) : '') + ' · ' + esc(n.lang) + (n.stale ? ' · older content' : '') + '</span>' + (n.comment ? '<div class="note">' + esc(n.comment) + '</div>' : '') + '</div>').join('') + '</td></tr>').join('') + '</table></div>';
+    } else if (view === 'batches') {
+      const bs = await api('/api/batches');
+      document.getElementById('sub').textContent = bs.length + ' batch(es) · accepted ' + bs.filter((b) => b.accepted).length;
+      if (!bs.length) { el.innerHTML = '<p class="muted">No batches yet. <code>node tools/grim.js batch NAME --files …</code> writes one.</p>'; return; }
+      const mark = (x) => (x && x.ok ? '<span class="up">✓</span>' : '<span class="down">✗</span>');
+      const keys = ['build', 'lint', 'balance', 'dupes', 'canon', 'i18n'];
+      el.innerHTML = '<div class="wrap"><table><tr><th>Batch</th><th>Files</th><th class="num">Events</th>' + keys.map((k) => '<th>' + k + '</th>').join('') + '<th>Critic</th><th>Spot-check</th><th>Status</th><th>When</th></tr>' + bs.map((b) =>
+        '<tr class="click" data-name="' + esc(b.name) + '"><td><b>' + esc(b.name) + '</b></td><td class="muted">' + esc(b.files.join(', ')) + '</td><td class="num">' + b.events.length + '</td>' + keys.map((k) => '<td>' + mark(b.validators[k]) + '</td>').join('') +
+        '<td>' + (b.critic ? mark({ ok: b.critic.accept }) + ' <span class="muted">' + (b.critic.issues || []).length + '</span>' : '<span class="muted">—</span>') + '</td><td>' + b.spotCheck.map((id) => '<a href="/index.html?event=' + encodeURIComponent(id) + '&debug" target="_blank">' + esc(id) + '</a>').join(', ') + '</td><td>' + (b.accepted ? '<span class="pill">accepted</span>' : '<span class="muted">pending</span>') + '</td><td>' + when(b.at) + '</td></tr>').join('') + '</table></div><div id="run"></div>';
+      el.querySelectorAll('tr.click').forEach((tr) => { tr.onclick = () => {
+        const b = bs.find((x) => x.name === tr.dataset.name), v = b.validators;
+        const issues = (b.critic && b.critic.issues || []).map((i) => '<tr><td>' + esc(i.event) + '</td><td>' + esc(i.problem) + '</td><td class="muted">' + esc(i.fix) + '</td></tr>').join('');
+        const lint = v.lint.errors.concat(v.lint.warnings).map((p) => '<div class="' + (p.level === 'error' ? 'err' : 'muted') + '">' + esc(p.where + ': ' + p.msg) + '</div>').join('');
+        document.getElementById('run').innerHTML = '<h2>' + esc(b.name) + '</h2><p class="muted">content ' + esc(b.contentHash) + ' · zh ' + v.i18n.translated + '/' + v.i18n.total + (v.dupes.pairs.length ? ' · dupes: ' + esc(v.dupes.pairs.map((p) => p.a + '~' + p.b + ' ' + p.score).join(', ')) : '') + (v.canon.unknown.length ? ' · unknown names: ' + esc(v.canon.unknown.join(', ')) : '') + (v.balance.alarms && v.balance.alarms.length ? '<br>alarms: ' + esc(v.balance.alarms.join(' · ')) : '') + '</p>' + lint +
+          (issues ? '<div class="wrap"><table><tr><th>Event</th><th>Critic: problem</th><th>Fix</th></tr>' + issues + '</table></div>' : '') + '<p class="muted">Events: ' + esc(b.events.join(', ')) + '</p>';
+      }; });
     } else {
       const runs = (await api('/api/runs')).filter((r) => sim || !r.sim);
       document.getElementById('sub').textContent = runs.length + ' run(s)';
