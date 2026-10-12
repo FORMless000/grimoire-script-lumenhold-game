@@ -2,7 +2,8 @@
 /*
  * grim — content toolchain for Lumenhold.
  *
- *   node tools/grim.js build            bundle content/**\/*.grim -> build/content.bundle.js (run after every content edit)
+ *   node tools/grim.js build [--check]  bundle content/**\/*.grim + locales -> build/content.bundle.js (run after every
+ *                                       content or translation edit); --check only reports a stale bundle (exit 1)
  *   node tools/grim.js lint             parse + cross-reference check (errors fail; warnings are advisory)
  *   node tools/grim.js sim [N] [--seed S] [--policy random|cautious|social] [--verbose] [--log DIR]
  *                                       auto-play N games, report coverage, endings, deaths, balance
@@ -56,11 +57,16 @@ const { listFiles, rel, localeLangs, loadLocaleSources, loadSources, compileAll 
 const C = process.stdout.isTTY ? { r: '\x1b[31m', y: '\x1b[33m', g: '\x1b[32m', d: '\x1b[2m', b: '\x1b[1m', x: '\x1b[0m' } : { r: '', y: '', g: '', d: '', b: '', x: '' };
 
 /* ------------------------------------------------------------------ build */
-function build() {
+function build(opts = {}) {
   const { sources, errors } = compileAll();
   if (errors.length) { errors.forEach((e) => console.error(C.r + 'error ' + C.x + e.message)); console.error(C.r + 'build failed' + C.x); process.exit(1); }
   fs.mkdirSync(path.dirname(BUNDLE), { recursive: true });
   const { text, locales } = P.bundleText(sources);
+  if (opts.check) {
+    const fresh = fs.existsSync(BUNDLE) && fs.readFileSync(BUNDLE, 'utf8') === text;
+    console.log(fresh ? 'build: bundle is up to date' : C.r + 'build: build/content.bundle.js is stale' + C.x + ' — run node tools/grim.js build (the file:// game loads it)');
+    return fresh;
+  }
   fs.writeFileSync(BUNDLE, text);
   const nLoc = Object.values(locales).reduce((n, a) => n + a.length, 0);
   console.log(C.g + 'built ' + C.x + path.relative(ROOT, BUNDLE) + ' (' + sources.length + ' content files, ' + nLoc + ' locale files in ' + Object.keys(locales).length + ' language(s), ' + (text.length / 1024).toFixed(0) + ' KB)');
@@ -652,7 +658,7 @@ function ids(kind) {
 const [cmd, ...rest] = process.argv.slice(2);
 const flag = (name) => { const i = rest.indexOf('--' + name); return i >= 0 ? (rest[i + 1] && !rest[i + 1].startsWith('--') ? rest[i + 1] : true) : null; };
 switch (cmd) {
-  case 'build': build(); break;
+  case 'build': if (build({ check: !!flag('check') }) === false) process.exit(1); break;
   case 'lint': lint({ verbose: !!flag('verbose') }); break;
   case 'sim': { const ok = sim(Number(rest.find((x) => /^\d+$/.test(x))) || 300, { seed: flag('seed') != null ? Number(flag('seed')) : undefined, policy: flag('policy'), lang: flag('lang'), verbose: !!flag('verbose'), log: typeof flag('log') === 'string' ? path.resolve(flag('log')) : null }); if (!ok) process.exit(1); break; }
   case 'i18n': if (rest[0]) i18nSync(rest[0]); else i18nStatus(); break;
