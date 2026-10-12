@@ -22,13 +22,16 @@
 
   // Functions whose bare-identifier arguments are names (not variables).
   // `npc` is always resolved to the bound actor's id.
-  const SYMBOLIC = new Set(['has', 'flag', 'left', 'rel', 'love', 'spark', 'bond', 'met', 'seen', 'since', 'chosen', 'bonds', 'npc_is', 'romanceable', 'tagged', 'passed', 'clue', 'spell_level', 'knows', 'npc_rel']);
+  const SYMBOLIC = new Set(['has', 'flag', 'left', 'rel', 'love', 'spark', 'bond', 'met', 'seen', 'since', 'chosen', 'bonds', 'npc_is', 'romanceable', 'tagged', 'passed', 'clue', 'spell_level', 'knows', 'npc_rel',
+    'enrolled', 'member', 'rank', 'performance', 'level', 'progress', 'due', 'visits', 'present', 'act', 'clock', 'discovered', 'applied', 'cast_as', 'plan']);
   const FUNCS = new Set([...SYMBOLIC, 'rand', 'min', 'max', 'abs', 'floor', 'round', 'clamp', 'known', 'chance_of']);
   // Reference kinds for linting: which argument of which function refers to what.
   const FUNC_REFS = {
     has: ['flagOrState'], flag: ['flag'], left: ['state'], rel: ['npc'], love: ['npc'], bond: ['npc'],
     met: ['npc'], seen: ['event'], since: ['event'], chosen: ['event', null], npc_is: ['npc'], bonds: [null], romanceable: ['npc'], tagged: ['npc', null],
     passed: ['track', null], clue: ['clue'], spark: ['npc'], spell_level: ['spell'], knows: ['fact'], npc_rel: ['npc', 'npc'],
+    enrolled: ['track'], member: ['track'], rank: ['track'], performance: ['track'], level: ['track'], progress: ['track'], due: ['track'], visits: ['track'], applied: ['track'],
+    present: ['place'], act: ['arc'], clock: ['arc'], discovered: ['place'], cast_as: [null, 'npc'], plan: [null],
   };
 
   function tokenize(s, file, line) {
@@ -167,22 +170,25 @@
    * ------------------------------------------------------------------ */
 
   const SCHEMA = {
-    game: { noId: true, props: ['title', 'subtitle', 'years', 'months', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'intro', 'summer_months', 'spell_resource'], effects: [] },
+    game: { noId: true, props: ['title', 'subtitle', 'years', 'months', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'intro', 'summer_months', 'spell_resource',
+      'schema', 'last_month', 'calendar', 'seasons', 'day_term', 'day_break', 'max_cards_per_day'], effects: [] },
     // Numbers (design §8.4): size and difficulty tiers, option-value weights, the expected-skill curve.
-    balance: { noId: true, props: ['sizes', 'difficulty', 'weights', 'curve', 'desc'], effects: [] },
+    balance: { noId: true, props: ['sizes', 'difficulty', 'weights', 'curve', 'desc', 'xp_cost', 'rank_xp', 'performance'], effects: [] },
     // A named group of effects, used as a statement: `grind arcana`. Its body may use $params.
     preset: { props: ['params', 'desc'], effects: [], raw: ['do'] },
     resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
     skill: { props: ['name', 'icon', 'start', 'max', 'desc', 'color'], effects: [] },
     npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel', 'age', 'role', 'year', 'traits', 'interests', 'stats', 'schedule', 'relations', 'voice'], effects: [] },
     state: { props: ['name', 'desc', 'art', 'tags', 'group', 'duration', 'hidden', 'kind'], effects: ['tick', 'on_add', 'on_expire', 'on_remove'] },
-    event: { props: ['title', 'text', 'art', 'scene', 'tags', 'when', 'weight', 'trigger', 'actor', 'repeat', 'priority', 'type', 'chain', 'class', 'tone', 'variant'], effects: ['on_show'], options: true },
-    ending: { props: ['title', 'text', 'art', 'scene', 'when', 'priority', 'tags', 'kind'], effects: [] },
+    event: { props: ['title', 'text', 'art', 'scene', 'tags', 'when', 'weight', 'trigger', 'actor', 'repeat', 'priority', 'type', 'chain', 'class', 'tone', 'variant',
+      // phase 2b: where and when it happens, who is in it, what it belongs to (design §5, §6, §7, §10.6)
+      'place', 'slot', 'replaces', 'track', 'level', 'rank', 'lesson', 'arc', 'beat', 'plan', 'cast', 'offers', 'pick', 'scope'], effects: ['on_show'], options: true },
+    ending: { props: ['title', 'text', 'art', 'scene', 'when', 'priority', 'tags', 'kind', 'slot', 'excludes'], effects: [] },
     hook: { props: ['on', 'when', 'desc', 'label'], effects: ['do'] },
     // Worldbook (design §3): data for briefs, lint and later phases. The engine doesn't play these yet.
     vocab: { props: ['values', 'desc'], effects: [] },
-    place: { props: ['name', 'region', 'map', 'kind', 'track', 'open', 'season', 'closed_when', 'discover', 'hint', 'hinted_when', 'desc', 'art'], effects: [] },
-    track: { props: ['kind', 'name', 'skill', 'levels', 'level_names', 'place', 'teaches', 'hidden', 'prereq', 'ranks', 'pay', 'due', 'lead', 'desc'], effects: [] },
+    place: { props: ['name', 'region', 'map', 'kind', 'track', 'open', 'season', 'closed_when', 'discover', 'hint', 'hinted_when', 'desc', 'art', 'draws'], effects: [] },
+    track: { props: ['kind', 'name', 'skill', 'levels', 'level_names', 'place', 'teaches', 'hidden', 'prereq', 'ranks', 'pay', 'due', 'lead', 'desc', 'legacy', 'opens'], effects: [] },
     spell: { props: ['name', 'discipline', 'cost', 'power', 'desc', 'art'], effects: [] },
     fact: { dotted: true, props: ['npc', 'tier', 'unlock', 'text'], effects: [] },
     archetype: { props: ['names', 'age', 'traits', 'pronouns', 'house', 'role', 'desc'], effects: [] },
@@ -192,8 +198,9 @@
     timeline: { props: ['date', 'kind', 'event', 'text'], effects: [] },
   };
   const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'discover', 'hinted_when', 'unlock', 'prereq']);
-  const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment', 'warn_below']);
-  const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'cast', 'params']);
+  const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment', 'warn_below',
+    'schema', 'last_month', 'max_cards_per_day', 'level', 'rank', 'beat', 'pick', 'opens']);
+  const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'params', 'draws', 'legacy', 'excludes', 'replaces']);
   const TIERS = ['tiny', 'small', 'medium', 'large', 'huge'];
   const DIFFICULTIES = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
   const CLASSES = ['routine', 'milestone', 'incident', 'windfall', 'story', 'crisis'];
@@ -236,6 +243,15 @@
     curve(t) { return words(t).map((x) => toNum(x, 'curve')); },
     // "-50 0.5": below -50, increases are halved
     drag(t) { const w = words(t); if (w.length !== 2) throw 'drag: expected "<below> <factor>"'; return { below: toNum(w[0], 'drag'), factor: toNum(w[1], 'drag') }; },
+    // "term=1-4 break=5-6 term=7-10 break=11-12" -> ['term', 'term', …] indexed by month - 1
+    calendar(t) { const out = []; for (const x of words(t)) { const m = x.match(/^([a-z_]+)=(\d+)-(\d+)$/); if (!m) throw 'calendar: expected name=from-to, got "' + x + '"'; for (let i = +m[2]; i <= +m[3]; i++) out[i - 1] = m[1]; } return out; },
+    seasons(t) { return STRUCT_PROPS.calendar(t); },
+    // "morning=courses noon=social:1-2 afternoon=visit night=world:1" -> [{slot, source, min, max}]
+    day_term(t) { return words(t).map((x) => { const m = x.match(/^([a-z_]+)=([a-z_]+)(?::(\d+)(?:-(\d+))?)?$/); if (!m) throw 'day recipe: expected slot=source[:min-max], got "' + x + '"'; const min = m[3] != null ? +m[3] : null; return { slot: m[1], source: m[2], min, max: m[4] != null ? +m[4] : min }; }); },
+    day_break(t) { return STRUCT_PROPS.day_term(t); },
+    xp_cost(t) { const w = words(t); if (w.length !== 2) throw 'xp_cost: expected "a b" (cost of the next point = a + b × level)'; return { a: toNum(w[0], 'xp_cost'), b: toNum(w[1], 'xp_cost') }; },
+    rank_xp(t) { return words(t).map((x) => toNum(x, 'rank_xp')); },
+    performance(t) { return STRUCT_PROPS.weights(t); },
   };
   const OPTION_PROPS = new Set(['when', 'hint', 'memory']);
 
@@ -251,11 +267,20 @@
     else: /^else\s*:$/,
     chance: /^chance\s+(.+?)%?\s*:$/,
     check: new RegExp('^check\\s+(' + ID + ')\\s+(.+):$'),
-    flag: new RegExp('^flag\\s+(' + ID + '(?:\\s+' + ID + ')*)$'),
-    unflag: new RegExp('^unflag\\s+(' + ID + '(?:\\s+' + ID + ')*)$'),
+    // gen.* flags are reserved for live generation (design §T3)
+    flag: new RegExp('^flag\\s+((?:gen\\.)?' + ID + '(?:\\s+(?:gen\\.)?' + ID + ')*)$'),
+    unflag: new RegExp('^unflag\\s+((?:gen\\.)?' + ID + '(?:\\s+(?:gen\\.)?' + ID + ')*)$'),
     gain: new RegExp('^gain\\s+(' + ID + ')(?:\\s+(.+))?$'),
     lose: new RegExp('^lose\\s+(' + ID + ')$'),
-    queue: new RegExp('^queue\\s+(' + ID + ')(?:\\s+(now|in\\s+.+?))?(?:\\s+with\\s+(' + ID + '))?$'),
+    queue: new RegExp('^queue\\s+(' + ID + ')(?:\\s+(now|in\\s+.+?|within\\s+\\d+\\s*\\.\\.\\s*\\d+|by\\s+month\\s+\\d+))?(?:\\s+with\\s+(' + ID + '))?$'),
+    unqueue: new RegExp('^unqueue\\s+(' + ID + ')$'),
+    sayAs: new RegExp('^say\\[(' + ID + ')\\]\\s*:\\s*(.*)$'),
+    trackOp: new RegExp('^(enrol|join|leave|promote|apply)\\s+(' + ID + ')(?:\\s+(\\d))?$'),
+    trackAmount: new RegExp('^(perform|rank_xp|progress)\\s+(' + ID + ')\\s*([+-])\\s*(\\d+|tiny|small|medium|large|huge)$'),
+    discover: new RegExp('^discover\\s+(' + ID + ')$'),
+    find: new RegExp('^find\\s+(' + ID + ')$'),
+    advanceArc: new RegExp('^advance\\s+(' + ID + ')\\s*\\+\\s*(\\d+)$'),
+    spawn: new RegExp('^spawn\\s+(' + ID + ')\\s+from\\s+(' + ID + ')$'),
     social: new RegExp('^(rel|love|spark)\\s+(' + ID + ')\\s*([+-])\\s*(\\d+)(?:\\s*~\\s*(\\d+))?$'),
     socialTier: new RegExp('^(rel|love|spark)\\s+(' + ID + ')\\s*([+-])\\s*(tiny|small|medium|large|huge)$'),
     deltaTier: new RegExp('^(' + ID + ')\\s*([+-])\\s*(tiny|small|medium|large|huge)$'),
@@ -275,6 +300,7 @@
     let m;
     const E = (s) => expr(s, file, line);
     if ((m = content.match(RE.say))) return { t: 'say', text: m[1].trim(), line };
+    if ((m = content.match(RE.sayAs))) return { t: 'say', who: m[1], text: m[2].trim(), line };
     if ((m = content.match(RE.if))) return { t: 'if', branches: [{ cond: E(m[1]), body: [] }], else: null, line, block: true };
     if ((m = content.match(RE.elif))) return { t: 'elif', cond: E(m[1]), line, block: true };
     if ((m = content.match(RE.else))) return { t: 'else', line, block: true };
@@ -288,10 +314,24 @@
     if ((m = content.match(RE.lose))) return { t: 'lose', state: m[1], line };
     if ((m = content.match(RE.queue))) {
       const st = { t: 'queue', event: m[1], now: false, delay: null, with: m[3] || null, line };
+      let w;
       if (m[2] === 'now') st.now = true;
+      else if (m[2] && (w = m[2].match(/^within\s+(\d+)\s*\.\.\s*(\d+)$/))) st.window = { from: +w[1], to: +w[2] };
+      else if (m[2] && (w = m[2].match(/^by\s+month\s+(\d+)$/))) st.byMonth = +w[1];
       else if (m[2]) st.delay = E(m[2].replace(/^in\s+/, ''));
       return st;
     }
+    if ((m = content.match(RE.unqueue))) return { t: 'unqueue', event: m[1], line };
+    if ((m = content.match(RE.trackOp))) return { t: m[1], track: m[2], level: m[3] ? +m[3] : null, line };
+    if ((m = content.match(RE.trackAmount))) {
+      const st = { t: m[1], track: m[2], sign: m[3] === '-' ? -1 : 1, line };
+      if (TIERS.includes(m[4])) st.tier = m[4]; else st.min = st.max = +m[4] * st.sign;
+      return st;
+    }
+    if ((m = content.match(RE.discover))) return { t: 'discover', place: m[1], line };
+    if ((m = content.match(RE.find))) return { t: 'find', clue: m[1], line };
+    if ((m = content.match(RE.advanceArc))) return { t: 'advance', arc: m[1], n: +m[2], line };
+    if ((m = content.match(RE.spawn))) return { t: 'spawn', id: m[1], archetype: m[2], line };
     // `love` is the v0.2 name of spark (kept as a legacy alias until phase 3).
     if ((m = content.match(RE.social))) {
       const a = +m[4], b = m[5] != null ? +m[5] : a, s = m[3] === '-' ? -1 : 1;
@@ -330,6 +370,12 @@
         if (L.indent > indent) throw new GrimError('unexpected indentation', file, L.line);
         pos++;
         const st = parseStatement(L.content, file, L.line);
+        if (st.t === 'say' && st.who) {
+          const prev = out[out.length - 1];
+          if (!prev || prev.t !== 'say' || prev.who) throw new GrimError('say[' + st.who + ']: must follow the say: line it replaces', file, L.line);
+          (prev.overrides = prev.overrides || {})[st.who] = st.text;
+          continue;
+        }
         let body = [];
         if (st.outcomes) {
           if (!(pos < lines.length && lines[pos].indent > indent)) throw new GrimError('"' + L.content + '" needs win:/lose: outcomes', file, L.line);
@@ -429,6 +475,23 @@
     return blocks.map(parseBlock);
   }
 
+  // cast:
+  //   friend: any where rel(friend) >= 20
+  //   host: present(place)            (or present(<place id>))
+  //   stranger: anyone where tagged(stranger, student)
+  //   mentor: thorne                   (a fixed character)
+  function parseCast(val, lines, file, line) {
+    if (val.trim()) throw new GrimError('cast: put one role per line below it ("friend: any where …")', file, line);
+    if (!lines.length) throw new GrimError('cast: needs at least one role', file, line);
+    return lines.map((L) => {
+      const m = L.content.match(/^([a-z_][a-z0-9_]*)\s*:\s*(any|anyone|present\(\s*([a-z_][a-z0-9_]*)\s*\)|[a-z_][a-z0-9_]*)(?:\s+where\s+(.+))?$/);
+      if (!m) throw new GrimError('cast role: expected "role: any|anyone|present(place)|<npc> [where <condition>]", got "' + L.content + '"', file, L.line);
+      if (['npc', 'player', 'track', 'place'].includes(m[1]) && m[1] !== 'npc') throw new GrimError('"' + m[1] + '" is reserved and can\'t be a role name', file, L.line);
+      const pool = m[2].startsWith('present') ? 'present' : (m[2] === 'any' || m[2] === 'anyone') ? m[2] : 'fixed';
+      return { role: m[1], pool, place: m[3] || null, npc: pool === 'fixed' ? m[2] : null, where: m[4] ? expr(m[4], file, L.line) : null };
+    });
+  }
+
   function parseBlock(b) {
     const schema = SCHEMA[b.kind]; const file = b.file;
     const def = { block: b.kind, id: b.id, file, line: b.line, options: schema.options ? [] : undefined };
@@ -475,6 +538,8 @@
       if (!m) throw new GrimError('expected "key: value", "> option: Label" or "@block", got "' + L.content + '"', file, L.line);
       const key = m[1], val = m[2];
       const sub = takeIndented();
+      if (key === 'cast' && b.kind === 'event') { def.cast = parseCast(val, sub.filter((x) => !x.blank), file, L.line); continue; }
+      if (key === 'cast' && b.kind === 'arc') { def.cast = words(joinText(val, sub)); continue; }
       if (schema.raw && schema.raw.includes(key)) {
         // Kept as lines; parsed when the preset is used, after $params are substituted.
         def[key] = (val.trim() ? [{ indent: 1000, content: val.trim(), line: L.line }] : []).concat(sub.filter((x) => !x.blank));
@@ -533,6 +598,7 @@
     }
     expandPresets(content, errors);
     for (const e of Object.values(content.events)) finalizeEvent(e, errors);
+    if (content.game.calendar && content.game.calendar.length !== (content.game.months || []).length && content.game.months) errors.push(new GrimError('@game calendar must cover every month', 'content/core/rules.grim', 1));
     return { content, errors };
   }
 
@@ -587,6 +653,11 @@
     if (!['random', 'auto', 'social', 'queued'].includes(e.trigger)) errors.push(new GrimError('trigger must be random, auto, social or queued', e.file, e.line));
     if (!e.title) errors.push(new GrimError('event needs a title', e.file, e.line));
     if (!e.text) errors.push(new GrimError('event needs text', e.file, e.line));
+    if (e.cast && e.actor) errors.push(new GrimError('use either actor: or cast:, not both', e.file, e.line));
+    if (e.offers && !['courses', 'clubs', 'jobs'].includes(e.offers)) errors.push(new GrimError('offers: must be courses, clubs or jobs', e.file, e.line));
+    if (e.offers && e.type !== 'menu' && e.options.every((o) => o.key !== 'left')) e.type = 'menu';
+    if (e.slot && !['morning', 'noon', 'afternoon', 'evening', 'night', 'midnight'].includes(e.slot)) errors.push(new GrimError('slot: morning, noon, afternoon, evening, night or midnight', e.file, e.line));
+    if (e.scope && !['temporary', 'library'].includes(e.scope)) errors.push(new GrimError('scope: temporary or library', e.file, e.line));
     if (e.variant && e.variant !== 'hard') errors.push(new GrimError('variant: the only variant is "hard"', e.file, e.line));
     if (e.class && !CLASSES.includes(e.class)) errors.push(new GrimError('class must be one of ' + CLASSES.join(', '), e.file, e.line));
     if (e.type !== 'card' && e.options.some((o) => o.key === 'up')) errors.push(new GrimError('"> up[spell]:" is only for two-choice cards', e.file, e.line));

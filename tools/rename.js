@@ -22,7 +22,7 @@ const { Rewriter } = require('./rewrite.js');
 
 const KINDS = ['event', 'state', 'npc', 'flag', 'var', 'ending', 'place', 'track', 'spell', 'arc'];
 const HEADER_KINDS = { event: 'events', state: 'states', npc: 'npcs', ending: 'endings', place: 'places', track: 'tracks', spell: 'spells', arc: 'arcs' };
-const SPECIAL = new Set(['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month']);
+const SPECIAL = new Set(['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa']);
 // Properties whose values are ids or expressions (renamed as whole words); everything else is text.
 const CODE_PROPS = new Set(['actor', 'when', 'weight', 'track', 'place', 'teaches', 'discipline', 'schedule', 'relations', 'members', 'lead', 'npc', 'cast', 'event', 'discover', 'closed_when', 'hinted_when', 'unlock', 'prereq', 'clues', 'key_clues']);
 const PRONOUNS = new Set(['they', 'them', 'their', 'theirs', 'are', 's', 'name', 'fullname', 'title', 'house']);

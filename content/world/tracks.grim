@@ -4,6 +4,9 @@
 #  (decision D4). Data only until phase 2b; today's electives,
 #  clubs and jobs are still the `class_*`, `club_*` and `job_*`
 #  states in content/states/states.grim.
+#  legacy: the old states a track stands for (phase 2b compat: joining
+#  grants them, so their events keep firing) · opens: the first term a
+#  course is offered (default 1).
 # ============================================================
 
 # ---------------- Courses: 6 disciplines × 3 levels ----------------
@@ -16,6 +19,7 @@ levels: 3
 level_names: Evocation I, Evocation II, Advanced Evocation
 place: lecture_tower
 teaches: flame@1 flame@2 tide@2 flame@3 tide@3
+legacy: class_pyromancy class_tidecalling
 desc: Fire and water, called up and held. Pyromancy and Tidecalling, taught together because they keep putting each other out.
 
 @track astromancy
@@ -26,6 +30,7 @@ levels: 3
 level_names: Astromancy I, Astromancy II, Advanced Astromancy
 place: observatory
 teaches: foresight@1 foresight@2 starlight@2 foresight@3 starlight@3
+legacy: class_astromancy class_divination
 desc: Reading the sky and the time that hasn't happened yet. Tea leaves in the first year; star charts that move in the third.
 
 @track alchemy
@@ -36,6 +41,7 @@ levels: 3
 level_names: Alchemy I, Alchemy II, Advanced Alchemy
 place: alchemy_lab
 teaches: mend@1 mend@2 purify@2 mend@3 purify@3
+legacy: class_alchemy class_healing
 desc: Potions, remedies and the patience to stir clockwise. Half of it happens in the laboratory and half in the infirmary.
 
 @track illusion
@@ -46,6 +52,7 @@ levels: 3
 level_names: Illusion I, Illusion II, Advanced Illusion
 place: lecture_tower
 teaches: glamour@1 glamour@2 mirror@2 glamour@3 mirror@3
+legacy: class_illusion
 desc: Making people see what you choose. Professor Vey grades on whether you fooled her, and she is very hard to fool.
 
 @track beastcraft
@@ -56,6 +63,8 @@ levels: 3
 level_names: Beastcraft I, Beastcraft II, Advanced Beastcraft
 place: stables
 teaches: haste@1 haste@2 beast_speech@2 haste@3 beast_speech@3
+legacy: class_beastcraft
+opens: 2
 desc: Creatures, familiars and brooms. Professor Brask believes the first two are easier to reason with than the third.
 
 @track umbral
@@ -66,6 +75,8 @@ levels: 3
 level_names: Umbral Theory I, Umbral Theory II, Advanced Umbral Theory
 place: lecture_tower
 teaches: ward@1 ward@2 shadowstep@2 ward@3 shadowstep@3
+legacy: class_umbral
+opens: 2
 desc: Shadow, wards and the magic of what is hidden. Taught at the top of the tower, where the lamps burn dim on purpose.
 
 # ---------------- Hidden courses ----------------
@@ -79,6 +90,7 @@ level_names: Artifice
 place: workshop
 hidden: true
 prereq: passed(alchemy, 2) and passed(evocation, 2)
+legacy: class_artifice
 desc: Enchanted machinery: clockwork that thinks, cauldrons that stir themselves. Offered to students who already know how to make things and how to make them burn.
 
 @track starcalling
@@ -113,6 +125,7 @@ place: duel_hall
 ranks: Member, Officer, Captain
 due: 2
 lead: lyra
+legacy: club_dueling
 desc: Practice bouts, the Spring Tournament and a great deal of shouting about footwork.
 
 @track lumen_ledger
@@ -123,6 +136,7 @@ place: ledger_office
 ranks: Stringer, Reporter, Editor
 due: 2
 lead: nessa
+legacy: club_ledger
 desc: The student newspaper. Scoops, deadlines, gossip columns and the occasional duty to the truth.
 
 @track verdant
@@ -133,6 +147,7 @@ place: greenhouses
 ranks: Member, Gardener, Head Gardener
 due: 2
 lead: tobias
+legacy: club_garden
 desc: The greenhouse club: moonflowers, mandrakes and long talks with plants that occasionally answer.
 
 @track cartographers
@@ -144,6 +159,7 @@ hidden: true
 ranks: Initiate, Mapper, Keeper of the Maps
 due: 2
 lead: corvin
+legacy: club_cartographers
 desc: The club that doesn't exist, mapping the passages the castle would prefer to keep. Never offered at the Club Fair; you are invited, or you aren't.
 
 # ---------------- Jobs (one at a time) ----------------
@@ -156,6 +172,7 @@ place: library
 ranks: Apprentice, Clerk, Senior Clerk
 pay: 8, 12, 16
 due: 3
+legacy: job_library
 desc: Shelving books that don't want to be shelved, and keeping Footnote off the reference desk.
 
 @track tavern
@@ -166,6 +183,7 @@ place: gilded_newt
 ranks: Server, Barkeep, Manager
 pay: 9, 13, 18
 due: 3
+legacy: job_tavern
 desc: Evening shifts behind the bar. Tips depend on charm; survival depends on remembering who ordered the spiced cider.
 
 @track apothecary_clerk
@@ -176,6 +194,7 @@ place: pell_apothecary
 ranks: Clerk, Dispenser, Assistant Apothecary
 pay: 8, 12, 17
 due: 3
+legacy: job_apothecary
 desc: Counting drops and reading labels at Pell & Daughters. The wrong drawer is never just the wrong drawer.
 
 @track broom_courier
@@ -186,6 +205,7 @@ place: courier_loft
 ranks: Runner, Courier, Chief Courier
 pay: 10, 14, 18
 due: 3
+legacy: job_courier
 desc: Parcels, letters and the occasional live delivery, flown across the lake in all weathers.
 
 # ---------------- Research internships (by application; design §7.5) ----------------

@@ -1,0 +1,286 @@
+# ============================================================
+#  The four-year loop's fixed beats (design §4, §7; phase 2b).
+#  These replace the old calendar menus and exams, which are
+#  retired by tools/migrations/0001-retire-v02-calendar.js.
+# ============================================================
+
+# ---------------- Enrolment (design §7.3): two courses a term ----------------
+
+@event enrolment
+title: Enrolment
+trigger: auto
+when: term and (month == 1 or month == 7)
+repeat: 6
+priority: 80
+type: menu
+offers: courses
+pick: 2
+class: story
+tone: light
+art: scroll
+tags: class study
+scene: The registrar's hall at the start of term, students queueing at long tables with course lists that rewrite themselves.
+text: {term_index == 1: Your first term. The registrar slides a list across the desk: four courses open to first-years.|A new term, and a new list. Courses you've passed are gone from it; new levels have appeared.} Choose two. Course fees are ten crowns.
+on_show:
+  gold -10
+> none: Take no courses this term
+  hint: Allowed. Your GPA will not thank you.
+  mood +small
+
+# ---------------- Club Fair (design §7.4): one club at a time ----------------
+
+@event club_fair_v3
+title: The Club Fair
+trigger: auto
+when: month == 2
+repeat: 12
+priority: 60
+type: menu
+offers: clubs
+class: story
+tone: light
+art: group
+tags: club festival
+scene: The courtyard full of recruiting tables, banners snapping, a duelling demonstration drawing a crowd.
+text: The Club Fair fills the courtyard. Every table wants you; every captain swears theirs is the one that matters. {rel(lyra) >= 10: Lyra is at the Duelling Circle's table, pretending not to watch which way you walk.|}
+> none: Not this year
+  hint: You can join at next year's fair.
+  mood +tiny
+
+# ---------------- The Job Board (design §7.4): visiting it is the change event ----------------
+
+@event job_board_visit
+title: The Job Board
+place: job_board
+repeat: 1
+weight: 30
+type: menu
+offers: jobs
+class: story
+tone: light
+art: paper
+tags: job money
+scene: A cork board crowded with notices, a student running a finger down a column of shift times.
+text: Notices for work, three layers deep: the library, the Gilded Newt, Pell & Daughters, the courier loft. Each wants someone reliable. Each says so twice.
+> look: Just looking
+  mood +tiny
+> quit: Hand in your notice
+  when: has(job_library) or has(job_tavern) or has(job_apothecary) or has(job_courier)
+  hint: You can find work again later.
+  leave job
+  mood +small
+  say: You hand in your notice. Your evenings are yours again; so is your empty purse.
+
+# ---------------- Break plans (design §4.3) ----------------
+
+@event break_plan
+title: The Break
+trigger: auto
+when: break and (month == 5 or month == 11) and not (final_year and month == 11)
+repeat: 6
+priority: 75
+type: menu
+class: story
+tone: warm
+art: sun
+tags: home
+scene: The academy gates thrown open, barges loading trunks, a few students lingering on the steps with nowhere they'd rather be.
+text: {month == 5: The winter break.|The summer break.} Two months without lectures. The castle empties, mostly.
+> castle: Stay at the castle
+  hint: Quiet corridors and secrets. Board 6 crowns a month.
+  gain plan_castle
+  say: The castle in the holidays is a different building: louder echoes, kinder staff, doors you've never seen open.
+> home: Go home
+  hint: Family, old friends, free board.
+  gain plan_home
+  say: The barge, the coach, the last mile on foot. Home is smaller than you remember, and warmer.
+> work: Work full-time
+  when: has(job_library) or has(job_tavern) or has(job_apothecary) or has(job_courier)
+  hint: Extra shifts at double pay.
+  gain plan_work
+  say: You trade the holidays for wages. Your feet will remember it.
+> intern: Start your internship
+  when: member(intern_royal_library)
+  hint: A stipend, a supervisor and a project.
+  gain plan_internship
+  say: You pack a trunk of notebooks and take the long coach to the capital.
+
+# ---------------- Track notices (pushed by the engine at term end) ----------------
+
+@event track_warning
+title: A Word About Your Attendance
+trigger: queued
+class: incident
+tone: tense
+art: paper
+tags: job club
+scene: A folded note on official paper, the words "performance" and "concern" underlined twice.
+text: A note about {track}: your attendance and your efforts have slipped, and it has been noticed. One more term like this and there will be consequences.
+> left: Promise to do better
+  perform track +small
+  mood -small
+  say: You write back a promise in your neatest hand. Now you'll have to keep it.
+> right: Let it slide
+  perform track -tiny
+  mood +tiny
+  say: You put the note in a drawer. It doesn't stop existing in the drawer.
+
+@event track_promotion
+title: A Step Up
+trigger: queued
+class: milestone
+tone: warm
+art: trophy
+tags: job club
+scene: A small ceremony in a cramped room, someone pinning a badge to a student's collar while the others applaud.
+text: {track} wants to promote you. More responsibility, more respect, and in the right places, more pay.
+> left: Accept
+  promote track
+  renown +small
+  mood +small
+  say: The badge is a little crooked. You don't straighten it.
+> right: Not yet
+  mood +tiny
+  say: "When you're ready, then." They mean it. The offer will come again.
+
+# ---------------- Research internship (design §7.5; the Royal Library is the slice host) ----------------
+
+@event intern_application
+title: Applications Open
+place: job_board
+when: term and month >= 7 and month <= 8 and year >= 2 and year <= 3 and not applied(intern_royal_library) and not member(intern_royal_library)
+weight: 40
+class: story
+tone: light
+art: letter
+tags: job study
+scene: A notice with a royal seal pinned above all the others: summer research posts at the Royal Library.
+text: The Royal Library is taking summer researchers. The notice wants a GPA of 2.5, Astromancy at the second level, and "a genuine love of indexes".
+> left: Apply
+  apply intern_royal_library
+  mood -tiny
+  say: You write the letter three times. The third is good. You send the second by mistake. It's fine.
+> right: Not this year
+  mood +tiny
+  say: You let the notice flap. There's always next year, until there isn't.
+
+@event intern_offer
+title: A Letter From the Royal Library
+trigger: auto
+when: month == 9 and applied(intern_royal_library)
+repeat: 12
+priority: 55
+class: milestone
+tone: warm
+art: letter
+tags: study
+scene: A heavy envelope with a royal seal on a dormitory desk.
+text: {gpa >= 2.5 and level(astromancy) >= 2: The Royal Library is pleased to offer you a summer research post.|The Royal Library regrets: the post has gone to a candidate with stronger marks.}
+> left: Accept
+  when: gpa >= 2.5 and level(astromancy) >= 2
+  join intern_royal_library
+  renown +small
+  say: You read the letter until the seal cracks. A summer in the oldest archives in the realm.
+> right: Fold the letter away
+  leave intern_royal_library
+  mood -tiny
+  say: You fold it carefully. Next year, perhaps.
+
+# ---------------- Thesis (design §7.6) ----------------
+
+@event thesis_setup
+title: Choosing a Thesis
+trigger: auto
+when: year == 3 and month == 10 and not member(thesis)
+repeat: 12
+priority: 50
+type: menu
+class: story
+tone: tense
+art: book
+tags: study
+scene: A professor's study, three topic proposals laid out on the desk like cards.
+text: Next year is your final year, and it comes with a thesis. Professor Thorne has three topics ready, at three levels of ambition.
+> safe: A careful survey
+  hint: Easier, and it will read as easier.
+  join thesis
+  flag thesis_safe
+  say: A sensible topic. Thorne says "Sensible," the way other people say "Disappointing."
+> solid: An original study
+  hint: The usual path.
+  join thesis
+  flag thesis_solid
+  say: Thorne nods. "Good. Bring me something I don't already know."
+> ambitious: Something no one has done
+  hint: Harder, and worth more.
+  join thesis
+  flag thesis_ambitious
+  say: Thorne is quiet for a long time. "Hm," he says, and for once it sounds like hope.
+
+@event thesis_defence
+title: The Defence
+trigger: auto
+when: final_year and month == 10 and member(thesis)
+repeat: 12
+priority: 65
+class: story
+tone: tense
+art: scroll
+tags: study exam
+scene: A semicircular table with three examiners, a student standing at a lectern with a stack of notes.
+text: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60: You know this material better than anyone in the room.|There are gaps, and you know where they are.}
+> left: Defend it
+  challenge negotiate using lore hard:
+    win:
+      flag thesis_distinction
+      renown +large
+      grades +large
+      say: They stop asking questions and start asking for copies. Distinction.
+    partial:
+      flag thesis_passed
+      grades +medium
+      say: A pass, with one examiner's handwriting all over your conclusion.
+    lose:
+      flag thesis_resubmit
+      mood -large
+      say: They send you away to resubmit. It isn't the end. It feels like it.
+
+# ---------------- Festivals that take a visit (design §4.4) ----------------
+
+@event lantern_night_v3
+title: Lantern Night
+place: lakeshore
+replaces: visit2
+when: month == 2
+repeat: 12
+class: milestone
+tone: warm
+art: lantern
+tags: festival
+scene: The Mirror Lake at night, hundreds of paper lanterns drifting over the water, students crowding the shore.
+text: Lantern Night. The whole academy gathers on the lakeshore with paper lanterns, each carrying a wish out over the water. {month == 2 and year == 1: Your first one.|Another year, another wish.}
+> left: Wish for something selfish
+  mood +medium
+  renown +tiny
+  say: Your lantern goes out over the water and keeps its secret. You feel lighter for having asked.
+> right: Wish for someone else
+  mood +small
+  alignment +small
+  say: You don't tell anyone who. The lantern seems to know; it flies straight.
+
+# ---------------- Calendar beats ----------------
+
+@event year_four
+title: The Final Year
+trigger: auto
+when: turn == 37
+priority: 90
+class: story
+tone: warm
+art: tower
+tags: story
+scene: The seven towers at dawn from the barge, the same view as the first day, but the student watching it has changed.
+text: The barge again, the towers again, and a thesis waiting. Final year. The first-years on the deck look at you the way you once looked at the fourth-years.
+> ok: Here we go
+  mood +small
+  say: You know which steps creak. You know which doors stick. One more year to learn the rest.

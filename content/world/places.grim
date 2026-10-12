@@ -7,6 +7,7 @@
 #  open:      the slots a place can be visited in
 #  discover:  when it becomes visible (omit for places open from the start)
 #  hint:      teaser shown while hinted (hinted_when) but not yet discovered
+#  draws:     tags of older events (no place: yet) that may happen here (compat, phase 2b)
 # ============================================================
 
 # ---------------- Public from the start ----------------
@@ -18,6 +19,7 @@ map: campus 585,278
 kind: public
 open: morning noon afternoon evening night
 art: tower
+draws: social festival rival story
 desc: Flagstones worn smooth by three centuries of students, a fountain that freezes when it shouldn't, and the best gossip in the castle.
 
 @place library
@@ -28,6 +30,7 @@ kind: public
 track: library_assistant
 open: morning noon afternoon evening night
 art: book
+draws: study
 desc: Seven floors of shelves that rearrange themselves when nobody is looking. Footnote the cat keeps order.
 
 @place refectory
@@ -37,6 +40,7 @@ map: campus 470,278
 kind: public
 open: morning noon evening
 art: meal
+draws: social home money
 desc: Long tables, longer benches, and soup that tastes faintly of whatever you're homesick for.
 
 @place lakeshore
@@ -46,6 +50,7 @@ map: campus 480,505
 kind: public
 open: morning noon afternoon evening night midnight
 art: wave
+draws: nature mystery romance
 desc: The Mirror Lake lies so still it shows the towers upside down. On some nights it shows other things.
 
 @place village
@@ -55,6 +60,7 @@ map: campus 720,520
 kind: public
 open: afternoon evening
 art: house
+draws: money home
 desc: A barge ride across the lake: crooked roofs, a market square and shopkeepers who have seen every kind of student.
 
 # ---------------- Castle ----------------
@@ -66,6 +72,7 @@ map: campus 420,180
 kind: public
 open: morning noon afternoon
 art: scroll
+draws: class study exam
 desc: Spiral lecture halls stacked one above another. Evocation on the lower floors, where scorch marks are expected; Umbral Theory at the top, where the lamps burn dim.
 
 @place observatory
@@ -75,6 +82,7 @@ map: campus 600,175
 kind: public
 open: evening night midnight
 art: planet
+draws: magic mystery
 desc: A brass dome at the top of the east tower. The great telescope points wherever it likes; usually that is the right place.
 
 @place great_hall
@@ -84,6 +92,7 @@ map: campus 455,215
 kind: public
 open: noon evening
 art: crown
+draws: festival social
 desc: Floating candles, a vaulted ceiling that shows tomorrow's weather, and the stage where the choir rehearses and the Midwinter Ball is held.
 
 @place infirmary
@@ -93,6 +102,7 @@ map: campus 530,200
 kind: public
 open: morning noon afternoon evening night midnight
 art: potion
+draws: crisis danger
 desc: Clean white beds, a cupboard of tonics and Sister Amaranth, who has seen every kind of injury and believes none of the excuses.
 
 @place alchemy_lab
@@ -102,6 +112,7 @@ map: campus 555,240
 kind: public
 open: morning afternoon
 art: cauldron
+draws: class magic
 desc: Long benches, cauldrons in every size, and a ventilation charm that has given up on the third floor.
 
 @place workshop
@@ -114,6 +125,7 @@ discover: met(mira)
 hint: Something clanks and hums behind the west-wing tapestry.
 hinted_when: turn >= 2
 art: gear
+draws: magic
 desc: A former classroom full of springs, gears, half-finished machines and the smell of solder. Fire buckets by the door, on the faculty's orders.
 
 @place job_board
@@ -123,6 +135,7 @@ map: campus 520,262
 kind: public
 open: morning noon afternoon
 art: paper
+draws: job money
 desc: A cork board in the entrance hall layered with notices: jobs, lost familiars, club recruitment and the occasional ransom note for a sock.
 
 @place ledger_office
@@ -134,6 +147,7 @@ track: lumen_ledger
 open: afternoon evening night
 discover: has(club_ledger) or met(nessa)
 art: paper
+draws: club
 desc: A cramped room under the library stairs, walls papered with old front pages. The printing press groans like a dragon on deadline night.
 
 @place headmistress_tower
@@ -146,6 +160,7 @@ discover: rel(isolde) >= 20 or flag(warden_trial)
 hint: A spiral stair guarded by a stone owl that only opens its eyes for some students.
 hinted_when: met(isolde)
 art: crown
+draws: story
 desc: Books, tea and a board of crystal towers by the window. You are only here because she wants you here.
 
 @place restricted_section
@@ -158,6 +173,7 @@ discover: seen(forbidden_section_1) > 0
 hint: A door at the back of the library that is always locked, and always slightly warm.
 hinted_when: turn >= 2
 art: lock
+draws: mystery danger
 desc: Black-bound books that breathe in the dark. Some of them read you back.
 
 @place gargoyle_passage
@@ -171,6 +187,7 @@ discover: has(club_cartographers)
 hint: Corvin keeps glancing at a particular gargoyle.
 hinted_when: met(corvin)
 art: map
+draws: club mystery
 desc: Behind the third gargoyle on the north parapet, a passage that isn't on any map. Except theirs.
 
 @place seventh_tower
@@ -183,6 +200,7 @@ discover: hollow >= 3
 hint: A locked stair that leads up into a tower nobody admits is there.
 hinted_when: hollow >= 1
 art: key
+draws: mystery story
 desc: Locked for a century. At the very top, one room of dust and moonlight, and a star-shaped hollow in the wall.
 
 @place thesis_lab
@@ -193,7 +211,8 @@ kind: thesis
 track: thesis
 open: morning afternoon evening
 discover: year >= 4
-art: study
+art: book
+draws: study
 desc: Rows of carrels where final-year students and their advisors argue about footnotes until the candles give out.
 
 # ---------------- Grounds ----------------
@@ -209,6 +228,7 @@ discover: has(club_dueling) or rel(lyra) >= 15
 hint: Steel rings somewhere above the east stair.
 hinted_when: met(lyra)
 art: duel
+draws: rival
 desc: Scorched floorboards and a ceiling that has seen things. The practice dummies have names, and grudges.
 
 @place greenhouses
@@ -220,6 +240,7 @@ track: verdant
 open: morning afternoon
 discover: has(club_garden) or met(tobias) or met(maud)
 art: leaf
+draws: nature
 desc: Glass houses that steam even in winter. The moonflowers bloom once every eleven years; the mandrakes have opinions every day.
 
 @place flight_field
@@ -229,6 +250,7 @@ map: campus 850,300
 kind: public
 open: morning afternoon
 art: broom
+draws: club
 desc: A long green field with hoops at either end and a wind that cheats. Broom lessons, races and spectacular landings.
 
 @place stables
@@ -238,6 +260,7 @@ map: campus 845,385
 kind: public
 open: morning afternoon evening
 art: paw
+draws: nature
 desc: Hippogriffs, a sulky griffon chick, owls in the rafters and Professor Brask, who talks to all of them more kindly than to students.
 
 @place boathouse
@@ -247,6 +270,7 @@ map: campus 610,440
 kind: public
 open: afternoon evening night midnight
 art: wave
+draws: social mystery romance
 desc: An old wooden boathouse and a jetty out over the water. People come here to say the things they can't say indoors.
 
 @place orchard
@@ -256,6 +280,7 @@ map: campus 790,165
 kind: public
 open: morning noon afternoon
 art: tree
+draws: nature romance
 desc: Apple and pear trees older than the towers. In spring the blossom falls like snow; once, it was snow.
 
 @place maud_cottage
@@ -266,6 +291,7 @@ kind: public
 open: morning noon afternoon evening
 discover: met(maud)
 art: house
+draws: nature home
 desc: A thatched cottage with chickens on the doorstep, bees in the eaves, a goat called Bartholomew and a kettle that is always nearly boiling.
 
 @place secret_garden
@@ -278,6 +304,7 @@ discover: seen(garden_maud_secret) > 0
 hint: A door in the wall behind the potting shed that you keep walking past.
 hinted_when: met(maud)
 art: flower
+draws: nature magic
 desc: Glowing ferns, silver bees and a pear tree that hums. It only exists for people Maud has shown it to.
 
 @place courier_loft
@@ -289,6 +316,7 @@ track: broom_courier
 open: morning afternoon evening
 discover: turn >= 3
 art: letter
+draws: job
 desc: A draughty loft full of parcels, pigeonholes and brooms in various states of repair. The dispatch bell rings at all hours.
 
 # ---------------- Village ----------------
@@ -301,6 +329,7 @@ kind: job
 track: tavern
 open: evening night
 art: cup
+draws: job money social
 desc: The village tavern: low beams, a fire that never goes out, and a landlady who remembers every student's tab to the penny.
 
 @place mabels
@@ -310,6 +339,7 @@ map: campus 725,565
 kind: public
 open: morning noon afternoon
 art: cup
+draws: social home
 desc: Forty kinds of tea, three kinds of cake and Mabel, who reads your mood from the way you open the door.
 
 @place grimsbys_books
@@ -319,6 +349,7 @@ map: campus 680,600
 kind: public
 open: noon afternoon
 art: book
+draws: study money
 desc: A bookshop so crowded the shelves lean on each other for support. Mr Grimsby will find anything except what you came in for.
 
 @place pell_apothecary
@@ -329,6 +360,7 @@ kind: job
 track: apothecary_clerk
 open: morning afternoon
 art: bottle
+draws: job money
 desc: An apothecary of a thousand labelled drawers. Old Pell taught three generations to count drops; his daughters taught him to smile at customers.
 
 @place bakery
@@ -338,6 +370,7 @@ map: campus 640,555
 kind: public
 open: morning noon
 art: meal
+draws: home money
 desc: The same family has baked here for two hundred years. The buns are famous; so, in certain circles, is a letter that arrived very late.
 
 # ---------------- Wilds ----------------
@@ -352,6 +385,7 @@ discover: met(maud) or flag(fox_met)
 hint: Fog sits on the western woods even at noon.
 hinted_when: turn >= 2
 art: tree
+draws: nature danger mystery
 desc: An old forest that talks in its sleep. Moonpetal grows in its clearings; so do things that are better left there.
 
 # ---------------- Internship hosts (one map each; design §7.5) ----------------
@@ -425,3 +459,35 @@ track: intern_unseen_office
 open: evening night
 art: eye
 desc: The Crown's Office of Unseen Affairs. It has no sign, no address, and a very good coffee machine.
+
+# ---------------- Home (the "go home" break plan; map: home) ----------------
+
+@place home_cottage
+name: The Family Cottage
+region: home
+map: home 485,320
+kind: plan
+open: morning noon afternoon evening night
+art: house
+draws: home
+desc: The kitchen table, the creaky stair, the smell of whatever is in the oven. Everyone asks how school is.
+
+@place home_fields
+name: The Fields
+region: home
+map: home 310,320
+kind: plan
+open: morning afternoon evening
+art: leaf
+draws: nature home
+desc: Long rows, a low wall to sit on, and the same view you used to stare at when you dreamed of towers.
+
+@place home_market
+name: The Market Town
+region: home
+map: home 770,240
+kind: plan
+open: noon afternoon evening
+art: coin
+draws: money social
+desc: Market stalls, the old crowd outside the inn, and the one shop that still sells your favourite sweets.

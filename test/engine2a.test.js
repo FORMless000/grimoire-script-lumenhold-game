@@ -7,6 +7,7 @@ const Engine = require('../src/engine.js');
 const Fmt = require('../tools/format.js');
 const { project } = require('../tools/project.js');
 const { ROOT } = require('./helpers.js');
+const Policies = require('../tools/policies.js');
 
 const BASE = `@game
 title: T
@@ -268,8 +269,10 @@ test('previews contain real outcomes and never touch the RNG (real content)', ()
   for (let g = 0; g < 8; g++) {
     const eng = new Engine(content);
     let r = eng.newGame({ seed: 4242 + g * 31, name: 'T' });
-    for (let k = 0; k < 4000 && r.kind !== 'ending'; k++) {
+    for (let k = 0; k < 6000 && r.kind !== 'ending'; k++) {
       if (r.kind === 'month') { r = eng.advance(); continue; }
+      if (r.kind === 'map') { eng.pickPlaces(Policies.pickPlaces(eng, r.view)); r = eng.advance(); continue; }
+      if (r.view.pick > 1) { eng.choose(Policies.pickMany(eng, r.view, r.view.options.filter((o) => !o.disabled && o.key !== 'none'))); r = eng.advance(); continue; }
       const opts = r.view.options.filter((o) => !o.disabled);
       const key = opts[(k + g) % opts.length].key;
       const rng = eng.s.rng;

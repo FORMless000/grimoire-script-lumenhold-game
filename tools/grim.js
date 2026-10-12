@@ -83,9 +83,10 @@ function build(opts = {}) {
 
 /* ------------------------------------------------------------------ lint */
 const KNOWN_BONDS = new Set(['none', 'friend', 'close', 'rival', 'nemesis', 'partner', 'ex']);
-const SPECIAL_IDS = new Set(['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month']);
+const SPECIAL_IDS = new Set(['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa']);
 const PRONOUN_KEYS = new Set(['they', 'them', 'their', 'theirs', 'are', 's', 'name', 'fullname', 'title', 'house']);
 
+let ROLES = new Set();   // cast role names of the event being scanned (valid character references)
 function analyze(content) {
   // Collect everything that is set / referenced, with locations.
   const A = { flagsSet: {}, flagsRead: {}, varsSet: {}, varsRead: {}, queued: {}, statesRef: {}, npcsRef: {}, endingsRef: {}, eventsRef: {}, problems: [], legacy: [] };
@@ -107,7 +108,7 @@ function analyze(content) {
           if (kind === 'flagOrState') { if (!content.states[a.v]) add(A.flagsRead, a.v, where); }
           else if (kind === 'flag') add(A.flagsRead, a.v, where);
           else if (kind === 'state') add(A.statesRef, a.v, where);
-          else if (kind === 'npc') add(A.npcsRef, a.v, where);
+          else if (kind === 'npc') { if (!ROLES.has(a.v)) add(A.npcsRef, a.v, where); }
           else if (kind === 'event') add(A.eventsRef, a.v, where);
           else if (kind === 'track') { if (!content.tracks[a.v]) P('error', where, n.n + '(): unknown track "' + a.v + '"'); }
           else if (kind === 'clue') { if (!Object.values(content.arcs).some((arc) => (arc.clues || []).includes(a.v))) P('error', where, 'clue(' + a.v + '): not a clue of any @arc'); }
@@ -132,7 +133,9 @@ function analyze(content) {
       if (['player', 'month', 'year'].includes(k)) continue;
       if (k[0] === '=') { try { const ex = G.expr(k.slice(1)); scanExpr(ex, where, hasActor); } catch (e) { P('error', where, 'bad {=expr}: ' + e.message); } continue; }
       if (content.npcs[k]) { add(A.npcsRef, k, where); continue; }
+      if (ROLES.has(k) || k === 'track' || k === 'place') continue;
       const [head, key] = k.includes('.') ? k.split('.') : [null, k];
+      if (head && ROLES.has(head)) continue;
       if (head && head !== 'npc' && !content.npcs[head]) { P('error', where, 'unknown npc in {' + k + '}'); continue; }
       if (!PRONOUN_KEYS.has(key.toLowerCase()) && key !== 'npc') { P('error', where, 'unknown text token {' + k + '}'); continue; }
       if (!head && !hasActor) P('error', where, '{' + k + '} needs an actor (this block has none)');
@@ -163,10 +166,11 @@ function analyze(content) {
           if (!content.events[st.event]) P('error', w, 'queue: unknown event "' + st.event + '"');
           add(A.queued, st.event, w);
           if (st.with === 'npc' && !hasActor) P('error', w, 'queue ... with npc: block has no actor');
-          else if (st.with && st.with !== 'npc' && !content.npcs[st.with]) P('error', w, 'queue ... with: unknown npc "' + st.with + '"');
+          else if (st.with && st.with !== 'npc' && !content.npcs[st.with] && !ROLES.has(st.with)) P('error', w, 'queue ... with: unknown npc "' + st.with + '"');
           if (st.delay) scanExpr(st.delay, w, hasActor);
           break;
         case 'rel': case 'spark': case 'bond': case 'meet':
+          if (ROLES.has(st.npc)) break;
           if (st.npc === 'npc') { if (!hasActor) P('error', w, st.t + ' npc: block has no actor'); }
           else if (!content.npcs[st.npc]) P('error', w, st.t + ': unknown npc "' + st.npc + '"');
           else add(A.npcsRef, st.npc, w);
@@ -175,6 +179,16 @@ function analyze(content) {
           break;
         case 'end': if (!content.endings[st.ending]) P('error', w, 'end: unknown ending "' + st.ending + '"'); add(A.endingsRef, st.ending, w); break;
         case 'learn': if (!content.facts[st.fact]) P('error', w, 'learn: unknown fact "' + st.fact + '"'); break;
+        case 'enrol': case 'join': case 'leave': case 'promote': case 'apply': case 'perform': case 'rank_xp': case 'progress':
+          if (st.track !== 'track' && !(st.t === 'leave' && ['job', 'club'].includes(st.track)) && !content.tracks[st.track]) P('error', w, st.t + ': unknown track "' + st.track + '"');
+          break;
+        case 'discover': if (!content.places[st.place]) P('error', w, 'discover: unknown place "' + st.place + '"'); break;
+        case 'find': if (!Object.values(content.arcs).some((a) => (a.clues || []).includes(st.clue))) P('error', w, 'find: "' + st.clue + '" is not a clue of any @arc');
+          else if (/^content\/batches\//.test(w)) { const key = Object.values(content.arcs).some((a) => (a.key_clues || []).includes(st.clue)); if (key) P('error', w, 'find ' + st.clue + ': only hard-canon events may grant key clues'); }
+          break;
+        case 'advance': if (!content.arcs[st.arc]) P('error', w, 'advance: unknown arc "' + st.arc + '"'); else if (/^content\/batches\//.test(w)) P('error', w, 'advance: only hard-canon events move an arc clock'); break;
+        case 'spawn': if (!content.archetypes[st.archetype]) P('error', w, 'spawn: unknown archetype "' + st.archetype + '"'); break;
+        case 'unqueue': if (!content.events[st.event]) P('error', w, 'unqueue: unknown event "' + st.event + '"'); break;
         case 'learn_spell': if (!content.spells[st.spell]) P('error', w, 'learn_spell: unknown spell "' + st.spell + '"'); break;
         case 'npc_rel': for (const x of [st.a, st.b]) { if (x === 'npc') { if (!hasActor) P('error', w, 'npc_rel npc: block has no actor'); } else if (!content.npcs[x]) P('error', w, 'npc_rel: unknown npc "' + x + '"'); } break;
         case 'challenge':
@@ -194,7 +208,8 @@ function analyze(content) {
 
   const loc = (d) => d.file + ':' + d.line;
   for (const e of Object.values(content.events)) {
-    const hasActor = !!e.actor;
+    const hasActor = !!e.actor || !!e.cast;
+    ROLES = new Set((e.cast || []).map((r) => r.role));
     const w = loc(e);
     if (e.actor && !['any', 'npc'].includes(e.actor) && !content.npcs[e.actor]) P('error', w, 'actor: unknown npc "' + e.actor + '"');
     if (e.trigger === 'social' && !e.actor) P('warn', w, 'social event without actor');
@@ -204,7 +219,17 @@ function analyze(content) {
     scanText(e.title, w, hasActor); scanText(e.text, w, hasActor); scanText(e.scene, w, hasActor);
     if (e.text && e.text.length > 480) P('warn', w, 'card text is long (' + e.text.length + ' chars; aim for < 400)');
     scanEffects(e.on_show, w, hasActor);
-    if (e.actor === 'any') A.legacy.push({ where: w, what: '"actor: any" (becomes a cast role in phase 2b)' });
+    if (e.actor === 'any') A.legacy.push({ where: w, what: '"actor: any" (use a cast: role)' });
+    if (e.place && !content.places[e.place]) P('error', w, 'place: unknown place "' + e.place + '"');
+    if (e.track && !content.tracks[e.track]) P('error', w, 'track: unknown track "' + e.track + '"');
+    if (e.arc && !content.arcs[e.arc]) P('error', w, 'arc: unknown arc "' + e.arc + '"');
+    if (e.plan && !content.states['plan_' + e.plan]) P('error', w, 'plan: no @state plan_' + e.plan);
+    if (e.replaces && !e.place) P('error', w, 'replaces: needs a place:');
+    for (const r of e.cast || []) {
+      if (r.pool === 'fixed' && !content.npcs[r.npc]) P('error', w, 'cast ' + r.role + ': unknown character "' + r.npc + '"');
+      if (r.pool === 'present' && r.place && r.place !== 'place' && !content.places[r.place]) P('error', w, 'cast ' + r.role + ': unknown place "' + r.place + '"');
+      if (r.where) scanExpr(r.where, w, true);
+    }
     if (!e.class) A.legacy.push({ where: w, what: 'no class: (routine, milestone, incident, windfall, story, crisis)' });
     if (e.tone && content.vocab.tones && !content.vocab.tones.values.includes(e.tone)) P('error', w, 'tone "' + e.tone + '" is not in @vocab tones');
     if (e.class) budgetCheck(e, content, (lvl, msg) => P(lvl, w, msg));
@@ -222,9 +247,10 @@ function analyze(content) {
       scanEffects(o.effects, ow, hasActor);
     }
     if (e.options.length > 1 && e.options.every((o) => o.when)) P('warn', w, 'every option has a "when" — the card can soft-lock if none are available');
+    ROLES = new Set();
   }
   for (const s of Object.values(content.states)) ['tick', 'on_add', 'on_expire', 'on_remove'].forEach((k) => scanEffects(s[k], loc(s), false));
-  for (const h of Object.values(content.hooks)) { scanExpr(h.when, loc(h), false); scanEffects(h.do, loc(h), false); if (!['game_start', 'month_start', 'month_end'].includes(h.on)) P('error', loc(h), 'hook "on" must be game_start, month_start or month_end'); }
+  for (const h of Object.values(content.hooks)) { scanExpr(h.when, loc(h), false); scanEffects(h.do, loc(h), false); if (!['game_start', 'month_start', 'month_end', 'term_start', 'term_end'].includes(h.on)) P('error', loc(h), 'hook "on" must be game_start, month_start, month_end, term_start or term_end'); }
   for (const r of Object.values(content.resources)) scanEffects(r.on_zero, loc(r), false);
   for (const en of Object.values(content.endings)) { scanExpr(en.when, loc(en), false); scanText(en.text, loc(en), false); }
   for (const n of Object.values(content.npcs)) { if (!n.name) P('error', loc(n), 'npc needs a name'); if (n.pronouns && !/^(she|he|they)\b/.test(n.pronouns)) P('warn', loc(n), 'pronouns should start with she/he/they'); }
@@ -237,6 +263,8 @@ function analyze(content) {
   for (const [s, ws] of Object.entries(A.statesRef)) if (!content.states[s]) P('error', ws[0], 'unknown state "' + s + '"');
   for (const [n, ws] of Object.entries(A.npcsRef)) if (!content.npcs[n]) P('error', ws[0], 'unknown npc "' + n + '"');
   for (const [ev, ws] of Object.entries(A.eventsRef)) if (!content.events[ev]) P('error', ws[0], 'unknown event "' + ev + '"');
+  // The engine itself queues these at term end (design §6.2).
+  for (const id of ['track_warning', 'track_promotion']) A.queued[id] = A.queued[id] || ['engine'];
   for (const e of Object.values(content.events)) if (e.trigger === 'queued' && !A.queued[e.id]) P('warn', loc(e), 'queued-only event "' + e.id + '" is never queued (orphan)');
   for (const st of Object.values(content.states)) if (!A.statesRef[st.id]) P('info', loc(st), 'state "' + st.id + '" is never gained');
   if (!Object.keys(content.endings).length) P('error', '-', 'no @ending defined');
@@ -249,12 +277,20 @@ function analyze(content) {
 function budgetCheck(e, content, P) {
   const bal = content.balance || {};
   const weights = bal.weights || {};
-  const eng = budgetCheck.eng = budgetCheck.eng || (() => { const x = new Engine(content); x.newGame({ seed: 1, name: 'Lint' }); return x; })();
+  // A neutral mid-range state, so costs never clamp away (a fresh game may start broke after tuition).
+  const eng = budgetCheck.eng = budgetCheck.eng || (() => {
+    const x = new Engine(content); x.newGame({ seed: 1, name: 'Lint' });
+    for (const [id, r] of Object.entries(content.resources)) x.s.vals[id] = id === 'gold' ? 200 : r.min < 0 ? 0 : 50;
+    return x;
+  })();
   const actor = e.actor && !['any', 'npc'].includes(e.actor) ? e.actor : e.actor ? Object.keys(content.npcs)[0] : null;
   const row = (k) => (content.skills[k] ? 'xp' : k.split(':')[0]);
   const medium = (k) => eng.tierAmount(row(k) === 'xp' ? Object.keys(content.skills)[0] : row(k), 'medium') || 7;
   const weight = (k) => weights[row(k)] != null ? weights[row(k)] : 0.5;
   let larges = 0;
+  // Track events are previewed in their track's context (performance and progress count as costs).
+  const prevCur = eng.s.cur;
+  eng.s.cur = { id: e.id, track: e.track || null };
   for (const o of e.options) {
     let pv; try { pv = eng.preview(e.id, o.key, actor); } catch (err) { continue; }
     const value = (d) => Object.entries(d).reduce((a, [k, r]) => a + weight(k) * ((r[0] + r[1]) / 2) / medium(k), 0);
@@ -266,6 +302,7 @@ function budgetCheck(e, content, P) {
       if (Math.abs(exp) > 1.5) P('warn', 'routine option "' + o.key + '" is worth ' + exp.toFixed(1) + ' medium-equivalents (budget ±1.5)');
     }
   }
+  eng.s.cur = prevCur;
   if (e.class === 'milestone' && larges > 2) P('warn', 'milestone has ' + larges + ' large changes (cap 2)');
   if (e.class === 'windfall' && larges > 1) P('warn', 'windfall has ' + larges + ' large changes (cap 1)');
   if (e.class === 'incident' && e.options.length < 2) P('warn', 'an incident must offer agency: at least two options');
@@ -511,10 +548,18 @@ function playGame(content, { seed, style, runId, name = 'Sim', onLog = null, pre
   let r = eng.newGame({ seed, name, runId });
   let steps = 0;
   try {
-    while (steps++ < 4000) {
+    while (steps++ < 6000) {
       if (r.kind === 'ending') break;
       if (r.kind === 'month') { r = eng.advance(); continue; }
+      if (r.kind === 'map') { eng.pickPlaces((style.pickPlaces || Policies.pickPlaces)(eng, r.view)); r = eng.advance(); continue; }
       const v = r.view;
+      if (v.pick > 1) {
+        const opts = v.options.filter((o) => !o.disabled && o.key !== 'none');
+        const keys = (style.pickMany || Policies.pickMany)(eng, v, opts);
+        eng.choose(keys.length ? keys : [v.options.find((o) => !o.disabled).key]);
+        r = eng.advance();
+        continue;
+      }
       if (!v.options.some((o) => !o.disabled)) throw new Error('soft-lock: no available options on ' + v.id);
       const key = style.pick(eng, v);
       // Preview property test (design §8.3): every real outcome lies within its preview.
@@ -524,7 +569,7 @@ function playGame(content, { seed, style, runId, name = 'Sim', onLog = null, pre
       r = eng.advance();
     }
   } finally { if (onLog) onLog(eng); }
-  if (r.kind !== 'ending') throw new Error('did not finish after 4000 steps');
+  if (r.kind !== 'ending') throw new Error('did not finish after 6000 steps');
   return { eng, r };
 }
 
@@ -563,7 +608,7 @@ function sim(n = 300, opts = {}) {
     } catch (e) { crashes++; if (crashes < 5) console.error(C.r + 'game ' + g + ' crashed: ' + C.x + e.stack); }
   }
   console.warn = origWarn;
-  const allEvents = Object.keys(content.events);
+  const allEvents = Object.keys(content.events).filter((id) => !(content.events[id].tags || []).includes('retired'));
   const never = allEvents.filter((id) => !seen[id]);
   const avg = (a) => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
   const maxT = new Engine(content).maxTurns;
@@ -597,7 +642,7 @@ function balance(opts = {}) {
   const { content, errors } = compileAll();
   if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
   const games = opts.games || (opts.quick ? 30 : 100);
-  const styles = opts.quick ? ['random', 'balanced', 'social', 'aggressive'] : ['random', 'cautious', 'social', 'balanced', 'aggressive', 'moneymaxx', 'caster', 'focused:arcana', 'focused:lore', 'social:lyra'];
+  const styles = opts.quick ? ['random', 'balanced', 'social', 'aggressive', 'truant'] : ['random', 'cautious', 'social', 'balanced', 'aggressive', 'moneymaxx', 'caster', 'truant', 'focused:arcana', 'focused:lore', 'social:lyra'];
   const report = { format: 'lumenhold-balance', v: 1, contentHash: contentHash(), createdAt: new Date().toISOString(), games, styles: {}, invariants: [], alarms: [] };
   const fail = (msg) => report.invariants.push(msg), alarm = (msg) => report.alarms.push(msg);
   // Static invariants
@@ -640,7 +685,7 @@ function balance(opts = {}) {
   }
   console.warn = origWarn;
   for (const [k, v] of Object.entries(warns)) alarm('runtime warning ×' + v + ': ' + k);
-  const never = Object.keys(content.events).filter((id) => !seenAll[id]);
+  const never = Object.keys(content.events).filter((id) => !seenAll[id] && !(content.events[id].tags || []).includes('retired'));
   report.neverSeen = never;
   if (never.length) alarm(never.length + ' event(s) never seen by any play style: ' + never.join(', '));
   fs.mkdirSync(path.join(ROOT, 'build'), { recursive: true });

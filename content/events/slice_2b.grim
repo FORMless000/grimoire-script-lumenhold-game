@@ -1,0 +1,820 @@
+# ============================================================
+#  Phase 2b vertical slice (design §13): the world loop in the new
+#  format. The Evocation course (3 levels), the Duelling Circle, the
+#  Library Assistant job, five campus places, break plans, the
+#  Royal Library internship, the thesis, and a four-event arc
+#  (The Bell Under the Water). Uses cast roles, say[npc],
+#  present(place), queue within … and unqueue.
+# ============================================================
+
+# ---------------- Evocation (track: evocation) ----------------
+
+@event evo_first_spark
+title: The First Spark
+track: evocation
+level: 1
+lesson: lumenhold
+class: routine
+tone: light
+art: flame
+tags: class magic
+scene: A lecture hall with scorch marks on every desk, students holding their palms up as if testing for rain.
+text: Evocation I begins with a single instruction from the lectern: "Make heat. Not fire. Heat." Half the class makes nothing. One student makes a small, apologetic fire.
+> left: Aim for heat, carefully
+  arcana +small
+  mood -tiny
+  say: Your palm warms like a stone left in the sun. The lecturer nods, which is better than most get.
+> right: Aim for fire, boldly
+  challenge exam using arcana easy:
+    win:
+      arcana +medium
+      renown +tiny
+      say: A neat little flame, exactly where you meant it. The lecturer writes your name down. Approvingly, you hope.
+    lose:
+      health -tiny
+      arcana +tiny
+      say: Your sleeve learns more about fire than you do. The lecture continues around the smell.
+
+@event evo_puddle_drill
+title: Puddle Drill
+track: evocation
+level: 1
+lesson: mirror_lake
+class: routine
+tone: light
+art: wave
+tags: class magic
+scene: Students crouched over puddles in a stone courtyard, trying to make the water stand up.
+text: Tidecalling half of the course: a puddle each, and the task of making it stand up and stay up. Yours trembles, considers it, and lies back down.
+> left: Practise until it stands
+  grind arcana
+  say: By the end of the hour your puddle stands like a sulky child. It counts.
+> right: Copy the student next to you
+  arcana +tiny
+  guile +tiny
+  mood -tiny
+  say: You learn their trick, and also that they hum while they cast. You hum too. It works, inexplicably.
+
+@event evo_misfire
+title: Misfire
+track: evocation
+level: 1
+class: incident
+tone: tense
+art: bolt
+tags: class danger
+scene: A lecture hall filling with steam after a spell meets a bucket of water at the wrong moment.
+text: Someone's tidecalling meets someone else's flame in the middle of the room. The hall fills with scalding steam and twenty students who all have opinions.
+> left: Shield the front row
+  health -small
+  renown +small
+  say: You take the worst of it on your sleeves. The front row looks at you the way people look at lifeboats.
+> right: Get out and open the windows
+  mood -tiny
+  say: The steam pours out into the courtyard and becomes, briefly, a very small cloud with a grudge.
+
+@event evo_tide_wall
+title: The Tide Wall
+track: evocation
+level: 2
+lesson: mirror_lake
+class: routine
+tone: tense
+art: wave
+tags: class magic
+scene: A student holding back a wall of lake water on the shore while classmates watch from behind them.
+text: Evocation II takes the class to the lakeshore. The exercise: raise a wall of water and hold it while a classmate walks past behind it. Your classmate looks nervous. So do you.
+> left: Hold it steady
+  challenge exam using arcana medium:
+    win:
+      arcana +medium
+      say: The wall holds. Your classmate walks past dry and amazed. You let it down gently, which is the hard part.
+    lose:
+      health -small
+      mood -small
+      say: The wall holds until it doesn't. Your classmate is very wet and very gracious about it.
+> right: Ask to go second
+  arcana +small
+  mood -tiny
+  say: You watch three people do it first and learn from all of their mistakes.
+
+@event evo_lattice
+title: The Flame Lattice
+track: evocation
+level: 2
+lesson: founders_seal
+class: routine
+tone: light
+art: flame
+tags: class study
+scene: Interlocking threads of fire hanging in the air of a lecture hall like a glowing net.
+text: Fire woven into a lattice, each strand holding the others up. The lecturer says the founders built wards like this. The lecturer also says you have twenty minutes.
+> left: Build it slowly
+  lore +small
+  arcana +small
+  mood -small
+  say: Your lattice is small and ugly and holds perfectly. The lecturer says "Founder-ish," which you choose to take as praise.
+> right: Build it big
+  risk arcana
+  say: {~It's magnificent for nine seconds.|It holds just long enough for everyone to see it.} Then the strands find each other and the whole thing sighs into sparks.
+
+@event evo_storm_pairing
+title: Storm Pairing
+track: evocation
+level: 3
+class: milestone
+tone: tense
+art: bolt
+tags: class duel
+cast:
+  partner: any where not tagged(partner, faculty)
+scene: Two students on a windswept tower top, one calling rain, the other calling lightning, the sky between them churning.
+text: Advanced Evocation pairs students for a storm: one calls the rain, the other the lightning, and neither is allowed to let go first. You're paired with {partner}.
+> left: Call the lightning
+  challenge exam using arcana hard:
+    win:
+      arcana +large
+      rel partner +small
+      say: The storm answers both of you at once. {partner} laughs into the wind, soaked and astonished.
+      say[lyra]: The storm answers both of you at once. Lyra looks at you as though you've finally said something worth hearing.
+    lose:
+      health -medium
+      rel partner +tiny
+      say: The lightning goes where it likes. You both spend an afternoon in the infirmary, comparing burns.
+> right: Call the rain, and let them lead
+  arcana +medium
+  rel partner +small
+  say: You hold the rain steady while {partner} draws the lightning down. Afterwards {they} thank{s} you for not trying to steal it.
+
+@event evo_final_practical
+title: The Final Practical
+track: evocation
+level: 3
+class: story
+tone: tense
+art: flame
+tags: class exam
+scene: An examination hall cleared of desks, a single student facing three examiners and a target dummy made of ice.
+text: The last practical of Advanced Evocation: melt an ice dummy without touching the floor around it. Professor Thorne is on the panel, and he is not blinking.
+> left: Fire, precisely
+  challenge exam using arcana hard:
+    win:
+      arcana +large
+      grades +medium
+      rel thorne +small
+      say: The ice runs off the dummy and not a drop touches the floor. Thorne says "Hm," and writes something underlined.
+    lose:
+      grades -small
+      say: The dummy melts, and so does a fair part of the floor. Thorne writes something with a question mark.
+> right: Water, patiently
+  arcana +medium
+  lore +small
+  say: You draw the cold out of the ice with water instead of fire. It takes twice as long. The panel watches every minute.
+
+# ---------------- Duelling Circle (track: duelling) ----------------
+
+@event duel_first_practice
+title: First Practice
+track: duelling
+rank: 1
+class: routine
+tone: light
+art: duel
+tags: club duel
+scene: A duelling hall with chalk circles on the floor and practice dummies with names painted on their chests.
+text: Lyra runs the first practice like a general. "Footwork," she says. "If your feet are wrong, your spell is a rumour." She pairs you with a dummy called Gerald the Second.
+> left: Drill footwork
+  vigor +small
+  perform track +small
+  mood -tiny
+  say: Two hours of stepping in circles. Gerald the Second wins every round. Your feet, however, are now correct.
+> right: Spar for real
+  challenge duel vs lyra.vigor easy:
+    win:
+      vigor +medium
+      rel lyra +small
+      say: You land a clean disarm on your partner. Across the hall, Lyra raises an eyebrow, which is her version of a standing ovation.
+    lose:
+      health -small
+      say: You spend the evening relearning which way is up. Lyra says that's the first lesson anyway.
+
+@event duel_footwork_feud
+title: The Footwork Feud
+track: duelling
+class: routine
+tone: tense
+art: duel
+tags: club rival
+scene: Two students arguing in the middle of a duelling circle while the rest of the club pretends not to listen.
+text: Bram says the Circle's footwork is "Emberhall nonsense" and Lyra says Bram's footwork is "a hazard to shipping". Both of them look at you to settle it.
+> left: Side with Lyra
+  rel lyra +small
+  rel bram -small
+  npc_rel lyra bram -tiny
+  say: Lyra nods as if this were obvious. Bram takes a demerit book out of his pocket, looks at it, and puts it back. Progress.
+> right: Side with Bram
+  rel bram +small
+  rel lyra -small
+  say: Bram looks startled to be agreed with. Lyra looks at you like a puzzle she will solve later, with fire.
+
+@event duel_fixture
+title: Fixture Against Thornwick
+track: duelling
+rank: 2
+class: milestone
+tone: tense
+art: trophy
+tags: club duel festival
+scene: A duelling green with rival banners, students from both academies packed onto benches.
+text: Thornwick Academy's duelling team has crossed the hills for a fixture. The Circle needs one more duellist in the line-up, and the captain is looking at you.
+> left: Duel for the Circle
+  challenge duel hard:
+    win:
+      renown +medium
+      perform track +medium
+      say: You win your bout, and the Circle wins the fixture by a whisker. Someone carries you a few steps before remembering they don't like you.
+    partial:
+      renown +small
+      perform track +small
+      say: A draw. The Circle loses by one bout, but nobody blames you, and Lyra says "acceptable" twice.
+    lose:
+      health -small
+      mood -small
+      say: The Thornwick duellist is very good and very polite about it. You hate both.
+> right: Offer to be the reserve
+  perform track +tiny
+  mood +tiny
+  say: You hold coats and bring water. It turns out reserves see everything, including how Thornwick cheats.
+
+@event duel_captain_call
+title: The Captain's Question
+track: duelling
+rank: 2
+class: milestone
+tone: warm
+art: duel
+tags: club
+scene: An empty duelling hall at night, two students sitting on the edge of a chalk circle.
+text: After practice, the captain sits beside you. "When I graduate, someone has to run this place," she says. "Someone who turns up. You turn up."
+> left: Say you'll think about it
+  perform track +small
+  rank_xp track +medium
+  say: "Think fast," she says. "Feet first, then spells." You're fairly sure that's a yes.
+> right: Say you're not the type
+  mood +tiny
+  say: "Nobody's the type," she says. "That's why it has to be someone who turns up."
+
+# ---------------- Library Assistant (track: library_assistant) ----------------
+
+@event lib_shelving_rush
+title: The Shelving Rush
+track: library_assistant
+class: routine
+tone: light
+art: book
+tags: job study
+scene: A library cart overflowing with returned books, a student pushing it at a run between towering shelves.
+text: Exam week, and every book in the library has been borrowed, read and returned at once. The cart is taller than you are. Footnote is sitting on top of it.
+> left: Shelve properly
+  lore +small
+  perform track +small
+  mood -small
+  say: Every book in its place by closing. Footnote has moved to the top shelf to supervise.
+> right: Shelve quickly
+  perform track -tiny
+  mood +tiny
+  say: The books are on shelves. Most of them are even on the right shelves. Someone will find out in a decade.
+
+@event lib_overdue_mage
+title: The Overdue Mage
+track: library_assistant
+class: routine
+tone: light
+art: hourglass
+tags: job
+scene: An elderly mage at the library desk clutching a book that is sixty years overdue.
+text: An old mage returns a book sixty years overdue and asks, with great dignity, what the fine is. The ledger says the fine is more than the library.
+> left: Waive it
+  rel thorne +tiny
+  perform track -tiny
+  mood +small
+  say: The old mage thanks you and leaves a sweet on the desk. Later you find out he taught Professor Thorne.
+> right: Charge it, by the book
+  gold +small
+  perform track +small
+  rel thorne -tiny
+  say: The mage pays in coins so old the bank has to look them up. The head librarian is delighted.
+
+@event lib_footnote_strike
+title: Footnote Goes on Strike
+track: library_assistant
+class: incident
+tone: light
+art: cat
+tags: job
+scene: A large library cat lying across a reference desk, refusing to move, while students queue in front of it.
+text: Footnote has lain down across the reference desk and will not move. Students are queueing. The cat has made its demands clear: none.
+> left: Bribe him with fish
+  gold -tiny
+  perform track +small
+  say: Footnote accepts the fish, the apology and the chair you bring him. The queue resumes.
+> right: Work around him
+  perform track -tiny
+  mood -tiny
+  say: You stamp books on the far end of the desk for an hour. Footnote watches with the calm of a cat who has won.
+
+# ---------------- Places ----------------
+
+@event court_fountain_freeze
+title: The Frozen Fountain
+place: courtyard
+class: routine
+tone: eerie
+art: snow
+tags: mystery
+scene: A courtyard fountain frozen mid-splash, the water hanging in the air like glass.
+text: The courtyard fountain has frozen in the middle of a splash. The water hangs in the air like glass. A first-year is trying to lick it.
+> left: Stop the first-year
+  rel kael +tiny
+  health -tiny
+  hollow +1
+  say: You pull the first-year away just as the ice cracks. For a moment you'd swear you saw a black star reflected in it.
+> right: Study the ice
+  lore +small
+  mood -tiny
+  say: The ice is colder than ice should be. Your notes say "colder than ice should be" three times.
+
+@event court_rumour_mill
+title: The Rumour Mill
+place: courtyard
+class: routine
+tone: light
+art: group
+tags: social
+cast:
+  gossip: present(place) where not tagged(gossip, faculty)
+scene: Students huddled around the courtyard fountain trading whispers, one of them clearly enjoying it most.
+text: {gossip} has news, which is to say gossip, which is to say three different stories about the same broken window. "You'll want to hear this," {they} say{s}.
+> left: Listen to all of it
+  rel gossip +small
+  mood +small
+  guile -tiny
+  say: You hear all three stories. Two are true. One is about you.
+  say[nessa]: You hear all three stories. Nessa is already writing the fourth.
+> right: Make up a better one
+  guile +small
+  rel gossip +tiny
+  renown +tiny
+  alignment -tiny
+  say: Your story is better than all three. By dinner it's the official version.
+
+@event lake_skimming
+title: Skimming Stones
+place: lakeshore
+class: windfall
+tone: warm
+art: wave
+tags: nature
+cast:
+  friend: any where rel(friend) >= 10 and not tagged(friend, faculty)
+scene: Two students skimming stones across a perfectly still lake at dusk.
+text: {friend} is skimming stones on the Mirror Lake. The water is so still each stone leaves rings that go on forever. "Seven," {they} say{s}. "Beat that."
+> left: Try to beat it
+  challenge duel easy:
+    win:
+      rel friend +small
+      mood +small
+      say: Nine skips. {friend} demands a rematch and gets one. The afternoon disappears into stones.
+    lose:
+      rel friend +small
+      mood +tiny
+      say: Your stone sinks with great dignity. {friend} laughs until {they} have to sit down.
+> right: Just watch the rings
+  mood +small
+  rel friend +tiny
+  say: You sit and watch the rings spread until the light goes. Neither of you says much. It's one of the good afternoons.
+
+@event lake_reflection_bet
+title: The Reflection Bet
+place: lakeshore
+class: windfall
+tone: eerie
+art: mirror
+tags: mystery
+scene: A student staring into a still lake where their reflection appears to be holding a coin.
+text: Your reflection in the Mirror Lake is holding a coin you don't have. It flips it. It catches it. It offers it to you.
+> left: Take the coin
+  gold +small
+  alignment -tiny
+  say: The coin is real, and cold, and you can't remember putting it in your pocket.
+> right: Shake your head
+  alignment +tiny
+  mood +tiny
+  say: Your reflection shrugs, pockets the coin and walks out of the frame before you do.
+
+@event ref_food_fight
+title: Pudding Diplomacy
+place: refectory
+class: routine
+tone: light
+art: meal
+tags: social
+scene: A refectory mid-food-fight, puddings in the air, a prefect rising slowly from behind a table.
+text: A pudding sails across the refectory and lands in Bram's lap. The hall goes silent. Every eye turns to the table it came from, which is yours.
+> left: Own up
+  rel bram +small
+  renown +tiny
+  grades -tiny
+  say: Bram writes you a demerit, then pauses. "Good throw," he says, almost without wanting to.
+> right: Throw another
+  renown +small
+  rel bram -small
+  mood +small
+  say: The second pudding starts a war that the refectory will talk about for years. Historians will argue about who won. You know.
+
+@event ref_cook_secret
+title: The Cook's Secret
+place: refectory
+class: windfall
+tone: warm
+art: cup
+tags: home
+scene: A huge kitchen behind the refectory, an enormous cook stirring a pot with a spoon the size of an oar.
+text: The cook catches you lingering by the kitchen door. "You look like someone who misses proper soup," she says, and hands you a bowl before you can deny it.
+> left: Eat it slowly
+  health +small
+  mood +small
+  say: It tastes like the kitchen at home. You don't say so. She can tell anyway.
+> right: Ask for the recipe
+  alchemy +tiny
+  mood +tiny
+  say: "Ha," says the cook, which means no, which means you'll have to keep coming back.
+
+@event obs_comet_watch
+title: The Comet Watch
+place: observatory
+class: routine
+tone: warm
+art: planet
+tags: magic
+scene: The brass dome of an observatory open to the night, a student at the eyepiece, another beside them with a notebook.
+text: A comet is due tonight and the observatory is full of students pretending they came for the science. The telescope has a queue. The roof has a view.
+> left: Queue for the telescope
+  lore +small
+  mood -tiny
+  say: Your turn at the eyepiece lasts thirty seconds. The comet's tail is green. You'll remember it longer than most lectures.
+> right: Watch from the roof
+  mood +small
+  rel kael +tiny
+  health -tiny
+  say: The comet crosses the sky slowly, like it's looking for something. Kael is already on the roof. He moves over to make room.
+
+@event obs_star_chart
+title: The Missing Star
+place: observatory
+class: story
+tone: eerie
+art: star
+tags: mystery magic
+scene: An old star chart spread on a desk, one constellation with a careful empty circle drawn where a star should be.
+text: An old star chart in the observatory archive has a circle drawn where a star should be, with a note in faded ink: "It eats the light. Do not chart it."
+> left: Copy the chart
+  lore +small
+  hollow +1
+  say: You copy it carefully. That night you dream of a circle with nothing inside it, waiting.
+> right: Put it back
+  mood +tiny
+  say: You return it to the drawer. The drawer feels colder when you close it.
+
+@event green_mandrake_choir
+title: The Mandrake Choir
+place: greenhouses
+class: routine
+tone: light
+art: leaf
+tags: nature
+scene: A greenhouse bench of potted mandrakes wearing tiny earmuffs, a student conducting them with a pencil.
+text: Tobias has taught the greenhouse mandrakes to scream in harmony. He would like your opinion. The mandrakes would like an audience.
+> left: Conduct a verse
+  rel tobias +small
+  health -tiny
+  say: You conduct one verse. Your ears ring for a day. Tobias says it's the best performance they've given.
+> right: Wear earmuffs and listen
+  rel tobias +tiny
+  mood +small
+  gold -tiny
+  say: Through the earmuffs it sounds almost beautiful. Tobias is so proud he cries a little.
+
+@event green_moonflower_sprout
+title: A Moonflower Seedling
+place: greenhouses
+class: windfall
+tone: warm
+art: flower
+tags: nature
+scene: A tiny silver-leaved seedling in a clay pot, glowing faintly in a dark greenhouse.
+text: In a forgotten corner of the greenhouse, a moonflower seed has sprouted on its own, eleven years early. It glows faintly when you lean over it.
+> left: Pot it and look after it
+  alchemy +small
+  mood +small
+  say: You give it a pot, a label and a name. It glows a little brighter when you visit.
+> right: Tell Tobias
+  rel tobias +medium
+  say: Tobias is speechless, then very loud. The seedling gets a sign, a fence and a rota.
+
+# ---------------- Break days ----------------
+
+@event castle_empty_halls
+title: Empty Halls
+plan: castle
+class: windfall
+tone: warm
+art: tower
+tags: home
+scene: A long castle corridor in the holidays, dust in sunbeams, one student walking alone.
+text: The castle in the holidays is enormous and quiet. Your footsteps echo down corridors you've never been alone in. A door you've never noticed is standing open.
+> left: Go through the door
+  guile +small
+  mood +tiny
+  discover seventh_tower
+  say: It leads to a stair that leads to a locked door that leads, you're almost sure, to the seventh tower.
+> right: Read in the window seat
+  lore +small
+  mood +small
+  say: You read all day in a window seat with the whole lake below you. The best kind of nothing.
+
+@event castle_skeleton_crew
+title: The Skeleton Crew
+plan: castle
+class: windfall
+tone: light
+art: meal
+tags: home
+scene: A handful of staff and students sharing a long table in a nearly empty great hall.
+text: Supper in the holidays is one table in the Great Hall: you, three other students, the cook, two prefects and Old Maud, who has brought her goat.
+> left: Sit next to Maud
+  rel maud +small
+  mood +small
+  say: Maud tells a story about the frozen spring that she's never told the term-time students. Bartholomew eats your napkin.
+> right: Play cards with the prefects
+  gold +small
+  guile +tiny
+  say: The prefects play cards like they enforce rules: badly and with great confidence. You win dessert.
+
+@event home_family_supper
+title: Supper at Home
+place: home_cottage
+class: windfall
+tone: warm
+art: meal
+tags: home
+scene: A crowded kitchen table, a family passing dishes, a student back from the academy being asked too many questions.
+text: Supper at home. Everyone wants to know what you've learned. You try to explain evocation to an aunt who thinks it's a kind of cheese.
+> left: Show them a spell
+  mood +small
+  arcana +tiny
+  say: You light every candle in the room at once. Your aunt applauds and asks if you can do it with cheese.
+> right: Just listen
+  mood +medium
+  health +tiny
+  say: You let them talk. You'd forgotten how loud and how good it is.
+
+@event home_old_friend
+title: An Old Friend
+place: home_fields
+class: windfall
+tone: warm
+art: leaf
+tags: home
+scene: Two old friends sitting on a field wall at sunset, one in academy robes, the other in work clothes.
+text: Your oldest friend is sitting on the wall at the edge of the fields, exactly where you left them. "So," they say. "Are you a wizard now, or what?"
+> left: Tell them everything
+  mood +medium
+  charm +tiny
+  say: You talk until the stars come out. They want to hear about the lake most of all.
+> right: Ask about their life instead
+  mood +small
+  charm +small
+  say: They've been busy too: a farm, a fiancé, a goat that bites. Your life isn't the only one that grew.
+
+@event home_market_day
+title: Market Day
+place: home_market
+class: routine
+tone: light
+art: coin
+tags: home money
+scene: A small country market, a student in academy robes being stared at by stallholders.
+text: Market day in town. A stallholder recognises your academy robes and asks if you can do anything about his leaky roof. For a price.
+> left: Fix it with magic
+  gold +small
+  arcana +tiny
+  health -tiny
+  say: The roof is dry, the stallholder is thrilled and you are slightly scorched. He pays in apples and coins.
+> right: Just buy sweets
+  gold -tiny
+  mood +small
+  say: The sweet shop still sells your favourites. You eat them on the bridge like you used to.
+
+@event work_double_shift
+title: The Double Shift
+plan: work
+class: routine
+tone: tense
+art: coin
+tags: job money
+scene: A student asleep on their feet behind a counter, a clock on the wall showing a very late hour.
+text: Holiday shifts pay double and feel triple. It's your second shift today and the evening rush hasn't started.
+> left: Push through
+  gold +medium
+  health -small
+  mood -small
+  say: You push through. The coins are heavy in your pocket and your feet are heavy everywhere else.
+> right: Swap the shift
+  gold -tiny
+  mood +small
+  say: A colleague takes it for a favour you'll owe later. You sleep for eleven hours.
+
+# ---------------- The Royal Library internship (plan: internship) ----------------
+
+@event intern_first_assignment
+title: The First Assignment
+plan: internship
+class: routine
+tone: light
+art: book
+tags: study
+scene: A vast underground archive, a supervisor handing a student a list longer than their arm.
+text: Your supervisor at the Royal Library hands you a list of forty uncatalogued boxes. "Find out what's in them," she says. "Carefully. One of them is probably alive."
+> left: Work through the boxes
+  lore +medium
+  mood -small
+  say: Box thirty-one is alive. It's a very small, very old dictionary that bites. You catalogue it.
+> right: Ask the other interns
+  charm +small
+  lore +small
+  mood -tiny
+  say: The other interns have a system, a rota and a song. You learn all three.
+
+@event intern_index_maze
+title: The Index Maze
+plan: internship
+class: milestone
+tone: tense
+art: map
+tags: study mystery
+scene: A student lost between endless shelves underground, following an index card trail by lamplight.
+text: A cross-reference in the archive leads to another, and another, and another, deeper under the city. The last card is about the founders of Lumenhold.
+> left: Follow it to the end
+  challenge research hard:
+    win:
+      lore +large
+      renown +small
+      say: At the end is a letter from a founder about "the seventh lock". You copy it with shaking hands.
+    lose:
+      mood -small
+      say: The trail ends at a missing card. Somebody took it. Recently.
+> right: Report it to your supervisor
+  lore +small
+  rel isolde +tiny
+  say: Your supervisor reads the card, goes pale and writes a letter to the headmistress of Lumenhold.
+
+# ---------------- Thesis (track: thesis) ----------------
+
+@event thesis_proposal
+title: The Proposal
+track: thesis
+class: routine
+tone: tense
+art: scroll
+tags: study
+scene: A desk covered in drafts, one page with a single sentence circled many times.
+text: Your thesis proposal is due. Professor Thorne wants one sentence that says what you'll find out. You have eleven sentences and none of them is it.
+> left: Rewrite it all night
+  progress track +medium
+  health -small
+  say: At dawn you have one sentence. Thorne reads it twice. "Yes," he says. "That."
+> right: Hand in what you have
+  progress track +small
+  rel thorne -tiny
+  say: Thorne reads all eleven sentences and circles the fourth. "That one," he says. "Next time, only that one."
+
+@event thesis_lab_night
+title: Late in the Lab
+track: thesis
+class: routine
+tone: tense
+art: candle
+tags: study
+scene: A thesis laboratory at midnight, one carrel lit, a student surrounded by open books.
+text: The thesis lab after midnight: everyone else has gone home, and your argument has a hole in it the size of the seventh tower.
+> left: Find the hole
+  progress track +medium
+  mood -small
+  say: You find it, fill it and find two more. That's progress, apparently.
+> right: Go to bed
+  rest
+  progress track -small
+  say: You sleep. In the morning the hole is still there, but you can see the edges of it.
+
+# ---------------- The Bell Under the Water (arc: the_bell) ----------------
+
+@event bell_first_ring
+title: A Bell Under the Water
+arc: the_bell
+beat: 1
+slot: night
+class: story
+tone: eerie
+art: bell
+tags: mystery
+scene: A dark lakeshore at night, ripples spreading from the middle of the lake though nothing has fallen in.
+text: In the middle of the night you hear a bell, low and slow, from the middle of the lake. Nobody else in your dormitory wakes up.
+> left: Go down to the shore
+  find bell_heard
+  health -tiny
+  say: The water is perfectly still. Then, once, a ring spreads out from the centre, as if the lake had been struck from below.
+> right: Pull the blanket over your head
+  find bell_heard
+  mood -tiny
+  say: It rings seven times. You count every one. In the morning you are the only one who remembers.
+
+@event bell_maud_rope
+title: Maud's Rope
+arc: the_bell
+beat: 2
+slot: night
+class: story
+tone: eerie
+art: bell
+tags: mystery
+cast:
+  keeper: maud
+scene: An old woman in a garden shed holding up a frayed, waterlogged bell-rope.
+text: {keeper} shows you a rope, frayed and black with lake water, that she's kept in her shed for sixty years. "From the bell," she says. "It came up the night the lake froze. Someone cut it."
+> left: Ask who cut it
+  find bell_rope
+  rel keeper +small
+  queue bell_answer within 1..3 with keeper
+  say: "That," says {keeper}, "is the question I've been asking for sixty years." She promises to tell you what she knows, when she's ready.
+> right: Leave her to her memories
+  find bell_rope
+  rel keeper +tiny
+  say: You leave her with the rope in her lap. She doesn't notice you go.
+
+@event bell_answer
+title: What Maud Remembers
+trigger: queued
+actor: npc
+class: story
+tone: warm
+art: lantern
+tags: mystery
+scene: An old woman and a student sitting by a cottage fire, a waterlogged rope coiled between them.
+text: {npc} finds you by the boathouse. "The rope," she says. "Edmund cut it. To stop the bell ringing the thing awake. It went on ringing anyway."
+> ok: Listen
+  rel npc +small
+  mood -tiny
+  say: She talks until the light goes. When she's finished, she seems lighter, and you seem to be carrying something.
+
+@event bell_drowned
+title: The Diving Bell
+arc: the_bell
+beat: 3
+slot: night
+class: story
+tone: tense
+art: wave
+tags: mystery danger
+scene: A student in a borrowed diving helmet standing at the end of a jetty over black water.
+text: The bell has rung every night for a week. The boathouse has an old diving helmet and a rope. The lake is very dark and very still.
+> left: Dive
+  challenge research hard:
+    win:
+      find bell_name
+      lore +medium
+      say: Far down, the bell lies on its side, and around its rim, letters: a name you don't know. You surface gasping, and you keep the name.
+    lose:
+      health -medium
+      say: The cold drives you back up before you see anything. Old Maud is waiting on the jetty with a blanket and a look.
+> right: Wait for the bell to stop
+  unqueue bell_answer
+  mood -small
+  say: You wait for a week. It doesn't stop. Something in you decides it will have to be you, next time.
+
+@event bell_silence
+title: The Bell Falls Silent
+arc: the_bell
+beat: 4
+slot: night
+when: clue(bell_name) or clue(bell_rope)
+class: story
+tone: warm
+art: bell
+tags: mystery
+scene: The Mirror Lake at dawn, perfectly still, a student standing at the water's edge with a lantern.
+text: {clue(bell_name): You say the name from the bell's rim out loud, over the water.|You stand at the shore with Maud's rope in your hands.} The bell rings one last time, and then the lake is just a lake.
+> ok: Let it rest
+  mood +medium
+  alignment +small
+  say: For the first time in sixty years, the lake is quiet. Somewhere in her cottage, you think, Maud sleeps through the night.

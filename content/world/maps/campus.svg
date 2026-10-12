@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 680">
+  <!-- Campus base map (design §6.3). Markers are drawn on top by src/map.js from @place map: positions. -->
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#1f2a44"/><stop offset="1" stop-color="#0d1222"/></radialGradient>
+    <linearGradient id="land" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c3a2a"/><stop offset="1" stop-color="#1f2b22"/></linearGradient>
+    <radialGradient id="lake" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#3a6a96"/><stop offset="1" stop-color="#1c3552"/></radialGradient>
+    <filter id="blur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="14"/></filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+  </defs>
+  <rect width="960" height="680" fill="url(#bg)"/>
+  <path d="M90 170 C180 110 330 95 480 100 C650 105 800 120 880 190 C920 260 905 420 860 500 C820 580 700 620 560 625 C400 630 230 610 150 540 C80 470 60 260 90 170 Z" fill="url(#land)" stroke="#45583f" stroke-width="2"/>
+  <!-- the Whisperwood -->
+  <g fill="#1d2a1f" stroke="#2f4231" stroke-width="1.5">
+    <circle cx="140" cy="300" r="26"/><circle cx="175" cy="270" r="22"/><circle cx="205" cy="310" r="25"/><circle cx="150" cy="350" r="24"/><circle cx="190" cy="370" r="27"/>
+    <circle cx="230" cy="345" r="20"/><circle cx="120" cy="400" r="22"/><circle cx="165" cy="420" r="24"/><circle cx="215" cy="410" r="19"/><circle cx="245" cy="290" r="18"/>
+  </g>
+  <!-- paths -->
+  <g fill="none" stroke="#6b6a4e" stroke-opacity=".45" stroke-width="3" stroke-linecap="round">
+    <path d="M380 262 C330 300 320 360 360 430 C390 480 430 500 480 505"/>
+    <path d="M590 262 C650 250 700 240 740 235"/>
+    <path d="M600 262 C700 290 780 300 850 300"/>
+    <path d="M610 270 C640 330 700 340 760 360 C800 372 830 380 845 385"/>
+    <path d="M640 160 C700 150 760 160 790 165"/>
+  </g>
+  <!-- the Mirror Lake -->
+  <ellipse cx="480" cy="360" rx="235" ry="125" fill="url(#lake)"/>
+  <ellipse cx="480" cy="360" rx="235" ry="125" fill="none" stroke="#7fb0d6" stroke-opacity=".35" stroke-width="2"/>
+  <g fill="none" stroke="#9cc4e6" stroke-opacity=".25" stroke-width="1.5"><path d="M330 350 q20 -6 40 0 M520 400 q20 -6 40 0 M420 420 q14 -5 28 0 M600 330 q16 -5 32 0"/></g>
+  <!-- barge line to the village -->
+  <path d="M560 285 C640 330 700 400 735 480" fill="none" stroke="#e7d39a" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 6"/>
+  <!-- the castle: seven towers and bridges of light -->
+  <g>
+    <path d="M370 255 L590 255 L590 235 L370 235 Z" fill="#3b3f5a"/>
+    <g fill="#4a4f70" stroke="#62688e" stroke-width="1">
+      <rect x="380" y="170" width="22" height="70"/><rect x="414" y="185" width="22" height="55"/><rect x="448" y="150" width="24" height="90"/>
+      <rect x="488" y="125" width="26" height="115"/><rect x="528" y="160" width="22" height="80"/><rect x="560" y="180" width="20" height="60"/><rect x="590" y="195" width="18" height="45"/>
+    </g>
+    <g fill="#5b6290">
+      <path d="M378 170 L391 140 L404 170 Z"/><path d="M413 185 L425 160 L437 185 Z"/><path d="M446 150 L460 115 L474 150 Z"/>
+      <path d="M486 125 L501 85 L516 125 Z"/><path d="M526 160 L539 130 L552 160 Z"/><path d="M558 180 L570 155 L582 180 Z"/><path d="M588 195 L599 172 L610 195 Z"/>
+    </g>
+    <g stroke="#f0d58c" stroke-width="2" stroke-opacity=".75" filter="url(#glow)">
+      <path d="M402 190 L414 200 M436 195 L448 170 M472 160 L488 145 M514 150 L528 175 M550 180 L560 195 M580 200 L590 210"/>
+    </g>
+    <g fill="#f0d58c" opacity=".7"><rect x="388" y="190" width="5" height="7"/><rect x="455" y="175" width="5" height="7"/><rect x="497" y="150" width="6" height="8"/><rect x="535" y="185" width="5" height="7"/></g>
+  </g>
+  <!-- grounds east: greenhouses, duelling hall, orchard, flight field, stables -->
+  <g>
+    <path d="M700 250 Q720 222 740 250 Z M738 252 Q758 226 778 252 Z" fill="#3c5a52" stroke="#6c9488" stroke-width="1.5"/>
+    <rect x="640" y="132" width="44" height="30" fill="#4a3b36" stroke="#7a5e52"/><path d="M636 134 L662 116 L688 134 Z" fill="#5e4a42"/>
+    <g fill="#26412a" stroke="#3c5e3f"><circle cx="770" cy="150" r="11"/><circle cx="795" cy="165" r="12"/><circle cx="815" cy="150" r="10"/><circle cx="790" cy="140" r="9"/></g>
+    <rect x="815" y="280" width="70" height="40" rx="6" fill="#33492f" stroke="#4f6b49"/>
+    <g fill="#4a3f30" stroke="#6f5d44"><rect x="825" y="372" width="40" height="26"/><path d="M820 374 L845 358 L870 374 Z"/></g>
+    <g fill="#43383a" stroke="#6a5a5c"><rect x="868" y="220" width="26" height="22"/><path d="M864 222 L881 208 L898 222 Z"/></g>
+    <!-- Maud's cottage and the boathouse -->
+    <g fill="#5a4a36" stroke="#7e6a4e"><rect x="688" y="322" width="26" height="18"/><path d="M684 324 L701 310 L718 324 Z"/></g>
+    <g fill="#4b3f34" stroke="#6e5e4c"><rect x="598" y="432" width="26" height="16"/><path d="M596 433 L611 422 L626 433 Z"/><path d="M611 448 L611 470" stroke="#8a7a5c" stroke-width="3"/></g>
+  </g>
+  <!-- the village -->
+  <g fill="#4a3d36" stroke="#6b5a4e" stroke-width="1">
+    <path d="M700 515 L718 500 L736 515 L736 540 L700 540 Z"/><path d="M745 528 L760 515 L775 528 L775 552 L745 552 Z"/>
+    <path d="M785 505 L805 488 L825 505 L825 530 L785 530 Z"/><path d="M820 545 L835 532 L850 545 L850 565 L820 565 Z"/>
+    <path d="M630 548 L645 536 L660 548 L660 568 L630 568 Z"/><path d="M670 590 L684 578 L698 590 L698 610 L670 610 Z"/><path d="M758 590 L772 578 L786 590 L786 610 L758 610 Z"/>
+  </g>
+  <!-- fog over the far west -->
+  <ellipse cx="150" cy="330" rx="110" ry="120" fill="#8a94b0" opacity=".12" filter="url(#blur)"/>
+</svg>

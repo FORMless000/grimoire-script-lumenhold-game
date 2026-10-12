@@ -45,14 +45,15 @@ text: The Sorting Mirror in the entrance hall does not sort you into anything. I
   say: The mirror shows ledgers, ships and your mother's disappointed face. Still: gold.
 
 @event choose_elective
+# retired in phase 2b (was "month == 1 or month == 6"); replaced by enrolment (offers: courses, pick: 2)
 title: Choosing an Elective
 trigger: auto
-when: month == 1 or month == 6
+when: false
 repeat: 5
 priority: 45
 type: menu
 art: scroll
-tags: study class
+tags: study class retired
 scene: A long noticeboard covered in fluttering enchanted parchment, each sheet trying to shoulder the others aside.
 text: The registrar's noticeboard flaps with sign-up sheets for this term's electives. Core lectures are compulsory; your elective is yours to choose. The sheets jostle for your attention.
 > pyro: Pyromancy
@@ -89,14 +90,15 @@ text: The registrar's noticeboard flaps with sign-up sheets for this term's elec
   flag took_umbral
 
 @event club_fair
+# retired in phase 2b (was "month == 2"); replaced by club_fair_v3 (offers: clubs)
 title: The Club Fair
 trigger: auto
-when: month == 2
+when: false
 repeat: 12
 priority: 40
 type: menu
 art: group
-tags: social club
+tags: social club retired
 scene: The great courtyard filled with banners and stalls: a duelist juggling sparks, a choir floating a foot off the ground, a girl handing out newspapers that shout headlines.
 text: The courtyard is a riot of banners. Every club wants you, or at least your membership fee. A broom whizzes overhead trailing a SKYRACE TRYOUTS banner; somewhere a choir is harmonising with a cat.
 > duel: Dueling Circle
@@ -131,14 +133,15 @@ text: The courtyard is a riot of banners. Every club wants you, or at least your
   mood +2
 
 @event job_board
+# retired in phase 2b (was "month == 3 or month == 9"); replaced by job_board_visit (the Job Board place)
 title: The Job Board
 trigger: auto
-when: month == 3 or month == 9
+when: false
 repeat: 5
 priority: 35
 type: menu
 art: coin
-tags: job money
+tags: job money retired
 scene: A cork board outside the bursar's office, papered with notices; one is on fire, one is wriggling.
 text: Rent is ten crowns a month and your purse is a fragile thing. The board outside the bursar's office offers honest work, and some that is merely work.
 > library: Library Assistant — 10 gold/month
@@ -171,12 +174,13 @@ text: Rent is ten crowns a month and your purse is a fragile thing. The board ou
   lose job_courier
 
 @event lantern_night
+# retired in phase 2b (was "month == 2"); replaced by lantern_night_v3 (a festival at the lakeshore)
 title: Lantern Night
 trigger: auto
-when: month == 2
+when: false
 repeat: 12
 art: lantern
-tags: festival social
+tags: festival social retired
 scene: Hundreds of paper lanterns rising off the lake at dusk, each with a wish written on it in glowing ink.
 text: On Lantern Night every student writes a wish on a paper lantern and lets it go over the lake. Rumour says the lanterns that sink were wishes the lake wanted for itself.
 > left: Wish for something selfish
@@ -215,13 +219,14 @@ text: Mid-term, the dining hall doors open and frost crawls across the floor. A 
   flag kael_kindness
 
 @event winter_trials
+# retired in phase 2b (was "month == 4"); replaced by term-end exams (engine, design §7.3)
 title: The Winter Trials
 trigger: auto
-when: month == 4
+when: false
 repeat: 12
 priority: 40
 art: hourglass
-tags: study exam
+tags: study exam retired
 scene: A vast examination hall where floating quills hover over a hundred desks and the windows are thick with frost.
 text: The Winter Trials. A hundred desks, a hundred floating quills, one very old proctor who may be asleep. The first question asks you to explain the Third Law of Correspondence. The second asks you to demonstrate it.
 > left: Lean on theory (Lore)
@@ -408,13 +413,14 @@ text: The final. Across the ring stands {lyra}, wand raised, eyes blazing. "I wa
   say: The crowd boos. Lyra does not cheer her victory. Later she finds you: "Why?" You don't have a good answer, and she seems to like that.
 
 @event grand_exams
+# retired in phase 2b (was "month == 10"); replaced by term-end exams (engine, design §7.3)
 title: Grand Examinations
 trigger: auto
-when: month == 10
+when: false
 repeat: 12
 priority: 40
 art: scroll
-tags: study exam
+tags: study exam retired
 scene: A circular examination chamber with a domed ceiling of moving constellations; examiners in grey robes sit behind a long table.
 text: Year-end examinations. Three days, five examiners and a practical in front of a panel that includes the headmistress. Your standing for the year rides on this.
 > left: Prepare a dazzling practical
@@ -437,14 +443,15 @@ text: Year-end examinations. Three days, five examiners and a practical in front
     say: Your thesis is described, aloud, as "ambitious". It is not a compliment.
 
 @event summer_plans
+# retired in phase 2b (was "month == 11"); replaced by break_plan
 title: Summer Recess
 trigger: auto
-when: month == 11
+when: false
 repeat: 12
 priority: 40
 type: menu
 art: sun
-tags: home
+tags: home retired
 scene: The academy gates thrown open to green hills; students with trunks waving from departing sky-barges.
 text: The towers empty for the summer. Two months of freedom. How will you spend them?
 > home: Go home
@@ -516,7 +523,7 @@ text: A letter arrives in the last month of summer, the handwriting so familiar 
 @event starfall
 title: Starfall
 trigger: auto
-when: month == 12 and year < 3
+when: month == 12 and year < 4
 repeat: 12
 priority: 30
 art: star
@@ -566,7 +573,7 @@ text: "Third years," the headmistress says, "this is your last year in these hal
 @event graduation_eve
 title: The Eve of Graduation
 trigger: auto
-when: turn == 36
+when: turn == 47
 priority: 60
 art: crown
 tags: story

@@ -211,12 +211,8 @@
     const when = document.getElementById('when');
     if (!when) return;
     when.innerHTML = esc(snap.month) + '<small>' + esc(t('date.sub', { year: snap.year, turn: snap.turn, max: snap.maxTurns })) + '</small>';
-    const summer = (content.game.summer_months || ['11', '12']).map(Number);
     let tl = '';
-    for (let i = 1; i <= snap.maxTurns; i++) {
-      const mi = ((i - 1) % eng.months.length) + 1;
-      tl += '<i class="' + (i < snap.turn ? 'done ' : '') + (i === snap.turn ? 'now ' : '') + (summer.includes(mi) ? 'summer' : '') + '"></i>';
-    }
+    for (let i = 1; i <= snap.maxTurns; i++) tl += '<i class="' + (i < snap.turn ? 'done ' : '') + (i === snap.turn ? 'now ' : '') + (eng.phaseOf(i) === 'break' ? 'summer' : '') + '"></i>';
     document.getElementById('timeline').innerHTML = tl;
     for (const r of snap.resources) {
       const el = document.getElementById('m-' + r.id); if (!el) continue;
@@ -251,6 +247,18 @@
       h += '<div class="sec-h">' + esc(snap.name) + '</div>';
       const panel = snap.resources.filter((r) => r.display === 'panel');
       if (panel.length) h += '<div class="panel-res">' + panel.map((r) => '<div class="pres' + (r.warn_below != null && r.value <= r.warn_below ? ' low' : '') + '" title="' + esc(r.desc || '') + '">' + Art.icon(r.icon || 'star', 16) + '<span>' + esc(r.name) + '</span><b>' + Math.round(r.value) + '</b></div>').join('') + '</div>';
+      const tracks = snap.tracks || [];
+      if (tracks.length || snap.gpa) {
+        h += '<div class="sec-h">' + esc(t('side.studies')) + (snap.gpa ? '<span class="gpa">' + esc(t('side.gpa', { gpa: snap.gpa.toFixed(2) })) + '</span>' : '') + '</div>';
+        for (const tr of tracks) {
+          let line = '';
+          if (tr.kind === 'course') line = tr.status === 'enrolled' ? t('side.enrolled') : tr.grades.length ? t('side.grades', { grades: tr.grades.join(' ') }) : '';
+          else if (tr.kind === 'club' || tr.kind === 'job') line = t('side.rankLine', { rank: tr.rank || '', perf: tr.perf, due: tr.due });
+          else if (tr.kind === 'thesis') line = t('side.progress', { n: tr.progress });
+          else if (tr.status === 'applied') line = t('side.applied');
+          h += '<div class="state track ' + esc(tr.kind) + '">' + Art.icon(tr.kind === 'job' ? 'coin' : tr.kind === 'club' ? 'group' : 'book', 20) + '<div><b>' + esc(tr.levelName || tr.name) + '</b><p>' + esc(line) + '</p></div>' + (tr.kind === 'club' || tr.kind === 'job' ? '<span class="left">' + esc(t('side.perf', { n: tr.perf })) + '</span>' : '') + '</div>';
+        }
+      }
       if (snap.spells.length) {
         h += '<div class="sec-h">' + esc(t('side.spells')) + '</div>';
         for (const sp of snap.spells) h += '<div class="state spell">' + Art.icon(sp.art || 'wand', 20) + '<div><b>' + esc(sp.name) + ' ' + ['', 'I', 'II', 'III'][sp.level] + '</b><p>' + esc(sp.desc || '') + '</p></div><span class="left">' + esc(t('side.spellCost', { n: sp.cost })) + '</span></div>';
@@ -321,6 +329,7 @@
   }
   function route(r) {
     if (r.kind === 'month') { Net.flush(eng, runRecordMeta()); return showMonth(r); }
+    if (r.kind === 'map') return showMap(r.view);
     if (r.kind === 'ending') {
       archiveRun(eng); store.del(SAVE_KEY);
       if (Net.available) { Net.flush(eng, runRecordMeta(), { final: true }); Net.deleteSave('auto').catch(() => {}); }
@@ -389,7 +398,8 @@
       '<div class="card-body">' + actorRow(v.actor) + '<h2>' + esc(v.title) + '</h2><p class="text">' + esc(v.text) + '</p>' +
       sceneNote(v.scene, !settings.notes) + '</div>',
       v.art, v.tags, v.id);
-    card.querySelector('.card-art').insertAdjacentHTML('beforeend', '<span class="tagline">' + esc(cardTagline(v)) + '</span>' + (v.src === 'queued' && !(v.tags || []).includes('story') ? '<span class="src">' + esc(t('card.consequence')) + '</span>' : ''));
+    card.querySelector('.card-art').insertAdjacentHTML('beforeend', '<span class="tagline">' + esc(cardTagline(v)) + '</span>' + (v.src === 'queued' && !(v.tags || []).includes('story') ? '<span class="src">' + esc(t('card.consequence')) + '</span>' : '') +
+      (v.slot ? '<span class="slotchip">' + esc([t('slot.' + v.slot), v.place && content.places[v.place] ? content.places[v.place].name : null, v.track && content.tracks[v.track] ? content.tracks[v.track].name : null].filter(Boolean).join(' · ')) + '</span>' : ''));
     const choices = document.getElementById('choices');
     const pv = (o) => previewHtml(v, o);
     const chk = (o) => (o.hint ? '<span class="chk">' + esc(o.hint) + '</span>' : '') + pv(o);
@@ -513,6 +523,13 @@
     if (n.kind === 'bond') return t('note.bond', { name: shortName(n.npc), status: bondLabel(n.status) });
     if (n.kind === 'gain' || n.kind === 'lose') return t('note.' + n.kind, { state: content.states[n.state] ? content.states[n.state].name : n.state });
     if (n.kind === 'spell') return t('note.spell', { spell: spellName(n.spell), level: ['', 'I', 'II', 'III'][n.level] || n.level });
+    const tn = (id) => (content.tracks[id] ? content.tracks[id].name : id);
+    if (n.kind === 'grade') return t('note.grade', { track: ((content.tracks[n.track] || {}).level_names || tn(n.track)).split(/\s*[,，、]\s*/)[n.level - 1] || tn(n.track), grade: n.grade });
+    if (['enrol', 'join', 'leave', 'promote', 'dropped'].includes(n.kind)) return t('note.' + n.kind, { track: tn(n.track) });
+    if (n.kind === 'missed') return t('note.missed', { track: tn(n.track), n: n.n });
+    if (n.kind === 'attend') return t('note.attend', { track: tn(n.track), n: n.left });
+    if (n.kind === 'discover') return t('note.discover', { place: content.places[n.place] ? content.places[n.place].name : n.place });
+    if (n.kind === 'clue') return t('note.clue');
     if (n.kind === 'fact') return t('note.fact', { name: shortName(n.fact.split('.')[0]) });
     return n.text || '';
   }
@@ -554,7 +571,7 @@
 
   /* ------------------------------------------------------------------ menu */
   function showMenu(v) {
-    ui.mode = 'menu'; ui.view = v; ui.busy = false;
+    ui.mode = 'menu'; ui.view = v; ui.busy = false; ui.multi = v.pick > 1 ? [] : null;
     const deck = document.getElementById('deck'); deck.querySelectorAll('.card').forEach((c) => c.remove());
     document.getElementById('choices').innerHTML = '';
     const opts = v.options.map((o, i) => {
@@ -564,7 +581,8 @@
     }).join('');
     openOverlay('<div class="modal dark"><div class="modal-art">' + Art.scene(v.art, v.tags, v.id) + '</div><div class="modal-body">' + (v.actor ? actorRow(v.actor).replace('actor-row', 'actor-row" style="color:var(--text)') : '') +
       '<h2>' + esc(v.title) + '</h2><p class="text">' + esc(v.text) + '</p>' + (settings.notes ? sceneNote(v.scene) : '') +
-      '<div class="opt-grid">' + opts + '</div></div></div>');
+      '<div class="opt-grid">' + opts + '</div>' + (ui.multi ? '<div class="row" style="margin-top:14px"><button class="btn primary grow" id="multiGo" disabled style="width:100%">' + esc(t('menu.confirm', { n: 0, max: v.pick })) + '</button></div>' : '') + '</div></div>');
+    if (ui.multi) document.getElementById('multiGo').onclick = () => { if (ui.multi.length) { const keys = ui.multi.slice(); ui.busy = true; closeOverlay(); setPreview(null); resolve(keys); } };
     document.querySelectorAll('.opt').forEach((b) => {
       const o = v.options.find((x) => x.key === b.dataset.k);
       b.onmouseenter = () => setPreview(o.affects);
@@ -576,9 +594,39 @@
     if (ui.busy || ui.mode !== 'menu') return;
     const o = ui.view.options.find((x) => x.key === key);
     if (!o || o.disabled) return;
+    if (ui.multi) {
+      const i = ui.multi.indexOf(key);
+      if (i >= 0) ui.multi.splice(i, 1); else if (ui.multi.length < ui.view.pick) ui.multi.push(key);
+      document.querySelectorAll('.opt').forEach((b) => b.classList.toggle('sel', ui.multi.includes(b.dataset.k)));
+      const go = document.getElementById('multiGo');
+      go.disabled = !ui.multi.length; go.textContent = t('menu.confirm', { n: ui.multi.length, max: ui.view.pick });
+      return;
+    }
     ui.busy = true;
     closeOverlay(); setPreview(null);
     resolve(key);
+  }
+
+  /* ------------------------------------------------------------------ map (design §6.3) */
+  function showMap(view) {
+    ui.mode = 'map'; ui.busy = false;
+    document.querySelectorAll('#deck .card').forEach((c) => c.remove());
+    document.getElementById('choices').innerHTML = '';
+    openOverlay('<div class="modal dark map-modal"><div class="modal-body" id="mapRoot"></div></div>');
+    const snap = eng.snapshot();
+    ui.mapCtl = MapView.render(document.getElementById('mapRoot'), view, {
+      t, esc, Art, npcs: content.npcs,
+      title: t('map.title', { month: snap.month, year: snap.year, phase: t('phase.' + view.phase) }),
+      onConfirm(picks) {
+        if (ui.mode !== 'map') return;
+        let out;
+        try { out = eng.pickPlaces(picks); } catch (e) { console.warn(e); return; }
+        ui.mode = null; ui.mapCtl = null; closeOverlay();
+        renderChrome(); floatDeltas(out.deltas); save();
+        if (out.notes.length || hasVisibleDeltas(out.deltas)) showOutcome(out); else next();
+      },
+    });
+    const first = document.querySelector('#mapRoot .mk.st-open'); if (first) first.focus({ preventScroll: true });
   }
 
   /* ------------------------------------------------------------------ month */
@@ -645,6 +693,7 @@
     }
     if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
     if ((e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey && document.getElementById('fbBar')) { e.preventDefault(); openFeedback(); return; }
+    if (ui.mode === 'map') { if (ui.mapCtl && ui.mapCtl.key(e)) e.preventDefault(); return; }
     if (ui.mode === 'card') {
       const v = ui.view; const story = v.type === 'story' || v.options.length === 1;
       if (e.key === 'ArrowLeft') { e.preventDefault(); commitCard(story ? 'right' : 'left'); }

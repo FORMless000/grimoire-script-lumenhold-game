@@ -591,3 +591,41 @@ desc: A sliver of Northern winter that Ilse sewed into your collar. Cold things 
 tick:
   arcana +1
   health +1
+
+# ---------------- Break plans (design §4.3; phase 2b) ----------------
+# Chosen at the start of each break (calendar_2b.grim: break_plan). A plan lasts the break.
+
+@state plan_castle
+name: Break: at the castle
+kind: plan
+group: plan
+duration: 2
+art: tower
+desc: A skeleton crew, empty corridors and secrets. Board costs 6 crowns a month.
+
+@state plan_home
+name: Break: at home
+kind: plan
+group: plan
+duration: 2
+art: house
+desc: Family, old friends and free board. The days are slower here.
+on_add:
+  gain summer_away 2
+
+@state plan_work
+name: Break: working full-time
+kind: plan
+group: plan
+duration: 2
+art: coin
+desc: Extra shifts at double pay. Tiring.
+
+@state plan_internship
+name: Break: internship
+kind: plan
+group: plan
+duration: 2
+art: book
+desc: A research placement away from the castle, with a stipend and a supervisor.
+tick: gold +6

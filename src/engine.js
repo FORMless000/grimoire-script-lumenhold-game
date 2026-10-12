@@ -6,9 +6,9 @@
  *         or {kind:'ending'} once the game is over.
  */
 (function (root, factory) {
-  if (typeof module === 'object' && module.exports) module.exports = factory(require('./grimoire.js'));
-  else root.Engine = factory(root.Grimoire);
-})(typeof self !== 'undefined' ? self : this, function (G) {
+  if (typeof module === 'object' && module.exports) module.exports = factory(require('./grimoire.js'), require('./director.js'));
+  else root.Engine = factory(root.Grimoire, root.Director);
+})(typeof self !== 'undefined' ? self : this, function (G, Director) {
   'use strict';
 
   const PRONOUNS = {
@@ -40,7 +40,10 @@
       const g = content.game;
       this.years = g.years || 3;
       this.months = g.months && g.months.length ? g.months : ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6', 'Month 7', 'Month 8', 'Month 9', 'Month 10', 'Month 11', 'Month 12'];
-      this.maxTurns = this.years * this.months.length;
+      // The run ends in `last_month` of the final year (design §4.1: Goldenhaze of year 4 = turn 47).
+      this.maxTurns = (this.years - 1) * this.months.length + (g.last_month || this.months.length);
+      this.calendar = g.calendar || null;   // month index -> 'term' | 'break'
+      this.seasons = g.seasons || null;
       this.cardsPerMonth = g.cards_per_month || 3;
       this.maxCards = g.max_cards_per_month || 7;
       this.socialPerMonth = g.social_per_month == null ? 1 : g.social_per_month;
@@ -92,10 +95,12 @@
         queue: [], deck: [], cur: null, log: [], ended: null, pending: [], cardsThisMonth: 0,
         runId: opts.runId || newRunId(seed), hist: [], seq: 0,
         spells: {}, facts: {}, memories: [], npcRel: {},
+        tracks: {}, places: {}, arcs: {}, clues: {}, skillGain: {}, peak: {}, day: null, runsSeen: opts.runsSeen || {},
       };
       s.hist.push({ t: 'start', at: now(), seed, name: s.name });
       for (const id of this.c.order.resources) s.vals[id] = this.c.resources[id].start ?? 50;
-      for (const id of this.c.order.skills) s.vals[id] = this.c.skills[id].start ?? 0;
+      for (const id of this.c.order.skills) { s.vals[id] = this.c.skills[id].start ?? 0; s.peak[id] = s.vals[id]; }
+      for (const p of Object.values(this.c.places || {})) if (!p.discover) s.places[p.id] = { found: 0 };
       for (const id of this.c.order.npcs) s.npcs[id] = { met: false, rel: this.c.npcs[id].start_rel || 0, spark: 0, bond: 'none', touched: 0, sparked: 0, lowSpark: 0 };
       this.runHooks('game_start');
       return this.beginMonth();
@@ -189,15 +194,215 @@
     spellCost(id, level) { const d = this.c.spells && this.c.spells[id]; return d && d.cost ? d.cost[clamp((level || 1) - 1, 0, d.cost.length - 1)] : 0; }
     get spellResource() { return this.c.game.spell_resource || 'mana'; }
 
+    /* ---------------- Tracks (design §7) ---------------- */
+    trackState(id) { id = this._ctxTrack && id === 'track' ? this._ctxTrack : id; return (this.s.tracks || {})[id] || null; }
+    levelPassed(id) { const t = this.trackState(id); if (!t || !t.passed) return 0; return Math.max(0, ...Object.keys(t.passed).filter((l) => t.passed[l] !== 'F').map(Number)); }
+    trackSkills(id) { const d = this.c.tracks[id]; return d && d.skill ? [].concat(d.skill) : []; }
+    // GPA from every graded course (A 4 · B 3 · C 2 · F 0); 0 before the first exams.
+    gpa() {
+      const pts = { A: 4, B: 3, C: 2, F: 0 }, all = [];
+      for (const t of Object.values(this.s.tracks || {})) for (const g of t.grades || []) all.push(pts[g]);
+      return all.length ? Math.round((all.reduce((a, b) => a + b, 0) / all.length) * 100) / 100 : 0;
+    }
+    trackSize(row, tier, dflt) { const sz = this.c.balance && this.c.balance.sizes && this.c.balance.sizes[row]; return (sz || dflt)[TIER_INDEX[tier]]; }
+    // Legacy states a track stands for (compat: old class/club/job events stay gated on them).
+    grantLegacy(id, ctx, on) {
+      // Bypasses `group:` exclusivity: one track may stand for several old electives (Evocation = Pyromancy + Tidecalling).
+      for (const st of (this.c.tracks[id] || {}).legacy || []) {
+        const d = this.c.states[st]; if (!d) continue;
+        if (on && !this.s.states[st]) { this.s.states[st] = { left: null, since: this.s.turn, legacy: id }; this.run(d.on_add, ctx); }
+        else if (!on && this.s.states[st] && this.s.states[st].legacy === id) { delete this.s.states[st]; this.run(d.on_remove, ctx); }
+      }
+    }
+    trackOp(st, ctx) {
+      const s = this.s;
+      let id = st.track === 'track' ? ctx.track : st.track;
+      // `leave job` / `leave club`: whichever one you have.
+      if (st.t === 'leave' && (id === 'job' || id === 'club')) id = Object.keys(s.tracks || {}).find((k) => s.tracks[k].kind === id && s.tracks[k].status === 'member');
+      const d = this.c.tracks[id];
+      if (!d) return;
+      s.tracks = s.tracks || {};
+      const t = s.tracks[id] = s.tracks[id] || { kind: d.kind, status: 'none', passed: {}, grades: [], rank: 0, perf: 50, rankXp: 0, visits: 0, due: d.due || 0, progress: 0, study: 0 };
+      switch (st.t) {
+        case 'enrol': {
+          if (d.kind !== 'course' && d.kind !== 'thesis') return;
+          t.status = 'enrolled'; t.level = st.level || Math.min(d.levels || 1, this.levelPassed(id) + 1); t.study = 0;
+          ctx.notes.push({ kind: 'enrol', track: id, level: t.level });
+          this.grantLegacy(id, ctx, true);
+          break;
+        }
+        case 'join': {
+          if (t.status === 'member') return;
+          if (d.kind === 'job' && t.unreliableUntil && this.termIndex() < t.unreliableUntil) return;
+          // One club and one job at a time (decision D3).
+          for (const [oid, o] of Object.entries(s.tracks)) if (oid !== id && o.status === 'member' && o.kind === d.kind && (d.kind === 'club' || d.kind === 'job')) { o.status = 'left'; this.grantLegacy(oid, ctx, false); ctx.notes.push({ kind: 'leave', track: oid }); }
+          t.status = 'member'; t.perf = t.dropped ? 30 : 50; t.visits = 0; t.due = d.due || 0; t.benched = false;
+          ctx.notes.push({ kind: 'join', track: id });
+          this.grantLegacy(id, ctx, true);
+          break;
+        }
+        case 'leave': if (t.status === 'member' || t.status === 'enrolled') { t.status = 'left'; this.grantLegacy(id, ctx, false); ctx.notes.push({ kind: 'leave', track: id }); } break;
+        case 'apply': if (t.status === 'none' || t.status === 'left') t.status = 'applied'; break;
+        case 'promote': {
+          const ranks = (d.ranks || '').split(/\s*[,，、]\s*/).filter(Boolean).length || 1;
+          if (t.rank < ranks - 1) { t.rank++; t.rankXp = 0; ctx.notes.push({ kind: 'promote', track: id, rank: t.rank }); }
+          break;
+        }
+        case 'perform': { const amt = st.tier ? st.sign * this.trackSize('performance', st.tier, [2, 5, 8, 15, 25]) : st.min; t.perf = clamp((t.perf || 0) + amt, 0, 100); ctx.deltas['perf:' + id] = (ctx.deltas['perf:' + id] || 0) + amt; break; }
+        case 'rank_xp': { const amt = st.tier ? st.sign * this.tierAmount('xp', st.tier) : st.min; t.rankXp = Math.max(0, (t.rankXp || 0) + amt); break; }
+        case 'progress': { const amt = st.tier ? st.sign * this.trackSize('progress', st.tier, [2, 4, 8, 15, 25]) : st.min; t.progress = clamp((t.progress || 0) + amt, 0, 100); ctx.deltas['progress:' + id] = (ctx.deltas['progress:' + id] || 0) + amt; break; }
+      }
+    }
+    // Visiting a club/job/thesis place you belong to (design §6.2): attendance, performance, pay, rank XP.
+    attend(id, ctx) {
+      const s = this.s, t = this.trackState(id), d = this.c.tracks[id];
+      if (!t || t.status !== 'member' || !d) return;
+      const extra = t.visits >= t.due;
+      t.visits++;
+      t.perf = clamp((t.perf || 0) + (extra ? 2 : 8), 0, 100);
+      t.rankXp = (t.rankXp || 0) + (extra ? 1 : 2);
+      if (d.kind === 'job' && d.pay) {
+        const pay = d.pay[Math.min(t.rank, d.pay.length - 1)] * (this.phaseOf() === 'break' ? 2 : 1) * (t.benched ? 0.6 : 1);
+        this.change('gold', Math.round(pay), ctx);
+      }
+      if (d.kind === 'thesis') t.progress = clamp((t.progress || 0) + (extra ? 2 : 5), 0, 100);
+      ctx.notes.push({ kind: 'attend', track: id, left: Math.max(0, t.due - t.visits) });
+    }
+    // End of a term (design §6.2, §7.3): exams for enrolled courses, missed obligations, warnings, promotions.
+    endTerm(summary) {
+      const s = this.s, pts = { A: 4, B: 3, C: 2, F: 0 };
+      const ctx = this.newCtx(null, 'term');
+      const excused = Object.keys(s.states).some((k) => this.c.states[k] && (this.c.states[k].tags || []).includes('excuse'));
+      for (const [id, t] of Object.entries(s.tracks || {})) {
+        const d = this.c.tracks[id]; if (!d) continue;
+        if (t.status === 'enrolled' && d.kind === 'course') {
+          const sk = this.trackSkills(id); const sv = sk.reduce((a, k) => a + (s.vals[k] || 0), 0) / Math.max(1, sk.length);
+          const tier = ['medium', 'hard', 'heroic'][Math.min(2, (t.level || 1) - 1)];
+          const dc = this.expectedSkill() + this.difficulty(tier) - Math.min(15, t.study || 0);
+          const odds = (x) => clamp(Math.round(50 + 2.5 * (sv - x)), 8, 92);
+          const r = this.rand() * 100;
+          const grade = r < odds(dc + 5) ? (sv - dc >= 15 ? 'A' : 'B') : r < odds(dc - 5) ? 'C' : 'F';
+          t.grades.push(grade); t.passed[t.level] = grade; t.status = grade === 'F' ? 'failed' : 'done';
+          ctx.notes.push({ kind: 'grade', track: id, level: t.level, grade });
+          // Passing a level teaches its spells (design §9.1: `teaches: flame@1 tide@2 …`).
+          if (grade !== 'F') for (const x of d.teaches || []) if (x.level === t.level && this.c.spells[x.spell]) this.run([{ t: 'learn_spell', spell: x.spell, level: null }], ctx);
+          this.grantLegacy(id, ctx, false);
+        }
+        if (t.status === 'member' && (d.kind === 'club' || d.kind === 'job' || d.kind === 'thesis')) {
+          const missed = excused ? 0 : Math.max(0, (t.due || 0) - (t.visits || 0));
+          if (missed) {
+            t.perf = clamp(t.perf - 15 * missed, 0, 100);
+            if (d.kind === 'thesis') t.progress = clamp((t.progress || 0) - 8 * missed, 0, 100);
+            if (d.lead && s.npcs[d.lead]) s.npcs[d.lead].rel = clamp(s.npcs[d.lead].rel - 5 * missed, -100, 100);
+            ctx.notes.push({ kind: 'missed', track: id, n: missed });
+          }
+          t.visits = 0;
+          if (t.perf <= 0 && d.kind !== 'thesis') {
+            t.status = 'dropped'; t.dropped = true; this.grantLegacy(id, ctx, false);
+            if (d.kind === 'job') t.unreliableUntil = this.termIndex() + 2;
+            ctx.notes.push({ kind: 'dropped', track: id });
+          } else {
+            t.benched = t.perf < 20;
+            t.due = t.benched && d.kind === 'job' ? Math.min(2, d.due || 0) : d.due || 0;
+            if (t.perf < 40) this.pushTrackEvent('track_warning', id);
+            const need = ((this.c.balance && this.c.balance.rank_xp) || [10, 25])[t.rank];
+            const ranks = (d.ranks || '').split(/\s*[,，、]\s*/).filter(Boolean).length || 1;
+            if (t.perf >= 70 && need != null && t.rankXp >= need && t.rank < ranks - 1) this.pushTrackEvent('track_promotion', id);
+          }
+        }
+      }
+      if (ctx.notes.length) summary.push(this.summaryItem(ctx, null));
+      this.runHooks('term_end', summary);
+    }
+    // Generated menu options (design §7.3, §7.4): `offers: courses | clubs | jobs`.
+    offered(kind) {
+      const s = this.s, out = [], ti = this.termIndex();
+      for (const d of Object.values(this.c.tracks || {})) {
+        const t = (s.tracks || {})[d.id];
+        if (kind === 'courses' && d.kind === 'course') {
+          if (t && t.status === 'enrolled') continue;
+          const lv = this.levelPassed(d.id) + 1;
+          if (lv > (d.levels || 1)) continue;
+          if (d.hidden) { if (ti < 5 || !(d.prereq && this.test(d.prereq, null))) continue; }
+          else if (lv === 1 ? ti < (d.opens || 1) : ti < ({ 2: 2, 3: 4 }[lv] || 99)) continue;
+          const names = (d.level_names || d.name).split(/\s*[,，、]\s*/);
+          out.push({ key: d.id, label: names[lv - 1] || d.name, hint: d.desc || null, effects: [{ t: 'enrol', track: d.id, level: lv }] });
+        } else if ((kind === 'clubs' && d.kind === 'club') || (kind === 'jobs' && d.kind === 'job')) {
+          if (d.hidden || (t && t.status === 'member') || (t && t.unreliableUntil && ti < t.unreliableUntil)) continue;
+          out.push({ key: d.id, label: d.name, hint: d.desc || null, effects: [{ t: 'join', track: d.id }] });
+        }
+      }
+      return out;
+    }
+    optionsOf(e) {
+      if (!e.offers) return e.options;
+      const gen = this.offered(e.offers).map((o) => ({ ...o, when: null, memory: null, spell: null, line: e.line, affects: [], firstCheck: null, generated: true }));
+      return gen.concat(e.options);
+    }
+    // How many options a menu takes (`pick: N`; the year-4 thesis takes one course slot).
+    pickCount(e) {
+      if (!e.pick) return 1;
+      const thesis = Object.values(this.s.tracks || {}).some((t) => t.kind === 'thesis' && t.status === 'member');
+      return Math.max(1, e.pick - (e.offers === 'courses' && thesis ? 1 : 0));
+    }
+    pushTrackEvent(eventId, track) { if (this.c.events[eventId]) this.s.queue.push({ id: eventId, actor: null, track, due: this.s.turn + 1, src: 'queued' }); }
+
+    /* ---------------- Places, arcs, skills (design §6, §10.6, §8.5) ---------------- */
+    presentAt(place, slot) {
+      slot = slot || (this.s.cur && this.s.cur.slot) || this._slot || '';
+      return Object.keys(this.s.npcs).filter((id) => { const d = this.c.npcs[id]; return d && (d.schedule || []).some((x) => x.place === place && (!slot || x.slots.includes(slot))); });
+    }
+    actOf(arcId) { const a = this.c.arcs && this.c.arcs[arcId]; if (!a || !a.acts) return 0; return a.acts.filter((x) => x.year <= this.yearOf()).length; }
+    monthlyWorld(summary) {
+      const s = this.s, ctx = this.newCtx(null, null);
+      for (const p of Object.values(this.c.places || {})) if (!s.places[p.id] && p.discover && this.test(p.discover, null)) { s.places[p.id] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: p.id }); }
+      for (const a of Object.values(this.c.arcs || {})) {
+        const st = s.arcs[a.id] = s.arcs[a.id] || { clock: (a.clock && a.clock.min) || 0 };
+        for (const b of a.beats || []) if (b.year === this.yearOf() && b.month === this.monthIndex() && st.clock < b.clock) st.clock = b.clock;
+      }
+      // Rust (design §8.5): −1 a month after 3 idle months in term time, never below 60% of the peak.
+      if (this.phaseOf() === 'term') for (const k of this.c.order.skills) {
+        if (s.turn - (s.skillGain[k] || 0) > 3 && s.vals[k] > 0.6 * (s.peak[k] || 0)) { this.change(k, -Math.min(1, s.vals[k] - 0.6 * s.peak[k]), ctx, true); }
+      }
+      if (ctx.notes.length || Object.keys(ctx.deltas).length) summary.push(this.summaryItem(ctx, null));
+    }
+    // Skill gains are XP (design §8.5): the next point costs a + b × level; mastery and an aligned club or job multiply.
+    skillGain(name, amount) {
+      const s = this.s, cost = (this.c.balance && this.c.balance.xp_cost) || { a: 1, b: 0 };
+      let mult = 1;
+      for (const [id, t] of Object.entries(s.tracks || {})) {
+        if (!this.trackSkills(id).includes(name)) continue;
+        if (t.kind === 'course' && this.levelPassed(id) >= 2) mult += 0.3;
+        if ((t.kind === 'club' || t.kind === 'job') && t.status === 'member') mult += 0.15;
+      }
+      mult = Math.min(mult, 1.6);
+      let v = s.vals[name] || 0, xp = amount * mult;
+      while (xp > 1e-9) { const c = Math.max(0.05, cost.a + cost.b * v); const step = Math.min(1, xp / c); v += step; xp -= step * c; }
+      s.skillGain[name] = s.turn;
+      return v - (s.vals[name] || 0);
+    }
+
     /* ---------------- Calendar ---------------- */
     get turn() { return this.s.turn; }
     monthIndex(turn = this.s.turn) { return ((turn - 1) % this.months.length) + 1; }
     yearOf(turn = this.s.turn) { return Math.ceil(turn / this.months.length); }
     monthName(turn = this.s.turn) { return this.months[this.monthIndex(turn) - 1]; }
+    phaseOf(turn = this.s.turn) { return this.calendar ? this.calendar[this.monthIndex(turn) - 1] || 'term' : 'term'; }
+    seasonOf(turn = this.s.turn) { return this.seasons ? this.seasons[this.monthIndex(turn) - 1] || '' : ''; }
+    // 1 for the first term, 2 for the second, … (counting terms only); 0 before the first.
+    termIndex(turn = this.s.turn) {
+      if (!this.calendar) return Math.ceil(turn / 6);
+      let n = 0, prev = null;
+      for (let t = 1; t <= turn; t++) { const ph = this.phaseOf(t); if (ph === 'term' && prev !== 'term') n++; prev = ph; }
+      return n;
+    }
+    isTermStart(turn = this.s.turn) { return this.phaseOf(turn) === 'term' && (turn === 1 || this.phaseOf(turn - 1) !== 'term'); }
+    isTermEnd(turn = this.s.turn) { return this.phaseOf(turn) === 'term' && (turn >= this.maxTurns || this.phaseOf(turn + 1) !== 'term'); }
 
     /* ---------------- Expression environment ---------------- */
     env(actor) {
-      const eng = this, s = this.s;
+      const eng = this, s = this.s, cast = this._cast || null;
+      const R = (x) => (cast && typeof x === 'string' && cast[x]) || x;
       return {
         actor,
         ident(n) {
@@ -209,13 +414,23 @@
             case 'turns_left': return eng.maxTurns - s.turn;
             case 'max_turns': return eng.maxTurns;
             case 'cards_this_month': return s.cardsThisMonth;
+            // phase 2b calendar (design §4.1)
+            case 'term': return eng.phaseOf() === 'term';
+            case 'break': return eng.phaseOf() === 'break';
+            case 'season': return eng.seasonOf();
+            case 'final_year': return eng.yearOf() === eng.years;
+            case 'slot': return s.cur && s.cur.slot ? s.cur.slot : '';
+            case 'term_index': return eng.termIndex();
+            case 'gpa': return eng.gpa();
           }
-          if (n.includes('.')) { const [who, stat] = n.split('.'); return eng.statOf(who, stat, actor); }
+          if (n.includes('.')) { const [who, stat] = n.split('.'); return eng.statOf(R(who), stat, actor); }
           const v = s.vals[n];
           return v == null ? 0 : v;
         },
         fn(n, a) {
+          a = a.map(R);
           switch (n) {
+            case 'cast_as': return !!cast && cast[a[0]] === a[1];
             case 'has': return !!s.flags[a[0]] || !!s.states[a[0]];
             case 'flag': return !!s.flags[a[0]];
             case 'left': { const st = s.states[a[0]]; return st ? (st.left == null ? 99 : st.left) : 0; }
@@ -224,6 +439,22 @@
             case 'spell_level': return (s.spells || {})[a[0]] || 0;
             case 'knows': return !!(s.facts || {})[a[0]];
             case 'npc_rel': return eng.npcRel(a[0] === 'npc' ? actor : a[0], a[1] === 'npc' ? actor : a[1]);
+            // tracks (design §7)
+            case 'enrolled': { const t = eng.trackState(a[0]); return !!t && t.status === 'enrolled'; }
+            case 'member': { const t = eng.trackState(a[0]); return !!t && t.status === 'member'; }
+            case 'applied': { const t = eng.trackState(a[0]); return !!t && t.status === 'applied'; }
+            case 'rank': { const t = eng.trackState(a[0]); return t && t.status === 'member' ? t.rank + 1 : 0; }
+            case 'performance': { const t = eng.trackState(a[0]); return t ? t.perf || 0 : 0; }
+            case 'level': return eng.levelPassed(a[0]);
+            case 'progress': { const t = eng.trackState(a[0]); return t ? t.progress || 0 : 0; }
+            case 'due': { const t = eng.trackState(a[0]); return t && t.status === 'member' ? Math.max(0, (t.due || 0) - (t.visits || 0)) : 0; }
+            case 'visits': { const t = eng.trackState(a[0]); return t ? t.visits || 0 : 0; }
+            // places, arcs, casting (design §6, §10.6, §5.4)
+            case 'discovered': return !!(s.places || {})[a[0]];
+            case 'present': return eng.presentAt(a[0]).length;
+            case 'act': return eng.actOf(a[0]);
+            case 'clock': return ((s.arcs || {})[a[0]] || {}).clock || 0;
+            case 'plan': return Object.keys(s.states).some((k) => eng.c.states[k] && eng.c.states[k].kind === 'plan' && k === 'plan_' + a[0]);
             case 'bond': return s.npcs[a[0]] ? s.npcs[a[0]].bond : 'none';
             case 'met': return !!(s.npcs[a[0]] && s.npcs[a[0]].met);
             case 'npc_is': return actor === a[0];
@@ -242,9 +473,8 @@
             case 'floor': return Math.floor(a[0]);
             case 'round': return Math.round(a[0]);
             case 'clamp': return clamp(a[0], a[1], a[2]);
-            // Tracks and arc clues arrive in phase 2b (design §7, §10.6); until then nothing is passed or found.
-            case 'passed': return false;
-            case 'clue': return false;
+            case 'passed': return eng.levelPassed(a[0]) >= (a[1] || 1);
+            case 'clue': return !!(s.clues || {})[a[0]];
           }
           return 0;
         },
@@ -300,7 +530,7 @@
       for (let k = 0; k < str.length; k++) { h ^= str.charCodeAt(k); h = Math.imul(h, 16777619); }
       return parts[(h >>> 0) % parts.length];
     }
-    interp(text, actor, key) {
+    interp(text, actor, key, castOverride) {
       if (!text) return '';
       const s = this.s;
       text = this.vary(text, actor, key);
@@ -313,9 +543,13 @@
           const src = k.slice(1);
           try { const ex = this._exprCache[src] || (this._exprCache[src] = G.expr(src)); const v = ex.fn(this.env(actor)); return typeof v === 'number' ? String(Math.round(v)) : String(v); } catch (e) { return m; }
         }
+        const cast = castOverride || this._cast || {};
+        if (k === 'track') { const id = this._ctxTrack; const d = id && this.c.tracks[id]; return d ? d.name : m; }
+        if (k === 'place') { const id = this._ctxPlace; const d = id && this.c.places[id]; return d ? d.name : m; }
         let npcId = actor, key = k;
         const dot = k.indexOf('.');
-        if (dot > 0) { npcId = k.slice(0, dot) === 'npc' ? actor : k.slice(0, dot); key = k.slice(dot + 1); }
+        if (dot > 0) { const head = k.slice(0, dot); npcId = head === 'npc' ? actor : cast[head] || head; key = k.slice(dot + 1); }
+        else if (cast[k]) { npcId = cast[k]; key = 'name'; }
         else if (this.c.npcs[k]) { npcId = k; key = 'name'; }
         else if (k === 'npc') key = 'name';
         const def = npcId && this.c.npcs[npcId];
@@ -337,8 +571,9 @@
     /* ---------------- Effects ---------------- */
     newCtx(actor, label, key) { return { actor, label, key: key || null, deltas: {}, say: [], sayIds: [], notes: [], checks: [], zeroed: [], nowIdx: 0 }; }
 
-    change(name, amount, ctx) {
+    change(name, amount, ctx, raw) {
       const s = this.s, c = this.c;
+      if (c.skills[name] && amount > 0 && !raw) amount = this.skillGain(name, amount);
       const def = c.resources[name] || c.skills[name];
       const old = s.vals[name] == null ? 0 : s.vals[name];
       if (def && def.drag && amount > 0 && old < def.drag.below) amount *= def.drag.factor;
@@ -351,11 +586,12 @@
       }
       nv = Math.round(nv * 100) / 100;
       s.vals[name] = nv;
+      if (c.skills[name] && nv > (s.peak[name] || 0)) s.peak[name] = nv;
       const d = nv - old;
       if (d) ctx.deltas[name] = (ctx.deltas[name] || 0) + d;
     }
 
-    npcOf(ref, ctx) { return ref === 'npc' ? ctx.actor : ref; }
+    npcOf(ref, ctx) { if (ref === 'npc') return ctx.actor; if (ctx && ctx.cast && ctx.cast[ref]) return ctx.cast[ref]; return ref; }
     touchNpc(id, ctx) {
       const n = this.s.npcs[id];
       if (!n) return null;
@@ -403,7 +639,12 @@
             else this.change(st.name, st.op === '+=' ? v : -v, ctx);
             break;
           }
-          case 'say': ctx.say.push(this.interp(st.text, ctx.actor, ctx.key)); if (st.sid) ctx.sayIds.push(st.sid); break;
+          case 'say': {
+            const who = st.overrides && Object.keys(st.overrides).find((id) => id === ctx.actor || Object.values(ctx.cast || {}).includes(id));
+            ctx.say.push(this.interp(who ? st.overrides[who] : st.text, ctx.actor, ctx.key, ctx.cast));
+            if (st.sid) ctx.sayIds.push(st.sid + (who ? '@' + who : ''));
+            break;
+          }
           case 'flag': st.names.forEach((n) => { s.flags[n] = true; }); break;
           case 'unflag': st.names.forEach((n) => { delete s.flags[n]; }); break;
           case 'gain': this.addState(st.state, st.dur ? this.value(st.dur, ctx.actor) : null, ctx); break;
@@ -411,11 +652,17 @@
           case 'queue': {
             if (!c.events[st.event]) { this.warn(new Error('queue: unknown event ' + st.event), st); break; }
             const actor = st.with ? this.npcOf(st.with, ctx) : (c.events[st.event].actor === 'npc' ? ctx.actor : null);
-            if (st.now) s.deck.splice(ctx.nowIdx++, 0, { id: st.event, actor, src: 'queued' });
-            else {
+            const carry = { track: ctx.track || undefined, cast: st.with && ctx.cast && ctx.cast[st.with] ? { npc: ctx.cast[st.with] } : undefined };
+            if (st.now) s.deck.splice(ctx.nowIdx++, 0, { id: st.event, actor, src: 'queued', ...carry });
+            else if (st.window || st.byMonth) {
+              // A window (design §5.3): the chance rises each month (1 / months left), forced on the last one.
+              const to = st.window ? s.turn + st.window.to : s.turn + (((st.byMonth - this.monthIndex()) + this.months.length) % this.months.length || this.months.length);
+              const from = st.window ? s.turn + st.window.from : s.turn + 1;
+              s.queue.push({ id: st.event, actor, due: from, until: to, src: 'queued', ...carry });
+            } else {
               const delay = st.delay ? Math.max(0, Math.round(this.value(st.delay, ctx.actor))) : 1;
               if (delay === 0) s.deck.push({ id: st.event, actor, src: 'queued' });
-              else s.queue.push({ id: st.event, actor, due: s.turn + delay });
+              else s.queue.push({ id: st.event, actor, due: s.turn + delay, ...carry });
             }
             break;
           }
@@ -438,6 +685,12 @@
             for (const [x, y] of [[a, b], [b, a]]) s.npcRel[x + '>' + y] = clamp(this.npcRel(x, y) + amt, -100, 100);
             break;
           }
+          case 'enrol': case 'join': case 'leave': case 'promote': case 'apply': case 'perform': case 'rank_xp': case 'progress': this.trackOp(st, ctx); break;
+          case 'discover': if (!s.places[st.place] && this.c.places[st.place]) { s.places[st.place] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: st.place }); } break;
+          case 'find': if (!s.clues[st.clue]) { s.clues[st.clue] = s.turn; ctx.notes.push({ kind: 'clue', clue: st.clue }); } break;
+          case 'advance': { const a = s.arcs[st.arc] = s.arcs[st.arc] || { clock: 0 }; const d = this.c.arcs[st.arc]; a.clock = Math.min(d && d.clock ? d.clock.max : 99, a.clock + st.n); break; }
+          case 'spawn': ctx.notes.push({ kind: 'spawn', id: st.id, archetype: st.archetype }); break;   // phase 4
+          case 'unqueue': s.queue = s.queue.filter((q) => q.id !== st.event); s.deck = s.deck.filter((q) => q.id !== st.event); break;
           case 'learn': {
             s.facts = s.facts || {};
             if (!s.facts[st.fact]) { s.facts[st.fact] = s.turn; ctx.notes.push({ kind: 'fact', fact: st.fact }); }
@@ -554,8 +807,15 @@
       }
       this.relationshipDrift(summary);
       this.unlockFacts();
+      if (this.c.places && Object.keys(this.c.places).length) this.monthlyWorld(summary);
+      if (this.dayMode && this.isTermStart()) this.runHooks('term_start', summary);
       this.runHooks('month_start', summary);
-      if (!s.ended) this.buildDeck();
+      if (!s.ended) {
+        if (this.dayMode) {
+          s.day = { phase: 'pick', picks: null };
+          if (!this.visitSlots().length || !this.mapView().places.some((p) => p.state === 'open')) this.buildDay([], []);
+        } else this.buildDeck();
+      }
       const shown = summary.filter((x) => Object.keys(x.deltas).length || x.notes.length || x.say.length);
       s.hist.push({ t: 'month', turn: s.turn, year: this.yearOf(), month: this.monthIndex(), summary: shown, deck: s.deck.map((d) => d.id), vals: { ...s.vals }, at: now() });
       return { kind: 'month', turn: s.turn, month: this.monthName(), monthIndex: this.monthIndex(), year: this.yearOf(), maxTurns: this.maxTurns, summary: shown, deckSize: s.deck.length, ended: !!s.ended };
@@ -603,8 +863,42 @@
       if (last == null) return true;
       return !!e.repeat && (this.s.turn - last) >= e.repeat;
     }
+    // Radiant casting (design §5.4): fill the event's roles in order, weighted by affinity, with up to 50
+    // backtracking attempts, on a scratch copy of the RNG (eligibility never changes what happens).
+    fillCast(e) {
+      const s = this.s, rng = s.rng, roles = e.cast;
+      let tries = 0;
+      const aff = (id) => { const n = s.npcs[id]; return n ? 1 + Math.abs(n.rel) / 20 + n.spark / 15 + (n.bond !== 'none' ? 1 : 0) + (s.turn - (n.touched || 0) < 3 ? 0.5 : 0) : 1; };
+      const pool = (r) => {
+        if (r.pool === 'fixed') return this.c.npcs[r.npc] ? [r.npc] : [];
+        if (r.pool === 'present') return this.presentAt(r.place === 'place' || !r.place ? this._place : r.place).filter((id) => s.npcs[id] && s.npcs[id].met);
+        return Object.keys(s.npcs).filter((id) => r.pool === 'anyone' || s.npcs[id].met);
+      };
+      const fill = (i, cast) => {
+        if (i === roles.length) { const prev = this._cast; this._cast = cast; const ok = this.test(e.when, cast.npc || null); this._cast = prev; return ok ? { ...cast } : null; }
+        const r = roles[i];
+        let opts = pool(r).filter((id) => !Object.values(cast).includes(id));
+        opts = opts.filter((id) => { if (!r.where) return true; const prev = this._cast; this._cast = { ...cast, [r.role]: id }; const ok = this.test(r.where, cast.npc || id); this._cast = prev; return ok; });
+        // weighted order
+        const order = [];
+        while (opts.length) { const w = opts.map(aff); let x = this.rand() * w.reduce((a, b) => a + b, 0); let k = 0; for (; k < opts.length - 1; k++) { x -= w[k]; if (x < 0) break; } order.push(opts.splice(k, 1)[0]); }
+        for (const id of order) { if (++tries > 50) return null; const got = fill(i + 1, { ...cast, [r.role]: id }); if (got) return got; }
+        return null;
+      };
+      try { return fill(0, {}); } finally { s.rng = rng; }
+    }
     // [{e, actor, w}] for an event, honouring actor binding
     candidates(e) {
+      if (e.cast) {
+        const cast = this.fillCast(e);
+        if (!cast) return [];
+        const actor = cast.npc || Object.values(cast)[0] || null;
+        if (actor && !this.eligibleFor(e, actor)) return [];
+        const prev = this._cast; this._cast = cast;
+        const w = e.weight ? this.value(e.weight, actor, 10) : 10;
+        this._cast = prev;
+        return w > 0 ? [{ e, actor, cast, w }] : [];
+      }
       const out = [];
       let actors;
       if (e.actor === 'any') actors = Object.keys(this.s.npcs).filter((id) => this.s.npcs[id].met);
@@ -673,6 +967,8 @@
     endMonth() {
       const s = this.s;
       const summary = [];
+      if (this.dayMode && this.isTermEnd()) this.endTerm(summary);
+      s.day = null;
       this.runHooks('month_end', summary);
       s.pending = summary;
       if (s.ended) return this.ending();
@@ -684,29 +980,38 @@
     advance() {
       const s = this.s;
       if (s.ended) return this.ending();
-      if (s.cur) return { kind: 'card', view: this.view(s.cur), onShow: null };
+      if (s.cur) return { kind: 'card', view: this.withContext(s.cur, () => this.view(s.cur)), onShow: null };
+      if (s.day && s.day.phase === 'pick') return { kind: 'map', view: this.mapView() };
       while (s.deck.length) {
         const item = s.deck.shift();
         const e = this.c.events[item.id];
         if (!e) { this.warn(new Error('unknown event in deck: ' + item.id)); continue; }
         if (e.actor && e.actor !== 'any' && e.actor !== 'npc') item.actor = e.actor;
         // item.force (debug/preview) skips the `when` check
-        if ((e.actor === 'any' || e.actor === 'npc') && !item.actor) {
+        if ((e.actor === 'any' || e.actor === 'npc' || (e.cast && !item.cast)) && !item.actor && !item.cast) {
+          this._place = item.place || null;
           const c = this.candidates(e); const pick = this.pickWeighted(c);
+          this._place = null;
           if (!pick) continue;
-          item.actor = pick.actor;
-        } else if (!item.force && !this.test(e.when, item.actor)) continue;
+          item.actor = pick.actor; if (pick.cast) item.cast = pick.cast;
+        } else if (!item.force) {
+          this._cast = item.cast || null; this._place = item.place || null;
+          const ok = this.test(e.when, item.actor);
+          this._cast = null; this._place = null;
+          if (!ok) continue;
+        }
         s.cur = item;
         s.seen[e.id] = (s.seen[e.id] || 0) + 1;
         s.last[e.id] = s.turn;
         if (item.actor) { s.lastBy = s.lastBy || {}; s.lastBy[e.id + '@' + item.actor] = s.turn; }
         s.cardsThisMonth++;
         let onShow = null;
-        if (e.on_show) { const ctx = this.newCtx(item.actor, null, e.id); this.run(e.on_show, ctx); this.handleZeroed(ctx); onShow = this.outcome(ctx); }
-        const view = this.view(item);
+        this.withContext(item, () => { if (e.on_show) { const ctx = this.newCtx(item.actor, null, e.id); ctx.cast = item.cast; ctx.track = item.track; this.run(e.on_show, ctx); this.handleZeroed(ctx); onShow = this.outcome(ctx); } });
+        const view = this.withContext(item, () => this.view(item));
         item.n = ++s.seq;
         s.hist.push({
           t: 'card', n: item.n, turn: s.turn, year: this.yearOf(), month: this.monthIndex(), id: e.id, actor: item.actor || null, src: item.src, type: e.type,
+          slot: item.slot || undefined, place: item.place || undefined, track: item.track || undefined, class: e.class || undefined, cast: item.cast || undefined, variant: item.variant || undefined,
           title: view.title, text: view.text,
           options: view.options.map((o) => ({ key: o.key, label: o.label, disabled: o.disabled || undefined, check: o.check || undefined })),
           onShow: onShow || undefined, at: now(),
@@ -716,16 +1021,22 @@
       return this.endMonth();
     }
 
+    withContext(item, fn) {
+      const prev = [this._cast, this._ctxTrack, this._ctxPlace, this._place];
+      this._cast = item.cast || null; this._ctxTrack = item.track || null; this._ctxPlace = item.place || null; this._place = item.place || null;
+      try { return fn(); } finally { [this._cast, this._ctxTrack, this._ctxPlace, this._place] = prev; }
+    }
     view(item) {
       const e = this.c.events[item.id];
       const a = item.actor;
       const npc = a && this.c.npcs[a];
       return {
-        id: e.id, type: e.type, src: item.src,
+        id: e.id, type: e.type, src: item.src, slot: item.slot || null, place: item.place || null, track: item.track || null, cast: item.cast || null, offers: e.offers || null,
         title: this.interp(e.title, a, e.id), text: this.interp(e.text, a, e.id),
         art: e.art || null, scene: e.scene ? this.interp(e.scene, a, e.id) : null, tags: e.tags || [],
         actor: npc ? { id: a, name: npc.name, title: npc.title, color: npc.color, house: npc.house, ...this.s.npcs[a] } : null,
-        options: e.options.filter((o) => !o.spell || (this.s.spells || {})[o.spell]).map((o) => {
+        pick: this.pickCount(e),
+        options: this.optionsOf(e).filter((o) => !o.spell || (this.s.spells || {})[o.spell]).map((o) => {
           const lv = o.spell ? this.s.spells[o.spell] : 0;
           const cost = o.spell ? this.spellCost(o.spell, lv) : 0;
           const short = o.spell && (this.s.vals[this.spellResource] || 0) < cost;
@@ -744,10 +1055,13 @@
       const s = this.s;
       if (!s.cur) throw new Error('no current card');
       const item = s.cur, e = this.c.events[item.id];
-      const opt = e.options.find((o) => o.key === key);
+      if (Array.isArray(key)) return this.chooseMany(key);
+      const opt = this.withContext(item, () => this.optionsOf(e)).find((o) => o.key === key);
       if (!opt) throw new Error('no option ' + key + ' on ' + e.id);
       if (opt.when && !this.test(opt.when, item.actor)) throw new Error('option ' + key + ' is not available');
       const ctx = this.newCtx(item.actor, null, e.id);
+      ctx.cast = item.cast || null; ctx.track = item.track || null;
+      this._cast = ctx.cast; this._ctxTrack = ctx.track; this._ctxPlace = item.place || null;
       this._variant = item.variant || null;
       if (opt.spell) {
         const lv = (s.spells || {})[opt.spell];
@@ -759,6 +1073,13 @@
       this.run(opt.effects, ctx);
       this.handleZeroed(ctx);
       this._variant = null;
+      // Track cards (design §6.2, §7.3): a course card is study for the exam; outcomes move performance.
+      if (item.track && s.tracks && s.tracks[item.track]) {
+        const t = s.tracks[item.track];
+        if (t.status === 'enrolled') t.study = Math.min(15, (t.study || 0) + 3);
+        if (t.status === 'member') for (const c of ctx.checks) { const good = c.challenge ? c.result === 'win' : c.ok; const bad = c.challenge ? c.result === 'lose' : !c.ok; if (good) t.perf = Math.min(100, t.perf + 5); if (bad) t.perf = Math.max(0, t.perf - 5); }
+      }
+      this._cast = null; this._ctxTrack = null; this._ctxPlace = null;
       if (opt.memory) {
         const who = opt.memory.who === 'npc' ? item.actor : opt.memory.who;
         if (who && this.c.npcs[who]) { s.memories = s.memories || []; s.memories.push({ npc: who, event: e.id, kind: opt.memory.kind, turn: s.turn }); if (s.memories.length > 400) s.memories.shift(); }
@@ -773,6 +1094,30 @@
       if (s.log.length > 400) s.log.shift();
       return out;
     }
+    // A `pick: N` menu: several options at once (design §7.3 enrolment).
+    chooseMany(keys) {
+      const s = this.s, item = s.cur, e = this.c.events[item.id];
+      const opts = this.withContext(item, () => this.optionsOf(e));
+      const n = this.pickCount(e);
+      keys = [...new Set(keys)];
+      if (keys.length < 1 || keys.length > n) throw new Error(e.id + ' takes 1 to ' + n + ' option(s)');
+      const ctx = this.newCtx(item.actor, null, e.id);
+      ctx.cast = item.cast || null; ctx.track = item.track || null;
+      this._cast = ctx.cast; this._ctxTrack = ctx.track;
+      const chosen = keys.map((k) => { const o = opts.find((x) => x.key === k); if (!o) throw new Error('no option ' + k + ' on ' + e.id); return o; });
+      for (const o of chosen) this.run(o.effects, ctx);
+      this.handleZeroed(ctx);
+      this._cast = null; this._ctxTrack = null;
+      s.choices[e.id] = keys.join('+');
+      s.cur = null;
+      const out = this.outcome(ctx);
+      const label = chosen.map((o) => this.interp(o.label, item.actor, e.id)).join(' · ');
+      const h = item.n != null ? this.histEntry(item.n) : null;
+      if (h) Object.assign(h, { choice: keys.join('+'), label, out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() });
+      s.log.push({ n: item.n, turn: s.turn, id: e.id, key: keys.join('+'), title: this.interp(e.title, item.actor), choice: label, say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null });
+      return out;
+    }
+
     /* ---------------- Previews (design §8.3) ---------------- */
     // Every way an option can turn out, by running its effects on a scratch copy of the state for each path
     // through its chances, checks and challenges, with random amounts at both ends of their range. Nothing
@@ -780,16 +1125,19 @@
     //   -> { paths: [{p, labels, deltas: {key: [lo, hi]}, follows}], deltas (envelope), follows, cost }
     preview(eventId, key, actor) {
       const e = this.c.events[eventId];
-      const opt = e && e.options.find((o) => o.key === key);
+      const opt = e && this.optionsOf(e).find((o) => o.key === key);
       if (!opt) throw new Error('no option ' + key + ' on ' + eventId);
       const s = this.s;
       const cost = opt.spell ? this.spellCost(opt.spell, (s.spells || {})[opt.spell] || 1) : 0;
-      const KEYS = ['vals', 'flags', 'states', 'npcs', 'queue', 'deck', 'ended', 'spells', 'facts', 'memories', 'npcRel', 'rng', 'cur'];
+      const KEYS = ['vals', 'flags', 'states', 'npcs', 'queue', 'deck', 'ended', 'spells', 'facts', 'memories', 'npcRel', 'rng', 'cur', 'tracks', 'places', 'arcs', 'clues', 'skillGain', 'peak'];
       const runOnce = (prefix, mode) => {
         const saved = {}; for (const k of KEYS) saved[k] = s[k];
         s.vals = { ...saved.vals }; s.flags = { ...saved.flags }; s.spells = { ...(saved.spells || {}) }; s.facts = { ...(saved.facts || {}) };
         s.npcRel = { ...(saved.npcRel || {}) }; s.memories = (saved.memories || []).slice(); s.queue = saved.queue.slice(); s.deck = saved.deck.slice();
         s.states = {}; for (const [k, v] of Object.entries(saved.states)) s.states[k] = { ...v };
+        s.tracks = {}; for (const [k, v] of Object.entries(saved.tracks || {})) s.tracks[k] = { ...v, passed: { ...v.passed }, grades: (v.grades || []).slice() };
+        s.places = { ...(saved.places || {}) }; s.arcs = {}; for (const [k, v] of Object.entries(saved.arcs || {})) s.arcs[k] = { ...v };
+        s.clues = { ...(saved.clues || {}) }; s.skillGain = { ...(saved.skillGain || {}) }; s.peak = { ...(saved.peak || {}) };
         s.npcs = {}; for (const [k, v] of Object.entries(saved.npcs)) s.npcs[k] = { ...v };
         const decisions = [];
         this._oracle = {
@@ -802,7 +1150,9 @@
           amount: (a, b) => (mode === 'min' ? Math.min(a, b) : Math.max(a, b)),
         };
         const ctx = this.newCtx(actor, null, eventId);
-        this._variant = s.cur && s.cur.id === eventId ? s.cur.variant || null : null;
+        const cur = s.cur && s.cur.id === eventId ? s.cur : {};
+        this._variant = cur.variant || null; ctx.cast = cur.cast || null; ctx.track = cur.track || null;
+        this._cast = ctx.cast; this._ctxTrack = ctx.track;
         try {
           if (opt.spell) this.change(this.spellResource, -cost, ctx);
           this.run(opt.effects, ctx);
@@ -810,7 +1160,7 @@
         } finally {
           const follows = ctx.notes.length > 0 || s.queue.length !== saved.queue.length || s.deck.length !== saved.deck.length || !!s.ended !== !!saved.ended ||
             Object.keys(s.flags).length !== Object.keys(saved.flags).length || Object.keys(s.flags).some((k) => !saved.flags[k]);
-          this._oracle = null; this._variant = null;
+          this._oracle = null; this._variant = null; this._cast = null; this._ctxTrack = null;
           for (const k of KEYS) s[k] = saved[k];
           runOnce.last = { decisions, deltas: ctx.deltas, follows };
         }
@@ -882,6 +1232,11 @@
         name: s.name, turn: s.turn, maxTurns: this.maxTurns, month: this.monthName(), monthIndex: this.monthIndex(), year: this.yearOf(), years: this.years,
         deckLeft: s.deck.length, cardsThisMonth: s.cardsThisMonth,
         resources: c.order.resources.map((id) => ({ id, ...pick(c.resources[id], ['name', 'icon', 'color', 'min', 'desc', 'display', 'warn_below']), maxNow: this.resMax(c.resources[id]), value: s.vals[id] })),
+        gpa: this.gpa(), phase: this.phaseOf(), season: this.seasonOf(),
+        tracks: Object.entries(s.tracks || {}).filter(([id, t]) => c.tracks[id] && ['enrolled', 'member', 'done', 'failed', 'applied'].includes(t.status)).map(([id, t]) => {
+          const d = c.tracks[id], ranks = (d.ranks || '').split(/\s*[,，、]\s*/).filter(Boolean), levels = (d.level_names || d.name).split(/\s*[,，、]\s*/);
+          return { id, name: d.name, kind: d.kind, status: t.status, level: t.level || null, levelName: t.level ? levels[t.level - 1] || d.name : null, passed: this.levelPassed(id), grades: (t.grades || []).slice(), rank: ranks[t.rank] || null, perf: Math.round(t.perf || 0), due: Math.max(0, (t.due || 0) - (t.visits || 0)), progress: Math.round(t.progress || 0) };
+        }),
         spells: Object.entries(s.spells || {}).filter(([id]) => c.spells && c.spells[id]).map(([id, level]) => ({ id, level, ...pick(c.spells[id], ['name', 'desc', 'art']), cost: this.spellCost(id, level) })),
         skills: c.order.skills.map((id) => ({ id, ...pick(c.skills[id], ['name', 'icon', 'color', 'max', 'desc']), value: s.vals[id] })),
         states: Object.keys(s.states).filter((id) => c.states[id] && !c.states[id].hidden).map((id) => ({ id, name: c.states[id].name || id, desc: this.interp(c.states[id].desc || ''), art: c.states[id].art, kind: c.states[id].kind || null, group: c.states[id].group || null, left: s.states[id].left })),
@@ -893,6 +1248,7 @@
   function newRunId(seed) { return 'r' + now().toString(36) + '-' + ((seed >>> 0) % 1679616).toString(36); }
   function pick(o, keys) { const r = {}; for (const k of keys) if (o[k] != null) r[k] = o[k]; return r; }
 
+  if (Director) Director.install(Engine, G);
   Engine.shortName = shortName;
   Engine.SAVE_VERSION = SAVE_VERSION;
   Engine.SaveVersionError = SaveVersionError;

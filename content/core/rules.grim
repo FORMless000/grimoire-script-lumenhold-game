@@ -6,15 +6,23 @@
 
 @game
 title: Lumenhold Academy
-subtitle: Three years. Thirty-six moons. One apprentice.
-years: 3
-# The academic year starts in autumn. Month 1 = Harvestmoon.
+subtitle: Four years. Forty-seven moons. One apprentice.
+# Four years (design §4.1). The academic year starts in autumn; the run ends in Goldenhaze of year 4 (turn 47).
+years: 4
+last_month: 11
 months: Harvestmoon, Emberwane, Mistveil, Frostcall, Deepwinter, Thawmoon, Stormbloom, Greenrise, Blossomtide, Highsun, Goldenhaze, Starfall
+calendar: term=1-4 break=5-6 term=7-10 break=11-12
+seasons: autumn=1-3 winter=4-6 spring=7-9 summer=10-12
+summer_months: 5, 6, 11, 12
+# Each month is one day (design §4.2). The two visits are picked on the map.
+day_term: morning=courses noon=social:1-2 afternoon=visit evening=visit night=world:1-2 midnight=special:0-1
+day_break: morning=plan afternoon=visit night=world:1
+max_cards_per_day: 14
 cards_per_month: 3
 max_cards_per_month: 7
 social_per_month: 1
 min_random_per_month: 1
-intro: The sky-barge lurches. Below, the lake glitters; above, the seven towers of Lumenhold Academy pierce the clouds. You have a trunk, a borrowed wand and a letter of acceptance with your name spelled wrong. Three years begin now.
+intro: The sky-barge lurches. Below, the lake glitters; above, the seven towers of Lumenhold Academy pierce the clouds. You have a trunk, a borrowed wand and a letter of acceptance with your name spelled wrong. Four years begin now.
 
 # ---------------- Resources ----------------
 # The top bars (design §8.1) are Health · Mood · Mana · Renown · Alignment, in this order;
@@ -148,14 +156,46 @@ desc: Sneaking, lying, noticing what others miss.
 @hook rent
 on: month_start
 label: Dormitory & board
-when: turn > 1 and not has(summer_away)
+when: turn > 1 and term
 do:
   gold -10
+
+@hook break_rent
+on: month_start
+label: Board at the castle
+when: break and has(plan_castle)
+do:
+  gold -6
+
+# Tuition each term (design §8.2); the scholarship pays half.
+@hook tuition
+on: term_start
+label: Tuition
+do:
+  if has(origin_scholar):
+    gold -20
+  else:
+    gold -40
+
+# Standing (legacy) follows the GPA at the end of each term until phase 3 retires it.
+@hook term_marks
+on: term_end
+label: Term marks
+when: gpa > 0
+do:
+  grades += (gpa - 2.5) * 8
+
+@hook gpa_probation
+on: term_end
+label: Academic probation
+when: gpa > 0 and gpa < 1.5 and year >= 2
+do:
+  queue crisis_probation
 
 @hook term_stress
 on: month_start
 label: Term-time pressure
-when: turn > 1 and month != 11 and month != 12
+when: turn > 1 and term
 do:
   mood -1
   if month == 4 or month == 10:
@@ -192,7 +232,7 @@ do:
 @hook standing_drift
 on: month_start
 label: Coursework
-when: turn > 1 and month != 11 and month != 12 and turn % 2 == 0
+when: turn > 1 and term and turn % 2 == 0
 do:
   grades -1
   if has(slacking):

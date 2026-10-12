@@ -67,7 +67,7 @@ function scorer(name, weights, guard = 4) {
       let best = null, bestScore = -Infinity;
       for (const o of view.options) {
         if (o.disabled) continue;
-        const def = ev.options.find((q) => q.key === o.key);
+        const def = eng.optionsOf(ev).find((q) => q.key === o.key); if (!def) continue;
         const est = estimate(eng, def, view.actor ? view.actor.id : null, view.id);
         let sc = eng.rand() * 0.5;   // small noise breaks ties and varies runs
         if (o.spell && weights.cast) sc += weights.cast;
@@ -103,7 +103,7 @@ const LEGACY = {
     pick(eng, view) {
       const ev = eng.c.events[view.id]; let best = -1, o;
       for (const x of view.options.filter((y) => !y.disabled)) {
-        const def = ev.options.find((q) => q.key === x.key); let sc = eng.rand() * 3;
+        const def = eng.optionsOf(ev).find((q) => q.key === x.key); if (!def) continue; let sc = eng.rand() * 3;
         G.walkEffects(def.effects, (st) => { if ((st.t === 'rel' || st.t === 'spark') && st.max > 0) sc += st.max; if (st.t === 'bond' && ['friend', 'close', 'partner'].includes(st.status)) sc += 20; });
         if (sc > best) { best = sc; o = x; }
       }
@@ -123,15 +123,39 @@ const STYLES = {
   social: (npc) => scorer('social:' + npc, { health: 0.6, mood: 0.6, gold: 0.3, grades: 0.6, renown: 0.2, skill: 0.3, 'rel:': (k) => (k === 'rel:' + npc ? 5 : 0.2), 'spark:': (k) => (k === 'spark:' + npc ? 4 : 0), 'bond:': (k) => (k === 'bond:' + npc ? 1 : 0), 'gain:': 3 }),
 };
 
+// Places (design §6.3): by default, keep obligations (club/job/thesis places with visits due), then go
+// somewhere new, else anywhere open. `truant` never keeps obligations.
+function pickPlaces(eng, view, opts = {}) {
+  const picks = [];
+  view.slots.forEach((sl, i) => {
+    if (view.locked.some((l) => l.slot === sl)) { picks.push(null); return; }
+    const open = view.places.filter((p) => p.state === 'open' && p.open[i]);
+    if (!open.length) { picks.push(null); return; }
+    const duty = opts.truant ? [] : open.filter((p) => p.track && p.track.due > picks.filter((x) => x === p.id).length);
+    const fresh = open.filter((p) => p.news && !picks.includes(p.id));
+    const pool = opts.truant ? open.filter((p) => !p.track) : duty.length ? duty : fresh.length && eng.rand() < 0.6 ? fresh : open;
+    const from = pool.length ? pool : open;
+    picks.push(from[Math.floor(eng.rand() * from.length)].id);
+  });
+  return picks;
+}
+// Several options of a `pick: N` menu (enrolment): random distinct ones, up to N.
+function pickMany(eng, view, opts) {
+  const pool = opts.slice(), keys = [];
+  while (keys.length < view.pick && pool.length) keys.push(pool.splice(Math.floor(eng.rand() * pool.length), 1)[0].key);
+  return keys;
+}
+
 function get(name) {
   name = name || 'random';
   if (LEGACY[name]) return LEGACY[name];
   const [base, arg] = name.split(':');
   if (base === 'focused' && !SKILLS.includes(arg)) throw new Error('focused:<skill> needs one of ' + SKILLS.join(' '));
   if ((base === 'social') && !arg) return LEGACY.social;
+  if (base === 'truant') return Object.assign(STYLES.balanced(), { name: 'truant', pickPlaces: (eng, view) => pickPlaces(eng, view, { truant: true }) });
   if (STYLES[base]) return STYLES[base](arg);
   throw new Error('unknown play style "' + name + '" (' + list().join(', ') + ')');
 }
-function list() { return ['random', 'cautious', 'social', 'balanced', 'focused:<skill>', 'aggressive', 'moneymaxx', 'caster', 'social:<npc>']; }
+function list() { return ['random', 'cautious', 'social', 'balanced', 'focused:<skill>', 'aggressive', 'moneymaxx', 'caster', 'truant', 'social:<npc>']; }
 
-module.exports = { get, list, estimate };
+module.exports = { get, list, estimate, pickPlaces, pickMany };
