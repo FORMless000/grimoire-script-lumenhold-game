@@ -113,6 +113,8 @@
         if (!p || p.state !== 'open' || !p.open[i]) throw new Error('place ' + id + ' is not open in the ' + sl);
         return id;
       });
+      if (!s.visitsTo) s.visitsTo = {};
+      for (const id of picks) if (id) s.visitsTo[id] = (s.visitsTo[id] || 0) + 1;
       const ctx = this.newCtx(null, null);
       for (const id of new Set(picks.filter(Boolean))) {
         const p = this.c.places[id];

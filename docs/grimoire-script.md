@@ -194,7 +194,9 @@ At graduation, endings **without** `kind: early` are checked from highest `prior
 
 ### `@game`
 
-This holds global settings, and there is exactly one (in `core/rules.grim`): `title subtitle years months cards_per_month max_cards_per_month social_per_month min_random_per_month intro summer_months`.
+This holds global settings, and there is exactly one (in `core/rules.grim`): `title subtitle years months cards_per_month max_cards_per_month social_per_month min_random_per_month intro summer_months`, plus `schema: 1`, the format version the content is written for (lint errors if it's missing or newer than the parser).
+
+**The format is frozen at schema v1** (design §12). From now on blocks, properties, statements, functions and identifiers may be added but never removed or changed. `test/golden/schema-v1.json` records the frozen format; `node tools/grim.js schema` checks it (and `--update` records additions). The legacy constructs (`check`, `actor: any`, `love`, `draws:`, track `legacy:`, raw numbers and `grades` in options) are marked `legacy` there: they are the only removals allowed, in phase 3.
 
 `min_random_per_month` guarantees that many random cards each month even when queued and auto cards already fill `cards_per_month` (the deck may then grow up to `max_cards_per_month`). Lumenhold uses 1, so calendar-heavy months still draw from the random pool.
 
@@ -215,6 +217,7 @@ Used in `when`, `weight`, `if`, `chance`, `check`, assignments and `{=…}`.
 | `month` | 1…12 within the year (1 Harvestmoon … 4 Frostcall term, 5–6 winter break, 7–10 term, 11–12 summer break) |
 | `year` | 1…4 |
 | `term` `break` `season` `final_year` `term_index` `gpa` `slot` | the calendar and tracks (§6c) |
+| `runs_completed` | how many runs this player has finished on this machine or server. Flavour text only: never use it in a `when` that changes odds |
 | `turns_left`, `max_turns`, `cards_this_month` | as named |
 | `npc` | the bound actor's id (only in events with `actor`) |
 | anything else | a custom variable (default 0), set with `name +1` / `name = …` |
@@ -466,7 +469,7 @@ cast:
 
 Roles are filled on a scratch copy of the RNG, with backtracking, favouring stronger relationships. In text use `{friend}`, `{friend.their}`; in effects `rel friend +small`, `spark friend +tiny`; in challenges `vs friend.duel`. Inside a role's event, plain `{they}` / `{them}` refer to the first role. `actor: any` still works as a one-role cast. `say[lyra]: …` right after a `say:` line replaces it when that role is Lyra (its translation key gets the suffix `@lyra`).
 
-**Tracks** (`@track` in `content/world/tracks.grim`). Statements: `enrol evocation` (or `enrol evocation 2`), `join duelling`, `leave duelling` (`leave job` / `leave club`: whichever you have), `apply intern_royal_library`, `promote track`, `perform track +small`, `rank_xp track +small`, `progress thesis +medium`. Inside a track notice, `track` means the track that triggered it, and `{track}` prints its name. Functions: `enrolled(t) member(t) applied(t) level(t) passed(t, n) rank(t) performance(t) progress(t) due(t) visits(t)`.
+**Tracks** (`@track` in `content/world/tracks.grim`). Statements: `enrol evocation` (or `enrol evocation 2`), `join duelling`, `leave duelling` (`leave job` / `leave club`: whichever you have), `apply intern_royal_library`, `promote track`, `perform track +small`, `rank_xp track +small`, `progress thesis +medium`, `study evocation +small` (exam preparation for an enrolled course, capped at 15; `study +small` without a track prepares for every enrolled course; this replaces `grades` effects). Inside a track notice, `track` means the track that triggered it, and `{track}` prints its name. Functions: `enrolled(t) member(t) applied(t) level(t) passed(t, n) rank(t) performance(t) progress(t) due(t) visits(t)`.
 
 - **Courses:** enrolment menus (`offers: courses`, `pick: 2`) at each term start; `opens: 2` delays a course to term 2. At term end each enrolled course sits an exam (a challenge at the course level's difficulty, easier for study), graded A/B/C/F; the grades make the **GPA**. Passing a level teaches its spells (`teaches: flame@1 tide@2`). `legacy:` lists v0.2 states that enrolling grants, so old class events keep firing.
 - **Clubs and jobs:** one of each at a time. Each term asks for `due:` visits to the track's place. Visits raise performance and rank XP; jobs pay `pay:` per visit (double on breaks). Missed visits cost performance (and standing with the `lead:`). Below 40 a `track_warning` follows, at 0 you are dropped, and with enough rank XP and performance ≥ 70 a `track_promotion` is offered.
@@ -474,7 +477,7 @@ Roles are filled on a scratch copy of the RNG, with backtracking, favouring stro
 
 **Hooks:** `on: term_start` and `on: term_end` run at the first and last month of each term (rules use them for tuition, term marks and probation).
 
-**Places** (`@place`): `map: campus 585,278` positions the marker; `open:` lists the slots it is open in; `season:`, `closed_when:` close it; `discover:` (a condition) finds it, else it starts found unless `hinted_when:` shows it as "?"; `track:` makes it a club or job place; `draws:` lets old tag-only random events be drawn there. Statements: `discover library`. Functions: `discovered(p)`, `present(p)` (who is there now).
+**Places** (`@place`): `map: campus 585,278` positions the marker; `open:` lists the slots it is open in; `season:`, `closed_when:` close it; `discover:` (a condition) finds it, else it starts found unless `hinted_when:` shows it as "?"; `track:` makes it a club or job place; `draws:` lets old tag-only random events be drawn there. Statements: `discover library`. Functions: `discovered(p)`, `present(p)` (who is there now), `visits_to(p)` (lifetime visits picked on the map).
 
 **Arcs** (`@arc` in `content/world/arcs.grim`): `clock: 0..12` and `beats: 1@y1m3 2@y1m9 …` advance the clock on schedule whatever the player does. Statements: `find bell_rope` (a clue), `advance hollowstar +1`. Functions: `clue(x)`, `clock(arc)`, `act(arc)` (the current act by year).
 

@@ -18,6 +18,8 @@ const ID = '[a-z_][a-z0-9_]*';
 const RE_HEADER = /^@([a-z]+)(?:\s+([a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)?))?\s*$/;
 const RE_OPTION = /^>\s*([a-z_][a-z0-9_]*)\s*:\s*(.*)$/;
 const RE_PROP = /^([a-z_][a-z0-9_]*)\s*:\s*(.*)$/;
+// perform/rank_xp/progress <track> ±n|tier, and study [track] ±n|tier
+const RE_TRACK_AMOUNT = new RegExp('^(perform|rank_xp|progress|study)(?:\\s+(' + ID + '))?\\s*([+-])\\s*(\\d+|tiny|small|medium|large|huge)$');
 const RE_AMOUNT = new RegExp('^(?:(rel|love)\\s+)?(' + ID + ')\\s*([+-])\\s*(\\d+)(?:\\s*~\\s*(\\d+))?$');
 const isComment = (c) => c.startsWith('#') || c.startsWith('//');
 
@@ -26,6 +28,7 @@ function normStatement(c) {
   let m;
   if ((m = c.match(/^say\s*:\s*(.*)$/))) return 'say: ' + m[1];
   if (/^else\s*:$/.test(c)) return 'else:';
+  if ((m = c.match(RE_TRACK_AMOUNT))) return m[1] + (m[2] ? ' ' + m[2] : '') + ' ' + m[3] + m[4];
   if ((m = c.match(RE_AMOUNT))) return (m[1] ? m[1] + ' ' : '') + m[2] + ' ' + m[3] + m[4] + (m[5] != null ? '~' + m[5] : '');
   return c;
 }

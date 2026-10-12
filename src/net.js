@@ -6,7 +6,7 @@
  *   Net.flush(eng, meta, {final})       send new / changed run-history entries (telemetry)
  *   Net.markDirty(n)                    a hist entry changed after it was sent (feedback)
  *   Net.listSaves() / getSave(slot) / putSave(slot, json)
- *   Net.addSeen(runId, eventIds)        cross-run "seen" counters (for the director)
+ *   Net.getSeen() / addSeen(runId, eventIds)   cross-run "seen" counters (for the director)
  *
  * A `?token=` in the page URL is sent along, for servers that require ADMIN_TOKEN.
  */
@@ -77,6 +77,7 @@
     deleteSave(slot) { return call('DELETE', 'api/saves/' + slot); },
 
     /* ---------------- cross-run seen counters */
+    getSeen() { return call('GET', 'api/seen'); },
     addSeen(runId, events) { return call('POST', 'api/seen', { runId, events }).catch((e) => console.warn('[net] seen', e.message)); },
   };
   root.Net = Net;

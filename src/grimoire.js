@@ -23,7 +23,9 @@
   // Functions whose bare-identifier arguments are names (not variables).
   // `npc` is always resolved to the bound actor's id.
   const SYMBOLIC = new Set(['has', 'flag', 'left', 'rel', 'love', 'spark', 'bond', 'met', 'seen', 'since', 'chosen', 'bonds', 'npc_is', 'romanceable', 'tagged', 'passed', 'clue', 'spell_level', 'knows', 'npc_rel',
-    'enrolled', 'member', 'rank', 'performance', 'level', 'progress', 'due', 'visits', 'present', 'act', 'clock', 'discovered', 'applied', 'cast_as', 'plan']);
+    'enrolled', 'member', 'rank', 'performance', 'level', 'progress', 'due', 'visits', 'present', 'act', 'clock', 'discovered', 'applied', 'cast_as', 'plan', 'visits_to']);
+  // Built-in identifiers the engine answers (env.ident); content can read but never assign them.
+  const IDENTS = ['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa', 'runs_completed'];
   const FUNCS = new Set([...SYMBOLIC, 'rand', 'min', 'max', 'abs', 'floor', 'round', 'clamp', 'known', 'chance_of']);
   // Reference kinds for linting: which argument of which function refers to what.
   const FUNC_REFS = {
@@ -31,7 +33,7 @@
     met: ['npc'], seen: ['event'], since: ['event'], chosen: ['event', null], npc_is: ['npc'], bonds: [null], romanceable: ['npc'], tagged: ['npc', null],
     passed: ['track', null], clue: ['clue'], spark: ['npc'], spell_level: ['spell'], knows: ['fact'], npc_rel: ['npc', 'npc'],
     enrolled: ['track'], member: ['track'], rank: ['track'], performance: ['track'], level: ['track'], progress: ['track'], due: ['track'], visits: ['track'], applied: ['track'],
-    present: ['place'], act: ['arc'], clock: ['arc'], discovered: ['place'], cast_as: [null, 'npc'], plan: [null],
+    present: ['place'], act: ['arc'], clock: ['arc'], discovered: ['place'], cast_as: [null, 'npc'], plan: [null], visits_to: ['place'],
   };
 
   function tokenize(s, file, line) {
@@ -277,6 +279,8 @@
     sayAs: new RegExp('^say\\[(' + ID + ')\\]\\s*:\\s*(.*)$'),
     trackOp: new RegExp('^(enrol|join|leave|promote|apply)\\s+(' + ID + ')(?:\\s+(\\d))?$'),
     trackAmount: new RegExp('^(perform|rank_xp|progress)\\s+(' + ID + ')\\s*([+-])\\s*(\\d+|tiny|small|medium|large|huge)$'),
+    // study [track] ±n: exam preparation for one enrolled course (or all of them), capped at 15 (design §7.3).
+    study: new RegExp('^study(?:\\s+(' + ID + '))?\\s*([+-])\\s*(\\d+|tiny|small|medium|large|huge)$'),
     discover: new RegExp('^discover\\s+(' + ID + ')$'),
     find: new RegExp('^find\\s+(' + ID + ')$'),
     advanceArc: new RegExp('^advance\\s+(' + ID + ')\\s*\\+\\s*(\\d+)$'),
@@ -326,6 +330,11 @@
     if ((m = content.match(RE.trackAmount))) {
       const st = { t: m[1], track: m[2], sign: m[3] === '-' ? -1 : 1, line };
       if (TIERS.includes(m[4])) st.tier = m[4]; else st.min = st.max = +m[4] * st.sign;
+      return st;
+    }
+    if ((m = content.match(RE.study))) {
+      const st = { t: 'study', track: m[1] || null, sign: m[2] === '-' ? -1 : 1, line };
+      if (TIERS.includes(m[3])) st.tier = m[3]; else st.min = st.max = +m[3] * st.sign;
       return st;
     }
     if ((m = content.match(RE.discover))) return { t: 'discover', place: m[1], line };
@@ -690,5 +699,5 @@
     return { tokens, conds };
   }
 
-  return { textTokens, parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES };
+  return { textTokens, parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES };
 });

@@ -35,6 +35,9 @@
  *   node tools/grim.js brief [--cast a,b] [--place P] [--track T] [--arc A] [--topic "…"] [--tier T] [--out FILE]
  *                                       a ~6k-token context pack for writing events (design §3.4)
  *   node tools/grim.js docs [--check]   regenerate the block table in docs/authoring/schema.md
+ *   node tools/grim.js schema [--update]
+ *                                       check the format against the frozen manifest (test/golden/schema-v1.json):
+ *                                       removals fail, additions are listed (--update records them)
  *   node tools/grim.js canon            proper nouns in player-visible text that the worldbook doesn't know
  *   node tools/grim.js feedback [PATH…] [--event ID] [--json]
  *                                       summarise playtest feedback from exported run logs (default: feedback/)
@@ -83,7 +86,7 @@ function build(opts = {}) {
 
 /* ------------------------------------------------------------------ lint */
 const KNOWN_BONDS = new Set(['none', 'friend', 'close', 'rival', 'nemesis', 'partner', 'ex']);
-const SPECIAL_IDS = new Set(['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa']);
+const SPECIAL_IDS = new Set(G.IDENTS);
 const PRONOUN_KEYS = new Set(['they', 'them', 'their', 'theirs', 'are', 's', 'name', 'fullname', 'title', 'house']);
 
 let ROLES = new Set();   // cast role names of the event being scanned (valid character references)
@@ -182,6 +185,7 @@ function analyze(content) {
         case 'enrol': case 'join': case 'leave': case 'promote': case 'apply': case 'perform': case 'rank_xp': case 'progress':
           if (st.track !== 'track' && !(st.t === 'leave' && ['job', 'club'].includes(st.track)) && !content.tracks[st.track]) P('error', w, st.t + ': unknown track "' + st.track + '"');
           break;
+        case 'study': if (st.track && st.track !== 'track' && !(content.tracks[st.track] && content.tracks[st.track].kind === 'course')) P('error', w, 'study: "' + st.track + '" is not a course'); break;
         case 'discover': if (!content.places[st.place]) P('error', w, 'discover: unknown place "' + st.place + '"'); break;
         case 'find': if (!Object.values(content.arcs).some((a) => (a.clues || []).includes(st.clue))) P('error', w, 'find: "' + st.clue + '" is not a clue of any @arc');
           else if (/^content\/batches\//.test(w)) { const key = Object.values(content.arcs).some((a) => (a.key_clues || []).includes(st.clue)); if (key) P('error', w, 'find ' + st.clue + ': only hard-canon events may grant key clues'); }
@@ -390,6 +394,7 @@ function lint(opts = {}) {
   errors.forEach((e) => console.error(C.r + 'error ' + C.x + e.message));
   if (errors.length) { console.error(C.r + errors.length + ' parse error(s)' + C.x); if (!opts.noExit) process.exit(1); return false; }
   const A = analyze(content);
+  schemaLint(content, A.problems);
   for (const u of canonCheck(content)) A.problems.push({ level: /^content\/batches\//.test(u.where[0]) ? 'error' : 'warn', where: u.where[0], msg: 'unknown proper noun "' + u.name + '" (add it to the worldbook, a @lore key or @vocab canon_allowlist)' + (u.where.length > 1 ? ' [+' + (u.where.length - 1) + ' more]' : '') });
   for (const lang of localeLangs()) lintLocale(content, lang, A.problems, opts);
   const by = { error: [], warn: [], info: [] };
@@ -423,6 +428,37 @@ function badToken(content, k) {
   if (!PRONOUN_KEYS.has(key.toLowerCase())) return 'unknown token {' + k + '}';
   return null;
 }
+// The content declares the format version it is written for (design §12); the parser must know it.
+function schemaLint(content, problems) {
+  const frozen = readJSONFile(SCHEMA_FILE);
+  const v = content.game.schema, max = frozen ? frozen.schema : require('./schema-manifest.js').SCHEMA_VERSION;
+  if (v == null) problems.push({ level: 'error', where: 'content/core/rules.grim', msg: '@game has no "schema:" (the format version, currently ' + max + ')' });
+  else if (v > max) problems.push({ level: 'error', where: 'content/core/rules.grim', msg: '@game schema ' + v + ' is newer than the parser (' + max + ')' });
+}
+function readJSONFile(f) { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { return null; } }
+const SCHEMA_FILE = path.join(ROOT, 'test', 'golden', 'schema-v1.json');
+
+// grim schema [--update]: compare the parser's format with the frozen manifest. Removals and changes fail;
+// legacy constructs may be retired; additions are listed and recorded with --update.
+function schemaCmd(opts = {}) {
+  const M = require('./schema-manifest.js');
+  const cur = M.manifest(), old = readJSONFile(SCHEMA_FILE);
+  if (!old) { fs.writeFileSync(SCHEMA_FILE, JSON.stringify(cur, null, 2) + '\n'); console.log('schema: wrote ' + path.relative(ROOT, SCHEMA_FILE)); return true; }
+  const d = M.compare(old, cur);
+  d.removed.forEach((x) => console.error(C.r + 'removed ' + C.x + x));
+  d.changed.forEach((x) => console.error(C.r + 'changed ' + C.x + x));
+  d.retired.forEach((x) => console.log(C.d + 'retired (legacy) ' + x + C.x));
+  d.added.forEach((x) => console.log(C.g + 'added ' + C.x + x));
+  const ok = !d.removed.length && !d.changed.length;
+  if (!ok) { console.error(C.r + 'schema: the frozen format v' + old.schema + ' may only grow' + C.x + ' (design §12)'); return false; }
+  if (opts.update && (d.added.length || d.retired.length)) {
+    cur.legacy = old.legacy;
+    fs.writeFileSync(SCHEMA_FILE, JSON.stringify(cur, null, 2) + '\n');
+    console.log('schema: recorded ' + d.added.length + ' addition(s)' + (d.retired.length ? ', ' + d.retired.length + ' retirement(s)' : ''));
+  } else console.log(C.g + 'schema: v' + old.schema + ' intact' + C.x + (d.added.length ? ' (' + d.added.length + ' addition(s) not recorded; run with --update)' : ''));
+  return true;
+}
+
 function lintLocale(content, lang, problems, opts = {}) {
   const P = (level, where, msg) => problems.push({ level, where, msg });
   const loc = I18n.loadLocale(lang, loadLocaleSources(lang).filter((s) => !s.path.endsWith('/_obsolete.lang')));
@@ -995,6 +1031,7 @@ switch (cmd) {
     else process.stdout.write(res.text);
     break;
   }
+  case 'schema': if (!schemaCmd({ update: !!flag('update') })) process.exit(1); break;
   case 'docs': if (!genDocs({ check: !!flag('check') })) process.exit(1); break;
   case 'canon': {
     const { content, errors } = compileAll();

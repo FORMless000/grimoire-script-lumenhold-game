@@ -47,6 +47,8 @@ locales/<lang>/            translations: one .lang per .grim file, plus ui.lang 
 
 The engine is content-agnostic. Only touch `src/` when you need a new language feature (a new statement, function or block property). When you do, update `src/grimoire.js` (syntax plus `SCHEMA` / `FUNCS`), `src/engine.js` (semantics), `tools/grim.js` (lint), `tools/format.js` and `tools/query.js` (canonical spacing and query fields for a new statement), and `docs/grimoire-script.md`, in that order.
 
+**The format is frozen at schema v1** (`@game schema: 1`, `test/golden/schema-v1.json`). Language features may be added but never removed or changed in meaning. After adding one, run `node tools/grim.js schema --update` to record it (`test/schema.test.js` fails on removals). Only the constructs marked `legacy` in the manifest may go, in phase 3.
+
 ### Event files
 
 | File | Contents | Triggers |
@@ -97,6 +99,7 @@ node tools/grim.js brief --cast lyra,kael --place library --topic "…"   # ~6k-
 node tools/grim.js canon      # proper nouns the worldbook doesn't know (also part of lint)
 node tools/grim.js lorebook   # export the worldbook as build/lorebook.json
 node tools/grim.js docs       # regenerate the block table in docs/authoring/schema.md (verify checks it)
+node tools/grim.js schema     # check the frozen format v1 (--update records additions)
 node tools/grim.js rename npc kael kael_dumont   # verified rename across content and translations (--dry-run)
 node tools/grim.js migrate    # run new scripts in tools/migrations/ (--dry-run shows the diff)
 npm test                      # unit tests: tools and server

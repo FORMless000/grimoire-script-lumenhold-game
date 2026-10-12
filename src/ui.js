@@ -138,14 +138,15 @@
       '</div></div></div>';
     ui.notice = null;
     document.querySelectorAll('.lang-btn').forEach((b) => { b.onclick = () => { if (b.dataset.lang !== cur) switchLang(b.dataset.lang, false); }; });
-    document.getElementById('begin').onclick = () => {
+    document.getElementById('begin').onclick = async () => {
       const name = document.getElementById('pname').value.trim() || t('title.defaultName');
       const seed = document.getElementById('pseed').value.trim();
       // The run being replaced keeps its log (and any feedback) in the archive.
       if (saved) { try { const old = new Engine(content).load(saved); archiveRun(old); Net.flush(old, runRecordMeta(old), { final: true }); } catch (e) { console.warn(e); } store.del(SAVE_KEY); }
+      const seen = await loadSeen();
       eng = new Engine(content);
       buildGame();
-      step(eng.newGame({ name, seed: seed === '' ? null : seed }));
+      step(eng.newGame({ name, seed: seed === '' ? null : seed, ...seen }));
     };
     const c = document.getElementById('cont');
     if (c) c.onclick = () => { eng = new Engine(content).load(saved); buildGame(); step(eng.advance()); };
@@ -549,6 +550,11 @@
         const [kind, id] = k.split(':'); if (!content.npcs[id]) continue;
         h += '<span class="chip ' + cls + '">' + Art.icon(kind === 'spark' ? 'heart' : 'group', 14) + esc(t(kind === 'spark' ? 'chip.love' : 'chip.rel', { name: shortName(id), delta: sign })) + '</span>';
       }
+      else if (/^(perf|progress|study):/.test(k)) {
+        // Track numbers (design §6.2, §7.3): performance, thesis progress, exam preparation.
+        const [kind, id] = k.split(':'); const d = content.tracks && content.tracks[id]; if (!d) continue;
+        h += '<span class="chip ' + cls + '">' + Art.icon(kind === 'study' ? 'book' : 'star', 14) + esc(t('chip.' + kind, { track: d.name, delta: sign })) + '</span>';
+      }
     }
     for (const n of out.notes || []) h += '<span class="chip note">' + esc(noteText(n)) + '</span>';
     return h;
@@ -780,13 +786,23 @@
   // Run metadata sent with every telemetry batch (the run record without its history).
   function runRecordMeta(engine) { const r = (engine || eng).exportRun(runMeta()); delete r.hist; return r; }
   // Cross-run "seen" counters, for the director's novelty score (design §5.2).
+  // The pseudo-id `_runs` counts completed runs (the `runs_completed` identifier).
   function recordSeen(engine) {
-    const ids = [...new Set(engine.s.hist.filter((h) => h.t === 'card').map((h) => h.id))];
+    const ids = [...new Set(engine.s.hist.filter((h) => h.t === 'card').map((h) => h.id)), '_runs'];
     if (Net.available) { Net.addSeen(engine.s.runId, ids); return; }
     let seen = {}; try { seen = JSON.parse(store.get(SEEN_KEY) || '{}'); } catch (e) { /* reset */ }
     const at = Date.now();
     for (const id of ids) { const c = seen[id] = seen[id] || { runs_seen: 0, last_run: null, last_at: null }; if (c.last_run !== engine.s.runId) { c.runs_seen++; c.last_run = engine.s.runId; c.last_at = at; } }
     store.set(SEEN_KEY, JSON.stringify(seen));
+  }
+
+  // newGame options from the seen counters: {runsSeen: {id: runs}, runsCompleted}.
+  async function loadSeen() {
+    let seen = {};
+    try { seen = Net.available ? await Net.getSeen() : JSON.parse(store.get(SEEN_KEY) || '{}'); } catch (e) { seen = {}; }
+    const runsSeen = {};
+    for (const [id, c] of Object.entries(seen || {})) if (id !== '_runs' && c && c.runs_seen) runsSeen[id] = c.runs_seen;
+    return { runsSeen, runsCompleted: (seen && seen._runs && seen._runs.runs_seen) || 0 };
   }
 
   // What the live bar and the F dialog rate: the newest two cards (or the ending and the last card).

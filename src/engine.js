@@ -96,6 +96,7 @@
         runId: opts.runId || newRunId(seed), hist: [], seq: 0,
         spells: {}, facts: {}, memories: [], npcRel: {},
         tracks: {}, places: {}, arcs: {}, clues: {}, skillGain: {}, peak: {}, day: null, runsSeen: opts.runsSeen || {},
+        visitsTo: {}, runsCompleted: opts.runsCompleted | 0,
       };
       s.hist.push({ t: 'start', at: now(), seed, name: s.name });
       for (const id of this.c.order.resources) s.vals[id] = this.c.resources[id].start ?? 50;
@@ -111,6 +112,7 @@
       // Saves may break until 1.0 (design §13): older versions are refused, not migrated.
       // The UI archives the old run's log (s.hist) before discarding it.
       if ((s.version || 1) < SAVE_VERSION) throw new SaveVersionError(s.version || 1);
+      if (!s.visitsTo) s.visitsTo = {};
       this.s = s;
       return this;
     }
@@ -422,6 +424,7 @@
             case 'slot': return s.cur && s.cur.slot ? s.cur.slot : '';
             case 'term_index': return eng.termIndex();
             case 'gpa': return eng.gpa();
+            case 'runs_completed': return s.runsCompleted || 0;
           }
           if (n.includes('.')) { const [who, stat] = n.split('.'); return eng.statOf(R(who), stat, actor); }
           const v = s.vals[n];
@@ -451,6 +454,7 @@
             case 'visits': { const t = eng.trackState(a[0]); return t ? t.visits || 0 : 0; }
             // places, arcs, casting (design §6, §10.6, §5.4)
             case 'discovered': return !!(s.places || {})[a[0]];
+            case 'visits_to': return (s.visitsTo || {})[a[0]] || 0;
             case 'present': return eng.presentAt(a[0]).length;
             case 'act': return eng.actOf(a[0]);
             case 'clock': return ((s.arcs || {})[a[0]] || {}).clock || 0;
@@ -686,6 +690,14 @@
             break;
           }
           case 'enrol': case 'join': case 'leave': case 'promote': case 'apply': case 'perform': case 'rank_xp': case 'progress': this.trackOp(st, ctx); break;
+          case 'study': {
+            // Exam preparation (design §7.3): one course (`track` = the event's own), else every enrolled course.
+            const amt = st.tier ? st.sign * this.trackSize('study', st.tier, [1, 3, 5, 8, 12]) : st.min;
+            const one = st.track === 'track' ? ctx.track : st.track;
+            const ids = one ? [one] : Object.keys(s.tracks || {}).filter((k) => s.tracks[k].status === 'enrolled');
+            for (const id of ids) { const t = (s.tracks || {})[id]; if (!t || t.status !== 'enrolled') continue; t.study = clamp((t.study || 0) + amt, 0, 15); ctx.deltas['study:' + id] = (ctx.deltas['study:' + id] || 0) + amt; }
+            break;
+          }
           case 'discover': if (!s.places[st.place] && this.c.places[st.place]) { s.places[st.place] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: st.place }); } break;
           case 'find': if (!s.clues[st.clue]) { s.clues[st.clue] = s.turn; ctx.notes.push({ kind: 'clue', clue: st.clue }); } break;
           case 'advance': { const a = s.arcs[st.arc] = s.arcs[st.arc] || { clock: 0 }; const d = this.c.arcs[st.arc]; a.clock = Math.min(d && d.clock ? d.clock.max : 99, a.clock + st.n); break; }

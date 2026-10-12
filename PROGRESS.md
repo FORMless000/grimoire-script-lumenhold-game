@@ -29,7 +29,8 @@
   - Vertical slice: Evocation I–III, the Duelling Circle, the Library Assistant job, campus and home places, the Royal Library internship stub, the thesis and the four-beat `the_bell` arc, about 50 events, in en and zh.
   - Tests for the calendar, director, map, tracks, cast and arcs; the browser test plays full four-year runs through the map and multi-pick menus.
   - **Known gaps** (phase 3): skewed endings, unreachable romance, short days (about 7 cards against 11). See the playtest guide.
-- **Your step:** play it (`npm start`) and leave feedback; then the schema freezes and phase 3 starts.
+- **Phase 3 (in progress).** Playtest #1 was skipped by decision; the simulator's known gaps stand in for its notes.
+  - **Step 0: schema v1 frozen.** `@game schema: 1`, `test/golden/schema-v1.json`, `grim schema [--update]`, `test/schema.test.js`. From now on the format may only grow. Last additions before the freeze: `study [track] ±tier`, `visits_to(place)`, `runs_completed`, and outcome chips for performance, progress and study. The browser now passes cross-run seen counters to new games, which it didn't before.
 - **First job after the freeze, before the rest of phase 3:** baseline events for the new draw sources, so no visit or slot comes up empty: repeatable routine events (with text variation) for every place, every course, club and job (practice, shift and class days instead of attendance notes), each break plan, and the noon and night slots. Held until the schema freezes, so they're written once in the final format.
 
 **v0.2.** Engine, UI, toolchain, docs and agent skill are done.
