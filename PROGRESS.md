@@ -30,6 +30,7 @@
   - Tests for the calendar, director, map, tracks, cast and arcs; the browser test plays full four-year runs through the map and multi-pick menus.
   - **Known gaps** (phase 3): skewed endings, unreachable romance, short days (about 7 cards against 11). See the playtest guide.
 - **Your step:** play it (`npm start`) and leave feedback; then the schema freezes and phase 3 starts.
+- **First job after the freeze, before the rest of phase 3:** baseline events for the new draw sources, so no visit or slot comes up empty: repeatable routine events (with text variation) for every place, every course, club and job (practice, shift and class days instead of attendance notes), each break plan, and the noon and night slots. Held until the schema freezes, so they're written once in the final format.
 
 **v0.2.** Engine, UI, toolchain, docs and agent skill are done.
 - **Localization:** a key-based module (`src/i18n.js`, `locales/`) with English and a complete Simplified Chinese translation (3,126 content strings plus the UI), switchable in-game.
