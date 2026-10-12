@@ -15,7 +15,8 @@ src/engine.js              DOM-free game logic (turns, deck, effects, states, re
 src/i18n.js                 localization: .lang parser, string extraction, applyContent, UI string table (UI_EN), t()
 src/art.js                 SVG icon library, card scene composer, procedural portraits
 src/ui.js, src/style.css   presentation only: swipe cards, menus, month & ending screens, side panel, ?debug panel
-tools/grim.js              CLI: build | lint | sim | stats | show | ids | check | i18n
+tools/grim.js              CLI: build | lint | sim | stats | show | ids | check | i18n | fmt | query | feedback
+tools/format.js, query.js  canonical formatter and structural search used by grim fmt / grim query
 build/content.bundle.js    GENERATED — all .grim sources + .lang files as one JS file (so file:// works). Never edit by hand.
 content/core/rules.grim    @game, resources, skills, global hooks (rent, drift, start)
 content/npcs/cast.grim     the 12 characters
@@ -26,7 +27,7 @@ docs/grimoire-script.md    language reference (includes the .lang format)
 locales/<lang>/            translations: one .lang per .grim file, plus ui.lang and GLOSSARY.md
 ```
 
-The engine is content-agnostic. Only touch `src/` when you need a new language feature (a new statement, function or block property). When you do, update `src/grimoire.js` (syntax plus `SCHEMA` / `FUNCS`), `src/engine.js` (semantics), `tools/grim.js` (lint), and `docs/grimoire-script.md`, in that order.
+The engine is content-agnostic. Only touch `src/` when you need a new language feature (a new statement, function or block property). When you do, update `src/grimoire.js` (syntax plus `SCHEMA` / `FUNCS`), `src/engine.js` (semantics), `tools/grim.js` (lint), `tools/format.js` and `tools/query.js` (canonical spacing and query fields for a new statement), and `docs/grimoire-script.md`, in that order.
 
 ### Event files
 
@@ -64,6 +65,8 @@ node tools/grim.js check      # build + lint + sim 200 — run before you finish
 node tools/grim.js show <id>  # print a block's source and everywhere it's referenced
 node tools/grim.js ids flag   # list existing ids (event|state|npc|ending|resource|skill|flag|var)
 node tools/grim.js stats      # counts by file / trigger / tag / actor / chain
+node tools/grim.js fmt        # canonical layout for .grim files (lossless; --check to only report)
+node tools/grim.js query check 'dc < 12 and not scales'   # structural search: blocks, options, statements (--fields)
 node tools/grim.js feedback   # summarise playtest feedback from exported run logs in feedback/ (or given paths)
 node tools/grim.js sim 50 --log build/runs   # also write every simulated game's full run log as JSON
 ```

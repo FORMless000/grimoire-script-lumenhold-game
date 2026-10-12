@@ -19,6 +19,9 @@
   - Sound and music.
   - A card-flip animation for outcomes.
 - **Tooling:**
+  - Done: `grim fmt` (lossless canonical formatter) and `grim query` (structural search), the groundwork for scripted content migrations.
+  - Next: `grim migrate`, numbered migration scripts that use an editing API on top of `query`, ending with lint plus a before/after sim comparison.
+  - Next: a rename map applied by `Engine.load`, so ids can be renamed without breaking saves.
   - `grim new <kind>` scaffolding.
   - A coverage report per chain.
   - A "goal" sim policy that tries to reach a named ending.

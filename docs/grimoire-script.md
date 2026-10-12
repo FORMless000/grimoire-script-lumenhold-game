@@ -376,6 +376,47 @@ trigger: queued
 
 ---
 
+## 7b. Canonical form and structural search
+
+These two tools are the basis for structured edits across many files: find what to change with `query`, change it, normalise with `fmt`, then verify with `check`.
+
+### `fmt`: canonical layout
+
+`node tools/grim.js fmt` rewrites every content file in canonical layout (`fmt <file…>` for specific files; `fmt --check` only lists files that differ and exits 1). `check` reports non-canonical files without failing.
+
+| Rule | Canonical form |
+|---|---|
+| Whitespace | LF line endings, no trailing spaces, tabs expanded, one final newline |
+| Blank lines | At most one in a row; none at the start of a file or right after a header; one before every `@block` (before its leading `#` comments) |
+| Headers and properties | `@kind id`, `key: value`, `> key: Label` |
+| Indentation | Effect bodies 2 spaces per nesting level; text continuation lines 2 spaces; indented comments align with the next line |
+| Statements | `say: …`, `else:`, `gold -10`, `gold +5~8`, `rel npc +4` |
+
+`fmt` is lossless: comments and paragraph breaks are kept, and expressions and text are never rewritten. Before writing, it compiles the file before and after and refuses (leaving the file untouched) unless both compile to exactly the same content. A file that does not parse is reported, not formatted. Running it twice changes nothing.
+
+### `query`: find blocks, options and statements
+
+```bash
+node tools/grim.js query NODE [WHERE] [--file S] [--grep RE] [--group FIELD] [--json]
+node tools/grim.js query --fields        # every field, per node kind
+```
+
+`NODE` is a block kind (`event state npc ending hook resource skill`), `option`, a statement kind (`say if chance check flag unflag gain lose queue rel love bond meet end delta assign`), `stmt` (any statement) or `any`. `WHERE` is an ordinary Grimoire expression evaluated against the row's fields. `has(x)` means "tagged x". A field that does not apply, or a DC that is not a constant, makes every comparison false. Each match prints `file:line`, the enclosing `block/option`, and the source line.
+
+| Question | Query |
+|---|---|
+| Easy checks that don't scale with the year | `query check 'dc < 12 and not scales'` |
+| How checks are spread across skills | `query check --group skill` |
+| Large gold losses | `query delta 'name == "gold" and amount <= -30'` |
+| High-weight romance events among the character arcs | `query event 'has(romance) and weight >= 20' --file people` |
+| Options the player gets no `say:` feedback from | `query option 'says == 0'` |
+| Everything that queues a given event | `query queue 'target == "soc_loan_repaid"'` |
+| Lines mentioning a word | `query say --grep lantern` |
+
+`--group FIELD` prints counts per value instead of rows. `--json` returns full rows, including `src`, the source line, for scripts and agents. Line numbers point into the `.grim` source, so the matches are a ready-made worklist for edits.
+
+---
+
 ## 8. Reference lists
 
 **Art keys** (`src/art.js`): book scroll letter potion cauldron flame wave moon star sun rain bolt leaf flower tree mushroom snow tower house door tent key lock chain coin pouch gem ring crown wand sparkle rune sword shield duel trophy mask eye hand heart heartbreak group skull ghost cat owl raven fox dragon frog spider paw feather candle lantern mirror hourglass bell music cup meal bed cards dice map compass scales paper cross planet gear broom bottle

@@ -11,7 +11,7 @@ Content is data, not code. You will write `.grim` blocks under `content/`, then 
 
 1. Read `AGENTS.md`: the world bible, cast, calendar, balance table and conventions.
 2. Skim `docs/grimoire-script.md`. Read it fully the first time; after that, keep it open for §3 (expressions), §4 (effects) and §5 (how a month is built).
-3. Run `node tools/grim.js stats` to see what already exists, and `node tools/grim.js ids event` (plus `flag`, `state`) to avoid duplicate ids and to reuse existing flags.
+3. Run `node tools/grim.js stats` to see what already exists, and `node tools/grim.js ids event` (plus `flag`, `state`) to avoid duplicate ids and to reuse existing flags. Use `node tools/grim.js query` to find precedents, for example `query check 'skill == "alchemy"' --group block` or `query event 'has(romance)' --file people`.
 4. Open one or two existing files of the kind you're writing (for example `content/events/classes.grim` for class events) and match their voice and density.
 
 ## 1. Plan before writing
@@ -107,6 +107,7 @@ New ending: add it to `content/endings.grim` with a `priority` that slots it cor
 ## 4. Verify (required)
 
 ```bash
+node tools/grim.js fmt                  # canonical layout (spacing, indentation); never changes meaning
 node tools/grim.js build
 node tools/grim.js lint                 # must be 0 errors; fix warnings about your new content
 node tools/grim.js sim 300              # 0 crashes; check your events aren't in "never seen"

@@ -11,6 +11,11 @@
  *   node tools/grim.js show <id>        print a block's source and everything that references it
  *   node tools/grim.js ids [kind]       list ids (event|state|npc|ending|resource|skill|flag|var)
  *   node tools/grim.js check            build + lint + sim 200 (what agents should run before finishing)
+ *   node tools/grim.js fmt [FILE…] [--check]
+ *                                       rewrite .grim files in canonical layout (lossless; refuses any change in meaning).
+ *                                       --check only lists files that are not canonical (exit 1 if any)
+ *   node tools/grim.js query NODE [WHERE] [--file S] [--grep RE] [--group FIELD] [--json] [--fields]
+ *                                       find blocks / options / statements, e.g.  query check "dc < 12 and not scales"
  *   node tools/grim.js feedback [PATH…] [--event ID] [--json]
  *                                       summarise playtest feedback from exported run logs (default: feedback/)
  *   node tools/grim.js i18n [lang]      no lang: translation coverage per language.
@@ -26,6 +31,8 @@ const G = require('../src/grimoire.js');
 const Engine = require('../src/engine.js');
 const Art = require('../src/art.js');
 const I18n = require('../src/i18n.js');
+const Fmt = require('./format.js');
+const Query = require('./query.js');
 
 const ROOT = path.resolve(__dirname, '..');
 const CONTENT = path.join(ROOT, 'content');
@@ -436,6 +443,46 @@ function sim(n = 300, opts = {}) {
   return crashes === 0;
 }
 
+/* ------------------------------------------------------------------ fmt */
+function fmt(paths, opts = {}) {
+  const files = paths.length ? paths.map((p) => path.resolve(p)).flatMap((p) => (fs.existsSync(p) && fs.statSync(p).isDirectory() ? listFiles(p) : [p])) : listFiles(CONTENT);
+  let changed = 0, errors = 0;
+  for (const f of files) {
+    if (!fs.existsSync(f)) { console.error(C.r + 'not found: ' + C.x + f); errors++; continue; }
+    const r = Fmt.formatChecked(fs.readFileSync(f, 'utf8'), rel(f));
+    if (r.error) { console.error(C.r + rel(f) + ': ' + C.x + r.error); errors++; continue; }
+    if (!r.changed) continue;
+    changed++;
+    if (opts.check) console.log(C.y + 'not canonical: ' + C.x + rel(f));
+    else { fs.writeFileSync(f, r.text); console.log('formatted ' + rel(f)); }
+  }
+  if (!opts.quiet || changed || errors) console.log('fmt: ' + files.length + ' file(s), ' + changed + (opts.check ? ' not canonical' : ' rewritten') + (errors ? ', ' + errors + ' error(s)' : '') + (opts.check && changed ? C.d + ' — run node tools/grim.js fmt' + C.x : ''));
+  return errors === 0 && !(opts.check && changed);
+}
+
+/* ------------------------------------------------------------------ query */
+function query(args, opts = {}) {
+  if (opts.fields) { for (const [k, v] of Object.entries(Query.FIELDS)) console.log(C.b + k.padEnd(16) + C.x + v); return; }
+  const [node, ...rest] = args;
+  if (!node) { console.log('usage: node tools/grim.js query NODE [WHERE]   (NODE: ' + Query.BLOCKS.concat(['option'], Query.STATEMENTS, ['stmt', 'any']).join(' ') + '; --fields lists what WHERE can use)'); return; }
+  const { content, sources, errors } = compileAll();
+  if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+  let hits;
+  try { hits = Query.select(content, { node, where: rest.join(' ').trim() || null }); } catch (e) { console.error(C.r + 'query: ' + C.x + e.message); process.exit(1); }
+  const lines = {}; for (const src of sources) lines[src.path] = src.text.split('\n');
+  const srcLine = (h) => ((lines[h.file] || [])[h.line - 1] || '').trim();
+  if (opts.file) hits = hits.filter((h) => h.file.includes(opts.file));
+  if (opts.grep) { const re = new RegExp(opts.grep, 'i'); hits = hits.filter((h) => re.test(srcLine(h)) || re.test(h.text || h.title || h.label || '')); }
+  if (opts.json) { console.log(JSON.stringify(hits.map((h) => ({ ...h, src: srcLine(h) })), null, 2)); return; }
+  if (opts.group) {
+    const g = {}; for (const h of hits) { const k = String(h[opts.group]); g[k] = (g[k] || 0) + 1; }
+    Object.entries(g).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => console.log(String(v).padStart(5) + '  ' + k));
+  } else {
+    for (const h of hits) console.log(C.d + h.file + ':' + h.line + C.x + '  ' + C.b + h.block + (h.option ? '/' + h.option : '') + C.x + '  ' + srcLine(h));
+  }
+  console.log(C.d + hits.length + ' match(es)' + C.x);
+}
+
 /* ------------------------------------------------------------------ feedback */
 // Same fingerprint the browser stamps on exported runs (src/ui.js runMeta), so logs from older content stand out.
 function contentHash() { return I18n.hash(loadSources().map((x) => x.path + '\n' + x.text).join('\n')); }
@@ -533,7 +580,9 @@ switch (cmd) {
   case 'stats': stats(); break;
   case 'show': show(rest[0]); break;
   case 'ids': ids(rest[0]); break;
+  case 'fmt': if (!fmt(rest.filter((x) => !x.startsWith('--')), { check: !!flag('check') })) process.exit(1); break;
+  case 'query': { const valued = ['file', 'grep', 'group']; query(rest.filter((x, i) => !x.startsWith('--') && !valued.includes((rest[i - 1] || '').slice(2))), { json: !!flag('json'), fields: !!flag('fields'), file: flag('file'), grep: flag('grep'), group: flag('group') }); break; }
   case 'feedback': feedback(rest.filter((x, i) => !x.startsWith('--') && rest[i - 1] !== '--event'), { event: flag('event'), json: !!flag('json') }); break;
-  case 'check': { build(); const ok = lint({ noExit: true }); const ok2 = sim(200, {}); process.exit(ok && ok2 ? 0 : 1); break; }
+  case 'check': { build(); const ok = lint({ noExit: true }); fmt([], { check: true, quiet: true }); const ok2 = sim(200, {}); process.exit(ok && ok2 ? 0 : 1); break; }
   default: console.log(fs.readFileSync(__filename, 'utf8').split(' */')[0].split('\n').slice(2).map((l) => l.replace(/^ \*\s?/, '')).join('\n'));
 }
