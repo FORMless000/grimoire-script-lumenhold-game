@@ -1,0 +1,384 @@
+# ============================================================
+#  Expansion — more academy life, plus a short chain:
+#    timeloop: life_timeloop_1 -> life_timeloop_2 -> life_timeloop_3
+# ============================================================
+
+# ---------------- The Tuesday That Wouldn't End ----------------
+
+@event life_timeloop_1
+title: Haven't We Done This?
+when: turn >= 5 and not flag(timeloop_started)
+weight: 6
+art: hourglass
+tags: mystery magic
+chain: timeloop
+scene: A student at breakfast staring at a plate of eggs with intense déjà vu, a clock on the wall with its hands spinning backward.
+text: Breakfast. Eggs. Thorne trips on the third step. A first-year spills juice on a prefect. You know all of this is about to happen, because it already happened. Yesterday. Which was also Tuesday.
+> left: Ignore it — probably just tired
+  flag timeloop_started
+  queue life_timeloop_2 now
+  say: You eat the eggs. They taste exactly as they did yesterday. Thorne trips on the third step.
+> right: Warn Thorne about the step
+  flag timeloop_started
+  rel thorne +2
+  queue life_timeloop_2 now
+  say: "The third step, Professor." He looks at you strangely and steps over it. Somewhere, a clock skips. It's still Tuesday.
+
+@event life_timeloop_2
+title: Tuesday, Again
+trigger: queued
+art: hourglass
+tags: mystery magic
+chain: timeloop
+scene: The same breakfast scene repeated, but the student is now standing on the table, holding up a sign that reads "IT'S STILL TUESDAY".
+text: It's Tuesday. Again. For the fourth time. Nobody else notices. On the bright side, you now know every answer in this afternoon's quiz. On the dark side, it's Tuesday. Forever.
+> left: Use it — ace the quiz, win every bet
+  grades +5
+  gold +15
+  queue life_timeloop_3 now
+  say: You win every bet, ace the quiz, and catch the juice before it hits the prefect. On the sixth Tuesday it starts to feel hollow. Something has to give.
+> right: Find the cause
+  lore +3
+  queue life_timeloop_3 now
+  say: You spend three Tuesdays in the library. On the fourth you find it: someone in the astronomy tower has wound an old chronometer backward. With a wand.
+
+@event life_timeloop_3
+title: The Broken Chronometer
+trigger: queued
+art: gear
+tags: mystery magic
+chain: timeloop
+scene: An astronomy tower at night, a giant brass chronometer with its gears spinning in reverse, a sleeping first-year slumped beside it with a wand still in hand.
+text: In the astronomy tower, a first-year is asleep beside an enormous brass chronometer, wand still stuck in its winding key. "I just wanted one more day before my exam," says the note on his chest.
+> left: Fix the chronometer (Arcana)
+  check arcana 18:
+    arcana +2
+    renown +4
+    say: You ease the wand out and the gears groan forward. Wednesday arrives like a sneeze. Nobody but you and one mortified first-year ever knows.
+  else:
+    health -5
+    mood -3
+    say: The chronometer bites. It takes you two more Tuesdays and a lot of swearing. But eventually, gloriously, it's Wednesday.
+> right: Teach the first-year to fix it
+  charm +2
+  mood +5
+  say: You show him how. He fixes his own mess, cries a little, and promises never to touch a clock again. Wednesday arrives. He passes his exam.
+
+# ---------------- Around the castle ----------------
+
+@event life_portrait_escape
+title: The Escaped Portrait
+weight: 10
+art: mirror
+tags: magic mystery
+scene: An empty gilded picture frame on a gallery wall, and further down the corridor a painted duchess hiding inside a landscape of a picnic.
+text: An empty frame in the long gallery. The Duchess of Ambry has escaped her portrait and is hiding in a landscape three corridors away, refusing to come back. "That frame," she declares, "is hideous."
+> left: Persuade her back (Charm)
+  check charm 14:
+    renown +3
+    say: You promise to have her frame regilded. She returns, mollified. The caretaker regilds it. You've acquired a duchess who now considers you a personal friend.
+  else:
+    mood -2
+    say: She calls you a peasant and moves to a painting of a shipwreck. She's still there. She says she likes the sea air.
+> right: Leave her in the picnic
+  mood +3
+  say: She seems happier among the sandwiches. So does the picnic. Some arrangements simply work.
+
+@event life_library_cat
+title: The Library Cat
+weight: 10
+art: cat
+tags: home
+scene: An enormous fluffy cat asleep on the exact book a student needs, on a high library shelf, one eye half-open.
+text: The library cat — a vast, ancient beast called Footnote — is asleep on the only copy of the book you need. You have an essay due tomorrow. Footnote has no deadlines.
+> left: Move the cat (Vigor)
+  check vigor 12:
+    grades +3
+    say: You lift Footnote like a sack of warm flour. He allows it, with contempt. You get the book. He gets your chair.
+  else:
+    health -3
+    say: Footnote does not consent to being moved. You now have three long scratches and still no book.
+> right: Bribe the cat
+  gold -2
+  mood +3
+  say: One sardine. Footnote rises like a sultan, stretches, and moves exactly one book to the left. It's enough.
+
+@event life_invent_spell
+title: A Spell of Your Own
+when: arcana >= 18
+weight: 10
+art: sparkle
+tags: magic study
+scene: A student at a desk covered in crossed-out incantations, a tiny spiral of light hovering over the page, an expression of dawning triumph.
+text: Late at night you realise there's a gap — a spell nobody has written yet, just a small one, to make ink dry instantly. You could try to invent it. Inventing spells, Thorne says, is "how most of my former students lost their eyebrows".
+> left: Invent it carefully (Lore)
+  check lore 22:
+    lore +2
+    renown +5
+    say: Three weeks of theory and one perfect evening. The spell works. Thorne grunts and puts your name on the lecture slide for next year. Forever.
+  else:
+    mood -3
+    say: Your spell dries ink instantly. It also dries the paper, the desk and your eyes. You shelve it for now.
+> right: Just try things until something works
+  chance 40:
+    arcana +3
+    renown +3
+    say: Somehow — through chaos and luck — it works. You couldn't explain why under oath. It still counts.
+  else:
+    health -4
+    say: Your eyebrows survive. Your desk does not.
+
+@event life_cursed_umbrella
+title: The Cursed Umbrella
+when: month >= 3 and month <= 7
+weight: 8
+art: rain
+tags: magic
+scene: A student holding a black umbrella under which a tiny private rainstorm is pouring, while the sky outside is perfectly clear.
+text: You borrowed an umbrella from lost property. It's black, elegant and cursed: underneath it, it is always raining. The rest of the world is sunny. You are very wet.
+> left: Break the curse (Arcana)
+  check arcana 14:
+    arcana +1
+    gold +5
+    say: The curse lifts with a soft hiss. The umbrella is now just a very nice umbrella. You sell it to Corvin, who wants it "for drama".
+  else:
+    health -3
+    say: Now it rains sideways.
+> right: Return it to lost property
+  mood +1
+  say: The caretaker takes it back, sighs, and hangs it on a hook labelled "DO NOT". There are six other things on that hook.
+
+@event life_exam_dream
+title: The Exam Dream
+when: month == 3 or month == 4 or month == 9 or month == 10
+weight: 10
+art: bed
+tags: home
+scene: A dream-image: a student in an exam hall in their pyjamas, the exam paper written in a language that keeps changing, a clock with no hands.
+text: You dream you're in the exam hall in your pyjamas. The paper is in a language that keeps changing. The proctor is Bartholomew the goat. You wake at 4am, heart pounding.
+> left: Get up and revise
+  grades +3
+  health -2
+  say: You revise until breakfast. The real exam paper is written in a normal language. You're absurdly relieved.
+> right: Go back to sleep
+  health +2
+  mood +1
+  say: You dream again. This time the goat gives you full marks. You choose to take this as an omen.
+
+@event life_garden_plot
+title: A Patch of Earth
+when: not has(garden_plot) and turn >= 4
+weight: 8
+art: leaf
+tags: nature
+scene: A small square of freshly turned earth behind the greenhouses, a wooden stake with a student's name painted on it, a watering can beside it.
+text: Old Maud is giving out the abandoned plots behind the greenhouses. There's one left: small, weedy and full of rocks. "It's yours if you want it," she says. "Gardens are a lot of work. Most of the work is noticing."
+> left: Take the plot
+  gain garden_plot
+  mood +3
+  say: You spend a whole weekend clearing rocks. By spring, you have lettuces, three violent mandrakes and a strange purple flower nobody can name.
+> right: Leave it for someone else
+  say: A shy first-year takes it and grows giant pumpkins. You feel oddly proud of them.
+
+@event life_pen_pal
+title: A Letter From Thornwick
+when: not has(pen_pal) and turn >= 6
+weight: 8
+art: letter
+tags: social
+scene: A letter with a green Thornwick seal open on a desk, beside a reply half-written in Lumenhold blue ink.
+text: A letter arrives from a stranger at Thornwick Academy — the rival school. "Dear Lumenhold student chosen at random," it begins. "I'm told you're all insufferable. Prove me wrong?"
+> left: Write back
+  gain pen_pal
+  charm +1
+  say: Your reply is four pages long and only slightly insufferable. The answer arrives within a week. You've made a friend in enemy territory.
+> right: Ignore it
+  say: You ignore it. A second letter arrives: "Insufferable AND rude. Noted." You almost reply. Almost.
+
+@event life_three_headed_puppy
+title: A Very Lost Puppy
+weight: 8
+art: paw
+tags: nature danger
+scene: A puppy with three heads sitting in a corridor, one head chewing a shoe, one licking a wall, one howling mournfully.
+text: There is a puppy in the dormitory corridor. It has three heads. One is eating a shoe, one is licking the wall, one is howling. It is very lost and, all three heads agree, very hungry.
+> left: Feed it and find its owner
+  gold -3
+  mood +6
+  say: You follow its owner's frantic shouting to Professor Brask's office. She weeps with relief. The puppy's three heads each lick you once, in strict order.
+> right: Call Professor Brask
+  rel maud +1
+  say: Brask arrives at a run with a lead and three biscuits. "Bad boys," she says fondly. All three heads look deeply ashamed.
+
+@event life_bell_tower
+title: The Midnight Bell
+when: turn >= 4
+weight: 8
+art: bell
+tags: danger social
+scene: A dark bell tower interior, ropes hanging down, a group of students at the bottom daring one of their number to climb.
+text: Tradition: once in your time at Lumenhold, you must ring the old bell at midnight without getting caught. Your dorm has decided tonight is your night.
+> left: Climb and ring it (Guile)
+  check guile 16:
+    renown +5
+    mood +5
+    say: BONG. The whole castle wakes. By the time the prefects reach the tower you're back in bed, innocent and smug.
+  else:
+    gain detention
+    renown +2
+    say: BONG — and Bram is at the bottom of the stairs when you come down. Detention. But you rang it, and everybody heard.
+> right: Decline the dare
+  mood -1
+  say: Someone else rings it instead and becomes a legend. You'll always wonder.
+
+@event life_fog_maze
+title: The Fog Maze
+when: month == 3 or month == 4
+weight: 8
+art: compass
+tags: nature mystery
+scene: The academy grounds swallowed by thick white fog, hedges looming like walls, a lantern glowing faintly ahead.
+text: Fog has come up off the lake so thick you can't see your own feet. The path to the greenhouses has become a maze. Somewhere ahead, someone is calling for help, faintly.
+> left: Follow the voice
+  check vigor 14:
+    renown +3
+    mood +4
+    say: You find a first-year sitting on a bench, completely lost, sixty feet from the door. You walk them in. They tell everyone you saved their life.
+  else:
+    mood -4
+    health -2
+    say: You walk in circles for an hour and end up exactly where you started. The voice was a very clever crow.
+> right: Cast a light and wait
+  arcana +1
+  say: You raise a floating light and wait. One by one, three lost students find their way to it. You feel like a lighthouse.
+
+@event life_wishing_well
+title: The Wishing Well
+weight: 8
+art: coin
+tags: magic money
+scene: An old stone well in the corner of a cloister, coins glinting at the bottom, a carved inscription half-worn away.
+text: In the old cloister there's a wishing well. The inscription says: "ONE COIN, ONE WISH, ONE PRICE." The bottom glitters with three hundred years of coins.
+> left: Throw in a coin and wish
+  gold -1
+  chance 50:
+    mood +6
+    say: You wish for a good month. It is, mostly. Coincidence, probably.
+  else:
+    mood -2
+    say: You wish. The well hiccups and spits your coin back out. Apparently, you can't afford that wish.
+> right: Fish out a few old coins
+  check guile 14:
+    gold +12
+    say: Twelve crowns' worth of antique coins. The well is silent. Disapprovingly silent.
+  else:
+    gold -5
+    mood -3
+    say: The well bites. You lose your own purse in it. ONE PRICE indeed.
+
+@event life_borrowed_broom
+title: The Borrowed Broom
+weight: 8
+art: broom
+tags: danger
+scene: A student clinging to a bucking broom high above the castle, its bristles on fire, a smaller student on the ground waving frantically.
+text: A second-year lends you their broom for an errand. Midway across the lake, you discover why they were so keen to lend it: it is extremely ticklish, and it hates you.
+> left: Wrestle it home (Vigor)
+  check vigor 16:
+    vigor +2
+    say: You land in a heap on the lawn, triumphant and windswept. The broom sulks. The second-year owes you a favour.
+  else:
+    health -6
+    say: You land in the lake. The broom flies home without you, very pleased with itself.
+> right: Soothe it (Charm)
+  check charm 14:
+    charm +1
+    mood +3
+    say: You talk to it gently all the way across. It purrs. Brooms shouldn't purr. Now it follows you around.
+  else:
+    health -4
+    say: It is not soothed. It is, if anything, more ticklish.
+
+@event life_double_trouble
+title: Your Double Is Loose
+when: has(class_illusion) or seen(illusion_mirror_self) > 0
+weight: 6
+art: mask
+tags: magic danger
+scene: A student staring in horror across a crowded corridor at a perfect copy of themselves, cheerfully chatting up a professor.
+text: An illusion of you — one you thought you'd dismissed — is still wandering the castle. It has been to three of your classes, flirted with a prefect, and volunteered you for the choir.
+> left: Catch it (Guile)
+  check guile 14:
+    guile +2
+    say: You corner it in a broom cupboard. It looks at you, shrugs and pops like a bubble. The prefect, however, still expects a date.
+  else:
+    renown +3
+    mood -3
+    say: It escapes, and spends a week as the most charming version of you. People are disappointed when you come back.
+> right: Let it run its course
+  renown +2
+  grades +2
+  say: It attends your lectures and takes better notes than you do. When it fades after a week, you're almost sorry.
+
+@event life_auction
+title: The Lost-Property Auction
+when: gold >= 10
+weight: 8
+art: dice
+tags: money
+scene: A crowded hall, a caretaker with a gavel at a lectern, tables piled with lost scarves, wands, boots and one suspiciously humming box.
+text: Once a year the caretaker auctions off unclaimed lost property. There's a box nobody wants that hums faintly. The bidding starts at two crowns. Nobody's bidding.
+> left: Bid on the humming box
+  gold -6
+  chance 50:
+    gain inspired
+    say: Inside: a music box that plays a different song every time you open it. Each one makes you think of something new.
+  else:
+    gain hiccup_hex
+    say: Inside: a very old, very annoyed hiccup curse, which immediately transfers itself to you.
+> right: Buy a good warm scarf instead
+  gold -3
+  health +3
+  say: A scarf of real Northern wool, slightly singed. It's the warmest thing you've ever owned.
+
+@event life_village_busking
+title: Busking in the Village
+when: has(club_choir) or charm >= 16
+weight: 8
+art: music
+tags: money social
+scene: A cobbled village square, a student singing beside a fountain with an upturned hat at their feet, villagers pausing to listen.
+text: You're short on crowns, and the village square has a fountain, an empty hat and a crowd of shoppers. You do know a few songs.
+> left: Sing your heart out
+  check charm 14:
+    gold +14
+    renown +2
+    say: A small crowd gathers. Someone requests an encore. The hat fills with copper and one silver coin from a weeping old man.
+  else:
+    gold +2
+    mood -2
+    say: Two crowns and a sympathetic look from a dog. Busking is harder than it looks.
+> right: Play the street-magic act instead (Arcana)
+  check arcana 14:
+    gold +16
+    mood +4
+    say: You make doves out of the fountain spray. Children scream with joy. The hat overflows.
+  else:
+    gold +3
+    say: Your doves come out as damp sparrows. People are kind about it.
+
+@event life_moths
+title: A Storm of Moths
+when: month >= 7 and month <= 10
+weight: 6
+art: moon
+tags: nature mystery
+scene: A dormitory room filled with thousands of pale moths circling a single candle, a student standing in the doorway, astonished.
+text: You open your door to find your room full of moths — thousands of them, pale as moonlight, circling your candle in silent spirals. It's eerie. It's also, you can't help noticing, beautiful.
+> left: Open the window and let them go
+  mood +5
+  say: They pour out into the night in a silver river. One stays behind, on your pillow, for a week. You name it Gregory.
+> right: Study them
+  lore +2
+  alchemy +1
+  say: They're luna moths, migrating — and drawn to something in your room. You find it: a crumb of moonpetal on your sleeve. Mystery solved. Mostly.

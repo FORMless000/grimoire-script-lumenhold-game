@@ -1,0 +1,792 @@
+# ============================================================
+#  Academy life — the random pool. Small moments that fill the
+#  month: weather, food, money, mischief, mishaps.
+#  Seasonal ones use `month` (1 Harvestmoon ... 12 Starfall).
+# ============================================================
+
+# ---------------- Around the castle ----------------
+
+@event life_staircase
+title: The Staircase Moves
+art: tower
+tags: magic
+scene: A grand spiral staircase in mid-rotation, a student clinging to the banister as the steps swing toward a different floor.
+text: Halfway up the west staircase, it decides to be somewhere else. You're now heading toward a floor you've never seen, at speed, and you're late for Arcana.
+> left: Hold on and see where it goes
+  lore +1
+  chance 50:
+    gold +8
+    say: It deposits you in a dusty forgotten classroom. In a desk: eight old crowns and a love letter from 1802.
+  else:
+    grades -2
+    say: It takes you to the roof. Then the cellar. Then the roof again. You miss Arcana entirely.
+> right: Jump for the landing
+  check vigor 12:
+    vigor +1
+    say: You leap and land neatly. A passing portrait applauds.
+  else:
+    health -5
+    say: You leap and land, but not neatly. A passing portrait winces.
+
+@event life_mystery_stew
+title: Mystery Stew
+art: meal
+tags: home
+scene: A huge cauldron of grey-green stew in the dining hall, a ladle standing upright in it unaided.
+text: Tonight's dinner is described on the board only as "Stew". It is grey-green. The ladle is standing up by itself. The cook is watching you with hope.
+> left: Eat it bravely
+  chance 60:
+    health +4
+    mood +3
+    say: It's... delicious? Rich, peppery, faintly glowing. You go back for seconds. The cook beams.
+  else:
+    health -6
+    say: It's not delicious. It's not anything a stomach should know about. You spend the night regretting it.
+> right: Toast and jam again
+  mood -1
+  say: You eat toast. The cook looks hurt. You feel guilty all evening.
+
+@event life_lost_wand
+title: Where Is Your Wand?
+art: wand
+tags: magic
+scene: A dormitory turned upside down, clothes everywhere, a student on hands and knees peering under a bed.
+text: Your wand is gone. It was on your desk. Now it isn't. Classes start in twenty minutes.
+> left: Tear the room apart
+  chance 70:
+    say: It's in your boot. Why is it in your boot? You make it to class with seconds to spare.
+  else:
+    grades -3
+    mood -3
+    say: You find it at lunch, inside the pillowcase. You've missed a whole morning.
+> right: Try a summoning charm
+  check arcana 14:
+    arcana +1
+    say: It flies into your hand from inside the wardrobe, offended at having been lost.
+  else:
+    health -3
+    say: Every pencil in the dormitory flies at your face. The wand stays hidden out of spite.
+
+@event life_snoring_roommate
+title: The Snorer
+art: bed
+tags: home
+scene: A dark dormitory, one bed shaking with snores so loud the curtains flutter, another occupant glaring with a pillow over their head.
+text: Your roommate snores like a dragon with a head cold. You haven't slept properly in a week.
+> left: Brew a silencing draught
+  check alchemy 12:
+    health +5
+    alchemy +1
+    say: Perfect silence. Too perfect. Your roommate is now silent even when awake. It wears off by Tuesday.
+  else:
+    health -2
+    say: The draught makes them snore in harmony. In two voices.
+> right: Move to the common room sofa
+  health -2
+  mood -2
+  charm +1
+  say: You sleep on the sofa and meet everyone who comes down at 3am. Some of them are very interesting.
+
+@event life_portrait_gossip
+title: The Portraits Talk
+art: mirror
+tags: mystery
+scene: A long gallery of gilded portraits, painted figures leaning out of their frames toward each other, whispering behind painted hands.
+text: Two portraits in the east gallery are gossiping about a student. Then one of them says your name and they both go suspiciously quiet.
+> left: Bribe them with flattery
+  check charm 12:
+    guile +1
+    lore +1
+    say: Ten minutes of compliments on their brushwork, and they tell you everything. Gossip about half the faculty, too.
+  else:
+    mood -2
+    say: "Flattery," sniffs the duchess, "is so common." They turn their backs. Literally.
+> right: Pretend you didn't hear
+  mood -1
+  say: You walk on. Behind you, the whispering resumes, louder.
+
+@event life_pixies
+title: Pixie Infestation
+art: sparkle
+tags: danger
+scene: A dormitory full of tiny blue winged creatures swinging from curtains, stealing socks and pulling hair.
+text: Someone left a window open and the dormitory is now full of pixies. They're stealing socks, unscrewing bedposts and laughing in very high voices.
+> left: Fight them off
+  check vigor 12:
+    vigor +1
+    renown +2
+    say: You catch nine with a laundry bag. The dorm cheers. The pixies swear at you, colourfully.
+  else:
+    health -4
+    say: You lose. The pixies hang you from the chandelier by your robe. It takes an hour to get down.
+> right: Bribe them with sugar
+  gold -3
+  mood +3
+  say: You lay a trail of sugar cubes out of the window. The pixies follow it, munching, and leave one sock as a tip.
+
+@event life_gargoyle
+title: A Talkative Gargoyle
+art: tower
+tags: magic
+scene: A weathered stone gargoyle on a parapet, one eye open, mouth moving, a student sitting beside it with a sandwich.
+text: The gargoyle above the east door clears its throat as you pass. "You," it rumbles. "You look like someone who'd listen. Nobody listens to gargoyles."
+> left: Hurry along
+  say: "Typical," says the gargoyle. It sulks until spring.
+> right: Sit and listen
+  lore +2
+  mood +2
+  say: It tells you three hundred years of academy gossip, including where the founders hid the good biscuits. You find the biscuits.
+
+@event life_brownies
+title: Help in the Night
+art: house
+tags: magic home
+scene: Tiny bearded figures in aprons tidying a cluttered student desk by moonlight, one darning a sock.
+text: You wake to find your desk tidied, your socks darned and your essay proofread. Brownies. They expect something in return. Traditionally: cream.
+> left: Leave out a bowl of cream
+  gold -2
+  mood +4
+  grades +2
+  say: Your room stays spotless all term. Your essays have suspiciously good spelling.
+> right: Leave them nothing
+  mood -3
+  say: The next morning, every one of your socks is tied in knots. Brownies keep score.
+
+@event life_midnight_snack
+title: Midnight Hunger
+art: meal
+tags: home
+scene: A student in pyjamas tiptoeing past a sleeping prefect toward a door marked KITCHENS, a candle cupped in their hand.
+text: It's midnight and you're starving. The kitchens are three floors down, past a prefect's post.
+> left: Go back to bed hungry
+  health -1
+  say: You dream of sandwiches. Long, detailed, beautiful sandwiches.
+> right: Sneak down (Guile)
+  check guile 12:
+    health +3
+    mood +4
+    say: Cold pie, a pot of custard, a heel of bread. Feast of kings.
+  else:
+    gain detention
+    say: The prefect is awake. You spend a week washing the pots you were trying to raid.
+
+@event life_insomnia
+title: The Ceiling at 3am
+art: moon
+tags: home
+scene: A student lying awake staring at a ceiling where faint painted stars have started slowly moving.
+text: You can't sleep. Your brain has decided to replay every embarrassing thing you've said since you were six.
+> left: Get up and study
+  lore +2
+  health -3
+  say: By dawn you've read three chapters and remembered one of them.
+> right: Brew chamomile and count the painted stars
+  health +2
+  mood +2
+  say: Halfway through counting, the stars start counting back. Then you're asleep.
+
+@event life_morning_run
+title: The Dawn Run
+art: sun
+tags: nature
+when: month <= 3 or month >= 7
+scene: The lakeshore path at dawn, mist on the water, a lone runner's breath steaming, the towers catching the first gold light.
+text: A group of students runs the lakeshore every dawn. They've invited you. It's very early. It's very cold.
+> left: Sleep in
+  mood +2
+  say: You hear them come back, glowing and smug. You are warm and unrepentant.
+> right: Run with them
+  vigor +2
+  health +4
+  mood +2
+  say: You nearly die at the first mile and feel immortal by the third. The lake shines like a coin.
+
+@event life_homework_mountain
+title: The Pile
+art: scroll
+tags: study
+scene: A desk buried under a precarious tower of scrolls and books, a student peeking hopelessly over the top.
+text: Three essays, a potion log, a star chart and a reading list the length of your arm. All due this week. The pile has achieved its own weather.
+> left: Grind through it
+  grades +4
+  health -4
+  mood -3
+  say: You finish at 4am on the last day. Every piece is handed in. You sleep through breakfast.
+> right: Pick what matters, skip the rest
+  gain slacking
+  mood +3
+  say: You hand in two of five and go for a walk. The professors are not pleased. You feel great, temporarily.
+
+@event life_stolen_answers
+title: The Answers
+art: scroll
+tags: study danger
+when: month == 3 or month == 4 or month == 9 or month == 10
+scene: A folded paper being passed under a library table, the faint glow of an examiner's seal on it.
+text: A third-year is selling copies of next week's exam. Ten crowns. "Guaranteed real," he whispers. "Straight from the examiner's desk."
+> left: Walk away
+  mood +1
+  say: Two weeks later, five students who bought copies are suspended. The answers were fake.
+> right: Buy a copy
+  gold -10
+  chance 40:
+    grades +8
+    guile +1
+    say: They're real. You ace it. You also can't quite look the examiner in the eye.
+  else:
+    grades -6
+    gain detention
+    say: They're fake, and planted. You're caught with a copy. Detention, and a very cold letter home.
+
+@event life_backfire
+title: Spell Backfire
+art: sparkle
+tags: magic danger
+scene: A student mid-hiccup, a small firework bursting from their mouth, classmates ducking.
+text: You mispronounce a minor cheering charm in the corridor. Something goes wrong. Every time you hiccup, a tiny firework comes out.
+> left: Go to the infirmary
+  gold -5
+  say: Sister Amaranth cures it in a minute and charges you five crowns. "For the ceiling," she says.
+> right: Live with it
+  gain hiccup_hex
+  renown +2
+  say: You become briefly famous as "the sparkler". It's not the fame you wanted.
+
+@event life_lake_swim
+title: A Swim in the Lake
+art: wave
+tags: nature
+when: month >= 9 or month <= 1
+scene: Students leaping off a wooden jetty into a sparkling lake on a hot afternoon, something large and dark moving far beneath the surface.
+text: It's hot and the whole year has gone down to the jetty. Something large is rumoured to live in the deep part. People are swimming anyway.
+> left: Stay on the jetty
+  mood +2
+  say: You dangle your feet and eat cherries. Something brushes your toe. You keep your feet up after that.
+> right: Dive in
+  health +3
+  mood +6
+  chance 20:
+    flag lake_knows
+    hollow +1
+    say: In the deep part, you open your eyes underwater and see a round door, far below, glowing. Then you need air.
+  else:
+    say: The water's perfect. Something large and friendly swims under you, and you decide not to panic.
+
+@event life_stray_cat
+title: A Cat Moves In
+art: cat
+tags: home
+scene: A scruffy black cat sitting on a dormitory pillow as if it has always lived there, one torn ear, very green eyes.
+text: A black cat with one torn ear is sitting on your pillow. It looks at you as though you are the one trespassing.
+> left: Shoo it out
+  mood -1
+  say: It leaves with enormous dignity and moves in with your neighbour, who spoils it rotten.
+> right: Let it stay
+  mood +5
+  gold -3
+  say: It's called Professor now. It sleeps on your homework. You've never been happier.
+
+@event life_storm_night
+title: The Lights Go Out
+art: bolt
+tags: mystery
+when: month >= 6 and month <= 8
+scene: A dark common room lit only by lightning, students huddled under blankets, one telling a ghost story.
+text: A storm knocks out every light-crystal in the dormitory. The common room fills with students, blankets and somebody's terrible ghost story.
+> left: Tell an even scarier story
+  check charm 12:
+    renown +3
+    mood +4
+    say: Your story is so good that three people sleep with the lights on for a week. You're a legend.
+  else:
+    mood +2
+    say: Your story is not scary. It is, however, accidentally hilarious.
+> right: Light the room with a spell
+  check arcana 12:
+    renown +2
+    arcana +1
+    say: You fill the room with soft floating lights. Someone starts singing. It turns into the best night of term.
+  else:
+    health -2
+    say: You light the sofa. Briefly. The storm seems less frightening after that.
+
+@event life_mirror_talks
+title: The Honest Mirror
+art: mirror
+tags: magic
+scene: A bathroom mirror with a stern painted face in its silvering, frowning at a student mid-toothbrush.
+text: The bathroom mirror has started commenting on your appearance. "Hair," it says this morning. Just: "Hair."
+> left: Ask for its advice
+  charm +2
+  say: It turns out to be an excellent stylist. You look great. You hate that it's right.
+> right: Cover it with a towel
+  mood +1
+  say: It sulks under the towel. Muffled: "Hair."
+
+@event life_prank_war
+title: Prank War
+art: mask
+tags: social
+scene: A corridor ankle-deep in enchanted soap bubbles, two dormitories' worth of students hurling them at each other.
+text: The dormitory across the corridor turned your door into a goat. The goat is fine. Honour, however, demands retaliation.
+> left: Rise above it
+  mood -2
+  say: You take the high road. The goat eats your homework. You let it.
+> right: Retaliate (Guile)
+  check guile 14:
+    renown +4
+    mood +5
+    say: You fill their dorm with a thousand singing bubbles. They concede by dawn.
+  else:
+    gain detention
+    renown +1
+    say: You're caught carrying a crate of bubbles. Detention, but the goat seems proud of you.
+
+@event life_mail_owl
+title: The Wrong Letter
+art: letter
+tags: mystery
+scene: A ruffled delivery owl dropping a scented pink envelope onto a breakfast plate, a student looking up in confusion.
+text: A delivery owl drops a scented pink letter in your porridge. It's addressed to someone else. It's a love letter. It's very, very passionate.
+> left: Deliver it to its owner
+  charm +1
+  renown +1
+  say: The recipient goes crimson and thanks you. Two weeks later, they're holding hands with the sender in the dining hall.
+> right: Read it first
+  guile +1
+  mood +3
+  say: You read it. You will never be able to look the potions professor in the eye again.
+
+# ---------------- Money ----------------
+
+@event life_money_from_home
+title: A Parcel From Home
+art: pouch
+tags: home money
+when: turn >= 2
+scene: A brown paper parcel tied with string on a dormitory bed, a knitted scarf, a jar of jam and a small coin purse spilling out.
+text: A parcel from home: a knitted scarf, a jar of jam, a note telling you to eat vegetables, and a small purse of coins.
+> left: Save the money
+  gold +15
+  mood +3
+  say: You tuck it away. The jam lasts six days.
+> right: Spend it on a treat for your friends
+  gold +5
+  mood +6
+  charm +1
+  say: Cake from the village for everyone. You're popular for an entire afternoon.
+
+@event life_found_purse
+title: A Purse in the Grass
+art: pouch
+tags: money
+scene: A velvet purse lying in the long grass beside a path, coins glinting at its open mouth, initials embroidered on it.
+text: A fat velvet purse lies in the grass by the path. Forty crowns at least. Embroidered initials: A.T.
+> left: Return it to its owner
+  rel thorne +6
+  renown +2
+  say: A.T. turns out to be Aldric Thorne. He takes the purse and stares at you a long moment. "Honest," he says. It sounds like a diagnosis.
+> right: Keep it
+  gold +40
+  guile +1
+  mood -2
+  say: Forty crowns richer. A few days later, Thorne mentions in class that he lost something. He looks at no one in particular.
+
+@event life_peddler
+title: The Travelling Peddler
+art: lantern
+tags: money magic
+scene: A gaudy painted wagon at the academy gates, hung with lanterns and trinkets, a peddler with a gold tooth grinning.
+text: A peddler's wagon has parked by the gates. "Lucky charms! Genuine article! Twenty-five crowns, and fortune follows you for a season!"
+> left: Buy a lucky charm
+  when: gold >= 25
+  hint: 25 gold
+  gold -25
+  chance 50:
+    gain inspired
+    mood +5
+    say: It's a real one. Things go right all month. You start talking to it.
+  else:
+    mood -3
+    say: It turns your neck green. Fortune does not follow you. The peddler is long gone.
+> right: Just browse
+  mood +2
+  say: You buy nothing and enjoy a sugared apple and the peddler's outrageous stories.
+
+@event life_bookshop
+title: Sale at Grimsby's
+art: book
+tags: money study
+scene: A crooked bookshop with books stacked to the ceiling, a hand-painted sign in the window reading HALF OFF, MOSTLY.
+text: Grimsby's Books is having a sale. An old copy of "Advanced Arcane Theory" for twenty crowns. Normally fifty. It's annotated, apparently, by a famous wizard.
+> left: Buy it
+  when: gold >= 20
+  hint: 20 gold
+  gold -20
+  lore +3
+  arcana +2
+  say: The annotations are brilliant, rude and occasionally about the author's divorce. You learn a great deal.
+> right: Leave it
+  say: You walk away. You think about it for weeks.
+
+@event life_new_robes
+title: Shabby Robes
+art: crown
+tags: money social
+when: renown >= 10
+scene: A student in a hall mirror holding up a fraying sleeve, a tailor's flyer in their other hand.
+text: Your robes are fraying at every hem. Someone at dinner called them "vintage". It was not a compliment.
+> left: Patch them yourself
+  mood -2
+  charm +1
+  say: Your stitching is crooked but cheerful. Some people start copying it.
+> right: Buy new robes (30 gold)
+  when: gold >= 30
+  hint: 30 gold
+  gold -30
+  renown +4
+  charm +2
+  say: Midnight-blue wool, silver trim. People actually turn to look. You walk differently all week.
+
+@event life_card_game
+title: A Game of Wizard's Hand
+art: cards
+tags: money social
+scene: A smoky corner of the common room, students around a low table with cards and coins, one card floating and changing face.
+text: A late-night game of Wizard's Hand. The cards change faces when no one's looking. The pot is thirty crowns. The upper-years look hungry.
+> left: Play (Guile)
+  check guile 16:
+    gold +30
+    say: You read every bluff and keep a straight face. Thirty crowns and a reputation.
+  else:
+    gold -15
+    say: You lose fifteen crowns and the upper-years' respect, in that order.
+> right: Watch and learn
+  guile +1
+  say: You learn more watching than you would have playing. Mostly about who cheats.
+
+@event life_essay_prize
+title: The Essay Prize
+art: feather
+tags: study money
+scene: A brass plaque on a noticeboard announcing THE LUMEN ESSAY PRIZE — 50 CROWNS, a quill pinned beneath it.
+text: The Lumen Essay Prize: fifty crowns for the best essay on "Magic and Duty". The deadline is Friday. You have an idea already.
+> left: Enter
+  check lore 16:
+    gold +50
+    renown +5
+    say: You win. Your essay is read aloud at dinner. You don't know where to look.
+  else:
+    lore +1
+    say: You don't win, but the judges' notes are glowing. Next year, maybe.
+> right: Skip it
+  say: The winner reads their essay aloud at dinner. Yours would have been better. Probably.
+
+@event life_charity
+title: The Winter Fund
+art: coin
+tags: money social
+when: month >= 3 and month <= 5
+scene: A collection jar shaped like a lantern on the dining hall table, half full of coins, a hand-lettered sign: FOR THE VILLAGE WINTER FUND.
+text: The village winter fund is collecting for families who can't afford fuel this winter. The jar is half full.
+> left: Donate twenty crowns
+  when: gold >= 20
+  hint: 20 gold
+  gold -20
+  renown +3
+  mood +5
+  say: Your name goes on a little list by the jar. You feel warm, which is the point.
+> right: Walk past
+  say: You walk past. The jar fills anyway. You think about it on cold nights.
+
+@event life_shady_offer
+title: A Quiet Job
+art: mask
+tags: money danger
+scene: A hooded figure in an alley behind the village tavern holding out a sealed envelope, a purse visible in their other hand.
+text: A hooded figure behind the tavern: "Deliver this envelope to the boathouse at midnight. Don't open it. Thirty crowns." The envelope is warm.
+> left: Refuse
+  say: The figure melts into the dark. The next morning, someone's boat is missing.
+> right: Do the job
+  gold +30
+  chance 40:
+    gain watched
+    say: You make the drop. Bram is watching from the boathouse window. He writes something down.
+  else:
+    guile +1
+    say: You make the drop. Nobody sees. Thirty crowns, and a slightly cold feeling in your stomach.
+
+# ---------------- Body & mind ----------------
+
+@event life_food_poisoning
+title: The Fish Was Off
+art: meal
+tags: crisis
+scene: A student curled on a dormitory bed clutching their stomach, a half-eaten fish pie on the bedside table.
+text: The fish pie at dinner was a mistake. Your stomach is staging a revolution.
+> left: Ride it out
+  health -8
+  mood -3
+  say: A miserable night. You never look at fish pie again.
+> right: Get a tonic from the infirmary
+  gold -5
+  health -3
+  say: The tonic tastes like old pennies, but it works.
+
+@event life_self_doubt
+title: Imposter
+art: mirror
+tags: home
+scene: A student sitting alone on the edge of a fountain at night, staring at their reflection broken up by ripples.
+text: Everyone around you seems to belong here more than you do. They cast faster, learn quicker, laugh easier. Maybe the letter was a mistake.
+> left: Write down everything you've learned
+  mood +6
+  lore +1
+  say: The list is longer than you expected. Much longer. You pin it above your bed.
+> right: Talk to someone about it
+  if bonds(friend) + bonds(close) + bonds(partner) > 0:
+    mood +10
+    say: Your friend laughs — not at you. "You? Everyone thinks you're the one who belongs." It helps more than you can say.
+  else:
+    mood +4
+    say: You talk to the night porter. He tells you everyone feels this way. You decide to believe him.
+
+@event life_sleepwalking
+title: Sleepwalking
+art: moon
+tags: mystery
+scene: A student in pyjamas standing on a moonlit battlement, eyes closed, one foot raised over the edge, an owl watching.
+text: You wake up on the battlements in your pyjamas, at the very edge, with no memory of how you got there. Your feet are wet with lake water.
+> left: Tell Sister Amaranth
+  gold -5
+  health +2
+  say: A sleeping draught and a stern warning. It doesn't happen again.
+> right: Keep it to yourself
+  mood -3
+  chance 40:
+    hollow +1
+    flag lake_knows
+    say: It happens twice more. Each time you're facing the lake. Each time, you're a little closer to the water.
+  else:
+    say: It doesn't happen again. You start locking your door from the inside, just in case.
+
+@event life_quiet_afternoon
+title: A Quiet Afternoon
+art: leaf
+tags: nature
+scene: A student lying in the long grass under an oak tree, a book open on their chest, clouds drifting above the towers.
+text: For once, nothing is due, nobody needs you, and the sun is out. A whole afternoon, unclaimed.
+> left: Nap under the oak tree
+  health +6
+  mood +5
+  say: You wake to find a bird sitting on your book. It seems content. So are you.
+> right: Practise spells in the meadow
+  arcana +2
+  mood +2
+  say: You make dandelion seeds dance in spirals for an hour. Nobody sees. It's perfect.
+
+@event life_injury_stairs
+title: The Trick Step
+art: cross
+tags: danger
+scene: A stone staircase with one step glowing faintly, a student mid-fall, books flying everywhere.
+text: The ninth step on the north stair is a trick step. Everyone knows. You forgot. Your leg sinks to the knee and the stair holds on.
+> left: Wait for someone to help
+  mood -3
+  grades -1
+  say: Forty minutes later, a first-year pulls you out. You're late for everything.
+> right: Wrench yourself free
+  check vigor 12:
+    vigor +1
+    say: You pull free with a pop. Your shoe stays in the stair forever.
+  else:
+    gain injured
+    health -4
+    say: Something in your knee goes click. Not a good click.
+
+@event life_lake_fever
+title: Lake Fever Season
+art: rain
+tags: crisis
+when: month >= 3 and month <= 6
+scene: A dormitory where half the beds hold sniffling students with faintly blue-glowing noses, tissues everywhere.
+text: Half your dormitory has Lake Fever. Noses are glowing blue. You feel a tickle in your throat.
+> left: Dose up on Maud's tea
+  if met(maud):
+    health +3
+    say: Maud's lemon-and-thunder tea keeps you upright through the whole outbreak.
+  else:
+    chance 50:
+      gain sick
+      say: The tea from the kitchens isn't the same. Your nose starts glowing on Thursday.
+    else:
+      say: You dodge it. Somehow.
+> right: Keep going as normal
+  chance 60:
+    gain sick
+    say: You keep going as normal for exactly two days.
+  else:
+    vigor +1
+    say: Iron constitution. You sail through. Everyone hates you a little.
+
+# ---------------- Seasons ----------------
+
+@event life_first_snow
+title: First Snow
+art: snow
+tags: nature festival
+when: month == 4 or month == 5
+scene: The academy courtyard blanketed in fresh snow, students mid-snowball fight, a snowman wearing a professor's hat.
+text: The first snow of winter falls overnight and the whole academy wakes up giddy. Classes are optional, officially. Unofficially, they're cancelled by snowball.
+> left: Join the snowball war
+  mood +7
+  vigor +1
+  chance 30:
+    health -3
+    say: You take a snowball to the face from the headmistress herself. Her aim is terrifying.
+  else:
+    say: Your side wins. You build a snow-fort that lasts until Thawmoon.
+> right: Hot chocolate by the fire
+  mood +5
+  health +2
+  say: You watch from the window, warm and smug, while the snowballs fly.
+
+@event life_spring_cleaning
+title: Spring Cleaning
+art: broom
+tags: home
+when: month == 7 or month == 8
+scene: A dormitory with every window thrown open, brooms sweeping by themselves, dust swirling in sunbeams.
+text: Spring cleaning. The brooms are enchanted, but the enchantment needs supervising. Your dorm's brooms have formed a union.
+> left: Negotiate with the brooms (Charm)
+  check charm 12:
+    mood +4
+    say: You agree to one day off a week and a polish. The dorm sparkles.
+  else:
+    health -3
+    say: The brooms do not accept your terms. They sweep you into a cupboard.
+> right: Clean by hand
+  vigor +1
+  mood +2
+  say: An afternoon of scrubbing. It's oddly satisfying. You find three lost quills and a sandwich from Thawmoon.
+
+@event life_summer_heat
+title: The Heat
+art: sun
+tags: nature
+when: month == 10 or month == 11 or month == 12
+scene: Students lying flat on the cool stone floor of a shaded colloquy, fanning themselves with exam papers.
+text: The heat is unbearable. Even the gargoyles are sweating. The lake is crowded, the library stifling, the dormitories ovens.
+> left: Cast a cooling charm on your room
+  check arcana 12:
+    mood +5
+    renown +2
+    say: Your room becomes an icebox. People pay to visit. You let them for free. Mostly.
+  else:
+    mood -2
+    say: You make it colder. Briefly. Then hotter. Then it rains inside.
+> right: Sleep on the roof
+  mood +3
+  say: You sleep under the stars with half the dormitory. It's the best idea anyone's had all year.
+
+@event life_harvest_festival
+title: The Harvest Feast
+trigger: auto
+repeat: 12
+art: meal
+tags: festival
+when: month == 1 and turn > 1
+scene: Long tables groaning under pies and roast vegetables, candles floating above, a giant pumpkin carved like the headmistress.
+text: The Harvest Feast: pies the size of cartwheels, cider, and a pumpkin carved to look like the headmistress, which she pretends not to notice.
+> left: Eat until you can't move
+  health +4
+  mood +6
+  say: You eat three helpings of everything. You're carried back to the dorm by friends. Worth it.
+> right: Help in the kitchens for extra pay
+  gold +12
+  charm +1
+  say: You serve pie to the entire academy. The cooks slip you coins and a whole pie of your own.
+
+@event life_rival_academy
+title: Visitors From Thornwick
+art: shield
+tags: rival social
+when: turn >= 6
+scene: A delegation of students in green robes marching through the gates, noses raised, a Lumenhold crowd watching suspiciously.
+text: A delegation from Thornwick Academy is visiting. Their students are smug, polished and very loudly unimpressed with Lumenhold's plumbing.
+> left: Be a gracious host
+  charm +2
+  renown +1
+  say: You show them the observatory. One of them admits, grudgingly, that it's better than theirs.
+> right: Defend Lumenhold's honour (Arcana)
+  check arcana 16:
+    renown +6
+    say: You challenge their best to a friendly duel and win. The Thornwick students are quieter at dinner.
+  else:
+    renown -3
+    health -4
+    say: You challenge their best to a friendly duel and lose, quite unfriendly. Thornwick will be insufferable.
+
+@event life_lost_firstyear
+title: A Lost First-Year
+art: compass
+tags: social
+when: month <= 3
+scene: A tiny first-year in enormous robes standing in the middle of a junction of five identical corridors, clutching a timetable upside down.
+text: A tiny first-year is standing in the middle of the corridor, clutching an upside-down timetable and trying very hard not to cry.
+> left: Point the way and hurry on
+  say: You point. They go the wrong way anyway. You hope they're all right.
+> right: Walk them to class
+  mood +4
+  grades -1
+  charm +1
+  say: You walk them all the way and they talk the entire time. You're late, but they've decided you're their hero.
+
+@event life_frog_escape
+title: The Frogs Are Out
+art: frog
+tags: danger
+scene: A potions classroom overrun by dozens of hopping green frogs, one sitting smugly on the professor's desk.
+text: Someone knocked over the frog crate in Potions. Thirty frogs are loose. One has climbed into the professor's hat. He has not noticed yet.
+> left: Help round them up
+  vigor +1
+  grades +2
+  say: You catch eleven, a personal best. The professor finds the hat frog at dinner. You were not involved.
+> right: Quietly let a few escape out the window
+  mood +4
+  guile +1
+  say: Five frogs hop to freedom in the lake. You feel like a liberator.
+
+@event life_fortune_teller
+title: The Village Fortune-Teller
+art: eye
+tags: mystery
+scene: A beaded doorway into a tiny dim tent, an old woman with a crystal ball and too many rings beckoning.
+text: In the village, an old fortune-teller beckons you into her tent. "Two crowns for your future, dearie. Five for a good one."
+> left: Pay two crowns
+  gold -2
+  chance 50:
+    mood +3
+    say: "You will meet a tall stranger." You already have. Several. It's an academy.
+  else:
+    mood -2
+    say: "Beware of water." She won't say more. You think about the lake a lot.
+> right: Pay five crowns
+  gold -5
+  mood +5
+  say: Your future is wonderful. She's very specific. You are fairly sure she's making it up, and you don't care.
+
+@event life_volunteer
+title: Clean-Up Duty
+art: broom
+tags: home
+scene: Students in rolled-up sleeves raking leaves on the great lawn, a groundskeeper directing them with a pitchfork.
+text: After the storm, the grounds are a wreck. Volunteers needed to help clear branches and rebuild the hen-house. No pay. Lots of mud.
+> left: Volunteer
+  vigor +1
+  mood +3
+  rel maud +5
+  say: A long day of mud and laughter. An old woman in a straw hat brings everyone cocoa and remembers your name.
+> right: Stay in and study
+  grades +2
+  say: You study through the shouting and hammering outside. The hen-house is very nice when it's done.

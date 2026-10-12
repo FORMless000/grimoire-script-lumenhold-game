@@ -1,0 +1,948 @@
+# ============================================================
+#  Character events — fellow students.
+#  Intros are `trigger: random` (they introduce the NPC).
+#  Everything else is `trigger: social`: drawn from the monthly
+#  social slot, only once the NPC has been met.
+#  Romance arc per character: spark (generic) -> love >= 35 ->
+#  confession -> partner events. See social.grim for generic ones.
+# ============================================================
+
+# ================= LYRA VANESHADE =================
+
+@event lyra_intro
+title: The Last Copy
+actor: lyra
+when: not met(lyra) and turn >= 2
+weight: 14
+art: book
+tags: social rival
+scene: Two hands reaching for the same red-bound book on a library shelf; one hand wears a signet ring with a flame crest.
+text: You reach for the last copy of "Foundations of Flame" and a ringed hand gets there first. "I need it more," says a tall girl with crimson hair, not looking at you. "You'll only underline the wrong bits."
+> left: Let her have it
+  meet lyra
+  rel lyra +2
+  say: "At least you know your place," she says, which is somehow worse than rudeness. Lyra Vaneshade. Everyone knows the name.
+> right: Argue for it
+  meet lyra
+  check charm 12:
+    rel lyra +6
+    say: You quote chapter three at her. She raises an eyebrow, then hands you the book. "Fine. Return it underlined correctly."
+  else:
+    rel lyra -4
+    say: She wins the argument in four sentences and leaves with the book. You think of the perfect comeback that night.
+
+@event lyra_letter
+title: A Letter With a Black Seal
+trigger: social
+actor: lyra
+when: rel(lyra) >= 10
+weight: 12
+art: letter
+tags: social
+scene: A girl sitting on a window seat in an empty corridor, crushing a letter with a black wax seal in her fist, face turned away.
+text: You find Lyra on a window seat with a crumpled letter. Black seal. Her family's. She's not crying; Vaneshades don't. But she's not quite not crying either.
+> left: Pretend you didn't see
+  say: You walk past. Later, she's flawless again, as if nothing happened. Maybe nothing did.
+> right: Sit down beside her
+  rel lyra +10
+  love lyra +4
+  flag lyra_vulnerable
+  say: "Second place," she says eventually. "I came second in the Winter Trials. My mother wants to know who beat me." She almost laughs. "It's always someone."
+
+@event lyra_study_rivalry
+title: Top of the Class
+trigger: social
+actor: lyra
+when: rel(lyra) > -40
+weight: 10
+art: scroll
+tags: social study rival
+scene: Two students at opposite ends of a long library table, surrounded by towers of books, glaring over the tops of them.
+text: The professors have posted rankings. Lyra is first. You're close enough to see the back of her head. She notices you noticing.
+> left: Suggest studying together
+  lore +2
+  rel lyra +5
+  say: "Together?" She considers this like a foreign custom. Then she pulls out a chair. She's an excellent, merciless study partner.
+> right: Beat her outright
+  check lore 22:
+    grades +6
+    rel lyra +3
+    renown +3
+    say: Next rankings: you're first. Lyra stares at the list for a long time. Then she finds you and says, "Good." She means it.
+  else:
+    grades +2
+    rel lyra -2
+    say: You study until your eyes bleed and come third. Lyra is still first. She doesn't gloat. That's worse.
+
+@event lyra_family_gala
+title: The Vaneshade Winter Gala
+trigger: social
+actor: lyra
+when: rel(lyra) >= 30 and month >= 3 and month <= 6
+weight: 12
+art: crown
+tags: social romance
+scene: A glittering ballroom in a noble house, candles floating in mid-air, a tall woman in crimson watching the crowd like a hawk.
+text: "My family's winter gala," Lyra says, too casually. "I need a guest who won't embarrass me. You'll do. Probably. You'll need proper clothes."
+> left: Decline
+  rel lyra -3
+  say: "Of course." A pause. "It doesn't matter." It clearly does.
+> right: Go with her (20 gold for clothes)
+  gold -20
+  charm +2
+  renown +4
+  love lyra +6
+  rel lyra +6
+  chance 40:
+    mood -4
+    say: Lyra's mother asks who your parents are, and then asks no further questions at all. Lyra squeezes your hand under the table, hard.
+  else:
+    mood +6
+    say: You dance, you charm a duke, you don't spill anything. In the carriage home, Lyra falls asleep on your shoulder.
+
+@event lyra_confession
+title: Lyra Doesn't Lose
+trigger: social
+actor: lyra
+when: love(lyra) >= 35 and rel(lyra) >= 25 and bond(lyra) != "partner"
+weight: 30
+art: flame
+tags: romance
+scene: A girl with crimson hair standing very close in a practice ring at dusk, sparks still drifting from her wand, cheeks flushed.
+text: After practice, Lyra doesn't leave. "I don't lose," she says, staring at the scorch marks. "I don't. But I think — " She stops. Starts again. "I think I've lost to you. Say something before I set something on fire."
+> left: Let her down gently
+  love lyra -20
+  rel lyra +2
+  say: She nods, sharp and quick. "Understood." She practises alone for a month. Then one day she nods to you in the corridor, and it's almost all right.
+> right: Kiss her
+  bond lyra partner
+  love lyra +15
+  mood +10
+  say: Nothing catches fire. Well. Something does, but it's only the practice dummy, and neither of you notices for a while.
+
+@event lyra_family_ultimatum
+title: The Ultimatum
+trigger: social
+actor: lyra
+when: bond(lyra) == "partner" and turn >= 14
+weight: 18
+art: crown
+tags: romance crisis
+scene: Lyra holding a letter with a black seal, her other hand clenched around a ring she has just pulled off.
+text: Another black-sealed letter. Lyra reads it twice and goes white. "My mother has found out about us. End it, she says, or she ends my inheritance." She looks at you. "Tell me what to do."
+> left: "Choose yourself, not them."
+  check charm 22 - love(lyra) / 5:
+    rel lyra +10
+    love lyra +10
+    flag lyra_free
+    say: She tears the letter in half. Then in quarters. Then she sets the quarters on fire and laughs like she hasn't in years.
+  else:
+    rel lyra -5
+    love lyra -10
+    mood -6
+    say: "Easy for you to say," she snaps. She doesn't mean it. She also doesn't take it back.
+> right: Step back so she doesn't lose everything
+  bond lyra ex
+  gain heartbroken
+  rel lyra +5
+  say: You end it before she has to. She doesn't argue. That's how you know how much it costs her.
+
+@event lyra_rival_sabotage
+title: Sabotage in Class
+trigger: social
+actor: lyra
+when: bond(lyra) == "rival" and rel(lyra) <= -10
+weight: 12
+art: potion
+tags: rival
+scene: A cauldron spitting black smoke, a crimson-haired student walking away with a tiny vial hidden in her sleeve.
+text: Your perfect potion turns black and starts screaming. Across the room, Lyra is very carefully not looking at you.
+> left: Retaliate (Guile)
+  check guile 16:
+    rel lyra -4
+    renown +3
+    say: Next lesson, her wand produces only bubbles. Pink ones. She knows. You both know. It's war. It's sort of fun.
+  else:
+    gain detention
+    rel lyra -6
+    say: You're caught slipping something into her bag. She looks genuinely delighted.
+> right: Confront her directly
+  rel lyra +6
+  say: "That was beneath you." She flushes. "...Yes. It was." The next day there's a perfect replacement potion on your desk.
+
+@event lyra_burnout
+title: Lyra Falls
+trigger: social
+actor: lyra
+when: rel(lyra) >= 20 and year >= 2
+weight: 10
+art: cross
+tags: social
+scene: A girl collapsed across a library desk among scattered notes, quill still in hand, candle burned down to nothing.
+text: You find Lyra face-down on a library desk at dawn, not asleep — out cold. She's been studying for three days straight. "Don't tell anyone," she mumbles when she comes round. "Mother can't know."
+> left: Take her to the infirmary anyway
+  rel lyra -3
+  love lyra +2
+  say: She's furious. Then she sleeps for nineteen hours. When she wakes up, she says, quietly, "Thank you."
+> right: Cover for her and make her rest
+  rel lyra +8
+  grades -2
+  say: You tell her professors she has a cold and sit by her door with your homework. She sleeps. You keep watch.
+
+# ================= TOBIAS FENNICK =================
+
+@event tobias_intro
+title: The Lost Boy
+actor: tobias
+when: not met(tobias) and turn >= 2
+weight: 14
+art: compass
+tags: social
+scene: A large, gentle-faced boy leading a crying first-year by the hand down the wrong corridor, both very lost.
+text: A big, broad-shouldered boy is leading a crying first-year through the corridors. "Don't worry, I know exactly where the infirmary is," he says, and walks confidently into a broom cupboard.
+> left: Point them the right way
+  meet tobias
+  rel tobias +4
+  say: "Ah. Left, you say. Right. I mean, correct." He grins, enormous and sheepish. "Tobias. Turnip scholarship. Thanks."
+> right: Walk with them
+  meet tobias
+  rel tobias +7
+  mood +3
+  say: You end up taking the scenic route, and the first-year stops crying because Tobias is telling a very long story about a goat.
+
+@event tobias_homesick
+title: Homesick
+trigger: social
+actor: tobias
+when: rel(tobias) >= 10
+weight: 12
+art: leaf
+tags: social nature
+scene: A dormitory windowsill crowded with clay pots of seedlings, a big boy watering them with a tiny can.
+text: Tobias has gone quiet. He's planted seedlings in every cup in the common room. "Harvest at home," he says. "First one I've missed. Ma's doing it alone."
+> left: Cheer him up with a joke
+  rel tobias +4
+  say: Your joke is terrible. He laughs anyway, the big rumbling laugh, and that seems to help.
+> right: Help him build a window garden
+  rel tobias +9
+  alchemy +1
+  mood +3
+  say: By the end of the week the common room smells of tomato leaves. Tobias whistles while he waters them.
+
+@event tobias_bad_harvest
+title: The Harvest Failed
+trigger: social
+actor: tobias
+when: rel(tobias) >= 25 and turn >= 8 and not flag(tobias_harvest_done)
+weight: 14
+art: rain
+tags: social money
+scene: A boy packing a battered trunk in an empty dormitory, a letter with smudged handwriting open on the bed.
+text: Tobias is packing. Blight took the harvest. His family needs money, and hands. "Thirty crowns would get them through winter," he says, not asking. "But I haven't got thirty crowns. I've got two arms."
+> left: Persuade him to stay and find work here
+  flag tobias_harvest_done
+  check charm 16:
+    rel tobias +8
+    say: You walk him to the job board. He signs up for double shifts at the stables and sends every crown home. He stays.
+  else:
+    rel tobias +2
+    mood -4
+    say: He listens, nods, and takes the barge in the morning. He's back in two months, thinner and quieter.
+> right: Give him thirty crowns
+  when: gold >= 30
+  flag tobias_harvest_done
+  gold -30
+  rel tobias +16
+  love tobias +4
+  say: He tries to refuse three times. Then he hugs you so hard your spine cracks. "I'll pay you back. Every crown. Every one."
+  queue tobias_repays in 6
+
+@event tobias_repays
+title: Every Crown
+trigger: queued
+actor: tobias
+art: pouch
+tags: social money
+scene: A clumsy hand-stitched pouch of coins and a jar of honey left on a dormitory pillow.
+text: A lumpy, hand-stitched pouch on your pillow: thirty crowns exactly, in small coins. And a jar of honey from home. A note in big, careful letters: "TOLD YOU. — T."
+> ok: Smile
+  gold +30
+  rel tobias +5
+  mood +5
+
+@event tobias_godparent
+title: The Mandrake Baby
+trigger: social
+actor: tobias
+when: rel(tobias) >= 15
+weight: 10
+art: leaf
+tags: social nature
+scene: A tiny mandrake in a pot wearing a knitted hat, a beaming boy presenting it like a newborn.
+text: Tobias presents a flowerpot containing a very small mandrake in a knitted hat. "This is Gerald," he says. "I'd like you to be his godparent." Gerald screams softly.
+> left: Politely decline
+  rel tobias -1
+  say: "No pressure," says Tobias, visibly pressured. Gerald glares at you from under his hat.
+> right: Accept with honour
+  rel tobias +7
+  mood +5
+  alchemy +1
+  say: You are now Gerald's godparent. Gerald bites you. Tobias says this means Gerald loves you.
+
+@event tobias_bullied
+title: Tobias and the Prefect
+trigger: social
+actor: tobias
+when: met(bram) and rel(tobias) >= 5
+weight: 10
+art: shield
+tags: social rival
+scene: A burly prefect mocking a big farm boy in a crowded corridor, students sniggering, the boy's ears bright red.
+text: Bram is doing an impression of Tobias's accent in the corridor. People are laughing. Tobias is pretending not to hear, ears burning red.
+> left: Stay out of it
+  rel tobias -4
+  say: Tobias doesn't mention it. He doesn't sit with you at dinner, either.
+> right: Step in
+  rel tobias +10
+  rel bram -8
+  check charm 18:
+    renown +3
+    say: "Funny," you say. "Do your father next." The laughter turns on Bram. He stalks off. Tobias stares at you in awe.
+  else:
+    gain watched
+    say: Bram turns his attention to you instead, with interest. Tobias brings you a pie later. A whole pie.
+
+@event tobias_confession
+title: A Confession, With Vegetables
+trigger: social
+actor: tobias
+when: love(tobias) >= 35 and rel(tobias) >= 25 and bond(tobias) != "partner"
+weight: 30
+art: heart
+tags: romance
+scene: A big boy holding out a perfect pumpkin like an offering in a greenhouse, cheeks scarlet.
+text: Tobias corners you in the greenhouse holding a very large pumpkin. "I grew this," he says. "For you. It's the best one. I didn't know how else to — I like you. Like that. I've practised this on the pumpkin. Sorry."
+> left: Let him down gently
+  love tobias -20
+  rel tobias +3
+  say: He nods a lot. "That's all right. That's fine. You can still have the pumpkin." You keep it until it rots, out of loyalty.
+> right: Say yes
+  bond tobias partner
+  love tobias +15
+  mood +10
+  say: He drops the pumpkin. It's fine; pumpkins are sturdy. So, it turns out, are his hugs.
+
+@event tobias_picnic
+title: A Picnic in the Orchard
+trigger: social
+actor: tobias
+when: bond(tobias) == "partner" and month >= 7 and month <= 10
+weight: 14
+repeat: 10
+art: tree
+tags: romance nature
+scene: A checked blanket under blossoming apple trees, a basket of bread and cheese, two students lying in the dappled light.
+text: Tobias has packed a picnic: bread he baked, cheese he begged from the kitchens, apples from the orchard he has befriended. "No exams for six hours," he announces. "I checked."
+> left: Bring your books anyway
+  lore +2
+  love tobias -2
+  say: You study on the blanket. He falls asleep with his head in your lap. It's still lovely.
+> right: Leave everything behind
+  mood +10
+  health +4
+  love tobias +5
+  say: The afternoon goes golden and slow. You can't remember the last time you didn't think about grades.
+
+# ================= SERAPHINE HALE =================
+
+@event seraphine_intro
+title: Your Left Shoe
+actor: seraphine
+when: not met(seraphine) and turn >= 2
+weight: 12
+art: eye
+tags: social mystery
+scene: A slight girl with silver-grey eyes and a scarf of stars passing in a corridor, pointing absently at someone's feet.
+text: A girl drifts past you in the corridor and says, without stopping, "You're going to lose your left shoe today. Don't worry, it's under the stairs in the east wing."
+> left: Ignore her
+  meet seraphine
+  say: That afternoon a staircase moves and eats your left shoe. It is, eventually, under the stairs in the east wing.
+> right: Ask how she knows
+  meet seraphine
+  rel seraphine +6
+  say: "I don't know things," she says. "Things know me." Then: "Seraphine. You'll want the shoe back by four." You get it back at 3:58.
+
+@event seraphine_tarot
+title: The Cards
+trigger: social
+actor: seraphine
+when: rel(seraphine) >= 5
+weight: 12
+art: cards
+tags: social mystery
+scene: A tarot spread on a velvet cloth in candlelight, a girl's pale fingers turning over a card showing a lightning-struck tower.
+text: Seraphine shuffles a battered tarot deck. "One card," she says. "For you. Only if you want it. They're quite rude sometimes."
+> left: Draw a card
+  chance 50:
+    mood +5
+    renown +1
+    say: The Star. "Hope," she says, delighted. "And someone's going to tell you a secret. Oh — it's me. I like you." She blushes.
+    rel seraphine +5
+  else:
+    mood -3
+    say: The Tower. She looks at it a long time. "It's fine," she says. "Towers fall. That's what they're for."
+    rel seraphine +3
+> right: Decline
+  rel seraphine +2
+  say: "Good," she says, putting the deck away. "Knowing is overrated."
+
+@event seraphine_lake_vision
+title: She Walks Into the Lake
+trigger: social
+actor: seraphine
+when: rel(seraphine) >= 10 and month >= 3 and month <= 9
+weight: 10
+art: wave
+tags: social danger
+scene: A girl in a nightgown wading into a misty lake at night, eyes glowing silver, arms outstretched toward something under the water.
+text: From your window you see Seraphine walking into the lake in her nightgown, eyes shining silver, already up to her waist.
+> left: Wake a prefect
+  rel seraphine +4
+  say: The prefect drags her out, coughing. She doesn't remember anything. She looks at you strangely for days.
+> right: Run down and pull her out
+  check vigor 15:
+    rel seraphine +12
+    love seraphine +5
+    hollow +1
+    say: You reach her just as she goes under. On the shore she wakes and whispers, "It was calling me. It called you too." Then she holds on very tight.
+  else:
+    health -10
+    gain sick
+    rel seraphine +10
+    say: You both nearly drown. You both come down with Lake Fever. She brings you soup that tastes faintly of the future.
+
+@event seraphine_future
+title: I Saw You Old
+trigger: social
+actor: seraphine
+when: rel(seraphine) >= 25
+weight: 10
+art: hourglass
+tags: social mystery
+scene: Two students sitting on the rim of a dry fountain, one looking up at the stars, the other looking at the first with a soft smile.
+text: "I saw you old," Seraphine says suddenly. "Last night. You were happy. Really happy. There was someone with you." She pauses. "Do you want to know who?"
+> left: Yes, tell me
+  chance 50:
+    love seraphine +6
+    say: She looks at you for a long time. "I'll tell you when you're old," she says, and goes pink.
+  else:
+    mood +3
+    say: "Someone kind," she says. "That's all I could see. Their hands were kind."
+> right: No, let it be a surprise
+  rel seraphine +6
+  mood +3
+  say: She smiles like you've given her a present. "That's the right answer. Nobody ever gives the right answer."
+
+@event seraphine_overwhelmed
+title: Too Many Tomorrows
+trigger: social
+actor: seraphine
+when: rel(seraphine) >= 15 and year >= 2
+weight: 10
+art: eye
+tags: social
+scene: A girl curled in a dark corner of an observatory with her hands over her eyes, a teacup gone cold beside her.
+text: Seraphine hasn't come to class in a week. You find her in a dark storeroom with her hands over her eyes. "It's too loud," she whispers. "Everyone's futures. All at once."
+> left: Fetch Sister Amaranth
+  rel seraphine +3
+  say: Amaranth gives her a sleeping draught and a dark room. She recovers. She doesn't say much about it.
+> right: Sit with her in the dark
+  rel seraphine +10
+  love seraphine +4
+  mood -2
+  say: You don't speak. After an hour she takes her hands from her eyes. "Yours is quiet," she says. "Your future. It's very quiet. I like it."
+
+@event seraphine_confession
+title: She Already Knew
+trigger: social
+actor: seraphine
+when: love(seraphine) >= 35 and rel(seraphine) >= 25 and bond(seraphine) != "partner"
+weight: 30
+art: star
+tags: romance
+scene: A girl with silver eyes holding out a single falling-star seed in her palm on a dark observatory balcony.
+text: "I've seen this conversation forty-one times," Seraphine says. "In twenty-nine of them, you say yes. I've been very nervous about the other twelve." She holds out her hand. "I like you. That part was always the same."
+> left: Gently say no
+  love seraphine -20
+  rel seraphine +2
+  say: She nods. "Twelve," she says softly. "I knew it might be twelve." She's kind to you afterwards. Somehow that hurts more.
+> right: Take her hand
+  bond seraphine partner
+  love seraphine +15
+  mood +10
+  say: "Twenty-nine," she whispers, and laughs, and for once she's entirely in the present.
+
+# ================= CORVIN ASHBY =================
+
+@event corvin_intro
+title: Light Fingers
+actor: corvin
+when: not met(corvin) and turn >= 2
+weight: 14
+art: mask
+tags: social
+scene: A dark-haired student with a crooked grin holding up a purse between two fingers, mid-bow.
+text: Someone bumps you in the crowd. A moment later a dark-haired boy is bowing and holding up your purse. "You dropped this," he says. "Into my pocket. Terrible habit of yours. Corvin Ashby."
+> left: Snatch it back and report him
+  meet corvin
+  rel corvin -5
+  say: He's gone before the prefect arrives. Your purse is lighter by exactly one crown and heavier by one IOU.
+> right: Laugh
+  meet corvin
+  rel corvin +7
+  guile +1
+  say: "Oh, I like you," he says, and teaches you the trick on the spot. You practise it on him. He lets you win. Probably.
+
+@event corvin_kitchen_raid
+title: The Kitchen Raid
+trigger: social
+actor: corvin
+when: rel(corvin) >= 5
+weight: 12
+art: meal
+tags: social
+scene: Two students creeping through a cavernous castle kitchen at night, a mountain of tarts on a table, a sleeping cook snoring by the hearth.
+text: "Midnight," Corvin whispers. "The cooks have made forty treacle tarts for the faculty dinner. Forty. Nobody needs forty."
+> left: Not tonight
+  rel corvin -2
+  say: He goes alone. The next morning there's a treacle tart on your pillow. You decide not to ask.
+> right: Lead the raid
+  check guile 14:
+    mood +8
+    rel corvin +6
+    say: You get out with nine tarts and a bottle of elderflower cordial. You eat them on the roof until sunrise.
+  else:
+    gain detention
+    rel corvin +8
+    say: The cook wakes up. You both spend a week scrubbing pans, laughing too hard to work.
+
+@event corvin_debt
+title: Corvin's Little Problem
+trigger: social
+actor: corvin
+when: rel(corvin) >= 20 and not flag(corvin_owes) and not flag(corvin_debt_refused)
+weight: 12
+art: chain
+tags: social money
+scene: A boy with a black eye sitting on the dormitory stairs, trying very hard to look casual.
+text: Corvin has a black eye and a very casual expression. "Small misunderstanding with some trolls," he says. "Thirty crowns would clear it right up. I'll pay you back. Probably with interest. Possibly with a goat."
+> left: Refuse
+  flag corvin_debt_refused
+  rel corvin -6
+  say: "Course. No problem." He has another black eye the next week. He's still friendly. Mostly.
+> right: Give him thirty crowns
+  when: gold >= 30
+  gold -30
+  flag corvin_owes
+  rel corvin +12
+  queue corvin_repays in 4
+  say: He stares at the coins, then at you. "No one's ever just... done that." He's quiet for a whole minute. A record.
+
+@event corvin_repays
+title: Interest
+trigger: queued
+actor: corvin
+art: coin
+tags: social money
+scene: A small brass key and a fat purse left on a desk with a playing card, the jack of spades, tucked under them.
+text: There's a fat purse on your desk and a jack of spades tucked under it. Inside the purse: more than thirty crowns. Much more.
+> left: Count it
+  chance 70:
+    gold +55
+    rel corvin +6
+    say: Fifty-five crowns. A note: "Interest. Don't ask. — C." You don't ask.
+  else:
+    gold +5
+    rel corvin +3
+    say: Five crowns and a very convincing IOU for the other twenty-five, with a doodle of a goat.
+> right: Find him and ask where it came from
+  rel corvin +10
+  gold +30
+  say: "I won it," he says. "Fairly. Mostly." He pushes the exact thirty into your hand. "The rest's mine. I've got another debt to pay."
+
+@event corvin_rooftop
+title: Up on the Roof
+trigger: social
+actor: corvin
+when: rel(corvin) >= 30
+weight: 10
+art: moon
+tags: social
+scene: Two students sitting on a steep slate roof under a full moon, legs dangling over a dizzying drop, sharing a bottle of something fizzy.
+text: On the roof at 2am, Corvin goes quiet. "I'm on my last warning," he says. "One more detention and they send me home. And home is... not a good place." He laughs, badly.
+> left: Tell him to keep his head down
+  rel corvin +4
+  say: "Head down. Right. I'll try anything once." He keeps his head down for almost a month.
+> right: Promise you'll cover for him
+  rel corvin +12
+  love corvin +4
+  flag covering_corvin
+  say: He looks at you like nobody has ever promised him anything. "You're an idiot," he says. "Thank you."
+
+@event corvin_framed
+title: Corvin Is Framed
+trigger: social
+actor: corvin
+when: rel(corvin) >= 15 and met(bram) and turn >= 10
+weight: 10
+art: scales
+tags: social rival
+scene: A boy standing before a disciplinary desk, a stolen silver goblet on it, a smug prefect at his shoulder.
+text: The headmistress's silver goblet has been found in Corvin's trunk. He swears he didn't take it. Bram, who found it, looks very pleased. Corvin is one detention from expulsion.
+> left: Stay out of it
+  rel corvin -10
+  chance 50:
+    say: Corvin talks his way out, barely. He doesn't look at you for a month.
+  else:
+    rel corvin -10
+    say: Corvin is suspended for a month. When he comes back, he's different. Quieter.
+> right: Find proof he was framed (Guile)
+  check guile 18:
+    rel corvin +15
+    rel bram -15
+    renown +4
+    say: You find the bill of sale: Bram bought a fake. Bram is stripped of his sash. Corvin buys you a goat. An actual goat.
+  else:
+    rel corvin +6
+    gain watched
+    say: You can't prove it. But you stood up for him in front of everyone, and he'll never forget it. Neither will Bram.
+
+@event corvin_confession
+title: Corvin, Serious for Once
+trigger: social
+actor: corvin
+when: love(corvin) >= 35 and rel(corvin) >= 25 and bond(corvin) != "partner"
+weight: 30
+art: cards
+tags: romance
+scene: A boy holding out a playing card — the queen of hearts — with an unsteady hand, no grin for once.
+text: Corvin holds out a playing card. The queen of hearts. His hand isn't quite steady. "No trick," he says. "No angle. I just — I like you more than I like anything, and I'm terrified, and I wanted you to have this."
+> left: Gently decline
+  love corvin -20
+  rel corvin +2
+  say: He laughs, too quickly. "Worth a shot." He keeps the card. You see it sometimes, tucked in his sleeve.
+> right: Take the card
+  bond corvin partner
+  love corvin +15
+  mood +10
+  say: For once, Corvin Ashby has nothing to say. He just kisses you, and then grins, and then can't stop grinning.
+
+@event corvin_runaway
+title: Let's Leave Tonight
+trigger: social
+actor: corvin
+when: bond(corvin) == "partner" and year == 3 and mood < 55
+weight: 16
+art: map
+tags: romance danger
+scene: A small sky-barge tied to the academy dock at midnight, lanterns lit, a boy at the tiller holding out his hand.
+text: Corvin's at your door at midnight, bag over his shoulder. "There's a sky-barge at the dock and nobody guarding it. Let's go. Tonight. The world's huge and we're wasting it in classrooms."
+> left: Stay and finish what you started
+  rel corvin -4
+  love corvin +2
+  say: He looks at you for a long time. Then he drops the bag. "Fine. But after graduation, we steal a boat. A big one."
+> right: Take his hand
+  end ending_runaway
+
+# ================= MIRA TEN =================
+
+@event mira_intro
+title: An Explosion in the West Wing
+actor: mira
+when: not met(mira) and turn >= 2
+weight: 14
+art: gear
+tags: social
+scene: A cloud of purple smoke billowing from a workshop door, a soot-covered student emerging with goggles and a thumbs-up.
+text: The west wing explodes. Not badly. A figure in goggles stumbles out of the purple smoke, coughing, and gives you a thumbs-up. "Don't worry! That was intentional! Mostly! Can you hold this?" They hand you a ticking teapot.
+> left: Put the teapot down and back away
+  meet mira
+  rel mira +2
+  say: The teapot stops ticking and starts humming the academy anthem. "Mira," they say. "They/them. Thanks for not throwing it."
+> right: Hold the teapot steady
+  meet mira
+  check alchemy 10:
+    rel mira +8
+    say: You keep it level while they twist a valve. It stops ticking. "You've got good hands," Mira says. "I'm going to need those."
+  else:
+    health -3
+    rel mira +6
+    say: The teapot goes off. Your eyebrows survive, mostly. Mira is apologising and laughing at the same time.
+
+@event mira_owl_gift
+title: A Present With Gears
+trigger: social
+actor: mira
+when: rel(mira) >= 30 and not has(familiar_owl)
+weight: 14
+art: owl
+tags: social magic
+scene: A small brass owl with glowing amber eyes perched on a student's wrist, its clockwork feathers fluffing.
+text: Mira presents a brass owl with amber glass eyes. It blinks, hoots the hour and says "HOMEWORK" in a tinny voice. "Made it for you. It remembers deadlines. And birthdays. And grudges, slightly."
+> left: It's too much
+  rel mira +3
+  say: Mira looks crushed, then rallies. "I'll give it to Thorne. He needs reminding to smile." The owl, you hear, refuses to work for him.
+> right: Accept it gratefully
+  gain familiar_owl
+  rel mira +8
+  love mira +4
+  say: The owl settles on your shoulder and says, "WELCOME." Mira pretends to have something in their eye.
+
+@event mira_fair
+title: The Artificers' Fair
+trigger: social
+actor: mira
+when: rel(mira) >= 15 and month >= 6 and month <= 9
+weight: 12
+art: gear
+tags: social festival
+scene: A hall crammed with bizarre inventions — walking teapots, singing clocks — and one enormous brass machine draped in a sheet.
+text: The Artificers' Fair. Mira's entry is under a sheet and occasionally growls. "I need an assistant to stand next to it and look confident," they say. "And possibly run."
+> left: Watch from a safe distance
+  mood +3
+  rel mira +2
+  say: The machine turns out to be a mechanical bear that bakes bread. It wins second place. Mira is ecstatic and flour-covered.
+> right: Be the confident assistant
+  check charm 14:
+    renown +5
+    rel mira +8
+    say: You present it like a showman. The bear bakes a perfect loaf and bows. First prize. Mira kisses the trophy, then, in a fluster, your cheek.
+    love mira +3
+  else:
+    health -4
+    renown +2
+    rel mira +5
+    say: The bear eats your sleeve. The crowd loves it. Third prize and a very good story.
+
+@event mira_workshop_closed
+title: The Workshop Is Shut
+trigger: social
+actor: mira
+when: rel(mira) >= 20 and year >= 2
+weight: 10
+art: lock
+tags: social
+scene: A workshop door chained shut with a faculty notice nailed to it, a forlorn student sitting on a toolbox outside.
+text: After the third fire this term, the faculty has padlocked Mira's workshop. Mira is sitting on a toolbox outside it, looking like someone took their heart and filed it under "hazards".
+> left: Plead their case to Professor Thorne
+  check charm 18:
+    rel mira +12
+    rel thorne +2
+    say: Thorne agrees to reopen it — with fire buckets and a weekly inspection. Mira cries on you. Oil and all.
+  else:
+    rel mira +5
+    rel thorne -2
+    say: Thorne refuses. But Mira heard you try. "Nobody's ever argued for me before," they say.
+> right: Help them build a secret workshop
+  check guile 14:
+    rel mira +12
+    guile +1
+    say: An abandoned classroom behind a tapestry. You bring candles; Mira brings everything else. It's perfect. It's almost entirely fireproof.
+  else:
+    rel mira +6
+    gain detention
+    say: Bram finds the secret workshop on day two. Worth it, says Mira, scrubbing cauldrons beside you.
+
+@event mira_dance_machine
+title: The Dancing Machine
+trigger: social
+actor: mira
+when: rel(mira) >= 10
+weight: 10
+art: music
+tags: social
+scene: A spindly brass contraption with too many legs attempting a waltz in an empty classroom, a student dancing with it.
+text: Mira has built a machine that teaches dancing. It has six legs and opinions. "It needs a test subject," they say. "It's mostly safe. It only kicked me twice."
+> left: Make Mira test it
+  rel mira +3
+  mood +3
+  say: You watch Mira and the machine waltz, badly, across the room. It's the funniest thing you've ever seen.
+> right: Dance with the machine
+  charm +2
+  health -2
+  rel mira +6
+  say: It kicks you twice too. But by the end you can waltz, and Mira is clapping with oily hands.
+
+@event mira_confession
+title: Blueprint
+trigger: social
+actor: mira
+when: love(mira) >= 35 and rel(mira) >= 25 and bond(mira) != "partner"
+weight: 30
+art: gear
+tags: romance
+scene: A rolled-out blueprint on a workbench showing a heart-shaped mechanism labelled with tiny careful notes, a nervous artificer beside it.
+text: Mira unrolls a blueprint. It's a mechanical heart, labelled in tiny careful handwriting: "Does not work without the other part." They clear their throat. "I'm bad at saying things. So I drew it. You're the other part. If you want."
+> left: Kindly say no
+  love mira -20
+  rel mira +3
+  say: Mira rolls up the blueprint carefully. "Good to know. Data is data." They're fine. They're mostly fine.
+> right: "I want."
+  bond mira partner
+  love mira +15
+  mood +10
+  say: The heart doesn't need to work. But Mira builds it anyway, and it ticks on your windowsill, in time with your own.
+
+@event mira_family_business
+title: The Family Clockworks
+trigger: social
+actor: mira
+when: rel(mira) >= 25 and year >= 2 and not flag(mira_family_done)
+weight: 10
+art: gear
+tags: social
+scene: An artificer holding a stiff letter embossed with a gear crest, a train ticket tucked inside, staring at it blankly.
+text: A letter from Mira's parents: the family clockworks needs them home. A ticket is enclosed. "They think this is a hobby," Mira says. "This. Is. Not. A. Hobby."
+> left: Tell them family comes first
+  flag mira_family_done
+  rel mira -5
+  say: Mira goes home for a month and comes back with a new scar and a clearer jaw. "They know now," they say. "It's not a hobby."
+> right: Help them write back
+  flag mira_family_done
+  rel mira +10
+  charm +1
+  say: Together you write a letter so persuasive it should be framed. Mira's mother replies: "Fine. Win a prize." Mira intends to win all of them.
+
+# ================= NESSA QUILL =================
+
+@event nessa_intro
+title: First Impressions
+actor: nessa
+when: not met(nessa) and turn >= 2
+weight: 14
+art: paper
+tags: social
+scene: A girl with ink-stained fingers and a self-writing quill floating at her shoulder, holding a notebook out expectantly.
+text: A girl with a quill floating at her shoulder plants herself in front of you. "Nessa Quill, Lumen Ledger. First impressions of Lumenhold, go. Be interesting, please. The last six were boring."
+> left: Give a safe answer
+  meet nessa
+  rel nessa +1
+  say: The quill writes "SAFE" in the margin and underlines it twice. Nessa sighs and moves on.
+> right: Say something outrageous
+  meet nessa
+  check charm 12:
+    renown +4
+    rel nessa +6
+    say: You're quoted on the front page. Half the academy now thinks you're hilarious. The other half thinks you're dangerous. Nessa thinks both.
+  else:
+    renown +2
+    rel nessa +2
+    mood -3
+    say: You are quoted. Out of context. Extremely out of context.
+
+@event nessa_gossip_column
+title: You're in the Gossip Column
+trigger: social
+actor: nessa
+when: renown >= 15
+weight: 12
+art: paper
+tags: social
+scene: A copy of the Lumen Ledger pinned to a noticeboard, a gossip column circled in red ink, students gathered round giggling.
+text: This week's Ledger gossip column features you, prominently, under the headline "WHO IS THE MYSTERY STUDENT ALWAYS IN THE LIBRARY AT MIDNIGHT?" Nessa swears she didn't write it.
+> left: Confront Nessa
+  rel nessa -3
+  check charm 15:
+    say: She prints a correction. Sort of. It's a much more flattering paragraph about you.
+    renown +2
+  else:
+    say: "Freedom of the press," says Nessa, sweetly. You both know she wrote it.
+> right: Lean into the mystery
+  renown +5
+  mood +3
+  rel nessa +4
+  say: You start leaving cryptic notes in the library. The column runs for six more weeks. Nessa is delighted.
+
+@event nessa_source
+title: The Source
+trigger: social
+actor: nessa
+when: rel(nessa) >= 20 and (has(job_library) or has(job_tutor) or rel(thorne) >= 15)
+weight: 10
+art: feather
+tags: social
+scene: Two students in a dark corner of the library, one whispering, the other writing furiously in a notebook.
+text: Nessa leans in. "You've got faculty access. The professors are planning to change the exam format and they're hiding it. I just need a quote. Anonymous. Please?"
+> left: Refuse — that's a breach of trust
+  rel nessa -4
+  rel thorne +3
+  say: Nessa sulks for a day. Then she respects you for it, which she hates.
+> right: Give her the scoop
+  rel nessa +10
+  renown +3
+  chance 30:
+    rel thorne -10
+    say: The story runs. Thorne knows exactly who talked. His glare could curdle milk.
+  else:
+    say: The story runs. Students are grateful. Nobody knows it was you. Nessa buys you cake.
+
+@event nessa_hollow_story
+title: Nessa Smells a Story
+trigger: social
+actor: nessa
+when: hollow >= 2 and rel(nessa) >= 10
+weight: 12
+art: paper
+tags: social mystery hollowstar
+scene: A wall in the newspaper office covered in pinned clippings and red string connecting a frozen lake, a black star and a fur-coated boy.
+text: Nessa's office wall is covered in red string. In the middle: a sketch of a black star. "Frozen fountains. Missing pages. A transfer from the North. Something's going on and you know about it. Spill."
+> left: Warn her off — it's dangerous
+  rel nessa -3
+  say: "That's what people say right before the best stories." But she takes the string down. Mostly.
+> right: Share what you know
+  rel nessa +8
+  hollow +1
+  chance 40:
+    gain watched
+    say: Nessa's article runs with half the facts. The man in grey reads it. So does Bram, who starts following you around.
+  else:
+    say: Nessa's notes are scarily thorough. She's found a record of three students who vanished in 1723. All on Blossom moons.
+
+@event nessa_paper_threatened
+title: Stop the Presses
+trigger: social
+actor: nessa
+when: rel(nessa) >= 15 and year >= 2
+weight: 10
+art: paper
+tags: social
+scene: A printing press with a faculty seal stamped across it, a defiant student standing in front of it with arms crossed.
+text: The headmistress has threatened to shut down the Ledger after an article about faculty salaries. Nessa is organising a protest. "I need people on the steps. Visible people. You."
+> left: Stay out of it
+  rel nessa -5
+  say: The protest is small. The Ledger survives, barely. Nessa notices who wasn't there.
+> right: Stand on the steps
+  rel nessa +10
+  rel isolde -4
+  renown +5
+  say: Forty students on the steps, chanting. The headmistress comes out and, astonishingly, listens. The Ledger stays.
+
+@event nessa_confession
+title: Off the Record
+trigger: social
+actor: nessa
+when: love(nessa) >= 35 and rel(nessa) >= 25 and bond(nessa) != "partner"
+weight: 30
+art: feather
+tags: romance
+scene: A girl with an inkpot in one hand, her self-writing quill hovering above a blank page that she has commanded to stay blank.
+text: Nessa puts down her quill. Then she tells it to stop writing. It's the first time you've seen it still. "This is off the record," she says. "Completely. I like you. I've drafted this eleven times. None of the drafts were good enough."
+> left: Gently say no
+  love nessa -20
+  rel nessa +2
+  say: "Noted," she says crisply. She keeps her quill still a moment longer. Then it starts writing again, and so does she.
+> right: Kiss her
+  bond nessa partner
+  love nessa +15
+  mood +10
+  say: Her quill, unattended, writes a single word in the margin: "FINALLY."

@@ -1,0 +1,332 @@
+# ============================================================
+#  Minor chains: short cause-and-effect stories.
+#    forbidden  — the Restricted Section key (from umbral_forbidden_notes)
+#    curse      — curing the Umbral Curse
+#    debt       — Grisk the moneylender (see state in_debt)
+#    familiar   — Ember the fox-spirit
+#    ghost      — the haunted dormitory
+# ============================================================
+
+# ---------------- The Restricted Section ----------------
+
+@event forbidden_section_1
+title: The Silver Key
+trigger: queued
+art: key
+tags: mystery
+chain: forbidden
+scene: A heavy iron door at the end of a library aisle, a silver key turning in its lock, a candle held low.
+text: Midnight. The silver key fits the Restricted Section door perfectly. Beyond it, shelves of black-bound books breathe softly in the dark. Somewhere, a prefect's footsteps.
+> left: Turn back
+  mood -1
+  flag forbidden_abandoned
+  say: You lock the door again and hang the key on a nail in your wardrobe. Some nights you hear it rattling.
+> right: Slip inside
+  check guile 14:
+    lore +4
+    queue forbidden_section_2 in 2
+    say: You spend two hours reading by candle-stub. You leave with a head full of things no first-year should know.
+  else:
+    gain detention
+    gain watched
+    rel bram -6
+    say: Bram Hollis is waiting by the door when you come out. He is smiling. It's the worst smile you've ever seen.
+
+@event forbidden_section_2
+title: The Codex of Hollow Names
+trigger: queued
+art: book
+tags: mystery hollowstar
+chain: forbidden
+scene: A book bound in something that is not leather, open on a reading stand, its letters slowly rearranging themselves.
+text: On your third visit, a book finds you. It falls from a high shelf and lands open at your feet: the Codex of Hollow Names. The first page is a list of names. The last one is still being written. It's yours.
+> left: Put it back
+  mood -2
+  say: You shelve it. When you look back, it has fallen again, open at the same page.
+> right: Read it
+  lore +3
+  arcana +3
+  hollow +1
+  queue forbidden_section_3 in 2
+  chance 45:
+    gain umbral_curse
+    say: You read until dawn. You learn about the thing under the lake. When you finally close the book, your fingertips are grey.
+  else:
+    say: You read until dawn and close the book with shaking hands. Some things you can't unread.
+
+@event forbidden_section_3
+title: Caught
+trigger: queued
+actor: isolde
+art: lock
+tags: mystery
+chain: forbidden
+scene: A tall silhouette in the doorway of the Restricted Section, holding a lantern that casts long shadows over a startled student.
+text: A lantern blazes in the doorway. Not a prefect this time: the headmistress herself. She looks at the book in your hands, then at you, for a very long time. "Most students who find that book," she says, "don't put it down."
+> left: Apologise and accept punishment
+  meet isolde
+  grades -6
+  gain detention
+  rel isolde +3
+  unflag forbidden_key
+  say: She takes the key. "Detention. And come to my tower on Thursdays. If you're going to learn dangerous things, you'll learn them properly."
+> right: Ask her what it means
+  meet isolde
+  rel isolde +6
+  lore +3
+  hollow +1
+  unflag forbidden_key
+  say: A long pause. "It means something is waking, and it is looking for help. Make sure it doesn't find yours." She takes the key and leaves you the candle.
+
+# ---------------- The Umbral Curse ----------------
+
+@event curse_cure_1
+title: A Cold That Won't Leave
+when: has(umbral_curse)
+weight: 30
+art: skull
+tags: crisis mystery
+chain: curse
+scene: A student wrapped in three blankets beside a roaring fire, breath still fogging the air, fingertips grey.
+text: The cold under your skin is getting worse. Sister Amaranth's tonics do nothing. She looks troubled. "This isn't an illness. It's a hunger." She lowers her voice. "Old Maud might know something. Don't tell anyone I said so."
+> left: Endure it
+  mood -3
+  arcana +1
+  say: You pile on blankets and keep going. The cold whispers sometimes. You pretend not to hear.
+> right: Go to Old Maud
+  meet maud
+  rel maud +3
+  queue curse_cure_2 in 1
+  say: Maud takes one look at your fingertips and puts the kettle on. "Moonpetal," she says. "Grows in the Whisperwood. Only blooms at midnight. You'll fetch it yourself — the cure has to come from the cursed."
+
+@event curse_cure_2
+title: Moonpetal
+trigger: queued
+art: flower
+tags: nature danger
+chain: curse
+scene: A dark forest at midnight, a single silver flower glowing in a clearing, eyes watching from between the trees.
+text: The Whisperwood at midnight. Things move between the trees. In a clearing, a single silver flower is opening, and between you and it stands a stag made of shadow.
+> left: Sneak around it
+  check guile 16:
+    lose umbral_curse
+    rel maud +8
+    say: You creep through the bracken and pluck the moonpetal. Maud's brew tastes like moonlight and burnt sugar. The cold is gone.
+  else:
+    health -10
+    queue curse_cure_2 in 2
+    say: The stag sees you. You run. No moonpetal tonight. Maud says the next bloom is in two months.
+> right: Face the stag
+  check vigor 18:
+    lose umbral_curse
+    vigor +2
+    rel maud +8
+    say: You stand your ground. The stag lowers its head — and steps aside. Maud's brew drives the cold out of your bones.
+  else:
+    health -12
+    queue curse_cure_2 in 2
+    say: The stag charges. You wake up in the bracken at dawn. Maud bandages you. "Again in two months," she says.
+
+# ---------------- Grisk the Moneylender ----------------
+
+@event grisk_offer
+title: A Helpful Goblin
+when: gold < 15 and turn >= 3 and not has(in_debt) and not flag(grisk_done)
+weight: 30
+art: pouch
+tags: money danger
+chain: debt
+scene: A small goblin in a velvet waistcoat and pince-nez, sitting on a crate in an alley, a ledger in one hand and a quill behind his ear.
+text: A goblin in a velvet waistcoat falls into step beside you. "Grisk," he says, "friend to the temporarily embarrassed. Sixty crowns, today. Twelve a month for six months. Very reasonable."
+> left: No thank you
+  mood -1
+  say: "My door is always open," Grisk says. You suspect it is actually always locked.
+> right: Take the loan
+  gold +60
+  gain in_debt
+  debt_paid = 0
+  debt_missed = 0
+  flag grisk_done
+  say: He counts out sixty crowns, writes your name in the ledger and smiles with a great many teeth.
+
+@event grisk_favour
+title: Grisk's Proposition
+when: has(in_debt)
+weight: 14
+art: chain
+tags: money mystery
+chain: debt
+scene: The goblin moneylender leaning close in a library alcove, pushing a slip of paper across a table.
+text: Grisk finds you in the library. "I could cancel your debt," he murmurs. "A small favour. There's a book in the archive — the Founders' Ledger. A client wants a page. Just one page."
+> left: Refuse
+  say: "Pity." He makes a note in his ledger. It looks expensive.
+> right: Do the favour
+  check guile 18:
+    lose in_debt
+    flag grisk_favour
+    hollow +1
+    say: You razor a page from the oldest ledger in the archive. Grisk tears up your debt. You notice the page had a black star on it.
+  else:
+    gain detention
+    grades -5
+    say: The archivist catches you with a razor in your hand. Detention. Grisk is nowhere to be found, and the debt stands.
+
+@event grisk_smuggling
+title: One More Job
+when: flag(grisk_favour) and not has(in_debt)
+weight: 10
+art: pouch
+tags: money danger
+chain: debt
+scene: A crate of clinking bottles hidden under a tarp on a dark boathouse dock, a small goblin silhouetted against the lake.
+text: Grisk again. "You were so good last time. A crate needs moving across the lake tonight. Don't open it. Forty crowns."
+> left: You're done with him
+  unflag grisk_favour
+  mood +3
+  say: "Everyone's done with me eventually," Grisk says, without rancour. You never see him again.
+> right: Move the crate
+  check guile 16:
+    gold +40
+    say: The crate clinks. It is also, faintly, singing. You deliver it without looking inside. Forty crowns.
+  else:
+    gold +10
+    gain detention
+    rel bram -8
+    say: Bram stops you on the dock. The crate is full of contraband charm-wine. You lose the crate, keep ten crowns and gain a detention.
+
+# ---------------- Ember the Fox-Spirit ----------------
+
+@event fox_injured
+title: Smoke in the Woods
+when: turn >= 4 and not flag(fox_met)
+weight: 6 + flag(familiar_affinity) * 14
+art: fox
+tags: nature
+chain: familiar
+scene: A small red fox lying in the snow at the forest edge, its tail smouldering like a dying campfire, one paw caught in a rusted snare.
+text: At the edge of the forest, a thin plume of smoke. A small fox is caught in a rusted snare, its tail smouldering like an ember. It snarls at you, then whimpers.
+> left: Leave it — it's wild
+  mood -3
+  say: You walk away. That night you dream of smoke.
+> right: Free it and bandage the paw
+  flag fox_met
+  health -3
+  gold -5
+  queue fox_returns in 2
+  say: It bites you, of course. But it lets you wrap the paw. Then it limps into the trees, glancing back once with eyes like embers.
+
+@event fox_returns
+title: A Visitor at the Window
+trigger: queued
+art: fox
+tags: nature
+chain: familiar
+scene: A fox with a softly glowing tail sitting on a stone windowsill at dawn, a ruby glinting at its feet.
+text: Two months later, a fox with a glowing tail is sitting on your windowsill. Its paw has healed. At its feet: a small, dusty ruby.
+> left: Shoo it away
+  gold +15
+  say: It leaves the ruby and vanishes. You sell the ruby. Somehow you feel you've failed a test.
+> right: Open the window
+  gold +15
+  mood +4
+  queue fox_bond in 1
+  say: It hops in, inspects your room thoroughly and falls asleep on your pillow. Your pillow is now slightly scorched. You don't mind.
+
+@event fox_bond
+title: Ember
+trigger: queued
+art: fox
+tags: nature magic
+chain: familiar
+scene: A student and a small fire-tailed fox nose to nose, a soft golden light connecting them.
+text: The fox has decided. It follows you to class, sleeps on your feet and growls at Bram. Students aren't allowed unregistered familiars. Registering one costs twenty crowns.
+> left: Hide her (Guile)
+  check guile 12:
+    gain familiar_fox
+    say: You name her Ember. Nobody notices a fox that doesn't want to be noticed.
+  else:
+    gain familiar_fox
+    gold -20
+    say: A professor spots her at once. You pay the fee — and Ember is yours, officially.
+> right: Register her properly
+  gold -20
+  gain familiar_fox
+  rel isolde +2
+  say: The registrar stamps a form. "Name?" "Ember," you say. The fox looks smug.
+
+@event fox_helps
+title: Ember Finds Something
+when: has(familiar_fox)
+weight: 10
+repeat: 8
+art: fox
+tags: nature
+chain: familiar
+scene: A fox nosing through dry leaves under a hedge and emerging with a purse in its jaws.
+text: Ember drags you, by the sleeve, through three corridors and a hedge. She's found something. She's very proud of it.
+> left: Let her keep it
+  mood +4
+  say: It's a sock. Ember is thrilled. You are thrilled for her.
+> right: See what it is
+  chance 50:
+    gold +20
+    say: A lost purse. You return it to its owner, who insists you keep the reward.
+  else:
+    lore +2
+    say: A lost page from a professor's lecture notes. Enlightening.
+
+# ---------------- The Haunted Dormitory ----------------
+
+@event ghost_socks
+title: Rearranged Socks
+when: turn >= 3 and not flag(ghost_met)
+weight: 8
+art: ghost
+tags: mystery
+chain: ghost
+scene: A dormitory drawer open in candlelight, socks arranged in a careful spiral, a faint shimmer in the air above them.
+text: Every morning, your socks have been rearranged. By colour. Then alphabetically by colour. Last night they spelled out "HELP".
+> left: Ignore it
+  gain haunted
+  say: You buy new socks. The next morning they're arranged by mood.
+> right: Stay up and watch
+  flag ghost_met
+  gain haunted
+  queue ghost_reveal now
+  say: At three in the morning, the drawer slides open by itself.
+
+@event ghost_reveal
+title: Prudence
+trigger: queued
+art: ghost
+tags: mystery
+chain: ghost
+scene: A translucent girl in old-fashioned school robes, hovering by a window, holding a faded letter.
+text: A girl in old-fashioned robes, translucent and very polite. "Prudence Ashworth, class of 1793. Terribly sorry about the socks. I never finished my letter. Could you deliver it? The village. The bakery. Please."
+> left: Exorcise her
+  lose haunted
+  arcana +1
+  mood -2
+  say: You speak the banishing rite. She fades with a small, hurt look. Your socks stay put after that. You feel a bit rotten.
+> right: Promise to deliver it
+  rel maud +2
+  queue ghost_letter in 1
+  say: She claps her translucent hands. "Oh, thank you! It's only taken two hundred years."
+
+@event ghost_letter
+title: A Letter Two Hundred Years Late
+trigger: queued
+art: letter
+tags: mystery social
+scene: A cosy village bakery, an old baker reading a yellowed letter with tears on her cheeks, a ghostly figure smiling in the doorway.
+text: The bakery has been in the same family for two hundred years. The old baker reads Prudence's letter at the counter. "My great-great-great-grandmother waited for this," she says. "She never stopped."
+> left: Stay and listen to the story
+  lose haunted
+  mood +10
+  lore +2
+  say: Prudence was in love with the baker's daughter. When you return, the ghost is waiting, glowing like a sunrise. Then she's gone, at peace.
+> right: Leave quietly
+  lose haunted
+  mood +6
+  renown +2
+  say: The baker presses a free loaf into your hands. That night, your socks are arranged into a heart. Then never again.

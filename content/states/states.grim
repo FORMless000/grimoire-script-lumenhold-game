@@ -1,0 +1,593 @@
+# ============================================================
+#  Persistent states. A state is something that sticks to the
+#  player across months: an origin, a class, a club, a job, an
+#  illness, a curse. States can:
+#    tick:      run every month start while active
+#    duration:  default length in months (omit = until removed)
+#    group:     only one state of the same group at a time
+#    on_add / on_expire / on_remove: effects
+#  Events check them with has(state_id) and left(state_id).
+# ============================================================
+
+# ---------------- Origins (chosen at the start) ----------------
+
+@state origin_noble
+name: Minor Nobility
+kind: origin
+group: origin
+art: crown
+desc: A family name that opens doors and an allowance that arrives every month — with letters attached.
+tick:
+  gold +6
+on_add:
+  gold +60
+  charm +3
+  renown +6
+
+@state origin_scholar
+name: Scholarship Student
+kind: origin
+group: origin
+art: scroll
+desc: The Crown pays your way — as long as your standing stays above 30.
+tick:
+  if grades >= 30:
+    gold +5
+on_add:
+  lore +5
+  grades +8
+
+@state origin_hedge
+name: Hedge-Witch's Grandchild
+kind: origin
+group: origin
+art: mushroom
+desc: Raised among drying herbs and muttered charms. Proper magic still feels a little too proper.
+on_add:
+  alchemy +6
+  mood +6
+  gold +15
+
+@state origin_street
+name: Street-Raised
+kind: origin
+group: origin
+art: mask
+desc: You learned to read crowds before you learned to read runes.
+on_add:
+  guile +7
+  vigor +3
+  gold +10
+
+@state origin_merchant
+name: Merchant's Child
+kind: origin
+group: origin
+art: scales
+desc: Everything has a price, and you were taught to haggle it down.
+tick:
+  gold +3
+on_add:
+  gold +90
+  charm +3
+
+# ---------------- Electives (one per term) ----------------
+
+@state class_pyromancy
+name: Elective: Pyromancy
+kind: class
+group: elective
+art: flame
+tags: class
+desc: Fire answers to will, not wishes. Singed eyebrows are considered a rite of passage.
+tick:
+  arcana +2
+  health -1
+
+@state class_tidecalling
+name: Elective: Tidecalling
+kind: class
+group: elective
+art: wave
+tags: class
+desc: Lessons on the lake shore, bending water and patience in equal measure.
+tick:
+  arcana +1
+  vigor +1
+  mood +1
+
+@state class_illusion
+name: Elective: Illusion & Glamour
+kind: class
+group: elective
+art: mask
+tags: class
+desc: The art of making people see what you want. Professor Vey insists it is not lying.
+tick:
+  guile +1
+  charm +1
+
+@state class_alchemy
+name: Elective: Practical Alchemy
+kind: class
+group: elective
+art: cauldron
+tags: class
+desc: Brewing, distilling and the occasional controlled explosion.
+tick:
+  alchemy +2
+
+@state class_divination
+name: Elective: Divination
+kind: class
+group: elective
+art: eye
+tags: class
+desc: Tea leaves, star charts and the Mirror of Next Tuesday.
+tick:
+  lore +1
+  if rand(1, 3) == 1:
+    mood -2
+
+@state class_artifice
+name: Elective: Artifice
+kind: class
+group: elective
+art: gear
+tags: class
+desc: Enchanting objects to do what they were never meant to do.
+tick:
+  alchemy +1
+  lore +1
+
+@state class_beastcraft
+name: Elective: Beastcraft
+kind: class
+group: elective
+art: paw
+tags: class
+desc: Familiars, griffon husbandry and dodging the manticore pen.
+tick:
+  vigor +1
+  mood +2
+
+@state class_astromancy
+name: Elective: Astromancy
+kind: class
+group: elective
+art: planet
+tags: class
+desc: Midnight lectures on the observatory roof. You will learn the stars; you will lose sleep.
+tick:
+  lore +2
+  health -1
+
+@state class_healing
+name: Elective: Healing Arts
+kind: class
+group: elective
+art: cross
+tags: class
+desc: Mending flesh with light and needle. Sister Amaranth expects perfection.
+tick:
+  alchemy +1
+  lore +1
+  health +1
+
+@state class_umbral
+name: Elective: Umbral Theory
+kind: class
+group: elective
+art: skull
+tags: class
+desc: Restricted. The study of shadow, death and what lies behind both. Strictly theoretical. Mostly.
+tick:
+  arcana +2
+  lore +1
+  mood -2
+
+# ---------------- Clubs (one at a time) ----------------
+
+@state club_dueling
+name: Club: Dueling Circle
+kind: club
+group: club
+art: duel
+desc: Bruises, glory and the Spring Tournament.
+tick:
+  vigor +1
+  arcana +1
+  health -1
+
+@state club_choir
+name: Club: Choir of the Spheres
+kind: club
+group: club
+art: music
+desc: Harmonies that make the candles flicker in time.
+tick:
+  charm +1
+  mood +2
+
+@state club_skyrace
+name: Club: Skyrace Squad
+kind: club
+group: club
+art: broom
+desc: Brooms, hoops and screaming crowds.
+tick:
+  vigor +2
+  health -1
+
+@state club_ledger
+name: Club: The Lumen Ledger
+kind: club
+group: club
+art: paper
+desc: The student paper. Deadlines, scoops and enemies.
+tick:
+  guile +1
+  charm +1
+
+@state club_garden
+name: Club: Verdant Circle
+kind: club
+group: club
+art: leaf
+desc: Greenhouse afternoons with mandrakes that sing off-key.
+tick:
+  alchemy +1
+  mood +1
+
+@state club_stargazers
+name: Club: Stargazers
+kind: club
+group: club
+art: star
+desc: Telescopes, cocoa and constellations nobody else can name.
+tick:
+  lore +1
+  mood +1
+
+@state club_cartographers
+name: Club: Midnight Cartographers
+kind: club
+group: club
+art: map
+desc: A club that officially does not exist, mapping corridors that officially do not either.
+tick:
+  guile +1
+  lore +1
+
+# ---------------- Jobs (one at a time) ----------------
+
+@state job_library
+name: Job: Library Assistant
+kind: job
+group: job
+art: book
+desc: Reshelving books that bite. Quiet hours, modest pay.
+tick:
+  gold +10
+  lore +1
+  mood -1
+
+@state job_tavern
+name: Job: The Gilded Newt
+kind: job
+group: job
+art: cup
+desc: Serving cider in the village tavern. Good tips, sore feet.
+tick:
+  gold +16
+  charm +1
+  health -2
+
+@state job_apothecary
+name: Job: Apothecary Clerk
+kind: job
+group: job
+art: bottle
+desc: Labelling jars at Pell & Daughters. Do not lick anything.
+tick:
+  gold +12
+  alchemy +1
+
+@state job_stables
+name: Job: Familiar Stables
+kind: job
+group: job
+art: paw
+desc: Feeding hippogriffs and mucking out things that breathe smoke.
+tick:
+  gold +11
+  vigor +1
+  health -1
+
+@state job_tutor
+name: Job: First-Year Tutor
+kind: job
+group: job
+art: feather
+desc: Explaining the difference between a hex and a jinx, again.
+tick:
+  gold +12
+  grades +1
+  mood -1
+
+@state job_courier
+name: Job: Broom Courier
+kind: job
+group: job
+art: letter
+desc: Parcels across the lake at full speed. Pays well. Hurts often.
+tick:
+  gold +18
+  vigor +1
+  health -3
+
+# ---------------- Conditions ----------------
+
+@state sick
+name: Lake Fever
+kind: debuff
+art: rain
+duration: 2
+desc: Shivers, sniffles and a nose that glows faintly blue.
+tick:
+  health -4
+  mood -2
+
+@state injured
+name: Injured
+kind: debuff
+art: cross
+duration: 2
+desc: Something is bruised, sprained or bent the wrong way.
+tick:
+  health -2
+  vigor -1
+
+@state exhausted
+name: Exhausted
+kind: debuff
+art: bed
+duration: 1
+desc: You could sleep standing up. You might have.
+tick:
+  health -3
+  mood -3
+
+@state inspired
+name: Inspired
+kind: buff
+art: sparkle
+duration: 2
+desc: Ideas arrive faster than you can write them down.
+tick:
+  lore +1
+  arcana +1
+  mood +2
+
+@state heartbroken
+name: Heartbroken
+kind: debuff
+art: heartbreak
+duration: 3
+desc: Songs are suddenly about you. All of them.
+tick:
+  mood -4
+
+@state slacking
+name: Skipping Classes
+kind: debuff
+art: bed
+duration: 2
+desc: Freedom! Also: falling behind.
+tick:
+  mood +2
+
+@state detention
+name: Detention
+kind: debuff
+art: lock
+duration: 1
+desc: Scrubbing cauldrons under the eye of a prefect.
+tick:
+  mood -3
+
+@state probation
+name: Academic Probation
+kind: debuff
+art: scales
+desc: One more failure and the board will not be lenient. Raise your Standing above 35 to clear it.
+tick:
+  mood -2
+  if grades >= 35:
+    lose probation
+
+@state in_debt
+name: Debt to Grisk
+kind: debuff
+art: chain
+desc: The goblin moneylender takes 12 crowns a month until the debt is cleared.
+tick:
+  if gold >= 12:
+    gold -12
+    debt_paid += 1
+  else:
+    mood -4
+    debt_missed += 1
+  if debt_paid >= 6:
+    lose in_debt
+  if debt_missed >= 2:
+    queue grisk_collectors now
+
+@state famous
+name: Talk of the Academy
+kind: buff
+art: star
+duration: 3
+desc: Strangers know your name. Some of them even say it nicely.
+tick:
+  renown +2
+  mood +1
+
+@state hiccup_hex
+name: Hiccup Hex
+kind: debuff
+art: sparkle
+duration: 2
+desc: Every hiccup releases a small, harmless, extremely embarrassing firework.
+tick:
+  mood -2
+  renown +1
+
+@state blessed
+name: Maud's Blessing
+kind: buff
+art: flower
+duration: 3
+desc: A sprig of rosemary in your pocket that never wilts.
+tick:
+  health +3
+
+@state familiar_fox
+name: Familiar: Ember
+kind: buff
+art: fox
+desc: A fox-spirit with a smouldering tail who has decided you are hers.
+tick:
+  mood +2
+  if rand(1, 4) == 1:
+    guile +1
+
+@state familiar_owl
+name: Familiar: Clockwork Owl
+kind: buff
+art: owl
+desc: Mira's gift. It hoots the hour, mostly correctly, and remembers your homework.
+tick:
+  grades +1
+
+@state training
+name: Tournament Training
+kind: buff
+art: duel
+duration: 2
+desc: Dawn drills on the dueling green.
+tick:
+  vigor +2
+  arcana +1
+  health -1
+
+@state wakeful
+name: Draught of Wakefulness
+kind: buff
+art: potion
+duration: 1
+desc: You haven't blinked in eleven hours. Your notes are immaculate.
+tick:
+  grades +3
+  health -3
+
+@state haunted
+name: Haunted Dormitory
+kind: debuff
+art: ghost
+duration: 2
+desc: Something rearranges your socks at night.
+tick:
+  mood -2
+
+@state watched
+name: Under Bram's Eye
+kind: debuff
+art: eye
+duration: 3
+desc: The prefect is watching you. Specifically, and with relish.
+tick:
+  mood -1
+
+@state umbral_curse
+name: Umbral Curse
+kind: debuff
+art: skull
+desc: A cold that lives under your skin. Something in the restricted section followed you home.
+tick:
+  health -3
+  mood -1
+  arcana +1
+
+@state hollow_dreams
+name: Hollow Dreams
+kind: debuff
+art: moon
+desc: Every night: a black star, a door beneath the lake, a voice that knows your name.
+tick:
+  mood -1
+  lore +1
+
+@state star_mark
+name: The Star-Mark
+kind: buff
+art: star
+desc: A pale, star-shaped mark on your palm that hums near old magic.
+tick:
+  arcana +1
+
+@state summer_away
+name: Summer Away
+kind: neutral
+art: house
+duration: 2
+desc: Away from the academy for the summer recess. No rent, no classes.
+
+@state summer_work
+name: Summer Work
+kind: job
+art: coin
+duration: 2
+desc: A summer of honest (and occasionally dishonest) labour.
+tick:
+  gold +25
+  health -2
+
+@state frog_voice
+name: Croaking
+kind: debuff
+art: frog
+duration: 1
+desc: A botched transfiguration left you with the voice of a bullfrog.
+tick:
+  charm -1
+  mood -2
+
+@state garden_plot
+name: Garden Plot
+kind: buff
+art: leaf
+desc: A little square of earth behind the greenhouses that is yours. Things grow; so do you.
+tick:
+  alchemy +1
+  if rand(1, 3) == 1:
+    mood +2
+
+@state pen_pal
+name: Pen Pal in Thornwick
+kind: buff
+art: letter
+desc: A student at the rival academy who writes you long, funny letters full of terrible gossip.
+tick:
+  mood +1
+  if rand(1, 4) == 1:
+    lore +1
+
+@state frost_ward
+name: Ilse's Frost-Ward
+kind: buff
+art: snow
+desc: A sliver of Northern winter that Ilse sewed into your collar. Cold things think twice about you.
+tick:
+  arcana +1
+  health +1

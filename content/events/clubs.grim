@@ -1,0 +1,442 @@
+# ============================================================
+#  Club events — drawn while the club state is active.
+#  Clubs are joined at the Club Fair (calendar.grim) except the
+#  Midnight Cartographers, who find you.
+# ============================================================
+
+# ---------------- Dueling Circle ----------------
+
+@event duel_practice_bout
+title: Practice Bout
+when: has(club_dueling)
+weight: 14
+art: duel
+tags: club
+scene: A chalk circle on a stone floor under high windows, two students mid-duel, a ring of members cheering.
+text: Wednesday practice. The captain pairs you with a fourth-year who has a reputation for ending bouts quickly. "Defence or attack," the captain says. "Pick one and commit."
+> left: Hold your ground (Vigor)
+  check vigor 14:
+    vigor +2
+    renown +2
+    say: You weather everything she throws until she runs out of breath. The captain nods slowly.
+  else:
+    health -5
+    say: You hold your ground very bravely, right up until you're on the floor.
+> right: Go on the attack (Arcana)
+  check arcana 14:
+    arcana +2
+    renown +2
+    say: Your opening hex catches her off guard. Point to you. The circle whoops.
+  else:
+    health -5
+    say: She sidesteps and you hex the wall. The wall wins.
+
+@event duel_bram_hazing
+title: Initiation, Prefect-Style
+when: has(club_dueling)
+actor: bram
+weight: 12
+art: shield
+tags: club rival
+scene: A burly upper-year in a prefect's sash blocking a corridor, wand twirling, a crowd of members watching nervously.
+text: Bram Hollis, prefect and senior Circle member, has decided new members need "toughening up". He's made you hold a shield-charm against him for an hour. The hour is not up.
+> left: Endure it
+  meet bram
+  vigor +2
+  mood -4
+  rel bram +3
+  say: Your arms shake. You don't drop the charm. Bram grunts, almost approvingly, and finds someone else to torment.
+> right: Drop the shield and duel him
+  meet bram
+  check vigor 22:
+    renown +6
+    rel bram -10
+    bond bram rival
+    say: You disarm him in front of everyone. His wand clatters across the floor. The silence is delicious. He will remember this.
+  else:
+    health -8
+    rel bram -4
+    say: Bram flattens you with a single bored flick. "Toughening up," he reminds the room.
+
+@event duel_lyra_training
+title: Training Partners
+when: has(club_dueling) and met(lyra) and month >= 6 and month <= 7 and rel(lyra) >= 0
+actor: lyra
+weight: 14
+art: duel
+tags: club rival social
+scene: A misty lawn at dawn, two figures practising wand forms side by side, frost on the grass.
+text: Lyra finds you after practice. "The tournament is in two months. You're the only person in this club who doesn't bore me. Train with me. Dawn. Every day. Don't be late."
+> left: Decline — you need sleep
+  rel lyra -3
+  say: "Sleep," she repeats, as if it's a foreign word. "Fine."
+> right: Agree
+  gain training
+  rel lyra +7
+  say: She's a merciless coach. Somewhere around the third week, you notice she's started bringing two cups of tea.
+
+# ---------------- Choir of the Spheres ----------------
+
+@event choir_solo
+title: Solo Auditions
+when: has(club_choir)
+weight: 14
+art: music
+tags: club
+scene: A circular choir loft under a painted dome, a single student standing in a pool of light, the rest of the choir floating gently above their seats.
+text: Auditions for the Midwinter solo. The choirmaster's eyebrows are famously hard to impress. Your throat is dry. Your hands are wet.
+> left: Stay in the back row
+  mood +2
+  say: You harmonise from safety, and it's lovely. Somebody else gets the solo and cries with relief.
+> right: Audition
+  check charm 16:
+    renown +5
+    mood +5
+    say: You hit the high note and the candles in the loft all flare at once. The choirmaster's eyebrows rise one millimetre. You got it.
+  else:
+    mood -5
+    say: Your voice cracks on the high note and a candle goes out in protest.
+
+@event choir_levitation
+title: Off-Key Altitude
+when: has(club_choir)
+weight: 14
+art: music
+tags: club magic
+scene: A choir hovering a few feet off the floor, all in harmony — except one singer, who has dropped back to the ground with a thump.
+text: The Choir of the Spheres literally floats when it harmonises. You keep falling out of the air on the third verse. People are starting to notice the thumps.
+> left: Mime the hard bits
+  guile +1
+  say: Nobody notices. You float serenely, mouthing words. It's a little bit like fraud.
+> right: Practise every night
+  charm +2
+  health -2
+  say: A week of late nights and you float through the third verse like a feather. The choirmaster gives you a tiny nod.
+
+@event choir_concert
+title: The Winter Concert
+when: has(club_choir) and (month == 4 or month == 5)
+weight: 16
+art: bell
+tags: club festival
+scene: The great hall at night, a floating choir lit by candles, the audience below with faces tilted up.
+text: The winter concert. The great hall is packed. Somewhere in the audience, the Ledger's critic is sharpening her quill.
+> left: Sing for the audience
+  renown +4
+  mood +4
+  say: You sing and the hall sways. The review calls the choir "unearthly". You cut it out and keep it.
+> right: Sing for yourself
+  mood +8
+  say: You close your eyes and forget anyone is listening. When you open them, you are higher than everyone else.
+
+# ---------------- Skyrace Squad ----------------
+
+@event sky_tryouts
+title: Tryouts
+when: has(club_skyrace) and not flag(sky_team)
+weight: 18
+art: broom
+tags: club
+scene: Brooms streaking around the towers, hoops of light hanging in the sky, a captain with a whistle on the battlements.
+text: Skyrace tryouts: three laps around the towers, through the hoops, without dying. The captain has a stopwatch and no visible sense of humour.
+> left: Fly clean and steady
+  check vigor 12:
+    flag sky_team
+    renown +3
+    say: You're not the fastest, but you hit every hoop. "Reserve," says the captain. Then: "...no. Team."
+  else:
+    mood -3
+    say: You miss two hoops and nearly a gargoyle. "Reserves," says the captain. "Keep practising."
+> right: Go full speed
+  check vigor 18:
+    flag sky_team
+    renown +5
+    say: You scream through the hoops so fast the stopwatch has to be checked. You're on the team. Obviously.
+  else:
+    health -8
+    say: You go full speed into the north tower. The tower is fine.
+
+@event sky_crash
+title: A Bad Landing
+when: has(club_skyrace)
+weight: 12
+art: broom
+tags: club danger
+scene: A broom snapped in two on the grass, a student sitting up dazed, teammates landing around them.
+text: Practice. A gust catches you mid-turn, and the ground arrives rather sooner than expected. Your ankle is making an interesting shape.
+> left: Walk it off
+  vigor +1
+  chance 50:
+    gain injured
+    say: You do not walk it off. You limp it off, for a month.
+  else:
+    say: Tough as old boots. The team cheers when you get back on your broom.
+> right: Straight to the infirmary
+  gold -5
+  health +4
+  say: Sister Amaranth sets it in a minute and charges you five crowns for "carelessness". Fair.
+
+@event sky_championship
+title: Lumenhold vs. Thornwick
+when: has(club_skyrace) and flag(sky_team) and month >= 6
+weight: 16
+art: trophy
+tags: club festival
+scene: Two teams of broom-riders in blue and green above a packed stadium, the golden finishing hoop glowing at the top of the highest tower.
+text: The championship against Thornwick Academy. Final lap. You're neck and neck with their captain, and the golden hoop is at the top of the tallest tower.
+> left: Play it safe
+  renown +3
+  say: Thornwick takes the hoop by a whisker. Still: second place in the region. The team carries you off the field anyway.
+> right: The suicide dive
+  check vigor 22:
+    renown +12
+    gain famous
+    mood +10
+    say: You dive straight down the tower face and pull up at the last second, through the hoop. The stadium explodes.
+  else:
+    health -14
+    gain injured
+    renown +4
+    say: You dive. You miss. The crowd gasps, then cheers you anyway when you stagger up waving.
+
+# ---------------- The Lumen Ledger ----------------
+
+@event ledger_pie_scoop
+title: The Case of the Missing Pies
+when: has(club_ledger)
+actor: nessa
+weight: 14
+art: paper
+tags: club social
+scene: A cramped newspaper office in a tower attic, a printing press clanking, a girl with an ink-stained grin pointing at a map pinned with string.
+text: Nessa slams a file on your desk. "Pies. Forty-two of them, gone from the kitchens in a single night. I want the culprit, I want a photo and I want it by Friday."
+> left: Write a light-hearted piece
+  charm +1
+  rel nessa +1
+  say: "Pie-rates Strike Again." Nessa groans at the headline and prints it anyway.
+> right: Actually investigate
+  check guile 14:
+    renown +4
+    rel nessa +6
+    say: The culprit: a family of brownies living in the chimney. Your story runs on the front page. Nessa frames it.
+  else:
+    mood -3
+    rel nessa +2
+    say: You stake out the kitchens for three nights and catch nothing but a cold. Nessa pats your head.
+
+@event ledger_bram_story
+title: The Prefect's Bribes
+when: has(club_ledger) and met(bram)
+actor: nessa
+weight: 12
+art: scales
+tags: club rival
+scene: An anonymous note spread on a desk under a lamp, next to a sketch of a prefect taking a coin purse from a first-year.
+text: An anonymous tip: Bram Hollis has been taking bribes from first-years to skip their demerits. You have a witness. Nessa wants your byline on it. "This is real journalism," she says, eyes shining.
+> left: Kill the story
+  rel nessa -4
+  rel bram +3
+  say: Nessa is disappointed in you. Somehow, Bram finds out you buried it. He nods at you in the corridor. You feel slightly dirty.
+> right: Publish it
+  renown +6
+  rel nessa +6
+  rel bram -15
+  gain watched
+  if rel(bram) < -30:
+    bond bram nemesis
+  say: The story runs. Bram is stripped of his sash for a month. He gets it back. And now he knows exactly who you are.
+
+@event ledger_deadline
+title: Deadline Night
+when: has(club_ledger)
+actor: nessa
+weight: 12
+art: candle
+tags: club
+scene: The newspaper office at 3am, crumpled drafts on the floor, two students slumped over typesetting trays.
+text: The press runs at dawn and half the paper is blank. Nessa is chewing her quill. "I need you tonight. All night. I'll owe you."
+> left: You have an exam tomorrow
+  grades +2
+  rel nessa -3
+  say: You sleep. The paper comes out with a large drawing of a duck on page four. Nessa doesn't speak to you for a day.
+> right: Pull an all-nighter
+  health -4
+  grades -2
+  rel nessa +6
+  say: You write three articles and a horoscope. At dawn Nessa falls asleep on your shoulder, ink on her nose.
+
+# ---------------- Verdant Circle ----------------
+
+@event garden_mandrakes
+title: The Mandrake Choir
+when: has(club_garden)
+weight: 14
+art: leaf
+tags: club nature
+scene: Rows of potted mandrakes in a steamy greenhouse, their little leafy heads opened in song.
+text: The greenhouse mandrakes have started singing again. Off-key and enthusiastic. The earmuffs are on the hook by the door. Tobias isn't wearing his; he's harmonising.
+> left: Earmuffs on
+  alchemy +1
+  say: You repot six mandrakes in blissful silence. Good honest work.
+> right: Sing along
+  mood +5
+  chance 30:
+    health -3
+    say: You sing along and promptly faint. Mandrake song is strong stuff. You wake up very relaxed.
+  else:
+    say: The mandrakes adore you. The greenhouse sounds like a pub at closing time.
+
+@event garden_moonflower
+title: The Moonflower
+when: has(club_garden) and met(tobias)
+actor: tobias
+weight: 12
+art: flower
+tags: club romance nature
+scene: A single silver flower opening in the dark of a glass greenhouse, two faces lit by its glow.
+text: "The moonflower's going to bloom tonight," Tobias says, a little breathless. "Once every eleven years. I'm staying up to see it. You... could stay too. If you want."
+> left: You need sleep
+  rel tobias -1
+  say: "Course. Yeah." He tells you about it at breakfast, in detail, with gestures.
+> right: Stay up with him
+  rel tobias +6
+  love tobias +5
+  mood +5
+  say: At 2am the flower opens and fills the greenhouse with silver light. Tobias doesn't look at the flower. He looks at you.
+
+@event garden_maud_secret
+title: The Secret Garden
+when: has(club_garden) or (month >= 7 and month <= 9)
+actor: maud
+weight: 10
+art: mushroom
+tags: club nature
+scene: An old woman in a battered straw hat holding open a hidden door in an ivy-covered wall; beyond, impossible flowers glow.
+text: The old groundskeeper beckons you behind the potting shed, to a door in the wall you've walked past a hundred times without seeing. "You've got the hands for it," Old Maud says. "Want to see what grows where nobody's looking?"
+> left: Thank her and decline
+  meet maud
+  rel maud +1
+  say: "Suit yourself." The door is gone when you look back.
+> right: Follow her in
+  meet maud
+  rel maud +8
+  alchemy +2
+  gain blessed
+  say: Inside: glowing ferns, silver bees, a pear tree that hums. Maud tucks a sprig of rosemary into your pocket. "For luck. Don't lose it."
+
+# ---------------- Stargazers ----------------
+
+@event stars_cocoa_night
+title: Cocoa on the Roof
+when: has(club_stargazers)
+weight: 14
+art: cup
+tags: club social
+scene: Students wrapped in blankets on a flat roof, steaming mugs in hand, telescopes pointed at a velvet sky.
+text: Stargazers meet on the roof with blankets, telescopes and an illegal quantity of cocoa. Tonight is cloudy. Nobody cares.
+> left: Talk until dawn
+  mood +6
+  charm +1
+  say: You talk about home, about the future, about whether stars are lonely. Someone falls asleep on your shoulder.
+> right: Do your homework by starlight
+  lore +2
+  grades +2
+  say: You finish your essay by the light of the cocoa-warmer charm. Productive. A little lonely.
+
+@event stars_meteor_bet
+title: The Meteor Wager
+when: has(club_stargazers)
+weight: 12
+art: dice
+tags: club money
+scene: A chalkboard on an observatory wall covered in tally marks and names, a pile of coins on a stool beneath it.
+text: The club is running a betting pool on tonight's meteor count. The current favourite is 40. The charts suggest something else. Or do they?
+> left: Bet on the charts (Lore)
+  check lore 14:
+    gold +20
+    say: Fifty-three meteors. You called fifty-two. Close enough to win the pot.
+  else:
+    gold -10
+    say: The charts were wrong, or you read them wrong. Ten crowns gone.
+> right: Stay out of it
+  mood +1
+  say: You watch the meteors for their own sake. Turns out that's the best seat in the house.
+
+@event stars_constellation
+title: An Unnamed Shape
+when: has(club_stargazers)
+weight: 12
+art: star
+tags: club mystery
+scene: A star chart spread on a table, a student's finger tracing a new pattern between unmarked stars.
+text: Plotting the autumn sky, you notice seven faint stars that form a ring around nothing. The charts call that patch of sky "empty". It doesn't look empty.
+> left: Ignore it
+  say: You plot the usual constellations. Your chart gets top marks.
+  grades +2
+> right: Investigate
+  lore +3
+  flag saw_hollow_star
+  hollow +1
+  say: You spend a week in the archives. Three hundred years ago, the patch was called the Hollow. Then someone scraped the name off every chart.
+
+# ---------------- Midnight Cartographers ----------------
+
+@event carto_invite
+title: An Invitation at Midnight
+when: met(corvin) and rel(corvin) >= 10 and not has(club_cartographers) and turn >= 4
+actor: corvin
+weight: 20
+art: map
+tags: club mystery
+scene: A slip of black paper pushed under a dormitory door, a silver ink map on it that rearranges itself as you watch.
+text: A black card under your door. On it, a map in silver ink that redraws itself while you watch. Corvin's handwriting: "Midnight. Under the third gargoyle. Bring a candle. Tell no one."
+> left: Ignore it
+  rel corvin -2
+  say: The card blanks itself the next morning. Corvin doesn't mention it, but he's a little cooler for a week.
+> right: Go
+  gain club_cartographers
+  rel corvin +6
+  guile +1
+  say: Under the gargoyle: six students, a stack of maps and a passage you'd never seen. "Welcome," says Corvin, "to the club that doesn't exist."
+
+@event carto_thursday_stairs
+title: The Thursday Staircase
+when: has(club_cartographers)
+weight: 14
+art: map
+tags: club mystery
+scene: A spiral staircase emerging from a blank wall in moonlight, its steps unfolding one by one.
+text: The Cartographers have heard of a staircase that only exists on Thursdays between midnight and one. Tonight is Thursday. It is 11:58.
+> left: Map it carefully
+  lore +2
+  guile +1
+  say: You chart forty-one steps and a landing with a window onto a sky that isn't this one. The map is the club's pride.
+> right: Climb it to the top
+  check guile 16:
+    gold +45
+    say: At the top, a forgotten storeroom. Inside: a chest of old academy coins. The club splits it. Corvin cries a little.
+  else:
+    mood -5
+    say: At one o'clock the staircase stops existing. You were on it. You land in a laundry chute.
+
+@event carto_lake_tunnel
+title: The Tunnel Under the Lake
+when: has(club_cartographers) and not flag(found_lake_tunnel)
+weight: 12
+art: door
+tags: club mystery hollowstar
+chain: hollowstar
+scene: A narrow brick tunnel dripping with water, lit by a single candle, ending at a round door carved with a black star.
+text: A loose stone in the boathouse cellar opens on a tunnel running out under the lake. The bricks drip. At the far end, a round door carved with a black star. It is warm to the touch.
+> left: Mark it and leave
+  flag found_lake_tunnel
+  hollow +1
+  lore +1
+  say: You add the tunnel to the club map with a skull beside it. Corvin adds a second skull, to be safe.
+> right: Press your palm to the star
+  flag found_lake_tunnel
+  hollow +1
+  arcana +2
+  mood -3
+  gain hollow_dreams
+  say: The star drinks the warmth out of your hand. Behind the door, something very large shifts in its sleep.

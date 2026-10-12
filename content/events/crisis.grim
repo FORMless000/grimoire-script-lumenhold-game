@@ -1,0 +1,126 @@
+# ============================================================
+#  Crises: queued by resources hitting zero (see core/rules.grim)
+#  and by debt. These are the "game over" gates — each gives the
+#  player one way out, at a price, before ending the run.
+# ============================================================
+
+@event crisis_collapse
+title: Collapse
+trigger: queued
+priority: 90
+art: cross
+tags: crisis
+scene: A narrow infirmary bed under a high arched window, a healer's lamp floating beside it.
+text: The world tilts. When it rights itself you are in the infirmary, and Sister Amaranth is looking at you over her spectacles. "You have been running your body like a borrowed broom," she says.
+> left: Pay for the full cure (30 gold)
+  if gold >= 30:
+    gold -30
+    health +40
+    say: Three foul tonics and two days' sleep later, you feel almost human.
+  elif collapses >= 1:
+    end ending_sent_home
+  else:
+    health +20
+    grades -8
+    collapses += 1
+    say: You can't pay. She heals you anyway, slowly, and you miss a fortnight of classes.
+> right: Ask to rest instead
+  if collapses >= 1:
+    end ending_sent_home
+  else:
+    health +25
+    grades -10
+    mood -5
+    collapses += 1
+    lose sick
+    say: A long, dull fortnight in bed. Sister Amaranth warns you: "Next time, I write to your family."
+
+@event crisis_despair
+title: The Grey
+trigger: queued
+priority: 90
+art: rain
+tags: crisis
+scene: A student sitting on the edge of a dormitory bed, rain on the window, a packed trunk by the door.
+text: Everything has gone grey. You have packed your trunk twice this week and unpacked it once. It would be so easy to take the next barge and simply stop.
+> left: Reach out to someone
+  if bonds(friend) + bonds(close) + bonds(partner) > 0:
+    mood +30
+    say: You knock on a friend's door. They don't ask questions. They just make tea, and stay.
+  elif met(maud):
+    mood +20
+    rel maud +6
+    say: Old Maud finds you in the gardens and puts a trowel in your hand. "Dig," she says. You dig. It helps more than it should.
+  elif despairs >= 1:
+    end ending_quiet_departure
+  else:
+    mood +15
+    despairs += 1
+    say: You talk to the night porter, of all people. He tells you about his own first year. It's enough, for now.
+> right: Take the next barge
+  if despairs >= 1:
+    end ending_quiet_departure
+  else:
+    mood +12
+    despairs += 1
+    say: You get as far as the landing. The barge is late. By the time it arrives, you have decided to stay one more month.
+
+@event crisis_probation
+title: The Disciplinary Board
+trigger: queued
+priority: 90
+art: scales
+tags: crisis
+scene: Three faculty members behind a high bench in a dim chamber; the headmistress in the centre, hands folded.
+text: Your standing has collapsed. You are summoned before the Disciplinary Board: three professors and the headmistress, who looks at you with an expression of deep, patient disappointment.
+> left: Plead your case (Charm)
+  if has(probation):
+    end ending_expelled
+  else:
+    check charm 25:
+      grades +20
+      gain probation
+      say: You speak honestly and well. They grant you probation. "Do not make us regret it."
+    else:
+      grades +12
+      gain probation
+      mood -8
+      say: You stammer. They grant probation anyway, but the headmistress's sigh will haunt you.
+> right: Promise to work harder
+  if has(probation):
+    end ending_expelled
+  else:
+    grades +15
+    gain probation
+    mood -5
+    say: "Promises are cheap," says Professor Thorne. "We'll take it anyway." Probation.
+
+@event grisk_collectors
+title: Grisk's Collectors
+trigger: queued
+priority: 80
+art: chain
+tags: crisis money
+chain: debt
+scene: Two large trolls in ill-fitting waistcoats looming in a dormitory doorway, one holding a ledger.
+text: Two trolls in waistcoats are waiting outside your dormitory. "Mister Grisk," says the larger one, "is disappointed." The smaller one cracks his knuckles, which sounds like a rockslide.
+> left: Hand over everything you have
+  gold = 0
+  debt_missed = 0
+  mood -6
+  if debt_paid >= 3:
+    lose in_debt
+    say: They count your purse twice and declare the debt settled. "Pleasure," says the large one, meaning it.
+  else:
+    debt_paid += 2
+    say: They take every coin and your good boots. "Partial," they say, and leave.
+> right: Run
+  check vigor 22:
+    debt_missed = 1
+    mood -2
+    say: You escape across the rooftops. They'll be back, but not this month.
+  else:
+    health -18
+    debt_missed = 0
+    say: You do not escape. The trolls are surprisingly gentle about breaking only one rib.
+    gain injured

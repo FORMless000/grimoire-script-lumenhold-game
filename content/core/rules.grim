@@ -1,0 +1,200 @@
+# ============================================================
+#  Lumenhold Academy — core rules
+#  Resources, skills, calendar, global hooks.
+#  See docs/grimoire-script.md for the language.
+# ============================================================
+
+@game
+title: Lumenhold Academy
+subtitle: Three years. Thirty-six moons. One apprentice.
+years: 3
+# The academic year starts in autumn. Month 1 = Harvestmoon.
+months: Harvestmoon, Emberwane, Mistveil, Frostcall, Deepwinter, Thawmoon, Stormbloom, Greenrise, Blossomtide, Highsun, Goldenhaze, Starfall
+cards_per_month: 3
+max_cards_per_month: 7
+social_per_month: 1
+min_random_per_month: 1
+intro: The sky-barge lurches. Below, the lake glitters; above, the seven towers of Lumenhold Academy pierce the clouds. You have a trunk, a borrowed wand and a letter of acceptance with your name spelled wrong. Three years begin now.
+
+# ---------------- Resources (meters at the top of the screen) ----------------
+
+@resource health
+name: Health
+icon: heart
+min: 0
+max: 100
+start: 70
+color: #d9606a
+desc: Your body. At zero you collapse.
+on_zero:
+  queue crisis_collapse now
+
+@resource mood
+name: Mood
+icon: sun
+min: 0
+max: 100
+start: 60
+color: #e6b84a
+desc: Your spirits. At zero, despair takes hold.
+on_zero:
+  queue crisis_despair now
+
+@resource gold
+name: Gold
+icon: coin
+min: 0
+max: 999
+start: 30
+color: #d7a948
+desc: Crowns in your purse. Rent is due every month.
+on_zero:
+  flag broke
+
+@resource grades
+name: Standing
+icon: scroll
+min: 0
+max: 100
+start: 50
+color: #6aa0e0
+desc: Your academic standing. At zero you face the disciplinary board.
+on_zero:
+  queue crisis_probation now
+
+@resource renown
+name: Renown
+icon: star
+min: 0
+max: 100
+start: 5
+color: #b58ae0
+desc: How much the academy talks about you — for better or worse.
+
+# ---------------- Skills ----------------
+
+@skill arcana
+name: Arcana
+icon: wand
+start: 8
+max: 100
+desc: Raw spellcraft — power, control, nerve.
+
+@skill lore
+name: Lore
+icon: book
+start: 8
+max: 100
+desc: Scholarship, theory, history, languages of the old world.
+
+@skill alchemy
+name: Alchemy
+icon: potion
+start: 6
+max: 100
+desc: Potions, herbs, reagents and the patience to stir clockwise.
+
+@skill charm
+name: Charm
+icon: mask
+start: 8
+max: 100
+desc: Wit, warmth, persuasion. Making people want to say yes.
+
+@skill vigor
+name: Vigor
+icon: sword
+start: 8
+max: 100
+desc: Stamina, reflexes, dueling and broom-flight.
+
+@skill guile
+name: Guile
+icon: eye
+start: 6
+max: 100
+desc: Sneaking, lying, noticing what others miss.
+
+# ---------------- Global hooks ----------------
+
+@hook rent
+on: month_start
+label: Dormitory & board
+when: turn > 1 and not has(summer_away)
+do:
+  gold -10
+
+@hook term_stress
+on: month_start
+label: Term-time pressure
+when: turn > 1 and month != 11 and month != 12
+do:
+  mood -1
+  if month == 4 or month == 10:
+    mood -3
+
+@hook debt_pressure
+on: month_start
+label: Empty purse
+when: gold <= 0 and turn > 1
+do:
+  mood -4
+
+@hook exhaustion_drain
+on: month_start
+label: Running on empty
+when: health < 25
+do:
+  mood -3
+
+@hook gloom_drain
+on: month_start
+label: Gloom
+when: mood < 20
+do:
+  health -2
+
+@hook natural_recovery
+on: month_start
+label: Rest
+when: health < 60 and not has(sick) and not has(injured)
+do:
+  health +2
+
+@hook standing_drift
+on: month_start
+label: Coursework
+when: turn > 1 and month != 11 and month != 12 and turn % 2 == 0
+do:
+  grades -1
+  if has(slacking):
+    grades -2
+
+@hook fame_fades
+on: month_start
+label: Fading gossip
+when: renown > 40 and turn % 3 == 0
+do:
+  renown -2
+
+# ---------------- Game start ----------------
+
+@hook start
+on: game_start
+do:
+  queue intro_arrival now
+  queue choose_origin now
+
+@hook love_glow
+on: month_start
+label: Someone to come home to
+when: bonds(partner) > 0
+do:
+  mood +3
+
+@hook lonely
+on: month_start
+label: Loneliness
+when: turn > 4 and bonds(friend) + bonds(close) + bonds(partner) == 0
+do:
+  mood -2

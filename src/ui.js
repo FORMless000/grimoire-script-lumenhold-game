@@ -1,0 +1,584 @@
+/*
+ * Lumenhold UI — renders the engine's output and feeds choices back.
+ * Swipe the card left/right (or use the buttons / arrow keys). Menus open as a modal.
+ * Add ?debug to the URL for the content-author panel, ?event=<id>&debug to preview one event.
+ * ?lang=<code> forces a language for this visit (e.g. ?lang=zh-CN).
+ * All visible strings go through t() (src/i18n.js) or come from (translated) content.
+ */
+(function () {
+  'use strict';
+  const SAVE_KEY = 'lumenhold.save.v1';
+  const SETTINGS_KEY = 'lumenhold.settings.v1';
+  const RESUME_KEY = 'lumenhold.resume';
+  const app = document.getElementById('app');
+  const params = new URLSearchParams(location.search);
+  const DEBUG = params.has('debug');
+  const t = I18n.t;
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } },
+    del(k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } },
+  };
+  let settings = { notes: true, lang: null };
+  try { Object.assign(settings, JSON.parse(store.get(SETTINGS_KEY) || '{}')); } catch (e) { /* ignore */ }
+  const saveSettings = () => store.set(SETTINGS_KEY, JSON.stringify(settings));
+
+  let content = null, eng = null;
+  const ui = { tab: 'you', mode: null, view: null, busy: false, sideOpen: false };
+  const LOCALES = window.LUMENHOLD_LOCALES || {};
+  const languages = [{ code: 'en', name: 'English' }].concat(Object.keys(LOCALES).map((code) => {
+    const uiSrc = LOCALES[code].find((s) => /(^|\/)ui\.lang$/.test(s.path));
+    const loc = uiSrc ? I18n.loadLocale(code, [uiSrc]) : { ui: {} };
+    return { code, name: loc.ui['lang.name'] || code };
+  }));
+
+  /* ------------------------------------------------------------------ boot (called at the end of this file) */
+  function pickLang() {
+    const want = params.get('lang') || settings.lang;
+    if (want && languages.some((l) => l.code === want)) return want;
+    const nav = (navigator.language || 'en').toLowerCase();
+    const hit = languages.find((l) => l.code.toLowerCase() === nav) || languages.find((l) => nav.startsWith(l.code.toLowerCase().split('-')[0]) && l.code !== 'en');
+    return hit ? hit.code : 'en';
+  }
+  function boot() {
+    if (!window.LUMENHOLD_SOURCES) return fatal(['Content bundle not found (build/content.bundle.js).', '', 'From the project folder run:', '    node tools/grim.js build']);
+    const r = Grimoire.compile(window.LUMENHOLD_SOURCES);
+    if (r.errors.length) return fatal(['Content failed to compile:', ''].concat(r.errors.map((e) => e.message)));
+    content = r.content;
+    const lang = pickLang();
+    let locale = null;
+    if (lang !== 'en' && LOCALES[lang]) {
+      locale = I18n.loadLocale(lang, LOCALES[lang]);
+      if (locale.errors.length) console.warn('[i18n]', locale.errors.join('\n'));
+      const st = I18n.applyContent(content, locale);
+      if (st.missing.length) console.info('[i18n] ' + lang + ': ' + st.missing.length + ' untranslated strings (shown in English)');
+    }
+    I18n.use(locale);
+    document.documentElement.lang = lang;
+    if (/^zh/.test(lang)) loadCjkFonts();
+    window.lumen = { content, get eng() { return eng; }, Grimoire, Engine, Art, I18n };
+    document.addEventListener('keydown', onKey);
+    if (params.get('event')) return previewEvent(params.get('event'));
+    if (store.get(RESUME_KEY)) {
+      store.del(RESUME_KEY);
+      const saved = store.get(SAVE_KEY);
+      if (saved) { try { eng = new Engine(content).load(saved); buildGame(); return step(eng.advance()); } catch (e) { console.warn(e); } }
+    }
+    titleScreen();
+  }
+  function loadCjkFonts() {
+    const l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;700&display=swap';
+    document.head.appendChild(l);
+  }
+  function fatal(lines) { app.innerHTML = '<div class="errors">' + esc(lines.join('\n')) + '</div>'; }
+  function switchLang(code, resume) {
+    if (resume && eng && eng.s && !eng.s.ended) { save(); store.set(RESUME_KEY, '1'); }
+    settings.lang = code; saveSettings();
+    const u = new URL(location.href); u.searchParams.delete('lang');
+    location.href = u.toString();
+  }
+
+  /* ------------------------------------------------------------------ title */
+  function titleScreen() {
+    ui.mode = 'title';
+    closeOverlay();
+    const saved = store.get(SAVE_KEY);
+    let savedInfo = '';
+    if (saved) { try { const s = JSON.parse(saved); const e = new Engine(content).load(s); savedInfo = t('title.saveInfo', { name: esc(s.name), month: esc(e.monthName()), year: e.yearOf() }); } catch (e) { savedInfo = ''; } }
+    const g = content.game;
+    const cur = I18n.lang();
+    app.innerHTML =
+      '<div class="title-screen"><div class="title-panel">' +
+      '<div class="title-crest">' + Art.icon('tower', 64) + '</div>' +
+      '<h1>' + esc(g.title || 'Lumenhold Academy') + '</h1>' +
+      '<p class="sub">' + esc(g.subtitle || '') + '</p>' +
+      '<div class="title-form">' +
+      (languages.length > 1 ? '<div class="lang-row">' + Art.icon('globe', 16) + languages.map((l) => '<button class="lang-btn' + (l.code === cur ? ' on' : '') + '" data-lang="' + esc(l.code) + '">' + esc(l.name) + '</button>').join('') + '</div>' : '') +
+      '<label for="pname">' + esc(t('title.yourName')) + '</label><input id="pname" maxlength="24" value="' + esc(randomName()) + '" autocomplete="off">' +
+      '<details class="adv"><summary>' + esc(t('title.seed')) + '</summary><input id="pseed" inputmode="numeric" placeholder="' + esc(t('title.seedPlaceholder')) + '"></details>' +
+      '<div class="row"><button class="btn primary grow" id="begin">' + esc(t('title.begin')) + '</button>' +
+      (savedInfo ? '<button class="btn grow" id="cont">' + esc(t('title.continue', { info: '' })) + savedInfo + '</button>' : '') + '</div>' +
+      '<div class="howto">' + t('title.howto_html') + '</div>' +
+      '</div></div></div>';
+    document.querySelectorAll('.lang-btn').forEach((b) => { b.onclick = () => { if (b.dataset.lang !== cur) switchLang(b.dataset.lang, false); }; });
+    document.getElementById('begin').onclick = () => {
+      const name = document.getElementById('pname').value.trim() || t('title.defaultName');
+      const seed = document.getElementById('pseed').value.trim();
+      eng = new Engine(content);
+      buildGame();
+      step(eng.newGame({ name, seed: seed === '' ? null : seed }));
+    };
+    const c = document.getElementById('cont');
+    if (c) c.onclick = () => { eng = new Engine(content).load(saved); buildGame(); step(eng.advance()); };
+  }
+  function randomName() { const n = t('title.names').split(/\s*[,，、]\s*/).filter(Boolean); return n[Math.floor(Math.random() * n.length)] || 'Wren'; }
+
+  function previewEvent(id) {
+    eng = new Engine(content);
+    eng.newGame({ name: t('title.defaultName'), seed: 1 });
+    if (!content.events[id]) return fatal(['No event with id "' + id + '"']);
+    const actor = params.get('actor') || (content.events[id].actor && !['any', 'npc'].includes(content.events[id].actor) ? content.events[id].actor : null) || (content.events[id].actor ? Object.keys(content.npcs)[0] : null);
+    if (actor && eng.s.npcs[actor]) eng.s.npcs[actor].met = true;
+    eng.s.deck.unshift({ id, actor, src: 'preview', force: true });
+    buildGame();
+    step(eng.advance());
+  }
+
+  /* ------------------------------------------------------------------ layout */
+  function buildGame() {
+    const nextLang = languages[(languages.findIndex((l) => l.code === I18n.lang()) + 1) % languages.length];
+    app.innerHTML =
+      '<div class="game">' +
+      '<header class="top"><div class="brand">' + esc(content.game.title || 'Lumenhold') + '</div>' +
+      '<div class="date"><div class="when" id="when"></div><div class="timeline" id="timeline"></div></div>' +
+      '<div class="top-actions">' +
+      '<button class="icon-btn side-toggle" id="sideToggle" title="' + esc(t('top.people')) + '">' + Art.icon('group', 20) + '</button>' +
+      (languages.length > 1 ? '<button class="icon-btn" id="langToggle" title="' + esc(t('top.lang') + ' → ' + nextLang.name) + '">' + Art.icon('globe', 18) + '</button>' : '') +
+      '<button class="icon-btn" id="notesToggle" title="' + esc(t('top.notes')) + '">' + Art.icon('feather', 18) + '</button>' +
+      '<button class="icon-btn" id="quit" title="' + esc(t('top.quit')) + '">' + Art.icon('door', 18) + '</button></div></header>' +
+      '<div class="meters" id="meters"></div>' +
+      '<main class="stage"><div class="deck" id="deck"><div class="ghost two"></div><div class="ghost"></div></div>' +
+      '<div class="choices" id="choices"></div><div class="pips" id="pips"></div></main>' +
+      '<aside class="side" id="side"><div class="tabs" id="tabs">' +
+      '<button data-tab="you">' + esc(t('tab.you')) + '</button><button data-tab="people">' + esc(t('tab.people')) + '</button><button data-tab="journal">' + esc(t('tab.journal')) + '</button></div>' +
+      '<div class="tab-body" id="tabBody"></div></aside>' +
+      '</div>';
+    document.getElementById('quit').onclick = () => { save(); titleScreen(); };
+    const lt = document.getElementById('langToggle');
+    if (lt) lt.onclick = () => switchLang(nextLang.code, true);
+    document.getElementById('notesToggle').onclick = () => { settings.notes = !settings.notes; saveSettings(); document.querySelectorAll('.scene-note').forEach((n) => { n.style.display = settings.notes ? '' : 'none'; }); };
+    document.getElementById('sideToggle').onclick = () => { ui.sideOpen = !ui.sideOpen; document.getElementById('side').classList.toggle('open', ui.sideOpen); };
+    document.getElementById('tabs').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; ui.tab = b.dataset.tab; renderSide(); };
+    const meters = document.getElementById('meters');
+    meters.innerHTML = content.order.resources.map((id) => {
+      const r = content.resources[id];
+      return '<div class="meter" id="m-' + id + '" style="--c:' + esc(r.color || '#888') + '" title="' + esc(r.name + ' — ' + (r.desc || '')) + '">' +
+        '<span class="dot"></span><div class="orb"><div class="fill"></div>' + Art.icon(r.icon || 'star', 20) + '</div>' +
+        '<div class="val"></div><div class="lbl">' + esc(r.name || id) + '</div></div>';
+    }).join('');
+    if (DEBUG) buildDebug();
+    renderChrome();
+  }
+
+  function renderChrome() {
+    if (!eng || !eng.s) return;
+    const snap = eng.snapshot();
+    const when = document.getElementById('when');
+    if (!when) return;
+    when.innerHTML = esc(snap.month) + '<small>' + esc(t('date.sub', { year: snap.year, turn: snap.turn, max: snap.maxTurns })) + '</small>';
+    const summer = (content.game.summer_months || ['11', '12']).map(Number);
+    let tl = '';
+    for (let i = 1; i <= snap.maxTurns; i++) {
+      const mi = ((i - 1) % eng.months.length) + 1;
+      tl += '<i class="' + (i < snap.turn ? 'done ' : '') + (i === snap.turn ? 'now ' : '') + (summer.includes(mi) ? 'summer' : '') + '"></i>';
+    }
+    document.getElementById('timeline').innerHTML = tl;
+    for (const r of snap.resources) {
+      const el = document.getElementById('m-' + r.id); if (!el) continue;
+      const min = r.min == null ? 0 : r.min, max = r.max == null ? 100 : r.max;
+      const scaleMax = r.id === 'gold' ? Math.max(100, Math.min(max, 200)) : max;
+      const pct = Math.max(0, Math.min(100, ((r.value - min) / (scaleMax - min)) * 100));
+      el.querySelector('.fill').style.height = pct + '%';
+      el.querySelector('.val').textContent = Math.round(r.value);
+      el.classList.toggle('low', r.id !== 'renown' && r.id !== 'gold' ? r.value <= 20 : (r.id === 'gold' && r.value <= 5));
+    }
+    const pips = document.getElementById('pips');
+    if (pips) {
+      const done = snap.cardsThisMonth, left = snap.deckLeft;
+      let p = ''; for (let i = 0; i < done + left; i++) p += '<i class="' + (i < done ? 'on' : '') + '"></i>';
+      pips.innerHTML = p ? p + '<span style="margin-left:6px">' + esc(t('pips.thisMonth')) + '</span>' : '';
+    }
+    renderSide(snap);
+  }
+
+  const bondLabel = (b) => t('bond.' + b);
+  const shortName = (npcOrId) => { const d = typeof npcOrId === 'string' ? content.npcs[npcOrId] : npcOrId; return d ? Engine.shortName(d) : String(npcOrId); };
+
+  function renderSide(snap) {
+    snap = snap || eng.snapshot();
+    const body = document.getElementById('tabBody'); if (!body) return;
+    document.querySelectorAll('#tabs button').forEach((b) => b.classList.toggle('on', b.dataset.tab === ui.tab));
+    let h = '';
+    if (ui.tab === 'you') {
+      h += '<div class="sec-h">' + esc(snap.name) + '</div>';
+      for (const s of snap.skills) {
+        const pct = Math.min(100, (s.value / 60) * 100);
+        h += '<div class="skill" title="' + esc(s.desc || '') + '">' + Art.icon(s.icon || 'star', 18) + '<div><div class="nm">' + esc(s.name) + '</div><div class="bar"><b style="width:' + pct + '%"></b></div></div><div class="v">' + Math.round(s.value) + '</div></div>';
+      }
+      h += '<div class="sec-h">' + esc(t('side.conditions')) + '</div>';
+      if (!snap.states.length) h += '<div class="empty">' + esc(t('side.nothing')) + '</div>';
+      const order = { origin: 0, class: 1, club: 2, job: 3 };
+      snap.states.slice().sort((a, b) => (order[a.kind] ?? 9) - (order[b.kind] ?? 9)).forEach((s) => {
+        h += '<div class="state ' + esc(s.kind || '') + '">' + Art.icon(s.art || 'sparkle', 20) + '<div><b>' + esc(s.name) + '</b><p>' + esc(s.desc) + '</p></div>' + (s.left != null ? '<span class="left">' + esc(t('side.monthsLeft', { n: s.left })) + '</span>' : '') + '</div>';
+      });
+    } else if (ui.tab === 'people') {
+      if (!snap.npcs.length) h += '<div class="empty">' + esc(t('side.noPeople')) + '</div>';
+      for (const n of snap.npcs) {
+        const rel = n.rel; const w = Math.abs(rel) / 2; const left = rel >= 0 ? 50 : 50 - w;
+        const col = rel >= 0 ? '#7fd18b' : '#ff8a80';
+        h += '<div class="person" data-id="' + esc(n.id) + '">' + Art.avatar(n, 44) + '<div class="info"><div class="nm">' + esc(n.name) + (n.bond !== 'none' ? '<span class="bond-badge bond-' + esc(n.bond) + '">' + esc(bondLabel(n.bond)) + '</span>' : '') + '</div>' +
+          '<div class="ttl">' + esc(n.title || '') + '</div>' +
+          '<div class="relbar" title="' + esc(t('side.relationship', { n: rel })) + '"><b style="left:' + left + '%;width:' + w + '%;background:' + col + '"></b></div>' +
+          (n.romance && n.love > 0 ? '<div class="lovebar" title="' + esc(t('side.romance', { n: n.love })) + '"><b style="width:' + n.love + '%"></b></div>' : '') +
+          '<div class="desc">' + esc(n.desc || '') + '<br><br>' + esc(t('side.relationship', { n: rel })) + (n.romance ? ' · ' + esc(t('side.romance', { n: n.love })) : '') + '</div></div></div>';
+      }
+    } else {
+      const log = snap.log.slice().reverse();
+      if (!log.length) h += '<div class="empty">' + esc(t('side.emptyJournal')) + '</div>';
+      for (const l of log.slice(0, 120)) {
+        // Re-render title and choice in the current language when possible.
+        const ev = content.events[l.id];
+        const title = ev ? eng.interp(ev.title, l.actor) : l.title;
+        const opt = ev && l.key ? ev.options.find((o) => o.key === l.key) : null;
+        const choice = opt ? eng.interp(opt.label, l.actor) : l.choice;
+        const say = l.sayIds && l.sayIds.length && l.sayIds.every((id) => eng.sayIndex[id]) ? l.sayIds.map((id) => eng.interp(eng.sayIndex[id].text, l.actor)).join(' ') : l.say;
+        h += '<div class="log-item"><div class="when">' + esc(t('journal.when', { month: eng.monthName(l.turn), year: eng.yearOf(l.turn) })) + '</div><b>' + esc(title) + '</b> — <span class="ch">' + esc(choice) + '</span>' + (say ? '<div class="say">' + esc(say) + '</div>' : '') + '</div>';
+      }
+    }
+    body.innerHTML = h;
+    body.querySelectorAll('.person').forEach((p) => { p.onclick = () => p.classList.toggle('open'); });
+  }
+
+  function setPreview(affects) {
+    document.querySelectorAll('.meter').forEach((m) => m.classList.toggle('preview', !!affects && affects.includes(m.id.slice(2))));
+  }
+  function floatDeltas(deltas) {
+    for (const [k, v] of Object.entries(deltas || {})) {
+      const el = document.getElementById('m-' + k);
+      if (!el || !v) continue;
+      const chip = document.createElement('div');
+      chip.className = 'float-chip ' + (v > 0 ? 'pos' : 'neg');
+      chip.textContent = (v > 0 ? '+' : '') + Math.round(v);
+      el.appendChild(chip);
+      setTimeout(() => chip.remove(), 1700);
+    }
+  }
+
+  /* ------------------------------------------------------------------ flow */
+  function step(r) {
+    save();
+    renderChrome();
+    if (r.kind === 'month') return showMonth(r);
+    if (r.kind === 'ending') { store.del(SAVE_KEY); return showEnding(r); }
+    if (r.onShow) floatDeltas(r.onShow.deltas);
+    if (r.view.type === 'menu') return showMenu(r.view);
+    return showCard(r.view);
+  }
+  function next() { ui.busy = false; step(eng.advance()); }
+  function save() { if (eng && eng.s && !eng.s.ended && !params.get('event')) store.set(SAVE_KEY, eng.save()); }
+
+  function resolve(key) {
+    let out;
+    try { out = eng.choose(key); } catch (e) { console.error(e); ui.busy = false; return; }
+    renderChrome();
+    floatDeltas(out.deltas);
+    if (out.say || out.notes.length || out.checks.length || hasVisibleDeltas(out.deltas)) showOutcome(out);
+    else next();
+  }
+  function hasVisibleDeltas(d) { return Object.keys(d).some((k) => content.skills[k] || k.startsWith('rel:') || k.startsWith('love:')); }
+
+  /* ------------------------------------------------------------------ card */
+  const TAGLINE_TAGS = ['class', 'club', 'job', 'social', 'romance', 'study', 'mystery', 'danger', 'crisis', 'festival', 'money', 'nature', 'home', 'rival', 'exam', 'story', 'magic'];
+  function cardTagline(v) {
+    for (const tag of v.tags || []) if (TAGLINE_TAGS.includes(tag)) return t('tag.' + tag);
+    return t('tag.default');
+  }
+  function actorRow(a) {
+    if (!a) return '';
+    const n = Object.assign({ id: a.id }, content.npcs[a.id], a);
+    const rel = a.rel > 0 ? '+' + a.rel : String(a.rel);
+    return '<div class="actor-row">' + Art.avatar(n, 40) + '<div class="who"><b>' + esc(a.name) + '</b><span>' + esc(a.title || '') + ' · ' + rel + '</span></div>' +
+      (a.bond && a.bond !== 'none' ? '<span class="bond-badge bond-' + esc(a.bond) + '">' + esc(bondLabel(a.bond)) + '</span>' : '') + '</div>';
+  }
+  function cardShell(inner, art, tags, seed, extraClass) {
+    const deck = document.getElementById('deck');
+    deck.querySelectorAll('.card').forEach((c) => c.remove());
+    const card = document.createElement('div');
+    card.className = 'card enter ' + (extraClass || '');
+    card.innerHTML = (art !== false ? '<div class="card-art">' + Art.scene(art, tags, seed) + '</div>' : '') + inner;
+    deck.appendChild(card);
+    return card;
+  }
+  const sceneNote = (scene, hidden) => scene ? '<p class="scene-note"' + (hidden ? ' style="display:none"' : '') + '>' + esc(t('card.illustration', { text: scene })) + '</p>' : '';
+  const checkText = (c) => t('check.button', { skill: skillName(c.skill), p: c.p });
+
+  function showCard(v) {
+    ui.mode = 'card'; ui.view = v; ui.busy = false;
+    closeOverlay();
+    const story = v.type === 'story' || v.options.length === 1;
+    const L = story ? v.options[0] : v.options.find((o) => o.key === 'left');
+    const R = story ? v.options[0] : v.options.find((o) => o.key === 'right');
+    const card = cardShell(
+      '<div class="card-label left">' + esc(L.label) + '</div><div class="card-label right">' + esc(R.label) + '</div>' +
+      '<div class="card-body">' + actorRow(v.actor) + '<h2>' + esc(v.title) + '</h2><p class="text">' + esc(v.text) + '</p>' +
+      sceneNote(v.scene, !settings.notes) + '</div>',
+      v.art, v.tags, v.id);
+    card.querySelector('.card-art').insertAdjacentHTML('beforeend', '<span class="tagline">' + esc(cardTagline(v)) + '</span>' + (v.src === 'queued' && !(v.tags || []).includes('story') ? '<span class="src">' + esc(t('card.consequence')) + '</span>' : ''));
+    const choices = document.getElementById('choices');
+    const chk = (o) => o.check ? '<span class="chk">' + esc(checkText(o.check)) + '</span>' : (o.hint ? '<span class="chk">' + esc(o.hint) + '</span>' : '');
+    if (story) {
+      choices.innerHTML = '<button class="choice single" data-k="' + esc(L.key) + '"><span>' + esc(L.label) + chk(L) + '</span></button>';
+    } else {
+      const lock = (o) => o.disabled ? ' disabled title="' + esc(o.hint || t('card.notAvailable')) + '"' : '';
+      choices.innerHTML = '<button class="choice left" data-k="left"' + lock(L) + '><span class="arrow">' + (L.disabled ? '🔒' : '←') + '</span><span>' + esc(L.label) + chk(L) + '</span></button>' +
+        '<button class="choice right" data-k="right"' + lock(R) + '><span>' + esc(R.label) + chk(R) + '</span><span class="arrow">' + (R.disabled ? '🔒' : '→') + '</span></button>';
+    }
+    choices.querySelectorAll('.choice').forEach((b) => {
+      const opt = v.options.find((o) => o.key === b.dataset.k);
+      b.onmouseenter = () => setPreview(opt.affects);
+      b.onmouseleave = () => setPreview(null);
+      b.onclick = () => commitCard(story ? 'right' : b.dataset.k);
+    });
+    attachSwipe(card, {
+      move(dx) {
+        const side = dx < 0 ? 'left' : 'right';
+        const a = Math.min(1, Math.abs(dx) / 90);
+        card.querySelector('.card-label.left').style.opacity = side === 'left' ? a : 0;
+        card.querySelector('.card-label.right').style.opacity = side === 'right' ? a : 0;
+        setPreview(Math.abs(dx) > 25 ? (side === 'left' ? L : R).affects : null);
+      },
+      commit(dir) { resolveCardDir(dir); },
+      allow(dir) { return story || !(dir === 'left' ? L : R).disabled; },
+    });
+  }
+  function skillName(id) { return (content.skills[id] && content.skills[id].name) || id; }
+  function commitCard(dir) {
+    if (ui.busy || ui.mode !== 'card') return;
+    const card = document.querySelector('#deck .card');
+    if (!card) return;
+    const v = ui.view;
+    const story = v.type === 'story' || v.options.length === 1;
+    const opt = v.options.find((o) => o.key === dir);
+    if (!story && opt && opt.disabled) return;
+    flyOut(card, dir);
+    resolveCardDir(dir);
+  }
+  function resolveCardDir(dir) {
+    if (ui.busy) return;
+    ui.busy = true;
+    setPreview(null);
+    const v = ui.view;
+    const story = v.type === 'story' || v.options.length === 1;
+    const key = story ? v.options[0].key : dir;
+    setTimeout(() => resolve(key), 260);
+  }
+  function flyOut(card, dir) {
+    const s = dir === 'left' ? -1 : 1;
+    card.classList.remove('dragging');
+    card.style.transform = 'translate(' + (s * (window.innerWidth * 0.9)) + 'px, 40px) rotate(' + (s * 24) + 'deg)';
+    card.style.opacity = '0';
+  }
+
+  function attachSwipe(card, h) {
+    let x0 = 0, y0 = 0, dx = 0, down = false, moved = false;
+    card.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0 || ui.busy) return;
+      down = true; moved = false; x0 = e.clientX; y0 = e.clientY; dx = 0;
+      card.setPointerCapture(e.pointerId); card.classList.add('dragging'); card.classList.remove('enter');
+    });
+    card.addEventListener('pointermove', (e) => {
+      if (!down) return;
+      dx = e.clientX - x0; const dy = (e.clientY - y0) * 0.25;
+      if (Math.abs(dx) > 4) moved = true;
+      card.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + (dx / 16) + 'deg)';
+      if (h.move) h.move(dx);
+    });
+    const end = () => {
+      if (!down) return; down = false;
+      card.classList.remove('dragging');
+      const dir = dx < 0 ? 'left' : 'right';
+      if (Math.abs(dx) > 100 && (!h.allow || h.allow(dir))) { flyOut(card, dir); h.commit(dir); }
+      else {
+        card.style.transform = '';
+        if (h.move) h.move(0);
+        if (!moved && h.tap) h.tap();
+      }
+    };
+    card.addEventListener('pointerup', end);
+    card.addEventListener('pointercancel', end);
+  }
+
+  /* ------------------------------------------------------------------ outcome */
+  function noteText(n) {
+    if (n.kind === 'meet') return t('note.meet', { name: content.npcs[n.npc] ? content.npcs[n.npc].name : n.npc });
+    if (n.kind === 'bond') return t('note.bond', { name: shortName(n.npc), status: bondLabel(n.status) });
+    if (n.kind === 'gain' || n.kind === 'lose') return t('note.' + n.kind, { state: content.states[n.state] ? content.states[n.state].name : n.state });
+    return n.text || '';
+  }
+  function chipsFor(out) {
+    let h = '';
+    for (const c of out.checks || []) h += '<span class="chip ' + (c.ok ? 'check-ok' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.chip', { skill: skillName(c.skill), p: c.p, result: t(c.ok ? 'check.success' : 'check.failed') })) + '</span>';
+    for (const [k, v] of Object.entries(out.deltas || {})) {
+      if (!v) continue;
+      const sign = (v > 0 ? '+' : '') + Math.round(v * 10) / 10;
+      const cls = v > 0 ? 'pos' : 'neg';
+      if (content.resources[k]) h += '<span class="chip ' + cls + '">' + Art.icon(content.resources[k].icon, 14) + esc(content.resources[k].name) + ' ' + sign + '</span>';
+      else if (content.skills[k]) h += '<span class="chip ' + cls + '">' + Art.icon(content.skills[k].icon, 14) + esc(content.skills[k].name) + ' ' + sign + '</span>';
+      else if (k.startsWith('rel:') || k.startsWith('love:')) {
+        const [kind, id] = k.split(':'); if (!content.npcs[id]) continue;
+        h += '<span class="chip ' + cls + '">' + Art.icon(kind === 'love' ? 'heart' : 'group', 14) + esc(t(kind === 'love' ? 'chip.love' : 'chip.rel', { name: shortName(id), delta: sign })) + '</span>';
+      }
+    }
+    for (const n of out.notes || []) h += '<span class="chip note">' + esc(noteText(n)) + '</span>';
+    return h;
+  }
+  function showOutcome(out) {
+    ui.mode = 'outcome'; ui.busy = false;
+    const card = cardShell('<div class="card-body">' + (out.say ? '<p class="say">' + esc(out.say) + '</p>' : '<p class="say" style="opacity:.6">…</p>') +
+      '<div class="chips">' + chipsFor(out) + '</div></div><div class="tap-note">' + esc(t('outcome.tap')) + '</div>', false, null, null, 'outcome');
+    card.style.background = 'linear-gradient(180deg, #f6efdd, #ece0c2)';
+    document.getElementById('choices').innerHTML = '<button class="choice single" id="contBtn">' + esc(t('outcome.continue')) + '</button>';
+    document.getElementById('contBtn').onclick = () => continueOutcome();
+    attachSwipe(card, { commit() { setTimeout(continueOutcome, 200); }, tap() { flyOut(card, 'right'); setTimeout(continueOutcome, 200); } });
+  }
+  function continueOutcome() {
+    if (ui.mode !== 'outcome' || ui.busy) return;
+    ui.busy = true;
+    next();
+  }
+
+  /* ------------------------------------------------------------------ menu */
+  function showMenu(v) {
+    ui.mode = 'menu'; ui.view = v; ui.busy = false;
+    const deck = document.getElementById('deck'); deck.querySelectorAll('.card').forEach((c) => c.remove());
+    document.getElementById('choices').innerHTML = '';
+    const opts = v.options.map((o, i) => {
+      const aff = o.affects.map((id) => content.resources[id] ? Art.icon(content.resources[id].icon, 14) : '').join('');
+      return '<button class="opt" data-k="' + esc(o.key) + '"' + (o.disabled ? ' disabled' : '') + '><span class="num">' + (i < 9 ? i + 1 : '') + '</span><b>' + esc(o.label) + '</b>' +
+        (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') + (o.check ? '<small>' + esc(checkText(o.check)) + '</small>' : '') +
+        (aff ? '<span class="aff">' + aff + '</span>' : '') + '</button>';
+    }).join('');
+    openOverlay('<div class="modal dark"><div class="modal-art">' + Art.scene(v.art, v.tags, v.id) + '</div><div class="modal-body">' + (v.actor ? actorRow(v.actor).replace('actor-row', 'actor-row" style="color:var(--text)') : '') +
+      '<h2>' + esc(v.title) + '</h2><p class="text">' + esc(v.text) + '</p>' + (settings.notes ? sceneNote(v.scene) : '') +
+      '<div class="opt-grid">' + opts + '</div></div></div>');
+    document.querySelectorAll('.opt').forEach((b) => {
+      const o = v.options.find((x) => x.key === b.dataset.k);
+      b.onmouseenter = () => setPreview(o.affects);
+      b.onmouseleave = () => setPreview(null);
+      b.onclick = () => pickMenu(o.key);
+    });
+  }
+  function pickMenu(key) {
+    if (ui.busy || ui.mode !== 'menu') return;
+    const o = ui.view.options.find((x) => x.key === key);
+    if (!o || o.disabled) return;
+    ui.busy = true;
+    closeOverlay(); setPreview(null);
+    resolve(key);
+  }
+
+  /* ------------------------------------------------------------------ month */
+  function showMonth(r) {
+    ui.mode = 'month'; ui.busy = false;
+    document.querySelectorAll('#deck .card').forEach((c) => c.remove());
+    document.getElementById('choices').innerHTML = '';
+    let rows = '';
+    if (r.turn === 1 && content.game.intro) rows += '<div class="row say">' + esc(content.game.intro) + '</div>';
+    for (const s of r.summary) {
+      const chips = chipsFor({ deltas: s.deltas, notes: s.notes, checks: [] });
+      if (!chips && !s.say.length) continue;
+      rows += '<div class="row"><span class="lbl">' + esc(s.label || t('month.thisMonth')) + '</span><span class="chips">' + chips + '</span></div>';
+      if (s.say.length) rows += '<div class="row say">' + esc(s.say.join(' ')) + '</div>';
+    }
+    const total = {};
+    r.summary.forEach((s) => Object.entries(s.deltas).forEach(([k, v]) => { total[k] = (total[k] || 0) + v; }));
+    openOverlay('<div class="modal dark month-modal"><div class="modal-body">' +
+      '<div class="yr">' + esc(t('month.header', { year: r.year, turn: r.turn, max: r.maxTurns })) + '</div>' +
+      '<div class="big">' + esc(r.month) + '</div>' +
+      '<p class="season">' + esc(t('season.' + r.monthIndex)) + '</p>' +
+      (rows ? '<div class="summary">' + rows + '</div>' : '') +
+      '<div class="row" style="margin-top:18px"><button class="btn primary grow" id="beginMonth" style="width:100%">' + esc(r.ended ? t('month.continue') : t('month.begin', { month: r.month })) + '</button></div>' +
+      '</div></div>');
+    const go = () => { if (ui.mode !== 'month') return; ui.mode = null; closeOverlay(); floatDeltas(total); next(); };
+    document.getElementById('beginMonth').onclick = go;
+    ui.monthGo = go;
+  }
+
+  /* ------------------------------------------------------------------ ending */
+  function showEnding(r) {
+    ui.mode = 'ending';
+    const snap = eng.snapshot();
+    const stats = snap.resources.concat(snap.skills).map((x) => '<div>' + esc(x.name) + '<b>' + Math.round(x.value) + '</b></div>').join('');
+    const people = snap.npcs.filter((n) => n.bond !== 'none' || Math.abs(n.rel) >= 30).map((n) => '<span>' + Art.avatar(n, 26) + esc(shortName(n)) + ' · ' + esc(n.bond !== 'none' ? bondLabel(n.bond) : t(n.rel > 0 ? 'ending.fond' : 'ending.cold')) + '</span>').join('');
+    openOverlay('<div class="modal dark ending-modal"><div class="modal-art" style="aspect-ratio:400/170">' + Art.scene(r.art, ['mystery'], r.id) + '</div><div class="modal-body">' +
+      '<div class="kicker">' + esc(r.early ? t('ending.early', { month: eng.monthName(), year: eng.yearOf() }) : t('ending.graduation')) + '</div>' +
+      '<h2>' + esc(r.title) + '</h2><p class="text">' + esc(r.text) + '</p>' +
+      '<div class="final-stats">' + stats + '</div>' + (people ? '<div class="sec-h">' + esc(t('ending.people')) + '</div><div class="final-people">' + people + '</div>' : '') +
+      '<div class="row" style="display:flex;gap:10px"><button class="btn primary grow" id="again">' + esc(t('ending.again')) + '</button><button class="btn grow" id="journal">' + esc(t('ending.journal')) + '</button></div>' +
+      '</div></div>');
+    document.getElementById('again').onclick = () => { eng = null; titleScreen(); };
+    document.getElementById('journal').onclick = () => { closeOverlay(); ui.tab = 'journal'; ui.sideOpen = true; document.getElementById('side').classList.add('open'); renderSide(); document.getElementById('choices').innerHTML = '<button class="choice single" id="backEnd">' + esc(t('ending.back')) + '</button>'; document.getElementById('backEnd').onclick = () => showEnding(r); };
+  }
+
+  /* ------------------------------------------------------------------ overlay */
+  function openOverlay(html) {
+    closeOverlay();
+    const o = document.createElement('div'); o.className = 'overlay'; o.id = 'overlay'; o.innerHTML = html;
+    document.body.appendChild(o);
+    const f = o.querySelector('button:not(:disabled)'); if (f && ui.mode !== 'menu') f.focus({ preventScroll: true });
+  }
+  function closeOverlay() { const o = document.getElementById('overlay'); if (o) o.remove(); }
+
+  /* ------------------------------------------------------------------ keys */
+  function onKey(e) {
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) return;
+    if (ui.mode === 'card') {
+      const v = ui.view; const story = v.type === 'story' || v.options.length === 1;
+      if (e.key === 'ArrowLeft') { e.preventDefault(); commitCard(story ? 'right' : 'left'); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); commitCard('right'); }
+      else if (story && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); commitCard('right'); }
+    } else if (ui.mode === 'outcome') {
+      if (['Enter', ' ', 'ArrowLeft', 'ArrowRight'].includes(e.key)) { e.preventDefault(); const c = document.querySelector('#deck .card'); if (c) flyOut(c, e.key === 'ArrowLeft' ? 'left' : 'right'); setTimeout(continueOutcome, 180); }
+    } else if (ui.mode === 'menu') {
+      const n = parseInt(e.key, 10);
+      if (n >= 1 && n <= 9 && ui.view.options[n - 1]) pickMenu(ui.view.options[n - 1].key);
+    } else if (ui.mode === 'month') {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ui.monthGo && ui.monthGo(); }
+    }
+  }
+
+  /* ------------------------------------------------------------------ debug panel (developer-facing, English only) */
+  function buildDebug() {
+    const btn = document.createElement('button'); btn.className = 'btn debug-btn'; btn.textContent = 'debug';
+    const panel = document.createElement('div'); panel.className = 'debug-panel'; panel.style.display = 'none';
+    const evIds = Object.keys(content.events).sort();
+    panel.innerHTML = '<b>Content debug</b>' +
+      '<input id="dbgEv" list="dbgEvList" placeholder="event id"><datalist id="dbgEvList">' + evIds.map((id) => '<option value="' + esc(id) + '">').join('') + '</datalist>' +
+      '<select id="dbgActor"><option value="">(actor: default)</option>' + Object.keys(content.npcs).map((id) => '<option>' + esc(id) + '</option>').join('') + '</select>' +
+      '<div class="row"><button class="btn" id="dbgPlay">Play now</button><button class="btn" id="dbgSkip">Skip month</button></div>' +
+      '<input id="dbgSet" placeholder="gold = 200 · flag x · gain sick · rel lyra +30"><div class="row"><button class="btn" id="dbgRun">Run effect</button><button class="btn" id="dbgDump">Refresh</button></div>' +
+      '<pre id="dbgOut"></pre>';
+    document.body.appendChild(btn); document.body.appendChild(panel);
+    btn.onclick = () => { panel.style.display = panel.style.display === 'none' ? '' : 'none'; dump(); };
+    const dump = () => {
+      const s = eng.s;
+      document.getElementById('dbgOut').textContent = 'lang ' + I18n.lang() + '  turn ' + s.turn + '  deck: ' + s.deck.map((d) => d.id + (d.actor ? '@' + d.actor : '')).join(', ') + '\nqueue: ' + s.queue.map((q) => q.id + '→' + q.due).join(', ') +
+        '\nflags: ' + Object.keys(s.flags).join(' ') + '\nstates: ' + Object.keys(s.states).join(' ') + '\nvals: ' + JSON.stringify(s.vals) + '\nnpcs: ' + JSON.stringify(s.npcs);
+    };
+    panel.querySelector('#dbgPlay').onclick = () => {
+      const id = document.getElementById('dbgEv').value.trim(); if (!content.events[id]) return alertish('no such event');
+      const actor = document.getElementById('dbgActor').value || null;
+      if (actor) eng.s.npcs[actor].met = true;
+      if (eng.s.cur) eng.s.deck.unshift(eng.s.cur);
+      eng.s.cur = null;
+      eng.s.deck.unshift({ id, actor: actor || (content.events[id].actor === 'any' ? Object.keys(content.npcs)[0] : null), src: 'debug', force: true });
+      closeOverlay(); ui.busy = false; step(eng.advance()); dump();
+    };
+    panel.querySelector('#dbgSkip').onclick = () => { eng.s.deck = []; eng.s.cur = null; closeOverlay(); ui.busy = false; step(eng.advance()); dump(); };
+    panel.querySelector('#dbgRun').onclick = () => {
+      try {
+        const src = '@hook dbg\non: month_end\ndo:\n  ' + document.getElementById('dbgSet').value.trim();
+        const defs = Grimoire.parseFile(src, 'debug');
+        const ctx = eng.newCtx(null); eng.run(defs[0].do, ctx); eng.handleZeroed(ctx); renderChrome(); floatDeltas(ctx.deltas); dump();
+      } catch (e) { alertish(e.message); }
+    };
+    panel.querySelector('#dbgDump').onclick = dump;
+    function alertish(m) { document.getElementById('dbgOut').textContent = m; }
+  }
+
+  // Start last, so every helper above is initialised before the first render.
+  boot();
+})();

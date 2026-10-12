@@ -1,0 +1,156 @@
+# ============================================================
+#  CHAIN: Ilse Dumont (expansion)
+#  Kael's younger sister, raised by the Hollow cult. Enters once
+#  the Hollow Star thread is under way (met her at the gates, or
+#  Kael known + hollow >= 2).
+#    ilse_village -> ilse_frost_lessons -> ilse_grey_returns
+#      -> (ilse_saved) ilse_kael_reunion / ilse_northern_letter / ilse_farewell
+#      -> (ilse_taken) she is gone north
+# ============================================================
+
+@event ilse_village
+title: The Girl at the Bakery
+actor: ilse
+when: turn >= 16 and not met(ilse) and (flag(met_sister) or (met(kael) and hollow >= 2))
+weight: 16
+art: snow
+tags: mystery hollowstar
+chain: ilse
+scene: A village bakery counter, a pale girl in white furs pushing a coin that is visibly frosted across the wood, a baffled baker.
+text: In the village bakery a girl in white furs is trying to pay for a bun with a coin so cold it has frozen to the counter. The baker is losing patience. You recognise those eyes: they're Kael's. "Ilse," she says, before you ask. "Don't."
+> left: Pay for her bun
+  meet ilse
+  gold -2
+  rel ilse +8
+  say: She stares at the bun, then at you, as if kindness is a trick she hasn't learned the counter to yet. "Fine," she says. "Thank you. Fine."
+> right: Leave her to it
+  meet ilse
+  rel ilse -3
+  say: You leave. Through the window you see the coin crack, and the baker's breath freeze in the air. Ilse walks out with the bun. Nobody stops her.
+
+@event ilse_frost_lessons
+title: A Trade in Winter
+trigger: social
+actor: ilse
+when: rel(ilse) >= 5
+weight: 14
+art: snow
+tags: magic hollowstar
+chain: ilse
+scene: A frozen pond at the edge of the woods, a girl in white furs drawing a perfect hexagon of frost in the air, a student copying her clumsily.
+text: Ilse finds you by the frozen pond. "My brother won't talk to me. You will. Tell me how he really is, and I'll teach you Northern frost-craft. It's better than anything your professors know."
+> left: Tell her the truth about Kael
+  rel ilse +10
+  arcana +3
+  say: You tell her about the cold hands, the roof at three in the morning, the bread. She listens without moving. Then she teaches you to freeze a falling leaf mid-air.
+> right: Protect Kael's privacy
+  rel ilse -4
+  rel kael +5
+  say: "He can tell you himself," you say. Ilse's eyes go flat. But the next day, she's at the pond again. "Fine. I'll teach you anyway. You'll need it."
+
+@event ilse_grey_returns
+title: The Man in Grey Comes for Ilse
+trigger: social
+actor: ilse
+when: rel(ilse) >= 12 and turn >= 20 and not flag(ilse_saved) and not flag(ilse_taken)
+weight: 18
+art: mask
+tags: danger hollowstar
+chain: ilse
+scene: A moonlit village lane, a man in a grey coat with one hand on a girl's shoulder, frost and shadow coiling around them both.
+text: Late at night, a lane behind the bakery. The man in grey has one hand on Ilse's shoulder. "Home," he is saying softly. "Your family is waiting. The door is waiting." Ilse sees you. She doesn't call out. She just looks.
+> left: Step between them (Arcana)
+  check arcana 26:
+    flag ilse_saved
+    rel ilse +15
+    renown +4
+    hollow +1
+    say: Your spell breaks his grip. He looks at his frosted hand with mild surprise, bows, and walks into the dark. Ilse is shaking. "Nobody's ever — " she says, and stops.
+  else:
+    flag ilse_taken
+    health -15
+    hollow +1
+    say: He swats your spell aside like a moth. When you get up, the lane is empty except for a single white glove in the snow.
+> right: Run for Kael
+  if met(kael):
+    flag ilse_saved
+    rel kael +10
+    rel ilse +8
+    hollow +1
+    say: Kael arrives like a blizzard. The man in grey takes one look at him and leaves without a word. Brother and sister stand in the snow, not touching, not speaking.
+  else:
+    flag ilse_taken
+    mood -6
+    hollow +1
+    say: By the time you're back with help, the lane is empty. There's frost on the cobbles in the shape of a closed door.
+
+@event ilse_kael_reunion
+title: Brother and Sister
+trigger: social
+actor: ilse
+when: flag(ilse_saved) and met(kael) and not flag(dumont_reunited)
+weight: 16
+art: snow
+tags: social hollowstar
+chain: ilse
+scene: Two pale siblings on opposite ends of a frozen jetty, a third person between them holding three cups of tea.
+text: Kael and Ilse have been in the same village for weeks and have spoken eleven words to each other. You have three cups of tea, a frozen jetty and a very bad idea.
+> left: Sit them both down
+  check charm 20:
+    flag dumont_reunited
+    rel kael +12
+    rel ilse +12
+    say: It takes an hour and two cups of tea are frozen solid. Then Ilse says "I was scared," and Kael says "So was I," and you quietly leave them to it.
+  else:
+    rel kael +3
+    rel ilse +3
+    say: They argue in a language you don't speak, at a temperature you can't endure. But they argue — which, you suspect, is a start.
+> right: Let them find their own way
+  rel kael +4
+  rel ilse +4
+  say: You leave the tea on the jetty. A week later you see them walking by the lake together, a careful arm's length apart. Then less.
+
+@event ilse_northern_letter
+title: A Summons From the North
+trigger: social
+actor: ilse
+when: flag(ilse_saved) and year == 3 and not flag(ilse_decided)
+weight: 14
+art: letter
+tags: hollowstar
+chain: ilse
+scene: A girl holding a letter sealed with a black star, standing at a window that looks north toward far white mountains.
+text: A letter with a black-star seal. The Dumont family summons Ilse home. "If I don't go, they'll send someone worse than the man in grey," she says. "If I do go, I could tell them to their faces that it's over. Or they could keep me."
+> left: "Go. Tell them it's over."
+  flag ilse_decided ilse_went_north
+  rel ilse +8
+  hollow +1
+  say: She leaves on the dawn barge, chin up. Before she goes, she presses her forehead to yours, a Northern farewell. "If I'm not back by graduation," she says, "come and get me."
+> right: "Stay. Let them come."
+  flag ilse_decided
+  rel ilse +10
+  gain frost_ward
+  say: She stays. She sews a sliver of winter into your collar "in case they do come". Nobody does. Not yet.
+
+@event ilse_farewell
+title: Snow in Blossomtide
+trigger: social
+actor: ilse
+when: flag(ilse_saved) and year == 3 and month >= 9 and not flag(ilse_goodbye)
+weight: 14
+art: snow
+tags: social
+chain: ilse
+scene: A single snowflake falling in a spring orchard full of blossom, a girl in white furs catching it on her glove and holding it out.
+text: It's spring, the orchard is in full blossom, and it is snowing — gently, over one tree. Ilse is underneath it. "Graduation's soon," she says. "Everyone's leaving. I wanted to give you something before you forgot me."
+> left: "I won't forget you."
+  flag ilse_goodbye
+  rel ilse +10
+  gain frost_ward
+  mood +6
+  say: She doesn't believe you, but she smiles anyway — the first real smile you've seen on her. She gives you a snowflake that never melts.
+> right: Invite her to the graduation
+  flag ilse_goodbye
+  rel ilse +12
+  rel kael +4
+  say: "Me? At a graduation?" She looks horrified, and then, slowly, delighted. On the day, she sits next to Kael in the second row and cries more than anyone.

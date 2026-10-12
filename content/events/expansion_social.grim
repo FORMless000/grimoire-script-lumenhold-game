@@ -1,0 +1,187 @@
+# ============================================================
+#  Expansion — more generic relationship events (actor: any).
+# ============================================================
+
+@event soc_lost_notes
+title: The Borrowed Notes
+actor: any
+when: not tagged(npc, faculty) and rel(npc) >= 5
+repeat: 8
+art: scroll
+tags: social study
+scene: A student holding a single soggy page of notes, the rest of the stack floating away down a stream behind them.
+text: {npc} borrowed your Lore notes last week. {They} {are} now standing in front of you holding a single soggy page. "There was a stream," {they} say{s}. "And a duck. Mostly a duck."
+> left: Laugh it off
+  rel npc +6
+  grades -2
+  say: You rewrite your notes from memory. {npc} brings you a cake every day for a week, by way of apology. The cakes are better than the notes were.
+> right: Make {them} rewrite them
+  rel npc -2
+  grades +1
+  say: {npc} copies out forty pages from a friend's notes, grumbling. The new notes are neater than yours ever were.
+
+@event soc_birthday
+title: A Birthday
+actor: any
+when: rel(npc) >= 15 and not tagged(npc, faculty)
+repeat: 12
+art: gem
+tags: social festival
+scene: A small cake with a single candle in a dark common room, a group of students crouched behind a sofa, a surprised face in the doorway.
+text: You find out — by accident — that it's {npc}'s birthday. {They} haven't told anyone. {They} {are} spending it in the library, alone, on purpose.
+> left: Organise a surprise
+  gold -6
+  rel npc +10
+  mood +4
+  say: Seven people jump out from behind a sofa. {npc} screams, then laughs, then has to sit down. "How did you know?" You'll never tell.
+> right: Join {them} in the library
+  rel npc +7
+  lore +1
+  say: You sit down opposite {them} with your own book. Neither of you says happy birthday. At midnight {they} slide{s} a biscuit across the table, and you both grin.
+
+@event soc_bad_news
+title: Bad News From Home
+actor: any
+when: rel(npc) >= 20 and not tagged(npc, faculty)
+repeat: 12
+art: letter
+tags: social
+scene: A student sitting on a stone staircase with a crumpled letter, head bowed, a friend sitting down beside them.
+text: {npc} is sitting on the stairs with a letter in {their} lap, not moving. {Their} grandmother is ill. The barge home takes two days. "I don't know whether to go," {they} say{s}.
+> left: "Go. We'll cover your classes."
+  rel npc +10
+  grades -2
+  say: {npc} catches the next barge. You take notes for two in every lesson. When {npc} comes back, {their} grandmother is better, and {they} hug{s} you on the landing.
+> right: Just sit with {them}
+  rel npc +6
+  mood -2
+  say: You sit there until the stairs move under you. You don't fix anything. That's not what {they} needed.
+
+@event soc_stargazing
+title: Counting Stars
+actor: any
+when: romanceable(npc) and rel(npc) >= 20 and bond(npc) != "partner"
+repeat: 8
+art: star
+tags: social romance
+scene: Two students lying on their backs on a flat roof, close but not quite touching, a sky full of stars above.
+text: {npc} has dragged a blanket up to the roof. "There's a meteor shower," {they} say{s}. "Supposedly." There's room on the blanket for two, just about.
+> left: Count meteors
+  rel npc +6
+  mood +5
+  say: You count thirty-one. {npc} counts thirty-four and accuses you of not looking properly. You weren't, entirely.
+> right: Talk about everything else
+  love npc +6
+  rel npc +4
+  say: You don't see a single meteor. You talk about home and fear and what you'd do if you could do anything. When you look up, the sky's gone grey with dawn.
+
+@event soc_jealous_friend
+title: Jealousy
+actor: any
+when: (bond(npc) == "friend" or bond(npc) == "close") and known() >= 4
+repeat: 10
+art: mask
+tags: social
+scene: A student standing alone at the edge of a laughing group, arms folded, watching someone else take what used to be their seat.
+text: {npc} has been odd all week. Finally it comes out. "You've got all these new friends now. I just — I don't know where I fit anymore."
+> left: Reassure {them}
+  rel npc +8
+  charm +1
+  say: You tell {them} exactly where {they} fit: right here, first. {npc} rolls {their} eyes, but {they}'re smiling. The oddness is gone by dinner.
+> right: Tell {them} friendship isn't a contest
+  rel npc -3
+  lore +1
+  say: You're right, technically. {npc} knows it. It still lands badly. It takes a few weeks for things to feel easy again.
+
+@event soc_teach_spell
+title: A Trick Worth Learning
+actor: any
+when: rel(npc) >= 12
+repeat: 8
+art: wand
+tags: social magic
+scene: Two students in an empty classroom, one demonstrating a wand movement, the other copying it with a tiny spark of light.
+text: {npc} has a spell {they} invented — a little thing, half-useful, half-ridiculous — and wants to teach it to someone. "It makes your tea exactly the right temperature," {they} say{s}. "Forever."
+> left: Learn it properly
+  arcana +2
+  rel npc +5
+  say: It takes an hour. Your tea is now perfect, always. You'll use this spell more than anything you learn in class.
+> right: Teach {them} one of yours in return
+  rel npc +8
+  charm +1
+  say: You trade spells like secrets. By midnight you've both got a new trick and an inside joke that will last three years.
+
+@event soc_secret_admirer
+title: A Secret Admirer
+actor: any
+when: romanceable(npc) and love(npc) >= 15 and bond(npc) != "partner"
+repeat: 12
+art: letter
+tags: romance
+scene: A folded note tucked into a library book with a pressed flower, unsigned, the handwriting careful and slightly shaky.
+text: Folded notes keep appearing in your library books. Unsigned. They're funny, and a little nervous, and they know things about you that only someone paying attention would know. The handwriting looks familiar.
+> left: Leave a note back
+  love npc +6
+  say: You write back. The notes get longer. One day the last line just says: "It's {npc}. You knew, didn't you?" You did.
+> right: Stake out the library
+  check guile 14:
+    love npc +8
+    rel npc +4
+    say: You catch {npc} red-handed, mid-tuck. {They} turn{s} the colour of a pyromancy exam. You both laugh until the librarian throws you out.
+  else:
+    love npc +2
+    say: You wait three nights and catch nobody. On the fourth morning the note says: "Nice try."
+
+@event soc_injured_friend
+title: Carried
+actor: any
+when: rel(npc) >= 10 and not tagged(npc, faculty)
+repeat: 10
+art: cross
+tags: social danger
+scene: A student carrying another piggyback across a muddy lawn, the injured one's ankle wrapped in a scarf.
+text: {npc} has twisted an ankle on the far side of the grounds, a long way from the infirmary, and it's getting dark. {They} {are} trying very hard to pretend it doesn't hurt.
+> left: Carry {them} on your back
+  vigor +2
+  rel npc +8
+  health -2
+  say: It's a long way. {npc} narrates the whole journey like a horse race. By the time you reach the infirmary you're both laughing too hard to breathe.
+> right: Run for help
+  rel npc +4
+  say: You run for Sister Amaranth, who arrives with a floating stretcher and a lot of opinions. {npc} is fine. {They} send{s} you a thank-you sweet.
+
+@event soc_rival_decency
+title: An Unexpected Kindness
+actor: any
+when: (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -15) and not tagged(npc, faculty)
+repeat: 10
+art: hand
+tags: rival social
+scene: A student picking up a rival's scattered books from a wet floor, the rival frozen mid-step, not sure what to say.
+text: You drop your books in the rain, and the first person to stoop and help pick them up is {npc}. {They} hand{s} them back without a word, looking as surprised as you are.
+> left: Thank {them} properly
+  rel npc +10
+  say: "Don't make it a thing," {npc} mutters. But the next day {they} nod{s} to you in the corridor. Something has thawed.
+> right: Suspect a trick
+  rel npc -2
+  guile +1
+  say: You check the books for hexes. There aren't any. {npc} saw you checking. You'll both remember that.
+
+@event soc_partner_anniversary
+title: An Anniversary
+actor: any
+when: bond(npc) == "partner" and love(npc) >= 40
+repeat: 12
+art: ring
+tags: romance
+scene: Two people on a bench by the lake at sunset, one holding out a small wrapped box, the other's hands over their mouth.
+text: It's been a while now — long enough that {npc} has started calling things "ours". Today {they} hand{s} you a small wrapped box and won't meet your eyes.
+> left: Open it now
+  love npc +6
+  mood +8
+  say: Inside: a pebble from the lakeshore where you first really talked, polished to a shine. "It's stupid," {npc} says. It isn't. You carry it everywhere.
+> right: Give {them} yours first
+  gold -8
+  love npc +8
+  mood +6
+  say: You'd had the same idea. You both open your boxes at once. They're nearly the same gift. You laugh until the sun goes down.

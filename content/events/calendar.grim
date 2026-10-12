@@ -1,0 +1,581 @@
+# ============================================================
+#  Calendar: the academy year's fixed beats.
+#  Most are `trigger: auto` — forced into the month's deck
+#  whenever their `when` is true (and `repeat` allows).
+#  Month 1 Harvestmoon ... 12 Starfall. 11–12 are summer recess.
+# ============================================================
+
+@event intro_arrival
+title: The Sky-Barge
+trigger: queued
+art: tower
+tags: story
+scene: A wooden barge with patched sails drifting between clouds toward seven impossibly tall towers above a mirror-still lake.
+text: The barge drops through the clouds and there it is: Lumenhold, seven towers stitched together with bridges of light. A first-year beside you is quietly being sick over the side. A prefect with a ledger counts heads and frowns at yours.
+> ok: Step onto the landing
+  say: Your boots touch stone that hums faintly underfoot. Three years. Thirty-six moons.
+
+@event choose_origin
+title: Who Were You Before?
+trigger: queued
+type: menu
+art: mirror
+tags: story
+scene: A tall enchanted mirror in the entrance hall, showing a different version of the viewer in each pane.
+text: The Sorting Mirror in the entrance hall does not sort you into anything. It simply asks, in a voice like cold water, who you were before you came here. It waits.
+> noble: The younger child of a minor noble house
+  hint: Gold, charm and a name people recognise.
+  gain origin_noble
+  say: The mirror shows you a crest you have tried to outgrow. It approves, faintly.
+> scholar: A scholarship student from the provinces
+  hint: Lore and Standing. The stipend depends on good marks.
+  gain origin_scholar
+  say: The mirror shows you a candle burning very late in a very small room.
+> hedge: Raised by a hedge-witch in the marshes
+  hint: Alchemy, good spirits, an eye for herbs.
+  gain origin_hedge
+  say: The mirror smells, briefly, of wet moss and woodsmoke. You feel at home.
+> street: Raised on the streets of Port Calder
+  hint: Guile and grit. Little gold.
+  gain origin_street
+  say: The mirror shows a pickpocket's quick hands. You check your pockets out of habit.
+> merchant: The heir to a trading company
+  hint: Plenty of gold, a nose for bargains.
+  gain origin_merchant
+  say: The mirror shows ledgers, ships and your mother's disappointed face. Still: gold.
+
+@event choose_elective
+title: Choosing an Elective
+trigger: auto
+when: month == 1 or month == 6
+repeat: 5
+priority: 45
+type: menu
+art: scroll
+tags: study class
+scene: A long noticeboard covered in fluttering enchanted parchment, each sheet trying to shoulder the others aside.
+text: The registrar's noticeboard flaps with sign-up sheets for this term's electives. Core lectures are compulsory; your elective is yours to choose. The sheets jostle for your attention.
+> pyro: Pyromancy
+  hint: +Arcana each month, small burns. Taught by Professor Thorne.
+  gain class_pyromancy
+> tide: Tidecalling
+  hint: +Arcana, +Vigor, lakeside calm.
+  gain class_tidecalling
+> illusion: Illusion & Glamour
+  hint: +Guile, +Charm.
+  gain class_illusion
+> alchemy: Practical Alchemy
+  hint: +Alchemy.
+  gain class_alchemy
+> divination: Divination
+  hint: +Lore, occasional gloomy omens.
+  gain class_divination
+> artifice: Artifice
+  hint: +Alchemy, +Lore.
+  gain class_artifice
+> beast: Beastcraft
+  hint: +Vigor, +Mood. Smells of hay.
+  gain class_beastcraft
+> astro: Astromancy
+  hint: +Lore, late nights.
+  gain class_astromancy
+> healing: Healing Arts
+  hint: +Alchemy, +Lore, a little health.
+  gain class_healing
+> umbral: Umbral Theory (restricted)
+  hint: Requires Lore 20 or second year. +Arcana, dark moods.
+  when: lore >= 20 or year >= 2
+  gain class_umbral
+  flag took_umbral
+
+@event club_fair
+title: The Club Fair
+trigger: auto
+when: month == 2
+repeat: 12
+priority: 40
+type: menu
+art: group
+tags: social club
+scene: The great courtyard filled with banners and stalls: a duelist juggling sparks, a choir floating a foot off the ground, a girl handing out newspapers that shout headlines.
+text: The courtyard is a riot of banners. Every club wants you, or at least your membership fee. A broom whizzes overhead trailing a SKYRACE TRYOUTS banner; somewhere a choir is harmonising with a cat.
+> duel: Dueling Circle
+  hint: +Vigor +Arcana, bruises. Home of the Spring Tournament.
+  gain club_dueling
+  meet lyra
+> choir: Choir of the Spheres
+  hint: +Charm, +Mood.
+  gain club_choir
+> sky: Skyrace Squad
+  hint: +Vigor, crowd glory, crashes.
+  gain club_skyrace
+> ledger: The Lumen Ledger
+  hint: +Guile +Charm. Nessa Quill's student paper.
+  gain club_ledger
+  meet nessa
+> garden: Verdant Circle
+  hint: +Alchemy +Mood. Greenhouses and gossip.
+  gain club_garden
+  meet tobias
+> stars: Stargazers
+  hint: +Lore +Mood.
+  gain club_stargazers
+> none: Keep your evenings free
+  hint: No club (leaves your current club, if any).
+  lose club_dueling
+  lose club_choir
+  lose club_skyrace
+  lose club_ledger
+  lose club_garden
+  lose club_stargazers
+  mood +2
+
+@event job_board
+title: The Job Board
+trigger: auto
+when: month == 3 or month == 9
+repeat: 5
+priority: 35
+type: menu
+art: coin
+tags: job money
+scene: A cork board outside the bursar's office, papered with notices; one is on fire, one is wriggling.
+text: Rent is ten crowns a month and your purse is a fragile thing. The board outside the bursar's office offers honest work, and some that is merely work.
+> library: Library Assistant — 10 gold/month
+  hint: +Lore, a little dull.
+  gain job_library
+> tavern: The Gilded Newt — 16 gold/month
+  hint: +Charm, tiring evenings in the village.
+  gain job_tavern
+> apothecary: Apothecary Clerk — 12 gold/month
+  hint: Requires Alchemy 12. +Alchemy.
+  when: alchemy >= 12
+  gain job_apothecary
+> stables: Familiar Stables — 11 gold/month
+  hint: +Vigor. Things bite.
+  gain job_stables
+> tutor: First-Year Tutor — 12 gold/month
+  hint: Requires Lore 18. +Standing.
+  when: lore >= 18
+  gain job_tutor
+> courier: Broom Courier — 18 gold/month
+  hint: Requires Vigor 14. Dangerous.
+  when: vigor >= 14
+  gain job_courier
+> none: No job (quit any current one)
+  lose job_library
+  lose job_tavern
+  lose job_apothecary
+  lose job_stables
+  lose job_tutor
+  lose job_courier
+
+@event lantern_night
+title: Lantern Night
+trigger: auto
+when: month == 2
+repeat: 12
+art: lantern
+tags: festival social
+scene: Hundreds of paper lanterns rising off the lake at dusk, each with a wish written on it in glowing ink.
+text: On Lantern Night every student writes a wish on a paper lantern and lets it go over the lake. Rumour says the lanterns that sink were wishes the lake wanted for itself.
+> left: Wish for something selfish
+  chance 50:
+    gold +15~30
+    say: Your lantern rises high. The next morning you find coins in your shoe. The lake is generous, and a little creepy.
+  else:
+    mood -4
+    say: Your lantern sinks with a hiss. Something under the water now knows what you want.
+    flag lake_knows
+    hollow +1
+> right: Wish for someone else
+  mood +6
+  renown +2
+  say: Your lantern rises and catches the wind. Across the shore, someone you have never met laughs out loud for no reason.
+
+@event kael_arrives
+title: The Boy From the North
+trigger: auto
+when: turn == 3
+priority: 30
+actor: kael
+art: snow
+tags: mystery hollowstar
+chain: hollowstar
+scene: A pale young man in a fur-lined coat standing at the door of the dining hall, frost spreading from his boots across the floor.
+text: Mid-term, the dining hall doors open and frost crawls across the floor. A boy in a fur coat walks in, takes the empty seat beside you, and says nothing at all. The headmistress introduces him as Kael Dumont, a transfer. She does not say from where.
+> left: Leave him be
+  meet kael
+  rel kael +2
+  say: You eat in silence. When you leave, your cup of tea has frozen solid.
+> right: Offer him the bread
+  meet kael
+  rel kael +8
+  say: He looks at the bread as if no one has offered him anything in a long time. "...Thank you." His voice sounds like wind over snow.
+  flag kael_kindness
+
+@event winter_trials
+title: The Winter Trials
+trigger: auto
+when: month == 4
+repeat: 12
+priority: 40
+art: hourglass
+tags: study exam
+scene: A vast examination hall where floating quills hover over a hundred desks and the windows are thick with frost.
+text: The Winter Trials. A hundred desks, a hundred floating quills, one very old proctor who may be asleep. The first question asks you to explain the Third Law of Correspondence. The second asks you to demonstrate it.
+> left: Lean on theory (Lore)
+  check lore 12 + year * 8:
+    grades +12
+    mood +4
+    say: Your answer is so thorough the quill gets a cramp. Top marks.
+  else:
+    grades -8
+    mood -4
+    say: You write three pages and realise halfway that you have been answering a different question.
+> right: Lean on practice (Arcana)
+  check arcana 12 + year * 8:
+    grades +12
+    renown +3
+    say: Your demonstration is clean and bright. The proctor wakes up and applauds.
+  else:
+    grades -8
+    health -4
+    say: The demonstration backfires. Politely, but with smoke.
+
+@event midwinter_ball
+title: The Midwinter Ball
+trigger: auto
+when: month == 5
+repeat: 12
+priority: 40
+type: menu
+art: music
+tags: festival romance social
+scene: The great hall transformed: an ice-crystal chandelier, couples waltzing a foot above the floor, snow falling indoors without ever landing.
+text: The great hall has been turned to ice and starlight for the Midwinter Ball. Couples float above the floor. Who will you go with?
+> lyra: Ask Lyra
+  when: met(lyra) and rel(lyra) >= 15
+  hint: She has had six invitations. She hasn't said yes to any.
+  check charm 20 - love(lyra) / 4:
+    love lyra +12
+    rel lyra +6
+    mood +8
+    say: "Finally, someone who doesn't stammer." She dances like a duel — and wins.
+  else:
+    rel lyra -4
+    mood -5
+    say: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
+> tobias: Ask Tobias
+  when: met(tobias) and rel(tobias) >= 15
+  hint: He has been practising with a broom.
+  love tobias +12
+  rel tobias +6
+  mood +8
+  say: He steps on your feet nine times and apologises ten. It's the best night of the term.
+> seraphine: Ask Seraphine
+  when: met(seraphine) and rel(seraphine) >= 15
+  hint: She may already know you'll ask.
+  love seraphine +10
+  rel seraphine +6
+  mood +6
+  say: "I said yes three weeks ago," she says, "you just hadn't asked yet." She dances a beat ahead of the music.
+> corvin: Ask Corvin
+  when: met(corvin) and rel(corvin) >= 15
+  hint: Odds he shows up: unclear.
+  chance 70:
+    love corvin +12
+    mood +8
+    say: He arrives late, in a stolen jacket, and is the best dancer in the room.
+  else:
+    mood -8
+    say: He never shows. A note arrives at midnight: "Got arrested. Long story. Save me a dance next year."
+> mira: Ask Mira
+  when: met(mira) and rel(mira) >= 15
+  hint: They're bringing a self-playing violin.
+  love mira +12
+  rel mira +5
+  mood +8
+  say: Mira's violin plays itself, then plays the chandelier, then plays the windows. You are asked to leave early. Worth it.
+> kael: Ask Kael
+  when: met(kael) and rel(kael) >= 20
+  hint: He doesn't seem to feel the cold.
+  love kael +12
+  rel kael +6
+  mood +6
+  say: He holds your hand like it is something fragile. Where your fingers touch, frost-ferns bloom on the glass.
+> nessa: Ask Nessa
+  when: met(nessa) and rel(nessa) >= 15
+  hint: She'll be working. She's always working.
+  love nessa +10
+  rel nessa +6
+  renown +3
+  say: She takes notes between dances. "For the society column." Then she stops taking notes.
+> friends: Go with friends
+  mood +6
+  charm +1
+  say: You go as a pack and dance badly together and it is perfect.
+> skip: Stay in and study
+  lore +2
+  grades +3
+  mood -3
+  say: The music drifts up through the floor while you read. Somewhere, people are happy. You are productive.
+
+@event spring_tournament
+title: The Spring Tournament
+trigger: auto
+when: month == 8
+repeat: 12
+priority: 40
+art: duel
+tags: festival rival
+chain: tournament
+scene: A ring of white stone on the lawn, crowds in the stands, two duelists bowing as their wands spark.
+text: The Spring Tournament: dueling on the great lawn, the whole academy watching. Entry is open to anyone foolish enough. Members of the Dueling Circle are expected to enter.
+> left: Watch from the stands
+  mood +3
+  if has(club_dueling):
+    renown -3
+    say: The Circle captain notes your absence with a very sharp quill.
+  else:
+    say: You eat candied chestnuts and scream for strangers.
+> right: Enter the tournament
+  check vigor 15 + year * 6:
+    renown +6
+    say: First round: you win, barely, and the crowd learns your name.
+    queue tournament_semifinal now
+  else:
+    health -8
+    renown +1
+    say: First round: you are knocked out of the ring in eleven seconds. A record, apparently.
+
+@event tournament_semifinal
+title: Semifinal
+trigger: queued
+art: duel
+tags: rival
+chain: tournament
+scene: The same ring at sunset, scorch marks on the stone. Your opponent is grinning.
+text: The semifinal. Your opponent is a fourth-year who has never lost. The crowd is louder now; you can hear your own name in it.
+> left: Fight clean (Arcana)
+  check arcana 20 + year * 6:
+    renown +6
+    say: You trade spells like questions and answers — and get the last word.
+    queue tournament_final now
+  else:
+    health -6
+    renown +2
+    say: A good fight. Not good enough. The crowd applauds you off the lawn.
+> right: Fight dirty (Guile)
+  check guile 18 + year * 6:
+    renown +4
+    say: A feint, a trip, a jinx to the shoelaces. Legal. Mostly.
+    queue tournament_final now
+    if met(bram):
+      rel bram -5
+  else:
+    renown -4
+    say: The referee sees the trick. Disqualified, and booed.
+
+@event tournament_final
+title: The Final
+trigger: queued
+art: trophy
+tags: rival festival
+chain: tournament
+scene: The dueling ring under floating lanterns, a silver cup on a plinth, and across from you, a familiar face.
+text: The final. Across the ring stands {lyra}, wand raised, eyes blazing. "I was hoping it would be you," she says, and she is not being friendly.
+> left: Give everything you have
+  meet lyra
+  check arcana 28 + year * 6:
+    renown +15
+    mood +10
+    flag tournament_champion
+    gain famous
+    rel lyra -6
+    if bond(lyra) == "none":
+      bond lyra rival
+    say: Your final spell lands like a bell. Silence — then the lawn erupts. Lyra stares at you as if seeing you for the first time.
+  else:
+    renown +6
+    rel lyra +4
+    say: She wins, but only just. Afterwards, she offers her hand. "Next year," she says. It is a promise and a threat.
+> right: Yield with a bow
+  meet lyra
+  rel lyra +10
+  renown +3
+  mood -2
+  say: The crowd boos. Lyra does not cheer her victory. Later she finds you: "Why?" You don't have a good answer, and she seems to like that.
+
+@event grand_exams
+title: Grand Examinations
+trigger: auto
+when: month == 10
+repeat: 12
+priority: 40
+art: scroll
+tags: study exam
+scene: A circular examination chamber with a domed ceiling of moving constellations; examiners in grey robes sit behind a long table.
+text: Year-end examinations. Three days, five examiners and a practical in front of a panel that includes the headmistress. Your standing for the year rides on this.
+> left: Prepare a dazzling practical
+  check arcana 15 + year * 10:
+    grades +16
+    renown +4
+    say: You finish your practical and the examiners actually lean forward. Distinction.
+  else:
+    grades -12
+    mood -6
+    say: The practical sputters. An examiner writes something very short.
+> right: Write a meticulous thesis
+  check lore 15 + year * 10:
+    grades +16
+    mood +4
+    say: Your thesis is cited by one examiner in an argument with another. Distinction.
+  else:
+    grades -12
+    mood -6
+    say: Your thesis is described, aloud, as "ambitious". It is not a compliment.
+
+@event summer_plans
+title: Summer Recess
+trigger: auto
+when: month == 11
+repeat: 12
+priority: 40
+type: menu
+art: sun
+tags: home
+scene: The academy gates thrown open to green hills; students with trunks waving from departing sky-barges.
+text: The towers empty for the summer. Two months of freedom. How will you spend them?
+> home: Go home
+  hint: Rest and recover. No rent while away.
+  gain summer_away
+  health +15
+  mood +10
+  if has(origin_noble):
+    say: Your family hosts three dinners in your honour and asks about your marriage prospects at all of them.
+  elif has(origin_street):
+    say: The old crowd in Port Calder treats you like a returning hero, and steals your trunk only once.
+  else:
+    say: Home is smaller than you remember, and warmer. Someone made your favourite pie.
+> work: Take summer work in the village
+  hint: About 50 gold over the summer. Tiring.
+  gain summer_work
+  vigor +2
+  say: You haul crates, serve tables and polish brass until your hands know the shape of every coin.
+> study: Stay and study in the empty library
+  hint: +Lore, +Arcana, +Standing. Lonely.
+  lore +4
+  arcana +3
+  grades +6
+  mood -4
+  say: Just you, the books and the dust motes. You learn things the term never had time for.
+> travel: Travel to the coast
+  hint: Costs 40 gold. Great for mood.
+  when: gold >= 40
+  gold -40
+  gain summer_away
+  mood +18
+  charm +2
+  say: Salt air, shell markets, a sea serpent at sunset. You come back tanned and ten years younger.
+> expedition: Join Old Maud's herb expedition
+  hint: Requires knowing Maud. Adventure.
+  when: met(maud)
+  gain summer_away
+  alchemy +4
+  vigor +2
+  rel maud +10
+  health +4
+  say: Two months in the Whisperwood with Maud and her goat. You learn which mushrooms sing and which ones lie.
+
+@event summer_letter
+title: A Letter From Home
+trigger: auto
+when: month == 12
+repeat: 12
+art: letter
+tags: home
+scene: A letter sealed with candle wax lying on a sunlit windowsill.
+text: A letter arrives in the last month of summer, the handwriting so familiar it hurts. They want to know how you are doing. Really doing.
+> left: Write back honestly
+  mood +4
+  if grades < 30:
+    mood -6
+    say: You tell them about your standing. Their reply is kind, which is worse.
+  else:
+    say: You write six pages. It feels like setting down a heavy bag.
+> right: Write back that everything is perfect
+  mood -2
+  guile +1
+  chance 50:
+    gold +20
+    say: Proud of you, they write, and enclose a little money you suspect they couldn't spare.
+  else:
+    say: They reply with exclamation marks. The lie sits in your stomach all week.
+
+@event starfall
+title: Starfall
+trigger: auto
+when: month == 12 and year < 3
+repeat: 12
+priority: 30
+art: star
+tags: festival
+scene: Students lying on the observatory roof under a sky streaked with falling stars.
+text: The last night of the academic year. Everyone climbs onto the observatory roof to watch the stars fall. They say if you catch one in a jar, you get a year of luck.
+> left: Lie back and just watch
+  mood +8
+  health +3
+  say: You count forty falling stars and then stop counting. It's enough.
+> right: Try to catch a star
+  check vigor 20:
+    renown +4
+    mood +5
+    gain inspired
+    say: It lands in your jar with a hiss and glows for weeks. Students come to see it.
+  else:
+    health -4
+    say: You lunge, miss, and nearly roll off the roof. A prefect catches you by the collar.
+
+@event year_two
+title: Second Year
+trigger: auto
+when: turn == 13
+priority: 55
+art: tower
+tags: story
+scene: The seven towers in autumn colours, the first-year barge arriving below, tiny and nervous.
+text: The barge brings new first-years, and you watch them gawp at the towers. Was that really you a year ago? You know which staircases move now, and which professors you can charm.
+> ok: Begin the second year
+  mood +4
+  renown +2
+
+@event year_three
+title: Final Year
+trigger: auto
+when: turn == 25
+priority: 55
+art: crown
+tags: story
+scene: The headmistress addressing a hall of third-years, every candle in the room leaning toward her.
+text: "Third years," the headmistress says, "this is your last year in these halls. What you become here, you will be for a long time." She looks, for a moment, directly at you.
+> ok: Begin the final year
+  mood +2
+  grades +2
+
+@event graduation_eve
+title: The Eve of Graduation
+trigger: auto
+when: turn == 36
+priority: 60
+art: crown
+tags: story
+scene: Graduation robes laid out on a dormitory bed, a single candle burning, the towers lit gold outside the window.
+text: Tomorrow you graduate. Your robes are laid out on the bed, slightly too long. Outside, the towers are lit gold. Three years have gone like a single held breath.
+> left: Spend the night with friends
+  mood +8
+  say: Laughter until dawn. Promises to write. Some of them, you'll keep.
+> right: Walk the halls alone one last time
+  lore +2
+  mood +4
+  say: Every corridor holds a memory. At the end of the last one, the castle sighs, as if saying goodbye.
