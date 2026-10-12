@@ -44,7 +44,7 @@ mkdir -p .claude/skills && cp -r skills/write-academy-events .claude/skills/
 **Pipeline.**
 - `content/**/*.grim` and `locales/<lang>/**/*.lang` are bundled into `build/content.bundle.js` by `node tools/grim.js build`.
 - The bundle is **committed on purpose**: `index.html` has to work from `file://`, where `fetch` of local files is blocked. Rebuild after every `.grim` or `.lang` edit. Never hand-edit the bundle.
-- Script load order in `index.html`: `grimoire.js` → `engine.js` → `art.js` → `i18n.js` → `ui.js`, then the bundle. All are UMD, so `tools/grim.js` `require`s the same files in Node.
+- Script load order in `index.html`: `grimoire.js` → `engine.js` → `art.js` → `i18n.js` → `build/content.bundle.js` → `ui.js` (the UI boots last, once the content exists). The `src/` files are UMD, so `tools/grim.js` `require`s the same files in Node.
 
 **Parser (`src/grimoire.js`).**
 - A compiled definition stores its block type as **`def.block`**, not `def.kind`. `kind` is a real property (`kind: early` on endings); using it for the block type caused a "duplicate property" bug.
@@ -71,7 +71,7 @@ mkdir -p .claude/skills && cp -r skills/write-academy-events .claude/skills/
 **UI (`src/ui.js`).**
 - `boot()` must stay at the **very end** of the IIFE. Calling it earlier hits the temporal dead zone of later `const`s ("Cannot access 'sceneNote' before initialization") on the preview and resume paths.
 - Preview cards (`?event=`) are flagged `force`, so they skip their `when` condition.
-- Saves live in localStorage under `lumenhold.save.v1`, with settings in `lumenhold.settings.v1`. The engine save has `version: 2` (v2 added the run history `hist`, `runId` and `seq`; `Engine.load` migrates v1 saves). If you change the save shape, bump the version and handle old saves. Archived run logs live under `lumenhold.runs.v1`.
+- Saves live in localStorage under `lumenhold.save.v1`, with settings in `lumenhold.settings.v1`. The engine save has `version: 1`. If you change the save shape, bump the version and handle old saves.
 
 **NPC names.** `{npc}` prints `short:` if set, otherwise the first word of `name` split on spaces or `·`. That is why the faculty have `short:` (`Professor Thorne`, `Old Maud`, `Headmistress Marrow`), and why the Chinese names use `·` (伊尔泽·杜蒙 → 伊尔泽).
 
@@ -93,6 +93,8 @@ Never seen under random play:
 These are mostly deep chain steps or require specific bond states.
 
 ## 5. Open issues and suggested next work (in priority order)
+
+> **The larger v0.3+ redesign** (4-year university, tracks, places, director, economy, spells, minigames, live LLM generation) is planned in **`docs/design-v0.3.md`**, including a phased implementation order. Its Phase 0 supersedes items 2–4 below: tune balance with the new balance tests rather than by hand.
 
 1. **Put the project under git** (§2) before changing anything.
 2. **The "beloved" ending is too strong for social players** (52%, against the guideline of at most 35%). Options:

@@ -1,0 +1,1243 @@
+# Lumenhold v0.3: design and implementation plan (rev. 4)
+
+> **Status.** Part I (§1–§14) is the **committed** design for **Phases 0–4**, detailed enough to implement.
+> Part II (§T1–§T3) is **TENTATIVE**: minigames, crafting and live generation. These are directions only, **not to be implemented** until they're reviewed after the Phase 4 playtests. The only part of them built earlier is the small set of *hooks* in the event format (§12), so content written now never needs rewriting.
+>
+> Numbers marked *(tunable)* are starting values. Balance is settled by human play and telemetry, not by the simulator (§8.8).
+
+---
+
+## Part I: Committed design (Phases 0–4)
+
+## 0. Summary
+
+### 0.1 What changes
+
+The game goes from *a monthly deck of random cards* to *a day in the life, with agency*:
+
+- A **4-year university** that follows real seasons: two 4-month terms and two 2-month breaks a year. Every character is an adult.
+- Each month is **one representative day**, split into slots (morning, noon, afternoon, evening, night, sometimes midnight). That's about 3× today's cards in term time, and a lighter day in breaks.
+- The player picks **two places to visit** each day on a **graphical map**. Places are found through events and relationships.
+- **Clubs and jobs are highlighted places with obligations.** Skipping is allowed and has consequences.
+- **Courses, clubs, jobs, internships and the thesis are one progression system** ("tracks"), fewer in number and deeper.
+- **Fast top bars** (Health, Mood, Mana, Renown, Alignment), always previewed before a choice.
+- **Card selection becomes a real system** (the director): novelty, relevance, variety, quotas, scheduled pushes, and radiant casting with multiple roles.
+- **A worldbook** (the world as data) grounds all content production.
+- **The event format (schema v1) freezes after Phase 2.** All existing events are rewritten once. Content production then runs continuously.
+- **A self-hosted server** replaces the standalone `index.html`, so saves, telemetry and an admin page live in one place.
+
+### 0.2 How content gets made
+
+Humans don't write events. There are three paths:
+1. **Batch authoring by Claude Code** through the skills and `AGENTS.md`. Committed; starts in Phase 3.
+2. **Feedback tuning by Claude Code** from telemetry reports. Committed; starts in Phase 3.
+3. **Live generation during play.** Tentative (§T3).
+
+All three share one authoring spec, one worldbook and one set of validators. The human role is curating the worldbook, playtesting and reading dashboards, and deleting content that doesn't belong.
+
+### 0.3 Phase overview
+
+| Phase | Name | Status |
+|---|---|---|
+| 0 | Platform and safety net | committed |
+| 1 | Worldbook and authoring spec | committed |
+| 2a | Groundwork: numbers and options | committed |
+| 2b | Groundwork: the world loop, then **freeze schema v1** | committed |
+| 3 | One-pass migration, balance, then **content production opens** | committed |
+| 4 | Narrative systems | committed |
+| 5 | Minigames | tentative (§T1) |
+| 6 | Inventory and crafting | tentative (§T2) |
+| 7 | Live generation | tentative (§T3) |
+
+---
+
+## 1. Platform: self-hosted server (Phase 0)
+
+### 1.1 Shape
+
+- `npm start` runs a Node server: Node ≥ 22, built-in `http`, a small router, and no framework.
+- It binds to `127.0.0.1:4173` by default; `HOST` and `PORT` override that.
+- If it binds to anything other than localhost, `/admin` and the write APIs need `ADMIN_TOKEN`.
+
+```
+server/
+  index.js          # boot, router, static files
+  db.js             # SQLite access (node:sqlite if available, else better-sqlite3)
+  routes/content.js saves.js log.js feedback.js admin.js
+  admin/            # admin pages (plain HTML + the game's CSS)
+data/lumenhold.db   # gitignored
+```
+
+### 1.2 Routes
+
+| Route | Method | Purpose |
+|---|---|---|
+| `/` | GET | game client (`index.html`, `src/`, `build/`) |
+| `/api/content?lang=` | GET | content bundle (chunking is tentative, §T3) |
+| `/api/saves` / `/api/saves/:slot` | GET / PUT / DELETE | 3 manual slots + autosave |
+| `/api/log` | POST | batched telemetry (§1.4) |
+| `/api/feedback` | POST | card 👍 / 👎 / "felt wrong", end-of-run survey |
+| `/api/seen` | GET / POST | cross-run "seen" counters for the director (§5.2) |
+| `/admin` | GET | runs, per-event statistics, `grim report` view, worldbook browser |
+
+**Client.** The client detects the server. Without one (static build), it falls back to localStorage saves, no telemetry, and local "seen" counters. `grim build --static` still produces a standalone `index.html` for demos.
+
+### 1.3 Tables
+
+| Table | Columns |
+|---|---|
+| `runs` | `id` PK, `started_at`, `ended_at`, `seed`, `content_version` (bundle hash), `lang`, `source` (`human` / `sim:<policy>`), `ending` JSON, `last_turn`, `abandoned` |
+| `cards` | `id` PK, `run_id`, `seq`, `turn`, `slot`, `place`, `event_id`, `class`, `cast` JSON, `options` JSON (keys + previews), `choice`, `outcome` JSON, `ms_to_decide`, `state` JSON (bars, skills, crowns, GPA), `at` |
+| `feedback` | `id` PK, `run_id`, `card_id` nullable, `kind`, `payload` JSON, `at` |
+| `saves` | `slot` PK, `run_id`, `version`, `data` JSON, `updated_at` |
+| `seen` | `event_id` PK, `runs_seen`, `last_run`, `last_at` |
+
+### 1.4 Telemetry
+
+- The client queues one record per card resolved and per menu choice, and POSTs them in batches at each month end and on page hide.
+- The simulator can optionally log with `source = sim:<policy>`, so reports can separate simulated runs from human ones.
+- Everything is local and single-owner. There's no external analytics.
+
+---
+
+## 2. Tooling and safety net (Phase 0)
+
+| Tool | Behaviour |
+|---|---|
+| **Line rewriter** (`tools/lib/rewrite.js`) | Uses the parser's recorded file and line positions. Applies edits bottom-up per file, re-parses to verify, and refuses to run if a file changed since it was read. Comments and formatting survive. |
+| `grim find <query>` | Queries: statement patterns (`check lore *`, `gold +>20`), expressions (`expr:"year == 3"`), properties (`prop:actor=any`), text (`text:/crowns/`), combined with `and`. Prints `file:line block`; `--json` gives a worklist. |
+| `grim rename <kind> <old> <new>` | Kinds: event, state, npc, flag, var, place, track, spell, fact, arc. Updates `.grim` references, `.lang` block headers and keys (including `@npc` overrides). |
+| `grim migrate [--dry-run]` | Runs `tools/migrations/NNNN-name.js` in order and records them in `content/.migrations.json`. A migration exports `{ id, description, run(ctx) }`, where `ctx` offers `find`, `edit`, `insertAfter`, `remove` and `report`. Safe to run twice. |
+| **Simulator play styles** | existing `random`, `cautious`, `social`, plus `balanced`, `focused:<skill>`, `aggressive`, `moneymaxx`, `caster`, `social:<npc>`, `truant`. A play style is a scoring function over the option previews. |
+| `grim balance` | Runs each play style (100 games by default). **Invariants fail the run; alarms warn** (§8.8). Writes `build/balance-report.json`. |
+| `grim snapshot` / `grim diff` | Simulates on fixed "golden" seeds and saves coverage, endings and average resources. `diff` compares two snapshots; a pure refactor must show none. |
+| **Save versioning** | `@game schema:` plus the save version. Saves from an older version are refused with a friendly message (saves may break until 1.0). |
+| `npm run verify` | build + lint + invariants + e2e, against the server |
+
+---
+
+## 3. Worldbook and authoring spec (Phase 1)
+
+### 3.1 Layout
+
+```
+content/world/
+  vocabulary.grim   # controlled tag vocabularies (traits, interests, roles, tones, memory kinds)
+  places.grim       # @place
+  tracks.grim       # @track (courses, clubs, jobs, internships, thesis)
+  spells.grim       # @spell
+  cast.grim         # @npc (moved from content/npcs/)
+  facts/*.grim      # @fact, one file per character
+  archetypes.grim   # @archetype
+  factions.grim     # @faction
+  arcs.grim         # @arc (§10.6)
+  lore/hard/*.grim  # @lore, curated canon
+  lore/soft/*.grim  # @lore, proposed by content batches; promotable to hard
+  timeline.grim     # @timeline (history + the in-run calendar of fixed beats)
+docs/authoring/     # the authoring spec (§3.5)
+```
+
+### 3.2 Blocks
+
+**`@npc`** (extended). `age` is required, and the engine refuses romance if any party is under 18. Traits and interests come from `vocabulary.grim`. `wealth` is on a 1–5 scale.
+
+```
+@npc lyra
+name: Lyra Vaneshade
+short: Lyra
+age: 19
+pronouns: she/her
+house: Emberhall
+role: student
+year: 1
+romance: true
+traits: proud ambitious lonely
+interests: duelling fire
+stats: arcana 34 lore 22 alchemy 8 charm 26 vigor 30 guile 12 wealth 5
+schedule: duel_hall@afternoon,evening refectory@noon library@night
+relations: kael:-20 tobias:5
+voice: clipped, formal, sarcastic when hurt; never says "please" first
+desc: Brilliant, impatient and used to winning.
+```
+
+**`@fact`.**
+- Tiers: surface (known on meeting), personal, secret.
+- `unlock` is a condition checked monthly. `learn lyra.mother` reveals a fact at once.
+- Fact text is shown in the People panel, so it's translatable.
+
+```
+@fact lyra.mother
+npc: lyra
+tier: personal
+unlock: rel(lyra) >= 30
+text: Her mother has never once told her "well done".
+```
+
+**`@place`**, `@track`, `@spell`: see §6, §7 and §9.
+
+**`@archetype`** (used in Phase 4):
+
+```
+@archetype student
+names: pool students
+age: 18..22
+traits: pick 2
+pronouns: any
+house: any
+```
+
+**`@faction`**: name, desc, members, alignment lean, stance toward the player.
+
+**`@lore`.**
+- `keys` drive retrieval. Lore is context for content production and isn't shown in the game, so it isn't translated.
+- `canon: hard` is curated; `canon: soft` is proposed by a batch.
+
+```
+@lore founders_seal
+keys: founders, seal, seven locks, lake, star key
+canon: hard
+text: The founders bound something beneath the lake with seven locks, one per tower…
+```
+
+**`@timeline`**: dated canon history, and the in-run calendar of fixed beats (§4.4).
+
+### 3.3 Canon lint
+
+- Extracts proper nouns (capitalised runs that don't start a sentence, plus known patterns) from every text field.
+- Compares them against the names of NPCs, places, tracks, spells, factions and archetype pools, lore `keys`, the glossary, and an allowlist.
+- **Hand-curated content:** a warning. **Content from batches and generation:** an error, unless the batch adds a `lore/soft` entry introducing the name.
+
+### 3.4 Lorebook export and briefs
+
+- `grim lorebook --out build/lorebook.json` exports every entry as `{id, kind, keys, text, canon, refs}`.
+- `grim brief --cast lyra,kael --place library --track evocation --arc hollowstar --topic "…"` prints a markdown **context pack**:
+  - the relevant NPCs, with facts up to the requested tier;
+  - the place;
+  - the track and its level;
+  - the arc's current act and clue list;
+  - matching lore entries (keyword retrieval);
+  - 3 similar existing events as style examples;
+  - the presets and class rules.
+
+  It's capped at about 6k tokens by default.
+
+### 3.5 Authoring spec (`docs/authoring/`)
+
+| File | Contents |
+|---|---|
+| `README.md` | how to make content; the three paths |
+| `style.md` | tone, voice per class, banned clichés, length limits, label rules |
+| `schema.md` | every construct in schema v1 with examples (partly generated from `SCHEMA`) |
+| `presets.md`, `classes.md` | when to use each preset, size tier and event class |
+| `checklist.md` | the acceptance checklist validators and critics apply |
+| `examples/*.grim` | annotated exemplar events, one per class and source |
+
+The Claude Code skills are rebuilt from these files:
+- `write-academy-events`: batch authoring.
+- `distill-lore`: Phase 1 seeding.
+- `tune-events`: Phase 3 onward.
+
+The tentative live harness will build its prompts from the same files, so the paths can't drift.
+
+### 3.6 Seeding by distillation (a Phase 1 task for Claude Code)
+
+1. Per NPC: read every event involving them → draft `@fact`s (5–8 per main character), a `schedule`, `voice`, `stats`, `relations`.
+2. Per place mentioned in events: draft a `@place` with region, map position and opening hours.
+3. Draft `@lore` from the Hollow Star chain and recurring world details (60+ entries), and the `@timeline`.
+4. Run canon lint over all existing content and add the missing names to the worldbook or allowlist.
+5. **Human curation:** review the diff in git and promote soft lore to hard.
+
+---
+
+## 4. Time (Phase 2b)
+
+### 4.1 Calendar and seasons
+
+| # | Month | Real-world | Season | Status | Fixed beats |
+|---|---|---|---|---|---|
+| 1 | Harvestmoon | Sep | autumn | **term** | year start, enrolment, Harvest Feast |
+| 2 | Emberwane | Oct | autumn | term | Club Fair; Lantern Night (festival) |
+| 3 | Mistveil | Nov | autumn | term | — |
+| 4 | Frostcall | Dec | winter | term | **finals**; Midwinter Ball (festival, at term end) |
+| 5 | Deepwinter | Jan | winter | **break** | break plan chosen |
+| 6 | Thawmoon | Feb | winter | break | — |
+| 7 | Stormbloom | Mar | spring | **term** | enrolment; internship applications open |
+| 8 | Greenrise | Apr | spring | term | Spring Tournament (festival) |
+| 9 | Blossomtide | May | spring | term | internship offers; *year 4: the Night* (plot finale) |
+| 10 | Highsun | Jun | summer | term | **finals**; *year 3: thesis setup*; *year 4: thesis defence* |
+| 11 | Goldenhaze | Jul | summer | **break** | break plan; *year 4: graduation, end of run* |
+| 12 | Starfall | Aug | summer | break | Starfall festival (the meteor showers) |
+
+- **4 years.** The run ends in Goldenhaze of year 4: **47 months**.
+- The names `final_year`, `term`, `break` and `season` are available in conditions and text.
+
+### 4.2 Day recipes
+
+**Term day:**
+
+| Slot | Source | Cards |
+|---|---|---|
+| morning | `courses` | 1 per enrolled course (2; 1 plus the thesis in year 4) |
+| noon | `social` | 1–2 |
+| afternoon | `visit` (map pick 1) | 1–2 |
+| evening | `visit` (map pick 2) | 1–2 |
+| night | `world` | 1–2 |
+| midnight | `special` | 0–1, only events with `slot: midnight` |
+
+**Break day:** morning = `plan` (break-plan pool), one `visit`, night = `world`. About 4–5 cards.
+
+Declared in `@game`:
+
+```
+@game
+schema: 1
+calendar: term=1-4 break=5-6 term=7-10 break=11-12
+seasons: autumn=1-3 winter=4-6 spring=7-9 summer=10-12
+day_term: morning=courses noon=social:1-2 afternoon=visit evening=visit night=world:1-2 midnight=special:0-1
+day_break: morning=plan afternoon=visit night=world:1
+max_cards_per_day: 14
+```
+
+**Run length:** 32 term months × ~11 cards + 15 break months × ~5 ≈ **425 decisions** *(checked at playtest #1)*.
+
+### 4.3 Break plans
+
+Chosen at the start of each break, as a menu:
+
+| Plan | Available | Effect |
+|---|---|---|
+| Stay at the castle | always | skeleton crew, secrets, cheap rent (6/month) |
+| Go home | always | home map, family and old friends, free board |
+| Travel | from year 2, costs crowns | travel map (port city / the North) |
+| Work full-time | with a job | extra shifts at double pay |
+| Research internship | from year 2, by application (§7.5) | host map, project, stipend |
+| Thesis retreat | year 4 winter | thesis progress |
+
+v0.3 ships castle, home and work full-time. Travel and internship maps follow as content (Phase 3/4).
+
+### 4.4 Festivals and fixed beats
+
+- Fixed beats live in `@timeline` as dated `auto` events.
+- Festivals use `replaces: visit1 | visit2`: they appear on the map at their location and take that visit.
+
+### 4.5 Re-pacing existing content
+
+- `year == 3` → `final_year` (17 places).
+- Hollow Star clues spread across years 1–3, finale in year 4's Blossomtide (§10.6).
+- Year-gated arcs (Lyra's ultimatum, the confessions, Ilse) shift by a year or gain a middle beat.
+- Careers move to year 4. Year 3 gets internships and the exchange students.
+- Today's summer events become break-plan pools.
+- Festivals move to the months in §4.1.
+
+---
+
+## 5. Director (Phase 2b)
+
+### 5.1 Sources
+
+`courses`, `visit` (the picked place), `social`, `world`, `special`, `plan`, `pushed` (story, track and fixed beats), `ambient` (fallback).
+
+An event belongs to a source through its fields:
+- `place:` → visit
+- `track:` → courses, or the track's place
+- `slot:` + `class:`
+- events with no specific source → social / world / ambient, by tags.
+
+### 5.2 Selection
+
+Each slot draws its quota from its source with **weighted sampling**, where:
+
+```
+score     = weight × novelty × relevance × variety
+novelty   = (1 − e^(−since/τ)) × 0.6^seen_this_run × 0.85^runs_seen          τ = 6 months (tunable)
+relevance = (1 + 0.5·cast_affinity) × (1 + 0.5·active_arc) × (1 + 0.3·recent_tag_overlap)
+variety   = 0.5 if the same tone or primary tag as either of the previous 2 cards, else 1
+```
+
+- `tone:` (light / warm / tense / grim / eerie) is a schema field (§12).
+- `runs_seen` comes from `/api/seen`; in the static build it comes from localStorage.
+
+### 5.3 Pushing
+
+| Syntax | Meaning |
+|---|---|
+| `queue x` | next month |
+| `queue x in N` | in N months |
+| `queue x now` | very next card |
+| `queue x within A..B` | a window: the chance rises each month (1 / months left), forced on the last month |
+| `queue x by month M` | deadline form of a window |
+| `queue x … with role` | carries a cast role into the queued event |
+| `unqueue x` | cancel |
+
+- **Priority classes**, used when the day overflows: `story > track > pushed > social > ambient`.
+- Overflow goes to the next day, and never exceeds `max_cards_per_day`.
+- A pushed event re-checks its `when` when drawn and skips quietly if it fails.
+
+### 5.4 Radiant casting
+
+```
+cast:
+  friend: any where rel(friend) >= 20 and not tagged(friend, faculty)
+  rival:  any where rival != friend and rel(rival) <= -10
+  host:   present(place)
+  stranger: anyone where tagged(stranger, student)
+```
+
+- **`any`:** met characters (authored and spawned). **`anyone`:** includes unmet characters, for introductions. **`present(place)`:** characters whose schedule puts them at the visited place in this slot.
+- **Filling:** roles fill in order, weighted by affinity (|rel| + spark + recency), with up to 50 backtracking attempts. Eligibility checks cast on a scratch copy of the random state; the drawn card keeps its cast.
+- **Per-role cooldown:** `repeat: N` applies per character.
+- **Text and effects use roles:** `{friend}`, `{rival.their}`, `rel rival -8`.
+- `say[lyra]:` overrides a line when Lyra is cast (translation key `…@lyra`).
+- **Cast-dependent outcomes** read NPC stats and tags: `challenge negotiate vs rival.charm`, `gold +friend.wealth`, `if tagged(friend, noble):`.
+- `actor: any` stays as shorthand for a single-role cast (removed from content in Phase 3).
+
+---
+
+## 6. Places and the map (Phase 2b)
+
+### 6.1 `@place`
+
+```
+@place duel_hall
+name: The Duelling Hall
+region: castle                 # castle | grounds | village | wilds | home | travel | internship:<host>
+map: campus 660,150            # map id + position
+kind: club                     # public | club | job | thesis | internship | plan
+track: duelling                # for club/job/thesis/internship places
+open: afternoon evening        # slots
+season: any                    # or e.g. "not winter"
+closed_when: flag(hall_burned)
+discover: has(club_duelling) or rel(lyra) >= 15
+hint: Steel rings somewhere above the east stair.   # teaser shown while hinted
+hinted_when: met(lyra)
+desc: Scorched floorboards and a ceiling that has seen things.
+```
+
+- **Public from the start:** courtyard, library, refectory, lakeshore, village.
+- Everything else is discovered through `discover`, the `discover <place>` effect, joining a track, or a donation.
+- **Visit draw:** 1–2 events with `place:` matching, plus a radiant cast from `present()`.
+- **Ambient leak:** place events can surface in `world` / `social` slots at ×0.2 weight.
+- **Content from dropped tracks moves to places:** Stargazers → Observatory, Choir → Great Hall, Skyrace → Flight Field, Familiar Stables → Stables, First-Year Tutor → Courtyard and mentoring events.
+
+### 6.2 Obligations (clubs, jobs, thesis, internship)
+
+| | Club | Job | Thesis (year 4) |
+|---|---|---|---|
+| Due per term | **2 practices** + fixtures (fixed dates, pushed) | **3 shifts** | **3 sessions** |
+| Visiting gives | track events: XP, rank XP, contacts | track events + **pay per shift** | progress + advisor events |
+| Extra visits | more XP, at decreasing returns | extra pay (breaks: double) | extra progress |
+| At term end, per missed visit | performance −15, lead rel −5 | performance −15, boss rel −5, no pay | progress −8, advisor rel −5 |
+| Excused | ill or injured; "cover for me" via a friend (rel ≥ 40) | ill; calling in sick costs −5 performance, no rel loss | ill |
+
+- The map badge shows what's left ("Practice · 2 left", "Shift · 1 left") and turns urgent in the last month of the term.
+
+**Performance** (0–100 per club or job; starts at 50):
+
+| Event | Change |
+|---|---|
+| attended visit | +8 (cap 100) |
+| good outcome in a track event | +5 |
+| bad outcome in a track event | −5 |
+| missed required visit | −15 (per above) |
+
+| Threshold | Consequence |
+|---|---|
+| < 40 | warning event (pushed) |
+| < 20 | benched (club: misses the next fixture) or fewer shifts offered (job: quota 2, with less pay) |
+| 0 | dropped or fired. Club: rejoin at the next Club Fair, starting at performance 30. Job: the Job Board marks you unreliable for 1 term |
+
+**Promotion** needs performance ≥ 70 and enough rank XP (§7.4).
+
+### 6.3 The map view
+
+Concept: `docs/map-concept.svg` / `.png`.
+
+**Rendering** (`src/map.js`): an illustrated SVG base per map (`content/world/maps/<id>.svg`: campus, home, port, north, internship hosts), plus markers generated from `@place`.
+
+**Marker states:**
+
+| State | Look |
+|---|---|
+| open | solid |
+| closed now | dimmed, with opening hours |
+| your club / job / thesis | gold or ember ring + badge |
+| hinted | dashed "?" + teaser |
+| undiscovered | hidden under fog |
+| festival | glow + "takes your evening visit" |
+
+**Overlays:**
+- pins for characters present (from schedules; met characters only; at most 3, plus "+n");
+- ✦ for unseen events or a pushed event waiting there;
+- a season tint (autumn amber, winter snow, spring blossom, summer gold).
+
+**Interaction:**
+- The first tap picks the afternoon, the second the evening, then confirm. Chips at the top show both picks.
+- Tapping a pick again clears it. Picking a closed place shows its opening hours instead.
+- On break days there's a single pick.
+
+**Accessibility:**
+- A list view with the same states as text.
+- Keyboard: arrow keys cycle markers, Enter picks.
+- Tap targets ≥ 44 px; the map fits the screen width, with scrolling on small screens.
+
+---
+
+## 7. Tracks (Phase 2b mechanics, Phase 3 content)
+
+### 7.1 The list
+
+**Courses: 6 disciplines × 3 levels, plus 3 hidden.** One skill per discipline. Each discipline teaches 2 spells (§9.1).
+
+| Discipline | Skill | Merges (today) | Spells |
+|---|---|---|---|
+| Evocation | arcana | Pyromancy, Tidecalling | Flame, Tide |
+| Astromancy & Divination | lore | Astromancy, Divination | Foresight, Starlight |
+| Alchemy & Healing | alchemy | Practical Alchemy, Healing Arts | Mend, Purify |
+| Illusion & Glamour | charm | Illusion & Glamour | Glamour, Mirror |
+| Beastcraft & Flight | vigor | Beastcraft (+ flight) | Haste, Beast-speech |
+| Umbral Theory | guile | Umbral Theory | Ward, Shadowstep |
+
+| Hidden course | Prerequisite |
+|---|---|
+| Artifice | Alchemy II + Evocation II |
+| Starcalling | Astromancy III + clue `heard_of_starcalling` |
+| Hollow Studies | Umbral II + Astromancy II + clue `knows_founders_seal` |
+
+**Clubs (4, one at a time):**
+- Duelling Circle (arcana / vigor)
+- Lumen Ledger (charm / lore)
+- Verdant Circle (alchemy)
+- Midnight Cartographers (guile; *secret*: discovered, never offered at the Fair)
+
+**Jobs (4, one at a time):** Library Assistant (lore), Gilded Newt (charm), Apothecary Clerk (alchemy), Broom Courier (vigor).
+
+**Internships (by application):** one host per discipline, plus the invitation-only Office of Unseen Affairs (§7.5).
+
+**Thesis:** year 4 (§7.6).
+
+### 7.2 `@track`
+
+```
+@track evocation
+kind: course                     # course | club | job | internship | thesis
+name: Evocation
+skill: arcana
+levels: 3
+level_names: Evocation I, Evocation II, Advanced Evocation
+place: lecture_tower             # where its events happen / obligation location for clubs & jobs
+teaches: flame@1 flame@2 tide@2 flame@3 tide@3
+hidden: false
+prereq: true                     # hidden courses: e.g. passed(alchemy,2) and passed(evocation,2)
+# clubs/jobs:
+ranks: Member, Officer, Captain  # or Apprentice, Clerk, Manager
+pay: 8, 12, 18                   # crowns per shift by rank (jobs) (tunable)
+due: 2                           # required visits per term
+lead: lyra                       # NPC whose relationship absence affects (or a cast role)
+```
+
+### 7.3 Courses
+
+**Enrolment:** a menu at the start of each term with `pick: 2`, where `pick` is a new menu property.
+
+| When | Offered |
+|---|---|
+| Year 1 autumn | level I of Evocation, Astromancy, Alchemy, Illusion |
+| Year 1 spring | level I of all 6, plus level II of courses passed |
+| Year 2 autumn | + level II |
+| Year 2 spring | + level III |
+| Year 3 on | + hidden courses whose prerequisites hold |
+
+- **Never a course already passed.** A failed course may be retaken.
+- In year 4 the thesis takes one slot, so there are **14 course slots against 21 courses**.
+- **Hint events** (2–3 per hidden course) point at the prerequisites.
+
+**Exams:**
+- At term end, each course runs `challenge exam` on its skill, at difficulty **tier by level** (I = medium, II = hard, III = heroic), relative to the calendar curve (§8.6).
+- **Study modifiers:** attendance and study choices during the term add up to +15 to the roll.
+- Until the exam minigame exists (§T1), it **auto-resolves**.
+
+**Grades:**
+- win margin ≥ 15 → A; win → B; partial → C; lose → F.
+- GPA = mean of A4 / B3 / C2 / F0.
+- **GPA replaces Standing:**
+  - probation if below 1.5 (from the end of year 1);
+  - the disciplinary board if below 1.0 twice in a row;
+  - it gates the scholar ending, internships and thesis eligibility.
+- Course events annotate `lesson: <fact or lore id>`. This is stored now and used by the tentative exam minigame.
+
+### 7.4 Clubs and jobs
+
+- **Joining or changing:** the Club Fair (Emberwane) and the **Job Board place**. Visiting it *is* the change event; no prompt every term.
+- **Ranks:**
+  - Promotion = performance ≥ 70 + rank XP (from track events) + a milestone event.
+  - Perks per rank (clubs: fixtures, contacts, spells; jobs: pay, discounts, access to places).
+- **Event depth targets:**
+  - 15–20 events per course level;
+  - 30+ per club or job across its ranks;
+  - a milestone event per level or rank.
+- **Rewards come through track events,** not a fixed payout.
+
+### 7.5 Research internships
+
+- **Application** (Stormbloom–Greenrise), at the Job Board or through a professor. Gates per host:
+  - GPA ≥ 2.5
+  - discipline level ≥ II
+  - prestigious hosts need a faculty recommendation (rel ≥ 30)
+
+  The offer or rejection arrives as an event in Blossomtide.
+- **Hosts:**
+  - Royal Library archives (lore)
+  - Conclave laboratory (arcana)
+  - Guild of Alchemists' works (alchemy)
+  - Observatory expedition (lore)
+  - Beastcraft field station (vigor)
+  - Thornwick exchange lab (charm)
+  - Office of Unseen Affairs (guile; by invitation)
+- **When:** summer of year 2 and year 3. Year 3's winter break also offers short ones.
+- **Play:** a break day on the host's map: morning assignment card, one visit, night.
+  - A supervisor NPC (authored, or a spawned archetype once Phase 4 exists).
+  - **One project** with `challenge research` checkpoints (auto-resolved until §T1).
+- **Rewards** (instead of double pay from full-time work):
+  - stipend 6 per month *(tunable)*;
+  - skill XP and renown;
+  - possible `published` flag;
+  - **a recommendation letter**: better odds and offers at the year-4 Career Fair;
+  - **thesis head start**: +15 progress if the thesis is in the same discipline.
+- **Plot hooks:** some hosts contain authored leads, each one of the redundant routes to a key clue (§10.6).
+
+### 7.6 Thesis (year 4)
+
+**Setup** (Highsun, year 3):
+1. **Discipline:** any with level III passed.
+2. **Advisor:** a faculty NPC. Their relationship modifies the thesis challenges, and their traits colour the events.
+3. **Topic:** one of 3, drawn from the discipline plus your flags, at an ambition level:
+
+| Ambition | Difficulty | Payoff |
+|---|---|---|
+| safe | tier −1 | ×0.7 |
+| solid | normal | normal |
+| ambitious | tier +1 | ×1.5; can bind to the main plot if you hold ≥ 3 key clues |
+
+**Running it:**
+- One course slot each term.
+- A **thesis lab** place with obligations (§6.2).
+- **Progress** (0–100) and the advisor relationship.
+
+| Month (year 4) | Milestone | Mechanic |
+|---|---|---|
+| Harvestmoon | proposal | advisor meeting; topic locked |
+| Emberwane–Mistveil | literature | `challenge research` |
+| Frostcall | first draft | advisor feedback; rewrite (time) or push on (risk) |
+| Deepwinter–Thawmoon | (optional) | "thesis retreat" break plan: +progress |
+| Stormbloom–Greenrise | experiment / fieldwork | discipline-skill `challenge`; a pushed **complication** incident |
+| Blossomtide | final draft | progress < 60 → crunch event (mood and health for progress) |
+| Highsun | **defence** | `challenge negotiate` against a committee of 3, modified by progress and the advisor relationship (auto-resolved until §T1) |
+
+**Result:** distinction, pass, or fail and resubmit (graduate late). It feeds GPA, the yearbook headline, the Career Fair and renown. An ambitious, plot-bound thesis adds a line to the ending's *mystery* slot.
+
+---
+
+## 8. Economy, preview and balance (Phase 2a; tuned in Phase 3)
+
+### 8.1 Top bars and the You panel
+
+| Top bar (fast, always previewed) | You panel (slow) |
+|---|---|
+| Health · Mood · **Mana** · Renown · **Alignment** | Crowns · 6 skills · GPA · course levels · club/job rank and performance · thesis progress · spells · conditions · discovered facts |
+
+### 8.2 Resources *(all numbers tunable)*
+
+**Health, Mood (0–100).**
+- **Balanced play** should keep them up easily.
+- **Aggressive play** (always grinding or working) drains mood to 0 in about 3 term months and health in about 6. Health- and mood-focused options recover at a similar rate.
+- Zero triggers the existing crisis events.
+
+**Crowns** (no maximum).
+
+| Cost | Amount |
+|---|---|
+| rent and board | 10 / term month; break: castle 6, home 0, travel varies |
+| tuition | 40 / term (scholarship origin −50%) |
+| course fees | 5 / course / term |
+
+- **Forced sinks** (`class: incident`, pushed, rare): medical bills, family emergencies, fines, a broken wand.
+- **Unpaid rent or board** → `hungry` (−4 health, −4 mood a month). Twice in a row → debt with Grisk.
+- **Money-maxxing sinks:** luxuries, bribes, patronage (crowns for renown), risky investments, donations that unlock places.
+- **Income:** job shifts, break work, windfalls.
+
+**Mana (0–max).**
+- Max = 40 + arcana/2. Regen per month = 10 + arcana/10.
+- Restored by some events (the observatory at night, ley lines, a professor's tea).
+- Ambient drains: wards failing, wild magic, exam nerves.
+- Spent by spells (§9.1).
+
+**Renown (0–100).**
+- −20% of its current value each month.
+- **Tiers:** Known 30, Famous 60, Legend 85. Each unlocks **spotlight** events (`class: milestone`) with large renown and real stakes.
+- At renown ≥ 60, spotlights carry **scandal** branches with a chance of roughly (renown − 50)%.
+
+**Alignment (−100 Hollow … +100 Lumen).**
+- No decay.
+- Moves toward Lumen at half speed once below −50, so climbing back from deep Hollow is harder.
+- Thresholds (±30, ±60) gate events; NPCs tagged `virtuous` / `ruthless` react.
+- The framing is the default pending decision D1.
+
+**Relationships: two axes.**
+- **Friendship (`rel`, −100…100; negative = hostility):** slow and sticky. A one-character focus reaches 100 at about 2 years. It decays only after 6 months without interaction (−2 a month toward 0).
+- **Spark (`spark`, 0–100; replaces `love`):**
+  - can start at first meeting;
+  - **−15% a month** without a romance interaction;
+  - −10 to −25 on hurtful choices;
+  - **jealousy** events if spark ≥ 30 with more than one person;
+  - partnership needs spark ≥ 60 at a confession, and breaks after 2 months below 20.
+- **Adults only** (§3.2).
+
+### 8.3 Previews
+
+- `preview(option, state)` walks the option's effects on a copy of the state, in order.
+- **Fixed amounts and ranges** combine per resource.
+- `if` is evaluated against the running state.
+- `chance` / `check` / `challenge` become labelled branches with probabilities, nested at most 2 deep; deeper nesting collapses to ranges.
+- Queues and flags show as a small "something follows" mark.
+- **UI:** numbers on the choice button; branches as "win +8 renown / lose −5 mood (62%)".
+- **Hard invariants:**
+  - lint rejects any effect it can't preview;
+  - the simulator property test asserts that every actual outcome falls within its preview, over 1,000 runs.
+
+### 8.4 Presets, tiers and budgets (`content/core/balance.grim`)
+
+**Size tiers** *(tunable)*:
+
+| | tiny | small | medium | large | huge |
+|---|---|---|---|---|---|
+| health / mood | 2 | 4 | 7 | 12 | 20 |
+| crowns | 3 | 8 | 15 | 30 | 60 |
+| renown | 1 | 3 | 6 | 10 | 16 |
+| mana | 3 | 6 | 10 | 16 | 25 |
+| skill XP | 1 | 2 | 4 | 7 | 12 |
+| rel / spark | 2 / 3 | 4 / 6 | 7 / 10 | 12 / 15 | 20 / 25 |
+| alignment | 2 | 4 | 7 | 12 | 20 |
+
+**Difficulty tiers:** `trivial −15 · easy −7 · medium 0 · hard +8 · heroic +16`, relative to `E(turn)` (§8.6).
+
+**Presets** expand to effects:
+- `grind <skill>` = skill +medium XP, mood −small, health −tiny
+- `rest` = mood +medium, health +small
+- `social <role>` = rel +small, mood +small, crowns −tiny
+- `work` = crowns +medium, mood −small, health −tiny
+- `splurge` = mood +large, crowns −medium
+- `risk` = a `chance` between large gain and medium loss
+
+**Option value:**
+- Σ (weight_resource × delta). The weights live in `balance.grim`.
+- **Routine** options must contain at least one cost or risky branch, and sit within ±1.5 medium-equivalents. Other classes follow §8.7.
+
+### 8.5 Skills
+
+- **XP sources:**
+  - course cards;
+  - club and job events;
+  - **incidental XP from ordinary events, spread across all skills**;
+  - internships;
+  - the thesis.
+
+  No-repeat electives push everyone toward breadth after their main discipline.
+- **Cost of the next point** = `a + b·level`. Starting values: `a ≈ 0.11X`, `b ≈ 0.0006X`, where X is the total XP of a typical term month (fitted by a tuning script).
+- **Focus multiplier:**
+  - **mastery** +30% XP on a course's skill while you hold level II+ in it;
+  - an **aligned club or job** +15%.
+  - Together that's about ×1.5, needed for "focused reaches about 95 by month 24" with a focus share of about 60%.
+- **Rust:** −1 a month after 3 idle months, never below 60% of peak. Breaks (2 months) never cause rust alone.
+
+### 8.6 Checks and difficulty over time
+
+- `E(turn)` = the expected skill of a balanced player at that turn (from the curve).
+- `DC = E(turn) + tier offset`.
+- Odds = `clamp(50 + 2.5·(skill − DC), 8, 92)`.
+- `partial:` is optional, with a band of ±5 around DC.
+- `variant hard`: the same event at tier +1 with ×1.5 rewards; the director picks it more often as the year advances.
+
+### 8.7 Event classes (`class:` is required)
+
+| Class | Rule | Measured |
+|---|---|---|
+| `routine` | strict budget (§8.4) | per event |
+| `milestone` | may be pure reward; capped at 2 large | per run: count and value |
+| `incident` | may be all-negative; must offer agency (mitigate vs accept) | per run: about 1–3 serious ones a year |
+| `windfall` | may be all-positive; capped at 1 large | per run: frequency band |
+| `story` | exempt from budget; reviewed by the critic | per arc |
+| `crisis` | exempt | rate per play style |
+
+### 8.8 Balance: alarms, and players as the judge
+
+**Reality.**
+- Impact varies by design.
+- How often an event appears is hidden behind prerequisite webs.
+- Simulated players are crude stand-ins.
+
+So automation catches **gross errors and regressions only**. **Human playtests** (end of Phases 2b, 3 and 4) and continuous telemetry are the judge. When they disagree with the simulator, **players win**, and the simulator's play styles are adjusted to match.
+
+**Level 1: hard invariants (fail the build):**
+- previews ⊇ outcomes;
+- no soft-locks, no empty menus;
+- no forced payment without a fallback;
+- adults only for romance;
+- every key clue has ≥ 2 reachable sources;
+- every event has a class;
+- routine budget respected.
+
+**Level 2: alarms (wide tolerances, warnings):**
+
+| Target | Alarm when |
+|---|---|
+| Focus tops a skill at ~2 years | `focused:x`: x < 85 by month 24, or the other skills average < 20 at the end |
+| Balanced ≈ 50% everywhere | `balanced`: mean skill outside 35–65 at the end |
+| Balanced affords ~50% of event costs | outside 30–70% |
+| Money-maxxing has sinks | crowns still climbing steeply in year 4 |
+| Forced sinks make food risky now and then | no tight month in a typical year |
+| Casting at every chance keeps mana low | `caster`: mana > 40% in most term months |
+| Without casting, mana still drains | `balanced`: mana always full |
+| Balanced holds health and mood | `balanced`: either hits 0 in > 15% of runs |
+| Aggressive breaks down | mood survives past term month 5, or health past 9 |
+| One friend at ~2 years | `social:x`: friendship < 80 by month 24 |
+| Romance is volatile | swings < 20 within 3 months in most romance runs |
+| Skipping hurts | `truant` is never dropped or fired |
+| Incidents / windfalls per year | outside 1–3 / 1–4 per year |
+
+**Level 3: impact report** (`grim report`, §11.2): reach × magnitude per event, using telemetry wherever human runs exist.
+
+---
+
+## 9. Option types (Phase 2a)
+
+### 9.1 Spells
+
+- 12 spells: 2 per discipline (§7.1), each with 3 levels.
+
+```
+@spell ward
+name: Ward
+discipline: umbral
+cost: 8, 6, 5          # mana per level (tunable)
+power: 1, 2, 3
+desc: A pale shell that turns aside the next harm.
+```
+
+- **Learned from:** `teaches:` on course levels, club and job ranks, events (`learn_spell ward`), close friends (rel ≥ 70 events).
+- **Options:** `> up[ward]: Raise a ward` is the swipe-up / ↑ option.
+  - Invisible unless the spell is known; shown but disabled if mana is short.
+  - Mana is deducted automatically and shown in the preview.
+  - Effects can read `spell_level(ward)`.
+  - Translation keys: `opt.up.*`.
+
+### 9.2 Challenges
+
+```
+challenge duel vs rival hard:     # duel | negotiate | deceive | exam | research | brew | enchant
+  win:     rel rival -4
+           renown +large
+  partial: renown +small
+  lose:    health -medium
+```
+
+**Auto-resolve** (committed; it's the only mode until §T1): the odds of a check on the mapped skill(s), against `DC(tier)`, plus modifiers.
+
+| Challenge | Skill(s) |
+|---|---|
+| duel | (vigor + arcana) / 2 |
+| negotiate | charm |
+| deceive | guile |
+| exam | the course's skill |
+| research | lore |
+| brew / enchant | alchemy |
+
+- **Modifiers** (each capped at ±15):
+  - `vs <role>.<stat>` shifts the DC by the opponent's stat minus E(turn);
+  - study points, advisor relationship, spells known (+3 each for relevant ones), items (§T2).
+- The simulator always auto-resolves.
+
+### 9.3 Crafting policy
+
+Until §T2 exists, alchemy is a skill and appears only in prose. Validators reject any mechanical reference to recipes, ingredients or items.
+
+---
+
+## 10. Narrative state
+
+### 10.1 Facts (stored in 2a; UI in Phase 4)
+
+- `@fact` blocks (§3.2). `learn npc.fact` reveals one; `unlock` conditions reveal them monthly.
+- **Phase 4:** the People panel shows facts by tier, with a "new" marker. Facts are also usable in conditions (`knows(lyra.mother)`) and modifiers.
+
+### 10.2 Memories (annotated in 2a; recall in Phase 4)
+
+- Options carry `memory: helped friend` / `memory: hurt rival`. The kinds come from the vocabulary: helped, hurt, laughed, fought, confided, kissed, betrayed, rescued, protected, abandoned.
+- The engine stores `{npc, event, kind, turn, place, vars}`.
+- **Phase 4:** `{friend.recall(helped)}` picks a matching memory and renders a **translated template** for its kind, filled from `vars`, e.g. "Still owe you for {memory.place}, by the way." It renders as empty if no memory exists.
+- No gameplay effect. Deterministic.
+
+### 10.3 Relationships between NPCs (stored in 2a; behaviours in Phase 4)
+
+- `npc_rel(a, b)` in conditions; `npc_rel a b +5` as an effect. Seeded from `relations:`; only changed pairs are stored.
+- **Phase 4 behaviours:**
+  - jealousy events (spark plus `npc_rel`);
+  - cliques (casting prefers friends together);
+  - matchmaking events;
+  - "friend and rival in the same room" events.
+
+### 10.4 Side characters from archetypes (Phase 4)
+
+- `spawn newcomer from student` creates a persistent character (`gen_NN`) from the archetype: traits, age 18–22, house, pronouns.
+- The **name is stored as a pool index**, rendered per language from `locales/<lang>/names.lang`.
+- Spawned characters fill `any` roles, have schedules (by archetype), and get memories and facts (generic, from trait templates).
+- **Limits:** at most 12 alive. They leave by graduating, transferring or drifting away (events). 3–4 spawn at game start.
+- Batches may spawn characters but never author new named canon characters without a hard-lore entry.
+
+### 10.5 Yearbook endings (`slot:` in schema v1; engine in Phase 4)
+
+| Slot | Picks |
+|---|---|
+| headline | 1 (career / academic; highest priority whose `when` holds) |
+| mystery | 0–1 (the main-plot outcome, §10.6) |
+| relationships | 0–3 (best bonds: partner > close > friend; one line each) |
+| personal | 0–2 (alignment, renown, notable flags) |
+
+- Endings declare `slot:` and `excludes:`. Game-over endings stay exclusive.
+- Phase 3 annotates the existing 19 endings with slots (ignored until Phase 4).
+
+### 10.6 Arcs and the main plot (mechanics 2b · restructure 3 · journal UI 4)
+
+**`@arc`:**
+
+```
+@arc hollowstar
+canon: hard
+acts: omens@y1 investigation@y2 escalation@y3 convergence@y4
+clock: 0..12
+beats: 2@y1m3 3@y1m9 5@y2m2 …        # clock advances on schedule
+clues: founders_ledger lake_bell second_shadow seven_locks star_key kael_family ilse_truth
+key_clues: seven_locks star_key ilse_truth
+```
+
+- **Events:** `arc:` (for director relevance), `clue(x)` in conditions, `find x` grants a clue (hard canon only), `act(hollowstar) >= 3`.
+- **Clock beats** fire `story` events on schedule, whatever the player does.
+
+**The Hollow Star in 4 acts:**
+
+| Act | When | Without you (clock beats) | What you can do |
+|---|---|---|---|
+| I · Omens | year 1 | rumours, lake anomalies, the drowned bell rings once, Kael arrives | notice; early clues are cheap and optional |
+| II · Investigation | year 2 | the Wardens stir; the man in grey; Ilse arrives | restricted section, founders' ledger, Maud's memories, research; trust or distrust the Dumonts |
+| III · Escalation | year 3 | an incident (the lake partly freezes, a tower goes dark); the factions recruit | pick a side (Wardens / Dumonts / your own way); internship leads; key clues |
+| IV · Convergence | year 4, Blossomtide | the Night: the lake freezes; the door opens | the finale: a sequence of challenges (duel, negotiate, research), whose options and odds come from your preparation |
+
+**Rules:**
+- **The world moves without you.** Ignoring the plot gives the *bystander* result, not a game over.
+- **Redundant routes:** each key clue has 2–3 sources (a place, a character's facts, an internship, a thesis topic, a research checkpoint). Hard invariant: ≥ 2 reachable.
+- **Preparation decides the finale:**
+  - clues held;
+  - allies (friendship ≥ 50 with Kael, Ilse, Maud, Isolde);
+  - alignment (≤ −60 unlocks *siding with the star*);
+  - spells known.
+- **Pacing:** at most 1 plot card a month, except in each act's climax month.
+- **Batch content** may read the act for flavour and point toward clue *sources*. Only hard-canon events can grant key clues or move the clock.
+- **The outcome** fills the yearbook *mystery* slot: sealed, bargained, freed, claimed, or bystander.
+- **Character arcs** (Lyra, Ilse, Kael, …) use the same construct, at a smaller scope.
+- **Phase 4:** a Journal tab shows clues found and the current act (as rumours, not spoilers).
+
+---
+
+## 11. Content production (committed paths)
+
+### 11.1 Path 1: batch authoring by Claude Code (from Phase 3)
+
+Loop per batch (a typical batch is 20–40 events around one brief):
+1. Choose a gap from `grim report --gaps` (depth targets, places with thin pools, under-served arcs, characters, seasons).
+2. `grim brief …` → context pack.
+3. Write the events.
+4. `grim build && grim lint && grim balance --quick && grim i18n zh-CN`, then translate.
+5. **Critic:** a separate subagent checks the batch against `checklist.md`: canon, tone, class rules, safety (adults only, nothing explicit), and duplication.
+6. **Duplicate check:** shingled-text Jaccard ≥ 0.6 against existing events is flagged.
+7. **Acceptance (default; decision D5):** auto-accept when all validators and the critic pass. Each batch writes a report, with a random 10% flagged for optional spot-checks in `/admin`.
+
+### 11.2 Path 3: feedback tuning (from Phase 3)
+
+`grim report` reads telemetry (human runs first, simulated runs separately):
+
+| Signal | Suggests |
+|---|---|
+| one option > 85% of picks (routine) | unbalanced choice |
+| eligible but never drawn | gating too tight |
+| high 👎 or "felt wrong" rate | rewrite |
+| long decision times | unclear text |
+| a card right before quitting | pacing |
+| outcome outside preview | engine bug (invariant) |
+| reach × magnitude outliers | review impact |
+
+The `tune-events` skill works through the report: rebalance, rewrite, re-gate or retire. Each change runs `grim snapshot` / `diff` before and after, plus canon lint and the critic.
+
+### 11.3 Translation
+
+Every batch and every tuning pass runs `i18n zh-CN` and translates per the glossary. New constructs get their own keys:
+- inline alternatives;
+- `say[npc]` overrides (`@npc` suffix);
+- `@fact` text, place names and descriptions, track, spell and rank names;
+- recall templates;
+- name pools.
+
+### 11.4 Reports in `/admin`
+
+- runs list;
+- per-event statistics (reach, choices, ratings);
+- the impact report;
+- balance alarms;
+- the batch acceptance log;
+- a worldbook browser.
+
+---
+
+## 12. Schema v1: the event format that freezes after Phase 2b
+
+| Construct | Added in | Engine at freeze |
+|---|---|---|
+| `class:`, `tone:` | 2a | full (lint, reports, variety) |
+| presets, size and difficulty tiers, `variant` | 2a | full |
+| new resources (`mana`, `alignment`, crowns, renown decay), `rel` + `spark` | 2a | full |
+| `> up[spell]:`, `spell_level()`, `learn_spell` | 2a | full |
+| `challenge … win/partial/lose`, `vs role.stat` | 2a | **auto-resolve** (minigames tentative) |
+| inline text `{a\|b}`, `{cond: x\|y}`, `{season=…}`, `{slot=…}` | 2a | full |
+| `learn npc.fact`, `knows()` | 2a | stored + conditions; panel in Phase 4 |
+| `memory: kind role` | 2a | stored; recall in Phase 4 |
+| `npc_rel()` / `npc_rel a b ±n` | 2a | stored + conditions; behaviours in Phase 4 |
+| `slot:`, `season`, `term`, `break`, `final_year` | 2b | full |
+| `place:`, `replaces:`, `discover`, `present()` | 2b | full |
+| `track:`, `level:`, `rank:`, `lesson:`, menu `pick: N` | 2b | full (`lesson:` stored for §T1) |
+| `cast:` roles, `say[npc]`, `any` / `anyone` | 2b | full |
+| `queue within / by`, `unqueue`, priority classes | 2b | full |
+| `@arc`, `arc:`, `clue()`, `find`, `act()` | 2b | full |
+| ending `slot:` / `excludes:` | 2b | parsed; yearbook in Phase 4 |
+| `spawn x from archetype` | 2b | parsed; full in Phase 4 |
+| `scope:`, `gen.*` flags | 2b | parsed only (§T3) |
+
+- **After the freeze, changes may only add things:** new optional fields or statements, never a change in meaning. `@game schema: 1` is checked by lint.
+- **During 2a and 2b,** a **compatibility layer** keeps the old syntax working (raw numbers, `actor: any`, `check`, `love`, `grades`) with "legacy" lint warnings, so the game stays playable. It's removed at the end of Phase 3.
+
+---
+
+## 13. Implementation plan (Phases 0–4)
+
+**Principles.**
+1. Build everything that affects *how an event is written* first, then freeze the format.
+2. Rewrite the existing content **once**.
+3. Open content production as early as possible.
+4. A vertical slice before each corpus change.
+5. Hard invariants always pass; alarms get reviewed, not blindly obeyed.
+6. Humans playtest at the end of Phases 2b, 3 and 4.
+7. Saves may break until 1.0.
+
+### Phase 0: Platform and safety net
+
+- **Deliverables:**
+  - git
+  - the server (§1): client hosting, saves, telemetry, feedback, `/api/seen`, a skeleton `/admin`
+  - client changes: server saves with a localStorage fallback, telemetry queue, rating buttons on outcome cards
+  - the tools in §2
+  - simulator play styles
+  - `grim balance` (invariants and alarms that apply today)
+  - golden-seed snapshot
+  - `npm run verify`
+- **Exit:**
+  - the game runs from the server in both languages, with saves and telemetry rows;
+  - e2e passes against the server;
+  - `find`, `rename` and `migrate` are covered by tests;
+  - the snapshot diff against v0.2 shows **no gameplay change**.
+- **Risk:** low.
+
+### Phase 1: Worldbook and authoring spec
+
+- **Deliverables:**
+  - `content/world/` (§3.1)
+  - parser support for the new blocks (data only; no gameplay use yet)
+  - vocabulary
+  - places with map positions
+  - **the reduced track list** (§7.1) as data
+  - 12 spells
+  - the extended cast (age, stats, schedules, voice, relations)
+  - facts (5–8 per main NPC)
+  - 60+ lore entries
+  - timeline, factions, arcs (data)
+  - canon lint, `grim lorebook`, `grim brief`
+  - `docs/authoring/`
+  - skills rebuilt: `write-academy-events`, `distill-lore`
+- **Method:** Claude Code distils (§3.6), then a human curates in git.
+- **Exit:**
+  - the worldbook parses and lints;
+  - canon lint reports 0 unknown names over existing content;
+  - briefs are generated for 5 sample topics;
+  - **no gameplay change** (snapshot diff).
+- **Risk:** low.
+
+### Phase 2a: Groundwork, numbers and options
+
+- **Deliverables:**
+  - the resources of §8.2 (mana, alignment, crowns, renown decay, rel/spark)
+  - top bars and the You panel
+  - `balance.grim` presets and tiers
+  - class / tone fields and the budget lint
+  - **preview engine** + property test
+  - `challenge` auto-resolve + `partial`
+  - spells and the swipe-up option
+  - inline text variation
+  - `learn` / `memory:` / `npc_rel` stored
+  - the compatibility layer
+- **Vertical slice:** 10 new events using every 2a construct, plus 2 spells.
+- **Exit:**
+  - the slice plays in both languages;
+  - the preview property test passes over 1,000 runs;
+  - old content still runs (compatibility layer);
+  - e2e passes.
+- **Risk:** medium.
+
+### Phase 2b: Groundwork, the world loop, then freeze
+
+- **Deliverables:**
+  - calendar, seasons, terms and breaks (§4)
+  - break plans (castle, home, work full-time)
+  - day recipes
+  - **director** (§5): scoring, cross-run novelty, quotas, pushing, priorities
+  - cast roles, `say[npc]`, NPC stats and schedules
+  - **places + map UI** (§6)
+  - tracks: enrolment (`pick: 2`), course opening schedule, exams → GPA, clubs/jobs with obligations, performance and absence, the Job Board, internship and thesis mechanics
+  - XP model, rust, mastery
+  - `@arc` clocks and clues
+  - parsing for ending slots, `spawn`, `scope`
+- **Vertical slice:**
+  - 1 course (3 levels), 1 club, 1 job, 1 internship host (stub);
+  - 5 places on the campus map;
+  - a 4-event arc;
+  - plus the existing content running in compatibility mode.
+- **Human playtest #1:** pacing (cards per day, run length), the map, obligation pressure.
+- **Exit:** the playtest notes are addressed. **Schema v1 freezes** (`@game schema: 1`, lint enforced).
+- **Risk:** medium-high; pacing is the main unknown.
+
+### Phase 3: One-pass migration, balance, then content production opens
+
+**Migration steps** (each a `grim migrate` script or a Claude Code worklist, verified by snapshot diff where it applies):
+1. **Mechanical:** `final_year`; `actor: any` → `cast:`; `love` → `spark`; `grades` → GPA references (118); numbers → nearest preset or tier.
+2. **Judged:** suitable `check` → `challenge` (148, with Claude Code worklists); assign a `class` and `tone` to every event.
+3. **Structural:** `slot`, `place`, `track`, `level` / `rank`, `lesson`, `arc`, `memory` annotations.
+4. **Consolidation:**
+   - 10 electives → 6 disciplines;
+   - 7 clubs → 4, 6 jobs → 4;
+   - dropped content moves to places (§6.1);
+   - write hint events for the hidden courses.
+5. **Re-pacing:** 4 years and real seasons (§4.5). Restructure the Hollow Star into 4 acts with redundant clue sources, writing the new events needed.
+6. **Endings:** annotate slots.
+7. **Translation:** `i18n zh-CN` complete. The compatibility layer is removed.
+8. **Balance:** invariants pass, alarms reviewed and tuned.
+9. **Human playtest #2:** a full run in each language.
+10. **Feedback tooling:** `grim report` and the `tune-events` skill working on playtest telemetry.
+
+**Content production opens:** path 1 starts with depth targets (§7.4): course levels, clubs and jobs, places, break plans.
+
+**Exit:**
+- 0 lint errors and 0 legacy warnings;
+- invariants pass;
+- zh 100%;
+- playtest #2 notes addressed;
+- the first path-1 batch accepted through the full loop.
+
+**Risk:** high (the biggest pass), but done once.
+
+### Phase 4: Narrative systems
+
+- **Deliverables:**
+  - fact discovery in the People panel + `knows()` usage
+  - memory recall templates (en + zh)
+  - NPC-to-NPC behaviours (jealousy, cliques, matchmaking)
+  - archetype side characters + name pools
+  - **yearbook endings**
+  - renown spotlights / scandals
+  - alignment reactions
+  - arc Journal tab
+- **Content:** path-1 batches for each system; path-3 tuning from playtest telemetry.
+- **Human playtest #3.**
+- **Exit:**
+  - the systems are live with content;
+  - playtest notes are addressed;
+  - **a review gate for Part II:** decide whether and how to proceed with §T1–§T3.
+- **Risk:** low; it only adds to the format.
+
+---
+
+## 14. Decisions
+
+Defaults apply until changed; none blocks Phase 0.
+
+| # | Decision | Default |
+|---|---|---|
+| D1 | Alignment framing | Lumen ↔ Hollow |
+| D2 | Romance | several at once, with jealousy |
+| D3 | Obligations | 2 practices, 3 shifts, 3 thesis sessions per term; at most 1 club + 1 job |
+| D4 | Track list (§7.1) | as proposed; **needed before Phase 1 data is curated** |
+| D5 | Path 1 acceptance | auto-accept when everything passes, with a 10% optional spot-check |
+| D6 | Breaks in v0.3 | castle, home, work full-time; travel and internships as Phase 3–4 content |
+| D7 | Main plot | optional (a bystander result is valid) |
+| D8 | Exams as knowledge tests | deferred with §T1; exams auto-resolve until then |
+| D9 | Model provider and budget | deferred with §T3 |
+
+---
+
+## Part II: TENTATIVE (do not implement before the Phase 4 review)
+
+These sections record the direction agreed so far. Their **only** effect on Phases 0–4 is the hooks in §12 (`challenge`, `lesson:`, `scope:`, `gen.*`). Everything else waits.
+
+## T1. Minigames *(tentative; Phase 5 if approved)*
+
+**Shared direction:**
+- **Short:** 30–90 seconds, 5–8 decisions, swipe or tap, no reflex tests.
+- **Stats and spells shape each one,** so progression matters.
+- **Auto-resolve stays available** at the plain check odds. A skilled player should beat it by about +10–15 points.
+- **Stakes previewed;** at most about 1 playable minigame a month; seeded and deterministic.
+- **One module interface:** `{skills, spells, mana, items, opponent, tier, context} → {outcome, spent, notes}`.
+
+| Minigame | Direction |
+|---|---|
+| **Duel** | Poise meters; secret strike / guard / feint each round; Guile reveals tells; opponent styles from traits; Vigor = stamina; Arcana = damage; spell cards cost mana (Ward, Flame breaks Guard, Glamour fakes a tell, Haste acts second); how you win affects the relationship |
+| **Negotiation / deception** | Conviction vs Patience (plus Suspicion when deceiving); argument cards reason / appeal / pressure / offer / lie / spell; hidden values from traits; **discovered facts become special cards**; lies are remembered and checked later; **the thesis defence** is a 3-member committee variant using your findings as cards |
+| **Exam** | Questions drawn from the `lesson:`-tagged lectures you saw that term, plus a validated question bank; skill buys lifelines (eliminate, hint, time). Needs decision D8 |
+| **Research** | Push-your-luck over face-down sources; clue vs complication; bank or push; 3 complications = bust; Lore reduces complications; discovered places and facts add sources; can hold key clues |
+
+## T2. Inventory and crafting *(tentative; Phase 6 if approved)*
+
+- **Items:** consumables and charms, with "use item" swipe-up options alongside spells.
+- **Alchemy:** ingredients carry element vectors; steer the brew into a recipe's region without overshooting into the volatile zone. Alchemy skill widens the target; recipes are discovered.
+- **Enchanting:** inscribe a spell into an item, making a charm with charges.
+- **This is the one planned addition to the format after the freeze** (items, `use item`, `brew`, `enchant`). Until then the crafting policy (§9.3) applies.
+
+## T3. Live generation *(tentative; Phase 7 if approved, last)*
+
+**Pipeline** (prompts built from `docs/authoring/`, like the Claude Code skills):
+1. plan (large model, run rarely)
+2. retrieve (`grim brief`)
+3. write (mid model; schema-constrained JSON → grim)
+4. validate (code: the same validators as path 1)
+5. critique (small model, separate from the writer)
+6. repair (≤ 2 rounds)
+7. translate
+
+**Sandbox:**
+- presets and tiers only, no `end`;
+- writes only `gen.*` flags; can't touch hard-canon arcs, clues or the clock;
+- no new places, tracks or spells;
+- characters only through roles or spawned archetypes.
+
+**Survey:** every 3 months, 3–4 options inferred from play plus free text. The text is treated as data only.
+
+**Delivery:** asynchronous on the server; results go into the run's `gen` push queue with a 1–3 month window. The game never waits.
+
+**Scope:** `temporary` (this run) or `library` (kept across runs, with provenance).
+
+**Audit:** a Library panel and `/admin` to list, preview, rate and delete, with automatic pruning.
+
+**Also deferred here:** content chunking for very large libraries; embedding-based retrieval and duplicate detection; the model provider (D9).
