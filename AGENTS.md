@@ -64,11 +64,22 @@ node tools/grim.js check      # build + lint + sim 200 — run before you finish
 node tools/grim.js show <id>  # print a block's source and everywhere it's referenced
 node tools/grim.js ids flag   # list existing ids (event|state|npc|ending|resource|skill|flag|var)
 node tools/grim.js stats      # counts by file / trigger / tag / actor / chain
+node tools/grim.js feedback   # summarise playtest feedback from exported run logs in feedback/ (or given paths)
+node tools/grim.js sim 50 --log build/runs   # also write every simulated game's full run log as JSON
 ```
 
 To preview a single event in the browser, open `index.html?event=<id>&debug`; add `&actor=<npc>` for `actor: any` events. With `?debug`, a panel lets you play any event now, skip the month, or run an effect line (`gold = 200`, `rel lyra +40`, `gain class_umbral`).
 
 Node is only needed for the tools. The game itself is plain static files.
+
+### Run logs and playtest feedback
+
+The engine records every run in full in `s.hist`: each month's start-of-month effects, every card shown (with its title, text and options as displayed), the choice, the outcome (deltas, checks, notes, `say`), and the resources and skills after it. `s.log` remains the player-facing journal. While playing, a bar in the bottom-left corner rates the current and the previous card 👍 / 👎. The ✎ button (or **F**) adds comments, and the Journal has the same controls for any earlier card. Feedback is stored as `fb` on the history entry.
+
+- **Where runs live:** the run in progress is in the save. Finished or replaced runs move to `lumenhold.runs.v1` in localStorage (the 15 most recent; runs without feedback are dropped first).
+- **Getting them out:** "Export" on the title screen downloads all runs, and "Export this run" on an ending screen downloads just that one.
+- **Reading them:** put the JSON files in `feedback/` and run `node tools/grim.js feedback` (`--event <id>` filters, `--json` for machine-readable output). Events are sorted by net 👎. Notes logged against older content are marked, using `contentHash`.
+- **Tuning workflow:** read the feedback, `show <id>`, edit, then `check`.
 
 ---
 

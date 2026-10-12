@@ -18,6 +18,8 @@
   };
   const DEFAULT_PRIORITY = { queued: 60, auto: 50, social: 20, random: 10 };
   const ANY_EVENT_REST = 2;
+  const SAVE_VERSION = 2;
+  const now = () => Date.now();
   const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
   // Display name used by {npc}: the npc's `short:` if given, else the first word of `name`.
   const shortName = (def) => def.short || String(def.name).split(/[\s·]/)[0];
@@ -77,10 +79,12 @@
     newGame(opts = {}) {
       const seed = opts.seed != null && opts.seed !== '' ? (Number(opts.seed) | 0) : Math.floor(Math.random() * 2147483647);
       const s = this.s = {
-        version: 1, seed, rng: seed, name: opts.name || 'Wren', turn: 0,
+        version: SAVE_VERSION, seed, rng: seed, name: opts.name || 'Wren', turn: 0,
         vals: {}, flags: {}, states: {}, npcs: {}, seen: {}, last: {}, lastBy: {}, choices: {},
         queue: [], deck: [], cur: null, log: [], ended: null, pending: [], cardsThisMonth: 0,
+        runId: opts.runId || newRunId(seed), hist: [], seq: 0,
       };
+      s.hist.push({ t: 'start', at: now(), seed, name: s.name });
       for (const id of this.c.order.resources) s.vals[id] = this.c.resources[id].start ?? 50;
       for (const id of this.c.order.skills) s.vals[id] = this.c.skills[id].start ?? 0;
       for (const id of this.c.order.npcs) s.npcs[id] = { met: false, rel: this.c.npcs[id].start_rel || 0, love: 0, bond: 'none' };
@@ -88,7 +92,48 @@
       return this.beginMonth();
     }
     save() { return JSON.stringify(this.s); }
-    load(json) { this.s = typeof json === 'string' ? JSON.parse(json) : json; return this; }
+    load(json) {
+      const s = this.s = typeof json === 'string' ? JSON.parse(json) : json;
+      // v1 saves predate the run history: start one now, marked as resumed mid-run.
+      if (!s.hist) { s.hist = [{ t: 'start', at: now(), seed: s.seed, name: s.name, resumedAt: s.turn }]; s.seq = 0; }
+      if (!s.runId) s.runId = newRunId(s.seed);
+      s.version = SAVE_VERSION;
+      return this;
+    }
+
+    /* ---------------- Run history ----------------
+     * s.hist is the complete, uncapped record of a run (s.log is the player's journal):
+     *   {t:'start', at, seed, name}
+     *   {t:'month', n?, turn, year, month, summary}          — month-start effects (rent, ticks, hooks)
+     *   {t:'card', n, turn, id, actor, src, type, title, text, options, onShow?, at,
+     *              choice?, label?, out?, vals?, chosenAt?}   — every card shown and what was picked
+     *   {t:'end', n, turn, id, early, at}
+     * Cards and endings carry a sequence number `n`; feedback attaches to them as `fb`. */
+    histEntry(n) { const h = this.s.hist; for (let i = h.length - 1; i >= 0; i--) if (h[i].n === n) return h[i]; return null; }
+    // The most recent rateable entries (cards and the ending), newest first.
+    recentEntries(count = 2) { const out = []; const h = this.s.hist; for (let i = h.length - 1; i >= 0 && out.length < count; i--) if (h[i].n != null) out.push(h[i]); return out; }
+    // fb: {rating: 'up' | 'down' | null, comment: string}. Clearing both removes the feedback.
+    setFeedback(n, fb) {
+      const e = this.histEntry(n);
+      if (!e) return null;
+      const rating = fb.rating === 'up' || fb.rating === 'down' ? fb.rating : null;
+      const comment = String(fb.comment || '').trim();
+      if (!rating && !comment) { delete e.fb; return e; }
+      if (e.fb && e.fb.rating === rating && e.fb.comment === comment) return e;
+      e.fb = { rating, comment, at: now() };
+      return e;
+    }
+    // A self-contained record of this run (the format the UI exports and `grim feedback` reads).
+    exportRun(meta = {}) {
+      const s = this.s;
+      return {
+        format: 'lumenhold-run', v: 1, runId: s.runId, name: s.name, seed: s.seed,
+        startedAt: s.hist.length ? s.hist[0].at : null, updatedAt: now(), turn: s.turn, maxTurns: this.maxTurns,
+        ended: s.ended ? { id: s.ended.id, turn: s.turn } : null,
+        feedback: s.hist.filter((h) => h.fb).length,
+        ...meta, hist: s.hist,
+      };
+    }
 
     /* ---------------- Calendar ---------------- */
     get turn() { return this.s.turn; }
@@ -352,7 +397,9 @@
       }
       this.runHooks('month_start', summary);
       if (!s.ended) this.buildDeck();
-      return { kind: 'month', turn: s.turn, month: this.monthName(), monthIndex: this.monthIndex(), year: this.yearOf(), maxTurns: this.maxTurns, summary: summary.filter((x) => Object.keys(x.deltas).length || x.notes.length || x.say.length), deckSize: s.deck.length, ended: !!s.ended };
+      const shown = summary.filter((x) => Object.keys(x.deltas).length || x.notes.length || x.say.length);
+      s.hist.push({ t: 'month', turn: s.turn, year: this.yearOf(), month: this.monthIndex(), summary: shown, deck: s.deck.map((d) => d.id), vals: { ...s.vals }, at: now() });
+      return { kind: 'month', turn: s.turn, month: this.monthName(), monthIndex: this.monthIndex(), year: this.yearOf(), maxTurns: this.maxTurns, summary: shown, deckSize: s.deck.length, ended: !!s.ended };
     }
 
     // once / repeat bookkeeping. For `actor: any` events it is per person:
@@ -471,7 +518,15 @@
         s.cardsThisMonth++;
         let onShow = null;
         if (e.on_show) { const ctx = this.newCtx(item.actor); this.run(e.on_show, ctx); this.handleZeroed(ctx); onShow = this.outcome(ctx); }
-        return { kind: 'card', view: this.view(item), onShow };
+        const view = this.view(item);
+        item.n = ++s.seq;
+        s.hist.push({
+          t: 'card', n: item.n, turn: s.turn, year: this.yearOf(), month: this.monthIndex(), id: e.id, actor: item.actor || null, src: item.src, type: e.type,
+          title: view.title, text: view.text,
+          options: view.options.map((o) => ({ key: o.key, label: o.label, disabled: o.disabled || undefined, check: o.check || undefined })),
+          onShow: onShow || undefined, at: now(),
+        });
+        return { kind: 'card', view, onShow };
       }
       return this.endMonth();
     }
@@ -507,7 +562,9 @@
       s.choices[e.id] = key;
       s.cur = null;
       const out = this.outcome(ctx);
-      s.log.push({ turn: s.turn, id: e.id, key, title: this.interp(e.title, item.actor), choice: this.interp(opt.label, item.actor), say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null });
+      const h = item.n != null ? this.histEntry(item.n) : null;
+      if (h) Object.assign(h, { choice: key, label: this.interp(opt.label, item.actor), out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() });
+      s.log.push({ n: item.n, turn: s.turn, id: e.id, key, title: this.interp(e.title, item.actor), choice: this.interp(opt.label, item.actor), say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null });
       if (s.log.length > 400) s.log.shift();
       return out;
     }
@@ -520,8 +577,10 @@
       return hit ? hit.id : (list[list.length - 1] || {}).id;
     }
     ending() {
-      const id = this.s.ended.id; const d = this.c.endings[id] || { title: 'The End', text: '' };
-      return { kind: 'ending', id, title: this.interp(d.title), text: this.interp(d.text), art: d.art || 'star', scene: d.scene || null, turn: this.s.turn, early: this.s.turn < this.maxTurns };
+      const s = this.s, id = s.ended.id; const d = this.c.endings[id] || { title: 'The End', text: '' };
+      const last = s.hist[s.hist.length - 1];
+      if (!last || last.t !== 'end') s.hist.push({ t: 'end', n: ++s.seq, turn: s.turn, id, title: this.interp(d.title), early: s.turn < this.maxTurns, vals: { ...s.vals }, at: now() });
+      return { kind: 'ending', n: s.seq, id, title: this.interp(d.title), text: this.interp(d.text), art: d.art || 'star', scene: d.scene || null, turn: this.s.turn, early: this.s.turn < this.maxTurns };
     }
 
     /* ---------------- Snapshot for UI ---------------- */
@@ -538,6 +597,7 @@
       };
     }
   }
+  function newRunId(seed) { return 'r' + now().toString(36) + '-' + ((seed >>> 0) % 1679616).toString(36); }
   function pick(o, keys) { const r = {}; for (const k of keys) if (o[k] != null) r[k] = o[k]; return r; }
 
   Engine.shortName = shortName;

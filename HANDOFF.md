@@ -71,7 +71,7 @@ mkdir -p .claude/skills && cp -r skills/write-academy-events .claude/skills/
 **UI (`src/ui.js`).**
 - `boot()` must stay at the **very end** of the IIFE. Calling it earlier hits the temporal dead zone of later `const`s ("Cannot access 'sceneNote' before initialization") on the preview and resume paths.
 - Preview cards (`?event=`) are flagged `force`, so they skip their `when` condition.
-- Saves live in localStorage under `lumenhold.save.v1`, with settings in `lumenhold.settings.v1`. The engine save has `version: 1`. If you change the save shape, bump the version and handle old saves.
+- Saves live in localStorage under `lumenhold.save.v1`, with settings in `lumenhold.settings.v1`. The engine save has `version: 2` (v2 added the run history `hist`, `runId` and `seq`; `Engine.load` migrates v1 saves). If you change the save shape, bump the version and handle old saves. Archived run logs live under `lumenhold.runs.v1`.
 
 **NPC names.** `{npc}` prints `short:` if set, otherwise the first word of `name` split on spaces or `·`. That is why the faculty have `short:` (`Professor Thorne`, `Old Maud`, `Headmistress Marrow`), and why the Chinese names use `·` (伊尔泽·杜蒙 → 伊尔泽).
 

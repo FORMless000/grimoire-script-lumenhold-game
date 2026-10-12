@@ -128,6 +128,26 @@
     'ending.back': 'Back to the ending',
     'ending.fond': 'fond',
     'ending.cold': 'cold',
+    'ending.export': 'Export this run',
+
+    // Playtest feedback: rate / comment on the current or previous card; runs are logged for export.
+    'fb.this': 'This card',
+    'fb.last': 'Last card',
+    'fb.prev': 'Previous',
+    'fb.ending': 'Ending',
+    'fb.good': 'Good',
+    'fb.bad': 'Bad',
+    'fb.open': 'Rate & comment (F)',
+    'fb.heading': 'Feedback',
+    'fb.intro': 'Rate cards and leave notes for the writers. Everything is saved with this run’s log.',
+    'fb.chose': 'You chose: {choice}',
+    'fb.placeholder': 'What worked, what didn’t? Tone, typos, balance, a confusing choice…',
+    'fb.save': 'Save',
+    'fb.cancel': 'Cancel',
+    'fb.none': 'Nothing to rate yet.',
+    'fb.when': '{month} · Y{year}',
+    'fb.log': 'Playtest log: {runs} runs · {notes} notes',
+    'fb.export': 'Export',
 
     // Pronoun tables used by {they} {them} {their} {theirs} {are} {s} in content text.
     'pronoun.she.they': 'she', 'pronoun.she.them': 'her', 'pronoun.she.their': 'her', 'pronoun.she.theirs': 'hers', 'pronoun.she.are': 'is', 'pronoun.she.s': 's',

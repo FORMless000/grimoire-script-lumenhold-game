@@ -4,12 +4,15 @@
  *
  *   node tools/grim.js build            bundle content/**\/*.grim -> build/content.bundle.js (run after every content edit)
  *   node tools/grim.js lint             parse + cross-reference check (errors fail; warnings are advisory)
- *   node tools/grim.js sim [N] [--seed S] [--policy random|cautious|social] [--verbose]
+ *   node tools/grim.js sim [N] [--seed S] [--policy random|cautious|social] [--verbose] [--log DIR]
  *                                       auto-play N games, report coverage, endings, deaths, balance
+ *                                       (--log writes every game's full run log to DIR as JSON)
  *   node tools/grim.js stats            count blocks by kind / trigger / tag
  *   node tools/grim.js show <id>        print a block's source and everything that references it
  *   node tools/grim.js ids [kind]       list ids (event|state|npc|ending|resource|skill|flag|var)
  *   node tools/grim.js check            build + lint + sim 200 (what agents should run before finishing)
+ *   node tools/grim.js feedback [PATH…] [--event ID] [--json]
+ *                                       summarise playtest feedback from exported run logs (default: feedback/)
  *   node tools/grim.js i18n [lang]      no lang: translation coverage per language.
  *                                       with lang (e.g. zh-CN): create/update locales/<lang>/*.lang — adds new
  *                                       keys (empty), stamps [hash]es, flags stale entries, moves obsolete ones
@@ -361,10 +364,12 @@ function sim(n = 300, opts = {}) {
   const seen = {}, endings = {}, endTurns = [], finals = {}, cardsPerMonth = [], menus = {};
   const resSum = {}; const skillSum = {}; let games = 0; let crashes = 0;
   const seed0 = opts.seed != null ? opts.seed : 12345;
+  const meta = { game: content.game.title, contentHash: contentHash(), lang: opts.lang || 'en', sim: opts.policy || 'random' };
+  if (opts.log) fs.mkdirSync(opts.log, { recursive: true });
   for (let g = 0; g < n; g++) {
     const eng = new Engine(content);
     try {
-      let r = eng.newGame({ seed: seed0 + g * 7919, name: 'Sim' });
+      let r = eng.newGame({ seed: seed0 + g * 7919, name: 'Sim', runId: 'sim-' + (opts.policy || 'random') + '-' + (seed0 + g * 7919) });
       let steps = 0; let monthCards = 0;
       while (steps++ < 2000) {
         if (r.kind === 'month') { if (eng.s.turn > 1) cardsPerMonth.push(monthCards); monthCards = 0; r = eng.advance(); continue; }
@@ -394,6 +399,7 @@ function sim(n = 300, opts = {}) {
           r = eng.advance();
         }
       }
+      if (opts.log) fs.writeFileSync(path.join(opts.log, eng.s.runId + '.json'), JSON.stringify(eng.exportRun(meta)));
       if (r.kind !== 'ending') throw new Error('did not finish after 2000 steps');
       endings[r.id] = (endings[r.id] || 0) + 1; endTurns.push(r.turn);
       if (!r.early) finals[r.id] = (finals[r.id] || 0) + 1;
@@ -426,7 +432,57 @@ function sim(n = 300, opts = {}) {
   }
   const wk = Object.entries(warnings);
   if (wk.length) { console.log(C.y + '\nruntime warnings:' + C.x); wk.slice(0, 20).forEach(([k, v]) => console.log('  ' + v + '×  ' + k)); }
+  if (opts.log) console.log('\nrun logs: ' + games + ' file(s) in ' + path.relative(process.cwd(), opts.log));
   return crashes === 0;
+}
+
+/* ------------------------------------------------------------------ feedback */
+// Same fingerprint the browser stamps on exported runs (src/ui.js runMeta), so logs from older content stand out.
+function contentHash() { return I18n.hash(loadSources().map((x) => x.path + '\n' + x.text).join('\n')); }
+function feedback(paths, opts = {}) {
+  const files = [];
+  for (const p of paths.length ? paths : [path.join(ROOT, 'feedback')]) {
+    if (!fs.existsSync(p)) { console.error('not found: ' + p); continue; }
+    if (fs.statSync(p).isDirectory()) files.push(...listFiles(p, '.json')); else files.push(p);
+  }
+  // A file holds one run ({format:'lumenhold-run'}) or an export ({format:'lumenhold-runs', runs:[…]}).
+  // The same run can appear in several exports; keep the latest copy.
+  const runs = {};
+  for (const f of files) {
+    let data; try { data = JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { console.error(C.y + 'skipped ' + f + ': ' + e.message + C.x); continue; }
+    for (const r of data.format === 'lumenhold-runs' ? data.runs || [] : [data]) {
+      if (!r || !Array.isArray(r.hist)) continue;
+      if (!runs[r.runId] || (r.updatedAt || 0) > (runs[r.runId].updatedAt || 0)) runs[r.runId] = r;
+    }
+  }
+  const { content } = compileAll();
+  const now = contentHash();
+  const months = content.game.months || [];
+  const byEvent = {};
+  let total = 0;
+  for (const r of Object.values(runs)) for (const h of r.hist) {
+    if (!h.fb) continue;
+    const key = h.t === 'end' ? h.id + ' (ending)' : h.id;
+    if (opts.event && h.id !== opts.event) continue;
+    const b = byEvent[key] = byEvent[key] || { id: h.id, up: 0, down: 0, notes: [] };
+    if (h.fb.rating === 'up') b.up++; else if (h.fb.rating === 'down') b.down++;
+    b.notes.push({ rating: h.fb.rating, comment: h.fb.comment, choice: h.label || null, actor: h.actor || null, turn: h.turn, run: r.runId, lang: r.lang, stale: !!r.contentHash && r.contentHash !== now, title: h.title });
+    total++;
+  }
+  const rows = Object.entries(byEvent).sort((a, b) => (b[1].down - b[1].up) - (a[1].down - a[1].up) || b[1].notes.length - a[1].notes.length);
+  if (opts.json) { console.log(JSON.stringify({ runs: Object.keys(runs).length, feedback: total, contentHash: now, events: Object.fromEntries(rows) }, null, 2)); return; }
+  console.log(C.b + 'feedback: ' + total + ' note(s) on ' + rows.length + ' event(s) from ' + Object.keys(runs).length + ' run(s) in ' + files.length + ' file(s)' + C.x);
+  if (!files.length) console.log(C.d + 'Export logs from the title screen (or an ending) and put the JSON files in feedback/.' + C.x);
+  for (const [key, b] of rows) {
+    const missing = !content.events[b.id] && !content.endings[b.id];
+    console.log('\n' + C.b + key + C.x + '  ' + C.g + '+' + b.up + C.x + ' ' + C.r + '-' + b.down + C.x + (missing ? C.y + '  (no longer exists)' + C.x : ''));
+    for (const n of b.notes) {
+      const when = (months[((n.turn - 1) % (months.length || 12))] || 'month ' + n.turn) + ' Y' + Math.ceil(n.turn / (months.length || 12));
+      const mark = n.rating === 'up' ? C.g + '+' + C.x : n.rating === 'down' ? C.r + '-' + C.x : ' ';
+      console.log('  ' + mark + ' ' + C.d + when + (n.actor ? ' @' + n.actor : '') + (n.choice ? ' → ' + n.choice : '') + ' · ' + n.lang + ' · ' + n.run + (n.stale ? ' · older content' : '') + C.x);
+      if (n.comment) console.log('    ' + n.comment.replace(/\n/g, '\n    '));
+    }
+  }
 }
 
 /* ------------------------------------------------------------------ stats / show / ids */
@@ -472,11 +528,12 @@ const flag = (name) => { const i = rest.indexOf('--' + name); return i >= 0 ? (r
 switch (cmd) {
   case 'build': build(); break;
   case 'lint': lint({ verbose: !!flag('verbose') }); break;
-  case 'sim': { const ok = sim(Number(rest.find((x) => /^\d+$/.test(x))) || 300, { seed: flag('seed') != null ? Number(flag('seed')) : undefined, policy: flag('policy'), lang: flag('lang'), verbose: !!flag('verbose') }); if (!ok) process.exit(1); break; }
+  case 'sim': { const ok = sim(Number(rest.find((x) => /^\d+$/.test(x))) || 300, { seed: flag('seed') != null ? Number(flag('seed')) : undefined, policy: flag('policy'), lang: flag('lang'), verbose: !!flag('verbose'), log: typeof flag('log') === 'string' ? path.resolve(flag('log')) : null }); if (!ok) process.exit(1); break; }
   case 'i18n': if (rest[0]) i18nSync(rest[0]); else i18nStatus(); break;
   case 'stats': stats(); break;
   case 'show': show(rest[0]); break;
   case 'ids': ids(rest[0]); break;
+  case 'feedback': feedback(rest.filter((x, i) => !x.startsWith('--') && rest[i - 1] !== '--event'), { event: flag('event'), json: !!flag('json') }); break;
   case 'check': { build(); const ok = lint({ noExit: true }); const ok2 = sim(200, {}); process.exit(ok && ok2 ? 0 : 1); break; }
-  default: console.log(fs.readFileSync(__filename, 'utf8').split('\n').slice(2, 14).map((l) => l.replace(/^ \*\s?/, '')).join('\n'));
+  default: console.log(fs.readFileSync(__filename, 'utf8').split(' */')[0].split('\n').slice(2).map((l) => l.replace(/^ \*\s?/, '')).join('\n'));
 }

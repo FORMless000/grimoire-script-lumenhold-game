@@ -259,6 +259,42 @@ details.adv input { margin-top: 8px; }
 .debug-panel .btn { padding: 6px 10px; font-size: 12px; }
 .debug-panel pre { white-space: pre-wrap; font-size: 11px; color: var(--muted); max-height: 200px; overflow: auto; }
 
+/* ---------------- Playtest feedback ---------------- */
+/* Lives on <body> (above menus and month/ending overlays, below the feedback dialog and debug panel). */
+.fb-bar { position: fixed; left: 14px; bottom: 14px; z-index: 25; display: flex; align-items: center; gap: 2px; padding: 4px 5px; background: rgba(17, 20, 40, .94); border: 1px solid var(--line); border-radius: 999px; box-shadow: 0 10px 30px rgba(0, 0, 0, .4); font-size: 10.5px; color: var(--muted); }
+.fb-t { display: flex; align-items: center; gap: 1px; padding: 0 4px 0 8px; }
+.fb-t + .fb-t { border-left: 1px solid var(--line); }
+.fb-lbl { text-transform: uppercase; letter-spacing: .08em; margin-right: 4px; white-space: nowrap; }
+.fb-r, .fb-c, .fb-open { background: transparent; border: 1px solid transparent; border-radius: 999px; width: 28px; height: 28px; padding: 0; display: grid; place-items: center; font-size: 14px; line-height: 1; transition: opacity .15s, border-color .15s, background .15s; }
+.fb-r { filter: grayscale(1); opacity: .55; }
+.fb-r:hover, .fb-c:hover, .fb-open:hover { opacity: 1; border-color: var(--line); }
+.fb-r.on { filter: none; opacity: 1; }
+.fb-r.up.on { background: rgba(127, 209, 139, .18); border-color: rgba(127, 209, 139, .55); }
+.fb-r.down.on { background: rgba(255, 138, 128, .18); border-color: rgba(255, 138, 128, .55); }
+.fb-open, .fb-c { color: var(--gold-2); opacity: .75; }
+.fb-open { margin-left: 2px; }
+.fb-open.has, .fb-c.has { opacity: 1; background: rgba(217, 180, 90, .15); border-color: rgba(217, 180, 90, .45); }
+
+.fb-wrap { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 16px; background: rgba(6, 8, 20, .6); backdrop-filter: blur(3px); animation: fade .2s; }
+.fb-dialog { width: min(520px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; background: var(--night-2); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px; box-shadow: 0 30px 80px rgba(0, 0, 0, .6); }
+.fb-dialog h3 { font-family: var(--display); font-size: 26px; color: var(--gold-2); margin: 0 0 2px; }
+.fb-intro { color: var(--muted); font-size: 13px; margin: 0 0 12px; line-height: 1.45; }
+.fb-item { border-top: 1px solid var(--line); padding: 12px 0; }
+.fb-head { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.fb-title { display: block; font-family: var(--display); font-size: 20px; font-weight: 600; margin: 2px 0; }
+.fb-chose { font-size: 12.5px; color: var(--gold-2); }
+.fb-rate { display: flex; gap: 8px; margin: 8px 0; }
+.fb-rate .fb-r { width: auto; height: auto; padding: 6px 14px; font-size: 13px; color: var(--text); border-color: var(--line); filter: none; opacity: .75; }
+.fb-rate .fb-r.on { opacity: 1; }
+.fb-dialog textarea { width: 100%; min-height: 66px; resize: vertical; background: var(--night); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; font: 14px/1.45 var(--sans); }
+.fb-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+.fb-mini { display: flex; gap: 2px; margin-top: 4px; }
+.fb-mini .fb-r, .fb-mini .fb-c { width: 24px; height: 24px; font-size: 12px; }
+.fb-note { font-size: 12.5px; color: var(--gold-2); font-style: italic; margin-top: 2px; white-space: pre-line; }
+.fb-log { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; color: var(--muted); }
+.linkish { background: none; border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; font-size: 12px; color: var(--gold-2); }
+.linkish:hover { border-color: var(--gold); }
+
 /* ---------------- Responsive ---------------- */
 @media (max-width: 900px) {
   .game { grid-template-columns: 1fr; grid-template-areas: "top" "meters" "stage"; }
@@ -267,6 +303,8 @@ details.adv input { margin-top: 8px; }
   .side-toggle { display: grid; }
   .brand { display: none; }
   .top { padding: 10px 16px; }
+  .stage { padding-bottom: 60px; }
+  .overlay { padding-bottom: 64px; }
 }
 @media (max-width: 520px) {
   .meter { width: 52px; }

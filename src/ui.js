@@ -10,6 +10,8 @@
   const SAVE_KEY = 'lumenhold.save.v1';
   const SETTINGS_KEY = 'lumenhold.settings.v1';
   const RESUME_KEY = 'lumenhold.resume';
+  const RUNS_KEY = 'lumenhold.runs.v1';   // archive of finished / abandoned runs (full logs + feedback)
+  const MAX_RUNS = 15;
   const app = document.getElementById('app');
   const params = new URLSearchParams(location.search);
   const DEBUG = params.has('debug');
@@ -84,7 +86,7 @@
   /* ------------------------------------------------------------------ title */
   function titleScreen() {
     ui.mode = 'title';
-    closeOverlay();
+    closeOverlay(); closeFeedback(); removeFeedbackBar();
     const saved = store.get(SAVE_KEY);
     let savedInfo = '';
     if (saved) { try { const s = JSON.parse(saved); const e = new Engine(content).load(s); savedInfo = t('title.saveInfo', { name: esc(s.name), month: esc(e.monthName()), year: e.yearOf() }); } catch (e) { savedInfo = ''; } }
@@ -101,18 +103,22 @@
       '<details class="adv"><summary>' + esc(t('title.seed')) + '</summary><input id="pseed" inputmode="numeric" placeholder="' + esc(t('title.seedPlaceholder')) + '"></details>' +
       '<div class="row"><button class="btn primary grow" id="begin">' + esc(t('title.begin')) + '</button>' +
       (savedInfo ? '<button class="btn grow" id="cont">' + esc(t('title.continue', { info: '' })) + savedInfo + '</button>' : '') + '</div>' +
-      '<div class="howto">' + t('title.howto_html') + '</div>' +
+      '<div class="howto">' + t('title.howto_html') + '</div>' + runLogLine() +
       '</div></div></div>';
     document.querySelectorAll('.lang-btn').forEach((b) => { b.onclick = () => { if (b.dataset.lang !== cur) switchLang(b.dataset.lang, false); }; });
     document.getElementById('begin').onclick = () => {
       const name = document.getElementById('pname').value.trim() || t('title.defaultName');
       const seed = document.getElementById('pseed').value.trim();
+      // The run being replaced keeps its log (and any feedback) in the archive.
+      if (saved) { try { archiveRun(new Engine(content).load(saved)); } catch (e) { console.warn(e); } store.del(SAVE_KEY); }
       eng = new Engine(content);
       buildGame();
       step(eng.newGame({ name, seed: seed === '' ? null : seed }));
     };
     const c = document.getElementById('cont');
     if (c) c.onclick = () => { eng = new Engine(content).load(saved); buildGame(); step(eng.advance()); };
+    const ex = document.getElementById('exportRuns');
+    if (ex) ex.onclick = () => exportRuns(allRuns(), 'lumenhold-runs-' + fileStamp() + '.json');
   }
   function randomName() { const n = t('title.names').split(/\s*[,，、]\s*/).filter(Boolean); return n[Math.floor(Math.random() * n.length)] || 'Wren'; }
 
@@ -159,7 +165,8 @@
         '<span class="dot"></span><div class="orb"><div class="fill"></div>' + Art.icon(r.icon || 'star', 20) + '</div>' +
         '<div class="val"></div><div class="lbl">' + esc(r.name || id) + '</div></div>';
     }).join('');
-    if (DEBUG) buildDebug();
+    if (DEBUG && !document.querySelector('.debug-btn')) buildDebug();
+    if (!params.get('event')) buildFeedbackBar();
     renderChrome();
   }
 
@@ -235,11 +242,15 @@
         const opt = ev && l.key ? ev.options.find((o) => o.key === l.key) : null;
         const choice = opt ? eng.interp(opt.label, l.actor) : l.choice;
         const say = l.sayIds && l.sayIds.length && l.sayIds.every((id) => eng.sayIndex[id]) ? l.sayIds.map((id) => eng.interp(eng.sayIndex[id].text, l.actor)).join(' ') : l.say;
-        h += '<div class="log-item"><div class="when">' + esc(t('journal.when', { month: eng.monthName(l.turn), year: eng.yearOf(l.turn) })) + '</div><b>' + esc(title) + '</b> — <span class="ch">' + esc(choice) + '</span>' + (say ? '<div class="say">' + esc(say) + '</div>' : '') + '</div>';
+        h += '<div class="log-item"><div class="when">' + esc(t('journal.when', { month: eng.monthName(l.turn), year: eng.yearOf(l.turn) })) + '</div><b>' + esc(title) + '</b> — <span class="ch">' + esc(choice) + '</span>' + (say ? '<div class="say">' + esc(say) + '</div>' : '') + (l.n != null ? journalFeedback(l.n) : '') + '</div>';
       }
     }
     body.innerHTML = h;
     body.querySelectorAll('.person').forEach((p) => { p.onclick = () => p.classList.toggle('open'); });
+    body.querySelectorAll('.fb-mini button').forEach((b) => {
+      const n = Number(b.parentNode.dataset.n);
+      b.onclick = () => (b.dataset.r ? quickRate(n, b.dataset.r) : openFeedback([n]));
+    });
   }
 
   function setPreview(affects) {
@@ -261,8 +272,12 @@
   function step(r) {
     save();
     renderChrome();
+    route(r);
+    renderFeedbackBar();
+  }
+  function route(r) {
     if (r.kind === 'month') return showMonth(r);
-    if (r.kind === 'ending') { store.del(SAVE_KEY); return showEnding(r); }
+    if (r.kind === 'ending') { archiveRun(eng); store.del(SAVE_KEY); return showEnding(r); }
     if (r.onShow) floatDeltas(r.onShow.deltas);
     if (r.view.type === 'menu') return showMenu(r.view);
     return showCard(r.view);
@@ -432,6 +447,7 @@
     card.style.background = 'linear-gradient(180deg, #f6efdd, #ece0c2)';
     document.getElementById('choices').innerHTML = '<button class="choice single" id="contBtn">' + esc(t('outcome.continue')) + '</button>';
     document.getElementById('contBtn').onclick = () => continueOutcome();
+    renderFeedbackBar();
     attachSwipe(card, { commit() { setTimeout(continueOutcome, 200); }, tap() { flyOut(card, 'right'); setTimeout(continueOutcome, 200); } });
   }
   function continueOutcome() {
@@ -508,9 +524,11 @@
       '<h2>' + esc(r.title) + '</h2><p class="text">' + esc(r.text) + '</p>' +
       '<div class="final-stats">' + stats + '</div>' + (people ? '<div class="sec-h">' + esc(t('ending.people')) + '</div><div class="final-people">' + people + '</div>' : '') +
       '<div class="row" style="display:flex;gap:10px"><button class="btn primary grow" id="again">' + esc(t('ending.again')) + '</button><button class="btn grow" id="journal">' + esc(t('ending.journal')) + '</button></div>' +
+      '<div class="row" style="margin-top:10px;text-align:center"><button class="linkish" id="exportRun">' + esc(t('ending.export')) + '</button></div>' +
       '</div></div>');
+    document.getElementById('exportRun').onclick = () => exportRuns([eng.exportRun(runMeta())], 'lumenhold-run-' + fileStamp() + '.json');
     document.getElementById('again').onclick = () => { eng = null; titleScreen(); };
-    document.getElementById('journal').onclick = () => { closeOverlay(); ui.tab = 'journal'; ui.sideOpen = true; document.getElementById('side').classList.add('open'); renderSide(); document.getElementById('choices').innerHTML = '<button class="choice single" id="backEnd">' + esc(t('ending.back')) + '</button>'; document.getElementById('backEnd').onclick = () => showEnding(r); };
+    document.getElementById('journal').onclick = () => { closeOverlay(); ui.tab = 'journal'; ui.sideOpen = true; document.getElementById('side').classList.add('open'); renderSide(); document.getElementById('choices').innerHTML = '<button class="choice single" id="backEnd">' + esc(t('ending.back')) + '</button>'; document.getElementById('backEnd').onclick = () => { showEnding(r); renderFeedbackBar(); }; renderFeedbackBar(); };
   }
 
   /* ------------------------------------------------------------------ overlay */
@@ -524,7 +542,13 @@
 
   /* ------------------------------------------------------------------ keys */
   function onKey(e) {
-    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) return;
+    if (fbOpen) {
+      if (e.key === 'Escape') { e.preventDefault(); closeFeedback(); }
+      else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); saveFeedback(); }
+      return;
+    }
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
+    if ((e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey && document.getElementById('fbBar')) { e.preventDefault(); openFeedback(); return; }
     if (ui.mode === 'card') {
       const v = ui.view; const story = v.type === 'story' || v.options.length === 1;
       if (e.key === 'ArrowLeft') { e.preventDefault(); commitCard(story ? 'right' : 'left'); }
@@ -539,6 +563,139 @@
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ui.monthGo && ui.monthGo(); }
     }
   }
+
+  /* ------------------------------------------------------------------ run log & playtest feedback
+   * The engine records every month, card, choice and outcome in s.hist (see engine.js "Run history").
+   * Feedback (good / bad + comment) attaches to a card or the ending as `fb`. The run in progress lives
+   * in the save; finished or replaced runs move to the RUNS_KEY archive. Export downloads JSON that
+   * `node tools/grim.js feedback <file>` aggregates per event. */
+  let contentHash = null, fbOpen = false, fbItems = [];
+  function runMeta() {
+    if (!contentHash) contentHash = I18n.hash((window.LUMENHOLD_SOURCES || []).map((x) => x.path + '\n' + x.text).join('\n'));
+    return { game: content.game.title || 'Lumenhold', contentHash, lang: I18n.lang(), userAgent: navigator.userAgent };
+  }
+  function loadRuns() { try { const r = JSON.parse(store.get(RUNS_KEY) || '[]'); return Array.isArray(r) ? r : []; } catch (e) { return []; } }
+  // Upsert a run into the archive (oldest first). When full, drop the oldest runs without feedback first.
+  function archiveRun(engine) {
+    if (!engine || !engine.s || !engine.s.hist || params.get('event')) return;
+    const rec = engine.exportRun(runMeta());
+    const runs = loadRuns().filter((r) => r.runId !== rec.runId);
+    runs.push(rec);
+    const dropOne = () => {
+      let i = runs.findIndex((r) => r !== rec && !r.feedback);
+      if (i < 0) i = runs.findIndex((r) => r !== rec);
+      if (i < 0) return false;
+      runs.splice(i, 1); return true;
+    };
+    while (runs.length > MAX_RUNS && dropOne());
+    for (;;) {
+      try { localStorage.setItem(RUNS_KEY, JSON.stringify(runs)); return; } catch (e) { if (!dropOne()) { console.warn('[runs] could not archive run', e); return; } }
+    }
+  }
+  // Archived runs plus the one in the save, if any.
+  function allRuns() {
+    const runs = loadRuns();
+    const saved = store.get(SAVE_KEY);
+    if (saved) {
+      try {
+        const rec = new Engine(content).load(saved).exportRun(Object.assign(runMeta(), { inProgress: true }));
+        const i = runs.findIndex((r) => r.runId === rec.runId);
+        if (i >= 0) runs[i] = rec; else runs.push(rec);
+      } catch (e) { console.warn(e); }
+    }
+    return runs;
+  }
+  function runLogLine() {
+    const runs = allRuns();
+    if (!runs.length) return '';
+    const notes = runs.reduce((a, r) => a + (r.feedback || 0), 0);
+    return '<div class="fb-log"><span>' + esc(t('fb.log', { runs: runs.length, notes })) + '</span><button class="linkish" id="exportRuns">' + esc(t('fb.export')) + '</button></div>';
+  }
+  function exportRuns(runs, filename) {
+    const data = JSON.stringify({ format: 'lumenhold-runs', v: 1, exportedAt: new Date().toISOString(), runs }, null, 1);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([data], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+  function fileStamp() { const d = new Date(), p = (n) => String(n).padStart(2, '0'); return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '-' + p(d.getHours()) + p(d.getMinutes()); }
+  // After feedback changes: the save holds a live run; a finished run only exists in the archive.
+  function persistFeedback() { if (eng.s.ended) archiveRun(eng); else save(); }
+
+  // What the live bar and the F dialog rate: the newest two cards (or the ending and the last card).
+  function fbTargets() {
+    if (!eng || !eng.s || !eng.s.hist) return [];
+    return eng.recentEntries(2).map((e, i) => ({ e, label: e.t === 'end' ? t('fb.ending') : i > 0 ? t('fb.prev') : t(ui.mode === 'month' ? 'fb.last' : 'fb.this') }));
+  }
+  const fbBtn = (n, r, fb, cls) => '<button class="fb-r ' + r + (fb && fb.rating === r ? ' on' : '') + (cls || '') + '" data-n="' + n + '" data-r="' + r + '" title="' + esc(t(r === 'up' ? 'fb.good' : 'fb.bad')) + '" aria-pressed="' + !!(fb && fb.rating === r) + '">' + (r === 'up' ? '👍' : '👎') + '</button>';
+  function buildFeedbackBar() {
+    if (document.getElementById('fbBar')) return;
+    const bar = document.createElement('div'); bar.className = 'fb-bar'; bar.id = 'fbBar';
+    document.body.appendChild(bar);
+    bar.onclick = (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.r) quickRate(Number(b.dataset.n), b.dataset.r); else openFeedback();
+    };
+  }
+  function removeFeedbackBar() { const b = document.getElementById('fbBar'); if (b) b.remove(); }
+  function renderFeedbackBar() {
+    const bar = document.getElementById('fbBar'); if (!bar) return;
+    const targets = fbTargets();
+    bar.style.display = targets.length ? '' : 'none';
+    bar.innerHTML = targets.map(({ e, label }) => '<div class="fb-t" title="' + esc(e.title || '') + '"><span class="fb-lbl">' + esc(label) + '</span>' + fbBtn(e.n, 'up', e.fb) + fbBtn(e.n, 'down', e.fb) + '</div>').join('') +
+      '<button class="fb-open' + (targets.some(({ e }) => e.fb && e.fb.comment) ? ' has' : '') + '" title="' + esc(t('fb.open')) + '">✎</button>';
+  }
+  function journalFeedback(n) {
+    const e = eng.histEntry(n); if (!e) return '';
+    const fb = e.fb;
+    return '<div class="fb-mini" data-n="' + n + '">' + fbBtn(n, 'up', fb) + fbBtn(n, 'down', fb) + '<button class="fb-c' + (fb && fb.comment ? ' has' : '') + '" title="' + esc(t('fb.open')) + '">✎</button></div>' +
+      (fb && fb.comment ? '<div class="fb-note">' + esc(fb.comment) + '</div>' : '');
+  }
+  function quickRate(n, r) {
+    const e = eng.histEntry(n); if (!e) return;
+    const fb = e.fb || {};
+    eng.setFeedback(n, { rating: fb.rating === r ? null : r, comment: fb.comment });
+    persistFeedback(); renderFeedbackBar();
+    if (ui.tab === 'journal') renderSide();
+  }
+  // ns: hist sequence numbers to edit (from the journal); default: the live targets.
+  function openFeedback(ns) {
+    if (!eng || !eng.s || !eng.s.hist) return;
+    closeFeedback();
+    fbItems = ns ? ns.map((n) => eng.histEntry(n)).filter(Boolean).map((e) => ({ e, label: e.t === 'end' ? t('fb.ending') : '' })) : fbTargets();
+    const body = fbItems.length ? fbItems.map(({ e, label }) => {
+      const fb = e.fb || {};
+      return '<div class="fb-item" data-n="' + e.n + '"><div class="fb-head"><span>' + esc(label) + '</span><span>' + esc(t('fb.when', { month: eng.monthName(e.turn), year: eng.yearOf(e.turn) })) + '</span></div>' +
+        '<b class="fb-title">' + esc(e.title || e.id) + '</b>' + (e.label ? '<div class="fb-chose">' + esc(t('fb.chose', { choice: e.label })) + '</div>' : '') +
+        '<div class="fb-rate">' + ['up', 'down'].map((r) => '<button class="fb-r ' + r + (fb.rating === r ? ' on' : '') + '" data-r="' + r + '">' + (r === 'up' ? '👍 ' : '👎 ') + esc(t(r === 'up' ? 'fb.good' : 'fb.bad')) + '</button>').join('') + '</div>' +
+        '<textarea rows="3" maxlength="2000" placeholder="' + esc(t('fb.placeholder')) + '">' + esc(fb.comment || '') + '</textarea></div>';
+    }).join('') : '<p class="fb-intro">' + esc(t('fb.none')) + '</p>';
+    const wrap = document.createElement('div'); wrap.className = 'fb-wrap'; wrap.id = 'fbDialog';
+    wrap.innerHTML = '<div class="fb-dialog" role="dialog" aria-modal="true" aria-labelledby="fbH"><h3 id="fbH">' + esc(t('fb.heading')) + '</h3><p class="fb-intro">' + esc(t('fb.intro')) + '</p>' + body +
+      '<div class="fb-actions"><button class="btn" id="fbCancel">' + esc(t('fb.cancel')) + '</button>' + (fbItems.length ? '<button class="btn primary" id="fbSave">' + esc(t('fb.save')) + '</button>' : '') + '</div></div>';
+    document.body.appendChild(wrap);
+    fbOpen = true;
+    wrap.onclick = (e) => { if (e.target === wrap) closeFeedback(); };
+    wrap.querySelectorAll('.fb-rate .fb-r').forEach((b) => {
+      b.onclick = () => { const was = b.classList.contains('on'); b.parentNode.querySelectorAll('.fb-r').forEach((x) => x.classList.remove('on')); if (!was) b.classList.add('on'); };
+    });
+    document.getElementById('fbCancel').onclick = closeFeedback;
+    const sv = document.getElementById('fbSave'); if (sv) sv.onclick = saveFeedback;
+    const ta = wrap.querySelector('textarea'); if (ta) ta.focus({ preventScroll: true });
+  }
+  function saveFeedback() {
+    const wrap = document.getElementById('fbDialog'); if (!wrap) return;
+    wrap.querySelectorAll('.fb-item').forEach((it) => {
+      const on = it.querySelector('.fb-rate .fb-r.on');
+      eng.setFeedback(Number(it.dataset.n), { rating: on ? on.dataset.r : null, comment: it.querySelector('textarea').value });
+    });
+    persistFeedback();
+    closeFeedback();
+    renderFeedbackBar();
+    if (ui.tab === 'journal') renderSide();
+  }
+  function closeFeedback() { const w = document.getElementById('fbDialog'); if (w) w.remove(); fbOpen = false; fbItems = []; }
 
   /* ------------------------------------------------------------------ debug panel (developer-facing, English only) */
   function buildDebug() {
