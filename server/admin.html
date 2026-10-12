@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lumenhold Admin</title>
+  <link rel="stylesheet" href="/src/style.css">
+  <style>
+    body { overflow: auto; }
+    .admin { max-width: 1100px; margin: 0 auto; padding: 20px 16px 60px; position: relative; z-index: 1; }
+    h1 { font-family: var(--display); color: var(--gold-2); margin: 0 0 4px; font-size: 34px; }
+    h2 { font-family: var(--display); color: var(--gold-2); margin: 28px 0 8px; font-size: 24px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    nav { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+    nav button.on { border-color: var(--gold); color: var(--gold-2); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: .06em; }
+    td.num { font-variant-numeric: tabular-nums; text-align: right; }
+    tr.click { cursor: pointer; } tr.click:hover td { background: rgba(255, 255, 255, .03); }
+    .up { color: var(--good); } .down { color: var(--bad); }
+    .note { color: var(--gold-2); font-style: italic; white-space: pre-line; }
+    .pill { display: inline-block; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); font-size: 11px; color: var(--muted); }
+    .wrap { overflow-x: auto; }
+    pre { white-space: pre-wrap; font-size: 12px; color: var(--muted); }
+    .err { color: var(--bad); }
+  </style>
+</head>
+<body>
+<div class="admin">
+  <h1>Lumenhold Admin</h1>
+  <div class="muted" id="sub">Loading…</div>
+  <nav>
+    <button class="btn on" data-view="feedback">Feedback by event</button>
+    <button class="btn" data-view="runs">Runs</button>
+    <label class="muted" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="sim"> include simulated runs</label>
+  </nav>
+  <div id="view"></div>
+</div>
+<script>
+'use strict';
+const token = new URLSearchParams(location.search).get('token');
+const api = (p) => fetch(p + (token ? (p.includes('?') ? '&' : '?') + 'token=' + encodeURIComponent(token) : ''), { cache: 'no-store' }).then((r) => r.ok ? r.json() : r.json().then((e) => Promise.reject(new Error(e.error || r.status))));
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const when = (t) => t ? new Date(t).toLocaleString() : '—';
+let view = 'feedback';
+document.querySelectorAll('nav button').forEach((b) => { b.onclick = () => { view = b.dataset.view; document.querySelectorAll('nav button').forEach((x) => x.classList.toggle('on', x === b)); render(); }; });
+document.getElementById('sim').onchange = render;
+
+async function render() {
+  const el = document.getElementById('view');
+  const sim = document.getElementById('sim').checked;
+  try {
+    if (view === 'feedback') {
+      const r = await api('/api/report' + (sim ? '?sim=1' : ''));
+      document.getElementById('sub').textContent = r.runs + ' run(s) · ' + r.feedback + ' feedback note(s) · content ' + r.contentHash;
+      if (!r.events.length) { el.innerHTML = '<p class="muted">No feedback yet. Rate cards in the game (👍 / 👎, or F to comment).</p>'; return; }
+      el.innerHTML = '<div class="wrap"><table><tr><th>Event</th><th class="num">👍</th><th class="num">👎</th><th>Notes</th></tr>' + r.events.map(([key, b]) =>
+        '<tr><td><b>' + esc(key) + '</b></td><td class="num up">' + b.up + '</td><td class="num down">' + b.down + '</td><td>' + b.notes.map((n) =>
+          '<div><span class="' + (n.rating || '') + '">' + (n.rating === 'up' ? '👍' : n.rating === 'down' ? '👎' : '·') + '</span> <span class="muted">turn ' + n.turn + (n.choice ? ' → ' + esc(n.choice) : '') + ' · ' + esc(n.lang) + (n.stale ? ' · older content' : '') + '</span>' + (n.comment ? '<div class="note">' + esc(n.comment) + '</div>' : '') + '</div>').join('') + '</td></tr>').join('') + '</table></div>';
+    } else {
+      const runs = (await api('/api/runs')).filter((r) => sim || !r.sim);
+      document.getElementById('sub').textContent = runs.length + ' run(s)';
+      el.innerHTML = '<div class="wrap"><table><tr><th>Run</th><th>Player</th><th>Lang</th><th class="num">Turn</th><th>Ending</th><th class="num">Cards</th><th class="num">Notes</th><th class="num">Median decide</th><th>Updated</th></tr>' + runs.map((r) =>
+        '<tr class="click" data-id="' + esc(r.runId) + '"><td>' + esc(r.runId) + (r.sim ? ' <span class="pill">sim:' + esc(r.sim) + '</span>' : '') + '</td><td>' + esc(r.name) + '</td><td>' + esc(r.lang) + '</td><td class="num">' + r.turn + '</td><td>' + esc(r.ended ? r.ended.id : '(in progress)') + '</td><td class="num">' + r.cards + '</td><td class="num">' + r.feedback + '</td><td class="num">' + (r.medianDecideMs != null ? (r.medianDecideMs / 1000).toFixed(1) + ' s' : '—') + '</td><td>' + when(r.updatedAt) + '</td></tr>').join('') + '</table></div><div id="run"></div>';
+      el.querySelectorAll('tr.click').forEach((tr) => { tr.onclick = async () => {
+        const r = await api('/api/runs/' + encodeURIComponent(tr.dataset.id));
+        const rows = r.hist.filter((h) => h.t === 'card' || h.t === 'end').map((h) => '<tr><td class="num">' + h.turn + '</td><td>' + esc(h.id) + (h.actor ? ' <span class="muted">@' + esc(h.actor) + '</span>' : '') + '</td><td>' + esc(h.label || '') + '</td><td class="muted">' + esc(h.out ? h.out.say : '') + '</td><td>' + (h.fb ? (h.fb.rating === 'up' ? '👍' : h.fb.rating === 'down' ? '👎' : '') + (h.fb.comment ? ' <span class="note">' + esc(h.fb.comment) + '</span>' : '') : '') + '</td></tr>').join('');
+        document.getElementById('run').innerHTML = '<h2>' + esc(r.runId) + '</h2><p class="muted">seed ' + esc(r.seed) + ' · ' + esc(r.lang) + ' · content ' + esc(r.contentHash) + '</p><div class="wrap"><table><tr><th class="num">Turn</th><th>Event</th><th>Choice</th><th>Outcome</th><th>Feedback</th></tr>' + rows + '</table></div>';
+        document.getElementById('run').scrollIntoView({ behavior: 'smooth' });
+      }; });
+    }
+  } catch (e) { el.innerHTML = '<p class="err">' + esc(e.message) + '</p>'; }
+}
+render();
+</script>
+</body>
+</html>

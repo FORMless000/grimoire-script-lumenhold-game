@@ -1,8 +1,8 @@
 # AGENTS.md — working on Lumenhold Academy
 
-Lumenhold Academy is a card-swipe life sim set at a magical academy. It runs locally in the browser by opening `index.html`; there is no server and no install. Content lives in a custom scripting language, Grimoire Script (`.grim`), which agents can extend without touching the engine.
+Lumenhold Academy is a card-swipe life sim set at a magical academy. It runs in the browser: open `index.html` directly (no install), or run `npm start` for the local server, which adds server saves, run logs and an admin page. The v0.3 redesign is planned in `docs/design-v0.3.md`. Content lives in a custom scripting language, Grimoire Script (`.grim`), which agents can extend without touching the engine.
 
-**Adding events, characters, states or chains?** Follow `skills/write-academy-events/SKILL.md` and use `docs/grimoire-script.md` as the language reference. Every change must pass `node tools/grim.js check`. Content is written in English; translations live in `locales/` (see **Localization** below).
+**Adding events, characters, states or chains?** Follow `skills/write-academy-events/SKILL.md` and use `docs/grimoire-script.md` as the language reference. Every change must pass `node tools/grim.js check` (quick) and, before you finish a larger change, `npm run verify`. Content is written in English; translations live in `locales/` (see **Localization** below).
 
 ---
 
@@ -14,9 +14,18 @@ src/grimoire.js            parser + expression compiler (UMD: browser + Node)
 src/engine.js              DOM-free game logic (turns, deck, effects, states, relationships, endings)
 src/i18n.js                 localization: .lang parser, string extraction, applyContent, UI string table (UI_EN), t()
 src/art.js                 SVG icon library, card scene composer, procedural portraits
-src/ui.js, src/style.css   presentation only: swipe cards, menus, month & ending screens, side panel, ?debug panel
-tools/grim.js              CLI: build | lint | sim | stats | show | ids | check | i18n | fmt | query | feedback
-tools/format.js, query.js  canonical formatter and structural search used by grim fmt / grim query
+src/net.js                 optional server client: detection, telemetry batches, server saves, seen counters
+src/ui.js, src/style.css   presentation only: swipe cards, menus, month & ending screens, side panel, feedback bar, saved games, ?debug panel
+server/                    `npm start`: index.js (routes, static files, live bundle), store.js (files under data/), admin.html
+data/                      server data, gitignored: runs/<runId>.ndjson, saves/<slot>.json, seen.json
+tools/grim.js              CLI (see Workflow)
+tools/project.js           shared loaders (sources, locales, bundle, content hash) for a project root
+tools/format.js, query.js  canonical formatter (grim fmt) and structural search (grim query)
+tools/rewrite.js           verified line edits; used by rename.js (grim rename) and migrate.js (grim migrate)
+tools/migrations/          NNNN-name.js content migrations; applied ids in content/.migrations.json
+tools/policies.js          simulator play styles; tools/runlog.js reads run logs and aggregates feedback
+tools/e2e.js               browser tests (Playwright): from file:// or --server
+test/                      node:test suite (npm test), fixtures/, golden/baseline.json (snapshot for grim diff)
 build/content.bundle.js    GENERATED — all .grim sources + .lang files as one JS file (so file:// works). Never edit by hand.
 content/core/rules.grim    @game, resources, skills, global hooks (rent, drift, start)
 content/npcs/cast.grim     the 12 characters
@@ -67,21 +76,31 @@ node tools/grim.js ids flag   # list existing ids (event|state|npc|ending|resour
 node tools/grim.js stats      # counts by file / trigger / tag / actor / chain
 node tools/grim.js fmt        # canonical layout for .grim files (lossless; --check to only report)
 node tools/grim.js query check 'dc < 12 and not scales'   # structural search: blocks, options, statements (--fields)
-node tools/grim.js feedback   # summarise playtest feedback from exported run logs in feedback/ (or given paths)
+node tools/grim.js feedback   # summarise playtest feedback: exported logs in feedback/ and the server's data/runs/
 node tools/grim.js sim 50 --log build/runs   # also write every simulated game's full run log as JSON
+node tools/grim.js sim 100 --policy balanced # play styles: random cautious social balanced aggressive moneymaxx focused:<skill> social:<npc>
+node tools/grim.js balance    # every play style: invariants fail the run, alarms warn (--quick: fewer styles and games)
+node tools/grim.js diff       # golden-seed snapshot vs test/golden/baseline.json: "no gameplay change" or what changed
+node tools/grim.js rename npc kael kael_dumont   # verified rename across content and translations (--dry-run)
+node tools/grim.js migrate    # run new scripts in tools/migrations/ (--dry-run shows the diff)
+npm test                      # unit tests: tools and server
+npm start                     # local server on http://127.0.0.1:4173 (admin: /admin)
+npm run verify                # build, lint, fmt --check, tests, balance --quick, diff, e2e against the server
 ```
+
+**Gameplay changes and the golden baseline.** `grim diff` (part of `verify`) fails when the golden games play differently. That's the point for refactors and tooling work. When a change is meant to alter gameplay (new rules, retuned content), confirm the diff is what you intended, then refresh the baseline in the same commit: `node tools/grim.js snapshot --out test/golden/baseline.json`.
 
 To preview a single event in the browser, open `index.html?event=<id>&debug`; add `&actor=<npc>` for `actor: any` events. With `?debug`, a panel lets you play any event now, skip the month, or run an effect line (`gold = 200`, `rel lyra +40`, `gain class_umbral`).
 
-Node is only needed for the tools. The game itself is plain static files.
+Node (≥ 20) is needed for the tools and the server. The game itself still runs as plain static files. Playwright (a devDependency) is only for `tools/e2e.js`: `npm install && npx playwright install chromium`.
 
 ### Run logs and playtest feedback
 
 The engine records every run in full in `s.hist`: each month's start-of-month effects, every card shown (with its title, text and options as displayed), the choice, the outcome (deltas, checks, notes, `say`), and the resources and skills after it. `s.log` remains the player-facing journal. While playing, a bar in the bottom-left corner rates the current and the previous card 👍 / 👎. The ✎ button (or **F**) adds comments, and the Journal has the same controls for any earlier card. Feedback is stored as `fb` on the history entry.
 
-- **Where runs live:** the run in progress is in the save. Finished or replaced runs move to `lumenhold.runs.v1` in localStorage (the 15 most recent; runs without feedback are dropped first).
-- **Getting them out:** "Export" on the title screen downloads all runs, and "Export this run" on an ending screen downloads just that one.
-- **Reading them:** put the JSON files in `feedback/` and run `node tools/grim.js feedback` (`--event <id>` filters, `--json` for machine-readable output). Events are sorted by net 👎. Notes logged against older content are marked, using `contentHash`.
+- **With the server (`npm start`):** the client sends new and changed history entries at every month screen, at the ending and on page hide. Runs land in `data/runs/<runId>.ndjson`, and `/admin` lists runs and feedback by event. Saves (an autosave plus 3 slots) also live on the server; loading a slot continues as a new run (`Engine.forkRun`).
+- **Without a server:** the run in progress is in the save. Finished or replaced runs move to `lumenhold.runs.v1` in localStorage (the 15 most recent; runs without feedback are dropped first). "Export" on the title screen downloads all runs, and "Export this run" on an ending screen downloads just that one.
+- **Reading them:** `node tools/grim.js feedback` reads `feedback/` (exported files) and `data/runs/` (`--event <id>` filters, `--json` for machine-readable output). Events are sorted by net 👎. Notes logged against older content are marked, using `contentHash`.
 - **Tuning workflow:** read the feedback, `show <id>`, edit, then `check`.
 
 ---

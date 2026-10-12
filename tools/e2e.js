@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 // Browser smoke test: plays full games in a real browser and checks the UI.
 //
-//   node tools/e2e.js              # English + zh-CN playthroughs, language switch, previews
+//   node tools/e2e.js              # English + zh-CN playthroughs, language switch, previews (from file://)
+//   node tools/e2e.js --server     # the same against the Lumenhold server (npm start), plus checks that the
+//                                  # run log, feedback, seen counters and saves reached it
+//   node tools/e2e.js --quick      # English playthrough + previews only
 //   node tools/e2e.js --lang zh-CN # one language only
 //   node tools/e2e.js --shots      # also save screenshots to build/e2e/
 //
@@ -22,8 +25,11 @@ function loadPlaywright() {
 const args = process.argv.slice(2);
 const only = args.includes('--lang') ? args[args.indexOf('--lang') + 1] : null;
 const SHOTS = args.includes('--shots');
+const SERVER = args.includes('--server');
+const QUICK = args.includes('--quick');
 const ROOT = path.resolve(__dirname, '..');
-const URL = 'file://' + path.join(ROOT, 'index.html');
+let URL = 'file://' + path.join(ROOT, 'index.html');
+let server = null;
 const OUT = path.join(ROOT, 'build', 'e2e');
 if (SHOTS) fs.mkdirSync(OUT, { recursive: true });
 
@@ -54,16 +60,36 @@ async function playthrough(browser, lang) {
     if (await p.$('#deck .card')) {
       n.card++; await scan();
       if (SHOTS && n.card === 12) await p.screenshot({ path: path.join(OUT, lang + '_card.png') });
+      if (n.card === 5) await p.click('#fbBar .fb-r.down');
       const bt = await p.$$('#choices .choice:not([disabled])'); await bt[steps % bt.length].click(); await p.waitForTimeout(320); continue;
     }
     await p.waitForTimeout(150);
   }
   if (SHOTS) await p.screenshot({ path: path.join(OUT, lang + '_ending.png') });
+  let serverOk = true;
+  if (SERVER && ended) serverOk = await checkServer(p, lang, errs);
   await p.close();
-  const ok = ended && !errs.length && !english.size;
+  const ok = ended && serverOk && !errs.length && !english.size;
   console.log((ok ? 'PASS' : 'FAIL') + ` playthrough [${lang}]: ended=${ended} months=${n.month} cards=${n.card} menus=${n.menu}`);
   if (english.size) console.log('  English text in ' + lang + ': ' + [...english].slice(0, 8).join(' | '));
   errs.forEach((e) => console.log('  error: ' + e));
+  return ok;
+}
+
+// After a finished game on the server: the run is stored complete, with its feedback, seen counters
+// were counted, and the autosave was cleared.
+async function checkServer(p, lang, errs) {
+  await p.waitForTimeout(800);
+  const r = await p.evaluate(async () => {
+    const runId = lumen.eng.s.runId;
+    const run = await fetch('api/runs/' + runId).then((x) => x.json());
+    const seen = await fetch('api/seen').then((x) => x.json());
+    const saves = await fetch('api/saves').then((x) => x.json());
+    const local = lumen.eng.s.hist.filter((h) => h.t === 'card').length;
+    return { stored: run.hist.filter((h) => h.t === 'card').length, local, ended: !!run.ended, unresolved: run.hist.filter((h) => h.t === 'card' && h.choice == null).length, fb: run.hist.filter((h) => h.fb).length, seen: Object.values(seen).some((c) => c.last_run === runId), auto: saves.find((x) => x.slot === 'auto').empty };
+  });
+  const ok = r.stored === r.local && r.ended && r.unresolved === 0 && r.fb >= 1 && r.seen && r.auto;
+  console.log((ok ? 'PASS' : 'FAIL') + ` server log [${lang}]: ${r.stored}/${r.local} cards stored, ended=${r.ended}, unresolved=${r.unresolved}, feedback=${r.fb}, seen=${r.seen}, autosave cleared=${r.auto}`);
   return ok;
 }
 
@@ -112,12 +138,22 @@ async function previews(browser) {
 
 (async () => {
   const { chromium } = loadPlaywright();
+  if (SERVER) {
+    const os = require('os');
+    const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lumenhold-e2e-'));
+    server = require('../server/index.js').createServer({ dataDir }).server;
+    await new Promise((res) => server.listen(0, '127.0.0.1', res));
+    URL = 'http://127.0.0.1:' + server.address().port + '/';
+    process.on('exit', () => fs.rmSync(dataDir, { recursive: true, force: true }));
+    console.log('server mode: ' + URL);
+  }
   const browser = await chromium.launch();
   const results = [];
   try {
-    for (const lang of only ? [only] : ['en', 'zh-CN']) results.push(await playthrough(browser, lang));
-    if (!only) { results.push(await languageSwitch(browser)); results.push(await previews(browser)); }
-  } finally { await browser.close(); }
+    for (const lang of only ? [only] : QUICK ? ['en'] : ['en', 'zh-CN']) results.push(await playthrough(browser, lang));
+    if (!only && !QUICK) results.push(await languageSwitch(browser));
+    if (!only) results.push(await previews(browser));
+  } finally { await browser.close(); if (server) server.close(); }
   const failed = results.filter((r) => !r).length;
   console.log(failed ? `\n${failed} check(s) failed` : '\nall browser checks passed');
   process.exit(failed ? 1 : 0);

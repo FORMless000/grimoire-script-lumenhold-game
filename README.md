@@ -8,12 +8,15 @@ A swipe-card life simulation at a magical academy. Each month brings a handful o
 
 Open **`index.html`** in a browser (double-click works; no server or install needed). The game autosaves to your browser after every card.
 
+Or run the local server (Node 20+, no install needed): `npm start`, then open http://127.0.0.1:4173. With the server, saves (an autosave plus 3 slots), full run logs and your card ratings are stored in `data/`, and `/admin` shows runs and feedback by event.
+
 - **Swipe** the card, click a choice button, or press **← / →**. **Enter** continues.
 - In menus, click a tile or press **1–9**.
 - **Glowing dots** above the meters show which resources a choice will touch. A dice line on a button shows a skill check and its odds.
 - The side panel shows your skills and conditions (**You**), relationships (**People**) and a log of every choice (**Journal**). On narrow screens it opens from the people icon.
 - Pick a language on the title screen, or switch mid-game with the globe icon (your game is saved and resumed in the new language). `index.html?lang=zh-CN` forces one.
-- The feather icon toggles the *Illustration:* notes, which are placeholder descriptions for future artwork.
+- The feather icon toggles the *Illustration:* notes, which are placeholder descriptions for future artwork. The scroll icon opens **Saved games**.
+- **Playtest feedback:** the bar in the bottom-left corner rates the current and the previous card 👍 / 👎; **F** (or ✎) adds a comment. The Journal has the same controls for earlier cards.
 
 ## What's in it
 

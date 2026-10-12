@@ -415,6 +415,29 @@ node tools/grim.js query --fields        # every field, per node kind
 
 `--group FIELD` prints counts per value instead of rows. `--json` returns full rows, including `src`, the source line, for scripts and agents. Line numbers point into the `.grim` source, so the matches are a ready-made worklist for edits.
 
+### `rename` and `migrate`: structured edits
+
+`node tools/grim.js rename KIND OLD NEW [--dry-run]` renames an `event`, `state`, `npc`, `flag`, `var` or `ending` id everywhere it's referenced:
+- **In content:** block headers, statements, `actor:`, conditions, and `{tokens}` in text. Prose is never touched.
+- **In translations:** `.lang` block headers and tokens, with their hashes re-stamped so translations don't turn stale.
+
+It refuses targets that already exist and names used by two kinds of id. It verifies by counting references in the compiled content before and after, and writes nothing if the counts don't match. Mentions in code and docs are listed for you to check by hand. Saves are not migrated.
+
+`node tools/grim.js migrate [--dry-run]` runs the scripts in `tools/migrations/` (`NNNN-name.js`) that haven't been applied yet, and records them in `content/.migrations.json`:
+
+```js
+module.exports = {
+  id: '0001-gold-costs',
+  description: 'Small gold costs become 2',
+  run(ctx) {
+    for (const row of ctx.query('delta', 'name == "gold" and amount == -1')) ctx.edit(row, (line) => line.replace('gold -1', 'gold -2'));
+    ctx.report('done');
+  },
+};
+```
+
+`ctx` offers `query(node, where)` (the rows of `grim query`), `edit(at, textOrFn)`, `insertAfter(at, text)`, `remove(at)`, `lines(file)`, `report(msg)` and the compiled `content`. Lines always refer to the file as it was before the migration. A migration whose result doesn't compile writes nothing. Changed files are formatted. Afterwards, run `build`, `lint` and `diff`.
+
 ---
 
 ## 8. Reference lists

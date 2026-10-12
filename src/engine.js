@@ -123,6 +123,14 @@
       e.fb = { rating, comment, at: now() };
       return e;
     }
+    // Continue from a loaded save as a new run (its history so far is kept), so two timelines from the
+    // same start never mix in one log.
+    forkRun() {
+      const s = this.s, from = s.runId;
+      s.runId = newRunId(s.seed);
+      s.hist.push({ t: 'fork', from, turn: s.turn, at: now() });
+      return s.runId;
+    }
     // A self-contained record of this run (the format the UI exports and `grim feedback` reads).
     exportRun(meta = {}) {
       const s = this.s;

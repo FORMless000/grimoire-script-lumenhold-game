@@ -1,5 +1,11 @@
 # Status & roadmap
 
+**v0.3 in progress** (plan: `docs/design-v0.3.md`, Phases 0 → 2b, then human playtest #1).
+- **Phase 0 (platform and safety net): done.**
+  - Server (`npm start`): saves and slots, run-log telemetry, seen counters, `/admin`. File storage, no dependencies.
+  - Tools: play styles, `balance`, `snapshot` / `diff` with a golden baseline, `rename`, `migrate`, `npm test`, `npm run verify`.
+  - Browser tests run against the server.
+
 **v0.2.** Engine, UI, toolchain, docs and agent skill are done.
 - **Localization:** a key-based module (`src/i18n.js`, `locales/`) with English and a complete Simplified Chinese translation (3,126 content strings plus the UI), switchable in-game.
 - **Content:** 354 events (100 added in v0.2: final-year careers, summer recess, faculty arcs, Ilse Dumont's chain, more character, social, life and class events), 55 states, 12 characters, 19 endings.

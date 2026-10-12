@@ -149,6 +149,21 @@
     'fb.log': 'Playtest log: {runs} runs · {notes} notes',
     'fb.export': 'Export',
 
+    // Saved games and the optional server
+    'slots.heading': 'Saved games',
+    'slots.auto': 'Autosave',
+    'slots.slot': 'Slot {n}',
+    'slots.empty': 'Empty',
+    'slots.info': '{name} — {month}, Year {year}',
+    'slots.saveHere': 'Save here',
+    'slots.load': 'Load',
+    'slots.saved': 'Saved',
+    'slots.close': 'Close',
+    'slots.whereServer': 'Stored on the server. Loading a slot continues it as a new run.',
+    'slots.whereLocal': 'Stored in this browser. Loading a slot continues it as a new run.',
+    'net.connected': 'Connected: runs and feedback are saved on the server.',
+    'net.admin': 'Admin',
+
     // Pronoun tables used by {they} {them} {their} {theirs} {are} {s} in content text.
     'pronoun.she.they': 'she', 'pronoun.she.them': 'her', 'pronoun.she.their': 'her', 'pronoun.she.theirs': 'hers', 'pronoun.she.are': 'is', 'pronoun.she.s': 's',
     'pronoun.he.they': 'he', 'pronoun.he.them': 'him', 'pronoun.he.their': 'his', 'pronoun.he.theirs': 'his', 'pronoun.he.are': 'is', 'pronoun.he.s': 's',

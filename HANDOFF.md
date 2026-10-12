@@ -44,7 +44,7 @@ mkdir -p .claude/skills && cp -r skills/write-academy-events .claude/skills/
 **Pipeline.**
 - `content/**/*.grim` and `locales/<lang>/**/*.lang` are bundled into `build/content.bundle.js` by `node tools/grim.js build`.
 - The bundle is **committed on purpose**: `index.html` has to work from `file://`, where `fetch` of local files is blocked. Rebuild after every `.grim` or `.lang` edit. Never hand-edit the bundle.
-- Script load order in `index.html`: `grimoire.js` → `engine.js` → `art.js` → `i18n.js` → `build/content.bundle.js` → `ui.js` (the UI boots last, once the content exists). The `src/` files are UMD, so `tools/grim.js` `require`s the same files in Node.
+- Script load order in `index.html`: `grimoire.js` → `engine.js` → `art.js` → `i18n.js` → `net.js` → `build/content.bundle.js` → `ui.js` (the UI boots last, once the content exists). The `src/` files are UMD, so `tools/grim.js` `require`s the same files in Node.
 
 **Parser (`src/grimoire.js`).**
 - A compiled definition stores its block type as **`def.block`**, not `def.kind`. `kind` is a real property (`kind: early` on endings); using it for the block type caused a "duplicate property" bug.

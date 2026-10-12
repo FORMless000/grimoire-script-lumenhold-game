@@ -588,46 +588,24 @@ function query(args, opts = {}) {
 // Same fingerprint the browser stamps on exported runs (src/ui.js runMeta), so logs from older content stand out.
 const contentHash = () => P.contentHash();
 function feedback(paths, opts = {}) {
-  const files = [];
-  for (const p of paths.length ? paths : [path.join(ROOT, 'feedback')]) {
-    if (!fs.existsSync(p)) { console.error('not found: ' + p); continue; }
-    if (fs.statSync(p).isDirectory()) files.push(...listFiles(p, '.json')); else files.push(p);
-  }
-  // A file holds one run ({format:'lumenhold-run'}) or an export ({format:'lumenhold-runs', runs:[…]}).
-  // The same run can appear in several exports; keep the latest copy.
-  const runs = {};
-  for (const f of files) {
-    let data; try { data = JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { console.error(C.y + 'skipped ' + f + ': ' + e.message + C.x); continue; }
-    for (const r of data.format === 'lumenhold-runs' ? data.runs || [] : [data]) {
-      if (!r || !Array.isArray(r.hist)) continue;
-      if (!runs[r.runId] || (r.updatedAt || 0) > (runs[r.runId].updatedAt || 0)) runs[r.runId] = r;
-    }
-  }
+  const RunLog = require('./runlog.js');
+  // Default: exported files in feedback/ plus the server's run logs in data/runs/.
+  const { runs, files, skipped } = RunLog.loadRuns(paths.length ? paths : [path.join(ROOT, 'feedback'), path.join(ROOT, 'data', 'runs')]);
+  skipped.forEach((m) => console.error(C.y + 'skipped ' + m + C.x));
   const { content } = compileAll();
   const now = contentHash();
   const months = content.game.months || [];
-  const byEvent = {};
-  let total = 0;
-  for (const r of Object.values(runs)) for (const h of r.hist) {
-    if (!h.fb) continue;
-    const key = h.t === 'end' ? h.id + ' (ending)' : h.id;
-    if (opts.event && h.id !== opts.event) continue;
-    const b = byEvent[key] = byEvent[key] || { id: h.id, up: 0, down: 0, notes: [] };
-    if (h.fb.rating === 'up') b.up++; else if (h.fb.rating === 'down') b.down++;
-    b.notes.push({ rating: h.fb.rating, comment: h.fb.comment, choice: h.label || null, actor: h.actor || null, turn: h.turn, run: r.runId, lang: r.lang, stale: !!r.contentHash && r.contentHash !== now, title: h.title });
-    total++;
-  }
-  const rows = Object.entries(byEvent).sort((a, b) => (b[1].down - b[1].up) - (a[1].down - a[1].up) || b[1].notes.length - a[1].notes.length);
-  if (opts.json) { console.log(JSON.stringify({ runs: Object.keys(runs).length, feedback: total, contentHash: now, events: Object.fromEntries(rows) }, null, 2)); return; }
-  console.log(C.b + 'feedback: ' + total + ' note(s) on ' + rows.length + ' event(s) from ' + Object.keys(runs).length + ' run(s) in ' + files.length + ' file(s)' + C.x);
-  if (!files.length) console.log(C.d + 'Export logs from the title screen (or an ending) and put the JSON files in feedback/.' + C.x);
+  const { total, rows } = RunLog.aggregateFeedback(runs, { event: opts.event, contentHash: now });
+  if (opts.json) { console.log(JSON.stringify({ runs: runs.length, feedback: total, contentHash: now, events: Object.fromEntries(rows) }, null, 2)); return; }
+  console.log(C.b + 'feedback: ' + total + ' note(s) on ' + rows.length + ' event(s) from ' + runs.length + ' run(s) in ' + files.length + ' file(s)' + C.x);
+  if (!files.length) console.log(C.d + 'Export logs from the title screen (or an ending) into feedback/, or play on the server (npm start).' + C.x);
   for (const [key, b] of rows) {
     const missing = !content.events[b.id] && !content.endings[b.id];
     console.log('\n' + C.b + key + C.x + '  ' + C.g + '+' + b.up + C.x + ' ' + C.r + '-' + b.down + C.x + (missing ? C.y + '  (no longer exists)' + C.x : ''));
     for (const n of b.notes) {
       const when = (months[((n.turn - 1) % (months.length || 12))] || 'month ' + n.turn) + ' Y' + Math.ceil(n.turn / (months.length || 12));
       const mark = n.rating === 'up' ? C.g + '+' + C.x : n.rating === 'down' ? C.r + '-' + C.x : ' ';
-      console.log('  ' + mark + ' ' + C.d + when + (n.actor ? ' @' + n.actor : '') + (n.choice ? ' → ' + n.choice : '') + ' · ' + n.lang + ' · ' + n.run + (n.stale ? ' · older content' : '') + C.x);
+      console.log('  ' + mark + ' ' + C.d + when + (n.actor ? ' @' + n.actor : '') + (n.choice ? ' → ' + n.choice : '') + ' · ' + n.lang + ' · ' + n.run + (n.sim ? ' · sim:' + n.sim : '') + (n.stale ? ' · older content' : '') + C.x);
       if (n.comment) console.log('    ' + n.comment.replace(/\n/g, '\n    '));
     }
   }

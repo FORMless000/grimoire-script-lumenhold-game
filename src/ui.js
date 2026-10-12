@@ -10,7 +10,9 @@
   const SAVE_KEY = 'lumenhold.save.v1';
   const SETTINGS_KEY = 'lumenhold.settings.v1';
   const RESUME_KEY = 'lumenhold.resume';
-  const RUNS_KEY = 'lumenhold.runs.v1';   // archive of finished / abandoned runs (full logs + feedback)
+  const RUNS_KEY = 'lumenhold.runs.v1';   // archive of finished / abandoned runs (full logs + feedback), without a server
+  const SEEN_KEY = 'lumenhold.seen.v1';   // cross-run seen counters, without a server
+  const SLOT_KEY = (n) => 'lumenhold.slot.' + n;
   const MAX_RUNS = 15;
   const app = document.getElementById('app');
   const params = new URLSearchParams(location.search);
@@ -62,12 +64,25 @@
     window.lumen = { content, get eng() { return eng; }, Grimoire, Engine, Art, I18n };
     document.addEventListener('keydown', onKey);
     if (params.get('event')) return previewEvent(params.get('event'));
-    if (store.get(RESUME_KEY)) {
-      store.del(RESUME_KEY);
-      const saved = store.get(SAVE_KEY);
-      if (saved) { try { eng = new Engine(content).load(saved); buildGame(); return step(eng.advance()); } catch (e) { console.warn(e); } }
-    }
-    titleScreen();
+    window.addEventListener('pagehide', () => { if (eng && eng.s) Net.flush(eng, runRecordMeta(), { final: true }); });
+    Net.detect().then(syncAutosave).catch((e) => console.warn(e)).then(() => {
+      if (store.get(RESUME_KEY)) {
+        store.del(RESUME_KEY);
+        const saved = store.get(SAVE_KEY);
+        if (saved) { try { eng = new Engine(content).load(saved); buildGame(); return step(eng.advance()); } catch (e) { console.warn(e); } }
+      }
+      titleScreen();
+    });
+  }
+  // With a server, the newer of the local and the server autosave wins (by the time of its last event).
+  async function syncAutosave() {
+    if (!Net.available) return;
+    const lastAt = (s) => { try { const h = (typeof s === 'string' ? JSON.parse(s) : s).hist || []; return h.length ? h[h.length - 1].at || 0 : 0; } catch (e) { return 0; } };
+    const local = store.get(SAVE_KEY);
+    let remote = null;
+    try { remote = await Net.getSave('auto'); } catch (e) { console.warn('[net] autosave', e.message); }
+    if (remote && lastAt(remote) > lastAt(local)) store.set(SAVE_KEY, JSON.stringify(remote));
+    else if (local && lastAt(local) > lastAt(remote)) Net.putSave('auto', local).catch((e) => console.warn(e));
   }
   function loadCjkFonts() {
     const l = document.createElement('link');
@@ -103,6 +118,7 @@
       '<details class="adv"><summary>' + esc(t('title.seed')) + '</summary><input id="pseed" inputmode="numeric" placeholder="' + esc(t('title.seedPlaceholder')) + '"></details>' +
       '<div class="row"><button class="btn primary grow" id="begin">' + esc(t('title.begin')) + '</button>' +
       (savedInfo ? '<button class="btn grow" id="cont">' + esc(t('title.continue', { info: '' })) + savedInfo + '</button>' : '') + '</div>' +
+      '<div class="row"><button class="btn ghost-btn grow" id="slotsBtn">' + esc(t('slots.heading')) + '</button></div>' +
       '<div class="howto">' + t('title.howto_html') + '</div>' + runLogLine() +
       '</div></div></div>';
     document.querySelectorAll('.lang-btn').forEach((b) => { b.onclick = () => { if (b.dataset.lang !== cur) switchLang(b.dataset.lang, false); }; });
@@ -110,13 +126,14 @@
       const name = document.getElementById('pname').value.trim() || t('title.defaultName');
       const seed = document.getElementById('pseed').value.trim();
       // The run being replaced keeps its log (and any feedback) in the archive.
-      if (saved) { try { archiveRun(new Engine(content).load(saved)); } catch (e) { console.warn(e); } store.del(SAVE_KEY); }
+      if (saved) { try { const old = new Engine(content).load(saved); archiveRun(old); Net.flush(old, runRecordMeta(old), { final: true }); } catch (e) { console.warn(e); } store.del(SAVE_KEY); }
       eng = new Engine(content);
       buildGame();
       step(eng.newGame({ name, seed: seed === '' ? null : seed }));
     };
     const c = document.getElementById('cont');
     if (c) c.onclick = () => { eng = new Engine(content).load(saved); buildGame(); step(eng.advance()); };
+    document.getElementById('slotsBtn').onclick = () => openSlots();
     const ex = document.getElementById('exportRuns');
     if (ex) ex.onclick = () => exportRuns(allRuns(), 'lumenhold-runs-' + fileStamp() + '.json');
   }
@@ -144,6 +161,7 @@
       '<button class="icon-btn side-toggle" id="sideToggle" title="' + esc(t('top.people')) + '">' + Art.icon('group', 20) + '</button>' +
       (languages.length > 1 ? '<button class="icon-btn" id="langToggle" title="' + esc(t('top.lang') + ' → ' + nextLang.name) + '">' + Art.icon('globe', 18) + '</button>' : '') +
       '<button class="icon-btn" id="notesToggle" title="' + esc(t('top.notes')) + '">' + Art.icon('feather', 18) + '</button>' +
+      '<button class="icon-btn" id="slotsTop" title="' + esc(t('slots.heading')) + '">' + Art.icon('scroll', 18) + '</button>' +
       '<button class="icon-btn" id="quit" title="' + esc(t('top.quit')) + '">' + Art.icon('door', 18) + '</button></div></header>' +
       '<div class="meters" id="meters"></div>' +
       '<main class="stage"><div class="deck" id="deck"><div class="ghost two"></div><div class="ghost"></div></div>' +
@@ -152,7 +170,8 @@
       '<button data-tab="you">' + esc(t('tab.you')) + '</button><button data-tab="people">' + esc(t('tab.people')) + '</button><button data-tab="journal">' + esc(t('tab.journal')) + '</button></div>' +
       '<div class="tab-body" id="tabBody"></div></aside>' +
       '</div>';
-    document.getElementById('quit').onclick = () => { save(); titleScreen(); };
+    document.getElementById('quit').onclick = () => { save(true); Net.flush(eng, runRecordMeta()); titleScreen(); };
+    document.getElementById('slotsTop').onclick = () => openSlots();
     const lt = document.getElementById('langToggle');
     if (lt) lt.onclick = () => switchLang(nextLang.code, true);
     document.getElementById('notesToggle').onclick = () => { settings.notes = !settings.notes; saveSettings(); document.querySelectorAll('.scene-note').forEach((n) => { n.style.display = settings.notes ? '' : 'none'; }); };
@@ -276,14 +295,28 @@
     renderFeedbackBar();
   }
   function route(r) {
-    if (r.kind === 'month') return showMonth(r);
-    if (r.kind === 'ending') { archiveRun(eng); store.del(SAVE_KEY); return showEnding(r); }
+    if (r.kind === 'month') { Net.flush(eng, runRecordMeta()); return showMonth(r); }
+    if (r.kind === 'ending') {
+      archiveRun(eng); store.del(SAVE_KEY);
+      if (Net.available) { Net.flush(eng, runRecordMeta(), { final: true }); Net.deleteSave('auto').catch(() => {}); }
+      recordSeen(eng);
+      return showEnding(r);
+    }
     if (r.onShow) floatDeltas(r.onShow.deltas);
     if (r.view.type === 'menu') return showMenu(r.view);
     return showCard(r.view);
   }
   function next() { ui.busy = false; step(eng.advance()); }
-  function save() { if (eng && eng.s && !eng.s.ended && !params.get('event')) store.set(SAVE_KEY, eng.save()); }
+  let serverSaveTimer = null;
+  function save(now) {
+    if (!eng || !eng.s || eng.s.ended || params.get('event')) return;
+    const json = eng.save();
+    store.set(SAVE_KEY, json);
+    if (!Net.available) return;
+    clearTimeout(serverSaveTimer);
+    const push = () => Net.putSave('auto', json).catch((e) => console.warn('[net] save', e.message));
+    if (now) push(); else serverSaveTimer = setTimeout(push, 1500);
+  }
 
   function resolve(key) {
     let out;
@@ -542,6 +575,7 @@
 
   /* ------------------------------------------------------------------ keys */
   function onKey(e) {
+    if (document.getElementById('slotDialog')) { if (e.key === 'Escape') { e.preventDefault(); closeSlots(); } return; }
     if (fbOpen) {
       if (e.key === 'Escape') { e.preventDefault(); closeFeedback(); }
       else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); saveFeedback(); }
@@ -577,7 +611,7 @@
   function loadRuns() { try { const r = JSON.parse(store.get(RUNS_KEY) || '[]'); return Array.isArray(r) ? r : []; } catch (e) { return []; } }
   // Upsert a run into the archive (oldest first). When full, drop the oldest runs without feedback first.
   function archiveRun(engine) {
-    if (!engine || !engine.s || !engine.s.hist || params.get('event')) return;
+    if (!engine || !engine.s || !engine.s.hist || params.get('event') || Net.available) return;
     const rec = engine.exportRun(runMeta());
     const runs = loadRuns().filter((r) => r.runId !== rec.runId);
     runs.push(rec);
@@ -606,6 +640,7 @@
     return runs;
   }
   function runLogLine() {
+    if (Net.available) return '<div class="fb-log"><span>' + esc(t('net.connected')) + '</span><a class="linkish" href="admin" target="_blank" rel="noopener">' + esc(t('net.admin')) + '</a></div>';
     const runs = allRuns();
     if (!runs.length) return '';
     const notes = runs.reduce((a, r) => a + (r.feedback || 0), 0);
@@ -621,7 +656,22 @@
   }
   function fileStamp() { const d = new Date(), p = (n) => String(n).padStart(2, '0'); return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '-' + p(d.getHours()) + p(d.getMinutes()); }
   // After feedback changes: the save holds a live run; a finished run only exists in the archive.
-  function persistFeedback() { if (eng.s.ended) archiveRun(eng); else save(); }
+  function persistFeedback(ns) {
+    ns.forEach((n) => Net.markDirty(eng.s.runId, n));
+    if (eng.s.ended) archiveRun(eng); else save();
+    Net.flush(eng, runRecordMeta());
+  }
+  // Run metadata sent with every telemetry batch (the run record without its history).
+  function runRecordMeta(engine) { const r = (engine || eng).exportRun(runMeta()); delete r.hist; return r; }
+  // Cross-run "seen" counters, for the director's novelty score (design §5.2).
+  function recordSeen(engine) {
+    const ids = [...new Set(engine.s.hist.filter((h) => h.t === 'card').map((h) => h.id))];
+    if (Net.available) { Net.addSeen(engine.s.runId, ids); return; }
+    let seen = {}; try { seen = JSON.parse(store.get(SEEN_KEY) || '{}'); } catch (e) { /* reset */ }
+    const at = Date.now();
+    for (const id of ids) { const c = seen[id] = seen[id] || { runs_seen: 0, last_run: null, last_at: null }; if (c.last_run !== engine.s.runId) { c.runs_seen++; c.last_run = engine.s.runId; c.last_at = at; } }
+    store.set(SEEN_KEY, JSON.stringify(seen));
+  }
 
   // What the live bar and the F dialog rate: the newest two cards (or the ending and the last card).
   function fbTargets() {
@@ -656,7 +706,7 @@
     const e = eng.histEntry(n); if (!e) return;
     const fb = e.fb || {};
     eng.setFeedback(n, { rating: fb.rating === r ? null : r, comment: fb.comment });
-    persistFeedback(); renderFeedbackBar();
+    persistFeedback([n]); renderFeedbackBar();
     if (ui.tab === 'journal') renderSide();
   }
   // ns: hist sequence numbers to edit (from the journal); default: the live targets.
@@ -686,16 +736,71 @@
   }
   function saveFeedback() {
     const wrap = document.getElementById('fbDialog'); if (!wrap) return;
+    const ns = [];
     wrap.querySelectorAll('.fb-item').forEach((it) => {
       const on = it.querySelector('.fb-rate .fb-r.on');
+      ns.push(Number(it.dataset.n));
       eng.setFeedback(Number(it.dataset.n), { rating: on ? on.dataset.r : null, comment: it.querySelector('textarea').value });
     });
-    persistFeedback();
+    persistFeedback(ns);
     closeFeedback();
     renderFeedbackBar();
     if (ui.tab === 'journal') renderSide();
   }
   function closeFeedback() { const w = document.getElementById('fbDialog'); if (w) w.remove(); fbOpen = false; fbItems = []; }
+
+  /* ------------------------------------------------------------------ saved games (autosave + 3 slots) */
+  // Slots live on the server when there is one, else in this browser. Loading a slot continues as a new
+  // run (Engine.forkRun), so its log never mixes with the timeline it was saved from.
+  async function slotList() {
+    if (Net.available) return Net.listSaves();
+    return ['auto', '1', '2', '3'].map((slot) => {
+      const raw = store.get(slot === 'auto' ? SAVE_KEY : SLOT_KEY(slot));
+      if (!raw) return { slot, empty: true };
+      try { const o = JSON.parse(raw); const d = o.data || o; return { slot, name: d.name, turn: d.turn, updatedAt: o.updatedAt || null }; } catch (e) { return { slot, empty: true }; }
+    });
+  }
+  async function slotData(slot) {
+    if (Net.available && slot !== 'auto') return Net.getSave(slot);
+    const raw = store.get(slot === 'auto' ? SAVE_KEY : SLOT_KEY(slot));
+    if (!raw) return null;
+    const o = JSON.parse(raw); return o.data || o;
+  }
+  async function openSlots() {
+    closeSlots();
+    const inGame = !!(eng && eng.s && !eng.s.ended && ui.mode !== 'title' && !params.get('event'));
+    const wrap = document.createElement('div'); wrap.className = 'fb-wrap'; wrap.id = 'slotDialog';
+    wrap.innerHTML = '<div class="fb-dialog slots" role="dialog" aria-modal="true" aria-labelledby="slotsH"><h3 id="slotsH">' + esc(t('slots.heading')) + '</h3><p class="fb-intro">' + esc(t(Net.available ? 'slots.whereServer' : 'slots.whereLocal')) + '</p><div id="slotRows" class="fb-intro">…</div>' +
+      '<div class="fb-actions"><button class="btn" id="slotsClose">' + esc(t('slots.close')) + '</button></div></div>';
+    document.body.appendChild(wrap);
+    wrap.onclick = (e) => { if (e.target === wrap) closeSlots(); };
+    document.getElementById('slotsClose').onclick = closeSlots;
+    const tmp = new Engine(content);
+    const render = async (note) => {
+      let list;
+      try { list = await slotList(); } catch (e) { document.getElementById('slotRows').textContent = e.message; return; }
+      const rows = document.getElementById('slotRows'); if (!rows) return;
+      rows.className = '';
+      rows.innerHTML = list.map((x) => '<div class="slot-row"><div><b>' + esc(x.slot === 'auto' ? t('slots.auto') : t('slots.slot', { n: x.slot })) + '</b><span>' +
+        esc(x.empty ? t('slots.empty') : t('slots.info', { name: x.name, month: tmp.monthName(x.turn), year: tmp.yearOf(x.turn) })) + (note && note.slot === x.slot ? ' · ' + esc(note.text) : '') + '</span></div><div class="slot-acts">' +
+        (inGame && x.slot !== 'auto' ? '<button class="linkish" data-save="' + x.slot + '">' + esc(t('slots.saveHere')) + '</button>' : '') +
+        (!x.empty ? '<button class="linkish" data-load="' + x.slot + '">' + esc(t('slots.load')) + '</button>' : '') + '</div></div>').join('');
+      rows.querySelectorAll('[data-save]').forEach((b) => { b.onclick = async () => {
+        const json = eng.save();
+        try { if (Net.available) await Net.putSave(b.dataset.save, json); else store.set(SLOT_KEY(b.dataset.save), JSON.stringify({ updatedAt: Date.now(), data: JSON.parse(json) })); render({ slot: b.dataset.save, text: t('slots.saved') }); } catch (e) { render({ slot: b.dataset.save, text: e.message }); }
+      }; });
+      rows.querySelectorAll('[data-load]').forEach((b) => { b.onclick = async () => {
+        let data; try { data = await slotData(b.dataset.load); } catch (e) { render({ slot: b.dataset.load, text: e.message }); return; }
+        if (!data) return;
+        if (eng && eng.s && !eng.s.ended && ui.mode !== 'title') { save(true); Net.flush(eng, runRecordMeta(), { final: true }); archiveRun(eng); }
+        eng = new Engine(content).load(JSON.parse(JSON.stringify(data)));
+        if (b.dataset.load !== 'auto') eng.forkRun();
+        closeSlots(); save(true); buildGame(); step(eng.advance());
+      }; });
+    };
+    render();
+  }
+  function closeSlots() { const w = document.getElementById('slotDialog'); if (w) w.remove(); }
 
   /* ------------------------------------------------------------------ debug panel (developer-facing, English only) */
   function buildDebug() {
