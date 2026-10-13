@@ -676,12 +676,14 @@ function i18nSync(lang) {
   }
   // Obsolete entries: keep the work, out of the way.
   const obs = ['# Translations whose source no longer exists. Kept for reference; not loaded by the game.', ''];
-  let nObs = 0;
+  let nObs = 0, nNew = 0;
+  // Entries already in _obsolete.lang are carried over; only newly retired ones are reported as moved.
+  const prevObs = I18n.loadLocale(lang, sources.filter((x) => x.path.endsWith('/_obsolete.lang'))).blocks;
   for (const [block, keys] of Object.entries(loc.blocks)) {
     const rows = Object.entries(keys).filter(([k, v]) => !used.has(block + ' ' + k) && v.text !== '');
     if (!rows.length) continue;
     obs.push('@' + block.replace(':', ' '));
-    for (const [k, v] of rows) { obs.push(k + (v.hash ? ' [' + v.hash + ']' : '') + ' = ' + I18n.enc(v.text)); nObs++; }
+    for (const [k, v] of rows) { obs.push(k + (v.hash ? ' [' + v.hash + ']' : '') + ' = ' + I18n.enc(v.text)); nObs++; if (!(prevObs[block] && prevObs[block][k])) nNew++; }
   }
   const obsPath = path.join(dir, '_obsolete.lang');
   if (nObs) { fs.writeFileSync(obsPath, obs.join('\n') + '\n'); written.add(rel(obsPath)); }
@@ -689,7 +691,7 @@ function i18nSync(lang) {
   for (const s of sources) if (!written.has(s.path) && !s.path.endsWith('/_obsolete.lang')) { fs.unlinkSync(path.join(ROOT, s.path)); console.log(C.d + 'removed ' + s.path + C.x); }
   let T = 0, D = 0, S = 0;
   for (const [f, d, n, st] of report) { T += n; D += d; S += st; console.log((d === n ? C.g : C.y) + String(d).padStart(5) + '/' + String(n).padEnd(5) + C.x + ' ' + f + (st ? C.y + '  ' + st + ' stale' + C.x : '')); }
-  console.log(C.b + lang + ': ' + D + '/' + T + ' translated (' + (100 * D / T).toFixed(1) + '%), ' + S + ' stale' + (nObs ? ', ' + nObs + ' obsolete moved to _obsolete.lang' : '') + C.x);
+  console.log(C.b + lang + ': ' + D + '/' + T + ' translated (' + (100 * D / T).toFixed(1) + '%), ' + S + ' stale' + (nNew ? ', ' + nNew + ' obsolete moved to _obsolete.lang' : '') + C.x);
 }
 
 /* ------------------------------------------------------------------ sim */
