@@ -116,6 +116,13 @@ art: hourglass
 when: (turn > 4 and gpa < 2.0)
 text: Your name is called last, after a long pause and some whispering between examiners. But it is called. You graduate. You are a mage of Lumenhold, and nobody ever has to know the details.
 
+@ending ending_bystander
+priority: 20
+title: Someone Else's Lantern
+art: lantern
+when: flag(hollow_out) or flag(hollow_held_line) or (clue(founders_ledger) + clue(lake_bell) + clue(second_shadow) + clue(seven_locks) + clue(star_key) + clue(kael_family) + clue(ilse_truth) + clue(knows_founders_seal) + clue(heard_of_starcalling) + clue(codex_names) <= 2 and not (flag(sided_wardens) or flag(sided_dumonts) or flag(sided_self)))
+text: There was a spring frost, the year you graduated, and a night when the bell under the lake would not stop ringing. You were somewhere else: asleep, or studying, or holding a door shut for the first-years. Someone else went down with the lantern. You never learn their whole story, but every spring, when the lake thaws, you find yourself grateful to them.
+
 @ending ending_graduate
 priority: 0
 title: A Mage of Lumenhold
