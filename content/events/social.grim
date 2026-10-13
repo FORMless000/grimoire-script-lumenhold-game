@@ -11,38 +11,43 @@
 
 @event soc_study_session
 title: Study Session
-actor: any
-when: not tagged(npc, faculty) and rel(npc) >= 0
+cast:
+  npc: any where not tagged(npc, faculty) and rel(npc) >= 0
+per: npc
+trigger: social
 repeat: 4
 art: book
 tags: social study
 scene: Two students at a candlelit table piled with books, one explaining something with wild hand gestures.
 text: {npc} drops into the seat across from you with an armful of books. "Exams are coming for us all. Misery loves company. Study with me?"
 > left: You work better alone
-  lore +1
-  rel npc -1
+  lore +tiny
+  rel npc -tiny
   say: You get a lot done. {npc} sits at the next table and sighs loudly every few minutes.
 > right: Pull up a chair
-  lore +2
-  grades +2
-  rel npc +5
+  lore +small
+  study +tiny
+  rel npc +small
   say: You get half as much done and remember twice as much of it. {npc} explains the Third Law with a biscuit diagram.
 
 @event soc_borrow_money
 title: A Small Loan
-actor: any
-when: not tagged(npc, faculty) and rel(npc) >= 5 and gold >= 20
+cast:
+  npc: any where not tagged(npc, faculty) and rel(npc) >= 5
+per: npc
+trigger: social
+when: gold >= 20
 repeat: 6
 art: pouch
 tags: social money
 scene: A student holding out an empty purse upside down with a sheepish grin.
 text: {npc} turns out an empty purse. "I'm fifteen crowns short for rent. I'll pay you back. I swear on my wand."
 > left: Sorry, you're tight too
-  rel npc -4
+  rel npc -small
   say: "No, of course, I understand." {They} {are} quiet at dinner.
 > right: Lend fifteen crowns
-  gold -15
-  rel npc +7
+  gold -medium
+  rel npc +medium
   chance 70:
     queue soc_loan_repaid in 2 with npc
     say: {npc} hugs you with the empty purse still in {their} hand.
@@ -58,67 +63,75 @@ tags: social money
 scene: A small stack of coins and a sweet bun left on a desk with a thank-you note.
 text: {npc} finds you after class and presses a little stack of coins into your hand, plus a sticky bun. "Fifteen crowns. And interest." The interest is the bun.
 > ok: Eat the interest
-  gold +15
-  rel npc +4
-  mood +2
+  gold +medium
+  rel npc +small
+  mood +tiny
 
 @event soc_become_friends
 title: Something Like Friendship
-actor: any
-when: bond(npc) == "none" and rel(npc) >= 30 and not tagged(npc, faculty)
+cast:
+  npc: any where bond(npc) == "none" and rel(npc) >= 30 and not tagged(npc, faculty)
+per: npc
+trigger: social
 weight: 20
 art: group
 tags: social
 scene: Two students walking across the lawn at sunset, laughing at the same joke, shadows long behind them.
 text: You realise you've been looking for {npc} in every room you walk into. {They} seem to have been doing the same. Somewhere along the way, this became a friendship.
 > left: Keep a little distance
-  rel npc +2
+  rel npc +tiny
   say: You stay friendly. Just not too close. Some walls are load-bearing.
 > right: Call it what it is
   bond npc friend
-  rel npc +6
-  mood +5
+  rel npc +medium
+  mood +small
   say: "So we're friends now," {npc} says. "Officially." You shake on it, solemnly, then ruin it by laughing.
 
 @event soc_become_close
 title: The Kind of Friend You Call at 3am
-actor: any
-when: bond(npc) == "friend" and rel(npc) >= 60
+cast:
+  npc: any where bond(npc) == "friend" and rel(npc) >= 60
+per: npc
+trigger: social
 weight: 18
 art: heart
 tags: social
 scene: Two friends sitting on a dormitory floor at 3am wrapped in one blanket, empty mugs between them.
 text: It's 3am. You can't sleep, and you've walked to {npc}'s door before you've even decided to. {They} open{s} it before you knock.
 > left: Apologise and go back to bed
-  rel npc +3
+  rel npc +small
   say: "Don't be daft," {npc} says, but lets you go. In the morning there's tea outside your door.
 > right: Talk until sunrise
   bond npc close
-  rel npc +8
-  mood +8
+  rel npc +medium
+  mood +medium
   say: You tell {them} things you haven't told anyone. {They} tell you things back. The sun comes up and neither of you notices.
 
 @event soc_secret
 title: A Secret
-actor: any
-when: rel(npc) >= 25 and not tagged(npc, faculty)
+cast:
+  npc: any where rel(npc) >= 25 and not tagged(npc, faculty)
+per: npc
+trigger: social
 repeat: 8
 art: lock
 tags: social
 scene: Two students huddled under a staircase, one whispering into the other's ear, a finger to their lips.
 text: {npc} pulls you under the stairs. "I need to tell someone or I'll burst. Swear you won't tell anyone. Not even the portraits."
 > left: "I'd rather not carry it."
-  rel npc -3
+  rel npc -tiny
   say: {npc} looks hurt, then relieved. "Maybe that's better." You'll never know.
 > right: "I swear."
-  rel npc +6
-  guile +1
+  rel npc +medium
+  guile +tiny
   say: It's not a big secret. It's the kind that's only big to the person holding it. You hold it with {them}.
 
 @event soc_argument
 title: Words Exchanged
-actor: any
-when: rel(npc) >= 10 and bond(npc) != "partner"
+cast:
+  npc: any where rel(npc) >= 10 and bond(npc) != "partner"
+per: npc
+trigger: social
 repeat: 6
 weight: 8
 art: bolt
@@ -126,50 +139,55 @@ tags: social
 scene: Two students facing off in an empty corridor, one with arms crossed, the other mid-gesture, both flushed.
 text: It starts with something small — a borrowed book, a joke that landed wrong — and suddenly you and {npc} are arguing in the corridor, louder than either of you intended.
 > left: Apologise first
-  rel npc +4
-  mood -1
+  rel npc +small
+  mood -tiny
   say: "I'm sorry." {npc} deflates. "...Me too." It's over. It feels better than winning would have.
 > right: Stand your ground
-  rel npc -8
-  mood -3
+  rel npc -medium
+  mood -tiny
   chance 50:
     say: {npc} storms off. You were right. It doesn't feel as good as you'd hoped.
   else:
-    rel npc +6
+    rel npc +medium
     say: You argue it out until you're both laughing at how ridiculous it got. Somehow you're closer after.
 
 @event soc_village_trip
 title: A Day in the Village
-actor: any
-when: rel(npc) >= 10 and not tagged(npc, faculty) and gold >= 5
+cast:
+  npc: any where rel(npc) >= 10 and not tagged(npc, faculty)
+per: npc
+trigger: social
+when: gold >= 5
 repeat: 5
 art: house
 tags: social
 scene: A cobbled village street with crooked shopfronts, two students sharing a paper cone of roasted nuts.
 text: "Barge to the village? Tea at Mabel's, a wander round the bookshops, back before curfew?" {npc} is already wearing {their} coat.
 > left: Not this week
-  rel npc -1
+  rel npc -tiny
   say: {They} bring{s} you back a cinnamon bun anyway.
 > right: Grab your coat
-  gold -5
-  mood +7
-  rel npc +5
+  gold -tiny
+  mood +medium
+  rel npc +small
   say: Tea, buns, a bookshop cat that sits on {npc}'s feet. You almost miss the last barge, laughing.
 
 @event soc_friend_sick
 title: Sick Friend
-actor: any
-when: (bond(npc) == "friend" or bond(npc) == "close" or bond(npc) == "partner")
+cast:
+  npc: any where (bond(npc) == "friend" or bond(npc) == "close" or bond(npc) == "partner")
+per: npc
+trigger: social
 repeat: 8
 art: rain
 tags: social
 scene: A student tucked into an infirmary bed under a mountain of blankets, a friend sitting beside them with a bowl of soup.
 text: {npc} has Lake Fever and is miserable in the infirmary. Sister Amaranth says visitors are allowed, but she won't be responsible.
 > left: Send a card
-  rel npc +2
+  rel npc +tiny
   say: You send a card with a drawing of Sister Amaranth as a dragon. {npc} keeps it on {their} bedside table.
 > right: Sit with them every evening
-  rel npc +8
+  rel npc +medium
   chance 35:
     gain sick
     say: You keep {them} company for a week. Then you're in the next bed. You both find this hilarious.
@@ -178,27 +196,32 @@ text: {npc} has Lake Fever and is miserable in the infirmary. Sister Amaranth sa
 
 @event soc_gift_given
 title: A Small Gift
-actor: any
-when: rel(npc) >= 15
+cast:
+  npc: any where rel(npc) >= 15
+per: npc
+trigger: social
 repeat: 7
 art: gem
 tags: social
 scene: A small wrapped parcel tied with ribbon left on a dormitory pillow, a pressed flower tucked into the bow.
 text: There's a small parcel on your pillow. A note in {npc}'s handwriting: "Saw this and thought of you. Don't make it weird."
 > left: Thank {them} later
-  mood +4
-  rel npc +2
+  mood +small
+  rel npc +tiny
   say: It's a tiny brass compass that always points to the nearest teapot. You use it constantly.
 > right: Get {them} something back (10 gold)
-  gold -10
-  mood +4
-  rel npc +7
+  gold -small
+  mood +small
+  rel npc +medium
   say: You find {them} a book {they}'d wanted for months. {npc}'s face when {they} open{s} it is worth twice the price.
 
 @event soc_drift
 title: Drifting Apart
-actor: any
-when: rel(npc) >= 10 and rel(npc) < 40 and since(soc_drift) > 3 and not tagged(npc, faculty)
+cast:
+  npc: any where rel(npc) >= 10 and rel(npc) < 40 and not tagged(npc, faculty)
+per: npc
+trigger: social
+when: since(soc_drift) > 3
 weight: 6
 repeat: 6
 art: hourglass
@@ -206,57 +229,63 @@ tags: social
 scene: A student glancing back across a busy courtyard at another who hasn't seen them, the space between them full of strangers.
 text: You realise you haven't really talked to {npc} in weeks. You see {them} across the courtyard, laughing with people you don't know.
 > left: Let it be
-  rel npc -5
+  rel npc -small
   say: People drift. It's nobody's fault. You still smile when you pass in the halls.
 > right: Go over and say hello
-  rel npc +6
-  mood +2
+  rel npc +medium
+  mood +tiny
   say: "There you are!" {npc} says, as if you'd been the one missing. Maybe you had.
 
 @event soc_rumour
 title: Rumours About {npc}
-actor: any
-when: rel(npc) >= 15
+cast:
+  npc: any where rel(npc) >= 15
+per: npc
+trigger: social
 repeat: 8
 art: paper
 tags: social
 scene: A cluster of students whispering behind their hands in a corridor, glancing toward someone just out of view.
 text: A nasty rumour about {npc} is going round the common room. It's not true. You know it's not true. People are laughing.
 > left: Let it blow over
-  rel npc -3
+  rel npc -tiny
   say: It blows over. {npc} never finds out you heard it. Probably.
 > right: Shut it down
-  check charm 14:
-    rel npc +8
-    renown +2
-    say: You make the rumour-monger look so foolish that the story dies on the spot. {npc} hears about it later and just squeezes your arm.
-  else:
-    rel npc +5
-    renown -2
-    say: You make a scene and now there are rumours about you too. {npc} thinks you're an idiot. A loyal idiot.
+  challenge negotiate trivial:
+    win:
+      rel npc +medium
+      renown +small
+      say: You make the rumour-monger look so foolish that the story dies on the spot. {npc} hears about it later and just squeezes your arm.
+    lose:
+      rel npc +small
+      renown -tiny
+      say: You make a scene and now there are rumours about you too. {npc} thinks you're an idiot. A loyal idiot.
 
 @event soc_homework_help
 title: Desperate Homework
-actor: any
-when: not tagged(npc, faculty) and rel(npc) >= 0
+cast:
+  npc: any where not tagged(npc, faculty) and rel(npc) >= 0
+per: npc
+trigger: social
 repeat: 5
 art: feather
 tags: social study
 scene: A student with ink on their face clutching a half-finished essay, another student leaning over to read it.
 text: {npc} waves a half-finished essay at you. "It's due in an hour and I've written the title twice. Help."
 > left: Explain the concept
-  check lore 14:
-    rel npc +6
-    lore +1
-    say: You explain it so clearly that {npc} finishes the essay with time to spare. {They} insist{s} you're a genius.
-  else:
-    rel npc +2
-    say: You explain it so confusingly that you both end up more lost. You hand it in together, two confused people against the world.
+  challenge research easy:
+    win:
+      rel npc +medium
+      lore +tiny
+      say: You explain it so clearly that {npc} finishes the essay with time to spare. {They} insist{s} you're a genius.
+    lose:
+      rel npc +tiny
+      say: You explain it so confusingly that you both end up more lost. You hand it in together, two confused people against the world.
 > right: "Copy mine."
-  rel npc +5
+  rel npc +small
   chance 30:
-    grades -4
-    rel npc -2
+    study -small
+    rel npc -tiny
     say: The professor notices two identical essays. You both get detention, and a lecture.
     gain detention
   else:
@@ -264,28 +293,32 @@ text: {npc} waves a half-finished essay at you. "It's due in an hour and I've wr
 
 @event soc_faculty_advice
 title: A Word of Advice
-actor: any
-when: tagged(npc, faculty) and rel(npc) >= 10
+cast:
+  npc: any where tagged(npc, faculty) and rel(npc) >= 10
+per: npc
+trigger: social
 repeat: 6
 art: scroll
 tags: study
 scene: A professor walking with a student along a covered walkway, pointing at something in an open book.
 text: {npc} catches you after a lecture. "You've been working hard. Or hardly working. I can never tell with your year. Some advice, if you'll take it?"
 > left: Politely decline
-  rel npc -2
+  rel npc -tiny
   say: "Suit yourself." {They} walk{s} off. Faculty have long memories.
 > right: Listen carefully
-  rel npc +5
-  grades +3
-  lore +1
+  rel npc +small
+  study +small
+  lore +tiny
   say: It's good advice. Annoyingly good. Your next essay is better for it.
 
 # ---------------- Romance ----------------
 
 @event soc_spark
 title: A Spark
-actor: any
-when: romanceable(npc) and rel(npc) >= 15 and love(npc) < 12 and bond(npc) != "partner"
+cast:
+  npc: any where romanceable(npc) and rel(npc) >= 15 and spark(npc) < 12 and bond(npc) != "partner"
+per: npc
+trigger: social
 weight: 12
 repeat: 6
 art: sparkle
@@ -293,17 +326,19 @@ tags: social romance
 scene: Two hands brushing as they reach for the same quill, both students freezing for a heartbeat.
 text: You reach for the same quill as {npc}. Your hands touch. Neither of you lets go immediately. It's a perfectly ordinary quill.
 > left: Laugh it off
-  rel npc +2
+  rel npc +tiny
   say: "All yours," you say. {npc} laughs. The moment passes. Mostly.
 > right: Hold on a moment longer
-  love npc +8
-  rel npc +2
+  spark npc +medium
+  rel npc +tiny
   say: {npc} looks up. Something in {their} face shifts. Then {they} let{s} go, a little pink, and the quill rolls under the desk.
 
 @event soc_date
 title: An Invitation
-actor: any
-when: romanceable(npc) and love(npc) >= 12 and love(npc) < 40 and bond(npc) != "partner" and rel(npc) >= 15
+cast:
+  npc: any where romanceable(npc) and spark(npc) >= 12 and spark(npc) < 40 and bond(npc) != "partner" and rel(npc) >= 15
+per: npc
+trigger: social
 weight: 12
 repeat: 4
 art: heart
@@ -311,46 +346,52 @@ tags: social romance
 scene: A student nervously holding out a hand-drawn ticket to the village's floating lantern show.
 text: You could ask {npc} to the lantern show in the village this weekend. As friends. Or, you know. Not as friends.
 > left: Ask as friends
-  rel npc +5
-  mood +3
+  rel npc +small
+  mood +small
   say: It's a lovely evening. You're both very careful about elbows.
 > right: Ask as more than friends
-  check charm 12 + (40 - love(npc)) / 3:
-    love npc +12
-    mood +8
-    say: {npc} says yes before you finish the sentence. You hold hands through the whole show and miss every lantern.
-  else:
-    love npc -4
-    mood -5
-    say: {npc} hesitates, then says {they}'d rather go as friends. It's a nice evening. It's a long evening.
+  challenge negotiate easy:
+    win:
+      spark npc +medium
+      mood +medium
+      say: {npc} says yes before you finish the sentence. You hold hands through the whole show and miss every lantern.
+    lose:
+      spark npc -tiny
+      mood -small
+      say: {npc} hesitates, then says {they}'d rather go as friends. It's a nice evening. It's a long evening.
 
 @event soc_confess_generic
 title: Feelings, Spoken
-actor: any
-when: romanceable(npc) and love(npc) >= 40 and rel(npc) >= 30 and bond(npc) != "partner" and bond(npc) != "ex"
+cast:
+  npc: any where romanceable(npc) and spark(npc) >= 40 and rel(npc) >= 30 and bond(npc) != "partner" and bond(npc) != "ex"
+per: npc
+trigger: social
 weight: 10
 art: heart
 tags: romance
 scene: Two students standing very close on a windswept bridge between towers, one with a hand over their heart.
 text: On the bridge between the towers, the wind snatching at your robes, you realise you can't keep it in anymore. {npc} is looking at you like {they} know what you're about to say.
 > left: Say nothing
-  love npc -6
+  spark npc -small
   say: The moment passes. You walk back together, a careful inch apart.
 > right: Tell {them}
-  check charm 10:
-    bond npc partner
-    love npc +12
-    mood +12
-    say: "Finally," {npc} says, and kisses you, and the wind steals your breath anyway.
-  else:
-    love npc -15
-    mood -8
-    say: {npc} takes a long breath. "I care about you," {they} say{s}. "Just not like that. I'm sorry." The wind is very cold.
+  challenge negotiate trivial:
+    win:
+      bond npc partner
+      spark npc +medium
+      mood +large
+      say: "Finally," {npc} says, and kisses you, and the wind steals your breath anyway.
+    lose:
+      spark npc -large
+      mood -medium
+      say: {npc} takes a long breath. "I care about you," {they} say{s}. "Just not like that. I'm sorry." The wind is very cold.
 
 @event soc_partner_date
 title: Date Night
-actor: any
-when: bond(npc) == "partner"
+cast:
+  npc: any where bond(npc) == "partner"
+per: npc
+trigger: social
 repeat: 3
 weight: 14
 art: candle
@@ -358,18 +399,21 @@ tags: romance
 scene: Two people at a tiny candlelit table in a window alcove of a village tea shop, snow falling outside.
 text: {npc} has booked the window table at Mabel's. Candles. Snow outside. "I'm paying," {they} say{s}. "Don't argue."
 > left: Talk about the future
-  love npc +5
-  mood +6
+  spark npc +small
+  mood +medium
   say: You talk about where you'll be in ten years. In every version, you're both there.
 > right: Talk about absolutely nothing
-  love npc +4
-  mood +8
+  spark npc +tiny
+  mood +medium
   say: You argue for an hour about whether a hotdog is a sandwich. It is the best date of your life.
 
 @event soc_partner_neglect
 title: "You're Always Busy"
-actor: any
-when: bond(npc) == "partner" and since(soc_partner_date) >= 5
+cast:
+  npc: any where bond(npc) == "partner"
+per: npc
+trigger: social
+when: since(soc_partner_date) >= 5
 weight: 14
 repeat: 5
 art: hourglass
@@ -377,147 +421,165 @@ tags: romance
 scene: A person waiting alone at a table set for two, a candle burned low, the other chair empty.
 text: {npc} is waiting outside your door. "I feel like I only see you in corridors," {they} say{s}. "Do you even want this?"
 > left: "I'm sorry. I'll make time."
-  love npc +4
-  mood -2
-  grades -2
+  spark npc +tiny
+  mood -tiny
+  study -tiny
   say: You skip a study session for a long walk by the lake. It's the right call.
 > right: "You know how busy I am."
-  love npc -12
-  rel npc -6
+  spark npc -medium
+  rel npc -medium
   say: {npc} nods slowly. Something between you cools a degree.
 
 @event soc_breakup
 title: The End of Something
-actor: any
-when: bond(npc) == "partner" and love(npc) < 25
+cast:
+  npc: any where bond(npc) == "partner" and spark(npc) < 25
+per: npc
+trigger: social
 weight: 30
 art: heartbreak
 tags: romance crisis
 scene: Two people sitting on opposite ends of a bench in a grey garden, not looking at each other, rain beginning.
 text: {npc} sits down at the far end of the bench. "I think we both know," {they} say{s} quietly. "This isn't working anymore."
 > left: Fight for it
-  check charm 20:
-    love npc +15
-    say: You talk for hours. It's raw and honest and it hurts. And at the end, {npc} takes your hand again.
-  else:
-    bond npc ex
-    gain heartbroken
-    rel npc -10
-    say: You try. It only makes it harder. In the end you're both crying, and it's over anyway.
+  challenge negotiate trivial:
+    win:
+      spark npc +large
+      say: You talk for hours. It's raw and honest and it hurts. And at the end, {npc} takes your hand again.
+    lose:
+      bond npc ex
+      gain heartbroken
+      rel npc -large
+      say: You try. It only makes it harder. In the end you're both crying, and it's over anyway.
 > right: Let {them} go
   bond npc ex
   gain heartbroken
-  rel npc +5
+  rel npc +small
   say: You agree. It's terrible and gentle and right. {npc} kisses your forehead once before {they} leave{s}.
 
 @event soc_two_timing
 title: Found Out
-actor: any
-when: bond(npc) == "partner" and bonds(partner) >= 2
+cast:
+  npc: any where bond(npc) == "partner"
+per: npc
+trigger: social
+when: bonds(partner) >= 2
 weight: 40
 art: heartbreak
 tags: romance crisis
 scene: A person holding up two crumpled love letters in a crowded corridor, the crowd parting around them.
 text: {npc} is holding two letters. One is to {them}. The other isn't. "I found it in your bag," {they} say{s}, very quietly. Half the corridor has stopped to watch.
 > left: Beg forgiveness
-  check charm 26:
-    love npc -15
-    rel npc -10
-    say: {npc} doesn't forgive you. But {they} don't leave. Not yet. You're on borrowed time.
-  else:
-    bond npc ex
-    rel npc -30
-    renown -6
-    gain heartbroken
-    say: {npc} tears both letters in half and walks away. Everyone knows by dinner.
+  challenge negotiate easy:
+    win:
+      spark npc -large
+      rel npc -large
+      say: {npc} doesn't forgive you. But {they} don't leave. Not yet. You're on borrowed time.
+    lose:
+      bond npc ex
+      rel npc -huge
+      renown -medium
+      gain heartbroken
+      say: {npc} tears both letters in half and walks away. Everyone knows by dinner.
 > right: Say nothing
   bond npc ex
-  rel npc -35
-  renown -8
+  rel npc -huge
+  renown -medium
   say: Your silence is an answer. {npc} drops the letters at your feet and leaves. The story is all over the academy.
 
 @event soc_ex_encounter
 title: Awkward
-actor: any
-when: bond(npc) == "ex"
+cast:
+  npc: any where bond(npc) == "ex"
+per: npc
+trigger: social
 repeat: 6
 art: mirror
 tags: romance
 scene: Two people coming face to face in a narrow library aisle, both holding books, neither moving.
 text: You turn into the library aisle and there's {npc}. Your ex. Holding the same book you came for. Neither of you moves.
 > left: Turn around and leave
-  mood -3
+  mood -tiny
   say: You find a different book in a different aisle and read the same paragraph six times.
 > right: Say hello like a person
-  rel npc +6
-  check charm 14:
-    bond npc friend
-    say: It's awkward for one minute, then it isn't. You end up laughing about the time the dummy caught fire. Friends, maybe. Really.
-  else:
-    mood -2
-    say: "Hello." "Hello." You both stand there. Then you both leave. It's a start.
+  rel npc +medium
+  challenge negotiate trivial:
+    win:
+      bond npc friend
+      say: It's awkward for one minute, then it isn't. You end up laughing about the time the dummy caught fire. Friends, maybe. Really.
+    lose:
+      mood -tiny
+      say: "Hello." "Hello." You both stand there. Then you both leave. It's a start.
 
 # ---------------- Rivalry ----------------
 
 @event soc_rival_taunt
 title: A Public Taunt
-actor: any
-when: (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -20) and not tagged(npc, faculty)
+cast:
+  npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -20) and not tagged(npc, faculty)
+per: npc
+trigger: social
 repeat: 4
 art: mask
 tags: rival
 scene: A smirking student surrounded by a small audience, pointing at someone across a crowded dining hall.
 text: In the middle of dinner, {npc} loudly recounts your most embarrassing moment of the term. People laugh. {They} look{s} very pleased.
 > left: Ignore {them}
-  mood -4
+  mood -small
   say: The laughter dies down. You eat your soup with as much dignity as soup allows.
 > right: Fire back
-  check charm 16:
-    renown +4
-    rel npc -4
-    say: Your comeback is so good that someone at the far table applauds. {npc} goes scarlet.
-  else:
-    renown -3
-    rel npc -2
-    say: Your comeback comes out as a squeak. The laughter doubles.
+  challenge negotiate trivial:
+    win:
+      renown +small
+      rel npc -small
+      say: Your comeback is so good that someone at the far table applauds. {npc} goes scarlet.
+    lose:
+      renown -small
+      rel npc -tiny
+      say: Your comeback comes out as a squeak. The laughter doubles.
 
 @event soc_make_peace
 title: Burying the Hatchet
-actor: any
-when: (bond(npc) == "rival" or bond(npc) == "nemesis") and rel(npc) >= 5
+cast:
+  npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis") and rel(npc) >= 5
+per: npc
+trigger: social
 weight: 18
 art: hand
 tags: rival social
 scene: Two former rivals shaking hands on a dueling green at sunset, wands tucked away.
 text: {npc} finds you after class, scuffing {their} shoes. "This whole rivalry thing. It's getting tiring. Truce?"
 > left: Keep the edge
-  rel npc -4
+  rel npc -small
   say: "Thought so," {npc} says, half-smiling. The game goes on.
 > right: Shake on it
   bond npc friend
-  rel npc +10
-  mood +4
+  rel npc +large
+  mood +small
   say: You shake. It's strange — you know {them} better than most of your friends. Maybe that's the point.
 
 @event soc_rival_bet
 title: The Wager
-actor: any
-when: bond(npc) == "rival" and not tagged(npc, faculty)
+cast:
+  npc: any where bond(npc) == "rival" and not tagged(npc, faculty)
+per: npc
+trigger: social
 repeat: 6
 art: dice
 tags: rival
 scene: Two students slapping coins onto a table between them, a crowd gathering, a chalked tally on the wall.
 text: "Ten crowns says I outscore you in the next Arcana practical," {npc} says, slapping coins on the table. A crowd forms.
 > left: Decline the bet
-  rel npc -2
+  rel npc -tiny
   say: "Thought so." {npc} pockets the coins. You decide not to care. You care.
 > right: Take the bet
-  check arcana 16 + year * 4:
-    gold +10
-    renown +2
-    rel npc +3
-    say: You win by a hair. {npc} pays up with a theatrical bow. "Next time."
-  else:
-    gold -10
-    rel npc +2
-    say: You lose by a hair. "Next time," you say. {npc} grins. "Next time."
+  challenge spell easy:
+    win:
+      gold +small
+      renown +small
+      rel npc +small
+      say: You win by a hair. {npc} pays up with a theatrical bow. "Next time."
+    lose:
+      gold -small
+      rel npc +tiny
+      say: You lose by a hair. "Next time," you say. {npc} grins. "Next time."

@@ -225,7 +225,7 @@ function analyze(content) {
     ROLES = new Set((e.cast || []).map((r) => r.role)); IN_EVENT = true;
     const w = loc(e);
     if (e.actor && !['any', 'npc'].includes(e.actor) && !content.npcs[e.actor]) P('error', w, 'actor: unknown npc "' + e.actor + '"');
-    if (e.trigger === 'social' && !e.actor) P('warn', w, 'social event without actor');
+    if (e.trigger === 'social' && !e.actor && !e.per) P('warn', w, 'social event without actor (or per: <cast role>)');
     if (e.art && !Art.has(e.art)) P('warn', w, 'unknown art "' + e.art + '" (see src/art.js; available: ' + Art.list().join(' ') + ')');
     if (!e.art) P('info', w, 'event has no art');
     scanExpr(e.when, w, hasActor); scanExpr(e.weight, w, hasActor);

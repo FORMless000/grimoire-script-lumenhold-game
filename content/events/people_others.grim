@@ -18,47 +18,47 @@ text: It's snowing in the courtyard. Only in a small circle, around Kael, who is
 > left: Leave him to it
   say: When you pass again, the circle of snow is gone, and there's a small, lopsided snowman in its place.
 > right: Throw the first one
-  rel kael +8
-  mood +6
-  vigor +1
+  rel kael +medium
+  mood +medium
+  vigor +tiny
   say: Your snowball hits him in the ear. He stares. Then he laughs — a real laugh, startled out of him — and the snow triples.
 
 @event kael_cold_hands
 title: Cold Hands
 trigger: social
 actor: kael
-when: rel(kael) >= 20 and love(kael) < 35
+when: rel(kael) >= 20 and spark(kael) < 35
 weight: 10
 art: heart
 tags: social romance
 scene: Two students sitting close in a library alcove, one holding the other's frost-white hand between both of theirs.
 text: Kael's hands are always cold. In the library tonight they're so cold the ink in his pen has frozen. He's trying to thaw it with his breath, embarrassed.
 > left: Lend him your gloves
-  rel kael +5
+  rel kael +small
   say: He wears them for the rest of the term. They're far too small. He doesn't care.
 > right: Warm his hands in yours
-  rel kael +6
-  love kael +6
+  rel kael +medium
+  spark kael +small
   say: He goes very still. Then, slowly, the frost on his fingertips melts. "Nobody's ever been warm enough," he says quietly. "Before."
 
 @event kael_confession
 title: Thaw
 trigger: social
 actor: kael
-when: love(kael) >= 35 and rel(kael) >= 25 and bond(kael) != "partner"
+when: spark(kael) >= 35 and rel(kael) >= 25 and bond(kael) != "partner"
 weight: 30
 art: snow
 tags: romance
 scene: Frost-ferns spreading across a dark window behind a pale boy who is, for once, looking directly at someone.
 text: "I was taught not to want things," Kael says. "Wanting things is how they control you." Frost blooms across the window behind him. "I want you. I'm sorry. I don't know what to do with it."
 > left: Gently say no
-  love kael -20
-  rel kael +2
+  spark kael -large
+  rel kael +tiny
   say: He nods, as if he expected it. "Thank you for being honest. Nobody is." The frost on the window fades slowly.
 > right: Show him what to do with it
   bond kael partner
-  love kael +15
-  mood +10
+  spark kael +large
+  mood +large
   say: You kiss him. Every window in the corridor frosts over at once, and then, very slowly, melts.
 
 # ================= BRAM HOLLIS =================
@@ -74,15 +74,15 @@ scene: A burly prefect with a red sash blocking a corridor, a demerit ledger ope
 text: "Running in the halls." A burly prefect with a red sash steps into your path, ledger already open. "Name?" You weren't running. You were walking briskly.
 > left: Accept the demerit
   meet bram
-  mood -2
-  grades -1
+  mood -tiny
+  study -tiny
   say: He writes your name very slowly, enjoying it. Bram Hollis. You will learn to recognise his footsteps.
 > right: Argue
   meet bram
-  rel bram -6
-  renown +2
+  rel bram -medium
+  renown +small
   say: "Walking briskly," you insist. Two demerits: one for running, one for "lip". Some students nearby clap quietly.
-  grades -2
+  study -tiny
 
 @event bram_hall_tax
 title: The Hall Tax
@@ -95,13 +95,13 @@ tags: rival money
 scene: A prefect leaning against a stone archway, palm out, a line of nervous first-years shuffling past him.
 text: Bram has invented a "hall tax" for using the east staircase. Ten crowns. "Maintenance," he says. The first-years are paying. He looks at you expectantly.
 > left: Pay it
-  gold -10
-  rel bram +3
-  mood -3
+  gold -small
+  rel bram +small
+  mood -tiny
   say: He pockets the coins. "Pleasure." You take the west staircase forever after.
 > right: Refuse loudly
-  rel bram -8
-  renown +3
+  rel bram -medium
+  renown +small
   chance 50:
     gain watched
     say: The first-years stop paying too. Bram is furious. He'll find a way to make you pay later. He always does.
@@ -119,22 +119,24 @@ tags: rival study
 scene: An empty desk drawer, a few scattered pages on the floor, a red prefect's sash glimpsed disappearing around a corner.
 text: Two days before exams, your revision notes vanish from your desk. All of them. You saw a red sash in the corridor.
 > left: Rewrite them from memory (Lore)
-  check lore 18:
-    lore +2
-    say: You rewrite everything in one furious night. Your new notes are better than the old ones. Take that, Bram.
-  else:
-    grades -5
-    health -3
-    say: You rewrite what you can. It isn't enough. Exams go worse than they should.
+  challenge research easy:
+    win:
+      lore +small
+      say: You rewrite everything in one furious night. Your new notes are better than the old ones. Take that, Bram.
+    lose:
+      study -medium
+      health -tiny
+      say: You rewrite what you can. It isn't enough. Exams go worse than they should.
 > right: Search his room (Guile)
-  check guile 18:
-    rel bram -6
-    renown +2
-    say: You find your notes under his mattress, and also a teddy bear. You take both. You return the bear. Eventually.
-  else:
-    gain detention
-    rel bram -4
-    say: He catches you in his room. That's two weeks of detention, and he gets to supervise.
+  challenge deceive easy:
+    win:
+      rel bram -medium
+      renown +small
+      say: You find your notes under his mattress, and also a teddy bear. You take both. You return the bear. Eventually.
+    lose:
+      gain detention
+      rel bram -small
+      say: He catches you in his room. That's two weeks of detention, and he gets to supervise.
 
 @event bram_crying
 title: Behind the Stables
@@ -147,11 +149,11 @@ tags: social
 scene: A big prefect sitting on an upturned bucket behind the stables, a crumpled letter in his fist, shoulders shaking.
 text: Behind the stables, you find Bram Hollis sitting on a bucket, crying into a crumpled letter. He sees you and freezes. "If you tell anyone," he begins, but his voice cracks.
 > left: Walk away and never mention it
-  rel bram +6
+  rel bram +medium
   say: You leave. You never tell anyone. Somehow, he knows you didn't. His demerits become fewer.
 > right: Sit down and ask what happened
   flag bram_softened
-  rel bram +20
+  rel bram +huge
   say: His father. A letter saying he's a disappointment, again. "He was a prefect too," Bram says. "Head boy. I'm just... loud." He wipes his face. "Don't be nice to me. I don't know what to do with it."
 
 @event bram_turns
@@ -165,10 +167,10 @@ tags: social
 scene: A prefect stepping between a cornered student and a pair of older bullies, arms crossed.
 text: Two sixth-years corner you by the boathouse, looking for trouble. Then a red sash steps between you. "Problem?" says Bram, cracking his knuckles. They leave fast.
 > left: Thank him awkwardly
-  rel bram +6
+  rel bram +medium
   say: "Don't make it weird," he says, and walks off. He's smiling, slightly.
 > right: Offer your hand
-  rel bram +10
+  rel bram +large
   bond bram friend
   say: He stares at your hand. Then he shakes it, hard. "Fine. Friends. But I'm still giving you demerits." He does. Fewer.
 
@@ -183,18 +185,19 @@ tags: rival danger
 scene: A white glove lying on a dormitory floor, a red sash folded beside it, a crowd peering through the doorway.
 text: Bram throws a glove at your feet in front of half the dormitory. "Formal challenge. Dawn. Dueling green. Unless you're a coward." Everyone is watching.
 > left: Decline
-  renown -4
-  mood -3
+  renown -small
+  mood -tiny
   say: "Coward," he says, delighted. It sticks for a while. Then people forget. Mostly.
 > right: Accept
-  check arcana 20 + year * 4:
-    renown +8
-    rel bram +5
-    say: You disarm him in three moves. The crowd goes wild. Bram, on the grass, starts laughing. "Fine," he says. "Fine."
-  else:
-    health -10
-    renown +2
-    say: He wins. But it takes him a full ten minutes, and he's limping too. He nods to you after. Grudging respect.
+  challenge spell medium:
+    win:
+      renown +large
+      rel bram +small
+      say: You disarm him in three moves. The crowd goes wild. Bram, on the grass, starts laughing. "Fine," he says. "Fine."
+    lose:
+      health -large
+      renown +small
+      say: He wins. But it takes him a full ten minutes, and he's limping too. He nods to you after. Grudging respect.
 
 # ================= PROFESSOR THORNE =================
 
@@ -209,18 +212,19 @@ scene: A steep lecture theatre, a stern grey-bearded professor pointing a long f
 text: First Arcana lecture. Professor Thorne surveys the room like a hawk over a field of mice. His finger lands on you. "You. What is the first law of the Arcane?"
 > left: Admit you don't know
   meet thorne
-  rel thorne +4
+  rel thorne +small
   say: "Correct answer," he says. "The first law is: know what you don't know. The rest of you, write that down."
 > right: Take a guess (Lore)
   meet thorne
-  check lore 10:
-    rel thorne +5
-    grades +2
-    say: "Energy follows intention." His eyebrows twitch. "Acceptable." The room exhales.
-  else:
-    rel thorne -2
-    mood -2
-    say: Your guess is so wrong the student next to you gasps. Thorne simply says, "No," and moves on.
+  challenge research easy:
+    win:
+      rel thorne +small
+      study +tiny
+      say: "Energy follows intention." His eyebrows twitch. "Acceptable." The room exhales.
+    lose:
+      rel thorne -tiny
+      mood -tiny
+      say: Your guess is so wrong the student next to you gasps. Thorne simply says, "No," and moves on.
 
 @event thorne_office_hours
 title: Office Hours
@@ -233,12 +237,12 @@ tags: study
 scene: A cramped office full of scorched books and a single lit candle, a stern professor leaning back in his chair, fingers steepled.
 text: Thorne stops you after class. "Your casting is sloppy and your instincts are good. That's an annoying combination. Thursdays. Seven o'clock. My office. Don't be late."
 > left: Politely decline — you're stretched thin
-  rel thorne -3
+  rel thorne -tiny
   say: "Hm." He seems neither surprised nor pleased. Thorne is rarely either.
 > right: Be there at seven
-  arcana +3
-  rel thorne +8
-  health -2
+  arcana +medium
+  rel thorne +medium
+  health -tiny
   say: Two hours of brutal drills. At the end, he hands you a book from his own shelf. "Read it. Return it unburnt."
 
 @event thorne_storm_story
@@ -253,17 +257,17 @@ scene: An old professor standing at a rain-lashed window, lightning illuminating
 text: During a thunderstorm, Thorne stops mid-lecture and watches the lightning. "They say I out-dueled a storm once," he says, to nobody in particular. "Would you like to know what actually happened?"
 > left: "Yes, sir."
   gain inspired
-  rel thorne +5
+  rel thorne +small
   say: He lost, he says. Badly. He spent a year learning why. "Losing well," he says, "is the only thing worth teaching." The class is silent.
 > right: Stay quiet
-  rel thorne +1
+  rel thorne +tiny
   say: He shakes his head and returns to the lecture. You'll always wonder.
 
 @event thorne_recommendation
 title: A Letter of Recommendation
 trigger: social
 actor: thorne
-when: rel(thorne) >= 30 and year == 3
+when: rel(thorne) >= 30 and final_year
 weight: 16
 art: letter
 tags: study
@@ -271,34 +275,34 @@ scene: A wax-sealed envelope on a professor's desk with a student's name written
 text: Thorne calls you to his office and slides an envelope across the desk. "The Conclave asked for my recommendations. I wrote one. I don't write many." He pauses. "Don't make me regret it."
 > left: Thank him sincerely
   flag thorne_letter
-  grades +5
-  rel thorne +5
-  mood +8
+  study +medium
+  rel thorne +small
+  mood +medium
   say: "Go away," he says gruffly. "I have marking." You see him smile at the window as you leave.
 > right: Ask why you
   flag thorne_letter
-  grades +5
-  rel thorne +3
+  study +medium
+  rel thorne +small
   say: "Because you ask questions like that," he says. "Most students don't. Go."
 
 @event thorne_disappointed
 title: A Word in Private
 trigger: social
 actor: thorne
-when: grades < 30
+when: (turn > 4 and gpa < 2.0)
 weight: 14
 art: scales
 tags: study crisis
 scene: A professor standing by his desk with a sheaf of red-marked papers, a student standing awkwardly before him.
 text: Thorne holds up your last three essays. All red. "You're better than this," he says. "That's not a compliment. It's an accusation."
 > left: Make excuses
-  rel thorne -4
-  mood -3
+  rel thorne -small
+  mood -tiny
   say: He listens to them all and says nothing. The silence is the worst grade yet.
 > right: Ask for help
-  rel thorne +6
-  grades +5
-  lore +1
+  rel thorne +medium
+  study +medium
+  lore +tiny
   say: He sighs and pulls out a chair. "Sit. We'll start with the first essay, and we'll stay until it's right."
 
 # ================= OLD MAUD =================
@@ -316,13 +320,14 @@ text: Forty chickens are loose on the main lawn, pursued by an old woman in a st
   say: You hear a crash, a squawk and a triumphant cackle behind you. The chickens, it seems, are caught.
 > right: Grab the speckled one
   meet maud
-  check vigor 10:
-    rel maud +8
-    say: You tackle the ringleader. The rest give up. "Good hands," says Old Maud, pressing a warm egg into your palm. "Come for tea."
-  else:
-    rel maud +5
-    health -2
-    say: The ringleader escapes and pecks you, but Maud is impressed by your enthusiasm. "Come for tea. Bring plasters."
+  challenge feat medium:
+    win:
+      rel maud +medium
+      say: You tackle the ringleader. The rest give up. "Good hands," says Old Maud, pressing a warm egg into your palm. "Come for tea."
+    lose:
+      rel maud +small
+      health -tiny
+      say: The ringleader escapes and pecks you, but Maud is impressed by your enthusiasm. "Come for tea. Bring plasters."
 
 @event maud_honey
 title: Honey for a Cold
@@ -335,15 +340,15 @@ tags: nature
 scene: A small cottage kitchen with bundles of herbs hanging from the beams, an old woman pouring golden honey into a steaming mug.
 text: Maud spots you sniffling across the lawn and drags you into her cottage. "Sit," she orders, pouring honey into something steaming that smells of lemon and thunder.
 > left: Drink it all
-  health +12
+  health +large
   lose sick
-  rel maud +4
+  rel maud +small
   say: It tastes like summer and lightning. By morning you're cured and slightly glowing.
 > right: Drink it and help with chores
-  health +8
+  health +medium
   lose sick
-  rel maud +8
-  alchemy +1
+  rel maud +medium
+  alchemy +tiny
   say: You sip and sort herbs while she tells you the names of every plant in the room. You remember most of them.
 
 @event maud_old_student
@@ -358,11 +363,11 @@ chain: hollowstar
 scene: An old woman sitting on a bench by the lake at dusk, looking at the water as if it might look back.
 text: "I was a student here, you know," Maud says, watching the lake. "Sixty years ago. The lake froze one spring. Three of my friends went down to the boathouse that night. Only two came back." She doesn't look at you. "Ask me what I know."
 > left: "You don't have to tell me."
-  rel maud +6
+  rel maud +medium
   say: She pats your hand. "Kind. But time's short, dearie." She tells you anyway, a little at a time, over many cups of tea.
   hollow +1
 > right: "What do you know?"
-  rel maud +4
+  rel maud +small
   hollow +1
   flag knows_founders_seal
   say: "Seven locks, one in each tower. The key's a star that eats light. And the thing below loves a lonely heart." She finally looks at you. "Don't be lonely."
@@ -378,17 +383,18 @@ tags: nature
 scene: Wooden hives in a wildflower meadow, an old woman in a veiled hat lifting a frame dripping with silver honey, bees glinting in the sun.
 text: "The silver bees need moving to the summer meadow," Maud says, handing you a veiled hat. "They're friendly. Mostly. Don't make any sudden thoughts."
 > left: Help with the hives
-  check vigor 12:
-    health +4
-    rel maud +6
-    gold +10
-    say: The bees hum around you like a blessing. Maud gives you a jar of silver honey that sells for ten crowns. You eat half first.
-  else:
-    health -6
-    rel maud +4
-    say: You have a sudden thought. The bees know. You spend the evening with vinegar on your stings.
+  challenge feat trivial:
+    win:
+      health +small
+      rel maud +medium
+      gold +small
+      say: The bees hum around you like a blessing. Maud gives you a jar of silver honey that sells for ten crowns. You eat half first.
+    lose:
+      health -medium
+      rel maud +small
+      say: You have a sudden thought. The bees know. You spend the evening with vinegar on your stings.
 > right: Watch from a safe distance
-  mood +3
+  mood +small
   say: You watch Maud move hives barehanded, singing to them. It's the calmest you've felt all month.
 
 @event maud_ill
@@ -403,12 +409,12 @@ scene: A small cottage bedroom with a patchwork quilt, an old woman propped up o
 text: Maud's chickens are running wild, unfed. You find her in bed, grey-faced and coughing. "Just a chill," she wheezes. "I'm eighty-one. I'm allowed."
 > left: Fetch Sister Amaranth
   flag maud_ill_done
-  rel maud +6
+  rel maud +medium
   say: Amaranth brings tonics and a stern lecture. Maud is back on her feet in a week, grumbling about fuss.
 > right: Look after her yourself for a week
   flag maud_ill_done
-  rel maud +14
-  grades -3
+  rel maud +large
+  study -small
   gain blessed
   say: You feed chickens, brew teas, read her the newspaper. When she's well, she gives you a sprig of rosemary. "You'll do," she says. "You'll do."
 
@@ -425,12 +431,12 @@ scene: A tall pale woman in dark robes pausing behind a student's chair in a can
 text: At dinner, a cool hand rests on the back of your chair. The headmistress. "{player}," she says, though you've never met. "Your marks in Arcana are interesting. Your marks in punctuality, less so." She moves on.
 > left: Stammer an apology
   meet isolde
-  rel isolde +2
+  rel isolde +tiny
   say: She's already three tables away. Every student between you sits a little straighter.
 > right: "Interesting how, Headmistress?"
   meet isolde
-  rel isolde +4
-  renown +2
+  rel isolde +small
+  renown +small
   say: She pauses. Turns. Almost smiles. "Ask me again at the end of your first year," she says. The table stares at you.
 
 @event isolde_tea
@@ -444,16 +450,17 @@ tags: social
 scene: A round tower study at twilight, two delicate teacups on a small table, a headmistress pouring tea with a perfectly steady hand.
 text: An invitation to tea with the headmistress. Students talk about these the way soldiers talk about battles. She pours. "Tell me, {player}: what do you want to become?"
 > left: Give an ambitious answer
-  check charm 18:
-    rel isolde +8
-    renown +3
-    say: She listens without interrupting, then says, "Good. Ambition without arrogance. Rarer than you'd think."
-  else:
-    rel isolde -2
-    say: She nods politely. "Ambition is a fine servant," she says, "and a poor master." You're dismissed shortly after.
+  challenge negotiate trivial:
+    win:
+      rel isolde +medium
+      renown +small
+      say: She listens without interrupting, then says, "Good. Ambition without arrogance. Rarer than you'd think."
+    lose:
+      rel isolde -tiny
+      say: She nods politely. "Ambition is a fine servant," she says, "and a poor master." You're dismissed shortly after.
 > right: Admit you don't know yet
-  rel isolde +6
-  lore +1
+  rel isolde +medium
+  lore +tiny
   say: "Neither did I, at your age," she says. "I still don't, some days. That's the point of an academy." She refills your cup.
 
 @event isolde_warning
@@ -467,15 +474,16 @@ tags: crisis
 scene: A headmistress walking alongside a student in a long colonnade, hands clasped behind her back, speaking without looking at them.
 text: The headmistress falls into step beside you in the colonnade. "I hear your name more often than I'd like," she says pleasantly. "In the wrong rooms. I'd hate to hear it in mine."
 > left: Promise to do better
-  rel isolde +3
-  grades +3
+  rel isolde +small
+  study +small
   lose watched
   say: "Good." She stops walking. You keep going. When you look back, she's gone.
 > right: Defend yourself
-  check charm 20:
-    rel isolde +5
-    lose watched
-    say: You lay it out plainly. She listens, then nods once. "Fair. I'll have a word with certain prefects."
-  else:
-    rel isolde -5
-    say: "Hm," she says. "Let's hope you're right." It doesn't feel like hope.
+  challenge negotiate trivial:
+    win:
+      rel isolde +small
+      lose watched
+      say: You lay it out plainly. She listens, then nods once. "Fair. I'll have a word with certain prefects."
+    lose:
+      rel isolde -small
+      say: "Hm," she says. "Let's hope you're right." It doesn't feel like hope.

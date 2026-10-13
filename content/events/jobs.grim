@@ -14,11 +14,11 @@ tags: job
 scene: A thick leather book with tiny teeth along its pages snapping at a hand reaching for it on a high shelf.
 text: Reshelving in the zoology section, a fat leather book clamps onto your finger and refuses to let go. The head librarian, without looking up, says: "Stroke the spine."
 > left: Muzzle it with a belt
-  health -2
+  health -tiny
   say: You wrestle it into submission and shelve it. It growls at you every time you pass for the rest of the term.
 > right: Stroke the spine and read it
-  lore +3
-  health -3
+  lore +medium
+  health -tiny
   say: It purrs, opens and turns out to be a fascinating treatise on carnivorous plants. It only bites twice more.
 
 @event lib_overdue_professor
@@ -30,11 +30,11 @@ tags: job
 scene: A severe professor towering over a library desk, a stack of books under one arm, a very small student assistant on the other side holding a fines ledger.
 text: Professor Thorne returns a book that is eleven years overdue. The fine, by library rules, is forty crowns. He looks at you. You look at the ledger.
 > left: Waive the fine
-  rel thorne +2
+  rel thorne +tiny
   say: "Hm," says Thorne. You can't tell if you've earned his respect or lost it.
 > right: Enforce the rules
-  rel thorne +5
-  mood -2
+  rel thorne +small
+  mood -tiny
   say: A long silence. Then he pays, in exact change. "Good," he says, and you could swear he almost smiles.
 
 @event lib_restricted_cart
@@ -46,10 +46,10 @@ tags: job mystery
 scene: A wheeled library cart chained shut, piled with black-bound books, parked alone in a candlelit aisle.
 text: You are asked to wheel the Restricted Section returns to the vault. The cart's chain has come loose. One of the books has fallen open on a page that is writing itself.
 > left: Close it without looking
-  grades +1
+  study +tiny
   say: The book snaps shut with a sound like a disappointed sigh. The vault door clangs.
 > right: Read a few lines
-  lore +4
+  lore +medium
   chance 35:
     gain umbral_curse
     say: The words crawl off the page and up your sleeve. That night, you can't get warm.
@@ -67,16 +67,17 @@ tags: job danger
 scene: A low-beamed tavern mid-brawl: a chair in mid-air, a dwarf on a table, cider sloshing everywhere.
 text: A dwarf and a troll disagree about the price of turnips, and the Gilded Newt erupts. A chair flies past your head. The owner is hiding behind the bar, gesturing at you to do something.
 > left: Duck behind the bar too
-  mood -1
+  mood -tiny
   say: You crouch beside the owner and share a bag of crisps while the room destroys itself.
 > right: Break it up
-  check vigor 16:
-    gold +15
-    renown +2
-    say: You slam a tray on the bar and bellow. Silence. The troll apologises. The dwarf tips you fifteen crowns.
-  else:
-    health -8
-    say: You step in. Someone's elbow steps into your face.
+  challenge feat trivial:
+    win:
+      gold +medium
+      renown +small
+      say: You slam a tray on the bar and bellow. Silence. The troll apologises. The dwarf tips you fifteen crowns.
+    lose:
+      health -medium
+      say: You step in. Someone's elbow steps into your face.
 
 @event tavern_star_coin
 title: A Generous Stranger
@@ -90,7 +91,7 @@ text: A hooded stranger nurses a cider all evening and leaves a tip: a black coi
 > left: Refuse the coin
   say: The stranger shrugs and pockets it. When you look again, the corner table is empty and the cider is frozen solid.
 > right: Take it
-  gold +5
+  gold +tiny
   flag star_coin
   hollow +1
   say: The coin is cold as ice and heavier than it should be. You find yourself turning it over in your pocket for days.
@@ -104,12 +105,12 @@ tags: job money
 scene: A ruddy tavern owner leaning on the bar, wiping a mug, a rota pinned behind him covered in crossed-out names.
 text: The owner is short-handed. "Double shifts for a month," he says. "Double pay. I know you've got studies, but you've also got rent."
 > left: Decline
-  grades +1
+  study +tiny
   say: "Fair enough," he says, and asks again next week.
 > right: Take the extra shifts
-  gold +30
-  health -6
-  grades -3
+  gold +large
+  health -medium
+  study -small
   say: A month of late nights and early lectures. Your purse is heavy. So are your eyelids.
 
 # ---------------- Apothecary Clerk ----------------
@@ -123,11 +124,11 @@ tags: job
 scene: Shelves of glass jars in a narrow shop, one jar labelled SLEEPING DRAUGHT glowing an ominous green.
 text: The jar labelled "Sleeping Draught" is green. Sleeping Draught is blue. You're fairly sure the green stuff is Draught of Unending Hiccups. Old Pell is very proud of his labelling.
 > left: Quietly fix the label
-  alchemy +1
+  alchemy +tiny
   say: Nobody ever knows. Somewhere, a customer sleeps soundly instead of hiccupping for a week.
 > right: Point it out to Pell
-  gold +5
-  alchemy +1
+  gold +tiny
+  alchemy +tiny
   say: Pell goes red, then thanks you gruffly and slips you five crowns "for your eyes".
 
 @event apoth_poor_mother
@@ -139,13 +140,13 @@ tags: job
 scene: A tired woman at a shop counter counting copper coins, a small child coughing beside her.
 text: A woman counts out coppers for fever tonic. She's twelve crowns short. Her son coughs into her coat. Pell is in the back room.
 > left: Charge the full price
-  gold +2
-  mood -4
+  gold +tiny
+  mood -small
   say: She leaves without it. The bell on the door rings for a very long time.
 > right: Pay the difference yourself
-  gold -12
-  mood +6
-  renown +2
+  gold -medium
+  mood +medium
+  renown +small
   say: You slip the tonic into her basket. Next week a pie appears on the counter with your name on it.
 
 @event apoth_nightshade_order
@@ -157,12 +158,12 @@ tags: job mystery
 scene: An order slip on a counter listing a dozen deadly reagents, signed with an elegant, illegible flourish.
 text: A note arrives with a sealed purse: a large order of nightshade, grave-moss and powdered moonstone. Legal, technically. Ingredients for something very old and very forbidden, also technically.
 > left: Fill the order
-  gold +20
+  gold +medium
   flag filled_dark_order
   say: The courier who collects it never shows his face. The purse is very generous.
 > right: Refuse and report it
-  rel isolde +4
-  renown +2
+  rel isolde +small
+  renown +small
   say: The headmistress listens to your report in silence. "Thank you," she says. "Tell no one else." She looks worried.
 
 # ---------------- Familiar Stables ----------------
@@ -176,16 +177,17 @@ tags: job nature
 scene: A proud hippogriff in a straw-strewn stall, head lowered, regarding a stable hand who is bowing very deeply.
 text: The new hippogriff won't let anyone near the feed trough. The stablemaster says to bow, keep eye contact and not blink. "Whatever you do, don't blink."
 > left: Leave the feed and run
-  mood -2
+  mood -tiny
   say: You toss the feed bucket and flee. The hippogriff eats it, and the bucket.
 > right: Bow and hold its gaze
-  check vigor 12:
-    vigor +2
-    mood +4
-    say: It bows back. After that it follows you around the stables like a large, feathered dog.
-  else:
-    health -6
-    say: You blinked.
+  challenge feat trivial:
+    win:
+      vigor +small
+      mood +small
+      say: It bows back. After that it follows you around the stables like a large, feathered dog.
+    lose:
+      health -medium
+      say: You blinked.
 
 @event stables_dragon_egg
 title: An Egg in the Hay
@@ -196,8 +198,8 @@ tags: job mystery
 scene: A speckled egg the size of a melon nestled in hay, steam rising from it, a stable hand's lantern held over it.
 text: Mucking out the far stall, you find an egg the size of a melon, nestled in the hay and steaming gently. It's very warm. It's very definitely not a chicken's.
 > left: Report it to Professor Brask
-  renown +3
-  rel maud +2
+  renown +small
+  rel maud +tiny
   say: Brask nearly faints. "Smugglers! A firedrake egg!" It's taken to the menagerie. You get a commendation.
 > right: Keep it
   flag dragon_egg
@@ -212,20 +214,21 @@ tags: danger mystery
 scene: A tiny red dragon perched on a scorched dormitory pillow, a puff of smoke rising from its nostrils, a horrified roommate in the doorway.
 text: At 3am your pillow catches fire. The egg has hatched: a firedrake the size of a kitten, delighted with itself and setting fire to everything it loves. It loves you very much.
 > left: Hand it over to the menagerie
-  mood -3
-  renown +2
+  mood -tiny
+  renown +small
   say: Brask takes it gently. "You'll be able to visit." You do, every week. It always tries to set you on fire, affectionately.
 > right: Hide it as long as you can
-  check guile 18:
-    mood +8
-    renown +5
-    gold -15
-    say: You keep it secret for a month — buying fireproof sheets, raw meat, an asbestos sock — before releasing it in the mountains. It circles once, roaring.
-  else:
-    gain detention
-    grades -5
-    health -5
-    say: The smoke alarm charm goes off in three towers at once. Discovered, singed, and in very deep trouble.
+  challenge deceive trivial:
+    win:
+      mood +medium
+      renown +medium
+      gold -medium
+      say: You keep it secret for a month — buying fireproof sheets, raw meat, an asbestos sock — before releasing it in the mountains. It circles once, roaring.
+    lose:
+      gain detention
+      study -medium
+      health -small
+      say: The smoke alarm charm goes off in three towers at once. Discovered, singed, and in very deep trouble.
 
 @event stables_night_shift
 title: The Sick Pegasus
@@ -238,9 +241,9 @@ text: The oldest pegasus in the stables is sick. Someone has to sit with her ove
 > left: Let Maud do it
   say: You sleep well. Maud is a little slower the next day.
 > right: Take the night shift
-  health -3
-  mood +5
-  rel maud +5
+  health -tiny
+  mood +small
+  rel maud +small
   say: She drinks. You talk to her all night about home. At dawn she stands, shakes her wings, and nuzzles your hair.
 
 # ---------------- First-Year Tutor ----------------
@@ -254,17 +257,18 @@ tags: job
 scene: A tiny first-year in oversized robes pointing a wand at a feather, which is stubbornly not moving, while a tutor watches with infinite patience.
 text: Your tutee has been trying to levitate a feather for three weeks. The feather has not moved. The tutee is starting to cry. You have one more session before their exam.
 > left: Drill the basics, again
-  grades +2
-  mood -2
+  study +tiny
+  mood -tiny
   say: Wrist, word, will. Wrist, word, will. On the exam, the feather twitches. It's enough to pass.
 > right: Try something unorthodox
-  check charm 15:
-    mood +6
-    renown +3
-    say: You tell them to imagine the feather is in love with the ceiling. It shoots upward and sticks there. They pass with distinction.
-  else:
-    mood -3
-    say: You tell them to imagine the feather is in love with the ceiling. They are confused. So is the feather.
+  challenge negotiate trivial:
+    win:
+      mood +medium
+      renown +small
+      say: You tell them to imagine the feather is in love with the ceiling. It shoots upward and sticks there. They pass with distinction.
+    lose:
+      mood -tiny
+      say: You tell them to imagine the feather is in love with the ceiling. They are confused. So is the feather.
 
 @event tutor_bribe
 title: An Indecent Proposal
@@ -275,17 +279,17 @@ tags: job money
 scene: A rich student in tailored robes sliding a heavy coin purse across a study table, smiling smugly.
 text: A rich second-year doesn't want tutoring. He wants an essay. "Thirty crowns," he says, dropping a purse on the table. "Nobody needs to know."
 > left: Refuse
-  grades +1
-  rel isolde +1
+  study +tiny
+  rel isolde +tiny
   say: He sneers and goes elsewhere. Later you see him in detention, scrubbing a cauldron.
 > right: Write the essay
-  gold +30
+  gold +large
   chance 35:
-    grades -8
+    study -large
     gain detention
     say: His professor recognises your style. You both end up in detention. He doesn't speak to you. Fine.
   else:
-    guile +1
+    guile +tiny
     say: He gets a decent mark. You get thirty crowns and a slightly sour feeling.
 
 @event tutor_prodigy
@@ -297,12 +301,12 @@ tags: job
 scene: A small first-year casting a dazzling spell that fills a classroom with light, their tutor watching with complicated feelings.
 text: Your newest tutee casts in a week what took you a year. Then she asks you a question you can't answer. She's eleven.
 > left: Bluff an answer
-  guile +1
-  mood -2
+  guile +tiny
+  mood -tiny
   say: She nods politely. You both know.
 > right: Admit you don't know and find out together
-  lore +3
-  mood +3
+  lore +medium
+  mood +small
   say: You spend an evening in the library together. She thanks you as if you've taught her something. Maybe you have.
 
 # ---------------- Broom Courier ----------------
@@ -316,17 +320,18 @@ tags: job danger
 scene: A courier on a broom bent low against a lightning-lit sky, a parcel strapped to their back, rain sheeting sideways.
 text: An urgent parcel needs to cross the lake tonight. There's a storm. The dispatcher offers double pay to whoever's fool enough. Everyone looks at you.
 > left: Wait for the storm to pass
-  gold -5
+  gold -tiny
   say: The parcel arrives late. The client deducts it from your wages. Rude, but survivable.
 > right: Fly through it
-  check vigor 18:
-    gold +25
-    vigor +2
-    say: You thread the lightning like a needle and land soaked, laughing, with the parcel dry.
-  else:
-    health -10
-    gain injured
-    say: Lightning strikes close enough to stand your hair on end. You lose the broom and gain a limp.
+  challenge feat medium:
+    win:
+      gold +large
+      vigor +small
+      say: You thread the lightning like a needle and land soaked, laughing, with the parcel dry.
+    lose:
+      health -large
+      gain injured
+      say: Lightning strikes close enough to stand your hair on end. You lose the broom and gain a limp.
 
 @event courier_whispering_parcel
 title: The Whispering Parcel
@@ -337,19 +342,20 @@ tags: job mystery
 scene: A brown paper parcel tied with black string on a courier's satchel, frost forming on its corners, faint whispers rising from it.
 text: Your parcel is addressed to "K. Dumont, Stillwater House". It is ice cold and it whispers when you aren't looking at it.
 > left: Deliver it unopened
-  rel kael +4
+  rel kael +small
   meet kael
   say: Kael takes it without a word. His hands shake. The next day, he looks like he hasn't slept.
 > right: Peek inside
-  check guile 14:
-    flag read_kael_parcel
-    hollow +1
-    lore +2
-    say: Inside: a letter in a cold, beautiful hand. "The Star wakes. Come home, or open the door. Your family." You reseal it perfectly.
-  else:
-    rel kael -8
-    meet kael
-    say: The seal hisses as it breaks. Kael is waiting at the door when you arrive. He saw. He says nothing, which is worse.
+  challenge deceive easy:
+    win:
+      flag read_kael_parcel
+      hollow +1
+      lore +small
+      say: Inside: a letter in a cold, beautiful hand. "The Star wakes. Come home, or open the door. Your family." You reseal it perfectly.
+    lose:
+      rel kael -medium
+      meet kael
+      say: The seal hisses as it breaks. Kael is waiting at the door when you arrive. He saw. He says nothing, which is worse.
 
 @event courier_sky_pirates
 title: Sky Pirates
@@ -360,14 +366,15 @@ tags: job danger
 scene: Three ragged figures on patched brooms surrounding a courier above the clouds, cutlasses glinting.
 text: Three figures on patched brooms drop out of a cloud and box you in. "Toll," says their leader, a woman with a parrot that is also on a tiny broom. "Ten crowns or the parcel."
 > left: Pay the toll
-  gold -10
+  gold -small
   say: They let you pass with a salute. The parrot salutes too.
 > right: Outfly them
-  check vigor 20:
-    renown +4
-    gold +5
-    say: You dive through a cloudbank and lose them over the lake. The client tips extra for the excitement.
-  else:
-    health -8
-    gold -15
-    say: They catch you, take the toll, the parcel and your hat. The parrot wears it.
+  challenge feat medium:
+    win:
+      renown +small
+      gold +tiny
+      say: You dive through a cloudbank and lose them over the lake. The client tips extra for the excitement.
+    lose:
+      health -medium
+      gold -medium
+      say: They catch you, take the toll, the parcel and your hat. The parrot wears it.

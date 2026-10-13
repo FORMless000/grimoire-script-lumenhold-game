@@ -231,15 +231,6 @@ when: health < 60 and not has(sick) and not has(injured)
 do:
   health +2
 
-@hook standing_drift
-on: month_start
-label: Coursework
-when: turn > 1 and term and turn % 2 == 0
-do:
-  grades -1
-  if has(slacking):
-    grades -2
-
 @hook fame_fades
 on: month_start
 label: Fading gossip

@@ -332,7 +332,7 @@
     if (r.kind === 'month') { Net.flush(eng, runRecordMeta()); return showMonth(r); }
     if (r.kind === 'map') return showMap(r.view);
     if (r.kind === 'ending') {
-      archiveRun(eng); store.del(SAVE_KEY);
+      archiveRun(eng); store.del(SAVE_KEY); clearTimeout(serverSaveTimer);   // a pending autosave push must not resurrect it
       if (Net.available) { Net.flush(eng, runRecordMeta(), { final: true }); Net.deleteSave('auto').catch(() => {}); }
       recordSeen(eng);
       return showEnding(r);

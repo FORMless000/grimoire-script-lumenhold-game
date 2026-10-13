@@ -7,7 +7,7 @@
 @event y3_career_fair
 title: The Career Fair
 trigger: auto
-when: year == 3 and month == 2
+when: final_year and month == 2
 priority: 42
 type: menu
 art: scroll
@@ -46,7 +46,7 @@ text: Every guild, order and institution in the kingdom has sent someone to the 
   flag career_teaching
   queue y3_interview now
 > none: Not yet — you'd rather not decide
-  mood +2
+  mood +tiny
   say: You collect a tote bag, three pamphlets and a free quill. The future can wait one more month.
 
 @event y3_interview
@@ -58,23 +58,25 @@ chain: careers
 scene: A small panelled room, a long table, three interviewers and one empty chair facing them.
 text: Three people behind a long table. One takes notes; one smiles too much; one says nothing at all, which is clearly the one who decides. "Tell us," says the smiling one, "why you."
 > left: Let your record speak (Lore)
-  check lore 26:
-    flag career_offered
-    queue y3_offer_letter in 2
-    renown +3
-    say: You talk about what you've learned and, more importantly, what you got wrong and fixed. The silent one writes a single word. You suspect it's "yes".
-  else:
-    mood -5
-    say: You recite your achievements like a shopping list. The silent one looks at the clock. "We'll be in touch," says the smiling one, which means no.
+  challenge research trivial:
+    win:
+      flag career_offered
+      queue y3_offer_letter in 2
+      renown +small
+      say: You talk about what you've learned and, more importantly, what you got wrong and fixed. The silent one writes a single word. You suspect it's "yes".
+    lose:
+      mood -small
+      say: You recite your achievements like a shopping list. The silent one looks at the clock. "We'll be in touch," says the smiling one, which means no.
 > right: Tell them a story (Charm)
-  check charm 24:
-    flag career_offered
-    queue y3_offer_letter in 2
-    renown +3
-    say: You tell them about the night the lake froze, or the night you caught a star, or the night you were wrong. The silent one laughs. Out loud.
-  else:
-    mood -5
-    say: The story goes on too long and ends in the wrong place. Somewhere in the middle you lost them, and yourself.
+  challenge negotiate trivial:
+    win:
+      flag career_offered
+      queue y3_offer_letter in 2
+      renown +small
+      say: You tell them about the night the lake froze, or the night you caught a star, or the night you were wrong. The silent one laughs. Out loud.
+    lose:
+      mood -small
+      say: The story goes on too long and ends in the wrong place. Somewhere in the middle you lost them, and yourself.
 
 @event y3_offer_letter
 title: The Offer
@@ -87,103 +89,104 @@ scene: An envelope with a heavy wax seal on a dormitory desk, unopened, a hand h
 text: A heavy envelope with a seal you recognise from the fair. Inside, a single page: an offer. A place. A future with a start date. It needs a signature by the end of the month.
 > left: Sign it today
   flag career_accepted
-  mood +8
+  mood +medium
   say: Your signature looks strange on the page — like a grown-up's. You pin the letter above your bed and look at it every night.
 > right: Ask them to wait
-  mood -2
-  lore +1
+  mood -tiny
+  lore +tiny
   say: You write back asking for time. They grant it, coolly. The future, it turns out, does not like waiting, but it will.
 
 @event y3_first_year_mentee
 title: Your First-Year
-when: year == 3 and month <= 4
+when: final_year and month <= 4
 weight: 14
 art: feather
 tags: social
 scene: A tiny first-year trotting beside a third-year across the courtyard, firing questions, clutching an enormous timetable.
 text: Third-years are assigned a first-year to mentor. Yours is called Pim, is about the size of a large cat, and has already asked forty-one questions, including "are the stairs alive" and "are YOU alive".
 > left: Answer every question honestly
-  mood +4
-  charm +2
+  mood +small
+  charm +small
   say: Yes, the stairs are alive. Yes, you are alive. No, the lake is not "friendly". Pim takes notes. By spring, Pim is explaining things to other first-years, wrongly but with total confidence.
 > right: Teach Pim to find answers alone
-  lore +2
-  grades +2
+  lore +small
+  study +tiny
   say: You hand Pim a library card and a map. Pim is furious for a week, then unstoppable. The librarian now knows Pim by name. And fears Pim, slightly.
 
 @event y3_last_lanterns
 title: The Last Lantern Night
-when: year == 3 and month == 2
+when: final_year and month == 2
 weight: 40
 art: lantern
 tags: festival
 scene: A lone student on the shore at night holding an unlit lantern, hundreds of others already drifting over the dark lake.
 text: Your last Lantern Night. You stand on the shore with an unlit lantern and a pen and realise you have no idea what to wish for. Three years ago it was obvious. Now it isn't.
 > left: Wish for the people you'll leave behind
-  mood +6
+  mood +medium
   say: You write all their names. It takes the whole lantern. It rises slowly, heavily, and you watch it until it is just a star among stars.
 > right: Leave it blank
-  lore +1
-  mood +2
+  lore +tiny
+  mood +tiny
   say: You let it go empty. Strangely, it rises higher than all the others. Maybe the lake likes not knowing either.
 
 @event y3_thesis
 title: The Final Thesis
-when: year == 3 and month >= 5 and month <= 8
+when: final_year and month >= 5 and month <= 8
 weight: 16
 art: book
 tags: study
 scene: A desk buried in drafts, a wall of pinned notes connected by string, a single candle and a single exhausted student.
 text: Every third-year writes a final thesis. You could write something safe and solid — or you could take on the question nobody has answered in three hundred years: why the academy was built above a lake.
 > left: Safe and solid
-  grades +6
+  study +medium
   say: Two hundred pages on the thermodynamics of hovering charms. Impeccable. Unremarkable. Your examiners will sleep well.
 > right: The question nobody answered
-  check lore 28:
-    grades +10
-    renown +6
-    hollow +1
-    say: Your thesis is so good that the headmistress asks for the only copy — and then, very politely, does not give it back.
-  else:
-    grades -4
-    mood -4
-    say: You chase the question until it runs out of archive. Your thesis ends mid-sentence, like the founders' ledger. The examiners are not amused.
+  challenge research trivial:
+    win:
+      study +large
+      renown +medium
+      hollow +1
+      say: Your thesis is so good that the headmistress asks for the only copy — and then, very politely, does not give it back.
+    lose:
+      study -small
+      mood -small
+      say: You chase the question until it runs out of archive. Your thesis ends mid-sentence, like the founders' ledger. The examiners are not amused.
 
 @event y3_portrait
 title: Sitting for the Portrait
-when: year == 3 and month >= 7
+when: final_year and month >= 7
 weight: 12
 art: mirror
 tags: story
 scene: An old painter at an easel in a sunlit studio, a student posing stiffly in robes, half-finished portraits of past graduates watching from the walls.
 text: Every graduate's portrait hangs in the long gallery — and every portrait, eventually, starts talking. You have one sitting to decide who will be gossiping on that wall for the next three hundred years.
 > left: Pose solemn and dignified
-  renown +3
+  renown +small
   say: The painter captures you looking wise and distant. Your portrait will be dignified. It will also be dreadfully bored.
 > right: Pose as yourself, mid-laugh
-  mood +6
-  charm +1
+  mood +medium
+  charm +tiny
   say: Your portrait is laughing. Three days after it's hung, it starts telling the other portraits jokes. The gallery has never been louder.
 
 @event y3_letter_to_self
 title: A Letter to Your First-Year Self
-when: year == 3 and month >= 4
+when: final_year and month >= 4
 weight: 10
 art: letter
 tags: home
 scene: A third-year writing by candlelight, a box of keepsakes open beside them: a pressed flower, a ticket stub, a borrowed wand returned.
 text: The Divination department runs a tradition: write a letter to your first-year self. They swear it will be delivered. Nobody knows how. Some third-years swear they received theirs.
 > left: Tell them it'll be all right
-  mood +6
+  mood +medium
   say: You write: "It's going to be all right. Not easy. All right." The next morning the letter is gone, and you remember, very faintly, reading it once on a sky-barge.
 > right: Warn them about everything
-  lore +2
-  mood -2
+  lore +small
+  mood -tiny
   say: You write eleven pages of warnings. The letter is returned unopened with a note in Divination ink: "Some things must be learned the hard way."
 
 @event y3_maud_seeds
 title: Seeds for Later
-when: year == 3 and month >= 9 and met(maud) and rel(maud) >= 15
+when: final_year and month >= 9 and met(maud) and rel(maud) >= 15
 actor: maud
 weight: 16
 art: flower
@@ -191,17 +194,17 @@ tags: nature social
 scene: An old woman pressing a small paper packet of seeds into a student's hands at the garden gate, bees drifting in the evening light.
 text: Maud presses a paper packet into your hands. "Seeds," she says. "From the secret garden. Plant them wherever you end up. They'll grow anywhere someone is a bit kind to them." She sniffs. "Like you did."
 > left: Hug her
-  rel maud +10
-  mood +8
+  rel maud +large
+  mood +medium
   say: She protests for exactly one second and then hugs back, fierce and small and smelling of rosemary. "Go on," she says. "Before I get soppy."
 > right: Promise to come back and visit
-  rel maud +6
+  rel maud +medium
   flag promised_maud
   say: "Every summer," you promise. "We'll see," she says, but she writes it on her calendar, in ink, which for Maud is a blood oath.
 
 @event y3_last_duel
 title: One Last Duel
-when: year == 3 and month >= 6 and (has(club_dueling) or flag(tournament_champion)) and met(lyra)
+when: final_year and month >= 6 and (has(club_dueling) or flag(tournament_champion)) and met(lyra)
 actor: lyra
 weight: 16
 art: duel
@@ -209,39 +212,40 @@ tags: rival
 scene: Two duelists bowing in an empty dueling ring at dawn, no crowd, no referee, just the mist and the lake beyond.
 text: Dawn, the empty dueling ring, no crowd. Lyra is waiting. "No referee," she says. "No points. Just one last duel, for us. So we know."
 > left: Duel her with everything
-  check arcana 34:
-    rel lyra +8
-    renown +4
-    say: It lasts eleven minutes. Nobody wins. You both end up flat on your backs, laughing at the sky. "Now we know," she says.
-  else:
-    rel lyra +6
-    health -6
-    say: She wins, cleanly. Then she helps you up and doesn't let go of your hand for a moment longer than necessary. "Now we know."
+  challenge spell trivial:
+    win:
+      rel lyra +medium
+      renown +small
+      say: It lasts eleven minutes. Nobody wins. You both end up flat on your backs, laughing at the sky. "Now we know," she says.
+    lose:
+      rel lyra +medium
+      health -medium
+      say: She wins, cleanly. Then she helps you up and doesn't let go of your hand for a moment longer than necessary. "Now we know."
 > right: Lower your wand and just talk
-  rel lyra +10
-  if love(lyra) >= 20:
-    love lyra +6
+  rel lyra +large
+  if spark(lyra) >= 20:
+    spark lyra +small
   say: You talk until the mist burns off. About fire, and mothers, and what comes after. It turns out you didn't need to duel to know.
 
 @event y3_time_capsule
 title: The Time Capsule
-when: year == 3 and month >= 8 and bonds(friend) + bonds(close) + bonds(partner) >= 2
+when: final_year and month >= 8 and bonds(friend) + bonds(close) + bonds(partner) >= 2
 weight: 14
 art: key
 tags: social
 scene: A group of students kneeling around a hole under an old oak, lowering in a battered tin box sealed with wax.
 text: Your friends have a battered tin box, a shovel and a plan: bury a time capsule under the old oak, to be opened in twenty years. Everyone puts something in. What will you give?
 > left: Something precious
-  mood +8
+  mood +medium
   say: You put in the first thing you ever enchanted. It's ugly and crooked and it still hums. Someone cries, and blames the dirt.
 > right: Something ridiculous
-  mood +10
+  mood +large
   say: You put in a single sock, labelled "EVIDENCE". In twenty years, nobody will remember why. That's the point.
 
 @event y3_speech
 title: The Graduation Speech
 trigger: auto
-when: year == 3 and month == 11 and (renown >= 40 or grades >= 70)
+when: final_year and month == 11 and (renown >= 40 or gpa >= 3.0)
 priority: 45
 actor: isolde
 art: crown
@@ -249,11 +253,11 @@ tags: story
 scene: A headmistress handing a scroll to a student in an empty great hall, rows of chairs set out for a ceremony that hasn't happened yet.
 text: The headmistress catches you in the great hall, where chairs are already being set out. "Each year one graduate speaks for their class," she says. "This year, the faculty would like it to be you."
 > left: Accept and write something honest
-  renown +8
-  mood +6
-  rel isolde +5
+  renown +large
+  mood +medium
+  rel isolde +small
   say: You write about fear, and friends, and the lake, and the things you didn't know you'd miss. When you practise it alone, your voice cracks in the same place every time. You leave it in.
 > right: Decline — someone else deserves it
-  rel isolde +3
-  charm +1
+  rel isolde +small
+  charm +tiny
   say: "Interesting," says the headmistress, which from her is a medal. The speech goes to a nervous first-generation student who absolutely brings the house down.

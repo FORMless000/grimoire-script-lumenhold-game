@@ -31,11 +31,11 @@ group: origin
 art: scroll
 desc: The Crown pays your way — as long as your standing stays above 30.
 tick:
-  if grades >= 30:
+  if gpa >= 2.0:
     gold +5
 on_add:
   lore +5
-  grades +8
+  study +large
 
 @state origin_hedge
 name: Hedge-Witch's Grandchild
@@ -312,7 +312,7 @@ art: feather
 desc: Explaining the difference between a hex and a jinx, again.
 tick:
   gold +12
-  grades +1
+  study +tiny
   mood -1
 
 @state job_courier
@@ -403,7 +403,7 @@ art: scales
 desc: One more failure and the board will not be lenient. Raise your Standing above 35 to clear it.
 tick:
   mood -2
-  if grades >= 35:
+  if gpa >= 2.0:
     lose probation
 
 @state in_debt
@@ -468,7 +468,7 @@ kind: buff
 art: owl
 desc: Mira's gift. It hoots the hour, mostly correctly, and remembers your homework.
 tick:
-  grades +1
+  study +tiny
 
 @state training
 name: Tournament Training
@@ -488,7 +488,7 @@ art: potion
 duration: 1
 desc: You haven't blinked in eleven hours. Your notes are immaculate.
 tick:
-  grades +3
+  study +small
   health -3
 
 @state haunted

@@ -22,13 +22,13 @@ chain: hollowstar
 scene: A dreamscape: a frozen lake seen from beneath, a round door glowing at the bottom, and above it a star that is a hole in the sky.
 text: You dream of the lake from underneath. There is a round door at the bottom, and above the water a star that is not a light but an absence. A voice says your name like it is tasting it. You wake with frost on your pillow.
 > left: Write the dream down
-  lore +2
+  lore +small
   hollow +1
   gain hollow_dreams
   say: Your notes fill four pages. In the morning you don't remember writing the last line: "It is not asleep. It is waiting."
 > right: Ask Seraphine what it means
   meet seraphine
-  rel seraphine +5
+  rel seraphine +small
   gain hollow_dreams
   say: Seraphine listens, then hands you a sprig of lavender. "It won't stop the dreams," she says. "But it'll make them smell nicer."
 
@@ -42,11 +42,11 @@ chain: hollowstar
 scene: A frozen fountain in a moonlit courtyard; a tall man in a grey coat facing a younger man, frost spreading from both.
 text: Late at night in the courtyard, Kael is arguing with a tall man in a grey coat. The fountain between them has frozen mid-splash. "You will open it," the man says calmly, "or your sister will."
 > left: Slip away unseen
-  guile +1
+  guile +tiny
   hollow +1
   say: You back into the shadows. The man in grey turns his head and looks straight at where you're hiding, then smiles and walks away.
 > right: Step out and interrupt
-  rel kael +10
+  rel kael +large
   hollow +1
   flag confronted_grey
   say: "Everything all right?" The man in grey studies you, nods politely and leaves. Kael's hands are shaking. "You shouldn't have done that," he says. "...Thank you."
@@ -61,17 +61,18 @@ chain: hollowstar
 scene: A dusty archive vault, a giant ledger open on a lectern, one page carefully razored out.
 text: In the archive vault you find the Founders' Ledger, three hundred years old. The entry for the academy's founding year has been cut out with a razor. But the page beneath still holds the impression of the pen.
 > left: Leave it — this feels dangerous
-  mood +1
+  mood +tiny
   say: You close the ledger. The dust settles. Some doors are better left alone. Probably.
 > right: Rub charcoal over the page
-  check lore 18:
-    flag knows_founders_seal
-    hollow +1
-    lore +2
-    say: Ghostly letters emerge: "Seven towers, seven locks. The Star sleeps beneath the water. The key is a star that holds no light." The founders built the academy as a seal.
-  else:
-    lore +1
-    say: The impression is too faint. You make out only three words: "...beneath the water..."
+  challenge research trivial:
+    win:
+      flag knows_founders_seal
+      hollow +1
+      lore +small
+      say: Ghostly letters emerge: "Seven towers, seven locks. The Star sleeps beneath the water. The key is a star that holds no light." The founders built the academy as a seal.
+    lose:
+      lore +tiny
+      say: The impression is too faint. You make out only three words: "...beneath the water..."
 
 @event hs_kael_truth
 title: What Kael Is Running From
@@ -85,16 +86,16 @@ scene: Two students sitting on the edge of the frozen boathouse jetty at night, 
 text: Kael sits with you on the boathouse jetty. "My family serve something under this lake," he says at last. "They sent me here to open its door. I came to stop them. Some nights I'm not sure which I'll actually do."
 > left: "Then we stop them together."
   flag kael_told kael_ally
-  rel kael +12
-  love kael +4
+  rel kael +large
+  spark kael +tiny
   hollow +1
   if bond(kael) == "none":
     bond kael friend
   say: He looks at you for a long moment, and the frost on the jetty melts a little. "Together," he repeats, as if trying out a word from another language.
 > right: Tell the headmistress
   flag kael_told reported_kael
-  rel kael -30
-  rel isolde +6
+  rel kael -huge
+  rel isolde +medium
   hollow +1
   say: The headmistress thanks you gravely. The next day Kael is moved to a room in the headmistress's tower. He doesn't look at you anymore.
 
@@ -111,11 +112,11 @@ text: The black-starred relic you've been carrying burns suddenly, so cold it fe
   flag threw_star
   unflag star_coin bell_fragment
   hollow +1
-  mood +2
+  mood +tiny
   say: It sinks without a ripple. The mark on your hand fades — almost entirely. Something under the water sighs.
 > right: Keep it. Feel the power.
   gain star_mark
-  arcana +3
+  arcana +medium
   hollow +1
   say: The mark pulses with every heartbeat. Spells come easier now. Much easier. That should probably worry you more than it does.
 
@@ -130,11 +131,11 @@ scene: A grey-coated man sitting uninvited at a library table, a black velvet bo
 text: The man in grey is waiting at your library table. "You've been asking questions about the Star," he says pleasantly. "It's noticed you. It could make you extraordinary. All it wants is for someone to open a door."
 > left: "Get out."
   flag grey_offer_seen
-  mood +2
+  mood +tiny
   say: He inclines his head and leaves. The candles return to yellow. You realise your hands are trembling.
 > right: "...What would it give me?"
   flag grey_offer_seen hollow_tempted
-  arcana +4
+  arcana +medium
   hollow +1
   say: He shows you, just for a moment. Power, endless and cold. When he's gone, you can still taste it.
 
@@ -148,22 +149,24 @@ chain: hollowstar
 scene: The top of a narrow, abandoned tower, cobwebbed and moonlit, with a wall bearing a star-shaped recess.
 text: The seventh tower has been locked for a century. You find a way in. At the very top, a single room: dust, moonlight, and a star-shaped hollow in the wall, holding something that does not reflect any light.
 > left: Take it quietly (Guile)
-  check guile 18:
-    flag star_key
-    hollow +1
-    say: A key shaped like a star, black as a hole in the world. The tower shudders as you lift it, then is still.
-  else:
-    gain detention
-    mood -4
-    say: A ward shrieks. A prefect finds you on the stairs. You get detention and a very long look from the headmistress.
+  challenge deceive trivial:
+    win:
+      flag star_key
+      hollow +1
+      say: A key shaped like a star, black as a hole in the world. The tower shudders as you lift it, then is still.
+    lose:
+      gain detention
+      mood -small
+      say: A ward shrieks. A prefect finds you on the stairs. You get detention and a very long look from the headmistress.
 > right: Take it boldly (Arcana)
-  check arcana 22:
-    flag star_key
-    hollow +1
-    say: You tear through the ward with brute force. The key comes free. Every candle in the academy goes out for one second.
-  else:
-    health -12
-    say: The ward throws you down two flights of stairs.
+  challenge spell trivial:
+    win:
+      flag star_key
+      hollow +1
+      say: You tear through the ward with brute force. The key comes free. Every candle in the academy goes out for one second.
+    lose:
+      health -large
+      say: The ward throws you down two flights of stairs.
 
 @event hs_isolde_summons
 title: The Headmistress Knows
@@ -179,13 +182,13 @@ text: The headmistress summons you to her tower. "You have been following the sa
 > left: Walk away
   meet isolde
   flag hollow_out
-  mood +3
+  mood +small
   say: "Wise," she says, and you can't tell if she means it. "Then stay above, and keep the first-years indoors."
 > right: "I'll be there."
   meet isolde
   flag warden_trial
-  rel isolde +10
-  arcana +2
+  rel isolde +large
+  arcana +small
   say: She presses something cold into your hand: a silver ward-ring. "Then learn quickly. You have until Blossomtide."
 
 @event hs_the_night
@@ -202,9 +205,9 @@ text: In the middle of spring, the lake freezes in a single breath. Cracks glow 
   queue hs_beneath now
   say: You run for the boathouse. Behind you, someone is shouting your name. You don't stop.
 > right: Stay above and protect the students
-  health -10
-  renown +8
-  rel isolde +4
+  health -large
+  renown +large
+  rel isolde +small
   flag hollow_held_line
   say: You hold the doors of the first-year tower all night against things made of frost and whispers. By dawn the lake thaws. Something below is still asleep — for now.
 
@@ -221,30 +224,31 @@ text: The tunnel ends at the round door. It stands open a crack. Through it, the
 > seal: Seal the door
   hint: Needs the star key or the founders' secret. Arcana check.
   when: flag(star_key) or flag(knows_founders_seal) or flag(warden_trial)
-  check arcana 30 - (flag(kael_ally) * 8) - (flag(warden_trial) * 6) - (flag(star_key) * 6):
-    flag hollow_sealed
-    renown +20
-    mood +10
-    lose star_mark
-    lose hollow_dreams
-    queue hs_aftermath in 1
-    say: You speak the founders' words and the door grinds shut. The Star screams without sound. Above, the ice cracks and the lake breathes again.
-  else:
-    health -30
-    flag hollow_sealed
-    lose hollow_dreams
-    queue hs_aftermath in 1
-    if flag(kael_ally):
-      rel kael +10
-      say: Your seal falters — and Kael throws his own strength into it, every ounce of frost in him. The door closes. He doesn't wake for three days.
-    else:
-      say: The seal holds, barely, and takes most of you with it. You wake in the infirmary a week later.
+  challenge spell easy:
+    win:
+      flag hollow_sealed
+      renown +huge
+      mood +large
+      lose star_mark
+      lose hollow_dreams
+      queue hs_aftermath in 1
+      say: You speak the founders' words and the door grinds shut. The Star screams without sound. Above, the ice cracks and the lake breathes again.
+    lose:
+      health -huge
+      flag hollow_sealed
+      lose hollow_dreams
+      queue hs_aftermath in 1
+      if flag(kael_ally):
+        rel kael +large
+        say: Your seal falters — and Kael throws his own strength into it, every ounce of frost in him. The door closes. He doesn't wake for three days.
+      else:
+        say: The seal holds, barely, and takes most of you with it. You wake in the infirmary a week later.
 > bargain: Accept the Star's bargain
   hint: Power beyond measure. A voice in your head forever.
   flag hollow_bargain
-  arcana +20
+  arcana +huge
   gain star_mark
-  mood -10
+  mood -large
   lose hollow_dreams
   say: You take what it offers. The door closes on its own — for now. The Star settles into the back of your mind like a cat finding a warm lap.
 > open: Open the door
@@ -252,8 +256,8 @@ text: The tunnel ends at the round door. It stands open a crack. Through it, the
   when: flag(hollow_tempted)
   end ending_hollow_claimed
 > flee: Run
-  health -15
-  mood -10
+  health -large
+  mood -large
   flag hollow_fled
   say: You run until the tunnel spits you out onto the shore. Behind you, the door is still ajar. In the morning, the headmistress's hair has gone white.
 
@@ -266,16 +270,16 @@ chain: hollowstar
 scene: The lake glittering in spring sunshine, students skimming stones, a bandaged figure sitting on the jetty.
 text: The lake glitters as if nothing happened. Most of the academy believes there was a strange spring frost. The headmistress knows better. So does Kael, who finds you on the jetty with two cups of tea.
 > left: Sit with him in silence
-  rel kael +10
-  mood +8
+  rel kael +large
+  mood +medium
   say: You watch the water. It's just water, now. Kael's tea, for once, doesn't freeze.
 > right: Tell him how you feel
-  if love(kael) >= 25:
-    love kael +15
+  if spark(kael) >= 25:
+    spark kael +large
     bond kael partner
     say: He kisses you, and for the first time since you've known him, his hands are warm.
   else:
-    rel kael +12
+    rel kael +large
     if bond(kael) == "none":
       bond kael close
     say: "I owe you everything," he says. "I'm not good at owing people. I'll learn."
@@ -291,15 +295,16 @@ scene: A girl in white furs standing at the academy gates in a snowstorm that is
 text: A girl in white furs is waiting at the gates in a private snowstorm. Kael's younger sister, Ilse. "If my brother won't open it," she says, "I will. Unless you can give me a reason not to."
 > left: Convince her (Charm)
   flag met_sister
-  check charm 22:
-    rel kael +10
-    hollow +1
-    say: You talk for an hour. Then she's crying, and Kael is holding her, and the snow stops. She stays in the village to be near him.
-  else:
-    mood -4
-    say: She listens politely and leaves. "We'll see each other again," she says. "Beneath the water."
+  challenge negotiate trivial:
+    win:
+      rel kael +large
+      hollow +1
+      say: You talk for an hour. Then she's crying, and Kael is holding her, and the snow stops. She stays in the village to be near him.
+    lose:
+      mood -small
+      say: She listens politely and leaves. "We'll see each other again," she says. "Beneath the water."
 > right: Warn the headmistress
   flag met_sister
-  rel isolde +4
-  rel kael -5
+  rel isolde +small
+  rel kael -small
   say: Ilse is escorted from the grounds. Kael understands. He says he understands. He's quiet for a long time.

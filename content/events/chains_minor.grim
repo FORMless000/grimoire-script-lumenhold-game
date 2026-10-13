@@ -18,19 +18,20 @@ chain: forbidden
 scene: A heavy iron door at the end of a library aisle, a silver key turning in its lock, a candle held low.
 text: Midnight. The silver key fits the Restricted Section door perfectly. Beyond it, shelves of black-bound books breathe softly in the dark. Somewhere, a prefect's footsteps.
 > left: Turn back
-  mood -1
+  mood -tiny
   flag forbidden_abandoned
   say: You lock the door again and hang the key on a nail in your wardrobe. Some nights you hear it rattling.
 > right: Slip inside
-  check guile 14:
-    lore +4
-    queue forbidden_section_2 in 2
-    say: You spend two hours reading by candle-stub. You leave with a head full of things no first-year should know.
-  else:
-    gain detention
-    gain watched
-    rel bram -6
-    say: Bram Hollis is waiting by the door when you come out. He is smiling. It's the worst smile you've ever seen.
+  challenge deceive trivial:
+    win:
+      lore +medium
+      queue forbidden_section_2 in 2
+      say: You spend two hours reading by candle-stub. You leave with a head full of things no first-year should know.
+    lose:
+      gain detention
+      gain watched
+      rel bram -medium
+      say: Bram Hollis is waiting by the door when you come out. He is smiling. It's the worst smile you've ever seen.
 
 @event forbidden_section_2
 title: The Codex of Hollow Names
@@ -41,11 +42,11 @@ chain: forbidden
 scene: A book bound in something that is not leather, open on a reading stand, its letters slowly rearranging themselves.
 text: On your third visit, a book finds you. It falls from a high shelf and lands open at your feet: the Codex of Hollow Names. The first page is a list of names. The last one is still being written. It's yours.
 > left: Put it back
-  mood -2
+  mood -tiny
   say: You shelve it. When you look back, it has fallen again, open at the same page.
 > right: Read it
-  lore +3
-  arcana +3
+  lore +medium
+  arcana +medium
   hollow +1
   queue forbidden_section_3 in 2
   chance 45:
@@ -65,15 +66,15 @@ scene: A tall silhouette in the doorway of the Restricted Section, holding a lan
 text: A lantern blazes in the doorway. Not a prefect this time: the headmistress herself. She looks at the book in your hands, then at you, for a very long time. "Most students who find that book," she says, "don't put it down."
 > left: Apologise and accept punishment
   meet isolde
-  grades -6
+  study -medium
   gain detention
-  rel isolde +3
+  rel isolde +small
   unflag forbidden_key
   say: She takes the key. "Detention. And come to my tower on Thursdays. If you're going to learn dangerous things, you'll learn them properly."
 > right: Ask her what it means
   meet isolde
-  rel isolde +6
-  lore +3
+  rel isolde +medium
+  lore +medium
   hollow +1
   unflag forbidden_key
   say: A long pause. "It means something is waking, and it is looking for help. Make sure it doesn't find yours." She takes the key and leaves you the candle.
@@ -90,12 +91,12 @@ chain: curse
 scene: A student wrapped in three blankets beside a roaring fire, breath still fogging the air, fingertips grey.
 text: The cold under your skin is getting worse. Sister Amaranth's tonics do nothing. She looks troubled. "This isn't an illness. It's a hunger." She lowers her voice. "Old Maud might know something. Don't tell anyone I said so."
 > left: Endure it
-  mood -3
-  arcana +1
+  mood -tiny
+  arcana +tiny
   say: You pile on blankets and keep going. The cold whispers sometimes. You pretend not to hear.
 > right: Go to Old Maud
   meet maud
-  rel maud +3
+  rel maud +small
   queue curse_cure_2 in 1
   say: Maud takes one look at your fingertips and puts the kettle on. "Moonpetal," she says. "Grows in the Whisperwood. Only blooms at midnight. You'll fetch it yourself — the cure has to come from the cursed."
 
@@ -108,24 +109,26 @@ chain: curse
 scene: A dark forest at midnight, a single silver flower glowing in a clearing, eyes watching from between the trees.
 text: The Whisperwood at midnight. Things move between the trees. In a clearing, a single silver flower is opening, and between you and it stands a stag made of shadow.
 > left: Sneak around it
-  check guile 16:
-    lose umbral_curse
-    rel maud +8
-    say: You creep through the bracken and pluck the moonpetal. Maud's brew tastes like moonlight and burnt sugar. The cold is gone.
-  else:
-    health -10
-    queue curse_cure_2 in 2
-    say: The stag sees you. You run. No moonpetal tonight. Maud says the next bloom is in two months.
+  challenge deceive trivial:
+    win:
+      lose umbral_curse
+      rel maud +medium
+      say: You creep through the bracken and pluck the moonpetal. Maud's brew tastes like moonlight and burnt sugar. The cold is gone.
+    lose:
+      health -large
+      queue curse_cure_2 in 2
+      say: The stag sees you. You run. No moonpetal tonight. Maud says the next bloom is in two months.
 > right: Face the stag
-  check vigor 18:
-    lose umbral_curse
-    vigor +2
-    rel maud +8
-    say: You stand your ground. The stag lowers its head — and steps aside. Maud's brew drives the cold out of your bones.
-  else:
-    health -12
-    queue curse_cure_2 in 2
-    say: The stag charges. You wake up in the bracken at dawn. Maud bandages you. "Again in two months," she says.
+  challenge feat trivial:
+    win:
+      lose umbral_curse
+      vigor +small
+      rel maud +medium
+      say: You stand your ground. The stag lowers its head — and steps aside. Maud's brew drives the cold out of your bones.
+    lose:
+      health -large
+      queue curse_cure_2 in 2
+      say: The stag charges. You wake up in the bracken at dawn. Maud bandages you. "Again in two months," she says.
 
 # ---------------- Grisk the Moneylender ----------------
 
@@ -139,10 +142,10 @@ chain: debt
 scene: A small goblin in a velvet waistcoat and pince-nez, sitting on a crate in an alley, a ledger in one hand and a quill behind his ear.
 text: A goblin in a velvet waistcoat falls into step beside you. "Grisk," he says, "friend to the temporarily embarrassed. Sixty crowns, today. Twelve a month for six months. Very reasonable."
 > left: No thank you
-  mood -1
+  mood -tiny
   say: "My door is always open," Grisk says. You suspect it is actually always locked.
 > right: Take the loan
-  gold +60
+  gold +huge
   gain in_debt
   debt_paid = 0
   debt_missed = 0
@@ -161,15 +164,16 @@ text: Grisk finds you in the library. "I could cancel your debt," he murmurs. "A
 > left: Refuse
   say: "Pity." He makes a note in his ledger. It looks expensive.
 > right: Do the favour
-  check guile 18:
-    lose in_debt
-    flag grisk_favour
-    hollow +1
-    say: You razor a page from the oldest ledger in the archive. Grisk tears up your debt. You notice the page had a black star on it.
-  else:
-    gain detention
-    grades -5
-    say: The archivist catches you with a razor in your hand. Detention. Grisk is nowhere to be found, and the debt stands.
+  challenge deceive trivial:
+    win:
+      lose in_debt
+      flag grisk_favour
+      hollow +1
+      say: You razor a page from the oldest ledger in the archive. Grisk tears up your debt. You notice the page had a black star on it.
+    lose:
+      gain detention
+      study -medium
+      say: The archivist catches you with a razor in your hand. Detention. Grisk is nowhere to be found, and the debt stands.
 
 @event grisk_smuggling
 title: One More Job
@@ -182,17 +186,18 @@ scene: A crate of clinking bottles hidden under a tarp on a dark boathouse dock,
 text: Grisk again. "You were so good last time. A crate needs moving across the lake tonight. Don't open it. Forty crowns."
 > left: You're done with him
   unflag grisk_favour
-  mood +3
+  mood +small
   say: "Everyone's done with me eventually," Grisk says, without rancour. You never see him again.
 > right: Move the crate
-  check guile 16:
-    gold +40
-    say: The crate clinks. It is also, faintly, singing. You deliver it without looking inside. Forty crowns.
-  else:
-    gold +10
-    gain detention
-    rel bram -8
-    say: Bram stops you on the dock. The crate is full of contraband charm-wine. You lose the crate, keep ten crowns and gain a detention.
+  challenge deceive trivial:
+    win:
+      gold +large
+      say: The crate clinks. It is also, faintly, singing. You deliver it without looking inside. Forty crowns.
+    lose:
+      gold +small
+      gain detention
+      rel bram -medium
+      say: Bram stops you on the dock. The crate is full of contraband charm-wine. You lose the crate, keep ten crowns and gain a detention.
 
 # ---------------- Ember the Fox-Spirit ----------------
 
@@ -206,12 +211,12 @@ chain: familiar
 scene: A small red fox lying in the snow at the forest edge, its tail smouldering like a dying campfire, one paw caught in a rusted snare.
 text: At the edge of the forest, a thin plume of smoke. A small fox is caught in a rusted snare, its tail smouldering like an ember. It snarls at you, then whimpers.
 > left: Leave it — it's wild
-  mood -3
+  mood -tiny
   say: You walk away. That night you dream of smoke.
 > right: Free it and bandage the paw
   flag fox_met
-  health -3
-  gold -5
+  health -tiny
+  gold -tiny
   queue fox_returns in 2
   say: It bites you, of course. But it lets you wrap the paw. Then it limps into the trees, glancing back once with eyes like embers.
 
@@ -224,11 +229,11 @@ chain: familiar
 scene: A fox with a softly glowing tail sitting on a stone windowsill at dawn, a ruby glinting at its feet.
 text: Two months later, a fox with a glowing tail is sitting on your windowsill. Its paw has healed. At its feet: a small, dusty ruby.
 > left: Shoo it away
-  gold +15
+  gold +medium
   say: It leaves the ruby and vanishes. You sell the ruby. Somehow you feel you've failed a test.
 > right: Open the window
-  gold +15
-  mood +4
+  gold +medium
+  mood +small
   queue fox_bond in 1
   say: It hops in, inspects your room thoroughly and falls asleep on your pillow. Your pillow is now slightly scorched. You don't mind.
 
@@ -241,17 +246,18 @@ chain: familiar
 scene: A student and a small fire-tailed fox nose to nose, a soft golden light connecting them.
 text: The fox has decided. It follows you to class, sleeps on your feet and growls at Bram. Students aren't allowed unregistered familiars. Registering one costs twenty crowns.
 > left: Hide her (Guile)
-  check guile 12:
-    gain familiar_fox
-    say: You name her Ember. Nobody notices a fox that doesn't want to be noticed.
-  else:
-    gain familiar_fox
-    gold -20
-    say: A professor spots her at once. You pay the fee — and Ember is yours, officially.
+  challenge deceive trivial:
+    win:
+      gain familiar_fox
+      say: You name her Ember. Nobody notices a fox that doesn't want to be noticed.
+    lose:
+      gain familiar_fox
+      gold -medium
+      say: A professor spots her at once. You pay the fee — and Ember is yours, officially.
 > right: Register her properly
-  gold -20
+  gold -medium
   gain familiar_fox
-  rel isolde +2
+  rel isolde +tiny
   say: The registrar stamps a form. "Name?" "Ember," you say. The fox looks smug.
 
 @event fox_helps
@@ -265,14 +271,14 @@ chain: familiar
 scene: A fox nosing through dry leaves under a hedge and emerging with a purse in its jaws.
 text: Ember drags you, by the sleeve, through three corridors and a hedge. She's found something. She's very proud of it.
 > left: Let her keep it
-  mood +4
+  mood +small
   say: It's a sock. Ember is thrilled. You are thrilled for her.
 > right: See what it is
   chance 50:
-    gold +20
+    gold +medium
     say: A lost purse. You return it to its owner, who insists you keep the reward.
   else:
-    lore +2
+    lore +small
     say: A lost page from a professor's lecture notes. Enlightening.
 
 # ---------------- The Haunted Dormitory ----------------
@@ -305,11 +311,11 @@ scene: A translucent girl in old-fashioned school robes, hovering by a window, h
 text: A girl in old-fashioned robes, translucent and very polite. "Prudence Ashworth, class of 1793. Terribly sorry about the socks. I never finished my letter. Could you deliver it? The village. The bakery. Please."
 > left: Exorcise her
   lose haunted
-  arcana +1
-  mood -2
+  arcana +tiny
+  mood -tiny
   say: You speak the banishing rite. She fades with a small, hurt look. Your socks stay put after that. You feel a bit rotten.
 > right: Promise to deliver it
-  rel maud +2
+  rel maud +tiny
   queue ghost_letter in 1
   say: She claps her translucent hands. "Oh, thank you! It's only taken two hundred years."
 
@@ -322,11 +328,11 @@ scene: A cosy village bakery, an old baker reading a yellowed letter with tears 
 text: The bakery has been in the same family for two hundred years. The old baker reads Prudence's letter at the counter. "My great-great-great-grandmother waited for this," she says. "She never stopped."
 > left: Stay and listen to the story
   lose haunted
-  mood +10
-  lore +2
+  mood +large
+  lore +small
   say: Prudence was in love with the baker's daughter. When you return, the ghost is waiting, glowing like a sunrise. Then she's gone, at peace.
 > right: Leave quietly
   lose haunted
-  mood +6
-  renown +2
+  mood +medium
+  renown +small
   say: The baker presses a free loaf into your hands. That night, your socks are arranged into a heart. Then never again.

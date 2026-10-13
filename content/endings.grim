@@ -57,14 +57,14 @@ text: The academy will never fully know what you did beneath the lake. The headm
 priority: 80
 title: The Archmage's Path
 art: wand
-when: arcana >= 50 and grades >= 70
+when: arcana >= 50 and gpa >= 3.0
 text: Graduating with highest honours and a power that makes the candles lean toward you, you are offered an apprenticeship with the Conclave of the Seven Towers. Professor Thorne shakes your hand and says, gruffly, "Don't waste it." You won't.
 
 @ending ending_scholar
 priority: 75
 title: Scholar of the Spire
 art: book
-when: lore >= 70 and grades >= 70
+when: lore >= 70 and gpa >= 3.0
 text: Your thesis is shelved in the Spire Library, in the section students whisper about. The faculty offers you a junior fellowship. You will spend your life among books that bite and secrets that wait — and you could not be happier.
 
 @ending ending_beloved
@@ -113,7 +113,7 @@ text: You may not leave as the brightest or the richest, but you leave surrounde
 priority: 40
 title: By the Skin of Your Teeth
 art: hourglass
-when: grades < 35
+when: (turn > 4 and gpa < 2.0)
 text: Your name is called last, after a long pause and some whispering between examiners. But it is called. You graduate. You are a mage of Lumenhold, and nobody ever has to know the details.
 
 @ending ending_graduate

@@ -130,7 +130,7 @@ text: The courtyard is a riot of banners. Every club wants you, or at least your
   lose club_ledger
   lose club_garden
   lose club_stargazers
-  mood +2
+  mood +tiny
 
 @event job_board
 # retired in phase 2b (was "month == 3 or month == 9"); replaced by job_board_visit (the Job Board place)
@@ -185,16 +185,16 @@ scene: Hundreds of paper lanterns rising off the lake at dusk, each with a wish 
 text: On Lantern Night every student writes a wish on a paper lantern and lets it go over the lake. Rumour says the lanterns that sink were wishes the lake wanted for itself.
 > left: Wish for something selfish
   chance 50:
-    gold +15~30
+    gold +large
     say: Your lantern rises high. The next morning you find coins in your shoe. The lake is generous, and a little creepy.
   else:
-    mood -4
+    mood -small
     say: Your lantern sinks with a hiss. Something under the water now knows what you want.
     flag lake_knows
     hollow +1
 > right: Wish for someone else
-  mood +6
-  renown +2
+  mood +medium
+  renown +small
   say: Your lantern rises and catches the wind. Across the shore, someone you have never met laughs out loud for no reason.
 
 @event kael_arrives
@@ -210,11 +210,11 @@ scene: A pale young man in a fur-lined coat standing at the door of the dining h
 text: Mid-term, the dining hall doors open and frost crawls across the floor. A boy in a fur coat walks in, takes the empty seat beside you, and says nothing at all. The headmistress introduces him as Kael Dumont, a transfer. She does not say from where.
 > left: Leave him be
   meet kael
-  rel kael +2
+  rel kael +tiny
   say: You eat in silence. When you leave, your cup of tea has frozen solid.
 > right: Offer him the bread
   meet kael
-  rel kael +8
+  rel kael +medium
   say: He looks at the bread as if no one has offered him anything in a long time. "...Thank you." His voice sounds like wind over snow.
   flag kael_kindness
 
@@ -230,23 +230,25 @@ tags: study exam retired
 scene: A vast examination hall where floating quills hover over a hundred desks and the windows are thick with frost.
 text: The Winter Trials. A hundred desks, a hundred floating quills, one very old proctor who may be asleep. The first question asks you to explain the Third Law of Correspondence. The second asks you to demonstrate it.
 > left: Lean on theory (Lore)
-  check lore 12 + year * 8:
-    grades +12
-    mood +4
-    say: Your answer is so thorough the quill gets a cramp. Top marks.
-  else:
-    grades -8
-    mood -4
-    say: You write three pages and realise halfway that you have been answering a different question.
+  challenge exam medium:
+    win:
+      study +huge
+      mood +small
+      say: Your answer is so thorough the quill gets a cramp. Top marks.
+    lose:
+      study -large
+      mood -small
+      say: You write three pages and realise halfway that you have been answering a different question.
 > right: Lean on practice (Arcana)
-  check arcana 12 + year * 8:
-    grades +12
-    renown +3
-    say: Your demonstration is clean and bright. The proctor wakes up and applauds.
-  else:
-    grades -8
-    health -4
-    say: The demonstration backfires. Politely, but with smoke.
+  challenge spell medium:
+    win:
+      study +huge
+      renown +small
+      say: Your demonstration is clean and bright. The proctor wakes up and applauds.
+    lose:
+      study -large
+      health -small
+      say: The demonstration backfires. Politely, but with smoke.
 
 @event midwinter_ball
 title: The Midwinter Ball
@@ -262,68 +264,69 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
 > lyra: Ask Lyra
   when: met(lyra) and rel(lyra) >= 15
   hint: She has had six invitations. She hasn't said yes to any.
-  check charm 20 - love(lyra) / 4:
-    love lyra +12
-    rel lyra +6
-    mood +8
-    say: "Finally, someone who doesn't stammer." She dances like a duel — and wins.
-  else:
-    rel lyra -4
-    mood -5
-    say: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
+  challenge negotiate easy:
+    win:
+      spark lyra +medium
+      rel lyra +medium
+      mood +medium
+      say: "Finally, someone who doesn't stammer." She dances like a duel — and wins.
+    lose:
+      rel lyra -small
+      mood -small
+      say: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
 > tobias: Ask Tobias
   when: met(tobias) and rel(tobias) >= 15
   hint: He has been practising with a broom.
-  love tobias +12
-  rel tobias +6
-  mood +8
+  spark tobias +medium
+  rel tobias +medium
+  mood +medium
   say: He steps on your feet nine times and apologises ten. It's the best night of the term.
 > seraphine: Ask Seraphine
   when: met(seraphine) and rel(seraphine) >= 15
   hint: She may already know you'll ask.
-  love seraphine +10
-  rel seraphine +6
-  mood +6
+  spark seraphine +medium
+  rel seraphine +medium
+  mood +medium
   say: "I said yes three weeks ago," she says, "you just hadn't asked yet." She dances a beat ahead of the music.
 > corvin: Ask Corvin
   when: met(corvin) and rel(corvin) >= 15
   hint: Odds he shows up: unclear.
   chance 70:
-    love corvin +12
-    mood +8
+    spark corvin +medium
+    mood +medium
     say: He arrives late, in a stolen jacket, and is the best dancer in the room.
   else:
-    mood -8
+    mood -medium
     say: He never shows. A note arrives at midnight: "Got arrested. Long story. Save me a dance next year."
 > mira: Ask Mira
   when: met(mira) and rel(mira) >= 15
   hint: They're bringing a self-playing violin.
-  love mira +12
-  rel mira +5
-  mood +8
+  spark mira +medium
+  rel mira +small
+  mood +medium
   say: Mira's violin plays itself, then plays the chandelier, then plays the windows. You are asked to leave early. Worth it.
 > kael: Ask Kael
   when: met(kael) and rel(kael) >= 20
   hint: He doesn't seem to feel the cold.
-  love kael +12
-  rel kael +6
-  mood +6
+  spark kael +medium
+  rel kael +medium
+  mood +medium
   say: He holds your hand like it is something fragile. Where your fingers touch, frost-ferns bloom on the glass.
 > nessa: Ask Nessa
   when: met(nessa) and rel(nessa) >= 15
   hint: She'll be working. She's always working.
-  love nessa +10
-  rel nessa +6
-  renown +3
+  spark nessa +medium
+  rel nessa +medium
+  renown +small
   say: She takes notes between dances. "For the society column." Then she stops taking notes.
 > friends: Go with friends
-  mood +6
-  charm +1
+  mood +medium
+  charm +tiny
   say: You go as a pack and dance badly together and it is perfect.
 > skip: Stay in and study
-  lore +2
-  grades +3
-  mood -3
+  lore +small
+  study +small
+  mood -tiny
   say: The music drifts up through the floor while you read. Somewhere, people are happy. You are productive.
 
 @event spring_tournament
@@ -338,21 +341,22 @@ chain: tournament
 scene: A ring of white stone on the lawn, crowds in the stands, two duelists bowing as their wands spark.
 text: The Spring Tournament: dueling on the great lawn, the whole academy watching. Entry is open to anyone foolish enough. Members of the Dueling Circle are expected to enter.
 > left: Watch from the stands
-  mood +3
+  mood +small
   if has(club_dueling):
-    renown -3
+    renown -small
     say: The Circle captain notes your absence with a very sharp quill.
   else:
     say: You eat candied chestnuts and scream for strangers.
 > right: Enter the tournament
-  check vigor 15 + year * 6:
-    renown +6
-    say: First round: you win, barely, and the crowd learns your name.
-    queue tournament_semifinal now
-  else:
-    health -8
-    renown +1
-    say: First round: you are knocked out of the ring in eleven seconds. A record, apparently.
+  challenge feat medium:
+    win:
+      renown +medium
+      say: First round: you win, barely, and the crowd learns your name.
+      queue tournament_semifinal now
+    lose:
+      health -medium
+      renown +tiny
+      say: First round: you are knocked out of the ring in eleven seconds. A record, apparently.
 
 @event tournament_semifinal
 title: Semifinal
@@ -363,24 +367,26 @@ chain: tournament
 scene: The same ring at sunset, scorch marks on the stone. Your opponent is grinning.
 text: The semifinal. Your opponent is a fourth-year who has never lost. The crowd is louder now; you can hear your own name in it.
 > left: Fight clean (Arcana)
-  check arcana 20 + year * 6:
-    renown +6
-    say: You trade spells like questions and answers — and get the last word.
-    queue tournament_final now
-  else:
-    health -6
-    renown +2
-    say: A good fight. Not good enough. The crowd applauds you off the lawn.
+  challenge spell hard:
+    win:
+      renown +medium
+      say: You trade spells like questions and answers — and get the last word.
+      queue tournament_final now
+    lose:
+      health -medium
+      renown +small
+      say: A good fight. Not good enough. The crowd applauds you off the lawn.
 > right: Fight dirty (Guile)
-  check guile 18 + year * 6:
-    renown +4
-    say: A feint, a trip, a jinx to the shoelaces. Legal. Mostly.
-    queue tournament_final now
-    if met(bram):
-      rel bram -5
-  else:
-    renown -4
-    say: The referee sees the trick. Disqualified, and booed.
+  challenge deceive hard:
+    win:
+      renown +small
+      say: A feint, a trip, a jinx to the shoelaces. Legal. Mostly.
+      queue tournament_final now
+      if met(bram):
+        rel bram -small
+    lose:
+      renown -small
+      say: The referee sees the trick. Disqualified, and booed.
 
 @event tournament_final
 title: The Final
@@ -392,24 +398,25 @@ scene: The dueling ring under floating lanterns, a silver cup on a plinth, and a
 text: The final. Across the ring stands {lyra}, wand raised, eyes blazing. "I was hoping it would be you," she says, and she is not being friendly.
 > left: Give everything you have
   meet lyra
-  check arcana 28 + year * 6:
-    renown +15
-    mood +10
-    flag tournament_champion
-    gain famous
-    rel lyra -6
-    if bond(lyra) == "none":
-      bond lyra rival
-    say: Your final spell lands like a bell. Silence — then the lawn erupts. Lyra stares at you as if seeing you for the first time.
-  else:
-    renown +6
-    rel lyra +4
-    say: She wins, but only just. Afterwards, she offers her hand. "Next year," she says. It is a promise and a threat.
+  challenge spell heroic:
+    win:
+      renown +huge
+      mood +large
+      flag tournament_champion
+      gain famous
+      rel lyra -medium
+      if bond(lyra) == "none":
+        bond lyra rival
+      say: Your final spell lands like a bell. Silence — then the lawn erupts. Lyra stares at you as if seeing you for the first time.
+    lose:
+      renown +medium
+      rel lyra +small
+      say: She wins, but only just. Afterwards, she offers her hand. "Next year," she says. It is a promise and a threat.
 > right: Yield with a bow
   meet lyra
-  rel lyra +10
-  renown +3
-  mood -2
+  rel lyra +large
+  renown +small
+  mood -tiny
   say: The crowd boos. Lyra does not cheer her victory. Later she finds you: "Why?" You don't have a good answer, and she seems to like that.
 
 @event grand_exams
@@ -424,23 +431,25 @@ tags: study exam retired
 scene: A circular examination chamber with a domed ceiling of moving constellations; examiners in grey robes sit behind a long table.
 text: Year-end examinations. Three days, five examiners and a practical in front of a panel that includes the headmistress. Your standing for the year rides on this.
 > left: Prepare a dazzling practical
-  check arcana 15 + year * 10:
-    grades +16
-    renown +4
-    say: You finish your practical and the examiners actually lean forward. Distinction.
-  else:
-    grades -12
-    mood -6
-    say: The practical sputters. An examiner writes something very short.
+  challenge spell hard:
+    win:
+      study +huge
+      renown +small
+      say: You finish your practical and the examiners actually lean forward. Distinction.
+    lose:
+      study -huge
+      mood -medium
+      say: The practical sputters. An examiner writes something very short.
 > right: Write a meticulous thesis
-  check lore 15 + year * 10:
-    grades +16
-    mood +4
-    say: Your thesis is cited by one examiner in an argument with another. Distinction.
-  else:
-    grades -12
-    mood -6
-    say: Your thesis is described, aloud, as "ambitious". It is not a compliment.
+  challenge exam hard:
+    win:
+      study +huge
+      mood +small
+      say: Your thesis is cited by one examiner in an argument with another. Distinction.
+    lose:
+      study -huge
+      mood -medium
+      say: Your thesis is described, aloud, as "ambitious". It is not a compliment.
 
 @event summer_plans
 # retired in phase 2b (was "month == 11"); replaced by break_plan
@@ -457,8 +466,8 @@ text: The towers empty for the summer. Two months of freedom. How will you spend
 > home: Go home
   hint: Rest and recover. No rent while away.
   gain summer_away
-  health +15
-  mood +10
+  health +large
+  mood +large
   if has(origin_noble):
     say: Your family hosts three dinners in your honour and asks about your marriage prospects at all of them.
   elif has(origin_street):
@@ -468,31 +477,31 @@ text: The towers empty for the summer. Two months of freedom. How will you spend
 > work: Take summer work in the village
   hint: About 50 gold over the summer. Tiring.
   gain summer_work
-  vigor +2
+  vigor +small
   say: You haul crates, serve tables and polish brass until your hands know the shape of every coin.
 > study: Stay and study in the empty library
   hint: +Lore, +Arcana, +Standing. Lonely.
-  lore +4
-  arcana +3
-  grades +6
-  mood -4
+  lore +medium
+  arcana +medium
+  study +medium
+  mood -small
   say: Just you, the books and the dust motes. You learn things the term never had time for.
 > travel: Travel to the coast
   hint: Costs 40 gold. Great for mood.
   when: gold >= 40
-  gold -40
+  gold -large
   gain summer_away
-  mood +18
-  charm +2
+  mood +huge
+  charm +small
   say: Salt air, shell markets, a sea serpent at sunset. You come back tanned and ten years younger.
 > expedition: Join Old Maud's herb expedition
   hint: Requires knowing Maud. Adventure.
   when: met(maud)
   gain summer_away
-  alchemy +4
-  vigor +2
-  rel maud +10
-  health +4
+  alchemy +medium
+  vigor +small
+  rel maud +large
+  health +small
   say: Two months in the Whisperwood with Maud and her goat. You learn which mushrooms sing and which ones lie.
 
 @event summer_letter
@@ -505,17 +514,17 @@ tags: home
 scene: A letter sealed with candle wax lying on a sunlit windowsill.
 text: A letter arrives in the last month of summer, the handwriting so familiar it hurts. They want to know how you are doing. Really doing.
 > left: Write back honestly
-  mood +4
-  if grades < 30:
-    mood -6
+  mood +small
+  if (turn > 4 and gpa < 2.0):
+    mood -medium
     say: You tell them about your standing. Their reply is kind, which is worse.
   else:
     say: You write six pages. It feels like setting down a heavy bag.
 > right: Write back that everything is perfect
-  mood -2
-  guile +1
+  mood -tiny
+  guile +tiny
   chance 50:
-    gold +20
+    gold +medium
     say: Proud of you, they write, and enclose a little money you suspect they couldn't spare.
   else:
     say: They reply with exclamation marks. The lie sits in your stomach all week.
@@ -531,18 +540,19 @@ tags: festival
 scene: Students lying on the observatory roof under a sky streaked with falling stars.
 text: The last night of the academic year. Everyone climbs onto the observatory roof to watch the stars fall. They say if you catch one in a jar, you get a year of luck.
 > left: Lie back and just watch
-  mood +8
-  health +3
+  mood +medium
+  health +small
   say: You count forty falling stars and then stop counting. It's enough.
 > right: Try to catch a star
-  check vigor 20:
-    renown +4
-    mood +5
-    gain inspired
-    say: It lands in your jar with a hiss and glows for weeks. Students come to see it.
-  else:
-    health -4
-    say: You lunge, miss, and nearly roll off the roof. A prefect catches you by the collar.
+  challenge feat trivial:
+    win:
+      renown +small
+      mood +small
+      gain inspired
+      say: It lands in your jar with a hiss and glows for weeks. Students come to see it.
+    lose:
+      health -small
+      say: You lunge, miss, and nearly roll off the roof. A prefect catches you by the collar.
 
 @event year_two
 title: Second Year
@@ -554,8 +564,8 @@ tags: story
 scene: The seven towers in autumn colours, the first-year barge arriving below, tiny and nervous.
 text: The barge brings new first-years, and you watch them gawp at the towers. Was that really you a year ago? You know which staircases move now, and which professors you can charm.
 > ok: Begin the second year
-  mood +4
-  renown +2
+  mood +small
+  renown +small
 
 @event year_three
 title: Final Year
@@ -567,8 +577,8 @@ tags: story
 scene: The headmistress addressing a hall of third-years, every candle in the room leaning toward her.
 text: "Third years," the headmistress says, "this is your last year in these halls. What you become here, you will be for a long time." She looks, for a moment, directly at you.
 > ok: Begin the final year
-  mood +2
-  grades +2
+  mood +tiny
+  study +tiny
 
 @event graduation_eve
 title: The Eve of Graduation
@@ -580,9 +590,9 @@ tags: story
 scene: Graduation robes laid out on a dormitory bed, a single candle burning, the towers lit gold outside the window.
 text: Tomorrow you graduate. Your robes are laid out on the bed, slightly too long. Outside, the towers are lit gold. Three years have gone like a single held breath.
 > left: Spend the night with friends
-  mood +8
+  mood +medium
   say: Laughter until dawn. Promises to write. Some of them, you'll keep.
 > right: Walk the halls alone one last time
-  lore +2
-  mood +4
+  lore +small
+  mood +small
   say: Every corridor holds a memory. At the end of the last one, the castle sighs, as if saying goodbye.

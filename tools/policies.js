@@ -30,13 +30,13 @@ function estimate(eng, opt, actor, eventId) {
   const walk = (effects, w) => {
     for (const st of effects || []) {
       switch (st.t) {
-        case 'delta': add(st.name, (st.min + st.max) / 2, w); break;
+        case 'delta': add(st.name, amount(eng, st, st.name), w); break;
         case 'assign': {
           const v = eng.value(st.expr, actor);
           add(st.name, st.op === '=' ? v - (eng.s.vals[st.name] || 0) : st.op === '+=' ? v : -v, w);
           break;
         }
-        case 'rel': case 'spark': add(st.t + ':' + (st.npc === 'npc' ? actor : st.npc), (st.min + st.max) / 2, w); break;
+        case 'rel': case 'spark': add(st.t + ':' + (st.npc === 'npc' ? actor : st.npc), amount(eng, st, st.t), w); break;
         case 'bond': if (['friend', 'close', 'partner'].includes(st.status)) add('bond:' + (st.npc === 'npc' ? actor : st.npc), 20, w); break;
         case 'gain': { const d = eng.c.states[st.state]; if (d && d.kind && !eng.s.states[st.state]) add('gain:' + d.kind, 1, w); break; }
         case 'if': {
@@ -53,6 +53,9 @@ function estimate(eng, opt, actor, eventId) {
   eng.s.rng = rng;
   return out;
 }
+
+// The amount of a delta/rel/spark statement: a tier word resolves through @balance sizes.
+function amount(eng, st, row, edge) { return st.tier ? st.sign * eng.tierAmount(row, st.tier) : edge === 'max' ? st.max : (st.min + st.max) / 2; }
 
 const RESOURCES = ['health', 'mood', 'gold', 'grades', 'renown'];
 const SKILLS = ['arcana', 'lore', 'alchemy', 'charm', 'vigor', 'guile'];
@@ -104,7 +107,7 @@ const LEGACY = {
       const ev = eng.c.events[view.id]; let best = -1, o;
       for (const x of view.options.filter((y) => !y.disabled)) {
         const def = eng.optionsOf(ev).find((q) => q.key === x.key); if (!def) continue; let sc = eng.rand() * 3;
-        G.walkEffects(def.effects, (st) => { if ((st.t === 'rel' || st.t === 'spark') && st.max > 0) sc += st.max; if (st.t === 'bond' && ['friend', 'close', 'partner'].includes(st.status)) sc += 20; });
+        G.walkEffects(def.effects, (st) => { if (st.t === 'rel' || st.t === 'spark') { const a = amount(eng, st, st.t, 'max'); if (a > 0) sc += a; } if (st.t === 'bond' && ['friend', 'close', 'partner'].includes(st.status)) sc += 20; });
         if (sc > best) { best = sc; o = x; }
       }
       return o.key;

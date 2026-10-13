@@ -13,16 +13,17 @@ tags: mystery home
 scene: A vast empty dining hall in summer, chairs upturned on the tables, a single student eating alone in a shaft of dusty sunlight.
 text: In summer the castle breathes differently. Corridors you've walked a thousand times are silent; doors that are always locked stand slightly open. A portrait yawns. Nobody is watching.
 > left: Explore the open doors
-  check guile 14:
-    lore +3
-    gold +10
-    say: Behind one door: a forgotten trophy room. Behind another: a professor's stash of very old toffee and a purse of lost-property coins nobody will miss.
-  else:
-    mood -3
-    say: Behind the first door: the caretaker, in a dressing gown, very surprised. You both agree this never happened.
+  challenge deceive trivial:
+    win:
+      lore +medium
+      gold +small
+      say: Behind one door: a forgotten trophy room. Behind another: a professor's stash of very old toffee and a purse of lost-property coins nobody will miss.
+    lose:
+      mood -tiny
+      say: Behind the first door: the caretaker, in a dressing gown, very surprised. You both agree this never happened.
 > right: Enjoy the quiet
-  mood +6
-  health +4
+  mood +medium
+  health +small
   say: You read in window seats, nap on the great lawn and eat breakfast at noon. For two weeks the most famous academy in the kingdom is just a big, peaceful house.
 
 @event sum_home_chores
@@ -34,16 +35,17 @@ tags: home
 scene: A farmhouse kitchen in high summer, a basket of laundry, a list of chores pinned to the door, a textbook hidden under a tea towel.
 text: Home is lovely for about three days. Then the list appears on the kitchen door: the roof, the goats, the fence, the cousin's wedding. Your summer reading list is hidden under a tea towel.
 > left: Do the chores — with magic
-  check arcana 16:
-    mood +5
-    renown +2
-    say: The fence mends itself, the goats are briefly levitated, the roof is better than new. The whole street comes to watch. Your mother pretends not to be proud.
-  else:
-    health -4
-    say: The goats are briefly levitated. Unfortunately so is the fence. Your family is very patient about it.
+  challenge spell trivial:
+    win:
+      mood +small
+      renown +small
+      say: The fence mends itself, the goats are briefly levitated, the roof is better than new. The whole street comes to watch. Your mother pretends not to be proud.
+    lose:
+      health -small
+      say: The goats are briefly levitated. Unfortunately so is the fence. Your family is very patient about it.
 > right: Do them the slow way, and talk
-  mood +4
-  vigor +2
+  mood +small
+  vigor +small
   say: You fix the fence by hand with your father, saying very little and then, suddenly, a lot. It's the best conversation you've had all year.
 
 @event sum_old_friend
@@ -55,12 +57,12 @@ tags: social home
 scene: Two young people sitting on a stone wall above a village, one in academy robes, one in work clothes, a little space between them.
 text: Your oldest friend from home is waiting at the crossroads, like always. But something's different. "So," they say, not quite looking at you, "I suppose you're too grand for us now."
 > left: Prove you're not
-  mood +6
-  charm +1
+  mood +medium
+  charm +tiny
   say: You spend the summer exactly as you used to — orchard raids, river swims, terrible jokes. By Starfall, the space between you on the wall is gone.
 > right: Admit you've changed
-  lore +1
-  mood +2
+  lore +tiny
+  mood +tiny
   say: "I have," you say. "So have you." They laugh, surprised. You talk all night about who you're both becoming. It's different from before. It might be better.
 
 @event sum_midsummer_fair
@@ -72,34 +74,37 @@ tags: festival money
 scene: A village green full of striped tents, a carousel of enchanted wooden animals, lanterns strung between trees, a strongman lifting a cow.
 text: The village Midsummer Fair: enchanted carousel, ring-toss, a strongman, and a booth promising "GUESS YOUR WEIGHT IN CHEESE". You have a few crowns in your pocket and a whole afternoon.
 > left: Win something at the ring-toss (Vigor)
-  check vigor 14:
-    gold +15
-    mood +5
-    say: Three rings, three hits. You win a stuffed griffon the size of a sheep and sell it to a crying child's father for fifteen crowns. Everyone wins.
-  else:
-    gold -5
-    mood +2
-    say: Every ring bounces off. The ring-toss is definitely enchanted. You don't care; you're eating candied apples.
+  challenge feat trivial:
+    win:
+      gold +medium
+      mood +small
+      say: Three rings, three hits. You win a stuffed griffon the size of a sheep and sell it to a crying child's father for fifteen crowns. Everyone wins.
+    lose:
+      gold -tiny
+      mood +tiny
+      say: Every ring bounces off. The ring-toss is definitely enchanted. You don't care; you're eating candied apples.
 > right: Ride the carousel
-  gold -2
-  mood +7
+  gold -tiny
+  mood +medium
   say: Your wooden hippogriff takes off, very slightly, at the top of every turn. You ride it nine times.
 
 @event sum_letter_from_friend
 title: A Summer Letter
 trigger: social
-actor: any
-when: month >= 11 and rel(npc) >= 20 and not tagged(npc, faculty)
+cast:
+  npc: any where rel(npc) >= 20 and not tagged(npc, faculty)
+per: npc
+when: month >= 11
 art: letter
 tags: social
 scene: A thick letter with a doodle on the envelope arriving by owl at a summer window.
 text: An owl arrives with a thick, slightly crumpled letter from {npc}. Six pages of summer news, two doodles, one pressed flower, and at the end, in smaller writing: "I miss the castle. I miss you, actually."
 > left: Write a short reply
-  rel npc +3
+  rel npc +small
   say: You write a page. It's warm, if brief. {npc} keeps it anyway.
 > right: Write back for hours
-  rel npc +8
-  mood +4
+  rel npc +medium
+  mood +small
   say: You write until the candle gutters. Twelve pages. You can't remember the last time you wrote that much that wasn't an essay.
 
 @event sum_rain_week
@@ -111,12 +116,12 @@ tags: home
 scene: Rain streaming down a tall window, a student curled in an armchair with a fat novel, a teapot steaming on the sill.
 text: It rains for a solid week. Not dramatic rain: just steady, grey, endless rain. Every plan you made for the summer is quietly drowning.
 > left: Read a very long novel
-  mood +5
-  lore +1
+  mood +small
+  lore +tiny
   say: You read eight hundred pages about a family of sea-witches and cry at the end. It's the best week of the summer.
 > right: Practise spells indoors
-  arcana +2
-  mood -1
+  arcana +small
+  mood -tiny
   say: You practise until you can light every candle in the room with a flick. You also set fire to one curtain. It's raining; it goes out quickly.
 
 @event sum_sea_serpent
@@ -128,16 +133,17 @@ tags: nature danger
 scene: A small fishing boat on a grey-green sea, a fishing line drawn taut, something very long and scaled rising beside the hull.
 text: Your uncle takes you fishing. Something takes the bait. Something very large. The line sings. The boat tilts. A long scaled neck rises out of the water and looks at you with polite interest.
 > left: Cut the line
-  mood +2
+  mood +tiny
   say: The serpent sinks back with a sigh like a disappointed whale. Your uncle tells the story for the rest of his life, and it gets bigger every time.
 > right: Try to talk to it (Charm)
-  check charm 18:
-    lore +3
-    renown +4
-    say: You greet it in the old courtesies Professor Brask taught you. It bows its great head, leaves a pearl on the deck and swims away. Your uncle faints.
-  else:
-    health -6
-    say: The serpent is not interested in conversation. It is interested in the boat. You swim home.
+  challenge negotiate trivial:
+    win:
+      lore +medium
+      renown +small
+      say: You greet it in the old courtesies Professor Brask taught you. It bows its great head, leaves a pearl on the deck and swims away. Your uncle faints.
+    lose:
+      health -medium
+      say: The serpent is not interested in conversation. It is interested in the boat. You swim home.
 
 @event sum_reading_list
 title: The Summer Reading List
@@ -148,13 +154,13 @@ tags: study
 scene: A long scroll unrolling off a table and across the floor, a list of titles in tiny handwriting, a student staring at it in despair.
 text: The summer reading list arrives by owl. It is a scroll. It unrolls across the floor, out of the door and partway down the stairs. Thorne has added a note at the bottom: "Optional. (It is not optional.)"
 > left: Read all of it
-  lore +4
-  grades +5
-  mood -4
+  lore +medium
+  study +medium
+  mood -small
   say: You read everything. When term starts, Thorne asks a question about the last book and you're the only one who can answer. His eyebrow rises half a millimetre.
 > right: Read the first and last chapters of each
-  guile +1
-  grades +1
+  guile +tiny
+  study +tiny
   say: A time-honoured strategy. You can talk confidently about the beginning and end of forty books. The middle remains a mystery, like most of life.
 
 @event sum_night_market
@@ -166,18 +172,18 @@ tags: money mystery
 scene: A market that only appears after midnight, stalls lit with coloured flames, hooded sellers, a bottle that seems to contain a small thundercloud.
 text: A night market appears in a field outside the village — it wasn't there yesterday and won't be tomorrow. A hooded stall-keeper offers you a stoppered bottle with a tiny thundercloud inside. "Fifteen crowns. What it does is a surprise."
 > left: Buy the bottle
-  gold -15
+  gold -medium
   chance 50:
     gain inspired
-    arcana +2
+    arcana +small
     say: You uncork it in your room. The little storm rains ideas on you for a fortnight. Your notebooks overflow.
   else:
-    mood -3
+    mood -tiny
     gain sick
     say: You uncork it in your room. The little storm rains on you. Just rain. For a fortnight. You catch a cold.
 > right: Just look around
-  mood +4
-  lore +1
+  mood +small
+  lore +tiny
   say: You wander until dawn, buying nothing, watching everything. When the sun rises the field is empty except for a single glowing feather. You keep it.
 
 @event sum_end_of_summer
@@ -189,10 +195,10 @@ tags: home
 scene: A student packing a trunk in golden late-summer light, a half-finished jar of jam, a pressed flower and a new textbook on the bed.
 text: The last week of summer has that particular light — golden, heavy, already nostalgic. Your trunk is half-packed. Part of you is desperate to get back. Part of you wants this week to last forever.
 > left: Squeeze every drop out of it
-  mood +8
-  health +2
+  mood +medium
+  health +tiny
   say: Late swims, long dinners, one final sunset from the hill. You arrive at the barge sunburnt and happy and only slightly late.
 > right: Get ready for the new year
-  grades +4
-  lore +1
+  study +small
+  lore +tiny
   say: You re-read your notes, sharpen your quills and polish your wand. When term starts you are, for once, ahead. It's an unfamiliar feeling.

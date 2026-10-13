@@ -196,7 +196,7 @@ test('a full four-year game ends under every quick style', () => {
   for (const style of ['random', 'balanced', 'truant']) {
     const { eng, r } = play(101, style);
     assert.equal(r.kind, 'ending', style);
-    assert.ok(eng.s.turn >= 40 || content.endings[r.ending.id].early, style + ' ended at turn ' + eng.s.turn);
+    assert.ok(eng.s.turn >= 40 || content.endings[r.id].kind === 'early', style + ' ended at turn ' + eng.s.turn);
   }
 });
 

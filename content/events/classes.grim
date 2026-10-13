@@ -15,24 +15,26 @@ tags: class magic
 scene: A dark classroom, a single candle on a stool at the far end, Professor Thorne's silhouette with folded arms.
 text: Professor Thorne places a candle at the far end of the hall. "Light it. From there." The class holds its breath. Last week a boy lit his own sleeve.
 > left: A careful spark
-  check arcana 10:
-    arcana +1
-    rel thorne +3
-    say: The wick catches with a polite little flame. Thorne grunts. From him, that is applause.
-  else:
-    mood -2
-    say: Nothing. Then a wisp of smoke from your fingertips. A few people giggle.
+  challenge spell easy:
+    win:
+      arcana +tiny
+      rel thorne +small
+      say: The wick catches with a polite little flame. Thorne grunts. From him, that is applause.
+    lose:
+      mood -tiny
+      say: Nothing. Then a wisp of smoke from your fingertips. A few people giggle.
 > right: Show them real fire
-  check arcana 18:
-    arcana +2
-    renown +3
-    rel thorne +2
-    say: The candle erupts in a pillar of white flame and then settles, obedient. The room goes quiet.
-  else:
-    health -5
-    grades -3
-    rel thorne -3
-    say: The candle lights. So do the curtains. And, briefly, your eyebrows.
+  challenge spell hard:
+    win:
+      arcana +small
+      renown +small
+      rel thorne +tiny
+      say: The candle erupts in a pillar of white flame and then settles, obedient. The room goes quiet.
+    lose:
+      health -small
+      study -small
+      rel thorne -tiny
+      say: The candle lights. So do the curtains. And, briefly, your eyebrows.
 
 @event pyro_ember_heart
 title: The Ember Within
@@ -43,12 +45,12 @@ tags: class magic
 scene: Students sitting cross-legged in a stone circle, each with a faint glow behind their ribs.
 text: Today's exercise: hold a spark inside your chest and let it grow. "Fire is fed by will," says Thorne. "And by you, if you are careless." It burns. It is supposed to burn.
 > left: Stop when it hurts
-  arcana +1
-  mood +2
+  arcana +tiny
+  mood +tiny
   say: You let the spark gutter out. Thorne says nothing. The silence is a grade.
 > right: Hold it longer than anyone
-  arcana +3
-  health -6
+  arcana +medium
+  health -medium
   say: Your vision goes white at the edges. When you open your eyes, your breath is steaming and the stones around you are warm.
 
 @event pyro_lyra_spar
@@ -61,20 +63,21 @@ tags: class rival
 scene: Two students facing each other across a scorched practice ring; one is a tall girl with crimson hair, flames curling around her wrists.
 text: "Professor, I'd like a demonstration partner." Lyra Vaneshade points her wand at you without looking. "That one."
 > left: Politely decline
-  rel lyra -3
-  mood -1
+  rel lyra -tiny
+  mood -tiny
   say: "As expected," Lyra says, and turns away. It stings worse than a burn would.
 > right: Step into the ring
-  check arcana 20:
-    rel lyra +6
-    renown +4
-    if bond(lyra) == "none":
-      bond lyra rival
-    say: Your fire meets hers and holds. When Thorne calls time, Lyra is breathing hard. "Again. Next week," she says.
-  else:
-    health -4
-    rel lyra +3
-    say: She wins in under a minute — but she looks at you afterwards like she's filing you away for later.
+  challenge spell easy:
+    win:
+      rel lyra +medium
+      renown +small
+      if bond(lyra) == "none":
+        bond lyra rival
+      say: Your fire meets hers and holds. When Thorne calls time, Lyra is breathing hard. "Again. Next week," she says.
+    lose:
+      health -small
+      rel lyra +small
+      say: She wins in under a minute — but she looks at you afterwards like she's filing you away for later.
 
 # ---------------- Tidecalling ----------------
 
@@ -87,15 +90,16 @@ tags: class magic nature
 scene: Students standing waist-deep in a silver lake at dawn, ripples spiralling out from their outstretched hands.
 text: Waist-deep in the freezing lake at dawn, Professor Marisol tells you to ask the water to rise. "Ask," she says. "Never demand. The lake remembers rudeness."
 > left: Command it anyway
-  check arcana 14:
-    arcana +2
-    say: The water rises in a shivering column. Marisol raises an eyebrow. "Effective. Rude."
-  else:
-    health -3
-    say: The lake declines, and expresses its displeasure by knocking you flat.
+  challenge spell easy:
+    win:
+      arcana +small
+      say: The water rises in a shivering column. Marisol raises an eyebrow. "Effective. Rude."
+    lose:
+      health -tiny
+      say: The lake declines, and expresses its displeasure by knocking you flat.
 > right: Listen first
-  lore +2
-  mood +3
+  lore +small
+  mood +small
   say: You stand still until the cold stops hurting. The lake murmurs — and for a moment you could swear it said your name.
   chance 30:
     flag lake_knows
@@ -110,11 +114,11 @@ tags: class nature
 scene: A rocky shore under black clouds, a few figures in soaked robes holding back a curtain of rain with raised hands.
 text: A storm rolls over the lake and Marisol is delighted. "Perfect conditions! Hold back the rain for as long as you can." Most of the class has already fled.
 > left: Shelter with the sensible ones
-  mood +1
+  mood +tiny
   say: You watch from the boathouse, dry and slightly ashamed.
 > right: Stay out in it
-  vigor +2
-  arcana +1
+  vigor +small
+  arcana +tiny
   chance 35:
     gain sick
     say: You hold the rain back for almost a minute. You also catch Lake Fever.
@@ -130,19 +134,20 @@ tags: class mystery hollowstar
 scene: Murky green water, a shaft of light catching the bronze curve of an enormous bell half-buried in silt.
 text: During a breathing-charm lesson you hear it: a bell, deep under the lake, tolling slow and soft. Nobody else seems to notice.
 > left: Mention it to Professor Marisol
-  lore +1
+  lore +tiny
   say: Her face goes very still. "There is no bell," she says. "There hasn't been a bell for three hundred years."
   flag heard_bell
   hollow +1
 > right: Dive down to find it
-  check vigor 16:
-    lore +2
-    flag bell_fragment
-    hollow +1
-    say: Deep in the silt you find a broken piece of bronze, warm to the touch, engraved with a black star.
-  else:
-    health -6
-    say: The water closes over you, dark and cold. You surface gasping, empty-handed, with the bell still ringing in your teeth.
+  challenge feat medium:
+    win:
+      lore +small
+      flag bell_fragment
+      hollow +1
+      say: Deep in the silt you find a broken piece of bronze, warm to the touch, engraved with a black star.
+    lose:
+      health -medium
+      say: The water closes over you, dark and cold. You surface gasping, empty-handed, with the bell still ringing in your teeth.
 
 # ---------------- Illusion ----------------
 
@@ -155,14 +160,14 @@ tags: class magic
 scene: A student facing a shimmering duplicate of themselves; the duplicate's smile is a little too wide.
 text: Assignment: conjure a convincing illusion of yourself. Professor Vey circles the room. "Most students make themselves taller. Interesting, what people choose."
 > left: Make it flattering
-  charm +2
-  mood +3
+  charm +small
+  mood +small
   say: Your double is radiant, confident, slightly better-looking. Vey writes something down and smiles thinly.
 > right: Make it accurate
-  guile +1
-  lore +1
+  guile +tiny
+  lore +tiny
   say: Your double slouches the way you slouch and chews its lip the way you do. It is deeply unsettling. Vey awards top marks.
-  grades +2
+  study +tiny
 
 @event illusion_professor_prank
 title: The Professor's Face
@@ -173,18 +178,19 @@ tags: class social
 scene: A student wearing a shimmering glamour of a stern old professor, classmates stifling laughter behind a door.
 text: Your classmates dare you: wear a glamour of Professor Thorne and cancel tomorrow's Arcana lecture. "Nobody will know," says someone who will definitely tell.
 > left: Absolutely not
-  grades +2
+  study +tiny
   say: Wise. Someone else tries it the next day and spends a week scrubbing gargoyles.
 > right: Do it
-  check guile 15:
-    renown +5
-    mood +5
-    say: "Class is cancelled," you announce in Thorne's gravel voice. The cheering is audible from three towers away.
-  else:
-    gain detention
-    grades -4
-    rel thorne -4
-    say: Halfway through, the glamour flickers. The real Thorne is standing in the doorway. He is not laughing.
+  challenge deceive easy:
+    win:
+      renown +medium
+      mood +small
+      say: "Class is cancelled," you announce in Thorne's gravel voice. The cheering is audible from three towers away.
+    lose:
+      gain detention
+      study -small
+      rel thorne -small
+      say: Halfway through, the glamour flickers. The real Thorne is standing in the doorway. He is not laughing.
 
 @event illusion_dragon
 title: The Courtyard Dragon
@@ -195,18 +201,19 @@ tags: class magic
 scene: A vast translucent dragon coiled around the academy's central fountain, students frozen mid-step beneath it.
 text: For your term project you must create an illusion that fools a crowd. You could make something small and flawless. Or you could put a dragon in the courtyard at lunchtime.
 > left: Small and flawless
-  grades +5
+  study +medium
   say: A single butterfly that nobody can tell is fake. Vey taps it with her wand and it bursts into light. "Perfect."
 > right: Dragon. Obviously.
-  check arcana 18:
-    renown +7
-    grades +3
-    say: The dragon uncurls around the fountain and yawns. Forty students scream. Vey laughs until she cries.
-  else:
-    renown +3
-    grades -3
-    rel isolde -3
-    say: The dragon is magnificent for four seconds and then sneezes into a cloud of glitter. The headmistress was eating lunch below it.
+  challenge spell trivial:
+    win:
+      renown +medium
+      study +small
+      say: The dragon uncurls around the fountain and yawns. Forty students scream. Vey laughs until she cries.
+    lose:
+      renown +small
+      study -small
+      rel isolde -tiny
+      say: The dragon is magnificent for four seconds and then sneezes into a cloud of glitter. The headmistress was eating lunch below it.
 
 # ---------------- Practical Alchemy ----------------
 
@@ -219,17 +226,18 @@ tags: class
 scene: Rows of bubbling cauldrons in a low stone room, each giving off a different coloured steam.
 text: The recipe is on the board: Draught of Mild Courage. Seven ingredients, three stirs clockwise, one counter-clockwise, and never — never — add the newt eye early.
 > left: Follow the recipe exactly
-  alchemy +1
-  grades +2
+  alchemy +tiny
+  study +tiny
   say: A clear, honey-coloured brew. The professor sniffs it and nods. Safe, solid, unremarkable.
 > right: Improvise a little
-  check alchemy 14:
-    alchemy +3
-    gold +10
-    say: Your variant tastes like cinnamon and makes people brave enough to ask for things. A fifth-year buys the whole flask.
-  else:
-    gain frog_voice
-    say: You taste-test. Mistake. For the next month, everything you say comes out as a deep, wet croak.
+  challenge brew easy:
+    win:
+      alchemy +medium
+      gold +small
+      say: Your variant tastes like cinnamon and makes people brave enough to ask for things. A fifth-year buys the whole flask.
+    lose:
+      gain frog_voice
+      say: You taste-test. Mistake. For the next month, everything you say comes out as a deep, wet croak.
 
 @event alch_unstable_cauldron
 title: Unstable Cauldron
@@ -240,16 +248,17 @@ tags: class danger
 scene: A cauldron shuddering on its iron legs, violet bubbles swelling over the rim, a student frozen beside it.
 text: The cauldron next to yours starts to shudder. Its owner, a terrified first-year, has added the newt eye early. It is going to blow.
 > left: Dive for cover
-  health -2
+  health -tiny
   say: The explosion paints the ceiling violet. Nobody is hurt. Everybody is purple.
 > right: Try to neutralise it
-  check alchemy 16:
-    renown +4
-    alchemy +2
-    say: A pinch of salt, a drop of moonwater, a quick counter-stir. The bubbling dies. The first-year bursts into grateful tears.
-  else:
-    health -8
-    say: The cauldron goes off in your face. You spend a week with violet eyebrows and a ringing in your ears.
+  challenge brew easy:
+    win:
+      renown +small
+      alchemy +small
+      say: A pinch of salt, a drop of moonwater, a quick counter-stir. The bubbling dies. The first-year bursts into grateful tears.
+    lose:
+      health -medium
+      say: The cauldron goes off in your face. You spend a week with violet eyebrows and a ringing in your ears.
 
 @event alch_corvin_market
 title: A Side Business
@@ -261,14 +270,14 @@ tags: class money
 scene: A young man leaning on a cauldron table, holding up a vial against the light with a merchant's grin.
 text: Corvin turns your leftover potions over in his hands. "These would sell for real crowns in the village. I know a buyer. I take a third. Nobody needs to know they came from a classroom."
 > left: Decline
-  rel corvin -2
+  rel corvin -tiny
   say: "Your loss, saint." He tosses the vial back. You fumble it.
 > right: Shake on it
-  gold +25
-  rel corvin +5
+  gold +large
+  rel corvin +small
   chance 30:
     gain detention
-    grades -3
+    study -small
     say: It goes well until a vial turns up in a professor's tea. You and Corvin share a detention and an alibi.
   else:
     say: Twenty-five crowns, no questions asked. Corvin winks. "Pleasure doing crime with you."
@@ -284,14 +293,14 @@ tags: class mystery
 scene: A delicate teacup tipped on its saucer, the dregs forming a shape like a skull — or possibly a mushroom.
 text: You read your partner's tea leaves. The shape at the bottom of the cup is unmistakably a skull. Your partner is looking at you hopefully.
 > left: Tell the truth
-  lore +2
+  lore +small
   chance 50:
     say: "A skull?" They laugh. "Professor says a skull means change." They're relieved. You aren't sure you should be.
   else:
-    mood -3
+    mood -tiny
     say: They go pale and leave early. The next day they trip down the stairs. Nothing serious. Still.
 > right: Lie kindly
-  charm +2
+  charm +small
   say: "A mushroom," you say. "Means good fortune." They beam. The professor, passing behind you, says nothing at all.
 
 @event div_next_tuesday
@@ -304,13 +313,13 @@ scene: An ornate standing mirror whose reflection shows the room on a different 
 text: The Mirror of Next Tuesday shows exactly what it promises. Students take turns looking. Some come away smiling. One comes away and goes straight to the infirmary.
 > left: Take a look
   chance 50:
-    grades +5
+    study +medium
     say: Next Tuesday you are sitting an Arcana quiz. You memorise the questions. Is that cheating? It's at least ambiguous.
   else:
-    mood -6
+    mood -medium
     say: Next Tuesday you are crying in the rain outside the observatory. You don't know why. You spend the week dreading it.
 > right: Decline
-  mood +1
+  mood +tiny
   say: "I'd rather be surprised." The professor smiles as if you have passed a different test entirely.
 
 @event div_seraphine_vision
@@ -325,13 +334,13 @@ scene: A dreamy-eyed girl gripping a classmate's wrist across a table of crystal
 text: In the middle of crystal-gazing, Seraphine Hale seizes your wrist. Her eyes have gone silver. "The door under the lake," she whispers. "Don't let him open it. Or do. I can't see which."
 > left: Pull away
   meet seraphine
-  rel seraphine -2
-  mood -2
+  rel seraphine -tiny
+  mood -tiny
   say: She blinks and lets go. "Sorry. That happens." She goes back to her crystal as if nothing occurred.
 > right: Ask who she means
   meet seraphine
-  rel seraphine +6
-  lore +1
+  rel seraphine +medium
+  lore +tiny
   flag heard_prophecy
   hollow +1
   say: "Someone cold," she says. "Someone kind." Then she shakes her head, smiles vaguely, and asks if you'd like a biscuit.
@@ -347,13 +356,13 @@ tags: class
 scene: A brass beetle the size of a fist on a workbench, tiny gears visible through its translucent wing-cases.
 text: Your project: a brass beetle that walks. The gears are in. The spring is wound. You could make it efficient, or you could give it a little personality.
 > left: Make it efficient
-  grades +3
-  lore +1
+  study +small
+  lore +tiny
   say: It walks in a perfect straight line until it hits a wall. Full marks.
 > right: Give it personality
-  mood +4
+  mood +small
   chance 40:
-    renown +3
+    renown +small
     say: It escapes during the presentation and lives in the walls for a month, occasionally stealing biscuits. It becomes a minor legend.
   else:
     say: It refuses to walk unless you compliment it. The professor is torn between marking you down and asking how you did it.
@@ -369,18 +378,19 @@ scene: A cluttered workbench covered in tools, sketches and one smoking teapot; 
 text: Mira Ten drops onto the bench beside you with a sketch of something that is either a self-stirring cauldron or a small war machine. "Partners? Your hands, my brain. Or the other way round. Both, actually."
 > left: Work alone
   meet mira
-  grades +1
+  study +tiny
   say: "Fair," says Mira, with no hard feelings, and is immediately on fire. Not badly.
 > right: Partner with Mira
   meet mira
-  check alchemy 14:
-    grades +5
-    rel mira +8
-    say: The cauldron stirs itself, hums a tune and only threatens the professor once. Mira hugs you with oily hands.
-  else:
-    health -4
-    rel mira +5
-    say: The prototype explodes. Mira laughs so hard they cry. "Again! We were so close!" You find you're laughing too.
+  challenge brew trivial:
+    win:
+      study +medium
+      rel mira +medium
+      say: The cauldron stirs itself, hums a tune and only threatens the professor once. Mira hugs you with oily hands.
+    lose:
+      health -small
+      rel mira +small
+      say: The prototype explodes. Mira laughs so hard they cry. "Again! We were so close!" You find you're laughing too.
 
 @event art_enchanted_quill
 title: The Self-Writing Quill
@@ -391,15 +401,15 @@ tags: class
 scene: A quill writing busily on its own over a sheaf of paper while its owner sleeps on folded arms.
 text: You've enchanted a quill to take dictation. It works beautifully. A thought occurs: what if it wrote your essays, too?
 > left: Just use it for notes
-  lore +2
+  lore +small
   say: Your notes are flawless. Even the professor's jokes are transcribed, with a small marginal comment: "(not funny)."
 > right: Let it write your essays
   chance 50:
-    grades +6
-    mood +3
+    study +medium
+    mood +small
     say: Your essays arrive on time, in impeccable penmanship. A little too impeccable. Nobody notices. Yet.
   else:
-    grades -6
+    study -medium
     gain detention
     say: The quill develops opinions and writes a scathing review of the professor. It signs your name.
 
@@ -414,16 +424,17 @@ tags: class nature
 scene: A straw nest under a heat lamp, a cracked golden egg, and a damp fluffy griffon chick blinking at the world.
 text: The griffon egg is cracking. Professor Brask whispers that the first face a chick sees, it trusts forever — or attacks forever. Hard to predict.
 > left: Hang back
-  lore +1
+  lore +tiny
   say: The chick sees Brask first and bites her. She seems delighted.
 > right: Offer your hand
-  check vigor 12:
-    mood +7
-    vigor +1
-    say: The chick peeps, nuzzles your palm and falls asleep. You are, apparently, its mother now.
-  else:
-    health -5
-    say: It bites. Hard. Griffon beaks are sharper than they look, and they look extremely sharp.
+  challenge feat trivial:
+    win:
+      mood +medium
+      vigor +tiny
+      say: The chick peeps, nuzzles your palm and falls asleep. You are, apparently, its mother now.
+    lose:
+      health -small
+      say: It bites. Hard. Griffon beaks are sharper than they look, and they look extremely sharp.
 
 @event beast_manticore
 title: The Manticore Is Loose
@@ -434,17 +445,18 @@ tags: class danger
 scene: A shadowy lion-shape with a scorpion's tail prowling between the greenhouse benches, students pressed against the glass.
 text: Someone left the manticore pen open. It's in the greenhouse, tail twitching, between you and the only exit.
 > left: Back away slowly
-  mood -3
+  mood -tiny
   say: You edge out. Professor Brask arrives with a bucket of meat and a lullaby and the crisis is over in minutes.
 > right: Try to calm it
-  check charm 18:
-    renown +6
-    vigor +1
-    say: You hum the lullaby Brask taught you. The manticore yawns, sits, and lets you scratch behind its ear. The whole class saw.
-  else:
-    health -12
-    gain injured
-    say: The manticore does not like your humming. The tail is quicker than you are.
+  challenge negotiate trivial:
+    win:
+      renown +medium
+      vigor +tiny
+      say: You hum the lullaby Brask taught you. The manticore yawns, sits, and lets you scratch behind its ear. The whole class saw.
+    lose:
+      health -large
+      gain injured
+      say: The manticore does not like your humming. The tail is quicker than you are.
 
 @event beast_familiar_call
 title: Calling a Familiar
@@ -455,10 +467,10 @@ tags: class magic
 scene: A circle of salt and candles in a forest clearing at dusk, shapes of small animals watching from the edge of the trees.
 text: Brask teaches the summoning circle. "It doesn't summon," she says. "It invites. Most of the time, nothing comes. That's fine. Familiars choose you."
 > left: Just watch the others
-  lore +1
+  lore +tiny
   say: A first-year is chosen by a very large toad. The toad looks smug about it.
 > right: Sit in the circle
-  mood +3
+  mood +small
   flag familiar_affinity
   say: Nothing comes. But for a long moment, something at the edge of the trees watches you with eyes like embers. Then it is gone.
 
@@ -473,16 +485,17 @@ tags: class
 scene: An observatory dome open to the night, a long-tailed comet smeared across the sky, students crowded at the telescopes.
 text: A comet appears that isn't in any of the charts. The observatory is in uproar. Everyone wants to be the one to name it.
 > left: Sketch it carefully
-  lore +2
+  lore +small
   say: Your drawing is lovely. Someone else's name goes on the comet. You keep the drawing.
 > right: Calculate its path
-  check lore 16:
-    renown +6
-    lore +2
-    say: Your math is right. The comet is named after you, or at least after a slight misspelling of you.
-  else:
-    grades -2
-    say: Your calculation suggests the comet will hit the academy on Thursday. It does not. You are teased about it for weeks.
+  challenge research easy:
+    win:
+      renown +medium
+      lore +small
+      say: Your math is right. The comet is named after you, or at least after a slight misspelling of you.
+    lose:
+      study -tiny
+      say: Your calculation suggests the comet will hit the academy on Thursday. It does not. You are teased about it for weeks.
 
 @event astro_kael_roof
 title: Three in the Morning
@@ -497,8 +510,8 @@ text: Long after the lecture ends you find Kael alone on the observatory roof. F
 > left: Leave him be
   say: You go down to bed. In the morning there's a perfect circle of frost on the roof where he sat.
 > right: Sit beside him
-  rel kael +6
-  lore +1
+  rel kael +medium
+  lore +tiny
   flag saw_hollow_star
   hollow +1
   say: "There," he says, pointing at the dark. "Can you see it? A star that eats light." You look for a long time. You think you can.
@@ -513,11 +526,11 @@ scene: A student asleep on an open star atlas at a library desk, a guttering can
 text: Midnight lectures, dawn homework, morning classes. You have started seeing constellations in your porridge.
 > left: Skip a few lectures
   gain slacking
-  health +4
+  health +small
   say: You sleep for fourteen hours and wake up feeling like a person.
 > right: Power through
-  health -5
-  lore +2
+  health -small
+  lore +small
   say: You learn the names of forty stars and forget the names of two friends. Temporarily.
 
 # ---------------- Healing Arts ----------------
@@ -531,16 +544,17 @@ tags: class
 scene: A pale first-year sitting on an infirmary cot holding a wrist at a strange angle, a nervous student healer kneeling beside them.
 text: A first-year stumbles into the practice ward with a wrist that bends the wrong way. Sister Amaranth is busy. The first-year looks at you with enormous, trusting eyes.
 > left: Fetch Sister Amaranth
-  grades +1
+  study +tiny
   say: Amaranth fixes it in seconds and nods at you. "Knowing your limits is the first lesson."
 > right: Heal it yourself
-  check alchemy 12:
-    alchemy +2
-    renown +2
-    say: The bone slides back with a soft click and a glow of warm light. The first-year tells everyone you're a genius.
-  else:
-    grades -3
-    say: The wrist is now straight. The fingers, however, are pointing backwards. Amaranth sighs and fixes both.
+  challenge brew easy:
+    win:
+      alchemy +small
+      renown +small
+      say: The bone slides back with a soft click and a glow of warm light. The first-year tells everyone you're a genius.
+    lose:
+      study -small
+      say: The wrist is now straight. The fingers, however, are pointing backwards. Amaranth sighs and fixes both.
 
 @event heal_fever_ward
 title: Fever in the Village
@@ -551,13 +565,13 @@ tags: class nature
 scene: A crowded village hall lined with cots, lanterns hanging from the rafters, student healers moving between patients.
 text: Lake Fever is spreading through the village below the academy. Sister Amaranth asks for student volunteers. It's hard, unpaid, and you might catch it.
 > left: Decline
-  mood -2
+  mood -tiny
   say: You watch the volunteers board the barge in the morning. You do your homework. It feels like the wrong homework.
 > right: Volunteer
-  renown +4
-  alchemy +2
-  mood +4
-  rel maud +3
+  renown +small
+  alchemy +small
+  mood +small
+  rel maud +small
   chance 40:
     gain sick
     say: You save lives, and catch the fever yourself. The village sends a basket of honey cakes to your sickbed.
@@ -574,12 +588,12 @@ tags: class social
 scene: A broad-shouldered boy sitting on a greenhouse bench, grimacing, holding up a hand swollen to twice its size.
 text: Tobias wanders into the practice ward holding up a hand swollen like a pumpkin. "Mandrake," he says. "She didn't like my singing." He looks hopefully at you.
 > left: Send him to the infirmary
-  rel tobias +2
+  rel tobias +tiny
   say: "Right. Proper healer. Good idea." He goes, a little disappointed.
 > right: Treat him yourself
-  alchemy +1
-  rel tobias +8
-  love tobias +3
+  alchemy +tiny
+  rel tobias +medium
+  spark tobias +tiny
   say: Your hands are steady. The swelling goes down. Tobias stares at his hand, then at you. "You're really good at this," he says softly.
 
 # ---------------- Umbral Theory ----------------
@@ -593,11 +607,11 @@ tags: class mystery danger
 scene: A student at a desk in a dim lecture hall, their shadow on the wall behind them turned the wrong way, leaning close to whisper.
 text: In the middle of a lecture on the Nature of Absence, your shadow leans away from the lamp, toward your ear, and says your name.
 > left: Banish it
-  arcana +1
-  mood -2
+  arcana +tiny
+  mood -tiny
   say: You speak the warding phrase. Your shadow snaps back into place, sulking. It does not speak again. You think.
 > right: Answer it
-  lore +3
+  lore +medium
   chance 40:
     gain umbral_curse
     say: It tells you something about death you can't unlearn. The cold starts the next morning.
@@ -613,17 +627,18 @@ tags: class magic
 scene: A tiny mouse skeleton on a silver tray, one bony paw twitching, students leaning away from it.
 text: Practical exercise: animate the skeleton of a field mouse. "Purely educational," the professor says, with a smile nobody trusts.
 > left: Refuse on principle
-  grades -2
-  mood +2
+  study -tiny
+  mood +tiny
   say: You write a short essay on why instead. The professor reads it with surprising attention.
 > right: Do the exercise
-  check arcana 20:
-    arcana +3
-    grades +3
-    say: The little skeleton stands up, washes its non-existent whiskers, and lies down again. Perfect control.
-  else:
-    gain haunted
-    say: It gets up. It does not lie down again. It follows you back to your dormitory and sits on your pillow every night.
+  challenge spell easy:
+    win:
+      arcana +medium
+      study +small
+      say: The little skeleton stands up, washes its non-existent whiskers, and lies down again. Perfect control.
+    lose:
+      gain haunted
+      say: It gets up. It does not lie down again. It follows you back to your dormitory and sits on your pillow every night.
 
 @event umbral_forbidden_notes
 title: Forbidden Notes
@@ -637,7 +652,7 @@ text: A sixth-year slides a battered notebook across the table. "My notes on the
 > left: Decline
   say: The sixth-year shrugs and slides the notebook to the next student. You watch it go.
 > right: Take the notebook
-  lore +4
+  lore +medium
   flag forbidden_key
   queue forbidden_section_1 in 1
   say: The notes are brilliant, half-mad and annotated in three colours of ink. The key is cold in your pocket.
