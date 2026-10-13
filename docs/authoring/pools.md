@@ -52,6 +52,8 @@ Each event will be seen several times. Use at least three variation points acros
 - `{final_year: …|…}` gives a last-year line ("the last time you'll…").
 - `{year == 1: …|…}`, `{gpa >= 3: …|…}`, and conditions on the player's state make a line respond to where they are.
 
+**Cast roles are re-filled on every showing.** A sequence must never imply the same companion as last time ("a scarf to go with last time's hat", "you each suspect the other"): anchor the progression on the place or the player, and let `{friend}` be new each time. Restrict classmate roles with `tagged(friend, student)` (a character's `role:` counts as a tag), so outsiders and staff aren't cast as fellow students.
+
 Don't build a repeatable on a one-time surprise (a secret door, a confession). Those are milestones, not pool events. The premise should be a *situation that recurs*: the queue at the refectory, the draft in the observatory, the lecturer's habit.
 
 ## What a source's pool should cover

@@ -49,6 +49,7 @@ For every event, ask the questions below. Write down an issue only when you can 
 
 **Repeats** (pool events with `repeat:`)
 - The event will be seen 3–6 times in a run. Do the variation lines (`{~a|b|c}`, `{season=…}`, `{final_year: …|…}`) make each showing read differently?
+- Cast roles are re-filled each showing: a sequence that implies the same companion as last time is a bug. Classmate roles should be `tagged(<role>, student)`.
 - Would the fourth showing still be welcome, or does the joke wear out? A repeatable event shouldn't hinge on a one-time surprise.
 
 **Items and recipes** (design §9.3)
