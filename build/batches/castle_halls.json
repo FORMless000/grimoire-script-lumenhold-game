@@ -1,0 +1,79 @@
+{
+  "name": "castle_halls",
+  "at": 1791857861361,
+  "files": [
+    "content/events/pools/castle_halls.grim"
+  ],
+  "events": [
+    "courtyard_sundial_bench",
+    "courtyard_saved_seat",
+    "courtyard_seasonal_game",
+    "library_wandering_book",
+    "library_shared_table",
+    "library_overdue",
+    "refectory_late_supper",
+    "refectory_house_tables",
+    "refectory_pudding_tax",
+    "lecture_tower_old_board",
+    "lecture_tower_stair_question",
+    "lecture_tower_scorched_room",
+    "great_hall_tomorrow_sky",
+    "great_hall_choir_rehearsal",
+    "great_hall_high_table_dare",
+    "infirmary_spare_bed",
+    "infirmary_visiting_hour",
+    "infirmary_tonic_cupboard",
+    "alchemy_lab_spare_cauldron",
+    "alchemy_lab_third_floor",
+    "alchemy_lab_unlabelled_jar",
+    "job_board_odd_jobs",
+    "job_board_lost_familiars"
+  ],
+  "contentHash": "dbdb75",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 186,
+      "total": 186
+    }
+  },
+  "critic": {
+    "batch": "castle_halls",
+    "round": 2,
+    "accept": true,
+    "summary": "All 7 round-1 issues are fixed. The cast ladders in courtyard_saved_seat, library_shared_table and refectory_pudding_tax now develop the place or the player rather than one companion. The seat-savers are gated on rel >= 0. Both friend casts are limited to students and the prefect, so Ilse can no longer be drawn. The old-board say is a random pick, and both polish lines are fixed. A full re-read found no new canon, safety, class-rule or repeat problems. One small schedule point is left as polish.",
+    "issues": [
+      {
+        "event": "lecture_tower_stair_question",
+        "problem": "Polish: Thorne's schedule puts him in the lecture tower in the morning and afternoon, but at noon he is in the great hall. The lecture tower is also open at noon, so the event can show him on the stair at a time the worldbook places him elsewhere.",
+        "fix": "Gate the event on Thorne being present at the lecture tower (e.g. cast `prof` from `present(place)` restricted to thorne, or a `when` that checks he is there), or limit it to the morning and afternoon slots."
+      }
+    ]
+  },
+  "spotCheck": [
+    "job_board_odd_jobs",
+    "courtyard_sundial_bench",
+    "courtyard_saved_seat"
+  ],
+  "accepted": true
+}

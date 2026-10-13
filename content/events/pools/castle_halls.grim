@@ -1,0 +1,609 @@
+# ============================================================
+#  Baseline pools (phase 3, step 1b): castle_halls.
+#  Repeatable routine events for map visits to the castle's
+#  public halls: courtyard, library, refectory, lecture tower,
+#  great hall, infirmary, alchemy laboratory and job board.
+#  Spec: docs/authoring/pools.md.
+# ============================================================
+
+# ---------------- The Courtyard ----------------
+
+@event courtyard_sundial_bench
+title: The Slow Sundial
+place: courtyard
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: sun
+tags: study
+scene: A stone bench beside a weathered sundial in a flagstone courtyard, a student reading with their back to the dial.
+text: {There's a bench by the old sundial, which runs eleven minutes slow.|Someone has scratched a tiny "+11" by the dial's noon. A fellow sufferer.|The sundial bench is yours by custom. A first-year asked if you came with it.} {season == "winter": Frost fills the hour lines, and the shadow skates across them.|{~Pigeons are holding a meeting on the gnomon.|A first-year checks a watch against it, horrified.|Someone has chalked a face where noon should be.}}
+> left: Read until the shadow moves
+  lore +small
+  health -tiny
+  say: {season == "winter": {~Your fingers go numb by page two. The chapter is worth it.|You read in gloves, turning pages with your teeth.}|{~You finish a chapter in the minutes the sundial owes you.|A pigeon reads over your shoulder, unimpressed.|The shadow crawls; you outpace it by three pages.}}
+> right: Close your eyes a while
+  mood +small
+  renown -tiny
+  say: {~You wake with a chalk moustache and no suspects.|You wake to a prefect clearing his throat an inch from your ear.|You wake rested and late, eleven minutes late by the dial.}
+
+@event courtyard_saved_seat
+title: A Seat on the Rim
+place: courtyard
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: group
+tags: social
+cast:
+  here: present(place) where not tagged(here, faculty) and rel(here) >= 0
+scene: Two students sitting on the dry edge of a courtyard fountain, bags between them, pigeons circling overhead.
+text: {{here} has claimed the dry stretch of the fountain rim and waves you over.|{here} is on your favourite stretch of the fountain rim, the one the sun reaches first, and waves you over.|Your stretch of the fountain rim is known now. {here} is sitting on it and shifts over without being asked.} {~Two towers' bells are arguing about the hour.|Pigeons circle like creditors.|{season == "winter": Your breath hangs between you.|Someone's lunch smells better than yours.}}
+> left: Sit down and catch up
+  social here
+  if npc_is(corvin):
+    say: {~Corvin tells you three stories, one of them true, and calls you "saint" when you don't ask which.|Corvin spots a prefect, palms something off the rim, and goes on talking as if nothing happened.}
+  elif npc_is(nessa):
+    say: {~Nessa interviews you about the weather, the soup and your love life, in that order, and writes down all three.|Nessa reads you tomorrow's headline and asks if it's too cruel. It is. She keeps it.}
+  elif npc_is(bram):
+    say: {~Bram lists every rule broken in the courtyard while you sit. Then, gruffly, he asks how your exams went.|Bram writes a demerit for a passing first-year, then tears it up when he thinks you aren't looking.}
+  else:
+    say: {~You trade the castle's news for an hour. {here} does most of the trading.|You talk until the bells stop arguing. Neither of you can remember about what.}
+> right: Wave, and keep walking
+  lore +small
+  rel here -tiny
+  mood -tiny
+  say: {~You promise next time. {here} looks as if {they} {are} counting.|You spend the hour with a book instead. It is a good book; it is not much company.}
+
+@event courtyard_seasonal_game
+title: The Courtyard Game
+place: courtyard
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: group
+tags: social
+scene: Students playing a rowdy game across a flagstone courtyard while others crowd the edges shouting bets.
+text: {season == "winter": A snowball war between Emberhall and Stillwater has reached the treaty stage.|{season == "spring": A charmed ball is loose, dodging everyone who kicks at it.|{season == "summer": It's too hot for sport, so it's catch with a charmed apple that bites.|It's conker season. The champion conker is said to be older than the fountain.}}} {Someone shouts for one more player.|They shout for you by name.|Both sides shout for you, and start bidding.}
+> left: Join in
+  challenge duel using vigor easy:
+    win:
+      renown +small
+      mood +small
+      health -tiny
+      say: {~Your side wins, and the result is disputed until supper.|You score the deciding point and are carried three whole steps before they drop you.}
+    lose:
+      health -small
+      mood +tiny
+      say: {~You are flattened, politely, by both sides at once.|You spend the rest of the game as the thing the other side aims at.}
+> right: Hold the coats and the bets
+  chance 50:
+    gold +small
+    say: {~The favourite loses. You are the only person in the courtyard who is pleased about it.|The underdog wins by a whisker, and the coats you are holding are suddenly lighter on your conscience.}
+  else:
+    gold -small
+    say: {~The favourite wins, and so does everyone who backed them, out of your pocket.|Everyone bet the same way, and everyone was right. You pay out in a hail of small coins.}
+
+# ---------------- The Library ----------------
+
+@event library_wandering_book
+title: The Book That Moved
+place: library
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: book
+tags: study
+scene: Tall library shelves leaning very slightly, a gap where one book should be, a student on a ladder peering into it.
+text: {Yesterday your book was on the third floor. Today the third floor has never heard of it.|Your book has moved again, leaving a bookmark in the gap, like a note.|You keep a map of where the shelves hide your books. They've started hiding the map.} {~In its place is a shelf of cookery spells.|In its place are bound weather reports.|In its place is one slim volume, face out, waiting.} {final_year: Soon they'll play these games with someone else.|}
+> left: Hunt it down
+  lore +small
+  mood -small
+  say: {You find it on the sixth floor, filed under "regret".|You find it in the stairwell, halfway between floors, as if it had been trying to leave.|You find it at once. Either you are learning the shelves, or they are getting lazy.}
+> right: Read what's in front of you
+  lore +tiny
+  mood +small
+  renown -tiny
+  say: {~You arrive at seminar having read the wrong book with great conviction.|You learn a great deal about something nobody will ever ask you about.|The wrong book turns out to be the right book for a question nobody asks until the exam.}
+
+@event library_shared_table
+title: The Last Free Chair
+place: library
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: candle
+tags: social study
+cast:
+  here: present(place) where not tagged(here, faculty) and rel(here) >= 0
+scene: A crowded library reading room, every table full but one, a single empty chair facing a student absorbed in a book.
+text: {The library is full. The only free chair is opposite {here}.|The only free chair is opposite {here}. A shelf has leaned over it, as if keeping it for you.|The library knows your habits now. The free chair, opposite {here}, has a book you wanted waiting on it.} {~Rain ticks on the tall windows.|A shelf nearby is quietly rearranging itself.|Footnote is asleep in the returns basket.|{season == "winter": The radiators clank like a ghost with a grudge.|Dust turns gold in the light.}}
+> left: Take the chair and work
+  rel here +small
+  lore +small
+  mood -tiny
+  if npc_is(kael):
+    say: {~Kael doesn't look up. By the end of the hour there is frost on your inkwell and a tiny, careful correction in your margin.|Kael pushes a page of his notes across to you, then looks away as if it had moved on its own.}
+  elif npc_is(lyra):
+    say: {~Lyra slides the candle an inch toward your side without looking up. Neither of you mentions it.|Lyra finishes before you, and waits, and says she wasn't waiting.}
+  elif npc_is(seraphine):
+    say: {~Seraphine writes a word in your notes that you won't understand until next week.|Seraphine reads the same page for an hour, smiling at something that isn't on it.}
+  elif npc_is(bram):
+    say: {~Bram informs you that you breathe too loudly. Then he lends you his ruler.|Bram underlines every rule in his book twice. Once, he asks your opinion of one.}
+  else:
+    say: {~You work in silence for an hour, which turns out to be a kind of company.|Neither of you speaks. Both of you get further than you would have alone.}
+> right: Whisper a question
+  rel here +small
+  mood +small
+  renown -tiny
+  say: {~The conversation is worth it. The look from the front desk has a long memory.|You get three sentences in before a shush arrives from two floors up.}
+
+@event library_overdue
+title: Overdue
+place: library
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: book
+tags: study money
+scene: A student holding a book behind their back near a wicker returns basket, a cat on the front desk watching them.
+text: {The book you borrowed in a hurry is overdue, and the library knows it. The spine has started to sigh.|Another overdue book. The front desk has begun keeping a little card with your name on it.|Your overdue books sigh in chorus now, and the card at the front desk has a second side.} {~Footnote watches you approach the returns basket with professional interest.|The front desk is, for once, unattended.|A queue of first-years is paying fines in small, sad coins.}
+> left: Own up and pay the fine
+  gold -small
+  lore +small
+  say: {The fine is paid; the desk, mollified, lends you the sequel.|You pay, and are lent another book, which you suspect is a trap.|The desk sighs, takes your coins and hands you a book it says you'll like. It is always right, which is the annoying part.}
+> right: Slip it into the basket
+  challenge deceive easy:
+    win:
+      guile +small
+      mood +tiny
+      say: {~The book goes in without a sound. It stops sighing at once, which feels like forgiveness.|You drop it in under cover of a sneeze. Footnote saw. Footnote will keep it to himself, for a price.}
+    lose:
+      gold -small
+      renown -tiny
+      mood -tiny
+      say: {~The book announces itself with a sigh like a dying organ. Everyone turns. You pay double.|It lands with a groan. The front desk adds a mark to your card without looking up.}
+
+# ---------------- The Refectory ----------------
+
+@event refectory_late_supper
+title: Late Supper
+place: refectory
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: meal
+tags: home
+scene: The far end of a long refectory table at night, most benches empty, a single student with a bowl and a half-written letter.
+text: {You come in late. The benches are empty and the cooks are wiping the far tables.|The cook leaves a lamp lit at the end of the bench now, where the draught can't find you.|Your late bowl is waiting under a plate, with a spoon laid beside it. Nobody admits to it.} {year == 1: Home feels very far away tonight.|{final_year: You count the suppers you have left, and stop.|{~The candles are down to stubs.|Someone has left a half-done puzzle on the next table.}}}
+> left: Write a letter home
+  mood +small
+  gold -tiny
+  say: {~You write two pages and post them with the last of your coppers.|You write about the food. You do not write about anything else, but they'll know.|You write a letter that is mostly questions. You post it before you can make it braver.}
+> right: Revise over the bowl
+  lore +small
+  mood -tiny
+  say: {~You learn three dates and a spill of gravy across all of them.|The cook reads over your shoulder and corrects one of your answers. She is right.}
+
+@event refectory_house_tables
+title: Where to Sit
+place: refectory
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: group
+tags: social
+scene: A crowded refectory at suppertime, a student standing with a tray between a loud house table and a quieter one of strangers.
+text: {Supper, and the question of where to sit.|Your house table has started saving a gap on the bench, roughly your width.|The gap is a named seat now, and the quiet table nods at you too.} Your house table is {~loud with a story about a goat|in the middle of a pudding treaty|singing, badly}. At the far end, {season == "winter": some second-years from Rootward huddle round a warming charm.|some second-years from Duskgate are arguing quietly about a map.}
+> left: Squeeze in with your house
+  mood +small
+  renown +tiny
+  health -tiny
+  say: {~You eat with an elbow in your ribs and laugh the whole way through.|Somebody's story gets better every time you hear it. So does the pudding.}
+> right: Sit with the strangers
+  charm +small
+  mood -tiny
+  say: {~They are polite, then curious, then actually rather good company.|It is awkward for exactly one course. By pudding, they have told you their secret map route.}
+
+@event refectory_pudding_tax
+title: The Pudding Tax
+place: refectory
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: cup
+tags: social
+cast:
+  friend: any where rel(friend) >= 10 and (tagged(friend, student) or tagged(friend, prefect))
+scene: Two friends at a refectory table, one guarding a bowl of treacle pudding, the other holding a spoon at the ready.
+text: {{friend} sits down opposite you and looks at your pudding the way a cat looks at a fish.|Your pudding has a reputation now. {friend} sits down opposite you with a spoon already in hand.|Word of your pudding tax has got round the refectory. Tonight {friend} comes to collect, with a little receipt.} {season == "winter": Tonight it's treacle sponge, steaming.|{~Tonight it's apple crumble.|Tonight it's a custard that wobbles with intent.}}
+> left: Pay the pudding tax
+  rel friend +small
+  mood -small
+  if npc_is(tobias):
+    say: {~Tobias apologises four times, eats it all, then tells you a long story about a goat who did the same. It helps, somehow.|Tobias eats half, then pushes the bowl back with a sprig of mint from his pocket on top, as an apology.}
+  elif npc_is(lyra):
+    say: {~"Efficient," Lyra says, finishing it. The next day a whole pudding appears on your tray. She doesn't mention it.|Lyra eats it in four exact bites and critiques the custard. She does not give it back.}
+  elif npc_is(mira):
+    say: {~Mira eats it while explaining a pudding-defence device that would probably work. Probably.|Mira eats it with a spoon they built themselves, which hums. They say the humming is probably normal.}
+  else:
+    say: {~{friend} eats exactly half and leaves you the burnt corner.|{friend} eats it slowly, savouring your defeat.}
+> right: Defend your pudding
+  challenge deceive easy:
+    win:
+      mood +small
+      rel friend -tiny
+      say: {~You hide it under a napkin and point at the window. It works. {friend} will remember this.|You claim it's been sneezed on. {friend} retreats in disgust, and you eat in peace.}
+    lose:
+      mood -tiny
+      rel friend +tiny
+      say: {~{friend} sees straight through you and takes the whole thing as a penalty. It is hard to stay cross.|{friend} distracts you with a story and the bowl is empty before it ends.}
+
+# ---------------- The Lecture Tower ----------------
+
+@event lecture_tower_old_board
+title: Someone Else's Lecture
+place: lecture_tower
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: scroll
+tags: study
+scene: An empty spiral lecture hall, a blackboard still dense with chalk diagrams from a class that has long gone.
+text: {term: {The fourth-floor hall is empty, but someone else's lecture is still on the board.|In the empty hall, a stub of chalk waits on the ledge, as if for you.|The board has a corner fenced off in chalk, labelled "answers here".}|In the break the boards are wiped, except one nobody dares touch.} {~Today it's a ward diagram, labelled "wrong, but how?"|Today it's half a proof, ending in a thumbprint.|Today it's a list headed "on the exam", crossed out.}
+> left: Copy it all down
+  arcana +small
+  mood -tiny
+  say: {~Your hand cramps. Your head, for once, does not.|You copy it all and understand most of it. The rest you'll grow into.}
+> right: Add your own answer
+  chance 60:
+    renown +small
+    say: {~Next time, someone has added "yes!" under your line.|Someone has answered your answer. The board has become a correspondence.|By the afternoon someone has drawn a box around your line, to keep it safe.}
+  else:
+    renown -tiny
+    mood -tiny
+    say: {~The professor whose board it was finds you holding the chalk. "Hm," says the look.|Your answer is wiped by the time you reach the door, by someone who knew better.}
+
+@event lecture_tower_stair_question
+title: One Question a Flight
+place: lecture_tower
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: tower
+tags: study
+cast:
+  prof: thorne
+scene: A narrow spiral stair inside a stone tower, a severe professor climbing ahead with a stack of papers, a student a step behind.
+text: {You meet Professor Thorne on the spiral stair. He allows one question per flight, and climbs fast.|Professor Thorne on the stair. He has slowed down by about one step in seven, which is how you know he expects you.|Thorne hands you half his stack of papers at the foot of the stair, without a word, and starts climbing.} {term: |The tower is half empty for the break; your footsteps echo twice.}{final_year: There are not many of these climbs left.|}
+> left: Ask a hard question
+  challenge exam using arcana medium:
+    win:
+      arcana +small
+      rel prof +tiny
+      say: {~He answers in four words, and the four words are enough.|"Hm," he says, then answers it properly, all the way to the seventh floor.}
+    lose:
+      arcana +tiny
+      mood -small
+      say: {~He answers with a harder question and leaves you on the landing.|"Wrong question," he says. "Find the right one by Thursday."}
+> right: Climb in silence beside him
+  rel prof +small
+  health -tiny
+  say: {~He climbs faster than you. At the top he says, "Adequate," and you are fairly sure he means the climbing.|Neither of you says a word for seven flights. It is oddly restful, apart from your legs.}
+
+@event lecture_tower_scorched_room
+title: The Scorched Room
+place: lecture_tower
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: flame
+tags: magic danger
+scene: A practice room on a lower floor of a stone tower, walls streaked with scorch marks, a sign by the door forbidding unsupervised casting.
+text: {The practice room on the Evocation floor is empty. A sign forbids unsupervised casting.|The scorched room is empty. Since your last visit, someone has underlined the sign.|The scorched room. The sign is underlined three times now, and signed by the headmistress.} {~A fresh scorch mark is shaped like a surprised face.|Someone has left a bucket of sand by the door.|{season == "winter": The walls are the only warm thing here.|The air smells faintly of singed eyebrow.}}
+> left: Practise anyway
+  mana -small
+  chance 70:
+    arcana +small
+    say: {~Your spell lands clean in the centre of the oldest scorch mark. You leave no evidence.|You practise until the flame does what you mean, not what you say.}
+  else:
+    health -small
+    renown -tiny
+    say: {~A new scorch mark joins the wall, shaped very like you.|The spell comes back at you. You leave with your eyebrows, mostly.}
+> right: Work through the theory
+  lore +small
+  mood -tiny
+  say: {~You draw the spell on paper fifty times. Paper is very forgiving.|You learn exactly why the walls look like that, and resolve not to add to them.}
+
+# ---------------- The Great Hall ----------------
+
+@event great_hall_tomorrow_sky
+title: Tomorrow's Weather
+place: great_hall
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: candle
+tags: magic
+scene: An empty great hall in the evening, floating candles drifting under a vaulted ceiling that shows a different sky from the windows.
+text: {The great hall is empty but for the candles. The ceiling shows tomorrow.|One candle drifts over to you and hovers at reading height.|Your candle meets you at the door now and leads you to your bench.} {season == "winter": Tomorrow, it says, it will snow.|{season == "spring": Tomorrow, a storm with bad manners.|{season == "summer": Tomorrow is cloudless, stars and all.|Tomorrow is fog, rolling across the vaults.}}} {final_year: There are fewer tomorrows here now.|}
+> left: Lie on a bench and watch
+  mood +small
+  health -tiny
+  say: {~You watch tomorrow until your neck stiffens. It is worth it.|A candle drifts down to see if you are all right, and stays.|You fall half asleep and dream tomorrow a little early.}
+> right: Read by the floating candles
+  lore +small
+  mood -tiny
+  say: {~A candle drips wax onto the best paragraph. You read it anyway, through the wax.|The candles follow your page like curious moths. It is the best light in the castle.}
+
+@event great_hall_choir_rehearsal
+title: The Choir Rehearses
+place: great_hall
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: music
+tags: social
+scene: A choir rehearsing on the stage of a candlelit great hall, a few singers floating a foot off the boards, the benches mostly empty.
+text: {The choir is rehearsing on the stage, a foot off the floor, and one voice short.|Still a voice short. The conductor has left a spare songbook on your bench.|The spare songbook has your name pencilled in it, and the alto line marked in red.} {season == "winter": They are learning the Midwinter music.|{~Tonight it's a round that nobody can find the end of.|Tonight it's a lament, sung far too cheerfully.}}
+> left: Listen from the back
+  mood +small
+  gold -tiny
+  say: {~The collection hat comes round. It is worth every coin.|You listen until the candles gutter. The hat comes round twice.}
+> right: Fill the missing voice
+  challenge negotiate using charm easy:
+    win:
+      renown +small
+      charm +tiny
+      say: {~You hit every note but one. The conductor says it was the best one.|You float a little off the floor on the last chord. Nobody mentions it, which is how you know.}
+    lose:
+      renown -tiny
+      mood -tiny
+      say: {~You come in confidently, in the wrong key, in the wrong song. The choir is very kind about it, which is worse.|You sing the round in a straight line and finish alone. The conductor thanks you for your enthusiasm.}
+
+@event great_hall_high_table_dare
+title: The High Table Dare
+place: great_hall
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: crown
+tags: social danger
+scene: An empty high table on a dais at the end of a dark great hall, a carved chair at its centre, students daring each other from the doorway.
+text: {Someone dares you to sit in the headmistress's chair at the empty high table.|The dare comes round again, and someone has started keeping a tally in chalk on the doorframe.|The tally on the doorframe has your column and everyone else's. First-years dare each other to dare you.} {~The chair is still warm.|A cushion embroidered with an owl sits on it.|Her teacup has been left behind, still steaming, which is worse.}
+> left: Take the dare
+  challenge deceive easy:
+    win:
+      renown +small
+      mood +small
+      say: {~You sit, cross your legs, and sip the air. The doorway erupts.|You sit for a full minute. The chair is surprisingly comfortable, and very slightly warm.}
+    lose:
+      renown -small
+      say: {~As you sit, a quiet, delighted laugh comes from the dark beyond the dais. You leave very fast.|A portrait above the table clears its throat. You have never moved so fast in your life.}
+> right: Tell them you value your life
+  renown -tiny
+  mood +tiny
+  say: {~They call you a coward, fondly. You keep your dignity, and your place at the academy.|"Coward," they chant. You bow. It seems the safest thing to do in that hall.}
+
+# ---------------- The Infirmary ----------------
+
+@event infirmary_spare_bed
+title: The Spare Bed
+place: infirmary
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: bed
+tags: home
+scene: A row of white infirmary beds under a high arched window, one turned down, a stern healer pointing at it.
+text: {You only came in for a plaster.|Your name is on the slate by the end bed, in pencil.|Your name on the slate is in ink now.} {health < 40: Sister Amaranth takes one look at you and points at the spare bed.|Sister Amaranth decides, over her spectacles, that you'll live.} {~It smells of lavender and singed wool.|Two beds down, someone hiccups in a minor key.|{season == "winter": A warming charm hums under every blanket.|The curtains breathe.}}
+> left: Lie down for an hour
+  mood +small
+  health +small
+  gold -tiny
+  say: {~You sleep the deep, dreamless sleep of the infirmary. The tonic afterwards costs a crown and tastes of regret.|You wake under a blanket you didn't pull up. There is a tonic on the side, and a bill under it.}
+> right: Help roll bandages
+  alchemy +small
+  mood -tiny
+  say: {~Sister Amaranth teaches you the knot she uses. You will never tie your boots any other way.|You roll bandages and listen to her opinion of duelling, which is long and specific.}
+
+@event infirmary_visiting_hour
+title: Visiting Hour
+place: infirmary
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: cross
+tags: social
+cast:
+  friend: any where rel(friend) >= 10 and (tagged(friend, student) or tagged(friend, prefect))
+scene: A friend propped up in an infirmary bed by a window, a visitor on a stool beside them with a paper bag of grapes.
+text: {Visiting hour. {friend} is in the bed by the window,|Visiting hour. Sister Amaranth waves you to the stool you used last time. Today it's {friend},|Visiting hour. The stool by the window has worn to your shape. Today it's {friend},} {~nursing a duelling bruise the colour of plums.|recovering from a draught of hiccups that hiccups back.|wrapped in three blankets against a lake chill.} {They} brighten{s} when you come in.
+> left: Sit and keep {them} company
+  social friend
+  say: {~You bring grapes and eat most of them yourself. {friend} doesn't mind.|You stay until Sister Amaranth sweeps you out. {friend} waves from the pillows.}
+> right: Smuggle in a pastry
+  chance 60:
+    rel friend +small
+    mood +tiny
+    say: {~The pastry makes it past the desk. {friend} eats it under the blanket like a crime.|You hide the pastry in a hollowed-out book. {friend} is delighted by both.}
+  else:
+    rel friend +tiny
+    renown -tiny
+    say: {~Sister Amaranth confiscates the pastry and eats it herself, slowly, while looking at you.|Sister Amaranth smells the pastry from across the ward and holds out her hand without a word.}
+
+@event infirmary_tonic_cupboard
+title: The Tonic Cupboard
+place: infirmary
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: potion
+tags: danger
+scene: A tall glass-fronted cupboard of coloured tonics in an empty infirmary, its door ajar, a teacup steaming on the healer's desk.
+text: {The tonic cupboard is open, and Sister Amaranth is in the back having her tea.|The tonic cupboard is open at teatime. A new label on the door reads "counted daily".|At teatime the cupboard is open, and the label now reads "counted daily, by name". The bright blue bottles have moved to the front.} {mana < 20: Your head aches with the dry ache of spent magic.|{~The bottles clink in the draught.|A label reads, in her handwriting, "absolutely not".}}
+> left: Help yourself to a tonic
+  challenge deceive easy:
+    win:
+      mana +small
+      health +tiny
+      guile +tiny
+      say: {~You drink it in the corridor. It tastes of peppermint and getting away with things.|You pocket the bottle, rinse it later, and put it back full of water. You feel slightly worse about that.}
+    lose:
+      mood -small
+      renown -tiny
+      say: {~"That one is for goats," says Sister Amaranth from the doorway. She makes you drink the right one, which is worse.|Sister Amaranth's teacup appears at your elbow. "Put it back," she says, "and sit down."}
+> right: Ask for one properly
+  gold -small
+  health +small
+  mana +tiny
+  say: {She charges you, lectures you, and gives you the good one.|She charges you, lectures you a little less, and gives you the good one.|"You again," she says, and hands it over before you ask.}
+
+# ---------------- The Alchemy Laboratory ----------------
+
+@event alchemy_lab_spare_cauldron
+title: A Spare Cauldron
+place: alchemy_lab
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: cauldron
+tags: study magic
+scene: A long laboratory bench in the afternoon light, a small cauldron free among larger ones, jars of ingredients lined up beside it.
+text: {There is a spare cauldron on the second bench, unclaimed.|The spare cauldron has a chalk mark on its rim like your initial.|Your cauldron, everyone calls it. Someone has scratched your initial into the handle.} {~Someone has left a ladle standing upright in something.|The bench smells of mint and burnt sugar.|{season == "summer": The heat makes every brew twice as eager.|The windows have steamed over with other people's experiments.}}
+> left: Brew a practice batch
+  challenge brew easy:
+    win:
+      alchemy +small
+      mood +tiny
+      say: {~The brew turns the right colour at the right moment. It feels like being trusted.|It comes out clear and smells of nothing, which is exactly right.}
+    lose:
+      alchemy +tiny
+      health -tiny
+      mood -tiny
+      say: {~The brew turns a colour you have never seen. So do your eyebrows.|It foams over and sets, firmly, around your sleeve.}
+> right: Scrub the cauldrons for crowns
+  gold +tiny
+  alchemy +tiny
+  mood -small
+  say: {~You learn more about failed potions from their residue than from any lecture.|You scrub until the bench is clean. Then you scratch your own initials into it, small, under the rim.}
+
+@event alchemy_lab_third_floor
+title: The Third-Floor Fumes
+place: alchemy_lab
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: bottle
+tags: social magic
+scene: A crowded upper floor of an alchemy laboratory, coloured vapour hanging under the ceiling, students working with handkerchiefs tied over their faces.
+text: {On the third floor the ventilation charm has given up, and the fumes have taken charge.|Someone has hung a sign by the stairs giving the fumes' mood of the day.|The fumes' sign has a column for forecasts now, in several hands.} {~Everyone is speaking in rhyme and trying to hide it.|Everyone is laughing at nothing and cannot stop.|Everyone is being unusually honest about everyone else's hair.} {season == "winter": The windows are frozen shut.|}
+> left: Stay and work in the fug
+  alchemy +small
+  health -tiny
+  say: {~You get a great deal done and agree with everyone about everything.|You leave with good notes and a headache that hums.}
+> right: Force the windows open
+  vigor +tiny
+  renown +tiny
+  mood -tiny
+  say: {season == "winter": {~The ice cracks. Half the floor cheers; half complains of the cold.|The frozen latch gives, and so does your thumbnail.}|{~The windows give. The fumes leave, sulking, and the floor applauds.|You wedge the window with a textbook. The fumes drift out, and nearly the textbook too.}}
+
+@event alchemy_lab_unlabelled_jar
+title: The Unlabelled Jar
+place: alchemy_lab
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: potion
+tags: magic danger
+scene: A dusty shelf of ingredient jars in an alchemy laboratory, one jar with no label glowing faintly, a student reaching for it.
+text: {Someone has left an unlabelled jar on the shared shelf. It glows, faintly.|Another unlabelled jar on the shared shelf, beside the cautious label someone wrote for the last one.|The shared shelf now has a row of careful labels, and one new jar at the end of it, waiting its turn.} {~It smells of thunder.|Something inside it turns over when you look.|It is warm to the touch.} {gpa >= 3: You could probably identify it, given time.|You have no idea what it is.}
+> left: Add a pinch to your brew
+  mana -tiny
+  chance 50:
+    mana +medium
+    alchemy +tiny
+    say: {~The brew turns gold and so do you, briefly. You feel enormous.|The brew sings a single note and leaves you humming with power.}
+  else:
+    health -small
+    say: {~The brew ignites, politely, and then impolitely.|Your cauldron sneezes. So, for the rest of the afternoon, do you.}
+> right: Label it, carefully
+  lore +small
+  mood -tiny
+  say: {~An hour of tests later, you write a cautious label. Someone adds a skull to it.|You work out what it is. Then you wash your hands three times.}
+
+# ---------------- The Job Board ----------------
+
+@event job_board_odd_jobs
+title: Odd Jobs
+place: job_board
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: paper
+tags: job money
+scene: A cork board in an entrance hall, a small notice pinned at an angle under the official job postings, a student reading it with a frown.
+text: {Under the proper postings, someone has pinned an odd job.|Under the proper postings is an odd job, and a second pin someone has left beside it, for answers.|The odd-jobs corner has a card addressed to you by name, in a hand you're starting to recognise.} {~Someone wants a homesick portrait read to.|Someone wants a ladder held, no questions asked.|Someone wants a reluctant gargoyle walked.} {term: |In the break the board is half bare, and the odd jobs pay a little better.}
+> left: Take the job
+  gold +small
+  mood -tiny
+  health -tiny
+  say: {~It takes all afternoon and pays exactly what it said, which is rarer than it should be.|It is stranger than the notice suggested, and pays slightly less.}
+> right: Haggle first
+  challenge negotiate easy:
+    win:
+      gold +small
+      charm +tiny
+      mood -tiny
+      say: {~You haggle the fee up by half. Your employer seems to respect you more for it.|You agree a price and a biscuit. The biscuit turns out to be the better half of the deal.}
+    lose:
+      renown -tiny
+      mood -tiny
+      say: {~Your employer takes the notice down and pins up a new one, asking for "someone less difficult".|The job goes to a first-year who asked for nothing. They seem very happy with it.}
+
+@event job_board_lost_familiars
+title: Lost and Found
+place: job_board
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: cat
+tags: social
+scene: The corner of a cork board crowded with hand-drawn posters of lost familiars and a ransom note for a sock.
+text: {The corner of the board for lost things is busier than the jobs.|An old poster in the lost-things corner now reads "found, thanks to a student".|The lost-things corner has thank-you notes now. One draws the rescuer with a halo.} {~A toad called "Sir" is missing, last seen being brave.|A ransom note demands three biscuits for one sock.|A small owl is lost, answers to nothing, and bites.} {season == "winter": Half the familiars have simply gone somewhere warm.|}
+> left: Go looking for it
+  chance 50:
+    gold +small
+    mood +small
+    say: {~You find it behind a radiator in the east tower, deeply unrepentant. The reward is small and grateful.|You find it, and the owner cries, and the reward is mostly biscuits.}
+  else:
+    health -tiny
+    mood -tiny
+    say: {~You search for an hour and find only a different, much angrier creature.|You don't find it. The next day the poster says "Found! Thanks anyway."}
+> right: Read every notice twice
+  guile +small
+  mood -tiny
+  say: {~The board is the castle's diary. You learn who lost what, and who owes whom.|You learn three secrets from the small print, and who has terrible handwriting.}

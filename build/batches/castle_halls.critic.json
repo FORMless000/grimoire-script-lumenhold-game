@@ -1,0 +1,13 @@
+{
+  "batch": "castle_halls",
+  "round": 2,
+  "accept": true,
+  "summary": "All 7 round-1 issues are fixed. The cast ladders in courtyard_saved_seat, library_shared_table and refectory_pudding_tax now develop the place or the player rather than one companion. The seat-savers are gated on rel >= 0. Both friend casts are limited to students and the prefect, so Ilse can no longer be drawn. The old-board say is a random pick, and both polish lines are fixed. A full re-read found no new canon, safety, class-rule or repeat problems. One small schedule point is left as polish.",
+  "issues": [
+    {
+      "event": "lecture_tower_stair_question",
+      "problem": "Polish: Thorne's schedule puts him in the lecture tower in the morning and afternoon, but at noon he is in the great hall. The lecture tower is also open at noon, so the event can show him on the stair at a time the worldbook places him elsewhere.",
+      "fix": "Gate the event on Thorne being present at the lecture tower (e.g. cast `prof` from `present(place)` restricted to thorne, or a `when` that checks he is there), or limit it to the morning and afternoon slots."
+    }
+  ]
+}
