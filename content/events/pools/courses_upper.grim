@@ -1,0 +1,667 @@
+# Course-morning pools, group courses_upper (docs/authoring/pools.md):
+# two more events each at levels II and III for the six core courses. Repeatable routine events.
+
+# ---------------- Evocation (track: evocation, skill arcana) ----------------
+
+@event evo_rain_barrel
+title: Rain on Demand
+track: evocation
+level: 2
+lesson: mirror_lake
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: rain
+tags: class magic
+scene: A row of students on a lakeside terrace, each with a small grey cloud above a wooden barrel, one cloud raining sideways onto a neighbour.
+text: {Tidecalling at Evocation II. Pull a cloud off the lake, park it over a barrel, and fill the barrel to the chalk line. Not over, not under.|The barrels are out on the terrace again, each with a chalk line.|You know your barrel now, the one with the iron band that's slipped.} {~Professor Marisol is reading on the steps, under a perfectly dry patch of air.|The wind keeps trying to borrow the clouds.|{season == "winter": The clouds come off the lake as sleet.|A heron watches the barrels with professional interest.}}
+> left: Wring it out to the line
+  challenge spell medium:
+    win:
+      arcana +small
+      study evocation +tiny
+      say: {~The last drop lands on the chalk. Marisol looks up from her book and back down, which counts.|You stop the rain a breath early and let the drip finish the job. Exactly to the line.}
+    lose:
+      mood -small
+      health -tiny
+      say: {~Your cloud overshoots, fills the barrel, and keeps going down your collar.|The cloud drifts left and rains on the next barrel, which is not yours, and on its owner, who is very not yours.}
+> right: Drizzle it in, slowly
+  arcana +small
+  mana -small
+  mood -tiny
+  say: {~It takes the whole lesson. Your cloud is the size of a pillow by the end, and very tired.|You fill it a thimble at a time. The others have gone in for lunch. The line is met.}
+
+@event evo_ember_stair
+title: Carrying the Ember
+track: evocation
+level: 2
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: flame
+tags: class magic danger
+scene: A student climbing a dim spiral stair, a single glowing ember resting in their bare open palm.
+text: {Pyromancy at Evocation II. Carry a live ember in your bare palm from the ground floor to the top of the Lecture Tower. Keep it alight. Keep your hand.|The ember drill again. The stair hasn't got any shorter.|Ember day. You've counted the stair by now, and you know where the draught is.} {~A door on the third floor opens just as you pass.|Someone ahead of you is climbing very fast and swearing quietly.|The lamps on the stair are out, and your ember is the only light.}
+> left: Feed it, and climb fast
+  challenge feat using arcana medium:
+    win:
+      arcana +small
+      say: {~You keep the ember bright with small breaths of heat and take the stairs two at a time. It arrives fat and orange.|You reach the top with the ember glowing and your palm only warm. The lecturer tips it into a brazier without a word.}
+    lose:
+      health -small
+      say: {~The ember flares on the landing and you learn exactly how hot a palm can get. You arrive with it alight, and with a blister.|You feed it too much at the draughty window. It bites. You carry it up the last flight in your other hand.}
+> right: Shield it, and climb slow
+  study evocation +small
+  mood -small
+  say: {~You climb at a crawl with the ember cupped against the draughts. It is alight at the top, just. So are your nerves.|Step by step, a held breath at each window. Last up, but the ember's still glowing.}
+
+@event evo_firebreak
+title: The Reed Burn
+track: evocation
+level: 3
+lesson: mirror_lake
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: flame
+tags: class magic danger
+scene: Advanced students along a lake shore in a line, half of them calling a low wall of fire through dry reeds, half of them holding back a curtain of lake water behind it.
+text: {Advanced Evocation does real work, the controlled burn of the dead reeds along the lake shore. Pyromancers lead the fire, tidecallers hold the line behind it.|Burn day. The shore smells of smoke for a week afterwards.|The reed burn. You can tell a fire's mood from its smoke now.} {~The wind is steady from the lake.|The wind can't decide.|The reeds are drier than anyone would like.} {season == "summer": The air is hot already.|Your breath steams.}
+> left: Walk at the fire's head
+  challenge spell hard:
+    win:
+      arcana +medium
+      say: {~The fire follows your hands down the shore like a dog on a lead. The lecturer lets you take it all the way to the boathouse.|You lead the fire low and even, and it goes out where you tell it. Behind you there's nothing but clean black ground.}
+    lose:
+      health -small
+      mood -small
+      say: {~A gust lifts the fire over your head. The tidecallers drop it in a wall of lake water, and you with it.|The fire jumps the line and runs. It's caught in a minute, but your eyebrows weren't.}
+> right: Hold the water line
+  study evocation +small
+  mana -small
+  mood -tiny
+  say: {~You stand in the shallows holding a curtain of lake water for an hour. Nothing gets past you. Nobody notices, which is the point.|Your arms ache from keeping the water up. It's the least glamorous job on the shore and the one the lecturer checks first.}
+
+@event evo_drowned_flame
+title: Fire Under Water
+track: evocation
+level: 3
+class: routine
+tone: eerie
+repeat: 5
+weight: 10
+art: candle
+tags: class magic
+scene: A glass tank of water on a scorched bench, a small blue flame burning steadily at the bottom of it.
+text: {Original work in Advanced Evocation, a fire that burns underwater. Every student gets a tank. Most tanks get a new pane every week.|Your tank is waiting, with a fresh crack along one pane.|The tank again. You talk to the water now, and to the fire, separately.} {~Someone's tank has boiled dry and they're staring at it.|A flame at the next bench burns green beneath the water, quite calm.|The lecturer is standing well back today.}
+> left: Light it at the bottom
+  challenge spell hard:
+    win:
+      arcana +small
+      mood +tiny
+      say: {~A small blue flame takes hold under the water and stays. The bubbles go up in a thin silver line.|It catches, gutters, and settles. The water around it doesn't even warm. You don't know how you did it.}
+    lose:
+      health -small
+      say: {~The water boils in a heartbeat and the pane splits. You wear the steam on your face for the rest of the day.|The flame goes up instead of in. The tank cracks, and your sleeve is wet and scorched at once.}
+> right: Wrap it in a bubble first
+  arcana +small
+  mana -small
+  mood -tiny
+  say: {~You hold a skin of air around the flame and sink them both. It's half a cheat, and the lecturer says so. It burns all hour.|Your flame sits in a bubble at the bottom like a moth in a jar. Not the assignment, but not nothing.}
+
+# ---------------- Astromancy & Divination (track: astromancy, skill lore) ----------------
+
+@event astro_sealed_forecast
+title: Tomorrow's Weather
+track: astromancy
+level: 2
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: rain
+tags: class study
+scene: A row of sealed envelopes pinned to a corkboard in the observatory, each labelled with a student's name and tomorrow's date.
+text: {Foresight at Astromancy II. Write down tomorrow's weather to the hour, seal it, pin it to the board. The lecturer opens the envelopes a day later, in public.|The envelopes come out again.|You've written so many forecasts you dream in drizzle.} {~Outside the dome the sky is giving nothing away.|Last week's best forecast just said "Wet", and was right.|{season == "winter": Frost on the dome, and snow somewhere in the future.|Clouds over the lake, moving with intent.}}
+> left: Commit to the hour
+  challenge research medium:
+    win:
+      lore +small
+      study astromancy +tiny
+      say: {~"Rain at the third bell, stopping at the fourth." It does. The lecturer reads it out twice.|You forecast a fog to the hour. When the envelope is opened, the fog is pressing on the dome.}
+    lose:
+      mood -small
+      say: {~"Clear by noon." It rains till evening. Your envelope is read out to great enjoyment.|You predicted wind. Tomorrow turns out so still that a feather on the sill doesn't move.}
+> right: Hedge, and learn from it
+  study astromancy +small
+  mood -tiny
+  say: {~"Some weather, at some point." The lecturer reads it out flatly and moves on. But you spent the hour watching how the good forecasters work.|You write a careful forecast with three possibilities. It's right, technically. The lecturer calls it "an umbrella of a prophecy".}
+
+@event astro_stubborn_telescope
+title: The Stubborn Telescope
+track: astromancy
+level: 2
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: planet
+tags: class study
+scene: A student tugging at a huge brass telescope in a dome, while it points stubbornly at a different patch of sky.
+text: {Astromancy II needs exact positions, and that means the great telescope. The great telescope points wherever it likes.|Your night on the great telescope. It is already pointing at something else.|The telescope swings toward you as you come in, like an old dog.} {~Tonight it wants the moon.|Tonight it's fixed on the lake, which is not in the sky.|Tonight it keeps drifting east, slowly, like a sigh.}
+> left: Argue it round
+  challenge research medium:
+    win:
+      lore +small
+      say: {~You coax it, inch by inch, and it settles on your star with a creak like a shrug.|You find the right thing to say to an old brass instrument. It points where you ask. You write the position fast.}
+    lose:
+      mood -small
+      health -tiny
+      say: {~It spends the night pointing where it likes. So do you, in the end, cold and annoyed.|You lean on it. It leans back. You go to bed at the fourth bell with nothing written down.}
+> right: Work it out from tables
+  lore +small
+  mood -small
+  say: {~You leave the telescope to its moods and work the positions out by candlelight from the old tables. It takes until dawn.|Pages of sums by candle. The telescope watches over your shoulder, pointedly.}
+
+@event astro_long_watch
+title: Keeping the Light
+track: astromancy
+level: 3
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: lantern
+tags: class magic
+scene: A student on the observatory roof before dawn, a glass lantern in their lap holding a single cold point of starlight.
+text: {Advanced Starlight. Hold one star's light in a lantern through a whole night on the roof. It wants to go home before dawn. Your job is to keep it.|The night watch on the roof again, a lantern and a blanket.|Your lantern, your star, your corner of the roof.} {~The star you've drawn is pale and blue.|The star you've drawn is small and stubborn.|The star you've drawn is very old and very faint.} {season == "winter": Frost on the slates.|The night is warm and full of moths.}
+> left: Keep it all night
+  lore +small
+  study astromancy +small
+  health -small
+  mood -tiny
+  say: {~At dawn your star is still in the lantern, blinking at the sun it was never meant to meet. You are blinking too.|You keep it till the lecturer comes up at sunrise. Your eyes are full of sand and your lantern is full of light.}
+> right: Let it go at midnight
+  lore +tiny
+  say: {~You open the lantern and the light goes up like a kite let loose. You watch it all the way home and then go to bed.|You let it go early. The lecturer's note just says "Released at midnight." You suspect it's not a compliment.}
+> up[starlight]: Feed it your own starlight
+  lore +small
+  say: {~You pour a little of your own starlight into the lantern. The star brightens as if it had been lonely.|Your light and the star's together are enough to read by. You read until dawn.}
+
+@event astro_two_futures
+title: Both Futures
+track: astromancy
+level: 3
+class: routine
+tone: eerie
+repeat: 5
+weight: 10
+art: dice
+tags: class magic
+scene: A coin balanced on edge on a dark table in the observatory, with two faint ghostly outcomes hovering above it.
+text: {Advanced Foresight. The lecturer balances a coin on its edge. Read both futures at once, the one where it falls heads and the one where it falls tails, and hold them both.|The coin on its edge again. You know how it feels to be two places at once now.|The coin. People come out of this lesson pressing their temples.} {~Someone in the front row says "heads" in two voices.|The lecturer is drinking tea and looking at nobody.|The candles burn straight up, very still.}
+> left: Hold both to the end
+  challenge exam hard:
+    win:
+      lore +medium
+      say: {~For a long moment you live both futures, side by side, and neither is frightening. Then the coin falls, and one of them goes out.|You hold both until the lecturer flicks the coin. One future folds away, neat as a letter.}
+    lose:
+      health -small
+      mood -small
+      say: {~The futures tangle and you get a headache that lasts till supper. For an hour you keep reaching for the wrong door handle.|You lose track of which future is which, and of which way is down. The lecturer sits you by an open window.}
+> right: Read one, then the other
+  study astromancy +small
+  mana -small
+  say: {~You read heads, then tails, carefully, one after the other. It's not the exercise, but you get both right.|One future at a time. Slower, safer, and the lecturer says you'll get there.}
+
+# ---------------- Alchemy & Healing (track: alchemy, skill alchemy) ----------------
+
+@event alch_unlabelled_vial
+title: The Unlabelled Vial
+track: alchemy
+level: 2
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: bottle
+tags: class study
+scene: A vial of clear liquid on a lab bench beside a strip of paper turning slowly purple, a student squinting at both.
+text: {Alchemy II hands out an unlabelled vial each, and an hour to say what's in it. Paper strips, a candle, a nose and a notebook are allowed.|Another unlabelled vial. The lecturer enjoys these.|The vial is waiting on your bench. You've started recognising the corks.} {~Yours is perfectly clear and smells faintly of pears.|Yours is cloudy and keeps settling into layers.|Yours is warm to the touch.} {~The ventilation charm is wheezing again.|The lab is quiet except for scratching quills.}
+> left: Test it the long way
+  alchemy +small
+  mood -small
+  say: {~Strip, flame, cold, filter. By the end of the hour you've a name and three reasons for it.|Every test, in order, written up neatly. Your notes are dull and your answer is right.}
+> right: Trust your nose
+  challenge brew medium:
+    win:
+      alchemy +small
+      study alchemy +tiny
+      say: {~One sniff and you know it. You write the name and use the spare hour to check yourself.|You tip the vial under your nose and the answer arrives before the smell does. The lecturer raises an eyebrow and a tick.}
+    lose:
+      health -tiny
+      mood -small
+      say: {~One sniff and your eyes stream for the rest of the morning. You guessed wrong, too.|It's not what you thought, and it is very much up your nose. You spend the hour at the window.}
+
+@event alch_cracked_tray
+title: The Cracked Tray
+track: alchemy
+level: 2
+lesson: infirmary
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: heart
+tags: class magic
+scene: A tray in the infirmary laid with a cracked teacup, a cracked hand mirror and a cracked bone from a teaching skeleton, a student's hands hovering over them.
+text: {Mend at Alchemy II. Sister Amaranth sets out a tray of cracked things, cup, mirror and bone. "Mend those," she says, "and then we'll see about people."|The tray again. Sister Amaranth has found new things to crack.|Sister Amaranth puts the tray down and nods at it. You know the drill.} {~A second-year is waiting on a cot with a sprained wrist from broom practice.|A third-year with a scalded hand from Evocation is waiting.|A first-year is in with a split lip and a long story about a door.}
+> left: Mend the tray, perfectly
+  challenge enchant medium:
+    win:
+      alchemy +small
+      say: {~The cracks close like seams being sewn shut. Sister Amaranth runs a thumbnail along the cup and finds nothing.|Cup, mirror, bone, whole. Sister Amaranth says "Fine," which is her highest word.}
+    lose:
+      mood -small
+      say: {~The cup mends with a ridge in it, the mirror with a ripple. Sister Amaranth sets them on the shelf of shame.|You mend the bone a little crooked. Sister Amaranth says that's how you learn and puts it back in the skeleton anyway.}
+> right: Mend the patient instead
+  study alchemy +small
+  mana -small
+  mood -tiny
+  say: {~You skip the tray and take the patient, with Sister Amaranth's hand on your shoulder. It goes slowly. It works.|Sister Amaranth lets you try on the patient while she watches. You're shaky and slow, and you'll never mend a cup the same way again.}
+
+@event alch_lake_fever
+title: Lake Fever Season
+track: alchemy
+level: 3
+lesson: infirmary
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: potion
+tags: class magic
+scene: A row of infirmary cots, students under blankets looking flushed and sorry for themselves, an advanced student drawing a faint grey haze out of one patient's brow.
+text: {Advanced Alchemy treats real patients. The infirmary has Lake Fever cases, from swimming where they shouldn't. Sister Amaranth wants the fever drawn out, not just cooled.|Lake Fever again. Students never learn, Sister Amaranth says, and neither do lakes.|Fever duty. Sister Amaranth hands you a list without looking up.} {~Your patient says they only went in up to the knees.|Your patient is a prefect, very embarrassed.|Your patient insists they were pushed.}
+> left: Draw the fever out by hand
+  challenge enchant hard:
+    win:
+      alchemy +small
+      study alchemy +small
+      say: {~The fever comes out like a grey thread pulled from wool. Your patient sleeps. You'd like to.|You draw it out slowly and the flush leaves their face. Sister Amaranth checks your work and doesn't check twice.}
+    lose:
+      health -small
+      mood -tiny
+      say: {~You draw out half of it and the half you drew comes with you. You spend the evening shivering in the next cot.|The cure has to come from somewhere. You wake up two hours later on the floor, with a blanket on you.}
+> right: Brew the slow tonic
+  alchemy +small
+  mood -small
+  say: {~Three hours of stirring willow bark and lake moss. The tonic works by morning, which is slower and safer.|You brew the old remedy by the book. Sister Amaranth tastes it, grimaces, and approves.}
+> up[purify]: Purify it in one pass
+  study alchemy +tiny
+  health -tiny
+  say: {~Your spell pulls the fever clean in a single pass. It leaves you yawning.|One pass of Purify and the patient sits up asking for soup. The tiredness lands on you an hour later.}
+
+@event alch_third_floor_still
+title: The Still Cracks
+track: alchemy
+level: 3
+class: incident
+tone: tense
+repeat: 5
+weight: 10
+art: cauldron
+tags: class danger
+scene: A copper still on a long bench, hissing from a fresh crack, a thin green vapour creeping across the laboratory floor.
+text: {Advanced Alchemy distils essences that would rather be gas. The ventilation charm gave up on the third floor years ago. Today your still cracks.|Distilling day, and a hiss from your still that you know.|Your still has cracked again. You're getting fast at noticing.} {~The vapour is green and smells of mint.|The vapour is pale and smells of nothing, which is worse.|The vapour is curling toward the next bench.}
+> left: Mend the crack, still hot
+  challenge enchant hard:
+    win:
+      alchemy +small
+      say: {~You close the copper under your palms while it's still singing. The hiss stops. The class breathes out.|The crack seals with a sound like a sigh, and the batch is saved. The lecturer opens a window, for form's sake.}
+    lose:
+      health -small
+      mood -small
+      say: {~The crack closes, then reopens with a pop. You breathe in a mouthful and spend the afternoon seeing double.|You burn your fingertips on the copper and the vapour gets out anyway. The lab is cleared for an hour.}
+> right: Shout, and clear the bench
+  study alchemy -tiny
+  mood -small
+  say: {~You call the warning and clear the bench. The batch is lost, nobody is hurt, and you start again next week.|Everyone is out in the corridor in a minute flat. The lecturer goes back in, a scarf over the mouth, and comes out carrying your ruined batch.}
+
+# ---------------- Illusion & Glamour (track: illusion, skill charm) ----------------
+
+@event illu_walking_double
+title: The Walking Double
+track: illusion
+level: 2
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: mirror
+tags: class magic
+scene: Two identical students walking side by side across a lecture hall, one of them leaving no footprints in the chalk dust.
+text: {Mirror at Illusion II. Make a double of yourself and walk it across the room. "Standing doubles are furniture," says Professor Vey. "Make it walk."|Doubles day. Vey watches feet, not faces.|Your double's walk is improving. It has your slouch now.} {~The floor has been dusted with chalk, to show footprints.|Someone's double is walking backwards.|Vey is sitting in the front row, which is unsettling.}
+> left: Walk it right across
+  challenge enchant using charm medium:
+    win:
+      charm +small
+      say: {~Your double crosses the room at your pace and even scuffs the chalk. Vey watches its feet the whole way and says nothing, which is high praise.|It walks, it turns, it nearly sits down. Vey says, "Better."}
+    lose:
+      mood -small
+      say: {~Halfway across, your double's legs forget to move and it glides. Vey says it's a ghost, not a person, and moves on.|Your double walks into the wall and keeps walking. The class watches it vanish into the plaster.}
+> right: Keep it still and perfect
+  study illusion +small
+  mana -small
+  say: {~Your double stands at your elbow, perfect to the last button. It doesn't move. Vey calls it a very good wardrobe.|You make it flawless and keep it standing. Vey taps its nose, and frowns when it holds.}
+
+@event illu_good_news
+title: Good News, Read Aloud
+track: illusion
+level: 2
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: mask
+tags: class magic
+scene: A student standing at a lectern reading from a dull notice while the listening class smiles as though hearing wonderful news.
+text: {Glamour at Illusion II, and today it's the voice. Vey hands you a dull notice and asks you to read it so the class hears good news.|Another notice from Vey's drawer of very dull notices.|Vey has saved the dullest notice for you.} {~Today's is about the drains.|Today's is about a change to the laundry rota.|Today's is a list of overdue library books, in full.}
+> left: Glamour every word
+  challenge deceive using charm medium:
+    win:
+      charm +small
+      say: {~By the second line the room is beaming. Someone claps. Vey waits for the clapping to stop and asks what the notice said. Nobody knows.|You read it warm and low, and the class leans in as if you were reading their letters from home.}
+    lose:
+      mood -small
+      say: {~Your glamour slips on a long word and the room hears exactly what it is: a notice. Someone yawns on purpose.|You overdo it. The class looks alarmed, as if the drains were about to propose.}
+> right: Read it plain, watch others
+  study illusion +small
+  mood -tiny
+  say: {~You read it straight and sit down. Then you watch the others, and notice the best of them barely change their voices at all.|Plain reading, polite applause. You spend the hour writing down where the good ones breathe.}
+
+@event illu_false_room
+title: The Room That Isn't
+track: illusion
+level: 3
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: door
+tags: class magic danger
+scene: A student walking confidently into a room that is partly painted light, a real stone wall standing where the illusion shows an open doorway.
+text: {Advanced Illusion asks for a double of a whole room. Hang it over the real one and walk a classmate through it. Vey's rule is simple. If anyone walks into a wall, it's your fault.|The room exercise. Somebody always walks into something.|You hang your room. You've learned where the real walls are.} {~Vey's volunteer today is a porter with a tray of cups.|Vey's volunteer today is Vey.|The real room has been rearranged overnight.}
+> left: Hang the whole room
+  challenge enchant using charm hard:
+    win:
+      charm +medium
+      say: {~Your walker crosses the false room and sits down in a false chair, which you hold up for them. Vey writes for a long time.|The room holds. Nobody touches a real wall. Vey walks it twice to be sure.}
+    lose:
+      mood -small
+      health -tiny
+      say: {~Your walker steps through a door you painted onto solid stone. You take them to Sister Amaranth with an apology.|Halfway across the room flickers, and the walker freezes. So do you, and you knock over a real chair.}
+> right: Chalk the real walls first
+  study illusion +small
+  mana -small
+  say: {~You hang half a room, with the real walls marked out in chalk so nobody could miss them. Vey calls it "a room with a safety rope".|Safe and visible, chalk lines everywhere. Vey sighs, and then copies down how you did the window.}
+
+@event illu_peeling_layers
+title: Seeing Through
+track: illusion
+level: 3
+class: routine
+tone: eerie
+repeat: 5
+weight: 10
+art: eye
+tags: class magic
+scene: A lecture hall in layers like peeled paper: one layer with velvet curtains, one bare stone, one darker one beneath, and a student standing at its centre.
+text: {Advanced Illusion. To make illusions you must see through them. Vey layers the hall in false rooms, one on another, and you peel them back one at a time.|Layer day. The hall looks normal. That's never a good sign.|You count the layers when you come in. You're usually wrong.} {~The top layer has velvet curtains.|The top layer is a summer garden.|The top layer is the hall itself, just slightly too tidy.}
+> left: Peel down to the stone
+  challenge exam using charm hard:
+    win:
+      charm +small
+      study illusion +tiny
+      say: {~Seven layers, then bare stone. Vey asks how many. You say seven. She smiles and says eight, and points at herself.|You reach the stone and stay there, sure of it. Vey nods slowly. "Hold on to that," she says.}
+    lose:
+      mood -small
+      health -tiny
+      say: {~You peel one too many and the stone underneath looks false. For the rest of the day you knock on walls.|After the fourth layer you stop being sure which way is up. Vey walks you to a chair, which is real.}
+> right: Stop at the third layer
+  charm +small
+  mood -small
+  say: {~Three layers and you stop, dizzy. Vey says knowing when to stop is the other half of the skill.|You get through three and sit down. The hall still looks too tidy, and you decide not to ask.}
+
+# ---------------- Beastcraft & Flight (track: beastcraft, skill vigor) ----------------
+
+@event beast_hedge_run
+title: The Hedge Run
+track: beastcraft
+level: 2
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: broom
+tags: class magic danger
+scene: Students on brooms skimming low over a line of hedges in a field, one broom bucking as its rider leans forward.
+text: {Beastcraft II puts haste on a broom, low over the hedges, as fast as you dare. Professor Brask says brooms are harder to reason with than hippogriffs, and harder to apologise to.|The hedge run. Your broom remembers last time.|Hedges. You've learned to read a broom's sulk through the handle.} {~Brask is timing with a crooked hourglass.|The hedges have been trimmed, unevenly.|{season == "autumn": Leaves come up behind every broom.|{season == "spring": The hedges are full of nesting birds who object.|The ground is hard and unforgiving.}}}
+> left: Haste at the last hedge
+  challenge feat using vigor medium:
+    win:
+      vigor +small
+      study beastcraft +tiny
+      say: {~You borrow a hawk's speed for the last hedge and clear it by a hand. Brask stops the hourglass and nods.|The broom flinches, then commits. You come in fastest of the morning, with hedge in your hair.}
+    lose:
+      health -small
+      say: {~The broom bucks at the haste and you go over the hedge without it.|You're fast. The broom is faster, briefly, and then upside down. You land in a bramble.}
+> right: Fly it clean and steady
+  vigor +small
+  mood -tiny
+  say: {~No haste, just a clean low line over every hedge. Brask says it's the best boring flying she's seen all week.|You fly it slow and tidy. The broom approves. Brask is less impressed.}
+
+@event beast_owl_post
+title: Teaching the Owls
+track: beastcraft
+level: 2
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: owl
+tags: class nature
+scene: A student in a stable loft with a young owl on their arm, pointing out of a high window toward a distant tower.
+text: {Beast-speech at Beastcraft II. The young owls must learn the post routes. Brask hands you one and says, "Explain the castle to it."|A new young owl, and the same castle to explain.|Another owl. You've got a speech now, and a map scratched on a beam.} {~Your owl wants to know why there are so many towers.|Your owl has strong opinions about the library.|Your owl keeps falling asleep, standing up.}
+> left: Explain it in owl
+  challenge negotiate using vigor medium:
+    win:
+      vigor +small
+      study beastcraft +tiny
+      say: {~You describe the castle in winds, perches and mice. The owl blinks, and goes and comes back with Brask's letter.|It takes a while to get "left" across to a bird. When it does, the owl does the route twice to show off.}
+    lose:
+      mood -small
+      say: {~The owl listens closely, then flies to the kitchens. Every time.|The owl makes you explain "tower" seven times and then goes to sleep on your head.}
+> right: Walk the route with it
+  vigor +small
+  health -tiny
+  mood -tiny
+  say: {~You walk the whole post route with the owl on your arm, up every stair. Your legs ache and the owl has learned it.|Up and down the castle with an owl on your wrist. People stare. The owl stares back.}
+
+@event beast_hooves
+title: Hoof Day
+track: beastcraft
+level: 3
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: paw
+tags: class nature danger
+scene: A student crouched beside a hippogriff in a stall, a hoof trimming knife in hand, the hippogriff looking down with one sceptical eye.
+text: {Advanced Beastcraft does the work nobody else wants. Today it's hooves. A hippogriff's need trimming each month, and the hippogriff disagrees.|Hoof day. The stall is the same; the hippogriff's opinion is too.|Hooves. You go in with a bucket of apples and a plan.} {~Today's hippogriff is grey and patient.|Today's is young and very sure of itself.|Today's is old and wants to tell you about it.}
+> left: Talk it into lifting a foot
+  challenge negotiate using vigor hard:
+    win:
+      vigor +small
+      study beastcraft +small
+      say: {~It listens to your case and lifts a hoof with enormous dignity. Brask watches from the door and says nothing.|You talk it through every hoof. It sighs at you between each one, like a patient uncle.}
+    lose:
+      health -small
+      mood -tiny
+      say: {~It lets you get all the way to the last hoof before stepping on your foot.|It hears you out, then sits on you. Brask lifts it off with one hand and a word.}
+> right: Rope, and Brask holding
+  vigor +small
+  health -small
+  say: {~The old way: a rope, a strong arm, Brask at its head. It's sweaty work and nobody enjoys it, including the hippogriff.|With Brask holding the head and you holding on, you finish every hoof. Your shoulders will remember it.}
+
+@event beast_night_stable
+title: Sitting Up With the Sick
+track: beastcraft
+level: 3
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: lantern
+tags: class nature
+scene: A student sitting in straw by lantern light, a sick creature curled beside them, the rest of the stables asleep.
+text: {Advanced students take turns sitting up in the stables when a creature is ill. Brask leaves you a lantern, a blanket and a list.|Your turn on the night watch, and the list is shorter.|The night watch. The owls are used to you now and only mutter.} {~Tonight it's the griffon chick, off its food.|Tonight it's an old owl with a cough.|Tonight it's a hippogriff who ate something it shouldn't.} {season == "winter": The stable is cold enough to see your breath.|It's warm in the straw.}
+> left: Sit up all night
+  vigor +small
+  study beastcraft +small
+  health -small
+  mood -tiny
+  say: {~You don't sleep, and by dawn it's breathing easier. Brask finds you asleep in the straw and leaves you there.|You watch it all night, changing the water and the straw. In the morning it eats, and so do you, enormously.}
+> right: Ask it where it hurts
+  challenge negotiate using vigor hard:
+    win:
+      vigor +small
+      say: {~It tells you, in its own way, exactly where it hurts. You write it on Brask's list and both of you sleep.|It points with its whole body. You bring the right tonic and it drops off before the lantern does.}
+    lose:
+      mood -small
+      say: {~It tells you a great deal, about its neighbours, the hay and the moon, and nothing about where it hurts.|It won't talk to you. It talks to the lantern. You stay up anyway, which is the point.}
+> up[beast_speech]: Speak with it properly
+  study beastcraft +small
+  say: {~With the spell, it's easy: it explains the pain, the food, and what it thinks of the night. You fetch the right remedy.|You speak properly, and it answers properly, slowly, like someone who's been waiting. You both feel better.}
+
+# ---------------- Umbral Theory (track: umbral, skill guile) ----------------
+
+@event umbral_ward_candle
+title: Ward the Candle
+track: umbral
+level: 2
+class: routine
+tone: tense
+repeat: 4
+weight: 10
+art: candle
+tags: class magic social
+cast:
+  partner: any where tagged(partner, student)
+scene: Two students at a dim bench under low lamps, a candle between them inside a faint pale shell, one student trying to blow it out.
+text: {Ward at Umbral Theory II. Ward a candle while your partner tries to put it out. Today that's {partner}.|Candle wards again, and the lamps are lower. {partner} is across the bench.|The candle exercise. You're paired with {partner}, who rolls up {their} sleeves.} {~The professor walks between the benches with a hand over the flames.|The room smells of wax and burnt thread.|Someone's ward has shrunk to the size of a thimble.}
+> left: A thick, honest shell
+  guile +small
+  mana -small
+  rel partner +tiny
+  say: {~Your ward is plain and solid. {partner} blows and blows and the candle doesn't even lean.|Strong and dull. {partner} gives up and the two of you watch the flame burn down.}
+> right: A ward that turns them aside
+  challenge deceive medium:
+    win:
+      guile +small
+      study umbral +tiny
+      say: {~Your ward turns {partner}'s breath round, and it blows {their} own hair into {their} eyes. The professor stops and says, "Ah."|{partner} reaches for your candle and finds {their} hand on the wrong side of the bench. The professor approves.}
+    lose:
+      mood -small
+      rel partner -tiny
+      say: {~Your clever ward turns aside the wrong thing, and the candle goes out with a smug little puff. {partner} smirks.|The ward bends {partner}'s breath straight into your face. You sneeze and the candle goes out.}
+
+@event umbral_dark_roll
+title: Who Moved
+track: umbral
+level: 2
+class: routine
+tone: eerie
+repeat: 5
+weight: 10
+art: moon
+tags: class magic
+scene: A pitch-dark classroom at the top of a tower, a few vague shapes of students sitting perfectly still in the gloom.
+text: {Umbral Theory II. The professor puts out every lamp, and in the dark one student moves. Say who, and where to.|Lamps out. You've learned to hear a sleeve.|The dark. You know the room's sounds, and which floorboard is a liar.} {~Rain on the tower roof makes it harder.|It's so quiet you can hear the stair breathing.|Somebody's stomach rumbles, which helps no one.}
+> left: Listen, and name them
+  guile +small
+  mood -tiny
+  say: {~"Third bench, to the window." Right. The professor relights a lamp and moves on.|You get it on the second try, by the creak of a bench and a faint smell of soap.}
+> right: Be the one who moves
+  challenge deceive medium:
+    win:
+      guile +small
+      study umbral +tiny
+      say: {~You cross the whole room in the dark and nobody names you. When the lamps come up you're behind the professor.|Nobody hears you. The professor says, "Someone moved," and seems pleased not to know who.}
+    lose:
+      health -tiny
+      mood -small
+      say: {~You catch a desk with your shin. "Window, limping," says everyone at once.|Your shoe squeaks on the second step. The whole class names you, with feeling.}
+
+@event umbral_corridor_step
+title: Across the Corridor
+track: umbral
+level: 3
+class: routine
+tone: eerie
+repeat: 5
+weight: 10
+art: ghost
+tags: class magic danger
+scene: A dim stone corridor at the top of a tower, a student half stepping out of the shadow of one doorway while their own shadow lingers in another across the hall.
+text: {Advanced Umbral Theory. Shadowstep across the corridor, door to door, the farthest the professor allows. "Short distances only," the professor says. "This is as short as long gets."|The corridor. The cold in between is colder than last time.|You stand at the door with your heels on the line. You know the cold that's coming.} {~The lamps are out on the landing.|A draught is moving along the floor.|Someone came back from it with frost on one shoulder.}
+> left: Step across
+  challenge deceive hard:
+    win:
+      guile +small
+      mood +tiny
+      say: {~One shadow, cold and long, and then the other. You come out on the far side shaking and grinning.|You step in by one door and out by the other, with a breath of frost on your collar. The professor writes your name, and a time.}
+    lose:
+      health -small
+      mood -small
+      say: {~The cold in between is longer than you thought. You come out in the right doorway and can't feel your hands for an hour.|You step and come out in the same doorway you went in by, with the feeling that something looked at you on the way.}
+> right: Walk it, counting shadows
+  study umbral +small
+  mood -tiny
+  say: {~You walk the corridor and count every shadow and every lamp. The professor calls this "mapping your road".|You pace it out and write down each shadow's depth. Next time you'll step it. Probably.}
+> up[shadowstep]: Step with a held breath
+  guile +tiny
+  health -tiny
+  say: {~You step without thinking about it, the way the spell knows. The cold barely touches you.|The spell takes you over quick and clean. Your fingers are cold for a minute.}
+
+@event umbral_unpick_ward
+title: Unpicking the Box
+track: umbral
+level: 3
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: lock
+tags: class magic
+scene: A small iron-bound box on a bench under a dim lamp, faint threads of a pale ward wrapped around it, a student leaning close with a needle.
+text: {Advanced Umbral Theory. The professor wards a small box and you unpick the ward without it noticing. "A ward that notices you," the professor says, "tells someone."|Box day. The professor has a new box, and a new ward on it.|The box. You've got a favourite needle for this now.} {~This ward is fine as a cobweb.|This ward is thick and patient.|This ward hums when you breathe on it.}
+> left: Thread by thread
+  guile +small
+  mana -small
+  mood -tiny
+  say: {~An hour with a needle and a steady breath, and the box opens. The professor checks the ward and it has no idea.|You undo it strand by strand. It takes the whole lesson, and you don't look up once.}
+> right: Cut it in one stroke
+  challenge deceive hard:
+    win:
+      guile +small
+      study umbral +small
+      say: {~You find the knot and cut it clean. The ward never knows. The professor raises a brow and opens the box.|One cut and the threads fall away. The professor spends a moment looking at the box and then at you.}
+    lose:
+      mood -small
+      health -tiny
+      say: {~The ward notices and rings like a little bell. The professor says, "And now someone knows." Everyone looks at you.|The ward snaps back at your hand and stings. The box stays shut.}
