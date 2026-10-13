@@ -421,7 +421,7 @@
             case 'break': return eng.phaseOf() === 'break';
             case 'season': return eng.seasonOf();
             case 'final_year': return eng.yearOf() === eng.years;
-            case 'slot': return s.cur && s.cur.slot ? s.cur.slot : '';
+            case 'slot': return eng._slot || (s.cur && s.cur.slot) || '';   // the slot being drawn (director) or shown
             case 'term_index': return eng.termIndex();
             case 'gpa': return eng.gpa();
             case 'runs_completed': return s.runsCompleted || 0;
@@ -1002,15 +1002,15 @@
         if (e.actor && e.actor !== 'any' && e.actor !== 'npc') item.actor = e.actor;
         // item.force (debug/preview) skips the `when` check
         if ((e.actor === 'any' || e.actor === 'npc' || (e.cast && !item.cast)) && !item.actor && !item.cast) {
-          this._place = item.place || null;
+          this._place = item.place || null; this._slot = item.slot || null;
           const c = this.candidates(e); const pick = this.pickWeighted(c);
-          this._place = null;
+          this._place = null; this._slot = null;
           if (!pick) continue;
           item.actor = pick.actor; if (pick.cast) item.cast = pick.cast;
         } else if (!item.force) {
-          this._cast = item.cast || null; this._place = item.place || null;
+          this._cast = item.cast || null; this._place = item.place || null; this._slot = item.slot || null;
           const ok = this.test(e.when, item.actor);
-          this._cast = null; this._place = null;
+          this._cast = null; this._place = null; this._slot = null;
           if (!ok) continue;
         }
         s.cur = item;

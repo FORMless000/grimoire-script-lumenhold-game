@@ -75,3 +75,12 @@ test('text variation: a colon inside {~…} or {&…} is text, not a condition',
   assert.deepEqual(G.textTokens('{~Note: a|b}').conds, []);
   assert.deepEqual(G.textTokens('{final_year: a|b}').conds, ['final_year']);
 });
+
+test('slot: a when on slot sees the slot being drawn, not the previous card', () => {
+  const eng = new Engine(content); quiet(() => eng.newGame({ seed: 4 }));
+  eng.s.cur = { id: 'x', slot: 'morning' };
+  eng._slot = 'evening';
+  assert.equal(eng.env().ident('slot'), 'evening');
+  eng._slot = null;
+  assert.equal(eng.env().ident('slot'), 'morning');
+});
