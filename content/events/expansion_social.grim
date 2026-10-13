@@ -4,7 +4,7 @@
 
 @event soc_lost_notes
 title: The Borrowed Notes
-class: routine
+class: windfall
 tone: light
 cast:
   npc: any where not tagged(npc, faculty) and rel(npc) >= 3
@@ -93,7 +93,7 @@ text: {npc} has dragged a blanket up to the roof. "There's a meteor shower," {th
 
 @event soc_jealous_friend
 title: Jealousy
-class: routine
+class: windfall
 tone: light
 cast:
   npc: any where (bond(npc) == "friend" or bond(npc) == "close")
@@ -186,7 +186,7 @@ text: {npc} has twisted an ankle on the far side of the grounds, a long way from
 
 @event soc_rival_decency
 title: An Unexpected Kindness
-class: routine
+class: windfall
 tone: tense
 cast:
   npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -9) and not tagged(npc, faculty)

@@ -844,7 +844,7 @@
         if (!n.met) continue;
         const notes = [], deltas = {};
         if (s.turn - (n.touched || 0) > 6 && n.rel !== 0) { const d = n.rel > 0 ? -Math.min(1, n.rel) : Math.min(1, -n.rel); n.rel += d; deltas['rel:' + id] = d; }
-        if (n.spark > 0 && n.sparked !== s.turn - 1) { const nv = Math.floor(n.spark * 0.85); if (nv !== n.spark) { deltas['spark:' + id] = nv - n.spark; n.spark = nv; } }
+        if (n.spark > 0 && n.sparked !== s.turn - 1) { const nv = Math.floor(n.spark * 0.9); if (nv !== n.spark) { deltas['spark:' + id] = nv - n.spark; n.spark = nv; } }
         if (n.bond === 'partner') {
           n.lowSpark = n.spark < 20 ? (n.lowSpark || 0) + 1 : 0;
           if (n.lowSpark >= 2) { n.bond = 'ex'; n.lowSpark = 0; notes.push({ kind: 'bond', npc: id, status: 'ex', text: shortName(this.c.npcs[id]) + ': ex' }); }

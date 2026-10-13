@@ -11,7 +11,7 @@
 
 @event soc_study_session
 title: Study Session
-class: routine
+class: windfall
 tone: light
 cast:
   npc: any where not tagged(npc, faculty) and rel(npc) >= 0
@@ -119,7 +119,7 @@ text: It's 3am. You can't sleep, and you've walked to {npc}'s door before you've
 
 @event soc_secret
 title: A Secret
-class: routine
+class: windfall
 tone: light
 cast:
   npc: any where rel(npc) >= 15 and not tagged(npc, faculty)
@@ -237,7 +237,7 @@ text: There's a small parcel on your pillow. A note in {npc}'s handwriting: "Saw
 
 @event soc_drift
 title: Drifting Apart
-class: routine
+class: windfall
 tone: light
 cast:
   npc: any where rel(npc) >= 6 and rel(npc) < 24 and not tagged(npc, faculty)
@@ -319,7 +319,7 @@ text: {npc} waves a half-finished essay at you. "It's due in an hour and I've wr
 
 @event soc_faculty_advice
 title: A Word of Advice
-class: routine
+class: windfall
 tone: light
 cast:
   npc: any where tagged(npc, faculty) and rel(npc) >= 6
