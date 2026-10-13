@@ -58,23 +58,24 @@ The engine is content-agnostic. Only touch `src/` when you need a new language f
 | `slice_2a.grim` | Phase 2a vertical slice: tiers, presets, challenges, spells, variation | mixed |
 | `slice_2b.grim` | Phase 2b vertical slice: Evocation I–III, Duelling Circle, Library Assistant, campus places, break plans, the internship stub, thesis, the_bell arc | place, track, plan, arc |
 | `calendar.grim` | v0.2 fixed beats: intro, origin, festivals, graduation (its menus and exams are retired by migration 0001) | mostly `auto` |
-| `classes.grim` | 3 events per elective, gated on `has(class_x)` | random, weight 16 |
-| `clubs.grim` | 3 per club, gated on `has(club_x)` | random, weight 14 |
-| `jobs.grim` | 3 per job, gated on `has(job_x)` | random, weight 14 |
+| `classes.grim` | v0.2 elective events, now `track: <course>` (pyromancy/tidecalling → evocation, …) | track |
+| `clubs.grim` | Club events, `track: <club>`; dropped clubs moved to their places (choir → great hall, …) | track, place |
+| `jobs.grim` | Job events, `track: <job>`; stables and tutor moved to their places | track, place |
 | `people_students.grim` | Per-character arcs for Lyra, Tobias, Seraphine, Corvin, Mira, Nessa | intros `random`, rest `social` |
 | `people_others.grim` | Kael (outside the main chain), Bram, Thorne, Maud, Isolde | same |
-| `social.grim` | Generic `actor: any` relationship events (friendship, romance, rivalry, decay) | `social` |
+| `social.grim` | Generic relationship events (`cast: npc: any …` + `per: npc`): friendship, romance, rivalry, decay | `social` |
 | `chain_hollowstar.grim` | The main mystery and its finale | mixed |
 | `chains_minor.grim` | Forbidden section, curse cure, Grisk's debt, Ember the fox, the ghost | mixed |
 | `life.grim` | Everyday academy life, money, seasons | random |
 | `crisis.grim` | What happens when a resource hits zero | queued |
+| `pools/*.grim` | Phase 3 baseline pools: places, course levels, clubs and jobs, break plans, thesis, internships | place, track, plan |
 | `expansion_y3.grim` | Final year: Career Fair menu → interview → offer (`career_*` flags feed the teacher / wanderer endings), thesis, portrait, farewells | auto + random |
-| `expansion_summer.grim` | `sum_*` summer-recess events (castle, home, travel) | random, months 11–12 |
+| `expansion_summer.grim` | `sum_*` summer-recess events; castle and home ones are `plan:` pools | plan, random |
 | `expansion_faculty.grim` | Short arcs for Thorne, Maud and the headmistress | social |
 | `expansion_people.grim` | More per-character events for the student cast | social |
-| `expansion_social.grim` | More generic `actor: any` relationship events | social |
+| `expansion_social.grim` | More generic relationship events (`per: npc`) | social |
 | `expansion_life.grim` | More everyday life, incl. the `timeloop` chain | random |
-| `expansion_classes.grim` | One more event per elective, plus compulsory broom flight | random |
+| `expansion_classes.grim` | One more event per elective (`track:`), plus compulsory broom flight | track, random |
 | `chain_ilse.grim` | Ilse Dumont's chain (flags `ilse_saved`, `ilse_taken`, `dumont_reunited`, …) | social |
 
 ---
@@ -152,23 +153,15 @@ Two rules that no lookup will tell you:
 
 ## Balance guidelines
 
-**New content uses size tiers and presets** (`content/core/balance.grim`, `docs/authoring/presets.md`), `class:`/`tone:`, and `challenge` instead of `check`; raw numbers below still apply to legacy content until phase 3.
+**All content uses size tiers and presets** (`content/core/balance.grim`, `docs/authoring/presets.md`), `class:`/`tone:`, and `challenge` instead of `check`. Never write raw numbers in event options. The tier rows in `@balance sizes` are the single place to retune amounts; skills use the `xp` row except where a skill has its own row (`lore`).
 
-| Change | Small | Typical | Big (rare, earned) |
-|---|---|---|---|
-| health / mood | ±2–4 | ±5–8 | ±10–20 |
-| gold | ±5 | ±10–25 | ±30–60 |
-| grades (Standing) | ±1–3 | ±4–6 | ±10–16 (exams) |
-| renown | ±1–2 | ±3–5 | ±8–15 |
-| skill | +1 | +2 | +3–4 |
-| rel | ±2–4 | ±5–8 | ±10–20 (milestones, betrayals) |
-| love | +2–4 | +5–8 | +12–15 (confessions) |
-
-- **Skill check DCs:** 10 is easy early on, 15 moderate, 20 hard, 25+ heroic. Starting skills are about 6–15 and reach 30–60 by graduation. Scale with year when it matters: `12 + year * 8`.
-- **Monthly baseline:** every month draws at least one random card (`min_random_per_month: 1`) even when calendar cards fill the slots; rent −10 gold, term stress −1 mood (−4 in exam months), coursework −1 Standing every other month. Jobs pay 10–18 a month.
-- **Every option should cost or risk something.** A choice between two good things or two bad things beats an obvious one. The best cards trade one resource for another.
-- **Weights:** default 10. Gated class, club and job events use 14–16. Milestone events (friendship, confession) use 18–30 so they show up soon after unlocking. Very niche events use 6–8.
-- After adding content, run `sim 300` and `sim 300 --policy social`. No single graduation ending should exceed about 35% under random play, and your new events should not appear in "never seen" unless they are deliberately rare. If one is, loosen its `when` or raise its `weight`.
+- **Read the economy before tuning:** `node tools/economy.js --games 30` splits every resource, skill, rel and spark into its sources and sinks (month hooks by label, cards by kind) per play style, with p10/p50/p90 finals and the ending mix.
+- **Challenges** are relative to `E(turn)`, the expected skill of a balanced player (`@balance curve`). After a change to skill growth, refit it with `node tools/grim.js curve --write`.
+- **Monthly baseline** (`content/core/rules.grim`): board −8 crowns a term month, tuition per term, term pressure, loneliness without a friend, rest below 60 health, coursework (an enrolled course trains its main skill). Jobs pay per visit (`@track pay:`).
+- **Relationships:** gates are on the scale of the `rel` row (a best friend reaches 60–100 over four years; most arcs open at rel 10–25).
+- **Every option should cost or risk something**, except a small safe choice (≤ 0.5 medium-equivalents) beside a risky one. The best cards trade one resource for another.
+- **Weights:** default 10. Milestones 18–30, so they show up soon after unlocking. Niche events 6–8.
+- After adding content, run `sim 300`, `sim 300 --policy social` and `balance --quick`. No single ending should exceed about 35% per style (known exception: the hollow endings for plot-completing styles until endings get slots in phase 4), and your events should not be "never seen" unless deliberately rare.
 
 ## Conventions
 
