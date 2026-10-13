@@ -11,7 +11,7 @@ This folder is the single source for how Lumenhold content is made (design §3.5
 | `checklist.md` | the acceptance checklist that validators and the critic apply; also the "Rules" section of every brief |
 | `examples/*.grim` | annotated exemplar events |
 
-The language reference stays `docs/grimoire-script.md`; the world bible stays in `AGENTS.md` and the worldbook in `content/world/`.
+The language reference stays `docs/grimoire-script.md`; canon lives only in the worldbook, `content/world/` (AGENTS.md carries no lore).
 
 ## Who writes content
 

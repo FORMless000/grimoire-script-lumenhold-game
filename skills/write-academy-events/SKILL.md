@@ -10,7 +10,7 @@ Content is data, not code: you write `.grim` blocks under `content/`, then forma
 ## 0. Load context (always)
 
 1. Read `docs/authoring/README.md`, `style.md` and `checklist.md`. Skim `schema.md` (the block table is generated from the parser). Read `docs/grimoire-script.md` fully the first time; afterwards keep §3 (expressions), §4 (effects) and §5 (how a month is built) at hand.
-2. Read `AGENTS.md` for the calendar, balance table and conventions.
+2. Read `AGENTS.md` for the workflow, balance table and conventions. It carries no lore: canon is only in the worldbook (`content/world/`), read through `grim brief` / `grim lorebook` (step 3).
 3. **Get a brief** for what you're writing. It contains the cast's voice, facts, schedules and relations, the place, the track, the arc, matching lore and three similar existing events (samples in `docs/authoring/briefs/`):
    ```bash
    node tools/grim.js brief --cast lyra,kael --place library --arc hollowstar --topic "what the batch is about" --out build/brief.md

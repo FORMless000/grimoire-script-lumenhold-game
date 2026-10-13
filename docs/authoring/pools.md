@@ -81,7 +81,7 @@ Don't build a repeatable on a one-time surprise (a secret door, a confession). T
 
 - **One file per group:** `content/events/pools/<group>.grim`. Run `node tools/grim.js i18n zh-CN` to create `locales/zh-CN/events/pools/<group>.lang`. Don't edit any other file, except your own soft-lore file if you truly need one (below).
 - **Ids:** `<place>_<slug>` for places (`courtyard_fountain_wish`), `<course prefix>_<slug>` for courses (`evo_`, `astro_`, `alch_`, `illu_`, `beast_`, `umbral_`), `<track>_<slug>` for clubs and jobs, `break_<plan>_<slug>` for plans, `thesis_<slug>`, `intern_<host>_<slug>`. Check that an id is free first: `node tools/grim.js ids event | grep <slug>`.
-- **No new proper nouns** unless you must. Use unnamed people ("the cook", "a second-year from Rootward") and the named minor figures in AGENTS.md. A new name needs a soft `@lore` entry in your own file, `content/world/lore/soft/pools_<group>.grim`. Never edit `vocabulary.grim`, `GLOSSARY.md` or shared files; list new zh terms in your report instead.
+- **No new proper nouns** unless you must. Use unnamed people ("the cook", "a second-year from Rootward") and named figures that already exist in the worldbook (`node tools/grim.js query lore …`, `content/world/lore/`). A new name needs a soft `@lore` entry in your own file, `content/world/lore/soft/pools_<group>.grim`. Never edit `vocabulary.grim`, `GLOSSARY.md` or shared files; list new zh terms in your report instead.
 - **Canon:** get a brief for every place or track you write for (`node tools/grim.js brief --place <id>` or `--track <id>`), and use what it says: who is there and when, the place's description, the track's description.
 
 ## Done means

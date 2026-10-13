@@ -128,51 +128,25 @@ The engine records every run in full in `s.hist`: each month's start-of-month ef
 
 ---
 
-## World bible (keep new content consistent)
+## Canon: read the worldbook, not this file
 
-**Setting.** Lumenhold Academy is seven towers joined by bridges of light, standing above a mirror-still lake. A village lies below, reached by barge. The Whisperwood forest is nearby. Rival school: Thornwick Academy. Currency: crowns (`gold`). The tone is warm, witty and slightly melancholy, like a cosy fantasy novel. Humour comes from specifics, not from winking at the reader. There is no gore, and nothing explicit.
+This file carries no world lore. The worldbook in `content/world/` is the only source of canon, and it is kept current:
+- `cast.grim`: the characters, with age, role, voice, traits, stats, schedules and relations; `facts/<npc>.grim`.
+- `places.grim`, `tracks.grim`, `spells.grim`, `arcs.grim`, `factions.grim`, `timeline.grim`.
+- `lore/{hard,soft}/`: setting, people and the main mystery.
 
-**Calendar** (`month` 1–12; 4 years = 47 turns, ending in Goldenhaze of year 4; each month is one day):
+Calendar, resources and skills are defined in `content/core/rules.grim`. Tone and safety rules are in `docs/authoring/style.md`.
 
-| # | Month | Phase | Fixed beats |
-|---|---|---|---|
-| 1 | Harvestmoon | term 1 | enrolment (pick two courses), Harvest Feast |
-| 2 | Emberwane | term 1 | Club Fair, Lantern Night (takes the evening visit) |
-| 3 | Mistveil | term 1 | — (the Job Board is a place: visit it to change jobs) |
-| 4 | Frostcall | term 1 | term end: course exams → GPA, obligations checked |
-| 5 | Deepwinter | winter break | break plan (castle, home, work, internship), Midwinter Ball |
-| 6 | Thawmoon | winter break | — |
-| 7 | Stormbloom | term 2 | enrolment; internship applications (years 2–3) |
-| 8 | Greenrise | term 2 | Spring Tournament |
-| 9 | Blossomtide | term 2 | internship offers; year-3 Hollow Star finale (v0.2 gate, moves to year 4 in phase 3) |
-| 10 | Highsun | term 2 | term end; thesis topic (year 3), thesis defence (year 4) |
-| 11 | Goldenhaze | summer break | break plan; the run ends here in year 4 |
-| 12 | Starfall | summer break | Starfall festival |
+**Before writing anything, read the canon you touch:**
+- `node tools/grim.js brief --cast … --place … --track … --arc … --topic "…"` gives a focused context pack.
+- `node tools/grim.js lorebook` writes everything to `build/lorebook.json`.
+- `node tools/grim.js query lore 'has("…")'` and `query fact 'npc == "…"'` look up single entries.
 
-**Player.** Top bars: `health`, `mood`, `mana`, `renown`, `alignment`; `gold` (Crowns) and `grades` (Standing, legacy) are in the You panel, with the GPA, tracks and spells. Six skills: `arcana lore alchemy charm vigor guile`. Origins (`origin_*` states) are picked at the start.
+Don't copy lore into prompts, skills or docs: point to the worldbook. To extend canon, use `skills/distill-lore/SKILL.md`; a new proper noun needs a soft `@lore` entry, or canon lint rejects it.
 
-**Cast.**
-
-| id | Who | Romance | Hooks |
-|---|---|---|---|
-| lyra | Lyra Vaneshade, noble pyromancy prodigy; proud, lonely | yes | rivalry → respect; her mother's pressure |
-| tobias | Tobias Fennick, farm boy on a scholarship; gentle, talks to plants | yes | homesick; family harvest; Gerald the mandrake |
-| seraphine | Seraphine Hale, seer; dreamy, half in other times | yes | prophecies; drawn to the lake |
-| corvin | Corvin Ashby, charming thief; in debt, on last warning | yes | Midnight Cartographers; may ask you to run away |
-| mira | Mira Ten (they/them), chaotic artificer | yes | inventions; the clockwork owl; family pressure |
-| kael | Kael Dumont, transfer from the frozen North; cold hands | yes | **main mystery**: his family serve the Hollow Star |
-| nessa | Nessa Quill, editor of the Lumen Ledger | yes | scoops, gossip columns, press freedom |
-| bram | Bram Hollis, bullying prefect | no | demerits, sabotage; a possible redemption arc |
-| thorne | Professor Aldric Thorne, Arcana; severe mentor | no | office hours; recommendation letter |
-| maud | Old Maud, groundskeeper and hedge-witch | no | remedies, secret garden, knew the last Hollow night |
-| isolde | Headmistress Isolde Marrow | no | knows everything; recruits you as a Warden |
-| ilse | Ilse Dumont, Kael's younger sister, raised by the Hollow cult | no | appears from year 2 once you know of her; can be saved from the man in grey |
-
-Faculty (`thorne maud isolde`) carry `tags: faculty`. Exclude them from peer events with `not tagged(npc, faculty)`.
-
-Minor named figures you may reuse: Professor Marisol (Tidecalling), Professor Vey (Illusion), Professor Brask (Beastcraft), Sister Amaranth (infirmary), Grisk (goblin moneylender), the man in grey (Hollow cult), Pim (your first-year mentee), Footnote (library cat), Bartholomew (Maud's goat), Edmund (Maud's lost friend), the Duchess of Ambry (escaped portrait), the Oracle of Vell (Seraphine's mother), Prudence Ashworth (ghost), Pell & Daughters (apothecary), the Gilded Newt (tavern), Mabel's tea shop, Grimsby's Books.
-
-**The Hollow Star (main chain).** A light-eating star sleeps beneath the lake, sealed by the founders (seven towers, seven locks, a star-shaped key). Clue events set flags and add `hollow +1`. At `hollow >= 3` the headmistress gets involved; in year 3, month 9, the lake freezes (`hs_the_night`), and `hs_beneath` decides between `hollow_sealed`, `hollow_bargain`, ending claimed, or fleeing. New clue events should `hollow +1` and be gated with sensible `when`s.
+Two rules that no lookup will tell you:
+- **Plot safety:** only hard-canon story events may grant key clues (`find`) or move arc clocks (`advance`). Everyday and pool events may be eerie but never reveal or confirm the main mystery's secrets.
+- **Adults only, nothing explicit, no gore.** Every character is an adult (lint checks ages).
 
 ---
 
