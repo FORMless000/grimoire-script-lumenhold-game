@@ -287,6 +287,28 @@ text: Next year is your final year, and it comes with a thesis. Professor Thorne
   flag thesis_ambitious
   say: Thorne is quiet for a long time. "Hm," he says, and for once it sounds like hope.
 
+@event thesis_crunch
+title: The Crunch
+trigger: auto
+when: final_year and month == 9 and member(thesis) and progress(thesis) < 60
+repeat: 12
+priority: 40
+class: incident
+tone: tense
+art: hourglass
+tags: study
+scene: A thesis carrel at dawn, a candle burned to a stub, drafts on the floor and a student asleep on the keyboard of a typing-quill.
+text: The defence is next month and your thesis is not ready. Your advisor's note is three words long: "Well? Final draft."
+> left: Work through the nights
+  progress thesis +large
+  health -medium
+  mood -medium
+  say: You stop seeing daylight. The draft gets better and you get worse, which seems to be how this works.
+> right: Hand in what you have
+  mood +tiny
+  progress thesis +small
+  say: You tidy what's there and accept the gaps. Your advisor sighs, which is not the same as no.
+
 @event thesis_defence
 title: The Defence
 trigger: auto
@@ -300,19 +322,52 @@ tags: study exam
 scene: A semicircular table with three examiners, a student standing at a lectern with a stack of notes.
 text: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60: You know this material better than anyone in the room.|There are gaps, and you know where they are.}
 > left: Defend it
-  challenge negotiate using lore hard:
-    win:
-      flag thesis_distinction
-      renown +large
-      say: They stop asking questions and start asking for copies. Distinction.
-    partial:
-      flag thesis_passed
-      renown +small
-      say: A pass, with one examiner's handwriting all over your conclusion.
-    lose:
-      flag thesis_resubmit
-      mood -large
-      say: They send you away to resubmit. It isn't the end. It feels like it.
+  hint: A safe topic is easier to defend and earns less; an ambitious one is harder and earns more.
+  if not (flag(thesis_safe) or flag(thesis_ambitious)):
+    challenge negotiate using lore hard:
+      win:
+        flag thesis_distinction
+        renown +large
+        say: They stop asking questions and start asking for copies. Distinction.
+      partial:
+        flag thesis_passed
+        renown +small
+        say: A pass, with one examiner's handwriting all over your conclusion.
+      lose:
+        flag thesis_resubmit
+        mood -large
+        say: They send you away to resubmit. It isn't the end. It feels like it.
+  elif flag(thesis_safe):
+    challenge negotiate using lore medium:
+      win:
+        flag thesis_distinction
+        renown +medium
+        say: A careful survey, carefully defended. They give you a distinction and the faint air of people who wished you'd risked more.
+      partial:
+        flag thesis_passed
+        renown +tiny
+        say: A pass. Nobody argues with a careful survey. Nobody remembers it either.
+      lose:
+        flag thesis_resubmit
+        mood -medium
+        say: Even a safe topic has its gaps, and they find every one. Resubmit.
+  else:
+    challenge negotiate using lore heroic:
+      win:
+        flag thesis_distinction
+        renown +huge
+        if clue(seven_locks) + clue(star_key) + clue(ilse_truth) >= 3:
+          flag thesis_hollowstar
+        say: Something no one has done, and now someone has. The committee stands when you finish. One of them is crying, and pretending not to.
+      partial:
+        flag thesis_passed
+        renown +medium
+        say: They pass it, arguing among themselves about whether it is brilliant or mad. Possibly both.
+      lose:
+        flag thesis_resubmit
+        mood -large
+        renown -small
+        say: You reached too far, and they tell you so, at length. Resubmit. The idea was good. The proof wasn't there yet.
 
 # ---------------- Festivals that take a visit (design §4.4) ----------------
 

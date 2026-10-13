@@ -28,7 +28,7 @@ Or run the local server (Node 20+, no install needed): `npm start`, then open ht
 
 ## Extending it
 
-All content lives in `content/**/*.grim` (Grimoire Script). Read **`AGENTS.md`** for the project map, workflow and balance rules (canon lives in the worldbook, `content/world/`), and **`docs/grimoire-script.md`** for the language. LLM agents should follow **`skills/write-academy-events/SKILL.md`**. To make it an auto-loaded Claude Code skill, copy that folder to `.claude/skills/write-academy-events/`.
+All content lives in `content/**/*.grim` (Grimoire Script). Read **`AGENTS.md`** for the principles and where everything lives (canon is in the worldbook, `content/world/`; the design in `docs/design-v0.3.md`), and **`docs/grimoire-script.md`** for the language. LLM agents should follow **`skills/write-academy-events/SKILL.md`**. To make it an auto-loaded Claude Code skill, copy that folder to `.claude/skills/write-academy-events/`.
 
 The tools need [Node.js](https://nodejs.org) 20+ (the game doesn't):
 

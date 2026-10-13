@@ -184,8 +184,15 @@
     }
     // Challenge odds (design §8.6, §9.2): {skill value, dc, win %, partial-or-better %}
     challengeOdds(st, actor) {
-      const skills = st.using ? [st.using] : (CHALLENGE_SKILLS[st.kind] || ['lore']);
-      const sv = skills.reduce((a, k) => a + (this.s.vals[k] || 0), 0) / skills.length;
+      const ct = this._ctxTrack && this.trackState(this._ctxTrack);
+      // An exam inside a course's card tests that course's skill (design §9.2).
+      const skills = st.using ? [st.using] : (st.kind === 'exam' && ct && this.trackSkills(this._ctxTrack).length ? this.trackSkills(this._ctxTrack) : (CHALLENGE_SKILLS[st.kind] || ['lore']));
+      let sv = skills.reduce((a, k) => a + (this.s.vals[k] || 0), 0) / skills.length;
+      // Modifiers, each capped at 15 (design §9.2): +3 per known spell of a discipline whose skill is tested; study points for an exam.
+      let sp = 0;
+      for (const id of Object.keys(this.s.spells || {})) { const d = this.c.spells[id]; if (d && d.discipline && this.trackSkills(d.discipline).some((k) => skills.includes(k))) sp += 3; }
+      sv += Math.min(15, sp);
+      if (st.kind === 'exam' && ct && ct.status === 'enrolled') sv += Math.min(15, ct.study || 0);
       const e = this.expectedSkill();
       const DT = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
       const tier = this._variant === 'hard' ? DT[Math.min(4, DT.indexOf(st.tier) + 1)] : st.tier;

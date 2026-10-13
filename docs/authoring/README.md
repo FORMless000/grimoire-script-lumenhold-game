@@ -18,7 +18,7 @@ The language reference stays `docs/grimoire-script.md`; canon lives only in the 
 Humans don't write events; they curate the worldbook, playtest, read dashboards and delete what doesn't belong. Content is made in three ways:
 
 1. **Batch authoring by Claude Code** (`skills/write-academy-events`): 20–40 events around one brief.
-2. **Feedback tuning by Claude Code** (a `tune-events` skill is planned; until then the loop in AGENTS.md): rebalance, rewrite, re-gate or retire events using `grim feedback` / `grim report` and the run logs.
+2. **Feedback tuning by Claude Code** (a `tune-events` skill is planned; until then: `grim feedback`, `grim show <id>`, edit, `grim check`): rebalance, rewrite, re-gate or retire events using `grim feedback` / `grim report` and the run logs.
 3. **Live generation during play**: tentative (design §T3); it will follow the same spec, worldbook and validators.
 
 ## The loop for a batch

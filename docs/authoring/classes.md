@@ -12,3 +12,5 @@
 | `crisis` | exempt | rate per play style |
 
 **Tones** (`@vocab tones`): light, warm, tense, grim, eerie. The director avoids two cards of the same tone or primary tag in a row.
+
+**Weights** (how often an eligible event is drawn): default 10; milestones 18–30, so they appear soon after they unlock; niche events 6–8.

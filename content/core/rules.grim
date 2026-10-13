@@ -301,6 +301,14 @@ when: turn > 1
 do:
   mana += 10 + arcana / 10
 
+# Ambient drains (design §8.2): exam nerves in the finals months, so mana matters even without casting.
+@hook exam_nerves
+on: month_start
+label: Exam nerves
+when: month == 4 or month == 10
+do:
+  mana -= 15
+
 # ---------------- Game start ----------------
 
 @hook start

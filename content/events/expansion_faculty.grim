@@ -18,7 +18,8 @@ tags: rival study
 scene: Two elderly mages facing each other across a dueling ring at dusk, one stern and grey, one flamboyant in purple, a nervous student holding a towel at the side.
 text: A flamboyant old wizard in purple has arrived to settle "a forty-year-old matter" with Professor Thorne. A formal duel needs a second. Thorne looks around the courtyard and, to everyone's astonishment, points at you.
 > left: Stand as his second
-  rel thorne +large
+  health -tiny
+  rel thorne +medium
   renown +small
   arcana +tiny
   say: The duel lasts four seconds. Thorne wins. Then both old men sit on the grass and laugh until they wheeze. You've never seen him laugh. Neither has anyone else.
@@ -28,7 +29,7 @@ text: A flamboyant old wizard in purple has arrived to settle "a forty-year-old 
 
 @event thorne_roses
 title: The Professor's Roses
-class: windfall
+class: routine
 tone: light
 trigger: social
 actor: thorne
@@ -39,6 +40,7 @@ tags: nature
 scene: A severe old professor kneeling in a hidden rose garden at dawn, sleeves rolled up, murmuring encouragement to a single struggling rosebush.
 text: At dawn, behind the observatory, you find Professor Thorne on his knees in a tiny walled rose garden, murmuring encouragement to a sickly bush. He sees you. Neither of you breathes.
 > left: Back away and never speak of it
+  gold -tiny
   rel thorne +medium
   say: You leave. The next day in class he calls on you for the hardest question — and then, very quietly, gives you full marks for a so-so answer.
 > right: Offer to help with the sick bush
@@ -64,6 +66,7 @@ tags: social
 scene: An old professor gripping the edge of a lectern with both hands, a dropped wand on the floor, a single student in the doorway.
 text: After class you see Thorne's wand slip from fingers that won't stop trembling. He picks it up, slowly. "Age," he says, not looking at you. "It comes for every storm eventually. You'll say nothing."
 > left: Say nothing, as he asks
+  gold -tiny
   rel thorne +medium
   say: You never mention it. But you start arriving early to set up his demonstrations. He notices. He lets you.
 > right: Tell Sister Amaranth
@@ -95,13 +98,14 @@ text: Maud's goat, Bartholomew, has got into the library and is eating the Restr
       health -tiny
       say: Bartholomew eats the apple, then your sleeve, then headbutts you into a shelf. Maud gets him out in the end, laughing.
 > right: Pick him up and carry him out
+  health -tiny
   vigor +small
   rel maud +medium
   say: He is heavier than he looks and struggles like a sack of angry cats. You carry him all the way to the paddock. The librarian applauds.
 
 @event maud_recipe
 title: Maud's Soup
-class: windfall
+class: routine
 tone: warm
 trigger: social
 actor: maud
@@ -112,11 +116,13 @@ tags: nature home
 scene: A small cottage kitchen, a black iron pot over the fire, an old woman guiding a student's hand as they stir.
 text: "I'm going to teach you my soup," says Maud, rolling up her sleeves. "Cures colds, broken hearts and most curses. Don't write it down. You'll remember it if you need it."
 > left: Learn it properly
-  alchemy +medium
+  health -tiny
+  alchemy +small
   rel maud +medium
   say: It takes all afternoon. Some of the ingredients are herbs; some, as far as you can tell, are just stories. You remember every step.
 > right: Mostly eat it
-  health +medium
+  gold -tiny
+  health +small
   mood +small
   rel maud +small
   say: You learn about half of it and eat three bowls. Maud declares that the most important part of the recipe anyway.
@@ -148,7 +154,7 @@ text: Maud unwraps something from a faded scarf: a slender silver wand. "Edmund'
 
 @event isolde_chess
 title: A Game of Tower Chess
-class: windfall
+class: routine
 tone: light
 trigger: social
 actor: isolde
@@ -169,13 +175,14 @@ text: The headmistress keeps a board of crystal towers by her window. "Do you pl
       lore +tiny
       say: She wins in nine moves and spends the next hour showing you exactly why. It is the most useful lesson you've had all year.
 > right: Play to learn how she thinks
+  health -tiny
   rel isolde +medium
   guile +small
   say: You lose, slowly, watching. She sacrifices pieces she seems to love. By the end, you understand a great deal about how the academy is run.
 
 @event isolde_portrait
 title: The Young Headmistress
-class: windfall
+class: routine
 tone: eerie
 trigger: social
 actor: isolde
@@ -186,16 +193,18 @@ tags: mystery
 scene: A portrait in a forgotten corridor of a laughing young woman in student robes with a wand behind her ear, frame dusty, eyes unmistakably the headmistress's.
 text: In a forgotten corridor you find a portrait of a laughing girl with a wand stuck behind her ear and ink on her nose. The plaque has been scratched off. The eyes are unmistakably the headmistress's. The portrait winks.
 > left: Ask the portrait about her
+  health -tiny
   guile +tiny
   lore +tiny
   say: "Detention record of the decade," whispers the portrait. "Set the observatory on fire twice. Best student this castle ever had." It winks again.
 > right: Tell the headmistress you found it
+  gold -tiny
   rel isolde +medium
   say: She is quiet for a moment. "I thought they'd burned it." She almost smiles. "Leave it where it is. Someone should remember her."
 
 @event isolde_judgement
 title: A Question of Mercy
-class: windfall
+class: routine
 tone: light
 trigger: social
 actor: isolde
@@ -206,10 +215,12 @@ tags: story
 scene: The headmistress at her desk with a single file open, a student seated opposite, rain on the window behind them.
 text: The headmistress slides a file across her desk. A second-year stole from the apothecary to pay for a sick mother's medicine. The rules say expulsion. "You're a student," she says. "Tell me what a student thinks is just."
 > left: Argue for mercy
+  health -tiny
   rel isolde +medium
   charm +tiny
   say: You argue for an hour. She listens to all of it. The second-year is given a job in the infirmary and a stern lecture. The mother recovers.
 > right: The rules exist for a reason
+  health -tiny
   rel isolde +small
   lore +tiny
   say: "Yes," she says, "they do." She closes the file. You never learn what she decided, but the second-year is still in class the next week, looking grateful at nobody in particular.

@@ -177,7 +177,9 @@ function pickPlaces(eng, view, opts = {}) {
     if (!open.length) { picks.push(null); return; }
     const duty = opts.truant ? [] : open.filter((p) => p.track && p.track.due > picks.filter((x) => x === p.id).length);
     const fresh = open.filter((p) => p.news && !picks.includes(p.id));
-    const pool = opts.truant ? open.filter((p) => !p.track) : duty.length ? duty : fresh.length && eng.rand() < 0.6 ? fresh : open;
+    // social:<npc> seeks out the places where that character is (shown on the map once met).
+    const near = opts.seek ? open.filter((p) => (p.present || []).includes(opts.seek) && !picks.includes(p.id)) : [];
+    const pool = opts.truant ? open.filter((p) => !p.track) : duty.length ? duty : near.length && eng.rand() < 0.7 ? near : fresh.length && eng.rand() < 0.6 ? fresh : open;
     const from = pool.length ? pool : open;
     // Habit: people go back to places they like. Weight by 1 + past visits (s.visitsTo), so favourites form.
     const seen = eng.s.visitsTo || {};
@@ -202,6 +204,7 @@ function get(name) {
   if (base === 'focused' && !SKILLS.includes(arg)) throw new Error('focused:<skill> needs one of ' + SKILLS.join(' '));
   if ((base === 'social') && !arg) return LEGACY.social;
   if (base === 'truant') return Object.assign(STYLES.balanced(), { name: 'truant', pickPlaces: (eng, view) => pickPlaces(eng, view, { truant: true }) });
+  if (base === 'social') return Object.assign(STYLES.social(arg), { pickPlaces: (eng, view) => pickPlaces(eng, view, { seek: arg }) });
   if (STYLES[base]) return STYLES[base](arg);
   throw new Error('unknown play style "' + name + '" (' + list().join(', ') + ')');
 }

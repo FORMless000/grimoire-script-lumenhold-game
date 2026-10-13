@@ -15,7 +15,7 @@ class: routine
 tone: tense
 actor: lyra
 when: not met(lyra) and turn >= 2
-weight: 14
+weight: 30
 art: book
 tags: social rival
 scene: Two hands reaching for the same red-bound book on a library shelf; one hand wears a signet ring with a flame crest.
@@ -36,7 +36,7 @@ text: You reach for the last copy of "Foundations of Flame" and a ringed hand ge
 
 @event lyra_letter
 title: A Letter With a Black Seal
-class: windfall
+class: routine
 tone: light
 trigger: social
 actor: lyra
@@ -47,8 +47,10 @@ tags: social
 scene: A girl sitting on a window seat in an empty corridor, crushing a letter with a black wax seal in her fist, face turned away.
 text: You find Lyra on a window seat with a crumpled letter. Black seal. Her family's. She's not crying; Vaneshades don't. But she's not quite not crying either.
 > left: Pretend you didn't see
+  mood -tiny
   say: You walk past. Later, she's flawless again, as if nothing happened. Maybe nothing did.
 > right: Sit down beside her
+  gold -tiny
   rel lyra +large
   spark lyra +tiny
   flag lyra_vulnerable
@@ -67,6 +69,7 @@ tags: social study rival
 scene: Two students at opposite ends of a long library table, surrounded by towers of books, glaring over the tops of them.
 text: The professors have posted rankings. Lyra is first. You're close enough to see the back of her head. She notices you noticing.
 > left: Suggest studying together
+  health -tiny
   lore +small
   rel lyra +small
   say: "Together?" She considers this like a foreign custom. Then she pulls out a chair. She's an excellent, merciless study partner.
@@ -102,7 +105,7 @@ text: "My family's winter gala," Lyra says, too casually. "I need a guest who wo
   charm +small
   renown +small
   spark lyra +small
-  rel lyra +medium
+  rel lyra +small
   chance 40:
     mood -small
     say: Lyra's mother asks who your parents are, and then asks no further questions at all. Lyra squeezes your hand under the table, hard.
@@ -198,6 +201,7 @@ text: Your perfect potion turns black and starts screaming. Across the room, Lyr
       rel lyra -medium
       say: You're caught slipping something into her bag. She looks genuinely delighted.
 > right: Confront her directly
+  gold -tiny
   rel lyra +medium
   say: "That was beneath you." She flushes. "...Yes. It was." The next day there's a perfect replacement potion on your desk.
 
@@ -218,6 +222,7 @@ text: You find Lyra face-down on a library desk at dawn, not asleep — out cold
   spark lyra +tiny
   say: She's furious. Then she sleeps for nineteen hours. When she wakes up, she says, quietly, "Thank you."
 > right: Cover for her and make her rest
+  gold -tiny
   rel lyra +medium
   study -tiny
   say: You tell her professors she has a cold and sit by her door with your homework. She sleeps. You keep watch.
@@ -230,7 +235,7 @@ class: windfall
 tone: light
 actor: tobias
 when: not met(tobias) and turn >= 2
-weight: 14
+weight: 30
 art: compass
 tags: social
 scene: A large, gentle-faced boy leading a crying first-year by the hand down the wrong corridor, both very lost.
@@ -247,7 +252,7 @@ text: A big, broad-shouldered boy is leading a crying first-year through the cor
 
 @event tobias_homesick
 title: Homesick
-class: windfall
+class: routine
 tone: light
 trigger: social
 actor: tobias
@@ -258,10 +263,12 @@ tags: social nature
 scene: A dormitory windowsill crowded with clay pots of seedlings, a big boy watering them with a tiny can.
 text: Tobias has gone quiet. He's planted seedlings in every cup in the common room. "Harvest at home," he says. "First one I've missed. Ma's doing it alone."
 > left: Cheer him up with a joke
+  gold -tiny
   rel tobias +small
   say: Your joke is terrible. He laughs anyway, the big rumbling laugh, and that seems to help.
 > right: Help him build a window garden
-  rel tobias +medium
+  health -tiny
+  rel tobias +small
   alchemy +tiny
   mood +small
   say: By the end of the week the common room smells of tomato leaves. Tobias whistles while he waters them.
@@ -328,7 +335,8 @@ text: Tobias presents a flowerpot containing a very small mandrake in a knitted 
   rel tobias -tiny
   say: "No pressure," says Tobias, visibly pressured. Gerald glares at you from under his hat.
 > right: Accept with honour
-  rel tobias +medium
+  health -tiny
+  rel tobias +small
   mood +small
   alchemy +tiny
   say: You are now Gerald's godparent. Gerald bites you. Tobias says this means Gerald loves you.
@@ -384,7 +392,7 @@ text: Tobias corners you in the greenhouse holding a very large pumpkin. "I grew
 
 @event tobias_picnic
 title: A Picnic in the Orchard
-class: windfall
+class: milestone
 tone: warm
 trigger: social
 actor: tobias
@@ -396,11 +404,13 @@ tags: romance nature
 scene: A checked blanket under blossoming apple trees, a basket of bread and cheese, two students lying in the dappled light.
 text: Tobias has packed a picnic: bread he baked, cheese he begged from the kitchens, apples from the orchard he has befriended. "No exams for six hours," he announces. "I checked."
 > left: Bring your books anyway
+  health -tiny
   lore +small
   spark tobias -tiny
   say: You study on the blanket. He falls asleep with his head in your lap. It's still lovely.
 > right: Leave everything behind
-  mood +large
+  gold -tiny
+  mood +medium
   health +small
   spark tobias +small
   say: The afternoon goes golden and slow. You can't remember the last time you didn't think about grades.
@@ -413,7 +423,7 @@ class: windfall
 tone: eerie
 actor: seraphine
 when: not met(seraphine) and turn >= 2
-weight: 12
+weight: 30
 art: eye
 tags: social mystery
 scene: A slight girl with silver-grey eyes and a scarf of stars passing in a corridor, pointing absently at someone's feet.
@@ -482,7 +492,7 @@ text: From your window you see Seraphine walking into the lake in her nightgown,
 
 @event seraphine_future
 title: I Saw You Old
-class: windfall
+class: routine
 tone: eerie
 trigger: social
 actor: seraphine
@@ -500,6 +510,7 @@ text: "I saw you old," Seraphine says suddenly. "Last night. You were happy. Rea
     mood +small
     say: "Someone kind," she says. "That's all I could see. Their hands were kind."
 > right: No, let it be a surprise
+  gold -tiny
   rel seraphine +medium
   mood +small
   say: She smiles like you've given her a present. "That's the right answer. Nobody ever gives the right answer."
@@ -555,7 +566,7 @@ class: routine
 tone: light
 actor: corvin
 when: not met(corvin) and turn >= 2
-weight: 14
+weight: 30
 art: mask
 tags: social
 scene: A dark-haired student with a crooked grin holding up a purse between two fingers, mid-bow.
@@ -565,6 +576,7 @@ text: Someone bumps you in the crowd. A moment later a dark-haired boy is bowing
   rel corvin -small
   say: He's gone before the prefect arrives. Your purse is lighter by exactly one crown and heavier by one IOU.
 > right: Laugh
+  health -tiny
   meet corvin
   rel corvin +medium
   guile +tiny
@@ -646,7 +658,7 @@ text: There's a fat purse on your desk and a jack of spades tucked under it. Ins
 
 @event corvin_rooftop
 title: Up on the Roof
-class: windfall
+class: routine
 tone: light
 trigger: social
 actor: corvin
@@ -657,9 +669,11 @@ tags: social
 scene: Two students sitting on a steep slate roof under a full moon, legs dangling over a dizzying drop, sharing a bottle of something fizzy.
 text: On the roof at 2am, Corvin goes quiet. "I'm on my last warning," he says. "One more detention and they send me home. And home is... not a good place." He laughs, badly.
 > left: Tell him to keep his head down
+  gold -tiny
   rel corvin +small
   say: "Head down. Right. I'll try anything once." He keeps his head down for almost a month.
 > right: Promise you'll cover for him
+  gold -tiny
   rel corvin +large
   spark corvin +tiny
   flag covering_corvin
@@ -745,7 +759,7 @@ class: routine
 tone: light
 actor: mira
 when: not met(mira) and turn >= 2
-weight: 14
+weight: 30
 art: gear
 tags: social
 scene: A cloud of purple smoke billowing from a workshop door, a soot-covered student emerging with goggles and a thumbs-up.
@@ -767,7 +781,7 @@ text: The west wing explodes. Not badly. A figure in goggles stumbles out of the
 
 @event mira_owl_gift
 title: A Present With Gears
-class: windfall
+class: routine
 tone: light
 trigger: social
 actor: mira
@@ -778,9 +792,11 @@ tags: social magic
 scene: A small brass owl with glowing amber eyes perched on a student's wrist, its clockwork feathers fluffing.
 text: Mira presents a brass owl with amber glass eyes. It blinks, hoots the hour and says "HOMEWORK" in a tinny voice. "Made it for you. It remembers deadlines. And birthdays. And grudges, slightly."
 > left: It's too much
+  gold -tiny
   rel mira +small
   say: Mira looks crushed, then rallies. "I'll give it to Thorne. He needs reminding to smile." The owl, you hear, refuses to work for him.
 > right: Accept it gratefully
+  gold -tiny
   gain familiar_owl
   rel mira +medium
   spark mira +tiny
@@ -799,6 +815,7 @@ tags: social festival
 scene: A hall crammed with bizarre inventions — walking teapots, singing clocks — and one enormous brass machine draped in a sheet.
 text: The Artificers' Fair. Mira's entry is under a sheet and occasionally growls. "I need an assistant to stand next to it and look confident," they say. "And possibly run."
 > left: Watch from a safe distance
+  gold -tiny
   mood +small
   rel mira +tiny
   say: The machine turns out to be a mechanical bear that bakes bread. It wins second place. Mira is ecstatic and flour-covered.
@@ -861,6 +878,7 @@ tags: social
 scene: A spindly brass contraption with too many legs attempting a waltz in an empty classroom, a student dancing with it.
 text: Mira has built a machine that teaches dancing. It has six legs and opinions. "It needs a test subject," they say. "It's mostly safe. It only kicked me twice."
 > left: Make Mira test it
+  gold -tiny
   rel mira +small
   mood +small
   say: You watch Mira and the machine waltz, badly, across the room. It's the funniest thing you've ever seen.
@@ -909,6 +927,7 @@ text: A letter from Mira's parents: the family clockworks needs them home. A tic
   rel mira -small
   say: Mira goes home for a month and comes back with a new scar and a clearer jaw. "They know now," they say. "It's not a hobby."
 > right: Help them write back
+  health -tiny
   flag mira_family_done
   rel mira +large
   charm +tiny
@@ -922,7 +941,7 @@ class: routine
 tone: light
 actor: nessa
 when: not met(nessa) and turn >= 2
-weight: 14
+weight: 30
 art: paper
 tags: social
 scene: A girl with ink-stained fingers and a self-writing quill floating at her shoulder, holding a notebook out expectantly.
@@ -965,7 +984,8 @@ text: This week's Ledger gossip column features you, prominently, under the head
     lose:
       say: "Freedom of the press," says Nessa, sweetly. You both know she wrote it.
 > right: Lean into the mystery
-  renown +medium
+  gold -tiny
+  renown +small
   mood +small
   rel nessa +small
   say: You start leaving cryptic notes in the library. The column runs for six more weeks. Nessa is delighted.

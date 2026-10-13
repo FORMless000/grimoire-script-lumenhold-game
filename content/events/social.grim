@@ -11,7 +11,7 @@
 
 @event soc_study_session
 title: Study Session
-class: windfall
+class: routine
 tone: light
 cast:
   npc: any where not tagged(npc, faculty) and rel(npc) >= 0
@@ -23,10 +23,12 @@ tags: social study
 scene: Two students at a candlelit table piled with books, one explaining something with wild hand gestures.
 text: {npc} drops into the seat across from you with an armful of books. "Exams are coming for us all. Misery loves company. Study with me?"
 > left: You work better alone
+  health -tiny
   lore +tiny
   rel npc -tiny
   say: You get a lot done. {npc} sits at the next table and sighs loudly every few minutes.
 > right: Pull up a chair
+  health -tiny
   lore +small
   study +tiny
   rel npc +small
@@ -119,7 +121,7 @@ text: It's 3am. You can't sleep, and you've walked to {npc}'s door before you've
 
 @event soc_secret
 title: A Secret
-class: windfall
+class: routine
 tone: light
 cast:
   npc: any where rel(npc) >= 15 and not tagged(npc, faculty)
@@ -131,9 +133,11 @@ tags: social
 scene: Two students huddled under a staircase, one whispering into the other's ear, a finger to their lips.
 text: {npc} pulls you under the stairs. "I need to tell someone or I'll burst. Swear you won't tell anyone. Not even the portraits."
 > left: "I'd rather not carry it."
+  gold -tiny
   rel npc -tiny
   say: {npc} looks hurt, then relieved. "Maybe that's better." You'll never know.
 > right: "I swear."
+  health -tiny
   rel npc +medium
   guile +tiny
   say: It's not a big secret. It's the kind that's only big to the person holding it. You hold it with {them}.
@@ -190,7 +194,7 @@ text: "Barge to the village? Tea at Mabel's, a wander round the bookshops, back 
 
 @event soc_friend_sick
 title: Sick Friend
-class: windfall
+class: routine
 tone: light
 cast:
   npc: any where (bond(npc) == "friend" or bond(npc) == "close" or bond(npc) == "partner")
@@ -226,6 +230,7 @@ tags: social
 scene: A small wrapped parcel tied with ribbon left on a dormitory pillow, a pressed flower tucked into the bow.
 text: There's a small parcel on your pillow. A note in {npc}'s handwriting: "Saw this and thought of you. Don't make it weird."
 > left: Thank {them} later
+  gold -tiny
   mood +small
   rel npc +tiny
   say: It's a tiny brass compass that always points to the nearest teapot. You use it constantly.
@@ -237,7 +242,7 @@ text: There's a small parcel on your pillow. A note in {npc}'s handwriting: "Saw
 
 @event soc_drift
 title: Drifting Apart
-class: windfall
+class: routine
 tone: light
 cast:
   npc: any where rel(npc) >= 6 and rel(npc) < 24 and not tagged(npc, faculty)
@@ -251,9 +256,11 @@ tags: social
 scene: A student glancing back across a busy courtyard at another who hasn't seen them, the space between them full of strangers.
 text: You realise you haven't really talked to {npc} in weeks. You see {them} across the courtyard, laughing with people you don't know.
 > left: Let it be
+  gold -tiny
   rel npc -small
   say: People drift. It's nobody's fault. You still smile when you pass in the halls.
 > right: Go over and say hello
+  gold -tiny
   rel npc +medium
   mood +tiny
   say: "There you are!" {npc} says, as if you'd been the one missing. Maybe you had.
@@ -320,7 +327,7 @@ text: {npc} waves a half-finished essay at you. "It's due in an hour and I've wr
 
 @event soc_faculty_advice
 title: A Word of Advice
-class: windfall
+class: routine
 tone: light
 cast:
   npc: any where tagged(npc, faculty) and rel(npc) >= 6
@@ -332,9 +339,11 @@ tags: study
 scene: A professor walking with a student along a covered walkway, pointing at something in an open book.
 text: {npc} catches you after a lecture. "You've been working hard. Or hardly working. I can never tell with your year. Some advice, if you'll take it?"
 > left: Politely decline
+  gold -tiny
   rel npc -tiny
   say: "Suit yourself." {They} walk{s} off. Faculty have long memories.
 > right: Listen carefully
+  health -tiny
   rel npc +small
   study +small
   lore +tiny
@@ -344,7 +353,7 @@ text: {npc} catches you after a lecture. "You've been working hard. Or hardly wo
 
 @event soc_spark
 title: A Spark
-class: windfall
+class: routine
 tone: warm
 cast:
   npc: any where romanceable(npc) and rel(npc) >= 9 and spark(npc) < 12 and bond(npc) != "partner"
@@ -357,9 +366,11 @@ tags: social romance
 scene: Two hands brushing as they reach for the same quill, both students freezing for a heartbeat.
 text: You reach for the same quill as {npc}. Your hands touch. Neither of you lets go immediately. It's a perfectly ordinary quill.
 > left: Laugh it off
+  gold -tiny
   rel npc +tiny
   say: "All yours," you say. {npc} laughs. The moment passes. Mostly.
 > right: Hold on a moment longer
+  gold -tiny
   spark npc +medium
   rel npc +tiny
   say: {npc} looks up. Something in {their} face shifts. Then {they} let{s} go, a little pink, and the quill rolls under the desk.
@@ -379,6 +390,7 @@ tags: social romance
 scene: A student nervously holding out a hand-drawn ticket to the village's floating lantern show.
 text: You could ask {npc} to the lantern show in the village this weekend. As friends. Or, you know. Not as friends.
 > left: Ask as friends
+  gold -tiny
   rel npc +small
   mood +small
   say: It's a lovely evening. You're both very careful about elbows.
@@ -434,7 +446,7 @@ text: On the bridge between the towers, the wind snatching at your robes, you re
 
 @event soc_partner_date
 title: Date Night
-class: windfall
+class: routine
 tone: warm
 cast:
   npc: any where bond(npc) == "partner"
@@ -447,10 +459,12 @@ tags: romance
 scene: Two people at a tiny candlelit table in a window alcove of a village tea shop, snow falling outside.
 text: {npc} has booked the window table at Mabel's. Candles. Snow outside. "I'm paying," {they} say{s}. "Don't argue."
 > left: Talk about the future
+  gold -tiny
   spark npc +small
   mood +medium
   say: You talk about where you'll be in ten years. In every version, you're both there.
 > right: Talk about absolutely nothing
+  gold -tiny
   spark npc +tiny
   mood +medium
   say: You argue for an hour about whether a hotdog is a sandwich. It is the best date of your life.

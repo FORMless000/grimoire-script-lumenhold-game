@@ -6,10 +6,10 @@
 
 | | |
 |---|---|
-| Content | 715 events (7 retired), 60 states, 12 characters, 43 places, 25 tracks, 12 spells, 25 endings (5 game-overs + yearbook lines) |
+| Content | 716 events (7 retired), 60 states, 12 characters, 43 places, 25 tracks, 12 spells, 26 endings (5 game-overs + yearbook lines) |
 | Format | schema v1, frozen; 0 lint errors, **0 legacy constructs** left in content |
 | Reachability | `grim reach`: every event, option, ending, place and track can be reached; each key clue has ≥ 2 sources |
-| Translation | zh-CN 100% (6,345 strings), 0 stale |
+| Translation | zh-CN 100% (6,362 strings), 0 stale |
 | Checks | `npm run verify` passes: build, lint, format, docs, 70+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 47 months, about 330 cards; random play graduates 85% of the time, social 95% |
 
@@ -43,31 +43,50 @@
   - The thesis distinction and resubmit feed the headline.
   - Ilse's chain now reaches the yearbook.
   - Corvin's runaway is reachable.
+- **Readiness audit (design vs. build):**
+  - The routine budget is now a lint error (migrations 0013–0015; two cards fixed by hand).
+  - Challenges apply the §9.2 modifiers: +3 per known spell of a tested discipline and study points on exams (each capped at 15). An exam inside a course card tests that course's skill.
+  - The thesis has a safe/ambitious choice, a crunch card and a Hollow Star thesis line.
+  - Exam nerves drain mana in exam months. The Midwinter Ball moved to month 4.
+  - Map art exists for every place map, checked by lint.
+  - Student intros now carry milestone weight (median first meeting moved from turn 10–29 to turn 8–12).
+  - The `social:<npc>` bot seeks out the places where its character is.
 - **Docs:** `PROGRESS.md`, `README.md`, the AGENTS.md traps (folded in from the retired HANDOFF.md), `docs/playtest-2.md` (replacing playtest-1), the language reference (yearbook, `clues()`, the alignment recipe), the authoring checklist and skill, regenerated sample briefs and examples.
 
 ## Known gaps and deviations from the design
 
 - **The finale** is one sealing challenge whose tier depends on preparation. The design asks for a sequence (duel, negotiate, research).
+- **Finale allies** count at rel ≥ 18, not the design's friendship ≥ 50. Even plot players end with Ilse at p90 16–22, Isolde at p90 10–12 and Maud at p90 ~44, while Kael saturates at 100. At ≥ 50 only Kael would ever count. Ilse, Isolde and Maud need more rel sources first.
 - **Relationship lines** in the yearbook are generic (a partner; three friends; Ilse's chain), not one line per bond (§10.5).
+- **Advisor relationship** (a §9.2 challenge modifier) has nothing to read: no track names an advisor character.
+- **Friendship growth is far below the design's ~80 by month 24:**
+  - A bot that courts one character reaches about 20–40 with Corvin or Tobias, and about 0 with Lyra.
+  - Character events sit in the general noon social pool (1–2 cards a day, hundreds of events), so a given character's own events come about once a year.
+  - Lyra's events also start at rel 6, and her intro gives at most +tiny.
+  - Needs a director decision: boost a character's events when they are present at a visited place, or a per-character slot.
+- **Skill growth is below the design's ~85 by month 24** for focused styles (41–55). Raising it means retuning the `xp` row and refitting the E(turn) curve (`grim curve --write`).
 - **Tuned on purpose** (design numbers are marked tunable):
   - board 8 instead of 10, tuition 30 instead of 40, no course fees;
   - hungry −1 health and −2 mood instead of −4/−4 (random players are broke in about half their months);
   - friendship decay −1 instead of −2;
   - spark decay 10% instead of 15%;
   - confessions at spark 30, not 60.
-- **Balance alarms:**
-  - the aggressive style collapses (58% Sent Home; it ignores health on purpose);
+- **Balance alarms** (full `balance`; 0 invariant failures):
+  - the aggressive style collapses (60% Sent Home; it ignores health on purpose), and lasts far longer than the design's breakdown by month 5/9 before it does;
+  - about 6 windfalls a year against the design's 1–4: around 48 one-shot random windfalls;
+  - the caster style keeps mana above 40%: spells are cheap relative to regeneration;
+  - romance is less volatile than the design's swings;
   - mood saturates near 100 for careful styles;
-  - 10 events are rarely or never seen: the Conclave and Unseen Office internships, some confessions, two-timing.
-- **63 per-option budget warnings** in lint, left for playtest feedback.
+  - 7–12 events are never seen by any style: crisis_probation (bots keep their GPA), the Conclave and Unseen Office internships, a few confessions, soc_two_timing.
 - **Deferred phase 3 steps:**
   - festivals as `replaces:` visits;
-  - removing the unused legacy syntax from the parser, and the engine's `legacy:` grants;
+  - removing the unused legacy syntax from the parser, and the engine's `legacy:` grants (§13 step 7);
   - `memory:` / `lesson:` annotations;
-  - the `tune-events` skill.
+  - the `tune-events` skill and the `grim report` telemetry signals of §11.2 (routine picks, eligible-but-never-drawn, decision times);
+  - the first path-1 batch accepted through the full loop (§13 exit).
 
 ## Next
 
 1. **Human playtest #2** (`docs/playtest-2.md`): a full run in each language, then `grim feedback`.
-2. Address its notes; then the per-option budget warnings and the aggressive and mood alarms.
+2. Address its notes; then friendship and skill growth, the finale allies, and the aggressive, windfall and caster alarms.
 3. Phase 4, starting with what playtest #2 says matters most.

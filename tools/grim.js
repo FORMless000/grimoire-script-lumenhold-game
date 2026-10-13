@@ -350,8 +350,9 @@ function budgetCheck(e, content, P) {
     // A free option is fine as the small, safe choice (≤ 0.5 medium-equivalents) beside a costly or risky one.
     const risky = rows.some((r) => r.hasCost);
     for (const r of rows) {
-      if (!r.hasCost && !(risky && r.exp <= 0.5)) P('warn', 'routine option "' + r.key + '" has no cost or risk' + (risky ? ' and is worth ' + r.exp.toFixed(1) + ' (a free safe choice stays ≤ 0.5)' : ' (every option should trade something)'));
-      if (Math.abs(r.exp) > 1.5) P('warn', 'routine option "' + r.key + '" is worth ' + r.exp.toFixed(1) + ' medium-equivalents (budget ±1.5)');
+      // Design §8.8: the routine budget is a hard invariant (an error).
+      if (!r.hasCost && !(risky && r.exp <= 0.5)) P('error', 'routine option "' + r.key + '" has no cost or risk' + (risky ? ' and is worth ' + r.exp.toFixed(1) + ' (a free safe choice stays ≤ 0.5)' : ' (every option should trade something)'));
+      if (Math.abs(r.exp) > 1.5) P('error', 'routine option "' + r.key + '" is worth ' + r.exp.toFixed(1) + ' medium-equivalents (budget ±1.5)');
     }
   }
   eng.s.cur = prevCur;
@@ -449,6 +450,8 @@ function lint(opts = {}) {
   for (const u of canonCheck(content)) A.problems.push({ level: /^content\/batches\//.test(u.where[0]) ? 'error' : 'warn', where: u.where[0], msg: 'unknown proper noun "' + u.name + '" (add it to the worldbook, a @lore key or @vocab canon_allowlist)' + (u.where.length > 1 ? ' [+' + (u.where.length - 1) + ' more]' : '') });
   for (const lang of localeLangs()) lintLocale(content, lang, A.problems, opts);
   reachLint(content, A.problems);
+  // Every map a place sits on needs its base art (src/map.js loads content/world/maps/<map>.svg).
+  for (const pl of Object.values(content.places || {})) if (pl.map && pl.map.map && !fs.existsSync(path.join(ROOT, 'content', 'world', 'maps', pl.map.map + '.svg'))) A.problems.push({ level: 'error', where: rel(pl.file) + ':' + pl.line, msg: 'place "' + pl.id + '": no map art content/world/maps/' + pl.map.map + '.svg' });
   const by = { error: [], warn: [], info: [] };
   A.problems.forEach((p) => by[p.level].push(p));
   by.error.forEach((p) => console.error(C.r + 'error ' + C.x + p.where + ': ' + p.msg));
@@ -871,6 +874,7 @@ function balance(opts = {}) {
         }
         if (hz) st.zero.health++; if (mz) st.zero.mood++;
         for (const [k, v] of Object.entries(eng.s.vals)) st.final[k] = (st.final[k] || 0) + v / games;
+        (st.runs = st.runs || []).push(runMetrics(content, eng));
       } catch (e) { st.crashed++; fail(name + ' seed ' + seed + ': ' + e.message); }
     }
     for (const k of Object.keys(st.final)) st.final[k] = Math.round(st.final[k]);
@@ -883,6 +887,7 @@ function balance(opts = {}) {
     if (name === 'balanced') for (const k of ['health', 'mood']) if (st.zero[k] / st.games > 0.15) alarm('balanced: ' + k + ' hits 0 in ' + Math.round(100 * st.zero[k] / st.games) + '% of runs (> 15%)');
   }
   console.warn = origWarn;
+  for (const [name, st] of Object.entries(report.styles)) { designAlarms(name, st.runs || [], alarm); delete st.runs; }
   for (const [k, v] of Object.entries(warns)) alarm('runtime warning ×' + v + ': ' + k);
   // Every final ending (headline or yearbook line) should be reached by some play style that wants it.
   const reached = new Set(Object.values(report.styles).flatMap((st) => Object.keys(st.endings).concat(Object.keys(st.lines))));
@@ -904,6 +909,83 @@ function balance(opts = {}) {
   report.alarms.forEach((m) => console.log(C.y + 'alarm     ' + C.x + m));
   console.log((report.invariants.length ? C.r : C.g) + report.invariants.length + ' invariant failure(s)' + C.x + ', ' + report.alarms.length + ' alarm(s) — build/balance-report.json');
   return report.invariants.length === 0;
+}
+
+// Per-run measures for the design's Level-2 alarms (§8.8), from the run history: the month entries carry every
+// resource and skill at the start of each month; cards carry their class and their deltas.
+function runMetrics(content, eng) {
+  const h = eng.s.hist, months = h.filter((x) => x.t === 'month' && x.vals), skills = content.order.skills;
+  const at = (turn) => { let v = null; for (const m of months) if (m.turn <= turn) v = m.vals; return v; };
+  const probe = new Engine(content), isTerm = (m) => probe.phaseOf(m.turn) === 'term';
+  const termMonths = months.filter(isTerm);
+  const manaMax = (v) => 40 + (v.arcana || 0) / 2;
+  const rel = {}, relAt24 = {}, spark = {};
+  for (const x of h) {
+    const d = x.t === 'card' ? x.out && x.out.deltas : null;
+    if (d) for (const [k, v] of Object.entries(d)) {
+      if (k.startsWith('rel:')) { rel[k.slice(4)] = (rel[k.slice(4)] || 0) + v; if (x.turn <= 24) relAt24[k.slice(4)] = rel[k.slice(4)]; }
+      if (k.startsWith('spark:')) (spark[k.slice(6)] = spark[k.slice(6)] || []).push([x.turn, v]);
+    }
+  }
+  // romance volatility: the largest spark change within any 3-month window, for the most-sparked character
+  let swing = 0;
+  for (const list of Object.values(spark)) for (const [t0] of list) { const w = list.filter(([t]) => t >= t0 && t < t0 + 3).reduce((a, [, v]) => a + v, 0); swing = Math.max(swing, Math.abs(w)); }
+  // a run that ended in collapse (health) or despair (mood) broke down then, even if no month started at zero
+  const early = eng.s.ended && eng.s.turn < eng.maxTurns ? eng.s.ended.id : null;
+  const firstZero = (k) => { let n = 0; for (const m of termMonths) { n++; if (m.vals[k] <= 0) return n; } return (k === 'health' && early === 'ending_sent_home') || (k === 'mood' && early === 'ending_quiet_departure') ? termMonths.length : null; };
+  const cls = (c) => h.filter((x) => x.t === 'card' && x.class === c).length;
+  const years = Math.max(1, Math.ceil(eng.s.turn / 12));
+  return {
+    m24: at(24), end: eng.s.vals, skills,
+    goldY3: (at(36) || {}).gold, goldEnd: eng.s.vals.gold, turn: eng.s.turn,
+    tightPerYear: months.filter((m) => isTerm(m) && m.vals.gold < 8).length / years,
+    manaHighShare: termMonths.length ? termMonths.filter((m) => m.vals.mana > 0.4 * manaMax(m.vals)).length / termMonths.length : 0,
+    manaFullShare: termMonths.length ? termMonths.filter((m) => m.vals.mana >= 0.95 * manaMax(m.vals)).length / termMonths.length : 0,
+    moodZeroAt: firstZero('mood'), healthZeroAt: firstZero('health'),
+    relAt24, swing, sparked: Object.keys(spark).length > 0,
+    dropped: h.some((x) => (x.out && x.out.notes || []).some((n) => n.kind === 'dropped')) || h.some((x) => (x.summary || []).some((it) => (it.notes || []).some((n) => n.kind === 'dropped'))),
+    incidentsPerYear: cls('incident') / years, windfallsPerYear: cls('windfall') / years,
+  };
+}
+// The design's Level-2 alarms (§8.8): wide tolerances, each judged on the median run of the style it is about.
+function designAlarms(name, runs, alarm) {
+  if (!runs.length) return;
+  const med = (a) => { const b = a.filter((x) => x != null).sort((x, y) => x - y); return b.length ? b[Math.floor(b.length / 2)] : null; };
+  const share = (f) => runs.filter(f).length / runs.length;
+  const r1 = (x) => Math.round(x * 10) / 10;
+  if (name.startsWith('focused:')) {
+    const k = name.split(':')[1];
+    const at24 = med(runs.map((r) => r.m24 && r.m24[k]));
+    if (at24 != null && at24 < 85) alarm(name + ': ' + k + ' is ' + Math.round(at24) + ' at month 24 (design: ~85+ by month 24)');
+    const others = med(runs.map((r) => r.skills.filter((s) => s !== k).reduce((a, s) => a + r.end[s], 0) / (r.skills.length - 1)));
+    if (others < 20) alarm(name + ': the other skills average ' + Math.round(others) + ' at the end (design: ≥ 20)');
+  }
+  if (name === 'balanced') {
+    const mean = med(runs.map((r) => r.skills.reduce((a, s) => a + r.end[s], 0) / r.skills.length));
+    if (mean < 35 || mean > 65) alarm('balanced: mean skill ' + Math.round(mean) + ' at the end (design: 35–65)');
+    if (share((r) => r.manaFullShare > 0.9) > 0.5) alarm('balanced: mana is (almost) always full without casting');
+    const tight = med(runs.map((r) => r.tightPerYear));
+    if (tight < 1) alarm('balanced: ' + r1(tight) + ' tight month(s) a year (design: forced sinks make food risky now and then)');
+    const inc = med(runs.map((r) => r.incidentsPerYear)), win = med(runs.map((r) => r.windfallsPerYear));
+    if (inc < 1 || inc > 3) alarm('balanced: ' + r1(inc) + ' incidents a year (design: 1–3)');
+    if (win < 1 || win > 4) alarm('balanced: ' + r1(win) + ' windfalls a year (design: 1–4)');
+  }
+  if (name === 'moneymaxx') {
+    const climb = med(runs.map((r) => r.goldY3 == null || r.turn < 40 ? null : (r.goldEnd - r.goldY3) / Math.max(1, r.turn - 36)));
+    if (climb != null && climb > 5) alarm('moneymaxx: crowns still climb ' + r1(climb) + ' a month in year 4 (design: sinks catch money-maxxing)');
+  }
+  if (name === 'caster' && share((r) => r.manaHighShare > 0.5) > 0.5) alarm('caster: mana stays above 40% in most term months (design: casting keeps it low)');
+  if (name === 'aggressive') {
+    const mz = med(runs.map((r) => r.moodZeroAt ?? 99)), hz = med(runs.map((r) => r.healthZeroAt ?? 99));
+    if (mz > 5 && hz > 9) alarm('aggressive: mood lasts ' + (mz === 99 ? 'the run' : mz + ' term months') + ', health ' + (hz === 99 ? 'the run' : hz + ' term months') + ' (design: breaks down by 5 / 9)');
+  }
+  if (name.startsWith('social:')) {
+    const npc = name.split(':')[1], f = med(runs.map((r) => r.relAt24[npc] || 0));
+    if (f < 80) alarm(name + ': friendship ' + Math.round(f) + ' at month 24 (design: ~80+ at about two years)');
+    const rom = runs.filter((r) => r.sparked);
+    if (rom.length && rom.filter((r) => r.swing >= 20).length / rom.length < 0.5) alarm(name + ': romance swings ≥ 20 within 3 months in only ' + Math.round(100 * rom.filter((r) => r.swing >= 20).length / rom.length) + '% of romance runs (design: volatile)');
+  }
+  if (name === 'truant' && !share((r) => r.dropped)) alarm('truant: never dropped or fired (design: skipping hurts)');
 }
 
 /* ------------------------------------------------------------------ curve */

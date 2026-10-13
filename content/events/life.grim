@@ -208,6 +208,7 @@ text: You can't sleep. Your brain has decided to replay every embarrassing thing
   health -tiny
   say: By dawn you've read three chapters and remembered one of them.
 > right: Brew chamomile and count the painted stars
+  gold -tiny
   health +tiny
   mood +tiny
   say: Halfway through counting, the stars start counting back. Then you're asleep.
@@ -244,6 +245,7 @@ text: Three essays, a potion log, a star chart and a reading list the length of 
   mood -tiny
   say: You finish at 4am on the last day. Every piece is handed in. You sleep through breakfast.
 > right: Pick what matters, skip the rest
+  gold -tiny
   gain slacking
   mood +small
   say: You hand in two of five and go for a walk. The professors are not pleased. You feel great, temporarily.
@@ -439,6 +441,7 @@ tags: money
 scene: A velvet purse lying in the long grass beside a path, coins glinting at its open mouth, initials embroidered on it.
 text: A fat velvet purse lies in the grass by the path. Forty crowns at least. Embroidered initials: A.T.
 > left: Return it to its owner
+  gold -tiny
   alignment +small
   rel thorne +medium
   renown +small
@@ -543,7 +546,7 @@ text: The Lumen Essay Prize: fifty crowns for the best essay on "Magic and Duty"
 > left: Enter
   challenge research easy:
     win:
-      gold +huge
+      gold +large
       renown +medium
       say: You win. Your essay is read aloud at dinner. You don't know where to look.
     lose:
@@ -737,6 +740,7 @@ text: The first snow of winter falls overnight and the whole academy wakes up gi
   else:
     say: Your side wins. You build a snow-fort that lasts until Thawmoon.
 > right: Hot chocolate by the fire
+  gold -tiny
   mood +small
   health +tiny
   say: You watch from the window, warm and smug, while the snowballs fly.
@@ -759,6 +763,7 @@ text: Spring cleaning. The brooms are enchanted, but the enchantment needs super
       health -tiny
       say: The brooms do not accept your terms. They sweep you into a cupboard.
 > right: Clean by hand
+  health -tiny
   vigor +tiny
   mood +tiny
   say: An afternoon of scrubbing. It's oddly satisfying. You find three lost quills and a sandwich from Thawmoon.
@@ -782,6 +787,7 @@ text: The heat is unbearable. Even the gargoyles are sweating. The lake is crowd
       mood -tiny
       say: You make it colder. Briefly. Then hotter. Then it rains inside.
 > right: Sleep on the roof
+  gold -tiny
   mood +small
   say: You sleep under the stars with half the dormitory. It's the best idea anyone's had all year.
 
@@ -815,6 +821,7 @@ when: turn >= 6
 scene: A delegation of students in green robes marching through the gates, noses raised, a Lumenhold crowd watching suspiciously.
 text: A delegation from Thornwick Academy is visiting. Their students are smug, polished and very loudly unimpressed with Lumenhold's plumbing.
 > left: Be a gracious host
+  health -tiny
   charm +small
   renown +tiny
   say: You show them the observatory. One of them admits, grudgingly, that it's better than theirs.

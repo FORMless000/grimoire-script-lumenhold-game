@@ -81,6 +81,7 @@ text: Lyra finds you after practice. "The tournament is in two months. You're th
   rel lyra -tiny
   say: "Sleep," she repeats, as if it's a foreign word. "Fine."
 > right: Agree
+  gold -tiny
   gain training
   rel lyra +medium
   say: She's a merciless coach. Somewhere around the third week, you notice she's started bringing two cups of tea.
@@ -218,7 +219,7 @@ text: The championship against Thornwick Academy. Final lap. You're neck and nec
 > right: The suicide dive
   challenge feat easy:
     win:
-      renown +large
+      renown +medium
       gain famous
       mood +large
       say: You dive straight down the tower face and pull up at the last second, through the hoop. The stadium explodes.
@@ -341,6 +342,7 @@ text: "The moonflower's going to bloom tonight," Tobias says, a little breathles
   rel tobias -tiny
   say: "Course. Yeah." He tells you about it at breakfast, in detail, with gestures.
 > right: Stay up with him
+  gold -tiny
   rel tobias +medium
   spark tobias +small
   mood +small
@@ -446,6 +448,7 @@ text: A black card under your door. On it, a map in silver ink that redraws itse
   rel corvin -tiny
   say: The card blanks itself the next morning. Corvin doesn't mention it, but he's a little cooler for a week.
 > right: Go
+  health -tiny
   join cartographers
   rel corvin +medium
   guile +tiny
@@ -462,13 +465,14 @@ tags: club mystery
 scene: A spiral staircase emerging from a blank wall in moonlight, its steps unfolding one by one.
 text: The Cartographers have heard of a staircase that only exists on Thursdays between midnight and one. Tonight is Thursday. It is 11:58.
 > left: Map it carefully
+  health -tiny
   lore +small
   guile +tiny
   say: You chart forty-one steps and a landing with a window onto a sky that isn't this one. The map is the club's pride.
 > right: Climb it to the top
   challenge deceive trivial:
     win:
-      gold +huge
+      gold +large
       say: At the top, a forgotten storeroom. Inside: a chest of old academy coins. The club splits it. Corvin cries a little.
     lose:
       mood -small

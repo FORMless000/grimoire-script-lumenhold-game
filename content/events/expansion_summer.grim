@@ -25,7 +25,8 @@ text: In summer the castle breathes differently. Corridors you've walked a thous
       mood -tiny
       say: Behind the first door: the caretaker, in a dressing gown, very surprised. You both agree this never happened.
 > right: Enjoy the quiet
-  mood +medium
+  gold -tiny
+  mood +small
   health +small
   say: You read in window seats, nap on the great lawn and eat breakfast at noon. For two weeks the most famous academy in the kingdom is just a big, peaceful house.
 
@@ -50,6 +51,7 @@ text: Home is lovely for about three days. Then the list appears on the kitchen 
       health -small
       say: The goats are briefly levitated. Unfortunately so is the fence. Your family is very patient about it.
 > right: Do them the slow way, and talk
+  health -tiny
   mood +small
   vigor +small
   say: You fix the fence by hand with your father, saying very little and then, suddenly, a lot. It's the best conversation you've had all year.
@@ -101,7 +103,7 @@ text: The village Midsummer Fair: enchanted carousel, ring-toss, a strongman, an
 
 @event sum_letter_from_friend
 title: A Summer Letter
-class: windfall
+class: routine
 tone: light
 trigger: social
 cast:
@@ -113,9 +115,11 @@ tags: social
 scene: A thick letter with a doodle on the envelope arriving by owl at a summer window.
 text: An owl arrives with a thick, slightly crumpled letter from {npc}. Six pages of summer news, two doodles, one pressed flower, and at the end, in smaller writing: "I miss the castle. I miss you, actually."
 > left: Write a short reply
+  gold -tiny
   rel npc +small
   say: You write a page. It's warm, if brief. {npc} keeps it anyway.
 > right: Write back for hours
+  gold -tiny
   rel npc +medium
   mood +small
   say: You write until the candle gutters. Twelve pages. You can't remember the last time you wrote that much that wasn't an essay.
@@ -131,6 +135,7 @@ tags: home
 scene: Rain streaming down a tall window, a student curled in an armchair with a fat novel, a teapot steaming on the sill.
 text: It rains for a solid week. Not dramatic rain: just steady, grey, endless rain. Every plan you made for the summer is quietly drowning.
 > left: Read a very long novel
+  health -tiny
   mood +small
   lore +tiny
   say: You read eight hundred pages about a family of sea-witches and cry at the end. It's the best week of the summer.
@@ -204,6 +209,7 @@ text: A night market appears in a field outside the village — it wasn't there 
     gain sick
     say: You uncork it in your room. The little storm rains on you. Just rain. For a fortnight. You catch a cold.
 > right: Just look around
+  health -tiny
   mood +small
   lore +tiny
   say: You wander until dawn, buying nothing, watching everything. When the sun rises the field is empty except for a single glowing feather. You keep it.

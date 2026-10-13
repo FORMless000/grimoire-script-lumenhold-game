@@ -367,7 +367,7 @@ trigger: queued
 
 **A moral choice:** put the weight on `alignment` (−100 Hollow … +100 Lumen): `alignment -small` for a cruel, greedy or Star-tempted choice, `alignment +small` for an honest or selfless one at a cost. Gate on the design thresholds, ±30 and ±60 (`when: alignment <= -30`). Below −50 the climb back toward Lumen runs at half speed (the resource's `drag:`). Characters tagged `virtuous` or `ruthless` (`tagged(npc, virtuous)`) are the ones who react.
 
-**A relationship milestone:** `when: love(npc) >= 35 and bond(npc) != "partner"`, with `weight: 30` so it appears promptly once unlocked.
+**A relationship milestone:** `when: spark(npc) >= 30 and bond(npc) != "partner"`, with `weight: 30` so it appears promptly once unlocked.
 
 **A purchase:** `when: gold >= 20` plus `hint: Costs 20 gold` on the option, then `gold -20` in its effects.
 
