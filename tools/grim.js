@@ -8,6 +8,7 @@
  *   node tools/grim.js sim [N] [--seed S] [--policy random|cautious|social] [--verbose] [--log DIR]
  *                                       auto-play N games, report coverage, endings, deaths, balance
  *                                       (--log writes every game's full run log to DIR as JSON)
+ *   node tools/grim.js reach            static reachability: events, options, endings, places, tracks no play can reach
  *   node tools/grim.js stats            count blocks by kind / trigger / tag
  *   node tools/grim.js show <id>        print a block's source and everything that references it
  *   node tools/grim.js ids [kind]       list ids (event|state|npc|ending|resource|skill|flag|var)
@@ -440,6 +441,7 @@ function lint(opts = {}) {
   schemaLint(content, A.problems);
   for (const u of canonCheck(content)) A.problems.push({ level: /^content\/batches\//.test(u.where[0]) ? 'error' : 'warn', where: u.where[0], msg: 'unknown proper noun "' + u.name + '" (add it to the worldbook, a @lore key or @vocab canon_allowlist)' + (u.where.length > 1 ? ' [+' + (u.where.length - 1) + ' more]' : '') });
   for (const lang of localeLangs()) lintLocale(content, lang, A.problems, opts);
+  reachLint(content, A.problems);
   const by = { error: [], warn: [], info: [] };
   A.problems.forEach((p) => by[p.level].push(p));
   by.error.forEach((p) => console.error(C.r + 'error ' + C.x + p.where + ': ' + p.msg));
@@ -449,6 +451,26 @@ function lint(opts = {}) {
   console.log((by.error.length ? C.r : C.g) + 'lint: ' + by.error.length + ' error(s), ' + by.warn.length + ' warning(s), ' + by.info.length + ' info' + C.x + C.d + ', ' + A.legacy.length + ' legacy (phase 3 migrates; --legacy lists)' + C.x + ' — ' + Object.keys(content.events).length + ' events, ' + Object.keys(content.states).length + ' states, ' + Object.keys(content.npcs).length + ' npcs, ' + Object.keys(content.endings).length + ' endings');
   if (by.error.length && !opts.noExit) process.exit(1);
   return !by.error.length;
+}
+
+// Reachability (tools/reach.js): a static fixpoint over producible facts. Anything it calls unreachable needs
+// a fact (flag, state, clue, track, place, met npc, queue) that no reachable event, hook or state produces.
+function reachLint(content, problems) {
+  const r = require('./reach.js').reach(content);
+  const at = (id) => { const e = content.events[id]; return e ? rel(e.file) + ':' + e.line : id; };
+  for (const u of r.unreachable) problems.push({ level: 'error', where: at(u.id), msg: 'event "' + u.id + '" is unreachable: ' + u.why });
+  for (const o of r.deadOptions) problems.push({ level: 'warn', where: at(o.id), msg: 'option "' + o.option + '" of "' + o.id + '" can never open: ' + o.why });
+  for (const e of r.endings) problems.push({ level: 'error', where: 'ending ' + e.id, msg: 'ending "' + e.id + '" is unreachable: ' + e.why });
+  for (const p of r.places) problems.push({ level: 'warn', where: 'place ' + p, msg: 'place "' + p + '" can never be discovered' });
+  for (const t of r.tracks) problems.push({ level: 'warn', where: 'track ' + t, msg: 'track "' + t + '" can never be joined' });
+  return r;
+}
+function reachCmd() {
+  const { content } = compileAll();
+  const problems = [], r = reachLint(content, problems);
+  problems.forEach((p) => console.error((p.level === 'error' ? C.r + 'error ' : C.y + 'warn  ') + C.x + p.where + ': ' + p.msg));
+  console.log((r.unreachable.length ? C.r : C.g) + 'reach: ' + r.reachable + '/' + r.total + ' events reachable' + C.x + ', ' + r.retired.length + ' retired (' + r.retired.join(', ') + '), ' + r.unreachable.length + ' unreachable, ' + r.deadOptions.length + ' dead option(s); ' + r.facts.flag.size + ' flags, ' + r.facts.clue.size + ' clues, ' + r.facts.place.size + ' places, ' + r.facts.track.size + ' tracks producible');
+  return !problems.some((p) => p.level === 'error');
 }
 
 // Canon lint (tools/canon.js): known names include every glossary's English column.
@@ -1097,6 +1119,7 @@ const [cmd, ...rest] = process.argv.slice(2);
 const flag = (name) => { const i = rest.indexOf('--' + name); return i >= 0 ? (rest[i + 1] && !rest[i + 1].startsWith('--') ? rest[i + 1] : true) : null; };
 switch (cmd) {
   case 'build': if (build({ check: !!flag('check') }) === false) process.exit(1); break;
+  case 'reach': if (!reachCmd()) process.exit(1); break;
   case 'lint': lint({ verbose: !!flag('verbose'), legacy: !!flag('legacy') }); break;
   case 'sim': { const ok = sim(Number(rest.find((x) => /^\d+$/.test(x))) || 300, { seed: flag('seed') != null ? Number(flag('seed')) : undefined, policy: flag('policy'), lang: flag('lang'), verbose: !!flag('verbose'), log: typeof flag('log') === 'string' ? path.resolve(flag('log')) : null }); if (!ok) process.exit(1); break; }
   case 'i18n': if (rest[0]) i18nSync(rest[0]); else i18nStatus(); break;

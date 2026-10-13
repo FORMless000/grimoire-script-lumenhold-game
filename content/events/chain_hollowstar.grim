@@ -254,7 +254,7 @@ text: The tunnel ends at the round door. It stands open a crack. Through it, the
 > seal: Seal the door
   hint: Needs the star key or the founders' secret. Arcana; preparation makes it easier.
   when: flag(star_key) or flag(knows_founders_seal) or flag(warden_trial)
-  hs_prep = clue(seven_locks) + clue(star_key) + clue(ilse_truth) + (rel(kael) >= 30) + (rel(ilse) >= 30) + (rel(maud) >= 30) + (rel(isolde) >= 30) + 2 * (flag(sided_wardens) or flag(sided_dumonts)) + flag(sided_self)
+  hs_prep = clue(seven_locks) + clue(star_key) + clue(ilse_truth) + (rel(kael) >= 18) + (rel(ilse) >= 18) + (rel(maud) >= 18) + (rel(isolde) >= 18) + 2 * (flag(sided_wardens) or flag(sided_dumonts)) + flag(sided_self)
   if hs_prep >= 6:
     challenge spell trivial:
       win:

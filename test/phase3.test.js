@@ -84,3 +84,20 @@ test('slot: a when on slot sees the slot being drawn, not the previous card', ()
   eng._slot = null;
   assert.equal(eng.env().ident('slot'), 'morning');
 });
+
+// grim reach: a static fixpoint over producible facts. The real content is fully reachable; breaking a link
+// (an unset flag, a queue nobody sends, a track nobody joins) is reported with the missing fact.
+test('reach: the content is fully reachable, and broken links are caught', () => {
+  const { reach } = require('../tools/reach.js');
+  const r = reach(content);
+  assert.deepEqual(r.unreachable.map((u) => u.id), []);
+  assert.deepEqual(r.endings, []);
+  const c2 = project(ROOT).compileAll().content;
+  for (const e of Object.values(c2.events)) for (const o of e.options) G.walkEffects(o.effects, (st) => { if (st.t === 'queue' && st.event === 'fox_returns') st.event = 'fox_injured'; });
+  c2.events.duel_fixture.when = { src: 'flag(never_set_anywhere)', ast: G.parseExprAst('flag(never_set_anywhere)') };
+  c2.events.duel_first_practice.track = 'no_such_track';
+  const r2 = reach(c2), by = Object.fromEntries(r2.unreachable.map((u) => [u.id, u.why]));
+  assert.match(by.fox_returns, /queued by nothing/);
+  assert.match(by.duel_fixture, /flag\(never_set_anywhere\)/);
+  assert.match(by.duel_first_practice, /no_such_track never joined/);
+});
