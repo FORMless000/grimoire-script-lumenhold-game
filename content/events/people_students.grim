@@ -40,7 +40,7 @@ class: routine
 tone: light
 trigger: social
 actor: lyra
-when: rel(lyra) >= 10
+when: rel(lyra) >= 6
 weight: 12
 art: letter
 tags: social
@@ -60,7 +60,7 @@ class: routine
 tone: tense
 trigger: social
 actor: lyra
-when: rel(lyra) > -40
+when: rel(lyra) > -24
 weight: 10
 art: scroll
 tags: social study rival
@@ -88,7 +88,7 @@ class: routine
 tone: warm
 trigger: social
 actor: lyra
-when: rel(lyra) >= 30 and month >= 3 and month <= 6
+when: rel(lyra) >= 18 and month >= 3 and month <= 6
 weight: 12
 art: crown
 tags: social romance
@@ -116,7 +116,7 @@ class: milestone
 tone: warm
 trigger: social
 actor: lyra
-when: spark(lyra) >= 25 and rel(lyra) >= 30 and bond(lyra) != "partner"
+when: spark(lyra) >= 25 and rel(lyra) >= 18 and bond(lyra) != "partner"
 weight: 30
 art: flame
 tags: romance
@@ -181,7 +181,7 @@ class: routine
 tone: tense
 trigger: social
 actor: lyra
-when: bond(lyra) == "rival" and rel(lyra) <= -10
+when: bond(lyra) == "rival" and rel(lyra) <= -6
 weight: 12
 art: potion
 tags: rival
@@ -207,7 +207,7 @@ class: routine
 tone: light
 trigger: social
 actor: lyra
-when: rel(lyra) >= 20 and year >= 2
+when: rel(lyra) >= 12 and year >= 2
 weight: 10
 art: cross
 tags: social
@@ -251,7 +251,7 @@ class: windfall
 tone: light
 trigger: social
 actor: tobias
-when: rel(tobias) >= 10
+when: rel(tobias) >= 6
 weight: 12
 art: leaf
 tags: social nature
@@ -272,7 +272,7 @@ class: routine
 tone: light
 trigger: social
 actor: tobias
-when: rel(tobias) >= 25 and turn >= 8 and not flag(tobias_harvest_done)
+when: rel(tobias) >= 15 and turn >= 8 and not flag(tobias_harvest_done)
 weight: 14
 art: rain
 tags: social money
@@ -318,7 +318,7 @@ class: routine
 tone: light
 trigger: social
 actor: tobias
-when: rel(tobias) >= 15
+when: rel(tobias) >= 9
 weight: 10
 art: leaf
 tags: social nature
@@ -339,7 +339,7 @@ class: routine
 tone: tense
 trigger: social
 actor: tobias
-when: met(bram) and rel(tobias) >= 5
+when: met(bram) and rel(tobias) >= 3
 weight: 10
 art: shield
 tags: social rival
@@ -365,7 +365,7 @@ class: milestone
 tone: warm
 trigger: social
 actor: tobias
-when: spark(tobias) >= 25 and rel(tobias) >= 30 and bond(tobias) != "partner"
+when: spark(tobias) >= 25 and rel(tobias) >= 18 and bond(tobias) != "partner"
 weight: 30
 art: heart
 tags: romance
@@ -431,7 +431,7 @@ class: routine
 tone: eerie
 trigger: social
 actor: seraphine
-when: rel(seraphine) >= 5
+when: rel(seraphine) >= 3
 weight: 12
 art: cards
 tags: social mystery
@@ -457,7 +457,7 @@ class: story
 tone: tense
 trigger: social
 actor: seraphine
-when: rel(seraphine) >= 10 and month >= 3 and month <= 9
+when: rel(seraphine) >= 6 and month >= 3 and month <= 9
 weight: 10
 art: wave
 tags: social danger
@@ -485,7 +485,7 @@ class: windfall
 tone: eerie
 trigger: social
 actor: seraphine
-when: rel(seraphine) >= 25
+when: rel(seraphine) >= 15
 weight: 10
 art: hourglass
 tags: social mystery
@@ -509,7 +509,7 @@ class: routine
 tone: light
 trigger: social
 actor: seraphine
-when: rel(seraphine) >= 15 and year >= 2
+when: rel(seraphine) >= 9 and year >= 2
 weight: 10
 art: eye
 tags: social
@@ -530,7 +530,7 @@ class: milestone
 tone: warm
 trigger: social
 actor: seraphine
-when: spark(seraphine) >= 25 and rel(seraphine) >= 30 and bond(seraphine) != "partner"
+when: spark(seraphine) >= 25 and rel(seraphine) >= 18 and bond(seraphine) != "partner"
 weight: 30
 art: star
 tags: romance
@@ -575,7 +575,7 @@ class: routine
 tone: light
 trigger: social
 actor: corvin
-when: rel(corvin) >= 5
+when: rel(corvin) >= 3
 weight: 12
 art: meal
 tags: social
@@ -601,7 +601,7 @@ class: routine
 tone: light
 trigger: social
 actor: corvin
-when: rel(corvin) >= 20 and not flag(corvin_owes) and not flag(corvin_debt_refused)
+when: rel(corvin) >= 12 and not flag(corvin_owes) and not flag(corvin_debt_refused)
 weight: 12
 art: chain
 tags: social money
@@ -649,7 +649,7 @@ class: windfall
 tone: light
 trigger: social
 actor: corvin
-when: rel(corvin) >= 30
+when: rel(corvin) >= 18
 weight: 10
 art: moon
 tags: social
@@ -670,7 +670,7 @@ class: routine
 tone: tense
 trigger: social
 actor: corvin
-when: rel(corvin) >= 15 and met(bram) and turn >= 10
+when: rel(corvin) >= 9 and met(bram) and turn >= 10
 weight: 10
 art: scales
 tags: social rival
@@ -701,7 +701,7 @@ class: milestone
 tone: warm
 trigger: social
 actor: corvin
-when: spark(corvin) >= 25 and rel(corvin) >= 30 and bond(corvin) != "partner"
+when: spark(corvin) >= 25 and rel(corvin) >= 18 and bond(corvin) != "partner"
 weight: 30
 art: cards
 tags: romance
@@ -770,7 +770,7 @@ class: windfall
 tone: light
 trigger: social
 actor: mira
-when: rel(mira) >= 30 and not has(familiar_owl)
+when: rel(mira) >= 18 and not has(familiar_owl)
 weight: 14
 art: owl
 tags: social magic
@@ -791,7 +791,7 @@ class: routine
 tone: light
 trigger: social
 actor: mira
-when: rel(mira) >= 15 and month >= 6 and month <= 9
+when: rel(mira) >= 9 and month >= 6 and month <= 9
 weight: 12
 art: gear
 tags: social festival
@@ -820,7 +820,7 @@ class: routine
 tone: light
 trigger: social
 actor: mira
-when: rel(mira) >= 20 and year >= 2
+when: rel(mira) >= 12 and year >= 2
 weight: 10
 art: lock
 tags: social
@@ -853,7 +853,7 @@ class: routine
 tone: light
 trigger: social
 actor: mira
-when: rel(mira) >= 10
+when: rel(mira) >= 6
 weight: 10
 art: music
 tags: social
@@ -875,7 +875,7 @@ class: milestone
 tone: warm
 trigger: social
 actor: mira
-when: spark(mira) >= 25 and rel(mira) >= 30 and bond(mira) != "partner"
+when: spark(mira) >= 25 and rel(mira) >= 18 and bond(mira) != "partner"
 weight: 30
 art: gear
 tags: romance
@@ -897,7 +897,7 @@ class: routine
 tone: light
 trigger: social
 actor: mira
-when: rel(mira) >= 25 and year >= 2 and not flag(mira_family_done)
+when: rel(mira) >= 15 and year >= 2 and not flag(mira_family_done)
 weight: 10
 art: gear
 tags: social
@@ -975,7 +975,7 @@ class: routine
 tone: light
 trigger: social
 actor: nessa
-when: rel(nessa) >= 20 and (member(library_assistant) or visits_to(courtyard) >= 3 or rel(thorne) >= 15)
+when: rel(nessa) >= 12 and (member(library_assistant) or visits_to(courtyard) >= 3 or rel(thorne) >= 9)
 weight: 10
 art: feather
 tags: social
@@ -1000,7 +1000,7 @@ class: story
 tone: eerie
 trigger: social
 actor: nessa
-when: hollow >= 2 and rel(nessa) >= 10
+when: hollow >= 2 and rel(nessa) >= 6
 weight: 12
 art: paper
 tags: social mystery hollowstar
@@ -1024,7 +1024,7 @@ class: routine
 tone: light
 trigger: social
 actor: nessa
-when: rel(nessa) >= 15 and year >= 2
+when: rel(nessa) >= 9 and year >= 2
 weight: 10
 art: paper
 tags: social
@@ -1045,7 +1045,7 @@ class: milestone
 tone: warm
 trigger: social
 actor: nessa
-when: spark(nessa) >= 25 and rel(nessa) >= 30 and bond(nessa) != "partner"
+when: spark(nessa) >= 25 and rel(nessa) >= 18 and bond(nessa) != "partner"
 weight: 30
 art: feather
 tags: romance

@@ -280,7 +280,7 @@ tags: festival romance social
 scene: The great hall transformed: an ice-crystal chandelier, couples waltzing a foot above the floor, snow falling indoors without ever landing.
 text: The great hall has been turned to ice and starlight for the Midwinter Ball. Couples float above the floor. Who will you go with?
 > lyra: Ask Lyra
-  when: met(lyra) and rel(lyra) >= 15
+  when: met(lyra) and rel(lyra) >= 9
   hint: She has had six invitations. She hasn't said yes to any.
   if spark(lyra) >= 25:
     challenge negotiate trivial:
@@ -305,21 +305,21 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
         mood -small
         say: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
 > tobias: Ask Tobias
-  when: met(tobias) and rel(tobias) >= 15
+  when: met(tobias) and rel(tobias) >= 9
   hint: He has been practising with a broom.
   spark tobias +medium
   rel tobias +medium
   mood +medium
   say: He steps on your feet nine times and apologises ten. It's the best night of the term.
 > seraphine: Ask Seraphine
-  when: met(seraphine) and rel(seraphine) >= 15
+  when: met(seraphine) and rel(seraphine) >= 9
   hint: She may already know you'll ask.
   spark seraphine +medium
   rel seraphine +medium
   mood +medium
   say: "I said yes three weeks ago," she says, "you just hadn't asked yet." She dances a beat ahead of the music.
 > corvin: Ask Corvin
-  when: met(corvin) and rel(corvin) >= 15
+  when: met(corvin) and rel(corvin) >= 9
   hint: Odds he shows up: unclear.
   chance 70:
     spark corvin +medium
@@ -329,21 +329,21 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
     mood -medium
     say: He never shows. A note arrives at midnight: "Got arrested. Long story. Save me a dance next year."
 > mira: Ask Mira
-  when: met(mira) and rel(mira) >= 15
+  when: met(mira) and rel(mira) >= 9
   hint: They're bringing a self-playing violin.
   spark mira +medium
   rel mira +small
   mood +medium
   say: Mira's violin plays itself, then plays the chandelier, then plays the windows. You are asked to leave early. Worth it.
 > kael: Ask Kael
-  when: met(kael) and rel(kael) >= 20
+  when: met(kael) and rel(kael) >= 12
   hint: He doesn't seem to feel the cold.
   spark kael +medium
   rel kael +medium
   mood +medium
   say: He holds your hand like it is something fragile. Where your fingers touch, frost-ferns bloom on the glass.
 > nessa: Ask Nessa
-  when: met(nessa) and rel(nessa) >= 15
+  when: met(nessa) and rel(nessa) >= 9
   hint: She'll be working. She's always working.
   spark nessa +medium
   rel nessa +medium

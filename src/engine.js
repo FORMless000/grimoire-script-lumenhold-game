@@ -836,14 +836,14 @@
       return { kind: 'month', turn: s.turn, month: this.monthName(), monthIndex: this.monthIndex(), year: this.yearOf(), maxTurns: this.maxTurns, summary: shown, deckSize: s.deck.length, ended: !!s.ended };
     }
 
-    // Design §8.2: friendship fades after 6 months without contact (−2 a month toward 0); spark fades
+    // Design §8.2: friendship fades after 6 months without contact (−1 a month toward 0; halved with the rel tiers in phase 3); spark fades
     // 15% a month without a romantic moment; a partnership ends after 2 months below spark 20.
     relationshipDrift(summary) {
       const s = this.s;
       for (const [id, n] of Object.entries(s.npcs)) {
         if (!n.met) continue;
         const notes = [], deltas = {};
-        if (s.turn - (n.touched || 0) > 6 && n.rel !== 0) { const d = n.rel > 0 ? -Math.min(2, n.rel) : Math.min(2, -n.rel); n.rel += d; deltas['rel:' + id] = d; }
+        if (s.turn - (n.touched || 0) > 6 && n.rel !== 0) { const d = n.rel > 0 ? -Math.min(1, n.rel) : Math.min(1, -n.rel); n.rel += d; deltas['rel:' + id] = d; }
         if (n.spark > 0 && n.sparked !== s.turn - 1) { const nv = Math.floor(n.spark * 0.85); if (nv !== n.spark) { deltas['spark:' + id] = nv - n.spark; n.spark = nv; } }
         if (n.bond === 'partner') {
           n.lowSpark = n.spark < 20 ? (n.lowSpark || 0) + 1 : 0;

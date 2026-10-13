@@ -37,7 +37,7 @@ title: A Small Loan
 class: routine
 tone: light
 cast:
-  npc: any where not tagged(npc, faculty) and rel(npc) >= 5
+  npc: any where not tagged(npc, faculty) and rel(npc) >= 3
 per: npc
 trigger: social
 when: gold >= 20
@@ -78,7 +78,7 @@ title: Something Like Friendship
 class: milestone
 tone: light
 cast:
-  npc: any where bond(npc) == "none" and rel(npc) >= 30 and not tagged(npc, faculty)
+  npc: any where bond(npc) == "none" and rel(npc) >= 18 and not tagged(npc, faculty)
 per: npc
 trigger: social
 weight: 20
@@ -100,7 +100,7 @@ title: The Kind of Friend You Call at 3am
 class: milestone
 tone: light
 cast:
-  npc: any where bond(npc) == "friend" and rel(npc) >= 60
+  npc: any where bond(npc) == "friend" and rel(npc) >= 36
 per: npc
 trigger: social
 weight: 18
@@ -122,7 +122,7 @@ title: A Secret
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 25 and not tagged(npc, faculty)
+  npc: any where rel(npc) >= 15 and not tagged(npc, faculty)
 per: npc
 trigger: social
 repeat: 8
@@ -143,7 +143,7 @@ title: Words Exchanged
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 10 and bond(npc) != "partner"
+  npc: any where rel(npc) >= 6 and bond(npc) != "partner"
 per: npc
 trigger: social
 repeat: 6
@@ -170,7 +170,7 @@ title: A Day in the Village
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 10 and not tagged(npc, faculty)
+  npc: any where rel(npc) >= 6 and not tagged(npc, faculty)
 per: npc
 trigger: social
 when: gold >= 5
@@ -217,7 +217,7 @@ title: A Small Gift
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 15
+  npc: any where rel(npc) >= 9
 per: npc
 trigger: social
 repeat: 7
@@ -240,7 +240,7 @@ title: Drifting Apart
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 10 and rel(npc) < 40 and not tagged(npc, faculty)
+  npc: any where rel(npc) >= 6 and rel(npc) < 24 and not tagged(npc, faculty)
 per: npc
 trigger: social
 when: since(soc_drift) > 3
@@ -263,7 +263,7 @@ title: Rumours About {npc}
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 15
+  npc: any where rel(npc) >= 9
 per: npc
 trigger: social
 repeat: 8
@@ -322,7 +322,7 @@ title: A Word of Advice
 class: routine
 tone: light
 cast:
-  npc: any where tagged(npc, faculty) and rel(npc) >= 10
+  npc: any where tagged(npc, faculty) and rel(npc) >= 6
 per: npc
 trigger: social
 repeat: 6
@@ -346,7 +346,7 @@ title: A Spark
 class: windfall
 tone: warm
 cast:
-  npc: any where romanceable(npc) and rel(npc) >= 15 and spark(npc) < 12 and bond(npc) != "partner"
+  npc: any where romanceable(npc) and rel(npc) >= 9 and spark(npc) < 12 and bond(npc) != "partner"
 per: npc
 trigger: social
 weight: 12
@@ -368,7 +368,7 @@ title: An Invitation
 class: routine
 tone: warm
 cast:
-  npc: any where romanceable(npc) and spark(npc) >= 12 and spark(npc) < 40 and bond(npc) != "partner" and rel(npc) >= 15
+  npc: any where romanceable(npc) and spark(npc) >= 12 and spark(npc) < 40 and bond(npc) != "partner" and rel(npc) >= 9
 per: npc
 trigger: social
 weight: 12
@@ -408,7 +408,7 @@ title: Feelings, Spoken
 class: milestone
 tone: warm
 cast:
-  npc: any where romanceable(npc) and spark(npc) >= 30 and rel(npc) >= 30 and bond(npc) != "partner" and bond(npc) != "ex"
+  npc: any where romanceable(npc) and spark(npc) >= 30 and rel(npc) >= 18 and bond(npc) != "partner" and bond(npc) != "ex"
 per: npc
 trigger: social
 weight: 10
@@ -573,7 +573,7 @@ title: A Public Taunt
 class: routine
 tone: tense
 cast:
-  npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -20) and not tagged(npc, faculty)
+  npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -12) and not tagged(npc, faculty)
 per: npc
 trigger: social
 repeat: 4
@@ -600,7 +600,7 @@ title: Burying the Hatchet
 class: milestone
 tone: tense
 cast:
-  npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis") and rel(npc) >= 5
+  npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis") and rel(npc) >= 3
 per: npc
 trigger: social
 weight: 18

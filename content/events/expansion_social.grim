@@ -7,7 +7,7 @@ title: The Borrowed Notes
 class: routine
 tone: light
 cast:
-  npc: any where not tagged(npc, faculty) and rel(npc) >= 5
+  npc: any where not tagged(npc, faculty) and rel(npc) >= 3
 per: npc
 trigger: social
 repeat: 8
@@ -29,7 +29,7 @@ title: A Birthday
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 15 and not tagged(npc, faculty)
+  npc: any where rel(npc) >= 9 and not tagged(npc, faculty)
 per: npc
 trigger: social
 repeat: 12
@@ -52,7 +52,7 @@ title: Bad News From Home
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 20 and not tagged(npc, faculty)
+  npc: any where rel(npc) >= 12 and not tagged(npc, faculty)
 per: npc
 trigger: social
 repeat: 12
@@ -74,7 +74,7 @@ title: Counting Stars
 class: windfall
 tone: warm
 cast:
-  npc: any where romanceable(npc) and rel(npc) >= 20 and bond(npc) != "partner"
+  npc: any where romanceable(npc) and rel(npc) >= 12 and bond(npc) != "partner"
 per: npc
 trigger: social
 repeat: 8
@@ -119,7 +119,7 @@ title: A Trick Worth Learning
 class: windfall
 tone: light
 cast:
-  npc: any where rel(npc) >= 12
+  npc: any where rel(npc) >= 7
 per: npc
 trigger: social
 repeat: 8
@@ -167,7 +167,7 @@ title: Carried
 class: routine
 tone: tense
 cast:
-  npc: any where rel(npc) >= 10 and not tagged(npc, faculty)
+  npc: any where rel(npc) >= 6 and not tagged(npc, faculty)
 per: npc
 trigger: social
 repeat: 10
@@ -189,7 +189,7 @@ title: An Unexpected Kindness
 class: routine
 tone: tense
 cast:
-  npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -15) and not tagged(npc, faculty)
+  npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -9) and not tagged(npc, faculty)
 per: npc
 trigger: social
 repeat: 10

@@ -40,7 +40,7 @@ weight: 24
 art: flame
 tags: class magic rival
 scene: A crimson-haired student balancing a flame on one fingertip while another student squints at a sputtering candle.
-text: Lyra watches you fail to light a candle for the third time. "You're asking it," she says. "Fire doesn't want to be asked. {rel(lyra) >= 20: Here — watch my hand.|Watch, if you can keep up.}"
+text: Lyra watches you fail to light a candle for the third time. "You're asking it," she says. "Fire doesn't want to be asked. {rel(lyra) >= 12: Here — watch my hand.|Watch, if you can keep up.}"
 > left: Watch her hand
   learn_spell flame
   rel lyra +small
@@ -138,7 +138,7 @@ title: Ashes in the Grate
 class: routine
 tone: tense
 actor: lyra
-when: rel(lyra) >= 10 and not knows(lyra.mother)
+when: rel(lyra) >= 6 and not knows(lyra.mother)
 weight: 18
 art: letter
 tags: social
@@ -227,7 +227,7 @@ title: Frost Against Fire
 class: milestone
 tone: tense
 actor: kael
-when: met(kael) and rel(kael) >= 15 and turn >= 8
+when: met(kael) and rel(kael) >= 9 and turn >= 8
 weight: 20
 art: duel
 tags: duel social

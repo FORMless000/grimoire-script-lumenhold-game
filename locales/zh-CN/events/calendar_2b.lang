@@ -19,8 +19,8 @@ opt.none.hint [362aa4] = 可以。你的 GPA 不会感谢你。
 @event club_fair_v3
 # en: The Club Fair
 title [ce4fee] = 社团招新会
-# en: The Club Fair fills the courtyard. Every table wants you; every captain swears theirs is the one that matters. {rel(lyra) >= 10: Lyra is at the Duelling Circle's table, pretending not to watch which way you walk.|}
-text [0746ce] = 社团招新会挤满了庭院。每张桌子都想要你，每位社长都发誓自家才是最要紧的。{rel(lyra) >= 10: 莱拉站在决斗社的桌边，假装没在看你往哪儿走。|}
+# en: The Club Fair fills the courtyard. Every table wants you; every captain swears theirs is the one that matters. {rel(lyra) >= 6: Lyra is at the Duelling Circle's table, pretending not to watch which way you walk.|}
+text [fa6309] = 社团招新会挤满了庭院。每张桌子都想要你，每位社长都发誓自家才是最要紧的。{rel(lyra) >= 6: 莱拉站在决斗社的桌边，假装没在看你往哪儿走。|}
 # en: The courtyard full of recruiting tables, banners snapping, a duelling demonstration drawing a crowd.
 scene [72616b] = 庭院里摆满招新桌，旗帜猎猎作响，一场决斗示范引来一圈围观者。
 # en: Not this year
@@ -111,34 +111,90 @@ opt.right.say.1 [ffa0ad] = “那就等你准备好。”他们是认真的。�
 @event intern_application
 # en: Applications Open
 title [e7df06] = 开始申请
-# en: The Royal Library is taking summer researchers. The notice wants a GPA of 2.5, Astromancy at the second level, and "a genuine love of indexes".
-text [935010] = 皇家图书馆在招暑期研究员。告示要求 GPA 2.5、星象学二级，以及“对索引的真挚热爱”。
-# en: A notice with a royal seal pinned above all the others: summer research posts at the Royal Library.
-scene [8cd4f2] = 一张盖着王室印章的告示钉在所有告示之上：皇家图书馆暑期研究职位。
-# en: Apply
-opt.left.label [77bbdb] = 申请
-# en: You write the letter three times. The third is good. You send the second by mistake. It's fine.
-opt.left.say.1 [451213] = 你把信写了三遍。第三遍写得很好。你错寄了第二遍。没关系。
+# en: Summer research posts are open. Six notices, six seals, six lists of requirements. You can put your name to one this year.
+text [73a8b3] = 夏季研究岗位开放申请了。六张告示，六枚火漆，六份要求清单。今年你只能报名其中一个。
+# en: A cluster of notices with wax seals pinned above all the others: summer research posts, each with its own demands.
+scene [a45b3c] = 一簇盖着火漆的告示钉在所有告示上方：夏季研究岗位，各有各的要求。
+# en: The Royal Library
+opt.royal.label [64f580] = 皇家图书馆
+# en: GPA 2.5, Astromancy II, a love of indexes.
+opt.royal.hint [a2a373] = GPA 2.5、星象与占卜 II，以及对索引的热爱。
+# en: You write the letter three times and send the best one. Probably the best one.
+opt.royal.say.1 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+# en: The Conclave Laboratory
+opt.conclave.label [858e84] = 七塔议会实验室
+# en: GPA 3.0, Evocation II, and a word from Thorne.
+opt.conclave.hint [d26da2] = GPA 3.0、塑能术 II，外加索恩的一句推荐。
+# en: You write the letter three times and send the best one. Probably the best one.
+opt.conclave.say.1 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+# en: The Guild of Alchemists' Works
+opt.alchemists.label [80cc20] = 炼金师公会工坊
+# en: GPA 2.0, Alchemy II, a strong stomach.
+opt.alchemists.hint [83e289] = GPA 2.0、炼金与治愈 II，还得有个好胃口。
+# en: You write the letter three times and send the best one. Probably the best one.
+opt.alchemists.say.1 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+# en: The Observatory Expedition
+opt.expedition.label [a8e59b] = 天文台远征队
+# en: Astromancy II and the legs for a plateau.
+opt.expedition.hint [447abb] = 星象与占卜 II，外加能爬上高原的双腿。
+# en: You write the letter three times and send the best one. Probably the best one.
+opt.expedition.say.1 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+# en: The Beastcraft Field Station
+opt.field.label [93e08b] = 驭兽野外站
+# en: Beastcraft II. Boots provided, mostly.
+opt.field.hint [9dfc58] = 驭兽与飞行 II。靴子基本上会发。
+# en: You write the letter three times and send the best one. Probably the best one.
+opt.field.say.1 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+# en: The Thornwick Exchange
+opt.thornwick.label [eb19f0] = 荆木学院交换项目
+# en: GPA 2.5 and Illusion II. Bring a thick skin.
+opt.thornwick.hint [777ce9] = GPA 2.5、幻术与魅影 II。脸皮得厚一点。
+# en: You write the letter three times and send the best one. Probably the best one.
+opt.thornwick.say.1 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
 # en: Not this year
-opt.right.label [594ecf] = 今年算了
-# en: You let the notice flap. There's always next year, until there isn't.
-opt.right.say.1 [d2e703] = 你任告示在风里扑腾。总还有明年，直到没有明年。
+opt.none.label [594ecf] = 今年算了
+# en: You let the notices flap. There's always next year, until there isn't.
+opt.none.say.1 [cd2444] = 你任由告示在风里拍打。总还有明年——直到没有为止。
 
 @event intern_offer
-# en: A Letter From the Royal Library
-title [7077cb] = 皇家图书馆来信
-# en: {gpa >= 2.5 and level(astromancy) >= 2: The Royal Library is pleased to offer you a summer research post.|The Royal Library regrets: the post has gone to a candidate with stronger marks.}
-text [971023] = {gpa >= 2.5 and level(astromancy) >= 2: 皇家图书馆很高兴为你提供一个暑期研究职位。|皇家图书馆深表遗憾：该职位已给了成绩更好的候选人。}
-# en: A heavy envelope with a royal seal on a dormitory desk.
-scene [d9ce04] = 宿舍书桌上一只盖着王室印章的厚信封。
-# en: Accept
-opt.left.label [b26149] = 接受
+# en: Letters With Seals
+title [51ad68] = 盖着火漆的信
+# en: The spring post brings answers. {(applied(intern_royal_library) and gpa >= 2.5 and level(astromancy) >= 2) or (applied(intern_conclave) and gpa >= 3.0 and level(evocation) >= 2 and rel(thorne) >= 6) or (applied(intern_alchemists) and gpa >= 2.0 and level(alchemy) >= 2) or (applied(intern_expedition) and level(astromancy) >= 2 and vigor >= 20) or (applied(intern_field_station) and level(beastcraft) >= 2) or (applied(intern_thornwick) and gpa >= 2.5 and level(illusion) >= 2): One of them begins "We are pleased".|Every letter begins with "We regret".} {guile >= 35 and rel(isolde) >= 6: There is also a plain grey envelope you never asked for.|}
+text [460590] = 春天的邮件带来了回音。{(applied(intern_royal_library) and gpa >= 2.5 and level(astromancy) >= 2) or (applied(intern_conclave) and gpa >= 3.0 and level(evocation) >= 2 and rel(thorne) >= 6) or (applied(intern_alchemists) and gpa >= 2.0 and level(alchemy) >= 2) or (applied(intern_expedition) and level(astromancy) >= 2 and vigor >= 20) or (applied(intern_field_station) and level(beastcraft) >= 2) or (applied(intern_thornwick) and gpa >= 2.5 and level(illusion) >= 2): 其中一封以“我们很高兴”开头。|每一封都以“我们很遗憾”开头。} {guile >= 35 and rel(isolde) >= 6: 还有一只你从没申请过的素灰色信封。|}
+# en: Heavy envelopes with wax seals on a dormitory desk, one of them plain grey with no seal at all.
+scene [28d6f5] = 宿舍书桌上放着几只封着火漆的厚信封，其中一只是素灰色的，根本没有封漆。
+# en: Accept: The Royal Library
+opt.royal.label [be98ce] = 接受：皇家图书馆
 # en: You read the letter until the seal cracks. A summer in the oldest archives in the realm.
-opt.left.say.1 [173a81] = 你把信读到封蜡都裂了。在王国最古老的档案馆里度过一整个夏天。
-# en: Fold the letter away
-opt.right.label [81ff5f] = 把信折起来收好
-# en: You fold it carefully. Next year, perhaps.
-opt.right.say.1 [e28348] = 你仔细折好它。也许明年吧。
+opt.royal.say.1 [173a81] = 你把信读了一遍又一遍，直到火漆裂开。一整个夏天，待在王国最古老的档案馆里。
+# en: Accept: The Conclave Laboratory
+opt.conclave.label [7c6b0e] = 接受：七塔议会实验室
+# en: You read the letter until the seal cracks. A summer in spell research under the Seven Towers.
+opt.conclave.say.1 [b4e606] = 你把信读了一遍又一遍，直到火漆裂开。一整个夏天，在七塔之下研究法术。
+# en: Accept: The Alchemists' Works
+opt.alchemists.label [245132] = 接受：炼金师工坊
+# en: You read the letter until the seal cracks. A summer in the great vats of the Guild.
+opt.alchemists.say.1 [bd86f6] = 你把信读了一遍又一遍，直到火漆裂开。一整个夏天，守着公会的大缸。
+# en: Accept: The Observatory Expedition
+opt.expedition.label [9f24c5] = 接受：天文台远征队
+# en: You read the letter until the seal cracks. A summer of sky charts on the high plateau.
+opt.expedition.say.1 [0d3ad9] = 你把信读了一遍又一遍，直到火漆裂开。一整个夏天，在高原上绘制星图。
+# en: Accept: The Beastcraft Field Station
+opt.field.label [7ea555] = 接受：驭兽野外站
+# en: You read the letter until the seal cracks. A summer in the moors, the heather and the creatures in them.
+opt.field.say.1 [8ddf5b] = 你把信读了一遍又一遍，直到火漆裂开。一整个夏天，在荒原和石楠丛里，与那里的生灵为伴。
+# en: Accept: The Thornwick Exchange
+opt.thornwick.label [476caa] = 接受：荆木学院交换项目
+# en: You read the letter until the seal cracks. A summer in the rival academy's illusion laboratory.
+opt.thornwick.say.1 [405c42] = 你把信读了一遍又一遍，直到火漆裂开。一整个夏天，待在对手学院的幻术实验室里。
+# en: Open the plain envelope
+opt.unseen.label [ca484a] = 拆开那只素信封
+# en: Inside: a time, an address and no signature. The paper is blank again by morning. You go anyway.
+opt.unseen.say.1 [702952] = 里面写着一个时间、一个地址，没有署名。到第二天早上，纸又变成了白纸。你还是去了。
+# en: Fold the letters away
+opt.decline.label [15c522] = 把信都收起来
+# en: You fold them carefully. Next year, perhaps.
+opt.decline.say.1 [b0ac8d] = 你把信仔细折好。也许明年吧。
 
 @event thesis_setup
 # en: Choosing a Thesis

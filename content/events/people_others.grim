@@ -11,7 +11,7 @@ class: routine
 tone: light
 trigger: social
 actor: kael
-when: rel(kael) >= 10 and month >= 5 and month <= 7
+when: rel(kael) >= 6 and month >= 5 and month <= 7
 weight: 10
 art: snow
 tags: social
@@ -31,7 +31,7 @@ class: windfall
 tone: warm
 trigger: social
 actor: kael
-when: rel(kael) >= 20 and spark(kael) < 35
+when: rel(kael) >= 12 and spark(kael) < 35
 weight: 10
 art: heart
 tags: social romance
@@ -51,7 +51,7 @@ class: milestone
 tone: warm
 trigger: social
 actor: kael
-when: spark(kael) >= 25 and rel(kael) >= 30 and bond(kael) != "partner"
+when: spark(kael) >= 25 and rel(kael) >= 18 and bond(kael) != "partner"
 weight: 30
 art: snow
 tags: romance
@@ -98,7 +98,7 @@ class: routine
 tone: tense
 trigger: social
 actor: bram
-when: rel(bram) < 10
+when: rel(bram) < 6
 weight: 12
 art: coin
 tags: rival money
@@ -124,7 +124,7 @@ class: routine
 tone: tense
 trigger: social
 actor: bram
-when: rel(bram) <= -20 and (month == 3 or month == 4 or month == 9 or month == 10)
+when: rel(bram) <= -12 and (month == 3 or month == 4 or month == 9 or month == 10)
 weight: 14
 art: scroll
 tags: rival study
@@ -176,7 +176,7 @@ class: milestone
 tone: light
 trigger: social
 actor: bram
-when: flag(bram_softened) and rel(bram) >= 10 and bond(bram) != "friend"
+when: flag(bram_softened) and rel(bram) >= 6 and bond(bram) != "friend"
 weight: 12
 art: shield
 tags: social
@@ -252,7 +252,7 @@ class: routine
 tone: light
 trigger: social
 actor: thorne
-when: rel(thorne) >= 10 and arcana >= 14
+when: rel(thorne) >= 6 and arcana >= 14
 weight: 10
 art: candle
 tags: study
@@ -273,7 +273,7 @@ class: windfall
 tone: light
 trigger: social
 actor: thorne
-when: rel(thorne) >= 20
+when: rel(thorne) >= 12
 weight: 8
 art: bolt
 tags: study
@@ -293,7 +293,7 @@ class: windfall
 tone: light
 trigger: social
 actor: thorne
-when: rel(thorne) >= 30 and final_year
+when: rel(thorne) >= 18 and final_year
 weight: 16
 art: letter
 tags: study
@@ -365,7 +365,7 @@ class: routine
 tone: light
 trigger: social
 actor: maud
-when: rel(maud) >= 5 and (has(sick) or health < 40)
+when: rel(maud) >= 3 and (has(sick) or health < 40)
 weight: 18
 art: flower
 tags: nature
@@ -389,7 +389,7 @@ class: story
 tone: eerie
 trigger: social
 actor: maud
-when: rel(maud) >= 15 and hollow >= 1
+when: rel(maud) >= 9 and hollow >= 1
 weight: 14
 art: moon
 tags: mystery hollowstar
@@ -415,7 +415,7 @@ class: routine
 tone: light
 trigger: social
 actor: maud
-when: rel(maud) >= 10 and month >= 7 and month <= 10
+when: rel(maud) >= 6 and month >= 7 and month <= 10
 weight: 10
 art: flower
 tags: nature
@@ -442,7 +442,7 @@ class: routine
 tone: light
 trigger: social
 actor: maud
-when: rel(maud) >= 20 and year >= 2 and not flag(maud_ill_done)
+when: rel(maud) >= 12 and year >= 2 and not flag(maud_ill_done)
 weight: 12
 art: house
 tags: social

@@ -44,7 +44,7 @@ text: Every guild, order and institution in the kingdom has sent someone to the 
   queue y3_interview now
 > teaching: Stay at Lumenhold as a junior teacher
   hint: Requires a faculty member who trusts you (Thorne, Maud or the Headmistress at 25+).
-  when: rel(thorne) >= 25 or rel(maud) >= 25 or rel(isolde) >= 25
+  when: rel(thorne) >= 15 or rel(maud) >= 15 or rel(isolde) >= 15
   flag career_teaching
   queue y3_interview now
 > none: Not yet — you'd rather not decide
@@ -204,7 +204,7 @@ text: The Divination department runs a tradition: write a letter to your first-y
 title: Seeds for Later
 class: windfall
 tone: light
-when: final_year and month >= 9 and met(maud) and rel(maud) >= 15
+when: final_year and month >= 9 and met(maud) and rel(maud) >= 9
 actor: maud
 weight: 16
 art: flower

@@ -145,7 +145,7 @@ map: campus 395,230
 kind: club
 track: lumen_ledger
 open: afternoon evening night
-discover: has(club_ledger) or met(nessa)
+discover: member(lumen_ledger) or met(nessa)
 art: paper
 draws: club
 desc: A cramped room under the library stairs, walls papered with old front pages. The printing press groans like a dragon on deadline night.
@@ -156,7 +156,7 @@ region: castle
 map: campus 500,130
 kind: public
 open: afternoon evening
-discover: rel(isolde) >= 20 or flag(warden_trial)
+discover: rel(isolde) >= 12 or flag(warden_trial)
 hint: A spiral stair guarded by a stone owl that only opens its eyes for some students.
 hinted_when: met(isolde)
 art: crown
@@ -168,7 +168,7 @@ name: The Restricted Section
 region: castle
 map: campus 352,245
 kind: public
-open: night midnight
+open: evening
 discover: seen(forbidden_section_1) > 0
 hint: A door at the back of the library that is always locked, and always slightly warm.
 hinted_when: turn >= 2
@@ -182,8 +182,8 @@ region: castle
 map: campus 418,135
 kind: club
 track: cartographers
-open: night midnight
-discover: has(club_cartographers)
+open: evening
+discover: member(cartographers)
 hint: Corvin keeps glancing at a particular gargoyle.
 hinted_when: met(corvin)
 art: map
@@ -195,7 +195,7 @@ name: The Seventh Tower
 region: castle
 map: campus 500,72
 kind: public
-open: night midnight
+open: evening
 discover: hollow >= 3
 hint: A locked stair that leads up into a tower nobody admits is there.
 hinted_when: hollow >= 1
@@ -224,7 +224,7 @@ map: campus 660,150
 kind: club
 track: duelling
 open: afternoon evening
-discover: has(club_dueling) or rel(lyra) >= 15
+discover: member(duelling) or rel(lyra) >= 9
 hint: Steel rings somewhere above the east stair.
 hinted_when: met(lyra)
 art: duel
@@ -238,7 +238,7 @@ map: campus 740,235
 kind: club
 track: verdant
 open: morning afternoon
-discover: has(club_garden) or met(tobias) or met(maud)
+discover: member(verdant) or met(tobias) or met(maud)
 art: leaf
 draws: nature
 desc: Glass houses that steam even in winter. The moonflowers bloom once every eleven years; the mandrakes have opinions every day.

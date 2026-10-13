@@ -42,7 +42,7 @@ tone: light
 art: group
 tags: club festival
 scene: The courtyard full of recruiting tables, banners snapping, a duelling demonstration drawing a crowd.
-text: The Club Fair fills the courtyard. Every table wants you; every captain swears theirs is the one that matters. {rel(lyra) >= 10: Lyra is at the Duelling Circle's table, pretending not to watch which way you walk.|}
+text: The Club Fair fills the courtyard. Every table wants you; every captain swears theirs is the one that matters. {rel(lyra) >= 6: Lyra is at the Duelling Circle's table, pretending not to watch which way you walk.|}
 > none: Not this year
   hint: You can join at next year's fair.
   mood +tiny
@@ -100,7 +100,7 @@ text: {month == 5: The winter break.|The summer break.} Two months without lectu
   gain plan_work
   say: You trade the holidays for wages. Your feet will remember it.
 > intern: Start your internship
-  when: member(intern_royal_library)
+  when: member(intern_royal_library) or member(intern_conclave) or member(intern_alchemists) or member(intern_expedition) or member(intern_field_station) or member(intern_thornwick) or member(intern_unseen_office)
   hint: A stipend, a supervisor and a project.
   gain plan_internship
   say: You pack a trunk of notebooks and take the long coach to the capital.
@@ -147,44 +147,114 @@ text: {track} wants to promote you. More responsibility, more respect, and in th
 
 @event intern_application
 title: Applications Open
-place: job_board
-when: term and month >= 7 and month <= 8 and year >= 2 and year <= 3 and not applied(intern_royal_library) and not member(intern_royal_library)
-weight: 40
+trigger: auto
+repeat: 2
+priority: 50
+type: menu
+when: month == 7 and year >= 2 and year <= 3 and not (applied(intern_royal_library) or applied(intern_conclave) or applied(intern_alchemists) or applied(intern_expedition) or applied(intern_field_station) or applied(intern_thornwick))
 class: story
 tone: light
 art: letter
 tags: job study
-scene: A notice with a royal seal pinned above all the others: summer research posts at the Royal Library.
-text: The Royal Library is taking summer researchers. The notice wants a GPA of 2.5, Astromancy at the second level, and "a genuine love of indexes".
-> left: Apply
+scene: A cluster of notices with wax seals pinned above all the others: summer research posts, each with its own demands.
+text: Summer research posts are open. Six notices, six seals, six lists of requirements. You can put your name to one this year.
+> royal: The Royal Library
+  when: not member(intern_royal_library)
+  hint: GPA 2.5, Astromancy II, a love of indexes.
   apply intern_royal_library
+  charm +tiny
+  say: You write the letter three times and send the best one. Probably the best one.
+> conclave: The Conclave Laboratory
+  when: not member(intern_conclave)
+  hint: GPA 3.0, Evocation II, and a word from Thorne.
+  apply intern_conclave
+  charm +tiny
+  say: You write the letter three times and send the best one. Probably the best one.
+> alchemists: The Guild of Alchemists' Works
+  when: not member(intern_alchemists)
+  hint: GPA 2.0, Alchemy II, a strong stomach.
+  apply intern_alchemists
+  charm +tiny
+  say: You write the letter three times and send the best one. Probably the best one.
+> expedition: The Observatory Expedition
+  when: not member(intern_expedition)
+  hint: Astromancy II and the legs for a plateau.
+  apply intern_expedition
+  charm +tiny
+  say: You write the letter three times and send the best one. Probably the best one.
+> field: The Beastcraft Field Station
+  when: not member(intern_field_station)
+  hint: Beastcraft II. Boots provided, mostly.
+  apply intern_field_station
+  charm +tiny
+  say: You write the letter three times and send the best one. Probably the best one.
+> thornwick: The Thornwick Exchange
+  when: not member(intern_thornwick)
+  hint: GPA 2.5 and Illusion II. Bring a thick skin.
+  apply intern_thornwick
+  charm +tiny
+  say: You write the letter three times and send the best one. Probably the best one.
+> none: Not this year
   mood -tiny
-  say: You write the letter three times. The third is good. You send the second by mistake. It's fine.
-> right: Not this year
-  mood +tiny
-  say: You let the notice flap. There's always next year, until there isn't.
+  say: You let the notices flap. There's always next year, until there isn't.
 
 @event intern_offer
-title: A Letter From the Royal Library
+title: Letters With Seals
 trigger: auto
-when: month == 9 and applied(intern_royal_library)
+type: menu
+when: month == 9 and year >= 2 and year <= 3 and (applied(intern_royal_library) or applied(intern_conclave) or applied(intern_alchemists) or applied(intern_expedition) or applied(intern_field_station) or applied(intern_thornwick) or (guile >= 35 and rel(isolde) >= 6 and not member(intern_unseen_office)))
 repeat: 12
 priority: 55
 class: milestone
 tone: warm
 art: letter
 tags: study
-scene: A heavy envelope with a royal seal on a dormitory desk.
-text: {gpa >= 2.5 and level(astromancy) >= 2: The Royal Library is pleased to offer you a summer research post.|The Royal Library regrets: the post has gone to a candidate with stronger marks.}
-> left: Accept
-  when: gpa >= 2.5 and level(astromancy) >= 2
+scene: Heavy envelopes with wax seals on a dormitory desk, one of them plain grey with no seal at all.
+text: The spring post brings answers. {(applied(intern_royal_library) and gpa >= 2.5 and level(astromancy) >= 2) or (applied(intern_conclave) and gpa >= 3.0 and level(evocation) >= 2 and rel(thorne) >= 6) or (applied(intern_alchemists) and gpa >= 2.0 and level(alchemy) >= 2) or (applied(intern_expedition) and level(astromancy) >= 2 and vigor >= 20) or (applied(intern_field_station) and level(beastcraft) >= 2) or (applied(intern_thornwick) and gpa >= 2.5 and level(illusion) >= 2): One of them begins "We are pleased".|Every letter begins with "We regret".} {guile >= 35 and rel(isolde) >= 6: There is also a plain grey envelope you never asked for.|}
+> royal: Accept: The Royal Library
+  when: applied(intern_royal_library) and gpa >= 2.5 and level(astromancy) >= 2
   join intern_royal_library
   renown +small
   say: You read the letter until the seal cracks. A summer in the oldest archives in the realm.
-> right: Fold the letter away
+> conclave: Accept: The Conclave Laboratory
+  when: applied(intern_conclave) and gpa >= 3.0 and level(evocation) >= 2 and rel(thorne) >= 6
+  join intern_conclave
+  renown +small
+  say: You read the letter until the seal cracks. A summer in spell research under the Seven Towers.
+> alchemists: Accept: The Alchemists' Works
+  when: applied(intern_alchemists) and gpa >= 2.0 and level(alchemy) >= 2
+  join intern_alchemists
+  renown +small
+  say: You read the letter until the seal cracks. A summer in the great vats of the Guild.
+> expedition: Accept: The Observatory Expedition
+  when: applied(intern_expedition) and level(astromancy) >= 2 and vigor >= 20
+  join intern_expedition
+  renown +small
+  say: You read the letter until the seal cracks. A summer of sky charts on the high plateau.
+> field: Accept: The Beastcraft Field Station
+  when: applied(intern_field_station) and level(beastcraft) >= 2
+  join intern_field_station
+  renown +small
+  say: You read the letter until the seal cracks. A summer in the moors, the heather and the creatures in them.
+> thornwick: Accept: The Thornwick Exchange
+  when: applied(intern_thornwick) and gpa >= 2.5 and level(illusion) >= 2
+  join intern_thornwick
+  renown +small
+  say: You read the letter until the seal cracks. A summer in the rival academy's illusion laboratory.
+> unseen: Open the plain envelope
+  when: guile >= 35 and rel(isolde) >= 6 and not member(intern_unseen_office)
+  join intern_unseen_office
+  guile +small
+  say: Inside: a time, an address and no signature. The paper is blank again by morning. You go anyway.
+> decline: Fold the letters away
   leave intern_royal_library
+  leave intern_conclave
+  leave intern_alchemists
+  leave intern_expedition
+  leave intern_field_station
+  leave intern_thornwick
   mood -tiny
-  say: You fold it carefully. Next year, perhaps.
+  say: You fold them carefully. Next year, perhaps.
 
 # ---------------- Thesis (design §7.6) ----------------
 

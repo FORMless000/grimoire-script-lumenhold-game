@@ -277,7 +277,7 @@ text: An anonymous tip: Bram Hollis has been taking bribes from first-years to s
   rel nessa +medium
   rel bram -large
   gain watched
-  if rel(bram) < -30:
+  if rel(bram) < -18:
     bond bram nemesis
   say: The story runs. Bram is stripped of his sash for a month. He gets it back. And now he knows exactly who you are.
 
@@ -436,7 +436,7 @@ text: Plotting the autumn sky, you notice seven faint stars that form a ring aro
 title: An Invitation at Midnight
 class: routine
 tone: eerie
-when: met(corvin) and rel(corvin) >= 10 and not member(cartographers) and turn >= 4
+when: met(corvin) and rel(corvin) >= 6 and not member(cartographers) and turn >= 4
 actor: corvin
 weight: 20
 art: map
@@ -447,7 +447,7 @@ text: A black card under your door. On it, a map in silver ink that redraws itse
   rel corvin -tiny
   say: The card blanks itself the next morning. Corvin doesn't mention it, but he's a little cooler for a week.
 > right: Go
-  gain club_cartographers
+  join cartographers
   rel corvin +medium
   guile +tiny
   say: Under the gargoyle: six students, a stack of maps and a passage you'd never seen. "Welcome," says Corvin, "to the club that doesn't exist."
