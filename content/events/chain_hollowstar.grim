@@ -14,6 +14,8 @@
 
 @event hs_dreams_begin
 title: The Black Star Dream
+class: story
+tone: eerie
 when: turn >= 5 and hollow >= 1 and not has(hollow_dreams)
 weight: 14
 art: moon
@@ -34,6 +36,8 @@ text: You dream of the lake from underneath. There is a round door at the bottom
 
 @event hs_grey_stranger
 title: A Man in Grey
+class: story
+tone: eerie
 when: turn >= 8 and met(kael) and hollow >= 1
 weight: 12
 art: snow
@@ -53,6 +57,8 @@ text: Late at night in the courtyard, Kael is arguing with a tall man in a grey 
 
 @event hs_founders_records
 title: The Founders' Ledger
+class: story
+tone: eerie
 when: hollow >= 1 and not flag(knows_founders_seal)
 weight: 12
 art: book
@@ -76,6 +82,8 @@ text: In the archive vault you find the Founders' Ledger, three hundred years ol
 
 @event hs_kael_truth
 title: What Kael Is Running From
+class: story
+tone: eerie
 when: hollow >= 2 and rel(kael) >= 25 and not flag(kael_told)
 actor: kael
 weight: 16
@@ -101,6 +109,8 @@ text: Kael sits with you on the boathouse jetty. "My family serve something unde
 
 @event hs_star_mark
 title: The Cold Coin Burns
+class: story
+tone: eerie
 when: (flag(star_coin) or flag(bell_fragment)) and not has(star_mark) and not flag(threw_star)
 weight: 12
 art: star
@@ -122,6 +132,8 @@ text: The black-starred relic you've been carrying burns suddenly, so cold it fe
 
 @event hs_grey_offer
 title: An Offer in Grey
+class: story
+tone: eerie
 when: turn >= 18 and hollow >= 2 and not flag(grey_offer_seen)
 weight: 12
 art: mask
@@ -141,6 +153,8 @@ text: The man in grey is waiting at your library table. "You've been asking ques
 
 @event hs_seventh_tower
 title: The Seventh Tower
+class: story
+tone: eerie
 when: hollow >= 3 and not flag(star_key)
 weight: 14
 art: tower
@@ -170,6 +184,8 @@ text: The seventh tower has been locked for a century. You find a way in. At the
 
 @event hs_isolde_summons
 title: The Headmistress Knows
+class: story
+tone: eerie
 trigger: auto
 when: year == 3 and month >= 3 and month <= 7 and hollow >= 3
 priority: 45
@@ -193,6 +209,8 @@ text: The headmistress summons you to her tower. "You have been following the sa
 
 @event hs_the_night
 title: The Night the Lake Froze
+class: story
+tone: eerie
 trigger: auto
 when: year == 3 and month == 9 and hollow >= 3
 priority: 70
@@ -213,6 +231,8 @@ text: In the middle of spring, the lake freezes in a single breath. Cracks glow 
 
 @event hs_beneath
 title: The Door Beneath the Lake
+class: story
+tone: eerie
 trigger: queued
 type: menu
 priority: 95
@@ -263,6 +283,8 @@ text: The tunnel ends at the round door. It stands open a crack. Through it, the
 
 @event hs_aftermath
 title: After the Thaw
+class: story
+tone: eerie
 trigger: queued
 art: sun
 tags: hollowstar story
@@ -286,6 +308,8 @@ text: The lake glitters as if nothing happened. Most of the academy believes the
 
 @event hs_kael_sister
 title: The Sister
+class: story
+tone: eerie
 when: flag(kael_ally) and turn >= 22 and not flag(met_sister)
 weight: 10
 art: snow

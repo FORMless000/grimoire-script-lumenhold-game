@@ -8,6 +8,8 @@
 
 @event pyro_candle
 title: Light the Candle
+class: routine
+tone: light
 when: has(class_pyromancy)
 weight: 16
 art: candle
@@ -38,6 +40,8 @@ text: Professor Thorne places a candle at the far end of the hall. "Light it. Fr
 
 @event pyro_ember_heart
 title: The Ember Within
+class: routine
+tone: light
 when: has(class_pyromancy)
 weight: 16
 art: flame
@@ -55,6 +59,8 @@ text: Today's exercise: hold a spark inside your chest and let it grow. "Fire is
 
 @event pyro_lyra_spar
 title: A Challenge in Class
+class: routine
+tone: tense
 when: has(class_pyromancy) and met(lyra)
 actor: lyra
 weight: 14
@@ -83,6 +89,8 @@ text: "Professor, I'd like a demonstration partner." Lyra Vaneshade points her w
 
 @event tide_lake_lesson
 title: The Lake Answers
+class: story
+tone: light
 when: has(class_tidecalling)
 weight: 16
 art: wave
@@ -107,6 +115,8 @@ text: Waist-deep in the freezing lake at dawn, Professor Marisol tells you to as
 
 @event tide_storm_drill
 title: Storm Drill
+class: windfall
+tone: light
 when: has(class_tidecalling)
 weight: 16
 art: rain
@@ -127,6 +137,8 @@ text: A storm rolls over the lake and Marisol is delighted. "Perfect conditions!
 
 @event tide_drowned_bell
 title: The Drowned Bell
+class: story
+tone: eerie
 when: has(class_tidecalling) and not flag(bell_fragment)
 weight: 12
 art: bell
@@ -153,6 +165,8 @@ text: During a breathing-charm lesson you hear it: a bell, deep under the lake, 
 
 @event illusion_mirror_self
 title: A Second You
+class: windfall
+tone: light
 when: has(class_illusion)
 weight: 16
 art: mirror
@@ -171,6 +185,8 @@ text: Assignment: conjure a convincing illusion of yourself. Professor Vey circl
 
 @event illusion_professor_prank
 title: The Professor's Face
+class: routine
+tone: light
 when: has(class_illusion)
 weight: 14
 art: mask
@@ -194,6 +210,8 @@ text: Your classmates dare you: wear a glamour of Professor Thorne and cancel to
 
 @event illusion_dragon
 title: The Courtyard Dragon
+class: routine
+tone: light
 when: has(class_illusion) and arcana >= 12
 weight: 12
 art: dragon
@@ -219,6 +237,8 @@ text: For your term project you must create an illusion that fools a crowd. You 
 
 @event alch_first_brew
 title: Draught of Mild Courage
+class: windfall
+tone: light
 when: has(class_alchemy)
 weight: 16
 art: cauldron
@@ -241,6 +261,8 @@ text: The recipe is on the board: Draught of Mild Courage. Seven ingredients, th
 
 @event alch_unstable_cauldron
 title: Unstable Cauldron
+class: routine
+tone: tense
 when: has(class_alchemy)
 weight: 14
 art: potion
@@ -262,6 +284,8 @@ text: The cauldron next to yours starts to shudder. Its owner, a terrified first
 
 @event alch_corvin_market
 title: A Side Business
+class: routine
+tone: light
 when: has(class_alchemy) and met(corvin)
 actor: corvin
 weight: 12
@@ -286,6 +310,8 @@ text: Corvin turns your leftover potions over in his hands. "These would sell fo
 
 @event div_tea_leaves
 title: Reading the Leaves
+class: routine
+tone: eerie
 when: has(class_divination)
 weight: 16
 art: cup
@@ -305,6 +331,8 @@ text: You read your partner's tea leaves. The shape at the bottom of the cup is 
 
 @event div_next_tuesday
 title: The Mirror of Next Tuesday
+class: routine
+tone: eerie
 when: has(class_divination)
 weight: 14
 art: mirror
@@ -324,6 +352,8 @@ text: The Mirror of Next Tuesday shows exactly what it promises. Students take t
 
 @event div_seraphine_vision
 title: She Grabs Your Hand
+class: story
+tone: eerie
 when: has(class_divination)
 actor: seraphine
 weight: 14
@@ -349,6 +379,8 @@ text: In the middle of crystal-gazing, Seraphine Hale seizes your wrist. Her eye
 
 @event art_clockwork_beetle
 title: The Clockwork Beetle
+class: windfall
+tone: light
 when: has(class_artifice)
 weight: 16
 art: gear
@@ -369,6 +401,8 @@ text: Your project: a brass beetle that walks. The gears are in. The spring is w
 
 @event art_mira_collab
 title: A Joint Project
+class: routine
+tone: light
 when: has(class_artifice)
 actor: mira
 weight: 14
@@ -394,6 +428,8 @@ text: Mira Ten drops onto the bench beside you with a sketch of something that i
 
 @event art_enchanted_quill
 title: The Self-Writing Quill
+class: routine
+tone: light
 when: has(class_artifice)
 weight: 14
 art: feather
@@ -417,6 +453,8 @@ text: You've enchanted a quill to take dictation. It works beautifully. A though
 
 @event beast_griffon_chick
 title: Hatching Day
+class: routine
+tone: light
 when: has(class_beastcraft)
 weight: 16
 art: feather
@@ -438,6 +476,8 @@ text: The griffon egg is cracking. Professor Brask whispers that the first face 
 
 @event beast_manticore
 title: The Manticore Is Loose
+class: routine
+tone: tense
 when: has(class_beastcraft)
 weight: 12
 art: paw
@@ -460,6 +500,8 @@ text: Someone left the manticore pen open. It's in the greenhouse, tail twitchin
 
 @event beast_familiar_call
 title: Calling a Familiar
+class: windfall
+tone: light
 when: has(class_beastcraft) and not has(familiar_fox)
 weight: 12
 art: fox
@@ -478,6 +520,8 @@ text: Brask teaches the summoning circle. "It doesn't summon," she says. "It inv
 
 @event astro_comet
 title: A New Comet
+class: routine
+tone: light
 when: has(class_astromancy)
 weight: 16
 art: star
@@ -499,6 +543,8 @@ text: A comet appears that isn't in any of the charts. The observatory is in upr
 
 @event astro_kael_roof
 title: Three in the Morning
+class: story
+tone: eerie
 when: has(class_astromancy) and met(kael)
 actor: kael
 weight: 14
@@ -518,6 +564,8 @@ text: Long after the lecture ends you find Kael alone on the observatory roof. F
 
 @event astro_sleepless
 title: Sleepless Weeks
+class: routine
+tone: light
 when: has(class_astromancy)
 weight: 14
 art: bed
@@ -537,6 +585,8 @@ text: Midnight lectures, dawn homework, morning classes. You have started seeing
 
 @event heal_first_patient
 title: Your First Patient
+class: routine
+tone: light
 when: has(class_healing)
 weight: 16
 art: cross
@@ -558,6 +608,8 @@ text: A first-year stumbles into the practice ward with a wrist that bends the w
 
 @event heal_fever_ward
 title: Fever in the Village
+class: routine
+tone: light
 when: has(class_healing)
 weight: 12
 art: cross
@@ -580,6 +632,8 @@ text: Lake Fever is spreading through the village below the academy. Sister Amar
 
 @event heal_tobias_sting
 title: Stung
+class: windfall
+tone: light
 when: has(class_healing) and met(tobias)
 actor: tobias
 weight: 12
@@ -600,6 +654,8 @@ text: Tobias wanders into the practice ward holding up a hand swollen like a pum
 
 @event umbral_whisper
 title: The Shadow Speaks
+class: routine
+tone: eerie
 when: has(class_umbral)
 weight: 16
 art: skull
@@ -620,6 +676,8 @@ text: In the middle of a lecture on the Nature of Absence, your shadow leans awa
 
 @event umbral_bone_mouse
 title: The Bone Mouse
+class: routine
+tone: light
 when: has(class_umbral)
 weight: 14
 art: skull
@@ -642,6 +700,8 @@ text: Practical exercise: animate the skeleton of a field mouse. "Purely educati
 
 @event umbral_forbidden_notes
 title: Forbidden Notes
+class: story
+tone: eerie
 when: has(class_umbral)
 weight: 12
 art: book

@@ -11,6 +11,8 @@
 
 @event forbidden_section_1
 title: The Silver Key
+class: story
+tone: eerie
 trigger: queued
 art: key
 tags: mystery
@@ -35,6 +37,8 @@ text: Midnight. The silver key fits the Restricted Section door perfectly. Beyon
 
 @event forbidden_section_2
 title: The Codex of Hollow Names
+class: story
+tone: eerie
 trigger: queued
 art: book
 tags: mystery hollowstar
@@ -57,6 +61,8 @@ text: On your third visit, a book finds you. It falls from a high shelf and land
 
 @event forbidden_section_3
 title: Caught
+class: story
+tone: eerie
 trigger: queued
 actor: isolde
 art: lock
@@ -83,6 +89,8 @@ text: A lantern blazes in the doorway. Not a prefect this time: the headmistress
 
 @event curse_cure_1
 title: A Cold That Won't Leave
+class: story
+tone: grim
 when: has(umbral_curse)
 weight: 30
 art: skull
@@ -102,6 +110,8 @@ text: The cold under your skin is getting worse. Sister Amaranth's tonics do not
 
 @event curse_cure_2
 title: Moonpetal
+class: story
+tone: tense
 trigger: queued
 art: flower
 tags: nature danger
@@ -134,6 +144,8 @@ text: The Whisperwood at midnight. Things move between the trees. In a clearing,
 
 @event grisk_offer
 title: A Helpful Goblin
+class: story
+tone: tense
 when: gold < 15 and turn >= 3 and not has(in_debt) and not flag(grisk_done)
 weight: 30
 art: pouch
@@ -154,6 +166,8 @@ text: A goblin in a velvet waistcoat falls into step beside you. "Grisk," he say
 
 @event grisk_favour
 title: Grisk's Proposition
+class: story
+tone: eerie
 when: has(in_debt)
 weight: 14
 art: chain
@@ -177,6 +191,8 @@ text: Grisk finds you in the library. "I could cancel your debt," he murmurs. "A
 
 @event grisk_smuggling
 title: One More Job
+class: story
+tone: tense
 when: flag(grisk_favour) and not has(in_debt)
 weight: 10
 art: pouch
@@ -203,6 +219,8 @@ text: Grisk again. "You were so good last time. A crate needs moving across the 
 
 @event fox_injured
 title: Smoke in the Woods
+class: story
+tone: light
 when: turn >= 4 and not flag(fox_met)
 weight: 6 + flag(familiar_affinity) * 14
 art: fox
@@ -222,6 +240,8 @@ text: At the edge of the forest, a thin plume of smoke. A small fox is caught in
 
 @event fox_returns
 title: A Visitor at the Window
+class: story
+tone: light
 trigger: queued
 art: fox
 tags: nature
@@ -239,6 +259,8 @@ text: Two months later, a fox with a glowing tail is sitting on your windowsill.
 
 @event fox_bond
 title: Ember
+class: story
+tone: light
 trigger: queued
 art: fox
 tags: nature magic
@@ -262,6 +284,8 @@ text: The fox has decided. It follows you to class, sleeps on your feet and grow
 
 @event fox_helps
 title: Ember Finds Something
+class: story
+tone: light
 when: has(familiar_fox)
 weight: 10
 repeat: 8
@@ -285,6 +309,8 @@ text: Ember drags you, by the sleeve, through three corridors and a hedge. She's
 
 @event ghost_socks
 title: Rearranged Socks
+class: story
+tone: eerie
 when: turn >= 3 and not flag(ghost_met)
 weight: 8
 art: ghost
@@ -303,6 +329,8 @@ text: Every morning, your socks have been rearranged. By colour. Then alphabetic
 
 @event ghost_reveal
 title: Prudence
+class: story
+tone: eerie
 trigger: queued
 art: ghost
 tags: mystery
@@ -321,6 +349,8 @@ text: A girl in old-fashioned robes, translucent and very polite. "Prudence Ashw
 
 @event ghost_letter
 title: A Letter Two Hundred Years Late
+class: story
+tone: eerie
 trigger: queued
 art: letter
 tags: mystery social

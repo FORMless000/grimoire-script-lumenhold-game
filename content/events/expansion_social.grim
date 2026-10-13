@@ -4,6 +4,8 @@
 
 @event soc_lost_notes
 title: The Borrowed Notes
+class: routine
+tone: light
 cast:
   npc: any where not tagged(npc, faculty) and rel(npc) >= 5
 per: npc
@@ -24,6 +26,8 @@ text: {npc} borrowed your Lore notes last week. {They} {are} now standing in fro
 
 @event soc_birthday
 title: A Birthday
+class: routine
+tone: light
 cast:
   npc: any where rel(npc) >= 15 and not tagged(npc, faculty)
 per: npc
@@ -45,6 +49,8 @@ text: You find out — by accident — that it's {npc}'s birthday. {They} haven'
 
 @event soc_bad_news
 title: Bad News From Home
+class: routine
+tone: light
 cast:
   npc: any where rel(npc) >= 20 and not tagged(npc, faculty)
 per: npc
@@ -65,6 +71,8 @@ text: {npc} is sitting on the stairs with a letter in {their} lap, not moving. {
 
 @event soc_stargazing
 title: Counting Stars
+class: windfall
+tone: warm
 cast:
   npc: any where romanceable(npc) and rel(npc) >= 20 and bond(npc) != "partner"
 per: npc
@@ -85,6 +93,8 @@ text: {npc} has dragged a blanket up to the roof. "There's a meteor shower," {th
 
 @event soc_jealous_friend
 title: Jealousy
+class: routine
+tone: light
 cast:
   npc: any where (bond(npc) == "friend" or bond(npc) == "close")
 per: npc
@@ -106,6 +116,8 @@ text: {npc} has been odd all week. Finally it comes out. "You've got all these n
 
 @event soc_teach_spell
 title: A Trick Worth Learning
+class: windfall
+tone: light
 cast:
   npc: any where rel(npc) >= 12
 per: npc
@@ -126,6 +138,8 @@ text: {npc} has a spell {they} invented — a little thing, half-useful, half-ri
 
 @event soc_secret_admirer
 title: A Secret Admirer
+class: windfall
+tone: warm
 cast:
   npc: any where romanceable(npc) and spark(npc) >= 15 and bond(npc) != "partner"
 per: npc
@@ -150,6 +164,8 @@ text: Folded notes keep appearing in your library books. Unsigned. They're funny
 
 @event soc_injured_friend
 title: Carried
+class: routine
+tone: tense
 cast:
   npc: any where rel(npc) >= 10 and not tagged(npc, faculty)
 per: npc
@@ -170,6 +186,8 @@ text: {npc} has twisted an ankle on the far side of the grounds, a long way from
 
 @event soc_rival_decency
 title: An Unexpected Kindness
+class: routine
+tone: tense
 cast:
   npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -15) and not tagged(npc, faculty)
 per: npc
@@ -189,6 +207,8 @@ text: You drop your books in the rain, and the first person to stoop and help pi
 
 @event soc_partner_anniversary
 title: An Anniversary
+class: routine
+tone: warm
 cast:
   npc: any where bond(npc) == "partner" and spark(npc) >= 40
 per: npc

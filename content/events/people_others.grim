@@ -7,6 +7,8 @@
 
 @event kael_snowball
 title: Snow in Thawmoon
+class: routine
+tone: light
 trigger: social
 actor: kael
 when: rel(kael) >= 10 and month >= 5 and month <= 7
@@ -25,6 +27,8 @@ text: It's snowing in the courtyard. Only in a small circle, around Kael, who is
 
 @event kael_cold_hands
 title: Cold Hands
+class: windfall
+tone: warm
 trigger: social
 actor: kael
 when: rel(kael) >= 20 and spark(kael) < 35
@@ -43,6 +47,8 @@ text: Kael's hands are always cold. In the library tonight they're so cold the i
 
 @event kael_confession
 title: Thaw
+class: milestone
+tone: warm
 trigger: social
 actor: kael
 when: spark(kael) >= 35 and rel(kael) >= 25 and bond(kael) != "partner"
@@ -65,6 +71,8 @@ text: "I was taught not to want things," Kael says. "Wanting things is how they 
 
 @event bram_intro
 title: Running in the Halls
+class: routine
+tone: tense
 actor: bram
 when: not met(bram) and turn >= 2
 weight: 12
@@ -86,6 +94,8 @@ text: "Running in the halls." A burly prefect with a red sash steps into your pa
 
 @event bram_hall_tax
 title: The Hall Tax
+class: routine
+tone: tense
 trigger: social
 actor: bram
 when: rel(bram) < 10
@@ -110,6 +120,8 @@ text: Bram has invented a "hall tax" for using the east staircase. Ten crowns. "
 
 @event bram_sabotage
 title: Missing Notes
+class: routine
+tone: tense
 trigger: social
 actor: bram
 when: rel(bram) <= -20 and (month == 3 or month == 4 or month == 9 or month == 10)
@@ -140,6 +152,8 @@ text: Two days before exams, your revision notes vanish from your desk. All of t
 
 @event bram_crying
 title: Behind the Stables
+class: windfall
+tone: light
 trigger: social
 actor: bram
 when: met(bram) and turn >= 8 and not flag(bram_softened)
@@ -158,6 +172,8 @@ text: Behind the stables, you find Bram Hollis sitting on a bucket, crying into 
 
 @event bram_turns
 title: An Unexpected Ally
+class: milestone
+tone: light
 trigger: social
 actor: bram
 when: flag(bram_softened) and rel(bram) >= 10 and bond(bram) != "friend"
@@ -176,6 +192,8 @@ text: Two sixth-years corner you by the boathouse, looking for trouble. Then a r
 
 @event bram_duel
 title: A Formal Challenge
+class: routine
+tone: tense
 trigger: social
 actor: bram
 when: bond(bram) == "rival" or bond(bram) == "nemesis"
@@ -203,6 +221,8 @@ text: Bram throws a glove at your feet in front of half the dormitory. "Formal c
 
 @event thorne_intro
 title: The First Question
+class: routine
+tone: light
 actor: thorne
 when: not met(thorne) and turn >= 1
 weight: 16
@@ -228,6 +248,8 @@ text: First Arcana lecture. Professor Thorne surveys the room like a hawk over a
 
 @event thorne_office_hours
 title: Office Hours
+class: routine
+tone: light
 trigger: social
 actor: thorne
 when: rel(thorne) >= 10 and arcana >= 14
@@ -247,6 +269,8 @@ text: Thorne stops you after class. "Your casting is sloppy and your instincts a
 
 @event thorne_storm_story
 title: The Storm Duel
+class: windfall
+tone: light
 trigger: social
 actor: thorne
 when: rel(thorne) >= 20
@@ -265,6 +289,8 @@ text: During a thunderstorm, Thorne stops mid-lecture and watches the lightning.
 
 @event thorne_recommendation
 title: A Letter of Recommendation
+class: windfall
+tone: light
 trigger: social
 actor: thorne
 when: rel(thorne) >= 30 and final_year
@@ -287,6 +313,8 @@ text: Thorne calls you to his office and slides an envelope across the desk. "Th
 
 @event thorne_disappointed
 title: A Word in Private
+class: routine
+tone: grim
 trigger: social
 actor: thorne
 when: (turn > 4 and gpa < 2.0)
@@ -309,6 +337,8 @@ text: Thorne holds up your last three essays. All red. "You're better than this,
 
 @event maud_chickens
 title: The Great Chicken Escape
+class: routine
+tone: light
 actor: maud
 when: not met(maud) and turn >= 2
 weight: 12
@@ -331,6 +361,8 @@ text: Forty chickens are loose on the main lawn, pursued by an old woman in a st
 
 @event maud_honey
 title: Honey for a Cold
+class: routine
+tone: light
 trigger: social
 actor: maud
 when: rel(maud) >= 5 and (has(sick) or health < 40)
@@ -353,6 +385,8 @@ text: Maud spots you sniffling across the lawn and drags you into her cottage. "
 
 @event maud_old_student
 title: Maud Was a Student Once
+class: story
+tone: eerie
 trigger: social
 actor: maud
 when: rel(maud) >= 15 and hollow >= 1
@@ -374,6 +408,8 @@ text: "I was a student here, you know," Maud says, watching the lake. "Sixty yea
 
 @event maud_bees
 title: The Silver Bees
+class: routine
+tone: light
 trigger: social
 actor: maud
 when: rel(maud) >= 10 and month >= 7 and month <= 10
@@ -399,6 +435,8 @@ text: "The silver bees need moving to the summer meadow," Maud says, handing you
 
 @event maud_ill
 title: Maud Is Unwell
+class: routine
+tone: light
 trigger: social
 actor: maud
 when: rel(maud) >= 20 and year >= 2 and not flag(maud_ill_done)
@@ -422,6 +460,8 @@ text: Maud's chickens are running wild, unfed. You find her in bed, grey-faced a
 
 @event isolde_intro
 title: She Knows Your Name
+class: windfall
+tone: light
 actor: isolde
 when: not met(isolde) and turn >= 3
 weight: 10
@@ -441,6 +481,8 @@ text: At dinner, a cool hand rests on the back of your chair. The headmistress. 
 
 @event isolde_tea
 title: Tea in the Tower
+class: routine
+tone: light
 trigger: social
 actor: isolde
 when: renown >= 25 and rel(isolde) >= 0
@@ -465,6 +507,8 @@ text: An invitation to tea with the headmistress. Students talk about these the 
 
 @event isolde_warning
 title: A Quiet Warning
+class: routine
+tone: grim
 trigger: social
 actor: isolde
 when: has(detention) or has(watched) or has(probation)

@@ -7,6 +7,8 @@
 
 @event lib_biting_book
 title: The Book That Bites
+class: routine
+tone: light
 when: has(job_library)
 weight: 14
 art: book
@@ -23,6 +25,8 @@ text: Reshelving in the zoology section, a fat leather book clamps onto your fin
 
 @event lib_overdue_professor
 title: Overdue
+class: routine
+tone: light
 when: has(job_library) and met(thorne)
 weight: 12
 art: hourglass
@@ -39,6 +43,8 @@ text: Professor Thorne returns a book that is eleven years overdue. The fine, by
 
 @event lib_restricted_cart
 title: The Restricted Cart
+class: windfall
+tone: eerie
 when: has(job_library)
 weight: 12
 art: lock
@@ -60,6 +66,8 @@ text: You are asked to wheel the Restricted Section returns to the vault. The ca
 
 @event tavern_brawl
 title: Brawl at the Newt
+class: routine
+tone: tense
 when: has(job_tavern)
 weight: 14
 art: cup
@@ -81,6 +89,8 @@ text: A dwarf and a troll disagree about the price of turnips, and the Gilded Ne
 
 @event tavern_star_coin
 title: A Generous Stranger
+class: story
+tone: eerie
 when: has(job_tavern)
 weight: 12
 art: coin
@@ -98,6 +108,8 @@ text: A hooded stranger nurses a cider all evening and leaves a tip: a black coi
 
 @event tavern_extra_shifts
 title: More Shifts
+class: routine
+tone: light
 when: has(job_tavern)
 weight: 10
 art: coin
@@ -117,6 +129,8 @@ text: The owner is short-handed. "Double shifts for a month," he says. "Double p
 
 @event apoth_wrong_label
 title: A Mislabelled Jar
+class: windfall
+tone: light
 when: has(job_apothecary)
 weight: 14
 art: bottle
@@ -133,6 +147,8 @@ text: The jar labelled "Sleeping Draught" is green. Sleeping Draught is blue. Yo
 
 @event apoth_poor_mother
 title: Can't Afford It
+class: routine
+tone: light
 when: has(job_apothecary)
 weight: 12
 art: potion
@@ -151,6 +167,8 @@ text: A woman counts out coppers for fever tonic. She's twelve crowns short. Her
 
 @event apoth_nightshade_order
 title: The Nightshade Order
+class: windfall
+tone: eerie
 when: has(job_apothecary)
 weight: 10
 art: skull
@@ -170,6 +188,8 @@ text: A note arrives with a sealed purse: a large order of nightshade, grave-mos
 
 @event stables_hippogriff
 title: Bow to the Hippogriff
+class: routine
+tone: light
 when: has(job_stables)
 weight: 14
 art: feather
@@ -191,6 +211,8 @@ text: The new hippogriff won't let anyone near the feed trough. The stablemaster
 
 @event stables_dragon_egg
 title: An Egg in the Hay
+class: routine
+tone: eerie
 when: has(job_stables) and not flag(dragon_egg)
 weight: 10
 art: dragon
@@ -208,6 +230,8 @@ text: Mucking out the far stall, you find an egg the size of a melon, nestled in
 
 @event egg_hatches
 title: It Hatches
+class: story
+tone: eerie
 trigger: queued
 art: dragon
 tags: danger mystery
@@ -232,6 +256,8 @@ text: At 3am your pillow catches fire. The egg has hatched: a firedrake the size
 
 @event stables_night_shift
 title: The Sick Pegasus
+class: routine
+tone: light
 when: has(job_stables)
 weight: 12
 art: moon
@@ -250,6 +276,8 @@ text: The oldest pegasus in the stables is sick. Someone has to sit with her ove
 
 @event tutor_hopeless
 title: The Hopeless Case
+class: routine
+tone: light
 when: has(job_tutor)
 weight: 14
 art: wand
@@ -272,6 +300,8 @@ text: Your tutee has been trying to levitate a feather for three weeks. The feat
 
 @event tutor_bribe
 title: An Indecent Proposal
+class: routine
+tone: light
 when: has(job_tutor)
 weight: 12
 art: pouch
@@ -294,6 +324,8 @@ text: A rich second-year doesn't want tutoring. He wants an essay. "Thirty crown
 
 @event tutor_prodigy
 title: Surpassed
+class: routine
+tone: light
 when: has(job_tutor)
 weight: 10
 art: sparkle
@@ -313,6 +345,8 @@ text: Your newest tutee casts in a week what took you a year. Then she asks you 
 
 @event courier_storm
 title: Delivery in a Storm
+class: routine
+tone: tense
 when: has(job_courier)
 weight: 14
 art: bolt
@@ -335,6 +369,8 @@ text: An urgent parcel needs to cross the lake tonight. There's a storm. The dis
 
 @event courier_whispering_parcel
 title: The Whispering Parcel
+class: story
+tone: eerie
 when: has(job_courier)
 weight: 10
 art: letter
@@ -359,6 +395,8 @@ text: Your parcel is addressed to "K. Dumont, Stillwater House". It is ice cold 
 
 @event courier_sky_pirates
 title: Sky Pirates
+class: routine
+tone: tense
 when: has(job_courier)
 weight: 10
 art: broom

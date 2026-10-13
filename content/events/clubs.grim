@@ -8,6 +8,8 @@
 
 @event duel_practice_bout
 title: Practice Bout
+class: routine
+tone: light
 when: has(club_dueling)
 weight: 14
 art: duel
@@ -35,6 +37,8 @@ text: Wednesday practice. The captain pairs you with a fourth-year who has a rep
 
 @event duel_bram_hazing
 title: Initiation, Prefect-Style
+class: routine
+tone: tense
 when: has(club_dueling)
 actor: bram
 weight: 12
@@ -63,6 +67,8 @@ text: Bram Hollis, prefect and senior Circle member, has decided new members nee
 
 @event duel_lyra_training
 title: Training Partners
+class: routine
+tone: tense
 when: has(club_dueling) and met(lyra) and month >= 6 and month <= 7 and rel(lyra) >= 0
 actor: lyra
 weight: 14
@@ -82,6 +88,8 @@ text: Lyra finds you after practice. "The tournament is in two months. You're th
 
 @event choir_solo
 title: Solo Auditions
+class: routine
+tone: light
 when: has(club_choir)
 weight: 14
 art: music
@@ -103,6 +111,8 @@ text: Auditions for the Midwinter solo. The choirmaster's eyebrows are famously 
 
 @event choir_levitation
 title: Off-Key Altitude
+class: routine
+tone: light
 when: has(club_choir)
 weight: 14
 art: music
@@ -119,6 +129,8 @@ text: The Choir of the Spheres literally floats when it harmonises. You keep fal
 
 @event choir_concert
 title: The Winter Concert
+class: windfall
+tone: light
 when: has(club_choir) and (month == 4 or month == 5)
 weight: 16
 art: bell
@@ -137,6 +149,8 @@ text: The winter concert. The great hall is packed. Somewhere in the audience, t
 
 @event sky_tryouts
 title: Tryouts
+class: routine
+tone: light
 when: has(club_skyrace) and not flag(sky_team)
 weight: 18
 art: broom
@@ -164,6 +178,8 @@ text: Skyrace tryouts: three laps around the towers, through the hoops, without 
 
 @event sky_crash
 title: A Bad Landing
+class: routine
+tone: tense
 when: has(club_skyrace)
 weight: 12
 art: broom
@@ -184,6 +200,8 @@ text: Practice. A gust catches you mid-turn, and the ground arrives rather soone
 
 @event sky_championship
 title: Lumenhold vs. Thornwick
+class: routine
+tone: light
 when: has(club_skyrace) and flag(sky_team) and month >= 6
 weight: 16
 art: trophy
@@ -210,6 +228,8 @@ text: The championship against Thornwick Academy. Final lap. You're neck and nec
 
 @event ledger_pie_scoop
 title: The Case of the Missing Pies
+class: routine
+tone: light
 when: has(club_ledger)
 actor: nessa
 weight: 14
@@ -234,6 +254,8 @@ text: Nessa slams a file on your desk. "Pies. Forty-two of them, gone from the k
 
 @event ledger_bram_story
 title: The Prefect's Bribes
+class: routine
+tone: tense
 when: has(club_ledger) and met(bram)
 actor: nessa
 weight: 12
@@ -256,6 +278,8 @@ text: An anonymous tip: Bram Hollis has been taking bribes from first-years to s
 
 @event ledger_deadline
 title: Deadline Night
+class: routine
+tone: light
 when: has(club_ledger)
 actor: nessa
 weight: 12
@@ -277,6 +301,8 @@ text: The press runs at dawn and half the paper is blank. Nessa is chewing her q
 
 @event garden_mandrakes
 title: The Mandrake Choir
+class: routine
+tone: light
 when: has(club_garden)
 weight: 14
 art: leaf
@@ -296,6 +322,8 @@ text: The greenhouse mandrakes have started singing again. Off-key and enthusias
 
 @event garden_moonflower
 title: The Moonflower
+class: routine
+tone: warm
 when: has(club_garden) and met(tobias)
 actor: tobias
 weight: 12
@@ -314,6 +342,8 @@ text: "The moonflower's going to bloom tonight," Tobias says, a little breathles
 
 @event garden_maud_secret
 title: The Secret Garden
+class: windfall
+tone: light
 when: has(club_garden) or (month >= 7 and month <= 9)
 actor: maud
 weight: 10
@@ -336,6 +366,8 @@ text: The old groundskeeper beckons you behind the potting shed, to a door in th
 
 @event stars_cocoa_night
 title: Cocoa on the Roof
+class: windfall
+tone: light
 when: has(club_stargazers)
 weight: 14
 art: cup
@@ -353,6 +385,8 @@ text: Stargazers meet on the roof with blankets, telescopes and an illegal quant
 
 @event stars_meteor_bet
 title: The Meteor Wager
+class: routine
+tone: light
 when: has(club_stargazers)
 weight: 12
 art: dice
@@ -373,6 +407,8 @@ text: The club is running a betting pool on tonight's meteor count. The current 
 
 @event stars_constellation
 title: An Unnamed Shape
+class: story
+tone: eerie
 when: has(club_stargazers)
 weight: 12
 art: star
@@ -392,6 +428,8 @@ text: Plotting the autumn sky, you notice seven faint stars that form a ring aro
 
 @event carto_invite
 title: An Invitation at Midnight
+class: routine
+tone: eerie
 when: met(corvin) and rel(corvin) >= 10 and not has(club_cartographers) and turn >= 4
 actor: corvin
 weight: 20
@@ -410,6 +448,8 @@ text: A black card under your door. On it, a map in silver ink that redraws itse
 
 @event carto_thursday_stairs
 title: The Thursday Staircase
+class: routine
+tone: eerie
 when: has(club_cartographers)
 weight: 14
 art: map
@@ -431,6 +471,8 @@ text: The Cartographers have heard of a staircase that only exists on Thursdays 
 
 @event carto_lake_tunnel
 title: The Tunnel Under the Lake
+class: story
+tone: eerie
 when: has(club_cartographers) and not flag(found_lake_tunnel)
 weight: 12
 art: door

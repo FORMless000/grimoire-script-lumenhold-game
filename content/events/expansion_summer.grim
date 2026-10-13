@@ -6,6 +6,8 @@
 
 @event sum_empty_castle
 title: The Empty Castle
+class: routine
+tone: eerie
 when: month >= 11 and not has(summer_away)
 weight: 16
 art: tower
@@ -28,6 +30,8 @@ text: In summer the castle breathes differently. Corridors you've walked a thous
 
 @event sum_home_chores
 title: Help Around the House
+class: routine
+tone: warm
 when: month >= 11 and has(summer_away) and not has(origin_noble)
 weight: 14
 art: house
@@ -50,6 +54,8 @@ text: Home is lovely for about three days. Then the list appears on the kitchen 
 
 @event sum_old_friend
 title: An Old Friend
+class: windfall
+tone: warm
 when: month >= 11 and has(summer_away)
 weight: 12
 art: group
@@ -67,6 +73,8 @@ text: Your oldest friend from home is waiting at the crossroads, like always. Bu
 
 @event sum_midsummer_fair
 title: The Midsummer Fair
+class: routine
+tone: light
 when: month == 11 or month == 12
 weight: 12
 art: tent
@@ -90,6 +98,8 @@ text: The village Midsummer Fair: enchanted carousel, ring-toss, a strongman, an
 
 @event sum_letter_from_friend
 title: A Summer Letter
+class: windfall
+tone: light
 trigger: social
 cast:
   npc: any where rel(npc) >= 20 and not tagged(npc, faculty)
@@ -109,6 +119,8 @@ text: An owl arrives with a thick, slightly crumpled letter from {npc}. Six page
 
 @event sum_rain_week
 title: A Week of Rain
+class: routine
+tone: warm
 when: month >= 11
 weight: 10
 art: rain
@@ -126,6 +138,8 @@ text: It rains for a solid week. Not dramatic rain: just steady, grey, endless r
 
 @event sum_sea_serpent
 title: Fishing With an Uncle
+class: routine
+tone: tense
 when: month >= 11 and has(summer_away)
 weight: 8
 art: wave
@@ -147,6 +161,8 @@ text: Your uncle takes you fishing. Something takes the bait. Something very lar
 
 @event sum_reading_list
 title: The Summer Reading List
+class: routine
+tone: light
 when: month == 11
 weight: 12
 art: scroll
@@ -165,6 +181,8 @@ text: The summer reading list arrives by owl. It is a scroll. It unrolls across 
 
 @event sum_night_market
 title: The Night Market
+class: routine
+tone: eerie
 when: month >= 11 and gold >= 15
 weight: 10
 art: lantern
@@ -188,6 +206,8 @@ text: A night market appears in a field outside the village — it wasn't there 
 
 @event sum_end_of_summer
 title: The Last Week of Summer
+class: windfall
+tone: warm
 when: month == 12
 weight: 14
 art: sun

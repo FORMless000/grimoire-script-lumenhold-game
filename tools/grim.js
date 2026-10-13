@@ -323,15 +323,21 @@ function budgetCheck(e, content, P) {
   let cast = null;
   if (e.cast) { const pool = Object.keys(content.npcs); cast = {}; for (const r of e.cast) cast[r.role] = r.pool === 'fixed' ? r.npc : pool.find((id) => !Object.values(cast).includes(id)); }
   eng.s.cur = { id: e.id, track: e.track || null, cast };
+  const rows = [];
   for (const o of e.options) {
     let pv; try { pv = eng.preview(e.id, o.key, actor); } catch (err) { continue; }
     const value = (d) => Object.entries(d).reduce((a, [k, r]) => a + weight(k) * ((r[0] + r[1]) / 2) / medium(k), 0);
     const exp = pv.paths.reduce((a, p) => a + p.p * value(p.deltas), 0);
     const hasCost = pv.paths.length > 1 || Object.values(pv.deltas).some((r) => r[0] < 0);
     for (const [k, r] of Object.entries(pv.deltas)) if (Math.max(Math.abs(r[0]), Math.abs(r[1])) >= eng.tierAmount(row(k) === 'xp' ? Object.keys(content.skills)[0] : row(k), 'large')) larges++;
-    if (e.class === 'routine') {
-      if (!hasCost) P('warn', 'routine option "' + o.key + '" has no cost or risk (every option should trade something)');
-      if (Math.abs(exp) > 1.5) P('warn', 'routine option "' + o.key + '" is worth ' + exp.toFixed(1) + ' medium-equivalents (budget ±1.5)');
+    rows.push({ key: o.key, exp, hasCost });
+  }
+  if (e.class === 'routine') {
+    // A free option is fine as the small, safe choice (≤ 0.5 medium-equivalents) beside a costly or risky one.
+    const risky = rows.some((r) => r.hasCost);
+    for (const r of rows) {
+      if (!r.hasCost && !(risky && r.exp <= 0.5)) P('warn', 'routine option "' + r.key + '" has no cost or risk' + (risky ? ' and is worth ' + r.exp.toFixed(1) + ' (a free safe choice stays ≤ 0.5)' : ' (every option should trade something)'));
+      if (Math.abs(r.exp) > 1.5) P('warn', 'routine option "' + r.key + '" is worth ' + r.exp.toFixed(1) + ' medium-equivalents (budget ±1.5)');
     }
   }
   eng.s.cur = prevCur;

@@ -11,6 +11,8 @@
 
 @event lyra_intro
 title: The Last Copy
+class: routine
+tone: tense
 actor: lyra
 when: not met(lyra) and turn >= 2
 weight: 14
@@ -34,6 +36,8 @@ text: You reach for the last copy of "Foundations of Flame" and a ringed hand ge
 
 @event lyra_letter
 title: A Letter With a Black Seal
+class: routine
+tone: light
 trigger: social
 actor: lyra
 when: rel(lyra) >= 10
@@ -52,6 +56,8 @@ text: You find Lyra on a window seat with a crumpled letter. Black seal. Her fam
 
 @event lyra_study_rivalry
 title: Top of the Class
+class: routine
+tone: tense
 trigger: social
 actor: lyra
 when: rel(lyra) > -40
@@ -78,6 +84,8 @@ text: The professors have posted rankings. Lyra is first. You're close enough to
 
 @event lyra_family_gala
 title: The Vaneshade Winter Gala
+class: routine
+tone: warm
 trigger: social
 actor: lyra
 when: rel(lyra) >= 30 and month >= 3 and month <= 6
@@ -104,6 +112,8 @@ text: "My family's winter gala," Lyra says, too casually. "I need a guest who wo
 
 @event lyra_confession
 title: Lyra Doesn't Lose
+class: milestone
+tone: warm
 trigger: social
 actor: lyra
 when: spark(lyra) >= 35 and rel(lyra) >= 25 and bond(lyra) != "partner"
@@ -124,6 +134,8 @@ text: After practice, Lyra doesn't leave. "I don't lose," she says, staring at t
 
 @event lyra_family_ultimatum
 title: The Ultimatum
+class: routine
+tone: grim
 trigger: social
 actor: lyra
 when: bond(lyra) == "partner" and turn >= 14
@@ -133,17 +145,30 @@ tags: romance crisis
 scene: Lyra holding a letter with a black seal, her other hand clenched around a ring she has just pulled off.
 text: Another black-sealed letter. Lyra reads it twice and goes white. "My mother has found out about us. End it, she says, or she ends my inheritance." She looks at you. "Tell me what to do."
 > left: "Choose yourself, not them."
-  challenge negotiate easy:
-    win:
-      rel lyra +large
-      spark lyra +medium
-      flag lyra_free
-      say: She tears the letter in half. Then in quarters. Then she sets the quarters on fire and laughs like she hasn't in years.
-    lose:
-      rel lyra -small
-      spark lyra -medium
-      mood -medium
-      say: "Easy for you to say," she snaps. She doesn't mean it. She also doesn't take it back.
+  if spark(lyra) >= 50:
+    challenge negotiate trivial:
+      win:
+        rel lyra +large
+        spark lyra +medium
+        flag lyra_free
+        say: She tears the letter in half. Then in quarters. Then she sets the quarters on fire and laughs like she hasn't in years.
+      lose:
+        rel lyra -small
+        spark lyra -medium
+        mood -medium
+        say: "Easy for you to say," she snaps. She doesn't mean it. She also doesn't take it back.
+  else:
+    challenge negotiate easy:
+      win:
+        rel lyra +large
+        spark lyra +medium
+        flag lyra_free
+        say: She tears the letter in half. Then in quarters. Then she sets the quarters on fire and laughs like she hasn't in years.
+      lose:
+        rel lyra -small
+        spark lyra -medium
+        mood -medium
+        say: "Easy for you to say," she snaps. She doesn't mean it. She also doesn't take it back.
 > right: Step back so she doesn't lose everything
   bond lyra ex
   gain heartbroken
@@ -152,6 +177,8 @@ text: Another black-sealed letter. Lyra reads it twice and goes white. "My mothe
 
 @event lyra_rival_sabotage
 title: Sabotage in Class
+class: routine
+tone: tense
 trigger: social
 actor: lyra
 when: bond(lyra) == "rival" and rel(lyra) <= -10
@@ -176,6 +203,8 @@ text: Your perfect potion turns black and starts screaming. Across the room, Lyr
 
 @event lyra_burnout
 title: Lyra Falls
+class: routine
+tone: light
 trigger: social
 actor: lyra
 when: rel(lyra) >= 20 and year >= 2
@@ -197,6 +226,8 @@ text: You find Lyra face-down on a library desk at dawn, not asleep — out cold
 
 @event tobias_intro
 title: The Lost Boy
+class: windfall
+tone: light
 actor: tobias
 when: not met(tobias) and turn >= 2
 weight: 14
@@ -216,6 +247,8 @@ text: A big, broad-shouldered boy is leading a crying first-year through the cor
 
 @event tobias_homesick
 title: Homesick
+class: windfall
+tone: light
 trigger: social
 actor: tobias
 when: rel(tobias) >= 10
@@ -235,6 +268,8 @@ text: Tobias has gone quiet. He's planted seedlings in every cup in the common r
 
 @event tobias_bad_harvest
 title: The Harvest Failed
+class: routine
+tone: light
 trigger: social
 actor: tobias
 when: rel(tobias) >= 25 and turn >= 8 and not flag(tobias_harvest_done)
@@ -264,6 +299,8 @@ text: Tobias is packing. Blight took the harvest. His family needs money, and ha
 
 @event tobias_repays
 title: Every Crown
+class: story
+tone: light
 trigger: queued
 actor: tobias
 art: pouch
@@ -277,6 +314,8 @@ text: A lumpy, hand-stitched pouch on your pillow: thirty crowns exactly, in sma
 
 @event tobias_godparent
 title: The Mandrake Baby
+class: routine
+tone: light
 trigger: social
 actor: tobias
 when: rel(tobias) >= 15
@@ -296,6 +335,8 @@ text: Tobias presents a flowerpot containing a very small mandrake in a knitted 
 
 @event tobias_bullied
 title: Tobias and the Prefect
+class: routine
+tone: tense
 trigger: social
 actor: tobias
 when: met(bram) and rel(tobias) >= 5
@@ -320,6 +361,8 @@ text: Bram is doing an impression of Tobias's accent in the corridor. People are
 
 @event tobias_confession
 title: A Confession, With Vegetables
+class: milestone
+tone: warm
 trigger: social
 actor: tobias
 when: spark(tobias) >= 35 and rel(tobias) >= 25 and bond(tobias) != "partner"
@@ -340,6 +383,8 @@ text: Tobias corners you in the greenhouse holding a very large pumpkin. "I grew
 
 @event tobias_picnic
 title: A Picnic in the Orchard
+class: routine
+tone: warm
 trigger: social
 actor: tobias
 when: bond(tobias) == "partner" and month >= 7 and month <= 10
@@ -363,6 +408,8 @@ text: Tobias has packed a picnic: bread he baked, cheese he begged from the kitc
 
 @event seraphine_intro
 title: Your Left Shoe
+class: routine
+tone: eerie
 actor: seraphine
 when: not met(seraphine) and turn >= 2
 weight: 12
@@ -380,6 +427,8 @@ text: A girl drifts past you in the corridor and says, without stopping, "You're
 
 @event seraphine_tarot
 title: The Cards
+class: routine
+tone: eerie
 trigger: social
 actor: seraphine
 when: rel(seraphine) >= 5
@@ -404,6 +453,8 @@ text: Seraphine shuffles a battered tarot deck. "One card," she says. "For you. 
 
 @event seraphine_lake_vision
 title: She Walks Into the Lake
+class: story
+tone: tense
 trigger: social
 actor: seraphine
 when: rel(seraphine) >= 10 and month >= 3 and month <= 9
@@ -430,6 +481,8 @@ text: From your window you see Seraphine walking into the lake in her nightgown,
 
 @event seraphine_future
 title: I Saw You Old
+class: windfall
+tone: eerie
 trigger: social
 actor: seraphine
 when: rel(seraphine) >= 25
@@ -452,6 +505,8 @@ text: "I saw you old," Seraphine says suddenly. "Last night. You were happy. Rea
 
 @event seraphine_overwhelmed
 title: Too Many Tomorrows
+class: routine
+tone: light
 trigger: social
 actor: seraphine
 when: rel(seraphine) >= 15 and year >= 2
@@ -471,6 +526,8 @@ text: Seraphine hasn't come to class in a week. You find her in a dark storeroom
 
 @event seraphine_confession
 title: She Already Knew
+class: milestone
+tone: warm
 trigger: social
 actor: seraphine
 when: spark(seraphine) >= 35 and rel(seraphine) >= 25 and bond(seraphine) != "partner"
@@ -493,6 +550,8 @@ text: "I've seen this conversation forty-one times," Seraphine says. "In twenty-
 
 @event corvin_intro
 title: Light Fingers
+class: routine
+tone: light
 actor: corvin
 when: not met(corvin) and turn >= 2
 weight: 14
@@ -512,6 +571,8 @@ text: Someone bumps you in the crowd. A moment later a dark-haired boy is bowing
 
 @event corvin_kitchen_raid
 title: The Kitchen Raid
+class: routine
+tone: light
 trigger: social
 actor: corvin
 when: rel(corvin) >= 5
@@ -536,6 +597,8 @@ text: "Midnight," Corvin whispers. "The cooks have made forty treacle tarts for 
 
 @event corvin_debt
 title: Corvin's Little Problem
+class: routine
+tone: light
 trigger: social
 actor: corvin
 when: rel(corvin) >= 20 and not flag(corvin_owes) and not flag(corvin_debt_refused)
@@ -558,6 +621,8 @@ text: Corvin has a black eye and a very casual expression. "Small misunderstandi
 
 @event corvin_repays
 title: Interest
+class: story
+tone: light
 trigger: queued
 actor: corvin
 art: coin
@@ -580,6 +645,8 @@ text: There's a fat purse on your desk and a jack of spades tucked under it. Ins
 
 @event corvin_rooftop
 title: Up on the Roof
+class: windfall
+tone: light
 trigger: social
 actor: corvin
 when: rel(corvin) >= 30
@@ -599,6 +666,8 @@ text: On the roof at 2am, Corvin goes quiet. "I'm on my last warning," he says. 
 
 @event corvin_framed
 title: Corvin Is Framed
+class: routine
+tone: tense
 trigger: social
 actor: corvin
 when: rel(corvin) >= 15 and met(bram) and turn >= 10
@@ -628,6 +697,8 @@ text: The headmistress's silver goblet has been found in Corvin's trunk. He swea
 
 @event corvin_confession
 title: Corvin, Serious for Once
+class: milestone
+tone: warm
 trigger: social
 actor: corvin
 when: spark(corvin) >= 35 and rel(corvin) >= 25 and bond(corvin) != "partner"
@@ -648,6 +719,8 @@ text: Corvin holds out a playing card. The queen of hearts. His hand isn't quite
 
 @event corvin_runaway
 title: Let's Leave Tonight
+class: story
+tone: warm
 trigger: social
 actor: corvin
 when: bond(corvin) == "partner" and final_year and mood < 55
@@ -667,6 +740,8 @@ text: Corvin's at your door at midnight, bag over his shoulder. "There's a sky-b
 
 @event mira_intro
 title: An Explosion in the West Wing
+class: routine
+tone: light
 actor: mira
 when: not met(mira) and turn >= 2
 weight: 14
@@ -691,6 +766,8 @@ text: The west wing explodes. Not badly. A figure in goggles stumbles out of the
 
 @event mira_owl_gift
 title: A Present With Gears
+class: windfall
+tone: light
 trigger: social
 actor: mira
 when: rel(mira) >= 30 and not has(familiar_owl)
@@ -710,6 +787,8 @@ text: Mira presents a brass owl with amber glass eyes. It blinks, hoots the hour
 
 @event mira_fair
 title: The Artificers' Fair
+class: routine
+tone: light
 trigger: social
 actor: mira
 when: rel(mira) >= 15 and month >= 6 and month <= 9
@@ -737,6 +816,8 @@ text: The Artificers' Fair. Mira's entry is under a sheet and occasionally growl
 
 @event mira_workshop_closed
 title: The Workshop Is Shut
+class: routine
+tone: light
 trigger: social
 actor: mira
 when: rel(mira) >= 20 and year >= 2
@@ -768,6 +849,8 @@ text: After the third fire this term, the faculty has padlocked Mira's workshop.
 
 @event mira_dance_machine
 title: The Dancing Machine
+class: routine
+tone: light
 trigger: social
 actor: mira
 when: rel(mira) >= 10
@@ -788,6 +871,8 @@ text: Mira has built a machine that teaches dancing. It has six legs and opinion
 
 @event mira_confession
 title: Blueprint
+class: milestone
+tone: warm
 trigger: social
 actor: mira
 when: spark(mira) >= 35 and rel(mira) >= 25 and bond(mira) != "partner"
@@ -808,6 +893,8 @@ text: Mira unrolls a blueprint. It's a mechanical heart, labelled in tiny carefu
 
 @event mira_family_business
 title: The Family Clockworks
+class: routine
+tone: light
 trigger: social
 actor: mira
 when: rel(mira) >= 25 and year >= 2 and not flag(mira_family_done)
@@ -830,6 +917,8 @@ text: A letter from Mira's parents: the family clockworks needs them home. A tic
 
 @event nessa_intro
 title: First Impressions
+class: routine
+tone: light
 actor: nessa
 when: not met(nessa) and turn >= 2
 weight: 14
@@ -856,6 +945,8 @@ text: A girl with a quill floating at her shoulder plants herself in front of yo
 
 @event nessa_gossip_column
 title: You're in the Gossip Column
+class: routine
+tone: light
 trigger: social
 actor: nessa
 when: renown >= 15
@@ -880,6 +971,8 @@ text: This week's Ledger gossip column features you, prominently, under the head
 
 @event nessa_source
 title: The Source
+class: routine
+tone: light
 trigger: social
 actor: nessa
 when: rel(nessa) >= 20 and (has(job_library) or has(job_tutor) or rel(thorne) >= 15)
@@ -903,6 +996,8 @@ text: Nessa leans in. "You've got faculty access. The professors are planning to
 
 @event nessa_hollow_story
 title: Nessa Smells a Story
+class: story
+tone: eerie
 trigger: social
 actor: nessa
 when: hollow >= 2 and rel(nessa) >= 10
@@ -925,6 +1020,8 @@ text: Nessa's office wall is covered in red string. In the middle: a sketch of a
 
 @event nessa_paper_threatened
 title: Stop the Presses
+class: routine
+tone: light
 trigger: social
 actor: nessa
 when: rel(nessa) >= 15 and year >= 2
@@ -944,6 +1041,8 @@ text: The headmistress has threatened to shut down the Ledger after an article a
 
 @event nessa_confession
 title: Off the Record
+class: milestone
+tone: warm
 trigger: social
 actor: nessa
 when: spark(nessa) >= 35 and rel(nessa) >= 25 and bond(nessa) != "partner"

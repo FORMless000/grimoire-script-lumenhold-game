@@ -11,6 +11,8 @@
 
 @event soc_study_session
 title: Study Session
+class: routine
+tone: light
 cast:
   npc: any where not tagged(npc, faculty) and rel(npc) >= 0
 per: npc
@@ -32,6 +34,8 @@ text: {npc} drops into the seat across from you with an armful of books. "Exams 
 
 @event soc_borrow_money
 title: A Small Loan
+class: routine
+tone: light
 cast:
   npc: any where not tagged(npc, faculty) and rel(npc) >= 5
 per: npc
@@ -56,6 +60,8 @@ text: {npc} turns out an empty purse. "I'm fifteen crowns short for rent. I'll p
 
 @event soc_loan_repaid
 title: Paid Back
+class: story
+tone: light
 trigger: queued
 actor: npc
 art: coin
@@ -69,6 +75,8 @@ text: {npc} finds you after class and presses a little stack of coins into your 
 
 @event soc_become_friends
 title: Something Like Friendship
+class: milestone
+tone: light
 cast:
   npc: any where bond(npc) == "none" and rel(npc) >= 30 and not tagged(npc, faculty)
 per: npc
@@ -89,6 +97,8 @@ text: You realise you've been looking for {npc} in every room you walk into. {Th
 
 @event soc_become_close
 title: The Kind of Friend You Call at 3am
+class: milestone
+tone: light
 cast:
   npc: any where bond(npc) == "friend" and rel(npc) >= 60
 per: npc
@@ -109,6 +119,8 @@ text: It's 3am. You can't sleep, and you've walked to {npc}'s door before you've
 
 @event soc_secret
 title: A Secret
+class: routine
+tone: light
 cast:
   npc: any where rel(npc) >= 25 and not tagged(npc, faculty)
 per: npc
@@ -128,6 +140,8 @@ text: {npc} pulls you under the stairs. "I need to tell someone or I'll burst. S
 
 @event soc_argument
 title: Words Exchanged
+class: routine
+tone: light
 cast:
   npc: any where rel(npc) >= 10 and bond(npc) != "partner"
 per: npc
@@ -153,6 +167,8 @@ text: It starts with something small — a borrowed book, a joke that landed wro
 
 @event soc_village_trip
 title: A Day in the Village
+class: routine
+tone: light
 cast:
   npc: any where rel(npc) >= 10 and not tagged(npc, faculty)
 per: npc
@@ -174,6 +190,8 @@ text: "Barge to the village? Tea at Mabel's, a wander round the bookshops, back 
 
 @event soc_friend_sick
 title: Sick Friend
+class: windfall
+tone: light
 cast:
   npc: any where (bond(npc) == "friend" or bond(npc) == "close" or bond(npc) == "partner")
 per: npc
@@ -196,6 +214,8 @@ text: {npc} has Lake Fever and is miserable in the infirmary. Sister Amaranth sa
 
 @event soc_gift_given
 title: A Small Gift
+class: routine
+tone: light
 cast:
   npc: any where rel(npc) >= 15
 per: npc
@@ -217,6 +237,8 @@ text: There's a small parcel on your pillow. A note in {npc}'s handwriting: "Saw
 
 @event soc_drift
 title: Drifting Apart
+class: routine
+tone: light
 cast:
   npc: any where rel(npc) >= 10 and rel(npc) < 40 and not tagged(npc, faculty)
 per: npc
@@ -238,6 +260,8 @@ text: You realise you haven't really talked to {npc} in weeks. You see {them} ac
 
 @event soc_rumour
 title: Rumours About {npc}
+class: routine
+tone: light
 cast:
   npc: any where rel(npc) >= 15
 per: npc
@@ -263,6 +287,8 @@ text: A nasty rumour about {npc} is going round the common room. It's not true. 
 
 @event soc_homework_help
 title: Desperate Homework
+class: routine
+tone: light
 cast:
   npc: any where not tagged(npc, faculty) and rel(npc) >= 0
 per: npc
@@ -293,6 +319,8 @@ text: {npc} waves a half-finished essay at you. "It's due in an hour and I've wr
 
 @event soc_faculty_advice
 title: A Word of Advice
+class: routine
+tone: light
 cast:
   npc: any where tagged(npc, faculty) and rel(npc) >= 10
 per: npc
@@ -315,6 +343,8 @@ text: {npc} catches you after a lecture. "You've been working hard. Or hardly wo
 
 @event soc_spark
 title: A Spark
+class: windfall
+tone: warm
 cast:
   npc: any where romanceable(npc) and rel(npc) >= 15 and spark(npc) < 12 and bond(npc) != "partner"
 per: npc
@@ -335,6 +365,8 @@ text: You reach for the same quill as {npc}. Your hands touch. Neither of you le
 
 @event soc_date
 title: An Invitation
+class: routine
+tone: warm
 cast:
   npc: any where romanceable(npc) and spark(npc) >= 12 and spark(npc) < 40 and bond(npc) != "partner" and rel(npc) >= 15
 per: npc
@@ -350,18 +382,31 @@ text: You could ask {npc} to the lantern show in the village this weekend. As fr
   mood +small
   say: It's a lovely evening. You're both very careful about elbows.
 > right: Ask as more than friends
-  challenge negotiate easy:
-    win:
-      spark npc +medium
-      mood +medium
-      say: {npc} says yes before you finish the sentence. You hold hands through the whole show and miss every lantern.
-    lose:
-      spark npc -tiny
-      mood -small
-      say: {npc} hesitates, then says {they}'d rather go as friends. It's a nice evening. It's a long evening.
+  if spark(npc) >= 25:
+    challenge negotiate trivial:
+      win:
+        spark npc +medium
+        mood +medium
+        say: {npc} says yes before you finish the sentence. You hold hands through the whole show and miss every lantern.
+      lose:
+        spark npc -tiny
+        mood -small
+        say: {npc} hesitates, then says {they}'d rather go as friends. It's a nice evening. It's a long evening.
+  else:
+    challenge negotiate easy:
+      win:
+        spark npc +medium
+        mood +medium
+        say: {npc} says yes before you finish the sentence. You hold hands through the whole show and miss every lantern.
+      lose:
+        spark npc -tiny
+        mood -small
+        say: {npc} hesitates, then says {they}'d rather go as friends. It's a nice evening. It's a long evening.
 
 @event soc_confess_generic
 title: Feelings, Spoken
+class: milestone
+tone: warm
 cast:
   npc: any where romanceable(npc) and spark(npc) >= 40 and rel(npc) >= 30 and bond(npc) != "partner" and bond(npc) != "ex"
 per: npc
@@ -388,6 +433,8 @@ text: On the bridge between the towers, the wind snatching at your robes, you re
 
 @event soc_partner_date
 title: Date Night
+class: windfall
+tone: warm
 cast:
   npc: any where bond(npc) == "partner"
 per: npc
@@ -409,6 +456,8 @@ text: {npc} has booked the window table at Mabel's. Candles. Snow outside. "I'm 
 
 @event soc_partner_neglect
 title: "You're Always Busy"
+class: routine
+tone: warm
 cast:
   npc: any where bond(npc) == "partner"
 per: npc
@@ -432,6 +481,8 @@ text: {npc} is waiting outside your door. "I feel like I only see you in corrido
 
 @event soc_breakup
 title: The End of Something
+class: routine
+tone: grim
 cast:
   npc: any where bond(npc) == "partner" and spark(npc) < 25
 per: npc
@@ -459,6 +510,8 @@ text: {npc} sits down at the far end of the bench. "I think we both know," {they
 
 @event soc_two_timing
 title: Found Out
+class: routine
+tone: grim
 cast:
   npc: any where bond(npc) == "partner"
 per: npc
@@ -489,6 +542,8 @@ text: {npc} is holding two letters. One is to {them}. The other isn't. "I found 
 
 @event soc_ex_encounter
 title: Awkward
+class: milestone
+tone: warm
 cast:
   npc: any where bond(npc) == "ex"
 per: npc
@@ -515,6 +570,8 @@ text: You turn into the library aisle and there's {npc}. Your ex. Holding the sa
 
 @event soc_rival_taunt
 title: A Public Taunt
+class: routine
+tone: tense
 cast:
   npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -20) and not tagged(npc, faculty)
 per: npc
@@ -540,6 +597,8 @@ text: In the middle of dinner, {npc} loudly recounts your most embarrassing mome
 
 @event soc_make_peace
 title: Burying the Hatchet
+class: milestone
+tone: tense
 cast:
   npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis") and rel(npc) >= 5
 per: npc
@@ -560,6 +619,8 @@ text: {npc} finds you after class, scuffing {their} shoes. "This whole rivalry t
 
 @event soc_rival_bet
 title: The Wager
+class: routine
+tone: tense
 cast:
   npc: any where bond(npc) == "rival" and not tagged(npc, faculty)
 per: npc

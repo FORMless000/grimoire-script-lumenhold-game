@@ -6,6 +6,8 @@
 
 @event y3_career_fair
 title: The Career Fair
+class: story
+tone: light
 trigger: auto
 when: final_year and month == 2
 priority: 42
@@ -51,6 +53,8 @@ text: Every guild, order and institution in the kingdom has sent someone to the 
 
 @event y3_interview
 title: The Interview
+class: story
+tone: light
 trigger: queued
 art: scales
 tags: study story
@@ -80,6 +84,8 @@ text: Three people behind a long table. One takes notes; one smiles too much; on
 
 @event y3_offer_letter
 title: The Offer
+class: story
+tone: light
 trigger: queued
 when: flag(career_offered)
 art: letter
@@ -98,6 +104,8 @@ text: A heavy envelope with a seal you recognise from the fair. Inside, a single
 
 @event y3_first_year_mentee
 title: Your First-Year
+class: windfall
+tone: light
 when: final_year and month <= 4
 weight: 14
 art: feather
@@ -115,6 +123,8 @@ text: Third-years are assigned a first-year to mentor. Yours is called Pim, is a
 
 @event y3_last_lanterns
 title: The Last Lantern Night
+class: windfall
+tone: light
 when: final_year and month == 2
 weight: 40
 art: lantern
@@ -131,6 +141,8 @@ text: Your last Lantern Night. You stand on the shore with an unlit lantern and 
 
 @event y3_thesis
 title: The Final Thesis
+class: story
+tone: light
 when: final_year and month >= 5 and month <= 8
 weight: 16
 art: book
@@ -154,6 +166,8 @@ text: Every third-year writes a final thesis. You could write something safe and
 
 @event y3_portrait
 title: Sitting for the Portrait
+class: windfall
+tone: light
 when: final_year and month >= 7
 weight: 12
 art: mirror
@@ -170,6 +184,8 @@ text: Every graduate's portrait hangs in the long gallery — and every portrait
 
 @event y3_letter_to_self
 title: A Letter to Your First-Year Self
+class: routine
+tone: warm
 when: final_year and month >= 4
 weight: 10
 art: letter
@@ -186,6 +202,8 @@ text: The Divination department runs a tradition: write a letter to your first-y
 
 @event y3_maud_seeds
 title: Seeds for Later
+class: windfall
+tone: light
 when: final_year and month >= 9 and met(maud) and rel(maud) >= 15
 actor: maud
 weight: 16
@@ -204,6 +222,8 @@ text: Maud presses a paper packet into your hands. "Seeds," she says. "From the 
 
 @event y3_last_duel
 title: One Last Duel
+class: routine
+tone: tense
 when: final_year and month >= 6 and (has(club_dueling) or flag(tournament_champion)) and met(lyra)
 actor: lyra
 weight: 16
@@ -229,6 +249,8 @@ text: Dawn, the empty dueling ring, no crowd. Lyra is waiting. "No referee," she
 
 @event y3_time_capsule
 title: The Time Capsule
+class: windfall
+tone: light
 when: final_year and month >= 8 and bonds(friend) + bonds(close) + bonds(partner) >= 2
 weight: 14
 art: key
@@ -244,6 +266,8 @@ text: Your friends have a battered tin box, a shovel and a plan: bury a time cap
 
 @event y3_speech
 title: The Graduation Speech
+class: story
+tone: light
 trigger: auto
 when: final_year and month == 11 and (renown >= 40 or gpa >= 3.0)
 priority: 45

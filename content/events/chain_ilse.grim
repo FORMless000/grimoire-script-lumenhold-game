@@ -10,6 +10,8 @@
 
 @event ilse_village
 title: The Girl at the Bakery
+class: story
+tone: eerie
 actor: ilse
 when: turn >= 16 and not met(ilse) and (flag(met_sister) or (met(kael) and hollow >= 2))
 weight: 16
@@ -30,6 +32,8 @@ text: In the village bakery a girl in white furs is trying to pay for a bun with
 
 @event ilse_frost_lessons
 title: A Trade in Winter
+class: story
+tone: eerie
 trigger: social
 actor: ilse
 when: rel(ilse) >= 5
@@ -50,6 +54,8 @@ text: Ilse finds you by the frozen pond. "My brother won't talk to me. You will.
 
 @event ilse_grey_returns
 title: The Man in Grey Comes for Ilse
+class: story
+tone: eerie
 trigger: social
 actor: ilse
 when: rel(ilse) >= 12 and turn >= 20 and not flag(ilse_saved) and not flag(ilse_taken)
@@ -87,6 +93,8 @@ text: Late at night, a lane behind the bakery. The man in grey has one hand on I
 
 @event ilse_kael_reunion
 title: Brother and Sister
+class: story
+tone: eerie
 trigger: social
 actor: ilse
 when: flag(ilse_saved) and met(kael) and not flag(dumont_reunited)
@@ -114,6 +122,8 @@ text: Kael and Ilse have been in the same village for weeks and have spoken elev
 
 @event ilse_northern_letter
 title: A Summons From the North
+class: story
+tone: eerie
 trigger: social
 actor: ilse
 when: flag(ilse_saved) and final_year and not flag(ilse_decided)
@@ -136,6 +146,8 @@ text: A letter with a black-star seal. The Dumont family summons Ilse home. "If 
 
 @event ilse_farewell
 title: Snow in Blossomtide
+class: story
+tone: light
 trigger: social
 actor: ilse
 when: flag(ilse_saved) and final_year and month >= 9 and not flag(ilse_goodbye)

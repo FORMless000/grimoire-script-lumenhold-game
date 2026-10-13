@@ -7,6 +7,8 @@
 
 @event intro_arrival
 title: The Sky-Barge
+class: story
+tone: light
 trigger: queued
 art: tower
 tags: story
@@ -17,6 +19,8 @@ text: The barge drops through the clouds and there it is: Lumenhold, seven tower
 
 @event choose_origin
 title: Who Were You Before?
+class: story
+tone: light
 trigger: queued
 type: menu
 art: mirror
@@ -47,6 +51,8 @@ text: The Sorting Mirror in the entrance hall does not sort you into anything. I
 @event choose_elective
 # retired in phase 2b (was "month == 1 or month == 6"); replaced by enrolment (offers: courses, pick: 2)
 title: Choosing an Elective
+class: story
+tone: light
 trigger: auto
 when: false
 repeat: 5
@@ -92,6 +98,8 @@ text: The registrar's noticeboard flaps with sign-up sheets for this term's elec
 @event club_fair
 # retired in phase 2b (was "month == 2"); replaced by club_fair_v3 (offers: clubs)
 title: The Club Fair
+class: story
+tone: light
 trigger: auto
 when: false
 repeat: 12
@@ -135,6 +143,8 @@ text: The courtyard is a riot of banners. Every club wants you, or at least your
 @event job_board
 # retired in phase 2b (was "month == 3 or month == 9"); replaced by job_board_visit (the Job Board place)
 title: The Job Board
+class: story
+tone: light
 trigger: auto
 when: false
 repeat: 5
@@ -176,6 +186,8 @@ text: Rent is ten crowns a month and your purse is a fragile thing. The board ou
 @event lantern_night
 # retired in phase 2b (was "month == 2"); replaced by lantern_night_v3 (a festival at the lakeshore)
 title: Lantern Night
+class: story
+tone: light
 trigger: auto
 when: false
 repeat: 12
@@ -199,6 +211,8 @@ text: On Lantern Night every student writes a wish on a paper lantern and lets i
 
 @event kael_arrives
 title: The Boy From the North
+class: story
+tone: eerie
 trigger: auto
 when: turn == 3
 priority: 30
@@ -221,6 +235,8 @@ text: Mid-term, the dining hall doors open and frost crawls across the floor. A 
 @event winter_trials
 # retired in phase 2b (was "month == 4"); replaced by term-end exams (engine, design §7.3)
 title: The Winter Trials
+class: story
+tone: tense
 trigger: auto
 when: false
 repeat: 12
@@ -252,6 +268,8 @@ text: The Winter Trials. A hundred desks, a hundred floating quills, one very ol
 
 @event midwinter_ball
 title: The Midwinter Ball
+class: story
+tone: warm
 trigger: auto
 when: month == 5
 repeat: 12
@@ -264,16 +282,28 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
 > lyra: Ask Lyra
   when: met(lyra) and rel(lyra) >= 15
   hint: She has had six invitations. She hasn't said yes to any.
-  challenge negotiate easy:
-    win:
-      spark lyra +medium
-      rel lyra +medium
-      mood +medium
-      say: "Finally, someone who doesn't stammer." She dances like a duel — and wins.
-    lose:
-      rel lyra -small
-      mood -small
-      say: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
+  if spark(lyra) >= 25:
+    challenge negotiate trivial:
+      win:
+        spark lyra +medium
+        rel lyra +medium
+        mood +medium
+        say: "Finally, someone who doesn't stammer." She dances like a duel — and wins.
+      lose:
+        rel lyra -small
+        mood -small
+        say: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
+  else:
+    challenge negotiate easy:
+      win:
+        spark lyra +medium
+        rel lyra +medium
+        mood +medium
+        say: "Finally, someone who doesn't stammer." She dances like a duel — and wins.
+      lose:
+        rel lyra -small
+        mood -small
+        say: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
 > tobias: Ask Tobias
   when: met(tobias) and rel(tobias) >= 15
   hint: He has been practising with a broom.
@@ -331,6 +361,8 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
 
 @event spring_tournament
 title: The Spring Tournament
+class: story
+tone: tense
 trigger: auto
 when: month == 8
 repeat: 12
@@ -360,6 +392,8 @@ text: The Spring Tournament: dueling on the great lawn, the whole academy watchi
 
 @event tournament_semifinal
 title: Semifinal
+class: story
+tone: tense
 trigger: queued
 art: duel
 tags: rival
@@ -390,6 +424,8 @@ text: The semifinal. Your opponent is a fourth-year who has never lost. The crow
 
 @event tournament_final
 title: The Final
+class: story
+tone: tense
 trigger: queued
 art: trophy
 tags: rival festival
@@ -422,6 +458,8 @@ text: The final. Across the ring stands {lyra}, wand raised, eyes blazing. "I wa
 @event grand_exams
 # retired in phase 2b (was "month == 10"); replaced by term-end exams (engine, design §7.3)
 title: Grand Examinations
+class: story
+tone: tense
 trigger: auto
 when: false
 repeat: 12
@@ -454,6 +492,8 @@ text: Year-end examinations. Three days, five examiners and a practical in front
 @event summer_plans
 # retired in phase 2b (was "month == 11"); replaced by break_plan
 title: Summer Recess
+class: story
+tone: warm
 trigger: auto
 when: false
 repeat: 12
@@ -506,6 +546,8 @@ text: The towers empty for the summer. Two months of freedom. How will you spend
 
 @event summer_letter
 title: A Letter From Home
+class: story
+tone: warm
 trigger: auto
 when: month == 12
 repeat: 12
@@ -531,6 +573,8 @@ text: A letter arrives in the last month of summer, the handwriting so familiar 
 
 @event starfall
 title: Starfall
+class: story
+tone: light
 trigger: auto
 when: month == 12 and year < 4
 repeat: 12
@@ -556,6 +600,8 @@ text: The last night of the academic year. Everyone climbs onto the observatory 
 
 @event year_two
 title: Second Year
+class: story
+tone: light
 trigger: auto
 when: turn == 13
 priority: 55
@@ -569,6 +615,8 @@ text: The barge brings new first-years, and you watch them gawp at the towers. W
 
 @event year_three
 title: Final Year
+class: story
+tone: light
 trigger: auto
 when: turn == 25
 priority: 55
@@ -582,6 +630,8 @@ text: "Third years," the headmistress says, "this is your last year in these hal
 
 @event graduation_eve
 title: The Eve of Graduation
+class: story
+tone: light
 trigger: auto
 when: turn == 47
 priority: 60

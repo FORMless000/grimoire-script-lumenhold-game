@@ -8,6 +8,8 @@
 
 @event lyra_toast
 title: Lyra Cannot Cook
+class: windfall
+tone: light
 trigger: social
 actor: lyra
 when: rel(lyra) >= 15
@@ -27,6 +29,8 @@ text: Smoke pours from the kitchenette. Lyra Vaneshade, pyromancy prodigy, is ho
 
 @event lyra_mother_visit
 title: Lady Vaneshade
+class: routine
+tone: tense
 trigger: social
 actor: lyra
 when: rel(lyra) >= 25 and year >= 2
@@ -53,6 +57,8 @@ text: Lady Vaneshade has come to inspect the academy, and her daughter. She stop
 
 @event lyra_rival_respect
 title: Respect, Grudgingly
+class: milestone
+tone: tense
 trigger: social
 actor: lyra
 when: bond(lyra) == "rival" and rel(lyra) >= 15
@@ -73,6 +79,8 @@ text: After another draw, Lyra drops onto the edge of the ring beside you. "You'
 
 @event tobias_scarecrow
 title: The Scarecrow Project
+class: routine
+tone: light
 trigger: social
 actor: tobias
 when: rel(tobias) >= 10
@@ -97,6 +105,8 @@ text: Tobias has built a scarecrow for the greenhouse plots and wants to enchant
 
 @event tobias_dance_lessons
 title: Two Left Feet
+class: windfall
+tone: warm
 trigger: social
 actor: tobias
 when: rel(tobias) >= 15 and (month == 4 or month == 5)
@@ -117,6 +127,8 @@ text: Tobias has pushed the desks against the walls of an empty classroom. "The 
 
 @event tobias_storm_greenhouse
 title: Storm Over the Greenhouses
+class: routine
+tone: tense
 trigger: social
 actor: tobias
 when: rel(tobias) >= 20 and month >= 6 and month <= 8
@@ -139,6 +151,8 @@ text: A storm hits at midnight. Glass is cracking in the greenhouses. Tobias is 
 
 @event seraphine_lost_day
 title: Seraphine Is Tomorrow
+class: routine
+tone: eerie
 trigger: social
 actor: seraphine
 when: rel(seraphine) >= 10
@@ -161,6 +175,8 @@ text: Seraphine is sitting in an empty classroom, waiting for a lesson that's ha
 
 @event seraphine_painting
 title: A Painting of Somewhere Else
+class: windfall
+tone: eerie
 trigger: social
 actor: seraphine
 when: rel(seraphine) >= 20
@@ -180,6 +196,8 @@ text: Seraphine has painted a small cottage by the sea, with a crooked chimney a
 
 @event seraphine_mother
 title: The Oracle's Summons
+class: routine
+tone: light
 trigger: social
 actor: seraphine
 when: rel(seraphine) >= 25 and year >= 2
@@ -200,6 +218,8 @@ text: Seraphine's mother, the Oracle of Vell, wants her home to take up the fami
 
 @event corvin_confiscation_vault
 title: The Confiscation Vault
+class: routine
+tone: tense
 trigger: social
 actor: corvin
 when: rel(corvin) >= 20
@@ -229,6 +249,8 @@ text: "The confiscation vault," Corvin breathes. "Three hundred years of everyth
 
 @event corvin_brother
 title: Corvin's Brother
+class: routine
+tone: light
 trigger: social
 actor: corvin
 when: rel(corvin) >= 25 and year >= 2
@@ -252,6 +274,8 @@ text: There's a rough-looking man at the gates, and Corvin has gone very still. 
 
 @event corvin_cards
 title: How to Cheat at Cards
+class: windfall
+tone: light
 trigger: social
 actor: corvin
 when: rel(corvin) >= 10
@@ -274,6 +298,8 @@ text: "Rule one: never cheat," says Corvin, shuffling so fast the cards blur. "R
 
 @event mira_ornithopter
 title: The Test Flight
+class: routine
+tone: tense
 trigger: social
 actor: mira
 when: rel(mira) >= 15
@@ -299,6 +325,8 @@ text: Mira has built a flying machine with canvas wings and seven propellers. It
 
 @event mira_lab_fire
 title: Fire in the Workshop
+class: routine
+tone: tense
 trigger: social
 actor: mira
 when: rel(mira) >= 20
@@ -324,6 +352,8 @@ text: The workshop is on fire. Properly this time. Mira is in the doorway, cough
 
 @event mira_name_day
 title: Mira's Name Day
+class: routine
+tone: light
 trigger: social
 actor: mira
 when: rel(mira) >= 25
@@ -346,6 +376,8 @@ text: It's Mira's name day. They mention it casually, as if it doesn't matter. I
 
 @event nessa_headmistress_interview
 title: The Impossible Interview
+class: routine
+tone: light
 trigger: social
 actor: nessa
 when: rel(nessa) >= 15 and (met(isolde) and rel(isolde) >= 10)
@@ -371,6 +403,8 @@ text: "Nobody has interviewed the headmistress in twenty years," Nessa says. "Bu
 
 @event nessa_typo
 title: A Catastrophic Typo
+class: routine
+tone: light
 trigger: social
 actor: nessa
 when: rel(nessa) >= 10 and met(thorne)
@@ -390,6 +424,8 @@ text: The Ledger has gone to print. In the headline about Professor Thorne's lec
 
 @event nessa_burnout
 title: The Editor Sleeps
+class: routine
+tone: light
 trigger: social
 actor: nessa
 when: rel(nessa) >= 20 and year >= 2
@@ -410,6 +446,8 @@ text: Nessa hasn't slept properly in a week. She's asleep at her desk now, and h
 
 @event kael_northern_lights
 title: The Lights of the North
+class: windfall
+tone: warm
 trigger: social
 actor: kael
 when: rel(kael) >= 20 and (month <= 5 or month >= 12)
@@ -430,6 +468,8 @@ text: Kael wakes you at midnight. "Come," he says. On the hill above the lake, t
 
 @event kael_fever
 title: Kael Burns
+class: routine
+tone: tense
 trigger: social
 actor: kael
 when: rel(kael) >= 15
@@ -459,6 +499,8 @@ text: Kael has a fever — and for someone made of frost, a fever is dangerous. 
 
 @event kael_letter_home
 title: A Letter He Won't Send
+class: windfall
+tone: light
 trigger: social
 actor: kael
 when: rel(kael) >= 25
@@ -480,6 +522,8 @@ text: Kael is writing a letter. He's rewritten the first line eleven times. "To 
 
 @event bram_father_visit
 title: Bram's Father
+class: windfall
+tone: light
 trigger: social
 actor: bram
 when: flag(bram_softened) and rel(bram) >= 15
@@ -502,6 +546,8 @@ text: A tall man in an old head-boy's sash is speaking to Bram in the entrance h
 
 @event bram_cheating
 title: Bram Cheats
+class: routine
+tone: tense
 trigger: social
 actor: bram
 when: met(bram) and (month == 4 or month == 10)
