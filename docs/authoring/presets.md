@@ -1,6 +1,6 @@
 # Presets and size tiers
 
-> **Live (phase 2a).** Tiers, presets and weights are defined in `content/core/balance.grim`; new content uses tier words and presets. Raw numbers still work and are counted as legacy until phase 3 converts them.
+> Tiers, presets and weights are defined in `content/core/balance.grim`, and all content uses tier words and presets (phase 3 converted the raw numbers; lint reports any new one as legacy).
 
 ## Size tiers (design §8.4, tunable)
 

@@ -146,11 +146,15 @@
       const primary = (x) => (x.tags || [])[0];
       return prev.some((p) => (e.tone && p.tone === e.tone) || (primary(e) && primary(p) === primary(e))) ? 0.5 : 1;
     },
+    isPlot(e) { return !!e && !!(e.arc || (e.chain && this.c.arcs && this.c.arcs[e.chain])); },
+    // Plot cards allowed this month: 1, or 2 when any arc has a beat now.
+    plotCap() { return Object.values(this.c.arcs || {}).some((a) => (a.beats || []).some((b) => b.year === this.yearOf() && b.month === this.monthIndex())) ? 2 : 1; },
     // Weighted draw of one card from a pool of events; respects once/repeat, `when`, casting.
     draw(pool, used, dayItems, extra) {
       const cands = [];
       for (const e of pool) {
         if (used.has(e.id) || !this.eligible(e, used)) continue;
+        if (this._plotLeft != null && this._plotLeft <= 0 && this.isPlot(e)) continue;   // the month's plot card is spent
         for (const c of this.candidates(e)) {
           const sc = c.w * this.novelty(e) * this.relevance(e, c.actor) * this.variety(e, dayItems);
           if (sc > 0) cands.push({ ...c, w: sc });
@@ -158,6 +162,7 @@
       }
       const pick = this.pickWeighted(cands);
       if (!pick) return null;
+      if (this._plotLeft != null && this.isPlot(pick.e)) this._plotLeft--;
       used.add(pick.e.id);
       return Object.assign({ id: pick.e.id, actor: pick.actor || null, cast: pick.cast || undefined }, extra || {});
     },
@@ -183,19 +188,20 @@
         pushed.push({ id: e.id, actor: pick.actor, cast: pick.cast, src: 'auto', prio: e.class === 'story' || e.arc ? 'story' : 'pushed', p: e.priority != null ? e.priority : 50 });
         used.add(e.id);
       }
-      // Arc beats (design §10.6): at most one plot card a month, except in a beat month.
-      let plot = 0;
+      // Arc beats (design §10.6): at most one plot card a month, except in a beat month. A plot card is an arc
+      // beat or any event whose `chain:` is an arc; queued follow-ups (a scene already under way) are not held back.
+      let plot = s.deck.concat(pushed).filter((x) => x.src !== 'queued' && this.isPlot(this.c.events[x.id])).length;
       for (const e of ix.arc) {
         if (e.trigger === 'queued' || used.has(e.id) || !this.eligible(e, used)) continue;
         const a = s.arcs[e.arc] || { clock: 0 };
         if (e.beat != null && a.clock < e.beat) continue;
-        const beatNow = (this.c.arcs[e.arc] && this.c.arcs[e.arc].beats || []).some((b) => b.year === this.yearOf() && b.month === this.monthIndex());
-        if (plot >= (beatNow ? 2 : 1)) break;
+        if (plot >= this.plotCap()) break;
         const c = this.candidates(e); if (!c.length) continue;
         const pick = this.pickWeighted(c);
         pushed.push({ id: e.id, actor: pick.actor, cast: pick.cast, src: 'arc', prio: 'story', slot: e.slot });
         used.add(e.id); plot++;
       }
+      this._plotLeft = this.plotCap() - plot;
       pushed.sort((a, b) => (b.p || 0) - (a.p || 0));
       // Slot by slot.
       const day = [];

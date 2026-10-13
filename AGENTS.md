@@ -177,6 +177,16 @@ Two rules that no lookup will tell you:
 
 ---
 
+## Traps (found the hard way)
+
+- `build/content.bundle.js` is committed on purpose: `index.html` must work from `file://`, where local `fetch` is blocked. Rebuild after every `.grim` or `.lang` edit.
+- A compiled block's type is `def.block`; `kind` is a real property (`kind: early`, track kinds).
+- Translation keys count `say:` lines in source order through all branches (`opt.left.say.2`): reordering `say:` lines in an option moves its translations. Run `i18n` and check for STALE after such an edit.
+- Inbox files (`locales/<lang>/_in/`) merge last; an empty line never overwrites a translation.
+- `boot()` must stay at the very end of `src/ui.js` (earlier calls hit the temporal dead zone of later `const`s).
+- `{npc}` prints `short:` or the first word of `name` (split on spaces or `·`), hence the faculty's `short:` and the `·` in Chinese names.
+- Preview cards (`?event=`) are `force`d past their `when`.
+
 ## Localization
 
 English in `content/**/*.grim` is the source of truth. Each language has a folder `locales/<lang>/` mirroring `content/` (`events/life.lang` translates `events/life.grim`), plus `ui.lang` for interface strings and `GLOSSARY.md` for names and terms.

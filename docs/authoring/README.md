@@ -7,7 +7,7 @@ This folder is the single source for how Lumenhold content is made (design §3.5
 | `README.md` | this page: the paths, the loop, the tools |
 | `style.md` | tone, voice, length limits, label rules, banned moves |
 | `schema.md` | every construct of the event format, with the block/property table generated from the parser |
-| `presets.md`, `classes.md` | size tiers, presets and event classes (the numbers arrive in phase 2a) |
+| `presets.md`, `classes.md` | size tiers, presets and event classes |
 | `checklist.md` | the acceptance checklist that validators and the critic apply; also the "Rules" section of every brief |
 | `examples/*.grim` | annotated exemplar events |
 
@@ -18,7 +18,7 @@ The language reference stays `docs/grimoire-script.md`; canon lives only in the 
 Humans don't write events; they curate the worldbook, playtest, read dashboards and delete what doesn't belong. Content is made in three ways:
 
 1. **Batch authoring by Claude Code** (`skills/write-academy-events`): 20–40 events around one brief.
-2. **Feedback tuning by Claude Code** (`tune-events`, from phase 3): rebalance, rewrite, re-gate or retire events using `grim feedback` / `grim report` and the run logs.
+2. **Feedback tuning by Claude Code** (a `tune-events` skill is planned; until then the loop in AGENTS.md): rebalance, rewrite, re-gate or retire events using `grim feedback` / `grim report` and the run logs.
 3. **Live generation during play**: tentative (design §T3); it will follow the same spec, worldbook and validators.
 
 ## The loop for a batch

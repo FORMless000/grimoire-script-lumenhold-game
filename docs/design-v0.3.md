@@ -41,12 +41,12 @@ All three share one authoring spec, one worldbook and one set of validators. The
 
 | Phase | Name | Status |
 |---|---|---|
-| 0 | Platform and safety net | committed |
-| 1 | Worldbook and authoring spec | committed |
-| 2a | Groundwork: numbers and options | committed |
-| 2b | Groundwork: the world loop, then **freeze schema v1** | committed |
-| 3 | One-pass migration, balance, then **content production opens** | committed |
-| 4 | Narrative systems | committed |
+| 0 | Platform and safety net | committed · done |
+| 1 | Worldbook and authoring spec | committed · done (soft lore awaits curation) |
+| 2a | Groundwork: numbers and options | committed · done |
+| 2b | Groundwork: the world loop, then **freeze schema v1** | committed · done (playtest #1 skipped by decision) |
+| 3 | One-pass migration, balance, then **content production opens** | committed · in progress: playtest #2 next (see `PROGRESS.md`) |
+| 4 | Narrative systems | committed · yearbook endings and alignment reactions were pulled into phase 3 |
 | 5 | Minigames | tentative (§T1) |
 | 6 | Inventory and crafting | tentative (§T2) |
 | 7 | Live generation | tentative (§T3) |

@@ -1,60 +1,73 @@
 # Status & roadmap
 
-**v0.3 in progress** (plan: `docs/design-v0.3.md`, Phases 0 → 2b, then human playtest #1).
-- **Phase 0 (platform and safety net): done.**
-  - Server (`npm start`): saves and slots, run-log telemetry, seen counters, `/admin`. File storage, no dependencies.
-  - Tools: play styles, `balance`, `snapshot` / `diff` with a golden baseline, `rename`, `migrate`, `npm test`, `npm run verify`.
-  - Browser tests run against the server.
-- **Phase 1 (worldbook and authoring spec): done, pending your curation.**
-  - `content/world/`: the extended cast (ages, voice, stats, schedules, relations), 72 facts, 40 places with campus map positions, the reduced track list (25 tracks), 12 spells, arcs, factions, archetypes, a timeline and 72 soft lore drafts. All of it is translated.
-  - Tools: canon lint (0 unknown names across existing content), `grim brief`, `grim lorebook`, `grim docs`.
-  - `docs/authoring/` (with 5 sample briefs); skills `write-academy-events` (rebuilt) and `distill-lore`.
-  - **Your step:** review `content/world/` in git and promote soft lore to `lore/hard/` (`canon: hard`).
-- **Phase 2a (numbers and options): done.**
-  - Resources: the top bars are Health · Mood · Mana · Renown · Alignment; Crowns and Standing are in the You panel; renown decay; mana regeneration. Relationships: spark, with friendship and spark decay.
-  - `content/core/balance.grim`: size and difficulty tiers, weights, a fitted E(turn) curve, presets.
-  - Event format: `class:`/`tone:` with budget lint, `challenge` (partial results, `vs`), spells and the swipe-up option, inline text variation, `learn`/`knows`, `memory:`, `npc_rel`, `variant: hard`.
-  - Exact previews on every option; the property test passes (0 misses).
-  - Compatibility layer: lint counts 2,325 legacy uses, the phase 3 worklist.
-  - Vertical slice: 10 events plus the Ward and Flame spells, in en and zh.
-  - Save version 3: older saves are refused, and their logs kept.
+**v0.3, phase 3 of 4: at the stop point, human playtest #2** (`docs/playtest-2.md`). The plan is `docs/design-v0.3.md`; how to work on the project is in `AGENTS.md`.
 
-- **Phase 2b (the world loop): done, ready for human playtest #1** (`docs/playtest-1.md`).
-  - Calendar: four years, 47 months, terms and breaks, seasons. Each month is one day.
-  - The director (`src/director.js`): day recipes and slots, weighted drawing (novelty, relevance, variety), priorities and overflow, push windows (`queue … within` / `by month`, `unqueue`).
-  - The map (`src/map.js`): two visits a day (one on breaks), opening hours, discovery, festivals that take a visit, club/job markers, who's there, a list view.
-  - Tracks: enrolment menus (`offers:`, `pick: 2`), term exams → GPA, spells taught on passing, clubs and jobs with obligations, performance, warnings, ranks and pay; internship applications; the thesis.
-  - Cast roles and `say[npc]`; arcs with clocks, beats and clues; break plans (castle, home, work, internship); the XP model and rust.
-  - Migration 0001 retired the v0.2 calendar menus and exams. Old content runs in compatibility mode (legacy states granted by tracks, `draws:` for places).
-  - Vertical slice: Evocation I–III, the Duelling Circle, the Library Assistant job, campus and home places, the Royal Library internship stub, the thesis and the four-beat `the_bell` arc, about 50 events, in en and zh.
-  - Tests for the calendar, director, map, tracks, cast and arcs; the browser test plays full four-year runs through the map and multi-pick menus.
-  - **Known gaps** (phase 3): skewed endings, unreachable romance, short days (about 7 cards against 11). See the playtest guide.
-- **Phase 3 (in progress).** Playtest #1 was skipped by decision; the simulator's known gaps stand in for its notes.
-  - **Step 0: schema v1 frozen.** `@game schema: 1`, `test/golden/schema-v1.json`, `grim schema [--update]`, `test/schema.test.js`. From now on the format may only grow. Last additions before the freeze: `study [track] ±tier`, `visits_to(place)`, `runs_completed`, and outcome chips for performance, progress and study. The browser now passes cross-run seen counters to new games, which it didn't before.
-- **First job after the freeze, before the rest of phase 3:** baseline events for the new draw sources, so no visit or slot comes up empty: repeatable routine events (with text variation) for every place, every course, club and job (practice, shift and class days instead of attendance notes), each break plan, and the noon and night slots. Held until the schema freezes, so they're written once in the final format.
+## Where things stand (October 13, 2026)
 
-**v0.2.** Engine, UI, toolchain, docs and agent skill are done.
-- **Localization:** a key-based module (`src/i18n.js`, `locales/`) with English and a complete Simplified Chinese translation (3,126 content strings plus the UI), switchable in-game.
-- **Content:** 354 events (100 added in v0.2: final-year careers, summer recess, faculty arcs, Ilse Dumont's chain, more character, social, life and class events), 55 states, 12 characters, 19 endings.
-- Lint is clean, and simulated games finish without crashes or soft-locks in both languages.
+| | |
+|---|---|
+| Content | 715 events (7 retired), 60 states, 12 characters, 43 places, 25 tracks, 12 spells, 25 endings (5 game-overs + yearbook lines) |
+| Format | schema v1, frozen; 0 lint errors, **0 legacy constructs** left in content |
+| Reachability | `grim reach`: every event, option, ending, place and track can be reached; each key clue has ≥ 2 sources |
+| Translation | zh-CN 100% (6,345 strings), 0 stale |
+| Checks | `npm run verify` passes: build, lint, format, docs, 70+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
+| A run | 47 months, about 330 cards; random play graduates 85% of the time, social 95% |
 
-## Ideas for next iterations
+## Phases
 
-- **Content depth:** the 9 events the random sim never reaches (mostly deep chain steps) could use looser gates; more romance-route payoffs in year 3; endings for Ilse's chain.
-- **Localization:** a third language (the toolchain supports any code: `node tools/grim.js i18n fr`); a human proofread of the Chinese.
-- **Systems:**
-  - Exams that scale with what you studied (per-class marks).
-  - Items and inventory (a `@item` block: buy, hold and use).
-  - Relationship decay over time for neglected friends.
-  - Multiple save slots.
-- **Presentation:**
-  - Replace SVG placeholders with real art. Every event has a `scene:` description ready for an artist or an image model.
-  - Sound and music.
-  - A card-flip animation for outcomes.
-- **Tooling:**
-  - Done: `grim fmt` (lossless canonical formatter) and `grim query` (structural search), the groundwork for scripted content migrations.
-  - Next: `grim migrate`, numbered migration scripts that use an editing API on top of `query`, ending with lint plus a before/after sim comparison.
-  - Next: a rename map applied by `Engine.load`, so ids can be renamed without breaking saves.
-  - `grim new <kind>` scaffolding.
-  - A coverage report per chain.
-  - A "goal" sim policy that tries to reach a named ending.
+- **0 · Platform and safety net: done.** Local server (saves, run logs, feedback, `/admin`), play styles, balance invariants, golden snapshots, `migrate`, `rename`, browser tests.
+- **1 · Worldbook and authoring spec: done.** `content/world/` is the only canon (cast, facts, places, tracks, spells, arcs, factions, lore), with canon lint, briefs and the lorebook. **Your step:** promote soft lore to hard canon.
+- **2a · Numbers and options: done.** Tiers and presets, the E(turn) curve, exact previews, challenges, spells, text variation.
+- **2b · The world loop: done.** Four years of month-days, the map with two visits, the director, tracks (courses with exams and GPA, clubs, jobs, internships, the thesis), arcs with clocks and beats. Playtest #1 was skipped by decision and schema v1 frozen.
+- **3 · Migration, balance, content: done up to playtest #2.**
+  - *Migration* (`tools/migrations/` 0001–0012): `actor: any` → casting, `love` → spark, `check` → challenges, raw numbers → tiers, class/tone everywhere, v0.2 electives/clubs/jobs → the new tracks and places, rel thresholds rescaled, the `hollow` counter and Standing retired.
+  - *New content* (writers plus a critic pass each): baseline pools for every place, course level, club, job, break plan and slot; course levels II–III; incidents and money sinks; the Hollow Star restructured into four acts with redundant clue sources; alignment events.
+  - *Systems pulled forward from phase 4:* **yearbook endings** (headline, mystery, relationships and personal lines) and **alignment reactions** (Lumen ↔ Hollow).
+  - *Balance:* `tools/economy.js` (sources and sinks per resource and style), the monthly baseline (board, tuition, coursework, rest, loneliness, hungry months, probation), per-style invariants and alarms.
+- **4 · Narrative systems: next.** Fact discovery in the People panel, memory recall, NPC-to-NPC behaviour, archetype side characters, renown spotlights and scandals, the arc Journal tab.
+
+## This round (after the pause)
+
+- **Unreachable content:** `grim reach` is a static fixpoint over everything content can produce (flags, states, clues, tracks, places, met characters, queues). It is part of lint and has a test. It found 0 unreachable events once its own model was complete; the rare events are a balance matter.
+- **Hollow Star steering:** every run reached the finale because about 50 statements, half of them in everyday events, raised a hidden `hollow` counter. The counter is gone (migration 0011). Plot gates read the arc (`clock()`, the new `clues()`), the Night comes only to those who engaged, and the outcome is now a yearbook line, so it no longer replaces the career headline.
+- **Lumen and Hollow:**
+  - Alignment was a dead bar. Now about 60 choices move it: Star temptations, cruelty, theft, cheating, exploiting someone, or honesty and protection at a cost.
+  - 14 new events open at ±30 and ±60: temptations, Maud's way back, reactions from characters tagged `virtuous` / `ruthless`, the man in grey courting both sides, and the headmistress noticing.
+  - The finale reads alignment. A Lumen player seals the door more easily. At ≤ −30 the bargain opens, and at ≤ −60 opening the door frees the Star (the new *freed* outcome) instead of ending the run.
+  - Measured: the lumen style ends around +61, the hollow style around −65, random play around +13.
+- **Bugs:** a policy reading of size tiers, joining a club without revealing its place, hidden places open only at night, and an autosave race (0e3f00b). Also a bot bug that counted a queued scene once per branch, and plot pacing (an auto event already in the deck was not counted).
+- **Design consistency:**
+  - Standing retired in favour of GPA.
+  - Unpaid board means a hungry month; twice in a row brings Grisk, once a run.
+  - Probation below 1.5 from the end of year 1; the board after two terms below 1.0.
+  - The thesis distinction and resubmit feed the headline.
+  - Ilse's chain now reaches the yearbook.
+  - Corvin's runaway is reachable.
+- **Docs:** `PROGRESS.md`, `README.md`, the AGENTS.md traps (folded in from the retired HANDOFF.md), `docs/playtest-2.md` (replacing playtest-1), the language reference (yearbook, `clues()`, the alignment recipe), the authoring checklist and skill, regenerated sample briefs and examples.
+
+## Known gaps and deviations from the design
+
+- **The finale** is one sealing challenge whose tier depends on preparation. The design asks for a sequence (duel, negotiate, research).
+- **Relationship lines** in the yearbook are generic (a partner; three friends; Ilse's chain), not one line per bond (§10.5).
+- **Tuned on purpose** (design numbers are marked tunable):
+  - board 8 instead of 10, tuition 30 instead of 40, no course fees;
+  - hungry −1 health and −2 mood instead of −4/−4 (random players are broke in about half their months);
+  - friendship decay −1 instead of −2;
+  - spark decay 10% instead of 15%;
+  - confessions at spark 30, not 60.
+- **Balance alarms:**
+  - the aggressive style collapses (58% Sent Home; it ignores health on purpose);
+  - mood saturates near 100 for careful styles;
+  - 10 events are rarely or never seen: the Conclave and Unseen Office internships, some confessions, two-timing.
+- **63 per-option budget warnings** in lint, left for playtest feedback.
+- **Deferred phase 3 steps:**
+  - festivals as `replaces:` visits;
+  - removing the unused legacy syntax from the parser, and the engine's `legacy:` grants;
+  - `memory:` / `lesson:` annotations;
+  - the `tune-events` skill.
+
+## Next
+
+1. **Human playtest #2** (`docs/playtest-2.md`): a full run in each language, then `grim feedback`.
+2. Address its notes; then the per-option budget warnings and the aggressive and mood alarms.
+3. Phase 4, starting with what playtest #2 says matters most.

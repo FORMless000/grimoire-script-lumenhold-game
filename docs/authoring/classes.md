@@ -1,6 +1,6 @@
 # Event classes
 
-> **Live (phase 2a).** Every new event declares `class:` and `tone:`; lint checks the class budgets with the preview engine. Existing events without a class are legacy until phase 3 annotates them.
+> Every event declares `class:` and `tone:` (phase 3 annotated all older content); lint checks the class budgets with the preview engine.
 
 | Class | Rule | Measured |
 |---|---|---|

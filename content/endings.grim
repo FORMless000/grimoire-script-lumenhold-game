@@ -163,6 +163,24 @@ art: tent
 when: flag(career_circus) and flag(career_accepted)
 text: You join the Travelling Circus of Wonders as its youngest illusionist. For years you cross the kingdoms in a painted wagon, making dragons out of moonlight for children who have never seen magic. Every winter, a letter arrives from Lumenhold. You always write back.
 
+# ---------------- Relationship lines: Ilse Dumont's chain ----------------
+
+@ending ending_dumonts_reunited
+slot: relationships
+priority: 50
+title: Two Dumonts in the Photograph
+art: snow
+when: flag(dumont_reunited)
+text: In the graduation photograph, at the edge of the crowd, two pale heads lean together: Kael, and the sister who was raised to open the door he refused. Neither of them is smiling at the camera. They are smiling at each other, which is rarer, and which you helped to happen.
+
+@ending ending_ilse_taken
+slot: relationships
+priority: 45
+title: A Chair Left Empty
+art: rain
+when: flag(ilse_taken) and not flag(dumont_reunited)
+text: The man in grey took Ilse north, and no letter has come. At graduation Kael keeps the seat beside him empty without saying why. You know why. Some evenings, when the lake goes very still, you still look for a girl in white furs on the far shore.
+
 # ---------------- Personal lines (yearbook) ----------------
 
 @ending ending_lumen
