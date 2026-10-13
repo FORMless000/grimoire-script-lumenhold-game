@@ -378,7 +378,7 @@ These constructs are the new event format. Older forms keep working through a co
 **Challenges** replace `check` (legacy):
 
 ```grim
-challenge duel vs lyra.arcana hard:     # duel | negotiate | deceive | exam | research | brew | enchant
+challenge duel vs lyra.arcana hard:     # duel | negotiate | deceive | exam | research | brew | enchant | feat | spell
   win:
     renown +medium
   partial:                              # optional: a band of ±5 around the DC
@@ -387,7 +387,7 @@ challenge duel vs lyra.arcana hard:     # duel | negotiate | deceive | exam | re
     health -medium
 ```
 
-The skill is mapped from the kind (duel: (vigor + arcana) / 2; negotiate: charm; deceive: guile; research and exam: lore; brew and enchant: alchemy), or set with `using <skill>`. DC = `E(turn)` (the `@balance curve`) + the difficulty tier (trivial −15, easy −7, medium 0, hard +8, heroic +16) + `vs <who>.<stat>` (that character's stat minus E(turn), capped at ±15). Odds = clamp(50 + 2.5 × (skill − DC), 8, 92). A card drawn as its `variant: hard` is one tier harder and pays positive tier rewards ×1.5 (the director chooses when, phase 2b).
+The skill is mapped from the kind (duel: (vigor + arcana) / 2; negotiate: charm; deceive: guile; research and exam: lore; brew and enchant: alchemy; feat: vigor; spell: arcana), or set with `using <skill>`. DC = `E(turn)` (the `@balance curve`) + the difficulty tier (trivial −15, easy −7, medium 0, hard +8, heroic +16) + `vs <who>.<stat>` (that character's stat minus E(turn), capped at ±15). Odds = clamp(50 + 2.5 × (skill − DC), 8, 92). A card drawn as its `variant: hard` is one tier harder and pays positive tier rewards ×1.5 (the director chooses when, phase 2b).
 
 **Spells.** `learn_spell ward` (level +1, max 3) or `learn_spell ward 2`; `spell_level(ward)` in conditions. On a card, `> up[ward]: Raise a ward` is the swipe-up / ↑ option: hidden until the spell is known, disabled when mana is short; its mana cost (`@spell cost`, per level) is paid automatically and shown in the preview. `@game spell_resource` names the resource (default `mana`).
 

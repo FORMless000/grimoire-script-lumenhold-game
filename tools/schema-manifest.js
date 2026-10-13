@@ -83,7 +83,7 @@ function manifest() {
   for (const f of [...G.FUNCS].sort()) functions[f] = G.FUNC_REFS[f] ? G.FUNC_REFS[f].length : null;
   const samples = {};
   for (const [line, t] of SAMPLES) samples[line] = t;
-  return { schema: SCHEMA_VERSION, blocks, statements: [...G.STATEMENTS].sort(), functions, identifiers: [...G.IDENTS].sort(), tiers: G.TIERS, difficulties: G.DIFFICULTIES, classes: G.CLASSES, samples, legacy: LEGACY };
+  return { schema: SCHEMA_VERSION, blocks, statements: [...G.STATEMENTS].sort(), functions, identifiers: [...G.IDENTS].sort(), tiers: G.TIERS, difficulties: G.DIFFICULTIES, classes: G.CLASSES, challengeKinds: Object.keys(G.CHALLENGE_KINDS), samples, legacy: LEGACY };
 }
 
 // Returns {removed: [...], changed: [...], added: [...]}. Removals of legacy entries go to `retired`.
@@ -104,7 +104,7 @@ function compare(old, cur) {
     else if (n != null && cur.functions[f] != null && cur.functions[f] < n) out.changed.push('function ' + f + '() takes fewer arguments (' + n + ' → ' + cur.functions[f] + ')');
   }
   for (const i of old.identifiers) if (!cur.identifiers.includes(i)) drop('identifier ' + i, (leg.identifiers || []).includes(i));
-  for (const k of ['tiers', 'difficulties', 'classes']) for (const x of old[k] || []) if (!(cur[k] || []).includes(x)) drop(k.slice(0, -1) + ' ' + x, false);
+  for (const k of ['tiers', 'difficulties', 'classes', 'challengeKinds']) for (const x of old[k] || []) if (!(cur[k] || []).includes(x)) drop(k.slice(0, -1) + ' ' + x, false);
   for (const [line, t] of Object.entries(old.samples || {})) {
     let got; try { got = parseSample(line); } catch (e) { got = 'error: ' + e.message; }
     if (got !== t) (leg.samples.includes(line) ? out.retired : out.changed).push('"' + line + '" parsed as ' + t + ', now ' + got);
@@ -118,6 +118,7 @@ function compare(old, cur) {
   for (const s of cur.statements) if (!old.statements.includes(s)) out.added.push('statement ' + s);
   for (const f of Object.keys(cur.functions)) if (!(f in old.functions)) out.added.push('function ' + f + '()');
   for (const i of cur.identifiers) if (!old.identifiers.includes(i)) out.added.push('identifier ' + i);
+  for (const x of cur.challengeKinds || []) if (!(old.challengeKinds || []).includes(x)) out.added.push('challenge kind ' + x);
   for (const line of Object.keys(cur.samples)) if (!(line in (old.samples || {}))) out.added.push('sample "' + line + '"');
   return out;
 }

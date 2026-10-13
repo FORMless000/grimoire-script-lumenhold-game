@@ -205,7 +205,7 @@ function analyze(content) {
         case 'learn_spell': if (!content.spells[st.spell]) P('error', w, 'learn_spell: unknown spell "' + st.spell + '"'); break;
         case 'npc_rel': for (const x of [st.a, st.b]) { if (x === 'npc') { if (!hasActor) P('error', w, 'npc_rel npc: block has no actor'); } else if (!content.npcs[x]) P('error', w, 'npc_rel: unknown npc "' + x + '"'); } break;
         case 'challenge':
-          if (!['duel', 'negotiate', 'deceive', 'exam', 'research', 'brew', 'enchant'].includes(st.kind)) P('error', w, 'challenge: unknown kind "' + st.kind + '" (duel negotiate deceive exam research brew enchant)');
+          if (!G.CHALLENGE_KINDS[st.kind]) P('error', w, 'challenge: unknown kind "' + st.kind + '" (' + Object.keys(G.CHALLENGE_KINDS).join(' ') + ')');
           if (st.using && !content.skills[st.using]) P('error', w, 'challenge using: unknown skill "' + st.using + '"');
           if (st.vs) {
             if (st.vs.who === 'npc' ? !hasActor : !content.npcs[st.vs.who]) P('error', w, 'challenge vs: unknown character "' + st.vs.who + '"');

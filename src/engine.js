@@ -24,7 +24,7 @@
   const DEFAULT_SIZES = { _: [2, 4, 7, 12, 20], gold: [3, 8, 15, 30, 60], renown: [1, 3, 6, 10, 16], mana: [3, 6, 10, 16, 25], xp: [1, 2, 4, 7, 12], rel: [2, 4, 7, 12, 20], spark: [3, 6, 10, 15, 25] };
   const DEFAULT_DIFFICULTY = { trivial: -15, easy: -7, medium: 0, hard: 8, heroic: 16 };
   // Which skill a challenge rolls (design §9.2); `using <skill>` overrides.
-  const CHALLENGE_SKILLS = { duel: ['vigor', 'arcana'], negotiate: ['charm'], deceive: ['guile'], research: ['lore'], brew: ['alchemy'], enchant: ['alchemy'], exam: ['lore'] };
+  const CHALLENGE_SKILLS = { duel: ['vigor', 'arcana'], negotiate: ['charm'], deceive: ['guile'], research: ['lore'], brew: ['alchemy'], enchant: ['alchemy'], exam: ['lore'], feat: ['vigor'], spell: ['arcana'] };   // = Grimoire.CHALLENGE_KINDS
   class SaveVersionError extends Error { constructor(v) { super('This save is from an older version of the game (save version ' + v + ', now ' + SAVE_VERSION + ') and can no longer be loaded.'); this.code = 'SAVE_VERSION'; this.saveVersion = v; } }
   const now = () => Date.now();
   const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);

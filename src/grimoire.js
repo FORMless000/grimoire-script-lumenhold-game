@@ -207,6 +207,8 @@
   const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'params', 'draws', 'legacy', 'excludes', 'replaces']);
   const TIERS = ['tiny', 'small', 'medium', 'large', 'huge'];
   const DIFFICULTIES = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
+  // Challenge kinds (design §8.3) and the skill each one tests (`using <skill>` overrides).
+  const CHALLENGE_KINDS = { duel: ['vigor', 'arcana'], negotiate: ['charm'], deceive: ['guile'], research: ['lore'], brew: ['alchemy'], enchant: ['alchemy'], exam: ['lore'], feat: ['vigor'], spell: ['arcana'] };
   const CLASSES = ['routine', 'milestone', 'incident', 'windfall', 'story', 'crisis'];
   const BOOL_PROPS = new Set(['romance', 'hidden']);
   // Structured worldbook values, parsed at compile time. Each returns the parsed value or throws a message.
@@ -701,5 +703,5 @@
     return { tokens, conds };
   }
 
-  return { textTokens, parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES };
+  return { textTokens, parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES, CHALLENGE_KINDS };
 });

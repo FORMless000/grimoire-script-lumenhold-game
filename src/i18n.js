@@ -115,6 +115,8 @@
     'challenge.research': 'Research',
     'challenge.brew': 'Brewing',
     'challenge.enchant': 'Enchanting',
+    'challenge.feat': 'Feat',
+    'challenge.spell': 'Spellwork',
     'challenge.win': 'win',
     'challenge.partial': 'partial',
     'challenge.lose': 'lose',
