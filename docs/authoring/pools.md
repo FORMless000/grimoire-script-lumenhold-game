@@ -17,7 +17,7 @@ weight: 10
 art: wave
 tags: life
 scene: A stone fountain in a flagstone courtyard, coins glinting under a skin of {season == "winter": ice|water}.
-text: {&The courtyard fountain is taking wishes again.|The fountain again. Someone has left a button in it.|You know this fountain's moods by now.} {season == "winter": A thin ice has formed over the coins.|{~A first-year is fishing for a coin with a quill.|Two prefects argue over whether it counts as littering.|The water hums faintly, which it shouldn't.}}
+text: {The courtyard fountain is taking wishes again.|The fountain again. Someone has left a button in it.|You know this fountain's moods by now.} {season == "winter": A thin ice has formed over the coins.|{~A first-year is fishing for a coin with a quill.|Two prefects argue over whether it counts as littering.|The water hums faintly, which it shouldn't.}}
 > left: Toss a crown and wish
   gold -tiny
   mood +small
@@ -44,8 +44,9 @@ text: {&The courtyard fountain is taking wishes again.|The fountain again. Someo
 
 ## Making repeats read differently (required)
 
-Each event will be seen several times. Use at least three variation points across `text` and `say:` lines:
-- `{&first time|second time|third and after}` changes with each showing; the last alternative sticks. Use it for familiarity: "again", "as usual", a running joke that develops.
+Each event will be seen several times. Use at least three variation points across `text` and `say:` lines. Every option the player will pick repeatedly needs varied `say:` lines too; that includes spell (`up[…]`) options, which a player who knows the spell picks every time. A `say:` must never claim rarity ("which never happens") or a one-time milestone unless it sits in a sequence:
+- `{first time|second time|third and after}` (no prefix) is a **sequence**: it follows how often the event has been seen, and the last alternative sticks. Use it for familiarity and a detail that *develops* (the chipped jar you always get, the cook who now saves your seat). Avoid stock ladders like "X again." / "X, as usual.": they read the same across every event.
+- `{&a|b|c}` **cycles** a, b, c, a, b … with each showing. Use it only for lines that are fine to come back around.
 - `{~a|b|c}` picks one at random per showing. Use it for incidental detail: who's there, what's on the board, the weather.
 - `{season == "winter": …|…}` picks by season (autumn, winter, spring, summer; nest them for more than two).
 - `{final_year: …|…}` gives a last-year line ("the last time you'll…").
