@@ -148,7 +148,12 @@ function pickPlaces(eng, view, opts = {}) {
     const fresh = open.filter((p) => p.news && !picks.includes(p.id));
     const pool = opts.truant ? open.filter((p) => !p.track) : duty.length ? duty : fresh.length && eng.rand() < 0.6 ? fresh : open;
     const from = pool.length ? pool : open;
-    picks.push(from[Math.floor(eng.rand() * from.length)].id);
+    // Habit: people go back to places they like. Weight by 1 + past visits (s.visitsTo), so favourites form.
+    const seen = eng.s.visitsTo || {};
+    const w = from.map((p) => 1 + (seen[p.id] || 0));
+    let x = eng.rand() * w.reduce((a, b) => a + b, 0), k = 0;
+    for (; k < from.length - 1; k++) { x -= w[k]; if (x < 0) break; }
+    picks.push(from[k].id);
   });
   return picks;
 }

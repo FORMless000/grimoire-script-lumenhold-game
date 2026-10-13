@@ -1,0 +1,309 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/pools/plans_more.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@event break_castle_holiday_repairs
+# en: Holiday Repairs
+title [d8f001] = 假期修缮
+# en: {The caretaker has a list of jobs that can only be done when the castle is empty, and an eye for idle students.|The caretaker's list is out again. Your name is pencilled in at the bottom, provisionally.|The caretaker hands you the list and a mug of tea, in that order.} {season == "winter": Today it's snow on the battlements, heavy enough to worry the roof leads.|Today it's the dormitory mattresses, which must be carried out and beaten in the sun.}
+text [74f49c] = {看门人有一张只能趁城堡空着时才能干的活儿清单，还有一双专盯闲人的眼睛。|看门人的清单又拿出来了。你的名字用铅笔写在最底下，暂定。|看门人递给你清单和一杯茶，顺序如上。} {season == "winter": 今天是城垛上的积雪，重得叫屋顶的铅皮都发愁。|今天是宿舍的床垫，得一张张搬出去，在太阳底下拍打。}
+# en: A caretaker with a long list on a clipboard in an empty castle corridor, a student trying to look busy nearby.
+scene [b4f7a1] = 空荡荡的城堡走廊里，看门人拿着夹板上的一长串清单，旁边一个学生努力装出很忙的样子。
+# en: Lend a hand
+opt.left.label [d5e12c] = 搭把手
+# en: {season == "winter": {~You shovel snow off the battlements until you can't feel your ears. The view is worth one of them.|You and the caretaker clear a whole parapet in silence. At the end you're handed a biscuit, which is how the caretaker says thank you.}|{~You beat forty mattresses. Two of them contained socks, one a love letter, and one a very surprised mouse.|You carry mattresses down six flights of moving stairs. One flight moves halfway through, with you and the mattress on it.}}
+opt.left.say.1 [82db30] = {season == "winter": {~你在城垛上铲雪，铲到耳朵没了知觉。这景色值其中一只耳朵。|你和看门人一声不吭地清完了一整段城墙。最后你得到一块饼干，这是看门人说谢谢的方式。}|{~你拍了四十张床垫。其中两张里有袜子，一张里有情书，还有一张里有一只非常吃惊的老鼠。|你扛着床垫下了六段会动的楼梯。有一段走到一半动了，连你带床垫一起。}}
+# en: Make myself scarce
+opt.right.label [8a06da] = 我先溜了
+# en: {~You remember an urgent appointment with a book and vanish round a corner. The caretaker's sigh follows you a long way.|You hide in a window seat until the list has moved on to someone else.}
+opt.right.say.1 [3ca560] = {~你想起一本书有急事等你，拐个弯就不见了。看门人的叹气声追了你好远。|你躲在窗台座里，直到清单换了别人。}
+# en: {~The caretaker finds you behind a tapestry and hands you a shovel without comment.|You get as far as the stairs, which choose that moment to move you straight back to the caretaker.}
+opt.right.say.2 [bc9719] = {~看门人在挂毯后面找到了你，一言不发地递来一把铲子。|你刚跑到楼梯口，楼梯就挑了这个时候，把你直接送回看门人跟前。}
+
+@event break_castle_flight_field
+# en: The Field to Yourself
+title [4a919a] = 独享飞行场
+# en: {With the flying lessons over for the break, the flight field is empty and nobody has locked the broom shed.|The broom shed is unlocked again. You suspect it's on purpose now.|The flight field in the break. You know which broom in the shed pulls left.} {season == "winter": The hoops are rimed with frost and the wind has teeth.|The air shimmers with heat, and the wind is lazy for once.} {~A crow is using the far hoop as a perch.|Somebody's lost scarf is snagged on the near hoop.|The grass is printed with a fox's tracks.}
+text [653e69] = {假期飞行课停了，飞行场空无一人，也没人锁扫帚棚。|扫帚棚又没锁。你现在怀疑是故意的。|假期的飞行场。你知道棚里哪把扫帚往左偏。} {season == "winter": 圆环上结着白霜，风像长了牙。|空气热得发颤，风难得懒洋洋的。} {~一只乌鸦把远处的圆环当成了栖木。|近处的圆环上挂着不知谁丢的围巾。|草地上印着一串狐狸的脚印。}
+# en: An empty flight field in the holidays, hoops at either end, a single student on a broom high above the grass.
+scene [2e2a95] = 假期里空荡荡的飞行场，两端立着圆环，一个学生骑着扫帚高高掠过草地。
+# en: Fly the hoops, fast
+opt.left.label [91ec70] = 高速穿环
+# en: {~You thread every hoop and pull up so late that the grass brushes your boots. Nobody saw. That's almost a shame.|You lap the field until the hoops blur. Landing, you find you're grinning like a first-year.}
+opt.left.say.1 [f80422] = {~你穿过每一个圆环，拉起得那么晚，靴子都擦到了草尖。没人看见。这几乎有点可惜。|你绕场飞到圆环都模糊了。落地时，你发现自己笑得像个一年级生。}
+# en: {~The wind cheats, as it always does, and you meet the far hoop with your shoulder.|You land in the long grass, which has caught a great many students before you. It does not catch gently.}
+opt.left.say.2 [bc67f8] = {~风照例耍赖，你的肩膀撞上了远处的圆环。|你落进了长草丛，它接住过许多学生，但从不温柔。}
+# en: Practise slow, careful turns
+opt.right.label [5ede57] = 慢慢练转弯
+# en: {~Left, right, left, at walking pace, for an hour. It is deeply dull and, annoyingly, it works.|You practise the turn that always throws you until it doesn't. Your arms ache all evening.}
+opt.right.say.1 [524f9e] = {~左、右、左，步行的速度，整整一个钟头。无聊透顶，而且，可气的是，真有用。|你一遍遍练那个总把你甩下去的转弯，直到它不再甩你。整个傍晚胳膊都在酸。}
+
+@event break_castle_bored_stairs
+# en: The Bored Staircases
+title [1e7930] = 无聊的楼梯
+# en: {With nobody to carry up and down, the castle's staircases have grown restless.|The staircases are bored again, and they've noticed you.|The stairs know you're one of the few left. One swings over the moment you reach the landing.} {season == "winter": The stairwell is cold enough to see your breath.|Warm air drifts up the stairwell with the smell of cut grass.} {~A flight is drifting past with a lost shoe on its top step.|Two staircases are sulking against the wall.|One flight keeps nudging the landing, like a dog with a stick.}
+text [fccdbc] = {没人可载上载下，城堡的楼梯开始坐不住了。|楼梯又无聊了，而且它们注意到了你。|楼梯知道你是少数留下的人之一。你一走到平台，就有一段荡了过来。} {season == "winter": 楼梯井冷得能看见自己的呼吸。|暖风带着刚割过的青草味飘上楼梯井。} {~一段楼梯飘过，最上面一级放着一只丢了的鞋。|两段楼梯靠着墙在赌气。|有一段不停地拱着平台，像叼着木棍的狗。}
+# en: A grand castle stairwell with several staircases swinging slowly through the air, a lone student waiting on a landing.
+scene [491257] = 宏伟的城堡楼梯井里，几段楼梯在半空中缓缓摇荡，一个学生独自在平台上等着。
+# en: Ride whichever one comes
+opt.left.label [b32bfb] = 来哪段坐哪段
+# en: {~It carries you to a corridor you've never seen, full of portraits who are thrilled to have a visitor.|It takes you the long way, through three towers, and sets you down exactly where you wanted to be.}
+opt.left.say.1 [04fae9] = {~它把你送到一条你从没见过的走廊，满墙的肖像见有人来，高兴坏了。|它绕了远路，穿过三座塔，最后恰好把你放在你想去的地方。}
+# en: {~It drops you on a landing in the east wing and refuses to come back. You walk for an hour.|It swings out over the stairwell and stops. You wait there, with nothing to read, until it gets bored again.}
+opt.left.say.2 [a9edca] = {~它把你丢在东翼的一个平台上，死活不肯回来。你走了一个钟头。|它荡到楼梯井半空就停住了。你在那儿干等，手边什么书也没有，直到它又觉得无聊。}
+# en: Take the long way, on foot
+opt.right.label [a78eb5] = 绕远路，走过去
+# en: {~You take the servants' stair, all two hundred steps of it. The staircases watch you go, disappointed.|You walk round by the bridges. It takes all morning, and your legs will remember it.}
+opt.right.say.1 [6c5c22] = {~你走仆人楼梯，整整两百级。楼梯们目送你离开，一脸失望。|你从廊桥绕过去，花了一整个上午，腿会记住这一趟的。}
+
+@event break_castle_night_rounds
+# en: The Lone Prefect
+title [5e697b] = 孤独的级长
+# en: {Only one prefect has stayed for the break, and seven towers are a lot to patrol.|The lone prefect's lantern again, bobbing across a far bridge.|You know the lone prefect's rounds by now, to the quarter-hour.} {season == "winter": The corridors are cold enough to frost the portraits.|The night is warm, and every window in the castle stands open.} {~A staircase shifts somewhere below with a long stone sigh.|An owl has got into the east wing.|Somewhere a door bangs in a draught.}
+text [afcae5] = {假期只有一位级长留了下来，七座塔可不好巡。|又是那位级长的灯笼，在远处的廊桥上晃。|你现在对那位级长的巡夜路线了如指掌，精确到一刻钟。} {season == "winter": 走廊冷得连肖像都结了霜。|夜里很暖，城堡的每扇窗都开着。} {~楼下某处，一段楼梯长长地叹了口石头气，挪了位置。|一只猫头鹰钻进了东翼。|某处一扇门被穿堂风吹得砰砰响。}
+# en: A single lantern bobbing along a bridge between dark towers at night, a student watching it from a window.
+scene [1d3f26] = 夜里，一盏灯笼沿着两座黑塔之间的廊桥晃动，一个学生在窗边看着它。
+# en: Wander the towers after curfew
+opt.left.label [a4fb1b] = 宵禁后在塔里闲逛
+# en: {~You have the castle to yourself for an hour: moonlit bridges, sleeping portraits, the whole lake laid out below.|You slip past the lantern twice and watch the lake from a window nobody uses. It feels like owning the place.}
+opt.left.say.1 [bdbdbb] = {~整整一个钟头，城堡归你一个人：月光下的廊桥，熟睡的肖像，脚下铺开的整片湖。|你两次溜过灯笼，在一扇没人用的窗前看湖。感觉像这地方归你所有。}
+# en: {~The lantern swings round and finds you. The prefect writes your name in the demerit ledger with visible relief at having something to write.|You walk straight into the prefect on a dark landing. You both scream, and then you get a demerit.}
+opt.left.say.2 [dab387] = {~灯笼一转，照住了你。级长把你的名字记进记过簿，看得出总算有东西可记，松了口气。|你在漆黑的平台上一头撞上级长。你们俩都尖叫了，然后你被记了一过。}
+# en: Walk the rounds with the prefect
+opt.right.label [6867b8] = 陪级长巡夜
+# en: {~The prefect is glad of the company and tells you which portraits snore. You go to bed very late.|You carry the lantern while the prefect checks doors. Somewhere in the fourth tower you become friends, a little.}
+opt.right.say.1 [10568d] = {~级长很高兴有人作伴，告诉你哪些肖像会打呼。你很晚才睡。|级长查门，你提着灯笼。走到第四座塔的时候，你们成了朋友，一点点。}
+
+@event break_home_family_recipe
+# en: The Family Recipe
+title [3ea562] = 家传菜谱
+# en: {Someone at home has decided you're old enough for the family recipe, and ties an apron on you before breakfast.|The recipe lessons resume. You're trusted with the knife now, if not the salt.|You know the first half of the recipe by heart. The second half is still guarded like a treaty.} {season == "winter": It's the stew for the cold months, which takes all day.|It's the summer preserve, and every fruit in the house is involved.} {~Nobody measures anything.|A pinch turns out to mean a handful.|The pot is older than you are.}
+text [494db6] = {家里有人认定你够大了，可以学家传菜谱了，早饭前就给你系上了围裙。|菜谱课继续。如今刀可以交给你了，盐还不行。|菜谱的前半你已经烂熟于心。后半还像条约一样严防死守。} {season == "winter": 是冬天的炖菜，要炖一整天。|是夏天的果酱，家里每一颗果子都得出力。} {~谁也不称分量。|“一小撮”原来是一大把。|这口锅比你年纪还大。}
+# en: A warm family kitchen, an older relative guiding a student's hands over a steaming pot, jars and bowls everywhere.
+scene [7fcbc3] = 温暖的家中厨房，一位长辈握着学生的手在冒热气的锅上方指点，四处摆满罐子和碗。
+# en: Write it all down
+opt.left.label [c13862] = 全都记下来
+# en: {~You take notes like it's a potions practical. You're corrected on every line, and then on the corrections.|Your notes are thorough, exact and, you're told, missing the point.}
+opt.left.say.1 [66920c] = {~你像上魔药实践课一样做笔记。每一行都被纠正，然后纠正又被纠正。|你的笔记详尽、精确，而且据说完全没抓住要点。}
+# en: Learn it by hand, the old way
+opt.right.label [990459] = 用手学，老办法
+# en: {~You burn a finger and get a nod. In this kitchen, that's a diploma.|You get it wrong in a way that turns out to be how your grandmother made it. Everyone goes quiet, and then they eat it all.}
+opt.right.say.1 [212327] = {~你烫了一根手指，换来一个点头。在这间厨房里，这就是毕业证书。|你做错了，错法恰好跟你祖母当年一样。大家沉默了一会儿，然后把它吃了个精光。}
+
+@event break_home_own_bed
+# en: Your Own Bed
+title [cf9821] = 自己的床
+# en: {Your own bed, after a term in the dormitory. You wake at the academy's hour anyway.|The house wakes at dawn. It always has; you'd forgotten.|You know which floorboard creaks on the way down, and that everyone else learned it first.} {season == "winter": There's frost on the window and the blankets weigh a ton.|Sunlight is coming through the curtains, and someone is already whistling in the yard.} Downstairs, {~the kettle is going.|someone is calling your name.|the door bangs for the third time.}
+text [e0699e] = {在宿舍住了一学期，终于睡回自己的床。你还是在学院的钟点醒了。|家里天一亮就醒。一直如此，你只是忘了。|你知道下楼时哪块地板会响，也知道全家早就比你先知道。} {season == "winter": 窗上结着霜，被子重得像一吨。|阳光透过窗帘，院子里已经有人在吹口哨。} 楼下，{~水壶响了。|有人在喊你的名字。|门第三次砰地关上。}
+# en: A narrow bed under a cottage window in early light, a student buried in blankets while the house bustles below.
+scene [12a0dd] = 清晨微光中，小屋窗下一张窄床，一个学生埋在被子里，楼下一片忙碌。
+# en: Sleep until noon
+opt.left.label [7405ea] = 睡到中午
+# en: {~You sleep like a stone. At lunch you're called "the scholar" with a new and pointed emphasis.|You wake at noon, rested and ashamed. The whole house has done a morning's work, and mentions it.}
+opt.left.say.1 [653073] = {~你睡得像块石头。午饭时，大家喊你“学者”，带着一种新鲜而意味深长的重音。|你中午醒来，神清气爽又满心惭愧。全家已经干完一上午的活，还特意提了提。}
+# en: Get up with everyone
+opt.right.label [b1c969] = 跟大家一起起床
+# en: {season == "winter": {~You break the ice on the water butt and carry wood in before breakfast. Your hands sting all morning.|You're out in the dark with a lantern before the cockerel. The cockerel resents the competition.}|{~You're in the yard by sunrise, hauling and fetching. Breakfast, when it comes, is the best of the year.|You work the cool hours with everyone else and see why they swear by them.}}
+opt.right.say.1 [3d9b9e] = {season == "winter": {~早饭前你敲开水桶上的冰，把柴搬进屋。整个上午手都在刺痛。|公鸡还没叫，你就提着灯笼出门了。公鸡对这个竞争者很不满。}|{~日出时你已经在院子里搬这搬那。早饭端上来时，是一年里最香的一顿。|你跟大家一起趁凉干活，总算明白他们为什么对这几个钟头赞不绝口。}}
+
+@event break_home_mending_chair
+# en: The Mending Chair
+title [56e7dd] = 待修的椅子
+# en: {Word goes round the house that the scholar can fix things.|The things that need fixing have been waiting for you on a chair by the door.|The mending chair fills up between breaks, like a well.} {season == "winter": Today it's a stove door that won't stay shut.|Today it's a window that sticks in the heat.} {~Also a clock that strikes thirteen.|Also a doll with a missing eye.|Also a teapot nobody admits to breaking.}
+text [64b233] = {家里传开了：学者会修东西。|要修的东西已经在门边的椅子上等着你了。|这把待修的椅子在两次假期之间就会堆满，像一口井。} {season == "winter": 今天是一扇关不严的炉门。|今天是一扇热天卡住的窗户。} {~还有一只会敲十三下的钟。|还有一个少了一只眼睛的布娃娃。|还有一把没人承认打碎的茶壶。}
+# en: A chair by a cottage door piled with broken household things, a student in academy robes eyeing them with a wand.
+scene [691b03] = 小屋门边一把椅子上堆满了坏掉的家什，一个穿学院长袍的学生拿着魔杖打量它们。
+# en: Mend it with a spell
+opt.left.label [16d363] = 用咒语修好
+# en: {~It mends with a click and a little puff of light. The family applauds, then brings out three more things.|You fix it so well that it works better than new. Now everyone wants their things to work better than new.}
+opt.left.say.1 [419187] = {~咔哒一声，冒出一小团光，修好了。全家鼓掌，然后又搬出三件来。|你修得比新的还好用。现在人人都想让自己的东西比新的还好用。}
+# en: {~It's mended, technically. It also hums now, and nobody can make it stop.|The spell fixes it and then, for good measure, everything else on the chair. Most of it did not need fixing that way.}
+opt.left.say.2 [f7485f] = {~严格来说，修好了。只是它现在会嗡嗡响，谁也停不下来。|咒语修好了它，顺带把椅子上别的东西也一并修了。大部分并不需要那样修。}
+# en: Mend it by hand
+opt.right.label [2c35c0] = 动手修
+# en: {~Glue, string, a borrowed hammer and the whole morning. It holds. You don't trust it, but it holds.|You fix it the way your family always has: slowly, with a lot of opinions from the doorway.}
+opt.right.say.1 [1a68c9] = {~胶水、绳子、借来的锤子，外加一整个上午。它撑住了。你不太信它，可它撑住了。|你照家里一贯的法子修：慢慢来，门口一堆人发表意见。}
+
+@event break_home_the_trunk
+# en: The Trunk in the Corner
+title [bc6453] = 角落里的箱子
+# en: {Your trunk stands open in the corner, and the family keeps putting things in it.|The trunk is open again, and it's filling up again.|The trunk is a family project now.} {season == "winter": Woollen socks, a jar of something pickled, a cake wrapped in three cloths.|Dried fruit, a straw hat nobody asked for, a cake wrapped in three cloths.} {final_year: Someone says "for next term", then stops.|{~The lid won't close.|Someone sits on the lid.|A note is tucked into a sock, not to be read till later.}}
+text [ee0214] = {你的箱子敞在角落里，家里人不停地往里塞东西。|箱子又敞开了，又满起来了。|这只箱子如今是全家的工程。} {season == "winter": 羊毛袜、一罐不知腌了什么的东西、一块裹了三层布的蛋糕。|果干、一顶没人要的草帽、一块裹了三层布的蛋糕。} {final_year: 有人说“下学期带着”，然后停住了。|{~盖子合不上。|有人坐到了盖子上。|一只袜子里塞着一张纸条，说好以后再看。}}
+# en: An open travelling trunk in the corner of a small bedroom, overflowing with jars, socks and parcels in cloth.
+scene [cc7e9b] = 小卧室角落里一只敞开的旅行箱，罐子、袜子和布包的东西满得溢了出来。
+# en: Take everything
+opt.left.label [054bdb] = 全都带上
+# en: {~The bargeman charges you double for the weight, but you eat well for a month.|You haul it all back across the lake. Half the corridor smells of pickles until spring.}
+opt.left.say.1 [ed11ba] = {~箱子太沉，船夫收了你双倍船钱，可你一个月都吃得很好。|你把这些全拖过了湖。半条走廊一直到春天都是腌菜味。}
+# en: Sneak half of it back
+opt.right.label [4040fd] = 偷偷放回一半
+# en: {~You smuggle the jars back into the pantry at night. In the morning they're in the trunk again, wrapped tighter.|You leave the hat on a hook by the door. You feel worse about it than you expected.}
+opt.right.say.1 [353f90] = {~你夜里把罐子偷偷送回储藏室。第二天早上，它们又回到了箱子里，裹得更紧了。|你把草帽挂在门边的钩子上。你比自己预想的更过意不去。}
+
+@event break_work_stocktake
+# en: Stocktaking
+title [8bb9d1] = 盘点库存
+# en: {The quiet days of the break are, says the owner, the time to count everything.|Stocktaking again. You have opinions about how to count things now.|Stocktaking. You count faster than the owner, and slower than you'd like.} {member(tavern): At the Gilded Newt that means every tankard, keg and spoon.|{member(apothecary_clerk): At Pell & Daughters that means a thousand drawers.|{member(broom_courier): At the loft that means every parcel, pigeonhole and broom.|{member(library_assistant): In the library that means books that won't hold still to be counted.|That means everything, twice.}}}} The tally comes out one short.
+text [e4cd36] = {老板说，假期的清闲日子正适合把东西全数一遍。|又盘点了。如今你对怎么数东西都有自己的见解了。|盘点。你数得比老板快，比你自己希望的慢。} {member(tavern): 在镀金蝾螈酒馆，这意味着每一只酒杯、每一桶酒、每一把勺子。|{member(apothecary_clerk): 在佩尔父女药铺，这意味着一千个抽屉。|{member(broom_courier): 在阁楼，这意味着每一个包裹、每一个信格、每一把扫帚。|{member(library_assistant): 在图书馆，这意味着那些不肯老老实实让人数的书。|这意味着所有东西，数两遍。}}}} 总数差了一个。
+# en: A student with a ledger and pencil counting rows of stock in a quiet workplace, the owner reading over their shoulder.
+scene [199b94] = 安静的工作场所里，一个学生拿着账本和铅笔清点一排排货物，老板从肩后看着。
+# en: Track down the missing one
+opt.left.label [855fc3] = 找出少的那一个
+# en: {~You find it wedged behind the counter, where it has been since the last stocktake. The owner tips you for your thoroughness.|You find the mistake in the ledger itself: someone counted a box as a crate. The owner pays you a little extra and says nothing else.}
+opt.left.say.1 [ecb532] = {~你在柜台后面找到了它，它从上次盘点起就卡在那儿了。老板为你的细心赏了点小钱。|你发现错在账本本身：有人把一箱记成了一桶。老板多付了你一点，别的什么也没说。}
+# en: {~You search until dusk, on your knees in the dust. It stays missing, and the owner looks at you as if you might have eaten it.|You count everything again and get a different number. Then a third.}
+opt.left.say.2 [8ebc14] = {~你跪在灰里找到天黑。它还是不见踪影，老板看你的眼神，好像是你把它吃了。|你又全数了一遍，得出另一个数。然后是第三个。}
+# en: Write it off and move on
+opt.right.label [71a437] = 记作损耗了事
+# en: {~"Breakage," you write. The owner docks a coin from your pay, on principle.|You write it off, and the owner sighs and takes it from your wages.}
+opt.right.say.1 [5560d4] = {~你写下“损耗”。老板照规矩从你工钱里扣了一枚。|你把它记作损耗，老板叹口气，从你工钱里扣了。}
+
+@event break_work_complaint
+# en: The Complaint
+title [dd0cf5] = 投诉
+# en: {A customer has come back with a complaint and a voice built for it.|Another complaint, another raised voice. You've learned to breathe out first.|This customer has been saving the complaint all week. You can tell.} {member(tavern): The cider was too warm, or too cold, or too cider.|{member(apothecary_clerk): The tonic did nothing, which is worse, they say, than doing something.|{member(broom_courier): The parcel arrived wet, late and somehow smug.|{member(library_assistant): The book they want is out, and they want it in.|The complaint has several parts, all of them loud.}}}} The owner is out.
+text [ec696e] = {一位客人带着投诉回来了，嗓门天生就是为投诉准备的。|又一桩投诉，又一个大嗓门。你已经学会先呼一口气。|这位客人攒了一整个星期的投诉。你看得出来。} {member(tavern): 苹果酒太热，或者太冷，或者太苹果酒了。|{member(apothecary_clerk): 补药毫无效果，他们说，这比有点效果还糟。|{member(broom_courier): 包裹送到时又湿又迟，还不知怎么透着一股得意。|{member(library_assistant): 他们要的书借出去了，他们要它现在就回来。|投诉分好几部分，每一部分都很响。}}}} 老板不在。
+# en: An irate customer leaning over a counter, finger raised, while a young worker stands very still behind it.
+scene [eec2a5] = 一位气冲冲的客人俯身在柜台上竖着手指，柜台后的年轻伙计一动不动。
+# en: Talk them down
+opt.left.label [dfea51] = 好言安抚
+# en: {~You agree with everything until there's nothing left to agree with. They leave calm, and they leave a tip.|You listen, nod and offer them a chair. By the end they're telling you about their sister.}
+opt.left.say.1 [46ab42] = {~你什么都附和，直到再没什么可附和。对方心平气和地走了，还留了小费。|你倾听、点头，请对方坐下。说到最后，对方在跟你讲他们的姐妹。}
+# en: {~It gets louder. You give them a coin of your own just to make it stop.|They demand the owner, then you, then the owner again, and you pay for the trouble out of your own pocket.}
+opt.left.say.2 [da9d83] = {~声音越来越大。你掏了自己的一枚钱，只求快点结束。|对方要找老板，然后找你，然后又找老板，最后这场麻烦由你自掏腰包。}
+# en: Give them what they want
+opt.right.label [876ac8] = 给他们想要的
+# en: {~You hand over a refund out of your wages. They leave. The quiet afterwards is worth a coin.|A free one, on you. They take it without thanks, and the next customer is lovely.}
+opt.right.say.1 [60d4c2] = {~你从工钱里退了款。对方走了。之后的清静值一枚钱。|这份算你请。对方连谢都没说就拿走了，下一位客人倒是可爱极了。}
+
+@event break_work_half_hour
+# en: Half an Hour Off
+title [647a16] = 半个钟头的休息
+# en: {Half an hour off in the middle of a long holiday shift.|Your half hour again. You know exactly how far it goes now.|Half an hour. You spend the first minute deciding.} {season == "winter": Outside, the snow is coming down sideways.|Outside, the sun is bright enough to hurt.} {~The back room has one chair and one draught.|A colleague has left half a pie, possibly for sharing.|A clock somewhere strikes the wrong hour.}
+text [ef7aff] = {漫长的假期班次中间，有半个钟头休息。|又是你的半个钟头。如今你清楚它能走多远。|半个钟头。头一分钟用来做决定。} {season == "winter": 外面，雪横着飘。|外面，太阳亮得刺眼。} {~后屋有一把椅子和一股穿堂风。|同事留下半个馅饼，也许是给大家分的。|某处的钟敲错了钟点。}
+# en: A tired student in a work apron standing in a back doorway, looking out at the weather with a cup in hand.
+scene [defd5a] = 一个系着围裙的疲惫学生站在后门口，手里捧着杯子，望着外面的天气。
+# en: Walk out into the weather
+opt.left.label [e0bf5d] = 出门走走
+# en: {season == "winter": {~You buy roast chestnuts and eat them walking, snow in your collar. You come back soaked and much happier.|You walk to the lake's edge and back. Your nose will not forgive you.}|{~You buy a cold drink and sit in the sun until your neck burns. Worth it.|You walk to the water and stand there. Half an hour is longer outside.}}
+opt.left.say.1 [65f2ce] = {season == "winter": {~你买了烤栗子边走边吃，雪灌进领口。回来时湿透了，心情却好多了。|你走到湖边又走回来。你的鼻子不会原谅你。}|{~你买了杯冷饮，坐在太阳底下晒到脖子发红。值。|你走到水边站着。半个钟头在外面显得更长。}}
+# en: Nap in the back room
+opt.right.label [a2e9fa] = 在后屋打个盹
+# en: {~You sleep sitting up and wake with the shape of a crate on your cheek.|You doze off and dream of work, which seems unfair. The bell wakes you mid-shift in the dream.}
+opt.right.say.1 [65498b] = {~你坐着睡着了，醒来脸上印着木箱的形状。|你打了个盹，梦见在干活，这似乎不太公平。梦里干到一半，铃声把你叫醒了。}
+
+@event break_work_short_wages
+# en: A Coin Short
+title [996363] = 少了一枚
+# en: {Wages, counted out into your hand. You count them again.|Wage day. You count your coins at the counter, in front of everyone, on principle.|Wage day. The owner counts slowly, and so do you.} {~It's short by one.|It's short, and there's a button where a coin should be.|It's short by just enough to notice.} {member(tavern): The landlady remembers every tab to the penny, and has somehow forgotten this one.|{member(apothecary_clerk): Old Pell counted it himself, drop by drop.|{member(broom_courier): The dispatch ledger says otherwise, in smudged ink.|{member(library_assistant): The pay envelope says otherwise, in very small writing.|Someone's sums say otherwise.}}}}
+text [8a7526] = {工钱数到你手里。你又数了一遍。|发工钱的日子。你现在当众在柜台上数钱，这是原则。|发工钱的日子。老板数得慢，你也数得慢。} {~少了一枚。|少了，本该是钱的地方放着一颗纽扣。|少的刚好够你察觉。} {member(tavern): 老板娘记得每一笔赊账，分毫不差，偏偏把这一笔忘了。|{member(apothecary_clerk): 是老佩尔亲手数的，一滴一滴地数。|{member(broom_courier): 派送账簿上可不是这么写的，墨迹还糊了。|{member(library_assistant): 工资袋上可不是这么写的，字小得很。|有人的算术可不是这么算的。}}}}
+# en: A student counting a small pile of coins on a counter for the second time, frowning, an employer pretending not to watch.
+scene [5dacbb] = 一个学生在柜台上第二次清点一小堆硬币，皱着眉，雇主假装没在看。
+# en: Point it out
+opt.left.label [d2676e] = 指出来
+# en: {~You show your sums. The owner checks them, coughs, and pays you the difference with a little extra for the embarrassment.|You point it out politely and firmly. The missing coin appears, with an apology and a pastry.}
+opt.left.say.1 [d3e741] = {~你把算式摆出来。老板核对一遍，咳了一声，补上差额，还为这份尴尬多给了一点。|你礼貌而坚定地指出来。少的那枚出现了，附带一句道歉和一块点心。}
+# en: {~The owner recounts, gets the same wrong answer, and looks hurt that you asked.|You're told it's for the breakage. You don't remember any breakage. Nobody else does either.}
+opt.left.say.2 [123ecc] = {~老板重数一遍，得出同样的错数，还一脸受伤，怪你多问。|你被告知这是赔损耗的。你不记得有什么损耗。别人也不记得。}
+# en: Let it go this once
+opt.right.label [b87d7e] = 这次就算了
+# en: {~You pocket it without a word. The owner sees you notice, and you're given the easy shift next week.|One coin. You decide you can afford to be the bigger person, just about.}
+opt.right.say.1 [9df634] = {~你一声不吭地收下了。老板看见你注意到了，下周给你排了轻松的班。|一枚而已。你决定自己大度得起，勉强吧。}
+
+@event refectory_cooks_taster
+# en: The Cook's Taster
+title [64d79d] = 厨娘的试吃员
+# en: The cook stops you before you reach the bench and holds out a spoon. "You're in here more than the cats," she says. "So you can taste the new pot first. Regulars do." Behind her a dozen steaming pots wait their turn, and the other students in the queue look on with naked envy.
+text [6626d7] = 你还没走到长凳，厨娘就拦住你，递过来一把勺子。“你来得比猫还勤，”她说，“所以新的一锅你先尝。常客都这样。”她身后十几口锅冒着热气等着轮到，排队的学生们毫不掩饰地眼红。
+# en: A refectory cook holding out a small spoon over the counter to a student, a new pot steaming behind her.
+scene [2e4b9e] = 膳堂厨娘隔着柜台递给学生一把小勺，身后一口新锅冒着热气。
+# en: Give an honest verdict
+opt.left.label [5b70db] = 说实话
+# en: You say it wants salt and less of the grey thing. The cook frowns, tastes, and nods. From then on your bowl comes from the bottom of the pot, where the good bits are.
+opt.left.say.1 [e40fb3] = 你说得多放盐，少放那灰乎乎的东西。厨娘皱眉尝了尝，点了点头。从此你的那碗都从锅底盛，好料都在那儿。
+# en: Praise it to the rafters
+opt.right.label [7c4191] = 夸上天去
+# en: You declare it the best soup in the kingdom. The cook doesn't believe a word of it, and gives you a second spoonful anyway.
+opt.right.say.1 [c29b20] = 你宣布这是王国里最好喝的汤。厨娘一个字也不信，还是又给了你一勺。
+
+@event library_footnote_bag
+# en: Footnote's Approval
+title [c453a2] = 脚注的认可
+# en: You come back from the shelves to find Footnote asleep on your bag, curled tight, one paw over the strap. Footnote sleeps on the reference desk and nowhere else; everybody knows that. A passing librarian stops, looks from the cat to you, and nods, as if something official has happened.
+text [ffc4bd] = 你从书架间回来，发现脚注睡在你的书包上，蜷得紧紧的，一只爪子搭着背带。人人都知道，脚注只睡参考台，别处一概不睡。一位路过的图书管理员停下来，看看猫又看看你，点了点头，仿佛刚发生了什么正式的事。
+# en: A huge old library cat curled asleep on a student's satchel under a reading desk, a student standing over it, uncertain.
+scene [515a63] = 阅览桌下，一只硕大的老图书馆猫蜷在学生的书包上睡觉，学生站在一旁不知所措。
+# en: Wait for him to wake
+opt.left.label [03f336] = 等他睡醒
+# en: You read standing up until the lamps are lit. Footnote wakes, stretches, and walks off without a glance. Your bag smells of warm cat for a week, and you find you don't mind.
+opt.left.say.1 [5ee19a] = 你站着看书，一直看到点灯。脚注醒了，伸个懒腰，看都不看你就走了。你的书包一个星期都带着暖烘烘的猫味，而你发现自己并不介意。
+# en: Ease the bag out, inch by inch
+opt.right.label [e23815] = 一寸寸抽出书包
+# en: You slide it free a fraction at a time. Footnote opens one eye, judges you, and allows it. The librarian says she's never seen him allow anything.
+opt.right.say.1 [2fedfc] = 你一点一点把书包抽出来。脚注睁开一只眼，审视了你一番，准了。图书管理员说她从没见他准过任何事。
+
+@event mabels_your_usual
+# en: Your Usual
+title [c3563c] = 老样子
+# en: You haven't even reached the counter. Mabel already has your cup out, the right tea steeping and the cake you always end up choosing on a plate. "Your usual," she says, and it isn't a question. On the slate behind the till, among the regulars, there's a new line in chalk.
+text [05c137] = 你还没走到柜台，梅布尔已经摆好了你的杯子，对的茶正在泡，盘子里放着你每次最后都会挑的那块蛋糕。“老样子，”她说，不是在问。收银台后的石板上，常客名单里多了一行新粉笔字。
+# en: A small tea shop counter with a cup already poured and a slice of cake on a plate, the shopkeeper smiling at a student in the doorway.
+scene [a81742] = 小茶馆的柜台上已经倒好一杯茶、放着一块蛋糕，店主朝门口的学生微笑。
+# en: Have the usual
+opt.left.label [de70ee] = 就要老样子
+# en: It's exactly right, as it always is. Mabel watches you take the first sip and turns back to the shelves, satisfied.
+opt.left.say.1 [ba0c49] = 恰到好处，一如既往。梅布尔看着你喝下第一口，心满意足地转回货架。
+# en: Ask for something new
+opt.right.label [35d8bb] = 来点新的
+# en: Mabel's eyebrows rise. Then she smiles like someone handed a puzzle and reaches for a tin from the very top shelf. It's odd and smoky, and you don't like it, and you're glad you asked.
+opt.right.say.1 [09aadb] = 梅布尔挑起眉毛。接着她笑得像拿到了一道谜题，伸手去够最顶层架子上的一个茶罐。那茶古怪又带烟味，你不喜欢，但你很高兴自己问了。
+
+@event bakery_bun_set_aside
+# en: The Bun Set Aside
+title [795ce5] = 留给你的面包
+# en: The baker's son reaches under the counter before you've said a word and brings out a bun wrapped in paper, with your initial on it in flour. "Saved from the first batch," he says. "Regulars get the corner ones." Behind him, by the ovens, the oldest baker nods as if she arranged it all herself.
+text [09ad6a] = 你还没开口，面包师的儿子就从柜台下拿出一个纸包的面包，纸上用面粉写着你名字的首字母。“头一炉留的，”他说，“常客拿边角的。”他身后的炉边，最年长的面包师点点头，好像这一切都是她安排的。
+# en: A baker's son handing a paper-wrapped bun across a flour-dusted counter, a letter written on the paper in flour.
+scene [e72281] = 面包师的儿子隔着撒满面粉的柜台递过一个纸包面包，纸上用面粉写着一个字母。
+# en: Insist on paying for it
+opt.left.label [5b7a00] = 坚持付钱
+# en: He refuses twice and accepts the third time. The coin goes in a jar by the till marked, in the oldest baker's hand, "for the post".
+opt.left.say.1 [d333cd] = 他推辞了两次，第三次收下了。那枚钱进了收银台边的一个罐子，罐上是最年长的面包师的笔迹：“寄信用”。
+# en: Thank him and eat it warm
+opt.right.label [8942f0] = 道谢，趁热吃
+# en: It's still warm and far too big, and you eat it on the step in four bites and burn your mouth. You'd do it again tomorrow.
+opt.right.say.1 [aea84b] = 面包还热着，大得离谱，你坐在台阶上四口吃完，烫了嘴。明天你还会这么干。
+
+@event grimsbys_right_book
+# en: The Right Book, First Time
+title [38138c] = 一次就拿对的书
+# en: You step into Grimsby's and open your mouth, and Mr Grimsby is already holding out a book. It is exactly the one you came for. He looks as astonished as you are. "Must be getting to know you," he says, and then, worried, "Don't tell anyone."
+text [c259e5] = 你走进格林斯比书店，刚张开嘴，格林斯比先生已经把一本书递了过来。正是你要找的那本。他和你一样惊讶。“大概是开始了解你了，”他说，又担心地补了一句，“别告诉别人。”
+# en: A cramped bookshop of leaning shelves, an elderly bookseller holding out a book to a student who has only just stepped inside.
+scene [83e433] = 书架东倒西歪的狭小书店里，一位年迈的书商把一本书递给刚进门的学生。
+# en: Buy it before it changes
+opt.left.label [8c5f21] = 趁它没变赶紧买
+# en: You pay at once, in case it turns into a book on beekeeping. It doesn't. You carry it all the way back to the castle, checking.
+opt.left.say.1 [e0afe4] = 你立刻付钱，以防它变成一本养蜂的书。它没变。你一路把它抱回城堡，边走边检查。
+# en: Ask what else he'd pick for me
+opt.right.label [4293db] = 问他还会给我挑啥
+# en: Restored to form, Mr Grimsby brings you a history of eels and a book of riddles. You buy the riddles. They're very good, and no help at all.
+opt.right.say.1 [8afbc7] = 格林斯比先生恢复了常态，给你拿来一本鳗鱼史和一本谜语书。你买了谜语书。谜语很好，一点用也没有。
+
+@event courtyard_in_the_know
+# en: In the Know
+title [143948] = 消息灵通
+# en: The knot of students by the fountain goes quiet as you pass, and then one of them waves you over. "You're out here every day," says a second-year from Duskgate. "So. What have you heard?" It seems you've been counted among the courtyard's regulars, and regulars are expected to bring news.
+text [f4ab24] = 你经过喷泉时，那一圈学生安静下来，接着其中一个朝你招手。“你天天在这儿，”一个暮门的二年级生说，“那么，你听到什么了？”看来你已经被算作庭院的常客了，而常客是要带消息来的。
+# en: A knot of students gathered on the rim of a courtyard fountain, leaning in, one waving a newcomer over.
+scene [ed9aa8] = 一群学生聚在庭院喷泉边沿，凑头说话，其中一人朝新来的人招手。
+# en: Share something harmless
+opt.left.label [743b67] = 说点无伤大雅的
+# en: You offer up a rumour about the refectory pudding. It's received with grave interest and is all over the castle by supper, much improved.
+opt.left.say.1 [04ca03] = 你贡献了一条关于膳堂布丁的传闻。大家郑重其事地听了，到晚饭时它已传遍城堡，还被添油加醋了不少。
+# en: Say I've heard nothing
+opt.right.label [4cfbdc] = 说我啥也没听说
+# en: They take your silence as proof that you know everything. By the end of the week, people are asking you for the news.
+opt.right.say.1 [60a72f] = 他们把你的沉默当成你什么都知道的证据。不到一个星期，就有人来找你打听消息了。

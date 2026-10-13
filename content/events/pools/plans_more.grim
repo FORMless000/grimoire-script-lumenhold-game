@@ -1,0 +1,416 @@
+# More break-plan pool events (castle, home, work) and the "regular" milestones.
+# Repeatable routine events; see docs/authoring/pools.md.
+
+# ---------------- Break: at the castle (plan: castle) ----------------
+
+@event break_castle_holiday_repairs
+title: Holiday Repairs
+plan: castle
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: house
+tags: home
+scene: A caretaker with a long list on a clipboard in an empty castle corridor, a student trying to look busy nearby.
+text: {The caretaker has a list of jobs that can only be done when the castle is empty, and an eye for idle students.|The caretaker's list is out again. Your name is pencilled in at the bottom, provisionally.|The caretaker hands you the list and a mug of tea, in that order.} {season == "winter": Today it's snow on the battlements, heavy enough to worry the roof leads.|Today it's the dormitory mattresses, which must be carried out and beaten in the sun.}
+> left: Lend a hand
+  vigor +small
+  health -tiny
+  mood -tiny
+  say: {season == "winter": {~You shovel snow off the battlements until you can't feel your ears. The view is worth one of them.|You and the caretaker clear a whole parapet in silence. At the end you're handed a biscuit, which is how the caretaker says thank you.}|{~You beat forty mattresses. Two of them contained socks, one a love letter, and one a very surprised mouse.|You carry mattresses down six flights of moving stairs. One flight moves halfway through, with you and the mattress on it.}}
+> right: Make myself scarce
+  challenge deceive easy:
+    win:
+      mood +small
+      say: {~You remember an urgent appointment with a book and vanish round a corner. The caretaker's sigh follows you a long way.|You hide in a window seat until the list has moved on to someone else.}
+    lose:
+      mood -small
+      vigor +tiny
+      say: {~The caretaker finds you behind a tapestry and hands you a shovel without comment.|You get as far as the stairs, which choose that moment to move you straight back to the caretaker.}
+
+@event break_castle_flight_field
+title: The Field to Yourself
+plan: castle
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: broom
+tags: home
+scene: An empty flight field in the holidays, hoops at either end, a single student on a broom high above the grass.
+text: {With the flying lessons over for the break, the flight field is empty and nobody has locked the broom shed.|The broom shed is unlocked again. You suspect it's on purpose now.|The flight field in the break. You know which broom in the shed pulls left.} {season == "winter": The hoops are rimed with frost and the wind has teeth.|The air shimmers with heat, and the wind is lazy for once.} {~A crow is using the far hoop as a perch.|Somebody's lost scarf is snagged on the near hoop.|The grass is printed with a fox's tracks.}
+> left: Fly the hoops, fast
+  challenge feat easy:
+    win:
+      vigor +small
+      mood +small
+      say: {~You thread every hoop and pull up so late that the grass brushes your boots. Nobody saw. That's almost a shame.|You lap the field until the hoops blur. Landing, you find you're grinning like a first-year.}
+    lose:
+      health -small
+      mood -tiny
+      say: {~The wind cheats, as it always does, and you meet the far hoop with your shoulder.|You land in the long grass, which has caught a great many students before you. It does not catch gently.}
+> right: Practise slow, careful turns
+  vigor +small
+  mood -small
+  say: {~Left, right, left, at walking pace, for an hour. It is deeply dull and, annoyingly, it works.|You practise the turn that always throws you until it doesn't. Your arms ache all evening.}
+
+@event break_castle_bored_stairs
+title: The Bored Staircases
+plan: castle
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: tower
+tags: home
+scene: A grand castle stairwell with several staircases swinging slowly through the air, a lone student waiting on a landing.
+text: {With nobody to carry up and down, the castle's staircases have grown restless.|The staircases are bored again, and they've noticed you.|The stairs know you're one of the few left. One swings over the moment you reach the landing.} {season == "winter": The stairwell is cold enough to see your breath.|Warm air drifts up the stairwell with the smell of cut grass.} {~A flight is drifting past with a lost shoe on its top step.|Two staircases are sulking against the wall.|One flight keeps nudging the landing, like a dog with a stick.}
+> left: Ride whichever one comes
+  chance 60:
+    guile +small
+    mood +small
+    say: {~It carries you to a corridor you've never seen, full of portraits who are thrilled to have a visitor.|It takes you the long way, through three towers, and sets you down exactly where you wanted to be.}
+  else:
+    health -tiny
+    mood -small
+    say: {~It drops you on a landing in the east wing and refuses to come back. You walk for an hour.|It swings out over the stairwell and stops. You wait there, with nothing to read, until it gets bored again.}
+> right: Take the long way, on foot
+  vigor +small
+  mood -small
+  health -tiny
+  say: {~You take the servants' stair, all two hundred steps of it. The staircases watch you go, disappointed.|You walk round by the bridges. It takes all morning, and your legs will remember it.}
+
+@event break_castle_night_rounds
+title: The Lone Prefect
+plan: castle
+class: routine
+tone: tense
+repeat: 4
+weight: 10
+art: lantern
+tags: home
+scene: A single lantern bobbing along a bridge between dark towers at night, a student watching it from a window.
+text: {Only one prefect has stayed for the break, and seven towers are a lot to patrol.|The lone prefect's lantern again, bobbing across a far bridge.|You know the lone prefect's rounds by now, to the quarter-hour.} {season == "winter": The corridors are cold enough to frost the portraits.|The night is warm, and every window in the castle stands open.} {~A staircase shifts somewhere below with a long stone sigh.|An owl has got into the east wing.|Somewhere a door bangs in a draught.}
+> left: Wander the towers after curfew
+  challenge deceive medium:
+    win:
+      guile +small
+      mood +small
+      say: {~You have the castle to yourself for an hour: moonlit bridges, sleeping portraits, the whole lake laid out below.|You slip past the lantern twice and watch the lake from a window nobody uses. It feels like owning the place.}
+    lose:
+      mood -small
+      guile +tiny
+      say: {~The lantern swings round and finds you. The prefect writes your name in the demerit ledger with visible relief at having something to write.|You walk straight into the prefect on a dark landing. You both scream, and then you get a demerit.}
+> right: Walk the rounds with the prefect
+  charm +small
+  health -tiny
+  say: {~The prefect is glad of the company and tells you which portraits snore. You go to bed very late.|You carry the lantern while the prefect checks doors. Somewhere in the fourth tower you become friends, a little.}
+
+# ---------------- Break: at home (plan: home) ----------------
+
+@event break_home_family_recipe
+title: The Family Recipe
+plan: home
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: cauldron
+tags: home
+scene: A warm family kitchen, an older relative guiding a student's hands over a steaming pot, jars and bowls everywhere.
+text: {Someone at home has decided you're old enough for the family recipe, and ties an apron on you before breakfast.|The recipe lessons resume. You're trusted with the knife now, if not the salt.|You know the first half of the recipe by heart. The second half is still guarded like a treaty.} {season == "winter": It's the stew for the cold months, which takes all day.|It's the summer preserve, and every fruit in the house is involved.} {~Nobody measures anything.|A pinch turns out to mean a handful.|The pot is older than you are.}
+> left: Write it all down
+  alchemy +small
+  mood -small
+  say: {~You take notes like it's a potions practical. You're corrected on every line, and then on the corrections.|Your notes are thorough, exact and, you're told, missing the point.}
+> right: Learn it by hand, the old way
+  mood +small
+  alchemy +tiny
+  health -tiny
+  say: {~You burn a finger and get a nod. In this kitchen, that's a diploma.|You get it wrong in a way that turns out to be how your grandmother made it. Everyone goes quiet, and then they eat it all.}
+
+@event break_home_own_bed
+title: Your Own Bed
+plan: home
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: bed
+tags: home
+scene: A narrow bed under a cottage window in early light, a student buried in blankets while the house bustles below.
+text: {Your own bed, after a term in the dormitory. You wake at the academy's hour anyway.|The house wakes at dawn. It always has; you'd forgotten.|You know which floorboard creaks on the way down, and that everyone else learned it first.} {season == "winter": There's frost on the window and the blankets weigh a ton.|Sunlight is coming through the curtains, and someone is already whistling in the yard.} Downstairs, {~the kettle is going.|someone is calling your name.|the door bangs for the third time.}
+> left: Sleep until noon
+  health +small
+  mood -tiny
+  say: {~You sleep like a stone. At lunch you're called "the scholar" with a new and pointed emphasis.|You wake at noon, rested and ashamed. The whole house has done a morning's work, and mentions it.}
+> right: Get up with everyone
+  vigor +small
+  health -tiny
+  say: {season == "winter": {~You break the ice on the water butt and carry wood in before breakfast. Your hands sting all morning.|You're out in the dark with a lantern before the cockerel. The cockerel resents the competition.}|{~You're in the yard by sunrise, hauling and fetching. Breakfast, when it comes, is the best of the year.|You work the cool hours with everyone else and see why they swear by them.}}
+
+@event break_home_mending_chair
+title: The Mending Chair
+plan: home
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: wand
+tags: home
+scene: A chair by a cottage door piled with broken household things, a student in academy robes eyeing them with a wand.
+text: {Word goes round the house that the scholar can fix things.|The things that need fixing have been waiting for you on a chair by the door.|The mending chair fills up between breaks, like a well.} {season == "winter": Today it's a stove door that won't stay shut.|Today it's a window that sticks in the heat.} {~Also a clock that strikes thirteen.|Also a doll with a missing eye.|Also a teapot nobody admits to breaking.}
+> left: Mend it with a spell
+  challenge spell easy:
+    win:
+      arcana +small
+      mood +small
+      say: {~It mends with a click and a little puff of light. The family applauds, then brings out three more things.|You fix it so well that it works better than new. Now everyone wants their things to work better than new.}
+    lose:
+      mana -small
+      mood -small
+      say: {~It's mended, technically. It also hums now, and nobody can make it stop.|The spell fixes it and then, for good measure, everything else on the chair. Most of it did not need fixing that way.}
+> right: Mend it by hand
+  vigor +small
+  mood -tiny
+  say: {~Glue, string, a borrowed hammer and the whole morning. It holds. You don't trust it, but it holds.|You fix it the way your family always has: slowly, with a lot of opinions from the doorway.}
+
+@event break_home_the_trunk
+title: The Trunk in the Corner
+plan: home
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: house
+tags: home
+scene: An open travelling trunk in the corner of a small bedroom, overflowing with jars, socks and parcels in cloth.
+text: {Your trunk stands open in the corner, and the family keeps putting things in it.|The trunk is open again, and it's filling up again.|The trunk is a family project now.} {season == "winter": Woollen socks, a jar of something pickled, a cake wrapped in three cloths.|Dried fruit, a straw hat nobody asked for, a cake wrapped in three cloths.} {final_year: Someone says "for next term", then stops.|{~The lid won't close.|Someone sits on the lid.|A note is tucked into a sock, not to be read till later.}}
+> left: Take everything
+  health +small
+  gold -tiny
+  say: {~The bargeman charges you double for the weight, but you eat well for a month.|You haul it all back across the lake. Half the corridor smells of pickles until spring.}
+> right: Sneak half of it back
+  guile +small
+  mood -tiny
+  say: {~You smuggle the jars back into the pantry at night. In the morning they're in the trunk again, wrapped tighter.|You leave the hat on a hook by the door. You feel worse about it than you expected.}
+
+# ---------------- Break: working full-time (plan: work) ----------------
+
+@event break_work_stocktake
+title: Stocktaking
+plan: work
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: scales
+tags: job
+scene: A student with a ledger and pencil counting rows of stock in a quiet workplace, the owner reading over their shoulder.
+text: {The quiet days of the break are, says the owner, the time to count everything.|Stocktaking again. You have opinions about how to count things now.|Stocktaking. You count faster than the owner, and slower than you'd like.} {member(tavern): At the Gilded Newt that means every tankard, keg and spoon.|{member(apothecary_clerk): At Pell & Daughters that means a thousand drawers.|{member(broom_courier): At the loft that means every parcel, pigeonhole and broom.|{member(library_assistant): In the library that means books that won't hold still to be counted.|That means everything, twice.}}}} The tally comes out one short.
+> left: Track down the missing one
+  challenge research using guile easy:
+    win:
+      guile +small
+      gold +tiny
+      say: {~You find it wedged behind the counter, where it has been since the last stocktake. The owner tips you for your thoroughness.|You find the mistake in the ledger itself: someone counted a box as a crate. The owner pays you a little extra and says nothing else.}
+    lose:
+      mood -small
+      health -tiny
+      say: {~You search until dusk, on your knees in the dust. It stays missing, and the owner looks at you as if you might have eaten it.|You count everything again and get a different number. Then a third.}
+> right: Write it off and move on
+  mood +small
+  gold -tiny
+  say: {~"Breakage," you write. The owner docks a coin from your pay, on principle.|You write it off, and the owner sighs and takes it from your wages.}
+
+@event break_work_complaint
+title: The Complaint
+plan: work
+class: routine
+tone: tense
+repeat: 4
+weight: 10
+art: hand
+tags: job
+scene: An irate customer leaning over a counter, finger raised, while a young worker stands very still behind it.
+text: {A customer has come back with a complaint and a voice built for it.|Another complaint, another raised voice. You've learned to breathe out first.|This customer has been saving the complaint all week. You can tell.} {member(tavern): The cider was too warm, or too cold, or too cider.|{member(apothecary_clerk): The tonic did nothing, which is worse, they say, than doing something.|{member(broom_courier): The parcel arrived wet, late and somehow smug.|{member(library_assistant): The book they want is out, and they want it in.|The complaint has several parts, all of them loud.}}}} The owner is out.
+> left: Talk them down
+  challenge negotiate medium:
+    win:
+      charm +small
+      gold +tiny
+      say: {~You agree with everything until there's nothing left to agree with. They leave calm, and they leave a tip.|You listen, nod and offer them a chair. By the end they're telling you about their sister.}
+    lose:
+      mood -small
+      gold -tiny
+      say: {~It gets louder. You give them a coin of your own just to make it stop.|They demand the owner, then you, then the owner again, and you pay for the trouble out of your own pocket.}
+> right: Give them what they want
+  gold -tiny
+  mood +tiny
+  say: {~You hand over a refund out of your wages. They leave. The quiet afterwards is worth a coin.|A free one, on you. They take it without thanks, and the next customer is lovely.}
+
+@event break_work_half_hour
+title: Half an Hour Off
+plan: work
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: cup
+tags: job
+scene: A tired student in a work apron standing in a back doorway, looking out at the weather with a cup in hand.
+text: {Half an hour off in the middle of a long holiday shift.|Your half hour again. You know exactly how far it goes now.|Half an hour. You spend the first minute deciding.} {season == "winter": Outside, the snow is coming down sideways.|Outside, the sun is bright enough to hurt.} {~The back room has one chair and one draught.|A colleague has left half a pie, possibly for sharing.|A clock somewhere strikes the wrong hour.}
+> left: Walk out into the weather
+  mood +small
+  health -tiny
+  gold -tiny
+  say: {season == "winter": {~You buy roast chestnuts and eat them walking, snow in your collar. You come back soaked and much happier.|You walk to the lake's edge and back. Your nose will not forgive you.}|{~You buy a cold drink and sit in the sun until your neck burns. Worth it.|You walk to the water and stand there. Half an hour is longer outside.}}
+> right: Nap in the back room
+  health +small
+  mood -tiny
+  say: {~You sleep sitting up and wake with the shape of a crate on your cheek.|You doze off and dream of work, which seems unfair. The bell wakes you mid-shift in the dream.}
+
+@event break_work_short_wages
+title: A Coin Short
+plan: work
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: coin
+tags: job money
+scene: A student counting a small pile of coins on a counter for the second time, frowning, an employer pretending not to watch.
+text: {Wages, counted out into your hand. You count them again.|Wage day. You count your coins at the counter, in front of everyone, on principle.|Wage day. The owner counts slowly, and so do you.} {~It's short by one.|It's short, and there's a button where a coin should be.|It's short by just enough to notice.} {member(tavern): The landlady remembers every tab to the penny, and has somehow forgotten this one.|{member(apothecary_clerk): Old Pell counted it himself, drop by drop.|{member(broom_courier): The dispatch ledger says otherwise, in smudged ink.|{member(library_assistant): The pay envelope says otherwise, in very small writing.|Someone's sums say otherwise.}}}}
+> left: Point it out
+  challenge negotiate easy:
+    win:
+      gold +small
+      charm +tiny
+      say: {~You show your sums. The owner checks them, coughs, and pays you the difference with a little extra for the embarrassment.|You point it out politely and firmly. The missing coin appears, with an apology and a pastry.}
+    lose:
+      mood -small
+      say: {~The owner recounts, gets the same wrong answer, and looks hurt that you asked.|You're told it's for the breakage. You don't remember any breakage. Nobody else does either.}
+> right: Let it go this once
+  gold -tiny
+  charm +tiny
+  say: {~You pocket it without a word. The owner sees you notice, and you're given the easy shift next week.|One coin. You decide you can afford to be the bigger person, just about.}
+
+# ---------------- Regulars (one-time milestones at public places) ----------------
+
+@event refectory_cooks_taster
+title: The Cook's Taster
+place: refectory
+class: milestone
+tone: warm
+weight: 30
+when: visits_to(refectory) >= 6
+art: meal
+tags: life
+scene: A refectory cook holding out a small spoon over the counter to a student, a new pot steaming behind her.
+text: The cook stops you before you reach the bench and holds out a spoon. "You're in here more than the cats," she says. "So you can taste the new pot first. Regulars do." Behind her a dozen steaming pots wait their turn, and the other students in the queue look on with naked envy.
+> left: Give an honest verdict
+  health +small
+  mood -tiny
+  say: You say it wants salt and less of the grey thing. The cook frowns, tastes, and nods. From then on your bowl comes from the bottom of the pot, where the good bits are.
+> right: Praise it to the rafters
+  mood +small
+  say: You declare it the best soup in the kingdom. The cook doesn't believe a word of it, and gives you a second spoonful anyway.
+
+@event library_footnote_bag
+title: Footnote's Approval
+place: library
+class: milestone
+tone: warm
+weight: 30
+when: visits_to(library) >= 6
+art: cat
+tags: life
+scene: A huge old library cat curled asleep on a student's satchel under a reading desk, a student standing over it, uncertain.
+text: You come back from the shelves to find Footnote asleep on your bag, curled tight, one paw over the strap. Footnote sleeps on the reference desk and nowhere else; everybody knows that. A passing librarian stops, looks from the cat to you, and nods, as if something official has happened.
+> left: Wait for him to wake
+  mood +small
+  health -tiny
+  say: You read standing up until the lamps are lit. Footnote wakes, stretches, and walks off without a glance. Your bag smells of warm cat for a week, and you find you don't mind.
+> right: Ease the bag out, inch by inch
+  guile +small
+  say: You slide it free a fraction at a time. Footnote opens one eye, judges you, and allows it. The librarian says she's never seen him allow anything.
+
+@event mabels_your_usual
+title: Your Usual
+place: mabels
+class: milestone
+tone: warm
+weight: 30
+when: visits_to(mabels) >= 6
+art: cup
+tags: life
+scene: A small tea shop counter with a cup already poured and a slice of cake on a plate, the shopkeeper smiling at a student in the doorway.
+text: You haven't even reached the counter. Mabel already has your cup out, the right tea steeping and the cake you always end up choosing on a plate. "Your usual," she says, and it isn't a question. On the slate behind the till, among the regulars, there's a new line in chalk.
+> left: Have the usual
+  mood +small
+  gold -tiny
+  say: It's exactly right, as it always is. Mabel watches you take the first sip and turns back to the shelves, satisfied.
+> right: Ask for something new
+  charm +small
+  mood -tiny
+  say: Mabel's eyebrows rise. Then she smiles like someone handed a puzzle and reaches for a tin from the very top shelf. It's odd and smoky, and you don't like it, and you're glad you asked.
+
+@event bakery_bun_set_aside
+title: The Bun Set Aside
+place: bakery
+class: milestone
+tone: warm
+weight: 30
+when: visits_to(bakery) >= 6
+art: meal
+tags: life
+scene: A baker's son handing a paper-wrapped bun across a flour-dusted counter, a letter written on the paper in flour.
+text: The baker's son reaches under the counter before you've said a word and brings out a bun wrapped in paper, with your initial on it in flour. "Saved from the first batch," he says. "Regulars get the corner ones." Behind him, by the ovens, the oldest baker nods as if she arranged it all herself.
+> left: Insist on paying for it
+  gold -tiny
+  charm +small
+  say: He refuses twice and accepts the third time. The coin goes in a jar by the till marked, in the oldest baker's hand, "for the post".
+> right: Thank him and eat it warm
+  mood +small
+  health -tiny
+  say: It's still warm and far too big, and you eat it on the step in four bites and burn your mouth. You'd do it again tomorrow.
+
+@event grimsbys_right_book
+title: The Right Book, First Time
+place: grimsbys_books
+class: milestone
+tone: light
+weight: 30
+when: visits_to(grimsbys_books) >= 6
+art: book
+tags: life
+scene: A cramped bookshop of leaning shelves, an elderly bookseller holding out a book to a student who has only just stepped inside.
+text: You step into Grimsby's and open your mouth, and Mr Grimsby is already holding out a book. It is exactly the one you came for. He looks as astonished as you are. "Must be getting to know you," he says, and then, worried, "Don't tell anyone."
+> left: Buy it before it changes
+  gold -tiny
+  mood +small
+  say: You pay at once, in case it turns into a book on beekeeping. It doesn't. You carry it all the way back to the castle, checking.
+> right: Ask what else he'd pick for me
+  charm +small
+  mood -tiny
+  say: Restored to form, Mr Grimsby brings you a history of eels and a book of riddles. You buy the riddles. They're very good, and no help at all.
+
+@event courtyard_in_the_know
+title: In the Know
+place: courtyard
+class: milestone
+tone: light
+weight: 30
+when: visits_to(courtyard) >= 6
+art: group
+tags: social
+scene: A knot of students gathered on the rim of a courtyard fountain, leaning in, one waving a newcomer over.
+text: The knot of students by the fountain goes quiet as you pass, and then one of them waves you over. "You're out here every day," says a second-year from Duskgate. "So. What have you heard?" It seems you've been counted among the courtyard's regulars, and regulars are expected to bring news.
+> left: Share something harmless
+  charm +small
+  mood -tiny
+  say: You offer up a rumour about the refectory pudding. It's received with grave interest and is all over the castle by supper, much improved.
+> right: Say I've heard nothing
+  guile +small
+  say: They take your silence as proof that you know everything. By the end of the week, people are asking you for the news.
