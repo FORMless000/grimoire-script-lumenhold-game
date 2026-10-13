@@ -57,6 +57,13 @@ function estimate(eng, opt, actor, eventId) {
 // The amount of a delta/rel/spark statement: a tier word resolves through @balance sizes.
 function amount(eng, st, row, edge) { return st.tier ? st.sign * eng.tierAmount(row, st.tier) : edge === 'max' ? st.max : (st.min + st.max) / 2; }
 
+// Does this option end the run early? Every style but random avoids that when it has a choice.
+function endsEarly(eng, view, key) {
+  const def = eng.optionsOf(eng.c.events[view.id]).find((q) => q.key === key); let hit = false;
+  if (def) G.walkEffects(def.effects, (st) => { if (st.t === 'end' && eng.c.endings[st.ending] && eng.c.endings[st.ending].kind === 'early') hit = true; });
+  return hit;
+}
+
 const RESOURCES = ['health', 'mood', 'gold', 'grades', 'renown'];
 const SKILLS = ['arcana', 'lore', 'alchemy', 'charm', 'vigor', 'guile'];
 
@@ -74,6 +81,8 @@ function scorer(name, weights, guard = 4) {
         const est = estimate(eng, def, view.actor ? view.actor.id : null, view.id);
         let sc = eng.rand() * 0.5;   // small noise breaks ties and varies runs
         if (o.spell && weights.cast) sc += weights.cast;
+        // A player who wants to keep playing avoids an option that ends the run early (the scorer would value it at 0).
+        G.walkEffects(def.effects, (st) => { if (st.t === 'end' && eng.c.endings[st.ending] && eng.c.endings[st.ending].kind === 'early') sc -= 100; });
         for (const [k, v] of Object.entries(est)) {
           let w = weights[k];
           if (w == null) w = weights[k.slice(0, k.indexOf(':') + 1)] ?? (SKILLS.includes(k) ? weights.skill : null) ?? 0;
@@ -94,7 +103,8 @@ const LEGACY = {
   cautious: {
     name: 'cautious',
     pick(eng, view) {
-      const opts = view.options.filter((x) => !x.disabled);
+      const all = view.options.filter((x) => !x.disabled);
+      const opts = all.filter((x) => !endsEarly(eng, view, x.key)).length ? all.filter((x) => !endsEarly(eng, view, x.key)) : all;
       const low = eng.c.order.resources.filter((id) => eng.s.vals[id] <= 25);
       const safe = opts.filter((x) => !x.affects.some((a) => low.includes(a)));
       return (safe.length ? safe : opts)[Math.floor(eng.rand() * (safe.length ? safe.length : opts.length))].key;
@@ -104,9 +114,9 @@ const LEGACY = {
   social: {
     name: 'social',
     pick(eng, view) {
-      const ev = eng.c.events[view.id]; let best = -1, o;
+      const ev = eng.c.events[view.id]; let best = -Infinity, o;
       for (const x of view.options.filter((y) => !y.disabled)) {
-        const def = eng.optionsOf(ev).find((q) => q.key === x.key); if (!def) continue; let sc = eng.rand() * 3;
+        const def = eng.optionsOf(ev).find((q) => q.key === x.key); if (!def) continue; let sc = eng.rand() * 3 - (endsEarly(eng, view, x.key) ? 100 : 0);
         G.walkEffects(def.effects, (st) => { if (st.t === 'rel' || st.t === 'spark') { const a = amount(eng, st, st.t, 'max'); if (a > 0) sc += a; } if (st.t === 'bond' && ['friend', 'close', 'partner'].includes(st.status)) sc += 20; });
         if (sc > best) { best = sc; o = x; }
       }

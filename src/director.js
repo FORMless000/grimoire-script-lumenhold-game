@@ -122,7 +122,7 @@
       }
       this.handleZeroed(ctx);
       s.day.picks = picks;
-      s.hist.push({ t: 'pick', turn: s.turn, picks, at: Date.now() });
+      s.hist.push(Object.assign({ t: 'pick', turn: s.turn, picks, at: Date.now() }, Object.keys(ctx.deltas).length ? { deltas: { ...ctx.deltas } } : {}));   // attendance pay etc.
       this.buildDay(picks, view.locked);
       return this.outcome(ctx);
     },

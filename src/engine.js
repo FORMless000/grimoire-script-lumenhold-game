@@ -240,6 +240,8 @@
           for (const [oid, o] of Object.entries(s.tracks)) if (oid !== id && o.status === 'member' && o.kind === d.kind && (d.kind === 'club' || d.kind === 'job')) { o.status = 'left'; this.grantLegacy(oid, ctx, false); ctx.notes.push({ kind: 'leave', track: oid }); }
           t.status = 'member'; t.perf = t.dropped ? 30 : 50; t.visits = 0; t.due = d.due || 0; t.benched = false;
           ctx.notes.push({ kind: 'join', track: id });
+          // A member is shown the way in: the track's place is discovered (the duel hall, the courier loft, …).
+          if (d.place && this.c.places[d.place] && !s.places[d.place]) { s.places[d.place] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: d.place }); }
           this.grantLegacy(id, ctx, true);
           break;
         }

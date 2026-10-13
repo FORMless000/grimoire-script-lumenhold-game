@@ -105,9 +105,7 @@ start: 50
 color: #6aa0e0
 display: panel
 warn_below: 20
-desc: Your academic standing. At zero you face the disciplinary board.
-on_zero:
-  queue crisis_probation now
+desc: Your academic standing (legacy: it follows the GPA; the GPA decides probation).
 
 # ---------------- Skills ----------------
 
@@ -160,7 +158,7 @@ on: month_start
 label: Dormitory & board
 when: turn > 1 and term
 do:
-  gold -10
+  gold -8
 
 @hook break_rent
 on: month_start
@@ -194,12 +192,78 @@ when: gpa > 0 and gpa < 1.5 and year >= 2
 do:
   queue crisis_probation
 
+# Coursework (phase 3): each enrolled course trains its main skill a little every term month.
+# (Replaces the v0.2 elective states' ticks, which enrolment used to grant two at a time.)
+@hook coursework_evocation
+on: month_start
+label: Coursework
+when: term and enrolled(evocation)
+do:
+  arcana +small
+
+@hook coursework_astromancy
+on: month_start
+label: Coursework
+when: term and enrolled(astromancy)
+do:
+  lore +small
+
+@hook coursework_alchemy
+on: month_start
+label: Coursework
+when: term and enrolled(alchemy)
+do:
+  alchemy +small
+
+@hook coursework_illusion
+on: month_start
+label: Coursework
+when: term and enrolled(illusion)
+do:
+  charm +small
+
+@hook coursework_beastcraft
+on: month_start
+label: Coursework
+when: term and enrolled(beastcraft)
+do:
+  vigor +small
+
+@hook coursework_umbral
+on: month_start
+label: Coursework
+when: term and enrolled(umbral)
+do:
+  guile +small
+
+@hook coursework_artifice
+on: month_start
+label: Coursework
+when: term and enrolled(artifice)
+do:
+  alchemy +small
+
+@hook coursework_starcalling
+on: month_start
+label: Coursework
+when: term and enrolled(starcalling)
+do:
+  lore +small
+
+@hook coursework_hollow_studies
+on: month_start
+label: Coursework
+when: term and enrolled(hollow_studies)
+do:
+  guile +small
+
 @hook term_stress
 on: month_start
 label: Term-time pressure
 when: turn > 1 and term
 do:
-  mood -1
+  if turn % 2 == 0:
+    mood -1
   if month == 4 or month == 10:
     mood -3
 
@@ -208,7 +272,7 @@ on: month_start
 label: Empty purse
 when: gold <= 0 and turn > 1
 do:
-  mood -4
+  mood -2
 
 @hook exhaustion_drain
 on: month_start
@@ -229,7 +293,7 @@ on: month_start
 label: Rest
 when: health < 60 and not has(sick) and not has(injured)
 do:
-  health +2
+  health +3
 
 @hook fame_fades
 on: month_start
@@ -265,4 +329,4 @@ on: month_start
 label: Loneliness
 when: turn > 4 and bonds(friend) + bonds(close) + bonds(partner) == 0
 do:
-  mood -2
+  mood -1

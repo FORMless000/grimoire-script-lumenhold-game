@@ -83,7 +83,7 @@ test('enrolment: pick two of the first-term courses; later courses open later', 
   quiet(() => eng.choose(['evocation', 'astromancy']));
   assert.equal(eng.s.tracks.evocation.status, 'enrolled');
   assert.equal(eng.s.tracks.astromancy.level, 1);
-  assert.ok(eng.s.states.class_pyromancy, 'legacy: enrolling grants the old elective state');
+  assert.ok(!eng.s.states.class_pyromancy, 'phase 3: enrolling no longer grants the v0.2 elective state');
 });
 
 test('term end: exams give grades, a GPA, and passing teaches spells', () => {
