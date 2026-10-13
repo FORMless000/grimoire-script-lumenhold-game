@@ -72,11 +72,13 @@ text: Late at night, a lane behind the bakery. The man in grey has one hand on I
       rel ilse +large
       renown +small
       hollow +1
+      find ilse_truth
       say: Your spell breaks his grip. He looks at his frosted hand with mild surprise, bows, and walks into the dark. Ilse is shaking. "Nobody's ever — " she says, and stops.
     lose:
       flag ilse_taken
       health -large
       hollow +1
+      find ilse_truth
       say: He swats your spell aside like a moth. When you get up, the lane is empty except for a single white glove in the snow.
 > right: Run for Kael
   if met(kael):
@@ -84,11 +86,13 @@ text: Late at night, a lane behind the bakery. The man in grey has one hand on I
     rel kael +large
     rel ilse +medium
     hollow +1
+    find ilse_truth
     say: Kael arrives like a blizzard. The man in grey takes one look at him and leaves without a word. Brother and sister stand in the snow, not touching, not speaking.
   else:
     flag ilse_taken
     mood -medium
     hollow +1
+    find ilse_truth
     say: By the time you're back with help, the lane is empty. There's frost on the cobbles in the shape of a closed door.
 
 @event ilse_kael_reunion

@@ -8,7 +8,7 @@
 #    hollow >= 1  dreams begin, research possible
 #    hollow >= 2  Kael confides (if he trusts you), grey visitors
 #    hollow >= 3  the seventh tower, the headmistress
-#  Finale (year 3, Blossomtide): hs_the_night -> hs_beneath (menu)
+#  Finale (final year, Blossomtide): hs_the_night -> hs_beneath (menu)
 #  Outcomes feed endings: hollow_sealed / hollow_bargain / claimed.
 # ============================================================
 
@@ -26,6 +26,7 @@ text: You dream of the lake from underneath. There is a round door at the bottom
 > left: Write the dream down
   lore +small
   hollow +1
+  find lake_bell
   gain hollow_dreams
   say: Your notes fill four pages. In the morning you don't remember writing the last line: "It is not asleep. It is waiting."
 > right: Ask Seraphine what it means
@@ -48,10 +49,12 @@ text: Late at night in the courtyard, Kael is arguing with a tall man in a grey 
 > left: Slip away unseen
   guile +tiny
   hollow +1
+  find second_shadow
   say: You back into the shadows. The man in grey turns his head and looks straight at where you're hiding, then smiles and walks away.
 > right: Step out and interrupt
   rel kael +large
   hollow +1
+  find second_shadow
   flag confronted_grey
   say: "Everything all right?" The man in grey studies you, nods politely and leaves. Kael's hands are shaking. "You shouldn't have done that," he says. "...Thank you."
 
@@ -73,6 +76,8 @@ text: In the archive vault you find the Founders' Ledger, three hundred years ol
   challenge research trivial:
     win:
       flag knows_founders_seal
+      find knows_founders_seal
+      find founders_ledger
       hollow +1
       lore +small
       say: Ghostly letters emerge: "Seven towers, seven locks. The Star sleeps beneath the water. The key is a star that holds no light." The founders built the academy as a seal.
@@ -97,6 +102,7 @@ text: Kael sits with you on the boathouse jetty. "My family serve something unde
   rel kael +large
   spark kael +tiny
   hollow +1
+  find kael_family
   if bond(kael) == "none":
     bond kael friend
   say: He looks at you for a long moment, and the frost on the jetty melts a little. "Together," he repeats, as if trying out a word from another language.
@@ -105,6 +111,7 @@ text: Kael sits with you on the boathouse jetty. "My family serve something unde
   rel kael -huge
   rel isolde +medium
   hollow +1
+  find kael_family
   say: The headmistress thanks you gravely. The next day Kael is moved to a room in the headmistress's tower. He doesn't look at you anymore.
 
 @event hs_star_mark
@@ -166,6 +173,7 @@ text: The seventh tower has been locked for a century. You find a way in. At the
   challenge deceive trivial:
     win:
       flag star_key
+      find star_key
       hollow +1
       say: A key shaped like a star, black as a hole in the world. The tower shudders as you lift it, then is still.
     lose:
@@ -176,6 +184,7 @@ text: The seventh tower has been locked for a century. You find a way in. At the
   challenge spell trivial:
     win:
       flag star_key
+      find star_key
       hollow +1
       say: You tear through the ward with brute force. The key comes free. Every candle in the academy goes out for one second.
     lose:
@@ -187,7 +196,7 @@ title: The Headmistress Knows
 class: story
 tone: eerie
 trigger: auto
-when: year == 3 and month >= 3 and month <= 7 and hollow >= 3
+when: final_year and month >= 3 and month <= 7 and hollow >= 3
 priority: 45
 actor: isolde
 art: crown
@@ -203,6 +212,7 @@ text: The headmistress summons you to her tower. "You have been following the sa
 > right: "I'll be there."
   meet isolde
   flag warden_trial
+  find seven_locks
   rel isolde +large
   arcana +small
   say: She presses something cold into your hand: a silver ward-ring. "Then learn quickly. You have until Blossomtide."
@@ -212,7 +222,7 @@ title: The Night the Lake Froze
 class: story
 tone: eerie
 trigger: auto
-when: year == 3 and month == 9 and hollow >= 3
+when: final_year and month == 9 and hollow >= 3
 priority: 70
 art: snow
 tags: mystery hollowstar danger
@@ -319,6 +329,7 @@ scene: A girl in white furs standing at the academy gates in a snowstorm that is
 text: A girl in white furs is waiting at the gates in a private snowstorm. Kael's younger sister, Ilse. "If my brother won't open it," she says, "I will. Unless you can give me a reason not to."
 > left: Convince her (Charm)
   flag met_sister
+  find ilse_truth
   challenge negotiate trivial:
     win:
       rel kael +large
@@ -329,6 +340,7 @@ text: A girl in white furs is waiting at the gates in a private snowstorm. Kael'
       say: She listens politely and leaves. "We'll see each other again," she says. "Beneath the water."
 > right: Warn the headmistress
   flag met_sister
+  find ilse_truth
   rel isolde +small
   rel kael -small
   say: Ilse is escorted from the grounds. Kael understands. He says he understands. He's quiet for a long time.
