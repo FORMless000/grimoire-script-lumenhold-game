@@ -1,0 +1,87 @@
+{
+  "name": "courses_a",
+  "at": 1791851763868,
+  "files": [
+    "content/events/pools/courses_a.grim"
+  ],
+  "events": [
+    "evo_snuffing_drill",
+    "evo_bucket_duty",
+    "evo_steady_cup",
+    "evo_shaping_hour",
+    "evo_kettle_pairs",
+    "evo_deep_call",
+    "evo_signature_flame",
+    "astro_tea_rota",
+    "astro_star_names",
+    "astro_cold_dome",
+    "astro_foresight_drill",
+    "astro_starlight_jars",
+    "astro_moving_charts",
+    "astro_far_glimpse",
+    "alch_stir_count",
+    "alch_chopping_board",
+    "alch_bandage_round",
+    "alch_purify_samples",
+    "alch_long_simmer",
+    "alch_volatile_reagents",
+    "alch_original_remedy"
+  ],
+  "contentHash": "42097e",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 169,
+      "total": 169
+    }
+  },
+  "critic": {
+    "batch": "courses_a",
+    "round": 2,
+    "accept": true,
+    "summary": "All 12 round-1 issues are fixed. The 'X again.' / 'as usual' ladder is gone in every event, replaced by details that develop (the smoking brazier, the stove's warm side, the cushion at the simmer); the three up[] says are varied with no rarity claims; the one-time win lines now sit in sequences; evo_deep_call's pacing is in fixed text; astro_tea_rota says Astromancy I and its right option is now the rota itself; the zh lines use 炼金与治愈 I and the stiff 照常 tails are gone. Three small polish points remain, none of them blocking.",
+    "issues": [
+      {
+        "event": "alch_original_remedy",
+        "problem": "The win say's new sequence starts with 'She writes…', but on the second and later showings neither the text nor the win say names Sister Amaranth, so 'She' has no antecedent.",
+        "fix": "Name her in the sequence's first item, e.g. {Sister Amaranth writes your recipe in her own book.|Sister Amaranth adds a note to your page in her book.|Sister Amaranth's book has a whole page of yours now.}"
+      },
+      {
+        "event": "alch_purify_samples",
+        "problem": "The win-say sequence follows how often the event has been seen, not how often you've won. A player whose first win comes on the second showing reads 'drinks a second glass again', which assumes a win they never had.",
+        "fix": "Drop 'again' from the middle step, e.g. 'The lecturer drinks a second glass, and pretends not to.' (the same applies to alch_original_remedy's sequence, which reads fine as it stands)."
+      },
+      {
+        "event": "astro_tea_rota",
+        "problem": "Its fixed text now says 'Astromancy I starts with tea leaves', while astro_star_names' first showing says 'Astromancy I begins with names'. A student who sees both reads two competing first lessons.",
+        "fix": "E.g. 'Astromancy I has a tea-leaf morning every week, and tea leaves require tea.' (zh to match)."
+      }
+    ]
+  },
+  "spotCheck": [
+    "astro_far_glimpse",
+    "evo_deep_call",
+    "evo_steady_cup"
+  ],
+  "accepted": true
+}

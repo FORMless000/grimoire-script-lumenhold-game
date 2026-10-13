@@ -1,0 +1,385 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/pools/courses_a.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@event evo_snuffing_drill
+# en: The Snuffing Drill
+title [1894a9] = 灭火操练
+# en: {Evocation I opens with a lesson nobody expected. "Anyone can start a fire," says the lecturer. "Stopping one is the course."|The braziers are lit before you arrive. You know which one smokes.|Your brazier goes out when you walk in now, out of habit. The lecturer relights it, unamused.} {~The front row smells of singed eyebrow.|Someone's brazier has gone out from fright.|The lecturer is timing you with an egg-timer.}
+text [0c2355] = {塑能术 I 的第一课出乎所有人意料。“谁都会点火，”讲师说，“学会灭火，才是这门课。”|你到之前火盆就已经点上了。哪一只爱冒烟，你心里有数。|如今你一走进来，你的火盆就习惯性地熄了。讲师把它重新点上，脸色不太好看。}{~前排飘着一股烧焦眉毛的味道。|有人的火盆被吓灭了。|讲师正拿着煮蛋计时器给你们计时。}
+# en: A row of iron braziers burning in a scorched lecture hall, students standing before them with their hands raised as if to calm a horse.
+scene [9cf592] = 焦痕斑斑的讲堂里，一排铁火盆燃着火，学生们站在盆前举起双手，像在安抚一匹马。
+# en: Call it back slowly
+opt.left.label [e24679] = 慢慢收回来
+# en: {~The flames shrink into embers, then into a warm ache in your palm.|It takes the whole hour. Your brazier goes out like a sigh.} {season == "winter": The hall is colder afterwards, and it's your fault.|The lecturer nods once.}
+opt.left.say.1 [b0010a] = {~火焰缩成余烬，又缩成你掌心里一阵温热的酸胀。|整整用了一节课。你的火盆像叹了口气似的熄了。}{season == "winter": 之后讲堂冷了一截，这得怪你。|讲师点了一下头。}
+# en: Snuff it in one breath
+opt.right.label [f77f0b] = 一口气掐灭
+# en: {~The fire folds itself into your hand all at once.|One breath, and the brazier is dark.} The lecturer writes something down without looking surprised, which is the compliment.
+opt.right.say.1 [4598da] = {~火一下子把自己折进了你的手心。|一口气，火盆就暗了。}讲师头也不抬地记了一笔，一点也不显得惊讶——这就是夸奖了。
+# en: {~The fire goes out. It goes out up your sleeve first.|The brazier flares, then sulks, then goes out on its own terms.} You spend the rest of the hour holding your wrist in a bucket.
+opt.right.say.2 [eefe9b] = {~火是灭了。不过它先顺着你的袖子灭了一遍。|火盆猛地一窜，接着闹起脾气，最后按它自己的意思熄了。}这节课剩下的时间，你都把手腕泡在水桶里。
+
+@event evo_bucket_duty
+# en: Bucket Duty
+title [af4be1] = 水桶值日
+# en: Every Evocation I lesson needs someone on the buckets: sand for the pyromancers, water for everyone else. {&Today it's your name on the board.|It's your turn again. The rota has a sense of humour.|Your name is on the board. You suspect the rota is personal.} {~The water bucket has a frog in it.|Someone has labelled the sand bucket "Hope".|The water bucket is half empty, because the tidecallers borrowed it.}
+text [9e10c8] = 每节塑能术 I 都得有人守着水桶：沙桶留给火焰术的人，水桶留给其他所有人。{&今天黑板上写的是你的名字。|又轮到你了。这张值日表挺有幽默感。|黑板上又是你的名字。你怀疑这张值日表针对你。}{~水桶里有只青蛙。|有人在沙桶上贴了张标签：“希望”。|水桶只剩半桶，因为唤潮术的人借走了。}
+# en: A student standing at the edge of a busy lecture hall beside a bucket of sand and a bucket of water, watching sparks fly.
+scene [b53c8a] = 一个学生站在热闹讲堂的边上，身旁一桶沙、一桶水，看着火星四溅。
+# en: Mind the buckets, watch closely
+opt.left.label [6fe757] = 守好水桶，看仔细
+# en: {~You put out four sleeves and a textbook, and learn more from their mistakes than from your own.|Watching from the side, you finally see what the lecturer means by "breathe first".} {month == 4 or month == 10: It's the best revision you've done all term.|Nobody thanks the bucket monitor.}
+opt.left.say.1 [a55bf4] = {~你扑灭了四只袖子和一本课本，从别人的失误里学到的比从自己的还多。|站在一旁看着，你终于明白了讲师说的“先呼吸”是什么意思。}{month == 4 or month == 10: 这是你整个学期做过的最好的复习。|没人会感谢守桶的人。}
+# en: Swap for a turn up front
+opt.right.label [38056d] = 换个机会上前练
+# en: {~You trade your duty for a turn at the practice line. Nobody is minding the buckets when your spark jumps the desk.|A first-year takes your buckets for a promise of help with their essay. Your practice goes well; your thumb goes pink.}
+opt.right.say.1 [0094a4] = {~你用值日换了一次上前练习的机会。你的火星跳过课桌时，没人在守水桶。|一个一年级生答应替你守桶，条件是你帮他们改论文。你练得不错，拇指却红了一块。}
+
+@event evo_steady_cup
+# en: The Steady Cup
+title [1aa292] = 稳住杯子
+# en: {Professor Marisol's Tidecalling mornings begin with a full cup held at arm's length. Keep the water level by will alone while she reads poetry aloud.|Marisol has brought a new book of poems, thicker than the last.|You can hold the cup half asleep now, and often are.} {season == "winter": The water has a skin of ice, which she says is cheating.|{~The poem is very long.|The poem is about the sea, and so are your sleeves.|A gull is watching your cup with intent.}}
+text [20d70b] = {玛丽索尔教授的唤潮术早课，从伸直手臂端一满杯水开始。她朗读诗歌时，你得单凭意志让水面保持平稳。|玛丽索尔带了本新诗集，比上一本还厚。|你现在半睡半醒也端得稳杯子，也确实常常半睡半醒。}{season == "winter": 水面结了一层薄冰，她说这算作弊。|{~这首诗很长。|这首诗写的是大海，你的袖子也成了大海。|一只海鸥正意味深长地盯着你的杯子。}}
+# en: A row of students on a stone terrace holding brimming cups at arm's length while a professor reads aloud from a slim book of poems.
+scene [a1e523] = 石砌露台上站着一排学生，手臂伸直端着满溢的杯子，一位教授在一旁捧着薄薄的诗集朗读。
+# en: Hold it to the last line
+opt.left.label [18e90f] = 撑到最后一行
+# en: {~Your arm burns by the third stanza. The water doesn't move.|By the end your arm is shaking and the water isn't.} Marisol closes the book and says, "There. The lake would approve."
+opt.left.say.1 [771247] = {~读到第三节，你的手臂火辣辣地疼。水纹丝不动。|到最后，你的手臂在抖，水却没有。}玛丽索尔合上书：“好了。湖会满意的。”
+# en: Spill, and study her hands
+opt.right.label [9eabd6] = 洒了，转而看她的手
+# en: {~Your cup tips over in the second verse. You spend the rest watching how Marisol turns her wrist, and write it down.|You give up on the cup and watch Marisol instead. She holds a whole pond steady while turning pages.} {final_year: You'll miss her terrible poems.|Your shoes are wet.}
+opt.right.say.1 [69f01a] = {~第二段时你的杯子就翻了。剩下的时间你都在看玛丽索尔怎么转手腕，并把它记了下来。|你放弃了杯子，改看玛丽索尔。她一边翻书，一边让整整一池水纹丝不动。}{final_year: 你会想念她那些糟糕的诗的。|你的鞋湿了。}
+
+@event evo_shaping_hour
+# en: Shaping Hour
+title [45641d] = 塑形课
+# en: Evocation II is shaping: flame made into a sphere, a key, a bird. The lecturer keeps a ledger of every scorch mark in the hall and makes you sign for yours. {Your page is blank so far.|Your page in the ledger is filling up.|The ledger has started a second page for you.} {~Today's shape is a bird.|Today's shape is a key that turns.|Today's shape is your own initial, which is harder than it sounds.}
+text [3f58c5] = 塑能术 II 学的是塑形：把火捏成球、钥匙、鸟。讲师有一本账簿，记着讲堂里每一处焦痕，谁烧的谁签字。{你那一页还是空白。|你在账簿上那一页渐渐写满了。|账簿已经给你开了第二页。}{~今天要捏的是一只鸟。|今天要捏的是一把能转动的钥匙。|今天要捏的是你自己名字的首字母，比听上去难。}
+# en: A lecture hall full of small fires shaped like birds, keys and letters, one of them visibly trying to escape through a window.
+scene [876135] = 讲堂里满是捏成鸟、钥匙和字母形状的小火团，其中一团明显正想从窗户溜走。
+# en: A hundred plain spheres
+opt.left.label [d097ee] = 捏一百个普通火球
+# en: {~Sphere after sphere, until your hands do it without asking you.|It's dull, honest work. Your spheres come out round, every one.} {season == "summer": The hall is an oven by noon.|The lecturer says nothing, which is approval.}
+opt.left.say.1 [e3fa06] = {~一个接一个，直到你的手不用问你就会做。|枯燥而老实的活儿。你捏出的每个火球都是圆的。}{season == "summer": 不到中午，讲堂就成了烤炉。|讲师什么也没说，这就是认可。}
+# en: Try the hard shape
+opt.right.label [183457] = 挑战难的形状
+# en: {~Your bird flaps twice, circles the lectern and goes out on a perch.|Your key turns in the air, with a click you feel more than hear.} The lecturer turns the ledger round to show it hasn't moved.
+opt.right.say.1 [20a781] = {~你的鸟扑了两下翅膀，绕讲台飞了一圈，落在栖木上熄灭了。|你的钥匙在半空中转动，那一声咔哒与其说听见，不如说感觉到。}讲师把账簿转过来给你看：一笔也没添。
+# en: {~Your bird has opinions, and leaves through the window.|Your key comes out as a fork, and a hot one.} You sign the ledger. The lecturer blots it for you, almost kindly.
+opt.right.say.2 [61ccab] = {~你的鸟很有主见，从窗户飞走了。|你的钥匙捏成了一把叉子，还是烫的。}你在账簿上签了字。讲师替你吸干了墨迹，几乎称得上温柔。
+# en: Shape it at a whisper
+opt.up.label [457949] = 轻声唤火塑形
+# en: {~You call the flame softly and it comes, small and obedient as a candle. The lecturer leans in to watch.|The shape comes out right first time, at a whisper. Your page in the ledger stays clean.|The flame stays the size you asked for, which is the whole lesson.}
+opt.up.say.1 [cbb4d4] = {~你轻轻唤火，它便来了，小小的，乖得像一支蜡烛。讲师凑近来看。|形状一次就成了，轻声细语之间。你在账簿上那一页依旧干干净净。|火焰保持着你要的大小——这门课教的就是这个。}
+
+@event evo_kettle_pairs
+# en: Fire Meets Water
+title [566646] = 水火相逢
+# en: {This is why Pyromancy and Tidecalling are taught together. One of you heats the kettle, one cools it, and it must simmer and never boil.|The kettles come out of the cupboard, every dent a story.|You know every kettle by its dents now. Two dents are yours.} {~Your partner is a nervous second-year from Stillwater.|Your partner is very confident, which is worrying.|Your partner yawns hugely.}
+text [d796c3] = {火焰术和唤潮术之所以一起教，就是为了这个。你们一人加热水壶，一人给它降温，要它一直微沸，绝不能滚开。|水壶从柜子里搬了出来，每一处凹痕都有故事。|如今每把水壶你都能凭凹痕认出来。其中两处是你的杰作。}{~你的搭档是个紧张的静水院二年级生。|你的搭档信心十足，这让人担心。|你的搭档打了个大大的哈欠。}
+# en: Pairs of students on either side of copper kettles, one with a palm of flame and one with a palm of water, steam curling between them.
+scene [a6ec61] = 学生两两站在铜水壶两侧，一人掌心托火，一人掌心托水，蒸汽在两人之间袅袅升起。
+# en: Take the fire side
+opt.left.label [60e2d6] = 负责加热
+# en: {~You and your partner find the rhythm together, and the kettle hums all hour.|Push, give, push. The kettle simmers like a contented cat.}
+opt.left.say.1 [43d706] = {~你和搭档一起找到了节奏，水壶整节课都在轻轻哼唱。|推，让，再推。水壶微微沸着，像只心满意足的猫。}
+# en: {~The kettle boils, then whistles, then lifts its lid at you. You both get a faceful of steam.|You push too hard. Your partner panics and freezes the spout.}
+opt.left.say.2 [78b600] = {~水壶滚了，接着鸣笛，然后冲你掀起了盖子。你们俩都被蒸汽扑了一脸。|你推得太猛。搭档一慌，把壶嘴冻住了。}
+# en: Take the water side
+opt.right.label [9f0835] = 负责降温
+# en: {~Cooling is the patient half. You hold the kettle back all hour and your partner gets the credit.|You lend the kettle your cold for an hour and feel drained by noon.} {final_year: The kettle has been here longer than you, and will stay after you've gone.|Your fingertips stay damp until lunch.}
+opt.right.say.1 [432312] = {~降温是需要耐心的那一半。你整节课都在压着水壶，功劳却归了搭档。|你把自己的凉意借给水壶一整节课，还没到中午就觉得被掏空了。}{final_year: 这把水壶在这儿的年头比你长，你走后它也还会在。|你的指尖一直湿到午饭时分。}
+
+@event evo_deep_call
+# en: Calling From the Deep
+title [758834] = 唤自深处
+# en: {Advanced Evocation calls water from the lake bed, where it is cold and old and in no hurry.|The jetty is slick at this hour.|The jetty boards know your boots by now.} The lecturer paces behind the line. The water comes up carrying things. {~Today, a bottle with no message in it.|Today, a single boot, laced.|Today, nothing at all, which is somehow worse.} {season == "winter": Ice grinds at the edges of the column.|Mist sits on the water.}
+text [1fc718] = {高等塑能术要从湖底唤水，那里的水又冷又老，一点也不着急。|这个时辰栈桥很滑。|栈桥的木板已经认得你的靴子了。}讲师在队伍后面来回踱步。水上来时总带着东西。{~今天是一只瓶子，里面没有信。|今天是一只靴子，鞋带还系着。|今天什么也没有，不知怎的反而更糟。}{season == "winter": 冰在水柱边缘咯吱作响。|水面上浮着一层雾。}
+# en: Advanced students on a jetty with their arms raised, a column of dark, old lake water rising toward them out of the depths.
+scene [285a58] = 高年级学生站在栈桥上高举双臂，一柱幽暗古老的湖水正从深处朝他们升起。
+# en: Reach deeper than the rest
+opt.left.label [3c22bf] = 探得比别人更深
+# en: {~You call water up from somewhere it has been still for a century. It rises like a held breath and comes down gently.|The water obeys, then lingers, as if it wanted to talk.} The lecturer stops pacing.
+opt.left.say.1 [17cf40] = {~你从一个静止了百年的地方唤起水来。它像一口屏住的气那样升起，又轻轻落下。|水服从了，随后又流连不去，像是想说点什么。}讲师停下了脚步。
+# en: {~The lake pulls back. You're on your knees on the jetty, cold to the bone.|The water rises, considers you, and drops onto your head.} The lecturer pulls you up with no comment, which is a comment.
+opt.left.say.2 [6ffd18] = {~湖往回一拽。你跪倒在栈桥上，冷到骨头里。|水升起来，打量了你一番，然后浇在你头上。}讲师一言不发地把你拉起来——不说话本身就是评语。
+# en: Keep to the shallows
+opt.right.label [98776f] = 守在浅水
+# en: {~You keep to safer water and log what the others bring up. It's useful and it's dull.|You hold your column at a sensible depth and watch someone else go white with the cold.} {gpa >= 3: The lecturer says you have nothing to prove. You'd like to.|You'll go deeper next time, perhaps.}
+opt.right.say.1 [4acfee] = {~你守着更安全的水域，记录别人捞上来的东西。有用，也无聊。|你把水柱维持在稳妥的深度，看着别人冻得脸色发白。}{gpa >= 3: 讲师说你没什么需要证明的。你倒想证明一下。|下次也许再探深一点。}
+
+@event evo_signature_flame
+# en: A Fire of Your Own
+title [aff5b8] = 属于你的火
+# en: Advanced Evocation asks every student for a signature flame: its own colour, its own heat, its own temper. {Yours is a sulky orange.|Yours has turned a gold that you're quietly proud of.|Yours knows you now. It leans toward you when you come in.} {~Somebody's flame across the hall is green and smells of pine.|Somebody's flame is silver and hums.|The lecturer's own flame is lit on the lectern, blue and tiny, never discussed.}
+text [f6d5f1] = 高等塑能术要求每个学生有一簇自己的标志之火：自己的颜色、自己的温度、自己的脾气。{你的是一团闹别扭的橙色。|你的已经变成一种金色，你暗暗为它骄傲。|你的火认得你了。你一进门，它就朝你倾过来。}{~讲堂那头有人的火是绿的，闻起来像松林。|有人的火是银色的，还会嗡嗡响。|讲师自己的火点在讲台上，小小的，蓝色的，从不提起。}
+# en: A student alone at a stone bench in a dim hall, coaxing a flame of an unusual colour above their palm.
+scene [e0b3dd] = 昏暗的讲堂里，一个学生独自坐在石凳旁，掌心上方哄着一簇颜色不寻常的火。
+# en: Push it somewhere new
+opt.left.label [2cb28f] = 推它去新的地方
+# en: {~Your flame slides into a colour nobody has a name for. The lecturer asks you to do it again, slowly.|For a moment your flame burns without smoke and without heat, just light.}
+opt.left.say.1 [a2a29d] = {~你的火滑进了一种没人叫得出名字的颜色。讲师请你再做一遍，慢一点。|有那么一刻，你的火燃得既无烟也无热，只有光。}
+# en: {~Your flame flares white, takes a bite of your hand and goes back to orange as if nothing happened.|The new colour lasts a heartbeat. The blister lasts a week.}
+opt.left.say.2 [a61aa0] = {~你的火猛地变白，咬了你的手一口，又若无其事地变回橙色。|新颜色只维持了一次心跳。水泡却维持了一个星期。}
+# en: Refine what it already is
+opt.right.label [83d981] = 打磨它本来的样子
+# en: {~You spend the morning making it steadier, not stranger. It's a better flame by noon, and a less exciting one.|You tune the heat by a hair, then another hair.} {final_year: You'll carry this fire out of Lumenhold with you.|It's yours, at least.}
+opt.right.say.1 [43ecdf] = {~你花了一上午让它更稳，而不是更奇。到中午它是一簇更好的火，也是一簇更无趣的火。|你把温度调了一丝，又调了一丝。}{final_year: 你会带着这簇火离开流明堡。|至少，它是你的。}
+
+@event astro_tea_rota
+# en: Another Pot of Tea
+title [62fbae] = 又一壶茶
+# en: Astromancy I has a tea-leaf morning every week, and tea leaves require tea. {The class gets through three pots before ten.|The tea rota has your name on it again.|The teapot greets you like an old colleague.} {~Your cup shows something that is either a ship or a boot.|Your cup shows a shape the textbook calls the ladder. It looks like a spoon.|Your cup shows rain. Your cup always shows rain.}
+text [700f1c] = 星象与占卜 I 每周都有一个读茶叶的早上，而读茶叶得先喝茶。{全班十点前就喝光了三壶。|泡茶值日表上又是你的名字。|茶壶像老同事一样跟你打招呼。}{~你的杯底要么是一艘船，要么是一只靴子。|你的杯底有个形状，课本管它叫梯子。看着像把勺子。|你的杯底显示有雨。你的杯底永远显示有雨。}
+# en: A round classroom under a brass dome, every desk crowded with teacups, a huge brown teapot steaming on the lectern.
+scene [990f2d] = 黄铜穹顶下的圆形教室，每张桌上都挤满茶杯，讲台上一把棕色大茶壶冒着热气。
+# en: Drink the pot and read
+opt.left.label [d0f9d4] = 喝完一壶再读
+# en: {~By the fourth cup your hands are shaking and the leaves are making more sense.|You read six cups in a row and see the pattern underneath the shapes.} {season == "winter": At least the tea is warm.|You will not sleep tonight.}
+opt.left.say.1 [5eb7a5] = {~到第四杯，你的手开始抖，茶叶却越来越说得通了。|你一连读了六杯，看出了形状底下的规律。}{season == "winter": 好在茶是热的。|你今晚别想睡了。}
+# en: Brew the next pot
+opt.right.label [213708] = 去泡下一壶
+# en: {~You take the rota and brew for the room. Watching leaves settle in a whole pot teaches you more than any one cup.|You brew it strong, the way the lecturer likes it, and learn the shapes as they sink.} {season == "summer": The classroom is a steam bath by ten.|Nobody thanks the brewer, but everyone notices weak tea.}
+opt.right.say.1 [7f1a13] = {~你接下值日，给全屋泡茶。看一整壶茶叶慢慢沉淀，比读哪一只杯子学到的都多。|你按讲师喜欢的那样泡得浓浓的，看着茶叶下沉时记住了它们的形状。}{season == "summer": 不到十点，教室就成了蒸笼。|没人感谢泡茶的人，可茶一淡，人人都会发现。}
+
+@event astro_star_names
+# en: Naming the Stars
+title [fb678b] = 群星之名
+# en: {Astromancy I begins with names. Three hundred stars painted on the dome, to be recited on request.|The long pole comes out. The lecturer points; you name.|You dream the star names some nights now, and wake reciting.} {~Today it's the winter constellations.|Today it's the faint stars nobody can see without squinting.|Today the lecturer points at a patch of bare plaster and waits to see who invents a name.}
+text [03e62c] = {星象与占卜 I 从名字学起。穹顶上画着三百颗星，点到哪颗就得背出哪颗。|长杆又拿出来了。讲师指，你报名字。|如今有些夜里你会梦见星名，醒来时还在背。}{~今天背冬季星座。|今天背那些不眯眼就看不见的暗星。|今天讲师指着一块光秃秃的灰泥，等着看谁会编出个名字。}
+# en: Students craning their necks under a painted dome of constellations while a lecturer points upward with a very long pole.
+scene [2a227c] = 学生们仰着脖子，头顶是画满星座的穹顶，讲师拿一根很长的杆子往上指。
+# en: Recite them until perfect
+opt.left.label [d30e26] = 背到一字不差
+# en: {~You chant star names under your breath all morning, like a prayer you don't quite believe in.|By noon you can name the whole southern sky backwards.} {month == 4 or month == 10: The exam is close, and the names are finally sticking.|Your neck aches from looking up.}
+opt.left.say.1 [a33940] = {~你一上午都在低声念星名，像在念一段自己不太信的祷词。|到中午，你已经能把整片南天倒着背出来。}{month == 4 or month == 10: 考试近了，这些名字总算记牢了。|你的脖子仰得发酸。}
+# en: Volunteer to go first
+opt.right.label [391066] = 自告奋勇先背
+# en: {~You name every star the pole touches, including the bare plaster, which you correctly call "nothing".|The lecturer runs out of stars before you run out of names.}
+opt.right.say.1 [3dccc6] = {~长杆点到哪颗你就报出哪颗，连那块灰泥也没难倒你——你准确地称它为“什么也没有”。|讲师的星星都点完了，你的名字还没报完。}
+# en: {~You call a bright star by the name of a lesser one. The lesser one's champion in the back row is offended.|You blank on the fourth star, and a whole constellation falls out of your head.}
+opt.right.say.2 [e4f71b] = {~你把一颗亮星叫成了一颗暗星的名字。后排那颗暗星的拥护者很不高兴。|背到第四颗你脑子一空，一整个星座从你脑袋里掉了出去。}
+
+@event astro_cold_dome
+# en: The Open Dome
+title [06fe07] = 敞开的穹顶
+# en: {Astromancy mornings start before the sun, under a dome cranked open to the sky.|The dome creaks open. You've learned which side of the stove is warmest.|The telescope's eyepiece has the shape of your eye by now.} {season == "winter": It is bitterly cold, and the stove is the most popular student in the class.|{season == "summer": The air is soft and the sky is already going pale.|There's dew on the telescope and on you.}} Somebody has to take the telescope.
+text [7c7b4e] = {星象学的早课在日出前开始，穹顶摇开，直对天空。|穹顶吱呀呀地打开。你已经摸清了火炉哪一边最暖。|望远镜的目镜如今已经是你眼睛的形状了。}{season == "winter": 冷得刺骨，火炉成了班上最受欢迎的同学。|{season == "summer": 空气柔和，天色已经开始泛白。|望远镜上有露水，你身上也有。}}总得有人去守望远镜。
+# en: The observatory's brass dome cranked open to a pale dawn sky, one student at the great telescope and the rest huddled round an iron stove.
+scene [66aa5f] = 观星台的黄铜穹顶摇开，露出淡淡的晨空，一个学生守在巨大的望远镜前，其余人围着一只铁炉子取暖。
+# en: Take the telescope turn
+opt.left.label [d7ad20] = 轮班守望远镜
+# en: {~You track a planet across the eyepiece until your eyelashes stick to it.|The great telescope wanders, as it does. You coax it back to the sky you were assigned.} {final_year: You've looked through it more times than you can count, and you'll still miss it.|Your fingers take an hour to thaw.}
+opt.left.say.1 [4c85c7] = {~你在目镜里追着一颗行星，直到睫毛粘在了上面。|巨大的望远镜照例四处乱转。你把它哄回分给你的那片天。}{final_year: 你已经数不清从它里面看过多少次了，可你还是会想念它。|你的手指过了一个钟头才暖过来。}
+# en: Stay by the stove with charts
+opt.right.label [d88b06] = 守着炉子看星图
+# en: {~The stove students form a little society of the warm and the guilty. You copy charts and hear every complaint.|You annotate the charts while the others shiver. The lecturer notices who is warm.}
+opt.right.say.1 [c05d33] = {~守炉子的学生自成一个小团体，又暖和又心虚。你抄着星图，听遍了每一句抱怨。|别人冻得发抖，你在给星图做批注。讲师注意到了谁是暖和的。}
+
+@event astro_foresight_drill
+# en: Catch the Chalk
+title [f960c8] = 接住粉笔
+# en: {Foresight at Astromancy II is practised on chalk. The lecturer drops a stick without warning; you catch it before it falls, by seeing it a heartbeat early.|The lecturer has opened a new box of chalk, which is a threat.|The lecturer's drops have got sneakier, and so have your hands.} {~The floor is white with failures.|A student from Stillwater has caught four in a row and is unbearable about it.|The lecturer is dropping two at once today.}
+text [3e6f82] = {星象与占卜 II 用粉笔练预见。讲师毫无预兆地松手，你得在粉笔落地前接住它——靠的是提前一个心跳看见它。|讲师拆开了一盒新粉笔，这是一种威胁。|讲师的出手越来越刁钻，你的手也是。}{~地上一片白，全是失手的痕迹。|一个静水院的学生连接了四根，得意得让人受不了。|讲师今天一次扔两根。}
+# en: A lecturer letting a stick of chalk fall from an outstretched hand while a student lunges to catch it a moment before it drops.
+scene [9286f6] = 讲师伸手松开一根粉笔，一个学生扑上前，在它落下前的一瞬接住了它。
+# en: Catch it before it falls
+opt.left.label [351adb] = 落地前接住它
+# en: {~Your hand is there before the chalk is. The lecturer looks at it, then at you, then drops another.|You catch it a breath before the drop.}
+opt.left.say.1 [dd3ad3] = {~粉笔还没到，你的手已经在那儿了。讲师看看粉笔，看看你，又扔了一根。|你在它落下前一口气的工夫接住了。}
+# en: {~You see it falling, clearly, half a second after it lands.|You catch a stick of chalk that wasn't dropped. The real one hits your shoe.}
+opt.left.say.2 [a3fabf] = {~你清清楚楚地看见它在下落——在它落地半秒之后。|你接住了一根根本没扔的粉笔。真的那根砸在了你鞋上。}
+# en: Time the drops instead
+opt.right.label [873a97] = 改为计时观察
+# en: {~You keep a tally of every drop and every catch and start to see the lecturer's rhythm.|You work out that the lecturer always blinks first. It's not foresight, but it helps.} {gpa >= 3: The lecturer asks to see your tally.|Your head aches from looking ahead.}
+opt.right.say.1 [ee94ec] = {~你记下了每一次扔和每一次接，开始摸到讲师的节奏。|你发现讲师每次都先眨眼。这不是预见，但有用。}{gpa >= 3: 讲师要看你的记录。|往前看得太久，你头疼。}
+# en: Let foresight do it
+opt.up.label [b09d2f] = 交给预见术
+# en: {~You stop trying and let the spell look ahead for you. Your hand opens, and the chalk drops into it like a tame bird.|It's a two-chalk day. The spell shows you both, and you catch both.|The lecturer stops mid-drop and just looks at you. You catch it anyway.}
+opt.up.say.1 [c7fd6d] = {~你不再使劲，让咒语替你往前看。你的手一张开，粉笔就像一只驯服的鸟落了进来。|今天是两根粉笔的日子。咒语让你两根都看见了，你两根都接住了。|讲师扔到一半停了手，只是看着你。你照样接住了。}
+
+@event astro_starlight_jars
+# en: Bottling Starlight
+title [5ed382] = 装瓶星光
+# en: {Starlight is gathered before dawn, one star at a time, in glass jars on the observatory roof.|The roof is slippery with frost or dew, depending.|The starlight jars. Yours has a chip in the rim you've grown fond of.} {~Most of the class is aiming for the brightest stars.|The lecturer says faint light keeps longer.|There's a slip of cloud coming in from the lake.}
+text [09dd8e] = {星光要在黎明前采集，在观星台屋顶上一颗一颗地装进玻璃罐。|屋顶上不是霜就是露，滑得很。|星光罐。你那只罐口有个缺口，你已经对它有了感情。}{~班上大多数人都瞄准最亮的星。|讲师说，暗淡的光存得更久。|一缕云正从湖上飘过来。}
+# en: Students on the observatory roof before dawn, holding glass jars up to the sky, each jar glowing faintly with captured light.
+scene [066f15] = 黎明前的观星台屋顶上，学生们把玻璃罐举向天空，每只罐里都微微亮着捕获的光。
+# en: Wait for the faint stars
+opt.left.label [ccc16b] = 等那些暗淡的星
+# en: {~Your jar fills slowly with a cool, pale light that lasts all day in your pocket.|The faint stars come one at a time.} The lecturer holds your jar up and says, "That will keep."
+opt.left.say.1 [b37464] = {~你的罐子慢慢盛满了一种清凉苍白的光，在口袋里亮了一整天。|暗星一颗一颗地来了。}讲师举起你的罐子：“这个存得住。”
+# en: {~The cloud comes in before your jar is half full, and you're cold for nothing.|You wait so long the sun rises on you and burns the jar to plain glass.}
+opt.left.say.2 [b4c891] = {~罐子还没装到一半，云就来了，你白挨了一场冻。|你等得太久，太阳升起来，把罐子晒回了一只普通的玻璃瓶。}
+# en: Take the bright, easy ones
+opt.right.label [a8446a] = 收亮的、容易的
+# en: {~Your jar is full in ten minutes and glows like a lamp. The lecturer calls it a lamp.|Easy light, quickly gathered and gone by noon.} {season == "summer": The short nights are no help.|You're back in bed before the bell.}
+opt.right.say.1 [3e8d4a] = {~十分钟你的罐子就满了，亮得像盏灯。讲师管它叫灯。|来得容易的光，收得快，不到中午就散了。}{season == "summer": 夏夜太短，帮不上忙。|铃响之前你就回到了床上。}
+
+@event astro_moving_charts
+# en: The Charts Move
+title [1e1b5e] = 会动的星图
+# en: {Advanced Astromancy uses charts that move. The inked stars drift to where they will be, not where they are.|The charts are livelier this morning, and one has crept off the table.|You've stopped flinching when the stars move. You still check twice.} {~Your chart keeps rearranging itself into a shape like a doorway.|Your chart is sulking in one corner.|Your chart is going faster than the others.} Pin it and read it, or read it as it goes.
+text [b5e372] = {高等星象学用的星图会动。墨画的星星会漂向它们将要在的位置，而不是现在的位置。|今早的星图格外活泼，有一张已经爬下了桌子。|星星移动时你已经不再吓一跳了。不过你还是会核对两遍。}{~你的星图总是自己排成一个门洞似的形状。|你的星图缩在一角闹脾气。|你的星图跑得比别人的都快。}是把它钉住再读，还是任它走着读？
+# en: A long table covered in star charts whose inked constellations are visibly sliding across the parchment, students pinning corners down.
+scene [042f72] = 长桌上铺满星图，墨画的星座在羊皮纸上清晰可见地滑动，学生们正按住纸角。
+# en: Pin it and trace the drift
+opt.left.label [89dcbd] = 钉住它，描出轨迹
+# en: {~You pin each star and trace its path, and for a moment you can see the whole season ahead laid out in ink.|The drift makes sense all at once.}
+opt.left.say.1 [26a1e5] = {~你把每颗星钉住，描出它的轨迹，有那么一刻，整个下一季在墨迹里铺展在你眼前。|漂移的规律一下子全通了。}
+# en: {~The chart slides out from under your pins and leaves ink on your sleeves.|You trace the drift for an hour and it goes back to where it started, laughing at you in its own way.}
+opt.left.say.2 [c7401b] = {~星图从你的图钉底下溜走，在你袖子上留了一片墨。|你描了一个钟头的轨迹，它又回到了原处，用它自己的方式嘲笑你。}
+# en: Sketch every shape it makes
+opt.right.label [25762b] = 画下它的每个形状
+# en: {~You fill four pages with the shapes the chart passes through. Most are nothing. One is almost something.|You draw it as it moves, like a portrait of someone who won't sit still.} {final_year: Soon the stars will move without you watching.|The lecturer collects your pages without a word.}
+opt.right.say.1 [6872b3] = {~你画满了四页星图经过的形状。大多什么也不是。有一个差点是点什么。|你边看边画，像给一个坐不住的人画肖像。}{final_year: 很快，星星就会在没有你注视的地方移动了。|讲师一言不发地收走了你的画稿。}
+
+@event astro_far_glimpse
+# en: Looking Too Far
+title [2bc51d] = 看得太远
+# en: {At this level Foresight reaches a season ahead. The lecturer allows one glimpse each, timed by an hourglass. People who look longer come back strange.|The dark mirror waits behind its curtain.|The hourglass is turned before you sit down. The lecturer knows your pace.} {final_year: A season from now you'll be gone, which makes the mirror harder to look at.|{~The curtains are drawn against the morning.|Someone before you came out very quiet.}}
+text [aa382a] = {到了这一级，预见术能看到一季之后。讲师只许每人看一眼，用沙漏计时。看得更久的人，回来时都有些不对劲。|暗镜在帘子后面等着。|你还没坐下，沙漏就翻过来了。讲师知道你的节奏。}{final_year: 一季之后你已经不在这里了，这让那面镜子更难看下去。|{~窗帘拉着，挡住了早晨。|你前面那个人出来时一声不吭。}}
+# en: A student staring into a dark mirror at the centre of a curtained room, a lecturer standing close with an hourglass.
+scene [3ee78e] = 拉着帘子的房间中央，一个学生凝视着一面暗色的镜子，讲师拿着沙漏站在近旁。
+# en: Look a season ahead
+opt.left.label [39e11f] = 看一季之后
+# en: {~You see a lit window and a cup going cold, and you know exactly where and when it will be. You keep it to yourself.|You see something small and true. You'll remember it when it happens.}
+opt.left.say.1 [756d9b] = {~你看见一扇亮着的窗和一杯渐凉的茶，清楚地知道那会在何时何地。你没告诉任何人。|你看见一件小而真实的事。等它发生时你会想起来。}
+# en: {~The mirror shows you too much at once. You come out with a nosebleed and a headache that lasts till dinner.|You see nothing, and then you see everything.}
+opt.left.say.2 [9506d2] = {~镜子一下子给你看了太多。你出来时流着鼻血，头疼到晚饭。|你什么也没看见，然后看见了一切。}
+# en: Look only as far as tomorrow
+opt.right.label [9c5502] = 只看到明天
+# en: {~Tomorrow, says the mirror, it will rain at noon. It does. It's not much, but it's right.|You look only one day ahead. Lunch will be soup.} {gpa >= 3: The lecturer says caution is a talent too.|It's safe, and it feels small.}
+opt.right.say.1 [6015ed] = {~镜子说，明天正午会下雨。真下了。不算什么，但它是对的。|你只往前看了一天。午饭是汤。}{gpa >= 3: 讲师说谨慎也是一种天赋。|稳妥，却显得渺小。}
+
+@event alch_stir_count
+# en: Clockwise
+title [255eb5] = 顺时针
+# en: {Alchemy I is mostly stirring, and the stirring is counted aloud by the whole class, in unison, like a choir with spoons.|The chorus is getting good. Someone has started harmonising.|You count stirs in your sleep now, and sometimes on the stairs.} {~Today's draught is a simple tonic.|Today's draught is meant to turn blue at forty.|Today the lecturer keeps changing the count to see who's listening.}
+text [e8bfc8] = {炼金与治愈 I 大半是搅拌，全班齐声数着搅拌的次数，像一支拿勺子的合唱团。|合唱越来越齐了，已经有人开始唱和声。|如今你睡着了都在数搅拌，有时走楼梯也在数。}{~今天的药剂是一种简单的补剂。|今天的药剂应该在第四十下时变蓝。|今天讲师不停地改拍子，看谁在认真听。}
+# en: A laboratory of identical cauldrons, a whole class stirring in unison while the lecturer counts aloud from the front.
+scene [ddbff8] = 一间摆满同样坩埚的实验室，全班整齐划一地搅拌，讲师在前面大声数数。
+# en: Count every stir aloud
+opt.left.label [363802] = 每一下都数出声
+# en: {~By the hundredth stir your voice is gone and your tonic is perfect.|Your count is right and your draught is dull. Both are what was asked.} {month == 4 or month == 10: The exam recipes come back to you in rhythm.|Your wrist aches.}
+opt.left.say.1 [5f0ad2] = {~搅到第一百下，你的嗓子哑了，补剂完美无缺。|你数得一下不差，药剂平平无奇。这两样都正是要求的。}{month == 4 or month == 10: 考试要背的配方随着节拍回到了你脑子里。|你的手腕酸了。}
+# en: Stir by the colour instead
+opt.right.label [b579ed] = 改看颜色来搅
+# en: {~You stop counting and watch the colour. It turns blue exactly when you expect it to.|You lose the count and keep the draught. The lecturer can tell, and allows it.}
+opt.right.say.1 [e21f75] = {~你不再数数，只盯着颜色。它正好在你预料的那一刻变蓝。|你数乱了，药剂却保住了。讲师看得出来，也由着你。}
+# en: {~You watch the colour too closely and miss it changing. The fumes make your eyes water.|Your draught turns a colour the lecturer has never seen. It's not a good sign.}
+opt.right.say.2 [170c75] = {~你盯颜色盯得太紧，反倒错过了它变色的那一刻。烟熏得你眼泪直流。|你的药剂变成了讲师从没见过的颜色。这可不是好兆头。}
+
+@event alch_chopping_board
+# en: Prep Work
+title [41ffcb] = 备料
+# en: {Half of alchemy, says the lecturer, is cutting things up correctly. The ingredients come from Pell & Daughters in the village, packed in straw, every one labelled in a careful hand.|The crate from the village is heavier today.|Your knife knows the way, and your thumb knows where not to be.} {~Today it's roots, to be sliced paper-thin.|Today it's beetles, to be crushed and not thought about.|Today it's berries, which stain everything.}
+text [c17aac] = {讲师说，炼金有一半功夫在于把东西切对。材料来自村里的佩尔父女药铺，用稻草包着，每一样都贴着字迹工整的标签。|今天从村里运来的箱子更沉。|你的刀认得路，你的拇指也知道该躲在哪儿。}{~今天是根茎，要切得薄如纸。|今天是甲虫，要碾碎，而且别多想。|今天是浆果，什么都会被染色。}
+# en: A long scrubbed bench heaped with roots, berries and dried beetles, students bent over chopping boards with small sharp knives.
+scene [89c924] = 一条擦洗干净的长桌上堆满根茎、浆果和干甲虫，学生们俯身在砧板前，握着锋利的小刀。
+# en: Prep for the whole bench
+opt.left.label [65b98b] = 替整张桌备料
+# en: {~You cut enough for six. Your bench-mates bring you tea, which is fair.|You chop for an hour. The roots are perfect and your fingers smell of them till dinner.} {season == "autumn": The berries are fresh this time of year, and it's almost pleasant.|The crate is empty when you're done.}
+opt.left.say.1 [63a8e5] = {~你切了六个人的份。同桌给你端来了茶，这很公平。|你切了一个钟头。根茎切得完美，你的手指一直到晚饭都是那股味道。}{season == "autumn": 这个时节浆果新鲜，切起来几乎算得上愉快。|你切完时，箱子空了。}
+# en: Prep yours, read ahead
+opt.right.label [da51d3] = 切完自己的就预习
+# en: {~You chop quickly and read the next recipe. You nick your thumb on the second root.|You rush the beetles and get to the reading, plus a small cut you'll be explaining all day.}
+opt.right.say.1 [71bc2e] = {~你飞快切完，去读下一道配方。切第二根根茎时划破了拇指。|你匆匆碾完甲虫赶去预习，外加一道小伤口，得解释一整天。}
+
+@event alch_bandage_round
+# en: Bandage Round
+title [f4fd11] = 绷带值班
+# en: {The healing half of Alchemy I is taught in the infirmary, where Sister Amaranth has the class roll bandages and watch her work.|Sister Amaranth inspects every roll, and unrolls one of yours.|Sister Amaranth hands you a roll without looking up.} {~A third-year is in with a burnt hand from Evocation.|A first-year is in with a cold and a great deal to say about it.|The ward is empty, which Sister Amaranth calls a miracle.}
+text [9642df] = {炼金与治愈 I 的治愈部分在医务室上，阿玛兰斯修女让全班卷绷带，看她做事。|阿玛兰斯修女每一卷都要检查，还拆开了你的一卷。|阿玛兰斯修女头也不抬地递给你一卷绷带。}{~一个三年级生上塑能术烧伤了手，正在这儿。|一个一年级生感冒了，而且对此有很多话要说。|病房空着，阿玛兰斯修女称之为奇迹。}
+# en: A sunny infirmary ward where students roll bandages at a long table while a nun in a starched apron checks their work.
+scene [fb0ff4] = 阳光明亮的医务室病房里，学生们在长桌边卷绷带，一位系着浆硬围裙的修女检查他们的活儿。
+# en: Roll bandages and watch
+opt.left.label [216947] = 卷绷带，在旁观察
+# en: {~You roll, and watch Sister Amaranth clean a cut in about three movements.|Your bandages pass inspection.} {season == "winter": The ward fills with sniffling students all morning.|She says nothing, which is high praise.}
+opt.left.say.1 [702c62] = {~你一边卷，一边看阿玛兰斯修女三两下就清理好一道伤口。|你卷的绷带通过了检查。}{season == "winter": 一上午，病房里挤满了吸鼻子的学生。|她什么也没说，这已是很高的评价。}
+# en: Offer to treat a patient
+opt.right.label [e0bf94] = 主动接诊一位病人
+# en: {~You clean and bind a scraped knee neatly. The patient doesn't even wince. Sister Amaranth adjusts one knot.|You treat the burn properly. Sister Amaranth says, "Hm." From her, that is a speech.}
+opt.right.say.1 [506da4] = {~你把擦伤的膝盖清理包扎得干净利落。病人连眉头都没皱。阿玛兰斯修女只调了一个结。|你把烧伤处理得很妥当。阿玛兰斯修女说了声“嗯”。从她嘴里出来，这就算一篇演讲了。}
+# en: {~You bandage the wrong knee. The patient is too polite to say so; Sister Amaranth is not.|Your bandage unrolls itself and the patient has to wait while you start again.}
+opt.right.say.2 [51f5a0] = {~你包错了膝盖。病人太客气没说，阿玛兰斯修女可不客气。|你的绷带自己散开了，病人只好等你从头再来。}
+
+@event alch_purify_samples
+# en: Lake Water Samples
+title [468eaa] = 湖水样本
+# en: {Alchemy II hands out jars of murky lake water, to be made fit to drink. The lecturer has a habit of drinking the results.|The lecturer looks thirsty, which is never a good sign.|The lecturer has brought a favourite cup for this, chipped at the rim.} {~Your jar has a small weed in it.|Your jar is suspiciously green.|Your jar has a tiny snail in it, which you set free.}
+text [f54094] = {炼金与治愈 II 发下一罐罐浑浊的湖水，要处理到能喝。讲师有个习惯，总要亲口喝下成果。|讲师看上去渴了，这从来不是好兆头。|讲师为此带来了一只心爱的杯子，杯沿有个缺口。}{~你的罐子里有一根小水草。|你的罐子绿得可疑。|你的罐子里有只小蜗牛，你把它放生了。}
+# en: A bench lined with jars of murky lake water, a lecturer at the end raising one now-clear jar to drink it.
+scene [3c5465] = 实验桌上摆着一排浑浊湖水的罐子，桌尾的讲师正举起一罐已变清澈的水要喝。
+# en: Purify it thoroughly
+opt.left.label [be5a08] = 彻底净化
+# en: {~Your water comes out clear and sweet. The lecturer drinks it, pauses and nods.|Clean as rainwater.} {The lecturer drinks a second glass, which nobody has seen before.|The lecturer drinks a second glass, and pretends not to.|The lecturer now holds out the cup for yours first.}
+opt.left.say.1 [c0d4c0] = {~你的水出来清澈甘甜。讲师喝了，顿了一下，点点头。|干净得像雨水。}{讲师又喝了第二杯，这可是谁都没见过的。|讲师喝了第二杯，还假装没有。|如今讲师总是先把杯子伸向你的那罐。}
+# en: {~You test it first, just a sip, as the lecturer always does. You spend the afternoon close to the washroom.|Your water clears, then clouds again as you lift it.}
+opt.left.say.2 [0ff9bd] = {~你学讲师的样子先抿了一口试试。整个下午你都待在离盥洗室不远的地方。|你的水清了，你一举起来它又浑了。}
+# en: Filter it the slow way
+opt.right.label [425b53] = 用老办法慢慢滤
+# en: {~Cloth, sand and charcoal, the old way. It takes the whole lesson.|You filter it by hand and write every step down. The lecturer drinks it and says, "Patient."} {final_year: You'll be filtering water like this for the rest of your life, probably.|Your hands are grey with charcoal.}
+opt.right.say.1 [468558] = {~布、沙、木炭，老办法。花了整整一节课。|你亲手过滤，把每一步都记了下来。讲师喝了，说：“有耐心。”}{final_year: 这辈子你大概都会这样滤水了。|你的手被木炭染得灰扑扑的。}
+
+@event alch_long_simmer
+# en: The Long Simmer
+title [191077] = 漫长的文火
+# en: {Some potions simmer for hours and must be watched. Whoever is on watch when the colour turns gets the credit, or the blame.|The class takes turns at the cauldron, and the rota has come round.|Your turn at the simmer. You've brought a cushion this time.} {~The rest of the class has gone to lunch.|The potion is making a noise like a contented cat.|The lecturer has left a note that says "Do not leave it."}
+text [f9f568] = {有些药剂要文火熬上好几个钟头，得有人看着。颜色变的那一刻谁在值守，功劳或黑锅就归谁。|全班轮流守坩埚，值日表又轮回来了。|轮到你守文火了。这回你带了个坐垫。}{~其他人都去吃午饭了。|药剂发出的声音像只心满意足的猫。|讲师留了张字条，上面写着“别走开”。}
+# en: A bubbling cauldron in an empty laboratory, a single student slumped on a stool beside it with an hourglass and a book.
+scene [d188f1] = 空荡荡的实验室里，一口坩埚咕嘟冒泡，旁边一个学生瘫坐在凳子上，手边一只沙漏、一本书。
+# en: Sit the whole watch
+opt.left.label [85d1b0] = 守满整班
+# en: {~Three hours, one cauldron, one hourglass. You see it turn and catch it at the right moment.|You read the same paragraph forty times and stir at every bubble.} {season == "summer": The laboratory is stifling.|By the end, you can tell its mood from the bubbles.}
+opt.left.say.1 [6d77e0] = {~三个钟头，一口坩埚，一只沙漏。你看着它变色，在恰好的时刻接住了。|同一段话你读了四十遍，每冒一个泡就搅一下。}{season == "summer": 实验室闷得透不过气。|到最后，你能从气泡听出它的心情。}
+# en: Set a charm to watch it
+opt.right.label [5a82a4] = 设个咒语替你看
+# en: {~Your charm rings like a bell when the colour turns. You come back from lunch in time to take it off the fire.|The charm works and you get to eat.}
+opt.right.say.1 [e8ee44] = {~颜色一变，你的咒语就像铃铛一样响了。你吃完午饭回来，正好把它端下火。|咒语管用，你也吃上了饭。}
+# en: {~Your charm falls asleep. The potion boils over and you breathe in a lot of steam getting it off the fire.|The charm rings for no reason, three times, and the fourth time you ignore it.}
+opt.right.say.2 [8a8a14] = {~你的咒语睡着了。药剂溢了出来，你把它端下火时吸了一大口蒸汽。|咒语无缘无故响了三次，第四次你没理它。}
+
+@event alch_volatile_reagents
+# en: Volatile Reagents
+title [2e9938] = 不稳定的试剂
+# en: {Advanced Alchemy handles reagents that react to being looked at the wrong way. The lecturer has one rule. One person speaks at a time, and that person is the one holding the vial.|Nobody is speaking. Somebody is breathing too loudly.|You've stopped holding your breath, mostly.} {~Today's vial is pale yellow and fizzing.|Today's vial is dark red and perfectly still, which is worse.|Today's vial is labelled in the lecturer's hand: "Gently."}
+text [d543ef] = {高等炼金学处理的试剂，被人看错一眼都会起反应。讲师只有一条规矩：一次只许一个人说话，那个人就是拿着药瓶的人。|没人说话。有人喘气声太大了。|你已经不再屏住呼吸了，大体上。}{~今天的药瓶是淡黄色的，滋滋冒泡。|今天的药瓶是暗红色的，一动不动，这更糟。|今天的药瓶上是讲师的笔迹：“轻拿。”}
+# en: A hushed laboratory, a student holding a glass vial of glowing liquid at arm's length, everyone else very still behind a screen.
+scene [448114] = 鸦雀无声的实验室里，一个学生伸直手臂捏着一只发光的玻璃药瓶，其余人都一动不动地躲在屏风后。
+# en: Handle it yourself
+opt.left.label [733ca1] = 亲手处理
+# en: {~You measure it drop by drop, speaking only the numbers. It settles exactly as it should.|Your hands don't shake.} The lecturer lets out a breath.
+opt.left.say.1 [4f6cb5] = {~你一滴一滴地量，只开口念数字。它不偏不倚地沉静下来。|你的手一点没抖。}讲师长舒了一口气。
+# en: {~The vial pops like a cork. Your eyebrows survive; your gloves do not.|A drop too many. The flask hisses and coughs out blue smoke, and you spend the hour in the infirmary.}
+opt.left.say.2 [6049c7] = {~药瓶像软木塞一样砰地一响。你的眉毛保住了，手套没保住。|多了一滴。烧瓶嘶嘶作响，咳出一股蓝烟，你在医务室待了一个钟头。}
+# en: Pass it to the steadiest hand
+opt.right.label [699cc4] = 交给手最稳的人
+# en: {~You hand the vial to someone with steadier hands and take careful notes. It stings a little.|You watch someone else do it right. You'll know how next time.} {gpa >= 3: The lecturer says you're allowed to be cautious.|You note every step.}
+opt.right.say.1 [3566b4] = {~你把药瓶递给手更稳的人，自己仔细记笔记。心里有点刺痛。|你看着别人做对了。下次你就知道怎么做了。}{gpa >= 3: 讲师说你可以谨慎。|你记下了每一步。}
+
+@event alch_original_remedy
+# en: A Remedy of Your Own
+title [8095a0] = 你自己的药方
+# en: {Advanced Alchemy asks for an original remedy, invented, written up, and tested under Sister Amaranth's eye.|Another revision. The notebook has more crossings-out than words.|Your remedy is nearly finished. It has been nearly finished for weeks.} {~This version is for headaches.|This version is for the common cold, which has resisted remedies for centuries.|This version is for exam nerves, which you need.}
+text [30102a] = {高等炼金学要求一份原创药方：自己发明、自己写成，在阿玛兰斯修女的注视下试验。|又一次修改。笔记本上划掉的比留下的还多。|你的药方快完成了。它已经“快完成了”好几个星期。}{~这一版治头疼。|这一版治普通感冒——几百年来它一直抵抗着各种药方。|这一版治考前紧张，你正需要。}
+# en: A student at a cluttered bench writing a recipe in a notebook, a small flask of their own remedy steaming beside it.
+scene [811658] = 一个学生在杂乱的实验桌前往笔记本上写配方，旁边一小瓶自制药剂冒着热气。
+# en: Test it on yourself
+opt.left.label [2dfc84] = 在自己身上试
+# en: {~It works. Your headache lifts and your mood with it.|It works better than you expected.} {Sister Amaranth writes your recipe in her own book.|Sister Amaranth adds a note to your page in her book.|Sister Amaranth's book has a whole page of yours now.}
+opt.left.say.1 [b89c43] = {~成了。头疼消了，心情也跟着好了。|效果比你预想的还好。}{阿玛兰斯修女把你的配方抄进了她自己的本子。|阿玛兰斯修女在本子里你那一页添了一条批注。|阿玛兰斯修女的本子里如今有整整一页是你的。}
+# en: {~It does something, but not what you wanted. Your ears are warm for the rest of the day.|It cures the headache and replaces it with hiccups.}
+opt.left.say.2 [d25c0f] = {~它确实起了作用，只是不是你想要的。你的耳朵热了一整天。|头疼治好了，换来了打嗝。}
+# en: Ask Sister Amaranth to review it
+opt.right.label [1828ec] = 请阿玛兰斯修女审阅
+# en: {~She crosses out three ingredients and one adjective.|She reads it twice, then hands it back. "Sound," she says. "Dull."} {final_year: You'll keep this recipe long after you leave Lumenhold.|It's better already, and you hate it a little.}
+opt.right.say.1 [b3c7c0] = {~她划掉了三种材料和一个形容词。|她读了两遍，递还给你。“可靠，”她说，“乏味。”}{final_year: 离开流明堡很久以后，你还会留着这张药方。|已经好多了，你却有点恨它。}
+# en: Purify the base first
+opt.up.label [568fb8] = 先净化基底
+# en: {~You draw every impurity out of the base before you start. The remedy comes out clear and gentle.|The base comes clean in one pass. Sister Amaranth smells it and says nothing, which is approval.|With a pure base, the fault in your recipe finally shows. You fix it.}
+opt.up.say.1 [8873fa] = {~动手之前，你把基底里的每一丝杂质都抽了出来。药剂清澈温和。|基底一遍就净了。阿玛兰斯修女闻了闻，什么也没说——这就是认可。|基底一纯，配方里的毛病终于显了出来。你把它改好了。}
