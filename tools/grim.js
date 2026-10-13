@@ -170,7 +170,7 @@ function analyze(content) {
           if (st.expr) scanExpr(st.expr, w, hasActor);
           if (SPECIAL_IDS.has(st.name)) P('error', w, 'cannot assign to built-in "' + st.name + '"');
           break;
-        case 'say': scanText(st.text, w, hasActor); if (st.text.length > 320) P('warn', w, 'say text is long (' + st.text.length + ' chars)'); break;
+        case 'say': { scanText(st.text, w, hasActor); const n = longestRendering(st.text); if (n > 320) P('warn', w, 'say text is long (' + n + ' chars at its longest)'); break; }
         case 'flag': st.names.forEach((n) => add(A.flagsSet, n, w)); break;
         case 'unflag': break;
         case 'gain': case 'lose': if (!content.states[st.state]) P('error', w, st.t + ': unknown state "' + st.state + '"'); add(A.statesRef, st.state, w); if (st.dur) scanExpr(st.dur, w, hasActor); break;
@@ -230,7 +230,7 @@ function analyze(content) {
     if (!e.art) P('info', w, 'event has no art');
     scanExpr(e.when, w, hasActor); scanExpr(e.weight, w, hasActor);
     scanText(e.title, w, hasActor); scanText(e.text, w, hasActor); scanText(e.scene, w, hasActor);
-    if (e.text && e.text.length > 480) P('warn', w, 'card text is long (' + e.text.length + ' chars; aim for < 400)');
+    { const n = longestRendering(e.text || ''); if (n > 480) P('warn', w, 'card text is long (' + n + ' chars at its longest; aim for < 400)'); }
     scanEffects(e.on_show, w, hasActor);
     if (e.actor === 'any') A.legacy.push({ where: w, what: '"actor: any" (use a cast: role)' });
     if (e.place && !content.places[e.place]) P('error', w, 'place: unknown place "' + e.place + '"');
@@ -288,6 +288,21 @@ function analyze(content) {
 // Worldbook blocks (design §3): references, vocabularies, structured values, adults-only romance.
 // Event classes (design §8.7). Option values come from the preview engine on a fresh game state, in
 // medium-equivalents: Σ weight × change / medium-size, using @balance weights and sizes.
+// Length of the longest way a text can render: each {…|…} group counts as its longest alternative
+// (conditions dropped), innermost first.
+function longestRendering(text) {
+  let t = String(text), prev;
+  do {
+    prev = t;
+    t = t.replace(/\{([^{}]*)\}/g, (m, inner) => {
+      if (!inner.includes('|') && !/^[^:]+:\s/.test(inner)) return m.length > 12 ? 'xxxxxxxx' : 'xxxxxx';   // a token ({npc}, {=expr})
+      const body = inner.replace(/^[~&]/, '').replace(/^[^|:]+:\s?/, (c) => (/[=<>!]|^\s*[a-z_]+(\(|\s*$)/.test(c.slice(0, -1).trim()) || /^[a-z_]+:\s?$/.test(c) ? '' : c));
+      return body.split('|').reduce((a, b) => (b.length > a.length ? b : a), '');
+    });
+  } while (t !== prev);
+  return t.length;
+}
+
 function budgetCheck(e, content, P) {
   const bal = content.balance || {};
   const weights = bal.weights || {};
@@ -304,7 +319,10 @@ function budgetCheck(e, content, P) {
   let larges = 0;
   // Track events are previewed in their track's context (performance and progress count as costs).
   const prevCur = eng.s.cur;
-  eng.s.cur = { id: e.id, track: e.track || null };
+  // Cast events get a stand-in cast (distinct characters), so `rel friend -tiny` counts as a cost.
+  let cast = null;
+  if (e.cast) { const pool = Object.keys(content.npcs); cast = {}; for (const r of e.cast) cast[r.role] = r.pool === 'fixed' ? r.npc : pool.find((id) => !Object.values(cast).includes(id)); }
+  eng.s.cur = { id: e.id, track: e.track || null, cast };
   for (const o of e.options) {
     let pv; try { pv = eng.preview(e.id, o.key, actor); } catch (err) { continue; }
     const value = (d) => Object.entries(d).reduce((a, [k, r]) => a + weight(k) * ((r[0] + r[1]) / 2) / medium(k), 0);

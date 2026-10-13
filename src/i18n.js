@@ -259,7 +259,7 @@
         if (!out.blocks[cur]) { out.blocks[cur] = {}; out.order.push(cur); }
         return;
       }
-      m = line.match(/^([A-Za-z0-9_.-]+)(?:\s+\[([0-9a-f]{6})\])?\s*=\s?(.*)$/);
+      m = line.match(/^([A-Za-z0-9_.@-]+)(?:\s+\[([0-9a-f]{6})\])?\s*=\s?(.*)$/);
       if (!m) { out.errors.push(path + ':' + (i + 1) + ': expected "key [hash] = text", "@block id" or "# comment"'); return; }
       if (!cur) { out.errors.push(path + ':' + (i + 1) + ': entry before any @block header'); return; }
       if (out.blocks[cur][m[1]]) out.errors.push(path + ':' + (i + 1) + ': duplicate key "' + m[1] + '" in @' + cur.replace(':', ' '));
@@ -331,11 +331,17 @@
       const bkey = kind === 'game' ? 'game' : kind + ':' + d.id;
       for (const f of FIELDS[kind] || []) if (typeof d[f] === 'string' && d[f]) cb(bkey, f, d[f], (v) => { d[f] = v; }, d);
       if (kind === 'game' && Array.isArray(d.months)) d.months.forEach((m, i) => cb(bkey, 'month.' + (i + 1), m, (v) => { d.months[i] = v; }, d));
-      for (const ef of EFFECT_FIELDS[kind] || []) { let n = 0; walkSays(d[ef], (st) => { n++; cb(bkey, ef + '.say.' + n, st.text, (v) => { st.text = v; }, d); }); }
+      // A say and its say[npc] overrides: the override's key is the say's key plus @npc.
+      const says = (prefix, effects) => { let n = 0; walkSays(effects, (st) => {
+        n++; const k = prefix + '.say.' + n;
+        cb(bkey, k, st.text, (v) => { st.text = v; }, d);
+        for (const who of Object.keys(st.overrides || {})) cb(bkey, k + '@' + who, st.overrides[who], (v) => { st.overrides[who] = v; }, d);
+      }); };
+      for (const ef of EFFECT_FIELDS[kind] || []) says(ef, d[ef]);
       if (kind === 'event') for (const o of d.options || []) {
         cb(bkey, 'opt.' + o.key + '.label', o.label, (v) => { o.label = v; }, d);
         if (o.hint) cb(bkey, 'opt.' + o.key + '.hint', o.hint, (v) => { o.hint = v; }, d);
-        let n = 0; walkSays(o.effects, (st) => { n++; cb(bkey, 'opt.' + o.key + '.say.' + n, st.text, (v) => { st.text = v; }, d); });
+        says('opt.' + o.key, o.effects);
       }
     }
   }
