@@ -463,7 +463,7 @@
             case 'met': return !!(s.npcs[a[0]] && s.npcs[a[0]].met);
             case 'npc_is': return actor === a[0];
             case 'romanceable': return !!(eng.c.npcs[a[0]] && eng.c.npcs[a[0]].romance);
-            case 'tagged': return !!(eng.c.npcs[a[0]] && (eng.c.npcs[a[0]].tags || []).includes(a[1]));
+            case 'tagged': { const d = eng.c.npcs[a[0]]; return !!d && ((d.tags || []).includes(a[1]) || d.role === a[1]); }   // a character's role counts as a tag (student, prefect, professor, staff, outsider)
             case 'seen': return s.seen[a[0]] || 0;
             case 'since': return s.last[a[0]] != null ? s.turn - s.last[a[0]] : 999;
             case 'chosen': return s.choices[a[0]] === a[1];

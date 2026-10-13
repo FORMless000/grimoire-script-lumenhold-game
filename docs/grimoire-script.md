@@ -136,7 +136,7 @@ start_rel: 0
 desc: Brilliant, impatient and used to winning.
 ```
 
-`pronouns` must start with `she`, `he` or `they` (this drives `{they}`, `{them}` …). `short` is the name `{npc}` prints (use it when the first word of `name` is a title: `short: Professor Thorne`). `romance: true` allows `love` to grow. `look` is optional and fixes the procedural portrait (hair 0–7, skin 0–5, style 0–4). `tags` can be tested with `tagged(npc, faculty)`.
+`pronouns` must start with `she`, `he` or `they` (this drives `{they}`, `{them}` …). `short` is the name `{npc}` prints (use it when the first word of `name` is a title: `short: Professor Thorne`). `romance: true` allows `love` to grow. `look` is optional and fixes the procedural portrait (hair 0–7, skin 0–5, style 0–4). `tags` can be tested with `tagged(npc, faculty)`; the character's `role:` counts as a tag too (`tagged(friend, student)` excludes staff, professors and outsiders such as Ilse).
 
 Each NPC carries a relationship record:
 
