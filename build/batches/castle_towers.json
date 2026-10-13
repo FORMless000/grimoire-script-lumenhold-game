@@ -1,0 +1,85 @@
+{
+  "name": "castle_towers",
+  "at": 1791857673460,
+  "files": [
+    "content/events/pools/castle_towers.grim"
+  ],
+  "events": [
+    "observatory_night_log",
+    "observatory_one_star_each",
+    "observatory_roof_ledge",
+    "observatory_scraped_word",
+    "workshop_spare_bench",
+    "workshop_volunteer",
+    "workshop_stirring_cauldron",
+    "workshop_glass_cabinet",
+    "ledger_office_unprintable",
+    "ledger_office_deadline_night",
+    "ledger_office_drying_line",
+    "headmistress_tower_stone_owl",
+    "headmistress_tower_tea",
+    "headmistress_tower_window_seat",
+    "restricted_section_breathing_shelves",
+    "restricted_section_lantern",
+    "restricted_section_chained_book",
+    "restricted_section_handleless_door",
+    "gargoyle_passage_old_marks",
+    "gargoyle_passage_offering_dish",
+    "gargoyle_passage_parapet_cards",
+    "seventh_tower_stair_count",
+    "seventh_tower_dust_room",
+    "seventh_tower_lake_window"
+  ],
+  "contentHash": "a519f0",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 180,
+      "total": 180
+    }
+  },
+  "critic": {
+    "batch": "castle_towers",
+    "round": 2,
+    "accept": true,
+    "summary": "All six round-1 issues are fixed in both en and zh. The lake window now stays ambiguous (\"a sound too low to be wind ... the pipes\"), so the plot-safety problem is gone. Its third sequence line is choice-neutral, the lantern progression is anchored on the player, the lock-pick win grants guile, the scraped-word line names Advanced Astromancy, and Corvin's win tease no longer misuses 'saint'. A full re-read found no new canon, safety, class or plot-safety problems. Two small polish points remain.",
+    "issues": [
+      {
+        "event": "observatory_one_star_each",
+        "problem": "Recast rule: the sticky third text line '{here} is at the telescope, as if {they} never left' implies the same person as last time, but here is re-filled each showing (Seraphine or Kael at night).",
+        "fix": "Anchor it on the place, e.g. 'Someone is always at the telescope when you arrive; tonight it's {here}.' Update the zh line to match."
+      },
+      {
+        "event": "restricted_section_lantern",
+        "problem": "The friend role (rel >= 10 and not faculty) can cast Bram (prefect) or Ilse (outsider), but the scene reads as two students sneaking a read. pools.md says classmate roles should use tagged(friend, student).",
+        "fix": "Change the role to 'friend: any where rel(friend) >= 10 and tagged(friend, student)'."
+      }
+    ]
+  },
+  "spotCheck": [
+    "workshop_stirring_cauldron",
+    "ledger_office_drying_line",
+    "seventh_tower_lake_window"
+  ],
+  "accepted": true
+}

@@ -1,0 +1,18 @@
+{
+  "batch": "castle_towers",
+  "round": 2,
+  "accept": true,
+  "summary": "All six round-1 issues are fixed in both en and zh. The lake window now stays ambiguous (\"a sound too low to be wind ... the pipes\"), so the plot-safety problem is gone. Its third sequence line is choice-neutral, the lantern progression is anchored on the player, the lock-pick win grants guile, the scraped-word line names Advanced Astromancy, and Corvin's win tease no longer misuses 'saint'. A full re-read found no new canon, safety, class or plot-safety problems. Two small polish points remain.",
+  "issues": [
+    {
+      "event": "observatory_one_star_each",
+      "problem": "Recast rule: the sticky third text line '{here} is at the telescope, as if {they} never left' implies the same person as last time, but here is re-filled each showing (Seraphine or Kael at night).",
+      "fix": "Anchor it on the place, e.g. 'Someone is always at the telescope when you arrive; tonight it's {here}.' Update the zh line to match."
+    },
+    {
+      "event": "restricted_section_lantern",
+      "problem": "The friend role (rel >= 10 and not faculty) can cast Bram (prefect) or Ilse (outsider), but the scene reads as two students sneaking a read. pools.md says classmate roles should use tagged(friend, student).",
+      "fix": "Change the role to 'friend: any where rel(friend) >= 10 and tagged(friend, student)'."
+    }
+  ]
+}
