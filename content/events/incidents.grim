@@ -1,0 +1,304 @@
+# ============================================================
+#  Incidents and money sinks (design §8.2).
+#  A) forced sinks: setbacks that cost crowns or health, always
+#     with a way to soften them. Gated on gold so they drain
+#     savings rather than break poor players.
+#  B) voluntary sinks: patronage and donations for the well-off.
+#  C) year three: a term of Thornwick exchange students.
+# ============================================================
+
+# ---------------- A) Forced sinks ----------------
+
+@event inc_fever_bill
+title: A Fever and a Bill
+class: incident
+tone: tense
+when: turn >= 3 and gold >= 20 and seen(inc_fever_bill) < 2 and since(inc_fever_bill) >= 12
+weight: 6
+repeat: 2
+art: potion
+tags: life money
+scene: A pale student in an infirmary bed, a stern nurse holding out a small blue bottle and a folded bill.
+text: You wake in the infirmary with a fever that makes the ceiling breathe. Sister Amaranth holds up a small blue bottle. "This clears it by morning. It is also not free," she says. "Or you can sweat it out, like your ancestors."
+> left: Buy the tonic
+  gold -large
+  health -small
+  say: {~It tastes of tin and regret.|It tastes like a pond that has given up.} By morning the ceiling is a ceiling again, and your purse is noticeably lighter.
+> right: Sweat it out
+  health -medium
+  study -small
+  say: Three days of damp sheets and strange dreams about stairs. You miss a week of notes, and come back feeling like a wrung-out dishcloth.
+
+@event inc_broken_wand
+title: Snapped on the Stairs
+class: incident
+tone: tense
+when: turn >= 3 and gold >= 20 and seen(inc_broken_wand) == 0
+weight: 6
+repeat: 1
+art: wand
+tags: magic money
+scene: A student kneeling on a stone staircase, holding the two halves of a wand that still fizzes faintly at the break.
+text: The moving stairs shift without warning. You catch yourself; your wand doesn't. It lies in two pieces on the landing, still fizzing at the break like a sulking firework.
+> left: Have it properly rebound
+  gold -large
+  say: The repairer in the village tuts, splints it with silver wire and charges you for every tut. It works better than before, which is somehow worse.
+> right: Bind it with string and hope
+  challenge spell easy:
+    win:
+      mood -tiny
+      say: It holds. It spits a little when you cast, like a cat that forgives you but wants it noted.
+    lose:
+      health -small
+      study -small
+      say: It holds for three days, then sneezes a spell backwards. Your eyebrows grow back within the week; your marks take longer.
+
+@event inc_library_fine
+title: The Overdue Notice
+class: incident
+tone: light
+when: turn >= 3 and gold >= 20 and seen(inc_library_fine) < 2 and since(inc_library_fine) >= 12
+weight: 6
+repeat: 2
+art: paper
+tags: study money
+scene: A prefect in a red sash holding out a long paper notice, a book with teeth marks on the desk between them.
+text: A prefect in a red sash slides a notice across your desk. The library book you borrowed has come back late, damp and, somehow, with teeth marks. "Damages," she says. "Or you can argue. People do. It never goes well."
+> left: Pay the fine
+  gold -medium
+  mood -tiny
+  say: She stamps your receipt with great satisfaction. The book is reshelved in a cage, which feels like the right outcome for everyone.
+> right: Argue that the book bit first
+  challenge negotiate medium:
+    win:
+      mood +tiny
+      say: You produce the bite on your thumb as evidence. The prefect inspects it, then the book, and halves the fine to nothing. "Fair," she says. "It has a history."
+    lose:
+      gold -large
+      study -tiny
+      say: The prefect writes down every word you say, then doubles the fine for "contempt of librarian". You pay it, and a demerit besides.
+
+@event inc_letter_home
+title: Bad Weather at Home
+class: incident
+tone: grim
+when: turn >= 3 and gold >= 30 and seen(inc_letter_home) == 0
+weight: 6
+repeat: 1
+art: letter
+tags: home money
+scene: A student at a window reading a rain-spotted letter, a small pile of coins on the sill beside them.
+text: A letter from home, written in a hurry. A storm took half the roof, and the repairs will cost more than anyone has. Nobody asks you for anything. That's how you know it's bad.
+> left: Send crowns home
+  gold -large
+  mood -small
+  say: You send everything you can spare and a little you can't. The reply comes a month later: a drawing of a roof, finished, and a pressed flower.
+> right: Write back with love, not money
+  mood -medium
+  say: You write four pages and keep your purse. The reply is kind. It doesn't mention the roof. That night you lie awake and listen to the rain.
+
+@event inc_stolen_purse
+title: Market Day Fingers
+class: incident
+tone: tense
+when: turn >= 3 and gold >= 20 and seen(inc_stolen_purse) < 2 and since(inc_stolen_purse) >= 12
+weight: 6
+repeat: 2
+art: pouch
+tags: money danger
+scene: A crowded village square on market day, a figure in a grey hood slipping away between the stalls with a small purse.
+text: Somewhere between the cheese stall and the man selling enchanted socks, your purse stops being yours. You catch a grey hood slipping between the stalls, already three stalls ahead.
+> left: Run after the hood
+  challenge feat medium:
+    win:
+      gold -small
+      health -tiny
+      say: You corner the thief behind the bakery. The purse comes back a little lighter; they'd already spent some on a bun. You let them keep the bun.
+    lose:
+      gold -large
+      health -small
+      say: You trip over a goose, then a second goose. When you get up, the hood is gone, and so are your crowns.
+> right: Let it go
+  gold -large
+  mood -small
+  say: You tell yourself it's only money. You tell yourself that all the way back up the hill, and it never quite takes.
+
+@event inc_hiccuping_robe
+title: The Robe That Hiccups
+class: incident
+tone: light
+when: turn >= 3 and gold >= 20 and seen(inc_hiccuping_robe) == 0
+weight: 6
+repeat: 1
+art: cauldron
+tags: magic money
+scene: A student in potion-stained robes jolting mid-step as their robe gives a visible hiccup, classmates hiding smiles.
+text: A cauldron two benches down boils over, and a whole batch of Draught of Unending Hiccups soaks your best robe. The stain fades by supper. The hiccups don't. Every few minutes, the robe jumps.
+> left: Buy a new robe
+  gold -medium
+  mood -tiny
+  say: The tailor in the village fits you in an afternoon and charges you for a week. The old robe now hiccups quietly in the bottom of your trunk.
+> right: Wear it with dignity
+  renown -small
+  mood -small
+  say: {~It hiccups through a lecture on silence.|It hiccups through the headmistress's announcements.} Someone starts a tally on the common-room wall. You are briefly famous for the wrong reasons.
+
+# ---------------- B) Voluntary sinks: patronage ----------------
+
+@event patron_tournament_purse
+title: A Patron's Purse
+class: routine
+tone: light
+when: (month == 7 or month == 8) and gold >= 80
+weight: 10
+repeat: 12
+art: trophy
+tags: festival money
+scene: A festival committee table on a lawn, a thin purse on a velvet cushion and a list of patrons with plenty of space left.
+text: The Spring Tournament committee has a velvet cushion, a very thin prize purse and a list of patrons with a lot of room left on it. Patrons are read out before the first bout, in a loud voice, to the whole academy.
+> left: Fund the champion's purse
+  gold -large
+  renown +medium
+  say: {~Your name is read out first, and mispronounced only slightly.|Your name rings across the lawn before the first bout. Two first-years bow to you, unsure why.} The champion thanks you from the podium.
+> right: Put in a few crowns
+  gold -small
+  renown +tiny
+  say: Your name is read out somewhere near the end, between a professor's cat and "a well-wisher". It still counts.
+
+@event patron_ledger_print
+title: Paper for the Press
+class: routine
+tone: light
+when: turn >= 6 and gold >= 80
+weight: 6
+repeat: 12
+art: paper
+tags: social money
+scene: A cramped office under a staircase, a groaning printing press, and a young editor holding out an empty paper tray.
+text: Nessa Quill corners you by the library stairs, holding an empty paper tray like evidence. "Special edition. Biggest story of the term. No paper. You," she says, pointing, "look solvent. Patrons get their name on the masthead."
+> left: Pay for the whole print run
+  gold -large
+  rel nessa +medium
+  renown +small
+  say: "Headline: generous student saves free press," Nessa says, already writing it. The masthead lists you in tiny capitals, which she says is the most honour anyone gets.
+> right: Buy one small advertisement
+  gold -small
+  renown +small
+  say: You buy a corner of page four. Nessa writes your copy for you, and somehow it reads like a confession. People quote it at you for a week.
+
+# ---------------- B) Voluntary sinks: donations ----------------
+
+@event donate_greenhouse_glass
+title: The Broken Panes
+class: routine
+tone: warm
+when: turn >= 3 and gold >= 80 and not discovered(greenhouses)
+weight: 8
+repeat: 3
+art: leaf
+tags: nature money
+scene: A collection tin on a garden gate, broken glass glittering in the grass behind it and steam escaping from a damaged greenhouse.
+text: Last night's hail went through the greenhouse glass like a hammer through toffee. A collection tin hangs on the gate with a hand-lettered sign: every pane paid for keeps the mandrakes from catching cold.
+> left: Pay for a whole pane
+  gold -large
+  mood +small
+  discover greenhouses
+  say: A gardener with mud to the elbows insists on showing you your pane. Inside it is warm, green and loud with opinions. You are welcome, she says, any morning.
+> right: Drop in a coin and walk on
+  gold -tiny
+  mood -tiny
+  say: The coin clinks into the tin. Behind the gate, something small and leafy sneezes. You feel, obscurely, that you've been judged.
+
+@event donate_duel_floor
+title: The Scorched Floor
+class: routine
+tone: light
+when: turn >= 3 and gold >= 80 and not discovered(duel_hall)
+weight: 8
+repeat: 3
+art: sword
+tags: club money
+scene: A sweaty duellist with a collection box at the foot of a stair, scorched floorboards stacked behind them.
+text: A duellist with a bandaged hand rattles a box at the foot of the east stair. "The hall floor," he says. "Someone set it on fire again. Every board you buy, we carve your initials on the underside. Honour, and splinters."
+> left: Buy a row of floorboards
+  gold -large
+  renown +small
+  discover duel_hall
+  say: He drags you upstairs to see. The hall smells of smoke and wax, and the practice dummies glare at you. Your initials go on the underside of the board by the door.
+> right: Give him a coin for the bandage
+  gold -tiny
+  mood -tiny
+  say: He thanks you with exaggerated courtesy and goes back to rattling. Somewhere above, steel rings on steel, and nobody invites you up.
+
+# ---------------- C) Year three: the Thornwick exchange ----------------
+
+@event xchg_arrival
+title: Guests in Green
+class: routine
+tone: light
+when: year == 3
+weight: 12
+repeat: 1
+art: mask
+tags: social rival
+scene: Four students in green Thornwick robes standing in a grand entrance hall, the portraits on the walls all turned to stare at them.
+text: Four students in Thornwick green arrive for a term, with trunks and very polite smiles. Within an hour every portrait in the entrance hall is winking at the wrong people. A prefect looks around for someone, anyone, to show them the castle.
+> left: Offer to show them round
+  challenge negotiate easy:
+    win:
+      renown +small
+      charm +small
+      say: You give the full tour, moving stairs included. By the end the boy with the sketchbook admits Lumenhold's towers are "not as crooked as reported".
+    lose:
+      mood -small
+      renown -tiny
+      say: Halfway round, they convince you a wall is a door. It isn't. They are very sorry, and laughing too hard to say so.
+> right: Watch them from a distance
+  guile +small
+  mood -tiny
+  say: You watch them all week. They watch back. You learn that the quiet one counts doorways, and that they know you're watching.
+
+@event xchg_ink_cuffs
+title: The Ink-Stained Cuffs
+class: routine
+tone: tense
+when: year == 3 and seen(xchg_arrival) > 0
+weight: 12
+repeat: 1
+art: book
+tags: study rival
+scene: A library at dusk, a student in green robes with ink-stained cuffs copying from a book chained to a desk.
+text: Late in the library, you find the Thornwick girl with the ink-stained cuffs copying from a chained book she shouldn't have reached. She sees you see her. "It's only history," she says. "Unless you want it to be a scandal."
+> left: Report her to the librarian
+  renown +small
+  mood -small
+  say: The librarian thanks you, coldly. The Thornwick girl is confined to the guest wing for a week. She nods to you at dinner afterwards, as if you had both played well.
+> right: Keep quiet, for a favour
+  guile +small
+  renown -tiny
+  say: She tears out the page she copied and hands you the other half of her notes instead. "We're even," she says. You're fairly sure you aren't.
+
+@event xchg_farewell
+title: A Thornwick Farewell
+class: milestone
+tone: warm
+when: year == 3 and seen(xchg_arrival) > 0 and since(xchg_arrival) >= 3
+weight: 12
+repeat: 1
+art: group
+tags: social rival
+scene: Students in green and blue robes on a jetty at dawn, a barge waiting, one of them holding out a striped scarf.
+text: The Thornwick students leave on the dawn barge. The boy with the sketchbook finds you on the jetty and holds out his scarf. "It's a custom," he says. "Probably. I've just decided." Behind him his friends pretend not to listen.
+> left: Swap scarves
+  mood +medium
+  renown -tiny
+  say: You trade scarves on the jetty. Someone from your own house mutters "traitor" at breakfast. You wear it anyway, and get a letter from across the hills by the end of the month.
+> right: Challenge him to one last duel
+  challenge duel medium:
+    win:
+      renown +medium
+      say: You win, narrowly, on the wet boards. He laughs, bows, and sketches you mid-spell on the barge as it pulls away. The sketch arrives by post, flattering.
+    lose:
+      health -small
+      mood +small
+      say: He wins with an illusion of a second you. You both end up in the lake. It is, somehow, the best goodbye you've had.
