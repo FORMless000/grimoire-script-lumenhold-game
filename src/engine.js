@@ -189,7 +189,7 @@
       const DT = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
       const tier = this._variant === 'hard' ? DT[Math.min(4, DT.indexOf(st.tier) + 1)] : st.tier;
       let dc = e + this.difficulty(tier);
-      if (st.vs) dc += clamp(this.statOf(st.vs.who, st.vs.stat, actor) - e, -15, 15);
+      if (st.vs) dc += clamp(this.statOf((this._cast && this._cast[st.vs.who]) || st.vs.who, st.vs.stat, actor) - e, -15, 15);   // a cast role resolves to its character
       const odds = (x) => clamp(Math.round(50 + 2.5 * (sv - x)), 8, 92);
       return st.partial ? { skill: skills.join('+'), value: sv, dc, win: odds(dc + 5), atLeastPartial: odds(dc - 5) } : { skill: skills.join('+'), value: sv, dc, win: odds(dc), atLeastPartial: odds(dc) };
     }
@@ -518,7 +518,8 @@
       for (let k = 0; k < inner.length; k++) { const ch = inner[k]; if (ch === '{') d++; else if (ch === '}') d--; else if (ch === '|' && !d) { parts.push(inner.slice(start, k)); start = k + 1; } }
       parts.push(inner.slice(start));
       let colon = -1; d = 0;
-      for (let k = 0; k < parts[0].length; k++) { const ch = parts[0][k]; if (ch === '{') d++; else if (ch === '}') d--; else if (ch === ':' && !d) { colon = k; break; } }
+      // {~…} and {&…} never take a condition, so a colon in their text is just a colon.
+      if (inner[0] !== '~' && inner[0] !== '&') for (let k = 0; k < parts[0].length; k++) { const ch = parts[0][k]; if (ch === '{') d++; else if (ch === '}') d--; else if (ch === ':' && !d) { colon = k; break; } }
       if (colon > 0) {
         const src = parts[0].slice(0, colon).trim();
         let ex; try { ex = this._exprCache['?' + src] || (this._exprCache['?' + src] = G.expr(src)); } catch (e) { return null; }

@@ -208,7 +208,7 @@ function analyze(content) {
           if (!G.CHALLENGE_KINDS[st.kind]) P('error', w, 'challenge: unknown kind "' + st.kind + '" (' + Object.keys(G.CHALLENGE_KINDS).join(' ') + ')');
           if (st.using && !content.skills[st.using]) P('error', w, 'challenge using: unknown skill "' + st.using + '"');
           if (st.vs) {
-            if (st.vs.who === 'npc' ? !hasActor : !content.npcs[st.vs.who]) P('error', w, 'challenge vs: unknown character "' + st.vs.who + '"');
+            if (st.vs.who === 'npc' ? !hasActor : !content.npcs[st.vs.who] && !ROLES.has(st.vs.who)) P('error', w, 'challenge vs: unknown character or cast role "' + st.vs.who + '"');
             if (!content.skills[st.vs.stat] && !['wealth', 'rel', 'spark'].includes(st.vs.stat)) P('error', w, 'challenge vs: "' + st.vs.stat + '" is not a skill, wealth, rel or spark');
           }
           break;

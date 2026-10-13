@@ -67,3 +67,11 @@ test('report --gaps: a row for every draw source, and usage from run histories',
   assert.equal(u.empty, 1);
   assert.equal(u.places.library.empty, 1);
 });
+
+test('text variation: a colon inside {~…} or {&…} is text, not a condition', () => {
+  const eng = new Engine(content); quiet(() => eng.newGame({ seed: 2 }));
+  const out = eng.interp('{~Note: it hums.|Note: it hums.}', null, 'x');
+  assert.equal(out, 'Note: it hums.');
+  assert.deepEqual(G.textTokens('{~Note: a|b}').conds, []);
+  assert.deepEqual(G.textTokens('{final_year: a|b}').conds, ['final_year']);
+});

@@ -692,7 +692,7 @@
         for (let k = 0; k < inner.length; k++) { const ch = inner[k]; if (ch === '{') dd++; else if (ch === '}') dd--; else if (ch === '|' && !dd) { parts.push(inner.slice(start, k)); start = k + 1; } }
         parts.push(inner.slice(start));
         let colon = -1; dd = 0;
-        if (inner[0] !== '=') for (let k = 0; k < parts[0].length; k++) { const ch = parts[0][k]; if (ch === '{') dd++; else if (ch === '}') dd--; else if (ch === ':' && !dd) { colon = k; break; } }
+        if (inner[0] !== '=' && inner[0] !== '~' && inner[0] !== '&') for (let k = 0; k < parts[0].length; k++) { const ch = parts[0][k]; if (ch === '{') dd++; else if (ch === '}') dd--; else if (ch === ':' && !dd) { colon = k; break; } }
         if (colon > 0) { conds.push(parts[0].slice(0, colon).trim()); scan(parts[0].slice(colon + 1)); parts.slice(1).forEach(scan); }
         else if (parts.length > 1) { if (inner[0] === '~' || inner[0] === '&') parts[0] = parts[0].slice(1); parts.forEach(scan); }
         else tokens.push(inner.trim());
