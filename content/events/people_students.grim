@@ -975,7 +975,7 @@ class: routine
 tone: light
 trigger: social
 actor: nessa
-when: rel(nessa) >= 20 and (has(job_library) or has(job_tutor) or rel(thorne) >= 15)
+when: rel(nessa) >= 20 and (member(library_assistant) or visits_to(courtyard) >= 3 or rel(thorne) >= 15)
 weight: 10
 art: feather
 tags: social

@@ -343,7 +343,7 @@ text: A second-year lends you their broom for an errand. Midway across the lake,
 title: Your Double Is Loose
 class: routine
 tone: tense
-when: has(class_illusion) or seen(illusion_mirror_self) > 0
+when: (enrolled(illusion) or passed(illusion, 1)) or seen(illusion_mirror_self) > 0
 weight: 6
 art: mask
 tags: magic danger
@@ -390,7 +390,7 @@ text: Once a year the caretaker auctions off unclaimed lost property. There's a 
 title: Busking in the Village
 class: routine
 tone: light
-when: has(club_choir) or charm >= 16
+when: visits_to(great_hall) >= 3 or charm >= 16
 weight: 8
 art: music
 tags: money social

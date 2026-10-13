@@ -10,7 +10,7 @@
 title: Practice Bout
 class: routine
 tone: light
-when: has(club_dueling)
+track: duelling
 weight: 14
 art: duel
 tags: club
@@ -39,7 +39,7 @@ text: Wednesday practice. The captain pairs you with a fourth-year who has a rep
 title: Initiation, Prefect-Style
 class: routine
 tone: tense
-when: has(club_dueling)
+track: duelling
 actor: bram
 weight: 12
 art: shield
@@ -69,7 +69,8 @@ text: Bram Hollis, prefect and senior Circle member, has decided new members nee
 title: Training Partners
 class: routine
 tone: tense
-when: has(club_dueling) and met(lyra) and month >= 6 and month <= 7 and rel(lyra) >= 0
+when: met(lyra) and month >= 6 and month <= 7 and rel(lyra) >= 0
+track: duelling
 actor: lyra
 weight: 14
 art: duel
@@ -90,7 +91,7 @@ text: Lyra finds you after practice. "The tournament is in two months. You're th
 title: Solo Auditions
 class: routine
 tone: light
-when: has(club_choir)
+place: great_hall
 weight: 14
 art: music
 tags: club
@@ -113,7 +114,7 @@ text: Auditions for the Midwinter solo. The choirmaster's eyebrows are famously 
 title: Off-Key Altitude
 class: routine
 tone: light
-when: has(club_choir)
+place: great_hall
 weight: 14
 art: music
 tags: club magic
@@ -131,7 +132,8 @@ text: The Choir of the Spheres literally floats when it harmonises. You keep fal
 title: The Winter Concert
 class: windfall
 tone: light
-when: has(club_choir) and (month == 4 or month == 5)
+when: (month == 4 or month == 5)
+place: great_hall
 weight: 16
 art: bell
 tags: club festival
@@ -151,7 +153,8 @@ text: The winter concert. The great hall is packed. Somewhere in the audience, t
 title: Tryouts
 class: routine
 tone: light
-when: has(club_skyrace) and not flag(sky_team)
+when: not flag(sky_team)
+place: flight_field
 weight: 18
 art: broom
 tags: club
@@ -180,7 +183,7 @@ text: Skyrace tryouts: three laps around the towers, through the hoops, without 
 title: A Bad Landing
 class: routine
 tone: tense
-when: has(club_skyrace)
+place: flight_field
 weight: 12
 art: broom
 tags: club danger
@@ -202,7 +205,8 @@ text: Practice. A gust catches you mid-turn, and the ground arrives rather soone
 title: Lumenhold vs. Thornwick
 class: routine
 tone: light
-when: has(club_skyrace) and flag(sky_team) and month >= 6
+when: flag(sky_team) and month >= 6
+place: flight_field
 weight: 16
 art: trophy
 tags: club festival
@@ -230,7 +234,7 @@ text: The championship against Thornwick Academy. Final lap. You're neck and nec
 title: The Case of the Missing Pies
 class: routine
 tone: light
-when: has(club_ledger)
+track: lumen_ledger
 actor: nessa
 weight: 14
 art: paper
@@ -256,7 +260,8 @@ text: Nessa slams a file on your desk. "Pies. Forty-two of them, gone from the k
 title: The Prefect's Bribes
 class: routine
 tone: tense
-when: has(club_ledger) and met(bram)
+when: met(bram)
+track: lumen_ledger
 actor: nessa
 weight: 12
 art: scales
@@ -280,7 +285,7 @@ text: An anonymous tip: Bram Hollis has been taking bribes from first-years to s
 title: Deadline Night
 class: routine
 tone: light
-when: has(club_ledger)
+track: lumen_ledger
 actor: nessa
 weight: 12
 art: candle
@@ -303,7 +308,7 @@ text: The press runs at dawn and half the paper is blank. Nessa is chewing her q
 title: The Mandrake Choir
 class: routine
 tone: light
-when: has(club_garden)
+track: verdant
 weight: 14
 art: leaf
 tags: club nature
@@ -324,7 +329,8 @@ text: The greenhouse mandrakes have started singing again. Off-key and enthusias
 title: The Moonflower
 class: routine
 tone: warm
-when: has(club_garden) and met(tobias)
+when: met(tobias)
+track: verdant
 actor: tobias
 weight: 12
 art: flower
@@ -344,7 +350,7 @@ text: "The moonflower's going to bloom tonight," Tobias says, a little breathles
 title: The Secret Garden
 class: windfall
 tone: light
-when: has(club_garden) or (month >= 7 and month <= 9)
+when: member(verdant) or (month >= 7 and month <= 9)
 actor: maud
 weight: 10
 art: mushroom
@@ -368,7 +374,7 @@ text: The old groundskeeper beckons you behind the potting shed, to a door in th
 title: Cocoa on the Roof
 class: windfall
 tone: light
-when: has(club_stargazers)
+place: observatory
 weight: 14
 art: cup
 tags: club social
@@ -387,7 +393,7 @@ text: Stargazers meet on the roof with blankets, telescopes and an illegal quant
 title: The Meteor Wager
 class: routine
 tone: light
-when: has(club_stargazers)
+place: observatory
 weight: 12
 art: dice
 tags: club money
@@ -409,7 +415,7 @@ text: The club is running a betting pool on tonight's meteor count. The current 
 title: An Unnamed Shape
 class: story
 tone: eerie
-when: has(club_stargazers)
+place: observatory
 weight: 12
 art: star
 tags: club mystery
@@ -430,7 +436,7 @@ text: Plotting the autumn sky, you notice seven faint stars that form a ring aro
 title: An Invitation at Midnight
 class: routine
 tone: eerie
-when: met(corvin) and rel(corvin) >= 10 and not has(club_cartographers) and turn >= 4
+when: met(corvin) and rel(corvin) >= 10 and not member(cartographers) and turn >= 4
 actor: corvin
 weight: 20
 art: map
@@ -450,7 +456,7 @@ text: A black card under your door. On it, a map in silver ink that redraws itse
 title: The Thursday Staircase
 class: routine
 tone: eerie
-when: has(club_cartographers)
+track: cartographers
 weight: 14
 art: map
 tags: club mystery
@@ -473,7 +479,8 @@ text: The Cartographers have heard of a staircase that only exists on Thursdays 
 title: The Tunnel Under the Lake
 class: story
 tone: eerie
-when: has(club_cartographers) and not flag(found_lake_tunnel)
+when: not flag(found_lake_tunnel)
+track: cartographers
 weight: 12
 art: door
 tags: club mystery hollowstar

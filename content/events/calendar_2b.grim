@@ -65,7 +65,7 @@ text: Notices for work, three layers deep: the library, the Gilded Newt, Pell & 
 > look: Just looking
   mood +tiny
 > quit: Hand in your notice
-  when: has(job_library) or has(job_tavern) or has(job_apothecary) or has(job_courier)
+  when: member(library_assistant) or member(tavern) or member(apothecary_clerk) or member(broom_courier)
   hint: You can find work again later.
   leave job
   mood +small
@@ -95,7 +95,7 @@ text: {month == 5: The winter break.|The summer break.} Two months without lectu
   gain plan_home
   say: The barge, the coach, the last mile on foot. Home is smaller than you remember, and warmer.
 > work: Work full-time
-  when: has(job_library) or has(job_tavern) or has(job_apothecary) or has(job_courier)
+  when: member(library_assistant) or member(tavern) or member(apothecary_clerk) or member(broom_courier)
   hint: Extra shifts at double pay.
   gain plan_work
   say: You trade the holidays for wages. Your feet will remember it.
