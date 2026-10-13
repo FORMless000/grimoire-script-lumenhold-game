@@ -1,0 +1,88 @@
+{
+  "name": "village_home",
+  "at": 1791857772862,
+  "files": [
+    "content/events/pools/village_home.grim"
+  ],
+  "events": [
+    "village_barge_crossing",
+    "village_square_errand",
+    "village_last_barge",
+    "gilded_newt_fireside",
+    "gilded_newt_card_game",
+    "gilded_newt_corner_table",
+    "mabels_the_door",
+    "mabels_window_seat",
+    "mabels_forty_teas",
+    "grimsbys_wrong_book",
+    "grimsbys_damp_barrow",
+    "grimsbys_last_copy",
+    "pell_apothecary_drawers",
+    "pell_apothecary_queue",
+    "pell_apothecary_tonic",
+    "bakery_bun_queue",
+    "bakery_oldest_baker",
+    "bakery_cooling_rack",
+    "home_cottage_old_room",
+    "home_cottage_list",
+    "home_cottage_after_supper",
+    "home_fields_long_rows",
+    "home_fields_neighbours",
+    "home_fields_pond",
+    "home_market_inn_crowd",
+    "home_market_charm_seller",
+    "home_market_post_office"
+  ],
+  "contentHash": "e5aa94",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 200,
+      "total": 200
+    }
+  },
+  "critic": {
+    "batch": "village_home",
+    "round": 2,
+    "accept": true,
+    "summary": "All nine round-1 issues are fixed. The three friend-cast events now tie their progressions to the shop or the player (Mabel's chart, the 'one thing' running joke, Grimsby's shop) and cast only role students, so Ilse can no longer be picked. The corner-table progression now belongs to the table and the landlady. A full re-read found no canon, safety, class or repeat problems. Two small polish points remain.",
+    "issues": [
+      {
+        "event": "gilded_newt_corner_table",
+        "problem": "The second sequence step reads '{here} is at the corner table with the corner table's jug, which...'. Saying 'corner table' twice in one sentence is clumsy.",
+        "fix": "Change the step to 'the house jug, which the landlady refills for whoever sits there.' (zh: 面前是店里那只专属酒壶…)."
+      },
+      {
+        "event": "village_square_errand",
+        "problem": "One random right-option say, 'You talk {friend} out of the hat', can come up on later showings, where the text no longer mentions a hat.",
+        "fix": "Make it general: 'You talk {friend} out of the third thing. {They} sulk{s} the whole way back to the barge.'"
+      }
+    ]
+  },
+  "spotCheck": [
+    "grimsbys_wrong_book",
+    "bakery_cooling_rack",
+    "home_market_charm_seller"
+  ],
+  "accepted": true
+}
