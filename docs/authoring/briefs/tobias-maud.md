@@ -27,7 +27,7 @@ Big hands, bigger heart. Talks to plants and, worryingly, the plants seem to ans
 - [surface] He talks to plants. Worryingly, they seem to answer. (`tobias.plants`)
 - [personal] His mother runs the farm alone at harvest. It's the first harvest he has ever missed. (`tobias.ma`, known when `seen(tobias_homesick) > 0`)
 - [personal] He is raising a mandrake called Gerald, who wears a knitted hat and screams softly. (`tobias.gerald`, known when `seen(tobias_godparent) > 0`)
-- [personal] The greenhouse moonflowers bloom once every eleven years. He would stand in a storm for them. (`tobias.moonflowers`, known when `rel(tobias) >= 20`)
+- [personal] The greenhouse moonflowers bloom once every eleven years. He would stand in a storm for them. (`tobias.moonflowers`, known when `rel(tobias) >= 12`)
 - [personal] He practised waltzing with a broom before the Midwinter Ball. The broom complained. (`tobias.dancing`, known when `seen(tobias_dance_lessons) > 0`)
 
 ### Old Maud (`maud`)
@@ -55,20 +55,19 @@ Keeps bees, chickens and a rather large secret garden. Gives advice you only und
 - [personal] Behind the potting shed there is a door to a garden that only exists for people she shows it to. (`maud.garden`, known when `seen(garden_maud_secret) > 0`)
 - [personal] She is eighty-one, and says she's allowed the occasional chill. (`maud.age`, known when `seen(maud_ill) > 0`)
 
-## Place: The Greenhouses (`greenhouses`)
+## Track: Verdant Circle (`verdant`)
 
-grounds · club · open morning, afternoon
+club · alchemy · ranks: Member, Gardener, Head Gardener · 2 required visits per term
 
-Glass houses that steam even in winter. The moonflowers bloom once every eleven years; the mandrakes have opinions every day.
+The greenhouse club: moonflowers, mandrakes and long talks with plants that occasionally answer.
 
-**Usually here:** Tobias Fennick (morning, afternoon); Old Maud (afternoon)
+**Lead:** Tobias Fennick
 
 ## Lore
 
-- **greenhouses** (`greenhouses`, soft): Glass houses that steam even in winter. The moonflowers there bloom once every eleven years and fill the greenhouse with silver light.
 - **frozen lake** (`lake_freezes`, soft): When the seal is at its weakest, on the night of the Blossom moon, the lake freezes in a single breath in the middle of spring. Cracks glow beneath the ice and things made of frost and whispers come ashore.
 - **Fennick** (`fennick_farm`, soft): The Fennick farm grows turnips, tomatoes and stubborn children. Tobias's mother runs it alone at harvest; one year blight nearly ruined them.
-- **houses** (`houses`, soft): Students belong to five houses: Emberhall (fire and ambition), Rootward (growing things), Stillwater (quiet and the far-sighted), Duskgate (shadows and secrets) and Brasswick (makers and tinkerers). Faculty belong to none.
+- **greenhouses** (`greenhouses`, soft): Glass houses that steam even in winter. The moonflowers there bloom once every eleven years and fill the greenhouse with silver light.
 - **Harvest Feast** (`festivals`, soft): The Harvest Feast opens the year; on Lantern Night lanterns carry wishes over the lake; the Midwinter Ball fills the Great Hall; the Spring Tournament crowns a duelling champion; and at Starfall the whole academy sleeps on the lawns to watch the meteors.
 - **Club Fair** (`fairs`, soft): In Emberwane the Club Fair fills the courtyard with recruiting tables; the Job Board in the entrance hall posts term-time work. The Artificers' Fair shows off students' machines, and in summer the village holds its Midsummer Fair with an enchanted carousel.
 - **Pell & Daughters** (`pell_and_daughters`, soft): The village apothecary, with a thousand labelled drawers. Old Pell taught three generations to count drops.
@@ -76,78 +75,85 @@ Glass houses that steam even in winter. The moonflowers bloom once every eleven 
 ## Style examples
 
 ```grim
-# content/events/expansion_people.grim:116
+# content/events/pools/clubs_jobs.grim:258
+@event verdant_tobias_cuttings
+title: The Cuttings Question
+track: verdant
+rank: 2
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+actor: tobias
+art: leaf
+tags: club nature
+scene: A big gentle student cradling a tray of leggy cuttings, eyeing a full compost heap with dread.
+text: {The benches are full and someone must choose which cuttings stay. Tobias can't. "It's like choosing between goats," he says.|Bench day. Tobias hovers over a tray of cuttings, apologising to them in advance and glancing at you.|Tobias hands you the tray before he can change his mind. He is grateful in a way that looks like grief.} {season == "autumn": The frost will take the weakest soon anyway.|}
+> left: Choose, and compost the rest
+  perform verdant +small
+  rank_xp verdant +small
+  rel tobias -tiny
+  mood -tiny
+  say: {~You keep the strongest and compost the rest. Tobias says "fair's fair", then goes very quiet over the heap.|The benches breathe again. Tobias thanks you, then tells you a long story about a goat he couldn't sell. You understand it is about the cuttings.}
+> right: Find room for every one
+  rel tobias +small
+  perform verdant -tiny
+  mood +tiny
+  say: {~You find room on windowsills, under benches and in a teacup. Nothing grows well, but everything grows. Tobias laughs from the belly.|"Ma always said a crowded field still feeds you," Tobias says, beaming. The benches groan. So does Old Maud, when she sees.}
+```
+
+```grim
+# content/events/clubs.grim:349
+@event garden_maud_secret
+title: The Secret Garden
+class: windfall
+tone: light
+when: member(verdant) or (month >= 7 and month <= 9)
+actor: maud
+weight: 10
+art: mushroom
+tags: club nature
+scene: An old woman in a battered straw hat holding open a hidden door in an ivy-covered wall; beyond, impossible flowers glow.
+text: The old groundskeeper beckons you behind the potting shed, to a door in the wall you've walked past a hundred times without seeing. "You've got the hands for it," Old Maud says. "Want to see what grows where nobody's looking?"
+> left: Thank her and decline
+  meet maud
+  rel maud +tiny
+  say: "Suit yourself." The door is gone when you look back.
+> right: Follow her in
+  meet maud
+  rel maud +medium
+  alchemy +small
+  gain blessed
+  say: Inside: glowing ferns, silver bees, a pear tree that hums. Maud tucks a sprig of rosemary into your pocket. "For luck. Don't lose it."
+
+# ---------------- Stargazers ----------------
+```
+
+```grim
+# content/events/expansion_people.grim:128
 @event tobias_storm_greenhouse
 title: Storm Over the Greenhouses
+class: routine
+tone: tense
 trigger: social
 actor: tobias
-when: rel(tobias) >= 20 and month >= 6 and month <= 8
+when: rel(tobias) >= 12 and month >= 6 and month <= 8
 weight: 12
 art: bolt
 tags: nature danger
 scene: Rain lashing a glass greenhouse at night, panes cracking, a big boy holding a door shut against the wind while plants rattle inside.
 text: A storm hits at midnight. Glass is cracking in the greenhouses. Tobias is out there in his nightshirt, trying to hold a door shut against the wind with his whole body. "The moonflowers!" he shouts. "Eleven years!"
 > left: Run out and help
-  health -5
-  rel tobias +12
-  love tobias +3
+  health -small
+  rel tobias +large
+  spark tobias +tiny
   say: You hold the panes together with every shielding charm you know until dawn. Every moonflower survives. Tobias hugs you, soaked, laughing, half crying.
 > right: Fetch Old Maud
-  rel tobias +5
-  rel maud +3
+  rel tobias +small
+  rel maud +small
   say: Maud arrives in her dressing gown, mutters three words at the sky, and the wind politely goes elsewhere. Tobias stares at her. "Teach me that," he says.
 
 # ---------------- Seraphine ----------------
-```
-
-```grim
-# content/events/people_others.grim:349
-@event maud_old_student
-title: Maud Was a Student Once
-trigger: social
-actor: maud
-when: rel(maud) >= 15 and hollow >= 1
-weight: 14
-art: moon
-tags: mystery hollowstar
-chain: hollowstar
-scene: An old woman sitting on a bench by the lake at dusk, looking at the water as if it might look back.
-text: "I was a student here, you know," Maud says, watching the lake. "Sixty years ago. The lake froze one spring. Three of my friends went down to the boathouse that night. Only two came back." She doesn't look at you. "Ask me what I know."
-> left: "You don't have to tell me."
-  rel maud +6
-  say: She pats your hand. "Kind. But time's short, dearie." She tells you anyway, a little at a time, over many cups of tea.
-  hollow +1
-> right: "What do you know?"
-  rel maud +4
-  hollow +1
-  flag knows_founders_seal
-  say: "Seven locks, one in each tower. The key's a star that eats light. And the thing below loves a lonely heart." She finally looks at you. "Don't be lonely."
-```
-
-```grim
-# content/events/expansion_faculty.grim:69
-@event maud_goat
-title: Bartholomew in the Library
-trigger: social
-actor: maud
-when: rel(maud) >= 5
-weight: 12
-art: book
-tags: nature
-scene: A shaggy goat standing on a library table chewing a book, an apoplectic librarian below, an old woman in a straw hat hurrying through the stacks.
-text: Maud's goat, Bartholomew, has got into the library and is eating the Restricted Section. The librarian is apoplectic. Maud, hurrying in, grabs your arm. "He likes you. Get him out before he eats anything with teeth."
-> left: Lure him out with an apple
-  check charm 12:
-    rel maud +8
-    say: Bartholomew follows the apple, and you, out into the sunlight. He has eaten one-third of "Curses of the Northern Wastes". He seems fine. Mostly.
-  else:
-    rel maud +4
-    health -3
-    say: Bartholomew eats the apple, then your sleeve, then headbutts you into a shelf. Maud gets him out in the end, laughing.
-> right: Pick him up and carry him out
-  vigor +2
-  rel maud +6
-  say: He is heavier than he looks and struggles like a sack of angry cats. You carry him all the way to the paddock. The librarian applauds.
 ```
 
 ## Rules

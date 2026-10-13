@@ -865,6 +865,7 @@ tags: study mystery
 scene: A plain folder with no label lying on an empty desk under a single lamp.
 text: {A file has been left on your desk. It isn't yours, and it isn't labelled.|A second unlabelled file. You're starting to think it's a test.|The unlabelled files keep arriving. You've stopped asking where they come from.} This one is tied shut with a red ribbon. {~It's very thin.|It's very thick, with a coffee ring on the cover.|The knot is one you don't recognise.}
 > left: Read it before returning it
+  alignment -tiny
   challenge deceive medium:
     win:
       guile +small
@@ -875,6 +876,7 @@ text: {A file has been left on your desk. It isn't yours, and it isn't labelled.
       mood -tiny
       say: {~Your supervisor takes the file back and glances at the ribbon. "Interesting knot," she says.|You put the pages back in the wrong order. Somehow, everyone knows by morning.}
 > right: Return it unopened
+  alignment +tiny
   perform intern_unseen_office +tiny
   mood -small
   say: {~You hand it back without looking. Your supervisor says nothing, which here is approval. You'll wonder about it for weeks.|You return it with the ribbon untouched. The next day there's a slightly better coffee waiting on your desk.}

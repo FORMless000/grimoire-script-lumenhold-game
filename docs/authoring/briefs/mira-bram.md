@@ -25,7 +25,7 @@ Smells permanently of solder and ozone. Has built a clockwork owl, a self-stirri
 **Facts:**
 - [surface] An artificer who smells of solder and ozone and has started at least one small fire. (`mira.artificer`)
 - [personal] Built a clockwork owl that remembers deadlines, birthdays and, slightly, grudges. (`mira.owl`, known when `seen(mira_owl_gift) > 0`)
-- [personal] Three years of notebooks are the most precious things they own. (`mira.notebooks`, known when `rel(mira) >= 20`)
+- [personal] Three years of notebooks are the most precious things they own. (`mira.notebooks`, known when `rel(mira) >= 12`)
 - [personal] Their family runs a clockworks and thinks invention is a hobby. It is not a hobby. (`mira.family`, known when `seen(mira_family_business) > 0`)
 - [personal] After the third fire in a term, the faculty padlocked their workshop. (`mira.workshop`, known when `seen(mira_workshop_closed) > 0`)
 
@@ -52,16 +52,6 @@ Upper-year prefect with a ledger of demerits and a fondness for writing your nam
 - [personal] He once invented a "hall tax" for the east staircase. (`bram.hall_tax`, known when `seen(bram_hall_tax) > 0`)
 - [personal] Under the sash, he will step between you and trouble. Then he tells you not to make it weird. (`bram.ally`, known when `seen(bram_turns) > 0`)
 
-## Place: Mira's Workshop (`workshop`)
-
-castle · public · open afternoon, evening, night
-
-A former classroom full of springs, gears, half-finished machines and the smell of solder. Fire buckets by the door, on the faculty's orders.
-
-Teaser while undiscovered: Something clanks and hums behind the west-wing tapestry.
-
-**Usually here:** Mira Ten (afternoon, evening, night)
-
 ## Lore
 
 - **Hollis** (`hollis_family`, soft): Bram's father was a prefect and head boy at Lumenhold, and has never stopped telling his son he will not amount to anything.
@@ -70,9 +60,11 @@ Teaser while undiscovered: Something clanks and hums behind the west-wing tapest
 ## Style examples
 
 ```grim
-# content/events/expansion_people.grim:493
+# content/events/expansion_people.grim:548
 @event bram_cheating
 title: Bram Cheats
+class: routine
+tone: tense
 trigger: social
 actor: bram
 when: met(bram) and (month == 4 or month == 10)
@@ -82,73 +74,70 @@ tags: rival study
 scene: A prefect in an exam hall slipping a tiny scroll out of his sleeve, a student two desks away watching.
 text: In the exam hall, two desks away, you see Bram Hollis — prefect, enforcer of rules — slip a tiny scroll out of his sleeve. He sees you seeing him. His face goes white.
 > left: Report him
-  rel bram -20
-  rel isolde +4
-  renown +2
+  rel bram -huge
+  rel isolde +small
+  renown +small
   say: Bram loses his sash for the rest of the year. Some students cheer. You don't feel like cheering. Neither, later, does he.
 > right: Say nothing — and let him know you saw
-  rel bram +6
-  guile +2
+  alignment -tiny
+  rel bram +medium
+  guile +small
   say: After the exam you just look at him. He nods, once. You never mention it. But his demerits stop, for you and for everyone you know.
 ```
 
 ```grim
-# content/events/people_students.grim:727
-@event mira_workshop_closed
-title: The Workshop Is Shut
+# content/events/people_students.grim:851
+@event mira_dance_machine
+title: The Dancing Machine
+class: routine
+tone: light
 trigger: social
 actor: mira
-when: rel(mira) >= 20 and year >= 2
+when: rel(mira) >= 6
 weight: 10
-art: lock
+art: music
 tags: social
-scene: A workshop door chained shut with a faculty notice nailed to it, a forlorn student sitting on a toolbox outside.
-text: After the third fire this term, the faculty has padlocked Mira's workshop. Mira is sitting on a toolbox outside it, looking like someone took their heart and filed it under "hazards".
-> left: Plead their case to Professor Thorne
-  check charm 18:
-    rel mira +12
-    rel thorne +2
-    say: Thorne agrees to reopen it — with fire buckets and a weekly inspection. Mira cries on you. Oil and all.
-  else:
-    rel mira +5
-    rel thorne -2
-    say: Thorne refuses. But Mira heard you try. "Nobody's ever argued for me before," they say.
-> right: Help them build a secret workshop
-  check guile 14:
-    rel mira +12
-    guile +1
-    say: An abandoned classroom behind a tapestry. You bring candles; Mira brings everything else. It's perfect. It's almost entirely fireproof.
-  else:
-    rel mira +6
-    gain detention
-    say: Bram finds the secret workshop on day two. Worth it, says Mira, scrubbing cauldrons beside you.
+scene: A spindly brass contraption with too many legs attempting a waltz in an empty classroom, a student dancing with it.
+text: Mira has built a machine that teaches dancing. It has six legs and opinions. "It needs a test subject," they say. "It's mostly safe. It only kicked me twice."
+> left: Make Mira test it
+  rel mira +small
+  mood +small
+  say: You watch Mira and the machine waltz, badly, across the room. It's the funniest thing you've ever seen.
+> right: Dance with the machine
+  charm +small
+  health -tiny
+  rel mira +medium
+  say: It kicks you twice too. But by the end you can waltz, and Mira is clapping with oily hands.
 ```
 
 ```grim
-# content/events/expansion_people.grim:294
-@event mira_lab_fire
-title: Fire in the Workshop
+# content/events/expansion_people.grim:300
+@event mira_ornithopter
+title: The Test Flight
+class: routine
+tone: tense
 trigger: social
 actor: mira
-when: rel(mira) >= 20
-weight: 10
-art: flame
-tags: danger
-scene: A workshop full of smoke and orange light, notebooks scattered across a burning bench, a figure in goggles coughing in the doorway.
-text: The workshop is on fire. Properly this time. Mira is in the doorway, coughing — and trying to go back in. "My notebooks! Three years of notes!"
-> left: Grab the notebooks
-  check vigor 16:
-    rel mira +14
-    health -4
-    say: You come out singed, smoking, with an armful of notebooks. Mira stares at you, then at the notebooks, then bursts into tears and hugs you, both of you coughing.
-  else:
-    health -10
-    rel mira +8
-    say: You get halfway before the smoke drives you back. You save one notebook. Mira says it's the most important one. You both know it isn't. They mean it anyway.
-> right: Drag Mira away
-  rel mira +6
-  health -2
-  say: You haul Mira back from the door. The notebooks burn. Mira is silent for a week. Then they start a new notebook. The first page just says: "Thank you."
+when: rel(mira) >= 9
+weight: 12
+art: gear
+tags: social danger
+scene: A rickety winged contraption balanced on the edge of a tower roof, a goggled artificer strapping into it, a friend holding a rope.
+text: Mira has built a flying machine with canvas wings and seven propellers. It is balanced on the edge of the north tower. "Brooms are so last century," they say, strapping in. "I need someone on the rope. Probably. Possibly."
+> left: Hold the rope
+  challenge feat trivial:
+    win:
+      rel mira +large
+      renown +small
+      say: The machine flies — wobbly, loud, glorious — twice around the tower before landing in the lake. Mira surfaces whooping. You're both legends by dinner.
+    lose:
+      health -medium
+      rel mira +medium
+      say: The rope wins. You are dragged eight feet along the roof before letting go. The machine lands in a tree. Mira waves from it, delighted.
+> right: Insist on a safety net
+  rel mira +small
+  alchemy +tiny
+  say: You spend a day building a net. The machine flies four feet and drops into it. "Data!" says Mira happily. Nobody dies. It's a good day.
 ```
 
 ## Rules

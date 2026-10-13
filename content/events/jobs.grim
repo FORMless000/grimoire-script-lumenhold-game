@@ -104,7 +104,7 @@ text: A hooded stranger nurses a cider all evening and leaves a tip: a black coi
 > right: Take it
   gold +tiny
   flag star_coin
-  hollow +1
+  alignment -small
   say: The coin is cold as ice and heavier than it should be. You find yourself turning it over in your pocket for days.
 
 @event tavern_extra_shifts
@@ -157,10 +157,12 @@ tags: job
 scene: A tired woman at a shop counter counting copper coins, a small child coughing beside her.
 text: A woman counts out coppers for fever tonic. She's twelve crowns short. Her son coughs into her coat. Pell is in the back room.
 > left: Charge the full price
+  alignment -small
   gold +tiny
   mood -small
   say: She leaves without it. The bell on the door rings for a very long time.
 > right: Pay the difference yourself
+  alignment +small
   gold -medium
   mood +medium
   renown +small
@@ -226,6 +228,7 @@ text: Mucking out the far stall, you find an egg the size of a melon, nestled in
   rel maud +tiny
   say: Brask nearly faints. "Smugglers! A firedrake egg!" It's taken to the menagerie. You get a commendation.
 > right: Keep it
+  alignment -tiny
   flag dragon_egg
   queue egg_hatches in 3
   say: You smuggle it back to your dormitory wrapped in a scarf. It purrs. Eggs shouldn't purr.
@@ -387,7 +390,7 @@ text: Your parcel is addressed to "K. Dumont, Stillwater House". It is ice cold 
   challenge deceive easy:
     win:
       flag read_kael_parcel
-      hollow +1
+      alignment -tiny
       lore +small
       say: Inside: a letter in a cold, beautiful hand. "The Star wakes. Come home, or open the door. Your family." You reseal it perfectly.
     lose:

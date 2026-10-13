@@ -96,17 +96,6 @@ desc: Crowns in your purse. Rent is due every month.
 on_zero:
   flag broke
 
-@resource grades
-name: Standing
-icon: scroll
-min: 0
-max: 100
-start: 50
-color: #6aa0e0
-display: panel
-warn_below: 20
-desc: Your academic standing (legacy: it follows the GPA; the GPA decides probation).
-
 # ---------------- Skills ----------------
 
 @skill arcana
@@ -153,12 +142,22 @@ desc: Sneaking, lying, noticing what others miss.
 
 # ---------------- Global hooks ----------------
 
+# Unpaid board (design §8.2): a hungry month; twice in a row, Grisk settles it for you (grisk_board_debt).
 @hook rent
 on: month_start
 label: Dormitory & board
 when: turn > 1 and term
 do:
-  gold -8
+  if gold >= 8:
+    gold -8
+    board_missed = 0
+  else:
+    gold = 0
+    gain hungry
+    board_missed += 1
+    if board_missed >= 2 and not has(in_debt) and not flag(grisk_done):
+      board_missed = 0
+      queue grisk_board_debt
 
 @hook break_rent
 on: month_start
@@ -177,20 +176,20 @@ do:
   else:
     gold -30
 
-# Standing (legacy) follows the GPA at the end of each term until phase 3 retires it.
-@hook term_marks
-on: term_end
-label: Term marks
-when: gpa > 0
-do:
-  grades += (gpa - 2.5) * 8
-
 @hook gpa_probation
 on: term_end
 label: Academic probation
-when: gpa > 0 and gpa < 1.5 and year >= 2
+when: gpa > 0 and (year >= 2 or month >= 10)
 do:
-  queue crisis_probation
+  if gpa < 1.5 and not has(probation):
+    gain probation
+  if gpa < 1.0:
+    gpa_low += 1
+  else:
+    gpa_low = 0
+  if gpa_low >= 2:
+    gpa_low = 0
+    queue crisis_probation
 
 # Coursework (phase 3): each enrolled course trains its main skill a little every term month.
 # (Replaces the v0.2 elective states' ticks, which enrolment used to grant two at a time.)
@@ -266,13 +265,6 @@ do:
     mood -1
   if month == 4 or month == 10:
     mood -3
-
-@hook debt_pressure
-on: month_start
-label: Empty purse
-when: gold <= 0 and turn > 1
-do:
-  mood -2
 
 @hook exhaustion_drain
 on: month_start

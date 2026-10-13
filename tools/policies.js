@@ -18,12 +18,17 @@ function estimate(eng, opt, actor, eventId) {
   const out = {};
   const add = (k, v, w) => { if (v) out[k] = (out[k] || 0) + v * w; };
   if (eventId) {
-    const pv = eng.preview(eventId, opt.key, actor);
+    const pv = eng.preview(eventId, opt.key, actor), seen = new Set();
     for (const p of pv.paths) for (const [k, r] of Object.entries(p.deltas)) add(k, (r[0] + r[1]) / 2, p.p);
     G.walkEffects(opt.effects, (st) => {
       if (st.t === 'gain') { const d = eng.c.states[st.state]; if (d && d.kind && !eng.s.states[st.state]) add('gain:' + d.kind, 1, 1); }
       if (st.t === 'learn_spell' && !(eng.s.spells || {})[st.spell]) add('learn', 1, 1);
+      // engagement with a plot: new clues, new flags, a queued follow-up (each distinct one once, whichever branch)
+      if (st.t === 'find' && !(eng.s.clues || {})[st.clue]) seen.add('find:' + st.clue);
+      if (st.t === 'flag') for (const f of st.names || []) if (!eng.s.flags[f]) seen.add('flag:' + f);
+      if (st.t === 'queue') seen.add('queue:' + st.event);
     });
+    for (const k of seen) add(k.slice(0, k.indexOf(':')), 1, 1);
     return out;
   }
   const rng = eng.s.rng;
@@ -59,12 +64,22 @@ function amount(eng, st, row, edge) { return st.tier ? st.sign * eng.tierAmount(
 
 // Does this option end the run early? Every style but random avoids that when it has a choice.
 function endsEarly(eng, view, key) {
-  const def = eng.optionsOf(eng.c.events[view.id]).find((q) => q.key === key); let hit = false;
-  if (def) G.walkEffects(def.effects, (st) => { if (st.t === 'end' && eng.c.endings[st.ending] && eng.c.endings[st.ending].kind === 'early') hit = true; });
-  return hit;
+  const def = eng.optionsOf(eng.c.events[view.id]).find((q) => q.key === key);
+  return !!def && reachesEnd(eng, def.effects, view.actor ? view.actor.id : null);
+}
+// An early `end` this option can reach now: `if` branches are decided by the current state, other branches
+// (challenges, chances) count as reachable.
+function reachesEnd(eng, effects, actor) {
+  for (const st of effects || []) {
+    if (st.t === 'end') { if (eng.c.endings[st.ending] && eng.c.endings[st.ending].kind === 'early') return true; continue; }
+    if (st.t === 'if') { const br = st.branches.find((b) => eng.test(b.cond, actor)); if (reachesEnd(eng, br ? br.body : st.else, actor)) return true; continue; }
+    let hit = false; G.walkEffects([st], (x) => { if (x !== st && x.t === 'end' && eng.c.endings[x.ending] && eng.c.endings[x.ending].kind === 'early') hit = true; });
+    if (hit) return true;
+  }
+  return false;
 }
 
-const RESOURCES = ['health', 'mood', 'gold', 'grades', 'renown'];
+const RESOURCES = ['health', 'mood', 'gold', 'renown'];
 const SKILLS = ['arcana', 'lore', 'alchemy', 'charm', 'vigor', 'guile'];
 
 // A scoring play style. weights: per key (resource / skill) or per prefix ('rel:', 'spark:', 'bond:', 'skill').
@@ -82,7 +97,7 @@ function scorer(name, weights, guard = 4) {
         let sc = eng.rand() * 0.5;   // small noise breaks ties and varies runs
         if (o.spell && weights.cast) sc += weights.cast;
         // A player who wants to keep playing avoids an option that ends the run early (the scorer would value it at 0).
-        G.walkEffects(def.effects, (st) => { if (st.t === 'end' && eng.c.endings[st.ending] && eng.c.endings[st.ending].kind === 'early') sc -= 100; });
+        if (reachesEnd(eng, def.effects, view.actor ? view.actor.id : null)) sc -= 100;
         for (const [k, v] of Object.entries(est)) {
           let w = weights[k];
           if (w == null) w = weights[k.slice(0, k.indexOf(':') + 1)] ?? (SKILLS.includes(k) ? weights.skill : null) ?? 0;
@@ -128,14 +143,28 @@ const LEGACY = {
 };
 
 // Weights per play style (design §2). Resource units: one point of health ≈ one point of mood.
+// Enrolment for a focused player: courses that train the focus skill first, then random ones.
+function pickManyFor(skill) {
+  return (eng, view, opts) => {
+    const fits = (o) => [].concat((eng.c.tracks[o.key] || {}).skill || []).includes(skill);
+    const pool = opts.filter(fits).concat(opts.filter((o) => !fits(o))), keys = [];
+    for (const o of pool) if (keys.length < view.pick) keys.push(o.key);
+    return keys;
+  };
+}
+
 const STYLES = {
-  balanced: () => scorer('balanced', { health: 1, mood: 1, gold: 0.4, grades: 1, renown: 0.3, skill: 1.2, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5 }),
-  aggressive: () => scorer('aggressive', { health: 0, mood: 0, gold: 0.8, grades: 1.5, renown: 0.5, skill: 2.5, 'rel:': 0, 'spark:': 0, 'bond:': 0 }, 1),
-  moneymaxx: () => scorer('moneymaxx', { health: 0.6, mood: 0.6, gold: 3, grades: 0.5, renown: 0.2, skill: 0.3, 'rel:': 0.1, 'spark:': 0, 'bond:': 0, 'gain:job': 12 }),
-  focused: (skill) => scorer('focused:' + skill, { health: 0.6, mood: 0.6, gold: 0.3, grades: 0.8, renown: 0.2, skill: (k) => (k === skill ? 6 : 0.4), 'rel:': 0.2, 'spark:': 0.1, 'bond:': 0.1, 'gain:': 4 }),
+  balanced: () => scorer('balanced', { health: 1, mood: 1, gold: 0.4, renown: 0.3, skill: 1.2, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5 }),
+  aggressive: () => scorer('aggressive', { health: 0, mood: 0, gold: 0.8, renown: 0.5, skill: 2.5, 'rel:': 0, 'spark:': 0, 'bond:': 0 }, 1),
+  moneymaxx: () => scorer('moneymaxx', { health: 0.6, mood: 0.6, gold: 3, renown: 0.2, skill: 0.3, 'rel:': 0.1, 'spark:': 0, 'bond:': 0, 'gain:job': 12 }),
+  focused: (skill) => Object.assign(scorer('focused:' + skill, { health: 0.6, mood: 0.6, gold: 0.3, renown: 0.2, skill: (k) => (k === skill ? 6 : 0.4), 'rel:': 0.2, 'spark:': 0.1, 'bond:': 0.1, 'gain:': 4 }), { pickMany: pickManyFor(skill) }),
   // Casts whenever it can (design §8.8: casting at every chance keeps mana low).
-  caster: () => scorer('caster', { health: 1, mood: 1, gold: 0.4, grades: 1, renown: 0.3, skill: 1.2, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5, learn: 30, cast: 50 }),
-  social: (npc) => scorer('social:' + npc, { health: 0.6, mood: 0.6, gold: 0.3, grades: 0.6, renown: 0.2, skill: 0.3, 'rel:': (k) => (k === 'rel:' + npc ? 5 : 0.2), 'spark:': (k) => (k === 'spark:' + npc ? 4 : 0), 'bond:': (k) => (k === 'bond:' + npc ? 1 : 0), 'gain:': 3 }),
+  caster: () => scorer('caster', { health: 1, mood: 1, gold: 0.4, renown: 0.3, skill: 1.2, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5, learn: 30, cast: 50 }),
+  // Alignment and plot styles (design §8.2, §10.6): lean Lumen or Hollow, and follow the Hollow Star.
+  lumen: () => scorer('lumen', { health: 1, mood: 1, gold: 0.4, renown: 0.3, skill: 1.2, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5, alignment: 2, find: 8, queue: 8, flag: 1 }),
+  hollow: () => scorer('hollow', { health: 1, mood: 1, gold: 0.4, renown: 0.3, skill: 1.2, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5, alignment: -2, find: 8, queue: 8, flag: 1 }),
+  plot: () => scorer('plot', { health: 1, mood: 1, gold: 0.4, renown: 0.3, skill: 1.2, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5, find: 20, queue: 10, flag: 2 }),
+  social: (npc) => scorer('social:' + npc, { health: 0.6, mood: 0.6, gold: 0.3, renown: 0.2, skill: 0.3, 'rel:': (k) => (k === 'rel:' + npc ? 5 : 0.2), 'spark:': (k) => (k === 'spark:' + npc ? 4 : 0), 'bond:': (k) => (k === 'bond:' + npc ? 1 : 0), 'gain:': 3 }),
 };
 
 // Places (design §6.3): by default, keep obligations (club/job/thesis places with visits due), then go
@@ -176,6 +205,6 @@ function get(name) {
   if (STYLES[base]) return STYLES[base](arg);
   throw new Error('unknown play style "' + name + '" (' + list().join(', ') + ')');
 }
-function list() { return ['random', 'cautious', 'social', 'balanced', 'focused:<skill>', 'aggressive', 'moneymaxx', 'caster', 'truant', 'social:<npc>']; }
+function list() { return ['random', 'cautious', 'social', 'balanced', 'focused:<skill>', 'aggressive', 'moneymaxx', 'caster', 'truant', 'lumen', 'hollow', 'plot', 'social:<npc>']; }
 
 module.exports = { get, list, estimate, pickPlaces, pickMany };

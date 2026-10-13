@@ -49,33 +49,35 @@ Runs the student paper with a quill that writes on its own. Everyone is a story;
 **Facts:**
 - [surface] Editor of the Lumen Ledger, with a quill that writes on its own. (`nessa.editor`)
 - [personal] Left unsupervised, her quill starts inventing the news. (`nessa.quill`, known when `seen(nessa_burnout) > 0`)
-- [personal] Nobody has interviewed the headmistress in twenty years. She means to be the first. (`nessa.interview`, known when `rel(nessa) >= 20`)
+- [personal] Nobody has interviewed the headmistress in twenty years. She means to be the first. (`nessa.interview`, known when `rel(nessa) >= 12`)
 - [personal] She would chain herself to the printing press before letting anyone shut the Ledger. (`nessa.press`, known when `seen(nessa_paper_threatened) > 0`)
 
-## Place: The Third Gargoyle (`gargoyle_passage`)
+## Track: The Lumen Ledger (`lumen_ledger`)
 
-castle · club · open night, midnight
+club · charm/lore · ranks: Stringer, Reporter, Editor · 2 required visits per term
 
-Behind the third gargoyle on the north parapet, a passage that isn't on any map. Except theirs.
+The student newspaper. Scoops, deadlines, gossip columns and the occasional duty to the truth.
 
-Teaser while undiscovered: Corvin keeps glancing at a particular gargoyle.
-
-**Usually here:** Corvin Ashby (night, midnight)
+**Lead:** Nessa Quill
 
 ## Lore
 
-- **gargoyle** (`gargoyles`, soft): The castle is riddled with passages that appear on no official plan. The way into the Midnight Cartographers' world is behind the third gargoyle on the north parapet.
 - **Founders' Ledger** (`founders_ledger`, soft): The Founders' Ledger in the archive vault is three hundred years old. The entry for the founding year was cut out with a razor, but the impression of the pen remains on the page beneath. A client of Grisk's once paid to have another page removed.
+- **Lumen Ledger** (`lumen_ledger`, soft): The student newspaper, printed at dawn on a press that groans like a dragon. Its gossip column is feared; its editor, Nessa Quill, has a quill that writes on its own.
+- **Lumen** (`lumen_and_hollow`, soft): Lumenhold talks about people the way it talks about candles: some give light (Lumen), some swallow it (the Hollow). It is not a house or a club, only what people notice. Those who lean toward the Hollow find the Star noticing them back; the way out of it is slow, and usually starts with someone handing you something to do.
 - **Ashby** (`ashby_family`, soft): Corvin's grandfather owned a genuinely lucky deck of cards; his brother turns up at the gates wanting money. Home, Corvin says, is not a good place.
 - **secret garden** (`secret_garden`, soft): Behind the potting shed, a door in the wall leads to Maud's secret garden: glowing ferns, silver bees and a pear tree that hums. It only exists for people Maud has shown it to.
 - **Pell & Daughters** (`pell_and_daughters`, soft): The village apothecary, with a thousand labelled drawers. Old Pell taught three generations to count drops.
+- **Lumen Essay Prize** (`lumen_essay_prize`, soft): An annual prize of fifty crowns for the best student essay on a set theme, judged by the faculty. Past themes include "Magic and Duty".
 
 ## Style examples
 
 ```grim
-# content/events/people_students.grim:818
+# content/events/people_students.grim:919
 @event nessa_intro
 title: First Impressions
+class: routine
+tone: light
 actor: nessa
 when: not met(nessa) and turn >= 2
 weight: 14
@@ -85,48 +87,53 @@ scene: A girl with ink-stained fingers and a self-writing quill floating at her 
 text: A girl with a quill floating at her shoulder plants herself in front of you. "Nessa Quill, Lumen Ledger. First impressions of Lumenhold, go. Be interesting, please. The last six were boring."
 > left: Give a safe answer
   meet nessa
-  rel nessa +1
+  rel nessa +tiny
   say: The quill writes "SAFE" in the margin and underlines it twice. Nessa sighs and moves on.
 > right: Say something outrageous
   meet nessa
-  check charm 12:
-    renown +4
-    rel nessa +6
-    say: You're quoted on the front page. Half the academy now thinks you're hilarious. The other half thinks you're dangerous. Nessa thinks both.
-  else:
-    renown +2
-    rel nessa +2
-    mood -3
-    say: You are quoted. Out of context. Extremely out of context.
+  challenge negotiate easy:
+    win:
+      renown +small
+      rel nessa +medium
+      say: You're quoted on the front page. Half the academy now thinks you're hilarious. The other half thinks you're dangerous. Nessa thinks both.
+    lose:
+      renown +small
+      rel nessa +tiny
+      mood -tiny
+      say: You are quoted. Out of context. Extremely out of context.
 ```
 
 ```grim
-# content/events/expansion_people.grim:383
+# content/events/expansion_people.grim:426
 @event nessa_burnout
 title: The Editor Sleeps
+class: windfall
+tone: light
 trigger: social
 actor: nessa
-when: rel(nessa) >= 20 and year >= 2
+when: rel(nessa) >= 12 and year >= 2
 weight: 10
 art: candle
 tags: social
 scene: A girl asleep at a desk in a newspaper office, her self-writing quill still scratching on its own, the candle burned down to a stub.
 text: Nessa hasn't slept properly in a week. She's asleep at her desk now, and her quill — unsupervised — is still writing next week's paper. It has started inventing news.
 > left: Put her to bed and run the paper yourself
-  rel nessa +10
-  grades -3
+  rel nessa +large
+  study -small
   say: You edit, typeset and print one issue. It's adequate. When Nessa wakes she reads it, winces at your headlines, and hugs you for a long time.
 > right: Wake her and make her rest
-  rel nessa +6
+  rel nessa +medium
   say: She argues for ten minutes, then sleeps for fourteen hours. The quill's invented news about a dragon in the kitchens turns out to be true.
 
 # ---------------- Kael ----------------
 ```
 
 ```grim
-# content/events/people_students.grim:487
+# content/events/people_students.grim:552
 @event corvin_intro
 title: Light Fingers
+class: routine
+tone: light
 actor: corvin
 when: not met(corvin) and turn >= 2
 weight: 14
@@ -136,12 +143,12 @@ scene: A dark-haired student with a crooked grin holding up a purse between two 
 text: Someone bumps you in the crowd. A moment later a dark-haired boy is bowing and holding up your purse. "You dropped this," he says. "Into my pocket. Terrible habit of yours. Corvin Ashby."
 > left: Snatch it back and report him
   meet corvin
-  rel corvin -5
+  rel corvin -small
   say: He's gone before the prefect arrives. Your purse is lighter by exactly one crown and heavier by one IOU.
 > right: Laugh
   meet corvin
-  rel corvin +7
-  guile +1
+  rel corvin +medium
+  guile +tiny
   say: "Oh, I like you," he says, and teaches you the trick on the spot. You practise it on him. He lets you win. Probably.
 ```
 

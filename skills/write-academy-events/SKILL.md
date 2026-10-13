@@ -25,8 +25,9 @@ For each event decide:
 - **Who:** `cast:` roles (`friend: any where rel(friend) >= 10`, `here: present(place)`, `keeper: maud`), or `actor:` a fixed npc id. Don't write `actor: any` (legacy since schema v1).
 - **When:** `when` on state, flags, relationship, month, year.
 - **Class in mind** (`docs/authoring/classes.md`): routine, milestone, incident, windfall, story.
-- **The trade:** every option costs or risks something; use the magnitudes in the AGENTS.md balance table (tiers arrive in phase 2a: `presets.md`).
-- **What it leaves behind:** flags, states, queued follow-ups. Clues (`find <clue>`) and arc clocks (`advance <arc> +1`) only in hard-canon story events.
+- **The trade:** every option costs or risks something; use the size tiers (`presets.md`).
+- **What it leaves behind:** flags, states, queued follow-ups. Clues (`find <clue>`) and arc clocks (`advance <arc> +1`) only in hard-canon story events. Plot gates read `clock(<arc>)` (the schedule) and `clues(<arc>)` (engagement), never a home-made counter.
+- **Conscience:** if an option is cruel, greedy, dishonest or reaches for the Star's power, add `alignment -tiny`/`-small`; if it is honest or selfless at a cost, `alignment +tiny`/`+small`. Events for players deep in either side gate on `alignment >= 30` / `<= -30` (±60 for rare ones). `checklist.md` has the rule.
 - **Use tiers and presets, never raw numbers:** `mood -small`, `grind arcana`, `study evocation +small` (exam preparation; never `grades`), `perform duelling +small`, `spark lyra +tiny` (never `love`). Use `challenge <kind> [using <skill>] <tier>:` with `win:` / `partial:` / `lose:`, never `check`.
 
 **Repeatable pool events** (places, class days, practice, shifts, plans) have `class: routine`, `repeat: 4`–`6` (the cooldown in months), and must read differently each time: at least 3 inline variants (`{~a|b|c}`) across text and says, plus `{season=autumn: …|winter: …|…}` or `{final_year: …|…}` lines where they fit. Don't hinge a repeatable on a one-time surprise.

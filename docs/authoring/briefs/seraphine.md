@@ -25,98 +25,117 @@ Speaks in half-sentences, as if finishing the other half in a different week. Of
 **Facts:**
 - [surface] A seer who speaks in half-sentences and is unsettlingly often right. (`seraphine.seer`)
 - [personal] Sometimes she slips a day ahead and needs someone to tell her what today is. (`seraphine.slips`, known when `seen(seraphine_lost_day) > 0`)
-- [personal] Her mother is the Oracle of Vell, who wants her home to tell kings what they want to hear. (`seraphine.oracle`, known when `rel(seraphine) >= 25`)
+- [personal] Her mother is the Oracle of Vell, who wants her home to tell kings what they want to hear. (`seraphine.oracle`, known when `rel(seraphine) >= 15`)
 - [personal] Seers can't see themselves, unless someone is standing next to them. (`seraphine.self`, known when `seen(seraphine_painting) > 0`)
 
-## Place: The Observatory (`observatory`)
+## Arc: The Hollow Star (`hollowstar`, hard canon)
 
-castle · public · open evening, night, midnight
+Something that eats light sleeps beneath the Mirror Lake, behind a door the founders sealed with seven locks. Someone wants it open.
 
-A brass dome at the top of the east tower. The great telescope points wherever it likes; usually that is the right place.
+**Acts:** omens (year 1) → investigation (year 2) → escalation (year 3) → convergence (year 4)
 
-**Usually here:** Seraphine Hale (evening, night); Kael Dumont (night, midnight)
+**Clues:** founders_ledger, lake_bell, second_shadow, seven_locks, star_key, kael_family, ilse_truth, knows_founders_seal, heard_of_starcalling, codex_names · **key:** seven_locks, star_key, ilse_truth
+
+Batch content may read the act for flavour and point toward clue sources. Only hard-canon events grant key clues or move the clock.
 
 ## Lore
 
-- **observatory** (`observatory`, soft): A brass dome atop the east tower. The great telescope points wherever it likes. On cold nights Kael sits on the roof outside it, and frost spreads around him.
+- **founders** (`founders_seal`, soft): The founders built Lumenhold as a seal over the Hollow Star: seven towers, one lock in each, and a key shaped like a star that holds no light. The seal weakens over generations and must be renewed.
+- **Hollow Star** (`hollow_star`, soft): A star that is not a light but an absence: it eats light. It sleeps beneath the Mirror Lake, behind a round door. It is not asleep so much as waiting, and it learns the names of those who look for it.
 - **star key** (`star_key`, soft): The key to the founders' seal is shaped like a star and black as a hole in the world. It was kept in a star-shaped hollow at the top of the seventh tower, behind wards that shriek.
+- **Dumont** (`dumont_family`, soft): The Dumonts are the foremost of the Hollow families. They sent Kael to open the door; when he refused, they raised his younger sister Ilse to do it instead. Their mother has never told either child she was proud.
+- **drowned bell** (`drowned_bell`, soft): A bell lies under the Mirror Lake. It tolls when the Star stirs, and once on the night the lake freezes. Edmund's silver wand hums the same note.
+- **Starcalling** (`starcalling`, soft): An old discipline of calling down the light of a named star. Light that the Hollow Star cannot swallow is one of the few weapons the founders left.
+- **Mirror Lake** (`mirror_lake`, soft): The lake is so still it shows the towers upside down. Students swim in it in summer and catch Lake Fever when they shouldn't. Some nights it calls to seers.
+- **Founders' Ledger** (`founders_ledger`, soft): The Founders' Ledger in the archive vault is three hundred years old. The entry for the founding year was cut out with a razor, but the impression of the pen remains on the page beneath. A client of Grisk's once paid to have another page removed.
+- **Codex of Hollow Names** (`codex_hollow_names`, soft): A book in the Restricted Section that finds its readers. Its first page is a list of names; the last is still being written. Reading it turns the fingertips grey.
 - **seventh tower** (`seventh_tower`, soft): One of the seven towers has been locked for a century. At its top is a single room of dust and moonlight. When the star key is lifted, every candle in the academy goes out at once.
-- **Harvest Feast** (`festivals`, soft): The Harvest Feast opens the year; on Lantern Night lanterns carry wishes over the lake; the Midwinter Ball fills the Great Hall; the Spring Tournament crowns a duelling champion; and at Starfall the whole academy sleeps on the lawns to watch the meteors.
+- **Lumen** (`lumen_and_hollow`, soft): Lumenhold talks about people the way it talks about candles: some give light (Lumen), some swallow it (the Hollow). It is not a house or a club, only what people notice. Those who lean toward the Hollow find the Star noticing them back; the way out of it is slow, and usually starts with someone handing you something to do.
 - **frozen lake** (`lake_freezes`, soft): When the seal is at its weakest, on the night of the Blossom moon, the lake freezes in a single breath in the middle of spring. Cracks glow beneath the ice and things made of frost and whispers come ashore.
-- **young headmistress** (`isolde_youth`, soft): Before she was headmistress, Isolde Marrow was the student with the detention record of the decade, who set the observatory on fire twice.
 
 ## Style examples
 
 ```grim
-# content/events/expansion_people.grim:138
-@event seraphine_lost_day
-title: Seraphine Is Tomorrow
+# content/events/people_students.grim:455
+@event seraphine_lake_vision
+title: She Walks Into the Lake
+class: story
+tone: tense
 trigger: social
 actor: seraphine
-when: rel(seraphine) >= 10
+when: rel(seraphine) >= 6 and month >= 3 and month <= 9
+weight: 10
+art: wave
+tags: social danger
+scene: A girl in a nightgown wading into a misty lake at night, eyes glowing silver, arms outstretched toward something under the water.
+text: From your window you see Seraphine walking into the lake in her nightgown, eyes shining silver, already up to her waist.
+> left: Wake a prefect
+  rel seraphine +small
+  say: The prefect drags her out, coughing. She doesn't remember anything. She looks at you strangely for days.
+> right: Run down and pull her out
+  challenge feat trivial:
+    win:
+      rel seraphine +large
+      spark seraphine +small
+      alignment +small
+      say: You reach her just as she goes under. On the shore she wakes and whispers, "It was calling me. It called you too." Then she holds on very tight.
+    lose:
+      health -large
+      gain sick
+      rel seraphine +large
+      say: You both nearly drown. You both come down with Lake Fever. She brings you soup that tastes faintly of the future.
+```
+
+```grim
+# content/events/expansion_people.grim:152
+@event seraphine_lost_day
+title: Seraphine Is Tomorrow
+class: routine
+tone: eerie
+trigger: social
+actor: seraphine
+when: rel(seraphine) >= 6
 weight: 10
 art: hourglass
 tags: mystery social
 scene: A girl sitting at the wrong desk in an empty classroom, a teacup in her hands, the calendar on the wall showing the next day's date.
 text: Seraphine is sitting in an empty classroom, waiting for a lesson that's happening tomorrow. "I've slipped," she says calmly. "I'm a day ahead. It happens. I need someone to remind me what today is."
 > left: Talk her back into today
-  rel seraphine +8
-  lore +1
+  rel seraphine +medium
+  lore +tiny
   say: You tell her what you had for breakfast, what the weather's like, what Thorne said this morning. Slowly her eyes stop looking through you. "Oh," she says. "Hello. Today."
 > right: Ask her what tomorrow holds
   chance 50:
-    grades +4
+    study +small
     say: "There's a surprise quiz in Lore," she says. "Question three is a trick." It is. You get it right.
   else:
-    mood -3
+    mood -tiny
     say: "It rains," she says. "You get wet. You'll be fine." You are not fine. You get very wet.
 ```
 
 ```grim
-# content/events/people_students.grim:424
-@event seraphine_future
-title: I Saw You Old
+# content/events/expansion_people.grim:197
+@event seraphine_mother
+title: The Oracle's Summons
+class: routine
+tone: light
 trigger: social
 actor: seraphine
-when: rel(seraphine) >= 25
-weight: 10
-art: hourglass
-tags: social mystery
-scene: Two students sitting on the rim of a dry fountain, one looking up at the stars, the other looking at the first with a soft smile.
-text: "I saw you old," Seraphine says suddenly. "Last night. You were happy. Really happy. There was someone with you." She pauses. "Do you want to know who?"
-> left: Yes, tell me
-  chance 50:
-    love seraphine +6
-    say: She looks at you for a long time. "I'll tell you when you're old," she says, and goes pink.
-  else:
-    mood +3
-    say: "Someone kind," she says. "That's all I could see. Their hands were kind."
-> right: No, let it be a surprise
-  rel seraphine +6
-  mood +3
-  say: She smiles like you've given her a present. "That's the right answer. Nobody ever gives the right answer."
-```
+when: rel(seraphine) >= 15 and year >= 2
+weight: 12
+art: letter
+tags: social
+scene: A girl holding a letter that glows faintly silver, standing at the top of a tower stair, looking down as if about to fall or fly.
+text: Seraphine's mother, the Oracle of Vell, wants her home to take up the family seat. "I'd spend my life telling kings what they want to hear," Seraphine says. "But she's already seen me say yes. She always sees me say yes."
+> left: "Then surprise her."
+  rel seraphine +large
+  mood +small
+  say: Seraphine writes back: no. For a whole day she's terrified. Then she's giddy. "I didn't see that coming," she keeps saying. "I didn't see it coming!"
+> right: "Maybe she's right."
+  rel seraphine -medium
+  say: She nods slowly. She doesn't go — not yet. But she stops telling you her visions, and you miss them more than you expected.
 
-```grim
-# content/events/expansion_people.grim:160
-@event seraphine_painting
-title: A Painting of Somewhere Else
-trigger: social
-actor: seraphine
-when: rel(seraphine) >= 20
-weight: 10
-art: eye
-tags: social mystery
-scene: A small canvas on an easel showing a stranger's cottage by the sea, a girl with paint on her fingers watching someone look at it.
-text: Seraphine has painted a small cottage by the sea, with a crooked chimney and a blue door. "It's yours," she says. "In twelve years. I thought you should see it now. In case you want a different door."
-> left: Keep the painting
-  mood +6
-  rel seraphine +6
-  say: You hang it over your bed. Some nights you swear the smoke from the chimney moves. You decide, privately, that you like the blue door.
-> right: Ask her to paint her own future
-  rel seraphine +8
-  love seraphine +3
-  say: She looks at the blank canvas for a long time. "I never can," she says. "Seers can't see themselves." Then, quietly: "Unless someone's standing next to us."
+# ---------------- Corvin ----------------
 ```
 
 ## Rules

@@ -154,6 +154,9 @@
     'ending.fond': 'fond',
     'ending.cold': 'cold',
     'ending.export': 'Export this run',
+    'ending.slot.mystery': 'The Hollow Star',
+    'ending.slot.relationships': 'Bonds',
+    'ending.slot.personal': 'Remembered as',
 
     // Playtest feedback: rate / comment on the current or previous card; runs are logged for export.
     'fb.this': 'This card',

@@ -427,7 +427,6 @@ text: Plotting the autumn sky, you notice seven faint stars that form a ring aro
 > right: Investigate
   lore +medium
   flag saw_hollow_star
-  hollow +1
   say: You spend a week in the archives. Three hundred years ago, the patch was called the Hollow. Then someone scraped the name off every chart.
 
 # ---------------- Midnight Cartographers ----------------
@@ -489,12 +488,11 @@ scene: A narrow brick tunnel dripping with water, lit by a single candle, ending
 text: A loose stone in the boathouse cellar opens on a tunnel running out under the lake. The bricks drip. At the far end, a round door carved with a black star. It is warm to the touch.
 > left: Mark it and leave
   flag found_lake_tunnel
-  hollow +1
   lore +tiny
   say: You add the tunnel to the club map with a skull beside it. Corvin adds a second skull, to be safe.
 > right: Press your palm to the star
   flag found_lake_tunnel
-  hollow +1
+  alignment -small
   arcana +small
   mood -tiny
   gain hollow_dreams

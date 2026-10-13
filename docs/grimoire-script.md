@@ -186,11 +186,17 @@ do:
 priority: 80
 title: The Archmage's Path
 art: wand
-when: arcana >= 50 and grades >= 70
+when: arcana >= 55 and gpa >= 2.5
 text: Graduating with highest honours...
+
+@ending ending_hollow_hero
+slot: mystery
+priority: 95
+when: flag(hollow_sealed)
+...
 ```
 
-At graduation, endings **without** `kind: early` are checked from highest `priority` down; the first whose `when` is true wins. One ending with no `when` (priority 0) is the fallback. `kind: early` endings are reached only through the `end <id>` effect (game over).
+At graduation the engine builds a **yearbook** (design §10.5). Each final ending (no `kind: early`) has a `slot:`: `headline` (the default), `mystery`, `relationships` or `personal`. Within a slot, endings are checked from highest `priority` down and the first ones whose `when` is true are taken, up to the slot's limit: headline 1, mystery 1, relationships 3, personal 2. The headline ending with no `when` (priority 0) is the fallback, and lint requires one. `excludes: a b` drops those endings once this one is picked. `kind: early` endings are reached only through the `end <id>` effect (game over) and take no slot. The ending screen shows the headline, then one line per other entry; the run log records them as `yearbook`.
 
 ### `@game`
 
@@ -357,7 +363,9 @@ trigger: queued
 
 **A branch that remembers:** set a flag (`flag kael_ally`), and later gate on it: `when: flag(kael_ally)`, or inside effects `if flag(kael_ally):`.
 
-**A counter across many events:** `hollow +1` in every clue event, then `when: hollow >= 3` for the payoff.
+**Plot progress:** read the arc, not a home-made counter. `clock(hollowstar) >= 4` is the schedule (the world moves without you); `clues(hollowstar) >= 2` is what the player has engaged with. A custom counter (`debt_paid += 1`) is still fine for a self-contained chain.
+
+**A moral choice:** put the weight on `alignment` (−100 Hollow … +100 Lumen): `alignment -small` for a cruel, greedy or Star-tempted choice, `alignment +small` for an honest or selfless one at a cost. Gate on the design thresholds, ±30 and ±60 (`when: alignment <= -30`). Below −50 the climb back toward Lumen runs at half speed (the resource's `drag:`). Characters tagged `virtuous` or `ruthless` (`tagged(npc, virtuous)`) are the ones who react.
 
 **A relationship milestone:** `when: love(npc) >= 35 and bond(npc) != "partner"`, with `weight: 30` so it appears promptly once unlocked.
 
@@ -479,7 +487,7 @@ Roles are filled on a scratch copy of the RNG, with backtracking, favouring stro
 
 **Places** (`@place`): `map: campus 585,278` positions the marker; `open:` lists the slots it is open in; `season:`, `closed_when:` close it; `discover:` (a condition) finds it, else it starts found unless `hinted_when:` shows it as "?"; `track:` makes it a club or job place; `draws:` lets old tag-only random events be drawn there. Statements: `discover library`. Functions: `discovered(p)`, `present(p)` (who is there now), `visits_to(p)` (lifetime visits picked on the map).
 
-**Arcs** (`@arc` in `content/world/arcs.grim`): `clock: 0..12` and `beats: 1@y1m3 2@y1m9 …` advance the clock on schedule whatever the player does. Statements: `find bell_rope` (a clue), `advance hollowstar +1`. Functions: `clue(x)`, `clock(arc)`, `act(arc)` (the current act by year).
+**Arcs** (`@arc` in `content/world/arcs.grim`): `clock: 0..12` and `beats: 1@y1m3 2@y1m9 …` advance the clock on schedule whatever the player does. Statements: `find bell_rope` (a clue), `advance hollowstar +1`. Functions: `clue(x)`, `clues(arc)` (how many of the arc's clues are found), `clock(arc)`, `act(arc)` (the current act by year).
 
 **Push windows** (design §5.3): `queue x within 2..4` (some month 2–4 months from now) and `queue x by month 6` (before the next month 6 is over). Each month in the window the card is pushed with a rising chance (1 / months left), and on the last month for certain. `unqueue x` drops a pending one.
 

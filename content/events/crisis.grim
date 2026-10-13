@@ -79,29 +79,28 @@ priority: 90
 art: scales
 tags: crisis
 scene: Three faculty members behind a high bench in a dim chamber; the headmistress in the centre, hands folded.
-text: Your standing has collapsed. You are summoned before the Disciplinary Board: three professors and the headmistress, who looks at you with an expression of deep, patient disappointment.
+text: Two terms of failing marks. You are summoned before the Disciplinary Board: three professors and the headmistress, who looks at you with an expression of deep, patient disappointment. {flag(board_reprieve): They have seen you here before.|}
 > left: Plead your case (Charm)
-  if has(probation):
+  if flag(board_reprieve):
     end ending_expelled
   else:
-    challenge negotiate easy:
+    challenge negotiate medium:
       win:
+        flag board_reprieve
         study +huge
         gain probation
-        say: You speak honestly and well. They grant you probation. "Do not make us regret it."
+        say: You speak honestly and well. They grant you one reprieve. "There will not be a second," says the headmistress, pleasantly.
       lose:
-        study +huge
-        gain probation
-        mood -medium
-        say: You stammer. They grant probation anyway, but the headmistress's sigh will haunt you.
+        end ending_expelled
 > right: Promise to work harder
-  if has(probation):
+  if flag(board_reprieve):
     end ending_expelled
   else:
+    flag board_reprieve
     study +huge
     gain probation
-    mood -small
-    say: "Promises are cheap," says Professor Thorne. "We'll take it anyway." Probation.
+    mood -medium
+    say: "Promises are cheap," says Professor Thorne. "We'll take this one. Only this one." A reprieve, and a very long term ahead.
 
 @event grisk_collectors
 title: Grisk's Collectors

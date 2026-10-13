@@ -50,6 +50,7 @@ text: Tidecalling half of the course: a puddle each, and the task of making it s
   grind arcana
   say: By the end of the hour your puddle stands like a sulky child. It counts.
 > right: Copy the student next to you
+  alignment -tiny
   arcana +tiny
   guile +tiny
   mood -tiny
@@ -160,11 +161,11 @@ text: The last practical of Advanced Evocation: melt an ice dummy without touchi
   challenge exam using arcana hard:
     win:
       arcana +large
-      grades +medium
+      study evocation +medium
       rel thorne +small
       say: The ice runs off the dummy and not a drop touches the floor. Thorne says "Hm," and writes something underlined.
     lose:
-      grades -small
+      mood -small
       say: The dummy melts, and so does a fair part of the floor. Thorne writes something with a question mark.
 > right: Water, patiently
   arcana +medium
@@ -337,7 +338,7 @@ text: The courtyard fountain has frozen in the middle of a splash. The water han
 > left: Stop the first-year
   rel kael +tiny
   health -tiny
-  hollow +1
+  alignment +small
   say: You pull the first-year away just as the ice cracks. For a moment you'd swear you saw a black star reflected in it.
 > right: Study the ice
   lore +small
@@ -422,9 +423,10 @@ tags: social
 scene: A refectory mid-food-fight, puddings in the air, a prefect rising slowly from behind a table.
 text: A pudding sails across the refectory and lands in Bram's lap. The hall goes silent. Every eye turns to the table it came from, which is yours.
 > left: Own up
+  alignment +tiny
   rel bram +small
   renown +tiny
-  grades -tiny
+  mood -tiny
   say: Bram writes you a demerit, then pauses. "Good throw," he says, almost without wanting to.
 > right: Throw another
   renown +small
@@ -480,9 +482,9 @@ scene: An old star chart spread on a desk, one constellation with a careful empt
 text: An old star chart in the observatory archive has a circle drawn where a star should be, with a note in faded ink: "It eats the light. Do not chart it."
 > left: Copy the chart
   lore +small
-  hollow +1
   say: You copy it carefully. That night you dream of a circle with nothing inside it, waiting.
 > right: Put it back
+  alignment +tiny
   mood +tiny
   say: You return it to the drawer. The drawer feels colder when you close it.
 

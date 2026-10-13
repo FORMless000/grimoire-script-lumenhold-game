@@ -19,6 +19,7 @@
   const DEFAULT_PRIORITY = { queued: 60, auto: 50, social: 20, random: 10 };
   const ANY_EVENT_REST = 2;
   const SAVE_VERSION = 3;
+  const YEARBOOK = [['headline', 1], ['mystery', 1], ['relationships', 3], ['personal', 2]];   // design §10.5
   // Defaults when content has no @balance block (design §8.4).
   const TIER_INDEX = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4 };
   const DEFAULT_SIZES = { _: [2, 4, 7, 12, 20], gold: [3, 8, 15, 30, 60], renown: [1, 3, 6, 10, 16], mana: [3, 6, 10, 16, 25], xp: [1, 2, 4, 7, 12], rel: [2, 4, 7, 12, 20], spark: [3, 6, 10, 15, 25] };
@@ -153,7 +154,7 @@
       return {
         format: 'lumenhold-run', v: 1, runId: s.runId, name: s.name, seed: s.seed,
         startedAt: s.hist.length ? s.hist[0].at : null, updatedAt: now(), turn: s.turn, maxTurns: this.maxTurns,
-        ended: s.ended ? { id: s.ended.id, turn: s.turn } : null,
+        ended: s.ended ? Object.assign({ id: s.ended.id, turn: s.turn }, s.ended.book ? { yearbook: s.ended.book.map((x) => x.slot + ':' + x.id) } : {}) : null,
         feedback: s.hist.filter((h) => h.fb).length,
         ...meta, hist: s.hist,
       };
@@ -460,6 +461,7 @@
             case 'present': return eng.presentAt(a[0]).length;
             case 'act': return eng.actOf(a[0]);
             case 'clock': return ((s.arcs || {})[a[0]] || {}).clock || 0;
+            case 'clues': { const d = eng.c.arcs && eng.c.arcs[a[0]]; return d ? (d.clues || []).filter((x) => (s.clues || {})[x]).length : 0; }   // clues of an arc found so far
             case 'plan': return Object.keys(s.states).some((k) => eng.c.states[k] && eng.c.states[k].kind === 'plan' && k === 'plan_' + a[0]);
             case 'bond': return s.npcs[a[0]] ? s.npcs[a[0]].bond : 'none';
             case 'met': return !!(s.npcs[a[0]] && s.npcs[a[0]].met);
@@ -987,7 +989,7 @@
       this.runHooks('month_end', summary);
       s.pending = summary;
       if (s.ended) return this.ending();
-      if (s.turn >= this.maxTurns) { s.ended = { id: this.finalEnding() }; return this.ending(); }
+      if (s.turn >= this.maxTurns) { const book = this.yearbook(); s.ended = { id: book[0].id, book }; return this.ending(); }
       return this.beginMonth();
     }
 
@@ -1229,16 +1231,30 @@
     outcome(ctx) { return { say: ctx.say.join(' '), deltas: ctx.deltas, notes: ctx.notes, checks: ctx.checks, ended: !!this.s.ended }; }
 
     /* ---------------- Endings ---------------- */
-    finalEnding() {
+    // Yearbook endings (design §10.5). Each final ending has a `slot:` (default headline): headline takes 1 (the
+    // highest priority whose `when` holds, else the fallback with no `when`), mystery 0–1, relationships 0–3,
+    // personal 0–2. A picked ending's `excludes:` removes others. Early endings stay exclusive.
+    yearbook() {
       const list = Object.values(this.c.endings).filter((x) => x.kind !== 'early').sort((a, b) => (b.priority || 0) - (a.priority || 0));
-      const hit = list.find((x) => this.test(x.when, null));
-      return hit ? hit.id : (list[list.length - 1] || {}).id;
+      const out = [], excluded = new Set(), slotOf = (x) => x.slot || 'headline';
+      for (const [slot, max] of YEARBOOK) {
+        const pool = list.filter((x) => slotOf(x) === slot);
+        for (const x of pool) {
+          if (out.filter((y) => y.slot === slot).length >= max) break;
+          if (excluded.has(x.id) || !x.when || !this.test(x.when, null)) continue;
+          out.push({ slot, id: x.id }); for (const e of x.excludes || []) excluded.add(e);
+        }
+        if (slot === 'headline' && !out.length) { const fb = pool.filter((x) => !x.when).pop() || pool[pool.length - 1]; if (fb) out.push({ slot, id: fb.id }); }
+      }
+      return out;
     }
+    finalEnding() { const b = this.yearbook(); return b.length ? b[0].id : null; }
     ending() {
       const s = this.s, id = s.ended.id; const d = this.c.endings[id] || { title: 'The End', text: '' };
+      const book = (s.ended.book || []).filter((x) => x.slot !== 'headline' && this.c.endings[x.id]).map((x) => { const e = this.c.endings[x.id]; return { slot: x.slot, id: x.id, title: this.interp(e.title), text: this.interp(e.text), art: e.art || 'star' }; });
       const last = s.hist[s.hist.length - 1];
-      if (!last || last.t !== 'end') s.hist.push({ t: 'end', n: ++s.seq, turn: s.turn, id, title: this.interp(d.title), early: s.turn < this.maxTurns, vals: { ...s.vals }, at: now() });
-      return { kind: 'ending', n: s.seq, id, title: this.interp(d.title), text: this.interp(d.text), art: d.art || 'star', scene: d.scene || null, turn: this.s.turn, early: this.s.turn < this.maxTurns };
+      if (!last || last.t !== 'end') s.hist.push(Object.assign({ t: 'end', n: ++s.seq, turn: s.turn, id, title: this.interp(d.title), early: s.turn < this.maxTurns, vals: { ...s.vals }, at: now() }, book.length ? { yearbook: book.map((x) => x.slot + ':' + x.id) } : {}));
+      return { kind: 'ending', n: s.seq, id, title: this.interp(d.title), text: this.interp(d.text), art: d.art || 'star', scene: d.scene || null, turn: this.s.turn, early: this.s.turn < this.maxTurns, yearbook: book };
     }
 
     /* ---------------- Snapshot for UI ---------------- */

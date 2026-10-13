@@ -1,8 +1,14 @@
 # ============================================================
-#  Endings. `kind: early` endings are only reached via `end <id>`.
-#  At graduation, final endings are checked in descending
-#  `priority`; the first whose `when` is true wins. An ending with
-#  no `when` is the fallback.
+#  Endings. `kind: early` endings are only reached via `end <id>`
+#  and stay exclusive (game over).
+#  Graduation builds a yearbook (design §10.5) from `slot:`s, each
+#  checked in descending `priority`:
+#    headline (default)  1: career / academic; `ending_graduate`
+#                           (no `when`) is the fallback
+#    mystery             0-1: the Hollow Star outcome
+#    relationships       0-3: bonds
+#    personal            0-2: alignment, renown
+#  `excludes:` drops other endings once this one is picked.
 # ============================================================
 
 # ---------------- Early endings ----------------
@@ -40,13 +46,23 @@ text: You and Corvin leave Lumenhold on a stolen sky-barge at midnight, laughing
 # ---------------- Final endings (graduation) ----------------
 
 @ending ending_hollow_keeper
+slot: mystery
 priority: 100
 title: Keeper of the Hollow Star
 art: moon
 when: flag(hollow_bargain)
 text: You graduate with a black star on your palm and a voice in the back of your mind that is not entirely yours. The Hollow Star gave you power; it will want something back. For now, the towers bow a little when you pass, and even the headmistress looks away first.
 
+@ending ending_hollow_freed
+slot: mystery
+priority: 98
+title: Herald of the Hollow Star
+art: moon
+when: flag(hollow_freed)
+text: The spring the lake froze, the Star went free, and you held the door. It did not swallow you; it remembered who let it out. The Northern families write to you as one of their own now, and wherever you walk, candles burn a little lower, as if bowing. Lumenhold still hands you a diploma. Nobody at the ceremony looks you in the eye.
+
 @ending ending_hollow_hero
+slot: mystery
 priority: 95
 title: Warden of Lumenhold
 art: shield
@@ -57,17 +73,18 @@ text: The academy will never fully know what you did beneath the lake. The headm
 priority: 80
 title: The Archmage's Path
 art: wand
-when: arcana >= 50 and gpa >= 3.0
+when: arcana >= 55 and gpa >= 2.5
 text: Graduating with highest honours and a power that makes the candles lean toward you, you are offered an apprenticeship with the Conclave of the Seven Towers. Professor Thorne shakes your hand and says, gruffly, "Don't waste it." You won't.
 
 @ending ending_scholar
 priority: 75
 title: Scholar of the Spire
 art: book
-when: lore >= 70 and gpa >= 3.0
+when: (lore >= 90 or (flag(thesis_distinction) and lore >= 70)) and gpa >= 2.5
 text: Your thesis is shelved in the Spire Library, in the section students whisper about. The faculty offers you a junior fellowship. You will spend your life among books that bite and secrets that wait — and you could not be happier.
 
 @ending ending_beloved
+slot: relationships
 priority: 70
 title: Hand in Hand
 art: heart
@@ -82,6 +99,7 @@ when: alchemy >= 50
 text: Your potions are already sold under the counter in three cities. On graduation day you sign the lease on a crooked little shop by the harbour. The sign reads your name, and underneath: NO REFUNDS FOR TRANSFORMATIONS.
 
 @ending ending_celebrity
+slot: personal
 priority: 60
 title: The Name on Every Lip
 art: star
@@ -92,7 +110,7 @@ text: The Lumen Ledger runs a special edition about you. First-years queue for y
 priority: 55
 title: Gold in the Vaults
 art: coin
-when: gold >= 250
+when: gold >= 180
 text: You leave Lumenhold with a diploma and a fortune. Magic, you've decided, is good, but compound interest is better. Within five years your trading house has offices in every port — and an enchanted ledger that never loses a coin.
 
 @ending ending_shadow
@@ -103,6 +121,7 @@ when: guile >= 40
 text: No one quite knows how you graduated with those grades. No one quite remembers the favours you called in. A discreet letter offers you a position with the Crown's Office of Unseen Affairs. You accept, of course. You'd already read it before it was sent.
 
 @ending ending_beloved_friends
+slot: relationships
 priority: 45
 title: The Ones Who Stayed
 art: group
@@ -113,14 +132,15 @@ text: You may not leave as the brightest or the richest, but you leave surrounde
 priority: 40
 title: By the Skin of Your Teeth
 art: hourglass
-when: (turn > 4 and gpa < 2.0)
+when: (turn > 4 and gpa < 2.0) or flag(thesis_resubmit)
 text: Your name is called last, after a long pause and some whispering between examiners. But it is called. You graduate. You are a mage of Lumenhold, and nobody ever has to know the details.
 
 @ending ending_bystander
+slot: mystery
 priority: 20
 title: Someone Else's Lantern
 art: lantern
-when: flag(hollow_out) or flag(hollow_held_line) or (clue(founders_ledger) + clue(lake_bell) + clue(second_shadow) + clue(seven_locks) + clue(star_key) + clue(kael_family) + clue(ilse_truth) + clue(knows_founders_seal) + clue(heard_of_starcalling) + clue(codex_names) <= 2 and not (flag(sided_wardens) or flag(sided_dumonts) or flag(sided_self)))
+when: not (flag(hollow_sealed) or flag(hollow_bargain) or flag(hollow_freed))
 text: There was a spring frost, the year you graduated, and a night when the bell under the lake would not stop ringing. You were somewhere else: asleep, or studying, or holding a door shut for the first-years. Someone else went down with the lantern. You never learn their whole story, but every spring, when the lake thaws, you find yourself grateful to them.
 
 @ending ending_graduate
@@ -142,3 +162,21 @@ title: The Road of Wonders
 art: tent
 when: flag(career_circus) and flag(career_accepted)
 text: You join the Travelling Circus of Wonders as its youngest illusionist. For years you cross the kingdoms in a painted wagon, making dragons out of moonlight for children who have never seen magic. Every winter, a letter arrives from Lumenhold. You always write back.
+
+# ---------------- Personal lines (yearbook) ----------------
+
+@ending ending_lumen
+slot: personal
+priority: 30
+title: A Lantern for Others
+art: lantern
+when: alignment >= 60
+text: In the yearbook, under your portrait, someone has written: "The one you went to when it mattered." First-years you barely remember will name their own lanterns after you. Lumenhold has a word for people like that. It is the same word as its name.
+
+@ending ending_hollow_touched
+slot: personal
+priority: 30
+title: The Shadow at Your Heel
+art: mask
+when: alignment <= -60
+text: Your portrait in the yearbook is the only one where the candles behind you seem to have gone out. People step aside when you pass, not quite knowing why. The Hollow has learned your name, and you find, more and more often, that you answer to it.

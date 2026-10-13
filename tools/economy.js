@@ -25,7 +25,7 @@ function play(seed, style) {
     if (r.kind === 'month') { r = eng.advance(); continue; }
     if (r.kind === 'map') { eng.pickPlaces((style.pickPlaces || Policies.pickPlaces)(eng, r.view)); r = eng.advance(); continue; }
     const v = r.view;
-    if (v.pick > 1) { const o = v.options.filter((x) => !x.disabled && x.key !== 'none'); eng.choose(Policies.pickMany(eng, v, o)); }
+    if (v.pick > 1) { const o = v.options.filter((x) => !x.disabled && x.key !== 'none'); eng.choose((style.pickMany || Policies.pickMany)(eng, v, o)); }
     else eng.choose(style.pick(eng, v));
     r = eng.advance();
   }

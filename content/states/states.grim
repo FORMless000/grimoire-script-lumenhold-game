@@ -328,6 +328,16 @@ tick:
 
 # ---------------- Conditions ----------------
 
+@state hungry
+name: Hungry
+kind: debuff
+art: meal
+duration: 1
+desc: The board went unpaid this month. Bread rolls pocketed from the refectory only go so far.
+tick:
+  health -1
+  mood -2
+
 @state sick
 name: Lake Fever
 kind: debuff
@@ -400,7 +410,7 @@ tick:
 name: Academic Probation
 kind: debuff
 art: scales
-desc: One more failure and the board will not be lenient. Raise your Standing above 35 to clear it.
+desc: Your marks are below the line. Two terms under a 1.0 and the Disciplinary Board sits. A GPA of 2.0 clears it.
 tick:
   mood -2
   if gpa >= 2.0:

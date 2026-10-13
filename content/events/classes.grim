@@ -112,7 +112,6 @@ text: Waist-deep in the freezing lake at dawn, Professor Marisol tells you to as
   say: You stand still until the cold stops hurting. The lake murmurs — and for a moment you could swear it said your name.
   chance 30:
     flag lake_knows
-    hollow +1
 
 @event tide_storm_drill
 title: Storm Drill
@@ -151,14 +150,12 @@ text: During a breathing-charm lesson you hear it: a bell, deep under the lake, 
   lore +tiny
   say: Her face goes very still. "There is no bell," she says. "There hasn't been a bell for three hundred years."
   flag heard_bell
-  hollow +1
   find lake_bell
 > right: Dive down to find it
   challenge feat medium:
     win:
       lore +small
       flag bell_fragment
-      hollow +1
       find lake_bell
       say: Deep in the silt you find a broken piece of bronze, warm to the touch, engraved with a black star.
     lose:
@@ -378,7 +375,6 @@ text: In the middle of crystal-gazing, Seraphine Hale seizes your wrist. Her eye
   rel seraphine +medium
   lore +tiny
   flag heard_prophecy
-  hollow +1
   say: "Someone cold," she says. "Someone kind." Then she shakes her head, smiles vaguely, and asks if you'd like a biscuit.
 
 # ---------------- Artifice ----------------
@@ -567,7 +563,6 @@ text: Long after the lecture ends you find Kael alone on the observatory roof. F
   rel kael +medium
   lore +tiny
   flag saw_hollow_star
-  hollow +1
   say: "There," he says, pointing at the dark. "Can you see it? A star that eats light." You look for a long time. You think you can.
 
 @event astro_sleepless
@@ -721,6 +716,7 @@ text: A sixth-year slides a battered notebook across the table. "My notes on the
 > left: Decline
   say: The sixth-year shrugs and slides the notebook to the next student. You watch it go.
 > right: Take the notebook
+  alignment -tiny
   lore +medium
   flag forbidden_key
   queue forbidden_section_1 in 1

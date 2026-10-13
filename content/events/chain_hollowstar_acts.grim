@@ -30,7 +30,6 @@ text: At supper you notice three identical silver rings at the high table: on th
 > left: Follow them down
   challenge deceive medium:
     win:
-      hollow +1
       lore +small
       say: You shadow them from tower to tower. At each one they lay a palm on the stone and wait. At the last, Maud takes her hand away and blows on her fingers as if the wall were ice.
     lose:
@@ -56,7 +55,6 @@ chain: hollowstar
 scene: A seer on the observatory balcony at night, counting the academy's towers on her fingers, one finger held back.
 text: Seraphine is on the observatory balcony, counting towers on her fingers. "Seven," she says. "Seven. Six, and then… no. Seven, for now." She looks at you as if you had arrived a little early. "What month is it? I lose track around the… you know."
 > left: "Which one goes out?"
-  hollow +1
   lore +small
   mood -small
   say: She points, then frowns at her own hand. "That one. Or the one next to it. Next year, I think." She doesn't remember saying it the next morning, but you do.
@@ -80,7 +78,6 @@ text: A warm night, and a ring of frost has formed in the middle of the lake: pe
 > left: Watch what she does
   challenge deceive medium:
     win:
-      hollow +1
       find lake_bell
       lore +small
       say: She kneels and speaks to the water, slow and patient, the way you would speak to a sleeping animal. The ring shrinks, cracks, and is gone. She stays kneeling a long time afterwards.
@@ -109,7 +106,6 @@ text: Mid-lecture, every lamp in the Lecture Tower goes out at once, and none of
 > left: Walk out onto the ice
   challenge research medium:
     win:
-      hollow +1
       advance hollowstar +1
       lore +medium
       health -small
@@ -140,7 +136,6 @@ text: Maud is on her cottage step with two mugs of tea, as if she expected you. 
   mood -tiny
   say: You drink your tea and watch the ice. She hums something old. When the mugs are empty she squeezes your hand. "That was the right one," she says, and you'll only understand why much later.
 > right: Ask what's holding it shut
-  hollow +1
   find seven_locks
   rel maud +small
   mood -small
@@ -150,7 +145,7 @@ text: Maud is on her cottage step with two mugs of tea, as if she expected you. 
 title: Two Invitations
 arc: hollowstar
 beat: 8
-when: hollow >= 2 or flag(kael_told) or flag(warden_trial)
+when: clues(hollowstar) >= 2 or flag(kael_told) or flag(warden_trial) or flag(wardens_noticed) or flag(hollow_courted)
 type: menu
 class: story
 tone: tense
@@ -194,7 +189,7 @@ text: Two invitations in one day. A note in the headmistress's neat hand: "My st
 title: The Last Winter Before
 arc: hollowstar
 beat: 10
-when: hollow >= 2 or flag(sided_wardens) or flag(sided_dumonts) or flag(sided_self)
+when: clues(hollowstar) >= 2 or flag(sided_wardens) or flag(sided_dumonts) or flag(sided_self)
 type: menu
 class: story
 tone: tense
@@ -241,7 +236,6 @@ scene: A young woman in white furs drawing a round door in the snow with the tip
 text: Ilse draws a circle in the snow with her wand, then a smaller one inside it. "This is the door," she says. "I have drawn it every day since I was six. I have never seen it." She doesn't look up. "Ask me what they taught me to do. Or don't. I don't care which."
 > left: "What did they teach you?"
   find ilse_truth
-  hollow +1
   rel ilse +small
   mood -small
   say: She tells you, flatly, like a lesson recited: how to stand, what to say, where to put her hands. "They raised me to open it," she says. "Nobody asked me if I wanted to." Then, sharply: "Now you know. Don't look at me like that."

@@ -51,7 +51,7 @@ text: On your third visit, a book finds you. It falls from a high shelf and land
 > right: Read it
   lore +medium
   arcana +medium
-  hollow +1
+  alignment -tiny
   find codex_names
   queue forbidden_section_3 in 2
   chance 45:
@@ -72,6 +72,7 @@ chain: forbidden
 scene: A tall silhouette in the doorway of the Restricted Section, holding a lantern that casts long shadows over a startled student.
 text: A lantern blazes in the doorway. Not a prefect this time: the headmistress herself. She looks at the book in your hands, then at you, for a very long time. "Most students who find that book," she says, "don't put it down."
 > left: Apologise and accept punishment
+  alignment +small
   meet isolde
   study -medium
   gain detention
@@ -82,7 +83,6 @@ text: A lantern blazes in the doorway. Not a prefect this time: the headmistress
   meet isolde
   rel isolde +medium
   lore +medium
-  hollow +1
   find codex_names
   unflag forbidden_key
   say: A long pause. "It means something is waking, and it is looking for help. Make sure it doesn't find yours." She takes the key and leaves you the candle.
@@ -166,6 +166,30 @@ text: A goblin in a velvet waistcoat falls into step beside you. "Grisk," he say
   flag grisk_done
   say: He counts out sixty crowns, writes your name in the ledger and smiles with a great many teeth.
 
+@event grisk_board_debt
+title: Settled, With Interest
+class: incident
+tone: tense
+trigger: queued
+priority: 70
+art: pouch
+tags: money danger
+chain: debt
+scene: A goblin in a velvet waistcoat waiting outside the bursar's office, waving a receipt like a small flag.
+text: The bursar's office has stopped sending reminders. Instead, Grisk is waiting outside it with a receipt. "Two months' board, paid in full," he beams. "By me. A loan, naturally. Sixty crowns, twelve a month for six months. You can sign here."
+> left: Sign his ledger
+  gold +huge
+  gain in_debt
+  debt_paid = 0
+  debt_missed = 0
+  flag grisk_done
+  say: You sign. He counts the change into your palm and writes your name in the ledger with a flourish that has teeth in it.
+> right: Beg the bursar for time
+  flag grisk_done
+  mood -small
+  renown -tiny
+  say: You spend an afternoon on a hard bench outside the bursar's office and leave with a month's grace and the feeling of having been looked at over spectacles for a very long time.
+
 @event grisk_favour
 title: Grisk's Proposition
 class: story
@@ -178,13 +202,14 @@ chain: debt
 scene: The goblin moneylender leaning close in a library alcove, pushing a slip of paper across a table.
 text: Grisk finds you in the library. "I could cancel your debt," he murmurs. "A small favour. There's a book in the archive — the Founders' Ledger. A client wants a page. Just one page."
 > left: Refuse
+  alignment +tiny
   say: "Pity." He makes a note in his ledger. It looks expensive.
 > right: Do the favour
   challenge deceive trivial:
     win:
       lose in_debt
       flag grisk_favour
-      hollow +1
+      alignment -small
       say: You razor a page from the oldest ledger in the archive. Grisk tears up your debt. You notice the page had a black star on it.
     lose:
       gain detention

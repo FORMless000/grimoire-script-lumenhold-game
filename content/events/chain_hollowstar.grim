@@ -2,21 +2,26 @@
 #  MAIN CHAIN: The Hollow Star
 #
 #  Something sleeps beneath the lake, sealed by Lumenhold's
-#  founders. Kael Dumont's family serve it. Clues are scattered
-#  across class/club/job events; each sets a flag and adds 1 to
-#  the hidden var `hollow`. Thresholds:
-#    hollow >= 1  dreams begin, research possible
-#    hollow >= 2  Kael confides (if he trusts you), grey visitors
-#    hollow >= 3  the seventh tower, the headmistress
-#  Finale (final year, Blossomtide): hs_the_night -> hs_beneath (menu)
-#  Outcomes feed endings: hollow_sealed / hollow_bargain / claimed.
+#  founders. Kael Dumont's family serve it. Progress follows the
+#  arc (content/world/arcs.grim): the clock advances on schedule,
+#  and what you engaged with is counted by clues(hollowstar).
+#    clock >= 1     dreams begin, the man in grey is seen
+#    clues >= 1     research, Kael confides (if he trusts you)
+#    clues >= 2     grey visitors, sides are taken
+#    clues >= 3     the seventh tower, the headmistress
+#  Alignment (Lumen + / Hollow -) is the moral axis: the Star's
+#  gifts pull toward the Hollow; refusing them, toward the Lumen.
+#  Finale (final year, Blossomtide): hs_the_night -> hs_beneath (menu),
+#  for those who engaged (or whom the Star has claimed, alignment <= -60).
+#  Outcomes fill the yearbook's mystery line: sealed / bargained /
+#  freed (alignment <= -60) / claimed (game over) / bystander.
 # ============================================================
 
 @event hs_dreams_begin
 title: The Black Star Dream
 class: story
 tone: eerie
-when: turn >= 5 and hollow >= 1 and not has(hollow_dreams)
+when: turn >= 5 and clock(hollowstar) >= 1 and not has(hollow_dreams)
 weight: 14
 art: moon
 tags: mystery hollowstar
@@ -25,7 +30,6 @@ scene: A dreamscape: a frozen lake seen from beneath, a round door glowing at th
 text: You dream of the lake from underneath. There is a round door at the bottom, and above the water a star that is not a light but an absence. A voice says your name like it is tasting it. You wake with frost on your pillow.
 > left: Write the dream down
   lore +small
-  hollow +1
   find lake_bell
   gain hollow_dreams
   say: Your notes fill four pages. In the morning you don't remember writing the last line: "It is not asleep. It is waiting."
@@ -39,7 +43,7 @@ text: You dream of the lake from underneath. There is a round door at the bottom
 title: A Man in Grey
 class: story
 tone: eerie
-when: turn >= 8 and met(kael) and hollow >= 1
+when: turn >= 8 and met(kael) and clock(hollowstar) >= 1
 weight: 12
 art: snow
 tags: mystery hollowstar
@@ -48,12 +52,10 @@ scene: A frozen fountain in a moonlit courtyard; a tall man in a grey coat facin
 text: Late at night in the courtyard, Kael is arguing with a tall man in a grey coat. The fountain between them has frozen mid-splash. "You will open it," the man says calmly, "or your sister will."
 > left: Slip away unseen
   guile +tiny
-  hollow +1
   find second_shadow
   say: You back into the shadows. The man in grey turns his head and looks straight at where you're hiding, then smiles and walks away.
 > right: Step out and interrupt
   rel kael +large
-  hollow +1
   find second_shadow
   flag confronted_grey
   say: "Everything all right?" The man in grey studies you, nods politely and leaves. Kael's hands are shaking. "You shouldn't have done that," he says. "...Thank you."
@@ -62,7 +64,7 @@ text: Late at night in the courtyard, Kael is arguing with a tall man in a grey 
 title: The Founders' Ledger
 class: story
 tone: eerie
-when: hollow >= 1 and not flag(knows_founders_seal)
+when: clues(hollowstar) >= 1 and not flag(knows_founders_seal)
 weight: 12
 art: book
 tags: mystery hollowstar study
@@ -78,7 +80,6 @@ text: In the archive vault you find the Founders' Ledger, three hundred years ol
       flag knows_founders_seal
       find knows_founders_seal
       find founders_ledger
-      hollow +1
       lore +small
       say: Ghostly letters emerge: "Seven towers, seven locks. The Star sleeps beneath the water. The key is a star that holds no light." The founders built the academy as a seal.
     lose:
@@ -89,7 +90,7 @@ text: In the archive vault you find the Founders' Ledger, three hundred years ol
 title: What Kael Is Running From
 class: story
 tone: eerie
-when: hollow >= 2 and rel(kael) >= 15 and not flag(kael_told)
+when: clues(hollowstar) >= 1 and rel(kael) >= 15 and not flag(kael_told)
 actor: kael
 weight: 16
 art: snow
@@ -101,7 +102,7 @@ text: Kael sits with you on the boathouse jetty. "My family serve something unde
   flag kael_told kael_ally
   rel kael +large
   spark kael +tiny
-  hollow +1
+  alignment +small
   find kael_family
   if bond(kael) == "none":
     bond kael friend
@@ -110,7 +111,6 @@ text: Kael sits with you on the boathouse jetty. "My family serve something unde
   flag kael_told reported_kael
   rel kael -huge
   rel isolde +medium
-  hollow +1
   find kael_family
   say: The headmistress thanks you gravely. The next day Kael is moved to a room in the headmistress's tower. He doesn't look at you anymore.
 
@@ -128,20 +128,20 @@ text: The black-starred relic you've been carrying burns suddenly, so cold it fe
 > left: Throw the relic into the lake
   flag threw_star
   unflag star_coin bell_fragment
-  hollow +1
+  alignment +medium
   mood +tiny
   say: It sinks without a ripple. The mark on your hand fades — almost entirely. Something under the water sighs.
 > right: Keep it. Feel the power.
   gain star_mark
   arcana +medium
-  hollow +1
+  alignment -medium
   say: The mark pulses with every heartbeat. Spells come easier now. Much easier. That should probably worry you more than it does.
 
 @event hs_grey_offer
 title: An Offer in Grey
 class: story
 tone: eerie
-when: turn >= 18 and hollow >= 2 and not flag(grey_offer_seen)
+when: turn >= 18 and (clues(hollowstar) >= 2 or alignment <= -30) and not flag(grey_offer_seen)
 weight: 12
 art: mask
 tags: mystery hollowstar danger
@@ -149,20 +149,90 @@ chain: hollowstar
 scene: A grey-coated man sitting uninvited at a library table, a black velvet box open in front of him, the candles around him burning blue.
 text: The man in grey is waiting at your library table. "You've been asking questions about the Star," he says pleasantly. "It's noticed you. It could make you extraordinary. All it wants is for someone to open a door."
 > left: "Get out."
+  alignment +small
   flag grey_offer_seen
   mood +tiny
   say: He inclines his head and leaves. The candles return to yellow. You realise your hands are trembling.
 > right: "...What would it give me?"
   flag grey_offer_seen hollow_tempted
   arcana +medium
-  hollow +1
+  alignment -medium
   say: He shows you, just for a moment. Power, endless and cold. When he's gone, you can still taste it.
+
+@event hs_grey_invitation
+title: A Seat at the Northern Table
+class: story
+tone: eerie
+when: alignment <= -60 and turn >= 12 and not flag(hollow_courted)
+weight: 16
+art: letter
+tags: mystery hollowstar danger
+chain: hollowstar
+scene: A black-edged letter on a dormitory pillow, its wax seal pressed with a star that has no light in it.
+text: There is a letter on your pillow, sealed with a black star. The handwriting is beautiful. "The families have watched you with great interest," it says. "There is a seat for you at our table, when the door is opened. Come to the boathouse at midnight, or burn this. Either is an answer."
+> left: Go to the boathouse
+  flag hollow_courted hollow_tempted
+  alignment -small
+  guile +small
+  health -small
+  say: The man in grey is waiting with two cups of something hot. He talks to you as an equal for an hour. You come back with frost in your hair and the feeling of having been measured, and found to fit.
+> right: Burn it
+  alignment +medium
+  mood -small
+  say: The paper burns blue and slow, and smells of the lake. It takes a long time to go out. Climbing back from where you've been is slower still, but this is a step.
+
+@event hs_grey_tests
+title: The Good Argument
+class: story
+tone: eerie
+when: alignment >= 30 and turn >= 14 and not flag(grey_tested)
+weight: 12
+art: mask
+tags: mystery hollowstar danger
+chain: hollowstar
+scene: A grey-coated man standing beside a student at the infirmary window, both looking down at a first-year with a bandaged arm.
+text: The man in grey falls into step beside you outside the infirmary. "You help people," he says pleasantly. "I admire it. But think how many more you could help with real power. The Star doesn't care what it's used for. Only that someone uses it."
+> left: "No."
+  flag grey_tested
+  alignment +small
+  mood -tiny
+  say: "No," you say. He smiles as if you'd said something charming, and leaves. The first-year in the window waves at you. You wave back, and your hand is shaking.
+> right: "...How many more?"
+  flag grey_tested hollow_tempted
+  alignment -medium
+  arcana +small
+  say: He tells you. The numbers are very large and very cold. That night, you dream of the lake from underneath, and you are not frightened in the dream.
+
+@event hs_wardens_notice
+title: The Headmistress Takes Note
+class: story
+tone: warm
+actor: isolde
+when: alignment >= 60 and turn >= 12 and not flag(wardens_noticed)
+weight: 16
+art: crown
+tags: mystery hollowstar
+chain: hollowstar
+scene: A tall woman in dark robes pausing on a stair to look down at one student among many, a silver ring glinting on her hand.
+text: On the grand stair the headmistress stops beside you. "Several people have told me about you," she says, "and not one of them was complaining. That is rare." Her silver ring catches the light. "I keep a list of students I would trust with a door. Don't let it go to your head."
+> left: "I'd be honoured."
+  meet isolde
+  flag wardens_noticed
+  rel isolde +medium
+  mood -tiny
+  say: "Good," she says. "Honour is a heavy thing to carry. Practise." She walks on. You stand on the stair for some time.
+> right: "What kind of door?"
+  meet isolde
+  flag wardens_noticed
+  rel isolde +small
+  lore +small
+  say: Her short, delighted laugh. "The kind that ought to stay shut," she says. "Keep asking questions like that. Just not on the stairs."
 
 @event hs_seventh_tower
 title: The Seventh Tower
 class: story
 tone: eerie
-when: hollow >= 3 and not flag(star_key)
+when: clues(hollowstar) >= 3 and not flag(star_key)
 weight: 14
 art: tower
 tags: mystery hollowstar
@@ -174,7 +244,6 @@ text: The seventh tower has been locked for a century. You find a way in. At the
     win:
       flag star_key
       find star_key
-      hollow +1
       say: A key shaped like a star, black as a hole in the world. The tower shudders as you lift it, then is still.
     lose:
       gain detention
@@ -185,7 +254,6 @@ text: The seventh tower has been locked for a century. You find a way in. At the
     win:
       flag star_key
       find star_key
-      hollow +1
       say: You tear through the ward with brute force. The key comes free. Every candle in the academy goes out for one second.
     lose:
       health -large
@@ -196,7 +264,7 @@ title: The Headmistress Knows
 class: story
 tone: eerie
 trigger: auto
-when: final_year and month >= 3 and month <= 7 and hollow >= 3
+when: final_year and month >= 3 and month <= 7 and (clues(hollowstar) >= 3 or flag(kael_ally) or flag(wardens_noticed) or flag(sided_wardens) or flag(sided_dumonts) or flag(sided_self))
 priority: 45
 actor: isolde
 art: crown
@@ -210,6 +278,7 @@ text: The headmistress summons you to her tower. "You have been following the sa
   mood +small
   say: "Wise," she says, and you can't tell if she means it. "Then stay above, and keep the first-years indoors."
 > right: "I'll be there."
+  alignment +small
   meet isolde
   flag warden_trial
   find seven_locks
@@ -222,7 +291,7 @@ title: The Night the Lake Froze
 class: story
 tone: eerie
 trigger: auto
-when: final_year and month == 9 and hollow >= 3
+when: final_year and month == 9 and (not flag(hollow_out) or flag(hollow_tempted) or flag(hollow_courted)) and (clues(hollowstar) >= 3 or flag(warden_trial) or flag(kael_ally) or flag(sided_wardens) or flag(sided_dumonts) or flag(sided_self) or flag(wardens_noticed) or flag(hollow_courted) or alignment <= -60)
 priority: 70
 art: snow
 tags: mystery hollowstar danger
@@ -233,6 +302,7 @@ text: In the middle of spring, the lake freezes in a single breath. Cracks glow 
   queue hs_beneath now
   say: You run for the boathouse. Behind you, someone is shouting your name. You don't stop.
 > right: Stay above and protect the students
+  alignment +small
   health -large
   renown +large
   rel isolde +small
@@ -254,7 +324,8 @@ text: The tunnel ends at the round door. It stands open a crack. Through it, the
 > seal: Seal the door
   hint: Needs the star key or the founders' secret. Arcana; preparation makes it easier.
   when: flag(star_key) or flag(knows_founders_seal) or flag(warden_trial)
-  hs_prep = clue(seven_locks) + clue(star_key) + clue(ilse_truth) + (rel(kael) >= 18) + (rel(ilse) >= 18) + (rel(maud) >= 18) + (rel(isolde) >= 18) + 2 * (flag(sided_wardens) or flag(sided_dumonts)) + flag(sided_self)
+  alignment +small
+  hs_prep = clue(seven_locks) + clue(star_key) + clue(ilse_truth) + (rel(kael) >= 18) + (rel(ilse) >= 18) + (rel(maud) >= 18) + (rel(isolde) >= 18) + 2 * (flag(sided_wardens) or flag(sided_dumonts)) + flag(sided_self) + (alignment >= 30) + (alignment >= 60) + (spell_level(starlight) >= 1) + (spell_level(ward) >= 1) + flag(wardens_noticed)
   if hs_prep >= 6:
     challenge spell trivial:
       win:
@@ -316,18 +387,33 @@ text: The tunnel ends at the round door. It stands open a crack. Through it, the
         else:
           say: The seal holds, barely, and takes most of you with it. You wake in the infirmary a week later.
 > bargain: Accept the Star's bargain
-  hint: Power beyond measure. A voice in your head forever.
+  hint: Power beyond measure. A voice in your head forever. Only for those it has already tempted.
+  when: alignment <= -30 or flag(hollow_tempted)
   flag hollow_bargain
+  alignment -large
   arcana +huge
   gain star_mark
-  mood -large
   health -large
   lose hollow_dreams
-  say: You take what it offers. The door closes on its own — for now. The Star settles into the back of your mind like a cat finding a warm lap.
+  if alignment <= -30:
+    mood +medium
+    say: You take what it offers, and it feels like coming home. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap.
+  else:
+    mood -large
+    say: You take what it offers. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap, and you lie awake for a week.
 > open: Open the door
-  hint: It wants out. Maybe it deserves to be.
-  when: flag(hollow_tempted)
-  end ending_hollow_claimed
+  hint: It wants out. Only one already deep in the Hollow could walk through beside it.
+  when: alignment <= -60 or flag(hollow_tempted)
+  if alignment <= -60:
+    flag hollow_freed
+    alignment -large
+    arcana +large
+    gain star_mark
+    lose hollow_dreams
+    renown -medium
+    say: You set your palm on the black stone and push. The door swings wide. The Star rises past you like a breath held for three hundred years, and on its way out it touches your shoulder, the way a lord touches a sword. Above, every candle in Lumenhold goes out, and does not come back on until dawn.
+  else:
+    end ending_hollow_claimed
 > flee: Run
   health -large
   mood -large
@@ -376,7 +462,6 @@ text: A girl in white furs is waiting at the gates in a private snowstorm. Kael'
   challenge negotiate trivial:
     win:
       rel kael +large
-      hollow +1
       say: You talk for an hour. Then she's crying, and Kael is holding her, and the snow stops. She stays in the village to be near him.
     lose:
       mood -small

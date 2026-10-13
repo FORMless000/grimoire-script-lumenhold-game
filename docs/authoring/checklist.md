@@ -13,6 +13,7 @@ Validators check the first group automatically; the critic (a separate pass, wit
 - **Choices:** every option costs or risks something; no obviously better option; every option has a specific `say:`.
 - **Tone:** warm, witty, slightly melancholy; humour from specifics; no gore, nothing explicit, adults only.
 - **Length:** text under 400 characters, labels under 36, `say` under 300.
-- **Gating:** `when` conditions are reachable and sensible; queued events are queued by something; flags read are set somewhere.
+- **Gating:** `when` conditions are reachable and sensible; queued events are queued by something; flags read are set somewhere (`grim reach` proves it; lint fails on an unreachable event).
 - **Plot safety:** only hard-canon story events grant key clues or move arc clocks.
+- **Alignment:** a choice with moral weight (cruelty, theft, cheating, exploiting someone, reaching for the Star's power; or honesty, protection, generosity at a cost) moves `alignment` (`-tiny`…`-medium` Hollow, `+tiny`…`+medium` Lumen). Ordinary choices don't. Never use alignment, or any counter, as plot progress: plot gates read `clock(arc)` and `clues(arc)`.
 - **Duplication:** no event repeats an existing one's premise (check `grim query event --grep <word>`).

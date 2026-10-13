@@ -2,7 +2,7 @@
 #  CHAIN: Ilse Dumont (expansion)
 #  Kael's younger sister, raised by the Hollow cult. Enters once
 #  the Hollow Star thread is under way (met her at the gates, or
-#  Kael known + hollow >= 2).
+#  Kael known + two Hollow Star clues).
 #    ilse_village -> ilse_frost_lessons -> ilse_grey_returns
 #      -> (ilse_saved) ilse_kael_reunion / ilse_northern_letter / ilse_farewell
 #      -> (ilse_taken) she is gone north
@@ -13,7 +13,7 @@ title: The Girl at the Bakery
 class: story
 tone: eerie
 actor: ilse
-when: turn >= 16 and not met(ilse) and (flag(met_sister) or (met(kael) and hollow >= 2))
+when: turn >= 16 and not met(ilse) and (flag(met_sister) or (met(kael) and clues(hollowstar) >= 2))
 weight: 16
 art: snow
 tags: mystery hollowstar
@@ -71,13 +71,13 @@ text: Late at night, a lane behind the bakery. The man in grey has one hand on I
       flag ilse_saved
       rel ilse +large
       renown +small
-      hollow +1
+      alignment +small
       find ilse_truth
       say: Your spell breaks his grip. He looks at his frosted hand with mild surprise, bows, and walks into the dark. Ilse is shaking. "Nobody's ever — " she says, and stops.
     lose:
       flag ilse_taken
       health -large
-      hollow +1
+      alignment +small
       find ilse_truth
       say: He swats your spell aside like a moth. When you get up, the lane is empty except for a single white glove in the snow.
 > right: Run for Kael
@@ -85,13 +85,11 @@ text: Late at night, a lane behind the bakery. The man in grey has one hand on I
     flag ilse_saved
     rel kael +large
     rel ilse +medium
-    hollow +1
     find ilse_truth
     say: Kael arrives like a blizzard. The man in grey takes one look at him and leaves without a word. Brother and sister stand in the snow, not touching, not speaking.
   else:
     flag ilse_taken
     mood -medium
-    hollow +1
     find ilse_truth
     say: By the time you're back with help, the lane is empty. There's frost on the cobbles in the shape of a closed door.
 
@@ -140,7 +138,6 @@ text: A letter with a black-star seal. The Dumont family summons Ilse home. "If 
 > left: "Go. Tell them it's over."
   flag ilse_decided ilse_went_north
   rel ilse +medium
-  hollow +1
   say: She leaves on the dawn barge, chin up. Before she goes, she presses her forehead to yours, a Northern farewell. "If I'm not back by graduation," she says, "come and get me."
 > right: "Stay. Let them come."
   flag ilse_decided

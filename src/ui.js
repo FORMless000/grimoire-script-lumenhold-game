@@ -672,6 +672,7 @@
     openOverlay('<div class="modal dark ending-modal"><div class="modal-art" style="aspect-ratio:400/170">' + Art.scene(r.art, ['mystery'], r.id) + '</div><div class="modal-body">' +
       '<div class="kicker">' + esc(r.early ? t('ending.early', { month: eng.monthName(), year: eng.yearOf() }) : t('ending.graduation')) + '</div>' +
       '<h2>' + esc(r.title) + '</h2><p class="text">' + esc(r.text) + '</p>' +
+      (r.yearbook || []).map((y) => '<div class="sec-h">' + esc(t('ending.slot.' + y.slot)) + ' · ' + esc(y.title) + '</div><p class="text yearbook-line">' + esc(y.text) + '</p>').join('') +
       '<div class="final-stats">' + stats + '</div>' + (people ? '<div class="sec-h">' + esc(t('ending.people')) + '</div><div class="final-people">' + people + '</div>' : '') +
       '<div class="row" style="display:flex;gap:10px"><button class="btn primary grow" id="again">' + esc(t('ending.again')) + '</button><button class="btn grow" id="journal">' + esc(t('ending.journal')) + '</button></div>' +
       '<div class="row" style="margin-top:10px;text-align:center"><button class="linkish" id="exportRun">' + esc(t('ending.export')) + '</button></div>' +

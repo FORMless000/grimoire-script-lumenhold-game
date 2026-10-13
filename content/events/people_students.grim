@@ -349,6 +349,7 @@ text: Bram is doing an impression of Tobias's accent in the corridor. People are
   rel tobias -small
   say: Tobias doesn't mention it. He doesn't sit with you at dinner, either.
 > right: Step in
+  alignment +small
   rel tobias +large
   rel bram -medium
   challenge negotiate easy:
@@ -471,7 +472,7 @@ text: From your window you see Seraphine walking into the lake in her nightgown,
     win:
       rel seraphine +large
       spark seraphine +small
-      hollow +1
+      alignment +small
       say: You reach her just as she goes under. On the shore she wakes and whispers, "It was calling me. It called you too." Then she holds on very tight.
     lose:
       health -large
@@ -723,7 +724,7 @@ class: story
 tone: warm
 trigger: social
 actor: corvin
-when: bond(corvin) == "partner" and final_year and mood < 55
+when: bond(corvin) == "partner" and final_year
 weight: 16
 art: map
 tags: romance danger
@@ -1000,7 +1001,7 @@ class: story
 tone: eerie
 trigger: social
 actor: nessa
-when: hollow >= 2 and rel(nessa) >= 6
+when: clues(hollowstar) >= 1 and rel(nessa) >= 6
 weight: 12
 art: paper
 tags: social mystery hollowstar
@@ -1011,7 +1012,6 @@ text: Nessa's office wall is covered in red string. In the middle: a sketch of a
   say: "That's what people say right before the best stories." But she takes the string down. Mostly.
 > right: Share what you know
   rel nessa +medium
-  hollow +1
   chance 40:
     gain watched
     say: Nessa's article runs with half the facts. The man in grey reads it. So does Bram, who starts following you around.

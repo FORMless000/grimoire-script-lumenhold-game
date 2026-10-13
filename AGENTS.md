@@ -37,8 +37,8 @@ content/world/              the worldbook (design §3): cast.grim (the 12 charac
                            clubs, jobs, internships, thesis), spells.grim, arcs.grim (clocks, beats), factions.grim,
                            archetypes.grim, timeline.grim, vocabulary.grim, lore/{hard,soft}/, maps/*.svg (map art)
 content/core/balance.grim  @balance (size and difficulty tiers, XP, the E(turn) curve) and @preset blocks
-content/states/states.grim origins, electives, clubs, jobs (v0.2 states, granted by tracks' legacy:), conditions, plan_* break plans
-content/endings.grim       early (game-over) and graduation endings
+content/states/states.grim origins, conditions (sick, hungry, probation, debt…), plan_* break plans; old elective/club/job states are unused
+content/endings.grim       early (game-over) endings and the yearbook (design §10.5): headline, mystery, relationships, personal slots
 content/events/*.grim      events, grouped by theme (see below)
 docs/grimoire-script.md    language reference (includes the .lang format)
 docs/authoring/            the authoring spec (style, schema, checklist, presets, classes, examples, sample briefs);
@@ -64,7 +64,8 @@ The engine is content-agnostic. Only touch `src/` when you need a new language f
 | `people_students.grim` | Per-character arcs for Lyra, Tobias, Seraphine, Corvin, Mira, Nessa | intros `random`, rest `social` |
 | `people_others.grim` | Kael (outside the main chain), Bram, Thorne, Maud, Isolde | same |
 | `social.grim` | Generic relationship events (`cast: npc: any …` + `per: npc`): friendship, romance, rivalry, decay | `social` |
-| `chain_hollowstar.grim` | The main mystery and its finale | mixed |
+| `chain_hollowstar.grim` | The main mystery and its finale (sealed / bargained / freed / claimed / bystander); gates read `clock(hollowstar)` and `clues(hollowstar)` | mixed |
+| `alignment.grim` | Lumen (+) ↔ Hollow (−) events at ±30, reactions from `virtuous` / `ruthless` characters, the way back from the Hollow | random, social |
 | `chains_minor.grim` | Forbidden section, curse cure, Grisk's debt, Ember the fox, the ghost | mixed |
 | `life.grim` | Everyday academy life, money, seasons | random |
 | `crisis.grim` | What happens when a resource hits zero | queued |
@@ -85,6 +86,7 @@ The engine is content-agnostic. Only touch `src/` when you need a new language f
 ```bash
 node tools/grim.js build      # regenerate build/content.bundle.js — required after any .grim change
 node tools/grim.js lint       # cross-reference check; 0 errors required, read the warnings
+node tools/grim.js reach      # static reachability (also in lint): events, options, endings, places, tracks, key-clue sources
 node tools/grim.js sim 300    # auto-play: crashes, soft-locks, coverage, ending distribution
 node tools/grim.js check      # build + lint + sim 200 — run before you finish
 node tools/grim.js show <id>  # print a block's source and everywhere it's referenced
@@ -94,7 +96,7 @@ node tools/grim.js fmt        # canonical layout for .grim files (lossless; --ch
 node tools/grim.js query check 'dc < 12 and not scales'   # structural search: blocks, options, statements (--fields)
 node tools/grim.js feedback   # summarise playtest feedback: exported logs in feedback/ and the server's data/runs/
 node tools/grim.js sim 50 --log build/runs   # also write every simulated game's full run log as JSON
-node tools/grim.js sim 100 --policy balanced # play styles: random cautious social balanced aggressive moneymaxx focused:<skill> social:<npc>
+node tools/grim.js sim 100 --policy balanced # play styles: random cautious social balanced aggressive moneymaxx caster truant lumen hollow plot focused:<skill> social:<npc>
 node tools/grim.js balance    # every play style: invariants fail the run, alarms warn (--quick: fewer styles and games)
 node tools/grim.js diff       # golden-seed snapshot vs test/golden/baseline.json: "no gameplay change" or what changed
 node tools/grim.js brief --cast lyra,kael --place library --topic "…"   # ~6k-token context pack for writing events
@@ -161,12 +163,13 @@ Two rules that no lookup will tell you:
 - **Relationships:** gates are on the scale of the `rel` row (a best friend reaches 60–100 over four years; most arcs open at rel 10–25).
 - **Every option should cost or risk something**, except a small safe choice (≤ 0.5 medium-equivalents) beside a risky one. The best cards trade one resource for another.
 - **Weights:** default 10. Milestones 18–30, so they show up soon after unlocking. Niche events 6–8.
-- After adding content, run `sim 300`, `sim 300 --policy social` and `balance --quick`. No single ending should exceed about 35% per style (known exception: the hollow endings for plot-completing styles until endings get slots in phase 4), and your events should not be "never seen" unless deliberately rare.
+- After adding content, run `sim 300`, `sim 300 --policy social` and `balance --quick`. No single headline ending should exceed about 35% per style (the fallback headline 50%; `focused:*` styles are exempt, they chase one ending), every ending should be reached by some style in the full `balance`, and your events should not be "never seen" unless deliberately rare.
+- **Alignment** (−100 Hollow … +100 Lumen) is the moral axis: cruel, greedy or Star-tempted choices `-tiny`…`-medium`, honest or selfless ones at a cost `+tiny`…`+medium`. Events gate at ±30 / ±60. Check it with `node tools/hs-funnel.js 40 lumen,hollow,random` (alignment reach, the Night, the yearbook per style).
 
 ## Conventions
 
 - **Event ids** are prefixed by area: `pyro_`, `tide_`, `duel_`, `lib_`, `lyra_`, `soc_`, `life_`, `hs_` (Hollow Star), `fox_`. Use `<chain>_<step>` for chains.
-- **Flags** are past-tense facts (`kael_told`, `fox_met`). Custom counters are nouns (`hollow`, `debt_paid`).
+- **Flags** are past-tense facts (`kael_told`, `fox_met`). Custom counters are nouns (`debt_paid`, `board_missed`); plot progress is never a counter (read `clock(arc)` / `clues(arc)`).
 - **Every event** has `title`, `text`, `art`, `tags`, `scene`. Option labels stay under about 36 characters, imperative or first-person ("Open the book", "I'll be there.").
 - **Every option** has at least one effect, and almost always a `say:` so the player sees a consequence.
 - **Never soft-lock:** menus need at least one option without `when`, and cards must not lock both sides.

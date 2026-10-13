@@ -304,11 +304,10 @@ text: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60:
     win:
       flag thesis_distinction
       renown +large
-      grades +large
       say: They stop asking questions and start asking for copies. Distinction.
     partial:
       flag thesis_passed
-      grades +medium
+      renown +small
       say: A pass, with one examiner's handwriting all over your conclusion.
     lose:
       flag thesis_resubmit

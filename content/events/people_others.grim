@@ -389,7 +389,7 @@ class: story
 tone: eerie
 trigger: social
 actor: maud
-when: rel(maud) >= 9 and hollow >= 1
+when: rel(maud) >= 9 and clock(hollowstar) >= 1
 weight: 14
 art: moon
 tags: mystery hollowstar
@@ -399,10 +399,8 @@ text: "I was a student here, you know," Maud says, watching the lake. "Sixty yea
 > left: "You don't have to tell me."
   rel maud +medium
   say: She pats your hand. "Kind. But time's short, dearie." She tells you anyway, a little at a time, over many cups of tea.
-  hollow +1
 > right: "What do you know?"
   rel maud +small
-  hollow +1
   flag knows_founders_seal
   find knows_founders_seal
   find seven_locks

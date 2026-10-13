@@ -170,6 +170,7 @@ text: You wake to find your desk tidied, your socks darned and your essay proofr
   study +tiny
   say: Your room stays spotless all term. Your essays have suspiciously good spelling.
 > right: Leave them nothing
+  alignment -tiny
   mood -tiny
   say: The next morning, every one of your socks is tied in knots. Brownies keep score.
 
@@ -257,9 +258,11 @@ when: month == 3 or month == 4 or month == 9 or month == 10
 scene: A folded paper being passed under a library table, the faint glow of an examiner's seal on it.
 text: A third-year is selling copies of next week's exam. Ten crowns. "Guaranteed real," he whispers. "Straight from the examiner's desk."
 > left: Walk away
+  alignment +tiny
   mood +tiny
   say: Two weeks later, five students who bought copies are suspended. The answers were fake.
 > right: Buy a copy
+  alignment -small
   gold -small
   chance 40:
     study +large
@@ -303,7 +306,6 @@ text: It's hot and the whole year has gone down to the jetty. Something large is
   mood +medium
   chance 20:
     flag lake_knows
-    hollow +1
     say: In the deep part, you open your eyes underwater and see a round door, far below, glowing. Then you need air.
   else:
     say: The water's perfect. Something large and friendly swims under you, and you decide not to panic.
@@ -402,6 +404,7 @@ text: A delivery owl drops a scented pink letter in your porridge. It's addresse
   renown +tiny
   say: The recipient goes crimson and thanks you. Two weeks later, they're holding hands with the sender in the dining hall.
 > right: Read it first
+  alignment -tiny
   guile +tiny
   mood +small
   say: You read it. You will never be able to look the potions professor in the eye again.
@@ -436,10 +439,12 @@ tags: money
 scene: A velvet purse lying in the long grass beside a path, coins glinting at its open mouth, initials embroidered on it.
 text: A fat velvet purse lies in the grass by the path. Forty crowns at least. Embroidered initials: A.T.
 > left: Return it to its owner
+  alignment +small
   rel thorne +medium
   renown +small
   say: A.T. turns out to be Aldric Thorne. He takes the purse and stares at you a long moment. "Honest," he says. It sounds like a diagnosis.
 > right: Keep it
+  alignment -small
   gold +large
   guile +tiny
   mood -tiny
@@ -559,11 +564,13 @@ text: The village winter fund is collecting for families who can't afford fuel t
 > left: Donate twenty crowns
   when: gold >= 20
   hint: 20 gold
+  alignment +small
   gold -medium
   renown +small
   mood +small
   say: Your name goes on a little list by the jar. You feel warm, which is the point.
 > right: Walk past
+  alignment -tiny
   say: You walk past. The jar fills anyway. You think about it on cold nights.
 
 @event life_shady_offer
@@ -639,7 +646,6 @@ text: You wake up on the battlements in your pyjamas, at the very edge, with no 
 > right: Keep it to yourself
   mood -tiny
   chance 40:
-    hollow +1
     flag lake_knows
     say: It happens twice more. Each time you're facing the lake. Each time, you're a little closer to the water.
   else:

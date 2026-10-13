@@ -273,7 +273,14 @@ function analyze(content) {
   for (const s of Object.values(content.states)) ['tick', 'on_add', 'on_expire', 'on_remove'].forEach((k) => scanEffects(s[k], loc(s), false));
   for (const h of Object.values(content.hooks)) { scanExpr(h.when, loc(h), false); scanEffects(h.do, loc(h), false); if (!['game_start', 'month_start', 'month_end', 'term_start', 'term_end'].includes(h.on)) P('error', loc(h), 'hook "on" must be game_start, month_start, month_end, term_start or term_end'); }
   for (const r of Object.values(content.resources)) scanEffects(r.on_zero, loc(r), false);
-  for (const en of Object.values(content.endings)) { scanExpr(en.when, loc(en), false); scanText(en.text, loc(en), false); }
+  for (const en of Object.values(content.endings)) {
+    scanExpr(en.when, loc(en), false); scanText(en.text, loc(en), false);
+    // Yearbook slots (design §10.5): game-over endings stay exclusive; a headline fallback has no `when`.
+    if (en.slot && !['headline', 'mystery', 'relationships', 'personal'].includes(en.slot)) P('error', loc(en), 'slot: "' + en.slot + '" is not headline, mystery, relationships or personal');
+    if (en.slot && en.kind === 'early') P('error', loc(en), 'an early (game-over) ending takes no slot');
+    for (const x of en.excludes || []) if (!content.endings[x]) P('error', loc(en), 'excludes: unknown ending "' + x + '"');
+  }
+  if (!Object.values(content.endings).some((en) => en.kind !== 'early' && (en.slot || 'headline') === 'headline' && !en.when)) P('error', '-', 'no headline fallback ending (a final ending with no slot or slot: headline, and no when)');
   for (const n of Object.values(content.npcs)) { if (!n.name) P('error', loc(n), 'npc needs a name'); if (n.pronouns && !/^(she|he|they)\b/.test(n.pronouns)) P('warn', loc(n), 'pronouns should start with she/he/they'); }
 
   analyzeWorld(content, P, scanExpr, scanText);
@@ -461,6 +468,7 @@ function reachLint(content, problems) {
   for (const u of r.unreachable) problems.push({ level: 'error', where: at(u.id), msg: 'event "' + u.id + '" is unreachable: ' + u.why });
   for (const o of r.deadOptions) problems.push({ level: 'warn', where: at(o.id), msg: 'option "' + o.option + '" of "' + o.id + '" can never open: ' + o.why });
   for (const e of r.endings) problems.push({ level: 'error', where: 'ending ' + e.id, msg: 'ending "' + e.id + '" is unreachable: ' + e.why });
+  for (const k of r.keyClues) if (k.sources.length < 2) problems.push({ level: 'error', where: 'arc ' + k.arc, msg: 'key clue "' + k.clue + '" has ' + k.sources.length + ' reachable source(s) (design §10.6 needs ≥ 2): ' + (k.sources.join(', ') || 'none') });
   for (const p of r.places) problems.push({ level: 'warn', where: 'place ' + p, msg: 'place "' + p + '" can never be discovered' });
   for (const t of r.tracks) problems.push({ level: 'warn', where: 'track ' + t, msg: 'track "' + t + '" can never be joined' });
   return r;
@@ -786,6 +794,7 @@ function sim(n = 300, opts = {}) {
         if (h.type === 'menu') { menus[h.id] = menus[h.id] || {}; menus[h.id][h.choice] = (menus[h.id][h.choice] || 0) + 1; }
       }
       endings[r.id] = (endings[r.id] || 0) + 1; endTurns.push(r.turn);
+      for (const y of r.yearbook || []) endings[y.id] = (endings[y.id] || 0) + 1;   // yearbook lines (mystery, relationships, personal)
       if (!r.early) finals[r.id] = (finals[r.id] || 0) + 1;
       for (const id of content.order.resources) resSum[id] = (resSum[id] || 0) + eng.s.vals[id];
       for (const id of content.order.skills) skillSum[id] = (skillSum[id] || 0) + eng.s.vals[id];
@@ -801,7 +810,7 @@ function sim(n = 300, opts = {}) {
   console.log('avg length: ' + avg(endTurns).toFixed(1) + ' / ' + maxT + ' months; reached graduation: ' + (100 * endTurns.filter((t) => t >= maxT).length / Math.max(1, games)).toFixed(0) + '%');
   console.log('avg cards per month: ' + avg(cardsPerMonth).toFixed(2));
   console.log('\nendings:');
-  Object.entries(endings).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => console.log('  ' + (100 * v / games).toFixed(1).padStart(5) + '%  ' + k + (content.endings[k] && content.endings[k].kind === 'early' ? C.d + ' (early)' + C.x : '')));
+  Object.entries(endings).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => { const d = content.endings[k] || {}; console.log('  ' + (100 * v / games).toFixed(1).padStart(5) + '%  ' + k + C.d + (d.kind === 'early' ? ' (early)' : ' (' + (d.slot || 'headline') + ')') + C.x); });
   const unreached = Object.keys(content.endings).filter((k) => !endings[k]);
   if (unreached.length) console.log(C.y + '  never reached: ' + unreached.join(', ') + C.x);
   console.log('\nfinal resources (avg): ' + content.order.resources.map((id) => id + ' ' + (resSum[id] / games).toFixed(0)).join(', '));
@@ -827,7 +836,7 @@ function balance(opts = {}) {
   const { content, errors } = compileAll();
   if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
   const games = opts.games || (opts.quick ? 30 : 100);
-  const styles = opts.quick ? ['random', 'balanced', 'social', 'aggressive', 'truant'] : ['random', 'cautious', 'social', 'balanced', 'aggressive', 'moneymaxx', 'caster', 'truant', 'focused:arcana', 'focused:lore', 'social:lyra'];
+  const styles = opts.quick ? ['random', 'balanced', 'social', 'aggressive', 'truant', 'lumen', 'hollow'] : ['random', 'cautious', 'social', 'balanced', 'aggressive', 'moneymaxx', 'caster', 'truant', 'focused:arcana', 'focused:lore', 'focused:alchemy', 'focused:guile', 'social:lyra', 'social:corvin', 'lumen', 'hollow', 'plot'];
   const report = { format: 'lumenhold-balance', v: 1, contentHash: contentHash(), createdAt: new Date().toISOString(), games, styles: {}, invariants: [], alarms: [] };
   const fail = (msg) => report.invariants.push(msg), alarm = (msg) => report.alarms.push(msg);
   // Static invariants
@@ -846,13 +855,14 @@ function balance(opts = {}) {
   const origWarn = console.warn; const warns = {}; console.warn = (...a) => { const k = a.join(' '); warns[k] = (warns[k] || 0) + 1; };
   for (const name of styles) {
     const style = Policies.get(name);
-    const st = report.styles[name] = { games: 0, crashed: 0, endings: {}, early: 0, zero: { health: 0, mood: 0 }, final: {} };
+    const st = report.styles[name] = { games: 0, crashed: 0, endings: {}, lines: {}, early: 0, zero: { health: 0, mood: 0 }, final: {} };
     for (let g = 0; g < games; g++) {
       const seed = 777 + g * 7919;
       try {
         const { eng, r } = playGame(content, { seed, style, runId: 'balance' });
         st.games++;
         st.endings[r.id] = (st.endings[r.id] || 0) + 1;
+        for (const y of r.yearbook || []) st.lines[y.id] = (st.lines[y.id] || 0) + 1;
         if (r.early) st.early++;
         let hz = false, mz = false;
         for (const h of eng.s.hist) {
@@ -864,12 +874,21 @@ function balance(opts = {}) {
       } catch (e) { st.crashed++; fail(name + ' seed ' + seed + ': ' + e.message); }
     }
     for (const k of Object.keys(st.final)) st.final[k] = Math.round(st.final[k]);
+    // One ending dominating is an alarm; the headline fallback (a final ending with no `when`) is allowed more,
+    // since the yearbook's other lines still vary, but not a majority.
     const top = Object.entries(st.endings).sort((a, b) => b[1] - a[1])[0];
-    if (top && top[1] / st.games > 0.35) alarm(name + ': ' + top[0] + ' is ' + Math.round(100 * top[1] / st.games) + '% of endings (> 35%)');
+    const fallback = top && content.endings[top[0]] && content.endings[top[0]].kind !== 'early' && !content.endings[top[0]].when;
+    // focused:* styles chase one skill's ending on purpose, so dominance there is the point.
+    if (top && !name.startsWith('focused:') && top[1] / st.games > (fallback ? 0.5 : 0.35)) alarm(name + ': ' + top[0] + ' is ' + Math.round(100 * top[1] / st.games) + '% of headlines (> ' + (fallback ? 50 : 35) + '%)');
     if (name === 'balanced') for (const k of ['health', 'mood']) if (st.zero[k] / st.games > 0.15) alarm('balanced: ' + k + ' hits 0 in ' + Math.round(100 * st.zero[k] / st.games) + '% of runs (> 15%)');
   }
   console.warn = origWarn;
   for (const [k, v] of Object.entries(warns)) alarm('runtime warning ×' + v + ': ' + k);
+  // Every final ending (headline or yearbook line) should be reached by some play style that wants it.
+  const reached = new Set(Object.values(report.styles).flatMap((st) => Object.keys(st.endings).concat(Object.keys(st.lines))));
+  // Game-over endings are avoided by every style but random; tests prove those reachable (test/alignment.test.js).
+  report.endingsUnreached = Object.keys(content.endings).filter((k) => !reached.has(k) && content.endings[k].kind !== 'early');
+  if (!opts.quick && report.endingsUnreached.length) alarm(report.endingsUnreached.length + ' ending(s) reached by no play style: ' + report.endingsUnreached.join(', '));
   const never = Object.keys(content.events).filter((id) => !seenAll[id] && !(content.events[id].tags || []).includes('retired'));
   report.neverSeen = never;
   if (never.length) alarm(never.length + ' event(s) never seen by any play style: ' + never.join(', '));
@@ -878,7 +897,8 @@ function balance(opts = {}) {
   console.log(C.b + 'balance: ' + styles.length + ' play styles × ' + games + ' games' + C.x + C.d + ' · preview test: ' + pt.cards + ' choices in ' + ptGames + ' games, ' + pt.misses.length + ' outside their preview' + C.x);
   for (const [name, st] of Object.entries(report.styles)) {
     const top = Object.entries(st.endings).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => k.replace(/^ending_/, '') + ' ' + Math.round(100 * v / Math.max(1, st.games)) + '%').join(', ');
-    console.log('  ' + name.padEnd(15) + ' early ' + String(Math.round(100 * st.early / Math.max(1, st.games))).padStart(3) + '%  ' + C.d + top + C.x);
+    const myst = Object.entries(st.lines).filter(([k]) => (content.endings[k] || {}).slot === 'mystery').sort((a, b) => b[1] - a[1]).map(([k, v]) => k.replace(/^ending_/, '') + ' ' + Math.round(100 * v / Math.max(1, st.games)) + '%').join(', ');
+    console.log('  ' + name.padEnd(15) + ' early ' + String(Math.round(100 * st.early / Math.max(1, st.games))).padStart(3) + '%  ' + C.d + top + (myst ? ' · mystery: ' + myst : '') + ' · alignment ' + (st.final.alignment ?? 0) + C.x);
   }
   report.invariants.forEach((m) => console.log(C.r + 'INVARIANT ' + C.x + m));
   report.alarms.forEach((m) => console.log(C.y + 'alarm     ' + C.x + m));

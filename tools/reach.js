@@ -67,6 +67,7 @@ function reach(content) {
       if (rl && a0 && rl.has(a0)) return null;
       if (L.n === 'seen' && pos) return R.has(a0) ? null : 'seen(' + a0 + ')';
       if (['level', 'performance', 'progress', 'visits', 'rank', 'due'].includes(L.n) && pos) return F.track.has(a0) ? null : L.n + '(' + a0 + ')';
+      if (L.n === 'clues' && pos) { const d = c.arcs[a0]; const k = d ? (d.clues || []).filter((x) => F.clue.has(x)).length : 0; return k >= v + (n.op === '>' ? 1 : 0) ? null : 'clues(' + a0 + ') ' + n.op + ' ' + v + ' (only ' + k + ' findable)'; }
       if (L.n === 'visits_to' && pos) return F.place.has(a0) ? null : 'visits_to(' + a0 + ')';
       if (['rel', 'spark', 'bond'].includes(L.n) && pos) return F.npc.has(a0) ? null : L.n + '(' + a0 + ') (never met)';
       if (L.n === 'spell_level' && pos) return F.spell.has(a0) ? null : 'spell(' + a0 + ')';
@@ -156,10 +157,16 @@ function reach(content) {
     const e = c.events[id], rl = roles(e);
     e.options.forEach((o, i) => { const m = o.when && need(o.when.ast, rl); if (m) deadOptions.push({ id, option: o.key, line: o.line, why: m }); });
   }
+  // Design §10.6 hard invariant: every key clue has at least 2 reachable sources (events that can grant it).
+  const keyClues = [];
+  for (const a of Object.values(c.arcs || {})) for (const k of a.key_clues || []) {
+    const src = [...R].filter((id) => { let hit = false; G.walkEffects([].concat(c.events[id].on_show || [], ...c.events[id].options.map((o) => o.effects)), (st) => { if (st.t === 'find' && st.clue === k) hit = true; }); return hit; });
+    keyClues.push({ arc: a.id, clue: k, sources: src });
+  }
   const retired = (e) => (e.tags || []).includes('retired') || (e.when && e.when.src === 'false');
   const unreachable = Object.entries(why).filter(([id]) => !retired(c.events[id])).map(([id, w]) => ({ id, file: c.events[id].file, line: c.events[id].line, why: w }));
   return {
-    unreachable, deadOptions, retired: Object.keys(why).filter((id) => retired(c.events[id])),
+    unreachable, deadOptions, keyClues, retired: Object.keys(why).filter((id) => retired(c.events[id])),
     endings: Object.entries(endings).filter(([, w]) => w).map(([id, w]) => ({ id, why: w })),
     places: Object.keys(c.places).filter((p) => !F.place.has(p)),
     tracks: Object.keys(c.tracks).filter((t) => !F.track.has(t)),
