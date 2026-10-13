@@ -186,7 +186,7 @@ do:
 priority: 80
 title: The Archmage's Path
 art: wand
-when: arcana >= 55 and gpa >= 2.5
+when: arcana >= 80 and gpa >= 2.5
 text: Graduating with highest honours...
 
 @ending ending_hollow_hero
@@ -448,7 +448,12 @@ day_break: morning=plan afternoon=visit night=world:1
 max_cards_per_day: 14
 ```
 
-**A day** (`src/director.js`). After the month's start effects, the player picks the visit slots on the **map** (two in term, one on a break). Then the director fills each slot from its source: `courses` (events of enrolled courses), `social` (`trigger: social`), `visit` (events with `place:` the player picked), `world` (random events with no place), `special`, `plan` (events for the active break plan). `:1-2` is how many cards a slot draws. Each candidate scores `weight × novelty × relevance × variety`. Pushed cards (queued, auto, arc beats, track notices) go into their `slot:` (else morning). When the day is over `max_cards_per_day`, priority decides (story > track > pushed > social > ambient) and pushed cards that don't fit move to the next day. `when` is checked again as each card is drawn.
+**A day** (`src/director.js`). After the month's start effects, the player picks the visit slots on the **map** (two in term, one on a break). Then the director fills each slot from its source: `courses` (events of enrolled courses), `social` (`trigger: social`), `visit` (events with `place:` the player picked), `world` (random events with no place), `special`, `plan` (events for the active break plan). `:1-2` is how many cards a slot draws. Each candidate scores `weight × novelty × relevance × variety`. Pushed cards (queued, auto, arc beats, track notices) go into their `slot:` (else morning). When the day is over `max_cards_per_day`, priority decides (story > track > pushed > friend > social > ambient) and pushed cards that don't fit move to the next day. `when` is checked again as each card is drawn.
+
+**People come by two tracks** (design §5.5). An event with a fixed `actor: <npc>` (and no `place:`, `track:`, `plan:` or `slot:`) is in that character's own pool as well as in the shared pools; generic social events (`per: npc` casts) can be cast with any one character.
+- *You find them:* the shared pools as above; a visit to a place where a character's `schedule:` puts them (met or not, so introductions happen where people are) and the social slot (anyone scheduled at a place you know) can each give a card from that character's pool.
+- *They find you:* every met character rolls each month, on their own, to bring you one card from their pool (at most two such cards a month, one on a break). The chance follows **warmth**: recent contact you chose. A card where you raised their `rel` or `spark` (even at the cap) warms them; a card with them where you didn't cools them; visiting where they are warms them a little; warmth fades every month. Standing friendship, spark and a bond add to it.
+- So a character needs a ladder of personal events starting near `rel 0` (a rival's too): if every one of their events is gated at `rel >= 10`, a new acquaintance has nothing to bring you and the friendship stalls.
 
 **Identifiers:** `term` and `break` (booleans), `season` (`"autumn"` …), `final_year`, `term_index` (1–8), `gpa` (0–4), `slot` (the slot being drawn). `month` is 1–12 within the academic year; `year` is 1–4; `turn` is 1–47.
 

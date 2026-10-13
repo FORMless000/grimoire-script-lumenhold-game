@@ -11,7 +11,7 @@
 | Reachability | `grim reach`: every event, option, ending, place and track can be reached; each key clue has ≥ 2 sources |
 | Translation | zh-CN 100% (6,362 strings), 0 stale |
 | Checks | `npm run verify` passes: build, lint, format, docs, 70+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
-| A run | 47 months, about 330 cards; random play graduates 85% of the time, social 95% |
+| A run | 47 months, about 340 cards; random play graduates 80% of the time, social and careful styles 97–99% |
 
 ## Phases
 
@@ -51,33 +51,38 @@
   - Map art exists for every place map, checked by lint.
   - Student intros now carry milestone weight (median first meeting moved from turn 10–29 to turn 8–12).
   - The `social:<npc>` bot seeks out the places where its character is.
+- **People come by two tracks** (design §5.5):
+  - *You find them:* at places where their schedule puts them, and at lunch.
+  - *They find you:* each character's own monthly roll, driven by warmth (recent contact you chose to warm to).
+  - Character events no longer depend on winning the shared social draw. A bot courting one character now reaches 50–100 by month 24 (it was 0–40), and every student is met in year 1.
+- **Bigger numbers:**
+  - every tier row is about 1.5× larger (lore and mana kept as they were);
+  - board 10 and tuition 40, as designed;
+  - stronger term stress, gloom and loneliness, and faster recovery below 70 health;
+  - friendship decay −2 and spark decay 15%, as designed;
+  - spells cost 1.75× as much;
+  - random windfalls are niche (migration 0017);
+  - the skill headlines are rescaled to the refitted curve (balanced players end around 60, not 42).
 - **Docs:** `PROGRESS.md`, `README.md`, the AGENTS.md traps (folded in from the retired HANDOFF.md), `docs/playtest-2.md` (replacing playtest-1), the language reference (yearbook, `clues()`, the alignment recipe), the authoring checklist and skill, regenerated sample briefs and examples.
 
 ## Known gaps and deviations from the design
 
 - **The finale** is one sealing challenge whose tier depends on preparation. The design asks for a sequence (duel, negotiate, research).
-- **Finale allies** count at rel ≥ 18, not the design's friendship ≥ 50. Even plot players end with Ilse at p90 16–22, Isolde at p90 10–12 and Maud at p90 ~44, while Kael saturates at 100. At ≥ 50 only Kael would ever count. Ilse, Isolde and Maud need more rel sources first.
+- **Finale allies** count at rel ≥ 18, not the design's friendship ≥ 50. Re-measure with the two tracks: Ilse, Isolde and Maud still have few personal events.
 - **Relationship lines** in the yearbook are generic (a partner; three friends; Ilse's chain), not one line per bond (§10.5).
 - **Advisor relationship** (a §9.2 challenge modifier) has nothing to read: no track names an advisor character.
-- **Friendship growth is far below the design's ~80 by month 24:**
-  - A bot that courts one character reaches about 20–40 with Corvin or Tobias, and about 0 with Lyra.
-  - Character events sit in the general noon social pool (1–2 cards a day, hundreds of events), so a given character's own events come about once a year.
-  - Lyra's events also start at rel 6, and her intro gives at most +tiny.
-  - Needs a director decision: boost a character's events when they are present at a visited place, or a per-character slot.
-- **Skill growth is below the design's ~85 by month 24** for focused styles (41–55). Raising it means retuning the `xp` row and refitting the E(turn) curve (`grim curve --write`).
+- **Friendship growth** reaches the design's ~80 by month 24 for most characters when courted; Lyra's median is ~50 (her early ladder is thin).
+- **Skill growth** for focused styles is 57–65 at month 24 (design ~85).
+- **Spells are scarce in content:** 11 swipe-up options in 716 events, and 5 of the 12 spells have none, so mana stays high (the caster alarm). Spells need a content batch, not a price change.
 - **Tuned on purpose** (design numbers are marked tunable):
-  - board 8 instead of 10, tuition 30 instead of 40, no course fees;
-  - hungry −1 health and −2 mood instead of −4/−4 (random players are broke in about half their months);
-  - friendship decay −1 instead of −2;
-  - spark decay 10% instead of 15%;
+  - hungry −2 health and −3 mood instead of −4/−4;
+  - no course fees;
   - confessions at spark 30, not 60.
 - **Balance alarms** (full `balance`; 0 invariant failures):
-  - the aggressive style collapses (60% Sent Home; it ignores health on purpose), and lasts far longer than the design's breakdown by month 5/9 before it does;
-  - about 6 windfalls a year against the design's 1–4: around 48 one-shot random windfalls;
-  - the caster style keeps mana above 40%: spells are cheap relative to regeneration;
-  - romance is less volatile than the design's swings;
-  - mood saturates near 100 for careful styles;
-  - 7–12 events are never seen by any style: crisis_probation (bots keep their GPA), the Conclave and Unseen Office internships, a few confessions, soc_two_timing.
+  - the aggressive style collapses (36% Sent Home; it ignores health on purpose), but later than the design's 5/9 months;
+  - about 5 windfalls a year against 1–4;
+  - caster mana, focused skills and Lyra, as above;
+  - 4 events are never seen by any style: crisis_probation (bots keep their GPA), gargoyle_passage_parapet_cards, the two Unseen Office internship cards.
 - **Deferred phase 3 steps:**
   - festivals as `replaces:` visits;
   - removing the unused legacy syntax from the parser, and the engine's `legacy:` grants (§13 step 7);
@@ -88,5 +93,5 @@
 ## Next
 
 1. **Human playtest #2** (`docs/playtest-2.md`): a full run in each language, then `grim feedback`.
-2. Address its notes; then friendship and skill growth, the finale allies, and the aggressive, windfall and caster alarms.
+2. Address its notes; then a spell-options batch, skill growth, the finale allies' ladders, and the aggressive and windfall alarms.
 3. Phase 4, starting with what playtest #2 says matters most.

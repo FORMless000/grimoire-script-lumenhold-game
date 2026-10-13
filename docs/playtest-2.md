@@ -21,11 +21,12 @@ open http://127.0.0.1:4173/admin     # runs, per-event feedback, decision times
 
 1. **The day.** Two places on the map, then the day's cards. Is the pace right over four years (about 330 cards)? Where did you start skimming?
 2. **Courses, clubs, jobs.** Enrolment, exams and the GPA; club practices and job shifts as obligations; probation if your marks fall. Do they feel like pressure in a good way?
-3. **Money.** Board and tuition, a hungry month when the purse is empty, Grisk if it happens twice. Too harsh, too soft, invisible?
-4. **Alignment.** Choices with moral weight move the Alignment bar toward the Lumen or the Hollow. Did you notice it move? Did the cards that open at ±30 and ±60 (people reacting, temptations, a way back) feel earned?
-5. **The Hollow Star.** It is optional. Did you notice it, and could you choose to ignore it? If you followed it, did the finale reflect what you prepared (clues, allies, sides, spells, alignment)?
-6. **The yearbook.** The ending is now a headline (career or studies) plus lines for the Hollow Star, your bonds and how you're remembered. Does it read as *your* run?
-7. **Chinese.** Wrong terms, stray English, awkward option labels.
+3. **Money and numbers.** Board and tuition, a hungry month when the purse is empty, Grisk if it happens twice. The amounts were raised so choices bite: too harsh, too soft, invisible?
+4. **People.** Characters turn up where their schedule puts them (the map shows who is there), and the ones you warm to start coming to find you. Do friendships form at a good pace? Does anyone crowd you out, or vanish after you met them?
+5. **Alignment.** Choices with moral weight move the Alignment bar toward the Lumen or the Hollow. Did you notice it move? Did the cards that open at ±30 and ±60 (people reacting, temptations, a way back) feel earned?
+6. **The Hollow Star.** It is optional. Did you notice it, and could you choose to ignore it? If you followed it, did the finale reflect what you prepared (clues, allies, sides, spells, alignment)?
+7. **The yearbook.** The ending is now a headline (career or studies) plus lines for the Hollow Star, your bonds and how you're remembered. Does it read as *your* run?
+8. **Chinese.** Wrong terms, stray English, awkward option labels.
 
 ## Known gaps (don't report these)
 

@@ -614,6 +614,7 @@
       n.touched = this.s.turn;
       if (!n.met) {
         n.met = true;
+        if (this.FRIENDS) n.warmth = Math.max(n.warmth || 0, this.FRIENDS.meet);
         ctx.notes.push({ kind: 'meet', npc: id, text: 'You met ' + this.c.npcs[id].name + '.' });
         // Surface facts are known on meeting (design §10.1).
         for (const f of Object.values(this.c.facts || {})) if (f.tier === 'surface' && f.id.startsWith(id + '.')) this.s.facts[f.id] = this.s.turn;
@@ -689,6 +690,7 @@
             const old = n[st.t];
             n[st.t] = st.t === 'rel' ? clamp(old + amt, -100, 100) : clamp(old + amt, 0, 100);
             if (st.t === 'spark' && amt > 0) n.sparked = s.turn;
+            if (amt) (ctx.contact = ctx.contact || {})[id] = Math.max((ctx.contact || {})[id] || -1, Math.sign(amt));   // warmth (design §5.5)
             const key = st.t + ':' + id;
             if (n[st.t] !== old) ctx.deltas[key] = (ctx.deltas[key] || 0) + (n[st.t] - old);
             break;
@@ -845,15 +847,15 @@
       return { kind: 'month', turn: s.turn, month: this.monthName(), monthIndex: this.monthIndex(), year: this.yearOf(), maxTurns: this.maxTurns, summary: shown, deckSize: s.deck.length, ended: !!s.ended };
     }
 
-    // Design §8.2: friendship fades after 6 months without contact (−1 a month toward 0; halved with the rel tiers in phase 3); spark fades
+    // Design §8.2: friendship fades after 6 months without contact (−2 a month toward 0); spark fades
     // 15% a month without a romantic moment; a partnership ends after 2 months below spark 20.
     relationshipDrift(summary) {
       const s = this.s;
       for (const [id, n] of Object.entries(s.npcs)) {
         if (!n.met) continue;
         const notes = [], deltas = {};
-        if (s.turn - (n.touched || 0) > 6 && n.rel !== 0) { const d = n.rel > 0 ? -Math.min(1, n.rel) : Math.min(1, -n.rel); n.rel += d; deltas['rel:' + id] = d; }
-        if (n.spark > 0 && n.sparked !== s.turn - 1) { const nv = Math.floor(n.spark * 0.9); if (nv !== n.spark) { deltas['spark:' + id] = nv - n.spark; n.spark = nv; } }
+        if (s.turn - (n.touched || 0) > 6 && n.rel !== 0) { const d = n.rel > 0 ? -Math.min(2, n.rel) : Math.min(2, -n.rel); n.rel += d; deltas['rel:' + id] = d; }
+        if (n.spark > 0 && n.sparked !== s.turn - 1) { const nv = Math.floor(n.spark * 0.85); if (nv !== n.spark) { deltas['spark:' + id] = nv - n.spark; n.spark = nv; } }
         if (n.bond === 'partner') {
           n.lowSpark = n.spark < 20 ? (n.lowSpark || 0) + 1 : 0;
           if (n.lowSpark >= 2) { n.bond = 'ex'; n.lowSpark = 0; notes.push({ kind: 'bond', npc: id, status: 'ex', text: shortName(this.c.npcs[id]) + ': ex' }); }
@@ -889,7 +891,7 @@
     }
     // Radiant casting (design §5.4): fill the event's roles in order, weighted by affinity, with up to 50
     // backtracking attempts, on a scratch copy of the RNG (eligibility never changes what happens).
-    fillCast(e) {
+    fillCast(e, bind) {
       const s = this.s, rng = s.rng, roles = e.cast;
       let tries = 0;
       const aff = (id) => { const n = s.npcs[id]; return n ? 1 + Math.abs(n.rel) / 20 + n.spark / 15 + (n.bond !== 'none' ? 1 : 0) + (s.turn - (n.touched || 0) < 3 ? 0.5 : 0) : 1; };
@@ -901,7 +903,7 @@
       const fill = (i, cast) => {
         if (i === roles.length) { const prev = this._cast; this._cast = cast; const ok = this.test(e.when, cast.npc || null); this._cast = prev; return ok ? { ...cast } : null; }
         const r = roles[i];
-        let opts = pool(r).filter((id) => !Object.values(cast).includes(id) && (r.role !== e.per || this.eligibleFor(e, id)));
+        let opts = pool(r).filter((id) => !Object.values(cast).includes(id) && (r.role !== e.per || this.eligibleFor(e, id)) && (!bind || !bind[r.role] || bind[r.role] === id));
         opts = opts.filter((id) => { if (!r.where) return true; const prev = this._cast; this._cast = { ...cast, [r.role]: id }; const ok = this.test(r.where, cast.npc || id); this._cast = prev; return ok; });
         // weighted order
         const order = [];
@@ -1110,6 +1112,7 @@
         if (who && this.c.npcs[who]) { s.memories = s.memories || []; s.memories.push({ npc: who, event: e.id, kind: opt.memory.kind, turn: s.turn }); if (s.memories.length > 400) s.memories.shift(); }
       }
       if (item.actor && s.npcs[item.actor]) s.npcs[item.actor].touched = s.turn;
+      if (this.noteContact) this.noteContact(item, ctx.contact || {});
       s.choices[e.id] = key;
       s.cur = null;
       const out = this.outcome(ctx);
@@ -1133,6 +1136,7 @@
       for (const o of chosen) this.run(o.effects, ctx);
       this.handleZeroed(ctx);
       this._cast = null; this._ctxTrack = null;
+      if (this.noteContact) this.noteContact(item, ctx.contact || {});
       s.choices[e.id] = keys.join('+');
       s.cur = null;
       const out = this.outcome(ctx);

@@ -12,9 +12,9 @@ module.exports = {
   id: '0013-routine-budget',
   description: 'routine options within budget: a tiny cost for free gains, one tier off over-budget gains',
   WORK,
-  run(ctx) {
+  run(ctx, work = WORK) {
     let free = 0, over = 0;
-    for (const [file, evLine, key, kind] of WORK) {
+    for (const [file, evLine, key, kind] of work) {
       const L = ctx.lines(file);
       let i = L.findIndex((l, k) => k >= evLine - 1 && new RegExp('^>\\s*' + key + '\\s*:').test(l));
       if (i < 0) throw new Error('option not found: ' + file + ':' + evLine + ' ' + key);

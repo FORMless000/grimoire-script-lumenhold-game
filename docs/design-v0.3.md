@@ -381,7 +381,7 @@ variety   = 0.5 if the same tone or primary tag as either of the previous 2 card
 | `queue x … with role` | carries a cast role into the queued event |
 | `unqueue x` | cancel |
 
-- **Priority classes**, used when the day overflows: `story > track > pushed > social > ambient`.
+- **Priority classes**, used when the day overflows: `story > track > pushed > friend > social > ambient` (`friend`: §5.5).
 - Overflow goes to the next day, and never exceeds `max_cards_per_day`.
 - A pushed event re-checks its `when` when drawn and skips quietly if it fails.
 
@@ -402,6 +402,33 @@ cast:
 - `say[lyra]:` overrides a line when Lyra is cast (translation key `…@lyra`).
 - **Cast-dependent outcomes** read NPC stats and tags: `challenge negotiate vs rival.charm`, `gold +friend.wealth`, `if tagged(friend, noble):`.
 - `actor: any` stays as shorthand for a single-role cast (removed from content in Phase 3).
+
+### 5.5 People: two tracks *(phase 3)*
+
+Friends are found the way they are in life: in the courses, clubs, jobs and places you choose. And once you enjoy someone's company, they start finding you. Every social opportunity comes by two tracks.
+
+- **Track 1, you find them.** The shared pools (§5.1). A visit to a place where a character's `schedule:` puts them in that slot may give a card from that character's own pool; so may the social slot (anyone scheduled at a place you know). Unmet characters count too, so introductions happen where people are.
+- **Track 2, they find you.** Each met character rolls once a month, independently of every other card, to bring one card from their own pool. It sits in the social slot with priority `friend` (between pushed and social). At most 2 such cards a month (1 on a break, where the chance is halved).
+- **A character's pool:** their events (a fixed `actor:`, no place, track, plan or slot), plus generic social events cast with them in the `per:` role.
+- **Warmth (0–100, per character)** is recent, chosen contact:
+  - meeting sets it to 35;
+  - visiting where they are: +6;
+  - a card with them where you raised their rel or spark (even at the cap): +18; a card with them where you didn't: −8 (a rival or nemesis warms on any contact);
+  - −20% every month.
+- **Pull** = 4 + warmth + 0.3 × friendship (hostility for a rival) + 0.3 × spark + bond (partner 30, close 20, friend 12, rival or nemesis 10). Monthly chance = pull / 100, at most 85%.
+- **Encounter chances:** 55% per visit with someone present; 35% at lunch.
+- All numbers are tunable (`FRIENDS` in `src/director.js`).
+- **Authoring consequence:** a character needs personal events from `rel 0` (rivals from below), or a new acquaintance has nothing to bring and the friendship stalls (`docs/authoring/pools.md`).
+
+**Other candidates for independent pushers** (ideas, not built):
+- rivals and nemeses provoking you;
+- faculty mentors (the course professor or thesis advisor reading performance and rel; this would give §9.2's advisor modifier a character to read);
+- family letters (origin-driven, quieter at home);
+- creditors (Grisk while in debt);
+- the press (renown tiers: spotlights and scandals, §8.2);
+- familiars and pets (Ember);
+- an arc's agents (the man in grey, the Wardens) driven by alignment and clues rather than the clock;
+- places that call you back (a favourite's regulars and news).
 
 ---
 

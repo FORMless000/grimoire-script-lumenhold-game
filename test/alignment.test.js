@@ -39,9 +39,9 @@ test('alignment: the hollow counter is gone, everywhere', () => {
 test('alignment: deep in the Hollow, the way back is slow (drag below −50)', () => {
   const eng = new Engine(content); eng.newGame({ seed: 2, name: 'T' });
   eng.s.vals.alignment = -70; eng.run([{ t: 'delta', name: 'alignment', tier: 'medium', sign: 1 }], { deltas: {}, notes: [], say: [], checks: [] });
-  assert.equal(eng.s.vals.alignment, -70 + 7 * 0.5);
+  assert.equal(eng.s.vals.alignment, -70 + 10 * 0.5);
   eng.s.vals.alignment = -20; eng.run([{ t: 'delta', name: 'alignment', tier: 'medium', sign: 1 }], { deltas: {}, notes: [], say: [], checks: [] });
-  assert.equal(eng.s.vals.alignment, -13);
+  assert.equal(eng.s.vals.alignment, -10);
 });
 
 test('finale: the Star sides with those deep in the Hollow (freed), claims the merely tempted', () => {
@@ -64,7 +64,7 @@ test('finale: the Star sides with those deep in the Hollow (freed), claims the m
 test('yearbook: headline, mystery, relationships and personal lines; the Hollow Star no longer takes the headline', () => {
   const eng = new Engine(content); eng.newGame({ seed: 3, name: 'T' });
   const s = eng.s;
-  s.flags.hollow_sealed = 1; s.vals.alignment = 75; s.vals.alchemy = 60; s.vals.mood = 80;
+  s.flags.hollow_sealed = 1; s.vals.alignment = 75; s.vals.alchemy = 80; s.vals.mood = 80;
   s.npcs.lyra.met = true; s.npcs.lyra.bond = 'partner';
   const book = eng.yearbook();
   const by = (slot) => book.filter((x) => x.slot === slot).map((x) => x.id);

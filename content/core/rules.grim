@@ -148,8 +148,8 @@ on: month_start
 label: Dormitory & board
 when: turn > 1 and term
 do:
-  if gold >= 8:
-    gold -8
+  if gold >= 10:
+    gold -10
     board_missed = 0
   else:
     gold = 0
@@ -164,7 +164,7 @@ on: month_start
 label: Board at the castle
 when: break and has(plan_castle)
 do:
-  gold -6
+  gold -8
 
 # Tuition each term (design §8.2); the scholarship pays half.
 @hook tuition
@@ -172,9 +172,9 @@ on: term_start
 label: Tuition
 do:
   if has(origin_scholar):
-    gold -15
+    gold -20
   else:
-    gold -30
+    gold -40
 
 @hook gpa_probation
 on: term_end
@@ -261,31 +261,30 @@ on: month_start
 label: Term-time pressure
 when: turn > 1 and term
 do:
-  if turn % 2 == 0:
-    mood -1
+  mood -2
   if month == 4 or month == 10:
-    mood -3
+    mood -5
 
 @hook exhaustion_drain
 on: month_start
 label: Running on empty
 when: health < 25
 do:
-  mood -3
+  mood -5
 
 @hook gloom_drain
 on: month_start
 label: Gloom
 when: mood < 20
 do:
-  health -2
+  health -4
 
 @hook natural_recovery
 on: month_start
 label: Rest
-when: health < 60 and not has(sick) and not has(injured)
+when: health < 70 and not has(sick) and not has(injured)
 do:
-  health +3
+  health +6
 
 @hook fame_fades
 on: month_start
@@ -322,11 +321,11 @@ on: month_start
 label: Someone to come home to
 when: bonds(partner) > 0
 do:
-  mood +3
+  mood +4
 
 @hook lonely
 on: month_start
 label: Loneliness
 when: turn > 4 and bonds(friend) + bonds(close) + bonds(partner) == 0
 do:
-  mood -1
+  mood -2

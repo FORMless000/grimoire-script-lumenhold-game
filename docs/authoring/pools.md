@@ -60,6 +60,14 @@ Each event will be seen several times. Use at least three variation points acros
 
 Don't build a repeatable on a one-time surprise (a secret door, a confession). Those are milestones, not pool events. The premise should be a *situation that recurs*: the queue at the refectory, the draft in the observatory, the lecturer's habit.
 
+## Character pools (people come by two tracks)
+
+An event with a fixed `actor: <npc>` and no `place:`, `track:`, `plan:` or `slot:` is that character's own card. The director draws it from the shared pools *and* from the character's own track: when you visit where their schedule puts them, at lunch, and when they come to find you (their monthly roll grows with **warmth**: contact the player chose to warm to). See `docs/grimoire-script.md` §5 and design §5.5.
+
+- **Give every character a ladder from `rel 0`**: at least two repeatable personal events (`repeat: 4–6`) open at `rel(npc) > -10` or lower, then milestones at 10, 20, 40… A character whose events all start at `rel >= 10` stalls after the intro, because there is nothing for them to bring.
+- **One option should warm to them** (`rel` or `spark` up, at a cost) and one should not; the player's pick decides whether they come back more often.
+- A rival's ladder can start negative (`rel(lyra) > -24`): contact with a rival counts as engagement whichever way it goes.
+
 ## What a source's pool should cover
 
 - **Places (3 each):**

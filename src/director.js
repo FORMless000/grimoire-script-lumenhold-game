@@ -8,7 +8,9 @@
  * night=world:1-2 midnight=special:0-1. Each slot draws from its source by weighted sampling:
  *   score = weight × novelty × relevance × variety          (design §5.2)
  * Pushed cards (queued, auto, arc beats, track notices) go into their slot (event `slot:`, else morning);
- * when the day overflows max_cards_per_day, priority decides: story > track > pushed > social > ambient,
+ * people come by two tracks (design §5.5): encounters at visited places and lunch, and each met character's own
+ * monthly roll to find you, driven by warmth;
+ * when the day overflows max_cards_per_day, priority decides: story > track > pushed > friend > social > ambient,
  * and pushed cards that don't fit move to the next day.
  *
  * Older content without places, slots or tracks is drawn too: random events fill the night and, through
@@ -21,7 +23,14 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
   const SLOTS = ['morning', 'noon', 'afternoon', 'evening', 'night', 'midnight'];
-  const PRIORITY = { story: 5, track: 4, pushed: 3, social: 2, ambient: 1 };
+  const PRIORITY = { story: 5, track: 4, pushed: 3, friend: 2.5, social: 2, ambient: 1 };
+  // Two tracks for people (design §5.5). Warmth (0–100) is recent, chosen contact with one character.
+  //   base: every met character's standing pull · presence: visiting a place where they are · engage / cool: a card with them where you did / didn't warm to them
+  //   meet: warmth on meeting · fade: monthly multiplier · encounter: chance of a card with someone present at a visit
+  //   lunch: the same at the social slot, with anyone scheduled there at a place you know
+  //   push: a character's monthly chance to find you = pull / 100, capped at maxP; at most `cap` such cards a month
+  //   (capBreak in break months, when the chance is also halved).
+  const FRIENDS = { base: 4, presence: 6, engage: 18, cool: 8, meet: 35, fade: 0.8, encounter: 0.55, lunch: 0.35, maxP: 0.85, cap: 2, capBreak: 1, bond: { partner: 30, close: 20, friend: 12, rival: 10, nemesis: 10 } };
   const TAU = 6;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
@@ -33,7 +42,7 @@
     /* ---------------- index (built once) ---------------- */
     directorIndex() {
       if (this._dir) return this._dir;
-      const c = this.c, ix = { legacyTrack: {}, byPlace: {}, byTrack: {}, byPlan: {}, slotBound: [], ambient: [], social: [], arc: [] };
+      const c = this.c, ix = { legacyTrack: {}, byPlace: {}, byTrack: {}, byPlan: {}, slotBound: [], ambient: [], social: [], arc: [], personal: {} };
       for (const t of Object.values(c.tracks || {})) for (const st of t.legacy || []) ix.legacyTrack[st] = t.id;
       // Events gated on a legacy state count as that track's events (compat).
       const legacyOf = (e) => { if (!e.when) return null; let hit = null; const G = this.G; G.walkAst(e.when.ast, (n) => { if (n.t === 'call' && n.n === 'has' && n.args[0] && n.args[0].t === 'sym' && ix.legacyTrack[n.args[0].v]) hit = ix.legacyTrack[n.args[0].v]; }); return hit; };
@@ -47,6 +56,9 @@
         else if (e.slot) ix.slotBound.push(e);
         else if (e.trigger === 'social') ix.social.push(e);
         else ix.ambient.push(e);
+        // One character's own cards (design §5.5) also go on that character's track: drawn when you meet them at a place
+        // or when they come looking for you, outside the shared pools' competition.
+        if (!e.place && !track && !e.plan && !e.slot && e.actor && e.actor !== 'any' && e.actor !== 'npc' && c.npcs[e.actor]) (ix.personal[e.actor] = ix.personal[e.actor] || []).push(e);
       }
       return (this._dir = ix);
     },
@@ -146,6 +158,54 @@
       const primary = (x) => (x.tags || [])[0];
       return prev.some((p) => (e.tone && p.tone === e.tone) || (primary(e) && primary(p) === primary(e))) ? 0.5 : 1;
     },
+    /* ---------------- people: two tracks (design §5.5) ---------------- */
+    // How strongly a character comes looking for you: recent warmth, plus standing friendship, spark and bond.
+    pull(id) {
+      const n = this.s.npcs[id]; if (!n) return 0;
+      const hostile = n.bond === 'rival' || n.bond === 'nemesis';
+      return FRIENDS.base + (n.warmth || 0) + 0.3 * Math.max(0, hostile ? -n.rel : n.rel) + 0.3 * (n.spark || 0) + (FRIENDS.bond[n.bond] || 0);
+    },
+    warm(id, d) { const n = this.s.npcs[id]; if (n) n.warmth = clamp(Math.round((n.warmth || 0) + d), 0, 100); },
+    // Cards with one character: their own events, and generic social events cast with them in the `per:` role.
+    boundCandidates(e, id) {
+      if (e.actor === id) return this.candidates(e);
+      if (e.actor === 'any') return this.candidates(e).filter((c) => c.actor === id).map((c) => Object.assign(c, { w: e.weight ? this.value(e.weight, id, 10) : 10 }));
+      if (e.cast && e.per) {
+        if (!this.eligibleFor(e, id)) return [];
+        const cast = this.fillCast(e, { [e.per]: id }); if (!cast) return [];
+        const prev = this._cast; this._cast = cast; const w = e.weight ? this.value(e.weight, id, 10) : 10; this._cast = prev;
+        return w > 0 ? [{ e, actor: id, cast, w }] : [];
+      }
+      return [];
+    },
+    drawWith(id, used, dayItems, extra) {
+      const ix = this.directorIndex(), cands = [];
+      for (const e of (ix.personal[id] || []).concat(ix.social.filter((x) => x.actor === 'any' || x.per))) {
+        if (used.has(e.id) || !this.eligible(e, used)) continue;
+        if (this._plotLeft != null && this._plotLeft <= 0 && this.isPlot(e)) continue;
+        for (const c of this.boundCandidates(e, id)) { const sc = c.w * this.novelty(e) * this.variety(e, dayItems) * ((ix.personal[id] || []).includes(e) ? 2 : 1); if (sc > 0) cands.push({ ...c, w: sc }); }
+      }
+      const pick = this.pickWeighted(cands);
+      if (!pick) return null;
+      if (this._plotLeft != null && this.isPlot(pick.e)) this._plotLeft--;
+      used.add(pick.e.id);
+      return Object.assign({ id: pick.e.id, actor: id, cast: pick.cast || undefined }, extra || {});
+    },
+    // After a card: warmth for everyone it touched (`contact`: id → sign of the rel/spark amounts applied). Choosing to
+    // warm to someone (a rel or spark gain, even at the cap) draws them closer;
+    // a card with them where you didn't cools it. Rivals warm on any contact.
+    noteContact(item, contact) {
+      const s = this.s, who = new Set();
+      if (item.actor && s.npcs[item.actor]) who.add(item.actor);
+      for (const id of Object.values(item.cast || {})) if (s.npcs[id]) who.add(id);
+      for (const [id, sg] of Object.entries(contact)) if (s.npcs[id] && sg > 0) who.add(id);
+      for (const id of who) {
+        const n = s.npcs[id]; if (!n.met) continue;
+        const hostile = n.bond === 'rival' || n.bond === 'nemesis';
+        if (contact[id] > 0 || (hostile && contact[id] != null)) this.warm(id, FRIENDS.engage);
+        else this.warm(id, -FRIENDS.cool);
+      }
+    },
     isPlot(e) { return !!e && !!(e.arc || (e.chain && this.c.arcs && this.c.arcs[e.chain])); },
     // Plot cards allowed this month: 1, or 2 when any arc has a beat now.
     plotCap() { return Object.values(this.c.arcs || {}).some((a) => (a.beats || []).some((b) => b.year === this.yearOf() && b.month === this.monthIndex())) ? 2 : 1; },
@@ -169,6 +229,9 @@
     buildDay(picks, locked) {
       const s = this.s, ix = this.directorIndex(), used = new Set(s.deck.map((d) => d.id));
       const maxCards = this.c.game.max_cards_per_day || 14;
+      // Warmth fades a little every month (design §5.5).
+      for (const n of Object.values(s.npcs)) if (n.warmth) n.warmth = Math.floor(n.warmth * FRIENDS.fade);
+      const brk = this.phaseOf() === 'break', withToday = new Set();
       this._recentTags = [].concat(...s.hist.filter((h) => h.t === 'card').slice(-6).map((h) => (this.c.events[h.id] || {}).tags || []));
       // Pushed cards: due queue items (windows by chance), auto events, arc beats.
       const pushed = [];
@@ -234,6 +297,21 @@
                 || this.draw(ix.ambient.filter((e) => (e.tags || []).some((tg) => (p.draws || []).includes(tg))), used, day.concat(items), { place, prio: 'ambient' });
               if (it) items.push(it);
             }
+            // Track 1 (design §5.5): the people here. Being where they are warms them; sometimes a card with one of them.
+            // Unmet characters count too, so introductions happen where people actually are.
+            const here = this.presentAt(place, r.slot).filter((id) => s.npcs[id] && !withToday.has(id));
+            for (const id of here) if (s.npcs[id].met) this.warm(id, FRIENDS.presence);
+            if (here.length && this.rand() < FRIENDS.encounter) {
+              const order = here.slice(); const cards = [];
+              while (order.length && !cards.length) {
+                const w = order.map((id) => 10 + this.pull(id)); let x = this.rand() * w.reduce((a, b) => a + b, 0), k = 0;
+                for (; k < order.length - 1; k++) { x -= w[k]; if (x < 0) break; }
+                const id = order.splice(k, 1)[0];
+                const it = this.drawWith(id, used, day.concat(items), { place, prio: 'social', src: 'encounter' });
+                if (it) { cards.push(it); withToday.add(id); }
+              }
+              items.push(...cards);
+            }
             this._place = null;
           }
         } else if (r.source === 'social' || r.source === 'world' || r.source === 'special' || r.source === 'plan') {
@@ -243,11 +321,35 @@
             : r.source === 'plan' ? (plan && ix.byPlan[plan.replace(/^plan_/, '')]) || ix.ambient
             : ix.ambient.concat(ix.slotBound.filter((e) => e.slot === r.slot));
           for (let k = 0; k < count; k++) { const it = this.draw(pool, used, day.concat(items), { prio: r.source === 'social' ? 'social' : 'ambient' }); if (it) items.push(it); }
+          // Track 1 at lunch (design §5.5): anyone whose schedule has them at a place you know in this slot, met or not.
+          if (r.source === 'social') {
+            const here = Object.keys(s.npcs).filter((id) => !withToday.has(id) && (this.c.npcs[id].schedule || []).some((x) => x.slots.includes(r.slot) && s.places[x.place]));
+            if (here.length && this.rand() < FRIENDS.lunch) {
+              const w = here.map((id) => 10 + this.pull(id)); let x = this.rand() * w.reduce((a, b) => a + b, 0), k = 0;
+              for (; k < here.length - 1; k++) { x -= w[k]; if (x < 0) break; }
+              const it = this.drawWith(here[k], used, day.concat(items), { prio: 'social', src: 'encounter' });
+              if (it) { items.push(it); withToday.add(here[k]); }
+            }
+          }
         }
         // Pushed cards for this slot (their own `slot:`, else the first slot of the day).
         const mine = pushed.filter((p) => { const e = this.c.events[p.id]; const sl = p.slot || (e && e.slot) || this.recipe()[0].slot; return sl === r.slot; });
         for (const it of mine.concat(items)) day.push(Object.assign(it, { slot: r.slot }));
         this._slot = null;
+      }
+      // Track 2 (design §5.5): each character you know may come and find you this month, on their own roll.
+      const rec = this.recipe().map((x) => x.slot), friendSlot = rec.includes('noon') ? 'noon' : rec.includes('night') ? 'night' : rec[rec.length - 1];
+      const callers = Object.keys(s.npcs).filter((id) => s.npcs[id].met && !withToday.has(id)).sort((a, b) => this.pull(b) - this.pull(a));
+      let calls = 0;
+      for (const id of callers) {
+        if (calls >= (brk ? FRIENDS.capBreak : FRIENDS.cap)) break;
+        const p = Math.min(FRIENDS.maxP, this.pull(id) / 100) * (brk ? 0.5 : 1);
+        if (p <= 0 || this.rand() >= p) continue;
+        const it = this.drawWith(id, used, day, { prio: 'friend', src: 'friend' });
+        if (!it) continue;
+        calls++; withToday.add(id);
+        let at = -1; day.forEach((x, i) => { if (rec.indexOf(x.slot) <= rec.indexOf(friendSlot)) at = i; });   // after the slot's other cards
+        day.splice(at + 1, 0, Object.assign(it, { slot: friendSlot }));
       }
       // Pushed cards whose slot isn't in today's recipe go first.
       for (const p of pushed) if (!day.includes(p)) day.unshift(Object.assign(p, { slot: this.recipe()[0].slot }));
@@ -268,6 +370,7 @@
   function install(Engine, G) {
     for (const [k, d] of Object.entries(Object.getOwnPropertyDescriptors(methods))) Object.defineProperty(Engine.prototype, k, d);
     Engine.prototype.G = G;
+    Engine.prototype.FRIENDS = FRIENDS;
   }
-  return { install, SLOTS };
+  return { install, SLOTS, FRIENDS };
 });
