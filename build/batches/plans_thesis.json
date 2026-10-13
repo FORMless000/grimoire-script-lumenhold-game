@@ -1,0 +1,153 @@
+{
+  "name": "plans_thesis",
+  "at": 1791858235578,
+  "files": [
+    "content/events/pools/plans_thesis.grim"
+  ],
+  "events": [
+    "break_castle_one_fire",
+    "break_castle_kitchen_rota",
+    "break_castle_empty_library",
+    "break_castle_post_day",
+    "break_home_kitchen_table",
+    "break_home_the_box",
+    "break_home_family_debate",
+    "break_home_village_children",
+    "break_work_holiday_rush",
+    "break_work_opening_up",
+    "break_work_regular",
+    "break_work_new_hire",
+    "break_internship_lodgings",
+    "break_internship_briefing",
+    "break_internship_other_interns",
+    "break_internship_stipend",
+    "thesis_margin_notes",
+    "thesis_carrel_neighbour",
+    "thesis_is_it_good",
+    "thesis_lab_spare_carrel",
+    "thesis_lab_footnote_war",
+    "thesis_lab_borrowed_candle",
+    "intern_royal_library_slips",
+    "intern_royal_library_mending",
+    "intern_conclave_test_chamber",
+    "intern_conclave_minutes",
+    "intern_alchemists_vat_watch",
+    "intern_alchemists_no_flame",
+    "intern_expedition_thin_air",
+    "intern_expedition_chart_dispute",
+    "intern_field_station_count",
+    "intern_field_station_patient",
+    "intern_thornwick_pastries",
+    "intern_thornwick_rivalry",
+    "intern_unseen_office_coffee",
+    "intern_unseen_office_wrong_file"
+  ],
+  "contentHash": "8a886b",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 273,
+      "total": 273
+    }
+  },
+  "critic": {
+    "batch": "plans_thesis",
+    "round": 2,
+    "accept": false,
+    "summary": "All 11 round-1 issues are fixed, and fixed well: member() job branches with a neutral fallback, host-neutral internship lodgings, other interns and stipend, plain coats, the duelling-field grudge, the stitched apron, and the final-year post line. The three new thesis_lab events fit the place desc and year-4 discovery and read nicely. The batch is still rejected under pools.md's newest rules, which landed on main after this worktree branched (the worktree's pools.md doesn't have them yet). In 10 of 36 events a say refers to a detail that only one random text alternative contains, so about half of those showings read incoherently: the blue one when the slip was a love letter, the cat when a first-year is in the chair. That is over 1 in 5. Four sequences also describe a choice's payoff. Every fix is a one-line say or sequence rewrite. The author should merge main first, to pick up the updated pools.md.",
+    "issues": [
+      {
+        "event": "break_castle_one_fire",
+        "problem": "Random picks are independent. The lose say 'The whole room watches you fail to dislodge a cat' only fits the 'Footnote is in it' text alternative. When the sleeping first-year is in the chair, it's wrong.",
+        "fix": "Make it fit both: 'The whole room watches you fail to dislodge the armchair's occupant. It's the most entertainment anyone has had all break.'"
+      },
+      {
+        "event": "break_home_village_children",
+        "problem": "Random picks are independent. The left say 'The smallest one catches it in the jar' needs the jar alternative ('The smallest has a jar…').",
+        "fix": "Drop the jar: 'The smallest one tries to catch it in cupped hands, or thinks they do, which is the same thing.'"
+      },
+      {
+        "event": "break_internship_briefing",
+        "problem": "Random picks are independent. The right win say 'It turns out the mumbled task was…' needs the 'last task is mumbled' alternative.",
+        "fix": "'It turns out the odd task was \"take the rest of the morning off\". Lucky.'"
+      },
+      {
+        "event": "intern_royal_library_slips",
+        "problem": "Random picks are independent. The left say 'You come back up with the blue one' needs the 'the blue one' slip alternative.",
+        "fix": "'You come back up with the book and a lot of opinions about stairs.'"
+      },
+      {
+        "event": "intern_conclave_test_chamber",
+        "problem": "Random picks are independent. The win say 'The candle burns backwards for one glorious minute' needs the candle alternative, and the lose say 'The room tidies itself, and then you' needs the tidy alternative. Separately, sequences count showings: line 2 ('a circle where you stood last time') and line 3 ('the newest scorch mark is suspiciously like you') assume you stepped into the chamber last time, but a player who always took readings behind the glass never did.",
+        "fix": "Make the says spell-neutral ('It works, more or less, for one glorious minute before the spell remembers itself.' / 'The spell goes off sideways, and your robes will never fold the same way again.'). Anchor lines 2 and 3 on the place: 'Someone has chalked a new circle on the floor. The old one is scorched.' / 'You know every scorch mark in the chamber by now, and who made each one.'"
+      },
+      {
+        "event": "intern_alchemists_vat_watch",
+        "problem": "Random picks are independent. The left win say 'the amber comes back' needs the 'amber is drifting' alternative. The bubble and cinnamon alternatives never lose the amber.",
+        "fix": "'A pinch of salt and a slow stir, and the vat settles back to its proper self.'"
+      },
+      {
+        "event": "intern_alchemists_no_flame",
+        "problem": "Random picks are independent. The win say 'The toast is a little purple' needs the toast alternative, and the lose say 'the inspector notices the steam' needs the inspector alternative. Line 3 ('the academy's expert in not technically breaking the rules') is a choice payoff, so it's wrong for a player who always sticks to the rules.",
+        "fix": "Make the says neutral ('It works, though everything boiled on it comes out a little purple.' / 'Your method works so well that someone in charge notices the steam…'). Line 3: 'By now the break room asks the academy intern first, whatever the problem.'"
+      },
+      {
+        "event": "intern_thornwick_rivalry",
+        "problem": "Random picks are independent. The lose say 'the illusion of you takes a bow' needs the 'one of them pretends to be you' alternative.",
+        "fix": "'You lose the exchange so badly that one of them takes a bow on your behalf.'"
+      },
+      {
+        "event": "intern_unseen_office_coffee",
+        "problem": "Random picks are independent. The win say 'By the second cup you understand the weather' needs the weather alternative.",
+        "fix": "'You drink your coffee slowly and listen. By the second cup you understand what nobody is saying.'"
+      },
+      {
+        "event": "intern_unseen_office_wrong_file",
+        "problem": "Random picks are independent. Three says refer to the red ribbon ('retie the ribbon perfectly', 'glances at the ribbon. \"Interesting knot\"', 'with the ribbon untouched'), and only one text alternative has it.",
+        "fix": "Either make the ribbon constant in the text ('tied shut with a red ribbon' as a fixed sentence, with the thin/thick/coffee-ring detail as the random part) or rewrite the says around the folder ('You read it and close it exactly as it was…')."
+      },
+      {
+        "event": "thesis_lab_borrowed_candle",
+        "problem": "Sequences count showings, not choices. Line 3 ('You owe the carrels of this room… about a dozen candles') and, more mildly, line 2 assume you borrowed every time, which is false for a player who always went back in the dark. Lines 2 and 3 also never say your candle has gone out, so 'Go back in the dark' and 'the box' arrive unexplained.",
+        "fix": "Anchor the sequence on the place, and restate the moment each time: 'Your candle gives out again. Next door, the usual box of spares and nobody in the chair.' / 'The lab's candles have outlasted no one's patience tonight, least of all yours. There's a box next door.'"
+      },
+      {
+        "event": "thesis_lab_spare_carrel",
+        "problem": "Minor, polish. The second lose say ('the spare carrel was theirs all along') sits awkwardly with lines 2 and 3, where you have half-adopted the carrel.",
+        "fix": "Optional: 'A final-year asks if you'd mind the corner. Their own candle has given out.'"
+      },
+      {
+        "event": "intern_expedition_chart_dispute",
+        "problem": "Minor, polish. Line 2 ('marking your disagreements with a small red cross') implies you raised them, which is a choice payoff, but the line still reads acceptably if you only rechecked alone.",
+        "fix": "Optional: 'The senior astronomer's charts and yours have a running disagreement now, kept in red ink.'"
+      }
+    ]
+  },
+  "spotCheck": [
+    "intern_field_station_count",
+    "intern_expedition_chart_dispute",
+    "intern_thornwick_pastries",
+    "break_work_holiday_rush"
+  ],
+  "accepted": false
+}
