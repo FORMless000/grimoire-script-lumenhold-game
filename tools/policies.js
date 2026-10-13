@@ -106,7 +106,9 @@ const LEGACY = {
       const all = view.options.filter((x) => !x.disabled);
       const opts = all.filter((x) => !endsEarly(eng, view, x.key)).length ? all.filter((x) => !endsEarly(eng, view, x.key)) : all;
       const low = eng.c.order.resources.filter((id) => eng.s.vals[id] <= 25);
-      const safe = opts.filter((x) => !x.affects.some((a) => low.includes(a)));
+      // Avoid options that can lower a low resource (the worst case of the engine's preview); gains are welcome.
+      const risky = (x) => { try { const pv = eng.preview(view.id, x.key, view.actor ? view.actor.id : null); return low.some((id) => pv.deltas[id] && pv.deltas[id][0] < 0); } catch (e) { return x.affects.some((a) => low.includes(a)); } };
+      const safe = opts.filter((x) => !risky(x));
       return (safe.length ? safe : opts)[Math.floor(eng.rand() * (safe.length ? safe.length : opts.length))].key;
     },
   },

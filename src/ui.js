@@ -333,7 +333,8 @@
     if (r.kind === 'map') return showMap(r.view);
     if (r.kind === 'ending') {
       archiveRun(eng); store.del(SAVE_KEY); clearTimeout(serverSaveTimer);   // a pending autosave push must not resurrect it
-      if (Net.available) { Net.flush(eng, runRecordMeta(), { final: true }); Net.deleteSave('auto').catch(() => {}); }
+      // Delete only after an autosave push already in flight has landed, or it would bring the save back.
+      if (Net.available) { Net.flush(eng, runRecordMeta(), { final: true }); pendingPush.then(() => Net.deleteSave('auto')).catch(() => {}); }
       recordSeen(eng);
       return showEnding(r);
     }
@@ -342,14 +343,14 @@
     return showCard(r.view);
   }
   function next() { ui.busy = false; step(eng.advance()); }
-  let serverSaveTimer = null;
+  let serverSaveTimer = null, pendingPush = Promise.resolve();
   function save(now) {
     if (!eng || !eng.s || eng.s.ended || params.get('event')) return;
     const json = eng.save();
     store.set(SAVE_KEY, json);
     if (!Net.available) return;
     clearTimeout(serverSaveTimer);
-    const push = () => Net.putSave('auto', json).catch((e) => console.warn('[net] save', e.message));
+    const push = () => { pendingPush = Net.putSave('auto', json).catch((e) => console.warn('[net] save', e.message)); return pendingPush; };
     if (now) push(); else serverSaveTimer = setTimeout(push, 1500);
   }
 
@@ -925,7 +926,8 @@
         let data; try { data = await slotData(b.dataset.load); } catch (e) { render({ slot: b.dataset.load, text: e.message }); return; }
         if (!data) return;
         if ((data.version || 1) < Engine.SAVE_VERSION) { render({ slot: b.dataset.load, text: t('slots.tooOld') }); return; }
-        if (eng && eng.s && !eng.s.ended && ui.mode !== 'title') { save(true); Net.flush(eng, runRecordMeta(), { final: true }); archiveRun(eng); }
+        // The old run is archived and flushed; no autosave push for it (it could land after the new game's and overwrite it).
+        if (eng && eng.s && !eng.s.ended && ui.mode !== 'title') { clearTimeout(serverSaveTimer); Net.flush(eng, runRecordMeta(), { final: true }); archiveRun(eng); }
         eng = new Engine(content).load(JSON.parse(JSON.stringify(data)));
         if (b.dataset.load !== 'auto') eng.forkRun();
         closeSlots(); save(true); buildGame(); step(eng.advance());

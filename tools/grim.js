@@ -234,6 +234,12 @@ function analyze(content) {
     scanEffects(e.on_show, w, hasActor);
     if (e.actor === 'any') A.legacy.push({ where: w, what: '"actor: any" (use a cast: role)' });
     if (e.place && !content.places[e.place]) P('error', w, 'place: unknown place "' + e.place + '"');
+    { // a slot an event needs must exist in a day recipe, and a place event's slot gate must be an open, visited slot
+      const recipeSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || [])].map((r) => r.slot));
+      if (e.slot && recipeSlots.size && !recipeSlots.has(e.slot)) P('error', w, 'slot: "' + e.slot + '" is in no day recipe');
+      const pl = e.place && content.places[e.place];
+      for (const m of ((e.when && e.when.src) || '').matchAll(/slot == "(\w+)"/g)) if (pl && pl.open && !pl.open.includes(m[1])) P('warn', w, 'when needs slot "' + m[1] + '" but ' + e.place + ' is closed then');
+    }
     if (e.track && !content.tracks[e.track]) P('error', w, 'track: unknown track "' + e.track + '"');
     if (e.arc && !content.arcs[e.arc]) P('error', w, 'arc: unknown arc "' + e.arc + '"');
     if (e.plan && !content.states['plan_' + e.plan]) P('error', w, 'plan: no @state plan_' + e.plan);
@@ -375,6 +381,9 @@ function analyzeWorld(content, P, scanExpr, scanText) {
     if (d.track && !content.tracks[d.track]) P('error', loc(d), 'track: unknown track "' + d.track + '"');
     if (['club', 'job', 'thesis', 'internship'].includes(d.kind) && !d.track) P('warn', loc(d), d.kind + ' place without a track');
     if (slots) for (const sl of d.open || []) if (!slots.has(sl)) P('error', loc(d), 'open: unknown slot "' + sl + '"');
+    // A place must open in a slot the day recipes visit, or nobody can ever go there (internship hosts use their own map).
+    const visitSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || [])].filter((r) => r.source === 'visit').map((r) => r.slot));
+    if (d.open && d.kind !== 'internship' && visitSlots.size && !d.open.some((sl) => visitSlots.has(sl))) P('error', loc(d), 'open: ' + d.open.join(' ') + ' — never a visit slot (' + [...visitSlots].join(', ') + '), so the place can never be visited');
     scanExpr(d.discover, loc(d), false); scanExpr(d.closed_when, loc(d), false); scanExpr(d.hinted_when, loc(d), false);
   }
   const TRACK_KINDS = new Set(['course', 'club', 'job', 'internship', 'thesis']);
