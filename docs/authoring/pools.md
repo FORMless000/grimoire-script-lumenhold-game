@@ -54,6 +54,10 @@ Each event will be seen several times. Use at least three variation points acros
 
 **Cast roles are re-filled on every showing.** A sequence must never imply the same companion as last time ("a scarf to go with last time's hat", "you each suspect the other"): anchor the progression on the place or the player, and let `{friend}` be new each time. Restrict classmate roles with `tagged(friend, student)` (a character's `role:` counts as a tag), so outsiders and staff aren't cast as fellow students.
 
+**Sequences count showings, not choices.** A sequence advances every time the card is shown, whatever the player picked. So it must never describe the payoff of a choice ("a reader you helped last time", "Lyra respects your calls now"): a player who always took the other option, or lost the challenge, never earned it. Gate such lines on state instead (`performance(track) >= 60`, `rel(lyra) >= 20`).
+
+**Random picks are independent.** A `{~…}` in the text and a `{~…}` in a `say:` are chosen separately, so a say must not refer to a detail only one text alternative mentions (the bees, the red scarf). Write says that fit every alternative.
+
 Don't build a repeatable on a one-time surprise (a secret door, a confession). Those are milestones, not pool events. The premise should be a *situation that recurs*: the queue at the refectory, the draft in the observatory, the lecturer's habit.
 
 ## What a source's pool should cover
