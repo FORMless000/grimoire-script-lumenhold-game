@@ -138,15 +138,36 @@ The biggest change, and what M41 builds on.
 | M40 Cartographers | A hidden flavour group: a new track kind (or a state with its own pool) with no due visits, performance or ranks, that doesn't take the club slot. Keep the `cartographers` id. |
 | M41 the midnight turn | The night card each on-campus month: Sleep, or Go out (mood and health −small), which opens a midnight pick through a new effect, `visit midnight` (reusing M1's picker). Six places get `open: midnight`. Suspicion uses two hidden markers and one forced morning event; the morning event is the only source of lockouts (as decided in M41). **Stub:** the Y1 Stormbloom lead-in, the night card with a few variants, and one event per night place. X13 fills it. Needs M42, M39, M1. |
 
+## Step 2b — Interim fixes (inserted midway through step 3; done before L continues)
+
+Found after M, from the half-done L-1. Language additions follow the usual order (grimoire.js → engine → lint → format/query → docs) and are recorded with `schema --update`.
+
+| Item | Approach |
+|---|---|
+| I1 Fixed shifts | A job's `due:` becomes a fixed number of **shifts** a term, not a minimum. The first `due` visits in a term are shifts (shift card, `wage`, performance, rank XP; M34's proration stays). The first visit after the last shift pushes a hint card, once per term per job ("not your shift: take a break"), and every further visit that term draws the place's regular pools (place events, no shift card, no pay, no attendance). The side panel and the map's job badge say "all shifts done" for the term. |
+| I2 No work on breaks | On a break, a visit to your job's place is an ordinary visit (regular pools, no shift card, no pay). Vacation work comes only from the break plan's choice ("Work on campus" and its gigs). |
+| I3 One visit per place a day | A place picked for one visit can't be picked again that day (the map marks it "visited today"). Midnight is exempt: the night places are different places at night. |
+| I4 Night penalties as pushes | A new `queue <event> chance N` form: the card is queued and, when it falls due, pushed with probability N (else dropped); the card itself shows no odds. Going out in term queues `night_suspicion` at 33%; risky outcomes queue it at 50%. Two queued copies give at most one card (≈ 66% for an illegal night, as M41 intended). The hidden `spotted` state goes; `night_suspicion` becomes a queued card. |
+
+## Step 2c — Before further balancing: tooling and audits
+
+| Item | Approach |
+|---|---|
+| A1 Simulation = play | Audit the simulated players against the browser: the same engine calls in the same order (origin, map picks per visit, menus, multi-picks), nothing a bot does that the UI can't, and no game logic in `tools/*.js` or `src/ui.js` that isn't in the engine or `.grim` (list today's: the bots' track-leaving penalty, the multi-pick fallback, the hard-coded plan and internship names in the director). Add a **replay** test: record a simulated run's seed and every choice and pick, replay it through the engine the way the UI drives it, and require the same history and final state. |
+| A2 Event graph and frequencies | Confirm (or complete) three tools: the event graph (`grim reach`, `grim show`: who queues, gates and unlocks what), a frequency estimate per event (from `balance`/`sim` coverage and the director's pools), and a search by stat change (`grim query` on deltas, e.g. every option that moves `gold` by tier, joined with frequency). Then run them: per attribute, expected flow per month by source (events × frequency), to set rough budgets before L. |
+| A3 No token costs | Find costs that exist only to satisfy the routine budget lint (a `mood -tiny` / `health -tiny` / `gold -tiny` the scene doesn't motivate), including those added in M-D to M-F, and remove or justify them; relax the budget rule where a free, safe choice is honest. |
+| A4 Run times and test strategy | Report how long a simulated run takes (per game, per `balance`, `check`, `snapshot`, `economy`), then propose and run further strategies: per-origin and per-style matrices, seeds sweeps for variance, targeted scenario runs (a poor origin with no job, a romance run, a night-owl run), and regression checks per package. The full browser test runs only to check integrity after architectural changes. |
+
 ## Step 3 — L (balance), after M
 
 Retune once, on the finished mechanics. Tools: `tools/economy.js`, `balance` (full, not `--quick`), `hs-funnel.js`, and the playtest log. Every number goes in `@balance` or the rules, never in events.
 | Package | Items | Approach |
 |---|---|---|
-| L-1 Economy | L24, L25, L26, L3 | Origins sponsor tuition and tuition drops (L24), so noble and street runs don't diverge too far; set from economy.js per origin and style, and update the origin screen's copy (M32). Thesis due 3 → 2 (L25). Internships pay properly through their events (L26, after M10). Check that money is spent by choice or passively (L3), and that board and hunger still bite the poor origins. |
+| L-1 Economy | L24, L25, L26, L3 | Origins sponsor tuition and tuition drops (L24), so noble and street runs don't diverge too far; set from economy.js per origin and style, and update the origin screen's copy (M32). Thesis due 3 → 2 (L25). Internships pay properly through their events (L26, after M10). Check that money is spent by choice or passively (L3), and that board and hunger still bite the poor origins. **Jobs:** unify their pay so it mostly matches, then pay hazardous, unquiet jobs more (the courier's flights, the Newt's nights) and peaceful ones less (the library, the apothecary's counter); add minor incident cards to the hazardous jobs' pools to show the hazard (a fall, a brawl, a lost parcel). |
 | L-2 Relationships | L27, L23 | Lower the friendship gains (the `rel` row, or the M37 ratio) so nobody hits 100 by year 2. Romance holds while dating: spark decay, partner cool-down, and the letters (M38). Check the Lyra and friendship-growth deviations in PROGRESS. |
-| L-3 Checks | L1, L4, L5, L6, L17, L18, L8, L19 | Grades spread across A–F (L1, on M4's exam cards). Skill scaling stays small; difficulty comes from variants (L4). Read late-game odds from the logs and the curve (L5: trivial or impossible). Higher course levels shift difficulty up (L6). Turbulent checks for `isolde_chess` and `inc_broken_wand` (L17, L18, with M14). The tournament from year 2 on (L8, L19, with M39). |
+| L-3 Checks | L1, L4, L5, L6, L17, L18, L8, L19 | Grades spread across A–F (L1, on M4's exam cards). Skill scaling stays small; difficulty comes from variants (L4). Read late-game odds from the logs and the curve (L5: trivial or impossible). Higher course levels shift difficulty up (L6). Turbulent checks for `isolde_chess` and `inc_broken_wand` (L17, L18, with M14). The tournament from year 2 on (L8, L19, with M39). **Forced fails:** the odds cap drops the forced fail from 8% to 5%; milestone checks (exams, internship interviews, the thesis defence: `sit_exam` and checks in `class: milestone` events, with the defence moved to that class) have none. |
 | L-4 Intensity | L2 | Larger health and mood swings: the rows in `@balance` and the hunger and rest presets, checked against the budget lint and the style invariants. |
+| L-6 Spell rewards | | Learning or upgrading a spell (passing a course's exam) gives a significant skill bonus in the spell's discipline: `@balance spell_bonus:` per spell level (xp tiers, e.g. large, large, huge), shown on the grade note, so passing a course feels like a reward. |
 | L-5 Event retunes | L10, L11, L15, L16, L20 | Reporting Bram gains Lumen (L10); holding your ground in `soc_argument` pays (L11); more mood cost in office hours (L15); more romantic tarot (L16); `hs_kael_truth`'s alignment (L20). |
 | Alarms | | The balance report's open alarms: the archmage share of headlines, windfalls (5.3 a year against 1–4), the aggressive style, the events no style sees. |
 
@@ -155,7 +176,7 @@ Not in step 3: L13 → M13; L21 → X; L22 → X3; L28 → the final pass.
 ## Status
 Steps 1 (B, C) and 2 (M, packages M-A to M-F) are done and committed; the triage marks each item.
 
-Step 3 (L) is **paused** partway through L-1, at the user's request, for adjustments first. Done so far (migration 0028, `tools/economy.js --origin`):
+Step 3 (L) is **paused** partway through L-1, at the user's request; steps 2b (interim fixes) and 2c (tooling and audits) come first, then L resumes with the balancing edits above (job pay and hazard, forced fails, spell rewards). Done so far (migration 0028, `tools/economy.js --origin`):
 - L24, first pass: tuition 30 → 16 a term; noble and merchant families pay the tuition (the noble allowance is now +1 a month and 40 crowns at the start; the merchant has 70 and no monthly share); the scholarship halves it (8), with a stipend of 2 while the GPA holds. The origin screen's money lines say so.
 - L25: the thesis asks 2 visits a term.
 - L26: internships pay a stipend through their host cards (`pay: 18`, `wage` in every option; lint allows `wage` in internship cards).
@@ -163,6 +184,8 @@ Step 3 (L) is **paused** partway through L-1, at the user's request, for adjustm
 Not yet done in L-1: re-measuring per origin and style after these numbers (`node tools/economy.js --origin <key>`), L3's check, and the triage marks. L-2 to L-5 and the alarms are untouched.
 
 ## Decisions
+- I1 (assumed, confirm): the "not your shift" hint comes once per term per job.
+- L-3: only the forced fail changes (8% → 5%; none for milestones); the forced success stays at 8% unless decided otherwise.
 - M21 (decided): year 4's last break is a wrap-up term, and month 48 only resolves endings.
 - Order (decided): checks before the day, so the combat stub is seen sooner.
 
