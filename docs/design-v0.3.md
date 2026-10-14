@@ -414,10 +414,14 @@ Friends are found the way they are in life: in the courses, clubs, jobs and plac
 - **Track 1, you find them.** The shared pools (§5.1). A visit to a place where a character's `schedule:` puts them in that slot may give a card from that character's own pool; so may the social slot (anyone scheduled at a place you know). Unmet characters count too, so introductions happen where people are.
 - **Track 2, they find you.** Each met character rolls once a month, independently of every other card, to bring one card from their own pool. It sits in the social slot with priority `friend` (between pushed and social). At most 2 such cards a month (1 on a break, where the chance is halved).
 - **A character's pool:** their events (a fixed `actor:`, no place, track, plan or slot), plus generic social events cast with them in the `per:` role.
+- **Schedules** (M42): an entry can hold on a share of days (`observatory@midnight:30`), and `schedule_break:` gives a break schedule, or `away`.
+- **Milestones** (M13) are pushed, not drawn: `ramp: rel(npc) 18..30` pushes the card each month at 40% from the low mark, certain at the high mark.
+- **One bar per character** (M37): length is closeness (rel), colour runs friendly ↔ romantic with spark. Friendship gains carry spark along in proportion to the spark already there (at most 2×, 3× for a partner), and crossing spark 30 asks once whether you want it (`spark_cooldown`).
+- **Off campus** (M38, M19, M29, M31): at home or on an internship, the day draws that place's pools, a letter comes each night, anyone who reaches you writes, and friendship and spark fade at half the pace. A character away over a break (`schedule_break: away`) is reachable only by letter.
 - **Warmth (0–100, per character)** is recent, chosen contact:
   - meeting sets it to 35;
-  - visiting where they are: +6;
-  - a card with them where you raised their rel or spark (even at the cap): +18; a card with them where you didn't: −8 (a rival or nemesis warms on any contact);
+  - visiting where they are: +12 (it counts as seeking them, playtest 2 M18);
+  - a card with them whose outcome moved the relationship further its own way (a friend's rel or spark up, even at the cap; a rival's down): +18; otherwise −8. When every option moved it that way, only the larger move counts (M17);
   - −20% every month.
 - **Pull** = 4 + warmth + 0.3 × friendship (hostility for a rival) + 0.3 × spark + bond (partner 30, close 20, friend 12, rival or nemesis 10). Monthly chance = pull / 100, at most 85%.
 - **Encounter chances:** 55% per visit with someone present; 35% at lunch. An encounter takes the place of one of the visit's (or lunch's) other cards: time with someone is part of the visit, not extra.

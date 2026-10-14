@@ -81,6 +81,7 @@ text: {~{npc} finds you after class and presses a little stack of coins into you
   say: You put it away uncounted. {npc} looks quietly pleased to be trusted, which was worth more than the crowns.
 
 @event soc_become_friends
+ramp: rel(npc) 18..30
 title: Something Like Friendship
 class: milestone
 tone: light
@@ -103,6 +104,7 @@ text: {npc} saves you a seat without asking now, and you save {them} one. You tr
   say: "So we're friends now," {npc} says. "Officially." You shake on it, solemnly, then ruin it by laughing.
 
 @event soc_become_close
+ramp: rel(npc) 36..50
 time: night
 title: The Kind of Friend You Call at 3am
 class: milestone
@@ -427,6 +429,7 @@ text: You could ask {npc} to the lantern show in the village this weekend. As fr
         say: {npc} hesitates, then says {they}'d rather go as friends. It's a nice evening. It's a long evening.
 
 @event soc_confess_generic
+ramp: spark(npc) 30..45
 title: Feelings, Spoken
 class: milestone
 tone: warm
@@ -622,6 +625,7 @@ text: In the middle of dinner, {npc} loudly recounts your most embarrassing mome
       say: Your comeback comes out as a squeak. The laughter doubles.
 
 @event soc_make_peace
+ramp: rel(npc) 3..15
 time: noon afternoon
 title: Burying the Hatchet
 class: milestone
@@ -671,3 +675,21 @@ text: "Eight crowns says I outscore you in the next Arcana practical," {npc} say
       gold -small
       rel npc +tiny
       say: You lose by a hair. "Next time," you say. {npc} grins. "Next time."
+
+# Spark crossing @balance spark_follow's cooldown mark (playtest 2, M37): the engine asks once whether you want it.
+@event spark_cooldown
+title: Something Between You
+trigger: queued
+actor: npc
+class: milestone
+tone: warm
+art: rose
+tags: romance social
+scene: Two students on a bench a little closer than friends usually sit, both pretending to read the same page.
+text: Something has shifted between you and {npc}. {~They hold your gaze a moment too long.|They've started saving you a seat, and blushing about it.|Your names keep turning up next to each other in other people's gossip.} You could let it grow, or gently let it cool.
+> left: Let it grow
+  say: {~You don't say anything. You don't move away either.|You hold their gaze back, for exactly as long.}
+> right: Let it cool, kindly
+  cool npc
+  rel npc +tiny
+  say: {~You find a gentle way to say you value them as a friend. They look relieved, or almost.|You keep it light and friendly, and the moment passes. The friendship stays.}

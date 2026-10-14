@@ -69,7 +69,7 @@ text: Professor Thorne places a candle at the far end of the hall. "Light it. Fr
 | `tags` | Space- or comma-separated. The first known tag picks the card colour and label (see §8). | — |
 | `when` | Expression; the event can only appear while true. Checked when the deck is built **and** again just before the card is shown. | always |
 | `weight` | Expression; relative draw chance among eligible events. | 10 |
-| `trigger` | How it enters a month's deck: `random`, `auto`, `social` or `queued` (§5). | `random`; `social` if `actor: any` |
+| `trigger` | How it enters a month's deck: `random`, `auto`, `social`, `queued` or `letter` (§5, §6c). | `random`; `social` if `actor: any` |
 | `actor` | The NPC the card is about: an npc id, `any` (engine picks one), or `npc` (inherited from the `queue … with` that scheduled it). Enables `npc` and `{npc}`. | none |
 | `repeat` | Cooldown in months. Without it, the event happens **once per game** (once per character for `actor: any`). | once |
 | `priority` | Ordering among forced cards (higher first). | queued 60, auto 50 |
@@ -319,6 +319,7 @@ Avoid contractions that break with "they" (`{they}'s`, `{they}'ve`).
 - `social` — the relationship slot. Requires a met actor (`actor: any` or a fixed met NPC).
 - `auto` — forced in whenever `when` is true: calendar beats, menus, chain finales. Always give it a tight `when` and usually a `repeat`.
 - `queued` — only appears through `queue`. Lint warns about orphans.
+- `letter` — a letter (playtest 2, M38): drawn only off campus, one each night, and by anyone who reaches you while one of you is away (M19). In no other pool.
 
 **`actor: any` selection:** every met NPC for whom `when` is true is a candidate. People with stronger relationships (|rel|, love, a bond) are picked more often. The event is once **per character** (or `repeat` = per-character cooldown) and rests globally for 2 months after showing.
 
@@ -438,7 +439,7 @@ Worldbook blocks are **data**: canon for authors, briefs and lint. Until phase 2
 
 | Block | What it is | Structured values |
 |---|---|---|
-| `@npc` (extended) | `age` (required; romance needs 18+), `role`, `year`, `traits` / `interests` (from `@vocab`), `voice` | `stats: arcana 34 lore 22 wealth 5` · `schedule: place@slot,slot …` · `relations: npc:value …` |
+| `@npc` (extended) | `age` (required; romance needs 18+), `role`, `year`, `traits` / `interests` (from `@vocab`), `voice` | `stats: arcana 34 lore 22 wealth 5` · `schedule: place@slot,slot … place@slot:30` (a number: there that share of days, decided per month without the RNG; M42) · `schedule_break: …` (the schedule on breaks, or `away`: gone for the break, reachable only by letter) · `relations: npc:value …` |
 | `@fact npc.key` | what can be learned about a character: `tier` surface / personal / secret, `unlock` (expression), `text` | |
 | `@place` | `region`, `kind` (public, club, job, thesis, internship, plan), `track`, `open` slots, `discover` / `closed_when` / `hinted_when` (expressions), `hint`, `desc` | `map: campus x,y` |
 | `@track` | `kind` (course, club, job, internship, thesis), `skill`, `levels` + `level_names`, `place`, `hidden`, `prereq`, `ranks`, `due`, `lead` | `teaches: spell@level …` · `pay: 8, 12, 18` |
@@ -477,9 +478,13 @@ origins: choose_origin               # the origin screen before the game lists t
 **People come by two tracks** (design §5.5). An event with a fixed `actor: <npc>` (and no `place:`, `track:`, `plan:` or `slot:`) is in that character's own pool as well as in the shared pools; generic social events (`per: npc` casts) can be cast with any one character.
 - *You find them:* the shared pools as above; a visit to a place where a character's `schedule:` puts them (met or not, so introductions happen where people are) and the social slot (anyone scheduled at a place you know) can each give a card from that character's pool.
 - *They find you:* every met character rolls each month, on their own, to bring you one card from their pool (at most two such cards a month, one on a break). The chance follows **warmth**: recent contact you chose. A card where you raised their `rel` or `spark` (even at the cap) warms them; a card with them where you didn't cools them; visiting where they are warms them a little; warmth fades every month. Standing friendship, spark and a bond add to it.
+- *Warmth counts seeking* (M17, M18): a card warms someone only when its outcome moves the relationship further its own way (a friend's `rel`/`spark` up, a rival's down); when every option moves it that way, only the larger move counts. Visiting a place where they are counts as seeking them.
+- *Milestones* (M13): an event with `ramp: rel(npc) 18..30` leaves the pools and is pushed instead, each month, for the character furthest along: at 40% once the value reaches the low mark, rising to certain at the high mark. Use it on becoming friends, confessions and the like, whose gate already names the low mark.
+- *Spark follows friendship* (M37): a `rel` gain on a romanceable character who already has spark adds spark too, `gain × spark / per`, at most `cap`× (`partner`× for a partner): `@balance spark_follow: per 25 cap 2 partner 3 cooldown 30`. Crossing `cooldown` pushes `@game spark_cooldown` once (not for a partner), whose `cool npc` statement clears spark. A gain at the cap shows in the outcome, marked as at the maximum.
+- *Off campus* (M38): on a break under a plan state tagged `away` (home, an internship), the day draws that plan's own pool (and a member internship's events) instead of campus pools, a `trigger: letter` card comes each night, anyone who calls writes instead, and friendship and spark fade at half the pace. The identifier `off_campus` is true then.
 - So a character needs a ladder of personal events starting near `rel 0` (a rival's too): if every one of their events is gated at `rel >= 10`, a new acquaintance has nothing to bring you and the friendship stalls.
 
-**Identifiers:** `term` and `break` (booleans), `season` (`"autumn"` …), `final_year`, `wrapup` (the final year's wrap-up months), `term_index` (1–8), `gpa` (0–4), `slot` (the slot being drawn). `month` is 1–12 within the academic year; `year` is 1–4; `turn` is 1–48.
+**Identifiers:** `term` and `break` (booleans), `season` (`"autumn"` …), `final_year`, `wrapup` (the final year's wrap-up months), `off_campus` (M38), `term_index` (1–8), `gpa` (0–4), `slot` (the slot being drawn). `month` is 1–12 within the academic year; `year` is 1–4; `turn` is 1–48.
 
 **Event fields**
 

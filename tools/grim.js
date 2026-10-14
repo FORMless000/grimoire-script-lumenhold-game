@@ -185,7 +185,7 @@ function analyze(content) {
           else if (st.with && st.with !== 'npc' && !content.npcs[st.with] && !ROLES.has(st.with)) P('error', w, 'queue ... with: unknown npc "' + st.with + '"');
           if (st.delay) scanExpr(st.delay, w, hasActor);
           break;
-        case 'rel': case 'spark': case 'bond': case 'meet':
+        case 'rel': case 'spark': case 'bond': case 'meet': case 'cool':
           if (ROLES.has(st.npc)) break;
           if (st.npc === 'npc') { if (!hasActor) P('error', w, st.t + ' npc: block has no actor'); }
           else if (!content.npcs[st.npc]) P('error', w, st.t + ': unknown npc "' + st.npc + '"');
@@ -239,6 +239,7 @@ function analyze(content) {
     if (e.art && !Art.has(e.art)) P('warn', w, 'unknown art "' + e.art + '" (see src/art.js; available: ' + Art.list().join(' ') + ')');
     if (!e.art) P('info', w, 'event has no art');
     scanExpr(e.when, w, hasActor); scanExpr(e.weight, w, hasActor);
+    if (e.ramp) { scanExpr(e.ramp.expr, w, hasActor); if (e.trigger === 'queued' || e.trigger === 'auto') P('warn', w, 'ramp: a queued or auto event is pushed already; the ramp is ignored'); }
     scanText(e.title, w, hasActor); scanText(e.text, w, hasActor); scanText(e.scene, w, hasActor);
     { const n = longestRendering(e.text || ''); if (n > 480) P('warn', w, 'card text is long (' + n + ' chars at its longest; aim for < 400)'); }
     scanEffects(e.on_show, w, hasActor);
@@ -304,7 +305,7 @@ function analyze(content) {
   for (const [n, ws] of Object.entries(A.npcsRef)) if (!content.npcs[n]) P('error', ws[0], 'unknown npc "' + n + '"');
   for (const [ev, ws] of Object.entries(A.eventsRef)) if (!content.events[ev]) P('error', ws[0], 'unknown event "' + ev + '"');
   // The engine itself queues these at term end (design §6.2).
-  for (const id of ['track_warning', 'track_promotion', 'job_term_review']) A.queued[id] = A.queued[id] || ['engine'];
+  for (const id of ['track_warning', 'track_promotion', 'job_term_review'].concat(content.game.spark_cooldown ? [content.game.spark_cooldown] : [])) A.queued[id] = A.queued[id] || ['engine'];
   // The exam card (`@game exam:`) is pushed by the engine for each enrolled course (M4).
   if (content.game.exam) A.queued[content.game.exam] = A.queued[content.game.exam] || ['engine'];
   for (const e of Object.values(content.events)) if (e.trigger === 'queued' && !A.queued[e.id]) P('warn', loc(e), 'queued-only event "' + e.id + '" is never queued (orphan)');
@@ -359,6 +360,7 @@ function budgetCheck(e, content, P) {
   const eng = budgetCheck.eng = budgetCheck.eng || (() => {
     const x = new Engine(content); x.newGame({ seed: 1, name: 'Lint' });
     for (const [id, r] of Object.entries(content.resources)) x.s.vals[id] = id === 'gold' ? 200 : r.min < 0 ? 0 : 50;
+    x.sparkFollow = () => ({ per: 25, cap: 0, partner: 0, cooldown: 101 });   // value what the card says, not spark carried along (M37)
     return x;
   })();
   const actor = e.actor && !['any', 'npc'].includes(e.actor) ? e.actor : e.actor ? Object.keys(content.npcs)[0] : null;
@@ -411,9 +413,10 @@ function analyzeWorld(content, P, scanExpr, scanText) {
     if (n.seeks) inVocab(n.seeks, 'seeks', n, 'seeks');
     for (const k of Object.keys(n.stats || {})) if (!isSkill(k) && k !== 'wealth') P('error', loc(n), 'stats: "' + k + '" is not a skill (or wealth)');
     if (n.stats && n.stats.wealth != null && !(n.stats.wealth >= 1 && n.stats.wealth <= 5)) P('error', loc(n), 'stats: wealth is 1–5');
-    for (const x of n.schedule || []) {
+    for (const x of [].concat(n.schedule || [], (n.schedule_break && n.schedule_break.entries) || [])) {
       if (!content.places[x.place]) P('error', loc(n), 'schedule: unknown place "' + x.place + '"');
       if (slots) for (const sl of x.slots) if (!slots.has(sl)) P('error', loc(n), 'schedule: unknown slot "' + sl + '"');
+      if (x.chance === 0) P('warn', loc(n), 'schedule: ' + x.place + ' at 0% is never used');
     }
     for (const id of Object.keys(n.relations || {})) if (!content.npcs[id]) P('error', loc(n), 'relations: unknown npc "' + id + '"');
   }

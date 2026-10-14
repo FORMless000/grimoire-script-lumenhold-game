@@ -343,3 +343,46 @@ test('menus hide options gated by what you cannot see; a stated prerequisite sho
   eng.trackOp({ t: 'leave', track: 'intern_royal_library' }, eng.newCtx(null, null));
   assert.equal(eng.s.tracks.intern_royal_library.status, 'none', 'leave withdraws an application');
 });
+
+test('schedules: a chance per entry, decided per day without the RNG; break schedules can send someone away (M42)', () => {
+  const c2 = JSON.parse(JSON.stringify(content));
+  c2.npcs.corvin.schedule_break = { away: true, entries: [] };
+  const eng = new Engine(c2);
+  quiet(() => { eng.newGame({ seed: 11, name: 'T' }); });
+  eng.s.npcs.corvin = Object.assign(eng.s.npcs.corvin || {}, { met: true });
+  let there = 0;
+  for (let t = 1; t <= 40; t++) {
+    eng.s.turn = t; if (eng.phaseOf() !== 'term') continue;
+    const rng = eng.s.rng, a = eng.presentAt('gargoyle_passage', 'midnight').includes('corvin');
+    assert.equal(eng.s.rng, rng, 'no RNG drawn');
+    assert.equal(eng.presentAt('gargoyle_passage', 'midnight').includes('corvin'), a, 'the same all day');
+    if (a) there++;
+  }
+  assert.ok(there > 0 && there < 30, 'some nights, not every night (' + there + ')');
+  eng.s.turn = 5;
+  assert.ok(eng.isAway('corvin') && !eng.presentAt('courtyard', 'noon').includes('corvin'), 'away for the break');
+});
+
+test('off campus: halved drift, a letter each night; milestones ramp; spark follows friendship (M13, M37, M38)', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 12, name: 'T' }); });
+  const ctx = eng.newCtx(null, null);
+  eng.s.turn = 11; eng.run([{ t: 'gain', state: 'plan_home' }], ctx);
+  assert.ok(eng.offCampus(), 'home is off campus');
+  const ix = eng.directorIndex();
+  assert.ok(ix.letter.length >= 3 && ix.ramp.length >= 10);
+  eng.s.npcs.lyra = Object.assign(eng.s.npcs.lyra || {}, { met: true, rel: 40, spark: 20, touched: 0 });
+  const sum = []; eng.relationshipDrift(sum);
+  assert.equal(eng.s.npcs.lyra.rel, 39, 'friendship fades by 1 off campus, not 2');
+  // spark follows a friendship gain, in proportion to the spark already there
+  const n = eng.s.npcs.lyra; n.spark = 28; n.bond = 'none';
+  const c2 = eng.newCtx(null, null);
+  eng.run([{ t: 'rel', npc: 'lyra', tier: 'small', sign: 1 }], c2);
+  assert.ok(n.spark > 28, 'spark carried along');
+  assert.ok(eng.s.queue.some((q) => q.id === 'spark_cooldown' && q.actor === 'lyra'), 'crossing the cooldown mark asks');
+  eng.run([{ t: 'cool', npc: 'lyra' }], c2);
+  assert.equal(n.spark, 0, 'cool clears spark');
+  n.rel = 100; const c3 = eng.newCtx(null, null);
+  eng.run([{ t: 'rel', npc: 'lyra', tier: 'small', sign: 1 }], c3);
+  assert.ok(eng.outcome(c3).capped['rel:lyra'] > 0, 'a gain at the cap still shows');
+});

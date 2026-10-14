@@ -92,6 +92,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `day_last` | structured |  |
 |  | `exam` | text |  |
 |  | `spread` | text |  |
+|  | `spark_cooldown` | text |  |
 | `@balance` | `sizes` | structured |  |
 |  | `difficulty` | structured |  |
 |  | `weights` | structured |  |
@@ -104,6 +105,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `combat_cost` | text |  |
 |  | `swing` | structured |  |
 |  | `wage` | structured |  |
+|  | `spark_follow` | structured |  |
 | `@preset id` | `params` | text |  |
 |  | `desc` | text |  |
 | `@resource id` | `name` | text | yes |
@@ -141,6 +143,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `interests` | list |  |
 |  | `stats` | structured |  |
 |  | `schedule` | structured |  |
+|  | `schedule_break` | structured |  |
 |  | `relations` | structured |  |
 |  | `voice` | text |  |
 |  | `seeks` | text |  |
@@ -188,6 +191,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `offers` | text |  |
 |  | `pick` | text |  |
 |  | `scope` | text |  |
+|  | `ramp` | structured |  |
 |  | `per` | text |  |
 | | `on_show:` | effects | `say:` lines |
 | | `> key: Label` | option (`when:`, `hint:`, effects) | label, hint, `say:` |

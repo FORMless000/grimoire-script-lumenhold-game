@@ -1,0 +1,78 @@
+# Letters (playtest 2, M38, M19; stub — N14 fills them): off campus a letter comes each night, and anyone who
+# reaches you while one of you is away writes instead of calling. `trigger: letter` keeps them out of every other
+# pool. Repeatable routine events; see docs/authoring/pools.md.
+
+@event letter_from_a_friend
+title: A Letter From {friend}
+trigger: letter
+class: routine
+tone: warm
+cast:
+  friend: any where met(friend) and rel(friend) >= 6
+per: friend
+repeat: 6
+weight: 20
+art: letter
+tags: social letter
+scene: A folded letter on a windowsill, the handwriting crowded to the very edge of the page, a pressed leaf inside.
+text: {friend} has written. {~Three pages, mostly about nothing, which is the best kind.|Half of it is crossed out and the other half underlined.|There's a drawing in the margin that is probably meant to be you.} {off_campus: The castle, they say, is too quiet without you.|They're away, and they say the quiet there is the wrong kind.}
+> left: Write back at length
+  rel friend +small
+  gold -tiny
+  mood -tiny
+  say: {~You write until the candle gutters and spend the postage you meant for something else. It's worth it.|Four pages back, and a pressed flower of your own. You pay the extra stamp.}
+> right: Send a short note
+  rel friend +tiny
+  chance 70:
+    say: {~A few lines, warm enough. They'll know you read it.|"Missing you. More soon." It says enough.}
+  else:
+    rel friend -tiny
+    say: {~Your note is so short it reads as cross. You meant it kindly.|Two lines. You can picture their face reading it, and it isn't pleased.}
+
+@event letter_castle_news
+title: News From the Castle
+trigger: letter
+when: has(plan_home)
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: paper
+tags: letter
+scene: A copy of the academy newssheet, forwarded in an envelope, its corners soft from travelling.
+text: Someone has forwarded the Lumen Ledger to you at home. {~A professor's hat has gone missing.|The lake froze, or thawed, depending on which column you believe.|There's a letter to the editor about the refectory soup, and it is furious.} It's strange to read about the castle from your old bedroom.
+> left: Read it cover to cover
+  lore +small
+  mood -tiny
+  say: {~You read every word, even the notices. By the end you're homesick for a place you're not at.|The whole paper, twice. Home feels very far from the castle tonight, and the castle very far from home.}
+> right: Just the gossip page
+  chance 60:
+    mood +small
+    say: {~The gossip is excellent. You laugh out loud and have to explain it to everyone at the table.|Someone you know is in it, for something ridiculous. Perfect.}
+  else:
+    mood -tiny
+    say: {~The gossip is about someone you like, and it's unkind.|There's nothing in it you didn't already know. Somehow that's worse.}
+
+@event letter_writing_home
+title: Writing Home
+trigger: letter
+when: has(plan_internship)
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: letter
+tags: letter home
+scene: A borrowed desk in a strange room, a half-written letter under a lamp, a map of somewhere else pinned on the wall.
+text: The placement keeps you busy, and home feels further away than the miles. {~There's ink, paper and a quiet hour.|The lamp in your lodgings is good for writing.|You owe home a letter, and you know it.}
+> left: Write a proper letter home
+  mood +small
+  gold -tiny
+  say: {~Four pages about the work, the food and the people. The postage is dear from here. You send it anyway.|You tell them everything, and in telling it you find out how much you like it here.}
+> right: A few lines and back to work
+  chance 60:
+    mood +tiny
+    say: {~Short and cheerful. It'll do, and they'll be glad of it.|"All well, more soon." True, mostly.}
+  else:
+    mood -tiny
+    say: {~You write three lines and feel guilty for a week.|The letter is so brief it reads like a receipt.}

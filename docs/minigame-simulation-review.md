@@ -73,3 +73,11 @@ For illustration only, `entry HP = 40 + floor((Arcana + Vigor) / 4) + entry Heal
 Those coefficients are **unselected and untested**. Spell damage and encounter length would need to be assessed at the same time. Compute the offset once at entry; repeatedly reducing maximum HP when campaign Health falls would charge the same injury twice. The campaign injury ledger, local HP recovery and post-game rebates need separate, explicit definitions. A weighted Health contribution is a sensitivity test, not an accepted change to the user's additive suggestion.
 
 Before selecting new rules, resolve what continuing pressure risks, how defensive play eventually advances or loses the encounter, what a zero-Mana actor can always do, how spells differ without extra targeting modes, and whether a low-health victory is realistically attainable. The frozen v01 results and adapter contract provide the starting comparison.
+
+## Validation at this checkpoint
+
+The 19 engine/scaffold tests pass, including deterministic replays, observation isolation, skill/accuracy ablations and legal policy play. Recorded source hashes, all 54,912 raw rows and every case's sample count were checked. A further 3,432-match small run exercised the shared RNG extraction; its streams exactly match the recorded baseline RNG.
+
+The temporary browser prototype now separates phone Setup/Play/Debug views and uses compact action/spell grids. Chromium checks passed 324 action/application/result previews at 390×844, 375×667 and 320×568, plus 84 round previews with active spells across both games and all three skill presets. Desktop playthroughs at 20/50/80 also pass. This changes presentation only; v01 mechanics, casting applications and direct Health-as-HP remain until a new design is selected. Physical phone browsers have not been tested.
+
+`node tools/grim.js check` and `npm run verify` passed in an isolated snapshot of the shared project, avoiding generated-file writes in the working checkout. Verification included 85 campaign tests, unchanged outcomes in 120 golden games and the server/browser checks. The campaign balance report emitted eight alarms and zero invariant failures; these minigame experiments do not retune the campaign economy.

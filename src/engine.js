@@ -50,7 +50,7 @@
       this.socialPerMonth = g.social_per_month == null ? 1 : g.social_per_month;
       this.minRandom = g.min_random_per_month == null ? 1 : g.min_random_per_month;
       this.events = Object.values(content.events);
-      this.byTrigger = { random: [], auto: [], social: [], queued: [] };
+      this.byTrigger = { random: [], auto: [], social: [], queued: [], letter: [] };
       for (const e of this.events) (this.byTrigger[e.trigger] || []).push(e);
       this.hooks = Object.values(content.hooks);
       // Index every `say` line of every option (event.option.n) so the journal can re-render
@@ -254,6 +254,17 @@
       if (!d || !d.pay || !t || t.status !== 'member') return 0;
       const share = Object.assign({ short: 0.5, full: 1, overtime: 2 }, (this.c.balance && this.c.balance.wage) || {})[size || 'full'];
       return Math.round(d.pay[Math.min(t.rank || 0, d.pay.length - 1)] * (share == null ? 1 : share) * (t.benched ? 0.6 : 1));
+    }
+    sparkFollow() { return Object.assign({ per: 25, cap: 2, partner: 3, cooldown: 30 }, (this.c.balance && this.c.balance.spark_follow) || {}); }
+    // Crossing the cooldown mark upward pushes `@game spark_cooldown` once (until spark falls back below it), so the
+    // player can say whether they want this (M37). Partners aren't asked.
+    sparkCheck(id, n) {
+      const ev = this.c.game.spark_cooldown, th = this.sparkFollow().cooldown;
+      if (!ev || !this.c.events[ev]) return;
+      if (n.spark < th) { n.coolAsked = false; return; }
+      if (n.coolAsked || n.bond === 'partner') return;
+      n.coolAsked = true;
+      this.s.queue.push({ id: ev, actor: id, due: this.s.turn + 1, src: 'queued' });
     }
     // A job up front (M23): what one shift pays a new hire, read from the job's own cards (wages, tips and fines
     // averaged over their options and outcomes), and the shifts a term asks for.
@@ -490,7 +501,28 @@
     /* ---------------- Places, arcs, skills (design §6, §10.6, §8.5) ---------------- */
     presentAt(place, slot) {
       slot = slot || (this.s.cur && this.s.cur.slot) || this._slot || '';
-      return Object.keys(this.s.npcs).filter((id) => { const d = this.c.npcs[id]; return d && (d.schedule || []).some((x) => x.place === place && (!slot || x.slots.includes(slot))); });
+      return Object.keys(this.s.npcs).filter((id) => this.scheduleOf(id).some((x) => x.place === place && (!slot || x.slots.includes(slot)) && this.onSchedule(id, x, slot)));
+    }
+    // Where a character can be this month (M42): their break schedule on a break, if they have one.
+    scheduleOf(id) {
+      const d = this.c.npcs[id]; if (!d) return [];
+      if (d.schedule_break && this.phaseOf() === 'break') return d.schedule_break.entries;
+      return d.schedule || [];
+    }
+    // Off campus (M38): on a break, under a plan state tagged `away` (home, an internship).
+    offCampus() {
+      if (this.phaseOf() !== 'break') return false;
+      return Object.keys(this.s.states || {}).some((k) => this.c.states[k] && this.c.states[k].kind === 'plan' && (this.c.states[k].tags || []).includes('away'));
+    }
+    // Away for the break (`schedule_break: away`): reachable only by letter (M19).
+    isAway(id) { const d = this.c.npcs[id]; return !!(d && d.schedule_break && d.schedule_break.away && this.phaseOf() === 'break'); }
+    // A `place@slot:30` entry holds on 30% of days, decided per month, character, place and slot by a hash of the
+    // run's seed (no RNG drawn: the map and the visit agree, and previews stay pure).
+    onSchedule(id, x, slot) {
+      if (x.chance == null || x.chance >= 100) return true;
+      let h = 2166136261; const str = this.s.seed + ':' + this.s.turn + ':' + id + ':' + x.place + ':' + (slot || '');
+      for (let k = 0; k < str.length; k++) { h ^= str.charCodeAt(k); h = Math.imul(h, 16777619); }
+      return (h >>> 0) % 100 < x.chance;
     }
     actOf(arcId) { const a = this.c.arcs && this.c.arcs[arcId]; if (!a || !a.acts) return 0; return a.acts.filter((x) => x.year <= this.yearOf()).length; }
     monthlyWorld(summary) {
@@ -562,6 +594,7 @@
             case 'season': return eng.seasonOf();
             case 'final_year': return eng.yearOf() === eng.years;
             case 'wrapup': return eng.isWrapUp();
+            case 'off_campus': return eng.offCampus();
             case 'slot': return eng._slot || (s.cur && s.cur.slot) || '';   // the slot being drawn (director) or shown
             case 'term_index': return eng.termIndex();
             case 'gpa': return eng.gpa();
@@ -826,9 +859,17 @@
             const old = n[st.t];
             n[st.t] = st.t === 'rel' ? clamp(old + amt, -100, 100) : clamp(old + amt, 0, 100);
             if (st.t === 'spark' && amt > 0) n.sparked = s.turn;
-            if (amt) (ctx.contact = ctx.contact || {})[id] = Math.max((ctx.contact || {})[id] || -1, Math.sign(amt));   // warmth (design §5.5)
+            if (amt) { ctx.contact = ctx.contact || {}; ctx.contact[id] = Math.max(ctx.contact[id] || -1, Math.sign(amt)); if (amt < 0) (ctx.contact.neg = ctx.contact.neg || {})[id] = true; }   // warmth (design §5.5, M17)
             const key = st.t + ':' + id;
             if (n[st.t] !== old) ctx.deltas[key] = (ctx.deltas[key] || 0) + (n[st.t] - old);
+            else if (amt > 0) (ctx.capped = ctx.capped || {})[key] = amt;   // a gain at the cap still shows (M37)
+            // Spark follows friendship (M37): with some spark already there, a friendship gain carries spark along.
+            if (st.t === 'rel' && amt > 0 && n.spark > 0 && this.c.npcs[id] && this.c.npcs[id].romance) {
+              const f = this.sparkFollow(), mult = Math.min(n.bond === 'partner' ? f.partner : f.cap, n.spark / f.per);
+              const add = Math.round(amt * mult), sOld = n.spark;
+              if (add > 0) { n.spark = clamp(sOld + add, 0, 100); n.sparked = s.turn; if (n.spark !== sOld) ctx.deltas['spark:' + id] = (ctx.deltas['spark:' + id] || 0) + (n.spark - sOld); }
+            }
+            if (n.spark !== undefined) this.sparkCheck(id, n);
             break;
           }
           case 'npc_rel': {
@@ -859,6 +900,7 @@
             break;
           }
           case 'sit_exam': this.sitExam(ctx.track || this._ctxTrack, st.swing, ctx); break;
+          case 'cool': { const id = this.npcOf(st.npc, ctx), n = id && s.npcs[id]; if (n && n.spark) { ctx.deltas['spark:' + id] = (ctx.deltas['spark:' + id] || 0) - n.spark; n.spark = 0; } break; }   // spark cleared (M37)
           case 'wage': {
             const ev = ctx.key && this.c.events[ctx.key], id = ctx.track || this._ctxTrack || (ev && ev.track);
             const pay = id ? this.wageFor(id, st.size) : 0;
@@ -1001,8 +1043,10 @@
       for (const [id, n] of Object.entries(s.npcs)) {
         if (!n.met) continue;
         const notes = [], deltas = {};
-        if (s.turn - (n.touched || 0) > 6 && n.rel !== 0) { const d = n.rel > 0 ? -Math.min(2, n.rel) : Math.min(2, -n.rel); n.rel += d; deltas['rel:' + id] = d; }
-        if (n.spark > 0 && n.sparked !== s.turn - 1) { const nv = Math.floor(n.spark * 0.85); if (nv !== n.spark) { deltas['spark:' + id] = nv - n.spark; n.spark = nv; } }
+        // Off campus, both fade at half the pace (M29, M38).
+        const off = this.offCampus(), step = off ? 1 : 2, keep = off ? 0.925 : 0.85;
+        if (s.turn - (n.touched || 0) > 6 && n.rel !== 0) { const d = n.rel > 0 ? -Math.min(step, n.rel) : Math.min(step, -n.rel); n.rel += d; deltas['rel:' + id] = d; }
+        if (n.spark > 0 && n.sparked !== s.turn - 1) { const nv = Math.floor(n.spark * keep); if (nv !== n.spark) { deltas['spark:' + id] = nv - n.spark; n.spark = nv; } }
         if (n.bond === 'partner') {
           n.lowSpark = n.spark < 20 ? (n.lowSpark || 0) + 1 : 0;
           if (n.lowSpark >= 2) { n.bond = 'ex'; n.lowSpark = 0; notes.push({ kind: 'bond', npc: id, status: 'ex', text: shortName(this.c.npcs[id]) + ': ex' }); }
@@ -1270,7 +1314,7 @@
         if (who && this.c.npcs[who]) { s.memories = s.memories || []; s.memories.push({ npc: who, event: e.id, kind: opt.memory.kind, turn: s.turn }); if (s.memories.length > 400) s.memories.shift(); }
       }
       if (item.actor && s.npcs[item.actor]) s.npcs[item.actor].touched = s.turn;
-      if (this.noteContact) this.noteContact(item, ctx.contact || {});
+      if (this.noteContact) this.noteContact(item, ctx.contact || {}, [key]);
       s.choices[e.id] = key;
       s.cur = null;
       const out = this.outcome(ctx);
@@ -1294,7 +1338,7 @@
       for (const o of chosen) this.run(o.effects, ctx);
       this.handleZeroed(ctx);
       this._cast = null; this._ctxTrack = null;
-      if (this.noteContact) this.noteContact(item, ctx.contact || {});
+      if (this.noteContact) this.noteContact(item, ctx.contact || {}, keys);
       s.choices[e.id] = keys.join('+');
       s.cur = null;
       const out = this.outcome(ctx);
@@ -1397,7 +1441,7 @@
         return true;
       });
     }
-    outcome(ctx) { return { say: ctx.say.join(' '), deltas: ctx.deltas, notes: ctx.notes, checks: ctx.checks, ended: !!this.s.ended }; }
+    outcome(ctx) { return Object.assign({ say: ctx.say.join(' '), deltas: ctx.deltas, notes: ctx.notes, checks: ctx.checks, ended: !!this.s.ended }, ctx.capped ? { capped: ctx.capped } : {}); }
 
     /* ---------------- Endings ---------------- */
     // Yearbook endings (design §10.5). Each final ending has a `slot:` (default headline): headline takes 1 (the

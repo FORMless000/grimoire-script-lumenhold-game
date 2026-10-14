@@ -64,7 +64,9 @@ function brief(content, sources, opt = {}) {
       if (n.voice) lines.push('**Voice:** ' + n.voice);
       if (n.traits) lines.push('**Traits:** ' + n.traits.join(', ') + (n.interests ? ' · **Interests:** ' + n.interests.join(', ') : ''));
       if (n.stats) lines.push('**Stats:** ' + Object.entries(n.stats).map(([k, v]) => k + ' ' + v).join(', '));
-      if (n.schedule) lines.push('**Schedule:** ' + n.schedule.map((x) => (content.places[x.place] ? content.places[x.place].name : x.place) + ' (' + x.slots.join(', ') + ')').join('; '));
+      const sched = (list) => list.map((x) => (content.places[x.place] ? content.places[x.place].name : x.place) + ' (' + x.slots.join(', ') + (x.chance != null ? ', ' + x.chance + '% of days' : '') + ')').join('; ');
+      if (n.schedule) lines.push('**Schedule:** ' + sched(n.schedule));
+      if (n.schedule_break) lines.push('**On breaks:** ' + (n.schedule_break.away ? 'away' : sched(n.schedule_break.entries)));
       const rel = Object.entries(n.relations || {});
       if (rel.length) lines.push('**Relations:** ' + rel.map(([k, v]) => npcName(content, k) + ' ' + (v > 0 ? '+' : '') + v).join(', '));
       const facts = Object.values(content.facts).filter((f) => f.id.startsWith(id + '.') && TIERS.indexOf(f.tier) <= tier);

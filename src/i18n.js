@@ -97,7 +97,7 @@
     'check.chip': '{skill} check ({p}%) · {result}',
     'check.success': 'success',
     'check.failed': 'failed',
-    'chip.rel': '{name} {delta}',
+    'chip.max': 'max', 'chip.rel': '{name} {delta}',
     'chip.perf': '{track} performance {delta}',
     'chip.progress': '{track} progress {delta}',
     'chip.study': '{track} study {delta}',

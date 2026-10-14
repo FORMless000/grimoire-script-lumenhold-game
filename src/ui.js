@@ -299,12 +299,14 @@
     } else if (ui.tab === 'people') {
       if (!snap.npcs.length) h += '<div class="empty">' + esc(t('side.noPeople')) + '</div>';
       for (const n of snap.npcs) {
-        const rel = n.rel; const w = Math.abs(rel) / 2; const left = rel >= 0 ? 50 : 50 - w;
-        const col = rel >= 0 ? '#7fd18b' : '#ff8a80';
+        // One bar per character (M37): its length is how close you are (rel; a rival's runs red), its colour how
+        // friendly ↔ romantic it is (spark's share).
+        const rel = n.rel, w = Math.min(100, Math.abs(rel));
+        const mix = (a, b, f) => '#' + [0, 2, 4].map((i) => Math.round(parseInt(a.substr(i, 2), 16) * (1 - f) + parseInt(b.substr(i, 2), 16) * f).toString(16).padStart(2, '0')).join('');
+        const col = rel < 0 ? '#ff8a80' : mix('7fd18b', 'e0708a', n.romance ? Math.min(1, (n.spark || 0) / 60) : 0);
         h += '<div class="person" data-id="' + esc(n.id) + '">' + Art.avatar(n, 44) + '<div class="info"><div class="nm">' + esc(n.name) + (n.bond !== 'none' ? '<span class="bond-badge bond-' + esc(n.bond) + '">' + esc(bondLabel(n.bond)) + '</span>' : '') + '</div>' +
           '<div class="ttl">' + esc(n.title || '') + '</div>' +
-          '<div class="relbar" title="' + esc(t('side.relationship', { n: rel })) + '"><b style="left:' + left + '%;width:' + w + '%;background:' + col + '"></b></div>' +
-          (n.romance && n.spark > 0 ? '<div class="lovebar" title="' + esc(t('side.romance', { n: n.spark })) + '"><b style="width:' + n.spark + '%"></b></div>' : '') +
+          '<div class="relbar' + (rel < 0 ? ' neg' : '') + '" title="' + esc(t('side.relationship', { n: rel }) + (n.romance ? ' · ' + t('side.romance', { n: n.spark }) : '')) + '"><b style="width:' + w + '%;background:' + col + '"></b>' + (n.romance && n.spark > 0 ? '<i style="left:' + Math.min(100, n.spark) + '%"></i>' : '') + '</div>' +
           '<div class="desc">' + esc(n.desc || '') + '<br><br>' + esc(t('side.relationship', { n: rel })) + (n.romance ? ' · ' + esc(t('side.romance', { n: n.spark })) : '') + '</div></div></div>';
       }
     } else {
@@ -586,6 +588,12 @@
     for (const c of out.checks || []) {
       if (c.challenge) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + (c.challenge === 'combat' ? ' combat' : '') + '">' + Art.icon(c.challenge === 'combat' ? 'sword' : 'dice', 14) + esc(t('check.challengeChip', { kind: challengeLabel(c.challenge, c.skill), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
       else h += '<span class="chip ' + (c.ok ? 'check-ok' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.chip', { skill: skillName(c.skill), p: c.p, result: t(c.ok ? 'check.success' : 'check.failed') })) + '</span>';
+    }
+    // A gain at the cap (M37): shown, marked as at the maximum.
+    for (const [k, v] of Object.entries(out.capped || {})) {
+      if ((out.deltas || {})[k]) continue;
+      const [kind, id] = k.split(':'); if (!content.npcs[id]) continue;
+      h += '<span class="chip pos capped">' + Art.icon(kind === 'spark' ? 'rose' : 'group', 14) + esc(t(kind === 'spark' ? 'chip.love' : 'chip.rel', { name: shortName(id), delta: '+' + shownAmount(v) }) + ' · ' + t('chip.max')) + '</span>';
     }
     for (const [k, v] of Object.entries(out.deltas || {})) {
       if (!v) continue;

@@ -25,7 +25,7 @@
   const SYMBOLIC = new Set(['has', 'flag', 'left', 'rel', 'love', 'spark', 'bond', 'met', 'seen', 'since', 'chosen', 'bonds', 'npc_is', 'romanceable', 'tagged', 'passed', 'clue', 'spell_level', 'knows', 'npc_rel',
     'enrolled', 'member', 'rank', 'performance', 'level', 'progress', 'due', 'visits', 'present', 'act', 'clock', 'discovered', 'applied', 'cast_as', 'plan', 'visits_to', 'clues']);
   // Built-in identifiers the engine answers (env.ident); content can read but never assign them.
-  const IDENTS = ['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa', 'runs_completed', 'wrapup'];
+  const IDENTS = ['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa', 'runs_completed', 'wrapup', 'off_campus'];
   const FUNCS = new Set([...SYMBOLIC, 'rand', 'min', 'max', 'abs', 'floor', 'round', 'clamp', 'known', 'chance_of']);
   // Reference kinds for linting: which argument of which function refers to what.
   const FUNC_REFS = {
@@ -179,23 +179,30 @@
       // the exam card pushed for each enrolled course in a term's last month (playtest 2, M4)
       'exam',
       // sources whose cards are dealt across the whole day instead of their own slot (playtest 2, M43)
-      'spread'], effects: [] },
+      'spread',
+      // the card pushed when spark crosses @balance spark_follow's cooldown mark (M37)
+      'spark_cooldown'], effects: [] },
     // Numbers (design §8.4): size and difficulty tiers, option-value weights, the expected-skill curve.
     balance: { noId: true, props: ['sizes', 'difficulty', 'weights', 'curve', 'desc', 'xp_cost', 'rank_xp', 'performance',
       // the combat stub's mix and entry cost (playtest 2, M39, M5); odds slopes per swing word (M14)
       'combat', 'combat_cost', 'swing',
       // a shift's pay per wage word (`wage short`), as a share of the job's `pay:` at your rank (M10)
-      'wage'], effects: [] },
+      'wage',
+      // friendship gains carry spark along (M37): spark / per × the gain, at most cap× (partner× for a partner);
+      // crossing `cooldown` spark pushes @game spark_cooldown
+      'spark_follow'], effects: [] },
     // A named group of effects, used as a statement: `grind arcana`. Its body may use $params.
     preset: { props: ['params', 'desc'], effects: [], raw: ['do'] },
     resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
     skill: { props: ['name', 'icon', 'start', 'max', 'desc', 'color'], effects: [] },
-    npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel', 'age', 'role', 'year', 'traits', 'interests', 'stats', 'schedule', 'relations', 'voice', 'seeks'], effects: [] },
+    npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel', 'age', 'role', 'year', 'traits', 'interests', 'stats', 'schedule', 'schedule_break', 'relations', 'voice', 'seeks'], effects: [] },
     state: { props: ['name', 'desc', 'art', 'tags', 'group', 'duration', 'hidden', 'kind', 'money'], effects: ['tick', 'on_add', 'on_expire', 'on_remove'] },
     event: { props: ['title', 'text', 'art', 'scene', 'tags', 'when', 'weight', 'trigger', 'actor', 'repeat', 'priority', 'type', 'chain', 'class', 'tone', 'variant',
       // phase 2b: where and when it happens, who is in it, what it belongs to (design §5, §6, §7, §10.6)
       // `time:` the slots it favours (M43), where `slot:` requires one
       'place', 'slot', 'time', 'replaces', 'track', 'level', 'rank', 'lesson', 'arc', 'beat', 'plan', 'cast', 'offers', 'pick', 'scope',
+      // `ramp: rel(npc) 18..30`: pushed outside the pools, more likely each month as the value climbs (M13)
+      'ramp',
       // `per: <role>`: once / repeat count per character in that cast role (what `actor: any` did)
       'per'], effects: ['on_show'], options: true },
     ending: { props: ['title', 'text', 'art', 'scene', 'when', 'priority', 'tags', 'kind', 'slot', 'excludes'], effects: [] },
@@ -231,7 +238,10 @@
     // "arcana 34 lore 22 wealth 5" -> {arcana: 34, lore: 22, wealth: 5}
     stats(t) { const w = words(t), o = {}; if (w.length % 2) throw 'stats: expected "name value" pairs'; for (let i = 0; i < w.length; i += 2) o[w[i]] = toNum(w[i + 1], 'stats ' + w[i]); return o; },
     // "duel_hall@afternoon,evening library@night" -> [{place, slots: [...]}]
-    schedule(t) { return t.split(/\s+/).filter(Boolean).map((x) => { const m = x.match(/^([a-z_][a-z0-9_]*)@([a-z,]+)$/); if (!m) throw 'schedule: expected place@slot,slot, got "' + x + '"'; return { place: m[1], slots: m[2].split(',').filter(Boolean) }; }); },
+    // `place@slot,slot` or `place@slot:30` (there 30% of the days, M42); `schedule_break:` is the same on breaks,
+    // or `away` (gone for the break).
+    schedule(t) { return t.split(/\s+/).filter(Boolean).map((x) => { const m = x.match(/^([a-z_][a-z0-9_]*)@([a-z,]+)(?::(\d{1,3}))?$/); if (!m) throw 'schedule: expected place@slot,slot or place@slot:N, got "' + x + '"'; return Object.assign({ place: m[1], slots: m[2].split(',').filter(Boolean) }, m[3] != null ? { chance: Math.min(100, +m[3]) } : {}); }); },
+    schedule_break(t) { return t.trim() === 'away' ? { away: true, entries: [] } : { away: false, entries: STRUCT_PROPS.schedule(t) }; },
     // "kael:-20 tobias:5" -> {kael: -20, tobias: 5}
     relations(t) { const o = {}; for (const x of words(t)) { const m = x.match(/^([a-z_][a-z0-9_]*):(-?\d+)$/); if (!m) throw 'relations: expected npc:value, got "' + x + '"'; o[m[1]] = +m[2]; } return o; },
     // "flame@1 tide@2" -> [{spell, level}]
@@ -276,6 +286,8 @@
     combat(t) { return STRUCT_PROPS.weights(t); },
     swing(t) { return STRUCT_PROPS.weights(t); },
     wage(t) { return STRUCT_PROPS.weights(t); },
+    spark_follow(t) { return STRUCT_PROPS.weights(t); },
+    ramp(t) { const m = t.trim().match(/^(.+?)\s+(-?\d+)\s*\.\.\s*(-?\d+)$/); if (!m || +m[3] <= +m[2]) throw 'ramp: expected "<expression> low..high", e.g. ramp: rel(npc) 18..30'; return { expr: m[1], lo: +m[2], hi: +m[3] }; },
   };
   // `locked:` a menu option whose `when` fails stays visible, disabled, with this reason (M24); others hide.
   const OPTION_PROPS = new Set(['when', 'hint', 'memory', 'locked']);
@@ -317,6 +329,7 @@
     challenge: new RegExp('^challenge\\s+(' + ID + ')(?:\\s+using\\s+(' + ID + '))?(?:\\s+vs\\s+(' + ID + ')\\.(' + ID + '))?\\s+(trivial|easy|medium|hard|heroic)(?:\\s+(wild|steady))?\\s*:$'),
     sitExam: /^sit_exam(?:\s+(wild|steady))?$/,
     wage: /^wage(?:\s+([a-z]+))?$/,
+    cool: /^cool\s+([a-z_][a-z0-9_]*)$/,
     preset: new RegExp('^(' + ID + ')((?:\\s+' + ID + ')*)$'),
     bond: new RegExp('^bond\\s+(' + ID + ')\\s+(' + ID + ')$'),
     meet: new RegExp('^meet\\s+(' + ID + ')$'),
@@ -338,6 +351,7 @@
     if ((m = content.match(RE.challenge))) return { t: 'challenge', kind: m[1], using: m[2] || null, vs: m[3] ? { who: m[3], stat: m[4] } : null, tier: m[5], swing: m[6] || null, win: null, partial: null, lose: null, line, block: true, outcomes: true };
     if ((m = content.match(RE.sitExam))) return { t: 'sit_exam', swing: m[1] || null, line };
     if ((m = content.match(RE.wage))) return { t: 'wage', size: m[1] || null, line };
+    if ((m = content.match(RE.cool))) return { t: 'cool', npc: m[1], line };
     if (content.endsWith(':')) throw new GrimError('unknown block statement "' + content + '" (expected if/elif/else/chance/check)', file, line);
     if ((m = content.match(RE.flag))) return { t: 'flag', names: m[1].split(/\s+/), line };
     if ((m = content.match(RE.unflag))) return { t: 'unflag', names: m[1].split(/\s+/), line };
@@ -595,6 +609,7 @@
       const text = joinText(val, sub);
       if (STRUCT_PROPS[key] && !(key === 'skill' && b.kind !== 'track')) {
         try { def[key] = STRUCT_PROPS[key](text); } catch (e) { throw new GrimError(typeof e === 'string' ? e : e.message, file, L.line); }
+        if (key === 'ramp') def.ramp.expr = expr(def.ramp.expr, file, L.line);
       } else if (EXPR_PROPS.has(key) || (key === 'max' && b.kind === 'resource' && !isFinite(Number(text)))) def[key] = expr(text, file, L.line);
       else if (NUM_PROPS.has(key)) {
         const n = Number(text);
@@ -687,7 +702,8 @@
       if (keys !== 'left,right' && keys !== 'left,right,up') errors.push(new GrimError('card events need "> left:" and "> right:" options, and optionally "> up[spell]:" (got ' + keys + ')', e.file, e.line));
     }
     if (!e.trigger) e.trigger = e.actor === 'any' ? 'social' : 'random';
-    if (!['random', 'auto', 'social', 'queued'].includes(e.trigger)) errors.push(new GrimError('trigger must be random, auto, social or queued', e.file, e.line));
+    // `letter` (M38): drawn only off campus, one each night, and for anyone who reaches you while one of you is away.
+    if (!['random', 'auto', 'social', 'queued', 'letter'].includes(e.trigger)) errors.push(new GrimError('trigger must be random, auto, social, queued or letter', e.file, e.line));
     if (!e.title) errors.push(new GrimError('event needs a title', e.file, e.line));
     if (!e.text) errors.push(new GrimError('event needs text', e.file, e.line));
     if (e.cast && e.actor) errors.push(new GrimError('use either actor: or cast:, not both', e.file, e.line));
