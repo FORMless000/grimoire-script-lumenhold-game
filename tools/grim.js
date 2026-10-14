@@ -238,6 +238,8 @@ function analyze(content) {
     { // a slot an event needs must exist in a day recipe, and a place event's slot gate must be an open, visited slot
       const recipeSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || [])].map((r) => r.slot));
       if (e.slot && recipeSlots.size && !recipeSlots.has(e.slot)) P('error', w, 'slot: "' + e.slot + '" is in no day recipe');
+      for (const sl of e.time || []) if (recipeSlots.size && !recipeSlots.has(sl)) P('error', w, 'time: "' + sl + '" is in no day recipe');
+      if (e.slot && (e.time || []).length) P('warn', w, 'time: is ignored when slot: requires one slot');
       const pl = e.place && content.places[e.place];
       for (const m of ((e.when && e.when.src) || '').matchAll(/slot == "(\w+)"/g)) if (pl && pl.open && !pl.open.includes(m[1])) P('warn', w, 'when needs slot "' + m[1] + '" but ' + e.place + ' is closed then');
     }

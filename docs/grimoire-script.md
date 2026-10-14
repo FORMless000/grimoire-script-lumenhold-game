@@ -463,6 +463,7 @@ seasons: autumn=1-3 winter=4-6 spring=7-9 summer=10-12
 day_term: morning=courses noon=social:1-2 afternoon=visit evening=visit night=world:1-2 midnight=special:0-1
 day_break: morning=plan afternoon=visit evening=visit night=world:1
 day_last: morning=special:0          # the last day: no map, no pools, only pushed cards (the run's resolution)
+spread: social world                 # these sources' cards are dealt across the day's slots, not drawn in their own
 origins: choose_origin               # the origin screen before the game lists this menu's options
 ```
 
@@ -470,7 +471,7 @@ origins: choose_origin               # the origin screen before the game lists t
 
 **The wrap-up** (`wrapup:`). Months of the final year listed here stay `break` months, but `wrapup` is true in them: content uses it to offer no break plan, and with no plan there is no board. The map shows the phase as "wrap-up". On the last turn, `day_last:` (if set) replaces the day's recipe and no one comes looking for you, so the month holds only pushed cards: the graduation and the endings' resolution (`turn == max_turns`).
 
-**A day** (`src/director.js`). After the month's start effects, the player picks the visit slots on the **map** (two, in term and on a break). Then the director fills each slot from its source: `courses` (events of enrolled courses), `social` (`trigger: social`), `visit` (events with `place:` the player picked), `world` (random events with no place), `special`, `plan` (events for the active break plan). `:1-2` is how many cards a slot draws. Each candidate scores `weight × novelty × relevance × variety`. Pushed cards (queued, auto, arc beats, track notices) go into their `slot:` (else morning). If `@game` sets `max_cards_per_day` (optional; no cap when absent, and Lumenhold sets none) and the day is over it, priority decides (story > track > pushed > friend > social > ambient) and pushed cards that don't fit move to the next day. `when` is checked again as each card is drawn.
+**A day** (`src/director.js`). The day is played slot by slot, in order (playtest 2, M1). The director fills each slot from its source as the player reaches it: `courses` (events of enrolled courses), `social` (`trigger: social`), `visit` (events with `place:` the player picked), `world` (random events with no place), `special`, `plan` (events for the active break plan). `:1-2` is how many cards a slot draws. A `visit` slot first stops on the **map** for that one visit: the player taps a place open in that slot, or stays in (no card). Each candidate scores `weight × novelty × relevance × variety × time fit`: an event's `time:` multiplies it by 3 in those slots and by 0.3 elsewhere, and a `slot:` keeps it to that slot. The sources listed in `@game spread:` keep their budget (`noon=social:1-2` still decides how many), but their cards are dealt to random slots of the day (not `special`), so a social card can come in the evening. Pushed cards (queued, auto, arc beats, track notices) go into their `slot:` (else the day's first). If `@game` sets `max_cards_per_day` (optional; no cap when absent, and Lumenhold sets none) and the day is over it, priority decides (story > track > pushed > friend > social > ambient) and pushed cards that don't fit move to the next day. `when` is checked again as each card is drawn.
 
 **People come by two tracks** (design §5.5). An event with a fixed `actor: <npc>` (and no `place:`, `track:`, `plan:` or `slot:`) is in that character's own pool as well as in the shared pools; generic social events (`per: npc` casts) can be cast with any one character.
 - *You find them:* the shared pools as above; a visit to a place where a character's `schedule:` puts them (met or not, so introductions happen where people are) and the social slot (anyone scheduled at a place you know) can each give a card from that character's pool.
@@ -483,8 +484,9 @@ origins: choose_origin               # the origin screen before the game lists t
 
 | Field | Meaning |
 |---|---|
-| `place: library` | Drawn when the player visits that place. `replaces: visit1` (or `visit2`) makes it a festival that takes that visit: the map locks the slot to the place. |
-| `slot: night` | The slot a pushed or arc event lands in (`morning noon afternoon evening night midnight`). |
+| `place: library` | Drawn when the player visits that place. `replaces: visit1` (or `visit2`) makes it a festival in that visit: the map marks its place, and picking the place draws it first (the visit is not forced). |
+| `slot: night` | The slot the event is drawn in or, if pushed or an arc beat, lands in (`morning noon afternoon evening night midnight`). Drawn events with a `slot:` appear in no other slot. |
+| `time: evening night` | Slots the event fits: drawn three times as often there, a third as often elsewhere. Use it rather than `slot:` when the text names a time but could happen at another. |
 | `track: evocation` · `level: 2` · `rank: 1` | An event of that course level or club/job rank; drawn in the course's morning or at its place. |
 | `plan: castle` | Drawn on a break with that plan (`plan_castle` state). |
 | `arc: the_bell` · `beat: 3` | A plot card, eligible once the arc's clock reaches the beat. One plot card a month, two in a beat month. |

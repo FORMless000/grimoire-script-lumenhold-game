@@ -300,6 +300,8 @@ The tentative live harness will build its prompts from the same files, so the pa
 
 **Break day:** morning = `plan` (break-plan pool), two visits (afternoon and evening; the evening one added after playtest 2), night = `world`. About 6–7 cards.
 
+**Played in order** (playtest 2, M1): the day runs slot by slot, and each visit is picked on the map when its slot comes, so the morning's cards can change where the afternoon goes. Most places are open for both visits (M2). Social and world cards are not tied to noon and night: `spread: social world` keeps their count but deals them across the day's slots, and an event whose text names a time (`time: evening`) is drawn three times as often then and a third as often elsewhere (M43). A slot is tinted by its time of day.
+
 Declared in `@game`:
 
 ```
@@ -309,6 +311,7 @@ calendar: term=1-4 break=5-6 term=7-10 break=11-12
 seasons: autumn=1-3 winter=4-6 spring=7-9 summer=10-12
 day_term: morning=courses noon=social:1-2 afternoon=visit evening=visit night=world:1-2 midnight=special:0-1
 day_break: morning=plan afternoon=visit evening=visit night=world:1
+spread: social world
 ```
 
 **Run length:** 32 term months × ~11 cards + 15 break months × ~5 ≈ **425 decisions** *(checked at playtest #1)*.
@@ -331,7 +334,7 @@ v0.3 ships castle, home and work full-time. Travel and internship maps follow as
 ### 4.4 Festivals and fixed beats
 
 - Fixed beats live in `@timeline` as dated `auto` events.
-- Festivals use `replaces: visit1 | visit2`: they appear on the map at their location and take that visit.
+- Festivals use `replaces: visit1 | visit2`: they appear on the map at their location in that visit, and going there draws the festival first. They no longer take the visit (playtest 2, B3): skipping a festival is a choice.
 
 ### 4.5 Re-pacing existing content
 
@@ -361,10 +364,11 @@ An event belongs to a source through its fields:
 Each slot draws its quota from its source with **weighted sampling**, where:
 
 ```
-score     = weight × novelty × relevance × variety
+score     = weight × novelty × relevance × variety × time_fit
 novelty   = (1 − e^(−since/τ)) × 0.6^seen_this_run          τ = 6 months (tunable)
 relevance = (1 + 0.5·cast_affinity) × (1 + 0.5·active_arc) × (1 + 0.3·recent_tag_overlap)
 variety   = 0.5 if the same tone or primary tag as either of the previous 2 cards, else 1
+time_fit  = 3 in an event's `time:` slots, 0.3 elsewhere, 1 without one; 0 outside its `slot:`
 ```
 
 - `tone:` (light / warm / tense / grim / eerie) is a schema field (§12).
@@ -517,7 +521,7 @@ Concept: `docs/map-concept.svg` / `.png`.
 | your club / job / thesis | gold or ember ring + badge |
 | hinted | dashed "?" + teaser |
 | undiscovered | hidden under fog |
-| festival | glow + "takes your evening visit" |
+| festival | glow + "festival this evening" (banner above the map) |
 
 **Overlays:**
 - pins for characters present (from schedules; met characters only; at most 3, plus "+n");
@@ -525,9 +529,9 @@ Concept: `docs/map-concept.svg` / `.png`.
 - a season tint (autumn amber, winter snow, spring blossom, summer gold).
 
 **Interaction:**
-- The first tap picks the afternoon, the second the evening, then confirm. Chips at the top show both picks.
-- Tapping a pick again clears it. Picking a closed place shows its opening hours instead.
-- On break days there's a single pick.
+- The map opens once per visit, when its slot comes (playtest 2, M1): "Where will you spend the afternoon?", then later "…the evening?". A tap on an open place goes there at once; "Stay in" skips the visit.
+- Picking a closed place shows its opening hours instead.
+- The outcome of a pick (attendance, pay) shows as a short toast, not a card.
 
 **Accessibility:**
 - A list view with the same states as text.

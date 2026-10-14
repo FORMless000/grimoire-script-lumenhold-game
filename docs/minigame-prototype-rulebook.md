@@ -6,13 +6,15 @@ This is a standalone specification for two testplay games. It proposes rules, nu
 
 The objective is short tactical encounters in which ordinary actions remain useful and spending Health, Mood, Renown and Mana has an opportunity cost. Context-specific rebates settle the encounter afterward without increasing any resource above its entry value. Start with eight exchanges at most. Measure actual playing time before attempting the design's 30–90 second target.
 
+For a first paper test, use a level-50 sheet in §4.1 and the tape in §3.4. Combat defaults to a mirrored opponent and 80% rebates; negotiation defaults to an asymmetrical audience role, the workshop fixture and 50% rebates. Start with standard resource budgets and Mana scale 2. Read §5 for common rules, then §7 or §8 for the chosen game. §9 gives worked outcomes; §11 lists decisions to refine.
+
 ## 1. Scope and relationship to the project
 
 References are for comparison and eventual integration, not runtime dependencies:
 
 | Project reference | Retained or adapted here |
 |---|---|
-| [Design §T1](design-v0.3.md#t1-minigames-tentative-phase-5-if-approved) | Short encounters, optional auto-resolution, `win / partial / lose`, deterministic randomness. |
+| [Design §T1](design-v0.3.md#t1-minigames-tentative-phase-5-if-approved) | Short encounters, `win / partial / lose`, deterministic randomness. Auto-resolution remains a main-game comparator; building it into the standalone prototype is deferred. |
 | [Engine](../src/engine.js), `rand()` | The same integer PRNG algorithm, instantiated locally; never consume an academy run's RNG. |
 | [Engine](../src/engine.js), `challengeOdds()` | Skill comparison and `clamp(50 + 2.5 × difference, 8, 92)` success odds. The prototype does not call this method. |
 | [Core rules](../content/core/rules.grim), `@resource mana` and `@hook mana_regen` | Mana capacity and the monthly recovery reference. No regeneration during encounters. |
@@ -38,7 +40,9 @@ fixture: practice_ring | workshop_request | formal_petition
 resourceBudget: standard | depleted | explicit amounts (default standard)
 context: practice_duel | real_conflict | public_duel | rehearsal
 rebates: optional per-resource overrides, each in 0..1
-manaCostScale: positive integer (default 3)
+manaCostScale: positive integer (default 2)
+combatScale: positive integer (default 3; combat Health units only)
+publicStakes: true | false (default true)
 spellAccess: kit | all (default kit)
 visibility: tells | open (default tells; combat only)
 ```
@@ -49,7 +53,7 @@ For combat's default mirror matchup, generate the player's kit once and clone it
 
 Negotiation's default audience uses the player's archetype and level, but roles remain asymmetrical: only the player builds agreement, makes claims and buys concessions. The audience challenges or listens. Its crowns are not a counter-bargaining purse. Both archetypes and levels can be selected independently.
 
-In `spellAccess: all`, both sides receive all twelve spells. Their two signature spells retain their generated ranks; all other spells use the support rank rule. This mode is for availability and spell-interaction tests, not the default progression test.
+In `spellAccess: all`, both sides receive all twelve spells without changing any existing kit spell's generated rank. Added spells use the added-support rank rule in §3.2. This mode is for availability and spell-interaction tests, not the default progression test.
 
 An integrated encounter could later assign `{mode, opponentArchetype, opponentLevel, fixture}`. Do not interpret opponent level as a month number or apply `E(turn)` again.
 
@@ -117,6 +121,21 @@ Unused slots are still reserved. An automatic action, preview, forecast, UI rere
 
 AI uses current public state and previous resolved actions. Once its next intention is committed, it cannot react to the player's still-uncommitted selection. Replaying the same setup and choices gives the same result. Different choices can lead to different AI intentions, while the tape stays fixed.
 
+### 3.4 Ready-to-use level-50 tape
+
+This table is calculated from a fresh level-50 generator, independent of kit draws. Check rolls are printed as percentages: succeed when the roll is strictly less than the displayed success odds. The AI column remains a unit draw for selecting candidate index. Printed values are rounded for paper use; an eventual implementation uses the generator's full precision and still reserves slot 4.
+
+| Exchange | Player check roll % | Opponent/response check roll % | AI candidate draw |
+|---|---:|---:|---:|
+| 1 | 54.259625 | 10.957532 | 0.336168794 |
+| 2 | 8.138688 | 97.849604 | 0.167862016 |
+| 3 | 89.776898 | 21.053479 | 0.239500644 |
+| 4 | 18.818610 | 93.954190 | 0.051843524 |
+| 5 | 46.113658 | 10.044990 | 0.637365305 |
+| 6 | 45.120402 | 41.129804 | 0.971757013 |
+| 7 | 69.590166 | 47.347449 | 0.629894003 |
+| 8 | 42.874716 | 32.408253 | 0.273519595 |
+
 ## 4. Six archetypes, usable for either participant
 
 Names here are prototype labels, not new worldbook characters. Offsets are parameters for review.
@@ -131,6 +150,19 @@ Names here are prototype labels, not new worldbook characters. Offsets are param
 | Warden | 0 | -2 | +5 | 0 | Ward, Shadowstep | Hush, Shape |
 
 This is a deliberately small kit: four learned spells, with ordinary actions covering missing capabilities. Signature does not mean exclusive; support spells and all-spells mode allow cross-discipline tests.
+
+### 4.1 Ready-to-use level-50 sheets
+
+Calculated from the specified generator for level 50: jitters `(0, -3, -1, -3)`, promoted support index 0, cycle offset 2 and temperament 0. All signature spells are rank II; the first support is II and the second I. These sheets allow a paper test without first implementing the generator.
+
+| Archetype | Arcana | Vigor | Charm | Guile | Lore | Alchemy | Full Mana |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Evoker | 58 | 42 | 47 | 53 | 49 | 43 | 69 |
+| Seer | 52 | 48 | 44 | 56 | 57 | 43 | 66 |
+| Restorer | 47 | 53 | 50 | 50 | 49 | 55 | 63 |
+| Illusionist | 46 | 54 | 41 | 59 | 47 | 43 | 63 |
+| Envoy | 50 | 50 | 55 | 45 | 52 | 47 | 65 |
+| Warden | 50 | 50 | 45 | 55 | 54 | 47 | 65 |
 
 ## 5. Shared resolution and resource rules
 
@@ -151,6 +183,8 @@ Every basic action costs **zero mana by default**, though some spend other resou
 Normal casting pays its spell cost instead; Focus cannot be purchased on top of a spell in this draft. Casting replaces the basic action for that exchange. No passive mana recovery, channel-to-refill action, free extra turn, or entry refill exists.
 
 Validate learning, action selection and affordability before committing. Invalid inputs spend nothing and do not advance the exchange. A legal but ineffective cast spends mana and time normally. Costs never become negative, and an interrupted legal cast is not refunded.
+
+Basic Concede/Close and Shadowstep's withdrawal application are terminal exits. Resolve them before charging or executing the opponent's committed action. A basic exit costs nothing; Shadowstep withdrawal pays its own scaled Mana cost before settlement. Exit legality is still validated before committing.
 
 For economy review, report gross spending, in-game restoration, rebates and final net losses separately for every resource. Report both `grossManaSpent / (10 + arcana/10)` and `netManaLost / (10 + arcana/10)` as **months of natural regeneration equivalent**. These values are diagnostics, not waiting rules. Never use the post-game rebate as spendable mana during play.
 
@@ -210,9 +244,9 @@ For consecutive bouts, carry the previous **settled** balances into the next ent
 
 ## 6. Proposed spell parameters
 
-These are **base** costs. Actual cost is `baseCost × manaCostScale`, with a proposed starting scale of **3**. Many reuse a current spell's cost row; the broader Glamour and Restoration use the current 14/10/9 row rather than the cheapest merged component. Shape, Hush and Attune are provisional. Do not write these into the worldbook as part of this task. Test scales 1, 2 and 3 rather than assuming the larger costs are already balanced.
+These are **base** costs. Actual cost is `baseCost × manaCostScale`, with a proposed starting scale of **2**. Many reuse a current spell's cost row; the broader Glamour and Restoration use the current 14/10/9 row rather than the cheapest merged component. Shape, Hush and Attune are provisional. Do not write these into the worldbook as part of this task. Test scales 1, 2 and 3 rather than assuming the larger costs are already balanced. Scale 2 keeps the largest rank-I cast (36 Mana) within the minimum generated full capacity (40). Scale 3 is a stress test: some low-level spells cost more than capacity, which the setup must flag explicitly.
 
-At scale 3, a Flame I costs 30 during the encounter. With no in-game Mana restoration, it leaves 15 net Mana spent under the 50% real-conflict rebate, or 6 under an 80% practice rebate. Entry balances determine affordability; the expected refund never does. Larger gross costs make casts a scarce tactical commitment, while separately tunable rebates determine the lasting day-to-day burden.
+At scale 2, a Flame I costs 20 during the encounter. With no in-game Mana restoration, it leaves 10 net Mana spent under the 50% real-conflict rebate, or 4 under an 80% practice rebate. Entry balances determine affordability; the expected refund never does. Larger gross costs make casts a scarce tactical commitment, while separately tunable rebates determine the lasting day-to-day burden.
 
 | Spell | Discipline | Mana I / II / III | Origin |
 |---|---|---|---|
@@ -239,7 +273,7 @@ Two consenting adults spar in a practice ring. The ring provides reshapeable woo
 
 Public state: each side's current and entry Health, Mood, Renown and Mana, full generated skills and spell ranks, active effects and round number. Positions are only `near` or `far`; start near. This is one shared range, not a grid. Either participant moving away makes it far; an Approach or a Shadowstep toward makes it near. Shadowstep away takes precedence over Approach if both happen together.
 
-The AI commits an action before the player chooses. In tells mode, reveal only its family: **physical** (Strike/Feint), **spell** (Flame/Tide/Starlight), **prepare** (other spells, Guard/Observe/Recover), or **approach**. The family is truthful. Open mode reveals the whole command. A Forecast reveals the whole command in the next exchange, including application and target; that command remains locked.
+The AI commits an action before the player chooses. In tells mode, reveal only its family: **physical** (Strike/Feint), **spell** (Flame/Tide/Starlight), **prepare** (other spells, Guard/Observe/Recover/Compose/Rally), or **approach**. The family is truthful. Open mode reveals the whole command. A Forecast reveals the whole command in the next exchange, including application and target; that command remains locked.
 
 ### 7.2 Exchange order
 
@@ -248,7 +282,7 @@ The AI commits an action before the player chooses. In tells mode, reveal only i
 3. Resolve non-attacking preparations and range changes before attacks. Both participants get their preparation, even if an attack later defeats them. Recover/Restoration are also preparations.
 4. Resolve attacks by initiative: higher Vigor first. A Haste prepared in the previous exchange outranks ordinary initiative; if both have Haste, compare Vigor. Remaining ties alternate: player first in odd exchanges, opponent first in even exchanges. Consume applicable Haste regardless of which action was chosen.
 5. A participant reduced to zero Health cannot subsequently attack. Its previously paid cost is not refunded. Already resolved preparations remain resolved.
-6. Check defeat, then expire effects (including Haste fatigue), check defeat again, and advance the exchange if still active. No regeneration. Concede instead exits immediately without the committed opponent action and goes straight to settlement.
+6. Check defeat, then expire effects and advance the exchange if still active. No regeneration. Concede instead exits immediately without the committed opponent action and goes straight to settlement.
 
 Haste cast now affects initiative **next** exchange. Attack reach uses range after preparations. An out-of-range committed attack spends its action and cost but does not check or hit.
 
@@ -282,7 +316,7 @@ All spell attacks use Arcana vs combat defence and reach both ranges. All other 
 | Shape: barricade | Create a Barricade reducing your next incoming Strike by 8+b. It does not reduce Feint or spell damage; Flame destroys it. |
 | Glamour: decoy | Create a Decoy reducing your next incoming attack's damage by 4+b. Starlight removes it. |
 | Hush: disrupt | Give the opponent Suppressed: reduce its next offensive spell's incoming damage to its target by 4+b before other protection. It remains legal to cast. No effect on basic attacks or prepared spells. |
-| Haste: quicken | Gain next-exchange Haste initiative. At its expiry, take 2 Health fatigue, ignoring protection. If fatigue defeats you after both attacks, resolve defeat then. |
+| Haste: quicken | Gain next-exchange Haste initiative. On commitment, take 2 Health base units of fatigue, ignoring protection and debiting only available Health. Reaching zero prevents the action and defeats you. Paying fatigue upfront avoids escaping an unpaid deferred cost by ending the bout. |
 | Attune: rhythm | +10 points on your next Strike or Feint, and reduce your next incoming Strike by 3+b. Rhythm's bonus and protection are consumed separately. Alternatively self-calm to recover 6+b actual Mood, capped at entry Mood. Choose one application. |
 | Ward: protect | A Ward absorbs up to 8+b damage from the first attack that reaches it, then disappears; unused capacity is lost. |
 | Shadowstep: reposition | Choose near or far and gain Evasion reducing your next incoming attack by 3+b. Does not grant an extra attack. |
@@ -434,30 +468,45 @@ These are explicit arithmetic states, **not claimed outputs of the seeded kit ge
 
 ### 9.1 Combat: Flame against Guard and Ward
 
-In a later near-range exchange, attacker Arcana is 50, defender combat defence is 50, attacker knows Flame II and has 12 mana. Defender has a Ward I from the previous exchange and commits Guard. No other modifiers apply.
+In a later near-range exchange, attacker Arcana is 50, defender combat defence is 50, attacker knows Flame II and has 21 Mana. Defender has a Ward I from the previous exchange and commits Guard. Both have sufficient Mood and no low-Mood penalty. Mana scale is 2 and combat scale is 3. No other modifiers apply.
 
-- Flame costs 9 mana; attacker has 3 left.
+- Flame costs `9 × 2 = 18` Mana; attacker has 3 left.
 - Success odds are 50%. With player slot 1 equal to 0.40, it succeeds.
-- Flame II deals 9 damage and ignores Guard.
-- Ward I absorbs 8 and disappears. Defender loses 1 Health.
+- Flame II deals `9 × 3 = 27` Health damage and ignores Guard.
+- Ward I absorbs `8 × 3 = 24` and disappears. Defender loses 3 Health.
 - Guard expires this exchange. The attacker did not buy Focus on a spell.
 
-Without Ward, Guard alone would have stopped none of the 9 damage. A Feint would also ignore Guard but would still meet Ward.
+Without Ward, Guard alone would have stopped none of the 27 damage. A Feint would also ignore Guard but would still meet Ward.
 
 ### 9.2 Negotiation: a bluff caught before agreement
 
-Player starts an exchange with Agreement 13, Suspicion 3 and Patience 3. The audience has already committed Scrutinize. Player Guile and audience argument defence are both 50; audience Lore is 50 too. No spell preparations apply.
+Player starts an exchange with Agreement 13, Suspicion 3, Patience 3, Mood 60 and Renown 30. Audience Mood is 60 and it has already committed Scrutinize. Player Guile and audience argument defence are both 50; audience Lore is 50 too. No spell preparations apply.
 
-- Player Bluffs. At 50% odds, slot 1 of 0.20 succeeds: Agreement becomes 19, Suspicion becomes 4, claim credit is 6.
+- Player pays 4 Mood for Bluff and audience pays 2 Mood for Scrutinize. Neither crosses the low-Mood threshold. At 50% odds, slot 1 of 0.20 succeeds: Agreement becomes 19, Suspicion becomes 4, claim credit is 6.
 - The encounter has not ended yet. Audience slot 2 of 0.30 succeeds at its 50% scrutiny check.
-- Remove the claim: Agreement returns to 13. Suspicion becomes 6.
+- Remove the claim: Agreement returns to 13, Suspicion becomes 6, and player Renown falls to 26.
 - Base Patience falls to 2. Suspicion takes precedence: result is lose.
 
 The player saw a questioning tell, could forecast an exact response beforehand, or could have chosen a safer action. No dialogue clue was needed to resolve the lie.
 
 ### 9.3 Negotiation: bank a partial result
 
-Player has Agreement 11, Suspicion 2, Patience 2, mana 4 and crowns 6. Offer is unaffordable; several spells are unaffordable. Close is still available and produces partial immediately without additional expenditure. Zero mana never prevents Reason, Appeal, Prepare, Reassure, Retract or Close.
+Player has Agreement 11, Suspicion 2, Patience 2, Mana 4 and Crowns 6. Offer and all spells are unaffordable at scale 2. Close is still available and produces partial immediately without additional expenditure. Zero Mana never prevents a basic action on its own.
+
+Those costed actions still require their listed Mood; Compose and Close require no resource payment. Apply rebates after classifying the partial result.
+
+### 9.4 Independent rebates and already-healed losses
+
+This is an explicit ledger example, not a generated matchup. Suppose the player's recorded losses and recovery are:
+
+| Resource | Entry | Gross spent | Restored during play | Before rebate | Ratio | Refund | Final | Net loss |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Health | 70 | 27 | 18 | 61 | 0.80 | 7 | 68 | 2 |
+| Mood | 60 | 12 | 6 | 54 | 0.80 | 4 | 58 | 2 |
+| Renown | 30 | 7 | 0 | 23 | 0.80 | 5 | 28 | 2 |
+| Mana | 60 | 54 | 0 | 6 | 0.80 | 43 | 49 | 11 |
+
+The Health refund is `floor(0.8 × 9)`, not `floor(0.8 × 27)`: 18 was already healed. At ratio 0.50 the same 54-Mana expenditure refunds 27 and leaves 33, a net loss of 27. Full in-game recovery leaves zero eligible loss and zero refund. At ratio 1 the final balance equals entry, never entry plus recovered spending. Settlement can also run after defeat with raw Health zero; it changes the balance, not the result.
 
 ## 10. Standalone interface and records
 
@@ -473,7 +522,8 @@ exchange: committed AI command, shown tell, player command/target,
           costs, compared skills, modifiers, odds, used tape slots,
           resulting effects and state, result if terminal
 summary: outcome, decisive/timeout/withdrawal reason, exchanges,
-         mana/crowns spent, remaining resources, regeneration equivalent
+         per-resource entry/grossSpent/restored/beforeRebate/ratio/refund/final/netLoss,
+         gross and net Mana regeneration equivalents, settlement identifier
 ```
 
 Proposed future module boundary (not an existing API):
@@ -483,7 +533,7 @@ createSetup(configuration) -> immutable kits + fixture + random tape
 legalActions(state, actor) -> actions, costs, applications, warnings
 preview(state, command) -> odds and conditional effect ranges
 resolveExchange(state, playerCommand) -> state + exchange record
-finish(state) -> {outcome, spent, remaining, notes, log}
+finish(state) -> {outcome, grossSpent, restored, rebates, netSpent, remaining, notes, log}
 ```
 
 Combat AI and audience AI must commit before `legalActions`/`preview` runs for the player. A reset rebuilds the same matchup; a level change builds a different deterministic matchup. Do not reset resources midway through a consecutive-bout test.
@@ -493,32 +543,41 @@ Combat AI and audience AI must commit before `legalActions`/`preview` runs for t
 ### 11.1 Narrow implementation checks, when implementation is authorized
 
 1. Generate each archetype at every integer level 1–100 twice; compare complete kits. Check all skills/ranks/budgets in bounds and both reference skill-pair means equal level.
-2. Verify default combat kits are identical, including support ranks and budgets. Negotiation uses distinct role rules even when templates match.
+2. Verify default combat kits are identical, including support ranks and all entry budgets. Negotiation uses distinct role rules even when templates match.
 3. Replay identical command sequences; require identical states, logs and outcomes. Preview/open-mode changes must not change tape or committed AI commands.
 4. With all-spells access, attempt all twelve spells in each fixture, including ineffective/coercive applications. Require explicit outcomes and correct costs; only learning/mana gates are allowed.
-5. Test zero-mana starts, unaffordable Offer, eight-exchange expiry, simultaneous fatigue defeat, suppression without spell disabling, and Suspicion taking precedence over Agreement.
-6. Assert previews contain actual outcomes, no resource becomes negative, no heal exceeds Health cap, one shared demonstration credit and one Offer maximum.
+5. Test zero-Mana starts, low Mood, unaffordable Offer, eight-exchange expiry, self-defeat from Haste/Exert expenditure, suppression without spell disabling, and Suspicion taking precedence over Agreement. Check that costless exit/Compose remain available when other actions are unaffordable.
+6. Assert previews contain actual outcomes, no resource becomes negative, no recovery exceeds entry balances, one shared demonstration credit and one Offer maximum. Keep pre-rebate result classification separate from settlement.
 7. Test intentional one-level differences, especially 35/36 and 70/71. Record rank discontinuities rather than claiming strictly monotonic difficulty for every neighbouring level.
+8. For every resource test ratios 0, 0.5, 0.8 and 1, plus mixed per-resource ratios. Assert `beforeRebate <= final <= entry`, exclude already-restored losses, and reject out-of-range ratios. Repeated settlement must return the same result without another refund. A next-bout refund cannot repay a previous bout's costs.
+9. Sweep Mana scales 1/2/3 and budget presets. At scale 2 with full Mana, every generated spell is affordable at entry; at scale 3 flag capacity failures. Compare gross action scarcity and final net depletion, not only win rates.
 
 ### 11.2 Small human test matrix
 
-First compare all six mirrored combat archetypes at level 50 with standard mana. Then repeat at levels 20 and 80 to see whether progression changes decisions. For negotiation, try a level-50 Envoy and Illusionist against all six level-50 audiences, in both fixtures. This is a proposed test schedule, not completed testing.
+First compare all six mirrored combat archetypes at level 50 with standard resource budgets and Mana scale 2. Then repeat at levels 20 and 80 to see whether progression changes decisions. For negotiation, try a level-50 Envoy and Illusionist against all six level-50 audiences, in both fixtures. This is a proposed test schedule, not completed testing.
 
 For a local difficulty sweep keep the player fixed and compare opponent levels 45, 49, 50, 51 and 55. Use manual or predeclared policies: direct basic actions, cautious preparation, aggressive spell spending, and economy-first play. Include a few cross-archetype combat matchups after the mirror baseline.
 
-Look for decisions that change with incoming threats and resource budgets; count dominant actions, ineffective casts, unused spells, timeouts, repeat healing loops and mana remaining. Report success together with expenditure. The design's +10–15-point advantage over auto-resolution is a later empirical target, not something this draft establishes. Do not tune to it using unlike resource budgets or by double-counting spell knowledge.
+Look for decisions that change with incoming threats and resource budgets; count dominant actions, ineffective casts, unused spells, timeouts, repeat healing loops and each resource remaining before/after rebate. Repeat a few matchups under 50% and 80% contexts, including consecutive bouts with carried settled balances. Report success together with gross and net expenditure. The design's +10–15-point advantage over auto-resolution is a later empirical target, not something this draft establishes. Do not tune to it using unlike resource budgets or by double-counting spell knowledge.
 
 ### 11.3 Decisions to refine before building games
 
 - Is eight exchanges the right length, or should partial closure happen earlier?
 - Is the one-slot action economy sufficient, especially for costly information spells?
-- Does standard 30 mana make three or fewer casts interesting, or simply discourage the expensive spells?
+- Does a full-capacity budget at Mana scale 2 make casts meaningful, and how does a depleted entry budget change that?
 - Are Guard/Feint and Barricade/Flame distinctions clear without a full stance system?
 - Does Attune retain a believable boundary, particularly in consensual sparring?
-- Should Haste's combat fatigue be a local Health cost or a later campaign resource cost?
+- Are Health expenditure, Mood fatigue and Renown commitments distinct enough to justify their bookkeeping?
+- Do 50% real-conflict and 80% practice rebates leave sufficient day-to-day impact? Which public contexts should retain more Renown loss?
 - Is negotiation's prepared-bonus model tactically distinct enough from simply buying better odds?
 - Is temporary Bluff credit plus later scrutiny useful without dialogue, or too abstract?
 - Should physical negotiation fixtures be central, occasional, or removed after testing?
 - Are the twelve proposed spells preferable to testing the existing roster first?
 
 All values and these choices remain open. Refine this rulebook before implementing testplay games. Event authoring, canon migration, engine integration and campaign balance are separate subsequent work.
+
+## 12. Draft validation record
+
+Before delivering this draft, temporary in-memory arithmetic checks verified all six kit templates at levels 1–100 (600 kits), exact RNG agreement with the current engine, skill/rank bounds, reproducibility, reference skill-pair means, and full-budget spell affordability at Mana scale 2. The twelve spells have listed applications in both games; seven local file references resolve. Rebate inequalities were checked for 103,020 combinations of entry balance, remaining balance, restoration and rebate ratio. These checks do not establish tactical balance, AI quality or enjoyment, and no testplay game has been implemented.
+
+The project's required `node tools/grim.js check` passed in a fresh isolated copy of the working sources: build, lint (0 errors/warnings), and 200 simulated academy games with zero crashes. The copy avoided rebuilding over ongoing workspace changes. These checks exercise existing academy code, not the unimplemented prototype games.

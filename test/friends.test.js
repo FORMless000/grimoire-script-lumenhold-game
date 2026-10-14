@@ -9,13 +9,12 @@ const { ROOT } = require('./helpers.js');
 
 const { content } = project(ROOT).compileAll();
 const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
-// A term month at the map, with the given characters met.
+// The start of a term month (its day not yet played), with the given characters met.
 function atMap(seed, met, setup) {
   const eng = new Engine(content);
   quiet(() => {
-    eng.newGame({ seed, name: 'T' });
-    let r = eng.advance();
-    for (let i = 0; i < 400 && !(r.kind === 'map' && eng.s.turn >= 3 && eng.phaseOf() === 'term'); i++) {
+    let r = eng.newGame({ seed, name: 'T' });
+    for (let i = 0; i < 400 && !(r.kind === 'month' && eng.s.turn >= 3 && eng.phaseOf() === 'term'); i++) {
       if (r.kind === 'map') { eng.pickPlaces([]); r = eng.advance(); continue; }
       if (r.kind === 'card') { if (r.view.pick > 1) eng.chooseMany([r.view.options[0].key]); else eng.choose(r.view.options[0].key); }
       r = eng.advance();
@@ -25,16 +24,29 @@ function atMap(seed, met, setup) {
   if (setup) setup(eng.s, eng);
   return eng;
 }
-const fromFriends = (eng) => eng.s.deck.filter((d) => d.src === 'friend');
+// The day is filled slot by slot (M1): fill all of today's slots (visiting `place` at the first visit it's open for,
+// else staying in) to see all its cards.
+function finishDay(eng, place) {
+  quiet(() => {
+    for (let i = 0; i < 30 && eng.s.day && !eng.s.day.done; i++) {
+      if (eng.s.day.phase === 'pick' || eng.stepDay() === 'pick') {
+        const v = eng.mapView(), p = place && v.places.find((x) => x.id === place && x.state === 'open' && x.open[0]);
+        eng.pickPlaces([p ? place : null]); if (p) place = null;
+      }
+    }
+  });
+  return eng;
+}
+const fromFriends = (eng) => finishDay(eng).s.deck.filter((d) => d.src === 'friend');
 
 test('friends: a warm character finds you on their own roll, a cold one rarely does', () => {
   let warm = 0, cold = 0;
   for (let seed = 1; seed <= 30; seed++) {
     const a = atMap(seed, ['tobias'], (s) => { s.npcs.tobias.warmth = 100; s.npcs.tobias.rel = 40; });
-    quiet(() => a.pickPlaces([]));
+    finishDay(a);
     if (fromFriends(a).some((d) => d.actor === 'tobias')) warm++;
     const b = atMap(seed, ['tobias'], (s) => { s.npcs.tobias.warmth = 0; s.npcs.tobias.rel = 0; });
-    quiet(() => b.pickPlaces([]));
+    finishDay(b);
     if (fromFriends(b).some((d) => d.actor === 'tobias')) cold++;
   }
   assert.ok(warm >= 18, 'warm: ' + warm + '/30');
@@ -45,7 +57,6 @@ test('friends: at most `cap` friend cards a month, one per character', () => {
   const all = Object.keys(content.npcs);
   for (let seed = 1; seed <= 10; seed++) {
     const eng = atMap(seed, all, (s) => { for (const id of all) { s.npcs[id].warmth = 100; s.npcs[id].rel = 50; } });
-    quiet(() => eng.pickPlaces([]));
     const f = fromFriends(eng);
     assert.ok(f.length <= eng.FRIENDS.cap);
     assert.equal(new Set(f.map((d) => d.actor)).size, f.length);
@@ -63,7 +74,7 @@ test('friends: engaging warms, brushing off cools, and warmth fades monthly', ()
   eng.s.npcs.tobias.rel = 100;
   quiet(() => eng.run([{ t: 'rel', npc: 'tobias', tier: 'small', sign: 1 }], Object.assign(eng.newCtx(null, null), {})));
   const before = eng.s.npcs.tobias.warmth;
-  quiet(() => eng.pickPlaces([]));
+  quiet(() => eng.startDay());   // a new day: warmth fades
   assert.ok(eng.s.npcs.tobias.warmth <= Math.floor(before * eng.FRIENDS.fade) + eng.FRIENDS.presence * 2);
 });
 
@@ -73,9 +84,7 @@ test('friends: visiting where someone is warms them (track 1)', () => {
   let warmed = 0;
   for (let seed = 1; seed <= 10; seed++) {
     const eng = atMap(seed, ['tobias'], (s) => { s.npcs.tobias.warmth = 0; s.places[place.id] = { found: 1 }; });
-    const v = eng.mapView(); const p = v.places.find((x) => x.id === place.id);
-    if (!p || !p.open[0]) continue;
-    quiet(() => eng.pickPlaces([place.id]));
+    finishDay(eng, place.id);
     if (eng.s.npcs.tobias.warmth >= eng.FRIENDS.presence) warmed++;
   }
   assert.ok(warmed > 0);

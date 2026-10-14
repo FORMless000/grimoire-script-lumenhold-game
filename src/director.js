@@ -1,13 +1,16 @@
 /*
  * The director (design §5): builds each month's day. DOM-free; installed onto Engine.prototype.
  *
- *   beginMonth -> s.day = {phase: 'pick'} -> advance() returns {kind: 'map', view: mapView()}
- *   pickPlaces([afternoon, evening]) -> attendance, then buildDay(): the day's cards, slot by slot
+ *   beginMonth -> startDay(): what the day holds (pushed cards, spread cards, the friend slot); advance() steps it:
+ *   stepDay() fills one slot at a time, in order (M1); at a visit slot it stops on the map for that one visit
+ *   ({kind: "map", view}) and pickPlaces([id]) records the pick and its attendance, then the slot is filled.
  *
  * A day follows @game day_term / day_break: morning=courses noon=social:1-2 afternoon=visit evening=visit
  * night=world:1-2 midnight=special:0-1. Each slot draws from its source by weighted sampling:
- *   score = weight × novelty × relevance × variety          (design §5.2)
- * Pushed cards (queued, auto, arc beats, track notices) go into their slot (event `slot:`, else morning);
+ *   score = weight × novelty × relevance × variety × time fit          (design §5.2; `time:` ×3 in its slots, else ×0.3)
+ * `@game spread:` sources (social, world) keep their budget but are dealt to random non-special slots (M43).
+ * Festivals don't take a visit: picking their place in their slot draws them (B3).
+ * Pushed cards (queued, auto, arc beats, track notices) go into their slot (event `slot:`, else the day's first);
  * people come by two tracks (design §5.5): encounters at visited places and lunch, and each met character's own
  * monthly roll to find you, driven by warmth;
  * when the day overflows max_cards_per_day, priority decides: story > track > pushed > friend > social > ambient,
@@ -57,12 +60,12 @@
         if (e.place) (ix.byPlace[e.place] = ix.byPlace[e.place] || []).push(e);
         else if (track) (ix.byTrack[track] = ix.byTrack[track] || []).push(e);
         else if (e.plan) (ix.byPlan[e.plan] = ix.byPlan[e.plan] || []).push(e);
-        else if (e.slot) ix.slotBound.push(e);
         else if (e.trigger === 'social') ix.social.push(e);
+        else if (e.slot) ix.slotBound.push(e);
         else ix.ambient.push(e);
         // One character's own cards (design §5.5) also go on that character's track: drawn when you meet them at a place
         // or when they come looking for you, outside the shared pools' competition.
-        if (!e.place && !track && !e.plan && !e.slot && e.actor && e.actor !== 'any' && e.actor !== 'npc' && c.npcs[e.actor]) (ix.personal[e.actor] = ix.personal[e.actor] || []).push(e);
+        if (!e.place && !track && !e.plan && e.actor && e.actor !== 'any' && e.actor !== 'npc' && c.npcs[e.actor]) (ix.personal[e.actor] = ix.personal[e.actor] || []).push(e);
       }
       return (this._dir = ix);
     },
@@ -88,8 +91,13 @@
       }
       return out;
     },
+    // The map for the visit being picked now (M1): one slot. Outside a pick, every visit slot (tools, the start-of-month check).
     mapView() {
-      const s = this.s, slots = this.visitSlots(), fest = this.festivals();
+      const s = this.s, d = s.day, picking = d && d.v === 2 && d.at < this.recipe().length && this.recipe()[d.at].source === 'visit';
+      const vi = picking ? this.visitIndex(d.at) : 0;
+      const slots = picking ? [this.recipe()[d.at].slot] : this.visitSlots();
+      // Festivals (B3, M1) no longer take the visit: their place is highlighted in their slot, and picking it draws the festival.
+      const fest = this.festivals().filter((f) => !picking || f.visit === vi).map((f) => Object.assign({}, f, { visit: picking ? 0 : f.visit }));
       // Which map (design §4.3): home for the home plan, the host's map during an internship, else the campus.
       let breakMap = 'campus';
       if (this.phaseOf() === 'break' && s.states.plan_home) breakMap = 'home';
@@ -114,34 +122,36 @@
           track: t ? Object.assign({ id: p.track, kind: this.c.tracks[p.track].kind }, this.phaseOf() === 'break' ? { due: null, urgent: false } : { due: Math.max(0, (t.due || 0) - (t.visits || 0)), urgent: this.isTermEnd() && t.visits < t.due }) : null,
           present: here, news, festival: fest.filter((f) => f.place === p.id).map((f) => ({ slot: slots[f.visit], event: f.event })) });
       }
-      return { map: breakMap, slots, places, locked: fest.filter((f) => f.visit < slots.length).map((f) => ({ slot: slots[f.visit], place: f.place, event: f.event })), season: this.seasonOf(), phase: this.isWrapUp() ? 'wrapup' : this.phaseOf() };
+      return { map: breakMap, slots, places, locked: [], festivals: fest.filter((f) => f.visit < slots.length).map((f) => ({ slot: slots[f.visit], place: f.place, event: f.event })),
+        visit: picking ? vi + 1 : null, visits: this.visitSlots().length, season: this.seasonOf(), phase: this.isWrapUp() ? 'wrapup' : this.phaseOf() };
     },
-    // The player's picks for the visit slots; festival-locked slots ignore the pick. Returns the attendance outcome.
+    // The player's pick for the visit on the map now (M1): a place id or null (stay in). Returns the attendance outcome.
+    // Extra ids (pickPlaces([a, b]), tests and tools) are kept for the day's next visits.
     pickPlaces(ids) {
       const s = this.s;
       if (!s.day || s.day.phase !== 'pick') throw new Error('no places to pick now');
-      const view = this.mapView();
-      const picks = view.slots.map((sl, i) => {
-        const lock = view.locked.find((l) => l.slot === sl);
-        if (lock) return lock.place;
-        const id = ids[i];
+      const list = [].concat(ids == null ? [null] : ids);
+      const ctx = this.pickPlace(list.length ? list[0] : null);
+      s.day.nextPicks = list.slice(1);
+      return this.outcome(ctx);
+    },
+    pickPlace(id) {
+      const s = this.s, d = s.day, view = this.mapView(), sl = view.slots[0];
+      if (id) {
         const p = view.places.find((x) => x.id === id);
-        if (!id) return null;
-        if (!p || p.state !== 'open' || !p.open[i]) throw new Error('place ' + id + ' is not open in the ' + sl);
-        return id;
-      });
+        if (!p || p.state !== 'open' || !p.open[0]) throw new Error('place ' + id + ' is not open in the ' + sl);
+      }
+      d.picks.push(id || null); d.phase = 'slots';
       if (!s.visitsTo) s.visitsTo = {};
-      for (const id of picks) if (id) s.visitsTo[id] = (s.visitsTo[id] || 0) + 1;
       const ctx = this.newCtx(null, null);
-      for (const id of new Set(picks.filter(Boolean))) {
+      if (id) {
+        s.visitsTo[id] = (s.visitsTo[id] || 0) + 1;
         const p = this.c.places[id];
-        if (p && p.track) for (const n of picks.filter((x) => x === id)) this.attend(p.track, ctx);   // each visit counts
+        if (p && p.track) this.attend(p.track, ctx);   // each visit counts
       }
       this.handleZeroed(ctx);
-      s.day.picks = picks;
-      s.hist.push(Object.assign({ t: 'pick', turn: s.turn, picks, at: Date.now() }, Object.keys(ctx.deltas).length ? { deltas: { ...ctx.deltas } } : {}));   // attendance pay etc.
-      this.buildDay(picks, view.locked);
-      return this.outcome(ctx);
+      s.hist.push(Object.assign({ t: 'pick', turn: s.turn, slot: sl, picks: [id || null], at: Date.now() }, Object.keys(ctx.deltas).length ? { deltas: { ...ctx.deltas } } : {}));   // attendance pay etc.
+      return ctx;
     },
 
     /* ---------------- building the day ---------------- */
@@ -158,6 +168,14 @@
       const recent = (this._recentTags || []);
       const overlap = (e.tags || []).length ? (e.tags || []).filter((t) => recent.includes(t)).length / e.tags.length : 0;
       return (1 + 0.5 * aff) * (1 + 0.5 * arc) * (1 + 0.3 * overlap);
+    },
+    // Time of day (M43): `slot:` requires a slot, `time:` favours its slots (×3) and makes others rarer (×0.3).
+    timeFit(e) {
+      const sl = this._slot;
+      if (!sl) return 1;
+      if (e.slot && e.slot !== sl) return 0;
+      if (e.time && e.time.length) return e.time.includes(sl) ? 3 : 0.3;
+      return 1;
     },
     variety(e, dayItems) {
       const prev = dayItems.slice(-2).map((x) => this.c.events[x.id]).filter(Boolean);
@@ -192,7 +210,8 @@
       for (const e of (ix.personal[id] || []).concat(ix.social.filter((x) => x.actor === 'any' || x.per))) {
         if (used.has(e.id) || !this.eligible(e, used)) continue;
         if (this._plotLeft != null && this._plotLeft <= 0 && this.isPlot(e)) continue;
-        for (const c of this.boundCandidates(e, id)) { const sc = c.w * this.novelty(e) * this.variety(e, dayItems) * ((ix.personal[id] || []).includes(e) ? 2 : 1); if (sc > 0) cands.push({ ...c, w: sc }); }
+        const fit = this.timeFit(e); if (!fit) continue;
+        for (const c of this.boundCandidates(e, id)) { const sc = c.w * fit * this.novelty(e) * this.variety(e, dayItems) * ((ix.personal[id] || []).includes(e) ? 2 : 1); if (sc > 0) cands.push({ ...c, w: sc }); }
       }
       const pick = this.pickWeighted(cands);
       if (!pick) return null;
@@ -224,8 +243,9 @@
       for (const e of pool) {
         if (used.has(e.id) || !this.eligible(e, used)) continue;
         if (this._plotLeft != null && this._plotLeft <= 0 && this.isPlot(e)) continue;   // the month's plot card is spent
+        const fit = this.timeFit(e); if (!fit) continue;
         for (const c of this.candidates(e)) {
-          const sc = c.w * this.novelty(e) * this.relevance(e, c.actor) * this.variety(e, dayItems);
+          const sc = c.w * fit * this.novelty(e) * this.relevance(e, c.actor) * this.variety(e, dayItems);
           if (sc > 0) cands.push({ ...c, w: sc });
         }
       }
@@ -235,17 +255,19 @@
       used.add(pick.e.id);
       return Object.assign({ id: pick.e.id, actor: pick.actor || null, cast: pick.cast || undefined }, extra || {});
     },
-    buildDay(picks, locked) {
-      const s = this.s, ix = this.directorIndex(), used = new Set(s.deck.map((d) => d.id));
-      // No daily cap unless @game sets one (playtest 2: a cap held back pushed cards and hindered content).
-      const maxCards = this.c.game.max_cards_per_day || Infinity;
+    /* ---------------- the day, slot by slot (design §4.2, §5; playtest 2: M1, M3, M43) ----------------
+     * startDay() rolls what the day holds (pushed cards and their slots, who comes looking for you, how many social and
+     * world cards each slot gets); stepDay() then fills one slot at a time: its pushed cards first (so a plan chosen in
+     * the morning shapes the afternoon), then its own draws. A visit slot stops on the map for that slot alone.
+     * Everything lives in s.day, so a save resumes mid-day.
+     */
+    startDay() {
+      const s = this.s, ix = this.directorIndex(), rec = this.recipe(), used = new Set(s.deck.map((d) => d.id));
       // Warmth fades a little every month (design §5.5).
       for (const n of Object.values(s.npcs)) if (n.warmth) n.warmth = Math.floor(n.warmth * FRIENDS.fade);
-      const brk = this.phaseOf() === 'break', withToday = new Set();
-      this._recentTags = [].concat(...s.hist.filter((h) => h.t === 'card').slice(-6).map((h) => (this.c.events[h.id] || {}).tags || []));
+      const slots = rec.map((r) => r.slot), first = slots[0];
       // Pushed cards: due queue items (windows by chance), auto events, arc beats.
-      const pushed = [];
-      const keep = [];
+      const pushed = [], keep = [];
       for (const q of s.queue) {
         if (q.due > s.turn) { keep.push(q); continue; }
         if (q.until != null && q.until > s.turn && this.rand() >= 1 / (q.until - s.turn + 1)) { keep.push(q); continue; }
@@ -274,116 +296,175 @@
         pushed.push({ id: e.id, actor: pick.actor, cast: pick.cast, src: 'arc', prio: 'story', slot: e.slot });
         used.add(e.id); plot++;
       }
-      this._plotLeft = this.plotCap() - plot;
       pushed.sort((a, b) => (b.p || 0) - (a.p || 0));
-      // Slot by slot.
-      const day = [];
-      let visit = 0;
-      for (const r of this.recipe()) {
-        this._slot = r.slot;
-        const items = [];
-        const count = r.min == null ? 1 : r.min + Math.floor(this.rand() * ((r.max || r.min) - r.min + 1));
-        if (r.source === 'courses') {
-          for (const [id, t] of Object.entries(s.tracks || {})) {
-            const d = this.c.tracks[id];
-            if (!d || !((t.status === 'enrolled' && d.kind === 'course') || (t.status === 'member' && d.kind === 'thesis'))) continue;
-            const pool = (ix.byTrack[id] || []).filter((e) => !e.level || e.level <= (t.level || 1));
-            const it = this.draw(pool, used, day.concat(items), { track: id, prio: 'track' });
+      // Each pushed card's slot: its own `slot:`, else the first of the day (and the first when its slot isn't today).
+      for (const p of pushed) { const e = this.c.events[p.id]; const sl = p.slot || (e && e.slot) || first; p.slot = slots.includes(sl) ? sl : first; }
+      // Social and world cards through the day (M43): `@game spread:` keeps each source's budget and deals its cards
+      // to random slots of the day (the special slots excepted) instead of drawing them all in their own slot.
+      const spread = {}, spreading = new Set(this.c.game.spread || []);
+      const open = rec.filter((r) => r.source !== 'special').map((r) => r.slot);
+      for (const r of rec) {
+        if (!spreading.has(r.source)) continue;
+        const n = r.min == null ? 1 : r.min + Math.floor(this.rand() * ((r.max || r.min) - r.min + 1));
+        for (let k = 0; k < n; k++) { const sl = open[Math.floor(this.rand() * open.length)]; spread[sl] = spread[sl] || {}; spread[sl][r.source] = (spread[sl][r.source] || 0) + 1; }
+      }
+      // Those who come looking for you (track 2) arrive in this slot; they roll when it comes, on that moment's warmth.
+      const friendSlot = slots.includes('noon') ? 'noon' : slots.includes('night') ? 'night' : slots[slots.length - 1];
+      s.day = { v: 2, phase: 'slots', at: 0, stage: 0, picks: [], nextPicks: [], used: [...used], items: [], withToday: [], pushed, spread, friendSlot,
+        plotLeft: this.plotCap() - plot, count: s.deck.length, done: false };
+    },
+    // Old saves (one map for the whole day) resume in the new shape.
+    upgradeDay() {
+      const d = this.s.day;
+      if (!d || d.v === 2) return;
+      if (d.phase === 'pick') this.startDay();
+      else this.s.day = { v: 2, phase: 'slots', at: this.recipe().length, stage: 0, picks: d.picks || [], nextPicks: [], used: [], items: [], withToday: [], pushed: [], spread: {}, count: 0, done: true };
+    },
+    visitIndex(at) { return this.recipe().slice(0, at).filter((r) => r.source === 'visit').length; },
+    curSlot() { const d = this.s.day, r = d && this.recipe()[d.at]; return r ? r.slot : null; },
+    // Adds a slot's cards to the deck (with the day's optional cap: pushed cards that don't fit move to tomorrow).
+    addToDeck(items, slot) {
+      const s = this.s, d = s.day, max = this.c.game.max_cards_per_day || Infinity;
+      for (const it of items) {
+        if (d.count >= max) {
+          if (it.src === 'queued' || it.src === 'auto' || it.src === 'arc') s.queue.push({ id: it.id, actor: it.actor, due: s.turn + 1, track: it.track, cast: it.cast, src: 'queued' });
+          continue;
+        }
+        const e = this.c.events[it.id];
+        // Variant hard (design §8.6): more likely as the years go by.
+        if (e && e.variant === 'hard' && this.rand() < (this.yearOf() - 1) * 0.15) it.variant = 'hard';
+        const { prio, p, done, ...rest } = it;
+        s.deck.push(Object.assign(rest, { slot }));
+        d.items.push(it.id); d.count++;
+      }
+    },
+    // One step of the day. Returns 'pick' (the map, for the current visit slot), 'cards', 'next' or 'done'.
+    stepDay() {
+      const s = this.s, d = s.day, rec = this.recipe();
+      if (d.done) return 'done';
+      if (d.at >= rec.length) { d.done = true; return 'done'; }
+      const r = rec[d.at];
+      if (d.stage === 0) {
+        const mine = d.pushed.filter((p) => p.slot === r.slot && !p.done);
+        for (const p of mine) p.done = true;
+        d.stage = 1;
+        if (mine.length) { this.addToDeck(mine, r.slot); return 'cards'; }
+      }
+      if (r.source === 'visit' && d.picks.length <= this.visitIndex(d.at)) {
+        const view = this.mapView();
+        const any = view.places.some((p) => p.state === 'open' && p.open[0]);
+        // A pick passed ahead of time (pickPlaces([a, b]), tests and tools) is used when its slot comes.
+        const ahead = d.nextPicks.length ? d.nextPicks.shift() : undefined;
+        if (!any || ahead !== undefined) { this.pickPlace(any ? ahead : null); }
+        else { d.phase = 'pick'; return 'pick'; }
+      }
+      const items = this.fillSlot(r);
+      d.at++; d.stage = 0;
+      if (d.at >= rec.length) d.done = true;
+      if (items.length) { this.addToDeck(items, r.slot); return 'cards'; }
+      return d.done ? 'done' : 'next';
+    },
+    // One slot's own cards.
+    fillSlot(r) {
+      const s = this.s, d = s.day, ix = this.directorIndex();
+      const used = new Set(d.used), withToday = new Set(d.withToday), day = d.items.map((id) => ({ id }));
+      this._recentTags = [].concat(...s.hist.filter((h) => h.t === 'card').slice(-6).map((h) => (this.c.events[h.id] || {}).tags || []));
+      this._plotLeft = d.plotLeft;
+      this._slot = r.slot;
+      const items = [];
+      const spreading = new Set(this.c.game.spread || []);
+      const count = spreading.has(r.source) ? 0 : r.min == null ? 1 : r.min + Math.floor(this.rand() * ((r.max || r.min) - r.min + 1));
+      const plan = Object.keys(s.states).find((k) => this.c.states[k] && this.c.states[k].kind === 'plan');
+      const poolOf = (source) => (source === 'social' ? ix.social
+        : source === 'special' ? ix.slotBound.filter((e) => e.slot === r.slot)
+        : source === 'plan' ? (plan && ix.byPlan[plan.replace(/^plan_/, '')]) || ix.ambient
+        : ix.ambient.concat(ix.slotBound));
+      if (r.source === 'courses') {
+        for (const [id, t] of Object.entries(s.tracks || {})) {
+          const td = this.c.tracks[id];
+          if (!td || !((t.status === 'enrolled' && td.kind === 'course') || (t.status === 'member' && td.kind === 'thesis'))) continue;
+          const pool = (ix.byTrack[id] || []).filter((e) => !e.level || e.level <= (t.level || 1));
+          const it = this.draw(pool, used, day.concat(items), { track: id, prio: 'track' });
+          if (it) items.push(it);
+          // Track 1 in class (design §5.5): the course's lead and whoever is at its place this slot see you there.
+          const crowd = new Set(td.place ? this.presentAt(td.place, r.slot) : []); if (td.lead) crowd.add(td.lead);
+          for (const nid of crowd) if (s.npcs[nid] && s.npcs[nid].met) this.warm(nid, FRIENDS.presence / 2);
+        }
+      } else if (r.source === 'visit') {
+        const place = d.picks[this.visitIndex(d.at)];
+        const fest = place && this.festivals().find((f) => f.place === place && f.visit === this.visitIndex(d.at));
+        if (fest) { items.push({ id: fest.event, actor: null, place, prio: 'story', src: 'festival' }); used.add(fest.event); }
+        else if (place) {
+          const p = this.c.places[place];
+          this._place = place;
+          const n = r.min == null ? 1 + Math.floor(this.rand() * 2) : count;
+          for (let k = 0; k < n; k++) {
+            const t = p.track && s.tracks[p.track] && s.tracks[p.track].status === 'member' ? p.track : null;
+            const it = (t && k === 0 && this.draw((ix.byTrack[t] || []).filter((e) => !e.rank || e.rank <= s.tracks[t].rank + 1), used, day.concat(items), { place, track: t, prio: 'track' }))
+              || this.draw(ix.byPlace[place] || [], used, day.concat(items), { place, prio: 'ambient' })
+              || this.draw(ix.ambient.filter((e) => (e.tags || []).some((tg) => (p.draws || []).includes(tg))), used, day.concat(items), { place, prio: 'ambient' });
             if (it) items.push(it);
-            // Track 1 in class (design §5.5): the course's lead and whoever is at its place this slot see you there.
-            const crowd = new Set(d.place ? this.presentAt(d.place, r.slot) : []); if (d.lead) crowd.add(d.lead);
-            for (const nid of crowd) if (s.npcs[nid] && s.npcs[nid].met) this.warm(nid, FRIENDS.presence / 2);
           }
-        } else if (r.source === 'visit') {
-          const place = picks[visit];
-          const lock = (locked || []).find((l) => l.slot === r.slot);
-          visit++;
-          if (lock) { items.push({ id: lock.event, actor: null, place: lock.place, prio: 'story', src: 'festival' }); used.add(lock.event); }
-          else if (place) {
-            const p = this.c.places[place];
-            this._place = place;
-            const n = r.min == null ? 1 + Math.floor(this.rand() * 2) : count;
-            for (let k = 0; k < n; k++) {
-              const t = p.track && s.tracks[p.track] && s.tracks[p.track].status === 'member' ? p.track : null;
-              const it = (t && k === 0 && this.draw((ix.byTrack[t] || []).filter((e) => !e.rank || e.rank <= s.tracks[t].rank + 1), used, day.concat(items), { place, track: t, prio: 'track' }))
-                || this.draw(ix.byPlace[place] || [], used, day.concat(items), { place, prio: 'ambient' })
-                || this.draw(ix.ambient.filter((e) => (e.tags || []).some((tg) => (p.draws || []).includes(tg))), used, day.concat(items), { place, prio: 'ambient' });
-              if (it) items.push(it);
+          // Track 1 (design §5.5): the people here. Being where they are warms them; sometimes a card with one of them.
+          // Unmet characters count too, so introductions happen where people actually are.
+          const here = this.presentAt(place, r.slot).filter((id) => s.npcs[id] && !withToday.has(id));
+          for (const id of here) if (s.npcs[id].met) this.warm(id, FRIENDS.presence);
+          if (here.length && this.rand() < FRIENDS.encounter) {
+            const order = here.slice(); const cards = [];
+            while (order.length && !cards.length) {
+              const w = order.map((id) => 10 + this.pull(id)); let x = this.rand() * w.reduce((a, b) => a + b, 0), k = 0;
+              for (; k < order.length - 1; k++) { x -= w[k]; if (x < 0) break; }
+              const id = order.splice(k, 1)[0];
+              const it = this.drawWith(id, used, day.concat(items), { place, prio: 'social', src: 'encounter' });
+              if (it) { cards.push(it); withToday.add(id); }
             }
-            // Track 1 (design §5.5): the people here. Being where they are warms them; sometimes a card with one of them.
-            // Unmet characters count too, so introductions happen where people actually are.
-            const here = this.presentAt(place, r.slot).filter((id) => s.npcs[id] && !withToday.has(id));
-            for (const id of here) if (s.npcs[id].met) this.warm(id, FRIENDS.presence);
-            if (here.length && this.rand() < FRIENDS.encounter) {
-              const order = here.slice(); const cards = [];
-              while (order.length && !cards.length) {
-                const w = order.map((id) => 10 + this.pull(id)); let x = this.rand() * w.reduce((a, b) => a + b, 0), k = 0;
-                for (; k < order.length - 1; k++) { x -= w[k]; if (x < 0) break; }
-                const id = order.splice(k, 1)[0];
-                const it = this.drawWith(id, used, day.concat(items), { place, prio: 'social', src: 'encounter' });
-                if (it) { cards.push(it); withToday.add(id); }
-              }
-              // Time spent with them is part of the visit, not extra: it takes the place of one ambient card.
-              const drop = cards.length ? items.map((x) => x.prio).lastIndexOf('ambient') : -1;
-              if (drop >= 0 && items.length > 1) used.delete(items.splice(drop, 1)[0].id);
-              items.push(...cards);
-            }
-            this._place = null;
+            // Time spent with them is part of the visit, not extra: it takes the place of one ambient card.
+            const drop = cards.length ? items.map((x) => x.prio).lastIndexOf('ambient') : -1;
+            if (drop >= 0 && items.length > 1) used.delete(items.splice(drop, 1)[0].id);
+            items.push(...cards);
           }
-        } else if (r.source === 'social' || r.source === 'world' || r.source === 'special' || r.source === 'plan') {
-          const plan = Object.keys(s.states).find((k) => this.c.states[k] && this.c.states[k].kind === 'plan');
-          const pool = r.source === 'social' ? ix.social
-            : r.source === 'special' ? ix.slotBound.filter((e) => e.slot === r.slot)
-            : r.source === 'plan' ? (plan && ix.byPlan[plan.replace(/^plan_/, '')]) || ix.ambient
-            : ix.ambient.concat(ix.slotBound.filter((e) => e.slot === r.slot));
-          for (let k = 0; k < count; k++) { const it = this.draw(pool, used, day.concat(items), { prio: r.source === 'social' ? 'social' : 'ambient' }); if (it) items.push(it); }
-          // Track 1 at lunch (design §5.5): anyone whose schedule has them at a place you know in this slot, met or not.
-          if (r.source === 'social') {
-            const here = Object.keys(s.npcs).filter((id) => !withToday.has(id) && (this.c.npcs[id].schedule || []).some((x) => x.slots.includes(r.slot) && s.places[x.place]));
-            if (here.length && this.rand() < FRIENDS.lunch) {
-              const w = here.map((id) => 10 + this.pull(id)); let x = this.rand() * w.reduce((a, b) => a + b, 0), k = 0;
-              for (; k < here.length - 1; k++) { x -= w[k]; if (x < 0) break; }
-              const it = this.drawWith(here[k], used, day.concat(items), { prio: 'social', src: 'encounter' });
-              if (it) {
-                // Lunch with someone replaces one of the slot's drawn cards.
-                if (items.length > 1) used.delete(items.pop().id);
-                items.push(it); withToday.add(here[k]);
-              }
+          this._place = null;
+        }
+      } else if (r.source === 'social' || r.source === 'world' || r.source === 'special' || r.source === 'plan') {
+        const pool = poolOf(r.source);
+        for (let k = 0; k < count; k++) { const it = this.draw(pool, used, day.concat(items), { prio: r.source === 'social' ? 'social' : 'ambient' }); if (it) items.push(it); }
+        // Track 1 at lunch (design §5.5): anyone whose schedule has them at a place you know in this slot, met or not.
+        if (r.source === 'social') {
+          const here = Object.keys(s.npcs).filter((id) => !withToday.has(id) && (this.c.npcs[id].schedule || []).some((x) => x.slots.includes(r.slot) && s.places[x.place]));
+          if (here.length && this.rand() < FRIENDS.lunch) {
+            const w = here.map((id) => 10 + this.pull(id)); let x = this.rand() * w.reduce((a, b) => a + b, 0), k = 0;
+            for (; k < here.length - 1; k++) { x -= w[k]; if (x < 0) break; }
+            const it = this.drawWith(here[k], used, day.concat(items), { prio: 'social', src: 'encounter' });
+            if (it) {
+              // Lunch with someone replaces one of the slot's drawn cards.
+              if (items.length > 1) used.delete(items.pop().id);
+              items.push(it); withToday.add(here[k]);
             }
           }
         }
-        // Pushed cards for this slot (their own `slot:`, else the first slot of the day).
-        const mine = pushed.filter((p) => { const e = this.c.events[p.id]; const sl = p.slot || (e && e.slot) || this.recipe()[0].slot; return sl === r.slot; });
-        for (const it of mine.concat(items)) day.push(Object.assign(it, { slot: r.slot }));
-        this._slot = null;
       }
-      // Track 2 (design §5.5): each character you know may come and find you this month, on their own roll.
-      const rec = this.recipe().map((x) => x.slot), friendSlot = rec.includes('noon') ? 'noon' : rec.includes('night') ? 'night' : rec[rec.length - 1];
-      const callers = Object.keys(s.npcs).filter((id) => s.npcs[id].met && !withToday.has(id)).sort((a, b) => this.pull(b) - this.pull(a));
-      let calls = 0;
-      for (const id of callers) {
-        if (this.isLastDay() || calls >= (brk ? FRIENDS.capBreak : FRIENDS.cap)) break;
-        const p = Math.min(FRIENDS.maxP, this.pull(id) / 100) * (brk ? 0.5 : 1);
-        if (p <= 0 || this.rand() >= p) continue;
-        const it = this.drawWith(id, used, day, { prio: 'friend', src: 'friend' });
-        if (!it) continue;
-        calls++; withToday.add(id);
-        let at = -1; day.forEach((x, i) => { if (rec.indexOf(x.slot) <= rec.indexOf(friendSlot)) at = i; });   // after the slot's other cards
-        day.splice(at + 1, 0, Object.assign(it, { slot: friendSlot }));
+      // The day's share of social and world cards for this slot (M43).
+      for (const [src, n] of Object.entries(d.spread[r.slot] || {})) {
+        const pool = poolOf(src);
+        for (let k = 0; k < n; k++) { const it = this.draw(pool, used, day.concat(items), { prio: src === 'social' ? 'social' : 'ambient' }); if (it) items.push(it); }
       }
-      // Pushed cards whose slot isn't in today's recipe go first.
-      for (const p of pushed) if (!day.includes(p)) day.unshift(Object.assign(p, { slot: this.recipe()[0].slot }));
-      // Overflow (design §5.3): drop the lowest priority; pushed cards move to the next day.
-      while (day.length > maxCards) {
-        let worst = 0;
-        day.forEach((x, i) => { if (PRIORITY[x.prio || 'ambient'] < PRIORITY[day[worst].prio || 'ambient']) worst = i; });
-        const [out] = day.splice(worst, 1);
-        if (out.src === 'queued' || out.src === 'auto' || out.src === 'arc') s.queue.push({ id: out.id, actor: out.actor, due: s.turn + 1, track: out.track, cast: out.cast, src: 'queued' });
+      // Track 2 (design §5.5): each character you know may come and find you this month, on their own roll,
+      // in the friend slot, after its other cards.
+      if (r.slot === d.friendSlot && !this.isLastDay()) {
+        const brk = this.phaseOf() === 'break';
+        const callers = Object.keys(s.npcs).filter((id) => s.npcs[id].met && !withToday.has(id)).sort((a, b) => this.pull(b) - this.pull(a));
+        let calls = 0;
+        for (const id of callers) {
+          if (calls >= (brk ? FRIENDS.capBreak : FRIENDS.cap)) break;
+          const p = Math.min(FRIENDS.maxP, this.pull(id) / 100) * (brk ? 0.5 : 1);
+          if (p <= 0 || this.rand() >= p) continue;
+          const it = this.drawWith(id, used, day.concat(items), { prio: 'friend', src: 'friend' });
+          if (it) { items.push(it); withToday.add(id); calls++; }
+        }
       }
-      // Variant hard (design §8.6): more likely as the years go by.
-      for (const it of day) { const e = this.c.events[it.id]; if (e && e.variant === 'hard' && this.rand() < (this.yearOf() - 1) * 0.15) it.variant = 'hard'; }
-      s.deck = s.deck.concat(day.map(({ prio, p, ...rest }) => rest));
-      s.day.phase = 'cards';
+      this._slot = null;
+      d.used = [...used]; d.withToday = [...withToday]; d.plotLeft = this._plotLeft;
+      return items;
     },
   };
 

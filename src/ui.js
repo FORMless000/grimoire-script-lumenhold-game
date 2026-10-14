@@ -209,7 +209,7 @@
       '<button class="icon-btn" id="quit" title="' + esc(t('top.quit')) + '">' + Art.icon('door', 18) + '</button></div></header>' +
       '<div class="meters" id="meters"></div>' +
       '<main class="stage"><div class="deck" id="deck"><div class="ghost two"></div><div class="ghost"></div></div>' +
-      '<div class="choices" id="choices"></div><div class="pips" id="pips"></div></main>' +
+      '<div class="choices" id="choices"></div></main>' +
       '<aside class="side" id="side"><div class="tabs" id="tabs">' +
       '<button data-tab="you">' + esc(t('tab.you')) + '</button><button data-tab="people">' + esc(t('tab.people')) + '</button><button data-tab="journal">' + esc(t('tab.journal')) + '</button></div>' +
       '<div class="tab-body" id="tabBody"></div></aside>' +
@@ -225,7 +225,8 @@
     meters.innerHTML = content.order.resources.filter((id) => content.resources[id].display !== 'panel').map((id) => {
       const r = content.resources[id];
       return '<div class="meter" id="m-' + id + '" style="--c:' + esc(r.color || '#888') + '" title="' + esc(r.name + ' — ' + (r.desc || '')) + '">' +
-        '<span class="dot"></span><div class="orb"><div class="fill"></div>' + Art.icon(r.icon || 'star', 20) + '</div>' +
+        // Alignment (M20): one fill from the bottom, Lumen gold with a sun, Hollow violet with its own icon.
+        '<span class="dot"></span><div class="orb"><div class="fill"></div>' + (r.min < 0 ? '<span class="ico-pos">' + Art.icon('sun', 20) + '</span><span class="ico-neg">' + Art.icon(r.icon || 'star', 20) + '</span>' : Art.icon(r.icon || 'star', 20)) + '</div>' +
         '<div class="val"></div><div class="lbl">' + esc(r.name || id) + '</div></div>';
     }).join('');
     if (DEBUG && !document.querySelector('.debug-btn')) buildDebug();
@@ -246,20 +247,14 @@
       const el = document.getElementById('m-' + r.id); if (!el) continue;
       const min = r.min == null ? 0 : r.min, max = r.maxNow;
       const fill = el.querySelector('.fill');
-      if (min < 0) {   // bipolar (Alignment): fill grows up or down from the middle
-        const half = Math.min(50, (Math.abs(r.value) / Math.max(max, -min)) * 50);
-        fill.style.height = half + '%'; fill.style.bottom = r.value >= 0 ? '50%' : (50 - half) + '%';
-        el.classList.toggle('neg', r.value < 0);
+      if (min < 0) {   // bipolar (Alignment, M20): the fill rises from the bottom with how far you lean, in that side's colour
+        fill.style.height = Math.min(100, (Math.abs(r.value) / Math.max(max, -min)) * 100) + '%'; fill.style.bottom = '0';
+        el.classList.toggle('neg', r.value < 0); el.classList.toggle('pos', r.value > 0);
       } else fill.style.height = Math.max(0, Math.min(100, ((r.value - min) / (max - min)) * 100)) + '%';
       el.querySelector('.val').textContent = Math.round(r.value);
       el.classList.toggle('low', r.warn_below != null && r.value <= r.warn_below);
     }
-    const pips = document.getElementById('pips');
-    if (pips) {
-      const done = snap.cardsThisMonth, left = snap.deckLeft;
-      let p = ''; for (let i = 0; i < done + left; i++) p += '<i class="' + (i < done ? 'on' : '') + '"></i>';
-      pips.innerHTML = p ? p + '<span style="margin-left:6px">' + esc(t('pips.thisMonth')) + '</span>' : '';
-    }
+    // No count of the day's cards (M3): the day isn't planned ahead any more.
     renderSide(snap);
   }
 
@@ -336,6 +331,13 @@
   function setPreview(affects) {
     document.querySelectorAll('.meter').forEach((m) => m.classList.toggle('preview', !!affects && affects.includes(m.id.slice(2))));
   }
+  function toast(text) {
+    if (!text) return;
+    const el = document.createElement('div'); el.className = 'toast'; el.textContent = text;
+    document.body.appendChild(el); setTimeout(() => el.remove(), 2600);
+  }
+  // Time of day (M7): the page takes a faint tint of the slot being played.
+  function setSlotTint(slot) { document.body.dataset.slot = slot || ''; }
   function floatDeltas(deltas) {
     for (const [k, v] of Object.entries(deltas || {})) {
       const el = document.getElementById('m-' + k);
@@ -424,7 +426,7 @@
   const checkLine = (c) => (c ? '<span class="chk roll' + (c.combat ? ' combat' : '') + '">' + Art.icon(c.combat ? 'sword' : c.exam ? 'scroll' : 'dice', 12) + ' ' + esc(checkText(c)) + '</span>' : '');
 
   function showCard(v) {
-    ui.mode = 'card'; ui.view = v; ui.busy = false;
+    ui.mode = 'card'; ui.view = v; ui.busy = false; setSlotTint(v.slot);
     closeOverlay();
     const story = v.type === 'story' || v.options.length === 1;
     const L = story ? v.options[0] : v.options.find((o) => o.key === 'left');
@@ -680,7 +682,7 @@
 
   /* ------------------------------------------------------------------ map (design §6.3) */
   function showMap(view) {
-    ui.mode = 'map'; ui.busy = false;
+    ui.mode = 'map'; ui.busy = false; setSlotTint(view.slots.length === 1 ? view.slots[0] : null);
     document.querySelectorAll('#deck .card').forEach((c) => c.remove());
     document.getElementById('choices').innerHTML = '';
     openOverlay('<div class="modal dark map-modal"><div class="modal-body" id="mapRoot"></div></div>');
@@ -688,13 +690,16 @@
     ui.mapCtl = MapView.render(document.getElementById('mapRoot'), view, {
       t, esc, Art, npcs: content.npcs,
       title: t('map.title', { month: snap.month, year: snap.year, phase: t('phase.' + view.phase) }),
+      eventTitle: (id) => (content.events[id] ? eng.interp(content.events[id].title) : id),
       onConfirm(picks) {
         if (ui.mode !== 'map') return;
         let out;
         try { out = eng.pickPlaces(picks); } catch (e) { console.warn(e); return; }
         ui.mode = null; ui.mapCtl = null; closeOverlay();
+        // No "…" card after a pick (M9): pay floats up from the meters, notes (a shift counted) show as a toast.
         renderChrome(); floatDeltas(out.deltas); save();
-        if (out.notes.length || hasVisibleDeltas(out.deltas)) showOutcome(out); else next();
+        if (out.notes.length) toast(out.notes.map(noteText).filter(Boolean).join(' · '));
+        next();
       },
     });
     const first = document.querySelector('#mapRoot .mk.st-open'); if (first) first.focus({ preventScroll: true });

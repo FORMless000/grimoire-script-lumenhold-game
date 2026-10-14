@@ -62,13 +62,14 @@ test('wrap-up (M21): year 4\'s last break has no plan or board, and the last day
   const m = eng.beginMonth();
   assert.ok(!m.summary.some((x) => /board/i.test(x.label || '')), 'no board in the wrap-up');
   assert.equal(eng.mapView().phase, 'wrapup');
-  eng.pickPlaces([]);
+  eng.stepDay();   // the morning's pushed cards
   assert.ok(eng.s.deck.some((d) => d.id === 'wrapup_begins'));
   assert.ok(!eng.s.deck.some((d) => d.id === 'break_plan'), 'no break plan in the wrap-up');
   // the last day: no map, only pushed cards
   eng.s.turn = 47; eng.s.deck = []; eng.s.queue = []; eng.s.day = null;
   eng.beginMonth();
-  assert.equal(eng.s.day.phase, 'cards', 'no map on the last day');
+  const steps = []; for (let i = 0; i < 20 && !eng.s.day.done; i++) steps.push(eng.stepDay());
+  assert.ok(!steps.includes('pick'), 'no map on the last day');
   assert.deepEqual(eng.s.deck.map((d) => d.id).filter((id) => content.events[id].trigger !== 'auto' && content.events[id].trigger !== 'queued'), []);
   assert.ok(eng.s.deck.some((d) => d.id === 'graduation_eve'));
 });
@@ -87,33 +88,48 @@ test('origin screen (M32): the origin applies before month 1\'s charges; the mir
   assert.ok(old.s.deck.some((d) => d.id === 'choose_origin'));
 });
 
-test('a month is a day: map first, then a slot-ordered deck', () => {
+// Plays the current month to its end: cards with their first enabled option, maps with the policy. Returns what was seen.
+function playMonth(eng, pick) {
+  const seen = [], turn = eng.s.turn;
+  let r = eng.s.cur ? { kind: 'card', view: eng.view(eng.s.cur) } : quiet(() => eng.advance());
+  for (let i = 0; i < 200 && eng.s.turn === turn && r.kind !== 'ending'; i++) {
+    if (r.kind === 'month') break;
+    if (r.kind === 'map') { seen.push({ map: r.view.slots }); quiet(() => eng.pickPlaces((pick || Policies.pickPlaces)(eng, r.view))); }
+    else if (r.kind === 'card') {
+      seen.push({ card: r.view.id, slot: r.view.slot });
+      const v = r.view, open = v.options.filter((o) => !o.disabled);
+      quiet(() => (v.pick > 1 ? eng.choose(open.filter((o) => o.key !== 'none').slice(0, v.pick).map((o) => o.key)) : eng.choose(open[0].key)));
+    }
+    r = quiet(() => eng.advance());
+  }
+  return seen;
+}
+
+test('a month is a day (M1): slot by slot, with a map before each visit', () => {
   const eng = new Engine(content);
-  const r = quiet(() => eng.newGame({ seed: 7, name: 'T' }));
-  const m = r.kind === 'month' ? quiet(() => eng.advance()) : r;
-  assert.equal(m.kind, 'map');
-  const v = m.view;
-  assert.deepEqual(v.slots, ['afternoon', 'evening']);
-  assert.equal(v.map, 'campus');
-  assert.ok(v.places.some((p) => p.state === 'open'), 'some place is open');
-  const closed = v.places.find((p) => p.state === 'closed');
-  if (closed) assert.throws(() => eng.pickPlaces([closed.id, null]), /not open/);
-  quiet(() => eng.pickPlaces(Policies.pickPlaces(eng, v)));
+  quiet(() => eng.newGame({ seed: 7, name: 'T', origin: 'noble' }));
+  const seen = playMonth(eng);
+  const maps = seen.filter((x) => x.map);
+  assert.deepEqual(maps.map((x) => x.map), [['afternoon'], ['evening']], 'one map per visit, in order');
   const order = ['morning', 'noon', 'afternoon', 'evening', 'night', 'midnight'];
-  const slots = eng.s.deck.map((c) => order.indexOf(c.slot || 'morning'));
-  assert.deepEqual(slots, slots.slice().sort((a, b) => a - b), 'cards come in slot order');
+  const at = seen.map((x) => (x.map ? order.indexOf(x.map[0]) : order.indexOf(x.card && x.slot || 'morning')));
+  assert.deepEqual(at, at.slice().sort((a, b) => a - b), 'cards and maps come in slot order');
+  assert.ok(seen.findIndex((x) => x.card === 'enrolment') < seen.findIndex((x) => x.map), 'the morning plays before the first map');
   assert.equal(content.game.max_cards_per_day, undefined, 'no daily card cap (playtest 2, B36)');
-  assert.equal(eng.s.hist.filter((h) => h.t === 'pick').length, 1);
+  assert.equal(eng.s.hist.filter((h) => h.t === 'pick' && h.turn === 1).length, 2);
+  // a closed place can't be picked
+  const e2 = new Engine(content); quiet(() => e2.newGame({ seed: 7, origin: 'noble' }));
+  let r = quiet(() => e2.advance()); for (let i = 0; i < 50 && r.kind !== 'map'; i++) { if (r.kind === 'card') quiet(() => e2.choose(r.view.pick > 1 ? r.view.options.filter((o) => !o.disabled && o.key !== 'none').slice(0, r.view.pick).map((o) => o.key) : r.view.options.find((o) => !o.disabled).key)); r = quiet(() => e2.advance()); }
+  const closed = r.view.places.find((p) => p.state === 'closed');
+  if (closed) assert.throws(() => e2.pickPlaces([closed.id]), /not open/);
 });
 
 test('max_cards_per_day, when a game sets one, still caps the day', () => {
   const capped = Object.assign({}, content, { game: Object.assign({}, content.game, { max_cards_per_day: 3 }) });
   const eng = new Engine(capped);
-  const r = quiet(() => eng.newGame({ seed: 7, name: 'T' }));
-  const m = r.kind === 'month' ? quiet(() => eng.advance()) : r;
-  const before = eng.s.deck.length;   // cards queued "now" (intro, origin) are already in the deck
-  quiet(() => eng.pickPlaces(Policies.pickPlaces(eng, m.view)));
-  assert.ok(eng.s.deck.length - before <= 3, 'the day is within the cap');
+  quiet(() => eng.newGame({ seed: 7, name: 'T', origin: 'noble' }));
+  const seen = playMonth(eng);
+  assert.ok(seen.filter((x) => x.card).length <= 3, 'the day is within the cap: ' + seen.filter((x) => x.card).length);
 });
 
 test('enrolment: pick two of the first-term courses; later courses open later', () => {

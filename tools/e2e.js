@@ -99,18 +99,17 @@ async function pickOrigin(p) {
   await opts[Math.floor(Math.random() * opts.length)].click(); await p.waitForTimeout(250);
 }
 
-// The map screen: fill every free visit slot with an open place (a different one each day), then begin the day.
+// The map screen (M1): one visit at a time; tapping an open place goes there at once, "Stay in" skips it.
 async function mapPick(p, steps) {
-  // Click the dots (the markers' only hit area); a place closed in the slot being filled just shows a
-  // status line, so keep trying others until both visits are set.
-  for (let i = 0; i < 40; i++) {
-    const go = await p.$('#mapGo:not([disabled])'); if (go) { if (SHOTS && steps < 40) await p.screenshot({ path: path.join(OUT, 'map.png') }); await go.click(); return true; }
-    const open = await p.$$('#mapRoot .mk.st-open:not(.picked) .mk-dot, #mapRoot .ml-row.st-open:not(.picked)');
-    if (!open.length) break;
-    await open[(steps + i * 7) % open.length].click(); await p.waitForTimeout(40);
-  }
-  console.log('  map: could not fill the visits; ' + (await p.evaluate(() => [...document.querySelectorAll('#mapRoot .pick-chip, #mapRoot .map-status')].map((b) => b.innerText).join(' | '))));
-  return false;
+  if (SHOTS && steps < 40) await p.screenshot({ path: path.join(OUT, 'map.png') });
+  const turn = () => p.evaluate(() => lumen.eng.s.hist.filter((h) => h.t === 'pick').length);
+  const before = await turn();
+  const open = await p.$$('#mapRoot .mk.st-open .mk-dot, #mapRoot .ml-row.st-open');
+  if (open.length) { await open[steps % open.length].click(); await p.waitForTimeout(60); }
+  // a place closed in this slot only shows a status line; then stay in
+  if ((await turn()) === before) { const stay = await p.$('#mapGo:not([disabled])'); if (stay) { await stay.click(); await p.waitForTimeout(60); } }
+  if ((await turn()) === before) { console.log('  map: could not leave the map; ' + (await p.evaluate(() => (document.querySelector('#mapRoot .map-status') || {}).innerText || ''))); return false; }
+  return true;
 }
 
 // After a finished game on the server: the run is stored complete, with its feedback, seen counters

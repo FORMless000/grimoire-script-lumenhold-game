@@ -6,9 +6,10 @@
  * `view` comes from Engine.mapView(): {map, slots, places: [{id, name, x, y, state, open[], hours,
  * kind, track, present[], news, festival[], hint}], locked: [{slot, place, event}], season, phase}.
  * The base art is content/world/maps/<map>.svg (an <img>, so it works from file:// too); markers are
- * positioned in percent of its 960 × 680 frame. First tap fills the first open slot, the next tap the
- * next; tapping a picked place clears it. A list view shows the same states as text; arrow keys move
- * between markers and Enter picks.
+ * positioned in percent of its 960 × 680 frame. The map is shown before each visit (playtest 2, M1), for
+ * that slot alone: tapping an open place goes there at once (M9); "Stay in" skips the visit. A festival's place
+ * is highlighted in its slot (picking it joins the festival). A list view shows the same states as text; arrow
+ * keys move between markers and Enter picks. (Several slots still work: then the button confirms them.)
  */
 (function (root) {
   'use strict';
@@ -36,6 +37,8 @@
       if (ok == null) { status = t('map.closed', { name: p.name, hours: (p.hours || []).map((h) => t('slot.' + h)).join(', ') }); return draw(); }
       picks[ok] = id;
       draw();
+      // One visit at a time (M9): the pick is the decision.
+      if (view.slots.length === 1) o.onConfirm(picks.slice());
     }
     function markerClass(p) {
       const c = ['mk', 'st-' + p.state];
@@ -79,20 +82,25 @@
           '<span class="pc-n">' + (i + 1) + '</span>' + esc(t('slot.' + sl)) + ' · ' + esc(id ? byId[id] ? byId[id].name : id : t('map.choose')) + (lock ? ' ✦' : '') + '</button>';
       }).join('');
     }
+    function festBanner() {
+      return (view.festivals || []).map((f) => '<div class="map-fest">✦ ' + esc(t('map.festivalHere', { event: o.eventTitle ? o.eventTitle(f.event) : f.event, place: byId[f.place] ? byId[f.place].name : f.place, slot: t('slot.' + f.slot).toLowerCase() })) + '</div>').join('');
+    }
     function draw() {
-      const ready = picks.every((p, i) => p || lockedAt(i) || !view.places.some((x) => x.open[i]));
+      const single = view.slots.length === 1;
+      const ready = single || picks.every((p, i) => p || lockedAt(i) || !view.places.some((x) => x.open[i]));
+      const q = single ? t('map.q.' + view.slots[0]) + (view.visits > 1 && view.visit ? ' · ' + t('map.visitOf', { n: view.visit, of: view.visits }) : '') : t('map.question2');
       el.innerHTML = '<div class="mapwrap">' +
-        '<div class="map-head"><div><div class="map-title">' + esc(o.title || '') + '</div><div class="map-q">' + esc(view.slots.length > 1 ? t('map.question2') : t('map.question1')) + '</div></div>' +
-        '<div class="map-picks">' + chips() + '</div></div>' +
+        '<div class="map-head"><div><div class="map-title">' + esc(o.title || '') + '</div><div class="map-q">' + esc(q) + '</div></div>' +
+        (single ? '' : '<div class="map-picks">' + chips() + '</div>') + '</div>' + festBanner() +
         (listMode ? '<div class="map-list">' + order.map(listRow).join('') + '</div>'
           : '<div class="map-frame season-' + esc(view.season || 'none') + '"><img class="map-base" alt="" src="content/world/maps/' + esc(view.map) + '.svg"><div class="map-tint"></div>' + order.map(marker).join('') + '</div>') +
         '<div class="map-status" role="status">' + esc(status) + '</div>' +
         '<div class="map-actions"><button class="btn ghost-btn" id="mapList">' + esc(listMode ? t('map.showMap') : t('map.showList')) + '</button>' +
-        '<button class="btn primary" id="mapGo"' + (ready ? '' : ' disabled') + '>' + esc(t('map.go')) + '</button></div></div>';
+        '<button class="btn ' + (single ? 'ghost-btn' : 'primary') + '" id="mapGo"' + (ready ? '' : ' disabled') + '>' + esc(single ? t('map.stayIn') : t('map.go')) + '</button></div></div>';
       el.querySelectorAll('[data-id]').forEach((b) => { b.onclick = () => tap(b.dataset.id); });
       el.querySelectorAll('.pick-chip:not([disabled])').forEach((b) => { b.onclick = () => { picks[+b.dataset.slot] = null; status = ''; draw(); }; });
       el.querySelector('#mapList').onclick = () => { listMode = !listMode; draw(); };
-      el.querySelector('#mapGo').onclick = () => o.onConfirm(picks.slice());
+      el.querySelector('#mapGo').onclick = () => o.onConfirm(single ? [null] : picks.slice());
     }
     function key(e) {
       const btns = [...el.querySelectorAll('[data-id]')];

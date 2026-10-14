@@ -9,8 +9,8 @@ Categories: **B** bugfix · **L** balance fix · **M** mechanic tweak · **C** c
 ## B — Bugfix
 
 - B1. Switching language auto-resolves the card currently on screen (the post-choice card). (W2) **Fixed:** a language switch on the result card re-renders it in place (the result is rebuilt from the log); no re-resolve.
-- B2. Place view: a selection can't be cancelled. (W6) **Rolled into M1:** every map pick clears when tapped again; the one slot that can't be cleared is a festival-locked one (Lantern Night, B3).
-- B3. Sometimes forced to visit the lake: investigate. (W8) **Rolled into M1** (Lantern Night takes visit 2 at the lakeshore every Emberwane, unexplained).
+- B2. Place view: a selection can't be cancelled. (W6) **Rolled into M1:** every map pick clears when tapped again; the one slot that can't be cleared is a festival-locked one (Lantern Night, B3). **Done (M-C):** the map now takes one pick per visit, a tap goes there at once, and "Stay in" skips it; nothing is locked.
+- B3. Sometimes forced to visit the lake: investigate. (W8) **Rolled into M1** (Lantern Night takes visit 2 at the lakeshore every Emberwane, unexplained). **Done (M-C):** festivals no longer take a visit (see M1).
 - B4. Learning a spell must be visible, and backed by an event so it feels significant. (W14) The spells do show in the listing (the run learned 9); mana works. → N3 **Fixed:** a learned spell shows as a highlighted banner on the result card (the event is N3).
 - B5. Vacation days miss the free evening action. (W16) **Fixed:** break days have an evening visit (`day_break`).
 - B6. Vacation work doesn't pause the club/regular-job counters and indicators on place selection. (W18) **Fixed:** break visits no longer count toward a track's term quota, and the map hides term badges on breaks.
@@ -20,17 +20,17 @@ Categories: **B** bugfix · **L** balance fix · **M** mechanic tweak · **C** c
 - B10. Nessa's SVG art: hair and background are the same colour. (W57) **Fixed:** Nessa's hair colour changed.
 - B11. `illu_spot_the_coin` (Y1 Mistveil): variant text not rendered. **Fixed in 5f961b5.**
 - B12. `duel_hall_gallery` (Y1 Frostcall): variant text not rendered. **Fixed in 5f961b5.**
-- B13. `core_flying_lesson` (Y1 Harvestmoon): a course event shown in the evening; belongs in the morning course pool. → M8 **Rolled into M43.**
+- B13. `core_flying_lesson` (Y1 Harvestmoon): a course event shown in the evening; belongs in the morning course pool. → M8 **Rolled into M43.** **Done (M-C):** `slot: morning`.
 - B14. `soc_make_peace` (Y1 Highsun): analyse the trace — how did we become rivals with a positive opinion? ? **Fixed:** intended (rivals pull by hostility, and a rivalry can thaw: `soc_make_peace` needs a rival at rel ≥ 3); the bond note now says "rival" instead of reading as friendship.
-- B15. `life_quiet_afternoon` (Y1 Goldenhaze): appeared at night. **Rolled into M43.**
-- B16. `starfall` (Y1 Starfall): appeared in the morning instead of at night. → X6 **Rolled into M43.**
-- B17. `life_frog_escape` (Y1 Starfall): appeared at night during vacation; should be a course event. → C **Rolled into M43.**
+- B15. `life_quiet_afternoon` (Y1 Goldenhaze): appeared at night. **Rolled into M43.** **Done (M-C):** `slot: afternoon`.
+- B16. `starfall` (Y1 Starfall): appeared in the morning instead of at night. → X6 **Rolled into M43.** **Done (M-C):** `slot: night`.
+- B17. `life_frog_escape` (Y1 Starfall): appeared at night during vacation; should be a course event. → C **Rolled into M43.** **Done (M-C):** it is an alchemy course card (`track: alchemy`), drawn in that course's morning or at its place.
 - B18. `club_fair_v3` (Y2 Emberwane): the club fair repeated. Yearly by design; the fair now knows your state (M35).
 - B19. `slice_late_lamps` (Y2 Emberwane): does it only appear after learning about the cat? ? → B35 (cocoa cost) **Fixed:** the text introduces Footnote ("the library cat"); the cocoa cost went with B35.
 - B20. `soc_rumour` (Y2 Thawmoon): stopping the rumour didn't affect the relationship. **Rolled into M37** (the friend was at rel 100, the cap).
 - B21. `soc_rival_bet` (Y2 Blossomtide): label says 10 gold, paid 8. **Fixed** with B22 and B25: every crown amount named in prose now matches its tier, and lint warns on a mismatch (`crownCheck`).
 - B22. `soc_gift_given` (Y2 Blossomtide): label says 10 gold, cost 8. **Fixed** (see B21).
-- B23. `soc_become_close` (Y2 Highsun): "talk till sunrise" appeared at noon; should be night. **Rolled into M43.**
+- B23. `soc_become_close` (Y2 Highsun): "talk till sunrise" appeared at noon; should be night. **Rolled into M43.** **Done (M-C):** `time: night`.
 - B24. `illu_bread_smell` (Y3 Mistveil): which skill is checked? It isn't shown in the status UI. ? **Fixed:** a challenge shows the skills it uses ("Enchant · Charm 62%"), on the button and the result.
 - B25. `lyra_family_gala` (Y3 Mistveil): label says 20 gold, cost 15. **Fixed** (see B21).
 - B26. `fox_bond` (Y3 Thawmoon): prose says attending a course, but it was vacation. **Fixed:** a break variant ("follows you through the half-empty corridors").
@@ -41,7 +41,7 @@ Categories: **B** bugfix · **L** balance fix · **M** mechanic tweak · **C** c
 - B31. No ending with Nessa as lover: why? ? (W64) **Fixed:** seven named partner endings (`ending_beloved_<npc>`, Nessa included) replace the generic line when the partner is a character.
 - Also seen in the log (not from the notes): month 2 had 26 card records and month 4 had 20, but only 10 and 14 unique cards; the rest are re-shown cards (feedback, language switch → B1). Values are stored as fractions (mana 76.35, charm +2.55). **Fixed:** the duplicates are the server's append-only log of re-shown cards (not new draws); fractions now show to one decimal when they would round to 0.
 - B32. Month 1's charges run before the origin is chosen: the scholar paid full tuition (30, not 15), started at 0 gold, went hungry in month 2 and took Grisk's loan in month 4. **Do with M32** (a fix now would be thrown away). (log) **Fixed with M32.**
-- B33. A break month's visit is picked before the break plan is chosen: "work" months visited the workshop and the Lumen Ledger, not the job (Y1 Deepwinter, Y1 Goldenhaze); an internship month visited the infirmary (Y2 Goldenhaze); "go home" visited the thesis lab (Y3 Goldenhaze). Likely the root of B5, B6 and B28. **Do with M1** (the per-slot picker then comes after the morning's break-plan card). (log)
+- B33. A break month's visit is picked before the break plan is chosen: "work" months visited the workshop and the Lumen Ledger, not the job (Y1 Deepwinter, Y1 Goldenhaze); an internship month visited the infirmary (Y2 Goldenhaze); "go home" visited the thesis lab (Y3 Goldenhaze). Likely the root of B5, B6 and B28. **Do with M1** (the per-slot picker then comes after the morning's break-plan card). (log) **Done (M-C):** each visit is picked when its slot comes, after the morning's break-plan cards.
 - B34. `hs_beneath`: losing the seal check still sets `hollow_sealed`, so the finale can't fail. **Do with X11** (a failed seal needs a designed outcome). (log)
 - B35. Event-level costs that make little sense (moved from L7, L9, L12, L14). Most were added in place to satisfy the routine-budget lint, so the fix must keep that lint passing. Route each cost by the rule of W39: forced costs hit mood by default; health only for clearly unhealthy or dangerous events (and harder); gold only for clear spending; where nothing fits, add a failure outcome that costs something reasonable; adjust the prose to match. Also sweep for the same pattern beyond these notes. Making such checks more random (W40) is M14. **Fixed:** migration 0019 reroutes all 124 costs from 0013/0015/0016 (40 mood, 15 health, 9 new failure outcomes, 34 free safe choices with trimmed gains, 26 kept where they fit) plus the extras: short wages always pay, a recovered purse costs a bun's worth and a lost chase hurts mood, the summoning charm costs mana, the late-lamps cocoa and fox bandage costs are gone, the dummies cost effort, the date at Mabel's is split. `life_fortune_teller` now reads three/eight crowns against tiny/small (fixed with B21).
   - gold costs that shouldn't be: `soc_stargazing` (Y1 Starfall, Y2 Frostcall), `soc_gift_given` "thank her later" (Y2 Harvestmoon), `bram_crying` (Y2 Harvestmoon), `slice_late_lamps` cocoa (Y2 Emberwane), `mira_owl_gift` (Y2 Mistveil), `nessa_burnout` (Y2 Frostcall), `lyra_burnout` (Y2 Deepwinter), `soc_rival_decency` (Y2 Greenrise, cost something else), `fox_injured` (Y3 Mistveil), `duel_hall_dummies` (Y3 Frostcall, ?), `soc_lost_notes` (Y3 Deepwinter), `soc_partner_anniversary` (Y3 Stormbloom, receiving a gift), `ledger_office_unprintable` (Y3 Stormbloom, ?), `soc_drift` (Y3 Greenrise), `soc_partner_date` (Y4 Emberwane, the bill is on them);
@@ -78,8 +78,8 @@ Categories: **B** bugfix · **L** balance fix · **M** mechanic tweak · **C** c
 - C22. `hs_last_winter` (Y4 Mistveil): what is this, and why a special node? ? Confusing as is. **Do with X11.**
 - C23. `ilse_village` (Y4 Mistveil): met too late; push earlier unless the plot intends it. ? **Rolled into X11** (her gate needs 2 Hollow Star clues, which this run had only from Y3 Mistveil; a random draw then took 11 months; the design has Ilse arrive in year 2).
 - C24. `soc_spark` (Y4 Frostcall): a spark while already dating doesn't fit. **Fixed:** `soc_spark` needs no current partner (`bonds(partner) == 0`).
-- C25. `nessa_typo` (Y1 Mistveil): states a time of day; tag it so. (was M26) **Rolled into M43.**
-- C26. `nessa_burnout` (Y2 Frostcall): evening-only. (was M27) **Rolled into M43.**
+- C25. `nessa_typo` (Y1 Mistveil): states a time of day; tag it so. (was M26) **Rolled into M43.** **Done (M-C):** `time: morning`.
+- C26. `nessa_burnout` (Y2 Frostcall): evening-only. (was M27) **Rolled into M43.** **Done (M-C):** `time: evening night`.
 - C27. `curse_cure_2` (Y2 Starfall): trigger from the clue (actually going to the forest), not automatically. (was M28) **Fixed:** Maud sends you to the Whisperwood (`moonpetal_sought`); the moonpetal card waits there, by night, until you go (a failure means another visit, not a timer).
 - C28. `y3_interview` (Y4 Emberwane): don't state skills as hard requirements. → X10 (was M30) **Fixed:** challenge labels no longer carry a skill suffix (47 labels: "(Lore)", "(Charm)"…), since the button names the skills (B24). The career fair's own skill gates go with X10.
 
@@ -87,15 +87,15 @@ Categories: **B** bugfix · **L** balance fix · **M** mechanic tweak · **C** c
 
 Order within M: M42 → M41 · M43 → M8 · M10 → M6 · M39 → M5, M11 · M1 → M9.
 
-- M1. Show the place picker before each afternoon and evening, not all in the morning. (W1) Includes B33. Includes B3: festivals no longer force a visit; the map highlights the festival at its place and slot instead (Lantern Night at the lakeshore, and other festivals where it applies).
-- M2. Most places open in both afternoon and evening; edit their events to match. (W3)
-- M3. Don't pre-plan the whole day/month of events (W4); drop the per-day event progress indicator (W4).
+- M1. Show the place picker before each afternoon and evening, not all in the morning. (W1) Includes B33. Includes B3: festivals no longer force a visit; the map highlights the festival at its place and slot instead (Lantern Night at the lakeshore, and other festivals where it applies). **Done (M-C):** the day runs slot by slot; the map opens for each visit when its slot comes. Festivals are marked at their place and slot (a banner above the map), and picking the place draws them; the visit is not forced.
+- M2. Most places open in both afternoon and evening; edit their events to match. (W3) **Done (M-C):** 16 places gained a second visit slot (migration 0022); the bakery keeps baker's hours and internship hosts their own. Place events whose text names a time are tagged `time:`.
+- M3. Don't pre-plan the whole day/month of events (W4); drop the per-day event progress indicator (W4). **Done (M-C):** the director fills each slot when the player reaches it; the day pips are gone.
 - M4. Courses show their potential outcomes up front (W11); exams become events, not background checks, so they feel significant (W12). **Done (M-B):** exams are cards (`@game exam: course_exam`, one per enrolled course in a term's last month: answer steadily, or go for top marks), showing the pass and A/B chances; the enrolment menu shows each course's skill, exam tier, spells and pass chance. The grade spread is L1.
 - M5. Combat entrances (currently checks) spend mana. (W15) **Done (M-B):** entering combat costs mana (`@balance combat_cost: small`), shown in the preview and on the button.
 - M6. Vacation work: choose from candidate jobs instead of plain "work" (W17); `break_plan` (Y1 Goldenhaze): job selection right after "work full-time". Decided (D2): choosing to work on campus pushes an automatic job-choice event; board is still paid; no double wage; the full-time jobs are higher-paying and drawn from a separate pool. Decided (D10): the vacation gigs are X15. **Stub:** two baseline gigs with a few events each (X15 fills them). Needs M10 first.
-- M7. Time of day shown by subtle background colour, not only words. (W19)
-- M8. `core_flying_lesson` (Y1 Harvestmoon): afternoon/evening pools hold only events set at that place, or place-independent ones. → M43
-- M9. Picker flow after M1: no confirmation for the first place, no "…" card. (W7)
+- M7. Time of day shown by subtle background colour, not only words. (W19) **Done (M-C):** each slot tints the background (`body[data-slot]`).
+- M8. `core_flying_lesson` (Y1 Harvestmoon): afternoon/evening pools hold only events set at that place, or place-independent ones. → M43 **Done (M-C):** course events drawn in visits only at their own place; see M43.
+- M9. Picker flow after M1: no confirmation for the first place, no "…" card. (W7) **Done (M-C):** a tap on the map goes there; the pick's outcome (attendance, pay) is a toast, not a card.
 - M10. Job pay through events: most job events say the player is paid and actually pay; the job's bonus is paid per shift in events, not when the time is assigned. (W31) Decided (D10): all job and gig pay comes through events instead of today's flat rate, keeping roughly the expected economy with some variation.
 - M11. UI distinguishes minigame events from skill checks, even before minigames exist. (W33) **Done (M-B):** every option button now shows its roll; combat is marked with a sword, apart from skill checks (this also completes B24: the button names the skills).
 - M12. Promotions reset performance. (W34)
@@ -106,7 +106,7 @@ Order within M: M42 → M41 · M43 → M8 · M10 → M6 · M39 → M5, M11 · M1
 - M17. Pushed relationship events count toward warmth only when the outcome moves a positive relationship up or a negative one down (if both options go the same way, count the larger). (W52)
 - M18. Visiting a place where a character is counts as actively seeking them, and adds warmth. (W53)
 - M19. When a character is at home, or the player is on an internship, their interactions become passive letters. (W55) Needs M42 (break schedules); X7 decides who goes away.
-- M20. Lumen/Hollow display starts from the bottom and fills with two colours/icons, not from the middle. (W58)
+- M20. Lumen/Hollow display starts from the bottom and fills with two colours/icons, not from the middle. (W58) **Done (M-C):** the meter fills from the bottom, gold for Lumen and violet for Hollow, each with its own icon.
 - M21. 48 months instead of 47. (W60) **Stub:** month 48 holds the existing graduation cards; X10 fills it. **Done (M-A):** 48 months; year 4's last break is the wrap-up (no plan, free board, no duties); month 48 holds only the graduation cards (X10 fills it).
 - M22. Grisk's debt: what happens if unpaid? ? Make it harsher and show it as events. (W28)
 - M23. `job_board_visit` (Y1 Harvestmoon): choosing no job shouldn't raise mood; list each job's expected average pay.
@@ -149,7 +149,7 @@ Order within M: M42 → M41 · M43 → M8 · M10 → M6 · M39 → M5, M11 · M1
   - **Stub:** the lead-in, the night card with a few variants, and one event per night place, so the turn is playable; X13 fills it.
   - Needs M42 (occasional night schedules) and M39 (duelling).
 - M42. Schedule language: a chance per schedule entry (`observatory@midnight:30`), so characters are there some nights, not every night (Corvin and Kael already have midnight schedules); and separate break schedules, so characters can be away over breaks. Prerequisite for M19, M41 and X7. (from X7, X13)
-- M43. Social and world pools are drawn through the whole day, not only at noon (social) and night (world): same budget, spread more evenly over the slots. Some events get time reinforcement: a time tag that favours or requires their slot. Includes B13, B15, B16, B17, B23, C25 and C26; → M8.
+- M43. Social and world pools are drawn through the whole day, not only at noon (social) and night (world): same budget, spread more evenly over the slots. Some events get time reinforcement: a time tag that favours or requires their slot. Includes B13, B15, B16, B17, B23, C25 and C26; → M8. **Done (M-C):** `@game spread: social world` deals those cards across the day's slots (same budget); `time:` favours an event's slots (×3, ×0.3 elsewhere), `slot:` requires one. 79 events tagged (migrations 0021, 0022).
 
 ## L — Balance fix
 

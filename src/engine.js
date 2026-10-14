@@ -140,6 +140,7 @@
       if ((s.version || 1) < SAVE_VERSION) throw new SaveVersionError(s.version || 1);
       if (!s.visitsTo) s.visitsTo = {};
       this.s = s;
+      if (this.dayMode) this.upgradeDay();   // a save from before the slot-by-slot day (M1)
       return this;
     }
 
@@ -940,8 +941,7 @@
       this.runHooks('month_start', summary);
       if (!s.ended) {
         if (this.dayMode) {
-          s.day = { phase: 'pick', picks: null };
-          if (!this.visitSlots().length || !this.mapView().places.some((p) => p.state === 'open')) this.buildDay([], []);
+          this.startDay();   // the day is filled slot by slot as it's played (playtest 2, M1)
         } else this.buildDeck();
       }
       const shown = summary.filter((x) => Object.keys(x.deltas).length || x.notes.length || x.say.length);
@@ -1109,8 +1109,12 @@
       const s = this.s;
       if (s.ended) return this.ending();
       if (s.cur) return { kind: 'card', view: this.withContext(s.cur, () => this.view(s.cur)), onShow: null };
-      if (s.day && s.day.phase === 'pick') return { kind: 'map', view: this.mapView() };
-      while (s.deck.length) {
+      for (;;) {
+        if (s.day && s.day.phase === 'pick') return { kind: 'map', view: this.mapView() };
+        if (!s.deck.length) {
+          if (s.day && s.day.v === 2 && !s.day.done) { this.stepDay(); continue; }
+          break;
+        }
         const item = s.deck.shift();
         const e = this.c.events[item.id];
         if (!e) { this.warn(new Error('unknown event in deck: ' + item.id)); continue; }

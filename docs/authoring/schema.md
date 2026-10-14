@@ -91,6 +91,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `wrapup` | structured |  |
 |  | `day_last` | structured |  |
 |  | `exam` | text |  |
+|  | `spread` | text |  |
 | `@balance` | `sizes` | structured |  |
 |  | `difficulty` | structured |  |
 |  | `weights` | structured |  |
@@ -173,6 +174,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `variant` | text |  |
 |  | `place` | text |  |
 |  | `slot` | text |  |
+|  | `time` | text |  |
 |  | `replaces` | text |  |
 |  | `track` | text |  |
 |  | `level` | text |  |

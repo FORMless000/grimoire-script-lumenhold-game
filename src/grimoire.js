@@ -177,7 +177,9 @@
       // the origin menu shown before the game (its options are the origins); the final year's wrap-up months; the last day's recipe
       'origins', 'wrapup', 'day_last',
       // the exam card pushed for each enrolled course in a term's last month (playtest 2, M4)
-      'exam'], effects: [] },
+      'exam',
+      // sources whose cards are dealt across the whole day instead of their own slot (playtest 2, M43)
+      'spread'], effects: [] },
     // Numbers (design §8.4): size and difficulty tiers, option-value weights, the expected-skill curve.
     balance: { noId: true, props: ['sizes', 'difficulty', 'weights', 'curve', 'desc', 'xp_cost', 'rank_xp', 'performance',
       // the combat stub's mix and entry cost (playtest 2, M39, M5); odds slopes per swing word (M14)
@@ -190,7 +192,8 @@
     state: { props: ['name', 'desc', 'art', 'tags', 'group', 'duration', 'hidden', 'kind', 'money'], effects: ['tick', 'on_add', 'on_expire', 'on_remove'] },
     event: { props: ['title', 'text', 'art', 'scene', 'tags', 'when', 'weight', 'trigger', 'actor', 'repeat', 'priority', 'type', 'chain', 'class', 'tone', 'variant',
       // phase 2b: where and when it happens, who is in it, what it belongs to (design §5, §6, §7, §10.6)
-      'place', 'slot', 'replaces', 'track', 'level', 'rank', 'lesson', 'arc', 'beat', 'plan', 'cast', 'offers', 'pick', 'scope',
+      // `time:` the slots it favours (M43), where `slot:` requires one
+      'place', 'slot', 'time', 'replaces', 'track', 'level', 'rank', 'lesson', 'arc', 'beat', 'plan', 'cast', 'offers', 'pick', 'scope',
       // `per: <role>`: once / repeat count per character in that cast role (what `actor: any` did)
       'per'], effects: ['on_show'], options: true },
     ending: { props: ['title', 'text', 'art', 'scene', 'when', 'priority', 'tags', 'kind', 'slot', 'excludes'], effects: [] },
@@ -210,7 +213,7 @@
   const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'discover', 'hinted_when', 'unlock', 'prereq']);
   const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment', 'warn_below',
     'schema', 'last_month', 'max_cards_per_day', 'level', 'rank', 'beat', 'pick', 'opens']);
-  const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'params', 'draws', 'legacy', 'excludes', 'replaces']);
+  const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'params', 'draws', 'legacy', 'excludes', 'replaces', 'time', 'spread']);
   const TIERS = ['tiny', 'small', 'medium', 'large', 'huge'];
   const DIFFICULTIES = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
   // Challenge kinds (design §8.3) and the skill each one tests (`using <skill>` overrides).

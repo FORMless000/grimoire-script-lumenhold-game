@@ -165,9 +165,6 @@ details.adv input { margin-top: 8px; }
 .choice .chk.roll.combat { color: #f0a868; font-weight: 600; }
 .chip.combat { border-color: rgba(240, 168, 104, .55); }
 .choice.single { justify-content: center; text-align: center; }
-.pips { display: flex; gap: 6px; margin-top: 12px; align-items: center; color: var(--muted); font-size: 12px; }
-.pips i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255, 255, 255, .15); }
-.pips i.on { background: var(--gold); }
 
 /* ---------------- Side panel ---------------- */
 .side { grid-area: side; border-left: 1px solid var(--line); background: rgba(14, 17, 36, 0.6); display: flex; flex-direction: column; min-height: 0; }
@@ -320,6 +317,22 @@ details.adv input { margin-top: 8px; }
 .choice.up:hover:not(:disabled) { border-color: #8fb8ff; }
 .chip.check-part { background: rgba(230, 184, 74, .18); color: var(--gold-2); }
 .meter.neg .fill { background: #7a5ac8; }
+.meter.pos .fill { background: var(--gold); }
+.meter .ico-pos { display: none; }
+.meter.pos .ico-pos { display: contents; }
+.meter.pos .ico-neg { display: none; }
+.meter .ico-pos svg, .meter .ico-neg svg { position: relative; z-index: 1; color: #fff; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .5)); }
+.map-fest { margin: 0 0 10px; padding: 8px 12px; border-radius: 12px; background: rgba(240, 200, 104, .12); border: 1px solid rgba(240, 200, 104, .35); color: var(--gold-2); font-size: 13.5px; }
+.toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 60; max-width: min(520px, calc(100vw - 32px)); padding: 10px 16px; border-radius: 14px; background: var(--night-3); border: 1px solid var(--line); color: var(--text); font-size: 13.5px; box-shadow: 0 12px 30px rgba(0, 0, 0, .45); animation: toast 2.6s ease forwards; pointer-events: none; }
+@keyframes toast { 0% { opacity: 0; transform: translate(-50%, 8px); } 10%, 80% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
+/* Time of day (M7): a faint wash over the page in the slot being played. */
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; background: var(--slot-tint, transparent); transition: background 1.2s ease; }
+body[data-slot="morning"] { --slot-tint: radial-gradient(120% 80% at 50% 0%, rgba(255, 214, 150, .10), transparent 60%); }
+body[data-slot="noon"] { --slot-tint: radial-gradient(120% 80% at 50% 0%, rgba(255, 244, 200, .09), transparent 60%); }
+body[data-slot="afternoon"] { --slot-tint: radial-gradient(120% 80% at 50% 0%, rgba(255, 190, 120, .09), transparent 60%); }
+body[data-slot="evening"] { --slot-tint: radial-gradient(120% 80% at 50% 0%, rgba(230, 120, 140, .10), transparent 60%); }
+body[data-slot="night"] { --slot-tint: radial-gradient(120% 80% at 50% 0%, rgba(80, 90, 200, .12), transparent 60%); }
+body[data-slot="midnight"] { --slot-tint: radial-gradient(120% 80% at 50% 0%, rgba(40, 20, 90, .22), transparent 65%); }
 .panel-res { display: flex; gap: 8px; margin: 2px 0 10px; flex-wrap: wrap; }
 .pres { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 10px; font-size: 13px; color: var(--muted); }
 .pres b { color: var(--text); font-variant-numeric: tabular-nums; }

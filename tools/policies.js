@@ -175,6 +175,9 @@ function pickPlaces(eng, view, opts = {}) {
     if (view.locked.some((l) => l.slot === sl)) { picks.push(null); return; }
     const open = view.places.filter((p) => p.state === 'open' && p.open[i]);
     if (!open.length) { picks.push(null); return; }
+    // A festival on today's map (M1: highlighted, no longer forced): most players go.
+    const fest = (view.festivals || []).find((f) => f.slot === sl && open.some((p) => p.id === f.place));
+    if (fest && eng.rand() < 0.8) { picks.push(fest.place); return; }
     const duty = opts.truant ? [] : open.filter((p) => p.track && p.track.due > picks.filter((x) => x === p.id).length);
     const fresh = open.filter((p) => p.news && !picks.includes(p.id));
     // social:<npc> seeks out the places where that character is
