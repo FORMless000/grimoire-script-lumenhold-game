@@ -523,7 +523,8 @@
     // last), {cond: a|b} conditional. `key` is the event id: cycles and sequences follow how often it was seen.
     // Deterministic and RNG-free (a hash of seed, turn and text), so it never changes what happens.
     vary(text, actor, key) {
-      if (!/\{[^{}]*[|:]/.test(text)) return text;
+      // Fast path: no braces, or nothing that could be a variant. (A variant may open with a token, `{~{partner} …|…}`.)
+      if (text.indexOf('{') < 0 || !/[|:]/.test(text)) return text;
       let out = '', i = 0;
       while (i < text.length) {
         if (text[i] !== '{') { out += text[i++]; continue; }
