@@ -43,7 +43,8 @@ function reach(content) {
       case 'has': return F.state.has(a0) ? null : 'has(' + a0 + ')';
       case 'clue': return F.clue.has(a0) ? null : 'clue(' + a0 + ')';
       case 'met': return F.npc.has(a0) ? null : 'met(' + a0 + ')';
-      case 'member': case 'enrolled': case 'applied': return F.track.has(a0) ? null : n.n + '(' + a0 + ')';
+      case 'member': case 'applied': if (!c.tracks[a0] && Object.values(c.tracks).some((d) => d.kind === a0)) return [...F.track].some((id) => c.tracks[id] && c.tracks[id].kind === a0) ? null : n.n + '(' + a0 + ')';   // a kind: any of it; falls through
+      case 'enrolled': return F.track.has(a0) ? null : n.n + '(' + a0 + ')';
       case 'passed': return F.track.has(a0) ? null : 'passed(' + a0 + ')';
       case 'discovered': return F.place.has(a0) ? null : 'discovered(' + a0 + ')';
       case 'spell_level': return F.spell.has(a0) ? null : 'spell(' + a0 + ')';
@@ -80,7 +81,7 @@ function reach(content) {
     G.walkEffects(effects || [], (st) => {
       switch (st.t) {
         case 'flag': for (const f of [].concat(st.flags || st.names || st.flag || [])) F.flag.add(f); break;
-        case 'gain': F.state.add(st.state); { const d = c.states[st.state]; if (d) { produce(d.on_add); produce(d.tick); } } break;
+        case 'gain': F.state.add(st.state); { const d = c.states[st.state]; if (d) { produce(d.on_add); produce(d.tick); produce(d.on_expire); produce(d.on_remove); } } break;
         case 'find': F.clue.add(st.clue); break;
         case 'discover': F.place.add(st.place); break;
         case 'meet': case 'rel': case 'spark': case 'bond': if (st.npc && c.npcs[st.npc]) F.npc.add(st.npc); break;
@@ -118,7 +119,7 @@ function reach(content) {
     const offered = new Set([...R].map((id) => c.events[id].offers).filter(Boolean));
     for (const t of Object.values(c.tracks)) if (offered.has(t.kind + 's') && (!t.prereq || !need(t.prereq.ast))) { F.track.add(t.id); if (t.kind === 'club' && t.place) F.place.add(t.place); }
     // the engine pushes track notices at term end for any track
-    if (F.track.size) { F.queued.add('track_warning'); F.queued.add('track_promotion'); if (c.game.exam) F.queued.add(c.game.exam); }
+    if (F.track.size) { F.queued.add('track_warning'); F.queued.add('track_promotion'); F.queued.add('job_term_review'); if (c.game.exam) F.queued.add(c.game.exam); }
     for (const e of Object.values(c.events)) {
       const rl = roles(e);
       if (R.has(e.id)) { reopen(e, rl); continue; }

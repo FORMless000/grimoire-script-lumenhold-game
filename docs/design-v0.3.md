@@ -325,11 +325,11 @@ Chosen at the start of each break, as a menu:
 | Stay at the castle | always | skeleton crew, secrets, cheap rent (6/month) |
 | Go home | always | home map, family and old friends, free board |
 | Travel | from year 2, costs crowns | travel map (port city / the North) |
-| Work full-time | with a job | extra shifts at double pay |
+| Work on campus | always | a holiday gig chosen on a pushed card (the grounds, the kitchens; X15 adds more), paid through its cards and better than a term job; board still paid; no double wage (playtest 2, M6) |
 | Research internship | from year 2, by application (§7.5) | host map, project, stipend |
 | Thesis retreat | year 4 winter | thesis progress |
 
-v0.3 ships castle, home and work full-time. Travel and internship maps follow as content (Phase 3/4).
+v0.3 ships castle, home, work on campus and internships. Travel and internship maps follow as content (Phase 3/4).
 
 ### 4.4 Festivals and fixed beats
 
@@ -625,9 +625,11 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 
 ### 7.4 Clubs and jobs
 
-- **Joining or changing:** the Club Fair (Emberwane) and the **Job Board place**. Visiting it *is* the change event; no prompt every term.
+- **Joining or changing:** the Club Fair (Emberwane) and the **Job Board place**. Visiting it *is* the change event. At the fair a member stays, resigns or switches; a switch shows what it leaves (rank and performance). The job board lists each job's pay per shift. Declining gives no mood (playtest 2, M23, M35).
+- **Each term:** joining mid-term asks at most one visit per month left (M34). At term end every job asks whether you stay on (`job_term_review`, M33).
+- **Pay through events** (M10): a job visit draws a shift card first, and its options pay the wage (`wage`, a share of `pay:` at your rank) with tips and fines as the spread.
 - **Ranks:**
-  - Promotion = performance ≥ 70 + rank XP (from track events) + a milestone event.
+  - Promotion = performance ≥ 70 + rank XP (from track events) + a milestone event. A new rank starts at performance 50 (M12).
   - Perks per rank (clubs: fixtures, contacts, spells; jobs: pay, discounts, access to places).
 - **Event depth targets:**
   - 15–20 events per course level;
@@ -637,12 +639,8 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 
 ### 7.5 Research internships
 
-- **Application** (Stormbloom–Greenrise), at the Job Board or through a professor. Gates per host:
-  - GPA ≥ 2.5
-  - discipline level ≥ II
-  - prestigious hosts need a faculty recommendation (rel ≥ 30)
-
-  The offer or rejection arrives as an event in Blossomtide.
+- **Application** (Greenrise): apply to as many hosts as you like; each letter after the first costs gold and mood (playtest 2, M36). A host needs its discipline at level II (shown locked, with the reason, until you have it).
+- **Offers** (Blossomtide): one sealed letter per application, opened one at a time. A host's GPA bar is checked first, then the interview, a `challenge research` on the host's skill (a word from Thorne makes the Conclave's easier). A rejection lets you open the next letter; an acceptance withdraws the rest.
 - **Hosts:**
   - Royal Library archives (lore)
   - Conclave laboratory (arcana)
@@ -651,7 +649,8 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
   - Beastcraft field station (vigor)
   - Thornwick exchange lab (charm)
   - Office of Unseen Affairs (guile; by invitation)
-- **When:** summer of year 2 and year 3. Year 3's winter break also offers short ones.
+- **When:** the summer of year 2 and year 3, one summer per offer (M16). A strong summer (performance ≥ 80) brings a letter asking you back; otherwise the post ends, and next year needs a new application.
+- **Away:** an internship draws no campus pools; the day's social and world cards come from the internship's own events, and nobody from campus comes calling.
 - **Play:** a break day on the host's map: morning assignment card, two visits, night.
   - A supervisor NPC (authored, or a spawned archetype once Phase 4 exists).
   - **One project** with `challenge research` checkpoints (auto-resolved until §T1).
@@ -720,6 +719,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 
 - **Forced sinks** (`class: incident`, pushed, rare): medical bills, family emergencies, fines, a broken wand.
 - **Unpaid rent or board** → `hungry` (−4 health, −4 mood a month). Twice in a row → debt with Grisk.
+- **Unpaid debt** escalates (playtest 2, M22): the first missed payment brings a reminder card (ignored, it adds a month), the next the collectors.
 - **Money-maxxing sinks:** luxuries, bribes, patronage (crowns for renown), risky investments, donations that unlock places.
 - **Income:** job shifts, break work, windfalls.
 

@@ -125,6 +125,11 @@
       return { map: breakMap, slots, places, locked: [], festivals: fest.filter((f) => f.visit < slots.length).map((f) => ({ slot: slots[f.visit], place: f.place, event: f.event })),
         visit: picking ? vi + 1 : null, visits: this.visitSlots().length, season: this.seasonOf(), phase: this.isWrapUp() ? 'wrapup' : this.phaseOf() };
     },
+    // Whether a visit to this job's place will draw one of its shift cards, which pay the wage (M10).
+    hasShift(id) {
+      const t = this.s.tracks[id], ix = this.directorIndex(), used = new Set(this.s.deck.map((d) => d.id));
+      return !!t && (ix.byTrack[id] || []).some((e) => (!e.rank || e.rank <= t.rank + 1) && !used.has(e.id) && this.eligible(e, used) && this.timeFit(e) && this.candidates(e).length);
+    },
     // The player's pick for the visit on the map now (M1): a place id or null (stay in). Returns the attendance outcome.
     // Extra ids (pickPlaces([a, b]), tests and tools) are kept for the day's next visits.
     pickPlaces(ids) {
@@ -375,7 +380,12 @@
       const spreading = new Set(this.c.game.spread || []);
       const count = spreading.has(r.source) ? 0 : r.min == null ? 1 : r.min + Math.floor(this.rand() * ((r.max || r.min) - r.min + 1));
       const plan = Object.keys(s.states).find((k) => this.c.states[k] && this.c.states[k].kind === 'plan');
-      const poolOf = (source) => (source === 'social' ? ix.social
+      // Away on a plan tagged `away` (an internship, M16): no campus pools. Social and world cards come from the
+      // plan's own pool and the host's (a member internship track's) events, and nobody from campus comes calling.
+      const away = plan && (this.c.states[plan].tags || []).includes('away') && this.phaseOf() === 'break';
+      const awayPool = away ? [].concat(ix.byPlan[plan.replace(/^plan_/, '')] || [], ...Object.entries(s.tracks || {}).filter(([, t]) => t.kind === 'internship' && t.status === 'member').map(([id]) => ix.byTrack[id] || [])) : null;
+      const poolOf = (source) => (away && source !== 'special' ? awayPool
+        : source === 'social' ? ix.social
         : source === 'special' ? ix.slotBound.filter((e) => e.slot === r.slot)
         : source === 'plan' ? (plan && ix.byPlan[plan.replace(/^plan_/, '')]) || ix.ambient
         : ix.ambient.concat(ix.slotBound));
@@ -429,7 +439,7 @@
         const pool = poolOf(r.source);
         for (let k = 0; k < count; k++) { const it = this.draw(pool, used, day.concat(items), { prio: r.source === 'social' ? 'social' : 'ambient' }); if (it) items.push(it); }
         // Track 1 at lunch (design §5.5): anyone whose schedule has them at a place you know in this slot, met or not.
-        if (r.source === 'social') {
+        if (r.source === 'social' && !away) {
           const here = Object.keys(s.npcs).filter((id) => !withToday.has(id) && (this.c.npcs[id].schedule || []).some((x) => x.slots.includes(r.slot) && s.places[x.place]));
           if (here.length && this.rand() < FRIENDS.lunch) {
             const w = here.map((id) => 10 + this.pull(id)); let x = this.rand() * w.reduce((a, b) => a + b, 0), k = 0;
@@ -450,7 +460,7 @@
       }
       // Track 2 (design §5.5): each character you know may come and find you this month, on their own roll,
       // in the friend slot, after its other cards.
-      if (r.slot === d.friendSlot && !this.isLastDay()) {
+      if (r.slot === d.friendSlot && !this.isLastDay() && !away) {
         const brk = this.phaseOf() === 'break';
         const callers = Object.keys(s.npcs).filter((id) => s.npcs[id].met && !withToday.has(id)).sort((a, b) => this.pull(b) - this.pull(a));
         let calls = 0;

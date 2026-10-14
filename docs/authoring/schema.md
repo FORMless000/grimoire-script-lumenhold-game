@@ -103,6 +103,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `combat` | structured |  |
 |  | `combat_cost` | text |  |
 |  | `swing` | structured |  |
+|  | `wage` | structured |  |
 | `@preset id` | `params` | text |  |
 |  | `desc` | text |  |
 | `@resource id` | `name` | text | yes |

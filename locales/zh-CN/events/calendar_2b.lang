@@ -25,12 +25,18 @@ title [ce4fee] = 社团招新会
 text [fa6309] = 社团招新会挤满了庭院。每张桌子都想要你，每位社长都发誓自家才是最要紧的。{rel(lyra) >= 6: 莱拉站在决斗社的桌边，假装没在看你往哪儿走。|}
 # en: The courtyard full of recruiting tables, banners snapping, a duelling demonstration drawing a crowd.
 scene [72616b] = 庭院里摆满招新桌，旗帜猎猎作响，一场决斗示范引来一圈围观者。
-# en: Not this year
-opt.none.label [594ecf] = 今年算了
-# en: You can join at next year's fair.
-opt.none.hint [2bec0b] = 明年的招新会还能加入。
-# en: You collect three leaflets and a free biscuit, and sign nothing.
-opt.none.say.1 [87e11a] = 你领了三张传单和一块免费饼干，什么也没签。
+# en: {member(club): Stay with your club|Not this year}
+opt.none.label [9e77c4] = {member(club): 留在你的社团|今年算了}
+# en: {member(club): Another year with the same table.|You can join at next year's fair.}
+opt.none.hint [5c873f] = {member(club): 和同一张桌子再过一年。|明年的招新会还能加入。}
+# en: {member(club): {~You stop by your own club's table to help hand out leaflets. Someone asks you if it's worth joining. You say yes and mean it.|You walk past every other table with the ease of someone already spoken for.}|You collect three leaflets and a free biscuit, and sign nothing.}
+opt.none.say.1 [b61f4a] = {member(club): {~你在自己社团的桌边帮忙发传单。有人问你值不值得加入。你说值得，而且是真心的。|你从别的桌子前走过，带着一种名花有主的从容。}|你领了三张传单和一块免费饼干，什么也没签。}
+# en: Resign from your club
+opt.quit.label [990542] = 退出你的社团
+# en: You can join again at next year's fair, as a new member.
+opt.quit.hint [5bb00e] = 明年的招新会还能以新成员身份重新加入。
+# en: {~You hand back your club pin at the table where you got it. It feels smaller than it did.|You resign. Your evenings are yours again, and nobody will expect you anywhere.}
+opt.quit.say.1 [0a0a06] = {~你在当初领徽章的那张桌子前把社团徽章交了回去。它看起来比当时小了。|你退出了。晚上又归你自己了，也没人会在哪儿等你。}
 
 @event job_board_visit
 # en: The Job Board
@@ -69,10 +75,10 @@ opt.home.label [c93952] = 回家
 opt.home.hint [1bbb35] = 家人、老朋友、免费食宿。
 # en: The barge, the coach, the last mile on foot. Home is smaller than you remember, and warmer.
 opt.home.say.1 [0b9342] = 驳船、马车，最后一里路靠双脚。家比记忆中小，也比记忆中暖。
-# en: Work full-time
-opt.work.label [02d5b1] = 全职打工
-# en: Extra shifts at double pay.
-opt.work.hint [155d60] = 加班，双倍工钱。
+# en: Work on campus
+opt.work.label [2ebfbe] = 留校打工
+# en: A holiday gig that pays well. Board 8 crowns a month.
+opt.work.hint [6b010a] = 一份工钱不错的假期零工。食宿每月 8 克朗。
 # en: You trade the holidays for wages. Your feet will remember it.
 opt.work.say.1 [e054a1] = 你用假期换了工钱。你的脚会记住这一切。
 # en: Start your internship
@@ -114,6 +120,22 @@ opt.right.label [344baa] = 随它去
 # en: You put the note in a drawer. It doesn't stop existing in the drawer.
 opt.right.say.1 [7973f8] = 你把便条塞进抽屉。它在抽屉里也照样存在。
 
+@event job_term_review
+# en: Another Term?
+title [9e843b] = 再干一学期？
+# en: The term is over, and so is the rota for {track}. A fresh one goes up for next term, and there's a gap where your name usually goes. {~Nobody would blame you either way.|Your feet have an opinion. So does your purse.|Someone has already pencilled a question mark next to it.}
+text [7bad94] = 学期结束了，{track}的排班表也到头了。下学期的新表会贴出来，你平常写名字的地方空着一格。{~怎么选都没人会怪你。|你的脚有意见。你的钱袋也有。|已经有人在旁边用铅笔画了个问号。}
+# en: A staff rota pinned to a door, last term's names crossed off, a blank column waiting for next term's.
+scene [2d74da] = 门上钉着一张员工排班表，上学期的名字都划掉了，空出一栏等着下学期。
+# en: Stay on next term
+opt.left.label [7e4424] = 下学期继续干
+# en: {~You write your name in the gap. Another term of shifts, another term of wages.|Your name goes back on the rota, in ink this time.}
+opt.left.say.1 [46037e] = {~你在空格里写上名字。又一学期的班，又一学期的工钱。|你的名字回到了排班表上，这次用的是墨水。}
+# en: Resign
+opt.right.label [b07941] = 辞职
+# en: {~You hand in your notice, politely. The evenings are yours again; the purse is lighter for it.|You leave the gap empty. You can always find work again, if you need to.}
+opt.right.say.1 [599e30] = {~你客客气气地递了辞呈。晚上又归你了；钱袋也因此轻了。|你让那一格空着。真需要的话，总还能再找活干。}
+
 @event track_promotion
 # en: A Step Up
 title [39f03f] = 更上一层
@@ -133,46 +155,70 @@ opt.right.say.1 [ffa0ad] = “那就等你准备好。”他们是认真的。�
 @event intern_application
 # en: Applications Open
 title [e7df06] = 开始申请
-# en: Summer research posts are open. Six notices, six seals, six lists of requirements. You can put your name to one this year.
-text [73a8b3] = 夏季研究岗位开放申请了。六张告示，六枚火漆，六份要求清单。今年你只能报名其中一个。
+# en: Summer research posts are open. Six notices, six seals, six lists of requirements. Apply to as many as you like: the first letter is an evening's work, and every one after it costs another evening and the postage.
+text [c4837d] = 夏季研究岗位开放申请了。六张告示，六枚火漆，六份要求清单。想申请几个都行：第一封信花你一个晚上，之后每多一封，就再搭上一个晚上和邮费。
 # en: A cluster of notices with wax seals pinned above all the others: summer research posts, each with its own demands.
 scene [a45b3c] = 一簇盖着火漆的告示钉在所有告示上方：夏季研究岗位，各有各的要求。
 # en: The Royal Library
 opt.royal.label [64f580] = 皇家图书馆
-# en: GPA 2.5, Astromancy II, a love of indexes.
-opt.royal.hint [a2a373] = GPA 2.5、星象与占卜 II，以及对索引的热爱。
+# en: GPA 2.5, an interview on lore, a love of indexes.
+opt.royal.hint [fbd651] = GPA 2.5，学识面试，以及对索引的热爱。
+# en: {member(intern_royal_library): They've already asked you back.|Needs Astromancy II.}
+opt.royal.locked [c8e0b8] = {member(intern_royal_library): 他们已经请你回去了。|需要星象与占卜 II。}
+# en: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
+opt.royal.say.1 [69905a] = {~又一封信，又一个晚上，又一张邮票。你的手在一个非常特定的地方发酸。|你写了一遍，划掉一半，又写一遍。邮费从你自己的钱袋里出。}
 # en: You write the letter three times and send the best one. Probably the best one.
-opt.royal.say.1 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+opt.royal.say.2 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
 # en: The Conclave Laboratory
 opt.conclave.label [858e84] = 七塔议会实验室
-# en: GPA 3.0, Evocation II, and a word from Thorne.
-opt.conclave.hint [d26da2] = GPA 3.0、塑能术 II，外加索恩的一句推荐。
+# en: GPA 3.0, an interview on arcana, and a word from Thorne helps.
+opt.conclave.hint [fd28c9] = GPA 3.0，奥术面试，有索恩的一句推荐会更好。
+# en: {member(intern_conclave): They've already asked you back.|Needs Evocation II.}
+opt.conclave.locked [fb2c57] = {member(intern_conclave): 他们已经请你回去了。|需要塑能术 II。}
+# en: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
+opt.conclave.say.1 [69905a] = {~又一封信，又一个晚上，又一张邮票。你的手在一个非常特定的地方发酸。|你写了一遍，划掉一半，又写一遍。邮费从你自己的钱袋里出。}
 # en: You write the letter three times and send the best one. Probably the best one.
-opt.conclave.say.1 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+opt.conclave.say.2 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
 # en: The Guild of Alchemists' Works
 opt.alchemists.label [80cc20] = 炼金师公会工坊
-# en: GPA 2.0, Alchemy II, a strong stomach.
-opt.alchemists.hint [83e289] = GPA 2.0、炼金与治愈 II，还得有个好胃口。
+# en: GPA 2.0, an interview on alchemy, and a strong stomach.
+opt.alchemists.hint [2d4395] = GPA 2.0，炼金面试，还得有个好胃口。
+# en: {member(intern_alchemists): They've already asked you back.|Needs Alchemy II.}
+opt.alchemists.locked [e156fa] = {member(intern_alchemists): 他们已经请你回去了。|需要炼金与治愈 II。}
+# en: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
+opt.alchemists.say.1 [69905a] = {~又一封信，又一个晚上，又一张邮票。你的手在一个非常特定的地方发酸。|你写了一遍，划掉一半，又写一遍。邮费从你自己的钱袋里出。}
 # en: You write the letter three times and send the best one. Probably the best one.
-opt.alchemists.say.1 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+opt.alchemists.say.2 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
 # en: The Observatory Expedition
 opt.expedition.label [a8e59b] = 天文台远征队
-# en: Astromancy II and the legs for a plateau.
-opt.expedition.hint [447abb] = 星象与占卜 II，外加能爬上高原的双腿。
+# en: An interview on vigor, and the legs for a plateau.
+opt.expedition.hint [6f139e] = 体魄面试，外加能爬上高原的双腿。
+# en: {member(intern_expedition): They've already asked you back.|Needs Astromancy II.}
+opt.expedition.locked [f35bc6] = {member(intern_expedition): 他们已经请你回去了。|需要星象与占卜 II。}
+# en: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
+opt.expedition.say.1 [69905a] = {~又一封信，又一个晚上，又一张邮票。你的手在一个非常特定的地方发酸。|你写了一遍，划掉一半，又写一遍。邮费从你自己的钱袋里出。}
 # en: You write the letter three times and send the best one. Probably the best one.
-opt.expedition.say.1 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+opt.expedition.say.2 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
 # en: The Beastcraft Field Station
 opt.field.label [93e08b] = 驭兽野外站
-# en: Beastcraft II. Boots provided, mostly.
-opt.field.hint [9dfc58] = 驭兽与飞行 II。靴子基本上会发。
+# en: An interview on vigor. Boots provided, mostly.
+opt.field.hint [c9d453] = 体魄面试。靴子基本上会发。
+# en: {member(intern_field_station): They've already asked you back.|Needs Beastcraft II.}
+opt.field.locked [5a1cba] = {member(intern_field_station): 他们已经请你回去了。|需要驭兽与飞行 II。}
+# en: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
+opt.field.say.1 [69905a] = {~又一封信，又一个晚上，又一张邮票。你的手在一个非常特定的地方发酸。|你写了一遍，划掉一半，又写一遍。邮费从你自己的钱袋里出。}
 # en: You write the letter three times and send the best one. Probably the best one.
-opt.field.say.1 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+opt.field.say.2 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
 # en: The Thornwick Exchange
 opt.thornwick.label [eb19f0] = 荆木学院交换项目
-# en: GPA 2.5 and Illusion II. Bring a thick skin.
-opt.thornwick.hint [777ce9] = GPA 2.5、幻术与魅影 II。脸皮得厚一点。
+# en: GPA 2.5, an interview on charm. Bring a thick skin.
+opt.thornwick.hint [5c642d] = GPA 2.5，魅力面试。脸皮得厚一点。
+# en: {member(intern_thornwick): They've already asked you back.|Needs Illusion II.}
+opt.thornwick.locked [9eb17a] = {member(intern_thornwick): 他们已经请你回去了。|需要幻术与魅影 II。}
+# en: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
+opt.thornwick.say.1 [69905a] = {~又一封信，又一个晚上，又一张邮票。你的手在一个非常特定的地方发酸。|你写了一遍，划掉一半，又写一遍。邮费从你自己的钱袋里出。}
 # en: You write the letter three times and send the best one. Probably the best one.
-opt.thornwick.say.1 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+opt.thornwick.say.2 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
 # en: Not this year
 opt.none.label [594ecf] = 今年算了
 # en: You let the notices flap. There's always next year, until there isn't.
@@ -181,34 +227,70 @@ opt.none.say.1 [cd2444] = 你任由告示在风里拍打。总还有明年——
 @event intern_offer
 # en: Letters With Seals
 title [51ad68] = 盖着火漆的信
-# en: The spring post brings answers. {(applied(intern_royal_library) and gpa >= 2.5 and level(astromancy) >= 2) or (applied(intern_conclave) and gpa >= 3.0 and level(evocation) >= 2 and rel(thorne) >= 6) or (applied(intern_alchemists) and gpa >= 2.0 and level(alchemy) >= 2) or (applied(intern_expedition) and level(astromancy) >= 2 and vigor >= 20) or (applied(intern_field_station) and level(beastcraft) >= 2) or (applied(intern_thornwick) and gpa >= 2.5 and level(illusion) >= 2): One of them begins "We are pleased".|Every letter begins with "We regret".} {guile >= 35 and rel(isolde) >= 6: There is also a plain grey envelope you never asked for.|}
-text [460590] = 春天的邮件带来了回音。{(applied(intern_royal_library) and gpa >= 2.5 and level(astromancy) >= 2) or (applied(intern_conclave) and gpa >= 3.0 and level(evocation) >= 2 and rel(thorne) >= 6) or (applied(intern_alchemists) and gpa >= 2.0 and level(alchemy) >= 2) or (applied(intern_expedition) and level(astromancy) >= 2 and vigor >= 20) or (applied(intern_field_station) and level(beastcraft) >= 2) or (applied(intern_thornwick) and gpa >= 2.5 and level(illusion) >= 2): 其中一封以“我们很高兴”开头。|每一封都以“我们很遗憾”开头。} {guile >= 35 and rel(isolde) >= 6: 还有一只你从没申请过的素灰色信封。|}
+# en: The spring post brings answers. {applied(internship): There are sealed letters on your desk. Which do you open first?|There are no more sealed letters.} {guile >= 35 and rel(isolde) >= 6 and not member(intern_unseen_office): There is also a plain grey envelope you never asked for.|}
+text [7b4927] = 春天的邮件带来了回音。{applied(internship): 你的书桌上放着几封封了火漆的信。先拆哪一封？|再没有封着火漆的信了。}{guile >= 35 and rel(isolde) >= 6 and not member(intern_unseen_office): 还有一只你从没申请过的素灰色信封。|}
 # en: Heavy envelopes with wax seals on a dormitory desk, one of them plain grey with no seal at all.
 scene [28d6f5] = 宿舍书桌上放着几只封着火漆的厚信封，其中一只是素灰色的，根本没有封漆。
-# en: Accept: The Royal Library
-opt.royal.label [be98ce] = 接受：皇家图书馆
-# en: You read the letter until the seal cracks. A summer in the oldest archives in the realm.
-opt.royal.say.1 [173a81] = 你把信读了一遍又一遍，直到火漆裂开。一整个夏天，待在王国最古老的档案馆里。
-# en: Accept: The Conclave Laboratory
-opt.conclave.label [7c6b0e] = 接受：七塔议会实验室
-# en: You read the letter until the seal cracks. A summer in spell research under the Seven Towers.
-opt.conclave.say.1 [b4e606] = 你把信读了一遍又一遍，直到火漆裂开。一整个夏天，在七塔之下研究法术。
-# en: Accept: The Alchemists' Works
-opt.alchemists.label [245132] = 接受：炼金师工坊
-# en: You read the letter until the seal cracks. A summer in the great vats of the Guild.
-opt.alchemists.say.1 [bd86f6] = 你把信读了一遍又一遍，直到火漆裂开。一整个夏天，守着公会的大缸。
-# en: Accept: The Observatory Expedition
-opt.expedition.label [9f24c5] = 接受：天文台远征队
-# en: You read the letter until the seal cracks. A summer of sky charts on the high plateau.
-opt.expedition.say.1 [0d3ad9] = 你把信读了一遍又一遍，直到火漆裂开。一整个夏天，在高原上绘制星图。
-# en: Accept: The Beastcraft Field Station
-opt.field.label [7ea555] = 接受：驭兽野外站
-# en: You read the letter until the seal cracks. A summer in the moors, the heather and the creatures in them.
-opt.field.say.1 [8ddf5b] = 你把信读了一遍又一遍，直到火漆裂开。一整个夏天，在荒原和石楠丛里，与那里的生灵为伴。
-# en: Accept: The Thornwick Exchange
-opt.thornwick.label [476caa] = 接受：荆木学院交换项目
-# en: You read the letter until the seal cracks. A summer in the rival academy's illusion laboratory.
-opt.thornwick.say.1 [405c42] = 你把信读了一遍又一遍，直到火漆裂开。一整个夏天，待在对手学院的幻术实验室里。
+# en: Letter from the Royal Library
+opt.royal.label [04415c] = 皇家图书馆的来信
+# en: They asked for a GPA of 2.5. The interview tests lore.
+opt.royal.hint [693412] = 他们要求 GPA 2.5。面试考学识。
+# en: "We are pleased." You read the letter until the seal cracks. A summer in the oldest archives in the realm.
+opt.royal.say.1 [d43827] = “我们很高兴。”你把信读了一遍又一遍，直到火漆裂开。一整个夏天，待在王国最古老的档案馆里。
+# en: "We regret." The interview went well, they write, and not quite well enough.
+opt.royal.say.2 [4db135] = “我们很遗憾。”信上说，你的面试表现不错，只是还差一点。
+# en: "We regret." They wanted a GPA of 2.5, and they say so twice.
+opt.royal.say.3 [ee2e12] = “我们很遗憾。”他们要的是 GPA 2.5，而且说了两遍。
+# en: Letter from the Conclave
+opt.conclave.label [187867] = 七塔议会的来信
+# en: They asked for a GPA of 3.0. The interview tests arcana. A word from Thorne would help.
+opt.conclave.hint [e87947] = 他们要求 GPA 3.0。面试考奥术。有索恩的一句推荐会更好。
+# en: "We are pleased." You read the letter until the seal cracks. A summer in spell research under the Seven Towers.
+opt.conclave.say.1 [b0dd08] = “我们很高兴。”你把信读了一遍又一遍，直到火漆裂开。一整个夏天，在七塔之下研究法术。
+# en: "We regret." The interview went well, they write, and not quite well enough.
+opt.conclave.say.2 [4db135] = “我们很遗憾。”信上说，你的面试表现不错，只是还差一点。
+# en: "We are pleased." You read the letter until the seal cracks. A summer in spell research under the Seven Towers.
+opt.conclave.say.3 [b0dd08] = “我们很高兴。”你把信读了一遍又一遍，直到火漆裂开。一整个夏天，在七塔之下研究法术。
+# en: "We regret." The interview went well, they write, and not quite well enough.
+opt.conclave.say.4 [4db135] = “我们很遗憾。”信上说，你的面试表现不错，只是还差一点。
+# en: "We regret." They wanted a GPA of 3.0, and they say so twice.
+opt.conclave.say.5 [fa762a] = “我们很遗憾。”他们要的是 GPA 3.0，而且说了两遍。
+# en: Letter from the Alchemists' Works
+opt.alchemists.label [3ad0f0] = 炼金师工坊的来信
+# en: They asked for a GPA of 2.0. The interview tests alchemy.
+opt.alchemists.hint [0b2080] = 他们要求 GPA 2.0。面试考炼金。
+# en: "We are pleased." You read the letter until the seal cracks. A summer in the great vats of the Guild.
+opt.alchemists.say.1 [d15c64] = “我们很高兴。”你把信读了一遍又一遍，直到火漆裂开。一整个夏天，守着公会的大缸。
+# en: "We regret." The interview went well, they write, and not quite well enough.
+opt.alchemists.say.2 [4db135] = “我们很遗憾。”信上说，你的面试表现不错，只是还差一点。
+# en: "We regret." They wanted a GPA of 2.0, and they say so twice.
+opt.alchemists.say.3 [1f5965] = “我们很遗憾。”他们要的是 GPA 2.0，而且说了两遍。
+# en: Letter from the Expedition
+opt.expedition.label [ca58f7] = 远征队的来信
+# en: The interview tests vigor.
+opt.expedition.hint [0bd21d] = 面试考体魄。
+# en: "We are pleased." You read the letter until the seal cracks. A summer of sky charts on the high plateau.
+opt.expedition.say.1 [9d271b] = “我们很高兴。”你把信读了一遍又一遍，直到火漆裂开。一整个夏天，在高原上绘制星图。
+# en: "We regret." The interview went well, they write, and not quite well enough.
+opt.expedition.say.2 [4db135] = “我们很遗憾。”信上说，你的面试表现不错，只是还差一点。
+# en: Letter from the Field Station
+opt.field.label [b25fe8] = 野外站的来信
+# en: The interview tests vigor.
+opt.field.hint [0bd21d] = 面试考体魄。
+# en: "We are pleased." You read the letter until the seal cracks. A summer in the moors, the heather and the creatures in them.
+opt.field.say.1 [27ceb5] = “我们很高兴。”你把信读了一遍又一遍，直到火漆裂开。一整个夏天，在荒原和石楠丛里，与那里的生灵为伴。
+# en: "We regret." The interview went well, they write, and not quite well enough.
+opt.field.say.2 [4db135] = “我们很遗憾。”信上说，你的面试表现不错，只是还差一点。
+# en: Letter from Thornwick
+opt.thornwick.label [c344dc] = 荆木学院的来信
+# en: They asked for a GPA of 2.5. The interview tests charm.
+opt.thornwick.hint [5c32c3] = 他们要求 GPA 2.5。面试考魅力。
+# en: "We are pleased." You read the letter until the seal cracks. A summer in the rival academy's illusion laboratory.
+opt.thornwick.say.1 [64ec58] = “我们很高兴。”你把信读了一遍又一遍，直到火漆裂开。一整个夏天，待在对手学院的幻术实验室里。
+# en: "We regret." The interview went well, they write, and not quite well enough.
+opt.thornwick.say.2 [4db135] = “我们很遗憾。”信上说，你的面试表现不错，只是还差一点。
+# en: "We regret." They wanted a GPA of 2.5, and they say so twice.
+opt.thornwick.say.3 [ee2e12] = “我们很遗憾。”他们要的是 GPA 2.5，而且说了两遍。
 # en: Open the plain envelope
 opt.unseen.label [ca484a] = 拆开那只素信封
 # en: Inside: a time, an address and no signature. The paper is blank again by morning. You go anyway.
@@ -217,6 +299,22 @@ opt.unseen.say.1 [702952] = 里面写着一个时间、一个地址，没有署�
 opt.decline.label [15c522] = 把信都收起来
 # en: You fold them carefully. Next year, perhaps.
 opt.decline.say.1 [b0ac8d] = 你把信仔细折好。也许明年吧。
+
+@event intern_asked_back
+# en: Asked Back
+title [8aa9d6] = 再次相邀
+# en: A letter from {member(intern_royal_library): the Royal Library Archives|{member(intern_conclave): the Conclave Laboratory|{member(intern_alchemists): the Guild of Alchemists' Works|{member(intern_expedition): the Observatory Expedition|{member(intern_field_station): the Beastcraft Field Station|{member(intern_thornwick): the Thornwick Exchange|the office with no name}}}}}}. They were pleased with your summer, and the post is yours again next summer if you want it.
+text [92bde8] = 一封来自{member(intern_royal_library): 皇家图书馆档案馆|{member(intern_conclave): 七塔议会实验室|{member(intern_alchemists): 炼金师公会工坊|{member(intern_expedition): 观星远征队|{member(intern_field_station): 驭兽术野外站|{member(intern_thornwick): 荆木学院交换项目|那间没有名字的办公室}}}}}}的信。他们对你这个夏天很满意，只要你愿意，明年夏天这个岗位还是你的。
+# en: A letter on good paper with a familiar seal, the words "next summer" underlined once, neatly.
+scene [522edb] = 一封用上好纸张写的信，盖着熟悉的火漆，“明年夏天”几个字下面工整地划了一道线。
+# en: Write back yes
+opt.left.label [622f58] = 回信答应
+# en: {~You write back the same evening. Next summer is spoken for, and you find you're glad.|"Yes," you write, and then three more lines to make it sound less eager.}
+opt.left.say.1 [71669f] = {~你当晚就回了信。明年夏天有着落了，你发现自己挺高兴。|你写下“好的”，又添了三行，好让自己显得没那么迫不及待。}
+# en: Thank them, and decline
+opt.right.label [1b8626] = 致谢，婉拒
+# en: {~You thank them warmly and say no. Next summer is yours to spend, or to apply for something new.|A polite no. You keep the letter anyway; it's good to be asked.}
+opt.right.say.1 [a75a4d] = {~你热情地道谢，然后说不。明年夏天由你自己安排，或者去申请些新的。|一句礼貌的拒绝。信你还是留着了；被人邀请总是好事。}
 
 @event thesis_setup
 # en: Choosing a Thesis

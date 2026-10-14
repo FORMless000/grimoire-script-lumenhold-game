@@ -427,7 +427,9 @@ tick:
 name: Debt to Grisk
 kind: debuff
 art: chain
-desc: The goblin moneylender takes 12 crowns a month until the debt is cleared.
+desc: The goblin moneylender takes 12 crowns a month until the debt is cleared. Ignore a missed payment and he adds another.
+# Unpaid, the debt escalates (playtest 2, M22): the first miss brings a reminder (ignore it and a month is added),
+# the next the collectors.
 tick:
   if gold >= 12:
     gold -12
@@ -435,6 +437,8 @@ tick:
   else:
     mood -4
     debt_missed += 1
+    if debt_missed == 1:
+      queue grisk_reminder now
   if debt_paid >= 6:
     lose in_debt
   if debt_missed >= 2:
@@ -630,13 +634,27 @@ desc: Family, old friends and free board. The days are slower here.
 on_add:
   gain summer_away 2
 
+@state gig_grounds
+name: Holiday gig: the grounds
+group: gig
+duration: 2
+art: leaf
+desc: Working the grounds for Old Maud this break. Good pay, sore hands.
+
+@state gig_kitchens
+name: Holiday gig: the kitchens
+group: gig
+duration: 2
+art: meal
+desc: Working the Refectory kitchens this break. Good pay, short temper.
+
 @state plan_work
 name: Break: working full-time
 kind: plan
 group: plan
 duration: 2
 art: coin
-desc: Extra shifts at double pay. Tiring.
+desc: Working on campus through the break: a holiday gig, and board as usual. Tiring.
 
 @state plan_internship
 name: Break: internship
@@ -644,5 +662,12 @@ kind: plan
 group: plan
 duration: 2
 art: book
+tags: away
 desc: A research placement away from the castle, with a stipend and a supervisor.
 tick: gold +6
+# One summer each (M16): a strong one brings an offer to come back; otherwise the post ends.
+on_expire:
+  if (member(intern_royal_library) and performance(intern_royal_library) >= 80) or (member(intern_conclave) and performance(intern_conclave) >= 80) or (member(intern_alchemists) and performance(intern_alchemists) >= 80) or (member(intern_expedition) and performance(intern_expedition) >= 80) or (member(intern_field_station) and performance(intern_field_station) >= 80) or (member(intern_thornwick) and performance(intern_thornwick) >= 80) or (member(intern_unseen_office) and performance(intern_unseen_office) >= 80):
+    queue intern_asked_back
+  else:
+    leave internship

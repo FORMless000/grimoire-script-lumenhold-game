@@ -102,6 +102,28 @@ text: Two terms of failing marks. You are summoned before the Disciplinary Board
     mood -medium
     say: "Promises are cheap," says Professor Thorne. "We'll take this one. Only this one." A reprieve, and a very long term ahead.
 
+# The first missed payment (M22): a reminder, with interest.
+@event grisk_reminder
+title: A Friendly Reminder
+class: incident
+tone: tense
+trigger: queued
+priority: 70
+art: letter
+tags: money
+chain: debt
+scene: A small, very neat note pinned to a dormitory door with a brass tack, the handwriting tiny and precise.
+text: A note on your door, in a tidy goblin hand: "A payment was missed. Mister Grisk is a patient businessman. Mister Grisk charges interest on his patience." Underneath, smaller: "Pay something, or another month will be added."
+> left: Scrape together what you can
+  gold = 0
+  debt_missed = 0
+  mood -small
+  say: You empty your purse into an envelope and slide it under his door. It isn't twelve crowns. It is, says the note in reply, "a gesture. Noted."
+> right: Put it out of your mind
+  debt_paid -= 1
+  mood -tiny
+  say: You put the note in a drawer. Another month goes on the ledger, and next month the knock on your door will be louder.
+
 @event grisk_collectors
 title: Grisk's Collectors
 class: crisis
@@ -121,8 +143,9 @@ text: Two trolls in waistcoats are waiting outside your dormitory. "Mister Grisk
     lose in_debt
     say: They count your purse twice and declare the debt settled. "Pleasure," says the large one, meaning it.
   else:
-    debt_paid += 2
-    say: They take every coin and your good boots. "Partial," they say, and leave.
+    debt_paid += 1
+    renown -small
+    say: They take every coin and your good boots, in front of half the corridor. "Partial," they say, and leave.
 > right: Run
   challenge feat trivial:
     win:

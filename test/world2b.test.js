@@ -169,16 +169,23 @@ test('obligations: a truant loses performance; a dutiful member keeps it', () =>
   }
 });
 
-test('attending a member place counts a visit and pays a job', () => {
+test('attending a member place counts a visit; a job pays through its shift cards (M10)', () => {
   const eng = new Engine(content);
   quiet(() => { eng.newGame({ seed: 3, name: 'T' }); });
   const ctx = eng.newCtx(null, null);
-  const gold = eng.s.vals.gold;
+  const gold = eng.s.vals.gold, pay = content.tracks.library_assistant.pay[0];
   eng.trackOp({ t: 'join', track: 'library_assistant' }, ctx);
+  assert.ok(eng.hasShift('library_assistant'), 'a shift card is there to draw');
   eng.attend('library_assistant', ctx);
   const t = eng.s.tracks.library_assistant;
   assert.equal(t.visits, 1);
-  assert.equal(eng.s.vals.gold, gold + content.tracks.library_assistant.pay[0]);
+  assert.equal(eng.s.vals.gold, gold, 'the visit itself pays nothing');
+  ctx.track = 'library_assistant';
+  eng.run([{ t: 'wage', size: null }, { t: 'wage', size: 'short' }], ctx);
+  assert.equal(eng.s.vals.gold, gold + pay + Math.round(pay / 2), 'wage, then a short wage');
+  eng.hasShift = () => false;   // no shift card left: the visit pays the flat wage
+  eng.attend('library_assistant', ctx);
+  assert.equal(eng.s.vals.gold, gold + 2 * pay + Math.round(pay / 2));
   eng.trackOp({ t: 'join', track: 'tavern' }, ctx);
   assert.equal(t.status, 'left', 'one job at a time');
 });
@@ -299,4 +306,40 @@ test('exams are cards (M4): one per enrolled course in a term\'s last month, gra
   // the outlook on the enrolment menu
   const o = eng.courseOutlook('evocation', 1);
   assert.ok(o && o.skills.length && o.exam === 'medium' && o.pass >= 8);
+});
+
+test('jobs and clubs: prorated dues, the term-end review, promotions and switching (M12, M33, M34, M35)', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 7, name: 'T' }); });
+  const ctx = eng.newCtx(null, null);
+  eng.s.turn = 3;   // the term's third month of four: two months left, this one included
+  eng.trackOp({ t: 'join', track: 'tavern' }, ctx);
+  const t = eng.s.tracks.tavern;
+  assert.equal(t.due, Math.min(content.tracks.tavern.due, 2), 'at most one visit due per month left');
+  t.perf = 90; t.rankXp = 99;
+  eng.trackOp({ t: 'promote', track: 'tavern' }, ctx);
+  assert.equal(t.rank, 1); assert.equal(t.perf, 50, 'a new rank starts its performance afresh');
+  eng.s.turn = 4; eng.s.queue = [];
+  quiet(() => eng.endTerm([]));
+  assert.ok(eng.s.queue.some((q) => q.id === 'job_term_review' && q.track === 'tavern'), 'keep or resign, every term end');
+  eng.trackOp({ t: 'join', track: 'duelling' }, ctx);
+  const fair = eng.offered('clubs').find((o) => o.key === 'verdant');
+  assert.equal(fair.switching.from, 'duelling', 'switching names what you leave');
+  assert.equal(eng.test(G.expr('member(club) and member(job)'), null), true, 'member(kind): any of that kind');
+});
+
+test('menus hide options gated by what you cannot see; a stated prerequisite shows locked (M24)', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 8, name: 'T' }); });
+  eng.s.turn = 19; eng.s.vals.gold = 0;
+  const ball = eng.view({ id: 'midwinter_ball', actor: null });
+  assert.ok(!ball.options.some((o) => o.key === 'lyra'), 'an unmet relationship gate is hidden');
+  assert.ok(ball.options.some((o) => o.key === 'friends'));
+  const apps = eng.view({ id: 'intern_application', actor: null });
+  const royal = apps.options.find((o) => o.key === 'royal');
+  assert.ok(royal && royal.disabled && /Astromancy II/.test(royal.locked), 'a course prerequisite shows, locked, with the reason');
+  eng.trackOp({ t: 'apply', track: 'intern_royal_library' }, eng.newCtx(null, null));
+  assert.equal(eng.test(G.expr('applied(internship)'), null), true);
+  eng.trackOp({ t: 'leave', track: 'intern_royal_library' }, eng.newCtx(null, null));
+  assert.equal(eng.s.tracks.intern_royal_library.status, 'none', 'leave withdraws an application');
 });

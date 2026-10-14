@@ -23,6 +23,7 @@ function estimate(eng, opt, actor, eventId) {
     G.walkEffects(opt.effects, (st) => {
       if (st.t === 'gain') { const d = eng.c.states[st.state]; if (d && d.kind && !eng.s.states[st.state]) add('gain:' + d.kind, 1, 1); }
       if (st.t === 'learn_spell' && !(eng.s.spells || {})[st.spell]) add('learn', 1, 1);
+      if (st.t === 'leave' && leaving(eng, st)) add('gain:track', -1, 1);   // giving up a club or job you have
       // engagement with a plot: new clues, new flags, a queued follow-up (each distinct one once, whichever branch)
       if (st.t === 'find' && !(eng.s.clues || {})[st.clue]) seen.add('find:' + st.clue);
       if (st.t === 'flag') for (const f of st.names || []) if (!eng.s.flags[f]) seen.add('flag:' + f);
@@ -44,6 +45,7 @@ function estimate(eng, opt, actor, eventId) {
         case 'rel': case 'spark': add(st.t + ':' + (st.npc === 'npc' ? actor : st.npc), amount(eng, st, st.t), w); break;
         case 'bond': if (['friend', 'close', 'partner'].includes(st.status)) add('bond:' + (st.npc === 'npc' ? actor : st.npc), 20, w); break;
         case 'gain': { const d = eng.c.states[st.state]; if (d && d.kind && !eng.s.states[st.state]) add('gain:' + d.kind, 1, w); break; }
+        case 'leave': if (leaving(eng, st)) add('gain:track', -1, w); break;
         case 'if': {
           const br = st.branches.find((b) => eng.test(b.cond, actor));
           walk(br ? br.body : st.else, w);
@@ -59,6 +61,12 @@ function estimate(eng, opt, actor, eventId) {
   return out;
 }
 
+// Whether a `leave` gives up a club or job the player has (the kind form, `leave job`, or `leave track` in context).
+function leaving(eng, st) {
+  const id = st.track === 'track' ? eng._ctxTrack || (eng.s.cur && eng.s.cur.track) : st.track;
+  const t = eng.c.tracks[id] ? eng.s.tracks[id] : Object.values(eng.s.tracks || {}).find((x) => x.kind === id && x.status === 'member');
+  return !!t && t.status === 'member' && (t.kind === 'job' || t.kind === 'club');
+}
 // The amount of a delta/rel/spark statement: a tier word resolves through @balance sizes.
 function amount(eng, st, row, edge) { return st.tier ? st.sign * eng.tierAmount(row, st.tier) : edge === 'max' ? st.max : (st.min + st.max) / 2; }
 
@@ -123,7 +131,9 @@ const LEGACY = {
       const low = eng.c.order.resources.filter((id) => eng.s.vals[id] <= 25);
       // Avoid options that can lower a low resource (the worst case of the engine's preview); gains are welcome.
       const risky = (x) => { try { const pv = eng.preview(view.id, x.key, view.actor ? view.actor.id : null); return low.some((id) => pv.deltas[id] && pv.deltas[id][0] < 0); } catch (e) { return x.affects.some((a) => low.includes(a)); } };
-      const safe = opts.filter((x) => !risky(x));
+      // Nor do they give up a club or job they have, when there's another way.
+      const quits = (x) => { const def = eng.optionsOf(eng.c.events[view.id]).find((q) => q.key === x.key); let q = false; if (def) G.walkEffects(def.effects, (st) => { if (st.t === 'leave' && leaving(eng, st)) q = true; }); return q; };
+      const safe = opts.filter((x) => !risky(x) && !quits(x));
       return (safe.length ? safe : opts)[Math.floor(eng.rand() * (safe.length ? safe.length : opts.length))].key;
     },
   },
@@ -134,7 +144,7 @@ const LEGACY = {
       const ev = eng.c.events[view.id]; let best = -Infinity, o;
       for (const x of view.options.filter((y) => !y.disabled)) {
         const def = eng.optionsOf(ev).find((q) => q.key === x.key); if (!def) continue; let sc = eng.rand() * 3 - (endsEarly(eng, view, x.key) ? 100 : 0);
-        G.walkEffects(def.effects, (st) => { if (st.t === 'rel' || st.t === 'spark') { const a = amount(eng, st, st.t, 'max'); if (a > 0) sc += a; } if (st.t === 'bond' && ['friend', 'close', 'partner'].includes(st.status)) sc += 20; });
+        G.walkEffects(def.effects, (st) => { if (st.t === 'rel' || st.t === 'spark') { const a = amount(eng, st, st.t, 'max'); if (a > 0) sc += a; } if (st.t === 'bond' && ['friend', 'close', 'partner'].includes(st.status)) sc += 20; if (st.t === 'leave' && leaving(eng, st)) sc -= 5; });
         if (sc > best) { best = sc; o = x; }
       }
       return o.key;
@@ -144,12 +154,15 @@ const LEGACY = {
 
 // Weights per play style (design §2). Resource units: one point of health ≈ one point of mood.
 // Enrolment for a focused player: courses that train the focus skill first, then random ones.
+// A multi-pick takes at least one option: with nothing left to pick from (all offered options gated), the first
+// open one (usually "Not this year").
+const orFirst = (view, keys) => (keys.length ? keys : [(view.options.find((o) => !o.disabled) || view.options[0]).key]);
 function pickManyFor(skill) {
   return (eng, view, opts) => {
     const fits = (o) => [].concat((eng.c.tracks[o.key] || {}).skill || []).includes(skill);
     const pool = opts.filter(fits).concat(opts.filter((o) => !fits(o))), keys = [];
     for (const o of pool) if (keys.length < view.pick) keys.push(o.key);
-    return keys;
+    return orFirst(view, keys);
   };
 }
 
@@ -199,7 +212,7 @@ function pickPlaces(eng, view, opts = {}) {
 function pickMany(eng, view, opts) {
   const pool = opts.slice(), keys = [];
   while (keys.length < view.pick && pool.length) keys.push(pool.splice(Math.floor(eng.rand() * pool.length), 1)[0].key);
-  return keys;
+  return orFirst(view, keys);
 }
 
 function get(name) {

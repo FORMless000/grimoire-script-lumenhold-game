@@ -247,6 +247,32 @@
       const levels = Object.values(s.spells || {}).reduce((a, b) => a + (b || 0), 0);
       return (tw ? sum / tw : 0) + (w.condition || 0) * shape + Math.min(15, (w.spells || 0) * levels);
     }
+    // One shift's pay (M10): the job's `pay:` at your rank × the wage word's share (`@balance wage:`), less while
+    // benched. No double wage on a break (M6): holiday work is the gigs'.
+    wageFor(id, size) {
+      const d = this.c.tracks[id], t = this.trackState(id);
+      if (!d || !d.pay || !t || t.status !== 'member') return 0;
+      const share = Object.assign({ short: 0.5, full: 1, overtime: 2 }, (this.c.balance && this.c.balance.wage) || {})[size || 'full'];
+      return Math.round(d.pay[Math.min(t.rank || 0, d.pay.length - 1)] * (share == null ? 1 : share) * (t.benched ? 0.6 : 1));
+    }
+    // A job up front (M23): what one shift pays a new hire, read from the job's own cards (wages, tips and fines
+    // averaged over their options and outcomes), and the shifts a term asks for.
+    jobOutlook(id) {
+      const d = this.c.tracks[id]; if (!d || d.kind !== 'job' || !d.pay) return null;
+      const share = Object.assign({ short: 0.5, full: 1, overtime: 2 }, (this.c.balance && this.c.balance.wage) || {});
+      const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
+      const gold = (effs) => (effs || []).reduce((sum, st) => {
+        if (st.t === 'wage') return sum + d.pay[0] * (share[st.size || 'full'] == null ? 1 : share[st.size || 'full']);
+        if (st.t === 'delta' && st.name === 'gold') return sum + (st.tier ? st.sign * this.tierAmount('gold', st.tier) : (st.min + st.max) / 2);
+        if (st.t === 'challenge') return sum + mean([st.win, st.partial, st.lose].filter(Boolean).map(gold));
+        if (st.t === 'chance') { const p = /^\d+$/.test((st.p && st.p.src) || '') ? +st.p.src / 100 : 0.5; return sum + p * gold(st.body) + (1 - p) * gold(st.else); }
+        if (st.t === 'if') return sum + mean(st.branches.map((b) => gold(b.body)).concat(st.else ? [gold(st.else)] : []));
+        return sum;
+      }, 0);
+      const cards = Object.values(this.c.events).filter((e) => e.track === id && (!e.rank || e.rank <= 1));
+      const shift = cards.length ? mean(cards.map((e) => mean((e.options || []).map((o) => gold(o.effects))))) : d.pay[0];
+      return { shift: Math.round(shift), due: d.due || 0 };
+    }
     // Entering a fight spends mana (M5): `@balance combat_cost:` (a tier, default small).
     combatCost() { return this.tierAmount(this.spellResource, (this.c.balance && this.c.balance.combat_cost) || 'small') || 0; }
     // The advisor modifier (design §9.2): how the track's `lead:` (its professor, captain or employer) feels about you, rel / 5, within ±15.
@@ -277,11 +303,12 @@
         else if (!on && this.s.states[st] && this.s.states[st].legacy === id) { delete this.s.states[st]; this.run(d.on_remove, ctx); }
       }
     }
+    trackKinds() { return this._kinds || (this._kinds = new Set(Object.values(this.c.tracks || {}).map((d) => d.kind))); }
     trackOp(st, ctx) {
       const s = this.s;
       let id = st.track === 'track' ? ctx.track : st.track;
-      // `leave job` / `leave club`: whichever one you have.
-      if (st.t === 'leave' && (id === 'job' || id === 'club')) id = Object.keys(s.tracks || {}).find((k) => s.tracks[k].kind === id && s.tracks[k].status === 'member');
+      // `leave job` / `leave club` / `leave internship` (any track kind): whichever one you have.
+      if (st.t === 'leave' && !this.c.tracks[id] && this.trackKinds().has(id)) id = Object.keys(s.tracks || {}).find((k) => s.tracks[k].kind === id && s.tracks[k].status === 'member');
       const d = this.c.tracks[id];
       if (!d) return;
       s.tracks = s.tracks || {};
@@ -298,9 +325,11 @@
         case 'join': {
           if (t.status === 'member') return;
           if (d.kind === 'job' && t.unreliableUntil && this.termIndex() < t.unreliableUntil) return;
-          // One club and one job at a time (decision D3).
-          for (const [oid, o] of Object.entries(s.tracks)) if (oid !== id && o.status === 'member' && o.kind === d.kind && (d.kind === 'club' || d.kind === 'job')) { o.status = 'left'; this.grantLegacy(oid, ctx, false); ctx.notes.push({ kind: 'leave', track: oid }); }
+          // One club, one job and one internship at a time (decision D3; M16).
+          for (const [oid, o] of Object.entries(s.tracks)) if (oid !== id && o.status === 'member' && o.kind === d.kind && (d.kind === 'club' || d.kind === 'job' || d.kind === 'internship')) { o.status = 'left'; this.grantLegacy(oid, ctx, false); ctx.notes.push({ kind: 'leave', track: oid }); }
           t.status = 'member'; t.perf = t.dropped ? 30 : 50; t.visits = 0; t.due = d.due || 0; t.benched = false;
+          // Joining mid-term (M34): at most one visit is due per month left in the term, this one included.
+          if (this.phaseOf() === 'term') { let left = 0; for (let k = s.turn; k <= this.maxTurns && this.phaseOf(k) === 'term'; k++) left++; t.due = Math.min(t.due, left); }
           ctx.notes.push({ kind: 'join', track: id });
           // A member is shown the way in: the track's place is discovered (the duel hall, the courier loft, …).
           if (d.place && this.c.places[d.place] && !s.places[d.place]) { s.places[d.place] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: d.place }); }
@@ -308,11 +337,14 @@
           this.grantLegacy(id, ctx, true);
           break;
         }
-        case 'leave': if (t.status === 'member' || t.status === 'enrolled') { t.status = 'left'; this.grantLegacy(id, ctx, false); ctx.notes.push({ kind: 'leave', track: id }); } break;
+        case 'leave': if (t.status === 'member' || t.status === 'enrolled') { t.status = 'left'; this.grantLegacy(id, ctx, false); ctx.notes.push({ kind: 'leave', track: id }); }
+          else if (t.status === 'applied') t.status = 'none';   // withdrawing, or turned down (M36)
+          break;
         case 'apply': if (t.status === 'none' || t.status === 'left') t.status = 'applied'; break;
         case 'promote': {
           const ranks = (d.ranks || '').split(/\s*[,，、]\s*/).filter(Boolean).length || 1;
-          if (t.rank < ranks - 1) { t.rank++; t.rankXp = 0; ctx.notes.push({ kind: 'promote', track: id, rank: t.rank }); }
+          if (t.rank < ranks - 1) { t.rank++; t.rankXp = 0; t.perf = 50;   // a new rank starts its performance afresh (M12)
+            ctx.notes.push({ kind: 'promote', track: id, rank: t.rank }); }
           break;
         }
         case 'perform': { const amt = st.tier ? st.sign * this.trackSize('performance', st.tier, [2, 5, 8, 15, 25]) : st.min; t.perf = clamp((t.perf || 0) + amt, 0, 100); ctx.deltas['perf:' + id] = (ctx.deltas['perf:' + id] || 0) + amt; break; }
@@ -326,14 +358,13 @@
       if (!t || t.status !== 'member' || !d) return;
       // On a break, a visit is an extra one: it never counts toward the next term's due (playtest 2, B6).
       const brk = this.phaseOf() === 'break';
-      const extra = brk || t.visits >= t.due;
+      // An internship is the break's work (M16): every visit there counts in full.
+      const extra = d.kind !== 'internship' && (brk || t.visits >= t.due);
       if (!brk) t.visits++;
       t.perf = clamp((t.perf || 0) + (extra ? 2 : 8), 0, 100);
       t.rankXp = (t.rankXp || 0) + (extra ? 1 : 2);
-      if (d.kind === 'job' && d.pay) {
-        const pay = d.pay[Math.min(t.rank, d.pay.length - 1)] * (this.phaseOf() === 'break' ? 2 : 1) * (t.benched ? 0.6 : 1);
-        this.change('gold', Math.round(pay), ctx);
-      }
+      // A job pays through its shift cards (`wage`, M10); only a shift with no card to draw pays here.
+      if (d.kind === 'job' && d.pay && !(this.hasShift && this.hasShift(id))) this.change('gold', this.wageFor(id, null), ctx);
       if (d.kind === 'thesis') t.progress = clamp((t.progress || 0) + (extra ? 2 : 5), 0, 100);
       ctx.notes.push(Object.assign({ kind: 'attend', track: id }, brk ? {} : { left: Math.max(0, t.due - t.visits) }));
     }
@@ -365,6 +396,8 @@
             if (t.perf >= 70 && d.lead && s.npcs[d.lead] && s.npcs[d.lead].met) this.run([{ t: 'rel', npc: d.lead, tier: 'small', sign: 1 }], ctx);
             t.due = t.benched && d.kind === 'job' ? Math.min(2, d.due || 0) : d.due || 0;
             if (t.perf < 40) this.pushTrackEvent('track_warning', id);
+            // Every job asks at term end: another term, or not (M33). Not after the last term.
+            if (d.kind === 'job') { let more = false; for (let k = s.turn + 1; k <= this.maxTurns && !more; k++) more = this.phaseOf(k) === 'term'; if (more) this.pushTrackEvent('job_term_review', id); }
             const need = ((this.c.balance && this.c.balance.rank_xp) || [10, 25])[t.rank];
             const ranks = (d.ranks || '').split(/\s*[,，、]\s*/).filter(Boolean).length || 1;
             if (t.perf >= 70 && need != null && t.rankXp >= need && t.rank < ranks - 1) this.pushTrackEvent('track_promotion', id);
@@ -434,7 +467,9 @@
           out.push({ key: d.id, label: names[lv - 1] || d.name, hint: d.desc || null, effects: [{ t: 'enrol', track: d.id, level: lv }] });
         } else if ((kind === 'clubs' && d.kind === 'club') || (kind === 'jobs' && d.kind === 'job')) {
           if (d.hidden || (t && t.status === 'member') || (t && t.unreliableUntil && ti < t.unreliableUntil)) continue;
-          out.push({ key: d.id, label: d.name, hint: d.desc || null, effects: [{ t: 'join', track: d.id }] });
+          // Switching (M35): joining leaves the one you're in, its rank and performance with it.
+          const cur = Object.entries(s.tracks || {}).find(([k, o]) => o.status === 'member' && o.kind === d.kind && k !== d.id);
+          out.push({ key: d.id, label: d.name, hint: d.desc || null, effects: [{ t: 'join', track: d.id }], switching: cur ? { from: cur[0], rank: cur[1].rank || 0, perf: Math.round(cur[1].perf || 0) } : null });
         }
       }
       return out;
@@ -550,8 +585,12 @@
             case 'npc_rel': return eng.npcRel(a[0] === 'npc' ? actor : a[0], a[1] === 'npc' ? actor : a[1]);
             // tracks (design §7)
             case 'enrolled': { const t = eng.trackState(a[0]); return !!t && t.status === 'enrolled'; }
-            case 'member': { const t = eng.trackState(a[0]); return !!t && t.status === 'member'; }
-            case 'applied': { const t = eng.trackState(a[0]); return !!t && t.status === 'applied'; }
+            case 'member': {   // member(club), member(job), …: in any track of that kind (as `leave club`)
+              if (!eng.c.tracks[a[0]] && eng.trackKinds().has(a[0])) return Object.values(eng.s.tracks || {}).some((t) => t.kind === a[0] && t.status === 'member');
+              const t = eng.trackState(a[0]); return !!t && t.status === 'member'; }
+            case 'applied': {   // applied(internship): to any of that kind
+              if (!eng.c.tracks[a[0]] && eng.trackKinds().has(a[0])) return Object.values(eng.s.tracks || {}).some((t) => t.kind === a[0] && t.status === 'applied');
+              const t = eng.trackState(a[0]); return !!t && t.status === 'applied'; }
             case 'rank': { const t = eng.trackState(a[0]); return t && t.status === 'member' ? t.rank + 1 : 0; }
             case 'performance': { const t = eng.trackState(a[0]); return t ? t.perf || 0 : 0; }
             case 'level': return eng.levelPassed(a[0]);
@@ -820,6 +859,12 @@
             break;
           }
           case 'sit_exam': this.sitExam(ctx.track || this._ctxTrack, st.swing, ctx); break;
+          case 'wage': {
+            const ev = ctx.key && this.c.events[ctx.key], id = ctx.track || this._ctxTrack || (ev && ev.track);
+            const pay = id ? this.wageFor(id, st.size) : 0;
+            if (pay) { this.change('gold', pay, ctx); ctx.notes.push({ kind: 'wage', track: id, gold: pay }); }
+            break;
+          }
           case 'learn_spell': {
             s.spells = s.spells || {};
             const lv = st.level || Math.min(3, (s.spells[st.spell] || 0) + 1);
@@ -1169,7 +1214,10 @@
         art: e.art || null, scene: e.scene ? this.interp(e.scene, a, e.id) : null, tags: e.tags || [],
         actor: npc ? { id: a, name: npc.name, title: npc.title, color: npc.color, house: npc.house, ...this.s.npcs[a] } : null,
         pick: this.pickCount(e),
-        options: this.optionsOf(e).filter((o) => !o.spell || (this.s.spells || {})[o.spell]).map((o) => {
+        // Option visibility (M24): in a menu, an option whose `when` fails is hidden unless it names its `locked:`
+        // reason (a stated prerequisite); then it shows, disabled, with the reason. Cards keep both sides.
+        options: this.optionsOf(e).filter((o) => !o.spell || (this.s.spells || {})[o.spell])
+          .filter((o) => e.type !== 'menu' || !o.when || o.locked || this.test(o.when, a)).map((o) => {
           const lv = o.spell ? this.s.spells[o.spell] : 0;
           const cost = o.spell ? this.spellCost(o.spell, lv) : 0;
           const short = o.spell && (this.s.vals[this.spellResource] || 0) < cost;
@@ -1180,6 +1228,9 @@
             spell: o.spell ? { id: o.spell, level: lv, cost, short } : null,
             check: o.firstCheck ? this.checkView(o.firstCheck, a, item) : null,
             course: (o.effects[0] && o.effects[0].t === 'enrol') ? this.courseOutlook(o.effects[0].track, o.effects[0].level) : null,
+            job: (o.effects[0] && o.effects[0].t === 'join') ? this.jobOutlook(o.effects[0].track) : null,
+            switching: o.switching || null,
+            locked: o.locked && o.when && !this.test(o.when, a) ? this.interp(o.locked, a, e.id) : null,
           };
         }),
       };
@@ -1239,7 +1290,7 @@
       const ctx = this.newCtx(item.actor, null, e.id);
       ctx.cast = item.cast || null; ctx.track = item.track || null;
       this._cast = ctx.cast; this._ctxTrack = ctx.track;
-      const chosen = keys.map((k) => { const o = opts.find((x) => x.key === k); if (!o) throw new Error('no option ' + k + ' on ' + e.id); return o; });
+      const chosen = keys.map((k) => { const o = opts.find((x) => x.key === k); if (!o) throw new Error('no option ' + k + ' on ' + e.id); if (o.when && !this.test(o.when, item.actor)) throw new Error('option ' + k + ' is not available'); return o; });
       for (const o of chosen) this.run(o.effects, ctx);
       this.handleZeroed(ctx);
       this._cast = null; this._ctxTrack = null;

@@ -444,7 +444,7 @@
     if (story) {
       choices.innerHTML = '<button class="choice single" data-k="' + esc(L.key) + '"><span>' + esc(L.label) + chk(L) + '</span></button>';
     } else {
-      const lock = (o) => o.disabled ? ' disabled title="' + esc(o.hint || t('card.notAvailable')) + '"' : '';
+      const lock = (o) => o.disabled ? ' disabled title="' + esc(o.locked || o.hint || t('card.notAvailable')) + '"' : '';
       const U = v.options.find((o) => o.key === 'up');
       choices.innerHTML = '<button class="choice left" data-k="left"' + lock(L) + '><span class="arrow">' + (L.disabled ? '🔒' : '←') + '</span><span>' + esc(L.label) + chk(L) + '</span></button>' +
         '<button class="choice right" data-k="right"' + lock(R) + '><span>' + esc(R.label) + chk(R) + '</span><span class="arrow">' + (R.disabled ? '🔒' : '→') + '</span></button>' +
@@ -574,6 +574,7 @@
     if (n.kind === 'leave' && content.tracks[n.track] && content.tracks[n.track].kind === 'thesis') return t('note.thesisDone', { track: tn(n.track) });
     if (['enrol', 'join', 'leave', 'promote', 'dropped'].includes(n.kind)) return t('note.' + n.kind, { track: tn(n.track) });
     if (n.kind === 'missed') return t('note.missed', { track: tn(n.track), n: n.n });
+    if (n.kind === 'wage') return t('note.wage', { track: tn(n.track), gold: n.gold });
     if (n.kind === 'attend') return n.left == null ? t('note.attendBreak', { track: tn(n.track) }) : t('note.attend', { track: tn(n.track), n: n.left });
     if (n.kind === 'discover') return t('note.discover', { place: content.places[n.place] ? content.places[n.place].name : n.place });
     if (n.kind === 'clue') return t('note.clue');
@@ -643,14 +644,26 @@
     if (c.teaches.length) parts.push(t('course.teaches', { spells: c.teaches.map(spellName).join(', ') }));
     return '<small class="course">' + Art.icon('scroll', 12) + ' ' + esc(parts.join(' · ')) + '</small>';
   }
+  // A job up front (M23): a new hire's pay per shift, read from the job's cards, and the shifts a term asks for.
+  function jobLine(j) {
+    if (!j) return '';
+    return '<small class="course">' + Art.icon('coin', 12) + ' ' + esc(t('job.outlook', { gold: j.shift, n: j.due })) + '</small>';
+  }
+  // What switching club or job costs (M35): the one you leave, with its rank and performance.
+  function switchLine(sw) {
+    if (!sw || !content.tracks[sw.from]) return '';
+    const d = content.tracks[sw.from], rank = (d.ranks || '').split(/\s*[,，、]\s*/)[sw.rank] || '';
+    return '<small class="course warn">' + esc(t('track.switch', { from: d.name, rank, perf: sw.perf })) + '</small>';
+  }
   function showMenu(v) {
     ui.mode = 'menu'; ui.view = v; ui.busy = false; ui.multi = v.pick > 1 ? [] : null;
     const deck = document.getElementById('deck'); deck.querySelectorAll('.card').forEach((c) => c.remove());
     document.getElementById('choices').innerHTML = '';
     const opts = v.options.map((o, i) => {
       const aff = o.affects.map((id) => content.resources[id] ? Art.icon(content.resources[id].icon, 14) : '').join('');
-      return '<button class="opt" data-k="' + esc(o.key) + '"' + (o.disabled ? ' disabled' : '') + '><span class="num">' + (i < 9 ? i + 1 : '') + '</span><b>' + esc(o.label) + '</b>' +
-        (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') + courseLine(o.course) + (previewHtml(v, o) || (aff ? '<span class="aff">' + aff + '</span>' : '')) + '</button>';
+      return '<button class="opt' + (o.locked ? ' locked' : '') + '" data-k="' + esc(o.key) + '"' + (o.disabled ? ' disabled' : '') + '><span class="num">' + (i < 9 ? i + 1 : '') + '</span><b>' + (o.locked ? '🔒 ' : '') + esc(o.label) + '</b>' +
+        (o.locked ? '<small class="why">' + esc(o.locked) + '</small>' : '') +
+        (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') + courseLine(o.course) + jobLine(o.job) + switchLine(o.switching) + (previewHtml(v, o) || (aff ? '<span class="aff">' + aff + '</span>' : '')) + '</button>';
     }).join('');
     openOverlay('<div class="modal dark"><div class="modal-art">' + Art.scene(v.art, v.tags, v.id) + '</div><div class="modal-body">' + (v.actor ? actorRow(v.actor).replace('actor-row', 'actor-row" style="color:var(--text)') : '') +
       '<h2>' + esc(v.title) + '</h2><p class="text">' + esc(v.text) + '</p>' + (settings.notes ? sceneNote(v.scene) : '') +

@@ -423,6 +423,7 @@ tags: job study
 scene: A library aisle with an empty gap where a whole bookcase should be, a student holding a catalogue.
 text: {The shelves rearranged themselves overnight. History is missing, and a queue is forming for it.|The shelves have wandered, this time the {~poetry|herbals|atlases}. You have brought string to mark the way.|The head librarian simply hands you the catalogue now and points upward.} {~Footnote sits where the section used to be.|A first-year swears she saw it go upstairs.|There is a faint trail in the dust, as if something heavy had tiptoed.}
 > left: Hunt it down by catalogue
+  wage
   challenge research easy:
     win:
       lore +small
@@ -433,6 +434,7 @@ text: {The shelves rearranged themselves overnight. History is missing, and a qu
       perform library_assistant -tiny
       say: {~You search until closing. In the morning the section is back where it started, faintly smug.|You find the wrong section, twice. The queue disperses with sighs you will hear in your sleep.}
 > right: Put up a sign and wait
+  wage
   mood +tiny
   perform library_assistant -tiny
   say: {~"Back shortly," says your sign. The section returns in the afternoon. The queue does not.|You sit at the desk and wait. A student asks whether the sign means you or the books.}
@@ -450,11 +452,13 @@ tags: job
 scene: A student assistant with a lamp walking between study tables in a dim library, one finger to her lips.
 text: {Evening hush round. One lap of the reading room, a lamp, a finger to your lips.|The reading room has learned the sound of your lamp. Whispers stop a table ahead of you.|The regulars hear your step and straighten up before you reach them.} {~A table of second-years is giggling.|An old scholar snores on his notes, in a scholarly key.|Somebody's quill is scratching so loudly it echoes.} {final_year: Soon this will be someone else's lap.|}
 > left: Hush them firmly
+  wage
   mood -tiny
   perform library_assistant +small
   rank_xp library_assistant +tiny
   say: {~One look and the room falls silent. Somewhere a bookcase seems to approve.|You hush them. They glare. In the morning one of them leaves a note on the desk: "sorry", in very small writing.}
 > right: Let them be
+  wage
   mood +tiny
   perform library_assistant -tiny
   say: {~You let it go. The noise rises, the head librarian appears from nowhere, and looks at you, not at them.|You leave them to it. For a while the murmur is the nicest sound in the building.}
@@ -472,6 +476,7 @@ tags: job study
 scene: A student behind a reference desk facing a line of readers, one of them holding up a green ribbon.
 text: {Clerks take the reference desk alone. The first question arrives before you sit down.|The desk has a worn patch now, exactly where your elbows go.|You keep a list of the strangest questions now, and it is long.} {~A professor wants "the green book, about this thick, I read it in my youth".|A first-year wants a book on a spell nobody has written yet.|A visiting scholar wants every book that mentions bees, by tonight.}
 > left: Dig until you find it
+  wage
   challenge research medium:
     win:
       lore +small
@@ -483,6 +488,7 @@ text: {Clerks take the reference desk alone. The first question arrives before y
       health -tiny
       say: {~Hours later you admit defeat. The book, it turns out, was on the desk all along, propping up the inkpot.|You never find it. You dream of card catalogues all night.}
 > right: Send them off with a good guess
+  wage
   mood +tiny
   perform library_assistant -tiny
   say: {~You point confidently at a staircase. They come back an hour later with a different book, which they say they liked better.|"Try the fourth floor." They do. You hope the fourth floor helps.}
@@ -499,11 +505,13 @@ tags: job study
 scene: An old librarian handing a brass ring of keys to a student among towering shelves at closing time.
 text: At closing the head librarian presses a brass ring of keys into your hand: the upper stacks, the map drawers, the ladder chains. Not the Restricted Section. "Lock up. The shelves settle after dark. Let them."
 > left: Do the closing round alone
+  wage
   rank_xp library_assistant +medium
   lore +small
   mood +small
   say: You walk every floor with the keys chiming. The shelves shift and creak and settle, like an old house going to sleep, and this time you are the one who gets to hear it.
 > right: Let Footnote come along
+  wage
   rank_xp library_assistant +medium
   mood +medium
   say: Footnote pads ahead of you up every stair, checking each lock before you do. At the top he sits in the window and lets you scratch his ears, once. You suspect that was the real promotion.
@@ -523,6 +531,7 @@ tags: job money
 scene: A crowded low-beamed tavern, a server balancing a tray of steaming mugs through the press of bodies.
 text: {The evening rush at the Gilded Newt. A dozen orders shouted at once, and a tray that holds fewer.|Half past seven, and the door won't stay shut. You have started remembering faces by their drink, which works until two people want spiced cider.|The regulars just point now, and you know what the points mean.} {~A barge crew has come in soaked and thirsty.|The card table is arguing about the rules again.|{season == "winter": Snow is melting off every coat in the room.|Half the village is on the step.}}
 > left: Keep every order in your head
+  wage
   challenge research using lore easy:
     win:
       gold +tiny
@@ -533,6 +542,7 @@ text: {The evening rush at the Gilded Newt. A dozen orders shouted at once, and 
       perform tavern -tiny
       say: {~The spiced cider goes to the wrong table. The right table has opinions. The wrong table drinks it anyway.|You mix up two orders and three tempers.}
 > right: Write every order down
+  wage
   perform tavern +tiny
   mood -tiny
   say: {~Slow but sure. Nobody gets the wrong drink; nobody tips the slow server either.|Your order pad fills with a shorthand only you can read. By closing, you can't either.}
@@ -550,11 +560,13 @@ tags: job social
 scene: An old barge-man, a herb-wife from the lane and a quiet traveller at a fireside table, beckoning a server over.
 text: {The regulars' corner by the fire wants you to sit for a minute. The fire is warm, and the minute is tempting.|The regulars' corner has saved you a stool now, with a cushion on it.|The regulars wave you over by name. They want to know how your exams went, all of them, in order.} {~The old barge-man is telling the eel story again.|The herb-wife from the lane wants her pie warmed "exactly as before".|A quiet traveller is listening to everything.}
 > left: Sit with them a while
+  wage
   charm +small
   gold +tiny
   perform tavern -tiny
   say: {~You hear the latest instalment of everyone's story. They tip you for listening, which is a better rate than serving.|You sit for one minute and stay for ten. The landlady clears her throat across the room like a falling tree.}
 > right: Keep the trays moving
+  wage
   perform tavern +small
   mood -tiny
   say: {~You wave and keep going. The corner toasts your back. The eel story will keep.|You work the room like weather. The corner calls you "the brisk one" now, which is not a compliment.}
@@ -574,12 +586,14 @@ tags: job money
 scene: A ledger open on a tavern bar, a long column of figures, a hopeful customer at the far end.
 text: {Barkeeps keep the tab book, and the tab book says {regular} owes the Newt rather a lot.|The tab book has grown a second volume, and {regular} has a page in it.|{regular} is at the end of the bar, and so, in the book, is a long column of figures.} {~{They} smile{s} at you hopefully.|{They} {are} pretending to be fascinated by the fire.|{They} {are} counting coins that clearly won't be enough.}
 > left: Call the tab in
+  wage
   gold +tiny
   perform tavern +small
   rel regular -small
   mood -tiny
   say: {~{regular} pays, slowly, coin by coin, as if each one were a friend leaving.|You call it in. {regular} pays half and an apology. The landlady counts both.}
 > right: Let it ride another week
+  wage
   rel regular +small
   perform tavern -tiny
   say: {~{regular} looks at you as if you had hung the moon. The landlady looks at you as if you had lost it.|Another week. The column grows, and so, oddly, does {regular}'s loyalty.}
@@ -596,11 +610,13 @@ tags: job
 scene: A landlady setting a heavy cellar key on a polished tavern bar, the hearth fire glowing behind her.
 text: The landlady sets the cellar key on the bar between you. "You pour from tonight," she says. "Barkeeps feed the fire, too. It hasn't gone out in my lifetime, nor my mother's. Don't be the one." The hearth crackles, as if listening.
 > left: Bank the fire at closing
+  wage
   rank_xp tavern +medium
   perform tavern +small
   health -tiny
   say: You stay after the last song, banking the coals the way she showed you, slow and careful as tucking in a child. In the morning it is still burning. You check twice anyway.
 > right: Pour the staff a round
+  wage
   rank_xp tavern +medium
   mood +small
   gold -tiny
@@ -621,11 +637,13 @@ tags: job
 scene: A student squinting at a glass dropper over a tiny vial at an apothecary counter, a wall of labelled drawers behind.
 text: {Old Pell's first rule is to count every drop aloud. Today the counter is lined with tinctures waiting to be measured.|Drop-counting. Your tongue knows the numbers before your eyes do.|Counting drops. Old Pell says you count like a metronome now, which from him is a sonnet.} {~A customer is waiting, tapping a coin on the glass.|One of the daughters is humming, which throws off your count.|Today's tincture is the colour of a bruise and smells of violets.}
 > left: Count aloud, every drop
+  wage
   perform apothecary_clerk +small
   alchemy +tiny
   mood -small
   say: {~Every vial exact. Anyone in the shop has now heard you count higher than anyone should.|Aloud, drop by drop. Old Pell, passing, nods once without breaking stride.}
 > right: Count by eye, faster
+  wage
   challenge brew easy:
     win:
       perform apothecary_clerk +small
@@ -649,6 +667,7 @@ tags: job mystery
 scene: A wall of tiny labelled wooden drawers, one of them rattling on its own.
 text: {Each shift a clerk checks a row of drawers against the stock book. Today's row starts with one that is stuck.|A different row today, and the same feeling that something in it is awake.|Your row for the week. You have learned that the wrong drawer is never just the wrong drawer.} {~One is labelled in a hand that isn't Pell's.|One is rattling, very gently, as if politely.|One smells of snow, in {season == "winter": a shop this warm|the wrong season entirely}.}
 > left: Open the odd drawer
+  wage
   challenge research using alchemy easy:
     win:
       alchemy +small
@@ -659,6 +678,7 @@ text: {Each shift a clerk checks a row of drawers against the stock book. Today'
       mood -tiny
       say: {~The drawer opens with a sneeze of pepperwort. You sneeze until closing.|Something small and grey bolts out of the drawer and into another, and you never find out which.}
 > right: Mark the row as checked
+  wage
   mood +tiny
   perform apothecary_clerk -tiny
   say: {~You tick the row and move on. Behind you a drawer rattles, as if to say it noticed.|"Checked," you write. Pell reads it, opens one drawer at random, and closes it again with a look.}
@@ -676,6 +696,7 @@ tags: job
 scene: A worried customer leaning over an apothecary counter, a student behind it consulting a heavy recipe book.
 text: {Dispensers advise, and today a customer asks you instead of Pell.|Pell has moved your stool to the end of the counter, where the customers come.|You know the regular coughs by sound now, before anyone opens the door.} {~A farmer has a cough that sounds like a gate.|A nervous student wants something for courage before exams.|A barge-hand has a back that hasn't straightened since autumn.}
 > left: Prescribe it yourself
+  wage
   challenge brew medium:
     win:
       perform apothecary_clerk +small
@@ -686,6 +707,7 @@ text: {Dispensers advise, and today a customer asks you instead of Pell.|Pell ha
       perform apothecary_clerk -tiny
       say: {~It helps a little, then not at all. They come back, and this time they ask for Pell.|Pell takes the bottle from your hand, adds one thing and gives it back. He doesn't say a word, which is worse.}
 > right: Fetch one of the daughters
+  wage
   alchemy +small
   perform apothecary_clerk -tiny
   say: {~The elder daughter takes over and talks the customer down like a nervous horse. You watch and write it all down.|The younger daughter mixes it in half the time you would have. She lets you hold the funnel.}
@@ -702,11 +724,13 @@ tags: job
 scene: An old apothecary handing over a well-worn pen beside a stack of fresh blank labels.
 text: Old Pell is very proud of his labelling. So it means something when he puts his own pen in your hand, its nib worn to his slant, and slides a stack of blank labels across the counter. "New stock," he says. "Your hand from now on. Neat, mind."
 > left: Label the new drawers yourself
+  wage
   rank_xp apothecary_clerk +medium
   alchemy +small
   perform apothecary_clerk +small
   say: You write every label slowly, in your best hand. Pell inspects them through his spectacles one by one and changes not a single letter. His daughters notice before you do.
 > right: Ask him to watch the first one
+  wage
   rank_xp apothecary_clerk +medium
   mood +medium
   say: He watches. Your first label wobbles at the end. Pell takes the pen, adds a tiny flourish to your wobble so that it looks deliberate, and returns the pen for good.
@@ -726,6 +750,7 @@ tags: job
 scene: A courier on a broom skimming low over a mirror-still lake at dawn, a mail sack over one shoulder.
 text: {The dispatch bell rings. The morning sack goes to the village, and the quickest way is over the lake.|You have started timing yourself against the gulls.|The lake knows your shadow by now.} {season == "winter": Ice fog sits on the water like a lid.|{season == "summer": The water is so still you fly over your own reflection.|{~A headwind is coming off the hills.|Gulls are holding a meeting on your route.|The far shore is lost in mist.}}}
 > left: Fly straight across
+  wage
   challenge feat easy:
     win:
       perform broom_courier +small
@@ -736,6 +761,7 @@ text: {The dispatch bell rings. The morning sack goes to the village, and the qu
       perform broom_courier -tiny
       say: {~A gust drops you into the shallows. The sack stays dry; you do not.|The far shore vanishes and you fly a slow circle round a buoy. You arrive late and very damp.}
 > right: Take the long way round
+  wage
   perform broom_courier +tiny
   mood -tiny
   say: {~Round the shore, safe and slow. The dispatcher checks the clock and sighs.|The long way. You wave to a fisherman, who does not wave back.}
@@ -753,10 +779,12 @@ tags: job
 scene: A draughty loft rack of battered brooms, couriers jostling to grab the least battered one.
 text: {Only one loft broom is in a good state, and every courier on shift wants it.|You have started arriving early for the brooms, and so has everyone else.|You could pick the good broom blindfold, by the smell of its varnish.} {~What's left is one that pulls left.|What's left sheds twigs when nervous.|What's left only flies if you're polite to it.} {season == "winter": Frost has got into all their bristles.|}
 > left: Race for the good broom
+  wage
   perform broom_courier +small
   mood -tiny
   say: {~You get there first, by a whisker and an elbow. The second-year you elbowed will remember.|The good broom is yours. It flies like a dream; the others fly like complaints.}
 > right: Take the difficult one
+  wage
   vigor +small
   health -tiny
   perform broom_courier +tiny
@@ -775,6 +803,7 @@ tags: job mystery
 scene: A dusty shelf of undeliverable parcels in a courier loft, one tied with a faded ribbon.
 text: {Couriers sort the dead letters, post with no proper address, waiting on a dusty shelf.|The dead-letter shelf has grown a second row.|You know which parcels have waited longest now, and which have stopped expecting anyone.} Today, a parcel addressed only to {~"the tall one in the red scarf, third tower"|"whoever plays the flute at dawn"|"my brother, the one who never writes"}.
 > left: Track down the recipient
+  wage
   challenge research easy:
     win:
       perform broom_courier +small
@@ -784,6 +813,7 @@ text: {Couriers sort the dead letters, post with no proper address, waiting on a
       mood -small
       say: {~You knock on every door you can think of. The parcel goes back on the shelf, a little more crumpled, a little more sad.|Wrong door. Wrong tower. Wrong week.}
 > right: Leave it on the shelf
+  wage
   mood +tiny
   perform broom_courier -tiny
   say: {~It goes back with the others. Some of them have been waiting longer than you have been alive.|You leave it. That night you dream of a parcel on a high tower, waiting.}
@@ -800,11 +830,13 @@ tags: job
 scene: A courier loft wall of pigeonholes, one freshly painted with a student's name, a brass bell above.
 text: The dispatcher has painted your name over a pigeonhole, in letters that will outlast the loft's roof. "Your route from now on," the dispatcher says. "Village, barge landing, the high towers. When the bell rings for you, you answer." The dispatch bell rings. It's for you.
 > left: Fly the route at once
+  wage
   rank_xp broom_courier +medium
   vigor +small
   health -tiny
   say: You fly your own route for the first time, every turning yours. At the barge landing someone calls you by name to hand over a letter. The wind is cold, and you don't mind at all.
 > right: Stand the runners a round
+  wage
   rank_xp broom_courier +medium
   mood +small
   gold -tiny

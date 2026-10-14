@@ -1,0 +1,166 @@
+# Holiday gigs (playtest 2, M6 stub; X15 fills them): working on campus over a break, you take one of two gigs
+# open to anyone. A gig pays through its cards, better than a term job's shift; board is still paid.
+# Repeatable routine events; see docs/authoring/pools.md.
+
+@event holiday_gigs
+title: Holiday Work
+trigger: queued
+type: menu
+class: story
+tone: warm
+art: coin
+tags: job money
+scene: A noticeboard by the castle gates in the emptying holidays, two handwritten notices pinned side by side.
+text: Two notices are still pinned by the gates. {season == "winter": The snow has got under one of them.|The sun has curled the corners of both.} Old Maud wants hands for the grounds. The Refectory kitchens want someone who can peel fast and not complain about it.
+> grounds: Work the grounds for Old Maud
+  hint: Outdoor work, heavy and honest. Good pay; hard on the body.
+  gain gig_grounds
+  say: Maud looks you up and down, hands you a pair of gloves two sizes too big, and says, "You'll grow into them."
+> kitchens: Work the Refectory kitchens
+  hint: Long hours by the ovens. Good pay; hard on the temper.
+  gain gig_kitchens
+  say: The head cook gives you an apron, a knife and a sack of onions, and doesn't ask your name until the sack is empty.
+
+# ---------------- The grounds (gig_grounds) ----------------
+
+@event gig_grounds_hard_ground
+title: Hard Ground
+plan: work
+when: has(gig_grounds)
+class: routine
+tone: light
+repeat: 5
+weight: 30
+art: leaf
+tags: job nature money
+scene: A student and an old woman working a frozen garden bed at dawn, breath steaming, a wheelbarrow between them.
+text: {season == "winter": The ground is frozen two fingers deep and Maud wants the beds turned anyway.|The ground is baked hard and Maud wants the beds turned anyway.} "The soil doesn't take holidays," she says. {~She hands you the heavier spade.|The bees watch you from their hives with professional interest.|She is already on her third bed.}
+> left: Dig until it's done
+  gold +large
+  health -small
+  vigor +small
+  say: {~By noon your hands have blisters on their blisters. Maud counts your wages into them anyway.|You turn every bed. Maud inspects them, says "Hm," and pays you a little over.}
+> right: Work at Maud's pace
+  gold +medium
+  health -tiny
+  say: {~Maud works slowly and never stops, and by evening you understand why. Less done, a smaller purse, an easier back.|You keep to her pace and her stories. She pays for the beds you turned, not the ones she did.}
+
+@event gig_grounds_storm_damage
+title: After the Storm
+plan: work
+when: has(gig_grounds)
+class: routine
+tone: tense
+repeat: 4
+weight: 30
+art: tree
+tags: job nature money
+scene: A fallen branch across an orchard path after a storm, a student with a saw, an old woman pointing at something higher up.
+text: {season == "winter": Last night's storm brought down half a pear tree.|A summer storm in the night has stripped the orchard.} Maud wants it cleared before the stay-behinds go walking. A cracked limb still hangs over the path.
+> left: Climb up and cut it down
+  gold +large
+  challenge feat easy:
+    win:
+      say: {~The limb comes down where you meant it to. Maud pays you extra for not falling.|You lower it on a rope like a professional. Maud pretends not to be impressed.}
+    lose:
+      health -medium
+      say: {~The limb comes down where it wanted to. So do you, more or less. Maud pays you and sends you to the infirmary.|You get the limb and the limb gets you.}
+> right: Rope it off and clear the rest
+  gold +medium
+  mood -tiny
+  say: {~You clear the path and rope off the danger. Maud nods: she'll ask someone with a ladder. The pay is for the path.|Safe and sensible, and a smaller purse for it.}
+
+@event gig_grounds_hive_check
+title: Checking the Hives
+plan: work
+when: has(gig_grounds)
+class: routine
+tone: warm
+repeat: 4
+weight: 30
+art: leaf
+tags: job nature
+scene: A student in a veiled hat leaning over an open beehive beside an old woman, who isn't wearing one.
+text: Maud's hives sit at the end of the orchard and she checks them {season == "winter": by ear in winter, knocking and listening|by hand in summer, slow and bare-armed}. Today she wants you to do it. "Tell them who you are," she says. "They like manners."
+> left: Introduce yourself properly
+  gold +medium
+  mood +small
+  health -tiny
+  say: {~You tell the bees your name and your house. Only one stings you, on principle. Maud pays you and calls you a natural.|You feel foolish for about a minute, and then you don't. The hive hums back, and one bee makes a point of it.}
+> right: Get it done quickly
+  gold +large
+  chance 50:
+    say: {~Quick and quiet. The bees let it pass this once.|You're done before the bees notice. Maud notices.}
+  else:
+    health -small
+    say: {~The bees take your hurry personally. Maud pays you and pulls out the stings with no sympathy at all.|Three stings and a lesson about manners.}
+
+# ---------------- The Refectory kitchens (gig_kitchens) ----------------
+
+@event gig_kitchens_onions
+title: The Onion Sack
+plan: work
+when: has(gig_kitchens)
+class: routine
+tone: light
+repeat: 5
+weight: 30
+art: meal
+tags: job money
+scene: A student at a scrubbed kitchen table behind a mountain of onions, eyes streaming, a huge cook stirring a cauldron behind them.
+text: {The holiday kitchens feed fewer mouths and work no fewer hours.|Back at the long table, back to the sack.|The head cook has started saving the worst sack for you, as a compliment.} {season == "winter": The Midwinter stock needs a hundred onions.|The summer stew needs a hundred onions.} Nobody has ever needed fewer.
+> left: Peel the whole sack
+  gold +large
+  mood -small
+  say: {~A hundred onions and not one tear left in you. The head cook pays you and adds a heel of fresh bread.|You finish the sack. The head cook counts the onions, then your wages, both correctly.}
+> right: Peel, then help at the stove
+  gold +medium
+  alchemy +tiny
+  mood -tiny
+  say: {~Half a sack and an hour at the stove. Less pay, but now you know why the soup tastes like home.|The head cook lets you stir. Somehow the stew tastes of your grandmother's. You get paid for the onions.}
+
+@event gig_kitchens_burnt_pan
+title: The Burnt Pan
+plan: work
+when: has(gig_kitchens)
+class: routine
+tone: tense
+repeat: 4
+weight: 30
+art: meal
+tags: job money
+scene: A smoking pan on a range, a student holding it at arm's length, a cook turning round with a ladle raised.
+text: You turn away for a moment and the porridge for the stay-behinds catches. The smell is already halfway to the dining hall. The head cook hasn't noticed. Yet.
+> left: Own up and start again
+  gold +medium
+  mood -small
+  alignment +tiny
+  say: {~The head cook sighs the sigh of thirty years in kitchens and docks you for the oats. You make it again, properly.|"Everyone burns one," says the head cook. "Once." You are paid, minus the oats.}
+> right: Scrape it and serve it
+  gold +large
+  chance 60:
+    say: {~Nobody notices. The stay-behinds eat it and ask for more. You don't feel great about it.|A little smoky. "Rustic," says someone. You get the full day's pay.}
+  else:
+    mood -medium
+    say: {~A professor sends it back with a note. The head cook reads it aloud, slowly, to the whole kitchen.|The smell gives you away. You're paid in full and in disapproval.}
+
+@event gig_kitchens_feast_night
+title: Feast Night
+plan: work
+when: has(gig_kitchens)
+class: routine
+tone: warm
+repeat: 4
+weight: 30
+art: cup
+tags: job money social
+scene: A steaming kitchen on a feast night, trays going out in a stream, a student in an apron grinning through the chaos.
+text: {season == "winter": The castle keeps a small Midwinter table for those who stayed, and the kitchens cook as if for the whole school.|The stay-behinds hold a summer supper in the courtyard, and the kitchens cook as if for the whole school.} Trays go out faster than you can fill them.
+> left: Carry trays all night
+  gold +large
+  health -small
+  say: {~You carry until your arms forget being arms. The head cook pays you double for the night, in coins and leftovers.|Up and down the stairs until midnight. Somebody toasts the kitchens and you hear it through the door.}
+> right: Stay in the back and plate
+  gold +medium
+  health -tiny
+  say: {~You plate by the ovens and listen to the feast through the wall. Smaller pay, a scorched wrist, and the best seat in the house.|Quiet hands in a hot room. The head cook gives you the last slice of pie, which is its own wage.}

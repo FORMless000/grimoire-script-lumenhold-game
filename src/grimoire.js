@@ -183,7 +183,9 @@
     // Numbers (design §8.4): size and difficulty tiers, option-value weights, the expected-skill curve.
     balance: { noId: true, props: ['sizes', 'difficulty', 'weights', 'curve', 'desc', 'xp_cost', 'rank_xp', 'performance',
       // the combat stub's mix and entry cost (playtest 2, M39, M5); odds slopes per swing word (M14)
-      'combat', 'combat_cost', 'swing'], effects: [] },
+      'combat', 'combat_cost', 'swing',
+      // a shift's pay per wage word (`wage short`), as a share of the job's `pay:` at your rank (M10)
+      'wage'], effects: [] },
     // A named group of effects, used as a statement: `grind arcana`. Its body may use $params.
     preset: { props: ['params', 'desc'], effects: [], raw: ['do'] },
     resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
@@ -273,8 +275,10 @@
     performance(t) { return STRUCT_PROPS.weights(t); },
     combat(t) { return STRUCT_PROPS.weights(t); },
     swing(t) { return STRUCT_PROPS.weights(t); },
+    wage(t) { return STRUCT_PROPS.weights(t); },
   };
-  const OPTION_PROPS = new Set(['when', 'hint', 'memory']);
+  // `locked:` a menu option whose `when` fails stays visible, disabled, with this reason (M24); others hide.
+  const OPTION_PROPS = new Set(['when', 'hint', 'memory', 'locked']);
 
   /* ------------------------------------------------------------------ *
    * Effects
@@ -312,6 +316,7 @@
     learnSpell: new RegExp('^learn_spell\\s+(' + ID + ')(?:\\s+([123]))?$'),
     challenge: new RegExp('^challenge\\s+(' + ID + ')(?:\\s+using\\s+(' + ID + '))?(?:\\s+vs\\s+(' + ID + ')\\.(' + ID + '))?\\s+(trivial|easy|medium|hard|heroic)(?:\\s+(wild|steady))?\\s*:$'),
     sitExam: /^sit_exam(?:\s+(wild|steady))?$/,
+    wage: /^wage(?:\s+([a-z]+))?$/,
     preset: new RegExp('^(' + ID + ')((?:\\s+' + ID + ')*)$'),
     bond: new RegExp('^bond\\s+(' + ID + ')\\s+(' + ID + ')$'),
     meet: new RegExp('^meet\\s+(' + ID + ')$'),
@@ -332,6 +337,7 @@
     if ((m = content.match(RE.check))) return { t: 'check', skill: m[1], dc: E(m[2]), body: [], else: null, line, block: true };
     if ((m = content.match(RE.challenge))) return { t: 'challenge', kind: m[1], using: m[2] || null, vs: m[3] ? { who: m[3], stat: m[4] } : null, tier: m[5], swing: m[6] || null, win: null, partial: null, lose: null, line, block: true, outcomes: true };
     if ((m = content.match(RE.sitExam))) return { t: 'sit_exam', swing: m[1] || null, line };
+    if ((m = content.match(RE.wage))) return { t: 'wage', size: m[1] || null, line };
     if (content.endsWith(':')) throw new GrimError('unknown block statement "' + content + '" (expected if/elif/else/chance/check)', file, line);
     if ((m = content.match(RE.flag))) return { t: 'flag', names: m[1].split(/\s+/), line };
     if ((m = content.match(RE.unflag))) return { t: 'unflag', names: m[1].split(/\s+/), line };
@@ -543,7 +549,7 @@
         if (!m) throw new GrimError('bad option header "' + L.content + '" (expected "> key: Label")', file, L.line);
         if (m[2] && m[1] !== 'up') throw new GrimError('only the "up" option takes a spell: > up[' + m[2] + ']:', file, L.line);
         if (m[1] === 'up' && !m[2]) throw new GrimError('the "up" option needs a spell: > up[ward]: Label', file, L.line);
-        const opt = { key: m[1], spell: m[2] || null, label: m[3].trim(), when: null, hint: null, memory: null, effects: [], line: L.line };
+        const opt = { key: m[1], spell: m[2] || null, label: m[3].trim(), when: null, hint: null, locked: null, memory: null, effects: [], line: L.line };
         if (def.options.some((o) => o.key === opt.key)) throw new GrimError('duplicate option key "' + opt.key + '"', file, L.line);
         const sub = takeIndented().filter((x) => !x.blank);
         const eff = [];
@@ -556,7 +562,8 @@
               const mm = pm[2].trim().match(/^([a-z_][a-z0-9_]*)\s+([a-z_][a-z0-9_]*)$/);
               if (!mm) throw new GrimError('memory: expected "<kind> <who>", e.g. memory: helped npc', file, S.line);
               opt.memory = { kind: mm[1], who: mm[2] };
-            } else opt.hint = pm[2].trim();
+            } else if (pm[1] === 'locked') opt.locked = pm[2].trim();
+            else opt.hint = pm[2].trim();
           } else eff.push(S);
         }
         if (eff.length && eff[0].indent !== base) throw new GrimError('unexpected indentation', file, eff[0].line);

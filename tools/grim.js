@@ -99,7 +99,10 @@ const PRONOUN_KEYS = new Set(['they', 'them', 'their', 'theirs', 'are', 's', 'na
 
 let ROLES = new Set();   // cast role names of the event being scanned (valid character references)
 let IN_EVENT = false;    // scanning an event's effects (raw amounts are legacy there)
+let CUR_TRACK = null;    // the scanned event's track (a wage is paid only in a job's own events)
 function analyze(content) {
+  // `member(club)`, `applied(internship)`, `leave job`: any track of that kind
+  const KIND_ARGS = new Set(Object.values(content.tracks || {}).map((d) => d.kind));
   // Collect everything that is set / referenced, with locations.
   const A = { flagsSet: {}, flagsRead: {}, varsSet: {}, varsRead: {}, queued: {}, statesRef: {}, npcsRef: {}, endingsRef: {}, eventsRef: {}, problems: [], legacy: [] };
   const add = (map, k, where) => { (map[k] = map[k] || []).push(where); };
@@ -122,7 +125,7 @@ function analyze(content) {
           else if (kind === 'state') add(A.statesRef, a.v, where);
           else if (kind === 'npc') { if (!ROLES.has(a.v)) add(A.npcsRef, a.v, where); }
           else if (kind === 'event') add(A.eventsRef, a.v, where);
-          else if (kind === 'track') { if (!content.tracks[a.v]) P('error', where, n.n + '(): unknown track "' + a.v + '"'); }
+          else if (kind === 'track') { if (!content.tracks[a.v] && !((n.n === 'member' || n.n === 'applied') && KIND_ARGS.has(a.v))) P('error', where, n.n + '(): unknown track "' + a.v + '"'); }
           else if (kind === 'clue') { if (!Object.values(content.arcs).some((arc) => (arc.clues || []).includes(a.v))) P('error', where, 'clue(' + a.v + '): not a clue of any @arc'); }
           if (n.n === 'bonds' && !KNOWN_BONDS.has(a.v)) P('warn', where, 'unknown bond status "' + a.v + '"');
         });
@@ -193,7 +196,7 @@ function analyze(content) {
         case 'end': if (!content.endings[st.ending]) P('error', w, 'end: unknown ending "' + st.ending + '"'); add(A.endingsRef, st.ending, w); break;
         case 'learn': if (!content.facts[st.fact]) P('error', w, 'learn: unknown fact "' + st.fact + '"'); break;
         case 'enrol': case 'join': case 'leave': case 'promote': case 'apply': case 'perform': case 'rank_xp': case 'progress':
-          if (st.track !== 'track' && !(st.t === 'leave' && ['job', 'club'].includes(st.track)) && !content.tracks[st.track]) P('error', w, st.t + ': unknown track "' + st.track + '"');
+          if (st.track !== 'track' && !(st.t === 'leave' && KIND_ARGS.has(st.track)) && !content.tracks[st.track]) P('error', w, st.t + ': unknown track "' + st.track + '"');
           break;
         case 'study': if (st.track && st.track !== 'track' && !(content.tracks[st.track] && content.tracks[st.track].kind === 'course')) P('error', w, 'study: "' + st.track + '" is not a course'); break;
         case 'discover': if (!content.places[st.place]) P('error', w, 'discover: unknown place "' + st.place + '"'); break;
@@ -213,6 +216,12 @@ function analyze(content) {
             if (!content.skills[st.vs.stat] && !['wealth', 'rel', 'spark'].includes(st.vs.stat)) P('error', w, 'challenge vs: "' + st.vs.stat + '" is not a skill, wealth, rel or spark');
           }
           break;
+        case 'wage': {
+          const words = Object.assign({ short: 0.5, full: 1, overtime: 2 }, (content.balance && content.balance.wage) || {});
+          if (st.size && words[st.size] == null) P('error', w, 'wage: unknown wage word "' + st.size + '" (' + Object.keys(words).join(' ') + ')');
+          if (IN_EVENT && !(CUR_TRACK && content.tracks[CUR_TRACK] && content.tracks[CUR_TRACK].kind === 'job')) P('error', w, 'wage: only a job\'s own events (track: <job>) pay a wage');
+          break;
+        }
         case 'if': st.branches.forEach((b) => scanExpr(b.cond, w, hasActor)); break;
         case 'chance': scanExpr(st.p, w, hasActor); break;
         case 'check': if (!content.skills[st.skill]) P('error', w, 'check: unknown skill "' + st.skill + '"'); scanExpr(st.dc, w, hasActor); break;
@@ -223,7 +232,7 @@ function analyze(content) {
   const loc = (d) => d.file + ':' + d.line;
   for (const e of Object.values(content.events)) {
     const hasActor = !!e.actor || !!e.cast;
-    ROLES = new Set((e.cast || []).map((r) => r.role)); IN_EVENT = true;
+    ROLES = new Set((e.cast || []).map((r) => r.role)); IN_EVENT = true; CUR_TRACK = e.track || null;
     const w = loc(e);
     if (e.actor && !['any', 'npc'].includes(e.actor) && !content.npcs[e.actor]) P('error', w, 'actor: unknown npc "' + e.actor + '"');
     if (e.trigger === 'social' && !e.actor && !e.per) P('warn', w, 'social event without actor (or per: <cast role>)');
@@ -267,7 +276,7 @@ function analyze(content) {
         if (o.memory.who === 'npc' ? !hasActor : !content.npcs[o.memory.who]) P('error', ow, 'memory: unknown character "' + o.memory.who + '"');
       }
       scanText(o.label, ow, hasActor); scanText(o.hint, ow, hasActor); scanExpr(o.when, ow, hasActor);
-      if (o.label.length > 42) P('warn', ow, 'option label is long (' + o.label.length + ' chars; aim for < 36)');
+      { const n = longestRendering(o.label); if (n > 42) P('warn', ow, 'option label is long (' + n + ' chars; aim for < 36)'); }
       scanEffects(o.effects, ow, hasActor);
     }
     if (e.options.length > 1 && e.options.every((o) => o.when)) P('warn', w, 'every option has a "when" — the card can soft-lock if none are available');
@@ -295,7 +304,7 @@ function analyze(content) {
   for (const [n, ws] of Object.entries(A.npcsRef)) if (!content.npcs[n]) P('error', ws[0], 'unknown npc "' + n + '"');
   for (const [ev, ws] of Object.entries(A.eventsRef)) if (!content.events[ev]) P('error', ws[0], 'unknown event "' + ev + '"');
   // The engine itself queues these at term end (design §6.2).
-  for (const id of ['track_warning', 'track_promotion']) A.queued[id] = A.queued[id] || ['engine'];
+  for (const id of ['track_warning', 'track_promotion', 'job_term_review']) A.queued[id] = A.queued[id] || ['engine'];
   // The exam card (`@game exam:`) is pushed by the engine for each enrolled course (M4).
   if (content.game.exam) A.queued[content.game.exam] = A.queued[content.game.exam] || ['engine'];
   for (const e of Object.values(content.events)) if (e.trigger === 'queued' && !A.queued[e.id]) P('warn', loc(e), 'queued-only event "' + e.id + '" is never queued (orphan)');

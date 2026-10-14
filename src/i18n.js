@@ -113,7 +113,7 @@
     'check.challengeButton': '{kind} · {p}%',
     'check.combatButton': 'Combat · {p}% · −{cost} mana', 'check.examButton': 'Exam: {skill} · pass {p}% · A or B {top}%',
     'swing.wild': 'wild', 'swing.steady': 'steady', 'challenge.combat': 'Combat',
-    'course.tests': 'Tests {skill}', 'course.exam': '{tier} exam, {p}% pass today', 'course.teaches': 'teaches {spells}',
+    'course.tests': 'Tests {skill}', 'course.exam': '{tier} exam, {p}% pass today', 'course.teaches': 'teaches {spells}', 'job.outlook': 'About {gold} crowns a shift · {n} shifts a term', 'track.switch': 'Leaves {from}: your {rank} rank and {perf} performance; you start here as new',
     'tier.medium': 'Medium', 'tier.hard': 'Hard', 'tier.heroic': 'Heroic',
     'challenge.duel': 'Duel',
     'challenge.negotiate': 'Negotiation',
@@ -219,7 +219,7 @@
     'note.promote': 'Promoted in {track}',
     'note.dropped': 'Dropped from {track}',
     'note.missed': '{track}: missed {n}',
-    'note.attend': '{track}: {n} left this term',
+    'note.attend': '{track}: {n} left this term', 'note.wage': '{track}: your wages, {gold} crowns',
     'note.attendBreak': '{track}: an extra visit (breaks don\'t count toward the term)',
     'note.discover': 'New place: {place}',
     'note.clue': 'A clue found',
@@ -356,6 +356,7 @@
       if (kind === 'event') for (const o of d.options || []) {
         cb(bkey, 'opt.' + o.key + '.label', o.label, (v) => { o.label = v; }, d);
         if (o.hint) cb(bkey, 'opt.' + o.key + '.hint', o.hint, (v) => { o.hint = v; }, d);
+        if (o.locked) cb(bkey, 'opt.' + o.key + '.locked', o.locked, (v) => { o.locked = v; }, d);
         says('opt.' + o.key, o.effects);
       }
     }

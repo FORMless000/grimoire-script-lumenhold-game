@@ -44,10 +44,14 @@ art: group
 tags: club festival
 scene: The courtyard full of recruiting tables, banners snapping, a duelling demonstration drawing a crowd.
 text: The Club Fair fills the courtyard. Every table wants you; every captain swears theirs is the one that matters. {rel(lyra) >= 6: Lyra is at the Duelling Circle's table, pretending not to watch which way you walk.|}
-> none: Not this year
-  hint: You can join at next year's fair.
-  mood +tiny
-  say: You collect three leaflets and a free biscuit, and sign nothing.
+> none: {member(club): Stay with your club|Not this year}
+  hint: {member(club): Another year with the same table.|You can join at next year's fair.}
+  say: {member(club): {~You stop by your own club's table to help hand out leaflets. Someone asks you if it's worth joining. You say yes and mean it.|You walk past every other table with the ease of someone already spoken for.}|You collect three leaflets and a free biscuit, and sign nothing.}
+> quit: Resign from your club
+  when: member(club)
+  hint: You can join again at next year's fair, as a new member.
+  leave club
+  say: {~You hand back your club pin at the table where you got it. It feels smaller than it did.|You resign. Your evenings are yours again, and nobody will expect you anywhere.}
 
 # ---------------- The Job Board (design §7.4): visiting it is the change event ----------------
 
@@ -65,10 +69,9 @@ tags: job money
 scene: A cork board crowded with notices, a student running a finger down a column of shift times.
 text: Notices for work, three layers deep: the library, the Gilded Newt, Pell & Daughters, the courier loft. Each wants someone reliable. Each says so twice.
 > look: Just looking
-  mood +tiny
   say: You read every notice twice and take none of them down.
 > quit: Hand in your notice
-  when: member(library_assistant) or member(tavern) or member(apothecary_clerk) or member(broom_courier)
+  when: member(job)
   hint: You can find work again later.
   leave job
   mood +small
@@ -97,13 +100,13 @@ text: {month == 5: The winter break.|The summer break.} Two months without lectu
   hint: Family, old friends, free board.
   gain plan_home
   say: The barge, the coach, the last mile on foot. Home is smaller than you remember, and warmer.
-> work: Work full-time
-  when: member(library_assistant) or member(tavern) or member(apothecary_clerk) or member(broom_courier)
-  hint: Extra shifts at double pay.
+> work: Work on campus
+  hint: A holiday gig that pays well. Board 8 crowns a month.
   gain plan_work
+  queue holiday_gigs now
   say: You trade the holidays for wages. Your feet will remember it.
 > intern: Start your internship
-  when: member(intern_royal_library) or member(intern_conclave) or member(intern_alchemists) or member(intern_expedition) or member(intern_field_station) or member(intern_thornwick) or member(intern_unseen_office)
+  when: member(internship) and month == 11
   hint: A stipend, a supervisor and a project.
   gain plan_internship
   say: You pack a trunk of notebooks and take the long coach to the capital.
@@ -143,6 +146,23 @@ text: A note about {track}: your attendance and your efforts have slipped, and i
   mood +tiny
   say: You put the note in a drawer. It doesn't stop existing in the drawer.
 
+# Every job at term end (playtest 2, M33): stay on for another term, or resign.
+@event job_term_review
+title: Another Term?
+trigger: queued
+class: milestone
+tone: light
+art: coin
+tags: job money
+scene: A staff rota pinned to a door, last term's names crossed off, a blank column waiting for next term's.
+text: The term is over, and so is the rota for {track}. A fresh one goes up for next term, and there's a gap where your name usually goes. {~Nobody would blame you either way.|Your feet have an opinion. So does your purse.|Someone has already pencilled a question mark next to it.}
+> left: Stay on next term
+  say: {~You write your name in the gap. Another term of shifts, another term of wages.|Your name goes back on the rota, in ink this time.}
+> right: Resign
+  leave track
+  mood +tiny
+  say: {~You hand in your notice, politely. The evenings are yours again; the purse is lighter for it.|You leave the gap empty. You can always find work again, if you need to.}
+
 @event track_promotion
 title: A Step Up
 trigger: queued
@@ -169,49 +189,94 @@ trigger: auto
 repeat: 2
 priority: 50
 type: menu
-when: month == 7 and year >= 2 and year <= 3 and not (applied(intern_royal_library) or applied(intern_conclave) or applied(intern_alchemists) or applied(intern_expedition) or applied(intern_field_station) or applied(intern_thornwick))
+pick: 6
+when: month == 7 and year >= 2 and year <= 3
 class: story
 tone: light
 art: letter
 tags: job study
 scene: A cluster of notices with wax seals pinned above all the others: summer research posts, each with its own demands.
-text: Summer research posts are open. Six notices, six seals, six lists of requirements. You can put your name to one this year.
+text: Summer research posts are open. Six notices, six seals, six lists of requirements. Apply to as many as you like: the first letter is an evening's work, and every one after it costs another evening and the postage.
+on_show:
+  intern_letters = 0
 > royal: The Royal Library
-  when: not member(intern_royal_library)
-  hint: GPA 2.5, Astromancy II, a love of indexes.
+  when: level(astromancy) >= 2 and not member(intern_royal_library)
+  locked: {member(intern_royal_library): They've already asked you back.|Needs Astromancy II.}
+  hint: GPA 2.5, an interview on lore, a love of indexes.
   apply intern_royal_library
-  charm +tiny
-  say: You write the letter three times and send the best one. Probably the best one.
+  intern_letters += 1
+  if intern_letters >= 2:
+    gold -small
+    mood -tiny
+    say: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
+  else:
+    charm +tiny
+    say: You write the letter three times and send the best one. Probably the best one.
 > conclave: The Conclave Laboratory
-  when: not member(intern_conclave)
-  hint: GPA 3.0, Evocation II, and a word from Thorne.
+  when: level(evocation) >= 2 and not member(intern_conclave)
+  locked: {member(intern_conclave): They've already asked you back.|Needs Evocation II.}
+  hint: GPA 3.0, an interview on arcana, and a word from Thorne helps.
   apply intern_conclave
-  charm +tiny
-  say: You write the letter three times and send the best one. Probably the best one.
+  intern_letters += 1
+  if intern_letters >= 2:
+    gold -small
+    mood -tiny
+    say: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
+  else:
+    charm +tiny
+    say: You write the letter three times and send the best one. Probably the best one.
 > alchemists: The Guild of Alchemists' Works
-  when: not member(intern_alchemists)
-  hint: GPA 2.0, Alchemy II, a strong stomach.
+  when: level(alchemy) >= 2 and not member(intern_alchemists)
+  locked: {member(intern_alchemists): They've already asked you back.|Needs Alchemy II.}
+  hint: GPA 2.0, an interview on alchemy, and a strong stomach.
   apply intern_alchemists
-  charm +tiny
-  say: You write the letter three times and send the best one. Probably the best one.
+  intern_letters += 1
+  if intern_letters >= 2:
+    gold -small
+    mood -tiny
+    say: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
+  else:
+    charm +tiny
+    say: You write the letter three times and send the best one. Probably the best one.
 > expedition: The Observatory Expedition
-  when: not member(intern_expedition)
-  hint: Astromancy II and the legs for a plateau.
+  when: level(astromancy) >= 2 and not member(intern_expedition)
+  locked: {member(intern_expedition): They've already asked you back.|Needs Astromancy II.}
+  hint: An interview on vigor, and the legs for a plateau.
   apply intern_expedition
-  charm +tiny
-  say: You write the letter three times and send the best one. Probably the best one.
+  intern_letters += 1
+  if intern_letters >= 2:
+    gold -small
+    mood -tiny
+    say: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
+  else:
+    charm +tiny
+    say: You write the letter three times and send the best one. Probably the best one.
 > field: The Beastcraft Field Station
-  when: not member(intern_field_station)
-  hint: Beastcraft II. Boots provided, mostly.
+  when: level(beastcraft) >= 2 and not member(intern_field_station)
+  locked: {member(intern_field_station): They've already asked you back.|Needs Beastcraft II.}
+  hint: An interview on vigor. Boots provided, mostly.
   apply intern_field_station
-  charm +tiny
-  say: You write the letter three times and send the best one. Probably the best one.
+  intern_letters += 1
+  if intern_letters >= 2:
+    gold -small
+    mood -tiny
+    say: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
+  else:
+    charm +tiny
+    say: You write the letter three times and send the best one. Probably the best one.
 > thornwick: The Thornwick Exchange
-  when: not member(intern_thornwick)
-  hint: GPA 2.5 and Illusion II. Bring a thick skin.
+  when: level(illusion) >= 2 and not member(intern_thornwick)
+  locked: {member(intern_thornwick): They've already asked you back.|Needs Illusion II.}
+  hint: GPA 2.5, an interview on charm. Bring a thick skin.
   apply intern_thornwick
-  charm +tiny
-  say: You write the letter three times and send the best one. Probably the best one.
+  intern_letters += 1
+  if intern_letters >= 2:
+    gold -small
+    mood -tiny
+    say: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
+  else:
+    charm +tiny
+    say: You write the letter three times and send the best one. Probably the best one.
 > none: Not this year
   mood -tiny
   say: You let the notices flap. There's always next year, until there isn't.
@@ -220,49 +285,174 @@ text: Summer research posts are open. Six notices, six seals, six lists of requi
 title: Letters With Seals
 trigger: auto
 type: menu
-when: month == 9 and year >= 2 and year <= 3 and (applied(intern_royal_library) or applied(intern_conclave) or applied(intern_alchemists) or applied(intern_expedition) or applied(intern_field_station) or applied(intern_thornwick) or (guile >= 35 and rel(isolde) >= 6 and not member(intern_unseen_office)))
-repeat: 12
+when: month == 9 and year >= 2 and year <= 3 and (applied(internship) or (guile >= 35 and rel(isolde) >= 6 and not member(intern_unseen_office)))
+repeat: 20
 priority: 55
 class: milestone
 tone: warm
 art: letter
 tags: study
 scene: Heavy envelopes with wax seals on a dormitory desk, one of them plain grey with no seal at all.
-text: The spring post brings answers. {(applied(intern_royal_library) and gpa >= 2.5 and level(astromancy) >= 2) or (applied(intern_conclave) and gpa >= 3.0 and level(evocation) >= 2 and rel(thorne) >= 6) or (applied(intern_alchemists) and gpa >= 2.0 and level(alchemy) >= 2) or (applied(intern_expedition) and level(astromancy) >= 2 and vigor >= 20) or (applied(intern_field_station) and level(beastcraft) >= 2) or (applied(intern_thornwick) and gpa >= 2.5 and level(illusion) >= 2): One of them begins "We are pleased".|Every letter begins with "We regret".} {guile >= 35 and rel(isolde) >= 6: There is also a plain grey envelope you never asked for.|}
-> royal: Accept: The Royal Library
-  when: applied(intern_royal_library) and gpa >= 2.5 and level(astromancy) >= 2
-  join intern_royal_library
-  renown +small
-  say: You read the letter until the seal cracks. A summer in the oldest archives in the realm.
-> conclave: Accept: The Conclave Laboratory
-  when: applied(intern_conclave) and gpa >= 3.0 and level(evocation) >= 2 and rel(thorne) >= 6
-  join intern_conclave
-  renown +small
-  say: You read the letter until the seal cracks. A summer in spell research under the Seven Towers.
-> alchemists: Accept: The Alchemists' Works
-  when: applied(intern_alchemists) and gpa >= 2.0 and level(alchemy) >= 2
-  join intern_alchemists
-  renown +small
-  say: You read the letter until the seal cracks. A summer in the great vats of the Guild.
-> expedition: Accept: The Observatory Expedition
-  when: applied(intern_expedition) and level(astromancy) >= 2 and vigor >= 20
-  join intern_expedition
-  renown +small
-  say: You read the letter until the seal cracks. A summer of sky charts on the high plateau.
-> field: Accept: The Beastcraft Field Station
-  when: applied(intern_field_station) and level(beastcraft) >= 2
-  join intern_field_station
-  renown +small
-  say: You read the letter until the seal cracks. A summer in the moors, the heather and the creatures in them.
-> thornwick: Accept: The Thornwick Exchange
-  when: applied(intern_thornwick) and gpa >= 2.5 and level(illusion) >= 2
-  join intern_thornwick
-  renown +small
-  say: You read the letter until the seal cracks. A summer in the rival academy's illusion laboratory.
+text: The spring post brings answers. {applied(internship): There are sealed letters on your desk. Which do you open first?|There are no more sealed letters.} {guile >= 35 and rel(isolde) >= 6 and not member(intern_unseen_office): There is also a plain grey envelope you never asked for.|}
+> royal: Letter from the Royal Library
+  when: applied(intern_royal_library)
+  hint: They asked for a GPA of 2.5. The interview tests lore.
+  if gpa >= 2.5:
+    challenge research using lore medium:
+      win:
+        join intern_royal_library
+        renown +small
+        leave intern_conclave
+        leave intern_alchemists
+        leave intern_expedition
+        leave intern_field_station
+        leave intern_thornwick
+        say: "We are pleased." You read the letter until the seal cracks. A summer in the oldest archives in the realm.
+      lose:
+        leave intern_royal_library
+        say: "We regret." The interview went well, they write, and not quite well enough.
+        if applied(internship):
+          queue intern_offer now
+  else:
+    leave intern_royal_library
+    say: "We regret." They wanted a GPA of 2.5, and they say so twice.
+    if applied(internship):
+      queue intern_offer now
+> conclave: Letter from the Conclave
+  when: applied(intern_conclave)
+  hint: They asked for a GPA of 3.0. The interview tests arcana. A word from Thorne would help.
+  if gpa >= 3.0:
+    if rel(thorne) >= 6:
+      challenge research using arcana easy:
+        win:
+          join intern_conclave
+          renown +small
+          leave intern_royal_library
+          leave intern_alchemists
+          leave intern_expedition
+          leave intern_field_station
+          leave intern_thornwick
+          say: "We are pleased." You read the letter until the seal cracks. A summer in spell research under the Seven Towers.
+        lose:
+          leave intern_conclave
+          say: "We regret." The interview went well, they write, and not quite well enough.
+          if applied(internship):
+            queue intern_offer now
+    else:
+      challenge research using arcana hard:
+        win:
+          join intern_conclave
+          renown +small
+          leave intern_royal_library
+          leave intern_alchemists
+          leave intern_expedition
+          leave intern_field_station
+          leave intern_thornwick
+          say: "We are pleased." You read the letter until the seal cracks. A summer in spell research under the Seven Towers.
+        lose:
+          leave intern_conclave
+          say: "We regret." The interview went well, they write, and not quite well enough.
+          if applied(internship):
+            queue intern_offer now
+  else:
+    leave intern_conclave
+    say: "We regret." They wanted a GPA of 3.0, and they say so twice.
+    if applied(internship):
+      queue intern_offer now
+> alchemists: Letter from the Alchemists' Works
+  when: applied(intern_alchemists)
+  hint: They asked for a GPA of 2.0. The interview tests alchemy.
+  if gpa >= 2.0:
+    challenge research using alchemy medium:
+      win:
+        join intern_alchemists
+        renown +small
+        leave intern_royal_library
+        leave intern_conclave
+        leave intern_expedition
+        leave intern_field_station
+        leave intern_thornwick
+        say: "We are pleased." You read the letter until the seal cracks. A summer in the great vats of the Guild.
+      lose:
+        leave intern_alchemists
+        say: "We regret." The interview went well, they write, and not quite well enough.
+        if applied(internship):
+          queue intern_offer now
+  else:
+    leave intern_alchemists
+    say: "We regret." They wanted a GPA of 2.0, and they say so twice.
+    if applied(internship):
+      queue intern_offer now
+> expedition: Letter from the Expedition
+  when: applied(intern_expedition)
+  hint: The interview tests vigor.
+  challenge research using vigor medium:
+    win:
+      join intern_expedition
+      renown +small
+      leave intern_royal_library
+      leave intern_conclave
+      leave intern_alchemists
+      leave intern_field_station
+      leave intern_thornwick
+      say: "We are pleased." You read the letter until the seal cracks. A summer of sky charts on the high plateau.
+    lose:
+      leave intern_expedition
+      say: "We regret." The interview went well, they write, and not quite well enough.
+      if applied(internship):
+        queue intern_offer now
+> field: Letter from the Field Station
+  when: applied(intern_field_station)
+  hint: The interview tests vigor.
+  challenge research using vigor medium:
+    win:
+      join intern_field_station
+      renown +small
+      leave intern_royal_library
+      leave intern_conclave
+      leave intern_alchemists
+      leave intern_expedition
+      leave intern_thornwick
+      say: "We are pleased." You read the letter until the seal cracks. A summer in the moors, the heather and the creatures in them.
+    lose:
+      leave intern_field_station
+      say: "We regret." The interview went well, they write, and not quite well enough.
+      if applied(internship):
+        queue intern_offer now
+> thornwick: Letter from Thornwick
+  when: applied(intern_thornwick)
+  hint: They asked for a GPA of 2.5. The interview tests charm.
+  if gpa >= 2.5:
+    challenge research using charm medium:
+      win:
+        join intern_thornwick
+        renown +small
+        leave intern_royal_library
+        leave intern_conclave
+        leave intern_alchemists
+        leave intern_expedition
+        leave intern_field_station
+        say: "We are pleased." You read the letter until the seal cracks. A summer in the rival academy's illusion laboratory.
+      lose:
+        leave intern_thornwick
+        say: "We regret." The interview went well, they write, and not quite well enough.
+        if applied(internship):
+          queue intern_offer now
+  else:
+    leave intern_thornwick
+    say: "We regret." They wanted a GPA of 2.5, and they say so twice.
+    if applied(internship):
+      queue intern_offer now
 > unseen: Open the plain envelope
   when: guile >= 35 and rel(isolde) >= 6 and not member(intern_unseen_office)
   join intern_unseen_office
   guile +small
+  leave intern_royal_library
+  leave intern_conclave
+  leave intern_alchemists
+  leave intern_expedition
+  leave intern_field_station
+  leave intern_thornwick
   say: Inside: a time, an address and no signature. The paper is blank again by morning. You go anyway.
 > decline: Fold the letters away
   leave intern_royal_library
@@ -273,6 +463,25 @@ text: The spring post brings answers. {(applied(intern_royal_library) and gpa >=
   leave intern_thornwick
   mood -tiny
   say: You fold them carefully. Next year, perhaps.
+
+# An internship lasts one summer (M16). The host asks you back only after a strong one.
+@event intern_asked_back
+title: Asked Back
+trigger: queued
+when: year <= 3
+class: milestone
+tone: warm
+art: letter
+tags: study job
+scene: A letter on good paper with a familiar seal, the words "next summer" underlined once, neatly.
+text: A letter from {member(intern_royal_library): the Royal Library Archives|{member(intern_conclave): the Conclave Laboratory|{member(intern_alchemists): the Guild of Alchemists' Works|{member(intern_expedition): the Observatory Expedition|{member(intern_field_station): the Beastcraft Field Station|{member(intern_thornwick): the Thornwick Exchange|the office with no name}}}}}}. They were pleased with your summer, and the post is yours again next summer if you want it.
+> left: Write back yes
+  renown +tiny
+  say: {~You write back the same evening. Next summer is spoken for, and you find you're glad.|"Yes," you write, and then three more lines to make it sound less eager.}
+> right: Thank them, and decline
+  leave internship
+  mood +tiny
+  say: {~You thank them warmly and say no. Next summer is yours to spend, or to apply for something new.|A polite no. You keep the letter anyway; it's good to be asked.}
 
 # ---------------- Thesis (design §7.6) ----------------
 

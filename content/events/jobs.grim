@@ -16,9 +16,11 @@ tags: job
 scene: A thick leather book with tiny teeth along its pages snapping at a hand reaching for it on a high shelf.
 text: Reshelving in the zoology section, a fat leather book clamps onto your finger and refuses to let go. The head librarian, without looking up, says: "Stroke the spine."
 > left: Muzzle it with a belt
+  wage
   health -tiny
   say: You wrestle it into submission and shelve it. It growls at you every time you pass for the rest of the term.
 > right: Stroke the spine and read it
+  wage
   lore +medium
   health -tiny
   say: It purrs, opens and turns out to be a fascinating treatise on carnivorous plants. It only bites twice more.
@@ -35,9 +37,11 @@ tags: job
 scene: A severe professor towering over a library desk, a stack of books under one arm, a very small student assistant on the other side holding a fines ledger.
 text: Professor Thorne returns a book that is eleven years overdue. The fine, by library rules, is forty crowns. He looks at you. You look at the ledger.
 > left: Waive the fine
+  wage
   rel thorne +tiny
   say: "Hm," says Thorne. You can't tell if you've earned his respect or lost it.
 > right: Enforce the rules
+  wage
   rel thorne +small
   mood -tiny
   say: A long silence. Then he pays, in exact change. "Good," he says, and you could swear he almost smiles.
@@ -53,9 +57,11 @@ tags: job mystery
 scene: A wheeled library cart chained shut, piled with black-bound books, parked alone in a candlelit aisle.
 text: You are asked to wheel the Restricted Section returns to the vault. The cart's chain has come loose. One of the books has fallen open on a page that is writing itself.
 > left: Close it without looking
+  wage
   study +tiny
   say: The book snaps shut with a sound like a disappointed sigh. The vault door clangs.
 > right: Read a few lines
+  wage
   lore +medium
   chance 35:
     gain umbral_curse
@@ -76,9 +82,11 @@ tags: job danger
 scene: A low-beamed tavern mid-brawl: a chair in mid-air, a dwarf on a table, cider sloshing everywhere.
 text: A dwarf and a troll disagree about the price of turnips, and the Gilded Newt erupts. A chair flies past your head. The owner is hiding behind the bar, gesturing at you to do something.
 > left: Duck behind the bar too
+  wage
   mood -tiny
   say: You crouch beside the owner and share a bag of crisps while the room destroys itself.
 > right: Break it up
+  wage
   challenge combat trivial:
     win:
       gold +medium
@@ -100,8 +108,10 @@ chain: hollowstar
 scene: A hooded figure at a corner table sliding a black coin across the wood, its surface stamped with a dark star.
 text: A hooded stranger nurses a cider all evening and leaves a tip: a black coin stamped with a hollow star. "For the student," they say. "Tell Kael Dumont his family sends regards."
 > left: Refuse the coin
+  wage
   say: The stranger shrugs and pockets it. When you look again, the corner table is empty and the cider is frozen solid.
 > right: Take it
+  wage
   gold +tiny
   flag star_coin
   alignment -small
@@ -118,10 +128,12 @@ tags: job money
 scene: A ruddy tavern owner leaning on the bar, wiping a mug, a rota pinned behind him covered in crossed-out names.
 text: The owner is short-handed. "Double shifts for a month," he says. "Double pay. I know you've got studies, but you've also got rent."
 > left: Decline
+  wage
   study +tiny
   say: "Fair enough," he says, and asks again next week.
 > right: Take the extra shifts
-  gold +large
+  wage
+  wage overtime
   health -medium
   study -small
   say: A month of late nights and early lectures. Your purse is heavy. So are your eyelids.
@@ -139,9 +151,11 @@ tags: job
 scene: Shelves of glass jars in a narrow shop, one jar labelled SLEEPING DRAUGHT glowing an ominous green.
 text: The jar labelled "Sleeping Draught" is green. Sleeping Draught is blue. You're fairly sure the green stuff is Draught of Unending Hiccups. Old Pell is very proud of his labelling.
 > left: Quietly fix the label
+  wage
   alchemy +tiny
   say: Nobody ever knows. Somewhere, a customer sleeps soundly instead of hiccupping for a week.
 > right: Point it out to Pell
+  wage
   gold +tiny
   alchemy +tiny
   say: Pell goes red, then thanks you gruffly and slips you three crowns "for your eyes".
@@ -157,11 +171,13 @@ tags: job
 scene: A tired woman at a shop counter counting copper coins, a small child coughing beside her.
 text: A woman counts out coppers for fever tonic. She's fifteen crowns short. Her son coughs into her coat. Pell is in the back room.
 > left: Charge the full price
+  wage
   alignment -small
   gold +tiny
   mood -small
   say: She leaves without it. The bell on the door rings for a very long time.
 > right: Pay the difference yourself
+  wage
   alignment +small
   gold -medium
   mood +medium
@@ -179,10 +195,12 @@ tags: job mystery
 scene: An order slip on a counter listing a dozen deadly reagents, signed with an elegant, illegible flourish.
 text: A note arrives with a sealed purse: a large order of nightshade, grave-moss and powdered moonstone. Legal, technically. Ingredients for something very old and very forbidden, also technically.
 > left: Fill the order
+  wage
   gold +medium
   flag filled_dark_order
   say: The courier who collects it never shows his face. The purse is very generous.
 > right: Refuse and report it
+  wage
   rel isolde +small
   renown +small
   say: The headmistress listens to your report in silence. "Thank you," she says. "Tell no one else." She looks worried.
@@ -360,9 +378,11 @@ tags: job danger
 scene: A courier on a broom bent low against a lightning-lit sky, a parcel strapped to their back, rain sheeting sideways.
 text: An urgent parcel needs to cross the lake tonight. There's a storm. The dispatcher offers double pay to whoever's fool enough. Everyone looks at you.
 > left: Wait for the storm to pass
+  wage
   gold -tiny
   say: The parcel arrives late. The client deducts it from your wages. Rude, but survivable.
 > right: Fly through it
+  wage
   challenge feat medium:
     win:
       gold +large
@@ -384,10 +404,12 @@ tags: job mystery
 scene: A brown paper parcel tied with black string on a courier's satchel, frost forming on its corners, faint whispers rising from it.
 text: Your parcel is addressed to "K. Dumont, Stillwater House". It is ice cold and it whispers when you aren't looking at it.
 > left: Deliver it unopened
+  wage
   rel kael +small
   meet kael
   say: Kael takes it without a word. His hands shake. The next day, he looks like he hasn't slept.
 > right: Peek inside
+  wage
   challenge deceive easy:
     win:
       flag read_kael_parcel
@@ -410,9 +432,11 @@ tags: job danger
 scene: Three ragged figures on patched brooms surrounding a courier above the clouds, cutlasses glinting.
 text: Three figures on patched brooms drop out of a cloud and box you in. "Toll," says their leader, a woman with a parrot that is also on a tiny broom. "Eight crowns or the parcel."
 > left: Pay the toll
+  wage
   gold -small
   say: They let you pass with a salute. The parrot salutes too.
 > right: Outfly them
+  wage
   challenge feat medium:
     win:
       renown +small

@@ -119,6 +119,7 @@ text: The registrar's noticeboard flaps with sign-up sheets for this term's elec
 > umbral: Umbral Theory (restricted)
   hint: Requires Lore 20 or second year. +Arcana, dark moods.
   when: lore >= 20 or year >= 2
+  locked: Needs Lore 20, or your second year.
   gain class_umbral
   flag took_umbral
 
@@ -190,6 +191,7 @@ text: Rent is ten crowns a month and your purse is a fragile thing. The board ou
 > apothecary: Apothecary Clerk — 12 gold/month
   hint: Requires Alchemy 12. +Alchemy.
   when: alchemy >= 12
+  locked: Needs Alchemy 12.
   gain job_apothecary
 > stables: Familiar Stables — 11 gold/month
   hint: +Vigor. Things bite.
@@ -197,10 +199,12 @@ text: Rent is ten crowns a month and your purse is a fragile thing. The board ou
 > tutor: First-Year Tutor — 12 gold/month
   hint: Requires Lore 18. +Standing.
   when: lore >= 18
+  locked: Needs Lore 18.
   gain job_tutor
 > courier: Broom Courier — 18 gold/month
   hint: Requires Vigor 14. Dangerous.
   when: vigor >= 14
+  locked: Needs Vigor 14.
   gain job_courier
 > none: No job (quit any current one)
   lose job_library
@@ -306,7 +310,7 @@ type: menu
 art: music
 tags: festival romance social
 scene: The great hall transformed: an ice-crystal chandelier, couples waltzing a foot above the floor, snow falling indoors without ever landing.
-text: The great hall has been turned to ice and starlight for the Midwinter Ball. Couples float above the floor. Who will you go with?
+text: The great hall has been turned to ice and starlight for the Midwinter Ball. Couples float above the floor. Who will you go with? You can only ask someone you know well.
 > lyra: Ask Lyra
   when: met(lyra) and rel(lyra) >= 9
   hint: She has had six invitations. She hasn't said yes to any.
@@ -587,6 +591,7 @@ text: The towers empty for the summer. Two months of freedom. How will you spend
 > travel: Travel to the coast
   hint: Costs 40 gold. Great for mood.
   when: gold >= 40
+  locked: Needs 40 crowns.
   gold -large
   gain summer_away
   mood +huge

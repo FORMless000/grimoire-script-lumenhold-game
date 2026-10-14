@@ -171,7 +171,7 @@ do:
 @hook break_rent
 on: month_start
 label: Board at the castle
-when: break and has(plan_castle)
+when: break and (has(plan_castle) or has(plan_work))
 do:
   gold -8
 
