@@ -17,11 +17,11 @@ kind: origin
 group: origin
 art: crown
 desc: A family name that opens doors and an allowance that arrives every month — with letters attached.
-money: Comfortable: savings and a monthly allowance. You will rarely need to work.
+money: Comfortable: your family pays your tuition, and there are some savings. You will rarely need to work.
 tick:
-  gold +6
+  gold +1
 on_add:
-  gold +60
+  gold +40
   charm +3
   renown +6
 
@@ -34,7 +34,7 @@ desc: The Crown pays half your tuition, and a little more while your grades hold
 money: Tight: half tuition, and a small stipend while your GPA stays at 2.0 or above. Expect to work some terms.
 tick:
   if gpa >= 2.0:
-    gold +5
+    gold +2
 on_add:
   lore +5
   study +large
@@ -45,7 +45,7 @@ kind: origin
 group: origin
 art: mushroom
 desc: Raised among drying herbs and muttered charms. Proper magic still feels a little too proper.
-money: Poor: a few crowns and no allowance. You will need a job from the first term.
+money: Poor: a few crowns, no allowance, and tuition to pay yourself. You will need a job from the first term.
 tags: poor
 on_add:
   alchemy +6
@@ -58,7 +58,7 @@ kind: origin
 group: origin
 art: mask
 desc: You learned to read crowds before you learned to read runes.
-money: Poor: almost nothing in your pockets. You will need a job from the first term.
+money: Poor: almost nothing in your pockets, and tuition to pay yourself. You will need a job from the first term.
 tags: poor
 on_add:
   guile +7
@@ -71,11 +71,9 @@ kind: origin
 group: origin
 art: scales
 desc: Everything has a price, and you were taught to haggle it down.
-money: Comfortable: the largest purse, and a small monthly share from the company.
-tick:
-  gold +3
+money: Comfortable: the company pays your tuition, and you arrive with the largest purse.
 on_add:
-  gold +90
+  gold +70
   charm +3
 
 # ---------------- Electives (one per term) ----------------

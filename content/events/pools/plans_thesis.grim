@@ -525,11 +525,13 @@ tags: study
 scene: A brass chute dropping paper slips into a basket at the top of a deep stairwell lined with shelves.
 text: {Scholars upstairs send their requests down a brass chute. Your job is to fetch them from the stacks, which go down for miles.|You've worn a path in the dust of the third landing.|You can read the chute's rattle now. A long rattle means someone wants something from the very bottom.} {~One slip is in a hand so old the ink has gone brown.|One slip asks for "the blue one".|One slip is a love letter, sent down by mistake.}
 > left: Take the deep requests
+  wage
   perform intern_royal_library +small
   lore +small
   health -small
   say: {~Four hundred steps down, the air is cold enough to keep books for ever. You come back up with the book and a lot of opinions about stairs.|You find the volume wedged behind a pipe. The scholar who asked for it nearly weeps.}
 > right: Take the near shelves
+  wage
   perform intern_royal_library -tiny
   lore +tiny
   mood +tiny
@@ -547,6 +549,7 @@ tags: study
 scene: A bright worktable under a lamp, a crumbling manuscript laid out in pieces and a student holding fine tweezers.
 text: {Today you're at the mending table, where crumbling records are put back together one flake at a time.|The binder hands you the tweezers without a word, which counts as a greeting.|The binder trusts you with the older pages now, which are the worst.} {~The page is a royal decree on the correct length of goose necks.|The page is a recipe, half eaten by something.|The page is a list of names, one crossed out very hard.}
 > left: Mend it myself
+  wage
   challenge research easy:
     win:
       perform intern_royal_library +small
@@ -557,6 +560,7 @@ text: {Today you're at the mending table, where crumbling records are put back t
       mood -tiny
       say: {~A sneeze. The binder looks at the scattered flakes and then at you. You both get the tweezers.|One flake ends up in the wrong century. Nobody can prove it was you, but everybody knows.}
 > right: Watch the binder work
+  wage
   lore +small
   perform intern_royal_library -tiny
   say: {~You watch for an hour and learn more than a book could tell you. The binder says you're slow. You were.|The binder works without speaking and you learn by watching. It's very peaceful and very little gets done.}
@@ -575,6 +579,7 @@ tags: study magic
 scene: A circular chamber with scorch-marked walls, a student at the centre with a wand raised and researchers watching through thick glass.
 text: {The Conclave's researchers need someone to cast their newest spell for the first time. The walls are thick for a reason.|Someone has chalked a new circle on the floor. The old one is scorched.|You know every scorch mark in the chamber by now, and who made each one.} {~Today's spell is meant to make a candle burn backwards.|Today's spell is meant to tidy a room. It has opinions about what tidy means.|Today's spell is unnamed. Nobody will say why.}
 > left: Step into the chamber
+  wage
   challenge enchant using arcana medium:
     win:
       perform intern_conclave +small
@@ -585,6 +590,7 @@ text: {The Conclave's researchers need someone to cast their newest spell for th
       perform intern_conclave -tiny
       say: {~The spell goes off sideways. Your eyebrows are fine. Your fringe has views of its own now.|The spell goes off sideways, and your robes will never fold the same way again.}
 > right: Take readings behind the glass
+  wage
   arcana +tiny
   perform intern_conclave +tiny
   mood -small
@@ -602,6 +608,7 @@ tags: study magic
 scene: A long table of elderly mages in heavy robes, all talking at once, a young intern writing furiously at the end.
 text: {You've been asked to take the minutes of a Conclave research committee. There are nine members, and none of them ever agrees.|The committee is still arguing about last time's question, and now about the minutes too.|You could take these minutes in your sleep, and some of the committee do attend them that way.} {~Two of them are not speaking to each other, and want it recorded.|One of them asks what you think.|One of them falls asleep, and wakes up to vote.}
 > left: Offer an opinion when asked
+  wage
   chance 50:
     perform intern_conclave +small
     renown +tiny
@@ -612,6 +619,7 @@ text: {You've been asked to take the minutes of a Conclave research committee. T
     mood -small
     say: {~Nine heads turn towards you, slowly. You say something about wands. It isn't minuted.|You give your opinion and it is recorded in full, with the note "(intern)".}
 > right: Keep my head down and write
+  wage
   perform intern_conclave +small
   lore +tiny
   mood -small
@@ -631,6 +639,7 @@ tags: study
 scene: A huge copper vat in a steaming hall, a student on a gantry staring into it with a colour chart in hand.
 text: {Your task at the works is to watch one great vat and call the foreman if it changes colour.|You've brought your own colour chart now, with notes in the margins.|You and the vat understand each other now. It's an unsettling feeling.} {~The amber is drifting, very slowly.|There's a bubble that keeps coming back, like a thought.|The vat smells faintly of cinnamon, which it never has before.} The foreman is all the way at the other end of the hall.
 > left: Adjust it myself
+  wage
   challenge brew medium:
     win:
       perform intern_alchemists +small
@@ -641,6 +650,7 @@ text: {Your task at the works is to watch one great vat and call the foreman if 
       health -tiny
       say: {~The vat turns a brilliant violet and hisses. The foreman arrives at a run, and you'll be hearing about it for weeks.|You make it worse. A lot worse. The whole hall smells of cinnamon until the end of the week.}
 > right: Run for the foreman
+  wage
   perform intern_alchemists +tiny
   alchemy +tiny
   mood -small
@@ -659,6 +669,7 @@ tags: study
 scene: A break room in an alchemical works, workers gathered around a kettle sitting on a glowing stone that is not, technically, on fire.
 text: {There's a strict rule at the works about naked flames, so the break room has spent forty years inventing flameless ways to boil a kettle.|Break time. The kettle sits on its warm stone, and the workers look at you hopefully.|By now the break room asks the academy intern first, whatever the problem.} {~Today the warm stone has gone cold.|Today someone wants toast, which is a much bigger question.|Today a new inspector is touring the works.}
 > left: Help brew the flameless tea
+  wage
   chance 70:
     alchemy +small
     mood +small
@@ -668,6 +679,7 @@ text: {There's a strict rule at the works about naked flames, so the break room 
     mood -tiny
     say: {~Your method works so well that someone in charge notices the steam. There's a meeting about it, with you in it.|The kettle boils, and so, briefly, does the table.}
 > right: Stick to the rules
+  wage
   perform intern_alchemists +tiny
   mood -small
   say: {~You drink cold water while everyone else drinks tea. The foreman notes your conduct, and the break room notes it too.|You remind everyone of the rule. You are absolutely right and nobody offers you a biscuit for the rest of the week.}
@@ -686,11 +698,13 @@ tags: study
 scene: A line of expedition members climbing a rocky ridge at dusk, carrying brass instruments wrapped in blankets.
 text: {The instruments have to go up to the ridge before dark, and the air on the plateau is very thin.|Your legs know the path now. Your lungs are still negotiating.|You've carried things up this ridge so often that the goats have stopped looking at you.} {season == "winter": {~Snow has drifted against the path.|The wind cuts through every layer you own.}|{~The rocks are still hot from the afternoon.|The sky is clear all the way to the top of the world.}}
 > left: Carry the great lens
+  wage
   perform intern_expedition +small
   vigor +tiny
   health -small
   say: {~You carry the great lens to the top without dropping it, then sit very still for a long time. The leader nods at you, once.|Your arms are numb by the top, and the lens is perfect. It's worth it when the first star shows in it.}
 > right: Do the sums in the tent
+  wage
   lore +small
   perform intern_expedition -tiny
   mood -tiny
@@ -708,11 +722,13 @@ tags: study
 scene: Two expedition members bent over a star chart by lamplight, one pointing firmly at a dot.
 text: {Your chart and the senior astronomer's disagree about where one faint star is.|The senior astronomer's charts and yours have a running disagreement now, kept in red ink.|The senior astronomer now checks your charts first. A compliment, possibly.} {~Probably your hand shook.|Probably their eyesight.|Probably the thin air.} {season == "winter": The nights are long, with time to recheck everything.|The nights are short, and every hour counts.}
 > left: Recheck it all night
+  wage
   lore +small
   perform intern_expedition +tiny
   health -small
   say: {~You recheck it until dawn. You were right by a hair, and nobody will ever care but you.|You were wrong by a hair. You fix it, and know the sky better than you did.}
 > right: Raise it with the astronomer
+  wage
   chance 50:
     perform intern_expedition +small
     charm +tiny
@@ -736,11 +752,13 @@ tags: study nature
 scene: A student lying flat in the heather at dawn, a tally board in hand, watching nesting towers on the moor.
 text: {Every morning someone has to lie in the heather and count what's living on the moor. Today it's you.|You've learned which tussock is the least wet, and you guard it.|You're the station's best counter now, mostly because you've stopped minding the damp.} {season == "winter": {~Snow hares are out, white on white.|Frost has made the heather crackle under you.}|{~The skylarks are going up one after another.|The midges have found you.}}
 > left: Count every last one
+  wage
   perform intern_field_station +small
   vigor +tiny
   health -small
   say: {~You count until your fingers are numb and the tally is perfect. The warden reads it twice and pins it on the wall.|You stay out until the very last nest is counted. You come back soaked and very proud of the number.}
 > right: Make a sensible estimate
+  wage
   chance 60:
     guile +small
     mood +tiny
@@ -762,6 +780,7 @@ tags: study nature
 scene: A muddy paddock with a splinted creature glaring from a straw nest, a student holding out a bucket at arm's length.
 text: {The station's latest patient is a moor-drake with a splinted wing and no gratitude at all.|Feeding time in paddock three. The patient sees you coming and lowers its head.|The drake in paddock three recognises you now. This hasn't made it any nicer.} {~It has eaten a glove.|It is pretending to sleep, which it does very badly.|It has learned to open the bucket by itself.} {season == "winter": Its breath steams in the frosty air.|It is lying in the one patch of shade.}
 > left: Feed it by hand
+  wage
   chance 65:
     perform intern_field_station +small
     vigor +small
@@ -771,6 +790,7 @@ text: {The station's latest patient is a moor-drake with a splinted wing and no 
     vigor +tiny
     say: {~It takes the food and a bit of your sleeve. Your arm is fine. Your sleeve is not.|It butts you into the mud and then looks pleased with itself.}
 > right: Use the long tongs
+  wage
   perform intern_field_station +tiny
   mood -small
   say: {~You feed it from a safe distance. It eats, and looks at you with deep contempt.|The tongs work perfectly. You feel you've let the patient down, somehow.}
@@ -789,6 +809,7 @@ tags: study
 scene: A polished laboratory table at a rival academy, a plate of perfect pastries set out for a visiting student.
 text: {Each morning your Thornwick hosts leave pastries on your desk, with a polite note.|The notes have grown longer and politer, which is worrying.|The pastries are a game now, and both sides know it.} {~They look perfect, which in an illusion lab is a warning.|One is steaming slightly, which it shouldn't be.|Today there's one plain biscuit, which is somehow worse.} {season == "winter": The pastries look very warm.|The icing hasn't melted in the heat.}
 > left: Eat one and smile
+  wage
   chance 60:
     mood +small
     charm +tiny
@@ -798,6 +819,7 @@ text: {Each morning your Thornwick hosts leave pastries on your desk, with a pol
     charm +tiny
     say: {~It's a glamour over something dry and joyless. You eat the whole thing with a smile, and the lab respects that.|It tastes of nothing at all. You compliment the baker, and someone in the corner laughs.}
 > right: Bring my own breakfast
+  wage
   guile +small
   perform intern_thornwick -tiny
   say: {~You eat your own bread, very pointedly. The Thornwick students write something down.|You leave the plate untouched. Your supervisor here calls it "a very Lumenhold choice", and doesn't mean it nicely.}
@@ -814,6 +836,7 @@ tags: study
 scene: A group of rival students around a lab bench, one of them leaning in with a pointed smile towards a visitor in different robes.
 text: {The Thornwick students have questions about Lumenhold. Most of them are about the last time the two schools met on the duelling field.|The Thornwick students have found a new angle on the old grudge.|You and the Thornwick students have a routine now. It's almost friendly.} {~Today they want to know if Lumenhold's towers still lean.|Today they ask, sweetly, if Lumenhold teaches illusion yet.|Today one of them pretends to be you, very well.}
 > left: Out-charm them
+  wage
   challenge negotiate medium:
     win:
       perform intern_thornwick +small
@@ -824,6 +847,7 @@ text: {The Thornwick students have questions about Lumenhold. Most of them are a
       perform intern_thornwick -tiny
       say: {~You try to be witty. It comes out as a speech about the founders. They let you finish, kindly.|You lose the exchange so badly that one of them takes a bow on your behalf.}
 > right: Let it slide
+  wage
   perform intern_thornwick +tiny
   mood -small
   say: {~You smile and go back to work. Your supervisor here notices, and approves, and you feel like you lost anyway.|You say nothing. It takes them all morning to realise you've won.}
@@ -842,6 +866,7 @@ tags: study mystery
 scene: A plain room with no windows and a gleaming coffee machine, quiet people in plain coats standing near it, not quite talking.
 text: {Nobody at the Office talks about anything, except the coffee machine. It's very good.|A queue forms around the machine each evening, though nobody seems to join it.|The coffee queue, you've learned, is where the Office's real work gets done.} {~Two people beside you discuss the weather in a way that isn't about the weather.|A cup has a name on it that was there yesterday, under another name.|The machine hisses, and everyone falls silent until it stops.}
 > left: Linger at the machine
+  wage
   chance 60:
     guile +small
     perform intern_unseen_office +tiny
@@ -850,6 +875,7 @@ text: {Nobody at the Office talks about anything, except the coffee machine. It'
     mood -small
     say: {~Someone notices you listening and asks, very kindly, how your day is going. You don't sleep that night.|You overhear something you very much wish you hadn't. It can't be unheard.}
 > right: Take my cup back to my desk
+  wage
   perform intern_unseen_office +small
   mood -small
   say: {~You work through the evening with your coffee. The work is dull and your supervisor approves, which is a little chilling.|Your desk is very quiet. It's the most anyone at the Office will say about you, and here that's high praise.}
@@ -866,6 +892,7 @@ tags: study mystery
 scene: A plain folder with no label lying on an empty desk under a single lamp.
 text: {A file has been left on your desk. It isn't yours, and it isn't labelled.|A second unlabelled file. You're starting to think it's a test.|The unlabelled files keep arriving. You've stopped asking where they come from.} This one is tied shut with a red ribbon. {~It's very thin.|It's very thick, with a coffee ring on the cover.|The knot is one you don't recognise.}
 > left: Read it before returning it
+  wage
   alignment -tiny
   challenge deceive medium:
     win:
@@ -877,6 +904,7 @@ text: {A file has been left on your desk. It isn't yours, and it isn't labelled.
       mood -tiny
       say: {~Your supervisor takes the file back and glances at the ribbon. "Interesting knot," she says.|You put the pages back in the wrong order. Somehow, everyone knows by morning.}
 > right: Return it unopened
+  wage
   alignment +tiny
   perform intern_unseen_office +tiny
   mood -small

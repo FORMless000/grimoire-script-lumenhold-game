@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Economy report (design §8.2): where every attribute comes from and goes to, per play style.
-//   node tools/economy.js [--games N] [--styles random,balanced,social] [--keys health,mood,gold] [--top 8] [--json]
+//   node tools/economy.js [--games N] [--styles random,balanced,social] [--keys health,mood,gold] [--top 8] [--origin hedge] [--json]
 // Plays N simulated games per style and splits each key's flow into sources: month hooks and states by
 // their label, cards by kind (track/place/plan/social/ambient/story/crisis…), per game. Also prints the
 // final-value spread (p10/p50/p90) and the share of games ended early, by ending.
@@ -14,13 +14,14 @@ const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i > 0 ?
 const GAMES = +arg('games', 40);
 const STYLES = arg('styles', 'random,balanced,social,cautious').split(',');
 const TOP = +arg('top', 8);
+const ORIGIN = arg('origin', null);   // every game starts from this origin (e.g. --origin hedge)
 const ROOT = path.join(__dirname, '..');
 const { content } = project(ROOT).compileAll();
 const KEYS = arg('keys', null) ? arg('keys').split(',') : [...Object.keys(content.resources), ...Object.keys(content.skills), 'rel', 'spark'];
 
 function play(seed, style) {
   const eng = new Engine(content);
-  let r = Policies.newGame(eng, style, { seed, name: 'Eco' });
+  let r = Policies.newGame(eng, ORIGIN ? Object.assign({}, style, { pickOrigin: () => ORIGIN }) : style, { seed, name: 'Eco' });
   for (let i = 0; i < 8000 && r.kind !== 'ending'; i++) {
     if (r.kind === 'month') { r = eng.advance(); continue; }
     if (r.kind === 'map') { eng.pickPlaces((style.pickPlaces || Policies.pickPlaces)(eng, r.view)); r = eng.advance(); continue; }

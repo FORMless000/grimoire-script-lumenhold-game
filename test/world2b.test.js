@@ -81,7 +81,7 @@ test('origin screen (M32): the origin applies before month 1\'s charges; the mir
   assert.ok(choices.find((o) => o.key === 'street').poor && !choices.find((o) => o.key === 'noble').poor);
   const eng = new Engine(content); const r = eng.newGame({ seed: 3, origin: 'scholar' });
   const tuition = r.summary.find((x) => x.label === 'Tuition');
-  assert.equal(tuition && tuition.deltas.gold, -15, 'the scholarship halves the first tuition (B32)');
+  assert.equal(tuition && tuition.deltas.gold, -8, 'the scholarship halves the first tuition (B32, L24)');
   assert.ok(eng.s.deck.some((d) => d.id === 'sorting_mirror') && !eng.s.deck.some((d) => d.id === 'choose_origin'));
   // without an origin (old callers), the mirror asks as before
   const old = new Engine(content); old.newGame({ seed: 3 });

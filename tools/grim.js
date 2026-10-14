@@ -226,7 +226,7 @@ function analyze(content) {
         case 'wage': {
           const words = Object.assign({ short: 0.5, full: 1, overtime: 2 }, (content.balance && content.balance.wage) || {});
           if (st.size && words[st.size] == null) P('error', w, 'wage: unknown wage word "' + st.size + '" (' + Object.keys(words).join(' ') + ')');
-          if (IN_EVENT && !(CUR_TRACK && content.tracks[CUR_TRACK] && content.tracks[CUR_TRACK].kind === 'job')) P('error', w, 'wage: only a job\'s own events (track: <job>) pay a wage');
+          if (IN_EVENT && !(CUR_TRACK && content.tracks[CUR_TRACK] && ['job', 'internship'].includes(content.tracks[CUR_TRACK].kind))) P('error', w, 'wage: only a job\'s or internship\'s own events (track: <job>) pay a wage');
           break;
         }
         case 'if': st.branches.forEach((b) => scanExpr(b.cond, w, hasActor)); break;

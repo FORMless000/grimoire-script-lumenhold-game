@@ -153,7 +153,14 @@ Retune once, on the finished mechanics. Tools: `tools/economy.js`, `balance` (fu
 Not in step 3: L13 → M13; L21 → X; L22 → X3; L28 → the final pass.
 
 ## Status
-Steps 1 (B, C) and 2 (M, packages M-A to M-F) are done and committed; the triage marks each item. Step 3 (L) is planned above and not started.
+Steps 1 (B, C) and 2 (M, packages M-A to M-F) are done and committed; the triage marks each item.
+
+Step 3 (L) is **paused** partway through L-1, at the user's request, for adjustments first. Done so far (migration 0028, `tools/economy.js --origin`):
+- L24, first pass: tuition 30 → 16 a term; noble and merchant families pay the tuition (the noble allowance is now +1 a month and 40 crowns at the start; the merchant has 70 and no monthly share); the scholarship halves it (8), with a stipend of 2 while the GPA holds. The origin screen's money lines say so.
+- L25: the thesis asks 2 visits a term.
+- L26: internships pay a stipend through their host cards (`pay: 18`, `wage` in every option; lint allows `wage` in internship cards).
+
+Not yet done in L-1: re-measuring per origin and style after these numbers (`node tools/economy.js --origin <key>`), L3's check, and the triage marks. L-2 to L-5 and the alarms are untouched.
 
 ## Decisions
 - M21 (decided): year 4's last break is a wrap-up term, and month 48 only resolves endings.
