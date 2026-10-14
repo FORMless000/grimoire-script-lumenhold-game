@@ -140,9 +140,10 @@
     },
 
     /* ---------------- building the day ---------------- */
+    // Within this run only (design §5.2): earlier runs, and other players on a shared server, don't make a card rarer.
     novelty(e) {
       const s = this.s, since = s.last[e.id] != null ? s.turn - s.last[e.id] : 999;
-      return (1 - Math.exp(-since / TAU)) * Math.pow(0.6, s.seen[e.id] || 0) * Math.pow(0.85, (s.runsSeen || {})[e.id] || 0);
+      return (1 - Math.exp(-since / TAU)) * Math.pow(0.6, s.seen[e.id] || 0);
     },
     relevance(e, actor) {
       const s = this.s;

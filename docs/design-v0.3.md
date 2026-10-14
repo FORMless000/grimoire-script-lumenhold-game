@@ -361,13 +361,13 @@ Each slot draws its quota from its source with **weighted sampling**, where:
 
 ```
 score     = weight × novelty × relevance × variety
-novelty   = (1 − e^(−since/τ)) × 0.6^seen_this_run × 0.85^runs_seen          τ = 6 months (tunable)
+novelty   = (1 − e^(−since/τ)) × 0.6^seen_this_run          τ = 6 months (tunable)
 relevance = (1 + 0.5·cast_affinity) × (1 + 0.5·active_arc) × (1 + 0.3·recent_tag_overlap)
 variety   = 0.5 if the same tone or primary tag as either of the previous 2 cards, else 1
 ```
 
 - `tone:` (light / warm / tense / grim / eerie) is a schema field (§12).
-- `runs_seen` comes from `/api/seen`; in the static build it comes from localStorage.
+- Novelty is **within one run only**. Earlier runs, and other players on a shared server, don't make a card rarer. The cross-run counters (`/api/seen`, or localStorage in the static build) are still recorded for the admin statistics.
 
 ### 5.3 Pushing
 
