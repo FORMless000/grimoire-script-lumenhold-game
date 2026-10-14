@@ -1,5 +1,5 @@
 # The midnight turn (playtest 2, M41; stub — X13 fills it): after a lead-in in year 1 Stormbloom, a night card each
-# on-campus month. "Go out" opens the midnight pick (`visit midnight`); six places are open then. Going out in term
+# on-campus month, first in the midnight slot (after every night card), so going out leads straight to the pick. "Go out" opens the midnight pick (`visit midnight`); six places are open then. Going out in term
 # carries a 33% chance of being noticed, and risky nights can get you spotted; either brings `night_suspicion` the
 # next morning, the only way to a lockout.
 
@@ -24,7 +24,7 @@ text: A note under your door, unsigned: "The castle has a second timetable. It s
 @event night_out
 title: After Curfew
 trigger: auto
-slot: night
+slot: midnight
 when: flag(night_unlocked) and not off_campus and not has(locked_out) and turn < max_turns
 repeat: 1
 class: story
