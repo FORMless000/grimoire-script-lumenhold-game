@@ -168,12 +168,13 @@ text: It starts with something small — a borrowed book, a joke that landed wro
   mood -tiny
   say: "I'm sorry." {npc} deflates. "...Me too." It's over. It feels better than winning would have.
 > right: Stand your ground
-  rel npc -medium
   mood -tiny
   chance 50:
+    rel npc -medium
     say: {npc} storms off. You were right. It doesn't feel as good as you'd hoped.
   else:
     rel npc +medium
+    charm +small
     say: You argue it out until you're both laughing at how ridiculous it got. Somehow you're closer after.
 
 @event soc_village_trip

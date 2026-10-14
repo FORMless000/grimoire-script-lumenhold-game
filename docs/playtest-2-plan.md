@@ -214,6 +214,8 @@ L resumed after step 2c. **L-1 is done.** Re-measured from scratch (100 games a 
 
 **L-6 is done.** Learning a spell, or a level of one, from any source gives skill XP in the spell's discipline: `@balance spell_bonus: medium large huge` (one tier per spell level; a frozen-format addition), shown on the "New spell" note ("New spell: Flame II (+4 Arcana)"; translated). Tied to learning the spell, as the user asked, not to the grade. It raises a balanced player's end-of-run mean skill from about 65 to 79 (large large huge gave 82), so skill growth (`xp_cost`) and the curve are retuned together in the alarms step.
 
+**L-5 is done.** Reporting Bram's cheating gains Lumen (alignment +small: honesty that costs his friendship; L10). Standing your ground in `soc_argument` is a real gamble now: half the time the friend storms off (rel −medium), half the time you're closer and argued well (rel +medium, charm +small); before, the good branch only undid the loss (L11). Thorne's office hours cost mood −small as well (L15). Drawing The Star in `seraphine_tarot` sparks (spark +small; L16). Telling the headmistress about Kael's family is Lumen too (alignment +tiny, against "together"'s +small), since it protects the school at the price of a friend (L20).
+
 ## Decisions
 - I1 (decided): the "not your shift" hint comes once per run, for all jobs combined.
 - I5–I10 (decided): festival places close until the festival; suspicion waits until you're back on campus; stub cards for thin places; job income falling is intended; "take no courses" goes.
