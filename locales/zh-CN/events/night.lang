@@ -1,0 +1,175 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/night.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@event night_lead_in
+# en: An Unsigned Note
+title [f1e5f3] = 一张没有署名的字条
+# en: A note under your door, unsigned: "The castle has a second timetable. It starts at midnight. Curfew is a suggestion made by people who go to bed early." In the corner, a map no bigger than a thumbnail, showing six doors that are open when they shouldn't be.
+text [e2406e] = 门下塞着一张没有署名的字条：“城堡有第二张时间表，从午夜开始。宵禁只是早睡的人提的建议。”角落里画着一张不比拇指大的地图，标出六扇本不该开着的门。
+# en: A folded note slipped under a dormitory door at night, unsigned, a tiny silver map drawn in one corner.
+scene [c4d793] = 夜里塞进宿舍门缝的一张折好的字条，没有署名，角落里画着一张小小的银色地图。
+# en: Burn it
+opt.left.label [162285] = 烧掉它
+# en: You hold it to the candle. The map in the corner is the last thing to burn, and you could swear it rearranged itself first.
+opt.left.say.1 [23cef0] = 你把它凑到烛火上。角落的地图最后才烧着，你敢发誓它在那之前先自己重新排列了一番。
+# en: Keep it
+opt.right.label [87c2f5] = 留着它
+# en: You fold it into your book. Some nights you take it out and look at the six doors.
+opt.right.say.1 [6468db] = 你把它折起来夹进书里。有些夜晚，你会拿出来看看那六扇门。
+
+@event night_out
+# en: After Curfew
+title [0fdaf7] = 宵禁之后
+# en: {season == "winter": Frost on the window, and the corridors are colder than the snow.|{season == "summer": The night is warm and the castle's windows are all open.|The castle settles for the night, beam by beam.}} {has(watched): Bram does his rounds earlier these nights. You've learned the sound of his boots.|{mood < 25: You can't sleep anyway.|{gold < 10: Your purse is light, and some doors after midnight pay.|Somewhere a door that should be locked isn't.}}}
+text [1d65cc] = {season == "winter": 窗上结了霜，走廊比雪还冷。|{season == "summer": 夜很暖，城堡的窗户全开着。|城堡一根梁接一根梁地沉入夜色。}}{has(watched): 这些夜里布拉姆巡夜更早了。你已经听熟了他的靴子声。|{mood < 25: 反正你也睡不着。|{gold < 10: 你的钱袋很轻，而午夜之后，有些门是给钱的。|某处一扇本该锁着的门没有锁。}}}
+# en: A dormitory window at midnight, the castle dark beyond it, one lantern moving along a far battlement.
+scene [0df004] = 午夜的宿舍窗户，窗外城堡一片漆黑，远处城垛上有一盏提灯在移动。
+# en: Sleep
+opt.left.label [a62ca8] = 睡觉
+# en: {~You blow out the candle and let the castle keep its secrets for one more night.|Sleep. The night can wait. It always does.}
+opt.left.say.1 [faefa3] = {~你吹灭蜡烛，让城堡再守住一晚它的秘密。|睡吧。夜晚可以等。它向来会等。}
+# en: Go out
+opt.right.label [1d9fab] = 出去
+# en: {~You wait for the last footsteps to fade, then ease the door open.|Boots in hand, you take the servants' stair.}
+opt.right.say.1 [6adc87] = {~你等最后的脚步声消失，然后轻轻推开门。|你拎着靴子，走仆人用的楼梯。}
+
+@event night_suspicion
+# en: A Word in the Morning
+title [42e6c8] = 早上的一句话
+# en: {has(watched): Bram is waiting at the foot of the stair, and this time he has a notebook open. "Twice," he says. "I did warn you."|Bram is waiting at the foot of the stair. "Someone was out last night," he says, looking at nobody in particular, which is to say at you.}
+text [04ce49] = {has(watched): 布拉姆等在楼梯脚下，这次手里摊着一本笔记本。“两次了，”他说，“我警告过你。”|布拉姆等在楼梯脚下。“昨晚有人出去了。”他说着，没看任何人——也就是说，看着你。}
+# en: A prefect waiting at the foot of a dormitory stair at breakfast time, arms folded, a small notebook open.
+scene [e8d3a9] = 早饭时分，一名级长抱着胳膊等在宿舍楼梯脚下，摊开着一本小笔记本。
+# en: Deny everything
+opt.left.label [b2b240] = 一口否认
+# en: Three months of detention and a door that is checked at midnight. Bram writes it all down, neatly.
+opt.left.say.1 [509dcb] = 三个月的禁闭，外加一扇午夜有人查的门。布拉姆把这一切工工整整地记了下来。
+# en: "I'll be keeping an eye on you." He means it literally.
+opt.left.say.2 [772653] = “我会盯着你的。”他是字面意思。
+# en: Own up
+opt.right.label [3a0128] = 承认
+# en: Three months of detention and a door that is checked at midnight. Bram writes it all down, neatly.
+opt.right.say.1 [509dcb] = 三个月的禁闭，外加一扇午夜有人查的门。布拉姆把这一切工工整整地记了下来。
+# en: "I'll be keeping an eye on you." He means it literally.
+opt.right.say.2 [772653] = “我会盯着你的。”他是字面意思。
+
+@event midnight_newt_cards
+# en: Upstairs at the Newt
+title [fe653a] = 镀金蝾螈的楼上
+# en: Upstairs at the Gilded Newt, after hours, the real game starts. The stakes are higher than anything downstairs, and nobody asks your name.
+text [ef03fa] = 打烊之后，镀金蝾螈酒馆楼上，真正的牌局才开始。赌注比楼下任何一桌都大，也没人问你的名字。
+# en: A smoky upstairs room at a tavern after hours, a card table under one lamp, coins stacked high.
+scene [e9f7a8] = 打烊后酒馆楼上烟雾缭绕的房间，一盏灯下一张牌桌，硬币堆得老高。
+# en: Play a few hands
+opt.left.label [efba54] = 玩几把
+# en: {~You leave with more than you came with and a few new enemies who smile too much.|Luck, nerve and one well-timed sigh. The pot is yours.}
+opt.left.say.1 [6262fc] = {~你走的时候比来的时候多了钱，也多了几个笑得太多的新仇人。|运气、胆量，加上一声恰到好处的叹气。彩池归你了。}
+# en: {~You lose, and on your way out a student from the castle sees you on the stair.|You lose your stake, and someone from the academy is drinking at the bar when you come down.}
+opt.left.say.2 [ac1397] = {~你输了，出门时一个城堡里的学生在楼梯上看见了你。|你输掉了赌本，下楼时学院里有人正在吧台喝酒。}
+# en: {~The cards go cold. So does your purse.|You lose your stake and walk back in the dark, poorer and wiser.}
+opt.left.say.3 [1c0c86] = {~牌运冷了。你的钱袋也是。|你输掉了赌本，摸黑走回去，钱少了，人也明白了。}
+# en: Watch, then leave
+opt.right.label [908b14] = 看一会儿就走
+# en: {~You watch one hand, see someone lose a familiar on a bluff, and leave before you're tempted.|You stay long enough to learn the rules, and leave before they learn you.}
+opt.right.say.1 [b1d011] = {~你看了一把，看见有人虚张声势输掉了自己的使魔，趁自己还没心动就走了。|你待到学会了规矩，又在他们认清你之前离开了。}
+
+@event midnight_boathouse_ring
+# en: The Ring Under the Boathouse
+title [31b605] = 船屋下的擂台
+# en: Under the boathouse, by lantern light, someone has chalked a ring on the flagstones. Purses go to whoever is still standing. "Next," says the student holding the money, looking at you.
+text [f5dc25] = 船屋底下，借着提灯的光，有人在石板上用粉笔画了个圈。钱袋归最后还站着的人。“下一个。”管钱的学生看着你说。
+# en: A cellar under a boathouse, lanterns hung from the beams, students in a ring around two duellists, coins changing hands.
+scene [faa793] = 船屋下的地窖，梁上挂着提灯，学生们围成一圈看两个决斗者，硬币在人手间传递。
+# en: Step into the ring
+opt.left.label [bf566a] = 走进圈里
+# en: {~You win the purse and the ring's respect, which is worth less and lasts longer.|Your opponent yields. Somebody whistles. The purse is heavier than you expected.}
+opt.left.say.1 [e69adc] = {~你赢了钱袋和擂台的尊重，后者不值钱，却更持久。|对手认输了。有人吹了声口哨。钱袋比你想的要沉。}
+# en: {~You lose, and limp home past a window where a light is still burning.|A bruising loss, and a prefect's lantern on the path home.}
+opt.left.say.2 [7b006f] = {~你输了，一瘸一拐地回去，路过一扇还亮着灯的窗。|输得鼻青脸肿，回去的路上还碰上了级长的提灯。}
+# en: {~You lose, and limp home in the dark.|You lose, and the lake is very cold for your bruises.}
+opt.left.say.3 [f53675] = {~你输了，摸黑一瘸一拐地回去。|你输了，湖水对你的淤青来说冷得要命。}
+# en: Bet on someone else
+opt.right.label [c75252] = 押别人
+# en: {~Your fighter wins. You collect, quietly.|A good bet. You leave before anyone remembers your face.}
+opt.right.say.1 [663262] = {~你押的人赢了。你悄悄领了钱。|押得好。你在别人记住你的脸之前就走了。}
+# en: {~Your fighter goes down in the first exchange. So does your stake.|You picked badly. The bookmaker smiles.}
+opt.right.say.2 [fc67b4] = {~你押的人第一回合就倒下了。你的赌本也是。|你押错了。庄家笑了。}
+
+@event midnight_kitchen_raid
+# en: The Kitchens at Midnight
+title [174e5a] = 午夜的厨房
+# en: The refectory kitchens at midnight: banked fires, a larder that isn't locked, and the smell of tomorrow's bread already rising.
+text [14230d] = 午夜的膳堂后厨：封好的炉火，一间没上锁的储藏室，明天的面包已经在发酵，香气飘了出来。
+# en: A dark castle kitchen at midnight, a student with a candle reaching into a larder, a cat watching from the hearth.
+scene [22b604] = 午夜昏暗的城堡厨房，一个学生举着蜡烛把手伸进储藏室，一只猫在炉边看着。
+# en: Fill your pockets
+opt.left.label [4d57c0] = 装满口袋
+# en: {~Bread, cheese and a pie. Then the scullery door opens and a cook's lantern finds you.|You eat well. A kitchen boy, up early, sees you go.}
+opt.left.say.1 [bd2a2e] = {~面包、奶酪和一个馅饼。然后洗碗间的门开了，厨子的提灯照到了你。|你吃得很饱。一个早起的厨房小工看见你离开。}
+# en: {~Bread, cheese and half a pie. Nobody counts the pies. You hope.|You eat by the banked fire with the kitchen cat. It doesn't tell.}
+opt.left.say.2 [5075b2] = {~面包、奶酪和半个馅饼。没人数馅饼。你希望如此。|你和厨房的猫一起在封好的炉火边吃东西。它不会告密。}
+# en: Just warm yourself by the fire
+opt.right.label [9fd3db] = 只在火边暖暖身子
+# en: {~You sit by the embers until your hands stop hurting, and take nothing. The walk back is cold.|The kitchen cat sits with you. You leave the larder alone, and feel strangely proud of it.}
+opt.right.say.1 [8dbfef] = {~你坐在余烬旁直到手不再疼，什么也没拿。回去的路很冷。|厨房的猫陪你坐着。你没碰储藏室，心里有种奇怪的自豪。}
+
+@event midnight_restricted_stacks
+# en: The Restricted Stacks
+title [700d36] = 禁书区的书架
+# en: The Restricted Section at midnight. The chains on the shelves clink when nobody touches them. One book has been left open, as if for you.
+text [a86ad6] = 午夜的禁书区。书架上的锁链在没人碰的时候叮当作响。有一本书摊开着，仿佛是为你留的。
+# en: A chained library section at midnight, a student reading by a stolen candle, shelves leaning in like listeners.
+scene [9d85ce] = 午夜被锁链锁住的藏书区，一个学生借着偷来的蜡烛读书，书架像听众一样倾身靠近。
+# en: Read the open book
+opt.left.label [5b587f] = 读那本摊开的书
+# en: {~Three pages before the book closes itself. You remember every word, which is worrying.|The book shows you a diagram you're not supposed to understand. You understand it.}
+opt.left.say.1 [133dfa] = {~读了三页，书就自己合上了。你记住了每一个字，这让人不安。|书给你看了一张你本不该看懂的图。你看懂了。}
+# en: {~The book slams shut and a librarian's lamp comes on two floors down.|The pages scream, briefly. Somebody hears.}
+opt.left.say.2 [b189de] = {~书啪地合上，楼下两层，图书管理员的灯亮了。|书页短促地尖叫了一声。有人听见了。}
+# en: {~The words slide off the page and into your dreams, where they misbehave.|You read a line that reads you back. You leave quickly.}
+opt.left.say.3 [4a7cec] = {~字从书页上滑下来，钻进你的梦里，在那儿捣乱。|你读到一行字，它反过来读了你。你赶紧离开。}
+# en: Leave it open and go
+opt.right.label [a40ffc] = 让它开着，离开
+# en: {~You back away from the book. It seems disappointed.|You leave it open for whoever it was waiting for. It wasn't you, you decide.}
+opt.right.say.1 [43824e] = {~你从书前退开。它似乎很失望。|你让它摊着，留给它在等的人。你认定那不是你。}
+
+@event midnight_observatory_stars
+# en: Stars at Midnight
+title [aa78c1] = 午夜的星星
+# en: The observatory roof at midnight is the quietest place in the castle. {bonds(partner) > 0: You've brought someone.|The stars are very close tonight.} Nobody comes up here after curfew, mostly.
+text [ef69f2] = 午夜的观星台屋顶是城堡里最安静的地方。{bonds(partner) > 0: 你带了个人来。|今晚星星离得很近。}宵禁之后，基本上没人上来。
+# en: The observatory roof at midnight, a student lying on the leads, the sky thick with stars.
+scene [1bfcc3] = 午夜的观星台屋顶，一个学生躺在铅皮屋面上，满天繁星。
+# en: Stay until the sky turns
+opt.left.label [6b603a] = 待到天色转亮
+# en: {~You count stars until you lose count, and then until the sky goes grey. You'll be tired. It was worth it.|A meteor, then another. You stay until the first bell.}
+opt.left.say.1 [8ea599] = {~你数星星数到数乱了，又一直数到天色发灰。你会很累。值得。|一颗流星，又一颗。你一直待到第一声钟响。}
+# en: An hour, then bed
+opt.right.label [d38b58] = 待一个钟头就睡
+# en: {~On the stair down you meet a professor coming up, with a telescope and a frown.|You're almost back when a lantern turns the corner.}
+opt.right.say.1 [59404c] = {~下楼时你碰上一位教授正往上走，扛着望远镜，皱着眉。|你快到宿舍时，一盏提灯拐过了墙角。}
+# en: {~An hour of stars, and you're back in bed before anyone stirs.|You slip back down the stair, the sky still in your eyes.}
+opt.right.say.2 [2dcc53] = {~看了一个钟头星星，在任何人醒来之前就回到了床上。|你溜下楼梯，眼里还装着星空。}
+
+@event midnight_passage_mapping
+# en: The Passage After Dark
+title [8077de] = 入夜后的密道
+# en: Behind the third gargoyle the passage is busier at midnight than at noon. {met(corvin): Corvin's chalk marks are fresh.|Someone's chalk marks are fresh.} A draught comes from a direction that has no wall.
+text [77c2e1] = 第三座石像鬼后面的密道，午夜比正午还热闹。{met(corvin): 科尔文的粉笔记号还是新的。|有人的粉笔记号还是新的。}一阵风从一个没有墙的方向吹来。
+# en: A secret passage behind a gargoyle at midnight, chalk marks on the walls, a candle guttering in a draught from nowhere.
+scene [e3c614] = 午夜石像鬼后的密道，墙上有粉笔记号，一支蜡烛在不知从哪来的风里摇曳。
+# en: Follow the draught
+opt.left.label [989dda] = 顺着风走
+# en: {~The draught leads you to a door you've never seen, and then, politely, closes it.|A new turning, a new stair. You chalk it for the map.}
+opt.left.say.1 [8bc3e0] = {~风把你领到一扇你从没见过的门前，然后礼貌地把它关上了。|一个新的拐角，一段新的楼梯。你用粉笔记下来，画进地图。}
+# en: {~The passage lets you out somewhere unexpected: the prefects' corridor.|You come out in the wrong tower, in front of the wrong person.}
+opt.left.say.2 [eb8d04] = {~密道把你放到了一个意想不到的地方：级长的走廊。|你从错误的塔里钻出来，站在了错误的人面前。}
+# en: {~You get lost for an hour and come out by the kitchens, cold and dusty.|The draught stops. So do you, in the dark, for a long time.}
+opt.left.say.3 [04ac12] = {~你迷路了一个钟头，从厨房旁边钻出来，又冷又脏。|风停了。你也停了，在黑暗里停了很久。}
+# en: Mark it and go back
+opt.right.label [776869] = 做个记号就回去
+# en: {~You chalk an arrow at the turning and leave the rest for another night.|You mark it on your copy of the map and go back to bed, a little sorry.}
+opt.right.say.1 [c06aa7] = {~你在拐角处用粉笔画了个箭头，剩下的留给下一个夜晚。|你在自己那份地图上做了记号，回去睡觉，有点遗憾。}

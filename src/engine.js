@@ -322,6 +322,7 @@
       if (st.t === 'leave' && !this.c.tracks[id] && this.trackKinds().has(id)) id = Object.keys(s.tracks || {}).find((k) => s.tracks[k].kind === id && s.tracks[k].status === 'member');
       const d = this.c.tracks[id];
       if (!d) return;
+      if (d.kind === 'society' && (st.t === 'perform' || st.t === 'rank_xp' || st.t === 'promote')) return;   // no performance or ranks (M40)
       s.tracks = s.tracks || {};
       const t = s.tracks[id] = s.tracks[id] || { kind: d.kind, status: 'none', passed: {}, grades: [], rank: 0, perf: 50, rankXp: 0, visits: 0, due: d.due || 0, progress: 0, study: 0 };
       switch (st.t) {
@@ -367,6 +368,7 @@
     attend(id, ctx) {
       const s = this.s, t = this.trackState(id), d = this.c.tracks[id];
       if (!t || t.status !== 'member' || !d) return;
+      if (d.kind === 'society') return;   // a society keeps no attendance (M40)
       // On a break, a visit is an extra one: it never counts toward the next term's due (playtest 2, B6).
       const brk = this.phaseOf() === 'break';
       // An internship is the break's work (M16): every visit there counts in full.
@@ -900,6 +902,8 @@
             break;
           }
           case 'sit_exam': this.sitExam(ctx.track || this._ctxTrack, st.swing, ctx); break;
+          // `visit midnight` (M41): that slot of today becomes a visit, picked on the map when it comes.
+          case 'visit': if (s.day && s.day.v === 2 && this.recipe().some((r) => r.slot === st.slot)) s.day.extraVisit = st.slot; break;
           case 'cool': { const id = this.npcOf(st.npc, ctx), n = id && s.npcs[id]; if (n && n.spark) { ctx.deltas['spark:' + id] = (ctx.deltas['spark:' + id] || 0) - n.spark; n.spark = 0; } break; }   // spark cleared (M37)
           case 'wage': {
             const ev = ctx.key && this.c.events[ctx.key], id = ctx.track || this._ctxTrack || (ev && ev.track);

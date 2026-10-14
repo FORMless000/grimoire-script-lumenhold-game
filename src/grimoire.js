@@ -330,6 +330,7 @@
     sitExam: /^sit_exam(?:\s+(wild|steady))?$/,
     wage: /^wage(?:\s+([a-z]+))?$/,
     cool: /^cool\s+([a-z_][a-z0-9_]*)$/,
+    visitSlot: /^visit\s+([a-z]+)$/,
     preset: new RegExp('^(' + ID + ')((?:\\s+' + ID + ')*)$'),
     bond: new RegExp('^bond\\s+(' + ID + ')\\s+(' + ID + ')$'),
     meet: new RegExp('^meet\\s+(' + ID + ')$'),
@@ -352,6 +353,7 @@
     if ((m = content.match(RE.sitExam))) return { t: 'sit_exam', swing: m[1] || null, line };
     if ((m = content.match(RE.wage))) return { t: 'wage', size: m[1] || null, line };
     if ((m = content.match(RE.cool))) return { t: 'cool', npc: m[1], line };
+    if ((m = content.match(RE.visitSlot))) return { t: 'visit', slot: m[1], line };
     if (content.endsWith(':')) throw new GrimError('unknown block statement "' + content + '" (expected if/elif/else/chance/check)', file, line);
     if ((m = content.match(RE.flag))) return { t: 'flag', names: m[1].split(/\s+/), line };
     if ((m = content.match(RE.unflag))) return { t: 'unflag', names: m[1].split(/\s+/), line };

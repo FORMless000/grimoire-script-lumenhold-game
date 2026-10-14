@@ -95,7 +95,7 @@
     },
     // The map for the visit being picked now (M1): one slot. Outside a pick, every visit slot (tools, the start-of-month check).
     mapView() {
-      const s = this.s, d = s.day, picking = d && d.v === 2 && d.at < this.recipe().length && this.recipe()[d.at].source === 'visit';
+      const s = this.s, d = s.day, picking = d && d.v === 2 && d.at < this.recipe().length && this.isVisitAt(d.at);
       const vi = picking ? this.visitIndex(d.at) : 0;
       const slots = picking ? [this.recipe()[d.at].slot] : this.visitSlots();
       // Festivals (B3, M1) no longer take the visit: their place is highlighted in their slot, and picking it draws the festival.
@@ -114,7 +114,10 @@
         const found = !!s.places[p.id];
         const hinted = !found && p.hinted_when && this.test(p.hinted_when, null);
         if (!found && !hinted) continue;
-        const open = slots.map((sl) => found && this.placeOpen(p, sl));
+        // In an opened slot (midnight, M41) a place is open only if it has something that names the slot.
+        const opened = picking && this.recipe()[d.at].source !== 'visit';
+        const names = (e) => e.slot === slots[0] || (e.time || []).includes(slots[0]);
+        const open = slots.map((sl) => found && this.placeOpen(p, sl) && (!opened || (this.directorIndex().byPlace[p.id] || []).concat(p.track ? this.directorIndex().byTrack[p.track] || [] : []).some(names)));
         const t = p.track && s.tracks[p.track] && s.tracks[p.track].status === 'member' ? s.tracks[p.track] : null;
         const here = found ? [...new Set(slots.flatMap((sl) => this.presentAt(p.id, sl).filter((id) => s.npcs[id] && s.npcs[id].met)))] : [];
         const ix = this.directorIndex();
@@ -125,7 +128,7 @@
           present: here, news, festival: fest.filter((f) => f.place === p.id).map((f) => ({ slot: slots[f.visit], event: f.event })) });
       }
       return { map: breakMap, slots, places, locked: [], festivals: fest.filter((f) => f.visit < slots.length).map((f) => ({ slot: slots[f.visit], place: f.place, event: f.event })),
-        visit: picking ? vi + 1 : null, visits: this.visitSlots().length, season: this.seasonOf(), phase: this.isWrapUp() ? 'wrapup' : this.phaseOf() };
+        visit: picking ? vi + 1 : null, visits: this.visitSlots().length + (d && d.extraVisit && !this.visitSlots().includes(d.extraVisit) ? 1 : 0), season: this.seasonOf(), phase: this.isWrapUp() ? 'wrapup' : this.phaseOf() };
     },
     // Whether a visit to this job's place will draw one of its shift cards, which pay the wage (M10).
     hasShift(id) {
@@ -367,7 +370,9 @@
       if (d.phase === 'pick') this.startDay();
       else this.s.day = { v: 2, phase: 'slots', at: this.recipe().length, stage: 0, picks: d.picks || [], nextPicks: [], used: [], items: [], withToday: [], pushed: [], spread: {}, count: 0, done: true };
     },
-    visitIndex(at) { return this.recipe().slice(0, at).filter((r) => r.source === 'visit').length; },
+    // A visit slot: the recipe's, or one opened today by `visit <slot>` (M41).
+    isVisitAt(at) { const r = this.recipe()[at], d = this.s.day; return !!r && (r.source === 'visit' || (!!d && d.extraVisit === r.slot)); },
+    visitIndex(at) { let n = 0; for (let k = 0; k < at; k++) if (this.isVisitAt(k)) n++; return n; },
     curSlot() { const d = this.s.day, r = d && this.recipe()[d.at]; return r ? r.slot : null; },
     // Adds a slot's cards to the deck (with the day's optional cap: pushed cards that don't fit move to tomorrow).
     addToDeck(items, slot) {
@@ -397,7 +402,7 @@
         d.stage = 1;
         if (mine.length) { this.addToDeck(mine, r.slot); return 'cards'; }
       }
-      if (r.source === 'visit' && d.picks.length <= this.visitIndex(d.at)) {
+      if (this.isVisitAt(d.at) && d.picks.length <= this.visitIndex(d.at)) {
         const view = this.mapView();
         const any = view.places.some((p) => p.state === 'open' && p.open[0]);
         // A pick passed ahead of time (pickPlaces([a, b]), tests and tools) is used when its slot comes.
@@ -405,7 +410,8 @@
         if (!any || ahead !== undefined) { this.pickPlace(any ? ahead : null); }
         else { d.phase = 'pick'; return 'pick'; }
       }
-      const items = this.fillSlot(r);
+      // An opened slot (M41) is filled as a visit: only events that name the slot, at the place picked.
+      const items = this.fillSlot(r.source !== 'visit' && d.extraVisit === r.slot ? Object.assign({}, r, { source: 'visit', min: 1, max: 1, opened: true }) : r);
       d.at++; d.stage = 0;
       if (d.at >= rec.length) d.done = true;
       if (items.length) { this.addToDeck(items, r.slot); return 'cards'; }
@@ -450,11 +456,13 @@
           const p = this.c.places[place];
           this._place = place;
           const n = r.min == null ? 1 + Math.floor(this.rand() * 2) : count;
+          // An opened slot (midnight, M41) draws only events that name it; no ambient fallback.
+          const names = (e) => !r.opened || e.slot === r.slot || (e.time || []).includes(r.slot);
           for (let k = 0; k < n; k++) {
             const t = p.track && s.tracks[p.track] && s.tracks[p.track].status === 'member' ? p.track : null;
-            const it = (t && k === 0 && this.draw((ix.byTrack[t] || []).filter((e) => !e.rank || e.rank <= s.tracks[t].rank + 1), used, day.concat(items), { place, track: t, prio: 'track' }))
-              || this.draw(ix.byPlace[place] || [], used, day.concat(items), { place, prio: 'ambient' })
-              || this.draw(ix.ambient.filter((e) => (e.tags || []).some((tg) => (p.draws || []).includes(tg))), used, day.concat(items), { place, prio: 'ambient' });
+            const it = (t && k === 0 && this.draw((ix.byTrack[t] || []).filter((e) => (!e.rank || e.rank <= s.tracks[t].rank + 1) && names(e)), used, day.concat(items), { place, track: t, prio: 'track' }))
+              || this.draw((ix.byPlace[place] || []).filter(names), used, day.concat(items), { place, prio: 'ambient' })
+              || (!r.opened && this.draw(ix.ambient.filter((e) => (e.tags || []).some((tg) => (p.draws || []).includes(tg))), used, day.concat(items), { place, prio: 'ambient' }));
             if (it) items.push(it);
           }
           // Track 1 (design §5.5): the people here. Being where they are warms them; sometimes a card with one of them.

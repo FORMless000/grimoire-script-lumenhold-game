@@ -230,7 +230,7 @@
     'side.rankLine': '{rank} · {due} due this term',
     'side.perf': '{n}%',
     'side.progress': 'Progress {n}%',
-    'side.applied': 'Applied',
+    'side.society': 'a society: no dues, no ranks', 'side.applied': 'Applied',
     'slots.heading': 'Saved games',
     'slots.auto': 'Autosave',
     'slots.slot': 'Slot {n}',

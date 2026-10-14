@@ -672,3 +672,21 @@ on_expire:
     queue intern_asked_back
   else:
     leave internship
+
+# ---------------- The midnight turn (playtest 2, M41) ----------------
+
+# Hidden: someone noticed you out after dark. The next morning brings `night_suspicion`, on breaks too.
+@state spotted
+name: Spotted After Dark
+kind: debuff
+hidden: true
+duration: 2
+art: eye
+desc: Someone saw you out after curfew.
+
+@state locked_out
+name: Confined After Dark
+kind: debuff
+duration: 3
+art: lock
+desc: Caught once too often. Your door is checked at midnight, and the night is closed to you.

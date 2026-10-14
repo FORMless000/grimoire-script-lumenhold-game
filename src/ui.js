@@ -278,8 +278,9 @@
           if (tr.kind === 'course') line = tr.status === 'enrolled' ? t('side.enrolled') : tr.grades.length ? t('side.grades', { grades: tr.grades.join(' ') }) : '';
           else if (tr.kind === 'club' || tr.kind === 'job') line = t('side.rankLine', { rank: tr.rank || '', perf: tr.perf, due: tr.due });
           else if (tr.kind === 'thesis') line = t('side.progress', { n: tr.progress });
+          else if (tr.kind === 'society') line = t('side.society');
           else if (tr.status === 'applied') line = t('side.applied');
-          h += '<div class="state track ' + esc(tr.kind) + '">' + Art.icon(tr.kind === 'job' ? 'coin' : tr.kind === 'club' ? 'group' : 'book', 20) + '<div><b>' + esc(tr.levelName || tr.name) + '</b><p>' + esc(line) + '</p></div>' + (tr.kind === 'club' || tr.kind === 'job' ? '<span class="left">' + esc(t('side.perf', { n: tr.perf })) + '</span>' : '') + '</div>';
+          h += '<div class="state track ' + esc(tr.kind) + '">' + Art.icon(tr.kind === 'job' ? 'coin' : tr.kind === 'club' ? 'group' : tr.kind === 'society' ? 'map' : 'book', 20) + '<div><b>' + esc(tr.levelName || tr.name) + '</b><p>' + esc(line) + '</p></div>' + (tr.kind === 'club' || tr.kind === 'job' ? '<span class="left">' + esc(t('side.perf', { n: tr.perf })) + '</span>' : '') + '</div>';
         }
       }
       if (snap.spells.length) {

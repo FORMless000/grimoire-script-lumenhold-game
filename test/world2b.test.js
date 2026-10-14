@@ -386,3 +386,44 @@ test('off campus: halved drift, a letter each night; milestones ramp; spark foll
   eng.run([{ t: 'rel', npc: 'lyra', tier: 'small', sign: 1 }], c3);
   assert.ok(eng.outcome(c3).capped['rel:lyra'] > 0, 'a gain at the cap still shows');
 });
+
+test('the midnight turn: going out opens a midnight pick; suspicion is the only way to a lockout (M41)', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 5, name: 'T' }); });
+  eng.s.flags.night_unlocked = true; eng.s.places.boathouse = { found: 1 }; eng.startDay();
+  let r = quiet(() => eng.advance()), sawNight = false, midnight = null;
+  for (let i = 0; i < 400 && eng.s.turn === 1; i++) {
+    if (r.kind === 'month') break;
+    if (r.kind === 'map') {
+      if (r.view.slots[0] === 'midnight') { midnight = r.view; eng.pickPlaces(['boathouse']); } else eng.pickPlaces([null]);
+      r = quiet(() => eng.advance()); continue;
+    }
+    const k = r.view.id === 'night_out' ? (sawNight = true, 'right') : r.view.options.find((o) => !o.disabled).key;
+    quiet(() => eng.choose(r.view.pick > 1 ? [k] : k)); r = quiet(() => eng.advance());
+  }
+  assert.ok(sawNight, 'the night card comes');
+  assert.ok(midnight, 'going out opens the midnight map');
+  assert.ok(midnight.places.filter((p) => p.state === 'open' && p.open[0]).every((p) => (eng.directorIndex().byPlace[p.id] || []).concat(eng.directorIndex().byTrack[content.places[p.id].track] || []).some((e) => e.slot === 'midnight')), 'only places with a midnight card are open');
+  assert.ok(eng.s.hist.some((h) => h.t === 'card' && /^midnight_/.test(h.id)), 'a midnight card at the place');
+  // the morning after being spotted: watched first, a lockout the second time
+  const ctx = eng.newCtx(null, null);
+  eng.run([{ t: 'gain', state: 'spotted' }], ctx);
+  eng.s.cur = { id: 'night_suspicion', actor: null }; quiet(() => eng.choose('right'));
+  assert.ok(eng.s.states.watched && !eng.s.states.locked_out);
+  eng.run([{ t: 'gain', state: 'spotted' }], ctx);
+  eng.s.cur = { id: 'night_suspicion', actor: null }; quiet(() => eng.choose('left'));
+  assert.ok(eng.s.states.locked_out && !eng.s.states.watched, 'watched twice: locked out');
+  assert.equal(eng.test(content.events.night_out.when, null), false, 'no night card while locked out');
+});
+
+test('a society keeps no dues, performance or ranks, and doesn\'t take the club slot (M40)', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 6, name: 'T' }); });
+  const ctx = eng.newCtx(null, null);
+  eng.trackOp({ t: 'join', track: 'duelling' }, ctx);
+  eng.trackOp({ t: 'join', track: 'cartographers' }, ctx);
+  assert.equal(eng.s.tracks.duelling.status, 'member', 'the club stays');
+  const t = eng.s.tracks.cartographers, perf = t.perf;
+  eng.attend('cartographers', ctx); eng.trackOp({ t: 'perform', track: 'cartographers', tier: 'large', sign: 1 }, ctx);
+  assert.equal(t.perf, perf); assert.equal(t.visits, 0);
+});

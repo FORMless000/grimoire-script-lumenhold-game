@@ -153,7 +153,7 @@ Retune once, on the finished mechanics. Tools: `tools/economy.js`, `balance` (fu
 Not in step 3: L13 → M13; L21 → X; L22 → X3; L28 → the final pass.
 
 ## Status
-Step 1 is done (B and C, not yet committed): the triage marks each item. B35 is migration 0019. Steps 2 (M) and 3 (L) are planned above; step 2 is under way.
+Steps 1 (B, C) and 2 (M, packages M-A to M-F) are done and committed; the triage marks each item. Step 3 (L) is planned above and not started.
 
 ## Decisions
 - M21 (decided): year 4's last break is a wrap-up term, and month 48 only resolves endings.

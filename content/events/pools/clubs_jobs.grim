@@ -309,7 +309,6 @@ text: At dusk Tobias holds out the iron key ring, warm from his pocket. "Ma says
 @event cartographers_survey_run
 title: A Survey Run
 track: cartographers
-rank: 1
 class: routine
 tone: eerie
 repeat: 4
@@ -321,23 +320,19 @@ text: {Initiates do the pacing. Corvin hands you chalk and a passage to measure 
 > left: Pace it properly
   challenge research using guile easy:
     win:
-      perform cartographers +small
       guile +small
       say: {~Every turning chalked and counted. The passage is exactly where it was last month, which on the master map counts as a scandal.|The passage is two strides longer from this end than from the other. Corvin is delighted.}
     lose:
       mood -small
-      perform cartographers -tiny
       say: {~Your chalk marks lead neatly into a wall that wasn't there when you started.|You lose count somewhere in the dark and have to admit it, which in this club is rarer than a map.}
 > right: Copy last month's figures
   alignment -tiny
   mood +tiny
-  perform cartographers -tiny
   say: {~You copy the old figures and sit in an alcove eating toffee. The castle, as if offended, moves the passage a foot.|The figures match last month's exactly. Corvin looks at them, then at you. "Forger," he says, approvingly.}
 
 @event cartographers_lantern_patrol
 title: The Prefect's Lantern
 track: cartographers
-rank: 1
 class: routine
 tone: tense
 repeat: 4
@@ -349,23 +344,19 @@ text: {Every expedition has the moment a lantern comes round the corner. Tonight
 > left: Freeze in the shadows
   challenge deceive easy:
     win:
-      perform cartographers +small
       guile +tiny
       say: {~The light slides over you like water off a duck. The footsteps go on.|You don't breathe for a very long time. The prefect sneezes, apologises to nobody and walks on.}
     lose:
       mood -small
-      perform cartographers -tiny
       say: {~The lantern stops on your face. You spend Saturday scrubbing pans and inventing a reason you were inside a wall.|You talk your way out with a story about a lost cat. It costs you the night's mapping and most of your dignity.}
 > right: Go back the long way
   guile +tiny
   health -tiny
-  perform cartographers -tiny
   say: {~The long way is four flights of freezing stairs. You learn every one of them by heart.|You double back through the kitchens and arrive late, cold and unseen. Corvin raises a mug of milk he certainly didn't pay for.}
 
 @event cartographers_inking_night
 title: Inking Night
 track: cartographers
-rank: 2
 class: routine
 tone: warm
 repeat: 5
@@ -376,19 +367,15 @@ tags: club
 scene: Two students bent over a huge map drawn in silver ink that shifts as they watch, in a hidden candlelit room.
 text: {Mappers ink the master map. Corvin unrolls it, silver lines shifting like breath, and passes you the pen.|Inking night. The map has redrawn a stair since your last visit, out of spite.|The map has started leaving a blank wherever you hesitate.} {~"Leave the one behind the kitchens off," he says. "Not for long. For me."|"The stair under the clock. Don't draw it. Don't ask why."|He taps a corridor. "That one stays off the map. Humour me."}
 > left: Ink it anyway
-  perform cartographers +small
-  rank_xp cartographers +small
   rel corvin -small
   say: {~You draw it, line by honest line. Corvin watches, then laughs, a little too late. "Saint," he says, without the usual smile.|It goes on the map. Corvin is quiet for the rest of the night, which on him is very loud.}
 > right: Leave it off for him
   rel corvin +small
-  perform cartographers -tiny
   say: {~You leave a careful blank. Corvin squeezes your shoulder and doesn't make a joke, which is how you know it matters.|The map gets a gap and Corvin keeps his secret. You wonder, later, what it's for.}
 
 @event cartographers_silver_pen
 title: A Pen of Your Own
 track: cartographers
-rank: 2
 class: milestone
 tone: warm
 weight: 20
@@ -398,14 +385,11 @@ tags: club
 scene: A silver-nibbed pen laid on a folded map in a candlelit stone alcove.
 text: Corvin presses a pen into your hand: silver nib, black barrel, warm from his pocket. "Mappers carry their own," he says. "And the first passage you find, you name. Club rule. I made it up, but it's a rule." Tonight you found one.
 > left: Name it after yourself
-  rank_xp cartographers +medium
   guile +small
   mood +small
   say: Your name goes on the master map in your own silver hand, at the mouth of a passage that smells faintly of rain. The ink shivers, then settles, as if the castle had agreed.
 > right: Name it for a club joke
-  rank_xp cartographers +medium
   rel corvin +small
-  perform cartographers +small
   say: You name it after the night's worst joke. Corvin laughs so hard a prefect two floors down stops to listen. "Keeper material," he whispers, and for once he doesn't laugh after.
 
 # ---------------- Library Assistant (track: library_assistant) ----------------

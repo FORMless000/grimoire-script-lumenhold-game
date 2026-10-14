@@ -316,6 +316,8 @@ spread: social world
 
 **Run length:** 32 term months × ~11 cards + 15 break months × ~5 ≈ **425 decisions** *(checked at playtest #1)*.
 
+**The midnight turn** (playtest 2, M41; content X13): after an unsigned note in year 1 Stormbloom, a night card comes each on-campus month (term, or a break at the castle or working on campus; not at home, on an internship, while locked out, or on the last day). "Sleep" costs nothing; "Go out" costs mood and health (−small each) and opens the midnight pick (`visit midnight`) among the places open then: the Gilded Newt, the boathouse, the refectory kitchens, the restricted section, the observatory and the gargoyle passage. Suspicion: going out in term carries a 33% chance of being noticed, and a risky outcome may get you spotted (about 50%, by event); either way the next morning brings one suspicion card. If you weren't watched, you are now; if you were, a three-month lockout and detention, with gold and mood losses, and `watched` is cleared. Day events that give `watched` never lock you out.
+
 ### 4.3 Break plans
 
 Chosen at the start of each break, as a menu:
@@ -640,6 +642,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
   - 30+ per club or job across its ranks;
   - a milestone event per level or rank.
 - **Rewards come through track events,** not a fixed payout.
+- **The Midnight Cartographers** are a society (M40): hidden, joined by invitation, with no dues, performance or ranks, and beside your club rather than instead of it.
 
 ### 7.5 Research internships
 

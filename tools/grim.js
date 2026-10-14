@@ -197,6 +197,7 @@ function analyze(content) {
         case 'learn': if (!content.facts[st.fact]) P('error', w, 'learn: unknown fact "' + st.fact + '"'); break;
         case 'enrol': case 'join': case 'leave': case 'promote': case 'apply': case 'perform': case 'rank_xp': case 'progress':
           if (st.track !== 'track' && !(st.t === 'leave' && KIND_ARGS.has(st.track)) && !content.tracks[st.track]) P('error', w, st.t + ': unknown track "' + st.track + '"');
+          else if (['perform', 'rank_xp', 'promote'].includes(st.t) && content.tracks[st.track] && content.tracks[st.track].kind === 'society') P('error', w, st.t + ': ' + st.track + ' is a society (no performance or ranks)');
           break;
         case 'study': if (st.track && st.track !== 'track' && !(content.tracks[st.track] && content.tracks[st.track].kind === 'course')) P('error', w, 'study: "' + st.track + '" is not a course'); break;
         case 'discover': if (!content.places[st.place]) P('error', w, 'discover: unknown place "' + st.place + '"'); break;
@@ -216,6 +217,12 @@ function analyze(content) {
             if (!content.skills[st.vs.stat] && !['wealth', 'rel', 'spark'].includes(st.vs.stat)) P('error', w, 'challenge vs: "' + st.vs.stat + '" is not a skill, wealth, rel or spark');
           }
           break;
+        case 'visit': {
+          const recipeSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || [])].map((r) => r.slot));
+          if (!recipeSlots.has(st.slot)) P('error', w, 'visit: "' + st.slot + '" is in no day recipe');
+          else if (!Object.values(content.places).some((p) => (p.open || []).includes(st.slot))) P('warn', w, 'visit: no place is open at ' + st.slot);
+          break;
+        }
         case 'wage': {
           const words = Object.assign({ short: 0.5, full: 1, overtime: 2 }, (content.balance && content.balance.wage) || {});
           if (st.size && words[st.size] == null) P('error', w, 'wage: unknown wage word "' + st.size + '" (' + Object.keys(words).join(' ') + ')');
@@ -420,7 +427,7 @@ function analyzeWorld(content, P, scanExpr, scanText) {
     }
     for (const id of Object.keys(n.relations || {})) if (!content.npcs[id]) P('error', loc(n), 'relations: unknown npc "' + id + '"');
   }
-  const PLACE_KINDS = new Set(['public', 'club', 'job', 'thesis', 'internship', 'plan']);
+  const PLACE_KINDS = new Set(['public', 'club', 'job', 'thesis', 'internship', 'plan', 'society']);
   for (const d of Object.values(content.places)) {
     if (!d.name) P('error', loc(d), '@place needs a name');
     if (!d.map) P('warn', loc(d), '@place has no map position');
@@ -434,7 +441,7 @@ function analyzeWorld(content, P, scanExpr, scanText) {
     if (d.open && d.kind !== 'internship' && visitSlots.size && !d.open.some((sl) => visitSlots.has(sl))) P('error', loc(d), 'open: ' + d.open.join(' ') + ' — never a visit slot (' + [...visitSlots].join(', ') + '), so the place can never be visited');
     scanExpr(d.discover, loc(d), false); scanExpr(d.closed_when, loc(d), false); scanExpr(d.hinted_when, loc(d), false);
   }
-  const TRACK_KINDS = new Set(['course', 'club', 'job', 'internship', 'thesis']);
+  const TRACK_KINDS = new Set(['course', 'club', 'job', 'internship', 'thesis', 'society']);
   for (const d of Object.values(content.tracks)) {
     if (!TRACK_KINDS.has(d.kind)) P('error', loc(d), '@track kind must be one of ' + [...TRACK_KINDS].join(', '));
     if (!d.name) P('error', loc(d), '@track needs a name');

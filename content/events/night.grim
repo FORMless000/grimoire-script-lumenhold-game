@@ -1,0 +1,258 @@
+# The midnight turn (playtest 2, M41; stub — X13 fills it): after a lead-in in year 1 Stormbloom, a night card each
+# on-campus month. "Go out" opens the midnight pick (`visit midnight`); six places are open then. Going out in term
+# carries a 33% chance of being noticed, and risky nights can get you spotted; either brings `night_suspicion` the
+# next morning, the only way to a lockout.
+
+@event night_lead_in
+title: An Unsigned Note
+trigger: auto
+when: year == 1 and month == 7 and not off_campus
+class: story
+tone: eerie
+art: map
+tags: mystery
+scene: A folded note slipped under a dormitory door at night, unsigned, a tiny silver map drawn in one corner.
+text: A note under your door, unsigned: "The castle has a second timetable. It starts at midnight. Curfew is a suggestion made by people who go to bed early." In the corner, a map no bigger than a thumbnail, showing six doors that are open when they shouldn't be.
+> left: Burn it
+  flag night_unlocked
+  say: You hold it to the candle. The map in the corner is the last thing to burn, and you could swear it rearranged itself first.
+> right: Keep it
+  flag night_unlocked
+  guile +tiny
+  say: You fold it into your book. Some nights you take it out and look at the six doors.
+
+@event night_out
+title: After Curfew
+trigger: auto
+slot: night
+when: flag(night_unlocked) and not off_campus and not has(locked_out) and turn < max_turns
+repeat: 1
+class: story
+tone: eerie
+art: moon
+tags: mystery
+scene: A dormitory window at midnight, the castle dark beyond it, one lantern moving along a far battlement.
+text: {season == "winter": Frost on the window, and the corridors are colder than the snow.|{season == "summer": The night is warm and the castle's windows are all open.|The castle settles for the night, beam by beam.}} {has(watched): Bram does his rounds earlier these nights. You've learned the sound of his boots.|{mood < 25: You can't sleep anyway.|{gold < 10: Your purse is light, and some doors after midnight pay.|Somewhere a door that should be locked isn't.}}}
+> left: Sleep
+  say: {~You blow out the candle and let the castle keep its secrets for one more night.|Sleep. The night can wait. It always does.}
+> right: Go out
+  mood -small
+  health -small
+  visit midnight
+  if term:
+    chance 33:
+      gain spotted
+  say: {~You wait for the last footsteps to fade, then ease the door open.|Boots in hand, you take the servants' stair.}
+
+# The morning after you were noticed: the only source of lockouts.
+@event night_suspicion
+title: A Word in the Morning
+trigger: auto
+slot: morning
+when: has(spotted)
+priority: 90
+repeat: 1
+class: incident
+tone: tense
+art: eye
+tags: crisis
+scene: A prefect waiting at the foot of a dormitory stair at breakfast time, arms folded, a small notebook open.
+text: {has(watched): Bram is waiting at the foot of the stair, and this time he has a notebook open. "Twice," he says. "I did warn you."|Bram is waiting at the foot of the stair. "Someone was out last night," he says, looking at nobody in particular, which is to say at you.}
+> left: Deny everything
+  lose spotted
+  guile +tiny
+  if has(watched):
+    lose watched
+    gain locked_out
+    gain detention 3
+    gold -small
+    mood -medium
+    say: Three months of detention and a door that is checked at midnight. Bram writes it all down, neatly.
+  else:
+    gain watched
+    say: "I'll be keeping an eye on you." He means it literally.
+> right: Own up
+  lose spotted
+  alignment +tiny
+  if has(watched):
+    lose watched
+    gain locked_out
+    gain detention 3
+    gold -small
+    mood -medium
+    say: Three months of detention and a door that is checked at midnight. Bram writes it all down, neatly.
+  else:
+    gain watched
+    say: "I'll be keeping an eye on you." He means it literally.
+
+# ---------------- One night at each open place (X13 adds more) ----------------
+
+@event midnight_newt_cards
+title: Upstairs at the Newt
+place: gilded_newt
+slot: midnight
+class: routine
+tone: tense
+repeat: 2
+weight: 10
+art: cup
+tags: money danger
+scene: A smoky upstairs room at a tavern after hours, a card table under one lamp, coins stacked high.
+text: Upstairs at the Gilded Newt, after hours, the real game starts. The stakes are higher than anything downstairs, and nobody asks your name.
+> left: Play a few hands
+  alignment -tiny
+  challenge deceive medium:
+    win:
+      gold +large
+      say: {~You leave with more than you came with and a few new enemies who smile too much.|Luck, nerve and one well-timed sigh. The pot is yours.}
+    lose:
+      gold -medium
+      chance 50:
+        gain spotted
+        say: {~You lose, and on your way out a student from the castle sees you on the stair.|You lose your stake, and someone from the academy is drinking at the bar when you come down.}
+      else:
+        say: {~The cards go cold. So does your purse.|You lose your stake and walk back in the dark, poorer and wiser.}
+> right: Watch, then leave
+  mood -tiny
+  say: {~You watch one hand, see someone lose a familiar on a bluff, and leave before you're tempted.|You stay long enough to learn the rules, and leave before they learn you.}
+
+@event midnight_boathouse_ring
+title: The Ring Under the Boathouse
+place: boathouse
+slot: midnight
+class: routine
+tone: tense
+repeat: 2
+weight: 10
+art: sword
+tags: danger money
+scene: A cellar under a boathouse, lanterns hung from the beams, students in a ring around two duellists, coins changing hands.
+text: Under the boathouse, by lantern light, someone has chalked a ring on the flagstones. Purses go to whoever is still standing. "Next," says the student holding the money, looking at you.
+> left: Step into the ring
+  alignment -tiny
+  challenge combat medium:
+    win:
+      gold +medium
+      renown +tiny
+      say: {~You win the purse and the ring's respect, which is worth less and lasts longer.|Your opponent yields. Somebody whistles. The purse is heavier than you expected.}
+    lose:
+      health -medium
+      chance 50:
+        gain spotted
+        say: {~You lose, and limp home past a window where a light is still burning.|A bruising loss, and a prefect's lantern on the path home.}
+      else:
+        say: {~You lose, and limp home in the dark.|You lose, and the lake is very cold for your bruises.}
+> right: Bet on someone else
+  gold -small
+  chance 50:
+    gold +medium
+    say: {~Your fighter wins. You collect, quietly.|A good bet. You leave before anyone remembers your face.}
+  else:
+    say: {~Your fighter goes down in the first exchange. So does your stake.|You picked badly. The bookmaker smiles.}
+
+@event midnight_kitchen_raid
+title: The Kitchens at Midnight
+place: refectory
+slot: midnight
+class: routine
+tone: light
+repeat: 2
+weight: 10
+art: meal
+tags: danger
+scene: A dark castle kitchen at midnight, a student with a candle reaching into a larder, a cat watching from the hearth.
+text: The refectory kitchens at midnight: banked fires, a larder that isn't locked, and the smell of tomorrow's bread already rising.
+> left: Fill your pockets
+  alignment -tiny
+  lose hungry
+  health +small
+  chance 50:
+    gain spotted
+    say: {~Bread, cheese and a pie. Then the scullery door opens and a cook's lantern finds you.|You eat well. A kitchen boy, up early, sees you go.}
+  else:
+    say: {~Bread, cheese and half a pie. Nobody counts the pies. You hope.|You eat by the banked fire with the kitchen cat. It doesn't tell.}
+> right: Just warm yourself by the fire
+  mood +tiny
+  health -tiny
+  say: {~You sit by the embers until your hands stop hurting, and take nothing. The walk back is cold.|The kitchen cat sits with you. You leave the larder alone, and feel strangely proud of it.}
+
+@event midnight_restricted_stacks
+title: The Restricted Stacks
+place: restricted_section
+slot: midnight
+class: routine
+tone: eerie
+repeat: 2
+weight: 10
+art: book
+tags: mystery danger
+scene: A chained library section at midnight, a student reading by a stolen candle, shelves leaning in like listeners.
+text: The Restricted Section at midnight. The chains on the shelves clink when nobody touches them. One book has been left open, as if for you.
+> left: Read the open book
+  challenge research easy:
+    win:
+      lore +small
+      say: {~Three pages before the book closes itself. You remember every word, which is worrying.|The book shows you a diagram you're not supposed to understand. You understand it.}
+    lose:
+      mood -small
+      chance 50:
+        gain spotted
+        say: {~The book slams shut and a librarian's lamp comes on two floors down.|The pages scream, briefly. Somebody hears.}
+      else:
+        say: {~The words slide off the page and into your dreams, where they misbehave.|You read a line that reads you back. You leave quickly.}
+> right: Leave it open and go
+  mood -tiny
+  say: {~You back away from the book. It seems disappointed.|You leave it open for whoever it was waiting for. It wasn't you, you decide.}
+
+@event midnight_observatory_stars
+title: Stars at Midnight
+place: observatory
+slot: midnight
+class: routine
+tone: warm
+repeat: 2
+weight: 10
+art: moon
+tags: nature
+scene: The observatory roof at midnight, a student lying on the leads, the sky thick with stars.
+text: The observatory roof at midnight is the quietest place in the castle. {bonds(partner) > 0: You've brought someone.|The stars are very close tonight.} Nobody comes up here after curfew, mostly.
+> left: Stay until the sky turns
+  mood +medium
+  health -small
+  say: {~You count stars until you lose count, and then until the sky goes grey. You'll be tired. It was worth it.|A meteor, then another. You stay until the first bell.}
+> right: An hour, then bed
+  mood +small
+  chance 20:
+    gain spotted
+    say: {~On the stair down you meet a professor coming up, with a telescope and a frown.|You're almost back when a lantern turns the corner.}
+  else:
+    say: {~An hour of stars, and you're back in bed before anyone stirs.|You slip back down the stair, the sky still in your eyes.}
+
+@event midnight_passage_mapping
+title: The Passage After Dark
+place: gargoyle_passage
+slot: midnight
+class: routine
+tone: eerie
+repeat: 2
+weight: 10
+art: map
+tags: club mystery
+scene: A secret passage behind a gargoyle at midnight, chalk marks on the walls, a candle guttering in a draught from nowhere.
+text: Behind the third gargoyle the passage is busier at midnight than at noon. {met(corvin): Corvin's chalk marks are fresh.|Someone's chalk marks are fresh.} A draught comes from a direction that has no wall.
+> left: Follow the draught
+  challenge research easy:
+    win:
+      lore +small
+      guile +tiny
+      say: {~The draught leads you to a door you've never seen, and then, politely, closes it.|A new turning, a new stair. You chalk it for the map.}
+    lose:
+      health -small
+      chance 50:
+        gain spotted
+        say: {~The passage lets you out somewhere unexpected: the prefects' corridor.|You come out in the wrong tower, in front of the wrong person.}
+      else:
+        say: {~You get lost for an hour and come out by the kitchens, cold and dusty.|The draught stops. So do you, in the dark, for a long time.}
+> right: Mark it and go back
+  mood -tiny
+  say: {~You chalk an arrow at the turning and leave the rest for another night.|You mark it on your copy of the map and go back to bed, a little sorry.}
