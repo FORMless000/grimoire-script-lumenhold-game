@@ -85,7 +85,6 @@ text: {Post day. The porter lays the letters out on one table in the Great Hall.
 > left: Write a long letter home
   mood +small
   gold -tiny
-  lore -tiny
   say: {final_year: You write that after this year you'll be home for good, and then look at the sentence for a long time.|{~You write four pages and pay for the heavy stamp. It's the closest thing to a conversation you've had all week.|You describe the empty castle so well that you feel lonelier writing it than living it.}}
 > right: Help the porter sort it all
   charm +small
@@ -111,7 +110,6 @@ text: {You spread your books across the kitchen table, where you did your sums a
   say: {~You read the same paragraph nine times and learn it perfectly, along with the price of eggs.|You get through a chapter. Your notes now have a jam stain, a crumb and the shopping list on them.}
 > right: Give up and help with lunch
   mood +small
-  gold -tiny
   say: {~You're sent to the shop for the one thing everyone forgot, and you buy sweets with the change.|You peel, chop and get told about everyone in the village. Your book stays shut, and it's the best morning of the break.}
 
 @event break_home_the_box
@@ -127,7 +125,6 @@ scene: A narrow childhood bedroom with a bed far too short for its occupant, an 
 text: {Your old room is smaller than you remember. Under the bed is the box where you kept everything that mattered when you were nine.|Someone has dusted the box since last time and pretended not to look inside.|You've almost reached the bottom of the box.} {~This time it's a wand you made from a stick and a lot of string.|This time it's the letter you wrote to the academy at age ten, asking to be let in early.|This time it's a drawing of seven towers, each with a little flag.}
 > left: Pack it in your trunk
   mood +small
-  health -tiny
   say: {~It comes back to Lumenhold with you. The trunk is heavier, and so, somehow, are you.|You pack it between your robes. Every time you open the trunk this term, it will be the first thing you see.}
 > right: Give it to the youngest cousin
   charm +small
@@ -156,7 +153,6 @@ text: {At breakfast the family is arguing, and someone says, "Ask the scholar."|
     say: {~You explain it perfectly, and they all decide the academy has taught you nonsense.|Halfway through you realise you're wrong. So does everyone else.}
 > right: Refuse to take sides
   charm +small
-  mood -tiny
   say: {~You butter your toast with great care and say, "Hm." It does not stop anyone, but it does save you.|You change the subject to the neighbour's fence. It works, but now there are two arguments.}
 
 @event break_home_village_children
@@ -177,7 +173,6 @@ text: {Word has spread that you're home from the wizard school. The village chil
   say: {~You make a little burst of light over the gate. The children scream with delight and demand it again, and again.|You make a spark dance across the gatepost. The smallest one tries to catch it in cupped hands, or thinks they do, which is the same thing.}
 > right: Teach them something real
   charm +small
-  mood -tiny
   say: {~You explain how the light gets into a spell. They listen politely and then ask for sparks.|You show them how to sit still and listen to a candle. One of them really hears it. You can tell.}
 
 # ---------------- Break: working full-time (plan: work) ----------------
@@ -482,7 +477,6 @@ text: {Two advisors are arguing about a footnote across three carrels, and every
       say: {~Your source turns out to be the one they were both arguing against. They unite, briefly, to explain why.|You cite the wrong edition. The room winces as one.}
 > right: Keep my head down and listen
   lore +small
-  mood -tiny
   say: {~You learn more about sources from ten minutes of the war than from a term of lectures, and you never have to say a word.|You take notes on both sides. Neither of them would like how fair your notes are.}
 
 @event thesis_lab_borrowed_candle
@@ -498,6 +492,7 @@ tags: study
 scene: A dark carrel lit by one dying candle, a full box of candles on the empty desk next door.
 text: {The candles here give out at the worst moment. Yours just has, and the carrel next door has a full box and nobody in it.|Your candle gives out again. Next door, the usual box of spares and nobody in the chair.|The lab's candles have outlasted no one's patience tonight, least of all yours. There's a box next door.} {~A draft lies open beside the box, face up.|A note on the box says "Help yourself" in one hand and "Don't" in another.|Someone has drawn a small eye on the box.}
 > left: Borrow one and keep working
+  alignment -tiny
   chance 65:
     lore +small
     mood -tiny

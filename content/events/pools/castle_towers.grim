@@ -78,7 +78,6 @@ text: {A window in the dome opens onto the roof, and onto a ledge that everyone 
       say: {~The loose tile is loose in a new place. You slide, grab, and hang on, and climb back in with skinned palms.|A gust takes your balance and most of your dignity. The gutter keeps the rest.}
 > right: Watch through the glass
   lore +tiny
-  mood -tiny
   say: {~You see half the sky and all of the smudges.|Through the glass the stars look like they're behind a shop window. You can look; you can't have.}
 
 @event observatory_scraped_word
@@ -101,7 +100,6 @@ text: {In the night log's oldest volume, every entry by a student who had finish
   say: {~The words around the gaps say "called", "named", "down". Whoever taught it taught it aloud, to people who had finished Advanced Astromancy.|"...and the light came down when I said its name..." Then the gap. You will need someone to tell you the word.}
 > right: Ask the telescope, half joking
   lore +tiny
-  mood -tiny
   say: {~The telescope swings to one bright star and stays there, patient as a teacher who knows you aren't ready.|It turns to a named star and holds it. You get the feeling you have to finish Advanced Astromancy before it explains.}
 
 # ---------------- Mira's Workshop ----------------
@@ -153,7 +151,6 @@ text: {"Perfect timing! I need a volunteer and you have hands!" {maker} holds up
     say: {~It works in the wrong direction. You spend a while upside down. {maker} apologises at length, with diagrams.|There's a bang, a smell of singed eyebrow, and {maker} saying "Interesting!" in a voice that means sorry.}
 > right: Hold the fire bucket
   rel maker +tiny
-  mood -tiny
   say: {~You hold the bucket. You don't need the bucket. {maker} looks faintly disappointed.|You need the bucket. Briefly, splendidly, you need the bucket.}
 
 @event workshop_stirring_cauldron
@@ -179,7 +176,6 @@ text: {The self-stirring cauldron in the corner wears a note. DO NOT ADJUST. IT 
       say: {~It stirs your sleeve, then you, then your sleeve again.|It speeds up instead. The ceiling now has toffee on it, and so do you.}
 > right: Take notes from a safe distance
   lore +tiny
-  mood -tiny
   say: {~You write down everything it's doing wrong. The list is long and slightly envious.|You sketch the rune on its base. The cauldron splashes your page, on purpose you think.}
 
 @event workshop_glass_cabinet
@@ -196,9 +192,9 @@ scene: A tall glass cabinet at the back of a workshop, clockwork animals inside 
 text: {At the back of the workshop is a glass cabinet that isn't Mira's, full of faculty machines, very still.|A clockwork mouse in the glass cabinet has moved since your last visit, and now faces the door.|The cabinet. Mira says the machines in it think, probably, and are waiting for the right student.} A card in old ink: "Artifice. By invitation, to those who have passed Alchemy II and Evocation II."
 > left: Study the machines through the glass
   alchemy +small
-  mood -tiny
   say: {~Nothing moves while you watch. The moment you look away, something ticks.|You count the gears in a brass beetle and lose count. Somebody made this who could make things and make them burn.}
 > right: Try the cabinet lock
+  alignment -tiny
   challenge deceive easy:
     win:
       guile +small
@@ -352,7 +348,6 @@ scene: A deep window seat high in a tower, a student reading with the lake far b
 text: {The headmistress waves you to the window seat without looking up from her letters. "Read anything. Break nothing."|A book has been left on the window seat, open, as if for you.|Your window seat, the headmistress calls it now, as though it always was.} {~Below, the lake is perfectly still.|Her quill scratches; the clock does not tick.|{season == "autumn": Leaves blow past at the height of the clouds.|The bridges of light come on one by one below.}}
 > left: Read what she left out
   lore +small
-  mood -tiny
   say: {~A history of the seven towers, annotated in her hand. One note just says "No."|A book of old law, with a dried rose marking a page about second chances.|A treatise on wards so dull it must be important. You get through it. She notices.}
 > right: Doze in the sun
   mood +small
@@ -474,7 +469,6 @@ text: {The passage walls are covered in initials, dates and tiny arrows, scratch
   say: {~You scratch your initials small and low, with a tiny arrow pointing nowhere. It feels like signing something.|{final_year: You add the year beside your old mark. It looks so much younger than you.|A knuckle pays for it. The mark is crooked and entirely yours.}}
 > right: Follow an old arrow
   lore +small
-  mood -tiny
   say: {~The arrow leads to another arrow, which leads to a wall, which has a joke scratched on it.|The arrow leads to a slit window with a view of the lake no plan admits to. Your knees disagree with the route.}
 
 @event gargoyle_passage_offering_dish
@@ -494,6 +488,7 @@ text: {The third gargoyle has a dish worn into its paw, and in the dish are offe
   mood +small
   say: {~By morning the crown is gone, and so is the biscuit. Nobody admits to either.|The crown clinks in. The gargoyle's expression doesn't change, but the wind drops.}
 > right: Borrow the biscuit
+  alignment -tiny
   chance 50:
     mood +small
     health +tiny

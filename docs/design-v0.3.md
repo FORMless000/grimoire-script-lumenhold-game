@@ -798,7 +798,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 
 **Option value:**
 - Σ (weight_resource × delta). The weights live in `balance.grim`.
-- **Routine** options must contain at least one cost or risky branch, and sit within ±1.5 medium-equivalents. Other classes follow §8.7.
+- **Routine** cards: no option is obviously best (at least as good as another on every value and better on one, with no risk on either side), and each option sits within ±1.5 medium-equivalents. A free option is honest when it gives up what the other offers; a cost must be one the scene shows (playtest 2, A3, which replaced "every option costs or risks something"; `docs/authoring/costs.md`). Other classes follow §8.7.
 
 ### 8.5 Skills
 
@@ -852,7 +852,7 @@ So automation catches **gross errors and regressions only**. **Human playtests**
 - adults only for romance;
 - every key clue has ≥ 2 reachable sources;
 - every event has a class;
-- routine budget respected.
+- routine budget respected: no option obviously best, each within ±1.5 (`docs/authoring/costs.md`).
 
 **Level 2: alarms (wide tolerances, warnings):**
 

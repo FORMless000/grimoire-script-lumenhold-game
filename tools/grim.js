@@ -374,6 +374,12 @@ function budgetCheck(e, content, P) {
     const x = new Engine(content); x.newGame({ seed: 1, name: 'Lint' });
     for (const [id, r] of Object.entries(content.resources)) x.s.vals[id] = id === 'gold' ? 200 : r.min < 0 ? 0 : 50;
     x.sparkFollow = () => ({ per: 25, cap: 0, partner: 0, cooldown: 101 });   // value what the card says, not spark carried along (M37)
+    // Every course enrolled with some preparation, so `study … -tiny` (a skipped lecture) shows as the cost it is (A3).
+    for (const d of Object.values(content.tracks || {})) if (d.kind === 'course') x.s.tracks[d.id] = { kind: 'course', status: 'enrolled', passed: {}, grades: [], rank: 0, perf: 50, rankXp: 0, visits: 0, due: 0, progress: 0, study: 7, level: 1 };
+    // A member of every club, job and placement, so `wage` pays and `wage overtime` counts.
+    for (const d of Object.values(content.tracks || {})) if (d.kind !== 'course') x.s.tracks[d.id] = { kind: d.kind, status: 'member', passed: {}, grades: [], rank: 0, perf: 50, rankXp: 0, visits: 0, due: 0, progress: 0, level: 1 };
+    // Everyone already met, so a `rel` doesn't read as a first meeting (which would count as leading somewhere).
+    for (const n of Object.values(x.s.npcs)) n.met = true;
     return x;
   })();
   const actor = e.actor && !['any', 'npc'].includes(e.actor) ? e.actor : e.actor ? Object.keys(content.npcs)[0] : null;
@@ -387,27 +393,32 @@ function budgetCheck(e, content, P) {
   let cast = null;
   if (e.cast) { const pool = Object.keys(content.npcs); cast = {}; for (const r of e.cast) cast[r.role] = r.pool === 'fixed' ? r.npc : pool.find((id) => !Object.values(cast).includes(id)); }
   eng.s.cur = { id: e.id, track: e.track || null, cast };
+  // A cast role named `npc` is the card's actor (the engine reads `npc` as the actor).
+  const who = cast && cast.npc ? cast.npc : actor;
   const rows = [];
   for (const o of e.options) {
-    let pv; try { pv = eng.preview(e.id, o.key, actor); } catch (err) { continue; }
-    const value = (d) => Object.entries(d).reduce((a, [k, r]) => a + weight(k) * ((r[0] + r[1]) / 2) / medium(k), 0);
+    let pv; try { pv = eng.preview(e.id, o.key, who); } catch (err) { continue; }
+    // Exam preparation (`study`) has no weight in the value; it still counts as a cost or gain between options (A3).
+    const value = (d) => Object.entries(d).reduce((a, [k, r]) => (k.startsWith('study:') ? a : a + weight(k) * ((r[0] + r[1]) / 2) / medium(k)), 0);
     const exp = pv.paths.reduce((a, p) => a + p.p * value(p.deltas), 0);
     // A penalty card (incident or crisis) queued at odds (`queue … chance N`, I4, I8) is a risk too.
     let atOdds = false; G.walkEffects(o.effects, (st) => { const q = st.t === 'queue' && st.chance != null && content.events[st.event]; if (q && ['incident', 'crisis'].includes(q.class)) atOdds = true; });
-    const hasCost = atOdds || pv.paths.length > 1 || Object.values(pv.deltas).some((r) => r[0] < 0);
     for (const [k, r] of Object.entries(pv.deltas)) if (Math.max(Math.abs(r[0]), Math.abs(r[1])) >= eng.tierAmount(row(k) === 'xp' ? Object.keys(content.skills)[0] : row(k), 'large')) larges++;
-    rows.push({ key: o.key, exp, hasCost });
+    // The expected change per value, and whether the option is a gamble or leads somewhere (a state, a flag, a queue).
+    const per = {}; for (const p of pv.paths) for (const [k, r] of Object.entries(p.deltas)) per[k] = (per[k] || 0) + p.p * (r[0] + r[1]) / 2;
+    rows.push({ key: o.key, exp, per, risky: atOdds || pv.paths.length > 1, follows: pv.paths.some((p) => p.follows), gated: !!o.when || !!o.spell });
   }
   // A placeholder card (I7) stands in for content still to write: listed, not judged.
   if (e.class === 'routine' && (e.tags || []).includes('placeholder')) P('info', 'placeholder card (to be replaced with real content)');
   else if (e.class === 'routine') {
-    // A free option is fine as the small, safe choice (≤ 0.5 medium-equivalents) beside a costly or risky one.
-    const risky = rows.some((r) => r.hasCost);
-    for (const r of rows) {
-      // Design §8.8: the routine budget is a hard invariant (an error).
-      if (!r.hasCost && !(risky && r.exp <= 0.5)) P('error', 'routine option "' + r.key + '" has no cost or risk' + (risky ? ' and is worth ' + r.exp.toFixed(1) + ' (a free safe choice stays ≤ 0.5)' : ' (every option should trade something)'));
-      if (Math.abs(r.exp) > 1.5) P('error', 'routine option "' + r.key + '" is worth ' + r.exp.toFixed(1) + ' medium-equivalents (budget ±1.5)');
-    }
+    // Design §8.4, §8.8 (playtest 2, A3): no option is obviously best — at least as good as another on every value
+    // and better on one, neither a gamble nor leading anywhere — and each option within ±1.5 medium-equivalents.
+    // A free option is fine beside one that gives something else (docs/authoring/costs.md).
+    const plain = rows.filter((r) => !r.risky && !r.follows && !r.gated);
+    // Alignment is a direction, not a gain: options that move it differently are never one "better" than the other.
+    const dominates = (a, b) => { let strict = false; for (const k of new Set([...Object.keys(a.per), ...Object.keys(b.per)])) { const x = a.per[k] || 0, y = b.per[k] || 0; if (k === 'alignment' && Math.abs(x - y) > 1e-6) return false; if (x < y - 1e-6) return false; if (x > y + 1e-6) strict = true; } return strict; };
+    for (const a of plain) for (const b of plain) if (a !== b && dominates(a, b)) P('error', 'routine option "' + a.key + '" is obviously better than "' + b.key + '" (at least as good on every value; see docs/authoring/costs.md)');
+    for (const r of rows) if (Math.abs(r.exp) > 1.5) P('error', 'routine option "' + r.key + '" is worth ' + r.exp.toFixed(1) + ' medium-equivalents (budget ±1.5)');
   }
   eng.s.cur = prevCur;
   if (e.class === 'milestone' && larges > 2) P('warn', 'milestone has ' + larges + ' large changes (cap 2)');
@@ -1315,7 +1326,7 @@ switch (cmd) {
     const rulesFile = path.join(ROOT, 'docs', 'authoring', 'checklist.md');
     let res;
     try {
-      res = require('./worldbook.js').brief(content, sources, { cast: list(flag('cast')), place: flag('place') || null, track: flag('track') || null, arc: flag('arc') || null, topic: typeof flag('topic') === 'string' ? flag('topic') : '', tier: flag('tier') || 'personal', budget: Number(flag('budget')) || 24000, rules: fs.existsSync(rulesFile) ? fs.readFileSync(rulesFile, 'utf8').replace(/^# .*\n/, '') : '' });
+      res = require('./worldbook.js').brief(content, sources, { cast: list(flag('cast')), place: flag('place') || null, track: flag('track') || null, arc: flag('arc') || null, topic: typeof flag('topic') === 'string' ? flag('topic') : '', tier: flag('tier') || 'personal', budget: Number(flag('budget')) || 24000, rules: [rulesFile, path.join(ROOT, 'docs', 'authoring', 'costs.md')].filter((f) => fs.existsSync(f)).map((f) => fs.readFileSync(f, 'utf8').replace(/^# .*\n/, '')).join('\n') });
     } catch (e) { console.error(C.r + 'brief: ' + C.x + e.message); process.exit(1); }
     if (flag('out')) { fs.mkdirSync(path.dirname(path.resolve(flag('out'))), { recursive: true }); fs.writeFileSync(path.resolve(flag('out')), res.text); console.error('brief: ' + res.chars + ' chars (~' + Math.round(res.chars / 4) + ' tokens), ' + res.lore + ' lore, ' + res.examples + ' example(s) → ' + flag('out')); }
     else process.stdout.write(res.text);

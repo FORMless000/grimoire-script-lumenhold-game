@@ -1414,7 +1414,7 @@
           this.run(opt.effects, ctx);
           this.handleZeroed(ctx);
         } finally {
-          const follows = ctx.notes.length > 0 || s.queue.length !== saved.queue.length || s.deck.length !== saved.deck.length || !!s.ended !== !!saved.ended ||
+          const follows = ctx.notes.some((n) => n.kind !== 'wage') || s.queue.length !== saved.queue.length || s.deck.length !== saved.deck.length || !!s.ended !== !!saved.ended ||
             Object.keys(s.flags).length !== Object.keys(saved.flags).length || Object.keys(s.flags).some((k) => !saved.flags[k]);
           this._oracle = null; this._variant = null; this._cast = null; this._ctxTrack = null;
           for (const k of KEYS) s[k] = saved[k];

@@ -8,6 +8,7 @@ This folder is the single source for how Lumenhold content is made (design §3.5
 | `style.md` | tone, voice, length limits, label rules, banned moves |
 | `schema.md` | every construct of the event format, with the block/property table generated from the parser |
 | `presets.md`, `classes.md` | size tiers, presets and event classes |
+| `costs.md` | the trade: what each resource, skill and track stands for, which costs fit which scenes, and the "no option obviously best" rule (also in every brief) |
 | `checklist.md` | the acceptance checklist that validators and the critic apply; also the "Rules" section of every brief |
 | `examples/*.grim` | annotated exemplar events |
 

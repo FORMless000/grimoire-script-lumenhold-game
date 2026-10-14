@@ -107,7 +107,6 @@ text: {From the gallery above the duelling floor you can watch whoever is practi
       say: {~{here} puts you on the floorboards, politely. From down there the ceiling's scorch marks make a sort of map.|{here} disarms you so neatly that the dummies seem to wince. Your wand skids under the gallery stairs.}
 > right: Watch and take notes
   lore +small
-  mood -tiny
   say: {~You fill a page with what {here} does with {their} feet. You'll never get to try it, and you know it.|You sketch {here}'s guard from above. On paper it has a gap. On the floor it doesn't.}
 
 @event duel_hall_humming_circle
@@ -136,7 +135,6 @@ text: {The evening bouts are over. At the near end of the hall the warding circl
       say: {~The circle hands your spell straight back to you. Your eyebrows will regrow.|The circle flares, the dummies rattle, and you leave very quickly before the steward arrives.}
 > right: Sweep up for the steward
   gold +tiny
-  mood -tiny
   say: {~You sweep up a winter's worth of ash. The steward pays you a crown and a grunt that might be thanks.|You sweep. The circle hums at you the whole time, like a cat that wants to be let out.}
 
 # ---------------- The Greenhouses ----------------
@@ -154,7 +152,6 @@ scene: A student reading on an upturned pot among tall ferns inside a steamy gla
 text: {season == "winter": Outside it's snowing. Inside, the glass runs with warm water and everything smells of earth.|{season == "summer": The greenhouses are sweltering, and everyone has retreated to the far end where the vents are.|The greenhouses steam gently. Someone is singing to the mandrakes at the far end.}} {You find a dry corner by the ferns, out of everyone's way.|Someone has left a cushion in your corner by the ferns.|The ferns lean toward you when you come in, as they do for you now.}
 > left: Do your reading in the warm
   lore +small
-  health -tiny
   say: {~You get through a whole chapter. The pages curl in the damp and you come out smelling of moss.|You read until the steam makes the ink run. What's left of the chapter sticks.}
 > right: Nap on the potting bench
   mood +small
@@ -290,7 +287,6 @@ text: {The long grass at the edge of the flight field catches everything that fa
 > right: Carry it to the porter's lodge
   alignment +small
   renown +tiny
-  mood -tiny
   say: {~It's a long walk round the field. The porter writes it in a book and gives you a look of mild surprise.|The porter thanks you with a peppermint from a jar that has clearly been open since the founders.}
 
 # ---------------- The Familiar Stables ----------------
@@ -308,11 +304,9 @@ scene: A hay loft in old stables, rows of sleepy owls on the rafters above a stu
 text: {Up the ladder, above the hippogriffs, is a hay loft full of owls and quiet.|The owls open one eye each, decide you're furniture, and go back to sleep.|The owls have stopped opening their eyes for you. You've been accepted.} {season == "winter": The warmth of the animals rises through the boards.|{~Rain ticks on the roof.|A stray letter has fallen into the hay.|The griffon chick is complaining somewhere below.}}
 > left: Read up among the owls
   lore +small
-  health -tiny
   say: {~You read until the light goes. The hay gets in everywhere, and the chapter gets in too.|An owl reads over your shoulder for a whole page, then hoots, pointedly, at a footnote.}
 > right: Help sort the owl post
   charm +small
-  mood -tiny
   say: {~You sort a dropped bundle of post by hand. One owl seems to know which letters you're going to misfile.|You deliver three soggy letters to their owners on the way back. One of them hugs you, which you weren't ready for.}
 
 @event stables_brask_rounds
@@ -328,7 +322,6 @@ scene: A burly professor stroking a hippogriff's beak in a stable aisle, ignorin
 text: {Professor Brask is on his rounds, telling each hippogriff she's a very good girl. He tells you to mind the bucket.|Brask is on his rounds. He nods at you, which is more than most get.|Brask greets you by name now, somewhere after the owls.} {season == "spring": There are new hippogriff foals, all legs and beak.|{~A hippogriff is sulking about its feathers.|The feed is late and everyone is cross.|The stable cat is asleep in the oats.}}
 > left: Ask Brask a question
   lore +small
-  mood -tiny
   say: {~He answers it at length, to the hippogriff. You take notes anyway.|"Good question," he says, to the owl. You decide that counts.}
 > right: Carry the feed buckets
   vigor +small
@@ -358,7 +351,6 @@ text: {The griffon chick is sulking in the corner stall, feathers puffed, refusi
       say: {~It takes the morsel and a corner of your sleeve. The sign was right.|It turns its back on you so pointedly that a passing owl looks embarrassed.}
 > right: Leave it to its sulk
   lore +tiny
-  mood -tiny
   say: {~You read the notice about griffon moods instead. It is mostly a list of things that will not help.|You leave it alone. It looks, as you go, a little disappointed you gave up.}
 
 # ---------------- The Boathouse ----------------
@@ -580,7 +572,6 @@ text: {{slot == "evening": Maud has stepped out to the hens.|Maud is up at the g
     say: {~Your eyebrows turn the colour of the label. When Maud sees them, she says nothing whatsoever.|It sneezes. Then you sneeze, for an hour. "Told you, dearie," says Maud later, not unkindly.}
 > right: Dust the shelf instead
   alchemy +small
-  mood -tiny
   say: {~You dust every jar and read every label. Maud's handwriting is a whole education, if a strange one.|Maud finds a clean shelf. "Somebody's been learning," she says, which isn't quite thanks.}
 
 # ---------------- The Secret Garden ----------------
@@ -598,7 +589,6 @@ scene: A student lying in the grass under a pear tree in a hidden walled garden,
 text: {The pear tree in Maud's secret garden is humming to itself.|The pear tree has changed its tune since you were last here, as if it's been practising.|The pear tree hums when you come in now. You'd like to think it's for you.} {season == "winter": Its tune is low and slow, like something asleep.|{season == "spring": Its tune has gone quick and bright with blossom.|{~Its tune is one you almost know.|Its tune has a sad turn in the middle.}}}
 > left: Hum along with it
   mana +small
-  mood -tiny
   say: {~You find the harmony on the third try. The tree corrects you twice, kindly.|The two of you hum until the ferns glow brighter. Afterwards you can't get the tune out of your head for days.}
 > right: Nap in its shade
   mood +small
@@ -650,7 +640,6 @@ text: {The ferns in the secret garden glow when the light goes. One frond would 
     say: {~It lights your dormitory green for a week. You read by it, and feel very slightly watched.|You keep it in a jar by your bed. It glows softer every night, like something being polite.}
 > right: Leave them glowing
   lore +small
-  mood -tiny
   say: {~You sit and watch the glow instead, and learn the way it moves with your breath. Maud would approve, if she knew.|You leave them be. On the way out, the ferns lean after you, like a dog that wanted to come.}
 
 # ---------------- The Courier Loft ----------------
@@ -708,6 +697,7 @@ tags: life
 scene: A rack of courier brooms in a loft, one sleek black broom set apart from the others with a red tag on its handle.
 text: {At the end of the rack is the courier loft's fast broom, tagged in red. Couriers only. Nobody's watching.|The fast broom is back on the rack, red tag and all.|The red-tagged broom. You've thought about it every time you've come up here.} {season == "winter": The loft doors are open on a sky full of snow.|{~The loft doors stand open on a blue sky.|Someone has polished it recently.|The red tag has a fresh scorch mark.}}
 > left: Take it for one lap
+  alignment -tiny
   challenge exam using vigor medium:
     win:
       mood +small
@@ -719,7 +709,6 @@ text: {At the end of the rack is the courier loft's fast broom, tagged in red. C
       say: {~It knows you aren't a courier. It shows you the courtyard, very close up. You pay for the bristles.|It bucks you off into a haystack outside the stables. You tip the stable hand to say nothing.}
 > right: Tighten its bristles instead
   lore +small
-  mood -tiny
   say: {~You spend an hour learning how a good broom is bound. It's more satisfying than you'd admit.|You retie the bristles properly. Some courier will fly a little faster tomorrow and never know why.}
 
 # ---------------- The Whisperwood ----------------
@@ -741,7 +730,6 @@ text: {The Whisperwood is talking in its sleep. You stand very still to make out
   say: {~You catch a whole sentence. It's about a winter long ago, and it's sad, and you walk home with it.|It notices you listening and goes quiet, the way a sleeper does. You leave feeling rude.}
 > right: Walk on, humming
   vigor +small
-  health -tiny
   say: {~You walk the long loop humming loudly. The forest grumbles and turns over. You come back with muddy boots and a clear head.|You hum all the way round. Twice, the forest hums back.}
 
 @event whisperwood_foragers
@@ -788,5 +776,4 @@ text: {A path opens to your left that wasn't there last time.|Another path that 
       say: {~You walk in circles until dusk and come out at the lake, with no idea how.|The path ends at a wall of fog. Turning back takes much longer than going in did.}
 > right: Mark a tree and turn back
   guile +tiny
-  mood -tiny
   say: {~You carve an arrow in the bark. The next time you come, the arrow points somewhere else.|You turn back. The path watches you go, and quietly closes behind you.}

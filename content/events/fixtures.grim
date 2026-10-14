@@ -48,7 +48,7 @@ tags: social nature
 scene: A healer and a student walking a long infirmary ward at dusk, the student carrying a tray of small glass bottles, lamps being lit along the beds.
 text: {Sister Amaranth catches you in the corridor and hands you a tray of tonics without a word of explanation.|Amaranth holds out the tonic tray as you pass. It seems you are on the rota now.|The tray is waiting for you on the ward table, labelled YOURS in Amaranth's square hand.} {~Six beds tonight.|A first-year with hiccups that light up.|Someone has charmed their own eyebrows off.}
 > left: Do the rounds with her
-  health -tiny
+  study -tiny
   alchemy +small
   rel amaranth +small
   say: {~She tells you what each tonic does and why it tastes like that. You remember all of it, to your surprise.|You learn which patients are brave and which are loud, and that they are rarely the same ones.|At the last bed she lets you measure the dose. "Again," she says. You do it again. "Fine."}
@@ -206,7 +206,6 @@ text: {Professor Vey is in the corridor with two cups of tea. She offers you one
 > right: Play along and get it wrong
   guile +small
   rel vey +small
-  mood -tiny
   say: {~You reach for the false one on purpose, with feeling. Vey narrows her eyes. "Either you're bad at this, or very good," she says. "I'll find out."|You let her win. She knows. She lets you know she knows.}
 
 @event vey_revue
@@ -276,12 +275,11 @@ text: It is raining on the whole lake except for one circle on the boathouse ste
 > left: Sit and ask how
   meet marisol
   arcana +small
-  mood -tiny
+  health -tiny
   rel marisol +small
-  say: She explains it as a conversation. The water, apparently, is willing. By the end of the poem the rain is going round you too, for almost a minute. "There," she says, and goes back to the poem.
+  say: She explains it as a conversation. The water, apparently, is willing. By the end of the poem the rain is going round you too, for almost a minute, and then it remembers you. "There," she says, and goes back to the poem.
 > right: Leave her to her book
   meet marisol
-  health -tiny
   say: You nod and run for cover. Behind you she reads aloud, to nobody, a poem about a storm that comes back every year to see if you've changed.
 
 @event marisol_cold_water
@@ -385,6 +383,7 @@ text: The bell over the door rings. The woman behind the counter looks up, consi
 > right: "Just something to go."
   meet mabel
   gold -tiny
+  health +tiny
   say: She hands you a paper cup and looks at you over it. "Come back when you've got time to sit," she says. "You'll know when."
 
 @event mabel_parcel
@@ -521,11 +520,13 @@ text: You ask for something for a headache. An old man on a ladder stops, counts
   gold -tiny
   alchemy +small
   rel pell +small
+  mood -tiny
   say: He tells you, at length, with diagrams drawn in the counter dust. You leave with the cure, a headache from the lecture and the dosage for nine other things.
 > right: Pay and go
   meet pell
   gold -tiny
-  say: He nods at the door as you leave, as if adding you to a ledger of people who will be back. You are back within a month.
+  health +tiny
+  say: He nods at the door as you leave, as if adding you to a ledger of people who will be back. The headache is gone before the quay, and you are back within a month.
 
 @event pell_count_drops
 title: Count Them Aloud
@@ -593,7 +594,7 @@ tags: money social
 scene: A goblin in a velvet waistcoat sitting at a corner table in a low-beamed tavern, raising a small glass to a student, a fat ledger at his elbow.
 text: {Grisk raises a small glass from the corner table of the Gilded Newt. "My friend," he says. "Do sit. I'm not working."|Grisk, at the corner table again. "How is the purse?" he asks, with what sounds like real concern.|"Ah, my favourite non-client," purrs Grisk.} {~His ledger stays closed, which feels deliberate.|He is eating a single olive very slowly.|The landlady gives you a warning look.}
 > left: Sit for one drink
-  gold -tiny
+  renown -tiny
   guile +small
   rel grisk +small
   say: {~He talks about money the way other people talk about weather, and you learn more in an hour than in a term of Umbral Theory.|He tells you which of the village shops are in trouble and why. It feels like gossip. It is a lesson.|He pays for the drinks and writes nothing down, which is the most unsettling thing he has ever done.}

@@ -425,7 +425,7 @@ The skill is mapped from the kind (duel: (vigor + arcana) / 2; negotiate: charm;
 
 **Relationships.** `spark` replaces `love` (legacy alias): it fades 15% a month without a romantic moment; a partnership ends after two months below 20. Friendship (`rel`) fades by 2 a month toward 0 after 6 months without contact.
 
-**Event fields.** `class:` (routine, milestone, incident, windfall, story, crisis; see `docs/authoring/classes.md`) and `tone:` (from `@vocab tones`). Lint checks each class's budget with the preview engine, in medium-equivalents (`@balance weights` × change ÷ medium size): a routine option must cost or risk something and stay within ±1.5; milestones allow 2 large changes, windfalls 1; incidents need at least two options.
+**Event fields.** `class:` (routine, milestone, incident, windfall, story, crisis; see `docs/authoring/classes.md`) and `tone:` (from `@vocab tones`). Lint checks each class's budget with the preview engine, in medium-equivalents (`@balance weights` × change ÷ medium size): no routine option may be obviously better than another (at least as good on every value and better on one, with neither a gamble nor a follow-up; options that move alignment differently never are), and each stays within ±1.5; milestones allow 2 large changes, windfalls 1; incidents need at least two options.
 
 **Resources.** `max:` may be an expression (`max: 40 + arcana / 2`); `display: panel` moves a resource from the top bars to the You panel; `warn_below: N` marks it low; `drag: -50 0.5` halves increases while below −50.
 

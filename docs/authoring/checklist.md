@@ -10,7 +10,7 @@ Validators check the first group automatically; the critic (a separate pass, wit
 **Critic**
 - **Canon:** names, places, facts and history match the worldbook; nothing contradicts hard lore; new names come with a soft `@lore` entry.
 - **Voice:** characters sound like their `voice:` and act on their traits and facts.
-- **Choices:** every option costs or risks something; no obviously better option; every option has a specific `say:`.
+- **Choices:** no option is obviously best (`costs.md`): options trade by giving different things or by a cost or risk; every cost is one the `say:` shows (body → health, spirits → mood, purchases → crowns, skipped work → `study`/`perform`/`progress`, a person let down → `rel`, a moral side → alignment); every option has a specific `say:`.
 - **Tone:** warm, witty, slightly melancholy; humour from specifics; no gore, nothing explicit, adults only.
 - **Length:** text under 400 characters, labels under 36, `say` under 300.
 - **Gating:** `when` conditions are reachable and sensible; queued events are queued by something; flags read are set somewhere (`grim reach` proves it; lint fails on an unreachable event).

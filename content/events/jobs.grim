@@ -18,11 +18,13 @@ text: Reshelving in the zoology section, a fat leather book clamps onto your fin
 > left: Muzzle it with a belt
   wage
   health -tiny
+  vigor +small
   say: You wrestle it into submission and shelve it. It growls at you every time you pass for the rest of the term.
 > right: Stroke the spine and read it
   wage
   lore +medium
   health -tiny
+  perform track -tiny
   say: It purrs, opens and turns out to be a fascinating treatise on carnivorous plants. It only bites twice more.
 
 @event lib_overdue_professor
@@ -83,7 +85,6 @@ scene: A low-beamed tavern mid-brawl: a chair in mid-air, a dwarf on a table, ci
 text: A dwarf and a troll disagree about the price of turnips, and the Gilded Newt erupts. A chair flies past your head. The owner is hiding behind the bar, gesturing at you to do something.
 > left: Duck behind the bar too
   wage
-  mood -tiny
   say: You crouch beside the owner and share a bag of crisps while the room destroys itself.
 > right: Break it up
   wage
@@ -218,7 +219,6 @@ tags: job nature
 scene: A proud hippogriff in a straw-strewn stall, head lowered, regarding a stable hand who is bowing very deeply.
 text: The new hippogriff won't let anyone near the feed trough. The stablemaster says to bow, keep eye contact and not blink. "Whatever you do, don't blink."
 > left: Leave the feed and run
-  mood -tiny
   say: You toss the feed bucket and flee. The hippogriff eats it, and the bucket.
 > right: Bow and hold its gaze
   challenge feat trivial:
@@ -288,6 +288,8 @@ tags: job nature
 scene: A white pegasus lying in a moonlit stall, wings folded, a student sitting beside it with a lantern and a blanket.
 text: The oldest pegasus in the stables is sick. Someone has to sit with her overnight, keep her warm, and make sure she drinks. It's unpaid. Old Maud says she'll do it if no one else will. Maud is eighty.
 > left: Let Maud do it
+  health +tiny
+  alignment -tiny
   say: You sleep well. Maud is a little slower the next day.
 > right: Take the night shift
   health -tiny
@@ -358,9 +360,9 @@ text: Your newest tutee casts in a week what took you a year. Then she asks you 
 > left: Bluff an answer
   guile +tiny
   mood -tiny
+  alignment -tiny
   say: She nods politely. You both know.
 > right: Admit you don't know and find out together
-  health -tiny
   lore +small
   mood +small
   say: You spend an evening in the library together. She thanks you as if you've taught her something. Maybe you have.

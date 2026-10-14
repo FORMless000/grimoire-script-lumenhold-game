@@ -18,7 +18,6 @@ tags: social
 scene: A courtyard where it is snowing in one small circle only, a boy in a fur coat standing at its centre holding a perfect snowball.
 text: It's snowing in the courtyard. Only in a small circle, around Kael, who is holding a snowball and looking at it as though he's never been allowed to throw one.
 > left: Leave him to it
-  mood -tiny
   say: When you pass again, the circle of snow is gone, and there's a small, lopsided snowman in its place.
 > right: Throw the first one
   health -tiny
@@ -43,9 +42,9 @@ text: Kael's hands are always cold. In the library tonight they're so cold the i
 > left: Lend him your gloves
   health -tiny
   rel kael +small
+  alignment +tiny
   say: He wears them for the rest of the term. They're far too small. He doesn't care. Your own fingers go numb on the walk back.
 > right: Warm his hands in yours
-  health -tiny
   rel kael +medium
   spark kael +small
   say: He goes very still. Then, slowly, the frost on his fingertips melts. "Nobody's ever been warm enough," he says quietly. "Before."
@@ -88,7 +87,6 @@ scene: A burly prefect with a red sash blocking a corridor, a demerit ledger ope
 text: "Running in the halls." A burly prefect with a red sash steps into your path, ledger already open. "Name?" You weren't running. You were walking briskly.
 > left: Accept the demerit
   meet bram
-  mood -tiny
   study -tiny
   say: He writes your name very slowly, enjoying it. Bram Hollis. You will learn to recognise his footsteps.
 > right: Argue
@@ -169,7 +167,6 @@ tags: social
 scene: A big prefect sitting on an upturned bucket behind the stables, a crumpled letter in his fist, shoulders shaking.
 text: Behind the stables, you find Bram Hollis sitting on a bucket, crying into a crumpled letter. He sees you and freezes. "If you tell anyone," he begins, but his voice cracks.
 > left: Walk away and never mention it
-  mood -tiny
   rel bram +medium
   say: You leave. You never tell anyone. Somehow, he knows you didn't. His demerits become fewer.
 > right: Sit down and ask what happened
@@ -290,7 +287,6 @@ tags: study
 scene: An old professor standing at a rain-lashed window, lightning illuminating a long scar along his jaw.
 text: During a thunderstorm, Thorne stops mid-lecture and watches the lightning. "They say I out-dueled a storm once," he says, to nobody in particular. "Would you like to know what actually happened?"
 > left: "Yes, sir."
-  mood -tiny
   gain inspired
   rel thorne +small
   say: He lost, he says. Badly. He spent a year learning why. "Losing well," he says, "is the only thing worth teaching." The class is silent.
@@ -338,13 +334,15 @@ text: Thorne holds up your last three essays. All red. "You're better than this,
 > left: Make excuses
   rel thorne -small
   mood -tiny
+  guile +tiny
+  alignment -tiny
   say: He listens to them all and says nothing. The silence is the worst grade yet.
 > right: Ask for help
-  mood -tiny
+  mood -small
   rel thorne +medium
   study +medium
   lore +tiny
-  say: He sighs and pulls out a chair. "Sit. We'll start with the first essay, and we'll stay until it's right."
+  say: He sighs and pulls out a chair. "Sit. We'll start with the first essay, and we'll stay until it's right." You stay until midnight.
 
 # ================= OLD MAUD =================
 
@@ -385,16 +383,14 @@ tags: nature
 scene: A small cottage kitchen with bundles of herbs hanging from the beams, an old woman pouring golden honey into a steaming mug.
 text: Maud spots you sniffling across the lawn and drags you into her cottage. "Sit," she orders, pouring honey into something steaming that smells of lemon and thunder.
 > left: Drink it all
-  mood -tiny
   health +medium
   lose sick
   rel maud +small
   say: It tastes like summer and lightning. You sneeze sparks for the rest of the day. By morning you're cured and slightly glowing.
 > right: Drink it and help with chores
-  mood -tiny
   health +small
   lose sick
-  rel maud +medium
+  rel maud +small
   alchemy +tiny
   say: You sip and sort herbs while she tells you the names of every plant in the room. You remember most of them.
 
@@ -462,7 +458,6 @@ tags: social
 scene: A small cottage bedroom with a patchwork quilt, an old woman propped up on pillows, a student reading aloud by candlelight.
 text: Maud's chickens are running wild, unfed. You find her in bed, grey-faced and coughing. "Just a chill," she wheezes. "I'm eighty-one. I'm allowed."
 > left: Fetch Sister Amaranth
-  mood -tiny
   flag maud_ill_done
   rel maud +medium
   say: Amaranth brings tonics and a stern lecture. Maud is back on her feet in a week, grumbling about fuss.
@@ -520,7 +515,6 @@ text: An invitation to tea with the headmistress. Students talk about these the 
       rel isolde -tiny
       say: She nods politely. "Ambition is a fine servant," she says, "and a poor master." You're dismissed shortly after.
 > right: Admit you don't know yet
-  mood -tiny
   rel isolde +medium
   lore +tiny
   say: "Neither did I, at your age," she says. "I still don't, some days. That's the point of an academy." She refills your cup.

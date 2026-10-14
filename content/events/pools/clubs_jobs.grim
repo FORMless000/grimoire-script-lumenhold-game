@@ -251,7 +251,7 @@ text: {Repotting day. The mandrakes have outgrown their pots and have opinions a
   say: {~One mandrake has rooted into the bench itself. It takes a trowel, a lullaby and both hands to talk it out.|Mandrake after mandrake, each into a bigger pot. Your ears ring all the way to supper.|The biggest one goes in headfirst and comes out, somehow, the right way up. You are not sure who won.}
 > right: Take the quiet seed trays
   alchemy +small
-  mood -tiny
+  health -tiny
   perform verdant +tiny
   say: {~Hundreds of seedlings, pricked out one by one. Your back will remember this tomorrow.|The seed trays are peaceful and endless. By dusk you have names for most of them.}
 
@@ -368,9 +368,11 @@ scene: Two students bent over a huge map drawn in silver ink that shifts as they
 text: {Mappers ink the master map. Corvin unrolls it, silver lines shifting like breath, and passes you the pen.|Inking night. The map has redrawn a stair since your last visit, out of spite.|The map has started leaving a blank wherever you hesitate.} {~"Leave the one behind the kitchens off," he says. "Not for long. For me."|"The stair under the clock. Don't draw it. Don't ask why."|He taps a corridor. "That one stays off the map. Humour me."}
 > left: Ink it anyway
   rel corvin -small
+  alignment +tiny
   say: {~You draw it, line by honest line. Corvin watches, then laughs, a little too late. "Saint," he says, without the usual smile.|It goes on the map. Corvin is quiet for the rest of the night, which on him is very loud.}
 > right: Leave it off for him
   rel corvin +small
+  perform track -tiny
   say: {~You leave a careful blank. Corvin squeezes your shoulder and doesn't make a joke, which is how you know it matters.|The map gets a gap and Corvin keeps his secret. You wonder, later, what it's for.}
 
 @event cartographers_silver_pen
@@ -747,7 +749,7 @@ text: {The dispatch bell rings. The morning sack goes to the village, and the qu
 > right: Take the long way round
   wage
   perform broom_courier +tiny
-  mood -tiny
+  perform track -tiny
   say: {~Round the shore, safe and slow. The dispatcher checks the clock and sighs.|The long way. You wave to a fisherman, who does not wave back.}
 
 @event broom_courier_broom_scramble
@@ -765,7 +767,7 @@ text: {Only one loft broom is in a good state, and every courier on shift wants 
 > left: Race for the good broom
   wage
   perform broom_courier +small
-  mood -tiny
+  alignment -tiny
   say: {~You get there first, by a whisker and an elbow. The second-year you elbowed will remember.|The good broom is yours. It flies like a dream; the others fly like complaints.}
 > right: Take the difficult one
   wage

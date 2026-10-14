@@ -117,7 +117,6 @@ text: Two portraits in the east gallery are gossiping about a student. Then one 
       mood -tiny
       say: "Flattery," sniffs the duchess, "is so common." They turn their backs. Literally.
 > right: Pretend you didn't hear
-  mood -tiny
   say: You walk on. Behind you, the whispering resumes, louder.
 
 @event life_pixies
@@ -252,7 +251,7 @@ text: Three essays, a potion log, a star chart and a reading list the length of 
   mood -tiny
   say: You finish at 4am on the last day. Every piece is handed in. You sleep through breakfast.
 > right: Pick what matters, skip the rest
-  renown -tiny
+  study -tiny
   gain slacking
   mood +small
   say: You hand in two of five and go for a walk. The professors are not pleased. You feel great, temporarily.
@@ -328,11 +327,10 @@ tags: home
 scene: A scruffy black cat sitting on a dormitory pillow as if it has always lived there, one torn ear, very green eyes.
 text: A black cat with one torn ear is sitting on your pillow. It looks at you as though you are the one trespassing.
 > left: Shoo it out
-  mood -tiny
   say: It leaves with enormous dignity and moves in with your neighbour, who spoils it rotten.
 > right: Let it stay
   mood +small
-  gold -tiny
+  study -tiny
   say: It's called Professor now. It sleeps on your homework. You've never been happier.
 
 @event life_storm_night
@@ -389,7 +387,7 @@ tags: social
 scene: A corridor ankle-deep in enchanted soap bubbles, two dormitories' worth of students hurling them at each other.
 text: The dormitory across the corridor turned your door into a goat. The goat is fine. Honour, however, demands retaliation.
 > left: Rise above it
-  mood -tiny
+  study -tiny
   say: You take the high road. The goat eats your homework. You let it.
 > right: Retaliate
   challenge deceive trivial:
@@ -513,7 +511,6 @@ when: renown >= 10
 scene: A student in a hall mirror holding up a fraying sleeve, a tailor's flyer in their other hand.
 text: Your robes are fraying at every hem. Someone at dinner called them "vintage". It was not a compliment.
 > left: Patch them yourself
-  mood -tiny
   charm +tiny
   say: Your stitching is crooked but cheerful. Some people start copying it.
 > right: Buy new robes (30 gold)
@@ -696,7 +693,6 @@ tags: danger
 scene: A stone staircase with one step glowing faintly, a student mid-fall, books flying everywhere.
 text: The ninth step on the north stair is a trick step. Everyone knows. You forgot. Your leg sinks to the knee and the stair holds on.
 > left: Wait for someone to help
-  mood -tiny
   study -tiny
   say: Forty minutes later, a first-year pulls you out. You're late for everything.
 > right: Wrench yourself free
@@ -780,7 +776,6 @@ text: Spring cleaning. The brooms are enchanted, but the enchantment needs super
       health -tiny
       say: The brooms do not accept your terms. They sweep you into a cupboard.
 > right: Clean by hand
-  health -tiny
   vigor +tiny
   mood +tiny
   say: An afternoon of scrubbing. It's oddly satisfying. You find three lost quills and a sandwich from Thawmoon.

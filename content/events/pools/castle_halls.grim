@@ -128,7 +128,6 @@ text: {The library is full. The only free chair is opposite {here}.|The only fre
 > left: Take the chair and work
   rel here +small
   lore +small
-  mood -tiny
   if npc_is(kael):
     say: {~Kael doesn't look up. By the end of the hour there is frost on your inkwell and a tiny, careful correction in your margin.|Kael pushes a page of his notes across to you, then looks away as if it had moved on its own.}
   elif npc_is(lyra):
@@ -193,7 +192,6 @@ text: {You come in late. The benches are empty and the cooks are wiping the far 
   say: {~You write two pages and post them with the last of your coppers.|You write about the food. You do not write about anything else, but they'll know.|You write a letter that is mostly questions. You post it before you can make it braver.}
 > right: Revise over the bowl
   lore +small
-  mood -tiny
   say: {~You learn three dates and a spill of gravy across all of them.|The cook reads over your shoulder and corrects one of your answers. She is right.}
 
 @event refectory_house_tables
@@ -211,7 +209,6 @@ text: {Supper, and the question of where to sit.|Your house table has started sa
 > left: Squeeze in with your house
   mood +small
   renown +tiny
-  health -tiny
   say: {~You eat with an elbow in your ribs and laugh the whole way through.|Somebody's story gets better every time you hear it. So does the pudding.}
 > right: Sit with the strangers
   charm +small
@@ -269,7 +266,6 @@ scene: An empty spiral lecture hall, a blackboard still dense with chalk diagram
 text: {term: {The fourth-floor hall is empty, but someone else's lecture is still on the board.|In the empty hall, a stub of chalk waits on the ledge, as if for you.|The board has a corner fenced off in chalk, labelled "answers here".}|In the break the boards are wiped, except one nobody dares touch.} {~Today it's a ward diagram, labelled "wrong, but how?"|Today it's half a proof, ending in a thumbprint.|Today it's a list headed "on the exam", crossed out.}
 > left: Copy it all down
   arcana +small
-  mood -tiny
   say: {~Your hand cramps. Your head, for once, does not.|You copy it all and understand most of it. The rest you'll grow into.}
 > right: Add your own answer
   chance 60:
@@ -330,7 +326,6 @@ text: {The practice room on the Evocation floor is empty. A sign forbids unsuper
     say: {~A new scorch mark joins the wall, shaped very like you.|The spell comes back at you. You leave with your eyebrows, mostly.}
 > right: Work through the theory
   lore +small
-  mood -tiny
   say: {~You draw the spell on paper fifty times. Paper is very forgiving.|You learn exactly why the walls look like that, and resolve not to add to them.}
 
 # ---------------- The Great Hall ----------------
@@ -352,7 +347,6 @@ text: {The great hall is empty but for the candles. The ceiling shows tomorrow.|
   say: {~You watch tomorrow until your neck stiffens. It is worth it.|A candle drifts down to see if you are all right, and stays.|You fall half asleep and dream tomorrow a little early.}
 > right: Read by the floating candles
   lore +small
-  mood -tiny
   say: {~A candle drips wax onto the best paragraph. You read it anyway, through the wax.|The candles follow your page like curious moths. It is the best light in the castle.}
 
 @event great_hall_choir_rehearsal
@@ -427,7 +421,6 @@ text: {You only came in for a plaster.|Your name is on the slate by the end bed,
   say: {~You sleep the deep, dreamless sleep of the infirmary. The tonic afterwards costs a crown and tastes of regret.|You wake under a blanket you didn't pull up. There is a tonic on the side, and a bill under it.}
 > right: Help roll bandages
   alchemy +small
-  mood -tiny
   say: {~Sister Amaranth teaches you the knot she uses. You will never tie your boots any other way.|You roll bandages and listen to her opinion of duelling, which is long and specific.}
 
 @event infirmary_visiting_hour
@@ -532,7 +525,6 @@ text: {On the third floor the ventilation charm has given up, and the fumes have
 > right: Force the windows open
   vigor +tiny
   renown +tiny
-  mood -tiny
   say: {season == "winter": {~The ice cracks. Half the floor cheers; half complains of the cold.|The frozen latch gives, and so does your thumbnail.}|{~The windows give. The fumes leave, sulking, and the floor applauds.|You wedge the window with a textbook. The fumes drift out, and nearly the textbook too.}}
 
 @event alchemy_lab_unlabelled_jar
@@ -557,7 +549,6 @@ text: {Someone has left an unlabelled jar on the shared shelf. It glows, faintly
     say: {~The brew ignites, politely, and then impolitely.|Your cauldron sneezes. So, for the rest of the afternoon, do you.}
 > right: Label it, carefully
   lore +small
-  mood -tiny
   say: {~An hour of tests later, you write a cautious label. Someone adds a skull to it.|You work out what it is. Then you wash your hands three times.}
 
 # ---------------- The Job Board ----------------
@@ -612,5 +603,4 @@ text: {The corner of the board for lost things is busier than the jobs.|An old p
     say: {~You search for an hour and find only a different, much angrier creature.|You don't find it. The next day the poster says "Found! Thanks anyway."}
 > right: Read every notice twice
   guile +small
-  mood -tiny
   say: {~The board is the castle's diary. You learn who lost what, and who owes whom.|You learn three secrets from the small print, and who has terrible handwriting.}
