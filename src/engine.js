@@ -244,6 +244,8 @@
     studyRule() { return Object.assign({ attend: 3, cap: 15 }, (this.c.balance && this.c.balance.study) || {}); }
     // A known spell's bonus on checks that test its discipline's skill (design §9.2; L-3, `@balance spell_check: per 2 cap 6`).
     spellCheck() { return Object.assign({ per: 3, cap: 15 }, (this.c.balance && this.c.balance.spell_check) || {}); }
+    // A course exam's difficulty at a course level (`@balance exam_tiers: easy medium hard`; L alarms).
+    examTier(level) { const w = (this.c.balance && this.c.balance.exam_tiers) || ['medium', 'hard', 'heroic']; return w[Math.min(w.length, Math.max(1, level)) - 1]; }
     isMilestone(eventId) { const e = eventId && this.c.events[eventId]; return !!e && e.class === 'milestone'; }
     // How much skill moves the odds (playtest 2, M14): `wild` checks swing whatever your skill, `steady` ones follow it closely.
     swingSlope(sw) { const d = (this.c.balance && this.c.balance.swing) || {}, k = sw || 'normal'; return d[k] != null ? d[k] : { normal: 2.5, wild: 1.2, steady: 4 }[k]; }
@@ -447,7 +449,7 @@
     examOdds(id, swing) {
       const s = this.s, t = this.trackState(id), sk = this.trackSkills(id);
       const sv = sk.reduce((a, k) => a + (s.vals[k] || 0), 0) / Math.max(1, sk.length);
-      const tier = ['medium', 'hard', 'heroic'][Math.min(2, ((t && t.level) || 1) - 1)];
+      const tier = this.examTier((t && t.level) || 1);
       const dc = this.expectedSkill() + this.difficulty(tier) - Math.min(this.studyRule().cap, (t && t.study) || 0) - this.advisorBonus(id);
       const slope = this.swingSlope(swing), [lo, hi] = this.oddsRange(true);
       const odds = (x) => clamp(Math.round(50 + slope * (sv - x)), lo, hi);
@@ -482,7 +484,7 @@
     courseOutlook(id, level) {
       const d = this.c.tracks[id]; if (!d) return null;
       const lv = level || this.levelPassed(id) + 1;
-      const tier = ['medium', 'hard', 'heroic'][Math.min(2, lv - 1)];
+      const tier = this.examTier(lv);
       const sk = this.trackSkills(id), sv = sk.reduce((a, k) => a + (this.s.vals[k] || 0), 0) / Math.max(1, sk.length);
       const dc = this.expectedSkill() + this.difficulty(tier) - this.advisorBonus(id);
       return { skills: sk, level: lv, exam: tier, teaches: (d.teaches || []).filter((x) => x.level === lv).map((x) => x.spell), pass: clamp(Math.round(50 + this.swingSlope(null) * (sv - (dc - 5))), ...this.oddsRange(true)) };

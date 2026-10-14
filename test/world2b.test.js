@@ -287,7 +287,8 @@ test('exams are cards (M4): one per enrolled course in a term\'s last month, gra
   assert.ok(exams.every((x) => x.track), 'in its course\'s context');
   // the outlook on the enrolment menu
   const o = eng.courseOutlook('evocation', 1);
-  assert.ok(o && o.skills.length && o.exam === 'medium' && o.pass >= 8);
+  assert.ok(o && o.skills.length && o.exam === eng.examTier(1) && o.pass >= 5);
+  assert.equal(eng.examTier(1), (content.balance.exam_tiers || ['medium'])[0], '@balance exam_tiers sets the tier by level');
 });
 
 test('jobs and clubs: prorated dues, the term-end review, promotions and switching (M12, M33, M34, M35)', () => {

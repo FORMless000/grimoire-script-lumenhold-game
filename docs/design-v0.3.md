@@ -618,8 +618,8 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - **Hint events** (2–3 per hidden course) point at the prerequisites.
 
 **Exams:**
-- In the term's last month, each course's exam is a card (playtest 2): the player chooses to answer steadily or to go for top marks (the swing of §9.2), and the card shows the pass and A/B chances. The exam is on the course's skill, at difficulty **tier by level** (I = medium, II = hard, III = heroic), relative to the calendar curve (§8.6). The enrolment menu shows each course's skill, exam tier, spells and pass chance up front.
-- **Study modifiers:** attendance and study choices during the term add up to +15 to the roll (L-3: a course card adds 1 by itself, so choices and skipped lectures decide most of it; `@balance study`).
+- In the term's last month, each course's exam is a card (playtest 2): the player chooses to answer steadily or to go for top marks (the swing of §9.2), and the card shows the pass and A/B chances. The exam is on the course's skill, at difficulty **tier by level** (I = easy, II = medium, III = hard; `@balance exam_tiers`, eased in L when harder exams sent careful players to "Barely"), relative to the calendar curve (§8.6). The enrolment menu shows each course's skill, exam tier, spells and pass chance up front.
+- **Study modifiers:** attendance and study choices during the term add up to +15 to the roll (L: a course card adds 2 by itself, so choices and skipped lectures decide the rest; `@balance study`).
 - Until the exam minigame exists (§T1), it **auto-resolves**.
 
 **Grades:**

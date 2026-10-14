@@ -112,6 +112,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `study` | structured |  |
 |  | `spell_check` | structured |  |
 |  | `spell_bonus` | structured |  |
+|  | `exam_tiers` | structured |  |
 | `@preset id` | `params` | text |  |
 |  | `desc` | text |  |
 | `@resource id` | `name` | text | yes |

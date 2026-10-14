@@ -203,7 +203,9 @@
       // checks of its discipline, per spell and at most (L-3)
       'study', 'spell_check',
       // the skill XP a spell gives in its discipline when learned, one tier per spell level (L-6)
-      'spell_bonus'], effects: [] },
+      'spell_bonus',
+      // a course exam's difficulty tier at each course level (L alarms)
+      'exam_tiers'], effects: [] },
     // A named group of effects, used as a statement: `grind arcana`. Its body may use $params.
     preset: { props: ['params', 'desc'], effects: [], raw: ['do'] },
     resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
@@ -306,6 +308,7 @@
     odds(t) { return STRUCT_PROPS.weights(t); },
     study(t) { return STRUCT_PROPS.weights(t); },
     spell_check(t) { return STRUCT_PROPS.weights(t); },
+    exam_tiers(t) { const w = words(t); for (const x of w) if (!DIFFICULTIES.includes(x)) throw 'exam_tiers: expected a difficulty tier per course level (trivial … heroic), got "' + x + '"'; return w; },
     spell_bonus(t) { const w = words(t); for (const x of w) if (!TIERS.includes(x)) throw 'spell_bonus: expected a size tier per spell level (tiny … huge), got "' + x + '"'; return w; },
     ramp(t) { const m = t.trim().match(/^(.+?)\s+(-?\d+)\s*\.\.\s*(-?\d+)$/); if (!m || +m[3] <= +m[2]) throw 'ramp: expected "<expression> low..high", e.g. ramp: rel(npc) 18..30'; return { expr: m[1], lo: +m[2], hi: +m[3] }; },
   };
