@@ -277,11 +277,13 @@ The tentative live harness will build its prompts from the same files, so the pa
 | 8 | Greenrise | Apr | spring | term | Spring Tournament (festival) |
 | 9 | Blossomtide | May | spring | term | internship offers; *year 4: the Night* (plot finale) |
 | 10 | Highsun | Jun | summer | term | **finals**; *year 4: thesis defence* |
-| 11 | Goldenhaze | Jul | summer | **break** | break plan; *year 4: graduation, end of run* |
-| 12 | Starfall | Aug | summer | break | Starfall festival (the meteor showers) |
+| 11 | Goldenhaze | Jul | summer | **break** | break plan; *year 4: the wrap-up begins (no plan, free board, no duties)* |
+| 12 | Starfall | Aug | summer | break | Starfall festival (the meteor showers); *year 4: graduation, the endings resolved, end of run* |
 
-- **4 years.** The run ends in Goldenhaze of year 4: **47 months**.
-- The names `final_year`, `term`, `break` and `season` are available in conditions and text.
+- **4 years.** The run ends in Starfall of year 4: **48 months**.
+- **The wrap-up** (playtest 2): year 4's last break is not a vacation. There is no break plan; the player stays on campus with free board and no obligations. Goldenhaze is a free campus month. Starfall, the last month, resolves the endings: no map and no ordinary cards, only the graduation and one resolution card per ending (X10 fills these), whose choices decide how each ending resolves.
+- **The origin** is picked on its own screen before the game (§3, playtest 2): each origin's money situation is shown, with a warning for the poor ones, and its effects apply before month 1's charges. The Sorting Mirror scene in month 1 reflects the choice.
+- The names `final_year`, `wrapup`, `term`, `break` and `season` are available in conditions and text.
 
 ### 4.2 Day recipes
 

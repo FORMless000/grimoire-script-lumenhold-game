@@ -11,7 +11,7 @@
 | Reachability | `grim reach`: every event, option, ending, place and track can be reached; each key clue has ≥ 2 sources |
 | Translation | zh-CN 100% (6,646 strings), 0 stale |
 | Checks | `npm run verify` passes: build, lint, format, docs, 70+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
-| A run | 47 months, about 340 cards; random play graduates 80% of the time, social and careful styles 97–99% |
+| A run | 48 months (the last two are the wrap-up), about 340 cards; random play graduates 80% of the time, social and careful styles 97–99% |
 
 ## Phases
 
@@ -28,6 +28,7 @@
 
 ## This round (after the pause)
 
+- **Playtest #2, mechanics (step 2, under way):** the origin screen (origins apply before month 1's charges); 48 months, with year 4's last break as the wrap-up and the last month only resolving the run.
 - **Playtest #2, bugfix and content sessions** (`docs/playtest-2-triage.md` B and C, plan in `docs/playtest-2-plan.md`):
   - no daily card cap (`max_cards_per_day` is optional; absent means none); break days have an evening visit, and break visits don't count toward term quotas;
   - the thesis is chosen at the start of year 4 (design §4.1, §7.6), and the defence ends the thesis track;

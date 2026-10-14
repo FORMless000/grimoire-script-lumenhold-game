@@ -764,7 +764,7 @@ function i18nSync(lang) {
 // eng.s.hist. Throws on a soft-lock (a card with no available option) or a game that never ends.
 function playGame(content, { seed, style, runId, name = 'Sim', onLog = null, previews = null }) {
   const eng = new Engine(content);
-  let r = eng.newGame({ seed, name, runId });
+  let r = Policies.newGame(eng, style, { seed, name, runId });
   let steps = 0;
   try {
     while (steps++ < 6000) {

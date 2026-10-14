@@ -153,15 +153,33 @@
       // The run being replaced keeps its log (and any feedback) in the archive.
       if (saved) { try { const old = new Engine(content).load(saved); archiveRun(old); Net.flush(old, runRecordMeta(old), { final: true }); } catch (e) { console.warn(e); } store.del(SAVE_KEY); }
       const seen = await loadSeen();
-      eng = new Engine(content);
-      buildGame();
-      step(eng.newGame({ name, seed: seed === '' ? null : seed, ...seen }));
+      const start = (origin) => {
+        ui.mode = null; closeOverlay();
+        eng = new Engine(content);
+        buildGame();
+        step(eng.newGame({ name, seed: seed === '' ? null : seed, ...seen, ...(origin ? { origin } : {}) }));
+      };
+      const choices = new Engine(content).originChoices();
+      if (choices.length) showOrigins(choices, start); else start(null);
     };
     const c = document.getElementById('cont');
     if (c) c.onclick = () => { eng = new Engine(content).load(saved); buildGame(); step(eng.advance()); };
     document.getElementById('slotsBtn').onclick = () => openSlots();
     const ex = document.getElementById('exportRuns');
     if (ex) ex.onclick = () => exportRuns(allRuns(), 'lumenhold-runs-' + fileStamp() + '.json');
+  }
+  // The origin screen (playtest 2, M32): who you were before, and what it means for money, before the game starts.
+  function showOrigins(choices, start) {
+    ui.mode = 'origin';
+    const opts = choices.map((o, i) => '<button class="opt origin-opt' + (o.poor ? ' poor' : '') + '" data-k="' + esc(o.key) + '"><span class="num">' + (i + 1) + '</span>' +
+      '<b>' + (o.art ? Art.icon(o.art, 16) + ' ' : '') + esc(o.label) + '</b>' + (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') +
+      (o.money ? '<small class="money">' + Art.icon('coin', 13) + ' ' + esc(o.money) + '</small>' : '') +
+      (o.poor ? '<small class="warn">' + esc(t('origin.poorWarning')) + '</small>' : '') + '</button>').join('');
+    openOverlay('<div class="modal dark origin-modal"><div class="modal-body"><h2>' + esc(t('origin.heading')) + '</h2><p class="text">' + esc(t('origin.intro')) + '</p>' +
+      '<div class="opt-grid">' + opts + '</div><div class="row" style="margin-top:14px"><button class="btn ghost-btn grow" id="originBack">' + esc(t('origin.back')) + '</button></div></div></div>');
+    document.querySelectorAll('.origin-opt').forEach((b) => { b.onclick = () => { if (ui.mode === 'origin') start(b.dataset.k); }; });
+    document.getElementById('originBack').onclick = () => { closeOverlay(); ui.mode = 'title'; };
+    ui.originPick = (i) => { const o = choices[i]; if (o && ui.mode === 'origin') start(o.key); };
   }
   function randomName() { const n = t('title.names').split(/\s*[,，、]\s*/).filter(Boolean); return n[Math.floor(Math.random() * n.length)] || 'Wren'; }
 
@@ -734,6 +752,7 @@
     }
     if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
     if ((e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey && document.getElementById('fbBar')) { e.preventDefault(); openFeedback(); return; }
+    if (ui.mode === 'origin') { if (/^[1-9]$/.test(e.key) && ui.originPick) { e.preventDefault(); ui.originPick(+e.key - 1); } else if (e.key === 'Escape') { e.preventDefault(); closeOverlay(); ui.mode = 'title'; } return; }
     if (ui.mode === 'map') { if (ui.mapCtl && ui.mapCtl.key(e)) e.preventDefault(); return; }
     if (ui.mode === 'card') {
       const v = ui.view; const story = v.type === 'story' || v.options.length === 1;

@@ -104,8 +104,33 @@
       for (const id of this.c.order.skills) { s.vals[id] = this.c.skills[id].start ?? 0; s.peak[id] = s.vals[id]; }
       for (const p of Object.values(this.c.places || {})) if (!p.discover) s.places[p.id] = { found: 0 };
       for (const id of this.c.order.npcs) s.npcs[id] = { met: false, rel: this.c.npcs[id].start_rel || 0, spark: 0, bond: 'none', touched: 0, sparked: 0, lowSpark: 0 };
+      // The origin, picked before the game (design §3, playtest 2 M32): applied before month 1's charges see it.
+      if (opts.origin != null) this.applyOrigin(opts.origin);
       this.runHooks('game_start');
       return this.beginMonth();
+    }
+    // The origins on offer: the options of `@game origins:` (a menu event), with the origin state each one grants.
+    originChoices() {
+      const e = this.c.events[this.c.game.origins];
+      if (!e) return [];
+      return e.options.map((o) => {
+        const gain = []; G.walkEffects(o.effects, (st) => { if (st.t === 'gain' && this.c.states[st.state] && this.c.states[st.state].kind === 'origin') gain.push(st.state); });
+        const d = gain.length ? this.c.states[gain[0]] : null;
+        return { key: o.key, label: o.label, hint: o.hint || '', state: d ? d.id : null, name: d ? d.name : o.label, desc: d ? d.desc || '' : '', money: d ? d.money || '' : '', poor: !!(d && (d.tags || []).includes('poor')), art: d ? d.art || null : null };
+      });
+    }
+    applyOrigin(key) {
+      const e = this.c.events[this.c.game.origins], o = e && e.options.find((x) => x.key === key);
+      if (!o) throw new Error('no origin "' + key + '"');
+      const ctx = this.newCtx(null, null);
+      this.run(o.effects, ctx);
+      this.handleZeroed(ctx);
+      const s = this.s;
+      s.origin = key; s.seen[e.id] = (s.seen[e.id] || 0) + 1; s.choices[e.id] = key;
+      s.hist.push({ t: 'origin', key, at: now() });
+      // Its numbers show in month 1's summary; its words belong to the mirror scene in the game itself.
+      ctx.say = []; ctx.sayIds = [];
+      s.pending.push(this.summaryItem(ctx, this.interp(o.label)));
     }
     save() { return JSON.stringify(this.s); }
     load(json) {
@@ -425,6 +450,8 @@
       return n;
     }
     isTermStart(turn = this.s.turn) { return this.phaseOf(turn) === 'term' && (turn === 1 || this.phaseOf(turn - 1) !== 'term'); }
+    // The final year's wrap-up (`@game wrapup:`): break months that close the run, with no plans or duties (playtest 2, M21).
+    isWrapUp(turn = this.s.turn) { return this.yearOf(turn) === this.years && (this.c.game.wrapup || []).includes(this.monthIndex(turn)); }
     isTermEnd(turn = this.s.turn) { return this.phaseOf(turn) === 'term' && (turn >= this.maxTurns || this.phaseOf(turn + 1) !== 'term'); }
 
     /* ---------------- Expression environment ---------------- */
@@ -447,6 +474,7 @@
             case 'break': return eng.phaseOf() === 'break';
             case 'season': return eng.seasonOf();
             case 'final_year': return eng.yearOf() === eng.years;
+            case 'wrapup': return eng.isWrapUp();
             case 'slot': return eng._slot || (s.cur && s.cur.slot) || '';   // the slot being drawn (director) or shown
             case 'term_index': return eng.termIndex();
             case 'gpa': return eng.gpa();
@@ -1292,7 +1320,7 @@
         name: s.name, turn: s.turn, maxTurns: this.maxTurns, month: this.monthName(), monthIndex: this.monthIndex(), year: this.yearOf(), years: this.years,
         deckLeft: s.deck.length, cardsThisMonth: s.cardsThisMonth,
         resources: c.order.resources.map((id) => ({ id, ...pick(c.resources[id], ['name', 'icon', 'color', 'min', 'desc', 'display', 'warn_below']), maxNow: this.resMax(c.resources[id]), value: s.vals[id] })),
-        gpa: this.gpa(), phase: this.phaseOf(), season: this.seasonOf(),
+        gpa: this.gpa(), phase: this.isWrapUp() ? 'wrapup' : this.phaseOf(), season: this.seasonOf(),
         tracks: Object.entries(s.tracks || {}).filter(([id, t]) => c.tracks[id] && ['enrolled', 'member', 'done', 'failed', 'applied'].includes(t.status)).map(([id, t]) => {
           const d = c.tracks[id], ranks = (d.ranks || '').split(/\s*[,，、]\s*/).filter(Boolean), levels = (d.level_names || d.name).split(/\s*[,，、]\s*/);
           return { id, name: d.name, kind: d.kind, status: t.status, level: t.level || null, levelName: t.level ? levels[t.level - 1] || d.name : null, passed: this.levelPassed(id), grades: (t.grades || []).slice(), rank: ranks[t.rank] || null, perf: Math.round(t.perf || 0), due: Math.max(0, (t.due || 0) - (t.visits || 0)), progress: Math.round(t.progress || 0) };

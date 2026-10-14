@@ -31,8 +31,8 @@ opt.noble.hint [61894b] = 金币、魅力，和一个人人认得的姓氏。
 opt.noble.say.1 [5615e9] = 镜中出现一枚你一直想摆脱的家徽。它微微表示认可。
 # en: A scholarship student from the provinces
 opt.scholar.label [4afbdf] = 来自外省的奖学金学生
-# en: Lore and Standing. The stipend depends on good marks.
-opt.scholar.hint [b50045] = 学识与学业。津贴取决于成绩。
+# en: Lore and study. The stipend depends on good marks.
+opt.scholar.hint [b8b070] = 学识与学业。津贴取决于成绩。
 # en: The mirror shows you a candle burning very late in a very small room.
 opt.scholar.say.1 [e182c1] = 镜中出现一间很小的屋子，一支蜡烛燃到很晚很晚。
 # en: Raised by a hedge-witch in the marshes
@@ -53,6 +53,30 @@ opt.merchant.label [2fc5e4] = 一家商行的继承人
 opt.merchant.hint [026706] = 金币充裕，对买卖嗅觉灵敏。
 # en: The mirror shows ledgers, ships and your mother's disappointed face. Still: gold.
 opt.merchant.say.1 [604ea4] = 镜中出现账簿、货船，还有你母亲失望的脸。不过：钱是真的多。
+
+@event sorting_mirror
+# en: The Sorting Mirror
+title [6d3a7b] = 分院镜
+# en: The Sorting Mirror in the entrance hall does not sort you into anything. It simply asks, in a voice like cold water, who you were before you came here. You tell it.
+text [43f613] = 门厅里的“分院镜”并不会把你分到哪里去。它只是用冷水般的声音问你：来这里之前，你是谁？你告诉了它。
+# en: A tall enchanted mirror in the entrance hall, showing a different version of the viewer in each pane.
+scene [c49f90] = 门厅里一面高大的魔法镜，每一格镜面都映出观者不同的模样。
+# en: Look into the mirror
+opt.ok.label [bb5682] = 望向镜中
+# en: {has(origin_noble): The mirror shows you a crest you have tried to outgrow. It approves, faintly.|{has(origin_scholar): The mirror shows you a candle burning very late in a very small room.|{has(origin_hedge): The mirror smells, briefly, of wet moss and woodsmoke. You feel at home.|{has(origin_street): The mirror shows a pickpocket's quick hands. You check your pockets out of habit.|The mirror shows ledgers, ships and your mother's disappointed face. Still: gold.}}}}
+opt.ok.say.1 [8c73e5] = {has(origin_noble): 镜中出现一枚你一直想摆脱的家徽。它微微表示认可。|{has(origin_scholar): 镜中出现一间很小的屋子，一支蜡烛燃到很晚很晚。|{has(origin_hedge): 镜子里一瞬间飘出湿苔藓和柴火烟的气味。你觉得像回到了家。|{has(origin_street): 镜中出现一双扒手的快手。你习惯性地摸了摸口袋。|镜中出现账簿、货船，还有你母亲失望的脸。不过：钱是真的多。}}}}
+
+@event wrapup_begins
+# en: The Last Weeks
+title [0438f9] = 最后的几周
+# en: A notice on the great hall door: classes are over, duties are done, and final-years may stay on until graduation, board on the house. The castle is yours for one last summer.
+text [172a68] = 大礼堂门上贴着一张告示：课程结束，职责已了，毕业生可以留到毕业典礼，食宿全免。最后一个夏天，城堡属于你。
+# en: An emptying castle in late summer light, trunks stacked in a corridor, a notice pinned to the great hall door.
+scene [1cbaa4] = 夏末的阳光里，城堡渐渐空了，走廊里堆着行李箱，大礼堂门上钉着一张告示。
+# en: Make the most of it
+opt.ok.label [793c29] = 好好享受
+# en: You walk the long way to breakfast, past every door you ever got lost behind.
+opt.ok.say.1 [725c27] = 你绕远路去吃早饭，经过每一扇你曾在后面迷过路的门。
 
 @event choose_elective
 # en: Choosing an Elective

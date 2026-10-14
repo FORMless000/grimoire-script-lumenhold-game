@@ -38,7 +38,9 @@
 
   const methods = {
     get dayMode() { return !!(this.c.game.day_term && this.c.game.day_term.length); },
-    recipe() { return (this.phaseOf() === 'break' ? this.c.game.day_break : this.c.game.day_term) || []; },
+    // The last day (`@game day_last:`) resolves the run: only its pushed cards, no pools (playtest 2, M21).
+    isLastDay() { return this.s.turn >= this.maxTurns && !!(this.c.game.day_last && this.c.game.day_last.length); },
+    recipe() { return (this.isLastDay() ? this.c.game.day_last : this.phaseOf() === 'break' ? this.c.game.day_break : this.c.game.day_term) || []; },
     visitSlots() { return this.recipe().filter((r) => r.source === 'visit').map((r) => r.slot); },
 
     /* ---------------- index (built once) ---------------- */
@@ -112,7 +114,7 @@
           track: t ? Object.assign({ id: p.track, kind: this.c.tracks[p.track].kind }, this.phaseOf() === 'break' ? { due: null, urgent: false } : { due: Math.max(0, (t.due || 0) - (t.visits || 0)), urgent: this.isTermEnd() && t.visits < t.due }) : null,
           present: here, news, festival: fest.filter((f) => f.place === p.id).map((f) => ({ slot: slots[f.visit], event: f.event })) });
       }
-      return { map: breakMap, slots, places, locked: fest.filter((f) => f.visit < slots.length).map((f) => ({ slot: slots[f.visit], place: f.place, event: f.event })), season: this.seasonOf(), phase: this.phaseOf() };
+      return { map: breakMap, slots, places, locked: fest.filter((f) => f.visit < slots.length).map((f) => ({ slot: slots[f.visit], place: f.place, event: f.event })), season: this.seasonOf(), phase: this.isWrapUp() ? 'wrapup' : this.phaseOf() };
     },
     // The player's picks for the visit slots; festival-locked slots ignore the pick. Returns the attendance outcome.
     pickPlaces(ids) {
@@ -360,7 +362,7 @@
       const callers = Object.keys(s.npcs).filter((id) => s.npcs[id].met && !withToday.has(id)).sort((a, b) => this.pull(b) - this.pull(a));
       let calls = 0;
       for (const id of callers) {
-        if (calls >= (brk ? FRIENDS.capBreak : FRIENDS.cap)) break;
+        if (this.isLastDay() || calls >= (brk ? FRIENDS.capBreak : FRIENDS.cap)) break;
         const p = Math.min(FRIENDS.maxP, this.pull(id) / 100) * (brk ? 0.5 : 1);
         if (p <= 0 || this.rand() >= p) continue;
         const it = this.drawWith(id, used, day, { prio: 'friend', src: 'friend' });

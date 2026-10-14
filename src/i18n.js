@@ -35,6 +35,8 @@
     'title.seed': 'Seed (optional)',
     'title.seedPlaceholder': 'random',
     'title.begin': 'Begin your first year',
+    'origin.heading': 'Who were you before?', 'origin.intro': 'Where you come from decides what you start with, and how hard money will be.',
+    'origin.poorWarning': 'Hard mode for money: plan on working a job most terms.', 'origin.back': 'Back',
     'title.continue': 'Continue · {info}',
     'title.saveInfo': '{name} — {month}, Year {year}',
     'title.howto_html': '<b>Swipe</b> each card left or right (or press ← / →) to choose. Some moments open a <b>menu</b> with more options. Keep your <b>Health, Mood, Gold and Standing</b> above zero for three years — 36 months — and see who you become. Glowing dots above a meter show what a choice will touch.',
@@ -182,7 +184,7 @@
     // Saved games and the optional server
     // The day and the map (phase 2b)
     'slot.morning': 'Morning', 'slot.noon': 'Noon', 'slot.afternoon': 'Afternoon', 'slot.evening': 'Evening', 'slot.night': 'Night', 'slot.midnight': 'Midnight',
-    'phase.term': 'Term', 'phase.break': 'Break',
+    'phase.term': 'Term', 'phase.break': 'Break', 'phase.wrapup': 'Wrap-up',
     'map.title': '{month} · Year {year} · {phase}',
     'map.question1': 'Where will you spend the afternoon?',
     'map.question2': 'Where will you spend the afternoon and the evening?',
@@ -304,7 +306,7 @@
     resource: ['name', 'desc'],
     skill: ['name', 'desc'],
     npc: ['name', 'short', 'title', 'house', 'desc'],
-    state: ['name', 'desc'],
+    state: ['name', 'desc', 'money'],
     event: ['title', 'text', 'scene'],
     ending: ['title', 'text', 'scene'],
     hook: ['label'],

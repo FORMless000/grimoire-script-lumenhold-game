@@ -39,9 +39,9 @@ function play(seed, styleName, stop = () => false, setup = null) {
 
 test('the real content compiles', () => assert.deepEqual(errors.map((e) => e.message), []));
 
-test('calendar: four years, 47 turns, terms and breaks', () => {
+test('calendar: four years, 48 turns, terms and breaks', () => {
   const eng = new Engine(content);
-  assert.equal(eng.maxTurns, 47);
+  assert.equal(eng.maxTurns, 48);
   assert.equal(eng.phaseOf(1), 'term');
   assert.equal(eng.phaseOf(5), 'break');            // Deepwinter: winter break
   assert.equal(eng.phaseOf(11), 'break');           // Goldenhaze: summer break
@@ -52,6 +52,39 @@ test('calendar: four years, 47 turns, terms and breaks', () => {
   assert.equal(eng.termIndex(13), 3);
   assert.equal(eng.yearOf(37), 4);
   assert.equal(eng.seasonOf(1), 'autumn');
+});
+
+test('wrap-up (M21): year 4\'s last break has no plan or board, and the last day only resolves the run', () => {
+  const eng = new Engine(content); eng.newGame({ seed: 7, origin: 'noble' });
+  assert.ok(eng.isWrapUp(47) && eng.isWrapUp(48) && !eng.isWrapUp(46) && !eng.isWrapUp(11));
+  // jump to Goldenhaze of year 4
+  eng.s.turn = 46; eng.s.deck = []; eng.s.queue = []; eng.s.day = null;
+  const m = eng.beginMonth();
+  assert.ok(!m.summary.some((x) => /board/i.test(x.label || '')), 'no board in the wrap-up');
+  assert.equal(eng.mapView().phase, 'wrapup');
+  eng.pickPlaces([]);
+  assert.ok(eng.s.deck.some((d) => d.id === 'wrapup_begins'));
+  assert.ok(!eng.s.deck.some((d) => d.id === 'break_plan'), 'no break plan in the wrap-up');
+  // the last day: no map, only pushed cards
+  eng.s.turn = 47; eng.s.deck = []; eng.s.queue = []; eng.s.day = null;
+  eng.beginMonth();
+  assert.equal(eng.s.day.phase, 'cards', 'no map on the last day');
+  assert.deepEqual(eng.s.deck.map((d) => d.id).filter((id) => content.events[id].trigger !== 'auto' && content.events[id].trigger !== 'queued'), []);
+  assert.ok(eng.s.deck.some((d) => d.id === 'graduation_eve'));
+});
+
+test('origin screen (M32): the origin applies before month 1\'s charges; the mirror only reflects it', () => {
+  const choices = new Engine(content).originChoices();
+  assert.deepEqual(choices.map((o) => o.key), ['noble', 'scholar', 'hedge', 'street', 'merchant']);
+  assert.ok(choices.every((o) => o.state && o.money), 'every origin has a state and a money line');
+  assert.ok(choices.find((o) => o.key === 'street').poor && !choices.find((o) => o.key === 'noble').poor);
+  const eng = new Engine(content); const r = eng.newGame({ seed: 3, origin: 'scholar' });
+  const tuition = r.summary.find((x) => x.label === 'Tuition');
+  assert.equal(tuition && tuition.deltas.gold, -15, 'the scholarship halves the first tuition (B32)');
+  assert.ok(eng.s.deck.some((d) => d.id === 'sorting_mirror') && !eng.s.deck.some((d) => d.id === 'choose_origin'));
+  // without an origin (old callers), the mirror asks as before
+  const old = new Engine(content); old.newGame({ seed: 3 });
+  assert.ok(old.s.deck.some((d) => d.id === 'choose_origin'));
 });
 
 test('a month is a day: map first, then a slot-ordered deck', () => {
@@ -124,8 +157,8 @@ test('attending a member place counts a visit and pays a job', () => {
   const eng = new Engine(content);
   quiet(() => { eng.newGame({ seed: 3, name: 'T' }); });
   const ctx = eng.newCtx(null, null);
-  eng.trackOp({ t: 'join', track: 'library_assistant' }, ctx);
   const gold = eng.s.vals.gold;
+  eng.trackOp({ t: 'join', track: 'library_assistant' }, ctx);
   eng.attend('library_assistant', ctx);
   const t = eng.s.tracks.library_assistant;
   assert.equal(t.visits, 1);

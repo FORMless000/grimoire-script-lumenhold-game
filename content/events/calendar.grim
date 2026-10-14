@@ -32,7 +32,7 @@ text: The Sorting Mirror in the entrance hall does not sort you into anything. I
   gain origin_noble
   say: The mirror shows you a crest you have tried to outgrow. It approves, faintly.
 > scholar: A scholarship student from the provinces
-  hint: Lore and Standing. The stipend depends on good marks.
+  hint: Lore and study. The stipend depends on good marks.
   gain origin_scholar
   say: The mirror shows you a candle burning very late in a very small room.
 > hedge: Raised by a hedge-witch in the marshes
@@ -47,6 +47,33 @@ text: The Sorting Mirror in the entrance hall does not sort you into anything. I
   hint: Plenty of gold, a nose for bargains.
   gain origin_merchant
   say: The mirror shows ledgers, ships and your mother's disappointed face. Still: gold.
+
+@event sorting_mirror
+title: The Sorting Mirror
+class: story
+tone: light
+trigger: queued
+art: mirror
+tags: story
+scene: A tall enchanted mirror in the entrance hall, showing a different version of the viewer in each pane.
+text: The Sorting Mirror in the entrance hall does not sort you into anything. It simply asks, in a voice like cold water, who you were before you came here. You tell it.
+> ok: Look into the mirror
+  say: {has(origin_noble): The mirror shows you a crest you have tried to outgrow. It approves, faintly.|{has(origin_scholar): The mirror shows you a candle burning very late in a very small room.|{has(origin_hedge): The mirror smells, briefly, of wet moss and woodsmoke. You feel at home.|{has(origin_street): The mirror shows a pickpocket's quick hands. You check your pockets out of habit.|The mirror shows ledgers, ships and your mother's disappointed face. Still: gold.}}}}
+
+@event wrapup_begins
+title: The Last Weeks
+class: story
+tone: warm
+trigger: auto
+when: wrapup and month == 11
+priority: 70
+art: tower
+tags: story
+scene: An emptying castle in late summer light, trunks stacked in a corridor, a notice pinned to the great hall door.
+text: A notice on the great hall door: classes are over, duties are done, and final-years may stay on until graduation, board on the house. The castle is yours for one last summer.
+> ok: Make the most of it
+  mood +small
+  say: You walk the long way to breakfast, past every door you ever got lost behind.
 
 @event choose_elective
 # retired in phase 2b (was "month == 1 or month == 6"); replaced by enrolment (offers: courses, pick: 2)
@@ -580,7 +607,7 @@ title: A Letter From Home
 class: story
 tone: warm
 trigger: auto
-when: month == 12 and not has(summer_away)
+when: month == 12 and not has(summer_away) and not wrapup
 repeat: 12
 art: letter
 tags: home
@@ -666,7 +693,7 @@ title: The Eve of Graduation
 class: story
 tone: light
 trigger: auto
-when: turn == 47
+when: turn == max_turns
 priority: 60
 art: crown
 tags: story

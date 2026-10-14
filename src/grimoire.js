@@ -25,7 +25,7 @@
   const SYMBOLIC = new Set(['has', 'flag', 'left', 'rel', 'love', 'spark', 'bond', 'met', 'seen', 'since', 'chosen', 'bonds', 'npc_is', 'romanceable', 'tagged', 'passed', 'clue', 'spell_level', 'knows', 'npc_rel',
     'enrolled', 'member', 'rank', 'performance', 'level', 'progress', 'due', 'visits', 'present', 'act', 'clock', 'discovered', 'applied', 'cast_as', 'plan', 'visits_to', 'clues']);
   // Built-in identifiers the engine answers (env.ident); content can read but never assign them.
-  const IDENTS = ['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa', 'runs_completed'];
+  const IDENTS = ['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa', 'runs_completed', 'wrapup'];
   const FUNCS = new Set([...SYMBOLIC, 'rand', 'min', 'max', 'abs', 'floor', 'round', 'clamp', 'known', 'chance_of']);
   // Reference kinds for linting: which argument of which function refers to what.
   const FUNC_REFS = {
@@ -173,7 +173,9 @@
 
   const SCHEMA = {
     game: { noId: true, props: ['title', 'subtitle', 'years', 'months', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'intro', 'summer_months', 'spell_resource',
-      'schema', 'last_month', 'calendar', 'seasons', 'day_term', 'day_break', 'max_cards_per_day'], effects: [] },
+      'schema', 'last_month', 'calendar', 'seasons', 'day_term', 'day_break', 'max_cards_per_day',
+      // the origin menu shown before the game (its options are the origins); the final year's wrap-up months; the last day's recipe
+      'origins', 'wrapup', 'day_last'], effects: [] },
     // Numbers (design §8.4): size and difficulty tiers, option-value weights, the expected-skill curve.
     balance: { noId: true, props: ['sizes', 'difficulty', 'weights', 'curve', 'desc', 'xp_cost', 'rank_xp', 'performance'], effects: [] },
     // A named group of effects, used as a statement: `grind arcana`. Its body may use $params.
@@ -181,7 +183,7 @@
     resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
     skill: { props: ['name', 'icon', 'start', 'max', 'desc', 'color'], effects: [] },
     npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel', 'age', 'role', 'year', 'traits', 'interests', 'stats', 'schedule', 'relations', 'voice', 'seeks'], effects: [] },
-    state: { props: ['name', 'desc', 'art', 'tags', 'group', 'duration', 'hidden', 'kind'], effects: ['tick', 'on_add', 'on_expire', 'on_remove'] },
+    state: { props: ['name', 'desc', 'art', 'tags', 'group', 'duration', 'hidden', 'kind', 'money'], effects: ['tick', 'on_add', 'on_expire', 'on_remove'] },
     event: { props: ['title', 'text', 'art', 'scene', 'tags', 'when', 'weight', 'trigger', 'actor', 'repeat', 'priority', 'type', 'chain', 'class', 'tone', 'variant',
       // phase 2b: where and when it happens, who is in it, what it belongs to (design §5, §6, §7, §10.6)
       'place', 'slot', 'replaces', 'track', 'level', 'rank', 'lesson', 'arc', 'beat', 'plan', 'cast', 'offers', 'pick', 'scope',
@@ -255,6 +257,9 @@
     // "morning=courses noon=social:1-2 afternoon=visit night=world:1" -> [{slot, source, min, max}]
     day_term(t) { return words(t).map((x) => { const m = x.match(/^([a-z_]+)=([a-z_]+)(?::(\d+)(?:-(\d+))?)?$/); if (!m) throw 'day recipe: expected slot=source[:min-max], got "' + x + '"'; const min = m[3] != null ? +m[3] : null; return { slot: m[1], source: m[2], min, max: m[4] != null ? +m[4] : min }; }); },
     day_break(t) { return STRUCT_PROPS.day_term(t); },
+    day_last(t) { return STRUCT_PROPS.day_term(t); },
+    // `wrapup: 11-12` (or `11, 12`): months of the final year that close the run
+    wrapup(t) { const out = []; for (const x of t.split(/[\s,]+/).filter(Boolean)) { const m = x.match(/^(\d+)(?:-(\d+))?$/); if (!m) throw 'wrapup: expected months like 11-12, got "' + x + '"'; for (let i = +m[1]; i <= +(m[2] || m[1]); i++) out.push(i); } return out; },
     xp_cost(t) { const w = words(t); if (w.length !== 2) throw 'xp_cost: expected "a b" (cost of the next point = a + b × level)'; return { a: toNum(w[0], 'xp_cost'), b: toNum(w[1], 'xp_cost') }; },
     rank_xp(t) { return words(t).map((x) => toNum(x, 'rank_xp')); },
     performance(t) { return STRUCT_PROPS.weights(t); },

@@ -6,12 +6,14 @@
 
 @game
 title: Lumenhold Academy
-subtitle: Four years. Forty-seven moons. One apprentice.
+subtitle: Four years. Forty-eight moons. One apprentice.
 # The content format version (design §12). Frozen: v1 may only grow; see test/golden/schema-v1.json.
 schema: 1
-# Four years (design §4.1). The academic year starts in autumn; the run ends in Goldenhaze of year 4 (turn 47).
+# Four years (design §4.1). The academic year starts in autumn; the run ends in Starfall of year 4 (turn 48).
+# Year 4's last break is the wrap-up: no plans or duties, board on the house; its last month only resolves the run.
 years: 4
-last_month: 11
+last_month: 12
+wrapup: 11-12
 months: Harvestmoon, Emberwane, Mistveil, Frostcall, Deepwinter, Thawmoon, Stormbloom, Greenrise, Blossomtide, Highsun, Goldenhaze, Starfall
 calendar: term=1-4 break=5-6 term=7-10 break=11-12
 seasons: autumn=1-3 winter=4-6 spring=7-9 summer=10-12
@@ -19,6 +21,9 @@ summer_months: 5, 6, 11, 12
 # Each month is one day (design §4.2). The two visits are picked on the map.
 day_term: morning=courses noon=social:1-2 afternoon=visit evening=visit night=world:1-2 midnight=special:0-1
 day_break: morning=plan afternoon=visit evening=visit night=world:1
+day_last: morning=special:0
+# The origin is picked on its own screen before the game (its options are the origins).
+origins: choose_origin
 cards_per_month: 3
 max_cards_per_month: 7
 social_per_month: 1
@@ -313,7 +318,11 @@ do:
 on: game_start
 do:
   queue intro_arrival now
-  queue choose_origin now
+  # Picked on the origin screen: the mirror only reflects it. Otherwise (tools, old callers) the mirror asks.
+  if has(origin_noble) or has(origin_scholar) or has(origin_hedge) or has(origin_street) or has(origin_merchant):
+    queue sorting_mirror now
+  else:
+    queue choose_origin now
 
 @hook love_glow
 on: month_start

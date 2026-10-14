@@ -20,7 +20,7 @@ const KEYS = arg('keys', null) ? arg('keys').split(',') : [...Object.keys(conten
 
 function play(seed, style) {
   const eng = new Engine(content);
-  let r = eng.newGame({ seed, name: 'Eco' });
+  let r = Policies.newGame(eng, style, { seed, name: 'Eco' });
   for (let i = 0; i < 8000 && r.kind !== 'ending'; i++) {
     if (r.kind === 'month') { r = eng.advance(); continue; }
     if (r.kind === 'map') { eng.pickPlaces((style.pickPlaces || Policies.pickPlaces)(eng, r.view)); r = eng.advance(); continue; }

@@ -112,6 +112,7 @@ tick:
 | `name`, `desc`, `art` | Shown in the side panel. `desc` supports tokens. |
 | `kind` | Purely visual: `origin class club job buff debuff neutral`. |
 | `group` | Only one state per group: gaining one removes the others (`elective`, `club`, `job`, `origin`). |
+| `money` | An origin's money situation in one line, shown on the origin screen (`tags: poor` adds a warning). |
 | `duration` | Default length in months; omit for "until removed". `gain x 3` overrides it. |
 | `hidden: true` | Not shown in the UI (internal bookkeeping). |
 | `tick:` | Effects run at the start of every month while active (not in the month it was gained). |
@@ -233,7 +234,7 @@ Used in `when`, `weight`, `if`, `chance`, `check`, assignments and `{=…}`.
 | `turn` | 1…47 (months elapsed; each month is one day) |
 | `month` | 1…12 within the year (1 Harvestmoon … 4 Frostcall term, 5–6 winter break, 7–10 term, 11–12 summer break) |
 | `year` | 1…4 |
-| `term` `break` `season` `final_year` `term_index` `gpa` `slot` | the calendar and tracks (§6c) |
+| `term` `break` `season` `final_year` `wrapup` `term_index` `gpa` `slot` | the calendar and tracks (§6c) |
 | `runs_completed` | how many runs this player has finished on this machine or server. Flavour text only: never use it in a `when` that changes odds |
 | `turns_left`, `max_turns`, `cards_this_month` | as named |
 | `npc` | the bound actor's id (only in events with `actor`) |
@@ -447,16 +448,23 @@ Translated worldbook fields: place name, desc and hint; track name, level names,
 
 ## 6c. The world loop (phase 2b)
 
-From phase 2b a run is **four years, 47 months, and each month is one day** (design §4). `@game` sets the shape:
+From phase 2b a run is **four years, 48 months, and each month is one day** (design §4). `@game` sets the shape:
 
 ```
 years: 4
-last_month: 11                       # the run ends in Goldenhaze of year 4 (turn 47)
+last_month: 12                       # the run ends in Starfall of year 4 (turn 48)
+wrapup: 11-12                        # the final year's last break: no plans or duties (the `wrapup` identifier)
 calendar: term=1-4 break=5-6 term=7-10 break=11-12
 seasons: autumn=1-3 winter=4-6 spring=7-9 summer=10-12
 day_term: morning=courses noon=social:1-2 afternoon=visit evening=visit night=world:1-2 midnight=special:0-1
 day_break: morning=plan afternoon=visit evening=visit night=world:1
+day_last: morning=special:0          # the last day: no map, no pools, only pushed cards (the run's resolution)
+origins: choose_origin               # the origin screen before the game lists this menu's options
 ```
+
+**The origin** (`@game origins:`, playtest 2). The UI shows the menu's options on their own screen before the game, each with its origin state's `money:` line, and a warning when the state is tagged `poor`. `newGame({origin: key})` runs that option before the first month's hooks, so tuition and board already see it. Started without an origin (old callers, some tools), the game still queues the menu as a card.
+
+**The wrap-up** (`wrapup:`). Months of the final year listed here stay `break` months, but `wrapup` is true in them: content uses it to offer no break plan, and with no plan there is no board. The map shows the phase as "wrap-up". On the last turn, `day_last:` (if set) replaces the day's recipe and no one comes looking for you, so the month holds only pushed cards: the graduation and the endings' resolution (`turn == max_turns`).
 
 **A day** (`src/director.js`). After the month's start effects, the player picks the visit slots on the **map** (two, in term and on a break). Then the director fills each slot from its source: `courses` (events of enrolled courses), `social` (`trigger: social`), `visit` (events with `place:` the player picked), `world` (random events with no place), `special`, `plan` (events for the active break plan). `:1-2` is how many cards a slot draws. Each candidate scores `weight × novelty × relevance × variety`. Pushed cards (queued, auto, arc beats, track notices) go into their `slot:` (else morning). If `@game` sets `max_cards_per_day` (optional; no cap when absent, and Lumenhold sets none) and the day is over it, priority decides (story > track > pushed > friend > social > ambient) and pushed cards that don't fit move to the next day. `when` is checked again as each card is drawn.
 
@@ -465,7 +473,7 @@ day_break: morning=plan afternoon=visit evening=visit night=world:1
 - *They find you:* every met character rolls each month, on their own, to bring you one card from their pool (at most two such cards a month, one on a break). The chance follows **warmth**: recent contact you chose. A card where you raised their `rel` or `spark` (even at the cap) warms them; a card with them where you didn't cools them; visiting where they are warms them a little; warmth fades every month. Standing friendship, spark and a bond add to it.
 - So a character needs a ladder of personal events starting near `rel 0` (a rival's too): if every one of their events is gated at `rel >= 10`, a new acquaintance has nothing to bring you and the friendship stalls.
 
-**Identifiers:** `term` and `break` (booleans), `season` (`"autumn"` …), `final_year`, `term_index` (1–8), `gpa` (0–4), `slot` (the slot being drawn). `month` is 1–12 within the academic year; `year` is 1–4; `turn` is 1–47.
+**Identifiers:** `term` and `break` (booleans), `season` (`"autumn"` …), `final_year`, `wrapup` (the final year's wrap-up months), `term_index` (1–8), `gpa` (0–4), `slot` (the slot being drawn). `month` is 1–12 within the academic year; `year` is 1–4; `turn` is 1–48.
 
 **Event fields**
 

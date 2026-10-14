@@ -87,6 +87,9 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `day_term` | structured |  |
 |  | `day_break` | structured |  |
 |  | `max_cards_per_day` | text |  |
+|  | `origins` | text |  |
+|  | `wrapup` | structured |  |
+|  | `day_last` | structured |  |
 | `@balance` | `sizes` | structured |  |
 |  | `difficulty` | structured |  |
 |  | `weights` | structured |  |
@@ -143,6 +146,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `duration` | number |  |
 |  | `hidden` | yes/no |  |
 |  | `kind` | text |  |
+|  | `money` | text | yes |
 | | `tick:` | effects | `say:` lines |
 | | `on_add:` | effects | `say:` lines |
 | | `on_expire:` | effects | `say:` lines |

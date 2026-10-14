@@ -212,4 +212,15 @@ function get(name) {
 }
 function list() { return ['random', 'cautious', 'social', 'balanced', 'focused:<skill>', 'aggressive', 'moneymaxx', 'caster', 'truant', 'lumen', 'hollow', 'plot', 'social:<npc>']; }
 
-module.exports = { get, list, estimate, pickPlaces, pickMany };
+// The origin screen (playtest 2, M32): a sim picks its origin up front, spread evenly over seeds (no RNG used),
+// so origin effects apply before month 1's charges, as in play.
+function pickOrigin(eng, seed) {
+  const o = eng.originChoices();
+  return o.length ? o[Math.abs(seed | 0) % o.length].key : null;
+}
+function newGame(eng, style, opts) {
+  const origin = (style.pickOrigin || pickOrigin)(eng, opts.seed);
+  return eng.newGame(Object.assign({}, opts, origin ? { origin } : {}));
+}
+
+module.exports = { get, list, estimate, pickPlaces, pickMany, pickOrigin, newGame };

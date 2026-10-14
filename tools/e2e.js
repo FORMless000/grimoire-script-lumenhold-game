@@ -48,6 +48,7 @@ async function playthrough(browser, lang) {
   const p = await newPage(browser, errs);
   await p.goto(URL + '?lang=' + lang); await p.waitForTimeout(300);
   await p.click('#begin'); await p.waitForTimeout(300);
+  await pickOrigin(p);
   const visible = () => p.evaluate(() => (document.querySelector('#deck .card') || document.querySelector('#overlay') || {}).innerText || '');
   const scan = async () => { if (lang === 'en') return; for (const m of (await visible()).match(ENGLISH_RUN) || []) english.add(m); };
   let steps = 0, ended = false;
@@ -91,6 +92,13 @@ async function playthrough(browser, lang) {
   return ok;
 }
 
+// The origin screen (M32): a random origin each run, so runs cover them all over time.
+async function pickOrigin(p) {
+  const opts = await p.$$('.origin-opt');
+  if (!opts.length) throw new Error('no origin screen after Begin');
+  await opts[Math.floor(Math.random() * opts.length)].click(); await p.waitForTimeout(250);
+}
+
 // The map screen: fill every free visit slot with an open place (a different one each day), then begin the day.
 async function mapPick(p, steps) {
   // Click the dots (the markers' only hit area); a place closed in the slot being filled just shows a
@@ -128,7 +136,7 @@ async function languageSwitch(browser) {
   await p.goto(URL + '?lang=en'); await p.waitForTimeout(300);
   await p.evaluate(() => { try { localStorage.clear(); } catch (e) { /* ignore */ } });
   await p.goto(URL); await p.waitForTimeout(300);
-  await p.click('#begin'); await p.waitForTimeout(200); await p.click('#beginMonth'); await p.waitForTimeout(300);
+  await p.click('#begin'); await p.waitForTimeout(200); await pickOrigin(p); await p.click('#beginMonth'); await p.waitForTimeout(300);
   // Play until an outcome card is on screen: switching there must keep it (B1), not skip to the next card.
   for (let i = 0; i < 30 && !(await p.$('#contBtn')); i++) {
     if (await p.$('.opt:not([disabled])')) await (await p.$$('.opt:not([disabled])'))[0].click();
