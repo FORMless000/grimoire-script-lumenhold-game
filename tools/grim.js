@@ -11,7 +11,9 @@
  *   node tools/grim.js reach            static reachability: events, options, endings, places, tracks no play can reach
  *   node tools/grim.js stats            count blocks by kind / trigger / tag
  *   node tools/grim.js show <id>        print a block's source and everything that references it
- *   node tools/grim.js ids [kind]       list ids (event|state|npc|ending|resource|skill|flag|var)
+ *   node tools/grim.js graph <id>       the event graph around an event, state or hook: who leads to it (queues it, with
+                                      odds; sets what its gates read) and what it leads to (queues, and who reads what it sets)
+  node tools/grim.js ids [kind]       list ids (event|state|npc|ending|resource|skill|flag|var)
  *   node tools/grim.js check            build + lint + sim 200 (what agents should run before finishing)
  *   node tools/grim.js fmt [FILE…] [--check]
  *                                       rewrite .grim files in canonical layout (lossless; refuses any change in meaning).
@@ -1265,6 +1267,7 @@ switch (cmd) {
   case 'i18n': if (rest[0]) i18nSync(rest[0]); else i18nStatus(); break;
   case 'stats': stats(); break;
   case 'show': show(rest[0]); break;
+  case 'graph': { const { content } = compileAll(); const out = require('./graph.js').describe(content, rest[0]); if (!out) { console.error('graph: no event, state or hook "' + rest[0] + '"'); process.exit(1); } console.log(out); break; }
   case 'ids': ids(rest[0]); break;
   case 'rename': {
     const [kind, from, to] = rest.filter((x) => !x.startsWith('--'));

@@ -426,7 +426,8 @@
           }
         }
       }
-      if (ctx.notes.length) summary.push(this.summaryItem(ctx, null));
+      // `src` names every month entry for the flow report (A2), labelled or not.
+      if (ctx.notes.length) summary.push(Object.assign(this.summaryItem(ctx, null), { src: 'term end' }));
       this.runHooks('term_end', summary);
     }
     // A course's exam (design §7.3): the skill it tests, the bar (the level's difficulty, lowered by study and the
@@ -547,7 +548,7 @@
       if (this.phaseOf() === 'term') for (const k of this.c.order.skills) {
         if (s.turn - (s.skillGain[k] || 0) > 3 && s.vals[k] > 0.6 * (s.peak[k] || 0)) { this.change(k, -Math.min(1, s.vals[k] - 0.6 * s.peak[k]), ctx, true); }
       }
-      if (ctx.notes.length || Object.keys(ctx.deltas).length) summary.push(this.summaryItem(ctx, null));
+      if (ctx.notes.length || Object.keys(ctx.deltas).length) summary.push(Object.assign(this.summaryItem(ctx, null), { src: 'rust and discovery' }));
     }
     // Skill gains are XP (design §8.5): the next point costs a + b × level; mastery and an aligned club or job multiply.
     skillGain(name, amount) {
@@ -1011,7 +1012,7 @@
         const ctx = this.newCtx(null, h.label || h.desc || h.id);
         this.run(h.do, ctx);
         this.handleZeroed(ctx);
-        if (summary) summary.push(this.summaryItem(ctx, h.label || null));
+        if (summary) summary.push(Object.assign(this.summaryItem(ctx, h.label || null), { src: 'hook ' + h.id }));
       }
     }
     summaryItem(ctx, label) { return { label, deltas: ctx.deltas, notes: ctx.notes, say: ctx.say }; }
@@ -1032,7 +1033,7 @@
           if (st.left != null) { st.left--; if (st.left <= 0) this.removeState(id, ctx, true); }
         }
         this.handleZeroed(ctx);
-        if (Object.keys(ctx.deltas).length || ctx.notes.length || ctx.say.length) summary.push(this.summaryItem(ctx, def.hidden ? null : (def.name || id)));
+        if (Object.keys(ctx.deltas).length || ctx.notes.length || ctx.say.length) summary.push(Object.assign(this.summaryItem(ctx, def.hidden ? null : (def.name || id)), { src: 'state ' + id }));
       }
       this.relationshipDrift(summary);
       this.unlockFacts();
@@ -1068,7 +1069,7 @@
           n.lowSpark = n.spark < 20 ? (n.lowSpark || 0) + 1 : 0;
           if (n.lowSpark >= 2) { n.bond = 'ex'; n.lowSpark = 0; notes.push({ kind: 'bond', npc: id, status: 'ex', text: shortName(this.c.npcs[id]) + ': ex' }); }
         }
-        if (notes.length || Object.keys(deltas).length) summary.push({ label: null, deltas, notes, say: [] });
+        if (notes.length || Object.keys(deltas).length) summary.push({ label: null, deltas, notes, say: [], src: 'relationship drift' });
       }
     }
     unlockFacts() {
