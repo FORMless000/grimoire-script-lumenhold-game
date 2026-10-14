@@ -23,7 +23,9 @@
   // Functions whose bare-identifier arguments are names (not variables).
   // `npc` is always resolved to the bound actor's id.
   const SYMBOLIC = new Set(['has', 'flag', 'left', 'rel', 'love', 'spark', 'bond', 'met', 'seen', 'since', 'chosen', 'bonds', 'npc_is', 'romanceable', 'tagged', 'passed', 'clue', 'spell_level', 'knows', 'npc_rel',
-    'enrolled', 'member', 'rank', 'performance', 'level', 'progress', 'due', 'visits', 'present', 'act', 'clock', 'discovered', 'applied', 'cast_as', 'plan', 'visits_to', 'clues']);
+    'enrolled', 'member', 'rank', 'performance', 'level', 'progress', 'due', 'visits', 'present', 'act', 'clock', 'discovered', 'applied', 'cast_as', 'plan', 'visits_to', 'clues',
+    // `offered(courses)`: how many options an `offers:` menu of that kind would generate now (playtest 2, I10)
+    'offered']);
   // Built-in identifiers the engine answers (env.ident); content can read but never assign them.
   const IDENTS = ['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa', 'runs_completed', 'wrapup', 'off_campus'];
   const FUNCS = new Set([...SYMBOLIC, 'rand', 'min', 'max', 'abs', 'floor', 'round', 'clamp', 'known', 'chance_of']);
@@ -33,7 +35,7 @@
     met: ['npc'], seen: ['event'], since: ['event'], chosen: ['event', null], npc_is: ['npc'], bonds: [null], romanceable: ['npc'], tagged: ['npc', null],
     passed: ['track', null], clue: ['clue'], spark: ['npc'], spell_level: ['spell'], knows: ['fact'], npc_rel: ['npc', 'npc'],
     enrolled: ['track'], member: ['track'], rank: ['track'], performance: ['track'], level: ['track'], progress: ['track'], due: ['track'], visits: ['track'], applied: ['track'],
-    present: ['place'], act: ['arc'], clock: ['arc'], discovered: ['place'], cast_as: [null, 'npc'], plan: [null], visits_to: ['place'], clues: ['arc'],
+    present: ['place'], act: ['arc'], clock: ['arc'], discovered: ['place'], cast_as: [null, 'npc'], plan: [null], visits_to: ['place'], clues: ['arc'], offered: [null],
   };
 
   function tokenize(s, file, line) {
@@ -206,7 +208,9 @@
       // `ramp: rel(npc) 18..30`: pushed outside the pools, more likely each month as the value climbs (M13)
       'ramp',
       // `per: <role>`: once / repeat count per character in that cast role (what `actor: any` did)
-      'per'], effects: ['on_show'], options: true },
+      'per',
+      // `defer: <expr>`: while true, a pushed card waits in the queue a month at a time instead of showing (I6)
+      'defer'], effects: ['on_show'], options: true },
     ending: { props: ['title', 'text', 'art', 'scene', 'when', 'priority', 'tags', 'kind', 'slot', 'excludes'], effects: [] },
     hook: { props: ['on', 'when', 'desc', 'label'], effects: ['do'] },
     // Worldbook (design §3): data for briefs, lint and later phases. The engine doesn't play these yet.
@@ -221,7 +225,7 @@
     lore: { props: ['keys', 'canon', 'text'], effects: [] },
     timeline: { props: ['date', 'kind', 'event', 'text'], effects: [] },
   };
-  const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'discover', 'hinted_when', 'unlock', 'prereq']);
+  const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'discover', 'hinted_when', 'unlock', 'prereq', 'defer']);
   const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment', 'warn_below',
     'schema', 'last_month', 'max_cards_per_day', 'level', 'rank', 'beat', 'pick', 'opens']);
   const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'params', 'draws', 'legacy', 'excludes', 'replaces', 'time', 'spread']);

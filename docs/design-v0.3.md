@@ -316,7 +316,7 @@ spread: social world
 
 **Run length:** 32 term months × ~11 cards + 15 break months × ~5 ≈ **425 decisions** *(checked at playtest #1)*.
 
-**The midnight turn** (playtest 2, M41; content X13): after an unsigned note in year 1 Stormbloom, a night card opens the midnight slot each on-campus month, after the night's cards (term, or a break at the castle or working on campus; not at home, on an internship, while locked out, or on the last day). "Sleep" costs nothing; "Go out" costs mood and health (−small each) and opens the midnight pick (`visit midnight`) among the places open then: the Gilded Newt, the boathouse, the refectory kitchens, the restricted section, the observatory and the gargoyle passage. Suspicion (I4): going out in term queues the suspicion card at 33% (`queue night_suspicion chance 33`), and a risky outcome queues it at its own odds (about 50%, by event); the cards never say whether you were seen, and two copies bring at most one card the next morning (about 66% for a risky night). If you weren't watched, you are now; if you were, a three-month lockout and detention, with gold and mood losses, and `watched` is cleared. Day events that give `watched` never lock you out.
+**The midnight turn** (playtest 2, M41; content X13): after an unsigned note in year 1 Stormbloom, a night card opens the midnight slot each on-campus month, after the night's cards (term, or a break at the castle or working on campus; not at home, on an internship, while locked out, or on the last day). "Sleep" costs nothing; "Go out" costs mood and health (−small each) and opens the midnight pick (`visit midnight`) among the places open then: the Gilded Newt, the boathouse, the refectory kitchens, the restricted section, the observatory and the gargoyle passage. Suspicion (I4): going out in term queues the suspicion card at 33% (`queue night_suspicion chance 33`), and a risky outcome queues it at its own odds (about 50%, by event); the cards never say whether you were seen, and two copies bring at most one card the next morning (about 66% for a risky night). Caught in a term's last month and off home or to an internship, the card waits until you're back on campus (`defer: off_campus`, I6). If you weren't watched, you are now; if you were, a three-month lockout and detention, with gold and mood losses, and `watched` is cleared. Day events that give `watched` never lock you out.
 
 ### 4.3 Break plans
 
@@ -336,7 +336,7 @@ v0.3 ships castle, home, work on campus and internships. Travel and internship m
 ### 4.4 Festivals and fixed beats
 
 - Fixed beats live in `@timeline` as dated `auto` events.
-- Festivals use `replaces: visit1 | visit2`: they appear on the map at their location in that visit, and going there draws the festival first. They no longer take the visit (playtest 2, B3): skipping a festival is a choice.
+- Festivals use `replaces: visit1 | visit2`: they appear on the map at their location in that visit, and going there draws the festival first. They no longer take the visit (playtest 2, B3): skipping a festival is a choice. A festival's place is closed in the day's earlier visits, getting ready (I5), so a visit there earlier can't use up the festival.
 
 ### 4.5 Re-pacing existing content
 
@@ -529,6 +529,7 @@ Concept: `docs/map-concept.svg` / `.png`.
 | visited today | dimmed, dashed ring: a place is picked at most once a day (I3); the midnight pick is exempt |
 | undiscovered | hidden under fog |
 | festival | glow + "festival this evening" (banner above the map) |
+| festival later today | dotted gold ring, closed: "getting ready for the festival this evening" (I5) |
 
 **Overlays:**
 - pins for characters present (from schedules; met characters only; at most 3, plus "+n");
@@ -602,7 +603,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 
 ### 7.3 Courses
 
-**Enrolment:** a menu at the start of each term with `pick: 2`, where `pick` is a new menu property.
+**Enrolment:** a menu at the start of each term with `pick: 2`, where `pick` is a new menu property. There is no "take no courses" option (playtest 2, I10: it could be combined with a course); a fallback appears only when no course is open to you (`offered(courses) == 0`).
 
 | When | Offered |
 |---|---|

@@ -21,7 +21,7 @@ const EFFECT_SLOTS = ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do
 const FIELDS = {
   '(every row)': 'node file line block (id of the enclosing block) block_kind tags (use has(x))',
   '(statements)': 'option (key, or "" outside options) slot ("option", "on_show", "tick", "do", …) depth (0 = top level) trigger actor (of the enclosing event)',
-  event: 'id title text_len trigger type actor weight weight_src repeat priority chain when_src options class tone track level rank place plan slot per arc beat',
+  event: 'id title text_len trigger type actor weight weight_src repeat priority chain when_src defer_src options class tone track level rank place plan slot per arc beat',
   state: 'id name kind group duration hidden',
   npc: 'id name romance start_rel age role year voice (has(trait) also matches traits and interests)',
   place: 'id name region map x y kind track discover_src',
@@ -94,7 +94,7 @@ function statementFields(st) {
 function blockFields(kind, d) {
   const base = { id: d.id };
   switch (kind) {
-    case 'event': return { ...base, title: d.title, text_len: (d.text || '').length, trigger: d.trigger, type: d.type, actor: d.actor || null, weight: d.weight ? constant(d.weight) : 10, weight_src: d.weight ? d.weight.src : null, repeat: d.repeat || 0, priority: d.priority == null ? null : d.priority, chain: d.chain || null, when_src: d.when ? d.when.src : null, options: d.options.length, class: d.class || null, tone: d.tone || null, track: d.track || null, level: d.level || null, rank: d.rank || null, place: d.place || null, plan: d.plan || null, slot: d.slot || null, per: d.per || null, arc: d.arc || null, beat: d.beat == null ? null : d.beat };
+    case 'event': return { ...base, title: d.title, text_len: (d.text || '').length, trigger: d.trigger, type: d.type, actor: d.actor || null, weight: d.weight ? constant(d.weight) : 10, weight_src: d.weight ? d.weight.src : null, repeat: d.repeat || 0, priority: d.priority == null ? null : d.priority, chain: d.chain || null, when_src: d.when ? d.when.src : null, defer_src: d.defer ? d.defer.src : null, options: d.options.length, class: d.class || null, tone: d.tone || null, track: d.track || null, level: d.level || null, rank: d.rank || null, place: d.place || null, plan: d.plan || null, slot: d.slot || null, per: d.per || null, arc: d.arc || null, beat: d.beat == null ? null : d.beat };
     case 'state': return { ...base, name: d.name, kind: d.kind || null, group: d.group || null, duration: d.duration == null ? null : d.duration, hidden: !!d.hidden };
     case 'npc': return { ...base, name: d.name, romance: !!d.romance, start_rel: d.start_rel || 0 };
     case 'ending': return { ...base, title: d.title, kind: d.kind || null, priority: d.priority || 0, when_src: d.when ? d.when.src : null };

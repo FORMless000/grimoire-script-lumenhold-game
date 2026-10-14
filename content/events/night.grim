@@ -1,7 +1,8 @@
 # The midnight turn (playtest 2, M41; stub — X13 fills it): after a lead-in in year 1 Stormbloom, a night card each
 # on-campus month, first in the midnight slot (after every night card), so going out leads straight to the pick. "Go out" opens the midnight pick (`visit midnight`); six places are open then. Going out in term
 # queues `night_suspicion` at 33%, and risky outcomes queue it at their own odds (I4); two copies bring at most one
-# card the next morning, the only way to a lockout. The cards never say whether you were seen.
+# card the next morning (or the first month back on campus), the only way to a lockout. The cards never say whether
+# you were seen.
 
 @event night_lead_in
 title: An Unsigned Note
@@ -48,6 +49,8 @@ text: {season == "winter": Frost on the window, and the corridors are colder tha
 title: A Word in the Morning
 trigger: queued
 slot: morning
+# Caught in a term's last month and off home or to an internship (I6): it waits until you're back on campus.
+defer: off_campus
 repeat: 1
 class: incident
 tone: tense

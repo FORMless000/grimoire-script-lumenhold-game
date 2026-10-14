@@ -1,0 +1,71 @@
+# Placeholders (playtest 2, I7): places whose ordinary visits could come up empty get one quiet card each, so a
+# visit always shows something. Low weight, so real cards win when they're available. Tagged `placeholder`: the
+# budget lint lists them instead of judging them, and X replaces them with real content.
+
+@event courier_loft_quiet_hour
+title: A Quiet Hour at the Loft
+place: courier_loft
+class: routine
+tone: warm
+repeat: 1
+weight: 2
+art: letter
+tags: placeholder job
+scene: An empty courier loft in slanting light, parcels stacked neatly, a single broom asleep in its rack.
+text: The Courier Loft is quiet today. The dispatch bell hangs still, the pigeonholes are full and nobody needs anything flown anywhere. It's a nice place when it isn't in a hurry.
+> left: Sit by the window a while
+  mood +tiny
+  say: {~You watch the brooms doze in their rack and the dust turn in the light. Nothing happens, pleasantly.|An hour among the parcels with nobody shouting your name. You leave in a better mood.}
+> right: Head off
+  say: {~You leave the loft to its quiet.|Nothing to fly today. You go and find something else to do.}
+
+@event headmistress_tower_quiet_hour
+title: An Empty Study
+place: headmistress_tower
+class: routine
+tone: warm
+repeat: 1
+weight: 2
+art: book
+tags: placeholder
+scene: A tower study with nobody in it, tea going cold on a tray, a board of crystal towers catching the afternoon sun.
+text: The study at the top of the tower is empty. The headmistress is elsewhere, the tea has gone cold and the crystal board by the window throws little rainbows on the books. It's a nice room when nobody is deciding your future in it.
+> left: Enjoy the view a moment
+  mood +tiny
+  say: {~You stand at the window and look down at the whole castle, small and busy. Then you go, before anyone asks why you're here.|The rainbows move slowly across the shelves. It's very peaceful, and a little like trespassing.}
+> right: Leave before anyone comes
+  say: {~You close the door softly behind you.|Nobody here today. You take the long stair down.}
+
+@event ledger_office_quiet_hour
+title: A Slow News Day
+place: ledger_office
+class: routine
+tone: warm
+repeat: 1
+weight: 2
+art: paper
+tags: placeholder club
+scene: A cramped newspaper office under a staircase, the press silent, old front pages curling on the walls.
+text: It's a slow news day at the Lumen Ledger. The press is cold, the editor's chair is empty and the only sound is the library above, creaking. It's a nice room when nobody is on deadline.
+> left: Read the old front pages
+  mood +tiny
+  say: {~You read headlines from before you were born. Half of them are about the refectory soup.|An hour with the old front pages. The castle has always been like this, it turns out.}
+> right: Come back on deadline night
+  say: {~Nothing to write today. You leave the press to its nap.|You tidy a stack of proofs and go.}
+
+@event flight_field_quiet_hour
+title: An Empty Field
+place: flight_field
+class: routine
+tone: warm
+repeat: 1
+weight: 2
+art: leaf
+tags: placeholder
+scene: A long green flying field with nobody on it, hoops at either end, grass flattened by the wind.
+text: Nobody is flying today. The Flight Field is all grass and wind, the hoops at either end swinging a little on their own. It's a nice place when nobody is crashing into it.
+> left: Lie in the grass a while
+  mood +tiny
+  say: {~You watch the clouds race the hoops. The clouds win.|The wind does the flying today. You just watch it.}
+> right: Walk on
+  say: {~You cut across the empty field and go on your way.|No lessons, no races. You leave the field to the wind.}

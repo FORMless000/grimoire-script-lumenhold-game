@@ -194,6 +194,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `scope` | text |  |
 |  | `ramp` | structured |  |
 |  | `per` | text |  |
+|  | `defer` | text |  |
 | | `on_show:` | effects | `say:` lines |
 | | `> key: Label` | option (`when:`, `hint:`, effects) | label, hint, `say:` |
 | `@ending id` | `title` | text | yes |
@@ -284,5 +285,5 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 
 ### Functions in expressions
 
-`abs()` · `act()` · `applied()` · `bond()` · `bonds()` · `cast_as()` · `chance_of()` · `chosen()` · `clamp()` · `clock()` · `clue()` · `clues()` · `discovered()` · `due()` · `enrolled()` · `flag()` · `floor()` · `has()` · `known()` · `knows()` · `left()` · `level()` · `love()` · `max()` · `member()` · `met()` · `min()` · `npc_is()` · `npc_rel()` · `passed()` · `performance()` · `plan()` · `present()` · `progress()` · `rand()` · `rank()` · `rel()` · `romanceable()` · `round()` · `seen()` · `since()` · `spark()` · `spell_level()` · `tagged()` · `visits()` · `visits_to()`
+`abs()` · `act()` · `applied()` · `bond()` · `bonds()` · `cast_as()` · `chance_of()` · `chosen()` · `clamp()` · `clock()` · `clue()` · `clues()` · `discovered()` · `due()` · `enrolled()` · `flag()` · `floor()` · `has()` · `known()` · `knows()` · `left()` · `level()` · `love()` · `max()` · `member()` · `met()` · `min()` · `npc_is()` · `npc_rel()` · `offered()` · `passed()` · `performance()` · `plan()` · `present()` · `progress()` · `rand()` · `rank()` · `rel()` · `romanceable()` · `round()` · `seen()` · `since()` · `spark()` · `spell_level()` · `tagged()` · `visits()` · `visits_to()`
 <!-- END GENERATED: schema -->

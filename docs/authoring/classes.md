@@ -4,7 +4,7 @@
 
 | Class | Rule | Measured |
 |---|---|---|
-| `routine` | strict budget: at least one cost or risky branch; within ±1.5 medium-equivalents | per event |
+| `routine` | strict budget: at least one cost or risky branch; within ±1.5 medium-equivalents. A routine card tagged `placeholder` (a stand-in for content still to write, playtest 2 I7) is listed by lint instead of judged | per event |
 | `milestone` | may be pure reward; capped at 2 large | per run: count and value |
 | `incident` | may be all-negative; must offer agency (mitigate vs accept) | per run: about 1–3 serious ones a year |
 | `windfall` | may be all-positive; capped at 1 large | per run: frequency band |

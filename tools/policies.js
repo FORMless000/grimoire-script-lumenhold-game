@@ -27,7 +27,10 @@ function estimate(eng, opt, actor, eventId) {
       // engagement with a plot: new clues, new flags, a queued follow-up (each distinct one once, whichever branch)
       if (st.t === 'find' && !(eng.s.clues || {})[st.clue]) seen.add('find:' + st.clue);
       if (st.t === 'flag') for (const f of st.names || []) if (!eng.s.flags[f]) seen.add('flag:' + f);
-      if (st.t === 'queue') seen.add('queue:' + st.event);
+      // A penalty card queued at odds (`queue … chance N`, I8) is a risk weighted by its odds, not engagement.
+      const q = st.t === 'queue' && eng.c.events[st.event];
+      if (q && st.chance != null && ['incident', 'crisis'].includes(q.class)) add('risk', st.chance / 100, 1);
+      else if (st.t === 'queue') seen.add('queue:' + st.event);
     });
     for (const k of seen) add(k.slice(0, k.indexOf(':')), 1, 1);
     return out;
@@ -110,6 +113,7 @@ function scorer(name, weights, guard = 4) {
           let w = weights[k];
           if (w == null) w = weights[k.slice(0, k.indexOf(':') + 1)] ?? (SKILLS.includes(k) ? weights.skill : null) ?? 0;
           if (typeof w === 'function') w = w(k);
+          if (k === 'risk') w = weights.risk ?? -3;   // a queued penalty card's odds (I8)
           if (RESOURCES.includes(k) && k !== 'renown' && eng.s.vals[k] <= 25) w *= guard;
           sc += w * v;
         }

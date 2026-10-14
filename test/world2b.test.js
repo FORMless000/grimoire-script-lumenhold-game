@@ -482,3 +482,68 @@ test('fixed shifts: off shift a job visit is ordinary, the hint comes once, one 
   assert.ok(!cards.some((id) => content.events[id] && content.events[id].track === 'library_assistant'), 'no shift card off shift');
   assert.equal(eng.eligible(content.events.job_off_shift, new Set()), false, 'once a run');
 });
+
+// Drive one month with simple choices; `onMap(view, k)` returns a place id or null for each map.
+function driveMonth(eng, onMap, onCard = () => {}) {
+  let r = quiet(() => eng.advance()), maps = 0;
+  const turn = eng.s.turn;
+  for (let i = 0; i < 300 && eng.s.turn === turn && r.kind !== 'month' && r.kind !== 'ending'; i++) {
+    if (r.kind === 'map') { eng.pickPlaces([onMap(r.view, maps++)]); r = quiet(() => eng.advance()); continue; }
+    const open = r.view.options.filter((o) => !o.disabled), k = onCard(r.view) || open[0].key;
+    quiet(() => eng.choose(r.view.pick > 1 ? [k] : k)); r = quiet(() => eng.advance());
+  }
+}
+
+test('a festival place is closed until its festival (I5)', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 10, name: 'T' }); });
+  eng.s.turn = 2; eng.s.deck = []; eng.s.places.lakeshore = { found: 1 }; eng.startDay();
+  const seen = [];
+  driveMonth(eng, (view) => { seen.push(view.places.find((p) => p.id === 'lakeshore')); return null; });
+  assert.ok(seen.length >= 2, 'two visits');
+  assert.equal(seen[0].festLater, 'evening'); assert.notEqual(seen[0].state, 'open');
+  assert.ok(seen[1].state === 'open' && !seen[1].festLater && seen[1].festival.length, 'open for the festival');
+});
+
+test('defer: a suspicion card waits until you are back on campus (I6)', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 11, name: 'T' }); });
+  eng.s.turn = 5; eng.s.cur = null; eng.s.states.plan_home = { left: null };
+  eng.s.deck = [{ id: 'night_suspicion', actor: null, src: 'queued' }];
+  const r = quiet(() => eng.advance());
+  assert.ok(!(r.kind === 'card' && r.view.id === 'night_suspicion'), 'not shown while away');
+  assert.ok(eng.s.queue.some((q) => q.id === 'night_suspicion' && q.due === eng.s.turn + 1), 'back in the queue for next month');
+  delete eng.s.states.plan_home; eng.s.cur = null;
+  eng.s.deck = [{ id: 'night_suspicion', actor: null, src: 'queued' }];
+  assert.equal(quiet(() => eng.advance()).view.id, 'night_suspicion', 'shown on campus');
+});
+
+test('break work: term jobs pay nothing on a break, the holiday gigs still do (I9)', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 12, name: 'T' }); });
+  const ctx = eng.newCtx(null, null);
+  eng.trackOp({ t: 'join', track: 'library_assistant' }, ctx);
+  eng.s.places.library = { found: 1 };
+  eng.s.turn = 5; eng.s.deck = []; eng.s.queue = []; eng.s.cur = null;
+  assert.equal(eng.phaseOf(), 'break');
+  eng.startDay();
+  const cards = [], gold = [];
+  driveMonth(eng, (view) => (view.places.find((p) => p.id === 'library' && p.state === 'open' && p.open[0]) ? 'library' : null),
+    (v) => { cards.push(v.id); gold.push(eng.s.vals.gold); return { break_plan: 'work', holiday_gigs: 'grounds' }[v.id]; });
+  assert.ok(eng.s.states.plan_work && eng.s.states.gig_grounds, 'working on campus, on the grounds');
+  assert.ok(cards.some((id) => /^gig_grounds_/.test(id)), 'a gig card');
+  assert.ok(!cards.some((id) => content.events[id] && content.events[id].track === 'library_assistant'), 'no shift card on a break');
+  assert.ok(!eng.s.hist.some((h) => h.t === 'pick' && h.deltas && h.deltas.gold > 0), 'no job pay for the visit');
+  assert.ok(Object.values(content.events).filter((e) => (e.track || '').startsWith('intern_')).every((e) => e.options.every((o) => JSON.stringify(o.effects).includes('"wage"'))), 'internships still pay through their host cards');
+});
+
+test('enrolment: no "take no courses"; a fallback only when nothing is offered (I10)', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 13, name: 'T' }); });
+  eng.s.cur = { id: 'enrolment', actor: null };
+  const keys = eng.view(eng.s.cur).options.map((o) => o.key);
+  assert.ok(keys.length >= 2 && !keys.includes('none'), 'only courses');
+  assert.ok(eng.test(G.parseFile('@event x\ntitle: X\ntext: x\nwhen: offered(courses) > 0\n> left: A\n  say: a\n> right: B\n  say: b\n', 't.grim')[0].when, null));
+  eng.offered = () => [];
+  assert.deepEqual(eng.view(eng.s.cur).options.map((o) => o.key), ['none'], 'the fallback, so the menu never soft-locks');
+});

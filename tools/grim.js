@@ -128,6 +128,7 @@ function analyze(content) {
           else if (kind === 'track') { if (!content.tracks[a.v] && !((n.n === 'member' || n.n === 'applied') && KIND_ARGS.has(a.v))) P('error', where, n.n + '(): unknown track "' + a.v + '"'); }
           else if (kind === 'clue') { if (!Object.values(content.arcs).some((arc) => (arc.clues || []).includes(a.v))) P('error', where, 'clue(' + a.v + '): not a clue of any @arc'); }
           if (n.n === 'bonds' && !KNOWN_BONDS.has(a.v)) P('warn', where, 'unknown bond status "' + a.v + '"');
+          if (n.n === 'offered' && !['courses', 'clubs', 'jobs'].includes(a.v)) P('error', where, 'offered(): takes courses, clubs or jobs, not "' + a.v + '"');
         });
         if (n.n === 'chosen' && n.args[0] && n.args[0].t === 'sym' && n.args[1] && n.args[1].t === 'sym') {
           const ev = content.events[n.args[0].v];
@@ -246,7 +247,7 @@ function analyze(content) {
     if (e.trigger === 'social' && !e.actor && !e.per) P('warn', w, 'social event without actor (or per: <cast role>)');
     if (e.art && !Art.has(e.art)) P('warn', w, 'unknown art "' + e.art + '" (see src/art.js; available: ' + Art.list().join(' ') + ')');
     if (!e.art) P('info', w, 'event has no art');
-    scanExpr(e.when, w, hasActor); scanExpr(e.weight, w, hasActor);
+    scanExpr(e.when, w, hasActor); scanExpr(e.weight, w, hasActor); if (e.defer) scanExpr(e.defer, w, hasActor);
     if (e.ramp) { scanExpr(e.ramp.expr, w, hasActor); if (e.trigger === 'queued' || e.trigger === 'auto') P('warn', w, 'ramp: a queued or auto event is pushed already; the ramp is ignored'); }
     scanText(e.title, w, hasActor); scanText(e.text, w, hasActor); scanText(e.scene, w, hasActor);
     { const n = longestRendering(e.text || ''); if (n > 480) P('warn', w, 'card text is long (' + n + ' chars at its longest; aim for < 400)'); }
@@ -389,13 +390,15 @@ function budgetCheck(e, content, P) {
     let pv; try { pv = eng.preview(e.id, o.key, actor); } catch (err) { continue; }
     const value = (d) => Object.entries(d).reduce((a, [k, r]) => a + weight(k) * ((r[0] + r[1]) / 2) / medium(k), 0);
     const exp = pv.paths.reduce((a, p) => a + p.p * value(p.deltas), 0);
-    // A card queued at odds (`queue … chance N`, I4) is a risk too.
-    let atOdds = false; G.walkEffects(o.effects, (st) => { if (st.t === 'queue' && st.chance != null) atOdds = true; });
+    // A penalty card (incident or crisis) queued at odds (`queue … chance N`, I4, I8) is a risk too.
+    let atOdds = false; G.walkEffects(o.effects, (st) => { const q = st.t === 'queue' && st.chance != null && content.events[st.event]; if (q && ['incident', 'crisis'].includes(q.class)) atOdds = true; });
     const hasCost = atOdds || pv.paths.length > 1 || Object.values(pv.deltas).some((r) => r[0] < 0);
     for (const [k, r] of Object.entries(pv.deltas)) if (Math.max(Math.abs(r[0]), Math.abs(r[1])) >= eng.tierAmount(row(k) === 'xp' ? Object.keys(content.skills)[0] : row(k), 'large')) larges++;
     rows.push({ key: o.key, exp, hasCost });
   }
-  if (e.class === 'routine') {
+  // A placeholder card (I7) stands in for content still to write: listed, not judged.
+  if (e.class === 'routine' && (e.tags || []).includes('placeholder')) P('info', 'placeholder card (to be replaced with real content)');
+  else if (e.class === 'routine') {
     // A free option is fine as the small, safe choice (≤ 0.5 medium-equivalents) beside a costly or risky one.
     const risky = rows.some((r) => r.hasCost);
     for (const r of rows) {
@@ -895,7 +898,9 @@ function balance(opts = {}) {
   const fail = (msg) => report.invariants.push(msg), alarm = (msg) => report.alarms.push(msg);
   // Static invariants
   for (const e of Object.values(content.events)) {
-    if (e.type === 'menu' && e.options.every((o) => o.when)) fail('menu ' + e.id + ' (' + e.file + ':' + e.line + '): every option has a "when", so it can be empty');
+    // An `offers:` menu whose fallback appears exactly when nothing is offered (`offered(kind) == 0`, I10) is never empty.
+    const fallback = e.offers && e.options.some((o) => o.when && o.when.src.replace(/\s+/g, '') === 'offered(' + e.offers + ')==0');
+    if (e.type === 'menu' && !fallback && e.options.every((o) => o.when)) fail('menu ' + e.id + ' (' + e.file + ':' + e.line + '): every option has a "when", so it can be empty');
   }
   // Hard invariant: previews contain the outcomes (random play, many games).
   const pt = { cards: 0, misses: [] };

@@ -100,6 +100,8 @@
       const slots = picking ? [this.recipe()[d.at].slot] : this.visitSlots();
       // Festivals (B3, M1) no longer take the visit: their place is highlighted in their slot, and picking it draws the festival.
       const fest = this.festivals().filter((f) => !picking || f.visit === vi).map((f) => Object.assign({}, f, { visit: picking ? 0 : f.visit }));
+      // A place with a festival later today is closed until then (playtest 2, I5): it is getting ready.
+      const later = picking ? this.festivals().filter((f) => f.visit > vi) : [];
       // Which map (design §4.3): home for the home plan, the host's map during an internship, else the campus.
       let breakMap = 'campus';
       if (this.phaseOf() === 'break' && s.states.plan_home) breakMap = 'home';
@@ -119,7 +121,8 @@
         const names = (e) => e.slot === slots[0] || (e.time || []).includes(slots[0]);
         // One visit per place a day (playtest 2, I3); an opened slot's places are different places at night.
         const visited = picking && !opened && d.picks.includes(p.id);
-        const open = slots.map((sl) => found && !visited && this.placeOpen(p, sl) && (!opened || (this.directorIndex().byPlace[p.id] || []).concat(p.track ? this.directorIndex().byTrack[p.track] || [] : []).some(names)));
+        const waiting = later.find((f) => f.place === p.id);
+        const open = slots.map((sl) => found && !visited && !waiting && this.placeOpen(p, sl) && (!opened || (this.directorIndex().byPlace[p.id] || []).concat(p.track ? this.directorIndex().byTrack[p.track] || [] : []).some(names)));
         const t = p.track && s.tracks[p.track] && s.tracks[p.track].status === 'member' ? s.tracks[p.track] : null;
         const here = found ? [...new Set(slots.flatMap((sl) => this.presentAt(p.id, sl).filter((id) => s.npcs[id] && s.npcs[id].met)))] : [];
         const ix = this.directorIndex();
@@ -129,7 +132,7 @@
           // A job whose shifts are all done this term (I1) says so.
           track: t ? Object.assign({ id: p.track, kind: this.c.tracks[p.track].kind }, this.phaseOf() === 'break' ? { due: null, urgent: false } : { due: Math.max(0, (t.due || 0) - (t.visits || 0)), urgent: this.isTermEnd() && t.visits < t.due },
             this.phaseOf() !== 'break' && this.c.tracks[p.track].kind === 'job' && t.visits >= (t.due || 0) ? { done: true } : {}) : null,
-          visited: visited || undefined,
+          visited: visited || undefined, festLater: waiting ? this.visitSlots()[waiting.visit] : undefined,
           present: here, news, festival: fest.filter((f) => f.place === p.id).map((f) => ({ slot: slots[f.visit], event: f.event })) });
       }
       return { map: breakMap, slots, places, locked: [], festivals: fest.filter((f) => f.visit < slots.length).map((f) => ({ slot: slots[f.visit], place: f.place, event: f.event })),

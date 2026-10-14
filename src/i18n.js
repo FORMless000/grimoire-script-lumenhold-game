@@ -211,6 +211,8 @@
     'map.shiftsDone': 'Shifts · all done this term',
     'map.visitedNow': 'visited today',
     'map.visitedToday': 'You’ve already been to {name} today.',
+    'map.festivalSoon': 'getting ready for the festival this {slot}',
+    'map.festivalLater': '{name} is closed while it gets ready for the festival this {slot}.',
     'map.sessionsLeft': 'Session · {n} left',
     'menu.confirm': 'Confirm ({n}/{max})',
     'note.grade': '{track}: {grade}',

@@ -23,10 +23,9 @@ scene: The registrar's hall at the start of term, students queueing at long tabl
 text: {term_index == 1: Your first term. The registrar slides a list across the desk: four courses open to first-years.|A new term, and a new list. Courses you've passed are gone from it; new levels have appeared.} Choose two. Course fees are eight crowns.
 on_show:
   gold -small
-> none: Take no courses this term
-  hint: Allowed. Your GPA will not thank you.
-  mood +small
-  say: You hand back the list blank. The registrar raises one eyebrow, which is the whole of her opinion.
+> none: There is nothing left for you to take
+  when: offered(courses) == 0
+  say: The registrar checks the list twice. Nothing on it is open to you this term. "Enjoy the quiet," she says, without much conviction.
 
 # ---------------- Club Fair (design §7.4): one club at a time ----------------
 

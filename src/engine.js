@@ -627,6 +627,7 @@
             case 'member': {   // member(club), member(job), …: in any track of that kind (as `leave club`)
               if (!eng.c.tracks[a[0]] && eng.trackKinds().has(a[0])) return Object.values(eng.s.tracks || {}).some((t) => t.kind === a[0] && t.status === 'member');
               const t = eng.trackState(a[0]); return !!t && t.status === 'member'; }
+            case 'offered': return eng.offered(a[0]).length;   // offered(courses): what an `offers:` menu would list (I10)
             case 'applied': {   // applied(internship): to any of that kind
               if (!eng.c.tracks[a[0]] && eng.trackKinds().has(a[0])) return Object.values(eng.s.tracks || {}).some((t) => t.kind === a[0] && t.status === 'applied');
               const t = eng.trackState(a[0]); return !!t && t.status === 'applied'; }
@@ -1219,6 +1220,11 @@
         const e = this.c.events[item.id];
         if (!e) { this.warn(new Error('unknown event in deck: ' + item.id)); continue; }
         if (e.actor && e.actor !== 'any' && e.actor !== 'npc') item.actor = e.actor;
+        // `defer:` (playtest 2, I6): while it holds, a pushed card goes back to the queue for next month instead of showing.
+        if (e.defer && !item.force && this.test(e.defer, item.actor || null)) {
+          s.queue.push({ id: item.id, actor: item.actor || null, due: s.turn + 1, track: item.track, cast: item.cast, src: 'queued' });
+          continue;
+        }
         // item.force (debug/preview) skips the `when` check
         if ((e.actor === 'any' || e.actor === 'npc' || (e.cast && !item.cast)) && !item.actor && !item.cast) {
           this._place = item.place || null; this._slot = item.slot || null;
