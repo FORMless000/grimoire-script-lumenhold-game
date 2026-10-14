@@ -139,6 +139,49 @@ text: The owner is short-handed. "Double shifts for a month," he says. "Double p
   study -small
   say: A month of late nights and early lectures. Your purse is heavy. So are your eyelids.
 
+# Hazards of the job (L-1): minor incidents that show why the Newt's pay is higher.
+
+@event tavern_broken_glass
+title: Broken Glass
+class: incident
+tone: tense
+track: tavern
+repeat: 6
+weight: 8
+art: cup
+tags: job danger
+scene: A tavern floor glittering with broken tankards, a server crouching with a cloth, a dog padding closer.
+text: {A tray of tankards meets a regular's elbow, and the floor is suddenly all glass.|Another tray, another floor of glass. The Newt goes through tankards the way other places go through napkins.} {~The regular is very sorry, loudly.|Everyone lifts their feet.|The dog is already heading for it.}
+> left: Clear it by hand, fast
+  wage
+  health -small
+  perform track +tiny
+  say: {~You have it cleared before the dog gets there, with a cut across your palm to show for it. The landlady binds it with a bar towel.|Fast and thorough, apart from the sliver you find in your thumb at midnight.}
+> right: Fetch the broom and do it properly
+  wage
+  perform track -tiny
+  say: {~By the time you're back with the broom, three customers have left with their cider unfinished. The landlady counts them.|You sweep slowly and safely while the bar goes dry. The landlady taps the clock.}
+
+@event tavern_after_closing
+title: After Closing
+class: incident
+tone: tense
+track: tavern
+repeat: 6
+weight: 8
+art: lantern
+tags: job danger
+scene: A lantern-lit shore path at night, a tired server walking alone beside black water, the castle's towers far off.
+text: {The Newt closes long after the last barge.|Closing time again, and the lake is dark.} {season == "winter": The shore path is ice under snow.|{~Fog has come off the water.|The shore path is very dark tonight.|Somebody is singing, badly, a long way off.}} It's a long walk round the lake to the castle.
+> left: Walk the shore path
+  wage
+  health -small
+  say: {~Two hours round the lake, and every noise in the reeds is something. You reach the gates with wet boots and a turned ankle.|You walk home in the dark and slip twice. You fall into bed as the first bell rings.}
+> right: Sleep by the Newt's fire
+  wage
+  study -tiny
+  say: {~The landlady lends you a blanket and the settle by the fire. You wake at dawn smelling of woodsmoke and miss the first lecture.|You sleep on the settle under somebody's coat and catch the morning barge, too late for your first class.}
+
 # ---------------- Apothecary Clerk ----------------
 
 @event apoth_wrong_label
@@ -448,6 +491,55 @@ text: Three figures on patched brooms drop out of a cloud and box you in. "Toll,
       health -medium
       gold -medium
       say: They catch you, take the toll, the parcel and your hat. The parrot wears it.
+
+# Hazards of the job (L-1): minor incidents that show why the courier's pay is higher.
+
+@event broom_courier_bad_landing
+title: A Bad Landing
+class: incident
+tone: tense
+track: broom_courier
+repeat: 6
+weight: 8
+art: broom
+tags: job danger
+scene: A courier sprawled on wet flagstones beside a broom, parcels scattered across a rain-slick courtyard.
+text: {The courtyard flagstones are wet, and your broom has opinions about wet flagstones.|Another wet landing. Your knees remember the last one.} {~You come in too fast.|A gust takes the tail as you drop.|A pigeon chooses this moment to exist.} You hit the ground rolling, and your ankle says no.
+> left: Finish the round anyway
+  wage
+  health -small
+  perform track +tiny
+  say: {~You limp the last three parcels to their doors. The dispatcher notes your time and, later, your ankle.|You finish the round on one good leg and a great deal of stubbornness. The bruise is spectacular by evening.}
+> right: Hand your sack to another courier
+  wage short
+  health -tiny
+  say: {~Another courier takes your sack with a sympathetic wince. Half a shift's pay, and an evening with your foot up.|You sit on the loft steps with a cold cloth on your ankle while someone else flies your round. They keep half the pay.}
+
+@event broom_courier_lost_parcel
+title: One Parcel Short
+class: incident
+tone: tense
+track: broom_courier
+repeat: 6
+weight: 8
+art: letter
+tags: job danger
+scene: A courier on a windy tower top turning an empty mail sack inside out, the lake far below.
+text: {Somewhere between the loft and the lecture tower, a parcel has left your sack.|One parcel short, again. You've started counting at every landing.} {~It was marked "Fragile".|It was marked "Urgent", in red, twice.|It was addressed to a professor.}
+> left: Retrace your route
+  wage
+  challenge research using guile easy:
+    win:
+      health -tiny
+      say: {~You find it in a hedge behind the greenhouses, whole and slightly damp. You deliver it late, with a story nobody believes.|It's on the boathouse roof. You climb up for it and deliver it with moss on your knees.}
+    lose:
+      gold -small
+      perform track -small
+      say: {~You search until dark. The loft takes the parcel's worth from your pay, and the dispatcher stops calling you reliable.|Nothing. The client complains twice, in writing, and the loss comes out of your wages.}
+> right: Report it lost at once
+  wage
+  gold -small
+  say: {~The dispatcher writes it in the ledger and the loss in your pay. "Happens," they say, in a voice that means it shouldn't.|You own up straight away. The loft takes it out of your wages, but the dispatcher seems to think better of you for it.}
 
 # ---------------- Off shift (playtest 2, I1) ----------------
 

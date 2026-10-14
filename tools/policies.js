@@ -32,7 +32,8 @@ function estimate(eng, opt, actor, eventId) {
     G.walkEffects(opt.effects, (st) => {
       if (st.t === 'gain') { const d = eng.c.states[st.state]; if (d && d.kind && !eng.s.states[st.state]) add('gain:' + d.kind, 1, 1); }
       if (st.t === 'learn_spell' && !(eng.s.spells || {})[st.spell]) add('learn', 1, 1);
-      if (st.t === 'leave' && leaving(eng, st)) add('gain:track', -1, 1);   // giving up a club or job you have
+      if (st.t === 'leave' && leaving(eng, st)) add('gain:' + leavingKind(eng, st), -1, 1);   // giving up a club or job you have
+      if (st.t === 'join' && joining(eng, st)) add('gain:' + eng.c.tracks[st.track].kind, 1, 1);   // a new club or job
       // engagement with a plot: new clues, new flags, a queued follow-up (each distinct one once, whichever branch)
       if (st.t === 'find' && !(eng.s.clues || {})[st.clue]) seen.add('find:' + st.clue);
       if (st.t === 'flag') for (const f of st.names || []) if (!eng.s.flags[f]) seen.add('flag:' + f);
@@ -57,7 +58,8 @@ function estimate(eng, opt, actor, eventId) {
         case 'rel': case 'spark': add(st.t + ':' + (st.npc === 'npc' ? actor : st.npc), amount(eng, st, st.t), w); break;
         case 'bond': if (['friend', 'close', 'partner'].includes(st.status)) add('bond:' + (st.npc === 'npc' ? actor : st.npc), 20, w); break;
         case 'gain': { const d = eng.c.states[st.state]; if (d && d.kind && !eng.s.states[st.state]) add('gain:' + d.kind, 1, w); break; }
-        case 'leave': if (leaving(eng, st)) add('gain:track', -1, w); break;
+        case 'leave': if (leaving(eng, st)) add('gain:' + leavingKind(eng, st), -1, w); break;
+        case 'join': if (joining(eng, st)) add('gain:' + eng.c.tracks[st.track].kind, 1, w); break;
         case 'if': {
           const br = st.branches.find((b) => eng.test(b.cond, actor));
           walk(br ? br.body : st.else, w);
@@ -77,6 +79,13 @@ function estimate(eng, opt, actor, eventId) {
 function leaving(eng, st) {
   const t = (eng.s.tracks || {})[eng.trackTarget(st, eng._ctxTrack || (eng.s.cur && eng.s.cur.track))];
   return !!t && t.status === 'member' && (t.kind === 'job' || t.kind === 'club');
+}
+// The kind of club or job a `leave` gives up.
+function leavingKind(eng, st) { return eng.s.tracks[eng.trackTarget(st, eng._ctxTrack || (eng.s.cur && eng.s.cur.track))].kind; }
+// Whether a `join` takes up a club, job or society the player isn't in (`gain:<kind>` to the scorers, like a state).
+function joining(eng, st) {
+  const d = eng.c.tracks[st.track], t = (eng.s.tracks || {})[st.track];
+  return !!d && ['job', 'club', 'society'].includes(d.kind) && !(t && t.status === 'member');
 }
 // The amount of a delta/rel/spark statement: a tier word resolves through @balance sizes.
 function amount(eng, st, row, edge) { return st.tier ? st.sign * eng.tierAmount(row, st.tier) : edge === 'max' ? st.max : (st.min + st.max) / 2; }
@@ -103,7 +112,11 @@ const SKILLS = ['arcana', 'lore', 'alchemy', 'charm', 'vigor', 'guile'];
 
 // A scoring play style. weights: per key (resource / skill) or per prefix ('rel:', 'spark:', 'bond:', 'skill').
 // guard: weight multiplier for a resource that is low (<= 25), so most styles try to survive.
+// Every scorer also minds what a player keeping up with their work minds (L-1): exam preparation (a point of `study`
+// is a point on the exam check), a job's or club's performance (at 0 you're dropped) and the thesis.
+const WORK = { 'study:': 1, 'perf:': 0.3, 'progress:': 0.5 };
 function scorer(name, weights, guard = 4) {
+  weights = Object.assign({}, WORK, weights);
   return {
     name,
     pick(eng, view) {

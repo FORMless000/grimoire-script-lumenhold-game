@@ -636,6 +636,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - **Joining or changing:** the Club Fair (Emberwane) and the **Job Board place**. Visiting it *is* the change event. At the fair a member stays, resigns or switches; a switch shows what it leaves (rank and performance). The job board lists each job's pay per shift. Declining gives no mood (playtest 2, M23, M35).
 - **Each term:** joining mid-term asks at most one visit per month left (M34). At term end every job asks whether you stay on (`job_term_review`, M33).
 - **Pay through events** (M10): a job visit draws a shift card first, and its options pay the wage (`wage`, a share of `pay:` at your rank) with tips and fines as the spread.
+- **Pay by hazard** (playtest 2, L-1): one base (15 / 21 / 27 a shift by rank); the hazardous jobs (the courier's flights, the Newt's nights) pay a quarter more and show the hazard in minor incident cards (a bad landing, a lost parcel, broken glass, the walk home after closing); the quiet ones (the library, the apothecary's counter) pay a fifth less.
 - **Fixed shifts** (playtest 2, I1, I2): `due:` is the number of shifts a term, not a minimum. Only those visits are shifts (shift card, pay, performance, rank XP); later visits that term, and every visit on a break, are ordinary visits to the place. Vacation work comes from the break plan ("Work on campus" and its gigs).
 - **Ranks:**
   - Promotion = performance ≥ 70 + rank XP (from track events) + a milestone event. A new rank starts at performance 50 (M12).
@@ -723,9 +724,9 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 
 | Cost | Amount |
 |---|---|
-| rent and board | 10 / term month; break: castle 6, home 0, travel varies |
-| tuition | 40 / term (scholarship origin −50%) |
-| course fees | 5 / course / term |
+| rent and board | 8 / term month; break: castle or campus work 8, home 0, travel varies |
+| tuition | 16 / term (L24: noble and merchant families pay it; the scholarship pays half) |
+| course fees | 8 / term, at enrolment |
 
 - **Forced sinks** (`class: incident`, pushed, rare): medical bills, family emergencies, fines, a broken wand.
 - **Unpaid rent or board** → `hungry` (−4 health, −4 mood a month). Twice in a row → debt with Grisk.

@@ -104,6 +104,38 @@ opt.right.label [124a34] = 接下加班
 # en: A month of late nights and early lectures. Your purse is heavy. So are your eyelids.
 opt.right.say.1 [bef75a] = 一个月的深夜打工和清早上课。你的钱袋沉甸甸的。眼皮也是。
 
+@event tavern_broken_glass
+# en: Broken Glass
+title [6a7d8c] = 打碎的酒杯
+# en: {A tray of tankards meets a regular's elbow, and the floor is suddenly all glass.|Another tray, another floor of glass. The Newt goes through tankards the way other places go through napkins.} {~The regular is very sorry, loudly.|Everyone lifts their feet.|The dog is already heading for it.}
+text [4e9a93] = {一托盘酒杯撞上了一位常客的胳膊肘，地上顿时满是碎玻璃。|又一托盘，又是一地玻璃。蝾螈酒馆消耗酒杯的速度，就像别处消耗餐巾。} {~那位常客大声地连连道歉。|所有人都把脚抬了起来。|那条狗已经朝碎片走过去了。}
+# en: A tavern floor glittering with broken tankards, a server crouching with a cloth, a dog padding closer.
+scene [6d91e1] = 酒馆地板上闪着碎酒杯的光，一名侍应蹲着拿抹布，一条狗正慢慢凑近。
+# en: Clear it by hand, fast
+opt.left.label [b1cbdf] = 徒手快快收拾
+# en: {~You have it cleared before the dog gets there, with a cut across your palm to show for it. The landlady binds it with a bar towel.|Fast and thorough, apart from the sliver you find in your thumb at midnight.}
+opt.left.say.1 [d8769f] = {~你赶在狗之前收拾干净了，手掌上多了一道口子作证。老板娘用一条吧台毛巾给你包上。|又快又干净，只是半夜你才在拇指里发现一根玻璃碴。}
+# en: Fetch the broom and do it properly
+opt.right.label [32e157] = 拿扫帚好好扫
+# en: {~By the time you're back with the broom, three customers have left with their cider unfinished. The landlady counts them.|You sweep slowly and safely while the bar goes dry. The landlady taps the clock.}
+opt.right.say.1 [32d375] = {~等你拿着扫帚回来，已经有三个客人苹果酒没喝完就走了。老板娘一个个数着。|你慢慢地、稳稳地扫，吧台那边却断了酒。老板娘敲了敲钟。}
+
+@event tavern_after_closing
+# en: After Closing
+title [c895a2] = 打烊之后
+# en: {The Newt closes long after the last barge.|Closing time again, and the lake is dark.} {season == "winter": The shore path is ice under snow.|{~Fog has come off the water.|The shore path is very dark tonight.|Somebody is singing, badly, a long way off.}} It's a long walk round the lake to the castle.
+text [f4a9dd] = {蝾螈酒馆打烊时，末班驳船早就开走了。|又到打烊时分，湖面一片漆黑。} {season == "winter": 湖岸小路上是雪下的冰。|{~湖上起了雾。|今晚的湖岸小路格外黑。|远处有人在唱歌，唱得很难听。}} 绕湖走回城堡，路还很长。
+# en: A lantern-lit shore path at night, a tired server walking alone beside black water, the castle's towers far off.
+scene [f876cc] = 夜里一条提灯照亮的湖岸小路，一名疲惫的侍应独自走在黑水边，城堡的塔楼远在天边。
+# en: Walk the shore path
+opt.left.label [8e64c1] = 走湖岸小路
+# en: {~Two hours round the lake, and every noise in the reeds is something. You reach the gates with wet boots and a turned ankle.|You walk home in the dark and slip twice. You fall into bed as the first bell rings.}
+opt.left.say.1 [c4c78a] = {~绕湖走了两个钟头，芦苇里每一声响都像有什么东西。你走到城门时靴子湿透，脚踝也扭了。|你摸黑走回去，滑倒了两次。第一遍钟响时你才倒在床上。}
+# en: Sleep by the Newt's fire
+opt.right.label [66046e] = 睡在酒馆炉边
+# en: {~The landlady lends you a blanket and the settle by the fire. You wake at dawn smelling of woodsmoke and miss the first lecture.|You sleep on the settle under somebody's coat and catch the morning barge, too late for your first class.}
+opt.right.say.1 [07ff41] = {~老板娘借你一条毯子，让你睡炉边的长椅。你在黎明醒来，一身木烟味，错过了第一节课。|你盖着不知谁的外套睡在长椅上，搭上了早班驳船，却赶不上第一节课了。}
+
 @event apoth_wrong_label
 # en: A Mislabelled Jar
 title [2e5055] = 贴错的标签
@@ -325,6 +357,40 @@ opt.right.label [a811f6] = 甩掉他们
 opt.right.say.1 [b17031] = 你俯冲穿过云堤，在湖面上空甩掉了他们。客户因为这份刺激多给了小费。
 # en: They catch you, take the toll, the parcel and your hat. The parrot wears it.
 opt.right.say.2 [8905f7] = 他们追上了你，拿走了过路费、包裹，还有你的帽子。鹦鹉戴上了它。
+
+@event broom_courier_bad_landing
+# en: A Bad Landing
+title [cc3b0c] = 摔了一跤
+# en: {The courtyard flagstones are wet, and your broom has opinions about wet flagstones.|Another wet landing. Your knees remember the last one.} {~You come in too fast.|A gust takes the tail as you drop.|A pigeon chooses this moment to exist.} You hit the ground rolling, and your ankle says no.
+text [30a3b6] = {庭院的石板是湿的，而你的扫帚对湿石板很有意见。|又是一次湿漉漉的降落。你的膝盖还记得上一次。} {~你降得太快了。|你往下落时一阵风掀起了扫帚尾。|一只鸽子偏偏挑这个时候出现。} 你滚着落了地，脚踝说：不行。
+# en: A courier sprawled on wet flagstones beside a broom, parcels scattered across a rain-slick courtyard.
+scene [20fcd9] = 一名信使摔倒在湿漉漉的石板上，扫帚在旁，包裹散落在雨水打湿的庭院里。
+# en: Finish the round anyway
+opt.left.label [bde896] = 坚持送完这一趟
+# en: {~You limp the last three parcels to their doors. The dispatcher notes your time and, later, your ankle.|You finish the round on one good leg and a great deal of stubbornness. The bruise is spectacular by evening.}
+opt.left.say.1 [04c489] = {~你一瘸一拐地把最后三个包裹送到门口。派件员记下了你的用时，后来又记下了你的脚踝。|你靠一条好腿和满满的倔劲送完了这一趟。到晚上，那块淤青壮观极了。}
+# en: Hand your sack to another courier
+opt.right.label [54b1a8] = 把邮袋交给别人
+# en: {~Another courier takes your sack with a sympathetic wince. Half a shift's pay, and an evening with your foot up.|You sit on the loft steps with a cold cloth on your ankle while someone else flies your round. They keep half the pay.}
+opt.right.say.1 [e4fc2a] = {~另一位信使同情地皱了皱眉，接过你的邮袋。半个班次的工钱，外加一晚上把脚架高。|你坐在阁楼台阶上，用凉布敷着脚踝，别人替你飞完了这一趟。工钱他们分走一半。}
+
+@event broom_courier_lost_parcel
+# en: One Parcel Short
+title [bffcca] = 少了一个包裹
+# en: {Somewhere between the loft and the lecture tower, a parcel has left your sack.|One parcel short, again. You've started counting at every landing.} {~It was marked "Fragile".|It was marked "Urgent", in red, twice.|It was addressed to a professor.}
+text [00b4b1] = {从阁楼到讲堂塔之间的某处，一个包裹离开了你的邮袋。|又少了一个包裹。你已经开始每次落地都数一遍了。} {~上面写着“易碎”。|上面用红笔写着“加急”，写了两遍。|收件人是一位教授。}
+# en: A courier on a windy tower top turning an empty mail sack inside out, the lake far below.
+scene [6920d2] = 一名信使站在大风的塔顶上，把空邮袋翻了个底朝天，湖面远在下方。
+# en: Retrace your route
+opt.left.label [0a2eb5] = 沿原路找回去
+# en: {~You find it in a hedge behind the greenhouses, whole and slightly damp. You deliver it late, with a story nobody believes.|It's on the boathouse roof. You climb up for it and deliver it with moss on your knees.}
+opt.left.say.1 [07e274] = {~你在温室后面的树篱里找到了它，完好无损，只是有点潮。你迟到着送达，还附上一个没人相信的故事。|它在船屋屋顶上。你爬上去拿，送到时膝盖上沾满了青苔。}
+# en: {~You search until dark. The loft takes the parcel's worth from your pay, and the dispatcher stops calling you reliable.|Nothing. The client complains twice, in writing, and the loss comes out of your wages.}
+opt.left.say.2 [b48cad] = {~你一直找到天黑。阁楼从你的工钱里扣了包裹的钱，派件员也不再说你靠得住了。|什么也没找到。客户写信投诉了两次，损失从你的工钱里扣。}
+# en: Report it lost at once
+opt.right.label [5e3d08] = 立刻报告丢失
+# en: {~The dispatcher writes it in the ledger and the loss in your pay. "Happens," they say, in a voice that means it shouldn't.|You own up straight away. The loft takes it out of your wages, but the dispatcher seems to think better of you for it.}
+opt.right.say.1 [6fe54d] = {~派件员把它记进账本，把损失记进你的工钱。“常有的事，”派件员说，语气却分明是说不该有。|你马上就承认了。阁楼从你的工钱里扣了钱，但派件员似乎对你更看得起了。}
 
 @event job_off_shift
 # en: Not Your Shift
