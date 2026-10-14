@@ -784,7 +784,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 | renown | 1 | 3 | 6 | 10 | 16 |
 | mana | 3 | 6 | 10 | 16 | 25 |
 | skill XP | 1 | 2 | 4 | 7 | 12 |
-| rel / spark | 2 / 3 | 4 / 6 | 7 / 10 | 12 / 15 | 20 / 25 |
+| rel / spark | 1 / 4 | 2 / 8 | 4 / 13 | 6 / 20 | 9 / 30 |
 | alignment | 2 | 4 | 7 | 12 | 20 |
 
 **Difficulty tiers:** `trivial −15 · easy −7 · medium 0 · hard +8 · heroic +16`, relative to `E(turn)` (§8.6).

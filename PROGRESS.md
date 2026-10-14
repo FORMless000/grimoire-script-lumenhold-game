@@ -90,7 +90,7 @@
 - **Card text and crown amounts:** many cards name a crown amount ("fifteen crowns"). Lint checks them against the gold row (3 8 15 30 60); retuning gold means rewriting them (or a `{=…}` amount token).
 - **Relationship lines** in the yearbook: partners have a named line each; friends are still generic (three friends; Ilse's chain), not one line per bond (§10.5).
 - **Advisor relationship** (a §9.2 challenge modifier) has nothing to read: no track names an advisor character.
-- **Friendship growth** reaches the design's ~80 by month 24 for most characters when courted; Lyra's median is ~50 (her early ladder is thin).
+- **Friendship growth** (L-2: the `rel` row is 1 2 4 6 9): courting one character reaches 100 around month 24 for most (Kael, Tobias, Seraphine, Corvin; Nessa ~90); Lyra's median at month 24 is ~63 and Mira's ~43, because their early ladders are thin (content, for X). The minor characters' trust cards open at rel 20 (were 30).
 - **Skill growth** for focused styles is 57–65 at month 24 (design ~85).
 - **Spells are scarce in content:** 11 swipe-up options in 716 events, and 5 of the 12 spells have none, so mana stays high (the caster alarm). Spells need a content batch, not a price change.
 - **Tuned on purpose** (design numbers are marked tunable):
