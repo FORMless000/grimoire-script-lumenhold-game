@@ -128,7 +128,7 @@ tone: tense
 art: bolt
 tags: class duel
 cast:
-  partner: any where not tagged(partner, faculty)
+  partner: any where (tagged(partner, student) or tagged(partner, prefect))
 scene: Two students on a windswept tower top, one calling rain, the other calling lightning, the sky between them churning.
 text: Advanced Evocation pairs students for a storm: one calls the rain, the other the lightning, and neither is allowed to let go first. You're paired with {partner}.
 > left: Call the lightning
@@ -353,7 +353,7 @@ tone: light
 art: group
 tags: social
 cast:
-  gossip: present(place) where not tagged(gossip, faculty)
+  gossip: present(place) where tagged(gossip, peer)
 scene: Students huddled around the courtyard fountain trading whispers, one of them clearly enjoying it most.
 text: {gossip} has news, which is to say gossip, which is to say three different stories about the same broken window. "You'll want to hear this," {they} say{s}.
 > left: Listen to all of it
@@ -377,7 +377,7 @@ tone: warm
 art: wave
 tags: nature
 cast:
-  friend: any where rel(friend) >= 6 and not tagged(friend, faculty)
+  friend: any where tagged(friend, peer) and rel(friend) >= 6
 scene: Two students skimming stones across a perfectly still lake at dusk.
 text: {friend} is skimming stones on the Mirror Lake. The water is so still each stone leaves rings that go on forever. "Seven," {they} say{s}. "Beat that."
 > left: Try to beat it

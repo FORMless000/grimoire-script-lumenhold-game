@@ -1,24 +1,30 @@
-# Exemplar: a generic relationship card (actor: any), from content/events/social.grim,
-# with its queued follow-up. Why it works: pronoun tokens make it fit anyone; the loan trades
-# gold for friendship with a chance it never comes back; the follow-up is queued "with npc"
-# so the same person repays you two months later.
+# Exemplar: a generic relationship card (a `per: npc` cast), from content/events/social.grim,
+# with its queued follow-up. Why it works: pronoun tokens make it fit anyone; the cast says who the
+# premise fits (a peer: someone your age you'd lend rent money to), not just who it excludes; the loan
+# trades gold for friendship with a chance it never comes back; the follow-up is queued "with npc" so
+# the same person repays you two months later. Amounts are tiers; "fifteen crowns" in the text is
+# what `gold medium` is in @balance.
 
 @event soc_borrow_money
 title: A Small Loan
-actor: any
-# Exclude faculty from peer events; require some friendship and enough gold to lend.
-when: not tagged(npc, faculty) and rel(npc) >= 5 and gold >= 20
+class: routine
+tone: light
+cast:
+  npc: any where tagged(npc, peer) and rel(npc) >= 3
+per: npc
+trigger: social
+when: gold >= 20
 repeat: 6
 art: pouch
 tags: social money
 scene: A student holding out an empty purse upside down with a sheepish grin.
 text: {npc} turns out an empty purse. "I'm fifteen crowns short for rent. I'll pay you back. I swear on my wand."
 > left: Sorry, you're tight too
-  rel npc -4
+  rel npc -small
   say: "No, of course, I understand." {They} {are} quiet at dinner.
 > right: Lend fifteen crowns
-  gold -15
-  rel npc +7
+  gold -medium
+  rel npc +medium
   chance 70:
     queue soc_loan_repaid in 2 with npc
     say: {npc} hugs you with the empty purse still in {their} hand.
@@ -27,6 +33,8 @@ text: {npc} turns out an empty purse. "I'm fifteen crowns short for rent. I'll p
 
 @event soc_loan_repaid
 title: Paid Back
+class: story
+tone: light
 trigger: queued
 actor: npc
 art: coin
@@ -34,6 +42,6 @@ tags: social money
 scene: A small stack of coins and a sweet bun left on a desk with a thank-you note.
 text: {npc} finds you after class and presses a little stack of coins into your hand, plus a sticky bun. "Fifteen crowns. And interest." The interest is the bun.
 > ok: Eat the interest
-  gold +15
-  rel npc +4
-  mood +2
+  gold +medium
+  rel npc +small
+  mood +tiny

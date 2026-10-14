@@ -177,8 +177,10 @@ function pickPlaces(eng, view, opts = {}) {
     if (!open.length) { picks.push(null); return; }
     const duty = opts.truant ? [] : open.filter((p) => p.track && p.track.due > picks.filter((x) => x === p.id).length);
     const fresh = open.filter((p) => p.news && !picks.includes(p.id));
-    // social:<npc> seeks out the places where that character is (shown on the map once met).
-    const near = opts.seek ? open.filter((p) => (p.present || []).includes(opts.seek) && !picks.includes(p.id)) : [];
+    // social:<npc> seeks out the places where that character is
+    // (by the character's schedule: someone courting the tea-shop owner knows where the tea shop is, met or not).
+    const sched = opts.seek ? ((eng.c.npcs[opts.seek] || {}).schedule || []) : [];
+    const near = opts.seek ? open.filter((p) => sched.some((x) => x.place === p.id && x.slots.includes(sl)) && !picks.includes(p.id)) : [];
     const pool = opts.truant ? open.filter((p) => !p.track) : duty.length ? duty : near.length && eng.rand() < 0.7 ? near : fresh.length && eng.rand() < 0.6 ? fresh : open;
     const from = pool.length ? pool : open;
     // Habit: people go back to places they like. Weight by 1 + past visits (s.visitsTo), so favourites form.

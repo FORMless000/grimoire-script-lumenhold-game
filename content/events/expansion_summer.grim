@@ -107,7 +107,7 @@ class: routine
 tone: light
 trigger: social
 cast:
-  npc: any where rel(npc) >= 12 and not tagged(npc, faculty)
+  npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 12
 per: npc
 when: month >= 11
 art: letter

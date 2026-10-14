@@ -6,10 +6,10 @@
 
 | | |
 |---|---|
-| Content | 716 events (7 retired), 60 states, 12 characters, 43 places, 25 tracks, 12 spells, 26 endings (5 game-overs + yearbook lines) |
+| Content | 741 events (7 retired), 60 states, 20 characters (12 core, 8 fixtures), 43 places, 25 tracks, 12 spells, 26 endings (5 game-overs + yearbook lines) |
 | Format | schema v1, frozen; 0 lint errors, **0 legacy constructs** left in content |
 | Reachability | `grim reach`: every event, option, ending, place and track can be reached; each key clue has ≥ 2 sources |
-| Translation | zh-CN 100% (6,362 strings), 0 stale |
+| Translation | zh-CN 100% (6,618 strings), 0 stale |
 | Checks | `npm run verify` passes: build, lint, format, docs, 70+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 47 months, about 340 cards; random play graduates 80% of the time, social and careful styles 97–99% |
 
@@ -56,25 +56,34 @@
   - *They find you:* each character's own monthly roll, driven by warmth (recent contact you chose to warm to).
   - Character events no longer depend on winning the shared social draw. A bot courting one character now reaches 50–100 by month 24 (it was 0–40), and every student is met in year 1.
 - **Bigger numbers:**
-  - every tier row is about 1.5× larger (lore and mana kept as they were);
-  - board 10 and tuition 40, as designed;
+  - every tier row is about 1.5× larger (lore, mana and gold kept as they were: 68 cards name crown amounts that match the gold row);
   - stronger term stress, gloom and loneliness, and faster recovery below 70 health;
   - friendship decay −2 and spark decay 15%, as designed;
   - spells cost 1.75× as much;
   - random windfalls are niche (migration 0017);
   - the skill headlines are rescaled to the refitted curve (balanced players end around 60, not 42).
+- **Fixtures:** eight background names promoted to characters (design §5.5): Sister Amaranth; Professors Brask, Vey and Marisol; Mabel, Mr Grimsby, Old Pell and Grisk.
+  - **What they have:** facts, schedules and 25 events; lighter ladders, a milestone each (four teach a spell), and no romance.
+  - **`seeks: rarely`:** they come to you only once you've been going to them.
+  - **Leads:** courses and the apothecary job name their professor or employer as `lead:`. You meet them on enrolment; grades and performance move their regard, which is the §9.2 advisor modifier.
+  - **Results:** a player who seeks one out reaches their milestone in 9–20 of 20 runs; others rarely see them.
+- **Casting by premise** (migration 0018): 33 generic social events now cast peers, classmates or teachers instead of "not faculty", so shopkeepers and staff never get student premises. Encounters replace a card of the visit instead of adding one.
+- **Novelty within one run only:** earlier runs and other players no longer make cards rarer.
+- **Hosting on the local network:** `scripts/host.sh`, `host.ps1`, `host.cmd`.
 - **Docs:** `PROGRESS.md`, `README.md`, the AGENTS.md traps (folded in from the retired HANDOFF.md), `docs/playtest-2.md` (replacing playtest-1), the language reference (yearbook, `clues()`, the alignment recipe), the authoring checklist and skill, regenerated sample briefs and examples.
 
 ## Known gaps and deviations from the design
 
 - **The finale** is one sealing challenge whose tier depends on preparation. The design asks for a sequence (duel, negotiate, research).
-- **Finale allies** count at rel ≥ 18, not the design's friendship ≥ 50. Re-measure with the two tracks: Ilse, Isolde and Maud still have few personal events.
+- **Finale allies** count at rel ≥ 18, not the design's friendship ≥ 50. Ilse, Isolde and Maud still have few personal events.
+- **Card text and crown amounts:** 68 cards name a crown amount ("fifteen crowns"). They match the gold row only while it stays 3 8 15 30 60; retuning gold means rewriting them (or a `{=…}` amount token).
 - **Relationship lines** in the yearbook are generic (a partner; three friends; Ilse's chain), not one line per bond (§10.5).
 - **Advisor relationship** (a §9.2 challenge modifier) has nothing to read: no track names an advisor character.
 - **Friendship growth** reaches the design's ~80 by month 24 for most characters when courted; Lyra's median is ~50 (her early ladder is thin).
 - **Skill growth** for focused styles is 57–65 at month 24 (design ~85).
 - **Spells are scarce in content:** 11 swipe-up options in 716 events, and 5 of the 12 spells have none, so mana stays high (the caster alarm). Spells need a content batch, not a price change.
 - **Tuned on purpose** (design numbers are marked tunable):
+  - board 8 instead of 10, tuition 30 instead of 40 (with the gold row unchanged, the design's figures send careful players hungry);
   - hungry −2 health and −3 mood instead of −4/−4;
   - no course fees;
   - confessions at spark 30, not 60.

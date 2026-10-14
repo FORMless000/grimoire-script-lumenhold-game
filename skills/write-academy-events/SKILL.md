@@ -22,7 +22,7 @@ Content is data, not code: you write `.grim` blocks under `content/`, then forma
 For each event decide:
 - **Trigger:** `random` (everyday, gated by `when`), `social` (about a character: a fixed `actor:` puts it on that character's own track as well, so it comes when you meet them where they are or when they come looking for you; give each character a ladder of personal events from `rel 0`, see `docs/authoring/pools.md`, Character pools), `auto` (forced when `when` holds: calendar beats, chain climaxes; tight `when` plus `repeat`), or `queued` (only reachable by `queue`).
 - **Where it is drawn** (the director, `docs/grimoire-script.md` §6c): `place: <id>` (a map visit), `track: <id>` with `level:` (course mornings) or `rank:` (club practice, job shifts), `plan: castle|home|work|internship` (break mornings), or no place (the night's world slot). Most everyday content belongs to a place or track now.
-- **Who:** `cast:` roles (`friend: any where rel(friend) >= 10`, `here: present(place)`, `keeper: maud`), or `actor:` a fixed npc id. Don't write `actor: any` (legacy since schema v1).
+- **Who:** `cast:` roles, cast by premise (`friend: any where tagged(friend, peer) and rel(friend) >= 10`; classmates `tagged(x, student) or tagged(x, prefect)`; `tagged(x, teacher)`), `here: present(place)`, `keeper: maud`), or `actor:` a fixed npc id. Don't write `actor: any` (legacy since schema v1).
 - **When:** `when` on state, flags, relationship, month, year.
 - **Class in mind** (`docs/authoring/classes.md`): routine, milestone, incident, windfall, story.
 - **The trade:** every option costs or risks something; use the size tiers (`presets.md`).

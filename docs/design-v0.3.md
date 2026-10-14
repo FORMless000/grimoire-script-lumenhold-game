@@ -389,7 +389,7 @@ variety   = 0.5 if the same tone or primary tag as either of the previous 2 card
 
 ```
 cast:
-  friend: any where rel(friend) >= 20 and not tagged(friend, faculty)
+  friend: any where rel(friend) >= 20 and tagged(friend, peer)
   rival:  any where rival != friend and rel(rival) <= -10
   host:   present(place)
   stranger: anyone where tagged(stranger, student)
@@ -416,13 +416,28 @@ Friends are found the way they are in life: in the courses, clubs, jobs and plac
   - a card with them where you raised their rel or spark (even at the cap): +18; a card with them where you didn't: −8 (a rival or nemesis warms on any contact);
   - −20% every month.
 - **Pull** = 4 + warmth + 0.3 × friendship (hostility for a rival) + 0.3 × spark + bond (partner 30, close 20, friend 12, rival or nemesis 10). Monthly chance = pull / 100, at most 85%.
-- **Encounter chances:** 55% per visit with someone present; 35% at lunch.
+- **Encounter chances:** 55% per visit with someone present; 35% at lunch. An encounter takes the place of one of the visit's (or lunch's) other cards: time with someone is part of the visit, not extra.
+- **In class:** a course's `lead:` and whoever is at its place that morning warm a little at each class.
+- **Who seeks (`@npc seeks:`):**
+  - `often` (default: the core cast, friends and rivals): full pull;
+  - `sometimes`: ×0.6, nothing below warmth 15;
+  - `rarely` (professors, staff, shopkeepers): ×0.4, nothing below warmth 35, so they come only once you have been coming to them;
+  - `never`.
+- **Fixtures** are the people of a place or a track, promoted from the background:
+  - Sister Amaranth; Professors Brask, Vey and Marisol; Mabel, Mr Grimsby, Old Pell and Grisk.
+  - **Shape:** lighter ladders (an introduction where they work or through their track, two or three repeatable cards, one milestone, often teaching a spell, §9.1), no romance, `seeks: rarely` (Grisk `sometimes`), and their own facts.
+  - **The roster's tiers:** core cast (full arcs, romance, the plot) and fixtures; no procedural characters for now.
+- **Leads (`@track lead:`)** are a course's professor or whoever runs a club or job:
+  - enrolling or joining meets them;
+  - each term, a course's grade moves their regard (A +medium, B +small, F −small), and a club or job term with performance ≥ 70 adds +small (missed visits cost it, §6.2);
+  - their regard is §9.2's advisor modifier.
+- **Casting by premise:** generic social events cast `peer` (students, the prefect, Ilse), classmates (student or prefect), `teacher` or `romanceable` as their premise needs, never just "not faculty". So a shopkeeper is never asked to do your homework.
 - All numbers are tunable (`FRIENDS` in `src/director.js`).
 - **Authoring consequence:** a character needs personal events from `rel 0` (rivals from below), or a new acquaintance has nothing to bring and the friendship stalls (`docs/authoring/pools.md`).
 
 **Other candidates for independent pushers** (ideas, not built):
 - rivals and nemeses provoking you;
-- faculty mentors (the course professor or thesis advisor reading performance and rel; this would give §9.2's advisor modifier a character to read);
+- faculty mentors beyond leads (a thesis advisor);
 - family letters (origin-driven, quieter at home);
 - creditors (Grisk while in debt);
 - the press (renown tiers: spotlights and scandals, §8.2);
@@ -892,7 +907,7 @@ challenge duel vs rival hard:     # duel | negotiate | deceive | exam | research
 
 - **Modifiers** (each capped at ±15):
   - `vs <role>.<stat>` shifts the DC by the opponent's stat minus E(turn);
-  - study points, advisor relationship, spells known (+3 each for relevant ones), items (§T2).
+  - study points; the advisor relationship (the track's `lead:` regard, rel / 5, within ±15, inside that track's cards and at its exams); spells known (+3 each for relevant ones); items (§T2).
 - The simulator always auto-resolves.
 
 ### 9.3 Crafting policy

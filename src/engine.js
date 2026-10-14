@@ -193,6 +193,7 @@
       for (const id of Object.keys(this.s.spells || {})) { const d = this.c.spells[id]; if (d && d.discipline && this.trackSkills(d.discipline).some((k) => skills.includes(k))) sp += 3; }
       sv += Math.min(15, sp);
       if (st.kind === 'exam' && ct && ct.status === 'enrolled') sv += Math.min(15, ct.study || 0);
+      sv += this.advisorBonus(this._ctxTrack);
       const e = this.expectedSkill();
       const DT = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
       const tier = this._variant === 'hard' ? DT[Math.min(4, DT.indexOf(st.tier) + 1)] : st.tier;
@@ -200,6 +201,11 @@
       if (st.vs) dc += clamp(this.statOf((this._cast && this._cast[st.vs.who]) || st.vs.who, st.vs.stat, actor) - e, -15, 15);   // a cast role resolves to its character
       const odds = (x) => clamp(Math.round(50 + 2.5 * (sv - x)), 8, 92);
       return st.partial ? { skill: skills.join('+'), value: sv, dc, win: odds(dc + 5), atLeastPartial: odds(dc - 5) } : { skill: skills.join('+'), value: sv, dc, win: odds(dc), atLeastPartial: odds(dc) };
+    }
+    // The advisor modifier (design §9.2): how the track's `lead:` (its professor, captain or employer) feels about you, rel / 5, within ±15.
+    advisorBonus(trackId) {
+      const d = trackId && this.c.tracks[trackId], n = d && d.lead && this.s.npcs[d.lead];
+      return n && n.met ? clamp(Math.round(n.rel / 5), -15, 15) : 0;
     }
     spellCost(id, level) { const d = this.c.spells && this.c.spells[id]; return d && d.cost ? d.cost[clamp((level || 1) - 1, 0, d.cost.length - 1)] : 0; }
     get spellResource() { return this.c.game.spell_resource || 'mana'; }
@@ -238,6 +244,7 @@
           if (d.kind !== 'course' && d.kind !== 'thesis') return;
           t.status = 'enrolled'; t.level = st.level || Math.min(d.levels || 1, this.levelPassed(id) + 1); t.study = 0;
           ctx.notes.push({ kind: 'enrol', track: id, level: t.level });
+          if (d.lead && s.npcs[d.lead]) this.touchNpc(d.lead, ctx);   // you meet the course's professor (design §5.5)
           this.grantLegacy(id, ctx, true);
           break;
         }
@@ -250,6 +257,7 @@
           ctx.notes.push({ kind: 'join', track: id });
           // A member is shown the way in: the track's place is discovered (the duel hall, the courier loft, …).
           if (d.place && this.c.places[d.place] && !s.places[d.place]) { s.places[d.place] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: d.place }); }
+          if (d.lead && s.npcs[d.lead]) this.touchNpc(d.lead, ctx);   // and whoever runs it
           this.grantLegacy(id, ctx, true);
           break;
         }
@@ -290,12 +298,15 @@
         if (t.status === 'enrolled' && d.kind === 'course') {
           const sk = this.trackSkills(id); const sv = sk.reduce((a, k) => a + (s.vals[k] || 0), 0) / Math.max(1, sk.length);
           const tier = ['medium', 'hard', 'heroic'][Math.min(2, (t.level || 1) - 1)];
-          const dc = this.expectedSkill() + this.difficulty(tier) - Math.min(15, t.study || 0);
+          const dc = this.expectedSkill() + this.difficulty(tier) - Math.min(15, t.study || 0) - this.advisorBonus(id);
           const odds = (x) => clamp(Math.round(50 + 2.5 * (sv - x)), 8, 92);
           const r = this.rand() * 100;
           const grade = r < odds(dc + 5) ? (sv - dc >= 15 ? 'A' : 'B') : r < odds(dc - 5) ? 'C' : 'F';
           t.grades.push(grade); t.passed[t.level] = grade; t.status = grade === 'F' ? 'failed' : 'done';
           ctx.notes.push({ kind: 'grade', track: id, level: t.level, grade });
+          // The professor notices (design §5.5): A warms them a good deal, B a little, F cools them.
+          const regard = { A: ['medium', 1], B: ['small', 1], F: ['small', -1] }[grade];
+          if (regard && d.lead && s.npcs[d.lead] && s.npcs[d.lead].met) this.run([{ t: 'rel', npc: d.lead, tier: regard[0], sign: regard[1] }], ctx);
           // Passing a level teaches its spells (design §9.1: `teaches: flame@1 tide@2 …`).
           if (grade !== 'F') for (const x of d.teaches || []) if (x.level === t.level && this.c.spells[x.spell]) this.run([{ t: 'learn_spell', spell: x.spell, level: null }], ctx);
           this.grantLegacy(id, ctx, false);
@@ -315,6 +326,8 @@
             ctx.notes.push({ kind: 'dropped', track: id });
           } else {
             t.benched = t.perf < 20;
+            // A good term with a club or job pleases whoever runs it (missed visits already cost their regard).
+            if (t.perf >= 70 && d.lead && s.npcs[d.lead] && s.npcs[d.lead].met) this.run([{ t: 'rel', npc: d.lead, tier: 'small', sign: 1 }], ctx);
             t.due = t.benched && d.kind === 'job' ? Math.min(2, d.due || 0) : d.due || 0;
             if (t.perf < 40) this.pushTrackEvent('track_warning', id);
             const need = ((this.c.balance && this.c.balance.rank_xp) || [10, 25])[t.rank];

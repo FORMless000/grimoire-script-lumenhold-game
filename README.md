@@ -2,7 +2,7 @@
 
 *Four years. Forty-seven moons. One apprentice.*
 
-A swipe-card life simulation at a magical academy. Each month is one day: pick two places on the campus map, then swipe through the day's cards to choose. Enrol in courses, keep up with a club and a job, plan your breaks, keep your Health and Mood up and your purse from emptying, grow six skills and twelve spells, befriend, romance or feud with twelve characters, lean toward the Lumen or the Hollow, and decide what to do about the secret beneath the lake. At graduation your yearbook collects what you became: a headline, the Hollow Star's outcome, your bonds and how you're remembered. Playable in **English** and **简体中文** (Simplified Chinese).
+A swipe-card life simulation at a magical academy. Each month is one day: pick two places on the campus map, then swipe through the day's cards to choose. Enrol in courses, keep up with a club and a job, plan your breaks, keep your Health and Mood up and your purse from emptying, grow six skills and twelve spells, befriend, romance or feud with twelve characters (and get to know eight more: the professors, the healer, the shopkeepers and a moneylender), lean toward the Lumen or the Hollow, and decide what to do about the secret beneath the lake. At graduation your yearbook collects what you became: a headline, the Hollow Star's outcome, your bonds and how you're remembered. Playable in **English** and **简体中文** (Simplified Chinese).
 
 ## Play
 
@@ -22,7 +22,7 @@ To play from other devices on your network, run `./scripts/host.sh` (Linux, macO
 
 ## What's in it
 
-- **About 700 events** in a custom scripting language: a four-year calendar of terms, breaks and festivals; 43 places on the campus map; 25 tracks (9 courses with three levels and exams, 4 clubs, 4 jobs, 7 internships and the thesis); 12 characters with personal arcs; relationship events; a main mystery (*The Hollow Star*) in four acts with five outcomes; Ilse Dumont's chain and smaller chains.
+- **About 740 events** in a custom scripting language: a four-year calendar of terms, breaks and festivals; 43 places on the campus map; 25 tracks (9 courses with three levels and exams, 4 clubs, 4 jobs, 7 internships and the thesis); 12 characters with personal arcs and 8 lighter ones (professors, staff, villagers); relationship events; a main mystery (*The Hollow Star*) in four acts with five outcomes; Ilse Dumont's chain and smaller chains.
 - **Alignment:** choices with moral weight move you toward the Lumen or the Hollow, and the people and the Star notice.
 - **Relationships:** each character has a relationship score, romance (for romanceable characters) and a status (friend, close, rival, nemesis, partner, ex). The more people you're close to, the more social cards each month brings.
 - **25 endings**: 5 early game-overs, and a graduation yearbook built from headline, mystery, relationship and personal lines.

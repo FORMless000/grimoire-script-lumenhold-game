@@ -30,7 +30,9 @@
   //   lunch: the same at the social slot, with anyone scheduled there at a place you know
   //   push: a character's monthly chance to find you = pull / 100, capped at maxP; at most `cap` such cards a month
   //   (capBreak in break months, when the chance is also halved).
-  const FRIENDS = { base: 4, presence: 6, engage: 18, cool: 8, meet: 35, fade: 0.8, encounter: 0.55, lunch: 0.35, maxP: 0.85, cap: 2, capBreak: 1, bond: { partner: 30, close: 20, friend: 12, rival: 10, nemesis: 10 } };
+  //   seeks: per character (`@npc seeks:`): pull × mult, and nothing below `min` warmth.
+  const FRIENDS = { base: 4, presence: 6, engage: 18, cool: 8, meet: 35, fade: 0.8, encounter: 0.55, lunch: 0.35, maxP: 0.85, cap: 2, capBreak: 1, bond: { partner: 30, close: 20, friend: 12, rival: 10, nemesis: 10 },
+    seeks: { often: { mult: 1, min: 0 }, sometimes: { mult: 0.6, min: 15 }, rarely: { mult: 0.4, min: 35 }, never: { mult: 0, min: 0 } } };
   const TAU = 6;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
@@ -161,10 +163,13 @@
     },
     /* ---------------- people: two tracks (design §5.5) ---------------- */
     // How strongly a character comes looking for you: recent warmth, plus standing friendship, spark and bond.
+    // A character's `seeks:` scales it: professors and shopkeepers come only once you've been coming to them.
     pull(id) {
       const n = this.s.npcs[id]; if (!n) return 0;
+      const sk = FRIENDS.seeks[(this.c.npcs[id] || {}).seeks || 'often'] || FRIENDS.seeks.often;
+      if (!sk.mult || (n.warmth || 0) < sk.min) return 0;
       const hostile = n.bond === 'rival' || n.bond === 'nemesis';
-      return FRIENDS.base + (n.warmth || 0) + 0.3 * Math.max(0, hostile ? -n.rel : n.rel) + 0.3 * (n.spark || 0) + (FRIENDS.bond[n.bond] || 0);
+      return sk.mult * (FRIENDS.base + (n.warmth || 0) + 0.3 * Math.max(0, hostile ? -n.rel : n.rel) + 0.3 * (n.spark || 0) + (FRIENDS.bond[n.bond] || 0));
     },
     warm(id, d) { const n = this.s.npcs[id]; if (n) n.warmth = clamp(Math.round((n.warmth || 0) + d), 0, 100); },
     // Cards with one character: their own events, and generic social events cast with them in the `per:` role.
@@ -281,6 +286,9 @@
             const pool = (ix.byTrack[id] || []).filter((e) => !e.level || e.level <= (t.level || 1));
             const it = this.draw(pool, used, day.concat(items), { track: id, prio: 'track' });
             if (it) items.push(it);
+            // Track 1 in class (design §5.5): the course's lead and whoever is at its place this slot see you there.
+            const crowd = new Set(d.place ? this.presentAt(d.place, r.slot) : []); if (d.lead) crowd.add(d.lead);
+            for (const nid of crowd) if (s.npcs[nid] && s.npcs[nid].met) this.warm(nid, FRIENDS.presence / 2);
           }
         } else if (r.source === 'visit') {
           const place = picks[visit];
@@ -311,6 +319,9 @@
                 const it = this.drawWith(id, used, day.concat(items), { place, prio: 'social', src: 'encounter' });
                 if (it) { cards.push(it); withToday.add(id); }
               }
+              // Time spent with them is part of the visit, not extra: it takes the place of one ambient card.
+              const drop = cards.length ? items.map((x) => x.prio).lastIndexOf('ambient') : -1;
+              if (drop >= 0 && items.length > 1) used.delete(items.splice(drop, 1)[0].id);
               items.push(...cards);
             }
             this._place = null;
@@ -329,7 +340,11 @@
               const w = here.map((id) => 10 + this.pull(id)); let x = this.rand() * w.reduce((a, b) => a + b, 0), k = 0;
               for (; k < here.length - 1; k++) { x -= w[k]; if (x < 0) break; }
               const it = this.drawWith(here[k], used, day.concat(items), { prio: 'social', src: 'encounter' });
-              if (it) { items.push(it); withToday.add(here[k]); }
+              if (it) {
+                // Lunch with someone replaces one of the slot's drawn cards.
+                if (items.length > 1) used.delete(items.pop().id);
+                items.push(it); withToday.add(here[k]);
+              }
             }
           }
         }

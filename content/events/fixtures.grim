@@ -1,0 +1,622 @@
+# ============================================================
+#  Fixtures (design §5.5): the people of a place or a track,
+#  promoted from the background. Lighter ladders than the core
+#  cast: an introduction where they work (or through their course
+#  or job, via `lead:`), two or three repeatable cards that come
+#  when you're there or when they look you up (rarely: `seeks:`),
+#  and one milestone. No romance; nothing touches the mystery.
+# ============================================================
+
+# ---------------- Sister Amaranth (infirmary; Alchemy & Healing) ----------------
+
+@event amaranth_intro
+title: No Excuses
+class: routine
+tone: light
+place: infirmary
+actor: amaranth
+when: not met(amaranth)
+weight: 30
+art: cross
+tags: social
+scene: A stern healer in a white apron holding a student's wrist up to the window light, a row of tonic bottles behind her.
+text: You came in for a plaster. Sister Amaranth takes your hand, turns it to the light and asks how it happened. You tell her. She waits. You tell her the true version. "Better," she says, and reaches for a bottle that is not a plaster.
+> left: Drink whatever it is
+  meet amaranth
+  health +small
+  mood -small
+  rel amaranth +small
+  say: It tastes of iron and regret. The hand stops throbbing before you reach the door. "Come back if it swells," she calls. "Don't come back if it doesn't."
+> right: Just the plaster, thanks
+  meet amaranth
+  gold -tiny
+  rel amaranth -tiny
+  say: She gives you the plaster, and a look you will remember the next time you lie to a healer. "Two crowns," she says. "The look is free."
+
+@event amaranth_rounds
+title: Evening Rounds
+class: routine
+tone: warm
+trigger: social
+actor: amaranth
+when: rel(amaranth) >= 0
+weight: 10
+repeat: 5
+art: potion
+tags: social nature
+scene: A healer and a student walking a long infirmary ward at dusk, the student carrying a tray of small glass bottles, lamps being lit along the beds.
+text: {Sister Amaranth catches you in the corridor and hands you a tray of tonics without a word of explanation.|Amaranth holds out the tonic tray as you pass. It seems you are on the rota now.|The tray is waiting for you on the ward table, labelled YOURS in Amaranth's square hand.} {~Six beds tonight.|A first-year with hiccups that light up.|Someone has charmed their own eyebrows off.}
+> left: Do the rounds with her
+  health -tiny
+  alchemy +small
+  rel amaranth +small
+  say: {~She tells you what each tonic does and why it tastes like that. You remember all of it, to your surprise.|You learn which patients are brave and which are loud, and that they are rarely the same ones.|At the last bed she lets you measure the dose. "Again," she says. You do it again. "Fine."}
+> right: You have an essay due
+  rel amaranth -tiny
+  say: {~"So does everyone," she says, and takes the tray back. "Off you go."|She nods, which is somehow worse than a lecture.|"Next time," she says, as a fact, not a question.}
+> up[mend]: Mend the worst one yourself
+  rel amaranth +small
+  say: {~You close a split knuckle with a whisper of light. Amaranth inspects it for a long time. "Neat," she says, the highest word she owns.|The sprain knits under your hands. The patient thanks Amaranth. Amaranth points at you.}
+
+@event amaranth_orders
+title: Doctor's Orders
+class: routine
+tone: light
+trigger: social
+actor: amaranth
+when: rel(amaranth) >= 6 and health < 50
+weight: 14
+repeat: 6
+art: bed
+tags: social
+scene: A healer standing in a dormitory doorway with her arms folded, a pale student halfway out of bed with a stack of books.
+text: {Sister Amaranth has come to find you, which has never happened to anyone. "You look like a draught of bad decisions," she says. "Bed."|Amaranth again, at your door, arms folded. "I can hear you coughing from the infirmary."|"Bed," says Amaranth, before you've opened the door all the way.}
+> left: Go to bed as ordered
+  health +medium
+  mood -small
+  rel amaranth +small
+  say: {~You sleep fourteen hours. She checks on you twice and leaves a tonic on the sill both times.|Two days of broth and boredom. You come out of it a person again.|You argue for one more chapter. You lose, and sleep.}
+> right: "I'm fine, honestly."
+  rel amaranth -small
+  health -tiny
+  say: {~"Nobody who says 'honestly' is," she says, and leaves. You are not fine by Thursday.|She writes something on a card and walks off. It turns out to be your name, on her list.}
+
+@event amaranth_trust
+title: The Cupboard Key
+class: milestone
+tone: warm
+trigger: social
+actor: amaranth
+when: rel(amaranth) >= 30
+weight: 20
+art: key
+tags: social magic
+scene: An infirmary storeroom at night lit by a single lamp, a healer pressing a small brass key into a student's palm, shelves of labelled bottles all around.
+text: Sister Amaranth closes the storeroom door behind you both. "I'm away for the solstice and the junior healer faints at blood," she says. "You don't." She holds out the key to the tonic cupboard, and with it a page of her own notes on the mending charm.
+> left: Take the key and the notes
+  learn_spell mend
+  rel amaranth +small
+  alchemy +small
+  say: "Mend what you can, send the rest to me, and lie to nobody," she says. The notes are written for someone she expects to be good at this. You read them twice and try very hard to be.
+> right: "I'm not ready for that."
+  rel amaranth +small
+  mood -tiny
+  say: She looks at you for a long moment. "Good answer. Wrong, but good." She keeps the key. She gives you the notes anyway.
+
+# ---------------- Professor Brask (stables; Beastcraft & Flight) ----------------
+
+@event brask_shovel
+title: Hands Wanted
+class: routine
+tone: light
+trigger: social
+actor: brask
+when: rel(brask) >= 0
+weight: 10
+repeat: 5
+art: paw
+tags: nature social
+scene: A weathered professor in a leather apron holding out a shovel to a student at a stable door, a hippogriff watching suspiciously from its stall.
+text: {Professor Brask holds out a shovel as you pass the stables. She doesn't say anything. The hippogriff behind her does, loudly.|Brask hands you the shovel before you're through the door.|"Ah," says Brask, and the shovel is already in your hands.} {~The griffon chick is in a mood.|The owls have opinions about the new straw.|A hippogriff has eaten a glove. Possibly a professor's.}
+> left: Muck out the stalls
+  vigor +small
+  health -tiny
+  rel brask +small
+  say: {~An hour of straw and silence. At the end Brask says, "The grey one likes you," which is more than she has said to anyone this term.|She tells you a story about a manticore, a bucket and a bishop. It ends with a bite and a moral. You miss the moral.|The hippogriff bows to you on your way out. Brask pretends not to see.}
+> right: Point out you're not in her class
+  rel brask -tiny
+  say: {~"Nobody is," she says, "until they are." She takes the shovel back.|"Neither is the hippogriff," says Brask. "It helps anyway."}
+> up[beast_speech]: Ask the stalls what they need
+  rel brask +small
+  vigor +tiny
+  say: {~The hippogriffs want the window open and the owls want it shut. You negotiate. Brask watches you with her arms folded and something almost like a smile.|The griffon chick tells you, at length, about a grievance. You pass it on. Brask nods. "She's right, actually."}
+
+@event brask_night_owl
+title: The Sick Owl
+class: routine
+tone: warm
+trigger: social
+actor: brask
+when: rel(brask) >= 10
+weight: 12
+art: owl
+tags: nature
+scene: A dim stable loft at night, a student sitting cross-legged beside a straw nest where a sick barn owl sleeps under a blanket, a lantern turned low.
+text: Brask finds you at supper and sits down without asking, which is a first. "The old barn owl won't eat," she says. "Somebody should sit with her tonight. Somebody quiet." She is looking at you.
+> left: Sit up with the owl
+  health -small
+  rel brask +medium
+  vigor +tiny
+  say: You sit in the loft till dawn, dripping water onto the owl's beak. At four she takes a mouse from your fingers. In the morning Brask looks at the empty dish for a long time, then claps you once on the shoulder, hard.
+> right: Send her to Sister Amaranth
+  rel brask -tiny
+  rel amaranth +tiny
+  say: Amaranth looks at the owl, looks at you, and says she doesn't do owls. Then she sits with it all night. Brask is not sure how to feel about this, and neither are you.
+
+@event brask_trust
+title: Old Courtesies
+class: milestone
+tone: warm
+trigger: social
+actor: brask
+when: rel(brask) >= 30
+weight: 20
+art: feather
+tags: nature magic
+scene: A professor and a student at the edge of a forest at dusk, both bowing low to a great antlered stag half-hidden in the trees.
+text: Brask takes you to the edge of the Whisperwood at dusk. "Most people talk at animals," she says. "A few talk to them. Fewer listen." She bows, very low, to something in the trees. "Do as I do. I'll teach you the rest."
+> left: Bow, and learn
+  learn_spell beast_speech
+  rel brask +small
+  health -tiny
+  say: It takes until full dark, and something huge breathes on your neck for most of it. Then, faintly, you understand a word. It is "rude". Brask laughs once, loudly, the way she does once a term.
+> right: Keep your distance
+  rel brask -tiny
+  vigor +small
+  say: You stay by the path and watch. She doesn't press you. On the walk back she talks about hoof care for an hour, which you suspect is a kindness.
+
+# ---------------- Professor Vey (lecture tower; Illusion & Glamour) ----------------
+
+@event vey_pop_quiz
+title: Is It There?
+class: routine
+tone: light
+trigger: social
+actor: vey
+when: rel(vey) >= 0
+weight: 10
+repeat: 5
+art: mask
+tags: magic study
+scene: A smiling professor in a violet scarf leaning against a corridor wall, a cup of tea in her hand, a second, slightly too perfect cup on the windowsill beside her.
+text: {Professor Vey is in the corridor with two cups of tea. She offers you one. "Only one of them is real," she says pleasantly.|Vey stops you on the stairs. "There's a coin behind your ear. Or there isn't."|"Good morning," says Vey, and the door you were about to open is, possibly, a wall.} {~She looks delighted already.|A student behind you walks into something.|She is humming.}
+> left: Look closely
+  challenge deceive medium:
+    win:
+      charm +small
+      rel vey +small
+      say: {~You pick the right one. Vey raises her cup to you. "Insufferable," she says, beaming.|You catch the shimmer at the edge. "Ah," says Vey. "You've been paying attention. Dreadful habit. Keep it."}
+    lose:
+      mood -tiny
+      say: {~You reach for the tea and close your fingers on air. Vey enjoys this very much.|Wrong. The real one was in her hand the whole time. "It usually is," she says.}
+> right: Play along and get it wrong
+  guile +small
+  rel vey +small
+  mood -tiny
+  say: {~You reach for the false one on purpose, with feeling. Vey narrows her eyes. "Either you're bad at this, or very good," she says. "I'll find out."|You let her win. She knows. She lets you know she knows.}
+
+@event vey_revue
+title: The Faculty Revue
+class: routine
+tone: light
+trigger: social
+actor: vey
+when: rel(vey) >= 10 and (month == 3 or month == 9)
+weight: 12
+art: music
+tags: social festival
+scene: A small stage in the Great Hall hung with violet curtains, a professor directing a nervous student holding a paper crown, chairs being set out below.
+text: Professor Vey is producing the faculty revue, in which professors make fools of themselves for charity. "I need someone to play a king who isn't there," she says. "You'd be wonderful. You'll be terrible. Either is fine."
+> left: Take the part
+  challenge feat using charm medium:
+    win:
+      renown +small
+      rel vey +medium
+      say: You are a king who isn't there, magnificently. Thorne, in the front row, says "Hm" twice, which the faculty agree is a standing ovation.
+    lose:
+      renown +tiny
+      mood -small
+      rel vey +small
+      say: You forget your lines, invent new ones and are, by general agreement, the best thing in it for the wrong reasons. Vey keeps the paper crown on her desk.
+> right: Hide in the wings
+  rel vey -tiny
+  say: You run the curtain. The revue goes ahead without a king, which Vey says was the point all along.
+
+@event vey_trust
+title: The Mirror Trick
+class: milestone
+tone: eerie
+trigger: social
+actor: vey
+when: rel(vey) >= 30
+weight: 20
+art: mirror
+tags: magic
+scene: An empty classroom at twilight, two identical students standing either side of a tall mirror, a professor seated on a desk between them, clapping softly.
+text: Vey keeps you after class and tilts a tall mirror towards you. Your reflection steps out of it and sits on a desk. "The trick isn't making a copy," she says. "It's knowing which of you to send. Want to learn it?"
+> left: Learn it
+  learn_spell mirror
+  rel vey +small
+  mood -small
+  say: It takes a week. On the last night your reflection refuses to go back. Vey talks it round over tea, then says, "Now you know why I don't do this in public." You are not sure which of you walked home.
+> right: Keep your own face, thanks
+  rel vey +tiny
+  charm +small
+  say: "Sensible," she says, disappointed. She teaches you instead how to tell when someone else is using it. It turns out a lot of people are.
+
+# ---------------- Professor Marisol (lakeshore; Evocation's tidecalling) ----------------
+
+@event marisol_intro
+title: A Dry Patch of Air
+class: routine
+tone: warm
+place: lakeshore
+actor: marisol
+when: not met(marisol)
+weight: 30
+art: rain
+tags: nature magic
+scene: Heavy rain on a lake shore, a woman reading on the boathouse steps beneath a perfectly dry circle of air, raindrops sliding around it as if around glass.
+text: It is raining on the whole lake except for one circle on the boathouse steps, where a woman in a soaked hat is reading poetry, perfectly dry. She looks up. "It's not hard," says Professor Marisol. "You just ask the water to go round. Sit, if you like."
+> left: Sit and ask how
+  meet marisol
+  arcana +small
+  mood -tiny
+  rel marisol +small
+  say: She explains it as a conversation. The water, apparently, is willing. By the end of the poem the rain is going round you too, for almost a minute. "There," she says, and goes back to the poem.
+> right: Leave her to her book
+  meet marisol
+  health -tiny
+  say: You nod and run for cover. Behind you she reads aloud, to nobody, a poem about a storm that comes back every year to see if you've changed.
+
+@event marisol_cold_water
+title: Cold Water Is Good for You
+class: routine
+tone: light
+trigger: social
+actor: marisol
+when: rel(marisol) >= 0
+weight: 10
+repeat: 5
+art: wave
+tags: nature magic
+scene: Dawn mist on a still lake, a professor standing waist-deep in the water waving cheerfully to a shivering student on the jetty.
+text: {Professor Marisol is in the lake at dawn, waist-deep, and waves at you as though this were normal.|Marisol again, in the lake. "It's lovely once you're in," she calls. It is not lovely.|"You came!" calls Marisol from the water. You had been walking past.} {~There is ice at the edges.|A heron is watching her with professional respect.|She has a book in one hand, held perfectly dry.}
+> left: Wade in
+  health -tiny
+  arcana +small
+  rel marisol +small
+  say: {~She teaches you to feel the lake breathing. You cannot feel your feet. Both are, she says, normal.|You ask the water to rise and it rises, a little, around your knees. Marisol whoops like a child.|By the time you climb out you've stopped shivering, which she says is a good sign and Amaranth will say is a bad one.}
+> right: Wave back from the jetty
+  rel marisol -tiny
+  say: {~She waves again, unoffended, and goes under.|"Coward," she calls cheerfully. You are fine with that.}
+> up[tide]: Raise a wave to say hello
+  rel marisol +small
+  arcana +tiny
+  say: {~A small, neat wave rolls across the lake and taps her on the shoulder. She laughs so hard she sinks.|Your wave arrives slightly late and very large. Marisol rides it in to shore, delighted.}
+
+@event marisol_storm
+title: Weather
+class: routine
+tone: tense
+trigger: social
+actor: marisol
+when: rel(marisol) >= 12 and (season == "autumn" or season == "spring")
+weight: 12
+art: bolt
+tags: nature magic danger
+scene: A wild storm over a dark lake, a professor and a student standing on a rocky point with their arms raised, lightning splitting the sky behind them.
+text: There's a knock at your window during the worst storm of the year. Professor Marisol is outside, hair everywhere, grinning. "Nobody learns tides on a calm day," she shouts over the wind. "Coming?"
+> left: Go out into it
+  challenge feat using arcana medium:
+    win:
+      arcana +medium
+      rel marisol +medium
+      health -small
+      say: On the point, in the roar, you hold back one wave for three whole seconds. Marisol screams with joy. You go home soaked to the bone and lit up like a lamp.
+    lose:
+      health -medium
+      rel marisol +small
+      say: The lake throws you on your back. Marisol hauls you out by the collar, laughing and apologising in equal parts, and walks you all the way to the infirmary.
+> right: Close the window
+  rel marisol -tiny
+  mood -tiny
+  say: She shrugs, cheerful, and runs off into the rain. You lie awake listening to the lake and wondering what you missed.
+
+@event marisol_trust
+title: The Last Line
+class: milestone
+tone: warm
+trigger: social
+actor: marisol
+when: rel(marisol) >= 30
+weight: 20
+art: scroll
+tags: magic
+scene: A quiet lakeside at sunset, a professor handing a student a worn book of poems with a ribbon in it, the water perfectly still before them.
+text: Marisol presses her old book of water poems into your hands. "I never remember the last lines," she says. "You will. The tidecalling's in the margins; I wrote it there when I was your age. Read it on the shore. It works better on the shore."
+> left: Read it on the shore
+  learn_spell tide
+  rel marisol +small
+  mood +small
+  health -tiny
+  say: You read until dark, ankle-deep. On the last page the lake answers you, softly, all the way out to the far bank. You remember the last line. You write it in, for her.
+> right: Give it back; it's hers
+  rel marisol +medium
+  mood -tiny
+  say: She looks at the book and then at you. "Nobody's ever given it back," she says, and reads you the poem herself. She forgets the last line. You tell her.
+
+# ---------------- Mabel (the tea shop) ----------------
+
+@event mabel_intro
+title: The Way You Open a Door
+class: routine
+tone: warm
+place: mabels
+actor: mabel
+when: not met(mabel)
+weight: 30
+art: cup
+tags: social home
+scene: A cosy village tea shop with a bell over the door, a woman behind the counter already reaching for a tin of tea as a student steps in from the cold.
+text: The bell over the door rings. The woman behind the counter looks up, considers how you came in, and reaches for a tin before you've said a word. "Homesick," says Mabel, "with a side of exam. Sit by the window, petal."
+> left: Sit by the window
+  meet mabel
+  gold -tiny
+  mood +small
+  rel mabel +small
+  say: The tea is exactly right and you can't say why. She brings a slice of cake you didn't order and doesn't charge for it. "First visit," she says. "After that I charge double."
+> right: "Just something to go."
+  meet mabel
+  gold -tiny
+  say: She hands you a paper cup and looks at you over it. "Come back when you've got time to sit," she says. "You'll know when."
+
+@event mabel_parcel
+title: A Tin From Mabel
+class: routine
+tone: warm
+trigger: social
+actor: mabel
+when: rel(mabel) >= 2
+weight: 10
+repeat: 6
+art: cup
+tags: social home
+scene: A small tin of tea wrapped in brown paper and string on a dormitory pillow, a handwritten label on top and a pressed flower tucked under the string.
+text: {A small tin arrives on the barge with your name on it, in Mabel's round hand. The label says "FOR THE COUGH I HEARD THROUGH THE DOOR."|Another tin from Mabel. The label says "FOR WHATEVER THIS WEEK IS."|Mabel's tins have a shelf of their own now. Today's label says only "YOU KNOW."} {~There's a pressed violet under the string.|It smells of honey and woodsmoke.|There's a biscuit taped to the lid.}
+> left: Pay her next time you're down
+  gold -tiny
+  health +small
+  rel mabel +small
+  say: {~You leave the crowns on her counter. She pushes them back. You leave them again. This goes on for some time.|You thank her in person. "Don't," she says. "Drink it." You do. It works.}
+> right: Send it back with a note
+  rel mabel -tiny
+  say: {~She sends it back again with a longer note. You give up and drink it.|The tin comes back on the next barge. The label now says "STUBBORN."}
+
+@event mabel_cup
+title: Your Cup on the Hook
+class: milestone
+tone: warm
+trigger: social
+actor: mabel
+when: rel(mabel) >= 25
+weight: 18
+art: cup
+tags: social home
+scene: A row of mismatched cups hanging on hooks behind a tea-shop counter, a woman hanging a new one with a student's initial painted on it.
+text: Behind Mabel's counter is a row of hooks with cups on them, each painted with a letter. You've never asked whose they are. Today, while you watch, Mabel hangs a new one with your initial on it. "Regulars," she says, as if that settled it.
+> left: Ask whose the others are
+  rel mabel +small
+  mood +medium
+  gold -tiny
+  say: She tells you, cup by cup: a fisherman, a dead headmaster, a girl who became a duchess and still writes. "And you," she says. Something in your chest unknots.
+> right: Say thank you and sit down
+  mood +small
+  health +small
+  say: You sit. She brings your tea in your cup. You don't need to say anything else, and she doesn't either.
+
+# ---------------- Mr Grimsby (the bookshop) ----------------
+
+@event grimsby_intro
+title: Not That One
+class: routine
+tone: light
+place: grimsbys_books
+actor: grimsby
+when: not met(grimsby)
+weight: 30
+art: book
+tags: study money
+scene: A cramped bookshop with leaning shelves, an elderly bookseller on a ladder holding out a book to a student below, the student holding a list.
+text: You ask for a textbook. An elderly man on a ladder says "Ah!" with enormous enthusiasm and hands you a history of lighthouses. "Not what you asked for," says Mr Grimsby. "What you'll need. You'll see."
+> left: Buy the lighthouse book
+  meet grimsby
+  gold -small
+  lore +small
+  rel grimsby +small
+  say: You read it on the barge home. Chapter four has the exact proof your essay was missing. When you go back to say so, he only nods. "They always come back," he says. "Lighthouses."
+> right: Insist on the textbook
+  meet grimsby
+  gold -tiny
+  rel grimsby -tiny
+  say: He finds it after forty minutes, under a cat. He sells it to you sadly, like a doctor handing over a prescription he doesn't believe in.
+
+@event grimsby_parcel
+title: The Wrong Book, Posted
+class: routine
+tone: light
+trigger: social
+actor: grimsby
+when: rel(grimsby) >= 2
+weight: 10
+repeat: 6
+art: book
+tags: study
+scene: A brown-paper parcel tied with string on a library desk, a student unwrapping an odd old book while a cat watches from the next chair.
+text: {A parcel arrives from Grimsby's. Inside is a book you didn't order and a note that says "Thought of you. Pay when convenient. A. G."|Another parcel from Mr Grimsby. This one is about eels.|Grimsby's parcels come monthly now, like weather.} {~It smells of rain and pipe smoke.|There's a bus ticket from another century inside the cover.|The note is written on the back of a recipe.}
+> left: Keep it and pay him
+  gold -small
+  lore +small
+  rel grimsby +small
+  say: {~It's the wrong book, exactly as promised, and somewhere in it is the right page. It always is.|You read it out of politeness and finish it out of something else.}
+> right: Post it back
+  gold -tiny
+  rel grimsby -tiny
+  say: {~The postage costs more than the book would have. He sends a cheerful note that says "Next time, then."|He sends it straight back with a second, wronger book. You keep both.}
+
+@event grimsby_mind_the_shop
+title: Mind the Shop
+class: milestone
+tone: warm
+trigger: social
+actor: grimsby
+when: rel(grimsby) >= 25
+weight: 18
+art: key
+tags: study money
+scene: A student alone behind the counter of a crowded old bookshop at dusk, a ring of keys on the counter and a customer peering in through the dusty window.
+text: Mr Grimsby has a ladder accident (a mild one; he lands on the poetry) and needs someone to mind the shop for a week. "You know where everything is," he says, which is untrue. "Better than me," he adds, which is.
+> left: Mind the shop
+  lore +medium
+  gold +small
+  mood -small
+  rel grimsby +medium
+  say: You sell eleven books, all of them the wrong ones, and every customer comes back to thank you. Grimsby, on crutches, says you have the gift. He means it as a warning.
+> right: "I can't, I'm sorry."
+  rel grimsby -small
+  say: He closes for the week instead, with a sign that says GONE TO LIGHTHOUSE. Nobody knows which one.
+
+# ---------------- Old Pell (Pell & Daughters; the apothecary job) ----------------
+
+@event pell_intro
+title: A Thousand Drawers
+class: routine
+tone: light
+place: pell_apothecary
+actor: pell
+when: not met(pell)
+weight: 30
+art: bottle
+tags: job money
+scene: An old apothecary on a library ladder in front of a wall of tiny labelled drawers, peering down over his spectacles at a student at the counter.
+text: You ask for something for a headache. An old man on a ladder stops, counts the drawers under his breath and comes down with exactly one twist of paper. "Willow and feverfew," says Old Pell. "Three pinches. Not four. Four is for people who don't listen."
+> left: Ask why not four
+  meet pell
+  gold -tiny
+  alchemy +small
+  rel pell +small
+  say: He tells you, at length, with diagrams drawn in the counter dust. You leave with the cure, a headache from the lecture and the dosage for nine other things.
+> right: Pay and go
+  meet pell
+  gold -tiny
+  say: He nods at the door as you leave, as if adding you to a ledger of people who will be back. You are back within a month.
+
+@event pell_count_drops
+title: Count Them Aloud
+class: routine
+tone: light
+trigger: social
+actor: pell
+when: rel(pell) >= 0 and member(apothecary_clerk)
+weight: 10
+repeat: 5
+art: bottle
+tags: job study
+scene: An old apothecary at a wooden counter holding a glass dropper over a vial, a student beside him counting on their fingers, a wall of tiny labelled drawers behind them.
+text: {Old Pell sets a dropper in your hand. "Forty. Aloud." He watches your lips, not the vial.|"Forty," says Pell, and stands behind you. You can hear him counting along under his breath.|Pell has started leaving you the hard tinctures. That is how he says he trusts you.} {~A daughter rolls her eyes at the counter.|The drawers rattle when a cart goes by.|Something in drawer three hundred is humming.}
+> left: Count, aloud, every drop
+  alchemy +small
+  mood -tiny
+  rel pell +small
+  say: {~Forty, exactly. Pell says nothing for a full minute, then "Again." You are fairly sure that was praise.|You lose count at thirty-one and start over without being told. Pell grunts approvingly.}
+> right: Eyeball it; it's close enough
+  challenge brew easy:
+    win:
+      alchemy +tiny
+      say: {~It's right. Pell checks it three times and is visibly annoyed that it's right.|Close enough is, today, exactly right. "Luck," says Pell. "Don't."}
+    lose:
+      rel pell -small
+      perform apothecary_clerk -small
+      say: {~Forty-three. Pell pours it out without a word and hands you the dropper again. The silence lasts all shift.|Too many. A daughter fixes it before he sees. He sees.}
+
+@event pell_daughters
+title: Pell & Daughters
+class: milestone
+tone: warm
+trigger: social
+actor: pell
+when: rel(pell) >= 20
+weight: 18
+art: scales
+tags: job home
+scene: An old apothecary and his two grown daughters arguing across a counter over a new painted shop sign, a student standing awkwardly between them.
+text: Pell's daughters want a new sign, brighter labels and a counter that faces the door. Pell wants it to be fifty years ago. All three of them turn to you, the only person in the shop who isn't family. "Well?" says Pell.
+> left: Side with the daughters
+  rel pell -small
+  mood +small
+  alignment +tiny
+  say: Pell stamps into the back room. A week later the new sign goes up. Underneath it, in small old letters, it still says PELL. He shows you, gruffly, as though you'd asked.
+> right: "The drawers have never been wrong."
+  rel pell +medium
+  gold +small
+  say: Pell glows. The daughters glare. Pell gives you a raise and the daughters give you all the worst stocktakes. Everyone feels this is fair.
+
+# ---------------- Grisk (the moneylender) ----------------
+
+@event grisk_pleasantries
+title: Pleasantries
+class: routine
+tone: tense
+trigger: social
+actor: grisk
+when: rel(grisk) >= -10 and not flag(grisk_gone)
+weight: 8
+repeat: 6
+art: pouch
+tags: money social
+scene: A goblin in a velvet waistcoat sitting at a corner table in a low-beamed tavern, raising a small glass to a student, a fat ledger at his elbow.
+text: {Grisk raises a small glass from the corner table of the Gilded Newt. "My friend," he says. "Do sit. I'm not working."|Grisk, at the corner table again. "How is the purse?" he asks, with what sounds like real concern.|"Ah, my favourite non-client," purrs Grisk.} {~His ledger stays closed, which feels deliberate.|He is eating a single olive very slowly.|The landlady gives you a warning look.}
+> left: Sit for one drink
+  gold -tiny
+  guile +small
+  rel grisk +small
+  say: {~He talks about money the way other people talk about weather, and you learn more in an hour than in a term of Umbral Theory.|He tells you which of the village shops are in trouble and why. It feels like gossip. It is a lesson.|He pays for the drinks and writes nothing down, which is the most unsettling thing he has ever done.}
+> right: Keep walking
+  rel grisk -tiny
+  say: {~"Another time," he calls after you. "I'm very patient."|He raises the glass anyway. You feel it between your shoulder blades all the way out.}
+
+@event grisk_tip
+title: A Tip, Between Friends
+class: routine
+tone: tense
+trigger: social
+actor: grisk
+when: rel(grisk) >= 4 and not has(in_debt) and not flag(grisk_gone)
+weight: 10
+art: coin
+tags: money
+scene: A goblin leaning across a tavern table to murmur into a student's ear, sliding a single gold coin across the wood with one finger.
+text: Grisk slides a coin across the table. "Between friends," he murmurs. "The barge company is about to buy a second barge. The ferryman's cousin will sell his share this week, cheap, because he doesn't know. You could know."
+> left: Buy the share
+  alignment -tiny
+  chance 60:
+    gold +large
+    rel grisk +small
+    say: The second barge arrives. The share triples. Grisk lifts his glass across the Newt. You feel rich and slightly unwell.
+  else:
+    gold -medium
+    say: The second barge sinks on its first crossing. Grisk is sympathetic. "Risk," he says. "Delicious, and sometimes poison."
+> right: Leave the cousin his share
+  rel grisk -tiny
+  alignment +tiny
+  say: Grisk pockets the coin. "Honest," he says, as if diagnosing something. "It'll pass. Or it won't, and you'll be poor and admired."

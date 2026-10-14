@@ -148,8 +148,8 @@ on: month_start
 label: Dormitory & board
 when: turn > 1 and term
 do:
-  if gold >= 10:
-    gold -10
+  if gold >= 8:
+    gold -8
     board_missed = 0
   else:
     gold = 0
@@ -172,9 +172,9 @@ on: term_start
 label: Tuition
 do:
   if has(origin_scholar):
-    gold -20
+    gold -15
   else:
-    gold -40
+    gold -30
 
 @hook gpa_probation
 on: term_end

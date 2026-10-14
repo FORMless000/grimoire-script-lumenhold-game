@@ -14,7 +14,7 @@ house: Emberhall
 color: #b0383c
 romance: true
 look: hair:7 skin:5 style:1
-tags: noble ambitious fire
+tags: noble ambitious fire peer
 age: 19
 role: student
 year: 1
@@ -34,7 +34,7 @@ house: Rootward
 color: #4f8a3c
 romance: true
 look: hair:2 skin:0 style:2
-tags: commoner kind herbs virtuous
+tags: commoner kind herbs virtuous peer
 age: 19
 role: student
 year: 1
@@ -54,7 +54,7 @@ house: Stillwater
 color: #6a4aa8
 romance: true
 look: hair:4 skin:3 style:4
-tags: seer quiet mystery
+tags: seer quiet mystery peer
 age: 19
 role: student
 year: 1
@@ -74,7 +74,7 @@ house: Duskgate
 color: #3a3a4a
 romance: true
 look: hair:0 skin:1 style:3
-tags: rogue guile trouble
+tags: rogue guile trouble peer
 age: 20
 role: student
 year: 2
@@ -94,7 +94,7 @@ house: Brasswick
 color: #2a8a8a
 romance: true
 look: hair:5 skin:2 style:0
-tags: artificer chaotic
+tags: artificer chaotic peer
 age: 19
 role: student
 year: 1
@@ -114,7 +114,7 @@ house: Stillwater
 color: #3a5a7a
 romance: true
 look: hair:4 skin:0 style:0
-tags: mystery north hollowstar
+tags: mystery north hollowstar peer
 age: 20
 role: student
 year: 1
@@ -134,7 +134,7 @@ house: Duskgate
 color: #a86a2a
 romance: true
 look: hair:2 skin:4 style:3
-tags: gossip journalist virtuous
+tags: gossip journalist virtuous peer
 age: 20
 role: student
 year: 2
@@ -155,7 +155,7 @@ color: #7a4a20
 romance: false
 start_rel: -10
 look: hair:3 skin:1 style:2
-tags: prefect bully rival ruthless
+tags: prefect bully rival ruthless peer
 age: 21
 role: prefect
 year: 3
@@ -176,9 +176,10 @@ house: Faculty
 color: #444466
 romance: false
 look: hair:4 skin:0 style:0
-tags: faculty mentor strict
+tags: faculty mentor strict teacher
 age: 68
 role: professor
+seeks: rarely
 traits: severe exacting dry warm
 interests: duelling roses teaching chess
 stats: arcana 88 lore 74 alchemy 30 charm 22 vigor 40 guile 36 wealth 4
@@ -199,6 +200,7 @@ look: hair:4 skin:2 style:4
 tags: faculty kind herbs virtuous
 age: 81
 role: staff
+seeks: sometimes
 traits: kind eccentric patient warm
 interests: plants bees soup animals history
 stats: arcana 46 lore 58 alchemy 72 charm 30 vigor 20 guile 34 wealth 2
@@ -219,6 +221,7 @@ look: hair:7 skin:5 style:1
 tags: faculty authority
 age: 57
 role: headmistress
+seeks: rarely
 traits: calm watchful formidable perceptive
 interests: chess history justice
 stats: arcana 84 lore 90 alchemy 50 charm 60 vigor 30 guile 70 wealth 4
@@ -235,7 +238,7 @@ house: none
 color: #8aa8c8
 romance: false
 look: hair:4 skin:5 style:1
-tags: north hollowstar ruthless
+tags: north hollowstar ruthless peer
 age: 18
 role: outsider
 traits: fierce lonely proud wary
@@ -245,3 +248,174 @@ schedule: village@afternoon,evening lakeshore@night
 relations: kael:20
 voice: Sharp, curt, older than she is; Northern words when upset. Treats kindness like a trick she hasn't learned the counter to.
 desc: Raised by the Hollow cult to open a door she has never seen. Sharp as an icicle, lonely as a frozen lake, and much younger than she pretends to be.
+
+# ---------------- Fixtures (design §5.5): people of a place or a track, with lighter ladders ----------------
+# They come looking for you rarely, and only once you've been coming to them (`seeks:`). No romance.
+
+@npc amaranth
+name: Sister Amaranth
+short: Sister Amaranth
+title: Healer of the infirmary
+pronouns: she/her
+house: Faculty
+color: #9a3b4a
+romance: false
+look: hair:2 skin:3 style:0
+tags: faculty healer teacher virtuous
+age: 54
+role: staff
+seeks: rarely
+traits: severe honest patient warm
+interests: plants soup history
+stats: arcana 40 lore 52 alchemy 80 charm 24 vigor 34 guile 30 wealth 2
+schedule: alchemy_lab@morning infirmary@afternoon,evening,night great_hall@noon
+relations: maud:25 thorne:10 brask:15
+voice: Short sentences, delivered while doing something else. Believes no excuse, forgives most things anyway. Praise comes as an instruction ("Keep doing that.").
+desc: Runs the infirmary with warming charms, tonics and no patience for excuses. Teaches the healing half of Alchemy & Healing.
+
+@npc brask
+name: Professor Hedda Brask
+short: Professor Brask
+title: Professor of Beastcraft & Flight
+pronouns: she/her
+house: Faculty
+color: #7a5a2a
+romance: false
+look: hair:3 skin:4 style:4
+tags: faculty teacher animals
+age: 61
+role: professor
+seeks: rarely
+traits: dry gentle stubborn brave
+interests: animals flying history
+stats: arcana 52 lore 48 alchemy 30 charm 16 vigor 70 guile 28 wealth 2
+schedule: stables@morning,afternoon,evening great_hall@noon
+relations: amaranth:15 maud:20 thorne:5
+voice: Speaks to creatures in full sentences and to students in half ones. Every story ends with a bite and a moral. Laughs once a term, loudly.
+desc: Teaches Beastcraft & Flight and is kinder to animals than to students, though the gap closes for anyone who mucks out without being asked.
+
+@npc vey
+name: Professor Ottilie Vey
+short: Professor Vey
+title: Professor of Illusion & Glamour
+pronouns: she/her
+house: Faculty
+color: #6a4a8a
+romance: false
+look: hair:6 skin:1 style:1
+tags: faculty teacher theatre
+age: 46
+role: professor
+seeks: rarely
+traits: charming perceptive sly funny
+interests: theatre painting cards
+stats: arcana 60 lore 50 alchemy 20 charm 78 guile 70 vigor 22 wealth 3
+schedule: lecture_tower@morning,afternoon great_hall@noon
+relations: thorne:5 marisol:20
+voice: Amused, theatrical, a little too observant. Asks questions she already knows the answer to, to see what you'll do. Delighted by anyone who fools her.
+desc: Teaches Illusion & Glamour and grades on whether you fooled her. She is very hard to fool, and very generous to the few who manage it.
+
+@npc marisol
+name: Professor Ines Marisol
+short: Professor Marisol
+title: Professor of Tidecalling
+pronouns: she/her
+house: Faculty
+color: #2a6a8a
+romance: false
+look: hair:1 skin:3 style:4
+tags: faculty teacher tides
+age: 39
+role: professor
+seeks: rarely
+traits: dreamy warm reckless curious
+interests: tides music writing
+stats: arcana 70 lore 56 alchemy 18 charm 40 guile 20 vigor 52 wealth 2
+schedule: lakeshore@morning,evening lecture_tower@afternoon
+relations: vey:20 thorne:15
+voice: Soft and unhurried until there's weather; then she whoops. Quotes poems about water and forgets the last line. Believes cold water is good for everyone.
+desc: Teaches the tidecalling half of Evocation, waist-deep in the lake at dawn. Keeps the lake calm on exam days and reads poetry under a dry patch of air when it rains.
+
+@npc mabel
+name: Mabel Thistlewood
+short: Mabel
+title: Keeper of the tea shop
+pronouns: she/her
+house: none
+color: #a0703a
+romance: false
+look: hair:4 skin:2 style:4
+tags: village kind
+age: 63
+role: villager
+seeks: rarely
+traits: perceptive warm nosy patient
+interests: cooking gossip music
+stats: arcana 14 lore 30 alchemy 36 charm 58 vigor 20 guile 40 wealth 3
+schedule: mabels@morning,noon,afternoon village@evening
+relations: grimsby:20 pell:15
+voice: Warm and brisk; finishes your order for you. Reads moods like weather and says so. Calls students "petal" and means something different every time.
+desc: Forty kinds of tea, three kinds of cake, and a talent for reading your mood from the way you open her door.
+
+@npc grimsby
+name: Mr Alder Grimsby
+short: Mr Grimsby
+title: Bookseller
+pronouns: he/him
+house: none
+color: #5a4a2a
+romance: false
+look: hair:4 skin:1 style:0
+tags: village books
+age: 72
+role: villager
+seeks: rarely
+traits: eccentric kind distant curious
+interests: books history maps
+stats: arcana 20 lore 74 alchemy 12 charm 30 vigor 10 guile 22 wealth 2
+schedule: grimsbys_books@noon,afternoon village@evening
+relations: mabel:20
+voice: Vague, courteous, enthusiastic about the wrong thing. Recommends books by their smell. Remembers what you read three years ago and nothing about what you asked for today.
+desc: Keeps a bookshop so crowded the shelves lean on each other. He will find anything except what you came in for, which is often what you needed.
+
+@npc pell
+name: Old Pell
+short: Old Pell
+title: Apothecary of Pell & Daughters
+pronouns: he/him
+house: none
+color: #3a5a3a
+romance: false
+look: hair:4 skin:2 style:0
+tags: village
+age: 77
+role: villager
+seeks: rarely
+traits: exacting proud loyal stubborn
+interests: plants rules money
+stats: arcana 22 lore 46 alchemy 76 charm 14 vigor 16 guile 30 wealth 3
+schedule: pell_apothecary@morning,afternoon village@evening
+relations: mabel:15 grisk:-20
+voice: Gruff, precise, counts aloud. Never apologises; corrects a label instead. Trusts people who measure twice, and says so once a decade.
+desc: Taught three generations of the village to count drops. His daughters run the counter now; he runs the drawers, and the drawers are never wrong.
+
+@npc grisk
+name: Grisk
+short: Grisk
+title: Moneylender, friend to the temporarily embarrassed
+pronouns: he/him
+house: none
+color: #4a6a3a
+romance: false
+look: hair:0 skin:6 style:1
+tags: village goblin money
+age: 58
+role: villager
+seeks: sometimes
+traits: sly charming patient guarded
+interests: money cards gossip
+stats: arcana 18 lore 40 alchemy 20 charm 46 vigor 14 guile 82 wealth 4
+schedule: gilded_newt@evening village@afternoon
+relations: pell:-10
+voice: Courtly, purring, every sentence an invoice. Calls debts "friendships". Never threatens; describes, pleasantly, what will happen.
+desc: A goblin in a velvet waistcoat who lends to students: sixty crowns today, twelve a month for six. He keeps a ledger, and sometimes asks for favours instead of coin.

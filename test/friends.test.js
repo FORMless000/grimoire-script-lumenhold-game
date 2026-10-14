@@ -80,3 +80,35 @@ test('friends: visiting where someone is warms them (track 1)', () => {
   }
   assert.ok(warmed > 0);
 });
+
+test('friends: `seeks: rarely` comes only once you have been coming to them', () => {
+  const eng = atMap(1, ['vey', 'tobias']);
+  for (const id of ['vey', 'tobias']) { eng.s.npcs[id].warmth = 20; eng.s.npcs[id].rel = 40; }
+  assert.equal(eng.pull('vey'), 0, 'below the rarely threshold');
+  assert.ok(eng.pull('tobias') > 0);
+  eng.s.npcs.vey.warmth = 60;
+  assert.ok(eng.pull('vey') > 0 && eng.pull('vey') < eng.pull('tobias') + 40 * 0.6, 'scaled down');
+});
+
+test('tracks: enrolling meets the course lead; the lead\'s regard is the advisor modifier (±15)', () => {
+  const eng = atMap(2, []);
+  eng.s.npcs.brask.met = false;
+  quiet(() => eng.run([{ t: 'enrol', track: 'beastcraft' }], eng.newCtx(null, null)));
+  assert.ok(eng.s.npcs.brask.met);
+  eng.s.npcs.brask.rel = 50; assert.equal(eng.advisorBonus('beastcraft'), 10);
+  eng.s.npcs.brask.rel = 100; assert.equal(eng.advisorBonus('beastcraft'), 15);
+  eng.s.npcs.brask.rel = -40; assert.equal(eng.advisorBonus('beastcraft'), -8);
+  assert.equal(eng.advisorBonus('astromancy'), 0, 'no lead');
+});
+
+test('casting: peer-only premises never cast faculty or villagers', () => {
+  const { content: c } = { content };
+  const eng = atMap(3, Object.keys(c.npcs), (s) => { for (const n of Object.values(s.npcs)) { n.rel = 60; n.bond = 'friend'; } });
+  for (const id of ['soc_secret', 'soc_village_trip', 'soc_become_close', 'soc_borrow_money', 'soc_gift_given']) {
+    for (let k = 0; k < 20; k++) {
+      const cast = eng.fillCast(c.events[id]);
+      if (!cast) continue;
+      for (const who of Object.values(cast)) assert.ok((c.npcs[who].tags || []).includes('peer'), id + ' cast ' + who);
+    }
+  }
+});

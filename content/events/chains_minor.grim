@@ -156,9 +156,11 @@ chain: debt
 scene: A small goblin in a velvet waistcoat and pince-nez, sitting on a crate in an alley, a ledger in one hand and a quill behind his ear.
 text: A goblin in a velvet waistcoat falls into step beside you. "Grisk," he says, "friend to the temporarily embarrassed. Sixty crowns, today. Twelve a month for six months. Very reasonable."
 > left: No thank you
+  meet grisk
   mood -tiny
   say: "My door is always open," Grisk says. You suspect it is actually always locked.
 > right: Take the loan
+  meet grisk
   gold +huge
   gain in_debt
   debt_paid = 0
@@ -178,6 +180,7 @@ chain: debt
 scene: A goblin in a velvet waistcoat waiting outside the bursar's office, waving a receipt like a small flag.
 text: The bursar's office has stopped sending reminders. Instead, Grisk is waiting outside it with a receipt. "Two months' board, paid in full," he beams. "By me. A loan, naturally. Sixty crowns, twelve a month for six months. You can sign here."
 > left: Sign his ledger
+  meet grisk
   gold +huge
   gain in_debt
   debt_paid = 0
@@ -185,6 +188,7 @@ text: The bursar's office has stopped sending reminders. Instead, Grisk is waiti
   flag grisk_done
   say: You sign. He counts the change into your palm and writes your name in the ledger with a flourish that has teeth in it.
 > right: Beg the bursar for time
+  meet grisk
   flag grisk_done
   mood -small
   renown -tiny
@@ -229,6 +233,7 @@ scene: A crate of clinking bottles hidden under a tarp on a dark boathouse dock,
 text: Grisk again. "You were so good last time. A crate needs moving across the lake tonight. Don't open it. Forty crowns."
 > left: You're done with him
   unflag grisk_favour
+  flag grisk_gone
   mood +small
   say: "Everyone's done with me eventually," Grisk says, without rancour. You never see him again.
 > right: Move the crate

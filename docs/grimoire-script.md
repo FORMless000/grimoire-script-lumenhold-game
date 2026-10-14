@@ -131,12 +131,23 @@ house: Emberhall
 color: #b0383c
 romance: true
 look: hair:7 skin:5 style:1
-tags: noble ambitious fire
+tags: noble ambitious fire peer
 start_rel: 0
+# seeks: often        (optional; how readily they come looking for you: often | sometimes | rarely | never)
 desc: Brilliant, impatient and used to winning.
 ```
 
 `pronouns` must start with `she`, `he` or `they` (this drives `{they}`, `{them}` …). `short` is the name `{npc}` prints (use it when the first word of `name` is a title: `short: Professor Thorne`). `romance: true` allows `love` to grow. `look` is optional and fixes the procedural portrait (hair 0–7, skin 0–5, style 0–4). `tags` can be tested with `tagged(npc, faculty)`; the character's `role:` counts as a tag too (`tagged(friend, student)` excludes staff, professors and outsiders such as Ilse).
+
+**Casting by premise.** A generic event's `where` says who its premise fits, not just who it excludes:
+- `tagged(x, peer)`: someone your age you spend time with (students, the prefect, Ilse); for hanging out, secrets, rivalries, birthdays and loans;
+- `(tagged(x, student) or tagged(x, prefect))`: a classmate; for notes, homework, exams and class pairings;
+- `tagged(x, teacher)`: someone who teaches a course; for advice after a lecture;
+- `romanceable(x)`: for romance.
+
+Shopkeepers and staff (`role: villager`, `staff`) have their own events instead.
+
+`seeks:` scales how often a character comes looking for you on their own (design §5.5). `rarely` characters (professors, shopkeepers) come only once you have been going to them; `never` ones only appear where they are.
 
 Each NPC carries a relationship record:
 
@@ -485,7 +496,7 @@ Roles are filled on a scratch copy of the RNG, with backtracking, favouring stro
 **Tracks** (`@track` in `content/world/tracks.grim`). Statements: `enrol evocation` (or `enrol evocation 2`), `join duelling`, `leave duelling` (`leave job` / `leave club`: whichever you have), `apply intern_royal_library`, `promote track`, `perform track +small`, `rank_xp track +small`, `progress thesis +medium`, `study evocation +small` (exam preparation for an enrolled course, capped at 15; `study +small` without a track prepares for every enrolled course; this replaces `grades` effects). Inside a track notice, `track` means the track that triggered it, and `{track}` prints its name. Functions: `enrolled(t) member(t) applied(t) level(t) passed(t, n) rank(t) performance(t) progress(t) due(t) visits(t)`.
 
 - **Courses:** enrolment menus (`offers: courses`, `pick: 2`) at each term start; `opens: 2` delays a course to term 2. At term end each enrolled course sits an exam (a challenge at the course level's difficulty, easier for study), graded A/B/C/F; the grades make the **GPA**. Passing a level teaches its spells (`teaches: flame@1 tide@2`). `legacy:` lists v0.2 states that enrolling grants, so old class events keep firing.
-- **Clubs and jobs:** one of each at a time. Each term asks for `due:` visits to the track's place. Visits raise performance and rank XP; jobs pay `pay:` per visit (double on breaks). Missed visits cost performance (and standing with the `lead:`). Below 40 a `track_warning` follows, at 0 you are dropped, and with enough rank XP and performance ≥ 70 a `track_promotion` is offered.
+- **Clubs and jobs:** one of each at a time. Each term asks for `due:` visits to the track's place. Visits raise performance and rank XP; jobs pay `pay:` per visit (double on breaks). Missed visits cost performance (and standing with the `lead:`); a term with performance ≥ 70 raises it. Below 40 a `track_warning` follows, at 0 you are dropped, and with enough rank XP and performance ≥ 70 a `track_promotion` is offered.
 - **Internships and the thesis** use the same statements: `apply`, then a letter event that `join`s or `leave`s; the thesis is `join thesis` with progress from visits and `progress thesis +…`.
 
 **Hooks:** `on: term_start` and `on: term_end` run at the first and last month of each term (rules use them for tuition, term marks and probation).

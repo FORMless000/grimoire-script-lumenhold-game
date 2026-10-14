@@ -37,7 +37,7 @@ text: {The courtyard fountain is taking wishes again.|The fountain again. Someon
 - **Budget:** `routine` means every option costs or risks something and stays within ±1.5 medium-equivalents (lint checks it). Typical shape: a small gain against a tiny or small cost.
 - **Cast:** optional. If an event needs a character, use `cast:` roles:
   - `here: present(place)`: someone whose schedule puts them here now;
-  - `friend: any where rel(friend) >= 10`;
+  - `friend: any where tagged(friend, peer) and rel(friend) >= 10` (cast by premise: `peer` to spend time with, `(tagged(x, student) or tagged(x, prefect))` for a classmate, `tagged(x, teacher)` for a professor; never just `not tagged(x, faculty)`, which also admits shopkeepers);
   - a fixed npc.
 
   An event whose cast can't be filled is skipped. So **at least two of each source's events have no cast**, or the pool comes up empty. Never use `actor: any`.
@@ -67,6 +67,7 @@ An event with a fixed `actor: <npc>` and no `place:`, `track:`, `plan:` or `slot
 - **Give every character a ladder from `rel 0`**: at least two repeatable personal events (`repeat: 4–6`) open at `rel(npc) > -10` or lower, then milestones at 10, 20, 40… A character whose events all start at `rel >= 10` stalls after the intro, because there is nothing for them to bring.
 - **One option should warm to them** (`rel` or `spark` up, at a cost) and one should not; the player's pick decides whether they come back more often.
 - A rival's ladder can start negative (`rel(lyra) > -24`): contact with a rival counts as engagement whichever way it goes.
+- **Fixtures** (`seeks: rarely`: professors, staff, shopkeepers) need less: an introduction at their `place:` (or none, if a course or job `lead:` introduces them), two or three repeatable cards from `rel 0`, and one milestone at about `rel 25–30` (a spell they teach, a key, a cup on the hook). No romance.
 
 ## What a source's pool should cover
 

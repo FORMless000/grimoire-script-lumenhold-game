@@ -14,7 +14,7 @@ title: Study Session
 class: routine
 tone: light
 cast:
-  npc: any where not tagged(npc, faculty) and rel(npc) >= 0
+  npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 0
 per: npc
 trigger: social
 repeat: 4
@@ -39,7 +39,7 @@ title: A Small Loan
 class: routine
 tone: light
 cast:
-  npc: any where not tagged(npc, faculty) and rel(npc) >= 3
+  npc: any where tagged(npc, peer) and rel(npc) >= 3
 per: npc
 trigger: social
 when: gold >= 20
@@ -80,7 +80,7 @@ title: Something Like Friendship
 class: milestone
 tone: light
 cast:
-  npc: any where bond(npc) == "none" and rel(npc) >= 18 and not tagged(npc, faculty)
+  npc: any where tagged(npc, peer) and bond(npc) == "none" and rel(npc) >= 18
 per: npc
 trigger: social
 weight: 20
@@ -102,7 +102,7 @@ title: The Kind of Friend You Call at 3am
 class: milestone
 tone: light
 cast:
-  npc: any where bond(npc) == "friend" and rel(npc) >= 36
+  npc: any where tagged(npc, peer) and bond(npc) == "friend" and rel(npc) >= 36
 per: npc
 trigger: social
 weight: 18
@@ -124,7 +124,7 @@ title: A Secret
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 15 and not tagged(npc, faculty)
+  npc: any where tagged(npc, peer) and rel(npc) >= 15
 per: npc
 trigger: social
 repeat: 8
@@ -147,7 +147,7 @@ title: Words Exchanged
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 6 and bond(npc) != "partner"
+  npc: any where tagged(npc, peer) and rel(npc) >= 6 and bond(npc) != "partner"
 per: npc
 trigger: social
 repeat: 6
@@ -174,7 +174,7 @@ title: A Day in the Village
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 6 and not tagged(npc, faculty)
+  npc: any where tagged(npc, peer) and rel(npc) >= 6
 per: npc
 trigger: social
 when: gold >= 5
@@ -197,7 +197,7 @@ title: Sick Friend
 class: routine
 tone: light
 cast:
-  npc: any where (bond(npc) == "friend" or bond(npc) == "close" or bond(npc) == "partner")
+  npc: any where tagged(npc, peer) and (bond(npc) == "friend" or bond(npc) == "close" or bond(npc) == "partner")
 per: npc
 trigger: social
 repeat: 8
@@ -221,7 +221,7 @@ title: A Small Gift
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 9
+  npc: any where tagged(npc, peer) and rel(npc) >= 9
 per: npc
 trigger: social
 repeat: 7
@@ -245,7 +245,7 @@ title: Drifting Apart
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 6 and rel(npc) < 24 and not tagged(npc, faculty)
+  npc: any where tagged(npc, peer) and rel(npc) >= 6 and rel(npc) < 24
 per: npc
 trigger: social
 when: since(soc_drift) > 3
@@ -270,7 +270,7 @@ title: Rumours About {npc}
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 9
+  npc: any where rel(npc) >= 9 and not tagged(npc, villager)
 per: npc
 trigger: social
 repeat: 8
@@ -297,7 +297,7 @@ title: Desperate Homework
 class: routine
 tone: light
 cast:
-  npc: any where not tagged(npc, faculty) and rel(npc) >= 0
+  npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 0
 per: npc
 trigger: social
 repeat: 5
@@ -330,7 +330,7 @@ title: A Word of Advice
 class: routine
 tone: light
 cast:
-  npc: any where tagged(npc, faculty) and rel(npc) >= 6
+  npc: any where tagged(npc, teacher) and rel(npc) >= 6
 per: npc
 trigger: social
 repeat: 6
@@ -588,7 +588,7 @@ title: A Public Taunt
 class: routine
 tone: tense
 cast:
-  npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -12) and not tagged(npc, faculty)
+  npc: any where tagged(npc, peer) and (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -12)
 per: npc
 trigger: social
 repeat: 4
@@ -615,7 +615,7 @@ title: Burying the Hatchet
 class: milestone
 tone: tense
 cast:
-  npc: any where (bond(npc) == "rival" or bond(npc) == "nemesis") and rel(npc) >= 3
+  npc: any where tagged(npc, peer) and (bond(npc) == "rival" or bond(npc) == "nemesis") and rel(npc) >= 3
 per: npc
 trigger: social
 weight: 18
@@ -637,7 +637,7 @@ title: The Wager
 class: routine
 tone: tense
 cast:
-  npc: any where bond(npc) == "rival" and not tagged(npc, faculty)
+  npc: any where (tagged(npc, student) or tagged(npc, prefect)) and bond(npc) == "rival"
 per: npc
 trigger: social
 repeat: 6

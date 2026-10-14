@@ -373,6 +373,7 @@ function analyzeWorld(content, P, scanExpr, scanText) {
     if (n.romance && !(n.age >= 18)) P('error', loc(n), 'romance: true needs age 18 or over');
     inVocab(n.traits, 'traits', n, 'trait'); inVocab(n.interests, 'interests', n, 'interest');
     if (n.role) inVocab(n.role, 'roles', n, 'role');
+    if (n.seeks) inVocab(n.seeks, 'seeks', n, 'seeks');
     for (const k of Object.keys(n.stats || {})) if (!isSkill(k) && k !== 'wealth') P('error', loc(n), 'stats: "' + k + '" is not a skill (or wealth)');
     if (n.stats && n.stats.wealth != null && !(n.stats.wealth >= 1 && n.stats.wealth <= 5)) P('error', loc(n), 'stats: wealth is 1–5');
     for (const x of n.schedule || []) {

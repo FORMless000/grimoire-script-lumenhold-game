@@ -134,6 +134,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `schedule` | structured |  |
 |  | `relations` | structured |  |
 |  | `voice` | text |  |
+|  | `seeks` | text |  |
 | `@state id` | `name` | text | yes |
 |  | `desc` | text | yes |
 |  | `art` | text |  |
