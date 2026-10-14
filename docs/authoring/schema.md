@@ -108,6 +108,9 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `swing` | structured |  |
 |  | `wage` | structured |  |
 |  | `spark_follow` | structured |  |
+|  | `odds` | structured |  |
+|  | `study` | structured |  |
+|  | `spell_check` | structured |  |
 | `@preset id` | `params` | text |  |
 |  | `desc` | text |  |
 | `@resource id` | `name` | text | yes |

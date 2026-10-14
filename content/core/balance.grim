@@ -25,6 +25,13 @@ combat_cost: small
 swing: normal 2.5 wild 1.2 steady 4
 # A shift's pay (M10): `wage` in a job's cards pays the job's `pay:` at your rank × this share.
 wage: short 0.5 full 1 overtime 2
+# The range a check's odds are clamped to (L-3): a 5% forced fail and a 5% forced success. Milestone checks (a
+# `class: milestone` card, an exam) have no forced fail.
+odds: min 5 max 95
+# Exam preparation (L-3): a course card adds `attend` by itself (options add or cost more); at most `cap` counts.
+study: attend 1 cap 15
+# A known spell adds `per` to checks of its discipline's skill, at most `cap` (design §9.2; L-3).
+spell_check: per 2 cap 6
 # Spark follows friendship (M37): a friendship gain adds spark × (spark / per), at most cap× (partner× for a partner);
 # spark crossing `cooldown` asks whether you want it (@game spark_cooldown).
 spark_follow: per 25 cap 2 partner 3 cooldown 30

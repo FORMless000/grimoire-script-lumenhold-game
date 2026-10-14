@@ -619,7 +619,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 
 **Exams:**
 - In the term's last month, each course's exam is a card (playtest 2): the player chooses to answer steadily or to go for top marks (the swing of §9.2), and the card shows the pass and A/B chances. The exam is on the course's skill, at difficulty **tier by level** (I = medium, II = hard, III = heroic), relative to the calendar curve (§8.6). The enrolment menu shows each course's skill, exam tier, spells and pass chance up front.
-- **Study modifiers:** attendance and study choices during the term add up to +15 to the roll.
+- **Study modifiers:** attendance and study choices during the term add up to +15 to the roll (L-3: a course card adds 1 by itself, so choices and skipped lectures decide most of it; `@balance study`).
 - Until the exam minigame exists (§T1), it **auto-resolves**.
 
 **Grades:**
@@ -822,7 +822,8 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 
 - `E(turn)` = the expected skill of a balanced player at that turn (from the curve).
 - `DC = E(turn) + tier offset`.
-- Odds = `clamp(50 + 2.5·(skill − DC), 8, 92)`.
+- Odds = `clamp(50 + slope·(skill − DC), 5, 95)` (slope by swing, §9.2; L-3: a 5% forced fail and forced success). A milestone check and an exam have no forced fail.
+- **Course levels** (L-3): a course card's check is one tier harder per level above I.
 - `partial:` is optional, with a band of ±5 around DC.
 - `variant hard`: the same event at tier +1 with ×1.5 rewards; the director picks it more often as the year advances.
 
@@ -923,7 +924,7 @@ challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam |
 
 - **Modifiers** (each capped at ±15):
   - `vs <role>.<stat>` shifts the DC by the opponent's stat minus E(turn);
-  - study points; the advisor relationship (the track's `lead:` regard, rel / 5, within ±15, inside that track's cards and at its exams); spells known (+3 each for relevant ones); items (§T2).
+  - study points; the advisor relationship (the track's `lead:` regard, rel / 5, within ±15, inside that track's cards and at its exams); spells known (+2 each for relevant ones, at most +6; L-3); items (§T2).
 - **Combat stub** (playtest 2): until the combat minigame (X5), fights use `combat`, so how rested, cheerful and charged the player is matters, and so does every spell learned. Entering a fight spends mana.
 - **Swing** (playtest 2): a check can be `wild` (skill moves the odds little: banter, luck) or `steady` (skill decides). Low-stakes checks should swing; hard ones should be steadier.
 - **Renown** can be the tested value (`using renown`) where popularity is the advantage.

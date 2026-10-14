@@ -149,6 +149,33 @@ text: t
   assert.ok(Math.abs(pv.paths.reduce((a, p) => a + p.p, 0) - 1) < 1e-9);
 });
 
+test('odds range: 5–95 by default, no forced fail on a milestone, @balance odds and spell_check (L-3)', () => {
+  const ev = (id, cls, tier = 'trivial') => `@event ${id}
+title: E
+class: ${cls}
+text: t
+> ok: Go
+  challenge negotiate ${tier}:
+    win:
+      health +small
+    lose:
+      health -small
+`;
+  const eng = engineWith(ev('plain', 'routine') + '\n' + ev('big', 'milestone') + '\n' + ev('far', 'routine', 'heroic'));
+  eng.s.vals.charm = 90;   // far above the curve: odds hit the top of the range
+  const st = (id) => eng.c.events[id].options[0].effects[0];
+  assert.equal(eng.challengeOdds(st('plain'), null, 'plain').win, 95);
+  assert.equal(eng.challengeOdds(st('big'), null, 'big').win, 100);
+  eng.s.vals.charm = 0;    // far below a heroic check: the forced success is all that's left
+  assert.equal(eng.challengeOdds(st('far'), null, 'far').win, 5);
+  eng.c.balance.odds = { min: 10, max: 80 };
+  eng.s.vals.charm = 90;
+  assert.equal(eng.challengeOdds(st('plain'), null, 'plain').win, 80);
+  assert.deepEqual(eng.spellCheck(), { per: 3, cap: 15 });   // the defaults when @balance says nothing
+  eng.c.balance.spell_check = { per: 2, cap: 6 };
+  assert.deepEqual(eng.spellCheck(), { per: 2, cap: 6 });
+});
+
 test('spells: hidden until known, disabled without mana, cost paid on choose', () => {
   const eng = engineWith(`@event cold
 title: C

@@ -196,7 +196,12 @@
       'wage',
       // friendship gains carry spark along (M37): spark / per × the gain, at most cap× (partner× for a partner);
       // crossing `cooldown` spark pushes @game spark_cooldown
-      'spark_follow'], effects: [] },
+      'spark_follow',
+      // the range a check's odds are clamped to: forced fail and forced success (L-3); milestones have no forced fail
+      'odds',
+      // exam preparation: what a course card adds by itself and the most it counts (L-3); a known spell's bonus on
+      // checks of its discipline, per spell and at most (L-3)
+      'study', 'spell_check'], effects: [] },
     // A named group of effects, used as a statement: `grind arcana`. Its body may use $params.
     preset: { props: ['params', 'desc'], effects: [], raw: ['do'] },
     resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
@@ -296,6 +301,9 @@
     swing(t) { return STRUCT_PROPS.weights(t); },
     wage(t) { return STRUCT_PROPS.weights(t); },
     spark_follow(t) { return STRUCT_PROPS.weights(t); },
+    odds(t) { return STRUCT_PROPS.weights(t); },
+    study(t) { return STRUCT_PROPS.weights(t); },
+    spell_check(t) { return STRUCT_PROPS.weights(t); },
     ramp(t) { const m = t.trim().match(/^(.+?)\s+(-?\d+)\s*\.\.\s*(-?\d+)$/); if (!m || +m[3] <= +m[2]) throw 'ramp: expected "<expression> low..high", e.g. ramp: rel(npc) 18..30'; return { expr: m[1], lo: +m[2], hi: +m[3] }; },
   };
   // `locked:` a menu option whose `when` fails stays visible, disabled, with this reason (M24); others hide.
