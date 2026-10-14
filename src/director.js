@@ -117,14 +117,19 @@
         // In an opened slot (midnight, M41) a place is open only if it has something that names the slot.
         const opened = picking && this.recipe()[d.at].source !== 'visit';
         const names = (e) => e.slot === slots[0] || (e.time || []).includes(slots[0]);
-        const open = slots.map((sl) => found && this.placeOpen(p, sl) && (!opened || (this.directorIndex().byPlace[p.id] || []).concat(p.track ? this.directorIndex().byTrack[p.track] || [] : []).some(names)));
+        // One visit per place a day (playtest 2, I3); an opened slot's places are different places at night.
+        const visited = picking && !opened && d.picks.includes(p.id);
+        const open = slots.map((sl) => found && !visited && this.placeOpen(p, sl) && (!opened || (this.directorIndex().byPlace[p.id] || []).concat(p.track ? this.directorIndex().byTrack[p.track] || [] : []).some(names)));
         const t = p.track && s.tracks[p.track] && s.tracks[p.track].status === 'member' ? s.tracks[p.track] : null;
         const here = found ? [...new Set(slots.flatMap((sl) => this.presentAt(p.id, sl).filter((id) => s.npcs[id] && s.npcs[id].met)))] : [];
         const ix = this.directorIndex();
         const news = found && (ix.byPlace[p.id] || []).some((e) => !s.seen[e.id] && this.eligible(e, new Set()) && this.test(e.when, null));
         places.push({ id: p.id, name: p.name, x: p.map.x, y: p.map.y, kind: p.kind || 'public', art: p.art || null, hint: hinted ? p.hint || '' : null, state: found ? (open.some(Boolean) ? 'open' : 'closed') : 'hinted', open, hours: p.open || null,
           // Breaks pause term obligations (B6): the place is still marked as yours, without what's due.
-          track: t ? Object.assign({ id: p.track, kind: this.c.tracks[p.track].kind }, this.phaseOf() === 'break' ? { due: null, urgent: false } : { due: Math.max(0, (t.due || 0) - (t.visits || 0)), urgent: this.isTermEnd() && t.visits < t.due }) : null,
+          // A job whose shifts are all done this term (I1) says so.
+          track: t ? Object.assign({ id: p.track, kind: this.c.tracks[p.track].kind }, this.phaseOf() === 'break' ? { due: null, urgent: false } : { due: Math.max(0, (t.due || 0) - (t.visits || 0)), urgent: this.isTermEnd() && t.visits < t.due },
+            this.phaseOf() !== 'break' && this.c.tracks[p.track].kind === 'job' && t.visits >= (t.due || 0) ? { done: true } : {}) : null,
+          visited: visited || undefined,
           present: here, news, festival: fest.filter((f) => f.place === p.id).map((f) => ({ slot: slots[f.visit], event: f.event })) });
       }
       return { map: breakMap, slots, places, locked: [], festivals: fest.filter((f) => f.visit < slots.length).map((f) => ({ slot: slots[f.visit], place: f.place, event: f.event })),
@@ -149,7 +154,7 @@
       const s = this.s, d = s.day, view = this.mapView(), sl = view.slots[0];
       if (id) {
         const p = view.places.find((x) => x.id === id);
-        if (!p || p.state !== 'open' || !p.open[0]) throw new Error('place ' + id + ' is not open in the ' + sl);
+        if (!p || p.state !== 'open' || !p.open[0]) throw new Error('place ' + id + ' is not ' + (p && p.visited ? 'open again today' : 'open in the ' + sl));
       }
       d.picks.push(id || null); d.phase = 'slots';
       if (!s.visitsTo) s.visitsTo = {};
@@ -157,7 +162,8 @@
       if (id) {
         s.visitsTo[id] = (s.visitsTo[id] || 0) + 1;
         const p = this.c.places[id];
-        if (p && p.track) this.attend(p.track, ctx);   // each visit counts
+        // Each visit counts; a job visit off shift (I1, I2) is an ordinary one, remembered for the slot's draw.
+        if (p && p.track && this.attend(p.track, ctx) === 'off') (d.offDuty = d.offDuty || []).push(d.picks.length - 1);
       }
       this.handleZeroed(ctx);
       s.hist.push(Object.assign({ t: 'pick', turn: s.turn, slot: sl, picks: [id || null], at: Date.now() }, Object.keys(ctx.deltas).length ? { deltas: { ...ctx.deltas } } : {}));   // attendance pay etc.
@@ -304,6 +310,8 @@
       for (const q of s.queue) {
         if (q.due > s.turn) { keep.push(q); continue; }
         if (q.until != null && q.until > s.turn && this.rand() >= 1 / (q.until - s.turn + 1)) { keep.push(q); continue; }
+        // `queue … chance N` (I4): pushed with probability N when due, else dropped; two copies give at most one card.
+        if (q.chance != null && (used.has(q.id) || this.rand() * 100 >= q.chance)) continue;
         pushed.push({ id: q.id, actor: q.actor || null, src: 'queued', track: q.track, cast: q.cast, prio: this.c.events[q.id] && this.c.events[q.id].class === 'story' ? 'story' : q.track ? 'track' : 'pushed' });
         used.add(q.id);
       }
@@ -449,7 +457,7 @@
           for (const nid of crowd) if (s.npcs[nid] && s.npcs[nid].met) this.warm(nid, FRIENDS.presence / 2);
         }
       } else if (r.source === 'visit') {
-        const place = d.picks[this.visitIndex(d.at)];
+        const place = d.picks[this.visitIndex(d.at)], off = (d.offDuty || []).includes(this.visitIndex(d.at));
         const fest = place && this.festivals().find((f) => f.place === place && f.visit === this.visitIndex(d.at));
         if (fest) { items.push({ id: fest.event, actor: null, place, prio: 'story', src: 'festival' }); used.add(fest.event); }
         else if (place) {
@@ -458,8 +466,11 @@
           const n = r.min == null ? 1 + Math.floor(this.rand() * 2) : count;
           // An opened slot (midnight, M41) draws only events that name it; no ambient fallback.
           const names = (e) => !r.opened || e.slot === r.slot || (e.time || []).includes(r.slot);
+          // Off shift in term (I1): @game off_shift's hint card comes first, as often as its `repeat:` allows.
+          const hint = off && this.phaseOf() !== 'break' && this.c.game.off_shift && this.c.events[this.c.game.off_shift];
+          if (hint && this.eligible(hint, used) && this.test(hint.when, null)) { items.push({ id: hint.id, actor: null, place, prio: 'track', src: 'hint' }); used.add(hint.id); }
           for (let k = 0; k < n; k++) {
-            const t = p.track && s.tracks[p.track] && s.tracks[p.track].status === 'member' ? p.track : null;
+            const t = !off && p.track && s.tracks[p.track] && s.tracks[p.track].status === 'member' ? p.track : null;
             const it = (t && k === 0 && this.draw((ix.byTrack[t] || []).filter((e) => (!e.rank || e.rank <= s.tracks[t].rank + 1) && names(e)), used, day.concat(items), { place, track: t, prio: 'track' }))
               || this.draw((ix.byPlace[place] || []).filter(names), used, day.concat(items), { place, prio: 'ambient' })
               || (!r.opened && this.draw(ix.ambient.filter((e) => (e.tags || []).some((tg) => (p.draws || []).includes(tg))), used, day.concat(items), { place, prio: 'ambient' }));

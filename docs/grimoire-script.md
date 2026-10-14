@@ -277,6 +277,7 @@ One statement per line. Blocks end with `:` and nest by indentation.
 | `queue event in 3` | …in 3 months (`in 0` means later this month). |
 | `queue event now` | It becomes the **very next card** (this is how menus lead to sub-scenes). |
 | `queue event … with npc` / `with lyra` | Carry an actor into the queued event (the target uses `actor: npc`). |
+| `queue event … chance 33` | When it falls due, push the card with that probability (%), else drop it (playtest 2, I4); `now` and `in 0` roll at once. Copies of one event due the same month give at most one card. The card shows no odds; the budget lint counts it as a risk. |
 | `rel lyra +5` · `love lyra +3~6` · `bond lyra friend` · `meet lyra` | Relationships. Use `npc` instead of an id for the bound actor. Each implies `meet`. |
 | `end ending_id` | Game over with that ending (after the outcome card). |
 | `if expr:` / `elif expr:` / `else:` | Branching. |
@@ -472,6 +473,8 @@ origins: choose_origin               # the origin screen before the game lists t
 **The origin** (`@game origins:`, playtest 2). The UI shows the menu's options on their own screen before the game, each with its origin state's `money:` line, and a warning when the state is tagged `poor`. `newGame({origin: key})` runs that option before the first month's hooks, so tuition and board already see it. Started without an origin (old callers, some tools), the game still queues the menu as a card.
 
 **The wrap-up** (`wrapup:`). Months of the final year listed here stay `break` months, but `wrapup` is true in them: content uses it to offer no break plan, and with no plan there is no board. The map shows the phase as "wrap-up". On the last turn, `day_last:` (if set) replaces the day's recipe and no one comes looking for you, so the month holds only pushed cards: the graduation and the endings' resolution (`turn == max_turns`).
+
+**Fixed shifts** (I1, I2): a job track's `due:` is its shifts a term. A visit to the job's place after the last one, or on a break, is an ordinary visit (`attend` keeps no attendance or pay, and the slot draws the place's events, not the track's). In term, `@game off_shift: <event>` is pushed first on such a visit, as often as the event's `repeat:` allows (Lumenhold's has none: once a run). **One visit per place a day** (I3): a place picked earlier today is not open again (the map marks it visited), except in an opened slot.
 
 **Opening a slot** (M41): `visit midnight` in a card makes that slot of today a visit. When it comes, the map opens for it, listing only places open then that have an event naming the slot (`slot: midnight` or `time: … midnight`), and the visit draws only such events (no ambient fallback). Lumenhold's night card uses it for the midnight turn.
 

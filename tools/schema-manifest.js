@@ -25,6 +25,7 @@ const SAMPLES = [
   ['queue some_event in 2', 'queue'],
   ['queue some_event within 1..3', 'queue'],
   ['queue some_event by month 9', 'queue'],
+  ['queue some_event chance 33', 'queue'],
   ['unqueue some_event', 'unqueue'],
   ['enrol evocation 1', 'enrol'],
   ['join duelling', 'join'],

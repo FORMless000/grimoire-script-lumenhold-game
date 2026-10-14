@@ -181,7 +181,9 @@
       // sources whose cards are dealt across the whole day instead of their own slot (playtest 2, M43)
       'spread',
       // the card pushed when spark crosses @balance spark_follow's cooldown mark (M37)
-      'spark_cooldown'], effects: [] },
+      'spark_cooldown',
+      // the hint card on the first visit to a job's place after the term's last shift (playtest 2, I1)
+      'off_shift'], effects: [] },
     // Numbers (design §8.4): size and difficulty tiers, option-value weights, the expected-skill curve.
     balance: { noId: true, props: ['sizes', 'difficulty', 'weights', 'curve', 'desc', 'xp_cost', 'rank_xp', 'performance',
       // the combat stub's mix and entry cost (playtest 2, M39, M5); odds slopes per swing word (M14)
@@ -309,7 +311,8 @@
     unflag: new RegExp('^unflag\\s+((?:gen\\.)?' + ID + '(?:\\s+(?:gen\\.)?' + ID + ')*)$'),
     gain: new RegExp('^gain\\s+(' + ID + ')(?:\\s+(.+))?$'),
     lose: new RegExp('^lose\\s+(' + ID + ')$'),
-    queue: new RegExp('^queue\\s+(' + ID + ')(?:\\s+(now|in\\s+.+?|within\\s+\\d+\\s*\\.\\.\\s*\\d+|by\\s+month\\s+\\d+))?(?:\\s+with\\s+(' + ID + '))?$'),
+    // `chance N` (playtest 2, I4): when due, the card is pushed with probability N%, else dropped.
+    queue: new RegExp('^queue\\s+(' + ID + ')(?:\\s+(now|in\\s+.+?|within\\s+\\d+\\s*\\.\\.\\s*\\d+|by\\s+month\\s+\\d+))?(?:\\s+with\\s+(' + ID + '))?(?:\\s+chance\\s+(\\d+))?$'),
     unqueue: new RegExp('^unqueue\\s+(' + ID + ')$'),
     sayAs: new RegExp('^say\\[(' + ID + ')\\]\\s*:\\s*(.*)$'),
     trackOp: new RegExp('^(enrol|join|leave|promote|apply)\\s+(' + ID + ')(?:\\s+(\\d))?$'),
@@ -361,6 +364,7 @@
     if ((m = content.match(RE.lose))) return { t: 'lose', state: m[1], line };
     if ((m = content.match(RE.queue))) {
       const st = { t: 'queue', event: m[1], now: false, delay: null, with: m[3] || null, line };
+      if (m[4] != null) st.chance = +m[4];
       let w;
       if (m[2] === 'now') st.now = true;
       else if (m[2] && (w = m[2].match(/^within\s+(\d+)\s*\.\.\s*(\d+)$/))) st.window = { from: +w[1], to: +w[2] };

@@ -371,6 +371,9 @@
       if (d.kind === 'society') return;   // a society keeps no attendance (M40)
       // On a break, a visit is an extra one: it never counts toward the next term's due (playtest 2, B6).
       const brk = this.phaseOf() === 'break';
+      // A job is a fixed number of shifts a term (playtest 2, I1, I2): on a break, or once the term's shifts are done,
+      // a visit to its place is an ordinary one (no shift card, pay or attendance).
+      if (d.kind === 'job' && (brk || t.visits >= (t.due || 0))) return 'off';
       // An internship is the break's work (M16): every visit there counts in full.
       const extra = d.kind !== 'internship' && (brk || t.visits >= t.due);
       if (!brk) t.visits++;
@@ -380,6 +383,7 @@
       if (d.kind === 'job' && d.pay && !(this.hasShift && this.hasShift(id))) this.change('gold', this.wageFor(id, null), ctx);
       if (d.kind === 'thesis') t.progress = clamp((t.progress || 0) + (extra ? 2 : 5), 0, 100);
       ctx.notes.push(Object.assign({ kind: 'attend', track: id }, brk ? {} : { left: Math.max(0, t.due - t.visits) }));
+      return 'on';
     }
     // End of a term (design §6.2, §7.3): exams for enrolled courses, missed obligations, warnings, promotions.
     endTerm(summary) {
@@ -841,6 +845,9 @@
             if (!c.events[st.event]) { this.warn(new Error('queue: unknown event ' + st.event), st); break; }
             const actor = st.with ? this.npcOf(st.with, ctx) : (c.events[st.event].actor === 'npc' ? ctx.actor : null);
             const carry = { track: ctx.track || undefined, cast: st.with && ctx.cast && ctx.cast[st.with] ? { npc: ctx.cast[st.with] } : undefined };
+            // `chance N` (I4): rolled when the card falls due (at once for `now`); a failed roll drops it.
+            if (st.chance != null) carry.chance = st.chance;
+            if (st.chance != null && (st.now || (!st.window && !st.byMonth && st.delay && Math.round(this.value(st.delay, ctx.actor)) <= 0)) && this.rand() * 100 >= st.chance) break;
             if (st.now) s.deck.splice(ctx.nowIdx++, 0, { id: st.event, actor, src: 'queued', ...carry });
             else if (st.window || st.byMonth) {
               // A window (design §5.3): the chance rises each month (1 / months left), forced on the last one.
@@ -1149,7 +1156,7 @@
       const due = s.queue.filter((q) => q.due <= s.turn);
       s.queue = s.queue.filter((q) => q.due > s.turn);
       const prio = (id, src) => { const e = this.c.events[id]; return e && e.priority != null ? e.priority : DEFAULT_PRIORITY[src]; };
-      for (const q of due) { head.push({ id: q.id, actor: q.actor, src: 'queued', p: prio(q.id, 'queued') }); used.add(q.id); }
+      for (const q of due) { if (q.chance != null && (used.has(q.id) || this.rand() * 100 >= q.chance)) continue; head.push({ id: q.id, actor: q.actor, src: 'queued', p: prio(q.id, 'queued') }); used.add(q.id); }
       for (const e of this.byTrigger.auto) {
         if (!this.eligible(e, used)) continue;
         const c = this.candidates(e);
@@ -1484,7 +1491,8 @@
         gpa: this.gpa(), phase: this.isWrapUp() ? 'wrapup' : this.phaseOf(), season: this.seasonOf(),
         tracks: Object.entries(s.tracks || {}).filter(([id, t]) => c.tracks[id] && ['enrolled', 'member', 'done', 'failed', 'applied'].includes(t.status)).map(([id, t]) => {
           const d = c.tracks[id], ranks = (d.ranks || '').split(/\s*[,，、]\s*/).filter(Boolean), levels = (d.level_names || d.name).split(/\s*[,，、]\s*/);
-          return { id, name: d.name, kind: d.kind, status: t.status, level: t.level || null, levelName: t.level ? levels[t.level - 1] || d.name : null, passed: this.levelPassed(id), grades: (t.grades || []).slice(), rank: ranks[t.rank] || null, perf: Math.round(t.perf || 0), due: Math.max(0, (t.due || 0) - (t.visits || 0)), progress: Math.round(t.progress || 0) };
+          return { id, name: d.name, kind: d.kind, status: t.status, level: t.level || null, levelName: t.level ? levels[t.level - 1] || d.name : null, passed: this.levelPassed(id), grades: (t.grades || []).slice(), rank: ranks[t.rank] || null, perf: Math.round(t.perf || 0), due: Math.max(0, (t.due || 0) - (t.visits || 0)), progress: Math.round(t.progress || 0),
+            done: d.kind === 'job' && t.status === 'member' && t.visits >= (t.due || 0) };
         }),
         spells: Object.entries(s.spells || {}).filter(([id]) => c.spells && c.spells[id]).map(([id, level]) => ({ id, level, ...pick(c.spells[id], ['name', 'desc', 'art']), cost: this.spellCost(id, level) })),
         skills: c.order.skills.map((id) => ({ id, ...pick(c.skills[id], ['name', 'icon', 'color', 'max', 'desc']), value: s.vals[id] })),

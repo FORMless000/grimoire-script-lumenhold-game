@@ -176,7 +176,9 @@ Not in step 3: L13 → M13; L21 → X; L22 → X3; L28 → the final pass.
 ## Status
 Steps 1 (B, C) and 2 (M, packages M-A to M-F) are done and committed; the triage marks each item.
 
-Step 3 (L) is **paused** partway through L-1, at the user's request; steps 2b (interim fixes) and 2c (tooling and audits) come first, then L resumes with the balancing edits above (job pay and hazard, forced fails, spell rewards). Done so far (migration 0028, `tools/economy.js --origin`):
+Step 2b is done: I1 fixed shifts (`@game off_shift: job_off_shift`, once a run; the map and side panel say "all shifts done"), I2 no shifts on breaks, I3 one visit per place a day (the midnight pick exempt), I4 `queue <event> chance N` (night suspicion queued at 33% / 50% / 20% by event, at most one a morning; `spotted` removed; the budget lint counts a queue at odds as a risk). Job income now comes only from the term's fixed shifts, so L-1's re-measure must include it.
+
+Step 3 (L) is **paused** partway through L-1, at the user's request; step 2c (tooling and audits) comes first, then L resumes with the balancing edits above (job pay and hazard, forced fails, spell rewards). Done so far (migration 0028, `tools/economy.js --origin`):
 - L24, first pass: tuition 30 → 16 a term; noble and merchant families pay the tuition (the noble allowance is now +1 a month and 40 crowns at the start; the merchant has 70 and no monthly share); the scholarship halves it (8), with a stipend of 2 while the GPA holds. The origin screen's money lines say so.
 - L25: the thesis asks 2 visits a term.
 - L26: internships pay a stipend through their host cards (`pay: 18`, `wage` in every option; lint allows `wage` in internship cards).

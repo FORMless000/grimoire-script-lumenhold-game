@@ -184,6 +184,7 @@ function analyze(content) {
           if (st.with === 'npc' && !hasActor) P('error', w, 'queue ... with npc: block has no actor');
           else if (st.with && st.with !== 'npc' && !content.npcs[st.with] && !ROLES.has(st.with)) P('error', w, 'queue ... with: unknown npc "' + st.with + '"');
           if (st.delay) scanExpr(st.delay, w, hasActor);
+          if (st.chance != null && (st.chance < 1 || st.chance > 99)) P('error', w, 'queue ... chance: must be 1–99 (got ' + st.chance + ')');
           break;
         case 'rel': case 'spark': case 'bond': case 'meet': case 'cool':
           if (ROLES.has(st.npc)) break;
@@ -315,6 +316,8 @@ function analyze(content) {
   for (const id of ['track_warning', 'track_promotion', 'job_term_review'].concat(content.game.spark_cooldown ? [content.game.spark_cooldown] : [])) A.queued[id] = A.queued[id] || ['engine'];
   // The exam card (`@game exam:`) is pushed by the engine for each enrolled course (M4).
   if (content.game.exam) A.queued[content.game.exam] = A.queued[content.game.exam] || ['engine'];
+  // The off-shift hint (`@game off_shift:`, I1) is pushed by the director on a job visit after the term's last shift.
+  if (content.game.off_shift) A.queued[content.game.off_shift] = A.queued[content.game.off_shift] || ['engine'];
   for (const e of Object.values(content.events)) if (e.trigger === 'queued' && !A.queued[e.id]) P('warn', loc(e), 'queued-only event "' + e.id + '" is never queued (orphan)');
   for (const st of Object.values(content.states)) if (!A.statesRef[st.id]) P('info', loc(st), 'state "' + st.id + '" is never gained');
   if (!Object.keys(content.endings).length) P('error', '-', 'no @ending defined');
@@ -386,7 +389,9 @@ function budgetCheck(e, content, P) {
     let pv; try { pv = eng.preview(e.id, o.key, actor); } catch (err) { continue; }
     const value = (d) => Object.entries(d).reduce((a, [k, r]) => a + weight(k) * ((r[0] + r[1]) / 2) / medium(k), 0);
     const exp = pv.paths.reduce((a, p) => a + p.p * value(p.deltas), 0);
-    const hasCost = pv.paths.length > 1 || Object.values(pv.deltas).some((r) => r[0] < 0);
+    // A card queued at odds (`queue … chance N`, I4) is a risk too.
+    let atOdds = false; G.walkEffects(o.effects, (st) => { if (st.t === 'queue' && st.chance != null) atOdds = true; });
+    const hasCost = atOdds || pv.paths.length > 1 || Object.values(pv.deltas).some((r) => r[0] < 0);
     for (const [k, r] of Object.entries(pv.deltas)) if (Math.max(Math.abs(r[0]), Math.abs(r[1])) >= eng.tierAmount(row(k) === 'xp' ? Object.keys(content.skills)[0] : row(k), 'large')) larges++;
     rows.push({ key: o.key, exp, hasCost });
   }

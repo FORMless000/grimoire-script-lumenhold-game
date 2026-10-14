@@ -446,3 +446,24 @@ text: Three figures on patched brooms drop out of a cloud and box you in. "Toll,
       health -medium
       gold -medium
       say: They catch you, take the toll, the parcel and your hat. The parrot wears it.
+
+# ---------------- Off shift (playtest 2, I1) ----------------
+
+# `@game off_shift`: pushed on the first visit to a job's place after the term's last shift, once a run for every
+# job together. A hint not to work overtime; the visit then draws the place's ordinary cards.
+@event job_off_shift
+title: Not Your Shift
+trigger: queued
+class: incident
+tone: light
+art: hourglass
+tags: job
+scene: A duty roster pinned by a staff door, every one of a student's shifts for the term already ticked off.
+text: You turn up for work out of habit. The roster by the door says your shifts this term are done, and whoever runs the place says so too. "Nobody pays you to be here today. Go and have a life. Come back next term."
+> left: Take the time for yourself
+  mood +small
+  say: {~You leave before anyone can change their mind, and spend the hours on nothing in particular. It's wonderful.|You take the advice. The place gets on without you, and so, it turns out, do you.}
+> right: Stay and help anyway
+  renown +tiny
+  health -tiny
+  say: {~You stay, unpaid. Someone notices. Nobody thanks you, and you're tired the next morning.|You lend a hand for an hour. It's not a shift and it doesn't pay, but people remember who stayed.}

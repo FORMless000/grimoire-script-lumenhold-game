@@ -1,7 +1,7 @@
 # The midnight turn (playtest 2, M41; stub — X13 fills it): after a lead-in in year 1 Stormbloom, a night card each
 # on-campus month, first in the midnight slot (after every night card), so going out leads straight to the pick. "Go out" opens the midnight pick (`visit midnight`); six places are open then. Going out in term
-# carries a 33% chance of being noticed, and risky nights can get you spotted; either brings `night_suspicion` the
-# next morning, the only way to a lockout.
+# queues `night_suspicion` at 33%, and risky outcomes queue it at their own odds (I4); two copies bring at most one
+# card the next morning, the only way to a lockout. The cards never say whether you were seen.
 
 @event night_lead_in
 title: An Unsigned Note
@@ -40,17 +40,14 @@ text: {season == "winter": Frost on the window, and the corridors are colder tha
   health -small
   visit midnight
   if term:
-    chance 33:
-      gain spotted
+    queue night_suspicion chance 33
   say: {~You wait for the last footsteps to fade, then ease the door open.|Boots in hand, you take the servants' stair.}
 
-# The morning after you were noticed: the only source of lockouts.
+# The morning after you were noticed (queued by the night's cards, I4): the only source of lockouts.
 @event night_suspicion
 title: A Word in the Morning
-trigger: auto
+trigger: queued
 slot: morning
-when: has(spotted)
-priority: 90
 repeat: 1
 class: incident
 tone: tense
@@ -59,7 +56,6 @@ tags: crisis
 scene: A prefect waiting at the foot of a dormitory stair at breakfast time, arms folded, a small notebook open.
 text: {has(watched): Bram is waiting at the foot of the stair, and this time he has a notebook open. "Twice," he says. "I did warn you."|Bram is waiting at the foot of the stair. "Someone was out last night," he says, looking at nobody in particular, which is to say at you.}
 > left: Deny everything
-  lose spotted
   guile +tiny
   if has(watched):
     lose watched
@@ -72,7 +68,6 @@ text: {has(watched): Bram is waiting at the foot of the stair, and this time he 
     gain watched
     say: "I'll be keeping an eye on you." He means it literally.
 > right: Own up
-  lose spotted
   alignment +tiny
   if has(watched):
     lose watched
@@ -107,11 +102,8 @@ text: Upstairs at the Gilded Newt, after hours, the real game starts. The stakes
       say: {~You leave with more than you came with and a few new enemies who smile too much.|Luck, nerve and one well-timed sigh. The pot is yours.}
     lose:
       gold -medium
-      chance 50:
-        gain spotted
-        say: {~You lose, and on your way out a student from the castle sees you on the stair.|You lose your stake, and someone from the academy is drinking at the bar when you come down.}
-      else:
-        say: {~The cards go cold. So does your purse.|You lose your stake and walk back in the dark, poorer and wiser.}
+      queue night_suspicion chance 50
+      say: {~The cards go cold, and so does your purse. On the stair down, a face from the castle turns away a little too fast.|You lose your stake and walk back in the dark, poorer, wiser and not sure you went unseen.}
 > right: Watch, then leave
   mood -tiny
   say: {~You watch one hand, see someone lose a familiar on a bluff, and leave before you're tempted.|You stay long enough to learn the rules, and leave before they learn you.}
@@ -137,11 +129,8 @@ text: Under the boathouse, by lantern light, someone has chalked a ring on the f
       say: {~You win the purse and the ring's respect, which is worth less and lasts longer.|Your opponent yields. Somebody whistles. The purse is heavier than you expected.}
     lose:
       health -medium
-      chance 50:
-        gain spotted
-        say: {~You lose, and limp home past a window where a light is still burning.|A bruising loss, and a prefect's lantern on the path home.}
-      else:
-        say: {~You lose, and limp home in the dark.|You lose, and the lake is very cold for your bruises.}
+      queue night_suspicion chance 50
+      say: {~You lose, and limp home past a window where a light is still burning.|A bruising loss, and a lantern somewhere on the path home. Maybe it saw you; maybe not.}
 > right: Bet on someone else
   gold -small
   chance 50:
@@ -166,11 +155,8 @@ text: The refectory kitchens at midnight: banked fires, a larder that isn't lock
   alignment -tiny
   lose hungry
   health +small
-  chance 50:
-    gain spotted
-    say: {~Bread, cheese and a pie. Then the scullery door opens and a cook's lantern finds you.|You eat well. A kitchen boy, up early, sees you go.}
-  else:
-    say: {~Bread, cheese and half a pie. Nobody counts the pies. You hope.|You eat by the banked fire with the kitchen cat. It doesn't tell.}
+  queue night_suspicion chance 50
+  say: {~Bread, cheese and half a pie. Nobody counts the pies, you hope, and the scullery door creaks as you leave.|You eat by the banked fire with the kitchen cat. On your way out, a kitchen boy is up early. Did he see you?}
 > right: Just warm yourself by the fire
   mood +tiny
   health -tiny
@@ -195,11 +181,8 @@ text: The Restricted Section at midnight. The chains on the shelves clink when n
       say: {~Three pages before the book closes itself. You remember every word, which is worrying.|The book shows you a diagram you're not supposed to understand. You understand it.}
     lose:
       mood -small
-      chance 50:
-        gain spotted
-        say: {~The book slams shut and a librarian's lamp comes on two floors down.|The pages scream, briefly. Somebody hears.}
-      else:
-        say: {~The words slide off the page and into your dreams, where they misbehave.|You read a line that reads you back. You leave quickly.}
+      queue night_suspicion chance 50
+      say: {~The book slams shut and a lamp comes on two floors down. You're gone before it reaches the stair.|The pages scream, briefly. You leave quickly, and hope nobody heard.}
 > right: Leave it open and go
   mood -tiny
   say: {~You back away from the book. It seems disappointed.|You leave it open for whoever it was waiting for. It wasn't you, you decide.}
@@ -222,11 +205,8 @@ text: The observatory roof at midnight is the quietest place in the castle. {bon
   say: {~You count stars until you lose count, and then until the sky goes grey. You'll be tired. It was worth it.|A meteor, then another. You stay until the first bell.}
 > right: An hour, then bed
   mood +small
-  chance 20:
-    gain spotted
-    say: {~On the stair down you meet a professor coming up, with a telescope and a frown.|You're almost back when a lantern turns the corner.}
-  else:
-    say: {~An hour of stars, and you're back in bed before anyone stirs.|You slip back down the stair, the sky still in your eyes.}
+  queue night_suspicion chance 20
+  say: {~An hour of stars, and you're back in bed before anyone stirs, you think.|You slip back down the stair, the sky still in your eyes. A lantern turns a far corner, and you don't wait to see whose.}
 
 @event midnight_passage_mapping
 title: The Passage After Dark
@@ -248,11 +228,8 @@ text: Behind the third gargoyle the passage is busier at midnight than at noon. 
       say: {~The draught leads you to a door you've never seen, and then, politely, closes it.|A new turning, a new stair. You chalk it for the map.}
     lose:
       health -small
-      chance 50:
-        gain spotted
-        say: {~The passage lets you out somewhere unexpected: the prefects' corridor.|You come out in the wrong tower, in front of the wrong person.}
-      else:
-        say: {~You get lost for an hour and come out by the kitchens, cold and dusty.|The draught stops. So do you, in the dark, for a long time.}
+      queue night_suspicion chance 50
+      say: {~The passage lets you out somewhere unexpected: the prefects' corridor, empty, you hope.|You get lost for an hour and come out in the wrong tower, cold and dusty, and not alone on the stair.}
 > right: Mark it and go back
   mood -tiny
   say: {~You chalk an arrow at the turning and leave the rest for another night.|You mark it on your copy of the map and go back to bed, a little sorry.}

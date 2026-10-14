@@ -93,6 +93,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `exam` | text |  |
 |  | `spread` | text |  |
 |  | `spark_cooldown` | text |  |
+|  | `off_shift` | text |  |
 | `@balance` | `sizes` | structured |  |
 |  | `difficulty` | structured |  |
 |  | `weights` | structured |  |

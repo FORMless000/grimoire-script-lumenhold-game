@@ -276,6 +276,8 @@
         for (const tr of tracks) {
           let line = '';
           if (tr.kind === 'course') line = tr.status === 'enrolled' ? t('side.enrolled') : tr.grades.length ? t('side.grades', { grades: tr.grades.join(' ') }) : '';
+          else if (tr.kind === 'job' && tr.status === 'member' && snap.phase !== 'term') line = t('side.noShifts', { rank: tr.rank || '' });
+          else if (tr.kind === 'job' && tr.done) line = t('side.shiftsDone', { rank: tr.rank || '' });
           else if (tr.kind === 'club' || tr.kind === 'job') line = t('side.rankLine', { rank: tr.rank || '', perf: tr.perf, due: tr.due });
           else if (tr.kind === 'thesis') line = t('side.progress', { n: tr.progress });
           else if (tr.kind === 'society') line = t('side.society');

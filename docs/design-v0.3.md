@@ -316,7 +316,7 @@ spread: social world
 
 **Run length:** 32 term months × ~11 cards + 15 break months × ~5 ≈ **425 decisions** *(checked at playtest #1)*.
 
-**The midnight turn** (playtest 2, M41; content X13): after an unsigned note in year 1 Stormbloom, a night card opens the midnight slot each on-campus month, after the night's cards (term, or a break at the castle or working on campus; not at home, on an internship, while locked out, or on the last day). "Sleep" costs nothing; "Go out" costs mood and health (−small each) and opens the midnight pick (`visit midnight`) among the places open then: the Gilded Newt, the boathouse, the refectory kitchens, the restricted section, the observatory and the gargoyle passage. Suspicion: going out in term carries a 33% chance of being noticed, and a risky outcome may get you spotted (about 50%, by event); either way the next morning brings one suspicion card. If you weren't watched, you are now; if you were, a three-month lockout and detention, with gold and mood losses, and `watched` is cleared. Day events that give `watched` never lock you out.
+**The midnight turn** (playtest 2, M41; content X13): after an unsigned note in year 1 Stormbloom, a night card opens the midnight slot each on-campus month, after the night's cards (term, or a break at the castle or working on campus; not at home, on an internship, while locked out, or on the last day). "Sleep" costs nothing; "Go out" costs mood and health (−small each) and opens the midnight pick (`visit midnight`) among the places open then: the Gilded Newt, the boathouse, the refectory kitchens, the restricted section, the observatory and the gargoyle passage. Suspicion (I4): going out in term queues the suspicion card at 33% (`queue night_suspicion chance 33`), and a risky outcome queues it at its own odds (about 50%, by event); the cards never say whether you were seen, and two copies bring at most one card the next morning (about 66% for a risky night). If you weren't watched, you are now; if you were, a three-month lockout and detention, with gold and mood losses, and `watched` is cleared. Day events that give `watched` never lock you out.
 
 ### 4.3 Break plans
 
@@ -489,11 +489,11 @@ desc: Scorched floorboards and a ceiling that has seen things.
 |---|---|---|---|
 | Due per term | **2 practices** + fixtures (fixed dates, pushed) | **3 shifts** | **3 sessions** |
 | Visiting gives | track events: XP, rank XP, contacts | track events + **pay per shift** | progress + advisor events |
-| Extra visits | more XP, at decreasing returns | extra pay (breaks: double) | extra progress |
+| Extra visits | more XP, at decreasing returns | none: the shifts are fixed (I1). After the last shift a visit is an ordinary one (the place's own cards, no pay); the first such visit in a run shows a hint card (`@game off_shift`). No shifts on a break (I2) | extra progress |
 | At term end, per missed visit | performance −15, lead rel −5 | performance −15, boss rel −5, no pay | progress −8, advisor rel −5 |
 | Excused | ill or injured; "cover for me" via a friend (rel ≥ 40) | ill; calling in sick costs −5 performance, no rel loss | ill |
 
-- The map badge shows what's left ("Practice · 2 left", "Shift · 1 left") and turns urgent in the last month of the term.
+- The map badge shows what's left ("Practice · 2 left", "Shift · 1 left") and turns urgent in the last month of the term. A job whose shifts are done says "all done this term" on the map and in the side panel; on a break the side panel says there are no shifts.
 
 **Performance** (0–100 per club or job; starts at 50):
 
@@ -526,6 +526,7 @@ Concept: `docs/map-concept.svg` / `.png`.
 | closed now | dimmed, with opening hours |
 | your club / job / thesis | gold or ember ring + badge |
 | hinted | dashed "?" + teaser |
+| visited today | dimmed, dashed ring: a place is picked at most once a day (I3); the midnight pick is exempt |
 | undiscovered | hidden under fog |
 | festival | glow + "festival this evening" (banner above the map) |
 
@@ -634,6 +635,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - **Joining or changing:** the Club Fair (Emberwane) and the **Job Board place**. Visiting it *is* the change event. At the fair a member stays, resigns or switches; a switch shows what it leaves (rank and performance). The job board lists each job's pay per shift. Declining gives no mood (playtest 2, M23, M35).
 - **Each term:** joining mid-term asks at most one visit per month left (M34). At term end every job asks whether you stay on (`job_term_review`, M33).
 - **Pay through events** (M10): a job visit draws a shift card first, and its options pay the wage (`wage`, a share of `pay:` at your rank) with tips and fines as the spread.
+- **Fixed shifts** (playtest 2, I1, I2): `due:` is the number of shifts a term, not a minimum. Only those visits are shifts (shift card, pay, performance, rank XP); later visits that term, and every visit on a break, are ordinary visits to the place. Vacation work comes from the break plan ("Work on campus" and its gigs).
 - **Ranks:**
   - Promotion = performance ≥ 70 + rank XP (from track events) + a milestone event. A new rank starts at performance 50 (M12).
   - Perks per rank (clubs: fixtures, contacts, spells; jobs: pay, discounts, access to places).

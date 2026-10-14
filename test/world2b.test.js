@@ -405,12 +405,9 @@ test('the midnight turn: going out opens a midnight pick; suspicion is the only 
   assert.ok(midnight, 'going out opens the midnight map');
   assert.ok(midnight.places.filter((p) => p.state === 'open' && p.open[0]).every((p) => (eng.directorIndex().byPlace[p.id] || []).concat(eng.directorIndex().byTrack[content.places[p.id].track] || []).some((e) => e.slot === 'midnight')), 'only places with a midnight card are open');
   assert.ok(eng.s.hist.some((h) => h.t === 'card' && /^midnight_/.test(h.id)), 'a midnight card at the place');
-  // the morning after being spotted: watched first, a lockout the second time
-  const ctx = eng.newCtx(null, null);
-  eng.run([{ t: 'gain', state: 'spotted' }], ctx);
+  // the morning after being noticed: watched first, a lockout the second time
   eng.s.cur = { id: 'night_suspicion', actor: null }; quiet(() => eng.choose('right'));
   assert.ok(eng.s.states.watched && !eng.s.states.locked_out);
-  eng.run([{ t: 'gain', state: 'spotted' }], ctx);
   eng.s.cur = { id: 'night_suspicion', actor: null }; quiet(() => eng.choose('left'));
   assert.ok(eng.s.states.locked_out && !eng.s.states.watched, 'watched twice: locked out');
   assert.equal(eng.test(content.events.night_out.when, null), false, 'no night card while locked out');
@@ -426,4 +423,62 @@ test('a society keeps no dues, performance or ranks, and doesn\'t take the club 
   const t = eng.s.tracks.cartographers, perf = t.perf;
   eng.attend('cartographers', ctx); eng.trackOp({ t: 'perform', track: 'cartographers', tier: 'large', sign: 1 }, ctx);
   assert.equal(t.perf, perf); assert.equal(t.visits, 0);
+});
+
+test('queue … chance N: rolled when due, dropped on a miss, two copies give one card (I4)', () => {
+  const G = require('../src/grimoire.js');
+  const st = G.parseFile('@event x\ntitle: X\ntext: x\n> left: A\n  queue night_suspicion chance 33\n> right: B\n  say: b\n', 't.grim')[0];
+  const q = JSON.stringify(st).match(/"chance":33/);
+  assert.ok(q, 'the parser keeps the odds');
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 8, name: 'T' }); });
+  const ctx = eng.newCtx(null, null), stmt = { t: 'queue', event: 'night_suspicion', now: false, delay: null, with: null, chance: 50 };
+  eng.run([stmt, stmt], ctx);
+  assert.equal(eng.s.queue.filter((x) => x.id === 'night_suspicion').length, 2);
+  eng.s.turn++; eng.rand = () => 0.1; eng.startDay();
+  assert.equal(eng.s.day.pushed.filter((x) => x.id === 'night_suspicion').length, 1, 'at most one a morning');
+  assert.ok(!eng.s.queue.some((x) => x.id === 'night_suspicion'), 'both copies are spent');
+  const eng2 = new Engine(content);
+  quiet(() => { eng2.newGame({ seed: 8, name: 'T' }); });
+  eng2.run([stmt], eng2.newCtx(null, null));
+  eng2.s.turn++; eng2.rand = () => 0.9; eng2.startDay();
+  assert.ok(!eng2.s.day.pushed.some((x) => x.id === 'night_suspicion'), 'a miss drops it');
+  assert.ok(!eng2.s.states.spotted && !content.states.spotted, 'no hidden spotted state');
+});
+
+test('fixed shifts: off shift a job visit is ordinary, the hint comes once, one visit per place a day (I1–I3)', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 9, name: 'T' }); });
+  const ctx = eng.newCtx(null, null);
+  eng.trackOp({ t: 'join', track: 'library_assistant' }, ctx);
+  const t = eng.s.tracks.library_assistant; t.due = 1; t.visits = 0;
+  assert.equal(eng.attend('library_assistant', ctx), 'on');
+  const perf = t.perf, gold = eng.s.vals.gold;
+  assert.equal(eng.attend('library_assistant', ctx), 'off', 'after the last shift');
+  assert.equal(t.visits, 1); assert.equal(t.perf, perf); assert.equal(eng.s.vals.gold, gold);
+  eng.s.places.library = { found: 1 };
+  assert.ok(eng.mapView().places.find((p) => p.id === 'library').track.done, 'the map says all shifts done');
+  assert.ok(eng.snapshot().tracks.find((x) => x.id === 'library_assistant').done, 'so does the side panel');
+  const phase = eng.phaseOf; eng.phaseOf = () => 'break'; t.visits = 0;
+  assert.equal(eng.attend('library_assistant', ctx), 'off', 'no shifts on a break'); assert.equal(t.visits, 0);
+  eng.phaseOf = phase; t.visits = 1;
+  eng.startDay();
+  let r = quiet(() => eng.advance()), maps = 0, threw = false;
+  const cards = [];
+  for (let i = 0; i < 200 && eng.s.turn === 1; i++) {
+    if (r.kind === 'month') break;
+    if (r.kind === 'map') {
+      const lib = r.view.places.find((p) => p.id === 'library');
+      if (maps === 1) { assert.ok(lib.visited && lib.state !== 'open', 'visited today'); try { eng.pickPlaces(['library']); } catch (e) { threw = true; } eng.pickPlaces([null]); }
+      else eng.pickPlaces([maps === 0 && lib.state === 'open' ? 'library' : null]);
+      maps++; r = quiet(() => eng.advance()); continue;
+    }
+    cards.push(r.view.id);
+    const k = r.view.options.find((o) => !o.disabled).key;
+    quiet(() => eng.choose(r.view.pick > 1 ? [k] : k)); r = quiet(() => eng.advance());
+  }
+  assert.ok(threw, 'the same place can\'t be picked twice a day');
+  assert.ok(cards.includes('job_off_shift'), 'the off-shift hint');
+  assert.ok(!cards.some((id) => content.events[id] && content.events[id].track === 'library_assistant'), 'no shift card off shift');
+  assert.equal(eng.eligible(content.events.job_off_shift, new Set()), false, 'once a run');
 });

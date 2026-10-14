@@ -31,6 +31,7 @@
       const already = pickedIdx(id);
       if (already.length) { picks[already[already.length - 1]] = null; return draw(); }
       if (p.state === 'hinted') { status = p.hint || t('map.undiscovered'); return draw(); }
+      if (p.visited) { status = t('map.visitedToday', { name: p.name }); return draw(); }
       const free = view.slots.map((_, i) => i).filter((i) => !picks[i] && !lockedAt(i));
       if (!free.length) { status = t('map.full'); return draw(); }
       const ok = free.find((i) => p.open[i]);
@@ -44,13 +45,14 @@
       const c = ['mk', 'st-' + p.state];
       if (p.track) c.push('mine', 'k-' + p.track.kind);
       if (p.track && p.track.urgent) c.push('urgent');
+      if (p.visited) c.push('visited');
       if (p.festival.length) c.push('fest');
       if (picks.includes(p.id)) c.push('picked');
       return c.join(' ');
     }
     function badge(p) {
       if (!p.track || p.track.due == null) return '';
-      const label = p.track.kind === 'job' ? t('map.shiftsLeft', { n: p.track.due }) : p.track.kind === 'thesis' ? t('map.sessionsLeft', { n: p.track.due }) : t('map.practiceLeft', { n: p.track.due });
+      const label = p.track.done ? t('map.shiftsDone') : p.track.kind === 'job' ? t('map.shiftsLeft', { n: p.track.due }) : p.track.kind === 'thesis' ? t('map.sessionsLeft', { n: p.track.due }) : t('map.practiceLeft', { n: p.track.due });
       return '<span class="mk-badge' + (p.track.urgent ? ' urgent' : '') + '">' + esc(label) + '</span>';
     }
     function pins(p) {
@@ -60,13 +62,13 @@
     }
     function marker(p) {
       const n = picks.map((x, i) => (x === p.id ? i + 1 : 0)).filter(Boolean);
-      const title = p.state === 'hinted' ? (p.hint || t('map.undiscovered')) : p.name + (p.state === 'closed' ? ' — ' + t('map.closedNow') : '') + (p.festival.length ? ' — ' + t('map.festival', { slot: t('slot.' + p.festival[0].slot) }) : '');
+      const title = p.state === 'hinted' ? (p.hint || t('map.undiscovered')) : p.name + (p.visited ? ' — ' + t('map.visitedNow') : p.state === 'closed' ? ' — ' + t('map.closedNow') : '') + (p.festival.length ? ' — ' + t('map.festival', { slot: t('slot.' + p.festival[0].slot) }) : '');
       return '<button class="' + markerClass(p) + '" data-id="' + esc(p.id) + '" style="left:' + (100 * p.x / W) + '%;top:' + (100 * p.y / H) + '%" title="' + esc(title) + '" aria-label="' + esc(title) + '">' +
         '<span class="mk-dot">' + (p.state === 'hinted' ? '?' : Art.icon(p.art || 'star', 18)) + (n.length ? '<b class="mk-n">' + n.join('·') + '</b>' : '') + (p.news ? '<i class="mk-news">✦</i>' : '') + '</span>' +
         (p.state !== 'hinted' ? '<span class="mk-label">' + esc(p.name) + '</span>' : '') + badge(p) + pins(p) + '</button>';
     }
     function listRow(p) {
-      const states = [p.state === 'hinted' ? t('map.hinted') : p.state === 'closed' ? t('map.closedNow') : t('map.open')];
+      const states = [p.state === 'hinted' ? t('map.hinted') : p.visited ? t('map.visitedNow') : p.state === 'closed' ? t('map.closedNow') : t('map.open')];
       if (p.track) states.push(badge(p).replace(/<[^>]+>/g, ''));
       if (p.festival.length) states.push(t('map.festival', { slot: t('slot.' + p.festival[0].slot) }));
       if (p.present.length) states.push(t('map.here', { names: p.present.map((id) => (o.npcs[id] || {}).short || ((o.npcs[id] || {}).name || id).split(' ')[0]).join(', ') }));

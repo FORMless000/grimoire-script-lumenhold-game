@@ -119,7 +119,7 @@ function reach(content) {
     const offered = new Set([...R].map((id) => c.events[id].offers).filter(Boolean));
     for (const t of Object.values(c.tracks)) if (offered.has(t.kind + 's') && (!t.prereq || !need(t.prereq.ast))) { F.track.add(t.id); if (t.kind === 'club' && t.place) F.place.add(t.place); }
     // the engine pushes track notices at term end for any track
-    if (F.track.size) { F.queued.add('track_warning'); F.queued.add('track_promotion'); F.queued.add('job_term_review'); if (c.game.spark_cooldown) F.queued.add(c.game.spark_cooldown); if (c.game.exam) F.queued.add(c.game.exam); }
+    if (F.track.size) { F.queued.add('track_warning'); F.queued.add('track_promotion'); F.queued.add('job_term_review'); if (c.game.spark_cooldown) F.queued.add(c.game.spark_cooldown); if (c.game.exam) F.queued.add(c.game.exam); if (c.game.off_shift) F.queued.add(c.game.off_shift); }
     for (const e of Object.values(c.events)) {
       const rl = roles(e);
       if (R.has(e.id)) { reopen(e, rl); continue; }
