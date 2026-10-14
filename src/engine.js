@@ -315,11 +315,16 @@
       }
     }
     trackKinds() { return this._kinds || (this._kinds = new Set(Object.values(this.c.tracks || {}).map((d) => d.kind))); }
+    // The track a track statement acts on: `track` is the card's own; `leave job` / `leave club` / `leave internship`
+    // (any track kind) is whichever one you have. Tools ask this too, so they never re-derive it (A1).
+    trackTarget(st, ctxTrack) {
+      const s = this.s, id = st.track === 'track' ? ctxTrack : st.track;
+      if (st.t === 'leave' && !this.c.tracks[id] && this.trackKinds().has(id)) return Object.keys(s.tracks || {}).find((k) => s.tracks[k].kind === id && s.tracks[k].status === 'member');
+      return id;
+    }
     trackOp(st, ctx) {
       const s = this.s;
-      let id = st.track === 'track' ? ctx.track : st.track;
-      // `leave job` / `leave club` / `leave internship` (any track kind): whichever one you have.
-      if (st.t === 'leave' && !this.c.tracks[id] && this.trackKinds().has(id)) id = Object.keys(s.tracks || {}).find((k) => s.tracks[k].kind === id && s.tracks[k].status === 'member');
+      const id = this.trackTarget(st, ctx.track);
       const d = this.c.tracks[id];
       if (!d) return;
       if (d.kind === 'society' && (st.t === 'perform' || st.t === 'rank_xp' || st.t === 'promote')) return;   // no performance or ranks (M40)
@@ -1377,9 +1382,11 @@
       if (!opt) throw new Error('no option ' + key + ' on ' + eventId);
       const s = this.s;
       const cost = opt.spell ? this.spellCost(opt.spell, (s.spells || {})[opt.spell] || 1) : 0;
-      const KEYS = ['vals', 'flags', 'states', 'npcs', 'queue', 'deck', 'ended', 'spells', 'facts', 'memories', 'npcRel', 'rng', 'cur', 'tracks', 'places', 'arcs', 'clues', 'skillGain', 'peak'];
+      // `day`: a `visit <slot>` in a previewed option must not open the slot (A1: hovering "Go out" opened midnight).
+      const KEYS = ['vals', 'flags', 'states', 'npcs', 'queue', 'deck', 'ended', 'spells', 'facts', 'memories', 'npcRel', 'rng', 'cur', 'tracks', 'places', 'arcs', 'clues', 'skillGain', 'peak', 'day'];
       const runOnce = (prefix, mode) => {
         const saved = {}; for (const k of KEYS) saved[k] = s[k];
+        if (saved.day) s.day = { ...saved.day };
         s.vals = { ...saved.vals }; s.flags = { ...saved.flags }; s.spells = { ...(saved.spells || {}) }; s.facts = { ...(saved.facts || {}) };
         s.npcRel = { ...(saved.npcRel || {}) }; s.memories = (saved.memories || []).slice(); s.queue = saved.queue.slice(); s.deck = saved.deck.slice();
         s.states = {}; for (const [k, v] of Object.entries(saved.states)) s.states[k] = { ...v };

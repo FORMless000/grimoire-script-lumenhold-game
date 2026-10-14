@@ -94,6 +94,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `spread` | text |  |
 |  | `spark_cooldown` | text |  |
 |  | `off_shift` | text |  |
+|  | `map_id` | text |  |
 | `@balance` | `sizes` | structured |  |
 |  | `difficulty` | structured |  |
 |  | `weights` | structured |  |
@@ -157,6 +158,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `hidden` | yes/no |  |
 |  | `kind` | text |  |
 |  | `money` | text | yes |
+|  | `map_id` | text |  |
 | | `tick:` | effects | `say:` lines |
 | | `on_add:` | effects | `say:` lines |
 | | `on_expire:` | effects | `say:` lines |

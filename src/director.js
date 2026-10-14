@@ -102,14 +102,15 @@
       const fest = this.festivals().filter((f) => !picking || f.visit === vi).map((f) => Object.assign({}, f, { visit: picking ? 0 : f.visit }));
       // A place with a festival later today is closed until then (playtest 2, I5): it is getting ready.
       const later = picking ? this.festivals().filter((f) => f.visit > vi) : [];
-      // Which map (design §4.3): home for the home plan, the host's map during an internship, else the campus.
-      let breakMap = 'campus';
-      if (this.phaseOf() === 'break' && s.states.plan_home) breakMap = 'home';
-      else if (this.phaseOf() === 'break' && s.states.plan_internship) {
-        const host = Object.entries(s.tracks || {}).find(([id, t]) => t.kind === 'internship' && t.status === 'member');
-        const pl = host && this.c.tracks[host[0]] && this.c.places[this.c.tracks[host[0]].place];
+      // Which map (design §4.3): the active plan's `map_id:` on a break (a map id, or a track kind: the map of your track
+      // of that kind's place, the internship host), else `@game map_id:`.
+      let breakMap = this.c.game.map_id || 'campus';
+      const planMap = this.phaseOf() === 'break' && this.planMap();
+      if (planMap && this.trackKinds().has(planMap)) {
+        const host = Object.keys(s.tracks || {}).find((id) => s.tracks[id].kind === planMap && s.tracks[id].status === 'member');
+        const pl = host && this.c.tracks[host] && this.c.places[this.c.tracks[host].place];
         if (pl && pl.map) breakMap = pl.map.map;
-      }
+      } else if (planMap) breakMap = planMap;
       const places = [];
       for (const p of Object.values(this.c.places || {})) {
         if (!p.map || p.map.map !== breakMap) continue;
@@ -137,6 +138,11 @@
       }
       return { map: breakMap, slots, places, locked: [], festivals: fest.filter((f) => f.visit < slots.length).map((f) => ({ slot: slots[f.visit], place: f.place, event: f.event })),
         visit: picking ? vi + 1 : null, visits: this.visitSlots().length + (d && d.extraVisit && !this.visitSlots().includes(d.extraVisit) ? 1 : 0), season: this.seasonOf(), phase: this.isWrapUp() ? 'wrapup' : this.phaseOf() };
+    },
+    // The active plan's `map_id:` (A1), or null.
+    planMap() {
+      const k = Object.keys(this.s.states || {}).find((x) => this.c.states[x] && this.c.states[x].kind === 'plan' && this.c.states[x].map_id);
+      return k ? this.c.states[k].map_id : null;
     },
     // Whether a visit to this job's place will draw one of its shift cards, which pay the wage (M10).
     hasShift(id) {
@@ -440,9 +446,10 @@
       const count = spreading.has(r.source) ? 0 : r.min == null ? 1 : r.min + Math.floor(this.rand() * ((r.max || r.min) - r.min + 1));
       const plan = Object.keys(s.states).find((k) => this.c.states[k] && this.c.states[k].kind === 'plan');
       // Away on a plan tagged `away` (an internship, M16): no campus pools. Social and world cards come from the
-      // plan's own pool and the host's (a member internship track's) events, and nobody from campus comes calling.
-      const away = this.offCampus();
-      const awayPool = away ? [].concat(ix.byPlan[plan.replace(/^plan_/, '')] || [], ...Object.entries(s.tracks || {}).filter(([, t]) => t.kind === 'internship' && t.status === 'member').map(([id]) => ix.byTrack[id] || [])) : null;
+      // plan's own pool and, when the plan's `map_id:` is a track kind, your track of that kind's events (the host's),
+      // and nobody from campus comes calling.
+      const away = this.offCampus(), hostKind = away && this.trackKinds().has(this.planMap()) ? this.planMap() : null;
+      const awayPool = away ? [].concat(ix.byPlan[plan.replace(/^plan_/, '')] || [], ...Object.entries(s.tracks || {}).filter(([, t]) => hostKind && t.kind === hostKind && t.status === 'member').map(([id]) => ix.byTrack[id] || [])) : null;
       const poolOf = (source) => (away && source !== 'special' ? awayPool
         : source === 'social' ? ix.social
         : source === 'special' ? ix.slotBound.filter((e) => e.slot === r.slot)

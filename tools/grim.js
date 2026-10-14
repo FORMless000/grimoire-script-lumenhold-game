@@ -505,6 +505,10 @@ function lint(opts = {}) {
   for (const lang of localeLangs()) lintLocale(content, lang, A.problems, opts);
   reachLint(content, A.problems);
   // Every map a place sits on needs its base art (src/map.js loads content/world/maps/<map>.svg).
+  // A plan's `map_id:` (and @game map_id:) names a map some place sits on, or a track kind (A1).
+  const MAPS = new Set(Object.values(content.places || {}).map((pl) => pl.map && pl.map.map).filter(Boolean)), KINDS = new Set(Object.values(content.tracks || {}).map((d) => d.kind));
+  for (const st of Object.values(content.states || {})) if (st.map_id && !MAPS.has(st.map_id) && !KINDS.has(st.map_id)) A.problems.push({ level: 'error', where: rel(st.file) + ':' + st.line, msg: 'state "' + st.id + '": map_id "' + st.map_id + '" is neither a map with places nor a track kind' });
+  if (content.game.map_id && !MAPS.has(content.game.map_id)) A.problems.push({ level: 'error', where: '@game', msg: '@game map_id: "' + content.game.map_id + '" has no places' });
   for (const pl of Object.values(content.places || {})) if (pl.map && pl.map.map && !fs.existsSync(path.join(ROOT, 'content', 'world', 'maps', pl.map.map + '.svg'))) A.problems.push({ level: 'error', where: rel(pl.file) + ':' + pl.line, msg: 'place "' + pl.id + '": no map art content/world/maps/' + pl.map.map + '.svg' });
   const by = { error: [], warn: [], info: [] };
   A.problems.forEach((p) => by[p.level].push(p));
@@ -795,32 +799,10 @@ function i18nSync(lang) {
 // eng.s.hist. Throws on a soft-lock (a card with no available option) or a game that never ends.
 function playGame(content, { seed, style, runId, name = 'Sim', onLog = null, previews = null }) {
   const eng = new Engine(content);
-  let r = Policies.newGame(eng, style, { seed, name, runId });
-  let steps = 0;
-  try {
-    while (steps++ < 6000) {
-      if (r.kind === 'ending') break;
-      if (r.kind === 'month') { r = eng.advance(); continue; }
-      if (r.kind === 'map') { eng.pickPlaces((style.pickPlaces || Policies.pickPlaces)(eng, r.view)); r = eng.advance(); continue; }
-      const v = r.view;
-      if (v.pick > 1) {
-        const opts = v.options.filter((o) => !o.disabled && o.key !== 'none');
-        const keys = (style.pickMany || Policies.pickMany)(eng, v, opts);
-        eng.choose(keys.length ? keys : [v.options.find((o) => !o.disabled).key]);
-        r = eng.advance();
-        continue;
-      }
-      if (!v.options.some((o) => !o.disabled)) throw new Error('soft-lock: no available options on ' + v.id);
-      const key = style.pick(eng, v);
-      // Preview property test (design §8.3): every real outcome lies within its preview.
-      const pv = previews ? eng.preview(v.id, key, v.actor ? v.actor.id : null) : null;
-      const out = eng.choose(key);
-      if (previews) { previews.cards++; if (!Engine.fits(pv, out.deltas)) previews.misses.push({ event: v.id, key, turn: eng.s.turn, actual: out.deltas, paths: pv.paths.map((p) => p.deltas) }); }
-      r = eng.advance();
-    }
-  } finally { if (onLog) onLog(eng); }
-  if (r.kind !== 'ending') throw new Error('did not finish after 6000 steps');
-  return { eng, r };
+  // Preview property test (design §8.3): every real outcome lies within its preview.
+  const before = previews ? (e, v, key) => (Array.isArray(key) ? null : e.preview(v.id, key, v.actor ? v.actor.id : null)) : null;
+  const after = previews ? (e, v, key, out, pv) => { if (!pv) return; previews.cards++; if (!Engine.fits(pv, out.deltas)) previews.misses.push({ event: v.id, key, turn: e.s.turn, actual: out.deltas, paths: pv.paths.map((p) => p.deltas) }); } : null;
+  try { return Policies.play(eng, style, { seed, name, runId, maxSteps: 6000, strict: true, before, after }); } finally { if (onLog) onLog(eng); }
 }
 
 function sim(n = 300, opts = {}) {

@@ -12,6 +12,15 @@
 'use strict';
 const G = require('../src/grimoire.js');
 
+// The bots' own random numbers (playtest 2, A1): seeded from the game's seed but kept apart from the game's RNG, so a
+// simulated game is one a player could have played: replaying its choices and picks gives the same game.
+function rnd(eng) {
+  let a = (eng._botRng = ((eng._botRng == null ? (eng.s.seed ^ 0x5bd1e995) : eng._botRng) + 0x6D2B79F5) | 0);
+  let t = Math.imul(a ^ (a >>> 15), 1 | a);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+
 // Expected deltas of an option: {health: -2.5, arcana: 1, 'rel:lyra': 4, 'gain:club': 1, ...}.
 // Probability-weighted midpoints of the engine's preview; side-effect free.
 function estimate(eng, opt, actor, eventId) {
@@ -66,8 +75,7 @@ function estimate(eng, opt, actor, eventId) {
 
 // Whether a `leave` gives up a club or job the player has (the kind form, `leave job`, or `leave track` in context).
 function leaving(eng, st) {
-  const id = st.track === 'track' ? eng._ctxTrack || (eng.s.cur && eng.s.cur.track) : st.track;
-  const t = eng.c.tracks[id] ? eng.s.tracks[id] : Object.values(eng.s.tracks || {}).find((x) => x.kind === id && x.status === 'member');
+  const t = (eng.s.tracks || {})[eng.trackTarget(st, eng._ctxTrack || (eng.s.cur && eng.s.cur.track))];
   return !!t && t.status === 'member' && (t.kind === 'job' || t.kind === 'club');
 }
 // The amount of a delta/rel/spark statement: a tier word resolves through @balance sizes.
@@ -105,7 +113,7 @@ function scorer(name, weights, guard = 4) {
         if (o.disabled) continue;
         const def = eng.optionsOf(ev).find((q) => q.key === o.key); if (!def) continue;
         const est = estimate(eng, def, view.actor ? view.actor.id : null, view.id);
-        let sc = eng.rand() * 0.5;   // small noise breaks ties and varies runs
+        let sc = rnd(eng) * 0.5;   // small noise breaks ties and varies runs
         if (o.spell && weights.cast) sc += weights.cast;
         // A player who wants to keep playing avoids an option that ends the run early (the scorer would value it at 0).
         if (reachesEnd(eng, def.effects, view.actor ? view.actor.id : null)) sc -= 100;
@@ -125,7 +133,7 @@ function scorer(name, weights, guard = 4) {
 }
 
 const LEGACY = {
-  random: { name: 'random', pick(eng, view) { const o = view.options.filter((x) => !x.disabled); return o[Math.floor(eng.rand() * o.length)].key; } },
+  random: { name: 'random', pick(eng, view) { const o = view.options.filter((x) => !x.disabled); return o[Math.floor(rnd(eng) * o.length)].key; } },
   // prefer options that don't risk low resources
   cautious: {
     name: 'cautious',
@@ -138,7 +146,7 @@ const LEGACY = {
       // Nor do they give up a club or job they have, when there's another way.
       const quits = (x) => { const def = eng.optionsOf(eng.c.events[view.id]).find((q) => q.key === x.key); let q = false; if (def) G.walkEffects(def.effects, (st) => { if (st.t === 'leave' && leaving(eng, st)) q = true; }); return q; };
       const safe = opts.filter((x) => !risky(x) && !quits(x));
-      return (safe.length ? safe : opts)[Math.floor(eng.rand() * (safe.length ? safe.length : opts.length))].key;
+      return (safe.length ? safe : opts)[Math.floor(rnd(eng) * (safe.length ? safe.length : opts.length))].key;
     },
   },
   // prefer options that raise relationships / romance / bonds (tests the social content)
@@ -147,7 +155,7 @@ const LEGACY = {
     pick(eng, view) {
       const ev = eng.c.events[view.id]; let best = -Infinity, o;
       for (const x of view.options.filter((y) => !y.disabled)) {
-        const def = eng.optionsOf(ev).find((q) => q.key === x.key); if (!def) continue; let sc = eng.rand() * 3 - (endsEarly(eng, view, x.key) ? 100 : 0);
+        const def = eng.optionsOf(ev).find((q) => q.key === x.key); if (!def) continue; let sc = rnd(eng) * 3 - (endsEarly(eng, view, x.key) ? 100 : 0);
         G.walkEffects(def.effects, (st) => { if (st.t === 'rel' || st.t === 'spark') { const a = amount(eng, st, st.t, 'max'); if (a > 0) sc += a; } if (st.t === 'bond' && ['friend', 'close', 'partner'].includes(st.status)) sc += 20; if (st.t === 'leave' && leaving(eng, st)) sc -= 5; });
         if (sc > best) { best = sc; o = x; }
       }
@@ -194,19 +202,19 @@ function pickPlaces(eng, view, opts = {}) {
     if (!open.length) { picks.push(null); return; }
     // A festival on today's map (M1: highlighted, no longer forced): most players go.
     const fest = (view.festivals || []).find((f) => f.slot === sl && open.some((p) => p.id === f.place));
-    if (fest && eng.rand() < 0.8) { picks.push(fest.place); return; }
+    if (fest && rnd(eng) < 0.8) { picks.push(fest.place); return; }
     const duty = opts.truant ? [] : open.filter((p) => p.track && p.track.due > picks.filter((x) => x === p.id).length);
     const fresh = open.filter((p) => p.news && !picks.includes(p.id));
     // social:<npc> seeks out the places where that character is
     // (by the character's schedule: someone courting the tea-shop owner knows where the tea shop is, met or not).
     const sched = opts.seek ? ((eng.c.npcs[opts.seek] || {}).schedule || []) : [];
     const near = opts.seek ? open.filter((p) => sched.some((x) => x.place === p.id && x.slots.includes(sl)) && !picks.includes(p.id)) : [];
-    const pool = opts.truant ? open.filter((p) => !p.track) : duty.length ? duty : near.length && eng.rand() < 0.7 ? near : fresh.length && eng.rand() < 0.6 ? fresh : open;
+    const pool = opts.truant ? open.filter((p) => !p.track) : duty.length ? duty : near.length && rnd(eng) < 0.7 ? near : fresh.length && rnd(eng) < 0.6 ? fresh : open;
     const from = pool.length ? pool : open;
     // Habit: people go back to places they like. Weight by 1 + past visits (s.visitsTo), so favourites form.
     const seen = eng.s.visitsTo || {};
     const w = from.map((p) => 1 + (seen[p.id] || 0));
-    let x = eng.rand() * w.reduce((a, b) => a + b, 0), k = 0;
+    let x = rnd(eng) * w.reduce((a, b) => a + b, 0), k = 0;
     for (; k < from.length - 1; k++) { x -= w[k]; if (x < 0) break; }
     picks.push(from[k].id);
   });
@@ -215,7 +223,7 @@ function pickPlaces(eng, view, opts = {}) {
 // Several options of a `pick: N` menu (enrolment): random distinct ones, up to N.
 function pickMany(eng, view, opts) {
   const pool = opts.slice(), keys = [];
-  while (keys.length < view.pick && pool.length) keys.push(pool.splice(Math.floor(eng.rand() * pool.length), 1)[0].key);
+  while (keys.length < view.pick && pool.length) keys.push(pool.splice(Math.floor(rnd(eng) * pool.length), 1)[0].key);
   return orFirst(view, keys);
 }
 
@@ -243,4 +251,61 @@ function newGame(eng, style, opts) {
   return eng.newGame(Object.assign({}, opts, origin ? { origin } : {}));
 }
 
-module.exports = { get, list, estimate, pickPlaces, pickMany, pickOrigin, newGame };
+// The choice a style makes on a card: a multi-pick menu (`pick: N`) takes one to N of its options.
+function choiceFor(eng, style, v) {
+  if (v.pick > 1) {
+    const opts = v.options.filter((o) => !o.disabled && o.key !== 'none');
+    const keys = (style.pickMany || pickMany)(eng, v, opts);
+    return keys.length ? keys : [v.options.find((o) => !o.disabled).key];
+  }
+  return style.pick(eng, v);
+}
+
+// One simulated game, driven exactly as the UI drives the engine (playtest 2, A1): newGame with an origin, then
+// advance; a pick for each map, a choice for each card. Every tool and test plays through here.
+//   opts: seed, name, runId, maxSteps (8000), setup(eng) after newGame, stop(eng, r) to end early,
+//         before(eng, view, key) → state handed to after(eng, view, key, out, state), strict (throw on a soft-lock or
+//         a game that never ends), record (keep every pick and choice, for replay()).
+// Returns { eng, r, record }.
+function play(eng, style, opts = {}) {
+  let r = newGame(eng, style, opts);
+  const record = opts.record ? { seed: eng.s.seed, name: eng.s.name, origin: eng.s.origin || null, steps: [] } : null;
+  if (opts.setup) opts.setup(eng);
+  let steps = 0, stopped = false;
+  for (const max = opts.maxSteps || 8000; steps++ < max && r.kind !== 'ending';) {
+    if (opts.stop && opts.stop(eng, r)) { stopped = true; break; }
+    if (r.kind === 'month') { r = eng.advance(); continue; }
+    if (r.kind === 'map') {
+      const picks = (style.pickPlaces || pickPlaces)(eng, r.view);
+      if (record) record.steps.push(['pick', picks]);
+      eng.pickPlaces(picks); r = eng.advance(); continue;
+    }
+    const v = r.view;
+    if (!v.options.some((o) => !o.disabled)) { if (opts.strict) throw new Error('soft-lock: no available options on ' + v.id); break; }
+    const key = choiceFor(eng, style, v);
+    const st = opts.before ? opts.before(eng, v, key) : null;
+    if (record) record.steps.push(['choose', key]);
+    const out = eng.choose(key);
+    if (opts.after) opts.after(eng, v, key, out, st);
+    r = eng.advance();
+  }
+  if (opts.strict && !stopped && r.kind !== 'ending') throw new Error('did not finish after ' + (opts.maxSteps || 8000) + ' steps');
+  return { eng, r, record };
+}
+
+// Replay a recorded game through the engine the way the UI drives it (A1). Throws where the replay leaves the record.
+function replay(eng, record) {
+  let r = eng.newGame({ seed: record.seed, name: record.name, ...(record.origin ? { origin: record.origin } : {}) });
+  for (let i = 0; r.kind !== 'ending';) {
+    if (r.kind === 'month') { r = eng.advance(); continue; }
+    const step = record.steps[i++];
+    if (!step) break;
+    const want = r.kind === 'map' ? 'pick' : 'choose';
+    if (step[0] !== want) throw new Error('replay left the record at step ' + i + ': expected ' + step[0] + ', got ' + r.kind + (r.view && r.view.id ? ' ' + r.view.id : ''));
+    if (want === 'pick') eng.pickPlaces(step[1]); else eng.choose(step[1]);
+    r = eng.advance();
+  }
+  return { eng, r };
+}
+
+module.exports = { get, list, estimate, pickPlaces, pickMany, pickOrigin, newGame, choiceFor, play, replay };

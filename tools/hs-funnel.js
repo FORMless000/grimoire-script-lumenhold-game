@@ -13,16 +13,11 @@ const pct = (n) => Math.round(100 * n / N) + '%';
 const q = (a, p) => { const b = a.slice().sort((x, y) => x - y); return b[Math.min(b.length - 1, Math.floor(p * b.length))]; };
 const fmt = (o) => Object.entries(o).sort((a, b) => b[1] - a[1]).map(([k, v]) => k.replace(/^ending_/, '') + ' ' + pct(v)).join(', ');
 function play(seed, style) {
-  const eng = new Engine(content); let r = Policies.newGame(eng, style, { seed, name: 'H' }); const picks = {}; let lo = 0, hi = 0;
-  for (let i = 0; i < 8000 && r.kind !== 'ending'; i++) {
-    if (r.kind === 'month') { r = eng.advance(); continue; }
-    if (r.kind === 'map') { eng.pickPlaces((style.pickPlaces || Policies.pickPlaces)(eng, r.view)); r = eng.advance(); continue; }
-    const v = r.view; let k;
-    if (v.pick > 1) { const o = v.options.filter((x) => !x.disabled && x.key !== 'none'); k = (style.pickMany || Policies.pickMany)(eng, v, o); } else k = style.pick(eng, v);
+  const picks = {}; let lo = 0, hi = 0;
+  const { eng, r } = Policies.play(new Engine(content), style, { seed, name: 'H', after: (e, v, k) => {
     if (/^(hs_|align_)/.test(v.id)) picks[v.id] = k;
-    eng.choose(k); r = eng.advance();
-    const a = eng.s.vals.alignment; lo = Math.min(lo, a); hi = Math.max(hi, a);
-  }
+    const a = e.s.vals.alignment; lo = Math.min(lo, a); hi = Math.max(hi, a);
+  } });
   return { eng, r, picks, lo, hi };
 }
 for (const sn of styles) {

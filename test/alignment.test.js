@@ -101,12 +101,7 @@ test('corvin_runaway: the proposal comes to a partner in the final year, and the
 
 test('play styles steer alignment: lumen climbs past +30, hollow sinks past −30', () => {
   const run = (name, seed) => quiet(() => {
-    const eng = new Engine(content), st = Policies.get(name); let r = eng.newGame({ seed, name: 'T' });
-    for (let i = 0; i < 8000 && r.kind !== 'ending'; i++) {
-      if (r.kind === 'month') { r = eng.advance(); continue; }
-      if (r.kind === 'map') { eng.pickPlaces(Policies.pickPlaces(eng, r.view)); r = eng.advance(); continue; }
-      const v = r.view; eng.choose(v.pick > 1 ? Policies.pickMany(eng, v, v.options.filter((x) => !x.disabled && x.key !== 'none')) : st.pick(eng, v)); r = eng.advance();
-    }
+    const { eng } = Policies.play(new Engine(content), Policies.get(name), { seed, name: 'T' });
     return eng.s.vals.alignment;
   });
   assert.ok(run('lumen', 11) >= 30);

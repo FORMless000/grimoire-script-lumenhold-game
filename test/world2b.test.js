@@ -16,25 +16,7 @@ const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { r
 
 // Play with a style until `stop(eng, r)` is true or the game ends. Returns { eng, r }.
 function play(seed, styleName, stop = () => false, setup = null) {
-  const eng = new Engine(content);
-  const style = Policies.get(styleName);
-  return quiet(() => {
-    let r = eng.newGame({ seed, name: 'T' });
-    if (setup) setup(eng);
-    for (let i = 0; i < 6000 && r.kind !== 'ending'; i++) {
-      if (stop(eng, r)) break;
-      if (r.kind === 'month') { r = eng.advance(); continue; }
-      if (r.kind === 'map') { eng.pickPlaces((style.pickPlaces || Policies.pickPlaces)(eng, r.view)); r = eng.advance(); continue; }
-      const v = r.view;
-      if (v.pick > 1) {
-        const opts = v.options.filter((o) => !o.disabled && o.key !== 'none');
-        const keys = Policies.pickMany(eng, v, opts);
-        eng.choose(keys.length ? keys : [v.options.find((o) => !o.disabled).key]);
-      } else eng.choose(style.pick(eng, v));
-      r = eng.advance();
-    }
-    return { eng, r };
-  });
+  return quiet(() => Policies.play(new Engine(content), Policies.get(styleName), { seed, name: 'T', maxSteps: 6000, stop, setup }));
 }
 
 test('the real content compiles', () => assert.deepEqual(errors.map((e) => e.message), []));
@@ -546,4 +528,34 @@ test('enrolment: no "take no courses"; a fallback only when nothing is offered (
   assert.ok(eng.test(G.parseFile('@event x\ntitle: X\ntext: x\nwhen: offered(courses) > 0\n> left: A\n  say: a\n> right: B\n  say: b\n', 't.grim')[0].when, null));
   eng.offered = () => [];
   assert.deepEqual(eng.view(eng.s.cur).options.map((o) => o.key), ['none'], 'the fallback, so the menu never soft-locks');
+});
+
+test('a simulated game replays exactly through the engine, as the UI would drive it (A1)', () => {
+  const strip = (s) => JSON.stringify({ vals: s.vals, flags: s.flags, states: s.states, tracks: s.tracks, npcs: s.npcs, turn: s.turn, ended: s.ended,
+    hist: s.hist.map((h) => Object.assign({}, h, { at: 0, chosenAt: 0 })) });
+  for (const [style, seed] of [['balanced', 21], ['random', 22], ['social', 23]]) {
+    const a = quiet(() => Policies.play(new Engine(content), Policies.get(style), { seed, name: 'R', record: true }));
+    assert.ok(a.record.steps.length > 400, style + ' played a whole game');
+    const b = quiet(() => Policies.replay(new Engine(content), a.record));
+    assert.equal(strip(b.eng.s), strip(a.eng.s), style + ': same history and final state');
+  }
+});
+
+test('previewing an option never changes the game (A1: a previewed `visit midnight` opened the slot)', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 24, name: 'T' }); });
+  eng.s.flags.night_unlocked = true; eng.startDay();
+  let r = quiet(() => eng.advance()), checked = 0;
+  for (let i = 0; i < 300 && eng.s.turn === 1 && r.kind !== 'month'; i++) {
+    if (r.kind === 'map') { eng.pickPlaces([null]); r = quiet(() => eng.advance()); continue; }
+    const before = JSON.stringify(eng.s);
+    for (const o of r.view.options) quiet(() => { try { eng.preview(r.view.id, o.key, r.view.actor ? r.view.actor.id : null); } catch (e) { /* menus with generated options */ } });
+    assert.equal(JSON.stringify(eng.s), before, 'previewing ' + r.view.id + ' changed the game');
+    checked++;
+    const k = r.view.id === 'night_out' ? 'left' : r.view.options.find((o) => !o.disabled).key;
+    quiet(() => eng.choose(r.view.pick > 1 ? [k] : k)); r = quiet(() => eng.advance());
+  }
+  assert.ok(checked > 3);
+  assert.ok(eng.s.hist.some((h) => h.id === 'night_out'), 'the night card came');
+  assert.ok(!eng.s.hist.some((h) => h.t === 'pick' && h.slot === 'midnight'), 'Sleep opens no midnight pick');
 });

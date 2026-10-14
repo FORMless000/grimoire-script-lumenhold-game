@@ -185,7 +185,9 @@
       // the card pushed when spark crosses @balance spark_follow's cooldown mark (M37)
       'spark_cooldown',
       // the hint card on the first visit to a job's place after the term's last shift (playtest 2, I1)
-      'off_shift'], effects: [] },
+      'off_shift',
+      // the map shown unless a plan names another (A1; `campus` when absent)
+      'map_id'], effects: [] },
     // Numbers (design §8.4): size and difficulty tiers, option-value weights, the expected-skill curve.
     balance: { noId: true, props: ['sizes', 'difficulty', 'weights', 'curve', 'desc', 'xp_cost', 'rank_xp', 'performance',
       // the combat stub's mix and entry cost (playtest 2, M39, M5); odds slopes per swing word (M14)
@@ -200,7 +202,8 @@
     resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
     skill: { props: ['name', 'icon', 'start', 'max', 'desc', 'color'], effects: [] },
     npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel', 'age', 'role', 'year', 'traits', 'interests', 'stats', 'schedule', 'schedule_break', 'relations', 'voice', 'seeks'], effects: [] },
-    state: { props: ['name', 'desc', 'art', 'tags', 'group', 'duration', 'hidden', 'kind', 'money'], effects: ['tick', 'on_add', 'on_expire', 'on_remove'] },
+    // `map_id:` on a plan (A1): the map shown while it lasts, a map id or a track kind (the place of your track of that kind)
+    state: { props: ['name', 'desc', 'art', 'tags', 'group', 'duration', 'hidden', 'kind', 'money', 'map_id'], effects: ['tick', 'on_add', 'on_expire', 'on_remove'] },
     event: { props: ['title', 'text', 'art', 'scene', 'tags', 'when', 'weight', 'trigger', 'actor', 'repeat', 'priority', 'type', 'chain', 'class', 'tone', 'variant',
       // phase 2b: where and when it happens, who is in it, what it belongs to (design §5, §6, §7, §10.6)
       // `time:` the slots it favours (M43), where `slot:` requires one
