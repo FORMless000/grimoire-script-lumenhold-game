@@ -207,7 +207,7 @@ function analyze(content) {
         case 'npc_rel': for (const x of [st.a, st.b]) { if (x === 'npc') { if (!hasActor) P('error', w, 'npc_rel npc: block has no actor'); } else if (!content.npcs[x]) P('error', w, 'npc_rel: unknown npc "' + x + '"'); } break;
         case 'challenge':
           if (!G.CHALLENGE_KINDS[st.kind]) P('error', w, 'challenge: unknown kind "' + st.kind + '" (' + Object.keys(G.CHALLENGE_KINDS).join(' ') + ')');
-          if (st.using && !content.skills[st.using]) P('error', w, 'challenge using: unknown skill "' + st.using + '"');
+          if (st.using && !content.skills[st.using] && !content.resources[st.using]) P('error', w, 'challenge using: unknown skill or resource "' + st.using + '"');
           if (st.vs) {
             if (st.vs.who === 'npc' ? !hasActor : !content.npcs[st.vs.who] && !ROLES.has(st.vs.who)) P('error', w, 'challenge vs: unknown character or cast role "' + st.vs.who + '"');
             if (!content.skills[st.vs.stat] && !['wealth', 'rel', 'spark'].includes(st.vs.stat)) P('error', w, 'challenge vs: "' + st.vs.stat + '" is not a skill, wealth, rel or spark');
@@ -294,6 +294,8 @@ function analyze(content) {
   for (const [ev, ws] of Object.entries(A.eventsRef)) if (!content.events[ev]) P('error', ws[0], 'unknown event "' + ev + '"');
   // The engine itself queues these at term end (design §6.2).
   for (const id of ['track_warning', 'track_promotion']) A.queued[id] = A.queued[id] || ['engine'];
+  // The exam card (`@game exam:`) is pushed by the engine for each enrolled course (M4).
+  if (content.game.exam) A.queued[content.game.exam] = A.queued[content.game.exam] || ['engine'];
   for (const e of Object.values(content.events)) if (e.trigger === 'queued' && !A.queued[e.id]) P('warn', loc(e), 'queued-only event "' + e.id + '" is never queued (orphan)');
   for (const st of Object.values(content.states)) if (!A.statesRef[st.id]) P('info', loc(st), 'state "' + st.id + '" is never gained');
   if (!Object.keys(content.endings).length) P('error', '-', 'no @ending defined');

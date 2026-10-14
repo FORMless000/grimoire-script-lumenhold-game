@@ -416,7 +416,12 @@
   const sceneNote = (scene, hidden) => scene ? '<p class="scene-note"' + (hidden ? ' style="display:none"' : '') + '>' + esc(t('card.illustration', { text: scene })) + '</p>' : '';
   // A challenge names its kind and the skill(s) it rolls (B24): "Enchanting · Charm".
   const challengeLabel = (kind, using) => t('challenge.' + kind) + (using ? ' · ' + using.split('+').map(skillName).join(' + ') : '');
-  const checkText = (c) => c.challenge ? t('check.challengeButton', { kind: challengeLabel(c.skill, c.using), p: c.p }) : t('check.button', { skill: skillName(c.skill), p: c.p });
+  const swingText = (c) => (c.swing ? ' · ' + t('swing.' + c.swing) : '');
+  const checkText = (c) => c.exam ? t('check.examButton', { skill: c.using.split('+').map(skillName).join(' + '), p: c.p, top: c.top }) + swingText(c)
+    : c.combat ? t('check.combatButton', { p: c.p, cost: c.cost }) + swingText(c)
+    : c.challenge ? t('check.challengeButton', { kind: challengeLabel(c.skill, c.using), p: c.p }) + swingText(c) : t('check.button', { skill: skillName(c.skill), p: c.p });
+  // The roll on an option's button (B24, M11): combat, the future minigame, is marked apart from skill checks.
+  const checkLine = (c) => (c ? '<span class="chk roll' + (c.combat ? ' combat' : '') + '">' + Art.icon(c.combat ? 'sword' : c.exam ? 'scroll' : 'dice', 12) + ' ' + esc(checkText(c)) + '</span>' : '');
 
   function showCard(v) {
     ui.mode = 'card'; ui.view = v; ui.busy = false;
@@ -433,7 +438,7 @@
       (v.slot ? '<span class="slotchip">' + esc([t('slot.' + v.slot), v.place && content.places[v.place] ? content.places[v.place].name : null, v.track && content.tracks[v.track] ? content.tracks[v.track].name : null].filter(Boolean).join(' · ')) + '</span>' : ''));
     const choices = document.getElementById('choices');
     const pv = (o) => previewHtml(v, o);
-    const chk = (o) => (o.hint ? '<span class="chk">' + esc(o.hint) + '</span>' : '') + pv(o);
+    const chk = (o) => (o.hint ? '<span class="chk">' + esc(o.hint) + '</span>' : '') + checkLine(o.check) + pv(o);
     if (story) {
       choices.innerHTML = '<button class="choice single" data-k="' + esc(L.key) + '"><span>' + esc(L.label) + chk(L) + '</span></button>';
     } else {
@@ -485,6 +490,7 @@
       const d = pth.labels[0]; if (!d) return '';
       if (d.kind === 'check') return (d.choice === 0 ? '✓ ' : '✗ ');
       if (d.kind === 'challenge') return t('challenge.' + ['win', 'partial', 'lose'][d.choice]) + ' ';
+      if (d.kind === 'exam') return ['A', 'B', 'C', 'F'][d.choice] + ' ';
       return '';
     };
     const more = pv.follows ? '<i class="more" title="' + esc(t('preview.follows')) + '">…</i>' : '';
@@ -575,7 +581,7 @@
   function chipsFor(out) {
     let h = '';
     for (const c of out.checks || []) {
-      if (c.challenge) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.challengeChip', { kind: challengeLabel(c.challenge, c.skill), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
+      if (c.challenge) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + (c.challenge === 'combat' ? ' combat' : '') + '">' + Art.icon(c.challenge === 'combat' ? 'sword' : 'dice', 14) + esc(t('check.challengeChip', { kind: challengeLabel(c.challenge, c.skill), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
       else h += '<span class="chip ' + (c.ok ? 'check-ok' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.chip', { skill: skillName(c.skill), p: c.p, result: t(c.ok ? 'check.success' : 'check.failed') })) + '</span>';
     }
     for (const [k, v] of Object.entries(out.deltas || {})) {
@@ -628,6 +634,13 @@
   }
 
   /* ------------------------------------------------------------------ menu */
+  // A course up front (M4): what it tests, its exam, its spells, and the pass chance if the exam were today.
+  function courseLine(c) {
+    if (!c) return '';
+    const parts = [t('course.tests', { skill: c.skills.map(skillName).join(' + ') }), t('course.exam', { tier: t('tier.' + c.exam), p: c.pass })];
+    if (c.teaches.length) parts.push(t('course.teaches', { spells: c.teaches.map(spellName).join(', ') }));
+    return '<small class="course">' + Art.icon('scroll', 12) + ' ' + esc(parts.join(' · ')) + '</small>';
+  }
   function showMenu(v) {
     ui.mode = 'menu'; ui.view = v; ui.busy = false; ui.multi = v.pick > 1 ? [] : null;
     const deck = document.getElementById('deck'); deck.querySelectorAll('.card').forEach((c) => c.remove());
@@ -635,7 +648,7 @@
     const opts = v.options.map((o, i) => {
       const aff = o.affects.map((id) => content.resources[id] ? Art.icon(content.resources[id].icon, 14) : '').join('');
       return '<button class="opt" data-k="' + esc(o.key) + '"' + (o.disabled ? ' disabled' : '') + '><span class="num">' + (i < 9 ? i + 1 : '') + '</span><b>' + esc(o.label) + '</b>' +
-        (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') + (previewHtml(v, o) || (aff ? '<span class="aff">' + aff + '</span>' : '')) + '</button>';
+        (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') + courseLine(o.course) + (previewHtml(v, o) || (aff ? '<span class="aff">' + aff + '</span>' : '')) + '</button>';
     }).join('');
     openOverlay('<div class="modal dark"><div class="modal-art">' + Art.scene(v.art, v.tags, v.id) + '</div><div class="modal-body">' + (v.actor ? actorRow(v.actor).replace('actor-row', 'actor-row" style="color:var(--text)') : '') +
       '<h2>' + esc(v.title) + '</h2><p class="text">' + esc(v.text) + '</p>' + (settings.notes ? sceneNote(v.scene) : '') +

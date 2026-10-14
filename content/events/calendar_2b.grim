@@ -110,6 +110,22 @@ text: {month == 5: The winter break.|The summer break.} Two months without lectu
 
 # ---------------- Track notices (pushed by the engine at term end) ----------------
 
+@event course_exam
+title: Exam Day
+trigger: queued
+class: story
+tone: tense
+art: scroll
+tags: study class
+scene: A silent exam hall in late light, rows of bent heads, an hourglass on the invigilator's desk.
+text: Exam day for {track}. The hall is silent except for quills and somebody's knee bouncing under a desk. {~The paper is long.|The first question is one you revised.|The first question is one you didn't.|The invigilator turns the hourglass with a click you feel in your teeth.}
+> left: Answer what you know, carefully
+  sit_exam steady
+  say: {~You write slowly: everything you're sure of, and nothing you aren't.|You check every answer twice and hand in at the bell.}
+> right: Go for top marks
+  sit_exam wild
+  say: {~You take the hardest question first and gamble the essay on an idea you had at breakfast.|You write the answer you'd want to read, not the safe one.}
+
 @event track_warning
 title: A Word About Your Attendance
 trigger: queued

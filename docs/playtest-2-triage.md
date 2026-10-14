@@ -90,18 +90,18 @@ Order within M: M42 → M41 · M43 → M8 · M10 → M6 · M39 → M5, M11 · M1
 - M1. Show the place picker before each afternoon and evening, not all in the morning. (W1) Includes B33. Includes B3: festivals no longer force a visit; the map highlights the festival at its place and slot instead (Lantern Night at the lakeshore, and other festivals where it applies).
 - M2. Most places open in both afternoon and evening; edit their events to match. (W3)
 - M3. Don't pre-plan the whole day/month of events (W4); drop the per-day event progress indicator (W4).
-- M4. Courses show their potential outcomes up front (W11); exams become events, not background checks, so they feel significant (W12).
-- M5. Combat entrances (currently checks) spend mana. (W15)
+- M4. Courses show their potential outcomes up front (W11); exams become events, not background checks, so they feel significant (W12). **Done (M-B):** exams are cards (`@game exam: course_exam`, one per enrolled course in a term's last month: answer steadily, or go for top marks), showing the pass and A/B chances; the enrolment menu shows each course's skill, exam tier, spells and pass chance. The grade spread is L1.
+- M5. Combat entrances (currently checks) spend mana. (W15) **Done (M-B):** entering combat costs mana (`@balance combat_cost: small`), shown in the preview and on the button.
 - M6. Vacation work: choose from candidate jobs instead of plain "work" (W17); `break_plan` (Y1 Goldenhaze): job selection right after "work full-time". Decided (D2): choosing to work on campus pushes an automatic job-choice event; board is still paid; no double wage; the full-time jobs are higher-paying and drawn from a separate pool. Decided (D10): the vacation gigs are X15. **Stub:** two baseline gigs with a few events each (X15 fills them). Needs M10 first.
 - M7. Time of day shown by subtle background colour, not only words. (W19)
 - M8. `core_flying_lesson` (Y1 Harvestmoon): afternoon/evening pools hold only events set at that place, or place-independent ones. → M43
 - M9. Picker flow after M1: no confirmation for the first place, no "…" card. (W7)
 - M10. Job pay through events: most job events say the player is paid and actually pay; the job's bonus is paid per shift in events, not when the time is assigned. (W31) Decided (D10): all job and gig pay comes through events instead of today's flat rate, keeping roughly the expected economy with some variation.
-- M11. UI distinguishes minigame events from skill checks, even before minigames exist. (W33)
+- M11. UI distinguishes minigame events from skill checks, even before minigames exist. (W33) **Done (M-B):** every option button now shows its roll; combat is marked with a sword, apart from skill checks (this also completes B24: the button names the skills).
 - M12. Promotions reset performance. (W34)
 - M13. Relationship milestones (becoming friends, etc.) are pushed as extra events that don't compete with other cards; they trigger semi-reliably at the threshold, probability rising to 100% past a second threshold. (W37)
-- M14. A randomness/variance parameter per check: trivial, low-stakes checks (banter, course interactions) swing wildly unless the prose says skill makes them trivial; "hardcore" checks are more deterministic but harder. (W41)
-- M15. Renown checks in events (popularity as an advantage). (W45)
+- M14. A randomness/variance parameter per check: trivial, low-stakes checks (banter, course interactions) swing wildly unless the prose says skill makes them trivial; "hardcore" checks are more deterministic but harder. (W41) **Done (M-B):** `wild` / `steady` after a challenge's tier (slopes in `@balance swing:`). The event retunes are L17, L18.
+- M15. Renown checks in events (popularity as an advantage). (W45) **Done (M-B):** `using renown` (read on the skill scale: 50 = the expected skill now); used by busking, Nessa's headmistress interview and Isolde's warning.
 - M16. Internships don't draw regular campus events (W46); each internship needs a new application or an explicit return offer for high performance — a one-off gig, not long-term (W47); `intern_conclave_minutes` (Y2 Starfall): more internship events at once, so it isn't trivial yet slow to progress. Works with today's internship events; X12 deepens it.
 - M17. Pushed relationship events count toward warmth only when the outcome moves a positive relationship up or a negative one down (if both options go the same way, count the larger). (W52)
 - M18. Visiting a place where a character is counts as actively seeking them, and adds warmth. (W53)
@@ -134,7 +134,7 @@ Order within M: M42 → M41 · M43 → M8 · M10 → M6 · M39 → M5, M11 · M1
   - every night brings a forced letter card: write to someone, and receive letters. **Stub:** a few generic letters (N14 fills them);
   - no midnight turns (M41).
   - (D8, → M19, M29)
-- M39. The combat stub: until the minigame exists (X5), combat and conflict scenes use a combat challenge entry instead of skill checks. Its odds mix arcana, vigor, guile, current health, mood and mana, and total spell levels. It's used widely: duels, fights, the tournament, the midnight duelling gig (X13), the finale. → M5, M11 (D11)
+- M39. The combat stub: until the minigame exists (X5), combat and conflict scenes use a combat challenge entry instead of skill checks. Its odds mix arcana, vigor, guile, current health, mood and mana, and total spell levels. It's used widely: duels, fights, the tournament, the midnight duelling gig (X13), the finale. → M5, M11 (D11) **Done (M-B):** `challenge combat` (arcana, vigor, guile, condition, spell levels; weights in `@balance combat:`); migration 0020 moves 23 fights to it (tournament chain, duels and spars, Bram, brawls, the stag, Ilse's rescue). The finale stays a sealing spell check (X11).
 - M40. The Midnight Cartographers become a hidden flavour group with no club-system obligations: no due visits, no performance or ranks. Belonging doesn't take the player's one club slot, so joining no longer drops a real club. Their nights are not exempt from the flat 33% suspicion roll. Keep the `cartographers` id: the invitation (`clubs.grim`), the gargoyle passage's discovery, Corvin's facts and the pool events key off it. (D11)
 - M41. The midnight turn: mechanics (from X13; content stays in X13). (D11)
   - **Access:** unlocked by a forced lead-in in year 1 Stormbloom, whatever the answer; on campus only (on-campus breaks have it; home, internships and travel don't); not during a lockout.

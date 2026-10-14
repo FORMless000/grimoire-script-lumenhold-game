@@ -248,3 +248,39 @@ test('the v0.2 calendar migration is recorded as applied', () => {
   const ids = (applied.applied || applied).map((a) => (typeof a === 'string' ? a : a.id));
   assert.ok(ids.some((id) => /^0001/.test(id)), JSON.stringify(applied));
 });
+
+test('combat stub (M39, M5): reads condition and spells, costs mana to enter, previews it', () => {
+  const eng = new Engine(content); eng.newGame({ seed: 4, origin: 'noble' });
+  const st = { t: 'challenge', kind: 'combat', tier: 'medium', win: [], lose: [] };
+  for (const k of ['arcana', 'vigor', 'guile']) eng.s.vals[k] = 30;
+  eng.s.vals.health = eng.s.vals.mood = eng.s.vals.mana = 50;
+  const base = eng.challengeOdds(st).value;
+  eng.s.vals.health = eng.s.vals.mood = eng.s.vals.mana = 100;
+  assert.ok(eng.challengeOdds(st).value > base, 'a fresh fighter does better');
+  eng.s.spells = { flame: 2, ward: 1 };
+  assert.ok(eng.challengeOdds(st).value > base + 10, 'spell levels count');
+  eng.s.vals.mana = 40;
+  const ctx = eng.newCtx(null, null); const mana = eng.s.vals.mana;
+  eng.run([st], ctx);
+  assert.equal(eng.s.vals.mana, mana - eng.combatCost(), 'entering a fight spends mana');
+  const pv = eng.preview('bram_duel', 'right', 'bram');
+  assert.ok(pv.paths.every((p) => p.deltas.mana && p.deltas.mana[0] < 0), 'the preview shows the mana');
+});
+
+test('swing (M14): wild checks flatten the odds, steady ones sharpen them', () => {
+  const eng = new Engine(content); eng.newGame({ seed: 4 });
+  eng.s.vals.charm = eng.expectedSkill() + 10;
+  const p = (swing) => eng.challengeOdds({ kind: 'negotiate', tier: 'medium', swing }).win;
+  assert.ok(p('wild') < p(null) && p(null) < p('steady'), p('wild') + ' < ' + p(null) + ' < ' + p('steady'));
+});
+
+test('exams are cards (M4): one per enrolled course in a term\'s last month, graded on the card', () => {
+  const { eng } = play(9, 'balanced', (e) => e.s.turn === 4 && e.s.deck.length > 0);
+  const exams = eng.s.deck.filter((d) => d.id === 'course_exam');
+  const enrolled = Object.entries(eng.s.tracks).filter(([id, t]) => t.status === 'enrolled' && content.tracks[id].kind === 'course');
+  assert.equal(exams.length, enrolled.length, 'one exam card per enrolled course');
+  assert.ok(exams.every((x) => x.track), 'in its course\'s context');
+  // the outlook on the enrolment menu
+  const o = eng.courseOutlook('evocation', 1);
+  assert.ok(o && o.skills.length && o.exam === 'medium' && o.pass >= 8);
+});

@@ -12,7 +12,7 @@
 const G = require('../src/grimoire.js');
 
 const BLOCKS = ['event', 'state', 'npc', 'ending', 'hook', 'resource', 'skill', 'place', 'track', 'spell', 'fact', 'archetype', 'faction', 'arc', 'lore', 'timeline', 'vocab'];
-const STATEMENTS = ['say', 'if', 'chance', 'check', 'challenge', 'flag', 'unflag', 'gain', 'lose', 'queue', 'rel', 'spark', 'npc_rel', 'learn', 'learn_spell', 'bond', 'meet', 'end', 'delta', 'assign'];
+const STATEMENTS = ['say', 'if', 'chance', 'check', 'challenge', 'sit_exam', 'flag', 'unflag', 'gain', 'lose', 'queue', 'rel', 'spark', 'npc_rel', 'learn', 'learn_spell', 'bond', 'meet', 'end', 'delta', 'assign'];
 const COLLECTIONS = { event: 'events', state: 'states', npc: 'npcs', ending: 'endings', hook: 'hooks', resource: 'resources', skill: 'skills',
   place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', lore: 'lore', timeline: 'timeline', vocab: 'vocab' };
 const EFFECT_SLOTS = ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero'];
@@ -39,7 +39,8 @@ const FIELDS = {
   chance: 'p (null unless constant) p_src has_else',
   if: 'branches cond_src has_else',
   'delta, rel, spark': 'name (resource/skill, or npc for rel/spark) npc min max amount (null for tier words) tier legacy (spark written as love)',
-  challenge: 'kind tier using vs has_partial',
+  challenge: 'kind tier using vs has_partial swing',
+  sit_exam: 'swing',
   assign: 'name op expr_src',
   say: 'text len',
   'flag, unflag': 'name (first) count',
@@ -71,7 +72,8 @@ function statementFields(st) {
     case 'if': return { branches: st.branches.length, cond_src: st.branches[0].cond.src, has_else: !!st.else };
     case 'delta': return { name: st.name, min: st.min, max: st.max, amount: st.tier ? null : (st.min + st.max) / 2, tier: st.tier || null };
     case 'rel': case 'spark': return { name: st.npc, npc: st.npc, min: st.min, max: st.max, amount: st.tier ? null : (st.min + st.max) / 2, tier: st.tier || null, legacy: !!st.legacy };
-    case 'challenge': return { kind: st.kind, tier: st.tier, using: st.using, vs: st.vs ? st.vs.who + '.' + st.vs.stat : null, has_partial: !!st.partial };
+    case 'challenge': return { kind: st.kind, tier: st.tier, using: st.using, vs: st.vs ? st.vs.who + '.' + st.vs.stat : null, has_partial: !!st.partial, swing: st.swing || null };
+    case 'sit_exam': return { swing: st.swing || null };
     case 'npc_rel': return { a: st.a, b: st.b, tier: st.tier || null };
     case 'learn': return { fact: st.fact };
     case 'learn_spell': return { spell: st.spell, level: st.level };

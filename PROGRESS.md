@@ -28,7 +28,7 @@
 
 ## This round (after the pause)
 
-- **Playtest #2, mechanics (step 2, under way):** the origin screen (origins apply before month 1's charges); 48 months, with year 4's last break as the wrap-up and the last month only resolving the run.
+- **Playtest #2, mechanics (step 2, under way):** the origin screen (origins apply before month 1's charges); 48 months, with year 4's last break as the wrap-up and the last month only resolving the run; the combat stub (fights cost mana, read condition and spells), swing on checks, renown checks, and exams as cards.
 - **Playtest #2, bugfix and content sessions** (`docs/playtest-2-triage.md` B and C, plan in `docs/playtest-2-plan.md`):
   - no daily card cap (`max_cards_per_day` is optional; absent means none); break days have an evening visit, and break visits don't count toward term quotas;
   - the thesis is chosen at the start of year 4 (design §4.1, §7.6), and the defence ends the thesis track;

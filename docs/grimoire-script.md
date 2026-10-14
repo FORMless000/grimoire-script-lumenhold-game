@@ -398,7 +398,7 @@ These constructs are the new event format. Older forms keep working through a co
 **Challenges** replace `check` (legacy):
 
 ```grim
-challenge duel vs lyra.arcana hard:     # duel | negotiate | deceive | exam | research | brew | enchant | feat | spell
+challenge duel vs lyra.arcana hard:     # combat | duel | negotiate | deceive | exam | research | brew | enchant | feat | spell
   win:
     renown +medium
   partial:                              # optional: a band of ±5 around the DC
@@ -407,7 +407,11 @@ challenge duel vs lyra.arcana hard:     # duel | negotiate | deceive | exam | re
     health -medium
 ```
 
-The skill is mapped from the kind (duel: (vigor + arcana) / 2; negotiate: charm; deceive: guile; research and exam: lore; brew and enchant: alchemy; feat: vigor; spell: arcana), or set with `using <skill>`. DC = `E(turn)` (the `@balance curve`) + the difficulty tier (trivial −15, easy −7, medium 0, hard +8, heroic +16) + `vs <who>.<stat>` (that character's stat minus E(turn), capped at ±15). Odds = clamp(50 + 2.5 × (skill − DC), 8, 92). A card drawn as its `variant: hard` is one tier harder and pays positive tier rewards ×1.5 (the director chooses when, phase 2b).
+The skill is mapped from the kind (duel: (vigor + arcana) / 2; negotiate: charm; deceive: guile; research and exam: lore; brew and enchant: alchemy; feat: vigor; spell: arcana), or set with `using <skill>`. `using` may also name a resource such as `renown`; a resource isn't on the skill scale, so it reads as E(turn) + (value − 50) / 2. DC = `E(turn)` (the `@balance curve`) + the difficulty tier (trivial −15, easy −7, medium 0, hard +8, heroic +16) + `vs <who>.<stat>` (that character's stat minus E(turn), capped at ±15). Odds = clamp(50 + slope × (skill − DC), 8, 92), with slope 2.5.
+
+**Swing.** A word after the tier changes how far skill moves the odds: `challenge negotiate trivial wild:` swings whatever your skill (slope 1.2), `challenge deceive hard steady:` follows skill closely (slope 4). Use `wild` for banter and low-stakes luck, `steady` for checks where skill should decide. The slopes are `@balance swing: normal 2.5 wild 1.2 steady 4`.
+
+**Combat** (the stub until the combat minigame). `challenge combat <tier>:` is for fights: duels, spars, brawls, the tournament. Its value mixes arcana, vigor and guile (weighted), adds condition × (the mean of health, mood and mana − 50), and adds spells × your total spell levels (at most +15); `vs` works as usual. Entering a fight costs mana (`@balance combat_cost:`, a tier, default small); the preview shows it. Weights: `@balance combat: arcana 1 vigor 1 guile 0.5 condition 0.2 spells 1.5`. The button marks combat apart from skill checks. A card drawn as its `variant: hard` is one tier harder and pays positive tier rewards ×1.5 (the director chooses when, phase 2b).
 
 **Spells.** `learn_spell ward` (level +1, max 3) or `learn_spell ward 2`; `spell_level(ward)` in conditions. On a card, `> up[ward]: Raise a ward` is the swipe-up / ↑ option: hidden until the spell is known, disabled when mana is short; its mana cost (`@spell cost`, per level) is paid automatically and shown in the preview. `@game spell_resource` names the resource (default `mana`).
 
@@ -502,7 +506,7 @@ Roles are filled on a scratch copy of the RNG, with backtracking, favouring stro
 
 **Tracks** (`@track` in `content/world/tracks.grim`). Statements: `enrol evocation` (or `enrol evocation 2`), `join duelling`, `leave duelling` (`leave job` / `leave club`: whichever you have), `apply intern_royal_library`, `promote track`, `perform track +small`, `rank_xp track +small`, `progress thesis +medium`, `study evocation +small` (exam preparation for an enrolled course, capped at 15; `study +small` without a track prepares for every enrolled course; this replaces `grades` effects). Inside a track notice, `track` means the track that triggered it, and `{track}` prints its name. Functions: `enrolled(t) member(t) applied(t) level(t) passed(t, n) rank(t) performance(t) progress(t) due(t) visits(t)`.
 
-- **Courses:** enrolment menus (`offers: courses`, `pick: 2`) at each term start; `opens: 2` delays a course to term 2. At term end each enrolled course sits an exam (a challenge at the course level's difficulty, easier for study), graded A/B/C/F; the grades make the **GPA**. Passing a level teaches its spells (`teaches: flame@1 tide@2`). `legacy:` lists v0.2 states that enrolling grants, so old class events keep firing.
+- **Courses:** enrolment menus (`offers: courses`, `pick: 2`) at each term start, where each course shows what it tests, its exam's difficulty, the spells it teaches and today's pass chance; `opens: 2` delays a course to term 2. In a term's last month, `@game exam: course_exam` pushes that card once per enrolled course, in its context; its options grade the exam with `sit_exam` (or `sit_exam wild` / `sit_exam steady`, see Swing). A course not graded by a card sits the exam at term end, as before. Each exam is at the course level's difficulty, easier for study, graded A/B/C/F; the grades make the **GPA**. Passing a level teaches its spells (`teaches: flame@1 tide@2`). `legacy:` lists v0.2 states that enrolling grants, so old class events keep firing.
 - **Clubs and jobs:** one of each at a time. Each term asks for `due:` visits to the track's place. Visits raise performance and rank XP; jobs pay `pay:` per visit (double on breaks). Missed visits cost performance (and standing with the `lead:`); a term with performance ≥ 70 raises it. Below 40 a `track_warning` follows, at 0 you are dropped, and with enough rank XP and performance ≥ 70 a `track_promotion` is offered.
 - **Internships and the thesis** use the same statements: `apply`, then a letter event that `join`s or `leave`s; the thesis is `join thesis` with progress from visits and `progress thesis +…`.
 

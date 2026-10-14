@@ -175,9 +175,13 @@
     game: { noId: true, props: ['title', 'subtitle', 'years', 'months', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'intro', 'summer_months', 'spell_resource',
       'schema', 'last_month', 'calendar', 'seasons', 'day_term', 'day_break', 'max_cards_per_day',
       // the origin menu shown before the game (its options are the origins); the final year's wrap-up months; the last day's recipe
-      'origins', 'wrapup', 'day_last'], effects: [] },
+      'origins', 'wrapup', 'day_last',
+      // the exam card pushed for each enrolled course in a term's last month (playtest 2, M4)
+      'exam'], effects: [] },
     // Numbers (design §8.4): size and difficulty tiers, option-value weights, the expected-skill curve.
-    balance: { noId: true, props: ['sizes', 'difficulty', 'weights', 'curve', 'desc', 'xp_cost', 'rank_xp', 'performance'], effects: [] },
+    balance: { noId: true, props: ['sizes', 'difficulty', 'weights', 'curve', 'desc', 'xp_cost', 'rank_xp', 'performance',
+      // the combat stub's mix and entry cost (playtest 2, M39, M5); odds slopes per swing word (M14)
+      'combat', 'combat_cost', 'swing'], effects: [] },
     // A named group of effects, used as a statement: `grind arcana`. Its body may use $params.
     preset: { props: ['params', 'desc'], effects: [], raw: ['do'] },
     resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
@@ -210,7 +214,8 @@
   const TIERS = ['tiny', 'small', 'medium', 'large', 'huge'];
   const DIFFICULTIES = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
   // Challenge kinds (design §8.3) and the skill each one tests (`using <skill>` overrides).
-  const CHALLENGE_KINDS = { duel: ['vigor', 'arcana'], negotiate: ['charm'], deceive: ['guile'], research: ['lore'], brew: ['alchemy'], enchant: ['alchemy'], exam: ['lore'], feat: ['vigor'], spell: ['arcana'] };
+  // combat (playtest 2, M39): the stub until the combat minigame; its value also reads condition and spells (@balance combat).
+  const CHALLENGE_KINDS = { combat: ['arcana', 'vigor', 'guile'], duel: ['vigor', 'arcana'], negotiate: ['charm'], deceive: ['guile'], research: ['lore'], brew: ['alchemy'], enchant: ['alchemy'], exam: ['lore'], feat: ['vigor'], spell: ['arcana'] };
   const CLASSES = ['routine', 'milestone', 'incident', 'windfall', 'story', 'crisis'];
   const BOOL_PROPS = new Set(['romance', 'hidden']);
   // Structured worldbook values, parsed at compile time. Each returns the parsed value or throws a message.
@@ -263,6 +268,8 @@
     xp_cost(t) { const w = words(t); if (w.length !== 2) throw 'xp_cost: expected "a b" (cost of the next point = a + b × level)'; return { a: toNum(w[0], 'xp_cost'), b: toNum(w[1], 'xp_cost') }; },
     rank_xp(t) { return words(t).map((x) => toNum(x, 'rank_xp')); },
     performance(t) { return STRUCT_PROPS.weights(t); },
+    combat(t) { return STRUCT_PROPS.weights(t); },
+    swing(t) { return STRUCT_PROPS.weights(t); },
   };
   const OPTION_PROPS = new Set(['when', 'hint', 'memory']);
 
@@ -300,7 +307,8 @@
     npcRel: new RegExp('^npc_rel\\s+(' + ID + ')\\s+(' + ID + ')\\s*([+-])\\s*(\\d+|tiny|small|medium|large|huge)$'),
     learn: new RegExp('^learn\\s+(' + ID + '\\.' + ID + ')$'),
     learnSpell: new RegExp('^learn_spell\\s+(' + ID + ')(?:\\s+([123]))?$'),
-    challenge: new RegExp('^challenge\\s+(' + ID + ')(?:\\s+using\\s+(' + ID + '))?(?:\\s+vs\\s+(' + ID + ')\\.(' + ID + '))?\\s+(trivial|easy|medium|hard|heroic)\\s*:$'),
+    challenge: new RegExp('^challenge\\s+(' + ID + ')(?:\\s+using\\s+(' + ID + '))?(?:\\s+vs\\s+(' + ID + ')\\.(' + ID + '))?\\s+(trivial|easy|medium|hard|heroic)(?:\\s+(wild|steady))?\\s*:$'),
+    sitExam: /^sit_exam(?:\s+(wild|steady))?$/,
     preset: new RegExp('^(' + ID + ')((?:\\s+' + ID + ')*)$'),
     bond: new RegExp('^bond\\s+(' + ID + ')\\s+(' + ID + ')$'),
     meet: new RegExp('^meet\\s+(' + ID + ')$'),
@@ -319,7 +327,8 @@
     if ((m = content.match(RE.else))) return { t: 'else', line, block: true };
     if ((m = content.match(RE.chance))) return { t: 'chance', p: E(m[1]), body: [], else: null, line, block: true };
     if ((m = content.match(RE.check))) return { t: 'check', skill: m[1], dc: E(m[2]), body: [], else: null, line, block: true };
-    if ((m = content.match(RE.challenge))) return { t: 'challenge', kind: m[1], using: m[2] || null, vs: m[3] ? { who: m[3], stat: m[4] } : null, tier: m[5], win: null, partial: null, lose: null, line, block: true, outcomes: true };
+    if ((m = content.match(RE.challenge))) return { t: 'challenge', kind: m[1], using: m[2] || null, vs: m[3] ? { who: m[3], stat: m[4] } : null, tier: m[5], swing: m[6] || null, win: null, partial: null, lose: null, line, block: true, outcomes: true };
+    if ((m = content.match(RE.sitExam))) return { t: 'sit_exam', swing: m[1] || null, line };
     if (content.endsWith(':')) throw new GrimError('unknown block statement "' + content + '" (expected if/elif/else/chance/check)', file, line);
     if ((m = content.match(RE.flag))) return { t: 'flag', names: m[1].split(/\s+/), line };
     if ((m = content.match(RE.unflag))) return { t: 'unflag', names: m[1].split(/\s+/), line };

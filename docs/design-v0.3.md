@@ -606,7 +606,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - **Hint events** (2–3 per hidden course) point at the prerequisites.
 
 **Exams:**
-- At term end, each course runs `challenge exam` on its skill, at difficulty **tier by level** (I = medium, II = hard, III = heroic), relative to the calendar curve (§8.6).
+- In the term's last month, each course's exam is a card (playtest 2): the player chooses to answer steadily or to go for top marks (the swing of §9.2), and the card shows the pass and A/B chances. The exam is on the course's skill, at difficulty **tier by level** (I = medium, II = hard, III = heroic), relative to the calendar curve (§8.6). The enrolment menu shows each course's skill, exam tier, spells and pass chance up front.
 - **Study modifiers:** attendance and study choices during the term add up to +15 to the roll.
 - Until the exam minigame exists (§T1), it **auto-resolves**.
 
@@ -887,7 +887,7 @@ desc: A pale shell that turns aside the next harm.
 ### 9.2 Challenges
 
 ```
-challenge duel vs rival hard:     # duel | negotiate | deceive | exam | research | brew | enchant
+challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam | research | brew | enchant
   win:     rel rival -4
            renown +large
   partial: renown +small
@@ -898,6 +898,7 @@ challenge duel vs rival hard:     # duel | negotiate | deceive | exam | research
 
 | Challenge | Skill(s) |
 |---|---|
+| combat | the combat stub: arcana, vigor and guile, plus condition (health, mood, mana) and total spell levels; costs mana to enter |
 | duel | (vigor + arcana) / 2 |
 | negotiate | charm |
 | deceive | guile |
@@ -908,6 +909,9 @@ challenge duel vs rival hard:     # duel | negotiate | deceive | exam | research
 - **Modifiers** (each capped at ±15):
   - `vs <role>.<stat>` shifts the DC by the opponent's stat minus E(turn);
   - study points; the advisor relationship (the track's `lead:` regard, rel / 5, within ±15, inside that track's cards and at its exams); spells known (+3 each for relevant ones); items (§T2).
+- **Combat stub** (playtest 2): until the combat minigame (X5), fights use `combat`, so how rested, cheerful and charged the player is matters, and so does every spell learned. Entering a fight spends mana.
+- **Swing** (playtest 2): a check can be `wild` (skill moves the odds little: banter, luck) or `steady` (skill decides). Low-stakes checks should swing; hard ones should be steadier.
+- **Renown** can be the tested value (`using renown`) where popularity is the advantage.
 - The simulator always auto-resolves.
 
 ### 9.3 Crafting policy

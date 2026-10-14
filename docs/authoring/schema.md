@@ -90,6 +90,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `origins` | text |  |
 |  | `wrapup` | structured |  |
 |  | `day_last` | structured |  |
+|  | `exam` | text |  |
 | `@balance` | `sizes` | structured |  |
 |  | `difficulty` | structured |  |
 |  | `weights` | structured |  |
@@ -98,6 +99,9 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `xp_cost` | structured |  |
 |  | `rank_xp` | structured |  |
 |  | `performance` | structured |  |
+|  | `combat` | structured |  |
+|  | `combat_cost` | text |  |
+|  | `swing` | structured |  |
 | `@preset id` | `params` | text |  |
 |  | `desc` | text |  |
 | `@resource id` | `name` | text | yes |

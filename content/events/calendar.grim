@@ -404,7 +404,7 @@ text: The Spring Tournament: dueling on the great lawn, the whole academy watchi
   mood +small
   say: You eat candied chestnuts and scream for strangers.
 > right: Enter the tournament
-  challenge feat medium:
+  challenge combat medium:
     win:
       renown +medium
       say: First round: you win, barely, and the crowd learns your name.
@@ -428,7 +428,7 @@ tags: rival
 scene: The great lawn ringed with banners, a chalk duelling circle at its centre and the Duelling Circle's names on a board.
 text: The Spring Tournament: duelling on the great lawn, the whole academy watching. The Duelling Circle's names went up on the board a week ago, yours among them. The captain wants results, and says so.
 > left: Fight to make a good showing
-  challenge feat easy:
+  challenge combat easy:
     win:
       renown +small
       perform duelling +small
@@ -437,7 +437,7 @@ text: The Spring Tournament: duelling on the great lawn, the whole academy watch
       health -small
       say: You go out in the first round, on your feet at least. The captain says you fought like someone who expected to lose.
 > right: Go for the title
-  challenge feat medium:
+  challenge combat medium:
     win:
       renown +medium
       say: First round: you win, barely, and the crowd learns your name.
@@ -459,7 +459,7 @@ chain: tournament
 scene: The same ring at sunset, scorch marks on the stone. Your opponent is grinning.
 text: The semifinal. Your opponent is a fourth-year who has never lost. The crowd is louder now; you can hear your own name in it.
 > left: Fight clean
-  challenge spell hard:
+  challenge combat hard:
     win:
       renown +medium
       say: You trade spells like questions and answers — and get the last word.
@@ -492,7 +492,7 @@ scene: The dueling ring under floating lanterns, a silver cup on a plinth, and a
 text: The final. Across the ring stands {lyra}, wand raised, eyes blazing. "I was hoping it would be you," she says, and she is not being friendly.
 > left: Give everything you have
   meet lyra
-  challenge spell heroic:
+  challenge combat heroic:
     win:
       renown +huge
       mood +large

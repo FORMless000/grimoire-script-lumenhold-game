@@ -25,7 +25,7 @@
   const DEFAULT_SIZES = { _: [2, 4, 7, 12, 20], gold: [3, 8, 15, 30, 60], renown: [1, 3, 6, 10, 16], mana: [3, 6, 10, 16, 25], xp: [1, 2, 4, 7, 12], rel: [2, 4, 7, 12, 20], spark: [3, 6, 10, 15, 25] };
   const DEFAULT_DIFFICULTY = { trivial: -15, easy: -7, medium: 0, hard: 8, heroic: 16 };
   // Which skill a challenge rolls (design §9.2); `using <skill>` overrides.
-  const CHALLENGE_SKILLS = { duel: ['vigor', 'arcana'], negotiate: ['charm'], deceive: ['guile'], research: ['lore'], brew: ['alchemy'], enchant: ['alchemy'], exam: ['lore'], feat: ['vigor'], spell: ['arcana'] };   // = Grimoire.CHALLENGE_KINDS
+  const CHALLENGE_SKILLS = { combat: ['arcana', 'vigor', 'guile'], duel: ['vigor', 'arcana'], negotiate: ['charm'], deceive: ['guile'], research: ['lore'], brew: ['alchemy'], enchant: ['alchemy'], exam: ['lore'], feat: ['vigor'], spell: ['arcana'] };   // = Grimoire.CHALLENGE_KINDS
   class SaveVersionError extends Error { constructor(v) { super('This save is from an older version of the game (save version ' + v + ', now ' + SAVE_VERSION + ') and can no longer be loaded.'); this.code = 'SAVE_VERSION'; this.saveVersion = v; } }
   const now = () => Date.now();
   const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -64,7 +64,7 @@
       for (const e of this.events) for (const o of e.options) {
         const set = new Set();
         G.walkEffects(o.effects, (st) => { if ((st.t === 'delta' || st.t === 'assign') && content.resources[st.name]) set.add(st.name); });
-        o.firstCheck = o.effects.find((st) => st.t === 'check' || st.t === 'challenge') || null;
+        o.firstCheck = o.effects.find((st) => st.t === 'check' || st.t === 'challenge' || st.t === 'sit_exam') || null;
         if (o.spell) set.add(content.game.spell_resource || 'mana');
         o.affects = [...set];
       }
@@ -212,10 +212,14 @@
       const ct = this._ctxTrack && this.trackState(this._ctxTrack);
       // An exam inside a course's card tests that course's skill (design §9.2).
       const skills = st.using ? [st.using] : (st.kind === 'exam' && ct && this.trackSkills(this._ctxTrack).length ? this.trackSkills(this._ctxTrack) : (CHALLENGE_SKILLS[st.kind] || ['lore']));
-      let sv = skills.reduce((a, k) => a + (this.s.vals[k] || 0), 0) / skills.length;
+      const combat = st.kind === 'combat' && !st.using;
+      // A resource in `using` (renown, M15) isn't on the skill scale: 50 reads as the expected skill now, ±25 at the ends.
+      const val = (k) => (this.c.resources[k] && !this.c.skills[k] ? this.expectedSkill() + ((this.s.vals[k] || 0) - 50) / 2 : this.s.vals[k] || 0);
+      let sv = combat ? this.combatValue() : skills.reduce((a, k) => a + val(k), 0) / skills.length;
       // Modifiers, each capped at 15 (design §9.2): +3 per known spell of a discipline whose skill is tested; study points for an exam.
+      // (Combat counts every spell level in its own value.)
       let sp = 0;
-      for (const id of Object.keys(this.s.spells || {})) { const d = this.c.spells[id]; if (d && d.discipline && this.trackSkills(d.discipline).some((k) => skills.includes(k))) sp += 3; }
+      if (!combat) for (const id of Object.keys(this.s.spells || {})) { const d = this.c.spells[id]; if (d && d.discipline && this.trackSkills(d.discipline).some((k) => skills.includes(k))) sp += 3; }
       sv += Math.min(15, sp);
       if (st.kind === 'exam' && ct && ct.status === 'enrolled') sv += Math.min(15, ct.study || 0);
       sv += this.advisorBonus(this._ctxTrack);
@@ -224,9 +228,26 @@
       const tier = this._variant === 'hard' ? DT[Math.min(4, DT.indexOf(st.tier) + 1)] : st.tier;
       let dc = e + this.difficulty(tier);
       if (st.vs) dc += clamp(this.statOf((this._cast && this._cast[st.vs.who]) || st.vs.who, st.vs.stat, actor) - e, -15, 15);   // a cast role resolves to its character
-      const odds = (x) => clamp(Math.round(50 + 2.5 * (sv - x)), 8, 92);
+      const slope = this.swingSlope(st.swing);
+      const odds = (x) => clamp(Math.round(50 + slope * (sv - x)), 8, 92);
       return st.partial ? { skill: skills.join('+'), value: sv, dc, win: odds(dc + 5), atLeastPartial: odds(dc - 5) } : { skill: skills.join('+'), value: sv, dc, win: odds(dc), atLeastPartial: odds(dc) };
     }
+    // How much skill moves the odds (playtest 2, M14): `wild` checks swing whatever your skill, `steady` ones follow it closely.
+    swingSlope(sw) { const d = (this.c.balance && this.c.balance.swing) || {}, k = sw || 'normal'; return d[k] != null ? d[k] : { normal: 2.5, wild: 1.2, steady: 4 }[k]; }
+    // The combat stub (playtest 2, M39), until the minigame: a mix of arcana, vigor and guile, how you are right now
+    // (health, mood, mana around 50) and every spell level you know. Weights in `@balance combat:`.
+    combatWeights() { return Object.assign({ arcana: 1, vigor: 1, guile: 0.5, condition: 0.2, spells: 1.5 }, (this.c.balance && this.c.balance.combat) || {}); }
+    combatValue() {
+      const s = this.s, w = this.combatWeights();
+      let sum = 0, tw = 0;
+      for (const k of Object.keys(w)) if (this.c.skills[k] && w[k]) { sum += w[k] * (s.vals[k] || 0); tw += w[k]; }
+      const cond = ['health', 'mood', this.spellResource].filter((k) => this.c.resources[k]);
+      const shape = cond.length ? cond.reduce((a, k) => a + (s.vals[k] || 0), 0) / cond.length - 50 : 0;
+      const levels = Object.values(s.spells || {}).reduce((a, b) => a + (b || 0), 0);
+      return (tw ? sum / tw : 0) + (w.condition || 0) * shape + Math.min(15, (w.spells || 0) * levels);
+    }
+    // Entering a fight spends mana (M5): `@balance combat_cost:` (a tier, default small).
+    combatCost() { return this.tierAmount(this.spellResource, (this.c.balance && this.c.balance.combat_cost) || 'small') || 0; }
     // The advisor modifier (design §9.2): how the track's `lead:` (its professor, captain or employer) feels about you, rel / 5, within ±15.
     advisorBonus(trackId) {
       const d = trackId && this.c.tracks[trackId], n = d && d.lead && this.s.npcs[d.lead];
@@ -322,23 +343,8 @@
       const excused = Object.keys(s.states).some((k) => this.c.states[k] && (this.c.states[k].tags || []).includes('excuse'));
       for (const [id, t] of Object.entries(s.tracks || {})) {
         const d = this.c.tracks[id]; if (!d) continue;
-        if (t.status === 'enrolled' && d.kind === 'course') {
-          const sk = this.trackSkills(id); const sv = sk.reduce((a, k) => a + (s.vals[k] || 0), 0) / Math.max(1, sk.length);
-          const tier = ['medium', 'hard', 'heroic'][Math.min(2, (t.level || 1) - 1)];
-          const dc = this.expectedSkill() + this.difficulty(tier) - Math.min(15, t.study || 0) - this.advisorBonus(id);
-          const odds = (x) => clamp(Math.round(50 + 2.5 * (sv - x)), 8, 92);
-          const r = this.rand() * 100;
-          const grade = r < odds(dc + 5) ? (sv - dc >= 15 ? 'A' : 'B') : r < odds(dc - 5) ? 'C' : 'F';
-          t.grades.push(grade); t.passed[t.level] = grade; t.status = grade === 'F' ? 'failed' : 'done';
-          // Why (B7): the skill tested, its value, the exam's bar (after study and the advisor) and the pass chance.
-          ctx.notes.push({ kind: 'grade', track: id, level: t.level, grade, skills: sk, value: Math.round(sv), bar: Math.round(dc), pass: odds(dc - 5) });
-          // The professor notices (design §5.5): A warms them a good deal, B a little, F cools them.
-          const regard = { A: ['medium', 1], B: ['small', 1], F: ['small', -1] }[grade];
-          if (regard && d.lead && s.npcs[d.lead] && s.npcs[d.lead].met) this.run([{ t: 'rel', npc: d.lead, tier: regard[0], sign: regard[1] }], ctx);
-          // Passing a level teaches its spells (design §9.1: `teaches: flame@1 tide@2 …`).
-          if (grade !== 'F') for (const x of d.teaches || []) if (x.level === t.level && this.c.spells[x.spell]) this.run([{ t: 'learn_spell', spell: x.spell, level: null }], ctx);
-          this.grantLegacy(id, ctx, false);
-        }
+        // A course not graded by its exam card this month (no `@game exam:`, or the card was never shown) sits it here.
+        if (t.status === 'enrolled' && d.kind === 'course') this.sitExam(id, null, ctx);
         if (t.status === 'member' && (d.kind === 'club' || d.kind === 'job' || d.kind === 'thesis')) {
           const missed = excused ? 0 : Math.max(0, (t.due || 0) - (t.visits || 0));
           if (missed) {
@@ -366,6 +372,51 @@
       }
       if (ctx.notes.length) summary.push(this.summaryItem(ctx, null));
       this.runHooks('term_end', summary);
+    }
+    // A course's exam (design §7.3): the skill it tests, the bar (the level's difficulty, lowered by study and the
+    // advisor) and the chance of each grade: A at 15+ over the bar, B above it, C within 5 below, else F.
+    examOdds(id, swing) {
+      const s = this.s, t = this.trackState(id), sk = this.trackSkills(id);
+      const sv = sk.reduce((a, k) => a + (s.vals[k] || 0), 0) / Math.max(1, sk.length);
+      const tier = ['medium', 'hard', 'heroic'][Math.min(2, ((t && t.level) || 1) - 1)];
+      const dc = this.expectedSkill() + this.difficulty(tier) - Math.min(15, (t && t.study) || 0) - this.advisorBonus(id);
+      const slope = this.swingSlope(swing);
+      const odds = (x) => clamp(Math.round(50 + slope * (sv - x)), 8, 92);
+      const top = odds(dc + 5), pass = odds(dc - 5);
+      const A = sv - dc >= 15 ? top : 0, B = top - A, C = pass - top, F = 100 - pass;
+      return { skills: sk, value: sv, bar: dc, probs: [A, B, C, F], pass, top };
+    }
+    // Sitting a course's exam (M4: an exam card's `sit_exam`, else at term end): the grade, its reasons, the professor's regard, spells.
+    sitExam(id, swing, ctx) {
+      const s = this.s, t = this.trackState(id), d = this.c.tracks[id];
+      if (!t || !d || d.kind !== 'course' || t.status !== 'enrolled') return;
+      const o = this.examOdds(id, swing);
+      const grade = ['A', 'B', 'C', 'F'][this.pick('exam', o.probs, { exam: id })];
+      t.grades.push(grade); t.passed[t.level] = grade; t.status = grade === 'F' ? 'failed' : 'done';
+      // Why (B7): the skill tested, its value, the exam's bar (after study and the advisor) and the pass chance.
+      ctx.notes.push({ kind: 'grade', track: id, level: t.level, grade, skills: o.skills, value: Math.round(o.value), bar: Math.round(o.bar), pass: o.pass });
+      // The professor notices (design §5.5): A warms them a good deal, B a little, F cools them.
+      const regard = { A: ['medium', 1], B: ['small', 1], F: ['small', -1] }[grade];
+      if (regard && d.lead && s.npcs[d.lead] && s.npcs[d.lead].met) this.run([{ t: 'rel', npc: d.lead, tier: regard[0], sign: regard[1] }], ctx);
+      // Passing a level teaches its spells (design §9.1: `teaches: flame@1 tide@2 …`).
+      if (grade !== 'F') for (const x of d.teaches || []) if (x.level === t.level && this.c.spells[x.spell]) this.run([{ t: 'learn_spell', spell: x.spell, level: null }], ctx);
+      this.grantLegacy(id, ctx, false);
+    }
+    // What an option's first roll looks like on its button: a challenge (with its swing, and combat's mana), an exam, a legacy check.
+    checkView(st, actor, item) {
+      if (st.t === 'challenge') { const odds = this.challengeOdds(st, actor); return { skill: st.kind, using: odds.skill, p: odds.win, challenge: true, swing: st.swing || null, combat: st.kind === 'combat', cost: st.kind === 'combat' ? this.combatCost() : 0 }; }
+      if (st.t === 'sit_exam') { const id = (item && item.track) || this._ctxTrack; const o = id && this.trackState(id) ? this.examOdds(id, st.swing) : null; return o ? { exam: true, skill: 'exam', using: o.skills.join('+'), p: o.pass, top: o.top, swing: st.swing || null } : null; }
+      return { skill: st.skill, p: this.checkChance(st.skill, this.value(st.dc, actor)) };
+    }
+    // A course on the enrolment menu, up front (playtest 2, M4): what it tests, how hard its exam is, what it teaches,
+    // and the pass chance if the exam were today without study.
+    courseOutlook(id, level) {
+      const d = this.c.tracks[id]; if (!d) return null;
+      const lv = level || this.levelPassed(id) + 1;
+      const tier = ['medium', 'hard', 'heroic'][Math.min(2, lv - 1)];
+      const sk = this.trackSkills(id), sv = sk.reduce((a, k) => a + (this.s.vals[k] || 0), 0) / Math.max(1, sk.length);
+      const dc = this.expectedSkill() + this.difficulty(tier) - this.advisorBonus(id);
+      return { skills: sk, level: lv, exam: tier, teaches: (d.teaches || []).filter((x) => x.level === lv).map((x) => x.spell), pass: clamp(Math.round(50 + this.swingSlope(null) * (sv - (dc - 5))), 8, 92) };
     }
     // Generated menu options (design §7.3, §7.4): `offers: courses | clubs | jobs`.
     offered(kind) {
@@ -767,6 +818,7 @@
             if (!s.facts[st.fact]) { s.facts[st.fact] = s.turn; ctx.notes.push({ kind: 'fact', fact: st.fact }); }
             break;
           }
+          case 'sit_exam': this.sitExam(ctx.track || this._ctxTrack, st.swing, ctx); break;
           case 'learn_spell': {
             s.spells = s.spells || {};
             const lv = st.level || Math.min(3, (s.spells[st.spell] || 0) + 1);
@@ -774,10 +826,11 @@
             break;
           }
           case 'challenge': {
+            if (st.kind === 'combat') this.change(this.spellResource, -this.combatCost(), ctx);
             const o = this.challengeOdds(st, ctx.actor);
             const probs = [o.win, st.partial ? o.atLeastPartial - o.win : 0, 100 - o.atLeastPartial];
             const result = ['win', 'partial', 'lose'][this.pick('challenge', probs, { challenge: st.kind })];
-            ctx.checks.push({ challenge: st.kind, skill: o.skill, p: o.win, partial: st.partial ? o.atLeastPartial - o.win : null, result, ok: result !== 'lose' });
+            ctx.checks.push({ challenge: st.kind, skill: o.skill, p: o.win, partial: st.partial ? o.atLeastPartial - o.win : null, result, ok: result !== 'lose', swing: st.swing || null });
             this.run(st[result], ctx);
             break;
           }
@@ -880,6 +933,10 @@
       this.unlockFacts();
       if (this.c.places && Object.keys(this.c.places).length) this.monthlyWorld(summary);
       if (this.dayMode && this.isTermStart()) this.runHooks('term_start', summary);
+      // Exams are cards (playtest 2, M4): in a term's last month, one `@game exam:` card per enrolled course, in its context.
+      if (this.dayMode && this.isTermEnd() && this.c.events[this.c.game.exam]) {
+        for (const [id, t] of Object.entries(s.tracks || {})) if (t.status === 'enrolled' && (this.c.tracks[id] || {}).kind === 'course') s.queue.push({ id: this.c.game.exam, actor: null, track: id, due: s.turn, src: 'queued' });
+      }
       this.runHooks('month_start', summary);
       if (!s.ended) {
         if (this.dayMode) {
@@ -1117,7 +1174,8 @@
             disabled: (o.when ? !this.test(o.when, a) : false) || short,
             affects: o.affects,
             spell: o.spell ? { id: o.spell, level: lv, cost, short } : null,
-            check: o.firstCheck ? (o.firstCheck.t === 'challenge' ? ((odds) => ({ skill: o.firstCheck.kind, using: odds.skill, p: odds.win, challenge: true }))(this.challengeOdds(o.firstCheck, a)) : { skill: o.firstCheck.skill, p: this.checkChance(o.firstCheck.skill, this.value(o.firstCheck.dc, a)) }) : null,
+            check: o.firstCheck ? this.checkView(o.firstCheck, a, item) : null,
+            course: (o.effects[0] && o.effects[0].t === 'enrol') ? this.courseOutlook(o.effects[0].track, o.effects[0].level) : null,
           };
         }),
       };
