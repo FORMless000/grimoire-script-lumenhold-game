@@ -729,7 +729,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 | course fees | 8 / term, at enrolment |
 
 - **Forced sinks** (`class: incident`, pushed, rare): medical bills, family emergencies, fines, a broken wand.
-- **Unpaid rent or board** → `hungry` (−4 health, −4 mood a month). Twice in a row → debt with Grisk.
+- **Unpaid rent or board** → `hungry` (−3 health, −4 mood a month). Twice in a row → debt with Grisk.
 - **Unpaid debt** escalates (playtest 2, M22): the first missed payment brings a reminder card (ignored, it adds a month), the next the collectors.
 - **Money-maxxing sinks:** luxuries, bribes, patronage (crowns for renown), risky investments, donations that unlock places.
 - **Income:** job shifts, break work, windfalls.
@@ -779,7 +779,8 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 
 | | tiny | small | medium | large | huge |
 |---|---|---|---|---|---|
-| health / mood | 2 | 4 | 7 | 12 | 20 |
+| health | 3 | 5 | 10 | 16 | 25 |
+| mood | 4 | 8 | 13 | 20 | 30 |
 | crowns | 3 | 8 | 15 | 30 | 60 |
 | renown | 1 | 3 | 6 | 10 | 16 |
 | mana | 3 | 6 | 10 | 16 | 25 |

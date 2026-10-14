@@ -94,9 +94,9 @@
 - **Skill growth** for focused styles is 57–65 at month 24 (design ~85).
 - **Spells are scarce in content:** 11 swipe-up options in 716 events, and 5 of the 12 spells have none, so mana stays high (the caster alarm). Spells need a content batch, not a price change.
 - **Tuned on purpose** (design numbers are marked tunable):
-  - board 8 instead of 10, tuition 30 instead of 40 (with the gold row unchanged, the design's figures send careful players hungry);
-  - hungry −2 health and −3 mood instead of −4/−4;
-  - no course fees;
+  - board 8 instead of 10, tuition 16 instead of 40, paid by noble and merchant families (L24);
+  - hungry −3 health and −4 mood instead of −4/−4 (L-4);
+  - course fees 8 a term at enrolment, not per course;
   - confessions at spark 30, not 60.
 - **Balance alarms** (full `balance`; 0 invariant failures):
   - the aggressive style collapses (36% Sent Home; it ignores health on purpose), but later than the design's 5/9 months;
