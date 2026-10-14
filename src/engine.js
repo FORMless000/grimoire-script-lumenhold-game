@@ -940,7 +940,13 @@
           case 'learn_spell': {
             s.spells = s.spells || {};
             const lv = st.level || Math.min(3, (s.spells[st.spell] || 0) + 1);
-            if (lv > (s.spells[st.spell] || 0)) { s.spells[st.spell] = lv; ctx.notes.push({ kind: 'spell', spell: st.spell, level: lv }); }
+            if (lv > (s.spells[st.spell] || 0)) {
+              s.spells[st.spell] = lv;
+              // Learning or upgrading a spell is a reward (L-6): skill XP in its discipline, `@balance spell_bonus` by level.
+              const tier = ((this.c.balance && this.c.balance.spell_bonus) || [])[lv - 1], sp = this.c.spells[st.spell], bonus = {};
+              if (tier && sp && sp.discipline) for (const k of this.trackSkills(sp.discipline)) { const before = s.vals[k] || 0; this.change(k, this.tierAmount('xp', tier), ctx); bonus[k] = Math.round(((s.vals[k] || 0) - before) * 100) / 100; }
+              ctx.notes.push(Object.assign({ kind: 'spell', spell: st.spell, level: lv }, Object.keys(bonus).length ? { bonus } : {}));
+            }
             break;
           }
           case 'challenge': {

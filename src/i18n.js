@@ -108,6 +108,7 @@
     'note.gain': '+ {state}',
     'note.lose': '− {state}',
     'note.spell': 'New spell: {spell} {level}',
+    'note.spellBonus': 'New spell: {spell} {level} ({bonus})',
     'note.fact': 'You learned something about {name}.',
     'check.challengeChip': '{kind} ({p}%) · {result}',
     'check.challengeButton': '{kind} · {p}%',

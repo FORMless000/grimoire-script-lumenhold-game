@@ -176,6 +176,39 @@ text: t
   assert.deepEqual(eng.spellCheck(), { per: 2, cap: 6 });
 });
 
+test('learning a spell gives skill XP in its discipline, by spell level (L-6)', () => {
+  const eng = engineWith(`@track evo
+kind: course
+name: Evocation
+skill: arcana
+levels: 3
+
+@spell flame
+name: Flame
+discipline: evo
+cost: 8, 6, 5
+power: 1, 2, 3
+
+@event teach
+title: T
+text: t
+> ok: Go
+  learn_spell flame
+`);
+  eng.c.balance.spell_bonus = ['large', 'large', 'huge'];
+  const before = eng.s.vals.arcana;
+  show(eng, 'teach');
+  const out = eng.choose('ok');
+  const note = out.notes.find((n) => n.kind === 'spell');
+  assert.equal(note.level, 1);
+  assert.ok(note.bonus.arcana > 0, 'the note carries the bonus');
+  assert.equal(Math.round((eng.s.vals.arcana - before) * 100) / 100, note.bonus.arcana);
+  // A spell already known at that level gives nothing.
+  eng.s.spells.flame = 3;
+  show(eng, 'teach');
+  assert.equal(eng.choose('ok').notes.filter((n) => n.kind === 'spell').length, 0);
+});
+
 test('spells: hidden until known, disabled without mana, cost paid on choose', () => {
   const eng = engineWith(`@event cold
 title: C

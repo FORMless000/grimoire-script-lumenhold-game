@@ -111,6 +111,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `odds` | structured |  |
 |  | `study` | structured |  |
 |  | `spell_check` | structured |  |
+|  | `spell_bonus` | structured |  |
 | `@preset id` | `params` | text |  |
 |  | `desc` | text |  |
 | `@resource id` | `name` | text | yes |

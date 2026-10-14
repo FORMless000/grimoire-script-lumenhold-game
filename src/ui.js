@@ -569,7 +569,12 @@
     // A rivalry can sit alongside friendship (respect with an edge), so say so when it starts (B14).
     if (n.kind === 'bond') return t(n.status === 'rival' ? 'note.bondRival' : 'note.bond', { name: shortName(n.npc), status: bondLabel(n.status) });
     if (n.kind === 'gain' || n.kind === 'lose') return t('note.' + n.kind, { state: content.states[n.state] ? content.states[n.state].name : n.state });
-    if (n.kind === 'spell') return t('note.spell', { spell: spellName(n.spell), level: ['', 'I', 'II', 'III'][n.level] || n.level });
+    if (n.kind === 'spell') {
+      const lv = ['', 'I', 'II', 'III'][n.level] || n.level;
+      // The spell's reward (L-6): the skill it trained, "+3 Arcana".
+      const bonus = Object.entries(n.bonus || {}).filter(([, v]) => v > 0).map(([k, v]) => '+' + Math.round(v) + ' ' + skillName(k)).join(', ');
+      return bonus ? t('note.spellBonus', { spell: spellName(n.spell), level: lv, bonus }) : t('note.spell', { spell: spellName(n.spell), level: lv });
+    }
     const tn = (id) => (content.tracks[id] ? content.tracks[id].name : id);
     if (n.kind === 'grade') {
       const track = ((content.tracks[n.track] || {}).level_names || tn(n.track)).split(/\s*[,，、]\s*/)[n.level - 1] || tn(n.track);

@@ -895,6 +895,7 @@ desc: A pale shell that turns aside the next harm.
 ```
 
 - **Learned from:** `teaches:` on course levels, club and job ranks, events (`learn_spell ward`), close friends (rel ≥ 70 events).
+- **A reward** (playtest 2, L-6): learning a spell, or a level of one, gives skill XP in its discipline's skill (`@balance spell_bonus`, one tier per spell level: medium, large, huge), shown on the "New spell" note, so passing a course feels like a reward.
 - **Options:** `> up[ward]: Raise a ward` is the swipe-up / ↑ option.
   - Invisible unless the spell is known; shown but disabled if mana is short.
   - Mana is deducted automatically and shown in the preview.
