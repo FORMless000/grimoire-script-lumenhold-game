@@ -10,6 +10,8 @@ Open **`index.html`** in a browser (double-click works; no server or install nee
 
 Or run the local server (Node 20+, no install needed): `npm start`, then open http://127.0.0.1:4173. With the server, saves (an autosave plus 3 slots), full run logs and your card ratings are stored in `data/`, and `/admin` shows runs and feedback by event.
 
+To play from other devices on your network, run `./scripts/host.sh` (Linux, macOS), `scripts\host.cmd` or `scripts\host.ps1` (Windows). It serves on 0.0.0.0 and prints the links. Players need the link that includes `?token=…` for saves and run logs; the same token opens `/admin`, and save slots are shared by everyone on the server.
+
 - **Swipe** the card, click a choice button, or press **← / →**. **Enter** continues.
 - In menus, click a tile or press **1–9**.
 - **Previews** on every choice show what it will change; a challenge shows its odds.
