@@ -233,12 +233,19 @@ function get(name) {
   const [base, arg] = name.split(':');
   if (base === 'focused' && !SKILLS.includes(arg)) throw new Error('focused:<skill> needs one of ' + SKILLS.join(' '));
   if ((base === 'social') && !arg) return LEGACY.social;
+  // Scenario styles (A4): a balanced player who always goes out at night, or one who never takes a job.
+  if (base === 'nightowl') { const b = STYLES.balanced(); return Object.assign({}, b, { name: 'nightowl', pick: (eng, v) => (v.id === 'night_out' && v.options.some((o) => o.key === 'right' && !o.disabled) ? 'right' : b.pick(eng, v)) }); }
+  if (base === 'nojob') {
+    const b = STYLES.balanced();
+    const joinsJob = (eng, v, key) => { const def = eng.optionsOf(eng.c.events[v.id]).find((o) => o.key === key); let j = false; if (def) G.walkEffects(def.effects, (st) => { if (st.t === 'join' && eng.c.tracks[st.track] && eng.c.tracks[st.track].kind === 'job') j = true; }); return j; };
+    return Object.assign({}, b, { name: 'nojob', pick: (eng, v) => { const ok = v.options.filter((o) => !o.disabled && !joinsJob(eng, v, o.key)); return ok.length ? b.pick(eng, Object.assign({}, v, { options: ok })) : b.pick(eng, v); } });
+  }
   if (base === 'truant') return Object.assign(STYLES.balanced(), { name: 'truant', pickPlaces: (eng, view) => pickPlaces(eng, view, { truant: true }) });
   if (base === 'social') return Object.assign(STYLES.social(arg), { pickPlaces: (eng, view) => pickPlaces(eng, view, { seek: arg }) });
   if (STYLES[base]) return STYLES[base](arg);
   throw new Error('unknown play style "' + name + '" (' + list().join(', ') + ')');
 }
-function list() { return ['random', 'cautious', 'social', 'balanced', 'focused:<skill>', 'aggressive', 'moneymaxx', 'caster', 'truant', 'lumen', 'hollow', 'plot', 'social:<npc>']; }
+function list() { return ['random', 'cautious', 'social', 'balanced', 'focused:<skill>', 'aggressive', 'moneymaxx', 'caster', 'truant', 'lumen', 'hollow', 'plot', 'social:<npc>', 'nightowl', 'nojob']; }
 
 // The origin screen (playtest 2, M32): a sim picks its origin up front, spread evenly over seeds (no RNG used),
 // so origin effects apply before month 1's charges, as in play.

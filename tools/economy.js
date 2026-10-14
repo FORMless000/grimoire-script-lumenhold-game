@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Economy report (design §8.2): where every attribute comes from and goes to, per play style.
 //   node tools/economy.js [--games N] [--styles random,balanced,social] [--keys health,mood,gold] [--top 8] [--origin hedge]
-//                         [--by kind|event] [--per game|month] [--freq [N]] [--json]
+//                         [--by kind|event] [--per game|month] [--freq [N]] [--seed S] [--matrix] [--json]
 // Plays N simulated games per style and splits each key's flow into sources: month hooks and states by
 // their label, cards by kind (track/place/plan/social/ambient/story/crisis…) or, with --by event, by event (with how
 // often it is shown), per game or per month played. Also prints the final-value spread (p10/p50/p90), the share of
@@ -19,13 +19,33 @@ const STYLES = arg('styles', 'random,balanced,social,cautious').split(',');
 const TOP = +arg('top', 8);
 const ORIGIN = arg('origin', null);   // every game starts from this origin (e.g. --origin hedge)
 const BY = arg('by', 'kind'), PER = arg('per', 'game');
+const SEED = +arg('seed', 7001);   // the first game's seed (A4: seed sweeps compare runs from different seeds)
+const MATRIX = process.argv.includes('--matrix');   // A4: every origin × every style, one summary line each
 const FREQ = process.argv.includes('--freq') ? (+arg('freq', 15) || 15) : 0;
 const ROOT = path.join(__dirname, '..');
 const { content } = project(ROOT).compileAll();
 const KEYS = arg('keys', null) ? arg('keys').split(',') : [...Object.keys(content.resources), ...Object.keys(content.skills), 'rel', 'spark'];
 
-function play(seed, style) {
-  return Policies.play(new Engine(content), ORIGIN ? Object.assign({}, style, { pickOrigin: () => ORIGIN }) : style, { seed, name: 'Eco' });
+function play(seed, style, origin = ORIGIN) {
+  return Policies.play(new Engine(content), origin ? Object.assign({}, style, { pickOrigin: () => origin }) : style, { seed, name: 'Eco' });
+}
+if (MATRIX) {
+  // One line per origin × style (A4): early endings, final health / mood / gold medians, the top headline.
+  const w0 = console.warn; console.warn = () => {};
+  const origins = new Engine(content).originChoices().map((o) => o.key), early = new Set(Object.values(content.endings).filter((e) => e.kind === 'early').map((e) => e.id));
+  const med = (a) => { const s = a.slice().sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
+  console.log('origin'.padEnd(12) + STYLES.map((s) => s.padEnd(34)).join(''));
+  for (const o of origins) {
+    let row = o.padEnd(12);
+    for (const sn of STYLES) {
+      const fin = { health: [], mood: [], gold: [] }, ends = {};
+      for (let g = 0; g < GAMES; g++) { const { eng, r } = play(SEED + g * 7919, Policies.get(sn), o); for (const k of Object.keys(fin)) fin[k].push(eng.s.vals[k]); const id = r.kind === 'ending' ? r.id : '-'; ends[id] = (ends[id] || 0) + 1; }
+      const e = Object.entries(ends).filter(([id]) => early.has(id)).reduce((a, [, n]) => a + n, 0);
+      row += ('early ' + Math.round(100 * e / GAMES) + '% h' + Math.round(med(fin.health)) + ' m' + Math.round(med(fin.mood)) + ' g' + Math.round(med(fin.gold))).padEnd(34);
+    }
+    console.log(row);
+  }
+  console.warn = w0; process.exit(0);
 }
 const ix = new Engine(content).directorIndex();
 const kindOf = (id) => {
@@ -47,7 +67,7 @@ for (const name of STYLES) {
   const flow = {}, finals = {}, ends = {}, shown = {}, effect = {};
   let months = 0;
   for (let g = 0; g < GAMES; g++) {
-    const { eng, r } = play(7001 + g * 7919, style);
+    const { eng, r } = play(SEED + g * 7919, style);
     const add = (src, k, v) => { k = norm(k); if (!KEYS.includes(k) || !v) return; const f = flow[k] = flow[k] || {}; const s = f[src] = f[src] || { gain: 0, loss: 0 }; if (v > 0) s.gain += v; else s.loss += v; };
     const total = {};
     const tally = (src, k, v) => { if (!(k in eng.s.vals)) { add(src, k, v); return; } total[k] = (total[k] || 0) + v; add(src, k, v); };
