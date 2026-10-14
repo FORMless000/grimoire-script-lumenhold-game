@@ -149,6 +149,17 @@ Found after M, from the half-done L-1. Language additions follow the usual order
 | I3 One visit per place a day | A place picked for one visit can't be picked again that day (the map marks it "visited today"). Midnight is exempt: the night places are different places at night. |
 | I4 Night penalties as pushes | A new `queue <event> chance N` form: the card is queued and, when it falls due, pushed with probability N (else dropped); the card itself shows no odds. Going out in term queues `night_suspicion` at 33%; risky outcomes queue it at 50%. Two queued copies give at most one card (≈ 66% for an illegal night, as M41 intended). The hidden `spotted` state goes; `night_suspicion` becomes a queued card. |
 
+### Step 2b follow-ups (from the review of 2b)
+
+| Item | Approach |
+|---|---|
+| I5 Festival places wait | A place with a festival later today is closed until the festival's visit (a lakeshore festival in the evening closes the lakeshore in the afternoon); the map says it is getting ready. This also keeps I3 from making a festival unreachable. |
+| I6 Suspicion waits for campus | A new event property `defer: <expr>`: when a pushed card is about to show and `defer` holds, it goes back to the queue for next month instead of showing (unlike a failed `when`, which drops it). `night_suspicion` gets `defer: off_campus`, so a night caught in a term's last month waits through a break at home or on an internship and comes the first month you're back on campus. |
+| I7 Placeholder cards for thin places | Places whose ordinary visits can come up empty (fewer than 8 repeatable place cards plus tagged ambient cards: the courier loft, the headmistress's tower, the ledger office, the flight field) get one stub card each: a pleasant place where nothing much is happening, a little mood. Tagged `placeholder` (the budget lint lists them instead of judging them); X replaces them. |
+| I8 Odds in the heuristics | The budget lint accepts `queue … chance N` as a risk only when the queued card is a penalty (`incident` or `crisis` class). The bots' estimate stops counting such a queue as plot engagement (the plot, lumen and hollow styles valued it) and scores it as a risk weighted by its odds. A2's frequency estimate weights a queued card by its odds; the simulations already roll them. |
+| I9 Break work | Confirm with a test: on a break the term job pays nothing and draws no shift cards, while "Work on campus" still offers the gigs, which pay; internships still pay through their host cards. Job income falling is intended. |
+| I10 No "take no courses" | Remove the enrolment menu's "Take no courses this term" option (it could be combined with a course). To never soft-lock, a fallback shows only when no course is offered, through a new function `offered(courses)` (the number of options an `offers:` menu would generate). The internships' "Not this year" in their pick-6 menu has the same combining issue; A1 takes it up. |
+
 ## Step 2c — Before further balancing: tooling and audits
 
 | Item | Approach |
@@ -178,6 +189,8 @@ Steps 1 (B, C) and 2 (M, packages M-A to M-F) are done and committed; the triage
 
 Step 2b is done: I1 fixed shifts (`@game off_shift: job_off_shift`, once a run; the map and side panel say "all shifts done"), I2 no shifts on breaks, I3 one visit per place a day (the midnight pick exempt), I4 `queue <event> chance N` (night suspicion queued at 33% / 50% / 20% by event, at most one a morning; `spotted` removed; the budget lint counts a queue at odds as a risk). Job income now comes only from the term's fixed shifts, so L-1's re-measure must include it.
 
+The review of 2b added I5–I10 (above), done before 2c.
+
 Step 3 (L) is **paused** partway through L-1, at the user's request; step 2c (tooling and audits) comes first, then L resumes with the balancing edits above (job pay and hazard, forced fails, spell rewards). Done so far (migration 0028, `tools/economy.js --origin`):
 - L24, first pass: tuition 30 → 16 a term; noble and merchant families pay the tuition (the noble allowance is now +1 a month and 40 crowns at the start; the merchant has 70 and no monthly share); the scholarship halves it (8), with a stipend of 2 while the GPA holds. The origin screen's money lines say so.
 - L25: the thesis asks 2 visits a term.
@@ -187,6 +200,7 @@ Not yet done in L-1: re-measuring per origin and style after these numbers (`nod
 
 ## Decisions
 - I1 (decided): the "not your shift" hint comes once per run, for all jobs combined.
+- I5–I10 (decided): festival places close until the festival; suspicion waits until you're back on campus; stub cards for thin places; job income falling is intended; "take no courses" goes.
 - L-3 (decided): forced fail and forced success are both 5%; milestone checks have no forced fail.
 - M21 (decided): year 4's last break is a wrap-up term, and month 48 only resolves endings.
 - Order (decided): checks before the day, so the combat stub is seen sooner.
