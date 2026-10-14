@@ -13,7 +13,7 @@ art: broom
 tags: class danger
 scene: A row of nervous first-years standing beside brooms on the lawn, one broom already rising on its own, an instructor with a whistle.
 text: Compulsory first-year broom flight. The instructor blows her whistle. Your broom rises, hesitates, and then — clearly having taken a dislike to you — begins drifting toward the lake.
-> left: Hold on and steer it back (Vigor)
+> left: Hold on and steer it back
   challenge feat medium:
     win:
       vigor +small
@@ -37,7 +37,7 @@ art: dragon
 tags: class magic
 scene: A glass jar containing a single writhing flame of deep blue, held in tongs by a stern professor, students leaning back from it.
 text: Thorne holds up a sealed jar containing one flame of genuine dragonfire, blue-white and furious. "Who would like to try holding it?" he asks. Nobody moves. He looks at you.
-> left: Hold it (Arcana)
+> left: Hold it
   challenge spell hard:
     win:
       arcana +medium
@@ -61,7 +61,7 @@ art: wave
 tags: class nature
 scene: Students swimming across a lake at dawn, translucent water-spirits racing alongside them like silver dolphins.
 text: Professor Marisol's final challenge: swim the lake while the water spirits race you. "They cheat," she says cheerfully. "Ask them nicely not to."
-> left: Race them flat out (Vigor)
+> left: Race them flat out
   challenge feat medium:
     win:
       vigor +medium
@@ -90,7 +90,7 @@ art: mirror
 tags: class magic
 scene: A maze of tall mirrors in a dark hall, each reflecting a different version of the same student, one reflection grinning.
 text: Professor Vey's exam: a maze of enchanted mirrors. Find the exit. Some reflections lie. One of them is — she promises — the real you.
-> left: Trust your own eyes (Guile)
+> left: Trust your own eyes
   challenge deceive medium:
     win:
       guile +medium
@@ -99,7 +99,7 @@ text: Professor Vey's exam: a maze of enchanted mirrors. Find the exit. Some ref
     lose:
       mood -small
       say: You follow the happiest reflection for an hour. It leads you in a circle and waves goodbye.
-> right: Shatter the illusion (Arcana)
+> right: Shatter the illusion
   challenge spell medium:
     win:
       arcana +small
@@ -107,7 +107,7 @@ text: Professor Vey's exam: a maze of enchanted mirrors. Find the exit. Some ref
       say: Every mirror goes dark at once. Exit found. Vey writes, "Effective. Inelegant. Pass."
     lose:
       health -small
-      say: You shatter one mirror. It was real. Seven years of bad luck, the caretaker says, or two crowns for the glass.
+      say: You shatter one mirror. It was real. Seven years of bad luck, the caretaker says, or three crowns for the glass.
       gold -tiny
 
 @event alch_love_potion
@@ -131,7 +131,7 @@ text: This week's assignment: brew a love potion — "for analytical purposes on
     gain detention
     say: A prefect falls in love with the headmistress's portrait. It's traced back to you. Worth it, almost.
   else:
-    say: Twenty crowns. You never ask what it was used for. You see a lot of unusual couples at dinner.
+    say: Fifteen crowns. You never ask what it was used for. You see a lot of unusual couples at dinner.
 
 @event div_prophecy_exam
 title: The Prophecy Exam
@@ -166,7 +166,7 @@ art: gear
 tags: class magic
 scene: A knee-high clay golem carrying a teetering stack of books across a classroom, a student watching anxiously as it nears a staircase.
 text: Your term project: a knee-high clay golem that carries books. It works! It works so well that it has started carrying everyone's books, whether they want it to or not.
-> left: Add a "stop" command (Lore)
+> left: Add a "stop" command
   challenge research trivial:
     win:
       study +medium
@@ -176,10 +176,13 @@ text: Your term project: a knee-high clay golem that carries books. It works! It
       mood -tiny
       say: Now it stops randomly, mid-staircase, holding forty books. Nobody can get past it. It looks very pleased.
 > right: Let it roam free
-  gold -tiny
-  renown +small
-  mood +small
-  say: The golem becomes a beloved castle fixture, delivering books to whoever looks sad. Nobody knows who made it. You know.
+  chance 70:
+    renown +small
+    mood +small
+    say: The golem becomes a beloved castle fixture, delivering books to whoever looks sad. Nobody knows who made it. You know.
+  else:
+    renown -tiny
+    say: It also delivers a Restricted Section book to a first-year. The librarian follows the clay smudges straight to your door.
 
 @event beast_hippocampus
 title: The Hippocampus Foal
@@ -191,7 +194,7 @@ art: wave
 tags: class nature
 scene: A tiny sea-horse foal with a fish's tail struggling in a rock pool on the lake shore, a student kneeling beside the water.
 text: A hippocampus foal — half pony, half fish — has been stranded in a shrinking rock pool on the lakeshore. Professor Brask is on the other side of the grounds. The foal is panicking.
-> left: Carry it to the lake (Vigor)
+> left: Carry it to the lake
   challenge feat trivial:
     win:
       mood +medium

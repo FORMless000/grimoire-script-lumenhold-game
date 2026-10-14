@@ -19,11 +19,10 @@ tags: social
 scene: A dormitory kitchenette full of smoke, a crimson-haired girl holding a blackened slice of toast at arm's length, a fire-charm still sparking in her other hand.
 text: Smoke pours from the kitchenette. Lyra Vaneshade, pyromancy prodigy, is holding a piece of bread that is now mostly charcoal. "I can incinerate a target at forty paces," she says. "I cannot make toast. Don't. Say. Anything."
 > left: Say absolutely nothing
-  gold -tiny
   rel lyra +small
   say: You open a window, take the bread, and make two perfect slices with a toasting fork. She eats hers in dignified silence. Then she asks for another.
 > right: Teach her — gently
-  health -tiny
+  mood -tiny
   rel lyra +medium
   spark lyra +tiny
   charm +tiny
@@ -41,7 +40,7 @@ art: crown
 tags: social rival
 scene: A tall woman in crimson and black walking through the courtyard like a queen inspecting troops, Lyra two steps behind her, very straight.
 text: Lady Vaneshade has come to inspect the academy, and her daughter. She stops in front of you. "You must be the one my daughter mentions," she says. "Constantly. I'd like to know why."
-> left: Answer with perfect manners (Charm)
+> left: Answer with perfect manners
   challenge negotiate trivial:
     win:
       rel lyra +large
@@ -52,7 +51,7 @@ text: Lady Vaneshade has come to inspect the academy, and her daughter. She stop
       mood -small
       say: You stumble over a title. Lady Vaneshade's eyebrow says everything. Later, Lyra finds you. "She does that to everyone," she says. "You lasted longer than most."
 > right: Answer honestly
-  gold -tiny
+  mood -tiny
   rel lyra +medium
   if spark(lyra) >= 15:
     spark lyra +small
@@ -92,7 +91,7 @@ art: leaf
 tags: social nature
 scene: A scarecrow in a straw hat waving its arms at crows in a vegetable patch, a big farm boy and a student watching it proudly.
 text: Tobias has built a scarecrow for the greenhouse plots and wants to enchant it to scare crows. "Just a little life," he says. "Just enough to wave. Nothing creepy."
-> left: Help enchant it (Arcana)
+> left: Help enchant it
   challenge spell trivial:
     win:
       rel tobias +medium
@@ -102,9 +101,7 @@ text: Tobias has built a scarecrow for the greenhouse plots and wants to enchant
       mood -tiny
       say: The scarecrow comes to life, looks at you both, and walks off into the forest. You see it sometimes, at dusk, waving.
 > right: Suggest a cat instead
-  gold -tiny
   rel tobias +small
-  mood +small
   say: You borrow the greenhouse cat. The crows leave immediately. Tobias is a little sad about the scarecrow, so you help him make it a hat.
 
 @event tobias_dance_lessons
@@ -126,9 +123,8 @@ text: Tobias has pushed the desks against the walls of an empty classroom. "The 
   charm +tiny
   say: One-two-three, one-two-three. He steps on you exactly fifty times. On the fifty-first bar, something clicks, and for a moment he's graceful. He looks astonished.
 > right: Tell him nobody cares about footwork
-  gold -tiny
-  rel tobias +small
-  mood +small
+  rel tobias +tiny
+  mood +tiny
   say: "Just enjoy it," you say. He thinks about this, nods, and dances like a delighted bear. It's terrible. It's wonderful.
 
 @event tobias_storm_greenhouse
@@ -149,7 +145,7 @@ text: A storm hits at midnight. Glass is cracking in the greenhouses. Tobias is 
   spark tobias +tiny
   say: You hold the panes together with every shielding charm you know until dawn. Every moonflower survives. Tobias hugs you, soaked, laughing, half crying.
 > right: Fetch Old Maud
-  gold -tiny
+  health -tiny
   rel tobias +small
   rel maud +small
   say: Maud arrives in her dressing gown, mutters three words at the sky, and the wind politely goes elsewhere. Tobias stares at her. "Teach me that," he says.
@@ -169,7 +165,7 @@ tags: mystery social
 scene: A girl sitting at the wrong desk in an empty classroom, a teacup in her hands, the calendar on the wall showing the next day's date.
 text: Seraphine is sitting in an empty classroom, waiting for a lesson that's happening tomorrow. "I've slipped," she says calmly. "I'm a day ahead. It happens. I need someone to remind me what today is."
 > left: Talk her back into today
-  health -tiny
+  mood -tiny
   rel seraphine +medium
   lore +tiny
   say: You tell her what you had for breakfast, what the weather's like, what Thorne said this morning. Slowly her eyes stop looking through you. "Oh," she says. "Hello. Today."
@@ -194,12 +190,16 @@ tags: social mystery
 scene: A small canvas on an easel showing a stranger's cottage by the sea, a girl with paint on her fingers watching someone look at it.
 text: Seraphine has painted a small cottage by the sea, with a crooked chimney and a blue door. "It's yours," she says. "In twelve years. I thought you should see it now. In case you want a different door."
 > left: Keep the painting
-  gold -tiny
-  mood +small
-  rel seraphine +medium
-  say: You hang it over your bed. Some nights you swear the smoke from the chimney moves. You decide, privately, that you like the blue door.
+  chance 70:
+    mood +small
+    rel seraphine +medium
+    say: You hang it over your bed. Some nights you swear the smoke from the chimney moves. You decide, privately, that you like the blue door.
+  else:
+    rel seraphine +small
+    mood -tiny
+    say: You hang it over your bed. Some mornings the door is a different colour, and you lie there wondering which one you chose.
 > right: Ask her to paint her own future
-  gold -tiny
+  mood -tiny
   rel seraphine +medium
   spark seraphine +tiny
   say: She looks at the blank canvas for a long time. "I never can," she says. "Seers can't see themselves." Then, quietly: "Unless someone's standing next to us."
@@ -217,10 +217,9 @@ tags: social
 scene: A girl holding a letter that glows faintly silver, standing at the top of a tower stair, looking down as if about to fall or fly.
 text: Seraphine's mother, the Oracle of Vell, wants her home to take up the family seat. "I'd spend my life telling kings what they want to hear," Seraphine says. "But she's already seen me say yes. She always sees me say yes."
 > left: "Then surprise her."
-  gold -tiny
+  mood -tiny
   rel seraphine +large
-  mood +small
-  say: Seraphine writes back: no. For a whole day she's terrified. Then she's giddy. "I didn't see that coming," she keeps saying. "I didn't see it coming!"
+  say: Seraphine writes back: no. For a whole day she's terrified, and so are you. Then she's giddy. "I didn't see that coming," she keeps saying. "I didn't see it coming!"
 > right: "Maybe she's right."
   rel seraphine -medium
   say: She nods slowly. She doesn't go — not yet. But she stops telling you her visions, and you miss them more than you expected.
@@ -302,11 +301,16 @@ text: "Rule one: never cheat," says Corvin, shuffling so fast the cards blur. "R
   rel corvin +small
   say: By midnight you can spot a marked card, a bottom deal and a mirror charm. You will never be fleeced at Wizard's Hand again.
 > right: Learn to play honestly — and well
-  health -tiny
-  lore +tiny
-  rel corvin +small
-  gold +small
-  say: He teaches you odds and nerve instead. That weekend you win ten crowns at the common-room game without cheating. Corvin is weirdly proud.
+  chance 60:
+    lore +tiny
+    rel corvin +small
+    gold +small
+    say: He teaches you odds and nerve instead. That weekend you win eight crowns at the common-room game without cheating. Corvin is weirdly proud.
+  else:
+    gold -tiny
+    lore +tiny
+    rel corvin +small
+    say: He teaches you odds and nerve instead. That weekend the odds take three crowns off you. "Also a lesson," says Corvin.
 
 # ---------------- Mira ----------------
 
@@ -413,7 +417,7 @@ text: "Nobody has interviewed the headmistress in twenty years," Nessa says. "Bu
       rel nessa +small
       say: "No," says the headmistress, pleasantly. "But tell Miss Quill her piece on the kitchens was excellent." Nessa frames the rejection.
 > right: Suggest someone overlooked instead
-  health -tiny
+  mood -tiny
   rel nessa +medium
   charm +tiny
   say: Nessa interviews the night porter instead. It's the most-read piece of the year. Half the academy cries over breakfast.
@@ -435,7 +439,7 @@ text: The Ledger has gone to print. In the headline about Professor Thorne's lec
   rel nessa +medium
   say: You correct five hundred copies with a scraping charm and a lot of tea. At dawn, Nessa falls asleep on the press. Thorne never knows.
 > right: Tell her to run a correction and own it
-  gold -tiny
+  mood -tiny
   rel nessa +small
   rel thorne +small
   say: The correction is gracious. Thorne, astonishingly, cuts it out and pins it to his door. "Precision," he says in class, "is a virtue. So is apology."
@@ -453,12 +457,12 @@ tags: social
 scene: A girl asleep at a desk in a newspaper office, her self-writing quill still scratching on its own, the candle burned down to a stub.
 text: Nessa hasn't slept properly in a week. She's asleep at her desk now, and her quill — unsupervised — is still writing next week's paper. It has started inventing news.
 > left: Put her to bed and run the paper yourself
-  gold -tiny
+  health -tiny
   rel nessa +large
   study -small
   say: You edit, typeset and print one issue. It's adequate. When Nessa wakes she reads it, winces at your headlines, and hugs you for a long time.
 > right: Wake her and make her rest
-  gold -tiny
+  mood -tiny
   rel nessa +medium
   say: She argues for ten minutes, then sleeps for fourteen hours. The quill's invented news about a dragon in the kitchens turns out to be true.
 
@@ -477,7 +481,7 @@ tags: social romance
 scene: Two figures on a frozen hillside under ribbons of green and violet light, one pointing upward, frost forming a circle around them.
 text: Kael wakes you at midnight. "Come," he says. On the hill above the lake, the sky is moving — green and violet ribbons, the lights of his home, here, for him. "I called them," he says. "I wanted you to see."
 > left: Watch in silence
-  gold -tiny
+  health -tiny
   rel kael +small
   mood +medium
   say: You watch until the lights fade. Neither of you speaks. On the walk down, he takes your hand without seeming to notice he's done it.
@@ -532,7 +536,7 @@ tags: social
 scene: A boy at a library desk, a letter half-written in sharp Northern script, a candle beside it, ink frozen in the pen.
 text: Kael is writing a letter. He's rewritten the first line eleven times. "To my mother," he says. "I'm telling her I won't come home. I won't open the door. I'm telling her I've found..." He stops.
 > left: "Found what?"
-  gold -tiny
+  mood -tiny
   rel kael +medium
   spark kael +tiny
   say: He looks at you for a long time. Then he writes the last word of the sentence without showing you, seals it, and sends it. He's lighter for days.
@@ -565,7 +569,7 @@ text: A tall man in an old head-boy's sash is speaking to Bram in the entrance h
       rel bram +medium
       say: His father looks through you as if you're furniture. But afterwards, Bram finds you and says, roughly, "Nobody's ever stood there before. Thanks."
 > right: Find Bram afterwards
-  gold -tiny
+  mood -tiny
   rel bram +medium
   say: He's behind the stables, again. You sit on the bucket next to his. You don't talk. After a while he says, "Same time next year, probably," and almost laughs.
 

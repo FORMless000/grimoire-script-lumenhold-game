@@ -40,7 +40,7 @@ tags: nature
 scene: A severe old professor kneeling in a hidden rose garden at dawn, sleeves rolled up, murmuring encouragement to a single struggling rosebush.
 text: At dawn, behind the observatory, you find Professor Thorne on his knees in a tiny walled rose garden, murmuring encouragement to a sickly bush. He sees you. Neither of you breathes.
 > left: Back away and never speak of it
-  gold -tiny
+  mood -tiny
   rel thorne +medium
   say: You leave. The next day in class he calls on you for the hardest question — and then, very quietly, gives you full marks for a so-so answer.
 > right: Offer to help with the sick bush
@@ -66,7 +66,7 @@ tags: social
 scene: An old professor gripping the edge of a lectern with both hands, a dropped wand on the floor, a single student in the doorway.
 text: After class you see Thorne's wand slip from fingers that won't stop trembling. He picks it up, slowly. "Age," he says, not looking at you. "It comes for every storm eventually. You'll say nothing."
 > left: Say nothing, as he asks
-  gold -tiny
+  mood -tiny
   rel thorne +medium
   say: You never mention it. But you start arriving early to set up his demonstrations. He notices. He lets you.
 > right: Tell Sister Amaranth
@@ -116,15 +116,13 @@ tags: nature home
 scene: A small cottage kitchen, a black iron pot over the fire, an old woman guiding a student's hand as they stir.
 text: "I'm going to teach you my soup," says Maud, rolling up her sleeves. "Cures colds, broken hearts and most curses. Don't write it down. You'll remember it if you need it."
 > left: Learn it properly
-  health -tiny
+  mood -tiny
   alchemy +small
   rel maud +medium
   say: It takes all afternoon. Some of the ingredients are herbs; some, as far as you can tell, are just stories. You remember every step.
 > right: Mostly eat it
-  gold -tiny
-  health +small
-  mood +small
-  rel maud +small
+  health +tiny
+  rel maud +tiny
   say: You learn about half of it and eat three bowls. Maud declares that the most important part of the recipe anyway.
 
 @event maud_old_wand
@@ -164,7 +162,7 @@ art: crown
 tags: study
 scene: A chessboard of carved crystal towers on a small table by a tower window, two players, one candle, the lake silver below.
 text: The headmistress keeps a board of crystal towers by her window. "Do you play?" she asks. It is clearly not a question. The pieces are already moving into position by themselves.
-> left: Play to win (Lore)
+> left: Play to win
   challenge research trivial:
     win:
       rel isolde +medium
@@ -175,7 +173,7 @@ text: The headmistress keeps a board of crystal towers by her window. "Do you pl
       lore +tiny
       say: She wins in nine moves and spends the next hour showing you exactly why. It is the most useful lesson you've had all year.
 > right: Play to learn how she thinks
-  health -tiny
+  mood -tiny
   rel isolde +medium
   guile +small
   say: You lose, slowly, watching. She sacrifices pieces she seems to love. By the end, you understand a great deal about how the academy is run.
@@ -193,13 +191,15 @@ tags: mystery
 scene: A portrait in a forgotten corridor of a laughing young woman in student robes with a wand behind her ear, frame dusty, eyes unmistakably the headmistress's.
 text: In a forgotten corridor you find a portrait of a laughing girl with a wand stuck behind her ear and ink on her nose. The plaque has been scratched off. The eyes are unmistakably the headmistress's. The portrait winks.
 > left: Ask the portrait about her
-  health -tiny
-  guile +tiny
-  lore +tiny
-  say: "Detention record of the decade," whispers the portrait. "Set the observatory on fire twice. Best student this castle ever had." It winks again.
+  chance 60:
+    guile +tiny
+    lore +tiny
+    say: "Detention record of the decade," whispers the portrait. "Set the observatory on fire twice. Best student this castle ever had." It winks again.
+  else:
+    mood -tiny
+    say: The portrait pretends to be asleep, loudly. By the time you give up, the corridor has rearranged itself, and it takes you half the evening to find your way out.
 > right: Tell the headmistress you found it
-  gold -tiny
-  rel isolde +medium
+  rel isolde +small
   say: She is quiet for a moment. "I thought they'd burned it." She almost smiles. "Leave it where it is. Someone should remember her."
 
 @event isolde_judgement
@@ -215,12 +215,12 @@ tags: story
 scene: The headmistress at her desk with a single file open, a student seated opposite, rain on the window behind them.
 text: The headmistress slides a file across her desk. A second-year stole from the apothecary to pay for a sick mother's medicine. The rules say expulsion. "You're a student," she says. "Tell me what a student thinks is just."
 > left: Argue for mercy
-  health -tiny
+  mood -tiny
   rel isolde +medium
   charm +tiny
   say: You argue for an hour. She listens to all of it. The second-year is given a job in the infirmary and a stern lecture. The mother recovers.
 > right: The rules exist for a reason
-  health -tiny
+  mood -tiny
   rel isolde +small
   lore +tiny
   say: "Yes," she says, "they do." She closes the file. You never learn what she decided, but the second-year is still in class the next week, looking grateful at nobody in particular.

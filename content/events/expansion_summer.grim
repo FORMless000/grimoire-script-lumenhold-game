@@ -25,8 +25,6 @@ text: In summer the castle breathes differently. Corridors you've walked a thous
       mood -tiny
       say: Behind the first door: the caretaker, in a dressing gown, very surprised. You both agree this never happened.
 > right: Enjoy the quiet
-  gold -tiny
-  mood +small
   health +small
   say: You read in window seats, nap on the great lawn and eat breakfast at noon. For two weeks the most famous academy in the kingdom is just a big, peaceful house.
 
@@ -86,7 +84,7 @@ art: tent
 tags: festival money
 scene: A village green full of striped tents, a carousel of enchanted wooden animals, lanterns strung between trees, a strongman lifting a cow.
 text: The village Midsummer Fair: enchanted carousel, ring-toss, a strongman, and a booth promising "GUESS YOUR WEIGHT IN CHEESE". You have a few crowns in your pocket and a whole afternoon.
-> left: Win something at the ring-toss (Vigor)
+> left: Win something at the ring-toss
   challenge feat trivial:
     win:
       gold +medium
@@ -115,11 +113,10 @@ tags: social
 scene: A thick letter with a doodle on the envelope arriving by owl at a summer window.
 text: An owl arrives with a thick, slightly crumpled letter from {npc}. Six pages of summer news, two doodles, one pressed flower, and at the end, in smaller writing: "I miss the castle. I miss you, actually."
 > left: Write a short reply
-  gold -tiny
   rel npc +small
   say: You write a page. It's warm, if brief. {npc} keeps it anyway.
 > right: Write back for hours
-  gold -tiny
+  health -tiny
   rel npc +medium
   mood +small
   say: You write until the candle gutters. Twelve pages. You can't remember the last time you wrote that much that wasn't an essay.
@@ -135,10 +132,10 @@ tags: home
 scene: Rain streaming down a tall window, a student curled in an armchair with a fat novel, a teapot steaming on the sill.
 text: It rains for a solid week. Not dramatic rain: just steady, grey, endless rain. Every plan you made for the summer is quietly drowning.
 > left: Read a very long novel
-  health -tiny
+  gold -tiny
   mood +small
   lore +tiny
-  say: You read eight hundred pages about a family of sea-witches and cry at the end. It's the best week of the summer.
+  say: You buy an eight-hundred-page novel about a family of sea-witches, read every word and cry at the end. It's the best week of the summer.
 > right: Practise spells indoors
   arcana +small
   mood -tiny
@@ -158,7 +155,7 @@ text: Your uncle takes you fishing. Something takes the bait. Something very lar
 > left: Cut the line
   mood +tiny
   say: The serpent sinks back with a sigh like a disappointed whale. Your uncle tells the story for the rest of his life, and it gets bigger every time.
-> right: Try to talk to it (Charm)
+> right: Try to talk to it
   challenge negotiate trivial:
     win:
       lore +medium

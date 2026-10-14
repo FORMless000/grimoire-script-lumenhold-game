@@ -267,7 +267,7 @@ The tentative live harness will build its prompts from the same files, so the pa
 
 | # | Month | Real-world | Season | Status | Fixed beats |
 |---|---|---|---|---|---|
-| 1 | Harvestmoon | Sep | autumn | **term** | year start, enrolment, Harvest Feast |
+| 1 | Harvestmoon | Sep | autumn | **term** | year start, enrolment, Harvest Feast; *year 4: thesis setup* (before enrolment) |
 | 2 | Emberwane | Oct | autumn | term | Club Fair; Lantern Night (festival) |
 | 3 | Mistveil | Nov | autumn | term | — |
 | 4 | Frostcall | Dec | winter | term | **finals**; Midwinter Ball (festival, at term end) |
@@ -276,7 +276,7 @@ The tentative live harness will build its prompts from the same files, so the pa
 | 7 | Stormbloom | Mar | spring | **term** | enrolment; internship applications open |
 | 8 | Greenrise | Apr | spring | term | Spring Tournament (festival) |
 | 9 | Blossomtide | May | spring | term | internship offers; *year 4: the Night* (plot finale) |
-| 10 | Highsun | Jun | summer | term | **finals**; *year 3: thesis setup*; *year 4: thesis defence* |
+| 10 | Highsun | Jun | summer | term | **finals**; *year 4: thesis defence* |
 | 11 | Goldenhaze | Jul | summer | **break** | break plan; *year 4: graduation, end of run* |
 | 12 | Starfall | Aug | summer | break | Starfall festival (the meteor showers) |
 
@@ -296,7 +296,7 @@ The tentative live harness will build its prompts from the same files, so the pa
 | night | `world` | 1–2 |
 | midnight | `special` | 0–1, only events with `slot: midnight` |
 
-**Break day:** morning = `plan` (break-plan pool), one `visit`, night = `world`. About 4–5 cards.
+**Break day:** morning = `plan` (break-plan pool), two visits (afternoon and evening; the evening one added after playtest 2), night = `world`. About 6–7 cards.
 
 Declared in `@game`:
 
@@ -306,8 +306,7 @@ schema: 1
 calendar: term=1-4 break=5-6 term=7-10 break=11-12
 seasons: autumn=1-3 winter=4-6 spring=7-9 summer=10-12
 day_term: morning=courses noon=social:1-2 afternoon=visit evening=visit night=world:1-2 midnight=special:0-1
-day_break: morning=plan afternoon=visit night=world:1
-max_cards_per_day: 14
+day_break: morning=plan afternoon=visit evening=visit night=world:1
 ```
 
 **Run length:** 32 term months × ~11 cards + 15 break months × ~5 ≈ **425 decisions** *(checked at playtest #1)*.
@@ -381,8 +380,7 @@ variety   = 0.5 if the same tone or primary tag as either of the previous 2 card
 | `queue x … with role` | carries a cast role into the queued event |
 | `unqueue x` | cancel |
 
-- **Priority classes**, used when the day overflows: `story > track > pushed > friend > social > ambient` (`friend`: §5.5).
-- Overflow goes to the next day, and never exceeds `max_cards_per_day`.
+- **No daily card cap** (removed after playtest 2: it held back pushed cards and would hinder future content). `max_cards_per_day` stays an optional `@game` setting; when one is set, priority classes decide the overflow: `story > track > pushed > friend > social > ambient` (`friend`: §5.5), and overflow goes to the next day.
 - A pushed event re-checks its `when` when drawn and skips quietly if it fails.
 
 ### 5.4 Radiant casting
@@ -648,7 +646,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
   - Thornwick exchange lab (charm)
   - Office of Unseen Affairs (guile; by invitation)
 - **When:** summer of year 2 and year 3. Year 3's winter break also offers short ones.
-- **Play:** a break day on the host's map: morning assignment card, one visit, night.
+- **Play:** a break day on the host's map: morning assignment card, two visits, night.
   - A supervisor NPC (authored, or a spawned archetype once Phase 4 exists).
   - **One project** with `challenge research` checkpoints (auto-resolved until §T1).
 - **Rewards** (instead of double pay from full-time work):
@@ -661,7 +659,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 
 ### 7.6 Thesis (year 4)
 
-**Setup** (Highsun, year 3):
+**Setup** (Harvestmoon, year 4, before enrolment so the thesis takes one course slot; moved from year 3's Highsun after playtest 2, where starting in a term's last month made the first term end warn at once):
 1. **Discipline:** any with level III passed.
 2. **Advisor:** a faculty NPC. Their relationship modifies the thesis challenges, and their traits colour the events.
 3. **Topic:** one of 3, drawn from the discipline plus your flags, at an ambition level:

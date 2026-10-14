@@ -70,7 +70,9 @@ test('yearbook: headline, mystery, relationships and personal lines; the Hollow 
   const by = (slot) => book.filter((x) => x.slot === slot).map((x) => x.id);
   assert.deepEqual(by('headline'), ['ending_alchemist']);
   assert.deepEqual(by('mystery'), ['ending_hollow_hero']);
-  assert.ok(by('relationships').includes('ending_beloved'));
+  // a named partner gets their own beloved line, which replaces the generic one (B31)
+  assert.ok(by('relationships').includes('ending_beloved_lyra'));
+  assert.ok(!by('relationships').includes('ending_beloved'));
   assert.ok(by('personal').includes('ending_lumen'));
   // nobody special: the fallback headline and the bystander line
   const e2 = new Engine(content); e2.newGame({ seed: 4, name: 'T' });

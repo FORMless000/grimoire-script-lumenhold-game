@@ -220,11 +220,9 @@ tags: life
 scene: A wicker basket overflowing with letters by the door of a cramped newspaper office, front pages papering the walls.
 text: {By the Ledger's door sits a basket marked LETTERS WE WILL NOT PRINT. Visitors may read them.|The unprintable basket has overflowed into a second basket, which is also full.|You are a connoisseur of the unprintable basket now.} {~On top is a complaint about the soup, in verse.|One is just a drawing of a prefect, unflattering and accurate.|{season == "winter": Someone demands that snow be cancelled.|Someone asks who keeps moving the stairs.}}
 > left: Read the whole basket
-  mood +small
-  health -tiny
+  mood +tiny
   say: {~The best one is an apology to a goat.|One is from a first-year who misses home. You put it back gently.|{final_year: A letter in your own first-year hand. You don't remember sending it. You were right.|Three letters about the same broken window, all blaming different people.}}
 > right: Write one of your own
-  gold -tiny
   chance 35:
     renown +small
     mood +tiny
@@ -538,7 +536,7 @@ weight: 10
 art: tower
 tags: mystery
 scene: A narrow spiral stair inside a dusty stone tower, a single candle climbing it, moonlight falling through slit windows.
-text: {The stair of the seventh tower has a different number of steps each time anyone climbs it. Tonight you count.|You count the steps. The number is new; you've started chalking them on the wall.|You've stopped expecting the stair to agree with you. You count anyway; it's a kind of manners.} {~Dust lies thick on every step but yours.|The moon follows you from window to window.|{season == "winter": The cold comes up through your shoes.|Your candle leans towards the top, like a dog on a lead.}}
+text: {The seventh tower's stair never has the same number of steps twice. Scholars count it to learn how the castle bends; everyone else says it lets you up faster if you don't look.|Back on the stair that won't keep its count. You've started chalking each total on the wall; no two agree.|You've stopped expecting the stair to agree with you. You count anyway; it's a kind of manners.} {~Dust lies thick on every step but yours.|The moon follows you from window to window.|{season == "winter": The cold comes up through your shoes.|Your candle leans towards the top, like a dog on a lead.}}
 > left: Count every step
   lore +small
   mood -small

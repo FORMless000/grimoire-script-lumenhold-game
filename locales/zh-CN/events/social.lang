@@ -41,18 +41,24 @@ opt.right.say.2 [506678] = {npc}抱住了你。你怀疑那十五克朗再也回
 @event soc_loan_repaid
 # en: Paid Back
 title [ed4502] = 还钱
-# en: {npc} finds you after class and presses a little stack of coins into your hand, plus a sticky bun. "Fifteen crowns. And interest." The interest is the bun.
-text [84b265] = 下课后{npc}找到你，往你手里塞了一小摞硬币，外加一个黏糊糊的小面包。“十五克朗。还有利息。”利息就是那个面包。
+# en: {~{npc} finds you after class and presses a little stack of coins into your hand, plus a sticky bun. "Fifteen crowns. And interest." The interest is the bun.|{npc} turns up at breakfast with a small purse and a very straight face. "Fifteen crowns. I said I would."|{npc} slides fifteen crowns across the library table, one coin at a time. The last one has a note under it: "Thank you. Really."}
+text [d1878a] = {~下课后{npc}找到你，往你手里塞了一小摞硬币，外加一个黏糊糊的小面包。“十五克朗。还有利息。”利息就是那个面包。|{npc}在早餐时出现，拿着一个小钱袋，一脸严肃。“十五克朗。我说过会还的。”|{npc}在图书馆的桌子上把十五克朗一枚一枚推到你面前。最后一枚下面压着一张字条：“谢谢你。真的。”}
 # en: A small stack of coins and a sweet bun left on a desk with a thank-you note.
 scene [a79734] = 桌上放着一小摞硬币和一个甜面包，旁边还有一张感谢字条。
-# en: Eat the interest
-opt.ok.label [550c2c] = 把利息吃掉
+# en: Count it
+opt.left.label [5fce81] = 数一数
+# en: You count it, because {they}'d be offended if you didn't. Fifteen exactly. {npc} nods, satisfied, as if a debt of honour has been settled.
+opt.left.say.1 [3ec7dd] = 你数了一遍，因为不数的话{they}会觉得被冒犯。正好十五。{npc}满意地点点头，好像一笔关乎荣誉的债终于了结了。
+# en: Pocket it without counting
+opt.right.label [4b0d5d] = 不数就收下
+# en: You put it away uncounted. {npc} looks quietly pleased to be trusted, which was worth more than the crowns.
+opt.right.say.1 [997bc1] = 你没数就收了起来。{npc}看起来暗自高兴被你信任——这比那些克朗值钱多了。
 
 @event soc_become_friends
 # en: Something Like Friendship
 title [68b938] = 类似友谊的东西
-# en: You realise you've been looking for {npc} in every room you walk into. {They} seem to have been doing the same. Somewhere along the way, this became a friendship.
-text [d3b07d] = 你发现自己走进每个房间时都在寻找{npc}。{they}似乎也是一样。不知从何时起，这已经成了一段友谊。
+# en: {npc} saves you a seat without asking now, and you save {them} one. You trade notes, complaints and the last biscuit without keeping score. Somewhere along the way, this became a friendship.
+text [013159] = 现在{npc}会不声不响地给你占座，你也给{them}占。你们交换笔记、牢骚和最后一块饼干，从不记账。不知从何时起，这已经成了一段友谊。
 # en: Two students walking across the lawn at sunset, laughing at the same joke, shadows long behind them.
 scene [ea4144] = 夕阳下两个学生穿过草坪，为同一个笑话大笑，身后拖着长长的影子。
 # en: Keep a little distance
@@ -159,8 +165,8 @@ scene [5a37d3] = 宿舍枕头上一个系着丝带的小包裹，蝴蝶结里夹
 opt.left.label [a0fa69] = 回头再谢{them}
 # en: It's a tiny brass compass that always points to the nearest teapot. You use it constantly.
 opt.left.say.1 [0451b8] = 是一个小小的黄铜罗盘，永远指向最近的茶壶。你天天都在用。
-# en: Get {them} something back (10 gold)
-opt.right.label [e7176a] = 回赠一份礼物（10 金币）
+# en: Get {them} something back (8 gold)
+opt.right.label [42a27b] = 回赠一份礼物（8 金币）
 # en: You find {them} a book {they}'d wanted for months. {npc}'s face when {they} open{s} it is worth twice the price.
 opt.right.say.1 [3ade33] = 你找到了一本{they}想要了好几个月的书。{npc}打开时的表情，值两倍的价钱。
 
@@ -179,6 +185,8 @@ opt.left.say.1 [8a48fa] = 人总会渐行渐远。不是谁的错。在走廊里
 opt.right.label [cdae69] = 走过去打个招呼
 # en: "There you are!" {npc} says, as if you'd been the one missing. Maybe you had.
 opt.right.say.1 [1d0cee] = “你在这儿呀！”{npc}说，好像失踪的人是你。也许确实是。
+# en: You go over. It is friendly, and short, and you both say "we should catch up" in a way that means you won't.
+opt.right.say.2 [46fd68] = 你走过去。气氛很友好，也很短，你们都说了句“改天聚聚”，那语气意味着不会有改天。
 
 @event soc_rumour
 # en: Rumours About {npc}
@@ -249,6 +257,8 @@ opt.left.say.1 [134287] = “你用吧。”你说。{npc}笑了。那一刻过�
 opt.right.label [04d88b] = 多握一会儿
 # en: {npc} looks up. Something in {their} face shifts. Then {they} let{s} go, a little pink, and the quill rolls under the desk.
 opt.right.say.1 [6bf6bf] = {npc}抬起头。{their}脸上有什么东西变了。然后{they}松开了手，脸有点红，羽毛笔滚到了桌子底下。
+# en: {npc} pulls back as if burned, and the rest of the lesson is very, very awkward.
+opt.right.say.2 [cb9381] = {npc}像被烫到一样缩回了手，那节课剩下的时间尴尬得要命。
 
 @event soc_date
 # en: An Invitation
@@ -293,8 +303,8 @@ opt.right.say.2 [fe43d9] = {npc}深吸了一口气。“我在乎你，”{they}
 @event soc_partner_date
 # en: Date Night
 title [b6d8e3] = 约会之夜
-# en: {npc} has booked the window table at Mabel's. Candles. Snow outside. "I'm paying," {they} say{s}. "Don't argue."
-text [f0c994] = {npc}订了梅布尔茶馆靠窗的位子。蜡烛。窗外飘着雪。“我请客，”{they}说，“别跟我争。”
+# en: {npc} has booked the window table at Mabel's. Candles. Snow outside. "We're splitting the bill," {they} say{s}. "Don't argue."
+text [cdc59b] = {npc}订了梅布尔茶馆靠窗的位子。蜡烛。窗外飘着雪。“这顿我们平摊，”{they}说，“别跟我争。”
 # en: Two people at a tiny candlelit table in a window alcove of a village tea shop, snow falling outside.
 scene [7b9157] = 小镇茶馆窗边凹室里一张小小的烛光桌，两个人对坐，窗外飘着雪。
 # en: Talk about the future
@@ -413,8 +423,8 @@ opt.right.say.1 [e1ff36] = 你们握了手。说来奇怪——你对{them}的�
 @event soc_rival_bet
 # en: The Wager
 title [5a804e] = 赌约
-# en: "Ten crowns says I outscore you in the next Arcana practical," {npc} says, slapping coins on the table. A crowd forms.
-text [1f3062] = “十克朗，赌下次奥术实践课我分数比你高。”{npc}把硬币拍在桌上。一群人围了过来。
+# en: "Eight crowns says I outscore you in the next Arcana practical," {npc} says, slapping coins on the table. A crowd forms.
+text [2cae36] = “八克朗，赌下次奥术实践课我分数比你高。”{npc}把硬币拍在桌上。一群人围了过来。
 # en: Two students slapping coins onto a table between them, a crowd gathering, a chalked tally on the wall.
 scene [8dd838] = 两个学生把硬币拍在中间的桌上，人群聚拢，墙上用粉笔记着比分。
 # en: Decline the bet

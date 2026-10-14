@@ -108,7 +108,8 @@
         const ix = this.directorIndex();
         const news = found && (ix.byPlace[p.id] || []).some((e) => !s.seen[e.id] && this.eligible(e, new Set()) && this.test(e.when, null));
         places.push({ id: p.id, name: p.name, x: p.map.x, y: p.map.y, kind: p.kind || 'public', art: p.art || null, hint: hinted ? p.hint || '' : null, state: found ? (open.some(Boolean) ? 'open' : 'closed') : 'hinted', open, hours: p.open || null,
-          track: t ? { id: p.track, due: Math.max(0, (t.due || 0) - (t.visits || 0)), urgent: this.isTermEnd() && t.visits < t.due, kind: this.c.tracks[p.track].kind } : null,
+          // Breaks pause term obligations (B6): the place is still marked as yours, without what's due.
+          track: t ? Object.assign({ id: p.track, kind: this.c.tracks[p.track].kind }, this.phaseOf() === 'break' ? { due: null, urgent: false } : { due: Math.max(0, (t.due || 0) - (t.visits || 0)), urgent: this.isTermEnd() && t.visits < t.due }) : null,
           present: here, news, festival: fest.filter((f) => f.place === p.id).map((f) => ({ slot: slots[f.visit], event: f.event })) });
       }
       return { map: breakMap, slots, places, locked: fest.filter((f) => f.visit < slots.length).map((f) => ({ slot: slots[f.visit], place: f.place, event: f.event })), season: this.seasonOf(), phase: this.phaseOf() };
@@ -234,7 +235,8 @@
     },
     buildDay(picks, locked) {
       const s = this.s, ix = this.directorIndex(), used = new Set(s.deck.map((d) => d.id));
-      const maxCards = this.c.game.max_cards_per_day || 14;
+      // No daily cap unless @game sets one (playtest 2: a cap held back pushed cards and hindered content).
+      const maxCards = this.c.game.max_cards_per_day || Infinity;
       // Warmth fades a little every month (design §5.5).
       for (const n of Object.values(s.npcs)) if (n.warmth) n.warmth = Math.floor(n.warmth * FRIENDS.fade);
       const brk = this.phaseOf() === 'break', withToday = new Set();

@@ -40,11 +40,11 @@ tags: social romance
 scene: Two students sitting close in a library alcove, one holding the other's frost-white hand between both of theirs.
 text: Kael's hands are always cold. In the library tonight they're so cold the ink in his pen has frozen. He's trying to thaw it with his breath, embarrassed.
 > left: Lend him your gloves
-  gold -tiny
+  health -tiny
   rel kael +small
-  say: He wears them for the rest of the term. They're far too small. He doesn't care.
+  say: He wears them for the rest of the term. They're far too small. He doesn't care. Your own fingers go numb on the walk back.
 > right: Warm his hands in yours
-  gold -tiny
+  health -tiny
   rel kael +medium
   spark kael +small
   say: He goes very still. Then, slowly, the frost on his fingertips melts. "Nobody's ever been warm enough," he says quietly. "Before."
@@ -107,7 +107,7 @@ weight: 12
 art: coin
 tags: rival money
 scene: A prefect leaning against a stone archway, palm out, a line of nervous first-years shuffling past him.
-text: Bram has invented a "hall tax" for using the east staircase. Ten crowns. "Maintenance," he says. The first-years are paying. He looks at you expectantly.
+text: Bram has invented a "hall tax" for using the east staircase. Eight crowns. "Maintenance," he says. The first-years are paying. He looks at you expectantly.
 > left: Pay it
   gold -small
   rel bram +small
@@ -134,7 +134,7 @@ art: scroll
 tags: rival study
 scene: An empty desk drawer, a few scattered pages on the floor, a red prefect's sash glimpsed disappearing around a corner.
 text: Two days before exams, your revision notes vanish from your desk. All of them. You saw a red sash in the corridor.
-> left: Rewrite them from memory (Lore)
+> left: Rewrite them from memory
   challenge research easy:
     win:
       lore +small
@@ -143,7 +143,7 @@ text: Two days before exams, your revision notes vanish from your desk. All of t
       study -medium
       health -tiny
       say: You rewrite what you can. It isn't enough. Exams go worse than they should.
-> right: Search his room (Guile)
+> right: Search his room
   challenge deceive easy:
     win:
       rel bram -medium
@@ -167,11 +167,11 @@ tags: social
 scene: A big prefect sitting on an upturned bucket behind the stables, a crumpled letter in his fist, shoulders shaking.
 text: Behind the stables, you find Bram Hollis sitting on a bucket, crying into a crumpled letter. He sees you and freezes. "If you tell anyone," he begins, but his voice cracks.
 > left: Walk away and never mention it
-  gold -tiny
+  mood -tiny
   rel bram +medium
   say: You leave. You never tell anyone. Somehow, he knows you didn't. His demerits become fewer.
 > right: Sit down and ask what happened
-  gold -tiny
+  mood -tiny
   flag bram_softened
   rel bram +huge
   say: His father. A letter saying he's a disappointment, again. "He was a prefect too," Bram says. "Head boy. I'm just... loud." He wipes his face. "Don't be nice to me. I don't know what to do with it."
@@ -207,7 +207,7 @@ weight: 12
 art: duel
 tags: rival danger
 scene: A white glove lying on a dormitory floor, a red sash folded beside it, a crowd peering through the doorway.
-text: Bram throws a glove at your feet in front of half the dormitory. "Formal challenge. Dawn. Dueling green. Unless you're a coward." Everyone is watching.
+text: Bram throws a glove at your feet in front of half the dormitory. "Formal challenge. The dueling green, right now. Unless you're a coward." Everyone is watching.
 > left: Decline
   renown -small
   mood -tiny
@@ -240,7 +240,7 @@ text: First Arcana lecture. Professor Thorne surveys the room like a hawk over a
   meet thorne
   rel thorne +small
   say: "Correct answer," he says. "The first law is: know what you don't know. The rest of you, write that down."
-> right: Take a guess (Lore)
+> right: Take a guess
   meet thorne
   challenge research easy:
     win:
@@ -286,12 +286,11 @@ tags: study
 scene: An old professor standing at a rain-lashed window, lightning illuminating a long scar along his jaw.
 text: During a thunderstorm, Thorne stops mid-lecture and watches the lightning. "They say I out-dueled a storm once," he says, to nobody in particular. "Would you like to know what actually happened?"
 > left: "Yes, sir."
-  gold -tiny
+  mood -tiny
   gain inspired
   rel thorne +small
   say: He lost, he says. Badly. He spent a year learning why. "Losing well," he says, "is the only thing worth teaching." The class is silent.
 > right: Stay quiet
-  gold -tiny
   rel thorne +tiny
   say: He shakes his head and returns to the lecture. You'll always wonder.
 
@@ -308,18 +307,17 @@ tags: study
 scene: A wax-sealed envelope on a professor's desk with a student's name written on it in sharp, angular handwriting.
 text: Thorne calls you to his office and slides an envelope across the desk. "The Conclave asked for my recommendations. I wrote one. I don't write many." He pauses. "Don't make me regret it."
 > left: Thank him sincerely
-  gold -tiny
   flag thorne_letter
   study +medium
-  rel thorne +small
-  mood +medium
+  rel thorne +tiny
+  mood +tiny
   say: "Go away," he says gruffly. "I have marking." You see him smile at the window as you leave.
 > right: Ask why you
-  gold -tiny
+  mood -tiny
   flag thorne_letter
   study +medium
-  rel thorne +small
-  say: "Because you ask questions like that," he says. "Most students don't. Go."
+  rel thorne +medium
+  say: "Because you ask questions like that," he says. "Most students don't. Go." You leave unsure whether you were praised or dismissed.
 
 @event thorne_disappointed
 title: A Word in Private
@@ -338,7 +336,7 @@ text: Thorne holds up your last three essays. All red. "You're better than this,
   mood -tiny
   say: He listens to them all and says nothing. The silence is the worst grade yet.
 > right: Ask for help
-  health -tiny
+  mood -tiny
   rel thorne +medium
   study +medium
   lore +tiny
@@ -383,13 +381,13 @@ tags: nature
 scene: A small cottage kitchen with bundles of herbs hanging from the beams, an old woman pouring golden honey into a steaming mug.
 text: Maud spots you sniffling across the lawn and drags you into her cottage. "Sit," she orders, pouring honey into something steaming that smells of lemon and thunder.
 > left: Drink it all
-  gold -tiny
+  mood -tiny
   health +medium
   lose sick
   rel maud +small
-  say: It tastes like summer and lightning. By morning you're cured and slightly glowing.
+  say: It tastes like summer and lightning. You sneeze sparks for the rest of the day. By morning you're cured and slightly glowing.
 > right: Drink it and help with chores
-  gold -tiny
+  mood -tiny
   health +small
   lose sick
   rel maud +medium
@@ -438,14 +436,13 @@ text: "The silver bees need moving to the summer meadow," Maud says, handing you
       health +small
       rel maud +medium
       gold +small
-      say: The bees hum around you like a blessing. Maud gives you a jar of silver honey that sells for ten crowns. You eat half first.
+      say: The bees hum around you like a blessing. Maud gives you a jar of silver honey that sells for eight crowns. You eat half first.
     lose:
       health -medium
       rel maud +small
       say: You have a sudden thought. The bees know. You spend the evening with vinegar on your stings.
 > right: Watch from a safe distance
-  gold -tiny
-  mood +small
+  mood +tiny
   say: You watch Maud move hives barehanded, singing to them. It's the calmest you've felt all month.
 
 @event maud_ill
@@ -461,12 +458,12 @@ tags: social
 scene: A small cottage bedroom with a patchwork quilt, an old woman propped up on pillows, a student reading aloud by candlelight.
 text: Maud's chickens are running wild, unfed. You find her in bed, grey-faced and coughing. "Just a chill," she wheezes. "I'm eighty-one. I'm allowed."
 > left: Fetch Sister Amaranth
-  gold -tiny
+  mood -tiny
   flag maud_ill_done
   rel maud +medium
   say: Amaranth brings tonics and a stern lecture. Maud is back on her feet in a week, grumbling about fuss.
 > right: Look after her yourself for a week
-  gold -tiny
+  health -tiny
   flag maud_ill_done
   rel maud +large
   study -small
@@ -518,7 +515,7 @@ text: An invitation to tea with the headmistress. Students talk about these the 
       rel isolde -tiny
       say: She nods politely. "Ambition is a fine servant," she says, "and a poor master." You're dismissed shortly after.
 > right: Admit you don't know yet
-  health -tiny
+  mood -tiny
   rel isolde +medium
   lore +tiny
   say: "Neither did I, at your age," she says. "I still don't, some days. That's the point of an academy." She refills your cup.

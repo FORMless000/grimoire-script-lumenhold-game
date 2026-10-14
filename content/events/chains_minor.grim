@@ -107,19 +107,22 @@ text: The cold under your skin is getting worse. Sister Amaranth's tonics do not
 > right: Go to Old Maud
   meet maud
   rel maud +small
-  queue curse_cure_2 in 1
+  flag moonpetal_sought
   say: Maud takes one look at your fingertips and puts the kettle on. "Moonpetal," she says. "Grows in the Whisperwood. Only blooms at midnight. You'll fetch it yourself — the cure has to come from the cursed."
 
 @event curse_cure_2
 title: Moonpetal
 class: story
 tone: tense
-trigger: queued
+place: whisperwood
+when: has(umbral_curse) and flag(moonpetal_sought)
+repeat: 6
+weight: 60
 art: flower
 tags: nature danger
 chain: curse
 scene: A dark forest at midnight, a single silver flower glowing in a clearing, eyes watching from between the trees.
-text: The Whisperwood at midnight. Things move between the trees. In a clearing, a single silver flower is opening, and between you and it stands a stag made of shadow.
+text: The Whisperwood after dark. Things move between the trees. In a clearing, a single silver flower is opening, and between you and it stands a stag made of shadow.
 > left: Sneak around it
   challenge deceive trivial:
     win:
@@ -128,8 +131,7 @@ text: The Whisperwood at midnight. Things move between the trees. In a clearing,
       say: You creep through the bracken and pluck the moonpetal. Maud's brew tastes like moonlight and burnt sugar. The cold is gone.
     lose:
       health -large
-      queue curse_cure_2 in 2
-      say: The stag sees you. You run. No moonpetal tonight. Maud says the next bloom is in two months.
+      say: The stag sees you. You run. No moonpetal tonight; you'll have to come back.
 > right: Face the stag
   challenge feat trivial:
     win:
@@ -139,8 +141,7 @@ text: The Whisperwood at midnight. Things move between the trees. In a clearing,
       say: You stand your ground. The stag lowers its head — and steps aside. Maud's brew drives the cold out of your bones.
     lose:
       health -large
-      queue curse_cure_2 in 2
-      say: The stag charges. You wake up in the bracken at dawn. Maud bandages you. "Again in two months," she says.
+      say: The stag charges. You wake up in the bracken at dawn. Maud bandages you. "Another night," she says.
 
 # ---------------- Grisk the Moneylender ----------------
 
@@ -230,7 +231,7 @@ art: pouch
 tags: money danger
 chain: debt
 scene: A crate of clinking bottles hidden under a tarp on a dark boathouse dock, a small goblin silhouetted against the lake.
-text: Grisk again. "You were so good last time. A crate needs moving across the lake tonight. Don't open it. Forty crowns."
+text: Grisk again. "You were so good last time. A crate needs moving across the lake tonight. Don't open it. Thirty crowns."
 > left: You're done with him
   unflag grisk_favour
   flag grisk_gone
@@ -240,12 +241,12 @@ text: Grisk again. "You were so good last time. A crate needs moving across the 
   challenge deceive trivial:
     win:
       gold +large
-      say: The crate clinks. It is also, faintly, singing. You deliver it without looking inside. Forty crowns.
+      say: The crate clinks. It is also, faintly, singing. You deliver it without looking inside. Thirty crowns.
     lose:
       gold +small
       gain detention
       rel bram -medium
-      say: Bram stops you on the dock. The crate is full of contraband charm-wine. You lose the crate, keep ten crowns and gain a detention.
+      say: Bram stops you on the dock. The crate is full of contraband charm-wine. You lose the crate, keep eight crowns and gain a detention.
 
 # ---------------- Ember the Fox-Spirit ----------------
 
@@ -266,7 +267,6 @@ text: At the edge of the forest, a thin plume of smoke. A small fox is caught in
 > right: Free it and bandage the paw
   flag fox_met
   health -tiny
-  gold -tiny
   queue fox_returns in 2
   say: It bites you, of course. But it lets you wrap the paw. Then it limps into the trees, glancing back once with eyes like embers.
 
@@ -298,8 +298,8 @@ art: fox
 tags: nature magic
 chain: familiar
 scene: A student and a small fire-tailed fox nose to nose, a soft golden light connecting them.
-text: The fox has decided. It follows you to class, sleeps on your feet and growls at Bram. Students aren't allowed unregistered familiars. Registering one costs twenty crowns.
-> left: Hide her (Guile)
+text: The fox has decided. {term: It follows you to class|It follows you through the half-empty corridors}, sleeps on your feet and growls at Bram. Students aren't allowed unregistered familiars. Registering one costs fifteen crowns.
+> left: Hide her
   challenge deceive trivial:
     win:
       gain familiar_fox

@@ -16,12 +16,11 @@ tags: social study
 scene: A student holding a single soggy page of notes, the rest of the stack floating away down a stream behind them.
 text: {npc} borrowed your Lore notes last week. {They} {are} now standing in front of you holding a single soggy page. "There was a stream," {they} say{s}. "And a duck. Mostly a duck."
 > left: Laugh it off
-  gold -tiny
+  mood -tiny
   rel npc +medium
   study -tiny
   say: You rewrite your notes from memory. {npc} brings you a cake every day for a week, by way of apology. The cakes are better than the notes were.
 > right: Make {them} rewrite them
-  gold -tiny
   rel npc -tiny
   study +tiny
   say: {npc} copies out forty pages from a friend's notes, grumbling. The new notes are neater than yours ever were.
@@ -85,12 +84,12 @@ tags: social romance
 scene: Two students lying on their backs on a flat roof, close but not quite touching, a sky full of stars above.
 text: {npc} has dragged a blanket up to the roof. "There's a meteor shower," {they} say{s}. "Supposedly." There's room on the blanket for two, just about.
 > left: Count meteors
-  gold -tiny
+  health -tiny
   rel npc +medium
   mood +small
   say: You count thirty-one. {npc} counts thirty-four and accuses you of not looking properly. You weren't, entirely.
 > right: Talk about everything else
-  gold -tiny
+  health -tiny
   spark npc +small
   rel npc +small
   say: You don't see a single meteor. You talk about home and fear and what you'd do if you could do anything. When you look up, the sky's gone grey with dawn.
@@ -110,12 +109,11 @@ tags: social
 scene: A student standing alone at the edge of a laughing group, arms folded, watching someone else take what used to be their seat.
 text: {npc} has been odd all week. Finally it comes out. "You've got all these new friends now. I just — I don't know where I fit anymore."
 > left: Reassure {them}
-  health -tiny
+  mood -tiny
   rel npc +medium
   charm +tiny
   say: You tell {them} exactly where {they} fit: right here, first. {npc} rolls {their} eyes, but {they}'re smiling. The oddness is gone by dinner.
 > right: Tell {them} friendship isn't a contest
-  health -tiny
   rel npc -tiny
   lore +tiny
   say: You're right, technically. {npc} knows it. It still lands badly. It takes a few weeks for things to feel easy again.
@@ -134,10 +132,14 @@ tags: social magic
 scene: Two students in an empty classroom, one demonstrating a wand movement, the other copying it with a tiny spark of light.
 text: {npc} has a spell {they} invented — a little thing, half-useful, half-ridiculous — and wants to teach it to someone. "It makes your tea exactly the right temperature," {they} say{s}. "Forever."
 > left: Learn it properly
-  health -tiny
-  arcana +small
-  rel npc +small
-  say: It takes an hour. Your tea is now perfect, always. You'll use this spell more than anything you learn in class.
+  chance 75:
+    arcana +small
+    rel npc +small
+    say: It takes an hour. Your tea is now perfect, always. You'll use this spell more than anything you learn in class.
+  else:
+    health -tiny
+    rel npc +small
+    say: The first attempt freezes your tea solid, and your eyebrows with it. The second works. Your eyebrows take a day to thaw.
 > right: Teach {them} one of yours in return
   health -tiny
   rel npc +medium
@@ -207,11 +209,10 @@ tags: rival social
 scene: A student picking up a rival's scattered books from a wet floor, the rival frozen mid-step, not sure what to say.
 text: You drop your books in the rain, and the first person to stoop and help pick them up is {npc}. {They} hand{s} them back without a word, looking as surprised as you are.
 > left: Thank {them} properly
-  gold -tiny
+  mood -tiny
   rel npc +large
   say: "Don't make it a thing," {npc} mutters. But the next day {they} nod{s} to you in the corridor. Something has thawed.
 > right: Suspect a trick
-  health -tiny
   rel npc -tiny
   guile +tiny
   say: You check the books for hexes. There aren't any. {npc} saw you checking. You'll both remember that.
@@ -233,7 +234,7 @@ text: It's been a while now — long enough that {npc} has started calling thing
   gold -tiny
   spark npc +small
   mood +medium
-  say: Inside: a pebble from the lakeshore where you first really talked, polished to a shine. "It's stupid," {npc} says. It isn't. You carry it everywhere.
+  say: Inside: a pebble from the lakeshore where you first really talked, polished to a shine. "It's stupid," {npc} says. It isn't. You carry it everywhere, and spend the next day hunting for something half as good to give back.
 > right: Give {them} yours first
   gold -small
   spark npc +medium

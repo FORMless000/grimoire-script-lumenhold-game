@@ -66,10 +66,18 @@
     if (params.get('event')) return previewEvent(params.get('event'));
     window.addEventListener('pagehide', () => { if (eng && eng.s) Net.flush(eng, runRecordMeta(), { final: true }); });
     Net.detect().then(syncAutosave).catch((e) => console.warn(e)).then(() => {
-      if (store.get(RESUME_KEY)) {
+      const resume = store.get(RESUME_KEY);
+      if (resume) {
         store.del(RESUME_KEY);
         const saved = store.get(SAVE_KEY);
-        if (saved) { try { eng = new Engine(content).load(saved); buildGame(); return step(eng.advance()); } catch (e) { if (e.code === 'SAVE_VERSION') retireOldSave(saved); else console.warn(e); eng = null; } }
+        if (saved) {
+          try {
+            eng = new Engine(content).load(saved); buildGame();
+            const out = resume === 'outcome' && !eng.s.cur ? lastOutcome() : null;
+            if (out) { renderChrome(); renderFeedbackBar(); return showOutcome(out); }
+            return step(eng.advance());
+          } catch (e) { if (e.code === 'SAVE_VERSION') retireOldSave(saved); else console.warn(e); eng = null; }
+        }
       }
       titleScreen();
     });
@@ -92,7 +100,8 @@
   }
   function fatal(lines) { app.innerHTML = '<div class="errors">' + esc(lines.join('\n')) + '</div>'; }
   function switchLang(code, resume) {
-    if (resume && eng && eng.s && !eng.s.ended) { save(); store.set(RESUME_KEY, '1'); }
+    // An outcome on screen is re-shown after the reload (in the new language) instead of being skipped.
+    if (resume && eng && eng.s && !eng.s.ended) { save(); store.set(RESUME_KEY, ui.mode === 'outcome' ? 'outcome' : '1'); }
     settings.lang = code; saveSettings();
     const u = new URL(location.href); u.searchParams.delete('lang');
     location.href = u.toString();
@@ -265,7 +274,7 @@
         for (const sp of snap.spells) h += '<div class="state spell">' + Art.icon(sp.art || 'wand', 20) + '<div><b>' + esc(sp.name) + ' ' + ['', 'I', 'II', 'III'][sp.level] + '</b><p>' + esc(sp.desc || '') + '</p></div><span class="left">' + esc(t('side.spellCost', { n: sp.cost })) + '</span></div>';
       }
       for (const s of snap.skills) {
-        const pct = Math.min(100, (s.value / 60) * 100);
+        const pct = Math.min(100, (s.value / (s.max || 100)) * 100);   // the skill's real range (was drawn against 60: B8)
         h += '<div class="skill" title="' + esc(s.desc || '') + '">' + Art.icon(s.icon || 'star', 18) + '<div><div class="nm">' + esc(s.name) + '</div><div class="bar"><b style="width:' + pct + '%"></b></div></div><div class="v">' + Math.round(s.value) + '</div></div>';
       }
       h += '<div class="sec-h">' + esc(t('side.conditions')) + '</div>';
@@ -387,7 +396,9 @@
     return card;
   }
   const sceneNote = (scene, hidden) => scene ? '<p class="scene-note"' + (hidden ? ' style="display:none"' : '') + '>' + esc(t('card.illustration', { text: scene })) + '</p>' : '';
-  const checkText = (c) => t('check.button', { skill: skillName(c.skill), p: c.p });
+  // A challenge names its kind and the skill(s) it rolls (B24): "Enchanting · Charm".
+  const challengeLabel = (kind, using) => t('challenge.' + kind) + (using ? ' · ' + using.split('+').map(skillName).join(' + ') : '');
+  const checkText = (c) => c.challenge ? t('check.challengeButton', { kind: challengeLabel(c.skill, c.using), p: c.p }) : t('check.button', { skill: skillName(c.skill), p: c.p });
 
   function showCard(v) {
     ui.mode = 'card'; ui.view = v; ui.busy = false;
@@ -433,6 +444,8 @@
       allow(dir) { if (dir === 'up') return !!UP && !UP.disabled; return story || !(dir === 'left' ? L : R).disabled; },
     });
   }
+  // Values are stored with fractions (the coursework curve); show whole numbers, and one decimal only below 1.
+  function shownAmount(x) { const r = Math.round(x); return r === 0 && x > 0 ? String(Math.round(x * 10) / 10) : String(r); }
   function skillName(id) { return (content.skills[id] && content.skills[id].name) || id; }
   function spellName(id) { return (content.spells[id] && content.spells[id].name) || id; }
   // Exact outcome preview (design §8.3) for one option: one line of changes, or one line per outcome.
@@ -440,12 +453,12 @@
     let pv;
     try { pv = eng.preview(v.id, o.key, v.actor ? v.actor.id : null); } catch (e) { return ''; }
     const amt = (k, r) => {
-      const sign = (x) => (x > 0 ? '+' : x < 0 ? '−' : '') + Math.abs(Math.round(x * 10) / 10);
+      const sign = (x) => (x > 0 ? '+' : x < 0 ? '−' : '') + shownAmount(Math.abs(x));
       const val = r[0] === r[1] ? sign(r[0]) : (r[0] < 0 && r[1] <= 0 ? '−' + Math.abs(Math.round(r[1])) + '~' + Math.abs(Math.round(r[0])) : sign(r[0]) + '~' + Math.abs(Math.round(r[1])));
       let icon = 'star', title = k;
       if (content.resources[k]) { icon = content.resources[k].icon; title = content.resources[k].name; }
       else if (content.skills[k]) { icon = content.skills[k].icon; title = content.skills[k].name; }
-      else if (k.startsWith('rel:') || k.startsWith('spark:')) { const [kind, id] = k.split(':'); icon = kind === 'spark' ? 'heart' : 'group'; title = shortName(id); }
+      else if (k.startsWith('rel:') || k.startsWith('spark:')) { const [kind, id] = k.split(':'); icon = kind === 'spark' ? 'rose' : 'group'; title = shortName(id); }
       else return '';
       return '<i class="' + (r[1] > 0 ? 'pos' : r[0] < 0 ? 'neg' : '') + '" title="' + esc(title) + '">' + Art.icon(icon, 12) + val + '</i>';
     };
@@ -522,14 +535,20 @@
   /* ------------------------------------------------------------------ outcome */
   function noteText(n) {
     if (n.kind === 'meet') return t('note.meet', { name: content.npcs[n.npc] ? content.npcs[n.npc].name : n.npc });
-    if (n.kind === 'bond') return t('note.bond', { name: shortName(n.npc), status: bondLabel(n.status) });
+    // A rivalry can sit alongside friendship (respect with an edge), so say so when it starts (B14).
+    if (n.kind === 'bond') return t(n.status === 'rival' ? 'note.bondRival' : 'note.bond', { name: shortName(n.npc), status: bondLabel(n.status) });
     if (n.kind === 'gain' || n.kind === 'lose') return t('note.' + n.kind, { state: content.states[n.state] ? content.states[n.state].name : n.state });
     if (n.kind === 'spell') return t('note.spell', { spell: spellName(n.spell), level: ['', 'I', 'II', 'III'][n.level] || n.level });
     const tn = (id) => (content.tracks[id] ? content.tracks[id].name : id);
-    if (n.kind === 'grade') return t('note.grade', { track: ((content.tracks[n.track] || {}).level_names || tn(n.track)).split(/\s*[,，、]\s*/)[n.level - 1] || tn(n.track), grade: n.grade });
+    if (n.kind === 'grade') {
+      const track = ((content.tracks[n.track] || {}).level_names || tn(n.track)).split(/\s*[,，、]\s*/)[n.level - 1] || tn(n.track);
+      if (n.bar == null) return t('note.grade', { track, grade: n.grade });
+      return t('note.gradeWhy', { track, grade: n.grade, skill: (n.skills || []).map(skillName).join(' + '), value: n.value, bar: n.bar, p: n.pass });
+    }
+    if (n.kind === 'leave' && content.tracks[n.track] && content.tracks[n.track].kind === 'thesis') return t('note.thesisDone', { track: tn(n.track) });
     if (['enrol', 'join', 'leave', 'promote', 'dropped'].includes(n.kind)) return t('note.' + n.kind, { track: tn(n.track) });
     if (n.kind === 'missed') return t('note.missed', { track: tn(n.track), n: n.n });
-    if (n.kind === 'attend') return t('note.attend', { track: tn(n.track), n: n.left });
+    if (n.kind === 'attend') return n.left == null ? t('note.attendBreak', { track: tn(n.track) }) : t('note.attend', { track: tn(n.track), n: n.left });
     if (n.kind === 'discover') return t('note.discover', { place: content.places[n.place] ? content.places[n.place].name : n.place });
     if (n.kind === 'clue') return t('note.clue');
     if (n.kind === 'fact') return t('note.fact', { name: shortName(n.fact.split('.')[0]) });
@@ -538,18 +557,18 @@
   function chipsFor(out) {
     let h = '';
     for (const c of out.checks || []) {
-      if (c.challenge) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.challengeChip', { kind: t('challenge.' + c.challenge), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
+      if (c.challenge) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.challengeChip', { kind: challengeLabel(c.challenge, c.skill), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
       else h += '<span class="chip ' + (c.ok ? 'check-ok' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.chip', { skill: skillName(c.skill), p: c.p, result: t(c.ok ? 'check.success' : 'check.failed') })) + '</span>';
     }
     for (const [k, v] of Object.entries(out.deltas || {})) {
       if (!v) continue;
-      const sign = (v > 0 ? '+' : '') + Math.round(v * 10) / 10;
+      const sign = (v > 0 ? '+' : v < 0 ? '−' : '') + shownAmount(Math.abs(v));
       const cls = v > 0 ? 'pos' : 'neg';
       if (content.resources[k]) h += '<span class="chip ' + cls + '">' + Art.icon(content.resources[k].icon, 14) + esc(content.resources[k].name) + ' ' + sign + '</span>';
       else if (content.skills[k]) h += '<span class="chip ' + cls + '">' + Art.icon(content.skills[k].icon, 14) + esc(content.skills[k].name) + ' ' + sign + '</span>';
       else if (k.startsWith('rel:') || k.startsWith('spark:')) {
         const [kind, id] = k.split(':'); if (!content.npcs[id]) continue;
-        h += '<span class="chip ' + cls + '">' + Art.icon(kind === 'spark' ? 'heart' : 'group', 14) + esc(t(kind === 'spark' ? 'chip.love' : 'chip.rel', { name: shortName(id), delta: sign })) + '</span>';
+        h += '<span class="chip ' + cls + '">' + Art.icon(kind === 'spark' ? 'rose' : 'group', 14) + esc(t(kind === 'spark' ? 'chip.love' : 'chip.rel', { name: shortName(id), delta: sign })) + '</span>';
       }
       else if (/^(perf|progress|study):/.test(k)) {
         // Track numbers (design §6.2, §7.3): performance, thesis progress, exam preparation.
@@ -557,7 +576,9 @@
         h += '<span class="chip ' + cls + '">' + Art.icon(kind === 'study' ? 'book' : 'star', 14) + esc(t('chip.' + kind, { track: d.name, delta: sign })) + '</span>';
       }
     }
-    for (const n of out.notes || []) h += '<span class="chip note">' + esc(noteText(n)) + '</span>';
+    // A new spell gets a banner of its own, first in line (B4); other notes stay chips.
+    for (const n of out.notes || []) if (n.kind === 'spell') h = '<div class="spell-banner">' + Art.icon('wand', 20) + '<span>' + esc(noteText(n)) + '</span></div>' + h;
+    for (const n of out.notes || []) if (n.kind !== 'spell') h += '<span class="chip note">' + esc(noteText(n)) + '</span>';
     return h;
   }
   function showOutcome(out) {
@@ -569,6 +590,18 @@
     document.getElementById('contBtn').onclick = () => continueOutcome();
     renderFeedbackBar();
     attachSwipe(card, { commit() { setTimeout(continueOutcome, 200); }, tap() { flyOut(card, 'right'); setTimeout(continueOutcome, 200); } });
+  }
+  // The last choice's outcome, rebuilt from the run log, with its say lines in the current language.
+  function lastOutcome() {
+    const h = eng.s.hist, rec = h.slice().reverse().find((x) => x.t === 'card');
+    if (!rec || !rec.out || rec.choice == null) return null;
+    const l = eng.s.log[eng.s.log.length - 1];
+    let say = rec.out.say;
+    if (l && l.n === rec.n && l.sayIds && l.sayIds.length) {
+      const parts = l.sayIds.map((id) => { const [sid, who] = id.split('@'); const e = eng.sayIndex[sid]; return e ? eng.interp(e.text, who || l.actor) : null; });
+      if (parts.every((x) => x != null)) say = parts.join(' ');
+    }
+    return { say, deltas: rec.out.deltas || {}, notes: rec.out.notes || [], checks: rec.out.checks || [] };
   }
   function continueOutcome() {
     if (ui.mode !== 'outcome' || ui.busy) return;

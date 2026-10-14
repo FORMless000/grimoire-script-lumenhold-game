@@ -2,14 +2,14 @@
 
 **v0.3, phase 3 of 4: at the stop point, human playtest #2** (`docs/playtest-2.md`). The plan is `docs/design-v0.3.md`; how to work on the project is in `AGENTS.md`.
 
-## Where things stand (October 13, 2026)
+## Where things stand (October 14, 2026)
 
 | | |
 |---|---|
-| Content | 741 events (7 retired), 60 states, 20 characters (12 core, 8 fixtures), 43 places, 25 tracks, 12 spells, 26 endings (5 game-overs + yearbook lines) |
+| Content | 741 events (7 retired), 60 states, 20 characters (12 core, 8 fixtures), 43 places, 25 tracks, 12 spells, 33 endings (5 game-overs + yearbook lines) |
 | Format | schema v1, frozen; 0 lint errors, **0 legacy constructs** left in content |
 | Reachability | `grim reach`: every event, option, ending, place and track can be reached; each key clue has ≥ 2 sources |
-| Translation | zh-CN 100% (6,618 strings), 0 stale |
+| Translation | zh-CN 100% (6,646 strings), 0 stale |
 | Checks | `npm run verify` passes: build, lint, format, docs, 70+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 47 months, about 340 cards; random play graduates 80% of the time, social and careful styles 97–99% |
 
@@ -28,6 +28,14 @@
 
 ## This round (after the pause)
 
+- **Playtest #2, bugfix and content sessions** (`docs/playtest-2-triage.md` B and C, plan in `docs/playtest-2-plan.md`):
+  - no daily card cap (`max_cards_per_day` is optional; absent means none); break days have an evening visit, and break visits don't count toward term quotas;
+  - the thesis is chosen at the start of year 4 (design §4.1, §7.6), and the defence ends the thesis track;
+  - migration 0019 reroutes the 124 costs the budget migrations inserted (0013/0015/0016) by what the scene costs (mood, health, clear spending, or a failure outcome); the routine budget still holds;
+  - crown amounts in prose match their gold tier everywhere, and lint warns on a mismatch;
+  - named partner endings (`ending_beloved_<npc>`);
+  - content tweaks (triage C): four years throughout, the last-year speech moved to year four, a Duelling Circle card for the Spring Tournament, the moonpetal fetched at the Whisperwood, no new sparks while partnered, challenge labels without skill suffixes, and rewrites of confusing cards;
+  - UI: the result card survives a language switch, spells learned show as a banner, challenge buttons name their skills, grade notes show score against bar, spark has its own icon, bars draw against the real maximum.
 - **Unreachable content:** `grim reach` is a static fixpoint over everything content can produce (flags, states, clues, tracks, places, met characters, queues). It is part of lint and has a test. It found 0 unreachable events once its own model was complete; the rare events are a balance matter.
 - **Hollow Star steering:** every run reached the finale because about 50 statements, half of them in everyday events, raised a hidden `hollow` counter. The counter is gone (migration 0011). Plot gates read the arc (`clock()`, the new `clues()`), the Night comes only to those who engaged, and the outcome is now a yearbook line, so it no longer replaces the career headline.
 - **Lumen and Hollow:**
@@ -76,8 +84,8 @@
 
 - **The finale** is one sealing challenge whose tier depends on preparation. The design asks for a sequence (duel, negotiate, research).
 - **Finale allies** count at rel ≥ 18, not the design's friendship ≥ 50. Ilse, Isolde and Maud still have few personal events.
-- **Card text and crown amounts:** 68 cards name a crown amount ("fifteen crowns"). They match the gold row only while it stays 3 8 15 30 60; retuning gold means rewriting them (or a `{=…}` amount token).
-- **Relationship lines** in the yearbook are generic (a partner; three friends; Ilse's chain), not one line per bond (§10.5).
+- **Card text and crown amounts:** many cards name a crown amount ("fifteen crowns"). Lint checks them against the gold row (3 8 15 30 60); retuning gold means rewriting them (or a `{=…}` amount token).
+- **Relationship lines** in the yearbook: partners have a named line each; friends are still generic (three friends; Ilse's chain), not one line per bond (§10.5).
 - **Advisor relationship** (a §9.2 challenge modifier) has nothing to read: no track names an advisor character.
 - **Friendship growth** reaches the design's ~80 by month 24 for most characters when courted; Lyra's median is ~50 (her early ladder is thin).
 - **Skill growth** for focused styles is 57–65 at month 24 (design ~85).

@@ -61,7 +61,7 @@ tags: study story
 chain: careers
 scene: A small panelled room, a long table, three interviewers and one empty chair facing them.
 text: Three people behind a long table. One takes notes; one smiles too much; one says nothing at all, which is clearly the one who decides. "Tell us," says the smiling one, "why you."
-> left: Let your record speak (Lore)
+> left: Let your record speak
   challenge research trivial:
     win:
       flag career_offered
@@ -71,7 +71,7 @@ text: Three people behind a long table. One takes notes; one smiles too much; on
     lose:
       mood -small
       say: You recite your achievements like a shopping list. The silent one looks at the clock. "We'll be in touch," says the smiling one, which means no.
-> right: Tell them a story (Charm)
+> right: Tell them a story
   challenge negotiate trivial:
     win:
       flag career_offered
@@ -110,8 +110,8 @@ when: final_year and month <= 4
 weight: 5
 art: feather
 tags: social
-scene: A tiny first-year trotting beside a third-year across the courtyard, firing questions, clutching an enormous timetable.
-text: Third-years are assigned a first-year to mentor. Yours is called Pim, is about the size of a large cat, and has already asked forty-one questions, including "are the stairs alive" and "are YOU alive".
+scene: A tiny first-year trotting beside a fourth-year across the courtyard, firing questions, clutching an enormous timetable.
+text: Fourth-years are assigned a first-year to mentor. Yours is called Pim, is about the size of a large cat, and has already asked forty-one questions, including "are the stairs alive" and "are YOU alive".
 > left: Answer every question honestly
   mood +small
   charm +small
@@ -148,7 +148,7 @@ weight: 16
 art: book
 tags: study
 scene: A desk buried in drafts, a wall of pinned notes connected by string, a single candle and a single exhausted student.
-text: Every third-year writes a final thesis. You could write something safe and solid — or you could take on the question nobody has answered in three hundred years: why the academy was built above a lake.
+text: Every fourth-year writes a final thesis. You could write something safe and solid — or you could take on the question nobody has answered in three hundred years: why the academy was built above a lake.
 > left: Safe and solid
   study +medium
   say: Two hundred pages on the thermodynamics of hovering charms. Impeccable. Unremarkable. Your examiners will sleep well.
@@ -189,12 +189,15 @@ when: final_year and month >= 4
 weight: 10
 art: letter
 tags: home
-scene: A third-year writing by candlelight, a box of keepsakes open beside them: a pressed flower, a ticket stub, a borrowed wand returned.
-text: The Divination department runs a tradition: write a letter to your first-year self. They swear it will be delivered. Nobody knows how. Some third-years swear they received theirs.
+scene: A fourth-year writing by candlelight, a box of keepsakes open beside them: a pressed flower, a ticket stub, a borrowed wand returned.
+text: The Divination department runs a tradition: write a letter to your first-year self. They swear it will be delivered. Nobody knows how. Some fourth-years swear they received theirs.
 > left: Tell them it'll be all right
-  gold -tiny
-  mood +medium
-  say: You write: "It's going to be all right. Not easy. All right." The next morning the letter is gone, and you remember, very faintly, reading it once on a sky-barge.
+  chance 75:
+    mood +medium
+    say: You write: "It's going to be all right. Not easy. All right." The next morning the letter is gone, and you remember, very faintly, reading it once on a sky-barge.
+  else:
+    mood -tiny
+    say: You try to write something comforting, and it keeps coming out as a list of warnings. You seal it anyway. The next morning it is gone.
 > right: Warn them about everything
   lore +small
   mood -tiny
@@ -242,7 +245,7 @@ text: Dawn, the empty dueling ring, no crowd. Lyra is waiting. "No referee," she
       health -medium
       say: She wins, cleanly. Then she helps you up and doesn't let go of your hand for a moment longer than necessary. "Now we know."
 > right: Lower your wand and just talk
-  gold -tiny
+  mood -tiny
   rel lyra +large
   if spark(lyra) >= 20:
     spark lyra +small

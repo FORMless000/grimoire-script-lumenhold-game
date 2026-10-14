@@ -254,6 +254,7 @@ function analyze(content) {
     if (!e.class) A.legacy.push({ where: w, what: 'no class: (routine, milestone, incident, windfall, story, crisis)' });
     if (e.tone && content.vocab.tones && !content.vocab.tones.values.includes(e.tone)) P('error', w, 'tone "' + e.tone + '" is not in @vocab tones');
     if (e.class) budgetCheck(e, content, (lvl, msg) => P(lvl, w, msg));
+    crownCheck(e, content, (lvl, msg) => P(lvl, w, msg));
     for (const o of e.options) {
       const ow = e.file + ':' + o.line;
       if (o.spell && !content.spells[o.spell]) P('error', ow, 'up[' + o.spell + ']: unknown spell');
@@ -317,6 +318,27 @@ function longestRendering(text) {
   return t.length;
 }
 
+// Crown amounts named in a card must be amounts the card actually moves (playtest 2: texts said 10 and 20 while
+// the gold row pays 8 and 15). Cards that move no gold (a fine nobody charges, a coin trick) are flavour.
+const CROWN_WORDS = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, fifteen: 15, twenty: 20, 'twenty-five': 25, thirty: 30, forty: 40, fifty: 50, sixty: 60, hundred: 100 };
+const CROWN_RE = new RegExp('\\b(\\d+|' + Object.keys(CROWN_WORDS).join('|') + ')\\s+(?:gold|crowns?)\\b', 'gi');
+function crownCheck(e, content, P) {
+  if (e.when && e.when.src === 'false') return;
+  const row = (content.balance && content.balance.sizes && content.balance.sizes.gold) || [3, 8, 15, 30, 60];
+  const TI = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4 };
+  const moved = new Set(), texts = [e.title, e.text];
+  const walk = (effs) => G.walkEffects(effs || [], (st) => {
+    if (st.t === 'delta' && st.name === 'gold') { if (st.tier) moved.add(row[TI[st.tier]]); for (const k of ['min', 'max', 'amount']) if (typeof st[k] === 'number') moved.add(Math.abs(st[k])); }
+    if (st.t === 'say') texts.push(st.text);
+  });
+  walk(e.on_show);
+  for (const o of e.options) { texts.push(o.label, o.hint); walk(o.effects); }
+  if (!moved.size) return;
+  for (const t of texts) for (const m of String(t || '').matchAll(CROWN_RE)) {
+    const v = CROWN_WORDS[m[1].toLowerCase()] != null ? CROWN_WORDS[m[1].toLowerCase()] : +m[1];
+    if (!moved.has(v)) P('warn', 'names "' + m[0] + '" but the card moves ' + [...moved].sort((a, b) => a - b).join(', ') + ' gold');
+  }
+}
 function budgetCheck(e, content, P) {
   const bal = content.balance || {};
   const weights = bal.weights || {};

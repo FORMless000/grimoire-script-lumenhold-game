@@ -13,8 +13,8 @@ text [402ca7] = 驳船穿过云层下降，它就在那里：流明堡，七座�
 scene [45ee12] = 一艘打着补丁的木帆驳船在云间漂浮，驶向矗立在镜面般湖泊之上、高得不可思议的七座塔楼。
 # en: Step onto the landing
 opt.ok.label [2c37cd] = 踏上码头
-# en: Your boots touch stone that hums faintly underfoot. Three years. Thirty-six moons.
-opt.ok.say.1 [90fc7f] = 你的靴子踩上了石板，脚下微微嗡鸣。三年。三十六轮月。
+# en: Your boots touch stone that hums faintly underfoot. Four years. Forty-eight moons.
+opt.ok.say.1 [c9a4d2] = 你的靴子踩上了石板，脚下微微嗡鸣。四年。四十八轮月。
 
 @event choose_origin
 # en: Who Were You Before?
@@ -213,14 +213,14 @@ title [01bc52] = 冬季考核
 text [f596dd] = 冬季考核。一百张课桌，一百支悬浮的羽毛笔，一位很老很老、可能已经睡着的监考官。第一题要你解释“第三对应定律”。第二题要你当场演示。
 # en: A vast examination hall where floating quills hover over a hundred desks and the windows are thick with frost.
 scene [f46856] = 宽阔的考场里，悬浮的羽毛笔停在一百张课桌上方，窗户上结着厚厚的霜。
-# en: Lean on theory (Lore)
-opt.left.label [41ae72] = 靠理论取胜（学识）
+# en: Lean on theory
+opt.left.label [f71caf] = 靠理论取胜
 # en: Your answer is so thorough the quill gets a cramp. Top marks.
 opt.left.say.1 [eb0c7e] = 你的答案详尽到羽毛笔都抽筋了。满分。
 # en: You write three pages and realise halfway that you have been answering a different question.
 opt.left.say.2 [6df893] = 你写了三页，写到一半才发现自己答的是另一道题。
-# en: Lean on practice (Arcana)
-opt.right.label [d691ec] = 靠实践取胜（奥术）
+# en: Lean on practice
+opt.right.label [e24f03] = 靠实践取胜
 # en: Your demonstration is clean and bright. The proctor wakes up and applauds.
 opt.right.say.1 [5963aa] = 你的演示干净利落、光彩夺目。监考官醒过来，鼓起了掌。
 # en: The demonstration backfires. Politely, but with smoke.
@@ -295,22 +295,40 @@ opt.skip.say.1 [c55696] = 你看书时，音乐透过地板飘上来。某个地
 @event spring_tournament
 # en: The Spring Tournament
 title [e40010] = 春季锦标赛
-# en: The Spring Tournament: dueling on the great lawn, the whole academy watching. Entry is open to anyone foolish enough. Members of the Dueling Circle are expected to enter.
-text [3e3333] = 春季锦标赛：在大草坪上决斗，全院围观。任何够傻的人都可以报名。决斗社的成员按惯例必须参赛。
+# en: The Spring Tournament: dueling on the great lawn, the whole academy watching. Entry is open to anyone foolish enough.
+text [75ecd9] = 春季锦标赛：在大草坪上决斗，全院围观。任何够傻的人都可以报名。
 # en: A ring of white stone on the lawn, crowds in the stands, two duelists bowing as their wands spark.
 scene [903c03] = 草坪上一圈白石决斗场，看台上挤满人群，两名决斗者行礼致意，魔杖迸出火花。
 # en: Watch from the stands
 opt.left.label [8d4dec] = 在看台上观战
-# en: The Circle captain notes your absence with a very sharp quill.
-opt.left.say.1 [aa4407] = 社长用一支非常锋利的羽毛笔记下了你的缺席。
 # en: You eat candied chestnuts and scream for strangers.
-opt.left.say.2 [8ad597] = 你吃着糖炒栗子，为陌生人声嘶力竭地呐喊。
+opt.left.say.1 [8ad597] = 你吃着糖炒栗子，为素不相识的人尖叫助威。
 # en: Enter the tournament
 opt.right.label [dd70a1] = 报名参赛
 # en: First round: you win, barely, and the crowd learns your name.
 opt.right.say.1 [5dba97] = 第一轮：你赢了，险胜，观众记住了你的名字。
 # en: First round: you are knocked out of the ring in eleven seconds. A record, apparently.
 opt.right.say.2 [39b48e] = 第一轮：你在十一秒内被打出场外。据说是新纪录。
+
+@event spring_tournament_circle
+# en: The Spring Tournament
+title [e40010] = 春季锦标赛
+# en: The Spring Tournament: duelling on the great lawn, the whole academy watching. The Duelling Circle's names went up on the board a week ago, yours among them. The captain wants results, and says so.
+text [ed1689] = 春季锦标赛：在大草坪上决斗，全院围观。一周前，决斗社的名单就贴上了公告板，你的名字也在其中。社长要的是成绩，而且直说了。
+# en: The great lawn ringed with banners, a chalk duelling circle at its centre and the Duelling Circle's names on a board.
+scene [0ee357] = 挂满旗帜的大草坪，中央用粉笔画着决斗圈，一块板上写着决斗社成员的名字。
+# en: Fight to make a good showing
+opt.left.label [ad260b] = 打出一场像样的比赛
+# en: You win your first bout cleanly and lose the second honourably. The captain ticks your name, which from her is a medal.
+opt.left.say.1 [53d64e] = 你干净利落地赢下第一场，又体面地输掉第二场。社长在你的名字旁打了个勾——从她那儿来说，这就是一枚奖章。
+# en: You go out in the first round, on your feet at least. The captain says you fought like someone who expected to lose.
+opt.left.say.2 [6cf312] = 你在第一轮就出局了，好歹是站着出去的。社长说你打得像个早就料到自己会输的人。
+# en: Go for the title
+opt.right.label [a6e251] = 冲击冠军
+# en: First round: you win, barely, and the crowd learns your name.
+opt.right.say.1 [5dba97] = 第一轮：你赢了，赢得很险，全场都记住了你的名字。
+# en: First round: you are knocked out of the ring in eleven seconds. A record, apparently, and not one the Circle wanted.
+opt.right.say.2 [0831c2] = 第一轮：你在十一秒内被打出了场地。据说是个纪录，可惜不是决斗社想要的那种。
 
 @event tournament_semifinal
 # en: Semifinal
@@ -319,14 +337,14 @@ title [4ddbc9] = 半决赛
 text [69650a] = 半决赛。你的对手是一位从未输过的四年级生。人群更吵了；你能在喧闹中听见自己的名字。
 # en: The same ring at sunset, scorch marks on the stone. Your opponent is grinning.
 scene [54c532] = 夕阳下的同一座决斗场，石面上满是焦痕。你的对手咧嘴笑着。
-# en: Fight clean (Arcana)
-opt.left.label [4b1c59] = 堂堂正正地战斗（奥术）
+# en: Fight clean
+opt.left.label [e5ec00] = 堂堂正正地战斗
 # en: You trade spells like questions and answers — and get the last word.
 opt.left.say.1 [a411dd] = 你们你来我往地交换咒语，像一问一答——最后一句是你说的。
 # en: A good fight. Not good enough. The crowd applauds you off the lawn.
 opt.left.say.2 [2ec6f6] = 打得很好。但还不够好。人群鼓掌送你离开草坪。
-# en: Fight dirty (Guile)
-opt.right.label [bb2a82] = 耍点小手段（诡计）
+# en: Fight dirty
+opt.right.label [2323b9] = 耍点小手段
 # en: A feint, a trip, a jinx to the shoelaces. Legal. Mostly.
 opt.right.say.1 [28eb74] = 一个虚招，一个绊子，一个冲着鞋带的小咒。合规。大体上。
 # en: The referee sees the trick. Disqualified, and booed.
@@ -421,8 +439,8 @@ text [67658a] = 夏天的最后一个月，一封信寄到了，字迹熟悉得�
 scene [ac2d7b] = 一封用烛蜡封口的信，躺在洒满阳光的窗台上。
 # en: Write back honestly
 opt.left.label [24b451] = 如实回信
-# en: You tell them about your standing. Their reply is kind, which is worse.
-opt.left.say.1 [c36670] = 你告诉了他们你的学业情况。他们的回信很温柔，这反而更难受。
+# en: You tell them about your grades. Their reply is kind, which is worse.
+opt.left.say.1 [5e0fac] = 你告诉了他们你的成绩。他们的回信很温柔，这反而更难受。
 # en: You write six pages. It feels like setting down a heavy bag.
 opt.left.say.2 [f6372c] = 你写了六页。感觉像放下了一个沉重的包袱。
 # en: Write back that everything is perfect
@@ -459,22 +477,26 @@ text [9706f9] = 驳船载来了新一届的一年级生，你看着他们目瞪�
 scene [aa7c3d] = 秋色中的七座高塔，下方新生的驳船正在靠岸，渺小而紧张。
 # en: Begin the second year
 opt.ok.label [338fd8] = 开始第二学年
+# en: You unpack faster than last year, and in the right order.
+opt.ok.say.1 [fc01d0] = 你收拾行李比去年快，顺序也对了。
 
 @event year_three
-# en: Final Year
-title [ed5f4c] = 最后一年
-# en: "Third years," the headmistress says, "this is your last year in these halls. What you become here, you will be for a long time." She looks, for a moment, directly at you.
-text [89b6e8] = “三年级的同学们，”院长说，“这是你们在这些厅堂里的最后一年。你们在这里成为什么样的人，就会长久地是那样的人。”有那么一刻，她直直地看着你。
+# en: Third Year
+title [c19627] = 第三年
+# en: "Third years," the headmistress says, "you are past the middle of your time here. Next year will ask a great deal of you; spend this one finding out what you want from it." She looks, for a moment, directly at you.
+text [f9a2f2] = “三年级的同学们，”院长说，“你们在这里的时光已经过半。明年会对你们提出很多要求；今年就用来弄明白，你们想从中得到什么。”有那么一刻，她直直地看着你。
 # en: The headmistress addressing a hall of third-years, every candle in the room leaning toward her.
 scene [3c61bc] = 院长向满堂的三年级生讲话，屋里的每一支蜡烛都向她倾斜。
-# en: Begin the final year
-opt.ok.label [a50a76] = 开始最后一年
+# en: Begin the third year
+opt.ok.label [85c8b5] = 开始第三年
+# en: You know the castle well enough now to get lost in it on purpose.
+opt.ok.say.1 [25b60e] = 如今你对城堡熟到可以故意在里面迷路了。
 
 @event graduation_eve
 # en: The Eve of Graduation
 title [16a29d] = 毕业前夜
-# en: Tomorrow you graduate. Your robes are laid out on the bed, slightly too long. Outside, the towers are lit gold. Three years have gone like a single held breath.
-text [aa0aaa] = 明天你就要毕业了。学士袍摊在床上，稍微长了一点。窗外，高塔被点亮成金色。三年时光，像屏住的一口气，倏忽而过。
+# en: Tomorrow you graduate. Your robes are laid out on the bed, slightly too long. Outside, the towers are lit gold. Four years have gone like a single held breath.
+text [feebe6] = 明天你就要毕业了。学士袍摊在床上，稍微长了一点。窗外，高塔被点亮成金色。四年时光，像屏住的一口气，倏忽而过。
 # en: Graduation robes laid out on a dormitory bed, a single candle burning, the towers lit gold outside the window.
 scene [47f9c3] = 宿舍床上摊着毕业袍，一支蜡烛独自燃烧，窗外的塔楼灯火金黄。
 # en: Spend the night with friends

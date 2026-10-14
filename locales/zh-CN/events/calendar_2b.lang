@@ -7,14 +7,16 @@
 @event enrolment
 # en: Enrolment
 title [cbadef] = 选课
-# en: {term_index == 1: Your first term. The registrar slides a list across the desk: four courses open to first-years.|A new term, and a new list. Courses you've passed are gone from it; new levels have appeared.} Choose two. Course fees are ten crowns.
-text [2d80c6] = {term_index == 1: 你的第一个学期。教务员把一张清单推过桌面：四门对一年级开放的课。|新学期，新清单。你已通过的课不见了，新的级别冒了出来。}选两门。课程费十克朗。
+# en: {term_index == 1: Your first term. The registrar slides a list across the desk: four courses open to first-years.|A new term, and a new list. Courses you've passed are gone from it; new levels have appeared.} Choose two. Course fees are eight crowns.
+text [6207d2] = {term_index == 1: 你的第一个学期。教务员把一张清单推过桌面：四门对一年级开放的课。|新学期，新清单。你已通过的课不见了，新的级别冒了出来。}选两门。课程费八克朗。
 # en: The registrar's hall at the start of term, students queueing at long tables with course lists that rewrite themselves.
 scene [6d30e9] = 开学时的教务大厅，学生们在长桌前排队，手里的课程表会自己改写。
 # en: Take no courses this term
 opt.none.label [679a29] = 这学期不选课
 # en: Allowed. Your GPA will not thank you.
 opt.none.hint [362aa4] = 可以。你的 GPA 不会感谢你。
+# en: You hand back the list blank. The registrar raises one eyebrow, which is the whole of her opinion.
+opt.none.say.1 [5046fe] = 你把空白的名单交了回去。教务员挑起一边眉毛，那就是她全部的意见。
 
 @event club_fair_v3
 # en: The Club Fair
@@ -27,6 +29,8 @@ scene [72616b] = 庭院里摆满招新桌，旗帜猎猎作响，一场决斗示
 opt.none.label [594ecf] = 今年算了
 # en: You can join at next year's fair.
 opt.none.hint [2bec0b] = 明年的招新会还能加入。
+# en: You collect three leaflets and a free biscuit, and sign nothing.
+opt.none.say.1 [87e11a] = 你领了三张传单和一块免费饼干，什么也没签。
 
 @event job_board_visit
 # en: The Job Board
@@ -37,6 +41,8 @@ text [358cb2] = 招工启事叠了三层：图书馆、镀金蝾螈酒馆、佩�
 scene [62cc7b] = 一块挤满告示的软木板，一名学生用手指顺着一列排班时间往下划。
 # en: Just looking
 opt.look.label [4af612] = 只是看看
+# en: You read every notice twice and take none of them down.
+opt.look.say.1 [5234e4] = 你把每张告示都读了两遍，一张也没揭下来。
 # en: Hand in your notice
 opt.quit.label [e9edc6] = 递交辞呈
 # en: You can find work again later.
@@ -53,8 +59,8 @@ text [78e780] = {month == 5: 冬假。|暑假。}两个月没有课。城堡几�
 scene [003006] = 学院大门敞开，驳船装着行李箱，几个学生在台阶上逗留，哪儿也不想去。
 # en: Stay at the castle
 opt.castle.label [04365a] = 留在城堡
-# en: Quiet corridors and secrets. Board 6 crowns a month.
-opt.castle.hint [b21ac5] = 安静的走廊和秘密。每月食宿 6 克朗。
+# en: Quiet corridors and secrets. Board 8 crowns a month.
+opt.castle.hint [6c24c3] = 安静的走廊和秘密。每月食宿 8 克朗。
 # en: The castle in the holidays is a different building: louder echoes, kinder staff, doors you've never seen open.
 opt.castle.say.1 [f9e1bd] = 假期里的城堡是另一座建筑：回声更响，职员更和气，还有你从没见开过的门。
 # en: Go home
@@ -199,8 +205,8 @@ opt.decline.say.1 [b0ac8d] = 你把信仔细折好。也许明年吧。
 @event thesis_setup
 # en: Choosing a Thesis
 title [ed9c10] = 选定论文
-# en: Next year is your final year, and it comes with a thesis. Professor Thorne has three topics ready, at three levels of ambition.
-text [c744eb] = 明年是你的最后一年，还附带一篇毕业论文。索恩教授准备了三个题目，野心各不相同。
+# en: The final year opens with a thesis. Before you choose this term's courses, Professor Thorne lays out three topics, at three levels of ambition.
+text [c76290] = 最后一年以毕业论文开场。在你选定本学期的课程之前，索恩教授摆出了三个题目，野心各不相同。
 # en: A professor's study, three topic proposals laid out on the desk like cards.
 scene [82a455] = 教授的书房，三份选题提案像纸牌一样摊在桌上。
 # en: A careful survey
@@ -287,8 +293,8 @@ opt.right.say.1 [00b286] = 你没告诉任何人是谁。灯笼似乎知道，�
 @event year_four
 # en: The Final Year
 title [a30775] = 最后一年
-# en: The barge again, the towers again, and a thesis waiting. Final year. The first-years on the deck look at you the way you once looked at the fourth-years.
-text [b5589b] = 又是驳船，又是高塔，还有一篇论文在等着。最后一年。甲板上的一年级生看你的眼神，就像你当年看四年级生那样。
+# en: The barge again, the towers again, and a thesis waiting. The first-years on the deck look at you the way you once looked at the fourth-years. At the opening feast the headmistress says, "Fourth years, this is your last year in these halls. What you become here, you will be for a long time." She looks, for a moment, directly at you.
+text [cb5447] = 又是驳船，又是高塔，还有一篇论文在等着。甲板上的一年级生看你的眼神，就像你当年看四年级生那样。开学宴上，院长说：“四年级的同学们，这是你们在这些厅堂里的最后一年。你们在这里成为什么样的人，就会长久地是那样的人。”有那么一刻，她直直地看着你。
 # en: The seven towers at dawn from the barge, the same view as the first day, but the student watching it has changed.
 scene [542188] = 从驳船上望见的黎明七塔，和第一天的景色一样，但看风景的学生已经变了。
 # en: Here we go

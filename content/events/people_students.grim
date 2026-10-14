@@ -50,7 +50,7 @@ text: You find Lyra on a window seat with a crumpled letter. Black seal. Her fam
   mood -tiny
   say: You walk past. Later, she's flawless again, as if nothing happened. Maybe nothing did.
 > right: Sit down beside her
-  gold -tiny
+  mood -tiny
   rel lyra +large
   spark lyra +tiny
   flag lyra_vulnerable
@@ -68,9 +68,9 @@ repeat: 4
 art: scroll
 tags: social study rival
 scene: Two students at opposite ends of a long library table, surrounded by towers of books, glaring over the tops of them.
-text: The professors have posted rankings. Lyra is first. You're close enough to see the back of her head. She notices you noticing.
+text: The professors post this week's rankings, with an open paper this afternoon for anyone who wants to improve their place. Lyra is first. You're close enough to see the back of her head. She notices you noticing.
 > left: Suggest studying together
-  health -tiny
+  mood -tiny
   lore +small
   rel lyra +small
   say: "Together?" She considers this like a foreign custom. Then she pulls out a chair. She's an excellent, merciless study partner.
@@ -80,11 +80,11 @@ text: The professors have posted rankings. Lyra is first. You're close enough to
       study +medium
       rel lyra +small
       renown +small
-      say: Next rankings: you're first. Lyra stares at the list for a long time. Then she finds you and says, "Good." She means it.
+      say: The afternoon paper puts you first. Lyra stares at the list for a long time. Then she finds you and says, "Good." She means it.
     lose:
       study +tiny
       rel lyra -tiny
-      say: You study until your eyes bleed and come third. Lyra is still first. She doesn't gloat. That's worse.
+      say: You cram through lunch and come third. Lyra is still first. She doesn't gloat. That's worse.
 
 @event lyra_family_gala
 title: The Vaneshade Winter Gala
@@ -101,7 +101,7 @@ text: "My family's winter gala," Lyra says, too casually. "I need a guest who wo
 > left: Decline
   rel lyra -tiny
   say: "Of course." A pause. "It doesn't matter." It clearly does.
-> right: Go with her (20 gold for clothes)
+> right: Go with her (15 gold for clothes)
   gold -medium
   charm +small
   renown +small
@@ -191,7 +191,7 @@ art: potion
 tags: rival
 scene: A cauldron spitting black smoke, a crimson-haired student walking away with a tiny vial hidden in her sleeve.
 text: Your perfect potion turns black and starts screaming. Across the room, Lyra is very carefully not looking at you.
-> left: Retaliate (Guile)
+> left: Retaliate
   challenge deceive trivial:
     win:
       rel lyra -small
@@ -202,7 +202,7 @@ text: Your perfect potion turns black and starts screaming. Across the room, Lyr
       rel lyra -medium
       say: You're caught slipping something into her bag. She looks genuinely delighted.
 > right: Confront her directly
-  gold -tiny
+  mood -tiny
   rel lyra +medium
   say: "That was beneath you." She flushes. "...Yes. It was." The next day there's a perfect replacement potion on your desk.
 
@@ -223,7 +223,7 @@ text: You find Lyra face-down on a library desk at dawn, not asleep — out cold
   spark lyra +tiny
   say: She's furious. Then she sleeps for nineteen hours. When she wakes up, she says, quietly, "Thank you."
 > right: Cover for her and make her rest
-  gold -tiny
+  health -tiny
   rel lyra +medium
   study -tiny
   say: You tell her professors she has a cold and sit by her door with your homework. She sleeps. You keep watch.
@@ -264,15 +264,14 @@ tags: social nature
 scene: A dormitory windowsill crowded with clay pots of seedlings, a big boy watering them with a tiny can.
 text: Tobias has gone quiet. He's planted seedlings in every cup in the common room. "Harvest at home," he says. "First one I've missed. Ma's doing it alone."
 > left: Cheer him up with a joke
-  gold -tiny
   rel tobias +small
   say: Your joke is terrible. He laughs anyway, the big rumbling laugh, and that seems to help.
 > right: Help him build a window garden
-  health -tiny
+  gold -tiny
   rel tobias +small
   alchemy +tiny
   mood +small
-  say: By the end of the week the common room smells of tomato leaves. Tobias whistles while he waters them.
+  say: You buy seeds and a stack of pots. By the end of the week the common room smells of tomato leaves. Tobias whistles while he waters them.
 
 @event tobias_bad_harvest
 title: The Harvest Failed
@@ -319,6 +318,7 @@ text: A lumpy, hand-stitched pouch on your pillow: thirty crowns exactly, in sma
   gold +large
   rel tobias +small
   mood +small
+  say: The honey tastes of a farm you have never seen and somehow already miss.
 
 @event tobias_godparent
 title: The Mandrake Baby
@@ -405,12 +405,10 @@ tags: romance nature
 scene: A checked blanket under blossoming apple trees, a basket of bread and cheese, two students lying in the dappled light.
 text: Tobias has packed a picnic: bread he baked, cheese he begged from the kitchens, apples from the orchard he has befriended. "No exams for six hours," he announces. "I checked."
 > left: Bring your books anyway
-  health -tiny
   lore +small
   spark tobias -tiny
   say: You study on the blanket. He falls asleep with his head in your lap. It's still lovely.
 > right: Leave everything behind
-  gold -tiny
   mood +medium
   health +small
   spark tobias +small
@@ -511,10 +509,9 @@ text: "I saw you old," Seraphine says suddenly. "Last night. You were happy. Rea
     mood +small
     say: "Someone kind," she says. "That's all I could see. Their hands were kind."
 > right: No, let it be a surprise
-  gold -tiny
+  mood -tiny
   rel seraphine +medium
-  mood +small
-  say: She smiles like you've given her a present. "That's the right answer. Nobody ever gives the right answer."
+  say: She smiles like you've given her a present. "That's the right answer. Nobody ever gives the right answer." Not knowing nags at you for days.
 
 @event seraphine_overwhelmed
 title: Too Many Tomorrows
@@ -575,13 +572,13 @@ text: Someone bumps you in the crowd. A moment later a dark-haired boy is bowing
 > left: Snatch it back and report him
   meet corvin
   rel corvin -small
-  say: He's gone before the prefect arrives. Your purse is lighter by exactly one crown and heavier by one IOU.
+  say: He's gone before the prefect arrives. Your purse is all there, plus an IOU you don't remember receiving.
 > right: Laugh
-  health -tiny
+  gold -tiny
   meet corvin
   rel corvin +medium
   guile +tiny
-  say: "Oh, I like you," he says, and teaches you the trick on the spot. You practise it on him. He lets you win. Probably.
+  say: "Oh, I like you," he says, and teaches you the trick on the spot. You practise it on him. He lets you win. Probably. Later, you are three crowns short. Probably a coincidence.
 
 @event corvin_kitchen_raid
 title: The Kitchen Raid
@@ -647,11 +644,11 @@ text: There's a fat purse on your desk and a jack of spades tucked under it. Ins
   chance 70:
     gold +huge
     rel corvin +medium
-    say: Fifty-five crowns. A note: "Interest. Don't ask. — C." You don't ask.
+    say: Sixty crowns. A note: "Interest. Don't ask. — C." You don't ask.
   else:
     gold +tiny
     rel corvin +small
-    say: Five crowns and a very convincing IOU for the other twenty-five, with a doodle of a goat.
+    say: Three crowns and a very convincing IOU for the other twenty-seven, with a doodle of a goat.
 > right: Find him and ask where it came from
   rel corvin +large
   gold +large
@@ -670,11 +667,11 @@ tags: social
 scene: Two students sitting on a steep slate roof under a full moon, legs dangling over a dizzying drop, sharing a bottle of something fizzy.
 text: On the roof at 2am, Corvin goes quiet. "I'm on my last warning," he says. "One more detention and they send me home. And home is... not a good place." He laughs, badly.
 > left: Tell him to keep his head down
-  gold -tiny
+  health -tiny
   rel corvin +small
   say: "Head down. Right. I'll try anything once." He keeps his head down for almost a month.
 > right: Promise you'll cover for him
-  gold -tiny
+  health -tiny
   rel corvin +large
   spark corvin +tiny
   flag covering_corvin
@@ -699,7 +696,7 @@ text: The headmistress's silver goblet has been found in Corvin's trunk. He swea
   else:
     rel corvin -large
     say: Corvin is suspended for a month. When he comes back, he's different. Quieter.
-> right: Find proof he was framed (Guile)
+> right: Find proof he was framed
   challenge deceive trivial:
     win:
       rel corvin +large
@@ -793,15 +790,14 @@ tags: social magic
 scene: A small brass owl with glowing amber eyes perched on a student's wrist, its clockwork feathers fluffing.
 text: Mira presents a brass owl with amber glass eyes. It blinks, hoots the hour and says "HOMEWORK" in a tinny voice. "Made it for you. It remembers deadlines. And birthdays. And grudges, slightly."
 > left: It's too much
-  gold -tiny
   rel mira +small
   say: Mira looks crushed, then rallies. "I'll give it to Thorne. He needs reminding to smile." The owl, you hear, refuses to work for him.
 > right: Accept it gratefully
-  gold -tiny
+  mood -tiny
   gain familiar_owl
   rel mira +medium
   spark mira +tiny
-  say: The owl settles on your shoulder and says, "WELCOME." Mira pretends to have something in their eye.
+  say: The owl settles on your shoulder and says, "WELCOME." Mira pretends to have something in their eye. At six the next morning, the owl says "HOMEWORK." It says it every morning for the rest of the year.
 
 @event mira_fair
 title: The Artificers' Fair
@@ -816,8 +812,7 @@ tags: social festival
 scene: A hall crammed with bizarre inventions — walking teapots, singing clocks — and one enormous brass machine draped in a sheet.
 text: The Artificers' Fair. Mira's entry is under a sheet and occasionally growls. "I need an assistant to stand next to it and look confident," they say. "And possibly run."
 > left: Watch from a safe distance
-  gold -tiny
-  mood +small
+  mood +tiny
   rel mira +tiny
   say: The machine turns out to be a mechanical bear that bakes bread. It wins second place. Mira is ecstatic and flour-covered.
 > right: Be the confident assistant
@@ -879,10 +874,9 @@ tags: social
 scene: A spindly brass contraption with too many legs attempting a waltz in an empty classroom, a student dancing with it.
 text: Mira has built a machine that teaches dancing. It has six legs and opinions. "It needs a test subject," they say. "It's mostly safe. It only kicked me twice."
 > left: Make Mira test it
-  gold -tiny
-  rel mira +small
+  rel mira -tiny
   mood +small
-  say: You watch Mira and the machine waltz, badly, across the room. It's the funniest thing you've ever seen.
+  say: You watch Mira and the machine waltz, badly, across the room. It kicks them twice; Mira gives you a look. It's the funniest thing you've ever seen.
 > right: Dance with the machine
   charm +small
   health -tiny
@@ -928,7 +922,7 @@ text: A letter from Mira's parents: the family clockworks needs them home. A tic
   rel mira -small
   say: Mira goes home for a month and comes back with a new scar and a clearer jaw. "They know now," they say. "It's not a hobby."
 > right: Help them write back
-  health -tiny
+  mood -tiny
   flag mira_family_done
   rel mira +large
   charm +tiny
@@ -985,11 +979,15 @@ text: This week's Ledger gossip column features you, prominently, under the head
     lose:
       say: "Freedom of the press," says Nessa, sweetly. You both know she wrote it.
 > right: Lean into the mystery
-  gold -tiny
-  renown +small
-  mood +small
-  rel nessa +small
-  say: You start leaving cryptic notes in the library. The column runs for six more weeks. Nessa is delighted.
+  chance 70:
+    renown +small
+    mood +small
+    rel nessa +small
+    say: You start leaving cryptic notes in the library. The column runs for six more weeks. Nessa is delighted.
+  else:
+    renown +tiny
+    mood -small
+    say: The column runs for six more weeks. By the fourth it has decided you are haunting the library, and people move tables when you sit down.
 
 @event nessa_source
 title: The Source

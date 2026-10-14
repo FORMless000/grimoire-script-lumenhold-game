@@ -129,20 +129,25 @@ async function languageSwitch(browser) {
   await p.evaluate(() => { try { localStorage.clear(); } catch (e) { /* ignore */ } });
   await p.goto(URL); await p.waitForTimeout(300);
   await p.click('#begin'); await p.waitForTimeout(200); await p.click('#beginMonth'); await p.waitForTimeout(300);
-  for (let i = 0; i < 4; i++) {
+  // Play until an outcome card is on screen: switching there must keep it (B1), not skip to the next card.
+  for (let i = 0; i < 30 && !(await p.$('#contBtn')); i++) {
     if (await p.$('.opt:not([disabled])')) await (await p.$$('.opt:not([disabled])'))[0].click();
-    else if (await p.$('#contBtn')) await p.click('#contBtn');
+    else if (await p.$('#mapGo')) await mapPick(p, i);
+    else if (await p.$('#beginMonth')) await p.click('#beginMonth');
     else await p.keyboard.press('ArrowRight');
     await p.waitForTimeout(400);
   }
   const when = () => p.evaluate(() => (document.querySelector('#when') || {}).innerText || 'TITLE SCREEN');
   const before = await when();
+  const hadOutcome = !!(await p.$('#contBtn'));
   await p.$eval('#langToggle', (el) => el.click()); await p.waitForTimeout(900);
   const after = await when();
+  const keptOutcome = !hadOutcome || !!(await p.$('#contBtn'));
+  if (!keptOutcome) console.log('  the outcome card was skipped by the language switch');
   await p.$eval('[data-tab=journal]', (el) => el.click()); await p.waitForTimeout(200);
   const journal = await p.evaluate(() => document.querySelector('#tabBody').innerText);
   await p.close();
-  const ok = /[一-鿿]/.test(after) && /[一-鿿]/.test(journal) && after !== 'TITLE SCREEN' && !errs.length;
+  const ok = /[一-鿿]/.test(after) && /[一-鿿]/.test(journal) && after !== 'TITLE SCREEN' && keptOutcome && hadOutcome && !errs.length;
   console.log((ok ? 'PASS' : 'FAIL') + ` language switch: "${before.replace(/\s+/g, ' ')}" -> "${after.replace(/\s+/g, ' ')}"`);
   errs.forEach((e) => console.log('  error: ' + e));
   return ok;

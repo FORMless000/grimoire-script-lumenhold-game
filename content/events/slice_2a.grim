@@ -101,14 +101,13 @@ repeat: 6
 art: candle
 tags: study
 scene: The library at closing time, one desk still lit, a cat asleep on an open book.
-text: {&The library is emptying.|The library is emptying again.|The library empties around you, as usual.} Footnote is asleep on the book you need, and the last lamp is yours if you want it.
+text: {&The library is emptying.|The library is emptying again.|The library empties around you, as usual.} Footnote, the library cat, is asleep on the book you need, and the last lamp is yours if you want it.
 > left: Keep the lamp
   grind lore
   say: {~You read until the words swim.|You read until Footnote leaves in protest.|You read until the night porter coughs pointedly.}
 > right: Go to bed
-  rest
-  gold -tiny
-  say: You buy a cocoa on the way and sleep like a stone. The book will still be there. So, probably, will Footnote.
+  health +small
+  say: You sleep like a stone. The book will still be there. So, probably, will Footnote.
 
 @event slice_quarrel
 title: A Quarrel in the Snow
@@ -186,13 +185,13 @@ repeat: 8
 art: coin
 tags: money
 scene: A crowded village market stall heaped with jars of glowing spices and a stall-holder with an enormous moustache.
-text: The stall-holder in the village market wants twenty crowns for a jar of starpepper. Mabel swears by it for colds. The stall-holder swears by his prices.
+text: The stall-holder in the village market wants thirty crowns for a jar of starpepper. Mabel swears by it for colds. The stall-holder swears by his prices.
 > left: Haggle
   challenge negotiate easy:
     win:
       gold -small
       health +small
-      say: Twelve crowns and a compliment on your persistence. Mabel says you've been robbed, but only slightly.
+      say: Eight crowns and a compliment on your persistence. Mabel says you've been robbed, but only slightly.
     partial:
       gold -medium
       health +small

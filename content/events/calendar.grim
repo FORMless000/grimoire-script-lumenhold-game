@@ -15,7 +15,7 @@ tags: story
 scene: A wooden barge with patched sails drifting between clouds toward seven impossibly tall towers above a mirror-still lake.
 text: The barge drops through the clouds and there it is: Lumenhold, seven towers stitched together with bridges of light. A first-year beside you is quietly being sick over the side. A prefect with a ledger counts heads and frowns at yours.
 > ok: Step onto the landing
-  say: Your boots touch stone that hums faintly underfoot. Three years. Thirty-six moons.
+  say: Your boots touch stone that hums faintly underfoot. Four years. Forty-eight moons.
 
 @event choose_origin
 title: Who Were You Before?
@@ -246,7 +246,7 @@ art: hourglass
 tags: study exam retired
 scene: A vast examination hall where floating quills hover over a hundred desks and the windows are thick with frost.
 text: The Winter Trials. A hundred desks, a hundred floating quills, one very old proctor who may be asleep. The first question asks you to explain the Third Law of Correspondence. The second asks you to demonstrate it.
-> left: Lean on theory (Lore)
+> left: Lean on theory
   challenge exam medium:
     win:
       study +huge
@@ -256,7 +256,7 @@ text: The Winter Trials. A hundred desks, a hundred floating quills, one very ol
       study -large
       mood -small
       say: You write three pages and realise halfway that you have been answering a different question.
-> right: Lean on practice (Arcana)
+> right: Lean on practice
   challenge spell medium:
     win:
       study +huge
@@ -365,21 +365,17 @@ title: The Spring Tournament
 class: story
 tone: tense
 trigger: auto
-when: month == 8
+when: month == 8 and not member(duelling)
 repeat: 12
 priority: 40
 art: duel
 tags: festival rival
 chain: tournament
 scene: A ring of white stone on the lawn, crowds in the stands, two duelists bowing as their wands spark.
-text: The Spring Tournament: dueling on the great lawn, the whole academy watching. Entry is open to anyone foolish enough. Members of the Dueling Circle are expected to enter.
+text: The Spring Tournament: dueling on the great lawn, the whole academy watching. Entry is open to anyone foolish enough.
 > left: Watch from the stands
   mood +small
-  if member(duelling):
-    renown -small
-    say: The Circle captain notes your absence with a very sharp quill.
-  else:
-    say: You eat candied chestnuts and scream for strangers.
+  say: You eat candied chestnuts and scream for strangers.
 > right: Enter the tournament
   challenge feat medium:
     win:
@@ -391,6 +387,40 @@ text: The Spring Tournament: dueling on the great lawn, the whole academy watchi
       renown +tiny
       say: First round: you are knocked out of the ring in eleven seconds. A record, apparently.
 
+@event spring_tournament_circle
+title: The Spring Tournament
+class: story
+tone: tense
+trigger: auto
+when: month == 8 and member(duelling)
+repeat: 12
+priority: 40
+chain: tournament
+art: duel
+tags: rival
+scene: The great lawn ringed with banners, a chalk duelling circle at its centre and the Duelling Circle's names on a board.
+text: The Spring Tournament: duelling on the great lawn, the whole academy watching. The Duelling Circle's names went up on the board a week ago, yours among them. The captain wants results, and says so.
+> left: Fight to make a good showing
+  challenge feat easy:
+    win:
+      renown +small
+      perform duelling +small
+      say: You win your first bout cleanly and lose the second honourably. The captain ticks your name, which from her is a medal.
+    lose:
+      health -small
+      say: You go out in the first round, on your feet at least. The captain says you fought like someone who expected to lose.
+> right: Go for the title
+  challenge feat medium:
+    win:
+      renown +medium
+      say: First round: you win, barely, and the crowd learns your name.
+      queue tournament_semifinal now
+    lose:
+      health -medium
+      renown +tiny
+      perform duelling -tiny
+      say: First round: you are knocked out of the ring in eleven seconds. A record, apparently, and not one the Circle wanted.
+
 @event tournament_semifinal
 title: Semifinal
 class: story
@@ -401,7 +431,7 @@ tags: rival
 chain: tournament
 scene: The same ring at sunset, scorch marks on the stone. Your opponent is grinning.
 text: The semifinal. Your opponent is a fourth-year who has never lost. The crowd is louder now; you can hear your own name in it.
-> left: Fight clean (Arcana)
+> left: Fight clean
   challenge spell hard:
     win:
       renown +medium
@@ -411,7 +441,7 @@ text: The semifinal. Your opponent is a fourth-year who has never lost. The crow
       health -medium
       renown +small
       say: A good fight. Not good enough. The crowd applauds you off the lawn.
-> right: Fight dirty (Guile)
+> right: Fight dirty
   challenge deceive hard:
     win:
       renown +small
@@ -550,7 +580,7 @@ title: A Letter From Home
 class: story
 tone: warm
 trigger: auto
-when: month == 12
+when: month == 12 and not has(summer_away)
 repeat: 12
 art: letter
 tags: home
@@ -560,7 +590,7 @@ text: A letter arrives in the last month of summer, the handwriting so familiar 
   mood +small
   if (turn > 4 and gpa < 2.0):
     mood -medium
-    say: You tell them about your standing. Their reply is kind, which is worse.
+    say: You tell them about your grades. Their reply is kind, which is worse.
   else:
     say: You write six pages. It feels like setting down a heavy bag.
 > right: Write back that everything is perfect
@@ -613,9 +643,10 @@ text: The barge brings new first-years, and you watch them gawp at the towers. W
 > ok: Begin the second year
   mood +small
   renown +small
+  say: You unpack faster than last year, and in the right order.
 
 @event year_three
-title: Final Year
+title: Third Year
 class: story
 tone: light
 trigger: auto
@@ -624,10 +655,11 @@ priority: 55
 art: crown
 tags: story
 scene: The headmistress addressing a hall of third-years, every candle in the room leaning toward her.
-text: "Third years," the headmistress says, "this is your last year in these halls. What you become here, you will be for a long time." She looks, for a moment, directly at you.
-> ok: Begin the final year
+text: "Third years," the headmistress says, "you are past the middle of your time here. Next year will ask a great deal of you; spend this one finding out what you want from it." She looks, for a moment, directly at you.
+> ok: Begin the third year
   mood +tiny
   study +tiny
+  say: You know the castle well enough now to get lost in it on purpose.
 
 @event graduation_eve
 title: The Eve of Graduation
@@ -639,7 +671,7 @@ priority: 60
 art: crown
 tags: story
 scene: Graduation robes laid out on a dormitory bed, a single candle burning, the towers lit gold outside the window.
-text: Tomorrow you graduate. Your robes are laid out on the bed, slightly too long. Outside, the towers are lit gold. Three years have gone like a single held breath.
+text: Tomorrow you graduate. Your robes are laid out on the bed, slightly too long. Outside, the towers are lit gold. Four years have gone like a single held breath.
 > left: Spend the night with friends
   mood +medium
   say: Laughter until dawn. Promises to write. Some of them, you'll keep.

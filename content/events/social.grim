@@ -23,12 +23,11 @@ tags: social study
 scene: Two students at a candlelit table piled with books, one explaining something with wild hand gestures.
 text: {npc} drops into the seat across from you with an armful of books. "Exams are coming for us all. Misery loves company. Study with me?"
 > left: You work better alone
-  health -tiny
   lore +tiny
   rel npc -tiny
   say: You get a lot done. {npc} sits at the next table and sighs loudly every few minutes.
 > right: Pull up a chair
-  health -tiny
+  mood -tiny
   lore +small
   study +tiny
   rel npc +small
@@ -69,11 +68,17 @@ actor: npc
 art: coin
 tags: social money
 scene: A small stack of coins and a sweet bun left on a desk with a thank-you note.
-text: {npc} finds you after class and presses a little stack of coins into your hand, plus a sticky bun. "Fifteen crowns. And interest." The interest is the bun.
-> ok: Eat the interest
+text: {~{npc} finds you after class and presses a little stack of coins into your hand, plus a sticky bun. "Fifteen crowns. And interest." The interest is the bun.|{npc} turns up at breakfast with a small purse and a very straight face. "Fifteen crowns. I said I would."|{npc} slides fifteen crowns across the library table, one coin at a time. The last one has a note under it: "Thank you. Really."}
+> left: Count it
   gold +medium
   rel npc +small
   mood +tiny
+  say: You count it, because {they}'d be offended if you didn't. Fifteen exactly. {npc} nods, satisfied, as if a debt of honour has been settled.
+> right: Pocket it without counting
+  gold +medium
+  rel npc +small
+  mood +tiny
+  say: You put it away uncounted. {npc} looks quietly pleased to be trusted, which was worth more than the crowns.
 
 @event soc_become_friends
 title: Something Like Friendship
@@ -87,7 +92,7 @@ weight: 20
 art: group
 tags: social
 scene: Two students walking across the lawn at sunset, laughing at the same joke, shadows long behind them.
-text: You realise you've been looking for {npc} in every room you walk into. {They} seem to have been doing the same. Somewhere along the way, this became a friendship.
+text: {npc} saves you a seat without asking now, and you save {them} one. You trade notes, complaints and the last biscuit without keeping score. Somewhere along the way, this became a friendship.
 > left: Keep a little distance
   rel npc +tiny
   say: You stay friendly. Just not too close. Some walls are load-bearing.
@@ -133,11 +138,10 @@ tags: social
 scene: Two students huddled under a staircase, one whispering into the other's ear, a finger to their lips.
 text: {npc} pulls you under the stairs. "I need to tell someone or I'll burst. Swear you won't tell anyone. Not even the portraits."
 > left: "I'd rather not carry it."
-  gold -tiny
   rel npc -tiny
   say: {npc} looks hurt, then relieved. "Maybe that's better." You'll never know.
 > right: "I swear."
-  health -tiny
+  mood -tiny
   rel npc +medium
   guile +tiny
   say: It's not a big secret. It's the kind that's only big to the person holding it. You hold it with {them}.
@@ -230,11 +234,10 @@ tags: social
 scene: A small wrapped parcel tied with ribbon left on a dormitory pillow, a pressed flower tucked into the bow.
 text: There's a small parcel on your pillow. A note in {npc}'s handwriting: "Saw this and thought of you. Don't make it weird."
 > left: Thank {them} later
-  gold -tiny
-  mood +small
+  mood +tiny
   rel npc +tiny
   say: It's a tiny brass compass that always points to the nearest teapot. You use it constantly.
-> right: Get {them} something back (10 gold)
+> right: Get {them} something back (8 gold)
   gold -small
   mood +small
   rel npc +medium
@@ -256,14 +259,17 @@ tags: social
 scene: A student glancing back across a busy courtyard at another who hasn't seen them, the space between them full of strangers.
 text: You realise you haven't really talked to {npc} in weeks. You see {them} across the courtyard, laughing with people you don't know.
 > left: Let it be
-  gold -tiny
   rel npc -small
   say: People drift. It's nobody's fault. You still smile when you pass in the halls.
 > right: Go over and say hello
-  gold -tiny
-  rel npc +medium
-  mood +tiny
-  say: "There you are!" {npc} says, as if you'd been the one missing. Maybe you had.
+  chance 70:
+    rel npc +medium
+    mood +tiny
+    say: "There you are!" {npc} says, as if you'd been the one missing. Maybe you had.
+  else:
+    rel npc +tiny
+    mood -tiny
+    say: You go over. It is friendly, and short, and you both say "we should catch up" in a way that means you won't.
 
 @event soc_rumour
 title: Rumours About {npc}
@@ -339,11 +345,10 @@ tags: study
 scene: A professor walking with a student along a covered walkway, pointing at something in an open book.
 text: {npc} catches you after a lecture. "You've been working hard. Or hardly working. I can never tell with your year. Some advice, if you'll take it?"
 > left: Politely decline
-  gold -tiny
   rel npc -tiny
   say: "Suit yourself." {They} walk{s} off. Faculty have long memories.
 > right: Listen carefully
-  health -tiny
+  mood -tiny
   rel npc +small
   study +small
   lore +tiny
@@ -359,6 +364,7 @@ cast:
   npc: any where romanceable(npc) and rel(npc) >= 9 and spark(npc) < 12 and bond(npc) != "partner"
 per: npc
 trigger: social
+when: bonds(partner) == 0
 weight: 12
 repeat: 6
 art: sparkle
@@ -366,14 +372,17 @@ tags: social romance
 scene: Two hands brushing as they reach for the same quill, both students freezing for a heartbeat.
 text: You reach for the same quill as {npc}. Your hands touch. Neither of you lets go immediately. It's a perfectly ordinary quill.
 > left: Laugh it off
-  gold -tiny
   rel npc +tiny
   say: "All yours," you say. {npc} laughs. The moment passes. Mostly.
 > right: Hold on a moment longer
-  gold -tiny
-  spark npc +medium
-  rel npc +tiny
-  say: {npc} looks up. Something in {their} face shifts. Then {they} let{s} go, a little pink, and the quill rolls under the desk.
+  chance 70:
+    spark npc +medium
+    rel npc +tiny
+    say: {npc} looks up. Something in {their} face shifts. Then {they} let{s} go, a little pink, and the quill rolls under the desk.
+  else:
+    rel npc +tiny
+    mood -tiny
+    say: {npc} pulls back as if burned, and the rest of the lesson is very, very awkward.
 
 @event soc_date
 title: An Invitation
@@ -457,7 +466,7 @@ weight: 14
 art: candle
 tags: romance
 scene: Two people at a tiny candlelit table in a window alcove of a village tea shop, snow falling outside.
-text: {npc} has booked the window table at Mabel's. Candles. Snow outside. "I'm paying," {they} say{s}. "Don't argue."
+text: {npc} has booked the window table at Mabel's. Candles. Snow outside. "We're splitting the bill," {they} say{s}. "Don't argue."
 > left: Talk about the future
   gold -tiny
   spark npc +small
@@ -644,7 +653,7 @@ repeat: 6
 art: dice
 tags: rival
 scene: Two students slapping coins onto a table between them, a crowd gathering, a chalked tally on the wall.
-text: "Ten crowns says I outscore you in the next Arcana practical," {npc} says, slapping coins on the table. A crowd forms.
+text: "Eight crowns says I outscore you in the next Arcana practical," {npc} says, slapping coins on the table. A crowd forms.
 > left: Decline the bet
   rel npc -tiny
   say: "Thought so." {npc} pockets the coins. You decide not to care. You care.

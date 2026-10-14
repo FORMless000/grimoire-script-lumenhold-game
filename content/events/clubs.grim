@@ -16,7 +16,7 @@ art: duel
 tags: club
 scene: A chalk circle on a stone floor under high windows, two students mid-duel, a ring of members cheering.
 text: Wednesday practice. The captain pairs you with a fourth-year who has a reputation for ending bouts quickly. "Defence or attack," the captain says. "Pick one and commit."
-> left: Hold your ground (Vigor)
+> left: Hold your ground
   challenge feat easy:
     win:
       vigor +small
@@ -25,7 +25,7 @@ text: Wednesday practice. The captain pairs you with a fourth-year who has a rep
     lose:
       health -small
       say: You hold your ground very bravely, right up until you're on the floor.
-> right: Go on the attack (Arcana)
+> right: Go on the attack
   challenge spell easy:
     win:
       arcana +small
@@ -81,7 +81,7 @@ text: Lyra finds you after practice. "The tournament is in two months. You're th
   rel lyra -tiny
   say: "Sleep," she repeats, as if it's a foreign word. "Fine."
 > right: Agree
-  gold -tiny
+  health -tiny
   gain training
   rel lyra +medium
   say: She's a merciless coach. Somewhere around the third week, you notice she's started bringing two cups of tea.
@@ -200,7 +200,7 @@ text: Practice. A gust catches you mid-turn, and the ground arrives rather soone
 > right: Straight to the infirmary
   gold -tiny
   health +small
-  say: Sister Amaranth sets it in a minute and charges you five crowns for "carelessness". Fair.
+  say: Sister Amaranth sets it in a minute and charges you three crowns for "carelessness". Fair.
 
 @event sky_championship
 title: Lumenhold vs. Thornwick
@@ -243,9 +243,7 @@ tags: club social
 scene: A cramped newspaper office in a tower attic, a printing press clanking, a girl with an ink-stained grin pointing at a map pinned with string.
 text: Nessa slams a file on your desk. "Pies. Forty-two of them, gone from the kitchens in a single night. I want the culprit, I want a photo and I want it by Friday."
 > left: Write a light-hearted piece
-  health -tiny
   charm +tiny
-  rel nessa +tiny
   say: "Pie-rates Strike Again." Nessa groans at the headline and prints it anyway.
 > right: Actually investigate
   challenge deceive easy:
@@ -343,7 +341,7 @@ text: "The moonflower's going to bloom tonight," Tobias says, a little breathles
   rel tobias -tiny
   say: "Course. Yeah." He tells you about it at breakfast, in detail, with gestures.
 > right: Stay up with him
-  gold -tiny
+  health -tiny
   rel tobias +medium
   spark tobias +small
   mood +small
@@ -402,14 +400,14 @@ art: dice
 tags: club money
 scene: A chalkboard on an observatory wall covered in tally marks and names, a pile of coins on a stool beneath it.
 text: The club is running a betting pool on tonight's meteor count. The current favourite is 40. The charts suggest something else. Or do they?
-> left: Bet on the charts (Lore)
+> left: Bet on the charts
   challenge research trivial:
     win:
       gold +medium
       say: Fifty-three meteors. You called fifty-two. Close enough to win the pot.
     lose:
       gold -small
-      say: The charts were wrong, or you read them wrong. Ten crowns gone.
+      say: The charts were wrong, or you read them wrong. Eight crowns gone.
 > right: Stay out of it
   mood +tiny
   say: You watch the meteors for their own sake. Turns out that's the best seat in the house.

@@ -57,7 +57,7 @@ tags: mystery magic
 chain: timeloop
 scene: An astronomy tower at night, a giant brass chronometer with its gears spinning in reverse, a sleeping first-year slumped beside it with a wand still in hand.
 text: In the astronomy tower, a first-year is asleep beside an enormous brass chronometer, wand still stuck in its winding key. "I just wanted one more day before my exam," says the note on his chest.
-> left: Fix the chronometer (Arcana)
+> left: Fix the chronometer
   challenge spell trivial:
     win:
       arcana +small
@@ -83,7 +83,7 @@ art: mirror
 tags: magic mystery
 scene: An empty gilded picture frame on a gallery wall, and further down the corridor a painted duchess hiding inside a landscape of a picnic.
 text: An empty frame in the long gallery. The Duchess of Ambry has escaped her portrait and is hiding in a landscape three corridors away, refusing to come back. "That frame," she declares, "is hideous."
-> left: Persuade her back (Charm)
+> left: Persuade her back
   challenge negotiate trivial:
     win:
       renown +small
@@ -92,8 +92,7 @@ text: An empty frame in the long gallery. The Duchess of Ambry has escaped her p
       mood -tiny
       say: She calls you a peasant and moves to a painting of a shipwreck. She's still there. She says she likes the sea air.
 > right: Leave her in the picnic
-  gold -tiny
-  mood +small
+  mood +tiny
   say: She seems happier among the sandwiches. So does the picnic. Some arrangements simply work.
 
 @event life_library_cat
@@ -105,7 +104,7 @@ art: cat
 tags: home
 scene: An enormous fluffy cat asleep on the exact book a student needs, on a high library shelf, one eye half-open.
 text: The library cat — a vast, ancient beast called Footnote — is asleep on the only copy of the book you need. You have an essay due tomorrow. Footnote has no deadlines.
-> left: Move the cat (Vigor)
+> left: Move the cat
   challenge feat trivial:
     win:
       study +small
@@ -128,7 +127,7 @@ art: sparkle
 tags: magic study
 scene: A student at a desk covered in crossed-out incantations, a tiny spiral of light hovering over the page, an expression of dawning triumph.
 text: Late at night you realise there's a gap — a spell nobody has written yet, just a small one, to make ink dry instantly. You could try to invent it. Inventing spells, Thorne says, is "how most of my former students lost their eyebrows".
-> left: Invent it carefully (Lore)
+> left: Invent it carefully
   challenge research trivial:
     win:
       lore +small
@@ -156,7 +155,7 @@ art: rain
 tags: magic
 scene: A student holding a black umbrella under which a tiny private rainstorm is pouring, while the sky outside is perfectly clear.
 text: You borrowed an umbrella from lost property. It's black, elegant and cursed: underneath it, it is always raining. The rest of the world is sunny. You are very wet.
-> left: Break the curse (Arcana)
+> left: Break the curse
   challenge spell trivial:
     win:
       arcana +tiny
@@ -185,9 +184,7 @@ text: You dream you're in the exam hall in your pyjamas. The paper is in a langu
   health -tiny
   say: You revise until breakfast. The real exam paper is written in a normal language. You're absurdly relieved.
 > right: Go back to sleep
-  gold -tiny
   health +tiny
-  mood +tiny
   say: You dream again. This time the goat gives you full marks. You choose to take this as an omen.
 
 @event life_garden_plot
@@ -251,7 +248,7 @@ art: bell
 tags: danger social
 scene: A dark bell tower interior, ropes hanging down, a group of students at the bottom daring one of their number to climb.
 text: Tradition: once in your time at Lumenhold, you must ring the old bell at midnight without getting caught. Your dorm has decided tonight is your night.
-> left: Climb and ring it (Guile)
+> left: Climb and ring it
   challenge deceive trivial:
     win:
       renown +medium
@@ -310,7 +307,7 @@ text: In the old cloister there's a wishing well. The inscription says: "ONE COI
   challenge deceive trivial:
     win:
       gold +medium
-      say: Twelve crowns' worth of antique coins. The well is silent. Disapprovingly silent.
+      say: Fifteen crowns' worth of antique coins. The well is silent. Disapprovingly silent.
     lose:
       gold -tiny
       mood -tiny
@@ -325,7 +322,7 @@ art: broom
 tags: danger
 scene: A student clinging to a bucking broom high above the castle, its bristles on fire, a smaller student on the ground waving frantically.
 text: A second-year lends you their broom for an errand. Midway across the lake, you discover why they were so keen to lend it: it is extremely ticklish, and it hates you.
-> left: Wrestle it home (Vigor)
+> left: Wrestle it home
   challenge feat trivial:
     win:
       vigor +small
@@ -333,7 +330,7 @@ text: A second-year lends you their broom for an errand. Midway across the lake,
     lose:
       health -medium
       say: You land in the lake. The broom flies home without you, very pleased with itself.
-> right: Soothe it (Charm)
+> right: Soothe it
   challenge negotiate trivial:
     win:
       charm +tiny
@@ -353,7 +350,7 @@ art: mask
 tags: magic danger
 scene: A student staring in horror across a crowded corridor at a perfect copy of themselves, cheerfully chatting up a professor.
 text: An illusion of you — one you thought you'd dismissed — is still wandering the castle. It has been to three of your classes, flirted with a prefect, and volunteered you for the choir.
-> left: Catch it (Guile)
+> left: Catch it
   challenge deceive trivial:
     win:
       guile +small
@@ -376,7 +373,7 @@ weight: 8
 art: dice
 tags: money
 scene: A crowded hall, a caretaker with a gavel at a lectern, tables piled with lost scarves, wands, boots and one suspiciously humming box.
-text: Once a year the caretaker auctions off unclaimed lost property. There's a box nobody wants that hums faintly. The bidding starts at two crowns. Nobody's bidding.
+text: Once a year the caretaker auctions off unclaimed lost property. There's a box nobody wants that hums faintly. The bidding starts at three crowns. Nobody's bidding.
 > left: Bid on the humming box
   gold -small
   chance 50:
@@ -409,8 +406,8 @@ text: You're short on crowns, and the village square has a fountain, an empty ha
     lose:
       gold +tiny
       mood -tiny
-      say: Two crowns and a sympathetic look from a dog. Busking is harder than it looks.
-> right: Play the street-magic act instead (Arcana)
+      say: Three crowns and a sympathetic look from a dog. Busking is harder than it looks.
+> right: Play the street-magic act instead
   challenge spell trivial:
     win:
       gold +medium

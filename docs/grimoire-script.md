@@ -455,11 +455,10 @@ last_month: 11                       # the run ends in Goldenhaze of year 4 (tur
 calendar: term=1-4 break=5-6 term=7-10 break=11-12
 seasons: autumn=1-3 winter=4-6 spring=7-9 summer=10-12
 day_term: morning=courses noon=social:1-2 afternoon=visit evening=visit night=world:1-2 midnight=special:0-1
-day_break: morning=plan afternoon=visit night=world:1
-max_cards_per_day: 14
+day_break: morning=plan afternoon=visit evening=visit night=world:1
 ```
 
-**A day** (`src/director.js`). After the month's start effects, the player picks the visit slots on the **map** (two in term, one on a break). Then the director fills each slot from its source: `courses` (events of enrolled courses), `social` (`trigger: social`), `visit` (events with `place:` the player picked), `world` (random events with no place), `special`, `plan` (events for the active break plan). `:1-2` is how many cards a slot draws. Each candidate scores `weight × novelty × relevance × variety`. Pushed cards (queued, auto, arc beats, track notices) go into their `slot:` (else morning). When the day is over `max_cards_per_day`, priority decides (story > track > pushed > friend > social > ambient) and pushed cards that don't fit move to the next day. `when` is checked again as each card is drawn.
+**A day** (`src/director.js`). After the month's start effects, the player picks the visit slots on the **map** (two, in term and on a break). Then the director fills each slot from its source: `courses` (events of enrolled courses), `social` (`trigger: social`), `visit` (events with `place:` the player picked), `world` (random events with no place), `special`, `plan` (events for the active break plan). `:1-2` is how many cards a slot draws. Each candidate scores `weight × novelty × relevance × variety`. Pushed cards (queued, auto, arc beats, track notices) go into their `slot:` (else morning). If `@game` sets `max_cards_per_day` (optional; no cap when absent, and Lumenhold sets none) and the day is over it, priority decides (story > track > pushed > friend > social > ambient) and pushed cards that don't fit move to the next day. `when` is checked again as each card is drawn.
 
 **People come by two tracks** (design §5.5). An event with a fixed `actor: <npc>` (and no `place:`, `track:`, `plan:` or `slot:`) is in that character's own pool as well as in the shared pools; generic social events (`per: npc` casts) can be cast with any one character.
 - *You find them:* the shared pools as above; a visit to a place where a character's `schedule:` puts them (met or not, so introductions happen where people are) and the social slot (anyone scheduled at a place you know) can each give a card from that character's pool.

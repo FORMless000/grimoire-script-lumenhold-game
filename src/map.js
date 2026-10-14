@@ -46,7 +46,7 @@
       return c.join(' ');
     }
     function badge(p) {
-      if (!p.track) return '';
+      if (!p.track || p.track.due == null) return '';
       const label = p.track.kind === 'job' ? t('map.shiftsLeft', { n: p.track.due }) : p.track.kind === 'thesis' ? t('map.sessionsLeft', { n: p.track.due }) : t('map.practiceLeft', { n: p.track.due });
       return '<span class="mk-badge' + (p.track.urgent ? ' urgent' : '') + '">' + esc(label) + '</span>';
     }

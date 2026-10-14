@@ -54,7 +54,7 @@ test('calendar: four years, 47 turns, terms and breaks', () => {
   assert.equal(eng.seasonOf(1), 'autumn');
 });
 
-test('a month is a day: map first, then a slot-ordered deck within the card cap', () => {
+test('a month is a day: map first, then a slot-ordered deck', () => {
   const eng = new Engine(content);
   const r = quiet(() => eng.newGame({ seed: 7, name: 'T' }));
   const m = r.kind === 'month' ? quiet(() => eng.advance()) : r;
@@ -69,8 +69,18 @@ test('a month is a day: map first, then a slot-ordered deck within the card cap'
   const order = ['morning', 'noon', 'afternoon', 'evening', 'night', 'midnight'];
   const slots = eng.s.deck.map((c) => order.indexOf(c.slot || 'morning'));
   assert.deepEqual(slots, slots.slice().sort((a, b) => a - b), 'cards come in slot order');
-  assert.ok(eng.s.deck.length <= content.game.max_cards_per_day, 'within max_cards_per_day');
+  assert.equal(content.game.max_cards_per_day, undefined, 'no daily card cap (playtest 2, B36)');
   assert.equal(eng.s.hist.filter((h) => h.t === 'pick').length, 1);
+});
+
+test('max_cards_per_day, when a game sets one, still caps the day', () => {
+  const capped = Object.assign({}, content, { game: Object.assign({}, content.game, { max_cards_per_day: 3 }) });
+  const eng = new Engine(capped);
+  const r = quiet(() => eng.newGame({ seed: 7, name: 'T' }));
+  const m = r.kind === 'month' ? quiet(() => eng.advance()) : r;
+  const before = eng.s.deck.length;   // cards queued "now" (intro, origin) are already in the deck
+  quiet(() => eng.pickPlaces(Policies.pickPlaces(eng, m.view)));
+  assert.ok(eng.s.deck.length - before <= 3, 'the day is within the cap');
 });
 
 test('enrolment: pick two of the first-term courses; later courses open later', () => {

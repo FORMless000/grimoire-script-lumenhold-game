@@ -20,12 +20,13 @@ tone: light
 art: scroll
 tags: class study
 scene: The registrar's hall at the start of term, students queueing at long tables with course lists that rewrite themselves.
-text: {term_index == 1: Your first term. The registrar slides a list across the desk: four courses open to first-years.|A new term, and a new list. Courses you've passed are gone from it; new levels have appeared.} Choose two. Course fees are ten crowns.
+text: {term_index == 1: Your first term. The registrar slides a list across the desk: four courses open to first-years.|A new term, and a new list. Courses you've passed are gone from it; new levels have appeared.} Choose two. Course fees are eight crowns.
 on_show:
   gold -small
 > none: Take no courses this term
   hint: Allowed. Your GPA will not thank you.
   mood +small
+  say: You hand back the list blank. The registrar raises one eyebrow, which is the whole of her opinion.
 
 # ---------------- Club Fair (design §7.4): one club at a time ----------------
 
@@ -46,6 +47,7 @@ text: The Club Fair fills the courtyard. Every table wants you; every captain sw
 > none: Not this year
   hint: You can join at next year's fair.
   mood +tiny
+  say: You collect three leaflets and a free biscuit, and sign nothing.
 
 # ---------------- The Job Board (design §7.4): visiting it is the change event ----------------
 
@@ -64,6 +66,7 @@ scene: A cork board crowded with notices, a student running a finger down a colu
 text: Notices for work, three layers deep: the library, the Gilded Newt, Pell & Daughters, the courier loft. Each wants someone reliable. Each says so twice.
 > look: Just looking
   mood +tiny
+  say: You read every notice twice and take none of them down.
 > quit: Hand in your notice
   when: member(library_assistant) or member(tavern) or member(apothecary_clerk) or member(broom_courier)
   hint: You can find work again later.
@@ -87,7 +90,7 @@ tags: home
 scene: The academy gates thrown open, barges loading trunks, a few students lingering on the steps with nowhere they'd rather be.
 text: {month == 5: The winter break.|The summer break.} Two months without lectures. The castle empties, mostly.
 > castle: Stay at the castle
-  hint: Quiet corridors and secrets. Board 6 crowns a month.
+  hint: Quiet corridors and secrets. Board 8 crowns a month.
   gain plan_castle
   say: The castle in the holidays is a different building: louder echoes, kinder staff, doors you've never seen open.
 > home: Go home
@@ -117,11 +120,10 @@ tags: job club
 scene: A folded note on official paper, the words "performance" and "concern" underlined twice.
 text: A note about {track}: your attendance and your efforts have slipped, and it has been noticed. One more term like this and there will be consequences.
 > left: Promise to do better
-  perform track +small
   mood -small
   say: You write back a promise in your neatest hand. Now you'll have to keep it.
 > right: Let it slide
-  perform track -tiny
+  perform track -small
   mood +tiny
   say: You put the note in a drawer. It doesn't stop existing in the drawer.
 
@@ -261,16 +263,16 @@ text: The spring post brings answers. {(applied(intern_royal_library) and gpa >=
 @event thesis_setup
 title: Choosing a Thesis
 trigger: auto
-when: year == 3 and month == 10 and not member(thesis)
+when: year == 4 and month == 1 and not member(thesis)
 repeat: 12
-priority: 50
+priority: 85
 type: menu
 class: story
 tone: tense
 art: book
 tags: study
 scene: A professor's study, three topic proposals laid out on the desk like cards.
-text: Next year is your final year, and it comes with a thesis. Professor Thorne has three topics ready, at three levels of ambition.
+text: The final year opens with a thesis. Before you choose this term's courses, Professor Thorne lays out three topics, at three levels of ambition.
 > safe: A careful survey
   hint: Easier, and it will read as easier.
   join thesis
@@ -368,6 +370,8 @@ text: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60:
         mood -large
         renown -small
         say: You reached too far, and they tell you so, at length. Resubmit. The idea was good. The proof wasn't there yet.
+  # The defence closes the thesis: its lab events stop (B30).
+  leave thesis
 
 # ---------------- Festivals that take a visit (design §4.4) ----------------
 
@@ -404,7 +408,7 @@ tone: warm
 art: tower
 tags: story
 scene: The seven towers at dawn from the barge, the same view as the first day, but the student watching it has changed.
-text: The barge again, the towers again, and a thesis waiting. Final year. The first-years on the deck look at you the way you once looked at the fourth-years.
+text: The barge again, the towers again, and a thesis waiting. The first-years on the deck look at you the way you once looked at the fourth-years. At the opening feast the headmistress says, "Fourth years, this is your last year in these halls. What you become here, you will be for a long time." She looks, for a moment, directly at you.
 > ok: Here we go
   mood +small
   say: You know which steps creak. You know which doors stick. One more year to learn the rest.

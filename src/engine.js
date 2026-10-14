@@ -277,8 +277,10 @@
     attend(id, ctx) {
       const s = this.s, t = this.trackState(id), d = this.c.tracks[id];
       if (!t || t.status !== 'member' || !d) return;
-      const extra = t.visits >= t.due;
-      t.visits++;
+      // On a break, a visit is an extra one: it never counts toward the next term's due (playtest 2, B6).
+      const brk = this.phaseOf() === 'break';
+      const extra = brk || t.visits >= t.due;
+      if (!brk) t.visits++;
       t.perf = clamp((t.perf || 0) + (extra ? 2 : 8), 0, 100);
       t.rankXp = (t.rankXp || 0) + (extra ? 1 : 2);
       if (d.kind === 'job' && d.pay) {
@@ -286,7 +288,7 @@
         this.change('gold', Math.round(pay), ctx);
       }
       if (d.kind === 'thesis') t.progress = clamp((t.progress || 0) + (extra ? 2 : 5), 0, 100);
-      ctx.notes.push({ kind: 'attend', track: id, left: Math.max(0, t.due - t.visits) });
+      ctx.notes.push(Object.assign({ kind: 'attend', track: id }, brk ? {} : { left: Math.max(0, t.due - t.visits) }));
     }
     // End of a term (design §6.2, §7.3): exams for enrolled courses, missed obligations, warnings, promotions.
     endTerm(summary) {
@@ -303,7 +305,8 @@
           const r = this.rand() * 100;
           const grade = r < odds(dc + 5) ? (sv - dc >= 15 ? 'A' : 'B') : r < odds(dc - 5) ? 'C' : 'F';
           t.grades.push(grade); t.passed[t.level] = grade; t.status = grade === 'F' ? 'failed' : 'done';
-          ctx.notes.push({ kind: 'grade', track: id, level: t.level, grade });
+          // Why (B7): the skill tested, its value, the exam's bar (after study and the advisor) and the pass chance.
+          ctx.notes.push({ kind: 'grade', track: id, level: t.level, grade, skills: sk, value: Math.round(sv), bar: Math.round(dc), pass: odds(dc - 5) });
           // The professor notices (design §5.5): A warms them a good deal, B a little, F cools them.
           const regard = { A: ['medium', 1], B: ['small', 1], F: ['small', -1] }[grade];
           if (regard && d.lead && s.npcs[d.lead] && s.npcs[d.lead].met) this.run([{ t: 'rel', npc: d.lead, tier: regard[0], sign: regard[1] }], ctx);
@@ -1086,7 +1089,7 @@
             disabled: (o.when ? !this.test(o.when, a) : false) || short,
             affects: o.affects,
             spell: o.spell ? { id: o.spell, level: lv, cost, short } : null,
-            check: o.firstCheck ? (o.firstCheck.t === 'challenge' ? { skill: o.firstCheck.kind, p: this.challengeOdds(o.firstCheck, a).win, challenge: true } : { skill: o.firstCheck.skill, p: this.checkChance(o.firstCheck.skill, this.value(o.firstCheck.dc, a)) }) : null,
+            check: o.firstCheck ? (o.firstCheck.t === 'challenge' ? ((odds) => ({ skill: o.firstCheck.kind, using: odds.skill, p: odds.win, challenge: true }))(this.challengeOdds(o.firstCheck, a)) : { skill: o.firstCheck.skill, p: this.checkChance(o.firstCheck.skill, this.value(o.firstCheck.dc, a)) }) : null,
           };
         }),
       };
