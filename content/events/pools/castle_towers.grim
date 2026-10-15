@@ -1,6 +1,6 @@
 # ============================================================
 #  Baseline pools: the castle towers (phase 3, step 1b).
-#  Repeatable routine events for the observatory, Mira's workshop,
+#  Repeatable routine events for the observatory, Mir's workshop,
 #  the Ledger office, the headmistress's tower, the Restricted
 #  Section, the third gargoyle and the seventh tower, plus the
 #  hidden-course hints for artifice, starcalling and hollow studies.
@@ -102,7 +102,7 @@ text: {In the night log's oldest volume, every entry by a student who had finish
   lore +tiny
   say: {~The telescope swings to one bright star and stays there, patient as a teacher who knows you aren't ready.|It turns to a named star and holds it. You get the feeling you have to finish Advanced Astromancy before it explains.}
 
-# ---------------- Mira's Workshop ----------------
+# ---------------- Mir's Workshop ----------------
 
 @event workshop_spare_bench
 title: The Spare Bench
@@ -114,17 +114,17 @@ weight: 10
 art: gear
 tags: magic life
 scene: A cluttered workshop bench under a hand-painted sign, a music box in pieces beside a jar of springs, fire buckets by the door.
-text: {Mira keeps a spare bench for visitors, under a sign that says TOUCH THINGS (CAREFULLY).|The sign over the spare bench has grown a second line, (MORE CAREFULLY).|Your bench, as Mira has started calling it, has a jar of springs waiting.} {~Mira waves a spanner at you without looking up.|Something on a high shelf is ticking.|{season == "winter": The forge-lamp makes it the warmest room in the west wing.|The window is open to let the smoke out.}}
+text: {Mir keeps a spare bench for visitors, under a sign that says TOUCH THINGS (CAREFULLY).|The sign over the spare bench has grown a second line, (MORE CAREFULLY).|Your bench, as Mir has started calling it, has a jar of springs waiting.} {~Mir waves a spanner at you without looking up.|Something on a high shelf is ticking.|{season == "winter": The forge-lamp makes it the warmest room in the west wing.|The window is open to let the smoke out.}}
 > left: Mend a jammed music box
   alchemy +small
   mood -tiny
   health -tiny
-  say: {~It plays again, a little too fast, like it's late for something.|You fix the tune and break the lid. Mira says that's probably progress.|It plays a waltz nobody has heard in years. You leave it on the sill to finish.}
-> right: Just watch Mira work
+  say: {~It plays again, a little too fast, like it's late for something.|You fix the tune and break the lid. Mir says that's probably progress.|It plays a waltz nobody has heard in years. You leave it on the sill to finish.}
+> right: Just watch Mir work
   mood +small
   rel mira +tiny
   health -tiny
-  say: {~Mira explains a gear train for an hour. You follow about a third, which they say is probably a record.|You sit by the fire buckets and watch the sparks. Your eyes sting. It's a good afternoon.|Mira hands you things to hold and forgets you're holding them. It's oddly restful.}
+  say: {~Mir explains a gear train for an hour. You follow about a third, which they say is probably a record.|You sit by the fire buckets and watch the sparks. Your eyes sting. It's a good afternoon.|Mir hands you things to hold and forgets you're holding them. It's oddly restful.}
 
 @event workshop_volunteer
 title: A Volunteer With Hands
@@ -169,7 +169,7 @@ text: {The self-stirring cauldron in the corner wears a note. DO NOT ADJUST. IT 
     win:
       alchemy +small
       mood +tiny
-      say: {~It settles into a slow, contented clockwise. Mira, passing, says "Oh!" and then "Huh," and then "Teach me."|The spoon taps the rim twice, like a thank-you, and gets on with it.}
+      say: {~It settles into a slow, contented clockwise. Mir, passing, says "Oh!" and then "Huh," and then "Teach me."|The spoon taps the rim twice, like a thank-you, and gets on with it.}
     lose:
       health -tiny
       mood -small
@@ -189,7 +189,7 @@ weight: 6
 art: gear
 tags: study magic
 scene: A tall glass cabinet at the back of a workshop, clockwork animals inside it, a faded card propped against the glass.
-text: {At the back of the workshop is a glass cabinet that isn't Mira's, full of faculty machines, very still.|A clockwork mouse in the glass cabinet has moved since your last visit, and now faces the door.|The cabinet. Mira says the machines in it think, probably, and are waiting for the right student.} A card in old ink: "Artifice. By invitation, to those who have passed Alchemy II and Evocation II."
+text: {At the back of the workshop is a glass cabinet that isn't Mir's, full of faculty machines, very still.|A clockwork mouse in the glass cabinet has moved since your last visit, and now faces the door.|The cabinet. Mir says the machines in it think, probably, and are waiting for the right student.} A card in old ink: "Artifice. By invitation, to those who have passed Alchemy II and Evocation II."
 > left: Study the machines through the glass
   alchemy +small
   say: {~Nothing moves while you watch. The moment you look away, something ticks.|You count the gears in a brass beetle and lose count. Somebody made this who could make things and make them burn.}
@@ -203,7 +203,7 @@ text: {At the back of the workshop is a glass cabinet that isn't Mira's, full of
     lose:
       mood -small
       renown -tiny
-      say: {~The cabinet shrieks like a kettle. Mira is delighted. The corridor is not.|The lock bites your pick and keeps it. Mira says it does that, probably, to people it likes.}
+      say: {~The cabinet shrieks like a kettle. Mir is delighted. The corridor is not.|The lock bites your pick and keeps it. Mir says it does that, probably, to people it likes.}
 
 # ---------------- The Lumen Ledger Office ----------------
 

@@ -7,7 +7,7 @@ Warm, witty and slightly melancholy, like a cosy fantasy novel. Humour comes fro
 ## Voice
 
 - **Second person, present tense** for `text` ("You find Lyra on a window seat…"); `say:` lines continue it.
-- **Characters sound like their `voice:`** in `content/world/cast.grim`. Lyra never says "please" first; Kael uses few words; Maud calls you "dearie"; Mira says "probably". Read the voice line before writing dialogue, and keep characters' facts consistent with their `@fact`s.
+- **Characters sound like their `voice:`** in `content/world/cast.grim`. Lyra never says "please" first; Kael uses few words; Maud calls you "dearie"; Mir says "probably". Read the voice line before writing dialogue, and keep characters' facts consistent with their `@fact`s.
 - **Events by class** (`classes.md`):
   - *routine*: everyday life; light, quick, a small trade-off.
   - *milestone*: friendships, confessions, promotions; let them breathe.

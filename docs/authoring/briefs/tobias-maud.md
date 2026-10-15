@@ -20,7 +20,7 @@ Big hands, bigger heart. Talks to plants and, worryingly, the plants seem to ans
 
 **Schedule:** The Greenhouses (morning, afternoon); The Refectory (noon, evening); The Familiar Stables (evening)
 
-**Relations:** Old Maud +20, Bram Hollis -15, Mira Ten +10
+**Relations:** Old Maud +20, Bram Hollis -15, Mir Ten +10
 
 **Facts:**
 - [surface] A farmer's son on a turnip scholarship, built like a barn door and gentle as a lamb. (`tobias.scholarship`)

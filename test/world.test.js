@@ -133,7 +133,7 @@ test('brief: cards already at the place or track, examples from there first, --l
 test('rename place updates schedules and the place header', () => {
   const dir = tempProject();
   write(dir, 'content/world/places.grim', '@place library\nname: The Library\nmap: campus 1,2\n\n@place yard\nname: The Yard\nmap: campus 3,4\n');
-  write(dir, 'content/world/people.grim', '@npc mira\nname: Mira Ten\nage: 19\nschedule: library@night yard@noon\n');
+  write(dir, 'content/world/people.grim', '@npc mira\nname: Mir Ten\nage: 19\nschedule: library@night yard@noon\n');
   rename(dir, 'place', 'library', 'great_library');
   assert.match(read(dir, 'content/world/places.grim'), /^@place great_library$/m);
   assert.match(read(dir, 'content/world/people.grim'), /schedule: great_library@night yard@noon/);

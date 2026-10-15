@@ -1,6 +1,6 @@
 # ============================================================
 #  Expansion — more character events (social slot).
-#  Three each for Lyra, Tobias, Seraphine, Corvin, Mira, Nessa,
+#  Three each for Lyra, Tobias, Seraphine, Corvin, Mir, Nessa,
 #  Kael; two for Bram.
 # ============================================================
 
@@ -310,7 +310,7 @@ text: "Rule one: never cheat," says Corvin, shuffling so fast the cards blur. "R
     rel corvin +small
     say: He teaches you odds and nerve instead. That weekend the odds take three crowns off you. "Also a lesson," says Corvin.
 
-# ---------------- Mira ----------------
+# ---------------- Mir ----------------
 
 @event mira_ornithopter
 title: The Test Flight
@@ -323,21 +323,21 @@ weight: 12
 art: gear
 tags: social danger
 scene: A rickety winged contraption balanced on the edge of a tower roof, a goggled artificer strapping into it, a friend holding a rope.
-text: Mira has built a flying machine with canvas wings and seven propellers. It is balanced on the edge of the north tower. "Brooms are so last century," they say, strapping in. "I need someone on the rope. Probably. Possibly."
+text: Mir has built a flying machine with canvas wings and seven propellers. It is balanced on the edge of the north tower. "Brooms are so last century," they say, strapping in. "I need someone on the rope. Probably. Possibly."
 > left: Hold the rope
   challenge feat trivial:
     win:
       rel mira +large
       renown +small
-      say: The machine flies — wobbly, loud, glorious — twice around the tower before landing in the lake. Mira surfaces whooping. You're both legends by dinner.
+      say: The machine flies — wobbly, loud, glorious — twice around the tower before landing in the lake. Mir surfaces whooping. You're both legends by dinner.
     lose:
       health -medium
       rel mira +medium
-      say: The rope wins. You are dragged eight feet along the roof before letting go. The machine lands in a tree. Mira waves from it, delighted.
+      say: The rope wins. You are dragged eight feet along the roof before letting go. The machine lands in a tree. Mir waves from it, delighted.
 > right: Insist on a safety net
   rel mira +small
   alchemy +tiny
-  say: You spend a day building a net. The machine flies four feet and drops into it. "Data!" says Mira happily. Nobody dies. It's a good day.
+  say: You spend a day building a net. The machine flies four feet and drops into it. "Data!" says Mir happily. Nobody dies. It's a good day.
 
 @event mira_lab_fire
 title: Fire in the Workshop
@@ -350,24 +350,24 @@ weight: 10
 art: flame
 tags: danger
 scene: A workshop full of smoke and orange light, notebooks scattered across a burning bench, a figure in goggles coughing in the doorway.
-text: The workshop is on fire. Properly this time. Mira is in the doorway, coughing — and trying to go back in. "My notebooks! Three years of notes!"
+text: The workshop is on fire. Properly this time. Mir is in the doorway, coughing — and trying to go back in. "My notebooks! Three years of notes!"
 > left: Grab the notebooks
   challenge feat trivial:
     win:
       rel mira +large
       health -small
-      say: You come out singed, smoking, with an armful of notebooks. Mira stares at you, then at the notebooks, then bursts into tears and hugs you, both of you coughing.
+      say: You come out singed, smoking, with an armful of notebooks. Mir stares at you, then at the notebooks, then bursts into tears and hugs you, both of you coughing.
     lose:
       health -large
       rel mira +medium
-      say: You get halfway before the smoke drives you back. You save one notebook. Mira says it's the most important one. You both know it isn't. They mean it anyway.
-> right: Drag Mira away
+      say: You get halfway before the smoke drives you back. You save one notebook. Mir says it's the most important one. You both know it isn't. They mean it anyway.
+> right: Drag Mir away
   rel mira +medium
   health -tiny
-  say: You haul Mira back from the door. The notebooks burn. Mira is silent for a week. Then they start a new notebook. The first page just says: "Thank you."
+  say: You haul Mir back from the door. The notebooks burn. Mir is silent for a week. Then they start a new notebook. The first page just says: "Thank you."
 
 @event mira_name_day
-title: Mira's Name Day
+title: Mir's Name Day
 class: routine
 tone: light
 trigger: social
@@ -377,17 +377,17 @@ weight: 10
 art: gem
 tags: social
 scene: A cluttered workshop decorated with paper chains and one small cake with a single gear-shaped candle, an artificer looking embarrassed and pleased.
-text: It's Mira's name day. They mention it casually, as if it doesn't matter. It clearly matters. Nobody else seems to know.
+text: It's Mir's name day. They mention it casually, as if it doesn't matter. It clearly matters. Nobody else seems to know.
 > left: Throw a surprise party
   gold -small
   rel mira +large
   mood +small
-  say: Six friends, one cake and a banner you painted badly. Mira walks in, stops, and has to sit down. "Nobody's ever..." they start, and can't finish.
+  say: Six friends, one cake and a banner you painted badly. Mir walks in, stops, and has to sit down. "Nobody's ever..." they start, and can't finish.
 > right: Give them a handmade gift
   gold -tiny
   rel mira +medium
   spark mira +tiny
-  say: A little brass key that fits nothing. "For whatever you build next," you say. Mira wears it on a chain, every day, for years.
+  say: A little brass key that fits nothing. "For whatever you build next," you say. Mir wears it on a chain, every day, for years.
 
 # ---------------- Nessa ----------------
 

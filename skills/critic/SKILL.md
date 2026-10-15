@@ -27,7 +27,7 @@ For every event, ask the questions below. Write down an issue only when you can 
 - A new proper noun needs a soft `@lore` entry.
 
 **Voice**
-- Each character who speaks sounds like their `voice:` line: Lyra never says "please" first, Kael uses few words, Maud says "dearie", Mira says "probably".
+- Each character who speaks sounds like their `voice:` line: Lyra never says "please" first, Kael uses few words, Maud says "dearie", Mir says "probably".
 - They act on their traits and facts.
 
 **Tone and safety**

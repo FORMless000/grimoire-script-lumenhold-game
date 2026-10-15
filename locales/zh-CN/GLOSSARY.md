@@ -50,7 +50,7 @@ Translators (human or LLM) must follow this table so names and terms stay consis
 | tobias | Tobias Fennick | 托比亚斯·芬尼克 | 托比亚斯 |
 | seraphine | Seraphine Hale | 瑟拉芬·海尔 | 瑟拉芬 |
 | corvin | Corvin Ashby | 科尔文·阿什比 | 科尔文 |
-| mira | Mira Ten (they/them) | 米拉·滕 | 米拉（代词用 TA） |
+| mira | Mir Ten (they/them) | 米尔·滕 | 米尔（代词用 TA） |
 | kael | Kael Dumont | 凯尔·杜蒙 | 凯尔 |
 | nessa | Nessa Quill | 内莎·奎尔 | 内莎 |
 | bram | Bram Hollis | 布拉姆·霍利斯 | 布拉姆 |
@@ -105,7 +105,7 @@ friend 朋友 · close 挚友 · rival 对手 · nemesis 宿敌 · partner 恋�
 
 ## 世界书（v0.3）：地点、课程与社团、咒语、阵营
 
-Places: The Courtyard 庭院 · The Library 图书馆 · The Refectory 膳堂 · The Lakeshore 湖岸 · The Lecture Tower 讲堂塔 · The Observatory 观星台 · The Great Hall 大礼堂 · The Alchemy Laboratory 炼金实验室 · Mira's Workshop 米拉的工坊 · The Job Board 招工告示板 · The Lumen Ledger Office 《流明纪事报》编辑部 · The Headmistress's Tower 院长塔 · The Third Gargoyle 第三座石像鬼 · The Seventh Tower 第七塔 · The Thesis Laboratory 论文实验室 · The Duelling Hall 决斗厅 · The Greenhouses 温室 · The Flight Field 飞行场 · The Familiar Stables 使魔马厩 · The Boathouse 船屋 · The Orchard 果园 · Old Maud's Cottage 老莫德的小屋 · The Secret Garden 秘密花园 · The Courier Loft 信使阁楼 · The Bakery 面包房 · the Mirror Lake 镜湖 · the Sorting Mirror 分院镜 · the Spire Library 尖塔图书馆.
+Places: The Courtyard 庭院 · The Library 图书馆 · The Refectory 膳堂 · The Lakeshore 湖岸 · The Lecture Tower 讲堂塔 · The Observatory 观星台 · The Great Hall 大礼堂 · The Alchemy Laboratory 炼金实验室 · Mir's Workshop 米尔的工坊 · The Job Board 招工告示板 · The Lumen Ledger Office 《流明纪事报》编辑部 · The Headmistress's Tower 院长塔 · The Third Gargoyle 第三座石像鬼 · The Seventh Tower 第七塔 · The Thesis Laboratory 论文实验室 · The Duelling Hall 决斗厅 · The Greenhouses 温室 · The Flight Field 飞行场 · The Familiar Stables 使魔马厩 · The Boathouse 船屋 · The Orchard 果园 · Old Maud's Cottage 老莫德的小屋 · The Secret Garden 秘密花园 · The Courier Loft 信使阁楼 · The Bakery 面包房 · the Mirror Lake 镜湖 · the Sorting Mirror 分院镜 · the Spire Library 尖塔图书馆.
 
 Courses (课程): Evocation 塑能术 · Astromancy & Divination 星象与占卜 · Alchemy & Healing 炼金与治愈 · Illusion & Glamour 幻术与魅影 · Beastcraft & Flight 驭兽与飞行 · Umbral Theory 暗影理论 · Artifice 奇械术 · Starcalling 唤星术 · Hollow Studies 空洞研究 · Thesis 毕业论文. Level names use 、 between levels (塑能术 I、塑能术 II、高等塑能术).
 

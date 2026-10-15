@@ -4,7 +4,7 @@ Context pack for writing events. Canon is what is written here and in the worldb
 
 ## Cast
 
-### Mira Ten (`mira`)
+### Mir Ten (`mira`)
 
 they/them · age 19 · student year 1 · Brasswick · romanceable
 
@@ -18,7 +18,7 @@ Smells permanently of solder and ozone. Has built a clockwork owl, a self-stirri
 
 **Stats:** arcana 24, lore 20, alchemy 30, charm 14, vigor 10, guile 12, wealth 3
 
-**Schedule:** Mira's Workshop (afternoon, evening, night); The Refectory (noon); The Lecture Tower (morning)
+**Schedule:** Mir's Workshop (afternoon, evening, night); The Refectory (noon); The Lecture Tower (morning)
 
 **Relations:** Tobias Fennick +10
 
@@ -58,7 +58,7 @@ Upper-year prefect with a ledger of demerits and a fondness for writing your nam
 - `duel_bram_hazing` Initiation, Prefect-Style (routine)
 - `mira_ornithopter` The Test Flight (routine)
 - `mira_lab_fire` Fire in the Workshop (routine)
-- `mira_name_day` Mira's Name Day (routine)
+- `mira_name_day` Mir's Name Day (routine)
 - `bram_father_visit` Bram's Father (routine)
 - `bram_cheating` Bram Cheats (routine)
 - `bram_intro` Running in the Halls (routine)
@@ -80,7 +80,7 @@ Upper-year prefect with a ledger of demerits and a fondness for writing your nam
 ## Lore
 
 - **Hollis** (`hollis_family`, soft): Bram's father was a prefect and head boy at Lumenhold, and has never stopped telling his son he will not amount to anything.
-- **Ten family** (`ten_clockworks`, soft): Mira's family runs a clockworks and expects them home. After a persuasive letter, Mira's mother agreed: "Fine. Win a prize."
+- **Ten family** (`ten_clockworks`, soft): Mir's family runs a clockworks and expects them home. After a persuasive letter, Mir's mother agreed: "Fine. Win a prize."
 
 ## Style examples
 
@@ -124,16 +124,16 @@ weight: 10
 art: music
 tags: social
 scene: A spindly brass contraption with too many legs attempting a waltz in an empty classroom, a student dancing with it.
-text: Mira has built a machine that teaches dancing. It has six legs and opinions. "It needs a test subject," they say. "It's mostly safe. It only kicked me twice."
-> left: Make Mira test it
+text: Mir has built a machine that teaches dancing. It has six legs and opinions. "It needs a test subject," they say. "It's mostly safe. It only kicked me twice."
+> left: Make Mir test it
   rel mira -tiny
   mood +small
-  say: You watch Mira and the machine waltz, badly, across the room. It kicks them twice; Mira gives you a look. It's the funniest thing you've ever seen.
+  say: You watch Mir and the machine waltz, badly, across the room. It kicks them twice; Mir gives you a look. It's the funniest thing you've ever seen.
 > right: Dance with the machine
   charm +small
   health -tiny
   rel mira +medium
-  say: It kicks you twice too. But by the end you can waltz, and Mira is clapping with oily hands.
+  say: It kicks you twice too. But by the end you can waltz, and Mir is clapping with oily hands.
 ```
 
 ```grim
@@ -149,21 +149,21 @@ weight: 12
 art: gear
 tags: social danger
 scene: A rickety winged contraption balanced on the edge of a tower roof, a goggled artificer strapping into it, a friend holding a rope.
-text: Mira has built a flying machine with canvas wings and seven propellers. It is balanced on the edge of the north tower. "Brooms are so last century," they say, strapping in. "I need someone on the rope. Probably. Possibly."
+text: Mir has built a flying machine with canvas wings and seven propellers. It is balanced on the edge of the north tower. "Brooms are so last century," they say, strapping in. "I need someone on the rope. Probably. Possibly."
 > left: Hold the rope
   challenge feat trivial:
     win:
       rel mira +large
       renown +small
-      say: The machine flies — wobbly, loud, glorious — twice around the tower before landing in the lake. Mira surfaces whooping. You're both legends by dinner.
+      say: The machine flies — wobbly, loud, glorious — twice around the tower before landing in the lake. Mir surfaces whooping. You're both legends by dinner.
     lose:
       health -medium
       rel mira +medium
-      say: The rope wins. You are dragged eight feet along the roof before letting go. The machine lands in a tree. Mira waves from it, delighted.
+      say: The rope wins. You are dragged eight feet along the roof before letting go. The machine lands in a tree. Mir waves from it, delighted.
 > right: Insist on a safety net
   rel mira +small
   alchemy +tiny
-  say: You spend a day building a net. The machine flies four feet and drops into it. "Data!" says Mira happily. Nobody dies. It's a good day.
+  say: You spend a day building a net. The machine flies four feet and drops into it. "Data!" says Mir happily. Nobody dies. It's a good day.
 ```
 
 ## Rules
