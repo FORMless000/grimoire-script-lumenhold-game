@@ -1,0 +1,305 @@
+# ============================================================
+#  The time loop (playtest 2, X8 with L21): the cards each loop
+#  can lead to. The start, the hub and the fix are in
+#  expansion_life.grim (life_timeloop_1/2/3). Every card here ends
+#  by looping again (loop_n += 1), and the ninth loop breaks it.
+#  Nothing done in an experiment lasts; what you exploit does,
+#  and costs more each time (loop_exploit).
+# ============================================================
+
+@event timeloop_exploit
+title: Every Bet, Every Answer
+class: story
+tone: eerie
+trigger: queued
+repeat: 8
+art: coin
+tags: mystery money
+chain: timeloop
+scene: A student at the centre of a crowd in the courtyard collecting coins from groaning classmates, a quiz paper marked full marks in their other hand.
+text: {loop_exploit == 0: You know which way every coin will fall, and what's on this afternoon's quiz.|{loop_exploit == 1: The bets again. Your classmates are starting to look at you oddly when you win.|The bets, the quiz, the same faces losing. Their groans have stopped being funny.}} {~The quiz is on the founders.|A fifth-year bets you can't name every tower.|Someone bets on which way the prefect will fall.}
+> left: Take everything you can
+  gold +medium
+  study +small
+  alignment -tiny
+  loop_exploit += 1
+  if loop_exploit >= 3:
+    mood -medium
+    health -small
+    queue timeloop_noticed now
+    say: You win it all again, and the winning has a taste like tin. The loop tightens: the morning is shorter now, the edges closer. And someone is watching you across the courtyard as if they know.
+  else:
+    mood -small
+    loop_n += 1
+    if loop_n >= 9:
+      queue timeloop_cap now
+    else:
+      queue life_timeloop_2 now
+    say: {~The coins are real when you wake, and the marks stay in the ledger. So does the hollow feeling, a little deeper each time.|You win again. The crowns carry over into the next Tuesday. So does the weight of them.}
+> right: Just the quiz, then stop
+  study +small
+  mood -tiny
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: {~Full marks, and nothing else. It's a small cheat, and it still sits badly at supper.|You ace the quiz and leave the bets alone. A small mercy, to yourself mostly.}
+
+@event timeloop_noticed
+title: "You've Done This Before"
+class: story
+tone: eerie
+trigger: queued
+actor: seraphine
+repeat: 2
+art: eye
+tags: mystery social
+chain: timeloop
+scene: A seer catching a student's sleeve in a crowded corridor, her eyes very clear, the other students blurred around them as if moving too fast.
+text: Seraphine catches your sleeve in the corridor. Her eyes are very clear. "You've done this before," she says. "Today. Many times. I can see the creases in it." She doesn't let go. "Whatever you're taking from it, it's taking from you too."
+> left: Tell her everything
+  meet seraphine
+  rel seraphine +medium
+  loop_clues += 1
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: You tell her, all of it, in a window seat. She listens and then says, "Ask the clocks in the astronomy tower." Tomorrow she won't remember. Today, she holds your hand like she will.
+> right: Pull away
+  meet seraphine
+  mood -small
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: You pull free and walk fast. She doesn't follow. "I'll forget this," she calls after you. "You won't." She's right, and that's the worst of it.
+
+@event timeloop_dare_confess
+title: Things You'd Never Say
+class: story
+tone: warm
+trigger: queued
+repeat: 3
+art: heart
+tags: mystery romance
+chain: timeloop
+scene: Two students in an empty corridor at dusk, one mid-sentence with their heart on their sleeve, the other's face caught between surprise and joy.
+text: {Nothing today will last. So you find the person you've never told, and you tell them.|Another Tuesday, another confession nobody will remember.|You've confessed to them three times now, three different ways.} {~They look at you as if you've handed them something breakable.|They laugh, kindly, then don't.|They take a long time to answer.}
+> left: Say it all, properly
+  mood +small
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: {~You say all of it. They say something back that you'll keep for the rest of your life, and they'll have forgotten by breakfast. It's the most bittersweet thing you've ever done.|They kiss you, or hug you, or cry; it's different each time. By morning it never happened. Only you know.}
+> right: Say it badly, on purpose
+  mood +tiny
+  charm +tiny
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: {~You make a terrible speech, as a rehearsal. They're baffled. You learn exactly which words you'd use if this were real, and file them away.|You stumble through it, and practise, and stumble less. One Tuesday you'll say it on a Wednesday.}
+
+@event timeloop_dare_fall
+title: Off the Observatory Roof
+class: story
+tone: eerie
+trigger: queued
+repeat: 3
+art: feather
+tags: mystery
+chain: timeloop
+scene: A student standing on the observatory parapet with arms wide, the lake far below, the morning sky enormous.
+text: {If nothing lasts, then nothing can hurt for long. You climb the observatory parapet with the whole lake below you.|The parapet again. You know exactly how the wind feels at the top.|You've done this before. You still can't quite believe you do it.} {~The lake is very blue.|Gulls wheel below you.|The bell in the tower is about to ring.}
+> left: Jump
+  mood +small
+  health -tiny
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: {~You fall for a long, bright moment, and the lake rushes up, and you wake in your bed to the smell of eggs. Your heart is still pounding. It was glorious, and you'll never do it again. You'll do it again.|You hit the water like a bell. Then: eggs, sunlight, your own bed. You laugh out loud at breakfast and the prefect stares.}
+> right: Just look
+  mood +tiny
+  lore +tiny
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: {~You sit on the parapet and watch the whole valley wake, the same as yesterday, the same as tomorrow. From up here the loop looks almost peaceful.|You don't jump. You count every roof in the village instead, and find one more than there should be.}
+
+@event timeloop_dare_kindness
+title: One Perfect Day for a Stranger
+class: story
+tone: warm
+trigger: queued
+repeat: 3
+art: sun
+tags: mystery social
+chain: timeloop
+scene: A shy first-year in the refectory looking astonished at a slice of cake, a note and a flower appearing one after another in front of them.
+text: {There's a shy first-year who eats alone every Tuesday. Today you know everything that will go wrong for them, and you can stop all of it.|The same first-year, the same table. You know their day by heart now.|You've made this stranger's Tuesday perfect before. You do it again anyway.} {~They get the juice in the face at ten.|They fail the quiz by one mark.|Someone laughs at their hat.}
+> left: Make it perfect
+  mood +small
+  gold -tiny
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: {~You move the juice, whisper the quiz answer, compliment the hat. By evening they're laughing with three new friends. Tomorrow none of it will have happened, except in you.|A perfect day, built carefully, gone by morning. You don't mind as much as you thought you would.}
+> right: Just sit with them
+  mood +tiny
+  charm +tiny
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: {~You sit with them at lunch and talk about nothing. They smile once. That one, somehow, you're sure they keep.|An hour of company for someone lonely. It doesn't last. It isn't nothing.}
+
+@event timeloop_clue_bells
+title: The Bells Are Wrong
+class: story
+tone: eerie
+trigger: queued
+repeat: 2
+art: bell
+tags: mystery study
+chain: timeloop
+scene: A student counting chimes in a castle stairwell, one hand raised, the great clock face above them stopped between two hours.
+text: You spend this Tuesday listening. Every bell in the castle strikes on time, except the astronomy tower's, which strikes a beat late, and then a beat early, as if it's arguing with itself.
+> left: Follow the sound up the tower
+  lore +small
+  loop_clues += 1
+  health -tiny
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: Four hundred steps. At the top the door is locked and humming. Through the keyhole, gears turning the wrong way. The morning folds before you can open it.
+> right: Ask the clockmaster
+  lore +tiny
+  loop_clues += 1
+  mood -tiny
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: The clockmaster swears the tower clock is perfect. "The big chronometer up there? Not wound for fifty years." He looks at you oddly. "Unless someone's been at it."
+
+@event timeloop_clue_light
+title: A Light in the Astronomy Tower
+class: story
+tone: eerie
+trigger: queued
+repeat: 2
+art: lantern
+tags: mystery study
+chain: timeloop
+scene: A dark astronomy tower at dawn, a single lamp burning in its highest window, a student watching from a courtyard far below.
+text: You wake before the eggs this Tuesday and look out of the window. One lamp is burning in the astronomy tower, the only light in the castle. It goes out at the exact moment the morning begins.
+> left: Be there when it goes out
+  loop_clues += 1
+  health -small
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: You run the stairs in the dark and reach the top as the lamp dies. Someone small is curled by a great brass clock, asleep. Then the morning folds, and you're in bed again, breathless.
+> right: Watch the window all night
+  loop_clues += 1
+  mood -small
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: You don't sleep. At three a shadow passes the window: someone small, with a wand. At four the lamp goes out, and so do you.
+
+@event timeloop_clue_firstyear
+title: The Boy Who Dreads Wednesday
+class: story
+tone: warm
+trigger: queued
+repeat: 4
+art: book
+tags: mystery social
+chain: timeloop
+scene: A small first-year hunched over a textbook at breakfast, not eating, a note in the margin reading "one more day".
+text: {There's a first-year who doesn't eat breakfast on Tuesdays. He reads the same page of a textbook over and over. In the margin he's written "one more day".|The boy again, the page again. He's in your dreams now.|You sit down opposite the boy before he can leave.} Tomorrow is his first exam.
+> left: Ask him about the exam
+  loop_clues += 1
+  charm +tiny
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: He's terrified of it: if he fails, he goes home. "I wished for one more day," he says, and then looks frightened. "I mean, I just wished." He glances at the astronomy tower without meaning to.
+> right: Help him study instead
+  loop_clues += 1
+  lore +tiny
+  mood -tiny
+  loop_n += 1
+  if loop_n >= 9:
+    queue timeloop_cap now
+  else:
+    queue life_timeloop_2 now
+  say: You teach him the chapter he's been failing to read. He nearly gets it. He mentions, offhand, the big clock in the astronomy tower, "the one that grants wishes, people say".
+
+@event timeloop_cap
+title: Wednesday, Whether You Like It or Not
+class: story
+tone: eerie
+trigger: queued
+art: hourglass
+tags: mystery magic
+chain: timeloop
+scene: A shattered brass chronometer in a tower room at dawn, springs and gears scattered across the floor, a first-year and a student staring at the wreck.
+text: The loop pulls tight one last time and snaps. Somewhere above, a great clock bursts its springs, and the morning comes in like a wave. It's Wednesday. You feel as if you've run every Tuesday at once.
+> left: Climb the tower to see
+  flag timeloop_done
+  health -small
+  mood -small
+  queue timeloop_after in 1
+  say: The astronomy tower's chronometer lies in pieces, and a first-year sits among them, white-faced. "I just wanted one more day," he whispers. You sit with him until the clockmaster comes. Your bones ache for a week.
+> right: Go back to bed
+  flag timeloop_done
+  mood -medium
+  queue timeloop_after in 1
+  say: You sleep through Wednesday's breakfast, and it is the best sleep of your life. When you wake, nobody remembers anything, and you remember all of it.
+
+@event timeloop_after
+title: Only You Remember
+class: story
+tone: warm
+trigger: queued
+art: hourglass
+tags: mystery
+chain: timeloop
+scene: A student alone at a window seat on an ordinary morning, a cup of tea going cold, a clock on the wall ticking forward at last.
+text: Weeks later, the Tuesdays still visit you in dreams. {loop_exploit >= 2: People remember your winning streak, though not why, and some of them have stopped betting with you.|Nobody else remembers anything.} You remember the confessions, the falls, the stranger's perfect day. You could tell someone, if you wanted.
+> left: Tell one person the truth
+  mood +small
+  if loop_exploit >= 2:
+    renown -tiny
+    say: You tell a friend everything over tea. They don't believe a word and believe all of it. At the end they ask, gently, whether you gave back the winnings. You didn't. It weighs, a little.
+  else:
+    say: You tell a friend everything over tea. They don't believe a word and believe all of it. At the end they say, "So you were kind to a stranger, a dozen times, and nobody knew." You nod. "Sounds like you," they say.
+> right: Keep it to yourself
+  lore +small
+  mood -tiny
+  say: You keep it. Some mornings you catch a phrase you once said in a loop, and the person you say it to looks at you as if they almost remember. They never quite do.

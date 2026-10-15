@@ -5,6 +5,10 @@
 
 # ---------------- The Tuesday That Wouldn't End ----------------
 
+# The time loop (playtest 2, X8 with L21): one Tuesday, lived over and over in a single day of the game. The hub
+# (`life_timeloop_2`) counts the loops in `loop_n`; each loop you exploit it, experiment or investigate, and each
+# card ends by looping again. Clues (`loop_clues`) open the fix (`life_timeloop_3`), which gets easier every loop;
+# at the ninth loop it breaks by itself (`timeloop_cap`), so it can never soft-lock. More cards: chain_timeloop.grim.
 @event life_timeloop_1
 slot: morning
 title: Haven't We Done This?
@@ -17,61 +21,151 @@ tags: mystery magic
 chain: timeloop
 scene: A student at breakfast staring at a plate of eggs with intense déjà vu, a clock on the wall with its hands spinning backward.
 text: Breakfast. Eggs. Thorne trips on the third step. A first-year spills juice on a prefect. You know all of this is about to happen, because it already happened. Yesterday. Which was also Tuesday.
-> left: Ignore it — probably just tired
+> left: Ignore it, you're probably just tired
   flag timeloop_started
+  loop_n = 1
+  loop_clues = 0
+  loop_exploit = 0
+  mood -tiny
   queue life_timeloop_2 now
-  say: You eat the eggs. They taste exactly as they did yesterday. Thorne trips on the third step.
+  say: You eat the eggs. They taste exactly as they did yesterday. Thorne trips on the third step. You go to bed early, uneasy, and wake to eggs.
 > right: Warn Thorne about the step
   flag timeloop_started
+  loop_n = 1
+  loop_clues = 0
+  loop_exploit = 0
   rel thorne +tiny
   queue life_timeloop_2 now
-  say: "The third step, Professor." He looks at you strangely and steps over it. Somewhere, a clock skips. It's still Tuesday.
+  say: "The third step, Professor." He looks at you strangely and steps over it. Somewhere, a clock skips. You go to bed, and wake, and it's still Tuesday.
 
 @event life_timeloop_2
 title: Tuesday, Again
 class: story
 tone: eerie
 trigger: queued
+type: menu
+repeat: 10
 art: hourglass
 tags: mystery magic
 chain: timeloop
 scene: The same breakfast scene repeated, but the student is now standing on the table, holding up a sign that reads "IT'S STILL TUESDAY".
-text: It's Tuesday. Again. For the fourth time. Nobody else notices. On the bright side, you now know every answer in this afternoon's quiz. On the dark side, it's Tuesday. Forever.
-> left: Use it — ace the quiz, win every bet
-  alignment -tiny
-  study +medium
-  gold +medium
+text: {loop_n <= 1: It's Tuesday again. Eggs, the third step, the juice, the prefect. Nobody else notices anything.|{loop_n <= 3: Tuesday. You could recite breakfast. You could recite the prefect's yelp.|{loop_n <= 5: Tuesday, again. The days are starting to feel thin, like a page read too often.|{loop_n <= 7: Tuesday. The eggs taste of nothing now. The clock in the hall ticks a beat late.|Tuesday. The edges of the morning are fraying, like a loop pulled too tight. It can't hold much longer.}}}} {loop_clues >= 3: You know where it comes from now.|{loop_clues >= 1: You have a thread to pull.|You have no idea why.}}
+> exploit: Use it: win every bet, ace the quiz
+  hint: Crowns and marks carry over. It wears on you, and someone may notice.
+  queue timeloop_exploit now
+  say: You know every answer and every coin-toss. Why not?
+> experiment: Do something you'd never dare
+  hint: Nothing you do today will last. Almost nothing.
+  chance 34:
+    queue timeloop_dare_confess now
+  else:
+    chance 50:
+      queue timeloop_dare_fall now
+    else:
+      queue timeloop_dare_kindness now
+  say: Nothing today can stick. You might as well find out who you are when nothing sticks.
+> investigate: Look for the cause
+  hint: Each loop, a clue. Clues make the fix possible.
+  if loop_clues == 0:
+    queue timeloop_clue_bells now
+  elif loop_clues == 1:
+    queue timeloop_clue_light now
+  else:
+    queue timeloop_clue_firstyear now
+  say: Something is doing this. Clocks don't stop on their own.
+> fix: Try to break the loop
+  hint: A spell against the clock. Hard at first; easier every loop, and with what you've found.
+  when: loop_clues >= 1
   queue life_timeloop_3 now
-  say: You win every bet, ace the quiz, and catch the juice before it hits the prefect. On the sixth Tuesday it starts to feel hollow. Something has to give.
-> right: Find the cause
-  lore +medium
-  queue life_timeloop_3 now
-  say: You spend three Tuesdays in the library. On the fourth you find it: someone in the astronomy tower has wound an old chronometer backward. With a wand.
+  say: You go up the astronomy tower before breakfast, while the morning is still new.
 
 @event life_timeloop_3
 title: The Broken Chronometer
 class: story
 tone: eerie
 trigger: queued
+repeat: 8
 art: gear
 tags: mystery magic
 chain: timeloop
 scene: An astronomy tower at night, a giant brass chronometer with its gears spinning in reverse, a sleeping first-year slumped beside it with a wand still in hand.
-text: In the astronomy tower, a first-year is asleep beside an enormous brass chronometer, wand still stuck in its winding key. "I just wanted one more day before my exam," says the note on his chest.
-> left: Fix the chronometer
-  challenge spell trivial:
-    win:
-      arcana +small
-      renown +small
-      say: You ease the wand out and the gears groan forward. Wednesday arrives like a sneeze. Nobody but you and one mortified first-year ever knows.
-    lose:
-      health -small
-      mood -tiny
-      say: The chronometer bites. It takes you two more Tuesdays and a lot of swearing. But eventually, gloriously, it's Wednesday.
-> right: Teach the first-year to fix it
+text: In the astronomy tower, a first-year is asleep beside an enormous brass chronometer, wand still stuck in its winding key. "I just wanted one more day before my exam," says the note on his chest. {loop_clues >= 3: You know exactly which gear, and why.|You know roughly where to start.}
+> left: Wrench the clock forward
+  loop_tier = loop_n + 2 * (loop_clues >= 3)
+  if loop_tier >= 7:
+    challenge spell easy:
+      win:
+        flag timeloop_done
+        arcana +small
+        queue timeloop_after in 1
+        say: The gears groan, catch and turn forward. Somewhere a clock strikes, properly, for the first time in {loop_n >= 6: what feels like a month|days}. It's Wednesday. The first-year in the corner wakes up and starts to cry with relief.
+      lose:
+        health -small
+        loop_n += 1
+        if loop_n >= 9:
+          queue timeloop_cap now
+        else:
+          queue life_timeloop_2 now
+        say: The chronometer bites, and the morning folds up like a letter. You wake to eggs, and the third step, and the juice. It's Tuesday. You know a little more about the clock.
+  elif loop_tier >= 5:
+    challenge spell medium:
+      win:
+        flag timeloop_done
+        arcana +small
+        queue timeloop_after in 1
+        say: The gears groan, catch and turn forward. Somewhere a clock strikes, properly, for the first time in {loop_n >= 6: what feels like a month|days}. It's Wednesday. The first-year in the corner wakes up and starts to cry with relief.
+      lose:
+        health -small
+        loop_n += 1
+        if loop_n >= 9:
+          queue timeloop_cap now
+        else:
+          queue life_timeloop_2 now
+        say: The chronometer bites, and the morning folds up like a letter. You wake to eggs, and the third step, and the juice. It's Tuesday. You know a little more about the clock.
+  elif loop_tier >= 3:
+    challenge spell hard:
+      win:
+        flag timeloop_done
+        arcana +small
+        queue timeloop_after in 1
+        say: The gears groan, catch and turn forward. Somewhere a clock strikes, properly, for the first time in {loop_n >= 6: what feels like a month|days}. It's Wednesday. The first-year in the corner wakes up and starts to cry with relief.
+      lose:
+        health -small
+        loop_n += 1
+        if loop_n >= 9:
+          queue timeloop_cap now
+        else:
+          queue life_timeloop_2 now
+        say: The chronometer bites, and the morning folds up like a letter. You wake to eggs, and the third step, and the juice. It's Tuesday. You know a little more about the clock.
+  else:
+    challenge spell heroic:
+      win:
+        flag timeloop_done
+        arcana +small
+        queue timeloop_after in 1
+        say: The gears groan, catch and turn forward. Somewhere a clock strikes, properly, for the first time in {loop_n >= 6: what feels like a month|days}. It's Wednesday. The first-year in the corner wakes up and starts to cry with relief.
+      lose:
+        health -small
+        loop_n += 1
+        if loop_n >= 9:
+          queue timeloop_cap now
+        else:
+          queue life_timeloop_2 now
+        say: The chronometer bites, and the morning folds up like a letter. You wake to eggs, and the third step, and the juice. It's Tuesday. You know a little more about the clock.
+> right: Wake the first-year and fix it together
   charm +small
-  mood +small
-  say: You show him how. He fixes his own mess, cries a little, and promises never to touch a clock again. Wednesday arrives. He passes his exam.
+  mood -tiny
+  if loop_clues >= 2:
+    flag timeloop_done
+    queue timeloop_after in 1
+    say: You shake him awake. He's horrified, then helpful. Between your clues and his guilt you find the gear together, and the clock strikes Wednesday. He passes his exam. You never tell him how many Tuesdays it was.
+  else:
+    loop_n += 1
+    if loop_n >= 9:
+      queue timeloop_cap now
+    else:
+      queue life_timeloop_2 now
+    say: You shake him awake, and he panics, and the wand snaps in the key. The morning folds up. You wake to eggs. It's Tuesday, and you know a little more about the boy.
 
 # ---------------- Around the castle ----------------
 
@@ -207,22 +301,26 @@ text: Old Maud is giving out the abandoned plots behind the greenhouses. There's
 > right: Leave it for someone else
   say: A shy first-year takes it and grows giant pumpkins. You feel oddly proud of them.
 
+# The pen pal's first letter (playtest 2, X9): Tamsin Reed, the start of chain_thornwick.grim.
 @event life_pen_pal
 title: A Letter From Thornwick
+trigger: auto
+when: year == 1 and month == 2 and not met(tamsin) and not off_campus
 class: routine
 tone: light
-when: not has(pen_pal) and turn >= 6
-weight: 5
 art: letter
 tags: social
 scene: A letter with a green Thornwick seal open on a desk, beside a reply half-written in Lumenhold blue ink.
-text: A letter arrives from a stranger at Thornwick Academy — the rival school. "Dear Lumenhold student chosen at random," it begins. "I'm told you're all insufferable. Prove me wrong?"
+text: A letter arrives from a stranger at Thornwick Academy, the rival school. "Dear Lumenhold student chosen at random," it begins. "I'm told you're all insufferable. Prove me wrong? T. Reed (illusion, first year, not insufferable)."
 > left: Write back
-  gain pen_pal
-  charm +tiny
-  say: Your reply is four pages long and only slightly insufferable. The answer arrives within a week. You've made a friend in enemy territory.
+  meet tamsin
+  rel tamsin +small
+  mood -tiny
+  say: Your reply is four pages long and only slightly insufferable, and it takes the whole evening. The answer arrives within a week, signed "Tamsin". You've made a friend in enemy territory.
 > right: Ignore it
-  say: You ignore it. A second letter arrives: "Insufferable AND rude. Noted." You almost reply. Almost.
+  charm +tiny
+  queue tamsin_second_letter in 3
+  say: You ignore it, and enjoy the feeling of being unbothered for about a day. Some letters, you suspect, don't take no for an answer.
 
 @event life_three_headed_puppy
 title: A Very Lost Puppy

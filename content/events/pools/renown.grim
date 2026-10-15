@@ -1,0 +1,201 @@
+# Renown (playtest 2, X3; L22: renown was hard to raise): twice a year a chance to be noticed is pushed
+# (`renown_chance`), and a handful of cards in the pools stake renown on a hard challenge: much to gain, a real
+# price to fail. Some open only once you're known.
+
+@event renown_chance
+title: A Chance to Be Noticed
+trigger: auto
+when: term and (month == 2 or month == 8) and not final_year
+repeat: 6
+priority: 25
+type: menu
+class: routine
+tone: tense
+art: trophy
+tags: renown
+scene: A noticeboard in the entrance hall crowded with announcements, one gold-bordered notice pinned dead centre, students jostling to read it.
+text: {A gold-bordered notice in the entrance hall says the academy wants volunteers.|Another gold notice, and the crowd around it is bigger this year.|The gold notice again. People glance at you as they read it now.} {~Whoever stands up will be seen by the whole school.|The village is invited.|There's a prize, and there's the shame of losing in public.}
+> demonstrate: Cast a spell before the school
+  hint: Arcana, hard. Fame or embarrassment.
+  queue renown_demonstration now
+  say: You write your name on the list before you can think better of it.
+> debate: Enter the great debate
+  hint: Lore, hard. The faculty will be listening.
+  queue renown_debate now
+  say: You sign up for the debate. Your hands are shaking already.
+> fair: Perform at the village fair
+  hint: Charm and a spell. The village pays and remembers.
+  queue renown_village_fair now
+  say: You put your name down for the village fair. Somebody will have to teach you to bow.
+> pass: Keep your head down
+  mood +tiny
+  say: {~You read the notice and walk on. Fame can find someone else this term.|Not this time. You've got enough to do without an audience.}
+
+@event renown_demonstration
+title: Before the Whole School
+trigger: queued
+class: routine
+tone: tense
+art: wand
+tags: renown magic
+scene: The Great Hall packed to the rafters, every house at its table, a single student standing in the middle of the floor with a wand raised.
+text: The whole school is in the Great Hall, and so is the faculty, and so, at the end, is the headmistress. You're in the middle of the floor. Your spell is the most ambitious thing you know. There's a long silence while everyone waits for you to begin.
+> left: Cast the hardest thing you know
+  challenge spell hard:
+    win:
+      renown +large
+      arcana +small
+      say: It works, beautifully, better than ever before. The hall is silent and then very loud. For a month, first-years point at you in corridors.
+    lose:
+      renown -small
+      mood -medium
+      say: It fizzles in front of everyone, with a noise like a sad goose. The hall is very kind about it, which is unbearable. You'll be "the goose" until someone else fails.
+> right: Cast something safe, perfectly
+  renown +small
+  mood -tiny
+  say: Something simple, done flawlessly. Polite applause. Nobody will remember it, and nobody will laugh at you either.
+
+@event renown_debate
+title: The Great Debate
+trigger: queued
+class: routine
+tone: tense
+art: scroll
+tags: renown study
+scene: Two lecterns on a stage under banners, a student at one pointing emphatically, an older student at the other frowning, a packed hall of faces in the dark.
+text: The great debate: "That magic should be taught to anyone who asks." You've drawn the side you disagree with, against a fifth-year who has never lost. The faculty are in the front row. Thorne is taking notes.
+> left: Argue your side brilliantly anyway
+  challenge research hard:
+    win:
+      renown +large
+      lore +small
+      rel thorne +small
+      say: You argue the side you don't believe so well that you half-believe it. The fifth-year concedes. Thorne, afterwards, says "Hm," twice, which has never happened.
+    lose:
+      renown -small
+      mood -small
+      say: The fifth-year takes you apart, politely and completely. The hall applauds you for trying, which is the cruellest kind of applause.
+> right: Argue what you actually believe
+  renown +tiny
+  alignment +tiny
+  mood -small
+  say: You throw away the brief and argue your own side, which is against the rules. You lose on points and win the hall. Thorne writes something down, and you'll never know what.
+
+@event renown_village_fair
+title: Magic at the Fair
+trigger: queued
+class: routine
+tone: light
+art: sparkle
+tags: renown money
+scene: A small stage at a village fair under bunting, a student conjuring coloured lights over a crowd of children and farmers.
+text: The village fair has a stage, bunting and a crowd of farmers who have seen every trick there is. Children sit at the front, cross-legged, unimpressed in advance.
+> left: Put on a real show
+  challenge negotiate using charm medium:
+    win:
+      renown +medium
+      gold +small
+      say: Lights, a dancing hat, a dove that turns into a shower of petals. The children scream with joy. The farmers pay for the hat trick twice. The village talks about it until harvest.
+    lose:
+      renown -tiny
+      mood -small
+      say: The dove refuses to turn into anything and sits on your head. The children love it; the farmers don't pay.
+> right: Do card tricks for the children
+  renown +small
+  mood +small
+  say: You sit on the edge of the stage and do card tricks for the children until your voice gives out. No fame to speak of. The children follow you to the gate.
+
+@event renown_ice_rescue
+title: A First-Year on the Ice
+class: incident
+tone: tense
+when: season == "winter" and term
+weight: 8
+art: snow
+tags: renown danger
+scene: A small figure clinging to the edge of a broken patch of ice in the middle of a frozen lake, students shouting on the shore, a student running out across the ice.
+text: A first-year has gone through the ice on the lake. A crowd is shouting on the shore, and nobody is moving. You're nearest.
+> left: Go out on the ice
+  challenge feat hard:
+    win:
+      renown +large
+      health -small
+      alignment +tiny
+      say: You crawl out flat on the ice and pull them free. By supper the whole school knows your name, and the first-year's mother writes you a letter you keep for ever.
+    lose:
+      health -large
+      renown +small
+      say: The ice gives under you too. The prefects pull you both out with a ladder. You spend a week in the infirmary, a little famous, mostly frozen.
+> right: Run for the prefects
+  renown +tiny
+  mood -small
+  say: You run for help, and the prefects get there with ladders in time. Someone else is the hero. You were right, and you feel wrong about it all winter.
+
+@event renown_portrait
+title: A Portrait for the Hall
+class: routine
+tone: light
+when: renown >= 30
+weight: 8
+art: mirror
+tags: renown money
+scene: A painter's easel in a sunlit corridor, a half-finished portrait of a student in formal robes, the sitter trying very hard not to scratch their nose.
+text: The academy hangs a portrait of its most talked-about students in the long gallery each year, and someone has suggested you. The painter's fee is yours to pay, as is the custom. The other portraits are already watching you.
+> left: Sit for it
+  gold -medium
+  renown +medium
+  mood -tiny
+  say: Six sittings, an itchy collar and a painter who hums. The portrait is good, if a little more heroic than you are. Passing it, first-years straighten their backs.
+> right: Decline politely
+  mood +tiny
+  say: You decline. Your purse is grateful. The portrait that goes up instead is of someone who looks very pleased with themselves, and you find you don't mind at all.
+
+@event renown_rumour
+title: A Rumour About You
+class: incident
+tone: tense
+when: renown >= 40
+weight: 8
+art: mask
+tags: renown social
+scene: Two students whispering behind their hands in a corridor, a third walking past them with a stiff back, a crumpled gossip sheet on the floor.
+text: Being known has a price: there's a rumour about you going round the castle, untrue and a little bit funny, and it's in Nessa's gossip column by Friday. People stop talking when you walk in.
+> left: Answer it in public
+  challenge negotiate medium:
+    win:
+      renown +small
+      say: You laugh it off at supper, loudly and well, with a better story of your own. By Monday everyone's repeating yours instead.
+    lose:
+      renown -small
+      mood -small
+      say: You deny it too hard, and it sounds true. The rumour grows a second chapter. It'll pass. It takes a month.
+> right: Ignore it
+  renown -tiny
+  mood -tiny
+  say: You say nothing. It burns for a fortnight and then dies of boredom. You learn who repeated it, and remember.
+
+@event renown_patron_dinner
+title: Dinner With a Patron
+class: routine
+tone: tense
+when: renown >= 25 and term
+weight: 8
+art: meal
+tags: renown money
+scene: A long candlelit dining table in a grand townhouse, a student in borrowed formal robes seated between a wealthy patron and a portrait of the patron.
+text: A wealthy patron of the academy has asked to meet "the students everyone's talking about", and you're one of them. Dinner is nine courses. The patron likes clever talk and has been known to fund a promising student's whole final year.
+> left: Be dazzling
+  challenge negotiate using charm hard:
+    win:
+      renown +medium
+      gold +large
+      say: You're witty through nine courses and wise on the tenth. The patron sends you home with a purse "for books" and an invitation to come back next year.
+    lose:
+      renown -small
+      mood -small
+      say: You use the wrong fork, then the wrong joke. The patron is kind and bored. You're not asked back.
+> right: Be honest about your struggles
+  renown +small
+  alignment +tiny
+  gold +small
+  say: You talk plainly about money and work and exams. The patron listens, the only one at the table who does. A small purse arrives the next week with no letter, just a crest.

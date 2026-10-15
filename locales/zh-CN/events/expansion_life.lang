@@ -11,48 +11,78 @@ title [f7db95] = 这事是不是发生过？
 text [8f145a] = 早餐。鸡蛋。索恩在第三级台阶上绊了一下。一个一年级生把果汁洒在了级长身上。你知道这一切马上就要发生，因为它已经发生过了。昨天。昨天也是星期二。
 # en: A student at breakfast staring at a plate of eggs with intense déjà vu, a clock on the wall with its hands spinning backward.
 scene [f64ed4] = 一名学生在早餐桌前盯着一盘鸡蛋，强烈的既视感涌上心头，墙上的钟指针在倒转。
-# en: Ignore it — probably just tired
-opt.left.label [d0cdc9] = 不管了——大概只是累了
-# en: You eat the eggs. They taste exactly as they did yesterday. Thorne trips on the third step.
-opt.left.say.1 [e481ca] = 你吃了鸡蛋。味道和昨天一模一样。索恩在第三级台阶上绊了一下。
+# en: Ignore it, you're probably just tired
+opt.left.label [f68ce0] = 别管它，大概只是累了
+# en: You eat the eggs. They taste exactly as they did yesterday. Thorne trips on the third step. You go to bed early, uneasy, and wake to eggs.
+opt.left.say.1 [1ccd6d] = 你吃了鸡蛋。味道和昨天一模一样。索恩教授在第三级台阶上绊了一下。你早早上床，心神不宁，醒来又是鸡蛋。
 # en: Warn Thorne about the step
 opt.right.label [eb6211] = 提醒索恩小心台阶
-# en: "The third step, Professor." He looks at you strangely and steps over it. Somewhere, a clock skips. It's still Tuesday.
-opt.right.say.1 [8ba6ad] = “第三级台阶，教授。”他奇怪地看了你一眼，跨了过去。某处，一座钟跳了一格。还是星期二。
+# en: "The third step, Professor." He looks at you strangely and steps over it. Somewhere, a clock skips. You go to bed, and wake, and it's still Tuesday.
+opt.right.say.1 [fc4336] = “第三级台阶，教授。”他奇怪地看了你一眼，跨了过去。某处，一座钟跳了一格。你上床，醒来，还是星期二。
 
 @event life_timeloop_2
 # en: Tuesday, Again
 title [d04f00] = 又是星期二
-# en: It's Tuesday. Again. For the fourth time. Nobody else notices. On the bright side, you now know every answer in this afternoon's quiz. On the dark side, it's Tuesday. Forever.
-text [b8ccb9] = 星期二。又是。第四次了。没有别人注意到。往好处想，你现在知道今天下午小测的每一道答案。往坏处想，今天是星期二。永远是。
+# en: {loop_n <= 1: It's Tuesday again. Eggs, the third step, the juice, the prefect. Nobody else notices anything.|{loop_n <= 3: Tuesday. You could recite breakfast. You could recite the prefect's yelp.|{loop_n <= 5: Tuesday, again. The days are starting to feel thin, like a page read too often.|{loop_n <= 7: Tuesday. The eggs taste of nothing now. The clock in the hall ticks a beat late.|Tuesday. The edges of the morning are fraying, like a loop pulled too tight. It can't hold much longer.}}}} {loop_clues >= 3: You know where it comes from now.|{loop_clues >= 1: You have a thread to pull.|You have no idea why.}}
+text [c737ca] = {loop_n <= 1: 又是星期二。鸡蛋、第三级台阶、果汁、级长。没有别人注意到任何事。|{loop_n <= 3: 星期二。你能背出早餐，能背出级长的那声惨叫。|{loop_n <= 5: 又是星期二。日子开始变薄了，像一页被翻了太多遍的纸。|{loop_n <= 7: 星期二。鸡蛋已经没有味道了。大厅里的钟晚了一拍。|星期二。早晨的边缘正在磨损，像一个被拉得太紧的圈。它撑不了多久了。}}}} {loop_clues >= 3: 现在你知道它从哪儿来了。|{loop_clues >= 1: 你手里有一根可以拉的线头。|你完全不知道为什么。}}
 # en: The same breakfast scene repeated, but the student is now standing on the table, holding up a sign that reads "IT'S STILL TUESDAY".
 scene [443eec] = 同样的早餐场景再次上演，但这一次学生站在了桌子上，举着一块牌子：“现在还是星期二”。
-# en: Use it — ace the quiz, win every bet
-opt.left.label [c29420] = 利用它——考满分，赌必赢
-# en: You win every bet, ace the quiz, and catch the juice before it hits the prefect. On the sixth Tuesday it starts to feel hollow. Something has to give.
-opt.left.say.1 [fbd1e9] = 你赢了每一场赌局，小测拿了满分，还在果汁泼到级长之前接住了它。到第六个星期二，这一切开始变得空洞。总得有什么东西松动才行。
-# en: Find the cause
-opt.right.label [12f556] = 找出原因
-# en: You spend three Tuesdays in the library. On the fourth you find it: someone in the astronomy tower has wound an old chronometer backward. With a wand.
-opt.right.say.1 [8ee226] = 你在图书馆里度过了三个星期二。第四个星期二，你找到了：天文塔里有人用魔杖把一台古老的计时仪倒着上了发条。
+# en: Use it: win every bet, ace the quiz
+opt.exploit.label [42a58e] = 利用它：每赌必赢，小测满分
+# en: Crowns and marks carry over. It wears on you, and someone may notice.
+opt.exploit.hint [522272] = 金币和分数都会留下。它会消磨你，也可能有人察觉。
+# en: You know every answer and every coin-toss. Why not?
+opt.exploit.say.1 [ceb5c5] = 每一道答案、每一次抛硬币你都知道。为什么不呢？
+# en: Do something you'd never dare
+opt.experiment.label [d06730] = 做一件你永远不敢做的事
+# en: Nothing you do today will last. Almost nothing.
+opt.experiment.hint [36f434] = 今天你做的一切都不会留下。几乎一切。
+# en: Nothing today can stick. You might as well find out who you are when nothing sticks.
+opt.experiment.say.1 [3cf8fb] = 今天什么都留不住。那不如看看，什么都留不住的时候，你是个怎样的人。
+# en: Look for the cause
+opt.investigate.label [c6ff51] = 寻找原因
+# en: Each loop, a clue. Clues make the fix possible.
+opt.investigate.hint [c9830b] = 每一轮，一条线索。线索让解法成为可能。
+# en: Something is doing this. Clocks don't stop on their own.
+opt.investigate.say.1 [21f23e] = 有什么东西在这么做。钟不会自己停下。
+# en: Try to break the loop
+opt.fix.label [e608ff] = 试着打破循环
+# en: A spell against the clock. Hard at first; easier every loop, and with what you've found.
+opt.fix.hint [7437c3] = 一道对抗时间的咒语。一开始很难；每一轮都会更容易，你找到的线索也有帮助。
+# en: You go up the astronomy tower before breakfast, while the morning is still new.
+opt.fix.say.1 [455845] = 趁早晨还新鲜，你在早餐前爬上了天文塔。
 
 @event life_timeloop_3
 # en: The Broken Chronometer
 title [d82d49] = 坏掉的计时仪
-# en: In the astronomy tower, a first-year is asleep beside an enormous brass chronometer, wand still stuck in its winding key. "I just wanted one more day before my exam," says the note on his chest.
-text [94f829] = 天文塔里，一个一年级生睡在一台巨大的黄铜计时仪旁边，魔杖还卡在发条钥匙里。他胸前的字条上写着：“我只是想在考试前多要一天。”
+# en: In the astronomy tower, a first-year is asleep beside an enormous brass chronometer, wand still stuck in its winding key. "I just wanted one more day before my exam," says the note on his chest. {loop_clues >= 3: You know exactly which gear, and why.|You know roughly where to start.}
+text [a07ba5] = 天文塔里，一个一年级生睡在一台巨大的黄铜计时仪旁边，魔杖还卡在发条钥匙里。他胸前的字条上写着：“我只是想在考试前多要一天。”{loop_clues >= 3: 你清楚地知道是哪个齿轮，也知道为什么。|你大概知道从哪儿下手。}
 # en: An astronomy tower at night, a giant brass chronometer with its gears spinning in reverse, a sleeping first-year slumped beside it with a wand still in hand.
 scene [4ad62e] = 夜晚的天文塔，一台巨型黄铜计时仪的齿轮在倒转，一个睡着的一年级生瘫在旁边，手里还握着魔杖。
-# en: Fix the chronometer
-opt.left.label [bbdcd3] = 修好计时仪
-# en: You ease the wand out and the gears groan forward. Wednesday arrives like a sneeze. Nobody but you and one mortified first-year ever knows.
-opt.left.say.1 [a7de56] = 你轻轻抽出魔杖，齿轮吱嘎着向前转动。星期三像一个喷嚏一样到来了。除了你和一个羞愧万分的一年级生，没人知道这件事。
-# en: The chronometer bites. It takes you two more Tuesdays and a lot of swearing. But eventually, gloriously, it's Wednesday.
-opt.left.say.2 [276d7c] = 计时仪咬人。你又花了两个星期二、骂了不少脏话。但最终，光荣地，星期三来了。
-# en: Teach the first-year to fix it
-opt.right.label [eb58e0] = 教那个一年级生自己修
-# en: You show him how. He fixes his own mess, cries a little, and promises never to touch a clock again. Wednesday arrives. He passes his exam.
-opt.right.say.1 [c72a99] = 你教他怎么做。他亲手收拾了自己的烂摊子，哭了一小会儿，发誓再也不碰钟了。星期三来了。他考试及格了。
+# en: Wrench the clock forward
+opt.left.label [86cabc] = 把钟硬拧向前
+# en: The gears groan, catch and turn forward. Somewhere a clock strikes, properly, for the first time in {loop_n >= 6: what feels like a month|days}. It's Wednesday. The first-year in the corner wakes up and starts to cry with relief.
+opt.left.say.1 [aa5594] = 齿轮呻吟着，卡住，然后向前转动。某处，一座钟正常地敲响了，这是{loop_n >= 6: 仿佛一个月|好几天}以来的第一次。是星期三了。角落里的一年级生醒过来，如释重负地哭了。
+# en: The chronometer bites, and the morning folds up like a letter. You wake to eggs, and the third step, and the juice. It's Tuesday. You know a little more about the clock.
+opt.left.say.2 [e63c45] = 计时仪咬了你一口，早晨像一封信一样折了起来。你醒来，鸡蛋、第三级台阶、果汁。是星期二。你对那座钟又多了解了一点。
+# en: The gears groan, catch and turn forward. Somewhere a clock strikes, properly, for the first time in {loop_n >= 6: what feels like a month|days}. It's Wednesday. The first-year in the corner wakes up and starts to cry with relief.
+opt.left.say.3 [aa5594] = 齿轮呻吟着，卡住，然后向前转动。某处，一座钟正常地敲响了，这是{loop_n >= 6: 仿佛一个月|好几天}以来的第一次。是星期三了。角落里的一年级生醒过来，如释重负地哭了。
+# en: The chronometer bites, and the morning folds up like a letter. You wake to eggs, and the third step, and the juice. It's Tuesday. You know a little more about the clock.
+opt.left.say.4 [e63c45] = 计时仪咬了你一口，早晨像一封信一样折了起来。你醒来，鸡蛋、第三级台阶、果汁。是星期二。你对那座钟又多了解了一点。
+# en: The gears groan, catch and turn forward. Somewhere a clock strikes, properly, for the first time in {loop_n >= 6: what feels like a month|days}. It's Wednesday. The first-year in the corner wakes up and starts to cry with relief.
+opt.left.say.5 [aa5594] = 齿轮呻吟着，卡住，然后向前转动。某处，一座钟正常地敲响了，这是{loop_n >= 6: 仿佛一个月|好几天}以来的第一次。是星期三了。角落里的一年级生醒过来，如释重负地哭了。
+# en: The chronometer bites, and the morning folds up like a letter. You wake to eggs, and the third step, and the juice. It's Tuesday. You know a little more about the clock.
+opt.left.say.6 [e63c45] = 计时仪咬了你一口，早晨像一封信一样折了起来。你醒来，鸡蛋、第三级台阶、果汁。是星期二。你对那座钟又多了解了一点。
+# en: The gears groan, catch and turn forward. Somewhere a clock strikes, properly, for the first time in {loop_n >= 6: what feels like a month|days}. It's Wednesday. The first-year in the corner wakes up and starts to cry with relief.
+opt.left.say.7 [aa5594] = 齿轮呻吟着，卡住，然后向前转动。某处，一座钟正常地敲响了，这是{loop_n >= 6: 仿佛一个月|好几天}以来的第一次。是星期三了。角落里的一年级生醒过来，如释重负地哭了。
+# en: The chronometer bites, and the morning folds up like a letter. You wake to eggs, and the third step, and the juice. It's Tuesday. You know a little more about the clock.
+opt.left.say.8 [e63c45] = 计时仪咬了你一口，早晨像一封信一样折了起来。你醒来，鸡蛋、第三级台阶、果汁。是星期二。你对那座钟又多了解了一点。
+# en: Wake the first-year and fix it together
+opt.right.label [64c5c1] = 叫醒一年级生，一起修好它
+# en: You shake him awake. He's horrified, then helpful. Between your clues and his guilt you find the gear together, and the clock strikes Wednesday. He passes his exam. You never tell him how many Tuesdays it was.
+opt.right.say.1 [3f81c1] = 你把他摇醒。他先是吓坏了，然后帮了大忙。靠你的线索和他的愧疚，你们一起找到了那个齿轮，钟敲响了星期三。他考试及格了。你从没告诉他到底过了多少个星期二。
+# en: You shake him awake, and he panics, and the wand snaps in the key. The morning folds up. You wake to eggs. It's Tuesday, and you know a little more about the boy.
+opt.right.say.2 [a2a494] = 你把他摇醒，他慌了，魔杖断在了钥匙里。早晨折了起来。你醒来，又是鸡蛋。是星期二，你对那个男孩又多了解了一点。
 
 @event life_portrait_escape
 # en: The Escaped Portrait
@@ -163,18 +193,18 @@ opt.right.say.1 [a9e348] = 一个害羞的一年级生接手了它，种出了�
 @event life_pen_pal
 # en: A Letter From Thornwick
 title [64e8f7] = 荆木来信
-# en: A letter arrives from a stranger at Thornwick Academy — the rival school. "Dear Lumenhold student chosen at random," it begins. "I'm told you're all insufferable. Prove me wrong?"
-text [a313a2] = 一封信来自对手学校荆木学院的一个陌生人。“亲爱的、随机抽中的流明堡学生，”信的开头写道，“听说你们全都让人受不了。能证明我错了吗？”
+# en: A letter arrives from a stranger at Thornwick Academy, the rival school. "Dear Lumenhold student chosen at random," it begins. "I'm told you're all insufferable. Prove me wrong? T. Reed (illusion, first year, not insufferable)."
+text [36cb26] = 一封信来自对手学校荆木学院的一个陌生人。“亲爱的、随机抽中的流明堡学生，”信的开头写道，“听说你们全都让人受不了。能证明我错了吗？T. 里德（幻术，一年级，并非让人受不了）。”
 # en: A letter with a green Thornwick seal open on a desk, beside a reply half-written in Lumenhold blue ink.
 scene [72beee] = 书桌上摊开一封盖着荆木绿色封印的信，旁边是一封用流明堡蓝墨水写了一半的回信。
 # en: Write back
 opt.left.label [ae4ebf] = 回信
-# en: Your reply is four pages long and only slightly insufferable. The answer arrives within a week. You've made a friend in enemy territory.
-opt.left.say.1 [3f96bc] = 你的回信写了四页，只是稍微有点让人受不了。不到一星期回信就到了。你在敌方领土交到了一个朋友。
+# en: Your reply is four pages long and only slightly insufferable, and it takes the whole evening. The answer arrives within a week, signed "Tamsin". You've made a friend in enemy territory.
+opt.left.say.1 [b1f05a] = 你的回信写了四页，只是稍微有点让人受不了，花了一整个晚上。不到一星期回信就到了，署名“塔姆辛”。你在敌方领土交到了一个朋友。
 # en: Ignore it
 opt.right.label [e2ae0c] = 不理它
-# en: You ignore it. A second letter arrives: "Insufferable AND rude. Noted." You almost reply. Almost.
-opt.right.say.1 [a47716] = 你没理它。第二封信来了：“让人受不了，而且没礼貌。记下了。”你差点就回信了。差一点。
+# en: You ignore it, and enjoy the feeling of being unbothered for about a day. Some letters, you suspect, don't take no for an answer.
+opt.right.say.1 [a29868] = 你没理它，享受了大约一天的无所谓。你怀疑，有些信是不接受拒绝的。
 
 @event life_three_headed_puppy
 # en: A Very Lost Puppy

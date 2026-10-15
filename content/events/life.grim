@@ -831,20 +831,26 @@ text: The Harvest Feast: pies the size of cartwheels, cider, and a pumpkin carve
   charm +tiny
   say: You serve pie to the entire academy. The cooks slip you coins and a whole pie of your own.
 
+# The rivalry's first fixture (playtest 2, X9): Thornwick visits in year 1's Greenrise.
 @event life_rival_academy
 title: Visitors From Thornwick
+trigger: auto
+when: year == 1 and month == 8 and not off_campus
 class: routine
 tone: tense
 art: shield
 tags: rival social
-when: turn >= 6
 scene: A delegation of students in green robes marching through the gates, noses raised, a Lumenhold crowd watching suspiciously.
-text: A delegation from Thornwick Academy is visiting. Their students are smug, polished and very loudly unimpressed with Lumenhold's plumbing.
+text: A delegation from Thornwick Academy is visiting. Their students are smug, polished and very loudly unimpressed with Lumenhold's plumbing. {met(tamsin): One of them is scanning the crowd with a letter in their hand, and you know the handwriting.|}
 > left: Be a gracious host
   mood -tiny
   charm +small
   renown +tiny
-  say: You show them the observatory. One of them admits, grudgingly, that it's better than theirs.
+  if met(tamsin):
+    rel tamsin +small
+    say: Tamsin finds you before you find them, and is exactly like their letters, only faster. You show them the observatory. They admit, grudgingly, that it's better than theirs.
+  else:
+    say: You show them the observatory. One of them admits, grudgingly, that it's better than theirs.
 > right: Defend Lumenhold's honour
   challenge combat trivial:
     win:

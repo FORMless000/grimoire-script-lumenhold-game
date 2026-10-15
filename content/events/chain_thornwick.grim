@@ -1,0 +1,350 @@
+# ============================================================
+#  The Thornwick rivalry (playtest 2, X9): four years of a rival
+#  school and one friend in it, apart from the Hollow Star.
+#    the pen pal: life_pen_pal (y1) -> Tamsin's letters (social,
+#      actor tamsin) -> asked for secrets (y2) / offered theirs
+#      (y3) -> what they were sent to do (tamsin_confession)
+#    the fixture: life_rival_academy (y1, they visit) ->
+#      rival_return_visit (y2) -> rival_contest (y3, combat) ->
+#      rival_last_match (y4) -> tamsin_farewell
+#  Ties: the Thornwick internship, Lyra's opinion, a yearbook line.
+# ============================================================
+
+# ---------------- The letters ----------------
+
+@event tamsin_second_letter
+title: Insufferable AND Rude
+trigger: queued
+class: routine
+tone: light
+art: letter
+tags: social
+scene: A second letter with a green Thornwick seal on a dormitory pillow, the word "NOTED" underlined three times.
+text: A second letter from Thornwick, in the same quick hand. "Insufferable AND rude. Noted. I'm giving you one more chance, because I'm a generous person and because my roommate bet me you'd never answer. Prove her wrong. T. Reed."
+> left: Write back, finally
+  meet tamsin
+  rel tamsin +small
+  mood -tiny
+  say: You write back, grudgingly at first and then not at all grudgingly. Four pages. The answer comes within a week, with a postscript: "My roommate owes me a pie. Thank you."
+> right: Let it lie
+  say: You leave it on the pillow. Somewhere across the hills, a roommate wins a pie. You'll never know what you missed, which is how it should be, probably.
+
+@event tamsin_letter_gossip
+title: News From Thornwick
+actor: tamsin
+trigger: social
+class: routine
+tone: light
+repeat: 6
+weight: 12
+art: letter
+tags: social letter
+scene: A letter with a green seal open on a desk, its margins full of tiny unflattering sketches of Thornwick professors.
+text: {Tamsin has written again, six pages of Thornwick gossip with sketches of the professors in the margins.|Another letter from Tamsin, signed "your rival, nemesis and only friend west of the hills".|Tamsin's letter is mostly a drawing of their illusion professor as a goat.} {~Their head of house has banned whistling.|Someone at Thornwick set the library on fire, a little.|They want to know if Lumenhold's food is really as bad as everyone says.} Answering properly would take an evening.
+> left: Write back at length
+  rel tamsin +small
+  mood -tiny
+  say: {~You write till the candle gutters, with sketches of your own professors, and pay the extra postage. Tamsin's reply calls your drawing of Thorne "libellous and correct".|Five pages back, with the castle's gossip and your worst week. They answer the worst week first.}
+> right: A few lines and a sketch
+  rel tamsin +tiny
+  mood +tiny
+  say: {~A short note and a drawing of a gargoyle. Tamsin writes back that it's "the most Lumenhold thing ever sent through the post".|Three lines. Tamsin replies with three pages, offended and delighted.}
+
+@event tamsin_letter_questions
+title: Twenty Questions
+actor: tamsin
+trigger: social
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: letter
+tags: social letter
+scene: A letter numbered down the margin from one to twenty, each line a question, a student chewing a quill over the answers.
+text: {Tamsin's letter is a numbered list of twenty questions about life at Lumenhold, from "Is the lake haunted?" to "What do you eat for breakfast?"|Another list of questions. Number seven is "Who is the most annoying person at your school?"|Questions again. "Be honest," says number one. "Number twenty can be a lie."} {~Number twelve asks about your exams.|Number fifteen asks about the lake.|Number nineteen just says "Are you happy?"}
+> left: Answer every one honestly
+  rel tamsin +small
+  lore +tiny
+  mood -tiny
+  say: {~Twenty honest answers, even number nineteen. It's harder than it looks. Their reply begins, "Thank you for nineteen."|You answer the lot. Writing it down, you learn a few things about yourself.}
+> right: Make the answers outrageous
+  charm +tiny
+  rel tamsin +tiny
+  say: {~The lake is haunted by a choir of geese. Breakfast is boiled bricks. Tamsin's reply is two pages of laughter and a request for "the true answers, eventually".|You invent a Lumenhold of dragons and duels before dawn. Tamsin believes none of it and asks for more.}
+
+@event tamsin_letter_trouble
+title: A Short Letter
+actor: tamsin
+trigger: social
+class: routine
+tone: tense
+when: rel(tamsin) >= 8
+weight: 12
+art: letter
+tags: social letter
+scene: A single short page with a green seal, the handwriting cramped and unsteady, a blot where a sentence was crossed out hard.
+text: Tamsin's letter is one page, which has never happened. They failed their illusion examination, the one thing they were good at, and their grandmother's theatre has been sold. There's a sentence crossed out so hard the nib went through the paper.
+> left: Write back that night
+  rel tamsin +medium
+  mood -small
+  health -tiny
+  say: You write until two in the morning: the time you failed, what helped, a list of everything they're good at that isn't illusion. Their next letter is six pages again, and the first line is "You idiot, you made me cry in the refectory."
+> right: Send them something instead
+  gold -small
+  rel tamsin +small
+  say: You send a parcel: Mabel's best biscuits, a book of plays, a drawing of a gargoyle holding a sign that says "RETAKE". Tamsin writes back that the gargoyle is on their wall now, and that they passed.
+
+@event tamsin_letter_asks_secret
+title: A Small Favour
+actor: tamsin
+trigger: social
+class: story
+tone: tense
+when: year >= 2 and rel(tamsin) >= 10
+weight: 12
+art: letter
+tags: social letter rival
+scene: A letter half-read on a desk, a single paragraph underlined twice, a student staring out of a window at the hills.
+text: Tamsin's letter is cheerful until the last paragraph. "Small favour. Thornwick's duelling captain wants to know Lumenhold's tournament order. Just the order. Everyone does it, honestly. I'd owe you." The underline is very neat, as if they did it twice.
+> left: Send the real order
+  alignment -small
+  rel tamsin +small
+  flag told_thornwick
+  say: You write it out: who fights first, who last. It feels like nothing at all until you post it, and then it feels like a stone. Tamsin's reply thanks you, too warmly.
+> right: Send a false one
+  guile +small
+  alignment -tiny
+  rel tamsin -tiny
+  say: You invent an order, plausible and wrong. At the tournament, Thornwick's captain looks baffled for the whole first round. Tamsin's next letter is short and doesn't mention it, which is how you know they know.
+> refuse: Say no, and say why
+  rel tamsin -small
+  alignment +small
+  say: "Ask me anything else," you write. Their reply is a week late and very polite. Then, a fortnight after: "You were right. Sorry. Still friends?" You write back yes before you've finished reading.
+
+@event tamsin_letter_offers_secret
+title: Their Turn
+actor: tamsin
+trigger: social
+class: story
+tone: tense
+when: year >= 3 and rel(tamsin) >= 14 and not flag(thornwick_secrets)
+weight: 12
+art: letter
+tags: social letter rival
+scene: A folded paper inside a letter, covered in diagrams of duelling circles and arrows, a student holding it at arm's length as if it were hot.
+text: Folded inside Tamsin's letter is a second paper: Thornwick's whole plan for this year's contest, every pairing, every trick. "Fair's fair," they've written. "Burn it or use it. I won't ask which."
+> left: Use it
+  flag thornwick_secrets
+  alignment -small
+  rel tamsin +small
+  say: You keep the plan and study it until you know it better than Thornwick does. It will help. You can't quite look at your own reflection while you read it.
+> right: Burn it unread
+  alignment +small
+  rel tamsin +small
+  mood -tiny
+  say: You burn it in the candle without unfolding it, and write back that you did. Their reply has one line: "I knew you would. That's why I sent it." You're still not sure if it was a test.
+
+@event tamsin_confession
+title: What I Was Sent to Do
+actor: tamsin
+trigger: social
+class: milestone
+tone: tense
+when: year >= 2 and rel(tamsin) >= 18
+ramp: rel(tamsin) 18..30
+weight: 14
+art: letter
+tags: social letter rival
+scene: A long letter in a shaky hand spread across a desk, a green seal broken beside it, a student reading with one hand over their mouth.
+text: Tamsin's letter is long and the hand is unsteady. "I have to tell you. The first letter wasn't random. Thornwick set some of us to write to Lumenhold students and report back. I reported for two letters. Then I liked you, and I stopped, and I've been ashamed ever since. You can stop writing. I'd understand."
+> left: Forgive them
+  rel tamsin +large
+  mood -tiny
+  say: You write back one line: "Third letter onwards, then. That's when I started liking you too." Their reply is the longest yet, and the first not signed with an insult.
+> right: Ask what they reported
+  rel tamsin +small
+  lore +tiny
+  say: They tell you, exactly: the food, the weather, your opinion of Professor Thorne. Nothing that mattered. "I made it boring on purpose," they write. You laugh, and then you forgive them anyway.
+
+@event tamsin_letter_after
+title: After Graduation
+actor: tamsin
+trigger: social
+class: routine
+tone: warm
+when: final_year and month >= 7 and rel(tamsin) >= 10
+weight: 14
+art: letter
+tags: social letter
+scene: A letter with a green seal and a pressed flower, a map of the realm sketched on the back with two towns circled.
+text: Tamsin's letter has a map on the back with two towns circled: Lumenhold and Thornwick, and a line between them. "After graduation, there'll be no school to be rivals for. What are we, then?" Under it, smaller: "Don't answer that. Answer it."
+> left: "Friends. Obviously."
+  rel tamsin +medium
+  mood +small
+  say: You write it in letters an inch high. Their reply has the map again, with a third town circled halfway between: "Meeting point. Every spring. Bring biscuits."
+> right: "Still rivals. Obviously."
+  rel tamsin +small
+  charm +tiny
+  say: "Excellent," they write back. "I was worried you'd go soft." Under it, very small: "Friends too, though. Obviously."
+
+# ---------------- The yearly fixture ----------------
+
+@event rival_return_visit
+title: To Thornwick
+trigger: auto
+when: year == 2 and month == 8 and not off_campus
+type: menu
+class: story
+tone: light
+art: tower
+tags: rival social
+scene: A barge full of Lumenhold students arriving at a rival academy of green-roofed towers, a crowd of green-robed students waiting on the jetty.
+text: This year it's Lumenhold's turn to visit. A barge leaves for Thornwick at dawn with a delegation of students who have been told to behave. {met(tamsin): Tamsin has written three letters about it. The last one just says "COME".|Thornwick has, by all accounts, better plumbing.}
+> go: Join the delegation
+  hint: Two days across the hills. The barge fare is yours.
+  gold -small
+  mood +small
+  if met(tamsin):
+    rel tamsin +medium
+    say: Tamsin is on the jetty, smaller than their letters and louder, holding a sign with your name spelled wrong on purpose. They show you every corner of Thornwick and argue that each one beats Lumenhold. They're mostly wrong.
+  else:
+    charm +tiny
+    say: Thornwick's towers are green-roofed and smug, and their plumbing really is better. A student in green follows you around the library, asking about the lake.
+> stay: Stay at the castle
+  hint: A quiet weekend with half the school gone.
+  rest
+  if met(tamsin):
+    rel tamsin -small
+    say: You stay. The castle is wonderfully quiet. Tamsin's next letter is very short, and sulks, and then forgives you on the last line.
+  else:
+    say: The castle is half empty and wholly peaceful. You read in the window seat all weekend and don't miss Thornwick at all.
+
+@event rival_contest
+title: The Inter-School Contest
+trigger: auto
+when: year == 3 and month == 8 and not off_campus
+class: story
+tone: tense
+art: trophy
+tags: rival duel
+scene: A packed duelling arena under banners of blue and green, two duellists facing each other in the chalk ring, a crowd on its feet.
+text: The inter-school contest, at Lumenhold this year, before both schools and half the village. You've made the team. {met(tamsin): In the final, the name opposite yours is Tamsin Reed. They wave from across the ring, apologetically, and then stop smiling.|In the final, a Thornwick illusionist faces you, smiling far too much.}{flag(thornwick_secrets): You know every trick they've planned.|}
+> left: Fight to win
+  if flag(thornwick_secrets):
+    challenge combat medium:
+      win:
+        flag thornwick_contest_won
+        renown +large
+        health -small
+        say: You counter every planned trick before it's cast. Lumenhold wins the contest, and the castle roars. {met(tamsin): Tamsin shakes your hand afterwards and holds on too long. "You read the plan," they say quietly. "Good." You can't tell if they mean it.|}
+      lose:
+        renown -tiny
+        health -medium
+        say: Knowing the plan isn't enough: they change it in the ring. Thornwick takes the cup. The plan, in your pocket, feels heavier than ever.
+  else:
+    challenge combat hard:
+      win:
+        flag thornwick_contest_won
+        renown +large
+        health -small
+        say: An honest win, hard and close. Lumenhold takes the cup and carries you round the arena. {met(tamsin): Tamsin is on the ground laughing. "Next year," they gasp. "Next year I'll flatten you."|}
+      lose:
+        renown -tiny
+        health -medium
+        say: You lose by a breath. Thornwick sings all the way back to their barge. {met(tamsin): Tamsin helps you up and doesn't gloat, not once, which you'll never forget.|}
+> right: Fight clean and generous
+  renown +small
+  alignment +tiny
+  if met(tamsin):
+    rel tamsin +small
+  say: You fight well and fairly, and when you have them down you let them stand before the next exchange. You lose on points. The crowd stands for both of you anyway, and Lyra, in the stands, actually claps.
+
+@event rival_last_match
+title: The Last Match
+trigger: auto
+when: year == 4 and month == 8 and not off_campus
+class: story
+tone: warm
+art: trophy
+tags: rival duel
+scene: An evening exhibition match on the lawn between two academies, lanterns strung between the trees, final-year students in blue and green laughing in the ring.
+text: The last match of your year against Thornwick's: an exhibition on the lawn, lanterns in the trees, nothing at stake but four years of grudges. {met(tamsin): Tamsin has asked to be your opponent. "For the record," they say. "Ours."|Thornwick's final-years have brought cake, which feels like a trick.}
+> left: Give it everything
+  challenge combat medium:
+    win:
+      renown +medium
+      queue tamsin_farewell in 1
+      say: You win the last exchange of your schooling against Thornwick, and the lawn erupts. {met(tamsin): Tamsin, flat on the grass, laughs up at the lanterns. "Fine," they say. "Fine. Record's yours."|}
+    lose:
+      health -small
+      queue tamsin_farewell in 1
+      say: You lose, gloriously, and lie on the grass looking at the lanterns. {met(tamsin): Tamsin lies down next to you. "Record's mine," they say, and then, quieter, "I'll miss this."|}
+> right: Turn it into a show
+  charm +small
+  mood +small
+  queue tamsin_farewell in 1
+  say: You turn the match into a performance, illusions and flourishes and a duel that never lands a blow. {met(tamsin): Tamsin catches on at once and plays along. The two schools applaud the same thing for the first time in a century.|Both schools applaud the same thing for the first time in a century.}
+
+@event tamsin_farewell
+title: Across the Hills
+trigger: queued
+class: milestone
+tone: warm
+when: met(tamsin)
+art: letter
+tags: social
+scene: Two students at a barge landing at dusk, one in Lumenhold blue and one in Thornwick green, exchanging small wrapped parcels.
+text: At the barge landing, before Thornwick's delegation leaves for the last time, Tamsin gives you a small parcel. Inside: every letter you ever sent them, tied with string. "So you can read how insufferable you were," they say. "I kept copies. Obviously."
+> left: Give them yours
+  rel tamsin +medium
+  mood +small
+  flag tamsin_friends
+  say: You hand over the box you've kept under your bed for four years: every letter they sent, every insult, every postscript. They read the first one on the barge steps and laugh, and the barge leaves with them still laughing.
+> right: "Write to me. Same as ever."
+  rel tamsin +small
+  flag tamsin_friends
+  say: "Every week," they promise. "Insufferably." The barge pulls away. They're still waving when it rounds the bend, and so are you.
+
+# ---------------- Ties ----------------
+
+@event intern_thornwick_tamsin
+title: A Familiar Hand
+track: intern_thornwick
+class: routine
+tone: warm
+when: met(tamsin)
+weight: 16
+art: mask
+tags: study social
+scene: A laboratory at a rival academy, a student in Thornwick green looking up from a glowing illusion on a bench, mid-grin, at a visitor in the doorway.
+text: On your first morning at the Thornwick lab, the student at the next bench looks up from a glowing illusion and grins. It's Tamsin. "They said a Lumenhold intern was coming," they say. "I told them it had better be you, or I'd sabotage everything."
+> left: Work beside them all summer
+  wage
+  perform intern_thornwick +tiny
+  rel tamsin +medium
+  say: A summer at the next bench. They show you every trick in Thornwick's book, and you show them three Lumenhold ones they swear aren't legal. Your supervisor calls you "the inseparables", not kindly.
+> right: Keep it professional
+  wage
+  perform intern_thornwick +medium
+  rel tamsin -tiny
+  say: You work at your own bench and keep your mind on the work. The lab notices; Tamsin notices more. "Fine," they say at the end. "You were right. But I missed you, at the next bench."
+
+@event lyra_on_thornwick
+title: Lyra on Thornwick
+actor: lyra
+trigger: social
+class: routine
+tone: light
+when: seen(rival_contest) > 0
+weight: 12
+art: duel
+tags: social rival
+scene: A proud red-haired student sitting on a bench by the duelling hall, a newspaper folded to the contest results across her knee.
+text: Lyra has the Ledger folded to the contest results. "Thornwick," she says, as if it were a mild disease. {met(tamsin): "And you write letters to one of them. Every week. I've seen the green seals."|"I hope you enjoyed humiliating them. Or being humiliated. I was too angry to watch closely."}
+> left: Defend Thornwick
+  rel lyra -small
+  charm +tiny
+  say: You tell her Thornwick's people are people. She listens with enormous scepticism. A month later she asks, very casually, whether your Thornwick friend would ever want a practice duel. "For research," she says.
+> right: Agree they're insufferable
+  rel lyra +small
+  say: "Insufferable," you agree. She looks almost happy. "Exactly," she says. "Thank you." You don't tell Tamsin, who would agree with her.
