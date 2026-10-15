@@ -280,11 +280,15 @@ test('swing (M14): wild checks flatten the odds, steady ones sharpen them', () =
 });
 
 test('exams are cards (M4): one per enrolled course in a term\'s last month, graded on the card', () => {
-  const { eng } = play(9, 'balanced', (e) => e.s.turn === 4 && e.s.deck.length > 0);
-  const exams = eng.s.deck.filter((d) => d.id === 'course_exam');
-  const enrolled = Object.entries(eng.s.tracks).filter(([id, t]) => t.status === 'enrolled' && content.tracks[id].kind === 'course');
-  assert.equal(exams.length, enrolled.length, 'one exam card per enrolled course');
-  assert.ok(exams.every((x) => x.track), 'in its course\'s context');
+  // The first term ends in month 4: every course enrolled then gets one exam card that month, and a grade from it.
+  let enrolled = null;
+  const { eng } = play(9, 'balanced', (e) => {
+    if (e.s.turn === 4 && enrolled === null) enrolled = Object.entries(e.s.tracks).filter(([id, t]) => t.status === 'enrolled' && content.tracks[id].kind === 'course').map(([id]) => id);
+    return e.s.turn === 5;
+  });
+  assert.ok(enrolled && enrolled.length > 0, 'enrolled in month 4');
+  assert.equal(eng.s.seen.course_exam, enrolled.length, 'one exam card per enrolled course');
+  assert.ok(enrolled.every((id) => eng.s.tracks[id].grades.length === 1), 'each graded once, on its own card');
   // the outlook on the enrolment menu
   const o = eng.courseOutlook('evocation', 1);
   assert.ok(o && o.skills.length && o.exam === eng.examTier(1) && o.pass >= 5);
@@ -624,4 +628,15 @@ test('around() and apart() read presence and per-person contact', () => {
   assert.equal(ex('apart(lyra) == 999'), true, 'never in contact');
   eng.s.npcs.lyra.touched = eng.s.turn;
   assert.equal(ex('apart(lyra) == 0'), true, 'in contact this month');
+});
+
+// Review fixes, batch 41–159: bonds_around(status) counts the bond only among those who are around.
+test('bonds_around() counts only partners who are around', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 15, name: 'T' }); });
+  const ex = (src) => eng.test(G.expr(src), null);
+  eng.s.npcs.tobias.met = true; eng.s.npcs.tobias.bond = 'partner';
+  assert.equal(ex('bonds(partner) == 1 and bonds_around(partner) == 1'), true, 'a partner in term is around');
+  eng.s.flags.tobias_went_home = true; eng.s.last.tobias_bad_harvest = eng.s.turn; eng.s.seen.tobias_bad_harvest = 1;
+  assert.equal(ex('bonds(partner) == 1 and bonds_around(partner) == 0'), true, 'a partner who has gone home is not');
 });

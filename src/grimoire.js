@@ -27,6 +27,8 @@
     // `around(x)`: x is on campus and reachable in person (not away for the break, not gone); `apart(x)`: months since
     // the last card with x (999 if never). Review fixes, batch 24–40.
     'around', 'apart',
+    // `bonds_around(partner)`: like `bonds()`, counting only those who are `around` (review fixes, batch 41-159).
+    'bonds_around',
     // `offered(courses)`: how many options an `offers:` menu of that kind would generate now (playtest 2, I10)
     'offered']);
   // Built-in identifiers the engine answers (env.ident); content can read but never assign them.
@@ -38,7 +40,7 @@
     met: ['npc'], seen: ['event'], since: ['event'], chosen: ['event', null], npc_is: ['npc'], bonds: [null], romanceable: ['npc'], tagged: ['npc', null],
     passed: ['track', null], clue: ['clue'], spark: ['npc'], spell_level: ['spell'], knows: ['fact'], npc_rel: ['npc', 'npc'],
     enrolled: ['track'], member: ['track'], rank: ['track'], performance: ['track'], level: ['track'], progress: ['track'], due: ['track'], visits: ['track'], applied: ['track'],
-    present: ['place'], act: ['arc'], clock: ['arc'], discovered: ['place'], cast_as: [null, 'npc'], plan: [null], visits_to: ['place'], clues: ['arc'], offered: [null], around: ['npc'], apart: ['npc'],
+    present: ['place'], act: ['arc'], clock: ['arc'], discovered: ['place'], cast_as: [null, 'npc'], plan: [null], visits_to: ['place'], clues: ['arc'], offered: [null], around: ['npc'], apart: ['npc'], bonds_around: [null],
   };
 
   function tokenize(s, file, line) {

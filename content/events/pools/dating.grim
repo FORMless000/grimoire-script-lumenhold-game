@@ -10,7 +10,7 @@ trigger: social
 class: routine
 tone: warm
 cast:
-  partner: any where bond(partner) == "partner"
+  partner: any where bond(partner) == "partner" and around(partner)
 per: partner
 repeat: 5
 weight: 12
@@ -25,7 +25,7 @@ text: {Market day in the village, and {partner} has decided you're going togethe
 > right: Just walk and talk
   rel partner +small
   mood +tiny
-  say: {~You walk the whole market twice and buy nothing but a pie to share. You talk the entire time and remember none of it, only the voice.|An afternoon of nothing in particular, which is exactly what you both needed.}
+  say: {~You walk the whole market twice and buy nothing at all. You talk the entire time and remember none of it, only the voice.|An afternoon of nothing in particular, which is exactly what you both needed.}
 
 @event date_study_together
 title: Studying Together
@@ -33,8 +33,9 @@ trigger: social
 class: routine
 tone: light
 cast:
-  partner: any where bond(partner) == "partner"
+  partner: any where bond(partner) == "partner" and around(partner)
 per: partner
+when: term
 repeat: 5
 weight: 12
 art: book
@@ -44,7 +45,7 @@ text: {{partner} suggests studying together. In theory, this is efficient.|Anoth
 > left: Actually study
   study +small
   spark partner -tiny
-  say: {~You study, properly, in companionable silence. {partner} sighs once, theatrically. You both pass the next quiz.|Two hours of real work. {partner} quizzes you on the walk back, and you get them all right.}
+  say: {~You study, properly, in companionable silence. {partner} sighs once, theatrically. You both pass the next quiz.|Two hours of real work. {partner} quizzes you on the walk back, a little wistful that it was only studying, and you get them all right.}
 > right: Don't study at all
   spark partner +small
   study -tiny
@@ -56,7 +57,7 @@ trigger: social
 class: incident
 tone: tense
 cast:
-  partner: any where bond(partner) == "partner" and spark(partner) >= 30
+  partner: any where bond(partner) == "partner" and spark(partner) >= 30 and around(partner)
 per: partner
 weight: 10
 art: heart
@@ -78,8 +79,8 @@ trigger: social
 class: routine
 tone: light
 cast:
-  partner: any where bond(partner) == "partner"
-  friend: any where rel(friend) >= 12 and bond(friend) != "partner" and tagged(friend, student)
+  partner: any where bond(partner) == "partner" and around(partner)
+  friend: any where rel(friend) >= 12 and bond(friend) != "partner" and tagged(friend, student) and not tagged(friend, outsider) and around(friend)
 per: partner
 weight: 10
 art: group
@@ -87,7 +88,7 @@ tags: romance social
 scene: Three students around a refectory table, two of them sizing each other up over the bread basket, one in the middle smiling too hard.
 text: {friend} and {partner} have heard a great deal about each other, all from you, and now they're at the same supper table. {friend} is being very polite. {partner} is being very polite back. You are dying.
 > left: Steer the talk to something they share
-  challenge negotiate easy:
+  challenge negotiate apprentice+:
     win:
       rel friend +small
       rel partner +small
@@ -106,14 +107,14 @@ trigger: social
 class: routine
 tone: warm
 cast:
-  partner: any where bond(partner) == "partner"
+  partner: any where bond(partner) == "partner" and around(partner)
 per: partner
 repeat: 4
 weight: 10
 art: candle
 tags: romance
 scene: Rain streaming down a tall window seat, two students under one blanket with a board game between them, cups of tea steaming.
-text: {Rain all afternoon, and {partner} has found the window seat in the west tower, a blanket and an old board game with half the pieces.|Rain again. The window seat is yours now, by custom.|{partner} has brought new pieces for the game, carved from soap.} {~The rain is loud on the leads.|The tea is too hot.|The game's rules are mostly invented.}
+text: {Rain all afternoon, and {partner} has found the window seat in the west tower, a blanket and an old board game with half the pieces.|Rain again, and {partner} has claimed the window seat for the two of you.|Rain, a blanket, and a game whose missing pieces someone has replaced with ones carved from soap.} {~The rain is loud on the leads.|The tea is too hot.|The game's rules are mostly invented.}
 > left: Play to win
   spark partner +tiny
   guile +tiny
@@ -129,20 +130,21 @@ trigger: social
 class: incident
 tone: tense
 cast:
-  partner: any where bond(partner) == "partner"
+  partner: any where bond(partner) == "partner" and around(partner)
 per: partner
 weight: 9
 art: heart
 tags: romance
 scene: A student holding a small wrapped present out to another student, whose hands are empty and whose face has just fallen.
-text: {partner} hands you a small parcel, wrapped carefully, and says "Happy half-year." You didn't know there was a half-year. You have nothing. {partner} sees you realise it.
+text: {partner} hands you a small parcel, wrapped carefully. "It's our day," {they} say{s}. Apparently there is a day. You didn't know. You have nothing. {partner} sees you realise it.
 > left: Confess and make it up
   gold -small
   spark partner +tiny
   mood -small
   say: "I forgot," you say. {They} laugh{s}, a little hurt. That evening you turn up with flowers from the village and a terrible poem, and the poem does it.
 > right: Pretend your gift is "coming"
-  chance 50:
+  alignment -tiny
+  chance even:
     gold -medium
     say: You run to the village before the shops shut and spend more than you meant on something you hope looks planned. {partner} believes you, or kindly pretends to.
   else:
@@ -155,7 +157,7 @@ trigger: social
 class: routine
 tone: light
 cast:
-  partner: any where bond(partner) == "partner"
+  partner: any where bond(partner) == "partner" and around(partner)
 when: month == 4 or month == 12
 per: partner
 repeat: 3
@@ -163,7 +165,7 @@ weight: 12
 art: music
 tags: romance
 scene: Two students practising dance steps in an empty classroom, chairs pushed back, one counting aloud and the other looking at their feet.
-text: {With the {month == 4: Midwinter Ball|Starfall dance} coming, {partner} has decided you're going to learn properly, in an empty classroom, with the chairs pushed back.|Another lesson. You're on the second dance now, which has a spin.|"Again," says {partner}. "From the turn."} {~Somebody is watching from the door.|Your feet have opinions.|There's no music, only counting.}
+text: With the {month == 4: Midwinter Ball|Starfall dance} coming, {partner} has decided you're going to learn properly, in an empty classroom, with the chairs pushed back. {~You start on the dance with the spin.|"Again," says {partner}. "From the turn."|Somebody is watching from the door.|Your feet have opinions.|There's no music, only counting.}
 > left: Practise until it's right
   vigor +tiny
   spark partner +small
@@ -180,14 +182,14 @@ trigger: social
 class: milestone
 tone: warm
 cast:
-  partner: any where bond(partner) == "partner" and spark(partner) >= 60
+  partner: any where bond(partner) == "partner" and spark(partner) >= 60 and around(partner)
 when: final_year
 per: partner
 weight: 16
 art: heart
 tags: romance
 scene: Two students sitting on the castle wall at sunset, legs dangling, the whole valley below them gold.
-text: On the castle wall at sunset, {partner} asks the question neither of you has said out loud: "After graduation. What happens to us?" The valley below is gold. {They} {are} not looking at you, very deliberately.
+text: On the castle wall, with the light going long over the valley, {partner} asks the question neither of you has said out loud: "After graduation. What happens to us?" The valley below is gold. {They} {are} not looking at you, very deliberately.
 > left: "We go together."
   spark partner +medium
   flag after_together
@@ -201,20 +203,20 @@ text: On the castle wall at sunset, {partner} asks the question neither of you h
 # ---------------- One date only they would plan ----------------
 
 @event lyra_date_dawn_duel
-title: A Duel at Dawn
+title: A Duel for Two
 actor: lyra
 trigger: social
 class: routine
 tone: warm
-when: bond(lyra) == "partner"
+when: bond(lyra) == "partner" and around(lyra)
 repeat: 3
 weight: 12
 art: duel
 tags: romance duel
 scene: Two duellists bowing in a misty courtyard at dawn, wands lowered, both trying not to smile.
-text: {Lyra's idea of a romantic morning is a duel at dawn in the empty courtyard, "to keep you sharp".|Another dawn duel. Lyra has started calling them "our mornings".|Lyra is already in the courtyard, wand out, mist on her shoulders.} {~She's brought coffee for after.|She's in a terrible mood, which means she slept well.|"No holding back," she says. "I'll know."}
+text: {Lyra's idea of a romantic afternoon is a duel in the empty courtyard, "to keep you sharp".|Another courtyard duel. Lyra has started calling them "our afternoons".|Lyra is already in the courtyard, wand out, sleeves rolled.} {~She's brought coffee for after.|She's in a terrible mood, which means she slept well.|"No holding back," she says. "I'll know."}
 > left: Duel her properly
-  challenge duel vs lyra.arcana medium:
+  challenge duel vs lyra.arcana:
     win:
       spark lyra +small
       arcana +tiny
@@ -229,18 +231,18 @@ text: {Lyra's idea of a romantic morning is a duel at dawn in the empty courtyar
   say: {~She knows the moment you drop your guard. "Don't you dare," she says, and then kisses you, furious, and then makes you do it again properly.|She's outraged. She's also, for the rest of the day, unusually soft.}
 
 @event tobias_date_greenhouse_supper
-title: Supper Among the Tomatoes
+title: Lunch Among the Tomatoes
 actor: tobias
 trigger: social
 class: routine
 tone: warm
-when: bond(tobias) == "partner"
+when: bond(tobias) == "partner" and around(tobias)
 repeat: 3
 weight: 12
 art: flower
 tags: romance nature
 scene: A candlelit table set up between rows of tomato plants in a warm greenhouse at night, a big student serving soup from a pot.
-text: {Tobias has cooked supper in the greenhouse, at a table between the tomato rows, with everything he grew himself.|Supper in the greenhouse again. The tomatoes have names now.|Tobias has added a second candle and a jar of wildflowers.} {~The soup is his grandmother's recipe.|A tomato plant is leaning in to listen.|There is far too much bread.}
+text: {Tobias has cooked lunch in the greenhouse, at a table between the tomato rows, with everything he grew himself.|Lunch in the greenhouse again. The tomatoes have names now.|Tobias has added a second candle and a jar of wildflowers.} {~The soup is his grandmother's recipe.|A tomato plant is leaning in to listen.|There is far too much bread.}
 > left: Eat everything, and ask for seconds
   spark tobias +small
   health +tiny
@@ -248,8 +250,8 @@ text: {Tobias has cooked supper in the greenhouse, at a table between the tomato
 > right: Help him in the beds after
   rel tobias +small
   vigor +tiny
-  mood -tiny
-  say: {~You weed the beds by lantern light, side by side. Your back aches; your hands smell of tomato leaves. He hums the whole time.|An hour of planting. He shows you how to tell a seedling it's doing well. You feel ridiculous, and do it anyway.}
+  health -tiny
+  say: {~You weed the beds in the afternoon sun, side by side. Your back aches; your hands smell of tomato leaves. He hums the whole time.|An hour of planting. He shows you how to tell a seedling it's doing well. You feel ridiculous, and do it anyway, until your knees ache from the kneeling.}
 
 @event seraphine_date_a_future
 title: A Future She Saw
@@ -257,17 +259,17 @@ actor: seraphine
 trigger: social
 class: routine
 tone: warm
-when: bond(seraphine) == "partner"
+when: bond(seraphine) == "partner" and around(seraphine)
 repeat: 3
 weight: 12
 art: eye
 tags: romance magic
 scene: A seer and a student lying on the observatory floor beneath the open dome, a scatter of tarot cards between them.
-text: {Seraphine says she's seen a future with the two of you in it, and wants to tell you about it on the observatory floor, under the open dome.|Another future, another evening on the observatory floor.|"I saw us again," Seraphine says, lying down beside you. "Older."} {~She's shuffling the cards without looking.|The dome is full of stars.|She is, for once, entirely in the present.}
+text: {Seraphine says she's seen a future with the two of you in it, and wants to tell you about it on the observatory floor, under the shuttered dome.|Another future, another hour on the observatory floor.|"I saw us again," Seraphine says, lying down beside you. "Older."} {~She's shuffling the cards without looking.|The dome's painted stars have faded to grey.|She is, for once, entirely in the present.}
 > left: Ask her to tell you
   spark seraphine +small
   lore +tiny
-  say: {~She tells you: a kitchen, a cat, a terrible argument about curtains, a garden. It's so ordinary you could cry. She says it's her favourite one.|A future with snow in it, and a child who isn't yours or hers but stays anyway. She stops halfway and holds your hand.}
+  say: {~She tells you: a kitchen, a cat, a terrible argument about curtains, a garden. It's so ordinary you could cry. She says it's her favourite one.|A future with snow in it, and an old friend who comes to stay and never leaves. She stops halfway and holds your hand.}
 > right: Ask her not to
   rel seraphine +small
   mood -tiny
@@ -279,13 +281,13 @@ actor: corvin
 trigger: social
 class: routine
 tone: light
-when: bond(corvin) == "partner"
+when: bond(corvin) == "partner" and around(corvin)
 repeat: 3
 weight: 12
 art: map
 tags: romance
 scene: A tablecloth spread on a castle rooftop between chimneys, a candle in a jar, two students eating pastries above the sleeping towers.
-text: {Corvin leads you through three passages and a window to a rooftop between chimneys, where a tablecloth and supper are waiting.|Another rooftop, another tablecloth. You don't ask where he finds them.|"New roof," says Corvin. "Better view. Mostly legal."} {~The pastries are from the headmistress's own kitchen.|There's a candle in a jam jar.|He's brought cushions, which is unlike him.}
+text: {Corvin leads you through three passages and a window to a rooftop between chimneys, where a tablecloth and supper are waiting.|Another rooftop, another tablecloth. You don't ask where he finds them.|"New roof," says Corvin. "Better view. Mostly legal."} {~There are pastries you don't recognise.|There's a candle in a jam jar.|He's brought cushions, which is unlike him.}
 > left: Ask where the supper came from
   guile +tiny
   spark corvin +tiny
@@ -294,7 +296,7 @@ text: {Corvin leads you through three passages and a window to a rooftop between
 > right: Just enjoy it
   spark corvin +small
   health -tiny
-  say: {~You eat supper on the roof until the candle gutters. He doesn't make a single joke for a whole hour, and when you notice, he kisses you to stop you saying so.|The chimneys are warm, the air is cold, and you climb down at midnight scraped and happy.}
+  say: {~You eat supper on the roof until the candle gutters and the cold comes up through the slates. He doesn't make a single joke for a whole hour, and when you notice, he kisses you to stop you saying so.|The chimneys are warm, the air is cold, and you climb down at midnight scraped and happy.}
 
 @event mir_date_invention
 title: They Built You Something
@@ -302,7 +304,7 @@ actor: mir
 trigger: social
 class: routine
 tone: light
-when: bond(mir) == "partner"
+when: bond(mir) == "partner" and around(mir)
 repeat: 3
 weight: 12
 art: gear
@@ -310,7 +312,7 @@ tags: romance
 scene: A cluttered workshop bench, a small brass contraption with wings sitting on it, a grinning inventor and a nervous student leaning away.
 text: {Mir has built you a present, a brass bird that sings your name, mostly.|Another present from Mir's bench, ticking ominously.|Mir presents their newest invention with a flourish and a fire bucket.} {~It's warm to the touch.|It has seven moving parts and one they don't explain.|"It's probably safe," they say.}
 > left: Wind it up at once
-  chance 60:
+  chance likely:
     spark mir +small
     mood +small
     say: {~It sings your name, slightly wrong, all the way round the workshop, and lands in your hand. Mir bursts into happy tears and pretends it's soot.|It works. It works! They kiss you on the cheek and immediately start on version two.}
@@ -329,7 +331,7 @@ actor: kael
 trigger: social
 class: routine
 tone: warm
-when: bond(kael) == "partner"
+when: bond(kael) == "partner" and around(kael)
 repeat: 3
 weight: 12
 art: snow
@@ -339,7 +341,7 @@ text: {Kael leads you to a corner of the lawn and makes it snow, only there, onl
 > left: Catch the flakes
   spark kael +small
   health -tiny
-  say: {~You catch them on your tongue and laugh, and Kael, astonishingly, laughs too, out loud. The snow falls harder when he's happy, it turns out.|You're both soaked and frozen. He warms your hands in his, which are, for the first time, warm.}
+  say: {~You catch them on your tongue until your teeth ache with cold, and laugh, and Kael, astonishingly, laughs too, out loud. The snow falls harder when he's happy, it turns out.|You're both soaked and frozen. He warms your hands in his, which have warmed, against all habit.}
 > right: Ask him what it costs
   rel kael +small
   lore +tiny
@@ -352,18 +354,16 @@ actor: nessa
 trigger: social
 class: routine
 tone: warm
-when: bond(nessa) == "partner"
+when: bond(nessa) == "partner" and around(nessa)
 repeat: 3
 weight: 12
 art: paper
 tags: romance
 scene: A newspaper office late at night, an enchanted quill lying still on a desk for once, two students sharing a pot of tea among the proofs.
-text: {Nessa locks the Ledger office, puts her quill in a drawer and says, "Off the record. All night."|Another night off the record. The quill sulks in its drawer.|Nessa has started saying "off the record" when she means "I love you". You've noticed.} {~There's a pot of tea and a plate of toast.|The proofs are stacked and, for once, ignored.|It's raining on the skylight.}
+text: {Nessa locks the Ledger office, puts her quill in a drawer and says, "Off the record. For as long as you like."|Another hour off the record. The quill sulks in its drawer.|Nessa has started saying "off the record" when she means "I love you". You've noticed.} {~There's a pot of tea and a plate of toast.|The proofs are stacked and, for once, ignored.|It's raining on the skylight.}
 > left: Ask her about herself
   spark nessa +small
-  mood -tiny
   say: {~She talks about her childhood for an hour, which she never does: a printing shop, a father who read the news aloud. You don't take a single note. She notices.|Nessa, off the record, is quieter and funnier. You stay until the lamp runs out.}
 > right: Tell her a secret of your own
   rel nessa +small
-  guile -tiny
   say: {~You tell her something nobody knows. She holds it like it's the most valuable story she's ever had, and never writes it down.|She listens, and then tells you one back. Off the record. It feels like a promise.}

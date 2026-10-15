@@ -15,7 +15,7 @@ tags: home
 scene: A cavernous common room in the holidays, a handful of students in blankets crowded around {season == "winter": one roaring hearth|one open window}.
 text: {With the houses empty, the stewards light one common room and let the rest go dark.|Someone has brought a kettle, and now there's a rota for it.|The break common room. You know everyone's blanket by now.} {season == "winter": The best armchair is right by the fire.|The best armchair is by the only breeze.} {~A first-year from Stillwater is asleep in it.|Footnote is in it. Footnote moves for no one.}
 > left: Talk my way into the armchair
-  challenge deceive easy:
+  challenge deceive apprentice:
     win:
       mood +small
       guile +tiny
@@ -48,7 +48,7 @@ text: {Half the kitchen staff have gone home for the break, and the cook has sta
   guile +tiny
   mood +small
   gold -tiny
-  say: {~You escape to the village and buy a pie you could have had for free. The cook sees you come back with the crumbs.|You hide in the library until lunch. Lunch, it turns out, is served by the cook, who gives you the smallest portion with a meaningful look.}
+  say: {~You escape to the village and buy a pie you could have had for free. The cook sees you come back with the crumbs.|You hide in the village bakery until lunch is over and buy what you could have eaten for free. The cook gives you a meaningful look all evening.}
 
 @event break_castle_empty_library
 title: The Library on Holiday
@@ -85,7 +85,7 @@ text: {Post day. The porter lays the letters out on one table in the Great Hall.
 > left: Write a long letter home
   mood +small
   gold -tiny
-  say: {final_year: You write that after this year you'll be home for good, and then look at the sentence for a long time.|{~You write four pages and pay for the heavy stamp. It's the closest thing to a conversation you've had all week.|You describe the empty castle so well that you feel lonelier writing it than living it.}}
+  say: {final_year: You write that this is your last break at the castle, and then look at the sentence for a long time.|{~You write four pages and pay for the heavy stamp. It's the closest thing to a conversation you've had all week.|You describe the empty castle so well that you feel lonelier writing it than living it.}}
 > right: Help the porter sort it all
   charm +small
   mood -tiny
@@ -96,6 +96,7 @@ text: {Post day. The porter lays the letters out on one table in the Great Hall.
 @event break_home_kitchen_table
 title: Homework at the Kitchen Table
 plan: home
+slot: morning
 class: routine
 tone: warm
 repeat: 4
@@ -103,7 +104,7 @@ weight: 10
 art: house
 tags: home study
 scene: A family kitchen in the morning, a student's books spread among the breakfast plates, someone reaching across them for the butter.
-text: {You spread your books across the kitchen table, where you did your sums as a child.|Your books have been moved for the bread, and one is being used as a trivet.|The family works around your books now. Mostly.} {season == "winter": The stove is the only warm place, so everyone is in the kitchen.|The door is open, and everyone passing asks what the book is about.} {~A small cousin has drawn a dragon in your margin.|The kettle boils every quarter-hour, on principle.}
+text: {You spread your books across the kitchen table, where you did your sums as a child.|Your books have been moved for the bread, and one is being used as a trivet.|The family works around your books now. Mostly.} {season == "winter": The stove is the only warm place, so everyone is in the kitchen.|The door is open, and everyone passing asks what the book is about.} {~A cousin has drawn a dragon in your margin.|The kettle boils every quarter-hour, on principle.}
 > left: Study through the noise
   lore +small
   mood -small
@@ -126,14 +127,15 @@ text: {Your old room is smaller than you remember. Under the bed is the box wher
 > left: Pack it in your trunk
   mood +small
   say: {~It comes back to Lumenhold with you. The trunk is heavier, and so, somehow, are you.|You pack it between your robes. Every time you open the trunk this term, it will be the first thing you see.}
-> right: Give it to the youngest cousin
+> right: Give it to your cousin
   charm +small
   mood -tiny
-  say: {~The youngest cousin takes it with enormous seriousness and announces that they're going to be a wizard too. You feel very old.|The cousin promises to keep it safe. By supper it has been traded to a neighbour's child for a frog.}
+  say: {~Your cousin, who is applying to the academy next autumn, takes it with enormous seriousness. You feel very old.|Your cousin promises to keep it safe. By supper it has been traded to a neighbour for a jar of honey.}
 
 @event break_home_family_debate
 title: The Family Debate
 plan: home
+slot: morning
 class: routine
 tone: light
 repeat: 5
@@ -143,7 +145,7 @@ tags: home
 scene: A breakfast table mid-argument, several relatives pointing at a student as if they were the deciding vote.
 text: {At breakfast the family is arguing, and someone says, "Ask the scholar."|The argument has started without you. Everyone turns as you come down the stairs.|"The scholar is up," someone announces. They've saved today's argument for you.} {season == "winter": {~Is it colder than the year of the big snow?|Can you freeze a pond by thinking at it?}|{~Do swallows sleep at the bottom of rivers?|Will it rain on the fair, and can you stop it?}}
 > left: Settle it with what I've learned
-  chance 60:
+  chance likely:
     lore +small
     mood +small
     say: {~You explain it so clearly that the argument ends. There is a short, respectful silence, and then a new argument starts.|You settle it. An uncle demands to see it in writing. You write it on a napkin, and he keeps the napkin.}
@@ -158,22 +160,23 @@ text: {At breakfast the family is arguing, and someone says, "Ask the scholar."|
 @event break_home_village_children
 title: The Wizard Is Home
 plan: home
+slot: morning
 class: routine
 tone: light
 repeat: 4
 weight: 10
 art: sparkle
 tags: home
-scene: A gaggle of village children at a cottage gate in the morning, staring hopefully at a student in academy robes.
-text: {Word has spread that you're home from the wizard school. The village children are waiting at the gate.|The children are back at the gate, with a younger sibling to show you off to.|The gate committee is in session. They've drawn up a list.} {season == "winter": They want more snow.|They want it to stop being so hot.} {~The smallest has a jar, in case you make something worth keeping.|One asks if you've ever met a dragon.|The tallest has a stick that might be a wand.}
+scene: A gaggle of villagers at a cottage gate in the morning, staring hopefully at a student in academy robes.
+text: {Word has spread that you're home from the wizard school. Half the village has found a reason to pass the gate.|The neighbours are back at the gate, with a cousin from the next village to show you off to.|The gate committee is in session. They've drawn up a list.} {season == "winter": They want more snow for the sledging.|They want it to stop being so hot.} {~The baker has brought a jar, in case you make something worth keeping.|The miller's wife asks if you've ever met a dragon.|The blacksmith has a stick that might be a wand.}
 > left: Show them some sparks
   mana -small
   mood +small
   arcana +tiny
-  say: {~You make a little burst of light over the gate. The children scream with delight and demand it again, and again.|You make a spark dance across the gatepost. The smallest one tries to catch it in cupped hands, or thinks they do, which is the same thing.}
+  say: {~You make a little burst of light over the gate. The neighbours cheer and demand it again, and again.|You make a spark dance across the gatepost. The baker tries to catch it in her apron, or thinks she does, which is the same thing.}
 > right: Teach them something real
   charm +small
-  say: {~You explain how the light gets into a spell. They listen politely and then ask for sparks.|You show them how to sit still and listen to a candle. One of them really hears it. You can tell.}
+  say: {~You explain how the light gets into a spell. They listen politely and then ask for sparks.|You show them how to sit still and listen to a candle. The old miller really hears it. You can tell.}
 
 # ---------------- Break: working full-time (plan: work) ----------------
 
@@ -187,7 +190,7 @@ weight: 10
 art: coin
 tags: job money
 scene: A holiday rush at a busy workplace, a student in the thick of it wearing the fixed smile of someone on their fourth hour of the same question.
-text: {The holidays bring the crowds.|This time you've learned to eat breakfast before the rush, not during it.|You can feel the rush coming an hour before it arrives.} {member(tavern): The Gilded Newt is packed to the beams.|{member(apothecary_clerk): The queue at Pell & Daughters is out of the door.|{member(broom_courier): The loft's shelves are stacked to the rafters with parcels.|{member(library_assistant): The library is full of last-minute readers.|Everyone wants something, and now.}}}} {season == "winter": {~Everyone wants it before Midwinter.|Wet boots, short tempers.}|{~Everyone is sunburnt.|Travellers keep asking the way.}}
+text: {The holidays bring the crowds.|This time you've learned to eat breakfast before the rush, not during it.|You can feel the rush coming an hour before it arrives.} {has(gig_newt): The Gilded Newt is packed to the beams.|{has(gig_pell): The queue at Pell & Daughters is out of the door.|{has(gig_post): The loft's shelves are stacked to the rafters with parcels.|{has(gig_library): The library is full of last-minute readers.|{has(gig_kitchens): The Refectory is feeding everyone who stayed, and all their visiting families.|{has(gig_grounds): The grounds are full of visitors walking off their holiday dinners, and every one of them has a question.|Everyone wants something, and now.}}}}}} {season == "winter": {~Everyone wants it before Midwinter.|Wet boots, short tempers.}|{~Everyone is sunburnt.|Travellers keep asking the way.}}
 > left: Smile through it
   charm +small
   gold +tiny
@@ -202,6 +205,7 @@ text: {The holidays bring the crowds.|This time you've learned to eat breakfast 
 @event break_work_opening_up
 title: Opening Up
 plan: work
+when: has(gig_newt) or has(gig_pell)
 class: routine
 tone: light
 repeat: 5
@@ -216,7 +220,7 @@ text: {In the holidays you're trusted with the keys. You open up at dawn, alone.
   health -tiny
   say: {~Swept, stocked and opened to the minute. The owner notices and slips you a little extra.|Everything is ready when the first customer arrives. Nobody notices but you. Still, the coin is good.}
 > right: Steal a quiet half hour
-  chance 70:
+  chance likely:
     mood +small
     say: {~You drink tea by the window and watch the street wake up. It's the best part of the job.|You read a chapter with your feet up. Nobody ever knows.}
   else:
@@ -227,6 +231,7 @@ text: {In the holidays you're trusted with the keys. You open up at dawn, alone.
 @event break_work_regular
 title: The Holiday Regular
 plan: work
+when: has(gig_newt) or has(gig_pell)
 class: routine
 tone: warm
 repeat: 5
@@ -237,8 +242,8 @@ scene: An elderly customer settling in for a long chat at a counter, a student b
 text: {Every holiday has its regular. This one comes every morning and wants to talk.|The regular is back. They wave to you as if you were old friends.|The regular has started calling you by your first name.} {~Today it's about their late husband's beard.|Today it's about a dragon they swear they saw as a girl.|Today it's about the year the lake froze, which may or may not have happened.} The queue behind them is getting longer.
 > left: Let them finish the story
   charm +small
-  gold -tiny
-  say: {~You hear the whole story. The queue thins out to somewhere else. The regular leaves happy, and so, oddly, are you.|The story has an ending you didn't expect, and you'll think about it all day. The customers you lost won't.}
+  health -tiny
+  say: {~You hear the whole story, standing, while the queue thins out to somewhere else. Your feet ache by the end. The regular leaves happy, and so, oddly, are you.|The story has an ending you didn't expect, and you'll think about it all day. You stood through all of it, and your back says so.}
 > right: Hurry them gently along
   gold +tiny
   mood -small
@@ -247,6 +252,7 @@ text: {Every holiday has its regular. This one comes every morning and wants to 
 @event break_work_new_hire
 title: The Holiday Hire
 plan: work
+when: not has(gig_grounds) and not has(gig_post)
 class: routine
 tone: light
 repeat: 5
@@ -254,21 +260,22 @@ weight: 10
 art: hand
 tags: job
 scene: A nervous new worker holding a tray at the wrong angle, a student leaning over to correct them.
-text: {The owner has taken on a holiday hire and put them next to you.|Another holiday hire, another nervous face. You're the old hand now.|This break's new hire looks at you the way you once looked at everyone.} {~They've already dropped something.|They ask whether the job is always like this. You don't answer.|They're very keen and very fast, and very nearly right.}
+text: {The boss has taken on a holiday hire and put them next to you.|Another holiday hire, another nervous face. You're the old hand now.|This break's new hire looks at you the way you once looked at everyone.} {~They've already dropped something.|They ask whether the job is always like this. You don't answer.|They're very keen and very fast, and very nearly right.}
 > left: Show them the ropes
   charm +small
   mood -small
-  say: {~By noon they know where everything is and that the owner is all bark. You've lost a morning and gained a friend.|You teach them the trick with the till. They teach you a song. You both get told off for the song.}
+  say: {~By noon they know where everything is and that the boss is all bark. You've lost a morning and gained a friend.|You teach them the trick with the till. They teach you a song. You both get told off for the song.}
 > right: Let them learn the hard way
   mood +tiny
   gold -tiny
-  say: {~They learn. Unfortunately, they learn by breaking a jar that the owner puts on your account.|You let them flounder. It takes them all day to find the stockroom, and you end up covering their shift anyway.}
+  say: {~They learn. Unfortunately, they learn by breaking a jar that the boss puts on your account.|You let them flounder. It takes them all day to find the stockroom, and you end up covering their shift anyway. The boss takes the stock they spoiled out of your pay.}
 
 # ---------------- Break: internship (plan: internship) ----------------
 
 @event break_internship_lodgings
 title: Breakfast at the Lodgings
 plan: internship
+slot: morning
 class: routine
 tone: warm
 repeat: 5
@@ -290,6 +297,7 @@ text: {{member(intern_expedition): Your lodging for the placement is a tent that
 @event break_internship_briefing
 title: The Morning Briefing
 plan: internship
+slot: morning
 class: routine
 tone: tense
 repeat: 5
@@ -304,10 +312,10 @@ text: {Your supervisor reads the day's tasks aloud, once, very fast.|You bring t
   mood -small
   say: {~Your supervisor explains it again, slowly, while the other interns smirk. Two of them come to you at lunch to ask what it meant.|"Good question," says your supervisor, in a tone that suggests it wasn't. You get the task right, anyway.}
 > right: Guess and get on with it
-  chance 55:
+  chance even:
     lore +small
     mood +tiny
-    say: {~You guess right. Your supervisor nods as if they never doubted you.|It turns out the odd task was "take the rest of the morning off". Lucky.}
+    say: {~You guess right. Your supervisor nods as if they never doubted you.|It turns out the odd task was "take the rest of the morning off". Lucky. You spend it reading in the archive.}
   else:
     mood -small
     say: {~You guess wrong and spend the morning carefully doing the opposite of what was wanted.|You did the right task to the wrong thing. The wrong thing will never be the same again.}
@@ -315,23 +323,24 @@ text: {Your supervisor reads the day's tasks aloud, once, very fast.|You bring t
 @event break_internship_other_interns
 title: The Other Interns
 plan: internship
+slot: evening
 class: routine
 tone: light
 repeat: 5
 weight: 10
 art: group
 tags: study
-scene: A small group of interns eating lunch together, one sitting slightly apart with a notebook.
-text: {There are other interns here, and they've already formed a lunch table.|You've learned to find the lunch table on the first day, and which seat isn't anyone's.|By now you can tell within a morning which intern is the one to sit beside.} {~One has a cousin on the Conclave and mentions it hourly.|One is better than all of you, and very nice about it.|One has been here before and knows where the biscuits are.} {season == "winter": Lunch is eaten in coats.|Lunch is eaten in the sun.}
-> left: Join them for lunch
+scene: A small group of interns eating supper together, one sitting slightly apart with a notebook.
+text: {There are other interns here, and they've already formed a supper table.|You've learned to find the supper table on the first day, and which seat isn't anyone's.|By now you can tell within a morning which intern is the one to sit beside.} {~One has a cousin on the Conclave and mentions it hourly.|One is better than all of you, and very nice about it.|One has been here before and knows where the biscuits are.} {season == "winter": Supper is eaten in coats.|Supper is eaten in the last of the sun.}
+> left: Join them for supper
   mood +small
   charm +tiny
   gold -tiny
-  say: {~You chip in for the shared food and find out which of the supervisors are kind. Useful, and fun.|You talk shop until your lunch is cold. It turns out everyone else is as lost as you are, which helps.}
+  say: {~You chip in for the shared food and find out which of the supervisors are kind. Useful, and fun.|You talk shop until your supper is cold. It turns out everyone else is as lost as you are, which helps.}
 > right: Eat alone with your notes
   lore +small
   mood -small
-  say: {~You finish the reading for the afternoon. You hear laughter from the table, and you don't look up.|You get ahead of everyone. Nobody saves you a biscuit.}
+  say: {~You finish the reading for tomorrow. You hear laughter from the table, and you don't look up.|You get ahead of everyone. Nobody saves you a biscuit.}
 
 @event break_internship_stipend
 title: Stipend Day
@@ -371,7 +380,7 @@ text: {Professor Thorne returns your chapter. In the margin of page one he has w
   mood -small
   say: {~You rewrite every page he marked. The chapter is shorter and better, and you hate that he was right.|You take every note. When he reads it again he crosses out only one thing, and you could cry.}
 > right: Defend my version
-  challenge negotiate using lore medium:
+  challenge negotiate using lore vs thorne.lore -2:
     win:
       progress thesis +small
       rel thorne +tiny
@@ -393,7 +402,7 @@ tags: study
 scene: Two thesis carrels side by side, the partition between them covered in pinned notes and a shared candle.
 text: {Your carrel neighbour, a final-year from Rootward, reads aloud under their breath.|Your carrel neighbour now reads your chapter titles aloud too.|You and your carrel neighbour now speak a language of sighs.} {~They're stuck on chapter three.|They've found a source that disagrees with you both.|They pass you half a sandwich over the partition.} {season == "winter": The thesis lab is cold enough for gloves.|Someone's notes are escaping through the window.}
 > left: Swap drafts for an hour
-  chance 70:
+  chance likely:
     progress thesis +small
     charm +tiny
     mood -tiny
@@ -446,7 +455,7 @@ text: {There's an empty carrel at the end of the row, with a candle stub and nob
   mood -small
   say: {~You write until the stub drowns in its own wax. Your notes are good, and your neck will remember them.|You read one book and half of another. The room's silence does half the work for you.}
 > right: Just sit in the quiet
-  chance 70:
+  chance likely:
     mood +small
     say: {~You sit with your hands in your lap and listen to everyone else think. It's oddly restful.|You doze off with your cheek on someone's old footnotes. Nobody minds.}
   else:
@@ -465,7 +474,7 @@ tags: study
 scene: Two advisors arguing across a row of carrels, final-year students peering over the partitions to watch.
 text: {Two advisors are arguing about a footnote across three carrels, and every final-year in the room has stopped pretending to work.|The footnote war has broken out again. Someone has drawn up sides on a scrap of paper.|By now the footnote war has rules, a referee and a running score chalked on the door.} {~Today it's about whether an old founders' letter counts as a source.|Today it's about a comma.|Today it's about a footnote to a footnote.}
 > left: Weigh in with a source
-  challenge research medium:
+  challenge research expert-:
     win:
       lore +small
       renown +tiny
@@ -492,7 +501,7 @@ scene: A dark carrel lit by one dying candle, a full box of candles on the empty
 text: {The candles here give out at the worst moment. Yours just has, and the carrel next door has a full box and nobody in it.|Your candle gives out again. Next door, the usual box of spares and nobody in the chair.|The lab's candles have outlasted no one's patience tonight, least of all yours. There's a box next door.} {~A draft lies open beside the box, face up.|A note on the box says "Help yourself" in one hand and "Don't" in another.|Someone has drawn a small eye on the box.}
 > left: Borrow one and keep working
   alignment -tiny
-  chance 65:
+  chance likely:
     lore +small
     mood -tiny
     say: {~You light it and work until the bell. You leave a note that says "IOU one candle", unsigned.|One candle, two good hours. You put the stub back, which is either honest or worse.}
@@ -544,7 +553,7 @@ scene: A bright worktable under a lamp, a crumbling manuscript laid out in piece
 text: {Today you're at the mending table, where crumbling records are put back together one flake at a time.|The binder hands you the tweezers without a word, which counts as a greeting.|The binder trusts you with the older pages now, which are the worst.} {~The page is a royal decree on the correct length of goose necks.|The page is a recipe, half eaten by something.|The page is a list of names, one crossed out very hard.}
 > left: Mend it myself
   wage
-  challenge research easy:
+  challenge research journeyman+ steady:
     win:
       perform intern_royal_library +small
       lore +small
@@ -574,7 +583,7 @@ scene: A circular chamber with scorch-marked walls, a student at the centre with
 text: {The Conclave's researchers need someone to cast their newest spell for the first time. The walls are thick for a reason.|Someone has chalked a new circle on the floor. The old one is scorched.|You know every scorch mark in the chamber by now, and who made each one.} {~Today's spell is meant to make a candle burn backwards.|Today's spell is meant to tidy a room. It has opinions about what tidy means.|Today's spell is unnamed. Nobody will say why.}
 > left: Step into the chamber
   wage
-  challenge enchant using arcana medium:
+  challenge enchant using arcana adept:
     win:
       perform intern_conclave +small
       arcana +small
@@ -603,7 +612,7 @@ scene: A long table of elderly mages in heavy robes, all talking at once, a youn
 text: {You've been asked to take the minutes of a Conclave research committee. There are nine members, and none of them ever agrees.|The committee is still arguing about last time's question, and now about the minutes too.|You could take these minutes in your sleep, and some of the committee do attend them that way.} {~Two of them are not speaking to each other, and want it recorded.|One of them asks what you think.|One of them falls asleep, and wakes up to vote.}
 > left: Offer an opinion when asked
   wage
-  chance 50:
+  chance even:
     perform intern_conclave +small
     renown +tiny
     mood -tiny
@@ -634,7 +643,7 @@ scene: A huge copper vat in a steaming hall, a student on a gantry staring into 
 text: {Your task at the works is to watch one great vat and call the foreman if it changes colour.|You've brought your own colour chart now, with notes in the margins.|You and the vat understand each other now. It's an unsettling feeling.} {~The amber is drifting, very slowly.|There's a bubble that keeps coming back, like a thought.|The vat smells faintly of cinnamon, which it never has before.} The foreman is all the way at the other end of the hall.
 > left: Adjust it myself
   wage
-  challenge brew medium:
+  challenge brew adept-:
     win:
       perform intern_alchemists +small
       alchemy +small
@@ -661,28 +670,29 @@ weight: 10
 art: cup
 tags: study
 scene: A break room in an alchemical works, workers gathered around a kettle sitting on a glowing stone that is not, technically, on fire.
-text: {There's a strict rule at the works about naked flames, so the break room has spent forty years inventing flameless ways to boil a kettle.|Break time. The kettle sits on its warm stone, and the workers look at you hopefully.|By now the break room asks the academy intern first, whatever the problem.} {~Today the warm stone has gone cold.|Today someone wants toast, which is a much bigger question.|Today a new inspector is touring the works.}
+text: {There's a strict rule at the works against naked flames, and against any heating reaction the foreman hasn't approved. The break room has spent forty years looking for one he will.|Break time. The kettle sits on its warm stone, and the workers look at you hopefully.|By now the break room asks the academy intern first, whatever the problem.} {~Today the warm stone has gone cold.|Today someone wants toast, which is a much bigger question.|Today a new inspector is touring the works.}
 > left: Help brew the flameless tea
   wage
-  chance 70:
+  chance likely:
     alchemy +small
     mood +small
     say: {~You heat the kettle with a reaction you learned in your first year. The break room calls it "the academy method" and adopts it on the spot.|It works, though everything boiled on it comes out a little purple.}
   else:
     perform intern_alchemists -small
     mood -tiny
-    say: {~Your method works so well that someone in charge notices the steam. There's a meeting about it, with you in it.|The kettle boils, and so, briefly, does the table.}
+    say: {~Your method works so well that someone in charge notices the steam from a reaction nobody approved. There's a meeting about it, with you in it.|The kettle boils, and so, briefly, does the table.}
 > right: Stick to the rules
   wage
   perform intern_alchemists +tiny
   mood -small
-  say: {~You drink cold water while everyone else drinks tea. The foreman notes your conduct, and the break room notes it too.|You remind everyone of the rule. You are absolutely right and nobody offers you a biscuit for the rest of the week.}
+  say: {~You drink cold water while everyone else drinks tea brewed on an unapproved reaction. The foreman notes your conduct, and the break room notes it too.|You remind everyone of the rule. You are absolutely right and nobody offers you a biscuit for the rest of the week.}
 
 # ---------------- Internship: the Observatory Expedition ----------------
 
 @event intern_expedition_thin_air
 title: Up the Ridge
 track: intern_expedition
+slot: evening
 class: routine
 tone: light
 repeat: 5
@@ -723,7 +733,7 @@ text: {Your chart and the senior astronomer's disagree about where one faint sta
   say: {~You recheck it until dawn. You were right by a hair, and nobody will ever care but you.|You were wrong by a hair. You fix it, and know the sky better than you did.}
 > right: Raise it with the astronomer
   wage
-  chance 50:
+  chance even:
     perform intern_expedition +small
     charm +tiny
     say: {~The astronomer checks, grumbles and corrects their chart. Then they buy you a cup of the camp's terrible coffee.|"Well spotted," says the astronomer, through their teeth.}
@@ -737,6 +747,7 @@ text: {Your chart and the senior astronomer's disagree about where one faint sta
 @event intern_field_station_count
 title: The Dawn Count
 track: intern_field_station
+slot: morning
 class: routine
 tone: warm
 repeat: 5
@@ -753,10 +764,10 @@ text: {Every morning someone has to lie in the heather and count what's living o
   say: {~You count until your fingers are numb and the tally is perfect. The warden reads it twice and pins it on the wall.|You stay out until the very last nest is counted. You come back soaked and very proud of the number.}
 > right: Make a sensible estimate
   wage
-  chance 60:
-    guile +small
+  chance likely:
+    lore +small
     mood +tiny
-    say: {~Your estimate is so close that nobody suspects. You spend the extra hour by the stove with a cup of tea.|The warden checks your number against his own and nods. You will never tell him.}
+    say: {~You mark it "estimated" in the margin, the way the station counts the far nests anyway. The warden accepts it, and you spend the extra hour by the stove with a cup of tea.|The warden checks your estimate against his own count and nods. He does the same on wet mornings.}
   else:
     perform intern_field_station -small
     mood -tiny
@@ -775,14 +786,14 @@ scene: A muddy paddock with a splinted creature glaring from a straw nest, a stu
 text: {The station's latest patient is a moor-drake with a splinted wing and no gratitude at all.|Feeding time in paddock three. The patient sees you coming and lowers its head.|The drake in paddock three recognises you now. This hasn't made it any nicer.} {~It has eaten a glove.|It is pretending to sleep, which it does very badly.|It has learned to open the bucket by itself.} {season == "winter": Its breath steams in the frosty air.|It is lying in the one patch of shade.}
 > left: Feed it by hand
   wage
-  chance 65:
+  chance likely:
     perform intern_field_station +small
     vigor +small
     say: {~It takes the food from your hand, very gently. Then it bites the bucket, to make a point.|It lets you check the splint, grumbling the whole time like an old man at the barber's.}
   else:
     health -small
     vigor +tiny
-    say: {~It takes the food and a bit of your sleeve. Your arm is fine. Your sleeve is not.|It butts you into the mud and then looks pleased with itself.}
+    say: {~It takes the food, a bit of your sleeve and a bruise's worth of your arm.|It butts you into the mud and then looks pleased with itself.}
 > right: Use the long tongs
   wage
   perform intern_field_station +tiny
@@ -794,6 +805,7 @@ text: {The station's latest patient is a moor-drake with a splinted wing and no 
 @event intern_thornwick_pastries
 title: Thornwick Hospitality
 track: intern_thornwick
+slot: morning
 class: routine
 tone: light
 repeat: 5
@@ -804,7 +816,7 @@ scene: A polished laboratory table at a rival academy, a plate of perfect pastri
 text: {Each morning your Thornwick hosts leave pastries on your desk, with a polite note.|The notes have grown longer and politer, which is worrying.|The pastries are a game now, and both sides know it.} {~They look perfect, which in an illusion lab is a warning.|One is steaming slightly, which it shouldn't be.|Today there's one plain biscuit, which is somehow worse.} {season == "winter": The pastries look very warm.|The icing hasn't melted in the heat.}
 > left: Eat one and smile
   wage
-  chance 60:
+  chance likely:
     mood +small
     charm +tiny
     say: {~It's real, and very good. The Thornwick interns look almost disappointed.|It's real. You eat it slowly, in front of everyone, and thank them warmly.}
@@ -831,7 +843,7 @@ scene: A group of rival students around a lab bench, one of them leaning in with
 text: {The Thornwick students have questions about Lumenhold. Most of them are about the last time the two schools met on the duelling field.|The Thornwick students have found a new angle on the old grudge.|You and the Thornwick students have a routine now. It's almost friendly.} {~Today they want to know if Lumenhold's towers still lean.|Today they ask, sweetly, if Lumenhold teaches illusion yet.|Today one of them pretends to be you, very well.}
 > left: Out-charm them
   wage
-  challenge negotiate medium:
+  challenge negotiate adept-:
     win:
       perform intern_thornwick +small
       charm +small
@@ -861,7 +873,7 @@ scene: A plain room with no windows and a gleaming coffee machine, quiet people 
 text: {Nobody at the Office talks about anything, except the coffee machine. It's very good.|A queue forms around the machine each evening, though nobody seems to join it.|The coffee queue, you've learned, is where the Office's real work gets done.} {~Two people beside you discuss the weather in a way that isn't about the weather.|A cup has a name on it that was there yesterday, under another name.|The machine hisses, and everyone falls silent until it stops.}
 > left: Linger at the machine
   wage
-  chance 60:
+  chance likely:
     guile +small
     perform intern_unseen_office +tiny
     say: {~You learn three things nobody told you, and one thing nobody knows you know.|You drink your coffee slowly and listen. By the second cup you understand what nobody is saying.}
@@ -888,7 +900,7 @@ text: {A file has been left on your desk. It isn't yours, and it isn't labelled.
 > left: Read it before returning it
   wage
   alignment -tiny
-  challenge deceive medium:
+  challenge deceive adept-:
     win:
       guile +small
       perform intern_unseen_office +small

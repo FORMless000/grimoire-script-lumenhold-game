@@ -13,8 +13,8 @@ text [a148a4] = {护盾演练。社员排成一列举着护盾，高年级生从
 scene [271b31] = 一排学生在焦黑的大厅里举着微光闪烁的护盾，高年级生朝他们抛掷火花。
 # en: Take the front of the line
 opt.left.label [d28df6] = 站到队伍最前面
-# en: {~Your shield takes everything and hums about it afterwards.|Hexes splash off your ward like rain off a good hat.|You hold until the bell. Lyra writes something down, which is either praise or a list of your faults.}
-opt.left.say.1 [ac5ab3] = {~你的护盾照单全收，事后还嗡嗡响了好一阵。|咒语从你的护界上溅开，像雨水打在一顶好帽子上。|你一直撑到铃响。莱拉记了点什么，要么是夸奖，要么是你的毛病清单。}
+# en: {~Your shield takes everything and hums about it afterwards.|Hexes splash off your ward like rain off a good hat.|You hold until the bell. {around(lyra): Lyra|The senior on the whistle} writes something down, which is either praise or a list of your faults.}
+opt.left.say.1 [61e226] = {~你的护盾照单全收，事后还嗡嗡响了好一阵。|咒语从你的护界上溅开，像雨水打在一顶好帽子上。|你一直撑到铃响。{around(lyra): 莱拉|吹哨的高年级生}记了点什么，要么是夸奖，要么是你的毛病清单。}
 # en: {~A hex finds the gap by your elbow. Your arm fizzes until supper.|Your ward folds like wet paper. The senior apologises, mostly to the floor.}
 opt.left.say.2 [2963e5] = {~一道咒语钻进你手肘边的空隙，整条胳膊麻到晚饭。|你的护盾像湿纸一样折了。那位学长道了歉，主要是对着地板。}
 # en: Hold the back row tonight
@@ -23,14 +23,14 @@ opt.right.label [a28ef7] = 今晚待在后排
 opt.right.say.1 [dd0d87] = {~在后排，你看清了好护盾是弯而不折的。没人看你。|你整场都在研究前排的失误，感觉很有用，看起来很像在躲。|在安全的后排，你对天花板有了深入了解。}
 # en: Hold the line with a real ward
 opt.up.label [c704b4] = 用真正的护界守住阵线
-# en: {~You raise a proper ward, the one from Umbral Theory, and the seniors' hexes slide off it like rain off glass. Lyra stops the drill to look.|Your ward holds the whole line's flank. Your arm aches from the mana, not the hexes.}
-opt.up.say.1 [db3ad0] = {~你立起一道真正的护界，暗影理论课上学的那种，高年级生的恶咒从上面滑开，像雨水滑过玻璃。莱拉停下训练来看。|你的护界守住了整条阵线的侧翼。你的胳膊酸痛，是因为法力，不是因为恶咒。}
+# en: {~You raise a proper ward, the one from Umbral Theory, and the seniors' hexes slide off it like rain off glass. {around(lyra): Lyra stops the drill to look.|The seniors stop the drill to look.}|Your ward holds the whole line's flank. Your arm aches from the mana, not the hexes.}
+opt.up.say.1 [d522b4] = {~你立起一道真正的护界，暗影理论课上学的那种，高年级生的恶咒从上面滑开，像雨水滑过玻璃。{around(lyra): 莱拉停下训练来看。|高年级生们停下训练来看。}|你的护界守住了整条阵线的侧翼。你的胳膊酸痛，是因为法力，不是因为恶咒。}
 
 @event duelling_dummy_mending
 # en: Mending the Dummies
 title [d3be80] = 缝补假人
-# en: {After practice someone has to mend the dummies, and tonight the rota says it's you.|Mending night. You now keep a spare spool of thread in your pocket, just for the dummies.|You have stitched every dummy here twice. They look at you with something like trust.} {~The tall dummy is missing an arm. Someone always takes the arm.|One dummy is now mostly scorch mark.|Someone has painted a new name on a dummy's chest, and a grudge beneath it.}
-text [97b6af] = {练习结束后总得有人缝补假人，值日表上今晚写的是你。|缝补之夜。你现在口袋里常备一卷线，专为这些假人。|这里每个假人你都缝过两遍。它们看你的眼神有点像信任了。} {~那个高个子假人少了一条胳膊。总有人把胳膊拿走。|有个假人现在基本只剩焦痕。|有人在一个假人胸口画了新名字，下面还写着一笔旧怨。}
+# en: {After practice someone has to mend the dummies, and tonight the rota says it's you.|Mending night again, and the rota has your name on it.|You know every dummy here by its scars. They look at you with something like trust.} {~The tall dummy is missing an arm. Someone always takes the arm.|One dummy is now mostly scorch mark.|Someone has painted a new name on a dummy's chest, and a grudge beneath it.}
+text [1f9043] = {练习结束后总得有人缝补假人，值日表上今晚写的是你。|又是缝补之夜，值日表上又有你的名字。|这里每个假人身上的伤疤你都认得。它们看你的眼神有点像信任了。} {~那个高个子假人少了一条胳膊。总有人把胳膊拿走。|有个假人现在基本只剩焦痕。|有人在一个假人胸口画了新名字，下面还写着一笔旧怨。}
 # en: A student alone in a duelling hall at night, stitching straw back into a battered practice dummy.
 scene [29efd2] = 夜里，一个学生独自坐在决斗厅里，把稻草塞回一个破旧的练习假人。
 # en: Stay late and stitch them up
@@ -39,14 +39,14 @@ opt.left.label [84da41] = 留下来把它们缝好
 opt.left.say.1 [ab7892] = {~到午夜，所有假人都完好如初，你身上也多了几处不该有稻草的地方。|你把一个假人的胳膊缝反了。它看起来反倒更危险了。|大厅很安静，针脚很稳，整整一个钟头没人嚷嚷步法。}
 # en: Leave them for the morning
 opt.right.label [3c93be] = 留到明早再说
-# en: {~In the morning the dummies are still in pieces, and so is Lyra's patience.|You slip out early. Someone finds the dummies and puts your name on next week's rota, underlined twice.}
-opt.right.say.1 [d5fdbc] = {~第二天早上，假人们还是一地零件，莱拉的耐心也是。|你提前溜了。有人发现了这些假人，把你的名字写进下周值日表，还画了两道线。}
+# en: {~In the morning the dummies are still in pieces, and so is the seniors' patience.|You slip out early. Someone finds the dummies and puts your name on next week's rota, underlined twice.}
+opt.right.say.1 [390001] = {~第二天早上，假人们还是一地零件，高年级生们的耐心也是。|你提前溜了。有人发现了这些假人，把你的名字写进下周值日表，还画了两道线。}
 
 @event duelling_refereeing_lyra
 # en: Refereeing Lyra
 title [9a9369] = 给莱拉当裁判
-# en: {Officers referee, so tonight you hold the whistle while Lyra duels a second-year.|You know the circle's chalk by heart now, and Lyra's footwork better.|{rel(lyra) >= 12: Lyra no longer asks who is refereeing. She looks for you.|The whistle has a dent in it from some earlier, unrecorded argument.}} {~Her last spell landed a breath after the bell.|She stepped out of the circle by a boot's width, and knows it.|Her opponent's shield dropped first, but only if you squint.} {final_year: One of the last bouts you will call for her.|}
-text [5c5000] = {干部要当裁判，于是今晚你拿着哨子，看莱拉和一个二年级生对决。|决斗圈的粉笔线你已烂熟于心，莱拉的步法你更熟。|{rel(lyra) >= 12: 莱拉已经不问谁当裁判了。她直接找你。|哨子上有个凹痕，来自某次没记录在案的争执。}} {~她最后一道咒语比铃声晚了一口气。|她踏出圈外一只靴子宽，她自己也知道。|对手的盾先落下，但得眯着眼才看得出。} {final_year: 这是你最后几次为她判比赛了。|}
+# en: {Officers referee, so tonight you hold the whistle while Lyra duels a second-year.|You know the circle's chalk by heart now, and Lyra's footwork better.|{rel(lyra) >= 12: Lyra no longer asks who is refereeing. She looks for you.|The whistle has a dent in it from some earlier, unrecorded argument.}} {~Her last spell landed a breath after the bell.|She stepped out of the circle by a boot's width, and knows it.|Her last hex went in after her opponent had called the yield.} {final_year: One of the last bouts you will call for her.|}
+text [a06a29] = {干部要当裁判，于是今晚你拿着哨子，看莱拉和一个二年级生对决。|决斗圈的粉笔线你已烂熟于心，莱拉的步法你更熟。|{rel(lyra) >= 12: 莱拉已经不问谁当裁判了。她直接找你。|哨子上有个凹痕，来自某次没记录在案的争执。}} {~她最后一道咒语比铃声晚了一口气。|她踏出圈外一只靴子宽，她自己也知道。|她最后一道恶咒是在对手喊了认输之后才打出去的。} {final_year: 这是你最后几次为她判比赛了。|}
 # en: A student with a whistle watching a noble duellist in a chalk circle, her opponent's shield just failing.
 scene [a5fea0] = 一个拿着哨子的学生注视着圈中的贵族决斗者，她对手的护盾正要崩溃。
 # en: Call it against her
@@ -151,14 +151,14 @@ text [e4dcef] = {你上了浇水值日表，那是一张门板大的图表。|�
 scene [535c02] = 热气蒸腾的温室里，一个学生拿着水壶和一张巨大的图表，几株蕨饥渴地凑过来。
 # en: Follow the chart exactly
 opt.left.label [577433] = 严格按表来
-# en: {~Warm rainwater for the ferns, cold tea for the moss, nothing at all for the cactus that bites. It takes all afternoon.|By the chart, to the drop. Tobias says the plants look "right pleased", and they do, in a leafy way.}
-opt.left.say.1 [481e3e] = {~给蕨浇温雨水，给苔藓浇冷茶，那株咬人的仙人掌一滴也不给。整整花了一下午。|按表来，一滴不差。托比亚斯说植物们看着“可高兴了”，确实，以叶子的方式。}
+# en: {~Warm rainwater for the ferns, cold tea for the moss, nothing at all for the cactus that bites. It takes all afternoon.|By the chart, to the drop. {around(tobias): Tobias says the plants look "right pleased", and they do, in a leafy way.|The plants look pleased, in a leafy way.}}
+opt.left.say.1 [e23826] = {~给蕨浇温雨水，给苔藓浇冷茶，那株咬人的仙人掌一滴也不给。整整花了一下午。|按表来，一滴不差。{around(tobias): 托比亚斯说植物们看着“可高兴了”，确实，以叶子的方式。|植物们看着很高兴，以叶子的方式。}}
 # en: Water by feel
 opt.right.label [36cb6b] = 凭感觉浇
-# en: {~You read the leaves instead of the chart. Everything perks up, and one fern makes a sound suspiciously like purring.|You guess right on every bed. Tobias asks how you knew. You honestly don't.}
-opt.right.say.1 [18e9c7] = {~你看叶子而不看表。一切都精神起来了，有一株蕨发出的声音很像呼噜。|每一床你都猜对了。托比亚斯问你怎么知道的。你真的不知道。}
-# en: {~You drown a pot of sundew, and a biting fern takes a polite nip of your thumb.|The moss wanted tea, not water. It sulks visibly.}
-opt.right.say.2 [59bb15] = {~你淹了一盆茅膏菜，一株咬人蕨还客客气气地啃了你的拇指一口。|苔藓要的是茶，不是水。它明显在生闷气。}
+# en: {~You read the leaves instead of the chart. Everything perks up, and one fern makes a sound suspiciously like purring.|You guess right on every bed. {around(tobias): Tobias asks how you knew. You honestly don't.|You couldn't say how you knew.}}
+opt.right.say.1 [96be6d] = {~你看叶子而不看表。一切都精神起来了，有一株蕨发出的声音很像呼噜。|每一床你都猜对了。{around(tobias): 托比亚斯问你怎么知道的。你真的不知道。|你自己也说不清是怎么知道的。}}
+# en: {~You drown a pot of sundew, and a biting fern takes a polite nip of your thumb.|The moss wanted tea, not water. It sulks visibly, and the cactus you reach past bites.}
+opt.right.say.2 [1d3bbd] = {~你淹了一盆茅膏菜，一株咬人蕨还客客气气地啃了你的拇指一口。|苔藓要的是茶，不是水。它明显在生闷气，你伸手越过的那株仙人掌还咬了你一口。}
 
 @event verdant_repotting_day
 # en: Repotting Day
@@ -297,8 +297,8 @@ opt.right.say.1 [83e774] = {~你的告示写着“马上回来”。书区下午
 @event library_assistant_hush_round
 # en: The Hush Round
 title [bd75f0] = 肃静巡视
-# en: {Evening hush round. One lap of the reading room, a lamp, a finger to your lips.|The reading room has learned the sound of your lamp. Whispers stop a table ahead of you.|The regulars hear your step and straighten up before you reach them.} {~A table of second-years is giggling.|An old scholar snores on his notes, in a scholarly key.|Somebody's quill is scratching so loudly it echoes.} {final_year: Soon this will be someone else's lap.|}
-text [2d03a0] = {傍晚的肃静巡视。在阅览室走一圈，一盏灯，一根竖在唇边的手指。|阅览室已经认得你提灯的声音，你还隔着一张桌子，低语就停了。|常客们听到你的脚步，不等你走近就坐直了。} {~一桌二年级生笑个不停。|一位老学者趴在笔记上打鼾，鼾声都带着学术腔调。|不知谁的羽毛笔沙沙响得都有回声了。} {final_year: 很快这一圈就是别人的了。|}
+# en: {Hush round. One lap of the reading room, a lamp, a finger to your lips.|The reading room has learned the sound of your lamp. Whispers stop a table ahead of you.|The regulars hear your step and straighten up before you reach them.} {~A table of second-years is giggling.|An old scholar snores on his notes, in a scholarly key.|Somebody's quill is scratching so loudly it echoes.} {final_year: Soon this will be someone else's lap.|}
+text [fde51c] = {肃静巡视。在阅览室走一圈，一盏灯，一根竖在唇边的手指。|阅览室已经认得你提灯的声音，你还隔着一张桌子，低语就停了。|常客们听到你的脚步，不等你走近就坐直了。} {~一桌二年级生笑个不停。|一位老学者趴在笔记上打鼾，鼾声都带着学术腔调。|不知谁的羽毛笔沙沙响得都有回声了。} {final_year: 很快这一圈就是别人的了。|}
 # en: A student assistant with a lamp walking between study tables in a dim library, one finger to her lips.
 scene [207931] = 昏暗的图书馆里，一个提灯的学生助理在自习桌之间走过，一根手指竖在唇边。
 # en: Hush them firmly
@@ -313,8 +313,8 @@ opt.right.say.1 [48d593] = {~你没管。声音越来越大，图书馆馆长不
 @event library_assistant_reference_desk
 # en: The Reference Desk
 title [6eeb1e] = 咨询台
-# en: {Clerks take the reference desk alone. The first question arrives before you sit down.|The desk has a worn patch now, exactly where your elbows go.|You keep a list of the strangest questions now, and it is long.} {~A professor wants "the green book, about this thick, I read it in my youth".|A first-year wants a book on a spell nobody has written yet.|A visiting scholar wants every book that mentions bees, by tonight.}
-text [4ea61d] = {文员要独自值咨询台。你还没坐下，第一个问题就来了。|柜台上如今磨出了一块亮斑，正好是你搁手肘的地方。|你现在专门记录最古怪的问题，单子已经很长了。} {~一位教授要找“那本绿皮书，大概这么厚，我年轻时读过”。|一个一年级生要找一本讲一道还没人写出来的咒语的书。|一位来访学者要今晚之前找齐所有提到蜜蜂的书。}
+# en: {Clerks take the reference desk alone. The first question arrives before you sit down.|The desk has a worn patch now, exactly where your elbows go.|You keep a list of the strangest questions now, and it is long.} {~A professor wants "the green book, about this thick, I read it in my youth".|A first-year wants the book their professor "definitely mentioned".|A visiting scholar wants the one book that explains why bees hum in thirds, by tonight.}
+text [088a36] = {文员要独自值咨询台。你还没坐下，第一个问题就来了。|柜台上如今磨出了一块亮斑，正好是你搁手肘的地方。|你现在专门记录最古怪的问题，单子已经很长了。} {~一位教授要找“那本绿皮书，大概这么厚，我年轻时读过”。|一个一年级生要找他们教授“肯定提过”的那本书。|一位来访学者要在今晚之前找到那本解释蜜蜂为什么用三度音嗡嗡叫的书。}
 # en: A student behind a reference desk facing a line of readers, one of them holding up a green ribbon.
 scene [d1f7a3] = 一个学生坐在咨询台后，面对一队读者，其中一人举着一根绿丝带。
 # en: Dig until you find it
@@ -347,8 +347,8 @@ opt.right.say.1 [dd5a65] = 脚注在你前面轻步走上每一级台阶，抢�
 @event tavern_cider_rush
 # en: The Cider Rush
 title [9095b3] = 苹果酒高峰
-# en: {The evening rush at the Gilded Newt. A dozen orders shouted at once, and a tray that holds fewer.|Half past seven, and the door won't stay shut. You have started remembering faces by their drink, which works until two people want spiced cider.|The regulars just point now, and you know what the points mean.} {~A barge crew has come in soaked and thirsty.|The card table is arguing about the rules again.|{season == "winter": Snow is melting off every coat in the room.|Half the village is on the step.}}
-text [8cff7f] = {镀金蝾螈酒馆的傍晚高峰。十几份点单同时喊过来，托盘却放不下那么多。|七点半，门怎么也关不上。你开始凭各人点的酒记住他们的脸，直到有两个人都要香料苹果酒。|常客们现在只用手指，你也都看得懂。} {~一队驳船船员浑身湿透地进来，口渴得很。|牌桌那边又在为规则吵架了。|{season == "winter": 满屋大衣上的雪都在化。|半个小镇的人都站在门口台阶上。}}
+# en: {The rush at the Gilded Newt. A dozen orders shouted at once, and a tray that holds fewer.|The door won't stay shut. You have started remembering faces by their drink, which works until two people want spiced cider.|The regulars just point now, and you know what the points mean.} {~A barge crew has come in soaked and thirsty.|The card table is arguing about the rules again.|{season == "winter": Snow is melting off every coat in the room.|Half the village is on the step.}}
+text [fa7f84] = {镀金蝾螈酒馆的高峰。十几份点单同时喊过来，托盘却放不下那么多。|门怎么也关不上。你开始凭各人点的酒记住他们的脸，直到有两个人都要香料苹果酒。|常客们现在只用手指，你也都看得懂。} {~一队驳船船员浑身湿透地进来，口渴得很。|牌桌那边又在为规则吵架了。|{season == "winter": 满屋大衣上的雪都在化。|半个小镇的人都站在门口台阶上。}}
 # en: A crowded low-beamed tavern, a server balancing a tray of steaming mugs through the press of bodies.
 scene [3aaff4] = 低梁的酒馆里人头攒动，一个侍应托着一盘冒热气的杯子穿过人群。
 # en: Keep every order in your head
@@ -387,8 +387,8 @@ text [165279] = {吧台侍应管着赊账簿，账簿上说{regular}欠了酒馆
 scene [1a746d] = 酒馆吧台上摊开一本账簿，一长列数字，吧台尽头坐着一位满怀希望的客人。
 # en: Call the tab in
 opt.left.label [6ebe68] = 把账收回来
-# en: {~{regular} pays, slowly, coin by coin, as if each one were a friend leaving.|You call it in. {regular} pays half and an apology. The landlady counts both.}
-opt.left.say.1 [a5ea12] = {~{regular}一枚一枚慢慢付钱，好像每枚硬币都是一位离去的朋友。|你开口要账。{regular}付了一半，外加一句道歉。老板娘把两样都点了数。}
+# en: {~{regular} pays, slowly, coin by coin, as if each one were a friend leaving. The landlady slides you a few crowns for the collecting.|You call it in. {regular} pays half and an apology. The landlady counts both, and gives you a few crowns of it for your trouble.}
+opt.left.say.1 [330e1e] = {~{regular}一枚一枚慢慢付钱，好像每枚硬币都是一位离去的朋友。老板娘塞给你几枚克朗，算收账的辛苦费。|你开口要账。{regular}付了一半，外加一句道歉。老板娘把两样都点了数，从里头分了你几枚克朗作辛苦费。}
 # en: Let it ride another week
 opt.right.label [2f306c] = 再宽限一周
 # en: {~{regular} looks at you as if you had hung the moon. The landlady looks at you as if you had lost it.|Another week. The column grows, and so, oddly, does {regular}'s loyalty.}
@@ -441,8 +441,8 @@ opt.left.label [7cc2f8] = 打开那个古怪的抽屉
 opt.left.say.1 [500b7a] = {~里面是一窝干月光花瓣，本该放在最上排。你挪好了，抽屉不再赌气。|你哄开抽屉，找到了失踪的蝾螈粉。佩尔在一张他留了一年的清单上划掉了一项。}
 # en: {~The drawer opens with a sneeze of pepperwort. You sneeze until closing.|Something small and grey bolts out of the drawer and into another, and you never find out which.}
 opt.left.say.2 [e44af0] = {~抽屉一开，喷出一股胡椒草粉。你一直打喷嚏到打烊。|一个灰色的小东西从抽屉里窜出来，钻进了另一个抽屉，你始终不知道是哪个。}
-# en: Mark the row as checked
-opt.right.label [748f18] = 直接标成已核对
+# en: Sign it off unchecked
+opt.right.label [49847c] = 没核对就签字
 # en: {~You tick the row and move on. Behind you a drawer rattles, as if to say it noticed.|"Checked," you write. Pell reads it, opens one drawer at random, and closes it again with a look.}
 opt.right.say.1 [e90b5e] = {~你打了个勾，继续往下。身后一个抽屉咔哒一响，像是在说它看见了。|你写下“已核对”。佩尔看了看，随手拉开一个抽屉，又关上，看了你一眼。}
 
@@ -481,10 +481,10 @@ opt.right.label [bd2847] = 请他看你写第一张
 opt.right.say.1 [f27abb] = 他看着。你的第一张标签末尾抖了一下。佩尔拿过笔，在那一抖上添了个小小的花饰，让它看起来像是故意的，然后把笔还给你，从此归你。
 
 @event broom_courier_morning_crossing
-# en: The Morning Crossing
-title [d5cc3c] = 清晨过湖
-# en: {The dispatch bell rings. The morning sack goes to the village, and the quickest way is over the lake.|You have started timing yourself against the gulls.|The lake knows your shadow by now.} {season == "winter": Ice fog sits on the water like a lid.|{season == "summer": The water is so still you fly over your own reflection.|{~A headwind is coming off the hills.|Gulls are holding a meeting on your route.|The far shore is lost in mist.}}}
-text [6a5395] = {派件铃响了。早班邮袋要送去山下小镇，最快的路是飞过湖面。|你开始和海鸥比速度了。|湖早就认得你的影子了。} {season == "winter": 冰雾像锅盖一样压在水面上。|{season == "summer": 湖水静得你像在自己的倒影上飞。|{~山那边吹来一阵逆风。|一群海鸥在你的航线上开会。|对岸隐没在雾里。}}}
+# en: The Lake Crossing
+title [6090d5] = 过湖
+# en: {The dispatch bell rings. The village sack is ready, and the quickest way is over the lake.|You have started timing yourself against the gulls.|The lake knows your shadow by now.} {season == "winter": Ice fog sits on the water like a lid.|{season == "summer": The water is so still you fly over your own reflection.|{~A headwind is coming off the hills.|Gulls are holding a meeting on your route.|The far shore is lost in mist.}}}
+text [278f00] = {派件铃响了。送往山下小镇的邮袋已经备好，最快的路是飞过湖面。|你开始和海鸥比速度了。|湖早就认得你的影子了。} {season == "winter": 冰雾像锅盖一样压在水面上。|{season == "summer": 湖水静得你像在自己的倒影上飞。|{~山那边吹来一阵逆风。|一群海鸥在你的航线上开会。|对岸隐没在雾里。}}}
 # en: A courier on a broom skimming low over a mirror-still lake at dawn, a mail sack over one shoulder.
 scene [021120] = 黎明时分，一个肩挎邮袋的信使骑着飞帚，贴着镜面般平静的湖水低飞。
 # en: Fly straight across
@@ -505,10 +505,10 @@ title [90ac74] = 抢飞帚
 text [699753] = {阁楼里只有一把飞帚是好的，当班的信使人人都想要它。|你开始提早到场抢飞帚，别人也一样。|你闭着眼凭清漆味都能挑出那把好飞帚。} {~剩下的那把总往左偏。|剩下的那把一紧张就掉枝条。|剩下的那把只有你对它客气才肯飞。} {season == "winter": 霜已经钻进了所有飞帚的帚毛里。|}
 # en: A draughty loft rack of battered brooms, couriers jostling to grab the least battered one.
 scene [bf0220] = 透风的阁楼里一排破旧的飞帚，信使们推搡着去抢最不破的那一把。
-# en: Race for the good broom
-opt.left.label [4eba2c] = 抢那把好飞帚
-# en: {~You get there first, by a whisker and an elbow. The second-year you elbowed will remember.|The good broom is yours. It flies like a dream; the others fly like complaints.}
-opt.left.say.1 [295a16] = {~你抢先一步，赢在毫厘和一记手肘。被你挤开的那个二年级生会记住的。|好飞帚归你了。它飞起来像一场梦，别的飞帚飞起来像一串抱怨。}
+# en: Shoulder in for the good broom
+opt.left.label [fe1030] = 挤上去抢好飞帚
+# en: {~You get there first, by a whisker and an elbow. The second-year you elbowed will remember.|You shoulder a second-year aside and the good broom is yours. It flies like a dream; theirs flies like a complaint.}
+opt.left.say.1 [5a6c9c] = {~你抢先一步，赢在毫厘和一记手肘。被你挤开的那个二年级生会记住的。|你用肩膀把一个二年级生挤到一边，好飞帚归你了。它飞起来像一场梦；他们那把飞起来像一串抱怨。}
 # en: Take the difficult one
 opt.right.label [c8d2e7] = 骑那把难缠的
 # en: {~It fights you the whole way across the lake. Your arms will remember this, and so will you.|It takes the whole route to come to an understanding with it. You win, narrowly.}

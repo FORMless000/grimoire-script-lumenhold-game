@@ -46,7 +46,7 @@ repeat: 5
 art: potion
 tags: social nature
 scene: A healer and a student walking a long infirmary ward at dusk, the student carrying a tray of small glass bottles, lamps being lit along the beds.
-text: {Sister Amaranth catches you in the corridor and hands you a tray of tonics without a word of explanation.|Amaranth holds out the tonic tray as you pass. It seems you are on the rota now.|The tray is waiting for you on the ward table, labelled YOURS in Amaranth's square hand.} {~Six beds tonight.|A first-year with hiccups that light up.|Someone has charmed their own eyebrows off.}
+text: {Sister Amaranth catches you in the corridor and hands you a tray of tonics without a word of explanation.|Amaranth holds out the tonic tray as you pass. It seems you are on the rota now.|The tray is waiting for you on the ward table, labelled YOURS in Amaranth's square hand.} {~Six beds on the ward today.|A first-year with hiccups that light up.|Someone has charmed their own eyebrows off.}
 > left: Do the rounds with her
   study -tiny
   alchemy +small
@@ -124,9 +124,9 @@ text: {Professor Brask holds out a shovel as you pass the stables. She doesn't s
   health -tiny
   rel brask +small
   say: {~An hour of straw and silence. At the end Brask says, "The grey one likes you," which is more than she has said to anyone this term.|She tells you a story about a manticore, a bucket and a bishop. It ends with a bite and a moral. You miss the moral.|The hippogriff bows to you on your way out. Brask pretends not to see.}
-> right: Point out you're not in her class
+> right: Decline, politely
   rel brask -tiny
-  say: {~"Nobody is," she says, "until they are." She takes the shovel back.|"Neither is the hippogriff," says Brask. "It helps anyway."}
+  say: {~"Suit yourself," she says, and takes the shovel back. "The straw won't mind."|"The hippogriff doesn't want to either," says Brask. "It helps anyway."}
 > up[beast_speech]: Ask the stalls what they need
   rel brask +small
   vigor +tiny
@@ -144,7 +144,7 @@ weight: 12
 art: owl
 tags: nature
 scene: A dim stable loft at night, a student sitting cross-legged beside a straw nest where a sick barn owl sleeps under a blanket, a lantern turned low.
-text: Brask finds you at supper and sits down without asking, which is a first. "The old barn owl won't eat," she says. "Somebody should sit with her tonight. Somebody quiet." She is looking at you.
+text: Brask stops you in the corridor and falls into step without asking, which is a first. "The old barn owl won't eat," she says. "Somebody should sit with her tonight. Somebody quiet." She is looking at you.
 > left: Sit up with the owl
   health -small
   rel brask +medium
@@ -167,12 +167,12 @@ weight: 20
 art: feather
 tags: nature magic
 scene: A professor and a student at the edge of a forest at dusk, both bowing low to a great antlered stag half-hidden in the trees.
-text: Brask takes you to the edge of the Whisperwood at dusk. "Most people talk at animals," she says. "A few talk to them. Fewer listen." She bows, very low, to something in the trees. "Do as I do. I'll teach you the rest."
+text: Brask takes you to the edge of the Whisperwood one afternoon. "Most people talk at animals," she says. "A few talk to them. Fewer listen." She bows, very low, to something in the trees. "Do as I do. I'll teach you the rest."
 > left: Bow, and learn
   learn_spell beast_speech
   rel brask +small
   health -tiny
-  say: It takes until full dark, and something huge breathes on your neck for most of it. Then, faintly, you understand a word. It is "rude". Brask laughs once, loudly, the way she does once a term.
+  say: It takes until full dark, bent double until your back aches, and something huge breathes on your neck for most of it. Then, faintly, you understand a word. It is "rude". Brask laughs once, loudly, the way she does once a term.
 > right: Keep your distance
   rel brask -tiny
   vigor +small
@@ -187,7 +187,7 @@ class: routine
 tone: light
 trigger: social
 actor: vey
-when: rel(vey) >= 0
+when: rel(vey) >= 0 and around(vey)
 weight: 10
 repeat: 5
 art: mask
@@ -195,18 +195,18 @@ tags: magic study
 scene: A smiling professor in a violet scarf leaning against a corridor wall, a cup of tea in her hand, a second, slightly too perfect cup on the windowsill beside her.
 text: {Professor Vey is in the corridor with two cups of tea. She offers you one. "Only one of them is real," she says pleasantly.|Vey stops you on the stairs. "There's a coin behind your ear. Or there isn't."|"Good morning," says Vey, and the door you were about to open is, possibly, a wall.} {~She looks delighted already.|A student behind you walks into something.|She is humming.}
 > left: Look closely
-  challenge deceive medium:
+  challenge deceive adept:
     win:
       charm +small
       rel vey +small
-      say: {~You pick the right one. Vey raises her cup to you. "Insufferable," she says, beaming.|You catch the shimmer at the edge. "Ah," says Vey. "You've been paying attention. Dreadful habit. Keep it."}
+      say: {~You pick the real one. Vey raises an eyebrow. "Insufferable," she says, beaming.|You catch the shimmer at the edge. "Ah," says Vey. "You've been paying attention. Dreadful habit. Keep it."}
     lose:
       mood -tiny
-      say: {~You reach for the tea and close your fingers on air. Vey enjoys this very much.|Wrong. The real one was in her hand the whole time. "It usually is," she says.}
+      say: {~You reach for the real one and close your fingers on air. Vey enjoys this very much.|Wrong. "It's usually the other one," she says, kindly, which is worse.}
 > right: Play along and get it wrong
   guile +small
   rel vey +small
-  say: {~You reach for the false one on purpose, with feeling. Vey narrows her eyes. "Either you're bad at this, or very good," she says. "I'll find out."|You let her win. She knows. She lets you know she knows.}
+  say: {~You choose the false one on purpose, with feeling. Vey narrows her eyes. "Either you're bad at this, or very good," she says. "I'll find out."|You let her win. She knows. She lets you know she knows.}
 
 @event vey_revue
 title: The Faculty Revue
@@ -221,7 +221,7 @@ tags: social festival
 scene: A small stage in the Great Hall hung with violet curtains, a professor directing a nervous student holding a paper crown, chairs being set out below.
 text: Professor Vey is producing the faculty revue, in which professors make fools of themselves for charity. "I need someone to play a king who isn't there," she says. "You'd be wonderful. You'll be terrible. Either is fine."
 > left: Take the part
-  challenge feat using charm medium:
+  challenge feat using charm journeyman+ wild:
     win:
       renown +small
       rel vey +medium
@@ -242,7 +242,7 @@ class: milestone
 tone: eerie
 trigger: social
 actor: vey
-when: rel(vey) >= 20
+when: rel(vey) >= 20 and around(vey)
 weight: 20
 art: mirror
 tags: magic
@@ -295,7 +295,7 @@ repeat: 5
 art: wave
 tags: nature magic
 scene: Dawn mist on a still lake, a professor standing waist-deep in the water waving cheerfully to a shivering student on the jetty.
-text: {Professor Marisol is in the lake at dawn, waist-deep, and waves at you as though this were normal.|Marisol again, in the lake. "It's lovely once you're in," she calls. It is not lovely.|"You came!" calls Marisol from the water. You had been walking past.} {~There is ice at the edges.|A heron is watching her with professional respect.|She has a book in one hand, held perfectly dry.}
+text: {Professor Marisol is in the lake, waist-deep, and waves at you as though this were normal.|Marisol again, in the lake. "It's lovely once you're in," she calls. It is not lovely.|"You came!" calls Marisol from the water. You had been walking past.} {~There is ice at the edges.|A heron is watching her with professional respect.|She has a book in one hand, held perfectly dry.}
 > left: Wade in
   health -tiny
   arcana +small
@@ -322,7 +322,7 @@ tags: nature magic danger
 scene: A wild storm over a dark lake, a professor and a student standing on a rocky point with their arms raised, lightning splitting the sky behind them.
 text: There's a knock at your window during the worst storm of the year. Professor Marisol is outside, hair everywhere, grinning. "Nobody learns tides on a calm day," she shouts over the wind. "Coming?"
 > left: Go out into it
-  challenge feat using arcana medium:
+  challenge feat using arcana adept- wild:
     win:
       arcana +medium
       rel marisol +medium
@@ -398,11 +398,11 @@ art: cup
 tags: social home
 scene: A small tin of tea wrapped in brown paper and string on a dormitory pillow, a handwritten label on top and a pressed flower tucked under the string.
 text: {A small tin arrives on the barge with your name on it, in Mabel's round hand. The label says "FOR THE COUGH I HEARD THROUGH THE DOOR."|Another tin from Mabel. The label says "FOR WHATEVER THIS WEEK IS."|Mabel's tins have a shelf of their own now. Today's label says only "YOU KNOW."} {~There's a pressed violet under the string.|It smells of honey and woodsmoke.|There's a biscuit taped to the lid.}
-> left: Pay her next time you're down
+> left: Bring her something back
   gold -tiny
   health +small
   rel mabel +small
-  say: {~You leave the crowns on her counter. She pushes them back. You leave them again. This goes on for some time.|You thank her in person. "Don't," she says. "Drink it." You do. It works.}
+  say: {~You bring her a jar of honey from the market. She calls it bribery and puts it on the shelf behind the counter.|You bring her flowers from the village stall. "Don't," she says. "Drink it." You do. It works.}
 > right: Send it back with a note
   rel mabel -tiny
   say: {~She sends it back again with a longer note. You give up and drink it.|The tin comes back on the next barge. The label now says "STUBBORN."}
@@ -422,7 +422,6 @@ text: Behind Mabel's counter is a row of hooks with cups on them, each painted w
 > left: Ask whose the others are
   rel mabel +small
   mood +medium
-  gold -tiny
   say: She tells you, cup by cup: a fisherman, a dead headmaster, a girl who became a duchess and still writes. "And you," she says. Something in your chest unknots.
 > right: Say thank you and sit down
   mood +small
@@ -543,7 +542,7 @@ text: {Old Pell sets a dropper in your hand. "Forty. Aloud." He watches your lip
   rel pell +small
   say: {~Forty, exactly. Pell says nothing for a full minute, then "Again." You are fairly sure that was praise.|You lose count at thirty-one and start over without being told. Pell grunts approvingly.}
 > right: Eyeball it; it's close enough
-  challenge brew easy:
+  challenge brew apprentice wild:
     win:
       alchemy +tiny
       say: {~It's right. Pell checks it three times and is visibly annoyed that it's right.|Close enough is, today, exactly right. "Luck," says Pell. "Don't."}
@@ -567,12 +566,15 @@ text: Pell's daughters want a new sign, brighter labels and a counter that faces
 > left: Side with the daughters
   rel pell -small
   mood +small
-  alignment +tiny
   say: Pell stamps into the back room. A week later the new sign goes up. Underneath it, in small old letters, it still says PELL. He shows you, gruffly, as though you'd asked.
 > right: "The drawers have never been wrong."
   rel pell +medium
-  gold +small
-  say: Pell glows. The daughters glare. Pell gives you a raise and the daughters give you all the worst stocktakes. Everyone feels this is fair.
+  if member(apothecary_clerk):
+    gold +small
+    say: Pell glows. The daughters glare. Pell gives you a bonus and the daughters give you all the worst stocktakes. Everyone feels this is fair.
+  else:
+    health +small
+    say: Pell glows. The daughters glare. Pell presses a bottle of his best tonic on you, and the daughters give you a look that lasts a month.
 
 # ---------------- Grisk (the moneylender) ----------------
 
@@ -588,7 +590,7 @@ repeat: 6
 art: pouch
 tags: money social
 scene: A goblin in a velvet waistcoat sitting at a corner table in a low-beamed tavern, raising a small glass to a student, a fat ledger at his elbow.
-text: {Grisk raises a small glass from the corner table of the Gilded Newt. "My friend," he says. "Do sit. I'm not working."|Grisk, at the corner table again. "How is the purse?" he asks, with what sounds like real concern.|"Ah, my favourite non-client," purrs Grisk.} {~His ledger stays closed, which feels deliberate.|He is eating a single olive very slowly.|The landlady gives you a warning look.}
+text: {Grisk raises a small glass from the corner table of the Gilded Newt. "My friend," he says. "Do sit. I'm not working."|Grisk, at the corner table again. "How is the purse?" he asks, with what sounds like real concern.|{has(in_debt) or flag(grisk_done): "Ah, my favourite client," purrs Grisk.|"Ah, my favourite non-client," purrs Grisk.}} {~His ledger stays closed, which feels deliberate.|He is eating a single olive very slowly.|The landlady gives you a warning look.}
 > left: Sit for one drink
   renown -tiny
   guile +small
@@ -611,13 +613,15 @@ tags: money
 scene: A goblin leaning across a tavern table to murmur into a student's ear, sliding a single gold coin across the wood with one finger.
 text: Grisk slides a coin across the table. "Between friends," he murmurs. "The barge company is about to buy a second barge. The ferryman's cousin will sell his share this week, cheap, because he doesn't know. You could know."
 > left: Buy the share
+  hint: The share costs a fair few crowns.
   alignment -tiny
-  chance 60:
+  gold -medium
+  chance likely:
     gold +large
+    gold +medium
     rel grisk +small
     say: The second barge arrives. The share triples. Grisk lifts his glass across the Newt. You feel rich and slightly unwell.
   else:
-    gold -medium
     say: The second barge sinks on its first crossing. Grisk is sympathetic. "Risk," he says. "Delicious, and sometimes poison."
 > right: Leave the cousin his share
   rel grisk -tiny

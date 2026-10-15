@@ -822,6 +822,7 @@
             case 'since': return s.last[a[0]] != null ? s.turn - s.last[a[0]] : 999;
             case 'chosen': return s.choices[a[0]] === a[1];
             case 'bonds': return Object.values(s.npcs).filter((x) => x.met && x.bond === a[0]).length;
+            case 'bonds_around': return Object.entries(s.npcs).filter(([k, x]) => x.met && x.bond === a[0] && eng.c.npcs[k] && !eng.isAway(k)).length;
             case 'known': return Object.values(s.npcs).filter((x) => x.met).length;
             case 'rand': return eng.randInt(Math.round(a[0]), Math.round(a[1]));
             case 'chance_of': return eng.checkChance(a[0], a[1]);

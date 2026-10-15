@@ -227,7 +227,7 @@ tags: festival social retired
 scene: Hundreds of paper lanterns rising off the lake at dusk, each with a wish written on it in glowing ink.
 text: On Lantern Night every student writes a wish on a paper lantern and lets it go over the lake. Rumour says the lanterns that sink were wishes the lake wanted for itself.
 > left: Wish for something selfish
-  chance 50:
+  chance even:
     gold +large
     say: Your lantern rises high. The next morning you find coins in your shoe. The lake is generous, and a little creepy.
   else:
@@ -278,7 +278,7 @@ tags: study exam retired
 scene: A vast examination hall where floating quills hover over a hundred desks and the windows are thick with frost.
 text: The Winter Trials. A hundred desks, a hundred floating quills, one very old proctor who may be asleep. The first question asks you to explain the Third Law of Correspondence. The second asks you to demonstrate it.
 > left: Lean on theory
-  challenge exam medium:
+  challenge research journeyman:
     win:
       study +huge
       mood +small
@@ -288,7 +288,7 @@ text: The Winter Trials. A hundred desks, a hundred floating quills, one very ol
       mood -small
       say: You write three pages and realise halfway that you have been answering a different question.
 > right: Lean on practice
-  challenge spell medium:
+  challenge spell journeyman:
     win:
       study +huge
       renown +small
@@ -315,38 +315,27 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
 > lyra: Ask Lyra
   when: met(lyra) and rel(lyra) >= 9
   hint: {&She has had six invitations. She hasn't said yes to any.|She has had invitations again. She is pretending not to count them.}
-  if spark(lyra) >= 25:
-    challenge negotiate vs lyra.charm likely:
-      win:
-        spark lyra +medium
-        rel lyra +medium
-        mood +medium
-        queue ball_last_dance now with lyra
-        say: {&"Finally, someone who doesn't stammer." She dances like a duel — and wins.|{bond(lyra) == "partner": "Obviously," she says, before you finish asking. She leads, of course.|"Again? Fine. You've improved." She dances like a duel, and this year you nearly keep up.}}
-      lose:
-        rel lyra -small
-        mood -small
-        say: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
-  else:
-    challenge negotiate vs lyra.charm:
-      win:
-        spark lyra +medium
-        rel lyra +medium
-        mood +medium
-        queue ball_last_dance now with lyra
-        say: {&"Finally, someone who doesn't stammer." She dances like a duel — and wins.|{bond(lyra) == "partner": "Obviously," she says, before you finish asking. She leads, of course.|"Again? Fine. You've improved." She dances like a duel, and this year you nearly keep up.}}
-      lose:
-        rel lyra -small
-        mood -small
-        say: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
+  challenge negotiate vs lyra.charm +1 if spark(lyra) >= 25:
+    win:
+      spark lyra +medium
+      rel lyra +medium
+      mood +medium
+      queue ball_last_dance now with lyra
+      say: {bond(lyra) == "partner": "Obviously," she says, before you finish asking. She leads, of course.|{flag(ball_lyra): "Again? Fine. You've improved." She dances like a duel, and this year you nearly keep up.|"Finally, someone who doesn't stammer." She dances like a duel — and wins.}}
+      flag ball_lyra
+    lose:
+      rel lyra -small
+      mood -small
+      say: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
 > tobias: Ask Tobias
   when: met(tobias) and rel(tobias) >= 9
-  hint: {&He has been practising with a broom.|He has been practising with a broom again. The broom has improved.}
+  hint: {flag(ball_tobias): He has been practising with a broom again. The broom has improved.|He has been practising with a broom.}
   spark tobias +medium
   rel tobias +medium
   mood +medium
   queue ball_last_dance now with tobias
-  say: {&He steps on your feet nine times and apologises ten. It's the best night of the term.|He only steps on your feet twice this year, and is so proud of it that he tells everyone. It's the best night of the term.}
+  say: {flag(ball_tobias): He only steps on your feet twice this year, and is so proud of it that he tells everyone. It's the best night of the term.|He steps on your feet nine times and apologises ten. It's the best night of the term.}
+  flag ball_tobias
 > seraphine: Ask Seraphine
   when: met(seraphine) and rel(seraphine) >= 9
   hint: She may already know you'll ask.
@@ -354,7 +343,8 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   rel seraphine +medium
   mood +medium
   queue ball_last_dance now with seraphine
-  say: {&"I said yes three weeks ago," she says, "you just hadn't asked yet." She dances a beat ahead of the music.|"Same as last year," Seraphine says, "but you'll wear blue." You hadn't planned to. You do.}
+  say: {flag(ball_seraphine): "Same as last time," Seraphine says, "but you'll wear blue." You hadn't planned to. You do.|"I said yes three weeks ago," she says, "you just hadn't asked yet." She dances a beat ahead of the music.}
+  flag ball_seraphine
 > corvin: Ask Corvin
   when: met(corvin) and rel(corvin) >= 9
   hint: Odds he shows up: unclear.
@@ -362,17 +352,20 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
     spark corvin +medium
     mood +medium
     queue ball_last_dance now with corvin
-    say: {&He arrives late, in a stolen jacket, and is the best dancer in the room.|He arrives on time, which alarms everyone, in a jacket he swears is borrowed. He is still the best dancer in the room.}
+    say: {flag(ball_corvin): He arrives on time, which alarms everyone, in a jacket he swears is borrowed. He is still the best dancer in the room.|He arrives late, in a stolen jacket, and is the best dancer in the room.}
+    flag ball_corvin
   else:
     mood -medium
-    say: {&He never shows. A note arrives at midnight: "Got arrested. Long story. Save me a dance next year."|He never shows. A note arrives at midnight: "Not arrested this time. Worse. Explain later." He never does.}
+    say: {flag(ball_corvin_arrested): He never shows. A note arrives at midnight: "Not arrested this time. Worse. Explain later." He never does.|He never shows. A note arrives at midnight: "Got arrested. Long story. Save me a dance next year."}
+    flag ball_corvin_arrested
 > mir: Ask Mir
   when: met(mir) and rel(mir) >= 9
-  hint: {&They're bringing a self-playing violin.|They promise the violin has been fixed.}
+  hint: {flag(ball_mir): They promise the violin has been fixed.|They're bringing a self-playing violin.}
   spark mir +medium
   rel mir +small
   mood +medium
-  say: {&Mir's violin plays itself, then plays the chandelier, then plays the windows. You are asked to leave early. Worth it.|The violin behaves all night. Mir is almost disappointed, until it plays the last waltz entirely on its own and bows.}
+  say: {flag(ball_mir): The violin behaves all night. Mir is almost disappointed, until it plays the last waltz entirely on its own and bows.|Mir's violin plays itself, then plays the chandelier, then plays the windows. You are asked to leave early. Worth it.}
+  flag ball_mir
 > kael: Ask Kael
   when: met(kael) and rel(kael) >= 12
   hint: He doesn't seem to feel the cold.
@@ -380,7 +373,8 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   rel kael +medium
   mood +medium
   queue ball_last_dance now with kael
-  say: {&He holds your hand like it is something fragile. Where your fingers touch, frost-ferns bloom on the glass.|He takes your hand without asking this time, as if it were already decided. The frost-ferns on the glass grow into a whole winter garden.}
+  say: {flag(ball_kael): He takes your hand without asking this time, as if it were already decided. The frost-ferns on the glass grow into a whole winter garden.|He holds your hand like it is something fragile. Where your fingers touch, frost-ferns bloom on the glass.}
+  flag ball_kael
 > nessa: Ask Nessa
   when: met(nessa) and rel(nessa) >= 9
   hint: She'll be working. She's always working.
@@ -388,11 +382,13 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   rel nessa +medium
   renown +small
   queue ball_last_dance now with nessa
-  say: {&She takes notes between dances. "For the society column." Then she stops taking notes.|She leaves her notebook in her bag all night. "The column can make something up," she says. It does.}
+  say: {flag(ball_nessa): She leaves her notebook in her bag all night. "The column can make something up," she says. It does.|She takes notes between dances. "For the society column." Then she stops taking notes.}
+  flag ball_nessa
 > friends: Go with friends
   mood +medium
   charm +tiny
-  say: {&You go as a pack and dance badly together and it is perfect.|You go as a pack again, and this year someone has taught everyone the same dance, badly. It is still perfect.}
+  say: {flag(ball_friends): You go as a pack again, and this year someone has taught everyone the same dance, badly. It is still perfect.|You go as a pack and dance badly together and it is perfect.}
+  flag ball_friends
 > skip: Stay in and study
   lore +small
   study +small
@@ -438,18 +434,18 @@ chain: tournament
 art: duel
 tags: rival
 scene: The great lawn ringed with banners, a chalk duelling circle at its centre and the Duelling Circle's names on a board.
-text: The Spring Tournament: duelling on the great lawn, the whole academy watching. The Duelling Circle's names went up on the board a week ago, yours among them. The captain wants results, and says so.
+text: The Spring Tournament: duelling on the great lawn, the whole academy watching. The Duelling Circle's names went up on the board a week ago, yours among them. {rank(duelling) >= 3: You are the captain, and the Circle expects its captain to win something.|The captain wants results, and says so.}
 > left: Fight to make a good showing
-  challenge combat easy:
+  challenge combat journeyman drift mid:
     win:
       renown +small
       perform duelling +small
-      say: You win your first bout cleanly and lose the second honourably. The captain ticks your name, which from her is a medal.
+      say: You win your first bout cleanly and lose the second honourably. {rank(duelling) >= 3: Your second-years cheer their captain louder than anyone in the stands.|The captain ticks your name, which from her is a medal.}
     lose:
       health -small
-      say: You go out in the first round, on your feet at least. The captain says you fought like someone who expected to lose.
+      say: You go out in the first round, on your feet at least. {rank(duelling) >= 3: Your second-years are kind about it, which is worse.|The captain says you fought like someone who expected to lose.}
 > right: Go for the title
-  challenge combat medium:
+  challenge combat journeyman+ drift mid:
     win:
       renown +medium
       say: First round: you win, barely, and the crowd learns your name.
@@ -540,7 +536,7 @@ tags: study exam retired
 scene: A circular examination chamber with a domed ceiling of moving constellations; examiners in grey robes sit behind a long table.
 text: Year-end examinations. Three days, five examiners and a practical in front of a panel that includes the headmistress. Your standing for the year rides on this.
 > left: Prepare a dazzling practical
-  challenge spell hard:
+  challenge spell adept+:
     win:
       study +huge
       renown +small
@@ -550,7 +546,7 @@ text: Year-end examinations. Three days, five examiners and a practical in front
       mood -medium
       say: The practical sputters. An examiner writes something very short.
 > right: Write a meticulous thesis
-  challenge exam hard:
+  challenge research adept+:
     win:
       study +huge
       mood +small
@@ -664,9 +660,9 @@ text: {year == 1: The last night of the academic year. Everyone climbs onto the 
   starfall_jar = 0
   say: You count forty falling stars and then stop counting. It's enough.
 > right: Try to catch a star
-  hint: Easier with a good jar from the observatory.
+  hint: Nobody has caught one in years. A good jar from the observatory improves the odds.
   if starfall_jar >= 1:
-    challenge feat apprentice+ likely wild:
+    challenge feat apprentice unlikely luck:
       win:
         renown +small
         mood +small
@@ -677,7 +673,7 @@ text: {year == 1: The last night of the academic year. Everyone climbs onto the 
         health -small
         say: You lunge, miss, and nearly roll off the roof. A prefect catches you by the collar.
   else:
-    challenge feat apprentice+ wild:
+    challenge feat apprentice slim luck:
       win:
         renown +small
         mood +small
@@ -689,7 +685,7 @@ text: {year == 1: The last night of the academic year. Everyone climbs onto the 
         say: You lunge, miss, and nearly roll off the roof. A prefect catches you by the collar.
   starfall_jar = 0
 > together: Find your sweetheart on the lawn
-  when: bonds(partner) > 0
+  when: bonds_around(partner) > 0
   starfall_jar = 0
   queue starfall_together now
   say: You leave the roof and go looking. You know exactly where to look.

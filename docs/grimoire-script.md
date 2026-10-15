@@ -264,6 +264,7 @@ Used in `when`, `weight`, `if`, `chance`, `check`, assignments and `{=…}`.
 | `rel(n)` `spark(n)` `bond(n)` `met(n)` (`love(n)` is *legacy* for `spark`) | relationship fields (`bond` returns a string: compare with `bond(n) == "friend"`) |
 | `romanceable(n)` `tagged(n, tag)` `npc_is(n)` | NPC tests (`npc_is(lyra)`: is the actor Lyra?) |
 | `bonds(status)` | how many met NPCs have that bond (`bonds(partner) > 0`) |
+| `bonds_around(status)` | the same, counting only those who are `around` now: use it to offer a scene with someone of that bond in person (`bonds_around(partner) > 0`) |
 | `known()` | how many NPCs you've met |
 | `seen(event)` | times that event has been shown |
 | `since(event)` | months since it was last shown (999 if never) |

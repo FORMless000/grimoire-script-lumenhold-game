@@ -269,56 +269,52 @@ scene [84cb48] = 焕然一新的大礼堂：冰晶吊灯，离地一尺旋转华
 opt.lyra.label [b5812c] = 邀请莱拉
 # en: {&She has had six invitations. She hasn't said yes to any.|She has had invitations again. She is pretending not to count them.}
 opt.lyra.hint [31cae8] = {&她收到了六份邀请，一份也没答应。|她又收到了一堆邀请，正假装没在数。}
-# en: {&"Finally, someone who doesn't stammer." She dances like a duel — and wins.|{bond(lyra) == "partner": "Obviously," she says, before you finish asking. She leads, of course.|"Again? Fine. You've improved." She dances like a duel, and this year you nearly keep up.}}
-opt.lyra.say.1 [bf4e18] = {&“总算来了个不结巴的。”她跳舞像决斗一样——而且赢了。|{bond(lyra) == "partner": “那还用说，”你还没问完，她就答应了。当然是她领舞。|“又来？行吧。你有进步。”她跳舞还是像决斗，今年你差点就跟上了。}}
+# en: {bond(lyra) == "partner": "Obviously," she says, before you finish asking. She leads, of course.|{flag(ball_lyra): "Again? Fine. You've improved." She dances like a duel, and this year you nearly keep up.|"Finally, someone who doesn't stammer." She dances like a duel — and wins.}}
+opt.lyra.say.1 [053333] = {bond(lyra) == "partner": “那还用说，”你还没问完，她就答应了。当然是她领舞。|{flag(ball_lyra): “又来？行吧。你有进步。”她跳舞还是像决斗，今年你差点就跟上了。|“总算来了个不结巴的。”她跳舞像决斗一样——而且赢了。}}
 # en: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
 opt.lyra.say.2 [ba4ab4] = “我一个人去。效率更高。”你看着她独自跳了一整晚，完美无缺。
-# en: {&"Finally, someone who doesn't stammer." She dances like a duel — and wins.|{bond(lyra) == "partner": "Obviously," she says, before you finish asking. She leads, of course.|"Again? Fine. You've improved." She dances like a duel, and this year you nearly keep up.}}
-opt.lyra.say.3 [bf4e18] = {&“总算来了个不结巴的。”她跳舞像决斗一样——而且赢了。|{bond(lyra) == "partner": “那还用说，”你还没问完，她就答应了。当然是她领舞。|“又来？行吧。你有进步。”她跳舞还是像决斗，今年你差点就跟上了。}}
-# en: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
-opt.lyra.say.4 [ba4ab4] = “我一个人去。效率更高。”你看着她独自跳了一整晚，完美无缺。
 # en: Ask Tobias
 opt.tobias.label [81d042] = 邀请托比亚斯
-# en: {&He has been practising with a broom.|He has been practising with a broom again. The broom has improved.}
-opt.tobias.hint [a58525] = {&他一直在拿扫帚当舞伴练习。|他又拿扫帚练了一年。扫帚的舞技进步了。}
-# en: {&He steps on your feet nine times and apologises ten. It's the best night of the term.|He only steps on your feet twice this year, and is so proud of it that he tells everyone. It's the best night of the term.}
-opt.tobias.say.1 [551886] = {&他踩了你的脚九次，道歉了十次。这是本学期最美好的一晚。|今年他只踩了你两次，得意得逢人就说。这是本学期最美好的一晚。}
+# en: {flag(ball_tobias): He has been practising with a broom again. The broom has improved.|He has been practising with a broom.}
+opt.tobias.hint [7aa1e2] = {flag(ball_tobias): 他又拿扫帚练了一年。扫帚的舞技进步了。|他一直在拿扫帚当舞伴练习。}
+# en: {flag(ball_tobias): He only steps on your feet twice this year, and is so proud of it that he tells everyone. It's the best night of the term.|He steps on your feet nine times and apologises ten. It's the best night of the term.}
+opt.tobias.say.1 [dd7f73] = {flag(ball_tobias): 今年他只踩了你两次，得意得逢人就说。这是本学期最美好的一晚。|他踩了你的脚九次，道歉了十次。这是本学期最美好的一晚。}
 # en: Ask Seraphine
 opt.seraphine.label [4c88b3] = 邀请瑟拉芬
 # en: She may already know you'll ask.
 opt.seraphine.hint [da4e86] = 她可能早就知道你会邀请她。
-# en: {&"I said yes three weeks ago," she says, "you just hadn't asked yet." She dances a beat ahead of the music.|"Same as last year," Seraphine says, "but you'll wear blue." You hadn't planned to. You do.}
-opt.seraphine.say.1 [e41460] = {&“我三周前就答应了，”她说，“只是你那时还没开口。”她的舞步总比音乐快半拍。|“和去年一样，”塞拉菲娜说，“不过你会穿蓝色。”你本来没打算穿。结果你穿了。}
+# en: {flag(ball_seraphine): "Same as last time," Seraphine says, "but you'll wear blue." You hadn't planned to. You do.|"I said yes three weeks ago," she says, "you just hadn't asked yet." She dances a beat ahead of the music.}
+opt.seraphine.say.1 [8d2828] = {flag(ball_seraphine): “和上回一样，”瑟拉芬说，“不过你会穿蓝色。”你本来没打算穿。结果你穿了。|“我三周前就答应了，”她说，“只是你那时还没开口。”她的舞步总比音乐快半拍。}
 # en: Ask Corvin
 opt.corvin.label [cbffdf] = 邀请科尔文
 # en: Odds he shows up: unclear.
 opt.corvin.hint [bd223d] = 他会不会出现：不好说。
-# en: {&He arrives late, in a stolen jacket, and is the best dancer in the room.|He arrives on time, which alarms everyone, in a jacket he swears is borrowed. He is still the best dancer in the room.}
-opt.corvin.say.1 [3eb23e] = {&他迟到了，穿着一件偷来的外套，却是全场跳得最好的人。|他准时到了，把所有人都吓了一跳，身上那件外套他发誓是借的。他依然是全场跳得最好的人。}
-# en: {&He never shows. A note arrives at midnight: "Got arrested. Long story. Save me a dance next year."|He never shows. A note arrives at midnight: "Not arrested this time. Worse. Explain later." He never does.}
-opt.corvin.say.2 [a70582] = {&他始终没来。午夜时分送来一张字条：“被捕了。说来话长。明年给我留支舞。”|他始终没来。午夜时分送来一张字条：“这次没被捕。更糟。回头解释。”他始终没解释。}
+# en: {flag(ball_corvin): He arrives on time, which alarms everyone, in a jacket he swears is borrowed. He is still the best dancer in the room.|He arrives late, in a stolen jacket, and is the best dancer in the room.}
+opt.corvin.say.1 [48f270] = {flag(ball_corvin): 他准时到了，把所有人都吓了一跳，身上那件外套他发誓是借的。他依然是全场跳得最好的人。|他迟到了，穿着一件偷来的外套，却是全场跳得最好的人。}
+# en: {flag(ball_corvin_arrested): He never shows. A note arrives at midnight: "Not arrested this time. Worse. Explain later." He never does.|He never shows. A note arrives at midnight: "Got arrested. Long story. Save me a dance next year."}
+opt.corvin.say.2 [0ac25d] = {flag(ball_corvin_arrested): 他始终没来。午夜时分送来一张字条：“这次没被捕。更糟。回头解释。”他始终没解释。|他始终没来。午夜时分送来一张字条：“被捕了。说来话长。明年给我留支舞。”}
 # en: Ask Mir
 opt.mir.label [c272fe] = 邀请米尔
-# en: {&They're bringing a self-playing violin.|They promise the violin has been fixed.}
-opt.mir.hint [6d488b] = {&TA 要带一把会自己演奏的小提琴。|TA 保证小提琴已经修好了。}
-# en: {&Mir's violin plays itself, then plays the chandelier, then plays the windows. You are asked to leave early. Worth it.|The violin behaves all night. Mir is almost disappointed, until it plays the last waltz entirely on its own and bows.}
-opt.mir.say.1 [0680fa] = {&米尔的小提琴自己拉了起来，然后拉起了吊灯，然后拉起了窗户。你们被请提前离场。值了。|小提琴整晚都很规矩。米尔几乎有点失望，直到最后一支华尔兹它完全自己拉完，还鞠了一躬。}
+# en: {flag(ball_mir): They promise the violin has been fixed.|They're bringing a self-playing violin.}
+opt.mir.hint [ff16f8] = {flag(ball_mir): TA 保证小提琴已经修好了。|TA 要带一把会自己演奏的小提琴。}
+# en: {flag(ball_mir): The violin behaves all night. Mir is almost disappointed, until it plays the last waltz entirely on its own and bows.|Mir's violin plays itself, then plays the chandelier, then plays the windows. You are asked to leave early. Worth it.}
+opt.mir.say.1 [dddb91] = {flag(ball_mir): 小提琴整晚都很规矩。米尔几乎有点失望，直到最后一支华尔兹它完全自己拉完，还鞠了一躬。|米尔的小提琴自己拉了起来，然后拉起了吊灯，然后拉起了窗户。你们被请提前离场。值了。}
 # en: Ask Kael
 opt.kael.label [bf9bdb] = 邀请凯尔
 # en: He doesn't seem to feel the cold.
 opt.kael.hint [3c4856] = 他似乎感觉不到寒冷。
-# en: {&He holds your hand like it is something fragile. Where your fingers touch, frost-ferns bloom on the glass.|He takes your hand without asking this time, as if it were already decided. The frost-ferns on the glass grow into a whole winter garden.}
-opt.kael.say.1 [45feee] = {&他握着你的手，像握着什么易碎的东西。你们指尖相触之处，玻璃上绽开了霜蕨。|这一次他没问就牵起了你的手，仿佛早已说定。玻璃上的霜蕨长成了一整座冬日花园。}
+# en: {flag(ball_kael): He takes your hand without asking this time, as if it were already decided. The frost-ferns on the glass grow into a whole winter garden.|He holds your hand like it is something fragile. Where your fingers touch, frost-ferns bloom on the glass.}
+opt.kael.say.1 [a16e50] = {flag(ball_kael): 这一次他没问就牵起了你的手，仿佛早已说定。玻璃上的霜蕨长成了一整座冬日花园。|他握着你的手，像握着什么易碎的东西。你们指尖相触之处，玻璃上绽开了霜蕨。}
 # en: Ask Nessa
 opt.nessa.label [6cfd84] = 邀请内莎
 # en: She'll be working. She's always working.
 opt.nessa.hint [698b3a] = 她会边跳边工作。她永远在工作。
-# en: {&She takes notes between dances. "For the society column." Then she stops taking notes.|She leaves her notebook in her bag all night. "The column can make something up," she says. It does.}
-opt.nessa.say.1 [0f45ac] = {&她在舞曲间隙做笔记。“写社交专栏用的。”后来，她不再做笔记了。|她整晚都把笔记本留在包里。“专栏可以随便编点什么，”她说。专栏真的编了。}
+# en: {flag(ball_nessa): She leaves her notebook in her bag all night. "The column can make something up," she says. It does.|She takes notes between dances. "For the society column." Then she stops taking notes.}
+opt.nessa.say.1 [56ee97] = {flag(ball_nessa): 她整晚都把笔记本留在包里。“专栏可以随便编点什么，”她说。专栏真的编了。|她在舞曲间隙做笔记。“写社交专栏用的。”后来，她不再做笔记了。}
 # en: Go with friends
 opt.friends.label [596790] = 和朋友们一起去
-# en: {&You go as a pack and dance badly together and it is perfect.|You go as a pack again, and this year someone has taught everyone the same dance, badly. It is still perfect.}
-opt.friends.say.1 [cf9610] = {&你们成群结队地去，一起跳得乱七八糟，完美极了。|你们又成群结队地去了，今年有人教了大家同一支舞，大家都跳得很糟。依然完美。}
+# en: {flag(ball_friends): You go as a pack again, and this year someone has taught everyone the same dance, badly. It is still perfect.|You go as a pack and dance badly together and it is perfect.}
+opt.friends.say.1 [7848f2] = {flag(ball_friends): 你们又成群结队地去了，今年有人教了大家同一支舞，大家都跳得很糟。依然完美。|你们成群结队地去，一起跳得乱七八糟，完美极了。}
 # en: Stay in and study
 opt.skip.label [6d8b57] = 留在宿舍学习
 # en: The music drifts up through the floor while you read. Somewhere, people are happy. You are productive.
@@ -345,16 +341,16 @@ opt.right.say.2 [39b48e] = 第一轮：你在十一秒内被打出场外。据�
 @event spring_tournament_circle
 # en: The Spring Tournament
 title [e40010] = 春季锦标赛
-# en: The Spring Tournament: duelling on the great lawn, the whole academy watching. The Duelling Circle's names went up on the board a week ago, yours among them. The captain wants results, and says so.
-text [ed1689] = 春季锦标赛：在大草坪上决斗，全院围观。一周前，决斗社的名单就贴上了公告板，你的名字也在其中。社长要的是成绩，而且直说了。
+# en: The Spring Tournament: duelling on the great lawn, the whole academy watching. The Duelling Circle's names went up on the board a week ago, yours among them. {rank(duelling) >= 3: You are the captain, and the Circle expects its captain to win something.|The captain wants results, and says so.}
+text [baac89] = 春季锦标赛：在大草坪上决斗，全院围观。一周前，决斗社的名单就贴上了公告板，你的名字也在其中。{rank(duelling) >= 3: 你就是社长，决斗社指望社长拿点什么回来。|社长要的是成绩，而且直说了。}
 # en: The great lawn ringed with banners, a chalk duelling circle at its centre and the Duelling Circle's names on a board.
 scene [0ee357] = 挂满旗帜的大草坪，中央用粉笔画着决斗圈，一块板上写着决斗社成员的名字。
 # en: Fight to make a good showing
 opt.left.label [ad260b] = 打出一场像样的比赛
-# en: You win your first bout cleanly and lose the second honourably. The captain ticks your name, which from her is a medal.
-opt.left.say.1 [53d64e] = 你干净利落地赢下第一场，又体面地输掉第二场。社长在你的名字旁打了个勾——从她那儿来说，这就是一枚奖章。
-# en: You go out in the first round, on your feet at least. The captain says you fought like someone who expected to lose.
-opt.left.say.2 [6cf312] = 你在第一轮就出局了，好歹是站着出去的。社长说你打得像个早就料到自己会输的人。
+# en: You win your first bout cleanly and lose the second honourably. {rank(duelling) >= 3: Your second-years cheer their captain louder than anyone in the stands.|The captain ticks your name, which from her is a medal.}
+opt.left.say.1 [84d823] = 你干净利落地赢下第一场，又体面地输掉第二场。{rank(duelling) >= 3: 你的二年级社员为社长欢呼，比看台上任何人都响。|社长在你的名字旁打了个勾——从她那儿来说，这就是一枚奖章。}
+# en: You go out in the first round, on your feet at least. {rank(duelling) >= 3: Your second-years are kind about it, which is worse.|The captain says you fought like someone who expected to lose.}
+opt.left.say.2 [9fdebe] = 你在第一轮就出局了，好歹是站着出去的。{rank(duelling) >= 3: 你的二年级社员对此很体贴，这更糟。|社长说你打得像个早就料到自己会输的人。}
 # en: Go for the title
 opt.right.label [a6e251] = 冲击冠军
 # en: First round: you win, barely, and the crowd learns your name.
@@ -497,8 +493,8 @@ opt.left.label [df7032] = 躺下来，只是看着
 opt.left.say.1 [d2a569] = 你数了四十颗流星，然后不再数了。这就够了。
 # en: Try to catch a star
 opt.right.label [734781] = 试着接住一颗星
-# en: Easier with a good jar from the observatory.
-opt.right.hint [558f26] = 有一只好罐子会更容易，在观星台做。
+# en: Nobody has caught one in years. A good jar from the observatory improves the odds.
+opt.right.hint [26a72f] = 好些年没人接住过一颗了。观星台做的好罐子能提高几分胜算。
 # en: It lands in your jar with a hiss and glows for weeks. Students come to see it.
 opt.right.say.1 [f06369] = 它嘶的一声落进你的罐子，发光发了好几个星期。同学们都跑来看。
 # en: You lunge, miss, and nearly roll off the roof. A prefect catches you by the collar.

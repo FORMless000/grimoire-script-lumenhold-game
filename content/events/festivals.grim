@@ -43,7 +43,7 @@ repeat: 3
 class: story
 tone: warm
 cast:
-  partner: any where bond(partner) == "partner"
+  partner: any where bond(partner) == "partner" and around(partner)
 art: star
 tags: festival romance
 scene: Two students lying on a blanket on the lawn at night, wrapped in one shawl, a falling star streaking over the castle towers.
@@ -71,9 +71,8 @@ text: The oldest Starfall custom: pick one star, the brightest you'll see all ni
 > left: Wish for your own year
   gain inspired
   mood -tiny
-  say: You wish hard and selfishly, and the star burns out over the water. It feels like a promise you've made to yourself, which is heavier than you expected.
+  say: You wish hard for your own year, and the star burns out over the water. It feels like a promise you've made to yourself, which is heavier than you expected.
 > right: Wish for someone else
-  alignment +tiny
   mood +small
   say: You don't say who. The star falls slowly, or you imagine it does, all the way down to the lake.
 
@@ -113,13 +112,13 @@ repeat: 3
 priority: 30
 art: star
 tags: festival home
-scene: A family on the roof of a cottage at night, wrapped in quilts, a small child pointing at a streak of light across the sky.
+scene: A family on the roof of a cottage at night, wrapped in quilts, a grandmother pointing at a streak of light across the sky.
 text: {Starfall at home. There's no observatory here, only the cottage roof and the whole family on it in quilts, as when you were small.|Starfall at home again. Someone has saved you the warm patch of roof by the chimney.|The roof, the quilts, the chimney. Someone asks what the academy does for Starfall, and you find you'd rather be here.} {~The village dogs howl at every star.|Somebody's brought cocoa.|A neighbour is telling the one about the star that fell in the duck pond.}
 > left: Tell them about the academy
   mood +medium
   charm +tiny
   health -tiny
-  say: {~You tell them about the towers and the lake and the staircase that moves, and they ask questions until the stars run out. It's past three when you climb down, cold to the bone and glad.|Everyone wants a story. You give them the best ones, slightly improved. Nobody minds.}
+  say: {~You tell them about the towers and the lake and the staircase that moves, and they ask questions until the stars run out. It's past three when you climb down, cold to the bone and glad.|Everyone wants a story. You give them the best ones, slightly improved, until your feet have gone numb on the slates. Nobody minds.}
 > right: Slip off to the hill alone
   lore +small
   mood +small
@@ -141,7 +140,7 @@ text: Starfall, and you're far from the observatory roof. {member(intern_expedit
 > left: Join the others on the roof
   mood +medium
   perform internship -tiny
-  say: {~You lie on a strange roof among people you met two months ago and count stars until they feel like old friends. Tomorrow's work goes slowly.|Coats, a borrowed blanket, someone's terrible song. It's not the observatory roof, and it's good anyway.}
+  say: {~You lie on a strange roof among people you met two months ago and count stars until they feel like old friends. Tomorrow's work goes slowly.|Coats, a borrowed blanket, someone's terrible song. It's not the observatory roof, and it's good anyway, though the morning's work comes out half asleep.}
 > right: Keep working through the night
   perform internship +small
   mood -small
@@ -168,7 +167,7 @@ text: {year == 1: The Midwinter Ball is tonight, and you have nothing to wear th
   charm +tiny
   say: {~Deep blue, with a lining like the night sky. In the tailor's mirror you look, for once, like someone in a portrait.|New robes, a sensible colour and an insensible price. They fit as if they were waiting for you.}
 > right: Glamour your old ones
-  challenge spell easy:
+  challenge spell apprentice+:
     win:
       mood +small
       guile +tiny
@@ -193,12 +192,12 @@ text: {The frost-mages have turned the courtyard into an ice garden for the ball
 > left: Walk it slowly
   mood +small
   health -tiny
-  say: {~You walk every path twice, until your toes are numb and your head is clear. The fountain's frozen spray catches the light like a held breath.|You find the centre of the maze, where someone has left a frozen bench and a frozen apple. You sit a while.}
+  say: {~You walk every path twice, until your toes are numb and your head is clear. The fountain's frozen spray catches the light like a held breath.|You find the centre of the maze, where someone has left a frozen bench and a frozen apple. You sit a while, until the cold comes up through your shoes.}
 > right: Help the frost-mages finish it
   arcana +tiny
   renown +tiny
-  mood -tiny
-  say: {~They show you how to hold the cold in a petal until it sets. Your hands ache for an hour. One of the roses on the path is yours.|You shape a whole archway of ice under instruction, and it holds. The frost-mages nod, which is how they applaud.}
+  health -tiny
+  say: {~They show you how to hold the cold in a petal until it sets. Your hands ache for an hour. One of the roses on the path is yours.|You shape a whole archway of ice under instruction, fingers stiff with cold, and it holds. The frost-mages nod, which is how they applaud.}
 
 @event ball_last_dance
 title: The Last Waltz
@@ -236,7 +235,7 @@ tags: festival social
 scene: A snowy courtyard at night full of students in ruined ball robes hurling snowballs from behind snow forts, a prefect ducking.
 text: {After the ball, someone throws the first snowball in the courtyard, and within a minute every house is at war, in ball robes.|The snowball war, as much a tradition as the ball. The forts went up during the last waltz.|The snowball war again. The first-years have built a fort that is frankly impressive.} {~A prefect is trying to restore order and failing.|Someone has enchanted their snowballs, which is cheating.|The robes are already ruined.}
 > left: Charge the enemy fort
-  challenge feat easy:
+  challenge feat apprentice wild:
     win:
       renown +small
       mood +small

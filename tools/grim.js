@@ -134,7 +134,7 @@ function analyze(content) {
           else if (kind === 'event') add(A.eventsRef, a.v, where);
           else if (kind === 'track') { if (!content.tracks[a.v] && !(['member', 'applied', 'rank', 'performance'].includes(n.n) && KIND_ARGS.has(a.v))) P('error', where, n.n + '(): unknown track "' + a.v + '"'); }
           else if (kind === 'clue') { if (!content.clues[a.v]) P('error', where, 'clue(' + a.v + '): no @clue ' + a.v); }
-          if (n.n === 'bonds' && !KNOWN_BONDS.has(a.v)) P('warn', where, 'unknown bond status "' + a.v + '"');
+          if ((n.n === 'bonds' || n.n === 'bonds_around') && !KNOWN_BONDS.has(a.v)) P('warn', where, 'unknown bond status "' + a.v + '"');
           if (n.n === 'offered' && !['courses', 'clubs', 'jobs'].includes(a.v)) P('error', where, 'offered(): takes courses, clubs or jobs, not "' + a.v + '"');
         });
         if (n.n === 'chosen' && n.args[0] && n.args[0].t === 'sym' && n.args[1] && n.args[1].t === 'sym') {

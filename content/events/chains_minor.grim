@@ -14,11 +14,13 @@ title: The Silver Key
 class: story
 tone: eerie
 trigger: queued
+slot: night
+defer: off_campus
 art: key
 tags: mystery
 chain: forbidden
 scene: A heavy iron door at the end of a library aisle, a silver key turning in its lock, a candle held low.
-text: Midnight. The silver key fits the Restricted Section door perfectly. Beyond it, shelves of black-bound books breathe softly in the dark. Somewhere, a prefect's footsteps.
+text: Late at night. The silver key fits the Restricted Section door perfectly. Beyond it, shelves of black-bound books breathe softly in the dark. Somewhere, a prefect's footsteps.
 > left: Turn back
   mood -tiny
   flag forbidden_abandoned
@@ -40,6 +42,8 @@ title: The Codex of Hollow Names
 class: story
 tone: eerie
 trigger: queued
+slot: night
+defer: off_campus
 art: book
 tags: mystery hollowstar
 chain: forbidden
@@ -65,6 +69,8 @@ title: Caught
 class: story
 tone: eerie
 trigger: queued
+slot: night
+defer: off_campus
 actor: isolde
 art: lock
 tags: mystery
@@ -181,15 +187,16 @@ art: pouch
 tags: money danger
 chain: debt
 scene: A goblin in a velvet waistcoat waiting outside the bursar's office, waving a receipt like a small flag.
-text: The bursar's office has stopped sending reminders. Instead, Grisk is waiting outside it with a receipt. "Two months' board, paid in full," he beams. "By me. A loan, naturally. Sixty crowns, twelve a month for six months. You can sign here."
+text: The bursar's office has stopped sending reminders. Instead, Grisk is waiting outside it with a receipt. "Two months' board, paid in full," he beams. "By me. A loan, naturally, with a little extra for your pocket. Twelve a month for six months. You can sign here."
 > left: Sign his ledger
   meet grisk
-  gold +huge
+  gold +large
+  gold +medium
   gain in_debt
   debt_paid = 0
   debt_missed = 0
   flag grisk_done
-  say: You sign. He counts the change into your palm and writes your name in the ledger with a flourish that has teeth in it.
+  say: You sign. He has already paid the board out of it; he counts the rest into your palm and writes your name in the ledger with a flourish that has teeth in it.
 > right: Beg the bursar for time
   meet grisk
   flag grisk_done

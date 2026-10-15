@@ -13,8 +13,8 @@ text [dcbbbc] = {老日晷旁有一张长椅。这日晷慢十一分钟。|有�
 scene [549ef0] = 石板庭院里，一张石凳挨着一座饱经风霜的日晷，一个学生背对晷面读书。
 # en: Read until the shadow moves
 opt.left.label [7b2740] = 读到影子挪动为止
-# en: {season == "winter": {~Your fingers go numb by page two. The chapter is worth it.|You read in gloves, turning pages with your teeth.}|{~You finish a chapter in the minutes the sundial owes you.|A pigeon reads over your shoulder, unimpressed.|The shadow crawls; you outpace it by three pages.}}
-opt.left.say.1 [5a10ee] = {season == "winter": {~读到第二页手指就冻麻了。这一章值得。|你戴着手套读，用牙齿翻页。}|{~日晷欠你的那几分钟，够你读完一章。|一只鸽子凑在你肩头一起读，不以为然。|影子慢慢爬，你领先它三页。}}
+# en: {season == "winter": {~Your fingers go numb by page two. The chapter is worth it.|You read in gloves, turning pages with your teeth.}|{~You finish a chapter in the minutes the sundial owes you, squinting into the glare.|A pigeon reads over your shoulder, unimpressed, and your neck has a crick in it by the end.|The shadow crawls; you outpace it by three pages and a stiff back.}}
+opt.left.say.1 [a0fbd0] = {season == "winter": {~读到第二页手指就冻麻了。这一章值得。|你戴着手套读，用牙齿翻页。}|{~日晷欠你的那几分钟，够你眯着眼迎着日光读完一章。|一只鸽子凑在你肩头一起读，不以为然；读完时你的脖子也僵了。|影子慢慢爬，你领先它三页，背也坐僵了。}}
 # en: Close your eyes a while
 opt.right.label [64f7ca] = 闭眼歇一会儿
 # en: {~You wake with a chalk moustache and no suspects.|You wake to a prefect clearing his throat an inch from your ear.|You wake rested and late, eleven minutes late by the dial.}
@@ -37,10 +37,12 @@ opt.left.say.2 [d2957f] = {~内莎就天气、汤和你的感情生活依次采�
 opt.left.say.3 [397168] = {~你坐着的工夫，布拉姆把庭院里违反的校规一条条数了一遍。然后，他粗声粗气地问你考得怎么样。|布拉姆给路过的一年级生记了一次过，以为你没看见时又把单子撕了。}
 # en: {~You trade the castle's news for an hour. {here} does most of the trading.|You talk until the shadows cross the fountain. Neither of you can remember about what.}
 opt.left.say.4 [1508f0] = {~你们交换了一小时城堡新闻，大多是{here}在说。|你们一直聊到影子爬过喷泉，谁也想不起聊了些什么。}
+# en: The cider from the cart by the gate is on you.
+opt.left.say.5 [e9717b] = 城门边小推车上的苹果酒，算你请的。
 # en: Wave, and keep walking
 opt.right.label [ff1be9] = 挥挥手，继续走
-# en: {~You promise next time. {here} looks as if {they} {are} counting.|You spend the hour with a book instead. It is a good book; it is not much company.}
-opt.right.say.1 [7519a0] = {~你说下次一定。{here}看上去像是在记账。|你改和一本书待了一小时。书很好，只是不太能陪人。}
+# en: {~You promise next time and take your book to the library instead. {here} looks as if {they} {are} counting.|You spend the hour with a book instead. It is a good book; it is not much company.}
+opt.right.say.1 [2575b9] = {~你说下次一定，拿着书去了图书馆。{here}看上去像是在记账。|你改和一本书待了一小时。书很好，只是不太能陪人。}
 
 @event courtyard_seasonal_game
 # en: The Courtyard Game
@@ -61,6 +63,8 @@ opt.right.label [175f1b] = 帮忙看外套和赌注
 opt.right.say.1 [445a49] = {~大热门输了。整个庭院里只有你一个人高兴。|冷门险胜，你手里抱着的外套忽然让你良心轻了不少。}
 # en: {~The favourite wins, and so does everyone who backed them, out of your pocket.|Everyone bet the same way, and everyone was right. You pay out in a hail of small coins.}
 opt.right.say.2 [68429d] = {~大热门赢了，押它的人也都赢了——钱从你兜里出。|大家都押了同一边，也都押对了。你在一阵小硬币的冰雹里赔了钱。}
+# en: The favourite wins. With nothing in your pocket to pay out, you're chased twice round the fountain and lose a coat button to the crowd.
+opt.right.say.3 [69835b] = 热门赢了。你口袋里一个子儿也没有，赔不出钱，被人追着绕喷泉跑了两圈，还在人堆里丢了一颗外套扣子。
 
 @event library_wandering_book
 # en: The Book That Moved
@@ -75,8 +79,8 @@ opt.left.label [e1addf] = 把它找出来
 opt.left.say.1 [05a6d5] = {你在六楼找到了它，归在“悔恨”类下。|你在楼梯间找到了它，卡在两层之间，好像它正打算出走。|你一下子就找到了。要么是你摸透了书架，要么是书架变懒了。}
 # en: Read what's in front of you
 opt.right.label [5bdb99] = 读手边这本
-# en: {~You arrive at seminar having read the wrong book with great conviction.|You learn a great deal about something nobody will ever ask you about.|The wrong book turns out to be the right book for a question nobody asks until the exam.}
-opt.right.say.1 [f419ac] = {~你满怀信心地带着读错的书去上研讨课。|你学到了大量永远不会有人问起的知识。|读错的书恰好是对的书——对一道直到考试才有人问的题。}
+# en: {~You read the wrong book with great conviction, and quote it at supper.|You learn a great deal about something nobody will ever ask you about.|The wrong book turns out to be a very good novel. You read all of it, and none of it will be on any exam.}
+opt.right.say.1 [101f3f] = {~你满怀信心地读了一本错的书，晚饭时还引用了它。|你学到了大量永远不会有人问起的知识。|读错的书原来是一本很好的小说。你把它读完了，而里面没有一个字会出现在考试里。}
 
 @event library_shared_table
 # en: The Last Free Chair
@@ -113,12 +117,16 @@ scene [9136c2] = 一个学生把书藏在身后，靠近一只柳条还书筐，
 opt.left.label [1ffaa0] = 认错交罚款
 # en: {The fine is paid; the desk, mollified, lends you the sequel.|You pay, and are lent another book, which you suspect is a trap.|The desk sighs, takes your coins and hands you a book it says you'll like. It is always right, which is the annoying part.}
 opt.left.say.1 [e1d0b0] = {罚款交了，前台消了气，把续集借给了你。|你交了钱，又被借了一本书，你怀疑这是个圈套。|前台叹口气，收下硬币，递给你一本说你会喜欢的书。它总是对的，这才让人恼火。}
+# en: You own up with empty pockets. The desk lets you work the fine off reshelving, which takes all evening, and lends you the sequel anyway.
+opt.left.say.2 [6ba749] = 你两手空空地去认错。前台让你靠整理书架抵罚款，整整花了一个晚上，还照样把续集借给了你。
 # en: Slip it into the basket
 opt.right.label [aa0b65] = 偷偷塞进还书筐
 # en: {~The book goes in without a sound. It stops sighing at once, which feels like forgiveness.|You drop it in under cover of a sneeze. Footnote saw. Footnote will keep it to himself, for a price.}
 opt.right.say.1 [bc9c6d] = {~书悄无声息地滑了进去，立刻不再叹气，像是原谅了你。|你借着一个喷嚏把书丢了进去。“脚注”看见了。“脚注”会替你保密——有代价的。}
-# en: {~The book announces itself with a sigh like a dying organ. Everyone turns. You pay double.|It lands with a groan. The front desk adds a mark to your card without looking up.}
-opt.right.say.2 [71c1f3] = {~那本书发出一声垂死管风琴般的叹息，宣告了自己的到来。所有人都回过头。你交了双倍罚款。|书落进筐里，呻吟了一声。前台头也不抬，在你的卡片上又记了一笔。}
+# en: {~The book announces itself with a sigh like a dying organ. Everyone turns. You pay double.|It lands with a groan. The front desk adds a mark to your card, and the fine, doubled.}
+opt.right.say.2 [d005ec] = {~那本书发出一声垂死管风琴般的叹息，宣告了自己的到来。所有人都回过头。你交了双倍罚款。|书落进筐里，呻吟了一声。前台在你的卡片上又记了一笔，罚款翻倍。}
+# en: The book announces itself with a sigh like a dying organ. Everyone turns. With nothing to pay, you're put on reshelving until the fine is worked off twice over.
+opt.right.say.3 [cb93a1] = 那本书发出一声垂死管风琴般的叹息，宣告了自己的到来。所有人都回过头。你没钱可付，只好去整理书架，直到把双倍罚款抵完。
 
 @event refectory_late_supper
 # en: Late Supper
@@ -291,8 +299,8 @@ text [4c9497] = {你只是来要块膏药的。|尽头那张床边的石板上�
 scene [6baaff] = 高拱窗下一排白色病床，其中一张已铺开，一位严厉的医护指着它。
 # en: Lie down for an hour
 opt.left.label [a6694f] = 躺一个钟头
-# en: {~You sleep the deep, dreamless sleep of the infirmary. The tonic afterwards costs a crown and tastes of regret.|You wake under a blanket you didn't pull up. There is a tonic on the side, and a bill under it.}
-opt.left.say.1 [20c199] = {~你睡了一场医务室式的、无梦的深眠。醒来后的补药要一个克朗，味道像悔恨。|你醒来时身上盖着一条不是你拉的毯子。床头有一瓶补药，下面压着账单。}
+# en: {~You sleep the deep, dreamless sleep of the infirmary. The tonic afterwards costs a few crowns and tastes of regret.|You wake under a blanket you didn't pull up. There is a tonic on the side, and a bill under it.}
+opt.left.say.1 [6b4424] = {~你睡了一场医务室式的、无梦的深眠。醒来后的补药要几个克朗，味道像悔恨。|你醒来时身上盖着一条不是你拉的毯子。床头有一瓶补药，下面压着账单。}
 # en: Help roll bandages
 opt.right.label [a9dc7c] = 帮忙卷绷带
 # en: {~Sister Amaranth teaches you the knot she uses. You will never tie your boots any other way.|You roll bandages and listen to her opinion of duelling, which is long and specific.}
@@ -333,6 +341,8 @@ opt.left.say.2 [2814ae] = {~“那瓶是给山羊的。”阿玛兰斯修女在�
 opt.right.label [8a2146] = 好好开口要
 # en: {She charges you, lectures you, and gives you the good one.|She charges you, lectures you a little less, and gives you the good one.|"You again," she says, and hands it over before you ask.}
 opt.right.say.1 [381f3d] = {她收了钱，训了你一顿，给了你好的那瓶。|她收了钱，训得少了些，给了你好的那瓶。|“又是你。”她说，没等你开口就递了过来。}
+# en: She looks at your empty purse, gives you the good one anyway, and lectures you twice as long.
+opt.right.say.2 [58433e] = 她看了看你空空的钱袋，照样给了你好的那瓶，训话却长了一倍。
 
 @event alchemy_lab_spare_cauldron
 # en: A Spare Cauldron
@@ -399,8 +409,8 @@ opt.left.label [a7359a] = 接下这活
 opt.left.say.1 [6233c9] = {~花了一整个下午，报酬和说好的分毫不差——这比应有的要少见。|比启事上写的更古怪，工钱也少了一点。}
 # en: Haggle first
 opt.right.label [789545] = 先讲讲价
-# en: {~You haggle the fee up by half. Your employer seems to respect you more for it.|You agree a price and a biscuit. The biscuit turns out to be the better half of the deal.}
-opt.right.say.1 [362f3c] = {~你把价钱抬高了一半。雇主似乎因此更尊重你了。|你们谈定了价钱外加一块饼干。结果饼干才是这笔买卖里更划算的那一半。}
+# en: {~You haggle the fee up by a third. Your employer seems to respect you more for it.|You agree a price and a biscuit. The biscuit turns out to be the better half of the deal.}
+opt.right.say.1 [b212fb] = {~你把价钱抬高了三分之一。雇主似乎因此更尊重你了。|你们谈定了价钱外加一块饼干。结果饼干才是这笔买卖里更划算的那一半。}
 # en: {~Your employer takes the notice down and pins up a new one, asking for "someone less difficult".|The job goes to a first-year who asked for nothing. They seem very happy with it.}
 opt.right.say.2 [d201b3] = {~雇主把启事撕下来，换上一张新的，要找个“好说话一点的人”。|活儿给了一个什么都没要求的一年级生。那孩子看起来非常高兴。}
 

@@ -33,8 +33,10 @@ opt.left.label [faeb8d] = 帮忙拎包裹
 opt.left.say.1 [5cbcb5] = {~你抱着一摞系着绳子的包裹爬回山上，手腕酸痛。|{friend}买了颗栗子当报酬。这报酬远远不够。|有个包裹叮当作响，十分可疑。你决定不问。}
 # en: Talk {them} out of it
 opt.right.label [2a8f41] = 劝{them}别买了
-# en: {~You talk {friend} out of the third thing. {They} sulk{s} the whole way back to the barge.|Your argument is excellent. {friend} buys the thing anyway, and now you've been wrong in public.|You win. {friend} says you'd make a terrible shopkeeper and a worse friend, then takes your arm anyway.}
-opt.right.say.1 [4768d2] = {~你劝{friend}放弃了第三样东西。{They}一路生着闷气回到驳船上。|你的论证无懈可击。{friend}还是买了，于是你当众输了一回。|你赢了。{friend}说你会是个糟糕的店主、更糟糕的朋友，然后照样挽起你的胳膊。}
+# en: {~You talk {friend} out of the third thing. {They} sulk{s} the whole way back to the barge.|You win. {friend} says you'd make a terrible shopkeeper and a worse friend, then takes your arm anyway.}
+opt.right.say.1 [a3b084] = {~你劝{friend}放弃了第三样东西。{They}一路生着闷气回到驳船上。|你赢了。{friend}说你会是个糟糕的店主、更糟糕的朋友，然后照样挽起你的胳膊。}
+# en: Your argument is excellent. {friend} buys the thing anyway, and now you've been wrong in public.
+opt.right.say.2 [c1ae81] = 你的论证无懈可击。{friend}还是买了，于是你当众输了一回。
 
 @event village_last_barge
 # en: The Last Barge
@@ -51,8 +53,10 @@ opt.left.say.1 [2b9596] = {~你纵身一跃赶上了，湿了一只靴子。|你
 opt.right.label [4a025a] = 再待一会儿
 # en: {~A fisherman rows you back for a ruinous fare and a story you didn't ask for.|You pay the night ferryman far too much. He rows like he has somewhere better to be.}
 opt.right.say.1 [4245d0] = {~一个渔夫划船送你回去，要价高得离谱，还附赠一个你没想听的故事。|你付给夜间摆渡人太多钱了。他划船的样子，像是有更要紧的地方要去。}
+# en: You have no fare for the night ferryman, so you sleep on a bench under the Newt's eaves and wake with a cat on your feet.
+opt.right.say.2 [2c3fa2] = 你付不起夜里船夫的船钱，只好在蝾螈酒馆的屋檐下睡了一夜长凳，醒来时脚上趴着一只猫。
 # en: {~You sleep on a bench under the Newt's eaves and wake up with a cat on your feet.|The first barge of morning finds you yawning on the quay.}
-opt.right.say.2 [daec8c] = {~你在蝾螈酒馆的屋檐下睡了一夜长凳，醒来时脚上趴着一只猫。|清晨的头班驳船发现你正在码头上打哈欠。}
+opt.right.say.3 [daec8c] = {~你在蝾螈酒馆的屋檐下睡了一夜长凳，醒来时脚上趴着一只猫。|清晨的头班驳船发现你正在码头上打哈欠。}
 
 @event gilded_newt_fireside
 # en: By the Newt's Fire
@@ -73,12 +77,14 @@ opt.right.say.1 [d61234] = {~在三轮祝酒和一段提琴之间，你写完了
 @event gilded_newt_card_game
 # en: Cards at the Newt
 title [cae7f0] = 蝾螈的牌局
-# en: {There's a card game in the back room of the Gilded Newt, and an empty chair.|The empty chair in the back room has a cushion on it now, as if it's been waiting.|The card players greet you by the name of your worst hand.} {~Tonight it's a tinker, a widow and a man who shuffles like a conjuror.|Tonight the stakes are copper and pride.|Tonight a second-year from Duskgate is losing very cheerfully.}
-text [82b92a] = {镀金蝾螈的后屋有一局牌，还有一把空椅子。|后屋那把空椅子上如今多了个坐垫，像是一直在等你。|牌友们用你最烂的那手牌给你起了外号来打招呼。} {~今晚是一个补锅匠、一个寡妇，还有一个洗牌像变戏法的男人。|今晚的赌注是铜板和面子。|今晚一个暮门的二年级生正输得兴高采烈。}
+# en: {There's a card game in the back room of the Gilded Newt, and an empty chair.|The empty chair in the back room has a cushion on it now, as if it's been waiting.|{flag(newt_cards_played): The card players greet you by the name of your worst hand.|The card players nod you towards the chair as if you were a regular.}} {~Tonight it's a tinker, a widow and a man who shuffles like a conjuror.|Tonight the stakes are copper and pride.|Tonight a second-year from Duskgate is losing very cheerfully.}
+text [d9d3ee] = {镀金蝾螈的后屋有一局牌，还有一把空椅子。|后屋那把空椅子上如今多了个坐垫，像是一直在等你。|{flag(newt_cards_played): 牌友们用你最烂的那手牌给你起了外号来打招呼。|牌友们朝那把椅子努努嘴，好像你是常客。}} {~今晚是一个补锅匠、一个寡妇，还有一个洗牌像变戏法的男人。|今晚的赌注是铜板和面子。|今晚一个暮门的二年级生正输得兴高采烈。}
 # en: A smoky back room in a tavern, a card game around a scarred table and one empty chair.
 scene [939cdf] = 烟雾缭绕的酒馆后屋，一张满是划痕的桌上正在打牌，还有一把空椅子。
 # en: Take the empty chair
 opt.left.label [2c28bd] = 坐上那把空椅子
+# en: The stake is a few crowns a hand.
+opt.left.hint [dc8887] = 每手的赌注是几枚克朗。
 # en: {~You win a handful of crowns and a reputation for an honest face.|You win, and the widow asks where you learned to bluff like that.}
 opt.left.say.1 [08271b] = {~你赢了一把克朗，还落了个“老实面相”的名声。|你赢了，寡妇问你从哪儿学的这手虚张声势。}
 # en: {~You lose your crowns slowly, and then all at once.|The tinker takes your last coin and buys you a drink with it, which somehow makes it worse.}
@@ -101,8 +107,8 @@ opt.left.label [e16ef4] = 坐下喝一杯
 opt.left.say.1 [6ac2b8] = {~一杯变成了三个故事，外加一段走回驳船的长路。|喝到半壶时{here}跟你说了句真心话，然后装作没说过。|你待得比打算的晚。明早难熬，但值得。}
 # en: Wave and keep walking
 opt.right.label [11b59d] = 挥挥手继续走
-# en: {~You wave and get back to your book. {here} toasts your back, a little hurt.|You plead an early lecture. It's even true.}
-opt.right.say.1 [9c38b6] = {~你挥挥手，回去看你的书。{here}冲你的背影举杯，有点受伤。|你推说明早有课。这居然是真的。}
+# en: {~You wave and get back to your book. {here} toasts your back, a little hurt.|{term: You plead an early lecture. It's even true, and you read for it before bed.|You plead an early start, and read in your room instead.}}
+opt.right.say.1 [66d741] = {~你挥挥手，回去看你的书。{here}冲你的背影举杯，有点受伤。|{term: 你推说明早有课。这居然是真的，睡前你还为它预习了。|你推说明天要早起，回房间看书去了。}}
 
 @event mabels_the_door
 # en: Mabel Reads the Door
@@ -119,8 +125,8 @@ opt.left.say.1 [05b49e] = {~她端来一杯带烟熏味的茶，说：“给你�
 opt.right.label [35b845] = 装出高兴的样子进门
 # en: {~She brings you the cheerful tea and waves your coins away, "for the performance". It's so good you actually cheer up, which may have been her plan all along.|Mabel looks fooled, and doesn't charge you. Then she adds a biscuit, which means she wasn't.}
 opt.right.say.1 [2b9590] = {~她端来了“开心的茶”，摆摆手不收你的钱，说是“看在表演的分上”。好喝得你真的开心起来——说不定这本来就是她的打算。|梅布尔一副被骗过去的样子，没收你的钱。然后她多给了你一块饼干，说明她根本没被骗。}
-# en: {~She brings you a pot labelled, in her own hand, "for people pretending".|"Nice try, dear," says Mabel, and brings the strong one.}
-opt.right.say.2 [a03282] = {~她端来一壶茶，壶上是她亲手写的标签：“给装样子的人”。|“想得美，亲爱的。”梅布尔说完，端来了浓的那种。}
+# en: {~She brings you a pot labelled, in her own hand, "for people pretending". She doesn't charge for it, which is somehow worse.|"Nice try, dear," says Mabel, and brings the strong one, on the house.}
+opt.right.say.2 [a38ce9] = {~她端来一壶茶，壶上是她亲手写的标签：“给装样子的人”。她没收钱，这反而更糟。|“想得美，亲爱的。”梅布尔说完，端来了浓的那种，算店里请的。}
 
 @event mabels_window_seat
 # en: The Window Seat
@@ -131,12 +137,12 @@ text [a61345] = {梅布尔茶馆的靠窗座位能望见湖对岸的城堡，而
 scene [36406e] = 茶馆的靠窗座位，隔着平静的湖望见远处七座塔，窗台上放着茶壶和摊开的笔记。
 # en: Make one pot last all day
 opt.left.label [abe18d] = 一壶茶坐一整天
-# en: {~You get through a whole chapter on one pot, under Mabel's increasingly pointed looks.|By the third hour the tea is cold and Mabel is dusting very close to your table.|You finish your notes. Mabel says nothing, which is worse.}
-opt.left.say.1 [3095f9] = {~一壶茶你读完了整整一章，梅布尔的眼神越来越意味深长。|到第三个钟头，茶凉了，梅布尔在离你桌子很近的地方掸灰。|你写完了笔记。梅布尔一句话也没说，这更可怕。}
+# en: {~You get through a whole chapter on the one free pot Mabel gives window-seat readers, under her increasingly pointed looks.|By the third hour the tea is cold and Mabel is dusting very close to your table.|You finish your notes. Mabel says nothing, which is worse.}
+opt.left.say.1 [2993bf] = {~梅布尔给坐窗边看书的人免费续一壶茶，你靠这一壶读完了整整一章，她的眼神越来越意味深长。|到第三个钟头，茶凉了，梅布尔在离你桌子很近的地方掸灰。|你写完了笔记。梅布尔一句话也没说，这更可怕。}
 # en: Order cake with it
 opt.right.label [8d317c] = 再配块蛋糕
-# en: {You've had two of Mabel's three cakes. Today, the third, which is lemon and worth every crown.|Mabel has started cutting the lemon cake before you sit down.|{~Mabel brings the lemon without asking. You eat it slowly while the barges come and go.|The lemon cake, the window, the lake. The work can wait.}}
-opt.right.say.1 [a91f90] = {梅布尔的三种蛋糕你吃过两种了。今天是第三种，柠檬味的，每个克朗都花得值。|梅布尔开始在你坐下之前就切好柠檬蛋糕了。|{~梅布尔没等你开口就端来了柠檬蛋糕。你慢慢吃着，看驳船来来去去。|柠檬蛋糕、窗户、湖。功课可以等一等。}}
+# en: {flag(mabel_lemon): {~Mabel has started cutting the lemon cake before you sit down.|Mabel brings the lemon without asking. You eat it slowly while the barges come and go.|The lemon cake, the window, the lake. The work can wait.}|Mabel has three cakes. You pick the lemon, and it's worth every crown.}
+opt.right.say.1 [9faf83] = {flag(mabel_lemon): {~梅布尔开始在你坐下之前就切好柠檬蛋糕了。|梅布尔没等你开口就端来了柠檬蛋糕。你慢慢吃着，看驳船来来去去。|柠檬蛋糕、窗户、湖。功课可以等一等。}|梅布尔有三种蛋糕。你挑了柠檬味的，每个克朗都花得值。}
 
 @event mabels_forty_teas
 # en: Forty Kinds of Tea
@@ -149,16 +155,16 @@ scene [b50dbf] = 两个学生坐在茶馆的小桌旁，桌上挤满了不成套
 opt.left.label [76b503] = 两壶都我请
 # en: {~{friend} pronounces today's tea "bracing", which means awful. You drink yours anyway.|You pay. Mabel marks you on the chart as a patron of the arts.|{friend} declares it the best tea in the village, then sniffs yours to be sure.}
 opt.left.say.1 [487728] = {~{friend}宣布今天的茶“提神”，意思是难喝。你还是把自己那杯喝完了。|你付了钱。梅布尔在表上把你记作“艺术赞助人”。|{friend}宣布这是全镇最好的茶，然后凑过来闻了闻你那杯，以防万一。}
-# en: Let {friend} pay for once
-opt.right.label [757914] = 这次让{friend}请客
+# en: Let {friend} pay this time
+opt.right.label [586795] = 这次让{friend}请客
 # en: {~{friend} pays, and calls you unadventurous for ordering your usual. Your tea is perfect, thank you.|"Coward," says {friend} fondly, paying for your usual and their something purple.|{friend} pays, grumbling, and drinks something that smells of bonfires and looks betrayed by it.}
 opt.right.say.1 [1105c1] = {~{friend}付了钱，还说你点老样子太不爱冒险。你的茶好得很，谢谢。|“胆小鬼，”{friend}亲昵地说，一边替你的老样子和自己那杯紫色的东西付了钱。|{friend}嘟囔着付了钱，喝了一杯有篝火味的茶，一脸被背叛的表情。}
 
 @event grimsbys_wrong_book
 # en: Not the Book You Wanted
 title [480464] = 不是你要的那本
-# en: {You ask Mr Grimsby for a textbook. He vanishes into the shelves and comes back with a book on beekeeping.|You ask Mr Grimsby for one thing. He brings you another, with great confidence.|Mr Grimsby sees you coming and is already halfway up a ladder, looking for the wrong book.} {~Today's is a cookery book with a whole chapter on eels.|Today's is a history of a town that may not exist.|Today's is in a language neither of you reads.}
-text [2b8dca] = {你向格林斯比先生要一本教科书。他消失在书架间，拿回来一本讲养蜂的书。|你向格林斯比先生要一样东西。他信心十足地拿来另一样。|格林斯比先生一看见你进门，就已经爬上半截梯子，去找那本错的书了。} {~今天这本是菜谱，有整整一章讲鳗鱼。|今天这本是一座可能并不存在的小镇的历史。|今天这本用的语言你们俩都不认识。}
+# en: {You ask Mr Grimsby for a textbook. He vanishes into the shelves and comes back with something else entirely.|You ask Mr Grimsby for one thing. He brings you another, with great confidence.|Mr Grimsby sees you coming and is already halfway up a ladder, looking for the wrong book.} {~Today's is a cookery book with a whole chapter on eels.|Today's is a history of a town that may not exist.|Today's is a guide to the moods of weather.}
+text [30f50b] = {你向格林斯比先生要一本教科书。他消失在书架间，拿回来的完全是另一本。|你向格林斯比先生要一样东西。他信心十足地拿来另一样。|格林斯比先生一看见你进门，就已经爬上半截梯子，去找那本错的书了。} {~今天这本是菜谱，有整整一章讲鳗鱼。|今天这本是一座可能并不存在的小镇的历史。|今天这本是一本讲天气脾性的指南。}
 # en: A bookshop so crowded the shelves lean together, an elderly bookseller on a ladder triumphantly holding up the wrong book.
 scene [ea591e] = 挤得书架互相倚靠的书店里，一位老书商站在梯子上，得意地举着一本错的书。
 # en: Buy what he found
@@ -167,8 +173,8 @@ opt.left.label [8212ca] = 买下他找到的书
 opt.left.say.1 [7b70a6] = {~它毫无用处，又妙不可言。你在驳船上就读了一半。|你学到了比预想更多的东西，关于一件你从没打算学的事。|书里夹着一朵压干的花，扉页上写着一个你不认识的名字。}
 # en: Search the shelves yourself
 opt.right.label [68f103] = 自己去书架上找
-# en: {~You find it behind a stack of almanacs, exactly where he said it wasn't.|You find it. Mr Grimsby looks wounded and charges you anyway.}
-opt.right.say.1 [34eb8d] = {~你在一摞年鉴后面找到了它，正是他说不在的地方。|你找到了。格林斯比先生一脸受伤，照样收了你的钱。}
+# en: {~You find it behind a stack of almanacs, exactly where he said it wasn't, and read the chapter you need at the counter.|You find it. Mr Grimsby looks wounded and lets you read it at the counter for free, since you found it yourself.}
+opt.right.say.1 [8045f4] = {~你在一摞年鉴后面找到了它，正是他说不在的地方，就在柜台边读完了你要的那一章。|你找到了。格林斯比先生一脸受伤，因为是你自己找到的，就让你在柜台边免费读了。}
 # en: {~A shelf leans on you for support. You hold it up for a long time.|An afternoon, a sneezing fit, and no book.}
 opt.right.say.2 [f7eb7b] = {~一个书架靠在你身上寻求支撑。你扶了它很久。|一个下午，一阵喷嚏，没有书。}
 
@@ -203,8 +209,8 @@ opt.left.say.1 [87b7a4] = {~{friend}答应“很快”就借给你。你知道�
 opt.right.label [3e6001] = 讨价还价抢下它
 # en: {~Mr Grimsby takes your side for reasons of his own. {friend} won't speak to you until the quay.|You win it fair and square, and {friend} says so in a voice that means the opposite.}
 opt.right.say.1 [f53bc6] = {~格林斯比先生出于自己的理由站在你这边。{friend}一直到码头都没理你。|你光明正大地赢了，{friend}也这么说，只是语气意思正相反。}
-# en: {~{friend} outbids you, and somehow you end up paying for the tea afterwards.|You argue so long that a third-year buys it while you're both talking.}
-opt.right.say.2 [d8d4d0] = {~{friend}出价比你高，结果不知怎的，事后的茶钱还是你付的。|你们争了太久，一个三年级生趁你们说话时把书买走了。}
+# en: {~{friend} outbids you, and Mr Grimsby hands your crowns back with a sympathetic look.|You argue so long that a third-year buys it while you're both talking. Mr Grimsby gives your crowns back.}
+opt.right.say.2 [82cb6d] = {~{friend}出价比你高，格林斯比先生带着同情的眼神把你的克朗退了回来。|你们争了太久，一个三年级生趁你们说话时把书买走了。格林斯比先生把你的克朗退了回来。}
 
 @event pell_apothecary_drawers
 # en: A Thousand Drawers
@@ -261,18 +267,18 @@ opt.right.say.1 [15501e] = {~老佩尔卖给你一种褐色的、靠得住的药
 @event bakery_bun_queue
 # en: The Bun Queue
 title [b02932] = 买面包的队伍
-# en: {There's a queue outside the bakery before the village is properly awake, and it smells like a promise.|The baker's son counts heads in the bun queue and knows you by your scarf.|The bun queue. You know everyone in it by their order.} {season == "winter": Breath steams in the cold.|{season == "autumn": Leaves skitter round everyone's ankles.|{~The baker's son is singing off-key.|A goat has joined the queue and nobody has the heart to send it away.}}}
-text [3390ec] = {小镇还没完全醒来，面包房门外已经排起了队，空气里的香味像一个承诺。|面包师的儿子数着排队的人头，认得你的围巾。|买面包的队伍。队里每个人你都能按他们点的东西认出来。} {season == "winter": 呼出的气在冷空气里冒着白雾。|{season == "autumn": 落叶在每个人的脚踝边打转。|{~面包师的儿子在跑调地唱歌。|一只山羊也排进了队，谁都不忍心把它赶走。}}}
+# en: {There's a queue outside the bakery for the afternoon batch, and it smells like a promise.|The baker's son counts heads in the bun queue and knows you by your scarf.|The bun queue. You know everyone in it by their order.} {season == "winter": Breath steams in the cold.|{season == "autumn": Leaves skitter round everyone's ankles.|{~The baker's son is singing off-key.|A goat has joined the queue and nobody has the heart to send it away.}}}
+text [20208a] = {面包房门外为下午那一炉排起了队，空气里的香味像一个承诺。|面包师的儿子数着排队的人头，认得你的围巾。|买面包的队伍。队里每个人你都能按他们点的东西认出来。} {season == "winter": 呼出的气在冷空气里冒着白雾。|{season == "autumn": 落叶在每个人的脚踝边打转。|{~面包师的儿子在跑调地唱歌。|一只山羊也排进了队，谁都不忍心把它赶走。}}}
 # en: A queue of villagers and students outside a little bakery at dawn, steam and the smell of cinnamon pouring out of the door.
 scene [09ed66] = 黎明时一家小面包房外排着镇民和学生，热气和肉桂香从门里涌出来。
 # en: Buy a bag for your corridor
 opt.left.label [fed2ca] = 给走廊的人买一袋
-# en: {~You come back with a warm bag and are, for one morning, the most popular person in your house.|The buns are gone before you've taken your coat off. Someone leaves you a thank-you note on a napkin.|A prefect takes one "to check it for contraband". It passes.}
-opt.left.say.1 [c3953d] = {~你带回一袋热面包，整整一个早上成了学院里最受欢迎的人。|你还没脱外套，面包就被抢光了。有人在餐巾上给你留了张感谢条。|一个级长拿走一个，说要“检查有没有违禁品”。检查通过。}
+# en: {~You come back with a warm bag and are, for one evening, the most popular person in your house.|The buns are gone before you've taken your coat off. Someone leaves you a thank-you note on a napkin.|A prefect takes one "to check it for contraband". It passes.}
+opt.left.say.1 [750931] = {~你带回一袋热面包，整整一个晚上成了学院里最受欢迎的人。|你还没脱外套，面包就被抢光了。有人在餐巾上给你留了张感谢条。|一个级长拿走一个，说要“检查有没有违禁品”。检查通过。}
 # en: Take a broken bun from the free tray
 opt.right.label [355ae4] = 从免费盘里拿个碎面包
-# en: {~The baker's son gives you one that came out lopsided. You eat it on the quay while it's still too hot. Worth every burnt finger.|A broken bun, free: butter, cinnamon and the lake in the morning. Nothing has ever been better.|The free tray has one left. You eat it slowly and think about nothing at all.}
-opt.right.say.1 [5c5488] = {~面包师的儿子给了你一个烤歪了的。你在码头上趁烫就吃了。烫了手指也值。|一个碎掉的面包，免费的：黄油、肉桂，还有清晨的湖。再没有比这更好的了。|免费盘里还剩最后一个。你慢慢吃着，什么也不想。}
+# en: {~The baker's son gives you one that came out lopsided. You eat it on the quay while it's still too hot. Worth every burnt finger.|A broken bun, free: butter, cinnamon and the lake in the afternoon. Nothing has ever been better.|The free tray has one left. You eat it slowly and think about nothing at all.}
+opt.right.say.1 [471530] = {~面包师的儿子给了你一个烤歪了的。你在码头上趁烫就吃了。烫了手指也值。|一个碎掉的面包，免费的：黄油、肉桂，还有午后的湖。再没有比这更好的了。|免费盘里还剩最后一个。你慢慢吃着，什么也不想。}
 
 @event bakery_oldest_baker
 # en: The Oldest Baker
@@ -301,8 +307,10 @@ scene [22dd92] = 面包房敞开的窗台上晾着一盘冒热气的面包，一
 opt.left.label [9b35c2] = 从窗台顺一个
 # en: {~You get away with it. It tastes slightly of guilt and mostly of cinnamon.|Clean away. The crow watches you with professional respect.}
 opt.left.say.1 [6a1d7f] = {~你得手了。吃起来有一点点内疚味，主要是肉桂味。|干净利落。乌鸦用同行的敬意看着你。}
-# en: {~A floury hand appears from the window, palm up. You pay double.|Caught by the baker's son, who tells everyone in the queue.}
-opt.left.say.2 [50cf95] = {~一只沾满面粉的手从窗里伸出来，掌心朝上。你付了双倍。|被面包师的儿子逮个正着，他告诉了队伍里的每一个人。}
+# en: {~A floury hand appears from the window, palm up. You pay double.|Caught by the baker's son, who makes you pay double and tells everyone in the queue.}
+opt.left.say.2 [57a037] = {~一只沾满面粉的手从窗里伸出来，掌心朝上。你付了双倍。|被面包师的儿子逮个正着，他让你付了双倍，还告诉了队伍里的每一个人。}
+# en: A floury hand appears from the window, palm up. Your pockets are empty, so you spend an hour scrubbing trays instead.
+opt.left.say.3 [af2de5] = 一只沾满面粉的手从窗里伸出来，掌心朝上。你口袋空空，只好去刷了一个钟头的烤盘。
 # en: Ask for yesterday's
 opt.right.label [eb962f] = 讨点昨天的
 # en: {~The baker gives you a bag of yesterday's for nothing. They're as hard as roof slates.|You get the broken ones free. You eat one and lose a little faith in bread.|"For the student who asks," says the baker, and hands you a stale one with a wink.}
@@ -311,18 +319,18 @@ opt.right.say.1 [b47d93] = {~面包师白送你一袋昨天的面包。硬得像
 @event home_cottage_old_room
 # en: Your Old Room
 title [8a919e] = 你的旧房间
-# en: {Your old room is exactly as you left it, except smaller.|Someone has been storing apples in your old room.|Your old room has started to feel like a guest room, and you like it less for that.} {season == "winter": There's frost on the inside of the window, as always.|The window won't shut properly in the heat, as always.} Downstairs, the house is already awake.
-text [05514b] = {你的旧房间和你离开时一模一样，只是变小了。|有人在你的旧房间里存了苹果。|你的旧房间开始像一间客房了，你因此不那么喜欢它了。} {season == "winter": 窗户内侧结着霜，一如往常。|天热时窗户总关不严，一如往常。}楼下，一家人早已醒了。
+# en: {Your old room is exactly as you left it, except smaller.|Someone has been storing apples in your old room.|Your old room has started to feel like a guest room, and you like it less for that.} {season == "winter": There's frost on the inside of the window, as always.|The window won't shut properly in the heat, as always.} Downstairs, the house is busy without you.
+text [ad7a94] = {你的旧房间和你离开时一模一样，只是变小了。|有人在你的旧房间里存了苹果。|你的旧房间开始像一间客房了，你因此不那么喜欢它了。} {season == "winter": 窗户内侧结着霜，一如往常。|天热时窗户总关不严，一如往常。}楼下，一家人没等你就忙开了。
 # en: A small childhood bedroom under the eaves, a too-short bed, a window looking out over fields.
 scene [0981a6] = 屋檐下一间小小的儿时卧室，一张太短的床，窗外是田野。
-# en: Sleep until noon
-opt.left.label [7405ea] = 睡到中午
-# en: {~You sleep like a stone. Downstairs, someone has done all your chores, loudly.|You wake to the smell of lunch and a pointed silence.|You sleep the clock round. You feel human, and slightly ashamed.}
-opt.left.say.1 [5ed973] = {~你睡得像块石头。楼下有人把你的家务全干了，动静很大。|你在午饭的香味和意味深长的沉默中醒来。|你睡了个对时。感觉活过来了，也有点惭愧。}
-# en: Get up with the house
-opt.right.label [4c01bf] = 跟全家一起起床
-# en: {final_year: {~You go down in the dark and realise there won't be many more mornings like this.|You memorise the kitchen without meaning to.}|{~You help with the fire. Nobody says much. Nobody needs to.|The creaky stair announces you. Someone hands you a cup before you've asked.}}
-opt.right.say.1 [6b3cab] = {final_year: {~你摸黑下楼，忽然意识到这样的早晨不会再有很多了。|你不知不觉把厨房的样子记在了心里。}|{~你帮着生火。谁都没多说话。也不需要。|吱呀的楼梯报告了你的到来。你还没开口，就有人递给你一杯茶。}}
+# en: Nap the afternoon away
+opt.left.label [f2dad7] = 睡掉一个下午
+# en: {~You sleep like a stone. Downstairs, someone has done all your chores, loudly.|You wake to the smell of supper and a pointed silence.|You sleep through the afternoon. You feel human, and slightly ashamed.}
+opt.left.say.1 [d25933] = {~你睡得像块石头。楼下有人把你的家务全干了，动静很大。|你在晚饭的香味和意味深长的沉默中醒来。|你睡了整整一下午。感觉活过来了，也有点惭愧。}
+# en: Go down and help
+opt.right.label [5819cf] = 下楼帮忙
+# en: {final_year: {~You go down and realise there won't be many more afternoons like this.|You memorise the kitchen without meaning to.}|{~You help with the fire. Nobody says much. Nobody needs to.|The creaky stair announces you. Someone hands you a cup before you've asked.}}
+opt.right.say.1 [c75f0f] = {final_year: {~你下楼时忽然意识到，这样的下午不会再有很多了。|你不知不觉把厨房的样子记在了心里。}|{~你帮着生火。谁都没多说话。也不需要。|吱呀的楼梯报告了你的到来。你还没开口，就有人递给你一杯茶。}}
 
 @event home_cottage_list
 # en: The List on the Table
@@ -393,14 +401,14 @@ opt.right.say.1 [497c04] = {~你从集市提回一篮子东西，成了田里最
 @event home_fields_pond
 # en: The Old Pond
 title [ed9a38] = 老池塘
-# en: {season == "winter": The pond at the bottom of the fields has frozen over, and the local youngsters are daring each other onto the ice.|The pond at the bottom of the fields is warm and green, and the local youngsters are daring each other off the willow.} {You used to be one of them.|This time they dare you too.|They've started daring you first.} {~A dog barks at the whole business.|Someone's little sister is keeping score.|Your old initials are still carved in the willow.}
-text [209ed4] = {season == "winter": 田地尽头的池塘结了冰，镇上的年轻人正互相激将着上冰。|田地尽头的池塘温暖碧绿，镇上的年轻人正互相激将着从柳树上跳下去。} {你从前也是他们中的一个。|这回他们也激你了。|他们现在先激你。} {~一条狗冲着这一切汪汪叫。|有人的小妹妹在记分。|你小时候刻的名字缩写还在柳树上。}
+# en: {season == "winter": The pond at the bottom of the fields has frozen over, and the young farmhands are daring each other onto the ice.|The pond at the bottom of the fields is warm and green, and the young farmhands are daring each other off the willow.} {You used to be one of them.|This time they dare you too.|They've started daring you first.} {~A dog barks at the whole business.|The blacksmith's apprentice is keeping score.|Your old initials are still carved in the willow.}
+text [47fcfc] = {season == "winter": 田地尽头的池塘结了冰，年轻的农工们正互相激将着上冰。|田地尽头的池塘温暖碧绿，年轻的农工们正互相激将着从柳树上跳下去。} {你从前也是他们中的一个。|这回他们也激你了。|他们现在先激你。} {~一条狗冲着这一切汪汪叫。|铁匠的学徒在记分。|你小时候刻的名字缩写还在柳树上。}
 # en: A pond at the bottom of a field under an old willow, local youngsters daring each other at its edge.
 scene [6031f0] = 田边一棵老柳树下的池塘，镇上的年轻人在岸边互相激将。
 # en: Take the dare
 opt.left.label [6cb2fd] = 接受挑战
-# en: {season == "winter": {~You skate across and back to roaring applause from three children and a dog.|You slide the whole length on your back. It counts.}|{~You drop off the willow into the green. It's colder than memory, and better.|A perfect splash. The little sister gives it top marks.}}
-opt.left.say.1 [4d7d33] = {season == "winter": {~你滑过去又滑回来，赢得三个孩子和一条狗的欢呼。|你仰面滑完了全程。这也算数。}|{~你从柳树上跳进碧水里。比记忆中更冷，也更好。|完美的水花。小妹妹给了最高分。}}
+# en: {season == "winter": {~You skate across and back to roaring applause from three farmhands and a dog.|You slide the whole length on your back. It counts.}|{~You drop off the willow into the green. It's colder than memory, and better.|A perfect splash. The scorekeeper gives it top marks.}}
+opt.left.say.1 [018b96] = {season == "winter": {~你滑过去又滑回来，赢得三个农工和一条狗的欢呼。|你仰面滑完了全程。这也算数。}|{~你从柳树上跳进碧水里。比记忆中更冷，也更好。|完美的水花。记分的人给了最高分。}}
 # en: {season == "winter": {~You go through the ice up to your knees and limp home to a lecture and a fire.|The ice cracks under you and you scramble back, soaked and laughed at.}|{~You belly-flop. The sound carries across three fields. Everyone heard.|You slip off the willow early and land in the reeds, muddy to the ears.}}
 opt.left.say.2 [1ed50b] = {season == "winter": {~你踩破冰面，水没到膝盖，一瘸一拐地回家，迎接你的是一顿数落和一炉火。|冰在你脚下裂开，你手脚并用爬回岸上，浑身湿透，被笑了个够。}|{~你肚皮拍水。那声响传遍了三块田。所有人都听见了。|你还没站稳就从柳树上滑了下去，一头栽进芦苇丛，泥糊到耳朵。}}
 # en: Hold the coats

@@ -111,7 +111,7 @@ chain: hollowstar
 scene: A dark aisle of the Restricted Section at midnight, a bundle of yellowed drafts chained to a shelf, the chain faintly glowing.
 text: The archive's ledger has its founding page cut out. The Restricted Section keeps the founders' own drafts, chained to a shelf at the very back, and the chain is warm to the touch. Somewhere behind you, a book turns its own page.
 > left: Work the chain loose
-  challenge deceive medium:
+  challenge deceive journeyman:
     win:
       flag knows_founders_seal
       find founders_ledger
@@ -126,7 +126,7 @@ text: The archive's ledger has its founding page cut out. The Restricted Section
   lore +small
   mana -tiny
   find lead_seventh_tower
-  say: The drafts' shelf-list is less guarded and nearly as strange. One entry reads only "Key: the seventh tower, top room. Do not lend." You copy it out by the light of a book that hums, which leaves you tired.
+  say: The drafts' shelf-list is less guarded and nearly as strange. One entry reads only "Key: the seventh tower, top room. Do not lend." You copy it out by the light of a reading charm you have to keep alive for an hour, and it leaves you drained.
 
 @event hs_boathouse_bell
 title: The Hatch in the Boathouse
@@ -142,7 +142,7 @@ chain: hollowstar
 scene: The inside of an old wooden boathouse at night, a square hatch open in the floorboards, stone steps leading down into dark water.
 text: Under a coil of rotten rope in the boathouse there's a hatch, and under the hatch, stone steps going down into the lake. The air coming up smells of cold bronze. From somewhere below, very faint, a bell is tolling under the water.
 > left: Go down the steps
-  challenge feat easy:
+  challenge feat apprentice:
     win:
       flag found_lake_tunnel
       find lake_bell
@@ -160,7 +160,7 @@ text: Under a coil of rotten rope in the boathouse there's a hatch, and under th
 @event hs_seraphine_shadow
 title: One Star Too Many
 place: observatory
-time: evening night
+slot: evening
 class: story
 tone: eerie
 actor: seraphine
@@ -300,7 +300,7 @@ text: The man in grey falls into step beside you outside the infirmary. "You hel
 > right: "...How many more?"
   flag grey_tested hollow_tempted
   alignment -medium
-  arcana +small
+  lore +small
   say: He tells you. The numbers are very large and very cold. That night, you dream of the lake from underneath, and you are not frightened in the dream.
 
 @event hs_wardens_notice
@@ -331,6 +331,7 @@ text: On the grand stair the headmistress stops beside you. "Several people have
 @event hs_seventh_tower
 title: The Seventh Tower
 place: seventh_tower
+slot: evening
 class: story
 tone: eerie
 when: clue(lead_seventh_tower) and not flag(star_key) and not flag(gave_star_key)
@@ -369,6 +370,7 @@ title: Something of Mine
 class: story
 tone: tense
 trigger: queued
+defer: off_campus
 actor: isolde
 art: key
 tags: mystery hollowstar
@@ -414,7 +416,7 @@ text: The headmistress summons you to her tower. "You have been following the sa
   rel isolde +large
   arcana +small
   mood -small
-  say: She presses a silver ward-ring into your hand. "The founders' key is kept at the top of the seventh tower{=flag(gave_star_key) and ", and now in my desk" or ""}. On the night, it comes down with us. Learn quickly. You have until Blossomtide." You lose a little sleep over that every night.
+  say: She presses a silver ward-ring into your hand. "{flag(star_key): The founders' key is with you. Keep it close.|{flag(gave_star_key): The founders' key is in my desk.|The founders' key is kept at the top of the seventh tower.}} On the night, it comes down with us. Learn quickly. You have until Blossomtide." You lose a little sleep over that every night.
 
 @event hs_the_night
 title: The Night the Lake Froze
@@ -455,7 +457,7 @@ text: The tunnel from the boathouse runs down under the ice, slick and glowing b
   hint: Combat. Easier with Kael at your side.
   queue hs_threshold now
   if flag(kael_ally) or flag(winter_kael):
-    challenge combat medium:
+    challenge combat master-:
       win:
         flag hs_tunnel_clear
         health -small
@@ -464,7 +466,7 @@ text: The tunnel from the boathouse runs down under the ice, slick and glowing b
         health -large
         say: He swats the two of you aside like moths, then steps back to let you pass, smiling. "Go on, then." You go down bleeding, and late.
   else:
-    challenge combat hard:
+    challenge combat master- unlikely:
       win:
         flag hs_tunnel_clear
         health -small
@@ -476,7 +478,7 @@ text: The tunnel from the boathouse runs down under the ice, slick and glowing b
   hint: Charm. Easier if Ilse is safe, or you know what she was raised for.
   queue hs_threshold now
   if flag(ilse_saved) or flag(winter_ilse) or clue(ilse_truth):
-    challenge negotiate medium:
+    challenge negotiate master-:
       win:
         flag hs_tunnel_clear
         mood -small
@@ -485,7 +487,7 @@ text: The tunnel from the boathouse runs down under the ice, slick and glowing b
         mood -medium
         say: He listens courteously, agrees with every word, and lets you pass only once you've heard every word of his. You arrive shaken, and late.
   else:
-    challenge negotiate hard:
+    challenge negotiate master- unlikely:
       win:
         flag hs_tunnel_clear
         mood -small
@@ -497,16 +499,16 @@ text: The tunnel from the boathouse runs down under the ice, slick and glowing b
   hint: Guile. Easier if you know the old tunnels.
   queue hs_threshold now
   if flag(found_lake_tunnel) or clue(lake_bell):
-    challenge deceive easy:
+    challenge deceive master- likely:
       win:
         flag hs_tunnel_clear
-        mana -small
+        health -small
         say: You know a side passage he doesn't, the one the bell's rope once ran through. You come out below him, breathless and spent, and he never sees you go.
       lose:
         health -medium
         say: The side passage is half flooded. You come out soaked and freezing, below him, but late, and he calls a polite good evening after you.
   else:
-    challenge deceive hard:
+    challenge deceive master- unlikely:
       win:
         flag hs_tunnel_clear
         mana -small
@@ -531,17 +533,17 @@ text: The tunnel ends at a wall of black stone carved with the founders' words, 
   hint: Lore. The founders' seal and the seven locks make it easier.
   queue hs_beneath now
   if clue(knows_founders_seal) and clue(seven_locks):
-    challenge research easy:
+    challenge research master- likely:
       win:
         flag hs_threshold_read
         mood -tiny
-        say: You've read these words before, in pieces: the ledger, Maud's tea, the locks. Said whole, they open the wall like a door, and the strain of it sits behind your eyes.
+        say: You've read these words before, in pieces, and you know where the locks fall. Said whole, they open the wall like a door, and the strain of it sits behind your eyes.
       lose:
         health -small
         mood -small
         say: You stumble on the last line, and the wall opens only a crack. You squeeze through it; it scrapes skin off your shoulder on the way.
   elif clue(knows_founders_seal) or clue(seven_locks) or flag(winter_isolde):
-    challenge research medium:
+    challenge research master-:
       win:
         flag hs_threshold_read
         mood -tiny
@@ -551,7 +553,7 @@ text: The tunnel ends at a wall of black stone carved with the founders' words, 
         mood -small
         say: You stumble on the last line, and the wall opens only a crack. You squeeze through it; it scrapes skin off your shoulder on the way.
   else:
-    challenge research hard:
+    challenge research master- unlikely:
       win:
         flag hs_threshold_read
         mood -tiny
@@ -564,7 +566,7 @@ text: The tunnel ends at a wall of black stone carved with the founders' words, 
   hint: Arcana, and it hurts. Easier if Maud taught you her wards.
   queue hs_beneath now
   if flag(winter_maud):
-    challenge spell medium:
+    challenge spell master-:
       win:
         flag hs_threshold_read
         health -small
@@ -573,7 +575,7 @@ text: The tunnel ends at a wall of black stone carved with the founders' words, 
         health -medium
         say: The stone fights back. You get through in the end, but your hands are raw and shaking.
   else:
-    challenge spell hard:
+    challenge spell master- unlikely:
       win:
         flag hs_threshold_read
         health -small
@@ -711,10 +713,10 @@ text: Beyond the wall, the round door. It stands open a crack. Through it, the H
   lose hollow_dreams
   if alignment <= -30:
     mood +medium
-    say: You take what it offers, and it feels like coming home. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap.
+    say: You take what it offers, and it feels like coming home. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap. The price comes out of your body: you climb the tunnel grey-lipped, and for days every stair leaves you breathless.
   else:
     mood -large
-    say: You take what it offers. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap, and you lie awake for a week.
+    say: You take what it offers. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap. You climb the tunnel grey-lipped, and for a week you lie awake, too weak for stairs.
 > open: Open the door
   hint: It wants out. Only one already deep in the Hollow could walk through beside it.
   when: alignment <= -60 or flag(hollow_tempted)
