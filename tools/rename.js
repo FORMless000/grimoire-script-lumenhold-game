@@ -24,7 +24,7 @@ const KINDS = ['event', 'state', 'npc', 'flag', 'var', 'ending', 'place', 'track
 const HEADER_KINDS = { event: 'events', state: 'states', npc: 'npcs', ending: 'endings', place: 'places', track: 'tracks', spell: 'spells', arc: 'arcs' };
 const SPECIAL = new Set(['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa']);
 // Properties whose values are ids or expressions (renamed as whole words); everything else is text.
-const CODE_PROPS = new Set(['actor', 'when', 'weight', 'defer', 'track', 'place', 'teaches', 'discipline', 'schedule', 'relations', 'members', 'lead', 'npc', 'cast', 'event', 'discover', 'closed_when', 'hinted_when', 'unlock', 'prereq', 'clues', 'key_clues']);
+const CODE_PROPS = new Set(['actor', 'when', 'weight', 'defer', 'ramp', 'track', 'place', 'teaches', 'discipline', 'schedule', 'relations', 'members', 'lead', 'npc', 'cast', 'event', 'discover', 'closed_when', 'hinted_when', 'unlock', 'prereq', 'clues', 'key_clues']);
 const PRONOUNS = new Set(['they', 'them', 'their', 'theirs', 'are', 's', 'name', 'fullname', 'title', 'house']);
 
 // Every reference in compiled content, as [kind, id] pairs (definitions included).
@@ -93,7 +93,7 @@ function references(content) {
   for (const col of ['events', 'states', 'npcs', 'endings', 'hooks', 'resources']) {
     for (const d of Object.values(content[col])) {
       for (const f of ['title', 'text', 'scene', 'desc', 'name', 'label']) if (typeof d[f] === 'string') scanText(d[f]);
-      scanExpr(d.when); scanExpr(d.weight);
+      scanExpr(d.when); scanExpr(d.weight); scanExpr(d.defer); if (d.ramp) scanExpr(d.ramp.expr);
       if (d.actor && !['any', 'npc'].includes(d.actor)) add('npc', d.actor);
       for (const f of ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero']) scanEffects(d[f]);
       for (const o of d.options || []) {

@@ -758,61 +758,61 @@ text: Corvin's at your door at midnight, bag over his shoulder. "There's a sky-b
 
 # ================= MIRA TEN =================
 
-@event mira_intro
+@event mir_intro
 title: An Explosion in the West Wing
 class: routine
 tone: light
-actor: mira
-when: not met(mira) and turn >= 2
+actor: mir
+when: not met(mir) and turn >= 2
 weight: 30
 art: gear
 tags: social
 scene: A cloud of purple smoke billowing from a workshop door, a soot-covered student emerging with goggles and a thumbs-up.
 text: The west wing explodes. Not badly. A figure in goggles stumbles out of the purple smoke, coughing, and gives you a thumbs-up. "Don't worry! That was intentional! Mostly! Can you hold this?" They hand you a ticking teapot.
 > left: Put the teapot down and back away
-  meet mira
-  rel mira +tiny
+  meet mir
+  rel mir +tiny
   say: The teapot stops ticking and starts humming the academy anthem. "Mir," they say. "They/them. Thanks for not throwing it."
 > right: Hold the teapot steady
-  meet mira
+  meet mir
   challenge brew trivial:
     win:
-      rel mira +medium
+      rel mir +medium
       say: You keep it level while they twist a valve. It stops ticking. "You've got good hands," Mir says. "I'm going to need those."
     lose:
       health -tiny
-      rel mira +medium
+      rel mir +medium
       say: The teapot goes off. Your eyebrows survive, mostly. Mir is apologising and laughing at the same time.
 
-@event mira_owl_gift
+@event mir_owl_gift
 title: A Present With Gears
 class: routine
 tone: light
 trigger: social
-actor: mira
-when: rel(mira) >= 18 and not has(familiar_owl)
+actor: mir
+when: rel(mir) >= 18 and not has(familiar_owl)
 weight: 14
 art: owl
 tags: social magic
 scene: A small brass owl with glowing amber eyes perched on a student's wrist, its clockwork feathers fluffing.
 text: Mir presents a brass owl with amber glass eyes. It blinks, hoots the hour and says "HOMEWORK" in a tinny voice. "Made it for you. It remembers deadlines. And birthdays. And grudges, slightly."
 > left: It's too much
-  rel mira +small
+  rel mir +small
   say: Mir looks crushed, then rallies. "I'll give it to Thorne. He needs reminding to smile." The owl, you hear, refuses to work for him.
 > right: Accept it gratefully
   mood -tiny
   gain familiar_owl
-  rel mira +medium
-  spark mira +tiny
+  rel mir +medium
+  spark mir +tiny
   say: The owl settles on your shoulder and says, "WELCOME." Mir pretends to have something in their eye. At six the next morning, the owl says "HOMEWORK." It says it every morning for the rest of the year.
 
-@event mira_fair
+@event mir_fair
 title: The Artificers' Fair
 class: routine
 tone: light
 trigger: social
-actor: mira
-when: rel(mira) >= 9 and month >= 6 and month <= 9
+actor: mir
+when: rel(mir) >= 9 and month >= 6 and month <= 9
 weight: 12
 art: gear
 tags: social festival
@@ -820,28 +820,28 @@ scene: A hall crammed with bizarre inventions — walking teapots, singing clock
 text: The Artificers' Fair. Mir's entry is under a sheet and occasionally growls. "I need an assistant to stand next to it and look confident," they say. "And possibly run."
 > left: Watch from a safe distance
   mood +tiny
-  rel mira +tiny
+  rel mir +tiny
   say: The machine turns out to be a mechanical bear that bakes bread. It wins second place. Mir is ecstatic and flour-covered.
 > right: Be the confident assistant
   challenge negotiate trivial:
     win:
       renown +medium
-      rel mira +medium
+      rel mir +medium
       say: You present it like a showman. The bear bakes a perfect loaf and bows. First prize. Mir kisses the trophy, then, in a fluster, your cheek.
-      spark mira +tiny
+      spark mir +tiny
     lose:
       health -small
       renown +small
-      rel mira +small
+      rel mir +small
       say: The bear eats your sleeve. The crowd loves it. Third prize and a very good story.
 
-@event mira_workshop_closed
+@event mir_workshop_closed
 title: The Workshop Is Shut
 class: routine
 tone: light
 trigger: social
-actor: mira
-when: rel(mira) >= 12 and year >= 2
+actor: mir
+when: rel(mir) >= 12 and year >= 2
 weight: 10
 art: lock
 tags: social
@@ -850,88 +850,88 @@ text: After the third fire this term, the faculty has padlocked Mir's workshop. 
 > left: Plead their case to Professor Thorne
   challenge negotiate trivial:
     win:
-      rel mira +large
+      rel mir +large
       rel thorne +tiny
       say: Thorne agrees to reopen it — with fire buckets and a weekly inspection. Mir cries on you. Oil and all.
     lose:
-      rel mira +small
+      rel mir +small
       rel thorne -tiny
       say: Thorne refuses. But Mir heard you try. "Nobody's ever argued for me before," they say.
 > right: Help them build a secret workshop
   challenge deceive trivial:
     win:
-      rel mira +large
+      rel mir +large
       guile +tiny
       say: An abandoned classroom behind a tapestry. You bring candles; Mir brings everything else. It's perfect. It's almost entirely fireproof.
     lose:
-      rel mira +medium
+      rel mir +medium
       gain detention
       say: Bram finds the secret workshop on day two. Worth it, says Mir, scrubbing cauldrons beside you.
 
-@event mira_dance_machine
+@event mir_dance_machine
 title: The Dancing Machine
 class: routine
 tone: light
 trigger: social
-actor: mira
-when: rel(mira) >= 6
+actor: mir
+when: rel(mir) >= 6
 weight: 10
 art: music
 tags: social
 scene: A spindly brass contraption with too many legs attempting a waltz in an empty classroom, a student dancing with it.
 text: Mir has built a machine that teaches dancing. It has six legs and opinions. "It needs a test subject," they say. "It's mostly safe. It only kicked me twice."
 > left: Make Mir test it
-  rel mira -tiny
+  rel mir -tiny
   mood +small
   say: You watch Mir and the machine waltz, badly, across the room. It kicks them twice; Mir gives you a look. It's the funniest thing you've ever seen.
 > right: Dance with the machine
   charm +small
   health -tiny
-  rel mira +medium
+  rel mir +medium
   say: It kicks you twice too. But by the end you can waltz, and Mir is clapping with oily hands.
 
-@event mira_confession
-ramp: spark(mira) 25..40
+@event mir_confession
+ramp: spark(mir) 25..40
 title: Blueprint
 class: milestone
 tone: warm
 trigger: social
-actor: mira
-when: spark(mira) >= 25 and rel(mira) >= 18 and bond(mira) != "partner"
+actor: mir
+when: spark(mir) >= 25 and rel(mir) >= 18 and bond(mir) != "partner"
 weight: 30
 art: gear
 tags: romance
 scene: A rolled-out blueprint on a workbench showing a heart-shaped mechanism labelled with tiny careful notes, a nervous artificer beside it.
 text: Mir unrolls a blueprint. It's a mechanical heart, labelled in tiny careful handwriting: "Does not work without the other part." They clear their throat. "I'm bad at saying things. So I drew it. You're the other part. If you want."
 > left: Kindly say no
-  spark mira -large
-  rel mira +small
+  spark mir -large
+  rel mir +small
   say: Mir rolls up the blueprint carefully. "Good to know. Data is data." They're fine. They're mostly fine.
 > right: "I want."
-  bond mira partner
-  spark mira +large
+  bond mir partner
+  spark mir +large
   mood +large
   say: The heart doesn't need to work. But Mir builds it anyway, and it ticks on your windowsill, in time with your own.
 
-@event mira_family_business
+@event mir_family_business
 title: The Family Clockworks
 class: routine
 tone: light
 trigger: social
-actor: mira
-when: rel(mira) >= 15 and year >= 2 and not flag(mira_family_done)
+actor: mir
+when: rel(mir) >= 15 and year >= 2 and not flag(mir_family_done)
 weight: 10
 art: gear
 tags: social
 scene: An artificer holding a stiff letter embossed with a gear crest, a train ticket tucked inside, staring at it blankly.
 text: A letter from Mir's parents: the family clockworks needs them home. A ticket is enclosed. "They think this is a hobby," Mir says. "This. Is. Not. A. Hobby."
 > left: Tell them family comes first
-  flag mira_family_done
-  rel mira -small
+  flag mir_family_done
+  rel mir -small
   say: Mir goes home for a month and comes back with a new scar and a clearer jaw. "They know now," they say. "It's not a hobby."
 > right: Help them write back
-  flag mira_family_done
-  rel mira +large
+  flag mir_family_done
+  rel mir +large
   charm +tiny
   say: Together you write a letter so persuasive it should be framed. Mir's mother replies: "Fine. Win a prize." Mir intends to win all of them.
 

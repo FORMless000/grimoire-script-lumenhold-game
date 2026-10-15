@@ -312,13 +312,13 @@ text: "Rule one: never cheat," says Corvin, shuffling so fast the cards blur. "R
 
 # ---------------- Mir ----------------
 
-@event mira_ornithopter
+@event mir_ornithopter
 title: The Test Flight
 class: routine
 tone: tense
 trigger: social
-actor: mira
-when: rel(mira) >= 9
+actor: mir
+when: rel(mir) >= 9
 weight: 12
 art: gear
 tags: social danger
@@ -327,25 +327,25 @@ text: Mir has built a flying machine with canvas wings and seven propellers. It 
 > left: Hold the rope
   challenge feat trivial:
     win:
-      rel mira +large
+      rel mir +large
       renown +small
       say: The machine flies — wobbly, loud, glorious — twice around the tower before landing in the lake. Mir surfaces whooping. You're both legends by dinner.
     lose:
       health -medium
-      rel mira +medium
+      rel mir +medium
       say: The rope wins. You are dragged eight feet along the roof before letting go. The machine lands in a tree. Mir waves from it, delighted.
 > right: Insist on a safety net
-  rel mira +small
+  rel mir +small
   alchemy +tiny
   say: You spend a day building a net. The machine flies four feet and drops into it. "Data!" says Mir happily. Nobody dies. It's a good day.
 
-@event mira_lab_fire
+@event mir_lab_fire
 title: Fire in the Workshop
 class: routine
 tone: tense
 trigger: social
-actor: mira
-when: rel(mira) >= 12
+actor: mir
+when: rel(mir) >= 12
 weight: 10
 art: flame
 tags: danger
@@ -354,25 +354,25 @@ text: The workshop is on fire. Properly this time. Mir is in the doorway, coughi
 > left: Grab the notebooks
   challenge feat trivial:
     win:
-      rel mira +large
+      rel mir +large
       health -small
       say: You come out singed, smoking, with an armful of notebooks. Mir stares at you, then at the notebooks, then bursts into tears and hugs you, both of you coughing.
     lose:
       health -large
-      rel mira +medium
+      rel mir +medium
       say: You get halfway before the smoke drives you back. You save one notebook. Mir says it's the most important one. You both know it isn't. They mean it anyway.
 > right: Drag Mir away
-  rel mira +medium
+  rel mir +medium
   health -tiny
   say: You haul Mir back from the door. The notebooks burn. Mir is silent for a week. Then they start a new notebook. The first page just says: "Thank you."
 
-@event mira_name_day
+@event mir_name_day
 title: Mir's Name Day
 class: routine
 tone: light
 trigger: social
-actor: mira
-when: rel(mira) >= 15
+actor: mir
+when: rel(mir) >= 15
 weight: 10
 art: gem
 tags: social
@@ -380,13 +380,13 @@ scene: A cluttered workshop decorated with paper chains and one small cake with 
 text: It's Mir's name day. They mention it casually, as if it doesn't matter. It clearly matters. Nobody else seems to know.
 > left: Throw a surprise party
   gold -small
-  rel mira +large
+  rel mir +large
   mood +small
   say: Six friends, one cake and a banner you painted badly. Mir walks in, stops, and has to sit down. "Nobody's ever..." they start, and can't finish.
 > right: Give them a handmade gift
   gold -tiny
-  rel mira +medium
-  spark mira +tiny
+  rel mir +medium
+  spark mir +tiny
   say: A little brass key that fits nothing. "For whatever you build next," you say. Mir wears it on a chain, every day, for years.
 
 # ---------------- Nessa ----------------

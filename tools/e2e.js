@@ -163,7 +163,7 @@ async function languageSwitch(browser) {
 async function previews(browser) {
   const errs = [];
   const p = await newPage(browser, errs);
-  const cases = ['y3_career_fair', 'soc_birthday&actor=mira', 'ilse_village', 'hs_the_night'];
+  const cases = ['y3_career_fair', 'soc_birthday&actor=mir', 'ilse_village', 'hs_the_night'];
   let ok = true;
   for (const lang of ['en', 'zh-CN']) for (const c of cases) {
     await p.goto(URL + '?debug&lang=' + lang + '&event=' + c); await p.waitForTimeout(400);

@@ -4,7 +4,7 @@ Context pack for writing events. Canon is what is written here and in the worldb
 
 ## Cast
 
-### Mir Ten (`mira`)
+### Mir Ten (`mir`)
 
 they/them · age 19 · student year 1 · Brasswick · romanceable
 
@@ -23,11 +23,11 @@ Smells permanently of solder and ozone. Has built a clockwork owl, a self-stirri
 **Relations:** Tobias Fennick +10
 
 **Facts:**
-- [surface] An artificer who smells of solder and ozone and has started at least one small fire. (`mira.artificer`)
-- [personal] Built a clockwork owl that remembers deadlines, birthdays and, slightly, grudges. (`mira.owl`, known when `seen(mira_owl_gift) > 0`)
-- [personal] Three years of notebooks are the most precious things they own. (`mira.notebooks`, known when `rel(mira) >= 12`)
-- [personal] Their family runs a clockworks and thinks invention is a hobby. It is not a hobby. (`mira.family`, known when `seen(mira_family_business) > 0`)
-- [personal] After the third fire in a term, the faculty padlocked their workshop. (`mira.workshop`, known when `seen(mira_workshop_closed) > 0`)
+- [surface] An artificer who smells of solder and ozone and has started at least one small fire. (`mir.artificer`)
+- [personal] Built a clockwork owl that remembers deadlines, birthdays and, slightly, grudges. (`mir.owl`, known when `seen(mir_owl_gift) > 0`)
+- [personal] Three years of notebooks are the most precious things they own. (`mir.notebooks`, known when `rel(mir) >= 12`)
+- [personal] Their family runs a clockworks and thinks invention is a hobby. It is not a hobby. (`mir.family`, known when `seen(mir_family_business) > 0`)
+- [personal] After the third fire in a term, the faculty padlocked their workshop. (`mir.workshop`, known when `seen(mir_workshop_closed) > 0`)
 
 ### Bram Hollis (`bram`)
 
@@ -54,11 +54,11 @@ Upper-year prefect with a ledger of demerits and a fondness for writing your nam
 
 ## Already written here (22)
 
-- `art_mira_collab` A Joint Project (routine)
+- `art_mir_collab` A Joint Project (routine)
 - `duel_bram_hazing` Initiation, Prefect-Style (routine)
-- `mira_ornithopter` The Test Flight (routine)
-- `mira_lab_fire` Fire in the Workshop (routine)
-- `mira_name_day` Mir's Name Day (routine)
+- `mir_ornithopter` The Test Flight (routine)
+- `mir_lab_fire` Fire in the Workshop (routine)
+- `mir_name_day` Mir's Name Day (routine)
 - `bram_father_visit` Bram's Father (routine)
 - `bram_cheating` Bram Cheats (routine)
 - `bram_intro` Running in the Halls (routine)
@@ -67,15 +67,15 @@ Upper-year prefect with a ledger of demerits and a fondness for writing your nam
 - `bram_crying` Behind the Stables (routine)
 - `bram_turns` An Unexpected Ally (milestone)
 - `bram_duel` A Formal Challenge (routine)
-- `mira_intro` An Explosion in the West Wing (routine)
-- `mira_owl_gift` A Present With Gears (routine)
-- `mira_fair` The Artificers' Fair (routine)
-- `mira_workshop_closed` The Workshop Is Shut (routine)
-- `mira_dance_machine` The Dancing Machine (routine)
-- `mira_confession` Blueprint (milestone)
-- `mira_family_business` The Family Clockworks (routine)
-- `letter_mira_blueprint` A Letter That Folds Itself (routine)
-- `letter_mira_ticking` Something That Ticks (routine)
+- `mir_intro` An Explosion in the West Wing (routine)
+- `mir_owl_gift` A Present With Gears (routine)
+- `mir_fair` The Artificers' Fair (routine)
+- `mir_workshop_closed` The Workshop Is Shut (routine)
+- `mir_dance_machine` The Dancing Machine (routine)
+- `mir_confession` Blueprint (milestone)
+- `mir_family_business` The Family Clockworks (routine)
+- `letter_mir_blueprint` A Letter That Folds Itself (routine)
+- `letter_mir_ticking` Something That Ticks (routine)
 
 ## Lore
 
@@ -113,38 +113,38 @@ text: In the exam hall, two desks away, you see Bram Hollis — prefect, enforce
 
 ```grim
 # content/events/people_students.grim:871
-@event mira_dance_machine
+@event mir_dance_machine
 title: The Dancing Machine
 class: routine
 tone: light
 trigger: social
-actor: mira
-when: rel(mira) >= 6
+actor: mir
+when: rel(mir) >= 6
 weight: 10
 art: music
 tags: social
 scene: A spindly brass contraption with too many legs attempting a waltz in an empty classroom, a student dancing with it.
 text: Mir has built a machine that teaches dancing. It has six legs and opinions. "It needs a test subject," they say. "It's mostly safe. It only kicked me twice."
 > left: Make Mir test it
-  rel mira -tiny
+  rel mir -tiny
   mood +small
   say: You watch Mir and the machine waltz, badly, across the room. It kicks them twice; Mir gives you a look. It's the funniest thing you've ever seen.
 > right: Dance with the machine
   charm +small
   health -tiny
-  rel mira +medium
+  rel mir +medium
   say: It kicks you twice too. But by the end you can waltz, and Mir is clapping with oily hands.
 ```
 
 ```grim
 # content/events/expansion_people.grim:315
-@event mira_ornithopter
+@event mir_ornithopter
 title: The Test Flight
 class: routine
 tone: tense
 trigger: social
-actor: mira
-when: rel(mira) >= 9
+actor: mir
+when: rel(mir) >= 9
 weight: 12
 art: gear
 tags: social danger
@@ -153,15 +153,15 @@ text: Mir has built a flying machine with canvas wings and seven propellers. It 
 > left: Hold the rope
   challenge feat trivial:
     win:
-      rel mira +large
+      rel mir +large
       renown +small
       say: The machine flies — wobbly, loud, glorious — twice around the tower before landing in the lake. Mir surfaces whooping. You're both legends by dinner.
     lose:
       health -medium
-      rel mira +medium
+      rel mir +medium
       say: The rope wins. You are dragged eight feet along the roof before letting go. The machine lands in a tree. Mir waves from it, delighted.
 > right: Insist on a safety net
-  rel mira +small
+  rel mir +small
   alchemy +tiny
   say: You spend a day building a net. The machine flies four feet and drops into it. "Data!" says Mir happily. Nobody dies. It's a good day.
 ```

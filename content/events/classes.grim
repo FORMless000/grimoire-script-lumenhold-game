@@ -402,31 +402,31 @@ text: Your project: a brass beetle that walks. The gears are in. The spring is w
   else:
     say: It refuses to walk unless you compliment it. The professor is torn between marking you down and asking how you did it.
 
-@event art_mira_collab
+@event art_mir_collab
 title: A Joint Project
 class: routine
 tone: light
 track: artifice
-actor: mira
+actor: mir
 weight: 14
 art: gear
 tags: class social
 scene: A cluttered workbench covered in tools, sketches and one smoking teapot; a grinning student with goggles pushed up into wild hair.
 text: Mir Ten drops onto the bench beside you with a sketch of something that is either a self-stirring cauldron or a small war machine. "Partners? Your hands, my brain. Or the other way round. Both, actually."
 > left: Work alone
-  meet mira
+  meet mir
   study +tiny
   say: "Fair," says Mir, with no hard feelings, and is immediately on fire. Not badly.
 > right: Partner with Mir
-  meet mira
+  meet mir
   challenge brew trivial:
     win:
       study +medium
-      rel mira +medium
+      rel mir +medium
       say: The cauldron stirs itself, hums a tune and only threatens the professor once. Mir hugs you with oily hands.
     lose:
       health -small
-      rel mira +small
+      rel mir +small
       say: The prototype explodes. Mir laughs so hard they cry. "Again! We were so close!" You find you're laughing too.
 
 @event art_enchanted_quill

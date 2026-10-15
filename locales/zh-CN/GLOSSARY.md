@@ -50,7 +50,7 @@ Translators (human or LLM) must follow this table so names and terms stay consis
 | tobias | Tobias Fennick | 托比亚斯·芬尼克 | 托比亚斯 |
 | seraphine | Seraphine Hale | 瑟拉芬·海尔 | 瑟拉芬 |
 | corvin | Corvin Ashby | 科尔文·阿什比 | 科尔文 |
-| mira | Mir Ten (they/them) | 米尔·滕 | 米尔（代词用 TA） |
+| mir | Mir Ten (they/them) | 米尔·滕 | 米尔（代词用 TA） |
 | kael | Kael Dumont | 凯尔·杜蒙 | 凯尔 |
 | nessa | Nessa Quill | 内莎·奎尔 | 内莎 |
 | bram | Bram Hollis | 布拉姆·霍利斯 | 布拉姆 |

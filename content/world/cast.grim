@@ -46,7 +46,7 @@ stats: arcana 12 lore 14 alchemy 26 charm 18 vigor 30 guile 4 wealth 1
 schedule: greenhouses@morning,afternoon refectory@noon,evening stables@evening:60
 # Breaks on the family farm (X7): reachable only by letter.
 schedule_break: away
-relations: maud:20 bram:-15 mira:10
+relations: maud:20 bram:-15 mir:10
 voice: Warm, slow and earnest, with farm sayings and long stories about goats. Apologises too much; laughs from the belly.
 desc: Big hands, bigger heart. Talks to plants and, worryingly, the plants seem to answer.
 
@@ -93,7 +93,10 @@ relations: bram:-30 nessa:10
 voice: Quick, teasing, deflecting with jokes; calls you "saint" when you're being good. When he means something, the jokes stop and so does he.
 desc: Knows every locked door in the academy and has opinions about all of them. Owes money to at least three people.
 
-@npc mira
+# Renamed on 2026-10-15: this character was "Mira" (id `mira`, Chinese 米拉) and is now Mir (id `mir`, 米尔), they/them.
+# Every id was renamed with it (`mir_*`, `letter_mir_*`, `art_mir_collab`, `ending_beloved_mir`, `mir.*` facts).
+# Older records (tools/migrations/, past reviews) still use the old name; never reintroduce it in content.
+@npc mir
 name: Mir Ten
 title: Artificer of questionable inventions
 pronouns: they/them
