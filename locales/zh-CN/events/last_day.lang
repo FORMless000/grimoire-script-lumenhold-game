@@ -1,0 +1,131 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/last_day.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@event last_morning
+# en: The Last Morning
+title [1e4ad4] = 最后的早晨
+# en: You wake before the bell, out of habit, and there's no bell. Your trunk is packed and strapped. The robes hang on the wardrobe door. It's Starfall, the last day of the year, and tomorrow you graduate. The castle is very quiet, as if it's listening.
+text [c12f0c] = 你习惯性地在钟声前醒来，可已经没有钟声了。你的箱子收拾好了，捆紧了。礼袍挂在衣柜门上。今天是星坠节，一年的最后一天，明天你就毕业了。城堡非常安静，像是在倾听。
+# en: A dormitory room in early light, trunks packed and strapped, graduation robes hanging on the wardrobe door, the towers gold through the window.
+scene [b7f47f] = 清晨微光中的宿舍，箱子已经收拾好捆紧，毕业礼袍挂在衣柜门上，窗外的塔楼一片金黄。
+# en: Get up and begin the last day
+opt.ok.label [72f307] = 起床，开始最后一天
+# en: {has(origin_noble): You dress with care, the way you were raised to.|{has(origin_street): You check your pockets out of habit, then laugh at yourself.|You dress slowly, wanting the morning to last.}} The staircase that moves waits for you at the top, for once, as if it knows.
+opt.ok.say.1 [c634ce] = {has(origin_noble): 你按从小被教导的那样，仔细地穿戴整齐。|{has(origin_street): 你习惯性地摸了摸口袋，然后笑自己。|你慢慢地穿衣服，想让这个早晨长一点。}} 那道会移动的楼梯难得一次在顶上等着你，好像它知道。
+
+@event last_results
+# en: The Final Lists
+title [8ae58d] = 最终名单
+# en: The final lists are pinned to the great hall door, and the whole year is crowded in front of them. {gpa >= 3.5: Your name is near the top, and someone has drawn a small star beside it.|{gpa >= 2.5: Your name sits in the middle of the list, solid and unremarkable, exactly where you hoped.|{gpa >= 2.0: Your name is near the bottom, but it's there.|Your name is on the list, just. Someone has pencilled "phew" next to it, possibly you.}}} {flag(thesis_distinction): In the thesis column, one word in gold ink, Distinction.|{flag(thesis_passed): In the thesis column, a plain pass.|{flag(thesis_resubmit): In the thesis column, in red, To be resubmitted.|}}}
+text [fc0c76] = 最终名单钉在大礼堂的门上，全年级的人都挤在前面。{gpa >= 3.5: 你的名字靠近最上面，有人在旁边画了一颗小星星。|{gpa >= 2.5: 你的名字在名单中间，稳稳当当，毫不起眼，正是你希望的位置。|{gpa >= 2.0: 你的名字靠近末尾，但它在上面。|你的名字在名单上，勉强。有人在旁边用铅笔写了“呼”，可能是你自己。}}} {flag(thesis_distinction): 论文一栏里，一个金色墨水写的词，优等。|{flag(thesis_passed): 论文一栏里，平平常常的通过。|{flag(thesis_resubmit): 论文一栏里，红字写着，需重交。|}}}
+# en: A crowd of final-year students around a great oak door in the entrance hall, long lists of names pinned to it, one student reaching up to touch a line.
+scene [888bd9] = 门厅里一群毕业生围着一扇巨大的橡木门，门上钉着长长的名单，一个学生伸手去摸其中一行。
+# en: Touch your name, for luck
+opt.ok.label [85aada] = 摸一摸你的名字，讨个好运
+# en: {gpa >= 3.0: People you barely know shake your hand on the way out. You let them.|{gpa >= 2.0: You run a finger along the line. Four years, one line. It's enough.|You stand there a while after the crowd has gone. It's on the list. It counts.}}
+opt.ok.say.1 [a8c0d4] = {gpa >= 3.0: 出去的路上，几乎不认识的人都来和你握手。你由着他们。|{gpa >= 2.0: 你用手指划过那一行。四年，一行字。够了。|人群散去后，你在那儿站了一会儿。名字在名单上。这就算数。}}
+
+@event last_career
+# en: What Comes Next
+title [4fbe37] = 接下来
+# en: {flag(career_accepted): A letter about your start date. {flag(career_conclave): The Conclave expects you at the Seven Towers in autumn, in grey.|{flag(career_library): The Royal Library has a desk for you, and a key to a room nobody else may enter.|{flag(career_guild): The Guild of Alchemists sends a list of the protective clothing you must buy yourself.|{flag(career_unseen): The Office of Unseen Affairs sends no letter at all, which is how you know you're expected.|{flag(career_circus): The circus wagons will pass the village in a week, and they'll slow down, but they won't stop.|The faculty barge leaves in autumn, and you'll be on it, on the wrong side of the lectern.}}}}}|{flag(career_offered): The offer is still on your desk, unsigned. Today is the last day it stands.|No letter, no start date. Everyone else seems to know where they're going, or says so.}}
+text [3e8f77] = {flag(career_accepted): 一封关于入职日期的信。{flag(career_conclave): 七塔议会等你秋天穿着灰袍去七塔报到。|{flag(career_library): 皇家图书馆给你留了一张桌子，还有一把通往一间别人不得进入的房间的钥匙。|{flag(career_guild): 炼金师公会寄来一张清单，列着你得自己购买的防护服。|{flag(career_unseen): 王室隐秘事务署根本没有来信，你就是这样知道他们在等你。|{flag(career_circus): 马戏团的马车一周后会经过村子，它们会放慢速度，但不会停下。|教职员的驳船秋天出发，你会在船上，站在讲台的另一边。}}}}}|{flag(career_offered): 那份录用书还放在你桌上，没签字。今天是它有效的最后一天。|没有信，没有入职日期。其他人似乎都知道自己要去哪儿，或者说自己知道。}}
+# en: A letter with a heavy seal open on a packed trunk, a student sitting on the trunk lid reading it by the window.
+scene [564759] = 一封盖着厚重封蜡的信摊开在收拾好的箱子上，一个学生坐在箱盖上，就着窗边的光读着。
+# en: Sign the offer after all
+opt.sign.label [411b94] = 最后还是签下录用书
+# en: You sign it on the trunk lid and run it to the owl tower before you can change your mind. Your handwriting looks like a grown-up's.
+opt.sign.say.1 [62fbfd] = 你在箱盖上签了字，趁自己还没改主意，一路跑去了猫头鹰塔。你的笔迹看起来像个大人的。
+# en: Write back that you'll be there
+opt.reply.label [db9603] = 回信说你会去
+# en: You write it in your best hand and seal it with the academy's wax for the last time. Then you sit for a while with your hands in your lap, getting used to being expected somewhere.
+opt.reply.say.1 [dbc595] = 你用最好的字迹写好回信，最后一次用学院的蜡封上。然后你双手放在膝上坐了一会儿，慢慢习惯被某个地方期待着的感觉。
+# en: Leave it all open
+opt.road.label [5cbfd6] = 一切都先不定
+# en: {flag(career_accepted): The letter can wait a day. Today is still yours, the last one that is.|You decide not to decide, not today. The world is very large, and it's been waiting four years. It can wait one more day.}
+opt.road.say.1 [6f0c03] = {flag(career_accepted): 那封信可以等一天。今天还是你的，最后一个属于你的日子。|你决定不做决定，至少今天不做。世界很大，它已经等了四年。再多等一天也无妨。}
+# en: Write home about what's next
+opt.home.label [5c1adf] = 给家里写信说说以后
+# en: You write home, and tell them the truth about what comes next, or what doesn't yet. It's the longest letter you've ever sent, and the easiest.
+opt.home.say.1 [466235] = 你给家里写信，如实说了接下来的打算，或者还没有打算。这是你寄过的最长的一封信，也是最轻松的一封。
+
+@event last_lake
+# en: The Lake, One Last Time
+title [3fc408] = 最后一次看湖
+# en: You walk down to the lake before breakfast, the way you did your first morning. {flag(hollow_sealed): It's clearer than you've ever seen it, clear all the way down, and nothing looks back. You did that. Almost nobody knows.|{flag(hollow_freed): It has been different since the spring it froze, warmer somehow, and the candles along the shore lean toward you as you pass. You did that too.|{flag(hollow_bargain): The water is still. The mark on your palm is not. It hums as you come near, like something greeting something.|{flag(hollow_failed): It's calm this morning. You know what lies beneath it, and who paid to keep it closed. You stand on the jetty a long time.|{clues(hollowstar) >= 1: There were stories about this lake, and you followed some of them a little way. You never learned what they meant, or whether they meant anything. The lake isn't telling.|It's flat and blue and ordinary, and the towers stand upside down in it. Four years, and it never once did anything strange. That you saw.}}}}}
+text [d82b7f] = 你在早饭前走到湖边，就像你来的第一个早晨那样。{flag(hollow_sealed): 它比你见过的任何时候都清澈，一直清到湖底，没有什么在回望你。这是你做到的。几乎没人知道。|{flag(hollow_freed): 自从那年春天它结冰之后，它就变了，不知怎么暖了些，你经过时，岸边的蜡烛都朝你倾斜。这也是你做到的。|{flag(hollow_bargain): 湖水很静。你掌心的印记却不静。你走近时它嗡嗡作响，像是某样东西在问候另一样东西。|{flag(hollow_failed): 今天早上它很平静。你知道它底下是什么，也知道是谁付出代价让它保持关闭。你在码头上站了很久。|{clues(hollowstar) >= 1: 关于这座湖有过一些传说，你顺着其中几个走了一小段。你始终没弄明白它们是什么意思，或者是否有什么意思。湖不会告诉你。|它平坦、湛蓝、普普通通，塔楼倒映在水里。四年了，它从没做过一件奇怪的事。至少你没看见。}}}}}
+# en: A student standing alone at the end of a wooden jetty at dawn, the Mirror Lake perfectly still, the towers reflected upside down in it.
+scene [0a0e22] = 黎明时分，一个学生独自站在木码头的尽头，镜湖一片静止，塔楼倒映在水中。
+# en: Say goodbye to the lake
+opt.ok.label [822a12] = 向湖道别
+# en: {~You skim one stone. It skips seven times, which is your record, and nobody saw.|You crouch and put your hand in the water. It's cold, the way it always was.} Then you walk back up to the castle without looking round.
+opt.ok.say.1 [3cf7b9] = {~你打了一个水漂。跳了七下，是你的纪录，没人看见。|你蹲下来把手伸进水里。很凉，和以前一样。} 然后你走回城堡，没有回头。
+
+@event last_friends
+# en: The Last Ordinary Morning
+title [090df6] = 最后一个寻常的早晨
+# en: {friend} finds you in the courtyard with two mugs of tea and no particular reason. "Last ordinary morning," {they} say{s}. "I thought it should be spent properly." You sit on the rim of the fountain and don't talk about tomorrow.
+text [f8ed5f] = {friend} 端着两杯茶在庭院里找到你，没什么特别的理由。“最后一个寻常的早晨，”{they} 说。“我觉得应该好好过。”你们坐在喷泉边上，不谈明天。
+# en: Two students sitting on the rim of a courtyard fountain with mugs of tea, packed trunks stacked by the doors behind them.
+scene [d79b2e] = 两个学生端着茶杯坐在庭院的喷泉边上，身后的门边堆着收拾好的箱子。
+# en: Promise to visit, and mean it
+opt.left.label [c31f13] = 约好去看对方，说到做到
+# en: You set a date, a real one, with a place and a time, and write it in both your notebooks. {friend} underlines it twice. You both know which of you will be late.
+opt.left.say.1 [a5332c] = 你们定了一个日子，一个真正的日子，有地点也有时间，写在两个人的笔记本上。{friend} 在下面划了两道线。你们都知道到时候谁会迟到。
+# en: Give {them} something of yours
+opt.right.label [e3fb07] = 把你的一样东西送给 {them}
+# en: You give {friend} the thing on your desk you'd most miss: a cracked mug, a dog-eared book, the stone from the lake. {They} turn{s} it over and over and say{s} nothing, which says enough.
+opt.right.say.1 [b34494] = 你把桌上你最舍不得的东西给了 {friend}：一只裂了的杯子、一本卷了角的书、一块湖边的石头。{They} 把它翻来覆去地看，什么也没说，这已经说明了一切。
+
+@event last_partner
+# en: After Tomorrow
+title [2d7d5c] = 明天之后
+# en: {partner} has a map, an apple and the whole afternoon. "Tomorrow we're not students," {they} say{s}. "So I thought we'd better have a plan. Or decide not to." The map is spread on the battlement between you, weighted at one corner with the apple.
+text [67a061] = {partner} 带着一张地图、一个苹果和一整个下午。“明天我们就不是学生了，”{they} 说。“所以我觉得我们最好有个计划。或者决定不要计划。”地图摊在你们之间的城垛上，一角压着那个苹果。
+# en: Two students sitting on a castle battlement at noon, legs dangling over the edge, a map of the realm spread between them, weighted with an apple.
+scene [c72168] = 正午时分，两个学生坐在城堡的城垛上，双腿悬在外面，王国的地图摊在两人之间，用一个苹果压着。
+# en: Plan the first year together
+opt.left.label [ed42fa] = 一起规划第一年
+# en: You plan it badly and in detail: a town on the map, a room above a shop, whose turn it is to cook. {partner} draws a circle round the town in ink, so it can't be rubbed out.
+opt.left.say.1 [345a32] = 你们规划得很糟又很细：地图上的一座小镇、一间店铺楼上的屋子、轮到谁做饭。{partner} 用墨水把那座小镇圈了起来，这样就擦不掉了。
+# en: Fold the map, and just have today
+opt.right.label [6d2d59] = 收起地图，只过好今天
+# en: You fold the map and put it away. "Whatever comes," you say, and {partner} takes your hand, and for an afternoon there's nothing on the other side of tomorrow at all.
+opt.right.say.1 [fc8f32] = 你把地图折起来收好。“不管以后怎样，”你说，{partner} 握住了你的手，整整一个下午，明天的另一边什么都没有。
+
+@event last_rival
+# en: One Last Word
+title [38a94f] = 最后一句话
+# en: {rival} is waiting in the empty duelling hall, as if by appointment. Four years of grudges, and tomorrow there won't be a school to have them in. "Well," {they} say{s}. "That's that, then."
+text [aa9863] = {rival} 在空荡荡的决斗厅里等着，像是约好了似的。四年的积怨，而明天就没有学校可以让你们较劲了。“好吧，”{they} 说。“就这样了。”
+# en: Two students facing each other in an empty duelling hall, wands holstered, packed trunks visible through the open door behind them.
+scene [fe4904] = 空荡荡的决斗厅里，两个学生面对面站着，魔杖都收在套里，身后敞开的门外能看见收拾好的箱子。
+# en: Offer your hand
+opt.left.label [1f34dd] = 伸出你的手
+# en: {rival} looks at your hand for a long moment, then takes it, hard. "You were worth beating," {they} say{s}, and then, almost too quietly to hear, "and worth losing to."
+opt.left.say.1 [598903] = {rival} 盯着你的手看了很久，然后握住了，握得很用力。“你值得被打败，”{they} 说，然后，轻得几乎听不见，“也值得输给你。”
+# en: "Rematch, in ten years."
+opt.right.label [3736fb] = “十年后再战。”
+# en: "Ten years," says {rival}, "and I'll still win." You shake on it, which is the closest either of you will come to saying anything kind.
+opt.right.say.1 [016c3a] = “十年，”{rival} 说，“我还是会赢。”你们握手为定，这是你们俩最接近说句好话的时刻了。
+
+@event last_starfall
+# en: The Last Starfall
+title [78d505] = 最后的星坠节
+# en: Tonight is Starfall, and by tradition the final-years have the observatory roof to themselves. The first-years are down on the lawns with their jars. Up here, everyone is pretending not to be sad.
+text [b059cd] = 今晚是星坠节，按照传统，观星台的屋顶归毕业生们独享。一年级生们拿着罐子在下面的草坪上。在这上面，每个人都在假装不难过。
+# en: Final-year students in a row on the observatory roof under a sky full of falling stars, graduation robes thrown over their shoulders like blankets.
+scene [f698e6] = 毕业生们在观星台屋顶上排成一排，头顶的天空满是坠落的星星，毕业礼袍像毯子一样披在肩上。
+# en: Catch one for the road
+opt.left.label [cc3892] = 接一颗带上路
+# en: It drops into your hands with a hiss, the last thing Lumenhold gives you. The whole roof cheers. You'll keep it in its jar on a windowsill somewhere you haven't seen yet.
+opt.left.say.1 [317c17] = 它嘶的一声落进你手里，这是流明堡给你的最后一样东西。整个屋顶都在欢呼。你会把它装在罐子里，放在某个你还没见过的地方的窗台上。
+# en: You lunge, miss, and sit down hard, and the whole roof laughs, and you laugh too. Some things you're supposed to leave behind.
+opt.left.say.2 [83ff36] = 你扑过去，没接住，一屁股坐下，整个屋顶都笑了，你也笑了。有些东西本来就该留下。
+# en: Lie back with everyone
+opt.right.label [41957d] = 和大家一起躺下
+# en: You lie in a row with your year, shoulder to shoulder, and count the stars aloud until the counting falls apart. Somebody starts to cry, and then everybody is laughing.
+opt.right.say.1 [d8e7fe] = 你和同年级的人肩并肩躺成一排，大声数着星星，直到数乱了。有人开始哭，然后所有人都笑了起来。

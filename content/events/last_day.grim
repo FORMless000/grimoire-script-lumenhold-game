@@ -1,0 +1,172 @@
+# ============================================================
+#  The last day (playtest 2, X10; fills M21's stub). Month 48 is
+#  Starfall of the final year and holds only pushed cards, in
+#  priority order: the morning, the results, the career, the
+#  lake, the people, the speech (expansion_y3.grim), the last
+#  Starfall, and the eve of graduation (calendar.grim). Each card
+#  looks back on what the run was; the endings follow.
+# ============================================================
+
+@event last_morning
+title: The Last Morning
+class: story
+tone: warm
+trigger: auto
+when: turn == max_turns
+priority: 95
+art: tower
+tags: story
+scene: A dormitory room in early light, trunks packed and strapped, graduation robes hanging on the wardrobe door, the towers gold through the window.
+text: You wake before the bell, out of habit, and there's no bell. Your trunk is packed and strapped. The robes hang on the wardrobe door. It's Starfall, the last day of the year, and tomorrow you graduate. The castle is very quiet, as if it's listening.
+> ok: Get up and begin the last day
+  mood +tiny
+  say: {has(origin_noble): You dress with care, the way you were raised to.|{has(origin_street): You check your pockets out of habit, then laugh at yourself.|You dress slowly, wanting the morning to last.}} The staircase that moves waits for you at the top, for once, as if it knows.
+
+@event last_results
+title: The Final Lists
+class: story
+tone: tense
+trigger: auto
+when: turn == max_turns
+priority: 90
+art: scroll
+tags: story study
+scene: A crowd of final-year students around a great oak door in the entrance hall, long lists of names pinned to it, one student reaching up to touch a line.
+text: The final lists are pinned to the great hall door, and the whole year is crowded in front of them. {gpa >= 3.5: Your name is near the top, and someone has drawn a small star beside it.|{gpa >= 2.5: Your name sits in the middle of the list, solid and unremarkable, exactly where you hoped.|{gpa >= 2.0: Your name is near the bottom, but it's there.|Your name is on the list, just. Someone has pencilled "phew" next to it, possibly you.}}} {flag(thesis_distinction): In the thesis column, one word in gold ink, Distinction.|{flag(thesis_passed): In the thesis column, a plain pass.|{flag(thesis_resubmit): In the thesis column, in red, To be resubmitted.|}}}
+> ok: Touch your name, for luck
+  mood +tiny
+  say: {gpa >= 3.0: People you barely know shake your hand on the way out. You let them.|{gpa >= 2.0: You run a finger along the line. Four years, one line. It's enough.|You stand there a while after the crowd has gone. It's on the list. It counts.}}
+
+@event last_career
+title: What Comes Next
+class: story
+tone: warm
+trigger: auto
+when: turn == max_turns
+priority: 85
+type: menu
+art: letter
+tags: story
+chain: careers
+scene: A letter with a heavy seal open on a packed trunk, a student sitting on the trunk lid reading it by the window.
+text: {flag(career_accepted): A letter about your start date. {flag(career_conclave): The Conclave expects you at the Seven Towers in autumn, in grey.|{flag(career_library): The Royal Library has a desk for you, and a key to a room nobody else may enter.|{flag(career_guild): The Guild of Alchemists sends a list of the protective clothing you must buy yourself.|{flag(career_unseen): The Office of Unseen Affairs sends no letter at all, which is how you know you're expected.|{flag(career_circus): The circus wagons will pass the village in a week, and they'll slow down, but they won't stop.|The faculty barge leaves in autumn, and you'll be on it, on the wrong side of the lectern.}}}}}|{flag(career_offered): The offer is still on your desk, unsigned. Today is the last day it stands.|No letter, no start date. Everyone else seems to know where they're going, or says so.}}
+> sign: Sign the offer after all
+  when: flag(career_offered) and not flag(career_accepted)
+  flag career_accepted
+  mood +small
+  say: You sign it on the trunk lid and run it to the owl tower before you can change your mind. Your handwriting looks like a grown-up's.
+> reply: Write back that you'll be there
+  when: flag(career_accepted)
+  mood +small
+  say: You write it in your best hand and seal it with the academy's wax for the last time. Then you sit for a while with your hands in your lap, getting used to being expected somewhere.
+> road: Leave it all open
+  mood +tiny
+  say: {flag(career_accepted): The letter can wait a day. Today is still yours, the last one that is.|You decide not to decide, not today. The world is very large, and it's been waiting four years. It can wait one more day.}
+> home: Write home about what's next
+  health +tiny
+  say: You write home, and tell them the truth about what comes next, or what doesn't yet. It's the longest letter you've ever sent, and the easiest.
+
+@event last_lake
+title: The Lake, One Last Time
+class: story
+tone: eerie
+trigger: auto
+when: turn == max_turns
+priority: 80
+art: wave
+tags: story mystery
+scene: A student standing alone at the end of a wooden jetty at dawn, the Mirror Lake perfectly still, the towers reflected upside down in it.
+text: You walk down to the lake before breakfast, the way you did your first morning. {flag(hollow_sealed): It's clearer than you've ever seen it, clear all the way down, and nothing looks back. You did that. Almost nobody knows.|{flag(hollow_freed): It has been different since the spring it froze, warmer somehow, and the candles along the shore lean toward you as you pass. You did that too.|{flag(hollow_bargain): The water is still. The mark on your palm is not. It hums as you come near, like something greeting something.|{flag(hollow_failed): It's calm this morning. You know what lies beneath it, and who paid to keep it closed. You stand on the jetty a long time.|{clues(hollowstar) >= 1: There were stories about this lake, and you followed some of them a little way. You never learned what they meant, or whether they meant anything. The lake isn't telling.|It's flat and blue and ordinary, and the towers stand upside down in it. Four years, and it never once did anything strange. That you saw.}}}}}
+> ok: Say goodbye to the lake
+  mood +tiny
+  say: {~You skim one stone. It skips seven times, which is your record, and nobody saw.|You crouch and put your hand in the water. It's cold, the way it always was.} Then you walk back up to the castle without looking round.
+
+@event last_friends
+title: The Last Ordinary Morning
+class: story
+tone: warm
+trigger: auto
+when: turn == max_turns
+priority: 75
+cast:
+  friend: any where rel(friend) >= 15
+art: cup
+tags: story social
+scene: Two students sitting on the rim of a courtyard fountain with mugs of tea, packed trunks stacked by the doors behind them.
+text: {friend} finds you in the courtyard with two mugs of tea and no particular reason. "Last ordinary morning," {they} say{s}. "I thought it should be spent properly." You sit on the rim of the fountain and don't talk about tomorrow.
+> left: Promise to visit, and mean it
+  rel friend +small
+  mood +small
+  say: You set a date, a real one, with a place and a time, and write it in both your notebooks. {friend} underlines it twice. You both know which of you will be late.
+> right: Give {them} something of yours
+  rel friend +medium
+  mood -tiny
+  say: You give {friend} the thing on your desk you'd most miss: a cracked mug, a dog-eared book, the stone from the lake. {They} turn{s} it over and over and say{s} nothing, which says enough.
+
+@event last_partner
+title: After Tomorrow
+class: story
+tone: warm
+trigger: auto
+when: turn == max_turns
+priority: 72
+cast:
+  partner: any where bond(partner) == "partner"
+art: heart
+tags: story romance
+scene: Two students sitting on a castle battlement at noon, legs dangling over the edge, a map of the realm spread between them, weighted with an apple.
+text: {partner} has a map, an apple and the whole afternoon. "Tomorrow we're not students," {they} say{s}. "So I thought we'd better have a plan. Or decide not to." The map is spread on the battlement between you, weighted at one corner with the apple.
+> left: Plan the first year together
+  spark partner +small
+  mood +small
+  say: You plan it badly and in detail: a town on the map, a room above a shop, whose turn it is to cook. {partner} draws a circle round the town in ink, so it can't be rubbed out.
+> right: Fold the map, and just have today
+  spark partner +medium
+  mood -tiny
+  say: You fold the map and put it away. "Whatever comes," you say, and {partner} takes your hand, and for an afternoon there's nothing on the other side of tomorrow at all.
+
+@event last_rival
+title: One Last Word
+class: story
+tone: tense
+trigger: auto
+when: turn == max_turns
+priority: 70
+cast:
+  rival: any where bond(rival) == "rival" or bond(rival) == "nemesis"
+art: wand
+tags: story social
+scene: Two students facing each other in an empty duelling hall, wands holstered, packed trunks visible through the open door behind them.
+text: {rival} is waiting in the empty duelling hall, as if by appointment. Four years of grudges, and tomorrow there won't be a school to have them in. "Well," {they} say{s}. "That's that, then."
+> left: Offer your hand
+  rel rival +medium
+  mood +small
+  say: {rival} looks at your hand for a long moment, then takes it, hard. "You were worth beating," {they} say{s}, and then, almost too quietly to hear, "and worth losing to."
+> right: "Rematch, in ten years."
+  rel rival +small
+  renown +tiny
+  say: "Ten years," says {rival}, "and I'll still win." You shake on it, which is the closest either of you will come to saying anything kind.
+
+@event last_starfall
+title: The Last Starfall
+class: story
+tone: warm
+trigger: auto
+when: turn == max_turns
+priority: 62
+art: star
+tags: festival story
+scene: Final-year students in a row on the observatory roof under a sky full of falling stars, graduation robes thrown over their shoulders like blankets.
+text: Tonight is Starfall, and by tradition the final-years have the observatory roof to themselves. The first-years are down on the lawns with their jars. Up here, everyone is pretending not to be sad.
+> left: Catch one for the road
+  challenge feat easy:
+    win:
+      mood +small
+      renown +tiny
+      say: It drops into your hands with a hiss, the last thing Lumenhold gives you. The whole roof cheers. You'll keep it in its jar on a windowsill somewhere you haven't seen yet.
+    lose:
+      mood +tiny
+      say: You lunge, miss, and sit down hard, and the whole roof laughs, and you laugh too. Some things you're supposed to leave behind.
+> right: Lie back with everyone
+  mood +medium
+  say: You lie in a row with your year, shoulder to shoulder, and count the stars aloud until the counting falls apart. Somebody starts to cry, and then everybody is laughing.

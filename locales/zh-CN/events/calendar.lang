@@ -487,8 +487,8 @@ opt.right.say.2 [75bc50] = 他们的回信满是感叹号。这个谎言在你�
 @event starfall
 # en: Starfall
 title [ab87b4] = 星坠节
-# en: The last night of the academic year. Everyone climbs onto the observatory roof to watch the stars fall. They say if you catch one in a jar, you get a year of luck.
-text [6b880d] = 学年的最后一夜。大家都爬上天文台屋顶看星星坠落。据说，如果你能用罐子接住一颗，就能交一整年的好运。
+# en: {year == 1: The last night of the academic year. Everyone climbs onto the observatory roof, and the rest spill out onto the lawns with blankets, to watch the stars fall. They say if you catch one in a jar, you get a year of luck.|Starfall again. The observatory roof, the lawns full of blankets, the whole academy lying on its back.} {starfall_jar >= 1: Your jar is ready, cork in hand.|} {~The first star falls before anyone is ready.|Somebody has brought a lute, unwisely.|The lake is full of reflected stars.}
+text [56614b] = {year == 1: 学年的最后一夜。大家都爬上观星台屋顶，其余的人带着毯子涌到草坪上，看星星坠落。据说，如果你能用罐子接住一颗，就能交一整年的好运。|又是星坠节。观星台的屋顶，铺满毯子的草坪，整个学院都仰面躺着。} {starfall_jar >= 1: 你的罐子准备好了，软木塞就在手里。|} {~第一颗星星在大家还没准备好时就落下了。|有人带了一把鲁特琴，不太明智。|湖里满是倒映的星星。}
 # en: Students lying on the observatory roof under a sky streaked with falling stars.
 scene [7b9deb] = 学生们躺在天文台屋顶上，头顶的夜空划满了流星。
 # en: Lie back and just watch
@@ -497,10 +497,24 @@ opt.left.label [df7032] = 躺下来，只是看着
 opt.left.say.1 [d2a569] = 你数了四十颗流星，然后不再数了。这就够了。
 # en: Try to catch a star
 opt.right.label [734781] = 试着接住一颗星
+# en: Easier with a good jar from the observatory.
+opt.right.hint [558f26] = 有一只好罐子会更容易，在观星台做。
 # en: It lands in your jar with a hiss and glows for weeks. Students come to see it.
 opt.right.say.1 [f06369] = 它嘶的一声落进你的罐子，发光发了好几个星期。同学们都跑来看。
 # en: You lunge, miss, and nearly roll off the roof. A prefect catches you by the collar.
 opt.right.say.2 [dd228d] = 你扑了过去，没接到，差点滚下屋顶。一位级长揪住了你的衣领。
+# en: It lands in your jar with a hiss and glows for weeks. Students come to see it.
+opt.right.say.3 [f06369] = 它嘶的一声落进你的罐子，发了好几个星期的光。同学们都来看它。
+# en: You lunge, miss, and nearly roll off the roof. A prefect catches you by the collar.
+opt.right.say.4 [dd228d] = 你扑过去，没接住，差点从屋顶滚下去。一位级长揪住了你的领子。
+# en: Find your sweetheart on the lawn
+opt.together.label [6cf90b] = 去草坪上找你的心上人
+# en: You leave the roof and go looking. You know exactly where to look.
+opt.together.say.1 [8e8e09] = 你离开屋顶去找。你很清楚该去哪儿找。
+# en: Make the Starfall wish
+opt.wish.label [a6bf48] = 许下星坠节的愿望
+# en: You climb to the very top of the roof, where the old custom says the wishes go.
+opt.wish.say.1 [c0d3b2] = 你爬到屋顶的最高处，老习俗说愿望都从那里升上去。
 
 @event year_two
 # en: Second Year

@@ -299,6 +299,7 @@ text: The Winter Trials. A hundred desks, a hundred floating quills, one very ol
       say: The demonstration backfires. Politely, but with smoke.
 
 @event midwinter_ball
+slot: evening
 title: The Midwinter Ball
 class: story
 tone: warm
@@ -320,6 +321,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
         spark lyra +medium
         rel lyra +medium
         mood +medium
+        queue ball_last_dance now with lyra
         say: "Finally, someone who doesn't stammer." She dances like a duel — and wins.
       lose:
         rel lyra -small
@@ -331,6 +333,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
         spark lyra +medium
         rel lyra +medium
         mood +medium
+        queue ball_last_dance now with lyra
         say: "Finally, someone who doesn't stammer." She dances like a duel — and wins.
       lose:
         rel lyra -small
@@ -342,6 +345,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   spark tobias +medium
   rel tobias +medium
   mood +medium
+  queue ball_last_dance now with tobias
   say: He steps on your feet nine times and apologises ten. It's the best night of the term.
 > seraphine: Ask Seraphine
   when: met(seraphine) and rel(seraphine) >= 9
@@ -349,6 +353,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   spark seraphine +medium
   rel seraphine +medium
   mood +medium
+  queue ball_last_dance now with seraphine
   say: "I said yes three weeks ago," she says, "you just hadn't asked yet." She dances a beat ahead of the music.
 > corvin: Ask Corvin
   when: met(corvin) and rel(corvin) >= 9
@@ -356,6 +361,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   chance 70:
     spark corvin +medium
     mood +medium
+    queue ball_last_dance now with corvin
     say: He arrives late, in a stolen jacket, and is the best dancer in the room.
   else:
     mood -medium
@@ -373,6 +379,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   spark kael +medium
   rel kael +medium
   mood +medium
+  queue ball_last_dance now with kael
   say: He holds your hand like it is something fragile. Where your fingers touch, frost-ferns bloom on the glass.
 > nessa: Ask Nessa
   when: met(nessa) and rel(nessa) >= 9
@@ -380,6 +387,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   spark nessa +medium
   rel nessa +medium
   renown +small
+  queue ball_last_dance now with nessa
   say: She takes notes between dances. "For the society column." Then she stops taking notes.
 > friends: Go with friends
   mood +medium
@@ -641,27 +649,53 @@ title: Starfall
 class: story
 tone: light
 trigger: auto
-when: month == 12 and year < 4
+when: month == 12 and year < 4 and not off_campus
 repeat: 12
 priority: 30
+type: menu
 art: star
 tags: festival
 scene: Students lying on the observatory roof under a sky streaked with falling stars.
-text: The last night of the academic year. Everyone climbs onto the observatory roof to watch the stars fall. They say if you catch one in a jar, you get a year of luck.
+text: {year == 1: The last night of the academic year. Everyone climbs onto the observatory roof, and the rest spill out onto the lawns with blankets, to watch the stars fall. They say if you catch one in a jar, you get a year of luck.|Starfall again. The observatory roof, the lawns full of blankets, the whole academy lying on its back.} {starfall_jar >= 1: Your jar is ready, cork in hand.|} {~The first star falls before anyone is ready.|Somebody has brought a lute, unwisely.|The lake is full of reflected stars.}
 > left: Lie back and just watch
   mood +medium
   health +small
+  starfall_jar = 0
   say: You count forty falling stars and then stop counting. It's enough.
 > right: Try to catch a star
-  challenge feat trivial:
-    win:
-      renown +small
-      mood +small
-      gain inspired
-      say: It lands in your jar with a hiss and glows for weeks. Students come to see it.
-    lose:
-      health -small
-      say: You lunge, miss, and nearly roll off the roof. A prefect catches you by the collar.
+  hint: Easier with a good jar from the observatory.
+  if starfall_jar >= 1:
+    challenge feat trivial:
+      win:
+        renown +small
+        mood +small
+        gain inspired
+        queue starfall_caught
+        say: It lands in your jar with a hiss and glows for weeks. Students come to see it.
+      lose:
+        health -small
+        say: You lunge, miss, and nearly roll off the roof. A prefect catches you by the collar.
+  else:
+    challenge feat easy:
+      win:
+        renown +small
+        mood +small
+        gain inspired
+        queue starfall_caught
+        say: It lands in your jar with a hiss and glows for weeks. Students come to see it.
+      lose:
+        health -small
+        say: You lunge, miss, and nearly roll off the roof. A prefect catches you by the collar.
+  starfall_jar = 0
+> together: Find your sweetheart on the lawn
+  when: bonds(partner) > 0
+  starfall_jar = 0
+  queue starfall_together now
+  say: You leave the roof and go looking. You know exactly where to look.
+> wish: Make the Starfall wish
+  starfall_jar = 0
+  queue starfall_wish now
+  say: You climb to the very top of the roof, where the old custom says the wishes go.
 
 @event year_two
 title: Second Year

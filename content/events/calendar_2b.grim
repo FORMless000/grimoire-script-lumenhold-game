@@ -546,54 +546,115 @@ tone: tense
 art: scroll
 tags: study exam
 scene: A semicircular table with three examiners, a student standing at a lectern with a stack of notes.
-text: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60: You know this material better than anyone in the room.|There are gaps, and you know where they are.}
+text: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60: You know this material better than anyone in the room.|There are gaps, and you know where they are.} First, you present. Then they ask. Then they send you out of the room.
 > left: Defend it
   hint: A safe topic is easier to defend and earns less; an ambitious one is harder and earns more.
+  def_score = 0
   if not (flag(thesis_safe) or flag(thesis_ambitious)):
-    challenge negotiate using lore hard:
-      win:
-        flag thesis_distinction
-        renown +large
-        say: They stop asking questions and start asking for copies. Distinction.
-      partial:
-        flag thesis_passed
-        renown +small
-        say: A pass, with one examiner's handwriting all over your conclusion.
-      lose:
-        flag thesis_resubmit
-        mood -large
-        say: They send you away to resubmit. It isn't the end. It feels like it.
-  elif flag(thesis_safe):
     challenge negotiate using lore medium:
       win:
-        flag thesis_distinction
-        renown +medium
-        say: A careful survey, carefully defended. They give you a distinction and the faint air of people who wished you'd risked more.
+        def_score = 2
+        say: Your presentation runs clean from first slide to last. One examiner has stopped taking notes and is just listening.
       partial:
-        flag thesis_passed
-        renown +tiny
-        say: A pass. Nobody argues with a careful survey. Nobody remembers it either.
+        def_score = 1
+        say: A solid presentation with one wobble in the middle. You recover. They noticed the wobble.
       lose:
-        flag thesis_resubmit
-        mood -medium
-        say: Even a safe topic has its gaps, and they find every one. Resubmit.
-  else:
-    challenge negotiate using lore heroic:
+        mood -small
+        say: You lose your place twice and your nerve once. The examiners exchange a look you'll remember for years.
+  elif flag(thesis_safe):
+    challenge negotiate using lore easy:
       win:
-        flag thesis_distinction
-        renown +huge
+        def_score = 2
+        say: A careful survey, carefully presented. Nobody could fault a word of it. Nobody looks thrilled, either.
+      partial:
+        def_score = 1
+        say: Careful, competent and a little dull, and you can see one examiner fighting a yawn.
+      lose:
+        mood -small
+        say: Even a safe topic has its gaps, and your presentation walks straight into one of them.
+  else:
+    challenge negotiate using lore hard:
+      win:
+        def_score = 2
         if clue(seven_locks) + clue(star_key) + clue(ilse_truth) >= 3:
           flag thesis_hollowstar
-        say: Something no one has done, and now someone has. The committee stands when you finish. One of them is crying, and pretending not to.
+        say: Something no one has done, laid out so clearly they can't look away. One examiner has put down their pen.
       partial:
-        flag thesis_passed
-        renown +medium
-        say: They pass it, arguing among themselves about whether it is brilliant or mad. Possibly both.
+        def_score = 1
+        say: They follow you most of the way, arguing among themselves about whether it's brilliant or mad. Possibly both.
       lose:
-        flag thesis_resubmit
-        mood -large
-        renown -small
-        say: You reached too far, and they tell you so, at length. Resubmit. The idea was good. The proof wasn't there yet.
+        mood -small
+        say: You reach too far in the first ten minutes, and spend the rest of the hour trying to get back. They let you.
+  queue thesis_defence_question now
+> right: Open with your weakest chapter
+  hint: Name the gaps before they find them. Safe, and modest.
+  def_score = 1
+  mood -tiny
+  queue thesis_defence_question now
+  say: You start with what you couldn't prove, and why, and what you'd do next. It takes the wind out of their sails, and a little out of yours.
+
+@event thesis_defence_question
+title: The Question
+trigger: queued
+repeat: 12
+class: milestone
+tone: tense
+art: scroll
+tags: study exam
+scene: An examiner leaning over a semicircular table, pointing at one line in a thick bound thesis, the student at the lectern very still.
+text: The examiner who hasn't spoken yet opens your thesis to a page near the end, puts a finger on one line and asks the question you hoped no one would ask.
+> left: Answer it head-on
+  challenge research using lore medium:
+    win:
+      def_score += 1
+      say: You answer it, and then the question behind it, and then the one behind that. The examiner closes the thesis, slowly.
+    lose:
+      def_score -= 1
+      mood -small
+      say: Your answer starts well and ends somewhere you didn't mean to go. The examiner lets the silence do the rest.
+  queue thesis_defence_verdict now
+> right: Admit what you don't know
+  mood -tiny
+  if def_score >= 2:
+    def_score += 1
+    say: "I don't know," you say, "and here is how I'd find out." From someone who has just presented so well, it sounds like mastery. Two examiners nod.
+  else:
+    say: "I don't know," you say, "and here is how I'd find out." It costs you nothing and earns you nothing. The examiner moves on.
+  queue thesis_defence_verdict now
+
+@event thesis_defence_verdict
+title: The Verdict
+trigger: queued
+repeat: 12
+class: milestone
+tone: tense
+art: scroll
+tags: study exam
+scene: A student waiting alone on a bench in a long stone corridor outside a closed oak door, hands clasped, a clock on the wall.
+text: They send you out. Twenty minutes on a bench in the corridor, with the clock and your heartbeat. Then the door opens, and they call you back in.
+> ok: Go back in
+  if def_score >= 3:
+    flag thesis_distinction
+    if flag(thesis_ambitious):
+      renown +huge
+    elif flag(thesis_safe):
+      renown +medium
+    else:
+      renown +large
+    say: They stop asking questions and start asking for copies. Distinction. One of them shakes your hand twice, as if the first didn't count.
+  elif def_score >= 1:
+    flag thesis_passed
+    if flag(thesis_ambitious):
+      renown +medium
+    else:
+      renown +small
+    say: A pass, with one examiner's handwriting all over your conclusion. "Good work," says the chair, and means it, mostly.
+  else:
+    flag thesis_resubmit
+    mood -large
+    if flag(thesis_ambitious):
+      renown -small
+    say: They send you away to resubmit. It isn't the end. It feels like it. The idea was good, says the chair. The proof wasn't there yet.
   # The defence closes the thesis: its lab events stop (B30).
   leave thesis
 

@@ -1,0 +1,251 @@
+# ============================================================
+#  Festivals as chains (playtest 2, X6 and X16).
+#  Starfall (month 12, years 1-3): star jars at the observatory
+#  as the afternoon's festival visit, the night itself (`starfall`
+#  in calendar.grim) with its follow-ups here, and the same night
+#  for those at home or on an internship.
+#  The Midwinter Ball (month 4): something to wear at noon, the
+#  ice garden as the afternoon's festival visit, the ball itself
+#  (`midwinter_ball` in calendar.grim), the last waltz with
+#  whoever you went with, and the snowball war after.
+# ============================================================
+
+# ---------------- Starfall ----------------
+
+@event starfall_jars
+title: Star Jars
+place: observatory
+replaces: visit1
+when: month == 12 and year < 4 and not off_campus
+repeat: 3
+class: routine
+tone: light
+art: star
+tags: festival
+scene: Long trestle tables under the observatory dome covered in glass jars, students painting stars on them, one of the Stargazers handing out corks.
+text: {The Stargazers have set up tables under the dome, and everyone is making a jar to catch a falling star in tonight. Nobody has caught one in years. Everyone tries.|The jar tables are out under the dome again, and the first-years are making theirs all wrong.|Star jars again. You know which glass holds and which cracks in the cold.} {~The Stargazers are arguing about the forecast.|Somebody has painted a jar entirely gold.|The telescope keeps swinging toward the lake.}
+> left: Make a proper jar
+  gold -tiny
+  mood +tiny
+  starfall_jar = 1
+  say: {~Thick glass, a cork sealed with wax, a rune for luck scratched into the lid. "Better odds tonight," says one of the Stargazers. "Theoretically."|You buy the good glass and take your time over it. It's the best jar on the table, and you know it.}
+> right: Help the Stargazers set up the roof
+  renown +tiny
+  health -tiny
+  mood +small
+  starfall_jar = 0
+  say: {~You haul blankets and telescopes up the observatory stairs all afternoon. Your arms ache. The Stargazers save you the best spot on the roof.|Blankets, cushions, a kettle that has to be carried up four hundred steps. The Stargazers know your name by the end of it.}
+
+@event starfall_together
+title: A Blanket for Two
+trigger: queued
+repeat: 3
+class: story
+tone: warm
+cast:
+  partner: any where bond(partner) == "partner"
+art: star
+tags: festival romance
+scene: Two students lying on a blanket on the lawn at night, wrapped in one shawl, a falling star streaking over the castle towers.
+text: You find {partner} on the lawn below the observatory with a blanket already spread for two and a flask of something hot. "I saved you the sky," {they} say{s}. The first star falls before you've sat down.
+> left: Stay out until dawn
+  spark partner +small
+  mood +medium
+  health -small
+  say: You stay out until the sky turns grey, counting stars and then not counting anything. You're both frozen and hoarse and late for breakfast, and it was worth all of it.
+> right: Tell {them} what you wished for
+  spark partner +medium
+  mood -tiny
+  say: You say it out loud, which you're told ruins a wish. {partner} goes very quiet and then tells you {their} own. Neither of you minds if it's ruined.
+
+@event starfall_wish
+title: A Wish on a Falling Star
+trigger: queued
+repeat: 3
+class: story
+tone: warm
+art: star
+tags: festival
+scene: A student kneeling on the observatory roof with eyes closed, hands clasped, a bright star falling over the dark lake below.
+text: The oldest Starfall custom: pick one star, the brightest you'll see all night, and give it one wish. The Stargazers say a wish you spend on someone else falls slower. Nobody knows what that means. A very bright one is coming down over the lake.
+> left: Wish for your own year
+  gain inspired
+  mood -tiny
+  say: You wish hard and selfishly, and the star burns out over the water. It feels like a promise you've made to yourself, which is heavier than you expected.
+> right: Wish for someone else
+  alignment +tiny
+  mood +small
+  say: You don't say who. The star falls slowly, or you imagine it does, all the way down to the lake.
+
+@event starfall_caught
+title: The Star in the Jar
+trigger: queued
+repeat: 3
+class: story
+tone: warm
+type: menu
+art: star
+tags: festival
+scene: A glass jar on a dormitory windowsill holding a tiny glowing star, a pale light on the curtains, frost on the outside of the glass.
+text: The star you caught at Starfall still glows in its jar on your windowsill, a little dimmer each night. A collector in the village has offered good money for it. One of the Stargazers says it would like to go back up, if stars like anything.
+> keep: Keep it by your bed
+  mood +medium
+  gold -tiny
+  say: You keep it, and buy oil to keep the window frost off it. It fades by spring, slowly, like a coal. The last night it glows, you sit up with it.
+> sell: Sell it to the collector
+  gold +medium
+  mood -small
+  say: The collector holds it up to the light and pays without haggling. The windowsill looks very dark that night.
+> release: Let it go from the roof
+  alignment +tiny
+  mood +small
+  renown +tiny
+  say: You climb the observatory at midnight and open the jar. It hangs there a moment, then rises, slow and sure, until you can't tell it from the others. A few people saw. The story goes round by breakfast.
+
+@event starfall_at_home
+slot: night
+title: Starfall at Home
+class: story
+tone: warm
+trigger: auto
+when: month == 12 and year < 4 and has(plan_home)
+repeat: 3
+priority: 30
+art: star
+tags: festival home
+scene: A family on the roof of a cottage at night, wrapped in quilts, a small child pointing at a streak of light across the sky.
+text: {Starfall at home. There's no observatory here, only the cottage roof and the whole family on it in quilts, as when you were small.|Starfall at home again. Someone has saved you the warm patch of roof by the chimney.|The roof, the quilts, the chimney. Someone asks what the academy does for Starfall, and you find you'd rather be here.} {~The village dogs howl at every star.|Somebody's brought cocoa.|A neighbour is telling the one about the star that fell in the duck pond.}
+> left: Tell them about the academy
+  mood +medium
+  charm +tiny
+  health -tiny
+  say: {~You tell them about the towers and the lake and the staircase that moves, and they ask questions until the stars run out. It's past three when you climb down, cold to the bone and glad.|Everyone wants a story. You give them the best ones, slightly improved. Nobody minds.}
+> right: Slip off to the hill alone
+  lore +small
+  mood +small
+  say: {~From the hill behind the cottage you name every star the way they taught you, and a few the way you learned as a child. Both names are right.|Alone on the hill, you watch the sky the way an academy student does now, and miss, a little, the way you used to.}
+
+@event starfall_on_internship
+slot: night
+title: Starfall Far From Home
+class: story
+tone: warm
+trigger: auto
+when: month == 12 and year < 4 and has(plan_internship)
+repeat: 3
+priority: 30
+art: star
+tags: festival
+scene: A group of interns on a flat roof far from the academy, wrapped in coats, watching falling stars over unfamiliar rooftops.
+text: Starfall, and you're far from the observatory roof. {member(intern_expedition): Up at the ridge camp the sky is enormous, and the expedition's astronomers are working through it, counting every streak.|{member(intern_thornwick): Thornwick marks Starfall with illusions, and the lawn is full of false stars falling among the real ones. {met(tamsin): Tamsin finds you and points out which ones are theirs.|}|{member(intern_field_station): At the field station the creatures are restless under the falling stars, and someone has to sit up with them.|{member(intern_royal_library) or member(intern_unseen_office): The city has no lawns, only rooftops, and every one of them has people on it tonight.|The other interns have found a flat roof and a crate of something fizzy, and your supervisor is pretending not to know.}}}}
+> left: Join the others on the roof
+  mood +medium
+  perform internship -tiny
+  say: {~You lie on a strange roof among people you met two months ago and count stars until they feel like old friends. Tomorrow's work goes slowly.|Coats, a borrowed blanket, someone's terrible song. It's not the observatory roof, and it's good anyway.}
+> right: Keep working through the night
+  perform internship +small
+  mood -small
+  say: {~You work through it with the window open, glancing up now and then. Your supervisor finds the finished work on the desk at dawn and raises an eyebrow, which is a great deal from them.|The stars fall outside while you finish the job. You see a few. Your supervisor sees all of it.}
+
+# ---------------- The Midwinter Ball ----------------
+
+@event ball_robes
+slot: noon
+title: Something to Wear
+class: routine
+tone: light
+trigger: auto
+when: month == 4 and term
+repeat: 4
+priority: 25
+art: mirror
+tags: festival money
+scene: A dormitory room strewn with robes, a student holding up a moth-eaten formal robe against themselves before a cracked mirror.
+text: {year == 1: The Midwinter Ball is tonight, and you have nothing to wear that isn't a uniform or a nightshirt.|{final_year: The last ball of your life as a student. The old robes look very tired.|{~Ball night again, and last year's robes have shrunk, somehow, in the trunk.|Ball night again. Your robes have a stain on the cuff you'd forgotten about.}}} {~The village tailor is open till three.|Your roommate is already dressed and gloating.|The mirror has opinions.}
+> left: Buy new robes in the village
+  gold -small
+  mood +small
+  charm +tiny
+  say: {~Deep blue, with a lining like the night sky. In the tailor's mirror you look, for once, like someone in a portrait.|New robes, a sensible colour and an insensible price. They fit as if they were waiting for you.}
+> right: Glamour your old ones
+  challenge spell easy:
+    win:
+      mood +small
+      guile +tiny
+      say: The old robes shimmer into silk. Nobody guesses, and three people ask where you had them made.
+    lose:
+      mood -small
+      renown -tiny
+      say: At the stroke of nine your glamour slips, and the mended elbow shows through the silk like a confession. You keep your arm by your side all night.
+
+@event ball_ice_garden
+title: The Ice Garden
+place: courtyard
+replaces: visit1
+when: month == 4 and term
+repeat: 4
+class: routine
+tone: warm
+art: snow
+tags: festival
+scene: A castle courtyard turned into a garden of ice, frozen roses along glittering paths, a fountain stopped mid-splash, students walking under lanterns.
+text: {The frost-mages have turned the courtyard into an ice garden for the ball. Frozen roses line the paths, and the fountain has stopped mid-splash.|The ice garden again, bigger this year, with a hedge maze of frost.|The ice garden, and you know its paths by heart now.} {~Couples are walking it before the music has started.|A first-year has got their tongue stuck to a rose.|The lanterns make the ice glow blue.}
+> left: Walk it slowly
+  mood +small
+  health -tiny
+  say: {~You walk every path twice, until your toes are numb and your head is clear. The fountain's frozen spray catches the light like a held breath.|You find the centre of the maze, where someone has left a frozen bench and a frozen apple. You sit a while.}
+> right: Help the frost-mages finish it
+  arcana +tiny
+  renown +tiny
+  mood -tiny
+  say: {~They show you how to hold the cold in a petal until it sets. Your hands ache for an hour. One of the roses on the path is yours.|You shape a whole archway of ice under instruction, and it holds. The frost-mages nod, which is how they applaud.}
+
+@event ball_last_dance
+title: The Last Waltz
+trigger: queued
+repeat: 4
+class: story
+tone: warm
+actor: npc
+art: music
+tags: festival romance
+scene: The great hall near midnight, candles burning low, a single couple still turning slowly beneath a dripping ice-crystal chandelier.
+text: Near midnight the musicians play the last waltz, slow and a little sad. {npc} holds out a hand without saying anything. Half the hall has gone to bed. The chandelier is dripping.
+> left: Dance until the music stops
+  spark npc +small
+  mood +small
+  health -tiny
+  say: You dance it slowly, and then once more after the musicians have packed up, to no music at all. Nobody else is left to see, which is the point.
+> right: Slip out onto the frozen terrace
+  rel npc +small
+  spark npc +tiny
+  health -small
+  say: Outside it's bitter, and the stars are out over the lake. You talk until you can't feel your fingers, about nothing and then about everything, and go back in blue-lipped and grinning.
+
+@event ball_snowball_war
+slot: night
+title: The Snowball War
+class: routine
+tone: light
+trigger: auto
+when: month == 4 and term
+repeat: 4
+priority: 20
+art: snow
+tags: festival social
+scene: A snowy courtyard at night full of students in ruined ball robes hurling snowballs from behind snow forts, a prefect ducking.
+text: {After the ball, someone throws the first snowball in the courtyard, and within a minute every house is at war, in ball robes.|The snowball war, as much a tradition as the ball. The forts went up during the last waltz.|The snowball war again. The first-years have built a fort that is frankly impressive.} {~A prefect is trying to restore order and failing.|Someone has enchanted their snowballs, which is cheating.|The robes are already ruined.}
+> left: Charge the enemy fort
+  challenge feat easy:
+    win:
+      renown +small
+      mood +medium
+      say: You take the fort with a war cry and a single perfect throw. Your house carries you round the fountain on its shoulders. Your robes will never recover.
+    lose:
+      health -small
+      mood +small
+      say: A snowball, then fourteen. You go down laughing under a drift, and someone has to dig you out. Worth it.
+> right: Watch from the cloister with cocoa
+  mood +small
+  health +tiny
+  say: {~You watch from the cloister, warm and dry, and cheer for whoever's losing. Nobody throws at you. Mostly.|You hold the cocoa and the coats, and you're the only one who goes to bed warm.}
