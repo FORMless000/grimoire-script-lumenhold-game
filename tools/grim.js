@@ -131,7 +131,7 @@ function analyze(content) {
           else if (kind === 'state') add(A.statesRef, a.v, where);
           else if (kind === 'npc') { if (!ROLES.has(a.v)) add(A.npcsRef, a.v, where); }
           else if (kind === 'event') add(A.eventsRef, a.v, where);
-          else if (kind === 'track') { if (!content.tracks[a.v] && !((n.n === 'member' || n.n === 'applied') && KIND_ARGS.has(a.v))) P('error', where, n.n + '(): unknown track "' + a.v + '"'); }
+          else if (kind === 'track') { if (!content.tracks[a.v] && !(['member', 'applied', 'rank', 'performance'].includes(n.n) && KIND_ARGS.has(a.v))) P('error', where, n.n + '(): unknown track "' + a.v + '"'); }
           else if (kind === 'clue') { if (!content.clues[a.v]) P('error', where, 'clue(' + a.v + '): no @clue ' + a.v); }
           if (n.n === 'bonds' && !KNOWN_BONDS.has(a.v)) P('warn', where, 'unknown bond status "' + a.v + '"');
           if (n.n === 'offered' && !['courses', 'clubs', 'jobs'].includes(a.v)) P('error', where, 'offered(): takes courses, clubs or jobs, not "' + a.v + '"');
@@ -204,7 +204,7 @@ function analyze(content) {
         case 'end': if (!content.endings[st.ending]) P('error', w, 'end: unknown ending "' + st.ending + '"'); add(A.endingsRef, st.ending, w); break;
         case 'learn': if (!content.facts[st.fact]) P('error', w, 'learn: unknown fact "' + st.fact + '"'); break;
         case 'enrol': case 'join': case 'leave': case 'promote': case 'apply': case 'perform': case 'rank_xp': case 'progress':
-          if (st.track !== 'track' && !(st.t === 'leave' && KIND_ARGS.has(st.track)) && !content.tracks[st.track]) P('error', w, st.t + ': unknown track "' + st.track + '"');
+          if (st.track !== 'track' && !KIND_ARGS.has(st.track) && !content.tracks[st.track]) P('error', w, st.t + ': unknown track "' + st.track + '"');
           else if (['perform', 'rank_xp', 'promote'].includes(st.t) && content.tracks[st.track] && content.tracks[st.track].kind === 'society') P('error', w, st.t + ': ' + st.track + ' is a society (no performance or ranks)');
           break;
         case 'study': if (st.track && st.track !== 'track' && !(content.tracks[st.track] && content.tracks[st.track].kind === 'course')) P('error', w, 'study: "' + st.track + '" is not a course'); break;

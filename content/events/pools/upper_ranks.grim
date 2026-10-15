@@ -1,0 +1,401 @@
+# Top-rank pools (playtest 2, X2): at a club's or job's highest rank (`rank: 3`), its cards carry more risk and more
+# reward instead of a quiet stat bump. They join the lower ranks' cards (pools.md); two per track.
+
+# ---------------- Duelling Circle: Captain ----------------
+
+@event duelling_captain_challenge
+title: The Captain's Challenge
+track: duelling
+rank: 3
+class: routine
+tone: tense
+repeat: 4
+weight: 10
+art: duel
+tags: club duel
+scene: A captain of a duelling circle in a chalk ring facing a visiting champion, the whole hall packed to the rafters.
+text: {A visiting champion has challenged the Circle's captain, by name, in front of everyone. The captain is you.|Another challenger at the door, asking for the captain.|They come for the captain now, from three valleys away.} {~The hall is packed to the rafters.|Lyra is in the front row with her arms folded.|Somebody is taking bets in the corridor.}
+> left: Accept in front of everyone
+  challenge combat hard:
+    win:
+      perform duelling +medium
+      renown +medium
+      health -small
+      say: {~You win the third exchange and the hall comes apart. The champion bows, properly. The Circle will talk about it for a year.|A long, hard bout, and yours at the end. Your name goes on the board in gold paint.}
+    lose:
+      perform duelling -small
+      renown -small
+      health -medium
+      say: {~You lose, in front of everyone, by a breath. The Circle carries you to the infirmary anyway, which is its own verdict.|Beaten, cleanly. The champion is gracious. That's the worst part.}
+> right: Send your best officer instead
+  perform duelling +small
+  mood -small
+  say: {~Your officer wins, narrowly, and the hall cheers for the Circle. A few people look at you and wonder why you didn't step up.|You coach from the edge. The officer loses but fights well. It was the right call, you think, mostly.}
+
+@event duelling_captain_injury
+title: The Captain's Call
+track: duelling
+rank: 3
+class: routine
+tone: grim
+repeat: 3
+weight: 9
+art: duel
+tags: club duel danger
+scene: A duellist kneeling in a chalk circle clutching a wrist, a captain crouching beside them, a referee waiting with a whistle.
+text: {A first-year in the Circle has twisted a wrist in the final of the house cup, and insists on finishing.|Another final, another stubborn first-year with an injury.|The house cup final again, and again someone hurt who won't stop.} {~The house's honour is riding on it.|Their parents are in the gallery.|The referee looks at you: the captain decides.}
+> left: Let them finish
+  chance 50:
+    perform duelling +medium
+    renown +small
+    say: {~They finish, and win, with one hand. The gallery stands. You stood beside them, and you'll remember the fear more than the win.|They finish and win. Amaranth bandages them afterwards and gives you a look that could strip paint.}
+  else:
+    perform duelling -medium
+    alignment -tiny
+    say: {~They finish and lose, and the wrist is worse. Sister Amaranth sends for you specifically, to explain.|The bout ends with a second injury. You let it happen. You don't sleep that night.}
+> right: Stop the bout
+  alignment +tiny
+  perform duelling -small
+  say: {~You call it. The house loses the cup and the first-year cries and calls you a coward. A week later, in the corridor, they thank you.|You stop it. The gallery boos. Lyra, in the front row, nods once.}
+
+# ---------------- The Lumen Ledger: Editor ----------------
+
+@event lumen_ledger_editor_scoop
+title: The Story That Could Close Us
+track: lumen_ledger
+rank: 3
+class: routine
+tone: tense
+repeat: 3
+weight: 10
+art: paper
+tags: club
+scene: A cramped newspaper office at night, a student editor reading a draft under a lamp, a stack of evidence beside it and the clock showing late.
+text: {A reporter brings you a story about a governor of the academy, true and well sourced, and dangerous.|Another story with teeth, on your desk at midnight.|Nessa calls it "the kind of story that closes papers". She says it admiringly.} {~The evidence is a stack of letters.|The source wants to stay unnamed.|The printer needs the pages by dawn.}
+> left: Run it on the front page
+  challenge research hard:
+    win:
+      perform lumen_ledger +large
+      renown +medium
+      alignment +tiny
+      say: {~Every fact holds. The Ledger sells out by breakfast; the governor resigns by supper. Nessa frames the front page.|It runs, it holds, and the castle talks of nothing else for a week.}
+    lose:
+      perform lumen_ledger -medium
+      renown -small
+      gain detention
+      say: {~One fact was wrong, and it's the one they sue over. The Ledger prints a retraction; you write it. Detention, too, for good measure.|It runs, with a mistake in it. The governor's lawyers are very polite, and very thorough.}
+> right: Hold it until it's airtight
+  perform lumen_ledger +tiny
+  mood -small
+  say: {~You hold it. Another paper in the village runs a thinner version first. Nessa doesn't speak to you for two days, then admits you were right.|You hold it for a month and check every line. When it finally runs, it's bulletproof, and old news.}
+
+@event lumen_ledger_editor_threat
+title: A Letter to the Editor
+track: lumen_ledger
+rank: 3
+class: incident
+tone: grim
+repeat: 3
+weight: 8
+art: letter
+tags: club danger
+scene: A black-edged letter open on a newspaper desk, a student editor reading it with a cold face, the window behind them dark.
+text: {A letter to the editor, unsigned, about a story you ran. It knows where you sleep.|Another unsigned letter, the same careful hand.|The letters have stopped being polite.} {~It smells of expensive ink.|The seal has been scraped off.|It's been slipped under the office door, not posted.}
+> left: Print it, with a reply
+  renown +small
+  perform lumen_ledger +small
+  mood -medium
+  say: {~You print it in full on page two, with three lines of your own beneath. The castle loves it. You check your door twice every night for a month.|The letter goes in the paper. The next one never comes. The waiting for it is worse.}
+> right: Take it to the headmistress
+  meet isolde
+  rel isolde +small
+  perform lumen_ledger -tiny
+  say: {~She reads it once and puts it in a drawer. "Leave it with me." You never get another. Nessa says that's censorship. It's also sleep.|The headmistress handles it. You don't ask how. The Ledger is quieter for a while.}
+
+# ---------------- Verdant Circle: Head Gardener ----------------
+
+@event verdant_head_gardener_blight
+title: The Blight
+track: verdant
+rank: 3
+class: routine
+tone: grim
+repeat: 3
+weight: 10
+art: leaf
+tags: club nature
+scene: A greenhouse full of wilting plants, black spots on every leaf, a head gardener holding a sickly seedling up to the light.
+text: {Blight in the greenhouses, black spots spreading by the hour. The Head Gardener decides what to burn.|The blight is back, in a different house.|Black spots again. You know the smell of it now.} {~Tobias is close to tears.|The rarest plant in the collection is at the edge of it.|Maud has come up from the cottage to look.}
+> left: Try an untested cure on everything
+  challenge brew hard:
+    win:
+      perform verdant +large
+      alchemy +small
+      say: {~The cure works, overnight. Every plant lives, even the rare one. Maud says she's never seen it done, and asks for the recipe.|By morning the spots are fading. The Circle sings, badly, in the greenhouse.}
+    lose:
+      perform verdant -medium
+      mood -medium
+      say: {~The cure kills what the blight hadn't. You burn the whole house. Tobias helps, and doesn't blame you, which is worse.|It fails. You lose half the collection, and all of your confidence for a week.}
+> right: Burn the sick plants now
+  perform verdant +small
+  mood -small
+  say: {~You burn a third of the house and save the rest. It's the right call and it smells of grief.|You burn the sick ones before it spreads. The rare plant is among them.}
+
+@event verdant_head_gardener_show
+title: The Valley Fair
+track: verdant
+rank: 3
+class: routine
+tone: light
+repeat: 3
+weight: 9
+art: flower
+tags: club nature
+scene: A crowded show tent in a village field, prize vegetables on trestle tables, a student head gardener carrying an enormous potted plant toward the judges.
+text: {The valley's flower show, and the Verdant Circle's entry is yours to choose.|The flower show again; the judges remember you.|The show tent smells of crushed grass and rivalry.} {~A farmer's pumpkin is the size of a cart.|Thornwick has sent a team.|The judges are three old women who have seen everything.}
+> left: Enter the night-blooming lily
+  challenge negotiate medium:
+    win:
+      perform verdant +medium
+      renown +small
+      gold +small
+      say: {~It opens at dusk in front of the judges, as if on cue. First prize, and a purse, and a drawing in the village paper.|The lily wins, narrowly, over a cabbage. Nobody will forget the cabbage's grower's face.}
+    lose:
+      perform verdant -tiny
+      mood -small
+      say: {~It refuses to open. The cabbage wins. The lily blooms at midnight, for nobody, in your arms.|Second place, to Thornwick. Tobias says second is good. It isn't.}
+> right: Enter the reliable roses
+  perform verdant +small
+  say: {~Third prize for the roses. Solid, respectable, forgettable.|The roses place. The Circle is pleased; the Circle is also bored.}
+
+# ---------------- Library Assistant: Senior Clerk ----------------
+
+@event library_senior_banned_book
+title: A Request for a Banned Book
+track: library_assistant
+rank: 3
+class: routine
+tone: tense
+repeat: 3
+weight: 10
+art: book
+tags: job study
+scene: A library desk at closing time, a nervous first-year holding a request slip for a chained book, a senior clerk with the keys looking down at it.
+text: {A first-year brings you a request slip for a chained book. Senior clerks hold the keys, and the rules say no.|Another request for a chained book, from a student who looks desperate.|They've heard you hold the keys. The slips keep coming.} {~The first-year's thesis depends on it.|The slip is signed by a professor, perhaps.|The book in question bites.}
+> left: Fetch it, against the rules
+  wage
+  challenge deceive medium:
+    win:
+      gold +small
+      alignment -tiny
+      say: {~You fetch it, watch them read it, and chain it back before closing. Nobody knows. The first-year passes with honours and leaves you a cake.|The book goes out and comes back. The rules bent, and didn't break.}
+    lose:
+      perform library_assistant -medium
+      say: {~The head librarian finds the chain unlocked. A month's pay docked and a long, quiet talk.|Caught, with the key in your hand. You're still Senior Clerk; nobody quite knows how.}
+> right: Refuse
+  wage
+  perform library_assistant +small
+  mood -small
+  say: {~You say no. The first-year leaves in tears. The head librarian, who heard, nods.|The rules hold. So does your conscience, more or less.}
+
+@event library_senior_night_flood
+title: Water in the Stacks
+track: library_assistant
+rank: 3
+class: incident
+tone: grim
+repeat: 2
+weight: 8
+art: wave
+tags: job danger
+scene: A flooded lower library level at night, water lapping at the bottom shelves, a senior clerk wading with an armful of books.
+text: {A pipe has burst in the lower stacks at night, and the senior clerk on duty is you.|Water in the stacks again. The pipes are older than the books.|The lower level floods every spring now.} {~The rarest books are on the bottom shelf.|The water is rising.|Someone is shouting for help two floors up.}
+> left: Save the rare books first
+  wage overtime
+  perform library_assistant +medium
+  health -medium
+  say: {~You carry armful after armful up the stair in freezing water until dawn. Every rare book saved. Your boots are not.|You save the rarest and lose the common ones, and the head librarian, arriving at six, hugs you, which nobody has ever seen.}
+> right: Run for the head librarian
+  wage
+  perform library_assistant -tiny
+  say: {~By the time she comes, a shelf is lost. "You did right to fetch me," she says, and looks at the shelf.|She takes charge. You carry what she points at.}
+
+# ---------------- The Gilded Newt: Manager ----------------
+
+@event tavern_manager_inspector
+title: The Inspector Calls
+track: tavern
+rank: 3
+class: routine
+tone: tense
+repeat: 3
+weight: 10
+art: cup
+tags: job money
+scene: A village tavern in the morning, a stern inspector in a long coat running a finger along a bar, a student manager following with a ledger.
+text: {The licensing inspector is here, unannounced, and the landlady is away. The manager is you.|The inspector again, with the same long coat and longer list.|The inspector nods at you like an old enemy.} {~The cellar has a leak.|The ledger has a page you'd rather they didn't read.|There's a goblin asleep in the back booth.}
+> left: Show everything, honestly
+  wage
+  challenge negotiate hard:
+    win:
+      perform tavern +large
+      gold +small
+      say: {~The inspector finds the leak, notes it and passes the Newt with a warning. The landlady, back, gives you a bonus and her late mother's tankard.|A clean bill, almost. The inspector shakes your hand.}
+    lose:
+      perform tavern -medium
+      gold -small
+      say: {~The fine is steep and the landlady's face is steeper.|Three infractions. You pay the fine from the till and your pride from your own pocket.}
+> right: Steer them away from the cellar
+  wage
+  alignment -tiny
+  challenge deceive medium:
+    win:
+      perform tavern +medium
+      say: {~The inspector never goes downstairs. You fix the leak that night with your own hands, guiltily.|A clean bill, by omission. You don't tell the landlady how.}
+    lose:
+      perform tavern -medium
+      gain watched
+      say: {~The inspector goes straight to the cellar. The fine doubles for "obstruction". Bram hears of it somehow.|Caught steering. The inspector writes your name down in a separate book.}
+
+@event tavern_manager_grisk_offer
+title: An Investor
+track: tavern
+rank: 3
+class: routine
+tone: tense
+repeat: 2
+weight: 8
+when: met(grisk)
+art: pouch
+tags: job money danger
+scene: A goblin in a velvet waistcoat sitting at a tavern's best table, a bag of coin and a contract in front of him, a student manager standing opposite.
+text: {Grisk would like to invest in the Newt, with new chairs and a second fire, "and a little room upstairs for my associates".|Grisk again, with a bigger bag of coin.|"My offer stands," says Grisk, "and grows."} {~The chairs really are falling apart.|The landlady is away.|The bag of coin is very heavy.}
+> left: Take his money for the chairs
+  wage
+  gold +medium
+  alignment -small
+  perform tavern +small
+  flag grisk_contact
+  say: {~New chairs, a second fire, and Grisk's associates upstairs on Thursdays. Trade is up. So is the noise, at midnight.|The Newt has never looked better. The upstairs room has never been busier, and you don't go up there.}
+> right: Turn him down
+  wage
+  perform tavern -tiny
+  mood -tiny
+  say: {~"Your loss," says Grisk, and means it as a threat. The chairs stay wobbly.|You say no. Grisk tips his hat and drinks somewhere else for a month, which hurts trade.}
+
+# ---------------- Apothecary Clerk: Assistant Apothecary ----------------
+
+@event apothecary_assistant_poison
+title: A Dangerous Prescription
+track: apothecary_clerk
+rank: 3
+class: routine
+tone: grim
+repeat: 3
+weight: 10
+actor: pell
+art: bottle
+tags: job alchemy danger
+scene: An apothecary counter, a prescription slip with a dose underlined in red, an old apothecary and his assistant looking at it together.
+text: {A prescription comes in from a village healer with a dose ten times too strong. Pell is out. Assistant apothecaries decide.|Another slip with a strange dose. You've learned to read the healer's handwriting, which doesn't help.|A dose that would fell a horse, for a child.} {~The patient's mother is waiting.|The healer is a day's ride away.|It might be a slip of the pen. It might not.}
+> left: Mix it at a safe dose
+  wage
+  challenge brew hard:
+    win:
+      perform apothecary_clerk +large
+      alchemy +small
+      say: {~You work out what the healer meant and mix that. The child recovers. Pell, back, reads the slip and goes white, then pats your shoulder for a long time.|Right dose, right remedy. The healer writes later to thank you, embarrassed.}
+    lose:
+      perform apothecary_clerk -medium
+      mood -medium
+      say: {~Your safe dose is too weak. The child recovers slowly, and the mother tells the whole village.|You get it nearly right. Nearly is a word you stop using for a while.}
+> right: Refuse until the healer confirms
+  wage short
+  perform apothecary_clerk +tiny
+  mood -small
+  say: {~A day's wait. The mother shouts at you. The healer confirms the slip was wrong. You were right, and it was a long day.|You send a rider. The answer comes at midnight. You stay up for it.}
+
+@event apothecary_assistant_rival_shop
+title: A Shop Across the Square
+track: apothecary_clerk
+rank: 3
+class: routine
+tone: tense
+repeat: 2
+weight: 8
+actor: pell
+art: bottle
+tags: job money
+scene: A gleaming new apothecary shop across a village square, its window full of bright bottles, an old apothecary peering at it from his own doorway.
+text: {A new apothecary has opened across the square, all brass and bright bottles and half Pell's prices.|The shop across the square has a queue now.|Pell has started calling the new shop "that brass insult".} {~Their remedies are mostly coloured water.|They've hired a singer for the doorway.|Pell's daughters have written to ask what's wrong.}
+> left: Expose their coloured water
+  wage
+  challenge research medium:
+    win:
+      perform apothecary_clerk +medium
+      renown +small
+      say: {~You buy a bottle of everything and test them in Pell's back room. The results go on a board in the window. The brass shop closes by the season's end.|Your tests are fair and public. The village comes back to Pell, a little sheepish.}
+    lose:
+      perform apothecary_clerk -small
+      mood -small
+      say: {~Their remedies turn out to work, annoyingly. You look petty. Pell says, "Well, now we know."|Inconclusive, and everyone saw you try.}
+> right: Lower Pell's prices
+  wage short
+  perform apothecary_clerk +small
+  gold -tiny
+  say: {~Cheaper remedies, longer hours, a full shop. Pell grumbles and is secretly delighted.|You match them on price and beat them on care. It's slow, and it works.}
+
+# ---------------- Broom Courier: Chief Courier ----------------
+
+@event courier_chief_urgent_crossing
+title: The Urgent Crossing
+track: broom_courier
+rank: 3
+class: routine
+tone: tense
+repeat: 3
+weight: 10
+art: feather
+tags: job danger
+scene: A courier on a broom flying through a mountain pass in a gale, a red-sealed package clutched to their chest, lightning on the peaks.
+text: {A red-sealed package for the far side of the mountains, by tomorrow, and only the chief courier flies red seals.|Another red seal, another gale over the pass.|The red seals come to you by name now.} {~The pass is in cloud.|A storm is coming in from the west.|The package is humming.}
+> left: Fly the pass tonight
+  wage overtime
+  challenge feat hard:
+    win:
+      perform broom_courier +large
+      renown +small
+      health -small
+      say: {~Through the pass in the dark, lightning on both sides. You deliver at dawn to a pale woman who breaks the seal and weeps with relief. The bonus is the biggest of your life.|You make it, frozen, at dawn. The recipient signs with shaking hands.}
+    lose:
+      perform broom_courier -medium
+      health -large
+      say: {~The gale takes you into a snowfield. You walk the last mile with the package and a broken wrist, and arrive late.|You crash short of the pass and are found by a goatherd. The package arrives a day late, via goat.}
+> right: Wait for the storm to pass
+  wage
+  perform broom_courier -small
+  mood -tiny
+  say: {~You wait out the storm and fly at dawn. A day late. The recipient is gracious, and the loft-master isn't.|Late but whole. You'll always wonder what was in it.}
+
+@event courier_chief_new_runner
+title: The New Runner
+track: broom_courier
+rank: 3
+class: routine
+tone: warm
+repeat: 3
+weight: 9
+art: feather
+tags: job
+scene: A courier loft at dawn, a nervous young runner holding a broom the wrong way round, a chief courier showing them the grip.
+text: {The loft has a new runner, younger than you were, who holds the broom like a mop.|Another new runner, another bad grip.|The new runners all ask for you now.} {~Their first route is across the lake.|They've never flown in rain.|Their parents are watching from the gate.}
+> left: Fly their first route with them
+  wage short
+  perform broom_courier +small
+  mood +tiny
+  say: {~You fly beside them across the lake, calling the wind. They land shaking and grinning. They'll name a broom after you, they say.|A slow route, flown twice. They'll be good, one day.}
+> right: Let them learn on their own
+  wage
+  perform broom_courier +tiny
+  mood -tiny
+  say: {~They come back soaked and late, with every parcel. You were the same.|They learn the hard way. So did you.}

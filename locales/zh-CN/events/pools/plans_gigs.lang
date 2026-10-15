@@ -7,8 +7,8 @@
 @event holiday_gigs
 # en: Holiday Work
 title [ec8a5c] = 假期打工
-# en: Two notices are still pinned by the gates. {season == "winter": The snow has got under one of them.|The sun has curled the corners of both.} Old Maud wants hands for the grounds. The Refectory kitchens want someone who can peel fast and not complain about it.
-text [38e9ab] = 城门边还钉着两张告示。{season == "winter": 雪已经钻到其中一张底下了。|太阳把两张的边角都晒卷了。}老莫德要人手打理庭园。膳堂后厨要一个削皮快、还不抱怨的人。
+# en: Two notices are still pinned by the gates. {season == "winter": The snow has got under one of them.|The sun has curled the corners of both.} Old Maud wants hands for the grounds. The Refectory kitchens want someone who can peel fast and not complain about it. {rank(library_assistant) >= 3 or rank(tavern) >= 3 or rank(apothecary_clerk) >= 3 or rank(broom_courier) >= 3: A third notice has your name on it.|}
+text [9dfc2d] = 城门边还钉着两张告示。{season == "winter": 雪已经钻到其中一张底下了。|太阳把两张的边角都晒卷了。}老莫德要人手打理庭园。膳堂后厨要一个削皮快、还不抱怨的人。{rank(library_assistant) >= 3 or rank(tavern) >= 3 or rank(apothecary_clerk) >= 3 or rank(broom_courier) >= 3: 第三张告示上写着你的名字。|}
 # en: A noticeboard by the castle gates in the emptying holidays, two handwritten notices pinned side by side.
 scene [e17fee] = 假期里渐渐空下来的城堡大门边，一块告示板上并排钉着两张手写告示。
 # en: Work the grounds for Old Maud
@@ -23,6 +23,46 @@ opt.kitchens.label [fb1ad3] = 去膳堂后厨帮工
 opt.kitchens.hint [305589] = 在炉灶边站一整天。工钱不错；磨脾气。
 # en: The head cook gives you an apron, a knife and a sack of onions, and doesn't ask your name until the sack is empty.
 opt.kitchens.say.1 [e58aab] = 大厨递给你一条围裙、一把刀和一麻袋洋葱，直到麻袋空了才问你叫什么。
+# en: Run the library's holiday stocktake
+opt.library.label [b69455] = 负责图书馆的假期盘点
+# en: For senior clerks. Better pay; long days in the stacks.
+opt.library.hint [8ad639] = 给资深馆员的活。报酬更高；整天泡在书库里。
+# en: The head librarian hands you the stocktake ledger, a lamp and a pair of gauntlets. "Count everything," she says. "Twice, if it moves."
+opt.library.say.1 [0880b9] = 总馆员把盘点账簿、一盏灯和一副护手套交给你。“什么都要数，”她说，“会动的数两遍。”
+# en: Run the Newt through the holiday rush
+opt.newt.label [3759b3] = 带蝾螈酒馆撑过节日高峰
+# en: For the Newt's managers. The best tips of the year; the longest nights.
+opt.newt.hint [b33ad6] = 给蝾螈酒馆经理的活。一年里最好的小费；最长的夜。
+# en: The landlady gives you the keys and goes to visit her sister. "Don't let the fire go out," she says, "or the village."
+opt.newt.say.1 [33e627] = 老板娘把钥匙交给你，去看她妹妹了。“别让炉火灭了，”她说，“也别让村子乱了。”
+# en: Mix the season's remedies at Pell's
+opt.pell.label [beefb9] = 在佩尔的铺子调配应季药剂
+# en: For assistant apothecaries. Good pay; the village depends on you.
+opt.pell.hint [48142a] = 给助理药师的活。报酬不错；全村都指望着你。
+# en: Old Pell ties an apron on you himself. "Half the valley will be coughing by next week," he says, delighted. "We'll be rich."
+opt.pell.say.1 [3c5cdc] = 老佩尔亲手给你系上围裙。“下个星期半个山谷都要咳嗽，”他高兴地说，“我们要发财了。”
+# en: Fly the holiday post
+opt.post.label [339ed9] = 飞送节日邮件
+# en: For chief couriers. Every parcel in the valley; the weather against you.
+opt.post.hint [0579c6] = 给首席信使的活。山谷里的每一个包裹；还有跟你作对的天气。
+# en: The loft is stacked to the rafters with parcels in brown paper. Your name is chalked on the board above the busiest route.
+opt.post.say.1 [50dcda] = 阁楼里牛皮纸包裹堆到了房梁。最繁忙的那条路线上方的板子上，用粉笔写着你的名字。
+
+@event holiday_notices
+# en: Notices by the Gate
+title [92fc07] = 城门边的告示
+# en: {Holiday work notices are going up by the gates, for the grounds and the kitchens, both paying better than any term job.|The holiday notices again, the same two, in fresher ink.|The notices by the gate. You know them by heart.} {rank(library_assistant) >= 3 or rank(tavern) >= 3 or rank(apothecary_clerk) >= 3 or rank(broom_courier) >= 3: One is addressed to you by name, from your own job.|{~Someone has written "and board!" under one.|A first-year is copying them out.|The wind is trying to take them.}}
+text [7beabf] = {城门边贴出了假期招工告示，庭园和后厨，报酬都比任何学期里的工作高。|又是那两张假期告示，墨迹更新了。|城门边的告示。你已经背下来了。}{rank(library_assistant) >= 3 or rank(tavern) >= 3 or rank(apothecary_clerk) >= 3 or rank(broom_courier) >= 3: 其中一张是你自己的工作写给你的，指名道姓。|{~有人在一张下面写了“还包食宿！”|一个一年级生正在抄写。|风正想把它们刮走。}}
+# en: A noticeboard by the castle gates near the end of term, fresh notices for holiday work pinned over the old ones, students stopping to read.
+scene [ff22d4] = 学期快结束时城门边的告示板，新的假期招工告示钉在旧告示上面，学生们停下来看。
+# en: Pin them up for the cook
+opt.left.label [bead3d] = 替厨师把告示钉好
+# en: {~The head cook pays you a coin to pin the new notices straight. Working the break would mean no lie-ins, and real money.|You pin them up, get a coin for it, and read the hours. It's tempting, and tiring just to read.}
+opt.left.say.1 [2fb452] = {~后厨大厨给你一枚硬币，让你把新告示钉正。假期打工意味着没有懒觉，但有真金白银。|你把告示钉好，得了一枚硬币，顺便看了看工时。很诱人，光是读一读就累了。}
+# en: Walk past
+opt.right.label [d5359c] = 走过去
+# en: {~The break is for sleeping, you decide, and walk on. The notices flap behind you.|Not this time. You'll choose when the break comes.}
+opt.right.say.1 [e88a45] = {~假期是用来睡觉的，你决定，然后走开了。告示在你身后哗啦作响。|这次就算了。放假的时候再选吧。}
 
 @event gig_grounds_hard_ground
 # en: Hard Ground
@@ -125,3 +165,233 @@ opt.left.say.1 [aecfbc] = {~你端到胳膊都忘了自己是胳膊。大厨付�
 opt.right.label [5d859a] = 待在后面装盘
 # en: {~You plate by the ovens and listen to the feast through the wall. Smaller pay, a scorched wrist, and the best seat in the house.|Quiet hands in a hot room. The head cook gives you the last slice of pie, which is its own wage.}
 opt.right.say.1 [cae555] = {~你在烤炉边装盘，隔着墙听宴会的热闹。钱少些，手腕烫了一下，却是全场最好的位置。|热屋子里一双安静的手。大厨把最后一块派给了你，这本身就是一份工钱。}
+
+@event gig_grounds_goat
+# en: Bartholomew Escapes
+title [ecc00d] = 巴塞洛缪越狱了
+# en: {Bartholomew the goat has got out again and is standing on the shed roof, eating the thatch.|Bartholomew is on the shed roof. He has made this a habit.|The goat is on the roof. You don't even ask how any more.} Maud is laughing too hard to help. {~The thatch is going fast.|He has a cabbage in his mouth.|He looks at you like a duke.}
+text [b0b626] = {山羊巴塞洛缪又跑出来了，站在棚屋顶上啃茅草。|巴塞洛缪在棚屋顶上。他已经养成习惯了。|山羊在屋顶上。你都懒得问它是怎么上去的了。}莫德笑得太厉害，帮不上忙。{~茅草少得飞快。|他嘴里叼着一颗卷心菜。|他看你的样子像个公爵。}
+# en: A goat standing triumphantly on the roof of a garden shed, a student with a rope below, an old woman laughing behind them.
+scene [10fe10] = 一只山羊得意洋洋地站在园中棚屋的屋顶上，下面一个学生拿着绳子，后面一位老妇人在笑。
+# en: Climb up after him
+opt.left.label [7a4523] = 爬上去追他
+# en: {~You get him down after an hour and a fall. Maud pays you double for the entertainment, she says, and a little for the bruises.|Up the ladder, along the ridge, one hand on his horn. He comes down when he's ready, which is later than you are.}
+opt.left.say.1 [9c35d0] = {~你摔了一跤，花了一个钟头才把他弄下来。莫德说为了这场好戏付你双倍工钱，再加一点淤青的钱。|爬上梯子，沿着屋脊，一只手抓住他的角。他想下来的时候才下来，比你想的晚。}
+# en: Bribe him down with an apple
+opt.right.label [bc5cca] = 用苹果哄他下来
+# en: {~One apple, held very still. He considers it for a long time, like a merchant, and comes down. Maud pays for the hour you saved.|He takes the apple and stays where he is. Then, at his own pace, he comes down. Maud pays you for patience.}
+opt.right.say.1 [e83258] = {~一个苹果，一动不动地举着。他像个商人一样考虑了很久，然后下来了。莫德为你省下的那个钟头付了钱。|他接过苹果，站着不动。然后，按他自己的节奏，下来了。莫德为你的耐心付了钱。}
+
+@event gig_kitchens_staff_supper
+# en: The Staff Supper
+title [b2c3f9] = 员工晚餐
+# en: {After the last service the kitchen staff eat together at the scrubbed table, on leftovers, bread and the head cook's opinions.|The staff supper again. They've saved you a place now.|The head cook bangs a ladle. "Staff supper. Sit, or serve."} {~Somebody is telling a story about a swan.|The pot-boy is asleep in his soup.|There's a cake nobody will admit to making.}
+text [89b026] = {最后一轮供餐结束后，后厨的员工围着擦洗干净的桌子一起吃饭，吃剩菜、面包，还有大厨的高见。|又是员工晚餐。他们现在给你留了位置。|大厨敲了敲长柄勺。“员工晚餐。要么坐，要么端。”}{~有人在讲一个关于天鹅的故事。|洗锅的男孩在汤里睡着了。|有个蛋糕，没人承认是自己做的。}
+# en: Cooks and kitchen hands crowded round a scrubbed table late at night, eating the day's leftovers, one student serving.
+scene [7186d1] = 深夜里厨师和帮厨们挤在一张擦洗干净的桌子旁吃当天的剩菜，一个学生在上菜。
+# en: Serve, then wash up
+opt.left.label [c4f447] = 先上菜，再洗碗
+# en: {~You serve forty bowls, wash forty bowls, and are paid for the extra hour in coins and a slice of the mystery cake.|You finish the washing-up at midnight. The head cook pays you extra and calls you "the useful one".}
+opt.left.say.1 [be71a5] = {~你端了四十碗，洗了四十碗，多干的那个钟头的报酬是硬币和一块神秘蛋糕。|你午夜才洗完碗。大厨多付了你钱，叫你“有用的那个”。}
+# en: Sit and eat with them
+opt.right.label [22c3ea] = 坐下和他们一起吃
+# en: {~You eat, and laugh at the swan story, and leave earlier with a smaller purse and a full stomach.|You sit. The cooks tell you which professors send back their soup. It's worth more than the wages.}
+opt.right.say.1 [46ecbd] = {~你吃着饭，听天鹅的故事笑出声，早早离开，钱袋小了些，肚子饱了。|你坐了下来。厨师们告诉你哪些教授会把汤退回来。这比工钱值钱。}
+
+@event gig_library_stocktake
+# en: The Stocktake
+title [987da1] = 盘点
+# en: {The library in the holidays is all yours and all to be counted.|The stocktake ledger is half full; the shelves are not half counted.|You've stopped counting books and started counting floors.} {~A shelf of atlases has migrated to the poetry section.|One book is not on any list and seems pleased about it.|The lamp in the east wing keeps going out, politely.}
+text [1738b9] = {假期里的图书馆全归你，也全等着你数。|盘点账簿填了一半；书架连一半都还没数完。|你已经不数书了，开始数楼层。}{~一架地图集迁移到了诗歌区。|有本书不在任何清单上，似乎还挺得意。|东翼的灯老是礼貌地熄灭。}
+# en: A deserted library in the holidays, a student on a tall ladder with a ledger, books stacked on every table, dust in the lamplight.
+scene [d520da] = 假期里空无一人的图书馆，一个学生拿着账簿站在高梯上，每张桌子上都堆满了书，灯光里浮着灰尘。
+# en: Count the restricted shelves too
+opt.left.label [0c6c3e] = 连禁书架也一起数
+# en: {~The restricted shelves count back. You finish with the right number and a bite on the thumb. The librarian pays you extra for the bite.|You count every chained volume. One of them counts you. The pay is better than term-time's by a good margin.}
+opt.left.say.1 [3a0a54] = {~禁书架会回数你。你数对了数目，拇指上挨了一口。总馆员为那一口多付了你钱。|你数遍了每一本锁链书。其中一本也数了你。报酬比学期里高出一大截。}
+# en: Keep to the open stacks
+opt.right.label [fa9957] = 只数开放书库
+# en: {~Open stacks only, every book counted, the ledger perfect. The librarian pays you in full and says nothing about the shelves you left.|A long, dusty, honest day. You go to bed counting.}
+opt.right.say.1 [2620a5] = {~只数开放书库，每本书都数了，账簿完美。总馆员全额付了钱，对你没数的书架只字不提。|漫长、满是灰尘、老老实实的一天。你躺在床上还在数。}
+
+@event gig_library_lost_shelf
+# en: The Shelf That Wasn't There
+title [b74ee7] = 不存在的书架
+# en: {The stocktake finds a shelf that isn't in any ledger.|The extra shelf again. It has grown a book since yesterday.|The shelf is longer than the room it's in, now.} {~The books on it have no titles.|One is warm.|One is labelled with the date of tomorrow.}
+text [5c41b6] = {盘点时发现了一个任何账簿上都没有的书架。|又是那个多出来的书架。从昨天起它又长出了一本书。|现在这个书架比它所在的房间还长。}{~上面的书都没有书名。|有一本是温的。|有一本标着明天的日期。}
+# en: A narrow library aisle that seems to go on further than the building, a student holding a lamp up to an unfamiliar shelf.
+scene [6b7883] = 一条窄窄的图书馆过道，似乎比建筑本身还长，一个学生把灯举向一个陌生的书架。
+# en: Catalogue it
+opt.left.label [b5435f] = 把它编目
+# en: {~You list every book. The librarian reads your list, goes pale and pays you to forget it. You don't.|You catalogue the shelf by lamplight. In the morning, it's gone, and your list is the only proof.}
+opt.left.say.1 [41d3ad] = {~你列出了每一本书。总馆员读了你的清单，脸色发白，付钱让你忘掉它。你没忘。|你借着灯光给书架编了目。第二天早上它不见了，你的清单是唯一的证据。}
+# en: Leave it off the ledger
+opt.right.label [bee004] = 不记进账簿
+# en: {~You don't write it down. Some shelves don't want to be counted. The librarian, passing, nods as if you'd passed a test.|You skip it. The ledger balances. The shelf, you'd swear, looks relieved.}
+opt.right.say.1 [1e16e9] = {~你没有把它写下来。有些书架不想被数。总馆员经过时点了点头，好像你通过了一场考验。|你跳过了它。账簿平了。那个书架，你敢发誓，看起来松了口气。}
+
+@event gig_library_last_day
+# en: The Ledger Balances
+title [0c78c2] = 账目平了
+# en: {The last page of the stocktake. The librarian reads it slowly, all of it.|Another stocktake done, another ledger signed.|The librarian signs, and blots, and signs again for luck.} {~"Not one missing," she says. "That has never happened."|"Three missing, and one extra. Normal."|She closes the ledger with both hands.}
+text [9979c0] = {盘点的最后一页。总馆员慢慢地读，一字不漏。|又一次盘点结束，又一本账簿签了字。|总馆员签了字，吸干墨迹，为了好运又签了一次。}{~“一本没少，”她说，“从来没有过。”|“少了三本，多了一本。正常。”|她用双手合上账簿。}
+# en: A head librarian signing a thick stocktake ledger at a desk under a window, a tired student waiting with ink on every finger.
+scene [41e847] = 窗下书桌前一位总馆员在厚厚的盘点账簿上签字，一个疲惫的学生在等着，每根手指上都沾着墨水。
+# en: Ask for a reference
+opt.left.label [d577d3] = 请她写封推荐信
+# en: {~She writes one on the spot: three lines, and the third makes you blush. The pay is good and the reference is better.|She writes you a reference in a hand like engraving. It's worth more than the wages, someone tells you later.}
+opt.left.say.1 [b1a36c] = {~她当场写了一封：三行字，第三行让你脸红。报酬不错，推荐信更好。|她用镌刻般的字迹给你写了推荐信。后来有人告诉你，它比工钱值钱。}
+# en: Ask for the afternoon off
+opt.right.label [25c4ff] = 请她放你一个下午的假
+# en: {~She gives you the afternoon and a little less pay. You spend it asleep in the reading room, which is the best use of it.|An afternoon off, and a library to yourself. You read for pleasure for the first time in months.}
+opt.right.say.1 [5f18a3] = {~她给了你一个下午，工钱少了一点。你在阅览室里睡了一下午，这是最好的用法。|一个下午的假，一整座图书馆归你。几个月来你第一次为了乐趣读书。}
+
+@event gig_newt_rush
+# en: The Holiday Rush
+title [c1bbea] = 节日高峰
+# en: {The Newt in the holidays is full to the rafters with farmers, barge crews and families home for the season.|Another holiday night, another full house.|The queue for the bar goes out of the door and round the well.} {~Someone has started a song with forty verses.|A wedding party arrives without warning.|The fire is roaring, and so is the room.}
+text [7cd7dd] = {假期里的蝾螈酒馆挤满了农夫、驳船船员和回家过节的一家家人。|又一个节日之夜，又一次满座。|吧台前的队伍排出了门，绕过了水井。}{~有人起了一首四十段的歌。|一支婚礼队伍不打招呼就来了。|炉火熊熊，整个屋子也热火朝天。}
+# en: A packed village tavern at the holidays, garlands over the bar, every table full, a student manager behind the bar with three jugs in hand.
+scene [c18223] = 节日里挤满人的村酒馆，吧台上挂着花环，每张桌子都坐满了，一个学生经理站在吧台后，手里拿着三个酒壶。
+# en: Keep the bar open till the last song
+opt.left.label [687db7] = 营业到最后一首歌
+# en: {~You pour till the song ends, then pour for the encore. The tips are the best you've ever counted, and your feet will never forgive you.|Closing at three, the till heavy, the floor sticky. The landlady's note says "Well done" in two places.}
+opt.left.say.1 [f1407a] = {~你一直倒酒倒到歌唱完，又为返场接着倒。这是你数过最好的小费，你的脚永远不会原谅你。|凌晨三点打烊，钱柜沉甸甸的，地板黏糊糊的。老板娘的字条上有两处写着“干得好”。}
+# en: Close at the proper hour
+opt.right.label [d3eedf] = 按时打烊
+# en: {~You call time at midnight, firmly and politely. Some grumble. The till is lighter, and you sleep.|Last orders on the stroke. You lose some tips and keep your temper.}
+opt.right.say.1 [b6fae1] = {~你在午夜坚定而礼貌地宣布打烊。有人抱怨。钱柜轻了一些，你睡了个好觉。|准点最后点单。你少了些小费，保住了好脾气。}
+
+@event gig_newt_brawl
+# en: A Fight Over a Song
+title [08605c] = 为一首歌打起来
+# en: {Two barge crews disagree about the last verse of a song, loudly.|The barge crews again, and the song again, and the same verse.|This time it's a farmer and a fisherman, and the song is a different one.} {~A chair is already in the air.|Somebody has taken their coat off.|The fiddler has stopped playing.}
+text [6cbac0] = {两拨驳船船员为一首歌的最后一段争得不可开交。|又是那两拨船员，又是那首歌，又是那一段。|这次是一个农夫和一个渔夫，歌也换了一首。}{~已经有一把椅子飞在空中了。|有人脱了外套。|提琴手停了下来。}
+# en: Two barge crews squaring up in the middle of a crowded tavern, a student manager stepping between them with a tray.
+scene [768c1a] = 两拨驳船船员在拥挤的酒馆中央对峙，一个学生经理端着托盘挡在他们中间。
+# en: Step between them
+opt.left.label [f242e3] = 站到他们中间
+# en: {~You stop the first punch with a tray and the second with a look. Both crews buy a round to make up. You take the tips.|You walk between them and stay there. Eventually somebody laughs, and the song goes on.}
+opt.left.say.1 [0f3da2] = {~你用托盘挡住了第一拳，用眼神挡住了第二拳。两拨人各请了一轮酒赔罪。小费归你。|你走到他们中间，站着不动。最后有人笑了，歌又唱了下去。}
+# en: {~The tray takes one punch and your jaw takes the other. They pay for the chair, at least.|You get a black eye and a free drink, which you can't drink, being on duty.}
+opt.left.say.2 [4b4b9b] = {~托盘挨了一拳，你的下巴挨了另一拳。至少他们赔了椅子。|你得了一只黑眼圈和一杯免费的酒，可你在当班，不能喝。}
+# en: Bribe them with a free round
+opt.right.label [63b266] = 请他们喝一轮
+# en: {~One round on the house, and they're singing together by the second verse. The house is a little poorer.|A free round fixes most things. The landlady's ledger will notice.}
+opt.right.say.1 [7154e8] = {~店里请了一轮，到第二段他们就一起唱起来了。店里穷了一点。|一轮免费的酒能解决大多数问题。老板娘的账簿会注意到的。}
+
+@event gig_newt_fire
+# en: The Fire Must Not Go Out
+title [bda4da] = 炉火不能灭
+# en: {The landlady's fire has never gone out in her lifetime or her mother's. Tonight the wind is in the chimney and it's sinking.|The fire is low again. The wind is from the north.|The fire flickers as you lock up, as if to test you.} {~The wood is damp.|There's frost on the inside of the windows.|The cat is sitting on the warmest stone, unhelpfully.}
+text [50d4bc] = {老板娘的炉火在她这辈子和她母亲那辈子都没灭过。今晚风灌进了烟囱，火在往下沉。|火又弱了。刮的是北风。|你锁门时火苗闪了闪，像是在考验你。}{~木柴是潮的。|窗户里面结了霜。|猫坐在最暖的石头上，一点也不帮忙。}
+# en: The great hearth of a village tavern late at night, embers banked low, a student kneeling with tongs and a bucket of ash.
+scene [95b956] = 深夜里村酒馆的大壁炉，余烬低低地封着，一个学生拿着火钳和一桶炉灰跪在旁边。
+# en: Sit up with it all night
+opt.left.label [18ab48] = 守它一整夜
+# en: {~You feed it one stick at a time until dawn. When the landlady comes back, she puts a hand on the stones and pays you a bonus without a word.|You sleep in the chair with the tongs in your lap. The fire lives. So, nearly, do you.}
+opt.left.say.1 [3c60fb] = {~你一根一根地添柴，一直到天亮。老板娘回来后，把手放在炉石上，一言不发地给了你一笔奖金。|你抱着火钳在椅子上睡着了。火活了下来。你也差不多。}
+# en: Bank it and trust it
+opt.right.label [fc6608] = 封好火，相信它
+# en: {~You bank it the way she showed you and go to bed. You dream of ash. In the morning, it's alive, and you're shaking.|You trust it. It holds. You don't sleep a wink anyway.}
+opt.right.say.1 [7d28c9] = {~你按她教的方法封好火，上床睡觉。你梦见了灰烬。早上它还活着，你却在发抖。|你相信了它。它撑住了。你还是一眼都没合上。}
+
+@event gig_pell_remedy_rush
+# en: Cough Season
+title [efc796] = 咳嗽季
+# en: {The whole valley is coughing, and Pell's queue is out of the door.|Day three of the cough. Pell is humming. You are not.|The queue at Pell's has its own gossip by now.} {~A child wants the cherry one.|A farmer wants something for his cow.|A professor in disguise wants something "for a friend".}
+text [ddd777] = {整个山谷都在咳嗽，佩尔铺子的队伍排出了门外。|咳嗽的第三天。佩尔在哼歌。你没有。|佩尔铺子前的队伍已经有了自己的八卦。}{~一个孩子要樱桃味的。|一个农夫想给他的牛要点药。|一位乔装的教授要点药“给一个朋友”。}
+# en: A crowded village apothecary in winter, a queue of coughing villagers, a student and an old man filling bottles as fast as they can.
+scene [390033] = 冬天里拥挤的村药铺，一队咳嗽的村民，一个学生和一位老人飞快地灌着药瓶。
+# en: Mix to order, carefully
+opt.left.label [101dc9] = 按需调配，仔细些
+# en: {~Every bottle mixed for the person in front of you. It's slow, and Pell pays you for every one of them.|You learn sixty coughs by ear. Pell says you're wasted on students.}
+opt.left.say.1 [8e0c72] = {~每一瓶都为眼前的人单独调配。很慢，佩尔为每一瓶都付了钱。|你听声音就能分辨六十种咳嗽了。佩尔说你当学生真是可惜了。}
+# en: Mix in big batches
+opt.right.label [14ba6e] = 大批量调配
+# en: {~One cauldron, one recipe, three hundred bottles. It works for nearly everyone. Pell pays you and looks at the cauldron for a long time.|Fast and efficient. A farmer comes back the next day about the cow.}
+opt.right.say.1 [a0c39e] = {~一口大锅，一个配方，三百瓶。对几乎所有人都管用。佩尔付了钱，盯着那口锅看了很久。|又快又省事。第二天，那个农夫为了牛的事又来了。}
+
+@event gig_pell_night_knock
+# en: A Knock After Closing
+title [55f4f5] = 打烊后的敲门声
+# en: {Someone is knocking at Pell's door after closing, a frantic mother with a feverish child.|Another knock after dark. You're sleeping above the shop now, it seems.|The night knock again. You're already pulling on your boots.} {~Pell is asleep and snoring.|The fire is out.|The ledger says not to open after dark.}
+text [b329e4] = {打烊后有人在敲佩尔的门，一位焦急的母亲抱着发烧的孩子。|天黑后又有人敲门。看来你现在住在铺子楼上了。|又是夜里的敲门声。你已经在穿靴子了。}{~佩尔睡着了，打着呼噜。|炉火灭了。|账簿上写着天黑后不开门。}
+# en: An apothecary's door at night, a lantern held up to a frightened villager in the doorway, a student in a nightcap behind the counter.
+scene [742c58] = 夜里药铺的门口，一盏灯照着门口一个惊慌的村民，柜台后面一个戴睡帽的学生。
+# en: Mix the remedy yourself
+opt.left.label [37d5b3] = 自己调药
+# en: {~You mix it by candlelight from memory. The child is better by morning. The mother pays in eggs and coins, and Pell pays you for the night.|The remedy is right. Pell, in the morning, checks your work and says nothing, which from him is a medal.}
+opt.left.say.1 [fa8c19] = {~你凭记忆在烛光下调好了药。孩子到早上就好多了。那位母亲用鸡蛋和硬币付了账，佩尔为这一夜付了你钱。|药是对的。佩尔早上检查了你的成果，什么也没说，这对他来说就是一枚奖章。}
+# en: {~The first batch is wrong. You wake Pell, who fixes it in a minute and pays you anyway, for trying.|You get it right on the third try, at dawn, and you shake all the next day.}
+opt.left.say.2 [a9da07] = {~第一批调错了。你叫醒佩尔，他一分钟就改好了，还是为你的尝试付了钱。|你试到第三次，天亮时才调对，第二天一整天都在发抖。}
+# en: Wake Pell
+opt.right.label [d95fb8] = 叫醒佩尔
+# en: {~Pell comes down grumbling, mixes it in two minutes and goes back to bed. You learn more watching than mixing.|You wake him. He's not cross. "That's what I'm for," he says.}
+opt.right.say.1 [2894a4] = {~佩尔嘟囔着下楼，两分钟调好药，又回去睡了。你看着学到的比自己调学到的还多。|你叫醒了他。他没生气。“这就是我该干的，”他说。}
+
+@event gig_pell_ledger
+# en: Pell's Books
+title [b8833a] = 佩尔的账
+# en: {Pell's account books have not been balanced since his daughters left home.|The account books again. Pell has found another drawer of receipts.|You're nearly at the bottom of the receipts. Pell is nearly at the bottom of his patience.} {~Half the debts are owed to him.|Half the debts are owed by him.|Some debts are in a currency that no longer exists.}
+text [c8cdf7] = {自从女儿们离家后，佩尔的账就再没平过。|又是那些账本。佩尔又找到了一抽屉收据。|收据快理到底了。佩尔的耐心也快到底了。}{~一半的账是别人欠他的。|一半的账是他欠别人的。|有些账用的是早已不存在的货币。}
+# en: A cluttered apothecary back room, an old man and a student bent over a ledger full of crossings-out, jars all around them.
+scene [982dfe] = 杂乱的药铺后屋，一位老人和一个学生埋头看着一本涂改满页的账簿，四周都是药罐。
+# en: Balance them properly
+opt.left.label [39ae80] = 把账理清
+# en: {~Three days of receipts. At the end, Pell is owed more than he thought. He pays you out of it, generously.|You balance every page. Pell signs it as if it were a treaty.}
+opt.left.say.1 [87039b] = {~三天的收据。理完后，别人欠佩尔的比他以为的多。他从中拿出一笔，大方地付给你。|你把每一页都理平了。佩尔签字的样子像在签条约。}
+# en: Forgive the small debts
+opt.right.label [48c657] = 免掉小额欠款
+# en: {~You strike out every debt under a crown. Pell reads the list and nods. "They'd never have paid," he says. "Now they'll come back."|Small debts forgiven, the book is simpler and the village is kinder to Pell. The pay is a little less.}
+opt.right.say.1 [0c5abf] = {~你把一克朗以下的欠款全划掉了。佩尔读了清单，点点头。“反正他们也不会还，”他说，“现在他们会回来了。”|小额欠款免了，账簿简单了，村里人对佩尔也更亲切了。报酬少了一点。}
+
+@event gig_post_storm_run
+# en: The Storm Run
+title [a96ce0] = 风暴航线
+# en: {The holiday post doesn't wait for weather. Tonight's route crosses the ridge in a storm.|The ridge again, and the wind again.|You've flown this route so often the farm dogs know your broom.} {~The sack is heavier than the broom likes.|One parcel is labelled "fragile" in four languages.|The light at the last farm is always on for you.}
+text [a4a14d] = {节日邮件不等天气。今晚的路线要在风暴中翻过山脊。|又是山脊，又是大风。|这条路线你飞了太多遍，连农场的狗都认得你的飞帚。}{~邮袋比飞帚喜欢的要重。|有个包裹用四种语言写着“易碎”。|最后一座农场的灯总是为你亮着。}
+# en: A courier on a broom flying low over snowy fields in a storm, a sack of parcels strapped behind them, a farmhouse light ahead.
+scene [6d3bf8] = 一个信使骑着飞帚在风暴中低低掠过雪地，身后绑着一袋包裹，前方是农舍的灯光。
+# en: Fly straight over the ridge
+opt.left.label [12b64e] = 直接飞越山脊
+# en: {~Over the ridge and down to the farms in half the time. The bonus for early delivery is very good.|The wind does its worst and you do better. Every parcel delivered, dry.}
+opt.left.say.1 [2c61e5] = {~翻过山脊，用一半的时间飞到农场。提前送达的奖金非常丰厚。|风使出了浑身解数，你做得更好。每个包裹都送到了，干干的。}
+# en: {~The wind takes you into a hedge. The parcels survive. You are less sure about yourself.|You deliver everything, late and frozen, with a sprained wrist.}
+opt.left.say.2 [793aa5] = {~风把你卷进了树篱。包裹们幸存了下来。你对自己就没那么有把握了。|你把所有东西都送到了，晚了，冻僵了，还扭伤了手腕。}
+# en: Take the valley road
+opt.right.label [e98ab2] = 走山谷那条路
+# en: {~The long way round, low and slow. Late, but every parcel's in one piece, and so are you.|The valley road adds two hours and no danger. The pay is the pay.}
+opt.right.say.1 [eb8bab] = {~绕远路，飞得又低又慢。晚了，但每个包裹都完好无损，你也一样。|山谷那条路多花两个钟头，没有危险。报酬就是报酬。}
+
+@event gig_post_wrong_parcel
+# en: The Wrong Parcel
+title [3a22ae] = 送错的包裹
+# en: {A parcel you delivered yesterday has come back. The old woman says it isn't hers, and it's ticking.|Another wrong address. The holiday post is chaos.|The labels are getting worse. One just says "Aunt".} {~The ticking is getting faster.|It smells of oranges.|It's addressed to someone who died years ago.}
+text [e5b35f] = {你昨天送的一个包裹被退回来了。那位老太太说不是她的，而且它在滴答作响。|又一个错地址。节日邮件一团糟。|标签越来越离谱。有一张只写着“姨妈”。}{~滴答声越来越快。|它闻起来有橙子味。|收件人好几年前就去世了。}
+# en: A farmhouse doorway in the snow, an old woman holding up a parcel that is clearly ticking, a courier on the step looking worried.
+scene [3247cb] = 雪中农舍的门口，一位老太太举着一个明显在滴答作响的包裹，台阶上的信使一脸担忧。
+# en: Find the right house tonight
+opt.left.label [f52daa] = 今晚就找到对的人家
+# en: {~You fly the valley till midnight and find the right house. The ticking was a clock, a present for a grandfather. He gives you a slice of cake and a coin.|You find the owner three farms over. The bonus for "lost and found" is surprisingly good.}
+opt.left.say.1 [c640d1] = {~你在山谷里飞到半夜，找到了对的人家。滴答声原来是一只钟，送给一位祖父的礼物。他给了你一块蛋糕和一枚硬币。|你在三座农场外找到了主人。“失而复得”的奖金出奇地丰厚。}
+# en: Return it to the loft
+opt.right.label [f4d50d] = 退回阁楼
+# en: {~You take it back to the loft. Someone else will fly it tomorrow, and get the bonus.|The loft-master sighs and puts it on the shelf of the lost. It ticks there all week.}
+opt.right.say.1 [d2af2e] = {~你把它带回阁楼。明天会有别人送，奖金也归别人。|阁楼主管叹了口气，把它放上失物架。它在那儿滴答了一整个星期。}
+
+@event gig_post_last_parcel
+# en: The Last Parcel
+title [364d35] = 最后一个包裹
+# en: {The last parcel of the holiday post is small, and addressed in a shaky hand to a cottage on the far moor.|One parcel left again. Always one.|The last parcel, and the last daylight.} {~It's light as a feather.|It's warm.|It rattles like a box of buttons.}
+text [b17555] = {节日邮件的最后一个包裹很小，寄往远处荒原上的一座小屋，字迹颤抖。|又只剩一个包裹了。总是剩一个。|最后一个包裹，最后一缕天光。}{~它轻得像一根羽毛。|它是温的。|它摇起来像一盒纽扣。}
+# en: An empty courier loft at the end of the holidays, one small parcel left on the shelf, addressed in shaky handwriting.
+scene [2d16a9] = 节日结束时空荡荡的信使阁楼，架子上只剩一个小包裹，地址写得歪歪扭扭。
+# en: Fly it out now
+opt.left.label [9bacc3] = 现在就送出去
+# en: {~The cottage is an hour into the dark. An old man opens the door and holds the parcel as if it were alive. "From my son," he says. The pay feels like the least of it.|You deliver it at dusk to a woman who cries. You don't ask why. You fly home slowly.}
+opt.left.say.1 [8f33cc] = {~那座小屋在一个钟头的夜路之外。一位老人开了门，捧着包裹，好像它是活的。“我儿子寄的，”他说。报酬倒显得最不重要了。|黄昏时你把它交给一个女人，她哭了。你没问为什么。你慢慢地飞回家。}
+# en: Leave it for the morning
+opt.right.label [f26d71] = 留到明天早上
+# en: {~It waits on the shelf all night and you think about it all night. You fly it at dawn.|In the morning you deliver it, a day late. Nobody minds but you.}
+opt.right.say.1 [af526a] = {~它在架子上等了一整夜，你也想了它一整夜。天一亮你就送去了。|早上你把它送到了，晚了一天。除了你，没人在意。}

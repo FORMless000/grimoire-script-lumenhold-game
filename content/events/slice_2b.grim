@@ -641,7 +641,7 @@ text: Holiday shifts pay double and feel triple. It's your second shift today an
 
 @event intern_first_assignment
 title: The First Assignment
-plan: internship
+track: intern_royal_library
 class: routine
 tone: light
 art: book
@@ -649,10 +649,12 @@ tags: study
 scene: A vast underground archive, a supervisor handing a student a list longer than their arm.
 text: Your supervisor at the Royal Library hands you a list of forty uncatalogued boxes. "Find out what's in them," she says. "Carefully. One of them is probably alive."
 > left: Work through the boxes
+  wage
   lore +medium
   mood -small
   say: Box thirty-one is alive. It's a very small, very old dictionary that bites. You catalogue it.
 > right: Ask the other interns
+  wage
   charm +small
   lore +small
   mood -tiny
@@ -660,7 +662,7 @@ text: Your supervisor at the Royal Library hands you a list of forty uncatalogue
 
 @event intern_index_maze
 title: The Index Maze
-plan: internship
+track: intern_royal_library
 class: milestone
 tone: tense
 art: map
@@ -668,6 +670,7 @@ tags: study mystery
 scene: A student lost between endless shelves underground, following an index card trail by lamplight.
 text: A cross-reference in the archive leads to another, and another, and another, deeper under the city. The last card is about the founders of Lumenhold.
 > left: Follow it to the end
+  wage
   challenge research hard:
     win:
       lore +large
@@ -677,6 +680,7 @@ text: A cross-reference in the archive leads to another, and another, and anothe
       mood -small
       say: The trail ends at a missing card. Somebody took it. Recently.
 > right: Report it to your supervisor
+  wage
   lore +small
   rel isolde +tiny
   say: Your supervisor reads the card, goes pale and writes a letter to the headmistress of Lumenhold.

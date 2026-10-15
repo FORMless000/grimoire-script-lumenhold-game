@@ -329,11 +329,11 @@
       }
     }
     trackKinds() { return this._kinds || (this._kinds = new Set(Object.values(this.c.tracks || {}).map((d) => d.kind))); }
-    // The track a track statement acts on: `track` is the card's own; `leave job` / `leave club` / `leave internship`
-    // (any track kind) is whichever one you have. Tools ask this too, so they never re-derive it (A1).
+    // The track a track statement acts on: `track` is the card's own; a track kind (`leave job`, `perform internship`,
+    // X12) is whichever one of that kind you have. Tools ask this too, so they never re-derive it (A1).
     trackTarget(st, ctxTrack) {
       const s = this.s, id = st.track === 'track' ? ctxTrack : st.track;
-      if (st.t === 'leave' && !this.c.tracks[id] && this.trackKinds().has(id)) return Object.keys(s.tracks || {}).find((k) => s.tracks[k].kind === id && s.tracks[k].status === 'member');
+      if (!this.c.tracks[id] && this.trackKinds().has(id)) return Object.keys(s.tracks || {}).find((k) => s.tracks[k].kind === id && s.tracks[k].status === 'member');
       return id;
     }
     trackOp(st, ctx) {
@@ -697,8 +697,9 @@
             case 'applied': {   // applied(internship): to any of that kind
               if (!eng.c.tracks[a[0]] && eng.trackKinds().has(a[0])) return Object.values(eng.s.tracks || {}).some((t) => t.kind === a[0] && t.status === 'applied');
               const t = eng.trackState(a[0]); return !!t && t.status === 'applied'; }
-            case 'rank': { const t = eng.trackState(a[0]); return t && t.status === 'member' ? t.rank + 1 : 0; }
-            case 'performance': { const t = eng.trackState(a[0]); return t ? t.perf || 0 : 0; }
+            // rank() and performance() also take a track kind: the one of that kind you're in (X12).
+            case 'rank': { const t = eng.trackState(eng.c.tracks[a[0]] || a[0] === 'track' ? a[0] : eng.trackTarget({ track: a[0] })); return t && t.status === 'member' ? t.rank + 1 : 0; }
+            case 'performance': { const t = eng.trackState(eng.c.tracks[a[0]] || a[0] === 'track' ? a[0] : eng.trackTarget({ track: a[0] })); return t ? t.perf || 0 : 0; }
             case 'level': return eng.levelPassed(a[0]);
             case 'progress': { const t = eng.trackState(a[0]); return t ? t.progress || 0 : 0; }
             case 'due': { const t = eng.trackState(a[0]); return t && t.status === 'member' ? Math.max(0, (t.due || 0) - (t.visits || 0)) : 0; }

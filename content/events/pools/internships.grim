@@ -1,0 +1,243 @@
+# Internships (playtest 2, X12; with M16): a shared backbone every placement draws (`plan: internship`; its
+# performance through `perform internship`, whichever host you are with), and for each host one card that changes
+# something beyond the summer. The everyday cards per host are in pools/plans_thesis.grim.
+
+# ---------------- The backbone ----------------
+
+@event intern_midsummer_review
+title: The Midsummer Review
+plan: internship
+class: milestone
+tone: tense
+repeat: 4
+weight: 14
+art: scroll
+tags: study job
+scene: A supervisor's desk with a single sheet of notes face down, a student sitting opposite with hands folded too tightly.
+text: {Halfway through the placement, your supervisor asks to see you. There's a single sheet of notes on the desk, face down.|The midsummer review again: the desk, the sheet, the tea nobody drinks.|You know the review's shape by now. You still don't know what's on the sheet.} {performance(internship) >= 60: Your supervisor is almost smiling.|{performance(internship) < 40: Your supervisor is not smiling.|Your supervisor's face gives nothing away.}}
+> left: Ask for honest criticism
+  perform internship +small
+  mood -small
+  say: {~You get it: three things you do badly, in order. You fix two of them by the end of the summer. Your supervisor notices both.|"Most interns ask for praise," your supervisor says, and turns the sheet over. It's a long list. You're grateful for every line, eventually.}
+> right: Ask what you've done well
+  mood +small
+  perform internship -tiny
+  say: {~Your supervisor reads the good half aloud. You leave glowing, and never hear the other half.|"Your handwriting," your supervisor says, after a pause, "is excellent." You decide to take it.}
+
+@event intern_credit_taken
+title: Someone Else's Name
+plan: internship
+class: incident
+tone: tense
+repeat: 3
+weight: 10
+art: paper
+tags: study job
+scene: A report pinned on a wall, a student staring at the name at the bottom of it, which is not their own.
+text: {The report you spent a week on is pinned up in the corridor, praised by everyone, with another intern's name at the bottom.|Another piece of your work, another name on it.|It's happened again, and this time the other intern doesn't even look away.} {~Your supervisor is reading it with approval.|The other intern is being congratulated.|Your notes are still on your desk, in your hand.}
+> left: Take it to your supervisor
+  challenge negotiate medium:
+    win:
+      perform internship +medium
+      mood -tiny
+      say: {~You bring your notes, your drafts, your dates. Your supervisor reads them in silence and changes the name in red ink. The corridor goes very quiet around you.|You make your case calmly. The name is changed. The other intern doesn't speak to you again, which is fine.}
+    lose:
+      perform internship -small
+      mood -small
+      say: {~Your supervisor hears you out and says it's "a matter for the two of you". It isn't. You go back to your desk with your face burning.|Without proof enough, you sound petty, and you know it. The name stays.}
+> right: Let it go and work faster
+  perform internship +tiny
+  mood -medium
+  say: {~You say nothing and do the next one twice as well, in ink that's hard to copy. It doesn't feel like justice. It feels like work.|You let it go. You write your name on every page from then on, small, in the corner.}
+
+@event intern_city_evening
+title: An Evening Off
+plan: internship
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: lantern
+tags: social
+scene: A lamplit street far from the academy, interns spilling out of a busy inn, one looking back at the lit window of the workplace.
+text: {The other interns are going out tonight, to an inn with music and a stall that sells fried bread at midnight.|Another evening off, and the others are already at the door.|"Coming?" says the intern with the biscuits. "Last time you said next time."} {member(intern_expedition) or member(intern_field_station): {~Out here, going out means a fire and a guitar.|There's a dance in the nearest village, three miles off.}|{~The streets are bright.|There's a fair on the river.|Somebody knows a band.}} Your work for tomorrow isn't done.
+> left: Go out with them
+  mood +medium
+  perform internship -tiny
+  gold -tiny
+  say: {~You dance badly and laugh well and walk home at two in the morning, arm in arm with people you met last month. Tomorrow's work is a little worse for it.|You go. You learn more about the place from the other interns in one evening than from a month of briefings, and remember half of it.}
+> right: Finish tomorrow's work
+  perform internship +small
+  mood -small
+  say: {~You finish the work by lamplight. You hear them come home, singing. In the morning your work is the best on the table.|You stay in. The work is good. The evening is long.}
+
+@event intern_letter_from_campus
+title: A Letter From the Castle
+plan: internship
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: letter
+tags: social
+cast:
+  friend: any where rel(friend) >= 8 and tagged(friend, student)
+scene: A letter open on a desk far from the academy, its margins full of little drawings of the castle, a student smiling at it.
+text: {A letter from {friend}, forwarded twice, with the castle drawn in the margins.|Another letter from {friend}. {They} write{s} more often than you do.|{friend}'s handwriting on the envelope. You open it before your coat is off.} {~The letter misses you, in a roundabout way.|{They} {are} bored without you, {they} say{s}.|There's gossip, and a pressed flower.} Answering it properly would take the evening.
+> left: Write back at length
+  rel friend +small
+  perform internship -tiny
+  say: {~Six pages, with drawings of your own. You post it at dawn and are late for the briefing, and don't mind.|You write back everything: the work, the city, the interns. It's like talking to {them}.}
+> right: Send a quick note
+  perform internship +tiny
+  rel friend -tiny
+  say: {~"Busy. Miss you. More soon." It's true, and it's thin, and you know it.|Three lines and a promise. You mean to write more. The summer is very full.}
+
+# ---------------- One card per host that reaches past the summer ----------------
+
+@event intern_conclave_your_ward
+title: A Ward of Your Own
+track: intern_conclave
+class: milestone
+tone: tense
+weight: 18
+art: shield
+tags: study magic
+scene: A circular test chamber, a student at the centre holding up a shimmering ward against a bolt of light, researchers behind thick glass on their feet.
+text: The Conclave is testing a new ward, and the researcher who designed it is ill. "You've read every note," says your supervisor. "Cast it. If it holds, it's yours to keep, and your name goes in the paper." Behind the glass, half the Conclave has come to watch.
+> left: Cast it
+  wage
+  challenge spell using arcana hard:
+    win:
+      perform intern_conclave +large
+      learn_spell ward
+      renown +small
+      say: The bolt hits the ward and stops, humming, an inch from your nose. Behind the glass, someone starts clapping. Your name goes in the paper, third of four, and the ward is yours for good.
+    lose:
+      perform intern_conclave -small
+      health -medium
+      say: The ward holds for half a heartbeat and then doesn't. You wake on the floor with your hair standing up and a researcher fanning you with your own notes.
+> right: Ask them to wait for the designer
+  wage
+  perform intern_conclave -tiny
+  lore +small
+  say: "Sensible," says your supervisor, in a voice that means "disappointing". The designer recovers, casts it, and thanks you in the paper's footnotes for the notes you kept.
+
+@event intern_alchemists_safety
+title: The Cracked Vat
+track: intern_alchemists
+class: milestone
+tone: grim
+weight: 18
+art: cauldron
+tags: job danger
+scene: A huge iron vat in an alchemical works, a hairline crack weeping green steam, workers walking past it without looking.
+text: The seventh vat at the Guild works has a crack in it. Everyone knows. The foreman says it'll last the season, and the season's quota depends on it. Workers walk past it without looking. You've seen what the steam does to brass.
+> left: Report it to the Guild masters
+  wage
+  alignment +small
+  perform intern_alchemists -small
+  mood -small
+  say: The masters close the seventh vat for a week and the foreman doesn't speak to you again. In the third week the replacement vat arrives, and an old worker shakes your hand without a word.
+> right: Mend it yourself, quietly
+  wage
+  challenge brew hard:
+    win:
+      perform intern_alchemists +medium
+      alchemy +medium
+      say: You seal it from the inside in the night, with a sealant of your own. It holds through the season. The foreman never knows. The old worker does, somehow, and leaves an apple on your bench every morning.
+    lose:
+      health -large
+      perform intern_alchemists -small
+      say: The steam gets you as the seal gives. You wake in the works infirmary with blistered hands, and the vat is closed anyway.
+
+@event intern_expedition_new_star
+title: A Star Nobody Charted
+track: intern_expedition
+class: milestone
+tone: warm
+weight: 18
+art: star
+tags: study magic
+scene: A telescope on a high plateau at night, a student with an eye to the eyepiece and a chart on their knee, a single new star circled in red.
+text: At three in the morning, on your own shift, there's a star in the eyepiece that isn't on any chart: small, steady, blue. The expedition lead is asleep. By custom, whoever records a new star first may name it.
+> left: Wake the lead and share it
+  wage
+  perform intern_expedition +medium
+  lore +small
+  health -tiny
+  say: The lead comes in a nightshirt and stares until dawn. The star goes in the record under the expedition's name and yours, and the whole camp toasts it at breakfast.
+> right: Record it in your own name
+  wage
+  renown +medium
+  perform intern_expedition +small
+  mood -tiny
+  say: You write it into the log: the time, the place, a name you choose. It's yours for as long as there are charts. At breakfast the lead reads the log twice, and is polite to you all week, which is worse.
+
+@event intern_field_station_foal
+title: The Orphaned Foal
+track: intern_field_station
+class: milestone
+tone: warm
+weight: 18
+art: paw
+tags: nature
+scene: A newborn hippogriff foal shivering in the heather on the moor, a student kneeling with a blanket, the field station lamps far off.
+text: On the moor, a hippogriff foal, newborn and alone. The station's rule is plain: you count wild creatures, you don't raise them. The station chief says it won't last the night. It looks at you as if you were the only warm thing on the moor, which you are.
+> left: Take it back and raise it
+  wage
+  vigor +small
+  health -small
+  perform intern_field_station -small
+  rel brask +small
+  say: You feed it every two hours for a month and break the rule every one of them. By summer's end it flies. Back at Lumenhold, Professor Brask hears the story and invites you to supper. "Rules," she says, "are for people who've never held a foal."
+> right: Count it and leave it
+  wage
+  perform intern_field_station +small
+  mood -medium
+  say: You write it down: one foal, alone, the date. You don't sleep. In the morning the chief tells you its mother came back in the night. You never find out if that's true.
+
+@event intern_thornwick_offer
+title: An Offer From Thornwick
+track: intern_thornwick
+class: milestone
+tone: tense
+weight: 18
+art: letter
+tags: study
+scene: A lacquered office at a rival academy, a smiling dean sliding a sealed offer across a desk, a window full of unfamiliar towers.
+text: Thornwick's dean asks to see you on your last week. "Transfer to us," she says, sliding a sealed offer across the desk. "Full scholarship, your own lab bench, a seat in our illusion faculty in time. Lumenhold never valued glamour. We do." She's sincere, and that's the danger.
+> left: Decline, warmly
+  wage
+  perform intern_thornwick +small
+  rel vey +small
+  say: "Lumenhold is home," you say. She smiles as if she expected it. "The offer stands." Back at the castle, Professor Vey hears about it somehow and gives you an approving look that lasts all term.
+> right: Keep the offer, unopened
+  wage
+  gold +medium
+  renown +small
+  flag thornwick_offer
+  mood -small
+  say: You keep it, sealed, in the bottom of your trunk. Thornwick sends a stipend "as a courtesy". Knowing there's a door out makes some evenings easier, and some harder.
+
+@event intern_unseen_office_file
+title: The File With Your Name
+track: intern_unseen_office
+class: milestone
+tone: eerie
+weight: 18
+art: eye
+tags: mystery
+scene: A windowless office lined with drawers, a student holding open a thin file with their own name on the label, a clerk's empty chair behind them.
+text: Sorting files for the Office, you find one with your name on it. It's thin. The clerk has gone to lunch. The last page is about Lumenhold, and the lake, and a tower nobody has opened in a century.
+> left: Read it all
+  wage
+  guile +small
+  find lead_seventh_tower
+  perform intern_unseen_office -small
+  say: They know where you sleep and what you eat, which is unsettling. The last page notes that "the seventh tower's key remains in place". When the clerk comes back you are filing something else. The clerk looks at you a little too long.
+> right: Put it back unread
+  wage
+  perform intern_unseen_office +medium
+  mood -small
+  say: You put it back. The clerk returns, checks the drawer and smiles for the first time all summer. "The Office notices who doesn't look," the clerk says. You didn't look. You'll wonder for years.
