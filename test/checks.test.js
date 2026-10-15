@@ -115,6 +115,6 @@ test('exams on the ladder: the course standard with low drift, less study', () =
 
 test('the odds tool prints every check and roll', () => {
   const text = require('../tools/odds.js').odds(content, ['midnight_boathouse_ring']);
-  assert.match(text, /challenge combat medium \(legacy\)/);
-  assert.match(text, /chance 50\s+50%/);
+  assert.match(text, /challenge combat adept-\s+\d+ \d+ \d+ \d+\s+\d+ \d+ \d+ \d+/);
+  assert.match(text, /chance even\s+50%/);
 });

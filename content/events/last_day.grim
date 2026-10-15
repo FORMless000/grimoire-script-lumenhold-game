@@ -54,7 +54,7 @@ text: {flag(career_accepted): A letter about your start date. {flag(career_concl
   when: flag(career_offered) and not flag(career_accepted)
   flag career_accepted
   mood +small
-  say: You sign it on the trunk lid and run it to the owl tower before you can change your mind. Your handwriting looks like a grown-up's.
+  say: You sign it on the trunk lid and run it to the owl tower before you can change your mind. {iv_score >= 3: The signing purse lapsed with their deadline; the place, it turns out, did not. |} Your handwriting looks like a grown-up's.
 > reply: Write back that you'll be there
   when: flag(career_accepted)
   mood +small
@@ -63,7 +63,7 @@ text: {flag(career_accepted): A letter about your start date. {flag(career_concl
   mood +tiny
   say: {flag(career_accepted): The letter can wait a day. Today is still yours, the last one that is.|You decide not to decide, not today. The world is very large, and it's been waiting four years. It can wait one more day.}
 > home: Write home about what's next
-  health +tiny
+  mood +small
   say: You write home, and tell them the truth about what comes next, or what doesn't yet. It's the longest letter you've ever sent, and the easiest.
 
 @event last_lake
@@ -76,7 +76,7 @@ priority: 80
 art: wave
 tags: story mystery
 scene: A student standing alone at the end of a wooden jetty at dawn, the Mirror Lake perfectly still, the towers reflected upside down in it.
-text: You walk down to the lake before breakfast, the way you did your first morning. {flag(hollow_sealed): It's clearer than you've ever seen it, clear all the way down, and nothing looks back. You did that. Almost nobody knows.|{flag(hollow_freed): It has been different since the spring it froze, warmer somehow, and the candles along the shore lean toward you as you pass. You did that too.|{flag(hollow_bargain): The water is still. The mark on your palm is not. It hums as you come near, like something greeting something.|{flag(hollow_failed): It's calm this morning. You know what lies beneath it, and who paid to keep it closed. You stand on the jetty a long time.|{clues(hollowstar) >= 1: There were stories about this lake, and you followed some of them a little way. You never learned what they meant, or whether they meant anything. The lake isn't telling.|It's flat and blue and ordinary, and the towers stand upside down in it. Four years, and it never once did anything strange. That you saw.}}}}}
+text: You walk down to the lake before breakfast, the way you did your first morning. {flag(hollow_sealed): It's clearer than you've ever seen it, clear all the way down, and nothing looks back. You did that. Almost nobody knows.|{flag(hollow_freed): It has been different since the spring it froze, warmer somehow, and the candles along the shore lean toward you as you pass. You did that too.|{flag(hollow_bargain): The water is still. The mark on your palm is not. It hums as you come near, like something greeting something.|{flag(hollow_fled): The water looks ordinary. It isn't. Somewhere under it a door stands ajar, because you ran, and the headmistress's hair has been white since that night.|{flag(hollow_failed): It's calm this morning. You know what lies beneath it, and who paid to keep it closed. You stand on the jetty a long time.|{clues(hollowstar) >= 1: There were stories about this lake, and you followed some of them a little way. You never learned what they meant, or whether they meant anything. The lake isn't telling.|It's flat and blue and ordinary, and the towers stand upside down in it. Four years, and it never once did anything strange. That you saw.}}}}}}
 > ok: Say goodbye to the lake
   mood +tiny
   say: {~You skim one stone. It skips seven times, which is your record, and nobody saw.|You crouch and put your hand in the water. It's cold, the way it always was.} Then you walk back up to the castle without looking round.
@@ -89,7 +89,7 @@ trigger: auto
 when: turn == max_turns
 priority: 75
 cast:
-  friend: any where rel(friend) >= 15
+  friend: any where rel(friend) >= 15 and not tagged(friend, outsider)
 art: cup
 tags: story social
 scene: Two students sitting on the rim of a courtyard fountain with mugs of tea, packed trunks stacked by the doors behind them.
@@ -145,7 +145,7 @@ text: {rival} is waiting in the empty duelling hall, as if by appointment. Four 
 > right: "Rematch, in ten years."
   rel rival +small
   renown +tiny
-  say: "Ten years," says {rival}, "and I'll still win." You shake on it, which is the closest either of you will come to saying anything kind.
+  say: "Ten years," says {rival}, "and I'll still win." You shake on it in front of the last of the Circle, who spread it round the year by supper. It's the closest either of you will come to saying anything kind.
 
 @event last_starfall
 title: The Last Starfall
@@ -159,7 +159,7 @@ tags: festival story
 scene: Final-year students in a row on the observatory roof under a sky full of falling stars, graduation robes thrown over their shoulders like blankets.
 text: Tonight is Starfall, and by tradition the final-years have the observatory roof to themselves. The first-years are down on the lawns with their jars. Up here, everyone is pretending not to be sad.
 > left: Catch one for the road
-  challenge feat easy:
+  challenge feat apprentice slim luck:
     win:
       mood +small
       renown +tiny

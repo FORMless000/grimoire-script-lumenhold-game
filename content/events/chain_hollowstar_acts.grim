@@ -60,7 +60,7 @@ chain: hollowstar
 scene: The Great Hall at supper, candlelight catching three identical silver rings on three very different hands at the high table.
 text: At supper you notice three identical silver rings at the high table: on the headmistress, on Professor Thorne and on Old Maud's earthy hand. After curfew, from your window, you see all three walking the lakeshore with lanterns, stopping at the foot of each tower in turn.
 > left: Follow them down
-  challenge deceive medium:
+  challenge deceive vs thorne.guile:
     win:
       lore +small
       say: You shadow them from tower to tower. At each one they lay a palm on the stone and wait. At the last, Maud takes her hand away and blows on her fingers as if the wall were ice.
@@ -135,7 +135,7 @@ chain: hollowstar
 scene: The Mirror Lake on a warm spring night, a perfect white ring of frost on the water, a tall woman standing at the waterline with a lantern.
 text: A warm night, and a ring of frost has formed in the middle of the lake: perfectly round, perfectly white, as wide as the Great Hall. Far below it, very faintly, a bell tolls once. The headmistress is standing alone at the waterline.
 > left: Watch what she does
-  challenge deceive medium:
+  challenge deceive master- likely:
     win:
       find lake_bell
       lore +small
@@ -163,7 +163,7 @@ chain: hollowstar
 scene: An academy tower standing black against the night sky among its lit neighbours, and below it a lake half-covered in autumn ice.
 text: Mid-lecture, every lamp in the Lecture Tower goes out at once, and none of them will light again. Nobody is hurt. By morning, weeks before any frost, half the lake has frozen: a sheet of ice that ends in a clean edge, as if cut. The prefects are already telling everyone to keep off it.
 > left: Walk out onto the ice
-  challenge research medium:
+  challenge research expert:
     win:
       advance hollowstar +1
       lore +medium
@@ -189,7 +189,7 @@ art: cup
 tags: mystery hollowstar
 chain: hollowstar
 scene: An old woman wrapped in a shawl on her cottage step, two mugs steaming beside her, looking down at a half-frozen lake.
-text: Maud is on her cottage step with two mugs of tea, as if she expected you. "The lake doesn't freeze this time of year, dearie," she says. "Last time it froze at all, I lost a friend to it." She pushes a mug toward you. "Sit. Or ask. You can't really do both."
+text: Maud is on her cottage step with two mugs of tea, as if she expected you. "The lake doesn't freeze this time of year, dearie," she says. "Last time it froze through like this, I lost a friend to it." She pushes a mug toward you. "Sit. Or ask. You can't really do both."
 > left: Sit with her
   rel maud +medium
   mood -tiny
@@ -278,7 +278,7 @@ art: lantern
 tags: mystery hollowstar
 chain: hollowstar
 scene: Lantern light in a frost-rimed window, the frozen edge of the lake beyond it, a student's desk covered in maps of seven towers.
-text: The Lecture Tower has been dark for a year, and the lake freezes overnight in circles now. In spring the seal will weaken, and whoever you spend this winter with is who will stand with you beneath the lake. You have one winter and not enough evenings.
+text: The Lecture Tower has been dark for a year, and the lake freezes overnight in circles now. In spring the seal will weaken, and how you spend this winter decides what you carry beneath the lake. You have one winter and not enough evenings.
 > kael: Train with Kael on the ice
   hint: He'll fight beside you in the tunnel.
   flag winter_kael
@@ -306,7 +306,7 @@ text: The Lecture Tower has been dark for a year, and the lake freezes overnight
   health -small
   say: She knocks you into the snow eleven times. The twelfth time you don't fall, and she looks at you as if you had done a trick she has never learned the counter to.
 > alone: Rest while you still can
-  hint: A quiet winter. You'll go down alone, but rested.
+  hint: A quiet winter. No new training, but rested.
   rest
   say: You sleep, you eat, you read novels with no doors in them. It's the kindest winter you've had in years, and you can feel the lake getting colder anyway.
 

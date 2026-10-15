@@ -20,7 +20,7 @@ text: {Artifice begins with a heart, a fist of clockwork that must tick evenly b
   mood -small
   say: {~Tooth by tooth, under a loupe, until your eyes water. The tick evens out by the bell.|You file all morning and burn one thumb on the solder. The heart ticks steady and slightly smug.|It's slow, fiddly work, and your hands learn it faster than your head does.}
 > right: Charm the spring to keep time
-  challenge enchant using arcana medium:
+  challenge enchant standard:
     win:
       arcana +small
       study artifice +tiny
@@ -47,7 +47,7 @@ text: {The class project is a cauldron that stirs itself. It does, mostly, in wh
   health -tiny
   say: {~You spend the morning with a graver and a magnifier, recutting the stirring runes one stroke at a time. Your fingers are nicked; the arm moves sweetly.|Fine work in brass, the whole lesson long. The arm stirs evenly, and you have solder burns in a neat little row.}
 > right: Test it on a live brew
-  challenge brew medium:
+  challenge brew standard:
     win:
       alchemy +small
       study artifice +tiny
@@ -69,13 +69,13 @@ weight: 10
 art: star
 tags: class study
 scene: A dark brass dome open to a sky full of stars, a student at the eyepiece of a great telescope while another recites from memory, breath steaming.
-text: {Starcalling is taught by appointment, at night, and it begins with names. "You cannot call what you cannot name."|Another night appointment under the dome. The list of names is longer than it was.|The dome at night feels like yours now. You know where the draught comes in.} {~The great telescope has swung round on its own again.|A meteor scratches the sky and is gone.|An owl is sitting on the open shutter, listening.} {season == "winter": Your breath freezes on the eyepiece.|The night air smells of cut grass from the lawns below.}
+text: {Starcalling is taught by appointment, at night, and this morning's note gives you tonight's hour. It begins with names. "You cannot call what you cannot name."|Another note at breakfast, another night appointment under the dome. The list of names is longer than it was.|Tonight's appointment under the dome again. You know where the draught comes in.} {~The note warns that the great telescope has been swinging round on its own.|Meteors are expected tonight.|The note is written on the back of a star chart.} {season == "winter": Tonight your breath will freeze on the eyepiece.|Tonight the air will smell of cut grass from the lawns below.}
 > left: Recite the names until perfect
   lore +small
   mood -small
   say: {~You say them over and over into the cold until they stop being words and start being places.|Name after name, in order and then backwards. By the end you could find them blindfold, and nearly have to.|You stumble on the same name four times. The fifth time it comes out right, and you feel it land somewhere.}
 > right: Let the telescope choose a star
-  challenge research easy:
+  challenge research standard-1:
     win:
       study starcalling +small
       say: {~The telescope settles on a star you've never heard of. You find its name in the old charts before the lecturer can tell you.|Wherever it points, you follow, and the charts agree with it. That's a whole lesson learned the other way round.}
@@ -95,7 +95,7 @@ weight: 10
 art: sparkle
 tags: class magic
 scene: A student in a dark observatory with hands cupped upward, a single silver thread of starlight running down through the open dome into their palms.
-text: {Tonight you try to call down a single thread of a named star's light, no thicker than a hair.|The lesson is the same as ever: one thread, one star, held as long as you can bear it.|You've called down threads before. Tonight the lecturer wants it held longer.} {~The sky is clear and very far away.|Thin cloud keeps crossing the star you've chosen.|The other students are already standing with their hands raised.}
+text: {Tonight's lesson, says the morning note, is to call down a single thread of a named star's light, no thicker than a hair.|Tonight's lesson is the same as ever: one thread, one star, held as long as you can bear it.|You've called down threads before. The morning note says tonight the lecturer wants it held longer.} {~The morning sky is clear, and the night promises to be.|Thin cloud is forecast to cross the star you've chosen.|At breakfast the others are already practising the hand positions.}
 > left: Call the thread down yourself
   study starcalling +small
   mana -small
@@ -120,13 +120,13 @@ weight: 10
 art: lock
 tags: class mystery
 scene: A windowless room lined with black-bound books, a single lamp on a table, a tall calm woman setting a small locked box in front of a student.
-text: {Each lesson, the headmistress sets a sealed thing in front of you. "Tell me how it was closed," she says. "Not what is inside. How."|Another sealed thing on the table. Tonight it is {~a letter with a wax seal|a small lacquered box|a jar with its lid charmed shut}.|The headmistress places tonight's sealed thing with a little smile. She has started choosing harder ones.} {~The lamp hisses.|The books on the shelves breathe slowly in the dark.|She sits with her hands folded, unhurried.}
+text: {Each lesson, the headmistress sets a sealed thing in front of you. "Tell me how it was closed," she says. "Not what is inside. How."|Another sealed thing on the table. Today it is {~a letter with a wax seal|a small lacquered box|a jar with its lid charmed shut}.|The headmistress places today's sealed thing with a little smile. She has started choosing harder ones.} {~The lamp hisses.|The books on the shelves breathe slowly in the dark.|She sits with her hands folded, unhurried.}
 > left: Study the seal for the hour
   lore +small
   mood -small
   say: {~You trace every line of it without touching. At the end you can name each step of the sealing, in order. She nods once.|It takes the whole hour and a headache, but you work it out backwards, layer by layer.|You get two layers right and one wrong. She tells you which, kindly, and you'll remember.}
 > right: Open it without leaving a trace
-  challenge deceive medium:
+  challenge deceive standard:
     win:
       guile +small
       study hollow_studies +tiny
@@ -146,7 +146,7 @@ weight: 10
 art: book
 tags: class mystery
 scene: A student bent over an apparently blank page by lamplight, faint lines of ink surfacing under their fingertips, black-bound books leaning in from the shelves.
-text: {"Most things that are hidden are not gone," the headmistress says, and gives you a blank page. "Find what was written. Gently."|A new blank page tonight. It feels warmer than paper should.|You know the weight of hidden writing in a page by now, like a pocket with something in it.} {~The books on the nearest shelf seem to lean closer.|The lamp burns low and blue.|Somewhere in the stacks, a book turns its own page.} {final_year: She asks where you'll go after graduation, and listens.|She is reading while you work, and doesn't look up.}
+text: {"Most things that are hidden are not gone," the headmistress says, and gives you a blank page. "Find what was written. Gently."|A new blank page today. It feels warmer than paper should.|You know the weight of hidden writing in a page by now, like a pocket with something in it.} {~The books on the nearest shelf seem to lean closer.|The lamp burns low and blue.|Somewhere in the stacks, a book turns its own page.} {final_year: She asks where you'll go after graduation, and listens.|She is reading while you work, and doesn't look up.}
 > left: Coax the ink up slowly
   study hollow_studies +small
   mana -small

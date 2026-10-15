@@ -11,7 +11,7 @@ actor: thorne
 art: flame
 tags: magic study
 scene: A stone practice room with scorched walls, a stern grey-bearded professor beside a roaring brazier, a bucket of water at his feet.
-text: Flame is yours on paper. Professor Thorne gathers everyone who passed in the stone practice room and lights a brazier. "Any fool can start a fire," he says. "You are here to learn to stop one." There is a bucket of water at his feet, and he forbids you to touch it.
+text: Flame is yours now. Professor Thorne gathers the year's new Flame casters in the stone practice room and lights a brazier. "Any fool can start a fire," he says. "You are here to learn to stop one." There is a bucket of water at his feet, and he forbids you to touch it.
 > left: Pull the fire back into your hand
   meet thorne
   arcana +small
@@ -69,7 +69,7 @@ trigger: auto
 when: spell_level(starlight) >= 1 and term
 class: routine
 tone: warm
-time: night
+slot: night
 art: star
 tags: magic study
 scene: A flat observatory roof at night, a student holding up a glass jar toward a sky crowded with stars, breath steaming.
@@ -138,7 +138,7 @@ scene: A velvet-curtained classroom, a professor in a violet coat fanning out a 
 text: Professor Vey's glamour lesson is a card game. Each student glamours a plain card to look like the queen of stars, and Vey picks out the true queen from the pile. Nobody, she says, has ever made her pick wrong. "Fool me, and you may skip the essay."
 > left: Glamour your card
   meet vey
-  challenge deceive using charm medium:
+  challenge deceive master- slim:
     win:
       charm +small
       rel vey +small
@@ -185,7 +185,7 @@ scene: A windy flight field marked with flags, a grey-haired professor holding a
 text: Professor Brask teaches Haste on the flight field, with a stopwatch and a hippogriff that is faster than the spell. "Beat her," she says to you. To the hippogriff she explains, at length and politely, that she is not to bite you if you win.
 > left: Race the hippogriff
   meet brask
-  challenge feat easy:
+  challenge feat adept-:
     win:
       vigor +small
       rel brask +tiny

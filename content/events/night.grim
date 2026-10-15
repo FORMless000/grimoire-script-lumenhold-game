@@ -64,7 +64,6 @@ text: {has(watched): Bram is waiting at the foot of the stair, and this time he 
     lose watched
     gain locked_out
     gain detention 3
-    gold -small
     mood -medium
     say: Three months of detention and a door that is checked at midnight. Bram writes it all down, neatly.
   else:
@@ -76,7 +75,6 @@ text: {has(watched): Bram is waiting at the foot of the stair, and this time he 
     lose watched
     gain locked_out
     gain detention 3
-    gold -small
     mood -medium
     say: Three months of detention and a door that is checked at midnight. Bram writes it all down, neatly.
   else:
@@ -99,12 +97,13 @@ scene: A smoky upstairs room at a tavern after hours, a card table under one lam
 text: Upstairs at the Gilded Newt, after hours, the real game starts. The stakes are higher than anything downstairs, and nobody asks your name.
 > left: Play a few hands
   alignment -tiny
-  challenge deceive medium:
+  gold -medium
+  challenge deceive adept- unlikely luck:
     win:
       gold +large
+      gold +medium
       say: {~You leave with more than you came with and a few new enemies who smile too much.|Luck, nerve and one well-timed sigh. The pot is yours.}
     lose:
-      gold -medium
       queue night_suspicion chance 50
       say: {~The cards go cold, and so does your purse. On the stair down, a face from the castle turns away a little too fast.|You lose your stake and walk back in the dark, poorer, wiser and not sure you went unseen.}
 > right: Watch, then leave
@@ -123,8 +122,7 @@ tags: danger money
 scene: A cellar under a boathouse, lanterns hung from the beams, students in a ring around two duellists, coins changing hands.
 text: Under the boathouse, by lantern light, someone has chalked a ring on the flagstones. Purses go to whoever is still standing. "Next," says the student holding the money, looking at you.
 > left: Step into the ring
-  alignment -tiny
-  challenge combat medium:
+  challenge combat adept-:
     win:
       gold +medium
       renown +tiny
@@ -135,7 +133,7 @@ text: Under the boathouse, by lantern light, someone has chalked a ring on the f
       say: {~You lose, and limp home past a window where a light is still burning.|A bruising loss, and a lantern somewhere on the path home. Maybe it saw you; maybe not.}
 > right: Bet on someone else
   gold -small
-  chance 50:
+  chance even:
     gold +medium
     say: {~Your fighter wins. You collect, quietly.|A good bet. You leave before anyone remembers your face.}
   else:
@@ -162,7 +160,7 @@ text: The refectory kitchens at midnight: banked fires, a larder that isn't lock
 > right: Just warm yourself by the fire
   mood +tiny
   health -tiny
-  say: {~You sit by the embers until your hands stop hurting, and take nothing. The walk back is cold.|The kitchen cat sits with you. You leave the larder alone, and feel strangely proud of it.}
+  say: {~You sit by the embers until your hands stop hurting, and take nothing. The walk back is cold.|The kitchen cat sits with you. You leave the larder alone, feel strangely proud of it, and shiver all the way back to bed.}
 
 @event midnight_restricted_stacks
 title: The Restricted Stacks
@@ -177,7 +175,7 @@ tags: mystery danger
 scene: A chained library section at midnight, a student reading by a stolen candle, shelves leaning in like listeners.
 text: The Restricted Section at midnight. The chains on the shelves clink when nobody touches them. One book has been left open, as if for you.
 > left: Read the open book
-  challenge research easy:
+  challenge research apprentice+:
     win:
       lore +small
       say: {~Three pages before the book closes itself. You remember every word, which is worrying.|The book shows you a diagram you're not supposed to understand. You understand it.}
@@ -222,7 +220,7 @@ tags: club mystery
 scene: A secret passage behind a gargoyle at midnight, chalk marks on the walls, a candle guttering in a draught from nowhere.
 text: Behind the third gargoyle the passage is busier at midnight than at noon. {met(corvin): Corvin's chalk marks are fresh.|Someone's chalk marks are fresh.} A draught comes from a direction that has no wall.
 > left: Follow the draught
-  challenge research easy:
+  challenge research apprentice+:
     win:
       lore +small
       guile +tiny
@@ -230,6 +228,6 @@ text: Behind the third gargoyle the passage is busier at midnight than at noon. 
     lose:
       health -small
       queue night_suspicion chance 50
-      say: {~The passage lets you out somewhere unexpected: the prefects' corridor, empty, you hope.|You get lost for an hour and come out in the wrong tower, cold and dusty, and not alone on the stair.}
+      say: {~After an hour of cold stone, the passage lets you out somewhere unexpected: the prefects' corridor, empty, you hope.|You get lost for an hour and come out in the wrong tower, cold and dusty, and not alone on the stair.}
 > right: Mark it and go back
   say: {~You chalk an arrow at the turning and leave the rest for another night.|You mark it on your copy of the map and go back to bed, a little sorry.}
