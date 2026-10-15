@@ -24,6 +24,7 @@ text: {A small notice by the bursar's door reads "Hardship fund. Applications in
 @event aid_interview
 title: The Bursar Will See You
 trigger: queued
+defer: off_campus
 class: incident
 tone: tense
 art: scales
@@ -31,7 +32,7 @@ tags: money
 scene: A small cluttered office, a grey-haired bursar behind a ledger as large as a tombstone, a student sitting very upright on a hard chair.
 text: The bursar has your forms open under her hand and a ledger the size of a tombstone at her elbow. "The fund is small," she says, "and the hands are many. Tell me why it should be yours. Or, if you'd rather not beg, I can lend you sixty crowns against your future, at no interest."
 > left: Make your case
-  challenge negotiate easy:
+  challenge negotiate journeyman:
     win:
       gain hardship_grant
       mood -tiny
@@ -43,7 +44,7 @@ text: The bursar has your forms open under her hand and a ledger the size of a t
   gold +huge
   gain bursar_loan
   loan_paid = 0
-  say: Sixty crowns, counted out in old coins, and your name in the tombstone ledger. "Eight a month, when you can," she says. "I'm a patient woman. The ledger is more patient still." It sits on your shoulder from then on.
+  say: Sixty crowns, counted out in old coins, and your name in the tombstone ledger. "Eight a month, when you can, and a little less at the end," she says. "I'm a patient woman. The ledger is more patient still." It sits on your shoulder from then on.
 
 @event favour_vey_letter
 title: A Discreet Errand
@@ -66,6 +67,7 @@ text: Professor Vey stops you in an empty corridor with a sealed letter and a si
   meet vey
   gold +small
   guile +tiny
+  alignment -tiny
   rel vey -small
   say: You make out one line: "...I have never stopped..." Then you deliver it. The next day Vey says, without looking at you, "The light in that corridor is very good, isn't it?"
 
@@ -115,7 +117,7 @@ text: Sister Amaranth needs a pair of hands for the infirmary's night shift. "Ba
   gold +tiny
   rel amaranth +tiny
   mood -tiny
-  say: She looks at you over her spectacles and hands you a mountain of linen. "Bandages it is. Half the pay, all of the tedium." By the end you could roll them in your sleep.
+  say: She looks at you over her spectacles and hands you a mountain of linen. "Bandages it is. Less pay, all of the tedium." By the end you could roll them in your sleep.
 
 @event upper_year_errands
 title: Errands for Upper-Years
@@ -133,10 +135,10 @@ text: {Upper-years pay for errands, a book fetched or a queue stood in or a lett
   mood -small
   say: {~You run up and down the towers all evening and are paid in coins and condescension.|You fetch, carry and queue. Your legs are tired; your purse is less light.}
 > right: Name your price
-  challenge negotiate easy:
+  challenge negotiate apprentice+:
     win:
       gold +medium
-      say: {~"Double, or find your own cat." They pay. You find the cat anyway; it was in the laundry.|You haggle like a merchant's child. The upper-year pays with grudging respect.}
+      say: {~"More, or find your own cat." They pay. You find the cat anyway; it was in the laundry.|You haggle like a merchant's child. The upper-year pays with grudging respect.}
     lose:
       renown -tiny
       mood -tiny
@@ -153,8 +155,9 @@ weight: 12
 art: scales
 tags: money
 scene: A dusty village shop window crowded with pawned treasures, wands, rings and a stuffed owl, a student looking in with their hands in empty pockets.
-text: {The pawnbroker's window is full of other people's treasures, wands and rings and a stuffed owl. The sign says "Fair prices. Redemption within the year."|The pawnbroker's window again. Something of yours is in it now.|The pawnbroker nods at you through the glass like an acquaintance.} {~A first-year's silver locket is in the front row.|There's a familiar's collar, empty.|The stuffed owl seems to judge you.}
+text: {The pawnbroker's window is full of other people's treasures, wands and rings and a stuffed owl. The sign says "Fair prices. Redemption within the year."|{flag(pawned_something): The pawnbroker's window again. Something of yours is in it now.|The pawnbroker's window again, the same treasures in new places.}|The pawnbroker nods at you through the glass like an acquaintance.} {~A first-year's silver locket is in the front row.|There's a familiar's collar, empty.|The stuffed owl seems to judge you.}
 > left: Pawn something you'd miss
+  flag pawned_something
   gold +medium
   mood -small
   say: {~Your good boots, or your grandmother's ring, or the wand-case with your name burned in it. The money is fair; the ticket says "within the year". You put the ticket somewhere safe and try not to look at it.|You hand over something you love, and take the money, and walk home faster than usual.}

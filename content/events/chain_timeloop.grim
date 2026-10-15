@@ -21,7 +21,7 @@ text: {loop_exploit == 0: You know which way every coin will fall, and what's on
 > left: Take everything you can
   gold +medium
   study +small
-  alignment -tiny
+  alignment -small
   loop_exploit += 1
   if loop_exploit >= 3:
     mood -medium
@@ -38,6 +38,7 @@ text: {loop_exploit == 0: You know which way every coin will fall, and what's on
     say: {~The coins are real when you wake, and the marks stay in the ledger. So does the hollow feeling, a little deeper each time.|You win again. The crowns carry over into the next Tuesday. So does the weight of them.}
 > right: Just the quiz, then stop
   study +small
+  alignment -tiny
   mood -tiny
   loop_n += 1
   if loop_n >= 9:
@@ -147,8 +148,9 @@ art: sun
 tags: mystery social
 chain: timeloop
 scene: A shy first-year in the refectory looking astonished at a slice of cake, a note and a flower appearing one after another in front of them.
-text: {There's a shy first-year who eats alone every Tuesday. Today you know everything that will go wrong for them, and you can stop all of it.|The same first-year, the same table. You know their day by heart now.|You've made this stranger's Tuesday perfect before. You do it again anyway.} {~They get the juice in the face at ten.|They fail the quiz by one mark.|Someone laughs at their hat.}
+text: {There's a shy first-year who eats alone every Tuesday. Today you know everything that will go wrong for them, and you can stop all of it.|The same first-year, the same table. You know their day by heart now.|{flag(loop_perfect_day): You've made this stranger's Tuesday perfect before. You do it again anyway.|You've sat with this stranger before. Today you could do more.}} {~They get the juice in the face at ten.|They fail the quiz by one mark.|Someone laughs at their hat.}
 > left: Make it perfect
+  flag loop_perfect_day
   mood +small
   gold -tiny
   loop_n += 1
@@ -156,7 +158,7 @@ text: {There's a shy first-year who eats alone every Tuesday. Today you know eve
     queue timeloop_cap now
   else:
     queue life_timeloop_2 now
-  say: {~You move the juice, whisper the quiz answer, compliment the hat. By evening they're laughing with three new friends. Tomorrow none of it will have happened, except in you.|A perfect day, built carefully, gone by morning. You don't mind as much as you thought you would.}
+  say: {~You move the juice, whisper the quiz answer, compliment the hat and buy them a slice of cake at tea. By evening they're laughing with three new friends. Tomorrow none of it will have happened, except in you.|A perfect day, built carefully, down to the cake you paid for, gone by morning. You don't mind as much as you thought you would.}
 > right: Just sit with them
   mood +tiny
   charm +tiny
@@ -291,14 +293,14 @@ art: hourglass
 tags: mystery
 chain: timeloop
 scene: A student alone at a window seat on an ordinary morning, a cup of tea going cold, a clock on the wall ticking forward at last.
-text: Weeks later, the Tuesdays still visit you in dreams. {loop_exploit >= 2: People remember your winning streak, though not why, and some of them have stopped betting with you.|Nobody else remembers anything.} You remember the confessions, the falls, the stranger's perfect day. You could tell someone, if you wanted.
+text: Weeks later, the Tuesdays still visit you in dreams. {loop_exploit >= 2: People remember your winning streak, though not why, and some of them have stopped betting with you.|Nobody else remembers anything.} You remember the eggs, the bells, the same morning over and over. You could tell someone, if you wanted.
 > left: Tell one person the truth
   mood +small
   if loop_exploit >= 2:
     renown -tiny
     say: You tell a friend everything over tea. They don't believe a word and believe all of it. At the end they ask, gently, whether you gave back the winnings. You didn't. It weighs, a little.
   else:
-    say: You tell a friend everything over tea. They don't believe a word and believe all of it. At the end they say, "So you were kind to a stranger, a dozen times, and nobody knew." You nod. "Sounds like you," they say.
+    say: You tell a friend everything over tea. They don't believe a word and believe all of it. {seen(timeloop_dare_kindness) > 0: At the end they say, "So you were kind to a stranger, again and again, and nobody knew." You nod. "Sounds like you," they say.|At the end they say, "So you lived one day over and over, and nobody knew." You nod. "Sounds exhausting," they say.}
 > right: Keep it to yourself
   lore +small
   mood -tiny

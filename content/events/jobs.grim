@@ -171,7 +171,7 @@ weight: 8
 art: lantern
 tags: job danger
 scene: A lantern-lit shore path at night, a tired server walking alone beside black water, the castle's towers far off.
-text: {The Newt closes long after the last barge.|Closing time again, and the lake is dark.} {season == "winter": The shore path is ice under snow.|{~Fog has come off the water.|The shore path is very dark tonight.|Somebody is singing, badly, a long way off.}} It's a long walk round the lake to the castle.
+text: {Your shift tonight runs until the Newt closes, long after the last barge.|Another late shift. By closing time the lake will be dark.} {season == "winter": These nights the shore path is ice under snow.|{~Fog comes off the water most nights now.|The shore path has no lamps.|Somebody always sings, badly, on the way home.}} It's a long walk round the lake to the castle.
 > left: Walk the shore path
   wage
   health -small
@@ -525,18 +525,17 @@ tags: job danger
 scene: A courier on a windy tower top turning an empty mail sack inside out, the lake far below.
 text: {Somewhere between the loft and the lecture tower, a parcel has left your sack.|One parcel short, again. You've started counting at every landing.} {~It was marked "Fragile".|It was marked "Urgent", in red, twice.|It was addressed to a professor.}
 > left: Retrace your route
-  wage
-  challenge research using guile easy:
+  challenge research using guile apprentice:
     win:
+      wage
       health -tiny
       say: {~You find it in a hedge behind the greenhouses, whole and slightly damp. You deliver it late, with a story nobody believes.|It's on the boathouse roof. You climb up for it and deliver it with moss on your knees.}
     lose:
-      gold -small
+      wage short
       perform track -small
       say: {~You search until dark. The loft takes the parcel's worth from your pay, and the dispatcher stops calling you reliable.|Nothing. The client complains twice, in writing, and the loss comes out of your wages.}
 > right: Report it lost at once
-  wage
-  gold -small
+  wage short
   say: {~The dispatcher writes it in the ledger and the loss in your pay. "Happens," they say, in a voice that means it shouldn't.|You own up straight away. The loft takes it out of your wages, but the dispatcher seems to think better of you for it.}
 
 # ---------------- Off shift (playtest 2, I1) ----------------
@@ -551,7 +550,7 @@ tone: light
 art: hourglass
 tags: job
 scene: A duty roster pinned by a staff door, every one of a student's shifts for the term already ticked off.
-text: You turn up for work out of habit. The roster by the door says your shifts this term are done, and whoever runs the place says so too. "Nobody pays you to be here today. Go and have a life. Come back next term."
+text: You turn up for work out of habit. The roster by the door says your shifts this term are done, and whoever runs the place says so too. "Nobody pays you to be here today. Go and have a life."
 > left: Take the time for yourself
   mood +small
   say: {~You leave before anyone can change their mind, and spend the hours on nothing in particular. It's wonderful.|You take the advice. The place gets on without you, and so, it turns out, do you.}

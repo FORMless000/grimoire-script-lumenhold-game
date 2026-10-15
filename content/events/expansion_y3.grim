@@ -94,7 +94,7 @@ scene: A plain table in a panelled room set with a single task, three interviewe
 text: The note-taker sets a task on the table. {flag(career_conclave): A ward with a flaw in it, somewhere.|{flag(career_library): A crumbling manuscript in three hands and no catalogue.|{flag(career_guild): A cauldron, a recipe with one ingredient missing, and a clock.|{flag(career_unseen): A sealed letter, and the request to read it without breaking the seal.|{flag(career_circus): An empty stage, a sceptical crowd of three, and five minutes.|A class of imaginary first-years, and a lesson to give them.}}}}} "In your own time," says the smiling one, and turns over an hourglass.
 > left: Do it properly
   if flag(career_conclave):
-    challenge spell using arcana medium:
+    challenge spell expert drift low:
       win:
         iv_score += 1
         say: You find the flaw, name it and close it, and the ward rings like a struck glass. The silent one leans forward for the first time.
@@ -102,7 +102,7 @@ text: The note-taker sets a task on the table. {flag(career_conclave): A ward wi
         mood -small
         say: The flaw finds you first. The ward fizzes out in your hands, and the note-taker writes for a long time.
   elif flag(career_library):
-    challenge research using lore medium:
+    challenge research expert drift low:
       win:
         iv_score += 1
         say: Three hands, three centuries, one lost chapter. You date them all before the sand runs out. The silent one nods, once.
@@ -110,7 +110,7 @@ text: The note-taker sets a task on the table. {flag(career_conclave): A ward wi
         mood -small
         say: You date the second hand a century wrong, and know it the moment you say it. The note-taker writes for a long time.
   elif flag(career_guild):
-    challenge brew using alchemy medium:
+    challenge brew expert drift low:
       win:
         iv_score += 1
         say: You find the missing ingredient by its absence and the cauldron settles to a perfect simmer. Someone behind the table sniffs, approvingly.
@@ -118,7 +118,7 @@ text: The note-taker sets a task on the table. {flag(career_conclave): A ward wi
         mood -small
         say: The cauldron spits and turns a colour no recipe asks for. The note-taker writes for a long time.
   elif flag(career_unseen):
-    challenge deceive using guile medium:
+    challenge deceive expert drift low:
       win:
         iv_score += 1
         say: Steam, a thin blade, a little patience. You read it, reseal it and hand it back. The silent one smiles, which is somehow worse.
@@ -126,7 +126,7 @@ text: The note-taker sets a task on the table. {flag(career_conclave): A ward wi
         mood -small
         say: The seal cracks with a sound like a shot. The silent one does not look surprised. The note-taker writes for a long time.
   elif flag(career_circus):
-    challenge negotiate using charm medium:
+    challenge negotiate expert drift low:
       win:
         iv_score += 1
         say: Five minutes of nonsense and wonder, and the crowd of three are on their feet. One of them is the silent one.
@@ -134,7 +134,7 @@ text: The note-taker sets a task on the table. {flag(career_conclave): A ward wi
         mood -small
         say: The crowd of three stays seated, arms folded, for all five minutes. The note-taker writes for a long time.
   else:
-    challenge negotiate using lore medium:
+    challenge negotiate using lore expert drift low:
       win:
         iv_score += 1
         say: You teach the empty chairs the thing you most wish someone had taught you, and forget for a while that they're empty. The silent one nods.
@@ -171,7 +171,8 @@ text: At last the silent one speaks. "Tell me about a time you did something you
     say: You tell them the truth, and halfway through you realise you might do it again. So does the silent one. "Honest," they say. It isn't clear whether that's good.
   queue y3_interview_verdict now
 > right: Tell them what they want to hear
-  challenge deceive medium:
+  alignment -tiny
+  challenge deceive expert drift low:
     win:
       iv_score += 1
       say: A small mistake, gracefully regretted, neatly learned from. It isn't quite true. The silent one writes something down and underlines it.
@@ -214,7 +215,7 @@ chain: careers
 scene: A thin envelope on a dormitory desk, a single page beside it, a student reading it a second time with their chin on their fist.
 text: A thin letter. You are "a strong candidate" and on "a short list", and they "hope to write again". It's not a no. It's not anything.
 > left: Write back and make your case
-  challenge negotiate easy:
+  challenge negotiate journeyman+ drift low:
     win:
       flag career_offered
       queue y3_offer_letter in 1
@@ -224,7 +225,7 @@ text: A thin letter. You are "a strong candidate" and on "a short list", and the
       say: You write two pages, then four, then a fifth you shouldn't send, and do. No heavier envelope comes.
 > right: Let it lie and see
   mood -tiny
-  chance 40:
+  chance unlikely:
     flag career_offered
     queue y3_offer_letter in 2
     say: You let it lie. Two months later, when you'd almost stopped looking, the heavier envelope comes after all.

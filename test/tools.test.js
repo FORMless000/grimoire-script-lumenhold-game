@@ -158,7 +158,7 @@ test('grimoire: fixture compiles cleanly (sanity)', () => {
 test('graph (A2): who leads to a card, with odds, and what it leads to', () => {
   const { content } = require('../tools/project.js').project(require('./helpers.js').ROOT).compileAll();
   const out = require('../tools/graph.js').describe(content, 'night_suspicion');
-  assert.match(out, /event night_out — option right \(chance 33%\)/);
+  assert.match(out, /event night_out — option right \(chance unlikely\)/);
   assert.match(out, /state:locked_out \[option left\] → event night_out/);
   assert.match(require('../tools/graph.js').describe(content, 'night_out'), /flag:night_unlocked \[when\] ← event night_lead_in/);
 });

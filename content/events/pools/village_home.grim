@@ -41,14 +41,14 @@ text: {friend} has come down to the village with you "for one thing", which turn
 > left: Carry the parcels
   rel friend +small
   health -tiny
-  queue village_errand_parcel in 2 with friend chance 30
+  queue village_errand_parcel in 2 with friend chance unlikely
   say: {~You come back up the hill with an armful of string-tied parcels and sore wrists.|{friend} buys you a chestnut as payment. It is not enough payment.|One parcel clinks suspiciously. You decide not to ask.}
 > right: Talk {them} out of it
   charm +small
   rel friend -tiny
   mood -tiny
   chance likely:
-    queue village_errand_third_thing in 1 with friend chance 30
+    queue village_errand_third_thing in 1 with friend chance unlikely
     say: {~You talk {friend} out of the third thing. {They} sulk{s} the whole way back to the barge.|You win. {friend} says you'd make a terrible shopkeeper and a worse friend, then takes your arm anyway.}
   else:
     say: Your argument is excellent. {friend} buys the thing anyway, and now you've been wrong in public.

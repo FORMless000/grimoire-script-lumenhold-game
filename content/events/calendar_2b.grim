@@ -638,7 +638,7 @@ tags: study exam
 scene: An examiner leaning over a semicircular table, pointing at one line in a thick bound thesis, the student at the lectern very still.
 text: The examiner who hasn't spoken yet opens your thesis to a page near the end, puts a finger on one line and asks the question you hoped no one would ask.
 > left: Answer it head-on
-  challenge research using lore medium:
+  challenge research expert:
     win:
       def_score += 1
       say: You answer it, and then the question behind it, and then the one behind that. The examiner closes the thesis, slowly.
@@ -653,7 +653,7 @@ text: The examiner who hasn't spoken yet opens your thesis to a page near the en
     def_score += 1
     say: "I don't know," you say, "and here is how I'd find out." From someone who has just presented so well, it sounds like mastery. Two examiners nod.
   else:
-    say: "I don't know," you say, "and here is how I'd find out." It costs you nothing and earns you nothing. The examiner moves on.
+    say: "I don't know," you say, "and here is how I'd find out." It stings a little, and earns you nothing. The examiner moves on.
   queue thesis_defence_verdict now
 
 @event thesis_defence_verdict
@@ -742,7 +742,7 @@ tags: study class
 scene: A long table of grey-robed examiners in a panelled room, a single student standing before them holding an exam paper.
 text: The examiners' list is pinned up, and beside {track} there is an F. The clerk mentions, without looking up, that a student may appeal a grade in person, once, before the board. Most don't. Some of those who do come out with a C.
 > left: Appeal before the board
-  challenge negotiate medium:
+  challenge negotiate expert unlikely drift low:
     win:
       regrade track C
       say: You talk for ten minutes about the paper, the question and the answer they marked wrong. The board confers in whispers. The F becomes a C, in red ink, with a sigh.

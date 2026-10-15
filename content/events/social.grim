@@ -687,6 +687,7 @@ text: "Eight crowns says I {~outscore you in the next practical|light more candl
 title: Something Between You
 trigger: queued
 actor: npc
+defer: off_campus or not around(npc)
 class: milestone
 tone: warm
 art: rose
@@ -708,8 +709,8 @@ class: routine
 tone: tense
 trigger: social
 cast:
-  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner"
-  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner"
+  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and around(suitor)
+  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and around(other)
 per: suitor
 repeat: 2
 weight: 20
@@ -734,8 +735,8 @@ class: routine
 tone: tense
 trigger: social
 cast:
-  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner"
-  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner"
+  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and around(suitor)
+  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and around(other)
 per: suitor
 repeat: 2
 weight: 20
@@ -749,7 +750,7 @@ text: {suitor} saw you laughing with {other} in the courtyard yesterday, and is 
   spark other +tiny
   say: It lands like a dropped plate. {suitor} nods, and swallows, and thanks you for not pretending. It's the kindest thing you've done all week, and it doesn't feel kind at all.
 > right: "Oh, we're just friends"
-  chance 60:
+  chance likely:
     spark suitor +small
     say: {suitor}'s shoulders come down an inch. You spend the rest of the evening together, and nobody mentions the courtyard again.
   else:
@@ -763,8 +764,8 @@ class: routine
 tone: tense
 trigger: social
 cast:
-  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner"
-  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner"
+  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and around(suitor)
+  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and around(other)
 per: suitor
 repeat: 2
 weight: 20

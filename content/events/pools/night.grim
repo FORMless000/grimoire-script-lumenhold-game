@@ -26,10 +26,10 @@ text: {The woman who runs the upstairs room looks you over. "The guests like goo
     lose:
       gold +tiny
       mood -small
-      queue night_suspicion chance 40
+      queue night_suspicion chance unlikely
       say: {~A guest's hand wanders and doesn't take the hint. You leave by the back stair with a few coins and a cold feeling that lasts the week.|You say the wrong thing to the wrong magistrate, and are paid off early and shown the stair. Someone from the castle is drinking at the bar below.}
   if bonds(partner) > 0:
-    queue night_partner_asks chance 30
+    queue night_partner_asks chance unlikely
 > right: Not tonight
   mood -tiny
   say: {~You turn the work down and walk home past the lit windows, a little poorer and quite sure of yourself.|"Another night, then," says the woman, writing something in a small book. You wonder what.}
@@ -60,7 +60,7 @@ text: {Behind the upstairs room there's a back room, and in it the high table. G
       mood +small
       say: {~You read the table like a book you've already finished. The pot slides over, and Grisk applauds politely with two fingers.|Your nerve holds and theirs doesn't. You walk home heavy with silver and hollow with nerves.}
     lose:
-      queue night_suspicion chance 50
+      queue night_suspicion chance even
       say: {~The cards turn on you, then the room does. You leave lighter, and a prefect's lamp is going round the courtyard.|You lose the pot and your temper with it. Grisk sympathises, with interest.}
 > favour: Stake a favour to Grisk
   hint: Win big, or owe him a job.
@@ -168,10 +168,10 @@ text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yo
       say: {~You win, bloodied and grinning, and the bookmaker pays out through his teeth.|The crowd roars. You collect your bet and your opponent's grudging handshake, and limp home rich.}
     lose:
       health -medium
-      queue night_suspicion chance 50
+      queue night_suspicion chance even
       say: {~You go down in the third exchange, and your purse goes with you. On the way home a light is on in the prefects' corridor.|A bad loss: the bet, a tooth's worth of pride and most of your skin.}
   if met(lyra):
-    queue lyra_ring_word chance 25
+    queue lyra_ring_word chance unlikely
 > right: Fight for the purse only
   challenge combat adept-:
     win:
@@ -304,7 +304,7 @@ text: {Behind the kitchens is the storeroom, full of sugar, spices and oranges f
 > left: Fill a satchel to sell
   alignment -small
   gold +small
-  queue night_suspicion chance 50
+  queue night_suspicion chance even
   say: {~Oranges, a cone of sugar, a jar of saffron. The village grocer asks no questions and pays in coppers. Somebody in the castle will be short of saffron.|A full satchel and an empty conscience, or nearly. On the way out, the scullery door bangs behind you.}
 > right: Take one orange and go
   mood +tiny
@@ -351,7 +351,7 @@ text: {Grisk mentioned, once, that a collector pays for illuminated pages "of a 
   flag sold_page
   alignment -small
   gold +medium
-  queue night_suspicion chance 50
+  queue night_suspicion chance even
   say: {~One clean cut. The book doesn't cry out, which is somehow worse. The collector pays well, and never asks where.|You sell the page and keep the guilt, which no one will buy.}
 > right: Read it instead
   lore +small
@@ -377,7 +377,7 @@ text: {You've brought {partner} up to the observatory roof, with a stolen blanke
 > left: Stay until the sky turns
   spark partner +small
   health -small
-  queue night_suspicion chance 25
+  queue night_suspicion chance unlikely
   say: {~You name the stars between you, wrong, and argue about it, and stay until the sky goes grey. The stair down is lit by a prefect's lamp you just avoid.|You fall asleep up there and wake to the first bell, frozen and happy.}
 > right: An hour, then back
   rel partner +small

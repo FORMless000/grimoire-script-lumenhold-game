@@ -107,10 +107,15 @@ chain: debt
 scene: A small, very neat note pinned to a dormitory door with a brass tack, the handwriting tiny and precise.
 text: A note on your door, in a tidy goblin hand: "A payment was missed. Mister Grisk is a patient businessman. Mister Grisk charges interest on his patience." Underneath, smaller: "Pay something, or another month will be added."
 > left: Scrape together what you can
-  gold = 0
-  debt_missed = 0
-  mood -small
-  say: You empty your purse into an envelope and slide it under his door. It isn't twelve crowns. It is, says the note in reply, "a gesture. Noted."
+  if gold > 0:
+    gold = 0
+    debt_missed = 0
+    mood -small
+    say: You empty your purse into an envelope and slide it under his door. It isn't twelve crowns. It is, says the note in reply, "a gesture. Noted."
+  else:
+    debt_paid -= 1
+    mood -small
+    say: There is nothing to put in the envelope. You write "next month, I promise" on a scrap and slide that under his door instead. The reply is a single line, "Promises are added to the ledger," and another month is.
 > right: Put it out of your mind
   debt_paid -= 1
   mood -tiny

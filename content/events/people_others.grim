@@ -588,7 +588,7 @@ scene: A lecture room hung with velvet curtains, a woman in a violet coat pourin
 text: First Illusion lecture. Professor Vey pours you a cup of tea from a pot you would swear is empty, and waits. "Milk?" she asks. The whole row turns to see what you'll do with a cup of nothing.
 > left: Drink it, and thank her
   meet vey
-  challenge deceive using charm easy:
+  challenge deceive using charm apprentice+:
     win:
       charm +small
       rel vey +small
@@ -642,10 +642,11 @@ text: Your first shift at Pell & Daughters. Old Pell climbs down from his ladder
   say: "One. Two. Three." Your voice fills the shop; the customer joins in at nine. Pell nods once. "Twelve. Not eleven. Not thirteen. You'll count like that until they bury you."
 > right: Count in your head, quickly
   meet pell
-  chance 70:
-    rel pell -tiny
-    renown +tiny
-    say: Twelve drops, done in a breath; the customer tells the whole queue how quick the new clerk is. Pell counts the level against the light. "Correct. Next time, aloud. I like to hear a thing being right."
-  else:
-    rel pell -small
-    say: You lose count at eight and guess. Pell tips the bottle out and starts it again, aloud, without a word to you. The customer leaves with the right dose and a look at you.
+  challenge brew apprentice:
+    win:
+      rel pell -tiny
+      renown +tiny
+      say: Twelve drops, done in a breath; the customer tells the whole queue how quick the new clerk is. Pell counts the level against the light. "Correct. Next time, aloud. I like to hear a thing being right."
+    lose:
+      rel pell -small
+      say: You lose count at eight and guess. Pell tips the bottle out and starts it again, aloud, without a word to you. The customer leaves with the right dose and a look at you.

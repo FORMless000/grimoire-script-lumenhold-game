@@ -446,9 +446,12 @@ tick:
 name: Bursar's Loan
 kind: debuff
 art: scales
-desc: The academy lent you sixty crowns. It takes 8 a month when you can pay, eight times, with no interest and no collectors: only a very patient ledger.
+desc: The academy lent you sixty crowns. It takes 8 a month when you can pay, seven times, then a last 4, with no interest and no collectors: only a very patient ledger.
 tick:
-  if gold >= 8:
+  if loan_paid >= 7 and gold >= 4:
+    gold -4
+    loan_paid += 1
+  elif loan_paid < 7 and gold >= 8:
     gold -8
     loan_paid += 1
   else:

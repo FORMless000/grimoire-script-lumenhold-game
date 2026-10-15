@@ -52,5 +52,5 @@ Course standard at levels I–III: `apprentice+` · `journeyman+` · `adept+`; a
 | `social <who>` | Time with someone. `rel $who +small; mood +small; gold -tiny` |
 | `work` | Paid work. `gold +medium; mood -small; health -tiny` |
 | `splurge` | Spending to feel better. `mood +large; gold -medium` |
-| `risk <res>` | A gamble: a large gain or a medium loss. `chance 50: $res +large; else: $res -medium` |
+| `risk <res>` | A gamble: a large gain or a medium loss. `chance even: $res +large; else: $res -medium` |
 <!-- END GENERATED: tiers -->
