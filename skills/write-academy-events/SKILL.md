@@ -9,7 +9,7 @@ Content is data, not code: you write `.grim` blocks under `content/`, then forma
 
 ## 0. Load context (always)
 
-1. Read `docs/authoring/README.md`, `style.md` and `checklist.md`. Skim `schema.md` (the block table is generated from the parser). Read `docs/grimoire-script.md` fully the first time; afterwards keep §3 (expressions), §4 (effects) and §5 (how a month is built) at hand.
+1. Read `docs/authoring/README.md`, `style.md`, `checklist.md` and `checks.md` (how every check and roll is pitched). Skim `schema.md` (the block table is generated from the parser). Read `docs/grimoire-script.md` fully the first time; afterwards keep §3 (expressions), §4 (effects) and §5 (how a month is built) at hand.
 2. Read `AGENTS.md` for the principles and where things live; numbers and rules are in `docs/design-v0.3.md` and `docs/authoring/`. It carries no lore: canon is only in the worldbook (`content/world/`), read through `grim brief` / `grim lorebook` (step 3).
 3. **Get a brief** for what you're writing. It contains the cast's voice, facts, schedules and relations, the place, the track, the arc, matching lore, **every card already written at that place or track or about that cast** (by id and title), and the most similar existing cards in full (same place or track first; `--examples N` for more, `--like id,id` to include named ones, such as the chain you're extending). Samples in `docs/authoring/briefs/`:
    ```bash
@@ -29,7 +29,7 @@ For each event decide:
 - **What it leaves behind:** flags, states, queued follow-ups. Clues (`find <clue>`) and arc clocks (`advance <arc> +1`) only in hard-canon story events. Plot gates read `clock(<arc>)` (the schedule) and `clues(<arc>)` (engagement), never a home-made counter.
 - **Conscience:** if an option is cruel, greedy, dishonest or reaches for the Star's power, add `alignment -tiny`/`-small`; if it is honest or selfless at a cost, `alignment +tiny`/`+small`. Events for players deep in either side gate on `alignment >= 30` / `<= -30` (±60 for rare ones). `checklist.md` has the rule.
 - **Newer constructs** (each documented in `docs/grimoire-script.md`; `node tools/grim.js schema` lists what the format has gained): `time:` / `slot:` (time of day), `defer:`, `up[spell]` options, `wage`, `locked:` on menu options, milestone `ramp:`, track `intro:`, `@game appeal` with `regrade`, `display:` on resources.
-- **Use tiers and presets, never raw numbers:** `mood -small`, `grind arcana`, `study evocation +small` (exam preparation; never `grades`), `perform duelling +small`, `spark lyra +tiny` (never `love`). Use `challenge <kind> [using <skill>] <tier>:` with `win:` / `partial:` / `lose:`, never `check`.
+- **Use tiers and presets, never raw numbers:** `mood -small`, `grind arcana`, `study evocation +small` (exam preparation; never `grades`), `perform duelling +small`, `spark lyra +tiny` (never `love`). Pitch every `challenge` (with `win:` / `partial:` / `lose:`) and every `chance` with `docs/authoring/checks.md`: difficulty, odds by nature, luck, drift; never `check`.
 
 **Repeatable pool events** (places, class days, practice, shifts, plans) have `class: routine`, `repeat: 4`–`6` (the cooldown in months), and must read differently each time: at least 3 inline variants (`{~a|b|c}`) across text and says, plus `{season=autumn: …|winter: …|…}` or `{final_year: …|…}` lines where they fit. Don't hinge a repeatable on a one-time surprise.
 

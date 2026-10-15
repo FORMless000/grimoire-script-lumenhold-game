@@ -11,7 +11,7 @@ This file holds only the standing principles and where to look. It carries no lo
 | The design: systems, rules, numbers, phases | `docs/design-v0.3.md` |
 | Current status, known gaps, next steps | `PROGRESS.md` |
 | Canon (characters, places, tracks, spells, arcs, factions, lore) | the worldbook, `content/world/`, via `node tools/grim.js brief …`, `lorebook`, `query lore …` |
-| How to write a good card | `skills/write-academy-events/SKILL.md` (the workflow), built from `docs/authoring/`: style, costs (how a choice trades), classes, presets (generated from `balance.grim`), checklist, pools, examples; batches are reviewed with `skills/critic/SKILL.md` |
+| How to write a good card | `skills/write-academy-events/SKILL.md` (the workflow), built from `docs/authoring/`: style, costs (how a choice trades), checks (how a check or roll is pitched), classes, presets (generated from `balance.grim`), checklist, pools, examples; batches are reviewed with `skills/critic/SKILL.md` |
 | Existing cards to learn from or extend | `node tools/grim.js brief …` (every card already at that place or track, and the most similar ones in full; `--like` names more), `query event …`, `show <id>`, `graph <id>` (what leads to a card and what it leads to), `dupes <files>` |
 | Whether a card is balanced | `docs/authoring/costs.md` and `classes.md` (the rules the lint checks); `node tools/grim.js balance` (invariants and alarms); `tools/economy.js --by event` (each card's flow and frequency) against the measured monthly flows in `docs/playtest-2-flows.md`; `tools/hs-funnel.js` for the main plot |
 | How to extend canon | `skills/distill-lore/SKILL.md` |

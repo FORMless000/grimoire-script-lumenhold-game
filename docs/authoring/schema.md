@@ -31,7 +31,7 @@ text: Two to four sentences. Present tense, second person. Set up a real dilemma
 ```
 
 - **Where it's drawn:** `place:` (a map visit), `track:` with `level:` or `rank:` (class mornings, practice, shifts), `plan:` (break mornings), or none (the night's world slot). `class:` and `tone:` are required (`classes.md`). A pool card has `repeat:` (its cooldown) and at least three `{~a|b|c}` variants (`pools.md`); a one-off has neither.
-- **Effects** are tier words and presets (`presets.md`), never raw numbers; checks are `challenge <kind> [using <skill>] <tier>:` with `win:` / `lose:` (and `partial:`); romance is `spark`. How the options should trade is `costs.md`.
+- **Effects** are tier words and presets (`presets.md`), never raw numbers; checks are `challenge <kind> [using <skill>] <difficulty> [<odds>] [<luck>] [drift <word>]:` with `win:` / `lose:` (and `partial:`), pitched with `checks.md`; romance is `spark`. How the options should trade is `costs.md`.
 
 **Menus**: 3–8 options with keys other than left/right, each with a `hint:`; at least one option without `when:`.
 **Character events**: `actor: <npc>` with `when: rel(<npc>) >= N` (`trigger: social` puts it on their own track too). **Generic relationship events**: a `cast:` role cast by premise (`friend: any where tagged(friend, peer) and rel(friend) >= 10`) with `per: friend`; `{friend}`, `{friend.their}`, or `{they}` / `{them}` / `{s}` / `{are}` for the first role; `rel friend +small`, `spark friend +tiny`.

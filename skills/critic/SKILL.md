@@ -9,7 +9,7 @@ You are the second reader. You did not write this batch, and you don't get the a
 
 ## 0. Load
 
-1. `docs/authoring/checklist.md` (the "Critic" list), `style.md`, `costs.md` (the trade), `classes.md` and `presets.md`.
+1. `docs/authoring/checklist.md` (the "Critic" list), `style.md`, `costs.md` (the trade), `checks.md` (how checks are pitched), `classes.md` and `presets.md`.
 2. The batch's files (they're named in the request, or in `build/batches/<name>.json` under `files`). Read every event in full.
 3. For the cast, places and tracks the batch touches, get a brief:
    `node tools/grim.js brief --cast <ids> --place <id> --track <id> --out build/critic-brief.md`.
@@ -48,6 +48,12 @@ For every event, ask the questions below. Write down an issue only when you can 
 - Every cost is one the `say:` shows (body → health, spirits → mood, purchases → crowns, skipped work → `study`/`perform`/`progress`, a person let down → `rel`, a moral side → alignment). A cost the scene doesn't show is a defect, not a fix.
 - Every option has its own specific `say:`, never "You gain 5 mood." Prose never mentions numbers or mechanics.
 - Labels are under about 36 characters, imperative or first person.
+
+**Checks** (`checks.md`)
+- Is the difficulty what the player is actually up against (the opponent or the obstacle), not who is on the card or when it shows?
+- Is any reason counted twice: a strong foe written as `slim`, a coin toss written as a high rung? Is a gamble on `luck`?
+- Grandmaster+ only on story or milestone cards, with `partial:` and a route without the check; a loss that ends the run has `partial:` or `likely`+.
+- Does the kind fit the action and the skill fit the obstacle? `using` only when it differs from the kind's default; `exam` only in a course.
 
 **Repeats** (pool events with `repeat:`)
 - The event will be seen 3–6 times in a run. Do the variation lines (`{~a|b|c}`, `{season=…}`, `{final_year: …|…}`) make each showing read differently?
