@@ -73,7 +73,7 @@ Categories: **B** bugfix · **L** balance fix · **M** mechanic tweak · **C** c
 - C17. `hs_choosing_sides` (Y3 Deepwinter): too abrupt, little lead-in. **Do with X11.**
 - C18. `align_warm_regard` (Y3 Greenrise): confusing. **Fixed:** the praise names what it's for (kind things done unseen); the other option is modesty ("anyone would have").
 - C19. `life_snoring_roommate` (Y3 Goldenhaze): the roommate was never introduced. **Fixed:** someone in your dormitory, unnamed.
-- C20. `year_four` (Y4 Harvestmoon): move the last-year text here; each year's opening foreshadows new options, duties and expectations. Here: move the text. The foreshadowing of new options, including year 4's hint at the thesis load and at quitting a job or club for more time (L25), is N15, once the M features exist. **Text moved** (the last-year speech is now in `year_four`); the foreshadowing stays with N15.
+- C20. `year_four` (Y4 Harvestmoon): move the last-year text here; each year's opening foreshadows new options, duties and expectations. Here: move the text. The foreshadowing of new options, including year 4's hint at the thesis load and at quitting a job or club for more time (L25), is N15, once the M features exist. **Text moved** (the last-year speech is now in `year_four`); the foreshadowing stays with N15. **Done (N15).**
 - C21. `hs_grey_stranger` (Y4 Harvestmoon): mysterious. **Do with X11.**
 - C22. `hs_last_winter` (Y4 Mistveil): what is this, and why a special node? ? Confusing as is. **Do with X11.**
 - C23. `ilse_village` (Y4 Mistveil): met too late; push earlier unless the plot intends it. ? **Rolled into X11** (her gate needs 2 Hollow Star clues, which this run had only from Y3 Mistveil; a random draw then took 11 months; the design has Ilse arrive in year 2).
@@ -153,33 +153,33 @@ Order within M: M42 → M41 · M43 → M8 · M10 → M6 · M39 → M5, M11 · M1
 
 ## L — Balance fix
 
-- L1. Exam results show constant As or Fs; grades should reflect more than skill and progress checks. (W13) → M4
-- L2. Health and mood changes need more intensity. (W20)
-- L3. Money should be spent when the player chooses to, or passively. (W25) → L7
-- L4. Skill-check scaling should be minuscule; difficulty should come from event variants (when that's not possible, leave it). (W29) → M14
-- L5. Late-game checks feel either trivial or impossible: investigate from the logs. (W30)
-- L6. Course levels should feel significant: each higher level brings harder checks and challenges. (W42)
+- L1. Exam results show constant As or Fs; grades should reflect more than skill and progress checks. (W13) → M4 **Done (M4, L-3):** exams are cards with a swing, and exam tiers by level spread the grades (random play about A 14–30%, F 7–22%).
+- L2. Health and mood changes need more intensity. (W20) **Done (L-4):** the health and mood rows are about a quarter larger, and the monthly pressures with them.
+- L3. Money should be spent when the player chooses to, or passively. (W25) → L7 **Done (L-1):** spending is about half passive (board, tuition, fees, debt) and half by choice in cards.
+- L4. Skill-check scaling should be minuscule; difficulty should come from event variants (when that's not possible, leave it). (W29) → M14 **Done (M14):** swing words on checks; the curve keeps skill scaling small.
+- L5. Late-game checks feel either trivial or impossible: investigate from the logs. (W30) **Done (L-3):** odds run 5–95% with no forced fail on milestones and exams; course levels make card checks harder.
+- L6. Course levels should feel significant: each higher level brings harder checks and challenges. (W42) **Done (L-3):** a course card's check is one tier harder per level above I; exams are easy / medium / hard by level.
 - L7. Moved to B35 (the per-event sweep). Its "such checks should be more random" part (W40) is M14.
-- L8. `tournament_semifinal` (Y1 Greenrise): cheating gives worse results than fighting fair; is it a minigame? If not, redesign the checks. ? → M39, X5
+- L8. `tournament_semifinal` (Y1 Greenrise): cheating gives worse results than fighting fair; is it a minigame? If not, redesign the checks. ? → M39, X5 **Done (L-3)** for the checks: fighting dirty is a medium deceive check that costs alignment −small. The minigame is X5.
 - L9. Moved to B35.
-- L10. `bram_cheating` (Y2 Frostcall): reporting him should gain Lumen.
-- L11. `soc_argument` (Y2 Greenrise): no reward for holding your ground.
+- L10. `bram_cheating` (Y2 Frostcall): reporting him should gain Lumen. **Done (L-5).**
+- L11. `soc_argument` (Y2 Greenrise): no reward for holding your ground. **Done (L-5).**
 - L12. Moved to B35.
-- L13. `soc_become_friends` (Y3 Harvestmoon): came far too late. → M13 (the wording is C15)
+- L13. `soc_become_friends` (Y3 Harvestmoon): came far too late. → M13 (the wording is C15) **Done (M13).**
 - L14. Moved to B35.
-- L15. `thorne_office_hours` (Y3 Mistveil): more mood cost.
-- L16. `seraphine_tarot` (Y3 Stormbloom): rewards should be more romantic.
-- L17. `isolde_chess` (Y3 Stormbloom): the check should be hard and turbulent. → M14
-- L18. `inc_broken_wand` (Y3 Starfall): 30 gold vs a trivial check; make the check more turbulent. → M14
-- L19. `spring_tournament` (Y3 Greenrise): feels impossible from year 2 on. → M39, X5
-- L20. `hs_kael_truth` (Y4 Emberwane): alignment change? ?
+- L15. `thorne_office_hours` (Y3 Mistveil): more mood cost. **Done (L-5).**
+- L16. `seraphine_tarot` (Y3 Stormbloom): rewards should be more romantic. **Done (L-5).**
+- L17. `isolde_chess` (Y3 Stormbloom): the check should be hard and turbulent. → M14 **Done (L-3):** a hard, wild check.
+- L18. `inc_broken_wand` (Y3 Starfall): 30 gold vs a trivial check; make the check more turbulent. → M14 **Done (L-3):** an easy, wild check.
+- L19. `spring_tournament` (Y3 Greenrise): feels impossible from year 2 on. → M39, X5 **Done (alarms):** the combat stub counts spell levels at 0.75, so the final is no longer near-certain. The minigame is X5.
+- L20. `hs_kael_truth` (Y4 Emberwane): alignment change? ? **Done (L-5).**
 - L21. `life_timeloop_2` (Y4 Frostcall): exploiting the loop should cost more. → X
 - L22. Renown is hard to raise. (W43) → X3
-- L23. `soc_breakup` (Y4 Blossomtide): romance faded too fast while dating, with few chances for romantic time beyond visiting her place. (Log: the "fight for it" check was won, spark +20.) → M37, M38
-- L24. Origins sponsor tuition, and tuition is lowered so the origin doesn't swing the game too much. In this run's numbers, over four years: noble ≈ 340 income, merchant ≈ 230, scholar ≈ 215 plus half tuition, hedge 15, street 10, against ≈ 560 of costs. Poor origins are warned on the origin screen (M32). (D4/D7)
-- L25. Thesis obligation 3 → 2 sessions a term, so year 4 isn't a full squeeze (in this run, job 3 + club 2 + thesis 3 filled all 8 term visits). The year-4 opening hints at quitting a job or club for more time (C20). (D4/D7)
-- L26. Research internships pay properly (this run: 24 crowns across two internships). → M10, M16, X12 (D4/D7)
-- L27. Friendship gains are lower overall: Nessa hit 100 by Y2 Greenrise, and every later gain was wasted. → M37 (D6)
+- L23. `soc_breakup` (Y4 Blossomtide): romance faded too fast while dating, with few chances for romantic time beyond visiting her place. (Log: the "fight for it" check was won, spark +20.) → M37, M38 **Done (M37, M38).**
+- L24. Origins sponsor tuition, and tuition is lowered so the origin doesn't swing the game too much. In this run's numbers, over four years: noble ≈ 340 income, merchant ≈ 230, scholar ≈ 215 plus half tuition, hedge 15, street 10, against ≈ 560 of costs. Poor origins are warned on the origin screen (M32). (D4/D7) **Done (L, first pass):** tuition 16 a term, paid by noble and merchant families, halved for the scholar.
+- L25. Thesis obligation 3 → 2 sessions a term, so year 4 isn't a full squeeze (in this run, job 3 + club 2 + thesis 3 filled all 8 term visits). The year-4 opening hints at quitting a job or club for more time (C20). (D4/D7) **Done (L25):** 2 visits a term; the year-4 hint is N15.
+- L26. Research internships pay properly (this run: 24 crowns across two internships). → M10, M16, X12 (D4/D7) **Done (L26):** a stipend through the host cards (`pay: 18`).
+- L27. Friendship gains are lower overall: Nessa hit 100 by Y2 Greenrise, and every later gain was wasted. → M37 (D6) **Done (M37, L-2):** the `rel` row is 1 2 4 6 9.
 - L28. **Final pass, after X:** re-check the economy and balance once X13 (illegal gigs), X14 (financial aid, debts, favours) and X15 (vacation gigs) add their income, and refresh the golden baseline.
 
 ## N — Minor addition opportunity

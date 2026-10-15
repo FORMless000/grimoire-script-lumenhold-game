@@ -135,6 +135,20 @@ test('appeals (N4): a failed course pushes @game appeal in its context; regrade 
   assert.ok(ctx2.notes.some((n) => n.kind === 'regrade' && n.from === 'F' && n.grade === 'C'));
 });
 
+test('course standing (step 5): an enrolled course shows preparation, months to the exam and today\'s odds', () => {
+  const eng = atMap(2, []);
+  quiet(() => eng.run([{ t: 'enrol', track: 'evocation' }], eng.newCtx(null, null)));
+  eng.trackState('evocation').study = 40;
+  const tr = eng.snapshot().tracks.find((x) => x.id === 'evocation');
+  assert.equal(tr.studyCap, eng.studyRule().cap);
+  assert.equal(tr.study, tr.studyCap, 'capped like the exam counts it');
+  const o = eng.examOdds('evocation', null);
+  assert.equal(tr.pass, o.pass); assert.equal(tr.top, o.top);
+  let n = 0; for (let k = eng.s.turn; eng.phaseOf(k) === 'term' && !eng.isTermEnd(k); k++) n++;
+  assert.equal(tr.examIn, n);
+  assert.ok(eng.isTermEnd(eng.s.turn + tr.examIn), 'counts to the term\'s last month');
+});
+
 test('casting: peer-only premises never cast faculty or villagers', () => {
   const { content: c } = { content };
   const eng = atMap(3, Object.keys(c.npcs), (s) => { for (const n of Object.values(s.npcs)) { n.rel = 60; n.bond = 'friend'; } });

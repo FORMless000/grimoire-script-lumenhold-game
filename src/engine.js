@@ -493,6 +493,14 @@
       if (st.t === 'sit_exam') { const id = (item && item.track) || this._ctxTrack; const o = id && this.trackState(id) ? this.examOdds(id, st.swing) : null; return o ? { exam: true, skill: 'exam', using: o.skills.join('+'), p: o.pass, top: o.top, swing: st.swing || null } : null; }
       return { skill: st.skill, p: this.checkChance(st.skill, this.value(st.dc, actor)) };
     }
+    // An enrolled course as it stands (playtest 2, step 5): exam preparation, the exam's odds if it were sat today,
+    // and the months until it (0 = this month, the term's last).
+    courseStanding(id) {
+      const t = this.trackState(id), sr = this.studyRule(), o = this.examOdds(id, null);
+      let examIn = 0;
+      for (let k = this.s.turn; k < this.maxTurns && this.phaseOf(k) === 'term' && !this.isTermEnd(k); k++) examIn++;
+      return { study: Math.min(sr.cap, (t && t.study) || 0), studyCap: sr.cap, pass: o.pass, top: o.top, examIn };
+    }
     // A course on the enrolment menu, up front (playtest 2, M4): what it tests, how hard its exam is, what it teaches,
     // and the pass chance if the exam were today without study.
     courseOutlook(id, level) {
@@ -1552,7 +1560,7 @@
         tracks: Object.entries(s.tracks || {}).filter(([id, t]) => c.tracks[id] && ['enrolled', 'member', 'done', 'failed', 'applied'].includes(t.status)).map(([id, t]) => {
           const d = c.tracks[id], ranks = (d.ranks || '').split(/\s*[,，、]\s*/).filter(Boolean), levels = (d.level_names || d.name).split(/\s*[,，、]\s*/);
           return { id, name: d.name, kind: d.kind, status: t.status, level: t.level || null, levelName: t.level ? levels[t.level - 1] || d.name : null, passed: this.levelPassed(id), grades: (t.grades || []).slice(), rank: ranks[t.rank] || null, perf: Math.round(t.perf || 0), due: Math.max(0, (t.due || 0) - (t.visits || 0)), progress: Math.round(t.progress || 0),
-            done: d.kind === 'job' && t.status === 'member' && t.visits >= (t.due || 0) };
+            done: d.kind === 'job' && t.status === 'member' && t.visits >= (t.due || 0), ...(d.kind === 'course' && t.status === 'enrolled' ? this.courseStanding(id) : {}) };
         }),
         spells: Object.entries(s.spells || {}).filter(([id]) => c.spells && c.spells[id]).map(([id, level]) => ({ id, level, ...pick(c.spells[id], ['name', 'desc', 'art']), cost: this.spellCost(id, level) })),
         skills: c.order.skills.map((id) => ({ id, ...pick(c.skills[id], ['name', 'icon', 'color', 'max', 'desc']), value: s.vals[id] })),

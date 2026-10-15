@@ -429,7 +429,7 @@ The skill is mapped from the kind (duel: (vigor + arcana) / 2; negotiate: charm;
 
 **Event fields.** `class:` (routine, milestone, incident, windfall, story, crisis; see `docs/authoring/classes.md`) and `tone:` (from `@vocab tones`). Lint checks each class's budget with the preview engine, in medium-equivalents (`@balance weights` × change ÷ medium size): no routine option may be obviously better than another (at least as good on every value and better on one, with neither a gamble nor a follow-up; options that move alignment differently never are), and each stays within ±1.5; milestones allow 2 large changes, windfalls 1; incidents need at least two options.
 
-**Resources.** `max:` may be an expression (`max: 40 + arcana / 2`); `display: panel` moves a resource from the top bars to the You panel; `warn_below: N` marks it low; `drag: -50 0.5` halves increases while below −50.
+**Resources.** `max:` may be an expression (`max: 40 + arcana / 2`); `display: panel` moves a resource from the top bars to the You panel, and `display: number` shows it in the middle of the top row as a plain number instead of a bar; `warn_below: N` marks it low; `drag: -50 0.5` halves increases while below −50.
 
 **Inline text variation** (Ink-style; in any text, including `say:`): `{~a|b|c}` one of them (deterministic per seed, turn and event), `{&a|b}` cycles each time the event is seen, `{a|b|c}` runs through them and stays on the last, `{cond: a|b}` picks by a condition (`{gold > 20: rich|poor}`); a colon inside `{~…}` or `{&…}` is plain text. `cast_as(role, npc)` tests who filled a role (`{cast_as(here, maud): …|…}`). Alternatives may contain other tokens. Translations keep the same structure.
 

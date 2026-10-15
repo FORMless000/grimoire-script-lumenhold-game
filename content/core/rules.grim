@@ -44,7 +44,7 @@ intro: The sky-barge lurches. Below, the lake glitters; above, the seven towers 
 
 # ---------------- Resources ----------------
 # The top bars (design §8.1) are Health · Mood · Mana · Renown · Alignment, in this order;
-# `display: panel` resources (Crowns, Standing) are shown in the You panel instead.
+# `display: panel` resources are shown in the You panel instead; `display: number` (Crowns) sits in the top row as a plain number.
 
 @resource health
 name: Health
@@ -106,7 +106,8 @@ min: 0
 max: 99999
 start: 30
 color: #d7a948
-display: panel
+# Shown in the middle of the top row as a plain number (playtest 2, step 5), not in the You panel.
+display: number
 warn_below: 6
 desc: Crowns in your purse. Rent is due every month.
 on_zero:

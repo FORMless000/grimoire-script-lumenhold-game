@@ -209,6 +209,15 @@ Measured (`check`, `balance --quick`): every new card is seen except the two pro
 
 Decided (user): a won appeal turns the F into a C (`regrade track C`); the familiars' cards replace their monthly ticks; N3's lesson cards are written now for the current 12 spells (reworked if the minigames change the spells); each batch is self-reviewed against the critic checklist.
 
+## Step 5 — X (major content), after N
+
+Planned package by package; 5.0 first, then a recap of the X items and their order for the user to decide.
+
+### 5.0 UI and housekeeping (done)
+- **Crowns in the top row:** `display: number` (a frozen-format addition of a value, documented) shows a resource as a plain number in the middle of the top row, not an orb to fill. Crowns use it and are no longer in the You panel; deltas float up from it like the other meters.
+- **Live course standing:** each enrolled course in the You panel shows its exam preparation (n/15, with a bar), the months to its exam and today's pass chance; the tooltip adds the A-or-B chance and says the odds are "if the exam were today". The engine's snapshot carries it (`courseStanding`); a test pins it.
+- **Housekeeping:** the triage marks the L items (and C20) done.
+
 ## Status
 Steps 1 (B, C) and 2 (M, packages M-A to M-F) are done and committed; the triage marks each item.
 

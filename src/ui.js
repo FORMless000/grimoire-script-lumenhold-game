@@ -222,13 +222,19 @@
     document.getElementById('sideToggle').onclick = () => { ui.sideOpen = !ui.sideOpen; document.getElementById('side').classList.toggle('open', ui.sideOpen); };
     document.getElementById('tabs').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; ui.tab = b.dataset.tab; renderSide(); };
     const meters = document.getElementById('meters');
-    meters.innerHTML = content.order.resources.filter((id) => content.resources[id].display !== 'panel').map((id) => {
+    // `display: number` (step 5: Crowns) sits in the middle of the row as a plain number, not an orb to fill.
+    const orbIds = content.order.resources.filter((id) => !content.resources[id].display);
+    const numIds = content.order.resources.filter((id) => content.resources[id].display === 'number');
+    const numberMeter = (id) => { const r = content.resources[id]; return '<div class="meter number" id="m-' + id + '" style="--c:' + esc(r.color || '#888') + '" title="' + esc(r.name + ' — ' + (r.desc || '')) + '"><span class="dot"></span><div class="num">' + Art.icon(r.icon || 'coin', 16) + '<span class="val"></span></div><div class="lbl">' + esc(r.name || id) + '</div></div>'; };
+    const mid = Math.ceil(orbIds.length / 2);
+    meters.innerHTML = orbIds.slice(0, mid).map(orbMeter).join('') + numIds.map(numberMeter).join('') + orbIds.slice(mid).map(orbMeter).join('');
+    function orbMeter(id) {
       const r = content.resources[id];
       return '<div class="meter" id="m-' + id + '" style="--c:' + esc(r.color || '#888') + '" title="' + esc(r.name + ' — ' + (r.desc || '')) + '">' +
         // Alignment (M20): one fill from the bottom, Lumen gold with a sun, Hollow violet with its own icon.
         '<span class="dot"></span><div class="orb"><div class="fill"></div>' + (r.min < 0 ? '<span class="ico-pos">' + Art.icon('sun', 20) + '</span><span class="ico-neg">' + Art.icon(r.icon || 'star', 20) + '</span>' : Art.icon(r.icon || 'star', 20)) + '</div>' +
         '<div class="val"></div><div class="lbl">' + esc(r.name || id) + '</div></div>';
-    }).join('');
+    }
     if (DEBUG && !document.querySelector('.debug-btn')) buildDebug();
     if (!params.get('event')) buildFeedbackBar();
     renderChrome();
@@ -247,7 +253,7 @@
       const el = document.getElementById('m-' + r.id); if (!el) continue;
       const min = r.min == null ? 0 : r.min, max = r.maxNow;
       const fill = el.querySelector('.fill');
-      if (min < 0) {   // bipolar (Alignment, M20): the fill rises from the bottom with how far you lean, in that side's colour
+      if (!fill) { /* `display: number`: the value alone */ } else if (min < 0) {   // bipolar (Alignment, M20): the fill rises from the bottom with how far you lean, in that side's colour
         fill.style.height = Math.min(100, (Math.abs(r.value) / Math.max(max, -min)) * 100) + '%'; fill.style.bottom = '0';
         el.classList.toggle('neg', r.value < 0); el.classList.toggle('pos', r.value > 0);
       } else fill.style.height = Math.max(0, Math.min(100, ((r.value - min) / (max - min)) * 100)) + '%';
@@ -275,14 +281,21 @@
         h += '<div class="sec-h">' + esc(t('side.studies')) + (snap.gpa ? '<span class="gpa">' + esc(t('side.gpa', { gpa: snap.gpa.toFixed(2) })) + '</span>' : '') + '</div>';
         for (const tr of tracks) {
           let line = '';
-          if (tr.kind === 'course') line = tr.status === 'enrolled' ? t('side.enrolled') : tr.grades.length ? t('side.grades', { grades: tr.grades.join(' ') }) : '';
+          if (tr.kind === 'course') line = tr.status === 'enrolled' ? '' : tr.grades.length ? t('side.grades', { grades: tr.grades.join(' ') }) : '';
           else if (tr.kind === 'job' && tr.status === 'member' && snap.phase !== 'term') line = t('side.noShifts', { rank: tr.rank || '' });
           else if (tr.kind === 'job' && tr.done) line = t('side.shiftsDone', { rank: tr.rank || '' });
           else if (tr.kind === 'club' || tr.kind === 'job') line = t('side.rankLine', { rank: tr.rank || '', perf: tr.perf, due: tr.due });
           else if (tr.kind === 'thesis') line = t('side.progress', { n: tr.progress });
           else if (tr.kind === 'society') line = t('side.society');
           else if (tr.status === 'applied') line = t('side.applied');
-          h += '<div class="state track ' + esc(tr.kind) + '">' + Art.icon(tr.kind === 'job' ? 'coin' : tr.kind === 'club' ? 'group' : tr.kind === 'society' ? 'map' : 'book', 20) + '<div><b>' + esc(tr.levelName || tr.name) + '</b><p>' + esc(line) + '</p></div>' + (tr.kind === 'club' || tr.kind === 'job' ? '<span class="left">' + esc(t('side.perf', { n: tr.perf })) + '</span>' : '') + '</div>';
+          // An enrolled course as it stands (step 5): preparation toward the exam, when it is, and today's odds.
+          const standing = tr.study != null;
+          const when = standing ? (tr.examIn === 0 ? t('side.examNow') : tr.examIn === 1 ? t('side.examNext') : t('side.examIn', { n: tr.examIn })) : '';
+          const body = standing
+            ? '<p>' + esc(t('side.prep', { n: tr.study, cap: tr.studyCap }) + ' · ' + when) + '</p><div class="prep"><b style="width:' + Math.round((tr.study / Math.max(1, tr.studyCap)) * 100) + '%"></b></div>'
+            : '<p>' + esc(line) + '</p>';
+          const right = tr.kind === 'club' || tr.kind === 'job' ? t('side.perf', { n: tr.perf }) : standing ? t('side.passToday', { p: tr.pass }) : '';
+          h += '<div class="state track ' + esc(tr.kind) + '"' + (standing ? ' title="' + esc(t('side.oddsTip', { pass: tr.pass, top: tr.top })) + '"' : '') + '>' + Art.icon(tr.kind === 'job' ? 'coin' : tr.kind === 'club' ? 'group' : tr.kind === 'society' ? 'map' : 'book', 20) + '<div class="grow"><b>' + esc(tr.levelName || tr.name) + '</b>' + body + '</div>' + (right ? '<span class="left">' + esc(right) + '</span>' : '') + '</div>';
         }
       }
       if (snap.spells.length) {

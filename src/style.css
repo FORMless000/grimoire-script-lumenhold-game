@@ -100,6 +100,10 @@ details.adv input { margin-top: 8px; }
 .meter .val { font-size: 12px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
 .meter .lbl { font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
 .meter.low .orb { border-color: var(--bad); animation: pulse 1.6s infinite; }
+.meter.number .num { height: 46px; display: flex; align-items: center; gap: 4px; color: var(--c); font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.meter.number .num .val { font-size: inherit; font-weight: inherit; color: var(--text); }
+.meter.number.low .num .val { color: var(--bad); }
+.meter.number .lbl { margin-top: 19px; }   /* level with the orbs' labels, which sit under a value line */
 .meter .dot { position: absolute; top: -9px; width: 8px; height: 8px; border-radius: 50%; background: var(--gold-2); box-shadow: 0 0 8px var(--gold); opacity: 0; transform: scale(.4); transition: opacity .15s, transform .15s; }
 .meter.preview .dot { opacity: 1; transform: scale(1); }
 .float-chip { position: absolute; top: 4px; left: 50%; transform: translateX(-50%); font-weight: 700; font-size: 13px; pointer-events: none; animation: floatUp 1.6s ease-out forwards; text-shadow: 0 1px 3px #000; white-space: nowrap; }
@@ -186,6 +190,9 @@ details.adv input { margin-top: 8px; }
 .state b { font-size: 13px; font-weight: 600; display: block; }
 .state p { margin: 2px 0 0; font-size: 12px; color: var(--muted); line-height: 1.4; }
 .state .left { margin-left: auto; font-size: 11px; color: var(--muted); white-space: nowrap; }
+.state .grow { flex: 1; min-width: 0; }
+.state .prep { height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .08); overflow: hidden; margin-top: 5px; }
+.state .prep b { display: block; height: 100%; background: linear-gradient(90deg, #5a8ad8, #8ac4ff); }
 .person { display: flex; gap: 10px; padding: 10px; border-radius: 12px; background: rgba(255, 255, 255, .035); border: 1px solid rgba(255, 255, 255, .05); margin-bottom: 8px; cursor: pointer; }
 .person .avatar { flex: 0 0 auto; border-radius: 50%; }
 .person .info { flex: 1; min-width: 0; }
@@ -418,6 +425,7 @@ body[data-slot="midnight"] { --slot-tint: radial-gradient(120% 80% at 50% 0%, rg
   .meters { gap: 6px; padding: 10px 8px 2px; }
   .meter { width: 52px; }
   .meter .orb { width: 40px; height: 40px; }
+  .meter.number .num { height: 40px; font-size: 17px; }
   .meter .lbl { font-size: 9px; letter-spacing: .04em; }
   .card-body h2 { font-size: 24px; }
   .card-body .text { font-size: 16.5px; }
