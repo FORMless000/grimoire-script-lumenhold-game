@@ -21,7 +21,9 @@ year: 1
 traits: proud ambitious lonely stubborn
 interests: duelling fire books
 stats: arcana 34 lore 22 alchemy 8 charm 20 vigor 28 guile 12 wealth 5
-schedule: duel_hall@afternoon,evening refectory@noon library@night
+schedule: duel_hall@afternoon,evening refectory@noon library@night:60
+# Breaks at the Vaneshade estate (X7): reachable only by letter.
+schedule_break: away
 relations: kael:-10 bram:5 nessa:-5
 voice: Clipped and formal; sarcastic when hurt. Never says "please" first, never admits to being tired, apologises by doing something useful.
 desc: Brilliant, impatient and used to winning. She treats everyone as either a rival or furniture — and is quietly lonely about it.
@@ -41,7 +43,9 @@ year: 1
 traits: kind gentle homesick loyal
 interests: plants animals cooking dancing
 stats: arcana 12 lore 14 alchemy 26 charm 18 vigor 30 guile 4 wealth 1
-schedule: greenhouses@morning,afternoon refectory@noon,evening stables@evening
+schedule: greenhouses@morning,afternoon refectory@noon,evening stables@evening:60
+# Breaks on the family farm (X7): reachable only by letter.
+schedule_break: away
 relations: maud:20 bram:-15 mira:10
 voice: Warm, slow and earnest, with farm sayings and long stories about goats. Apologises too much; laughs from the belly.
 desc: Big hands, bigger heart. Talks to plants and, worryingly, the plants seem to answer.
@@ -61,7 +65,8 @@ year: 1
 traits: dreamy distant perceptive kind
 interests: prophecy painting tarot stars
 stats: arcana 20 lore 32 alchemy 10 charm 16 vigor 8 guile 14 wealth 3
-schedule: observatory@evening,night lakeshore@afternoon library@morning
+schedule: observatory@evening,night lakeshore@afternoon library@morning:50
+schedule_break: observatory@evening,night lakeshore@afternoon
 relations: kael:10 lyra:5
 voice: Half-sentences, finished in another week. Calm, vague, then suddenly exact about something that hasn't happened yet.
 desc: Speaks in half-sentences, as if finishing the other half in a different week. Often right. Unsettlingly often.
@@ -82,6 +87,8 @@ traits: charming reckless loyal secretive
 interests: maps locks cards money
 stats: arcana 16 lore 12 alchemy 14 charm 30 vigor 18 guile 38 wealth 1
 schedule: courtyard@noon,afternoon gargoyle_passage@night gargoyle_passage@midnight:40 gilded_newt@evening
+# Nowhere he'd go back to (X7): the Newt and the passages over breaks.
+schedule_break: gilded_newt@afternoon,evening gargoyle_passage@night gargoyle_passage@midnight:50
 relations: bram:-30 nessa:10
 voice: Quick, teasing, deflecting with jokes; calls you "saint" when you're being good. When he means something, the jokes stop and so does he.
 desc: Knows every locked door in the academy and has opinions about all of them. Owes money to at least three people.
@@ -101,7 +108,8 @@ year: 1
 traits: chaotic curious stubborn funny
 interests: machines clocks flying
 stats: arcana 24 lore 20 alchemy 30 charm 14 vigor 10 guile 12 wealth 3
-schedule: workshop@afternoon,evening,night refectory@noon lecture_tower@morning
+schedule: workshop@afternoon,evening,night refectory@noon:50 lecture_tower@morning
+schedule_break: workshop@afternoon,evening,night
 relations: tobias:10
 voice: Fast, enthusiastic, full of technical tangents and exclamation marks. Talks to machines more gently than to people. Says "probably" a lot.
 desc: Smells permanently of solder and ozone. Has built a clockwork owl, a self-stirring cauldron and at least one small fire.
@@ -121,7 +129,9 @@ year: 1
 traits: guarded cold lonely protective
 interests: stars snow books
 stats: arcana 36 lore 26 alchemy 8 charm 10 vigor 22 guile 18 wealth 2
-schedule: observatory@night observatory@midnight:30 library@afternoon boathouse@evening
+schedule: observatory@night observatory@midnight:30 library@afternoon:60 boathouse@evening
+# Can't go home (X7): the lake and the observatory all break long.
+schedule_break: lakeshore@afternoon boathouse@evening observatory@night observatory@midnight:40
 relations: ilse:30 lyra:-10 seraphine:5
 voice: Few words, quiet, as if each one costs something. Northern formality; literal-minded about feelings, startled by kindness.
 desc: Arrived mid-term with no luggage and frost in his eyelashes. Doesn't talk about where he came from. Watches the sky at night.
@@ -141,7 +151,8 @@ year: 2
 traits: nosy idealistic overworked bold
 interests: writing gossip justice
 stats: arcana 14 lore 26 alchemy 8 charm 30 vigor 12 guile 24 wealth 2
-schedule: ledger_office@afternoon,evening,night courtyard@noon
+schedule: ledger_office@afternoon,evening,night courtyard@noon gilded_newt@evening:25
+schedule_break: ledger_office@afternoon village@evening:50
 relations: bram:-20 corvin:10 lyra:-5
 voice: Rapid, bossy, headline-shaped. Treats every conversation as an interview; goes very quiet when it's off the record.
 desc: Runs the student paper with a quill that writes on its own. Everyone is a story; some are just not finished yet.
@@ -162,7 +173,9 @@ year: 3
 traits: bullying insecure proud loyal
 interests: rules duelling
 stats: arcana 26 lore 18 alchemy 10 charm 14 vigor 32 guile 20 wealth 4
-schedule: courtyard@morning,noon duel_hall@evening library@afternoon
+schedule: courtyard@morning,noon duel_hall@evening library@afternoon:50
+# A prefect who stays on campus through every break (X7).
+schedule_break: courtyard@afternoon duel_hall@evening
 relations: tobias:-15 corvin:-30 nessa:-20 lyra:5
 voice: Loud, officious, rule-quoting; demerits as punctuation. Under it, his father's voice. When he's honest, he's gruff and brief.
 desc: Upper-year prefect with a ledger of demerits and a fondness for writing your name in it.
@@ -183,7 +196,8 @@ seeks: rarely
 traits: severe exacting dry warm
 interests: duelling roses teaching chess
 stats: arcana 88 lore 74 alchemy 30 charm 22 vigor 40 guile 36 wealth 4
-schedule: lecture_tower@morning,afternoon great_hall@noon library@evening
+schedule: lecture_tower@morning,afternoon great_hall@noon library@evening:50
+schedule_break: library@afternoon,evening
 relations: isolde:30 maud:20
 voice: Terse, precise, allergic to flattery. "Hm." is a full sentence. Praise arrives disguised as criticism, and very rarely.
 desc: Severe, exacting, allergic to flattery. Rumoured to have once out-dueled a storm.
@@ -205,6 +219,7 @@ traits: kind eccentric patient warm
 interests: plants bees soup animals history
 stats: arcana 46 lore 58 alchemy 72 charm 30 vigor 20 guile 34 wealth 2
 schedule: maud_cottage@morning,evening greenhouses@afternoon orchard@noon
+schedule_break: maud_cottage@morning,evening greenhouses@afternoon
 relations: thorne:20 isolde:25 tobias:20
 voice: Folksy and sharp; calls everyone "dearie". Gives advice you only understand two weeks later; tells sad stories over tea as if they were recipes.
 desc: Keeps bees, chickens and a rather large secret garden. Gives advice you only understand two weeks later.
@@ -226,6 +241,7 @@ traits: calm watchful formidable perceptive
 interests: chess history justice
 stats: arcana 84 lore 90 alchemy 50 charm 60 vigor 30 guile 70 wealth 4
 schedule: headmistress_tower@morning,afternoon,evening great_hall@noon
+schedule_break: headmistress_tower@afternoon,evening
 relations: thorne:30 maud:25
 voice: Pleasant, unhurried, every word placed like a chess piece. Never raises her voice; never needs to. A short, delighted laugh when surprised.
 desc: Tall, pale and impossibly calm. She remembers every student's name — and every student's mistakes.
@@ -269,6 +285,7 @@ traits: severe honest patient warm
 interests: plants soup history
 stats: arcana 40 lore 52 alchemy 80 charm 24 vigor 34 guile 30 wealth 2
 schedule: alchemy_lab@morning infirmary@afternoon,evening,night great_hall@noon
+schedule_break: infirmary@afternoon,evening,night
 relations: maud:25 thorne:10 brask:15
 voice: Short sentences, delivered while doing something else. Believes no excuse, forgives most things anyway. Praise comes as an instruction ("Keep doing that.").
 desc: Runs the infirmary with warming charms, tonics and no patience for excuses. Teaches the healing half of Alchemy & Healing.
@@ -290,6 +307,7 @@ traits: dry gentle stubborn brave
 interests: animals flying history
 stats: arcana 52 lore 48 alchemy 30 charm 16 vigor 70 guile 28 wealth 2
 schedule: stables@morning,afternoon,evening great_hall@noon
+schedule_break: stables@morning,afternoon,evening
 relations: amaranth:15 maud:20 thorne:5
 voice: Speaks to creatures in full sentences and to students in half ones. Every story ends with a bite and a moral. Laughs once a term, loudly.
 desc: Teaches Beastcraft & Flight and is kinder to animals than to students, though the gap closes for anyone who mucks out without being asked.
@@ -311,6 +329,8 @@ traits: charming perceptive sly funny
 interests: theatre painting cards
 stats: arcana 60 lore 50 alchemy 20 charm 78 guile 70 vigor 22 wealth 3
 schedule: lecture_tower@morning,afternoon great_hall@noon
+# Breaks with the theatre season in the capital (X7).
+schedule_break: away
 relations: thorne:5 marisol:20
 voice: Amused, theatrical, a little too observant. Asks questions she already knows the answer to, to see what you'll do. Delighted by anyone who fools her.
 desc: Teaches Illusion & Glamour and grades on whether you fooled her. She is very hard to fool, and very generous to the few who manage it.
@@ -332,6 +352,7 @@ traits: dreamy warm reckless curious
 interests: tides music writing
 stats: arcana 70 lore 56 alchemy 18 charm 40 guile 20 vigor 52 wealth 2
 schedule: lakeshore@morning,evening lecture_tower@afternoon
+schedule_break: lakeshore@morning,evening
 relations: vey:20 thorne:15
 voice: Soft and unhurried until there's weather; then she whoops. Quotes poems about water and forgets the last line. Believes cold water is good for everyone.
 desc: Teaches the tidecalling half of Evocation, waist-deep in the lake at dawn. Keeps the lake calm on exam days and reads poetry under a dry patch of air when it rains.
