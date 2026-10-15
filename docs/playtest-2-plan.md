@@ -184,6 +184,23 @@ Retune once, on the finished mechanics. Tools: `tools/economy.js`, `balance` (fu
 
 Not in step 3: L13 → M13; L21 → X; L22 → X3; L28 → the final pass.
 
+## Step 4 — N (minor additions), after L
+
+Mostly content, written with `skills/write-academy-events` (brief, write, fmt / build / lint, i18n zh-CN, critic, `check` and `balance --quick`, snapshot, commit). Three small language additions come first, in the usual order (grimoire.js → engine → lint → format/query → docs, `schema --update`). About 70 new cards in four packages, each committed on its own.
+
+What exists (surveyed after L): every main character has an intro card except Kael (`kael_arrives`), Maud, Ilse, Brask, Vey and Grisk; enrolling in a course or joining a club or job meets its `lead:` silently (Thorne, Amaranth, Vey, Brask, Lyra, Nessa, Tobias, Corvin, Pell); `hungry` is read by no card, `detention` and `probation` by one each; the familiars (`familiar_fox`, `familiar_owl`) are passive ticks; the letter pool has 3 cards; romance jealousy is only `soc_two_timing` (two partners); the job board has 2 ordinary cards; `year_two` / `year_three` / `year_four` exist; there is no appeal card; each spell is learned silently at an exam (the note only).
+
+| Package | Items | Approach |
+|---|---|---|
+| N-A Language | N1, N4, N6 | **`intro:` on `@track`** (N1): enrolling or joining no longer meets the lead at once; the track's intro card is queued for its first visit (a card where you meet them). Intros written for Vey and Brask. **Appeals** (N4): `@game appeal` names a card pushed after a failed course, in that course's context; a won appeal changes the grade with a new statement (`regrade track C`). **Month-end lines** (N6): hooks and states take optional `say:` lines (with variants), shown in the month summary beside the numbers, so "Term-time pressure −3" reads as a sentence. |
+| N-B Status and spells in play | N2, N5, N8, N9, N12 | N2: cards that show statuses: hungry (3: the refectory's leftovers, pocketed rolls, Maud's soup), detention (2), probation (2: the advisor, the warning letter), sick or injured (2). N5: a hint card at the job board when crowns are low and you have no job (decided D2: hints, never obligations). N8: the familiars become cards (3 each) instead of monthly ticks. N9: `life_invent_spell` teaches a spell. N12: `up[spell]` options in `duelling_ward_line` (ward), `illu_good_news` (glamour or mirror), `life_prank_war` (glamour). |
+| N-C People | N1, N7, N10, N14 | N1: lead-in cards before the club fair, the job board's first visit and enrolment (a flyer, a notice, the registrar's list). N7: romance jealousy, two cast roles with spark ≥ 30 each and no partner yet (3 cards), per design §8.2. N14: letters: about 8 generic (home, friends, a professor) and 2 per romanceable character (14). N10: a follow-up to `village_square_errand` (1–2). |
+| N-D The year's frame | N3, N13, N15 | N3: a lesson card for each spell, auto when it's first learned (12): where and how it's taught, by whom. N13: job board cards with some story (3), plot-safe. N15: each year's opening foreshadows what's new: the midnight turn, internship applications, vacation work, year 4's thesis load and the hint to drop a job or club. |
+
+Not in step 4: N11 → X11.
+
+Decided (user): a won appeal turns the F into a C (`regrade track C`); the familiars' cards replace their monthly ticks; N3's lesson cards are written now for the current 12 spells (reworked if the minigames change the spells); each batch is self-reviewed against the critic checklist.
+
 ## Status
 Steps 1 (B, C) and 2 (M, packages M-A to M-F) are done and committed; the triage marks each item.
 
