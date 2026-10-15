@@ -1,6 +1,6 @@
 // Investigation helper: the Hollow Star funnel and alignment per play style.
 //   node tools/hs-funnel.js [games=60] [styles=random,balanced,social,lumen,hollow,plot]
-// Per style: alignment p10/p50/p90 and how often ±30/±60 were crossed; clues; how many reached the Night and
+// Per style: alignment p10/p50/p90 and how often ±30/±60 were crossed; clues(hollowstar); how many reached the Night and
 // what they chose there and beneath the lake; the yearbook (headline, mystery, personal lines). Not part of verify.
 'use strict';
 const path = require('path');
@@ -24,11 +24,12 @@ for (const sn of styles) {
   const st = Policies.get(sn); const T = { al: [], clues: [], m30: 0, m60: 0, p30: 0, p60: 0, night: {}, beneath: {}, head: {}, myst: {}, pers: {}, rel: {}, early: {}, align: 0 };
   for (let g = 0; g < N; g++) {
     const { eng, r, picks, lo, hi } = play(1000 + g * 7, st); const s = eng.s;
-    T.al.push(s.vals.alignment); T.clues.push(Object.keys(s.clues || {}).length);
+    T.al.push(s.vals.alignment); T.clues.push(((content.arcs.hollowstar || {}).clues || []).filter((k) => (s.clues || {})[k] != null).length);
     if (lo <= -30) T.m30++; if (lo <= -60) T.m60++; if (hi >= 30) T.p30++; if (hi >= 60) T.p60++;
     if (Object.keys(picks).some((k) => k.startsWith('align_'))) T.align++;
     if (picks.hs_the_night) T.night[picks.hs_the_night] = (T.night[picks.hs_the_night] || 0) + 1;
-    if (picks.hs_beneath) T.beneath[picks.hs_beneath] = (T.beneath[picks.hs_beneath] || 0) + 1;
+    if (picks.hs_beneath) { const k = picks.hs_beneath + (picks.hs_beneath === 'seal' ? (s.flags.hollow_failed ? ':failed' : ':held') : ''); T.beneath[k] = (T.beneath[k] || 0) + 1; }
+    for (const k of ['hs_tunnel', 'hs_threshold']) if (picks[k]) T.beneath[k + ':' + picks[k] + (s.flags[k === 'hs_tunnel' ? 'hs_tunnel_clear' : 'hs_threshold_read'] ? '+' : '-')] = (T.beneath[k + ':' + picks[k] + (s.flags[k === 'hs_tunnel' ? 'hs_tunnel_clear' : 'hs_threshold_read'] ? '+' : '-')] || 0) + 1;
     if (r.early) T.early[r.id] = (T.early[r.id] || 0) + 1; else T.head[r.id] = (T.head[r.id] || 0) + 1;
     for (const y of r.yearbook || []) { const b = y.slot === 'mystery' ? T.myst : y.slot === 'personal' ? T.pers : T.rel; if (b) b[y.id] = (b[y.id] || 0) + 1; }
   }

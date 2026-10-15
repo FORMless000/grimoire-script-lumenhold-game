@@ -237,11 +237,15 @@
     fact: { dotted: true, props: ['npc', 'tier', 'unlock', 'text'], effects: [] },
     archetype: { props: ['names', 'age', 'traits', 'pronouns', 'house', 'role', 'desc'], effects: [] },
     faction: { props: ['name', 'desc', 'members', 'alignment', 'stance'], effects: [] },
-    arc: { props: ['name', 'canon', 'acts', 'clock', 'beats', 'clues', 'key_clues', 'cast', 'desc'], effects: [] },
+    // `act_names:` the acts' names as players read them, comma-separated in `acts:` order (playtest 2, X11)
+    arc: { props: ['name', 'canon', 'acts', 'act_names', 'clock', 'beats', 'clues', 'key_clues', 'cast', 'desc'], effects: [] },
+    // A clue or a lead as the Journal shows it (X11): `kind: clue` (the default) is one of its arc's `clues:`, counted by
+    // clues(arc); `kind: lead` points somewhere to look and is never counted; `followed: <expr>` strikes a lead through.
+    clue: { props: ['arc', 'name', 'text', 'kind', 'followed'], effects: [] },
     lore: { props: ['keys', 'canon', 'text'], effects: [] },
     timeline: { props: ['date', 'kind', 'event', 'text'], effects: [] },
   };
-  const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'discover', 'hinted_when', 'unlock', 'prereq', 'defer']);
+  const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'discover', 'hinted_when', 'unlock', 'prereq', 'defer', 'followed']);
   const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment', 'warn_below',
     'schema', 'last_month', 'max_cards_per_day', 'level', 'rank', 'beat', 'pick', 'opens']);
   const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'params', 'draws', 'legacy', 'excludes', 'replaces', 'time', 'spread']);
@@ -661,8 +665,8 @@
    * ------------------------------------------------------------------ */
 
   const COLLECTION = { preset: 'presets', resource: 'resources', skill: 'skills', npc: 'npcs', state: 'states', event: 'events', ending: 'endings', hook: 'hooks',
-    vocab: 'vocab', place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', lore: 'lore', timeline: 'timeline' };
-  const WORLD_COLLECTIONS = ['presets', 'vocab', 'places', 'tracks', 'spells', 'facts', 'archetypes', 'factions', 'arcs', 'lore', 'timeline'];
+    vocab: 'vocab', place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline' };
+  const WORLD_COLLECTIONS = ['presets', 'vocab', 'places', 'tracks', 'spells', 'facts', 'archetypes', 'factions', 'arcs', 'clues', 'lore', 'timeline'];
 
   // sources: [{path, text}] -> {content, errors}
   function compile(sources) {

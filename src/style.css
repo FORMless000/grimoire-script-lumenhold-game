@@ -208,6 +208,18 @@ details.adv input { margin-top: 8px; }
 .side .bond-friend, .side .bond-close { background: rgba(127, 209, 139, .15); color: var(--good); }
 .side .bond-partner { background: rgba(224, 112, 138, .2); color: #f4a0b4; }
 .side .bond-rival, .side .bond-nemesis { background: rgba(255, 138, 128, .15); color: var(--bad); }
+.thread { margin: 4px 0 12px; padding: 10px 12px; border: 1px solid rgba(232, 200, 120, .22); border-radius: 10px; background: rgba(232, 200, 120, .05); }
+.thread .th-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 14px; }
+.thread .th-act { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.th-sub { margin: 8px 0 2px; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.th-sub.log-head { margin-top: 14px; }
+.th-row { position: relative; padding: 3px 0 3px 16px; font-size: 12.5px; line-height: 1.45; }
+.th-row::before { position: absolute; left: 0; top: 3px; color: #e8c878; }
+.th-row.clue::before { content: '✦'; }
+.th-row.clue.key::before { content: '✷'; color: #ffd76a; }
+.th-row.lead::before { content: '→'; color: var(--muted); }
+.th-row.lead.done { opacity: .55; }
+.th-row.lead.done b { text-decoration: line-through; }
 .log-item { padding: 9px 0; border-bottom: 1px solid rgba(255, 255, 255, .05); font-size: 13px; line-height: 1.45; }
 .log-item .when { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
 .log-item b { font-weight: 600; }

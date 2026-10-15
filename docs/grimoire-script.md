@@ -461,7 +461,8 @@ Worldbook blocks are **data**: canon for authors, briefs and lint. Until phase 2
 | `@place` | `region`, `kind` (public, club, job, thesis, internship, plan), `track`, `open` slots, `discover` / `closed_when` / `hinted_when` (expressions), `hint`, `desc` | `map: campus x,y` |
 | `@track` | `kind` (course, club, job, internship, thesis), `skill`, `levels` + `level_names`, `place`, `hidden`, `prereq`, `ranks`, `due`, `lead` | `teaches: spell@level …` · `pay: 8, 12, 18` |
 | `@spell` | `discipline` (a course track) | `cost: 8, 6, 5` · `power: 1, 2, 3` |
-| `@arc` | `canon`, `clues`, `key_clues`, `cast` | `acts: name@yN …` · `clock: 0..12` · `beats: clock@yNmM …` |
+| `@arc` | `canon`, `clues`, `key_clues`, `cast`, `act_names` (the acts as players read them, comma-separated) | `acts: name@yN …` · `clock: 0..12` · `beats: clock@yNmM …` |
+| `@clue` | `arc`, `name`, `text`, `kind: clue \| lead`, `followed: <expr>` (a lead only) | the Journal's entry for a clue or a lead |
 | `@lore` | `keys` (comma-separated), `canon` hard / soft, `text` (not translated) | |
 | `@faction`, `@archetype`, `@timeline`, `@vocab` | members and stance; spawn templates (`age: 18..22`); dated history and calendar beats; controlled vocabularies (`values:`) | |
 
@@ -554,6 +555,17 @@ Roles are filled on a scratch copy of the RNG, with backtracking, favouring stro
 **Places** (`@place`): `map: campus 585,278` positions the marker; `open:` lists the slots it is open in; `season:`, `closed_when:` close it; `discover:` (a condition) finds it, else it starts found unless `hinted_when:` shows it as "?"; `track:` makes it a club or job place; `draws:` lets old tag-only random events be drawn there. Statements: `discover library`. Functions: `discovered(p)`, `present(p)` (who is there now), `visits_to(p)` (lifetime visits picked on the map).
 
 **Arcs** (`@arc` in `content/world/arcs.grim`): `clock: 0..12` and `beats: 1@y1m3 2@y1m9 …` advance the clock on schedule whatever the player does. Statements: `find bell_rope` (a clue), `advance hollowstar +1`. Functions: `clue(x)`, `clues(arc)` (how many of the arc's clues are found), `clock(arc)`, `act(arc)` (the current act by year).
+
+**Clues and leads** (`@clue` in `content/world/clues.grim`, playtest 2 X11): every clue an arc lists has a `@clue` with the `name:` and `text:` the Journal shows. A `kind: lead` is a pointer a story beat leaves behind ("Old Maud lost a friend to the lake"): `find` gives it like a clue, `clue(x)` tests it, but `clues(arc)` never counts it, and its `followed:` expression strikes it through in the Journal once it holds (usually `clue(<the clue it leads to>)`). The pattern: beats every player sees leave leads; the clue waits at the place or with the person the lead names (`place:` plus `when: clue(lead_…)`), so finding it is a choice. Lint: every `find` and `clue()` target needs a `@clue`, every arc clue has one, a clue is in its arc's `clues:` and a lead never is.
+
+```grim
+@clue lead_maud_friend
+arc: hollowstar
+kind: lead
+name: Maud lost a friend
+text: Old Maud was a student the last time the lake froze, and lost a friend to it. She might tell you more, if she trusts you.
+followed: clue(knows_founders_seal)
+```
 
 **Push windows** (design §5.3): `queue x within 2..4` (some month 2–4 months from now) and `queue x by month 6` (before the next month 6 is over). Each month in the window the card is pushed with a rising chance (1 / months left), and on the last month for certain. `unqueue x` drops a pending one.
 

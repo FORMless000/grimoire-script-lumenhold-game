@@ -326,7 +326,18 @@
           '<div class="desc">' + esc(n.desc || '') + '<br><br>' + esc(t('side.relationship', { n: rel })) + (n.romance ? ' · ' + esc(t('side.romance', { n: n.spark })) : '') + '</div></div></div>';
       }
     } else {
+      // The threads you are following (X11): each arc's act, clues found and leads, above the log.
+      const arcs = Object.keys(content.arcs || {}).sort((a, b) => (content.arcs[b].canon === 'hard') - (content.arcs[a].canon === 'hard'));
+      for (const id of arcs) {
+        const j = eng.journalOf(id); if (!j || (!j.clues.length && !j.leads.length && !j.act)) continue;
+        if (!j.clues.length && !j.leads.length && content.arcs[id].canon !== 'hard') continue;
+        h += '<div class="thread"><div class="th-head"><b>' + esc(j.name) + '</b>' + (j.actName ? '<span class="th-act">' + esc(t('journal.act', { n: j.act, of: j.acts, name: j.actName })) + '</span>' : '') + '</div>';
+        if (j.clues.length) h += '<div class="th-sub">' + esc(t('journal.clues')) + '</div>' + j.clues.map((c) => '<div class="th-row clue' + (c.key ? ' key' : '') + '"' + (c.key ? ' title="' + esc(t('journal.keyClue')) + '"' : '') + '><b>' + esc(c.name) + '</b> ' + esc(c.text) + '</div>').join('');
+        if (j.leads.length) h += '<div class="th-sub">' + esc(t('journal.leads')) + '</div>' + j.leads.map((c) => '<div class="th-row lead' + (c.followed ? ' done' : '') + '"><b>' + esc(c.name) + '</b> ' + esc(c.text) + (c.followed ? ' <i>(' + esc(t('journal.followed')) + ')</i>' : '') + '</div>').join('');
+        h += '</div>';
+      }
       const log = snap.log.slice().reverse();
+      if (h && log.length) h += '<div class="th-sub log-head">' + esc(t('journal.log')) + '</div>';
       if (!log.length) h += '<div class="empty">' + esc(t('side.emptyJournal')) + '</div>';
       for (const l of log.slice(0, 120)) {
         // Re-render title and choice in the current language when possible.

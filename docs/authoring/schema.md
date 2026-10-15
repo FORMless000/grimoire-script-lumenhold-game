@@ -287,12 +287,18 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 | `@arc id` | `name` | text | yes |
 |  | `canon` | text |  |
 |  | `acts` | structured |  |
+|  | `act_names` | text | yes |
 |  | `clock` | structured |  |
 |  | `beats` | structured |  |
 |  | `clues` | list |  |
 |  | `key_clues` | list |  |
 |  | `cast` | list |  |
 |  | `desc` | text | yes |
+| `@clue id` | `arc` | text |  |
+|  | `name` | text | yes |
+|  | `text` | text | yes |
+|  | `kind` | text |  |
+|  | `followed` | text |  |
 | `@lore id` | `keys` | structured |  |
 |  | `canon` | text |  |
 |  | `text` | text |  |

@@ -61,6 +61,14 @@ art: moon
 when: flag(hollow_freed)
 text: The spring the lake froze, the Star went free, and you held the door. It did not swallow you; it remembered who let it out. The Northern families write to you as one of their own now, and wherever you walk, candles burn a little lower, as if bowing. Lumenhold still hands you a diploma. Nobody at the ceremony looks you in the eye.
 
+@ending ending_hollow_failed
+slot: mystery
+priority: 90
+title: The Night Was Lost
+art: door
+when: flag(hollow_failed)
+text: The spring the lake froze, you went down beneath it, and the door would not close for you. The headmistress closed it in your place and paid for it with years she didn't have to spare. The Wardens don't blame you. Every spring, when the lake thaws, you do, a little, and then you get up and keep the old doors anyway.
+
 @ending ending_hollow_hero
 slot: mystery
 priority: 95
@@ -205,7 +213,7 @@ slot: mystery
 priority: 20
 title: Someone Else's Lantern
 art: lantern
-when: not (flag(hollow_sealed) or flag(hollow_bargain) or flag(hollow_freed))
+when: not (flag(hollow_sealed) or flag(hollow_bargain) or flag(hollow_freed) or flag(hollow_failed))
 text: There was a spring frost, the year you graduated, and a night when the bell under the lake would not stop ringing. You were somewhere else: asleep, or studying, or holding a door shut for the first-years. Someone else went down with the lantern. You never learn their whole story, but every spring, when the lake thaws, you find yourself grateful to them.
 
 @ending ending_graduate

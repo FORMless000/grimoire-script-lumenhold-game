@@ -1,0 +1,136 @@
+# ============================================================
+#  Clues and leads (playtest 2, X11) as the Journal shows them.
+#  kind: clue is one of its arc's clues: and counts in clues(arc);
+#  kind: lead points somewhere to look, never counts, and is
+#  struck through once its followed: holds. Only hard-canon story
+#  cards find clues; a lead may come from any story beat.
+# ============================================================
+
+# ---------------- The Hollow Star: leads ----------------
+
+@clue lead_lake_breathed
+arc: hollowstar
+kind: lead
+name: The lake held its breath
+text: In Mistveil the lake froze for one breath and the drowned bell tolled. Whoever keeps the boathouse has heard that shore for years.
+followed: clue(lake_bell)
+
+@clue lead_founders_archive
+arc: hollowstar
+kind: lead
+name: What the founders wrote
+text: The headmistress told the hall it was nothing. The founders' records in the library archive may disagree, and the Restricted Section keeps what the archive won't.
+followed: clue(founders_ledger)
+
+@clue lead_maud_friend
+arc: hollowstar
+kind: lead
+name: Maud lost a friend
+text: Old Maud was a student the last time the lake froze, and lost a friend to it. She might tell you more, if she trusts you.
+followed: clue(knows_founders_seal)
+
+@clue lead_man_in_grey
+arc: hollowstar
+kind: lead
+name: A man in grey
+text: A man in a grey coat told Kael to open something, or his sister would. Kael knows what. He'll tell someone he trusts.
+followed: clue(kael_family)
+
+@clue lead_black_star_dream
+arc: hollowstar
+kind: lead
+name: A dream of a black star
+text: You dreamt of the lake from underneath. Seraphine dreams too, and the observatory sees further than any dream.
+followed: clue(second_shadow)
+
+@clue lead_seventh_tower
+arc: hollowstar
+kind: lead
+name: The seventh tower
+text: Seven towers, seven locks. One tower has been locked for a century, and something is kept at the top of it.
+followed: clue(star_key)
+
+@clue lead_white_furs
+arc: hollowstar
+kind: lead
+name: A girl in white furs
+text: A Northern girl has taken a room above the village bakery. Kael went pale when he heard.
+followed: met(ilse)
+
+@clue heard_of_starcalling
+arc: hollowstar
+kind: lead
+name: A scraped-out word
+text: One word has been scraped out of the observatory's oldest logs. Students who finished Advanced Astromancy were taught it aloud.
+followed: enrolled(starcalling) or passed(starcalling, 1)
+
+# ---------------- The Hollow Star: clues ----------------
+
+@clue founders_ledger
+arc: hollowstar
+name: The razored page
+text: The founding year was cut out of the Founders' Ledger with a razor, but the pen's impression survived on the page beneath.
+
+@clue knows_founders_seal
+arc: hollowstar
+name: The founders' seal
+text: Lumenhold was built as a seal: seven towers, seven locks, and a key shaped like a star. Something sleeps beneath the water.
+
+@clue lake_bell
+arc: hollowstar
+name: The bell under the water
+text: A drowned bell lies under the lake and tolls when the thing below stirs. A tunnel runs down from the boathouse toward it.
+
+@clue second_shadow
+arc: hollowstar
+name: A second shadow
+text: Something small and dark crossed the sky the wrong way and stopped directly above the lake.
+
+@clue seven_locks
+arc: hollowstar
+name: Seven locks
+text: One lock in each tower; when a tower goes dark, so does its lock. Locks can be mended. They need hands, and a key.
+
+@clue star_key
+arc: hollowstar
+name: The star key
+text: A key shaped like a star that holds no light, kept at the top of the seventh tower. The seal can't be renewed without it, or without the founders' words.
+
+@clue kael_family
+arc: hollowstar
+name: The Dumonts
+text: Kael's family serve the thing under the lake. They sent him to open its door. He came to stop them.
+
+@clue ilse_truth
+arc: hollowstar
+name: What Ilse was raised for
+text: The Dumonts raised Kael's sister to open the door if he wouldn't. Nobody ever asked her if she wanted to.
+
+@clue codex_names
+arc: hollowstar
+name: The Codex of Hollow Names
+text: A book in the Restricted Section lists everyone the Star has noticed. The last name is still being written, and it is yours.
+
+# ---------------- The Bell Under the Water ----------------
+
+@clue bell_heard
+arc: the_bell
+name: A bell where none is
+text: The drowned bell rang in the night with no one near it, and nobody else woke.
+
+@clue bell_rope
+arc: the_bell
+name: The cut rope
+text: Maud has kept the bell's rope for sixty years. It came up the night the lake froze, cut clean.
+
+@clue bell_name
+arc: the_bell
+name: The name on the rim
+text: Letters run around the bell's rim on the lakebed: a name you don't know, and now keep.
+
+# ---------------- Second Place ----------------
+
+@clue black_seal_letters
+arc: lyra_and_her_mother
+name: Letters under a black seal
+text: House Vaneshade writes to Lyra under its black seal. Her mother asks who beat her, never how she is.

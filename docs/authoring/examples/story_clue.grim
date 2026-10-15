@@ -1,16 +1,19 @@
 # Exemplar: a main-plot clue (story class), from content/events/chain_hollowstar.grim.
 # Why it works: tense, concrete discovery; the safe option costs the clue; the risky option is a
-# challenge whose failure still gives something (and a hint). Its gate reads the arc, not a counter:
-# `clues(hollowstar) >= 1` means the player has already noticed something. Only hard-canon events
-# may grant key clues (`find`) or move the arc clock; moral weight goes on `alignment`, never on
-# plot progress.
+# challenge whose failure still gives something (and a hint). Clues are found by following a lead
+# (X11): a story beat leaves `lead_founders_archive` (an @clue of kind lead, content/world/clues.grim),
+# and this card waits at the place the lead names (`place: library`), so the player chooses to dig.
+# Its gate reads leads and clues, never a home-made counter. Only hard-canon events may grant key
+# clues (`find`) or move the arc clock; moral weight goes on `alignment`, never on plot progress.
 
 @event hs_founders_records
 title: The Founders' Ledger
+place: library
+time: morning afternoon
 class: story
 tone: eerie
-when: clues(hollowstar) >= 1 and not flag(knows_founders_seal)
-weight: 12
+when: clue(lead_founders_archive) and not clue(founders_ledger)
+weight: 14
 art: book
 tags: mystery hollowstar study
 chain: hollowstar
@@ -30,4 +33,3 @@ text: In the archive vault you find the Founders' Ledger, three hundred years ol
     lose:
       lore +tiny
       say: The impression is too faint. You make out only three words: "...beneath the water..."
-

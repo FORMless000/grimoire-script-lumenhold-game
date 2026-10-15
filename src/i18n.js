@@ -63,6 +63,12 @@
     'side.spellCost': '{n} mana',
     'side.emptyJournal': 'Your story is yet unwritten.',
     'journal.when': '{month} · Y{year}',
+    'journal.act': 'Act {n} of {of} · {name}',
+    'journal.clues': 'Clues',
+    'journal.leads': 'Leads',
+    'journal.followed': 'followed',
+    'journal.keyClue': 'a key clue: needed beneath the lake',
+    'journal.log': 'What happened',
 
     'bond.friend': 'friend',
     'bond.close': 'close',
@@ -336,7 +342,8 @@
     spell: ['name', 'desc'],
     fact: ['text'],
     faction: ['name', 'desc'],
-    arc: ['name', 'desc'],
+    arc: ['name', 'act_names', 'desc'],
+    clue: ['name', 'text'],
   };
   const EFFECT_FIELDS = { resource: ['on_zero'], state: ['on_add', 'tick', 'on_expire', 'on_remove'], hook: ['do'], event: ['on_show'] };
 
@@ -354,7 +361,7 @@
     const defs = [];
     const g = content.game || {};
     defs.push(g.block ? g : Object.assign({ block: 'game', id: 'game' }, g));
-    for (const col of ['resources', 'skills', 'npcs', 'states', 'events', 'endings', 'hooks', 'places', 'tracks', 'spells', 'facts', 'factions', 'arcs']) defs.push(...Object.values(content[col] || {}));
+    for (const col of ['resources', 'skills', 'npcs', 'states', 'events', 'endings', 'hooks', 'places', 'tracks', 'spells', 'facts', 'factions', 'arcs', 'clues']) defs.push(...Object.values(content[col] || {}));
     defs.sort((a, b) => (a.file || '').localeCompare(b.file || '') || (a.line || 0) - (b.line || 0));
     for (const d of defs) {
       const kind = d.block || 'game';

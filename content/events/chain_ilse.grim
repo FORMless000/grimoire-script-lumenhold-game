@@ -1,8 +1,8 @@
 # ============================================================
 #  CHAIN: Ilse Dumont (expansion)
-#  Kael's younger sister, raised by the Hollow cult. Enters once
-#  the Hollow Star thread is under way (met her at the gates, or
-#  Kael known + two Hollow Star clues).
+#  Kael's younger sister, raised by the Hollow cult. She takes a room
+#  above the bakery in year 2 (hs_ilse_arrives, X11); you meet her
+#  there if you follow the lead, or at the gates (hs_kael_sister).
 #    ilse_village -> ilse_frost_lessons -> ilse_grey_returns
 #      -> (ilse_saved) ilse_kael_reunion / ilse_northern_letter / ilse_farewell
 #      -> (ilse_taken) she is gone north
@@ -10,11 +10,12 @@
 
 @event ilse_village
 title: The Girl at the Bakery
+place: village
 class: story
 tone: eerie
 actor: ilse
-when: turn >= 16 and not met(ilse) and (flag(met_sister) or (met(kael) and clues(hollowstar) >= 2))
-weight: 16
+when: not met(ilse) and (flag(ilse_in_village) or flag(met_sister))
+weight: 20
 art: snow
 tags: mystery hollowstar
 chain: ilse

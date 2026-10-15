@@ -583,6 +583,19 @@
       for (let k = 0; k < str.length; k++) { h ^= str.charCodeAt(k); h = Math.imul(h, 16777619); }
       return (h >>> 0) % 100 < x.chance;
     }
+    // The Journal's view of an arc (X11): the act by name, the clues found and the leads picked up (struck through once
+    // `followed:` holds), each in the order found. Null until the arc has begun (its clock moved, or anything found).
+    journalOf(arcId) {
+      const a = this.c.arcs && this.c.arcs[arcId]; if (!a) return null;
+      const s = this.s, act = this.actOf(arcId), found = Object.values(this.c.clues || {}).filter((d) => d.arc === arcId && (s.clues || {})[d.id] != null);
+      if (!found.length && !((s.arcs[arcId] || {}).clock > 0)) return null;
+      found.sort((x, y) => s.clues[x.id] - s.clues[y.id]);
+      const names = (a.act_names || '').split(/\s*[,，、]\s*/).filter(Boolean);
+      const row = (d) => ({ id: d.id, name: d.name, text: d.text, turn: s.clues[d.id], key: (a.key_clues || []).includes(d.id) });
+      return { id: arcId, name: a.name, act, actName: act ? names[act - 1] || (a.acts[act - 1] || {}).name : null, acts: (a.acts || []).length,
+        clues: found.filter((d) => d.kind !== 'lead').map(row),
+        leads: found.filter((d) => d.kind === 'lead').map((d) => Object.assign(row(d), { followed: !!(d.followed && this.test(d.followed, null)) })) };
+    }
     actOf(arcId) { const a = this.c.arcs && this.c.arcs[arcId]; if (!a || !a.acts) return 0; return a.acts.filter((x) => x.year <= this.yearOf()).length; }
     monthlyWorld(summary) {
       const s = this.s, ctx = this.newCtx(null, null);

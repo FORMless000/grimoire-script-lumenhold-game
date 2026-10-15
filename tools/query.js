@@ -11,10 +11,10 @@
 'use strict';
 const G = require('../src/grimoire.js');
 
-const BLOCKS = ['event', 'state', 'npc', 'ending', 'hook', 'resource', 'skill', 'place', 'track', 'spell', 'fact', 'archetype', 'faction', 'arc', 'lore', 'timeline', 'vocab'];
+const BLOCKS = ['event', 'state', 'npc', 'ending', 'hook', 'resource', 'skill', 'place', 'track', 'spell', 'fact', 'archetype', 'faction', 'arc', 'clue', 'lore', 'timeline', 'vocab'];
 const STATEMENTS = ['say', 'if', 'chance', 'check', 'challenge', 'sit_exam', 'wage', 'flag', 'unflag', 'gain', 'lose', 'queue', 'rel', 'spark', 'npc_rel', 'cool', 'visit', 'learn', 'learn_spell', 'regrade', 'bond', 'meet', 'end', 'delta', 'assign'];
 const COLLECTIONS = { event: 'events', state: 'states', npc: 'npcs', ending: 'endings', hook: 'hooks', resource: 'resources', skill: 'skills',
-  place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', lore: 'lore', timeline: 'timeline', vocab: 'vocab' };
+  place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline', vocab: 'vocab' };
 const EFFECT_SLOTS = ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero'];
 
 // Documented per node kind (printed by `grim query --fields`).
@@ -108,6 +108,7 @@ function blockFields(kind, d) {
     case 'spell': return { ...base, name: d.name, discipline: d.discipline || null };
     case 'fact': return { ...base, npc: d.npc || d.id.split('.')[0], tier: d.tier || null, unlock_src: d.unlock ? d.unlock.src : null, text: d.text, len: (d.text || '').length };
     case 'lore': return { ...base, canon: d.canon || null, keys: (d.keys || []).join(', '), text: d.text, len: (d.text || '').length };
+    case 'clue': return { ...base, name: d.name || null, arc: d.arc || null, kind: d.kind || 'clue', text: d.text, len: (d.text || '').length };
     case 'arc': case 'faction': case 'archetype': case 'timeline': case 'vocab': return { ...base, name: d.name || null, canon: d.canon || null, kind: d.kind || null, date: d.date || null, event: d.event || null };
   }
   return base;

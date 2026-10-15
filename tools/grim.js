@@ -132,7 +132,7 @@ function analyze(content) {
           else if (kind === 'npc') { if (!ROLES.has(a.v)) add(A.npcsRef, a.v, where); }
           else if (kind === 'event') add(A.eventsRef, a.v, where);
           else if (kind === 'track') { if (!content.tracks[a.v] && !((n.n === 'member' || n.n === 'applied') && KIND_ARGS.has(a.v))) P('error', where, n.n + '(): unknown track "' + a.v + '"'); }
-          else if (kind === 'clue') { if (!Object.values(content.arcs).some((arc) => (arc.clues || []).includes(a.v))) P('error', where, 'clue(' + a.v + '): not a clue of any @arc'); }
+          else if (kind === 'clue') { if (!content.clues[a.v]) P('error', where, 'clue(' + a.v + '): no @clue ' + a.v); }
           if (n.n === 'bonds' && !KNOWN_BONDS.has(a.v)) P('warn', where, 'unknown bond status "' + a.v + '"');
           if (n.n === 'offered' && !['courses', 'clubs', 'jobs'].includes(a.v)) P('error', where, 'offered(): takes courses, clubs or jobs, not "' + a.v + '"');
         });
@@ -209,7 +209,7 @@ function analyze(content) {
           break;
         case 'study': if (st.track && st.track !== 'track' && !(content.tracks[st.track] && content.tracks[st.track].kind === 'course')) P('error', w, 'study: "' + st.track + '" is not a course'); break;
         case 'discover': if (!content.places[st.place]) P('error', w, 'discover: unknown place "' + st.place + '"'); break;
-        case 'find': if (!Object.values(content.arcs).some((a) => (a.clues || []).includes(st.clue))) P('error', w, 'find: "' + st.clue + '" is not a clue of any @arc');
+        case 'find': if (!content.clues[st.clue]) P('error', w, 'find: no @clue "' + st.clue + '"');
           else if (/^content\/batches\//.test(w)) { const key = Object.values(content.arcs).some((a) => (a.key_clues || []).includes(st.clue)); if (key) P('error', w, 'find ' + st.clue + ': only hard-canon events may grant key clues'); }
           break;
         case 'advance': if (!content.arcs[st.arc]) P('error', w, 'advance: unknown arc "' + st.arc + '"'); else if (/^content\/batches\//.test(w)) P('error', w, 'advance: only hard-canon events move an arc clock'); break;
@@ -505,6 +505,19 @@ function analyzeWorld(content, P, scanExpr, scanText) {
     for (const k of d.key_clues || []) if (!(d.clues || []).includes(k)) P('error', loc(d), 'key clue "' + k + '" is not in clues');
     for (const m of d.cast || []) if (!content.npcs[m]) P('error', loc(d), 'cast: unknown npc "' + m + '"');
     for (const b of d.beats || []) if (d.clock && (b.clock < d.clock.min || b.clock > d.clock.max)) P('error', loc(d), 'beat ' + b.clock + ' is outside the clock');
+  }
+  // Clues and leads (X11): every arc clue has a @clue; a clue is in its arc's clues:, a lead never is.
+  for (const d of Object.values(content.arcs)) for (const k of d.clues || []) if (!content.clues[k]) P('error', loc(d), 'clue "' + k + '" has no @clue');
+  for (const d of Object.values(content.arcs)) if (d.act_names && d.acts && d.act_names.split(/\s*[,，、]\s*/).length !== d.acts.length) P('error', loc(d), 'act_names: one name per act');
+  for (const d of Object.values(content.clues)) {
+    const arc = content.arcs[d.arc];
+    if (!arc) { P('error', loc(d), '@clue ' + d.id + ': unknown arc "' + d.arc + '"'); continue; }
+    if (d.kind && !['clue', 'lead'].includes(d.kind)) P('error', loc(d), 'kind must be clue or lead');
+    const listed = (arc.clues || []).includes(d.id);
+    if (d.kind === 'lead' ? listed : !listed) P('error', loc(d), d.kind === 'lead' ? 'a lead must not be in its arc\'s clues:' : 'not in ' + d.arc + '\'s clues: (or make it kind: lead)');
+    if (d.followed && d.kind !== 'lead') P('error', loc(d), 'followed: is for leads');
+    if (!d.name || !d.text) P('error', loc(d), '@clue needs name and text');
+    if (d.followed) scanExpr(d.followed, loc(d), false);
   }
   for (const d of Object.values(content.lore)) {
     if (!['hard', 'soft'].includes(d.canon)) P('error', loc(d), '@lore canon must be hard or soft');

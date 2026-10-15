@@ -1,17 +1,49 @@
 # ============================================================
-#  THE HOLLOW STAR: Acts II-IV as arc beats (arc: hollowstar)
+#  THE HOLLOW STAR: the acts as arc beats (arc: hollowstar)
 #
-#  Act II (investigation, year 2): the Wardens stir.
-#    beat 4  hs_silver_rings, hs_seraphine_towers
+#  Rumours, leads, clues (playtest 2, X11): the beats fire for every
+#  player and leave leads (@clue kind: lead, content/world/clues.grim);
+#  clues are found only by following a lead to its place or person.
+#  Act I (omens, year 1)
+#    beat 1  hs_lake_breathes -> leads: the lake, the archive, Maud
+#    beat 2  hs_grey_stranger (chain_hollowstar.grim) -> lead: the man in grey
+#  Act II (investigation, year 2): the Wardens stir, Ilse arrives.
+#    beat 4  hs_silver_rings, hs_seraphine_towers, hs_ilse_arrives
 #    beat 5  hs_frost_ring
 #  Act III (escalation, year 3): a tower goes dark, sides are taken.
 #    beat 7  hs_dark_tower (may advance the clock to 8), hs_maud_locks
-#    beat 8  hs_choosing_sides -> flag sided_wardens | sided_dumonts | sided_self
+#    beat 8  hs_two_shadows -> hs_choosing_sides -> sided_wardens | sided_dumonts | sided_self
 #  Act IV (convergence, year 4): preparation before the summons.
-#    beat 10 hs_last_winter, hs_ilse_door
-#  Preparation (key clues, allies at rel >= 30, the side flag) sets
-#  the tier of the seal challenge in hs_beneath.
+#    beat 10 hs_last_winter (who stands with you beneath the lake), hs_ilse_door
+#  Preparation, and how the tunnel and the threshold went, set the
+#  tier of the seal in hs_beneath; the seal can fail (hollow_failed).
 # ============================================================
+
+# ---------------- Act I: omens ----------------
+
+@event hs_lake_breathes
+title: The Lake Breathes
+arc: hollowstar
+beat: 1
+slot: evening
+class: story
+tone: eerie
+art: snow
+tags: mystery hollowstar
+chain: hollowstar
+scene: The Great Hall at supper, every head turned to the tall windows, the lake beyond them gone white with sudden frost.
+text: At supper the lake outside the tall windows turns white, all at once, and stays white for one breath. Then it thaws. Far under the water a bell tolls once. The headmistress stands. "A cold current," she says pleasantly. "Eat your soup." Nobody does.
+> left: Go down to the shore after supper
+  meet maud
+  find lead_lake_breathed
+  find lead_maud_friend
+  health -tiny
+  say: The shore is soaked and freezing. Old Maud is already there with a lantern, watching the water. "Last time it did that, I lost a friend," she says, not quite to you. Then she sends you to bed, and you go, shivering.
+> right: Watch the high table instead
+  find lead_founders_archive
+  lore +tiny
+  mood -tiny
+  say: The headmistress finishes her soup. Professor Thorne doesn't touch his, and after supper he goes straight to the library archive. You lie awake wondering what he went to read.
 
 # ---------------- Act II: the Wardens stir ----------------
 
@@ -57,11 +89,38 @@ text: Seraphine is on the observatory balcony, counting towers on her fingers. "
 > left: "Which one goes out?"
   lore +small
   mood -small
-  say: She points, then frowns at her own hand. "That one. Or the one next to it. Next year, I think." She doesn't remember saying it the next morning, but you do.
+  find lead_seventh_tower
+  say: She points, then frowns at her own hand. "That one. Or the one next to it. Next year, I think. Not the seventh; nobody's lit the seventh for a hundred years." She doesn't remember saying it the next morning, but you do.
 > right: "It's {month}. Evening."
   rel seraphine +medium
   mood +tiny
   say: She lets out a long breath and sits down on the cold stone. "Thank you. I was halfway into a winter." You stay until she is sure which one she's in.
+
+@event hs_ilse_arrives
+title: Kael Goes Pale
+arc: hollowstar
+beat: 4
+when: met(kael)
+class: story
+tone: tense
+actor: kael
+art: snow
+tags: mystery hollowstar
+chain: hollowstar
+scene: A breakfast table in the refectory, a pale northern student staring at an unsealed letter, frost creeping across his teacup.
+text: At breakfast a village boy brings Kael a note, and Kael reads it and goes whiter than usual, which is a feat. Frost creeps across his tea. "My sister," he says. "She's taken a room above the bakery." He folds the note very small. "She isn't here to visit."
+> left: Go to the bakery yourself
+  flag ilse_in_village
+  find lead_white_furs
+  queue ilse_village in 1
+  rel kael -tiny
+  mood -tiny
+  say: "Don't," he says, too quickly. "She'd only… don't." He doesn't eat. You decide you'll go anyway, soon, and he can see you decide it, and looks away.
+> right: Leave him to it
+  flag ilse_in_village
+  find lead_white_furs
+  rel kael -tiny
+  say: You let him be. He sits with the note until the hall empties. That afternoon the whole village is talking about a girl in white furs whose coins freeze to the counter.
 
 @event hs_frost_ring
 title: A Ring of Frost
@@ -137,15 +196,37 @@ text: Maud is on her cottage step with two mugs of tea, as if she expected you. 
   say: You drink your tea and watch the ice. She hums something old. When the mugs are empty she squeezes your hand. "That was the right one," she says, and you'll only understand why much later.
 > right: Ask what's holding it shut
   find seven_locks
+  find lead_seventh_tower
   rel maud +small
   mood -small
   say: "Seven towers, seven locks, one in each," she says. "When a tower goes quiet, so does its lock." She looks at the dark tower. "Locks can be mended. They need hands, and they need a key."
+
+@event hs_two_shadows
+title: Two Shadows on the Ice
+arc: hollowstar
+beat: 8
+class: story
+tone: tense
+art: lantern
+tags: mystery hollowstar
+chain: hollowstar
+scene: Dusk on a half-frozen lake, two dark figures meeting in the middle of the ice, one holding a lantern, the dark tower behind them.
+text: At dusk, two figures walk out onto the frozen half of the lake from opposite shores: the headmistress with her lantern, and Kael, alone. They meet in the middle and talk for a long time, and part without shaking hands. At breakfast, both of them look at you a moment too long.
+> left: Ask Kael what they said
+  rel kael +small
+  mood -tiny
+  say: "She wants the door shut her way. I want it shut mine." He stirs his tea until it freezes. "We both asked about you. Don't make that face. You'll be asked."
+> right: Ask the headmistress
+  meet isolde
+  rel isolde +small
+  rel kael -tiny
+  say: "We disagree about method," she says, "and agree about the door." She studies you over her spectacles. "Expect an invitation. Possibly two. Choose with your eyes open." Kael, across the hall, sees you leave her tower.
 
 @event hs_choosing_sides
 title: Two Invitations
 arc: hollowstar
 beat: 8
-when: clues(hollowstar) >= 2 or flag(kael_told) or flag(warden_trial) or flag(wardens_noticed) or flag(hollow_courted)
+when: seen(hs_two_shadows) > 0
 type: menu
 class: story
 tone: tense
@@ -189,7 +270,7 @@ text: Two invitations in one day. A note in the headmistress's neat hand: "My st
 title: The Last Winter Before
 arc: hollowstar
 beat: 10
-when: clues(hollowstar) >= 2 or flag(sided_wardens) or flag(sided_dumonts) or flag(sided_self)
+when: clues(hollowstar) >= 2 or flag(sided_wardens) or flag(sided_dumonts) or flag(sided_self) or flag(warden_trial)
 type: menu
 class: story
 tone: tense
@@ -197,27 +278,35 @@ art: lantern
 tags: mystery hollowstar
 chain: hollowstar
 scene: Lantern light in a frost-rimed window, the frozen edge of the lake beyond it, a student's desk covered in maps of seven towers.
-text: The Lecture Tower has been dark for a year, and the lake has started freezing overnight in strange shapes: circles, mostly. Everyone who knows what's under it is getting ready in their own way. You have one winter and not enough evenings. Who do you spend them with?
+text: The Lecture Tower has been dark for a year, and the lake freezes overnight in circles now. In spring the seal will weaken, and whoever you spend this winter with is who will stand with you beneath the lake. You have one winter and not enough evenings.
 > kael: Train with Kael on the ice
+  hint: He'll fight beside you in the tunnel.
+  flag winter_kael
   rel kael +large
   health -small
   say: He drills you on the ice until you can hold a ward with numb hands. "Again," he says, and then, quietly, "Good." You will remember that he said it.
 > maud: Mend wards with Maud
+  hint: She'll have taught you the wards that open stone.
+  flag winter_maud
   rel maud +large
   mood -small
   say: You walk the towers with her, tracing old wards back into the stone. "Your hands are steadier than mine were," she says, and doesn't say whose hands she means.
 > isolde: Study with the headmistress
+  hint: You'll know the founders' words by heart.
+  flag winter_isolde
   rel isolde +large
   lore +small
   mood -small
   say: You lose at chess every evening and learn the founders' words between moves. Once you nearly win. Her short, delighted laugh is the warmest sound you hear all winter.
 > ilse: Spar with Ilse at the shore
+  hint: She'll talk her family's servant down for you.
   when: met(ilse) and not flag(ilse_taken) and not flag(ilse_went_north)
+  flag winter_ilse
   rel ilse +large
   health -small
   say: She knocks you into the snow eleven times. The twelfth time you don't fall, and she looks at you as if you had done a trick she has never learned the counter to.
 > alone: Rest while you still can
-  hint: A quiet winter. Nobody else's.
+  hint: A quiet winter. You'll go down alone, but rested.
   rest
   say: You sleep, you eat, you read novels with no doors in them. It's the kindest winter you've had in years, and you can feel the lake getting colder anyway.
 
