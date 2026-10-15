@@ -26,7 +26,7 @@ function produces(b) {
   for (const [via, effs] of b.effects) G.walkEffects(effs, (st) => {
     const add = (token, note) => out.push({ token, via, note: note || '' });
     switch (st.t) {
-      case 'queue': add('event:' + st.event, st.chance != null ? 'chance ' + st.chance + '%' : st.now ? 'now' : ''); break;
+      case 'queue': add('event:' + st.event, st.chanceWord ? 'chance ' + st.chanceWord : st.chance != null ? 'chance ' + st.chance + '%' : st.now ? 'now' : ''); break;
       case 'flag': for (const n of st.names) add('flag:' + n); break;
       case 'gain': add('state:' + st.state); break;
       case 'find': add('clue:' + st.clue); break;

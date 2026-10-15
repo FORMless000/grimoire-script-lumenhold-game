@@ -39,7 +39,7 @@ const FIELDS = {
   chance: 'p (null unless constant) p_src has_else',
   if: 'branches cond_src has_else',
   'delta, rel, spark': 'name (resource/skill, or npc for rel/spark) npc min max amount (null for tier words) tier legacy (spark written as love)',
-  challenge: 'kind tier using vs has_partial swing',
+  challenge: 'kind tier rung standard offset odds drift steps using vs has_partial swing',
   sit_exam: 'swing',
   wage: 'size (a wage word, null for full)',
   regrade: 'track grade',
@@ -70,11 +70,11 @@ function statementFields(st) {
   switch (st.t) {
     case 'say': return { text: st.text, len: st.text.length };
     case 'check': return { skill: st.skill, dc: constant(st.dc), dc_src: st.dc.src, scales: mentions(st.dc, ['year', 'turn']), has_else: !!st.else };
-    case 'chance': return { p: constant(st.p), p_src: st.p.src, has_else: !!st.else };
+    case 'chance': return st.word ? { p: null, p_src: st.word, odds: st.word, steps: (st.steps || []).length, has_else: !!st.else } : { p: constant(st.p), p_src: st.p.src, has_else: !!st.else };
     case 'if': return { branches: st.branches.length, cond_src: st.branches[0].cond.src, has_else: !!st.else };
     case 'delta': return { name: st.name, min: st.min, max: st.max, amount: st.tier ? null : (st.min + st.max) / 2, tier: st.tier || null };
     case 'rel': case 'spark': return { name: st.npc, npc: st.npc, min: st.min, max: st.max, amount: st.tier ? null : (st.min + st.max) / 2, tier: st.tier || null, legacy: !!st.legacy };
-    case 'challenge': return { kind: st.kind, tier: st.tier, using: st.using, vs: st.vs ? st.vs.who + '.' + st.vs.stat : null, has_partial: !!st.partial, swing: st.swing || null };
+    case 'challenge': return { kind: st.kind, tier: st.tier, rung: st.rung || null, standard: !!st.standard, offset: st.offset || 0, odds: st.odds || null, drift: st.drift || null, steps: (st.steps || []).length, using: st.using, vs: st.vs ? st.vs.who + '.' + st.vs.stat : null, has_partial: !!st.partial, swing: st.swing || null };
     case 'sit_exam': return { swing: st.swing || null };
     case 'wage': return { size: st.size || null };
     case 'npc_rel': return { a: st.a, b: st.b, tier: st.tier || null };
@@ -85,7 +85,7 @@ function statementFields(st) {
     case 'flag': case 'unflag': return { name: st.names[0], count: st.names.length };
     case 'gain': return { state: st.state, dur_src: st.dur ? st.dur.src : null };
     case 'lose': return { state: st.state };
-    case 'queue': return { target: st.event, now: st.now, delay_src: st.delay ? st.delay.src : null, with: st.with, chance: st.chance != null ? st.chance : null };
+    case 'queue': return { target: st.event, now: st.now, delay_src: st.delay ? st.delay.src : null, with: st.with, chance: st.chance != null ? st.chance : st.chanceWord || null };
     case 'bond': return { npc: st.npc, status: st.status };
     case 'meet': return { npc: st.npc };
     case 'end': return { ending: st.ending };

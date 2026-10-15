@@ -28,6 +28,23 @@ wage: short 0.5 full 1 overtime 2
 # The range a check's odds are clamped to (L-3): a 5% forced fail and a 5% forced success. Milestone checks (a
 # `class: milestone` card, an exam) have no forced fail.
 odds: min 5 max 95
+# The check ladder (docs/authoring/checks.md, design §8.6): checks written with a rung, odds by nature and a luck word.
+# A rung is the DC: who or what you're up against.
+dc_tiers: novice- 0 novice 4 novice+ 8 apprentice- 12 apprentice 16 apprentice+ 20 journeyman- 24 journeyman 28
+  journeyman+ 32 adept- 36 adept 40 adept+ 44 expert- 48 expert 52 expert+ 56 master- 60 master 64 master+ 68
+  grandmaster- 72 grandmaster 76 grandmaster+ 80 archmage- 84 archmage 88 archmage+ 92
+# Odds by nature: the chance (%) when your skill matches the DC; a circumstance step (`+1 if …`) moves it by odds_step (z).
+likelihood: certain 97 sure 90 likely 70 even 50 unlikely 30 slim 15 long_shot 5 freak 1
+odds_step: 0.5
+# Luck: the bell's σ. Odds = floor + (ceil − floor) × Φ(z(odds) + (skill − DC) / σ); milestones run 0–100.
+sigma: steady 12 normal 20 wild 32 luck 80
+bell: floor 2 ceil 98
+# Drift: how far the DC is pulled toward the expected skill (`curve`). Defaults: story none; milestone, crisis low; else high.
+drift: none 0 low 0.15 mid 0.3 high 0.5
+# A course's standard rung at levels I, II, III (a track's `standard:` overrides), and the rungs a course card rises per
+# course level above its own `level:`.
+course_standard: apprentice+ journeyman+ adept+
+course_step: 3
 # Exam preparation (L-3): a course card adds `attend` by itself (options add or cost more); at most `cap` counts.
 study: attend 2 cap 15
 # A course exam's difficulty tier at course level I, II and III (L alarms).

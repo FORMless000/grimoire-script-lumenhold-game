@@ -11,6 +11,7 @@
  *   node tools/grim.js reach            static reachability: events, options, endings, places, tracks no play can reach
  *   node tools/grim.js stats            count blocks by kind / trigger / tag
  *   node tools/grim.js show <id>        print a block's source and everything that references it
+ *   node tools/grim.js odds <event>…    each check's and roll's odds over the run, for a passive and a focused player (checks.md)
  *   node tools/grim.js graph <id>       the event graph around an event, state or hook: who leads to it (queues it, with
                                       odds; sets what its gates read) and what it leads to (queues, and who reads what it sets)
   node tools/grim.js ids [kind]       list ids (event|state|npc|ending|resource|skill|flag|var)
@@ -163,6 +164,27 @@ function analyze(content) {
       if (!head && !hasActor) P('error', where, '{' + k + '} needs an actor (this block has none)');
     }
   }
+  // Ladder checks (docs/authoring/checks.md): the rules the guide states that the format can see. Legacy tiers are
+  // left alone until the rewrite moves them.
+  function lintChecks(e, o) {
+    const rung = (w) => (content.balance.dc_tiers || {})[w] != null ? content.balance.dc_tiers[w] : (G.RANKS.indexOf(w.replace(/[+-]$/, '')) * 12 + (w.endsWith('-') ? 0 : w.endsWith('+') ? 8 : 4));
+    const track = e.track && content.tracks[e.track];
+    G.walkEffects(o.effects, (st) => {
+      if (st.t !== 'challenge' || !st.ladder) return;
+      const w = e.file + ':' + st.line;
+      if (st.standard && !(track && track.kind === 'course')) P('error', w, 'challenge standard: only a course card has a course standard (use a rung)');
+      if (st.kind === 'exam' && !(track && track.kind === 'course')) P('warn', w, 'challenge exam: only for course tests (pick the kind that fits the action)');
+      if (st.using && (G.CHALLENGE_KINDS[st.kind] || []).length === 1 && G.CHALLENGE_KINDS[st.kind][0] === st.using) P('warn', w, 'challenge using ' + st.using + ': already the default for ' + st.kind);
+      if (st.rung && rung(st.rung) >= rung('grandmaster+')) {
+        if (!['story', 'milestone'].includes(e.class)) P('warn', w, 'challenge ' + st.rung + ': legendary difficulty belongs on story or milestone cards');
+        if (!st.partial || !e.options.some((x) => !hasChallenge(x.effects))) P('warn', w, 'challenge ' + st.rung + ': a legendary check needs partial: and an option without the check');
+      }
+      let ends = false; G.walkEffects(st.lose || [], (x) => { if (x.t === 'end') ends = true; });
+      if (ends && !st.partial && !['certain', 'sure', 'likely'].includes(st.odds)) P('warn', w, 'challenge: losing ends the run; add partial: or make it likely or better');
+      for (const x of st.steps || []) if (Object.keys(content.skills).some((k) => new RegExp('\\b' + k + '\\b').test(x.cond.src))) P('warn', w, 'challenge step "' + x.cond.src + '": steps are for facts of the world; skill is already in the roll');
+    });
+  }
+  const hasChallenge = (effects) => { let f = false; G.walkEffects(effects || [], (x) => { if (x.t === 'challenge') f = true; }); return f; };
   function scanEffects(effects, where, hasActor) {
     G.walkEffects(effects, (st) => {
       const w = where.replace(/:\d+$/, '') + ':' + st.line;
@@ -225,6 +247,7 @@ function analyze(content) {
             if (st.vs.who === 'npc' ? !hasActor : !content.npcs[st.vs.who] && !ROLES.has(st.vs.who)) P('error', w, 'challenge vs: unknown character or cast role "' + st.vs.who + '"');
             if (!content.skills[st.vs.stat] && !['wealth', 'rel', 'spark'].includes(st.vs.stat)) P('error', w, 'challenge vs: "' + st.vs.stat + '" is not a skill, wealth, rel or spark');
           }
+          for (const x of st.steps || []) scanExpr(x.cond, w, hasActor);
           break;
         case 'visit': {
           const recipeSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || [])].map((r) => r.slot));
@@ -239,7 +262,7 @@ function analyze(content) {
           break;
         }
         case 'if': st.branches.forEach((b) => scanExpr(b.cond, w, hasActor)); break;
-        case 'chance': scanExpr(st.p, w, hasActor); break;
+        case 'chance': if (st.p) scanExpr(st.p, w, hasActor); for (const x of st.steps || []) scanExpr(x.cond, w, hasActor); break;
         case 'check': if (!content.skills[st.skill]) P('error', w, 'check: unknown skill "' + st.skill + '"'); scanExpr(st.dc, w, hasActor); break;
       }
     });
@@ -295,6 +318,7 @@ function analyze(content) {
       scanText(o.label, ow, hasActor); scanText(o.hint, ow, hasActor); scanExpr(o.when, ow, hasActor);
       { const n = longestRendering(o.label); if (n > 42) P('warn', ow, 'option label is long (' + n + ' chars; aim for < 36)'); }
       scanEffects(o.effects, ow, hasActor);
+      lintChecks(e, o);
     }
     if (e.options.length > 1 && e.options.every((o) => o.when)) P('warn', w, 'every option has a "when" — the card can soft-lock if none are available');
     ROLES = new Set(); IN_EVENT = false;
@@ -1328,7 +1352,17 @@ function genPresetsDoc(opts = {}) {
   const rows = ['', '## Size tiers', '', '| | ' + TIER.join(' | ') + ' |', '|---' + '|---'.repeat(TIER.length) + '|'];
   const label = { gold: 'crowns', xp: 'skill XP' };
   for (const [k, row] of Object.entries(sizes)) rows.push('| ' + (label[k] || k) + ' | ' + row.join(' | ') + ' |');
-  rows.push('', '## Difficulty tiers', '', Object.entries(b.difficulty || {}).map(([k, v]) => '`' + k + ' ' + (v > 0 ? '+' : '') + v + '`').join(' · ') + ', relative to the expected skill at that point of the run (`curve`).', '');
+  // The check ladder (docs/authoring/checks.md): rungs, odds by nature, luck, drift, course standards.
+  if (b.dc_tiers) {
+    const RK = G.RANKS, at = (w) => b.dc_tiers[w];
+    rows.push('', '## Check ladder (`checks.md`)', '', '| rank | − | (plain) | + |', '|---|---|---|---|');
+    for (const r of RK) rows.push('| ' + r + ' | ' + at(r + '-') + ' | ' + at(r) + ' | ' + at(r + '+') + ' |');
+    rows.push('', 'Odds by nature (the chance when your skill matches the DC): ' + Object.entries(b.likelihood || {}).map(([k, v]) => '`' + k + '` ' + v + '%').join(' · ') + '. A circumstance step moves the z by ' + b.odds_step + '.', '');
+    rows.push('Luck (the bell\'s σ): ' + Object.entries(b.sigma || {}).map(([k, v]) => '`' + k + '` ' + v).join(' · ') + '; odds run ' + (b.bell || {}).floor + '–' + (b.bell || {}).ceil + '% (milestones and exams 0–100).', '');
+    rows.push('Drift (share of the gap to the expected skill the DC closes): ' + Object.entries(b.drift || {}).map(([k, v]) => '`' + k + '` ' + v).join(' · ') + '.', '');
+    rows.push('Course standard at levels I–III: ' + (b.course_standard || []).map((x) => '`' + x + '`').join(' · ') + '; a course card rises ' + b.course_step + ' rungs per course level above its own.', '');
+  }
+  rows.push('## Difficulty tiers (legacy)', '', Object.entries(b.difficulty || {}).map(([k, v]) => '`' + k + ' ' + (v > 0 ? '+' : '') + v + '`').join(' · ') + ', relative to the expected skill at that point of the run (`curve`); being rewritten to the ladder.', '');
   rows.push('## Presets', '', '| Preset | Expands to |', '|---|---|');
   const lines = fs.readFileSync(path.join(ROOT, 'content', 'core', 'balance.grim'), 'utf8').split('\n');
   for (const pr of Object.values(content.presets || {})) {
@@ -1353,6 +1387,7 @@ switch (cmd) {
   case 'i18n': if (rest[0]) i18nSync(rest[0]); else i18nStatus(); break;
   case 'stats': stats(); break;
   case 'show': show(rest[0]); break;
+  case 'odds': { const { content, errors } = compileAll(); if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); } console.log(require('./odds.js').odds(content, rest.filter((x) => !x.startsWith('--')))); break; }
   case 'graph': { const { content } = compileAll(); const out = require('./graph.js').describe(content, rest[0]); if (!out) { console.error('graph: no event, state or hook "' + rest[0] + '"'); process.exit(1); } console.log(out); break; }
   case 'ids': ids(rest[0]); break;
   case 'rename': {

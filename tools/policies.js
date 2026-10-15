@@ -39,7 +39,8 @@ function estimate(eng, opt, actor, eventId) {
       if (st.t === 'flag') for (const f of st.names || []) if (!eng.s.flags[f]) seen.add('flag:' + f);
       // A penalty card queued at odds (`queue … chance N`, I8) is a risk weighted by its odds, not engagement.
       const q = st.t === 'queue' && eng.c.events[st.event];
-      if (q && st.chance != null && ['incident', 'crisis'].includes(q.class)) add('risk', st.chance / 100, 1);
+      const qc = st.chanceWord ? eng.likelihoodP(st.chanceWord) : st.chance;
+      if (q && qc != null && ['incident', 'crisis'].includes(q.class)) add('risk', qc / 100, 1);
       else if (st.t === 'queue') seen.add('queue:' + st.event);
     });
     for (const k of seen) add(k.slice(0, k.indexOf(':')), 1, 1);
@@ -65,7 +66,7 @@ function estimate(eng, opt, actor, eventId) {
           walk(br ? br.body : st.else, w);
           break;
         }
-        case 'chance': { const p = Math.max(0, Math.min(100, eng.value(st.p, actor))) / 100; walk(st.body, w * p); walk(st.else, w * (1 - p)); break; }
+        case 'chance': { const p = (st.word ? eng.likelihoodP(st.word, st.steps, actor) : Math.max(0, Math.min(100, eng.value(st.p, actor)))) / 100; walk(st.body, w * p); walk(st.else, w * (1 - p)); break; }
         case 'check': { const p = eng.checkChance(st.skill, eng.value(st.dc, actor)) / 100; walk(st.body, w * p); walk(st.else, w * (1 - p)); break; }
       }
     }

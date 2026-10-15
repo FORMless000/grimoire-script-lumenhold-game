@@ -70,9 +70,9 @@ function references(content) {
       case 'learn_spell': add('spell', st.spell); break;
       case 'learn': add('npc', st.fact.split('.')[0]); break;
       case 'npc_rel': for (const x of [st.a, st.b]) if (x !== 'npc') add('npc', x); break;
-      case 'challenge': if (st.vs && st.vs.who !== 'npc') add('npc', st.vs.who); break;
+      case 'challenge': if (st.vs && st.vs.who !== 'npc') add('npc', st.vs.who); for (const x of st.steps || []) scanExpr(x.cond); break;
       case 'if': st.branches.forEach((b) => scanExpr(b.cond)); break;
-      case 'chance': scanExpr(st.p); break;
+      case 'chance': if (st.p) scanExpr(st.p); for (const x of st.steps || []) scanExpr(x.cond); break;
       case 'check': scanExpr(st.dc); break;
     }
   });

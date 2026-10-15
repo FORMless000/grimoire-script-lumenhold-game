@@ -211,8 +211,12 @@
       'study', 'spell_check',
       // the skill XP a spell gives in its discipline when learned, one tier per spell level (L-6)
       'spell_bonus',
-      // a course exam's difficulty tier at each course level (L alarms)
-      'exam_tiers'], effects: [] },
+      // a course exam's difficulty tier at each course level (L alarms); rungs or `standard±N` use the check ladder
+      'exam_tiers',
+      // the check ladder (docs/authoring/checks.md, design §8.6): each rung's DC, the odds of each odds-by-nature word (%),
+      // σ of the bell per luck word, drift per drift word, the z one circumstance step moves, the bell's floor and ceiling,
+      // a course's standard rung at each level, and the rungs a course card rises per course level above its own
+      'dc_tiers', 'likelihood', 'sigma', 'drift', 'odds_step', 'bell', 'course_standard', 'course_step'], effects: [] },
     // A named group of effects, used as a statement: `grind arcana`. Its body may use $params.
     preset: { props: ['params', 'desc'], effects: [], raw: ['do'] },
     resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
@@ -237,7 +241,8 @@
     place: { props: ['name', 'region', 'map', 'kind', 'track', 'open', 'season', 'closed_when', 'discover', 'hint', 'hinted_when', 'desc', 'art', 'draws'], effects: [] },
     // `intro:` the card where you first meet the track's `lead:` (playtest 2, N1): queued on enrolling or joining, instead of
     // meeting them silently.
-    track: { props: ['kind', 'name', 'skill', 'levels', 'level_names', 'place', 'teaches', 'hidden', 'prereq', 'ranks', 'pay', 'due', 'lead', 'desc', 'legacy', 'opens', 'intro'], effects: [] },
+    // `standard:` a course's rung at each level (checks.md), else @balance course_standard
+    track: { props: ['kind', 'name', 'skill', 'levels', 'level_names', 'place', 'teaches', 'hidden', 'prereq', 'ranks', 'pay', 'due', 'lead', 'desc', 'legacy', 'opens', 'intro', 'standard'], effects: [] },
     spell: { props: ['name', 'discipline', 'cost', 'power', 'desc', 'art'], effects: [] },
     fact: { dotted: true, props: ['npc', 'tier', 'unlock', 'text'], effects: [] },
     archetype: { props: ['names', 'age', 'traits', 'pronouns', 'house', 'role', 'desc'], effects: [] },
@@ -256,6 +261,14 @@
   const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'params', 'draws', 'legacy', 'excludes', 'replaces', 'time', 'spread']);
   const TIERS = ['tiny', 'small', 'medium', 'large', 'huge'];
   const DIFFICULTIES = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
+  // The check ladder (docs/authoring/checks.md): rank words, each with a - and + rung; odds-by-nature, luck and drift words.
+  const RANKS = ['novice', 'apprentice', 'journeyman', 'adept', 'expert', 'master', 'grandmaster', 'archmage'];
+  const RUNG_RE = new RegExp('^(' + RANKS.join('|') + ')([+-])?$');
+  const ODDS_WORDS = ['certain', 'sure', 'likely', 'even', 'unlikely', 'slim', 'long_shot', 'freak'];
+  const SWINGS = ['steady', 'normal', 'wild', 'luck'];
+  const DRIFTS = ['none', 'low', 'mid', 'high'];
+  // A difficulty on the ladder: a rung (`adept+`) or a course's `standard`, `standard+1`.
+  const isLadderTier = (x) => RUNG_RE.test(x) || /^standard([+-]\d+)?$/.test(x);
   // Challenge kinds (design §8.3) and the skill each one tests (`using <skill>` overrides).
   // combat (playtest 2, M39): the stub until the combat minigame; its value also reads condition and spells (@balance combat).
   const CHALLENGE_KINDS = { combat: ['arcana', 'vigor', 'guile'], duel: ['vigor', 'arcana'], negotiate: ['charm'], deceive: ['guile'], research: ['lore'], brew: ['alchemy'], enchant: ['alchemy'], exam: ['lore'], feat: ['vigor'], spell: ['arcana'] };
@@ -321,7 +334,17 @@
     odds(t) { return STRUCT_PROPS.weights(t); },
     study(t) { return STRUCT_PROPS.weights(t); },
     spell_check(t) { return STRUCT_PROPS.weights(t); },
-    exam_tiers(t) { const w = words(t); for (const x of w) if (!DIFFICULTIES.includes(x)) throw 'exam_tiers: expected a difficulty tier per course level (trivial … heroic), got "' + x + '"'; return w; },
+    exam_tiers(t) { const w = words(t); for (const x of w) if (!DIFFICULTIES.includes(x) && !isLadderTier(x)) throw 'exam_tiers: expected a difficulty per course level (trivial … heroic, a rung, or standard±N), got "' + x + '"'; return w; },
+    // "novice- 0 novice 4 … archmage+ 92"
+    dc_tiers(t) { const o = STRUCT_PROPS.weights(t); for (const k of Object.keys(o)) if (!RUNG_RE.test(k)) throw 'dc_tiers: unknown rung "' + k + '"'; return o; },
+    likelihood(t) { const o = STRUCT_PROPS.weights(t); for (const k of Object.keys(o)) if (!ODDS_WORDS.includes(k)) throw 'likelihood: unknown word "' + k + '" (' + ODDS_WORDS.join(', ') + ')'; return o; },
+    sigma(t) { const o = STRUCT_PROPS.weights(t); for (const k of Object.keys(o)) if (!SWINGS.includes(k)) throw 'sigma: unknown luck word "' + k + '"'; return o; },
+    drift(t) { const o = STRUCT_PROPS.weights(t); for (const k of Object.keys(o)) if (!DRIFTS.includes(k)) throw 'drift: unknown word "' + k + '"'; return o; },
+    odds_step(t) { return toNum(t.trim(), 'odds_step'); },
+    bell(t) { return STRUCT_PROPS.weights(t); },
+    course_standard(t) { const w = words(t); for (const x of w) if (!RUNG_RE.test(x)) throw 'course_standard: expected a rung per course level, got "' + x + '"'; return w; },
+    course_step(t) { return toNum(t.trim(), 'course_step'); },
+    standard(t) { const w = words(t); for (const x of w) if (!RUNG_RE.test(x)) throw 'standard: expected a rung per course level, got "' + x + '"'; return w; },
     spell_bonus(t) { const w = words(t); for (const x of w) if (!TIERS.includes(x)) throw 'spell_bonus: expected a size tier per spell level (tiny … huge), got "' + x + '"'; return w; },
     ramp(t) { const m = t.trim().match(/^(.+?)\s+(-?\d+)\s*\.\.\s*(-?\d+)$/); if (!m || +m[3] <= +m[2]) throw 'ramp: expected "<expression> low..high", e.g. ramp: rel(npc) 18..30'; return { expr: m[1], lo: +m[2], hi: +m[3] }; },
   };
@@ -346,7 +369,7 @@
     gain: new RegExp('^gain\\s+(' + ID + ')(?:\\s+(.+))?$'),
     lose: new RegExp('^lose\\s+(' + ID + ')$'),
     // `chance N` (playtest 2, I4): when due, the card is pushed with probability N%, else dropped.
-    queue: new RegExp('^queue\\s+(' + ID + ')(?:\\s+(now|in\\s+.+?|within\\s+\\d+\\s*\\.\\.\\s*\\d+|by\\s+month\\s+\\d+))?(?:\\s+with\\s+(' + ID + '))?(?:\\s+chance\\s+(\\d+))?$'),
+    queue: new RegExp('^queue\\s+(' + ID + ')(?:\\s+(now|in\\s+.+?|within\\s+\\d+\\s*\\.\\.\\s*\\d+|by\\s+month\\s+\\d+))?(?:\\s+with\\s+(' + ID + '))?(?:\\s+chance\\s+(\\d+|' + ODDS_WORDS.join('|') + '))?$'),
     unqueue: new RegExp('^unqueue\\s+(' + ID + ')$'),
     sayAs: new RegExp('^say\\[(' + ID + ')\\]\\s*:\\s*(.*)$'),
     trackOp: new RegExp('^(enrol|join|leave|promote|apply)\\s+(' + ID + ')(?:\\s+(\\d))?$'),
@@ -378,6 +401,32 @@
     assign: new RegExp('^(?:set\\s+)?(' + ID + ')\\s*(\\+=|-=|=(?!=))\\s*(.+)$'),
   };
 
+  // Circumstance steps (checks.md): ` +1 if <cond> -1 if <cond>` at the end of a check's line.
+  function parseSteps(text, E) {
+    return String(text || '').split(/\s+(?=[+-]\d+\s+if\s)/).map((x) => x.trim()).filter(Boolean).map((x) => { const m = x.match(/^([+-]\d+)\s+if\s+(.+)$/); return { n: +m[1], cond: E(m[2]) }; });
+  }
+  // A ladder challenge (docs/authoring/checks.md): challenge <kind> [using <skill>] <rung | standard±N | vs <who>.<stat> [±N]>
+  // [<odds>] [<luck>] [drift <word>] [±N if <cond>]…  (the legacy form, with trivial … heroic, is matched first by RE.challenge)
+  function parseChallenge(body, E, file, line) {
+    const bad = (msg) => { throw new GrimError('challenge: ' + msg + ' in "challenge ' + body + ':"', file, line); };
+    const cut = body.search(/\s[+-]\d+\s+if\s/);
+    const tok = (cut < 0 ? body : body.slice(0, cut)).trim().split(/\s+/);
+    const st = { t: 'challenge', ladder: true, kind: tok.shift(), using: null, vs: null, tier: null, rung: null, standard: null, offset: 0, odds: null, swing: null, drift: null,
+      steps: parseSteps(cut < 0 ? '' : body.slice(cut), E), win: null, partial: null, lose: null, line, block: true, outcomes: true };
+    if (!ID_RE.test(st.kind || '')) bad('expected a kind');
+    if (tok[0] === 'using') { tok.shift(); st.using = tok.shift(); if (!ID_RE.test(st.using || '')) bad('expected a skill after using'); }
+    let m;
+    if (tok[0] === 'vs') { tok.shift(); if (!(m = (tok.shift() || '').match(/^([a-z_][a-z0-9_]*)\.([a-z_][a-z0-9_]*)$/))) bad('expected <who>.<stat> after vs'); st.vs = { who: m[1], stat: m[2] }; if (/^[+-]\d+$/.test(tok[0] || '')) st.offset = +tok.shift(); }
+    else if (RUNG_RE.test(tok[0] || '')) st.rung = tok.shift();
+    else if ((m = (tok[0] || '').match(/^standard([+-]\d+)?$/))) { tok.shift(); st.standard = true; st.offset = m[1] ? +m[1] : 0; }
+    else bad('expected a difficulty (a rung such as adept+, standard, or vs <who>.<stat>)');
+    if (ODDS_WORDS.includes(tok[0])) st.odds = tok.shift();
+    if (SWINGS.includes(tok[0])) { const w = tok.shift(); st.swing = w === 'normal' ? null : w; }
+    if (tok[0] === 'drift') { tok.shift(); st.drift = tok.shift(); if (!DRIFTS.includes(st.drift)) bad('expected ' + DRIFTS.join('/') + ' after drift'); }
+    if (tok.length) bad('unexpected "' + tok.join(' ') + '"');
+    return st;
+  }
+
   function parseStatement(content, file, line) {
     let m;
     const E = (s) => expr(s, file, line);
@@ -386,9 +435,11 @@
     if ((m = content.match(RE.if))) return { t: 'if', branches: [{ cond: E(m[1]), body: [] }], else: null, line, block: true };
     if ((m = content.match(RE.elif))) return { t: 'elif', cond: E(m[1]), line, block: true };
     if ((m = content.match(RE.else))) return { t: 'else', line, block: true };
+    if ((m = content.match(/^chance\s+([a-z_]+)((?:\s+[+-]\d+\s+if\s+.+?)*)\s*:$/)) && ODDS_WORDS.includes(m[1])) return { t: 'chance', word: m[1], steps: parseSteps(m[2], E), p: null, body: [], else: null, line, block: true };
     if ((m = content.match(RE.chance))) return { t: 'chance', p: E(m[1]), body: [], else: null, line, block: true };
     if ((m = content.match(RE.check))) return { t: 'check', skill: m[1], dc: E(m[2]), body: [], else: null, line, block: true };
     if ((m = content.match(RE.challenge))) return { t: 'challenge', kind: m[1], using: m[2] || null, vs: m[3] ? { who: m[3], stat: m[4] } : null, tier: m[5], swing: m[6] || null, win: null, partial: null, lose: null, line, block: true, outcomes: true };
+    if (/^challenge\s.*:$/.test(content)) return parseChallenge(content.slice(10, -1), E, file, line);
     if ((m = content.match(RE.sitExam))) return { t: 'sit_exam', swing: m[1] || null, line };
     if ((m = content.match(RE.wage))) return { t: 'wage', size: m[1] || null, line };
     if ((m = content.match(RE.cool))) return { t: 'cool', npc: m[1], line };
@@ -400,7 +451,7 @@
     if ((m = content.match(RE.lose))) return { t: 'lose', state: m[1], line };
     if ((m = content.match(RE.queue))) {
       const st = { t: 'queue', event: m[1], now: false, delay: null, with: m[3] || null, line };
-      if (m[4] != null) st.chance = +m[4];
+      if (m[4] != null) { if (/^\d+$/.test(m[4])) st.chance = +m[4]; else st.chanceWord = m[4]; }
       let w;
       if (m[2] === 'now') st.now = true;
       else if (m[2] && (w = m[2].match(/^within\s+(\d+)\s*\.\.\s*(\d+)$/))) st.window = { from: +w[1], to: +w[2] };
@@ -786,5 +837,5 @@
     return { tokens, conds };
   }
 
-  return { textTokens, parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES, CHALLENGE_KINDS };
+  return { textTokens, parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES, CHALLENGE_KINDS, RANKS, RUNG_RE, ODDS_WORDS, SWINGS, DRIFTS, isLadderTier };
 });

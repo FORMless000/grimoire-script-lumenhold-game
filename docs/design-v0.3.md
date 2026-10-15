@@ -788,7 +788,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 | rel / spark | 1 / 4 | 2 / 8 | 4 / 13 | 6 / 20 | 9 / 30 |
 | alignment | 2 | 4 | 7 | 12 | 20 |
 
-**Difficulty tiers:** `trivial −15 · easy −7 · medium 0 · hard +8 · heroic +16`, relative to `E(turn)` (§8.6).
+**Difficulty:** the check ladder (§8.6; values in `presets.md`). *Legacy:* `trivial −15 · easy −7 · medium 0 · hard +8 · heroic +16`, relative to `E(turn)`.
 
 **Presets** expand to effects:
 - `grind <skill>` = skill +medium XP, mood −small, health −tiny
@@ -821,12 +821,17 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 
 ### 8.6 Checks and difficulty over time
 
-- `E(turn)` = the expected skill of a balanced player at that turn (from the curve).
-- `DC = E(turn) + tier offset`.
-- Odds = `clamp(50 + slope·(skill − DC), 5, 95)` (slope by swing, §9.2; L-3: a 5% forced fail and forced success). A milestone check and an exam have no forced fail.
-- **Course levels** (L-3): a course card's check is one tier harder per level above I.
+A check's difficulty comes from the story, not the calendar (the skill-check survey and redesign, 2026-10-15; how to write one is `docs/authoring/checks.md`).
+
+- **Difficulty** is the DC, written as a rung of a rank ladder (novice … archmage, each with − and +; `@balance dc_tiers`): who or what the player is actually up against. A course card may write its course's `standard` (per level, ± rungs); a check against a character reads that character's stat.
+- **Odds by nature**: the chance when skill matches the DC (`certain` 97% … `freak` 1%), moved by circumstance steps (facts of the world, never skill).
+- **Luck** is the bell's σ: `steady`, `normal`, `wild`, `luck` (mostly chance).
+- **Drift** keeps difficulty on par as the player grows: DC = d + k·(E(turn) − d), where `E(turn)` is the expected skill of a balanced player (the curve). More significant, less drift: routine and repeat cards keep up (`high`, about half of a passive player's growth), milestones and crises barely (`low`), plot-relevant story checks not at all (`none`). It pulls a hard check toward the player, so a high-drift hard check never becomes harder than a no-drift one.
+- Odds = `floor + (ceil − floor)·Φ(z(odds) + steps + (skill − DC)/σ)`, 2–98%; a milestone check and an exam run 0–100. Skill still matters at the extremes.
+- **Course levels**: a course card shown above its own `level:` rises 3 rungs per level (`course_step`).
 - `partial:` is optional, with a band of ±5 around DC.
-- `variant hard`: the same event at tier +1 with ×1.5 rewards; the director picks it more often as the year advances.
+- `variant hard`: the same event 2 rungs harder with ×1.5 rewards; the director picks it more often as the year advances.
+- *Legacy (until every check is rewritten):* a tier word puts the DC at E(turn) + offset, and odds = `clamp(50 + slope·(skill − DC), 5, 95)`; `chance N` is a raw percentage.
 
 ### 8.7 Event classes (`class:` is required)
 
@@ -925,10 +930,11 @@ challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam |
 | brew / enchant | alchemy |
 
 - **Modifiers** (each capped at ±15):
-  - `vs <role>.<stat>` shifts the DC by the opponent's stat minus E(turn);
+  - `vs <role>.<stat>`: the opponent's stat is the DC (legacy tiers: it shifts the DC by the stat minus E(turn));
   - study points; the advisor relationship (the track's `lead:` regard, rel / 5, within ±15, inside that track's cards and at its exams); spells known (+2 each for relevant ones, at most +6; L-3); items (§T2).
 - **Combat stub** (playtest 2): until the combat minigame (X5), fights use `combat`, so how rested, cheerful and charged the player is matters, and so does every spell learned. Entering a fight spends mana.
-- **Swing** (playtest 2): a check can be `wild` (skill moves the odds little: banter, luck) or `steady` (skill decides). Low-stakes checks should swing; hard ones should be steadier.
+- **Luck (swing)**: how much of the outcome is chance rather than skill (§8.6): `steady` (practice decides), `normal`, `wild` (partly luck), `luck` (gambles, searches). It is independent of difficulty and stakes.
+- **Kind and skill**: the kind is the shape of the action (talk round, mislead, work out, brew, a feat, cast, fight; `exam` only in a course); the skill is what the player uses against the obstacle, with `using` only when it differs from the kind's default.
 - **Renown** can be the tested value (`using renown`) where popularity is the advantage.
 - The simulator always auto-resolves.
 

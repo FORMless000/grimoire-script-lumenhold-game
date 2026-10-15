@@ -120,7 +120,7 @@
     'check.challengeChip': '{kind} ({p}%) · {result}',
     'check.challengeButton': '{kind} · {p}%',
     'check.combatButton': 'Combat · {p}% · −{cost} mana', 'check.examButton': 'Exam: {skill} · pass {p}% · A or B {top}%',
-    'swing.wild': 'wild', 'swing.steady': 'steady', 'challenge.combat': 'Combat',
+    'swing.wild': 'wild', 'swing.steady': 'steady', 'swing.luck': 'luck', 'challenge.combat': 'Combat',
     'course.tests': 'Tests {skill}', 'course.exam': '{tier} exam, {p}% pass today', 'course.teaches': 'teaches {spells}', 'job.outlook': 'About {gold} crowns a shift · {n} shifts a term', 'track.switch': 'Leaves {from}: your {rank} rank and {perf} performance; you start here as new',
     'tier.medium': 'Medium', 'tier.hard': 'Hard', 'tier.heroic': 'Heroic',
     'challenge.duel': 'Duel',

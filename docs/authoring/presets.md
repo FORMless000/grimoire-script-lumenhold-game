@@ -18,9 +18,30 @@
 | rel | 1 | 2 | 4 | 6 | 9 |
 | spark | 4 | 8 | 13 | 20 | 30 |
 
-## Difficulty tiers
+## Check ladder (`checks.md`)
 
-`trivial -15` · `easy -7` · `medium 0` · `hard +8` · `heroic +16`, relative to the expected skill at that point of the run (`curve`).
+| rank | − | (plain) | + |
+|---|---|---|---|
+| novice | 0 | 4 | 8 |
+| apprentice | 12 | 16 | 20 |
+| journeyman | 24 | 28 | 32 |
+| adept | 36 | 40 | 44 |
+| expert | 48 | 52 | 56 |
+| master | 60 | 64 | 68 |
+| grandmaster | 72 | 76 | 80 |
+| archmage | 84 | 88 | 92 |
+
+Odds by nature (the chance when your skill matches the DC): `certain` 97% · `sure` 90% · `likely` 70% · `even` 50% · `unlikely` 30% · `slim` 15% · `long_shot` 5% · `freak` 1%. A circumstance step moves the z by 0.5.
+
+Luck (the bell's σ): `steady` 12 · `normal` 20 · `wild` 32 · `luck` 80; odds run 2–98% (milestones and exams 0–100).
+
+Drift (share of the gap to the expected skill the DC closes): `none` 0 · `low` 0.15 · `mid` 0.3 · `high` 0.5.
+
+Course standard at levels I–III: `apprentice+` · `journeyman+` · `adept+`; a course card rises 3 rungs per course level above its own.
+
+## Difficulty tiers (legacy)
+
+`trivial -15` · `easy -7` · `medium 0` · `hard +8` · `heroic +16`, relative to the expected skill at that point of the run (`curve`); being rewritten to the ladder.
 
 ## Presets
 

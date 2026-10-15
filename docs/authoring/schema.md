@@ -124,6 +124,14 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `spell_check` | structured |  |
 |  | `spell_bonus` | structured |  |
 |  | `exam_tiers` | structured |  |
+|  | `dc_tiers` | structured |  |
+|  | `likelihood` | structured |  |
+|  | `sigma` | structured |  |
+|  | `drift` | structured |  |
+|  | `odds_step` | structured |  |
+|  | `bell` | structured |  |
+|  | `course_standard` | structured |  |
+|  | `course_step` | structured |  |
 | `@preset id` | `params` | text |  |
 |  | `desc` | text |  |
 | `@resource id` | `name` | text | yes |
@@ -264,6 +272,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `legacy` | text |  |
 |  | `opens` | text |  |
 |  | `intro` | text |  |
+|  | `standard` | structured |  |
 | `@spell id` | `name` | text | yes |
 |  | `discipline` | text |  |
 |  | `cost` | structured |  |

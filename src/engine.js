@@ -24,6 +24,21 @@
   const TIER_INDEX = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4 };
   const DEFAULT_SIZES = { _: [2, 4, 7, 12, 20], gold: [3, 8, 15, 30, 60], renown: [1, 3, 6, 10, 16], mana: [3, 6, 10, 16, 25], xp: [1, 2, 4, 7, 12], rel: [2, 4, 7, 12, 20], spark: [3, 6, 10, 15, 25] };
   const DEFAULT_DIFFICULTY = { trivial: -15, easy: -7, medium: 0, hard: 8, heroic: 16 };
+  // The check ladder (docs/authoring/checks.md, design §8.6). Each value is a @balance default: 24 rungs, 4 apart;
+  // the odds of each odds-by-nature word (%); the bell's σ per luck word; drift per drift word; the z a circumstance
+  // step moves; the bell's floor and ceiling; a course's standard rung per level; rungs per course level above a card's own.
+  const LADDER_DEFAULTS = {
+    likelihood: { certain: 97, sure: 90, likely: 70, even: 50, unlikely: 30, slim: 15, long_shot: 5, freak: 1 },
+    sigma: { steady: 12, normal: 20, wild: 32, luck: 80 },
+    drift: { none: 0, low: 0.15, mid: 0.3, high: 0.5 },
+    odds_step: 0.5, bell: { floor: 2, ceil: 98 }, course_standard: ['apprentice+', 'journeyman+', 'adept+'], course_step: 3,
+  };
+  const DEFAULT_RUNGS = {};
+  ['novice', 'apprentice', 'journeyman', 'adept', 'expert', 'master', 'grandmaster', 'archmage'].forEach((r, i) => { DEFAULT_RUNGS[r + '-'] = 12 * i; DEFAULT_RUNGS[r] = 12 * i + 4; DEFAULT_RUNGS[r + '+'] = 12 * i + 8; });
+  // The normal CDF (Abramowitz–Stegun 7.1.26) and its inverse (bisection): the bell the ladder's odds follow.
+  const erf = (x) => { const sg = Math.sign(x), a = Math.abs(x), t = 1 / (1 + 0.3275911 * a); return sg * (1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-a * a)); };
+  const Phi = (z) => 0.5 * (1 + erf(z / Math.SQRT2));
+  const invPhi = (p) => { let lo = -8, hi = 8; for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2; if (Phi(m) < p) lo = m; else hi = m; } return (lo + hi) / 2; };
   // Which skill a challenge rolls (design §9.2); `using <skill>` overrides.
   const CHALLENGE_SKILLS = { combat: ['arcana', 'vigor', 'guile'], duel: ['vigor', 'arcana'], negotiate: ['charm'], deceive: ['guile'], research: ['lore'], brew: ['alchemy'], enchant: ['alchemy'], exam: ['lore'], feat: ['vigor'], spell: ['arcana'] };   // = Grimoire.CHALLENGE_KINDS
   class SaveVersionError extends Error { constructor(v) { super('This save is from an older version of the game (save version ' + v + ', now ' + SAVE_VERSION + ') and can no longer be loaded.'); this.code = 'SAVE_VERSION'; this.saveVersion = v; } }
@@ -208,8 +223,8 @@
       const d = this.c.npcs[id];
       return d && d.stats && d.stats[stat] != null ? d.stats[stat] : this.expectedSkill();
     }
-    // Challenge odds (design §8.6, §9.2): {skill value, dc, win %, partial-or-better %}
-    challengeOdds(st, actor, eventId) {
+    // The value a challenge tests (design §9.2): the kind's skill (or `using`), the combat stub's mix, and the modifiers.
+    checkValue(st) {
       const ct = this._ctxTrack && this.trackState(this._ctxTrack);
       // An exam inside a course's card tests that course's skill (design §9.2).
       const skills = st.using ? [st.using] : (st.kind === 'exam' && ct && this.trackSkills(this._ctxTrack).length ? this.trackSkills(this._ctxTrack) : (CHALLENGE_SKILLS[st.kind] || ['lore']));
@@ -225,6 +240,55 @@
       sv += Math.min(spc.cap, sp);
       if (st.kind === 'exam' && ct && ct.status === 'enrolled') sv += Math.min(this.studyRule().cap, ct.study || 0);
       sv += this.advisorBonus(this._ctxTrack);
+      return { skills, value: sv };
+    }
+    // The check ladder (docs/authoring/checks.md, design §8.6). A @balance value, or its default.
+    ladder(key) { const b = this.c.balance || {}; return b[key] != null ? b[key] : LADDER_DEFAULTS[key]; }
+    rungValue(w) { const t = (this.c.balance && this.c.balance.dc_tiers) || DEFAULT_RUNGS; return t[w] != null ? t[w] : DEFAULT_RUNGS[w]; }
+    rungStep() { return (this.rungValue('novice') - this.rungValue('novice-')) || 4; }
+    // A course's standard at a level: its `standard:` rung, else @balance course_standard.
+    courseStandard(trackId, level) { const d = trackId && this.c.tracks[trackId], l = (d && d.standard) || this.ladder('course_standard'); return this.rungValue(l[clamp(level || 1, 1, l.length) - 1]); }
+    // Odds by nature as a z: the word's odds, moved by each circumstance step whose condition holds.
+    likelihoodZ(word, steps, actor) {
+      let z = invPhi(clamp((this.ladder('likelihood')[word || 'even'] ?? 50) / 100, 0.0005, 0.9995));
+      for (const s of steps || []) if (this.test(s.cond, actor)) z += s.n * this.ladder('odds_step');
+      return z;
+    }
+    likelihoodP(word, steps, actor) { return Math.round(100 * Phi(this.likelihoodZ(word, steps, actor))); }
+    // Drift by significance (checks.md): a story card's challenge is what the story says; milestones and crises barely
+    // move; routine, incident, windfall and repeat cards keep up.
+    defaultDrift(ev) { return !ev ? 'high' : ev.class === 'story' ? 'none' : ['milestone', 'crisis'].includes(ev.class) ? 'low' : 'high'; }
+    // The bell: floor + (ceil − floor) × Φ(z + (skill − DC) / σ); a milestone and an exam run 0–100.
+    bellOdds(sv, dc, z0, swing, milestone) {
+      const b = this.ladder('bell'), [lo, hi] = milestone ? [0, 100] : [b.floor ?? 2, b.ceil ?? 98], sg = this.ladder('sigma')[swing || 'normal'] || 20;
+      return Math.round(lo + (hi - lo) * Phi(z0 + (sv - dc) / sg));
+    }
+    // A ladder challenge's odds: the difficulty (a rung, the course standard, or a character's stat; ± rungs; the course
+    // step for a card shown above its level; +2 for the hard variant), pulled toward the expected skill by drift.
+    ladderOdds(st, actor, eventId) {
+      const { skills, value: sv } = this.checkValue(st);
+      const ev = eventId && this.c.events[eventId], tr = this._ctxTrack, ct = tr && this.trackState(tr);
+      const inCourse = !!(ct && ct.status === 'enrolled' && this.c.tracks[tr] && this.c.tracks[tr].kind === 'course');
+      const own = (ev && ev.level) || null;
+      let base;
+      if (st.vs) base = this.statOf((this._cast && this._cast[st.vs.who]) || st.vs.who, st.vs.stat, actor);
+      else if (st.standard) base = this.courseStandard(inCourse ? tr : ev && ev.track, own || (inCourse ? ct.level : 1));
+      else base = this.rungValue(st.rung);
+      let rungs = st.offset || 0;
+      if (inCourse && own) rungs += this.ladder('course_step') * Math.max(0, (ct.level || 1) - own);
+      if (this._variant === 'hard') rungs += 2;
+      base += rungs * this.rungStep();
+      const k = this.ladder('drift')[st.drift || this.defaultDrift(ev)] || 0;
+      const dc = base + k * (this.expectedSkill() - base);
+      const z0 = this.likelihoodZ(st.odds, st.steps, actor), ms = this.isMilestone(eventId);
+      const odds = (x) => this.bellOdds(sv, x, z0, st.swing, ms);
+      return { skill: skills.join('+'), value: sv, dc, win: odds(st.partial ? dc + 5 : dc), atLeastPartial: odds(st.partial ? dc - 5 : dc) };
+    }
+    // Challenge odds (design §8.6, §9.2): {skill value, dc, win %, partial-or-better %}
+    challengeOdds(st, actor, eventId) {
+      if (st.ladder) return this.ladderOdds(st, actor, eventId);
+      const ct = this._ctxTrack && this.trackState(this._ctxTrack);
+      const { skills, value: sv } = this.checkValue(st);
       const e = this.expectedSkill();
       const DT = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
       // Harder at higher course levels (L-3, L6): a course card's check is one tier up per level above I; the hard
@@ -244,6 +308,15 @@
     studyRule() { return Object.assign({ attend: 3, cap: 15 }, (this.c.balance && this.c.balance.study) || {}); }
     // A known spell's bonus on checks that test its discipline's skill (design §9.2; L-3, `@balance spell_check: per 2 cap 6`).
     spellCheck() { return Object.assign({ per: 3, cap: 15 }, (this.c.balance && this.c.balance.spell_check) || {}); }
+    // An exam's bar before study and the advisor: a legacy tier is the expected skill + its offset; a ladder tier
+    // (a rung, or `standard±N`) is that difficulty with low drift (checks.md).
+    examBar(id, level) {
+      const tier = this.examTier(level);
+      if (DEFAULT_DIFFICULTY.hasOwnProperty(tier)) return this.expectedSkill() + this.difficulty(tier);
+      const m = tier.match(/^standard([+-]\d+)?$/);
+      const base = m ? this.courseStandard(id, level) + (m[1] ? +m[1] : 0) * this.rungStep() : this.rungValue(tier);
+      return base + this.ladder('drift').low * (this.expectedSkill() - base);
+    }
     // A course exam's difficulty at a course level (`@balance exam_tiers: easy medium hard`; L alarms).
     examTier(level) { const w = (this.c.balance && this.c.balance.exam_tiers) || ['medium', 'hard', 'heroic']; return w[Math.min(w.length, Math.max(1, level)) - 1]; }
     isMilestone(eventId) { const e = eventId && this.c.events[eventId]; return !!e && e.class === 'milestone'; }
@@ -470,10 +543,10 @@
     examOdds(id, swing) {
       const s = this.s, t = this.trackState(id), sk = this.trackSkills(id);
       const sv = sk.reduce((a, k) => a + (s.vals[k] || 0), 0) / Math.max(1, sk.length);
-      const tier = this.examTier((t && t.level) || 1);
-      const dc = this.expectedSkill() + this.difficulty(tier) - Math.min(this.studyRule().cap, (t && t.study) || 0) - this.advisorBonus(id);
+      const lv = (t && t.level) || 1, ladder = !DEFAULT_DIFFICULTY.hasOwnProperty(this.examTier(lv));
+      const dc = this.examBar(id, lv) - Math.min(this.studyRule().cap, (t && t.study) || 0) - this.advisorBonus(id);
       const slope = this.swingSlope(swing), [lo, hi] = this.oddsRange(true);
-      const odds = (x) => clamp(Math.round(50 + slope * (sv - x)), lo, hi);
+      const odds = ladder ? (x) => this.bellOdds(sv, x, 0, swing, true) : (x) => clamp(Math.round(50 + slope * (sv - x)), lo, hi);
       const top = odds(dc + 5), pass = odds(dc - 5);
       const A = sv - dc >= 15 ? top : 0, B = top - A, C = pass - top, F = 100 - pass;
       return { skills: sk, value: sv, bar: dc, probs: [A, B, C, F], pass, top };
@@ -529,8 +602,9 @@
       const lv = level || this.levelPassed(id) + 1;
       const tier = this.examTier(lv);
       const sk = this.trackSkills(id), sv = sk.reduce((a, k) => a + (this.s.vals[k] || 0), 0) / Math.max(1, sk.length);
-      const dc = this.expectedSkill() + this.difficulty(tier) - this.advisorBonus(id);
-      return { skills: sk, level: lv, exam: tier, teaches: (d.teaches || []).filter((x) => x.level === lv).map((x) => x.spell), pass: clamp(Math.round(50 + this.swingSlope(null) * (sv - (dc - 5))), ...this.oddsRange(true)) };
+      const dc = this.examBar(id, lv) - this.advisorBonus(id);
+      const pass = DEFAULT_DIFFICULTY.hasOwnProperty(tier) ? clamp(Math.round(50 + this.swingSlope(null) * (sv - (dc - 5))), ...this.oddsRange(true)) : this.bellOdds(sv, dc - 5, 0, null, true);
+      return { skills: sk, level: lv, exam: tier, teaches: (d.teaches || []).filter((x) => x.level === lv).map((x) => x.spell), pass };
     }
     // Generated menu options (design §7.3, §7.4): `offers: courses | clubs | jobs`.
     offered(kind) {
@@ -941,8 +1015,9 @@
             const actor = st.with ? this.npcOf(st.with, ctx) : (c.events[st.event].actor === 'npc' ? ctx.actor : null);
             const carry = { track: ctx.track || undefined, cast: st.with && ctx.cast && ctx.cast[st.with] ? { npc: ctx.cast[st.with] } : undefined };
             // `chance N` (I4): rolled when the card falls due (at once for `now`); a failed roll drops it.
-            if (st.chance != null) carry.chance = st.chance;
-            if (st.chance != null && (st.now || (!st.window && !st.byMonth && st.delay && Math.round(this.value(st.delay, ctx.actor)) <= 0)) && this.rand() * 100 >= st.chance) break;
+            const qc = st.chanceWord ? this.likelihoodP(st.chanceWord) : st.chance;   // `chance <word>` (checks.md)
+            if (qc != null) carry.chance = qc;
+            if (qc != null && (st.now || (!st.window && !st.byMonth && st.delay && Math.round(this.value(st.delay, ctx.actor)) <= 0)) && this.rand() * 100 >= qc) break;
             if (st.now) s.deck.splice(ctx.nowIdx++, 0, { id: st.event, actor, src: 'queued', ...carry });
             else if (st.window || st.byMonth) {
               // A window (design §5.3): the chance rises each month (1 / months left), forced on the last one.
@@ -1050,7 +1125,8 @@
             break;
           }
           case 'chance': {
-            const p = clamp(this.value(st.p, ctx.actor), 0, 100);
+            // `chance <word>` (checks.md): odds by nature with circumstance steps; `chance N` (legacy) a percentage.
+            const p = st.word ? this.likelihoodP(st.word, st.steps, ctx.actor) : clamp(this.value(st.p, ctx.actor), 0, 100);
             this.run(this.pick('chance', [p, 100 - p], { p }) === 0 ? st.body : st.else, ctx);
             break;
           }

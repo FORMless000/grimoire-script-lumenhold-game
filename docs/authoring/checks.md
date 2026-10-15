@@ -1,7 +1,7 @@
 # Checks: how hard, how likely, how lucky
 
 > How a `challenge` or `chance` is pitched (design §8.6). Rung values and odds are in `presets.md`, generated from `balance.grim`: write words, never numbers.
-> The old tier words (`trivial` … `heroic`) and `chance N` still parse while the existing checks are rewritten; write new checks with these words.
+> The old tier words (`trivial` … `heroic`) and `chance N` are legacy: they still play, with the old formula, until the existing checks are rewritten. Write every new or revised check with the words below.
 
 ## The four dials
 

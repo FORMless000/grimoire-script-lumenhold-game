@@ -292,12 +292,12 @@ One statement per line. Blocks end with `:` and nest by indentation.
 | `queue event in 3` | …in 3 months (`in 0` means later this month). |
 | `queue event now` | It becomes the **very next card** (this is how menus lead to sub-scenes). |
 | `queue event … with npc` / `with lyra` | Carry an actor into the queued event (the target uses `actor: npc`). |
-| `queue event … chance 33` | When it falls due, push the card with that probability (%), else drop it (playtest 2, I4); `now` and `in 0` roll at once. Copies of one event due the same month give at most one card. The card shows no odds. The budget lint counts it as a risk when the queued card is an `incident` or `crisis`, and the simulated players score it as a risk weighted by its odds (I8). |
+| `queue event … chance unlikely` (or a % such as `chance 33`, legacy) | When it falls due, push the card with those odds by nature (`@balance likelihood`), else drop it (playtest 2, I4); `now` and `in 0` roll at once. Copies of one event due the same month give at most one card. The card shows no odds. The budget lint counts it as a risk when the queued card is an `incident` or `crisis`, and the simulated players score it as a risk weighted by its odds (I8). |
 | `rel lyra +small` · `spark lyra +tiny` · `bond lyra friend` · `meet lyra` | Relationships. Use a cast role (or `npc` for the bound actor) instead of an id. Each implies `meet`. (`love` is *legacy* for `spark`.) |
 | `end ending_id` | Game over with that ending (after the outcome card). |
 | `if expr:` / `elif expr:` / `else:` | Branching. |
-| `chance 30:` … `else:` | 30% (any expression; `chance 30%:` also works). |
-| `challenge research easy:` … `win:` / `lose:` | A challenge (§6a): its kind, the skill it uses and a difficulty tier. The first top-level challenge in an option is shown on the button with its odds. |
+| `chance likely:` … `else:` | Pure luck, at the odds of an odds-by-nature word (`@balance likelihood`), moved by circumstance steps: `chance likely +1 if spark(npc) >= 30:` (`docs/authoring/checks.md`). *Legacy:* `chance 30:` (any expression; `chance 30%:` also works). |
+| `challenge research adept- unlikely wild:` … `win:` / `lose:` | A challenge (§6a): its kind, the skill it uses, a difficulty on the ladder, odds by nature, luck, drift and circumstance steps. The first top-level challenge in an option is shown on the button with its odds. |
 | `check arcana 20:` … `else:` | *Legacy* skill check (raw DC); use `challenge`. |
 
 **Odds:** a challenge compares your skill with the expected skill at that point of the run plus its difficulty tier, with a swing (§6a, `@balance swing` and `odds`). The legacy `check` used a raw DC.
@@ -414,10 +414,10 @@ These constructs are the new event format. Older forms keep working through a co
 
 **Presets.** Named groups of effects defined with `@preset` (`params:` and a `do:` body using `$param`), used as a statement: `grind arcana`, `rest`, `social npc`, `work`, `splurge`, `risk renown`. They expand at compile time.
 
-**Challenges** replace `check` (legacy):
+**Challenges** replace `check` (legacy). How to pitch one is `docs/authoring/checks.md`; the numbers are `@balance` (`presets.md`).
 
 ```grim
-challenge duel vs lyra.arcana hard:     # combat | duel | negotiate | deceive | exam | research | brew | enchant | feat | spell
+challenge duel vs lyra.arcana +2 wild:  # combat | duel | negotiate | deceive | exam | research | brew | enchant | feat | spell
   win:
     renown +medium
   partial:                              # optional: a band of ±5 around the DC
@@ -426,11 +426,19 @@ challenge duel vs lyra.arcana hard:     # combat | duel | negotiate | deceive | 
     health -medium
 ```
 
-The skill is mapped from the kind (duel: (vigor + arcana) / 2; negotiate: charm; deceive: guile; research and exam: lore; brew and enchant: alchemy; feat: vigor; spell: arcana), or set with `using <skill>`. `using` may also name a resource such as `renown`; a resource isn't on the skill scale, so it reads as E(turn) + (value − 50) / 2. DC = `E(turn)` (the `@balance curve`) + the difficulty tier (trivial −15, easy −7, medium 0, hard +8, heroic +16) + `vs <who>.<stat>` (that character's stat minus E(turn), capped at ±15). Odds = clamp(50 + slope × (skill − DC), 8, 92), with slope 2.5.
+The line is `challenge <kind> [using <skill>] <difficulty> [<odds>] [<luck>] [drift <word>] [±N if <cond>]…:`.
 
-**Swing.** A word after the tier changes how far skill moves the odds: `challenge negotiate trivial wild:` swings whatever your skill (slope 1.2), `challenge deceive hard steady:` follows skill closely (slope 4). Use `wild` for banter and low-stakes luck, `steady` for checks where skill should decide. The slopes are `@balance swing: normal 2.5 wild 1.2 steady 4`.
+- **The skill** is mapped from the kind (duel: (vigor + arcana) / 2; negotiate: charm; deceive: guile; research and exam: lore; brew and enchant: alchemy; feat: vigor; spell: arcana), or set with `using <skill>`. `using` may also name a resource such as `renown`; a resource isn't on the skill scale, so it reads as E(turn) + (value − 50) / 2.
+- **Difficulty** is the DC: a rung of the ladder (`novice-` … `archmage+`, `@balance dc_tiers`); `standard` / `standard±N` on a course card (the course's `standard:` at the card's `level:`, else `@balance course_standard`); or `vs <who>.<stat> [±N]` (that character's stat, ± N rungs). A course card shown in a course level above its own `level:` rises `course_step` rungs per level; the hard variant adds 2.
+- **Odds by nature** (`certain sure likely even unlikely slim long_shot freak`, default `even`) is the chance when your skill matches the DC (`@balance likelihood`). **Circumstance steps** (`+1 if renown >= 60`) move it by `odds_step` in z.
+- **Luck** (`steady normal wild luck`, default `normal`) is the bell's σ (`@balance sigma`).
+- **Drift** (`none low mid high`) pulls the DC toward the expected skill E(turn) (the `@balance curve`): DC = d + k × (E − d). Default: `story` none; `milestone` and `crisis` low; anything else high.
+- **Odds** = floor + (ceil − floor) × Φ(z(odds) + steps + (skill − DC) / σ), with `@balance bell: floor 2 ceil 98`; a check on a `class: milestone` card runs 0–100. Rounded to a whole percent.
+- **Modifiers** on the skill: a known spell adds `@balance spell_check: per 2 cap 6` to checks of its discipline's skill; in a course card an `exam` adds study (up to the cap); the advisor's regard.
 
-**Odds range and modifiers** (L-3). Odds are clamped to `@balance odds: min 5 max 95` (a forced fail and a forced success); a check on a `class: milestone` card and an exam have no forced fail (the top is 100). A known spell adds `@balance spell_check: per 2 cap 6` to checks of its discipline's skill. A course card's check is one tier harder per course level above I (`level:` of the enrolled course), and the hard variant adds one more, up to heroic.
+*Legacy* (being rewritten): a tier word `trivial easy medium hard heroic` puts the DC at E(turn) + `@balance difficulty` (+ `vs` stat − E, within ±15; one tier per course level above I; one more for the hard variant, up to heroic), and odds = clamp(50 + slope × (skill − DC), `@balance odds: min 5 max 95`; milestones 100) with slopes `@balance swing: normal 2.5 wild 1.2 steady 4`.
+
+**Exams.** `@balance exam_tiers` gives the bar at each course level: a legacy tier (E + offset), or a rung / `standard±N` (that difficulty with low drift). Study and the advisor lower it; the exam reads the same bell (0–100).
 
 **Combat** (the stub until the combat minigame). `challenge combat <tier>:` is for fights: duels, spars, brawls, the tournament. Its value mixes arcana, vigor and guile (weighted), adds condition × (the mean of health, mood and mana − 50), and adds spells × your total spell levels (at most +15); `vs` works as usual. Entering a fight costs mana (`@balance combat_cost:`, a tier, default small); the preview shows it. Weights: `@balance combat: arcana 1 vigor 1 guile 0.5 condition 0.2 spells 1.5`. The button marks combat apart from skill checks. A card drawn as its `variant: hard` is one tier harder and pays positive tier rewards ×1.5 (the director chooses when, phase 2b).
 
@@ -461,7 +469,7 @@ Worldbook blocks are **data**: canon for authors, briefs and lint. Until phase 2
 | `@npc` (extended) | `age` (required; romance needs 18+), `role`, `year`, `traits` / `interests` (from `@vocab`), `voice` | `stats: arcana 34 lore 22 wealth 5` · `schedule: place@slot,slot … place@slot:30` (a number: there that share of days, decided per month without the RNG; M42) · `schedule_break: …` (the schedule on breaks, or `away`: gone for the break, reachable only by letter) · `gone_when: <condition>` (review fixes: while it holds the character is nowhere on the map, fills no cast role and is drawn for no card except letters, e.g. `flag(ilse_taken)` or `flag(tobias_went_home) and since(tobias_bad_harvest) < 2`; scenes queued for them still play) · `relations: npc:value …` |
 | `@fact npc.key` | what can be learned about a character: `tier` surface / personal / secret, `unlock` (expression), `text` | |
 | `@place` | `region`, `kind` (public, club, job, thesis, internship, plan), `track`, `open` slots, `discover` / `closed_when` / `hinted_when` (expressions), `hint`, `desc` | `map: campus x,y` |
-| `@track` | `kind` (course, club, job, internship, thesis), `skill`, `levels` + `level_names`, `place`, `hidden`, `prereq`, `ranks`, `due`, `lead` | `teaches: spell@level …` · `pay: 8, 12, 18` |
+| `@track` | `kind` (course, club, job, internship, thesis), `skill`, `levels` + `level_names`, `place`, `hidden`, `prereq`, `ranks`, `due`, `lead`, `standard` (a course's rung per level, for `standard` checks) | `teaches: spell@level …` · `pay: 8, 12, 18` |
 | `@spell` | `discipline` (a course track) | `cost: 8, 6, 5` · `power: 1, 2, 3` |
 | `@arc` | `canon`, `clues`, `key_clues`, `cast`, `act_names` (the acts as players read them, comma-separated) | `acts: name@yN …` · `clock: 0..12` · `beats: clock@yNmM …` |
 | `@clue` | `arc`, `name`, `text`, `kind: clue \| lead`, `followed: <expr>` (a lead only) | the Journal's entry for a clue or a lead |
