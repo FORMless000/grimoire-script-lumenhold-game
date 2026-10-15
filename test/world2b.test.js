@@ -534,8 +534,10 @@ test('enrolment: no "take no courses"; a fallback only when nothing is offered (
 test('a simulated game replays exactly through the engine, as the UI would drive it (A1)', () => {
   const strip = (s) => JSON.stringify({ vals: s.vals, flags: s.flags, states: s.states, tracks: s.tracks, npcs: s.npcs, turn: s.turn, ended: s.ended,
     hist: s.hist.map((h) => Object.assign({}, h, { at: 0, chosenAt: 0 })) });
-  for (const [style, seed] of [['balanced', 21], ['random', 22], ['social', 23]]) {
-    const a = quiet(() => Policies.play(new Engine(content), Policies.get(style), { seed, name: 'R', record: true }));
+  for (const [style, seed0] of [['balanced', 21], ['random', 22], ['social', 23]]) {
+    // A random player may leave early (a valid ending); the first of a few seeds that plays a whole game is replayed.
+    let a = null;
+    for (let seed = seed0; seed < seed0 + 50 * 5 && !(a && a.record.steps.length > 400); seed += 50) a = quiet(() => Policies.play(new Engine(content), Policies.get(style), { seed, name: 'R', record: true }));
     assert.ok(a.record.steps.length > 400, style + ' played a whole game');
     const b = quiet(() => Policies.replay(new Engine(content), a.record));
     assert.equal(strip(b.eng.s), strip(a.eng.s), style + ': same history and final state');
