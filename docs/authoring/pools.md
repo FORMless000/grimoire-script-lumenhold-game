@@ -34,7 +34,7 @@ text: {The courtyard fountain is taking wishes again.|The fountain again. Someon
   - `track:` with `rank:` for club practice and job shifts;
   - `plan:` for break mornings.
 - **Effects:** only tiers and presets (`mood -small`, `grind lore`, `rest`, `work`, `social friend`). For courses use `study <track> ±tier`; for clubs and jobs use `perform <track> ±tier` and `rank_xp <track> ±tier`; for the thesis use `progress thesis ±tier`. Use `challenge` (never `check`) and `spark` (never `love`). Never use raw numbers or `grades`.
-- **Budget:** `routine` means every option costs or risks something and stays within ±1.5 medium-equivalents (lint checks it). Typical shape: a small gain against a tiny or small cost.
+- **Budget:** `routine` means no option is obviously best (`costs.md`), and each stays within ±1.5 medium-equivalents (lint checks both). Options trade by giving different things, or by a cost or risk the `say:` shows; a free option is honest when it gives up what the other offers. Typical shape: a small gain against a tiny or small cost the scene shows, or two different gains.
 - **Cast:** optional. If an event needs a character, use `cast:` roles:
   - `here: present(place)`: someone whose schedule puts them here now;
   - `friend: any where tagged(friend, peer) and rel(friend) >= 10` (cast by premise: `peer` to spend time with, `(tagged(x, student) or tagged(x, prefect))` for a classmate, `tagged(x, teacher)` for a professor; never just `not tagged(x, faculty)`, which also admits shopkeepers);

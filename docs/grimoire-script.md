@@ -4,6 +4,7 @@ Grimoire Script (`.grim`) is the content language of Lumenhold Academy. Every ev
 
 - Parser: `src/grimoire.js`. Engine semantics: `src/engine.js`.
 - After editing, run `node tools/grim.js build` (the page loads `build/content.bundle.js`) and `node tools/grim.js lint`.
+- **Current forms first.** Examples here use the current event format: tier words (`mood -small`), `challenge`, `spark`, `cast:` roles and a `class:` on every event. Older forms that still parse (raw amounts in events, `check`, `love`, `actor: any`, `grades`) are marked *legacy* where they appear; lint counts them, and §6a says what replaces each. Writing guidance is in `docs/authoring/` and `skills/write-academy-events/`.
 
 ---
 
@@ -38,26 +39,32 @@ File order does not matter, except that `content/core/` loads first. Put new con
 ```
 @event pyro_candle
 title: Light the Candle
-when: has(class_pyromancy)
-weight: 16
+track: evocation
+level: 1
+class: routine
+tone: light
+repeat: 5
+weight: 10
 art: candle
 tags: class magic
 scene: A dark classroom, a single candle on a stool at the far end, a stern silhouette.
 text: Professor Thorne places a candle at the far end of the hall. "Light it. From there."
 > left: A careful spark
-  check arcana 10:
-    arcana +1
-    say: The wick catches. Thorne grunts. From him, that is applause.
-  else:
-    mood -2
-    say: Nothing. Then a wisp of smoke.
+  challenge spell using arcana easy:
+    win:
+      arcana +small
+      say: The wick catches. Thorne grunts. From him, that is applause.
+    lose:
+      mood -small
+      say: Nothing. Then a wisp of smoke.
 > right: Show them real fire
-  check arcana 18:
-    renown +3
-    say: A pillar of white flame, then obedient silence.
-  else:
-    health -5
-    say: The candle lights. So do the curtains.
+  challenge spell using arcana hard:
+    win:
+      renown +small
+      say: A pillar of white flame, then obedient silence.
+    lose:
+      health -small
+      say: The candle lights. So do the curtains.
 ```
 
 | Property | Meaning | Default |
@@ -69,9 +76,9 @@ text: Professor Thorne places a candle at the far end of the hall. "Light it. Fr
 | `tags` | Space- or comma-separated. The first known tag picks the card colour and label (see §8). | — |
 | `when` | Expression; the event can only appear while true. Checked when the deck is built **and** again just before the card is shown. | always |
 | `weight` | Expression; relative draw chance among eligible events. | 10 |
-| `trigger` | How it enters a month's deck: `random`, `auto`, `social`, `queued` or `letter` (§5, §6c). | `random`; `social` if `actor: any` |
+| `trigger` | How it enters a month's deck: `random`, `auto`, `social`, `queued` or `letter` (§5, §6c). | `random` (`social` for the *legacy* `actor: any`) |
 | `actor` | The NPC the card is about: an npc id, `any` (engine picks one), or `npc` (inherited from the `queue … with` that scheduled it). Enables `npc` and `{npc}`. | none |
-| `repeat` | Cooldown in months. Without it, the event happens **once per game** (once per character for `actor: any`). | once |
+| `repeat` | Cooldown in months. Without it, the event happens **once per game** (once per character with `per: <role>`). | once |
 | `priority` | Ordering among forced cards (higher first). | queued 60, auto 50 |
 | `defer` | Expression (playtest 2, I6). When a pushed card is about to show and this is true, it goes back to the queue for next month instead (a failed `when` drops it). Lumenhold: `night_suspicion` waits with `defer: off_campus`. | — |
 | `type` | `card`, `story` or `menu` — inferred from the options (below). | inferred |
@@ -98,16 +105,20 @@ Option lines under `> key: Label` (indented):
 ### `@state` — something persistent on the player
 
 ```
-@state class_pyromancy
-name: Elective: Pyromancy
-kind: class
-group: elective
-art: flame
-desc: Fire answers to will, not wishes.
+@state inspired
+name: Inspired
+kind: buff
+art: sparkle
+duration: 2
+desc: Ideas arrive faster than you can write them down.
 tick:
-  arcana +2
-  health -1
+  lore +1
+  arcana +1
+  mood +2
+  say: {~Ideas arrive faster than you can write them down.|You fill a notebook and start another.}
 ```
+
+A state's `tick:` (like a hook's `do:`) may use raw amounts: they are monthly rules, not event outcomes. Its `say:` lines show in the month summary beside the numbers.
 
 | Property | Meaning |
 |---|---|
@@ -140,7 +151,7 @@ start_rel: 0
 desc: Brilliant, impatient and used to winning.
 ```
 
-`pronouns` must start with `she`, `he` or `they` (this drives `{they}`, `{them}` …). `short` is the name `{npc}` prints (use it when the first word of `name` is a title: `short: Professor Thorne`). `romance: true` allows `love` to grow. `look` is optional and fixes the procedural portrait (hair 0–7, skin 0–5, style 0–4). `tags` can be tested with `tagged(npc, faculty)`; the character's `role:` counts as a tag too (`tagged(friend, student)` excludes staff, professors and outsiders such as Ilse).
+`pronouns` must start with `she`, `he` or `they` (this drives `{they}`, `{them}` …). `short` is the name `{npc}` prints (use it when the first word of `name` is a title: `short: Professor Thorne`). `romance: true` allows `spark` (romantic interest) to grow. `look` is optional and fixes the procedural portrait (hair 0–7, skin 0–5, style 0–4). `tags` can be tested with `tagged(npc, faculty)`; the character's `role:` counts as a tag too (`tagged(friend, student)` excludes staff, professors and outsiders such as Ilse).
 
 **Casting by premise.** A generic event's `where` says who its premise fits, not just who it excludes:
 - `tagged(x, peer)`: someone your age you spend time with (students, the prefect, Ilse); for hanging out, secrets, rivalries, birthdays and loans;
@@ -156,14 +167,14 @@ Each NPC carries a relationship record:
 
 | Field | Range | Changed by |
 |---|---|---|
-| `met` | bool | `meet x`, or any `rel` / `love` / `bond` effect |
-| `rel` | −100…100 | `rel x +N` |
-| `love` | 0…100 | `love x +N` (romanceable characters only; lint warns otherwise) |
+| `met` | bool | `meet x`, or any `rel` / `spark` / `bond` effect |
+| `rel` | −100…100 | `rel x +small` (tier words; the `rel` row) |
+| `spark` | 0…100 | `spark x +tiny` (romanceable characters only; lint warns otherwise). `love` is its legacy name. |
 | `bond` | `none friend close rival nemesis partner ex` | `bond x status` |
 
 ### `@resource` and `@skill` — the player's numbers
 
-Resources are the meters at the top of the screen. Skills appear in the side panel and drive `check`s.
+Resources are the meters at the top of the screen. Skills appear in the side panel and drive challenges (§6a).
 
 ```
 @resource health
@@ -183,15 +194,16 @@ on_zero:
 ### `@hook` — global rules
 
 ```
-@hook rent
+@hook break_rent
 on: month_start
-label: Dormitory & board
-when: turn > 1 and not has(summer_away)
+label: Board at the castle
+when: break and (has(plan_castle) or has(plan_work))
 do:
-  gold -10
+  gold -8
+  say: {~The castle in the holidays still wants its board.|A bed in an empty dormitory costs the same as a full one.}
 ```
 
-`on` is `game_start`, `month_start` or `month_end`. Month-start hooks run after state ticks; their effects appear in the month summary under `label`.
+`on` is `game_start`, `month_start`, `month_end`, `term_start` or `term_end`. Month-start hooks run after state ticks; their effects appear in the month summary under `label`, with their `say:` lines. Hooks, like state ticks, may use raw amounts.
 
 ### `@ending`
 
@@ -249,7 +261,7 @@ Used in `when`, `weight`, `if`, `chance`, `check`, assignments and `{=…}`.
 | `has(x)` | true if flag `x` is set **or** state `x` is active |
 | `flag(x)` | true if flag `x` is set |
 | `left(state)` | months left (99 if permanent, 0 if absent) |
-| `rel(n)` `love(n)` `bond(n)` `met(n)` | relationship fields (`bond` returns a string: compare with `bond(n) == "friend"`) |
+| `rel(n)` `spark(n)` `bond(n)` `met(n)` (`love(n)` is *legacy* for `spark`) | relationship fields (`bond` returns a string: compare with `bond(n) == "friend"`) |
 | `romanceable(n)` `tagged(n, tag)` `npc_is(n)` | NPC tests (`npc_is(lyra)`: is the actor Lyra?) |
 | `bonds(status)` | how many met NPCs have that bond (`bonds(partner) > 0`) |
 | `known()` | how many NPCs you've met |
@@ -268,8 +280,8 @@ One statement per line. Blocks end with `:` and nest by indentation.
 
 | Statement | Meaning |
 |---|---|
-| `gold +10` / `mood -5` | Add or subtract (clamped for resources and skills). |
-| `gold +10~25` | A random amount in a range. |
+| `gold -small` / `mood +medium` / `arcana +tiny` | Add or subtract a tier (§6a; skills use the `xp` row). Clamped for resources and skills. |
+| `gold +10` · `gold +10~25` | A raw amount, or a random one in a range: for hooks, states and custom counters; *legacy* in events. |
 | `x = expr` · `x += expr` · `x -= expr` · `set x = expr` | Assign or adjust any variable, resource or skill. |
 | `say: text` | Outcome text shown after the choice. Multiple `say` lines join with spaces. Keep it to one line. |
 | `flag a b c` / `unflag a` | Set or clear permanent boolean flags. |
@@ -279,13 +291,14 @@ One statement per line. Blocks end with `:` and nest by indentation.
 | `queue event now` | It becomes the **very next card** (this is how menus lead to sub-scenes). |
 | `queue event … with npc` / `with lyra` | Carry an actor into the queued event (the target uses `actor: npc`). |
 | `queue event … chance 33` | When it falls due, push the card with that probability (%), else drop it (playtest 2, I4); `now` and `in 0` roll at once. Copies of one event due the same month give at most one card. The card shows no odds. The budget lint counts it as a risk when the queued card is an `incident` or `crisis`, and the simulated players score it as a risk weighted by its odds (I8). |
-| `rel lyra +5` · `love lyra +3~6` · `bond lyra friend` · `meet lyra` | Relationships. Use `npc` instead of an id for the bound actor. Each implies `meet`. |
+| `rel lyra +small` · `spark lyra +tiny` · `bond lyra friend` · `meet lyra` | Relationships. Use a cast role (or `npc` for the bound actor) instead of an id. Each implies `meet`. (`love` is *legacy* for `spark`.) |
 | `end ending_id` | Game over with that ending (after the outcome card). |
 | `if expr:` / `elif expr:` / `else:` | Branching. |
 | `chance 30:` … `else:` | 30% (any expression; `chance 30%:` also works). |
-| `check arcana 20:` … `else:` | Skill check (below). The first top-level `check` in an option is shown on the button with its odds. |
+| `challenge research easy:` … `win:` / `lose:` | A challenge (§6a): its kind, the skill it uses and a difficulty tier. The first top-level challenge in an option is shown on the button with its odds. |
+| `check arcana 20:` … `else:` | *Legacy* skill check (raw DC); use `challenge`. |
 
-**Skill checks:** success % = `clamp(50 + (skill − DC) × 3, 5, 95)`. At skill = DC it's 50%; 10 points above is 80%. The DC can be an expression (`check lore 12 + year * 8:`).
+**Odds:** a challenge compares your skill with the expected skill at that point of the run plus its difficulty tier, with a swing (§6a, `@balance swing` and `odds`). The legacy `check` used a raw DC.
 
 **Text tokens** (in `title`, `text`, `scene`, labels, hints, `say`):
 
@@ -314,16 +327,16 @@ Avoid contractions that break with "they" (`{they}'s`, `{they}'ve`).
 
    Social and random cards are shuffled.
 3. Cards are played in order. `queue … now` inserts at the front. Each card re-checks its `when` before showing (so a queued follow-up can quietly skip itself).
-4. When the deck is empty, `month_end` hooks run, then the next month begins, or the final ending is chosen after month 36.
+4. When the deck is empty, `month_end` hooks run, then the next month begins, or the final ending is chosen after the last month.
 
 **Triggers in short**
 - `random` — the filler pool. Most events.
-- `social` — the relationship slot. Requires a met actor (`actor: any` or a fixed met NPC).
+- `social` — the relationship slot. Requires a met actor: a fixed `actor:`, or a cast role with `per:` (the *legacy* `actor: any` worked the same way).
 - `auto` — forced in whenever `when` is true: calendar beats, menus, chain finales. Always give it a tight `when` and usually a `repeat`.
 - `queued` — only appears through `queue`. Lint warns about orphans.
 - `letter` — a letter (playtest 2, M38): drawn only off campus, one each night, and by anyone who reaches you while one of you is away (M19). In no other pool.
 
-**`actor: any` selection:** every met NPC for whom `when` is true is a candidate. People with stronger relationships (|rel|, love, a bond) are picked more often. The event is once **per character** (or `repeat` = per-character cooldown) and rests globally for 2 months after showing.
+**Cast selection** (and the *legacy* `actor: any`): every met NPC for whom `when` is true is a candidate. People with stronger relationships (|rel|, spark, a bond) are picked more often. The event is once **per character** (or `repeat` = per-character cooldown) and rests globally for 2 months after showing.
 
 ---
 
@@ -385,7 +398,7 @@ trigger: queued
 
 **A relationship milestone:** `when: spark(npc) >= 30 and bond(npc) != "partner"`, with `weight: 30` so it appears promptly once unlocked.
 
-**A purchase:** `when: gold >= 20` plus `hint: Costs 20 gold` on the option, then `gold -20` in its effects.
+**A purchase:** `when: gold >= 15` plus `hint: Costs fifteen crowns` on the option, then `gold -medium` in its effects (the prose's amount matches the tier; lint warns when it doesn't).
 
 **Seasonal:** `when: month == 4 or month == 5`.
 
@@ -553,7 +566,7 @@ Roles are filled on a scratch copy of the RNG, with backtracking, favouring stro
 - **Actors:** `npc` / `{they}` used in a block without an actor.
 - **Typos:** a flag that is read but never set; a variable that is read but never assigned.
 - **Orphans:** queued events nobody queues.
-- **Style:** text that is too long, a long label, unknown art key, unknown bond status, love on a non-romanceable NPC.
+- **Style:** text that is too long, a long label, unknown art key, unknown bond status, spark on a non-romanceable NPC.
 - **Worldbook:** unknown places, tracks, spells and npcs in worldbook blocks; values outside `@vocab`; a character without an age, or romance under 18; malformed structured values.
 - **Canon:** proper nouns in player-visible text that no worldbook entry, `@lore` key, glossary or `@vocab canon_allowlist` knows (a warning; an error for batch content under `content/batches/`). `node tools/grim.js canon` lists them.
 

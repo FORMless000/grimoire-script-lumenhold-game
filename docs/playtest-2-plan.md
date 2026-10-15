@@ -219,10 +219,23 @@ Planned package by package; 5.0 first, then a recap of the X items and their ord
 - **Housekeeping:** the triage marks the L items (and C20) done.
 - **Authoring plumbing** (the user asked to confirm AGENTS.md points to everything a card writer needs): AGENTS.md gains rows for writing a good card, finding existing cards to learn from or extend, and checking balance. `presets.md`'s tier table was stale (pre-L numbers); it is now generated from `balance.grim` by `grim docs` (`docs --check` catches drift). `style.md` and the critic still said "every option costs or risks something", against A3; both now follow `costs.md`, and the critic's sample issue no longer suggests adding an unshown cost. `grim brief` matched examples by cast and words only (a tavern brief offered a starcalling lesson): it now prefers the same place or track, never shows retired cards, lists every card already written there, and takes `--examples N` and `--like id,id`. The skill and the authoring README list the retrieval tools (`query`, `show`, `graph`, `dupes`, `economy.js --by event --freq`) and the newer constructs; sample briefs regenerated; a test pins the brief.
 
+### Order (decided)
+1. 5.1 the main plot proposal (X11, with B34, C12, C17, C21–C23 and N11), for the user's review;
+2. 5.2 NPC schedules (X7);
+3. 5.3 the main plot build (X11 as approved, the Journal first);
+4. 5.4 the night (X13), then income outside jobs (X14);
+5. 5.5 money and breaks: vacation gigs (X15), distinct internships (X12), higher-rank pools (X2);
+6. 5.6 people and life: dating (X4), the Thornwick rivalry (X9), the time loop (X8, with L21), renown (X3);
+7. 5.7 festivals (X6, X16), then the last month (X10);
+8. later, when the minigames settle: combat wiring (X5), social spells (X1), the spell lessons' rework and Mirror and Haste options; then the final pass (L28, C4, baseline).
+
+### Writer documents (checked after a second agent's review)
+Real drift, now fixed: `schema.md`'s first example used `check` and described `actor: any`; the character exemplar used raw amounts and `love`, and `soc_loan_repaid` in the social exemplar was an older copy; `pools.md` kept "every option costs or risks something"; the language reference's first event used `check` and raw amounts, its state example was a retired elective, its hook a v0.2 rent, its purchase pattern raw `gold -20`, and its relationship table `love`. Examples now use the current format, legacy forms are marked as legacy where they're documented, and `test/docs.test.js` fails when an example event uses a legacy form or an exemplar no longer matches its live card.
+
 ### X8 and X9: a larger budget (decided by the user)
 Both were small items (a few cards each); the user asked for more. Proposals, to settle when they come up:
 - **X9, the Thornwick rivalry** (about 20–25 cards), a small character arc over four years, separate from the Hollow Star:
-  - the pen pal becomes a person (a named Thornwick student with a soft `@lore` entry, possibly a fixture character), and the passive `pen_pal` tick becomes cards and letters, as the familiars did in N8;
+  - the pen pal becomes a person with a friendship bar (decided: a character with `rel`, not a romance; a named Thornwick student with facts and a soft `@lore` entry), and the passive `pen_pal` tick becomes cards and letters, as the familiars did in N8;
   - a yearly fixture with rising stakes: year 1 the Thornwick delegation visits (`life_rival_academy` becomes its first beat), year 2 the return visit, year 3 an inter-school contest (fights use the combat stub until X5), year 4 the last match and a farewell;
   - the pen pal thread crosses it: meeting in person, finding them on the other team, being asked for secrets or offered theirs (spy, mislead or keep it clean; alignment at stake; Thornwick's would-be spies are canon);
   - ties: the Thornwick internship's cards read the rivalry, the Spring Tournament, Lyra's opinion of it; a yearbook line for how it ended.

@@ -1,14 +1,18 @@
 # Exemplar: a character card (social), from content/events/expansion_people.grim.
 # Why it works: one specific, funny premise taken from the character's voice and facts
 # (Lyra: proud, can't admit weakness); both options are kind, but they trade a small, safe
-# gain against a bigger investment; each outcome is a little scene, not a number.
+# gain against a bigger investment that costs a little patience (mood -tiny, shown by the
+# eleven slices); each outcome is a little scene, not a number. Amounts are tier words;
+# romance is `spark`.
 
 @event lyra_toast
 title: Lyra Cannot Cook
+class: routine
+tone: light
 trigger: social
 actor: lyra
 # Gate on closeness so the scene lands: strangers wouldn't see her like this.
-when: rel(lyra) >= 15
+when: rel(lyra) >= 9
 weight: 10
 art: flame
 tags: social
@@ -16,10 +20,11 @@ scene: A dormitory kitchenette full of smoke, a crimson-haired girl holding a bl
 # Present tense, second person, ends on the moment of choice. Her line is in her voice.
 text: Smoke pours from the kitchenette. Lyra Vaneshade, pyromancy prodigy, is holding a piece of bread that is now mostly charcoal. "I can incinerate a target at forty paces," she says. "I cannot make toast. Don't. Say. Anything."
 > left: Say absolutely nothing
-  rel lyra +4
+  rel lyra +small
   say: You open a window, take the bread, and make two perfect slices with a toasting fork. She eats hers in dignified silence. Then she asks for another.
 > right: Teach her — gently
-  rel lyra +8
-  love lyra +2
-  charm +1
+  mood -tiny
+  rel lyra +medium
+  spark lyra +tiny
+  charm +tiny
   say: "Less fire," you say. "No, less. Less than that." It takes eleven slices. On the twelfth, she makes perfect golden toast and looks prouder than after any duel.

@@ -5,29 +5,38 @@ The full language reference is `docs/grimoire-script.md`. This page is the autho
 ## A two-choice card
 
 ```grim
-@event area_short_name
+@event library_returns_cart
 title: Short Evocative Title
-when: <gate>
+place: library
+class: routine
+tone: light
+repeat: 5
 weight: 10
-art: <icon key>
-tags: <primary tag> <more tags>
+art: book
+tags: study
 scene: One sentence describing the illustration an artist should draw.
 text: Two to four sentences. Present tense, second person. Set up a real dilemma; end on the moment of choice.
 > left: Short label
-  <effects>
-  say: What happened, in one or two sentences, with a little wit.
+  lore +small
+  mood -tiny
+  say: What happened, in one or two sentences, with a little wit (and the cost the scene shows).
 > right: Short label
-  check <skill> <dc>:
-    <success effects>
-    say: …
-  else:
-    <failure effects>
-    say: …
+  challenge research easy:
+    win:
+      lore +medium
+      say: What winning looks like.
+    lose:
+      mood -small
+      say: What losing looks like: a real outcome, not "it doesn't work".
 ```
 
+- **Where it's drawn:** `place:` (a map visit), `track:` with `level:` or `rank:` (class mornings, practice, shifts), `plan:` (break mornings), or none (the night's world slot). `class:` and `tone:` are required (`classes.md`). A pool card has `repeat:` (its cooldown) and at least three `{~a|b|c}` variants (`pools.md`); a one-off has neither.
+- **Effects** are tier words and presets (`presets.md`), never raw numbers; checks are `challenge <kind> [using <skill>] <tier>:` with `win:` / `lose:` (and `partial:`); romance is `spark`. How the options should trade is `costs.md`.
+
 **Menus**: 3–8 options with keys other than left/right, each with a `hint:`; at least one option without `when:`.
-**Character events**: `actor: <npc>` with `when: rel(<npc>) >= N`. **Generic relationship events**: `actor: any`, `{npc}` / `{they}` / `{their}` / `{s}` / `{are}` in text, `rel npc ±n`.
-**Chains**: `queue <event> [now | in N] [with npc]`; every queued event must be queued by something.
+**Character events**: `actor: <npc>` with `when: rel(<npc>) >= N` (`trigger: social` puts it on their own track too). **Generic relationship events**: a `cast:` role cast by premise (`friend: any where tagged(friend, peer) and rel(friend) >= 10`) with `per: friend`; `{friend}`, `{friend.their}`, or `{they}` / `{them}` / `{s}` / `{are}` for the first role; `rel friend +small`, `spark friend +tiny`.
+**Chains**: `queue <event> [now | in N] [with <role>] [chance N]`; every queued event must be queued by something (`grim graph <id>` shows what leads where).
+**Legacy** (still parses; lint counts it; don't write it): `check`, `love`, `actor: any`, raw amounts in events, `grades`.
 
 ## Worldbook blocks
 

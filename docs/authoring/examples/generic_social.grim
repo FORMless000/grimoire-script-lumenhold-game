@@ -2,8 +2,8 @@
 # with its queued follow-up. Why it works: pronoun tokens make it fit anyone; the cast says who the
 # premise fits (a peer: someone your age you'd lend rent money to), not just who it excludes; the loan
 # trades gold for friendship with a chance it never comes back; the follow-up is queued "with npc" so
-# the same person repays you two months later. Amounts are tiers; "fifteen crowns" in the text is
-# what `gold medium` is in @balance.
+# the same person repays you two months later, with three variants of how. Amounts are tiers;
+# "fifteen crowns" in the text is what `gold medium` is in @balance (lint checks that they match).
 
 @event soc_borrow_money
 title: A Small Loan
@@ -40,8 +40,14 @@ actor: npc
 art: coin
 tags: social money
 scene: A small stack of coins and a sweet bun left on a desk with a thank-you note.
-text: {npc} finds you after class and presses a little stack of coins into your hand, plus a sticky bun. "Fifteen crowns. And interest." The interest is the bun.
-> ok: Eat the interest
+text: {~{npc} finds you after class and presses a little stack of coins into your hand, plus a sticky bun. "Fifteen crowns. And interest." The interest is the bun.|{npc} turns up at breakfast with a small purse and a very straight face. "Fifteen crowns. I said I would."|{npc} slides fifteen crowns across the library table, one coin at a time. The last one has a note under it: "Thank you. Really."}
+> left: Count it
   gold +medium
   rel npc +small
   mood +tiny
+  say: You count it, because {they}'d be offended if you didn't. Fifteen exactly. {npc} nods, satisfied, as if a debt of honour has been settled.
+> right: Pocket it without counting
+  gold +medium
+  rel npc +small
+  mood +tiny
+  say: You put it away uncounted. {npc} looks quietly pleased to be trusted, which was worth more than the crowns.
