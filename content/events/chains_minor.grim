@@ -232,22 +232,17 @@ art: pouch
 tags: money danger
 chain: debt
 scene: A crate of clinking bottles hidden under a tarp on a dark boathouse dock, a small goblin silhouetted against the lake.
-text: Grisk again. "You were so good last time. A crate needs moving across the lake tonight. Don't open it. Thirty crowns."
+text: Grisk again. "You were so good last time. I have parcels that need carrying: collected at the boathouse at midnight, delivered to the village by day. Thirty crowns a parcel. Steady work, for steady hands."
 > left: You're done with him
   unflag grisk_favour
   flag grisk_gone
   mood +small
   say: "Everyone's done with me eventually," Grisk says, without rancour. You never see him again.
-> right: Move the crate
-  challenge deceive trivial:
-    win:
-      gold +large
-      say: The crate clinks. It is also, faintly, singing. You deliver it without looking inside. Thirty crowns.
-    lose:
-      gold +small
-      gain detention
-      rel bram -medium
-      say: Bram stops you on the dock. The crate is full of contraband charm-wine. You lose the crate, keep eight crowns and gain a detention.
+> right: Hear him out
+  flag grisk_contact
+  alignment -tiny
+  mood -tiny
+  say: He explains the arrangement: the jetty, midnight, oilcloth, a cobbler's back door. "Any month you like," he says. "I'm very flexible." You walk away with the arrangement in your head, and it won't leave.
 
 # ---------------- Ember the Fox-Spirit ----------------
 

@@ -430,6 +430,34 @@ tick:
     lose probation
   say: {~Probation sits on your shoulder through every lecture.|Your name is on a list you never wanted to be on.}
 
+# Financial aid (playtest 2, X14): a term's grant from the bursar's hardship fund, or the bursar's own loan, which is
+# gentler than Grisk's (no interest, no collectors; a missed month costs only mood and waits).
+@state hardship_grant
+name: Hardship Grant
+kind: buff
+art: scales
+duration: 4
+desc: The bursar's hardship fund pays 8 crowns a month for a term. The paperwork asked how poor you were, in detail.
+tick:
+  gold +8
+  say: {~The hardship grant arrives in a brown envelope with your name spelled wrong.|Eight crowns from the fund, and a form to say you received them.}
+
+@state bursar_loan
+name: Bursar's Loan
+kind: debuff
+art: scales
+desc: The academy lent you sixty crowns. It takes 8 a month when you can pay, eight times, with no interest and no collectors: only a very patient ledger.
+tick:
+  if gold >= 8:
+    gold -8
+    loan_paid += 1
+  else:
+    mood -1
+    say: {~No loan payment this month. The bursar notes it without comment, which is its own comment.|The loan waits. The ledger is patient; you are less so.}
+  if loan_paid >= 8:
+    lose bursar_loan
+    say: The bursar's loan is paid off. She stamps the ledger with something like a smile.
+
 @state in_debt
 name: Debt to Grisk
 kind: debuff

@@ -1,0 +1,162 @@
+# Money outside jobs (playtest 2, X14; D4/D7): financial aid, the bursar's loan, favours for the faculty and
+# upper-years, and the pawnbroker. Hinted at low gold, and sooner for those with no family money; never obligations.
+# The illicit routes (company, the ring, the high table, Grisk's parcels) are the night's (pools/night.grim).
+
+@event aid_notice
+title: The Hardship Notice
+class: routine
+tone: light
+when: term and turn > 2 and not has(hardship_grant) and not has(bursar_loan) and since(aid_interview) > 10 and (gold < 6 or (gold < 15 and (has(origin_hedge) or has(origin_street) or has(origin_scholar))))
+repeat: 3
+weight: 14
+art: scales
+tags: money
+scene: A notice pinned beside the bursar's office door, half covered by a newer notice about lost owls, a queue of three students pretending not to queue.
+text: {A small notice by the bursar's door reads "Hardship fund. Applications in writing. All circumstances considered."|The hardship notice again, under a new one about lost owls.|Someone has underlined "all circumstances" on the hardship notice.} {~Three students are pretending not to queue.|The ink on the forms is still wet.|The bursar's door is ajar.}
+> left: Fill in the forms
+  mood -tiny
+  queue aid_interview in 1
+  say: {~Four pages. One asks you to list everything you own. It doesn't take long, and that is the hard part.|You fill in the forms at a library table with your arm around them so nobody can see.}
+> right: Not yet
+  mood +tiny
+  say: {~You walk past. Your pride is intact, and so is your empty purse.|Another month, you tell yourself. You have a button left.}
+
+@event aid_interview
+title: The Bursar Will See You
+trigger: queued
+class: incident
+tone: tense
+art: scales
+tags: money
+scene: A small cluttered office, a grey-haired bursar behind a ledger as large as a tombstone, a student sitting very upright on a hard chair.
+text: The bursar has your forms open under her hand and a ledger the size of a tombstone at her elbow. "The fund is small," she says, "and the hands are many. Tell me why it should be yours. Or, if you'd rather not beg, I can lend you sixty crowns against your future, at no interest."
+> left: Make your case
+  challenge negotiate easy:
+    win:
+      gain hardship_grant
+      mood -tiny
+      say: You tell her plainly, and she listens without pity, which helps. "One term," she says, and stamps it. "Come back if it's still hard." Walking out, you feel both lighter and smaller.
+    lose:
+      mood -small
+      say: She hears you out, and then reads you the list of people ahead of you. Some of their circumstances are worse. "Next year," she says, kindly. You almost wish she hadn't been kind.
+> right: Take the loan
+  gold +huge
+  gain bursar_loan
+  loan_paid = 0
+  say: Sixty crowns, counted out in old coins, and your name in the tombstone ledger. "Eight a month, when you can," she says. "I'm a patient woman. The ledger is more patient still." It sits on your shoulder from then on.
+
+@event favour_vey_letter
+title: A Discreet Errand
+class: routine
+tone: light
+actor: vey
+when: met(vey) and gold < 25 and term
+weight: 10
+art: letter
+tags: money social
+scene: A professor in a violet coat holding out a sealed letter and a silver coin between two gloved fingers, in an empty theatre corridor.
+text: Professor Vey stops you in an empty corridor with a sealed letter and a silver coin. "A letter for the village. The house with the blue shutters. Into the hand of whoever opens the door, and not a word." Her smile is magnificent and gives nothing away.
+> left: Deliver it, unread
+  meet vey
+  gold +small
+  rel vey +small
+  health -tiny
+  say: The house with the blue shutters is at the far end of the village, in the rain. An old man opens the door, reads the name on the letter and starts to cry. You walk back soaked and never ask.
+> right: Hold it up to the light first
+  meet vey
+  gold +small
+  guile +tiny
+  rel vey -small
+  say: You make out one line: "...I have never stopped..." Then you deliver it. The next day Vey says, without looking at you, "The light in that corridor is very good, isn't it?"
+
+@event favour_thorne_marking
+title: Forty Essays
+class: routine
+tone: light
+actor: thorne
+when: met(thorne) and gold < 25 and year >= 2 and term
+weight: 10
+art: book
+tags: money study
+scene: A stack of forty first-year essays on a desk under a lamp, a red pen, a student with an expression of growing despair.
+text: Professor Thorne puts forty first-year essays on your desk. "Mark them. A crown for every five. Be honest. Honesty is a kindness they will not thank you for." He leaves. The first essay begins, "Fire is hot."
+> left: Mark them honestly
+  meet thorne
+  gold +small
+  lore +tiny
+  mood -small
+  say: Forty essays, eleven of them good, one brilliant and the rest about how fire is hot. Thorne reads your marks and says "Hm." You've learned that "Hm" is pay too.
+> right: Mark them kindly
+  meet thorne
+  gold +small
+  mood +tiny
+  rel thorne -small
+  say: You give every first-year a word of encouragement. Thorne raises your marks on three and lowers them on twenty. "Kindness," he says, "is not the same as a pass." He pays you anyway.
+
+@event favour_amaranth_shift
+title: The Night Shift
+class: routine
+tone: tense
+actor: amaranth
+when: met(amaranth) and gold < 25 and term
+weight: 10
+art: cross
+tags: money
+scene: A dim infirmary ward at night, a student in an apron carrying a basin between rows of beds, a stern healer writing by a single lamp.
+text: Sister Amaranth needs a pair of hands for the infirmary's night shift. "Basins, bandages, and sitting with whoever can't sleep. Eight crowns. Don't faint. If you faint, you're a patient, and patients don't get paid."
+> left: Take the shift
+  meet amaranth
+  gold +small
+  alchemy +tiny
+  health -small
+  say: A first-year with a fever, a prefect with a broken wrist, a boy who just wants someone awake. By dawn you're grey with tiredness. Amaranth says, "Keep doing that," and pays you.
+> right: Offer to roll bandages by day instead
+  meet amaranth
+  gold +tiny
+  rel amaranth +tiny
+  mood -tiny
+  say: She looks at you over her spectacles and hands you a mountain of linen. "Bandages it is. Half the pay, all of the tedium." By the end you could roll them in your sleep.
+
+@event upper_year_errands
+title: Errands for Upper-Years
+class: routine
+tone: light
+when: term and year <= 2 and gold < 30
+repeat: 5
+weight: 8
+art: pouch
+tags: money social
+scene: A crowded common room, a lounging upper-year holding out a coin and a list, a younger student taking the list with a sigh.
+text: {Upper-years pay for errands, a book fetched or a queue stood in or a letter carried to the owlery.|An upper-year waves a list and a coin at you. Word has got round.|"You again," says the upper-year, pleased. "Good. The usual, plus my laundry."} {~The list is long.|The coin is small.|One item on the list just says "find my cat".}
+> left: Run the errands
+  gold +small
+  mood -small
+  say: {~You run up and down the towers all evening and are paid in coins and condescension.|You fetch, carry and queue. Your legs are tired; your purse is less light.}
+> right: Name your price
+  challenge negotiate easy:
+    win:
+      gold +medium
+      say: {~"Double, or find your own cat." They pay. You find the cat anyway; it was in the laundry.|You haggle like a merchant's child. The upper-year pays with grudging respect.}
+    lose:
+      renown -tiny
+      mood -tiny
+      say: {~"Never mind," says the upper-year, and gives the list to a first-year behind you. Word gets round of that too.|They laugh, and find someone cheaper. You keep your dignity and nothing else.}
+
+@event pawnbroker_window
+title: The Pawnbroker's Window
+place: village
+class: routine
+tone: tense
+when: gold < 10
+repeat: 3
+weight: 12
+art: scales
+tags: money
+scene: A dusty village shop window crowded with pawned treasures, wands, rings and a stuffed owl, a student looking in with their hands in empty pockets.
+text: {The pawnbroker's window is full of other people's treasures, wands and rings and a stuffed owl. The sign says "Fair prices. Redemption within the year."|The pawnbroker's window again. Something of yours is in it now.|The pawnbroker nods at you through the glass like an acquaintance.} {~A first-year's silver locket is in the front row.|There's a familiar's collar, empty.|The stuffed owl seems to judge you.}
+> left: Pawn something you'd miss
+  gold +medium
+  mood -small
+  say: {~Your good boots, or your grandmother's ring, or the wand-case with your name burned in it. The money is fair; the ticket says "within the year". You put the ticket somewhere safe and try not to look at it.|You hand over something you love, and take the money, and walk home faster than usual.}
+> right: Walk on
+  say: {~You walk on with your hands in your pockets. They're empty, but they're yours.|Not today. The owl watches you go.}

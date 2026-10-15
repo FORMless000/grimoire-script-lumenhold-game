@@ -595,17 +595,21 @@ tone: tense
 art: mask
 tags: money danger
 scene: A hooded figure in an alley behind the village tavern holding out a sealed envelope, a purse visible in their other hand.
-text: A hooded figure behind the tavern: "Deliver this envelope to the boathouse at midnight. Don't open it. Thirty crowns." The envelope is warm.
+text: A hooded figure behind the tavern: "Deliver this envelope to the boathouse tonight. Don't open it. Thirty crowns." The envelope is warm. Under the hood, a glint of pince-nez, and teeth: this is one of Grisk's errands.
 > left: Refuse
-  say: The figure melts into the dark. The next morning, someone's boat is missing.
+  alignment +tiny
+  mood -tiny
+  say: The figure melts into the dark. The next morning, someone's boat is missing, and you wonder what was in the envelope, and whether you could have stopped it.
 > right: Do the job
   gold +large
+  alignment -small
+  flag grisk_contact
   chance 40:
     gain watched
-    say: You make the drop. Bram is watching from the boathouse window. He writes something down.
+    say: You make the drop. Bram is watching from the boathouse window and writes something down. On the jetty, a note in a neat hand: "Good work. Midnight, any month. G."
   else:
     guile +tiny
-    say: You make the drop. Nobody sees. Thirty crowns, and a slightly cold feeling in your stomach.
+    say: You make the drop. Nobody sees. Thirty crowns, a cold feeling in your stomach, and a note on the jetty: "Good work. Midnight, any month. G."
 
 # ---------------- Body & mind ----------------
 
