@@ -349,7 +349,7 @@
           if (d.kind !== 'course' && d.kind !== 'thesis') return;
           t.status = 'enrolled'; t.level = st.level || Math.min(d.levels || 1, this.levelPassed(id) + 1); t.study = 0;
           ctx.notes.push({ kind: 'enrol', track: id, level: t.level });
-          if (d.lead && s.npcs[d.lead]) this.touchNpc(d.lead, ctx);   // you meet the course's professor (design §5.5)
+          this.meetLead(id, d, ctx);   // you meet the course's professor (design §5.5)
           this.grantLegacy(id, ctx, true);
           break;
         }
@@ -364,7 +364,7 @@
           ctx.notes.push({ kind: 'join', track: id });
           // A member is shown the way in: the track's place is discovered (the duel hall, the courier loft, …).
           if (d.place && this.c.places[d.place] && !s.places[d.place]) { s.places[d.place] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: d.place }); }
-          if (d.lead && s.npcs[d.lead]) this.touchNpc(d.lead, ctx);   // and whoever runs it
+          this.meetLead(id, d, ctx);   // and whoever runs it
           this.grantLegacy(id, ctx, true);
           break;
         }
@@ -470,8 +470,22 @@
       const regard = { A: ['medium', 1], B: ['small', 1], F: ['small', -1] }[grade];
       if (regard && d.lead && s.npcs[d.lead] && s.npcs[d.lead].met) this.run([{ t: 'rel', npc: d.lead, tier: regard[0], sign: regard[1] }], ctx);
       // Passing a level teaches its spells (design §9.1: `teaches: flame@1 tide@2 …`).
-      if (grade !== 'F') for (const x of d.teaches || []) if (x.level === t.level && this.c.spells[x.spell]) this.run([{ t: 'learn_spell', spell: x.spell, level: null }], ctx);
+      if (grade !== 'F') this.teachLevel(id, t.level, ctx);
+      // A failed course can be appealed (playtest 2, N4): `@game appeal` comes next, in the course's context.
+      else if (this.c.game.appeal) this.pushTrackEvent(this.c.game.appeal, id);
       this.grantLegacy(id, ctx, false);
+    }
+    teachLevel(id, level, ctx) { for (const x of this.c.tracks[id].teaches || []) if (x.level === level && this.c.spells[x.spell]) this.run([{ t: 'learn_spell', spell: x.spell, level: null }], ctx); }
+    // `regrade track C` (N4): the course's latest grade becomes another; a pass where there was an F teaches the level.
+    regrade(st, ctx) {
+      const id = this.trackTarget(st, ctx.track || this._ctxTrack), t = this.trackState(id), d = this.c.tracks[id];
+      if (!t || !d || d.kind !== 'course' || !t.grades || !t.grades.length) return;
+      const was = t.grades[t.grades.length - 1], lv = t.level;
+      if (was === st.grade) return;
+      t.grades[t.grades.length - 1] = st.grade; t.passed[lv] = st.grade;
+      if (t.status === 'failed' || t.status === 'done') t.status = st.grade === 'F' ? 'failed' : 'done';
+      ctx.notes.push({ kind: 'regrade', track: id, level: lv, from: was, grade: st.grade });
+      if (was === 'F' && st.grade !== 'F') this.teachLevel(id, lv, ctx);
     }
     // What an option's first roll looks like on its button: a challenge (with its swing, and combat's mana), an exam, a legacy check.
     checkView(st, actor, item) {
@@ -521,6 +535,17 @@
       if (!e.pick) return 1;
       const thesis = Object.values(this.s.tracks || {}).some((t) => t.kind === 'thesis' && t.status === 'member');
       return Math.max(1, e.pick - (e.offers === 'courses' && thesis ? 1 : 0));
+    }
+    // A track's lead (design §5.5): already met, they notice you; not yet, the track's `intro:` card is queued so you meet
+    // them on a card of their own (playtest 2, N1); a track without one meets them at once, as before.
+    meetLead(id, d, ctx) {
+      const s = this.s, n = d.lead && s.npcs[d.lead];
+      if (!n) return;
+      if (!n.met && d.intro && this.c.events[d.intro]) {
+        if (!s.queue.some((q) => q.id === d.intro) && !s.deck.some((q) => q.id === d.intro)) s.queue.push({ id: d.intro, actor: d.lead, track: id, due: s.turn, src: 'queued' });
+        return;
+      }
+      this.touchNpc(d.lead, ctx);
     }
     pushTrackEvent(eventId, track) { if (this.c.events[eventId]) this.s.queue.push({ id: eventId, actor: null, track, due: this.s.turn + 1, src: 'queued' }); }
 
@@ -939,6 +964,7 @@
             if (pay) { this.change('gold', pay, ctx); ctx.notes.push({ kind: 'wage', track: id, gold: pay }); }
             break;
           }
+          case 'regrade': this.regrade(st, ctx); break;
           case 'learn_spell': {
             s.spells = s.spells || {};
             const lv = st.level || Math.min(3, (s.spells[st.spell] || 0) + 1);

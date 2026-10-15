@@ -76,3 +76,455 @@ text: The placement keeps you busy, and home feels further away than the miles. 
   else:
     mood -tiny
     say: {~You write three lines and feel guilty for a week.|The letter is so brief it reads like a receipt.}
+
+# ---------------- More letters (playtest 2, N14): general ones, then two for each romanceable character ----------------
+
+@event letter_reading_list
+title: A Reading List
+trigger: letter
+class: routine
+tone: light
+repeat: 2
+weight: 10
+art: book
+tags: letter study
+scene: A long handwritten list of book titles on academy paper, a small inkblot at the bottom where the writer paused.
+text: A professor has written over the break, as some of them do, with a reading list for next term: eleven titles, three of them underlined, one with "(if you dare)" beside it. {~The handwriting slopes like a staircase.|There's a coffee ring on the corner.}
+> left: Start on the list now
+  lore +small
+  mood -tiny
+  say: {~You read the first two by candlelight while everyone else is resting. The third is the one marked "if you dare". You don't, yet.|You make real progress and lose two afternoons of holiday to it. Next term will be easier for it.}
+> right: Put it under the bed until term
+  mood +small
+  say: {~The list goes under the bed with your winter boots. The holiday stays a holiday.|You don't read a word, and you don't feel a bit sorry.}
+
+@event letter_parcel_from_home
+title: A Parcel From Home
+trigger: letter
+when: not has(plan_home)
+class: routine
+tone: warm
+repeat: 2
+weight: 10
+art: pouch
+tags: letter home
+scene: A brown paper parcel tied with string, opened to show a squashed cake, a pair of knitted socks and a short letter.
+text: A parcel from home, squashed by the post: {~a cake that has become a different shape of cake|a tin of biscuits and a jar of jam|knitted socks and a fruit loaf}, and a letter that says, in four different hands, that everyone is well and the cat is not.
+> left: Share it with everyone around you
+  charm +small
+  say: {~You pass it round and it vanishes in minutes. People you barely know thank you by name the next day.|You share it out to the last crumb. Someone gives you a biscuit back, out of pity.}
+> right: Keep it for yourself
+  health +small
+  say: {~You eat it slowly, over a week, a slice a night. It tastes like your kitchen table.|You hide it under your bed and ration it. It lasts, and so does the feeling of home.}
+
+@event letter_wrong_address
+title: Not For You
+trigger: letter
+class: routine
+tone: light
+weight: 10
+art: letter
+tags: letter
+scene: A sealed envelope addressed in an unfamiliar hand to a name that isn't the reader's, lying on a windowsill beside a stamp.
+text: A letter arrives that isn't yours: the right house, the wrong name, a perfumed envelope sealed with green wax. It's addressed to someone you've never heard of. The seal is very thin.
+> left: Forward it unopened
+  gold -tiny
+  alignment +tiny
+  say: You write "not known here, please try again" on the back, add a stamp of your own and send it on its way. You'll never know what it said, which is how it should be.
+> right: Open it, just to see
+  guile +small
+  alignment -tiny
+  say: It's a love letter, and a bad one, full of rhymes on "moon". You reseal it carefully and send it on, feeling worse than you expected.
+
+@event letter_bookshop_bill
+title: A Bill You Don't Remember
+trigger: letter
+class: routine
+tone: light
+weight: 10
+art: coin
+tags: letter money
+scene: A crisp bill from a bookshop, an itemised list with one title circled, held up beside a student's puzzled face.
+text: A bill from the village bookshop for a book called "On Small Explosions", which you have never seen, never borrowed and never wanted. The bookseller writes that you signed for it. The signature looks a little like yours.
+> left: Pay it and be done
+  gold -small
+  say: You pay it. A week later the book arrives, and it's actually quite good. You still don't know who signed for it.
+> right: Write back and dispute it
+  challenge negotiate easy:
+    win:
+      charm +small
+      say: You write a polite, firm letter. The bookseller writes back: wrong student, same name, profuse apologies, and a voucher for a crown off your next book.
+    lose:
+      gold -small
+      mood -tiny
+      say: The bookseller replies with a copy of the signature and a note that she has "dealt with your sort before". You pay, and add a stiff note of your own.
+
+@event letter_old_friend
+title: From Before
+trigger: letter
+when: not has(plan_home)
+class: routine
+tone: warm
+weight: 10
+art: letter
+tags: letter home
+scene: A letter in a familiar childhood hand, with a small drawing of a village street in the margin.
+text: A letter from someone you grew up with, from before Lumenhold. {~They're apprenticed to a cooper now.|They're getting married in the spring.|They've moved to the city and hate it.} The letter asks what magic is like. It's a good question, and you don't know how to answer it.
+> left: Write back pages and pages
+  mood +small
+  gold -tiny
+  say: You try to explain magic, and the castle, and what it's like to fail an exam in front of a ghost. It takes four pages and an extra stamp. It's the best letter you've written.
+> right: Send a postcard of the towers
+  say: A postcard of the seven towers, and "It's hard to explain. Come and see?" You both know they won't. It's a kind postcard all the same.
+
+@event letter_ledger_competition
+title: The Holiday Essay Prize
+trigger: letter
+class: routine
+tone: light
+weight: 10
+art: paper
+tags: letter study
+scene: A folded copy of a student newspaper with a competition notice circled in red ink.
+text: The Lumen Ledger's holiday issue has found you: an essay prize, "What I Did Not Do This Holiday", five hundred words, the winner printed on the front page and paid in crowns.
+> left: Write an entry
+  challenge research medium:
+    win:
+      renown +small
+      gold +small
+      say: Your essay about the lake you didn't swim in wins. It's printed on the front page, a little cut, under your name spelled right for once.
+    lose:
+      mood -tiny
+      say: You write a good essay that doesn't win. The winner wrote about a goat. Everyone agrees the goat was the right choice.
+> right: Let someone else win
+  mood +tiny
+  say: You don't write a word of it, and spend the afternoon doing one of the things you didn't do.
+
+@event letter_from_a_firstyear
+title: Advice, Please
+trigger: letter
+when: year >= 2
+class: routine
+tone: warm
+weight: 10
+art: letter
+tags: letter social
+scene: A short anxious letter on cheap paper, several words crossed out, a small blot where the writer pressed too hard.
+text: A first-year you once showed the way to the library has written to you over the break. They're thinking of leaving. The letter is short, crossed out in places, and ends: "Did you ever feel like this?"
+> left: Write back honestly, at length
+  charm +small
+  mood -tiny
+  say: You tell them about your own worst month, which isn't easy to write. Next term they find you at breakfast and say they stayed because of it.
+> right: Send a few kind lines
+  mood +tiny
+  say: "Yes. It passes. Come back." It's short, and it's true. You hope it's enough. At the start of term you see them in the queue for the barge.
+
+@event letter_registrar_forms
+title: Forms in Triplicate
+trigger: letter
+class: routine
+tone: light
+weight: 10
+art: scroll
+tags: letter study
+scene: A thick envelope of forms with the academy's seal, three identical copies of everything fanned out on a table.
+text: The registrar's office has sent forms, in triplicate, about next term: your courses, your board, your "intentions regarding extracurricular activities". There is a box marked "Other (explain)". It is very small.
+> left: Fill them in properly now
+  lore +tiny
+  mood -small
+  say: An afternoon of copying your own name three times. At the start of term, your enrolment takes four minutes while everyone else queues. Smug is a feeling too.
+> right: Leave them until the barge
+  mood +small
+  say: You fill them in on the barge, on your knee, in the wind. One copy goes over the side. The registrar sighs at you all the way through enrolment.
+
+# Two letters each from the romanceable characters: one friendly, one when there's a spark.
+
+@event letter_lyra_drills
+title: A List of Drills
+trigger: letter
+actor: lyra
+when: rel(lyra) >= 10
+class: routine
+tone: light
+weight: 14
+art: letter
+tags: letter social duel
+scene: A letter of numbered duelling drills in crisp handwriting, a scratched-out postscript at the bottom.
+text: Lyra has written. It's a list of drills, numbered, with a note at the bottom: "Do these. You were slow in the last bout." There's a postscript under that, scratched out and rewritten three times and then scratched out for good.
+> left: Do every drill, and send your times
+  vigor +small
+  health -tiny
+  rel lyra +tiny
+  say: You do them in the cold every morning and post her your times. Her reply is one word: "Adequate." It's underlined, which from Lyra is a bouquet.
+> right: Ask what the postscript said
+  chance 50:
+    rel lyra +small
+    say: Two weeks later, one line: "It said: write back." Then, smaller: "You did. Good."
+  else:
+    rel lyra -tiny
+    say: She ignores the question entirely and sends a second list, longer, with no postscript at all.
+
+@event letter_lyra_book
+title: Foundations of Flame
+trigger: letter
+actor: lyra
+when: spark(lyra) >= 20
+class: routine
+tone: warm
+weight: 14
+art: book
+tags: letter romance
+scene: A worn copy of a spellbook unwrapped from brown paper, every margin full of small, fierce annotations in red ink.
+text: A parcel from Lyra: her own copy of "Foundations of Flame", every margin crowded with notes in red ink. On the flyleaf: "You'll only underline the wrong bits. So I've done it for you." The handwriting goes a little uneven at the end.
+> left: Read every note in the margins
+  lore +small
+  spark lyra +tiny
+  say: Her notes are sharp, funny and occasionally rude about the author. On page ninety there's a small flame drawn beside a paragraph, and your initials.
+> right: Annotate it back and return it
+  spark lyra +small
+  gold -tiny
+  say: You add your own notes in green and post it back at your own expense. Her reply says you're wrong about chapter four. She keeps the book, and your notes, and doesn't cross them out.
+
+@event letter_tobias_goats
+title: Four Pages of Goats
+trigger: letter
+actor: tobias
+when: rel(tobias) >= 10
+class: routine
+tone: warm
+weight: 14
+art: letter
+tags: letter social
+scene: A long letter in a big, careful hand with a drawing of a goat in the corner and a recipe card tucked into the fold.
+text: Tobias has written four pages, mostly about goats: one has escaped, one has eaten a hat, and one is, he writes, "going through something". Tucked in the fold is a recipe for his gran's barley soup, "for when the castle food gets you down".
+> left: Make the soup
+  health +small
+  gold -tiny
+  say: You buy the barley and borrow a pot. The soup is thick and plain and exactly what you needed. You write and tell him so; he writes back that his gran says you're welcome.
+> right: Write back with a story of your own
+  rel tobias +small
+  say: You send him the story of the ghost in the bathtub, at length. His reply says he read it to the goats, and that the one going through something seemed to feel better.
+
+@event letter_tobias_seeds
+title: Seeds for a Windowsill
+trigger: letter
+actor: tobias
+when: spark(tobias) >= 20
+class: routine
+tone: warm
+weight: 14
+art: flower
+tags: letter romance nature
+scene: A small paper packet of seeds tied with garden twine, a note in big careful handwriting beside it.
+text: A packet of seeds from Tobias, tied with garden twine. "For your windowsill. They'll keep you company. Water them Tuesdays." Then, squashed in at the bottom: "Sorry if that's soppy."
+> left: Plant them straight away
+  mood +small
+  spark tobias +tiny
+  say: Three shoots by the end of the month, leaning toward the light. You water them on Tuesdays and think of him on the other days too.
+> right: Write back that it isn't soppy
+  spark tobias +small
+  say: You write that it isn't soppy, and then a whole page about why. His reply is two lines long and you can tell he went red writing it.
+
+@event letter_seraphine_card
+title: Half a Sentence
+trigger: letter
+actor: seraphine
+when: rel(seraphine) >= 10
+class: routine
+tone: light
+weight: 14
+art: cards
+tags: letter social
+scene: A single tarot card in an envelope, with half a sentence written across the back in silver ink.
+text: An envelope from Seraphine with a single tarot card inside, the Wheel, and half a sentence on the back in silver ink: "Not this week but the one after, don't take the"
+> left: Try to work out the rest
+  lore +small
+  mood -tiny
+  say: You spend an evening with the card and every book on tarot you can find, and spend the following week avoiding stairs, carts and soup. Nothing happens. Probably.
+> right: Write and ask her to finish it
+  rel seraphine +small
+  say: Her reply comes ten days later, and finishes the sentence: "…long way round. Or do. It's lovely either way." It is, when you take it.
+
+@event letter_seraphine_painting
+title: A Painting of You
+trigger: letter
+actor: seraphine
+when: spark(seraphine) >= 20
+class: routine
+tone: warm
+weight: 14
+art: rose
+tags: letter romance
+scene: A small watercolour of a student reading under a tree in blossom, unwrapped from tissue paper on a desk.
+text: Seraphine has sent a small watercolour: you, reading under a tree in blossom, lit from one side. It is very good. You have never sat under that tree, and it isn't spring.
+> left: Hang it by your bed
+  mood +small
+  spark seraphine +tiny
+  say: It's the first thing you see each morning. It makes you look kinder than you feel, and you start, a little, to feel it.
+> right: Write and ask when she saw this
+  spark seraphine +small
+  say: She writes back, "Next spring," and nothing else, and then a second letter the same day: "I hope that's all right."
+
+@event letter_corvin_bakery
+title: The Best Bakery in the Kingdom
+trigger: letter
+actor: corvin
+when: rel(corvin) >= 10
+class: routine
+tone: light
+weight: 14
+art: map
+tags: letter social
+scene: A hand-drawn map of an unfamiliar town with a cross in ink over one corner, a postscript crammed into the margin.
+text: A letter from Corvin, with a map of a town you've never heard of and a cross on one corner. "Found the best bakery in the kingdom. Can't afford it. Thought you should know where it is, saint, in case you're ever richer than me. Low bar."
+> left: Send him a few crowns for a pastry
+  gold -small
+  rel corvin +small
+  say: You fold a few crowns into the reply. His next letter is mostly about the pastry, in loving detail, and then, at the very end and without a joke: "Thank you."
+> right: Write back a map of your own
+  guile +small
+  say: You draw him a map of every place you've found that he hasn't, with crosses and a key. He writes back that two of them are wrong and one of them is brilliant.
+
+@event letter_corvin_no_jokes
+title: A Letter With No Jokes
+trigger: letter
+actor: corvin
+when: spark(corvin) >= 20
+class: routine
+tone: warm
+weight: 14
+art: letter
+tags: letter romance
+scene: A single short page in quick handwriting, with no doodles and no crossings-out, folded very small.
+text: Corvin's letter has no jokes in it. You read it twice to be sure. It says the place is too quiet, that he keeps turning to say something to you, and that he isn't used to that. It isn't signed "your favourite thief". It's just signed.
+> left: Write back just as plainly
+  spark corvin +small
+  mood -tiny
+  say: You write back with no jokes either, and it's harder than you thought. His reply comes by return of post, and the first line is a joke, and the second line isn't.
+> right: Send a joke to make it easier
+  rel corvin +small
+  spark corvin -tiny
+  say: You send him the worst joke you know. He replies with a worse one, and you're both on safer ground. You wonder, later, if you missed something.
+
+@event letter_mira_blueprint
+title: A Letter That Folds Itself
+trigger: letter
+actor: mira
+when: rel(mira) >= 10
+class: routine
+tone: light
+weight: 14
+art: gear
+tags: letter social magic
+scene: A letter folding itself back up on a desk like a paper bird, a blueprint with arrows and exclamation marks spread out underneath.
+text: Mira's letter starts folding itself back up while you're still reading it. Inside is a blueprint for a self-folding letter ("PROBABLY works!!") and a page of excited tangents about hinges.
+> left: Build one yourself
+  arcana +small
+  gold -tiny
+  say: Wire, wax paper and one small enchantment. Your letter folds itself into a perfect swan and then, unprompted, into a slightly worse frog. Mira's reply is all exclamation marks.
+> right: Write back with improvements
+  rel mira +small
+  say: You suggest a stiffer hinge and a slower fold. Mira writes back that you are a genius and that they've already tried it and it exploded, but in a promising way.
+
+@event letter_mira_ticking
+title: Something That Ticks
+trigger: letter
+actor: mira
+when: spark(mira) >= 20
+class: routine
+tone: warm
+weight: 14
+art: gear
+tags: letter romance
+scene: A tiny brass mechanism the size of a walnut ticking softly on a pillow, a note in hurried handwriting beside it.
+text: A small brass thing the size of a walnut, ticking softly, with a note in Mira's hurried hand: "It's a metronome. Probably. It's set to a resting heart rate. Mine, actually, it took ages. Anyway!!"
+> left: Keep it on your pillow
+  mood +small
+  health -tiny
+  say: It ticks you to sleep every night, slightly faster than a resting heart rate. You don't mention that. Some nights it keeps you awake.
+> right: Write back how much you like it
+  spark mira +small
+  say: You write that you like it very much. Mira's reply is three pages about escapements, and then at the very end, very small: "good. i'm glad. good."
+
+@event letter_kael_three_lines
+title: Three Lines
+trigger: letter
+actor: kael
+when: rel(kael) >= 10
+class: routine
+tone: warm
+weight: 14
+art: snow
+tags: letter social
+scene: A sheet of good paper with only three short lines on it in careful handwriting, a great deal of white space below.
+text: A letter from Kael. Three lines, in careful handwriting, with a great deal of white paper below them: the weather, a star he saw, and "I hope you are well. That is the whole letter."
+> left: Write back three lines
+  rel kael +small
+  say: You write back three lines: your weather, a star of your own, and that you're well. His reply comes promptly. It has four lines. You count them twice.
+> right: Write back three pages
+  charm +small
+  rel kael +tiny
+  gold -tiny
+  say: You write three pages and pay the extra postage. His reply takes a long time and says only: "Thank you. I read it four times. I do not know how to answer so much." He keeps it, though.
+
+@event letter_kael_star_chart
+title: The Sky on Your Birthday
+trigger: letter
+actor: kael
+when: spark(kael) >= 20
+class: routine
+tone: warm
+weight: 14
+art: star
+tags: letter romance
+scene: A hand-inked star chart unfolded on a bed, one small cluster of stars circled in pencil, a short note pinned to the corner.
+text: Kael has sent a star chart, inked by hand, with one cluster circled in pencil. The note says: "The sky on the night you were born, from here. I checked the tables twice. It is a good sky."
+> left: Find those stars yourself tonight
+  lore +small
+  health -tiny
+  spark kael +tiny
+  say: You stand outside in the cold until you find them, low over the roofs. Your feet go numb. It is a good sky; he was right.
+> right: Thank him plainly
+  spark kael +small
+  say: You write that it's the kindest thing anyone has sent you. His reply says "You are welcome." Below that, smaller, as if added later: "Very."
+
+@event letter_nessa_deadline
+title: URGENT
+trigger: letter
+actor: nessa
+when: rel(nessa) >= 10
+class: routine
+tone: light
+weight: 14
+art: paper
+tags: letter social
+scene: A letter with URGENT written across the top in capitals and underlined three times, a deadline circled at the bottom.
+text: A letter from Nessa, URGENT underlined three times: the Ledger needs three hundred words on holidays for the first issue of term, "interesting ones please, the last six were about weather". Deadline circled. Twice.
+> left: Write the piece
+  renown +small
+  mood -tiny
+  say: You spend an evening on three hundred words and post them. Nessa cuts eighty, prints the rest on page four and writes back "Good. Rewrite the ending next time."
+> right: Write back off the record
+  rel nessa +small
+  say: You write back with no piece at all, just how she is. Her reply has no capitals in it. It's the longest thing she's ever written that she isn't going to print.
+
+@event letter_nessa_off_record
+title: Off the Record
+trigger: letter
+actor: nessa
+when: spark(nessa) >= 20
+class: routine
+tone: warm
+weight: 14
+art: letter
+tags: letter romance
+scene: A letter with OFF THE RECORD written at the top and then, for once, a page of short, unhurried sentences.
+text: Nessa's letter has OFF THE RECORD at the top, and then, for once, short sentences with nothing to sell. She's tired. The holidays are long. She keeps writing headlines about you in her head and crossing them out.
+> left: Reply off the record too
+  spark nessa +small
+  mood -tiny
+  say: You write back slowly and honestly, which costs you more than you expected. Her answer comes the day after it could have, which means she wrote it the moment she read yours.
+> right: Ask to see the headlines
+  charm +small
+  spark nessa +tiny
+  say: She sends three. One is unprintable, one is very sweet and one is "LOCAL STUDENT STILL NOT REPLYING", which is fair. You reply at once.

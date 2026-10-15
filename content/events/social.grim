@@ -694,3 +694,85 @@ text: Something has shifted between you and {npc}. {~They hold your gaze a momen
   cool npc
   rel npc +tiny
   say: {~You find a gentle way to say you value them as a friend. They look relieved, or almost.|You keep it light and friendly, and the moment passes. The friendship stays.}
+
+# ---------------- Jealousy (playtest 2, N7; design §8.2): two people with a spark for you, neither your partner yet ----------------
+
+@event jealousy_two_invitations
+title: Two Invitations
+class: routine
+tone: tense
+trigger: social
+cast:
+  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner"
+  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner"
+per: suitor
+repeat: 2
+weight: 20
+art: heart
+tags: romance social
+scene: A student holding two folded notes, one in each hand, in a corridor where two people wait at opposite ends.
+text: Two notes in one morning. {suitor} asks if you're free on Friday evening, in neat handwriting, crossed out once. {other} asks the same, for the same evening, in a hurry. They both know the other asked. The whole corridor seems to know.
+> left: Say yes to {suitor}
+  spark suitor +small
+  spark other -small
+  rel other -tiny
+  say: Friday with {suitor} is everything the note promised. On Saturday {other} passes you on the stairs with a smile that stops a little short of the eyes.
+> right: Say yes to {other}
+  spark other +small
+  spark suitor -small
+  rel suitor -tiny
+  say: Friday with {other} runs late and warm. On Saturday {suitor} is very polite to you at breakfast, which is worse than if they'd been rude.
+
+@event jealousy_seen_together
+title: "Who Was That?"
+class: routine
+tone: tense
+trigger: social
+cast:
+  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner"
+  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner"
+per: suitor
+repeat: 2
+weight: 20
+art: heartbreak
+tags: romance social
+scene: Two students talking by a window in a crowded common room, one of them asking a question too casually while looking at someone across the room.
+text: {suitor} saw you laughing with {other} in the courtyard yesterday, and is now asking about it too casually, in the voice people use when they've rehearsed. "You two looked… close. Not that it's any of my business."
+> left: Tell the truth: you like {other}
+  spark suitor -small
+  rel suitor +tiny
+  spark other +tiny
+  say: It lands like a dropped plate. {suitor} nods, and swallows, and thanks you for not pretending. It's the kindest thing you've done all week, and it doesn't feel kind at all.
+> right: "Oh, we're just friends"
+  chance 60:
+    spark suitor +small
+    say: {suitor}'s shoulders come down an inch. You spend the rest of the evening together, and nobody mentions the courtyard again.
+  else:
+    spark suitor +tiny
+    spark other -small
+    say: It goes well, until word gets back to {other}, who hears "just friends" and decides to believe it.
+
+@event jealousy_cold_supper
+title: A Quiet Supper
+class: routine
+tone: tense
+trigger: social
+cast:
+  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner"
+  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner"
+per: suitor
+repeat: 2
+weight: 20
+art: meal
+tags: romance social
+scene: A long refectory table at supper, one student eating in pointed silence beside another, a third person waving from the far end of the hall.
+text: {suitor} has gone quiet at supper, and answers in single words. From the far end of the hall, {other} is waving you over to an empty seat. You know exactly why {suitor} is quiet. So, by the look of it, does {other}.
+> left: Stay and talk it through
+  spark suitor +small
+  spark other -tiny
+  mood -tiny
+  say: A long walk after supper and a careful, clumsy conversation. {suitor} laughs at the end of it, which is something. At the far end of the hall, the empty seat stays empty.
+> right: Take the seat {other} saved
+  spark other +small
+  spark suitor -small
+  say: The seat is warm and so is {other}. Behind you, {suitor} finishes supper alone and leaves without the pudding, which everyone notices.

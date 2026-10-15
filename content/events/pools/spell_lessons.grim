@@ -1,0 +1,259 @@
+# Spell lessons (playtest 2, N3): once a spell is learned, the next term month shows where and how it's really taught,
+# and by whom. One card per spell, once a run. Written for the current twelve spells; reworked if the minigames change them.
+
+@event lesson_flame
+title: Putting Fire Out
+trigger: auto
+when: spell_level(flame) >= 1 and term
+class: routine
+tone: light
+actor: thorne
+art: flame
+tags: magic study
+scene: A stone practice room with scorched walls, a stern grey-bearded professor beside a roaring brazier, a bucket of water at his feet.
+text: Flame is yours on paper. Professor Thorne gathers everyone who passed in the stone practice room and lights a brazier. "Any fool can start a fire," he says. "You are here to learn to stop one." There is a bucket of water at his feet, and he forbids you to touch it.
+> left: Pull the fire back into your hand
+  meet thorne
+  arcana +small
+  mana -small
+  say: You call the flame back like a sleeve pulled over a wrist. It stings, and the brazier flares and sinks. "Again," says Thorne. He says it eleven times.
+> right: Ask what the bucket is for
+  meet thorne
+  lore +small
+  rel thorne +small
+  say: "For the student who doesn't ask," says Thorne, and empties it over the brazier of the boy beside you. Then he explains, for an hour, how every great fire he has known began.
+
+@event lesson_tide
+title: Waist-Deep at Dawn
+trigger: auto
+when: spell_level(tide) >= 1 and term
+class: routine
+tone: light
+actor: marisol
+art: wave
+tags: magic study
+scene: A misty lake at dawn, a professor standing waist-deep in the water with arms raised, students hesitating on the pebbled shore.
+text: Professor Marisol teaches Tide where it lives: waist-deep in the lake at dawn. "Cold water," she says happily, "is good for everyone." She recites a poem about waves and stops before the last line, frowning. The lake waits for you.
+> left: Wade in and call a wave
+  meet marisol
+  arcana +small
+  health -tiny
+  say: The water is so cold it feels like an opinion. Your wave rises knee-high and slaps Marisol full in the chest, and she whoops. "The last line!" she shouts. "It was about this!"
+> right: Call it from the shore
+  meet marisol
+  lore +small
+  rel marisol -tiny
+  say: You work the spell from the dry pebbles and raise a neat little swell. Marisol looks at your dry boots with real sorrow, as if at a poem with no ending.
+
+@event lesson_foresight
+title: The Bottom of the Cup
+trigger: auto
+when: spell_level(foresight) >= 1 and term
+class: routine
+tone: warm
+art: eye
+tags: magic study
+scene: An observatory room with tea cups on every desk, a lecturer in three scarves peering into a student's cup with a magnifying glass.
+text: The astromancy lecturer, who wears three scarves in every season, sits the class at the observatory with cups of tea and no instructions. Foresight, it turns out, begins at the bottom of the cup: what you think you see, and what you want to.
+> left: Read your own cup
+  lore +small
+  mood -tiny
+  say: The leaves say a hard week is coming. It does, from Tuesday. The lecturer says that's the trouble with reading your own: you start making it true.
+> right: Read your neighbour's
+  charm +small
+  say: You tell your neighbour a letter is on its way. A letter arrives at supper. Now half the dormitory wants their leaves read, and you have to learn to say "unclear" kindly.
+
+@event lesson_starlight
+title: A Jar on the Roof
+trigger: auto
+when: spell_level(starlight) >= 1 and term
+class: routine
+tone: warm
+time: night
+art: star
+tags: magic study
+scene: A flat observatory roof at night, a student holding up a glass jar toward a sky crowded with stars, breath steaming.
+text: Starlight is taught after midnight on the observatory roof, where the astromancy lecturer hands you a glass jar and tells you to hold it up "until something falls in". The stars are very far away. The roof is very cold.
+> left: Hold the jar until it fills
+  lore +small
+  health -tiny
+  say: At three in the morning a thread of light settles in the jar like milk in tea. You carry it down the stairs in both hands. You can't feel your fingers until breakfast.
+> right: Lie back and watch the sky
+  mood +small
+  say: You lie on the roof and name the constellations with whoever is beside you. Your jar stays empty. The lecturer, passing, says that's the first lesson too, and the one most people skip.
+
+@event lesson_mend
+title: Teacups First
+trigger: auto
+when: spell_level(mend) >= 1 and term
+class: routine
+tone: warm
+actor: amaranth
+art: cup
+tags: magic study
+scene: An infirmary storeroom, a stern healer dropping a teacup to the stone floor while a student kneels over the pieces with a wand.
+text: Sister Amaranth teaches Mend with teacups. She drops one on the infirmary floor without looking. "Mend it." When it's whole she drops another. "Bones are harder," she says, rolling bandages. "Cups first."
+> left: Mend cup after cup
+  meet amaranth
+  alchemy +small
+  mana -small
+  say: By the twentieth cup you can hear the crack close before you see it. Amaranth says "Keep doing that," and drops a teapot.
+> right: Ask her about the bones
+  meet amaranth
+  lore +small
+  mood -tiny
+  say: She tells you, still rolling bandages, about the worst break she ever set. It was a student's; that student is a professor now. You go a little pale, and listen to every word.
+
+@event lesson_purify
+title: Make It Water
+trigger: auto
+when: spell_level(purify) >= 1 and term
+class: routine
+tone: light
+actor: amaranth
+art: cauldron
+tags: magic study
+scene: An alchemy lab bench with a cauldron of thick green liquid, a healer standing over a student who holds a wand above it.
+text: Purify is taught over a cauldron of something green that Sister Amaranth will not name. "Make it water," she says, and goes back to her own work. That is the whole of the instruction. The smell is a kind of instruction too.
+> left: Purify it layer by layer
+  meet amaranth
+  alchemy +small
+  health -tiny
+  say: Slowly, layer by layer, the green turns grey, then cloudy, then clear. You breathe the fumes for two hours and get a headache for one. Amaranth tastes the result, nods and pours it into the kettle.
+> right: Ask what it was
+  meet amaranth
+  rel amaranth +small
+  say: "Last term's soup," she says. You decide not to believe her, then decide you do. She shows you the trick of it while you laugh, and you purify half a cup, badly.
+
+@event lesson_glamour
+title: Pick a Card
+trigger: auto
+when: spell_level(glamour) >= 1 and term
+class: routine
+tone: light
+actor: vey
+art: cards
+tags: magic study
+scene: A velvet-curtained classroom, a professor in a violet coat fanning out a hand of playing cards toward a row of students.
+text: Professor Vey's glamour lesson is a card game. Each student glamours a plain card to look like the queen of stars, and Vey picks out the true queen from the pile. Nobody, she says, has ever made her pick wrong. "Fool me, and you may skip the essay."
+> left: Glamour your card
+  meet vey
+  challenge deceive using charm medium:
+    win:
+      charm +small
+      rel vey +small
+      say: Vey picks your card, turns it over and finds a plain two. She laughs out loud, a real laugh, and the class goes silent. "Well," she says. "Well, well. No essay for you."
+    lose:
+      mood -tiny
+      say: Vey passes over your card without a glance. "The queen of stars," she says kindly, "does not blush."
+> right: Watch how she catches them
+  meet vey
+  guile +small
+  say: You watch her eyes instead of the cards. She never looks at the faces, only at the hands holding them. You write that down, and she sees you write it, and smiles.
+
+@event lesson_mirror
+title: Gently
+trigger: auto
+when: spell_level(mirror) >= 1 and term
+class: routine
+tone: warm
+actor: vey
+art: mirror
+tags: magic study
+scene: A dim classroom with the curtains drawn, a hand mirror on every desk, a professor standing well to one side of the glass.
+text: Professor Vey teaches Mirror in an empty classroom with the curtains drawn, which is not like her. "A mirror charm shows people themselves," she says. "Do it gently. Most people have not asked to see." She stands to one side of every glass in the room.
+> left: Practise on yourself first
+  meet vey
+  charm +small
+  mood -tiny
+  say: The charm shows you yourself a moment too honestly. You practise until you can look at it without flinching. Mostly.
+> right: Ask why she avoids the glass
+  meet vey
+  rel vey +small
+  say: "Vanity," says Vey, with a magnificent smile that answers nothing at all. But she lets you stay after the others leave, and shows you how to soften the charm's edges.
+
+@event lesson_haste
+title: Race the Hippogriff
+trigger: auto
+when: spell_level(haste) >= 1 and term
+class: routine
+tone: light
+actor: brask
+art: feather
+tags: magic study
+scene: A windy flight field marked with flags, a grey-haired professor holding a stopwatch, a student sprinting beside a hippogriff.
+text: Professor Brask teaches Haste on the flight field, with a stopwatch and a hippogriff that is faster than the spell. "Beat her," she says to you. To the hippogriff she explains, at length and politely, that she is not to bite you if you win.
+> left: Race the hippogriff
+  meet brask
+  challenge feat easy:
+    win:
+      vigor +small
+      rel brask +tiny
+      say: You cross the flag a beak's length ahead. The hippogriff looks at Brask; Brask looks at the stopwatch, then at you. "Hm," she says. From her, it's a medal.
+    lose:
+      mood -tiny
+      say: The hippogriff wins by a length and takes your hat as her prize. Brask tells a story about a student who lost to a goose. It ends with a bite. "Moral: faster."
+> right: Time the others first
+  meet brask
+  lore +small
+  say: You hold the stopwatch and watch the fast ones. They aren't running harder; they start the spell a step before they need it. Brask sees you notice, and hands you the next race.
+
+@event lesson_beast_speech
+title: The Mule Has Views
+trigger: auto
+when: spell_level(beast_speech) >= 1 and term
+class: routine
+tone: warm
+actor: brask
+art: paw
+tags: magic study
+scene: A warm stall with straw on the floor, a student sitting cross-legged opposite a grey old mule who stares back without blinking.
+text: Beast-speech, says Professor Brask, is mostly listening. She sits you in a stall beside an old mule who has, she says, "views". You are to hear them. The mule looks at you as if you're the one being taught.
+> left: Sit with him all afternoon
+  meet brask
+  vigor +small
+  mood -tiny
+  say: In the fourth hour the mule's thoughts come through: mostly apples, and one long grievance about a farrier. Brask says "Good," to the mule, not to you.
+> right: Try the spell straight away
+  meet brask
+  arcana +small
+  mana -small
+  say: You cast before you've listened and get one word back, very clearly: "Rude." Brask laughs once, loudly. It's the laugh of the term, and everyone in the stables heard it.
+
+@event lesson_ward
+title: Chalk
+trigger: auto
+when: spell_level(ward) >= 1 and term
+class: routine
+tone: light
+art: shield
+tags: magic study
+scene: A dim room at the top of a tower, low lamps, a lecturer mid-throw with a piece of chalk while students hold up shimmering wards.
+text: At the top of the lecture tower, where the lamps burn dim on purpose, the umbral lecturer teaches Ward by throwing chalk. Hard, and without warning. "A ward that only works when you're ready," says the lecturer, "is a decoration."
+> left: Hold the ward all hour
+  guile +small
+  mana -small
+  say: The first chalk hits your forehead. The fifth bounces off the ward with a sound like a bell. By the end of the hour your ward is up before you know you've raised it.
+> right: Watch the lecturer's wrist
+  lore +small
+  health -tiny
+  say: You let the ward drop and watch how the throws begin. Three pieces of chalk find your forehead while you do. But you see it now: the shoulder moves first.
+
+@event lesson_shadowstep
+title: Where the Voice Was
+trigger: auto
+when: spell_level(shadowstep) >= 1 and term
+class: routine
+tone: tense
+time: night
+art: moon
+tags: magic study
+scene: A pitch-dark tower room with one dim lamp guttering out, the outline of a student stepping between deep shadows.
+text: Shadowstep is taught in the dark. The umbral lecturer puts out the last dim lamp and calls your name from somewhere else in the room. You have to arrive where the voice was before it moves. Somewhere, a chair is waiting for your shins.
+> left: Step into the dark
+  guile +small
+  health -tiny
+  say: You step, and the dark folds, and you're across the room with a bruise from the chair. The voice is right beside you. "Better," it says, and moves away again.
+> right: Wait for your eyes to adjust
+  lore +small
+  say: You stand still until the dark has edges. The lecturer, somewhere, says that's cheating, and that cheating is half of umbral magic. You step only once, but you step exactly.

@@ -604,3 +604,60 @@ text: {The corner of the board for lost things is busier than the jobs.|An old p
 > right: Read every notice twice
   guile +small
   say: {~The board is the castle's diary. You learn who lost what, and who owes whom.|You learn three secrets from the small print, and who has terrible handwriting.}
+
+# Job board stories (playtest 2, N13): small, everyday, plot-safe.
+
+@event job_board_yellow_notice
+title: The Oldest Notice
+place: job_board
+class: routine
+tone: warm
+weight: 10
+art: paper
+tags: job social
+scene: A corner of a cork board where one notice, yellowed and curling, is pinned beneath years of newer ones.
+text: In the bottom corner of the board, under years of newer notices, is one gone yellow and soft: "Wanted, Thursdays: someone to read the newssheet aloud to the portrait on the west stair. He likes the sport and the obituaries. Small pay." Someone has renewed the pin.
+> left: Answer it, this Thursday
+  gold +tiny
+  mood +small
+  study -tiny
+  say: The portrait is a bald man in an old-fashioned collar who hasn't had the news read to him in years. He cheers the duelling results and sighs at the obituaries. You lose your Thursday evening, and he asks you to come back.
+> right: Ask the porter who pins it
+  lore +small
+  say: The porter says the notice was there when he started, and that a few crowns appear on the stair every Thursday whether anyone reads or not. He has never asked who leaves it. He suggests you don't either.
+
+@event job_board_torn_notice
+title: Half a Notice
+place: job_board
+class: routine
+tone: light
+weight: 10
+art: paper
+tags: job money
+scene: Two students tugging at either end of a single job notice in front of a crowded cork board, the paper starting to tear.
+text: A well-paid notice ("one evening's portering, generous rates") has drawn two students, who have both got hold of it. It tears down the middle as you arrive. One holds the half with the pay; the other holds the half with the address. Both look at you.
+> left: Settle it between them
+  charm +small
+  say: You suggest they share the evening and split the fee. They both hate the idea, then both agree to it, then both thank you. You get nothing but a reputation for being reasonable.
+> right: Read the address and go yourself
+  gold +small
+  alignment -tiny
+  renown -tiny
+  say: You read the address over a shoulder and get there first. The job pays well. By supper both of them have told everyone what you did.
+
+@event job_board_monthly_letter
+title: A Letter a Month
+place: job_board
+class: routine
+tone: warm
+weight: 10
+art: letter
+tags: job social
+scene: A small handwritten notice pinned beside a sealed letter on a cork board, a student reaching to unpin both.
+text: A small notice in a careful, shaky hand: "Wanted: a student to post a letter for me in the village, first of each month. A few crowns. I can't manage the hill any more." The letter is pinned beside it, sealed and addressed to someone in the village.
+> left: Take the letter down the hill
+  gold +tiny
+  health -tiny
+  say: You post it, then the next, then the next. In the third month the letter-writer leaves a note: the replies have started coming. You never learn who either of them is. You keep the crowns in a jar.
+> right: Leave it for someone else
+  say: You leave it on the board. The next morning it's gone, and someone has drawn a small heart beside the notice in pencil.

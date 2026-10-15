@@ -546,3 +546,80 @@ text: The headmistress falls into step beside you in the colonnade. "I hear your
     lose:
       rel isolde -small
       say: "Hm," she says. "Let's hope you're right." It doesn't feel like hope.
+
+# ---------------- Track leads met on a card of their own (playtest 2, N1): queued by enrolling or joining ----------------
+
+@event vey_intro
+title: Tea That Isn't There
+class: routine
+tone: light
+actor: vey
+when: not met(vey) and enrolled(illusion)
+weight: 30
+art: mask
+tags: study magic
+scene: A lecture room hung with velvet curtains, a woman in a violet coat pouring from an empty teapot into a student's empty cup.
+text: First Illusion lecture. Professor Vey pours you a cup of tea from a pot you would swear is empty, and waits. "Milk?" she asks. The whole row turns to see what you'll do with a cup of nothing.
+> left: Drink it, and thank her
+  meet vey
+  challenge deceive using charm easy:
+    win:
+      charm +small
+      rel vey +small
+      say: You sip, sigh and ask where she buys it. Vey's mouth twitches. "Lapsang. There was never any tea, of course. Sit down; you'll do."
+    lose:
+      mood -tiny
+      say: You raise the cup with a flourish and tip it a little too far. Nothing pours out, and the whole row sees nothing pour out. Vey writes something down, and smiles at it.
+> right: Say the cup is empty
+  meet vey
+  lore +small
+  say: "It's empty," you say. "So it is," says Vey, pleased and disappointed at once. "Honest eyes. We shall have to do something about those."
+
+@event brask_intro
+title: Shovel. There. Go.
+class: routine
+tone: light
+actor: brask
+when: not met(brask) and enrolled(beastcraft)
+weight: 30
+art: paw
+tags: study nature
+scene: A long stable in morning light, a grey-haired professor talking earnestly to a hippogriff while a student stands holding a shovel.
+text: First Beastcraft lesson, at the stables. Professor Brask is explaining to a hippogriff, in full and courteous sentences, that the new students will be clumsy and she is to be patient with them. Then she turns to you. "Shovel. There. Go."
+> left: Muck out without a word
+  meet brask
+  vigor +small
+  health -tiny
+  rel brask +small
+  say: You shovel until your arms shake. Brask watches, then tells the hippogriff, loud enough for you to hear, "This one might do." To you she says nothing, which you later learn is praise.
+> right: Ask what today's lesson is
+  meet brask
+  lore +small
+  rel brask -tiny
+  say: Brask tells the hippogriff a story about a student who asked questions before shovelling. It ends with a bite. "Moral: shovel." You shovel, a little behind the others.
+
+@event pell_first_shift
+title: Count Aloud
+class: routine
+tone: light
+actor: pell
+when: not met(pell) and member(apothecary_clerk)
+weight: 30
+art: bottle
+tags: job
+scene: A narrow apothecary lined with tiny labelled drawers, an old man on a ladder holding out a glass dropper to a nervous new clerk.
+text: Your first shift at Pell & Daughters. Old Pell climbs down from his ladder, hands you a dropper and a bottle of tincture, and points at a waiting customer. "Twelve drops," he says. "Aloud. Everyone counts aloud in this shop. The drawers like it."
+> left: Count every drop aloud
+  meet pell
+  alchemy +small
+  mood -tiny
+  say: "One. Two. Three." Your voice fills the shop; the customer joins in at nine. Pell nods once. "Twelve. Not eleven. Not thirteen. You'll count like that until they bury you."
+> right: Count in your head, quickly
+  meet pell
+  chance 70:
+    rel pell -tiny
+    renown +tiny
+    say: Twelve drops, done in a breath; the customer tells the whole queue how quick the new clerk is. Pell counts the level against the light. "Correct. Next time, aloud. I like to hear a thing being right."
+  else:
+    rel pell -small
+    say: You lose count at eight and guess. Pell tips the bottle out and starts it again, aloud, without a word to you. The customer leaves with the right dose and a look at you.

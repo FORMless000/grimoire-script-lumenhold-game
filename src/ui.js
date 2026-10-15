@@ -581,6 +581,10 @@
       if (n.bar == null) return t('note.grade', { track, grade: n.grade });
       return t('note.gradeWhy', { track, grade: n.grade, skill: (n.skills || []).map(skillName).join(' + '), value: n.value, bar: n.bar, p: n.pass });
     }
+    if (n.kind === 'regrade') {
+      const track = ((content.tracks[n.track] || {}).level_names || tn(n.track)).split(/\s*[,，、]\s*/)[n.level - 1] || tn(n.track);
+      return t('note.regrade', { track, from: n.from, grade: n.grade });
+    }
     if (n.kind === 'leave' && content.tracks[n.track] && content.tracks[n.track].kind === 'thesis') return t('note.thesisDone', { track: tn(n.track) });
     if (['enrol', 'join', 'leave', 'promote', 'dropped'].includes(n.kind)) return t('note.' + n.kind, { track: tn(n.track) });
     if (n.kind === 'missed') return t('note.missed', { track: tn(n.track), n: n.n });

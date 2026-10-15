@@ -111,14 +111,20 @@ desc [fe3ade] = 潜行、撒谎，以及注意到别人忽略的东西。
 @hook rent
 # en: Dormitory & board
 label [547aba] = 宿舍与膳食
+# en: {board_missed == 0: {~The bursar takes the board money with a nod and a tick in a very large book.|Board paid: a bed, three meals and the right to complain about both.|You pay the board and count what's left twice.}|{~The board went unpaid. The refectory still feeds you, a little less each day.|No board money this month. Lunch is a pocketed roll.}}
+do.say.1 [87a9cb] = {board_missed == 0: {~财务官收下食宿费，点一点头，在一本非常厚的账簿上打了个勾。|食宿费付清了：一张床、一日三餐，外加抱怨这两样的权利。|你付了食宿费，把剩下的钱数了两遍。}|{~食宿费没交上。膳堂照样给你饭吃，只是一天比一天少。|这个月交不起食宿费。午饭是一个揣在兜里的面包。}}
 
 @hook break_rent
 # en: Board at the castle
 label [0b2949] = 城堡食宿
+# en: {~The castle in the holidays still wants its board.|A bed in an empty dormitory costs the same as a full one.}
+do.say.1 [5ac98d] = {~假期里的城堡，照样要收食宿费。|空荡荡的宿舍里一张床，和住满时一个价。}
 
 @hook tuition
 # en: Tuition
 label [7ee27b] = 学费
+# en: {~Term fees, paid at a window with a very small grille.|The bursar's quill scratches. Another term is paid for.}
+do.say.1 [4595be] = {~学期费交在一个铁栅格小得可怜的窗口。|财务官的羽毛笔沙沙作响。又一个学期付清了。}
 
 @hook gpa_probation
 # en: Academic probation
@@ -127,71 +133,107 @@ label [5ecefe] = 学业察看
 @hook coursework_evocation
 # en: Coursework
 label [68f6e5] = 课业
+# en: {~Fire and water drills, twice a week.|Your sleeves smell of smoke, and the cuffs are damp.}
+do.say.1 [cf10aa] = {~一周两次火与水的练习。|你的袖子一股烟味，袖口却是湿的。}
 
 @hook coursework_astromancy
 # en: Coursework
 label [68f6e5] = 课业
+# en: {~Star charts by candlelight.|Tea leaves in the morning, star tables at night.}
+do.say.1 [dce92a] = {~烛光下的星图。|早上读茶叶，晚上查星表。}
 
 @hook coursework_alchemy
 # en: Coursework
 label [68f6e5] = 课业
+# en: {~Measuring, stirring, writing it all down.|Your fingers are stained a new colour this month.}
+do.say.1 [f46cda] = {~称量、搅拌、一一记下。|这个月你的手指又染上了新颜色。}
 
 @hook coursework_illusion
 # en: Coursework
 label [68f6e5] = 课业
+# en: {~Glamour exercises in front of the mirror.|You practise a smile that isn't quite yours.}
+do.say.1 [010d25] = {~对着镜子练习魅影。|你练习一种不太像你自己的微笑。}
 
 @hook coursework_beastcraft
 # en: Coursework
 label [68f6e5] = 课业
+# en: {~Mucking out and riding drills.|Hay in your hair and a bruise from a broom.}
+do.say.1 [cfb965] = {~铲马粪，练骑术。|头发里有干草，身上有扫帚撞出来的淤青。}
 
 @hook coursework_umbral
 # en: Coursework
 label [68f6e5] = 课业
+# en: {~Ward drills in the dim tower.|Lessons in the dark, where you learn to listen.}
+do.say.1 [27b9a9] = {~在昏暗的塔里练护界。|在黑暗里上课，学会用耳朵。}
 
 @hook coursework_artifice
 # en: Coursework
 label [68f6e5] = 课业
+# en: {~Gears, springs and burnt fingertips.|The workshop hums with your half-finished work.}
+do.say.1 [6c9a2f] = {~齿轮、发条和烫伤的指尖。|工坊里嗡嗡作响，全是你做了一半的东西。}
 
 @hook coursework_starcalling
 # en: Coursework
 label [68f6e5] = 课业
+# en: {~Night appointments under the dome.|Names of stars, said into the cold.}
+do.say.1 [26937f] = {~圆顶下的夜间课。|对着寒夜念出群星的名字。}
 
 @hook coursework_hollow_studies
 # en: Coursework
 label [68f6e5] = 课业
+# en: {~A windowless room and very old books.|Lessons you can't repeat at dinner.}
+do.say.1 [140733] = {~一间没有窗的屋子和一些非常古老的书。|这些课的内容，晚饭时没法跟人讲。}
 
 @hook term_stress
 # en: Term-time pressure
 label [0e2de2] = 学期压力
+# en: {month == 4 or month == 10: {~Exams are coming, and everybody's quill moves faster.|The library stays open late and is full until it closes.|You dream of an exam you haven't revised for, which is most of them.}|{~Essays stack up on your desk like weather coming in.|Lectures, reading, more reading. Term has a weight of its own.|Everyone is behind. Everyone says so in the corridors.}}
+do.say.1 [a08f53] = {month == 4 or month == 10: {~考试要来了，人人的羽毛笔都写得更快。|图书馆开到很晚，一直坐满到关门。|你梦见一场没复习过的考试，而没复习过的考试占了大多数。}|{~论文在你桌上越堆越高，像远处压过来的天气。|上课、阅读、更多的阅读。学期自有它的分量。|人人都落后了。走廊里人人都这么说。}}
 
 @hook exhaustion_drain
 # en: Running on empty
 label [069bc4] = 筋疲力尽
+# en: {~You are so tired that the stairs look personal.|Your body has opinions about this month, and none of them are kind.|You fall asleep in a lecture and wake up in a different mood.}
+do.say.1 [76f080] = {~你累得连楼梯都像在跟你作对。|你的身体对这个月颇有意见，而且没一条是好话。|你在课上睡着了，醒来时换了一副心情。}
 
 @hook gloom_drain
 # en: Gloom
 label [0e658b] = 阴郁
+# en: {~A grey month. You eat little and sleep badly.|Low spirits sit in your chest like a cold.|The gloom gets into your bones; even the stairs feel steeper.}
+do.say.1 [f3af29] = {~灰蒙蒙的一个月。你吃得少，睡得差。|低落的情绪像一场感冒，压在你胸口。|阴郁钻进了骨头里，连楼梯都显得更陡了。}
 
 @hook natural_recovery
 # en: Rest
 label [e989b7] = 休养
+# en: {~A few early nights and a warm meal put some colour back in your face.|You rest, and your body thanks you slowly.|Sleep, soup and a quiet week. You feel more like yourself.}
+do.say.1 [91824c] = {~早睡几晚，吃几顿热饭，你的脸上又有了血色。|你好好休息，身体慢慢地道了谢。|睡觉、喝汤、清静的一周。你觉得自己又像自己了。}
 
 @hook fame_fades
 # en: Fading gossip
 label [06d4e9] = 流言消散
+# en: {~The corridors find something else to talk about.|Yesterday's gossip goes the way of yesterday's bread.|Fewer heads turn when you pass. It's restful.}
+do.say.1 [5662c0] = {~走廊里找到了别的话题。|昨天的闲话，和昨天的面包一样，没人要了。|你经过时回头的人少了。挺清静的。}
 
 @hook mana_regen
 # en: Mana returns
 label [d61671] = 法力恢复
+# en: {~The magic seeps back into you overnight, like warmth into cold hands.|Your fingertips tingle again by morning.|Whatever you spent, the castle quietly gives some back.}
+do.say.1 [27eb51] = {~魔力在夜里一点点渗回你身上，像暖意回到冻僵的手。|到了早上，你的指尖又开始发麻了。|你花掉的，城堡悄悄还回来一些。}
 
 @hook exam_nerves
 # en: Exam nerves
 label [8b0cdb] = 考前焦虑
+# en: {~Exam nerves eat at your magic: your wand hand won't stay still.|Revision drinks your mana before you can cast a thing.}
+do.say.1 [90208e] = {~考前的紧张啃食着你的魔力：拿魔杖的手怎么也稳不住。|还没施一个咒，复习就先把你的法力喝光了。}
 
 @hook love_glow
 # en: Someone to come home to
 label [82093c] = 有人在等你回家
+# en: {~Someone saves you a seat, every time.|A note in your bag, in a hand you know. Just a heart.|You catch yourself smiling at nothing, again.}
+do.say.1 [e36b53] = {~总有人给你留个座位，每一次。|书包里有张字条，字迹你认得。只画了一颗心。|你又发现自己对着空气傻笑。}
 
 @hook lonely
 # en: Loneliness
 label [b35139] = 孤独
+# en: {~You eat alone more often than you mean to.|The common room is loud, and none of it is for you.|You write a letter to nobody, and burn it.}
+do.say.1 [6f8340] = {~你一个人吃饭的次数，比你想的要多。|公共休息室里很吵，但没有一句是对你说的。|你给谁也不是的人写了封信，然后烧掉了。}

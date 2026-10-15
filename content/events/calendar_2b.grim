@@ -635,4 +635,73 @@ scene: The seven towers at dawn from the barge, the same view as the first day, 
 text: The barge again, the towers again, and a thesis waiting. The first-years on the deck look at you the way you once looked at the fourth-years. At the opening feast the headmistress says, "Fourth years, this is your last year in these halls. What you become here, you will be for a long time." She looks, for a moment, directly at you.
 > ok: Here we go
   mood +small
-  say: You know which steps creak. You know which doors stick. One more year to learn the rest.
+  say: You know which steps creak and which doors stick. The thesis will want evenings of its own each term; something else may have to give, a club or a job.
+
+# ---------------- Appeals (playtest 2, N4): pushed after a failed course, in its context (@game appeal) ----------------
+
+@event grade_appeal
+title: The Appeal
+trigger: queued
+class: story
+tone: tense
+art: scales
+tags: study class
+scene: A long table of grey-robed examiners in a panelled room, a single student standing before them holding an exam paper.
+text: The examiners' list is pinned up, and beside {track} there is an F. The clerk mentions, without looking up, that a student may appeal a grade in person, once, before the board. Most don't. Some of those who do come out with a C.
+> left: Appeal before the board
+  challenge negotiate medium:
+    win:
+      regrade track C
+      say: You talk for ten minutes about the paper, the question and the answer they marked wrong. The board confers in whispers. The F becomes a C, in red ink, with a sigh.
+    lose:
+      mood -small
+      renown -tiny
+      say: The board hears you out, then reads your paper aloud. It's worse aloud. The F stands, and the queue outside the door heard every word.
+> right: Accept it, and read the comments
+  lore +small
+  mood -tiny
+  say: The examiner's comments are fair, which is the worst thing about them. You copy out every one. Next time you'll know exactly where it went wrong.
+
+# ---------------- Lead-ins (playtest 2, N1): what's coming, before it comes ----------------
+
+@event registrar_list
+title: The Registrar's List
+trigger: auto
+when: turn == 1
+priority: 85
+class: story
+tone: light
+art: scroll
+tags: study
+scene: A crowd of new students around a long parchment list pinned in an entrance hall, one of them tracing a line with a finger.
+text: Before enrolment, the registrar's list goes up in the entrance hall: each course, what it tests, which spells it teaches, and which open only next term. A second-year taps one. "That one's hard," she says, then taps another. "So's that."
+> ok: Read it twice
+  say: Two courses a term, a fee each time, and an exam at the end of each. Pass a level and you learn its spells.
+
+@event club_fair_flyer
+title: Flyers Under the Door
+trigger: auto
+when: turn == 1
+slot: night
+class: story
+tone: light
+art: paper
+tags: club
+scene: A dormitory floor scattered with colourful club flyers, more sliding under the door as a student watches.
+text: One flyer slides under your door, then another, then nine. The Club Fair is next month in the courtyard: the Duelling Circle, the Lumen Ledger, the Verdant Circle. One club at a time, says the small print, and each wants a couple of evenings a term.
+> ok: Keep the flyers
+  say: You pin them over your bed and argue with them until you fall asleep.
+
+@event job_board_notice
+title: Hands Wanted
+trigger: auto
+when: turn == 2 and not member(job)
+slot: noon
+class: story
+tone: light
+art: paper
+tags: job money
+scene: A refectory door with a notice pinned to it, three different handwritings added beneath the printed part.
+text: Pinned to the refectory door: "Hands wanted. See the Job Board, entrance hall." Under it, in pencil: "The Newt pays best. The library is warmest." Under that, in a third hand: "Pell counts."
+> ok: Make a note of it
+  say: One job at a time, a few shifts a term, paid by the shift. The board is up from morning until evening.

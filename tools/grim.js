@@ -212,6 +212,7 @@ function analyze(content) {
         case 'spawn': if (!content.archetypes[st.archetype]) P('error', w, 'spawn: unknown archetype "' + st.archetype + '"'); break;
         case 'unqueue': if (!content.events[st.event]) P('error', w, 'unqueue: unknown event "' + st.event + '"'); break;
         case 'learn_spell': if (!content.spells[st.spell]) P('error', w, 'learn_spell: unknown spell "' + st.spell + '"'); break;
+        case 'regrade': if (st.track !== 'track' && !(content.tracks[st.track] && content.tracks[st.track].kind === 'course')) P('error', w, 'regrade: "' + st.track + '" is not a course'); break;
         case 'npc_rel': for (const x of [st.a, st.b]) { if (x === 'npc') { if (!hasActor) P('error', w, 'npc_rel npc: block has no actor'); } else if (!content.npcs[x]) P('error', w, 'npc_rel: unknown npc "' + x + '"'); } break;
         case 'challenge':
           if (!G.CHALLENGE_KINDS[st.kind]) P('error', w, 'challenge: unknown kind "' + st.kind + '" (' + Object.keys(G.CHALLENGE_KINDS).join(' ') + ')');
@@ -321,6 +322,10 @@ function analyze(content) {
   if (content.game.exam) A.queued[content.game.exam] = A.queued[content.game.exam] || ['engine'];
   // The off-shift hint (`@game off_shift:`, I1) is pushed by the director on a job visit after the term's last shift.
   if (content.game.off_shift) A.queued[content.game.off_shift] = A.queued[content.game.off_shift] || ['engine'];
+  // The appeal card (`@game appeal:`, N4) after a failed course, and a track's `intro:` card when you join it (N1).
+  if (content.game.appeal) A.queued[content.game.appeal] = A.queued[content.game.appeal] || ['engine'];
+  for (const d of Object.values(content.tracks)) if (d.intro) A.queued[d.intro] = A.queued[d.intro] || ['track ' + d.id];
+  for (const k of ['appeal', 'off_shift', 'exam', 'spark_cooldown']) if (content.game[k] && !content.events[content.game[k]]) P('error', 'content/core/rules.grim', '@game ' + k + ': unknown event "' + content.game[k] + '"');
   for (const e of Object.values(content.events)) if (e.trigger === 'queued' && !A.queued[e.id]) P('warn', loc(e), 'queued-only event "' + e.id + '" is never queued (orphan)');
   for (const st of Object.values(content.states)) if (!A.statesRef[st.id]) P('info', loc(st), 'state "' + st.id + '" is never gained');
   if (!Object.keys(content.endings).length) P('error', '-', 'no @ending defined');
@@ -469,6 +474,8 @@ function analyzeWorld(content, P, scanExpr, scanText) {
     for (const sk of [].concat(d.skill || [])) if (!isSkill(sk)) P('error', loc(d), 'skill: unknown skill "' + sk + '"');
     if (d.place && !content.places[d.place]) P('error', loc(d), 'place: unknown place "' + d.place + '"');
     if (d.lead && !content.npcs[d.lead]) P('error', loc(d), 'lead: unknown npc "' + d.lead + '"');
+    if (d.intro && !content.events[d.intro]) P('error', loc(d), 'intro: unknown event "' + d.intro + '"');
+    if (d.intro && !d.lead) P('warn', loc(d), 'intro: without a lead: nobody to meet');
     for (const t of d.teaches || []) { if (!content.spells[t.spell]) P('error', loc(d), 'teaches: unknown spell "' + t.spell + '"'); if (d.levels && t.level > d.levels) P('error', loc(d), 'teaches ' + t.spell + '@' + t.level + ': the track has ' + d.levels + ' level(s)'); }
     if (d.level_names && d.levels && d.level_names.split(/\s*,\s*/).length !== d.levels) P('error', loc(d), 'level_names should list ' + d.levels + ' names');
     if (d.pay && d.ranks && d.pay.length !== d.ranks.split(/\s*,\s*/).length) P('error', loc(d), 'pay should have one amount per rank');

@@ -342,6 +342,7 @@ desc: The board went unpaid this month. Bread rolls pocketed from the refectory 
 tick:
   health -3
   mood -4
+  say: {~Your stomach growls through every lecture.|Bread rolls in your pockets, and not enough of them.|You learn exactly how long a bowl of porridge lasts.}
 
 @state sick
 name: Lake Fever
@@ -352,6 +353,7 @@ desc: Shivers, sniffles and a nose that glows faintly blue.
 tick:
   health -4
   mood -2
+  say: {~You sniffle through the month, nose glowing faintly blue.|Shivers, tea and far too many handkerchiefs.}
 
 @state injured
 name: Injured
@@ -362,6 +364,7 @@ desc: Something is bruised, sprained or bent the wrong way.
 tick:
   health -2
   vigor -1
+  say: {~Every staircase reminds you where it hurts.|You limp, and the moving stairs show no sympathy.}
 
 @state exhausted
 name: Exhausted
@@ -372,6 +375,7 @@ desc: You could sleep standing up. You might have.
 tick:
   health -3
   mood -3
+  say: {~You yawn through a whole lecture without ever closing your mouth.|You could sleep standing up, and once you do.}
 
 @state inspired
 name: Inspired
@@ -383,6 +387,7 @@ tick:
   lore +1
   arcana +1
   mood +2
+  say: {~Ideas arrive faster than you can write them down.|You fill a notebook and start another.}
 
 @state heartbroken
 name: Heartbroken
@@ -392,6 +397,7 @@ duration: 3
 desc: Songs are suddenly about you. All of them.
 tick:
   mood -4
+  say: {~Every song in the common room is about you.|You walk the long way round, to miss a certain corridor.}
 
 @state slacking
 name: Skipping Classes
@@ -401,6 +407,7 @@ duration: 2
 desc: Freedom! Also: falling behind.
 tick:
   mood +2
+  say: {~A free morning, a lie-in, a twinge of guilt.|You skip a lecture, and nobody seems to mind yet.}
 
 @state detention
 name: Detention
@@ -410,6 +417,7 @@ duration: 1
 desc: Scrubbing cauldrons under the eye of a prefect.
 tick:
   mood -3
+  say: {~Cauldrons scrubbed under a prefect's eye.|Evenings in detention, smelling of old potion.}
 
 @state probation
 name: Academic Probation
@@ -420,6 +428,7 @@ tick:
   mood -2
   if gpa >= 2.0:
     lose probation
+  say: {~Probation sits on your shoulder through every lecture.|Your name is on a list you never wanted to be on.}
 
 @state in_debt
 name: Debt to Grisk
@@ -476,18 +485,12 @@ name: Familiar: Ember
 kind: buff
 art: fox
 desc: A fox-spirit with a smouldering tail who has decided you are hers.
-tick:
-  mood +2
-  if rand(1, 4) == 1:
-    guile +1
 
 @state familiar_owl
 name: Familiar: Clockwork Owl
 kind: buff
 art: owl
 desc: Mira's gift. It hoots the hour, mostly correctly, and remembers your homework.
-tick:
-  study +tiny
 
 @state training
 name: Tournament Training

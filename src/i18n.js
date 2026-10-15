@@ -217,6 +217,7 @@
     'map.sessionsLeft': 'Session · {n} left',
     'menu.confirm': 'Confirm ({n}/{max})',
     'note.grade': '{track}: {grade}',
+    'note.regrade': '{track}: {from} → {grade} on appeal',
     'note.gradeWhy': '{track}: {grade} ({skill} {value} against an exam bar of {bar}; pass chance {p}%)',
     'note.enrol': 'Enrolled: {track}',
     'note.join': 'Joined: {track}',

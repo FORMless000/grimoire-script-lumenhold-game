@@ -1,0 +1,343 @@
+# Statuses in play (playtest 2, N2, N5, N8): cards that show a state you're in, so it is more than a number at month end.
+
+# ---------------- Hungry ----------------
+
+@event hungry_leftovers
+title: The Refectory's Leftovers
+class: routine
+tone: warm
+when: has(hungry) and term
+repeat: 3
+weight: 20
+art: meal
+tags: food money
+scene: A refectory kitchen door at closing time, a cook scraping the last of a stew into a bowl for a student waiting in the doorway.
+text: {The refectory is closing, and the kitchens are scraping the pots. A cook sees you hovering in the doorway and holds up a ladle, eyebrows raised.|The same cook, the same ladle. She doesn't ask any more; she just raises her eyebrows.|You know the kitchens' closing time to the minute now.} {~A prefect is still at the end table, finishing an essay.|Two first-years are sweeping, and watching.}
+> left: Take the bowl
+  health +small
+  renown -tiny
+  say: {~It's the burnt bit at the bottom of the stew and it is the best thing you've ever eaten. The prefect looks up from her essay and remembers your face.|The cook fills the bowl to the brim. The first-years see, and by breakfast half your year knows why.}
+> right: Shake your head and leave
+  health -tiny
+  say: {~"Not hungry," you say, to nobody in particular, and go upstairs on an empty stomach that disagrees.|You walk out with your pride and nothing else. Your stomach complains all night.}
+
+@event hungry_pocketed_rolls
+title: Rolls for Later
+class: routine
+tone: light
+when: has(hungry) and term
+repeat: 3
+weight: 20
+art: meal
+tags: food money
+scene: A breakfast table heaped with bread rolls, a student's hand hovering near a pocket while a prefect patrols the aisle.
+text: {Breakfast, and the bread rolls are piled high. Board-payers only, says the sign; it doesn't say how many.|The rolls again, and the sign again, and your empty pockets.|Breakfast. You've got good at looking as if you've paid.} {~The prefect on duty is reading a letter.|The prefect on duty is looking straight at the bread.}
+> left: Pocket a few for later
+  health +small
+  alignment -tiny
+  say: {~Three rolls in your robe, still warm. They last until supper, and so does the guilt.|You fill your pockets and walk out at an even pace, crumbs and all.|Two rolls and an apple. Nobody stops you. You eat them on the stairs, a little ashamed.}
+> right: Eat what's on your plate
+  say: {~One roll, eaten slowly, and nothing taken that isn't yours. By lunch you're light-headed and honest.|You eat what you're given, and the hunger keeps you company all morning.}
+
+@event hungry_maud_soup
+title: Soup at the Cottage
+class: routine
+tone: warm
+actor: maud
+when: has(hungry) and met(maud)
+repeat: 2
+weight: 20
+art: cauldron
+tags: food social
+scene: A crooked cottage kitchen full of hanging herbs, an old woman ladling soup from a black pot into a chipped bowl.
+text: {Old Maud catches you on the path by her cottage. "You've a hungry look, dearie. Come and eat." She has a pot on already, as if she knew.|Maud's pot is on again. She doesn't ask, and you don't explain.} {~The soup is leek and something she won't name.|A bee sits on the windowsill, waiting for its share.}
+> left: Stay for soup and a story
+  health +small
+  mood +small
+  rel maud +tiny
+  study -tiny
+  say: {~Two bowls, bread, and a sad story about her sister told like a recipe. Your reading waits until morning, and it'll be late.|She talks about the winter the lake froze twice while you eat. The essay you meant to write tonight stays unwritten.}
+> right: Take a jar back to your room
+  health +small
+  say: {~She fills a jar and wraps it in a cloth. "Bring the jar back," she says. "That's the price." You eat at your desk, studying.|You carry the warm jar up the hill and eat it over your books. Maud waves from the door, a little disappointed.}
+
+# ---------------- Detention ----------------
+
+@event detention_cauldrons
+title: Cauldron Duty
+class: routine
+tone: light
+when: has(detention)
+repeat: 3
+weight: 20
+art: cauldron
+tags: study
+scene: A dim potions storeroom, a student up to the elbows in a crusted cauldron while a prefect reads by a lamp at the door.
+text: {Detention, and a row of crusted cauldrons and a prefect by the door with a book.|Detention again. The cauldrons are the same; the crust is worse.|You know these cauldrons by name now. One of them, you suspect, knows you.} {~Something in the third one is still bubbling.|The prefect is pretending not to be bored.}
+> left: Scrub them properly
+  alchemy +small
+  health -tiny
+  say: {~You scrub until your knuckles are raw, and learn which residues bite back and which only sulk.|By the last cauldron you can tell a week-old draught from a month-old one by the smell alone. Your hands sting for days.}
+> right: Talk your way to an early night
+  challenge negotiate easy:
+    win:
+      mood +small
+      say: {~You talk about the prefect's book until the prefect is talking about it too, and at nine they wave you off. "Same time next week. Possibly."|You find out you're both from the same county. The cauldrons can wait for someone less charming.}
+    lose:
+      gain detention
+      say: {~"Nice try," says the prefect, and writes your name down for another evening.|The prefect hears you out, then adds a week. "For the speech."}
+
+@event detention_lines
+title: Lines, With Company
+class: routine
+tone: light
+cast:
+  other: any where met(other) and tagged(other, student)
+when: has(detention)
+repeat: 2
+weight: 16
+art: book
+tags: study social
+scene: An empty classroom at dusk, two students at separate desks writing the same sentence over and over, a quill scratching on its own at the front.
+text: Detention means lines, a hundred of them, and {other} is at the next desk doing the same. {~The sentence is "I will not bring livestock into the library."|The sentence is "Curfew is not a suggestion."|The sentence is "Stairs are for walking."} An enchanted quill at the front of the room writes down everything anyone says.
+> left: Do your homework under the desk
+  chance 70:
+    study +small
+    say: {~A hundred lines and half an essay. The quill at the front records nothing but scratching.|You alternate a line and a paragraph. Nobody checks. Your essay is the better for it.}
+  else:
+    gain detention
+    say: {~The prefect lifts your lines and finds your essay underneath. "Another evening, then."|Your essay falls on the floor at exactly the wrong moment. Another week of lines.}
+> right: Talk to {other}
+  rel other +small
+  say: {~By the fortieth line you know why {other} is here, and it's a better story than yours. The quill at the front writes it all down, word for word.|You compare crimes. {other} laughs so hard the quill at the front writes "LAUGHTER" in capitals.}
+
+# ---------------- Probation ----------------
+
+@event probation_advisor
+title: A Word With Your Advisor
+class: routine
+tone: tense
+when: has(probation) and term
+repeat: 2
+weight: 20
+art: scales
+tags: study
+scene: A cluttered faculty office with a ticking clock, an advisor and a student either side of a desk with a marks list between them.
+text: {A summons to your advisor's office. Your marks lie on the desk between you, upside down for you, right way up for them.|Your advisor again, and the same marks, a little better or a little worse.} "Two terms under the line and the Disciplinary Board sits," they say. "Shall we make sure it doesn't?"
+> left: Make a study plan together
+  study +medium
+  mood -small
+  say: {~An hour later you have a timetable that colours every evening grey. It is a very good timetable. You hate it.|The plan has a column for sleep, and it is narrow.}
+> right: Talk about what's going wrong
+  mood +small
+  say: {~You say aloud the thing you hadn't said to anyone. Your advisor listens and makes no plan at all. You leave lighter, and no better prepared.|It turns out your advisor failed a year, once. You talk about that instead of your marks.}
+
+@event probation_letter
+title: The Warning Letter
+class: routine
+tone: tense
+when: has(probation)
+weight: 20
+art: letter
+tags: study
+scene: A stiff envelope with the academy's seal lying open on a desk, a student holding the letter at arm's length.
+text: A letter from the registrar, in the stiff envelope everyone dreads: Academic Probation, your name spelled correctly for once, and a line about "consequences" underlined twice. A copy, it says, has gone to your family.
+> left: Pin it above your desk
+  study +small
+  mood -small
+  say: The letter glares at you every time you look up. It works, in the way a headache works: you study, and you don't enjoy a minute of it.
+> right: Put it in a drawer
+  say: Out of sight, mostly out of mind. Mostly. Some nights you open the drawer, look at it and close the drawer again.
+
+# ---------------- Sick or injured ----------------
+
+@event sick_in_the_infirmary
+title: A Bed by the Window
+class: routine
+tone: warm
+when: has(sick) and term
+repeat: 2
+weight: 20
+art: bed
+tags: health
+scene: A row of white infirmary beds, a student wrapped in blankets with a faintly glowing blue nose and a steaming mug beside them.
+text: {Lake fever. Your nose glows faintly blue, and Sister Amaranth says "Bed," in the voice that means it.|The fever again, and the same bed by the window.} {~Lectures are going on without you.|Someone has left a stack of notes on the chair.}
+> left: Stay in bed all week
+  health +medium
+  study -small
+  say: {~You sleep, drink something bitter and sleep again. When you go back, the class is two chapters ahead.|A week of blankets and broth. You feel much better and know much less.}
+> right: Go to lectures in a scarf
+  study +tiny
+  health -small
+  say: {~You sniffle through Arcana in three scarves. The notes are good; the coughing fit in the middle is not.|You make every lecture, and every lecture makes you worse. Sister Amaranth sees you on the stairs and says nothing, very loudly.}
+
+@event injured_on_the_stairs
+title: The Moving Stairs, Limping
+class: routine
+tone: light
+when: has(injured)
+repeat: 2
+weight: 20
+art: door
+tags: health
+scene: A grand staircase swinging slowly between landings, a student with a bandaged ankle clinging to the banister as it moves.
+text: {Your ankle is bandaged and the stairs are moving, as stairs here do. The lecture is three landings up and starts in five minutes.|The stairs again, the ankle again. The lecture, as ever, is at the top.}
+> left: Take the long way, slowly
+  health +small
+  study -tiny
+  say: {~You limp round by the back corridor and arrive as everyone is packing up. The ankle thanks you; your notes don't.|Slow, careful and very late. The ankle mends a little faster for it.}
+> right: Hop the gap as it swings
+  challenge feat easy:
+    win:
+      renown +tiny
+      say: {~You time it perfectly and land on one foot. Somebody on the landing applauds.|One hop, one wobble, one bow. You're on time and briefly famous.}
+    lose:
+      health -small
+      say: {~You land on the wrong foot, the bad one. The stairs swing on without you, and you sit on the step for a while.|The gap is wider than it looked. You arrive on time and limping twice as badly.}
+
+# ---------------- An empty purse (N5: a hint, never an obligation) ----------------
+
+@event purse_and_the_board
+title: A Light Purse
+class: routine
+tone: light
+when: term and gold < 10 and not member(job) and turn > 2
+repeat: 3
+weight: 16
+art: pouch
+tags: money
+scene: A student emptying a coin purse on a dormitory bed, three coins and a button rolling out across the blanket.
+text: {You tip out your purse on the bed. Three coins and a button.|The purse again. The button is still there; the coins are fewer.} Board is due at the start of every month. {~On the way to breakfast you passed the Job Board in the entrance hall, and someone was taking down a notice.|Someone in your year says the Newt is hiring again.}
+> left: Sell your second-best cloak
+  gold +small
+  mood -small
+  say: {~A second-hand stall in the village gives you a fair price and an unfair look. The castle is draughty without it.|You sell the cloak. It was your grandmother's. You're nearly sure she'd understand.}
+> right: Look at the Job Board later
+  say: {~You make a note: the Job Board, entrance hall, morning to evening. One job at a time, paid by the shift.|You'll go and read the notices. Probably. Board is due either way.}
+
+# ---------------- Familiars (N8): cards instead of a monthly tick ----------------
+
+@event ember_on_the_essay
+title: A Fox on the Essay
+class: routine
+tone: light
+when: has(familiar_fox)
+repeat: 3
+weight: 12
+art: fox
+tags: nature study
+scene: A fox-spirit curled asleep on a student's half-written essay, her tail smouldering gently at one corner of the page.
+text: {Ember has chosen your essay to sleep on, and her tail is smouldering, as it does when she dreams.|Ember is asleep on your essay again. The corner is already brown.|Ember has a new favourite sleeping place, and it is due on Monday.}
+> left: Rescue the essay
+  study +tiny
+  mood -tiny
+  say: {~You slide the essay out from under her. She opens one eye, says something rude in fox and sulks under the bed until supper.|You rescue the page and lose a fox: she spends the evening on your pillow with her back to you.}
+> right: Let her sleep and write around her
+  mood +small
+  study -tiny
+  say: {~You write the conclusion in the margin, round a sleeping fox. The essay comes back scorched at one corner and marked down for it.|She's warm, she's purring in her own way, and your essay has a hole in it now. It's worth it.}
+
+@event ember_night_hunt
+title: Ember Goes Hunting
+class: routine
+tone: light
+time: night
+when: has(familiar_fox)
+repeat: 3
+weight: 12
+art: fox
+tags: nature mystery
+scene: A dark castle corridor lit only by the glow of a fox's tail, a student in a nightgown following at a distance.
+text: {Ember tugs at your blanket. Then at your sleeve. Then at your ear. She wants you to come.|Ember is at the door again, tail glowing, waiting.} {~Somewhere below, something is scratching.|The corridors are cold and very quiet.}
+> left: Follow her through the castle
+  guile +small
+  health -tiny
+  say: {~She leads you down three staircases to a loose stone, and sits by it, very pleased. Behind it: nothing but a draught. You're back at dawn, frozen.|A mouse, two corridors and a door you'd never noticed. You get back to bed cold and much better at walking quietly.}
+> right: Pull the blanket over your head
+  health +tiny
+  say: {~You sleep. Ember goes alone and comes back at dawn smelling of the kitchens, enormously smug.|She sighs at you, a fox's sigh, and goes without you. You sleep like a stone.}
+
+@event ember_and_the_sandwich
+title: The Prefect's Sandwich
+class: routine
+tone: light
+when: has(familiar_fox) and term
+repeat: 2
+weight: 12
+art: fox
+tags: nature social
+scene: A crowded refectory, a small fire-tailed fox trotting off with a sandwich while a prefect stares at an empty plate.
+text: Ember trots through the refectory with a prefect's sandwich in her jaws, past forty witnesses. The prefect looks at the empty plate, then at the fox, then at the room. "Whose," the prefect says, "is that?"
+> left: Own up and buy a new one
+  gold -tiny
+  renown -tiny
+  alignment +tiny
+  say: You raise your hand. The room laughs; you pay for a sandwich at the counter and hand it over. The prefect accepts it with dignity. Ember eats the first one under your chair.
+> right: Look as puzzled as everyone else
+  guile +small
+  alignment -tiny
+  say: You look around the room, as baffled as anybody. Ember sits on your foot under the table, chewing. The prefect never finds out, and Ember never lets you forget it.
+
+@event owl_six_oclock
+title: "HOMEWORK"
+class: routine
+tone: light
+when: has(familiar_owl) and term
+repeat: 3
+weight: 12
+art: owl
+tags: study
+scene: A brass clockwork owl on a bedpost at dawn, its amber eyes glowing, a student groaning under a pillow.
+text: {Six in the morning. "HOMEWORK," says the clockwork owl, and then, because you haven't moved, "HOMEWORK. DUE. TODAY."|"HOMEWORK," says the owl, at six, as ever. This time it's right: something is due today and you'd forgotten.|The owl's six o'clock hoot has a new word in it: "LATE."}
+> left: Get up and write it now
+  study +small
+  health -tiny
+  say: {~You write it before breakfast with your eyes half shut. It's not your best work, but it's in. The owl says "GOOD," which you didn't know it could.|An hour of frantic quill-work in the grey light. You hand it in on time and nod off in the next lecture.}
+> right: Hand it in late
+  health +tiny
+  study -tiny
+  say: {~You go back to sleep. The owl says "DISAPPOINTED" twice and goes quiet. Your essay goes in a day late and is marked accordingly.|You sleep until eight. The owl doesn't speak to you until lunch, and then only to say "LATE."}
+
+@event owl_birthday
+title: "BIRTHDAY"
+class: routine
+tone: warm
+cast:
+  friend: any where met(friend) and rel(friend) >= 10
+when: has(familiar_owl)
+repeat: 2
+weight: 12
+art: owl
+tags: social
+scene: A clockwork owl fluttering in front of a student, its beak open mid-hoot, a calendar on the wall behind.
+text: "BIRTHDAY," says the owl, flapping in front of your face, and then, louder, "BIRTHDAY." It turns its head toward the window, toward the dormitory where {friend} lives. Mira built it to remember birthdays. You had not.
+> left: Buy a proper present
+  gold -small
+  rel friend +small
+  say: You run down to the village before the shops close and come back with something {friend} actually wanted. {They} look{s} at you as if you've always remembered.
+> right: Write a card, quickly
+  rel friend +tiny
+  say: A card, a drawing of the owl and "Happy birthday" in your best hand. {friend} pins it up anyway, and asks how you knew.
+
+@event owl_wound_down
+title: The Owl Winds Down
+class: routine
+tone: warm
+when: has(familiar_owl) and met(mira)
+weight: 12
+art: owl
+tags: magic social
+scene: A brass owl slumped on a desk with one wing drooping, a student peering into a small open panel in its chest with a magnifying glass.
+text: The clockwork owl has started saying "HOME… WORK…" very slowly, like a music box running down. One wing droops. There is a tiny panel in its chest, and a tinier key, and absolutely no instructions.
+> left: Take it back to Mira
+  rel mira +small
+  study -tiny
+  say: Mira lights up and spends the whole evening inside the owl with tweezers, explaining every spring. You miss your reading entirely. The owl comes back saying "HOMEWORK" faster than ever.
+> right: Fix it yourself
+  challenge enchant easy:
+    win:
+      arcana +small
+      say: A wound spring, a drop of oil and a charm to keep it turning. The owl shakes itself and says "THANK YOU," which it has never said before.
+    lose:
+      mood -tiny
+      say: You fix it. Now it hoots on the half hour instead of the hour, all night, and says "HOMEWORK" in a voice like a kettle.

@@ -199,6 +199,14 @@ What exists (surveyed after L): every main character has an intro card except Ka
 
 Not in step 4: N11 → X11.
 
+**Step 4 is done**, all four packages at once (the user's call: each was small), tested together:
+- N-A: `intro:` on `@track` (enrolling or joining queues it with the lead as actor, once, if the lead is unmet; `grim reach` counts it as queued); `@game appeal: grade_appeal` (pushed after an F, in the course's context); `regrade track C` (changes the latest grade and `passed`, teaches the level's spells when an F becomes a pass, and notes "on appeal"); `say:` lines on every hook and state tick (the engine already carried them to the month summary). Lint checks the new references; `grim reach` also counts spells taught by a course's `teaches:` (the lesson cards needed it).
+- N-B: hungry (3), detention (2), probation (2), sick and injured (2), a light-purse hint (no job, crowns under 10); Ember and the clockwork owl as 3 cards each (their ticks removed); `life_invent_spell`'s careful win teaches Mend; `up[ward]` in `duelling_ward_line`, `up[glamour]` in `illu_good_news` and `life_prank_war`.
+- N-C: `vey_intro`, `brask_intro`, `pell_first_shift` (Pell's old intro is a customer scene, so the job has its own); lead-ins `registrar_list` (turn 1, before enrolment), `club_fair_flyer`, `job_board_notice`; three jealousy cards (two cast roles with spark ≥ 30, neither a partner); two follow-ups queued from `village_square_errand` at 30%; 8 general letters and 2 for each romanceable character.
+- N-D: 12 lesson cards (auto, once, in term after the spell is learned; unnamed lecturers for astromancy and umbral); 3 job board stories; `year_two` / `year_three` / `year_four` foreshadow internships, the midnight doors, holiday work and the thesis load.
+
+Measured (`check`, `balance --quick`): every new card is seen except the two probation cards (probation is rare now that exams are easier; `crisis_probation` is unseen too); 0 invariant failures; the alarms are the known ones. One test changed on purpose (enrolling no longer meets an unmet lead at once) and one was added (appeal and regrade). The golden baseline is refreshed.
+
 Decided (user): a won appeal turns the F into a C (`regrade track C`); the familiars' cards replace their monthly ticks; N3's lesson cards are written now for the current 12 spells (reworked if the minigames change the spells); each batch is self-reviewed against the critic checklist.
 
 ## Status

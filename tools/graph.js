@@ -61,7 +61,7 @@ function build(content) {
     for (const r of reads(b, content)) (read[r.token] = read[r.token] || []).push({ to: b, ...r });
   }
   // The engine pushes these by name (@game) or by trigger.
-  const engineRefs = { exam: 'pushed for each enrolled course in a term\'s last month', off_shift: 'pushed on the first visit after a term\'s last shift', spark_cooldown: 'pushed when spark crosses the cooldown mark', origins: 'the origin screen' };
+  const engineRefs = { exam: 'pushed for each enrolled course in a term\'s last month', off_shift: 'pushed on the first visit after a term\'s last shift', appeal: 'pushed after a failed course', spark_cooldown: 'pushed when spark crosses the cooldown mark', origins: 'the origin screen' };
   for (const [k, why] of Object.entries(engineRefs)) if (content.game[k]) (prod['event:' + content.game[k]] = prod['event:' + content.game[k]] || []).push({ from: { kind: 'engine', id: '@game ' + k }, via: why, note: '' });
   for (const id of ['track_warning', 'track_promotion', 'job_term_review']) (prod['event:' + id] = prod['event:' + id] || []).push({ from: { kind: 'engine', id: 'term end' }, via: 'track notice', note: '' });
   return { blocks, by, prod, read };

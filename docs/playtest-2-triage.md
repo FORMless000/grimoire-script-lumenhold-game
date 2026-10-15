@@ -184,21 +184,21 @@ Order within M: M42 → M41 · M43 → M8 · M10 → M6 · M39 → M5, M11 · M1
 
 ## N — Minor addition opportunity
 
-- N1. Lead-in cards for the club fair, the job board and elective selection (`club_fair_v3`, Y1 Emberwane); every first meeting with a character gets a dedicated lead-in card instead of happening right after joining a course/club/job (`club_fair_v3`; `nessa_intro`, Y1 Emberwane).
-- N2. Events that show the effect of statuses like Detention and Hungry. (W10)
-- N3. An event for each spell learnt (where and how it is taught), so learning is seen and felt. (W22, with B4)
-- N4. An event to appeal a failing grade. (W24)
-- N5. Hints at proactive ways to earn money outside jobs. (W26) Decided (D2, D4/D7): low gold brings hints, never obligations. Here: the job-board hint. The hints to financial aid, debts and favours are written with X14, so they never point to nothing.
-- N6. Descriptive, varied text for end-of-month stat changes. (W36)
-- N7. Jealousy: is it implemented? ? Events when the player has romance values with more than one character. (W49)
-- N8. Pets: events instead of passive bonuses. (W50)
-- N9. `life_invent_spell` (Y2 Mistveil): reward an actual spell.
-- N10. `village_square_errand` (Y2 Frostcall): any follow-ups? ? Possible opportunity.
+- N1. Lead-in cards for the club fair, the job board and elective selection (`club_fair_v3`, Y1 Emberwane); every first meeting with a character gets a dedicated lead-in card instead of happening right after joining a course/club/job (`club_fair_v3`; `nessa_intro`, Y1 Emberwane). **Done (N):** `intro:` on tracks (Vey, Brask, Pell's first shift); lead-ins `registrar_list`, `club_fair_flyer`, `job_board_notice`.
+- N2. Events that show the effect of statuses like Detention and Hungry. (W10) **Done (N):** hungry ×3, detention ×2, probation ×2, sick/injured ×2.
+- N3. An event for each spell learnt (where and how it is taught), so learning is seen and felt. (W22, with B4) **Done (N):** 12 lesson cards (`content/events/pools/spell_lessons.grim`).
+- N4. An event to appeal a failing grade. (W24) **Done (N):** `@game appeal: grade_appeal`, `regrade track C`.
+- N5. Hints at proactive ways to earn money outside jobs. (W26) Decided (D2, D4/D7): low gold brings hints, never obligations. Here: the job-board hint. The hints to financial aid, debts and favours are written with X14, so they never point to nothing. **Done (N):** `purse_and_the_board`.
+- N6. Descriptive, varied text for end-of-month stat changes. (W36) **Done (N):** `say:` lines on every hook and state tick.
+- N7. Jealousy: is it implemented? ? Events when the player has romance values with more than one character. (W49) **Done (N):** three jealousy cards (`jealousy_*`).
+- N8. Pets: events instead of passive bonuses. (W50) **Done (N):** 3 cards each for Ember and the owl; ticks removed.
+- N9. `life_invent_spell` (Y2 Mistveil): reward an actual spell. **Done (N):** the careful win teaches Mend.
+- N10. `village_square_errand` (Y2 Frostcall): any follow-ups? ? Possible opportunity. **Done (N):** `village_errand_parcel`, `village_errand_third_thing` (queued at 30%).
 - N11. Clue journal: an interface that stores clues (`hs_frost_ring`, Y2 Blossomtide); `curse_cure_1` (Y2 Goldenhaze) should give a displayable clue; `hs_seventh_tower` (Y3 Greenrise): what were the consequences? ? Add a clue. (Log: the win granted nothing; **do with X11**.) Decided (D5): the plot is represented much more in the UI, and clues are explicit. → X11
-- N12. Spellcasting opportunities instead of plain checks: `duelling_ward_line` (Y3 Greenrise, a ward), `illu_good_news` (Y3 Blossomtide), `life_prank_war` (Y3 Blossomtide; a future mischief spell, or reuse illusion spells).
-- N13. Job board events with some story relevance, so a visit isn't only functional. (D2)
-- N14. Letter events for the nightly off-campus letter card (M38): mostly generic, plus some specific ones for each romanceable character. (D8)
-- N15. Each year's opening foreshadows that year's new options, duties and expectations (from C20): the midnight turn (M41), internship applications (M36), vacation work (M6), and year 4's thesis load with the hint to quit a job or club (L25). X features are added to the openings as they land.
+- N12. Spellcasting opportunities instead of plain checks: `duelling_ward_line` (Y3 Greenrise, a ward), `illu_good_news` (Y3 Blossomtide), `life_prank_war` (Y3 Blossomtide; a future mischief spell, or reuse illusion spells). **Done (N):** `up[ward]`, `up[glamour]` ×2.
+- N13. Job board events with some story relevance, so a visit isn't only functional. (D2) **Done (N):** three job board stories.
+- N14. Letter events for the nightly off-campus letter card (M38): mostly generic, plus some specific ones for each romanceable character. (D8) **Done (N):** 8 general letters, 2 per romanceable character.
+- N15. Each year's opening foreshadows that year's new options, duties and expectations (from C20): the midnight turn (M41), internship applications (M36), vacation work (M6), and year 4's thesis load with the hint to quit a job or club (L25). X features are added to the openings as they land. **Done (N):** `year_two`, `year_three`, `year_four`.
 
 ## X — Major content addition opportunity
 

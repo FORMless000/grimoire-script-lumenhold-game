@@ -411,5 +411,59 @@ text [cb5447] = 又是驳船，又是高塔，还有一篇论文在等着。甲�
 scene [542188] = 从驳船上望见的黎明七塔，和第一天的景色一样，但看风景的学生已经变了。
 # en: Here we go
 opt.ok.label [e1aa95] = 走吧
-# en: You know which steps creak. You know which doors stick. One more year to learn the rest.
-opt.ok.say.1 [e1f039] = 你知道哪级台阶会响，哪扇门会卡。还有一年，去学剩下的。
+# en: You know which steps creak and which doors stick. The thesis will want evenings of its own each term; something else may have to give, a club or a job.
+opt.ok.say.1 [e66c41] = 你知道哪级台阶会响，哪扇门会卡。毕业论文每学期都要占去好些晚上；总得放下点什么，一个社团，或者一份工作。
+
+@event grade_appeal
+# en: The Appeal
+title [83680b] = 申诉
+# en: The examiners' list is pinned up, and beside {track} there is an F. The clerk mentions, without looking up, that a student may appeal a grade in person, once, before the board. Most don't. Some of those who do come out with a C.
+text [dc09dc] = 考官名单贴出来了，{track}旁边是一个 F。办事员头也不抬地提了一句：学生可以亲自向委员会申诉一次成绩。大多数人不去。去了的人里，有些拿回了一个 C。
+# en: A long table of grey-robed examiners in a panelled room, a single student standing before them holding an exam paper.
+scene [ba2029] = 镶着护墙板的房间里，一长排身穿灰袍的考官坐在桌后，一个学生拿着考卷独自站在他们面前。
+# en: Appeal before the board
+opt.left.label [fecb7e] = 向委员会申诉
+# en: You talk for ten minutes about the paper, the question and the answer they marked wrong. The board confers in whispers. The F becomes a C, in red ink, with a sigh.
+opt.left.say.1 [20d3bd] = 你就那张考卷、那道题和那个被判错的答案讲了十分钟。委员会低声商议。F 变成了 C，红墨水写的，附带一声叹气。
+# en: The board hears you out, then reads your paper aloud. It's worse aloud. The F stands, and the queue outside the door heard every word.
+opt.left.say.2 [63e52e] = 委员会听完你的话，然后把你的考卷念了一遍。念出来更糟。F 维持原判，门外排队的人一字不落全听见了。
+# en: Accept it, and read the comments
+opt.right.label [b758f4] = 接受成绩，读读评语
+# en: The examiner's comments are fair, which is the worst thing about them. You copy out every one. Next time you'll know exactly where it went wrong.
+opt.right.say.1 [1fbf52] = 考官的评语很公道，这正是最糟的地方。你一条一条抄下来。下次你会清楚地知道自己错在哪儿。
+
+@event registrar_list
+# en: The Registrar's List
+title [0ca2e7] = 教务处的课程表
+# en: Before enrolment, the registrar's list goes up in the entrance hall: each course, what it tests, which spells it teaches, and which open only next term. A second-year taps one. "That one's hard," she says, then taps another. "So's that."
+text [f5996f] = 选课前，教务处的课程表贴在了门厅：每门课考什么，教哪些咒语，哪些下学期才开。一个二年级生点了点其中一门。“这门难，”她说，又点了另一门，“这门也难。”
+# en: A crowd of new students around a long parchment list pinned in an entrance hall, one of them tracing a line with a finger.
+scene [ddd05b] = 门厅里一群新生围着一张长长的羊皮纸名单，其中一个用手指顺着一行往下划。
+# en: Read it twice
+opt.ok.label [7de276] = 看两遍
+# en: Two courses a term, a fee each time, and an exam at the end of each. Pass a level and you learn its spells.
+opt.ok.say.1 [fb0418] = 每学期两门课，每次都要交课程费，每学期末各有一场考试。通过一个级别，就能学会它的咒语。
+
+@event club_fair_flyer
+# en: Flyers Under the Door
+title [fb904d] = 门缝下的传单
+# en: One flyer slides under your door, then another, then nine. The Club Fair is next month in the courtyard: the Duelling Circle, the Lumen Ledger, the Verdant Circle. One club at a time, says the small print, and each wants a couple of evenings a term.
+text [f8867e] = 一张传单从门缝下塞进来，又一张，然后是九张。社团招新会下个月在庭院举行：决斗社、《流明纪事报》社、青翠社。小字写着：一次只能加入一个社团，每个社团每学期要占你几个晚上。
+# en: A dormitory floor scattered with colourful club flyers, more sliding under the door as a student watches.
+scene [f482c7] = 宿舍地板上散落着五颜六色的社团传单，还有更多正从门缝下塞进来，一个学生在一旁看着。
+# en: Keep the flyers
+opt.ok.label [e3ac1e] = 把传单留着
+# en: You pin them over your bed and argue with them until you fall asleep.
+opt.ok.say.1 [ce52b4] = 你把它们钉在床头，和它们争论到睡着。
+
+@event job_board_notice
+# en: Hands Wanted
+title [82086c] = 招人
+# en: Pinned to the refectory door: "Hands wanted. See the Job Board, entrance hall." Under it, in pencil: "The Newt pays best. The library is warmest." Under that, in a third hand: "Pell counts."
+text [eb646b] = 膳堂门上钉着：“招人。详见门厅招工告示板。”下面有人用铅笔写：“酒馆给钱最多。图书馆最暖和。”再下面是第三种笔迹：“佩尔要数数。”
+# en: A refectory door with a notice pinned to it, three different handwritings added beneath the printed part.
+scene [ee5aec] = 膳堂门上钉着一张告示，印刷字下面添了三种不同的笔迹。
+# en: Make a note of it
+opt.ok.label [70f916] = 记下来
+# en: One job at a time, a few shifts a term, paid by the shift. The board is up from morning until evening.
+opt.ok.say.1 [611dbe] = 一次只能做一份工，每学期几个班次，按班次付钱。告示板从早上一直开到傍晚。

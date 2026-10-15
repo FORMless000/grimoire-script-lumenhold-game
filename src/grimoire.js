@@ -186,6 +186,8 @@
       'spark_cooldown',
       // the hint card on the first visit to a job's place after the term's last shift (playtest 2, I1)
       'off_shift',
+      // the card pushed after a failed course, in that course's context (playtest 2, N4)
+      'appeal',
       // the map shown unless a plan names another (A1; `campus` when absent)
       'map_id'], effects: [] },
     // Numbers (design §8.4): size and difficulty tiers, option-value weights, the expected-skill curve.
@@ -228,7 +230,9 @@
     // Worldbook (design §3): data for briefs, lint and later phases. The engine doesn't play these yet.
     vocab: { props: ['values', 'desc'], effects: [] },
     place: { props: ['name', 'region', 'map', 'kind', 'track', 'open', 'season', 'closed_when', 'discover', 'hint', 'hinted_when', 'desc', 'art', 'draws'], effects: [] },
-    track: { props: ['kind', 'name', 'skill', 'levels', 'level_names', 'place', 'teaches', 'hidden', 'prereq', 'ranks', 'pay', 'due', 'lead', 'desc', 'legacy', 'opens'], effects: [] },
+    // `intro:` the card where you first meet the track's `lead:` (playtest 2, N1): queued on enrolling or joining, instead of
+    // meeting them silently.
+    track: { props: ['kind', 'name', 'skill', 'levels', 'level_names', 'place', 'teaches', 'hidden', 'prereq', 'ranks', 'pay', 'due', 'lead', 'desc', 'legacy', 'opens', 'intro'], effects: [] },
     spell: { props: ['name', 'discipline', 'cost', 'power', 'desc', 'art'], effects: [] },
     fact: { dotted: true, props: ['npc', 'tier', 'unlock', 'text'], effects: [] },
     archetype: { props: ['names', 'age', 'traits', 'pronouns', 'house', 'role', 'desc'], effects: [] },
@@ -350,6 +354,8 @@
     npcRel: new RegExp('^npc_rel\\s+(' + ID + ')\\s+(' + ID + ')\\s*([+-])\\s*(\\d+|tiny|small|medium|large|huge)$'),
     learn: new RegExp('^learn\\s+(' + ID + '\\.' + ID + ')$'),
     learnSpell: new RegExp('^learn_spell\\s+(' + ID + ')(?:\\s+([123]))?$'),
+    // `regrade track C` (N4): the course's latest grade becomes this one (an appeal won)
+    regrade: new RegExp('^regrade\\s+(' + ID + ')\\s+([ABCF])$'),
     challenge: new RegExp('^challenge\\s+(' + ID + ')(?:\\s+using\\s+(' + ID + '))?(?:\\s+vs\\s+(' + ID + ')\\.(' + ID + '))?\\s+(trivial|easy|medium|hard|heroic)(?:\\s+(wild|steady))?\\s*:$'),
     sitExam: /^sit_exam(?:\s+(wild|steady))?$/,
     wage: /^wage(?:\s+([a-z]+))?$/,
@@ -422,6 +428,7 @@
     }
     if ((m = content.match(RE.learn))) return { t: 'learn', fact: m[1], line };
     if ((m = content.match(RE.learnSpell))) return { t: 'learn_spell', spell: m[1], level: m[2] ? +m[2] : null, line };
+    if ((m = content.match(RE.regrade))) return { t: 'regrade', track: m[1], grade: m[2], line };
     if ((m = content.match(RE.bond))) return { t: 'bond', npc: m[1], status: m[2], line };
     if ((m = content.match(RE.meet))) return { t: 'meet', npc: m[1], line };
     if ((m = content.match(RE.end))) return { t: 'end', ending: m[1], line };

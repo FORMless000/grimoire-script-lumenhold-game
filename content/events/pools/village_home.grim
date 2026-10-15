@@ -41,11 +41,13 @@ text: {friend} has come down to the village with you "for one thing", which turn
 > left: Carry the parcels
   rel friend +small
   health -tiny
+  queue village_errand_parcel in 2 with friend chance 30
   say: {~You come back up the hill with an armful of string-tied parcels and sore wrists.|{friend} buys you a chestnut as payment. It is not enough payment.|One parcel clinks suspiciously. You decide not to ask.}
 > right: Talk {them} out of it
   charm +small
   rel friend -tiny
   mood -tiny
+  queue village_errand_third_thing in 1 with friend chance 30
   say: {~You talk {friend} out of the third thing. {They} sulk{s} the whole way back to the barge.|Your argument is excellent. {friend} buys the thing anyway, and now you've been wrong in public.|You win. {friend} says you'd make a terrible shopkeeper and a worse friend, then takes your arm anyway.}
 
 @event village_last_barge
@@ -631,3 +633,42 @@ text: {The town's post office is the size of a cupboard, and its clerk has never
 > right: Write the essay you owe
   lore +small
   say: {~You write the essay on the clerk's counter, between parcels. It's not bad.|You post an essay to a professor. The clerk asks if it'll get you into trouble. Probably.|You finish it and post it. It's the dullest thing the clerk has ever weighed.}
+
+# Follow-ups to the errand (playtest 2, N10), queued by its options with the same friend.
+
+@event village_errand_parcel
+title: The Parcel That Clinked
+trigger: queued
+actor: npc
+class: routine
+tone: warm
+art: pouch
+tags: social
+scene: A student unwrapping a string-tied parcel on a dormitory bed, a small glass jar of honey and a note inside.
+text: {npc} turns up at your door with one of the parcels you carried up the hill: the one that clinked. "This one was for you," {they} say{s}. "I needed someone to carry it without guessing." Inside is a jar of village honey and a note: For the porter.
+> left: Open the honey now and share it
+  rel npc +small
+  study -tiny
+  say: You eat half the jar with {npc} on the dormitory floor, with spoons borrowed from the kitchens, and talk until your reading is a lost cause.
+> right: Save it for exam month
+  health +small
+  say: You put it on the shelf, labelled. In exam month, a spoonful at midnight gets you through two chapters. {npc} asks, later, if you liked it. You did.
+
+@event village_errand_third_thing
+title: The Third Thing, After All
+trigger: queued
+actor: npc
+class: routine
+tone: light
+art: coin
+tags: social
+scene: A village stall with a single extravagant hat on a stand, two students looking at it, one with a purse already open.
+text: {npc} has gone back down to the village for the third thing, the one you talked {them} out of, and has come back with it. "You were right," {they} say{s}. "I bought it anyway. Now I need you to say it suits me."
+> left: Say it suits {them}
+  rel npc +small
+  alignment -tiny
+  say: "It suits you," you say. It doesn't, at all. {npc} wears it to breakfast every day for a week, beaming.
+> right: Tell {them} the truth, kindly
+  charm +small
+  rel npc -tiny
+  say: You say it's a brave choice. {npc} hears what you mean, laughs and gives it to the porter, who wears it all winter with great dignity.

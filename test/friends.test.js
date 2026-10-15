@@ -99,15 +99,40 @@ test('friends: `seeks: rarely` comes only once you have been coming to them', ()
   assert.ok(eng.pull('vey') > 0 && eng.pull('vey') < eng.pull('tobias') + 40 * 0.6, 'scaled down');
 });
 
-test('tracks: enrolling meets the course lead; the lead\'s regard is the advisor modifier (±15)', () => {
+test('tracks: enrolling queues the lead\'s intro (N1), or meets an already-met lead; the lead\'s regard is the advisor modifier (±15)', () => {
   const eng = atMap(2, []);
   eng.s.npcs.brask.met = false;
   quiet(() => eng.run([{ t: 'enrol', track: 'beastcraft' }], eng.newCtx(null, null)));
-  assert.ok(eng.s.npcs.brask.met);
+  assert.ok(!eng.s.npcs.brask.met, 'met on the intro card, not at enrolment');
+  const q = eng.s.queue.find((x) => x.id === 'brask_intro');
+  assert.ok(q && q.actor === 'brask' && q.track === 'beastcraft', 'the intro is queued with the lead, in the track\'s context');
+  quiet(() => eng.run([{ t: 'enrol', track: 'beastcraft' }], eng.newCtx(null, null)));
+  assert.equal(eng.s.queue.filter((x) => x.id === 'brask_intro').length, 1, 'queued once');
+  eng.s.npcs.brask.met = true;
   eng.s.npcs.brask.rel = 50; assert.equal(eng.advisorBonus('beastcraft'), 10);
   eng.s.npcs.brask.rel = 100; assert.equal(eng.advisorBonus('beastcraft'), 15);
   eng.s.npcs.brask.rel = -40; assert.equal(eng.advisorBonus('beastcraft'), -8);
   assert.equal(eng.advisorBonus('astromancy'), 0, 'no lead');
+});
+
+test('appeals (N4): a failed course pushes @game appeal in its context; regrade turns the F into a C and teaches the level', () => {
+  const eng = atMap(2, []);
+  quiet(() => eng.run([{ t: 'enrol', track: 'evocation' }], eng.newCtx(null, null)));
+  eng.s.spells = {};
+  eng.examOdds = () => ({ skills: ['arcana'], value: 0, bar: 99, pass: 0, top: 0, probs: [0, 0, 0, 100] });
+  const ctx = eng.newCtx(null, null);
+  quiet(() => eng.sitExam('evocation', null, ctx));
+  const t = eng.trackState('evocation');
+  assert.equal(t.status, 'failed');
+  assert.ok(!(eng.s.spells.flame > 0), 'an F teaches nothing');
+  const q = eng.s.queue.find((x) => x.id === content.game.appeal);
+  assert.ok(q && q.track === 'evocation', 'the appeal is queued in the course\'s context');
+  const ctx2 = eng.newCtx(null, null); ctx2.track = 'evocation';
+  quiet(() => eng.run([{ t: 'regrade', track: 'track', grade: 'C' }], ctx2));
+  assert.equal(t.grades[t.grades.length - 1], 'C');
+  assert.equal(t.status, 'done');
+  assert.ok(eng.s.spells.flame >= 1, 'a pass on appeal teaches the level\'s spells');
+  assert.ok(ctx2.notes.some((n) => n.kind === 'regrade' && n.from === 'F' && n.grade === 'C'));
 });
 
 test('casting: peer-only premises never cast faculty or villagers', () => {
