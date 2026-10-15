@@ -116,7 +116,7 @@ text: Bram has invented a "hall tax" for using the east staircase. Eight crowns.
   alignment +tiny
   rel bram -medium
   renown +small
-  chance 50:
+  chance even:
     gain watched
     say: The first-years stop paying too. Bram is furious. He'll find a way to make you pay later. He always does.
   else:
@@ -135,7 +135,7 @@ tags: rival study
 scene: An empty desk drawer, a few scattered pages on the floor, a red prefect's sash glimpsed disappearing around a corner.
 text: Two days before exams, your revision notes vanish from your desk. All of them. You saw a red sash in the corridor.
 > left: Rewrite them from memory
-  challenge research easy:
+  challenge research apprentice+:
     win:
       lore +small
       say: You rewrite everything in one furious night. Your new notes are better than the old ones. Take that, Bram.
@@ -144,7 +144,7 @@ text: Two days before exams, your revision notes vanish from your desk. All of t
       health -tiny
       say: You rewrite what you can. It isn't enough. Exams go worse than they should.
 > right: Search his room
-  challenge deceive easy:
+  challenge deceive vs bram.guile:
     win:
       rel bram -medium
       guile +tiny
@@ -213,7 +213,7 @@ text: Bram throws a glove at your feet in front of half the dormitory. "Formal c
   mood -tiny
   say: "Coward," he says, delighted. It sticks for a while. Then people forget. Mostly.
 > right: Accept
-  challenge combat medium:
+  challenge combat vs bram.vigor:
     win:
       renown +large
       rel bram +small
@@ -242,7 +242,7 @@ text: First Evocation lecture. Professor Thorne surveys the room like a hawk ove
   say: "Correct answer," he says. "The first law is: know what you don't know. The rest of you, write that down."
 > right: Take a guess
   meet thorne
-  challenge research easy:
+  challenge research apprentice wild:
     win:
       rel thorne +small
       study evocation +tiny
@@ -362,7 +362,7 @@ text: Forty chickens are loose on the main lawn, pursued by an old woman in a st
   say: You hear a crash, a squawk and a triumphant cackle behind you. The chickens, it seems, are caught.
 > right: Grab the speckled one
   meet maud
-  challenge feat medium:
+  challenge feat apprentice wild:
     win:
       rel maud +medium
       say: You tackle the ringleader. The rest give up. "Good hands," says Old Maud, pressing a warm egg into your palm. "Come for tea."
@@ -433,7 +433,7 @@ tags: nature
 scene: Wooden hives in a wildflower meadow, an old woman in a veiled hat lifting a frame dripping with silver honey, bees glinting in the sun.
 text: "The silver bees need moving to the summer meadow," Maud says, handing you a veiled hat. "They're friendly. Mostly. Don't make any sudden thoughts."
 > left: Help with the hives
-  challenge feat trivial:
+  challenge feat apprentice- wild:
     win:
       health +small
       rel maud +medium
@@ -533,7 +533,7 @@ tags: social
 scene: A round tower study at twilight, two delicate teacups on a small table, a headmistress pouring tea with a perfectly steady hand.
 text: An invitation to tea with the headmistress. Students talk about these the way soldiers talk about battles. She pours. "Tell me, {player}: what do you want to become?"
 > left: Give an ambitious answer
-  challenge negotiate trivial:
+  challenge negotiate apprentice+:
     win:
       rel isolde +medium
       renown +small
@@ -564,7 +564,7 @@ text: The headmistress falls into step beside you in the colonnade. "I hear your
   lose watched
   say: "Good." She stops walking. You keep going. When you look back, she's gone.
 > right: Defend yourself
-  challenge negotiate using renown trivial:
+  challenge negotiate journeyman +1 if renown >= 25:
     win:
       rel isolde +small
       lose watched

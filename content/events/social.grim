@@ -55,7 +55,7 @@ text: {npc} turns out an empty purse. "I'm fifteen crowns short {~for rent|for t
   gold -medium
   alignment +tiny
   rel npc +medium
-  chance 70:
+  chance likely:
     queue soc_loan_repaid in 2 with npc
     say: {npc} hugs you with the empty purse still in {their} hand.
   else:
@@ -171,7 +171,7 @@ text: It starts with something small — {~a borrowed book, a joke that landed w
   say: {~"I'm sorry." {npc} deflates. "...Me too." It's over. It feels better than winning would have.|You say sorry first. {npc} looks almost disappointed not to get to say it. You share a bun about it later.|"I'm sorry." {npc} blinks, then laughs. "We were both being absurd." You were.}
 > right: Stand your ground
   mood -tiny
-  chance 50:
+  chance even:
     rel npc -medium
     say: {npc} storms off. You were right. It doesn't feel as good as you'd hoped.
   else:
@@ -221,7 +221,7 @@ text: {npc} has Lake Fever and is miserable in the infirmary. Sister Amaranth sa
 > right: Sit with them every evening
   rel npc +medium
   alignment +tiny
-  chance 35:
+  chance unlikely:
     gain sick
     say: You keep {them} company for a week. Then you're in the next bed. You both find this hilarious.
   else:
@@ -269,7 +269,7 @@ text: You realise you haven't really talked to {npc} in weeks. You see {them} {~
   rel npc -small
   say: People drift. It's nobody's fault. You still smile when you pass in the halls.
 > right: Go over and say hello
-  chance 70:
+  chance likely:
     rel npc +medium
     mood +tiny
     say: {~"There you are!" {npc} says, as if you'd been the one missing. Maybe you had.|{npc} introduces you to everyone as "the one I told you about". You wonder what {they} told them. It seems to have been good.|{npc} shifts over to make room on the bench without a word, as if your seat had been waiting.}
@@ -296,7 +296,7 @@ text: A nasty rumour about {npc} is going round {~the common room|the refectory|
   say: It blows over. {npc} never finds out you heard it. You find out you don't like yourself for it, a little.
 > right: Shut it down
   alignment +tiny
-  challenge negotiate trivial:
+  challenge negotiate apprentice:
     win:
       rel npc +medium
       renown +small
@@ -321,7 +321,7 @@ tags: social study
 scene: A student with ink on their face clutching a half-finished essay, another student leaning over to read it.
 text: {npc} waves a half-finished {~essay|lab report|star chart} at you. "It's due in an hour and I've written the title twice. Help."
 > left: Explain the concept
-  challenge research easy:
+  challenge research apprentice:
     win:
       rel npc +medium
       lore +tiny
@@ -332,7 +332,7 @@ text: {npc} waves a half-finished {~essay|lab report|star chart} at you. "It's d
 > right: "Copy mine."
   alignment -tiny
   rel npc +small
-  chance 30:
+  chance unlikely:
     study -small
     rel npc -tiny
     say: The professor notices two identical pieces of work. You both get detention, a lecture, and a note on your record that every one of your professors reads.
@@ -385,7 +385,7 @@ text: You and {npc} reach for {&the same quill|the last biscuit on the plate|the
   rel npc +tiny
   say: "All yours," you say. {npc} laughs. The moment passes. Mostly.
 > right: Hold on a moment longer
-  chance 70:
+  chance likely:
     spark npc +medium
     rel npc +tiny
     say: {npc} looks up. Something in {their} face shifts. Then {they} let{s} go, a little pink, and {&the quill rolls under the desk|the biscuit breaks neatly in half|the book falls open on the floor between you}.
@@ -415,7 +415,7 @@ text: You could ask {npc} to {&the lantern show in the village|the travelling pl
   say: You pay for both tickets and the hot cider. It's a lovely evening. You're both very careful about elbows.
 > right: Ask as more than friends
   if spark(npc) >= 25:
-    challenge negotiate trivial:
+    challenge negotiate apprentice likely wild:
       win:
         spark npc +medium
         mood +medium
@@ -425,7 +425,7 @@ text: You could ask {npc} to {&the lantern show in the village|the travelling pl
         mood -small
         say: {npc} hesitates, then says {they}'d rather go as friends. It's a nice evening. It's a long evening.
   else:
-    challenge negotiate easy:
+    challenge negotiate apprentice wild:
       win:
         spark npc +medium
         mood +medium
@@ -453,7 +453,7 @@ text: On the bridge between the towers, the wind snatching at your robes, you re
   spark npc -small
   say: The moment passes. You walk back together, a careful inch apart.
 > right: Tell {them}
-  challenge negotiate trivial:
+  challenge negotiate apprentice likely +1 if spark(npc) >= 60:
     win:
       bond npc partner
       spark npc +medium
@@ -526,7 +526,7 @@ tags: romance crisis
 scene: Two people sitting on opposite ends of a bench in a grey garden, not looking at each other, rain beginning.
 text: {npc} sits down at the far end of the bench. "I think we both know," {they} say{s} quietly. "This isn't working anymore."
 > left: Fight for it
-  challenge negotiate trivial:
+  challenge negotiate journeyman:
     win:
       spark npc +large
       say: You talk for hours. It's raw and honest and it hurts. And at the end, {npc} takes your hand again.
@@ -556,7 +556,7 @@ tags: romance crisis
 scene: A person holding up two crumpled love letters in a crowded corridor, the crowd parting around them.
 text: {npc} is holding two letters. One is to {them}. The other isn't. "I found it in your bag," {they} say{s}, very quietly. Half the corridor has stopped to watch.
 > left: Beg forgiveness
-  challenge negotiate easy:
+  challenge negotiate journeyman- unlikely:
     win:
       spark npc -large
       rel npc -large
@@ -591,7 +591,7 @@ text: {~You turn into the library aisle and there's {npc}. Your ex. Holding the 
   say: You find a different book in a different aisle and read the same paragraph six times.
 > right: Say hello like a person
   rel npc +medium
-  challenge negotiate trivial:
+  challenge negotiate apprentice-:
     win:
       bond npc friend
       say: It's awkward for one minute, then it isn't. You end up laughing about the worst of the dates you went on. Friends, maybe. Really.
@@ -618,7 +618,7 @@ text: In the middle of a crowded {~meal|common room|library queue}, {npc} loudly
   mood -small
   say: The laughter dies down. {~You carry on with as much dignity as you can find.|You wait it out, and stare at a fixed point on the wall.|Someone nearby passes you a biscuit in silent solidarity.}
 > right: Fire back
-  challenge negotiate trivial:
+  challenge negotiate vs npc.charm:
     win:
       renown +small
       rel npc -small
@@ -671,7 +671,7 @@ text: "Eight crowns says I {~outscore you in the next practical|light more candl
   say: "Thought so." {npc} pockets the coins. You decide not to care. You care.
 > right: Take the bet
   when: gold >= 8
-  challenge spell easy:
+  challenge spell vs npc.arcana wild:
     win:
       gold +small
       renown +small

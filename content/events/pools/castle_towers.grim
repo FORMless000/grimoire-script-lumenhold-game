@@ -67,7 +67,7 @@ tags: life danger
 scene: A student sitting on a narrow ledge outside a brass dome, legs dangling over the castle roofs, the lake far below.
 text: {A window in the dome opens onto the roof, and onto a ledge that everyone swears they have never sat on.|Someone else who never sits there has oiled the latch.|The ledge. You know where the loose tile is now.} {season == "winter": The tiles are white with frost.|{~The lake below is a second sky.|A warm wind comes up from the village.|Someone's scarf is snagged on the gutter.}}
 > left: Climb out onto the ledge
-  challenge exam using vigor easy:
+  challenge feat apprentice:
     win:
       mood +small
       lore +tiny
@@ -139,7 +139,7 @@ cast:
 scene: An artificer in soot-streaked goggles holding out a strange brass contraption, a fire bucket waiting hopefully on the floor.
 text: {"Perfect timing! I need a volunteer and you have hands!" {maker} holds up {~a pair of boots that walk on their own|a hat that remembers where you left things|goggles that see round corners}.|{maker} has a new invention and a familiar look. Today: {~boots that walk on their own|a hat with a memory|goggles for corners}.|You don't ask anymore. You just look at what {maker} is holding, then at the fire bucket.}
 > left: Try it on
-  chance 60:
+  chance likely:
     alchemy +small
     rel maker +tiny
     mood +tiny
@@ -164,7 +164,7 @@ tags: magic danger
 scene: A small cauldron in a workshop corner stirring itself with a wooden spoon, a stern paper note pinned to its rim.
 text: {The self-stirring cauldron in the corner wears a note. DO NOT ADJUST. IT KNOWS WHAT IT DID.|Someone has underlined the cauldron's note twice and added the word STILL.|The cauldron's spoon pauses when you come in, as if it remembers you.} {~It's going anticlockwise, which it isn't supposed to.|It smells of toffee and lightning.|{season == "spring": Someone has put flowers in it. It is stirring them.|It's stirring soup for nobody.}}
 > left: Adjust the enchantment
-  challenge enchant easy:
+  challenge enchant apprentice+:
     win:
       alchemy +small
       mood +tiny
@@ -194,7 +194,7 @@ text: {At the back of the workshop is a glass cabinet that isn't Mir's, full of 
   say: {~Nothing moves while you watch. The moment you look away, something ticks.|You count the gears in a brass beetle and lose count. Somebody made this who could make things and make them burn.}
 > right: Try the cabinet lock
   alignment -tiny
-  challenge deceive easy:
+  challenge deceive journeyman-:
     win:
       guile +small
       mood +tiny
@@ -222,7 +222,7 @@ text: {By the Ledger's door sits a basket marked LETTERS WE WILL NOT PRINT. Visi
   say: {~The best one is an apology to a goat.|One is from a first-year who misses home. You put it back gently.|{final_year and flag(ledger_letter_sent): A letter in your own first-year hand. You don't remember sending it. You were right.|Three letters about the same broken window, all blaming different people.}}
 > right: Write one of your own
   flag ledger_letter_sent
-  chance 35:
+  chance unlikely:
     renown +small
     mood +tiny
     say: {~They print it. Two people quote it at you at breakfast; one of them disagrees with it loudly.|It runs on the back page, under your initials. You feel oddly famous for a day.}
@@ -266,7 +266,7 @@ tags: life
 scene: Freshly printed pages pegged on a line across a cramped office to dry, one page hanging slightly crooked.
 text: {Tomorrow's gossip column is pegged on a line to dry, and nobody is watching it.|The proofs hang on the line, and the peg on the gossip column is a new red one.|The drying line. You know which peg holds the gossip column.} {~One item names your house.|One item begins "Which second-year was seen..."|{final_year: One item is about the graduating year. Possibly you.|A whole paragraph is about a broken window.}}
 > left: Read ahead
-  challenge deceive easy:
+  challenge deceive apprentice+:
     win:
       guile +small
       mood +small
@@ -294,7 +294,7 @@ tags: magic
 scene: A stone owl on the newel post of a spiral stair, one eye open, a student standing very still before it.
 text: {The stone owl on the stair opens one eye. "A question first," it says, in a voice like a door closing.|The owl's other eye is half open tonight. It has been waiting all day for someone to ask.|The owl opens both eyes for you now, which may or may not be an honour.} {~Today's question is about the founders.|Today's question is a riddle with no right answer.|{season == "winter": There is snow on its head, and it is not amused.|A moth has landed on its beak. It is pretending not to notice.}}
 > left: Answer the question
-  challenge research easy:
+  challenge research journeyman wild:
     win:
       lore +small
       rel isolde +tiny
@@ -325,7 +325,7 @@ text: {The headmistress pours two cups unasked. "Sit. Tell me how your term is g
   mood -small
   say: {~She listens without interrupting, which is worse than any lecture and better than most comfort.|She hears all of it and says only, "Yes. I thought so." Somehow that helps, later.}
 > right: Give her the polished version
-  challenge deceive hard:
+  challenge deceive vs isolde.guile -2:
     win:
       charm +small
       mood +tiny
@@ -413,7 +413,7 @@ tags: mystery danger
 scene: A heavy book chained to a library shelf, lying open on its own under a dim candle, the chain hanging slack.
 text: {One book here is chained to its shelf, and tonight it has opened itself to a page.|The chained book lies open at a different page, and the chain is a link longer.|The chained book has been expecting you. That's the worst part.} {~The page is in a script you almost know.|The page shows a lock with no keyhole.|The page is blank until you look away.}
 > left: Read the open page
-  challenge research medium:
+  challenge research adept-:
     win:
       lore +small
       mana +small
@@ -490,7 +490,7 @@ text: {The third gargoyle has a dish worn into its paw, and in the dish are offe
   say: {~By morning the crowns are gone, and so is the biscuit. Nobody admits to either.|The crowns clink in. The gargoyle's expression doesn't change, but the wind drops.}
 > right: Borrow the biscuit
   alignment -tiny
-  chance 50:
+  chance even:
     mood +small
     health +tiny
     say: {~It's a very good biscuit. Somebody's mother made it. You feel a little bad, and then less.|Shortbread, still crisp. The gargoyle allows it, this once.}
@@ -514,7 +514,7 @@ scene: Two students playing cards by lantern-light on a high castle parapet, a p
 text: {On the parapet, by lantern-light, {here} is dealing cards for buttons, and crowns for anyone who dares.|{here} has a new deck, and the pot of buttons has grown.|{here} deals you in before you've sat down.} {~The wind keeps trying to take the jack.|A pigeon watches the game with too much interest.|{final_year: "One more for the road," {they} say{s}.|The lake below holds the lantern perfectly still.}}
 > left: Play a hand
   when: gold >= 8
-  challenge deceive easy:
+  challenge deceive apprentice+ wild:
     win:
       gold +tiny
       mood +small
@@ -585,7 +585,7 @@ tags: mystery danger
 scene: A small arched window high in a tower, its latch half open, the Mirror Lake lying still and silver far below.
 text: {The tower's one window looks down on the Mirror Lake, and the latch isn't locked. They say if you open it, you can hear the lake.|The latch moves more easily than last time, as if someone else has been practising.|The window. You've stood here often enough that your hand finds the latch before you decide anything.} {~The lake is so still it looks painted.|There's a light on the water that isn't the moon's.|{season == "winter": The lake is grey and hard.|Mist lies on the water.}}
 > left: Open it and listen
-  challenge research using arcana easy:
+  challenge research using arcana journeyman- wild:
     win:
       mana +small
       lore +tiny

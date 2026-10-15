@@ -17,14 +17,14 @@ scene: A grand spiral staircase in mid-rotation, a student clinging to the banis
 text: Halfway up the west staircase, it decides to be somewhere else. You're now heading toward a floor you've never seen, at speed, and you're late for class.
 > left: Hold on and see where it goes
   lore +tiny
-  chance 50:
+  chance even:
     gold +small
     say: It deposits you in a dusty forgotten classroom. In a desk: eight old crowns and a love letter from 1802.
   else:
     study -tiny
     say: It takes you to the roof. Then the cellar. Then the roof again. You miss your morning lectures entirely.
 > right: Jump for the landing
-  challenge feat trivial:
+  challenge feat novice+ wild:
     win:
       vigor +tiny
       say: You leap and land neatly. A passing portrait applauds.
@@ -42,7 +42,7 @@ tags: home
 scene: A huge cauldron of grey-green stew in the dining hall, a ladle standing upright in it unaided.
 text: Tonight's dinner is described on the board only as "Stew". It is grey-green. The ladle is standing up by itself. The cook is watching you with hope.
 > left: Eat it bravely
-  chance 60:
+  chance likely:
     health +small
     mood +small
     say: It's... delicious? Rich, peppery, faintly glowing. You go back for seconds. The cook beams.
@@ -63,14 +63,14 @@ when: term and not wrapup
 scene: A dormitory turned upside down, clothes everywhere, a student on hands and knees peering under a bed.
 text: Your wand is gone. It was on your desk. Now it isn't. Classes start in twenty minutes.
 > left: Tear the room apart
-  chance 70:
+  chance likely:
     say: It's in your boot. Why is it in your boot? You make it to class with seconds to spare.
   else:
     study -small
     mood -tiny
     say: You find it at lunch, inside the pillowcase. You've missed a whole morning.
 > right: Try a summoning charm
-  challenge spell trivial:
+  challenge spell novice+:
     win:
       arcana +tiny
       say: It flies into your hand from inside the wardrobe, offended at having been lost.
@@ -87,7 +87,7 @@ tags: home
 scene: A dark dormitory, one bed shaking with snores so loud the curtains flutter, another occupant glaring with a pillow over their head.
 text: Someone in your dormitory snores like a dragon with a head cold, and nobody will admit to it. You haven't slept properly in a week.
 > left: Brew a silencing draught
-  challenge brew trivial:
+  challenge brew apprentice-:
     win:
       health +small
       alchemy +tiny
@@ -111,7 +111,7 @@ tags: mystery
 scene: A long gallery of gilded portraits, painted figures leaning out of their frames toward each other, whispering behind painted hands.
 text: Two portraits in the east gallery are gossiping about a student. Then one of them says your name and they both go suspiciously quiet.
 > left: Bribe them with flattery
-  challenge negotiate trivial:
+  challenge negotiate novice+:
     win:
       guile +tiny
       lore +tiny
@@ -131,7 +131,7 @@ tags: danger
 scene: A dormitory full of tiny blue winged creatures swinging from curtains, stealing socks and pulling hair.
 text: Someone left a window open and the dormitory is now full of pixies. They're stealing socks, unscrewing bedposts and laughing in very high voices.
 > left: Fight them off
-  challenge combat trivial:
+  challenge combat apprentice- wild:
     win:
       vigor +tiny
       renown +small
@@ -192,7 +192,7 @@ text: It's midnight and you're starving. The kitchens are three floors down, pas
   health -tiny
   say: You dream of sandwiches. Long, detailed, beautiful sandwiches.
 > right: Sneak down
-  challenge deceive trivial:
+  challenge deceive apprentice:
     win:
       health +small
       mood +small
@@ -276,7 +276,7 @@ text: A third-year is selling copies of next week's exam papers. Eight crowns fo
 > right: Buy a copy
   alignment -small
   gold -small
-  chance 40:
+  chance unlikely:
     study +large
     guile +tiny
     say: They're real. You know every question before you sit down. You also can't quite look the examiner in the eye.
@@ -316,7 +316,7 @@ text: It's hot and the whole year has gone down to the jetty. Something large is
 > right: Dive in
   health +small
   mood +medium
-  chance 20:
+  chance slim:
     flag lake_knows
     say: In the deep part, you open your eyes underwater and see a round door, far below, glowing. Then you need air.
   else:
@@ -347,7 +347,7 @@ when: month >= 6 and month <= 8
 scene: A dark common room lit only by lightning, students huddled under blankets, one telling a ghost story.
 text: A storm knocks out every light-crystal in the dormitory. The common room fills with students, blankets and somebody's terrible ghost story.
 > left: Tell an even scarier story
-  challenge negotiate trivial:
+  challenge negotiate apprentice-:
     win:
       renown +small
       mood +small
@@ -356,7 +356,7 @@ text: A storm knocks out every light-crystal in the dormitory. The common room f
       mood +tiny
       say: Your story is not scary. It is, however, accidentally hilarious.
 > right: Light the room with a spell
-  challenge spell trivial:
+  challenge spell novice+:
     win:
       renown +small
       arcana +tiny
@@ -394,7 +394,7 @@ text: The dormitory across the corridor turned your door into a goat. The goat i
   study -tiny
   say: You take the high road. The goat eats your homework. You let it.
 > right: Retaliate
-  challenge deceive trivial:
+  challenge deceive apprentice:
     win:
       renown +small
       mood +small
@@ -479,7 +479,7 @@ text: A peddler's wagon has parked by the gates. "Lucky charms! Genuine article!
 > left: Buy a lucky charm
   hint: 30 gold
   gold -large
-  chance 50:
+  chance even:
     gain inspired
     mood +small
     say: It's a real one. Things go right all month. You start talking to it.
@@ -538,7 +538,7 @@ scene: A smoky corner of the common room, students around a low table with cards
 text: A late-night game of Wizard's Hand. The cards change faces when no one's looking. The pot is thirty crowns. The upper-years look hungry.
 > left: Play
   when: gold >= 15
-  challenge deceive easy:
+  challenge deceive apprentice+ wild:
     win:
       gold +large
       say: You read every bluff and keep a straight face. Thirty crowns and a reputation.
@@ -559,7 +559,7 @@ scene: A brass plaque on a noticeboard announcing THE LUMEN ESSAY PRIZE — 30 C
 text: The Lumen Essay Prize: thirty crowns for the best essay on "Magic and Duty". The deadline is Friday. You have an idea already.
 > left: Enter
   study -tiny
-  challenge research easy:
+  challenge research adept-:
     win:
       gold +large
       renown +medium
@@ -609,7 +609,7 @@ text: A hooded figure behind the tavern: "Deliver this envelope to the boathouse
   gold +large
   alignment -small
   flag grisk_contact
-  chance 40:
+  chance unlikely:
     gain watched
     say: You make the drop. Bram is watching from the boathouse window and writes something down. On the jetty, a note in a neat hand: "Good work. Midnight, any month. G."
   else:
@@ -672,7 +672,7 @@ text: You wake up on the battlements in your pyjamas, at the very edge, with no 
   say: A sleeping draught and a stern warning. It doesn't happen again.
 > right: Keep it to yourself
   mood -tiny
-  chance 40:
+  chance unlikely:
     flag lake_knows
     say: It happens twice more. Each time you're facing the lake. Each time, you're a little closer to the water.
   else:
@@ -709,7 +709,7 @@ text: The ninth step on the north stair is a trick step. Everyone knows. You for
   study -tiny
   say: Forty minutes later, a first-year pulls you out. You're late for everything.
 > right: Wrench yourself free
-  challenge feat trivial:
+  challenge feat apprentice-:
     win:
       vigor +tiny
       say: You pull free with a pop. Your shoe stays in the stair forever.
@@ -733,13 +733,13 @@ text: Half your dormitory has Lake Fever. Noses are glowing blue. You feel a tic
     health +small
     say: Maud's lemon-and-thunder tea keeps you upright through the whole outbreak.
   else:
-    chance 50:
+    chance even:
       gain sick
       say: The tea from the kitchens isn't the same. Your nose starts glowing on Thursday.
     else:
       say: You dodge it. Somehow.
 > right: Keep going as normal
-  chance 60:
+  chance likely:
     gain sick
     say: You keep going as normal for exactly two days.
   else:
@@ -760,7 +760,7 @@ text: The first snow of winter falls overnight and the whole academy wakes up gi
 > left: Join the snowball war
   mood +medium
   vigor +tiny
-  chance 30:
+  chance unlikely:
     health -tiny
     say: You take a snowball to the face from the headmistress herself. Her aim is terrifying.
   else:
@@ -781,7 +781,7 @@ when: month == 7 or month == 8
 scene: A dormitory with every window thrown open, brooms sweeping by themselves, dust swirling in sunbeams.
 text: Spring cleaning. The brooms are enchanted, but the enchantment needs supervising. Your dorm's brooms have formed a union.
 > left: Negotiate with the brooms
-  challenge negotiate trivial:
+  challenge negotiate novice+ wild:
     win:
       mood +small
       say: You agree to one day off a week and a polish. The dorm sparkles.
@@ -803,7 +803,7 @@ when: month == 10 or month == 11 or month == 12
 scene: Students lying flat on the cool stone floor of a shaded colloquy, fanning themselves with exam papers.
 text: The heat is unbearable. Even the gargoyles are sweating. The lake is crowded, the library stifling, the dormitories ovens.
 > left: Cast a cooling charm on your room
-  challenge spell trivial:
+  challenge spell apprentice-:
     win:
       mood +small
       renown +small
@@ -857,7 +857,7 @@ text: A delegation from Thornwick Academy is visiting. Their students are smug, 
   else:
     say: You show them the observatory. One of them admits, grudgingly, that it's better than theirs.
 > right: Defend Lumenhold's honour
-  challenge combat trivial:
+  challenge combat apprentice+:
     win:
       renown +medium
       say: You challenge their best to a friendly duel and win. The Thornwick students are quieter at dinner.
@@ -913,7 +913,7 @@ tags: mystery
 scene: A beaded doorway into a tiny dim tent, an old woman with a crystal ball and too many rings beckoning.
 text: In the village, an old fortune-teller beckons you into her tent. "Eight crowns for a good future, dearie. The bad ones I tell for free."
 > left: Decline politely
-  chance 50:
+  chance even:
     mood +tiny
     say: "Suit yourself," she calls after you. "You will meet a tall stranger." You already have. Several. It's an academy.
   else:

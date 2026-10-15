@@ -130,7 +130,7 @@ tags: social magic
 scene: Two students in an empty classroom, one demonstrating a wand movement, the other copying it with a tiny spark of light.
 text: {npc} has a spell {they} invented — a little thing, half-useful, half-ridiculous — and wants to teach it to someone. {&"It makes your tea exactly the right temperature," {they} say{s}. "Forever."|"It finds the page you were reading," {they} say{s}. "Any book, anywhere."|"It keeps your socks dry," {they} say{s}. "Lake, rain, puddles. Dry."}
 > left: Learn it properly
-  chance 75:
+  chance likely:
     arcana +small
     rel npc +small
     say: It takes an hour. {&Your tea is now perfect, always.|You will never lose your page again.|Your socks are dry. Your socks will always be dry.} You'll use this spell more than anything you learn in class.
@@ -159,7 +159,7 @@ text: Folded notes keep appearing in your library books. Unsigned. They're funny
   spark npc +small
   say: You write back. The notes get longer. One day the last line just says: "It's {npc}. You knew, didn't you?" You did.
 > right: Stake out the library
-  challenge deceive trivial:
+  challenge deceive apprentice:
     win:
       spark npc +medium
       rel npc +small

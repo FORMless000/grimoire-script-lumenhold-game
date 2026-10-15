@@ -65,7 +65,7 @@ text: You are asked to wheel the Restricted Section returns to the vault. The ca
 > right: Read a few lines
   wage
   lore +medium
-  chance 35:
+  chance unlikely:
     gain umbral_curse
     say: The words crawl off the page and up your sleeve. That night, you can't get warm.
   else:
@@ -88,7 +88,7 @@ text: A dwarf and a troll disagree about the price of turnips, and the Gilded Ne
   say: You crouch beside the owner and share a bag of crisps while the room destroys itself.
 > right: Break it up
   wage
-  challenge combat trivial:
+  challenge combat apprentice+ wild:
     win:
       gold +medium
       renown +small
@@ -263,7 +263,7 @@ text: The new hippogriff won't let anyone near the feed trough. The stablemaster
 > left: Leave the feed and run
   say: You toss the feed bucket and flee. The hippogriff eats it, and the bucket.
 > right: Bow and hold its gaze
-  challenge feat trivial:
+  challenge feat apprentice:
     win:
       vigor +small
       mood +small
@@ -307,7 +307,7 @@ text: At 3am your pillow catches fire. The egg has hatched: a firedrake the size
   renown +small
   say: Brask takes it gently. "You'll be able to visit." You do, every week. It always tries to set you on fire, affectionately.
 > right: Hide it as long as you can
-  challenge deceive trivial:
+  challenge deceive apprentice wild:
     win:
       mood +medium
       gold -medium
@@ -356,7 +356,7 @@ text: Your tutee has been trying to levitate a feather for three weeks. The feat
   mood -tiny
   say: Wrist, word, will. Wrist, word, will. On the exam, the feather twitches. It's enough to pass. Your own levitation has never been cleaner.
 > right: Try something unorthodox
-  challenge negotiate trivial:
+  challenge negotiate apprentice wild:
     win:
       mood +medium
       renown +small
@@ -381,7 +381,7 @@ text: A rich second-year doesn't want tutoring. He wants an essay. "Thirty crown
 > right: Write the essay
   alignment -small
   gold +large
-  chance 35:
+  chance unlikely:
     study -large
     gain detention
     say: His professor recognises your style. You both end up in detention. He doesn't speak to you. Fine.
@@ -426,7 +426,7 @@ text: An urgent parcel needs to cross the lake tonight. There's a storm. The dis
   gold -tiny
   say: The parcel arrives late. The client deducts it from your wages. Rude, but survivable.
 > right: Fly through it
-  challenge feat medium:
+  challenge feat adept- wild:
     win:
       wage overtime
       vigor +small
@@ -454,7 +454,7 @@ text: Your parcel is addressed to "K. Dumont, Stillwater House". It is ice cold 
 > right: Peek inside
   wage
   alignment -tiny
-  challenge deceive easy:
+  challenge deceive apprentice+:
     win:
       flag read_kael_parcel
       lore +small
@@ -480,7 +480,7 @@ text: Three figures on patched brooms drop out of a cloud and box you in. "Toll,
   say: They let you pass with a salute. The parrot salutes too.
 > right: Outfly them
   wage
-  challenge feat medium:
+  challenge feat journeyman+:
     win:
       renown +small
       gold +tiny

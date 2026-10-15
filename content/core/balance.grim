@@ -47,8 +47,9 @@ course_standard: apprentice+ journeyman+ adept+
 course_step: 3
 # Exam preparation (L-3): a course card adds `attend` by itself (options add or cost more); at most `cap` counts.
 study: attend 2 cap 15
-# A course exam's difficulty tier at course level I, II and III (L alarms).
-exam_tiers: easy medium hard
+# A course exam's difficulty at course level I, II and III: the course standard ± rungs, with low drift (checks.md).
+# Level III sits two rungs up, because only the stronger players reach it (skill-check survey, 2026-10-15).
+exam_tiers: standard standard standard+2
 # A known spell adds `per` to checks of its discipline's skill, at most `cap` (design §9.2; L-3).
 spell_check: per 2 cap 6
 # Learning a spell, or a level of one, gives skill XP in its discipline (L-6): one tier per spell level.
@@ -56,7 +57,7 @@ spell_bonus: medium large huge
 # Spark follows friendship (M37): a friendship gain adds spark × (spark / per), at most cap× (partner× for a partner);
 # spark crossing `cooldown` asks whether you want it (@game spark_cooldown).
 spark_follow: per 25 cap 2 partner 3 cooldown 30
-curve: 8 10 11 12 15 15 16 18 19 20 23 23 24 26 27 28 31 31 32 33 34 35 38 38 39 40 41 42 44 45 45 46 47 48 50 51 51 52 53 53 55 55 56 56 57 57 58 59
+curve: 8 9 11 13 15 16 16 18 20 21 24 24 25 27 28 29 31 32 33 34 35 36 39 39 40 41 42 43 46 47 47 48 49 50 53 54 54 55 55 56 58 58 59 59 60 61 62 63
 
 # ---------------- Presets (design §8.4): named groups of effects ----------------
 

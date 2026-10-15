@@ -48,7 +48,7 @@ text: Lyra watches you fail to light a candle for the third time. "You're asking
   learn lyra.prodigy
   say: She doesn't explain. She just does it, slowly, twice. On the third try your candle catches, and so, very briefly, does your sleeve.
 > right: Challenge her to teach you properly
-  challenge duel vs lyra.arcana medium:
+  challenge duel vs lyra.arcana:
     win:
       learn_spell flame
       rel lyra +medium
@@ -77,7 +77,7 @@ text: Cold drifts down the corridor like a tide coming in, and the torches lean 
   mood -small
   say: You make the stairs with frost in your hair. Behind you, the corridor sighs and is just a corridor again.
 > right: Stand and study it
-  challenge research hard:
+  challenge research adept- wild:
     win:
       lore +medium
       say: It isn't weather. It feels like being looked at, from somewhere far below. You write down everything before your hands warm up, and none of it makes sense yet.
@@ -186,7 +186,7 @@ scene: A crowded village market stall heaped with jars of glowing spices and a s
 text: The stall-holder in the village market wants thirty crowns for {~a jar of starpepper|a twist of dragon-chilli|a pot of cliff-bee honey}. Mabel swears by it for colds. The stall-holder swears by his prices.
 > left: Haggle
   when: gold >= 30
-  challenge negotiate easy:
+  challenge negotiate journeyman-:
     win:
       gold -small
       health +small
@@ -215,7 +215,7 @@ scene: A knot of students around a table where coins and a pocket watch are bein
 text: Half the common room is betting on whether you can climb the clock tower before the bell. Corvin is holding the purse, which is either reassuring or not.
 > left: Climb
   vigor +tiny
-  chance 50:
+  chance even:
     renown +large
     say: {~You make it with a heartbeat to spare.|The bell rings as your hand touches the top.} They carry you round the common room on a chair.
   else:
@@ -238,7 +238,7 @@ scene: A duelling ring at dawn, frost spreading from one side and a faint warmth
 text: Kael asks for a practice duel, which for him is an astonishing number of words. "Not to win," he adds. "I want to see what you do when it's cold."
 > left: Duel him straight
   memory: fought kael
-  challenge combat vs kael.arcana hard:
+  challenge combat vs kael.arcana +1:
     win:
       renown +small
       rel kael +medium

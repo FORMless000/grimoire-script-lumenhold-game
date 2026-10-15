@@ -15,7 +15,7 @@ tags: class danger
 scene: A row of nervous first-years standing beside brooms on the lawn, one broom already rising on its own, an instructor with a whistle.
 text: Compulsory first-year broom flight. The instructor blows her whistle. Your broom rises, hesitates, and then — clearly having taken a dislike to you — begins drifting toward the lake.
 > left: Hold on and steer it back
-  challenge feat medium:
+  challenge feat apprentice wild:
     win:
       vigor +small
       renown +small
@@ -39,7 +39,7 @@ tags: class magic
 scene: A glass jar containing a single writhing flame of deep blue, held in tongs by a stern professor, students leaning back from it.
 text: Thorne holds up a sealed jar containing one flame of genuine dragonfire, blue-white and furious. "Who would like to try holding it?" he asks. Nobody moves. He looks at you.
 > left: Hold it
-  challenge spell hard:
+  challenge spell standard+1:
     win:
       arcana +medium
       renown +small
@@ -63,7 +63,7 @@ tags: class nature
 scene: Students swimming across a lake at dawn, translucent water-spirits racing alongside them like silver dolphins.
 text: Professor Marisol's final challenge: swim the lake while the water spirits race you. "They cheat," she says cheerfully. "Ask them nicely not to."
 > left: Race them flat out
-  challenge feat medium:
+  challenge feat journeyman wild:
     win:
       vigor +medium
       renown +small
@@ -72,7 +72,7 @@ text: Professor Marisol's final challenge: swim the lake while the water spirits
       health -small
       say: The spirits tow you in circles. You arrive last, but very clean.
 > right: Ask them nicely
-  challenge negotiate easy:
+  challenge negotiate apprentice+:
     win:
       mood +medium
       arcana +tiny
@@ -92,7 +92,7 @@ tags: class magic
 scene: A maze of tall mirrors in a dark hall, each reflecting a different version of the same student, one reflection grinning.
 text: Professor Vey's exam: a maze of enchanted mirrors. Find the exit. Some reflections lie. One of them is — she promises — the real you.
 > left: Trust your own eyes
-  challenge deceive medium:
+  challenge deceive standard:
     win:
       guile +medium
       study illusion +small
@@ -101,7 +101,7 @@ text: Professor Vey's exam: a maze of enchanted mirrors. Find the exit. Some ref
       mood -small
       say: You follow the happiest reflection for an hour. It leads you in a circle and waves goodbye.
 > right: Shatter the illusion
-  challenge spell medium:
+  challenge spell standard:
     win:
       arcana +small
       study illusion +tiny
@@ -128,7 +128,7 @@ text: This week's assignment: brew a love potion — "for analytical purposes on
 > right: Sell it
   alignment -small
   gold +medium
-  chance 40:
+  chance unlikely:
     gain detention
     say: A prefect falls in love with the headmistress's portrait. It's traced back to you. Worth it, almost.
   else:
@@ -145,7 +145,7 @@ tags: class mystery
 scene: A dim divination classroom, a single student staring into a crystal ball, the examiner's quill hovering expectantly over a blank page.
 text: The mock Divination exam: gaze into the crystal and make one prophecy about the coming month. The examiner will check. "Vague prophecies," she warns, "fail."
 > left: Make a bold, specific prophecy
-  chance 50:
+  chance even:
     study astromancy +large
     renown +small
     say: "On the eighth, the kitchen cat will have kittens in the headmistress's hat." On the eighth, she does. Top marks in the mock.
@@ -168,7 +168,7 @@ tags: class magic
 scene: A knee-high clay golem carrying a teetering stack of books across a classroom, a student watching anxiously as it nears a staircase.
 text: Your term project: a knee-high clay golem that carries books. It works! It works so well that it has started carrying everyone's books, whether they want it to or not.
 > left: Add a "stop" command
-  challenge research trivial:
+  challenge research standard-2:
     win:
       study artifice +medium
       lore +small
@@ -177,7 +177,7 @@ text: Your term project: a knee-high clay golem that carries books. It works! It
       mood -tiny
       say: Now it stops randomly, mid-staircase, holding forty books. Nobody can get past it. It looks very pleased.
 > right: Let it roam free
-  chance 70:
+  chance likely:
     renown +small
     mood +small
     say: The golem becomes a beloved castle fixture, delivering books to whoever looks sad. It signs every delivery with your initials, in clay.
@@ -197,7 +197,7 @@ scene: A tiny sea-horse foal with a fish's tail struggling in a rock pool on the
 text: A hippocampus foal — half pony, half fish — has been stranded in a shrinking rock pool on the lakeshore. Professor Brask is on the other side of the grounds. The foal is panicking.
 > left: Carry it to the lake
   alignment +tiny
-  challenge feat trivial:
+  challenge feat apprentice:
     win:
       mood +medium
       vigor +tiny
@@ -239,7 +239,7 @@ tags: class danger
 scene: A practice ward full of students acting injured, groaning theatrically on cots, a single student healer in the middle with a clipboard.
 text: Sister Amaranth's triage drill: twelve "injured" students, one healer — you — and ten minutes. Some are faking worse than others. One, you realise, is genuinely hurt.
 > left: Treat the genuine injury first
-  challenge brew easy:
+  challenge brew standard-1:
     win:
       alchemy +medium
       study alchemy +small

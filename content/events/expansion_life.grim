@@ -56,10 +56,10 @@ text: {loop_n <= 1: It's Tuesday again. Eggs, the third step, the juice, the pre
   say: You know every answer and every coin-toss. Why not?
 > experiment: Do something you'd never dare
   hint: Nothing you do today will last. Almost nothing.
-  chance 34:
+  chance unlikely:
     queue timeloop_dare_confess now
   else:
-    chance 50:
+    chance even:
       queue timeloop_dare_fall now
     else:
       queue timeloop_dare_kindness now
@@ -93,7 +93,7 @@ text: In the astronomy tower, a first-year is asleep beside an enormous brass ch
 > left: Wrench the clock forward
   loop_tier = loop_n + 2 * (loop_clues >= 3)
   if loop_tier >= 7:
-    challenge spell easy:
+    challenge spell adept likely:
       win:
         flag timeloop_done
         arcana +small
@@ -108,7 +108,7 @@ text: In the astronomy tower, a first-year is asleep beside an enormous brass ch
           queue life_timeloop_2 now
         say: The chronometer bites, and the morning folds up like a letter. You wake to eggs, and the third step, and the juice. It's Tuesday. You know a little more about the clock.
   elif loop_tier >= 5:
-    challenge spell medium:
+    challenge spell adept:
       win:
         flag timeloop_done
         arcana +small
@@ -123,7 +123,7 @@ text: In the astronomy tower, a first-year is asleep beside an enormous brass ch
           queue life_timeloop_2 now
         say: The chronometer bites, and the morning folds up like a letter. You wake to eggs, and the third step, and the juice. It's Tuesday. You know a little more about the clock.
   elif loop_tier >= 3:
-    challenge spell hard:
+    challenge spell adept unlikely:
       win:
         flag timeloop_done
         arcana +small
@@ -138,7 +138,7 @@ text: In the astronomy tower, a first-year is asleep beside an enormous brass ch
           queue life_timeloop_2 now
         say: The chronometer bites, and the morning folds up like a letter. You wake to eggs, and the third step, and the juice. It's Tuesday. You know a little more about the clock.
   else:
-    challenge spell heroic:
+    challenge spell adept slim:
       win:
         flag timeloop_done
         arcana +small
@@ -179,7 +179,7 @@ tags: magic mystery
 scene: An empty gilded picture frame on a gallery wall, and further down the corridor a painted duchess hiding inside a landscape of a picnic.
 text: An empty frame in the long gallery. The Duchess of Ambry has escaped her portrait and is hiding in a landscape three corridors away, refusing to come back. "That frame," she declares, "is hideous."
 > left: Persuade her back
-  challenge negotiate trivial:
+  challenge negotiate apprentice+ wild:
     win:
       renown +small
       say: You promise to have her frame regilded. She returns, mollified. The caretaker regilds it. You've acquired a duchess who now considers you a personal friend.
@@ -201,7 +201,7 @@ tags: home
 scene: An enormous fluffy cat asleep on the exact book a student needs, on a high library shelf, one eye half-open.
 text: The library cat — a vast, ancient beast called Footnote — is asleep on the only copy of the book you need. You have an essay due tomorrow. Footnote has no deadlines.
 > left: Move the cat
-  challenge feat trivial:
+  challenge feat apprentice wild:
     win:
       study +small
       say: You lift Footnote like a sack of warm flour. He allows it, with contempt. You get the book. He gets your chair.
@@ -225,7 +225,7 @@ tags: magic study
 scene: A student at a desk covered in crossed-out incantations, a tiny spiral of light hovering over the page, an expression of dawning triumph.
 text: Late at night you realise there's a gap — a spell nobody has written yet, just a small one, to make ink dry instantly. You could try to invent it. Inventing spells, Thorne says, is "how most of my former students lost their eyebrows".
 > left: Invent it carefully
-  challenge research easy:
+  challenge research journeyman steady:
     win:
       lore +small
       learn_spell mend
@@ -234,7 +234,7 @@ text: Late at night you realise there's a gap — a spell nobody has written yet
       mood -tiny
       say: Your spell dries ink instantly. It also dries the paper, the desk and your eyes. You shelve it for now.
 > right: Just try things until something works
-  chance 40:
+  chance unlikely:
     arcana +medium
     renown +small
     say: Somehow — through chaos and luck — it works. You couldn't explain why under oath. It still counts.
@@ -253,7 +253,7 @@ tags: magic
 scene: A student holding a black umbrella under which a tiny private rainstorm is pouring, while the sky outside is perfectly clear.
 text: You borrowed an umbrella from lost property. It's black, elegant and cursed: underneath it, it is always raining. The rest of the world is sunny. You are very wet.
 > left: Break the curse
-  challenge spell trivial:
+  challenge spell apprentice:
     win:
       arcana +tiny
       gold +tiny
@@ -355,7 +355,7 @@ tags: danger social
 scene: A dark bell tower interior, ropes hanging down, a group of students at the bottom daring one of their number to climb.
 text: Tradition: once in your time at Lumenhold, you must ring the old bell at midnight without getting caught. Your dorm has decided tonight is your night.
 > left: Climb and ring it
-  challenge deceive trivial:
+  challenge deceive apprentice+:
     win:
       renown +medium
       mood +small
@@ -380,7 +380,7 @@ scene: The academy grounds swallowed by thick white fog, hedges looming like wal
 text: Fog has come up off the lake so thick you can't see your own feet. The path to the greenhouses has become a maze. Somewhere ahead, someone is calling for help, faintly.
 > left: Follow the voice
   alignment +tiny
-  challenge feat trivial:
+  challenge feat apprentice wild:
     win:
       renown +small
       mood +small
@@ -404,7 +404,7 @@ scene: An old stone well in the corner of a cloister, coins glinting at the bott
 text: In the old cloister there's a wishing well. The inscription says: "ONE COIN, ONE WISH, ONE PRICE." The bottom glitters with three hundred years of coins.
 > left: Throw in a coin and wish
   gold -tiny
-  chance 50:
+  chance even:
     mood +medium
     say: You wish for a good month. It is, mostly. Coincidence, probably.
   else:
@@ -413,7 +413,7 @@ text: In the old cloister there's a wishing well. The inscription says: "ONE COI
     say: You wish. The well hiccups and spits your coin back out. Apparently, you can't afford that wish.
 > right: Fish out a few old coins
   alignment -tiny
-  challenge deceive trivial:
+  challenge deceive journeyman wild:
     win:
       gold +medium
       say: Fifteen crowns' worth of antique coins. The well is silent. Disapprovingly silent.
@@ -432,7 +432,7 @@ tags: danger
 scene: A student clinging to a bucking broom high above the castle, its bristles on fire, a smaller student on the ground waving frantically.
 text: A second-year lends you their broom for an errand. Midway across the lake, you discover why they were so keen to lend it: it is extremely ticklish, and it hates you.
 > left: Wrestle it home
-  challenge feat trivial:
+  challenge feat apprentice+ wild:
     win:
       vigor +small
       say: You land in a heap on the lawn, triumphant and windswept. The broom sulks. The second-year owes you a favour.
@@ -440,7 +440,7 @@ text: A second-year lends you their broom for an errand. Midway across the lake,
       health -medium
       say: You land in the lake. The broom flies home without you, very pleased with itself.
 > right: Soothe it
-  challenge negotiate trivial:
+  challenge negotiate apprentice+ wild:
     win:
       charm +tiny
       mood +small
@@ -460,7 +460,7 @@ tags: magic danger
 scene: A student staring in horror across a crowded corridor at a perfect copy of themselves, cheerfully chatting up a professor.
 text: An illusion of you — one you thought you'd dismissed — is still wandering the castle. It has been to three of your classes, flirted with a prefect, and volunteered you for the choir.
 > left: Catch it
-  challenge deceive trivial:
+  challenge deceive apprentice+:
     win:
       guile +small
       say: You corner it in a broom cupboard. It looks at you, shrugs and pops like a bubble. The prefect, however, still expects a date.
@@ -485,7 +485,7 @@ scene: A crowded hall, a caretaker with a gavel at a lectern, tables piled with 
 text: Once a year the caretaker auctions off unclaimed lost property. There's a box nobody wants that hums faintly. The bidding starts at eight crowns. Nobody's bidding.
 > left: Bid on the humming box
   gold -small
-  chance 50:
+  chance even:
     gain inspired
     say: Inside: a music box that plays a different song every time you open it. Each one makes you think of something new.
   else:
@@ -506,7 +506,7 @@ tags: money social
 scene: A cobbled village square, a student singing beside a fountain with an upturned hat at their feet, villagers pausing to listen.
 text: You're short on crowns, and the village square has a fountain, an empty hat and a crowd of shoppers. You do know a few songs.
 > left: Sing your heart out
-  challenge negotiate using renown trivial:
+  challenge negotiate apprentice wild:
     win:
       gold +medium
       renown +small
@@ -516,7 +516,7 @@ text: You're short on crowns, and the village square has a fountain, an empty ha
       mood -tiny
       say: Three crowns and a sympathetic look from a dog. Busking is harder than it looks.
 > right: Play the street-magic act instead
-  challenge spell trivial:
+  challenge spell apprentice wild:
     win:
       gold +medium
       mood +small

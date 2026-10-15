@@ -44,7 +44,7 @@ text: At dawn, behind the observatory, you find Professor Thorne on his knees in
   rel thorne +medium
   say: You leave. The next day in class he calls on you for the hardest question — and then, very quietly, gives you full marks for a so-so answer.
 > right: Offer to help with the sick bush
-  challenge brew easy:
+  challenge brew apprentice+:
     win:
       rel thorne +large
       alchemy +small
@@ -89,7 +89,7 @@ tags: nature
 scene: A shaggy goat standing on a library table chewing a book, an apoplectic librarian below, an old woman in a straw hat hurrying through the stacks.
 text: Maud's goat, Bartholomew, has got into the library and is eating the Restricted Section. The librarian is apoplectic. Maud, hurrying in, grabs your arm. "He likes you. Get him out before he eats anything with teeth."
 > left: Lure him out with an apple
-  challenge negotiate trivial:
+  challenge negotiate apprentice- wild:
     win:
       rel maud +medium
       say: Bartholomew follows the apple, and you, out into the sunlight. He has eaten one-third of "Curses of the Northern Wastes". He seems fine. Mostly.
@@ -162,7 +162,7 @@ tags: study
 scene: A chessboard of carved crystal towers on a small table by a tower window, two players, one candle, the lake silver below.
 text: The headmistress keeps a board of crystal towers by her window. "Do you play?" she asks. It is clearly not a question. The pieces are already moving into position by themselves.
 > left: Play to win
-  challenge research hard wild:
+  challenge research vs isolde.lore wild:
     win:
       rel isolde +medium
       lore +small
@@ -190,7 +190,7 @@ tags: mystery
 scene: A portrait in a forgotten corridor of a laughing young woman in student robes with a wand behind her ear, frame dusty, eyes unmistakably the headmistress's.
 text: In a forgotten corridor you find a portrait of a laughing girl with a wand stuck behind her ear and ink on her nose. The plaque has been scratched off. The eyes are unmistakably the headmistress's. The portrait winks.
 > left: Ask the portrait about her
-  chance 60:
+  chance likely:
     guile +tiny
     lore +tiny
     say: "Detention record of the decade," whispers the portrait. "Set the observatory on fire twice. Best student this castle ever had." It winks again.

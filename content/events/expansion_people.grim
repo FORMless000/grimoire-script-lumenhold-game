@@ -41,7 +41,7 @@ tags: social rival
 scene: A tall woman in crimson and black walking through the courtyard like a queen inspecting troops, Lyra two steps behind her, very straight.
 text: Lady Vaneshade has come to inspect the academy, and her daughter. She stops in front of you. "You must be the one my daughter mentions," she says. "Constantly. I'd like to know why."
 > left: Answer with perfect manners
-  challenge negotiate trivial:
+  challenge negotiate journeyman +1 if has(origin_noble):
     win:
       rel lyra +large
       renown +small
@@ -92,7 +92,7 @@ tags: social nature
 scene: A scarecrow in a straw hat waving its arms at crows in a vegetable patch, a big farm boy and a student watching it proudly.
 text: Tobias has built a scarecrow for the greenhouse plots and wants to enchant it to scare crows. "Just a little life," he says. "Just enough to wave. Nothing creepy."
 > left: Help enchant it
-  challenge spell trivial:
+  challenge spell apprentice:
     win:
       rel tobias +medium
       say: The scarecrow waves. It also learns to wave hello, and to tip its hat to the headmistress. The crows are terrified. The first-years adore it.
@@ -171,7 +171,7 @@ text: Seraphine is sitting in an empty classroom, waiting for a lesson that's ha
   lore +tiny
   say: You tell her what you had for breakfast, what the weather's like, what Thorne said this morning. Slowly her eyes stop looking through you. "Oh," she says. "Hello. Today."
 > right: Ask her what tomorrow holds
-  chance 50:
+  chance even:
     study +small
     say: "There's a surprise quiz in every class," she says. "They planned it together. Question three is always a trick." It is, every time. You get them all right.
   else:
@@ -191,7 +191,7 @@ tags: social mystery
 scene: A small canvas on an easel showing a stranger's cottage by the sea, a girl with paint on her fingers watching someone look at it.
 text: Seraphine has painted a small cottage by the sea, with a crooked chimney and a blue door. "It's yours," she says. "In twelve years. I thought you should see it now. In case you want a different door."
 > left: Keep the painting
-  chance 70:
+  chance likely:
     mood +small
     rel seraphine +medium
     say: You hang it over your bed. Some nights you swear the smoke from the chimney moves. You decide, privately, that you like the blue door.
@@ -240,7 +240,7 @@ scene: A dark vault crammed with confiscated student contraband — fanged frisb
 text: "The confiscation vault," Corvin breathes. "Three hundred years of everything the faculty ever took off a student. My grandfather's lucky deck is in there. I just want it back. Lookout?"
 > left: Keep lookout
   alignment -tiny
-  challenge deceive hard:
+  challenge deceive adept-:
     win:
       rel corvin +large
       gold +small
@@ -251,7 +251,7 @@ text: "The confiscation vault," Corvin breathes. "Three hundred years of everyth
       say: The vault alarm is a very loud goblin. You both spend a week cataloguing contraband — which Corvin considers a victory.
 > right: Talk him out of it
   rel corvin -tiny
-  challenge negotiate hard:
+  challenge negotiate vs corvin.guile:
     win:
       rel corvin +medium
       say: You convince him to just ask Thorne. Thorne, astonishingly, gives it back. "Your grandfather cheated me with it in '41," he says. "Tell him I said hello."
@@ -272,7 +272,7 @@ scene: A rough-looking young man leaning on the academy gate, cap pulled low, Co
 text: There's a rough-looking man at the gates, and Corvin has gone very still. "My brother," he says. "He wants money. He always wants money. If I don't pay, he tells the headmistress where I learned to pick locks."
 > left: Help Corvin face him down
   alignment +small
-  challenge negotiate trivial:
+  challenge negotiate journeyman:
     win:
       rel corvin +large
       say: You stand beside Corvin while he says no — the first time, he tells you later, that he's ever said it. His brother leaves. Corvin sits down on the steps and laughs and shakes.
@@ -302,7 +302,7 @@ text: "Rule one: never cheat," says Corvin, shuffling so fast the cards blur. "R
   say: By midnight you can spot a marked card, a bottom deal and a mirror charm. You will never be fleeced at Wizard's Hand again.
 > right: Learn to play honestly — and well
   when: gold >= 3
-  chance 60:
+  chance likely:
     lore +tiny
     rel corvin +small
     gold +small
@@ -328,7 +328,7 @@ tags: social danger
 scene: A rickety winged contraption balanced on the edge of a tower roof, a goggled artificer strapping into it, a friend holding a rope.
 text: Mir has built a flying machine with canvas wings and seven propellers. It is balanced on the edge of the north tower. "Brooms are so last century," they say, strapping in. "I need someone on the rope. Probably. Possibly."
 > left: Hold the rope
-  challenge feat trivial:
+  challenge feat apprentice wild:
     win:
       rel mir +large
       renown +small
@@ -356,7 +356,7 @@ scene: A workshop full of smoke and orange light, notebooks scattered across a b
 text: The workshop is on fire. Properly this time. Mir is in the doorway, coughing — and trying to go back in. "My notebooks! Three years of notes!"
 > left: Grab the notebooks
   alignment +tiny
-  challenge feat trivial:
+  challenge feat apprentice+ wild:
     win:
       rel mir +large
       health -small
@@ -409,7 +409,7 @@ scene: A newspaper editor and a student waiting outside the headmistress's tower
 text: "Nobody has interviewed the headmistress in twenty years," Nessa says. "But she likes you. Probably. Get me in the door and I'll name my firstborn after you."
 > left: Ask the headmistress
   rel isolde -tiny
-  challenge negotiate using renown trivial:
+  challenge negotiate journeyman +1 if renown >= 25:
     win:
       rel nessa +large
       renown +medium
@@ -509,7 +509,7 @@ scene: A pale boy in a narrow bed, sweating, frost forming and melting on the pi
 text: Kael has a fever — and for someone made of frost, a fever is dangerous. The infirmary's warming charms are making it worse. Sister Amaranth looks frightened. "He needs cold," she says. "Real cold. I don't know where to get it."
 > left: Bring him snow from the mountain
   alignment +tiny
-  challenge feat trivial:
+  challenge feat journeyman+:
     win:
       rel kael +large
       health -medium
@@ -564,7 +564,7 @@ tags: social
 scene: A towering grey-haired man in an old head-boy's sash speaking down to a red-faced prefect in the entrance hall, students hurrying past pretending not to look.
 text: A tall man in an old head-boy's sash is speaking to Bram in the entrance hall, quietly and terribly. Bram has shrunk two sizes. "...never amount to anything," the man is saying.
 > left: Interrupt — say something good
-  challenge negotiate trivial:
+  challenge negotiate apprentice+:
     win:
       rel bram +large
       say: You tell his father {seen(bram_turns): about the night at the boathouse|what Bram is like when nobody's keeping score}. The man falls silent. Bram looks at you like you've handed him a sword.

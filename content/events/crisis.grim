@@ -76,7 +76,7 @@ text: Two terms of failing marks. You are summoned before the Disciplinary Board
   if flag(board_reprieve):
     end ending_expelled
   else:
-    challenge negotiate medium:
+    challenge negotiate journeyman likely:
       win:
         flag board_reprieve
         study +huge
@@ -139,7 +139,7 @@ text: Two trolls in waistcoats are waiting outside your dormitory. "Mister Grisk
     renown -small
     say: They take every coin and your good boots, in front of half the corridor. "Partial," they say, and leave.
 > right: Run
-  challenge feat trivial:
+  challenge feat apprentice+ wild:
     win:
       debt_missed = 1
       mood -tiny

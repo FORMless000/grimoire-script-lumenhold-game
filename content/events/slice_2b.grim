@@ -24,7 +24,7 @@ text: Evocation I begins with a single instruction from the lectern: "Make heat.
   arcana +small
   say: Your palm warms like a stone left in the sun. The lecturer nods, which is better than most get.
 > right: Aim for fire, boldly
-  challenge exam using arcana easy:
+  challenge exam standard-1 wild:
     win:
       arcana +medium
       renown +tiny
@@ -84,7 +84,7 @@ tags: class magic
 scene: A student holding back a wall of lake water on the shore while classmates watch from behind them.
 text: Evocation II takes the class to the lakeshore. The exercise: raise a wall of water and hold it while a classmate walks past behind it. Your classmate looks nervous. So do you.
 > left: Hold it steady
-  challenge exam using arcana medium:
+  challenge exam standard steady:
     win:
       arcana +medium
       say: The wall holds. Your classmate walks past dry and amazed. You let it down gently, which is the hard part.
@@ -113,7 +113,7 @@ text: Fire woven into a lattice, each strand holding the others up. The lecturer
   mood -small
   say: Your lattice is small and ugly and holds perfectly. The lecturer says "Founder-ish," which you choose to take as praise.
 > right: Build it big
-  chance 50:
+  chance even:
     arcana +large
     say: {~It's magnificent for nine seconds.|It holds just long enough for everyone to see it.} Then the strands find each other and the whole thing sighs into sparks, and you understand exactly why.
   else:
@@ -134,7 +134,7 @@ cast:
 scene: Two students on a windswept tower top, one calling rain, the other calling lightning, the sky between them churning.
 text: Advanced Evocation pairs students for a storm: one calls the rain, the other the lightning, and neither is allowed to let go first. You're paired with {partner}.
 > left: Call the lightning
-  challenge exam using arcana hard:
+  challenge exam standard+1 wild:
     win:
       arcana +large
       rel partner +small
@@ -161,7 +161,7 @@ tags: class exam
 scene: An examination hall cleared of desks, a single student facing three examiners and a target dummy made of ice.
 text: The last practical of Advanced Evocation: melt an ice dummy without touching the floor around it. Professor Thorne is on the panel, and he is not blinking.
 > left: Fire, precisely
-  challenge exam using arcana hard:
+  challenge exam standard+1 steady:
     win:
       arcana +large
       study evocation +medium
@@ -194,7 +194,7 @@ text: Lyra runs practice like a general. "Footwork," she says. "If your feet are
   mood -tiny
   say: Two hours of stepping in circles. Gerald the Second wins every round. Your feet, however, are now correct.
 > right: Spar for real
-  challenge combat vs lyra.vigor easy:
+  challenge combat vs lyra.vigor -1:
     win:
       vigor +medium
       rel lyra +small
@@ -234,7 +234,7 @@ tags: club duel festival
 scene: A duelling green with rival banners, students from both academies packed onto benches.
 text: Thornwick Academy's duelling team has crossed the hills for a fixture. The Circle needs one more duellist in the line-up, and the captain is looking at you.
 > left: Duel for the Circle
-  challenge combat hard:
+  challenge combat adept-:
     win:
       renown +medium
       perform track +medium
@@ -388,7 +388,7 @@ cast:
 scene: Two students skimming stones across a perfectly still lake at dusk.
 text: {friend} is skimming stones on the Mirror Lake. The water is so still each stone leaves rings that go on forever. "Seven," {they} say{s}. "Beat that."
 > left: Try to beat it
-  challenge duel easy:
+  challenge duel apprentice wild:
     win:
       rel friend +small
       mood +small
@@ -677,7 +677,7 @@ scene: A student lost between endless shelves underground, following an index ca
 text: A cross-reference in the archive leads to another, and another, and another, deeper under the city. The last card is about the founders of Lumenhold.
 > left: Follow it to the end
   wage
-  challenge research hard:
+  challenge research adept:
     win:
       lore +large
       say: At the end is a letter from a founder about "the seventh lock". You copy it with shaking hands.
@@ -802,7 +802,7 @@ tags: mystery danger
 scene: A student in a borrowed diving helmet standing at the end of a jetty over black water.
 text: The bell has rung every night for a week. The boathouse has an old diving helmet and a rope. The lake is very dark and very still.
 > left: Dive
-  challenge research hard:
+  challenge research adept- wild:
     win:
       find bell_name
       lore +medium

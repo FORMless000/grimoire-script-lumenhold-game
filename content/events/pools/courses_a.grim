@@ -20,7 +20,7 @@ text: {Evocation I opens with a lesson nobody expected. "Anyone can start a fire
   health -tiny
   say: {~The flames shrink into embers, then into a warm ache in your palm.|It takes the whole hour. Your brazier goes out like a sigh.} {season == "winter": The hall is colder afterwards, and it's your fault.|The lecturer nods once.}
 > right: Snuff it in one breath
-  challenge exam using arcana easy:
+  challenge exam standard-1:
     win:
       arcana +small
       study evocation +tiny
@@ -88,7 +88,7 @@ text: Evocation II is shaping: flame made into a sphere, a key, a bird. The lect
   mood -small
   say: {~Sphere after sphere, until your hands do it without asking you.|It's dull, honest work. Your spheres come out round, every one.} {season == "summer": The hall is an oven by noon.|The lecturer says nothing, which is approval.}
 > right: Try the hard shape
-  challenge exam using arcana medium:
+  challenge exam standard+1:
     win:
       arcana +small
       study evocation +small
@@ -116,7 +116,7 @@ tags: class study
 scene: Pairs of students on either side of copper kettles, one with a palm of flame and one with a palm of water, steam curling between them.
 text: {This is why Pyromancy and Tidecalling are taught together. One of you heats the kettle, one cools it, and it must simmer and never boil.|The kettles come out of the cupboard, every dent a story.|You know every kettle by its dents now. Two dents are yours.} {~Your partner is a nervous second-year from Stillwater.|Your partner is very confident, which is worrying.|Your partner yawns hugely.}
 > left: Take the fire side
-  challenge exam using arcana medium:
+  challenge exam standard:
     win:
       arcana +small
       study evocation +small
@@ -144,7 +144,7 @@ tags: class danger
 scene: Advanced students on a jetty with their arms raised, a column of dark, old lake water rising toward them out of the depths.
 text: {Advanced Evocation calls water from the lake bed, where it is cold and old and in no hurry.|The jetty is slick at this hour.|The jetty boards know your boots by now.} The lecturer paces behind the line. The water comes up carrying things. {~Today, a bottle with no message in it.|Today, a single boot, laced.|Today, nothing at all, which is somehow worse.} {season == "winter": Ice grinds at the edges of the column.|Mist sits on the water.}
 > left: Reach deeper than the rest
-  challenge exam using arcana hard:
+  challenge exam standard+1 wild:
     win:
       arcana +medium
       say: {~You call water up from somewhere it has been still for a century. It rises like a held breath and comes down gently.|The water obeys, then lingers, as if it wanted to talk.} The lecturer stops pacing.
@@ -170,7 +170,7 @@ tags: class magic
 scene: A student alone at a stone bench in a dim hall, coaxing a flame of an unusual colour above their palm.
 text: Advanced Evocation asks every student for a signature flame: its own colour, its own heat, its own temper. {Yours is a sulky orange.|Yours has turned a gold that you're quietly proud of.|Yours knows you now. It leans toward you when you come in.} {~Somebody's flame across the hall is green and smells of pine.|Somebody's flame is silver and hums.|The lecturer's own flame is lit on the lectern, blue and tiny, never discussed.}
 > left: Push it somewhere new
-  challenge exam using arcana hard:
+  challenge exam standard+1 wild:
     win:
       arcana +medium
       say: {~Your flame slides into a colour nobody has a name for. The lecturer asks you to do it again, slowly.|For a moment your flame burns without smoke and without heat, just light.}
@@ -222,7 +222,7 @@ text: {Astromancy I begins with names. Three hundred stars painted on the dome, 
   mood -small
   say: {~You chant star names under your breath all morning, like a prayer you don't quite believe in.|By noon you can name the whole southern sky backwards.} {month == 4 or month == 10: The exam is close, and the names are finally sticking.|Your neck aches from looking up.}
 > right: Volunteer to go first
-  challenge exam easy:
+  challenge exam standard-1:
     win:
       lore +small
       renown +tiny
@@ -267,7 +267,7 @@ tags: class magic
 scene: A lecturer letting a stick of chalk fall from an outstretched hand while a student lunges to catch it a moment before it drops.
 text: {Foresight at Astromancy II is practised on chalk. The lecturer drops a stick without warning; you catch it before it falls, by seeing it a heartbeat early.|The lecturer has opened a new box of chalk, which is a threat.|The lecturer's drops have got sneakier, and so have your hands.} {~The floor is white with failures.|A student from Stillwater has caught four in a row and is unbearable about it.|The lecturer is dropping two at once today.}
 > left: Catch it before it falls
-  challenge exam medium:
+  challenge exam standard wild:
     win:
       lore +small
       study astromancy +small
@@ -297,7 +297,7 @@ tags: class magic
 scene: Students on the observatory roof before dawn, holding glass jars up to the sky, each jar glowing faintly with captured light.
 text: {Starlight is gathered before dawn, one star at a time, in glass jars on the observatory roof.|The roof is slippery with frost or dew, depending.|The starlight jars. Yours has a chip in the rim you've grown fond of.} {~Most of the class is aiming for the brightest stars.|The lecturer says faint light keeps longer.|There's a slip of cloud coming in from the lake.}
 > left: Wait for the faint stars
-  challenge research medium:
+  challenge research standard:
     win:
       lore +small
       study astromancy +small
@@ -323,7 +323,7 @@ tags: class study
 scene: A long table covered in star charts whose inked constellations are visibly sliding across the parchment, students pinning corners down.
 text: {Advanced Astromancy uses charts that move. The inked stars drift to where they will be, not where they are.|The charts are livelier this morning, and one has crept off the table.|You've stopped flinching when the stars move. You still check twice.} {~Your chart keeps rearranging itself into a shape like a doorway.|Your chart is sulking in one corner.|Your chart is going faster than the others.} Pin it and read it, or read it as it goes.
 > left: Pin it and trace the drift
-  challenge research hard:
+  challenge research standard+1:
     win:
       lore +medium
       say: {~You pin each star and trace its path, and for a moment you can see the whole season ahead laid out in ink.|The drift makes sense all at once.}
@@ -349,7 +349,7 @@ tags: class magic
 scene: A student staring into a dark mirror at the centre of a curtained room, a lecturer standing close with an hourglass.
 text: {At this level Foresight reaches a season ahead. The lecturer allows one glimpse each, timed by an hourglass. People who look longer come back strange.|The dark mirror waits behind its curtain.|The hourglass is turned before you sit down. The lecturer knows your pace.} {final_year: This is your last year of looking ahead from this room, which makes the mirror harder to look at.|{~The curtains are drawn against the morning.|Someone before you came out very quiet.}}
 > left: Look a season ahead
-  challenge exam hard:
+  challenge exam standard+1 wild:
     win:
       lore +small
       study astromancy +small
@@ -382,7 +382,7 @@ text: {Alchemy I is mostly stirring, and the stirring is counted aloud by the wh
   health -tiny
   say: {~By the hundredth stir your voice is gone and your tonic is perfect.|Your count is right and your draught is dull. Both are what was asked.} {month == 4 or month == 10: The exam recipes come back to you in rhythm.|Your wrist aches.}
 > right: Stir by the colour instead
-  challenge brew easy:
+  challenge brew standard-1:
     win:
       alchemy +small
       say: {~You stop counting and watch the colour. It turns blue exactly when you expect it to.|You lose the count and keep the draught. The lecturer can tell, and allows it.}
@@ -430,7 +430,7 @@ text: {The healing half of Alchemy I is taught in the infirmary, where Sister Am
   study alchemy +small
   say: {~You roll, and watch Sister Amaranth clean a cut in about three movements.|Your bandages pass inspection.} {season == "winter": The ward fills with sniffling students all morning.|She says nothing, which is high praise.}
 > right: Offer to treat a patient
-  challenge exam using alchemy easy:
+  challenge exam standard:
     win:
       alchemy +small
       say: {&You treat the burn properly. Sister Amaranth says, "Hm." From her, that is a speech.|You clean and bind the scraped knee neatly. The patient doesn't even wince. Sister Amaranth adjusts one knot.|You strap the wrist firmly and neatly. The patient flexes it and looks impressed.}
@@ -452,7 +452,7 @@ tags: class magic
 scene: A bench lined with jars of murky lake water, a lecturer at the end raising one now-clear jar to drink it.
 text: {Alchemy II hands out jars of murky lake water, to be made fit to drink. The lecturer has a habit of drinking the results.|The lecturer looks thirsty, which is never a good sign.|The lecturer has brought a favourite cup for this, chipped at the rim.} {~Your jar has a small weed in it.|Your jar is suspiciously green.|Your jar has a tiny snail in it, which you set free.}
 > left: Purify it thoroughly
-  challenge brew medium:
+  challenge brew standard:
     win:
       alchemy +small
       study alchemy +small
@@ -484,7 +484,7 @@ text: {Some potions simmer for hours and must be watched. Whoever is on watch wh
   mood -small
   say: {~Three hours, one cauldron, one hourglass. You see it turn and catch it at the right moment.|You read the same paragraph forty times and stir at every bubble.} {season == "summer": The laboratory is stifling.|By the end, you can tell its mood from the bubbles.}
 > right: Set a charm to watch it
-  challenge enchant medium:
+  challenge enchant standard:
     win:
       study alchemy +small
       mood +tiny
@@ -507,7 +507,7 @@ tags: class danger
 scene: A hushed laboratory, a student holding a glass vial of glowing liquid at arm's length, everyone else very still behind a screen.
 text: {Advanced Alchemy handles reagents that react to being looked at the wrong way. The lecturer has one rule. One person speaks at a time, and that person is the one holding the vial.|Nobody is speaking. Somebody is breathing too loudly.|You've stopped holding your breath, mostly.} {~Today's vial is pale yellow and fizzing.|Today's vial is dark red and perfectly still, which is worse.|Today's vial is labelled in the lecturer's hand: "Gently."}
 > left: Handle it yourself
-  challenge brew hard:
+  challenge brew standard+1 steady:
     win:
       alchemy +medium
       say: {~You measure it drop by drop, speaking only the numbers. It settles exactly as it should.|Your hands don't shake.} The lecturer lets out a breath.
@@ -534,7 +534,7 @@ tags: class study
 scene: A student at a cluttered bench writing a recipe in a notebook, a small flask of their own remedy steaming beside it.
 text: {Advanced Alchemy asks for an original remedy, invented, written up, and tested under Sister Amaranth's eye.|Another revision. The notebook has more crossings-out than words.|Your remedy is nearly finished. It has been nearly finished for weeks.} {~This version is for headaches.|This version is for the common cold, which has resisted remedies for centuries.|This version is for exam nerves, which you need.}
 > left: Test it on yourself
-  challenge brew hard:
+  challenge brew standard+1 wild:
     win:
       alchemy +medium
       say: {~It works. Your headache lifts and your mood with it.|It works better than you expected.} {flag(remedy_in_book): Sister Amaranth adds a note to your page in her book.|Sister Amaranth writes your recipe in her own book.}

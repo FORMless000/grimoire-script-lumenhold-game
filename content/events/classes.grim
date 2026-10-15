@@ -17,7 +17,7 @@ tags: class magic
 scene: A dark classroom, a single candle on a stool at the far end, Professor Thorne's silhouette with folded arms.
 text: Professor Thorne places a candle at the far end of the hall. "Light it. From there." The class holds its breath. Last week a boy lit his own sleeve.
 > left: A careful spark
-  challenge spell easy:
+  challenge spell standard steady:
     win:
       arcana +tiny
       rel thorne +small
@@ -26,7 +26,7 @@ text: Professor Thorne places a candle at the far end of the hall. "Light it. Fr
       mood -tiny
       say: Nothing. Then a wisp of smoke from your fingertips. A few people giggle.
 > right: Show them real fire
-  challenge spell hard:
+  challenge spell standard+2:
     win:
       arcana +small
       renown +small
@@ -75,7 +75,7 @@ text: "Professor, I'd like a demonstration partner." Lyra Vaneshade points her w
   mood -tiny
   say: "As expected," Lyra says, and turns away. It stings worse than a burn would.
 > right: Step into the ring
-  challenge combat easy:
+  challenge combat vs lyra.arcana:
     win:
       rel lyra +medium
       renown +small
@@ -100,7 +100,7 @@ tags: class magic nature
 scene: Students standing waist-deep in a silver lake at dawn, ripples spiralling out from their outstretched hands.
 text: Waist-deep in the freezing lake at dawn, Professor Marisol tells you to ask the water to rise. "Ask," she says. "Never demand. The lake remembers rudeness."
 > left: Command it anyway
-  challenge spell easy:
+  challenge spell apprentice+ unlikely:
     win:
       arcana +small
       say: The water rises in a shivering column. Marisol raises an eyebrow. "Effective. Rude."
@@ -111,7 +111,7 @@ text: Waist-deep in the freezing lake at dawn, Professor Marisol tells you to as
   lore +small
   mood +small
   say: You stand still until the cold stops hurting. The lake murmurs — and for a moment you could swear it said your name.
-  chance 30:
+  chance unlikely:
     flag lake_knows
 
 @event tide_storm_drill
@@ -130,7 +130,7 @@ text: A storm rolls over the lake and Marisol is delighted. "Perfect conditions!
 > right: Stay out in it
   vigor +small
   arcana +tiny
-  chance 35:
+  chance unlikely -1 if health >= 60:
     gain sick
     say: You hold the rain back for almost a minute. You also catch Lake Fever.
   else:
@@ -153,7 +153,7 @@ text: Ever since the lake held its breath in Mistveil, you listen for it. During
   flag heard_bell
   find lead_lake_breathed
 > right: Dive down to find it
-  challenge feat medium:
+  challenge feat adept- wild:
     win:
       lore +small
       flag bell_fragment
@@ -200,7 +200,7 @@ text: Your classmates dare you: wear a glamour of Professor Thorne and cancel to
   say: Wise. Someone else tries it the next day and spends a week scrubbing gargoyles.
 > right: Do it
   alignment -tiny
-  challenge deceive easy:
+  challenge deceive using charm journeyman+ wild:
     win:
       renown +medium
       mood +small
@@ -226,7 +226,7 @@ text: For your term project you must create an illusion that fools a crowd. You 
   study illusion +medium
   say: A single butterfly that nobody can tell is fake. Vey taps it with her wand and it bursts into light. "Perfect."
 > right: Dragon. Obviously.
-  challenge spell trivial:
+  challenge spell using charm standard+1 wild:
     win:
       renown +medium
       study illusion +small
@@ -254,7 +254,7 @@ text: The recipe is on the board: Draught of Mild Courage. Seven ingredients, th
   study alchemy +tiny
   say: A clear, honey-coloured brew. The professor sniffs it and nods. Safe, solid, unremarkable.
 > right: Improvise a little
-  challenge brew easy:
+  challenge brew standard wild:
     win:
       alchemy +medium
       gold +small
@@ -276,7 +276,7 @@ text: The cauldron next to yours starts to shudder. Its owner, a terrified first
 > left: Dive for cover
   say: The explosion paints the ceiling violet. Nobody is hurt. Everybody is purple.
 > right: Try to neutralise it
-  challenge brew easy:
+  challenge brew standard+1:
     win:
       renown +small
       alchemy +small
@@ -304,7 +304,7 @@ text: Corvin turns your leftover potions over in his hands. "These would sell fo
   alignment -tiny
   gold +large
   rel corvin +small
-  chance 30:
+  chance unlikely:
     gain detention
     study alchemy -small
     say: It goes well until a vial turns up in a professor's tea. You and Corvin share a detention and an alibi.
@@ -325,7 +325,7 @@ scene: A delicate teacup tipped on its saucer, the dregs forming a shape like a 
 text: You read your partner's tea leaves. The shape at the bottom of the cup is unmistakably a skull. Your partner is looking at you hopefully.
 > left: Tell the truth
   lore +small
-  chance 50:
+  chance even:
     say: "A skull?" They laugh. "Professor says a skull means change." They're relieved. You aren't sure you should be.
   else:
     mood -tiny
@@ -346,7 +346,7 @@ tags: class mystery
 scene: An ornate standing mirror whose reflection shows the room on a different day — the light at a different angle, a different person sitting in your chair.
 text: The Mirror of Next Tuesday shows exactly what it promises. Students take turns looking. Some come away smiling. One comes away and goes straight to the infirmary.
 > left: Take a look
-  chance 50:
+  chance even:
     study astromancy +medium
     alignment -tiny
     say: Next Tuesday you are sitting an Astromancy quiz. You memorise the questions. Is that cheating? It's at least ambiguous.
@@ -399,7 +399,7 @@ text: Your project: a brass beetle that walks. The gears are in. The spring is w
   say: It walks in a perfect straight line until it hits a wall. Full marks.
 > right: Give it personality
   mood +small
-  chance 40:
+  chance unlikely:
     renown +small
     say: It escapes during the presentation and lives in the walls for a month, occasionally stealing biscuits. It becomes a minor legend.
   else:
@@ -422,7 +422,7 @@ text: Mir Ten drops onto the bench beside you with a sketch of something that is
   say: "Fair," says Mir, with no hard feelings, and is immediately on fire. Not badly.
 > right: Partner with Mir
   meet mir
-  challenge brew trivial:
+  challenge brew standard wild:
     win:
       study artifice +medium
       rel mir +medium
@@ -447,7 +447,7 @@ text: You've enchanted a quill to take dictation. It works beautifully. A though
   say: Your notes are flawless. Even the professor's jokes are transcribed, with a small marginal comment: "(not funny)."
 > right: Let it write your essays
   alignment -tiny
-  chance 50:
+  chance even:
     study artifice +medium
     mood +small
     say: Your essays arrive on time, in impeccable penmanship. A little too impeccable. Nobody notices. Yet.
@@ -472,7 +472,7 @@ text: The griffon egg is cracking. Professor Brask whispers that the first face 
   lore +tiny
   say: The chick sees Brask first and bites her. She seems delighted.
 > right: Offer your hand
-  challenge feat trivial:
+  challenge feat apprentice+ luck:
     win:
       mood +medium
       vigor +tiny
@@ -494,7 +494,7 @@ text: Someone left the manticore pen open. It's in the greenhouse, tail twitchin
 > left: Back away slowly
   say: You edge out. Professor Brask arrives with a bucket of meat and a lullaby and the crisis is over in minutes.
 > right: Try to calm it
-  challenge negotiate trivial:
+  challenge negotiate adept wild:
     win:
       renown +medium
       vigor +tiny
@@ -539,7 +539,7 @@ text: A comet appears that isn't in any of the charts. The observatory is in upr
   lore +small
   say: Your drawing is lovely. Someone else's name goes on the comet. You keep the drawing.
 > right: Calculate its path
-  challenge research easy:
+  challenge research standard+1:
     win:
       renown +medium
       lore +small
@@ -605,7 +605,7 @@ text: A first-year stumbles into the practice ward with a wrist that bends the w
   study alchemy +tiny
   say: Amaranth fixes it in seconds and nods at you. "Knowing your limits is the first lesson."
 > right: Heal it yourself
-  challenge brew easy:
+  challenge brew standard+1:
     win:
       alchemy +small
       renown +small
@@ -632,7 +632,7 @@ text: Lake Fever is spreading through the village below the academy. Sister Amar
   alchemy +tiny
   mood +tiny
   alignment +tiny
-  chance 40:
+  chance unlikely -1 if health >= 60:
     gain sick
     say: You save lives, and catch the fever yourself. The village sends a basket of honey cakes to your sickbed.
   else:
@@ -676,7 +676,7 @@ text: In the middle of a lecture on the Nature of Absence, your shadow leans awa
   say: You speak the warding phrase. Your shadow snaps back into place, sulking. It does not speak again. You think.
 > right: Answer it
   lore +medium
-  chance 40:
+  chance unlikely:
     gain umbral_curse
     say: It tells you something about death you can't unlearn. The cold starts the next morning.
   else:
@@ -697,7 +697,7 @@ text: Practical exercise: animate the skeleton of a field mouse. "Purely educati
   mood +tiny
   say: You write a short essay on why instead. The professor reads it with surprising attention.
 > right: Do the exercise
-  challenge spell easy:
+  challenge spell standard:
     win:
       arcana +medium
       study umbral +small

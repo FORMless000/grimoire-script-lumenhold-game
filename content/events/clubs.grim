@@ -17,7 +17,7 @@ tags: club
 scene: A chalk circle on a stone floor under high windows, two students mid-duel, a ring of members cheering.
 text: Wednesday practice. The captain pairs you with a fourth-year who has a reputation for ending bouts quickly. "Defence or attack," the captain says. "Pick one and commit."
 > left: Hold your ground
-  challenge combat easy:
+  challenge combat apprentice+ steady:
     win:
       vigor +small
       renown +small
@@ -26,7 +26,7 @@ text: Wednesday practice. The captain pairs you with a fourth-year who has a rep
       health -small
       say: You hold your ground very bravely, right up until you're on the floor.
 > right: Go on the attack
-  challenge combat easy:
+  challenge combat apprentice+ wild:
     win:
       arcana +small
       renown +small
@@ -55,7 +55,7 @@ text: Bram Hollis, prefect and senior Circle member, has decided new members nee
   say: Your arms shake. You don't drop the charm. Bram grunts, almost approvingly, and finds someone else to torment.
 > right: Drop the shield and duel him
   meet bram
-  challenge combat medium:
+  challenge combat vs bram.vigor:
     win:
       renown +medium
       rel bram -large
@@ -103,7 +103,7 @@ text: Auditions for the Midwinter solo. The choirmaster's eyebrows are famously 
   mood +tiny
   say: You harmonise from safety, and it's lovely. Somebody else gets the solo and cries with relief.
 > right: Audition
-  challenge negotiate trivial:
+  challenge negotiate apprentice+:
     win:
       renown +medium
       mood +small
@@ -163,7 +163,7 @@ tags: club
 scene: Brooms streaking around the towers, hoops of light hanging in the sky, a captain with a whistle on the battlements.
 text: Skyrace tryouts: three laps around the towers, through the hoops, without dying. The captain has a stopwatch and no visible sense of humour.
 > left: Fly clean and steady
-  challenge feat trivial:
+  challenge feat apprentice+ steady:
     win:
       flag sky_team
       renown +small
@@ -172,7 +172,7 @@ text: Skyrace tryouts: three laps around the towers, through the hoops, without 
       mood -tiny
       say: You miss two hoops and nearly a gargoyle. "Reserves," says the captain. "Keep practising."
 > right: Go full speed
-  challenge feat trivial:
+  challenge feat apprentice+ wild:
     win:
       flag sky_team
       renown +medium
@@ -193,7 +193,7 @@ scene: A broom snapped in two on the grass, a student sitting up dazed, teammate
 text: Practice. A gust catches you mid-turn, and the ground arrives rather sooner than expected. Your ankle is making an interesting shape.
 > left: Walk it off
   vigor +tiny
-  chance 50:
+  chance even:
     gain injured
     say: You do not walk it off. You limp it off, for a month.
   else:
@@ -218,7 +218,7 @@ text: The championship against Thornwick Academy. Final lap. You're neck and nec
   renown +small
   say: Thornwick takes the hoop by a whisker. Still: second place in the region. The team carries you off the field anyway.
 > right: The suicide dive
-  challenge feat easy:
+  challenge feat adept- wild:
     win:
       renown +medium
       gain famous
@@ -247,7 +247,7 @@ text: Nessa slams a file on your desk. "Pies. Forty-two of them, gone from the k
   charm +tiny
   say: "Pie-rates Strike Again." Nessa groans at the headline and prints it anyway.
 > right: Actually investigate
-  challenge deceive easy:
+  challenge deceive journeyman-:
     win:
       renown +small
       rel nessa +medium
@@ -322,7 +322,7 @@ text: The greenhouse mandrakes have started singing again. Off-key and enthusias
   say: You repot six mandrakes in blissful silence. Good honest work.
 > right: Sing along
   mood +small
-  chance 30:
+  chance unlikely:
     health -tiny
     say: You sing along and promptly faint. Mandrake song is strong stuff. You wake up very relaxed.
   else:
@@ -409,7 +409,7 @@ scene: A chalkboard on an observatory wall covered in tally marks and names, a p
 text: The club is running a betting pool on tonight's meteor count. The current favourite is 40. The charts suggest something else. Or do they?
 > left: Bet on the charts
   when: gold >= 8
-  challenge research trivial:
+  challenge research journeyman-:
     win:
       gold +medium
       say: Fifty-three meteors. You called fifty-two. Close enough to win the pot.
@@ -479,7 +479,7 @@ text: The Cartographers have heard of a staircase that only exists on Thursdays 
   guile +tiny
   say: You chart forty-one steps and a landing with a window onto a sky that isn't this one. The map is the club's pride.
 > right: Climb it to the top
-  challenge deceive trivial:
+  challenge deceive journeyman wild:
     win:
       gold +large
       say: At the top, a forgotten storeroom. Inside: a chest of old academy coins. The club splits it. Corvin cries a little.

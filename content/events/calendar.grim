@@ -316,7 +316,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   when: met(lyra) and rel(lyra) >= 9
   hint: {&She has had six invitations. She hasn't said yes to any.|She has had invitations again. She is pretending not to count them.}
   if spark(lyra) >= 25:
-    challenge negotiate trivial:
+    challenge negotiate vs lyra.charm likely:
       win:
         spark lyra +medium
         rel lyra +medium
@@ -328,7 +328,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
         mood -small
         say: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
   else:
-    challenge negotiate easy:
+    challenge negotiate vs lyra.charm:
       win:
         spark lyra +medium
         rel lyra +medium
@@ -358,7 +358,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
 > corvin: Ask Corvin
   when: met(corvin) and rel(corvin) >= 9
   hint: Odds he shows up: unclear.
-  chance 70:
+  chance likely:
     spark corvin +medium
     mood +medium
     queue ball_last_dance now with corvin
@@ -416,7 +416,7 @@ text: The Spring Tournament: dueling on the great lawn, the whole academy watchi
   mood +small
   say: You eat candied chestnuts and scream for strangers.
 > right: Enter the tournament
-  challenge combat medium:
+  challenge combat journeyman+ drift mid:
     win:
       renown +medium
       say: First round: you win, barely, and {flag(tournament_champion): the crowd remembers your name from last year and chants it.|the crowd learns your name.}
@@ -471,7 +471,7 @@ chain: tournament
 scene: The same ring at sunset, scorch marks on the stone. Your opponent is grinning.
 text: The semifinal. Your opponent is a fourth-year who has never lost. The crowd is louder now; you can hear your own name in it.
 > left: Fight clean
-  challenge combat hard:
+  challenge combat expert- drift mid:
     win:
       renown +medium
       say: You trade spells like questions and answers — and get the last word.
@@ -482,7 +482,7 @@ text: The semifinal. Your opponent is a fourth-year who has never lost. The crow
       say: A good fight. Not good enough. The crowd applauds you off the lawn.
 > right: Fight dirty
   alignment -small
-  challenge deceive medium:
+  challenge deceive adept drift mid:
     win:
       renown +small
       say: A feint, a trip, a jinx to the shoelaces. Legal. Mostly.{met(bram):  On the prefects' bench Bram watches the whole thing with his jaw set, and doesn't clap.|}
@@ -505,7 +505,7 @@ scene: The dueling ring under floating lanterns, a silver cup on a plinth, and a
 text: The final. Across the ring stands {lyra}, wand raised, eyes blazing. "I was hoping it would be you," she says, and she is not being friendly.
 > left: Give everything you have
   meet lyra
-  challenge combat heroic:
+  challenge combat vs lyra.arcana +3:
     win:
       renown +huge
       mood +large
@@ -638,7 +638,7 @@ text: A letter arrives in the last month of summer, the handwriting so familiar 
   mood -tiny
   guile +tiny
   alignment -tiny
-  chance 50:
+  chance even:
     gold +medium
     say: Proud of you, they write, and enclose a little money{has(origin_noble) or has(origin_merchant): , as if a purse were the right answer to a letter.|  you suspect they couldn't spare.}
   else:
@@ -666,7 +666,7 @@ text: {year == 1: The last night of the academic year. Everyone climbs onto the 
 > right: Try to catch a star
   hint: Easier with a good jar from the observatory.
   if starfall_jar >= 1:
-    challenge feat trivial:
+    challenge feat apprentice+ likely wild:
       win:
         renown +small
         mood +small
@@ -677,7 +677,7 @@ text: {year == 1: The last night of the academic year. Everyone climbs onto the 
         health -small
         say: You lunge, miss, and nearly roll off the roof. A prefect catches you by the collar.
   else:
-    challenge feat easy:
+    challenge feat apprentice+ wild:
       win:
         renown +small
         mood +small

@@ -26,7 +26,7 @@ text: You reach for the last copy of "Foundations of Flame" and a ringed hand ge
   say: "At least you know your place," she says, which is somehow worse than rudeness. Lyra Vaneshade. Everyone knows the name.
 > right: Argue for it
   meet lyra
-  challenge negotiate easy:
+  challenge negotiate vs lyra.charm:
     win:
       rel lyra +medium
       say: You quote chapter three at her. She raises an eyebrow, then hands you the book. "Fine. Return it underlined correctly."
@@ -75,7 +75,7 @@ text: The professors post this week's rankings, with an open paper this afternoo
   rel lyra +small
   say: {&"Together?" She considers this like a foreign custom. Then she pulls out a chair. She's an excellent, merciless study partner.|She already has two cups of tea and your chair pulled out. "You're late," she says. You aren't.|"Fine. But I'm quizzing you first." She is merciless again, and you're better for it.}
 > right: Beat her outright
-  challenge research easy:
+  challenge research vs lyra.lore:
     win:
       study +medium
       rel lyra +small
@@ -107,7 +107,7 @@ text: "My family's winter gala," Lyra says, too casually. "I need a guest who wo
   renown +small
   spark lyra +small
   rel lyra +small
-  chance 40:
+  chance unlikely -1 if has(origin_noble):
     mood -small
     say: Lyra's mother asks who your parents are, and then asks no further questions at all. Lyra squeezes your hand under the table, hard.
   else:
@@ -151,7 +151,7 @@ scene: Lyra holding a letter with a black seal, her other hand clenched around a
 text: Another black-sealed letter. Lyra reads it twice and goes white. "My mother has found out about us. End it, she says, or she ends my inheritance." She looks at you. "Tell me what to do."
 > left: "Choose yourself, not them."
   if spark(lyra) >= 50:
-    challenge negotiate trivial:
+    challenge negotiate vs lyra.charm likely:
       win:
         rel lyra +large
         spark lyra +medium
@@ -163,7 +163,7 @@ text: Another black-sealed letter. Lyra reads it twice and goes white. "My mothe
         mood -medium
         say: "Easy for you to say," she snaps. She doesn't mean it. She also doesn't take it back.
   else:
-    challenge negotiate easy:
+    challenge negotiate vs lyra.charm:
       win:
         rel lyra +large
         spark lyra +medium
@@ -193,7 +193,7 @@ tags: rival
 scene: A cauldron spitting black smoke, a crimson-haired student walking away with a tiny vial hidden in her sleeve.
 text: Your perfect potion turns black and starts screaming. Across the room, Lyra is very carefully not looking at you.
 > left: Retaliate
-  challenge deceive trivial:
+  challenge deceive vs lyra.guile:
     win:
       rel lyra -small
       renown +small
@@ -290,7 +290,7 @@ scene: A boy packing a battered trunk in an empty dormitory, a letter with smudg
 text: Tobias is packing. Blight took the harvest. His family needs money, and hands. "Thirty crowns would get them through winter," he says, not asking. "But I haven't got thirty crowns. I've got two arms."
 > left: Persuade him to stay and find work here
   flag tobias_harvest_done
-  challenge negotiate trivial:
+  challenge negotiate vs tobias.charm:
     win:
       rel tobias +medium
       say: You walk him to the job board. He signs up for double shifts at the stables and sends every crown home. He stays.
@@ -366,7 +366,7 @@ text: Bram is doing an impression of Tobias's accent in the corridor. People are
   alignment +small
   rel tobias +large
   rel bram -medium
-  challenge negotiate easy:
+  challenge negotiate vs bram.charm wild:
     win:
       renown +small
       say: "Funny," you say. "Do your father next." The laughter turns on Bram. He stalks off. Tobias stares at you in awe.
@@ -454,7 +454,7 @@ tags: social mystery
 scene: A tarot spread on a velvet cloth in candlelight, a girl's pale fingers turning over a card showing a lightning-struck tower.
 text: Seraphine shuffles a battered tarot deck. "One card," she says. "For you. Only if you want it. They're quite rude sometimes."
 > left: Draw a card
-  chance 50:
+  chance even:
     mood +small
     say: The Star. "Hope," she says, delighted. "And someone's going to tell you a secret. Oh — it's me. I like you." She blushes.
     rel seraphine +small
@@ -484,7 +484,7 @@ text: From your window you see Seraphine walking into the lake in her nightgown,
   say: The prefect drags her out, coughing. She doesn't remember anything. She looks at you strangely for days.
 > right: Run down and pull her out
   alignment +small
-  challenge feat trivial:
+  challenge feat apprentice likely:
     win:
       rel seraphine +large
       spark seraphine +small
@@ -509,7 +509,7 @@ tags: social mystery
 scene: Two students sitting on the rim of a dry fountain, one looking up at the stars, the other looking at the first with a soft smile.
 text: "I saw you old," Seraphine says suddenly. "Last night. You were happy. Really happy. There was someone with you." She pauses. "Do you want to know who?"
 > left: Yes, tell me
-  chance 50:
+  chance even:
     spark seraphine +small
     say: She looks at you for a long time. "I'll tell you when you're old," she says, and goes pink.
   else:
@@ -606,7 +606,7 @@ text: "Midnight," Corvin whispers. "The cooks have made forty treacle tarts for 
   say: He goes alone. The next morning there's a treacle tart on your pillow. You decide not to ask.
 > right: Lead the raid
   alignment -tiny
-  challenge deceive trivial:
+  challenge deceive apprentice:
     win:
       mood +medium
       rel corvin +medium
@@ -652,7 +652,7 @@ tags: social money
 scene: A small brass key and a fat purse left on a desk with a playing card, the jack of spades, tucked under them.
 text: There's a fat purse on your desk and a jack of spades tucked under it. It's heavy, and it clinks.
 > left: Count it
-  chance 70:
+  chance likely:
     gold +huge
     rel corvin +medium
     say: Sixty crowns. A note: "Interest. Don't ask. — C." You don't ask.
@@ -701,13 +701,13 @@ scene: A boy standing before a disciplinary desk, a stolen silver goblet on it, 
 text: The headmistress's silver goblet has been found in Corvin's trunk. He swears he didn't take it. Bram, who found it, looks very pleased. Corvin is one detention from expulsion.
 > left: Stay out of it
   rel corvin -large
-  chance 50:
+  chance even:
     say: Corvin talks his way out, barely. He doesn't look at you for a month.
   else:
     rel corvin -large
     say: Corvin is suspended for a month. When he comes back, he's different. Quieter.
 > right: Find proof he was framed
-  challenge deceive trivial:
+  challenge deceive vs bram.guile:
     win:
       rel corvin +large
       rel bram -large
@@ -781,7 +781,7 @@ text: The west wing explodes. Not badly. A figure in goggles stumbles out of the
   say: The teapot stops ticking and starts humming the academy anthem. "Mir," they say. "They/them. Thanks for not throwing it."
 > right: Hold the teapot steady
   meet mir
-  challenge brew trivial:
+  challenge feat apprentice- wild:
     win:
       rel mir +medium
       say: You keep it level while they twist a valve. It stops ticking. "You've got good hands," Mir says. "I'm going to need those."
@@ -829,7 +829,7 @@ text: The Artificers' Fair. Mir's entry is under a sheet and occasionally growls
   rel mir +tiny
   say: The machine turns out to be a mechanical bear that bakes bread. It wins second place. Mir is ecstatic and flour-covered.
 > right: Be the confident assistant
-  challenge negotiate trivial:
+  challenge negotiate apprentice wild:
     win:
       renown +medium
       rel mir +medium
@@ -854,7 +854,7 @@ tags: social
 scene: A workshop door chained shut with a faculty notice nailed to it, a forlorn student sitting on a toolbox outside.
 text: After the third fire this term, the faculty has padlocked Mir's workshop. Mir is sitting on a toolbox outside it, looking like someone took their heart and filed it under "hazards".
 > left: Plead their case to Professor Thorne
-  challenge negotiate trivial:
+  challenge negotiate master-:
     win:
       rel mir +large
       rel thorne +tiny
@@ -865,7 +865,7 @@ text: After the third fire this term, the faculty has padlocked Mir's workshop. 
       flag mir_workshop_shut
       say: Thorne refuses. But Mir heard you try. "Nobody's ever argued for me before," they say.
 > right: Help them build a secret workshop
-  challenge deceive trivial:
+  challenge deceive adept-:
     win:
       rel mir +large
       guile +tiny
@@ -965,7 +965,7 @@ text: A girl with a quill floating at her shoulder plants herself in front of yo
   say: The quill writes "SAFE" in the margin and underlines it twice. Nessa sighs and moves on.
 > right: Say something outrageous
   meet nessa
-  challenge negotiate easy:
+  challenge negotiate apprentice wild:
     win:
       renown +small
       rel nessa +medium
@@ -990,14 +990,14 @@ scene: A copy of the Lumen Ledger pinned to a noticeboard, a gossip column circl
 text: This week's Ledger gossip column features you, prominently, under the headline "WHO IS THE MYSTERY STUDENT ALWAYS IN THE LIBRARY AT MIDNIGHT?" Nessa swears she didn't write it.
 > left: Confront Nessa
   rel nessa -tiny
-  challenge negotiate trivial:
+  challenge negotiate vs nessa.charm:
     win:
       say: She prints a correction. Sort of. It's a much more flattering paragraph about you.
       renown +small
     lose:
       say: "Freedom of the press," says Nessa, sweetly. You both know she wrote it.
 > right: Lean into the mystery
-  chance 70:
+  chance likely:
     renown +small
     mood +small
     rel nessa +small
@@ -1025,7 +1025,7 @@ text: Nessa leans in. "You've got faculty access. The professors are planning to
   say: Nessa sulks for a day. Then she respects you for it, which she hates. You sleep well.
 > right: Give her the scoop
   rel nessa +large
-  chance 30:
+  chance unlikely:
     rel thorne -large
     say: The story runs. Thorne knows exactly who talked. His glare could curdle milk.
   else:
@@ -1048,7 +1048,7 @@ text: Nessa's office wall is covered in red string. In the middle: a sketch of a
   say: "That's what people say right before the best stories." But she takes the string down. Mostly.
 > right: Share what you know
   rel nessa +medium
-  chance 40:
+  chance unlikely:
     gain watched
     say: Nessa's article runs with half the facts. The man in grey reads it. So does Bram, who starts following you around.
   else:

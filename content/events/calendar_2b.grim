@@ -319,7 +319,7 @@ text: The spring post brings answers. {applied(internship): There are sealed let
   when: applied(intern_royal_library)
   hint: They asked for a GPA of 2.5. The interview tests lore.
   if gpa >= 2.5:
-    challenge research using lore medium:
+    challenge research adept-:
       win:
         join intern_royal_library
         renown +small
@@ -344,7 +344,7 @@ text: The spring post brings answers. {applied(internship): There are sealed let
   hint: They asked for a GPA of 3.0. The interview tests arcana. A word from Thorne would help.
   if gpa >= 3.0:
     if rel(thorne) >= 6:
-      challenge research using arcana easy:
+      challenge research using arcana adept likely:
         win:
           join intern_conclave
           renown +small
@@ -360,7 +360,7 @@ text: The spring post brings answers. {applied(internship): There are sealed let
           if applied(internship):
             queue intern_offer now
     else:
-      challenge research using arcana hard:
+      challenge research using arcana adept unlikely:
         win:
           join intern_conclave
           renown +small
@@ -384,7 +384,7 @@ text: The spring post brings answers. {applied(internship): There are sealed let
   when: applied(intern_alchemists)
   hint: They asked for a GPA of 2.0. The interview tests alchemy.
   if gpa >= 2.0:
-    challenge research using alchemy medium:
+    challenge research using alchemy journeyman+:
       win:
         join intern_alchemists
         renown +small
@@ -407,7 +407,7 @@ text: The spring post brings answers. {applied(internship): There are sealed let
 > expedition: Letter from the Expedition
   when: applied(intern_expedition)
   hint: The interview tests vigor.
-  challenge research using vigor medium:
+  challenge research using vigor journeyman+:
     win:
       join intern_expedition
       renown +small
@@ -425,7 +425,7 @@ text: The spring post brings answers. {applied(internship): There are sealed let
 > field: Letter from the Field Station
   when: applied(intern_field_station)
   hint: The interview tests vigor.
-  challenge research using vigor medium:
+  challenge research using vigor journeyman+:
     win:
       join intern_field_station
       renown +small
@@ -444,7 +444,7 @@ text: The spring post brings answers. {applied(internship): There are sealed let
   when: applied(intern_thornwick)
   hint: They asked for a GPA of 2.5. The interview tests charm.
   if gpa >= 2.5:
-    challenge research using charm medium:
+    challenge research using charm adept-:
       win:
         join intern_thornwick
         renown +small
@@ -573,7 +573,7 @@ text: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60:
   hint: A safe topic is easier to defend and earns less; an ambitious one is harder and earns more. A year of thesis work counts.
   def_score = 0
   if not (flag(thesis_safe) or flag(thesis_ambitious)):
-    challenge negotiate using lore medium:
+    challenge negotiate using lore expert:
       win:
         def_score = 2
         say: Your presentation runs clean from first slide to last. One examiner has stopped taking notes and is just listening.
@@ -584,7 +584,7 @@ text: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60:
         mood -small
         say: You lose your place twice and your nerve once. The examiners exchange a look you'll remember for years.
   elif flag(thesis_safe):
-    challenge negotiate using lore easy:
+    challenge negotiate using lore expert likely:
       win:
         def_score = 2
         say: A careful survey, carefully presented. Nobody could fault a word of it. Nobody looks thrilled, either.
@@ -595,7 +595,7 @@ text: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60:
         mood -small
         say: Even a safe topic has its gaps, and your presentation walks straight into one of them.
   else:
-    challenge negotiate using lore hard:
+    challenge negotiate using lore expert unlikely:
       win:
         def_score = 2
         if clue(seven_locks) + clue(star_key) + clue(ilse_truth) >= 3:

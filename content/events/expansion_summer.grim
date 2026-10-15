@@ -16,7 +16,7 @@ tags: mystery home
 scene: A vast empty dining hall in summer, chairs upturned on the tables, a single student eating alone in a shaft of dusty sunlight.
 text: In summer the castle breathes differently. Corridors you've walked a thousand times are silent; doors that are always locked stand slightly open. A portrait yawns. Nobody is watching.
 > left: Explore the open doors
-  challenge deceive trivial:
+  challenge deceive apprentice:
     win:
       lore +medium
       gold +small
@@ -41,7 +41,7 @@ tags: home
 scene: A farmhouse kitchen in high summer, a basket of laundry, a list of chores pinned to the door, a textbook hidden under a tea towel.
 text: Home is lovely for about three days. Then the list appears on the kitchen door: the roof, the goats, the fence, the cousin's wedding. Your summer reading list is hidden under a tea towel.
 > left: Do the chores — with magic
-  challenge spell trivial:
+  challenge spell apprentice-:
     win:
       mood +small
       renown +small
@@ -87,7 +87,7 @@ tags: festival money
 scene: A village green full of striped tents, a carousel of enchanted wooden animals, lanterns strung between trees, a strongman lifting a cow.
 text: The village Midsummer Fair: enchanted carousel, ring-toss, a strongman, and a booth promising "GUESS YOUR WEIGHT IN CHEESE". You have a few crowns in your pocket and a whole afternoon.
 > left: Win something at the ring-toss
-  challenge feat trivial:
+  challenge feat apprentice+ wild:
     win:
       gold +medium
       mood +small
@@ -157,7 +157,7 @@ text: Your uncle takes you fishing. Something takes the bait. Something very lar
   mood +tiny
   say: The serpent sinks back with a sigh like a disappointed whale. Your uncle tells the story for the rest of his life, and it gets bigger every time.
 > right: Try to talk to it
-  challenge negotiate trivial:
+  challenge negotiate adept- wild:
     win:
       lore +medium
       renown +small
@@ -199,7 +199,7 @@ scene: A market that only appears after midnight, stalls lit with coloured flame
 text: A night market appears in a field outside the village — it wasn't there yesterday and won't be tomorrow. A hooded stall-keeper offers you a stoppered bottle with a tiny thundercloud inside. "Fifteen crowns. What it does is a surprise."
 > left: Buy the bottle
   gold -medium
-  chance 50:
+  chance even:
     gain inspired
     arcana +small
     say: You uncork it in your room. The little storm rains ideas on you for a fortnight. Your notebooks overflow.

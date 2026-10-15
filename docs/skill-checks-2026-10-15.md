@@ -216,3 +216,22 @@ These are not applied.
 - **Use the dormant knobs in content:** `steady` on training checks, `wild` on luck, `variant: hard` on repeatable cards.
 
 Scripts: `sim.js` (logs every roll through the engine's `challengeOdds` and `pick`) and `an.js` (the tables), kept outside the repo in the job's temp folder.
+
+## 6. Re-run after wave 1 (same 18 styles × 5 games)
+
+Wave 1 put the 216 challenges and 64 `chance` blocks of critique reports 01–40 on the check ladder (`docs/authoring/checks.md`), exams on the ladder (`exam_tiers: standard standard standard+2`) and the curve refit (it now ends at 63). The other 177 challenges and 47 rolls are still legacy.
+
+| | before | after wave 1 |
+|---|---|---|
+| balanced: win% / at the 95+ cap | 81 / 36% | 71 / 18% |
+| all styles: win% range | 64–81 | 56–78 |
+| feat (vigor) | 66 | 54 |
+| spell | 87 | 81 |
+| combat | 83 | 78 |
+| `wild` / `steady` rolls | 63 / 0 | 1,351 / 185 |
+| exams: pass p̄ L1 / L2 / L3 | 92 / 88 / 93 | 82 / 84 / 85 |
+| exams: A / F | 55 / 7% | 46 / 8% |
+
+- Exam tiers were chosen from three seeds of 24 games each: `standard` at every level left level III the easiest (only strong players reach it), and `standard+1` everywhere pushed GPA to about 2.7.
+- Feat checks are now the hardest kind, because vigor still lags every other skill.
+- The bots that take every check end early more often (quick balance: aggressive 27%, social 40%, from 13% and 30%). The careful styles still finish every run.

@@ -24,7 +24,7 @@ text: Midnight. The silver key fits the Restricted Section door perfectly. Beyon
   flag forbidden_abandoned
   say: You lock the door again and hang the key on a nail in your wardrobe. Some nights you hear it rattling.
 > right: Slip inside
-  challenge deceive trivial:
+  challenge deceive apprentice+:
     win:
       lore +medium
       queue forbidden_section_2 in 2
@@ -54,7 +54,7 @@ text: You keep going back. One night, a book finds you. It falls from a high she
   alignment -tiny
   find codex_names
   queue forbidden_section_3 in 2
-  chance 45:
+  chance even:
     gain umbral_curse
     say: You read until dawn. You learn about the thing under the lake. When you finally close the book, your fingertips are grey.
   else:
@@ -126,7 +126,7 @@ chain: curse
 scene: A dark forest at nightfall, a single silver flower glowing in a clearing, eyes watching from between the trees.
 text: The Whisperwood after dark. Things move between the trees. In a clearing, a single silver flower is opening, and between you and it stands a stag made of shadow.
 > left: Sneak around it
-  challenge deceive trivial:
+  challenge deceive journeyman:
     win:
       lose umbral_curse
       rel maud +medium
@@ -135,7 +135,7 @@ text: The Whisperwood after dark. Things move between the trees. In a clearing, 
       health -large
       say: The stag sees you. You run. No moonpetal tonight; you'll have to come back.
 > right: Face the stag
-  challenge combat trivial:
+  challenge combat adept-:
     win:
       lose umbral_curse
       vigor +small
@@ -213,7 +213,7 @@ text: Grisk finds you in the library. "I could cancel your debt," he murmurs. "A
   say: "Pity." He makes a note in his ledger. It looks expensive.
 > right: Do the favour
   alignment -small
-  challenge deceive trivial:
+  challenge deceive apprentice+:
     win:
       lose in_debt
       flag grisk_favour
@@ -299,7 +299,7 @@ chain: familiar
 scene: A student and a small fire-tailed fox nose to nose, a soft golden light connecting them.
 text: The fox has decided. {term: It follows you to class|It follows you through the half-empty corridors}, sleeps on your feet and growls at Bram. Students aren't allowed unregistered familiars. Registering one costs fifteen crowns.
 > left: Hide her
-  challenge deceive trivial:
+  challenge deceive apprentice:
     win:
       gain familiar_fox
       say: You name her Ember. Nobody notices a fox that doesn't want to be noticed.
@@ -329,7 +329,7 @@ text: {~Ember drags you, by the sleeve, through three corridors and a hedge. She
   mood +small
   say: {~It's a sock. Ember is thrilled. You are thrilled for her.|It's a glove that smells of the stables. Ember sleeps on it for a week.|It's a pine cone, slightly charred. She guards it from Bram personally.}
 > right: See what it is
-  chance 50:
+  chance even:
     gold +medium
     say: A lost purse. You return it to its owner, who insists you keep the reward.
   else:

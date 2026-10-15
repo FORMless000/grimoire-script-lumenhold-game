@@ -23,7 +23,7 @@ text: {Illusion I opens with a row of cold candles. Make them burn, Professor Ve
   mana -small
   say: {~Your flame steadies, then flickers in time with your breathing, which Vey says is the point.|Vey's palm hovers over your flame a moment longer than the others. "Almost warm," she says. From her, that's a sonnet.|By the bell your flame has a proper blue heart. You feel oddly proud of something that isn't there.}
 > right: Make it gutter and smoke
-  challenge deceive using charm easy:
+  challenge deceive using charm standard:
     win:
       charm +small
       mood +tiny
@@ -71,7 +71,7 @@ text: {Partner work. {partner} lays out three crowns, and one of them is an illu
   rel partner +tiny
   say: {~It's the one with no tarnish. Illusions always come out cleaner than money does.|You stare until your eyes water and pick the middle one. Wrong. {partner} pockets the real two, laughing.|You get it on the third try, by the shine that doesn't move when the light does.}
 > right: Watch their face, not the coins
-  challenge deceive using charm easy:
+  challenge deceive using charm standard:
     win:
       charm +small
       rel partner +tiny
@@ -96,7 +96,7 @@ text: {Illusion II adds the other senses. Today, a loaf that looks, smells and s
   study illusion +small
   say: {~You spend an hour on the smell of a crust. By the end it's nearly convincing and you're desperately hungry.|You think of a bakery on a cold street and the smell arrives with it. Vey sniffs, and nods once.|The smell is right. The sound of breaking is wrong. Vey says that's the usual order.}
 > right: Add the warmth of the oven
-  challenge enchant using charm medium:
+  challenge enchant using charm standard:
     win:
       charm +small
       renown +tiny
@@ -123,7 +123,7 @@ text: {Professor Vey is rarely at the lectern in Illusion II. She is somewhere i
   mood -small
   say: {~You don't find her, but you notice who blinks late. Vey turns out to have been the pigeon.|You learn three classmates' nervous habits and nothing about Vey, who was the chair.|At the end she steps out of the porter's coat. You'd suspected the mop. The mop was real.}
 > right: Name her early
-  challenge deceive using charm medium:
+  challenge deceive using charm standard+2:
     win:
       charm +small
       mood +tiny
@@ -169,7 +169,7 @@ text: {Original work, an illusion nobody taught you. Vey asks one question of ea
   mood -small
   say: {~You make the window of a house you grew up near, at dusk. Vey stands in front of it a long time and writes nothing down.|You make a corridor that remembers who walked down it. It's sadder than you meant. Vey says that's usually the good sign.}
 > right: Make something dazzling
-  challenge enchant using charm hard:
+  challenge enchant using charm standard+1 steady:
     win:
       charm +small
       renown +small
@@ -198,7 +198,7 @@ text: {Beastcraft I begins in the stables, with a pitchfork. Professor Brask say
   mood -small
   say: {~Two stalls, a barrow and a blister. Brask inspects your work and calls the straw "nearly decent".|You finish before anyone else. The hippogriff treads straight through your clean straw, deliberately.|Brask says nothing, which you've learned is the best review she gives humans.}
 > right: Bow to the hippogriff first
-  challenge exam using vigor easy:
+  challenge feat standard:
     win:
       study beastcraft +small
       mood +tiny
@@ -243,7 +243,7 @@ cast:
 scene: Two students carrying buckets between stalls, a sulky griffon chick in a nest of straw, owls leaning down from the rafters.
 text: {Feeding round, in pairs. You and {partner} have two buckets and a list, and the griffon chick is first on it.|Feeding round with {partner}. The griffon chick has heard the buckets.|You and {partner} could do the round blindfolded now. The chick would still sulk.} {~Brask has written "DO NOT HURRY" at the top of the list.|The owls lean down from the rafters to watch.|{partner} is humming to the buckets.}
 > left: Take the griffon chick
-  challenge exam using vigor easy:
+  challenge feat standard wild:
     win:
       vigor +small
       rel partner +tiny
@@ -311,7 +311,7 @@ tags: class danger
 scene: A student on a hippogriff's back skimming low over a mirror-still lake, their reflection racing along beneath them.
 text: {Advanced Beastcraft. A hippogriff each, over the lake, no saddle unless you ask. Brask won't think less of you for asking. She'll just remember.|The lake flight. Your hippogriff knows the way.|Over the lake. {final_year: You catch yourself memorising the view.|Your reflection keeps pace.}} {~The water is perfectly still.|A barge below, its passengers waving.|{season == "summer": The air is full of midges.|The wind off the water stings.}}
 > left: Ride bareback, low over the water
-  challenge exam using vigor hard:
+  challenge feat standard+1:
     win:
       vigor +small
       mood +small
@@ -337,7 +337,7 @@ tags: class danger
 scene: A manticore lying in straw with its eyes half-closed, one student gently holding its scorpion tail while another hums nearby.
 text: {Advanced students check the manticore once a month. Someone holds the tail; someone hums the lullaby. Brask lets you choose.|Manticore rounds. It knows the lullaby better than you do.|The manticore yawns at you, which is either a welcome or a threat.} {~Its tail twitches in its sleep.|It has been off its food, Brask says, and is in a mood.|{final_year: You wonder who'll hold the tail after you.|Brask has brought a bucket of meat and a smaller one of patience.}}
 > left: Hold the tail
-  challenge exam using vigor hard:
+  challenge feat standard+1 wild:
     win:
       vigor +small
       renown +tiny
@@ -367,7 +367,7 @@ text: {Umbral Theory I, top of the tower, lamps low on purpose. Name what's unde
   study umbral +small
   say: {~A teapot, a skull, a folded letter addressed to you. You open it later. It's blank.|You name every shadow but one. Under that cloth there is nothing at all. The professor doesn't explain.|Slowly, you get them all. The shadows told you, the professor says; you only had to stop interrupting.}
 > right: Slip in a false shadow
-  challenge deceive easy:
+  challenge deceive standard:
     win:
       guile +small
       say: {~You add the shadow of a cat to the wall. Three classmates write "cat". The professor writes your name, and underlines it.|Your false shadow passes all morning. The professor only catches it when it doesn't move with the lamp.}
@@ -412,7 +412,7 @@ text: {Each lesson opens with ten minutes of silence. "Listen to what's hidden,"
   mood -small
   say: {~You hear the tower breathing, which it shouldn't, and a sigh on the stair that nobody makes.|You hear the lake, which is impossible from up here. The professor says that's normal for this room. It is not reassuring.|In the silence you hear someone you miss, very faintly. When the lamps come up, you don't mention it.}
 > right: Quietly finish other homework
-  challenge deceive easy:
+  challenge deceive adept-:
     win:
       guile +small
       say: {~You finish a whole essay by feel in the dark. The professor never notices, or never says.|Not a scratch of the quill. When the lamps come up, your essay is done and your face is innocent.}
@@ -433,7 +433,7 @@ tags: class magic danger
 scene: A student stepping into the shadow under one desk and halfway out of the shadow under another, the room's lamps burning low.
 text: {Umbral Theory II brings the shadowstep, desk to desk. "The shadows in between are not friendly," the professor says, "so don't linger."|Shadowstep drill. Three desks this time, then four.|The desks. You know the way between them, and the cold that lives there.} {~Someone comes out under the wrong desk.|The lamps are lower than usual.|{gpa >= 3: The professor sets you the long way round.|The professor sets you the short way, and watches.}}
 > left: Step across
-  challenge deceive medium:
+  challenge deceive standard:
     win:
       guile +small
       say: {~In, through, out. It takes no time and lasts forever. You come out under the far desk with frost on your sleeves.|Four desks, clean. Something in between brushes your ankle, curious, and lets you pass.}
@@ -458,7 +458,7 @@ tags: class mystery
 scene: A dim classroom being searched by several students at once while one of them sits calmly at a desk with a small brass key in plain sight.
 text: {Hide a small key in this room, present but unseen. "Hiding is not removal," the professor says. "Removal is for amateurs."|The key, and somewhere to hide it. Your classmates are better at finding things.|The key exercise. Half the class pats their pockets out of habit.} {~The key is brass today.|The key is silver and very cold.|Last time a key hid in a shadow for two days.}
 > left: Hide it, and stay calm
-  challenge deceive medium:
+  challenge deceive standard:
     win:
       guile +small
       mood +tiny
@@ -504,7 +504,7 @@ tags: class magic mystery
 scene: A student standing in lamplight with no shadow at all, while across the room their shadow lifts a book from a shelf.
 text: {Original work. Send your own shadow on an errand across the room, the professor says, and have it come back. "It will want to wander. They all do."|Shadow errands. Yours picks its own route now.|Errand day. {final_year: Does your shadow know you're leaving soon?|Your shadow seems eager, which worries you.}} {~Someone's shadow is still under a desk from last week.|The professor's own shadow is missing today.|The lamps are low and the shadows long.}
 > left: Send it, and trust it
-  challenge deceive hard:
+  challenge deceive standard+1:
     win:
       guile +small
       mood +tiny

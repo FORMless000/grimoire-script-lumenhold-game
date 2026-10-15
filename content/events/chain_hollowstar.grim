@@ -86,7 +86,7 @@ text: In the archive vault you find the Founders' Ledger, three hundred years ol
   mood +tiny
   say: You close the ledger. The dust settles. Some doors are better left alone. Probably.
 > right: Rub charcoal over the page
-  challenge research trivial:
+  challenge research apprentice+:
     win:
       flag knows_founders_seal
       find knows_founders_seal
@@ -341,7 +341,7 @@ chain: hollowstar
 scene: The top of a narrow, abandoned tower, cobwebbed and moonlit, with a wall bearing a star-shaped recess.
 text: The seventh tower has been locked for a century. You find a way in. At the very top, a single room: dust, moonlight, and a star-shaped hollow in the wall, holding something that does not reflect any light.
 > left: Take it quietly
-  challenge deceive trivial:
+  challenge deceive journeyman:
     win:
       flag star_key
       find star_key
@@ -353,7 +353,7 @@ text: The seventh tower has been locked for a century. You find a way in. At the
       mood -small
       say: A ward shrieks. A prefect finds you on the stairs. You get detention and a very long look from the headmistress.
 > right: Take it boldly
-  challenge spell trivial:
+  challenge spell journeyman:
     win:
       flag star_key
       find star_key
@@ -601,7 +601,7 @@ text: Beyond the wall, the round door. It stands open a crack. Through it, the H
   hs_prep = clue(seven_locks) + clue(star_key) + clue(ilse_truth) + (rel(kael) >= 18) + (rel(ilse) >= 18) + (rel(maud) >= 18) + (rel(isolde) >= 18) + 2 * (flag(sided_wardens) or flag(sided_dumonts)) + flag(sided_self) + (alignment >= 30) + (alignment >= 60) + (spell_level(starlight) >= 1) + (spell_level(ward) >= 1) + flag(wardens_noticed)
   hs_seal = hs_prep + 2 * flag(hs_tunnel_clear) + 2 * flag(hs_threshold_read)
   if hs_seal >= 13:
-    challenge spell trivial:
+    challenge spell master sure:
       win:
         flag hollow_sealed
         renown +huge
@@ -621,7 +621,7 @@ text: Beyond the wall, the round door. It stands open a crack. Through it, the H
         else:
           say: Your seal falters and breaks, and takes most of you with it. The door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
   elif hs_seal >= 9:
-    challenge spell easy:
+    challenge spell master likely:
       win:
         flag hollow_sealed
         renown +huge
@@ -641,7 +641,7 @@ text: Beyond the wall, the round door. It stands open a crack. Through it, the H
         else:
           say: Your seal falters and breaks, and takes most of you with it. The door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
   elif hs_seal >= 5:
-    challenge spell medium:
+    challenge spell master:
       win:
         flag hollow_sealed
         renown +huge
@@ -661,7 +661,7 @@ text: Beyond the wall, the round door. It stands open a crack. Through it, the H
         else:
           say: Your seal falters and breaks, and takes most of you with it. The door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
   elif hs_seal >= 2:
-    challenge spell hard:
+    challenge spell master unlikely:
       win:
         flag hollow_sealed
         renown +huge
@@ -681,7 +681,7 @@ text: Beyond the wall, the round door. It stands open a crack. Through it, the H
         else:
           say: Your seal falters and breaks, and takes most of you with it. The door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
   else:
-    challenge spell heroic:
+    challenge spell master slim:
       win:
         flag hollow_sealed
         renown +huge
@@ -795,7 +795,7 @@ text: A girl in white furs is waiting at the gates in a private snowstorm. Kael'
 > left: Convince her
   flag met_sister
   find ilse_truth
-  challenge negotiate trivial:
+  challenge negotiate journeyman:
     win:
       rel kael +large
       say: You talk for an hour. Then she's crying, and Kael is holding her, and the snow stops. She stays in the village to be near him.
