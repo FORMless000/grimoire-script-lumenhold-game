@@ -35,6 +35,7 @@ text: {You notice it on the east stair. As you pass, the candle flames bend away
 @event align_whispered_answer
 title: A Voice Over Your Shoulder
 class: routine
+slot: night
 tone: eerie
 when: alignment <= -30 and term
 repeat: 12
@@ -115,7 +116,7 @@ weight: 10
 art: mask
 tags: social hollow
 scene: A hard-faced student leaning on a pillar, giving another a slow, approving nod across a busy corridor.
-text: {other} has always looked straight through you. Today {they} nod{s} as you pass, slow and approving, the way people nod at someone who has finally learned the rules of a game.
+text: {rel(other) < 10: {other} has always looked straight through you. Today {they} nod{s} as you pass|{other} catches your eye in the corridor and nod{s} again}, slow and approving, the way people nod at someone who has finally learned the rules of a game.
 > left: Nod back
   rel other +medium
   alignment -tiny
@@ -136,7 +137,7 @@ weight: 13
 art: pouch
 tags: hollow money
 scene: A hooded courier in a rain-dark alley behind the village, holding out a small parcel wrapped in black oilcloth and a purse.
-text: {~A hooded courier stops you behind the bakery.|The hooded courier is waiting again, same alley, same black oilcloth.} "For the boathouse, after dark," {~they say, and hold out the parcel and a purse.|they say. "The families remember who is reliable."} The oilcloth is cold enough to ache.
+text: {A hooded courier stops you behind the bakery.|The hooded courier is waiting again, same alley, same black oilcloth.} "For the boathouse, after dark," {~they say, and hold out the parcel and a purse.|they say. "The families remember who is reliable."} The oilcloth is cold enough to ache.
 > left: Carry it
   gold +medium
   alignment -medium
@@ -162,7 +163,6 @@ scene: A crumpled letter on a library floor, a student's name on the envelope, a
 text: {mark} has dropped a letter in the library: something private, something {they} would hate the corridor to hear. You could hand it back. You could also keep it, and {they} would owe you, quietly, for a long time.
 > left: Keep it
   guile +small
-  renown +tiny
   alignment -small
   rel mark -small
   say: You fold it into your book. When you mention it, very lightly, {mark} goes pale and agrees to everything. It works. It keeps working.
@@ -211,7 +211,7 @@ text: {~A first-year hovers by your table with a torn essay and a face like a we
   health -small
   renown +small
   alignment +tiny
-  say: It takes the whole evening. They leave lighter than they came. So, oddly, do you.
+  say: It takes the whole evening and half your sleep. They leave lighter than they came. So, oddly, do you.
 > right: Point them to a tutor
   mood +tiny
   say: You give them a name and a smile and get back to your own work. They look disappointed for a moment, then grateful anyway.
@@ -238,7 +238,7 @@ text: {friend} pushes the last biscuit across to you. "People talk, you know. Ab
   say: You eat the biscuit. {friend} looks very pleased. You buy the next pot.
 > right: Say anyone would have done the same
   rel friend +tiny
-  alignment +tiny
+  mood +tiny
   say: "Anyone would," you say. "Nobody did," says {friend}, and lets you change the subject, but the look {they} give{s} you says it has only been postponed.
 
 @event align_saint_jibe

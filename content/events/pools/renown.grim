@@ -14,7 +14,7 @@ tone: tense
 art: trophy
 tags: renown
 scene: A noticeboard in the entrance hall crowded with announcements, one gold-bordered notice pinned dead centre, students jostling to read it.
-text: {A gold-bordered notice in the entrance hall says the academy wants volunteers.|Another gold notice, and the crowd around it is bigger this year.|The gold notice again. People glance at you as they read it now.} {~Whoever stands up will be seen by the whole school.|The village is invited.|There's a prize, and there's the shame of losing in public.}
+text: {A gold-bordered notice in the entrance hall says the academy wants volunteers.|Another gold notice, and the crowd around it is bigger this time.|The gold notice again. People glance at you as they read it now.} {~Whoever stands up will be seen by the whole school.|The village is invited.|There's a prize, and there's the shame of losing in public.}
 > demonstrate: Cast a spell before the school
   hint: Arcana, hard. Fame or embarrassment.
   queue renown_demonstration now
@@ -41,7 +41,7 @@ tags: renown magic
 scene: The Great Hall packed to the rafters, every house at its table, a single student standing in the middle of the floor with a wand raised.
 text: The whole school is in the Great Hall, and so is the faculty, and so, at the end, is the headmistress. You're in the middle of the floor. Your spell is the most ambitious thing you know. There's a long silence while everyone waits for you to begin.
 > left: Cast the hardest thing you know
-  challenge spell hard:
+  challenge spell adept drift mid:
     win:
       renown +large
       arcana +small
@@ -65,7 +65,7 @@ tags: renown study
 scene: Two lecterns on a stage under banners, a student at one pointing emphatically, an older student at the other frowning, a packed hall of faces in the dark.
 text: The great debate: "That magic should be taught to anyone who asks." You've drawn the side you disagree with, against a fourth-year who has never lost. The faculty are in the front row. Thorne is taking notes.
 > left: Argue your side brilliantly anyway
-  challenge research hard:
+  challenge research expert drift mid:
     win:
       renown +large
       lore +small
@@ -77,7 +77,7 @@ text: The great debate: "That magic should be taught to anyone who asks." You've
       say: The fourth-year takes you apart, politely and completely. The hall applauds you for trying, which is the cruellest kind of applause.
 > right: Argue what you actually believe
   renown +tiny
-  alignment +tiny
+  charm +small
   mood -small
   say: You throw away the brief and argue your own side, which is against the rules. You lose on points and win the hall. Thorne writes something down, and you'll never know what.
 
@@ -88,22 +88,22 @@ class: routine
 tone: light
 art: sparkle
 tags: renown money
-scene: A small stage at a village fair under bunting, a student conjuring coloured lights over a crowd of children and farmers.
-text: The village fair has a stage, bunting and a crowd of farmers who have seen every trick there is. Children sit at the front, cross-legged, unimpressed in advance.
+scene: A small stage at a village fair under bunting, a student conjuring coloured lights over a crowd of apprentices and farmers.
+text: The village fair has a stage, bunting and a crowd of farmers who have seen every trick there is. The village apprentices sit at the front, cross-legged, unimpressed in advance.
 > left: Put on a real show
-  challenge negotiate using charm medium:
+  challenge negotiate journeyman:
     win:
       renown +medium
       gold +small
-      say: Lights, a dancing hat, a dove that turns into a shower of petals. The children scream with joy. The farmers pay for the hat trick twice. The village talks about it until harvest.
+      say: Lights, a dancing hat, a dove that turns into a shower of petals. The apprentices whoop. The farmers pay for the hat trick twice. The village talks about it until harvest.
     lose:
       renown -tiny
       mood -small
-      say: The dove refuses to turn into anything and sits on your head. The children love it; the farmers don't pay.
-> right: Do card tricks for the children
+      say: The dove refuses to turn into anything and sits on your head. The apprentices love it; the farmers don't pay.
+> right: Do card tricks for the front row
   renown +small
   mood +small
-  say: You sit on the edge of the stage and do card tricks for the children until your voice gives out. No fame to speak of. The children follow you to the gate.
+  say: You sit on the edge of the stage and do card tricks for the apprentices until your voice gives out. No fame to speak of. Half of them walk you to the gate.
 
 @event renown_ice_rescue
 title: A First-Year on the Ice
@@ -116,11 +116,11 @@ tags: renown danger
 scene: A small figure clinging to the edge of a broken patch of ice in the middle of a frozen lake, students shouting on the shore, a student running out across the ice.
 text: A first-year has gone through the ice on the lake. A crowd is shouting on the shore, and nobody is moving. You're nearest.
 > left: Go out on the ice
-  challenge feat hard:
+  alignment +tiny
+  challenge feat adept:
     win:
       renown +large
       health -small
-      alignment +tiny
       say: You crawl out flat on the ice and pull them free. By supper the whole school knows your name, and the first-year's mother writes you a letter you keep for ever.
     lose:
       health -large
@@ -161,7 +161,7 @@ tags: renown social
 scene: Two students whispering behind their hands in a corridor, a third walking past them with a stiff back, a crumpled gossip sheet on the floor.
 text: Being known has a price: there's a rumour about you going round the castle, untrue and a little bit funny, and it's in Nessa's gossip column by Friday. People stop talking when you walk in.
 > left: Answer it in public
-  challenge negotiate medium:
+  challenge negotiate journeyman unlikely wild:
     win:
       renown +small
       say: You laugh it off at supper, loudly and well, with a better story of your own. By Monday everyone's repeating yours instead.
@@ -185,17 +185,16 @@ tags: renown money
 scene: A long candlelit dining table in a grand townhouse, a student in borrowed formal robes seated between a wealthy patron and a portrait of the patron.
 text: A wealthy patron of the academy has asked to meet "the students everyone's talking about", and you're one of them. Dinner is nine courses. The patron likes clever talk and has been known to fund a promising student's whole final year.
 > left: Be dazzling
-  challenge negotiate using charm hard:
+  challenge negotiate expert:
     win:
       renown +medium
       gold +medium
-      say: You're witty through nine courses and wise on the tenth. The patron sends you home with a purse "for books" and an invitation to come back next year.
+      say: You're witty through eight courses and wise on the ninth. The patron sends you home with a purse "for books" and an invitation to come back next year.
     lose:
       renown -small
       mood -small
       say: You use the wrong fork, then the wrong joke. The patron is kind and bored. You're not asked back.
 > right: Be honest about your struggles
   renown +small
-  alignment +tiny
   gold +small
   say: You talk plainly about money and work and exams. The patron listens, the only one at the table who does. A small purse arrives the next week with no letter, just a crest.

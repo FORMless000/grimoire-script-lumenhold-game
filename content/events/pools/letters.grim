@@ -23,7 +23,7 @@ text: {friend} has written. {~Three pages, mostly about nothing, which is the be
   say: {~You write until the candle gutters and spend the postage you meant for something else. It's worth it.|Four pages back, and a pressed flower of your own. You pay the extra stamp.}
 > right: Send a short note
   rel friend +tiny
-  chance 70:
+  chance likely:
     say: {~A few lines, warm enough. They'll know you read it.|"Missing you. More soon." It says enough.}
   else:
     rel friend -tiny
@@ -46,7 +46,7 @@ text: Someone has forwarded the Lumen Ledger to you at home. {~A professor's hat
   mood -tiny
   say: {~You read every word, even the notices. By the end you're homesick for a place you're not at.|The whole paper, twice. Home feels very far from the castle tonight, and the castle very far from home.}
 > right: Just the gossip page
-  chance 60:
+  chance likely:
     mood +small
     say: {~The gossip is excellent. You laugh out loud and have to explain it to everyone at the table.|Someone you know is in it, for something ridiculous. Perfect.}
   else:
@@ -70,7 +70,7 @@ text: The placement keeps you busy, and home feels further away than the miles. 
   gold -tiny
   say: {~Four pages about the work, the food and the people. The postage is dear from here. You send it anyway.|You tell them everything, and in telling it you find out how much you like it here.}
 > right: A few lines and back to work
-  chance 60:
+  chance likely:
     mood +tiny
     say: {~Short and cheerful. It'll do, and they'll be glad of it.|"All well, more soon." True, mostly.}
   else:
@@ -150,14 +150,19 @@ text: A bill from the village bookshop for a book called "On Small Explosions", 
   gold -small
   say: You pay it. A week later the book arrives, and it's actually quite good. You still don't know who signed for it.
 > right: Write back and dispute it
-  challenge negotiate easy:
+  challenge negotiate apprentice:
     win:
       charm +small
-      say: You write a polite, firm letter. The bookseller writes back: wrong student, same name, profuse apologies, and a voucher for a crown off your next book.
+      say: You write a polite, firm letter. The bookseller writes back: wrong student, same name, profuse apologies, and a bookmark by way of sorry.
     lose:
-      gold -small
-      mood -tiny
-      say: The bookseller replies with a copy of the signature and a note that she has "dealt with your sort before". You pay, and add a stiff note of your own.
+      if gold > 0:
+        gold -small
+        mood -tiny
+        say: The bookseller replies with a copy of the signature and a note that she has "dealt with your sort before". You pay, and add a stiff note of your own.
+      else:
+        mood -small
+        health -tiny
+        say: The bookseller replies with a copy of the signature and a note that she has "dealt with your sort before". Your purse is empty, so you work the bill off, shelving her stock for a long, dusty afternoon.
 
 @event letter_old_friend
 title: From Before
@@ -188,7 +193,7 @@ tags: letter study
 scene: A folded copy of a student newspaper with a competition notice circled in red ink.
 text: The Lumen Ledger's holiday issue has found you: an essay prize, "What I Did Not Do This Holiday", five hundred words, the winner printed on the front page and paid in crowns.
 > left: Write an entry
-  challenge research medium:
+  challenge research journeyman+ slim:
     win:
       renown +small
       gold +small
@@ -250,14 +255,14 @@ weight: 14
 art: letter
 tags: letter social duel
 scene: A letter of numbered duelling drills in crisp handwriting, a scratched-out postscript at the bottom.
-text: Lyra has written. It's a list of drills, numbered, with a note at the bottom: "Do these. You were slow in the last bout." There's a postscript under that, scratched out and rewritten three times and then scratched out for good.
+text: Lyra has written. It's a list of drills, numbered, with a note at the bottom: "Do these. You're too slow. Everyone is." There's a postscript under that, scratched out and rewritten three times and then scratched out for good.
 > left: Do every drill, and send your times
   vigor +small
   health -tiny
   rel lyra +tiny
   say: You do them in the cold every morning and post her your times. Her reply is one word: "Adequate." It's underlined, which from Lyra is a bouquet.
 > right: Ask what the postscript said
-  chance 50:
+  chance even +1 if rel(lyra) >= 30:
     rel lyra +small
     say: Two weeks later, one line: "It said: write back." Then, smaller: "You did. Good."
   else:
@@ -523,7 +528,7 @@ text: Nessa's letter has OFF THE RECORD at the top, and then, for once, short se
 > left: Reply off the record too
   spark nessa +small
   mood -tiny
-  say: You write back slowly and honestly, which costs you more than you expected. Her answer comes the day after it could have, which means she wrote it the moment she read yours.
+  say: You write back slowly and honestly, which costs you more than you expected. Her answer is posted the day your letter must have reached her, which means she wrote it the moment she read yours.
 > right: Ask to see the headlines
   charm +small
   spark nessa +tiny

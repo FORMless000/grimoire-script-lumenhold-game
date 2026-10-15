@@ -14,7 +14,7 @@ time: morning
 title: A Fever and a Bill
 class: incident
 tone: tense
-when: turn >= 3 and gold >= 20 and seen(inc_fever_bill) < 2 and since(inc_fever_bill) >= 12
+when: turn >= 3 and gold >= 30 and seen(inc_fever_bill) < 2 and since(inc_fever_bill) >= 12
 weight: 6
 repeat: 2
 art: potion
@@ -34,7 +34,7 @@ text: You wake in the infirmary with a fever that makes the ceiling breathe. Sis
 title: Snapped on the Stairs
 class: incident
 tone: tense
-when: turn >= 3 and gold >= 20 and seen(inc_broken_wand) == 0
+when: turn >= 3 and gold >= 30 and seen(inc_broken_wand) == 0
 weight: 6
 repeat: 1
 art: wand
@@ -45,7 +45,7 @@ text: The moving stairs shift without warning. You catch yourself; your wand doe
   gold -large
   say: The repairer in the village tuts, splints it with silver wire and charges you for every tut. It works better than before, which is somehow worse.
 > right: Bind it with string and hope
-  challenge spell easy wild:
+  challenge spell apprentice wild:
     win:
       mood -tiny
       say: It holds. It spits a little when you cast, like a cat that forgives you but wants it noted.
@@ -58,7 +58,7 @@ text: The moving stairs shift without warning. You catch yourself; your wand doe
 title: The Overdue Notice
 class: incident
 tone: light
-when: turn >= 3 and gold >= 20 and seen(inc_library_fine) < 2 and since(inc_library_fine) >= 12
+when: turn >= 3 and gold >= 30 and seen(inc_library_fine) < 2 and since(inc_library_fine) >= 12
 weight: 6
 repeat: 2
 art: paper
@@ -70,14 +70,14 @@ text: A prefect in a red sash slides a notice across your desk. The library book
   mood -tiny
   say: She stamps your receipt with great satisfaction. The book is reshelved in a cage, which feels like the right outcome for everyone.
 > right: Argue that the book bit first
-  challenge negotiate medium:
+  challenge negotiate apprentice+ unlikely:
     win:
       mood +tiny
-      say: You produce the bite on your thumb as evidence. The prefect inspects it, then the book, and halves the fine to nothing. "Fair," she says. "It has a history."
+      say: You produce the bite on your thumb as evidence. The prefect inspects it, then the book, and waives the fine. "Fair," she says. "It has a history."
     lose:
       gold -large
       study -tiny
-      say: The prefect writes down every word you say, then doubles the fine for "contempt of librarian". You pay it, and a demerit besides.
+      say: The prefect writes down every word you say, then doubles the fine for "contempt of librarian". You pay it, and lose an evening's revision to the demerit hearing besides.
 
 @event inc_letter_home
 title: Bad Weather at Home
@@ -92,6 +92,7 @@ scene: A student at a window reading a rain-spotted letter, a small pile of coin
 text: A letter from home, written in a hurry. A storm took half the roof, and the repairs will cost more than anyone has. Nobody asks you for anything. That's how you know it's bad.
 > left: Send crowns home
   gold -large
+  alignment +small
   mood -small
   say: You send everything you can spare and a little you can't. The reply comes a month later: a drawing of a roof, finished, and a pressed flower.
 > right: Write back with love, not money
@@ -102,7 +103,7 @@ text: A letter from home, written in a hurry. A storm took half the roof, and th
 title: Market Day Fingers
 class: incident
 tone: tense
-when: turn >= 3 and gold >= 20 and seen(inc_stolen_purse) < 2 and since(inc_stolen_purse) >= 12
+when: turn >= 3 and gold >= 30 and seen(inc_stolen_purse) < 2 and since(inc_stolen_purse) >= 12
 weight: 6
 repeat: 2
 art: pouch
@@ -110,7 +111,7 @@ tags: money danger
 scene: A crowded village square on market day, a figure in a grey hood slipping away between the stalls with a small purse.
 text: Somewhere between the cheese stall and the man selling enchanted socks, your purse stops being yours. You catch a grey hood slipping between the stalls, already three stalls ahead.
 > left: Run after the hood
-  challenge feat medium:
+  challenge feat apprentice+:
     win:
       gold -tiny
       health -tiny
@@ -186,7 +187,7 @@ text: Nessa Quill corners you by the library stairs, holding an empty paper tray
 > right: Help her fold the edition instead
   rel nessa +small
   health -tiny
-  say: You can't pay for paper, but you can fold it. You fold until midnight, fingers grey with ink. Nessa credits you on the back page as "the folding department".
+  say: You'd rather give her your time than your crowns. Nessa scrounges paper from the Ledger's scrap bin, and you fold until midnight, fingers grey with ink. Nessa credits you on the back page as "the folding department".
 
 # ---------------- B) Voluntary sinks: donations ----------------
 
@@ -237,15 +238,14 @@ text: A duellist with a bandaged hand rattles a box at the foot of the east stai
 title: Guests in Green
 class: routine
 tone: light
-when: year == 3
+when: year == 3 and month <= 2 and seen(xchg_arrival) == 0
 weight: 12
-repeat: 1
 art: mask
 tags: social rival
 scene: Four students in green Thornwick robes standing in a grand entrance hall, the portraits on the walls all turned to stare at them.
 text: Four students in Thornwick green arrive for a term, with trunks and very polite smiles. Within an hour every portrait in the entrance hall is winking at the wrong people. A prefect looks around for someone, anyone, to show them the castle.
 > left: Offer to show them round
-  challenge negotiate easy:
+  challenge negotiate apprentice+:
     win:
       renown +small
       charm +small
@@ -262,9 +262,8 @@ text: Four students in Thornwick green arrive for a term, with trunks and very p
 title: The Ink-Stained Cuffs
 class: routine
 tone: tense
-when: year == 3 and seen(xchg_arrival) > 0
+when: year == 3 and month <= 4 and seen(xchg_arrival) > 0 and seen(xchg_farewell) == 0
 weight: 12
-repeat: 1
 art: book
 tags: study rival
 scene: A library at dusk, a student in green robes with ink-stained cuffs copying from a book chained to a desk.
@@ -276,27 +275,24 @@ text: Late in the library, you find the Thornwick girl with the ink-stained cuff
 > right: Keep quiet, for a favour
   alignment -tiny
   guile +small
-  renown -tiny
   say: She tears out the page she copied and hands you the other half of her notes instead. "We're even," she says. You're fairly sure you aren't.
 
 @event xchg_farewell
-time: morning
 title: A Thornwick Farewell
 class: milestone
 tone: warm
-when: year == 3 and seen(xchg_arrival) > 0 and since(xchg_arrival) >= 3
+when: year == 3 and month <= 4 and seen(xchg_arrival) > 0 and since(xchg_arrival) >= 2 and seen(xchg_farewell) == 0
 weight: 12
-repeat: 1
 art: group
 tags: social rival
 scene: Students in green and blue robes on a jetty at dawn, a barge waiting, one of them holding out a striped scarf.
-text: The Thornwick students leave on the dawn barge. The boy with the sketchbook finds you on the jetty and holds out his scarf. "It's a custom," he says. "Probably. I've just decided." Behind him his friends pretend not to listen.
+text: The Thornwick students leave on today's barge. The boy with the sketchbook finds you on the jetty and holds out his scarf. "It's a custom," he says. "Probably. I've just decided." Behind him his friends pretend not to listen.
 > left: Swap scarves
   mood +medium
   renown -tiny
   say: You trade scarves on the jetty. Someone from your own house mutters "traitor" at breakfast. You wear it anyway, and get a letter from across the hills by the end of the month.
 > right: Challenge him to one last duel
-  challenge combat medium:
+  challenge combat adept- wild:
     win:
       renown +medium
       say: You win, narrowly, on the wet boards. He laughs, bows, and sketches you mid-spell on the barge as it pulls away. The sketch arrives by post, flattering.

@@ -44,7 +44,7 @@ text: {Tamsin has written again, six pages of Thornwick gossip with sketches of 
 > left: Write back at length
   rel tamsin +small
   mood -tiny
-  say: {~You write till the candle gutters, with sketches of your own professors, and pay the extra postage. Tamsin's reply calls your drawing of Thorne "libellous and correct".|Five pages back, with the castle's gossip and your worst week. They answer the worst week first.}
+  say: {~You write till the candle gutters, with sketches of your own professors. Tamsin's reply calls your drawing of Thorne "libellous and correct".|Five pages back, with the castle's gossip and your worst week. They answer the worst week first.}
 > right: A few lines and a sketch
   rel tamsin +tiny
   mood +tiny
@@ -61,7 +61,7 @@ weight: 10
 art: letter
 tags: social letter
 scene: A letter numbered down the margin from one to twenty, each line a question, a student chewing a quill over the answers.
-text: {Tamsin's letter is a numbered list of twenty questions about life at Lumenhold, from "Is the lake haunted?" to "What do you eat for breakfast?"|Another list of questions. Number seven is "Who is the most annoying person at your school?"|Questions again. "Be honest," says number one. "Number twenty can be a lie."} {~Number twelve asks about your exams.|Number fifteen asks about the lake.|Number nineteen just says "Are you happy?"}
+text: {Tamsin's letter is a numbered list of twenty questions about life at Lumenhold, from "Is the lake haunted?" to "What do you eat for breakfast?"|Another list of questions. Number seven is "Who is the most annoying person at your school?"|Questions again. "Be honest," says number one. "Number twenty can be a lie."} {~Number twelve asks about your exams.|Number fifteen asks about the lake.|Number three asks about the food.} Number nineteen just says "Are you happy?"
 > left: Answer every one honestly
   rel tamsin +small
   lore +tiny
@@ -127,7 +127,7 @@ actor: tamsin
 trigger: social
 class: story
 tone: tense
-when: year >= 3 and rel(tamsin) >= 14 and not flag(thornwick_secrets)
+when: year == 3 and month <= 7 and seen(rival_contest) == 0 and rel(tamsin) >= 14 and not flag(thornwick_secrets)
 weight: 12
 art: letter
 tags: social letter rival
@@ -231,7 +231,7 @@ scene: A packed duelling arena under banners of blue and green, two duellists fa
 text: The inter-school contest, at Lumenhold this year, before both schools and half the village. You've made the team. {met(tamsin): In the final, the name opposite yours is Tamsin Reed. They wave from across the ring, apologetically, and then stop smiling.|In the final, a Thornwick illusionist faces you, smiling far too much.}{flag(thornwick_secrets): You know every trick they've planned.|}
 > left: Fight to win
   if flag(thornwick_secrets):
-    challenge combat medium:
+    challenge combat adept likely:
       win:
         flag thornwick_contest_won
         renown +large
@@ -242,7 +242,7 @@ text: The inter-school contest, at Lumenhold this year, before both schools and 
         health -medium
         say: Knowing the plan isn't enough: they change it in the ring. Thornwick takes the cup. The plan, in your pocket, feels heavier than ever.
   else:
-    challenge combat hard:
+    challenge combat adept:
       win:
         flag thornwick_contest_won
         renown +large
@@ -270,7 +270,7 @@ tags: rival duel
 scene: An evening exhibition match on the lawn between two academies, lanterns strung between the trees, final-year students in blue and green laughing in the ring.
 text: The last match of your year against Thornwick's: an exhibition on the lawn, lanterns in the trees, nothing at stake but four years of grudges. {met(tamsin): Tamsin has asked to be your opponent. "For the record," they say. "Ours."|Thornwick's final-years have brought cake, which feels like a trick.}
 > left: Give it everything
-  challenge combat medium:
+  challenge combat adept+:
     win:
       renown +medium
       queue tamsin_farewell in 1
@@ -317,12 +317,12 @@ weight: 16
 art: mask
 tags: study social
 scene: A laboratory at a rival academy, a student in Thornwick green looking up from a glowing illusion on a bench, mid-grin, at a visitor in the doorway.
-text: On your first morning at the Thornwick lab, the student at the next bench looks up from a glowing illusion and grins. It's Tamsin. "They said a Lumenhold intern was coming," they say. "I told them it had better be you, or I'd sabotage everything."
-> left: Work beside them all summer
+text: At the Thornwick lab, the student at the next bench, back from a week away, looks up from a glowing illusion and grins. It's Tamsin. "They said a Lumenhold intern had come," they say. "I told them it had better be you, or I'd sabotage everything."
+> left: Work beside them from now on
   wage
   perform intern_thornwick +tiny
   rel tamsin +medium
-  say: A summer at the next bench. They show you every trick in Thornwick's book, and you show them three Lumenhold ones they swear aren't legal. Your supervisor calls you "the inseparables", not kindly.
+  say: The rest of the summer at the next bench. They show you every trick in Thornwick's book, and you show them three Lumenhold ones they swear aren't legal. Your supervisor calls you "the inseparables", not kindly.
 > right: Keep it professional
   wage
   perform intern_thornwick +medium
@@ -335,7 +335,7 @@ actor: lyra
 trigger: social
 class: routine
 tone: light
-when: seen(rival_contest) > 0
+when: seen(rival_contest) > 0 and not off_campus and around(lyra)
 weight: 12
 art: duel
 tags: social rival
@@ -344,7 +344,7 @@ text: Lyra has the Ledger folded to the contest results. "Thornwick," she says, 
 > left: Defend Thornwick
   rel lyra -small
   charm +tiny
-  say: You tell her Thornwick's people are people. She listens with enormous scepticism. A month later she asks, very casually, whether your Thornwick friend would ever want a practice duel. "For research," she says.
+  say: You tell her Thornwick's people are people. She listens with enormous scepticism. A month later she asks, very casually, whether {met(tamsin): your Thornwick friend|any of Thornwick's duellists} would ever want a practice duel. "For research," she says.
 > right: Agree they're insufferable
   rel lyra +small
-  say: "Insufferable," you agree. She looks almost happy. "Exactly," she says. "Thank you." You don't tell Tamsin, who would agree with her.
+  say: "Insufferable," you agree. She looks almost happy. "Exactly," she says. "Thank you." {met(tamsin): You don't tell Tamsin, who would agree with her.|You keep to yourself that the Thornwick illusionist was rather good.}
