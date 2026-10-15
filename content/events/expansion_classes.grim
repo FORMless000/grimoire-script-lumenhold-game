@@ -8,7 +8,7 @@ slot: morning
 title: Compulsory Broom Flight
 class: routine
 tone: tense
-when: year == 1 and month <= 6
+when: year == 1 and month <= 6 and term
 weight: 12
 art: broom
 tags: class danger
@@ -50,7 +50,7 @@ text: Thorne holds up a sealed jar containing one flame of genuine dragonfire, b
       say: The dragonfire disagrees. You spend a week with bandaged hands and a new respect for dragons.
 > right: Watch someone else
   lore +tiny
-  say: A fifth-year volunteers and loses a sleeve. You take careful notes on what not to do.
+  say: A fourth-year volunteers and loses a sleeve. You take careful notes on what not to do.
 
 @event tide_water_spirit_race
 title: The Water Spirit Race
@@ -95,7 +95,7 @@ text: Professor Vey's exam: a maze of enchanted mirrors. Find the exit. Some ref
   challenge deceive medium:
     win:
       guile +medium
-      study +small
+      study illusion +small
       say: You spot the reflection that blinks late, and follow it out. Vey awards top marks and says, "Most people trust the one that looks happiest."
     lose:
       mood -small
@@ -104,7 +104,7 @@ text: Professor Vey's exam: a maze of enchanted mirrors. Find the exit. Some ref
   challenge spell medium:
     win:
       arcana +small
-      study +tiny
+      study illusion +tiny
       say: Every mirror goes dark at once. Exit found. Vey writes, "Effective. Inelegant. Pass."
     lose:
       health -small
@@ -123,7 +123,7 @@ scene: A pink, glittering potion in a heart-shaped flask on a workbench, a stude
 text: This week's assignment: brew a love potion — "for analytical purposes only". Your flask glows a suspicious pink. Someone at the next bench asks if they can buy it. Several people ask.
 > left: Brew it perfectly, then pour it away
   alchemy +medium
-  study +small
+  study alchemy +small
   say: Perfect colour, perfect scent. You pour it down the sink. The pipes are affectionate for a week.
 > right: Sell it
   alignment -small
@@ -143,19 +143,19 @@ weight: 12
 art: eye
 tags: class mystery
 scene: A dim divination classroom, a single student staring into a crystal ball, the examiner's quill hovering expectantly over a blank page.
-text: The final Divination exam: gaze into the crystal and make one prophecy about the coming month. The examiner will check. "Vague prophecies," she warns, "fail."
+text: The mock Divination exam: gaze into the crystal and make one prophecy about the coming month. The examiner will check. "Vague prophecies," she warns, "fail."
 > left: Make a bold, specific prophecy
   chance 50:
-    study +large
+    study astromancy +large
     renown +small
-    say: "On the eighth, the kitchen cat will have kittens in the headmistress's hat." On the eighth, she does. You pass with distinction.
+    say: "On the eighth, the kitchen cat will have kittens in the headmistress's hat." On the eighth, she does. Top marks in the mock.
   else:
-    study -small
+    study astromancy -small
     say: "On the eighth, it will snow indoors." It does not snow indoors. The examiner writes "ambitious".
 > right: Make a careful, safe prophecy
-  study +small
+  study astromancy +small
   lore +tiny
-  say: "Someone will be late to breakfast." Someone is. The examiner sighs and gives you a pass.
+  say: "Someone will be late to breakfast." Someone is. The examiner sighs and gives you a bare pass: it was vague, but it was checkable.
 
 @event art_golem_helper
 title: The Little Golem
@@ -170,7 +170,7 @@ text: Your term project: a knee-high clay golem that carries books. It works! It
 > left: Add a "stop" command
   challenge research trivial:
     win:
-      study +medium
+      study artifice +medium
       lore +small
       say: The golem stops. It also waits politely. The professor asks if she can borrow it for her office.
     lose:
@@ -180,7 +180,7 @@ text: Your term project: a knee-high clay golem that carries books. It works! It
   chance 70:
     renown +small
     mood +small
-    say: The golem becomes a beloved castle fixture, delivering books to whoever looks sad. Nobody knows who made it. You know.
+    say: The golem becomes a beloved castle fixture, delivering books to whoever looks sad. It signs every delivery with your initials, in clay.
   else:
     renown -tiny
     say: It also delivers a Restricted Section book to a first-year. The librarian follows the clay smudges straight to your door.
@@ -196,6 +196,7 @@ tags: class nature
 scene: A tiny sea-horse foal with a fish's tail struggling in a rock pool on the lake shore, a student kneeling beside the water.
 text: A hippocampus foal — half pony, half fish — has been stranded in a shrinking rock pool on the lakeshore. Professor Brask is on the other side of the grounds. The foal is panicking.
 > left: Carry it to the lake
+  alignment +tiny
   challenge feat trivial:
     win:
       mood +medium
@@ -241,13 +242,13 @@ text: Sister Amaranth's triage drill: twelve "injured" students, one healer — 
   challenge brew easy:
     win:
       alchemy +medium
-      study +small
+      study alchemy +small
       say: You spot the real injury in the first minute. Amaranth nods, once, which is the highest honour in the infirmary.
     lose:
-      study +tiny
+      study alchemy +tiny
       say: You find the real injury in minute nine. Late, but not too late. Amaranth's lips thin. "Again tomorrow."
 > right: Work systematically down the line
-  study +tiny
+  study alchemy +tiny
   lore +tiny
   say: Methodical, thorough and slow. The real patient waits seven minutes. Amaranth makes you write an essay on why.
 

@@ -163,10 +163,9 @@ text: The Spring Tournament committee has a velvet cushion, a very thin prize pu
   gold -large
   renown +medium
   say: {~Your name is read out first, and mispronounced only slightly.|Your name rings across the lawn before the first bout. Two first-years bow to you, unsure why.} The champion thanks you from the podium.
-> right: Put in a few crowns
-  gold -small
-  renown +tiny
-  say: Your name is read out somewhere near the end, between a professor's cat and "a well-wisher". It still counts.
+> right: Cheer from the stands instead
+  mood +tiny
+  say: Other names are read out, among them a professor's cat and "a well-wisher". You cheer for all of them, and loudest for the champion.
 
 @event patron_ledger_print
 title: Paper for the Press
@@ -184,10 +183,10 @@ text: Nessa Quill corners you by the library stairs, holding an empty paper tray
   rel nessa +medium
   renown +small
   say: "Headline: generous student saves free press," Nessa says, already writing it. The masthead lists you in tiny capitals, which she says is the most honour anyone gets.
-> right: Buy one small advertisement
-  gold -small
-  renown +small
-  say: You buy a corner of page four. Nessa writes your copy for you, and somehow it reads like a confession. People quote it at you for a week.
+> right: Help her fold the edition instead
+  rel nessa +small
+  health -tiny
+  say: You can't pay for paper, but you can fold it. You fold until midnight, fingers grey with ink. Nessa credits you on the back page as "the folding department".
 
 # ---------------- B) Voluntary sinks: donations ----------------
 
@@ -208,10 +207,9 @@ text: Last night's hail went through the greenhouse glass like a hammer through 
   mood +small
   discover greenhouses
   say: A gardener with mud to the elbows insists on showing you your pane. Inside it is warm, green and loud with opinions. You are welcome, she says, any morning.
-> right: Drop in a coin and walk on
-  gold -tiny
+> right: Walk on
   mood -tiny
-  say: The coin clinks into the tin. Behind the gate, something small and leafy sneezes. You feel, obscurely, that you've been judged.
+  say: You walk past the tin. Behind the gate, something small and leafy sneezes. You feel, obscurely, that you've been judged.
 
 @event donate_duel_floor
 title: The Scorched Floor
@@ -229,8 +227,7 @@ text: A duellist with a bandaged hand rattles a box at the foot of the east stai
   renown +small
   discover duel_hall
   say: He drags you upstairs to see. The hall smells of smoke and wax, and the practice dummies glare at you. Your initials go on the underside of the board by the door.
-> right: Give him a coin for the bandage
-  gold -tiny
+> right: Wish him luck with the bandage
   mood -tiny
   say: He thanks you with exaggerated courtesy and goes back to rattling. Somewhere above, steel rings on steel, and nobody invites you up.
 

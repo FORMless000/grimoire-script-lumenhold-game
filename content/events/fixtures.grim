@@ -380,11 +380,10 @@ text: The bell over the door rings. The woman behind the counter looks up, consi
   mood +small
   rel mabel +small
   say: The tea is exactly right and you can't say why. She brings a slice of cake you didn't order and doesn't charge for it. "First visit," she says. "After that I charge double."
-> right: "Just something to go."
+> right: Say you'll come back another time
   meet mabel
-  gold -tiny
-  health +tiny
-  say: She hands you a paper cup and looks at you over it. "Come back when you've got time to sit," she says. "You'll know when."
+  rel mabel +tiny
+  say: She looks at you over the counter. "Come back when you've got time to sit," she says. "You'll know when."
 
 @event mabel_parcel
 title: A Tin From Mabel
@@ -450,11 +449,10 @@ text: You ask for a textbook. An elderly man on a ladder says "Ah!" with enormou
   lore +small
   rel grimsby +small
   say: You read it on the barge home. Chapter four has the exact proof your essay was missing. When you go back to say so, he only nods. "They always come back," he says. "Lighthouses."
-> right: Insist on the textbook
+> right: Say you'll think about it
   meet grimsby
-  gold -tiny
   rel grimsby -tiny
-  say: He finds it after forty minutes, under a cat. He sells it to you sadly, like a doctor handing over a prescription he doesn't believe in.
+  say: He puts the lighthouses back on the shelf, sadly, like a doctor whose prescription has been refused. "It'll keep," he says. "So will you."
 
 @event grimsby_parcel
 title: The Wrong Book, Posted
@@ -474,10 +472,9 @@ text: {A parcel arrives from Grimsby's. Inside is a book you didn't order and a 
   lore +small
   rel grimsby +small
   say: {~It's the wrong book, exactly as promised, and somewhere in it is the right page. It always is.|You read it out of politeness and finish it out of something else.}
-> right: Post it back
-  gold -tiny
+> right: Send it back with the carrier
   rel grimsby -tiny
-  say: {~The postage costs more than the book would have. He sends a cheerful note that says "Next time, then."|He sends it straight back with a second, wronger book. You keep both.}
+  say: {~The carrier takes it back for nothing, grumbling. Grimsby sends a cheerful note that says "Next time, then."|He sends it straight back with a second, wronger book. You keep both.}
 
 @event grimsby_mind_the_shop
 title: Mind the Shop
@@ -517,11 +514,10 @@ scene: An old apothecary on a library ladder in front of a wall of tiny labelled
 text: You ask for something for a headache. An old man on a ladder stops, counts the drawers under his breath and comes down with exactly one twist of paper. "Willow and feverfew," says Old Pell. "Three pinches. Not four. Four is for people who don't listen."
 > left: Ask why not four
   meet pell
-  gold -tiny
   alchemy +small
   rel pell +small
   mood -tiny
-  say: He tells you, at length, with diagrams drawn in the counter dust. You leave with the cure, a headache from the lecture and the dosage for nine other things.
+  say: He tells you, at length, with diagrams drawn in the counter dust. He's so pleased someone asked that he forgets to charge you. You leave with the cure, a headache from the lecture and the dosage for nine other things.
 > right: Pay and go
   meet pell
   gold -tiny

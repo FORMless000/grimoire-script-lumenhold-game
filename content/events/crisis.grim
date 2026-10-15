@@ -15,17 +15,9 @@ tags: crisis
 scene: A narrow infirmary bed under a high arched window, a healer's lamp floating beside it.
 text: The world tilts. When it rights itself you are in the infirmary, and Sister Amaranth is looking at you over her spectacles. "You have been running your body like a borrowed broom," she says.
 > left: Pay for the full cure (30 gold)
-  if gold >= 30:
-    gold -large
-    health +huge
-    say: Three foul tonics and two days' sleep later, you feel almost human.
-  elif collapses >= 1:
-    end ending_sent_home
-  else:
-    health +huge
-    study -large
-    collapses += 1
-    say: You can't pay. She heals you anyway, slowly, and you miss a fortnight of classes.
+  gold -large
+  health +huge
+  say: Three foul tonics and two days' sleep later, you feel almost human.
 > right: Ask to rest instead
   if collapses >= 1:
     end ending_sent_home
@@ -78,7 +70,7 @@ trigger: queued
 priority: 90
 art: scales
 tags: crisis
-scene: Three faculty members behind a high bench in a dim chamber; the headmistress in the centre, hands folded.
+scene: Three professors behind a high bench in a dim chamber, the headmistress in the centre, hands folded.
 text: Two terms of failing marks. You are summoned before the Disciplinary Board: three professors and the headmistress, who looks at you with an expression of deep, patient disappointment. {flag(board_reprieve): They have seen you here before.|}
 > left: Plead your case
   if flag(board_reprieve):
@@ -89,7 +81,7 @@ text: Two terms of failing marks. You are summoned before the Disciplinary Board
         flag board_reprieve
         study +huge
         gain probation
-        say: You speak honestly and well. They grant you one reprieve. "There will not be a second," says the headmistress, pleasantly.
+        say: You speak honestly and well. They grant you one reprieve, and a study plan that fills every evening. "There will not be a second," says the headmistress, pleasantly.
       lose:
         end ending_expelled
 > right: Promise to work harder
@@ -100,7 +92,7 @@ text: Two terms of failing marks. You are summoned before the Disciplinary Board
     study +huge
     gain probation
     mood -medium
-    say: "Promises are cheap," says Professor Thorne. "We'll take this one. Only this one." A reprieve, and a very long term ahead.
+    say: "Promises are cheap," says Professor Thorne. "We'll take this one. Only this one." A reprieve, a study plan in his own hand, and a very long term ahead.
 
 # The first missed payment (M22): a reminder, with interest.
 @event grisk_reminder

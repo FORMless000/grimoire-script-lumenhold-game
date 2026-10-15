@@ -34,6 +34,8 @@ appeal: grade_appeal
 spark_cooldown: spark_cooldown
 # A job is a fixed number of shifts a term (playtest 2, I1): this card is pushed on the first visit after the last one.
 off_shift: job_off_shift
+# An option that charges crowns up front is locked when you can't pay (review fixes), unless every option would be.
+afford: gold
 # The term-time map; a break plan's `map_id:` replaces it (home, or the internship host's).
 map_id: campus
 cards_per_month: 3
@@ -195,6 +197,15 @@ do:
   elif not (has(origin_noble) or has(origin_merchant)):
     gold -16
   say: {~Term fees, paid at a window with a very small grille.|The bursar's quill scratches. Another term is paid for.}
+
+# Course fees (review fixes): charged with the term, like tuition, not by the enrolment card.
+@hook course_fees
+on: term_start
+when: term_index <= 6
+label: Course fees
+do:
+  gold -small
+  say: {~Course fees, paid at the registrar's window with the tuition.|The registrar takes the course fees with a sigh, as if it pained her too.}
 
 @hook gpa_probation
 on: term_end

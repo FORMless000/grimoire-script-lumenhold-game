@@ -584,3 +584,27 @@ test('previewing an option never changes the game (A1: a previewed `visit midnig
   assert.ok(eng.s.hist.some((h) => h.id === 'night_out'), 'the night card came');
   assert.ok(!eng.s.hist.some((h) => h.t === 'pick' && h.slot === 'midnight'), 'Sleep opens no midnight pick');
 });
+
+// Review fixes: an option that charges crowns up front locks when you can't pay (`@game afford: gold`), unless every
+// option on the card would lock (never soft-lock: an incident then takes what you have).
+test('options you can\'t afford are locked, never every option', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 14, name: 'T' }); });
+  eng.s.npcs.lyra = Object.assign(eng.s.npcs.lyra || {}, { met: true, rel: 30 });
+  eng.s.vals.gold = 0;
+  let v = eng.view({ id: 'lyra_family_gala', actor: 'lyra' });
+  const right = v.options.find((o) => o.key === 'right');
+  assert.ok(right.disabled && right.poor > 0, 'the gala clothes are locked at an empty purse');
+  assert.ok(!v.options.find((o) => o.key === 'left').disabled, 'declining stays open');
+  eng.s.cur = { id: 'lyra_family_gala', actor: 'lyra' };
+  assert.throws(() => eng.choose('right'), /costs more than you have/);
+  eng.s.vals.gold = 100;
+  v = eng.view({ id: 'lyra_family_gala', actor: 'lyra' });
+  assert.ok(!v.options.find((o) => o.key === 'right').disabled, 'open once you can pay');
+  // An incident whose every option charges crowns keeps them all open at an empty purse.
+  const both = Object.values(content.events).find((e) => e.class === 'incident' && !e.actor && !e.cast && e.options.length >= 2 && e.options.every((o) => !o.when && eng.priceOf(o) > 0));
+  if (both) {
+    eng.s.vals.gold = 0;
+    assert.ok(eng.view({ id: both.id }).options.every((o) => !o.disabled), both.id + ': nothing locked when everything would be');
+  }
+});

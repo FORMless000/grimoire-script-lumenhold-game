@@ -99,6 +99,7 @@
     'card.consequence': 'consequence',
     'card.illustration': 'Illustration: {text}',
     'card.notAvailable': 'Not available',
+    'card.cantAfford': 'Not enough crowns ({cost} needed)',
     'check.button': '{skill} check · {p}%',
     'check.chip': '{skill} check ({p}%) · {result}',
     'check.success': 'success',

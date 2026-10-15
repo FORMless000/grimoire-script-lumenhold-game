@@ -14,7 +14,7 @@ repeat: 8
 art: scroll
 tags: social study
 scene: A student holding a single soggy page of notes, the rest of the stack floating away down a stream behind them.
-text: {npc} borrowed your Lore notes last week. {They} {are} now standing in front of you holding a single soggy page. "There was a stream," {they} say{s}. "And a duck. Mostly a duck."
+text: {npc} borrowed all your lecture notes last week. {They} {are} now standing in front of you holding a single soggy page. "There was a stream," {they} say{s}. "And a duck. Mostly a duck."
 > left: Laugh it off
   rel npc +medium
   study -tiny
@@ -36,16 +36,16 @@ repeat: 12
 art: gem
 tags: social festival
 scene: A small cake with a single candle in a dark common room, a group of students crouched behind a sofa, a surprised face in the doorway.
-text: You find out — by accident — that it's {npc}'s birthday. {They} haven't told anyone. {They} {are} spending it in the library, alone, on purpose.
+text: {&You find out — by accident — that it's {npc}'s birthday. {They} haven't told anyone. {They} {are} spending it in the library, alone, on purpose.|It's {npc}'s birthday again, and again {they} haven't told anyone. {They} {are} in the library, alone, as if you might have forgotten.}
 > left: Organise a surprise
   gold -small
   rel npc +large
   mood +small
-  say: Seven people jump out from behind a sofa. {npc} screams, then laughs, then has to sit down. "How did you know?" You'll never tell.
+  say: {&Seven people jump out from behind a sofa. {npc} screams, then laughs, then has to sit down. "How did you know?" You'll never tell.|This year it's a cake shaped, badly, like the library. {npc} pretends to be annoyed for nearly a minute.}
 > right: Join {them} in the library
   rel npc +medium
   lore +tiny
-  say: You sit down opposite {them} with your own book. Neither of you says happy birthday. At midnight {they} slide{s} a biscuit across the table, and you both grin.
+  say: {&You sit down opposite {them} with your own book.|You take the same seat as last year, with your own book.} Neither of you says happy birthday. At midnight {they} slide{s} a biscuit across the table, and you both grin.
 
 @event soc_bad_news
 title: Bad News From Home
@@ -63,7 +63,7 @@ text: {npc} is sitting on the stairs with a letter in {their} lap, not moving. {
 > left: "Go. We'll cover your classes."
   rel npc +large
   study -tiny
-  say: {npc} catches the next barge. You take notes for two in every lesson. When {npc} comes back, {their} grandmother is better, and {they} hug{s} you on the landing.
+  say: {npc} catches the next barge. Every evening you copy out the day's notes for {them} from {their} classmates. When {npc} comes back, {their} grandmother is better, and {they} hug{s} you on the landing.
 > right: Just sit with {them}
   rel npc +medium
   mood -tiny
@@ -81,12 +81,12 @@ repeat: 8
 art: star
 tags: social romance
 scene: Two students lying on their backs on a flat roof, close but not quite touching, a sky full of stars above.
-text: {npc} has dragged a blanket up to the roof. "There's a meteor shower," {they} say{s}. "Supposedly." There's room on the blanket for two, just about.
+text: {&{npc} has dragged a blanket up to the roof.|{npc} is on the roof again with the blanket, and a flask this time.|{npc} has found a better spot on the roof, out of the wind, and a better blanket.} "There's a meteor shower," {they} say{s}. "Supposedly." There's room on the blanket for two, just about.
 > left: Count meteors
   health -tiny
   rel npc +medium
   mood +small
-  say: You count thirty-one. {npc} counts thirty-four and accuses you of not looking properly. You weren't, entirely.
+  say: You count thirty-one. {npc} counts thirty-four and accuses you of not looking properly. You weren't, entirely. You stay until the cold drives you in at dawn.
 > right: Talk about everything else
   health -tiny
   spark npc +small
@@ -106,7 +106,7 @@ repeat: 10
 art: mask
 tags: social
 scene: A student standing alone at the edge of a laughing group, arms folded, watching someone else take what used to be their seat.
-text: {npc} has been odd all week. Finally it comes out. "You've got all these new friends now. I just — I don't know where I fit anymore."
+text: {~{npc} has been odd all week. Finally it comes out.|{npc} has been short with you at every meal. Finally, on the stairs, it comes out.|{npc} cancels on you twice and then turns up at your door. It comes out in a rush.} "You've got all these new friends now. I just — I don't know where I fit anymore."
 > left: Reassure {them}
   rel npc +medium
   charm +tiny
@@ -114,30 +114,30 @@ text: {npc} has been odd all week. Finally it comes out. "You've got all these n
 > right: Tell {them} friendship isn't a contest
   rel npc -tiny
   lore +tiny
-  say: You're right, technically. {npc} knows it. It still lands badly. It takes a few weeks for things to feel easy again.
+  say: You're right, technically. {npc} knows it. It still lands badly. It takes a few weeks for things to feel easy again. You spend the evenings you'd have spent soothing {them} in the library instead.
 
 @event soc_teach_spell
 title: A Trick Worth Learning
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 7
+  npc: any where tagged(npc, peer) and rel(npc) >= 7
 per: npc
 trigger: social
 repeat: 8
 art: wand
 tags: social magic
 scene: Two students in an empty classroom, one demonstrating a wand movement, the other copying it with a tiny spark of light.
-text: {npc} has a spell {they} invented — a little thing, half-useful, half-ridiculous — and wants to teach it to someone. "It makes your tea exactly the right temperature," {they} say{s}. "Forever."
+text: {npc} has a spell {they} invented — a little thing, half-useful, half-ridiculous — and wants to teach it to someone. {&"It makes your tea exactly the right temperature," {they} say{s}. "Forever."|"It finds the page you were reading," {they} say{s}. "Any book, anywhere."|"It keeps your socks dry," {they} say{s}. "Lake, rain, puddles. Dry."}
 > left: Learn it properly
   chance 75:
     arcana +small
     rel npc +small
-    say: It takes an hour. Your tea is now perfect, always. You'll use this spell more than anything you learn in class.
+    say: It takes an hour. {&Your tea is now perfect, always.|You will never lose your page again.|Your socks are dry. Your socks will always be dry.} You'll use this spell more than anything you learn in class.
   else:
     health -tiny
     rel npc +small
-    say: The first attempt freezes your tea solid, and your eyebrows with it. The second works. Your eyebrows take a day to thaw.
+    say: {&The first attempt freezes your tea solid, and your eyebrows with it. The second works. Your eyebrows take a day to thaw.|The first attempt finds every page in the library at once. The second works. The librarian is not amused.|The first attempt dries your socks, your shoes and most of your feet. The second works. Your skin flakes for a day.}
 > right: Teach {them} one of yours in return
   rel npc +medium
   charm +tiny
@@ -151,7 +151,6 @@ cast:
   npc: any where romanceable(npc) and spark(npc) >= 15 and bond(npc) != "partner"
 per: npc
 trigger: social
-repeat: 12
 art: letter
 tags: romance
 scene: A folded note tucked into a library book with a pressed flower, unsigned, the handwriting careful and slightly shaky.
@@ -186,9 +185,9 @@ text: {npc} has twisted an ankle on the far side of the grounds, a long way from
   vigor +small
   rel npc +medium
   health -tiny
+  alignment +tiny
   say: It's a long way. {npc} narrates the whole journey like a horse race. By the time you reach the infirmary you're both laughing too hard to breathe.
 > right: Run for help
-  alignment +tiny
   rel npc +small
   say: You run for Sister Amaranth, who arrives with a floating stretcher and a lot of opinions. {npc} is fine. {They} send{s} you a thank-you sweet.
 
@@ -204,14 +203,14 @@ repeat: 10
 art: hand
 tags: rival social
 scene: A student picking up a rival's scattered books from a wet floor, the rival frozen mid-step, not sure what to say.
-text: You drop your books in the rain, and the first person to stoop and help pick them up is {npc}. {They} hand{s} them back without a word, looking as surprised as you are.
+text: {&You drop your books in the rain, and the first person to stoop and help pick them up is {npc}.|You slip on the wet stairs, and the hand that catches your elbow is {npc}'s.|The wind off the lake takes your scarf, and {npc} is the one who runs after it.} {They} hand{s} it back without a word, looking as surprised as you are.
 > left: Thank {them} properly
   rel npc +large
-  say: "Don't make it a thing," {npc} mutters. But the next day {they} nod{s} to you in the corridor. Something has thawed.
+  say: "Don't make it a thing," {npc} mutters. But the next day {they} nod{s} to you in the corridor. {&Something has thawed.|It's getting harder to stay enemies.|You're not sure what you are to each other anymore.}
 > right: Suspect a trick
   rel npc -tiny
   guile +tiny
-  say: You check the books for hexes. There aren't any. {npc} saw you checking. You'll both remember that.
+  say: You check for hexes. There aren't any. {npc} saw you checking. You'll both remember that.
 
 @event soc_partner_anniversary
 title: An Anniversary
@@ -227,12 +226,11 @@ tags: romance
 scene: Two people on a bench by the lake at sunset, one holding out a small wrapped box, the other's hands over their mouth.
 text: It's been a while now — long enough that {npc} has started calling things "ours". Today {they} hand{s} you a small wrapped box and won't meet your eyes.
 > left: Open it now
-  gold -tiny
   spark npc +small
   mood +medium
-  say: Inside: a pebble from the lakeshore where you first really talked, polished to a shine. "It's stupid," {npc} says. It isn't. You carry it everywhere, and spend the next day hunting for something half as good to give back.
+  say: Inside: a pebble from the lakeshore, polished to a shine, from the day you first really talked. "It's stupid," {npc} says. It isn't. You carry it everywhere, and spend the next day hunting for something half as good to give back.
 > right: Give {them} yours first
   gold -small
   spark npc +medium
   mood +medium
-  say: You'd had the same idea. You both open your boxes at once. They're nearly the same gift. You laugh until the sun goes down.
+  say: You'd had the same idea, and spent most of your purse on it. You both open your boxes at once. They're nearly the same gift. You laugh until the sun goes down.

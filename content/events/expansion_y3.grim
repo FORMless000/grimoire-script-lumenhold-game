@@ -45,7 +45,9 @@ text: Every guild, order and institution in the kingdom has sent someone to the 
   queue y3_interview now
 > none: Not yet — you'd rather not decide
   mood +tiny
-  say: You collect a tote bag, three pamphlets and a free quill. The future can wait one more month.
+  if month < 4:
+    queue y3_career_fair in 1
+  say: You collect a tote bag, three pamphlets and a free quill. {month < 4: The future can wait one more month; the fair is back next month.|The fair packs up for good. The future will have to come and find you.}
 
 @event y3_interview
 title: The Interview
@@ -285,7 +287,6 @@ text: Fourth-years are assigned a first-year to mentor. Yours is called Pim, is 
   say: Yes, the stairs are alive. Yes, you are alive. No, the lake is not "friendly". Pim takes notes. By spring, Pim is explaining things to other first-years, wrongly but with total confidence.
 > right: Teach Pim to find answers alone
   lore +small
-  study +tiny
   say: You hand Pim a library card and a map. Pim is furious for a week, then unstoppable. The librarian now knows Pim by name. And fears Pim, slightly.
 
 @event y3_last_lanterns
@@ -308,28 +309,28 @@ text: Your last Lantern Night. You stand on the shore with an unlit lantern and 
   say: You let it go empty. Strangely, it rises higher than all the others. Maybe the lake likes not knowing either.
 
 @event y3_thesis
-title: The Final Thesis
+title: The Last Chapter
 class: story
 tone: light
-when: final_year and month >= 5 and month <= 8
+when: final_year and month >= 5 and month <= 8 and member(thesis)
 weight: 16
 art: book
 tags: study
 scene: A desk buried in drafts, a wall of pinned notes connected by string, a single candle and a single exhausted student.
-text: Every fourth-year writes a final thesis. You could write something safe and solid — or you could take on the question nobody has answered in three hundred years: why the academy was built above a lake.
+text: Your thesis needs one more chapter. You could write something safe and solid, or chase the question your sources keep circling and nobody has answered in three hundred years: why the academy was built above a lake.
 > left: Safe and solid
-  study +medium
-  say: Two hundred pages on the thermodynamics of hovering charms. Impeccable. Unremarkable. Your examiners will sleep well.
+  progress thesis +medium
+  say: Forty pages on the thermodynamics of hovering charms. Impeccable. Unremarkable. Your examiners will sleep well.
 > right: The question nobody answered
   challenge research trivial:
     win:
-      study +large
+      progress thesis +large
       renown +medium
-      say: Your thesis is so good that the headmistress asks for the only copy — and then, very politely, does not give it back.
+      say: The chapter is so good that your supervisor shows it round the staff room, and the headmistress asks for the only copy — and then, very politely, does not give it back.
     lose:
-      study -small
+      progress thesis +tiny
       mood -small
-      say: You chase the question until it runs out of archive. Your thesis ends mid-sentence, like the founders' ledger. The examiners are not amused.
+      say: You chase the question until it runs out of archive. The chapter ends mid-sentence, like the founders' ledger. The examiners are not amused.
 
 @event y3_portrait
 title: Sitting for the Portrait
@@ -407,18 +408,18 @@ text: Dawn, the empty dueling ring, no crowd. Lyra is waiting. "No referee," she
   challenge combat trivial:
     win:
       rel lyra +medium
-      renown +small
+      vigor +small
       say: It lasts eleven minutes. Nobody wins. You both end up flat on your backs, laughing at the sky. "Now we know," she says.
     lose:
       rel lyra +medium
       health -medium
       say: She wins, cleanly. Then she helps you up and doesn't let go of your hand for a moment longer than necessary. "Now we know."
 > right: Lower your wand and just talk
-  mood -tiny
+  study -tiny
   rel lyra +large
   if spark(lyra) >= 20:
     spark lyra +small
-  say: You talk until the mist burns off. About fire, and mothers, and what comes after. It turns out you didn't need to duel to know.
+  say: You talk until the mist burns off. About fire, and mothers, and what comes after. You both miss the morning lecture. It turns out you didn't need to duel to know.
 
 @event y3_time_capsule
 title: The Time Capsule

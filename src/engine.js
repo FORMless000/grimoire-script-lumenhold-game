@@ -307,6 +307,27 @@
     }
     spellCost(id, level) { const d = this.c.spells && this.c.spells[id]; return d && d.cost ? d.cost[clamp((level || 1) - 1, 0, d.cost.length - 1)] : 0; }
     get spellResource() { return this.c.game.spell_resource || 'mana'; }
+    // What an option charges up front in `@game afford:`'s resource (review fixes): the top-level costs, not those
+    // inside a check, a chance or a condition. A range counts at its worst. 0 when the game doesn't set `afford:`.
+    priceOf(o) {
+      const res = this.c.game.afford; if (!res) return 0;
+      let p = 0;
+      for (const st of o.effects || []) if (st.t === 'delta' && st.name === res) {
+        const v = st.tier ? st.sign * this.tierAmount(res, st.tier) : Math.min(st.min, st.max);
+        if (v < 0) p -= v;
+      }
+      return p;
+    }
+    // Options you can't pay for are locked, unless that would lock every option on the card (never soft-lock: then
+    // you pay what you have). Returns the set of keys locked for want of money.
+    poorKeys(e, opts, a) {
+      const res = this.c.game.afford; if (!res) return new Set();
+      const have = this.s.vals[res] || 0;
+      const poor = new Set(opts.filter((o) => { const p = this.priceOf(o); return p > 0 && have < p; }).map((o) => o.key));
+      if (!poor.size) return poor;
+      const open = opts.some((o) => !poor.has(o.key) && !(o.when && !this.test(o.when, a)) && !(o.spell && !(this.s.spells || {})[o.spell]) && o.key !== 'up');
+      return open ? poor : new Set();
+    }
 
     /* ---------------- Tracks (design §7) ---------------- */
     trackState(id) { id = this._ctxTrack && id === 'track' ? this._ctxTrack : id; return (this.s.tracks || {})[id] || null; }
@@ -565,6 +586,7 @@
     // Where a character can be this month (M42): their break schedule on a break, if they have one.
     scheduleOf(id) {
       const d = this.c.npcs[id]; if (!d) return [];
+      if (this.gone(id)) return [];
       if (d.schedule_break && this.phaseOf() === 'break') return d.schedule_break.entries;
       return d.schedule || [];
     }
@@ -574,7 +596,10 @@
       return Object.keys(this.s.states || {}).some((k) => this.c.states[k] && this.c.states[k].kind === 'plan' && (this.c.states[k].tags || []).includes('away'));
     }
     // Away for the break (`schedule_break: away`): reachable only by letter (M19).
-    isAway(id) { const d = this.c.npcs[id]; return !!(d && d.schedule_break && d.schedule_break.away && this.phaseOf() === 'break'); }
+    isAway(id) { const d = this.c.npcs[id]; return !!(d && d.schedule_break && d.schedule_break.away && this.phaseOf() === 'break') || this.gone(id); }
+    // Gone (`gone_when:` on the @npc, review fixes): while the condition holds the character is nowhere on the map,
+    // fills no role and is drawn for no card except letters; scenes queued for them still play.
+    gone(id) { const d = this.c.npcs[id]; return !!(d && d.gone_when && this.test(d.gone_when, id)); }
     // A `place@slot:30` entry holds on 30% of days, decided per month, character, place and slot by a hash of the
     // run's seed (no RNG drawn: the map and the visit agree, and previews stay pure).
     onSchedule(id, x, slot) {
@@ -1177,10 +1202,11 @@
         if (r.pool === 'present') return this.presentAt(r.place === 'place' || !r.place ? this._place : r.place).filter((id) => s.npcs[id] && s.npcs[id].met);
         return Object.keys(s.npcs).filter((id) => r.pool === 'anyone' || s.npcs[id].met);
       };
+      const here = (id) => e.trigger === 'letter' || !this.gone(id);
       const fill = (i, cast) => {
         if (i === roles.length) { const prev = this._cast; this._cast = cast; const ok = this.test(e.when, cast.npc || null); this._cast = prev; return ok ? { ...cast } : null; }
         const r = roles[i];
-        let opts = pool(r).filter((id) => !Object.values(cast).includes(id) && (r.role !== e.per || this.eligibleFor(e, id)) && (!bind || !bind[r.role] || bind[r.role] === id));
+        let opts = pool(r).filter((id) => here(id) && !Object.values(cast).includes(id) && (r.role !== e.per || this.eligibleFor(e, id)) && (!bind || !bind[r.role] || bind[r.role] === id));
         opts = opts.filter((id) => { if (!r.where) return true; const prev = this._cast; this._cast = { ...cast, [r.role]: id }; const ok = this.test(r.where, cast.npc || id); this._cast = prev; return ok; });
         // weighted order
         const order = [];
@@ -1209,6 +1235,7 @@
       else actors = [null];
       for (const a of actors) {
         if (a && e.trigger === 'social' && !(this.s.npcs[a] && this.s.npcs[a].met)) continue;
+        if (a && e.trigger !== 'letter' && this.gone(a)) continue;
         if (a && !this.eligibleFor(e, a)) continue;
         if (!this.test(e.when, a)) continue;
         const w = e.weight ? this.value(e.weight, a, 10) : 10;
@@ -1351,14 +1378,15 @@
         pick: this.pickCount(e),
         // Option visibility (M24): in a menu, an option whose `when` fails is hidden unless it names its `locked:`
         // reason (a stated prerequisite); then it shows, disabled, with the reason. Cards keep both sides.
-        options: this.optionsOf(e).filter((o) => !o.spell || (this.s.spells || {})[o.spell])
-          .filter((o) => e.type !== 'menu' || !o.when || o.locked || this.test(o.when, a)).map((o) => {
+        options: ((all) => { const poor = this.poorKeys(e, all, a); return all.map((o) => [o, poor.has(o.key)]); })(this.optionsOf(e).filter((o) => !o.spell || (this.s.spells || {})[o.spell])
+          .filter((o) => e.type !== 'menu' || !o.when || o.locked || this.test(o.when, a))).map(([o, poor]) => {
           const lv = o.spell ? this.s.spells[o.spell] : 0;
           const cost = o.spell ? this.spellCost(o.spell, lv) : 0;
           const short = o.spell && (this.s.vals[this.spellResource] || 0) < cost;
           return {
             key: o.key, label: this.interp(o.label, a, e.id), hint: o.hint ? this.interp(o.hint, a, e.id) : null,
-            disabled: (o.when ? !this.test(o.when, a) : false) || short,
+            disabled: (o.when ? !this.test(o.when, a) : false) || short || poor,
+            poor: poor ? this.priceOf(o) : undefined,
             affects: o.affects,
             spell: o.spell ? { id: o.spell, level: lv, cost, short } : null,
             check: o.firstCheck ? this.checkView(o.firstCheck, a, item) : null,
@@ -1379,6 +1407,7 @@
       const opt = this.withContext(item, () => this.optionsOf(e)).find((o) => o.key === key);
       if (!opt) throw new Error('no option ' + key + ' on ' + e.id);
       if (opt.when && !this.test(opt.when, item.actor)) throw new Error('option ' + key + ' is not available');
+      if (this.withContext(item, () => this.poorKeys(e, this.optionsOf(e), item.actor)).has(key)) throw new Error('option ' + key + ' costs more than you have');
       const ctx = this.newCtx(item.actor, null, e.id);
       ctx.cast = item.cast || null; ctx.track = item.track || null;
       this._cast = ctx.cast; this._ctxTrack = ctx.track; this._ctxPlace = item.place || null;

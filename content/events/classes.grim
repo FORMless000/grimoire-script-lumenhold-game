@@ -34,7 +34,7 @@ text: Professor Thorne places a candle at the far end of the hall. "Light it. Fr
       say: The candle erupts in a pillar of white flame and then settles, obedient. The room goes quiet.
     lose:
       health -small
-      study -small
+      study evocation -small
       rel thorne -tiny
       say: The candle lights. So do the curtains. And, briefly, your eyebrows.
 
@@ -140,13 +140,13 @@ text: A storm rolls over the lake and Marisol is delighted. "Perfect conditions!
 title: The Drowned Bell
 class: story
 tone: eerie
-when: not flag(bell_fragment)
+when: not flag(bell_fragment) and seen(hs_lake_breathes)
 track: evocation
 weight: 12
 art: bell
 tags: class mystery hollowstar
 scene: Murky green water, a shaft of light catching the bronze curve of an enormous bell half-buried in silt.
-text: During a breathing-charm lesson you hear it: a bell, deep under the lake, tolling slow and soft. Nobody else seems to notice.
+text: Ever since the lake held its breath in Mistveil, you listen for it. During a breathing-charm lesson you hear it: a bell, deep under the lake, tolling slow and soft. Nobody else seems to notice.
 > left: Mention it to Professor Marisol
   lore +tiny
   say: Her face goes very still. "There is no bell," she says. "There hasn't been a bell for three hundred years."
@@ -183,7 +183,7 @@ text: Assignment: conjure a convincing illusion of yourself. Professor Vey circl
   guile +tiny
   lore +tiny
   say: Your double slouches the way you slouch and chews its lip the way you do. It is deeply unsettling. Vey awards top marks.
-  study +tiny
+  study illusion +tiny
 
 @event illusion_professor_prank
 title: The Professor's Face
@@ -196,9 +196,10 @@ tags: class social
 scene: A student wearing a shimmering glamour of a stern old professor, classmates stifling laughter behind a door.
 text: Your classmates dare you: wear a glamour of Professor Thorne and cancel tomorrow's Arcana lecture. "Nobody will know," says someone who will definitely tell.
 > left: Absolutely not
-  study +tiny
+  study illusion +tiny
   say: Wise. Someone else tries it the next day and spends a week scrubbing gargoyles.
 > right: Do it
+  alignment -tiny
   challenge deceive easy:
     win:
       renown +medium
@@ -206,7 +207,7 @@ text: Your classmates dare you: wear a glamour of Professor Thorne and cancel to
       say: "Class is cancelled," you announce in Thorne's gravel voice. The cheering is audible from three towers away.
     lose:
       gain detention
-      study -small
+      study illusion -small
       rel thorne -small
       say: Halfway through, the glamour flickers. The real Thorne is standing in the doorway. He is not laughing.
 
@@ -222,17 +223,17 @@ tags: class magic
 scene: A vast translucent dragon coiled around the academy's central fountain, students frozen mid-step beneath it.
 text: For your term project you must create an illusion that fools a crowd. You could make something small and flawless. Or you could put a dragon in the courtyard at lunchtime.
 > left: Small and flawless
-  study +medium
+  study illusion +medium
   say: A single butterfly that nobody can tell is fake. Vey taps it with her wand and it bursts into light. "Perfect."
 > right: Dragon. Obviously.
   challenge spell trivial:
     win:
       renown +medium
-      study +small
+      study illusion +small
       say: The dragon uncurls around the fountain and yawns. Forty students scream. Vey laughs until she cries.
     lose:
       renown +small
-      study -small
+      study illusion -small
       rel isolde -tiny
       say: The dragon is magnificent for four seconds and then sneezes into a cloud of glitter. The headmistress was eating lunch below it.
 
@@ -250,14 +251,14 @@ scene: Rows of bubbling cauldrons in a low stone room, each giving off a differe
 text: The recipe is on the board: Draught of Mild Courage. Seven ingredients, three stirs clockwise, one counter-clockwise, and never — never — add the newt eye early.
 > left: Follow the recipe exactly
   alchemy +tiny
-  study +tiny
+  study alchemy +tiny
   say: A clear, honey-coloured brew. The professor sniffs it and nods. Safe, solid, unremarkable.
 > right: Improvise a little
   challenge brew easy:
     win:
       alchemy +medium
       gold +small
-      say: Your variant tastes like cinnamon and makes people brave enough to ask for things. A fifth-year buys the whole flask.
+      say: Your variant tastes like cinnamon and makes people brave enough to ask for things. A fourth-year buys the whole flask.
     lose:
       gain frog_voice
       say: You taste-test. Mistake. For the next month, everything you say comes out as a deep, wet croak.
@@ -300,11 +301,12 @@ text: Corvin turns your leftover potions over in his hands. "These would sell fo
   rel corvin -tiny
   say: "Your loss, saint." He tosses the vial back. You fumble it.
 > right: Shake on it
+  alignment -tiny
   gold +large
   rel corvin +small
   chance 30:
     gain detention
-    study -small
+    study alchemy -small
     say: It goes well until a vial turns up in a professor's tea. You and Corvin share a detention and an alibi.
   else:
     say: Thirty crowns, no questions asked. Corvin winks. "Pleasure doing crime with you."
@@ -345,8 +347,9 @@ scene: An ornate standing mirror whose reflection shows the room on a different 
 text: The Mirror of Next Tuesday shows exactly what it promises. Students take turns looking. Some come away smiling. One comes away and goes straight to the infirmary.
 > left: Take a look
   chance 50:
-    study +medium
-    say: Next Tuesday you are sitting an Arcana quiz. You memorise the questions. Is that cheating? It's at least ambiguous.
+    study astromancy +medium
+    alignment -tiny
+    say: Next Tuesday you are sitting an Astromancy quiz. You memorise the questions. Is that cheating? It's at least ambiguous.
   else:
     mood -medium
     say: Next Tuesday you are crying in the rain outside the observatory. You don't know why. You spend the week dreading it.
@@ -391,7 +394,7 @@ tags: class
 scene: A brass beetle the size of a fist on a workbench, tiny gears visible through its translucent wing-cases.
 text: Your project: a brass beetle that walks. The gears are in. The spring is wound. You could make it efficient, or you could give it a little personality.
 > left: Make it efficient
-  study +small
+  study artifice +small
   lore +tiny
   say: It walks in a perfect straight line until it hits a wall. Full marks.
 > right: Give it personality
@@ -415,13 +418,13 @@ scene: A cluttered workbench covered in tools, sketches and one smoking teapot; 
 text: Mir Ten drops onto the bench beside you with a sketch of something that is either a self-stirring cauldron or a small war machine. "Partners? Your hands, my brain. Or the other way round. Both, actually."
 > left: Work alone
   meet mir
-  study +tiny
+  study artifice +tiny
   say: "Fair," says Mir, with no hard feelings, and is immediately on fire. Not badly.
 > right: Partner with Mir
   meet mir
   challenge brew trivial:
     win:
-      study +medium
+      study artifice +medium
       rel mir +medium
       say: The cauldron stirs itself, hums a tune and only threatens the professor once. Mir hugs you with oily hands.
     lose:
@@ -443,12 +446,13 @@ text: You've enchanted a quill to take dictation. It works beautifully. A though
   lore +small
   say: Your notes are flawless. Even the professor's jokes are transcribed, with a small marginal comment: "(not funny)."
 > right: Let it write your essays
+  alignment -tiny
   chance 50:
-    study +medium
+    study artifice +medium
     mood +small
     say: Your essays arrive on time, in impeccable penmanship. A little too impeccable. Nobody notices. Yet.
   else:
-    study -medium
+    study artifice -medium
     gain detention
     say: The quill develops opinions and writes a scathing review of the professor. It signs your name.
 
@@ -541,11 +545,11 @@ text: A comet appears that isn't in any of the charts. The observatory is in upr
       lore +small
       say: Your math is right. The comet is named after you, or at least after a slight misspelling of you.
     lose:
-      study -tiny
+      study astromancy -tiny
       say: Your calculation suggests the comet will hit the academy on Thursday. It does not. You are teased about it for weeks.
 
 @event astro_kael_roof
-title: Three in the Morning
+title: Up All Night
 class: story
 tone: eerie
 when: met(kael)
@@ -556,9 +560,9 @@ art: moon
 tags: class mystery hollowstar
 chain: hollowstar
 scene: A young man in a fur coat sitting alone on the observatory roof, frost on the tiles around him, staring at one spot in the stars.
-text: Long after the lecture ends you find Kael alone on the observatory roof. Frost has spread across the tiles around him. He is staring at a patch of sky where there are no stars at all.
+text: On your way to the morning lecture you find Kael alone on the observatory roof. He has been there all night. Frost has spread across the tiles around him. He is staring at a patch of sky where there are no stars at all.
 > left: Leave him be
-  say: You go down to bed. In the morning there's a perfect circle of frost on the roof where he sat.
+  say: You go down to class. By evening there's a perfect circle of frost on the roof where he sat, and no Kael.
 > right: Sit beside him
   rel kael +medium
   lore +tiny
@@ -598,7 +602,7 @@ tags: class
 scene: A pale first-year sitting on an infirmary cot holding a wrist at a strange angle, a nervous student healer kneeling beside them.
 text: A first-year stumbles into the practice ward with a wrist that bends the wrong way. Sister Amaranth is busy. The first-year looks at you with enormous, trusting eyes.
 > left: Fetch Sister Amaranth
-  study +tiny
+  study alchemy +tiny
   say: Amaranth fixes it in seconds and nods at you. "Knowing your limits is the first lesson."
 > right: Heal it yourself
   challenge brew easy:
@@ -607,7 +611,7 @@ text: A first-year stumbles into the practice ward with a wrist that bends the w
       renown +small
       say: The bone slides back with a soft click and a glow of warm light. The first-year tells everyone you're a genius.
     lose:
-      study -small
+      study alchemy -small
       say: The wrist is now straight. The fingers, however, are pointing backwards. Amaranth sighs and fixes both.
 
 @event heal_fever_ward
@@ -627,7 +631,7 @@ text: Lake Fever is spreading through the village below the academy. Sister Amar
   renown +tiny
   alchemy +tiny
   mood +tiny
-  rel maud +small
+  alignment +tiny
   chance 40:
     gain sick
     say: You save lives, and catch the fever yourself. The village sends a basket of honey cakes to your sickbed.
@@ -689,14 +693,14 @@ tags: class magic
 scene: A tiny mouse skeleton on a silver tray, one bony paw twitching, students leaning away from it.
 text: Practical exercise: animate the skeleton of a field mouse. "Purely educational," the professor says, with a smile nobody trusts.
 > left: Refuse on principle
-  study -tiny
+  study umbral -tiny
   mood +tiny
   say: You write a short essay on why instead. The professor reads it with surprising attention.
 > right: Do the exercise
   challenge spell easy:
     win:
       arcana +medium
-      study +small
+      study umbral +small
       say: The little skeleton stands up, washes its non-existent whiskers, and lies down again. Perfect control.
     lose:
       gain haunted
@@ -712,9 +716,9 @@ art: book
 tags: class mystery
 chain: forbidden
 scene: A battered notebook with a cracked leather cover being slid across a library table, a silver key tucked into its spine.
-text: A sixth-year slides a battered notebook across the table. "My notes on the Restricted Section. I'm graduating. You look like you'd use them." A silver key is tucked in the spine.
+text: A fourth-year slides a battered notebook across the table. "My notes on the Restricted Section. I'm graduating. You look like you'd use them." A silver key is tucked in the spine.
 > left: Decline
-  say: The sixth-year shrugs and slides the notebook to the next student. You watch it go.
+  say: The fourth-year shrugs and slides the notebook to the next student. You watch it go.
 > right: Take the notebook
   alignment -tiny
   lore +medium

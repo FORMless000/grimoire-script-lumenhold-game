@@ -6,10 +6,10 @@
 
 | | |
 |---|---|
-| Content | 988 events (lint's count), 69 states, 21 characters (12 core, 8 fixtures, Tamsin of Thornwick), 43 places, 25 tracks, 12 spells, 35 endings (5 game-overs + yearbook lines) |
+| Content | 989 events (lint's count), 69 states, 21 characters (12 core, 8 fixtures, Tamsin of Thornwick), 43 places, 25 tracks, 12 spells, 35 endings (5 game-overs + yearbook lines) |
 | Format | schema v1, frozen; 0 lint errors, **0 legacy constructs** left in content |
 | Reachability | `grim reach`: every event, option, ending, place and track can be reached; each key clue has ≥ 2 sources |
-| Translation | zh-CN 100% (8,767 strings), 0 stale |
+| Translation | zh-CN 100% (8,776 strings), 0 stale |
 | Checks | `npm run verify` passes: build, lint, format, docs, 100+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 48 months (the last two are the wrap-up), about 340 cards; random play graduates 80% of the time, social and careful styles 97–99% |
 
@@ -92,6 +92,13 @@ October 15, 2026: [the frequency and economy review](docs/reviews/event-economy-
 - **Novelty within one run only:** earlier runs and other players no longer make cards rarer.
 - **Hosting on the local network:** `scripts/host.sh`, `host.ps1`, `host.cmd`.
 - **Docs:** `PROGRESS.md`, `README.md`, the AGENTS.md traps (folded in from the retired HANDOFF.md), `docs/playtest-2.md` (replacing playtest-1), the language reference (yearbook, `clues()`, the alignment recipe), the authoring checklist and skill, regenerated sample briefs and examples.
+
+- **The event critique, reports 01–23 (October 15):** all 166 findings on 158 reviewed cards are fixed (`docs/review-fixes-plan.md`; per card in the critique's `handoff/fixes-2026-10-15.md`).
+  - Two format additions: `@game afford: gold` locks an option whose up-front crown cost you can't pay, never every option; `@npc gone_when:` keeps an absent character off the map and out of casting.
+  - A lint rule: a non-incident card can't make crown loss unavoidable.
+  - Migration 0031 scopes `study` in course cards to their own course.
+  - Card fixes: alignment on costly kindness and on theft or cheating; absent people's relationship changes, private renown and five- or six-year students removed; term, slot and month gates; continuity flags (Tobias away, Bram's sash, Mir's padlock, Maud's tea, Ilse gone, facts tied to the branch that tells them); wages and prices that match their text; variants for repeats.
+  - The critic has a mechanical audit of its 659 unreviewed cards to read next.
 
 ## Known gaps and deviations from the design
 

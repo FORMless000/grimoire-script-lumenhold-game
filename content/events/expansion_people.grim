@@ -110,12 +110,12 @@ class: routine
 tone: warm
 trigger: social
 actor: tobias
-when: rel(tobias) >= 9 and (month == 4 or month == 5)
+when: rel(tobias) >= 9 and (month == 3 or month == 4)
 weight: 12
 art: music
 tags: social romance
 scene: An empty classroom with desks pushed to the walls, a big boy counting steps aloud, a broom propped against the wall as his former partner.
-text: Tobias has pushed the desks against the walls of an empty classroom. "The Ball's next month," he says, mortified. "I've been practising with a broom. The broom has complained."
+text: Tobias has pushed the desks against the walls of an empty classroom. "The Ball's {month == 4: tonight|next month}," he says, mortified. "I've been practising with a broom. The broom has complained."
 > left: Teach him to waltz
   health -tiny
   rel tobias +medium
@@ -142,6 +142,7 @@ scene: Rain lashing a glass greenhouse at night, panes cracking, a big boy holdi
 text: A storm hits at midnight. Glass is cracking in the greenhouses. Tobias is out there in his nightshirt, trying to hold a door shut against the wind with his whole body. "The moonflowers!" he shouts. "Eleven years!"
 > left: Run out and help
   health -small
+  alignment +tiny
   rel tobias +large
   spark tobias +tiny
   say: You hold the panes together with every shielding charm you know until dawn. Every moonflower survives. Tobias hugs you, soaked, laughing, half crying.
@@ -172,7 +173,7 @@ text: Seraphine is sitting in an empty classroom, waiting for a lesson that's ha
 > right: Ask her what tomorrow holds
   chance 50:
     study +small
-    say: "There's a surprise quiz in Lore," she says. "Question three is a trick." It is. You get it right.
+    say: "There's a surprise quiz in every class," she says. "They planned it together. Question three is always a trick." It is, every time. You get them all right.
   else:
     mood -tiny
     say: "It rains," she says. "You get wet. You'll be fine." You are not fine. You get very wet.
@@ -221,7 +222,7 @@ text: Seraphine's mother, the Oracle of Vell, wants her home to take up the fami
   say: Seraphine writes back: no. For a whole day she's terrified, and so are you. Then she's giddy. "I didn't see that coming," she keeps saying. "I didn't see it coming!"
 > right: "Maybe she's right."
   rel seraphine -medium
-  say: She nods slowly. She doesn't go — not yet. But she stops telling you her visions, and you miss them more than you expected.
+  say: She nods slowly. She doesn't go — not yet. But for a long while she stops telling you her visions, and you miss them more than you expected.
 
 # ---------------- Corvin ----------------
 
@@ -238,6 +239,7 @@ tags: social danger
 scene: A dark vault crammed with confiscated student contraband — fanged frisbees, cursed dice, a goblet of endless soup — two figures with a lantern at the door.
 text: "The confiscation vault," Corvin breathes. "Three hundred years of everything the faculty ever took off a student. My grandfather's lucky deck is in there. I just want it back. Lookout?"
 > left: Keep lookout
+  alignment -tiny
   challenge deceive hard:
     win:
       rel corvin +large
@@ -276,8 +278,8 @@ text: There's a rough-looking man at the gates, and Corvin has gone very still. 
       say: You stand beside Corvin while he says no — the first time, he tells you later, that he's ever said it. His brother leaves. Corvin sits down on the steps and laughs and shakes.
     lose:
       rel corvin +medium
-      gold -medium
-      say: It turns ugly. In the end you pay half, just to make him leave. Corvin pays you back within a week, with a strange new seriousness.
+      mood -small
+      say: It turns ugly. In the end you empty your purse into his hand, just to make him leave. Corvin presses every coin back into yours that evening, with a strange new seriousness.
 > right: Stay out of family business
   rel corvin -small
   say: Corvin pays. You see him counting out every coin he has. He's quiet for a long while after.
@@ -299,6 +301,7 @@ text: "Rule one: never cheat," says Corvin, shuffling so fast the cards blur. "R
   rel corvin +small
   say: By midnight you can spot a marked card, a bottom deal and a mirror charm. You will never be fleeced at Wizard's Hand again.
 > right: Learn to play honestly — and well
+  when: gold >= 3
   chance 60:
     lore +tiny
     rel corvin +small
@@ -352,6 +355,7 @@ tags: danger
 scene: A workshop full of smoke and orange light, notebooks scattered across a burning bench, a figure in goggles coughing in the doorway.
 text: The workshop is on fire. Properly this time. Mir is in the doorway, coughing — and trying to go back in. "My notebooks! Three years of notes!"
 > left: Grab the notebooks
+  alignment +tiny
   challenge feat trivial:
     win:
       rel mir +large
@@ -362,6 +366,7 @@ text: The workshop is on fire. Properly this time. Mir is in the doorway, coughi
       rel mir +medium
       say: You get halfway before the smoke drives you back. You save one notebook. Mir says it's the most important one. You both know it isn't. They mean it anyway.
 > right: Drag Mir away
+  alignment +tiny
   rel mir +medium
   health -tiny
   say: You haul Mir back from the door. The notebooks burn. Mir is silent for a week. Then they start a new notebook. The first page just says: "Thank you."
@@ -384,7 +389,6 @@ text: It's Mir's name day. They mention it casually, as if it doesn't matter. It
   mood +small
   say: Six friends, one cake and a banner you painted badly. Mir walks in, stops, and has to sit down. "Nobody's ever..." they start, and can't finish.
 > right: Give them a handmade gift
-  gold -tiny
   rel mir +medium
   spark mir +tiny
   say: A little brass key that fits nothing. "For whatever you build next," you say. Mir wears it on a chain, every day, for years.
@@ -409,10 +413,10 @@ text: "Nobody has interviewed the headmistress in twenty years," Nessa says. "Bu
     win:
       rel nessa +large
       renown +medium
-      say: The headmistress agrees to ten minutes. She gives Nessa forty. The interview runs on the front page and sells out three printings.
+      say: The headmistress agrees to ten minutes. She gives Nessa forty, and gives you a look that says you have spent a favour. The interview runs on the front page and sells out three printings.
     lose:
       rel nessa +small
-      say: "No," says the headmistress, pleasantly. "But tell Miss Quill her piece on the kitchens was excellent." Nessa frames the rejection.
+      say: "No," says the headmistress, pleasantly. "But tell Miss Quill her piece on the kitchens was excellent." Nessa frames the rejection. The headmistress is a shade cooler with you in the corridors after that.
 > right: Suggest someone overlooked instead
   rel nessa +medium
   charm +tiny
@@ -430,7 +434,7 @@ weight: 10
 art: paper
 tags: social
 scene: A newspaper with a single word circled in red ink, an editor with her head in her hands, a stack of papers still warm from the press.
-text: The Ledger has gone to print. In the headline about Professor Thorne's lecture series, a single wrong letter has turned "Thorne's Brilliant Lectures" into "Thorne's Brilliant Lecturers". Which is somehow worse. Five hundred copies.
+text: The Ledger has gone to print. In the profile of Professor Thorne, a single wrong letter has turned "Thorne: Still Lively" into "Thorne: Still Lovely". By breakfast the whole academy will be calling the most frightening man in the castle lovely. Five hundred copies.
 > left: Help her fix every copy overnight
   health -tiny
   rel nessa +medium
@@ -458,7 +462,7 @@ text: Nessa hasn't slept properly in a week. She's asleep at her desk now, and h
   health -tiny
   rel nessa +large
   study -small
-  say: You edit, typeset and print one issue. It's adequate. When Nessa wakes she reads it, winces at your headlines, and hugs you for a long time.
+  say: You edit, typeset and print one issue, and miss a day of classes doing it. It's adequate. When Nessa wakes she reads it, winces at your headlines, and hugs you for a long time.
 > right: Wake her and make her rest
   mood -tiny
   rel nessa +medium
@@ -504,6 +508,7 @@ tags: danger social
 scene: A pale boy in a narrow bed, sweating, frost forming and melting on the pillow around his head in a constant cycle.
 text: Kael has a fever — and for someone made of frost, a fever is dangerous. The infirmary's warming charms are making it worse. Sister Amaranth looks frightened. "He needs cold," she says. "Real cold. I don't know where to get it."
 > left: Bring him snow from the mountain
+  alignment +tiny
   challenge feat trivial:
     win:
       rel kael +large
@@ -514,7 +519,7 @@ text: Kael has a fever — and for someone made of frost, a fever is dangerous. 
       rel kael +medium
       say: The mountain wins. You come back half-frozen and empty-handed. Kael recovers anyway, slowly — and visits you in the next bed.
 > right: Send word to Ilse
-  if met(ilse):
+  if met(ilse) and not flag(ilse_taken) and not flag(ilse_went_north):
     rel kael +medium
     rel ilse +medium
     say: Ilse arrives in a whirl of snow, puts her hand on his forehead and says something sharp in Northern. The fever breaks. Kael stares at his sister for a long time.
@@ -528,7 +533,7 @@ class: routine
 tone: light
 trigger: social
 actor: kael
-when: rel(kael) >= 15
+when: rel(kael) >= 15 and flag(kael_told)
 weight: 10
 art: letter
 tags: social
@@ -562,7 +567,7 @@ text: A tall man in an old head-boy's sash is speaking to Bram in the entrance h
   challenge negotiate trivial:
     win:
       rel bram +large
-      say: You tell his father about the sixth-years at the boathouse. The man falls silent. Bram looks at you like you've handed him a sword.
+      say: You tell his father {seen(bram_turns): about the night at the boathouse|what Bram is like when nobody's keeping score}. The man falls silent. Bram looks at you like you've handed him a sword.
     lose:
       rel bram +medium
       say: His father looks through you as if you're furniture. But afterwards, Bram finds you and says, roughly, "Nobody's ever stood there before. Thanks."

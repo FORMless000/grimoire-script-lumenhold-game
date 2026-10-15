@@ -473,7 +473,7 @@
     if (story) {
       choices.innerHTML = '<button class="choice single" data-k="' + esc(L.key) + '"><span>' + esc(L.label) + chk(L) + '</span></button>';
     } else {
-      const lock = (o) => o.disabled ? ' disabled title="' + esc(o.locked || o.hint || t('card.notAvailable')) + '"' : '';
+      const lock = (o) => o.disabled ? ' disabled title="' + esc(o.locked || (o.poor ? t('card.cantAfford', { cost: o.poor }) : null) || o.hint || t('card.notAvailable')) + '"' : '';
       const U = v.options.find((o) => o.key === 'up');
       choices.innerHTML = '<button class="choice left" data-k="left"' + lock(L) + '><span class="arrow">' + (L.disabled ? '🔒' : '←') + '</span><span>' + esc(L.label) + chk(L) + '</span></button>' +
         '<button class="choice right" data-k="right"' + lock(R) + '><span>' + esc(R.label) + chk(R) + '</span><span class="arrow">' + (R.disabled ? '🔒' : '→') + '</span></button>' +
@@ -704,6 +704,7 @@
     const deck = document.getElementById('deck'); deck.querySelectorAll('.card').forEach((c) => c.remove());
     document.getElementById('choices').innerHTML = '';
     const opts = v.options.map((o, i) => {
+      if (o.poor && !o.locked) o = Object.assign({}, o, { locked: t('card.cantAfford', { cost: o.poor }) });
       const aff = o.affects.map((id) => content.resources[id] ? Art.icon(content.resources[id].icon, 14) : '').join('');
       return '<button class="opt' + (o.locked ? ' locked' : '') + '" data-k="' + esc(o.key) + '"' + (o.disabled ? ' disabled' : '') + '><span class="num">' + (i < 9 ? i + 1 : '') + '</span><b>' + (o.locked ? '🔒 ' : '') + esc(o.label) + '</b>' +
         (o.locked ? '<small class="why">' + esc(o.locked) + '</small>' : '') +

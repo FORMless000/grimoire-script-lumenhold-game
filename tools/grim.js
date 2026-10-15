@@ -330,6 +330,28 @@ function analyze(content) {
   if (content.game.appeal) A.queued[content.game.appeal] = A.queued[content.game.appeal] || ['engine'];
   for (const d of Object.values(content.tracks)) if (d.intro) A.queued[d.intro] = A.queued[d.intro] || ['track ' + d.id];
   for (const k of ['appeal', 'off_shift', 'exam', 'spark_cooldown']) if (content.game[k] && !content.events[content.game[k]]) P('error', 'content/core/rules.grim', '@game ' + k + ': unknown event "' + content.game[k] + '"');
+  // `@game afford:` (review fixes) names a resource; options that charge it up front lock when you can't pay.
+  if (content.game.afford && !content.resources[content.game.afford]) P('error', 'content/core/rules.grim', '@game afford: unknown resource "' + content.game.afford + '"');
+  // No unavoidable crown loss outside incidents (review fixes): every other card keeps one always-available option
+  // that can't cost the afford resource for certain (a cost on every branch counts as certain).
+  if (content.game.afford) {
+    const res = content.game.afford;
+    const loses = (effs) => (effs || []).some((st) => {
+      if (st.t === 'delta' && st.name === res) return st.tier ? st.sign < 0 : Math.max(st.min, st.max) < 0;
+      if (st.t === 'challenge') return [st.win, st.partial, st.lose].filter(Boolean).length > 0 && [st.win, st.partial, st.lose].filter(Boolean).every(loses);
+      if (st.t === 'chance') return loses(st.body) && loses(st.else);
+      if (st.t === 'if') return !!st.else && st.branches.every((b) => loses(b.body)) && loses(st.else);
+      return false;
+    });
+    for (const e of Object.values(content.events)) {
+      if (e.class === 'incident' || !(e.options || []).length) continue;
+      const where = e.file + ':' + e.line;
+      if (loses(e.on_show)) { P('error', where, e.id + ': loses ' + res + ' on show; only an incident may take ' + res + ' unavoidably'); continue; }
+      if (e.offers) continue;   // generated menus (courses, clubs, jobs) list free choices of their own
+      const free = e.options.some((o) => !o.when && !o.spell && !loses(o.effects));
+      if (!free) P('error', where, e.id + ': every always-available option costs ' + res + '; give one a way out or make the card an incident');
+    }
+  }
   for (const e of Object.values(content.events)) if (e.trigger === 'queued' && !A.queued[e.id]) P('warn', loc(e), 'queued-only event "' + e.id + '" is never queued (orphan)');
   for (const st of Object.values(content.states)) if (!A.statesRef[st.id]) P('info', loc(st), 'state "' + st.id + '" is never gained');
   if (!Object.keys(content.endings).length) P('error', '-', 'no @ending defined');
@@ -456,6 +478,7 @@ function analyzeWorld(content, P, scanExpr, scanText) {
       if (x.chance === 0) P('warn', loc(n), 'schedule: ' + x.place + ' at 0% is never used');
     }
     for (const id of Object.keys(n.relations || {})) if (!content.npcs[id]) P('error', loc(n), 'relations: unknown npc "' + id + '"');
+    scanExpr(n.gone_when, loc(n), false);
   }
   const PLACE_KINDS = new Set(['public', 'club', 'job', 'thesis', 'internship', 'plan', 'society']);
   for (const d of Object.values(content.places)) {
@@ -1265,7 +1288,7 @@ function genDocs(opts = {}) {
   const file = path.join(ROOT, 'docs', 'authoring', 'schema.md');
   const type = (kind, p) => {
     if (G.STRUCT_PROPS[p] && !(p === 'skill' && kind !== 'track')) return 'structured';
-    if (['when', 'weight', 'closed_when', 'discover', 'hinted_when', 'unlock', 'prereq'].includes(p)) return 'expression';
+    if (['when', 'weight', 'closed_when', 'gone_when', 'discover', 'hinted_when', 'unlock', 'prereq'].includes(p)) return 'expression';
     if (['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment'].includes(p)) return 'number';
     if (['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'cast'].includes(p)) return 'list';
     if (['romance', 'hidden'].includes(p)) return 'yes/no';

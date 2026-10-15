@@ -168,8 +168,7 @@ text: {Mabel looks up as you open the door and is already reaching for a tin.|Ma
   challenge deceive easy:
     win:
       mood +small
-      gold -tiny
-      say: {~She brings you the cheerful tea. It's so good you actually cheer up, which may have been her plan all along.|Mabel looks fooled. Then she adds a biscuit, which means she wasn't.}
+      say: {~She brings you the cheerful tea and waves your coins away, "for the performance". It's so good you actually cheer up, which may have been her plan all along.|Mabel looks fooled, and doesn't charge you. Then she adds a biscuit, which means she wasn't.}
     lose:
       mood -tiny
       gold -tiny
@@ -212,11 +211,10 @@ text: {friend} wants to try one of Mabel's forty teas, and Mabel insists on choo
   gold -small
   rel friend +small
   say: {~{friend} pronounces today's tea "bracing", which means awful. You drink yours anyway.|You pay. Mabel marks you on the chart as a patron of the arts.|{friend} declares it the best tea in the village, then sniffs yours to be sure.}
-> right: Order your usual
+> right: Let {friend} pay for once
   mood +tiny
-  gold -tiny
   rel friend -tiny
-  say: {~{friend} calls you unadventurous. Your tea is perfect, thank you.|"Coward," says {friend} fondly, over something purple.|You stick to your usual. {friend} drinks something that smells of bonfires and looks betrayed by it.}
+  say: {~{friend} pays, and calls you unadventurous for ordering your usual. Your tea is perfect, thank you.|"Coward," says {friend} fondly, paying for your usual and their something purple.|{friend} pays, grumbling, and drinks something that smells of bonfires and looks betrayed by it.}
 
 # ---------------- Grimsby's Books ----------------
 
@@ -382,10 +380,9 @@ text: {There's a queue outside the bakery before the village is properly awake, 
   gold -small
   renown +small
   say: {~You come back with a warm bag and are, for one morning, the most popular person in your house.|The buns are gone before you've taken your coat off. Someone leaves you a thank-you note on a napkin.|A prefect takes one "to check it for contraband". It passes.}
-> right: One bun, eaten warm
-  gold -tiny
+> right: Take a broken bun from the free tray
   mood +small
-  say: {~You eat it on the quay while it's still too hot. Worth every burnt finger.|Butter, cinnamon and the lake in the morning. Nothing has ever been better.|You eat it slowly and think about nothing at all.}
+  say: {~The baker's son gives you one that came out lopsided. You eat it on the quay while it's still too hot. Worth every burnt finger.|A broken bun, free: butter, cinnamon and the lake in the morning. Nothing has ever been better.|The free tray has one left. You eat it slowly and think about nothing at all.}
 
 @event bakery_oldest_baker
 title: The Oldest Baker

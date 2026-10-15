@@ -87,14 +87,13 @@ scene: A burly prefect with a red sash blocking a corridor, a demerit ledger ope
 text: "Running in the halls." A burly prefect with a red sash steps into your path, ledger already open. "Name?" You weren't running. You were walking briskly.
 > left: Accept the demerit
   meet bram
-  study -tiny
+  mood -tiny
   say: He writes your name very slowly, enjoying it. Bram Hollis. You will learn to recognise his footsteps.
 > right: Argue
   meet bram
   rel bram -medium
   renown +small
   say: "Walking briskly," you insist. Two demerits: one for running, one for "lip". Some students nearby clap quietly.
-  study -tiny
 
 @event bram_hall_tax
 title: The Hall Tax
@@ -102,7 +101,7 @@ class: routine
 tone: tense
 trigger: social
 actor: bram
-when: rel(bram) < 6
+when: rel(bram) < 6 and not (flag(bram_sash_lost) and since(corvin_framed) < 10)
 weight: 12
 art: coin
 tags: rival money
@@ -114,6 +113,7 @@ text: Bram has invented a "hall tax" for using the east staircase. Eight crowns.
   mood -tiny
   say: He pockets the coins. "Pleasure." You take the west staircase forever after.
 > right: Refuse loudly
+  alignment +tiny
   rel bram -medium
   renown +small
   chance 50:
@@ -128,7 +128,7 @@ class: routine
 tone: tense
 trigger: social
 actor: bram
-when: rel(bram) <= -12 and (month == 3 or month == 4 or month == 9 or month == 10)
+when: rel(bram) <= -12 and (month == 4 or month == 10)
 weight: 14
 art: scroll
 tags: rival study
@@ -147,8 +147,8 @@ text: Two days before exams, your revision notes vanish from your desk. All of t
   challenge deceive easy:
     win:
       rel bram -medium
-      renown +small
-      say: You find your notes under his mattress, and also a teddy bear. You take both. You return the bear. Eventually.
+      guile +tiny
+      say: You find your notes under his mattress, and also a teddy bear. You take your notes and leave the bear exactly where it was, slightly straightened. He will know.
     lose:
       gain detention
       rel bram -small
@@ -187,7 +187,7 @@ weight: 12
 art: shield
 tags: social
 scene: A prefect stepping between a cornered student and a pair of older bullies, arms crossed.
-text: Two sixth-years corner you by the boathouse, looking for trouble. Then a red sash steps between you. "Problem?" says Bram, cracking his knuckles. They leave fast.
+text: Two fourth-years corner you by the boathouse, looking for trouble. Then a red sash steps between you. "Problem?" says Bram, cracking his knuckles. They leave fast.
 > left: Thank him awkwardly
   rel bram +medium
   say: "Don't make it weird," he says, and walks off. He's smiling, slightly.
@@ -230,12 +230,12 @@ title: The First Question
 class: routine
 tone: light
 actor: thorne
-when: not met(thorne) and turn >= 1
+when: not met(thorne) and enrolled(evocation)
 weight: 16
 art: wand
 tags: study
 scene: A steep lecture theatre, a stern grey-bearded professor pointing a long finger at one student in the middle row.
-text: First Arcana lecture. Professor Thorne surveys the room like a hawk over a field of mice. His finger lands on you. "You. What is the first law of the Arcane?"
+text: First Evocation lecture. Professor Thorne surveys the room like a hawk over a field of mice. His finger lands on you. "You. What is the first law of the Arcane?"
 > left: Admit you don't know
   meet thorne
   rel thorne +small
@@ -245,7 +245,7 @@ text: First Arcana lecture. Professor Thorne surveys the room like a hawk over a
   challenge research easy:
     win:
       rel thorne +small
-      study +tiny
+      study evocation +tiny
       say: "Energy follows intention." His eyebrows twitch. "Acceptable." The room exhales.
     lose:
       rel thorne -tiny
@@ -290,10 +290,12 @@ text: During a thunderstorm, Thorne stops mid-lecture and watches the lightning.
 > left: "Yes, sir."
   gain inspired
   rel thorne +small
-  say: He lost, he says. Badly. He spent a year learning why. "Losing well," he says, "is the only thing worth teaching." The class is silent.
+  study evocation -tiny
+  say: He lost, he says. Badly. He spent a year learning why. "Losing well," he says, "is the only thing worth teaching." The class is silent. The lecture never resumes.
 > right: Stay quiet
   rel thorne +tiny
-  say: He shakes his head and returns to the lecture. You'll always wonder.
+  study evocation +tiny
+  say: He shakes his head and returns to the lecture, which is a good one. You'll always wonder.
 
 @event thorne_recommendation
 title: A Letter of Recommendation
@@ -309,14 +311,12 @@ scene: A wax-sealed envelope on a professor's desk with a student's name written
 text: Thorne calls you to his office and slides an envelope across the desk. "The Conclave asked for my recommendations. I wrote one. I don't write many." He pauses. "Don't make me regret it."
 > left: Thank him sincerely
   flag thorne_letter
-  study +medium
   rel thorne +tiny
   mood +tiny
   say: "Go away," he says gruffly. "I have marking." You see him smile at the window as you leave.
 > right: Ask why you
   mood -tiny
   flag thorne_letter
-  study +medium
   rel thorne +medium
   say: "Because you ask questions like that," he says. "Most students don't. Go." You leave unsure whether you were praised or dismissed.
 
@@ -331,7 +331,7 @@ weight: 14
 art: scales
 tags: study crisis
 scene: A professor standing by his desk with a sheaf of red-marked papers, a student standing awkwardly before him.
-text: Thorne holds up your last three essays. All red. "You're better than this," he says. "That's not a compliment. It's an accusation."
+text: Thorne holds up your last three Evocation essays. All red. "You're better than this," he says. "That's not a compliment. It's an accusation."
 > left: Make excuses
   rel thorne -small
   mood -tiny
@@ -341,7 +341,7 @@ text: Thorne holds up your last three essays. All red. "You're better than this,
 > right: Ask for help
   mood -small
   rel thorne +medium
-  study +medium
+  study evocation +medium
   lore +tiny
   say: He sighs and pulls out a chair. "Sit. We'll start with the first essay, and we'll stay until it's right." You stay until midnight.
 
@@ -410,6 +410,7 @@ scene: An old woman sitting on a bench by the lake at dusk, looking at the water
 text: "I was a student here, you know," Maud says, watching the lake. "Sixty years ago. The lake froze one spring. Three of my friends went down to the boathouse that night. Only two came back." She doesn't look at you. "Ask me what I know."
 > left: "You don't have to tell me."
   rel maud +medium
+  queue maud_tea_tells in 1
   say: She pats your hand. "Kind. But time's short, dearie." She tells you anyway, a little at a time, over many cups of tea.
 > right: "What do you know?"
   rel maud +small
@@ -446,6 +447,30 @@ text: "The silver bees need moving to the summer meadow," Maud says, handing you
   mood +tiny
   say: You watch Maud move hives barehanded, singing to them. It's the calmest you've felt all month.
 
+# Review fixes (G): the kind answer to maud_old_student; she tells you anyway, over tea.
+@event maud_tea_tells
+title: Over Many Cups of Tea
+class: story
+tone: eerie
+trigger: queued
+actor: maud
+art: cup
+tags: mystery hollowstar
+chain: hollowstar
+scene: A cluttered cottage kitchen at dusk, two teacups and a pot between an old woman and a student, the lake grey in the window.
+text: Maud keeps her word, a little at a time. Over a month of afternoons and more tea than is good for anyone, the story of that spring comes out in pieces: the boathouse, the cold, the friend who didn't come back.
+> left: Listen to the end
+  rel maud +small
+  mood -small
+  flag knows_founders_seal
+  find knows_founders_seal
+  find lead_seventh_tower
+  say: "The founders built this place as a lid," she says on the last afternoon. "Seven towers, and the key kept in the one nobody climbs. The thing below loves a lonely heart. Don't be lonely." She pours another cup.
+> right: Tell her it can wait
+  rel maud +medium
+  queue maud_tea_tells in 2
+  say: "It can't, dearie," she says, "but I like you for saying so." She tells you about her chickens instead. You'll come back for the rest.
+
 @event maud_ill
 title: Maud Is Unwell
 class: routine
@@ -464,6 +489,7 @@ text: Maud's chickens are running wild, unfed. You find her in bed, grey-faced a
   say: Amaranth brings tonics and a stern lecture. Maud is back on her feet in a week, grumbling about fuss.
 > right: Look after her yourself for a week
   health -tiny
+  alignment +tiny
   flag maud_ill_done
   rel maud +large
   study -small
@@ -478,7 +504,7 @@ title: She Knows Your Name
 class: windfall
 tone: light
 actor: isolde
-when: not met(isolde) and turn >= 3
+when: not met(isolde) and turn >= 3 and year == 1 and term
 weight: 5
 art: crown
 tags: story
@@ -534,7 +560,7 @@ scene: A headmistress walking alongside a student in a long colonnade, hands cla
 text: The headmistress falls into step beside you in the colonnade. "I hear your name more often than I'd like," she says pleasantly. "In the wrong rooms. I'd hate to hear it in mine."
 > left: Promise to do better
   rel isolde +small
-  study +small
+  mood -tiny
   lose watched
   say: "Good." She stops walking. You keep going. When you look back, she's gone.
 > right: Defend yourself

@@ -28,7 +28,7 @@ text: Midnight. The silver key fits the Restricted Section door perfectly. Beyon
     win:
       lore +medium
       queue forbidden_section_2 in 2
-      say: You spend two hours reading by candle-stub. You leave with a head full of things no first-year should know.
+      say: You spend two hours reading by candle-stub. You leave with a head full of things no student should know.
     lose:
       gain detention
       gain watched
@@ -44,7 +44,7 @@ art: book
 tags: mystery hollowstar
 chain: forbidden
 scene: A book bound in something that is not leather, open on a reading stand, its letters slowly rearranging themselves.
-text: On your third visit, a book finds you. It falls from a high shelf and lands open at your feet: the Codex of Hollow Names. The first page is a list of names. The last one is still being written. It's yours.
+text: You keep going back. One night, a book finds you. It falls from a high shelf and lands open at your feet: the Codex of Hollow Names. The first page is a list of names. The last one is still being written. It's yours.
 > left: Put it back
   mood -tiny
   say: You shelve it. When you look back, it has fallen again, open at the same page.
@@ -78,14 +78,14 @@ text: A lantern blazes in the doorway. Not a prefect this time: the headmistress
   gain detention
   rel isolde +small
   unflag forbidden_key
-  say: She takes the key. "Detention. And come to my tower on Thursdays. If you're going to learn dangerous things, you'll learn them properly."
+  say: She takes the key. "Detention, every evening this month; your coursework can wait. And come to my tower on Thursdays. If you're going to learn dangerous things, you'll learn them properly."
 > right: Ask her what it means
   meet isolde
   rel isolde +medium
   lore +medium
   find codex_names
   unflag forbidden_key
-  say: A long pause. "It means something is waking, and it is looking for help. Make sure it doesn't find yours." She takes the key and leaves you the candle.
+  say: A long pause. "It means something is waking, and it is looking for help. Make sure it doesn't find yours." She takes the key, leaves you the candle, and forgets, or chooses to forget, the detention.
 
 # ---------------- The Umbral Curse ----------------
 
@@ -93,35 +93,37 @@ text: A lantern blazes in the doorway. Not a prefect this time: the headmistress
 title: A Cold That Won't Leave
 class: story
 tone: grim
-when: has(umbral_curse)
+when: has(umbral_curse) and not flag(moonpetal_sought)
+repeat: 6
 weight: 30
 art: skull
 tags: crisis mystery
 chain: curse
 scene: A student wrapped in three blankets beside a roaring fire, breath still fogging the air, fingertips grey.
-text: The cold under your skin is getting worse. Sister Amaranth's tonics do nothing. She looks troubled. "This isn't an illness. It's a hunger." She lowers her voice. "Old Maud might know something. Don't tell anyone I said so."
+text: {&The cold under your skin is getting worse.|The cold is back, worse than before.} Sister Amaranth's tonics do nothing. She looks troubled. "This isn't an illness. It's a hunger." She lowers her voice. "Old Maud might know something. Don't tell anyone I said so."
 > left: Endure it
   mood -tiny
   arcana +tiny
-  say: You pile on blankets and keep going. The cold whispers sometimes. You pretend not to hear.
+  say: You pile on blankets and keep going. The cold whispers sometimes. You pretend not to hear. Maud, you suppose, will still be there if it gets worse.
 > right: Go to Old Maud
   meet maud
   rel maud +small
   flag moonpetal_sought
-  say: Maud takes one look at your fingertips and puts the kettle on. "Moonpetal," she says. "Grows in the Whisperwood. Only blooms at midnight. You'll fetch it yourself — the cure has to come from the cursed."
+  say: Maud takes one look at your fingertips and puts the kettle on. "Moonpetal," she says. "Grows in the Whisperwood. Only blooms after dark. You'll fetch it yourself — the cure has to come from the cursed."
 
 @event curse_cure_2
 title: Moonpetal
 class: story
 tone: tense
 place: whisperwood
+slot: evening
 when: has(umbral_curse) and flag(moonpetal_sought)
 repeat: 6
 weight: 60
 art: flower
 tags: nature danger
 chain: curse
-scene: A dark forest at midnight, a single silver flower glowing in a clearing, eyes watching from between the trees.
+scene: A dark forest at nightfall, a single silver flower glowing in a clearing, eyes watching from between the trees.
 text: The Whisperwood after dark. Things move between the trees. In a clearing, a single silver flower is opening, and between you and it stands a stag made of shadow.
 > left: Sneak around it
   challenge deceive trivial:
@@ -210,11 +212,11 @@ text: Grisk finds you in the library. "I could cancel your debt," he murmurs. "A
   alignment +tiny
   say: "Pity." He makes a note in his ledger. It looks expensive.
 > right: Do the favour
+  alignment -small
   challenge deceive trivial:
     win:
       lose in_debt
       flag grisk_favour
-      alignment -small
       say: You razor a page from the oldest ledger in the archive. Grisk tears up your debt. You notice the page had a black star on it.
     lose:
       gain detention
@@ -263,6 +265,7 @@ text: At the edge of the forest, a thin plume of smoke. A small fox is caught in
 > right: Free it and bandage the paw
   flag fox_met
   health -tiny
+  alignment +tiny
   queue fox_returns in 2
   say: It bites you, of course. But it lets you wrap the paw. Then it limps into the trees, glancing back once with eyes like embers.
 
@@ -303,7 +306,7 @@ text: The fox has decided. {term: It follows you to class|It follows you through
     lose:
       gain familiar_fox
       gold -medium
-      say: A professor spots her at once. You pay the fee — and Ember is yours, officially.
+      say: A professor spots her at once. You pay what you can of the fee — and Ember is yours, officially.
 > right: Register her properly
   gold -medium
   gain familiar_fox
@@ -321,10 +324,10 @@ art: fox
 tags: nature
 chain: familiar
 scene: A fox nosing through dry leaves under a hedge and emerging with a purse in its jaws.
-text: Ember drags you, by the sleeve, through three corridors and a hedge. She's found something. She's very proud of it.
+text: {~Ember drags you, by the sleeve, through three corridors and a hedge. She's found something. She's very proud of it.|Ember sits on your book until you look at her. She has found something, and she has buried it, and now she wants you to dig.|Ember comes back from the lake with her tail steaming and something in her jaws. She drops it at your feet like a gift.}
 > left: Let her keep it
   mood +small
-  say: It's a sock. Ember is thrilled. You are thrilled for her.
+  say: {~It's a sock. Ember is thrilled. You are thrilled for her.|It's a glove that smells of the stables. Ember sleeps on it for a week.|It's a pine cone, slightly charred. She guards it from Bram personally.}
 > right: See what it is
   chance 50:
     gold +medium
@@ -368,11 +371,11 @@ scene: A translucent girl in old-fashioned school robes, hovering by a window, h
 text: A girl in old-fashioned robes, translucent and very polite. "Prudence Ashworth, class of 1793. Terribly sorry about the socks. I never finished my letter. Could you deliver it? The village. The bakery. Please."
 > left: Exorcise her
   lose haunted
+  alignment -tiny
   arcana +tiny
   mood -tiny
   say: You speak the banishing rite. She fades with a small, hurt look. Your socks stay put after that. You feel a bit rotten.
 > right: Promise to deliver it
-  rel maud +tiny
   queue ghost_letter in 1
   say: She claps her translucent hands. "Oh, thank you! It's only taken two hundred years."
 

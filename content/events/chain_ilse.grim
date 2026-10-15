@@ -37,7 +37,7 @@ class: story
 tone: eerie
 trigger: social
 actor: ilse
-when: rel(ilse) >= 3
+when: rel(ilse) >= 3 and not flag(ilse_taken) and not flag(ilse_went_north)
 weight: 14
 art: snow
 tags: magic hollowstar
@@ -47,11 +47,12 @@ text: Ilse finds you by the frozen pond. "My brother won't talk to me. You will.
 > left: Tell her the truth about Kael
   rel ilse +large
   arcana +medium
-  say: You tell her about the cold hands, the roof at three in the morning, the bread. She listens without moving. Then she teaches you to freeze a falling leaf mid-air.
+  say: You tell her about the cold hands, {seen(astro_kael_roof): the roof at three in the morning|the nights he doesn't sleep}, the bread. She listens without moving. Then she teaches you to freeze a falling leaf mid-air.
 > right: Protect Kael's privacy
   rel ilse -small
   rel kael +small
-  say: "He can tell you himself," you say. Ilse's eyes go flat. But the next day, she's at the pond again. "Fine. I'll teach you anyway. You'll need it."
+  arcana +small
+  say: "He can tell you himself," you say. Ilse's eyes go flat. But the next day, she's at the pond again. "Fine. I'll teach you anyway. You'll need it." She teaches you badly on purpose for an hour, and then, despite herself, well.
 
 @event ilse_grey_returns
 time: night
@@ -101,7 +102,7 @@ class: story
 tone: eerie
 trigger: social
 actor: ilse
-when: flag(ilse_saved) and met(kael) and not flag(dumont_reunited)
+when: flag(ilse_saved) and met(kael) and not flag(dumont_reunited) and not flag(ilse_went_north)
 weight: 16
 art: snow
 tags: social hollowstar
@@ -120,6 +121,7 @@ text: Kael and Ilse have been in the same village for weeks and have spoken elev
       rel ilse +small
       say: They argue in a language you don't speak, at a temperature you can't endure. But they argue — which, you suspect, is a start.
 > right: Let them find their own way
+  flag dumont_reunited
   rel kael +small
   rel ilse +small
   say: You leave the tea on the jetty. A week later you see them walking by the lake together, a careful arm's length apart. Then less.
@@ -153,7 +155,7 @@ class: story
 tone: light
 trigger: social
 actor: ilse
-when: flag(ilse_saved) and final_year and month >= 9 and not flag(ilse_goodbye)
+when: flag(ilse_saved) and final_year and month >= 7 and month <= 9 and not flag(ilse_goodbye) and not flag(ilse_went_north)
 weight: 14
 art: snow
 tags: social

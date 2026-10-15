@@ -20,7 +20,8 @@ text: In summer the castle breathes differently. Corridors you've walked a thous
     win:
       lore +medium
       gold +small
-      say: Behind one door: a forgotten trophy room. Behind another: a professor's stash of very old toffee and a purse of lost-property coins nobody will miss.
+      alignment -tiny
+      say: Behind one door: a forgotten trophy room. Behind another: a professor's stash of very old toffee and a purse of lost-property coins nobody will miss. You pocket it anyway.
     lose:
       mood -tiny
       say: Behind the first door: the caretaker, in a dressing gown, very surprised. You both agree this never happened.
@@ -79,7 +80,7 @@ time: afternoon
 title: The Midsummer Fair
 class: routine
 tone: light
-when: month == 11 or month == 12
+when: (month == 11 or month == 12) and gold >= 3
 weight: 12
 art: tent
 tags: festival money
@@ -104,7 +105,7 @@ text: The village Midsummer Fair: enchanted carousel, ring-toss, a strongman, an
 title: A Summer Letter
 class: routine
 tone: light
-trigger: social
+trigger: letter
 cast:
   npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 12
 per: npc
@@ -160,7 +161,7 @@ text: Your uncle takes you fishing. Something takes the bait. Something very lar
     win:
       lore +medium
       renown +small
-      say: You greet it in the old courtesies Professor Brask taught you. It bows its great head, leaves a pearl on the deck and swims away. Your uncle faints.
+      say: You greet it in the old courtesies {met(brask): Professor Brask taught you|from a book you once read and never expected to need}. It bows its great head, leaves a pearl on the deck and swims away. Your uncle faints.
     lose:
       health -medium
       say: The serpent is not interested in conversation. It is interested in the boat. You swim home.
@@ -169,7 +170,7 @@ text: Your uncle takes you fishing. Something takes the bait. Something very lar
 title: The Summer Reading List
 class: routine
 tone: light
-when: month == 11
+when: month == 11 and not wrapup
 weight: 12
 art: scroll
 tags: study
@@ -177,16 +178,16 @@ scene: A long scroll unrolling off a table and across the floor, a list of title
 text: The summer reading list arrives by owl. It is a scroll. It unrolls across the floor, out of the door and partway down the stairs. Thorne has added a note at the bottom: "Optional. (It is not optional.)"
 > left: Read all of it
   lore +medium
-  study +medium
+  lore +small
   mood -small
   say: You read everything. When term starts, Thorne asks a question about the last book and you're the only one who can answer. His eyebrow rises half a millimetre.
 > right: Read the first and last chapters of each
   guile +tiny
-  study +tiny
+  lore +tiny
   say: A time-honoured strategy. You can talk confidently about the beginning and end of forty books. The middle remains a mystery, like most of life.
 
 @event sum_night_market
-time: evening night
+slot: night
 title: The Night Market
 class: routine
 tone: eerie
@@ -227,6 +228,6 @@ text: The last week of summer has that particular light — golden, heavy, alrea
   health +tiny
   say: Late swims, long dinners, one final sunset from the hill. You arrive at the barge sunburnt and happy and only slightly late.
 > right: Get ready for the new year
-  study +small
+  gain inspired
   lore +tiny
   say: You re-read your notes, sharpen your quills and polish your wand. When term starts you are, for once, ahead. It's an unfamiliar feeling.

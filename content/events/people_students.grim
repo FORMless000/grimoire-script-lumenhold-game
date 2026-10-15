@@ -40,7 +40,7 @@ class: routine
 tone: light
 trigger: social
 actor: lyra
-when: rel(lyra) >= 6
+when: rel(lyra) >= 6 and (year > 1 or month > 4)
 weight: 12
 art: letter
 tags: social
@@ -62,18 +62,18 @@ class: routine
 tone: tense
 trigger: social
 actor: lyra
-when: rel(lyra) > -24
+when: rel(lyra) > -24 and term and not wrapup
 weight: 10
 repeat: 4
 art: scroll
 tags: social study rival
 scene: Two students at opposite ends of a long library table, surrounded by towers of books, glaring over the tops of them.
-text: The professors post this week's rankings, with an open paper this afternoon for anyone who wants to improve their place. Lyra is first. You're close enough to see the back of her head. She notices you noticing.
+text: The professors post this week's rankings, with an open paper this afternoon for anyone who wants to improve their place. Lyra is first{&. You're close enough to see the back of her head.|, again. You're close enough to read her handwriting.|. Of course she is. You're one name below her, which is somehow worse than three.} She notices you noticing.
 > left: Suggest studying together
   mood -tiny
   lore +small
   rel lyra +small
-  say: "Together?" She considers this like a foreign custom. Then she pulls out a chair. She's an excellent, merciless study partner.
+  say: {&"Together?" She considers this like a foreign custom. Then she pulls out a chair. She's an excellent, merciless study partner.|She already has two cups of tea and your chair pulled out. "You're late," she says. You aren't.|"Fine. But I'm quizzing you first." She is merciless again, and you're better for it.}
 > right: Beat her outright
   challenge research easy:
     win:
@@ -84,7 +84,7 @@ text: The professors post this week's rankings, with an open paper this afternoo
     lose:
       study +tiny
       rel lyra -tiny
-      say: You cram through lunch and come third. Lyra is still first. She doesn't gloat. That's worse.
+      say: {&You cram through lunch and come third. Lyra is still first. She doesn't gloat. That's worse.|Second, by one mark. Lyra leaves a note on your desk: "Close." You keep it.|You come fourth. Lyra looks almost disappointed on your behalf, which is unbearable.}
 
 @event lyra_family_gala
 title: The Vaneshade Winter Gala
@@ -226,6 +226,7 @@ text: You find Lyra face-down on a library desk at dawn, not asleep — out cold
   say: She's furious. Then she sleeps for nineteen hours. When she wakes up, she says, quietly, "Thank you."
 > right: Cover for her and make her rest
   health -tiny
+  alignment +tiny
   rel lyra +medium
   study -tiny
   say: You tell her professors she has a cold and sit by her door with your homework. She sleeps. You keep watch.
@@ -296,11 +297,13 @@ text: Tobias is packing. Blight took the harvest. His family needs money, and ha
     lose:
       rel tobias +tiny
       mood -small
+      flag tobias_went_home
       say: He listens, nods, and takes the barge in the morning. He's back in two months, thinner and quieter.
 > right: Give him thirty crowns
   when: gold >= 30
   flag tobias_harvest_done
   gold -large
+  alignment +tiny
   rel tobias +huge
   spark tobias +tiny
   say: He tries to refuse three times. Then he hugs you so hard your spine cracks. "I'll pay you back. Every crown. Every one."
@@ -406,11 +409,11 @@ repeat: 10
 art: tree
 tags: romance nature
 scene: A checked blanket under blossoming apple trees, a basket of bread and cheese, two students lying in the dappled light.
-text: Tobias has packed a picnic: bread he baked, cheese he begged from the kitchens, apples from the orchard he has befriended. "No exams for six hours," he announces. "I checked."
+text: Tobias has packed a picnic: {~bread he baked, cheese he begged from the kitchens, apples from the orchard he has befriended|a pie with your initials in the crust, slightly burnt, and a jar of honey from someone he helped|plums, hard cheese and something he calls a salad, which is mostly flowers}. "No {~exams|essays|professors} for six hours," he announces. "I checked."
 > left: Bring your books anyway
   lore +small
   spark tobias -tiny
-  say: You study on the blanket. He falls asleep with his head in your lap. It's still lovely.
+  say: You study on the blanket. He eyes the books, sighs a very small sigh, and falls asleep with his head in your lap. It's still lovely.
 > right: Leave everything behind
   mood +medium
   health +small
@@ -453,7 +456,6 @@ text: Seraphine shuffles a battered tarot deck. "One card," she says. "For you. 
 > left: Draw a card
   chance 50:
     mood +small
-    renown +tiny
     say: The Star. "Hope," she says, delighted. "And someone's going to tell you a secret. Oh — it's me. I like you." She blushes.
     rel seraphine +small
     spark seraphine +small
@@ -481,11 +483,12 @@ text: From your window you see Seraphine walking into the lake in her nightgown,
   rel seraphine +small
   say: The prefect drags her out, coughing. She doesn't remember anything. She looks at you strangely for days.
 > right: Run down and pull her out
+  alignment +small
   challenge feat trivial:
     win:
       rel seraphine +large
       spark seraphine +small
-      alignment +small
+      flag seraphine_lake_told
       say: You reach her just as she goes under. On the shore she wakes and whispers, "It was calling me. It called you too." Then she holds on very tight.
     lose:
       health -large
@@ -523,7 +526,7 @@ class: routine
 tone: light
 trigger: social
 actor: seraphine
-when: rel(seraphine) >= 9 and year >= 2
+when: rel(seraphine) >= 9 and year >= 2 and term
 weight: 10
 art: eye
 tags: social
@@ -602,6 +605,7 @@ text: "Midnight," Corvin whispers. "The cooks have made forty treacle tarts for 
   rel corvin -tiny
   say: He goes alone. The next morning there's a treacle tart on your pillow. You decide not to ask.
 > right: Lead the raid
+  alignment -tiny
   challenge deceive trivial:
     win:
       mood +medium
@@ -631,6 +635,7 @@ text: Corvin has a black eye and a very casual expression. "Small misunderstandi
 > right: Give him thirty crowns
   when: gold >= 30
   gold -large
+  alignment +tiny
   flag corvin_owes
   rel corvin +large
   queue corvin_repays in 4
@@ -645,7 +650,7 @@ actor: corvin
 art: coin
 tags: social money
 scene: A small brass key and a fat purse left on a desk with a playing card, the jack of spades, tucked under them.
-text: There's a fat purse on your desk and a jack of spades tucked under it. Inside the purse: more than thirty crowns. Much more.
+text: There's a fat purse on your desk and a jack of spades tucked under it. It's heavy, and it clinks.
 > left: Count it
   chance 70:
     gold +huge
@@ -661,7 +666,7 @@ text: There's a fat purse on your desk and a jack of spades tucked under it. Ins
   say: "I won it," he says. "Fairly. Mostly." He pushes the exact thirty into your hand. "The rest's mine. I've got another debt to pay."
 
 @event corvin_rooftop
-time: night
+slot: night
 title: Up on the Roof
 class: routine
 tone: light
@@ -707,7 +712,8 @@ text: The headmistress's silver goblet has been found in Corvin's trunk. He swea
       rel corvin +large
       rel bram -large
       renown +small
-      say: You find the bill of sale: Bram bought a fake. Bram is stripped of his sash. Corvin buys you a goat. An actual goat.
+      flag bram_sash_lost
+      say: You find the bill of sale: Bram bought a fake. Bram is stripped of his sash for the rest of the year. Corvin buys you a goat. An actual goat.
     lose:
       rel corvin +medium
       gain watched
@@ -737,7 +743,7 @@ text: Corvin holds out a playing card. The queen of hearts. His hand isn't quite
   say: For once, Corvin Ashby has nothing to say. He just kisses you, and then grins, and then can't stop grinning.
 
 @event corvin_runaway
-time: night
+slot: night
 title: Let's Leave Tonight
 class: story
 tone: warm
@@ -833,7 +839,7 @@ text: The Artificers' Fair. Mir's entry is under a sheet and occasionally growls
       health -small
       renown +small
       rel mir +small
-      say: The bear eats your sleeve. The crowd loves it. Third prize and a very good story.
+      say: The bear eats your sleeve and swats you into the flour bins on its way to the judges. The crowd loves it. Third prize and a very good story.
 
 @event mir_workshop_closed
 title: The Workshop Is Shut
@@ -856,16 +862,19 @@ text: After the third fire this term, the faculty has padlocked Mir's workshop. 
     lose:
       rel mir +small
       rel thorne -tiny
+      flag mir_workshop_shut
       say: Thorne refuses. But Mir heard you try. "Nobody's ever argued for me before," they say.
 > right: Help them build a secret workshop
   challenge deceive trivial:
     win:
       rel mir +large
       guile +tiny
+      flag mir_workshop_shut
       say: An abandoned classroom behind a tapestry. You bring candles; Mir brings everything else. It's perfect. It's almost entirely fireproof.
     lose:
       rel mir +medium
       gain detention
+      flag mir_workshop_shut
       say: Bram finds the secret workshop on day two. Worth it, says Mir, scrubbing cauldrons beside you.
 
 @event mir_dance_machine
@@ -927,13 +936,15 @@ scene: An artificer holding a stiff letter embossed with a gear crest, a train t
 text: A letter from Mir's parents: the family clockworks needs them home. A ticket is enclosed. "They think this is a hobby," Mir says. "This. Is. Not. A. Hobby."
 > left: Tell them family comes first
   flag mir_family_done
-  rel mir -small
-  say: Mir goes home for a month and comes back with a new scar and a clearer jaw. "They know now," they say. "It's not a hobby."
+  rel mir +small
+  mood +tiny
+  say: Mir goes home for a month and comes back with a new scar and a clearer jaw. "They know now," they say. "It's not a hobby. You were right to send me."
 > right: Help them write back
-  flag mir_family_done
+  flag mir_family_done mir_family_wrote
   rel mir +large
   charm +tiny
-  say: Together you write a letter so persuasive it should be framed. Mir's mother replies: "Fine. Win a prize." Mir intends to win all of them.
+  study -small
+  say: Together you spend three evenings, and most of your coursework, on a letter so persuasive it should be framed. Mir's mother replies: "Fine. Win a prize." Mir intends to win all of them.
 
 # ================= NESSA QUILL =================
 
@@ -1002,7 +1013,7 @@ class: routine
 tone: light
 trigger: social
 actor: nessa
-when: rel(nessa) >= 12 and (member(library_assistant) or visits_to(courtyard) >= 3 or rel(thorne) >= 9)
+when: rel(nessa) >= 12 and (member(library_assistant) or rel(thorne) >= 9)
 weight: 10
 art: feather
 tags: social
@@ -1010,11 +1021,10 @@ scene: Two students in a dark corner of the library, one whispering, the other w
 text: Nessa leans in. "You've got faculty access. The professors are planning to change the exam format and they're hiding it. I just need a quote. Anonymous. Please?"
 > left: Refuse — that's a breach of trust
   rel nessa -small
-  rel thorne +small
-  say: Nessa sulks for a day. Then she respects you for it, which she hates.
+  mood +tiny
+  say: Nessa sulks for a day. Then she respects you for it, which she hates. You sleep well.
 > right: Give her the scoop
   rel nessa +large
-  renown +small
   chance 30:
     rel thorne -large
     say: The story runs. Thorne knows exactly who talked. His glare could curdle milk.
@@ -1063,7 +1073,7 @@ text: The headmistress has threatened to shut down the Ledger after an article a
   rel nessa +large
   rel isolde -small
   renown +medium
-  say: Forty students on the steps, chanting. The headmistress comes out and, astonishingly, listens. The Ledger stays.
+  say: Forty students on the steps, chanting. The headmistress comes out and, astonishingly, listens, looking straight at you the whole time, and not warmly. The Ledger stays.
 
 @event nessa_confession
 ramp: spark(nessa) 25..40

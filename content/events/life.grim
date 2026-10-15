@@ -12,8 +12,9 @@ class: routine
 tone: light
 art: tower
 tags: magic
+when: term and not wrapup
 scene: A grand spiral staircase in mid-rotation, a student clinging to the banister as the steps swing toward a different floor.
-text: Halfway up the west staircase, it decides to be somewhere else. You're now heading toward a floor you've never seen, at speed, and you're late for Arcana.
+text: Halfway up the west staircase, it decides to be somewhere else. You're now heading toward a floor you've never seen, at speed, and you're late for class.
 > left: Hold on and see where it goes
   lore +tiny
   chance 50:
@@ -21,7 +22,7 @@ text: Halfway up the west staircase, it decides to be somewhere else. You're now
     say: It deposits you in a dusty forgotten classroom. In a desk: eight old crowns and a love letter from 1802.
   else:
     study -tiny
-    say: It takes you to the roof. Then the cellar. Then the roof again. You miss Arcana entirely.
+    say: It takes you to the roof. Then the cellar. Then the roof again. You miss your morning lectures entirely.
 > right: Jump for the landing
   challenge feat trivial:
     win:
@@ -58,6 +59,7 @@ class: routine
 tone: light
 art: wand
 tags: magic
+when: term and not wrapup
 scene: A dormitory turned upside down, clothes everywhere, a student on hands and knees peering under a bed.
 text: Your wand is gone. It was on your desk. Now it isn't. Classes start in twenty minutes.
 > left: Tear the room apart
@@ -89,7 +91,8 @@ text: Someone in your dormitory snores like a dragon with a head cold, and nobod
     win:
       health +small
       alchemy +tiny
-      say: Perfect silence. Too perfect. The culprit, the quiet one by the window, is now silent even when awake. It wears off by Tuesday.
+      alignment -tiny
+      say: Perfect silence. Too perfect. The culprit, the quiet one by the window, is now silent even when awake. It wears off by Tuesday. You never quite ask their permission.
     lose:
       health -tiny
       say: The draught finds the wrong bed. Now two people snore, in harmony.
@@ -211,7 +214,7 @@ text: You can't sleep. Your brain has decided to replay every embarrassing thing
   lore +small
   health -tiny
   say: By dawn you've read three chapters and remembered one of them.
-> right: Brew chamomile and count the painted stars
+> right: Chamomile, and count the stars
   gold -tiny
   health +tiny
   mood +tiny
@@ -243,6 +246,7 @@ class: routine
 tone: light
 art: scroll
 tags: study
+when: term and not wrapup
 scene: A desk buried under a precarious tower of scrolls and books, a student peeking hopelessly over the top.
 text: Three essays, a potion log, a star chart and a reading list the length of your arm. All due this week. The pile has achieved its own weather.
 > left: Grind through it
@@ -264,7 +268,7 @@ art: scroll
 tags: study danger
 when: month == 3 or month == 4 or month == 9 or month == 10
 scene: A folded paper being passed under a library table, the faint glow of an examiner's seal on it.
-text: A third-year is selling copies of next week's exam. Eight crowns. "Guaranteed real," he whispers. "Straight from the examiner's desk."
+text: A third-year is selling copies of next week's exam papers. Eight crowns for the set. "Guaranteed real," he whispers. "Straight from the examiner's desk."
 > left: Walk away
   alignment +tiny
   mood +tiny
@@ -275,7 +279,7 @@ text: A third-year is selling copies of next week's exam. Eight crowns. "Guarant
   chance 40:
     study +large
     guile +tiny
-    say: They're real. You ace it. You also can't quite look the examiner in the eye.
+    say: They're real. You know every question before you sit down. You also can't quite look the examiner in the eye.
   else:
     study -medium
     gain detention
@@ -473,7 +477,6 @@ tags: money magic
 scene: A gaudy painted wagon at the academy gates, hung with lanterns and trinkets, a peddler with a gold tooth grinning.
 text: A peddler's wagon has parked by the gates. "Lucky charms! Genuine article! Thirty crowns, and fortune follows you for a season!"
 > left: Buy a lucky charm
-  when: gold >= 25
   hint: 30 gold
   gold -large
   chance 50:
@@ -496,7 +499,6 @@ tags: money study
 scene: A crooked bookshop with books stacked to the ceiling, a hand-painted sign in the window reading HALF OFF, MOSTLY.
 text: Grimsby's Books is having a sale. An old copy of "Advanced Arcane Theory" for fifteen crowns. Normally forty. It's annotated, apparently, by a famous wizard.
 > left: Buy it
-  when: gold >= 20
   hint: 15 gold
   gold -medium
   lore +medium
@@ -535,6 +537,7 @@ tags: money social
 scene: A smoky corner of the common room, students around a low table with cards and coins, one card floating and changing face.
 text: A late-night game of Wizard's Hand. The cards change faces when no one's looking. The pot is thirty crowns. The upper-years look hungry.
 > left: Play
+  when: gold >= 15
   challenge deceive easy:
     win:
       gold +large
@@ -552,19 +555,21 @@ class: routine
 tone: light
 art: feather
 tags: study money
-scene: A brass plaque on a noticeboard announcing THE LUMEN ESSAY PRIZE — 50 CROWNS, a quill pinned beneath it.
+scene: A brass plaque on a noticeboard announcing THE LUMEN ESSAY PRIZE — 30 CROWNS, a quill pinned beneath it.
 text: The Lumen Essay Prize: thirty crowns for the best essay on "Magic and Duty". The deadline is Friday. You have an idea already.
 > left: Enter
+  study -tiny
   challenge research easy:
     win:
       gold +large
       renown +medium
-      say: You win. Your essay is read aloud at dinner. You don't know where to look.
+      say: The essay eats your week, and wins. Your essay is read aloud at dinner. You don't know where to look.
     lose:
       lore +tiny
-      say: You don't win, but the judges' notes are glowing. Next year, maybe.
+      say: The essay eats your week, and doesn't win, but the judges' notes are glowing. Next year, maybe.
 > right: Skip it
-  say: The winner reads their essay aloud at dinner. Yours would have been better. Probably.
+  mood +tiny
+  say: The winner reads their essay aloud at dinner. Yours would have been better. Probably. You had a very pleasant week instead.
 
 @event life_charity
 title: The Winter Fund
@@ -576,7 +581,6 @@ when: month >= 3 and month <= 5
 scene: A collection jar shaped like a lantern on the dining hall table, half full of coins, a hand-lettered sign: FOR THE VILLAGE WINTER FUND.
 text: The village winter fund is collecting for families who can't afford fuel this winter. The jar is half full.
 > left: Donate fifteen crowns
-  when: gold >= 20
   hint: 15 gold
   alignment +small
   gold -medium
@@ -584,8 +588,9 @@ text: The village winter fund is collecting for families who can't afford fuel t
   mood +small
   say: Your name goes on a little list by the jar. You feel warm, which is the point.
 > right: Walk past
-  alignment -tiny
-  say: You walk past. The jar fills anyway. You think about it on cold nights.
+  if gold >= 15:
+    alignment -tiny
+  say: {gold >= 15: You walk past. The jar fills anyway. You think about it on cold nights.|You have nothing to give this year. The jar fills anyway. You think about it on cold nights.}
 
 @event life_shady_offer
 time: afternoon evening
@@ -821,15 +826,15 @@ art: meal
 tags: festival
 when: month == 1 and turn > 1
 scene: Long tables groaning under pies and roast vegetables, candles floating above, a giant pumpkin carved like the headmistress.
-text: The Harvest Feast: pies the size of cartwheels, cider, and a pumpkin carved to look like the headmistress, which she pretends not to notice.
+text: The Harvest Feast: pies the size of cartwheels, cider, and {&a pumpkin carved to look like the headmistress, which she pretends not to notice.|a pumpkin carved to look like Professor Thorne this year, which he pretends not to notice, badly.|a turnip carved to look like the headmistress, by popular demand. She is seen smiling at it.}
 > left: Eat until you can't move
   health +small
   mood +medium
-  say: You eat three helpings of everything. You're carried back to the dorm by friends. Worth it.
+  say: {&You eat three helpings of everything. You're carried back to the dorm by friends. Worth it.|You pace yourself this year, and still lose to the pies. Worth it.|You win the cider-tasting by not falling over. Worth it.}
 > right: Help in the kitchens for extra pay
   gold +medium
   charm +tiny
-  say: You serve pie to the entire academy. The cooks slip you coins and a whole pie of your own.
+  say: {&You serve pie to the entire academy. The cooks slip you coins and a whole pie of your own.|The cooks remember you and put you on gravy, a promotion. Coins, and a pie of your own.|You carve the pumpkin yourself this year. The cooks pay you double in pie and the usual in coins.}
 
 # The rivalry's first fixture (playtest 2, X9): Thornwick visits in year 1's Greenrise.
 @event life_rival_academy
@@ -874,6 +879,7 @@ text: A tiny first-year is standing in the middle of the corridor, clutching an 
 > left: Point the way and hurry on
   say: You point. They go the wrong way anyway. You hope they're all right.
 > right: Walk them to class
+  alignment +tiny
   mood +small
   study -tiny
   charm +tiny
@@ -891,7 +897,7 @@ scene: A potions classroom overrun by dozens of hopping green frogs, one sitting
 text: Someone knocked over the frog crate in Potions. Thirty frogs are loose. One has climbed into the professor's hat. He has not noticed yet.
 > left: Help round them up
   vigor +tiny
-  study +tiny
+  study alchemy +tiny
   say: You catch eleven, a personal best. The professor finds the hat frog at dinner. You were not involved.
 > right: Quietly let a few escape out the window
   mood +small
@@ -905,15 +911,14 @@ tone: eerie
 art: eye
 tags: mystery
 scene: A beaded doorway into a tiny dim tent, an old woman with a crystal ball and too many rings beckoning.
-text: In the village, an old fortune-teller beckons you into her tent. "Three crowns for your future, dearie. Eight for a good one."
-> left: Pay three crowns
-  gold -tiny
+text: In the village, an old fortune-teller beckons you into her tent. "Eight crowns for a good future, dearie. The bad ones I tell for free."
+> left: Decline politely
   chance 50:
-    mood +small
-    say: "You will meet a tall stranger." You already have. Several. It's an academy.
+    mood +tiny
+    say: "Suit yourself," she calls after you. "You will meet a tall stranger." You already have. Several. It's an academy.
   else:
     mood -tiny
-    say: "Beware of water." She won't say more. You think about the lake a lot.
+    say: "Beware of water," she calls after you, free of charge. She won't say more. You think about the lake a lot.
 > right: Pay eight crowns
   gold -small
   mood +small

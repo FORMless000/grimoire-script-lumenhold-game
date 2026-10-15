@@ -39,6 +39,7 @@ text: Wednesday practice. The captain pairs you with a fourth-year who has a rep
 title: Initiation, Prefect-Style
 class: routine
 tone: tense
+when: rank(duelling) == 1
 track: duelling
 actor: bram
 weight: 12
@@ -69,7 +70,7 @@ text: Bram Hollis, prefect and senior Circle member, has decided new members nee
 title: Training Partners
 class: routine
 tone: tense
-when: met(lyra) and month >= 6 and month <= 7 and rel(lyra) >= 0
+when: met(lyra) and month == 6 and rel(lyra) >= 0
 track: duelling
 actor: lyra
 weight: 14
@@ -269,10 +270,12 @@ tags: club rival
 scene: An anonymous note spread on a desk under a lamp, next to a sketch of a prefect taking a coin purse from a first-year.
 text: An anonymous tip: Bram Hollis has been taking bribes from first-years to skip their demerits. You have a witness. Nessa wants your byline on it. "This is real journalism," she says, eyes shining.
 > left: Kill the story
+  alignment -tiny
   rel nessa -small
   rel bram +small
   say: Nessa is disappointed in you. Somehow, Bram finds out you buried it. He nods at you in the corridor. You feel slightly dirty.
 > right: Publish it
+  alignment +tiny
   renown +medium
   rel nessa +medium
   rel bram -large
@@ -292,7 +295,7 @@ art: candle
 tags: club
 scene: The newspaper office at 3am, crumpled drafts on the floor, two students slumped over typesetting trays.
 text: The press runs at dawn and half the paper is blank. Nessa is chewing her quill. "I need you tonight. All night. I'll owe you."
-> left: You have an exam tomorrow
+> left: Say you have revision to do
   study +tiny
   rel nessa -tiny
   say: You sleep. The paper comes out with a large drawing of a duck on page four. Nessa doesn't speak to you for a day.
@@ -361,13 +364,15 @@ text: The old groundskeeper beckons you behind the potting shed, to a door in th
 > left: Thank her and decline
   meet maud
   rel maud +tiny
-  say: "Suit yourself." The door is gone when you look back.
+  mood +tiny
+  say: "Suit yourself." The door is gone when you look back. You make your class with a minute to spare, oddly pleased with yourself.
 > right: Follow her in
   meet maud
   rel maud +medium
   alchemy +small
   gain blessed
-  say: Inside: glowing ferns, silver bees, a pear tree that hums. Maud tucks a sprig of rosemary into your pocket. "For luck. Don't lose it."
+  study -tiny
+  say: Inside: glowing ferns, silver bees, a pear tree that hums. Maud tucks a sprig of rosemary into your pocket. "For luck. Don't lose it." You lose the whole afternoon in there, and a class with it.
 
 # ---------------- Stargazers ----------------
 
@@ -403,6 +408,7 @@ tags: club money
 scene: A chalkboard on an observatory wall covered in tally marks and names, a pile of coins on a stool beneath it.
 text: The club is running a betting pool on tonight's meteor count. The current favourite is 40. The charts suggest something else. Or do they?
 > left: Bet on the charts
+  when: gold >= 8
   challenge research trivial:
     win:
       gold +medium
@@ -426,7 +432,7 @@ scene: A star chart spread on a table, a student's finger tracing a new pattern 
 text: Plotting the autumn sky, you notice seven faint stars that form a ring around nothing. The charts call that patch of sky "empty". It doesn't look empty.
 > left: Ignore it
   say: You plot the usual constellations. Your chart gets top marks.
-  study +tiny
+  study astromancy +tiny
 > right: Investigate
   lore +medium
   flag saw_hollow_star
@@ -460,6 +466,7 @@ text: A black card under your door. On it, a map in silver ink that redraws itse
 title: The Thursday Staircase
 class: routine
 tone: eerie
+slot: midnight
 track: cartographers
 weight: 14
 art: map

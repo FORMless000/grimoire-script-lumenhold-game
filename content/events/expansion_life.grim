@@ -192,6 +192,7 @@ text: An empty frame in the long gallery. The Duchess of Ambry has escaped her p
 
 @event life_library_cat
 title: The Library Cat
+when: term and not wrapup
 class: routine
 tone: warm
 weight: 10
@@ -256,7 +257,8 @@ text: You borrowed an umbrella from lost property. It's black, elegant and curse
     win:
       arcana +tiny
       gold +tiny
-      say: The curse lifts with a soft hiss. The umbrella is now just a very nice umbrella. You sell it to Corvin, who wants it "for drama".
+      alignment -tiny
+      say: The curse lifts with a soft hiss. The umbrella is now just a very nice umbrella. It isn't yours, but you sell it to Corvin anyway; he wants it "for drama".
     lose:
       health -tiny
       say: Now it rains sideways.
@@ -297,8 +299,10 @@ text: Old Maud is giving out the abandoned plots behind the greenhouses. There's
 > left: Take the plot
   gain garden_plot
   mood +small
-  say: You spend a whole weekend clearing rocks. By spring, you have lettuces, three violent mandrakes and a strange purple flower nobody can name.
+  health -tiny
+  say: You spend a whole weekend clearing rocks and earn a back that complains for a week. By spring, you have lettuces, three violent mandrakes and a strange purple flower nobody can name.
 > right: Leave it for someone else
+  mood +tiny
   say: A shy first-year takes it and grows giant pumpkins. You feel oddly proud of them.
 
 # The pen pal's first letter (playtest 2, X9): Tamsin Reed, the start of chain_thornwick.grim.
@@ -318,7 +322,7 @@ text: A letter arrives from a stranger at Thornwick Academy, the rival school. "
   mood -tiny
   say: Your reply is four pages long and only slightly insufferable, and it takes the whole evening. The answer arrives within a week, signed "Tamsin". You've made a friend in enemy territory.
 > right: Ignore it
-  charm +tiny
+  mood +tiny
   queue tamsin_second_letter in 3
   say: You ignore it, and enjoy the feeling of being unbothered for about a day. Some letters, you suspect, don't take no for an answer.
 
@@ -334,10 +338,10 @@ text: There is a puppy in the dormitory corridor. It has three heads. One is eat
 > left: Feed it and find its owner
   gold -tiny
   mood +medium
-  say: You follow its owner's frantic shouting to Professor Brask's office. She weeps with relief. The puppy's three heads each lick you once, in strict order.
+  say: You buy it a string of sausages from the kitchens, then follow its owner's frantic shouting to Professor Brask's office. She weeps with relief. The puppy's three heads each lick you once, in strict order.
 > right: Call Professor Brask
-  rel maud +tiny
-  say: Brask arrives at a run with a lead and three biscuits. "Bad boys," she says fondly. All three heads look deeply ashamed.
+  lore +tiny
+  say: Brask arrives at a run with a lead and three biscuits, and explains to you, at length, how to tell which head is in charge. "Bad boys," she says fondly. All three heads look deeply ashamed.
 
 @event life_bell_tower
 time: night
@@ -375,6 +379,7 @@ tags: nature mystery
 scene: The academy grounds swallowed by thick white fog, hedges looming like walls, a lantern glowing faintly ahead.
 text: Fog has come up off the lake so thick you can't see your own feet. The path to the greenhouses has become a maze. Somewhere ahead, someone is calling for help, faintly.
 > left: Follow the voice
+  alignment +tiny
   challenge feat trivial:
     win:
       renown +small
@@ -404,8 +409,10 @@ text: In the old cloister there's a wishing well. The inscription says: "ONE COI
     say: You wish for a good month. It is, mostly. Coincidence, probably.
   else:
     mood -tiny
+    gold +tiny
     say: You wish. The well hiccups and spits your coin back out. Apparently, you can't afford that wish.
 > right: Fish out a few old coins
+  alignment -tiny
   challenge deceive trivial:
     win:
       gold +medium
@@ -440,7 +447,7 @@ text: A second-year lends you their broom for an errand. Midway across the lake,
       say: You talk to it gently all the way across. It purrs. Brooms shouldn't purr. Now it follows you around.
     lose:
       health -small
-      say: It is not soothed. It is, if anything, more ticklish.
+      say: It is not soothed. It is, if anything, more ticklish, and it tips you into the shallows on the way home.
 
 @event life_double_trouble
 title: Your Double Is Loose
@@ -475,7 +482,7 @@ weight: 8
 art: dice
 tags: money
 scene: A crowded hall, a caretaker with a gavel at a lectern, tables piled with lost scarves, wands, boots and one suspiciously humming box.
-text: Once a year the caretaker auctions off unclaimed lost property. There's a box nobody wants that hums faintly. The bidding starts at three crowns. Nobody's bidding.
+text: Once a year the caretaker auctions off unclaimed lost property. There's a box nobody wants that hums faintly. The bidding starts at eight crowns. Nobody's bidding.
 > left: Bid on the humming box
   gold -small
   chance 50:
@@ -484,10 +491,9 @@ text: Once a year the caretaker auctions off unclaimed lost property. There's a 
   else:
     gain hiccup_hex
     say: Inside: a very old, very annoyed hiccup curse, which immediately transfers itself to you.
-> right: Buy a good warm scarf instead
-  gold -tiny
-  health +small
-  say: A scarf of real Northern wool, slightly singed. It's the warmest thing you've ever owned.
+> right: Just watch the bidding
+  mood +tiny
+  say: Nobody bids on the box. A first-year buys a single left boot for a crown and looks thrilled. You leave with nothing and a good story.
 
 @event life_village_busking
 title: Busking in the Village

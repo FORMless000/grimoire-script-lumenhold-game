@@ -27,15 +27,15 @@ art: mirror
 tags: story
 scene: A tall enchanted mirror in the entrance hall, showing a different version of the viewer in each pane.
 text: The Sorting Mirror in the entrance hall does not sort you into anything. It simply asks, in a voice like cold water, who you were before you came here. It waits.
-> noble: The younger child of a minor noble house
+> noble: A younger child of minor nobility
   hint: Gold, charm and a name people recognise.
   gain origin_noble
   say: The mirror shows you a crest you have tried to outgrow. It approves, faintly.
-> scholar: A scholarship student from the provinces
+> scholar: A provincial scholarship student
   hint: Lore and study. The stipend depends on good marks.
   gain origin_scholar
   say: The mirror shows you a candle burning very late in a very small room.
-> hedge: Raised by a hedge-witch in the marshes
+> hedge: Raised by a marsh hedge-witch
   hint: Alchemy, good spirits, an eye for herbs.
   gain origin_hedge
   say: The mirror smells, briefly, of wet moss and woodsmoke. You feel at home.
@@ -314,7 +314,7 @@ scene: The great hall transformed: an ice-crystal chandelier, couples waltzing a
 text: The great hall has been turned to ice and starlight for the Midwinter Ball. Couples float above the floor. Who will you go with? You can only ask someone you know well.
 > lyra: Ask Lyra
   when: met(lyra) and rel(lyra) >= 9
-  hint: She has had six invitations. She hasn't said yes to any.
+  hint: {&She has had six invitations. She hasn't said yes to any.|She has had invitations again. She is pretending not to count them.}
   if spark(lyra) >= 25:
     challenge negotiate trivial:
       win:
@@ -322,7 +322,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
         rel lyra +medium
         mood +medium
         queue ball_last_dance now with lyra
-        say: "Finally, someone who doesn't stammer." She dances like a duel — and wins.
+        say: {&"Finally, someone who doesn't stammer." She dances like a duel — and wins.|{bond(lyra) == "partner": "Obviously," she says, before you finish asking. She leads, of course.|"Again? Fine. You've improved." She dances like a duel, and this year you nearly keep up.}}
       lose:
         rel lyra -small
         mood -small
@@ -334,19 +334,19 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
         rel lyra +medium
         mood +medium
         queue ball_last_dance now with lyra
-        say: "Finally, someone who doesn't stammer." She dances like a duel — and wins.
+        say: {&"Finally, someone who doesn't stammer." She dances like a duel — and wins.|{bond(lyra) == "partner": "Obviously," she says, before you finish asking. She leads, of course.|"Again? Fine. You've improved." She dances like a duel, and this year you nearly keep up.}}
       lose:
         rel lyra -small
         mood -small
         say: "I'm going alone. It's more efficient." You watch her dance alone all night, perfectly.
 > tobias: Ask Tobias
   when: met(tobias) and rel(tobias) >= 9
-  hint: He has been practising with a broom.
+  hint: {&He has been practising with a broom.|He has been practising with a broom again. The broom has improved.}
   spark tobias +medium
   rel tobias +medium
   mood +medium
   queue ball_last_dance now with tobias
-  say: He steps on your feet nine times and apologises ten. It's the best night of the term.
+  say: {&He steps on your feet nine times and apologises ten. It's the best night of the term.|He only steps on your feet twice this year, and is so proud of it that he tells everyone. It's the best night of the term.}
 > seraphine: Ask Seraphine
   when: met(seraphine) and rel(seraphine) >= 9
   hint: She may already know you'll ask.
@@ -354,7 +354,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   rel seraphine +medium
   mood +medium
   queue ball_last_dance now with seraphine
-  say: "I said yes three weeks ago," she says, "you just hadn't asked yet." She dances a beat ahead of the music.
+  say: {&"I said yes three weeks ago," she says, "you just hadn't asked yet." She dances a beat ahead of the music.|"Same as last year," Seraphine says, "but you'll wear blue." You hadn't planned to. You do.}
 > corvin: Ask Corvin
   when: met(corvin) and rel(corvin) >= 9
   hint: Odds he shows up: unclear.
@@ -362,17 +362,17 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
     spark corvin +medium
     mood +medium
     queue ball_last_dance now with corvin
-    say: He arrives late, in a stolen jacket, and is the best dancer in the room.
+    say: {&He arrives late, in a stolen jacket, and is the best dancer in the room.|He arrives on time, which alarms everyone, in a jacket he swears is borrowed. He is still the best dancer in the room.}
   else:
     mood -medium
-    say: He never shows. A note arrives at midnight: "Got arrested. Long story. Save me a dance next year."
+    say: {&He never shows. A note arrives at midnight: "Got arrested. Long story. Save me a dance next year."|He never shows. A note arrives at midnight: "Not arrested this time. Worse. Explain later." He never does.}
 > mir: Ask Mir
   when: met(mir) and rel(mir) >= 9
-  hint: They're bringing a self-playing violin.
+  hint: {&They're bringing a self-playing violin.|They promise the violin has been fixed.}
   spark mir +medium
   rel mir +small
   mood +medium
-  say: Mir's violin plays itself, then plays the chandelier, then plays the windows. You are asked to leave early. Worth it.
+  say: {&Mir's violin plays itself, then plays the chandelier, then plays the windows. You are asked to leave early. Worth it.|The violin behaves all night. Mir is almost disappointed, until it plays the last waltz entirely on its own and bows.}
 > kael: Ask Kael
   when: met(kael) and rel(kael) >= 12
   hint: He doesn't seem to feel the cold.
@@ -380,7 +380,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   rel kael +medium
   mood +medium
   queue ball_last_dance now with kael
-  say: He holds your hand like it is something fragile. Where your fingers touch, frost-ferns bloom on the glass.
+  say: {&He holds your hand like it is something fragile. Where your fingers touch, frost-ferns bloom on the glass.|He takes your hand without asking this time, as if it were already decided. The frost-ferns on the glass grow into a whole winter garden.}
 > nessa: Ask Nessa
   when: met(nessa) and rel(nessa) >= 9
   hint: She'll be working. She's always working.
@@ -388,11 +388,11 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   rel nessa +medium
   renown +small
   queue ball_last_dance now with nessa
-  say: She takes notes between dances. "For the society column." Then she stops taking notes.
+  say: {&She takes notes between dances. "For the society column." Then she stops taking notes.|She leaves her notebook in her bag all night. "The column can make something up," she says. It does.}
 > friends: Go with friends
   mood +medium
   charm +tiny
-  say: You go as a pack and dance badly together and it is perfect.
+  say: {&You go as a pack and dance badly together and it is perfect.|You go as a pack again, and this year someone has taught everyone the same dance, badly. It is still perfect.}
 > skip: Stay in and study
   lore +small
   study +small
@@ -419,7 +419,7 @@ text: The Spring Tournament: dueling on the great lawn, the whole academy watchi
   challenge combat medium:
     win:
       renown +medium
-      say: First round: you win, barely, and the crowd learns your name.
+      say: First round: you win, barely, and {flag(tournament_champion): the crowd remembers your name from last year and chants it.|the crowd learns your name.}
       queue tournament_semifinal now
     lose:
       health -medium
@@ -485,7 +485,7 @@ text: The semifinal. Your opponent is a fourth-year who has never lost. The crow
   challenge deceive medium:
     win:
       renown +small
-      say: A feint, a trip, a jinx to the shoelaces. Legal. Mostly.
+      say: A feint, a trip, a jinx to the shoelaces. Legal. Mostly.{met(bram):  On the prefects' bench Bram watches the whole thing with his jaw set, and doesn't clap.|}
       queue tournament_final now
       if met(bram):
         rel bram -small
@@ -514,7 +514,7 @@ text: The final. Across the ring stands {lyra}, wand raised, eyes blazing. "I wa
       rel lyra -medium
       if bond(lyra) == "none":
         bond lyra rival
-      say: Your final spell lands like a bell. Silence — then the lawn erupts. Lyra stares at you as if seeing you for the first time.
+      say: Your final spell lands like a bell. Silence — then the lawn erupts. Lyra stares at you as if seeing you for the first time, then walks off the lawn without shaking your hand.
     lose:
       renown +medium
       rel lyra +small
@@ -637,9 +637,10 @@ text: A letter arrives in the last month of summer, the handwriting so familiar 
 > right: Write back that everything is perfect
   mood -tiny
   guile +tiny
+  alignment -tiny
   chance 50:
     gold +medium
-    say: Proud of you, they write, and enclose a little money you suspect they couldn't spare.
+    say: Proud of you, they write, and enclose a little money{has(origin_noble) or has(origin_merchant): , as if a purse were the right answer to a letter.|  you suspect they couldn't spare.}
   else:
     say: They reply with exclamation marks. The lie sits in your stomach all week.
 
@@ -743,7 +744,7 @@ scene: Graduation robes laid out on a dormitory bed, a single candle burning, th
 text: Tomorrow you graduate. Your robes are laid out on the bed, slightly too long. Outside, the towers are lit gold. Four years have gone like a single held breath.
 > left: Spend the night with friends
   mood +medium
-  say: Laughter until dawn. Promises to write. Some of them, you'll keep.
+  say: {bonds(friend) + bonds(close) + bonds(partner) > 0: Laughter until dawn. Promises to write. Some of them, you'll keep.|You knock on a few doors. Nobody who answers is a close friend, not yet, but they pour you a cup and keep you up laughing till dawn. You trade addresses anyway.}
 > right: Walk the halls alone one last time
   lore +small
   mood +small

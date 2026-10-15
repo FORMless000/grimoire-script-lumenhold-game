@@ -456,7 +456,7 @@ Worldbook blocks are **data**: canon for authors, briefs and lint. Until phase 2
 
 | Block | What it is | Structured values |
 |---|---|---|
-| `@npc` (extended) | `age` (required; romance needs 18+), `role`, `year`, `traits` / `interests` (from `@vocab`), `voice` | `stats: arcana 34 lore 22 wealth 5` · `schedule: place@slot,slot … place@slot:30` (a number: there that share of days, decided per month without the RNG; M42) · `schedule_break: …` (the schedule on breaks, or `away`: gone for the break, reachable only by letter) · `relations: npc:value …` |
+| `@npc` (extended) | `age` (required; romance needs 18+), `role`, `year`, `traits` / `interests` (from `@vocab`), `voice` | `stats: arcana 34 lore 22 wealth 5` · `schedule: place@slot,slot … place@slot:30` (a number: there that share of days, decided per month without the RNG; M42) · `schedule_break: …` (the schedule on breaks, or `away`: gone for the break, reachable only by letter) · `gone_when: <condition>` (review fixes: while it holds the character is nowhere on the map, fills no cast role and is drawn for no card except letters, e.g. `flag(ilse_taken)` or `flag(tobias_went_home) and since(tobias_bad_harvest) < 2`; scenes queued for them still play) · `relations: npc:value …` |
 | `@fact npc.key` | what can be learned about a character: `tier` surface / personal / secret, `unlock` (expression), `text` | |
 | `@place` | `region`, `kind` (public, club, job, thesis, internship, plan), `track`, `open` slots, `discover` / `closed_when` / `hinted_when` (expressions), `hint`, `desc` | `map: campus x,y` |
 | `@track` | `kind` (course, club, job, internship, thesis), `skill`, `levels` + `level_names`, `place`, `hidden`, `prereq`, `ranks`, `due`, `lead` | `teaches: spell@level …` · `pay: 8, 12, 18` |
@@ -549,6 +549,8 @@ Roles are filled on a scratch copy of the RNG, with backtracking, favouring stro
 
 - **Meeting the lead** (N1): a track's `lead:` is met when you enrol or join; with `intro: <event>` on the track, and the lead not yet met, that card is queued instead (in the track's context, with the lead as actor), so you meet them on a card of their own.
 - **Appeals** (N4): `@game appeal: <event>` is pushed after a failed course, in that course's context. `regrade track C` (or a course id) changes the course's latest grade; turning an F into a pass teaches that level's spells, and the note says "on appeal".
+
+- **Affordability** (review fixes): `@game afford: gold` names the resource an option's up-front price is paid in. An option whose top-level effects spend it (a tier at its amount, a range at its worst; costs inside a `chance`, `challenge` or `if` don't count) is disabled while you hold less, and the card says how much it needs; choosing it throws. If every option still available would be locked, none is (never soft-lock: the scene then takes what you have). Lint: an event that is not an incident may not spend it `on_show`, nor have every always-available option certainly spend it.
 
 **Hooks:** `on: term_start` and `on: term_end` run at the first and last month of each term (rules use them for tuition, term marks and probation).
 
