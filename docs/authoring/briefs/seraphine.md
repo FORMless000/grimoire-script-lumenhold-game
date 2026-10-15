@@ -38,6 +38,22 @@ Something that eats light sleeps beneath the Mirror Lake, behind a door the foun
 
 Batch content may read the act for flavour and point toward clue sources. Only hard-canon events grant key clues or move the clock.
 
+## Already written here (13)
+
+- `hs_seraphine_towers` Seven, Then Six (story)
+- `div_seraphine_vision` She Grabs Your Hand (story)
+- `seraphine_lost_day` Seraphine Is Tomorrow (routine)
+- `seraphine_painting` A Painting of Somewhere Else (routine)
+- `seraphine_mother` The Oracle's Summons (routine)
+- `seraphine_intro` Your Left Shoe (windfall)
+- `seraphine_tarot` The Cards (routine)
+- `seraphine_lake_vision` She Walks Into the Lake (story)
+- `seraphine_future` I Saw You Old (routine)
+- `seraphine_overwhelmed` Too Many Tomorrows (routine)
+- `seraphine_confession` She Already Knew (milestone)
+- `letter_seraphine_card` Half a Sentence (routine)
+- `letter_seraphine_painting` A Painting of You (routine)
+
 ## Lore
 
 - **founders** (`founders_seal`, soft): The founders built Lumenhold as a seal over the Hollow Star: seven towers, one lock in each, and a key shaped like a star that holds no light. The seal weakens over generations and must be renewed.
@@ -56,7 +72,61 @@ Batch content may read the act for flavour and point toward clue sources. Only h
 ## Style examples
 
 ```grim
-# content/events/people_students.grim:455
+# content/events/chain_hollowstar_acts.grim:44
+@event hs_seraphine_towers
+title: Seven, Then Six
+arc: hollowstar
+beat: 4
+slot: night
+class: story
+tone: eerie
+actor: seraphine
+art: tower
+tags: mystery hollowstar
+chain: hollowstar
+scene: A seer on the observatory balcony at night, counting the academy's towers on her fingers, one finger held back.
+text: Seraphine is on the observatory balcony, counting towers on her fingers. "Seven," she says. "Seven. Six, and then… no. Seven, for now." She looks at you as if you had arrived a little early. "What month is it? I lose track around the… you know."
+> left: "Which one goes out?"
+  lore +small
+  mood -small
+  say: She points, then frowns at her own hand. "That one. Or the one next to it. Next year, I think." She doesn't remember saying it the next morning, but you do.
+> right: "It's {month}. Evening."
+  rel seraphine +medium
+  mood +tiny
+  say: She lets out a long breath and sits down on the cold stone. "Thank you. I was halfway into a winter." You stay until she is sure which one she's in.
+```
+
+```grim
+# content/events/classes.grim:357
+@event div_seraphine_vision
+title: She Grabs Your Hand
+class: story
+tone: eerie
+track: astromancy
+actor: seraphine
+weight: 14
+art: eye
+tags: class mystery hollowstar
+chain: hollowstar
+scene: A dreamy-eyed girl gripping a classmate's wrist across a table of crystal balls, her pupils wide and silver.
+text: In the middle of crystal-gazing, Seraphine Hale seizes your wrist. Her eyes have gone silver. "The door under the lake," she whispers. "Don't let him open it. Or do. I can't see which."
+> left: Pull away
+  meet seraphine
+  rel seraphine -tiny
+  mood -tiny
+  say: She blinks and lets go. "Sorry. That happens." She goes back to her crystal as if nothing occurred.
+> right: Ask who she means
+  meet seraphine
+  rel seraphine +medium
+  lore +tiny
+  flag heard_prophecy
+  say: "Someone cold," she says. "Someone kind." Then she shakes her head, smiles vaguely, and asks if you'd like a biscuit.
+
+# ---------------- Artifice ----------------
+```
+
+```grim
+# content/events/people_students.grim:468
 @event seraphine_lake_vision
 title: She Walks Into the Lake
 class: story
@@ -86,58 +156,6 @@ text: From your window you see Seraphine walking into the lake in her nightgown,
       say: You both nearly drown. You both come down with Lake Fever. She brings you soup that tastes faintly of the future.
 ```
 
-```grim
-# content/events/expansion_people.grim:152
-@event seraphine_lost_day
-title: Seraphine Is Tomorrow
-class: routine
-tone: eerie
-trigger: social
-actor: seraphine
-when: rel(seraphine) >= 6
-weight: 10
-art: hourglass
-tags: mystery social
-scene: A girl sitting at the wrong desk in an empty classroom, a teacup in her hands, the calendar on the wall showing the next day's date.
-text: Seraphine is sitting in an empty classroom, waiting for a lesson that's happening tomorrow. "I've slipped," she says calmly. "I'm a day ahead. It happens. I need someone to remind me what today is."
-> left: Talk her back into today
-  rel seraphine +medium
-  lore +tiny
-  say: You tell her what you had for breakfast, what the weather's like, what Thorne said this morning. Slowly her eyes stop looking through you. "Oh," she says. "Hello. Today."
-> right: Ask her what tomorrow holds
-  chance 50:
-    study +small
-    say: "There's a surprise quiz in Lore," she says. "Question three is a trick." It is. You get it right.
-  else:
-    mood -tiny
-    say: "It rains," she says. "You get wet. You'll be fine." You are not fine. You get very wet.
-```
-
-```grim
-# content/events/expansion_people.grim:197
-@event seraphine_mother
-title: The Oracle's Summons
-class: routine
-tone: light
-trigger: social
-actor: seraphine
-when: rel(seraphine) >= 15 and year >= 2
-weight: 12
-art: letter
-tags: social
-scene: A girl holding a letter that glows faintly silver, standing at the top of a tower stair, looking down as if about to fall or fly.
-text: Seraphine's mother, the Oracle of Vell, wants her home to take up the family seat. "I'd spend my life telling kings what they want to hear," Seraphine says. "But she's already seen me say yes. She always sees me say yes."
-> left: "Then surprise her."
-  rel seraphine +large
-  mood +small
-  say: Seraphine writes back: no. For a whole day she's terrified. Then she's giddy. "I didn't see that coming," she keeps saying. "I didn't see it coming!"
-> right: "Maybe she's right."
-  rel seraphine -medium
-  say: She nods slowly. She doesn't go — not yet. But she stops telling you her visions, and you miss them more than you expected.
-
-# ---------------- Corvin ----------------
-```
-
 ## Rules
 
 Validators check the first group automatically; the critic (a separate pass, without the author's reasoning) checks the rest. A batch is accepted when everything passes.
@@ -150,9 +168,51 @@ Validators check the first group automatically; the critic (a separate pass, wit
 **Critic**
 - **Canon:** names, places, facts and history match the worldbook; nothing contradicts hard lore; new names come with a soft `@lore` entry.
 - **Voice:** characters sound like their `voice:` and act on their traits and facts.
-- **Choices:** every option costs or risks something; no obviously better option; every option has a specific `say:`.
+- **Choices:** no option is obviously best (`costs.md`): options trade by giving different things or by a cost or risk; every cost is one the `say:` shows (body → health, spirits → mood, purchases → crowns, skipped work → `study`/`perform`/`progress`, a person let down → `rel`, a moral side → alignment); every option has a specific `say:`.
 - **Tone:** warm, witty, slightly melancholy; humour from specifics; no gore, nothing explicit, adults only.
 - **Length:** text under 400 characters, labels under 36, `say` under 300.
-- **Gating:** `when` conditions are reachable and sensible; queued events are queued by something; flags read are set somewhere.
+- **Gating:** `when` conditions are reachable and sensible; queued events are queued by something; flags read are set somewhere (`grim reach` proves it; lint fails on an unreachable event).
 - **Plot safety:** only hard-canon story events grant key clues or move arc clocks.
+- **Alignment:** a choice with moral weight (cruelty, theft, cheating, exploiting someone, reaching for the Star's power; or honesty, protection, generosity at a cost) moves `alignment` (`-tiny`…`-medium` Hollow, `+tiny`…`+medium` Lumen). Ordinary choices don't. Never use alignment, or any counter, as plot progress: plot gates read `clock(arc)` and `clues(arc)`.
 - **Duplication:** no event repeats an existing one's premise (check `grim query event --grep <word>`).
+
+
+> How a choice trades (design §8.4; playtest 2, A3). The sizes are in `presets.md`; the rule the lint checks is in `classes.md`.
+
+## The rule
+
+- **No option is obviously best.** A routine card's options trade against each other: they give different things, or one costs or risks something the other doesn't. The lint fails a card when one option is at least as good as another on every value and better on one, with no risk on either side.
+- **A free option is honest** when choosing it gives up what the other option offers (an evening of study instead of an evening with friends). Don't add a cost to a free option to make it "trade": the other option is its cost.
+- **A cost is something the scene shows.** If the `say:` doesn't show the player paying it (tired legs, a spent crown, a friend's cool look, a missed lecture), it isn't a cost: drop it, pick the one the scene does show, or write the line that shows it.
+- **Keep each option within ±1.5 medium-equivalents** (the weights in `balance.grim`).
+- The lint reads alignment as a direction, not a gain: two options that move it differently are never one "better" than the other. A gamble (`chance`, a check, a penalty queued at odds) or an option that leads somewhere (a state, a flag, a queued card) is never "obviously best" either.
+
+## What each value stands for
+
+| Value | It is | Costs it when the scene shows | Gains it when |
+|---|---|---|---|
+| `health` | the body | exertion, cold, wet, injury, a fall, lost sleep, illness, a burn, a bite | rest, food, warmth, a healer, sleep |
+| `mood` | spirits | embarrassment, guilt, worry, boredom, disappointment, homesickness, a row, bad news | fun, beauty, praise, kindness, a win, a good meal with friends |
+| `mana` | the magic you can spend | casting or channelling, a ward that drinks from you, a spell gone wrong | rest after magic, a ley line, a potion; it refills monthly |
+| `renown` | being talked about | public embarrassment, backing down where people watch, a scandal, being forgotten | a public feat, a byline, a performance, a famous friend; it fades monthly |
+| `alignment` | Lumen ↔ Hollow | Hollow (`-`): cruelty, theft, cheating, lying for gain, exploiting someone, reaching for the Star | Lumen (`+`): honesty, protection, generosity at a real cost |
+| `gold` (crowns) | your purse | what you buy, pay, lose or are fined (the prose names it) | wages, tips, winnings, a gift, a find |
+| `arcana` `lore` `alchemy` `charm` `vigor` `guile` | skills (XP) | never a cost (rust is the engine's) | practice that matches the scene: spellcraft, study, brewing, persuasion, exertion and duelling, sneaking and noticing |
+
+**Track and relationship costs** (often the honest ones):
+
+| Statement | Use it when |
+|---|---|
+| `study <course> -tiny` / `study -tiny` | you skip a lecture, a revision night, a class's homework: that course's exam readiness drops (`study -tiny` without a course: every enrolled course) |
+| `perform <track> -tiny` | you slack, leave early or annoy the boss at a club or job (`perform track` in the track's own cards) |
+| `progress thesis -tiny` | the thesis waits while you do something else |
+| `rel <npc> -tiny` / `spark <npc> -tiny` | you snub, disappoint, refuse or embarrass someone; a romantic moment goes flat |
+
+**Alignment is a cost too.** A tempting option (keep the purse, read the letter, cheat the game, take the shortcut someone pays for) should put alignment at stake: `alignment -tiny`/`-small` on the tempting side, and `alignment +tiny` only when the honest side costs something real. Ordinary prudence (going to bed, saying no to a party) has no moral weight.
+
+## Checks before you finish an option
+
+1. What does the player give up? If it's the other option, the option can be free.
+2. Does the `say:` show the cost? If not, change the cost or the line.
+3. Is there a moral side? Then alignment moves.
+4. Does it skip study, work, practice or a person? Use `study`, `perform`, `progress` or `rel` instead of a vague `mood -tiny`.

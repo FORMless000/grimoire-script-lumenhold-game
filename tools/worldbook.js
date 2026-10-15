@@ -99,11 +99,19 @@ function brief(content, sources, opt = {}) {
   }).filter((x) => x.sc >= 1).sort((a, b) => b.sc - a.sc);
   const lore = scored.map(({ l }) => '- **' + l.keys[0] + '** (`' + l.id + '`, ' + l.canon + '): ' + l.text);
 
-  // Similar events: shared cast, tags and topic words.
+  // Similar events (step 5: place and track first): the same place or track, the cast, the arc's chain, tags and
+  // topic words; `like` names events to include whatever their score. Retired events are never examples.
   const lines = {}; for (const s of sources) lines[s.path] = s.text.split('\n');
   const src = (e) => { const L = lines[e.file] || []; let end = e.line; while (end < L.length && !L[end].startsWith('@')) end++; return L.slice(e.line - 1, end).join('\n').trimEnd(); };
+  const like = new Set(opt.like || []);
+  const unknownLike = [...like].filter((id) => !content.events[id]);
+  if (unknownLike.length) throw new Error('unknown: ' + unknownLike.map((x) => 'event ' + x).join(', '));
+  const live = Object.values(content.events).filter((e) => !(e.tags || []).includes('retired'));
   const evScore = (e) => {
-    let sc = 0;
+    let sc = like.has(e.id) ? 100 : 0;
+    if (place && e.place === place.id) sc += 6;
+    if (track && e.track === track.id) sc += 6;
+    if (arc && (e.arc === arc.id || e.chain === arc.id)) sc += 3;
     if (e.actor && cast.includes(e.actor)) sc += 4;
     for (const id of cast) if (e.id.startsWith(id + '_') || (e.text || '').includes('{' + id)) sc += 2;
     sc += (e.tags || []).filter((t) => qw.has(t)).length * 1.5;
@@ -111,8 +119,17 @@ function brief(content, sources, opt = {}) {
     if (track && (e.tags || []).includes(track.kind)) sc += 1;
     return sc;
   };
-  const examples = Object.values(content.events).map((e) => ({ e, sc: evScore(e) })).filter((x) => x.sc > 0).sort((a, b) => b.sc - a.sc).slice(0, 3)
+  const nEx = opt.examples != null ? opt.examples : 3;
+  const examples = live.map((e) => ({ e, sc: evScore(e) })).filter((x) => x.sc > 0).sort((a, b) => b.sc - a.sc).slice(0, Math.max(nEx, like.size))
     .map(({ e }) => '```grim\n# ' + e.file + ':' + e.line + '\n' + src(e) + '\n```');
+
+  // What already exists here (step 5): every card drawn at this place or track, or about this cast, by id and title,
+  // so a batch doesn't repeat a premise (check one with `grim show <id>`).
+  const here = live.filter((e) => (place && e.place === place.id) || (track && e.track === track.id) || (e.actor && cast.includes(e.actor)));
+  if (here.length) {
+    const cap = 40;
+    parts.push('## Already written here (' + here.length + ')\n\n' + here.slice(0, cap).map((e) => '- `' + e.id + '` ' + e.title + (e.class ? ' (' + e.class + (e.level ? ', level ' + e.level : e.rank ? ', rank ' + e.rank : '') + ')' : '')).join('\n') + (here.length > cap ? '\n- … and ' + (here.length - cap) + ' more (`grim query event \'' + (place ? 'place == "' + place.id + '"' : track ? 'track == "' + track.id + '"' : 'actor == "' + cast[0] + '"') + '\'`)' : ''));
+  }
 
   const rules = opt.rules ? '## Rules\n\n' + opt.rules.trim() : '';
   // Assemble within budget: drop lore, then examples, from the end.

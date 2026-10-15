@@ -11,16 +11,16 @@ Content is data, not code: you write `.grim` blocks under `content/`, then forma
 
 1. Read `docs/authoring/README.md`, `style.md` and `checklist.md`. Skim `schema.md` (the block table is generated from the parser). Read `docs/grimoire-script.md` fully the first time; afterwards keep §3 (expressions), §4 (effects) and §5 (how a month is built) at hand.
 2. Read `AGENTS.md` for the principles and where things live; numbers and rules are in `docs/design-v0.3.md` and `docs/authoring/`. It carries no lore: canon is only in the worldbook (`content/world/`), read through `grim brief` / `grim lorebook` (step 3).
-3. **Get a brief** for what you're writing. It contains the cast's voice, facts, schedules and relations, the place, the track, the arc, matching lore and three similar existing events (samples in `docs/authoring/briefs/`):
+3. **Get a brief** for what you're writing. It contains the cast's voice, facts, schedules and relations, the place, the track, the arc, matching lore, **every card already written at that place or track or about that cast** (by id and title), and the most similar existing cards in full (same place or track first; `--examples N` for more, `--like id,id` to include named ones, such as the chain you're extending). Samples in `docs/authoring/briefs/`:
    ```bash
    node tools/grim.js brief --cast lyra,kael --place library --arc hollowstar --topic "what the batch is about" --out build/brief.md
    ```
-4. Avoid duplicates and reuse what exists: `node tools/grim.js ids event` (and `flag`, `state`), `node tools/grim.js query event --grep <word>`, `node tools/grim.js query fact 'npc == "<id>"'`.
+4. Avoid duplicates and reuse what exists: `node tools/grim.js ids event` (and `flag`, `state`), `node tools/grim.js query event --grep <word>` (or a condition: `query event 'track == "tavern"'`), `node tools/grim.js query fact 'npc == "<id>"'`. Read a card you build on with `show <id>`, and see what leads to it and what it leads to with `graph <id>`. `node tools/economy.js --by event --freq` shows how often cards show and what they move; `docs/authoring/README.md` lists these tools.
 
 ## 1. Plan before writing
 
 For each event decide:
-- **Trigger:** `random` (everyday, gated by `when`), `social` (about a character: a fixed `actor:` puts it on that character's own track as well, so it comes when you meet them where they are or when they come looking for you; give each character a ladder of personal events from `rel 0`, see `docs/authoring/pools.md`, Character pools), `auto` (forced when `when` holds: calendar beats, chain climaxes; tight `when` plus `repeat`), or `queued` (only reachable by `queue`).
+- **Trigger:** `random` (everyday, gated by `when`), `social` (about a character: a fixed `actor:` puts it on that character's own track as well, so it comes when you meet them where they are or when they come looking for you; give each character a ladder of personal events from `rel 0`, see `docs/authoring/pools.md`, Character pools), `auto` (forced when `when` holds: calendar beats, chain climaxes; tight `when` plus `repeat`), `queued` (only reachable by `queue`; `queue x in 2 with friend chance 30` delays it, carries a cast role and rolls odds), or `letter` (the nightly letter while you or they are away: `actor:` or a cast role with `per:`).
 - **Where it is drawn** (the director, `docs/grimoire-script.md` §6c): `place: <id>` (a map visit), `track: <id>` with `level:` (course mornings) or `rank:` (club practice, job shifts), `plan: castle|home|work|internship` (break mornings), or no place (the night's world slot). Most everyday content belongs to a place or track now.
 - **Who:** `cast:` roles, cast by premise (`friend: any where tagged(friend, peer) and rel(friend) >= 10`; classmates `tagged(x, student) or tagged(x, prefect)`; `tagged(x, teacher)`), `here: present(place)`, `keeper: maud`), or `actor:` a fixed npc id. Don't write `actor: any` (legacy since schema v1).
 - **When:** `when` on state, flags, relationship, month, year.
@@ -28,6 +28,7 @@ For each event decide:
 - **The trade** (`docs/authoring/costs.md`, read it): no option is obviously best. Options trade by giving different things, or by a cost or risk the scene shows: health for the body, mood for spirits, crowns for what's bought, renown for being seen, `study`/`perform`/`progress` for skipped work, `rel` for a person let down, alignment for anything with a moral side. A free option is fine when it gives up what the other offers; never add a cost the `say:` doesn't show. Sizes in `presets.md`.
 - **What it leaves behind:** flags, states, queued follow-ups. Clues (`find <clue>`) and arc clocks (`advance <arc> +1`) only in hard-canon story events. Plot gates read `clock(<arc>)` (the schedule) and `clues(<arc>)` (engagement), never a home-made counter.
 - **Conscience:** if an option is cruel, greedy, dishonest or reaches for the Star's power, add `alignment -tiny`/`-small`; if it is honest or selfless at a cost, `alignment +tiny`/`+small`. Events for players deep in either side gate on `alignment >= 30` / `<= -30` (±60 for rare ones). `checklist.md` has the rule.
+- **Newer constructs** (each documented in `docs/grimoire-script.md`; `node tools/grim.js schema` lists what the format has gained): `time:` / `slot:` (time of day), `defer:`, `up[spell]` options, `wage`, `locked:` on menu options, milestone `ramp:`, track `intro:`, `@game appeal` with `regrade`, `display:` on resources.
 - **Use tiers and presets, never raw numbers:** `mood -small`, `grind arcana`, `study evocation +small` (exam preparation; never `grades`), `perform duelling +small`, `spark lyra +tiny` (never `love`). Use `challenge <kind> [using <skill>] <tier>:` with `win:` / `partial:` / `lose:`, never `check`.
 
 **Repeatable pool events** (places, class days, practice, shifts, plans) have `class: routine`, `repeat: 4`–`6` (the cooldown in months), and must read differently each time: at least 3 inline variants (`{~a|b|c}`) across text and says, plus `{season=autumn: …|winter: …|…}` or `{final_year: …|…}` lines where they fit. Don't hinge a repeatable on a one-time surprise.
@@ -50,6 +51,8 @@ node tools/grim.js sim 300                   # 0 crashes; your events are not in
 node tools/grim.js sim 300 --policy social   # for relationship content
 node tools/grim.js balance --quick           # 0 invariant failures; read the alarms
 node tools/grim.js show <new_id>             # sanity-check a block and its references
+node tools/grim.js graph <new_id>            # for a chain: what queues each card, what each leads to
+node tools/grim.js check                     # build + lint + sim 200: the standard check before finishing
 ```
 
 If a new event never appears, its `when` is too narrow, its `weight` too low, or nothing queues it: fix it or say it is deliberately rare. Content changes alter gameplay, so `grim diff` reports changes: that's expected; confirm they're what you intended, refresh the baseline (`node tools/grim.js snapshot --out test/golden/baseline.json`) and mention the ending distribution in your report. Browser check: `index.html?event=<id>&debug` (add `&actor=<npc>` for `actor: any`).

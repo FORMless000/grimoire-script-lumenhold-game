@@ -11,6 +11,7 @@ This folder is the single source for how Lumenhold content is made (design §3.5
 | `costs.md` | the trade: what each resource, skill and track stands for, which costs fit which scenes, and the "no option obviously best" rule (also in every brief) |
 | `checklist.md` | the acceptance checklist that validators and the critic apply; also the "Rules" section of every brief |
 | `examples/*.grim` | annotated exemplar events |
+| `briefs/*.md` | sample briefs (`grim brief` output) |
 
 The language reference stays `docs/grimoire-script.md`; canon lives only in the worldbook, `content/world/` (AGENTS.md carries no lore).
 
@@ -34,6 +35,25 @@ node tools/grim.js i18n zh-CN                               # then translate the
 ```
 
 Then check the batch against `checklist.md` (a separate critic pass, without the author's reasoning), and report.
+
+## Finding prior art
+
+Write next to what exists, not over it:
+
+```bash
+node tools/grim.js brief --place library --track library_assistant --topic "…"   # lists every card already there, shows the most similar in full
+node tools/grim.js brief --like soc_argument,life_timeloop_2 --topic "…"         # the named cards in full (the chain you extend, a shape you copy)
+node tools/grim.js query event 'place == "library"' --fields                     # everything matching a condition
+node tools/grim.js query event --grep goat                                       # by premise
+node tools/grim.js show <id>                                                     # a block and everything that references it
+node tools/grim.js graph <id>                                                    # who leads to it (queues, gates) and what it leads to
+node tools/grim.js dupes content/events/pools/<file>.grim                        # near-duplicate premises
+node tools/economy.js --by event --freq                                          # how often cards show and what they move
+```
+
+## Balance
+
+A card's numbers are tier words; whether its options trade is `costs.md` and `classes.md` (the lint checks the routine rule; `presets.md` has the sizes, generated from `content/core/balance.grim`). Whether the game as a whole holds is measured: `grim balance` (invariants and alarms per play style), `tools/economy.js` (sources and sinks by resource, event and month), with the measured flows per style in `docs/playtest-2-flows.md`.
 
 ## The worldbook
 

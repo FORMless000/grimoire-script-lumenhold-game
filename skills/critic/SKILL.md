@@ -9,10 +9,11 @@ You are the second reader. You did not write this batch, and you don't get the a
 
 ## 0. Load
 
-1. `docs/authoring/checklist.md` (the "Critic" list), `style.md`, `classes.md` and `presets.md`.
+1. `docs/authoring/checklist.md` (the "Critic" list), `style.md`, `costs.md` (the trade), `classes.md` and `presets.md`.
 2. The batch's files (they're named in the request, or in `build/batches/<name>.json` under `files`). Read every event in full.
 3. For the cast, places and tracks the batch touches, get a brief:
    `node tools/grim.js brief --cast <ids> --place <id> --track <id> --out build/critic-brief.md`.
+   Its "Already written here" list names every card at that place or track; check the batch against them for repeated premises (`grim show <id>`, `grim dupes <files>`).
    Read the `voice:` lines and the `@fact`s of every character who speaks.
 4. Read `build/batches/<name>.json` if it exists. Don't re-report what the validators already failed; mention it only if it changes your verdict.
 
@@ -43,7 +44,8 @@ For every event, ask the questions below. Write down an issue only when you can 
 - Only hard-canon story events may `find` a key clue or `advance` an arc clock.
 
 **Choices**
-- Every option costs or risks something.
+- No option is obviously best (`costs.md`): options trade by giving different things, or by a cost or risk. A free option is fine when it gives up what the other offers.
+- Every cost is one the `say:` shows (body → health, spirits → mood, purchases → crowns, skipped work → `study`/`perform`/`progress`, a person let down → `rel`, a moral side → alignment). A cost the scene doesn't show is a defect, not a fix.
 - Every option has its own specific `say:`, never "You gain 5 mood." Prose never mentions numbers or mechanics.
 - Labels are under about 36 characters, imperative or first person.
 
@@ -82,7 +84,7 @@ Write the verdict as JSON to `build/batches/<name>.critic.json`, and give it as 
   "accept": false,
   "summary": "one or two sentences: overall quality and the main problem",
   "issues": [
-    { "event": "pool_courtyard_pigeons", "problem": "Second option has no cost; strictly better than the first.", "fix": "Add mood -tiny or a chance of being late (study -tiny)." }
+    { "event": "pool_courtyard_pigeons", "problem": "Feeding the pigeons gives mood and costs nothing the scene shows, while staying gives nothing: the first is obviously best.", "fix": "Show what feeding them costs (the lecture you're late for: study -tiny, with a say line about it), or give staying its own gain." }
   ]
 }
 ```

@@ -114,6 +114,22 @@ test('lorebook and brief cover the worldbook', () => {
   assert.throws(() => WB.brief(content, sources, { cast: ['nobody'] }), /unknown: npc nobody/);
 });
 
+test('brief: cards already at the place or track, examples from there first, --like and --examples (step 5)', () => {
+  const { content, sources } = project(ROOT).compileAll();
+  const b = WB.brief(content, sources, { place: 'gilded_newt', track: 'tavern', topic: 'a brawl during a night shift' });
+  assert.match(b.text, /## Already written here \(\d+\)/);
+  assert.match(b.text, /`tavern_brawl` Brawl at the Newt/);
+  const ex = [...b.text.matchAll(/```grim\n# \S+\n@event (\w+)/g)].map((m) => m[1]);
+  assert.ok(ex.length >= 1);
+  for (const id of ex) { const e = content.events[id]; assert.ok(e.place === 'gilded_newt' || e.track === 'tavern', id + ' is from the Newt'); }
+  const l = WB.brief(content, sources, { like: ['life_timeloop_2'], examples: 0, topic: 'time loop' });
+  assert.match(l.text, /@event life_timeloop_2/);
+  assert.throws(() => WB.brief(content, sources, { like: ['no_such_event'] }), /unknown: event no_such_event/);
+  const retired = Object.values(content.events).filter((e) => (e.tags || []).includes('retired')).map((e) => e.id);
+  const r = WB.brief(content, sources, { like: [], examples: 10, topic: 'enrolment club fair courses' });
+  for (const id of retired) assert.doesNotMatch(r.text, new RegExp('@event ' + id + '\\n'), 'retired ' + id + ' is never an example');
+});
+
 test('rename place updates schedules and the place header', () => {
   const dir = tempProject();
   write(dir, 'content/world/places.grim', '@place library\nname: The Library\nmap: campus 1,2\n\n@place yard\nname: The Yard\nmap: campus 3,4\n');

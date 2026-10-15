@@ -36,8 +36,12 @@
  *   node tools/grim.js lorebook [--out FILE]
  *                                       export the worldbook as JSON (default build/lorebook.json)
  *   node tools/grim.js brief [--cast a,b] [--place P] [--track T] [--arc A] [--topic "…"] [--tier T] [--out FILE]
- *                                       a ~6k-token context pack for writing events (design §3.4)
- *   node tools/grim.js docs [--check]   regenerate the block table in docs/authoring/schema.md
+ *                            [--examples N] [--like id,id]
+ *                                      a ~6k-token context pack for writing events (design §3.4): cast, place, track,
+ *                                      arc, lore, every card already written there, N similar cards as examples
+ *                                      (same place or track first; --like adds named ones) and the rules
+ *   node tools/grim.js docs [--check]   regenerate the block table in docs/authoring/schema.md and the tiers and presets
+ *                                      in docs/authoring/presets.md (from content/core/balance.grim)
  *   node tools/grim.js report --gaps [--games N] [--policy P] [--all] [--json]
  *                                       pools per draw source vs floors and depth targets; empty draws and cards per day
  *   node tools/grim.js dupes [FILE…] [--threshold 0.6] [--strict]
@@ -1246,8 +1250,6 @@ function ids(kind) {
 // Regenerates the block/property table in docs/authoring/schema.md from the parser's SCHEMA.
 function genDocs(opts = {}) {
   const file = path.join(ROOT, 'docs', 'authoring', 'schema.md');
-  const text = fs.readFileSync(file, 'utf8');
-  const begin = '<!-- BEGIN GENERATED: schema (node tools/grim.js docs) -->', end = '<!-- END GENERATED: schema -->';
   const type = (kind, p) => {
     if (G.STRUCT_PROPS[p] && !(p === 'skill' && kind !== 'track')) return 'structured';
     if (['when', 'weight', 'closed_when', 'discover', 'hinted_when', 'unlock', 'prereq'].includes(p)) return 'expression';
@@ -1265,13 +1267,43 @@ function genDocs(opts = {}) {
     if (sc.options) rows.push('| | `> key: Label` | option (`when:`, `hint:`, effects) | label, hint, `say:` |');
   }
   rows.push('', '### Functions in expressions', '', [...G.FUNCS].sort().map((f) => '`' + f + '()`').join(' · '), '');
-  const gen = rows.join('\n');
+  const ok1 = regenSection(file, 'schema', rows.join('\n'), opts);
+  return genPresetsDoc(opts) && ok1;
+}
+
+// Replaces the text between a file's BEGIN/END GENERATED markers; with --check, only reports a stale section.
+function regenSection(file, name, gen, opts) {
+  const text = fs.readFileSync(file, 'utf8'), base = path.basename(file);
+  const begin = '<!-- BEGIN GENERATED: ' + name + ' (node tools/grim.js docs) -->', end = '<!-- END GENERATED: ' + name + ' -->';
   const i = text.indexOf(begin), j = text.indexOf(end);
-  if (i < 0 || j < 0) { console.error('schema.md: generated markers missing'); return false; }
+  if (i < 0 || j < 0) { console.error(base + ': generated markers missing'); return false; }
   const next = text.slice(0, i + begin.length) + gen + text.slice(j);
-  if (opts.check) { const ok = next === text; console.log(ok ? 'docs: schema.md is up to date' : C.r + 'docs: schema.md is stale' + C.x + ' — run node tools/grim.js docs'); return ok; }
-  if (next !== text) { fs.writeFileSync(file, next); console.log('docs: schema.md regenerated'); } else console.log('docs: schema.md is up to date');
+  if (opts.check) { const ok = next === text; console.log(ok ? 'docs: ' + base + ' is up to date' : C.r + 'docs: ' + base + ' is stale' + C.x + ' — run node tools/grim.js docs'); return ok; }
+  if (next !== text) { fs.writeFileSync(file, next); console.log('docs: ' + base + ' regenerated'); } else console.log('docs: ' + base + ' is up to date');
   return true;
+}
+
+// The size tiers, difficulty tiers and presets in docs/authoring/presets.md, from @balance and @preset (step 5),
+// so the writing guide can't drift from content/core/balance.grim.
+function genPresetsDoc(opts = {}) {
+  const { content, errors } = compileAll();
+  if (errors.length) { errors.forEach((e) => console.error(e.message)); return false; }
+  const b = content.balance || {}, sizes = b.sizes || {}, TIER = ['tiny', 'small', 'medium', 'large', 'huge'];
+  const rows = ['', '## Size tiers', '', '| | ' + TIER.join(' | ') + ' |', '|---' + '|---'.repeat(TIER.length) + '|'];
+  const label = { gold: 'crowns', xp: 'skill XP' };
+  for (const [k, row] of Object.entries(sizes)) rows.push('| ' + (label[k] || k) + ' | ' + row.join(' | ') + ' |');
+  rows.push('', '## Difficulty tiers', '', Object.entries(b.difficulty || {}).map(([k, v]) => '`' + k + ' ' + (v > 0 ? '+' : '') + v + '`').join(' · ') + ', relative to the expected skill at that point of the run (`curve`).', '');
+  rows.push('## Presets', '', '| Preset | Expands to |', '|---|---|');
+  const lines = fs.readFileSync(path.join(ROOT, 'content', 'core', 'balance.grim'), 'utf8').split('\n');
+  for (const pr of Object.values(content.presets || {})) {
+    if (!pr.file || !pr.file.endsWith('balance.grim')) continue;
+    let k = pr.line, body = [];
+    while (k < lines.length && !lines[k].startsWith('do:')) k++;
+    for (k++; k < lines.length && /^\s+\S/.test(lines[k]); k++) body.push(lines[k].trim());
+    rows.push('| `' + pr.id + ((pr.params || []).length ? ' <' + pr.params.join('> <') + '>' : '') + '` | ' + (pr.desc ? pr.desc + ' ' : '') + '`' + body.join('; ').replace(/:; /g, ': ') + '` |');
+  }
+  rows.push('');
+  return regenSection(path.join(ROOT, 'docs', 'authoring', 'presets.md'), 'tiers', rows.join('\n'), opts);
 }
 
 /* ------------------------------------------------------------------ main */
@@ -1333,7 +1365,7 @@ switch (cmd) {
     const rulesFile = path.join(ROOT, 'docs', 'authoring', 'checklist.md');
     let res;
     try {
-      res = require('./worldbook.js').brief(content, sources, { cast: list(flag('cast')), place: flag('place') || null, track: flag('track') || null, arc: flag('arc') || null, topic: typeof flag('topic') === 'string' ? flag('topic') : '', tier: flag('tier') || 'personal', budget: Number(flag('budget')) || 24000, rules: [rulesFile, path.join(ROOT, 'docs', 'authoring', 'costs.md')].filter((f) => fs.existsSync(f)).map((f) => fs.readFileSync(f, 'utf8').replace(/^# .*\n/, '')).join('\n') });
+      res = require('./worldbook.js').brief(content, sources, { like: list(flag('like')), examples: flag('examples') ? Number(flag('examples')) : null, cast: list(flag('cast')), place: flag('place') || null, track: flag('track') || null, arc: flag('arc') || null, topic: typeof flag('topic') === 'string' ? flag('topic') : '', tier: flag('tier') || 'personal', budget: Number(flag('budget')) || 24000, rules: [rulesFile, path.join(ROOT, 'docs', 'authoring', 'costs.md')].filter((f) => fs.existsSync(f)).map((f) => fs.readFileSync(f, 'utf8').replace(/^# .*\n/, '')).join('\n') });
     } catch (e) { console.error(C.r + 'brief: ' + C.x + e.message); process.exit(1); }
     if (flag('out')) { fs.mkdirSync(path.dirname(path.resolve(flag('out'))), { recursive: true }); fs.writeFileSync(path.resolve(flag('out')), res.text); console.error('brief: ' + res.chars + ' chars (~' + Math.round(res.chars / 4) + ' tokens), ' + res.lore + ' lore, ' + res.examples + ' example(s) → ' + flag('out')); }
     else process.stdout.write(res.text);

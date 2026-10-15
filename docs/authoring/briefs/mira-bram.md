@@ -52,6 +52,31 @@ Upper-year prefect with a ledger of demerits and a fondness for writing your nam
 - [personal] He once invented a "hall tax" for the east staircase. (`bram.hall_tax`, known when `seen(bram_hall_tax) > 0`)
 - [personal] Under the sash, he will step between you and trouble. Then he tells you not to make it weird. (`bram.ally`, known when `seen(bram_turns) > 0`)
 
+## Already written here (22)
+
+- `art_mira_collab` A Joint Project (routine)
+- `duel_bram_hazing` Initiation, Prefect-Style (routine)
+- `mira_ornithopter` The Test Flight (routine)
+- `mira_lab_fire` Fire in the Workshop (routine)
+- `mira_name_day` Mira's Name Day (routine)
+- `bram_father_visit` Bram's Father (routine)
+- `bram_cheating` Bram Cheats (routine)
+- `bram_intro` Running in the Halls (routine)
+- `bram_hall_tax` The Hall Tax (routine)
+- `bram_sabotage` Missing Notes (routine)
+- `bram_crying` Behind the Stables (routine)
+- `bram_turns` An Unexpected Ally (milestone)
+- `bram_duel` A Formal Challenge (routine)
+- `mira_intro` An Explosion in the West Wing (routine)
+- `mira_owl_gift` A Present With Gears (routine)
+- `mira_fair` The Artificers' Fair (routine)
+- `mira_workshop_closed` The Workshop Is Shut (routine)
+- `mira_dance_machine` The Dancing Machine (routine)
+- `mira_confession` Blueprint (milestone)
+- `mira_family_business` The Family Clockworks (routine)
+- `letter_mira_blueprint` A Letter That Folds Itself (routine)
+- `letter_mira_ticking` Something That Ticks (routine)
+
 ## Lore
 
 - **Hollis** (`hollis_family`, soft): Bram's father was a prefect and head boy at Lumenhold, and has never stopped telling his son he will not amount to anything.
@@ -60,7 +85,7 @@ Upper-year prefect with a ledger of demerits and a fondness for writing your nam
 ## Style examples
 
 ```grim
-# content/events/expansion_people.grim:548
+# content/events/expansion_people.grim:574
 @event bram_cheating
 title: Bram Cheats
 class: routine
@@ -77,6 +102,7 @@ text: In the exam hall, two desks away, you see Bram Hollis — prefect, enforce
   rel bram -huge
   rel isolde +small
   renown +small
+  alignment +small
   say: Bram loses his sash for the rest of the year. Some students cheer. You don't feel like cheering. Neither, later, does he.
 > right: Say nothing — and let him know you saw
   alignment -tiny
@@ -86,7 +112,7 @@ text: In the exam hall, two desks away, you see Bram Hollis — prefect, enforce
 ```
 
 ```grim
-# content/events/people_students.grim:851
+# content/events/people_students.grim:871
 @event mira_dance_machine
 title: The Dancing Machine
 class: routine
@@ -100,9 +126,9 @@ tags: social
 scene: A spindly brass contraption with too many legs attempting a waltz in an empty classroom, a student dancing with it.
 text: Mira has built a machine that teaches dancing. It has six legs and opinions. "It needs a test subject," they say. "It's mostly safe. It only kicked me twice."
 > left: Make Mira test it
-  rel mira +small
+  rel mira -tiny
   mood +small
-  say: You watch Mira and the machine waltz, badly, across the room. It's the funniest thing you've ever seen.
+  say: You watch Mira and the machine waltz, badly, across the room. It kicks them twice; Mira gives you a look. It's the funniest thing you've ever seen.
 > right: Dance with the machine
   charm +small
   health -tiny
@@ -111,7 +137,7 @@ text: Mira has built a machine that teaches dancing. It has six legs and opinion
 ```
 
 ```grim
-# content/events/expansion_people.grim:300
+# content/events/expansion_people.grim:315
 @event mira_ornithopter
 title: The Test Flight
 class: routine
@@ -152,9 +178,51 @@ Validators check the first group automatically; the critic (a separate pass, wit
 **Critic**
 - **Canon:** names, places, facts and history match the worldbook; nothing contradicts hard lore; new names come with a soft `@lore` entry.
 - **Voice:** characters sound like their `voice:` and act on their traits and facts.
-- **Choices:** every option costs or risks something; no obviously better option; every option has a specific `say:`.
+- **Choices:** no option is obviously best (`costs.md`): options trade by giving different things or by a cost or risk; every cost is one the `say:` shows (body → health, spirits → mood, purchases → crowns, skipped work → `study`/`perform`/`progress`, a person let down → `rel`, a moral side → alignment); every option has a specific `say:`.
 - **Tone:** warm, witty, slightly melancholy; humour from specifics; no gore, nothing explicit, adults only.
 - **Length:** text under 400 characters, labels under 36, `say` under 300.
-- **Gating:** `when` conditions are reachable and sensible; queued events are queued by something; flags read are set somewhere.
+- **Gating:** `when` conditions are reachable and sensible; queued events are queued by something; flags read are set somewhere (`grim reach` proves it; lint fails on an unreachable event).
 - **Plot safety:** only hard-canon story events grant key clues or move arc clocks.
+- **Alignment:** a choice with moral weight (cruelty, theft, cheating, exploiting someone, reaching for the Star's power; or honesty, protection, generosity at a cost) moves `alignment` (`-tiny`…`-medium` Hollow, `+tiny`…`+medium` Lumen). Ordinary choices don't. Never use alignment, or any counter, as plot progress: plot gates read `clock(arc)` and `clues(arc)`.
 - **Duplication:** no event repeats an existing one's premise (check `grim query event --grep <word>`).
+
+
+> How a choice trades (design §8.4; playtest 2, A3). The sizes are in `presets.md`; the rule the lint checks is in `classes.md`.
+
+## The rule
+
+- **No option is obviously best.** A routine card's options trade against each other: they give different things, or one costs or risks something the other doesn't. The lint fails a card when one option is at least as good as another on every value and better on one, with no risk on either side.
+- **A free option is honest** when choosing it gives up what the other option offers (an evening of study instead of an evening with friends). Don't add a cost to a free option to make it "trade": the other option is its cost.
+- **A cost is something the scene shows.** If the `say:` doesn't show the player paying it (tired legs, a spent crown, a friend's cool look, a missed lecture), it isn't a cost: drop it, pick the one the scene does show, or write the line that shows it.
+- **Keep each option within ±1.5 medium-equivalents** (the weights in `balance.grim`).
+- The lint reads alignment as a direction, not a gain: two options that move it differently are never one "better" than the other. A gamble (`chance`, a check, a penalty queued at odds) or an option that leads somewhere (a state, a flag, a queued card) is never "obviously best" either.
+
+## What each value stands for
+
+| Value | It is | Costs it when the scene shows | Gains it when |
+|---|---|---|---|
+| `health` | the body | exertion, cold, wet, injury, a fall, lost sleep, illness, a burn, a bite | rest, food, warmth, a healer, sleep |
+| `mood` | spirits | embarrassment, guilt, worry, boredom, disappointment, homesickness, a row, bad news | fun, beauty, praise, kindness, a win, a good meal with friends |
+| `mana` | the magic you can spend | casting or channelling, a ward that drinks from you, a spell gone wrong | rest after magic, a ley line, a potion; it refills monthly |
+| `renown` | being talked about | public embarrassment, backing down where people watch, a scandal, being forgotten | a public feat, a byline, a performance, a famous friend; it fades monthly |
+| `alignment` | Lumen ↔ Hollow | Hollow (`-`): cruelty, theft, cheating, lying for gain, exploiting someone, reaching for the Star | Lumen (`+`): honesty, protection, generosity at a real cost |
+| `gold` (crowns) | your purse | what you buy, pay, lose or are fined (the prose names it) | wages, tips, winnings, a gift, a find |
+| `arcana` `lore` `alchemy` `charm` `vigor` `guile` | skills (XP) | never a cost (rust is the engine's) | practice that matches the scene: spellcraft, study, brewing, persuasion, exertion and duelling, sneaking and noticing |
+
+**Track and relationship costs** (often the honest ones):
+
+| Statement | Use it when |
+|---|---|
+| `study <course> -tiny` / `study -tiny` | you skip a lecture, a revision night, a class's homework: that course's exam readiness drops (`study -tiny` without a course: every enrolled course) |
+| `perform <track> -tiny` | you slack, leave early or annoy the boss at a club or job (`perform track` in the track's own cards) |
+| `progress thesis -tiny` | the thesis waits while you do something else |
+| `rel <npc> -tiny` / `spark <npc> -tiny` | you snub, disappoint, refuse or embarrass someone; a romantic moment goes flat |
+
+**Alignment is a cost too.** A tempting option (keep the purse, read the letter, cheat the game, take the shortcut someone pays for) should put alignment at stake: `alignment -tiny`/`-small` on the tempting side, and `alignment +tiny` only when the honest side costs something real. Ordinary prudence (going to bed, saying no to a party) has no moral weight.
+
+## Checks before you finish an option
+
+1. What does the player give up? If it's the other option, the option can be free.
+2. Does the `say:` show the cost? If not, change the cost or the line.
+3. Is there a moral side? Then alignment moves.
+4. Does it skip study, work, practice or a person? Use `study`, `perform`, `progress` or `rel` instead of a vague `mood -tiny`.

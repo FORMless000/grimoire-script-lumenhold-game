@@ -8,7 +8,7 @@ Warm, witty and slightly melancholy, like a cosy fantasy novel. Humour comes fro
 
 - **Second person, present tense** for `text` ("You find Lyra on a window seat…"); `say:` lines continue it.
 - **Characters sound like their `voice:`** in `content/world/cast.grim`. Lyra never says "please" first; Kael uses few words; Maud calls you "dearie"; Mira says "probably". Read the voice line before writing dialogue, and keep characters' facts consistent with their `@fact`s.
-- **Events by class** (classes arrive in phase 2a; write with them in mind now):
+- **Events by class** (`classes.md`):
   - *routine*: everyday life; light, quick, a small trade-off.
   - *milestone*: friendships, confessions, promotions; let them breathe.
   - *incident*: something goes wrong; give the player agency (mitigate or accept).
@@ -28,7 +28,7 @@ Warm, witty and slightly melancholy, like a cosy fantasy novel. Humour comes fro
 
 ## Choices
 
-- Every option costs or risks something; a choice between two good things or two bad things beats an obvious one.
+- No option is obviously best (`costs.md`): options trade by giving different things, or by a cost or risk the `say:` shows. A free option is honest when it gives up what the other offers; never add a cost the scene doesn't show. A choice between two good things or two bad things beats an obvious one.
 - Every option has an effect and almost always a `say:`. Outcomes are specific ("Footnote sits on your essay"), never "You gain 5 mood."
 - Skill checks state their odds on the button automatically; write success and failure as two real outcomes, not "it works / it doesn't".
 

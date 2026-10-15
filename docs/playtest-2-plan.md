@@ -217,6 +217,21 @@ Planned package by package; 5.0 first, then a recap of the X items and their ord
 - **Crowns in the top row:** `display: number` (a frozen-format addition of a value, documented) shows a resource as a plain number in the middle of the top row, not an orb to fill. Crowns use it and are no longer in the You panel; deltas float up from it like the other meters.
 - **Live course standing:** each enrolled course in the You panel shows its exam preparation (n/15, with a bar), the months to its exam and today's pass chance; the tooltip adds the A-or-B chance and says the odds are "if the exam were today". The engine's snapshot carries it (`courseStanding`); a test pins it.
 - **Housekeeping:** the triage marks the L items (and C20) done.
+- **Authoring plumbing** (the user asked to confirm AGENTS.md points to everything a card writer needs): AGENTS.md gains rows for writing a good card, finding existing cards to learn from or extend, and checking balance. `presets.md`'s tier table was stale (pre-L numbers); it is now generated from `balance.grim` by `grim docs` (`docs --check` catches drift). `style.md` and the critic still said "every option costs or risks something", against A3; both now follow `costs.md`, and the critic's sample issue no longer suggests adding an unshown cost. `grim brief` matched examples by cast and words only (a tavern brief offered a starcalling lesson): it now prefers the same place or track, never shows retired cards, lists every card already written there, and takes `--examples N` and `--like id,id`. The skill and the authoring README list the retrieval tools (`query`, `show`, `graph`, `dupes`, `economy.js --by event --freq`) and the newer constructs; sample briefs regenerated; a test pins the brief.
+
+### X8 and X9: a larger budget (decided by the user)
+Both were small items (a few cards each); the user asked for more. Proposals, to settle when they come up:
+- **X9, the Thornwick rivalry** (about 20–25 cards), a small character arc over four years, separate from the Hollow Star:
+  - the pen pal becomes a person (a named Thornwick student with a soft `@lore` entry, possibly a fixture character), and the passive `pen_pal` tick becomes cards and letters, as the familiars did in N8;
+  - a yearly fixture with rising stakes: year 1 the Thornwick delegation visits (`life_rival_academy` becomes its first beat), year 2 the return visit, year 3 an inter-school contest (fights use the combat stub until X5), year 4 the last match and a farewell;
+  - the pen pal thread crosses it: meeting in person, finding them on the other team, being asked for secrets or offered theirs (spy, mislead or keep it clean; alignment at stake; Thornwick's would-be spies are canon);
+  - ties: the Thornwick internship's cards read the rivalry, the Spring Tournament, Lyra's opinion of it; a yearbook line for how it ended.
+- **X8, the time loop** (about 12–15 cards, with L21), `life_timeloop_*` as a real loop:
+  - each loop is a card, and a loop counter drives the variants (the same breakfast, the third step, the juice, the quiz), each told differently as you notice more;
+  - free experiments each loop, with no lasting consequence, and the bittersweet part: only you remember (a confession nobody else will recall);
+  - exploiting the loop (L21): crowns and study from bets and quizzes carry over, but cost strain (mood, health), alignment, and a tighter loop; eventually someone notices;
+  - resolution: find the cause from clues gathered across loops; the fix starts very hard and gets easier each loop (heroic → hard → medium → easy), and a cap ends the loop eventually, so it never soft-locks;
+  - existing features only (`queue … now`, variables, `if`).
 
 ## Status
 Steps 1 (B, C) and 2 (M, packages M-A to M-F) are done and committed; the triage marks each item.
