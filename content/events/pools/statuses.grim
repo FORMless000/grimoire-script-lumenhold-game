@@ -6,6 +6,7 @@
 title: The Refectory's Leftovers
 class: routine
 tone: warm
+slot: night
 when: has(hungry) and term
 repeat: 3
 weight: 20
@@ -31,20 +32,20 @@ weight: 20
 art: meal
 tags: food money
 scene: A breakfast table heaped with bread rolls, a student's hand hovering near a pocket while a prefect patrols the aisle.
-text: {Breakfast, and the bread rolls are piled high. Board-payers only, says the sign; it doesn't say how many.|The rolls again, and the sign again, and your empty pockets.|Breakfast. You've got good at looking as if you've paid.} {~The prefect on duty is reading a letter.|The prefect on duty is looking straight at the bread.}
+text: {The refectory's bread rolls are piled high. Board-payers only, says the sign; it doesn't say how many.|The rolls again, and the sign again, and your empty pockets.|Another meal. You've got good at looking as if you've paid.} {~The prefect on duty is reading a letter.|The prefect on duty is looking straight at the bread.}
 > left: Pocket a few for later
   health +small
   alignment -tiny
-  say: {~Three rolls in your robe, still warm. They last until supper, and so does the guilt.|You fill your pockets and walk out at an even pace, crumbs and all.|Two rolls and an apple. Nobody stops you. You eat them on the stairs, a little ashamed.}
+  say: {~Three rolls in your robe, still warm. They last a day, and so does the guilt.|You fill your pockets and walk out at an even pace, crumbs and all.|Two rolls and an apple. Nobody stops you. You eat them on the stairs, a little ashamed.}
 > right: Eat what's on your plate
-  say: {~One roll, eaten slowly, and nothing taken that isn't yours. By lunch you're light-headed and honest.|You eat what you're given, and the hunger keeps you company all morning.}
+  say: {~One roll, eaten slowly, and nothing taken that isn't yours. By the next meal you're light-headed and honest.|You eat what you're given, and the hunger keeps you company for hours.}
 
 @event hungry_maud_soup
 title: Soup at the Cottage
 class: routine
 tone: warm
 actor: maud
-when: has(hungry) and met(maud)
+when: has(hungry) and met(maud) and term
 repeat: 2
 weight: 20
 art: cauldron
@@ -79,13 +80,14 @@ text: {Detention, and a row of crusted cauldrons and a prefect by the door with 
   health -tiny
   say: {~You scrub until your knuckles are raw, and learn which residues bite back and which only sulk.|By the last cauldron you can tell a week-old draught from a month-old one by the smell alone. Your hands sting for days.}
 > right: Talk your way to an early night
-  challenge negotiate easy:
+  challenge negotiate apprentice+:
     win:
       mood +small
       say: {~You talk about the prefect's book until the prefect is talking about it too, and at nine they wave you off. "Same time next week. Possibly."|You find out you're both from the same county. The cauldrons can wait for someone less charming.}
     lose:
-      gain detention
-      say: {~"Nice try," says the prefect, and writes your name down for another evening.|The prefect hears you out, then adds a week. "For the speech."}
+      mood -small
+      health -tiny
+      say: {~"Nice try," says the prefect, and hands you the worst cauldron in the row.|The prefect hears you out, then points at the third cauldron, the bubbling one. "For the speech."}
 
 @event detention_lines
 title: Lines, With Company
@@ -101,12 +103,14 @@ tags: study social
 scene: An empty classroom at dusk, two students at separate desks writing the same sentence over and over, a quill scratching on its own at the front.
 text: Detention means lines, a hundred of them, and {other} is at the next desk doing the same. {~The sentence is "I will not bring livestock into the library."|The sentence is "Curfew is not a suggestion."|The sentence is "Stairs are for walking."} An enchanted quill at the front of the room writes down everything anyone says.
 > left: Do your homework under the desk
-  chance 70:
-    study +small
-    say: {~A hundred lines and half an essay. The quill at the front records nothing but scratching.|You alternate a line and a paragraph. Nobody checks. Your essay is the better for it.}
-  else:
-    gain detention
-    say: {~The prefect lifts your lines and finds your essay underneath. "Another evening, then."|Your essay falls on the floor at exactly the wrong moment. Another week of lines.}
+  challenge deceive apprentice likely:
+    win:
+      study +small
+      say: {~A hundred lines and an evening's revision for every course. The quill at the front records nothing but scratching.|You alternate a line and a page of notes. Nobody checks. Your whole week's reading is the better for it.}
+    lose:
+      mood -small
+      study -tiny
+      say: {~The prefect lifts your lines, finds your notes underneath and confiscates them until the end of term.|Your notes fall on the floor at exactly the wrong moment. The prefect keeps them, and makes you start the lines again.}
 > right: Talk to {other}
   rel other +small
   say: {~By the fortieth line you know why {other} is here, and it's a better story than yours. The quill at the front writes it all down, word for word.|You compare crimes. {other} laughs so hard the quill at the front writes "LAUGHTER" in capitals.}
@@ -127,7 +131,7 @@ text: {A summons to your advisor's office. Your marks lie on the desk between yo
 > left: Make a study plan together
   study +medium
   mood -small
-  say: {~An hour later you have a timetable that colours every evening grey. It is a very good timetable. You hate it.|The plan has a column for sleep, and it is narrow.}
+  say: {~An hour later you have a timetable that colours every evening grey, and you start on the first evening of it that night. It is a very good timetable. You hate it.|The plan has a column for sleep, and it is narrow. You work through the first week of it with your advisor checking in.}
 > right: Talk about what's going wrong
   mood +small
   say: {~You say aloud the thing you hadn't said to anyone. Your advisor listens and makes no plan at all. You leave lighter, and no better prepared.|It turns out your advisor failed a year, once. You talk about that instead of your marks.}
@@ -136,7 +140,7 @@ text: {A summons to your advisor's office. Your marks lie on the desk between yo
 title: The Warning Letter
 class: routine
 tone: tense
-when: has(probation)
+when: has(probation) and term
 weight: 20
 art: letter
 tags: study
@@ -175,7 +179,7 @@ text: {Lake fever. Your nose glows faintly blue, and Sister Amaranth says "Bed,"
 title: The Moving Stairs, Limping
 class: routine
 tone: light
-when: has(injured)
+when: has(injured) and term
 repeat: 2
 weight: 20
 art: door
@@ -187,7 +191,7 @@ text: {Your ankle is bandaged and the stairs are moving, as stairs here do. The 
   study -tiny
   say: {~You limp round by the back corridor and arrive as everyone is packing up. The ankle thanks you; your notes don't.|Slow, careful and very late. The ankle mends a little faster for it.}
 > right: Hop the gap as it swings
-  challenge feat easy:
+  challenge feat apprentice wild:
     win:
       renown +tiny
       say: {~You time it perfectly and land on one foot. Somebody on the landing applauds.|One hop, one wobble, one bow. You're on time and briefly famous.}
@@ -221,27 +225,27 @@ text: {You tip out your purse on the bed. Three coins and a button.|The purse ag
 title: A Fox on the Essay
 class: routine
 tone: light
-when: has(familiar_fox)
+when: has(familiar_fox) and term
 repeat: 3
 weight: 12
 art: fox
 tags: nature study
 scene: A fox-spirit curled asleep on a student's half-written essay, her tail smouldering gently at one corner of the page.
-text: {Ember has chosen your essay to sleep on, and her tail is smouldering, as it does when she dreams.|Ember is asleep on your essay again. The corner is already brown.|Ember has a new favourite sleeping place, and it is due on Monday.}
+text: {Ember has chosen your week's coursework to sleep on, and her tail is smouldering, as it does when she dreams.|Ember is asleep on your notes again. The corner of every page is already brown.|Ember has a new favourite sleeping place, and all of it is due on Monday.}
 > left: Rescue the essay
   study +tiny
   mood -tiny
-  say: {~You slide the essay out from under her. She opens one eye, says something rude in fox and sulks under the bed until supper.|You rescue the page and lose a fox: she spends the evening on your pillow with her back to you.}
+  say: {~You slide the pile out from under her. She opens one eye, says something rude in fox and sulks under the bed until supper.|You rescue the pages and lose a fox: she spends the evening on your pillow with her back to you.}
 > right: Let her sleep and write around her
   mood +small
   study -tiny
-  say: {~You write the conclusion in the margin, round a sleeping fox. The essay comes back scorched at one corner and marked down for it.|She's warm, she's purring in her own way, and your essay has a hole in it now. It's worth it.}
+  say: {~You write the conclusion in the margin, round a sleeping fox. Your essays come back scorched at one corner and marked down for it.|She's warm, she's purring in her own way, and your notes have a hole in them now. It's worth it.}
 
 @event ember_night_hunt
 title: Ember Goes Hunting
 class: routine
 tone: light
-time: night
+slot: night
 when: has(familiar_fox)
 repeat: 3
 weight: 12
@@ -282,28 +286,29 @@ text: Ember trots through the refectory with a prefect's sandwich in her jaws, p
 title: "HOMEWORK"
 class: routine
 tone: light
+slot: night
 when: has(familiar_owl) and term
 repeat: 3
 weight: 12
 art: owl
 tags: study
 scene: A brass clockwork owl on a bedpost at dawn, its amber eyes glowing, a student groaning under a pillow.
-text: {Six in the morning. "HOMEWORK," says the clockwork owl, and then, because you haven't moved, "HOMEWORK. DUE. TODAY."|"HOMEWORK," says the owl, at six, as ever. This time it's right: something is due today and you'd forgotten.|The owl's six o'clock hoot has a new word in it: "LATE."}
-> left: Get up and write it now
+text: {Bedtime. "HOMEWORK," says the clockwork owl, and then, because you haven't moved, "HOMEWORK. DUE. TOMORROW."|"HOMEWORK," says the owl, at bedtime, as ever. This time it's right. A week's exercises are due tomorrow, in every course, and you'd forgotten.|The owl's bedtime hoot has a new word in it: "LATE."}
+> left: Stay up and write it now
   study +small
   health -tiny
-  say: {~You write it before breakfast with your eyes half shut. It's not your best work, but it's in. The owl says "GOOD," which you didn't know it could.|An hour of frantic quill-work in the grey light. You hand it in on time and nod off in the next lecture.}
+  say: {~You write it all by candlelight with your eyes half shut. It's not your best work, but it's in. The owl says "GOOD," which you didn't know it could.|Two hours of frantic quill-work by the last of the candle. You hand it in on time and nod off in the next lecture.}
 > right: Hand it in late
   health +tiny
   study -tiny
-  say: {~You go back to sleep. The owl says "DISAPPOINTED" twice and goes quiet. Your essay goes in a day late and is marked accordingly.|You sleep until eight. The owl doesn't speak to you until lunch, and then only to say "LATE."}
+  say: {~You go to sleep. The owl says "DISAPPOINTED" twice and goes quiet. Your work goes in a day late and is marked accordingly.|You sleep until eight. The owl doesn't speak to you until lunch, and then only to say "LATE."}
 
 @event owl_birthday
 title: "BIRTHDAY"
 class: routine
 tone: warm
 cast:
-  friend: any where met(friend) and rel(friend) >= 10
+  friend: any where met(friend) and rel(friend) >= 10 and tagged(friend, student) and around(friend)
 when: has(familiar_owl)
 repeat: 2
 weight: 12
@@ -334,7 +339,7 @@ text: The clockwork owl has started saying "HOME… WORK…" very slowly, like a
   study -tiny
   say: Mir lights up and spends the whole evening inside the owl with tweezers, explaining every spring. You miss your reading entirely. The owl comes back saying "HOMEWORK" faster than ever.
 > right: Fix it yourself
-  challenge enchant easy:
+  challenge enchant apprentice+:
     win:
       arcana +small
       say: A wound spring, a drop of oil and a charm to keep it turning. The owl shakes itself and says "THANK YOU," which it has never said before.

@@ -10,6 +10,7 @@ plan: internship
 class: milestone
 tone: tense
 repeat: 4
+when: month == 12
 weight: 14
 art: scroll
 tags: study job
@@ -36,7 +37,7 @@ tags: study job
 scene: A report pinned on a wall, a student staring at the name at the bottom of it, which is not their own.
 text: {The report you spent a week on is pinned up in the corridor, praised by everyone, with another intern's name at the bottom.|Another piece of your work, another name on it.|It's happened again, and this time the other intern doesn't even look away.} {~Your supervisor is reading it with approval.|The other intern is being congratulated.|Your notes are still on your desk, in your hand.}
 > left: Take it to your supervisor
-  challenge negotiate medium:
+  challenge negotiate journeyman+:
     win:
       perform internship +medium
       mood -tiny
@@ -60,12 +61,12 @@ weight: 10
 art: lantern
 tags: social
 scene: A lamplit street far from the academy, interns spilling out of a busy inn, one looking back at the lit window of the workplace.
-text: {The other interns are going out tonight, to an inn with music and a stall that sells fried bread at midnight.|Another evening off, and the others are already at the door.|"Coming?" says the intern with the biscuits. "Last time you said next time."} {member(intern_expedition) or member(intern_field_station): {~Out here, going out means a fire and a guitar.|There's a dance in the nearest village, three miles off.}|{~The streets are bright.|There's a fair on the river.|Somebody knows a band.}} Your work for tomorrow isn't done.
+text: {{member(intern_expedition) or member(intern_field_station): The other interns are going out tonight, three miles to a village dance, with a fiddler and a supper laid on at a few coins a head.|The other interns are going out tonight, to an inn with music and a stall that sells fried bread at midnight.}|Another evening off, and the others are already at the door.|"Coming?" says the intern with the biscuits. "Last time you said next time."} {member(intern_expedition) or member(intern_field_station): {~The track is dark, but somebody has a lantern.|It's the only dance for thirty miles.}|{~The streets are bright.|There's a fair on the river.|Somebody knows a band.}} Your work for tomorrow isn't done.
 > left: Go out with them
   mood +medium
   perform internship -tiny
   gold -tiny
-  say: {~You dance badly and laugh well and walk home at two in the morning, arm in arm with people you met last month. Tomorrow's work is a little worse for it.|You go. You learn more about the place from the other interns in one evening than from a month of briefings, and remember half of it.}
+  say: {~You pay your share of the supper, dance badly, laugh well and walk home at two in the morning, arm in arm with people you met last month. Tomorrow's work is a little worse for it.|You go, and stand your round. You learn more about the place from the other interns in one evening than from a month of briefings, and remember half of it.}
 > right: Finish tomorrow's work
   perform internship +small
   mood -small
@@ -83,11 +84,11 @@ tags: social
 cast:
   friend: any where rel(friend) >= 8 and tagged(friend, student)
 scene: A letter open on a desk far from the academy, its margins full of little drawings of the castle, a student smiling at it.
-text: {A letter from {friend}, forwarded twice, with the castle drawn in the margins.|Another letter from {friend}. {They} write{s} more often than you do.|{friend}'s handwriting on the envelope. You open it before your coat is off.} {~The letter misses you, in a roundabout way.|{They} {are} bored without you, {they} say{s}.|There's gossip, and a pressed flower.} Answering it properly would take the evening.
+text: {A letter from {friend}, forwarded twice, with the castle drawn in the margins.|Another letter from campus, this one from {friend}.|{friend}'s handwriting on the envelope. You open it before your coat is off.} {~The letter misses you, in a roundabout way.|{They} {are} bored without you, {they} say{s}.|There's gossip, and a pressed flower.} Answering it properly would take the evening.
 > left: Write back at length
   rel friend +small
   perform internship -tiny
-  say: {~Six pages, with drawings of your own. You post it at dawn and are late for the briefing, and don't mind.|You write back everything: the work, the city, the interns. It's like talking to {them}.}
+  say: {~Six pages, with drawings of your own. You post it at dawn and are late for the briefing, and don't mind.|You write back everything: the work, the place, the interns. It's like talking to {them}.}
 > right: Send a quick note
   perform internship +tiny
   rel friend -tiny
@@ -107,7 +108,7 @@ scene: A circular test chamber, a student at the centre holding up a shimmering 
 text: The Conclave is testing a new ward, and the researcher who designed it is ill. "You've read every note," says your supervisor. "Cast it. If it holds, it's yours to keep, and your name goes in the paper." Behind the glass, half the Conclave has come to watch.
 > left: Cast it
   wage
-  challenge spell using arcana hard:
+  challenge spell expert:
     win:
       perform intern_conclave +large
       learn_spell ward
@@ -141,7 +142,7 @@ text: The seventh vat at the Guild works has a crack in it. Everyone knows. The 
   say: The masters close the seventh vat for a week and the foreman doesn't speak to you again. In the third week the replacement vat arrives, and an old worker shakes your hand without a word.
 > right: Mend it yourself, quietly
   wage
-  challenge brew hard:
+  challenge brew expert:
     win:
       perform intern_alchemists +medium
       alchemy +medium
@@ -160,7 +161,7 @@ weight: 18
 art: star
 tags: study magic
 scene: A telescope on a high plateau at night, a student with an eye to the eyepiece and a chart on their knee, a single new star circled in red.
-text: At three in the morning, on your own shift, there's a star in the eyepiece that isn't on any chart: small, steady, blue. The expedition lead is asleep. By custom, whoever records a new star first may name it.
+text: The lead gives you tonight's watch at the eyepiece, alone. At three in the morning there's a star in it that isn't on any chart: small, steady, blue. The expedition lead is asleep. By custom, whoever records a new star first may name it.
 > left: Wake the lead and share it
   wage
   perform intern_expedition +medium
@@ -188,6 +189,7 @@ text: On the moor, a hippogriff foal, newborn and alone. The station's rule is p
   wage
   vigor +small
   health -small
+  alignment +small
   perform intern_field_station -small
   rel brask +small
   say: You feed it every two hours for a month and break the rule every one of them. By summer's end it flies. Back at Lumenhold, Professor Brask hears the story and invites you to supper. "Rules," she says, "are for people who've never held a foal."
@@ -204,6 +206,7 @@ class: milestone
 tone: tense
 weight: 18
 art: letter
+when: month == 12
 tags: study
 scene: A lacquered office at a rival academy, a smiling dean sliding a sealed offer across a desk, a window full of unfamiliar towers.
 text: Thornwick's dean asks to see you on your last week. "Transfer to us," she says, sliding a sealed offer across the desk. "Full scholarship, your own lab bench, a seat in our illusion faculty in time. Lumenhold never valued glamour. We do." She's sincere, and that's the danger.
@@ -235,7 +238,7 @@ text: Sorting files for the Office, you find one with your name on it. It's thin
   guile +small
   find lead_seventh_tower
   perform intern_unseen_office -small
-  say: They know where you sleep and what you eat, which is unsettling. The last page notes that "the seventh tower's key remains in place". When the clerk comes back you are filing something else. The clerk looks at you a little too long.
+  say: They know where you sleep and what you eat, which is unsettling. The last page is mostly blacked out. What's left says the seventh tower "is to remain closed", and nothing about why. When the clerk comes back you are filing something else. The clerk looks at you a little too long.
 > right: Put it back unread
   wage
   perform intern_unseen_office +medium

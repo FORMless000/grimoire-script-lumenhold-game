@@ -1,7 +1,7 @@
 # The midnight pools (playtest 2, X13): what the six open places hold after curfew, and who is about. Most of the
 # castle is sealed; what is open feels shady, and nights are riskier than days: a risky outcome queues
-# `night_suspicion` at its own odds (M41). Illicit money (company, the ring, the high table, the stores, Grisk's
-# parcels) is a third way to pay and pulls alignment toward the Hollow. Harmless nights exist too.
+# `night_suspicion` at its own odds (M41). Illicit money (the ring, the high table, the stores, Grisk's parcels,
+# stolen pages) is a third way to pay and pulls alignment toward the Hollow; hosting upstairs is legal, only risky. Harmless nights exist too.
 
 # ---------------- The Gilded Newt, upstairs ----------------
 
@@ -18,8 +18,7 @@ tags: money danger
 scene: An upstairs room at a tavern after hours, card tables under low lamps, well-dressed guests laughing, a student in borrowed finery refilling a glass.
 text: {The woman who runs the upstairs room looks you over. "The guests like good company. Laugh at the jokes, keep the glasses full, lose gracefully at cards. Nothing more. Guests who want more are shown the stair."|The upstairs room again: velvet, lamplight, guests from the capital who tip in silver.|You know the room now, and which guests to sit beside.} {~Tonight it's a merchant's birthday.|Tonight, a card party for a visiting magistrate.|Tonight the guests are masked, for no reason anyone gives.}
 > left: Work the evening
-  alignment -tiny
-  challenge negotiate medium:
+  challenge negotiate journeyman:
     win:
       gold +medium
       mood -tiny
@@ -43,6 +42,7 @@ type: menu
 class: routine
 tone: tense
 repeat: 4
+when: not flag(grisk_gone)
 weight: 9
 art: cards
 tags: money danger
@@ -52,13 +52,14 @@ text: {Behind the upstairs room there's a back room, and in it the high table. G
   hint: Guile against the table.
   meet grisk
   alignment -tiny
-  challenge deceive hard:
+  gold -medium
+  challenge deceive adept unlikely wild:
     win:
       gold +large
+      gold +medium
       mood +small
       say: {~You read the table like a book you've already finished. The pot slides over, and Grisk applauds politely with two fingers.|Your nerve holds and theirs doesn't. You walk home heavy with silver and hollow with nerves.}
     lose:
-      gold -medium
       queue night_suspicion chance 50
       say: {~The cards turn on you, then the room does. You leave lighter, and a prefect's lamp is going round the courtyard.|You lose the pot and your temper with it. Grisk sympathises, with interest.}
 > favour: Stake a favour to Grisk
@@ -66,7 +67,7 @@ text: {Behind the upstairs room there's a back room, and in it the high table. G
   when: not flag(owes_grisk)
   meet grisk
   alignment -small
-  challenge deceive medium:
+  challenge deceive adept- unlikely wild:
     win:
       gold +large
       say: You stake "one favour, to be named" and win. Grisk smiles, tears up the promise, and keeps the pieces. "Next time," he says.
@@ -78,7 +79,7 @@ text: {Behind the upstairs room there's a back room, and in it the high table. G
 > health: Play the bone-dice
   hint: The old northern game. Win or bleed.
   alignment -tiny
-  challenge combat medium:
+  challenge combat adept- wild:
     win:
       gold +medium
       renown +tiny
@@ -93,12 +94,13 @@ text: {Behind the upstairs room there's a back room, and in it the high table. G
 @event night_partner_asks
 title: Where Were You?
 trigger: queued
+defer: off_campus
 class: incident
 tone: tense
 art: heart
 tags: romance
 cast:
-  partner: any where bond(partner) == "partner"
+  partner: any where bond(partner) == "partner" and around(partner)
 scene: Two students on a cold stone stair in the morning, one holding a tavern's silver token found in the other's coat.
 text: {partner} is waiting on the stair with a silver token from the Gilded Newt in {their} palm. It fell out of your coat. "The upstairs room," {they} say{s}. "People talk. I'd rather hear it from you."
 > left: Tell {them} everything
@@ -114,6 +116,8 @@ text: {partner} is waiting on the stair with a silver token from the Gilded Newt
 @event grisk_names_favour
 title: The Favour, Named
 trigger: queued
+defer: off_campus
+when: not flag(grisk_gone)
 class: incident
 tone: tense
 actor: grisk
@@ -125,7 +129,7 @@ text: Grisk is waiting in the library alcove with your promise between two finge
   unflag owes_grisk
   flag grisk_contact
   alignment -small
-  challenge deceive easy:
+  challenge deceive vs bram.guile +1:
     win:
       say: The crate clinks and, faintly, sings. You don't look inside. Grisk tears up your promise. "You're good at this," he says, which is the worst thing he could say.
     lose:
@@ -154,21 +158,22 @@ scene: A lantern-lit cellar under a boathouse, a chalk ring on wet flagstones, a
 text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yourself?" he says. "Put your money where your fists are."|The bookmaker knows your name and your odds, and they've shortened.|Your name is on the slate tonight before you've said you'll fight.} {~The water slaps under the floor.|Somebody is collecting teeth in a jar, as a joke, probably.|The crowd is bigger than last time.}
 > left: Bet your purse on yourself
   alignment -tiny
-  challenge combat hard:
+  gold -medium
+  challenge combat adept-:
     win:
       gold +large
+      gold +medium
       renown +tiny
       health -small
       say: {~You win, bloodied and grinning, and the bookmaker pays out through his teeth.|The crowd roars. You collect your bet and your opponent's grudging handshake, and limp home rich.}
     lose:
-      gold -medium
       health -medium
       queue night_suspicion chance 50
       say: {~You go down in the third exchange, and your purse goes with you. On the way home a light is on in the prefects' corridor.|A bad loss: the bet, a tooth's worth of pride and most of your skin.}
   if met(lyra):
     queue lyra_ring_word chance 25
 > right: Fight for the purse only
-  challenge combat medium:
+  challenge combat adept-:
     win:
       gold +small
       health -small
@@ -180,13 +185,14 @@ text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yo
 @event lyra_ring_word
 title: Lyra Has Heard
 trigger: queued
+defer: off_campus or not around(lyra)
 class: incident
 tone: tense
 actor: lyra
 art: sword
 tags: social
 scene: A proud red-haired student blocking a corridor with folded arms, a duelling glove tucked in her belt.
-text: Lyra blocks the corridor. "The ring under the boathouse." She says it as if it were a smell. "Brawling for coins in a cellar, in front of drunks. You can actually duel. I've seen you. This is beneath you." A pause. "It's beneath me to have lost to someone who does it."
+text: Lyra blocks the corridor. "The ring under the boathouse." She says it as if it were a smell. "Brawling for coins in a cellar, in front of drunks. You can actually duel. I've seen you. This is beneath you." A pause. "I'd hate to lose to someone who does it."
 > left: "Then spar with me instead."
   rel lyra +small
   health -tiny
@@ -194,7 +200,7 @@ text: Lyra blocks the corridor. "The ring under the boathouse." She says it as i
 > right: "It pays. You wouldn't know."
   rel lyra -medium
   gold +tiny
-  say: Her face shuts like a door. "No," she says. "I wouldn't." She walks off. Later you find she paid off your bar tab at the Newt, which is somehow worse.
+  say: Her face shuts like a door. "No," she says. "I wouldn't." She walks off. Later the Newt's landlady hands back the deposit you left on your bar tab: Lyra has paid it off. That is somehow worse.
 
 @event grisk_pickup
 title: A Parcel at the Boathouse
@@ -234,7 +240,7 @@ scene: A narrow village lane in daylight, a student with an oilcloth parcel unde
 text: {~You carry Grisk's parcel down to the village in broad daylight.|Grisk's parcel, the village lane, and too many people about.|The parcel is in your satchel and the satchel is suddenly the heaviest thing you own.} Bram is at the apple stall. The cobbler's back door is past him.
 > left: Walk past as if you belong
   unflag grisk_parcel
-  challenge deceive medium:
+  challenge deceive vs bram.guile +1:
     win:
       gold +large
       alignment -tiny
@@ -248,7 +254,7 @@ text: {~You carry Grisk's parcel down to the village in broad daylight.|Grisk's 
 > right: Leave it at the door and run
   unflag grisk_parcel
   gold +small
-  say: {~You go the long way round, drop it on the cobbler's step and run. The cobbler pays you, short, for the lack of manners.|You don't knock, and you don't wait. Half pay, slipped under your door that night.}
+  say: {~You go the long way round, drop it on the cobbler's step and run. The cobbler pays you, short, for the lack of manners.|You don't knock, and you don't wait. Short pay, slipped under your door that night.}
 
 @event grisk_cross
 title: Grisk Is Not Pleased
@@ -320,11 +326,11 @@ text: {The bakehouse behind the kitchens is lit. The night baker, flour to the e
   lose hungry
   health -tiny
   mood +small
-  say: {~You knead until your arms shake. She gives you the first roll out of the oven and no lecture at all.|An hour of flour and warmth. You go back to bed with your hands smelling of bread, and sleep like a stone.}
+  say: {~You knead until your arms shake. She gives you the first roll out of the oven and no lecture at all.|An hour of flour and warmth, and a hot roll for your trouble. You go back to bed with your hands smelling of bread, and sleep like a stone.}
 > right: Just sit by the oven
   lose hungry
   mood +tiny
-  say: {~You sit by the oven while she works. She doesn't ask why you're up. You don't ask why she is.|You eat the heel of bread and warm your feet. Upstairs, the castle is cold; down here, it never is.}
+  say: {~You sit by the oven with a roll from the cooling tray while she works. She doesn't ask why you're up. You don't ask why she is.|You eat the heel of bread and warm your feet. Upstairs, the castle is cold; down here, it never is.}
 
 # ---------------- The Restricted Section ----------------
 
@@ -340,8 +346,9 @@ when: met(grisk)
 art: book
 tags: money danger mystery
 scene: A dim Restricted Section aisle at midnight, a student holding a razor over an illuminated page, a black book watching from the shelf above.
-text: {Grisk mentioned, once, that a collector pays for illuminated pages "of a certain age". The Restricted Section is full of them.|There's a gap on the shelf where the last page you sold came from.|The illuminated books lean away from you as you pass.} {~A gold-leaf dragon glints on one page.|One margin is full of tiny stars, all black.|A page here is worth a month's board.}
+text: {Grisk mentioned, once, that a collector pays for illuminated pages "of a certain age". The Restricted Section is full of them.|{flag(sold_page): There's a gap on the shelf where the last page you sold came from.|The illuminated book you read last time is back on its shelf, untouched.}|The illuminated books lean away from you as you pass.} {~A gold-leaf dragon glints on one page.|One margin is full of tiny stars, all black.|A page here is worth a month's board.}
 > left: Cut a page
+  flag sold_page
   alignment -small
   gold +medium
   queue night_suspicion chance 50
@@ -349,7 +356,7 @@ text: {Grisk mentioned, once, that a collector pays for illuminated pages "of a 
 > right: Read it instead
   lore +small
   mana -tiny
-  say: {~You read the illuminated page by moonlight. It's a recipe for honey cakes, in exquisite gold leaf. You leave it where it is.|The page is a list of stars, by name. You learn three, and put the book back.}
+  say: {~You read the illuminated page by moonlight. It's a recipe for honey cakes, in exquisite gold leaf, and the gilding draws at your mana the whole time you read. You leave it where it is.|The page is a list of stars, by name, and each name pulls a little magic out of you as you read it. You learn three, and put the book back.}
 
 # ---------------- The observatory roof ----------------
 
@@ -362,7 +369,7 @@ tone: warm
 repeat: 4
 weight: 10
 cast:
-  partner: any where bond(partner) == "partner"
+  partner: any where bond(partner) == "partner" and around(partner)
 art: star
 tags: romance nature
 scene: Two students lying side by side on an observatory roof at midnight under a sky full of stars, one blanket between them.
@@ -379,6 +386,7 @@ text: {You've brought {partner} up to the observatory roof, with a stolen blanke
 
 @event kael_midnight_roof
 title: Kael at Midnight
+place: observatory
 actor: kael
 slot: midnight
 class: routine
@@ -404,6 +412,7 @@ text: {Kael is on the observatory parapet, which he shouldn't be, with frost spr
 
 @event corvin_note_was_mine
 title: Second Timetable
+place: gargoyle_passage
 actor: corvin
 slot: midnight
 class: milestone
@@ -426,6 +435,7 @@ text: In the gargoyle passage, Corvin holds up a map no bigger than a thumbnail.
 
 @event corvin_midnight_watch
 title: Corvin Keeps Watch
+place: gargoyle_passage
 actor: corvin
 slot: midnight
 class: routine
