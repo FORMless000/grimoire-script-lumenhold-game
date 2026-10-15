@@ -282,6 +282,8 @@ L resumed after step 2c. **L-1 is done.** Re-measured from scratch (100 games a 
 
 The bot fixes in L-1 (joining and resigning, study and performance weighed) change every simulated figure, so figures from before L are not comparable with these.
 
+**Step 5 (X) is done except X1 and X5**, which wait for the minigames. In order: 5.1 the plot proposal (`docs/x11-main-plot.md`) and 5.2 schedules (X7, `948cd58`); 5.3 the plot build (X11, `0f633cd`: `@clue` with leads and clues, the Journal's threads, forced lead-in beats, clue routes, a finale with seal tiers that can fail); 5.4 the night and money outside jobs (X13, X14, `24c6355`); 5.5 holiday gigs, internships and rank-3 pools (X15, X12, X2, `1d6af1c`; `rank()` / `performance()` take a track kind); 5.6 dates, Thornwick, the time loop and renown (X4, X9, X8, X3, `10a049d`; Tamsin Reed is a new character with an ending); 5.7 festival chains and the last day (X6, X16, X10, `9fc5e28`). Each package passed lint, the tests, `balance --quick` and a golden diff that was the intended change, and is fully translated. X10 also settles C28's career-fair gates: every career is open, and the interview tests the career's own skill. The full `balance` after X has 13 alarms and 0 invariant failures; PROGRESS lists what moved.
+
 ## Decisions
 - I1 (decided): the "not your shift" hint comes once per run, for all jobs combined.
 - I5–I10 (decided): festival places close until the festival; suspicion waits until you're back on campus; stub cards for thin places; job income falling is intended; "take no courses" goes.

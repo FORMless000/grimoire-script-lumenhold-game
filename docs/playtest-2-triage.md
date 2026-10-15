@@ -203,16 +203,16 @@ Order within M: M42 → M41 · M43 → M8 · M10 → M6 · M39 → M5, M11 · M1
 ## X — Major content addition opportunity
 
 - X1. Social spells (soothe, charm, mind-reading, deceiving…), learnable and used in events. (W21)
-- X2. Higher-tier jobs and clubs draw higher-tier event pools (more difficulty, risk, reward) instead of stat changes. (W32)
-- X3. Renown events: an extra pusher, high risk to balance the extra reward. (W44) (renown is hard to raise: L22)
-- X4. Lovers: more generic and character-specific dating events. (W48)
+- X2. Higher-tier jobs and clubs draw higher-tier event pools (more difficulty, risk, reward) instead of stat changes. (W32) **Done (5.5):** rank-3 cards for each job and club (`pools/upper_ranks.grim`); `rank()` and `performance()` take a track kind.
+- X3. Renown events: an extra pusher, high risk to balance the extra reward. (W44) (renown is hard to raise: L22) **Done (5.6):** `renown_chance` (months 2 and 8) leads to a demonstration, a debate or the village fair; the ice rescue, a portrait, a rumour and a patron dinner open as you become known (`pools/renown.grim`).
+- X4. Lovers: more generic and character-specific dating events. (W48) **Done (5.6):** eight generic partner cards and one per romanceable character (`pools/dating.grim`).
 - X5. Combat minigame wiring: `tournament_semifinal` (Y1 Greenrise) ?; `life_rival_academy` (Y2 Frostcall) — does it lead to a minigame? ?; `spring_tournament` (Y3 Greenrise) — consecutive fights with recovery as resources spent between fights; `ilse_grey_returns` (Y4 Greenrise); `y3_last_duel` (Y4 Blossomtide) — tell me if it's already a minigame placeholder ?; `hs_beneath` (Y4 Blossomtide) — more turns and eventually one or more minigames. The stub entry they all use until then: M39.
-- X6. Festivity overhaul: festivals as chains of many events — `starfall` (Y1 Starfall, too insignificant); `midwinter_ball` (Y2 Frostcall, extend the ball as a chain). Festivals replacing a visit already work in the engine (`replaces:`); only one event uses it so far.
-- X7. NPC schedules: differ by afternoon/evening and by term/vacation, shaped by character (clubs, work, idling; noble vs poorer students; home vs staying over vacation). (W54) Uses M42. Do before X13; whoever goes away over breaks, Bram stays on campus (X13).
-- X8. `life_timeloop_2` (Y4 Frostcall): more renditions, e.g. repeating loops until resolved through very hard, progressively easier checks. **Larger budget (user):** a full loop chain of about 12–15 cards, with L21; proposal in the plan, step 5.
-- X9. `life_pen_pal` (Y4 Harvestmoon): extend the Thornwood rivalry, maybe a dedicated annual event. **Larger budget (user):** a four-year Thornwick rivalry arc of about 20–25 cards, the pen pal as a person and a yearly fixture; proposal in the plan, step 5.
-- X10. A 48th month for the endings: a series of events (job interview, thesis defence, the main plot's final confrontation, goodbyes to friends, plans with the lover) that acknowledges what the player experienced, before the final summary. (W61) Related: `y3_interview` (Y4 Emberwane) as a prolonged event with tiered outcomes; `thesis_defence` (Y4 Highsun) as a process, not one check. Fills M21's stub.
-- X11. Main plot: propose changes that make it intuitive and engaging. (W63) Decided (D5):
+- X6. Festivity overhaul: festivals as chains of many events — `starfall` (Y1 Starfall, too insignificant); `midwinter_ball` (Y2 Frostcall, extend the ball as a chain). Festivals replacing a visit already work in the engine (`replaces:`); only one event uses it so far. **Done (5.7):** Starfall (star jars as the observatory's festival visit, the night as a hub, a blanket for two, the wish, the caught star) and the Midwinter Ball (robes, the ice garden as the courtyard's festival visit, the last waltz with whoever you went with, the snowball war) in `festivals.grim`.
+- X7. NPC schedules: differ by afternoon/evening and by term/vacation, shaped by character (clubs, work, idling; noble vs poorer students; home vs staying over vacation). (W54) Uses M42. Do before X13; whoever goes away over breaks, Bram stays on campus (X13). **Done (5.2).**
+- X8. `life_timeloop_2` (Y4 Frostcall): more renditions, e.g. repeating loops until resolved through very hard, progressively easier checks. **Larger budget (user):** a full loop chain of about 12–15 cards, with L21; proposal in the plan, step 5. **Done (5.6):** `life_timeloop_1/2/3` rewritten as a hub, with `chain_timeloop.grim` (exploit, noticed, three dares, three clues, the cap, the aftermath).
+- X9. `life_pen_pal` (Y4 Harvestmoon): extend the Thornwood rivalry, maybe a dedicated annual event. **Larger budget (user):** a four-year Thornwick rivalry arc of about 20–25 cards, the pen pal as a person and a yearly fixture; proposal in the plan, step 5. **Done (5.6):** Tamsin Reed (they/them) and `chain_thornwick.grim`: letters, a secret asked and offered, a confession, the return visit, the contest, the last match, the farewell, an internship meeting, Lyra's view, `ending_tamsin_friends`.
+- X10. A 48th month for the endings: a series of events (job interview, thesis defence, the main plot's final confrontation, goodbyes to friends, plans with the lover) that acknowledges what the player experienced, before the final summary. (W61) Related: `y3_interview` (Y4 Emberwane) as a prolonged event with tiered outcomes; `thesis_defence` (Y4 Highsun) as a process, not one check. Fills M21's stub. **Done (5.7):** the fair opens every career (the interview tests its skill); the interview is record, practical and question, with an offer, a waiting list or a polite no; the defence is presentation, question and verdict; month 48 is a closing sequence (`last_day.grim`).
+- X11. Main plot: propose changes that make it intuitive and engaging. (W63) Decided (D5): **Done (5.3).**
   - rewrite the plot so it's clearer and more significant;
   - forced lead-in events tell a clueless player what the conflict is (the mysterious beats already fire on their own);
   - clues require actively going after them (this run got 9 of 10 without seeking; two key clues came from one card, `maud_old_student`);
@@ -220,8 +220,8 @@ Order within M: M42 → M41 · M43 → M8 · M10 → M6 · M39 → M5, M11 · M1
   - includes B34, C12, C17, C21, C22, C23 (Ilse arrives in year 2, with a proper lead-in) and N11's `hs_seventh_tower`; the night clue routes (the restricted section at midnight, X13) are written here, each with a day alternative;
   - the UI shows it (N11).
   - Related: C12, C17, C21, C22.
-- X12. Distinct internships: a shared backbone of generic internship events, plus impactful events specific to each internship as its flavour. (from M24; with M16) Deepens M16; uses M36.
-- X13. The midnight turn: content (mechanics: M41, M42; D11). Do after X7 and X11.
+- X12. Distinct internships: a shared backbone of generic internship events, plus impactful events specific to each internship as its flavour. (from M24; with M16) Deepens M16; uses M36. **Done (5.5):** a backbone and cards for each host (`pools/internships.grim`).
+- X13. The midnight turn: content (mechanics: M41, M42; D11). Do after X7 and X11. **Done (5.4).**
   - **Lead-in** (year 1 Stormbloom): an unsigned note from the Midnight Cartographers (Corvin's hand, revealed later).
   - **The night card's variant pool:** it comes up about 40 times a run, so it needs a large pool (season, exam months and festivals, low mood or health, watched, a partner, low gold, the year, the last outing).
   - **Tone:** most places are sealed; the open ones feel shady and dangerous; midnight events are riskier and more punishing in general. Harmless nights exist too (stargazing, swims, a partner, eerie danger).
@@ -240,15 +240,15 @@ Order within M: M42 → M41 · M43 → M8 · M10 → M6 · M39 → M5, M11 · M1
     - **Grisk's jobs:** pick up at the boathouse at midnight; the delivery comes next month by day (midnight is the month's last slot) as a guile check that is the payday. A failed delivery loses the goods, angers Grisk (→ M22) and gives `watched`. `grisk_smuggling` becomes this pair; `grisk_favour` stays a day event; `life_shady_offer` (C11) becomes a lead into this business, with alignment and follow-up consequences;
     - not included: selling exam answers, forged excuse notes.
   - **Night people:** the Cartographers (a hidden flavour group, M40), Grisk as the fixer, a few night-only scenes for the man in grey (with X11). Bram stays on campus during breaks (X7).
-- X14. Income outside jobs: financial aid, and off-campus options such as taking on debts or doing favours, hinted at low money or for sponsor-less origins; includes N5's hints to them. → M22 (D4/D7)
-- X15. Vacation gigs for working on campus (M6):
+- X14. Income outside jobs: financial aid, and off-campus options such as taking on debts or doing favours, hinted at low money or for sponsor-less origins; includes N5's hints to them. → M22 (D4/D7) **Done (5.4).**
+- X15. Vacation gigs for working on campus (M6): **Done (5.5).**
   - **Baseline:** about 2 gigs, open to anyone, paying much better than a rank-3 term job.
   - **Extensions:** a holiday version of a term job, for players at rank 3 (above rank 2) in it. Its pay and performance are its own, independent of the term job's level, and it pays a little better overall than the baseline gigs.
   - **Notices:** lead-in notice events as the vacation starts.
   - **Pay:** through events (M10).
   - Fills M6's stub.
   - (D10)
-- X16. `starfall`: variants for players at home or on an internship (the festival is on the observatory roof). → X6
+- X16. `starfall`: variants for players at home or on an internship (the festival is on the observatory roof). → X6 **Done (5.7):** `starfall_at_home` and `starfall_on_internship` (by host; Tamsin at Thornwick).
 
 ## D — Design choice debate
 

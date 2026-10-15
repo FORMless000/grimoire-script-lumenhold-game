@@ -2,16 +2,20 @@
 
 **v0.3, phase 3 of 4: at the stop point, human playtest #2** (`docs/playtest-2.md`). The plan is `docs/design-v0.3.md`; how to work on the project is in `AGENTS.md`.
 
-## Where things stand (October 14, 2026)
+## Where things stand (October 15, 2026)
 
 | | |
 |---|---|
-| Content | 842 events (lint's count), 63 states, 20 characters (12 core, 8 fixtures), 43 places, 25 tracks, 12 spells, 33 endings (5 game-overs + yearbook lines) |
+| Content | 988 events (lint's count), 69 states, 21 characters (12 core, 8 fixtures, Tamsin of Thornwick), 43 places, 25 tracks, 12 spells, 35 endings (5 game-overs + yearbook lines) |
 | Format | schema v1, frozen; 0 lint errors, **0 legacy constructs** left in content |
 | Reachability | `grim reach`: every event, option, ending, place and track can be reached; each key clue has ≥ 2 sources |
-| Translation | zh-CN 100% (7,505 strings), 0 stale |
-| Checks | `npm run verify` passes: build, lint, format, docs, 70+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
+| Translation | zh-CN 100% (8,767 strings), 0 stale |
+| Checks | `npm run verify` passes: build, lint, format, docs, 100+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 48 months (the last two are the wrap-up), about 340 cards; random play graduates 80% of the time, social and careful styles 97–99% |
+
+## Frequency and economy audit
+
+October 15, 2026: [the frequency and economy review](docs/reviews/event-economy-2026-10-15/README.md) measures a preserved 963-event snapshot over 1,050 games and additional validation runs. Unresolved design deviations include midnight character cards appearing after Sleep or before unlock, incompatible schedule and slot requirements on `gargoyle_passage_parapet_cards`, and the probation hook ignoring an exactly zero GPA. The review also records mana and mood saturation, uneven relationship access, slow specialization in five disciplines, and scarce senior-job opportunities. No gameplay retuning was applied; the report includes per-event frequencies, resource flows and reproduction commands.
 
 ## Phases
 
@@ -29,6 +33,12 @@
 ## This round (after the pause)
 
 - **Playtest #2, mechanics (step 2, under way):** the origin screen (origins apply before month 1's charges); 48 months, with year 4's last break as the wrap-up and the last month only resolving the run; the combat stub (fights cost mana, read condition and spells), swing on checks, renown checks, and exams as cards; the day played slot by slot (the map opens for each visit as it comes; festivals marked, not forced), most places open for both visits, social and world cards spread through the day, `time:` and `slot:` on 79 events, a time-of-day tint, and an alignment meter that fills from the bottom; jobs paid through their shift cards (`wage`), holiday gigs for working on campus (stub), a term-end keep-or-resign card per job, prorated dues, promotions that reset performance, the club fair's stay/resign/switch, menus that hide gated options unless they state a prerequisite (`locked:`), internships applied for in bulk and won by interview, one summer each and away from campus, and Grisk's debt escalating through a reminder and the collectors; schedules with a chance per entry and break schedules, letters off campus (halved drift, no campus pools), milestones pushed on a ramp, warmth that counts only seeking, and one relationship bar with spark that follows friendship; the midnight turn (a night card each on-campus month, a midnight pick, suspicion and lockouts) and the Cartographers as a society. Step 2 (M) is complete. Step 3 (L, balance) is done (see below and `docs/playtest-2-plan.md`). Interim fixes (step 2b) are done: a job's dues are fixed shifts (later visits and break visits are ordinary ones, with a once-a-run "not your shift" hint), a place is visited at most once a day (midnight exempt), and night suspicion is a card queued at odds (`queue … chance N`), with no hidden `spotted` state. Its review added I5–I10, also done: festival places wait for their festival, suspicion waits until you're back on campus (`defer:`), placeholder cards at four thin places, odds-aware heuristics for queued penalties, and no "take no courses" at enrolment (`offered()`). Step 2c (tooling and audits) is done: A1, A2, A3 and A4 — one bot driver with record and replay (bots on their own RNG), an engine fix (previewing "Go out" opened the midnight pick even after "Sleep", which also skewed every balance run since M-F), `grim graph`, flows per event and per month with a reconciliation check (`docs/playtest-2-flows.md`), an origin × style matrix, seed sweeps and two scenario styles. A3 replaced the routine budget's "must cost or risk something" with "no option obviously best" (alignment counts as a direction; the lint's stand-in game now counts cast relationships and wages), read the 414 single-token costs one by one (migration 0029: 124 dropped, 14 swapped for a cost the scene shows, alignment at stake on 10 more options) and added `docs/authoring/costs.md` to the writing guide. Step 3 (L) is done: jobs pay by hazard (with four hazard incident cards); friendships grow at about half the old speed; odds run 5–95% with no forced fail on milestones and exams, exams are easy/medium/hard by course level, exam preparation comes from choices more than attendance, and course levels make card checks harder; health and mood swing about a quarter wider; learning a spell gives skill XP in its discipline; five event retunes; skill growth and the expected-skill curve refitted; 37 "windfalls" that were everyday trades are routine cards. The bots now value joining clubs and jobs, exam preparation, performance and thesis progress. New `@balance` keys: `odds`, `study`, `spell_check`, `spell_bonus`, `exam_tiers`.
+- **Playtest #2, step 5 (X, the major content) is done except X1 and X5**, which wait for the minigames (`docs/playtest-2-plan.md`, step 5):
+  - *X7* term and break schedules by character; *X11* the Hollow Star as rumours, leads and clues (`@clue`, the Journal's threads, act names), forced lead-in beats, clue routes you have to go after, and a finale with seal tiers that can fail (`hollow_failed`, its own ending);
+  - *X13* the midnight pools (the Newt upstairs, the ring under the boathouse, the kitchens, Grisk's pick-ups and deliveries, harmless nights) and *X14* money outside jobs (aid, favours, errands, the pawnbroker, a hardship grant and a bursar's loan);
+  - *X15* holiday notices and a holiday version of each term job at its top rank; *X12* an internship backbone plus cards for each host; *X2* rank-3 pools; `rank()` and `performance()` take a track kind;
+  - *X4* generic and per-character dates; *X9* Tamsin Reed (they/them), the Thornwick pen pal, with a four-year rivalry (letters, a secret asked and offered, a confession, the return visit, the contest, the last match, a farewell, an ending); *X8* the time loop as a hub of exploits, dares and clues with a fix that eases each loop and a cap; *X3* a twice-yearly chance to be noticed and renown stakes;
+  - *X6/X16* Starfall and the Midwinter Ball as chains, with festival visits (`replaces:`), follow-ups, and Starfall at home or on an internship; *X10* the career fair without skill gates, the interview and the thesis defence as three-stage processes with tiered results, and month 48 as a closing sequence (the last morning, the final lists, what comes next, the lake, friends, partner, rival, the speech, the last Starfall, the eve).
 - **Playtest #2, step 5.0 (UI) is done:** Crowns are a plain number in the middle of the top row (`display: number`), and each enrolled course shows its exam preparation, months to the exam and today's pass chance.
 - **Playtest #2, step 4 (N, minor additions) is done** (`docs/playtest-2-plan.md`): three frozen-format additions (`intro:` on a track, `@game appeal`, `regrade track C`), month-end lines on every hook and state tick, and about 70 cards: intros for Vey, Brask and Pell's first shift, queued when you enrol or join; lead-ins for enrolment, the club fair and the job board; the appeal after an F; cards for hunger, detention, probation, sickness and injury, and an empty purse; the familiars as cards instead of monthly ticks; a lesson card for each of the 12 spells; three spell options and a spell from `life_invent_spell`; three jealousy cards; two errand follow-ups; three job board stories; 22 letters; and each year's opening foreshadows what's new.
 - **Playtest #2, bugfix and content sessions** (`docs/playtest-2-triage.md` B and C, plan in `docs/playtest-2-plan.md`):
@@ -85,7 +95,7 @@
 
 ## Known gaps and deviations from the design
 
-- **Balance after L** (full `balance`, 100 games a style): random play ends early in about 31% of its runs, mostly by taking "the next barge" at its second despair crisis (the other styles never choose to leave); cautious 11%, social 4%, aggressive 15%, the rest 0–1%. Several milestones can ramp in the same month; the holiday gigs pay a flat tier per card until X15; internship cards are rare (2–3% of games) and few per host until X12. Scoring styles that ignore alignment drift Hollow (balanced p50 about −23, plot −60): the tempting options pay, which is the intended trade, but worth a look in playtests.
+- **Balance after L** (full `balance`, 100 games a style): random play ends early in about 31% of its runs, mostly by taking "the next barge" at its second despair crisis (the other styles never choose to leave); cautious 11%, social 4%, aggressive 15%, the rest 0–1%. Several milestones can ramp in the same month. The holiday versions of term jobs (X15) and the rank-3 pools (X2) need a job's top rank, which few simulated players reach, so the bots rarely see them (`test/world2b.test.js` deals each holiday gig directly). Scoring styles that ignore alignment drift Hollow (balanced p50 about −23, plot −60): the tempting options pay, which is the intended trade, but worth a look in playtests.
 - **Placeholder cards** (I7): the courier loft, the headmistress's tower, the ledger office and the flight field have too few ordinary cards, so each has a quiet `placeholder` card (lint lists them) until X writes real ones. The internships' pick-6 menu keeps "Not this year" (decided: internships are optional).
 - **The finale** is one sealing challenge whose tier depends on preparation. The design asks for a sequence (duel, negotiate, research).
 - **Finale allies** count at rel ≥ 18, not the design's friendship ≥ 50. Ilse, Isolde and Maud still have few personal events.
@@ -100,14 +110,14 @@
   - hungry −3 health and −4 mood instead of −4/−4 (L-4);
   - course fees 8 a term at enrolment, not per course;
   - confessions at spark 30, not 60.
-- **Balance alarms** (full `balance` after L; 0 invariant failures, 11 alarms):
+- **Balance alarms after X** (full `balance`, 120 games a style; 0 invariant failures, 13 alarms). New since L: the balanced style sees about 3.5 incidents a year (design 1–3; the X incident cards add about 0.1 a year, the rest moves between runs); the money-maxxer's year-4 climb sits at 5.4–6.1 against 5, from the courier job's top rank and the harvest festival rather than X's cards; the aggressive style's mood lasts 12 term months (9 before 5.6; festivals give a little mood); the aggressive archmage share rose to about 55% as the interview became a real test (fewer teacher and wanderer headlines). The never-seen events are the ones listed below plus the Newt's three holiday-gig cards.
+- **Balance alarms after L** (full `balance` after L; 0 invariant failures, 11 alarms):
   - the aggressive style's mood breaks by term month 10 (was 27; design 5): the design's drain assumes "always grinding", but the `grind` preset is used by 3 events, so it needs skill options that cost mood in content;
   - the money-maxxer still gains about 6 crowns a month in year 4 (alarm above 5) and ends a merchant 37% (above 35%): it never takes the optional sinks, by design of the bot;
   - caster mana, focused skills and Lyra (63 at month 24), as above;
   - `ending_beloved` is reached by no style: every romanceable character has a named partner ending that outranks it, so it's a fallback only;
   - 7 events are never seen: `choose_origin` (the origin screen, not drawn), `crisis_probation` (bots keep their GPA; N2's two probation cards, `probation_advisor` and `probation_letter`, are unseen for the same reason), Marisol's storm and trust cards, `mabel_cup` and `grimsby_mind_the_shop` (minor characters with few cards; gates lowered to rel 15), `gargoyle_passage_parapet_cards` (the place is found only by Cartographers).
 - **Deferred phase 3 steps:**
-  - festivals as `replaces:` visits;
   - removing the unused legacy syntax from the parser, and the engine's `legacy:` grants (§13 step 7);
   - `memory:` / `lesson:` annotations;
   - the `tune-events` skill and the `grim report` telemetry signals of §11.2 (routine picks, eligible-but-never-drawn, decision times);
@@ -117,4 +127,5 @@
 
 1. **Human playtest #2** (`docs/playtest-2.md`): a full run in each language, then `grim feedback`.
 2. Address its notes; then a spell-options batch, skill growth, the finale allies' ladders, and the aggressive and windfall alarms.
-3. Phase 4, starting with what playtest #2 says matters most.
+3. When the minigames settle: combat wiring (X5) and social spells (X1), then the final pass (L28 economy re-check, C4, baseline).
+4. Phase 4, starting with what playtest #2 says matters most.
