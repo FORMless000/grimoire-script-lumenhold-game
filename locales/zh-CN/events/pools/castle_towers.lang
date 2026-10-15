@@ -7,8 +7,8 @@
 @event observatory_night_log
 # en: The Night Log
 title [9e1784] = 观星日志
-# en: {The observatory keeps a night log, and anyone may write in it.|Since your last entry, someone has drawn a moustache on the moon.|You know the log's hands by now: the careful one, the frantic one, the one who only ever writes "cloudy".} {season == "winter": Frost feathers the inside of the dome.|{~The telescope turns, unasked, towards the north.|A draught turns the pages for you.|The lamp is low on oil, as always.}}
-text [5cd3f8] = {观星台有一本观星日志，谁都可以往里写。|自你上次写过之后，有人给月亮画了两撇胡子。|日志里的笔迹你都认得了：工整的那位，潦草的那位，还有永远只写“多云”的那位。} {season == "winter": 霜花在穹顶内侧结成羽毛。|{~望远镜没人碰，自己转向了北方。|一阵穿堂风替你翻开了书页。|灯油照例快烧干了。}}
+# en: {The observatory keeps a night log, and anyone may write in it.|{flag(wrote_night_log): Since your last entry|Since you were last here}, someone has drawn a moustache on the moon.|You know the log's hands by now: the careful one, the frantic one, the one who only ever writes "cloudy".} {season == "winter": Frost feathers the inside of the dome.|{~The telescope turns, unasked, towards the north.|A draught turns the pages for you.|The lamp is low on oil, as always.}}
+text [216fc2] = {观星台有一本观星日志，谁都可以往里写。|{flag(wrote_night_log): 自你上次写过之后|自你上次来过之后}，有人给月亮画了两撇胡子。|日志里的笔迹你都认得了：工整的那位，潦草的那位，还有永远只写“多云”的那位。} {season == "winter": 霜花在穹顶内侧结成羽毛。|{~望远镜没人碰，自己转向了北方。|一阵穿堂风替你翻开了书页。|灯油照例快烧干了。}}
 # en: A brass observatory dome at night, one student writing in a huge logbook by lamplight while the great telescope swings round on its own.
 scene [59d5ae] = 夜晚的黄铜穹顶下，一名学生借灯光在一本巨大的日志上书写，大望远镜自顾自地转动。
 # en: Log what the telescope finds
@@ -17,8 +17,8 @@ opt.left.label [8d5562] = 记下望远镜所见
 opt.left.say.1 [08228c] = {~你标出一颗上个月还不存在的星。日志里早有记载，笔迹比你老四十年。|三个小时，两页纸，外加一个喷嚏糊掉了一整个星座。|望远镜停在一颗安静的蓝星上，一直等到你把它好好写下来。}
 # en: Read the old entries instead
 opt.right.label [c05d01] = 改读旧日的记录
-# en: {~A winter entry from long ago says "Saw nothing. Stayed anyway. Worth it."|A love letter written across a page of moon sightings. Very bad. Very sweet.|{final_year: You find your own first entry and barely know the hand.|A student from your year logged your star a week before you did, with a small drawn smile.}}
-opt.right.say.1 [e270bd] = {~很久以前的一个冬夜，有人写道：“什么也没看到。还是留下了。值得。”|一封情书，横跨一整页的月相记录。写得很烂。也很甜。|{final_year: 你找到了自己的第一条记录，几乎认不出那笔迹。|你同届的一个学生比你早一周记下了你那颗星，旁边还画了个小笑脸。}}
+# en: {~A winter entry from long ago says "Saw nothing. Stayed anyway. Worth it."|A love letter written across a page of moon sightings. Very bad. Very sweet.|{final_year and flag(wrote_night_log): You find your own first entry and barely know the hand.|A student from your year logged your star a week before you did, with a small drawn smile.}}
+opt.right.say.1 [14c78a] = {~很久以前的一个冬夜，有人写道：“什么也没看到。还是留下了。值得。”|一封情书，横跨一整页的月相记录。写得很烂。也很甜。|{final_year and flag(wrote_night_log): 你找到了自己的第一条记录，几乎认不出那笔迹。|你同届的一个学生比你早一周记下了你那颗星，旁边还画了个小笑脸。}}
 
 @event observatory_one_star_each
 # en: One Star Each
@@ -63,8 +63,8 @@ text [fd4713] = {日志最老的那一卷里，凡是修完高等星象学的学
 scene [cccc67] = 灯下摊开一本古老的观星日志，同一个词被一行又一行地刮掉。
 # en: Trace the gaps by lamplight
 opt.left.label [5f1275] = 借灯光描摹空缺
-# en: {~The words around the gaps say "called", "named", "down". Whoever taught it taught it aloud, to people who had finished Advanced Astromancy.|"...and the light came down when I said its name..." Then the gap. You will need someone to tell you the word.}
-opt.left.say.1 [61a642] = {~空缺周围的词是“唤”“名”“降下”。不管是谁教的，都是口头教的，教给已经修完高等星象学的人。|“……当我念出它的名字，光便降了下来……”然后是空缺。你得有人把这个词告诉你。}
+# en: You feed a thread of witchlight into the gaps, and it drinks more than you meant to give. {~The words around the gaps say "called", "named", "down". Whoever taught it taught it aloud, to people who had finished Advanced Astromancy.|"...and the light came down when I said its name..." Then the gap. You will need someone to tell you the word.}
+opt.left.say.1 [54a913] = 你把一缕巫光送进空缺里，它吸走的比你想给的多。{~空缺周围的词是“唤”“名”“降下”。不管是谁教的，都是口头教的，教给已经修完高等星象学的人。|“……当我念出它的名字，光便降了下来……”然后是空缺。你得有人把这个词告诉你。}
 # en: Ask the telescope, half joking
 opt.right.label [de5250] = 半开玩笑地问望远镜
 # en: {~The telescope swings to one bright star and stays there, patient as a teacher who knows you aren't ready.|It turns to a named star and holds it. You get the feeling you have to finish Advanced Astromancy before it explains.}
@@ -79,8 +79,8 @@ text [f5e4a4] = {米尔给访客留了一张备用工作台，上方挂着牌子
 scene [d9570d] = 杂乱的工坊工作台上方挂着手绘的牌子，一只拆散的音乐盒旁放着一罐弹簧，门边摆着灭火水桶。
 # en: Mend a jammed music box
 opt.left.label [84f39e] = 修一只卡住的音乐盒
-# en: {~It plays again, a little too fast, like it's late for something.|You fix the tune and break the lid. Mir says that's probably progress.|It plays a waltz nobody has heard in years. You leave it on the sill to finish.}
-opt.left.say.1 [f67395] = {~它又响了，稍微快了点，像是赶着去哪儿。|曲子修好了，盒盖弄坏了。米尔说这大概也算进步。|它奏起一支多年没人听过的华尔兹。你把它放在窗台上，让它自己奏完。}
+# en: A loose spring bites your thumb on the way in. {~It plays again, a little too fast, like it's late for something.|You fix the tune and break the lid. Mir says that's probably progress.|It plays a waltz nobody has heard in years. You leave it on the sill to finish.}
+opt.left.say.1 [e17315] = 进门时一根松掉的弹簧咬了你的拇指一下。{~它又响了，稍微快了点，像是赶着去哪儿。|曲子修好了，盒盖弄坏了。米尔说这大概也算进步。|它奏起一支多年没人听过的华尔兹。你把它放在窗台上，让它自己奏完。}
 # en: Just watch Mir work
 opt.right.label [b61e05] = 就看米尔干活
 # en: {~Mir explains a gear train for an hour. You follow about a third, which they say is probably a record.|You sit by the fire buckets and watch the sparks. Your eyes sting. It's a good afternoon.|Mir hands you things to hold and forgets you're holding them. It's oddly restful.}
@@ -149,8 +149,8 @@ text [dba839] = {《流明纪事报》编辑部门口放着一只篮子，标着
 scene [276fb2] = 狭小的报社编辑部门口，一只柳条篮里塞满了信，墙上贴满了旧头版。
 # en: Read the whole basket
 opt.left.label [7b9421] = 把整篮都读完
-# en: {~The best one is an apology to a goat.|One is from a first-year who misses home. You put it back gently.|{final_year: A letter in your own first-year hand. You don't remember sending it. You were right.|Three letters about the same broken window, all blaming different people.}}
-opt.left.say.1 [3542b8] = {~最好的一封，是写给一只山羊的道歉信。|有一封来自一个想家的一年级生。你轻轻把它放了回去。|{final_year: 一封你自己一年级时的笔迹。你不记得寄过它。你当时说得没错。|三封信写的是同一扇碎窗户，各怪各的人。}}
+# en: {~The best one is an apology to a goat.|One is from a first-year who misses home. You put it back gently.|{final_year and flag(ledger_letter_sent): A letter in your own first-year hand. You don't remember sending it. You were right.|Three letters about the same broken window, all blaming different people.}}
+opt.left.say.1 [d555dd] = {~最好的一封，是写给一只山羊的道歉信。|有一封来自一个想家的一年级生。你轻轻把它放了回去。|{final_year and flag(ledger_letter_sent): 一封你自己一年级时的笔迹。你不记得寄过它。你当时说得没错。|三封信写的是同一扇碎窗户，各怪各的人。}}
 # en: Write one of your own
 opt.right.label [fec258] = 自己也写一封
 # en: {~They print it. Two people quote it at you at breakfast; one of them disagrees with it loudly.|It runs on the back page, under your initials. You feel oddly famous for a day.}
@@ -161,8 +161,8 @@ opt.right.say.2 [47bec5] = {~它进了篮子。下个星期，就有人在大声
 @event ledger_office_deadline_night
 # en: Deadline Night
 title [d06cb7] = 截稿之夜
-# en: {The press is groaning like a dragon on deadline, and {here} eyes you like a captain eyes a spare oar.|{here} hands you a stack before you've said hello, and a rag for your fingers.|You take a stack and start folding. {here} doesn't look up, which is a compliment.} {~The ink on the front page is still wet.|A headline has a spelling mistake nobody will admit to.|{final_year: You've folded this paper for years now.|The press shudders as if it's thinking of stopping.}}
-text [6df153] = {印刷机像截稿夜的龙一样呻吟，{here}打量你的眼神，就像船长打量一支备用的桨。|你还没打招呼，{here}就递来一摞报纸，外加一块擦手的布。|你拿起一摞就开始折。{here}头都不抬——这已经是夸奖了。} {~头版的墨迹还没干。|有个标题拼错了，谁也不肯认。|{final_year: 你已经折了好几年这份报纸。|印刷机一阵哆嗦，像在考虑罢工。}}
+# en: {The press is groaning like a dragon on deadline, and {here} eyes you like a captain eyes a spare oar.|{here} hands you a stack before you've said hello, and a rag for your fingers.|You take a stack and start folding. {here} doesn't look up, which is a compliment.} {~The ink on the front page is still wet.|A headline has a spelling mistake nobody will admit to.|{final_year and flag(ledger_folded): You've folded this paper for years now.|The press shudders as if it's thinking of stopping.}}
+text [e0527b] = {印刷机像截稿夜的龙一样呻吟，{here}打量你的眼神，就像船长打量一支备用的桨。|你还没打招呼，{here}就递来一摞报纸，外加一块擦手的布。|你拿起一摞就开始折。{here}头都不抬——这已经是夸奖了。} {~头版的墨迹还没干。|有个标题拼错了，谁也不肯认。|{final_year and flag(ledger_folded): 你已经折了好几年这份报纸。|印刷机一阵哆嗦，像在考虑罢工。}}
 # en: A cramped office lit by one lamp, a groaning printing press, two students folding newspapers into tall stacks.
 scene [241781] = 一盏灯照亮狭小的编辑部，印刷机轰鸣呻吟，两名学生把报纸折成高高的几摞。
 # en: Fold until the press stops
@@ -239,10 +239,10 @@ scene [830655] = 高塔上一个深深的窗边座位，一名学生在读书，
 opt.left.label [95fb60] = 读她摊开的书
 # en: {~A history of the seven towers, annotated in her hand. One note just says "No."|A book of old law, with a dried rose marking a page about second chances.|A treatise on wards so dull it must be important. You get through it. She notices.}
 opt.left.say.1 [1b1fe8] = {~一本七塔史，页边有她的批注。有一条只写着“不”。|一本古老的律法书，一朵干玫瑰夹在讲第二次机会的那一页。|一本讲护界的论著，枯燥得一定很重要。你读完了。她注意到了。}
-# en: Doze in the sun
-opt.right.label [84dad1] = 在阳光里打个盹
-# en: {~You wake to find a blanket over you and no comment at all, which is its own kind of comment.|You sleep through her afternoon. When you wake, she is still writing, and the light has moved.}
-opt.right.say.1 [b945f9] = {~你醒来时身上多了条毯子，她一句评论也没有——这本身就是一种评论。|你睡掉了她的整个下午。醒来时她还在写，光已经挪了位置。}
+# en: Doze on the window seat
+opt.right.label [c962c8] = 在窗边座位上打个盹
+# en: {~You wake to find a blanket over you and no comment at all, which is its own kind of comment.|You sleep through most of the visit. When you wake, she is still writing, and gives you a look over her spectacles that says she had hoped you would read.}
+opt.right.say.1 [babb55] = {~你醒来时身上多了条毯子，她一句评论也没有——这本身就是一种评论。|你睡掉了大半次拜访。醒来时她还在写，从眼镜上方看了你一眼，那眼神是说她本来希望你会读点书。}
 
 @event restricted_section_breathing_shelves
 # en: The Breathing Shelves
@@ -285,14 +285,14 @@ text [359598] = {这里有一本书被锁链拴在书架上，今晚它自己翻
 scene [04b543] = 一本沉重的书被锁链拴在图书馆书架上，在昏暗的烛光下自己摊开，锁链松垂。
 # en: Read the open page
 opt.left.label [a03931] = 读那翻开的一页
-# en: {~The words make sense for exactly as long as you're reading them. Afterwards you only remember that they did.|You read it, and the book turns its own page, satisfied, as if you'd passed something.}
-opt.left.say.1 [12c46f] = {~那些字只在你读着的时候才有意义。读完后，你只记得它们曾经有意义。|你读完了，书满意地自己翻了一页，好像你通过了什么。}
+# en: A thread of stored power runs up your arm from the page. {~The words make sense for exactly as long as you're reading them. Afterwards you only remember that they did.|You read it, and the book turns its own page, satisfied, as if you'd passed something.}
+opt.left.say.1 [6d9f81] = 一缕储存的力量从书页顺着你的手臂流上来。{~那些字只在你读着的时候才有意义。读完后，你只记得它们曾经有意义。|你读完了，书满意地自己翻了一页，好像你通过了什么。}
 # en: {~The words read you back. For a day afterwards you keep feeling underlined.|The candle goes out mid-line. In the dark, the page keeps going.}
 opt.left.say.2 [7fcd6f] = {~那些字反过来读了你。之后一整天，你总觉得自己被划了线。|蜡烛在读到一半时灭了。黑暗中，那一页还在继续。}
 # en: Close it and step back
 opt.right.label [fad0c0] = 合上它，退后
-# en: {~The chain rattles as the cover shuts, like a sigh. You stand with your back to it until your hands stop shaking.|You close it gently, the way you'd close a door on someone sleeping.}
-opt.right.say.1 [9cc33f] = {~封面合上时锁链哗啦一响，像一声叹息。你背对着它站着，直到手不再发抖。|你轻轻地合上它，就像给熟睡的人关门。}
+# en: As the cover shuts, something that had been quietly drawing on your magic lets go. {~The chain rattles as the cover shuts, like a sigh. You stand with your back to it until your hands stop shaking.|You close it gently, the way you'd close a door on someone sleeping.}
+opt.right.say.1 [d55a16] = 封面合上时，那个一直悄悄汲取你魔力的东西松开了。{~锁链哗啦一响，像一声叹息。你背对着它站着，直到手不再发抖。|你轻轻地合上它，就像给熟睡的人关门。}
 
 @event restricted_section_handleless_door
 # en: The Door Without a Handle
@@ -303,12 +303,12 @@ text [9b1c7d] = {最深处有一扇没有把手也没有窗的门。门上用永
 scene [2de116] = 漆黑图书馆的最深处，一扇没有把手的朴素木门，门上的粉笔字多年未曾模糊。
 # en: Knock
 opt.left.label [60f31f] = 敲门
-# en: {~Nobody answers. Then, very far away, a pleasant voice says, "Not yet."|Your knock doesn't echo. It just stops, as if something on the other side caught it.}
-opt.left.say.1 [d95abe] = {~没人应。然后，在很远很远的地方，一个温和的声音说：“还不是时候。”|你的敲门声没有回音。它就那么停了，像门另一边有什么接住了它。}
+# en: {~Nobody answers. Then, very far away, a pleasant voice says, "Not yet."|Your knock doesn't echo. It just stops, as if something on the other side caught it. Next day the headmistress nods to you in the corridor, as if she heard.}
+opt.left.say.1 [80ddfb] = {~没人应。然后，在很远很远的地方，一个温和的声音说：“还不是时候。”|你的敲门声没有回音。它就那么停了，像门另一边有什么接住了它。第二天，院长在走廊里朝你点了点头，好像她听见了。}
 # en: Copy the chalk into your notes
 opt.right.label [d25ac8] = 把粉笔字抄进笔记
-# en: {~The chalk makes your pencil cold. Two courses and a question, and the question is the hard part.|You copy it word for word. Back in your room, your notes have the same words, and one more underline than you made.}
-opt.right.say.1 [8087b2] = {~粉笔字让你的铅笔变得冰凉。两门课和一个问题，难的是那个问题。|你一字不差地抄了下来。回到房间，笔记上还是那些字，却比你画的多了一道下划线。}
+# en: Copying the chalk draws on your magic like a cold draught. {~The chalk makes your pencil cold. Two courses and a question, and the question is the hard part.|You copy it word for word. Back in your room, your notes have the same words, and one more underline than you made.}
+opt.right.say.1 [ec8232] = 抄写粉笔字像一阵冷风似的抽走你的魔力。{~粉笔字让你的铅笔变得冰凉。两门课和一个问题，难的是那个问题。|你一字不差地抄了下来。回到房间，笔记上还是那些字，却比你画的多了一道下划线。}
 
 @event gargoyle_passage_old_marks
 # en: Marks on the Wall
@@ -319,8 +319,8 @@ text [597d06] = {通道的墙上刻满了缩写、日期和小箭头，出自一
 scene [5e6982] = 石像鬼身后一条狭窄的石头通道，墙上刻满缩写、日期和小箭头，一截蜡烛头照着它们。
 # en: Add your own mark
 opt.left.label [5a8fd8] = 刻下你自己的记号
-# en: {~You scratch your initials small and low, with a tiny arrow pointing nowhere. It feels like signing something.|{final_year: You add the year beside your old mark. It looks so much younger than you.|A knuckle pays for it. The mark is crooked and entirely yours.}}
-opt.left.say.1 [ae76c9] = {~你把缩写刻得又小又低，再加一个指向虚空的小箭头。感觉像在签什么契约。|{final_year: 你在旧记号旁添上了年份。它看起来比你年轻太多。|赔进去一个指关节。记号歪歪扭扭，完全属于你。}}
+# en: {~You scratch your initials small and low, with a tiny arrow pointing nowhere. It feels like signing something.|{final_year and flag(left_wall_mark): You add the year beside your old mark. It looks so much younger than you.|A knuckle pays for it. The mark is crooked and entirely yours.}}
+opt.left.say.1 [4e6e41] = {~你把缩写刻得又小又低，再加一个指向虚空的小箭头。感觉像在签什么契约。|{final_year and flag(left_wall_mark): 你在旧记号旁添上了年份。它看起来比你年轻太多。|赔进去一个指关节。记号歪歪扭扭，完全属于你。}}
 # en: Follow an old arrow
 opt.right.label [40d53f] = 跟着旧箭头走
 # en: {~The arrow leads to another arrow, which leads to a wall, which has a joke scratched on it.|The arrow leads to a slit window with a view of the lake no plan admits to. Your knees disagree with the route.}
@@ -333,10 +333,10 @@ title [695172] = 石像鬼的碟子
 text [48ff6f] = {第三座石像鬼的爪子上磨出了一只碟子，碟里放着供品——一颗纽扣，一块饼干，一把弯钥匙。|有人给石像鬼留了一颗葡萄，还剥了皮。|石像鬼看你的眼神，就像房东在月初看房客。} {~今晚它看起来很饿。|今晚它看起来很得意。|{season == "summer": 石头还留着白天的余温。|雨水从它嘴里流出来，像一串不停的抱怨。}}
 # en: A weathered gargoyle on a moonlit parapet with a dish worn into its stone paw, holding a button, a biscuit and a bent key.
 scene [1fa1f4] = 月光下的护墙上，一座饱经风霜的石像鬼，石爪上磨出一只碟子，盛着一颗纽扣、一块饼干和一把弯钥匙。
-# en: Leave a crown in the dish
-opt.left.label [e7b1bc] = 往碟里放一枚克朗
-# en: {~By morning the crown is gone, and so is the biscuit. Nobody admits to either.|The crown clinks in. The gargoyle's expression doesn't change, but the wind drops.}
-opt.left.say.1 [053c47] = {~第二天早上，克朗不见了，饼干也不见了。谁都不承认。|克朗叮当一声落进碟里。石像鬼的表情没变，但风停了。}
+# en: Leave a few crowns in the dish
+opt.left.label [adb70b] = 往碟里放几枚克朗
+# en: {~By morning the crowns are gone, and so is the biscuit. Nobody admits to either.|The crowns clink in. The gargoyle's expression doesn't change, but the wind drops.}
+opt.left.say.1 [6d545a] = {~第二天早上，克朗不见了，饼干也不见了。谁都不承认。|几枚克朗叮当落进碟里。石像鬼的表情没变，但风停了。}
 # en: Borrow the biscuit
 opt.right.label [d81344] = 借走那块饼干
 # en: {~It's a very good biscuit. Somebody's mother made it. You feel a little bad, and then less.|Shortbread, still crisp. The gargoyle allows it, this once.}
@@ -347,16 +347,16 @@ opt.right.say.2 [7ad359] = {~是石头做的。石像鬼的玩笑，它等了很
 @event gargoyle_passage_parapet_cards
 # en: Cards on the Parapet
 title [d8d199] = 护墙上的牌局
-# en: {On the parapet, by lantern-light, {here} is dealing cards for buttons.|{here} has a new deck, and the pot of buttons has grown.|{here} deals you in before you've sat down.} {~The wind keeps trying to take the jack.|A pigeon watches the game with too much interest.|{final_year: "One more for the road," {they} say{s}.|The lake below holds the lantern perfectly still.}}
-text [d86f5b] = {护墙上，借着灯光，{here}正以纽扣为注发牌。|{here}换了一副新牌，纽扣堆也变大了。|你还没坐下，{here}就给你发了牌。} {~风一直想把那张杰克卷走。|一只鸽子对牌局关心得过了头。|{final_year: “最后再来一局。”{they}说。|下方的湖把灯影托得纹丝不动。}}
+# en: {On the parapet, by lantern-light, {here} is dealing cards for buttons, and crowns for anyone who dares.|{here} has a new deck, and the pot of buttons has grown.|{here} deals you in before you've sat down.} {~The wind keeps trying to take the jack.|A pigeon watches the game with too much interest.|{final_year: "One more for the road," {they} say{s}.|The lake below holds the lantern perfectly still.}}
+text [8d1f22] = {护墙上，借着灯光，{here}正以纽扣为注发牌，谁有胆量也可以押克朗。|{here}换了一副新牌，纽扣堆也变大了。|你还没坐下，{here}就给你发了牌。} {~风一直想把那张杰克卷走。|一只鸽子对牌局关心得过了头。|{final_year: “最后再来一局。”{they}说。|下方的湖把灯影托得纹丝不动。}}
 # en: Two students playing cards by lantern-light on a high castle parapet, a pot of buttons between them and the lake far below.
 scene [68ef4e] = 两名学生借着灯光在城堡高处的护墙上打牌，中间一堆纽扣，湖在远远的下方。
 # en: Play a hand
 opt.left.label [fc6de9] = 来一手
-# en: {cast_as(here, corvin): {~"Well, look at you," Corvin says, paying out. "Who taught you that? Don't say me."|"Remind me never to owe you money," Corvin tells the pigeon, and pays you in buttons.}|{~You win the pot and one actual crown that somebody bet by mistake.|You bluff with nothing and the wind turns your card over at the right moment. You take the buttons with dignity.}}
-opt.left.say.1 [2652b9] = {cast_as(here, corvin): {~“哟，瞧瞧你，”科尔文边付账边说，“谁教你的？别说是我。”|“提醒我永远别欠你钱。”科尔文对鸽子说，然后用纽扣付了账。}|{~你赢下了那堆纽扣，外加一枚有人押错了的真克朗。|你手里什么都没有却虚张声势，风恰好在对的时候掀开了你的牌。你体面地收下了纽扣。}}
-# en: {cast_as(here, corvin): {~Corvin scoops the pot and winces. "Saint, you're the worst liar I love playing." He gives a crown back.|"Never bluff a man who owes three people money," Corvin says, kindly.}|{~You lose your buttons, then some crowns, then the will to bluff.|The wind takes your best card over the parapet. It was the only one you had.}}
-opt.left.say.2 [13ccc3] = {cast_as(here, corvin): {~科尔文把赌注一扫而空，龇了龇牙。“圣人，你是我最爱的最烂骗子。”他还了你一枚克朗。|“别跟一个欠了三个人钱的人诈牌。”科尔文和气地说。}|{~你输光了纽扣，又输了几枚克朗，最后连虚张声势的心气也输了。|风把你最好的那张牌卷过了护墙。那也是你唯一一张好牌。}}
+# en: {cast_as(here, corvin): {~"Well, look at you," Corvin says, paying out. "Who taught you that? Don't say me."|"Remind me never to owe you money," Corvin tells the pigeon, and pays you in buttons and, grudgingly, crowns.}|{~You win the pot, buttons and a few actual crowns.|You bluff with nothing and the wind turns your card over at the right moment. You take the buttons, and the crowns under them, with dignity.}}
+opt.left.say.1 [c2c1b4] = {cast_as(here, corvin): {~“哟，瞧瞧你，”科尔文边付账边说，“谁教你的？别说是我。”|“提醒我永远别欠你钱。”科尔文对鸽子说，然后用纽扣付了账，又不情不愿地添了几枚克朗。}|{~你赢下了那堆纽扣，外加几枚真克朗。|你手里什么都没有却虚张声势，风恰好在对的时候掀开了你的牌。你体面地收下了纽扣，还有压在下面的克朗。}}
+# en: {cast_as(here, corvin): {~Corvin scoops the pot and winces. "Saint, you're the worst liar I love playing." He gives you your buttons back, at least.|"Never bluff a man who owes three people money," Corvin says, kindly.}|{~You lose your buttons, then some crowns, then the will to bluff.|The wind takes your best card over the parapet. It was the only one you had.}}
+opt.left.say.2 [3b6ce0] = {cast_as(here, corvin): {~科尔文把赌注一扫而空，龇了龇牙。“圣人，你是我最爱的最烂骗子。”至少他把你的纽扣还给了你。|“别跟一个欠了三个人钱的人诈牌。”科尔文和气地说。}|{~你输光了纽扣，又输了几枚克朗，最后连虚张声势的心气也输了。|风把你最好的那张牌卷过了护墙。那也是你唯一一张好牌。}}
 # en: Watch the lake instead
 opt.right.label [1e5c6c] = 还是看湖吧
 # en: {cast_as(here, corvin): {~"Saint," Corvin says, not looking up, "you'll never be rich." He passes you his scarf.|Corvin deals you out without a word and tosses you his scarf when the wind picks up.}|{~You sit with your back to the stone and watch the dark water while the cards slap behind you. It's cold, and peaceful.|You count the lights in the village until the game's over.}}
@@ -371,8 +371,8 @@ text [faba23] = {第七塔的楼梯从来不会两次有同样多的台阶。学
 scene [e0f863] = 落满灰尘的石塔里一道狭窄的螺旋楼梯，一支蜡烛向上移动，月光从细窄的窗缝洒进来。
 # en: Count every step
 opt.left.label [08b067] = 一级一级地数
-# en: {~You lose count twice and get two answers, both certain, both wrong.|Up, one number; down, one more. You don't stay to find the extra step.|{final_year: The count matches your very first climb. You can't say why that frightens you.|You count a step that isn't there, and your foot believes you.}}
-opt.left.say.1 [2eaa2d] = {~你数乱了两次，得出两个答案，都很笃定，都不对。|上楼一个数，下楼多一级。你没留下来找那多出来的一级。|{final_year: 这次的数字和你第一次爬时一模一样。你说不出为什么这让你害怕。|你数到了一级并不存在的台阶，而你的脚信了。}}
+# en: {~You lose count twice and get two answers, both certain, both wrong.|Up, one number; down, one more. You don't stay to find the extra step.|{final_year and flag(counted_seventh_stair): The count matches your very first climb. You can't say why that frightens you.|You count a step that isn't there, and your foot believes you.}}
+opt.left.say.1 [538297] = {~你数乱了两次，得出两个答案，都很笃定，都不对。|上楼一个数，下楼多一级。你没留下来找那多出来的一级。|{final_year and flag(counted_seventh_stair): 这次的数字和你第一次爬时一模一样。你说不出为什么这让你害怕。|你数到了一级并不存在的台阶，而你的脚信了。}}
 # en: Climb without counting
 opt.right.label [c06bdf] = 不数，直接爬
 # en: {~You climb by feel, in the dark between windows. The stair seems to like that better.|You stop counting and the climb is suddenly short, as if the tower was in a hurry too.}

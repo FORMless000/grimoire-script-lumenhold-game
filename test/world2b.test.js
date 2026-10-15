@@ -608,3 +608,20 @@ test('options you can\'t afford are locked, never every option', () => {
     assert.ok(eng.view({ id: both.id }).options.every((o) => !o.disabled), both.id + ': nothing locked when everything would be');
   }
 });
+
+// Review fixes, batch 24–40: around(n) is false while n is away for the break or gone; apart(n) counts months since
+// the last card with n, per person.
+test('around() and apart() read presence and per-person contact', () => {
+  const eng = new Engine(content);
+  quiet(() => { eng.newGame({ seed: 15, name: 'T' }); });
+  const ex = (src, actor) => eng.test(G.expr(src), actor || null);
+  eng.s.npcs.tobias.met = true;
+  assert.ok(ex('around(tobias)'), 'Tobias is around in term');
+  eng.s.flags.tobias_went_home = true; eng.s.last.tobias_bad_harvest = eng.s.turn; eng.s.seen.tobias_bad_harvest = 1;
+  assert.ok(!ex('around(tobias)'), 'gone home after a failed harvest appeal');
+  assert.equal(eng.c.npcs.tobias.gone_when ? true : false, true);
+  eng.s.npcs.lyra.touched = 0;
+  assert.equal(ex('apart(lyra) == 999'), true, 'never in contact');
+  eng.s.npcs.lyra.touched = eng.s.turn;
+  assert.equal(ex('apart(lyra) == 0'), true, 'in contact this month');
+});

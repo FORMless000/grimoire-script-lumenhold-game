@@ -18,12 +18,13 @@ repeat: 6
 art: pouch
 tags: social money
 scene: A student holding out an empty purse upside down with a sheepish grin.
-text: {npc} turns out an empty purse. "I'm fifteen crowns short for rent. I'll pay you back. I swear on my wand."
+text: {npc} turns out an empty purse. "I'm fifteen crowns short {~for rent|for the term's ink and parchment|for the wand-mender, and it's my only wand}. I'll pay you back. I swear on my wand."
 > left: Sorry, you're tight too
   rel npc -small
   say: "No, of course, I understand." {They} {are} quiet at dinner.
 > right: Lend fifteen crowns
   gold -medium
+  alignment +tiny
   rel npc +medium
   chance 70:
     queue soc_loan_repaid in 2 with npc

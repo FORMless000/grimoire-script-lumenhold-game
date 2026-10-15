@@ -7,8 +7,8 @@
 @event enrolment
 # en: Enrolment
 title [cbadef] = 选课
-# en: {term_index == 1: Your first term. The registrar slides a list across the desk: four courses open to first-years.|A new term, and a new list. Courses you've passed are gone from it; new levels have appeared.} Choose two. Course fees are eight crowns.
-text [6207d2] = {term_index == 1: 你的第一个学期。教务员把一张清单推过桌面：四门对一年级开放的课。|新学期，新清单。你已通过的课不见了，新的级别冒了出来。}选两门。课程费八克朗。
+# en: {term_index == 1: Your first term. The registrar slides a list across the desk: four courses open to first-years.|A new term, and a new list. Courses you've passed are gone from it; new levels have appeared.} {member(thesis): Choose one; the thesis takes your other slot.|Choose two.} Course fees are eight crowns.
+text [3119c3] = {term_index == 1: 你的第一个学期。教务员把一张清单推过桌面：四门对一年级开放的课。|新学期，新清单。你已通过的课不见了，新的级别冒了出来。}{member(thesis): 选一门；毕业论文占了你另一个名额。|选两门。}课程费八克朗。
 # en: The registrar's hall at the start of term, students queueing at long tables with course lists that rewrite themselves.
 scene [6d30e9] = 开学时的教务大厅，学生们在长桌前排队，手里的课程表会自己改写。
 # en: There is nothing left for you to take
@@ -83,8 +83,8 @@ opt.work.say.1 [e054a1] = 你用假期换了工钱。你的脚会记住这一切
 opt.intern.label [744abc] = 开始实习
 # en: A stipend, a supervisor and a project.
 opt.intern.hint [abd74b] = 一份津贴、一位导师和一个课题。
-# en: You pack a trunk of notebooks and take the long coach to the capital.
-opt.intern.say.1 [9f079a] = 你装了一箱笔记本，坐上去王都的长途马车。
+# en: You pack a trunk of notebooks and set off {member(intern_expedition): up the long road to the high plateau|{member(intern_field_station): across the moors to the field station|{member(intern_thornwick): on the coach to Thornwick, of all places|on the long coach to the capital}}}.
+opt.intern.say.1 [db63d2] = 你装了一箱笔记本，{member(intern_expedition): 踏上去高原的漫长山路|{member(intern_field_station): 穿过荒原前往野外站|{member(intern_thornwick): 坐上去荆木学院的马车，偏偏是那儿|坐上去王都的长途马车}}}。
 
 @event course_exam
 # en: Exam Day
@@ -115,8 +115,8 @@ opt.left.label [cba502] = 保证会改进
 opt.left.say.1 [5983e6] = 你用最工整的字回了一份保证。现在你得兑现它了。
 # en: Let it slide
 opt.right.label [344baa] = 随它去
-# en: You put the note in a drawer. It doesn't stop existing in the drawer.
-opt.right.say.1 [7973f8] = 你把便条塞进抽屉。它在抽屉里也照样存在。
+# en: You put the note in a drawer and skip the next session to prove a point. The note doesn't stop existing in the drawer.
+opt.right.say.1 [4ea3c0] = 你把便条塞进抽屉，还故意翘掉了下一次，以示态度。便条在抽屉里也照样存在。
 
 @event job_term_review
 # en: Another Term?
@@ -167,6 +167,8 @@ opt.royal.locked [c8e0b8] = {member(intern_royal_library): 他们已经请你回
 opt.royal.say.1 [69905a] = {~又一封信，又一个晚上，又一张邮票。你的手在一个非常特定的地方发酸。|你写了一遍，划掉一半，又写一遍。邮费从你自己的钱袋里出。}
 # en: You write the letter three times and send the best one. Probably the best one.
 opt.royal.say.2 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+# en: You write the letter, and then find you can't pay the postage. It stays on your desk.
+opt.royal.say.3 [ccb58d] = 你写好了信，却发现付不起邮费。它只能留在你桌上。
 # en: The Conclave Laboratory
 opt.conclave.label [858e84] = 七塔议会实验室
 # en: GPA 3.0, an interview on arcana, and a word from Thorne helps.
@@ -177,6 +179,8 @@ opt.conclave.locked [fb2c57] = {member(intern_conclave): 他们已经请你回�
 opt.conclave.say.1 [69905a] = {~又一封信，又一个晚上，又一张邮票。你的手在一个非常特定的地方发酸。|你写了一遍，划掉一半，又写一遍。邮费从你自己的钱袋里出。}
 # en: You write the letter three times and send the best one. Probably the best one.
 opt.conclave.say.2 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+# en: You write the letter, and then find you can't pay the postage. It stays on your desk.
+opt.conclave.say.3 [ccb58d] = 你写好了信，却发现付不起邮费。它只能留在你桌上。
 # en: The Guild of Alchemists' Works
 opt.alchemists.label [80cc20] = 炼金师公会工坊
 # en: GPA 2.0, an interview on alchemy, and a strong stomach.
@@ -187,6 +191,8 @@ opt.alchemists.locked [e156fa] = {member(intern_alchemists): 他们已经请你�
 opt.alchemists.say.1 [69905a] = {~又一封信，又一个晚上，又一张邮票。你的手在一个非常特定的地方发酸。|你写了一遍，划掉一半，又写一遍。邮费从你自己的钱袋里出。}
 # en: You write the letter three times and send the best one. Probably the best one.
 opt.alchemists.say.2 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+# en: You write the letter, and then find you can't pay the postage. It stays on your desk.
+opt.alchemists.say.3 [ccb58d] = 你写好了信，却发现付不起邮费。它只能留在你桌上。
 # en: The Observatory Expedition
 opt.expedition.label [a8e59b] = 天文台远征队
 # en: An interview on vigor, and the legs for a plateau.
@@ -197,6 +203,8 @@ opt.expedition.locked [f35bc6] = {member(intern_expedition): 他们已经请你�
 opt.expedition.say.1 [69905a] = {~又一封信，又一个晚上，又一张邮票。你的手在一个非常特定的地方发酸。|你写了一遍，划掉一半，又写一遍。邮费从你自己的钱袋里出。}
 # en: You write the letter three times and send the best one. Probably the best one.
 opt.expedition.say.2 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+# en: You write the letter, and then find you can't pay the postage. It stays on your desk.
+opt.expedition.say.3 [ccb58d] = 你写好了信，却发现付不起邮费。它只能留在你桌上。
 # en: The Beastcraft Field Station
 opt.field.label [93e08b] = 驭兽野外站
 # en: An interview on vigor. Boots provided, mostly.
@@ -207,6 +215,8 @@ opt.field.locked [5a1cba] = {member(intern_field_station): 他们已经请你回
 opt.field.say.1 [69905a] = {~又一封信，又一个晚上，又一张邮票。你的手在一个非常特定的地方发酸。|你写了一遍，划掉一半，又写一遍。邮费从你自己的钱袋里出。}
 # en: You write the letter three times and send the best one. Probably the best one.
 opt.field.say.2 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+# en: You write the letter, and then find you can't pay the postage. It stays on your desk.
+opt.field.say.3 [ccb58d] = 你写好了信，却发现付不起邮费。它只能留在你桌上。
 # en: The Thornwick Exchange
 opt.thornwick.label [eb19f0] = 荆木学院交换项目
 # en: GPA 2.5, an interview on charm. Bring a thick skin.
@@ -217,6 +227,8 @@ opt.thornwick.locked [9eb17a] = {member(intern_thornwick): 他们已经请你回
 opt.thornwick.say.1 [69905a] = {~又一封信，又一个晚上，又一张邮票。你的手在一个非常特定的地方发酸。|你写了一遍，划掉一半，又写一遍。邮费从你自己的钱袋里出。}
 # en: You write the letter three times and send the best one. Probably the best one.
 opt.thornwick.say.2 [b67a70] = 信你写了三遍，寄出了最好的一封。大概是最好的一封。
+# en: You write the letter, and then find you can't pay the postage. It stays on your desk.
+opt.thornwick.say.3 [ccb58d] = 你写好了信，却发现付不起邮费。它只能留在你桌上。
 # en: Not this year
 opt.none.label [594ecf] = 今年算了
 # en: You let the notices flap. There's always next year, until there isn't.
@@ -359,14 +371,14 @@ opt.right.say.1 [5cc846] = 你把现有的整理好，接受那些空缺。导�
 @event thesis_defence
 # en: The Defence
 title [3a2f48] = 答辩
-# en: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60: You know this material better than anyone in the room.|There are gaps, and you know where they are.} First, you present. Then they ask. Then they send you out of the room.
-text [8737a3] = 三位考官，一座讲台，一年的心血。{progress(thesis) >= 60: 这些内容你比屋里任何人都熟。|有漏洞，而且你知道它们在哪儿。} 先是你陈述。然后他们提问。然后他们请你出去。
+# en: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60: You know this material better than anyone in the room.|There are gaps, and you know where they are.} First, you present. Then they ask.
+text [9ab052] = 三位考官，一座讲台，一年的心血。{progress(thesis) >= 60: 这些内容你比屋里任何人都熟。|有漏洞，而且你知道它们在哪儿。} 先是你陈述。然后他们提问。
 # en: A semicircular table with three examiners, a student standing at a lectern with a stack of notes.
 scene [f8606f] = 半圆形的长桌后坐着三位考官，一名学生站在讲台前，手里一摞笔记。
 # en: Defend it
 opt.left.label [0249ce] = 为它辩护
-# en: A safe topic is easier to defend and earns less; an ambitious one is harder and earns more.
-opt.left.hint [c8bbcf] = 稳妥的题目更好答辩，回报也更少；大胆的题目更难，回报也更多。
+# en: A safe topic is easier to defend and earns less; an ambitious one is harder and earns more. A year of thesis work counts.
+opt.left.hint [fa3c91] = 稳妥的题目更好答辩，回报也更少；大胆的题目更难，回报也更多。一年的论文功夫也会算数。
 # en: Your presentation runs clean from first slide to last. One examiner has stopped taking notes and is just listening.
 opt.left.say.1 [f074e0] = 你的陈述从头到尾干净利落。一位考官已经不再记笔记，只是在听。
 # en: A solid presentation with one wobble in the middle. You recover. They noticed the wobble.
@@ -385,12 +397,20 @@ opt.left.say.7 [33edc7] = 前人从未做过的事，讲得清清楚楚，让他
 opt.left.say.8 [c3424d] = 他们大半程都跟上了你，彼此争论这究竟是天才还是疯狂。也许两者都是。
 # en: You reach too far in the first ten minutes, and spend the rest of the hour trying to get back. They let you.
 opt.left.say.9 [8a9009] = 你在头十分钟就走得太远，剩下的一个小时都在设法往回走。他们由着你。
+# en: And under the presentation, a year of work they can feel. Every page they turn has been turned before.
+opt.left.say.10 [90a675] = 陈述之下，是他们能感觉到的一整年功夫。他们翻过的每一页，你都早已翻过。
+# en: Under the presentation, the thin chapters show. One examiner starts counting pages.
+opt.left.say.11 [cbd512] = 陈述之下，单薄的章节露了馅。一位考官开始数页数。
 # en: Open with your weakest chapter
 opt.right.label [dd91ef] = 从最薄弱的一章讲起
 # en: Name the gaps before they find them. Safe, and modest.
 opt.right.hint [047c2c] = 在他们发现之前先说出漏洞。稳妥，也平淡。
 # en: You start with what you couldn't prove, and why, and what you'd do next. It takes the wind out of their sails, and a little out of yours.
 opt.right.say.1 [e57cc7] = 你从无法证明的部分讲起，讲为什么，讲下一步会怎么做。这让他们泄了气，也让你泄了一点气。
+# en: The rest of it stands on a year of real work, and they can tell.
+opt.right.say.2 [f4fa42] = 其余部分立在一整年扎实的功夫上，他们看得出来。
+# en: The trouble is how many chapters are weak. They notice that too.
+opt.right.say.3 [3088c9] = 麻烦在于薄弱的章节太多了。这一点他们也注意到了。
 
 @event thesis_defence_question
 # en: The Question

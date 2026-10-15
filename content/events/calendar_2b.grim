@@ -20,7 +20,7 @@ tone: light
 art: scroll
 tags: class study
 scene: The registrar's hall at the start of term, students queueing at long tables with course lists that rewrite themselves.
-text: {term_index == 1: Your first term. The registrar slides a list across the desk: four courses open to first-years.|A new term, and a new list. Courses you've passed are gone from it; new levels have appeared.} Choose two. Course fees are eight crowns.
+text: {term_index == 1: Your first term. The registrar slides a list across the desk: four courses open to first-years.|A new term, and a new list. Courses you've passed are gone from it; new levels have appeared.} {member(thesis): Choose one; the thesis takes your other slot.|Choose two.} Course fees are eight crowns.
 > none: There is nothing left for you to take
   when: offered(courses) == 0
   say: The registrar checks the list twice. Nothing on it is open to you this term. "Enjoy the quiet," she says, without much conviction.
@@ -106,7 +106,7 @@ text: {month == 5: The winter break.|The summer break.} Two months without lectu
   when: member(internship) and month == 11
   hint: A stipend, a supervisor and a project.
   gain plan_internship
-  say: You pack a trunk of notebooks and take the long coach to the capital.
+  say: You pack a trunk of notebooks and set off {member(intern_expedition): up the long road to the high plateau|{member(intern_field_station): across the moors to the field station|{member(intern_thornwick): on the coach to Thornwick, of all places|on the long coach to the capital}}}.
 
 # ---------------- Track notices (pushed by the engine at term end) ----------------
 
@@ -141,7 +141,7 @@ text: A note about {track}: your attendance and your efforts have slipped, and i
 > right: Let it slide
   perform track -small
   mood +tiny
-  say: You put the note in a drawer. It doesn't stop existing in the drawer.
+  say: You put the note in a drawer and skip the next session to prove a point. The note doesn't stop existing in the drawer.
 
 # Every job at term end (playtest 2, M33): stay on for another term, or resign.
 @event job_term_review
@@ -202,78 +202,102 @@ on_show:
   hint: GPA 2.5, an interview on lore, a love of indexes.
   apply intern_royal_library
   intern_letters += 1
-  if intern_letters >= 2:
+  if intern_letters >= 2 and gold >= 8:
     gold -small
     mood -tiny
     say: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
-  else:
+  elif intern_letters < 2:
     charm +tiny
     say: You write the letter three times and send the best one. Probably the best one.
+  else:
+    leave intern_royal_library
+    mood -tiny
+    say: You write the letter, and then find you can't pay the postage. It stays on your desk.
 > conclave: The Conclave Laboratory
   when: level(evocation) >= 2 and not member(intern_conclave)
   locked: {member(intern_conclave): They've already asked you back.|Needs Evocation II.}
   hint: GPA 3.0, an interview on arcana, and a word from Thorne helps.
   apply intern_conclave
   intern_letters += 1
-  if intern_letters >= 2:
+  if intern_letters >= 2 and gold >= 8:
     gold -small
     mood -tiny
     say: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
-  else:
+  elif intern_letters < 2:
     charm +tiny
     say: You write the letter three times and send the best one. Probably the best one.
+  else:
+    leave intern_conclave
+    mood -tiny
+    say: You write the letter, and then find you can't pay the postage. It stays on your desk.
 > alchemists: The Guild of Alchemists' Works
   when: level(alchemy) >= 2 and not member(intern_alchemists)
   locked: {member(intern_alchemists): They've already asked you back.|Needs Alchemy II.}
   hint: GPA 2.0, an interview on alchemy, and a strong stomach.
   apply intern_alchemists
   intern_letters += 1
-  if intern_letters >= 2:
+  if intern_letters >= 2 and gold >= 8:
     gold -small
     mood -tiny
     say: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
-  else:
+  elif intern_letters < 2:
     charm +tiny
     say: You write the letter three times and send the best one. Probably the best one.
+  else:
+    leave intern_alchemists
+    mood -tiny
+    say: You write the letter, and then find you can't pay the postage. It stays on your desk.
 > expedition: The Observatory Expedition
   when: level(astromancy) >= 2 and not member(intern_expedition)
   locked: {member(intern_expedition): They've already asked you back.|Needs Astromancy II.}
   hint: An interview on vigor, and the legs for a plateau.
   apply intern_expedition
   intern_letters += 1
-  if intern_letters >= 2:
+  if intern_letters >= 2 and gold >= 8:
     gold -small
     mood -tiny
     say: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
-  else:
+  elif intern_letters < 2:
     charm +tiny
     say: You write the letter three times and send the best one. Probably the best one.
+  else:
+    leave intern_expedition
+    mood -tiny
+    say: You write the letter, and then find you can't pay the postage. It stays on your desk.
 > field: The Beastcraft Field Station
   when: level(beastcraft) >= 2 and not member(intern_field_station)
   locked: {member(intern_field_station): They've already asked you back.|Needs Beastcraft II.}
   hint: An interview on vigor. Boots provided, mostly.
   apply intern_field_station
   intern_letters += 1
-  if intern_letters >= 2:
+  if intern_letters >= 2 and gold >= 8:
     gold -small
     mood -tiny
     say: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
-  else:
+  elif intern_letters < 2:
     charm +tiny
     say: You write the letter three times and send the best one. Probably the best one.
+  else:
+    leave intern_field_station
+    mood -tiny
+    say: You write the letter, and then find you can't pay the postage. It stays on your desk.
 > thornwick: The Thornwick Exchange
   when: level(illusion) >= 2 and not member(intern_thornwick)
   locked: {member(intern_thornwick): They've already asked you back.|Needs Illusion II.}
   hint: GPA 2.5, an interview on charm. Bring a thick skin.
   apply intern_thornwick
   intern_letters += 1
-  if intern_letters >= 2:
+  if intern_letters >= 2 and gold >= 8:
     gold -small
     mood -tiny
     say: {~Another letter, another evening, another stamp. Your hand aches in a very particular place.|You write it once, cross out half, write it again. The postage comes out of your own purse.}
-  else:
+  elif intern_letters < 2:
     charm +tiny
     say: You write the letter three times and send the best one. Probably the best one.
+  else:
+    leave intern_thornwick
+    mood -tiny
+    say: You write the letter, and then find you can't pay the postage. It stays on your desk.
 > none: Not this year
   mood -tiny
   say: You let the notices flap. There's always next year, until there isn't.
@@ -283,7 +307,7 @@ title: Letters With Seals
 trigger: auto
 type: menu
 when: month == 9 and year >= 2 and year <= 3 and (applied(internship) or (guile >= 35 and rel(isolde) >= 6 and not member(intern_unseen_office)))
-repeat: 20
+repeat: 12
 priority: 55
 class: milestone
 tone: warm
@@ -544,9 +568,9 @@ tone: tense
 art: scroll
 tags: study exam
 scene: A semicircular table with three examiners, a student standing at a lectern with a stack of notes.
-text: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60: You know this material better than anyone in the room.|There are gaps, and you know where they are.} First, you present. Then they ask. Then they send you out of the room.
+text: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60: You know this material better than anyone in the room.|There are gaps, and you know where they are.} First, you present. Then they ask.
 > left: Defend it
-  hint: A safe topic is easier to defend and earns less; an ambitious one is harder and earns more.
+  hint: A safe topic is easier to defend and earns less; an ambitious one is harder and earns more. A year of thesis work counts.
   def_score = 0
   if not (flag(thesis_safe) or flag(thesis_ambitious)):
     challenge negotiate using lore medium:
@@ -583,6 +607,12 @@ text: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60:
       lose:
         mood -small
         say: You reach too far in the first ten minutes, and spend the rest of the hour trying to get back. They let you.
+  if progress(thesis) >= 70:
+    def_score += 1
+    say: And under the presentation, a year of work they can feel. Every page they turn has been turned before.
+  elif progress(thesis) < 30:
+    def_score -= 1
+    say: Under the presentation, the thin chapters show. One examiner starts counting pages.
   queue thesis_defence_question now
 > right: Open with your weakest chapter
   hint: Name the gaps before they find them. Safe, and modest.
@@ -590,6 +620,12 @@ text: Three examiners, one lectern, and a year of work. {progress(thesis) >= 60:
   mood -tiny
   queue thesis_defence_question now
   say: You start with what you couldn't prove, and why, and what you'd do next. It takes the wind out of their sails, and a little out of yours.
+  if progress(thesis) >= 70:
+    def_score += 1
+    say: The rest of it stands on a year of real work, and they can tell.
+  elif progress(thesis) < 30:
+    def_score -= 1
+    say: The trouble is how many chapters are weak. They notice that too.
 
 @event thesis_defence_question
 title: The Question
@@ -672,11 +708,9 @@ scene: The Mirror Lake at night, hundreds of paper lanterns drifting over the wa
 text: Lantern Night. The whole academy gathers on the lakeshore with paper lanterns, each carrying a wish out over the water. {month == 2 and year == 1: Your first one.|Another year, another wish.}
 > left: Wish for something selfish
   mood +medium
-  renown +tiny
   say: Your lantern goes out over the water and keeps its secret. You feel lighter for having asked.
 > right: Wish for someone else
-  mood +small
-  alignment +small
+  mood +medium
   say: You don't tell anyone who. The lantern seems to know; it flies straight.
 
 # ---------------- Calendar beats ----------------

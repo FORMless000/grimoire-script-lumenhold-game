@@ -7,24 +7,24 @@
 @event soc_study_session
 # en: Study Session
 title [c13d4e] = 一起自习
-# en: {npc} drops into the seat across from you with an armful of books. "Exams are coming for us all. Misery loves company. Study with me?"
-text [e20c0b] = {npc}抱着一摞书一屁股坐到你对面。“考试要来收拾我们所有人了。同病相怜嘛。一起学？”
+# en: {~{npc} drops into the seat across from you with an armful of books. "Exams are coming for us all. Misery loves company. Study with me?"|{npc} slides a stack of notes onto your table. "I've read this chapter four times and it's still in a foreign language. Help?"|{npc} finds you in the library and sits down without asking. "If I study alone I'll just reorganise my quills. Keep me honest?"}
+text [4f74e2] = {~{npc}抱着一摞书一屁股坐到你对面。“考试要来收拾我们所有人了。同病相怜嘛。一起学？”|{npc}把一叠笔记推到你桌上。“这一章我读了四遍，还是像外语。帮帮我？”|{npc}在图书馆找到你，不问一声就坐下了。“我一个人学只会去整理羽毛笔。你帮我盯着点？”}
 # en: Two students at a candlelit table piled with books, one explaining something with wild hand gestures.
 scene [cb85c7] = 两个学生坐在堆满书的烛光桌前，其中一个正手舞足蹈地讲解着什么。
 # en: You work better alone
 opt.left.label [1f18da] = 你一个人效率更高
-# en: You get a lot done. {npc} sits at the next table and sighs loudly every few minutes.
-opt.left.say.1 [0d0d7f] = 你完成了很多。{npc}坐在隔壁桌，每隔几分钟就大声叹一口气。
+# en: You get a lot done. {~{npc} sits at the next table and sighs loudly every few minutes.|{npc} finds someone else, and their laughter carries across the library all evening.|{npc} leaves you a biscuit on the way out, which somehow makes it worse.}
+opt.left.say.1 [fb167d] = 你完成了很多。{~{npc}坐在隔壁桌，每隔几分钟就大声叹一口气。|{npc}找了别人一起学，他们的笑声整晚都在图书馆里回荡。|{npc}走的时候给你留了一块饼干，不知怎么反而更难受。}
 # en: Pull up a chair
 opt.right.label [d0a229] = 拉过一把椅子
-# en: You get half as much done and remember twice as much of it. {npc} explains the Third Law with a biscuit diagram.
-opt.right.say.1 [7cc537] = 你只完成了一半，却记住了两倍的内容。{npc}用饼干摆图讲解了第三定律。
+# en: You get half as much done and remember twice as much of it. {~{npc} explains the Third Law with a biscuit diagram.|You quiz each other until the candle gutters.|{npc} makes up a rude rhyme for every date, and you will never forget a single one.}
+opt.right.say.1 [2f03ab] = 你只完成了一半，却记住了两倍的内容。{~{npc}用饼干摆图讲解了第三定律。|你们互相提问，直到蜡烛快燃尽。|{npc}给每个日期都编了一句粗俗的顺口溜，你一个也忘不掉了。}
 
 @event soc_borrow_money
 # en: A Small Loan
 title [cd870f] = 一笔小借款
-# en: {npc} turns out an empty purse. "I'm fifteen crowns short for rent. I'll pay you back. I swear on my wand."
-text [d700eb] = {npc}把空空的钱袋翻了过来。“我房租还差十五克朗。我会还你的。我以我的魔杖发誓。”
+# en: {npc} turns out an empty purse. "I'm fifteen crowns short {~for rent|for the term's ink and parchment|for the wand-mender, and it's my only wand}. I'll pay you back. I swear on my wand."
+text [ddf34a] = {npc}把空空的钱袋翻了过来。“我还差十五克朗{~交房租|买这学期的墨水和羊皮纸|付修魔杖的钱，我就这一根魔杖}。我会还你的。我以我的魔杖发誓。”
 # en: A student holding out an empty purse upside down with a sheepish grin.
 scene [d2da5b] = 一个学生把空钱袋倒过来递给你看，脸上挂着不好意思的笑。
 # en: Sorry, you're tight too
@@ -89,8 +89,8 @@ opt.right.say.1 [c821d1] = 你告诉了{them}从没告诉过任何人的事。{t
 @event soc_secret
 # en: A Secret
 title [880a88] = 一个秘密
-# en: {npc} pulls you under the stairs. "I need to tell someone or I'll burst. Swear you won't tell anyone. Not even the portraits."
-text [556649] = {npc}把你拉到楼梯底下。“我得告诉一个人，不然我会憋炸的。发誓你谁也不说。连肖像画都不说。”
+# en: {~{npc} pulls you under the stairs. "I need to tell someone or I'll burst. Swear you won't tell anyone. Not even the portraits."|{npc} closes the dormitory door, checks it, and checks it again. "I have to tell someone. Swear you'll keep it."|{npc} walks you to the far end of the lake path, where nobody goes. "Can you keep something? Really keep it?"}
+text [620902] = {~{npc}把你拉到楼梯底下。“我得告诉一个人，不然我会憋炸的。发誓你谁也不说。连肖像画都不说。”|{npc}关上宿舍门，检查了一遍，又检查了一遍。“我得告诉一个人。发誓你会保密。”|{npc}把你带到湖边小路没人去的尽头。“你能守住一件事吗？真的守住？”}
 # en: Two students huddled under a staircase, one whispering into the other's ear, a finger to their lips.
 scene [e33a93] = 两个学生挤在楼梯下，一个凑在另一个耳边低语，手指竖在唇边。
 # en: "I'd rather not carry it."
@@ -99,20 +99,20 @@ opt.left.label [a4f5da] = “我宁愿不背这个包袱。”
 opt.left.say.1 [8b5a46] = {npc}先是一脸受伤，然后松了口气。“也许这样更好。”你永远不会知道了。
 # en: "I swear."
 opt.right.label [381a0e] = “我发誓。”
-# en: It's not a big secret. It's the kind that's only big to the person holding it. You hold it with {them}.
-opt.right.say.1 [a21861] = 不是什么大秘密。是那种只对守着它的人来说很大的秘密。你陪{them}一起守着。
+# en: {~It's not a big secret. It's the kind that's only big to the person holding it. You hold it with {them}.|It's about a letter from home, and it's heavier than {they} let on. You carry half of it now.|It's ridiculous, and {they} know it's ridiculous, and {they} needed someone else to know anyway. You do.}
+opt.right.say.1 [5f42d1] = {~不是什么大秘密。是那种只对守着它的人来说很大的秘密。你陪{them}一起守着。|是关于一封家书的事，比{they}表现出来的沉重得多。现在你替{them}分担了一半。|很荒唐，{they}自己也知道很荒唐，但{they}还是需要另一个人知道。现在你知道了。}
 
 @event soc_argument
 # en: Words Exchanged
 title [260001] = 口角
-# en: It starts with something small — a borrowed book, a joke that landed wrong — and suddenly you and {npc} are arguing in the corridor, louder than either of you intended.
-text [4ede37] = 起因是件小事——一本借走的书，一个说错时机的玩笑——突然间你和{npc}就在走廊里吵了起来，嗓门比你们俩想的都大。
+# en: It starts with something small — {~a borrowed book, a joke that landed wrong|whose turn it was to fetch the tea|a seat someone saved and someone else took} — and suddenly you and {npc} are arguing {~in the corridor|on the stairs|in the middle of the refectory}, louder than either of you intended.
+text [838628] = 起因是件小事——{~一本借走的书，一个说错时机的玩笑|该谁去打茶|有人占的座位被别人坐了}——突然间你和{npc}就{~在走廊里|在楼梯上|在食堂正中间}吵了起来，嗓门比你们俩想的都大。
 # en: Two students facing off in an empty corridor, one with arms crossed, the other mid-gesture, both flushed.
 scene [935b50] = 两个学生在空荡的走廊里对峙，一个抱着双臂，另一个正比划着，两人都涨红了脸。
 # en: Apologise first
 opt.left.label [9f3966] = 先道歉
-# en: "I'm sorry." {npc} deflates. "...Me too." It's over. It feels better than winning would have.
-opt.left.say.1 [47bc55] = “对不起。”{npc}一下子泄了气。“……我也是。”结束了。这比吵赢了感觉更好。
+# en: {~"I'm sorry." {npc} deflates. "...Me too." It's over. It feels better than winning would have.|You say sorry first. {npc} looks almost disappointed not to get to say it. You share a bun about it later.|"I'm sorry." {npc} blinks, then laughs. "We were both being absurd." You were.}
+opt.left.say.1 [d0711f] = {~“对不起。”{npc}一下子泄了气。“……我也是。”结束了。这比吵赢了感觉更好。|你先道了歉。{npc}看上去几乎有点失望，没轮到自己说。后来你们为这事分吃了一个面包。|“对不起。”{npc}眨眨眼，然后笑了。“我们俩都太荒唐了。”确实。}
 # en: Stand your ground
 opt.right.label [3881f5] = 坚持立场
 # en: {npc} storms off. You were right. It doesn't feel as good as you'd hoped.
@@ -129,12 +129,12 @@ text [07e032] = “坐驳船去镇上吗？去梅布尔茶馆喝茶，逛逛书�
 scene [743ea4] = 鹅卵石铺就的小镇街道，歪歪扭扭的店面，两个学生分享着一纸筒烤坚果。
 # en: Not this week
 opt.left.label [0fe3ce] = 这周不行
-# en: {They} bring{s} you back a cinnamon bun anyway.
-opt.left.say.1 [bce668] = {they}还是给你带回来一个肉桂卷。
+# en: {~{They} bring{s} you back a cinnamon bun anyway.|{They} bring{s} you back a postcard of the village, which is three streets long.|{They} come{s} back with a story about a goat and tell{s} it badly.}
+opt.left.say.1 [b6d43c] = {~{they}还是给你带回来一个肉桂卷。|{they}给你带回来一张小镇明信片，那小镇总共只有三条街。|{they}回来时带着一个关于山羊的故事，讲得很烂。}
 # en: Grab your coat
 opt.right.label [b14325] = 抓起外套
-# en: Tea, buns, a bookshop cat that sits on {npc}'s feet. You almost miss the last barge, laughing.
-opt.right.say.1 [fca757] = 喝茶，吃面包，书店的猫趴在{npc}脚上。你们笑着差点错过最后一班驳船。
+# en: {~Tea, buns, a bookshop cat that sits on {npc}'s feet. You almost miss the last barge, laughing.|Mabel's, then the market, then a long argument about which bun is best. You get the last barge home with sticky fingers.|Rain, so you spend the whole afternoon in the bookshop. {npc} buys a book about knots and explains every one on the barge home.}
+opt.right.say.1 [64f247] = {~喝茶，吃面包，书店的猫趴在{npc}脚上。你们笑着差点错过最后一班驳船。|先去梅布尔茶馆，再逛集市，然后为哪种面包最好吵了半天。你们带着黏糊糊的手指赶上了最后一班驳船。|下雨了，你们一下午都待在书店里。{npc}买了一本讲绳结的书，回程的驳船上把每个结都讲了一遍。}
 
 @event soc_friend_sick
 # en: Sick Friend
@@ -151,8 +151,8 @@ opt.left.say.1 [eae564] = 你送了一张卡片，上面画着变成了龙的阿
 opt.right.label [09fda2] = 每晚都去陪着
 # en: You keep {them} company for a week. Then you're in the next bed. You both find this hilarious.
 opt.right.say.1 [8c2cc5] = 你陪了{them}一个星期。然后你住进了隔壁床。你们俩都觉得这太好笑了。
-# en: You read aloud, badly, doing voices. {npc} recovers and claims it was the voices.
-opt.right.say.2 [55eed3] = 你给{them}念书，念得很烂，还学各种腔调。{npc}康复后坚称是那些腔调治好了{them}。
+# en: {~You read aloud, badly, doing voices. {npc} recovers and claims it was the voices.|You teach {them} every card game you know and lose all of them. {npc} recovers, insufferably.|You bring soup from the kitchens every evening and tell {them} all the gossip. {npc} recovers mostly out of curiosity.}
+opt.right.say.2 [0b98ac] = {~你给{them}念书，念得很烂，还学各种腔调。{npc}康复后坚称是那些腔调治好了{them}。|你把会的纸牌游戏全教给了{them}，结果每一局都输了。{npc}康复了，得意得叫人受不了。|你每晚从厨房端汤过来，把所有八卦都讲给{them}听。{npc}康复，主要是出于好奇。}
 
 @event soc_gift_given
 # en: A Small Gift
@@ -163,18 +163,18 @@ text [1d6ca6] = 你的枕头上放着一个小包裹。附着一张{npc}字迹�
 scene [5a37d3] = 宿舍枕头上一个系着丝带的小包裹，蝴蝶结里夹着一朵压花。
 # en: Thank {them} later
 opt.left.label [a0fa69] = 回头再谢{them}
-# en: It's a tiny brass compass that always points to the nearest teapot. You use it constantly.
-opt.left.say.1 [0451b8] = 是一个小小的黄铜罗盘，永远指向最近的茶壶。你天天都在用。
+# en: {~It's a tiny brass compass that always points to the nearest teapot. You use it constantly.|It's a bookmark that hums when you stop reading. Annoying. You love it.|It's a pair of gloves that stay warm all winter. You wear them until they're threadbare.}
+opt.left.say.1 [e85db0] = {~是一个小小的黄铜罗盘，永远指向最近的茶壶。你天天都在用。|是一枚书签，你一停下不读它就哼哼。烦人。你爱死它了。|是一副整个冬天都暖和的手套。你一直戴到磨破。}
 # en: Get {them} something back (8 gold)
 opt.right.label [42a27b] = 回赠一份礼物（8 金币）
-# en: You find {them} a book {they}'d wanted for months. {npc}'s face when {they} open{s} it is worth twice the price.
-opt.right.say.1 [3ade33] = 你找到了一本{they}想要了好几个月的书。{npc}打开时的表情，值两倍的价钱。
+# en: You find {them} {~a book {they}'d wanted for months|a scarf in exactly {their} colour|a sketchbook with good paper}. {npc}'s face when {they} open{s} it is worth twice the price.
+opt.right.say.1 [f29a77] = 你给{them}找到了{~一本{they}想要了好几个月的书|一条正是{their}颜色的围巾|一本纸张很好的速写本}。{npc}打开时的表情，值两倍的价钱。
 
 @event soc_drift
 # en: Drifting Apart
 title [73c51a] = 渐行渐远
-# en: You realise you haven't really talked to {npc} in weeks. You see {them} across the courtyard, laughing with people you don't know.
-text [17b0c4] = 你发现自己已经好几周没好好跟{npc}说过话了。你看见{them}在庭院那头，和一群你不认识的人说笑。
+# en: You realise you haven't really talked to {npc} in weeks. You see {them} {~across the courtyard|at the far end of the refectory|on the library steps}, laughing with people you don't know.
+text [27eced] = 你发现自己已经好几周没好好跟{npc}说过话了。你看见{them}{~在庭院那头|在食堂另一端|在图书馆台阶上}，和一群你不认识的人说笑。
 # en: A student glancing back across a busy courtyard at another who hasn't seen them, the space between them full of strangers.
 scene [e8800d] = 一个学生回头望向熙攘庭院另一端没看见自己的人，两人之间隔满了陌生人。
 # en: Let it be
@@ -183,22 +183,22 @@ opt.left.label [71cc4c] = 顺其自然
 opt.left.say.1 [8a48fa] = 人总会渐行渐远。不是谁的错。在走廊里擦肩而过时，你们仍会微笑。
 # en: Go over and say hello
 opt.right.label [cdae69] = 走过去打个招呼
-# en: "There you are!" {npc} says, as if you'd been the one missing. Maybe you had.
-opt.right.say.1 [1d0cee] = “你在这儿呀！”{npc}说，好像失踪的人是你。也许确实是。
+# en: {~"There you are!" {npc} says, as if you'd been the one missing. Maybe you had.|{npc} introduces you to everyone as "the one I told you about". You wonder what {they} told them. It seems to have been good.|{npc} shifts over to make room on the bench without a word, as if your seat had been waiting.}
+opt.right.say.1 [edea7c] = {~“你在这儿呀！”{npc}说，好像失踪的人是你。也许确实是。|{npc}向所有人介绍你：“就是我跟你们说过的那个。”你很好奇{they}说了什么。听起来是好话。|{npc}一言不发地挪了挪，在长凳上给你腾出位置，好像你的座位一直在等你。}
 # en: You go over. It is friendly, and short, and you both say "we should catch up" in a way that means you won't.
 opt.right.say.2 [46fd68] = 你走过去。气氛很友好，也很短，你们都说了句“改天聚聚”，那语气意味着不会有改天。
 
 @event soc_rumour
 # en: Rumours About {npc}
 title [e3d846] = 关于{npc}的流言
-# en: A nasty rumour about {npc} is going round the common room. It's not true. You know it's not true. People are laughing.
-text [bf28b6] = 公共休息室里流传着一条关于{npc}的恶毒流言。不是真的。你知道不是真的。大家在笑。
+# en: A nasty rumour about {npc} is going round {~the common room|the refectory|the library steps}: {~that {they} cheated on an exam|that {they} {are} leaving at the end of term in disgrace|that {they} said something cruel about a friend}. It's not true. You know it's not true. People are laughing.
+text [fdfb88] = {~公共休息室里|食堂里|图书馆台阶上}流传着一条关于{npc}的恶毒流言：{~说{they}考试作弊|说{they}学期末要灰溜溜地退学|说{they}对朋友说了很刻薄的话}。不是真的。你知道不是真的。大家在笑。
 # en: A cluster of students whispering behind their hands in a corridor, glancing toward someone just out of view.
 scene [78a3d1] = 一群学生在走廊里捂着嘴窃窃私语，朝视线外的某个人瞟去。
 # en: Let it blow over
 opt.left.label [962dcd] = 等它自己平息
-# en: It blows over. {npc} never finds out you heard it. Probably.
-opt.left.say.1 [fd8345] = 它平息了。{npc}永远不会知道你听到过。大概吧。
+# en: It blows over. {npc} never finds out you heard it. You find out you don't like yourself for it, a little.
+opt.left.say.1 [95d2f0] = 它平息了。{npc}永远不会知道你听到过。可你发现，你有点不喜欢这样的自己。
 # en: Shut it down
 opt.right.label [e3e364] = 当场制止
 # en: You make the rumour-monger look so foolish that the story dies on the spot. {npc} hears about it later and just squeezes your arm.
@@ -209,8 +209,8 @@ opt.right.say.2 [ea7565] = 你大闹了一场，现在也有关于你的流言�
 @event soc_homework_help
 # en: Desperate Homework
 title [b925b8] = 作业告急
-# en: {npc} waves a half-finished essay at you. "It's due in an hour and I've written the title twice. Help."
-text [600d7a] = {npc}朝你挥着一篇写了一半的论文。“一小时后就要交了，我只把标题写了两遍。救命。”
+# en: {npc} waves a half-finished {~essay|lab report|star chart} at you. "It's due in an hour and I've written the title twice. Help."
+text [eb5473] = {npc}朝你挥着一份写了一半的{~论文|实验报告|星图}。“一小时后就要交了，我只把标题写了两遍。救命。”
 # en: A student with ink on their face clutching a half-finished essay, another student leaning over to read it.
 scene [d955d2] = 一个脸上沾着墨水的学生攥着一篇半成品论文，另一个学生凑过来看。
 # en: Explain the concept
@@ -221,8 +221,8 @@ opt.left.say.1 [cf80f6] = 你讲得清清楚楚，{npc}提前写完了论文。{
 opt.left.say.2 [a0a001] = 你讲得一团乱麻，两个人都更糊涂了。你们一起交了上去——两个糊涂人对抗全世界。
 # en: "Copy mine."
 opt.right.label [b2d7d3] = “抄我的吧。”
-# en: The professor notices two identical essays. You both get detention, and a lecture.
-opt.right.say.1 [bd43e1] = 教授发现了两篇一模一样的论文。你们俩都被关了禁闭，还挨了一顿训。
+# en: The professor notices two identical pieces of work. You both get detention, a lecture, and a note on your record that every one of your professors reads.
+opt.right.say.1 [d3d733] = 教授发现了两份一模一样的作业。你们俩都被关了禁闭，挨了一顿训，档案上还记了一笔，你的每位教授都会看到。
 # en: {npc} hands it in and gets a better mark than you did. Unbelievable.
 opt.right.say.2 [c22ac9] = {npc}交了上去，分数比你还高。难以置信。
 
@@ -239,14 +239,14 @@ opt.left.label [8a601d] = 礼貌地拒绝
 opt.left.say.1 [19801b] = “随你。”{they}走开了。教职员的记性可都很好。
 # en: Listen carefully
 opt.right.label [1b6b4d] = 认真听
-# en: It's good advice. Annoyingly good. Your next essay is better for it.
-opt.right.say.1 [aeda53] = 是好建议。好得让人恼火。你的下一篇论文因此进步了不少。
+# en: It's good advice about how to study, {~annoyingly good|delivered at great length|illustrated with a story from {their} own disastrous first year}. Every piece of work you hand in that month is better for it.
+opt.right.say.1 [3db8c9] = 是关于怎么学习的好建议，{~好得让人恼火|讲得极其冗长|还配了一个{their}自己一年级时惨痛经历的故事}。那个月你交的每一份作业都因此进步了。
 
 @event soc_spark
 # en: A Spark
 title [21e629] = 火花
-# en: You reach for the same quill as {npc}. Your hands touch. Neither of you lets go immediately. It's a perfectly ordinary quill.
-text [563401] = 你和{npc}同时伸手去拿同一支羽毛笔。你们的手碰到了。谁也没有马上松开。那只是一支再普通不过的羽毛笔。
+# en: You and {npc} reach for {&the same quill|the last biscuit on the plate|the same library book} at the same moment. Your hands touch. Neither of you lets go immediately. {&It's a perfectly ordinary quill.|It's a perfectly ordinary biscuit.|It's a perfectly ordinary book.}
+text [8c5ce5] = 你和{npc}同时伸手去拿{&同一支羽毛笔|盘子里最后一块饼干|同一本图书馆的书}。你们的手碰到了。谁也没有马上松开。{&那只是一支再普通不过的羽毛笔。|那只是一块再普通不过的饼干。|那只是一本再普通不过的书。}
 # en: Two hands brushing as they reach for the same quill, both students freezing for a heartbeat.
 scene [d87696] = 两只手在伸向同一支羽毛笔时轻轻相触，两个学生都愣了一拍。
 # en: Laugh it off
@@ -255,30 +255,30 @@ opt.left.label [29c02a] = 一笑了之
 opt.left.say.1 [134287] = “你用吧。”你说。{npc}笑了。那一刻过去了。大体上。
 # en: Hold on a moment longer
 opt.right.label [04d88b] = 多握一会儿
-# en: {npc} looks up. Something in {their} face shifts. Then {they} let{s} go, a little pink, and the quill rolls under the desk.
-opt.right.say.1 [6bf6bf] = {npc}抬起头。{their}脸上有什么东西变了。然后{they}松开了手，脸有点红，羽毛笔滚到了桌子底下。
-# en: {npc} pulls back as if burned, and the rest of the lesson is very, very awkward.
-opt.right.say.2 [cb9381] = {npc}像被烫到一样缩回了手，那节课剩下的时间尴尬得要命。
+# en: {npc} looks up. Something in {their} face shifts. Then {they} let{s} go, a little pink, and {&the quill rolls under the desk|the biscuit breaks neatly in half|the book falls open on the floor between you}.
+opt.right.say.1 [c7d64d] = {npc}抬起头。{their}脸上有什么东西变了。然后{they}松开了手，脸有点红，{&羽毛笔滚到了桌子底下|饼干整整齐齐地断成了两半|书摊开掉在你们中间的地上}。
+# en: {npc} pulls back as if burned, and the rest of the {&lesson|meal|afternoon} is very, very awkward.
+opt.right.say.2 [671934] = {npc}像被烫到一样缩回了手，那{&节课|顿饭|个下午}剩下的时间尴尬得要命。
 
 @event soc_date
 # en: An Invitation
 title [aba1c1] = 一次邀约
-# en: You could ask {npc} to the lantern show in the village this weekend. As friends. Or, you know. Not as friends.
-text [ec7b1b] = 你可以邀请{npc}这个周末去镇上看灯笼表演。以朋友的身份。或者，你懂的。不只是朋友。
+# en: You could ask {npc} to {&the lantern show in the village|the travelling players at the Newt|the music on the quay} this weekend. As friends. Or, you know. Not as friends.
+text [c7f340] = 你可以邀请{npc}这个周末去{&镇上看灯笼表演|镀金蝾螈酒馆看巡演剧团|码头听音乐}。以朋友的身份。或者，你懂的。不只是朋友。
 # en: A student nervously holding out a hand-drawn ticket to the village's floating lantern show.
 scene [57c131] = 一个学生紧张地递出一张手绘的小镇浮灯表演门票。
 # en: Ask as friends
 opt.left.label [bd7c43] = 以朋友身份邀请
-# en: It's a lovely evening. You're both very careful about elbows.
-opt.left.say.1 [692d15] = 那是个美好的夜晚。你们俩都非常小心地不碰到对方的胳膊肘。
+# en: You pay for both tickets and the hot cider. It's a lovely evening. You're both very careful about elbows.
+opt.left.say.1 [0135a9] = 两张票和热苹果酒都是你付的。那是个美好的夜晚。你们俩都非常小心地不碰到对方的胳膊肘。
 # en: Ask as more than friends
 opt.right.label [e73a1b] = 以不只是朋友的身份邀请
-# en: {npc} says yes before you finish the sentence. You hold hands through the whole show and miss every lantern.
-opt.right.say.1 [ccf6c4] = 你话还没说完{npc}就答应了。整场表演你们都牵着手，一盏灯笼也没看见。
+# en: {npc} says yes before you finish the sentence. You hold hands through the whole {&show and miss every lantern|play and miss every line|evening and miss every song}.
+opt.right.say.1 [fb9a21] = 你话还没说完{npc}就答应了。{&整场表演你们都牵着手，一盏灯笼也没看见|整场戏你们都牵着手，一句台词也没听见|一整晚你们都牵着手，一首歌也没听进去}。
 # en: {npc} hesitates, then says {they}'d rather go as friends. It's a nice evening. It's a long evening.
 opt.right.say.2 [097e94] = {npc}犹豫了一下，说还是以朋友的身份去吧。那是个不错的夜晚。也是个漫长的夜晚。
-# en: {npc} says yes before you finish the sentence. You hold hands through the whole show and miss every lantern.
-opt.right.say.3 [ccf6c4] = 你话还没说完{npc}就答应了。整场表演你们都牵着手，一盏灯笼也没看见。
+# en: {npc} says yes before you finish the sentence. You hold hands through the whole {&show and miss every lantern|play and miss every line|evening and miss every song}.
+opt.right.say.3 [fb9a21] = 你话还没说完{npc}就答应了。{&整场表演你们都牵着手，一盏灯笼也没看见|整场戏你们都牵着手，一句台词也没听见|一整晚你们都牵着手，一首歌也没听进去}。
 # en: {npc} hesitates, then says {they}'d rather go as friends. It's a nice evening. It's a long evening.
 opt.right.say.4 [097e94] = {npc}犹豫了一下，说还是以朋友的身份去吧。那是个不错的夜晚。也是个漫长的夜晚。
 
@@ -303,18 +303,18 @@ opt.right.say.2 [fe43d9] = {npc}深吸了一口气。“我在乎你，”{they}
 @event soc_partner_date
 # en: Date Night
 title [b6d8e3] = 约会之夜
-# en: {npc} has booked the window table at Mabel's. Candles. Snow outside. "We're splitting the bill," {they} say{s}. "Don't argue."
-text [cdc59b] = {npc}订了梅布尔茶馆靠窗的位子。蜡烛。窗外飘着雪。“这顿我们平摊，”{they}说，“别跟我争。”
+# en: {npc} has booked the window table at Mabel's. Candles. {season == "winter": Snow outside.|The lake going gold outside.} "We're splitting the bill," {they} say{s}. "Don't argue."
+text [ae9174] = {npc}订了梅布尔茶馆靠窗的位子。蜡烛。{season == "winter": 窗外飘着雪。|窗外的湖正染成金色。}“这顿我们平摊，”{they}说，“别跟我争。”
 # en: Two people at a tiny candlelit table in a window alcove of a village tea shop, snow falling outside.
 scene [7b9157] = 小镇茶馆窗边凹室里一张小小的烛光桌，两个人对坐，窗外飘着雪。
 # en: Talk about the future
 opt.left.label [4d8f04] = 聊聊未来
-# en: You talk about where you'll be in ten years. In every version, you're both there.
-opt.left.say.1 [c75a7f] = 你们聊起十年后会在哪里。每一个版本里，你们俩都在。
+# en: {&You talk about where you'll be in ten years. In every version, you're both there.|You talk about after graduation, carefully, then not carefully at all.|You make a list of places you'll go together. It is already too long.}
+opt.left.say.1 [c9de6d] = {&你们聊起十年后会在哪里。每一个版本里，你们俩都在。|你们聊起毕业以后的事，起初小心翼翼，后来一点也不小心了。|你们列了一张以后要一起去的地方的清单。已经太长了。}
 # en: Talk about absolutely nothing
 opt.right.label [75d2d9] = 聊些完全没用的事
-# en: You argue for an hour about whether soup is a drink, and {npc} pays the bill while you're making your closing argument. It is the best date of your life.
-opt.right.say.1 [011d63] = 你们争论了一个小时汤到底算不算饮料，你还在做总结陈词时，{npc}已经把账结了。这是你这辈子最棒的一次约会。
+# en: You argue for an hour about {&whether soup is a drink|whether owls are smart or just look it|which professor would win in a duel}, and {npc} pays the bill while you're making your closing argument. {&It is the best date of your life.|It might be better than the last one.|You lose the argument and don't mind.}
+opt.right.say.1 [cc5078] = 你们争论了一个小时{&汤到底算不算饮料|猫头鹰是真聪明还是只是看起来聪明|哪位教授决斗会赢}，你还在做总结陈词时，{npc}已经把账结了。{&这是你这辈子最棒的一次约会。|也许比上一次还要好。|你辩输了，却一点也不在意。}
 
 @event soc_partner_neglect
 # en: "You're Always Busy"
@@ -371,8 +371,8 @@ opt.right.say.1 [855b96] = 你的沉默就是答案。{npc}把信扔在你脚边
 @event soc_ex_encounter
 # en: Awkward
 title [8ea9c0] = 尴尬
-# en: You turn into the library aisle and there's {npc}. Your ex. Holding the same book you came for. Neither of you moves.
-text [320159] = 你拐进图书馆的一条过道，{npc}就在那儿。你的前任。手里拿着你正要找的那本书。你们谁也没动。
+# en: {~You turn into the library aisle and there's {npc}. Your ex. Holding the same book you came for.|The only free seat in the refectory is opposite {npc}. Your ex. {They} look{s} up at the same moment you do.|You open the door to the owlery and there's {npc}. Your ex. Holding a letter, halfway to an owl.} Neither of you moves.
+text [d14bf3] = {~你拐进图书馆的一条过道，{npc}就在那儿。你的前任。手里拿着你正要找的那本书。|食堂里唯一的空位在{npc}对面。你的前任。{they}和你同时抬起了头。|你推开猫头鹰塔的门，{npc}就在那儿。你的前任。手里拿着一封信，正要交给猫头鹰。}你们谁也没动。
 # en: Two people coming face to face in a narrow library aisle, both holding books, neither moving.
 scene [0292af] = 两个人在图书馆狭窄的过道里迎面相遇，手里都拿着书，谁也没动。
 # en: Turn around and leave
@@ -381,26 +381,26 @@ opt.left.label [a746c5] = 转身离开
 opt.left.say.1 [a75b45] = 你在另一条过道找了另一本书，把同一段读了六遍。
 # en: Say hello like a person
 opt.right.label [06a265] = 像个正常人一样打招呼
-# en: It's awkward for one minute, then it isn't. You end up laughing about the time the dummy caught fire. Friends, maybe. Really.
-opt.right.say.1 [9dcf0b] = 尴尬了一分钟，然后就不尴尬了。你们最后笑着聊起那次假人着火的事。也许能做朋友。真的。
+# en: It's awkward for one minute, then it isn't. You end up laughing about the worst of the dates you went on. Friends, maybe. Really.
+opt.right.say.1 [38140b] = 尴尬了一分钟，然后就不尴尬了。你们最后笑着聊起约会时最糟的那一次。也许能做朋友。真的。
 # en: "Hello." "Hello." You both stand there. Then you both leave. It's a start.
 opt.right.say.2 [f4910b] = “你好。”“你好。”你们俩站在那儿。然后各自离开。算是个开始。
 
 @event soc_rival_taunt
 # en: A Public Taunt
 title [0b1cd5] = 当众嘲讽
-# en: In the middle of dinner, {npc} loudly recounts your most embarrassing moment of the term. People laugh. {They} look{s} very pleased.
-text [2c1a0a] = 晚饭吃到一半，{npc}大声讲起你这学期最丢人的一幕。大家都笑了。{they}看起来非常得意。
+# en: In the middle of a crowded {~meal|common room|library queue}, {npc} loudly recounts {~your most embarrassing moment of the term|the time you walked into a door that was a painting|your worst spell in front of the whole class}. People laugh. {They} look{s} very pleased.
+text [86e910] = 在挤满人的{~饭桌上|公共休息室里|图书馆排队时}，{npc}大声讲起{~你这学期最丢人的一幕|你一头撞上一扇其实是画的门那次|你当着全班的面施出的最烂的咒语}。大家都笑了。{they}看起来非常得意。
 # en: A smirking student surrounded by a small audience, pointing at someone across a crowded dining hall.
 scene [fc4e76] = 一个得意洋洋的学生被一小群观众围着，隔着拥挤的餐厅指向某人。
 # en: Ignore {them}
 opt.left.label [c17487] = 不理{them}
-# en: The laughter dies down. You eat your soup with as much dignity as soup allows.
-opt.left.say.1 [4234da] = 笑声渐渐平息。你以喝汤所能允许的最大尊严喝完了汤。
+# en: The laughter dies down. {~You carry on with as much dignity as you can find.|You wait it out, and stare at a fixed point on the wall.|Someone nearby passes you a biscuit in silent solidarity.}
+opt.left.say.1 [b738e5] = 笑声渐渐平息。{~你尽可能体面地继续做自己的事。|你熬过去，眼睛一直盯着墙上的某一点。|旁边有人默默递给你一块饼干，以示声援。}
 # en: Fire back
 opt.right.label [edc214] = 反唇相讥
-# en: Your comeback is so good that someone at the far table applauds. {npc} goes scarlet.
-opt.right.say.1 [e2e5b5] = 你的回击太漂亮了，远处那桌有人鼓起掌来。{npc}满脸通红。
+# en: {~Your comeback is so good that someone at the far table applauds.|Your comeback lands so well that people repeat it for a week.|Your comeback is quiet, exact and devastating.} {npc} goes scarlet.
+opt.right.say.1 [6c86a5] = {~你的回击太漂亮了，远处那桌有人鼓起掌来。|你的回击一语中的，大家足足学了一个星期。|你的回击轻声、精准、致命。}{npc}满脸通红。
 # en: Your comeback comes out as a squeak. The laughter doubles.
 opt.right.say.2 [992f30] = 你的回击变成了一声尖叫。笑声翻了一倍。
 
@@ -423,8 +423,8 @@ opt.right.say.1 [e1ff36] = 你们握了手。说来奇怪——你对{them}的�
 @event soc_rival_bet
 # en: The Wager
 title [5a804e] = 赌约
-# en: "Eight crowns says I outscore you in the next Arcana practical," {npc} says, slapping coins on the table. A crowd forms.
-text [2cae36] = “八克朗，赌下次奥术实践课我分数比你高。”{npc}把硬币拍在桌上。一群人围了过来。
+# en: "Eight crowns says I {~outscore you in the next practical|light more candles in one breath than you|hold a ward longer than you}," {npc} says, slapping coins on the table. A crowd forms.
+text [ff384f] = “八克朗，赌我{~下次实践课分数比你高|一口气点的蜡烛比你多|护界撑得比你久}。”{npc}把硬币拍在桌上。一群人围了过来。
 # en: Two students slapping coins onto a table between them, a crowd gathering, a chalked tally on the wall.
 scene [8dd838] = 两个学生把硬币拍在中间的桌上，人群聚拢，墙上用粉笔记着比分。
 # en: Decline the bet

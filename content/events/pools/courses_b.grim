@@ -117,7 +117,7 @@ weight: 10
 art: mask
 tags: class magic
 scene: A lecture hall where the professor's chair is empty and everyone is looking suspiciously at everyone else, including a pigeon on the sill.
-text: {Professor Vey is never at the lectern in Illusion II. She is somewhere in the room, wearing someone else, and the first to name her wins.|Vey's chair is empty. Everyone eyes the porter with the mop.|The lectern is empty. You trust nothing in this room.} {~There's a pigeon on the sill.|A student nobody remembers has taken the back row.|One of the portraits seems unusually attentive.}
+text: {Professor Vey is rarely at the lectern in Illusion II. She is somewhere in the room, wearing someone else, and the first to name her wins.|Vey's chair is empty. Everyone eyes the porter with the mop.|The lectern is empty. You trust nothing in this room.} {~There's a pigeon on the sill.|A student nobody remembers has taken the back row.|One of the portraits seems unusually attentive.}
 > left: Watch everyone, all lesson
   study illusion +small
   mood -small
@@ -150,7 +150,7 @@ text: {Advanced Illusion leaves the classroom. Hold an illusion over the busy co
   say: {~By the end your head rings like a struck bell. Nobody looked up once, which is how you know it worked.|A first-year holds out a hand to catch something you made. You keep it falling for her until the bell.|You hold it, then sit on the fountain's edge for longer than you'd like anyone to see.}
 > right: Keep it small and steady
   study illusion +small
-  say: {~One swallow, perfect, for an hour. Vey says ambition is cheap and an hour is not.|You shrink it to a patch of weather over one bench. It never frays, and nobody notices, which is the point and the pity.}
+  say: {~You keep only a corner of it, perfect, for an hour. Vey says ambition is cheap and an hour is not.|You shrink it to a patch of weather over one bench. It never frays, and nobody notices, which is the point and the pity.}
 
 @event illu_original_work
 title: An Illusion of Your Own
@@ -205,7 +205,7 @@ text: {Beastcraft I begins in the stables, with a pitchfork. Professor Brask say
       say: {~You bow low and hold it. The hippogriff considers, then bows back. Brask writes your name on the board, without comment.|The hippogriff lets you near enough to see where its feathers turn to fur. You'll remember the exact line.}
     lose:
       health -small
-      say: {~You bow too fast. The hippogriff takes it as a challenge and accepts.|The hippogriff looks at your bow, then at your hat, and eats the hat.}
+      say: {~You bow too fast. The hippogriff takes it as a challenge and accepts.|The hippogriff looks at your bow, then at your hat, and shoves you into the barrow to get at it. It eats the hat.}
 
 @event beast_hover_line
 title: The Hover Line
@@ -250,7 +250,7 @@ text: {Feeding round, in pairs. You and {partner} have two buckets and a list, a
       say: {~The chick eats from the bucket, then from your hand, then tries your sleeve. {partner} applauds quietly.|It sulks, then eats, then sulks about having eaten. Brask says that's progress for a griffon.}
     lose:
       health -small
-      say: {~The chick bites the bucket, then the hand holding it. {partner} finishes the round alone, kindly.|It knocks the bucket over and sits in it, glaring. You spend the hour fishing out its breakfast.}
+      say: {~The chick bites the bucket, then the hand holding it. {partner} finishes the round alone, kindly.|It knocks the bucket over, and you with it, and sits in it, glaring. You spend the hour, bruised and soaked, fishing out its breakfast.}
 > right: Take the owls instead
   study beastcraft +small
   rel partner +tiny
@@ -386,14 +386,14 @@ weight: 10
 art: shield
 tags: class magic
 scene: Students behind faint, pale bubbles of light as a professor flicks pieces of chalk at them from the front of a dim room.
-text: {Ward drill. Each student raises a pale shell, and the professor walks the room flicking chalk at them. Her aim is excellent.|The professor has a new box of chalk.|The ward drill. Most days your shell is up before the chalk leaves her hand.} {~The front row has chalk in their hair.|Someone's ward is shaped like an apology.|{gpa >= 3: She aims at you first, out of respect.|She aims at you first, out of curiosity.}}
-> left: Hold the ward up
+text: {Ward drill, in pairs. One of you raises a pale shell over the other, and the professor lets the lamp-shadows loose along the floor to find the gap.|Pairs again. The professor's shadows have learned new tricks since last time.|The paired drill. You know how the shadows like to come: low, and from behind.} {~Your partner's shell keeps flickering.|Your partner is a first-year who has never held a ward for more than a minute.|{gpa >= 3: The professor pairs you with the weakest student, on purpose.|The professor pairs you with someone as nervous as you are.}}
+> left: Hold the shell over both of you
   study umbral +small
   mana -small
-  say: {~Eleven pieces of chalk, eleven small pings. Your shell holds and you feel each one in your teeth.|The chalk turns aside and lands neatly in a row. The professor nods at the row more than at you.|Your ward is pale, thin and still there at the bell. She says that's the whole of it, really.}
-> right: Duck instead
+  say: {~You stretch your shell over your partner as well. The shadows nose along its edge for an hour and find nothing. You feel every touch in your teeth.|Two people under one ward is twice the weight. Yours holds until the bell, just.|The shadows give up on your shell and go after the next pair. The professor nods at you, once.}
+> right: Coach your partner through theirs
   guile +small
-  say: {~You duck the first nine. The tenth bounces off your forehead. "Avoidance is a ward," she says, "of a sort."|You let the shell drop and simply aren't where the chalk goes. She writes something down. It might be a mark, or a warning.}
+  say: {~You talk your partner through it, breath by breath. Their shell holds for nine minutes, then a shadow slips under it and makes you both jump. "Teaching," says the professor, "is also a ward."|You keep your own shell down and watch for the gaps in theirs. By the end, they've stopped flickering. You've learned where shadows like to get in.}
 
 @event umbral_quiet_minutes
 title: The Quiet Minutes
@@ -512,7 +512,7 @@ text: {Original work. Send your own shadow on an errand across the room, the pro
     lose:
       mood -small
       health -tiny
-      say: {~It comes back an hour late and a little the wrong shape. For a day it lags behind you on stairs, sulking.|It doesn't come back until dusk. When it does, it smells of the lake. The professor makes you sit with the lamp.}
+      say: {~It comes back an hour late and a little the wrong shape. For a day it lags behind you on stairs, sulking, and you can't get warm.|It doesn't come back until dusk. When it does, it smells of the lake. The professor makes you sit with the lamp until your hands stop shaking with cold.}
 > right: Keep it on a short leash
   study umbral +small
   mana -small

@@ -24,6 +24,9 @@
   // `npc` is always resolved to the bound actor's id.
   const SYMBOLIC = new Set(['has', 'flag', 'left', 'rel', 'love', 'spark', 'bond', 'met', 'seen', 'since', 'chosen', 'bonds', 'npc_is', 'romanceable', 'tagged', 'passed', 'clue', 'spell_level', 'knows', 'npc_rel',
     'enrolled', 'member', 'rank', 'performance', 'level', 'progress', 'due', 'visits', 'present', 'act', 'clock', 'discovered', 'applied', 'cast_as', 'plan', 'visits_to', 'clues',
+    // `around(x)`: x is on campus and reachable in person (not away for the break, not gone); `apart(x)`: months since
+    // the last card with x (999 if never). Review fixes, batch 24–40.
+    'around', 'apart',
     // `offered(courses)`: how many options an `offers:` menu of that kind would generate now (playtest 2, I10)
     'offered']);
   // Built-in identifiers the engine answers (env.ident); content can read but never assign them.
@@ -35,7 +38,7 @@
     met: ['npc'], seen: ['event'], since: ['event'], chosen: ['event', null], npc_is: ['npc'], bonds: [null], romanceable: ['npc'], tagged: ['npc', null],
     passed: ['track', null], clue: ['clue'], spark: ['npc'], spell_level: ['spell'], knows: ['fact'], npc_rel: ['npc', 'npc'],
     enrolled: ['track'], member: ['track'], rank: ['track'], performance: ['track'], level: ['track'], progress: ['track'], due: ['track'], visits: ['track'], applied: ['track'],
-    present: ['place'], act: ['arc'], clock: ['arc'], discovered: ['place'], cast_as: [null, 'npc'], plan: [null], visits_to: ['place'], clues: ['arc'], offered: [null],
+    present: ['place'], act: ['arc'], clock: ['arc'], discovered: ['place'], cast_as: [null, 'npc'], plan: [null], visits_to: ['place'], clues: ['arc'], offered: [null], around: ['npc'], apart: ['npc'],
   };
 
   function tokenize(s, file, line) {

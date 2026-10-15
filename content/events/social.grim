@@ -17,21 +17,22 @@ cast:
   npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 0
 per: npc
 trigger: social
+when: term and not wrapup
 repeat: 4
 art: book
 tags: social study
 scene: Two students at a candlelit table piled with books, one explaining something with wild hand gestures.
-text: {npc} drops into the seat across from you with an armful of books. "Exams are coming for us all. Misery loves company. Study with me?"
+text: {~{npc} drops into the seat across from you with an armful of books. "Exams are coming for us all. Misery loves company. Study with me?"|{npc} slides a stack of notes onto your table. "I've read this chapter four times and it's still in a foreign language. Help?"|{npc} finds you in the library and sits down without asking. "If I study alone I'll just reorganise my quills. Keep me honest?"}
 > left: You work better alone
   lore +tiny
   rel npc -tiny
-  say: You get a lot done. {npc} sits at the next table and sighs loudly every few minutes.
+  say: You get a lot done. {~{npc} sits at the next table and sighs loudly every few minutes.|{npc} finds someone else, and their laughter carries across the library all evening.|{npc} leaves you a biscuit on the way out, which somehow makes it worse.}
 > right: Pull up a chair
   mood -tiny
   lore +small
   study +tiny
   rel npc +small
-  say: You get half as much done and remember twice as much of it. {npc} explains the Third Law with a biscuit diagram.
+  say: You get half as much done and remember twice as much of it. {~{npc} explains the Third Law with a biscuit diagram.|You quiz each other until the candle gutters.|{npc} makes up a rude rhyme for every date, and you will never forget a single one.}
 
 @event soc_borrow_money
 title: A Small Loan
@@ -46,12 +47,13 @@ repeat: 6
 art: pouch
 tags: social money
 scene: A student holding out an empty purse upside down with a sheepish grin.
-text: {npc} turns out an empty purse. "I'm fifteen crowns short for rent. I'll pay you back. I swear on my wand."
+text: {npc} turns out an empty purse. "I'm fifteen crowns short {~for rent|for the term's ink and parchment|for the wand-mender, and it's my only wand}. I'll pay you back. I swear on my wand."
 > left: Sorry, you're tight too
   rel npc -small
   say: "No, of course, I understand." {They} {are} quiet at dinner.
 > right: Lend fifteen crowns
   gold -medium
+  alignment +tiny
   rel npc +medium
   chance 70:
     queue soc_loan_repaid in 2 with npc
@@ -105,7 +107,7 @@ text: {npc} saves you a seat without asking now, and you save {them} one. You tr
 
 @event soc_become_close
 ramp: rel(npc) 36..50
-time: night
+slot: night
 title: The Kind of Friend You Call at 3am
 class: milestone
 tone: light
@@ -139,7 +141,7 @@ repeat: 8
 art: lock
 tags: social
 scene: Two students huddled under a staircase, one whispering into the other's ear, a finger to their lips.
-text: {npc} pulls you under the stairs. "I need to tell someone or I'll burst. Swear you won't tell anyone. Not even the portraits."
+text: {~{npc} pulls you under the stairs. "I need to tell someone or I'll burst. Swear you won't tell anyone. Not even the portraits."|{npc} closes the dormitory door, checks it, and checks it again. "I have to tell someone. Swear you'll keep it."|{npc} walks you to the far end of the lake path, where nobody goes. "Can you keep something? Really keep it?"}
 > left: "I'd rather not carry it."
   rel npc -tiny
   say: {npc} looks hurt, then relieved. "Maybe that's better." You'll never know.
@@ -147,7 +149,7 @@ text: {npc} pulls you under the stairs. "I need to tell someone or I'll burst. S
   mood -tiny
   rel npc +medium
   guile +tiny
-  say: It's not a big secret. It's the kind that's only big to the person holding it. You hold it with {them}.
+  say: {~It's not a big secret. It's the kind that's only big to the person holding it. You hold it with {them}.|It's about a letter from home, and it's heavier than {they} let on. You carry half of it now.|It's ridiculous, and {they} know it's ridiculous, and {they} needed someone else to know anyway. You do.}
 
 @event soc_argument
 title: Words Exchanged
@@ -162,11 +164,11 @@ weight: 8
 art: bolt
 tags: social
 scene: Two students facing off in an empty corridor, one with arms crossed, the other mid-gesture, both flushed.
-text: It starts with something small — a borrowed book, a joke that landed wrong — and suddenly you and {npc} are arguing in the corridor, louder than either of you intended.
+text: It starts with something small — {~a borrowed book, a joke that landed wrong|whose turn it was to fetch the tea|a seat someone saved and someone else took} — and suddenly you and {npc} are arguing {~in the corridor|on the stairs|in the middle of the refectory}, louder than either of you intended.
 > left: Apologise first
   rel npc +small
   mood -tiny
-  say: "I'm sorry." {npc} deflates. "...Me too." It's over. It feels better than winning would have.
+  say: {~"I'm sorry." {npc} deflates. "...Me too." It's over. It feels better than winning would have.|You say sorry first. {npc} looks almost disappointed not to get to say it. You share a bun about it later.|"I'm sorry." {npc} blinks, then laughs. "We were both being absurd." You were.}
 > right: Stand your ground
   mood -tiny
   chance 50:
@@ -193,12 +195,12 @@ scene: A cobbled village street with crooked shopfronts, two students sharing a 
 text: "Barge to the village? Tea at Mabel's, a wander round the bookshops, back before curfew?" {npc} is already wearing {their} coat.
 > left: Not this week
   rel npc -tiny
-  say: {They} bring{s} you back a cinnamon bun anyway.
+  say: {~{They} bring{s} you back a cinnamon bun anyway.|{They} bring{s} you back a postcard of the village, which is three streets long.|{They} come{s} back with a story about a goat and tell{s} it badly.}
 > right: Grab your coat
   gold -tiny
   mood +medium
   rel npc +small
-  say: Tea, buns, a bookshop cat that sits on {npc}'s feet. You almost miss the last barge, laughing.
+  say: {~Tea, buns, a bookshop cat that sits on {npc}'s feet. You almost miss the last barge, laughing.|Mabel's, then the market, then a long argument about which bun is best. You get the last barge home with sticky fingers.|Rain, so you spend the whole afternoon in the bookshop. {npc} buys a book about knots and explains every one on the barge home.}
 
 @event soc_friend_sick
 title: Sick Friend
@@ -218,11 +220,12 @@ text: {npc} has Lake Fever and is miserable in the infirmary. Sister Amaranth sa
   say: You send a card with a drawing of Sister Amaranth as a dragon. {npc} keeps it on {their} bedside table.
 > right: Sit with them every evening
   rel npc +medium
+  alignment +tiny
   chance 35:
     gain sick
     say: You keep {them} company for a week. Then you're in the next bed. You both find this hilarious.
   else:
-    say: You read aloud, badly, doing voices. {npc} recovers and claims it was the voices.
+    say: {~You read aloud, badly, doing voices. {npc} recovers and claims it was the voices.|You teach {them} every card game you know and lose all of them. {npc} recovers, insufferably.|You bring soup from the kitchens every evening and tell {them} all the gossip. {npc} recovers mostly out of curiosity.}
 
 @event soc_gift_given
 title: A Small Gift
@@ -240,19 +243,19 @@ text: There's a small parcel on your pillow. A note in {npc}'s handwriting: "Saw
 > left: Thank {them} later
   mood +tiny
   rel npc +tiny
-  say: It's a tiny brass compass that always points to the nearest teapot. You use it constantly.
+  say: {~It's a tiny brass compass that always points to the nearest teapot. You use it constantly.|It's a bookmark that hums when you stop reading. Annoying. You love it.|It's a pair of gloves that stay warm all winter. You wear them until they're threadbare.}
 > right: Get {them} something back (8 gold)
   gold -small
   mood +small
   rel npc +medium
-  say: You find {them} a book {they}'d wanted for months. {npc}'s face when {they} open{s} it is worth twice the price.
+  say: You find {them} {~a book {they}'d wanted for months|a scarf in exactly {their} colour|a sketchbook with good paper}. {npc}'s face when {they} open{s} it is worth twice the price.
 
 @event soc_drift
 title: Drifting Apart
 class: routine
 tone: light
 cast:
-  npc: any where tagged(npc, peer) and rel(npc) >= 6 and rel(npc) < 24
+  npc: any where tagged(npc, peer) and rel(npc) >= 6 and rel(npc) < 24 and apart(npc) >= 2
 per: npc
 trigger: social
 when: since(soc_drift) > 3
@@ -261,7 +264,7 @@ repeat: 6
 art: hourglass
 tags: social
 scene: A student glancing back across a busy courtyard at another who hasn't seen them, the space between them full of strangers.
-text: You realise you haven't really talked to {npc} in weeks. You see {them} across the courtyard, laughing with people you don't know.
+text: You realise you haven't really talked to {npc} in weeks. You see {them} {~across the courtyard|at the far end of the refectory|on the library steps}, laughing with people you don't know.
 > left: Let it be
   rel npc -small
   say: People drift. It's nobody's fault. You still smile when you pass in the halls.
@@ -269,7 +272,7 @@ text: You realise you haven't really talked to {npc} in weeks. You see {them} ac
   chance 70:
     rel npc +medium
     mood +tiny
-    say: "There you are!" {npc} says, as if you'd been the one missing. Maybe you had.
+    say: {~"There you are!" {npc} says, as if you'd been the one missing. Maybe you had.|{npc} introduces you to everyone as "the one I told you about". You wonder what {they} told them. It seems to have been good.|{npc} shifts over to make room on the bench without a word, as if your seat had been waiting.}
   else:
     rel npc +tiny
     mood -tiny
@@ -287,11 +290,12 @@ repeat: 8
 art: paper
 tags: social
 scene: A cluster of students whispering behind their hands in a corridor, glancing toward someone just out of view.
-text: A nasty rumour about {npc} is going round the common room. It's not true. You know it's not true. People are laughing.
+text: A nasty rumour about {npc} is going round {~the common room|the refectory|the library steps}: {~that {they} cheated on an exam|that {they} {are} leaving at the end of term in disgrace|that {they} said something cruel about a friend}. It's not true. You know it's not true. People are laughing.
 > left: Let it blow over
-  rel npc -tiny
-  say: It blows over. {npc} never finds out you heard it. Probably.
+  mood -tiny
+  say: It blows over. {npc} never finds out you heard it. You find out you don't like yourself for it, a little.
 > right: Shut it down
+  alignment +tiny
   challenge negotiate trivial:
     win:
       rel npc +medium
@@ -310,11 +314,12 @@ cast:
   npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 0
 per: npc
 trigger: social
+when: term and not wrapup
 repeat: 5
 art: feather
 tags: social study
 scene: A student with ink on their face clutching a half-finished essay, another student leaning over to read it.
-text: {npc} waves a half-finished essay at you. "It's due in an hour and I've written the title twice. Help."
+text: {npc} waves a half-finished {~essay|lab report|star chart} at you. "It's due in an hour and I've written the title twice. Help."
 > left: Explain the concept
   challenge research easy:
     win:
@@ -330,7 +335,7 @@ text: {npc} waves a half-finished essay at you. "It's due in an hour and I've wr
   chance 30:
     study -small
     rel npc -tiny
-    say: The professor notices two identical essays. You both get detention, and a lecture.
+    say: The professor notices two identical pieces of work. You both get detention, a lecture, and a note on your record that every one of your professors reads.
     gain detention
   else:
     say: {npc} hands it in and gets a better mark than you did. Unbelievable.
@@ -343,6 +348,7 @@ cast:
   npc: any where tagged(npc, teacher) and rel(npc) >= 6
 per: npc
 trigger: social
+when: term and not wrapup
 repeat: 6
 art: scroll
 tags: study
@@ -356,7 +362,7 @@ text: {npc} catches you after a lecture. "You've been working hard. Or hardly wo
   rel npc +small
   study +small
   lore +tiny
-  say: It's good advice. Annoyingly good. Your next essay is better for it.
+  say: It's good advice about how to study, {~annoyingly good|delivered at great length|illustrated with a story from {their} own disastrous first year}. Every piece of work you hand in that month is better for it.
 
 # ---------------- Romance ----------------
 
@@ -374,7 +380,7 @@ repeat: 6
 art: sparkle
 tags: social romance
 scene: Two hands brushing as they reach for the same quill, both students freezing for a heartbeat.
-text: You reach for the same quill as {npc}. Your hands touch. Neither of you lets go immediately. It's a perfectly ordinary quill.
+text: You and {npc} reach for {&the same quill|the last biscuit on the plate|the same library book} at the same moment. Your hands touch. Neither of you lets go immediately. {&It's a perfectly ordinary quill.|It's a perfectly ordinary biscuit.|It's a perfectly ordinary book.}
 > left: Laugh it off
   rel npc +tiny
   say: "All yours," you say. {npc} laughs. The moment passes. Mostly.
@@ -382,11 +388,11 @@ text: You reach for the same quill as {npc}. Your hands touch. Neither of you le
   chance 70:
     spark npc +medium
     rel npc +tiny
-    say: {npc} looks up. Something in {their} face shifts. Then {they} let{s} go, a little pink, and the quill rolls under the desk.
+    say: {npc} looks up. Something in {their} face shifts. Then {they} let{s} go, a little pink, and {&the quill rolls under the desk|the biscuit breaks neatly in half|the book falls open on the floor between you}.
   else:
     rel npc +tiny
     mood -tiny
-    say: {npc} pulls back as if burned, and the rest of the lesson is very, very awkward.
+    say: {npc} pulls back as if burned, and the rest of the {&lesson|meal|afternoon} is very, very awkward.
 
 @event soc_date
 title: An Invitation
@@ -401,19 +407,19 @@ repeat: 4
 art: heart
 tags: social romance
 scene: A student nervously holding out a hand-drawn ticket to the village's floating lantern show.
-text: You could ask {npc} to the lantern show in the village this weekend. As friends. Or, you know. Not as friends.
+text: You could ask {npc} to {&the lantern show in the village|the travelling players at the Newt|the music on the quay} this weekend. As friends. Or, you know. Not as friends.
 > left: Ask as friends
   gold -tiny
   rel npc +small
   mood +small
-  say: It's a lovely evening. You're both very careful about elbows.
+  say: You pay for both tickets and the hot cider. It's a lovely evening. You're both very careful about elbows.
 > right: Ask as more than friends
   if spark(npc) >= 25:
     challenge negotiate trivial:
       win:
         spark npc +medium
         mood +medium
-        say: {npc} says yes before you finish the sentence. You hold hands through the whole show and miss every lantern.
+        say: {npc} says yes before you finish the sentence. You hold hands through the whole {&show and miss every lantern|play and miss every line|evening and miss every song}.
       lose:
         spark npc -tiny
         mood -small
@@ -423,7 +429,7 @@ text: You could ask {npc} to the lantern show in the village this weekend. As fr
       win:
         spark npc +medium
         mood +medium
-        say: {npc} says yes before you finish the sentence. You hold hands through the whole show and miss every lantern.
+        say: {npc} says yes before you finish the sentence. You hold hands through the whole {&show and miss every lantern|play and miss every line|evening and miss every song}.
       lose:
         spark npc -tiny
         mood -small
@@ -471,26 +477,25 @@ weight: 14
 art: candle
 tags: romance
 scene: Two people at a tiny candlelit table in a window alcove of a village tea shop, snow falling outside.
-text: {npc} has booked the window table at Mabel's. Candles. Snow outside. "We're splitting the bill," {they} say{s}. "Don't argue."
+text: {npc} has booked the window table at Mabel's. Candles. {season == "winter": Snow outside.|The lake going gold outside.} "We're splitting the bill," {they} say{s}. "Don't argue."
 > left: Talk about the future
   gold -tiny
   spark npc +small
   mood +small
-  say: You talk about where you'll be in ten years. In every version, you're both there.
+  say: {&You talk about where you'll be in ten years. In every version, you're both there.|You talk about after graduation, carefully, then not carefully at all.|You make a list of places you'll go together. It is already too long.}
 > right: Talk about absolutely nothing
   spark npc +tiny
   mood +medium
-  say: You argue for an hour about whether soup is a drink, and {npc} pays the bill while you're making your closing argument. It is the best date of your life.
+  say: You argue for an hour about {&whether soup is a drink|whether owls are smart or just look it|which professor would win in a duel}, and {npc} pays the bill while you're making your closing argument. {&It is the best date of your life.|It might be better than the last one.|You lose the argument and don't mind.}
 
 @event soc_partner_neglect
 title: "You're Always Busy"
 class: routine
 tone: warm
 cast:
-  npc: any where bond(npc) == "partner"
+  npc: any where bond(npc) == "partner" and apart(npc) >= 3
 per: npc
 trigger: social
-when: since(soc_partner_date) >= 5
 weight: 14
 repeat: 5
 art: hourglass
@@ -580,7 +585,7 @@ repeat: 6
 art: mirror
 tags: romance
 scene: Two people coming face to face in a narrow library aisle, both holding books, neither moving.
-text: You turn into the library aisle and there's {npc}. Your ex. Holding the same book you came for. Neither of you moves.
+text: {~You turn into the library aisle and there's {npc}. Your ex. Holding the same book you came for.|The only free seat in the refectory is opposite {npc}. Your ex. {They} look{s} up at the same moment you do.|You open the door to the owlery and there's {npc}. Your ex. Holding a letter, halfway to an owl.} Neither of you moves.
 > left: Turn around and leave
   mood -tiny
   say: You find a different book in a different aisle and read the same paragraph six times.
@@ -589,7 +594,7 @@ text: You turn into the library aisle and there's {npc}. Your ex. Holding the sa
   challenge negotiate trivial:
     win:
       bond npc friend
-      say: It's awkward for one minute, then it isn't. You end up laughing about the time the dummy caught fire. Friends, maybe. Really.
+      say: It's awkward for one minute, then it isn't. You end up laughing about the worst of the dates you went on. Friends, maybe. Really.
     lose:
       mood -tiny
       say: "Hello." "Hello." You both stand there. Then you both leave. It's a start.
@@ -597,7 +602,6 @@ text: You turn into the library aisle and there's {npc}. Your ex. Holding the sa
 # ---------------- Rivalry ----------------
 
 @event soc_rival_taunt
-time: evening
 title: A Public Taunt
 class: routine
 tone: tense
@@ -609,16 +613,16 @@ repeat: 4
 art: mask
 tags: rival
 scene: A smirking student surrounded by a small audience, pointing at someone across a crowded dining hall.
-text: In the middle of dinner, {npc} loudly recounts your most embarrassing moment of the term. People laugh. {They} look{s} very pleased.
+text: In the middle of a crowded {~meal|common room|library queue}, {npc} loudly recounts {~your most embarrassing moment of the term|the time you walked into a door that was a painting|your worst spell in front of the whole class}. People laugh. {They} look{s} very pleased.
 > left: Ignore {them}
   mood -small
-  say: The laughter dies down. You eat your soup with as much dignity as soup allows.
+  say: The laughter dies down. {~You carry on with as much dignity as you can find.|You wait it out, and stare at a fixed point on the wall.|Someone nearby passes you a biscuit in silent solidarity.}
 > right: Fire back
   challenge negotiate trivial:
     win:
       renown +small
       rel npc -small
-      say: Your comeback is so good that someone at the far table applauds. {npc} goes scarlet.
+      say: {~Your comeback is so good that someone at the far table applauds.|Your comeback lands so well that people repeat it for a week.|Your comeback is quiet, exact and devastating.} {npc} goes scarlet.
     lose:
       renown -small
       rel npc -tiny
@@ -656,15 +660,17 @@ cast:
   npc: any where (tagged(npc, student) or tagged(npc, prefect)) and bond(npc) == "rival"
 per: npc
 trigger: social
+when: term and not wrapup
 repeat: 6
 art: dice
 tags: rival
 scene: Two students slapping coins onto a table between them, a crowd gathering, a chalked tally on the wall.
-text: "Eight crowns says I outscore you in the next Arcana practical," {npc} says, slapping coins on the table. A crowd forms.
+text: "Eight crowns says I {~outscore you in the next practical|light more candles in one breath than you|hold a ward longer than you}," {npc} says, slapping coins on the table. A crowd forms.
 > left: Decline the bet
   rel npc -tiny
   say: "Thought so." {npc} pockets the coins. You decide not to care. You care.
 > right: Take the bet
+  when: gold >= 8
   challenge spell easy:
     win:
       gold +small

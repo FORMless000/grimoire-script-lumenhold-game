@@ -9,7 +9,7 @@
 | Content | 989 events (lint's count), 69 states, 21 characters (12 core, 8 fixtures, Tamsin of Thornwick), 43 places, 25 tracks, 12 spells, 35 endings (5 game-overs + yearbook lines) |
 | Format | schema v1, frozen; 0 lint errors, **0 legacy constructs** left in content |
 | Reachability | `grim reach`: every event, option, ending, place and track can be reached; each key clue has ≥ 2 sources |
-| Translation | zh-CN 100% (8,776 strings), 0 stale |
+| Translation | zh-CN 100% (8,788 strings), 0 stale |
 | Checks | `npm run verify` passes: build, lint, format, docs, 100+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 48 months (the last two are the wrap-up), about 340 cards; random play graduates 80% of the time, social and careful styles 97–99% |
 
@@ -99,6 +99,7 @@ October 15, 2026: [the frequency and economy review](docs/reviews/event-economy-
   - Migration 0031 scopes `study` in course cards to their own course.
   - Card fixes: alignment on costly kindness and on theft or cheating; absent people's relationship changes, private renown and five- or six-year students removed; term, slot and month gates; continuity flags (Tobias away, Bram's sash, Mir's padlock, Maud's tea, Ilse gone, facts tied to the branch that tells them); wages and prices that match their text; variants for repeats.
   - The critic has a mechanical audit of its 659 unreviewed cards to read next.
+  - Second batch (reports 24–40): 80 more findings fixed. `around(n)` and `apart(n)` check presence and per-person contact; repeat cards no longer assume history the player never made; stakes are gated; the thesis defence reads progress.
 
 ## Known gaps and deviations from the design
 
@@ -109,6 +110,7 @@ October 15, 2026: [the frequency and economy review](docs/reviews/event-economy-
 - **Card text and crown amounts:** many cards name a crown amount ("fifteen crowns"). Lint checks them against the gold row (3 8 15 30 60); retuning gold means rewriting them (or a `{=…}` amount token).
 - **Relationship lines** in the yearbook: partners have a named line each; friends are still generic (three friends; Ilse's chain), not one line per bond (§10.5).
 - **Advisor relationship** (a §9.2 challenge modifier) has nothing to read: no track names an advisor character.
+- **The thesis (§7.6) is simplified:** `thesis_setup` picks an ambition only; there is no discipline choice (level III passed) and no named advisor (Thorne sets the topics, but his standing doesn't modify the thesis), and a player with no courses still qualifies. Progress does count: at the defence, 70+ adds a point to the score and under 30 takes one away (event critique, report 27). Reason: the discipline and advisor systems need menus, a track lead and modifier wiring that would land with the minigames' rework of checks; the bounded version keeps the thesis playable and its work meaningful until then.
 - **Friendship growth** (L-2: the `rel` row is 1 2 4 6 9): courting one character reaches 100 around month 24 for most (Kael, Tobias, Seraphine, Corvin; Nessa ~90); Lyra's median at month 24 is ~63 and Mir's ~43, because their early ladders are thin (content, for X). The minor characters' trust cards open at rel 20 (were 30).
 - **Skill growth** (L: `xp_cost 1 0.04` with the spell bonus): a balanced player ends near a mean of 59 (design 35–65); a focused skill reaches 64–76 by month 24 (design ~85). The two targets pull against each other with one cost curve, because a focused player trains the other skills too; a stronger mastery bonus helped the balanced player as much.
 - **Spells are scarce in content:** 17 swipe-up options (3 added in N12), and Mirror and Haste still have none, so mana stays high (the caster alarm). Spells need a content batch, not a price change; the minigames may rework them.

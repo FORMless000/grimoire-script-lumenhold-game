@@ -739,6 +739,8 @@
             case 'plan': return Object.keys(s.states).some((k) => eng.c.states[k] && eng.c.states[k].kind === 'plan' && k === 'plan_' + a[0]);
             case 'bond': return s.npcs[a[0]] ? s.npcs[a[0]].bond : 'none';
             case 'met': return !!(s.npcs[a[0]] && s.npcs[a[0]].met);
+            case 'around': return !!eng.c.npcs[a[0]] && !eng.isAway(a[0]);
+            case 'apart': { const n = s.npcs[a[0]]; return n && n.touched ? s.turn - n.touched : 999; }
             case 'npc_is': return actor === a[0];
             case 'romanceable': return !!(eng.c.npcs[a[0]] && eng.c.npcs[a[0]].romance);
             case 'tagged': { const d = eng.c.npcs[a[0]]; return !!d && ((d.tags || []).includes(a[1]) || d.role === a[1]); }   // a character's role counts as a tag (student, prefect, professor, staff, outsider)

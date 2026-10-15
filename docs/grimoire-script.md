@@ -267,6 +267,8 @@ Used in `when`, `weight`, `if`, `chance`, `check`, assignments and `{=…}`.
 | `known()` | how many NPCs you've met |
 | `seen(event)` | times that event has been shown |
 | `since(event)` | months since it was last shown (999 if never) |
+| `around(n)` | true if `n` can be met in person now: not away for the break (`schedule_break: away`) and not gone (`gone_when`). A card that names someone it doesn't cast checks it |
+| `apart(n)` | months since the last card with `n` (or the last change in your standing with them); 999 if never. Per person, unlike `since(event)` |
 | `chosen(event, key)` | true if the player picked that option the last time the event was shown |
 | `rand(a, b)` | random integer a…b |
 | `chance_of(skill_or_value, dc)` | the success % a `check` would have |

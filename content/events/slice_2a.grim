@@ -52,12 +52,11 @@ text: Lyra watches you fail to light a candle for the third time. "You're asking
     win:
       learn_spell flame
       rel lyra +medium
-      renown +small
       say: You hold your own long enough that she stops and actually explains. "Fine," she says. "You'll do."
     partial:
       learn_spell flame
       health -small
-      say: She wins, but she shows you the trick on the way out, as if it were nothing.
+      say: She wins, and you hit the floor hard enough to feel it tomorrow, but she shows you the trick on the way out, as if it were nothing.
     lose:
       health -small
       mood -small
@@ -81,14 +80,12 @@ text: Cold drifts down the corridor like a tide coming in, and the torches lean 
   challenge research hard:
     win:
       lore +medium
-      alignment +small
-      say: It's not weather. It's attention: something under the lake, looking. You write down everything before your hands warm up.
+      say: It isn't weather. It feels like being looked at, from somewhere far below. You write down everything before your hands warm up, and none of it makes sense yet.
     lose:
       health -medium
       say: You learn exactly one thing, which is how cold cold can be. Sister Amaranth wraps you in four blankets.
 > up[ward]: Raise a ward
   mood +small
-  alignment +tiny
   say: Your ward flares, pale and steady. The cold breaks against it and slides away, the way a wave gives up on a rock.
 
 @event slice_late_lamps
@@ -102,25 +99,25 @@ repeat: 6
 art: candle
 tags: study
 scene: The library at closing time, one desk still lit, a cat asleep on an open book.
-text: {&The library is emptying.|The library is emptying again.|The library empties around you, as usual.} Footnote, the library cat, is asleep on the book you need, and the last lamp is yours if you want it.
+text: {&The library is emptying.|Rain on the high windows, and the library is emptying early.|Exam fever has filled the library all day; now, finally, it is emptying.} {~Footnote, the library cat, is asleep on the book you need|The book you need is on the top shelf, and the ladder squeaks|Someone has left a half-finished essay on your table, and a biscuit}, and the last lamp is yours if you want it.
 > left: Keep the lamp
   grind lore
   say: {~You read until the words swim.|You read until Footnote leaves in protest.|You read until the night porter coughs pointedly.}
 > right: Go to bed
   health +small
-  say: You sleep like a stone. The book will still be there. So, probably, will Footnote.
+  say: {~You sleep like a stone. The book will still be there. So, probably, will Footnote.|You fall asleep before your head finds the pillow. You wake up knowing one thing you didn't, somehow.|You sleep well and dream of shelves. The lamp goes to someone who needed it more.}
 
 @event slice_quarrel
-title: A Quarrel in the Snow
+title: A Quarrel in the Courtyard
 class: routine
 tone: tense
 actor: kael
-when: met(kael) and met(lyra) and turn >= 6
+when: met(kael) and met(lyra) and turn >= 6 and around(lyra) and around(kael)
 weight: 16
 art: snow
 tags: social rival
 scene: Two students facing each other in a snowy courtyard, one breathing frost, the other with sparks at her fingertips.
-text: Kael and Lyra are facing each other in the courtyard, and the snow between them is half melted, half frozen. "Say it again," Lyra says. Kael doesn't. He just looks at you.
+text: Kael and Lyra are facing each other in the courtyard, and the {season == "winter": snow|grass} between them is half {season == "winter": melted|scorched}, half frozen. "Say it again," Lyra says. Kael doesn't. He just looks at you.
 > left: Step between them
   alignment +tiny
   npc_rel lyra kael +small
@@ -186,8 +183,9 @@ repeat: 8
 art: coin
 tags: money
 scene: A crowded village market stall heaped with jars of glowing spices and a stall-holder with an enormous moustache.
-text: The stall-holder in the village market wants thirty crowns for a jar of starpepper. Mabel swears by it for colds. The stall-holder swears by his prices.
+text: The stall-holder in the village market wants thirty crowns for {~a jar of starpepper|a twist of dragon-chilli|a pot of cliff-bee honey}. Mabel swears by it for colds. The stall-holder swears by his prices.
 > left: Haggle
+  when: gold >= 30
   challenge negotiate easy:
     win:
       gold -small
@@ -200,7 +198,7 @@ text: The stall-holder in the village market wants thirty crowns for a jar of st
     lose:
       gold -large
       mood -tiny
-      say: You pay full price and somehow agree to a second jar. He waves you off like a nephew.
+      say: You pay full price and somehow promise to come back for more. He waves you off like a nephew.
 > right: Leave it
   health -tiny
   say: You walk on. You catch a cold the next week, out of spite.
@@ -216,9 +214,13 @@ tags: social
 scene: A knot of students around a table where coins and a pocket watch are being stacked as bets.
 text: Half the common room is betting on whether you can climb the clock tower before the bell. Corvin is holding the purse, which is either reassuring or not.
 > left: Climb
-  risk renown
   vigor +tiny
-  say: {~You make it with a heartbeat to spare.|The bell rings as your hand touches the top.} Whatever happens next, they'll tell it differently.
+  chance 50:
+    renown +large
+    say: {~You make it with a heartbeat to spare.|The bell rings as your hand touches the top.} They carry you round the common room on a chair.
+  else:
+    renown -medium
+    say: The bell rings when you're two-thirds up, and the caretaker has to talk you down with a ladder. They'll tell it for years.
 > right: Decline politely
   renown -tiny
   say: The crowd groans. Corvin pockets the purse thoughtfully and you decide not to ask.
@@ -241,7 +243,7 @@ text: Kael asks for a practice duel, which for him is an astonishing number of w
       renown +small
       rel kael +medium
       spark kael +small
-      say: You win by a whisker, breathing steam. Kael bows, and his hands, for once, are warm when he shakes yours.
+      say: You win by a whisker, breathing steam. Kael bows, and his hands, for once, are warm when he shakes yours. Half the duelling club, it turns out, was watching from the doorway.
     partial:
       rel kael +small
       health -small
@@ -259,4 +261,4 @@ text: Kael asks for a practice duel, which for him is an astonishing number of w
   spark kael +small
   renown +small
   memory: fought kael
-  say: Your flame meets his frost in a column of steam that fills the ring. When it clears, Kael is smiling at you, properly, for the first time.
+  say: Your flame meets his frost in a column of steam that fills the ring and brings half the corridor running. When it clears, Kael is smiling at you, properly, for the first time.

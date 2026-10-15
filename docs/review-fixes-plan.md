@@ -61,3 +61,15 @@ All three decisions were taken as recommended, and the user added one rule: no c
 - **B.** Migration `0031-course-study` (course cards); non-study scenes were fixed by hand.
 - **C–K.** Every finding was fixed card by card. Continuity needed one more format addition: `@npc gone_when:`, used for Ilse, Grisk and Tobias. One new card, `maud_tea_tells`, carries Maud's kind option to the clue.
 - **Handoff.** The per-card list of fixes and a pattern scan of the 659 unreviewed cards (197 candidates) are in `../lifesim-reviews/event-critique/handoff/` and were sent to the critic's session. Reading those texts is the critic's job; nothing in the scan was changed without being read.
+
+## 5. Second batch: reports 24–40 (October 15, 2026)
+
+The critic reviewed 152 more cards against `3288097` and recorded 80 issues (53 *revise*, 27 *polish*). All were checked against the source and all were fixed. The recurring kinds were:
+- cards that name someone who may be away or gone;
+- per-person timing read from a global event timer;
+- repeat cards assuming history the player never made (show counts standing in for choices);
+- independent `{~…}` variants that contradict each other;
+- stakes inside checks that a broke player can't pay;
+- costs and rewards the prose doesn't show.
+
+Two of these got a tool: `around(n)` and `apart(n)` (frozen-format additions). The rest were fixed card by card: flags set by the earning choice, `{&…}` cycles that keep target and outcome together, gold gates on stakes, and prose for each effect. The thesis defence now reads progress. The discipline and advisor selections of §7.6 are recorded as a deviation in `PROGRESS.md`. The per-card list is in `../lifesim-reviews/event-critique/handoff/fixes-2026-10-15-b.md`.

@@ -48,11 +48,9 @@ text: Tidecalling half of the course: a puddle each, and the task of making it s
 > left: Practise until it stands
   grind arcana
   say: By the end of the hour your puddle stands like a sulky child. It counts.
-> right: Copy the student next to you
-  alignment -tiny
+> right: Watch the student next to you
   arcana +tiny
   guile +tiny
-  mood -tiny
   say: You learn their trick, and also that they hum while they cast. You hum too. It works, inexplicably.
 
 @event evo_misfire
@@ -67,6 +65,7 @@ scene: A lecture hall filling with steam after a spell meets a bucket of water a
 text: Someone's tidecalling meets someone else's flame in the middle of the room. The hall fills with scalding steam and twenty students who all have opinions.
 > left: Shield the front row
   health -small
+  alignment +tiny
   renown +small
   say: You take the worst of it on your sleeves. The front row looks at you the way people look at lifeboats.
 > right: Get out and open the windows
@@ -92,7 +91,7 @@ text: Evocation II takes the class to the lakeshore. The exercise: raise a wall 
     lose:
       health -small
       mood -small
-      say: The wall holds until it doesn't. Your classmate is very wet and very gracious about it.
+      say: The wall holds until it doesn't, and comes down on both of you. Your classmate is very wet and very gracious about it. You shiver until dinner.
 > right: Ask to go second
   arcana +small
   say: You watch three people do it first and learn from all of their mistakes.
@@ -114,8 +113,13 @@ text: Fire woven into a lattice, each strand holding the others up. The lecturer
   mood -small
   say: Your lattice is small and ugly and holds perfectly. The lecturer says "Founder-ish," which you choose to take as praise.
 > right: Build it big
-  risk arcana
-  say: {~It's magnificent for nine seconds.|It holds just long enough for everyone to see it.} Then the strands find each other and the whole thing sighs into sparks.
+  chance 50:
+    arcana +large
+    say: {~It's magnificent for nine seconds.|It holds just long enough for everyone to see it.} Then the strands find each other and the whole thing sighs into sparks, and you understand exactly why.
+  else:
+    mood -small
+    health -tiny
+    say: The strands find each other in the first second, and the whole thing goes up in your face. You spend the rest of the lesson picking sparks out of your hair.
 
 @event evo_storm_pairing
 title: Storm Pairing
@@ -149,6 +153,7 @@ text: Advanced Evocation pairs students for a storm: one calls the rain, the oth
 title: The Final Practical
 track: evocation
 level: 3
+when: month == 4 or month == 10
 class: story
 tone: tense
 art: flame
@@ -176,6 +181,7 @@ text: The last practical of Advanced Evocation: melt an ice dummy without touchi
 title: Footwork
 track: duelling
 rank: 1
+when: around(lyra)
 class: routine
 tone: light
 art: duel
@@ -200,6 +206,7 @@ text: Lyra runs practice like a general. "Footwork," she says. "If your feet are
 @event duel_footwork_feud
 title: The Footwork Feud
 track: duelling
+when: around(lyra) and around(bram)
 class: routine
 tone: tense
 art: duel
@@ -235,11 +242,11 @@ text: Thornwick Academy's duelling team has crossed the hills for a fixture. The
     partial:
       renown +small
       perform track +small
-      say: A draw. The Circle loses by one bout, but nobody blames you, and Lyra says "acceptable" twice.
+      say: A draw. The Circle loses by one bout, but nobody blames you, and {around(lyra): Lyra|the captain} says "acceptable" twice.
     lose:
       health -small
       mood -small
-      say: The Thornwick duellist is very good and very polite about it. You hate both.
+      say: The Thornwick duellist is very good and very polite about it, and every bruise you collect is a polite one. You hate both.
 > right: Offer to be the reserve
   perform track +tiny
   mood +tiny
@@ -268,6 +275,7 @@ text: After practice, the captain sits beside you. "When I graduate, someone has
 @event lib_shelving_rush
 title: The Shelving Rush
 track: library_assistant
+when: month == 4 or month == 10
 class: routine
 tone: light
 art: book
@@ -297,7 +305,6 @@ scene: An elderly mage at the library desk clutching a book that is sixty years 
 text: An old mage returns a book sixty years overdue and asks, with great dignity, what the fine is. The ledger says the fine is more than the library.
 > left: Waive it
   wage
-  rel thorne +tiny
   perform track -tiny
   mood +small
   say: The old mage thanks you and leaves a sweet on the desk. Later you find out he taught Professor Thorne.
@@ -305,8 +312,7 @@ text: An old mage returns a book sixty years overdue and asks, with great dignit
   wage
   gold +small
   perform track +small
-  rel thorne -tiny
-  say: The mage pays in coins so old the bank has to look them up. The head librarian is delighted.
+  say: The mage pays in coins so old the bank has to look them up. The head librarian is delighted, and gives you the collector's share of the fine, as is tradition.
 
 @event lib_footnote_strike
 title: Footnote Goes on Strike
@@ -340,7 +346,6 @@ tags: mystery
 scene: A courtyard fountain frozen mid-splash, the water hanging in the air like glass.
 text: The courtyard fountain has frozen in the middle of a splash. The water hangs in the air like glass. A first-year is trying to lick it.
 > left: Stop the first-year
-  rel kael +tiny
   health -tiny
   alignment +small
   say: You pull the first-year away just as the ice cracks. For a moment you'd swear you saw a black star reflected in it.
@@ -455,7 +460,7 @@ text: The cook catches you lingering by the kitchen door. "You look like someone
   say: "Ha," says the cook, which means no, which means you'll have to keep coming back.
 
 @event obs_comet_watch
-time: evening night
+slot: evening
 title: The Comet Watch
 place: observatory
 class: routine
@@ -486,13 +491,13 @@ text: An old star chart in the observatory archive has a circle drawn where a st
   lore +small
   say: You copy it carefully. That night you dream of a circle with nothing inside it, waiting.
 > right: Put it back
-  alignment +tiny
   mood +tiny
   say: You return it to the drawer. The drawer feels colder when you close it.
 
 @event green_mandrake_choir
 title: The Mandrake Choir
 place: greenhouses
+when: around(tobias)
 class: routine
 tone: light
 art: leaf
@@ -522,6 +527,7 @@ text: In a forgotten corner of the greenhouse, a moonflower seed has sprouted on
   mood +small
   say: You give it a pot, a label and a name. It glows a little brighter when you visit.
 > right: Tell Tobias
+  when: around(tobias)
   rel tobias +medium
   say: Tobias is speechless, then very loud. The seedling gets a sign, a fence and a rota.
 
@@ -562,7 +568,7 @@ text: Supper in the holidays is one table in the Great Hall: you, three other st
 > right: Play cards with the prefects
   gold +small
   guile +tiny
-  say: The prefects play cards like they enforce rules: badly and with great confidence. You win dessert.
+  say: The prefects play cards like they enforce rules: badly and with great confidence. You win dessert and most of their pocket money.
 
 @event home_family_supper
 title: Supper at Home
@@ -674,7 +680,6 @@ text: A cross-reference in the archive leads to another, and another, and anothe
   challenge research hard:
     win:
       lore +large
-      renown +small
       say: At the end is a letter from a founder about "the seventh lock". You copy it with shaking hands.
     lose:
       mood -small
@@ -682,14 +687,15 @@ text: A cross-reference in the archive leads to another, and another, and anothe
 > right: Report it to your supervisor
   wage
   lore +small
-  rel isolde +tiny
-  say: Your supervisor reads the card, goes pale and writes a letter to the headmistress of Lumenhold.
+  perform track +small
+  say: Your supervisor reads the card, goes pale, thanks you for your care, and writes a letter to the headmistress of Lumenhold.
 
 # ---------------- Thesis (track: thesis) ----------------
 
 @event thesis_proposal
 title: The Proposal
 track: thesis
+when: progress(thesis) < 30
 class: routine
 tone: tense
 art: scroll
@@ -713,7 +719,7 @@ tone: tense
 art: candle
 tags: study
 scene: A thesis laboratory at midnight, one carrel lit, a student surrounded by open books.
-text: The thesis lab after midnight: everyone else has gone home, and your argument has a hole in it the size of the seventh tower.
+text: The thesis lab, long after everyone else has gone home: and your argument has a hole in it the size of the seventh tower.
 > left: Find the hole
   progress track +medium
   mood -small
@@ -771,6 +777,7 @@ text: {keeper} shows you a rope, frayed and black with lake water, that she's ke
 @event bell_answer
 title: What Maud Remembers
 trigger: queued
+defer: off_campus
 actor: npc
 class: story
 tone: warm
@@ -804,9 +811,9 @@ text: The bell has rung every night for a week. The boathouse has an old diving 
       health -medium
       say: The cold drives you back up before you see anything. Old Maud is waiting on the jetty with a blanket and a look.
 > right: Wait for the bell to stop
-  unqueue bell_answer
   mood -small
-  say: You wait for a week. It doesn't stop. Something in you decides it will have to be you, next time.
+  lore +small
+  say: You wait for a week, listening from the shore, until you know its rhythm by heart. It doesn't stop. Something in you decides it will have to be you, next time.
 
 @event bell_silence
 title: The Bell Falls Silent
