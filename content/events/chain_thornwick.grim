@@ -32,7 +32,7 @@ text: A second letter from Thornwick, in the same quick hand. "Insufferable AND 
 @event tamsin_letter_gossip
 title: News From Thornwick
 actor: tamsin
-trigger: social
+trigger: letter
 class: routine
 tone: light
 repeat: 6
@@ -53,7 +53,7 @@ text: {Tamsin has written again, six pages of Thornwick gossip with sketches of 
 @event tamsin_letter_questions
 title: Twenty Questions
 actor: tamsin
-trigger: social
+trigger: letter
 class: routine
 tone: light
 repeat: 4
@@ -75,10 +75,10 @@ text: {Tamsin's letter is a numbered list of twenty questions about life at Lume
 @event tamsin_letter_trouble
 title: A Short Letter
 actor: tamsin
-trigger: social
+trigger: letter
 class: routine
 tone: tense
-when: rel(tamsin) >= 8
+when: rel(tamsin) >= 4
 weight: 12
 art: letter
 tags: social letter
@@ -97,10 +97,10 @@ text: Tamsin's letter is one page, which has never happened. They failed their i
 @event tamsin_letter_asks_secret
 title: A Small Favour
 actor: tamsin
-trigger: social
+trigger: letter
 class: story
 tone: tense
-when: year >= 2 and rel(tamsin) >= 10
+when: year >= 2 and rel(tamsin) >= 6
 weight: 12
 art: letter
 tags: social letter rival
@@ -124,10 +124,10 @@ text: Tamsin's letter is cheerful until the last paragraph. "Small favour. Thorn
 @event tamsin_letter_offers_secret
 title: Their Turn
 actor: tamsin
-trigger: social
+trigger: letter
 class: story
 tone: tense
-when: year == 3 and month <= 7 and seen(rival_contest) == 0 and rel(tamsin) >= 14 and not flag(thornwick_secrets)
+when: year == 3 and month <= 7 and seen(rival_contest) == 0 and rel(tamsin) >= 8 and not flag(thornwick_secrets)
 weight: 12
 art: letter
 tags: social letter rival
@@ -147,10 +147,10 @@ text: Folded inside Tamsin's letter is a second paper: Thornwick's whole plan fo
 @event tamsin_confession
 title: What I Was Sent to Do
 actor: tamsin
-trigger: social
+trigger: letter
 class: milestone
 tone: tense
-when: year >= 2 and rel(tamsin) >= 18
+when: year >= 2 and rel(tamsin) >= 10
 ramp: rel(tamsin) 18..30
 weight: 14
 art: letter
@@ -169,10 +169,10 @@ text: Tamsin's letter is long and the hand is unsteady. "I have to tell you. The
 @event tamsin_letter_after
 title: After Graduation
 actor: tamsin
-trigger: social
+trigger: letter
 class: routine
 tone: warm
-when: final_year and month >= 7 and rel(tamsin) >= 10
+when: final_year and month >= 7 and rel(tamsin) >= 6
 weight: 14
 art: letter
 tags: social letter

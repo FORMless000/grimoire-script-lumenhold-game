@@ -174,6 +174,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `voice` | text |  |
 |  | `seeks` | text |  |
 |  | `gone_when` | expression |  |
+|  | `distant` | text |  |
 | `@state id` | `name` | text | yes |
 |  | `desc` | text | yes |
 |  | `art` | text |  |
@@ -255,6 +256,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `desc` | text | yes |
 |  | `art` | text |  |
 |  | `draws` | text |  |
+|  | `always` | text |  |
 | `@track id` | `kind` | text |  |
 |  | `name` | text | yes |
 |  | `skill` | structured |  |

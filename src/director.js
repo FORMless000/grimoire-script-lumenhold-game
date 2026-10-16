@@ -34,8 +34,10 @@
   //   push: a character's monthly chance to find you = pull / 100, capped at maxP; at most `cap` such cards a month
   //   (capBreak in break months, when the chance is also halved).
   //   seeks: per character (`@npc seeks:`): pull × mult, and nothing below `min` warmth.
+  //   pen: a distant character's own steady pull (`@npc distant:`, feedback 2026-10-15): they can't be met, so warmth
+  //   never builds; they write at this rate, more as you grow close.
   const FRIENDS = { base: 4, presence: 12, engage: 18, cool: 8, meet: 35, fade: 0.8, encounter: 0.55, lunch: 0.35, maxP: 0.85, cap: 2, capBreak: 1, bond: { partner: 30, close: 20, friend: 12, rival: 10, nemesis: 10 },
-    seeks: { often: { mult: 1, min: 0 }, sometimes: { mult: 0.6, min: 15 }, rarely: { mult: 0.4, min: 35 }, never: { mult: 0, min: 0 } } };
+    seeks: { often: { mult: 1, min: 0 }, sometimes: { mult: 0.6, min: 15 }, rarely: { mult: 0.4, min: 35 }, never: { mult: 0, min: 0 } }, pen: 22 };
   const TAU = 6;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
@@ -212,6 +214,7 @@
     // A character's `seeks:` scales it: professors and shopkeepers come only once you've been coming to them.
     pull(id) {
       const n = this.s.npcs[id]; if (!n) return 0;
+      if (this.distant(id)) return FRIENDS.pen + 0.3 * Math.max(0, n.rel) + (n.warmth || 0) / 2;
       const sk = FRIENDS.seeks[(this.c.npcs[id] || {}).seeks || 'often'] || FRIENDS.seeks.often;
       if (!sk.mult || (n.warmth || 0) < sk.min) return 0;
       const hostile = n.bond === 'rival' || n.bond === 'nemesis';
@@ -233,7 +236,7 @@
     // `letters`: only letter cards (M19): someone who reaches you while one of you is away writes instead.
     drawWith(id, used, dayItems, extra, letters) {
       const ix = this.directorIndex(), cands = [];
-      const pool = letters ? ix.letter.filter((x) => x.actor === id || x.per || x.cast) : (ix.personal[id] || []).concat(ix.social.filter((x) => x.actor === 'any' || x.per));
+      const pool = letters ? ix.letter.filter((x) => x.actor === id || (!this.distant(id) && (x.per || x.cast))) : (ix.personal[id] || []).concat(ix.social.filter((x) => x.actor === 'any' || x.per));
       for (const e of pool) {
         if (used.has(e.id) || !this.eligible(e, used)) continue;
         if (this._plotLeft != null && this._plotLeft <= 0 && this.isPlot(e)) continue;
@@ -479,7 +482,12 @@
           // Off shift in term (I1): @game off_shift's hint card comes first, as often as its `repeat:` allows.
           const hint = off && this.phaseOf() !== 'break' && this.c.game.off_shift && this.c.events[this.c.game.off_shift];
           if (hint && this.eligible(hint, used) && this.test(hint.when, null)) { items.push({ id: hint.id, actor: null, place, prio: 'track', src: 'hint' }); used.add(hint.id); }
-          for (let k = 0; k < n; k++) {
+          // A place's fixed card (`@place always:`, feedback 2026-10-15): first on every visit while its `when` holds,
+          // whatever its cooldown, and one drawn card after it, so a visit always has both.
+          const fixed = !r.opened && p.always && this.c.events[p.always];
+          let draws = n;
+          if (fixed && !used.has(fixed.id) && this.test(fixed.when, null)) { items.push({ id: fixed.id, actor: null, place, prio: 'track', src: 'always' }); used.add(fixed.id); draws = 1; }
+          for (let k = 0; k < draws; k++) {
             const t = !off && p.track && s.tracks[p.track] && s.tracks[p.track].status === 'member' ? p.track : null;
             const it = (t && k === 0 && this.draw((ix.byTrack[t] || []).filter((e) => (!e.rank || e.rank <= s.tracks[t].rank + 1) && names(e)), used, day.concat(items), { place, track: t, prio: 'track' }))
               || this.draw((ix.byPlace[place] || []).filter(names), used, day.concat(items), { place, prio: 'ambient' })

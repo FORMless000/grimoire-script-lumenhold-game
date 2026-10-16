@@ -678,3 +678,168 @@ text: A small notice in a careful, shaky hand: "Wanted: a student to post a lett
   say: You post it, then the next, then the next. In the third month the letter-writer leaves a note: the replies have started coming. You never learn who either of them is. You keep the crowns in a jar.
 > right: Leave it for someone else
   say: You leave it on the board. The next morning it's gone, and someone has drawn a small heart beside the notice in pencil.
+
+# Odd gigs (feedback 2026-10-15): the Job Board shows its job menu on every visit and one of these after it, so a
+# visit always has something small to take or leave. Everyday and plot-safe; each repeats every few months.
+
+@event job_board_copying
+title: Fair Copies Wanted
+place: job_board
+class: routine
+tone: light
+repeat: 3
+weight: 10
+art: scroll
+tags: job money
+scene: A cork board with a notice in a sick student's shaky hand, a stack of borrowed lecture notes tied with string beneath it.
+text: {A notice in a shaky hand. A student down with fever needs a fortnight of lecture notes copied out fair, and will pay for neatness.|Another fever, another fortnight of notes to copy fair. The notice says "neat hand preferred", and someone has written your name beside it.|The copying notice again. By now you can copy a page without reading a word of it, if you want to.}
+> left: Copy them for the pay
+  gold +small
+  mood -small
+  say: {Two evenings of careful letters. The pay arrives with a note that says your sevens are beautiful.|You copy every page, blot nothing and are paid exactly. Your wrist aches until the weekend.|You copy without reading, as fast as the ink allows. The pay is fair and the evening is gone.}
+> right: Copy them slowly, and learn them too
+  gold +tiny
+  lore +small
+  mood -small
+  say: {You read as you copy. Half the pay goes on candles, and you learn a course you aren't even taking.|You copy slowly and read every line. The notes are better than your own, and you keep a few of the ideas.|You read it all, slowly. The student pays a little less for the delay, and you know a little more for it.}
+
+@event job_board_message_run
+title: Messages Across the Castle
+place: job_board
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: letter
+tags: job money
+scene: A student with a satchel of folded notes running across a castle bridge between towers, a staircase swinging away behind them.
+text: {A professor wants a runner for the afternoon, with notes for every tower before the bell. A small fee, and no reading them.|The runner's notice is back, with a longer list of towers.|The runner's notice, and a list you could walk in your sleep. The staircases have learned your face.}
+> left: Run the round yourself
+  gold +small
+  health -tiny
+  say: {You reach the last tower as the bell goes. Your legs are jelly and the fee is honest.|Seven towers, two moving staircases and one argument with a portrait. Paid in full.|You take the shortcuts the staircases allow you now. Paid, and back in time for supper.}
+> right: Send the owls instead
+  gold +tiny
+  mood +tiny
+  say: {You pay the owlery out of the fee and keep the rest, and the afternoon. The professor never knows.|The owls do it faster than you would have. You pocket what's left and feel only slightly guilty.|The owls know the round now as well as you. You keep a little of the fee and all of your afternoon.}
+
+@event job_board_market_stall
+title: Mind the Stall
+place: job_board
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: coin
+tags: job money
+scene: A village market stall heaped with jars and woollens, a student behind it with a cash tin, the owner hobbling away towards a chair in the sun.
+text: {A villager with a bad knee wants someone to mind her market stall on Saturday morning, for a share of the takings.|The stall again: jars, woollens, the bad knee and the share of the takings.|The stall owner pins the notice up with your name already on it, and a question mark, to be polite.}
+> left: Mind it as she asked
+  gold +small
+  mood -tiny
+  say: {You sell three jars and a scarf and count the tin twice. She pays you a fair share and a jar.|A slow morning, honestly counted. She is pleased with the tin and gives you your share.|You know the prices by heart now. She hands you your share without counting it, which is a kind of compliment.}
+> right: Talk up the wares
+  gold +tiny
+  charm +small
+  say: {You sell like a pedlar and the takings are up. Most of the extra goes back to her, as it should, and you've learned a patter.|You talk a farmer into two scarves he didn't know he needed. Your share is small and your voice is gone.|You could sell her jars to anyone now. She jokes about leaving you the stall.}
+
+@event job_board_lost_property
+title: The Lost-Property Box
+place: job_board
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: key
+tags: job money
+scene: The porter's lodge, a vast wooden box of odd gloves, scarves, books and one boot, a student sorting them into piles.
+text: {The porter wants the lost-property box sorted before it starts to smell, and pays by the hour.|The lost-property box is full again, the porter says, mostly of the same gloves.|The porter slides the box across without a word. You know where the odd boot goes now.}
+> left: Sort it quickly for the pay
+  gold +small
+  mood -tiny
+  say: {Gloves, scarves, books and one boot, in piles by dusk. The porter pays and keeps the boot for himself.|You sort it in an hour. The porter pays for two, out of habit.|You sort it fast. The porter pays, and then tries the odd boot on again, hopefully.}
+> right: Read what people lose
+  gold +tiny
+  guile +small
+  say: {You learn who carries love letters and who never returns library books. The porter pays you less for taking so long.|You read the names in the books and the notes in the pockets, and put everything back exactly. A slow hour, and a useful one.|You know the castle by what it drops. The porter pays a little less, and you put the gossip away for later.}
+
+@event job_board_sick_familiar
+title: A Sick Familiar
+place: job_board
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: cat
+tags: job money
+scene: A student sitting up by lamplight beside a basket where a small sick familiar is curled in a blanket, a bottle of tonic on the table.
+text: {A student going home for a funeral needs someone to sit up with their sick familiar for two nights. They will pay.|Another notice for a night sitter, for a sick toad this time, and the pay is better.|The familiars' night-sitter: that's you, apparently. A cat this time, and a worried owner.}
+> left: Sit up with it, both nights
+  gold +small
+  health -small
+  say: {Two nights of tonic every hour and very little sleep. It recovers. So, eventually, do you.|The toad recovers and you nearly don't. The owner pays double and calls you a saint.|The cat is ungrateful and lives. You're paid, and spend the next day asleep in lectures.}
+> right: Sit up one night, and find a second sitter
+  gold +tiny
+  mood +tiny
+  say: {You take the first night and talk a friend into the second. The pay splits; the sleep doesn't.|One night each, you and a sleepy first-year. The familiar is fine. Half the pay is still pay.|You know who will sit up for a little money now. You split the nights and the pay, and sleep.}
+
+@event job_board_porters_crates
+title: Crates for the Porter
+place: job_board
+class: routine
+tone: light
+repeat: 3
+weight: 10
+art: house
+tags: job money
+scene: A cart of wooden crates at the foot of a long castle stair, a student lifting one while the porter points upward.
+text: {The porter needs crates carried up from the barge, a great many of them, up a great many stairs.|Crates again, the porter says, pointing at the barge. More of them than last time.|You hear the barge bell and the porter waves before you're even down the stairs. Crates.}
+> left: Carry them all
+  gold +small
+  health -small
+  say: {Forty crates up seventy stairs. The porter pays you and a little extra for not dropping the one that clinked.|Your back will remember every crate. The pay is good.|You carry the lot and don't count them any more. Paid, and sore.}
+> right: Carry what you can, and train with it
+  gold +tiny
+  vigor +small
+  health -tiny
+  say: {You take them slowly, two steps at a time, and count it as exercise. The porter pays for the crates you managed.|Half the crates, carried properly. Your legs are stronger and your purse a little lighter than it could be.|You carry what you can and stop before your back does. Paid for half, and stronger for it.}
+
+@event job_board_tutor_hour
+title: An Hour of Tutoring
+place: job_board
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: book
+tags: job money
+scene: An empty classroom, a nervous first-year with an essay full of crossings-out and an older student pointing at a line.
+text: {A first-year's notice, written with great care, asks for an hour's help with an essay. They can pay a little.|The same first-year's careful handwriting: another essay, another hour.|The first-year has stopped writing notices. They just pin up the essay, with a coin taped to the corner.}
+> left: Take the hour, and the coin
+  gold +small
+  mood -tiny
+  say: {An hour of commas and confusion. The essay improves; so does your purse, slightly.|You take them through it line by line. They pay, and thank you twice.|You know their mistakes before they make them now. The hour goes quickly, and they pay.}
+> right: Help, and leave the coin pinned
+  mood +small
+  alignment +tiny
+  say: {You leave the coin taped to the board. The essay comes back with a good mark, and the first-year tells everyone.|You help for nothing. They try to pay you anyway, and you won't let them.|You leave the coin where it is, as always. Somebody has drawn a small sun beside the notice.}
+
+@event job_board_greenhouse_pots
+title: Pots for Old Maud
+place: job_board
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: leaf
+tags: job money
+scene: A greenhouse doorway stacked with muddy clay pots, an old gardener on a stool directing a student with a scrubbing brush.
+text: {Old Maud's notice asks for clay pots scrubbed before planting, for a small wage and a cup of tea.|Maud's notice again. More pots, the same tea.|Maud has given up pinning notices. The pots are just waiting at the greenhouse door, with your brush on top.}
+> left: Scrub them for the wage
+  gold +small
+  mood -tiny
+  say: {A hundred pots, scrubbed and stacked. Maud pays you and says you're slower than her and twice as thorough.|You scrub them all and drink the tea. The wage is small and honestly earned.|You scrub in silence, and so does she. She pays you and lets you take a cutting home.}
+> right: Scrub them and ask about the plants
+  gold +tiny
+  alchemy +small
+  say: {Maud talks while you scrub, about which leaf cures what and which leaf kills. She pays a little less, because of the talking.|You learn three remedies and a poison you should never brew. The wage is smaller; the lesson isn't.|Maud tests you on last month's lesson while you scrub. You pass, mostly. The wage is small and the tea is good.}

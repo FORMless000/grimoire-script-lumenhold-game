@@ -681,7 +681,7 @@
     // Where a character can be this month (M42): their break schedule on a break, if they have one.
     scheduleOf(id) {
       const d = this.c.npcs[id]; if (!d) return [];
-      if (this.gone(id)) return [];
+      if (this.gone(id) || d.distant) return [];
       if (d.schedule_break && this.phaseOf() === 'break') return d.schedule_break.entries;
       return d.schedule || [];
     }
@@ -691,7 +691,10 @@
       return Object.keys(this.s.states || {}).some((k) => this.c.states[k] && this.c.states[k].kind === 'plan' && (this.c.states[k].tags || []).includes('away'));
     }
     // Away for the break (`schedule_break: away`): reachable only by letter (M19).
-    isAway(id) { const d = this.c.npcs[id]; return !!(d && d.schedule_break && d.schedule_break.away && this.phaseOf() === 'break') || this.gone(id); }
+    isAway(id) { const d = this.c.npcs[id]; return !!(d && d.schedule_break && d.schedule_break.away && this.phaseOf() === 'break') || this.gone(id) || this.distant(id); }
+    // Distant (`distant: true` on the @npc, feedback 2026-10-15): a pen pal. Never on the map or `around()`, fills no
+    // cast role and no `actor: any` (letters included), and reaches you only through their own cards, as letters.
+    distant(id) { const d = this.c.npcs[id]; return !!(d && d.distant); }
     // Gone (`gone_when:` on the @npc, review fixes): while the condition holds the character is nowhere on the map,
     // fills no role and is drawn for no card except letters; scenes queued for them still play.
     gone(id) { const d = this.c.npcs[id]; return !!(d && d.gone_when && this.test(d.gone_when, id)); }
@@ -1359,11 +1362,11 @@
         if (r.pool === 'present') return this.presentAt(r.place === 'place' || !r.place ? this._place : r.place).filter((id) => s.npcs[id] && s.npcs[id].met);
         return Object.keys(s.npcs).filter((id) => r.pool === 'anyone' || s.npcs[id].met);
       };
-      const here = (id) => e.trigger === 'letter' || !this.gone(id);
+      const here = (id) => (bind && Object.values(bind).includes(id)) || (!this.distant(id) && (e.trigger === 'letter' || !this.gone(id)));
       const fill = (i, cast) => {
         if (i === roles.length) { const prev = this._cast; this._cast = cast; const ok = this.test(e.when, cast.npc || null); this._cast = prev; return ok ? { ...cast } : null; }
         const r = roles[i];
-        let opts = pool(r).filter((id) => here(id) && !Object.values(cast).includes(id) && (r.role !== e.per || this.eligibleFor(e, id)) && (!bind || !bind[r.role] || bind[r.role] === id));
+        let opts = pool(r).filter((id) => (here(id) || (r.pool === 'fixed' && !this.gone(id))) && !Object.values(cast).includes(id) && (r.role !== e.per || this.eligibleFor(e, id)) && (!bind || !bind[r.role] || bind[r.role] === id));
         opts = opts.filter((id) => { if (!r.where) return true; const prev = this._cast; this._cast = { ...cast, [r.role]: id }; const ok = this.test(r.where, cast.npc || id); this._cast = prev; return ok; });
         // weighted order
         const order = [];
@@ -1387,7 +1390,7 @@
       }
       const out = [];
       let actors;
-      if (e.actor === 'any') actors = Object.keys(this.s.npcs).filter((id) => this.s.npcs[id].met);
+      if (e.actor === 'any') actors = Object.keys(this.s.npcs).filter((id) => this.s.npcs[id].met && !this.distant(id));
       else if (e.actor && e.actor !== 'npc') actors = [e.actor];
       else actors = [null];
       for (const a of actors) {

@@ -223,7 +223,7 @@
     preset: { props: ['params', 'desc'], effects: [], raw: ['do'] },
     resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
     skill: { props: ['name', 'icon', 'start', 'max', 'desc', 'color'], effects: [] },
-    npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel', 'age', 'role', 'year', 'traits', 'interests', 'stats', 'schedule', 'schedule_break', 'relations', 'voice', 'seeks', 'gone_when'], effects: [] },
+    npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel', 'age', 'role', 'year', 'traits', 'interests', 'stats', 'schedule', 'schedule_break', 'relations', 'voice', 'seeks', 'gone_when', 'distant'], effects: [] },
     // `map_id:` on a plan (A1): the map shown while it lasts, a map id or a track kind (the place of your track of that kind)
     state: { props: ['name', 'desc', 'art', 'tags', 'group', 'duration', 'hidden', 'kind', 'money', 'map_id'], effects: ['tick', 'on_add', 'on_expire', 'on_remove'] },
     event: { props: ['title', 'text', 'art', 'scene', 'tags', 'when', 'weight', 'trigger', 'actor', 'repeat', 'priority', 'type', 'chain', 'class', 'tone', 'variant',
@@ -240,7 +240,7 @@
     hook: { props: ['on', 'when', 'desc', 'label'], effects: ['do'] },
     // Worldbook (design §3): data for briefs, lint and later phases. The engine doesn't play these yet.
     vocab: { props: ['values', 'desc'], effects: [] },
-    place: { props: ['name', 'region', 'map', 'kind', 'track', 'open', 'season', 'closed_when', 'discover', 'hint', 'hinted_when', 'desc', 'art', 'draws'], effects: [] },
+    place: { props: ['name', 'region', 'map', 'kind', 'track', 'open', 'season', 'closed_when', 'discover', 'hint', 'hinted_when', 'desc', 'art', 'draws', 'always'], effects: [] },
     // `intro:` the card where you first meet the track's `lead:` (playtest 2, N1): queued on enrolling or joining, instead of
     // meeting them silently.
     // `standard:` a course's rung at each level (checks.md), else @balance course_standard
