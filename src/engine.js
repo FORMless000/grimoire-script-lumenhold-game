@@ -1220,12 +1220,9 @@
     summaryItem(ctx, label) { return { label, deltas: ctx.deltas, notes: ctx.notes, say: ctx.say }; }
 
     /* ---------------- Month cycle ---------------- */
-    beginMonth() {
+    // State ticks and durations, at the start of a month.
+    tickStates(summary) {
       const s = this.s;
-      s.turn++;
-      s.cardsThisMonth = 0;
-      const summary = s.pending || []; s.pending = [];
-      // State ticks & durations
       for (const id of Object.keys(s.states)) {
         const def = this.c.states[id]; const st = s.states[id];
         if (!def || !st) continue;
@@ -1237,6 +1234,31 @@
         this.handleZeroed(ctx);
         if (Object.keys(ctx.deltas).length || ctx.notes.length || ctx.say.length) summary.push(Object.assign(this.summaryItem(ctx, def.hidden ? null : (def.name || id)), { src: 'state ' + id }));
       }
+    }
+    // What next month's start will take or give (feedback 2026-10-15): state ticks, then term-start and month-start
+    // hooks, dry-run on a copy of the state (its own RNG copy too), so the run itself is untouched. One entry per
+    // label: { label, src, deltas }.
+    upcoming() {
+      const s = this.s;
+      if (!s || s.ended || s.turn >= this.maxTurns) return [];
+      const sh = this._shadow || (this._shadow = new this.constructor(this.c));
+      const copy = {}; for (const [k, v] of Object.entries(s)) if (k !== 'hist' && k !== 'log') copy[k] = v;
+      sh.s = JSON.parse(JSON.stringify(copy)); sh.s.hist = []; sh.s.log = []; sh.s.pending = [];
+      const summary = [];
+      try {
+        sh.s.turn++;
+        sh.tickStates(summary);
+        if (sh.dayMode && sh.isTermStart()) sh.runHooks('term_start', summary);
+        sh.runHooks('month_start', summary);
+      } catch (e) { return []; }
+      return summary.filter((x) => Object.values(x.deltas).some(Boolean)).map((x) => ({ label: x.label, src: x.src, deltas: x.deltas }));
+    }
+    beginMonth() {
+      const s = this.s;
+      s.turn++;
+      s.cardsThisMonth = 0;
+      const summary = s.pending || []; s.pending = [];
+      this.tickStates(summary);
       this.relationshipDrift(summary);
       this.unlockFacts();
       if (this.c.places && Object.keys(this.c.places).length) this.monthlyWorld(summary);
