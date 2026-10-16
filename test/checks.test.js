@@ -72,7 +72,7 @@ test('drift pulls the DC toward the expected skill, by significance', () => {
 test('vs reads the character; course cards read the standard and step up above their level', () => {
   const e = eng(12, 20);
   const lyra = content.npcs.lyra.stats.arcana;
-  assert.equal(e.challengeOdds(one('challenge duel using arcana vs lyra.arcana +2:'), null, 'bell_drowned').dc, lyra + 8);
+  assert.equal(e.challengeOdds(one('challenge duel using arcana vs lyra.arcana +2:'), null, 'bell_drowned').dc, Math.round(lyra * e.peerGrowth('lyra')) + 8);
   // illu_spot_the_coin is an Illusion card at level 1: the standard there is apprentice+ (20); in level III, +10 rungs (course_step 5 a level), with the course drift (low).
   e.s.tracks.illusion = { kind: 'course', status: 'enrolled', level: 1, study: 0, grades: [], passed: {} };
   e._ctxTrack = 'illusion';
@@ -84,6 +84,16 @@ test('vs reads the character; course cards read the standard and step up above t
   assert.equal(at3, 60 + 0.15 * (e.expectedSkill() - 60));
   // A track's own standard overrides the default.
   assert.equal(e.courseStandard('artifice', 1), 52);
+});
+
+test('peers grow with E(turn) to npc_growth share of the final E; faculty keep their stats', () => {
+  const curve = content.balance.curve, share = content.balance.npc_growth.share;
+  const first = eng(1, 20), last = eng(curve.length, 20);
+  assert.equal(first.statOf('lyra', 'arcana'), content.npcs.lyra.stats.arcana);
+  assert.equal(last.statOf('lyra', 'arcana'), Math.round(share * curve[curve.length - 1]));   // arcana is Lyra's best skill
+  assert.equal(last.statOf('thorne', 'arcana'), content.npcs.thorne.stats.arcana);
+  assert.equal(last.statOf('lyra', 'wealth'), content.npcs.lyra.stats.wealth);   // not a skill
+  assert.ok(last.statOf('tamsin', 'charm') > content.npcs.tamsin.stats.charm);   // the pen pal grows too (tag thornwick)
 });
 
 test('circumstance steps move the odds by nature; chance <word> rolls them', () => {

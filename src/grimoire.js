@@ -207,6 +207,8 @@
       'coursework',
       // an exam's grade bands (margins over the bar for A, B and a pass) and how going for top marks moves them
       'exam_bands',
+      // peers grow with the player (feedback 2026-10-15): characters with one of these tags reach `share` of the final E(turn)
+      'npc_growth',
       // friendship gains carry spark along (M37): spark / per × the gain, at most cap× (partner× for a partner);
       // crossing `cooldown` spark pushes @game spark_cooldown
       'spark_follow',
@@ -342,6 +344,7 @@
     odds(t) { return STRUCT_PROPS.weights(t); },
     study(t) { return STRUCT_PROPS.weights(t); },
     exam_bands(t) { return STRUCT_PROPS.weights(t); },
+    npc_growth(t) { const m = t.trim().match(/^share\s+(\S+)\s+tags?\s+(.+)$/); if (!m) throw 'npc_growth: expected "share <0..1> tags <tag> <tag>…"'; return { share: toNum(m[1], 'npc_growth share'), tags: words(m[2]) }; },
     spell_check(t) { return STRUCT_PROPS.weights(t); },
     exam_tiers(t) { const w = words(t); for (const x of w) if (!DIFFICULTIES.includes(x) && !isLadderTier(x)) throw 'exam_tiers: expected a difficulty per course level (trivial … heroic, a rung, or standard±N), got "' + x + '"'; return w; },
     // "novice- 0 novice 4 … archmage+ 92"

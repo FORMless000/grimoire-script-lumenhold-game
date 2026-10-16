@@ -120,6 +120,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `wage` | structured |  |
 |  | `coursework` | structured |  |
 |  | `exam_bands` | structured |  |
+|  | `npc_growth` | structured |  |
 |  | `spark_follow` | structured |  |
 |  | `odds` | structured |  |
 |  | `study` | structured |  |

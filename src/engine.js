@@ -240,7 +240,18 @@
       if (!id) return 0;
       if (stat === 'rel' || stat === 'spark') return this.s.npcs[id] ? this.s.npcs[id][stat] : 0;
       const d = this.c.npcs[id];
-      return d && d.stats && d.stats[stat] != null ? d.stats[stat] : this.expectedSkill();
+      if (!(d && d.stats && d.stats[stat] != null)) return this.expectedSkill();
+      return this.c.skills[stat] ? Math.round(d.stats[stat] * this.peerGrowth(id)) : d.stats[stat];
+    }
+    // Peers grow with the player (feedback 2026-10-15, `@balance npc_growth: share 0.9 tags peer thornwick`): a character
+    // with one of the tags has every skill stat × k(turn), rising with E(turn) from 1 to K, where K brings their best skill to `share` of
+    // the final E(turn). So each keeps their shape, and checks against classmates stay contests.
+    peerGrowth(id) {
+      const g = this.c.balance && this.c.balance.npc_growth, d = this.c.npcs[id], cv = this.c.balance && this.c.balance.curve;
+      if (!g || !d || !(d.tags || []).some((x) => g.tags.includes(x)) || !cv || cv.length < 2) return 1;
+      const top = Math.max(0, ...Object.keys(d.stats || {}).filter((k) => this.c.skills[k]).map((k) => d.stats[k]));
+      const K = top > 0 ? g.share * cv[cv.length - 1] / top : 1, e1 = cv[0], eN = cv[cv.length - 1];
+      return K > 1 && eN > e1 ? 1 + (K - 1) * clamp((this.expectedSkill() - e1) / (eN - e1), 0, 1) : 1;
     }
     // The value a challenge tests (design §9.2): the kind's skill (or `using`), the combat stub's mix, and the modifiers.
     checkValue(st) {

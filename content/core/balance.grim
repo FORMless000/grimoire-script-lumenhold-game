@@ -56,6 +56,10 @@ exam_tiers: standard+1 standard+1 standard+1
 # An exam's grades (feedback 2026-10-15): A from `a` over the bar, B from `b`, a pass from `pass`, each on the bell (no
 # hard A gate). Going for top marks (`sit_exam wild`) lowers the A mark by `ambitious` and is sat at `ambitious_sigma`.
 exam_bands: a 15 b 5 pass -5 ambitious 8 ambitious_sigma 20
+# Peers grow with the player (feedback 2026-10-15): a character with one of these tags (classmates, and the pen pal at
+# Thornwick) has every skill stat scaled up with E(turn), so that by the last month their best skill is `share` of the
+# final E(turn). Faculty and villagers keep theirs.
+npc_growth: share 0.9 tags peer thornwick
 # A known spell adds `per` to checks of its discipline's skill, at most `cap` (design §9.2; L-3).
 spell_check: per 2 cap 6
 # Learning a spell, or a level of one, gives skill XP in its discipline (L-6): one tier per spell level.

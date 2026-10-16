@@ -932,7 +932,7 @@ challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam |
 | brew / enchant | alchemy |
 
 - **Modifiers** (each capped at ±15):
-  - `vs <role>.<stat>`: the opponent's stat is the DC (legacy tiers: it shifts the DC by the stat minus E(turn));
+  - `vs <role>.<stat>`: the opponent's stat is the DC (legacy tiers: it shifts the DC by the stat minus E(turn)). Peers grow with you (feedback 2026-10-15, `@balance npc_growth`): classmates (tag `peer`) and the pen pal (`thornwick`) have every skill stat × k(turn) = 1 + (K − 1)·(E(t) − E(1))/(E(end) − E(1)), where K brings their best skill to 0.9 × the final E(turn) (Lyra's arcana 34 → 56). Faculty and villagers keep fixed stats. Every classmate, Corvin, Nessa and Bram (still a prefect) included, is a first-year with you;
   - study points; the advisor relationship (the track's `lead:` regard, rel / 5, within ±15, inside that track's cards and at its exams); spells known (+2 each for relevant ones, at most +6; L-3); items (§T2).
 - **Combat stub** (playtest 2): until the combat minigame (X5), fights use `combat`, so how rested, cheerful and charged the player is matters, and so does every spell learned. Entering a fight spends mana.
 - **Luck (swing)**: how much of the outcome is chance rather than skill (§8.6): `steady` (practice decides), `normal`, `wild` (partly luck), `luck` (gambles, searches). It is independent of difficulty and stakes.
