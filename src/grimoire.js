@@ -205,6 +205,8 @@
       'wage',
       // coursework: the size tier of a course's monthly skill XP at each course level (feedback 2026-10-15)
       'coursework',
+      // an exam's grade bands (margins over the bar for A, B and a pass) and how going for top marks moves them
+      'exam_bands',
       // friendship gains carry spark along (M37): spark / per × the gain, at most cap× (partner× for a partner);
       // crossing `cooldown` spark pushes @game spark_cooldown
       'spark_follow',
@@ -220,7 +222,7 @@
       // the check ladder (docs/authoring/checks.md, design §8.6): each rung's DC, the odds of each odds-by-nature word (%),
       // σ of the bell per luck word, drift per drift word, the z one circumstance step moves, the bell's floor and ceiling,
       // a course's standard rung at each level, and the rungs a course card rises per course level above its own
-      'dc_tiers', 'likelihood', 'sigma', 'drift', 'odds_step', 'bell', 'course_standard', 'course_step'], effects: [] },
+      'dc_tiers', 'likelihood', 'sigma', 'drift', 'odds_step', 'bell', 'course_standard', 'course_step', 'course_drift'], effects: [] },
     // A named group of effects, used as a statement: `grind arcana`. Its body may use $params.
     preset: { props: ['params', 'desc'], effects: [], raw: ['do'] },
     resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
@@ -339,6 +341,7 @@
     spark_follow(t) { return STRUCT_PROPS.weights(t); },
     odds(t) { return STRUCT_PROPS.weights(t); },
     study(t) { return STRUCT_PROPS.weights(t); },
+    exam_bands(t) { return STRUCT_PROPS.weights(t); },
     spell_check(t) { return STRUCT_PROPS.weights(t); },
     exam_tiers(t) { const w = words(t); for (const x of w) if (!DIFFICULTIES.includes(x) && !isLadderTier(x)) throw 'exam_tiers: expected a difficulty per course level (trivial … heroic, a rung, or standard±N), got "' + x + '"'; return w; },
     // "novice- 0 novice 4 … archmage+ 92"
@@ -350,6 +353,7 @@
     bell(t) { return STRUCT_PROPS.weights(t); },
     course_standard(t) { const w = words(t); for (const x of w) if (!RUNG_RE.test(x)) throw 'course_standard: expected a rung per course level, got "' + x + '"'; return w; },
     course_step(t) { return toNum(t.trim(), 'course_step'); },
+    course_drift(t) { const w = t.trim(); if (!/^[a-z_]+$/.test(w)) throw 'course_drift: expected a drift word (none, low, mid, high)'; return w; },
     standard(t) { const w = words(t); for (const x of w) if (!RUNG_RE.test(x)) throw 'standard: expected a rung per course level, got "' + x + '"'; return w; },
     coursework(t) { const w = words(t); for (const x of w) if (!TIERS.includes(x)) throw 'coursework: expected a size tier per course level (tiny … huge), got "' + x + '"'; return w; },
     spell_bonus(t) { const w = words(t); for (const x of w) if (!TIERS.includes(x)) throw 'spell_bonus: expected a size tier per spell level (tiny … huge), got "' + x + '"'; return w; },

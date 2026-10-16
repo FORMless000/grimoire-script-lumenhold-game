@@ -73,15 +73,15 @@ test('vs reads the character; course cards read the standard and step up above t
   const e = eng(12, 20);
   const lyra = content.npcs.lyra.stats.arcana;
   assert.equal(e.challengeOdds(one('challenge duel using arcana vs lyra.arcana +2:'), null, 'bell_drowned').dc, lyra + 8);
-  // illu_spot_the_coin is an Illusion card at level 1: the standard there is apprentice+ (20); in level III, +6 rungs.
+  // illu_spot_the_coin is an Illusion card at level 1: the standard there is apprentice+ (20); in level III, +10 rungs (course_step 5 a level), with the course drift (low).
   e.s.tracks.illusion = { kind: 'course', status: 'enrolled', level: 1, study: 0, grades: [], passed: {} };
   e._ctxTrack = 'illusion';
   const st = one('challenge deceive standard:');
   const at1 = e.challengeOdds(st, null, 'illu_spot_the_coin').dc;
   e.s.tracks.illusion.level = 3;
   const at3 = e.challengeOdds(st, null, 'illu_spot_the_coin').dc;
-  assert.equal(at1, 20 + 0.5 * (e.expectedSkill() - 20));
-  assert.equal(at3, 44 + 0.5 * (e.expectedSkill() - 44));
+  assert.equal(at1, 20 + 0.15 * (e.expectedSkill() - 20));
+  assert.equal(at3, 60 + 0.15 * (e.expectedSkill() - 60));
   // A track's own standard overrides the default.
   assert.equal(e.courseStandard('artifice', 1), 52);
 });

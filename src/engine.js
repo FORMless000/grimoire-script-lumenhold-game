@@ -31,7 +31,7 @@
     likelihood: { certain: 97, sure: 90, likely: 70, even: 50, unlikely: 30, slim: 15, long_shot: 5, freak: 1 },
     sigma: { steady: 12, normal: 20, wild: 32, luck: 80 },
     drift: { none: 0, low: 0.15, mid: 0.3, high: 0.5 },
-    odds_step: 0.5, bell: { floor: 2, ceil: 98 }, course_standard: ['apprentice+', 'journeyman+', 'adept+'], course_step: 3,
+    odds_step: 0.5, bell: { floor: 2, ceil: 98 }, course_standard: ['apprentice+', 'journeyman+', 'adept+'], course_step: 3, course_drift: 'high',
   };
   const DEFAULT_RUNGS = {};
   ['novice', 'apprentice', 'journeyman', 'adept', 'expert', 'master', 'grandmaster', 'archmage'].forEach((r, i) => { DEFAULT_RUNGS[r + '-'] = 12 * i; DEFAULT_RUNGS[r] = 12 * i + 4; DEFAULT_RUNGS[r + '+'] = 12 * i + 8; });
@@ -297,7 +297,10 @@
       if (inCourse && own) rungs += this.ladder('course_step') * Math.max(0, (ct.level || 1) - own);
       if (this._variant === 'hard') rungs += 2;
       base += rungs * this.rungStep();
-      const k = this.ladder('drift')[st.drift || this.defaultDrift(ev)] || 0;
+      // A course card's standard check inside its course drifts `course_drift` (feedback 2026-10-15: at `high`, half of
+      // each level's rise was pulled back, and higher levels felt easier).
+      const dw = st.drift || (st.standard && inCourse && ev && !['story', 'milestone', 'crisis'].includes(ev.class) ? this.ladder('course_drift') : this.defaultDrift(ev));
+      const k = this.ladder('drift')[dw] || 0;
       const dc = base + k * (this.expectedSkill() - base);
       const z0 = this.likelihoodZ(st.odds, st.steps, actor), ms = this.isMilestone(eventId);
       const odds = (x) => this.bellOdds(sv, x, z0, st.swing, ms);
@@ -324,6 +327,7 @@
     // (a `class: milestone` card, an exam) has no forced fail: enough skill makes it certain.
     oddsRange(milestone) { const o = Object.assign({ min: 5, max: 95 }, (this.c.balance && this.c.balance.odds) || {}); return [o.min, milestone ? 100 : o.max]; }
     // Exam preparation (L-3, `@balance study: attend 1 cap 15`): what a course card adds by itself, and the most it counts.
+    examRule() { return Object.assign({ a: 15, b: 5, pass: -5, ambitious: 8, ambitious_sigma: 20 }, (this.c.balance && this.c.balance.exam_bands) || {}); }
     studyRule() { return Object.assign({ attend: 3, cap: 15 }, (this.c.balance && this.c.balance.study) || {}); }
     // A known spell's bonus on checks that test its discipline's skill (design §9.2; L-3, `@balance spell_check: per 2 cap 6`).
     spellCheck() { return Object.assign({ per: 3, cap: 15 }, (this.c.balance && this.c.balance.spell_check) || {}); }
@@ -579,11 +583,13 @@
       const sv = sk.reduce((a, k) => a + (s.vals[k] || 0), 0) / Math.max(1, sk.length);
       const lv = (t && t.level) || 1, ladder = !DEFAULT_DIFFICULTY.hasOwnProperty(this.examTier(lv));
       const dc = this.examBar(id, lv) - Math.min(this.studyRule().cap, (t && t.study) || 0) - this.advisorBonus(id);
-      const slope = this.swingSlope(swing), [lo, hi] = this.oddsRange(true);
-      const odds = ladder ? (x) => this.bellOdds(sv, x, 0, swing, true) : (x) => clamp(Math.round(50 + slope * (sv - x)), lo, hi);
-      const top = odds(dc + 5), pass = odds(dc - 5);
-      const A = sv - dc >= 15 ? top : 0, B = top - A, C = pass - top, F = 100 - pass;
-      return { skills: sk, value: sv, bar: dc, probs: [A, B, C, F], pass, top };
+      const slope = this.swingSlope(swing), [lo, hi] = this.oddsRange(true), ex = this.examRule(), wild = swing === 'wild';
+      // Grade bands on the bell (feedback 2026-10-15): A, B and a pass each at their margin over the bar. Going for top
+      // marks lowers the A mark and is sat at its own spread, so it trades B for A and some F, at about the same GPA.
+      const bell = (x) => wild ? Math.round(100 * Phi((sv - x) / ex.ambitious_sigma)) : this.bellOdds(sv, x, 0, swing, true);
+      const odds = ladder ? bell : (x) => clamp(Math.round(50 + slope * (sv - x)), lo, hi);
+      const pass = odds(dc + ex.pass), top = Math.min(pass, odds(dc + ex.b)), a = Math.min(top, odds(dc + ex.a - (wild ? ex.ambitious : 0)));
+      return { skills: sk, value: sv, bar: dc, probs: [a, top - a, pass - top, 100 - pass], pass, top, a };
     }
     // Sitting a course's exam (M4: an exam card's `sit_exam`, else at term end): the grade, its reasons, the professor's regard, spells.
     sitExam(id, swing, ctx) {
@@ -618,7 +624,7 @@
     // What an option's first roll looks like on its button: a challenge (with its swing, and combat's mana), an exam, a legacy check.
     checkView(st, actor, item) {
       if (st.t === 'challenge') { const odds = this.challengeOdds(st, actor, item && item.id); return { skill: st.kind, using: odds.skill, p: odds.win, challenge: true, swing: st.swing || null, combat: st.kind === 'combat', cost: st.kind === 'combat' ? this.combatCost() : 0 }; }
-      if (st.t === 'sit_exam') { const id = (item && item.track) || this._ctxTrack; const o = id && this.trackState(id) ? this.examOdds(id, st.swing) : null; return o ? { exam: true, skill: 'exam', using: o.skills.join('+'), p: o.pass, top: o.top, swing: st.swing || null } : null; }
+      if (st.t === 'sit_exam') { const id = (item && item.track) || this._ctxTrack; const o = id && this.trackState(id) ? this.examOdds(id, st.swing) : null; return o ? { exam: true, skill: 'exam', using: o.skills.join('+'), p: o.pass, top: o.top, a: o.a, swing: st.swing || null } : null; }
       return { skill: st.skill, p: this.checkChance(st.skill, this.value(st.dc, actor)) };
     }
     // An enrolled course as it stands (playtest 2, step 5): exam preparation, the exam's odds if it were sat today,

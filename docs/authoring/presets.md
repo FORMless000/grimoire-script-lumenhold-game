@@ -37,7 +37,7 @@ Luck (the bell's σ): `steady` 12 · `normal` 20 · `wild` 32 · `luck` 80; odds
 
 Drift (share of the gap to the expected skill the DC closes): `none` 0 · `low` 0.15 · `mid` 0.3 · `high` 0.5.
 
-Course standard at levels I–III: `apprentice+` · `journeyman+` · `adept+`; a course card rises 3 rungs per course level above its own.
+Course standard at levels I–III: `apprentice+` · `adept+` · `master+`; a course card rises 5 rungs per course level above its own.
 
 ## Difficulty tiers (legacy)
 

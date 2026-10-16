@@ -476,7 +476,7 @@
   // A challenge names its kind and the skill(s) it rolls (B24): "Enchanting · Charm".
   const challengeLabel = (kind, using) => t('challenge.' + kind) + (using ? ' · ' + using.split('+').map(skillName).join(' + ') : '');
   const swingText = (c) => (c.swing ? ' · ' + t('swing.' + c.swing) : '');
-  const checkText = (c) => c.exam ? t('check.examButton', { skill: c.using.split('+').map(skillName).join(' + '), p: c.p, top: c.top }) + swingText(c)
+  const checkText = (c) => c.exam ? t('check.examButton', { skill: c.using.split('+').map(skillName).join(' + '), p: c.p, top: c.top, a: c.a }) + swingText(c)
     : c.combat ? t('check.combatButton', { p: c.p, cost: c.cost }) + swingText(c)
     : c.challenge ? t('check.challengeButton', { kind: challengeLabel(c.skill, c.using), p: c.p }) + swingText(c) : t('check.button', { skill: skillName(c.skill), p: c.p });
   // The roll on an option's button (B24, M11): combat, the future minigame, is marked apart from skill checks.

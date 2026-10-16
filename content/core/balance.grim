@@ -45,13 +45,17 @@ bell: floor 2 ceil 98
 drift: none 0 low 0.15 mid 0.3 high 0.5
 # A course's standard rung at levels I, II, III (a track's `standard:` overrides), and the rungs a course card rises per
 # course level above its own `level:`.
-course_standard: apprentice+ journeyman+ adept+
-course_step: 3
+course_standard: apprentice+ adept+ master+
+course_step: 5
+course_drift: low
 # Exam preparation (L-3): a course card adds `attend` by itself (options add or cost more); at most `cap` counts.
 study: attend 2 cap 15
 # A course exam's difficulty at course level I, II and III: the course standard ± rungs, with low drift (checks.md).
 # Level III sits two rungs up, because only the stronger players reach it (skill-check survey, 2026-10-15).
-exam_tiers: standard standard standard+2
+exam_tiers: standard+1 standard+1 standard+1
+# An exam's grades (feedback 2026-10-15): A from `a` over the bar, B from `b`, a pass from `pass`, each on the bell (no
+# hard A gate). Going for top marks (`sit_exam wild`) lowers the A mark by `ambitious` and is sat at `ambitious_sigma`.
+exam_bands: a 15 b 5 pass -5 ambitious 8 ambitious_sigma 20
 # A known spell adds `per` to checks of its discipline's skill, at most `cap` (design §9.2; L-3).
 spell_check: per 2 cap 6
 # Learning a spell, or a level of one, gives skill XP in its discipline (L-6): one tier per spell level.

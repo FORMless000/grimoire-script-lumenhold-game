@@ -119,6 +119,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `swing` | structured |  |
 |  | `wage` | structured |  |
 |  | `coursework` | structured |  |
+|  | `exam_bands` | structured |  |
 |  | `spark_follow` | structured |  |
 |  | `odds` | structured |  |
 |  | `study` | structured |  |
@@ -133,6 +134,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `bell` | structured |  |
 |  | `course_standard` | structured |  |
 |  | `course_step` | structured |  |
+|  | `course_drift` | structured |  |
 | `@preset id` | `params` | text |  |
 |  | `desc` | text |  |
 | `@resource id` | `name` | text | yes |
