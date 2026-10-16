@@ -12,7 +12,7 @@
 const G = require('../src/grimoire.js');
 
 const BLOCKS = ['event', 'state', 'npc', 'ending', 'hook', 'resource', 'skill', 'place', 'track', 'spell', 'fact', 'archetype', 'faction', 'arc', 'clue', 'lore', 'timeline', 'vocab'];
-const STATEMENTS = ['say', 'if', 'chance', 'check', 'challenge', 'sit_exam', 'wage', 'flag', 'unflag', 'gain', 'lose', 'queue', 'rel', 'spark', 'npc_rel', 'cool', 'visit', 'learn', 'learn_spell', 'regrade', 'bond', 'meet', 'end', 'delta', 'assign'];
+const STATEMENTS = ['say', 'if', 'chance', 'check', 'challenge', 'sit_exam', 'wage', 'coursework', 'flag', 'unflag', 'gain', 'lose', 'queue', 'rel', 'spark', 'npc_rel', 'cool', 'visit', 'learn', 'learn_spell', 'regrade', 'bond', 'meet', 'end', 'delta', 'assign'];
 const COLLECTIONS = { event: 'events', state: 'states', npc: 'npcs', ending: 'endings', hook: 'hooks', resource: 'resources', skill: 'skills',
   place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline', vocab: 'vocab' };
 const EFFECT_SLOTS = ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero'];
@@ -77,6 +77,7 @@ function statementFields(st) {
     case 'challenge': return { kind: st.kind, tier: st.tier, rung: st.rung || null, standard: !!st.standard, offset: st.offset || 0, odds: st.odds || null, drift: st.drift || null, steps: (st.steps || []).length, using: st.using, vs: st.vs ? st.vs.who + '.' + st.vs.stat : null, has_partial: !!st.partial, swing: st.swing || null };
     case 'sit_exam': return { swing: st.swing || null };
     case 'wage': return { size: st.size || null };
+    case 'coursework': return { track: st.track || null };
     case 'npc_rel': return { a: st.a, b: st.b, tier: st.tier || null };
     case 'learn': return { fact: st.fact };
     case 'learn_spell': return { spell: st.spell, level: st.level };

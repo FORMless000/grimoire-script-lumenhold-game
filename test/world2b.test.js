@@ -508,9 +508,18 @@ test('defer: a suspicion card waits until you are back on campus (I6)', () => {
 // The holiday versions of term jobs (X15) need a job's top rank and a working break, which simulated players
 // rarely combine; this deals each one directly so they can't silently stop working.
 test('holiday gigs at a job\'s top rank deal their own cards (X15)', () => {
+  // The gig's cards share the morning with the plan's other cards, so one seed may deal none in the two break months:
+  // a few seeds each, and at least one must deal one.
   for (const [job, gig] of [['library_assistant', 'library'], ['tavern', 'newt'], ['apothecary_clerk', 'pell'], ['broom_courier', 'post']]) {
+    let dealt = false;
+    for (let seed = 13; seed < 18 && !dealt; seed++) dealt = dealGig(job, gig, seed);
+    assert.ok(dealt, job + ': a ' + gig + ' gig card');
+  }
+});
+function dealGig(job, gig, seed) {
+  {
     const eng = new Engine(content);
-    quiet(() => { eng.newGame({ seed: 13, name: 'T' }); });
+    quiet(() => { eng.newGame({ seed, name: 'T' }); });
     const ctx = eng.newCtx(null, null);
     eng.trackOp({ t: 'join', track: job }, ctx);
     eng.trackState(job).rank = content.tracks[job].ranks.length - 1;
@@ -523,9 +532,9 @@ test('holiday gigs at a job\'s top rank deal their own cards (X15)', () => {
     assert.ok(eng.s.states['gig_' + gig], job + ': its holiday gig was offered and taken');
     // The plan's cards deal in the morning, which the first month spends choosing the plan.
     for (let m = 0; m < 3 && eng.phaseOf() === 'break' && !cards.some((id) => id.startsWith('gig_' + gig + '_')); m++) driveMonth(eng, any, pick);
-    assert.ok(cards.some((id) => id.startsWith('gig_' + gig + '_')), job + ': a ' + gig + ' gig card');
+    return cards.some((id) => id.startsWith('gig_' + gig + '_'));
   }
-});
+}
 
 test('break work: term jobs pay nothing on a break, the holiday gigs still do (I9)', () => {
   const eng = new Engine(content);

@@ -257,6 +257,11 @@ function analyze(content) {
           else if (!Object.values(content.places).some((p) => (p.open || []).includes(st.slot))) P('warn', w, 'visit: no place is open at ' + st.slot);
           break;
         }
+        case 'coursework': {
+          const id = st.track && st.track !== 'track' ? st.track : CUR_TRACK;
+          if (!(id && content.tracks[id] && content.tracks[id].kind === 'course')) P('error', w, 'coursework: ' + (st.track && st.track !== 'track' ? '"' + st.track + '" is not a course' : 'only a course\'s own events (track: <course>) give coursework, or name the course'));
+          break;
+        }
         case 'wage': {
           const words = Object.assign({ short: 0.5, full: 1, overtime: 2 }, (content.balance && content.balance.wage) || {});
           if (st.size && words[st.size] == null) P('error', w, 'wage: unknown wage word "' + st.size + '" (' + Object.keys(words).join(' ') + ')');
@@ -432,7 +437,8 @@ function budgetCheck(e, content, P) {
     for (const [id, r] of Object.entries(content.resources)) x.s.vals[id] = id === 'gold' ? 200 : r.min < 0 ? 0 : 50;
     x.sparkFollow = () => ({ per: 25, cap: 0, partner: 0, cooldown: 101 });   // value what the card says, not spark carried along (M37)
     // Every course enrolled with some preparation, so `study … -tiny` (a skipped lecture) shows as the cost it is (A3).
-    for (const d of Object.values(content.tracks || {})) if (d.kind === 'course') x.s.tracks[d.id] = { kind: 'course', status: 'enrolled', passed: {}, grades: [], rank: 0, perf: 50, rankXp: 0, visits: 0, due: 0, progress: 0, study: 7, level: 1 };
+    // Coursework counts as already given this month: it is the same on every option, so it stays out of their value.
+    for (const d of Object.values(content.tracks || {})) if (d.kind === 'course') x.s.tracks[d.id] = { kind: 'course', status: 'enrolled', passed: {}, grades: [], rank: 0, perf: 50, rankXp: 0, visits: 0, due: 0, progress: 0, study: 7, level: 1, cw: x.s.turn };
     // A member of every club, job and placement, so `wage` pays and `wage overtime` counts.
     for (const d of Object.values(content.tracks || {})) if (d.kind !== 'course') x.s.tracks[d.id] = { kind: d.kind, status: 'member', passed: {}, grades: [], rank: 0, perf: 50, rankXp: 0, visits: 0, due: 0, progress: 0, level: 1 };
     // Everyone already met, so a `rel` doesn't read as a first meeting (which would count as leading somewhere).
@@ -519,6 +525,8 @@ function analyzeWorld(content, P, scanExpr, scanText) {
     const visitSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || [])].filter((r) => r.source === 'visit').map((r) => r.slot));
     if (d.open && d.kind !== 'internship' && visitSlots.size && !d.open.some((sl) => visitSlots.has(sl))) P('error', loc(d), 'open: ' + d.open.join(' ') + ' — never a visit slot (' + [...visitSlots].join(', ') + '), so the place can never be visited');
     scanExpr(d.discover, loc(d), false); scanExpr(d.closed_when, loc(d), false); scanExpr(d.hinted_when, loc(d), false);
+    // `always:` (feedback 2026-10-15): the place's fixed card, an event of this place.
+    if (d.always) { const e = content.events[d.always]; if (!e) P('error', loc(d), 'always: no event "' + d.always + '"'); else if (e.place !== d.id) P('error', loc(d), 'always: "' + d.always + '" is not an event of this place (place: ' + (e.place || 'none') + ')'); }
   }
   const TRACK_KINDS = new Set(['course', 'club', 'job', 'internship', 'thesis', 'society']);
   for (const d of Object.values(content.tracks)) {

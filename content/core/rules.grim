@@ -225,79 +225,8 @@ do:
     gpa_low = 0
     queue crisis_probation
 
-# Coursework (phase 3): each enrolled course trains its main skill a little every term month.
-# (Replaces the v0.2 elective states' ticks, which enrolment used to grant two at a time.)
-@hook coursework_evocation
-on: month_start
-label: Coursework
-when: term and enrolled(evocation)
-do:
-  arcana +small
-  say: {~Fire and water drills, twice a week.|Your sleeves smell of smoke, and the cuffs are damp.}
-
-@hook coursework_astromancy
-on: month_start
-label: Coursework
-when: term and enrolled(astromancy)
-do:
-  lore +small
-  say: {~Star charts by candlelight.|Tea leaves in the morning, star tables at night.}
-
-@hook coursework_alchemy
-on: month_start
-label: Coursework
-when: term and enrolled(alchemy)
-do:
-  alchemy +small
-  say: {~Measuring, stirring, writing it all down.|Your fingers are stained a new colour this month.}
-
-@hook coursework_illusion
-on: month_start
-label: Coursework
-when: term and enrolled(illusion)
-do:
-  charm +small
-  say: {~Glamour exercises in front of the mirror.|You practise a smile that isn't quite yours.}
-
-@hook coursework_beastcraft
-on: month_start
-label: Coursework
-when: term and enrolled(beastcraft)
-do:
-  vigor +small
-  say: {~Mucking out and riding drills.|Hay in your hair and a bruise from a broom.}
-
-@hook coursework_umbral
-on: month_start
-label: Coursework
-when: term and enrolled(umbral)
-do:
-  guile +small
-  say: {~Ward drills in the dim tower.|Lessons in the dark, where you learn to listen.}
-
-@hook coursework_artifice
-on: month_start
-label: Coursework
-when: term and enrolled(artifice)
-do:
-  alchemy +small
-  say: {~Gears, springs and burnt fingertips.|The workshop hums with your half-finished work.}
-
-@hook coursework_starcalling
-on: month_start
-label: Coursework
-when: term and enrolled(starcalling)
-do:
-  lore +small
-  say: {~Night appointments under the dome.|Names of stars, said into the cold.}
-
-@hook coursework_hollow_studies
-on: month_start
-label: Coursework
-when: term and enrolled(hollow_studies)
-do:
-  guile +small
-  say: {~A windowless room and very old books.|Lessons you can't repeat at dinner.}
+# Coursework (feedback 2026-10-15): each enrolled course trains its main skill once a term month through its cards,
+# like a job's wage (engine: courseworkFor, `@balance coursework:`), so there are no coursework hooks.
 
 @hook term_stress
 on: month_start
@@ -369,19 +298,3 @@ do:
     queue sorting_mirror now
   else:
     queue choose_origin now
-
-@hook love_glow
-on: month_start
-label: Someone to come home to
-when: bonds(partner) > 0
-do:
-  mood +4
-  say: {~Someone saves you a seat, every time.|A note in your bag, in a hand you know. Just a heart.|You catch yourself smiling at nothing, again.}
-
-@hook lonely
-on: month_start
-label: Loneliness
-when: turn > 4 and bonds(friend) + bonds(close) + bonds(partner) == 0
-do:
-  mood -2
-  say: {~You eat alone more often than you mean to.|The common room is loud, and none of it is for you.|You write a letter to nobody, and burn it.}

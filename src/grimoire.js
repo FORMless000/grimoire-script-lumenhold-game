@@ -203,6 +203,8 @@
       'combat', 'combat_cost', 'swing',
       // a shift's pay per wage word (`wage short`), as a share of the job's `pay:` at your rank (M10)
       'wage',
+      // coursework: the size tier of a course's monthly skill XP at each course level (feedback 2026-10-15)
+      'coursework',
       // friendship gains carry spark along (M37): spark / per × the gain, at most cap× (partner× for a partner);
       // crossing `cooldown` spark pushes @game spark_cooldown
       'spark_follow',
@@ -349,6 +351,7 @@
     course_standard(t) { const w = words(t); for (const x of w) if (!RUNG_RE.test(x)) throw 'course_standard: expected a rung per course level, got "' + x + '"'; return w; },
     course_step(t) { return toNum(t.trim(), 'course_step'); },
     standard(t) { const w = words(t); for (const x of w) if (!RUNG_RE.test(x)) throw 'standard: expected a rung per course level, got "' + x + '"'; return w; },
+    coursework(t) { const w = words(t); for (const x of w) if (!TIERS.includes(x)) throw 'coursework: expected a size tier per course level (tiny … huge), got "' + x + '"'; return w; },
     spell_bonus(t) { const w = words(t); for (const x of w) if (!TIERS.includes(x)) throw 'spell_bonus: expected a size tier per spell level (tiny … huge), got "' + x + '"'; return w; },
     ramp(t) { const m = t.trim().match(/^(.+?)\s+(-?\d+)\s*\.\.\s*(-?\d+)$/); if (!m || +m[3] <= +m[2]) throw 'ramp: expected "<expression> low..high", e.g. ramp: rel(npc) 18..30'; return { expr: m[1], lo: +m[2], hi: +m[3] }; },
   };
@@ -395,6 +398,7 @@
     challenge: new RegExp('^challenge\\s+(' + ID + ')(?:\\s+using\\s+(' + ID + '))?(?:\\s+vs\\s+(' + ID + ')\\.(' + ID + '))?\\s+(trivial|easy|medium|hard|heroic)(?:\\s+(wild|steady))?\\s*:$'),
     sitExam: /^sit_exam(?:\s+(wild|steady))?$/,
     wage: /^wage(?:\s+([a-z]+))?$/,
+    coursework: /^coursework(?:\s+([a-z_]+))?$/,
     cool: /^cool\s+([a-z_][a-z0-9_]*)$/,
     visitSlot: /^visit\s+([a-z]+)$/,
     preset: new RegExp('^(' + ID + ')((?:\\s+' + ID + ')*)$'),
@@ -446,6 +450,7 @@
     if (/^challenge\s.*:$/.test(content)) return parseChallenge(content.slice(10, -1), E, file, line);
     if ((m = content.match(RE.sitExam))) return { t: 'sit_exam', swing: m[1] || null, line };
     if ((m = content.match(RE.wage))) return { t: 'wage', size: m[1] || null, line };
+    if ((m = content.match(RE.coursework))) return { t: 'coursework', track: m[1] || null, line };
     if ((m = content.match(RE.cool))) return { t: 'cool', npc: m[1], line };
     if ((m = content.match(RE.visitSlot))) return { t: 'visit', slot: m[1], line };
     if (content.endsWith(':')) throw new GrimError('unknown block statement "' + content + '" (expected if/elif/else/chance/check)', file, line);

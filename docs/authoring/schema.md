@@ -118,6 +118,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `combat_cost` | text |  |
 |  | `swing` | structured |  |
 |  | `wage` | structured |  |
+|  | `coursework` | structured |  |
 |  | `spark_follow` | structured |  |
 |  | `odds` | structured |  |
 |  | `study` | structured |  |

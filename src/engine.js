@@ -353,6 +353,21 @@
       const levels = Object.values(s.spells || {}).reduce((a, b) => a + (b || 0), 0);
       return (tw ? sum / tw : 0) + (w.condition || 0) * shape + Math.min(15, (w.spells || 0) * levels);
     }
+    // Coursework (feedback 2026-10-15): each enrolled course trains its main skill once a term month, at its level's
+    // size (`@balance coursework: small small small`), like a job's wage: through the first of its cards you play that
+    // month (or a `coursework` statement), else at the month's end. Returns whether it was given now.
+    courseworkFor(id, ctx) {
+      const s = this.s, t = s.tracks && s.tracks[id], d = this.c.tracks[id];
+      if (!t || !d || d.kind !== 'course' || t.status !== 'enrolled' || this.phaseOf() !== 'term' || t.cw === s.turn) return false;
+      const sk = this.trackSkills(id)[0]; if (!sk) return false;
+      const tiers = (this.c.balance && this.c.balance.coursework) || ['small', 'small', 'small'];
+      t.cw = s.turn;
+      // XP from the xp row for every course, whatever its skill (Lore has a smaller row of its own), so courses of one
+      // level train equally.
+      const xp = this.tierAmount('xp', tiers[Math.min(tiers.length, Math.max(1, t.level || 1)) - 1]);
+      this.run([{ t: 'delta', name: sk, min: xp, max: xp }], ctx);
+      return true;
+    }
     // One shift's pay (M10): the job's `pay:` at your rank × the wage word's share (`@balance wage:`), less while
     // benched. No double wage on a break (M6): holiday work is the gigs'.
     wageFor(id, size) {
@@ -1142,6 +1157,7 @@
           // `visit midnight` (M41): that slot of today becomes a visit, picked on the map when it comes.
           case 'visit': if (s.day && s.day.v === 2 && this.recipe().some((r) => r.slot === st.slot)) s.day.extraVisit = st.slot; break;
           case 'cool': { const id = this.npcOf(st.npc, ctx), n = id && s.npcs[id]; if (n && n.spark) { ctx.deltas['spark:' + id] = (ctx.deltas['spark:' + id] || 0) - n.spark; n.spark = 0; } break; }   // spark cleared (M37)
+          case 'coursework': { const id = !st.track || st.track === 'track' ? ctx.track || this._ctxTrack : st.track; if (id) this.courseworkFor(id, ctx); break; }
           case 'wage': {
             const ev = ctx.key && this.c.events[ctx.key], id = ctx.track || this._ctxTrack || (ev && ev.track);
             const pay = id ? this.wageFor(id, st.size) : 0;
@@ -1457,6 +1473,14 @@
     endMonth() {
       const s = this.s;
       const summary = [];
+      // Coursework not yet given this month (no card of the course played): given now, before exams close the term.
+      for (const id of Object.keys(s.tracks || {})) {
+        const ctx = this.newCtx(null, null, null);
+        if (this.courseworkFor(id, ctx)) {
+          const d = this.c.tracks[id], lv = (s.tracks[id].level || 1), names = (d.level_names || d.name).split(/\s*[,，、]\s*/);
+          summary.push(Object.assign(this.summaryItem(ctx, names[lv - 1] || d.name), { src: 'coursework ' + id }));
+        }
+      }
       if (this.dayMode && this.isTermEnd()) this.endTerm(summary);
       s.day = null;
       this.runHooks('month_end', summary);
@@ -1580,6 +1604,7 @@
         this.change(this.spellResource, -cost, ctx);
       }
       this.run(opt.effects, ctx);
+      if (item.track) this.courseworkFor(item.track, ctx);
       this.handleZeroed(ctx);
       this._variant = null;
       // Track cards (design §6.2, §7.3): a course card is study for the exam; outcomes move performance.
@@ -1669,6 +1694,7 @@
         try {
           if (opt.spell) this.change(this.spellResource, -cost, ctx);
           this.run(opt.effects, ctx);
+          if (ctx.track) this.courseworkFor(ctx.track, ctx);
           this.handleZeroed(ctx);
         } finally {
           const follows = ctx.notes.some((n) => n.kind !== 'wage') || s.queue.length !== saved.queue.length || s.deck.length !== saved.deck.length || !!s.ended !== !!saved.ended ||

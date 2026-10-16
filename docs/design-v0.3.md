@@ -719,6 +719,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - **Balanced play** should keep them up easily.
 - **Aggressive play** (always grinding or working) drains mood to 0 in about 3 term months and health in about 6. Health- and mood-focused options recover at a similar rate.
 - Zero triggers the existing crisis events.
+- No standing monthly mood from relationships (feedback 2026-10-15): the old "in love" and "lonely" hooks are gone; mood comes from what happens in cards.
 
 **Crowns** (no maximum).
 
@@ -805,6 +806,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 ### 8.5 Skills
 
 - **XP sources:**
+  - **coursework** (feedback 2026-10-15): once a month for each enrolled course, a fixed amount by course level (`@balance coursework`, from the `xp` row whatever the course's skill, so courses of one level train equally). It shows with the first card of that course in the month, or at month's end if the course had none. It replaced the monthly coursework hooks, which only paid when no card had;
   - course cards;
   - club and job events;
   - **incidental XP from ordinary events, spread across all skills**;
