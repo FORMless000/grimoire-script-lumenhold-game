@@ -20,17 +20,17 @@ tags: romance nature
 cast:
   date: any where romanceable(date) and rel(date) >= 12 and around(date)
 scene: Two figures walking a lakeside path at dusk, the towers reflected upside down in the still water beside them.
-text: {You came out to walk alone. {date} finds you on the shore path and falls into step without asking.|The shore path is where you go to think. Today {date} has the same idea.|You know every stone of the shore path by now. Today {date} walks it with you.} {season == "winter": The lake is frozen at the edges and your breath walks ahead of you.|{season == "summer": The water is warm and full of sky.|{Mist lies on the water like a sheet someone forgot to fold.|The towers stand upside down in the lake, lit window by lit window.}}}
+text: {You came out to walk alone. {date} finds you on the shore path and falls into step without asking.|The shore path is where you go to think. Today {date} has the same idea.|You know every stone of the shore path by now. Today {date} walks it with you.} {season == "winter": The lake is frozen at the edges and your breath walks ahead of you.|{season == "summer": The water is warm and full of sky.|{Mist lies on the water like a sheet someone forgot to fold.|The towers stand upside down in the lake, lit window by lit window.|The water is so still that a dropped leaf makes rings for a minute.}}}
 > left: Walk the long way round
   spark date +small
   rel date +tiny
   health -small
-  say: {final_year: Halfway round, {date} says "next year" and stops, because there won't be one here. You walk the rest closer together.|{season == "winter": {You walk until your toes go numb. {date} lends you {their} scarf and pretends not to be cold.|The ice sings under your boots. {date} takes your arm on the slippery stretch and forgets to let go.}|{You walk until the far lamps go out. Neither of you mentions the time.|{date} points out a lit tower window and tells you who lives behind it. Half of it is invented. You don't mind which half.|You stand at the water's edge in silence, and the silence is the good kind.}}}
+  say: {final_year: Halfway round, {date} says "next year" and stops, because there won't be one here. You walk the rest closer together.|{season == "winter": {You walk until your toes go numb. {date} lends you {their} scarf and pretends not to be cold.|The ice sings under your boots. {date} takes your arm on the slippery stretch and forgets to let go.|You walk the frozen edge in step. {date} counts the herons out loud, and you let {them} lose count.}|{You walk until the far lamps go out. Neither of you mentions the time.|{date} points out a lit tower window and tells you who lives behind it. Half of it is invented. You don't mind which half.|You stand at the water's edge in silence, and the silence is the good kind.}}}
 > right: Talk about anything but us
   rel date +small
   spark date -tiny
   health -tiny
-  say: {You talk about exams, the cook and the weather. It's easy. It's also not what either of you came for.|You argue cheerfully about whether the lake has a bottom. It's a good walk. It's only a walk.}
+  say: {You talk about exams, the cook and the weather. It's easy. It's also not what either of you came for.|You argue cheerfully about whether the lake has a bottom. It's a good walk. It's only a walk.|You talk about the lake, the cook and everything except the thing. It gets easier to leave it unsaid, which is not a good sign.}
 
 @event lakeshore_cold_swim
 title: The Cold Swim
@@ -49,15 +49,15 @@ text: {season == "winter": Students in towels are daring each other into the lak
       vigor +small
       mood +small
       health -tiny
-      say: {season == "winter": You go under, come up roaring, and are hauled out a hero.|{You slap the flat rock, whoop, and swim back to applause from people with dry hair.|You reach the rock first. The cold reaches you second, but you were already winning.}}
+      say: {season == "winter": You go under, come up roaring, and are hauled out a hero.|{You slap the flat rock, whoop, and swim back to applause from people with dry hair.|You reach the rock first. The cold reaches you second, but you were already winning.|You swim out to the rock and back without thinking about it. That's the trick, it turns out.}}
     lose:
       health -small
       mood -tiny
-      say: {You come back blue to the lips and sneezing. Sister Amaranth sighs before you've even sat down.|Halfway out, the lake reminds you who is in charge. You turn back with what dignity you have left.}
+      say: {You come back blue to the lips and sneezing. Sister Amaranth sighs before you've even sat down.|Halfway out, the lake reminds you who is in charge. You turn back with what dignity you have left.|The lake wins again. Sister Amaranth has a blanket ready before you've reached the shore.}
 > right: Hold the towels and heckle
   charm +small
   mood -tiny
-  say: {You announce every dive like a herald. You're dry, popular and a tiny bit jealous.|You keep the towels warm and the commentary warmer. Someone throws a wet sock at you, which is fair.}
+  say: {You announce every dive like a herald. You're dry, popular and a tiny bit jealous.|You keep the towels warm and the commentary warmer. Someone throws a wet sock at you, which is fair.|You keep the towels and the score. The swimmers argue with your score, which means they trust it.}
 
 # ---------------- The Duelling Hall ----------------
 
@@ -75,11 +75,11 @@ text: {The near end of the hall belongs to the practice dummies, who watch you c
 > left: Drill your hexes on it
   arcana +small
   mana -small
-  say: {Hex after hex until your wrists ache. The dummy loses a sleeve and none of its contempt.|You land a clean one at last. A wisp of straw floats down, slowly, like applause.}
+  say: {Hex after hex until your wrists ache. The dummy loses a sleeve and none of its contempt.|You land a clean one at last. A wisp of straw floats down, slowly, like applause.|You knock the eyepatch clean off. The dummy looks more menacing without it, which you didn't plan for.}
 > right: Restuff the battered ones
   mood +small
   health -tiny
-  say: {You haul a bale of straw over from the stables and restuff three dummies. They look almost grateful, which is unsettling.|You restuff the moustached one with special care. It still looks like it's planning something.}
+  say: {You haul a bale of straw over from the stables and restuff three dummies. They look almost grateful, which is unsettling.|You restuff the moustached one with special care. It still looks like it's planning something.|You restuff the moustached one and straighten its eyepatch. It's the best-dressed thing in the hall.}
 
 @event duel_hall_gallery
 title: From the Gallery
@@ -100,14 +100,14 @@ text: {From the gallery above the duelling floor you can watch whoever is practi
       rel here +small
       arcana +tiny
       health -tiny
-      say: {You take a round off {here}. {They} stare{s} at you for a long second, then ask{s} for another.|You win with a feint you stole from watching {here}. {They} notice{s}, and look{s} annoyed and pleased at once.}
+      say: {You take a round off {here}. {They} stare{s} at you for a long second, then ask{s} for another.|You win with a feint you stole from watching {here}. {They} notice{s}, and look{s} annoyed and pleased at once.|You spar with {here} as if you'd done it for years, because from the gallery, you have. {They} win{s} narrowly and look{s} at you differently.}
     lose:
       health -small
       rel here +tiny
-      say: {{here} puts you on the floorboards, politely. From down there the ceiling's scorch marks make a sort of map.|{here} disarms you so neatly that the dummies seem to wince. Your wand skids under the gallery stairs.}
+      say: {{here} puts you on the floorboards, politely. From down there the ceiling's scorch marks make a sort of map.|{here} disarms you so neatly that the dummies seem to wince. Your wand skids under the gallery stairs.|{here} lands a spell that singes the ceiling and you with it. You add your own mark to the map.}
 > right: Watch and take notes
   lore +small
-  say: {You fill a page with what {here} does with {their} feet. You'll never get to try it, and you know it.|You sketch {here}'s guard from above. On paper it has a gap. On the floor it doesn't.}
+  say: {You fill a page with what {here} does with {their} feet. You'll never get to try it, and you know it.|You sketch {here}'s guard from above. On paper it has a gap. On the floor it doesn't.|You take notes from your groove at the rail. Your notes on {here} could fill a book now, and might.}
 
 @event duel_hall_humming_circle
 time: evening
@@ -127,14 +127,14 @@ text: {The evening bouts are over. At the near end of the hall the warding circl
     win:
       arcana +small
       mana -small
-      say: {The spell comes out clean and the circle drinks it. Somewhere a dummy loses its head and nobody ever finds out how.|You try the thing you saw a fourth-year do. It works. You tell no one, and walk back grinning.}
+      say: {The spell comes out clean and the circle drinks it. Somewhere a dummy loses its head and nobody ever finds out how.|You try the thing you saw a fourth-year do. It works. You tell no one, and walk back grinning.|You cast the hard one and the circle hums the note back to you, a little higher. You think that's approval.}
     lose:
       health -small
       mana -small
-      say: {The circle hands your spell straight back to you. Your eyebrows will regrow.|The circle flares, the dummies rattle, and you leave very quickly before the steward arrives.}
+      say: {The circle hands your spell straight back to you. Your eyebrows will regrow.|The circle flares, the dummies rattle, and you leave very quickly before the steward arrives.|The circle swallows half your spell and spits out the other half in your direction. The steward's broom falls over, laughing.}
 > right: Sweep up for the steward
   gold +tiny
-  say: {You sweep up a winter's worth of ash. The steward pays you a few crowns and a grunt that might be thanks.|You sweep. The circle hums at you the whole time, like a cat that wants to be let out.}
+  say: {You sweep up a winter's worth of ash. The steward pays you a few crowns and a grunt that might be thanks.|You sweep. The circle hums at you the whole time, like a cat that wants to be let out.|You sweep in time with the hum. The steward says you're the only one who does it properly, and pays you for the compliment.}
 
 # ---------------- The Greenhouses ----------------
 
@@ -151,12 +151,12 @@ scene: A student reading on an upturned pot among tall ferns inside a steamy gla
 text: {season == "winter": Outside it's snowing. Inside, the glass runs with warm water and everything smells of earth.|{season == "summer": The greenhouses are sweltering, and everyone has retreated to the far end where the vents are.|The greenhouses steam gently. Someone is singing to the mandrakes at the far end.}} {You find a dry corner by the ferns, out of everyone's way.|Someone has left a cushion in your corner by the ferns.|The ferns lean toward you when you come in, as they do for you now.}
 > left: Do your reading in the warm
   lore +small
-  say: {You get through a whole chapter. The pages curl in the damp and you come out smelling of moss.|You read until the steam makes the ink run. What's left of the chapter sticks.}
+  say: {You get through a whole chapter. The pages curl in the damp and you come out smelling of moss.|You read until the steam makes the ink run. What's left of the chapter sticks.|You read with the ferns leaning in to listen. The chapter goes in easily, and the moss smell stays a day.}
 > right: Nap on the potting bench
   mood +small
   health +tiny
   renown -tiny
-  say: {You wake with a seed tray for a pillow and a first-year staring at you. By supper it's a story.|You wake to a mandrake humming a lullaby. You choose not to tell anyone. Someone tells everyone.}
+  say: {You wake with a seed tray for a pillow and a first-year staring at you. By supper it's a story.|You wake to a mandrake humming a lullaby. You choose not to tell anyone. Someone tells everyone.|You nap on your cushion among the ferns. Someone has put a sign by your feet. It says "Do not water".}
 
 @event greenhouses_repotting
 title: Repotting Day
@@ -175,12 +175,12 @@ text: {here} is up to the elbows in compost, repotting {season == "spring": seed
   rel here +small
   alchemy +tiny
   health -tiny
-  say: {You repot a whole row. Something nips your thumb in thanks.|You're filthy, nipped and oddly happy. {here} says you have good hands for roots.}
+  say: {You repot a whole row. Something nips your thumb in thanks.|You're filthy, nipped and oddly happy. {here} says you have good hands for roots.|You take your trowel off its hook and repot the difficult ones. Nothing bites you, which {here} says is a first.}
 > right: Ask questions, stay clean
   lore +small
   rel here -tiny
   mood -tiny
-  say: {You learn a great deal about soil. {here} learns that you're afraid of it.|You take notes. {here} gives you a look over the trowel that says notes are not hands.}
+  say: {You learn a great deal about soil. {here} learns that you're afraid of it.|You take notes. {here} gives you a look over the trowel that says notes are not hands.|You ask your questions with your trowel in your hand, which {here} counts as progress.}
 
 @event greenhouses_cuttings
 title: The Cuttings Bench
@@ -198,15 +198,15 @@ text: {A row of silver-leaf cuttings is drying on the bench|A tray of night-orch
     win:
       gold +small
       alignment -tiny
-      say: {Pell's counts the leaves twice and pays without a question. You don't look at the snapdragons on your next visit.|It sells for more than you expected, which somehow makes it worse.}
+      say: {Pell's counts the leaves twice and pays without a question. You don't look at the snapdragons on your next visit.|It sells for more than you expected, which somehow makes it worse.|Moonpetal sells for twice the others. Pell's doesn't ask where it came from, which you notice.}
     lose:
       renown -small
       alignment -tiny
-      say: {A snapdragon shrieks. Three Verdant students turn around at once. You put it back with a cough that convinces no one.|Your pocket rustles at the wrong moment. You spend the rest of the visit apologising to a fern.}
+      say: {A snapdragon shrieks. Three Verdant students turn around at once. You put it back with a cough that convinces no one.|Your pocket rustles at the wrong moment. You spend the rest of the visit apologising to a fern.|The snapdragons have been waiting for this. They raise the alarm before your hand reaches the cloth.}
 > right: Feed the snapdragons
   alchemy +small
   health -tiny
-  say: {They take the food, then a little of your finger. You learn which end to hold the tongs by.|Fed, the snapdragons purr like kettles. One of them still bites you, out of habit.}
+  say: {They take the food, then a little of your finger. You learn which end to hold the tongs by.|Fed, the snapdragons purr like kettles. One of them still bites you, out of habit.|You feed the snapdragons and they snap anyway, gently, out of principle. You've come to find it friendly.}
 
 # ---------------- The Flight Field ----------------
 
@@ -220,16 +220,16 @@ weight: 10
 art: broom
 tags: life
 scene: A long green field with tall hoops at either end, one student wobbling on a school broom against a gusting wind.
-text: {season == "winter": The flight field is white, the hoops wearing caps of snow.|{season == "spring": The field is soft with new grass and the wind is playful.|{The field is empty but for the wind, practising on its own.|A lone first-year is flying very careful circles.}}} {The school brooms in the shed are, at best, opinionated.|Your usual broom is in the shed, the one that pulls left.|The broom that pulls left now pulls right, out of spite.}
+text: {season == "winter": The flight field is white, the hoops wearing caps of snow.|{season == "spring": The field is soft with new grass and the wind is playful.|{The field is empty but for the wind, practising on its own.|A lone first-year is flying very careful circles.|A pair of fourth-years are racing low over the grass.}}} {The school brooms in the shed are, at best, opinionated.|Your usual broom is in the shed, the one that pulls left.|The broom that pulls left now pulls right, out of spite.}
 > left: Practise your landings
   vigor +small
   health -small
-  say: {A dozen landings. A few of them on purpose. The grass keeps a careful record of the rest.|The wind waits until you're nearly down, then shoves. You land in a hoop instead. Technically, a goal.}
+  say: {A dozen landings. A few of them on purpose. The grass keeps a careful record of the rest.|The wind waits until you're nearly down, then shoves. You land in a hoop instead. Technically, a goal.|Your broom pulls right; you lean left. The landings come out straight, for once.}
 > right: Hire a decent broom
   gold -small
   mood +small
   vigor +tiny
-  say: {The good broom goes where you look, not where it feels like. For an hour, flying is easy and the field is yours.|You fly the length of the field and back with the wind on your side for once. It costs a week's sweets.}
+  say: {The good broom goes where you look, not where it feels like. For an hour, flying is easy and the field is yours.|You fly the length of the field and back with the wind on your side for once. It costs a week's sweets.|You hire the good broom and leave the spiteful one in the shed. It will be waiting next time, and it will remember.}
 
 @event flight_field_pickup_race
 title: The Pick-Up Race
@@ -248,20 +248,20 @@ text: {A pick-up race is forming at the far hoops. Three brooms, two rules, no r
       renown +small
       mood +small
       health -tiny
-      say: {You win by a broom's length and a lot of shouting. The second-year taking bets has to pay out and never forgives you.|You take the last hoop sideways and cross first. Someone adds a new rule, about you.}
+      say: {You win by a broom's length and a lot of shouting. The second-year taking bets has to pay out and never forgives you.|You take the last hoop sideways and cross first. Someone adds a new rule, about you.|You cross the crooked finish line first, barefoot Rootward student close behind. Your name goes up on the post in chalk.}
     lose:
       health -small
       mood -tiny
-      say: {You finish last, and partly in a hedge.|The wind takes your side, then changes its mind. You walk the broom back to the start.}
+      say: {You finish last, and partly in a hedge.|The wind takes your side, then changes its mind. You walk the broom back to the start.|You lose to someone flying barefoot. You consider the lesson in this and decide against it.}
 > right: Bet a few crowns on the outsider
   gold -tiny
   chance unlikely:
     gold +small
     mood +tiny
-    say: {The outsider wins on a gust nobody else saw coming. You are suddenly very good at betting.|The outsider comes in first by a nose. You toast the nose.}
+    say: {The outsider wins on a gust nobody else saw coming. You are suddenly very good at betting.|The outsider comes in first by a nose. You toast the nose.|You bet on the barefoot flyer. Grip, it turns out, is everything.}
   else:
     mood -tiny
-    say: {The outsider stops halfway to admire the view. Your crowns go with them.|Your flyer is disqualified for a rule invented on the spot. You don't argue. It's a good rule.}
+    say: {The outsider stops halfway to admire the view. Your crowns go with them.|Your flyer is disqualified for a rule invented on the spot. You don't argue. It's a good rule.|Your outsider's broom throws them at the first hoop. The crowns stay where they landed, which is not with you.}
 
 @event flight_field_long_grass
 title: The Long Grass
@@ -273,20 +273,20 @@ weight: 10
 art: pouch
 tags: life
 scene: The long grass at the edge of a flight field, scattered with things dropped from brooms, a student crouching to look.
-text: {The long grass at the edge of the flight field catches everything that falls off a broom.|Someone has planted a little flag in the long grass, to mark where things land.|You've come to think of the long grass as the academy's real lost-and-found.} Today it's {a velvet glove|a letter with no envelope|a single boot, laced|someone's notes for an exam}. {season == "autumn": The leaves are trying to bury it.|{season == "winter": It's half under frost.|A grasshopper is sitting on it.}}
+text: {The long grass at the edge of the flight field catches everything that falls off a broom.|Someone has planted a little flag in the long grass, to mark where things land.|You've come to think of the long grass as the academy's real lost-and-found.|Somebody has started a ledger of the long grass, pinned to the fence. Today's entry is yours to write.} Today it's {a velvet glove|a letter with no envelope|a single boot, laced|someone's notes for an exam}. {season == "autumn": The leaves are trying to bury it.|{season == "winter": It's half under frost.|A grasshopper is sitting on it.}}
 > left: Keep what you find
   guile +tiny
   mood +tiny
   alignment -tiny
   chance unlikely:
     renown -small
-    say: {The owner lands right beside you while you're still holding it. There's a short, very long silence.|A second-year marches over the grass shouting "Thief!" at the sky in general and you in particular.}
+    say: {The owner lands right beside you while you're still holding it. There's a short, very long silence.|A second-year marches over the grass shouting "Thief!" at the sky in general and you in particular.|A boy hops across the field on one foot, shouting. He wants his boot back, and he wants to know why you're holding it.|The owner of the notes finds you reading them. Their exam is tomorrow. It turns out yours is too.}
   else:
-    say: {Finders, keepers. The grass doesn't argue, and neither does your conscience, much.|Nobody comes looking. You tell yourself that settles it.}
+    say: {Finders, keepers. The grass doesn't argue, and neither does your conscience, much.|Nobody comes looking. You tell yourself that settles it.|It's a good boot. You'll need another one, but it's a start.|The notes are better than yours. You tell yourself that settles it.}
 > right: Carry it to the porter's lodge
   alignment +small
   renown +tiny
-  say: {It's a long walk round the field. The porter writes it in a book and gives you a look of mild surprise.|The porter thanks you with a peppermint from a jar that has clearly been open since the founders.}
+  say: {It's a long walk round the field. The porter writes it in a book and gives you a look of mild surprise.|The porter thanks you with a peppermint from a jar that has clearly been open since the founders.|The porter puts the boot on a shelf of single boots, all left feet. This one is a right. He looks almost moved.|The porter reads the first page of the notes, says "Hm," and files them under urgent.}
 
 # ---------------- The Familiar Stables ----------------
 
@@ -303,10 +303,10 @@ scene: A hay loft in old stables, rows of sleepy owls on the rafters above a stu
 text: {Up the ladder, above the hippogriffs, is a hay loft full of owls and quiet.|The owls open one eye each, decide you're furniture, and go back to sleep.|The owls have stopped opening their eyes for you. You've been accepted.} {season == "winter": The warmth of the animals rises through the boards.|{Rain ticks on the roof.|A stray letter has fallen into the hay.|The griffon chick is complaining somewhere below.}}
 > left: Read up among the owls
   lore +small
-  say: {You read until the light goes. The hay gets in everywhere, and the chapter gets in too.|An owl reads over your shoulder for a whole page, then hoots, pointedly, at a footnote.}
+  say: {You read until the light goes. The hay gets in everywhere, and the chapter gets in too.|An owl reads over your shoulder for a whole page, then hoots, pointedly, at a footnote.|You read until the griffon below stops complaining. The owls don't stir. You belong up here now.}
 > right: Help sort the owl post
   charm +small
-  say: {You sort a dropped bundle of post by hand. One owl seems to know which letters you're going to misfile.|You deliver three soggy letters to their owners on the way back. One of them hugs you, which you weren't ready for.}
+  say: {You sort a dropped bundle of post by hand. One owl seems to know which letters you're going to misfile.|You deliver three soggy letters to their owners on the way back. One of them hugs you, which you weren't ready for.|You sort the owl post by the light of the hatch. An owl drops a letter in your lap; it's for you.}
 
 @event stables_brask_rounds
 title: Brask's Rounds
@@ -321,11 +321,11 @@ scene: A burly professor stroking a hippogriff's beak in a stable aisle, ignorin
 text: {Professor Brask is on her rounds, telling each hippogriff she's a very good girl. She tells you to mind the bucket.|Brask is on her rounds. She nods at you, which is more than most get.|Brask greets you by name now, somewhere after the owls.} {season == "spring": There are new hippogriff foals, all legs and beak.|{A hippogriff is sulking about its feathers.|The feed is late and everyone is cross.|The stable cat is asleep in the oats.}}
 > left: Ask Brask a question
   lore +small
-  say: {She answers it at length, to the hippogriff. You take notes anyway.|"Good question," she says, to the owl. You decide that counts.}
+  say: {She answers it at length, to the hippogriff. You take notes anyway.|"Good question," she says, to the owl. You decide that counts.|She answers you directly, which has never happened. The stable cat wakes up to see what's going on.}
 > right: Carry the feed buckets
   vigor +small
   health -tiny
-  say: {Every stall, two buckets each. Brask says nothing, which is his way of saying thank you.|A hippogriff bows to you over its bucket. Brask looks almost jealous.}
+  say: {Every stall, two buckets each. Brask says nothing, which is her way of saying thank you.|A hippogriff bows to you over its bucket. Brask looks almost jealous.|You carry the buckets and work around the cat in the oats. Brask hands you the last bucket without being asked.}
 
 @event stables_griffon_sulk
 title: The Sulking Griffon
@@ -343,14 +343,14 @@ text: {The griffon chick is sulking in the corner stall, feathers puffed, refusi
     win:
       charm +small
       mood +small
-      say: {It considers you for a long time, then takes the morsel with great delicacy. You feel chosen.|It eats from your hand and then, briefly, leans on you. You don't move for ten minutes.}
+      say: {It considers you for a long time, then takes the morsel with great delicacy. You feel chosen.|It eats from your hand and then, briefly, leans on you. You don't move for ten minutes.|It takes the morsel and then nudges your hand for another. Brask, passing, crosses out "I mean it".}
     lose:
       health -small
       mood -tiny
-      say: {It takes the morsel, a corner of your sleeve and a nip of your thumb. The sign was right.|It turns its back on you so pointedly that a passing owl looks embarrassed, and its tail catches you hard across the shins on the way round.}
+      say: {It takes the morsel, a corner of your sleeve and a nip of your thumb. The sign was right.|It turns its back on you so pointedly that a passing owl looks embarrassed, and its tail catches you hard across the shins on the way round.|It takes the morsel and your glove, and then the sign agrees with it. Brask adds a second underline.}
 > right: Leave it to its sulk
   lore +tiny
-  say: {You read the notice about griffon moods instead. It is mostly a list of things that will not help.|You leave it alone. It looks, as you go, a little disappointed you gave up.}
+  say: {You read the notice about griffon moods instead. It is mostly a list of things that will not help.|You leave it alone. It looks, as you go, a little disappointed you gave up.|You leave it to sulk. It follows you along the bars, sulking at a closer range.}
 
 # ---------------- The Boathouse ----------------
 
@@ -371,12 +371,12 @@ text: {{date} is at the end of the jetty, boots over the water. {They} move{s} o
   gold -small
   spark date +small
   mood +tiny
-  say: {season == "winter": You can't row on ice, so you sit in a beached boat and pretend. {date} calls it a fine voyage.|{You row badly, {date} laughs, and then neither of you is rowing at all.|Out in the middle the shore goes quiet. {date} says your name like the end of a sentence.}}
+  say: {season == "winter": You can't row on ice, so you sit in a beached boat and pretend. {date} calls it a fine voyage.|{You row badly, {date} laughs, and then neither of you is rowing at all.|Out in the middle the shore goes quiet. {date} says your name like the end of a sentence.|You row out until the village lamps are behind you. {date} trails a hand in the water and doesn't say anything for a long time.}}
 > right: Stay on the jetty and talk
   rel date +small
   mood +small
   health -tiny
-  say: {final_year: You talk about where you'll both be next year. Neither of you says "together", and both of you hear it.|{You talk until the lantern gutters. The jetty is cold and you don't notice until you stand.|You say one of the things you couldn't say indoors. {date} listens all the way to the end.}}
+  say: {final_year: You talk about where you'll both be next year. Neither of you says "together", and both of you hear it.|{You talk until the lantern gutters. The jetty is cold and you don't notice until you stand.|You say one of the things you couldn't say indoors. {date} listens all the way to the end.|You stay on the jetty, on the plank that creaks. {date} says it sounds like you, and won't explain.}}
 
 @event boathouse_green_boat
 title: The Leaky Green Boat
@@ -392,12 +392,12 @@ text: {The boathouse smells of tar and old rope. Its rowing boats are mostly lea
 > left: Patch the green boat
   vigor +small
   health -tiny
-  say: {You spend an hour with tar and a mallet. The green boat floats, briefly, with an air of surprise.|Your patch holds for a whole circuit of the boathouse. You have tar in your eyebrows and a certain pride.}
+  say: {You spend an hour with tar and a mallet. The green boat floats, briefly, with an air of surprise.|Your patch holds for a whole circuit of the boathouse. You have tar in your eyebrows and a certain pride.|You patch the green boat again. It leaks again. You're starting to think that's what it's for.}
 > right: Carve your initials in a beam
   hint: The boatman charges a few crowns a beam.
   mood +small
   gold -tiny
-  say: {final_year: You pay the boatman and carve them next to a pair from sixty years ago. Somebody, one day, will run a thumb over yours and wonder.|{You pay the boatman, and your penknife snaps on the last letter. The initials stay, slightly wrong, which feels right.|You pay the boatman, find a carving that could almost be yours from long ago, and add your own beneath it.}}
+  say: {final_year: You pay the boatman and carve them next to a pair from sixty years ago. Somebody, one day, will run a thumb over yours and wonder.|{You pay the boatman, and your penknife snaps on the last letter. The initials stay, slightly wrong, which feels right.|You pay the boatman, find a carving that could almost be yours from long ago, and add your own beneath it.|You pay the boatman and carve your initials under the spider's web. The spider doesn't object.}}
 
 @event boathouse_overheard
 title: Things Said Outside
@@ -415,14 +415,14 @@ text: {Two voices out on the jetty, low and urgent. People come to the boathouse
   alignment -tiny
   chance unlikely:
     renown -small
-    say: {A plank creaks under you. The voices stop. Two very red faces come round the door, and now they know your face too.|An oar slides off its peg with a clatter. Footsteps; a hiss of "Who's there?"; you are, unfortunately.}
+    say: {A plank creaks under you. The voices stop. Two very red faces come round the door, and now they know your face too.|An oar slides off its peg with a clatter. Footsteps; a hiss of "Who's there?"; you are, unfortunately.|You lean on the plank you know creaks. The pudding confession stops mid-sentence, and two faces you know appear at the door.}
   else:
-    say: {You learn more than you wanted to. You'll carry it carefully, and never tell.|It ends well, as it happens. You slip away before anyone has to know you were there.}
+    say: {You learn more than you wanted to. You'll carry it carefully, and never tell.|It ends well, as it happens. You slip away before anyone has to know you were there.|It's about a pudding, honestly. You leave knowing more than any academy should about one pudding.}
 > right: Cough loudly and leave
   alignment +tiny
   charm +tiny
   mood -tiny
-  say: {They wait for you to pass, hushed and grateful. You'll never know how it ended, and that's the price.|You make a great show of looking for an oar. By the time you've found one, they've gone.}
+  say: {They wait for you to pass, hushed and grateful. You'll never know how it ended, and that's the price.|You make a great show of looking for an oar. By the time you've found one, they've gone.|You cough and leave. On the path you meet the pudding's owner, and decide not to say anything.}
 
 # ---------------- The Orchard ----------------
 
@@ -442,12 +442,12 @@ text: {season == "spring": Blossom is coming down like snow, and {date} has some
 > left: Stay until the light goes
   spark date +small
   health -small
-  say: {season == "spring": {You stay until the blossom buries your shoes. You miss supper, and you'd do it again.|{date} picks blossom out of your hair, one petal at a time, and takes far too long about it.}|{season == "winter": {Your fingers go white, and {date} takes your hands to warm them, and doesn't give them back.|You lean against the same cold trunk until the stars come out over the bare branches.}|{You stay until the shadows outgrow the trees. You miss supper. Neither of you mentions it.|The light goes gold, then blue. {date} says something quiet you'll turn over for days.}}}
+  say: {season == "spring": {You stay until the blossom buries your shoes. You miss supper, and you'd do it again.|{date} picks blossom out of your hair, one petal at a time, and takes far too long about it.|You lie in the blossom until you're both freckled with it. {date} says it suits you, and keeps a petal.}|{season == "winter": {Your fingers go white, and {date} takes your hands to warm them, and doesn't give them back.|You lean against the same cold trunk until the stars come out over the bare branches.|You walk the bare rows until the frost comes up. {date} breathes on your hands and says it's for practical reasons.}|{You stay until the shadows outgrow the trees. You miss supper. Neither of you mentions it.|The light goes gold, then blue. {date} says something quiet you'll turn over for days.|You stay until the first star. {date} names it after something you said, and won't tell you which thing.}}}
 > right: Help in the orchard together
   rel date +small
   vigor +tiny
   health -tiny
-  say: {season == "autumn": {You fill two baskets and earn one wasp sting each. The cook gives you a pie, which you share on the steps.|{date} holds the ladder and says nothing useful, and you don't want {them} to.}|{season == "winter": {You prune dead wood side by side until your hands ache. {date} stacks it with great seriousness.|You wrap the young trees against the frost. {date} ties every knot twice.}|{season == "spring": {You carry hives along the rows for the blossom. One bee follows {date} all afternoon.|You clear the grass under the blossom. {date} keeps stopping to look up.}|{You water the young trees from a bucket chain of two. {date} is soaked by the end, and so are you.|You prop up a branch bowed with early apples. {date} holds it, and holds still, and you notice.}}}}
+  say: {season == "autumn": {You fill two baskets and earn one wasp sting each. The cook gives you a pie, which you share on the steps.|{date} holds the ladder and says nothing useful, and you don't want {them} to.|You pick from the top branches while {date} sorts the basket below. Every good apple goes to you, which you notice.}|{season == "winter": {You prune dead wood side by side until your hands ache. {date} stacks it with great seriousness.|You wrap the young trees against the frost. {date} ties every knot twice.|You mend the orchard fence together, one post each. {date}'s post is straighter, and {they} won't stop mentioning it.}|{season == "spring": {You carry hives along the rows for the blossom. One bee follows {date} all afternoon.|You clear the grass under the blossom. {date} keeps stopping to look up.|You graft a branch onto an old tree. {date} says you'll both have to come back to see if it takes.}|{You water the young trees from a bucket chain of two. {date} is soaked by the end, and so are you.|You prop up a branch bowed with early apples. {date} holds it, and holds still, and you notice.|You rake the cut grass into rows. {date} lies down in the first row, and the work goes no further.}}}}
 
 @event orchard_windfalls
 title: Windfalls
@@ -464,15 +464,15 @@ text: {The orchard trees are older than the towers, and never tidy.|The oldest t
   gold +small
   health -tiny
   mood -tiny
-  say: {The cook buys your basket for the cider vats and finds {season == "winter": a frozen beetle|a wasp} in it. You both pretend that's normal.|A full basket, {season == "winter": numb fingers|two stings} and a crick in your back. The crowns feel earned.}
+  say: {The cook buys your basket for the cider vats and finds {season == "winter": a frozen beetle|a wasp} in it. You both pretend that's normal.|A full basket, {season == "winter": numb fingers|two stings} and a crick in your back. The crowns feel earned.|You go straight to the trees that drop the good ones. The cook pays for a full basket and says you have an eye.}
 > right: Eat one under the oldest tree
   mood +small
   chance unlikely:
     health -small
-    say: {{season == "winter": It's frozen solid. Your teeth will remember this.|There was a wasp in it. There was, briefly, a wasp in you.}|It's sour enough to turn your face inside out, and your stomach complains about it until supper. A passing first-year laughs, and so, eventually, do you.}
+    say: {{season == "winter": It's frozen solid. Your teeth will remember this.|There was a wasp in it. There was, briefly, a wasp in you.}|It's sour enough to turn your face inside out, and your stomach complains about it until supper. A passing first-year laughs, and so, eventually, do you.|The one that throws gets you on the shoulder. You eat its apple out of spite, and it's {season == "winter": frozen through|full of wasp}, and so is your mood.}
   else:
     health +tiny
-    say: {It's the best thing you've eaten all month. The old tree creaks, as if pleased.|You eat it slowly. Above you, the oldest tree drops one more, gently, beside your hand.}
+    say: {It's the best thing you've eaten all month. The old tree creaks, as if pleased.|You eat it slowly. Above you, the oldest tree drops one more, gently, beside your hand.|You eat it under the oldest tree, as you always do now. It drops a leaf on your knee, and you keep it.}
 
 @event orchard_cider_shed
 title: The Cider Shed
@@ -490,14 +490,14 @@ text: {In the orchard shed, a few students are running an unofficial cider press
   mood +small
   chance unlikely:
     renown -tiny
-    say: {A prefect turns up as you raise the cup. Everyone is suddenly very interested in apples.|The lookout whistles too late. A prefect takes your name, then, after some thought, your cup.}
+    say: {A prefect turns up as you raise the cup. Everyone is suddenly very interested in apples.|The lookout whistles too late. A prefect takes your name, then, after some thought, your cup.|The prefect whose scarf it is comes back for it. Everyone looks at the scarf, then at you, holding a cup.}
   else:
-    say: {It's sharp, cold and a little bit fizzy. The day goes golden at the edges.|You drink it on an upturned bucket while someone tells a story about a goose. Excellent cider. Better goose.}
+    say: {It's sharp, cold and a little bit fizzy. The day goes golden at the edges.|You drink it on an upturned bucket while someone tells a story about a goose. Excellent cider. Better goose.|You drink it under the prefect's scarf. Nobody asks, and the cider is the best yet.}
 > right: Help turn the press, for a share
   alchemy +small
   mood -tiny
   health -tiny
-  say: {You turn the screw until your shoulders burn. The second-year in charge teaches you why some apples are better bruised.|You're sticky to the elbows and you've learned more about fermentation than in a term of class.}
+  say: {You turn the screw until your shoulders burn. The second-year in charge teaches you why some apples are better bruised.|You're sticky to the elbows and you've learned more about fermentation than in a term of class.|You turn the press with the regulars now. The second-year gives you a jar of your own to take home.}
 
 # ---------------- Old Maud's Cottage ----------------
 
@@ -512,16 +512,16 @@ weight: 10
 art: cup
 tags: home
 scene: A low cottage kitchen, a kettle on the hob, an old woman pouring tea into a chipped cup, a goat's head poking through the open door.
-text: {Old Maud's kettle is nearly boiling, as it always is. "Sit down, dearie," she says. "You look like a puddle with a worry."|The kettle is nearly boiling. Maud has already put out your cup, the chipped one.|Your chipped cup is waiting. Maud says it's been asking after you.} {Bartholomew is eating a tea towel.|Rain drums on the thatch.|A hen is asleep on the windowsill.|Bees drone in the eaves.}
+text: {Old Maud's kettle is nearly boiling, as it always is. "Sit down, dearie," she says. "You look like a puddle with a worry."|The kettle is nearly boiling. Maud has already put out your cup, the chipped one.|Your chipped cup is waiting. Maud says it's been asking after you.|Maud pours before you've sat down. "Same as ever, dearie," she says, and it is.} {Bartholomew is eating a tea towel.|Rain drums on the thatch.|A hen is asleep on the windowsill.|Bees drone in the eaves.}
 > left: Stay for a second cup
   mood +small
   rel maud +tiny
   health -tiny
-  say: {Maud tells you a sad story the way other people give a recipe. You walk home late and cold, thinking about it.|"Never trust a dry spring, dearie," she says. You won't understand it for a fortnight.|The second cup becomes a third. It's dark when you leave, and you've only half noticed.}
+  say: {Maud tells you a sad story the way other people give a recipe. You walk home late and cold, thinking about it.|"Never trust a dry spring, dearie," she says. You won't understand it for a fortnight.|The second cup becomes a third. It's dark when you leave, and you've only half noticed.|You stay for a second cup and the bees in the eaves put Maud to sleep mid-story. You wash the cups and let yourself out.}
 > right: Ask her for a remedy
   health +small
   mood -tiny
-  say: {She brews you something that tastes of ditches. "Down in one, dearie." You feel better at once, and resent it.|"For what ails you," she says, and doesn't say what she thinks that is. It tastes of nettles and of being right.}
+  say: {She brews you something that tastes of ditches. "Down in one, dearie." You feel better at once, and resent it.|"For what ails you," she says, and doesn't say what she thinks that is. It tastes of nettles and of being right.|She hands you a remedy before you've said what's wrong. It works, which is the annoying part.|"Honey and bee-balm, dearie, and stop worrying." It tastes of summer. You stop worrying, briefly.}
 
 @event maud_cottage_bartholomew
 title: Bartholomew Is Out
@@ -539,16 +539,16 @@ text: {Bartholomew the goat has got out.|Bartholomew is out again, and has learn
     win:
       rel maud +small
       vigor +tiny
-      say: {You corner him by the water butt. He gives up with the air of someone who allowed it. {slot == "evening": "Ta, dearie," calls Maud.|You tie him to the gate and leave Maud a note.}|You catch him on the second lap. He chews your sleeve all the way back, as a souvenir.}
+      say: {You corner him by the water butt. He gives up with the air of someone who allowed it. {slot == "evening": "Ta, dearie," calls Maud.|You tie him to the gate and leave Maud a note.}|You catch him on the second lap. He chews your sleeve all the way back, as a souvenir.|You chase him out of the cabbages with the ease of long practice. The hens don't even look up.}
     lose:
       health -tiny
       mood -small
-      say: {He leads you twice round the orchard and once through the hen run, then trots home on his own.|You end up in the cabbages. Bartholomew watches you from the roof, chewing, unhurried.}
+      say: {He leads you twice round the orchard and once through the hen run, then trots home on his own.|You end up in the cabbages. Bartholomew watches you from the roof, chewing, unhurried.|He leads you through the cabbages and leaves you there. The war continues without you.}
 > right: Bribe him with your lunch
   rel maud +tiny
   mood +small
   health -tiny
-  say: {He takes your sandwich and follows you home like a gentleman. You go hungry until supper.|Your lunch disappears in three bites. Bartholomew looks at you as if you might be worth knowing.}
+  say: {He takes your sandwich and follows you home like a gentleman. You go hungry until supper.|Your lunch disappears in three bites. Bartholomew looks at you as if you might be worth knowing.|He takes your lunch and walks home ahead of you. He knows the way better than you do by now.}
 
 @event maud_cottage_top_shelf
 title: The Top Shelf
@@ -566,14 +566,14 @@ text: {{slot == "evening": Maud has stepped out to the hens.|Maud is up at the g
   chance even:
     mana +small
     mood +small
-    say: {Something sweet and blue drifts out and settles in your chest. You feel, briefly, enormous.|A breath of summer rain escapes. You put the lid back on smiling.}
+    say: {Something sweet and blue drifts out and settles in your chest. You feel, briefly, enormous.|A breath of summer rain escapes. You put the lid back on smiling.|It's warm, and so is the air that comes out. You stand in it like a cat in a sunbeam until you hear Maud's step.}
   else:
     health -small
     mood -tiny
-    say: {Your eyebrows turn the colour of the label. When Maud sees them, she says nothing whatsoever.|It sneezes. Then you sneeze, for an hour. "Told you, dearie," says Maud later, not unkindly.}
+    say: {Your eyebrows turn the colour of the label. When Maud sees them, she says nothing whatsoever.|It sneezes. Then you sneeze, for an hour. "Told you, dearie," says Maud later, not unkindly.|You shook it, a little. The label was right. Your hair stands on end until supper.}
 > right: Dust the shelf instead
   alchemy +small
-  say: {You dust every jar and read every label. Maud's handwriting is a whole education, if a strange one.|Maud finds a clean shelf. "Somebody's been learning," she says, which isn't quite thanks.}
+  say: {You dust every jar and read every label. Maud's handwriting is a whole education, if a strange one.|Maud finds a clean shelf. "Somebody's been learning," she says, which isn't quite thanks.|You dust the new jar first and read its label twice. Maud finds you there and gives you a look that's almost proud.}
 
 # ---------------- The Secret Garden ----------------
 
@@ -587,16 +587,16 @@ weight: 10
 art: tree
 tags: nature magic
 scene: A student lying in the grass under a pear tree in a hidden walled garden, ferns glowing softly around them.
-text: {The pear tree in Maud's secret garden is humming to itself.|The pear tree has changed its tune since you were last here, as if it's been practising.|The pear tree hums when you come in now. You'd like to think it's for you.} {season == "winter": Its tune is low and slow, like something asleep.|{season == "spring": Its tune has gone quick and bright with blossom.|{Its tune is one you almost know.|Its tune has a sad turn in the middle.}}}
+text: {The pear tree in Maud's secret garden is humming to itself.|The pear tree has changed its tune since you were last here, as if it's been practising.|The pear tree hums when you come in now. You'd like to think it's for you.} {season == "winter": Its tune is low and slow, like something asleep.|{season == "spring": Its tune has gone quick and bright with blossom.|{Its tune is one you almost know.|Its tune has a sad turn in the middle.|Its tune is one you've heard Maud whistle.}}}
 > left: Hum along with it
   mana +small
-  say: {You find the harmony on the third try. The tree corrects you twice, kindly.|The two of you hum until the ferns glow brighter. Afterwards you can't get the tune out of your head for days.}
+  say: {You find the harmony on the third try. The tree corrects you twice, kindly.|The two of you hum until the ferns glow brighter. Afterwards you can't get the tune out of your head for days.|You hum along without thinking now. The pear tree drops a pear in your lap at the end, which feels like applause.}
 > right: Nap in its shade
   mood +small
   health +small
   if gold > 0:
     gold -tiny
-    say: {You wake rested, a few crowns lighter, with a fresh root curled over the spot where they fell.|You sleep like a seed. A few crowns slip out of your pocket and the roots close over them. Rent, perhaps.}
+    say: {You wake rested, a few crowns lighter, with a fresh root curled over the spot where they fell.|You sleep like a seed. A few crowns slip out of your pocket and the roots close over them. Rent, perhaps.|You sleep in your usual hollow between the roots. A few crowns are gone when you wake, and the tree looks very innocent.}
   else:
     say: You sleep like a seed and wake with your empty pocket turned out, as if the roots had checked.
 
@@ -615,13 +615,13 @@ text: {The silver bees are working the ferns; their hive in the old stump drips 
   alchemy +small
   chance unlikely:
     health -small
-    say: {A silver sting feels like a cold spark. Your hand glows for an hour and aches for two.|The bees file a complaint, in the form of your thumb.}
+    say: {A silver sting feels like a cold spark. Your hand glows for an hour and aches for two.|The bees file a complaint, in the form of your thumb.|They know your hand by now, and sting it anyway, more out of habit than anger.}
   else:
-    say: {You take a thumb's width of comb. It tastes like starlight and burns a little going down.|The bees let you take a little, and watch to make sure it's only a little.}
+    say: {You take a thumb's width of comb. It tastes like starlight and burns a little going down.|The bees let you take a little, and watch to make sure it's only a little.|They let you take a little and dance something at you afterwards. You'd give a lot to know what it meant.}
 > right: Follow a bee home
   lore +small
   health -tiny
-  say: {The bee leads you through brambles to a fern you've never seen, and then leaves you there, scratched and curious.|You follow it all the way round the garden and back to the stump. It seems to find this funny.}
+  say: {The bee leads you through brambles to a fern you've never seen, and then leaves you there, scratched and curious.|You follow it all the way round the garden and back to the stump. It seems to find this funny.|You follow a bee that's dancing the strange direction. It leads you to the garden wall, and over it, and you can't follow.}
 
 @event secret_garden_glowing_ferns
 title: The Glowing Ferns
@@ -639,12 +639,12 @@ text: {The ferns in the secret garden glow when the light goes. One frond would 
   alignment -tiny
   chance unlikely:
     mood -small
-    say: {The frond goes dark before you reach the door. The garden feels a little colder to you the next time.|The frond curls up in your hand like a woodlouse and goes out. The silver bees follow you to the gate, accusingly.}
+    say: {The frond goes dark before you reach the door. The garden feels a little colder to you the next time.|The frond curls up in your hand like a woodlouse and goes out. The silver bees follow you to the gate, accusingly.|You pick the brightest one. It goes out in your hand like a sigh, and the rest dim a little as you pass.}
   else:
-    say: {It lights your dormitory green for a week. You read by it, and feel very slightly watched.|You keep it in a jar by your bed. It glows softer every night, like something being polite.}
+    say: {It lights your dormitory green for a week. You read by it, and feel very slightly watched.|You keep it in a jar by your bed. It glows softer every night, like something being polite.|It's the brightest frond you've ever seen, and it lights your room for a fortnight. You don't tell Maud.}
 > right: Leave them glowing
   lore +small
-  say: {You sit and watch the glow instead, and learn the way it moves with your breath. Maud would approve, if she knew.|You leave them be. On the way out, the ferns lean after you, like a dog that wanted to come.}
+  say: {You sit and watch the glow instead, and learn the way it moves with your breath. Maud would approve, if she knew.|You leave them be. On the way out, the ferns lean after you, like a dog that wanted to come.|You sit among them at their brightest. They glow brighter while you stay, and that's enough.}
 
 # ---------------- The Courier Loft ----------------
 
@@ -658,15 +658,15 @@ weight: 10
 art: letter
 tags: home
 scene: A draughty loft full of pigeonholes, a student writing a letter on a parcel by the light of a high window.
-text: {The courier loft will take a letter home for next to nothing. You've meant to write for weeks.|This time the letter has been half-written in your head since breakfast.|Writing home is a habit now, and the loft knows your handwriting.} {final_year: There aren't many letters left to send from here.|{season == "winter": Frost on the window; the pigeonholes stuffed with cards.|{The dispatch bell rings twice while you write.|A broken broom leans against your elbow.}}}
+text: {The courier loft will take a letter home for next to nothing. You've meant to write for weeks.|This time the letter has been half-written in your head since breakfast.|Writing home is a habit now, and the loft knows your handwriting.} {final_year: There aren't many letters left to send from here.|{season == "winter": Frost on the window; the pigeonholes stuffed with cards.|{The dispatch bell rings twice while you write.|A broken broom leans against your elbow.|A courier is reading over your shoulder, and apologises.}}}
 > left: Write it all down and send it
   gold -tiny
   mood +small
-  say: {You write three pages and post them before you can cross anything out. You feel lighter, and a little homesick.|You tell them about your classes, and not about the hard parts. Then, in a postscript, you tell them about the hard parts.}
+  say: {You write three pages and post them before you can cross anything out. You feel lighter, and a little homesick.|You tell them about your classes, and not about the hard parts. Then, in a postscript, you tell them about the hard parts.|You write the letter you've written before, with this month's news in it. The courier says your family must look forward to them.}
 > right: Write it, then don't send it
   lore +tiny
   mood -tiny
-  say: {You read it over and fold it into your pocket instead. Some letters are only for writing.|You keep this one. The courier asks if you're sure. You aren't.}
+  say: {You read it over and fold it into your pocket instead. Some letters are only for writing.|You keep this one. The courier asks if you're sure. You aren't.|You put this one with the others you didn't send. It's getting to be quite a stack.}
 
 @event courier_loft_dispatch_bell
 title: The Dispatch Bell
@@ -683,11 +683,11 @@ text: {The dispatch bell clangs and the loft explodes into brooms. A courier sho
   gold +tiny
   vigor +tiny
   health -tiny
-  say: {You get it there out of breath and in time. The tip is a few crowns and a very strange look.|You run it up four flights of stairs. The recipient signs for it without looking up, as if you were the post.}
+  say: {You get it there out of breath and in time. The tip is a few crowns and a very strange look.|You run it up four flights of stairs. The recipient signs for it without looking up, as if you were the post.|You run the cold parcel across campus with your hands going numb. The tip is generous, and given quickly.}
 > right: Hand it back, politely
   mood +tiny
   renown -tiny
-  say: {"Fine, fine," says the courier, already on a broom. You hear about it, loudly, from the rafters.|The courier takes it back with a sigh that follows you down the ladder.}
+  say: {"Fine, fine," says the courier, already on a broom. You hear about it, loudly, from the rafters.|The courier takes it back with a sigh that follows you down the ladder.|You hand the cold parcel back. The courier holds it at arm's length and doesn't argue.}
 
 @event courier_loft_broom_rack
 title: The Fast Broom
@@ -707,14 +707,14 @@ text: {At the end of the rack is the courier loft's fast broom, tagged in red. C
     win:
       mood +small
       renown +tiny
-      say: {One lap of the towers, fast enough to make your ears sing. You put it back with the bristles barely warm.|You fly it under the bridges of light and come back laughing. Nobody saw, except, possibly, everybody.}
+      say: {One lap of the towers, fast enough to make your ears sing. You put it back with the bristles barely warm.|You fly it under the bridges of light and come back laughing. Nobody saw, except, possibly, everybody.|You take the fast broom for one lap at last. It flies like it's been waiting for you. You put it back and can't stop smiling.}
     lose:
       health -small
       mood -small
-      say: {It knows you aren't a courier. It shows you the courtyard, very close up.|It bucks you off into a haystack outside the stables. The stable hand laughs about it for a week.}
+      say: {It knows you aren't a courier. It shows you the courtyard, very close up.|It bucks you off into a haystack outside the stables. The stable hand laughs about it for a week.|The broom with the scorched tag has a scorched temper. It puts you through the stable roof.}
 > right: Tighten its bristles instead
   lore +small
-  say: {You spend an hour learning how a good broom is bound. It's more satisfying than you'd admit.|You retie the bristles properly. Some courier will fly a little faster tomorrow and never know why.}
+  say: {You spend an hour learning how a good broom is bound. It's more satisfying than you'd admit.|You retie the bristles properly. Some courier will fly a little faster tomorrow and never know why.|You rebind the bristles and the scorched tag. The head courier notices and says nothing, which is promising.}
 
 # ---------------- The Whisperwood ----------------
 
@@ -732,10 +732,10 @@ text: {The Whisperwood is talking in its sleep. You stand very still to make out
 > left: Listen closely
   lore +small
   mood -tiny
-  say: {You catch a whole sentence. It's about a winter long ago, and it's sad, and you walk home with it.|It notices you listening and goes quiet, the way a sleeper does. You leave feeling rude.}
+  say: {You catch a whole sentence. It's about a winter long ago, and it's sad, and you walk home with it.|It notices you listening and goes quiet, the way a sleeper does. You leave feeling rude.|You listen to the name until you could say it in your sleep. You don't know whose it is. You'll find out, one day.}
 > right: Walk on, humming
   vigor +small
-  say: {You walk the long loop humming loudly. The forest grumbles and turns over. You come back with muddy boots and a clear head.|You hum all the way round. Twice, the forest hums back.}
+  say: {You walk the long loop humming loudly. The forest grumbles and turns over. You come back with muddy boots and a clear head.|You hum all the way round. Twice, the forest hums back.|You hum over the name it keeps saying. The forest falls quiet, as if it had been waiting for someone to answer.}
 
 @event whisperwood_foragers
 title: Foraging Season
@@ -751,11 +751,11 @@ text: {season == "autumn": The Whisperwood is full of mushrooms and students wit
 > left: Forage for the apothecary
   gold +small
   health -small
-  say: {Pell & Daughters buys your basket and throws out a third of it. You've still got nettle rash.|A good basket, a fair price, and brambles in places you'd rather not discuss.}
+  say: {Pell & Daughters buys your basket and throws out a third of it. You've still got nettle rash.|A good basket, a fair price, and brambles in places you'd rather not discuss.|The foragers show you their own patch. Pell & Daughters keeps the whole basket, which has never happened.}
 > right: Learn the plants from the expert
   alchemy +small
   mood -tiny
-  say: {The second-year names everything, twice, with its uses and its poisons. You come away full of names and short of patience.|You learn which mushroom is supper and which is a funeral. It takes until supper, and you'll need it.}
+  say: {The second-year names everything, twice, with its uses and its poisons. You come away full of names and short of patience.|You learn which mushroom is supper and which is a funeral. It takes until supper, and you'll need it.|You teach a first-year what the Rootward student taught you, and get two of the names wrong. They're corrected for you, kindly.}
 
 @event whisperwood_off_path
 title: The Path That Wasn't
@@ -774,11 +774,11 @@ text: {A path opens to your left that wasn't there last time.|Another path that 
       lore +small
       mana +small
       health -tiny
-      say: {It leads to a clearing you'll never find again, full of moonpetal buds. You come back with a pocketful of quiet.|It loops you round to an old stone with words on it. You copy them down. They mean nothing yet.}
+      say: {It leads to a clearing you'll never find again, full of moonpetal buds. You come back with a pocketful of quiet.|It loops you round to an old stone with words on it. You copy them down. They mean nothing yet.|You follow it downhill, though there's no down left. It brings you out above the lake, which is impossible, and lovely.}
     lose:
       health -small
       mood -tiny
-      say: {You walk in circles until dusk and come out at the lake, with no idea how.|The path ends at a wall of fog. Turning back takes much longer than going in did.}
+      say: {You walk in circles until dusk and come out at the lake, with no idea how.|The path ends at a wall of fog. Turning back takes much longer than going in did.|You follow it downhill for an hour and come out exactly where you started. The wood seems pleased with itself.}
 > right: Mark a tree and turn back
   guile +tiny
-  say: {You carve an arrow in the bark. The next time you come, the arrow points somewhere else.|You turn back. The path watches you go, and quietly closes behind you.}
+  say: {You carve an arrow in the bark. The next time you come, the arrow points somewhere else.|You turn back. The path watches you go, and quietly closes behind you.|You mark a tree. The next morning there's a mark on the tree beside it, in the same hand.}

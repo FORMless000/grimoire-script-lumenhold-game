@@ -7,20 +7,20 @@
 @event break_castle_one_fire
 # en: The One Lit Fire
 title [c9e9bf] = 唯一一炉火
-# en: {With the houses empty, the stewards light one common room and let the rest go dark.|Someone has brought a kettle, and now there's a rota for it.|The break common room. You know everyone's blanket by now.} {season == "winter": The best armchair is right by the fire.|The best armchair is by the only breeze.} {A first-year from Stillwater is asleep in it.|Footnote is in it. Footnote moves for no one.}
-text [8556b2] = {宿舍楼都空了，管事们只点亮一间公共休息室，其余的任它暗着。|有人带来了水壶，现在还排了轮值表。|假期的公共休息室。现在每个人的毯子你都认得了。} {season == "winter": 最好的扶手椅就在炉火旁。|最好的扶手椅就在唯一有风的窗边。} {一个静水院的一年级生在椅子上睡着了。|脚注占着那把椅子。脚注不给任何人让座。}
+# en: {With the houses empty, the stewards light one common room and let the rest go dark.|Someone has brought a kettle, and now there's a rota for it.|The break common room. You know everyone's blanket by now.} {season == "winter": The best armchair is right by the fire.|The best armchair is by the only breeze.} {A first-year from Stillwater is asleep in it.|Footnote is in it. Footnote moves for no one.|The steward's dog is in it, and the steward is on the dog's side.}
+text [a49c22] = {宿舍楼都空了，管事们只点亮一间公共休息室，其余的任它暗着。|有人带来了水壶，现在还排了轮值表。|假期的公共休息室。现在每个人的毯子你都认得了。} {season == "winter": 最好的扶手椅就在炉火旁。|最好的扶手椅就在唯一有风的窗边。} {一个静水院的一年级生在椅子上睡着了。|脚注占着那把椅子。脚注不给任何人让座。|管事的狗占着它，而管事站在狗那边。}
 # en: A cavernous common room in the holidays, a handful of students in blankets crowded around {season == "winter": one roaring hearth|one open window}.
 scene [24c42d] = 假期里一间空旷的公共休息室，几个裹着毯子的学生挤在{season == "winter": 一炉旺火|一扇敞开的窗}旁。
 # en: Talk my way into the armchair
 opt.left.label [483910] = 把扶手椅骗到手
-# en: {You mention that the kitchens are giving out free toffee. The chair empties. You feel only slightly bad.|You announce, with great authority, that the armchair is due to be re-stuffed. It is, now, by you.}
-opt.left.say.1 [ddc89a] = {你随口提到厨房在免费发太妃糖。椅子空了。你只觉得有一点点愧疚。|你郑重宣布这把扶手椅要重新填絮了。现在它确实被填上了——用你。}
-# en: {Nobody moves. Someone says, "Nice try," without looking up from their book.|The whole room watches you fail to dislodge the armchair's occupant. It's the most entertainment anyone has had all break.}
-opt.left.say.2 [639d35] = {没人动。有人头也不抬地说：“想得美。”|全屋的人看着你没能把扶手椅上的那位挪开。这是整个假期里大家看过最好看的节目。}
+# en: {You mention that the kitchens are giving out free toffee. The chair empties. You feel only slightly bad.|You announce, with great authority, that the armchair is due to be re-stuffed. It is, now, by you.|You offer the dog your toast. It's a fair trade, and the chair is still warm.}
+opt.left.say.1 [dd333e] = {你随口提到厨房在免费发太妃糖。椅子空了。你只觉得有一点点愧疚。|你郑重宣布这把扶手椅要重新填絮了。现在它确实被填上了——用你。|你把吐司让给了那条狗。很公平的交易，椅子还是热的。}
+# en: {Nobody moves. Someone says, "Nice try," without looking up from their book.|The whole room watches you fail to dislodge the armchair's occupant. It's the most entertainment anyone has had all break.|The dog growls, the steward sides with the dog, and you take the floor.}
+opt.left.say.2 [6998ca] = {没人动。有人头也不抬地说：“想得美。”|全屋的人看着你没能把扶手椅上的那位挪开。这是整个假期里大家看过最好看的节目。|狗冲你低吼，管事站在狗那边，你只好坐地板。}
 # en: Take the draughty corner
 opt.right.label [590fe4] = 去漏风的角落
-# en: {season == "winter": {The corner is cold enough to see your breath, but you read three chapters.|You read in gloves. Turning pages becomes a skill.}|{It smells of old ink and warm dust. You read three chapters.|A wasp shares your corner. You reach an understanding.}}
-opt.right.say.1 [95ac16] = {season == "winter": {角落冷得能看见自己的呼气，但你读完了三章。|你戴着手套读书。翻页成了一门手艺。}|{那里有旧墨水和晒暖的灰尘的气味。你读完了三章。|一只黄蜂和你共享角落。你们达成了谅解。}}
+# en: {season == "winter": {The corner is cold enough to see your breath, but you read three chapters.|You read in gloves. Turning pages becomes a skill.|You find a blanket nobody claims and read until your nose goes numb.}|{It smells of old ink and warm dust. You read three chapters.|A wasp shares your corner. You reach an understanding.|The breeze turns your pages for you, mostly the right way. You read three chapters anyway.}}
+opt.right.say.1 [7c5c66] = {season == "winter": {角落冷得能看见自己的呼气，但你读完了三章。|你戴着手套读书。翻页成了一门手艺。|你找到一条没人认领的毯子，一直读到鼻子冻僵。}|{那里有旧墨水和晒暖的灰尘的气味。你读完了三章。|一只黄蜂和你共享角落。你们达成了谅解。|风替你翻页，大多翻对了方向。你还是读完了三章。}}
 
 @event break_castle_kitchen_rota
 # en: The Holiday Kitchen
@@ -31,12 +31,12 @@ text [21605b] = {一半厨工回家过假期了，厨娘开始拉路过的人来
 scene [d1a5e4] = 冒着热气的城堡厨房，一半烤炉是冷的，厨娘把围裙递给两个不情愿的学生。
 # en: Roll up your sleeves
 opt.left.label [52915f] = 挽起袖子
-# en: {season == "winter": {You stir puddings till your arm aches. "Just like potion work," says the cook. It isn't.|You baste the goose. The goose wins, narrowly.}|{A morning of jam teaches you more about setting points than a term of alchemy.|You label forty jars. The cook re-spells "gooseberry" on all of them.}}
-opt.left.say.1 [3d8929] = {season == "winter": {你搅布丁搅到胳膊发酸。“跟熬魔药一样。”厨娘说。并不一样。|你给鹅刷油。鹅以微弱优势获胜。}|{一上午的果酱让你对凝固点的了解超过一学期炼金课。|你给四十个罐子贴了标签。厨娘把每张上的“醋栗”都重新拼了一遍。}}
+# en: {season == "winter": {You stir puddings till your arm aches. "Just like potion work," says the cook. It isn't.|You baste the goose. The goose wins, narrowly.|The goose fits at last. The cook says it was her idea.}|{A morning of jam teaches you more about setting points than a term of alchemy.|You label forty jars. The cook re-spells "gooseberry" on all of them.|You stone plums all morning. Your fingers are purple until Tuesday.}}
+opt.left.say.1 [85e3c1] = {season == "winter": {你搅布丁搅到胳膊发酸。“跟熬魔药一样。”厨娘说。并不一样。|你给鹅刷油。鹅以微弱优势获胜。|鹅终于塞进去了。厨娘说这是她的主意。}|{一上午的果酱让你对凝固点的了解超过一学期炼金课。|你给四十个罐子贴了标签。厨娘把每张上的“醋栗”都重新拼了一遍。|你一上午都在给李子去核。手指一直紫到星期二。}}
 # en: Discover urgent business elsewhere
 opt.right.label [14e943] = 想起别处有急事
-# en: {You escape to the village and buy a pie you could have had for free. The cook sees you come back with the crumbs.|You hide in the village bakery until lunch is over and buy what you could have eaten for free. The cook gives you a meaningful look all evening.}
-opt.right.say.1 [ef455e] = {你溜去山下小镇，买了一个本来可以白吃的馅饼。厨娘看见你带着饼渣回来。|你躲在镇上的面包房里，一直躲到午饭结束，还花钱买了本来可以白吃的东西。厨娘一整晚都意味深长地看着你。}
+# en: {You escape to the village and buy a pie you could have had for free. The cook sees you come back with the crumbs.|You hide in the village bakery until lunch is over and buy what you could have eaten for free. The cook gives you a meaningful look all evening.|You claim a library emergency. The cook, who knows the library is shut, says nothing and saves you nothing.}
+opt.right.say.1 [73f1e1] = {你溜去山下小镇，买了一个本来可以白吃的馅饼。厨娘看见你带着饼渣回来。|你躲在镇上的面包房里，一直躲到午饭结束，还花钱买了本来可以白吃的东西。厨娘一整晚都意味深长地看着你。|你说图书馆有急事。厨娘知道图书馆关着门，什么也没说，也什么都没给你留。}
 
 @event break_castle_empty_library
 # en: The Library on Holiday
@@ -47,44 +47,44 @@ text [8f56d2] = {图书管理员们都回家了，图书馆留给了你和那只
 scene [e16f43] = 一座书桌空无一人的大图书馆，一只猫睡在咨询台上，一个学生在挑书。
 # en: Read whatever I like
 opt.left.label [0ceb4d] = 想读什么读什么
-# en: {You read a book about the history of spoons and forget to eat lunch. It was a very good book about spoons.|You read until the light goes, then a little after. Your eyes will mention it tomorrow.}
-opt.left.say.1 [cdeaa5] = {你读了一本讲勺子历史的书，忘了吃午饭。那是一本非常好的讲勺子的书。|你一直读到天光散尽，又多读了一会儿。明天你的眼睛会提起这件事。}
+# en: {You read a book about the history of spoons and forget to eat lunch. It was a very good book about spoons.|You read until the light goes, then a little after. Your eyes will mention it tomorrow.|You finish the book you started last break. The bookmark was still where you left it.}
+opt.left.say.1 [1afd3a] = {你读了一本讲勺子历史的书，忘了吃午饭。那是一本非常好的讲勺子的书。|你一直读到天光散尽，又多读了一会儿。明天你的眼睛会提起这件事。|你读完了上个假期开始读的那本书。书签还夹在你留下的地方。}
 # en: Get ahead on next term
 opt.right.label [d47dc6] = 提前预习下学期
-# en: {final_year: You make notes for a term you'll only half get to use. It still feels like the right thing to do.|{You make a neat set of notes for next term. Future you will be grateful. Present you is bored stiff.|You read ahead three chapters and find the professor's favourite mistake waiting in the fourth.}}
-opt.right.say.1 [b577c9] = {final_year: 你为一个只能用上一半的学期做笔记。可还是觉得该这么做。|{你为下学期整理了一套整齐的笔记。将来的你会感激。现在的你闷得要命。|你往前读了三章，在第四章撞见了教授最爱犯的那个错误。}}
+# en: {final_year: You make notes for a term you'll only half get to use. It still feels like the right thing to do.|{You make a neat set of notes for next term. Future you will be grateful. Present you is bored stiff.|You read ahead three chapters and find the professor's favourite mistake waiting in the fourth.|You copy out next term's reading list and get through half of it. The other half looks smug.}}
+opt.right.say.1 [425249] = {final_year: 你为一个只能用上一半的学期做笔记。可还是觉得该这么做。|{你为下学期整理了一套整齐的笔记。将来的你会感激。现在的你闷得要命。|你往前读了三章，在第四章撞见了教授最爱犯的那个错误。|你抄下下学期的书单，读完了一半。另一半看起来很得意。}}
 
 @event break_castle_post_day
 # en: Post for the Stay-Behinds
 title [38476c] = 留守者的信件
-# en: {Post day. The porter lays the letters out on one table in the Great Hall.|The porter now sorts the stay-behinds' letters into a pile of their own.|The porter nods to you. He keeps your letters on top now.} {season == "winter": {Most of it is Midwinter cards for people who went home.|One parcel is exactly the shape of a scarf.}|{Most of it is postcards from people's travels.|A postcard says "Wish you were here", and nobody knows whose it is.}}
-text [2779a5] = {邮件日。门房把信摊在大礼堂的一张桌子上。|门房现在把留守者的信单独分成一小叠。|门房朝你点点头。他现在把你的信放在最上面。} {season == "winter": {大多是寄给回家的人的仲冬贺卡。|有个包裹的形状和一条围巾一模一样。}|{大多是旅行中的人寄来的明信片。|一张明信片上只写着“真希望你也在”，没人知道是给谁的。}}
+# en: {Post day. The porter lays the letters out on one table in the Great Hall.|The porter now sorts the stay-behinds' letters into a pile of their own.|The porter nods to you. He keeps your letters on top now.} {season == "winter": {Most of it is Midwinter cards for people who went home.|One parcel is exactly the shape of a scarf.|One envelope has your name on it, in handwriting you know.}|{Most of it is postcards from people's travels.|A postcard says "Wish you were here", and nobody knows whose it is.|One envelope has your name on it and smells of the sea.}}
+text [5fca27] = {邮件日。门房把信摊在大礼堂的一张桌子上。|门房现在把留守者的信单独分成一小叠。|门房朝你点点头。他现在把你的信放在最上面。} {season == "winter": {大多是寄给回家的人的仲冬贺卡。|有个包裹的形状和一条围巾一模一样。|有一个信封上写着你的名字，字迹你认得。}|{大多是旅行中的人寄来的明信片。|一张明信片上只写着“真希望你也在”，没人知道是给谁的。|有一个信封写着你的名字，闻起来有海的味道。}}
 # en: A porter sorting a thin pile of letters on a long empty table, a few students waiting hopefully.
 scene [b2c195] = 门房在空荡的长桌上分拣一小叠信，几个学生满怀希望地等着。
 # en: Write a long letter home
 opt.left.label [b376a0] = 给家里写封长信
-# en: {final_year: You write that this is your last break at the castle, and then look at the sentence for a long time.|{You write four pages and pay for the heavy stamp. It's the closest thing to a conversation you've had all week.|You describe the empty castle so well that you feel lonelier writing it than living it.}}
-opt.left.say.1 [4a1a55] = {final_year: 你写道这是你在城堡度过的最后一个假期，然后盯着这句话看了很久。|{你写了四页，付了厚信的邮费。这是你这一周里最像聊天的一次。|你把空荡荡的城堡写得太好，写的时候比住在里面还寂寞。}}
+# en: {final_year: You write that this is your last break at the castle, and then look at the sentence for a long time.|{You write four pages and pay for the heavy stamp. It's the closest thing to a conversation you've had all week.|You describe the empty castle so well that you feel lonelier writing it than living it.|You write about the porter, the biscuit and the empty hall. It reads like a good life, which it is.}}
+opt.left.say.1 [bc5632] = {final_year: 你写道这是你在城堡度过的最后一个假期，然后盯着这句话看了很久。|{你写了四页，付了厚信的邮费。这是你这一周里最像聊天的一次。|你把空荡荡的城堡写得太好，写的时候比住在里面还寂寞。|你写了门房、饼干和空荡荡的大厅。读起来像一种不错的生活，事实也是。}}
 # en: Help the porter sort it all
 opt.right.label [329389] = 帮门房分拣
-# en: {The porter tells you who writes to whom, in strict confidence. You know far too much about the second-years now.|You sort the post into houses. There's nothing for you this time. The porter gives you a biscuit, which is nearly as good.}
-opt.right.say.1 [c1af6a] = {门房严格保密地告诉你谁给谁写信。现在你对二年级生知道得太多了。|你把信按学院分好。这次没有你的。门房给了你一块饼干，差不多一样好。}
+# en: {The porter tells you who writes to whom, in strict confidence. You know far too much about the second-years now.|You sort the post into houses. There's nothing for you this time. The porter gives you a biscuit, which is nearly as good.|You sort the pile in half the time it took you once. The porter calls you his deputy, and nobody argues.}
+opt.right.say.1 [fa9973] = {门房严格保密地告诉你谁给谁写信。现在你对二年级生知道得太多了。|你把信按学院分好。这次没有你的。门房给了你一块饼干，差不多一样好。|你分完这堆信，只用了当初一半的时间。门房管你叫他的副手，没人反对。}
 
 @event break_home_kitchen_table
 # en: Homework at the Kitchen Table
 title [081adf] = 厨房桌上的功课
-# en: {You spread your books across the kitchen table, where you did your sums as a child.|Your books have been moved for the bread, and one is being used as a trivet.|The family works around your books now. Mostly.} {season == "winter": The stove is the only warm place, so everyone is in the kitchen.|The door is open, and everyone passing asks what the book is about.} {A cousin has drawn a dragon in your margin.|The kettle boils every quarter-hour, on principle.}
-text [0d32c7] = {你把书摊在厨房桌上，小时候你就在这儿算算术。|你的书被挪开给面包腾地方，有一本被拿去垫了锅。|家里人现在会绕着你的书干活。大多数时候。} {season == "winter": 炉子是屋里唯一暖和的地方，所以大家都在厨房。|门朝院子开着，每个路过的人都要问这书讲什么。} {一个表亲在你的页边画了条龙。|水壶每一刻钟烧开一次，原则问题。}
+# en: {You spread your books across the kitchen table, where you did your sums as a child.|Your books have been moved for the bread, and one is being used as a trivet.|The family works around your books now. Mostly.} {season == "winter": The stove is the only warm place, so everyone is in the kitchen.|The door is open, and everyone passing asks what the book is about.} {A cousin has drawn a dragon in your margin.|The kettle boils every quarter-hour, on principle.|Someone has put a book of yours under a wobbly table leg, and it works.}
+text [266433] = {你把书摊在厨房桌上，小时候你就在这儿算算术。|你的书被挪开给面包腾地方，有一本被拿去垫了锅。|家里人现在会绕着你的书干活。大多数时候。} {season == "winter": 炉子是屋里唯一暖和的地方，所以大家都在厨房。|门朝院子开着，每个路过的人都要问这书讲什么。} {一个表亲在你的页边画了条龙。|水壶每一刻钟烧开一次，原则问题。|有人把你的一本书垫在了一条晃动的桌腿下面，还真管用。}
 # en: A family kitchen in the morning, a student's books spread among the breakfast plates, someone reaching across them for the butter.
 scene [6a8ca6] = 早晨的家中厨房，学生的书摊在早餐盘子之间，有人越过书去够黄油。
 # en: Study through the noise
 opt.left.label [9218fa] = 顶着吵闹学习
-# en: {You read the same paragraph nine times and learn it perfectly, along with the price of eggs.|You get through a chapter. Your notes now have a jam stain, a crumb and the shopping list on them.}
-opt.left.say.1 [03b558] = {同一段你读了九遍，背得滚瓜烂熟，连带记住了鸡蛋的价钱。|你读完了一章。你的笔记上现在有一块果酱渍、一粒面包屑和一张购物清单。}
+# en: {You read the same paragraph nine times and learn it perfectly, along with the price of eggs.|You get through a chapter. Your notes now have a jam stain, a crumb and the shopping list on them.|You learn to read with one hand and pass the salt with the other. A whole chapter goes in.}
+opt.left.say.1 [bc5a95] = {同一段你读了九遍，背得滚瓜烂熟，连带记住了鸡蛋的价钱。|你读完了一章。你的笔记上现在有一块果酱渍、一粒面包屑和一张购物清单。|你学会了一手看书一手递盐。读进去了整整一章。}
 # en: Give up and help with lunch
 opt.right.label [91e189] = 放弃，帮忙做午饭
-# en: {You're sent to the shop for the one thing everyone forgot, and you buy sweets with the change.|You peel, chop and get told about everyone in the village. Your book stays shut, and it's the best morning of the break.}
-opt.right.say.1 [713fc1] = {你被派去店里买大家都忘了的那样东西，用找零买了糖。|你削皮、切菜，听了村里每个人的近况。书一直没打开，这是假期里最好的一个上午。}
+# en: {You're sent to the shop for the one thing everyone forgot, and you buy sweets with the change.|You peel, chop and get told about everyone in the village. Your book stays shut, and it's the best morning of the break.|You're on potatoes again. You're told you peel like a scholar, which isn't a compliment.}
+opt.right.say.1 [7b491a] = {你被派去店里买大家都忘了的那样东西，用找零买了糖。|你削皮、切菜，听了村里每个人的近况。书一直没打开，这是假期里最好的一个上午。|你又被派去削土豆。家里人说你削皮的样子像个学者，这不是夸奖。}
 
 @event break_home_the_box
 # en: The Box Under the Bed
@@ -95,30 +95,30 @@ text [00a18c] = {你的旧房间比记忆里小。床底下是你九岁时装一
 scene [2fff89] = 一间窄小的儿时卧室，床对现在的主人来说短得多，一盒旧纪念品被拖到地板上。
 # en: Pack it in your trunk
 opt.left.label [60f445] = 装进行李箱
-# en: {It comes back to Lumenhold with you. The trunk is heavier, and so, somehow, are you.|You pack it between your robes. Every time you open the trunk this term, it will be the first thing you see.}
-opt.left.say.1 [decf39] = {它跟你一起回了流明堡。箱子更沉了，不知怎么，你也是。|你把它夹在袍子中间。这学期每次打开箱子，它都会是你第一眼看到的东西。}
+# en: {It comes back to Lumenhold with you. The trunk is heavier, and so, somehow, are you.|You pack it between your robes. Every time you open the trunk this term, it will be the first thing you see.|You pack it carefully. There's not much left in the box now, and that feels like something ending.}
+opt.left.say.1 [c4ea52] = {它跟你一起回了流明堡。箱子更沉了，不知怎么，你也是。|你把它夹在袍子中间。这学期每次打开箱子，它都会是你第一眼看到的东西。|你小心地把它收好。盒子里剩的不多了，感觉像什么东西要结束了。}
 # en: Give it to your cousin
 opt.right.label [a1cb8e] = 送给你的表亲
-# en: {Your cousin, who is applying to the academy next autumn, takes it with enormous seriousness. You feel very old.|Your cousin promises to keep it safe. By supper it has been traded to a neighbour for a jar of honey.}
-opt.right.say.1 [816fa7] = {你的表亲明年秋天要报考学院，无比郑重地接了过去。你觉得自己老了。|表亲保证会好好收着。到晚饭时，它已经被换给邻居，换来一罐蜂蜜。}
+# en: {Your cousin, who is applying to the academy next autumn, takes it with enormous seriousness. You feel very old.|Your cousin promises to keep it safe. By supper it has been traded to a neighbour for a jar of honey.|Your cousin says thank you and puts it in a box of their own, under their own bed. You feel very old and quite happy.}
+opt.right.say.1 [155820] = {你的表亲明年秋天要报考学院，无比郑重地接了过去。你觉得自己老了。|表亲保证会好好收着。到晚饭时，它已经被换给邻居，换来一罐蜂蜜。|表亲道了谢，把它放进了自己床底下的盒子里。你觉得自己老了，也挺高兴。}
 
 @event break_home_family_debate
 # en: The Family Debate
 title [673f25] = 家庭辩论
-# en: {At breakfast the family is arguing, and someone says, "Ask the scholar."|The argument has started without you. Everyone turns as you come down the stairs.|"The scholar is up," someone announces. They've saved today's argument for you.} {season == "winter": {Is it colder than the year of the big snow?|Can you freeze a pond by thinking at it?}|{Do swallows sleep at the bottom of rivers?|Will it rain on the fair, and can you stop it?}}
-text [52c288] = {早饭时一家人在争论，有人说：“问问读书人。”|争论没等你就开始了。你下楼时，所有人都转过头来。|“读书人起来了。”有人宣布。他们把今天的争论留给了你。} {season == "winter": {今年是不是比大雪那年还冷？|光靠想就能把池塘冻住吗？}|{燕子是不是睡在河底？|集市那天会下雨吗，你能不能拦住？}}
+# en: {At breakfast the family is arguing, and someone says, "Ask the scholar."|The argument has started without you. Everyone turns as you come down the stairs.|"The scholar is up," someone announces. They've saved today's argument for you.} {season == "winter": {Is it colder than the year of the big snow?|Can you freeze a pond by thinking at it?|Can a wizard make the hens lay in winter?}|{Do swallows sleep at the bottom of rivers?|Will it rain on the fair, and can you stop it?|Is the old well really haunted, and should it be?}}
+text [86f635] = {早饭时一家人在争论，有人说：“问问读书人。”|争论没等你就开始了。你下楼时，所有人都转过头来。|“读书人起来了。”有人宣布。他们把今天的争论留给了你。} {season == "winter": {今年是不是比大雪那年还冷？|光靠想就能把池塘冻住吗？|巫师能让母鸡冬天下蛋吗？}|{燕子是不是睡在河底？|集市那天会下雨吗，你能不能拦住？|那口老井真的闹鬼吗？该不该闹？}}
 # en: A breakfast table mid-argument, several relatives pointing at a student as if they were the deciding vote.
 scene [0af97b] = 争论正酣的早餐桌，几个亲戚指着一个学生，好像那是决定性的一票。
 # en: Settle it with what I've learned
 opt.left.label [650629] = 用学到的东西解决
-# en: {You explain it so clearly that the argument ends. There is a short, respectful silence, and then a new argument starts.|You settle it. An uncle demands to see it in writing. You write it on a napkin, and he keeps the napkin.}
-opt.left.say.1 [71131a] = {你讲得清清楚楚，争论结束了。一阵短暂而尊敬的沉默，然后新的争论开始了。|你解决了。一位叔叔要你写下来。你写在餐巾上，他把餐巾收了起来。}
-# en: {You explain it perfectly, and they all decide the academy has taught you nonsense.|Halfway through you realise you're wrong. So does everyone else.}
-opt.left.say.2 [a87b90] = {你讲得完美无缺，结果他们一致认定学院教了你一堆胡话。|讲到一半你发现自己错了。其他人也发现了。}
+# en: {You explain it so clearly that the argument ends. There is a short, respectful silence, and then a new argument starts.|You settle it. An uncle demands to see it in writing. You write it on a napkin, and he keeps the napkin.|You settle it with a diagram on the back of the almanac. It's still pinned by the stove the next time you're home.}
+opt.left.say.1 [98ec0a] = {你讲得清清楚楚，争论结束了。一阵短暂而尊敬的沉默，然后新的争论开始了。|你解决了。一位叔叔要你写下来。你写在餐巾上，他把餐巾收了起来。|你在历书背面画了张图解决了。下次你回家时，它还钉在炉子边上。}
+# en: {You explain it perfectly, and they all decide the academy has taught you nonsense.|Halfway through you realise you're wrong. So does everyone else.|You're right, and you prove it, and nobody believes you, because the almanac says otherwise.}
+opt.left.say.2 [364c86] = {你讲得完美无缺，结果他们一致认定学院教了你一堆胡话。|讲到一半你发现自己错了。其他人也发现了。|你是对的，也证明了，可没人信你，因为历书上写的不一样。}
 # en: Refuse to take sides
 opt.right.label [146465] = 拒绝站队
-# en: {You butter your toast with great care and say, "Hm." It does not stop anyone, but it does save you.|You change the subject to the neighbour's fence. It works, but now there are two arguments.}
-opt.right.say.1 [0852f5] = {你非常仔细地给吐司抹黄油，说了声“嗯”。没能阻止任何人，但救了你自己。|你把话题转到邻居家的篱笆上。奏效了，但现在有两场争论了。}
+# en: {You butter your toast with great care and say, "Hm." It does not stop anyone, but it does save you.|You change the subject to the neighbour's fence. It works, but now there are two arguments.|You say both sides have a point. Both sides turn on you. It's the most united the family has been all year.}
+opt.right.say.1 [97d4a0] = {你非常仔细地给吐司抹黄油，说了声“嗯”。没能阻止任何人，但救了你自己。|你把话题转到邻居家的篱笆上。奏效了，但现在有两场争论了。|你说双方都有道理。双方一起转向了你。这是全家一年里最团结的时候。}
 
 @event break_home_village_children
 # en: The Wizard Is Home
@@ -129,28 +129,28 @@ text [ccbdc0] = {消息传开了，说你从巫师学校回来了。半个村子
 scene [3660a2] = 早晨一群村民聚在小屋门口，满怀期待地盯着一个穿学院长袍的学生。
 # en: Show them some sparks
 opt.left.label [b1cdc8] = 给他们放点火花
-# en: {You make a little burst of light over the gate. The neighbours cheer and demand it again, and again.|You make a spark dance across the gatepost. The baker tries to catch it in her apron, or thinks she does, which is the same thing.}
-opt.left.say.1 [2aeaee] = {你在门上方变出一小团光。邻居们欢呼起来，要你再来，再来，再来。|你让一颗火花在门柱上跳舞。面包师想用围裙兜住它，或者以为兜住了，那也一样。}
+# en: {You make a little burst of light over the gate. The neighbours cheer and demand it again, and again.|You make a spark dance across the gatepost. The baker tries to catch it in her apron, or thinks she does, which is the same thing.|You work through the committee's list of sparks, in order. They tick each one off and ask for the list again tomorrow.}
+opt.left.say.1 [44bf13] = {你在门上方变出一小团光。邻居们欢呼起来，要你再来，再来，再来。|你让一颗火花在门柱上跳舞。面包师想用围裙兜住它，或者以为兜住了，那也一样。|你照着委员会的单子，一个一个放火花。他们看完一个就打个勾，还要你明天再来一遍。}
 # en: Teach them something real
 opt.right.label [f0ec48] = 教他们点真东西
-# en: {You explain how the light gets into a spell. They listen politely and then ask for sparks.|You show them how to sit still and listen to a candle. The old miller really hears it. You can tell.}
-opt.right.say.1 [837f71] = {你讲光是怎么进到咒语里的。他们礼貌地听完，然后要火花。|你教他们静静坐着听一支蜡烛。老磨坊主真的听见了。你看得出来。}
+# en: {You explain how the light gets into a spell. They listen politely and then ask for sparks.|You show them how to sit still and listen to a candle. The old miller really hears it. You can tell.|You make the blacksmith's stick glow for a minute. It isn't a wand, but he'll never believe that now.}
+opt.right.say.1 [93d4e1] = {你讲光是怎么进到咒语里的。他们礼貌地听完，然后要火花。|你教他们静静坐着听一支蜡烛。老磨坊主真的听见了。你看得出来。|你让铁匠那根棍子亮了一分钟。它不是魔杖，可他现在再也不会信了。}
 
 @event break_work_holiday_rush
 # en: The Holiday Rush
 title [c1bbea] = 假日高峰
-# en: {The holidays bring the crowds.|This time you've learned to eat breakfast before the rush, not during it.|You can feel the rush coming an hour before it arrives.} {has(gig_newt): The Gilded Newt is packed to the beams.|{has(gig_pell): The queue at Pell & Daughters is out of the door.|{has(gig_post): The loft's shelves are stacked to the rafters with parcels.|{has(gig_library): The library is full of last-minute readers.|{has(gig_kitchens): The Refectory is feeding everyone who stayed, and all their visiting families.|{has(gig_grounds): The grounds are full of visitors walking off their holiday dinners, and every one of them has a question.|Everyone wants something, and now.}}}}}} {season == "winter": {Everyone wants it before Midwinter.|Wet boots, short tempers.}|{Everyone is sunburnt.|Travellers keep asking the way.}}
-text [bc7639] = {假期带来了人潮。|这次你学会了在高峰前吃早饭，而不是在高峰中。|高峰还有一个钟头才到，你已经感觉到了。} {has(gig_newt): 镀金蝾螈酒馆挤得水泄不通。|{has(gig_pell): 佩尔父女药铺的队排到了门外。|{has(gig_post): 阁楼的架子上包裹一直堆到房梁。|{has(gig_library): 图书馆里全是临时抱佛脚的读者。|{has(gig_kitchens): 食堂要喂饱所有留校的人，还有他们来探望的家人。|{has(gig_grounds): 场地上全是吃完节日大餐出来散步的访客，每个人都有问题要问。|人人都想要点什么，而且现在就要。}}}}}} {season == "winter": {人人都想在仲冬前拿到。|湿靴子，坏脾气。}|{人人都晒得通红。|旅人不停地问路。}}
+# en: {The holidays bring the crowds.|This time you've learned to eat breakfast before the rush, not during it.|You can feel the rush coming an hour before it arrives.} {has(gig_newt): The Gilded Newt is packed to the beams.|{has(gig_pell): The queue at Pell & Daughters is out of the door.|{has(gig_post): The loft's shelves are stacked to the rafters with parcels.|{has(gig_library): The library is full of last-minute readers.|{has(gig_kitchens): The Refectory is feeding everyone who stayed, and all their visiting families.|{has(gig_grounds): The grounds are full of visitors walking off their holiday dinners, and every one of them has a question.|Everyone wants something, and now.}}}}}} {season == "winter": {Everyone wants it before Midwinter.|Wet boots, short tempers.|Everyone is in a hurry to be somewhere warm.}|{Everyone is sunburnt.|Travellers keep asking the way.|The heat slows everyone down except the queue.}}
+text [acfd1b] = {假期带来了人潮。|这次你学会了在高峰前吃早饭，而不是在高峰中。|高峰还有一个钟头才到，你已经感觉到了。} {has(gig_newt): 镀金蝾螈酒馆挤得水泄不通。|{has(gig_pell): 佩尔父女药铺的队排到了门外。|{has(gig_post): 阁楼的架子上包裹一直堆到房梁。|{has(gig_library): 图书馆里全是临时抱佛脚的读者。|{has(gig_kitchens): 食堂要喂饱所有留校的人，还有他们来探望的家人。|{has(gig_grounds): 场地上全是吃完节日大餐出来散步的访客，每个人都有问题要问。|人人都想要点什么，而且现在就要。}}}}}} {season == "winter": {人人都想在仲冬前拿到。|湿靴子，坏脾气。|人人都急着去暖和的地方。}|{人人都晒得通红。|旅人不停地问路。|炎热让每个人都慢下来，除了队伍。}}
 # en: A holiday rush at a busy workplace, a student in the thick of it wearing the fixed smile of someone on their fourth hour of the same question.
 scene [0eb180] = 假期里忙碌的工作场所，一个学生身处人潮中央，挂着第四个钟头回答同一个问题的僵硬笑容。
 # en: Smile through it
 opt.left.label [35213b] = 笑着撑过去
-# en: {You smile until your face aches. Somebody tips you a coin and a peppermint.|You smile through the fourth complaint about the weather, as if it were your fault. Somehow the tips are better than ever.}
-opt.left.say.1 [850a91] = {你笑到脸发酸。有人给了你一枚小费和一颗薄荷糖。|第四个人来抱怨天气，好像是你的错，你照样笑着。不知怎么，小费比哪次都多。}
+# en: {You smile until your face aches. Somebody tips you a coin and a peppermint.|You smile through the fourth complaint about the weather, as if it were your fault. Somehow the tips are better than ever.|You have a smile for every complaint now, sorted by type. The tips follow.}
+opt.left.say.1 [6aa1dc] = {你笑到脸发酸。有人给了你一枚小费和一颗薄荷糖。|第四个人来抱怨天气，好像是你的错，你照样笑着。不知怎么，小费比哪次都多。|现在你每种抱怨都备好了一种笑容，分门别类。小费随之而来。}
 # en: Take the heavy jobs instead
 opt.right.label [7fdbc4] = 改干重活
-# en: {You haul the heaviest loads all morning and talk to no one. Your arms complain, and nobody else does.|You take the dull, heavy work nobody wants. It's tiring and blissfully quiet.}
-opt.right.say.1 [213814] = {你搬了一上午最沉的东西，一句话没说。胳膊在抱怨，别的谁也没抱怨。|你揽下了没人想干的又闷又重的活。累，但安静得幸福。}
+# en: {You haul the heaviest loads all morning and talk to no one. Your arms complain, and nobody else does.|You take the dull, heavy work nobody wants. It's tiring and blissfully quiet.|You know where every heavy thing goes by now. You're done by noon, and nobody has spoken to you. Perfect.}
+opt.right.say.1 [020c37] = {你搬了一上午最沉的东西，一句话没说。胳膊在抱怨，别的谁也没抱怨。|你揽下了没人想干的又闷又重的活。累，但安静得幸福。|现在你知道每样重东西该放哪儿。不到中午就干完了，没人跟你说过一句话。完美。}
 
 @event break_work_opening_up
 # en: Opening Up
@@ -161,14 +161,14 @@ text [b1d7dc] = {假期里你被托付了钥匙。天一亮你独自开门。|�
 scene [7b5489] = 清晨微光中一个学生在开店门，呼出白气，身后的街道空无一人。
 # en: Do it all by the book
 opt.left.label [433ff5] = 一切按规矩来
-# en: {Swept, stocked and opened to the minute. The owner notices and slips you a little extra.|Everything is ready when the first customer arrives. Nobody notices but you. Still, the coin is good.}
-opt.left.say.1 [dbd6f0] = {扫好、摆好、准点开门。老板注意到了，悄悄多塞给你一点。|第一位客人来时一切就绪。除了你没人注意。不过钱是实在的。}
+# en: {Swept, stocked and opened to the minute. The owner notices and slips you a little extra.|Everything is ready when the first customer arrives. Nobody notices but you. Still, the coin is good.|You open up to the minute, as always. The owner has stopped checking.}
+opt.left.say.1 [4593ee] = {扫好、摆好、准点开门。老板注意到了，悄悄多塞给你一点。|第一位客人来时一切就绪。除了你没人注意。不过钱是实在的。|你一如既往地准点开门。老板已经不再来查了。}
 # en: Steal a quiet half hour
 opt.right.label [48ac16] = 偷半个钟头清闲
-# en: {You drink tea by the window and watch the street wake up. It's the best part of the job.|You read a chapter with your feet up. Nobody ever knows.}
-opt.right.say.1 [0258ad] = {你在窗边喝茶，看街道醒来。这是这份工作最好的部分。|你把脚翘起来读了一章。没人知道。}
-# en: {The owner arrives early and finds you with your feet up. The half hour comes out of your wages.|The first customer arrives early and finds the door locked. They leave a note. So does the owner.}
-opt.right.say.2 [768b55] = {老板来早了，看见你翘着脚。那半个钟头从工钱里扣了。|第一位客人来早了，发现门锁着。他留了张字条。老板也留了一张。}
+# en: {You drink tea by the window and watch the street wake up. It's the best part of the job.|You read a chapter with your feet up. Nobody ever knows.|There's a chair by the window that's yours now. Half an hour of nothing, and nobody the wiser.}
+opt.right.say.1 [73930f] = {你在窗边喝茶，看街道醒来。这是这份工作最好的部分。|你把脚翘起来读了一章。没人知道。|现在窗边有一把你专属的椅子。半个钟头什么也不干，谁也不知道。}
+# en: {The owner arrives early and finds you with your feet up. The half hour comes out of your wages.|The first customer arrives early and finds the door locked. They leave a note. So does the owner.|The owner has taken to arriving early just to check, and today it pays off. The half hour comes out of your wages.}
+opt.right.say.2 [36d6dc] = {老板来早了，看见你翘着脚。那半个钟头从工钱里扣了。|第一位客人来早了，发现门锁着。他留了张字条。老板也留了一张。|老板开始故意早到来查岗，今天被逮个正着。那半个钟头从工钱里扣了。}
 
 @event break_work_regular
 # en: The Holiday Regular
@@ -179,12 +179,12 @@ text [e2a150] = {每个假期都有个常客。这一位每天早上都来，而
 scene [4825ff] = 一位年长的客人在柜台前坐定准备长谈，柜台后的学生瞥着排队的人。
 # en: Let them finish the story
 opt.left.label [884a81] = 让他们把故事讲完
-# en: {You hear the whole story, standing, while the queue thins out to somewhere else. Your feet ache by the end. The regular leaves happy, and so, oddly, are you.|The story has an ending you didn't expect, and you'll think about it all day. You stood through all of it, and your back says so.}
-opt.left.say.1 [54a618] = {你站着听完了整个故事，排队的人散去别家了。到最后你的脚都站疼了。常客高高兴兴地走了，奇怪的是，你也是。|故事的结局出乎意料，你会想一整天。你从头站到尾，腰都在抗议。}
+# en: {You hear the whole story, standing, while the queue thins out to somewhere else. Your feet ache by the end. The regular leaves happy, and so, oddly, are you.|The story has an ending you didn't expect, and you'll think about it all day. You stood through all of it, and your back says so.|You know how their stories end by now, and you let them tell it anyway. The queue waits. Your feet don't forgive you.}
+opt.left.say.1 [ca67b9] = {你站着听完了整个故事，排队的人散去别家了。到最后你的脚都站疼了。常客高高兴兴地走了，奇怪的是，你也是。|故事的结局出乎意料，你会想一整天。你从头站到尾，腰都在抗议。|现在你已经知道对方的故事怎么结尾了，还是让对方讲完。队伍在等。你的脚可不原谅你。}
 # en: Hurry them gently along
 opt.right.label [7b4db3] = 温和地催一催
-# en: {You serve the queue and the regular leaves, mid-sentence, with a little wave. It shouldn't bother you as much as it does.|The queue is grateful. The regular says, "Another time, then," and you both know they mean it.}
-opt.right.say.1 [e7c8e4] = {你招呼了排队的人，常客话说到一半，挥挥手走了。这事不该让你这么在意。|排队的人很感激。常客说：“那下回吧。”你们都知道这话是真心的。}
+# en: {You serve the queue and the regular leaves, mid-sentence, with a little wave. It shouldn't bother you as much as it does.|The queue is grateful. The regular says, "Another time, then," and you both know they mean it.|You keep the queue moving and promise the regular the rest tomorrow. They hold you to it, every time.}
+opt.right.say.1 [890677] = {你招呼了排队的人，常客话说到一半，挥挥手走了。这事不该让你这么在意。|排队的人很感激。常客说：“那下回吧。”你们都知道这话是真心的。|你让队伍动起来，答应常客明天听完剩下的。每一次，对方都会记着要你兑现。}
 
 @event break_work_new_hire
 # en: The Holiday Hire
@@ -195,28 +195,28 @@ text [86103e] = {老板招了个假期临时工，安排在你旁边。|又一�
 scene [c6ec03] = 一个紧张的新人用错误的角度端着托盘，一个学生探身过去纠正。
 # en: Show them the ropes
 opt.left.label [f00110] = 带带新人
-# en: {By noon they know where everything is and that the boss is all bark. You've lost a morning and gained a friend.|You teach them the trick with the till. They teach you a song. You both get told off for the song.}
-opt.left.say.1 [3f5177] = {到中午他们知道了每样东西在哪，也知道老板只是嘴凶。你搭进一个上午，多了个朋友。|你教他们收银台的窍门。他们教你一首歌。你们俩因为那首歌一起挨了骂。}
+# en: {By noon they know where everything is and that the boss is all bark. You've lost a morning and gained a friend.|You teach them the trick with the till. They teach you a song. You both get told off for the song.|You show them everything you wish someone had shown you. By the end of the day they're showing the next one.}
+opt.left.say.1 [be1b0b] = {到中午他们知道了每样东西在哪，也知道老板只是嘴凶。你搭进一个上午，多了个朋友。|你教他们收银台的窍门。他们教你一首歌。你们俩因为那首歌一起挨了骂。|你把当初希望有人教你的全教给了他们。到下班时，他们已经在教下一个了。}
 # en: Let them learn the hard way
 opt.right.label [c3bb81] = 让他们吃点苦头
-# en: {They learn. Unfortunately, they learn by breaking a jar that the boss puts on your account.|You let them flounder. It takes them all day to find the stockroom, and you end up covering their shift anyway. The boss takes the stock they spoiled out of your pay.}
-opt.right.say.1 [faf42f] = {他们学会了。可惜是靠打碎一个罐子学会的，老板记在了你账上。|你让他们自己摸索。他们找了一整天库房，最后还是你替他们顶了班。他们糟蹋的货，老板从你工钱里扣了。}
+# en: {They learn. Unfortunately, they learn by breaking a jar that the boss puts on your account.|You let them flounder. It takes them all day to find the stockroom, and you end up covering their shift anyway. The boss takes the stock they spoiled out of your pay.|They learn fast, mostly from your mistakes, which they found in the ledger. The boss bills you for the latest one.}
+opt.right.say.1 [bf6511] = {他们学会了。可惜是靠打碎一个罐子学会的，老板记在了你账上。|你让他们自己摸索。他们找了一整天库房，最后还是你替他们顶了班。他们糟蹋的货，老板从你工钱里扣了。|他们学得很快，主要是从账本上你犯过的错里学的。老板把最新的一笔记在了你头上。}
 
 @event break_internship_lodgings
 # en: Breakfast at the Lodgings
 title [ae293d] = 寄宿处的早餐
-# en: {{member(intern_expedition): Your lodging for the placement is a tent that flaps all night.|{member(intern_field_station): Your lodging is a bunk in the station cabin, under a shelf of jars.|Your lodging is one small room and a breakfast you pay for.}}|By now you can make any lodging home in an evening, a book on the sill and your boots by the door.|You've slept in enough borrowed beds to know breakfast matters more than the mattress.} {season == "winter": {Your breath steams.|The water jug has frozen.}|{It's warm before sunrise.|A bird is shouting outside.}} {Breakfast is porridge.|Breakfast is porridge with opinions.|Breakfast is unnamed.}
-text [50d20f] = {{member(intern_expedition): 这次实习的住处是一顶整夜扑扑作响的帐篷。|{member(intern_field_station): 你的住处是野外站小木屋里的一张铺位，头顶一排罐子。|你的住处是一个小房间，外加一顿要付钱的早餐。}}|如今不管什么住处，你一个晚上就能住成家：窗台上一本书，门边一双靴子。|你睡过的借来的床够多了，知道早餐比床垫要紧。} {season == "winter": {呼出的气冒着白烟。|水壶冻住了。}|{太阳没出来就暖了。|外面有只鸟在大喊。}} {早餐是粥。|早餐是有主见的粥。|早餐是一样没人叫得出名的东西。}
+# en: {{member(intern_expedition): Your lodging for the placement is a tent that flaps all night.|{member(intern_field_station): Your lodging is a bunk in the station cabin, under a shelf of jars.|Your lodging is one small room and a breakfast you pay for.}}|By now you can make any lodging home in an evening, a book on the sill and your boots by the door.|You've slept in enough borrowed beds to know breakfast matters more than the mattress.} {season == "winter": {Your breath steams.|The water jug has frozen.|Ice on the inside of the window.}|{It's warm before sunrise.|A bird is shouting outside.|The window is open, and someone's breakfast is frying.}} {Breakfast is porridge.|Breakfast is porridge with opinions.|Breakfast is unnamed.}
+text [dd9184] = {{member(intern_expedition): 这次实习的住处是一顶整夜扑扑作响的帐篷。|{member(intern_field_station): 你的住处是野外站小木屋里的一张铺位，头顶一排罐子。|你的住处是一个小房间，外加一顿要付钱的早餐。}}|如今不管什么住处，你一个晚上就能住成家：窗台上一本书，门边一双靴子。|你睡过的借来的床够多了，知道早餐比床垫要紧。} {season == "winter": {呼出的气冒着白烟。|水壶冻住了。|窗户里面结了冰。}|{太阳没出来就暖了。|外面有只鸟在大喊。|窗开着，不知谁的早饭在煎。}} {早餐是粥。|早餐是有主见的粥。|早餐是一样没人叫得出名的东西。}
 # en: A borrowed bed at dawn, boots by the door, a bowl of breakfast waiting and a notebook open on the blanket.
 scene [7aadaf] = 黎明时一张借来的床，靴子放在门边，一碗早餐等着，毯子上摊着一本笔记。
 # en: Eat a proper breakfast
 opt.left.label [f0ec45] = 好好吃顿早饭
-# en: {You eat slowly and listen to everyone's gossip. You arrive late enough to be noticed.|Fed, warm and five minutes late. Your supervisor looks at the clock and says nothing at all.}
-opt.left.say.1 [b04b38] = {你慢慢吃，听着各种闲话。到得晚了，晚到会被注意。|吃饱了，暖和了，晚了五分钟。导师看了看钟，什么也没说。}
+# en: {You eat slowly and listen to everyone's gossip. You arrive late enough to be noticed.|Fed, warm and five minutes late. Your supervisor looks at the clock and says nothing at all.|You eat everything and ask for the recipe. You're late, and your supervisor has started to expect it.}
+opt.left.say.1 [dfef2d] = {你慢慢吃，听着各种闲话。到得晚了，晚到会被注意。|吃饱了，暖和了，晚了五分钟。导师看了看钟，什么也没说。|你吃得一干二净，还要了做法。你迟到了，导师已经开始预料到这一点。}
 # en: Skip it and go in early
 opt.right.label [cfe210] = 不吃了，早点去
-# en: {You're the first one in. You get through a pile of work before anyone else arrives, and your stomach growls through every meeting after.|You read the day's notes on the way. By lunchtime you're faint and well informed.}
-opt.right.say.1 [6f54e1] = {你第一个到。别人来之前你已经处理掉一堆活，之后的每场会上你的肚子都在叫。|你在路上读当天的笔记。到午饭时你头晕眼花，消息灵通。}
+# en: {You're the first one in. You get through a pile of work before anyone else arrives, and your stomach growls through every meeting after.|You read the day's notes on the way. By lunchtime you're faint and well informed.|You go in early with an apple in your pocket. It's gone by the first meeting, and the hunger stays until supper.}
+opt.right.say.1 [5cc63c] = {你第一个到。别人来之前你已经处理掉一堆活，之后的每场会上你的肚子都在叫。|你在路上读当天的笔记。到午饭时你头晕眼花，消息灵通。|你揣着一个苹果提早去了。第一场会还没开完它就没了，饿意一直撑到晚饭。}
 
 @event break_internship_briefing
 # en: The Morning Briefing
@@ -227,14 +227,14 @@ text [672368] = {导师把当天的任务大声念一遍，只念一次，念得
 scene [ba7fb6] = 导师对着一排实习生大声念任务清单，其中一个停下了笔。
 # en: Ask what it means
 opt.left.label [5dfe5f] = 问清楚是什么意思
-# en: {Your supervisor explains it again, slowly, while the other interns smirk. Two of them come to you at lunch to ask what it meant.|"Good question," says your supervisor, in a tone that suggests it wasn't. You get the task right, anyway.}
-opt.left.say.1 [9dcb91] = {导师又慢慢解释了一遍，其他实习生偷笑。午饭时有两个人跑来问你那是什么意思。|“好问题。”导师说，语气表明并不是。不管怎样，你把任务做对了。}
+# en: {Your supervisor explains it again, slowly, while the other interns smirk. Two of them come to you at lunch to ask what it meant.|"Good question," says your supervisor, in a tone that suggests it wasn't. You get the task right, anyway.|You ask before anyone else can pretend. Your supervisor answers, and three pens around you start writing.}
+opt.left.say.1 [1d092e] = {导师又慢慢解释了一遍，其他实习生偷笑。午饭时有两个人跑来问你那是什么意思。|“好问题。”导师说，语气表明并不是。不管怎样，你把任务做对了。|你抢在别人装懂之前就问了。导师作了答，你周围三支笔开始动起来。}
 # en: Guess and get on with it
 opt.right.label [f42afd] = 猜一猜，先干起来
-# en: {You guess right. Your supervisor nods as if they never doubted you.|It turns out the odd task was "take the rest of the morning off". Lucky. You spend it reading in the archive.}
-opt.right.say.1 [37a169] = {你猜对了。导师点点头，好像从没怀疑过你。|原来那项古怪的任务是“上午剩下的时间休息”。运气不错。你在档案室里读了一上午。}
-# en: {You guess wrong and spend the morning carefully doing the opposite of what was wanted.|You did the right task to the wrong thing. The wrong thing will never be the same again.}
-opt.right.say.2 [daf8e2] = {你猜错了，一上午都在一丝不苟地做和要求相反的事。|你对错的东西做了对的任务。那样东西再也回不去了。}
+# en: {You guess right. Your supervisor nods as if they never doubted you.|It turns out the odd task was "take the rest of the morning off". Lucky. You spend it reading in the archive.|You guess, and you've guessed this one before. The task is done before anyone else has finished asking.}
+opt.right.say.1 [a8aac1] = {你猜对了。导师点点头，好像从没怀疑过你。|原来那项古怪的任务是“上午剩下的时间休息”。运气不错。你在档案室里读了一上午。|你猜了，而这种你以前就猜过。别人还没问完，你已经做完了。}
+# en: {You guess wrong and spend the morning carefully doing the opposite of what was wanted.|You did the right task to the wrong thing. The wrong thing will never be the same again.|Your guess is confident, thorough and wrong. Your supervisor reads the result twice and asks you, kindly, to ask next time.}
+opt.right.say.2 [ba5ae5] = {你猜错了，一上午都在一丝不苟地做和要求相反的事。|你对错的东西做了对的任务。那样东西再也回不去了。|你猜得自信、周全，而且错了。导师把结果读了两遍，好心地让你下次先问。}
 
 @event break_internship_other_interns
 # en: The Other Interns
@@ -245,28 +245,28 @@ text [d1c192] = {这里还有别的实习生，他们已经凑成了一张晚饭
 scene [719a03] = 几个实习生一起吃晚饭，一个拿着笔记本的人坐得稍远。
 # en: Join them for supper
 opt.left.label [a8d96d] = 和他们一起吃晚饭
-# en: {You chip in for the shared food and find out which of the supervisors are kind. Useful, and fun.|You talk shop until your supper is cold. It turns out everyone else is as lost as you are, which helps.}
-opt.left.say.1 [a8f566] = {你凑钱买了大家分的吃食，打听到哪些导师心肠好。有用，也开心。|你们聊工作聊到饭都凉了。原来大家和你一样摸不着头脑，这让人宽心。}
+# en: {You chip in for the shared food and find out which of the supervisors are kind. Useful, and fun.|You talk shop until your supper is cold. It turns out everyone else is as lost as you are, which helps.|You sit beside the one who knows where the biscuits are. By pudding you know where everything else is too.}
+opt.left.say.1 [b0f35d] = {你凑钱买了大家分的吃食，打听到哪些导师心肠好。有用，也开心。|你们聊工作聊到饭都凉了。原来大家和你一样摸不着头脑，这让人宽心。|你坐到了那个知道饼干放哪儿的人旁边。到吃甜点时，你连别的东西在哪儿也都知道了。}
 # en: Eat alone with your notes
 opt.right.label [5262d8] = 独自看笔记吃饭
-# en: {You finish the reading for tomorrow. You hear laughter from the table, and you don't look up.|You get ahead of everyone. Nobody saves you a biscuit.}
-opt.right.say.1 [a7de44] = {你读完了明天的材料。桌子那边传来笑声，你没抬头。|你领先了所有人。没人给你留饼干。}
+# en: {You finish the reading for tomorrow. You hear laughter from the table, and you don't look up.|You get ahead of everyone. Nobody saves you a biscuit.|You eat with your notes again. Someone leaves a biscuit by your elbow without a word.}
+opt.right.say.1 [966ee9] = {你读完了明天的材料。桌子那边传来笑声，你没抬头。|你领先了所有人。没人给你留饼干。|你又一边吃饭一边看笔记。有人一言不发地在你手肘边放了块饼干。}
 
 @event break_internship_stipend
 # en: Stipend Day
 title [75f50a] = 发津贴的日子
-# en: {Stipend day. A small envelope, your name spelled almost right.|You've learned to budget the envelope before you open it.|Stipend day. You know what it's for before it arrives, and it still feels like a gift.} {member(intern_expedition) or member(intern_field_station): {The supply cart has come, with a pedlar riding on top.|A pedlar has walked a very long way to sell you socks.}|{season == "winter": {There's a warm scarf in a shop window you pass.|A bookshop nearby has a sale on almanacs.}|{A cart is selling lemon ices on the corner.|A bookshop nearby has put its sale out in the sun.}}}
-text [5f525f] = {发津贴了。一个小信封，你的名字几乎拼对了。|你学会了在拆信封之前就把钱安排好。|发津贴的日子。钱还没到你就知道它的用处，可它仍然像一份礼物。} {member(intern_expedition) or member(intern_field_station): {补给车来了，车顶上坐着一个货郎。|一个货郎走了很远的路来卖袜子给你。}|{season == "winter": {你路过的橱窗里有一条暖和的围巾。|附近的书店在打折卖年历。}|{街角有辆小车在卖柠檬冰。|附近的书店把打折书摆到了太阳底下。}}}
+# en: {Stipend day. A small envelope, your name spelled almost right.|You've learned to budget the envelope before you open it.|Stipend day. You know what it's for before it arrives, and it still feels like a gift.} {member(intern_expedition) or member(intern_field_station): {The supply cart has come, with a pedlar riding on top.|A pedlar has walked a very long way to sell you socks.|The pedlar is back, and has heard about you.}|{season == "winter": {There's a warm scarf in a shop window you pass.|A bookshop nearby has a sale on almanacs.|The baker on the corner has started putting one aside on stipend day.}|{A cart is selling lemon ices on the corner.|A bookshop nearby has put its sale out in the sun.|The baker on the corner sells the last of the cherry buns at noon.}}}
+text [b62368] = {发津贴了。一个小信封，你的名字几乎拼对了。|你学会了在拆信封之前就把钱安排好。|发津贴的日子。钱还没到你就知道它的用处，可它仍然像一份礼物。} {member(intern_expedition) or member(intern_field_station): {补给车来了，车顶上坐着一个货郎。|一个货郎走了很远的路来卖袜子给你。|那个货郎又来了，而且听说过你。}|{season == "winter": {你路过的橱窗里有一条暖和的围巾。|附近的书店在打折卖年历。|街角的面包师开始在发津贴的日子给你留一个。}|{街角有辆小车在卖柠檬冰。|附近的书店把打折书摆到了太阳底下。|街角的面包师中午卖最后一批樱桃面包。}}}
 # en: A small envelope of coins on a desk, a student looking at it with the expression of someone doing sums.
 scene [8956ab] = 书桌上一个装着硬币的小信封，一个学生看着它，一脸在算账的表情。
 # en: Treat yourself
 opt.left.label [ebab6c] = 犒劳一下自己
-# en: {member(intern_expedition) or member(intern_field_station): {You buy the pedlar's thickest socks. Your feet have never been so grateful.|You buy a jar of honey from the pedlar and eat it with a spoon, in triumph.}|{season == "winter": {You buy it. It's quite unnecessary, and the warmest you've felt all week.|You spend the lot before lunch and regret none of it.}|{You spend it before the corner and don't regret a crown.|You take your purchase to a bench in the sun and stay until your nose burns.}}}
-opt.left.say.1 [1718fd] = {member(intern_expedition) or member(intern_field_station): {你买了货郎最厚的袜子。你的脚从没这么感激过。|你从货郎那儿买了一罐蜂蜜，用勺子吃，吃得扬眉吐气。}|{season == "winter": {你买下了它。完全没必要，却是你这一周最暖和的时刻。|午饭前你就花光了，一点也不后悔。}|{没走到街角你就花完了，一个克朗都不后悔。|你带着买来的东西坐到阳光下的长椅上，一直坐到鼻子晒伤。}}}
+# en: {member(intern_expedition) or member(intern_field_station): {You buy the pedlar's thickest socks. Your feet have never been so grateful.|You buy a jar of honey from the pedlar and eat it with a spoon, in triumph.|You buy the pedlar's whole stock of liquorice. He says you're his best customer, and you probably are.}|{season == "winter": {You buy it. It's quite unnecessary, and the warmest you've felt all week.|You spend the lot before lunch and regret none of it.|You spend it on something warm and something sweet, and keep a single coin back for luck.}|{You spend it before the corner and don't regret a crown.|You take your purchase to a bench in the sun and stay until your nose burns.|You buy the last cherry bun and a book you don't need, and eat one while reading the other.}}}
+opt.left.say.1 [655edc] = {member(intern_expedition) or member(intern_field_station): {你买了货郎最厚的袜子。你的脚从没这么感激过。|你从货郎那儿买了一罐蜂蜜，用勺子吃，吃得扬眉吐气。|你把货郎的甘草糖全买了。他说你是他最好的主顾，大概真是。}|{season == "winter": {你买下了它。完全没必要，却是你这一周最暖和的时刻。|午饭前你就花光了，一点也不后悔。|你买了点暖和的、点甜的，留下一枚硬币图个吉利。}|{没走到街角你就花完了，一个克朗都不后悔。|你带着买来的东西坐到阳光下的长椅上，一直坐到鼻子晒伤。|你买了最后一个樱桃面包和一本用不着的书，一边吃一边读。}}}
 # en: Save it and borrow the book
 opt.right.label [034d5f] = 省下钱，借那本书
-# en: {You put the envelope away and borrow the book instead. It's the dullest thing you've ever read, and the most useful. You copy out half of it the first night.|The envelope goes under your mattress. You read the borrowed book, and the next time your supervisor mentions it you nod in the right places.}
-opt.right.say.1 [f1a3c4] = {你把信封收好，改去借了那本书。这是你读过最枯燥的书，也最有用。第一晚你就抄了一半。|信封塞到了床垫下面。你读了借来的书，下次导师提到它时，你在该点头的地方点了头。}
+# en: {You put the envelope away and borrow the book instead. It's the dullest thing you've ever read, and the most useful. You copy out half of it the first night.|The envelope goes under your mattress. You read the borrowed book, and the next time your supervisor mentions it you nod in the right places.|The envelope joins the others under the mattress. The pile is getting interesting, and so is the book.}
+opt.right.say.1 [374872] = {你把信封收好，改去借了那本书。这是你读过最枯燥的书，也最有用。第一晚你就抄了一半。|信封塞到了床垫下面。你读了借来的书，下次导师提到它时，你在该点头的地方点了头。|信封和其他的一起塞到了床垫下面。那一沓越来越可观，书也越来越有意思。}
 
 @event thesis_margin_notes
 # en: Notes in the Margin
@@ -277,14 +277,14 @@ text [f474bd] = {索恩教授把你的章节退了回来。第一页的页边上
 scene [981dda] = 一份退回的论文草稿，教授尖利的字迹爬满了每一处页边。
 # en: Rewrite to his notes
 opt.left.label [cbc3e9] = 照他的批注改
-# en: {You rewrite every page he marked. The chapter is shorter and better, and you hate that he was right.|You take every note. When he reads it again he crosses out only one thing, and you could cry.}
-opt.left.say.1 [f0a870] = {他标过的每一页你都重写了。这一章更短、更好，你恨他是对的。|你采纳了每一条批注。他再读时只划掉了一处，你差点哭出来。}
+# en: {You rewrite every page he marked. The chapter is shorter and better, and you hate that he was right.|You take every note. When he reads it again he crosses out only one thing, and you could cry.|You rewrite to his notes without arguing now. It saves a week, and he's usually right, which still annoys you.}
+opt.left.say.1 [c5eee1] = {他标过的每一页你都重写了。这一章更短、更好，你恨他是对的。|你采纳了每一条批注。他再读时只划掉了一处，你差点哭出来。|现在你照他的批注改，不再争了。省了一个星期，而他通常是对的，这依旧让你恼火。}
 # en: Defend my version
 opt.right.label [6497f5] = 为我的版本辩护
-# en: {You make your case at his office door. He listens, says "Hm," and crosses out his own note.|You argue for your paragraph and he lets you keep it. "Then make it say so," he says, which is almost praise.}
-opt.right.say.1 [2d8e9c] = {你在他办公室门口陈述理由。他听完，说了声“嗯”，划掉了自己的批注。|你为自己那一段据理力争，他让你留下了。“那就让它把话说清楚。”他说，这几乎算是夸奖。}
-# en: {You argue. Thorne waits until you've finished, then points at the sentence that proves him right.|He hears you out, then writes a new note in the margin. It says "No." again, in smaller letters.}
-opt.right.say.2 [ccd1ad] = {你争了。索恩等你说完，然后指着证明他是对的那一句。|他听你说完，在页边写了一条新批注。还是“不。”，字小了一号。}
+# en: {You make your case at his office door. He listens, says "Hm," and crosses out his own note.|You argue for your paragraph and he lets you keep it. "Then make it say so," he says, which is almost praise.|You defend the paragraph with a source he hasn't read. He reads it overnight and gives you the paragraph.}
+opt.right.say.1 [feebbe] = {你在他办公室门口陈述理由。他听完，说了声“嗯”，划掉了自己的批注。|你为自己那一段据理力争，他让你留下了。“那就让它把话说清楚。”他说，这几乎算是夸奖。|你拿一份他没读过的资料为那段辩护。他连夜读完，把那段留给了你。}
+# en: {You argue. Thorne waits until you've finished, then points at the sentence that proves him right.|He hears you out, then writes a new note in the margin. It says "No." again, in smaller letters.|You argue. He agrees with every point and still writes "No." You've begun to find this comforting.}
+opt.right.say.2 [e68279] = {你争了。索恩等你说完，然后指着证明他是对的那一句。|他听你说完，在页边写了一条新批注。还是“不。”，字小了一号。|你争了。他每一条都同意，可还是写下“不。”你开始觉得这有点让人安心。}
 
 @event thesis_carrel_neighbour
 # en: The Next Carrel
@@ -295,30 +295,30 @@ text [3b1774] = {你的隔间邻居是一位根庐的毕业年级生，总在小
 scene [e1d83d] = 两个并排的论文隔间，中间的隔板上钉满了笔记，还有一支共用的蜡烛。
 # en: Swap drafts for an hour
 opt.left.label [d31846] = 交换草稿看一小时
-# en: {They find the hole in your argument in ten minutes. You find three in theirs. Everyone feels better and worse.|They read your chapter and say, "Oh, I see." You're not sure you did, until now.}
-opt.left.say.1 [366006] = {他们十分钟就找到了你论证里的漏洞。你在他们的里面找到三个。大家都觉得好受了些，也难受了些。|他们读完你的章节，说：“哦，我明白了。”在这之前你都不确定自己明白。}
-# en: {They love your chapter, which helps nobody. You spend the hour fixing their commas.|They ask so many questions that you start doubting your title.}
-opt.left.say.2 [ab4374] = {他们很喜欢你的章节，这对谁都没帮助。你花了一小时改他们的逗号。|他们问了太多问题，你开始怀疑起自己的标题。}
+# en: {They find the hole in your argument in ten minutes. You find three in theirs. Everyone feels better and worse.|They read your chapter and say, "Oh, I see." You're not sure you did, until now.|You swap drafts over the partition, sandwich crumbs and all. Both chapters come back better.}
+opt.left.say.1 [e140b0] = {他们十分钟就找到了你论证里的漏洞。你在他们的里面找到三个。大家都觉得好受了些，也难受了些。|他们读完你的章节，说：“哦，我明白了。”在这之前你都不确定自己明白。|你们隔着隔板交换草稿，连带着三明治屑。两章都改得更好了。}
+# en: {They love your chapter, which helps nobody. You spend the hour fixing their commas.|They ask so many questions that you start doubting your title.|Their notes on your chapter are longer than your chapter. You lose the afternoon reading them.}
+opt.left.say.2 [792da9] = {他们很喜欢你的章节，这对谁都没帮助。你花了一小时改他们的逗号。|他们问了太多问题，你开始怀疑起自己的标题。|他们给你那一章写的批注比那一章还长。你搭进一下午读这些批注。}
 # en: Hunt a source in the stacks
 opt.right.label [714cad] = 去书库找资料
-# en: {You find it on the bottom shelf, under a dictionary and a sleeping cat. It says exactly what you hoped, in a footnote.|Three hours of climbing ladders for one paragraph. It's a very good paragraph.}
-opt.right.say.1 [01e133] = {你在最底层书架上找到了它，压在一本词典和一只睡着的猫下面。它说的正是你希望的，在一条脚注里。|爬了三个钟头梯子换来一段话。是非常好的一段话。}
+# en: {You find it on the bottom shelf, under a dictionary and a sleeping cat. It says exactly what you hoped, in a footnote.|Three hours of climbing ladders for one paragraph. It's a very good paragraph.|You find the source and a better one beside it. You bring both back and share the second.}
+opt.right.say.1 [1030e2] = {你在最底层书架上找到了它，压在一本词典和一只睡着的猫下面。它说的正是你希望的，在一条脚注里。|爬了三个钟头梯子换来一段话。是非常好的一段话。|你找到了那份资料，旁边还有一份更好的。你把两份都带了回来，把第二份分给了对方。}
 
 @event thesis_is_it_good
 # en: Is It Any Good?
 title [cfa126] = 写得好吗？
-# en: {Halfway through rereading your thesis, you can't tell if it's brilliant or obvious.|The doubt has learned your timetable. It comes the morning after good work.|You know this doubt now. It reaches your carrel first.} {progress(thesis) >= 60: Most of it is written, which almost makes it worse.|So much of it is still unwritten.} {final_year and season == "spring": After this term there are no more terms.|{First-years laugh in the courtyard below.|Last night's candle is a puddle.}}
-text [300282] = {重读论文到一半，你分不清它是精彩还是平庸。|怀疑摸清了你的作息。它总在干得不错的一夜之后的早晨出现。|你认得这种怀疑了。它比你先到隔间。} {progress(thesis) >= 60: 大部分已经写完，这几乎让事情更糟。|还有太多没写。} {final_year and season == "spring": 这学期过后，就再也没有学期了。|{楼下庭院里一年级生在笑。|昨晚的蜡烛化成了一摊。}}
+# en: {Halfway through rereading your thesis, you can't tell if it's brilliant or obvious.|The doubt has learned your timetable. It comes the morning after good work.|You know this doubt now. It reaches your carrel first.} {progress(thesis) >= 60: Most of it is written, which almost makes it worse.|So much of it is still unwritten.} {final_year and season == "spring": After this term there are no more terms.|{First-years laugh in the courtyard below.|Last night's candle is a puddle.|Someone two carrels down sighs the same sigh.}}
+text [c8d24e] = {重读论文到一半，你分不清它是精彩还是平庸。|怀疑摸清了你的作息。它总在干得不错的一夜之后的早晨出现。|你认得这种怀疑了。它比你先到隔间。} {progress(thesis) >= 60: 大部分已经写完，这几乎让事情更糟。|还有太多没写。} {final_year and season == "spring": 这学期过后，就再也没有学期了。|{楼下庭院里一年级生在笑。|昨晚的蜡烛化成了一摊。|隔两个隔间的人叹出了一模一样的气。}}
 # en: A student at a carrel in early light, holding a thick draft at arm's length as if it might bite.
 scene [43c23c] = 清晨的隔间里，一个学生把厚厚的草稿举得远远的，好像它会咬人。
 # en: Push on regardless
 opt.left.label [b83a2c] = 不管了，继续写
-# en: {You write a page you don't believe in. By lunch you believe in about half of it, which is a start.|You keep going. The doubt keeps you company, and gets bored by evening.}
-opt.left.say.1 [e4a602] = {你写了一页自己都不信的东西。到午饭时你信了大约一半，算是个开始。|你接着写。怀疑一直陪着你，到傍晚它自己也腻了。}
+# en: {You write a page you don't believe in. By lunch you believe in about half of it, which is a start.|You keep going. The doubt keeps you company, and gets bored by evening.|You write through it, as you have before. By evening the doubt has gone quiet, and the page is good.}
+opt.left.say.1 [bf5167] = {你写了一页自己都不信的东西。到午饭时你信了大约一半，算是个开始。|你接着写。怀疑一直陪着你，到傍晚它自己也腻了。|你像以前一样写过去。到傍晚怀疑安静了，那一页也写得不错。}
 # en: Walk by the lake instead
 opt.right.label [ff9e77] = 改去湖边散步
-# en: {You walk around the lake and come back with no new pages and one good idea. You'll find out tomorrow if it's good.|The lake is mirror-still and has no opinion on your thesis. It's a relief.}
-opt.right.say.1 [b0b834] = {你绕湖走了一圈，回来时没有新页，只有一个好主意。明天就知道它好不好了。|湖面如镜，对你的论文毫无意见。真是解脱。}
+# en: {You walk around the lake and come back with no new pages and one good idea. You'll find out tomorrow if it's good.|The lake is mirror-still and has no opinion on your thesis. It's a relief.|You walk the long way round the lake. The doubt can't keep up, and you come back with a sentence that works.}
+opt.right.say.1 [fcedbe] = {你绕湖走了一圈，回来时没有新页，只有一个好主意。明天就知道它好不好了。|湖面如镜，对你的论文毫无意见。真是解脱。|你绕湖走了远路。怀疑跟不上你，你带着一句好用的句子回来了。}
 
 @event thesis_lab_spare_carrel
 # en: The Spare Carrel
@@ -329,14 +329,14 @@ text [434cc4] = {这排尽头有个空隔间，只有一截蜡烛头，没写任
 scene [9557dc] = 一长排木制研读隔间，尽头那个空着，只有一截蜡烛头和一页散落的脚注。
 # en: Work until the candle dies
 opt.left.label [6a43fb] = 写到蜡烛燃尽
-# en: {You write until the stub drowns in its own wax. Your notes are good, and your neck will remember them.|You read one book and half of another. The room's silence does half the work for you.}
-opt.left.say.1 [771d9c] = {你一直写到烛头淹没在自己的蜡油里。笔记很好，脖子会记住它们。|你读完一本书，又读了半本。屋里的安静替你干了一半的活。}
+# en: {You write until the stub drowns in its own wax. Your notes are good, and your neck will remember them.|You read one book and half of another. The room's silence does half the work for you.|You work until the stub gives out and finish the paragraph by feel. It's better than the ones you could see.}
+opt.left.say.1 [244afc] = {你一直写到烛头淹没在自己的蜡油里。笔记很好，脖子会记住它们。|你读完一本书，又读了半本。屋里的安静替你干了一半的活。|你一直干到烛头熄灭，摸着黑写完了那一段。比看得见时写的那些还好。}
 # en: Just sit in the quiet
 opt.right.label [fbb3b9] = 只是在安静里坐坐
-# en: {You sit with your hands in your lap and listen to everyone else think. It's oddly restful.|You doze off with your cheek on someone's old footnotes. Nobody minds.}
-opt.right.say.1 [dc3a3d] = {你双手放在膝上，听着别人思考。出奇地让人放松。|你脸贴着别人的旧脚注睡着了。没人介意。}
-# en: {An advisor looks into the carrel and asks what you're working on. "Thinking," you say. He writes that down.|A final-year asks if you'd mind the corner. Their own candle has given out.}
-opt.right.say.2 [c0d5b8] = {一位导师探头问你在研究什么。“思考。”你说。他把这记了下来。|一位毕业年级生问你介不介意让出角落。他们自己的蜡烛燃尽了。}
+# en: {You sit with your hands in your lap and listen to everyone else think. It's oddly restful.|You doze off with your cheek on someone's old footnotes. Nobody minds.|You sit in the quiet and the argument rearranges itself while you're not looking. You write it down before it changes its mind.}
+opt.right.say.1 [9e69a4] = {你双手放在膝上，听着别人思考。出奇地让人放松。|你脸贴着别人的旧脚注睡着了。没人介意。|你坐在安静里，论证趁你不注意自己理顺了。你赶在它改主意之前把它记了下来。}
+# en: {An advisor looks into the carrel and asks what you're working on. "Thinking," you say. He writes that down.|A final-year asks if you'd mind the corner. Their own candle has given out.|An advisor finds you sitting still and lectures you on idleness for exactly as long as you'd have sat.}
+opt.right.say.2 [a0d748] = {一位导师探头问你在研究什么。“思考。”你说。他把这记了下来。|一位毕业年级生问你介不介意让出角落。他们自己的蜡烛燃尽了。|一位导师发现你坐着不动，就“游手好闲”给你训了一通话，时长正好等于你本打算坐的时间。}
 
 @event thesis_lab_footnote_war
 # en: The Footnote War
@@ -347,14 +347,14 @@ text [985478] = {两位导师隔着三个隔间为一条脚注争吵，屋里每
 scene [0da858] = 两位导师隔着一排隔间争吵，毕业年级生们从隔板上方探头观战。
 # en: Weigh in with a source
 opt.left.label [52a73e] = 拿出处加入战局
-# en: {You produce the source, open at the right page. Both advisors fall silent, and one of them asks for your name.|Your citation settles it. The loser shakes your hand and then rereads the page for an hour.}
-opt.left.say.1 [6cd25e] = {你拿出那份资料，正翻在对的那一页。两位导师都安静了，其中一位问了你的名字。|你的引文终结了争论。输的一方和你握了手，然后把那一页重读了一个钟头。}
-# en: {Your source turns out to be the one they were both arguing against. They unite, briefly, to explain why.|You cite the wrong edition. The room winces as one.}
-opt.left.say.2 [ef1e37] = {你的资料恰好是他们俩都在反对的那份。他们短暂地联手，向你解释为什么。|你引错了版本。全屋人齐齐一缩。}
+# en: {You produce the source, open at the right page. Both advisors fall silent, and one of them asks for your name.|Your citation settles it. The loser shakes your hand and then rereads the page for an hour.|Your source wins the round. The referee chalks a point on the door under a new column, which has your name on it.}
+opt.left.say.1 [131400] = {你拿出那份资料，正翻在对的那一页。两位导师都安静了，其中一位问了你的名字。|你的引文终结了争论。输的一方和你握了手，然后把那一页重读了一个钟头。|你的资料赢下了这一回合。裁判在门上新开了一栏记上一分，栏头写着你的名字。}
+# en: {Your source turns out to be the one they were both arguing against. They unite, briefly, to explain why.|You cite the wrong edition. The room winces as one.|Your source is ruled out of order by the referee, on a technicality you'll be studying for weeks.}
+opt.left.say.2 [69773d] = {你的资料恰好是他们俩都在反对的那份。他们短暂地联手，向你解释为什么。|你引错了版本。全屋人齐齐一缩。|裁判以一条技术理由判你的资料无效，那条理由够你研究好几个星期。}
 # en: Keep my head down and listen
 opt.right.label [a9d2c8] = 低头听着
-# en: {You learn more about sources from ten minutes of the war than from a term of lectures, and you never have to say a word.|You take notes on both sides. Neither of them would like how fair your notes are.}
-opt.right.say.1 [4fcefe] = {十分钟的战事教你的出处知识比一学期的课还多，而你一句话都不用说。|你把双方的论点都记了下来。他们谁都不会喜欢你记得这么公允。}
+# en: {You learn more about sources from ten minutes of the war than from a term of lectures, and you never have to say a word.|You take notes on both sides. Neither of them would like how fair your notes are.|You keep your head down and your notebook open. The war is the best seminar in the building, and it's free.}
+opt.right.say.1 [fa65d3] = {十分钟的战事教你的出处知识比一学期的课还多，而你一句话都不用说。|你把双方的论点都记了下来。他们谁都不会喜欢你记得这么公允。|你埋着头，开着笔记本。这场战争是整栋楼里最好的研讨课，还不收钱。}
 
 @event thesis_lab_borrowed_candle
 # en: Borrowing a Candle
@@ -365,14 +365,14 @@ text [e34b72] = {这里的蜡烛总在最要命的时候燃尽。你的刚灭，
 scene [a34fc6] = 一支将熄的蜡烛照着昏暗的隔间，隔壁空桌上放着满满一盒蜡烛。
 # en: Borrow one and keep working
 opt.left.label [178881] = 借一支接着干
-# en: {You light it and work until the bell. You leave a note that says "IOU one candle", unsigned.|One candle, two good hours. You put the stub back, which is either honest or worse.}
-opt.left.say.1 [dca7f9] = {你点上它一直干到钟响。你留了张字条：“欠蜡烛一支”，没署名。|一支蜡烛，两个好钟头。你把烛头放了回去，这要么算诚实，要么更糟。}
-# en: {The owner comes back for a forgotten scarf and finds you lit by their candle. They say nothing, which is worse.|By morning the whole lab knows who borrowed the candle. Someone leaves a box on your desk, with a ribbon.}
-opt.left.say.2 [1eebfe] = {主人回来取忘下的围巾，发现你正借着他们的烛光。他们什么也没说，这更糟。|到早上全实验室都知道是谁借了蜡烛。有人在你桌上放了一盒，还系了丝带。}
+# en: {You light it and work until the bell. You leave a note that says "IOU one candle", unsigned.|One candle, two good hours. You put the stub back, which is either honest or worse.|You borrow one and replace it the next morning with two. The box owner has started leaving the lid open.}
+opt.left.say.1 [e699bf] = {你点上它一直干到钟响。你留了张字条：“欠蜡烛一支”，没署名。|一支蜡烛，两个好钟头。你把烛头放了回去，这要么算诚实，要么更糟。|你借了一支，第二天早上还了两支。盒子的主人开始把盖子开着了。}
+# en: {The owner comes back for a forgotten scarf and finds you lit by their candle. They say nothing, which is worse.|By morning the whole lab knows who borrowed the candle. Someone leaves a box on your desk, with a ribbon.|The box is counted now, and the count is short. A note appears asking the borrower to come forward. You don't.}
+opt.left.say.2 [fad0d1] = {主人回来取忘下的围巾，发现你正借着他们的烛光。他们什么也没说，这更糟。|到早上全实验室都知道是谁借了蜡烛。有人在你桌上放了一盒，还系了丝带。|那盒蜡烛现在有人数了，数目不对。一张字条出现了，请借蜡烛的人站出来。你没有。}
 # en: Go back in the dark
 opt.right.label [48d592] = 摸黑回去
-# en: {You walk back across the bridges in the dark, your argument going round and round. It is better by the time you reach your bed.|You stub your toe twice on the way out. The idea you had on the stairs was worth both.}
-opt.right.say.1 [becd58] = {你摸黑走过光之桥，论证在脑子里转个不停。走到床边时它已经好多了。|出门路上你踢到两次脚趾。楼梯上冒出的那个主意值这两下。}
+# en: {You walk back across the bridges in the dark, your argument going round and round. It is better by the time you reach your bed.|You stub your toe twice on the way out. The idea you had on the stairs was worth both.|You know the way back in the dark by now. The argument walks with you and arrives a step ahead.}
+opt.right.say.1 [330b06] = {你摸黑走过光之桥，论证在脑子里转个不停。走到床边时它已经好多了。|出门路上你踢到两次脚趾。楼梯上冒出的那个主意值这两下。|现在你摸黑也认得回去的路。论证陪你一路走着，比你早一步到。}
 
 @event intern_royal_library_slips
 # en: Request Slips
@@ -383,12 +383,12 @@ text [4e976f] = {楼上的学者把借阅单从黄铜滑槽送下来。你的工
 scene [7b85db] = 一道黄铜滑槽把纸条投进篮子，篮子放在一口排满书架的深井楼梯顶上。
 # en: Take the deep requests
 opt.left.label [879821] = 接最深处的单子
-# en: {Four hundred steps down, the air is cold enough to keep books for ever. You come back up with the book and a lot of opinions about stairs.|You find the volume wedged behind a pipe. The scholar who asked for it nearly weeps.}
-opt.left.say.1 [90a8d5] = {往下四百级台阶，空气冷得书能永远保存。你带着那本书和一肚子对楼梯的意见回到上面。|你在一根管子后面找到了那本书。要它的学者差点哭了。}
+# en: {Four hundred steps down, the air is cold enough to keep books for ever. You come back up with the book and a lot of opinions about stairs.|You find the volume wedged behind a pipe. The scholar who asked for it nearly weeps.|You take the bottom slip without looking at it. Down there, you know the shelves better than the catalogue does.}
+opt.left.say.1 [b77c1b] = {往下四百级台阶，空气冷得书能永远保存。你带着那本书和一肚子对楼梯的意见回到上面。|你在一根管子后面找到了那本书。要它的学者差点哭了。|你看都不看就接了最底层的单子。在下面，你比目录更熟悉那些书架。}
 # en: Take the near shelves
 opt.right.label [ee4e7d] = 只取近处书架的
-# en: {You fetch the easy ones and leave the deep slips for someone else. Someone else notices.|You're fast and pleasant, and everyone knows you've never been below the third landing.}
-opt.right.say.1 [a406c3] = {你取了容易的，把深处的单子留给别人。别人注意到了。|你又快又和气，可大家都知道你从没下过第三层平台。}
+# en: {You fetch the easy ones and leave the deep slips for someone else. Someone else notices.|You're fast and pleasant, and everyone knows you've never been below the third landing.|You clear the near shelves twice over. The long rattles go to someone else, who looks at you as they pass.}
+opt.right.say.1 [f0ab93] = {你取了容易的，把深处的单子留给别人。别人注意到了。|你又快又和气，可大家都知道你从没下过第三层平台。|你把近处的书架清了两遍。长响的单子归了别人，对方经过时看了你一眼。}
 
 @event intern_royal_library_mending
 # en: The Mending Table
@@ -399,14 +399,14 @@ text [fe093e] = {今天你在修补台，把碎裂的档案一片一片拼回去
 scene [cb79c7] = 灯下一张明亮的工作台，一份碎裂的手稿摊成好几块，一个学生拿着细镊子。
 # en: Mend it myself
 opt.left.label [67b19a] = 我自己来修
-# en: {Every flake goes back where it belongs. The binder holds it up to the lamp and says, "Acceptable," which here is a medal.|You save the page and read it while the glue dries. It's better than you expected.}
-opt.left.say.1 [4de760] = {每一片都回到了原处。装订师把它举到灯下说：“还行。”在这里，这就是勋章。|你救下了这一页，趁胶水干的时候读了它。比你想的有意思。}
-# en: {A sneeze. The binder looks at the scattered flakes and then at you. You both get the tweezers.|One flake ends up in the wrong century. Nobody can prove it was you, but everybody knows.}
-opt.left.say.2 [d0e90b] = {一个喷嚏。装订师看看散落的碎片，又看看你。你们俩一起拿起了镊子。|有一片被放进了错误的世纪。没人能证明是你，但人人都知道。}
+# en: {Every flake goes back where it belongs. The binder holds it up to the lamp and says, "Acceptable," which here is a medal.|You save the page and read it while the glue dries. It's better than you expected.|You put the list back together, crossed-out name and all. The binder reads the name and says nothing for a while.}
+opt.left.say.1 [f4c658] = {每一片都回到了原处。装订师把它举到灯下说：“还行。”在这里，这就是勋章。|你救下了这一页，趁胶水干的时候读了它。比你想的有意思。|你把名单拼了回去，连那个被划掉的名字也拼好了。装订师读了那个名字，好一会儿没说话。}
+# en: {A sneeze. The binder looks at the scattered flakes and then at you. You both get the tweezers.|One flake ends up in the wrong century. Nobody can prove it was you, but everybody knows.|The oldest flake crumbles at your touch. The binder writes "lost in repair" in the ledger, in your hand.}
+opt.left.say.2 [a2111d] = {一个喷嚏。装订师看看散落的碎片，又看看你。你们俩一起拿起了镊子。|有一片被放进了错误的世纪。没人能证明是你，但人人都知道。|最老的一片一碰就碎了。装订师让你亲手在账簿上写下“修复中遗失”。}
 # en: Watch the binder work
 opt.right.label [5b7d5a] = 看装订师干活
-# en: {You watch for an hour and learn more than a book could tell you. The binder says you're slow. You were.|The binder works without speaking and you learn by watching. It's very peaceful and very little gets done.}
-opt.right.say.1 [262a2d] = {你看了一个钟头，学到的比书上能教的多。装订师说你慢。你确实慢。|装订师一言不发地干活，你在一旁看着学。非常宁静，也几乎没干成什么。}
+# en: {You watch for an hour and learn more than a book could tell you. The binder says you're slow. You were.|The binder works without speaking and you learn by watching. It's very peaceful and very little gets done.|You watch the binder mend the page you'd have ruined. Next time, you'll know how. That's the idea.}
+opt.right.say.1 [45e807] = {你看了一个钟头，学到的比书上能教的多。装订师说你慢。你确实慢。|装订师一言不发地干活，你在一旁看着学。非常宁静，也几乎没干成什么。|你看着装订师修好了那页你本会弄坏的纸。下次你就会了。这正是用意所在。}
 
 @event intern_conclave_test_chamber
 # en: The Test Chamber
@@ -417,14 +417,14 @@ text [d61ad5] = {议会的研究员们需要有人第一次施放他们最新的
 scene [033a72] = 一间墙上满是焦痕的圆形测试室，一个学生站在中央举着魔杖，研究员们隔着厚玻璃观看。
 # en: Step into the chamber
 opt.left.label [2de272] = 走进测试室
-# en: {The spell works on the first try. Behind the glass, someone writes your name in the margin of their notes.|It works, more or less, for one glorious minute before the spell remembers itself.}
-opt.left.say.1 [aa4b60] = {咒语一次成功。玻璃后面有人在笔记页边写下了你的名字。|基本成功了，光辉的一分钟之后，咒语才想起自己是谁。}
-# en: {The spell goes off sideways. Your eyebrows are fine. Your fringe has views of its own now.|The spell goes off sideways, and your robes will never fold the same way again.}
-opt.left.say.2 [f8b5e3] = {咒语往旁边炸开了。你的眉毛没事。你的刘海从此有了自己的主见。|咒语往旁边炸开了，你的袍子再也叠不回原来的样子。}
+# en: {The spell works on the first try. Behind the glass, someone writes your name in the margin of their notes.|It works, more or less, for one glorious minute before the spell remembers itself.|The spell works, and nobody behind the glass will say what it was for. They thank you very politely.}
+opt.left.say.1 [f386b1] = {咒语一次成功。玻璃后面有人在笔记页边写下了你的名字。|基本成功了，光辉的一分钟之后，咒语才想起自己是谁。|咒语成功了，玻璃后面没人肯说它是做什么用的。他们非常客气地向你道谢。}
+# en: {The spell goes off sideways. Your eyebrows are fine. Your fringe has views of its own now.|The spell goes off sideways, and your robes will never fold the same way again.|The spell goes off sideways and adds a new scorch mark to the wall. Someone labels it with your name.}
+opt.left.say.2 [218469] = {咒语往旁边炸开了。你的眉毛没事。你的刘海从此有了自己的主见。|咒语往旁边炸开了，你的袍子再也叠不回原来的样子。|咒语往旁边炸开了，在墙上添了一道新焦痕。有人在旁边标上了你的名字。}
 # en: Take readings behind the glass
 opt.right.label [531746] = 在玻璃后记读数
-# en: {You write down numbers for three hours while someone else gets to be brave. They're very good numbers.|You note every flicker. A senior researcher reads your page and asks for your notes next time.}
-opt.right.say.1 [da520d] = {别人去当勇士，你记了三个钟头数字。都是非常好的数字。|你记下了每一次闪烁。一位资深研究员读了你的记录，要你下次把笔记给他。}
+# en: {You write down numbers for three hours while someone else gets to be brave. They're very good numbers.|You note every flicker. A senior researcher reads your page and asks for your notes next time.|You take the readings for a spell nobody will name. The numbers are strange, and you're asked to forget them.}
+opt.right.say.1 [b1070e] = {别人去当勇士，你记了三个钟头数字。都是非常好的数字。|你记下了每一次闪烁。一位资深研究员读了你的记录，要你下次把笔记给他。|你为一个没人肯说出名字的咒语记录读数。数字很奇怪，有人请你把它们忘掉。}
 
 @event intern_conclave_minutes
 # en: Taking the Minutes
@@ -435,14 +435,14 @@ text [eece1c] = {你被派去给议会的一个研究委员会做记录。委员
 scene [998689] = 一张长桌旁坐满穿厚袍的年长法师，全都在同时说话，桌尾一个年轻实习生在拼命记录。
 # en: Offer an opinion when asked
 opt.left.label [48ef1a] = 被问到时说出看法
-# en: {The table goes silent. Then the oldest mage says, "The intern is right," and the rest pretend they agreed all along.|Your opinion settles the argument. It also starts two new ones.}
-opt.left.say.1 [23b290] = {桌边鸦雀无声。然后最年长的法师说：“实习生说得对。”其余人假装自己早就同意。|你的看法平息了争论。也引发了两场新的。}
-# en: {Nine heads turn towards you, slowly. You say something about wands. It isn't minuted.|You give your opinion and it is recorded in full, with the note "(intern)".}
-opt.left.say.2 [af7f05] = {九颗脑袋慢慢转向你。你说了点关于魔杖的话。没被记录。|你的看法被完整记录在案，后面注着“（实习生）”。}
+# en: {The table goes silent. Then the oldest mage says, "The intern is right," and the rest pretend they agreed all along.|Your opinion settles the argument. It also starts two new ones.|You give your opinion and the sleeper wakes up to agree with it. It carries, seven to two.}
+opt.left.say.1 [299c8d] = {桌边鸦雀无声。然后最年长的法师说：“实习生说得对。”其余人假装自己早就同意。|你的看法平息了争论。也引发了两场新的。|你说出了看法，睡着的那位醒来表示同意。七比二通过。}
+# en: {Nine heads turn towards you, slowly. You say something about wands. It isn't minuted.|You give your opinion and it is recorded in full, with the note "(intern)".|Your opinion is noted, discussed, voted down and then adopted next meeting without credit.}
+opt.left.say.2 [0d59e7] = {九颗脑袋慢慢转向你。你说了点关于魔杖的话。没被记录。|你的看法被完整记录在案，后面注着“（实习生）”。|你的看法被记录、讨论、否决，然后在下次会上被采纳，没提你的名字。}
 # en: Keep my head down and write
 opt.right.label [1678b2] = 低头只管记录
-# en: {Your minutes are perfect and so dull that nobody reads them, which in a committee is the highest praise.|You record every word of the argument. Your hand aches, and you understand the Conclave much better than you wanted to.}
-opt.right.say.1 [181bff] = {你的记录完美无缺，枯燥到没人读，在委员会里这是最高的赞誉。|你记下了争论的每一个字。手腕发酸，对议会的了解远超你的本意。}
+# en: {Your minutes are perfect and so dull that nobody reads them, which in a committee is the highest praise.|You record every word of the argument. Your hand aches, and you understand the Conclave much better than you wanted to.|You write it all down, including the vote of the member who slept through it. The minutes are accurate, which nobody wanted.}
+opt.right.say.1 [bf8a20] = {你的记录完美无缺，枯燥到没人读，在委员会里这是最高的赞誉。|你记下了争论的每一个字。手腕发酸，对议会的了解远超你的本意。|你把一切都记了下来，包括那位睡了全程的委员的投票。记录很准确，可这正是谁都不想要的。}
 
 @event intern_alchemists_vat_watch
 # en: Vat Watch
@@ -453,14 +453,14 @@ text [065445] = {你在工坊的任务是看守一口大缸，一旦变色就去
 scene [e8908d] = 蒸汽弥漫的大厅里一口巨大的铜缸，一个学生站在吊台上拿着色卡盯着缸里。
 # en: Adjust it myself
 opt.left.label [76449d] = 我自己调
-# en: {A pinch of salt and a slow stir, and the vat settles back to its proper self. The foreman never knew, but the vat did.|You correct it before it goes wrong. When the foreman passes, he gives the vat a satisfied look as if he did it.}
-opt.left.say.1 [7d7fbd] = {一撮盐，慢慢搅动，大缸恢复了本来的样子。工头永远不会知道，但大缸知道。|你在出事之前就纠正了。工头路过时满意地看了大缸一眼，好像是他干的。}
-# en: {The vat turns a brilliant violet and hisses. The foreman arrives at a run, and you'll be hearing about it for weeks.|You make it worse. A lot worse. The whole hall smells of cinnamon until the end of the week.}
-opt.left.say.2 [56531b] = {大缸变成鲜亮的紫罗兰色，嘶嘶作响。工头一路跑来，这事你要被念叨好几个星期。|你把它弄得更糟。糟得多。整座大厅到周末都是肉桂味。}
+# en: {A pinch of salt and a slow stir, and the vat settles back to its proper self. The foreman never knew, but the vat did.|You correct it before it goes wrong. When the foreman passes, he gives the vat a satisfied look as if he did it.|You trace the cinnamon to a cracked spice valve and close it. The vat settles, and the foreman finds the valve next week.}
+opt.left.say.1 [a41b7a] = {一撮盐，慢慢搅动，大缸恢复了本来的样子。工头永远不会知道，但大缸知道。|你在出事之前就纠正了。工头路过时满意地看了大缸一眼，好像是他干的。|你顺着肉桂味找到了一个裂开的香料阀，把它关上了。大缸平静下来，工头下个星期才发现那个阀门。}
+# en: {The vat turns a brilliant violet and hisses. The foreman arrives at a run, and you'll be hearing about it for weeks.|You add too much salt. The vat sulks a muddy brown until the foreman coaxes it back, at length, with you watching.|You make it worse. A lot worse. The whole hall smells of cinnamon until the end of the week.}
+opt.left.say.2 [816115] = {大缸变成鲜亮的紫罗兰色，嘶嘶作响。工头一路跑来，这事你要被念叨好几个星期。|你盐放多了。大缸赌气似的变成了泥褐色，工头哄了半天才把它哄回来，你在旁边看着。|你把它弄得更糟。糟得多。整座大厅到周末都是肉桂味。}
 # en: Run for the foreman
 opt.right.label [4b3ef4] = 跑去叫工头
-# en: {You run the length of the hall. The foreman fixes it in a second and explains how, at length, as you catch your breath.|By the time you're back with the foreman the colour has corrected itself. He stares at you, then at the vat.}
-opt.right.say.1 [9171f3] = {你跑完整个大厅。工头一秒钟就修好了，趁你喘气时详详细细地讲了怎么修。|等你带着工头回来，颜色已经自己恢复了。他盯着你，又盯着大缸。}
+# en: {You run the length of the hall. The foreman fixes it in a second and explains how, at length, as you catch your breath.|By the time you're back with the foreman the colour has corrected itself. He stares at you, then at the vat.|You run for the foreman, who sniffs the air, says "Cinnamon," and goes very pale. He fixes it, and doesn't explain.}
+opt.right.say.1 [ca9c22] = {你跑完整个大厅。工头一秒钟就修好了，趁你喘气时详详细细地讲了怎么修。|等你带着工头回来，颜色已经自己恢复了。他盯着你，又盯着大缸。|你跑去叫工头。他嗅了嗅空气，说了句“肉桂”，脸色发白。他修好了，没解释。}
 
 @event intern_alchemists_no_flame
 # en: The Rule About Flames
@@ -471,30 +471,30 @@ text [37d043] = {工坊有严格规定：不许明火，也不许用工头没批
 scene [03a5ac] = 炼金工坊的休息室，工人们围着一把放在发光石头上的水壶，严格说来那并不算着火。
 # en: Help brew the flameless tea
 opt.left.label [823819] = 帮忙泡无火茶
-# en: {You heat the kettle with a reaction you learned in your first year. The break room calls it "the academy method" and adopts it on the spot.|It works, though everything boiled on it comes out a little purple.}
-opt.left.say.1 [e0638f] = {你用一年级学的一个反应把水壶烧热了。休息室管它叫“学院法”，当场采用。|成功了，不过用它煮出来的东西都有点发紫。}
-# en: {Your method works so well that someone in charge notices the steam from a reaction nobody approved. There's a meeting about it, with you in it.|The kettle boils, and so, briefly, does the table.}
-opt.left.say.2 [7e78c9] = {你的方法太好用了，有位管事的注意到了一个没人批准过的反应冒出的蒸汽。为此开了个会，你也在场。|水壶开了，桌子也短暂地开了。}
+# en: {You heat the kettle with a reaction you learned in your first year. The break room calls it "the academy method" and adopts it on the spot.|It works, though everything boiled on it comes out a little purple.|You brew the tea with the new inspector in the room, and explain the method so confidently that he takes notes.}
+opt.left.say.1 [b5e9da] = {你用一年级学的一个反应把水壶烧热了。休息室管它叫“学院法”，当场采用。|成功了，不过用它煮出来的东西都有点发紫。|新来的督察就在屋里，你照样煮茶，而且把方法讲得头头是道，他还记了笔记。}
+# en: {Your method works so well that someone in charge notices the steam from a reaction nobody approved. There's a meeting about it, with you in it.|The kettle boils, and so, briefly, does the table.|The inspector walks in mid-reaction. There's a form for it, and you fill it in.}
+opt.left.say.2 [634dfa] = {你的方法太好用了，有位管事的注意到了一个没人批准过的反应冒出的蒸汽。为此开了个会，你也在场。|水壶开了，桌子也短暂地开了。|反应进行到一半，督察走了进来。这种事有专门的表格，你填了。}
 # en: Stick to the rules
 opt.right.label [b9e488] = 遵守规定
-# en: {You drink cold water while everyone else drinks tea brewed on an unapproved reaction. The foreman notes your conduct, and the break room notes it too.|You remind everyone of the rule. You are absolutely right and nobody offers you a biscuit for the rest of the week.}
-opt.right.say.1 [8c4ba6] = {别人喝着用未经批准的反应煮的茶，你喝凉水。工头记下了你的表现，休息室也记下了。|你提醒大家注意规定。你完全正确，这一整周没人再分你饼干。}
+# en: {You drink cold water while everyone else drinks tea brewed on an unapproved reaction. The foreman notes your conduct, and the break room notes it too.|You remind everyone of the rule. You are absolutely right and nobody offers you a biscuit for the rest of the week.|You keep to the rules with the inspector watching. He commends you by name, and the break room never forgives it.}
+opt.right.say.1 [91b8e6] = {别人喝着用未经批准的反应煮的茶，你喝凉水。工头记下了你的表现，休息室也记下了。|你提醒大家注意规定。你完全正确，这一整周没人再分你饼干。|你当着督察的面守规矩。他点名表扬了你，休息室从此再没原谅你。}
 
 @event intern_expedition_thin_air
 # en: Up the Ridge
 title [23ba3c] = 登上山脊
-# en: {The instruments have to go up to the ridge before dark, and the air on the plateau is very thin.|Your legs know the path now. Your lungs are still negotiating.|You've carried things up this ridge so often that the goats have stopped looking at you.} {season == "winter": {Snow has drifted against the path.|The wind cuts through every layer you own.}|{The rocks are still hot from the afternoon.|The sky is clear all the way to the top of the world.}}
-text [23cab7] = {天黑前仪器必须运上山脊，而高原上的空气非常稀薄。|腿已经认得路了。肺还在讨价还价。|你往这道山脊上搬过太多次东西，山羊都不再看你了。} {season == "winter": {雪堆在了路边。|风穿透你身上的每一层衣服。}|{石头还留着下午的热。|天空晴朗，一直晴到世界的顶端。}}
+# en: {The instruments have to go up to the ridge before dark, and the air on the plateau is very thin.|Your legs know the path now. Your lungs are still negotiating.|You've carried things up this ridge so often that the goats have stopped looking at you.} {season == "winter": {Snow has drifted against the path.|The wind cuts through every layer you own.|Ice has glazed the steps cut into the rock.}|{The rocks are still hot from the afternoon.|The sky is clear all the way to the top of the world.|The evening wind smells of thyme and stone.}}
+text [77ea0c] = {天黑前仪器必须运上山脊，而高原上的空气非常稀薄。|腿已经认得路了。肺还在讨价还价。|你往这道山脊上搬过太多次东西，山羊都不再看你了。} {season == "winter": {雪堆在了路边。|风穿透你身上的每一层衣服。|凿在岩石上的台阶结了一层冰。}|{石头还留着下午的热。|天空晴朗，一直晴到世界的顶端。|傍晚的风里有百里香和石头的气味。}}
 # en: A line of expedition members climbing a rocky ridge at dusk, carrying brass instruments wrapped in blankets.
 scene [00b5b6] = 黄昏时一队远征队员攀上岩石山脊，抱着裹在毯子里的黄铜仪器。
 # en: Carry the great lens
 opt.left.label [e7e4f2] = 扛那块大透镜
-# en: {You carry the great lens to the top without dropping it, then sit very still for a long time. The leader nods at you, once.|Your arms are numb by the top, and the lens is perfect. It's worth it when the first star shows in it.}
-opt.left.say.1 [bfbafc] = {你把大透镜扛到山顶，一点没摔，然后一动不动地坐了很久。领队朝你点了一下头。|到山顶时你的胳膊已经麻了，透镜完好无损。当第一颗星出现在镜中，一切都值了。}
+# en: {You carry the great lens to the top without dropping it, then sit very still for a long time. The leader nods at you, once.|Your arms are numb by the top, and the lens is perfect. It's worth it when the first star shows in it.|You carry the lens up without thinking about it. Nobody watches you any more, which is the compliment.}
+opt.left.say.1 [a354cc] = {你把大透镜扛到山顶，一点没摔，然后一动不动地坐了很久。领队朝你点了一下头。|到山顶时你的胳膊已经麻了，透镜完好无损。当第一颗星出现在镜中，一切都值了。|你想都没想就把透镜扛了上去。已经没人再盯着你了，这就是夸奖。}
 # en: Do the sums in the tent
 opt.right.label [d9b374] = 在帐篷里算数
-# en: {You work the night's sums by lamplight, warm and quiet. The lamp gutters twice. Your sums don't.|You have the charts ready when they come down. Nobody thanks you, because the charts are always ready.}
-opt.right.say.1 [1b4538] = {你借着灯光算当晚的数，温暖又安静。灯芯跳了两下，你的算式一下也没跳。|他们下来时星图已经准备好了。没人道谢，因为星图总是准备好的。}
+# en: {You work the night's sums by lamplight, warm and quiet. The lamp gutters twice. Your sums don't.|You have the charts ready when they come down. Nobody thanks you, because the charts are always ready.|You do the sums in the tent, as usual. The numbers are good, and so is the stove.}
+opt.right.say.1 [624053] = {你借着灯光算当晚的数，温暖又安静。灯芯跳了两下，你的算式一下也没跳。|他们下来时星图已经准备好了。没人道谢，因为星图总是准备好的。|你照常在帐篷里算数。数字不错，炉子也不错。}
 
 @event intern_expedition_chart_dispute
 # en: A Star Out of Place
@@ -505,32 +505,32 @@ text [2abc0a] = {你的星图和资深天文学家的星图，在一颗暗星的
 scene [576570] = 两名远征队员借着灯光俯身看一张星图，其中一人坚定地指着一个点。
 # en: Recheck it all night
 opt.left.label [19c9f0] = 通宵复核
-# en: {You recheck it until dawn. You were right by a hair, and nobody will ever care but you.|You were wrong by a hair. You fix it, and know the sky better than you did.}
-opt.left.say.1 [eabdc8] = {你一直核对到天亮。你对了，差之毫厘，除了你没人会在乎。|你错了，差之毫厘。你改了过来，对星空的了解又多了一点。}
+# en: {You recheck it until dawn. You were right by a hair, and nobody will ever care but you.|You were wrong by a hair. You fix it, and know the sky better than you did.|You recheck by lamplight and find the air was bending the star. You note it, and the astronomer copies your note.}
+opt.left.say.1 [f7e30b] = {你一直核对到天亮。你对了，差之毫厘，除了你没人会在乎。|你错了，差之毫厘。你改了过来，对星空的了解又多了一点。|你借着灯光复核，发现是空气让那颗星偏了位。你记了下来，天文学家抄走了你的笔记。}
 # en: Raise it with the astronomer
 opt.right.label [8f17a5] = 向天文学家提出来
-# en: {The astronomer checks, grumbles and corrects their chart. Then they buy you a cup of the camp's terrible coffee.|"Well spotted," says the astronomer, through their teeth.}
-opt.right.say.1 [5c7ba0] = {天文学家查了一遍，嘟囔着改了自己的星图。然后请你喝了一杯营地里难喝的咖啡。|“眼尖。”天文学家咬着牙说。}
-# en: {The astronomer checks and shows you, in front of everyone, exactly where you went wrong.|They don't check. They just look at you over their spectacles until you go away.}
-opt.right.say.2 [39e837] = {天文学家查了，当着所有人的面给你指出哪里错了。|他们没查。只是从眼镜上方看着你，直到你走开。}
+# en: {The astronomer checks, grumbles and corrects their chart. Then they buy you a cup of the camp's terrible coffee.|"Well spotted," says the astronomer, through their teeth.|You raise it, and the astronomer has already checked it. "You first, this time," they say.}
+opt.right.say.1 [e54689] = {天文学家查了一遍，嘟囔着改了自己的星图。然后请你喝了一杯营地里难喝的咖啡。|“眼尖。”天文学家咬着牙说。|你提了出来，天文学家早已核对过。“这次你先来。”对方说。}
+# en: {The astronomer checks and shows you, in front of everyone, exactly where you went wrong.|They don't check. They just look at you over their spectacles until you go away.|The astronomer blames the thin air and refuses to discuss it further. The star stays where they put it.}
+opt.right.say.2 [1426da] = {天文学家查了，当着所有人的面给你指出哪里错了。|他们没查。只是从眼镜上方看着你，直到你走开。|天文学家把错推给稀薄的空气，拒绝再谈。那颗星就待在对方画的位置。}
 
 @event intern_field_station_count
 # en: The Dawn Count
 title [c272a9] = 黎明清点
-# en: {Every morning someone has to lie in the heather and count what's living on the moor. Today it's you.|You've learned which tussock is the least wet, and you guard it.|You're the station's best counter now, mostly because you've stopped minding the damp.} {season == "winter": {Snow hares are out, white on white.|Frost has made the heather crackle under you.}|{The skylarks are going up one after another.|The midges have found you.}}
-text [cfdd29] = {每天早上都得有人趴在石楠丛里，清点荒原上活着的东西。今天轮到你。|你摸清了哪个草丛最不湿，并且守着它。|你现在是野外站最好的清点员，主要是因为你不再在乎潮湿了。} {season == "winter": {雪兔出来了，白上加白。|霜让石楠在你身下咔咔作响。}|{云雀一只接一只飞上天。|蠓虫找到你了。}}
+# en: {Every morning someone has to lie in the heather and count what's living on the moor. Today it's you.|You've learned which tussock is the least wet, and you guard it.|You're the station's best counter now, mostly because you've stopped minding the damp.} {season == "winter": {Snow hares are out, white on white.|Frost has made the heather crackle under you.|A fox is counting the same hares.}|{The skylarks are going up one after another.|The midges have found you.|The heather is warm, and so is your tussock.}}
+text [2ab961] = {每天早上都得有人趴在石楠丛里，清点荒原上活着的东西。今天轮到你。|你摸清了哪个草丛最不湿，并且守着它。|你现在是野外站最好的清点员，主要是因为你不再在乎潮湿了。} {season == "winter": {雪兔出来了，白上加白。|霜让石楠在你身下咔咔作响。|一只狐狸在数同一群野兔。}|{云雀一只接一只飞上天。|蠓虫找到你了。|石楠是暖的，你那块草墩也是。}}
 # en: A student lying flat in the heather at dawn, a tally board in hand, watching nesting towers on the moor.
 scene [94a0ee] = 黎明时一个学生平趴在石楠丛中，手拿计数板，望着荒原上的筑巢塔。
 # en: Count every last one
 opt.left.label [1a8fb1] = 一只不落地数
-# en: {You count until your fingers are numb and the tally is perfect. The warden reads it twice and pins it on the wall.|You stay out until the very last nest is counted. You come back soaked and very proud of the number.}
-opt.left.say.1 [0673db] = {你数到手指发麻，记录完美无缺。站长读了两遍，钉在了墙上。|你一直待到最后一个巢数完。回来时浑身湿透，为这个数字非常骄傲。}
+# en: {You count until your fingers are numb and the tally is perfect. The warden reads it twice and pins it on the wall.|You stay out until the very last nest is counted. You come back soaked and very proud of the number.|You count them all from your tussock. The warden copies your tally into the station book without checking it.}
+opt.left.say.1 [6946d4] = {你数到手指发麻，记录完美无缺。站长读了两遍，钉在了墙上。|你一直待到最后一个巢数完。回来时浑身湿透，为这个数字非常骄傲。|你在你的草墩上把它们全数完了。站长没核对就把你的记录抄进了站志。}
 # en: Make a sensible estimate
 opt.right.label [db92d7] = 合理估一个数
-# en: {You mark it "estimated" in the margin, the way the station counts the far nests anyway. The warden accepts it, and you spend the extra hour by the stove with a cup of tea.|The warden checks your estimate against his own count and nods. He does the same on wet mornings.}
-opt.right.say.1 [b183c3] = {你在页边注明“估算”，反正站里数远处的巢也是这么数的。站长认了，省下的那个钟头你在炉边喝了杯茶。|站长拿你的估算和他自己的数对了对，点点头。下雨的早上，他也是这么干的。}
-# en: {The warden counted too. His number is not your number. He makes a note.|Your estimate includes a flock that left last week. The warden is very nice about it, which is worse.}
-opt.right.say.2 [91671e] = {站长也数了。他的数不是你的数。他记了一笔。|你的估计里包括了一群上周就飞走的鸟。站长对此非常客气，这更糟。}
+# en: {You mark it "estimated" in the margin, the way the station counts the far nests anyway. The warden accepts it, and you spend the extra hour by the stove with a cup of tea.|The warden checks your estimate against his own count and nods. He does the same on wet mornings.|Your estimate is close enough that the warden uses it for the far nests too. You get the stove first.}
+opt.right.say.1 [994847] = {你在页边注明“估算”，反正站里数远处的巢也是这么数的。站长认了，省下的那个钟头你在炉边喝了杯茶。|站长拿你的估算和他自己的数对了对，点点头。下雨的早上，他也是这么干的。|你的估算很接近，站长连远处的巢也用了它。你先占到了炉子。}
+# en: {The warden counted too. His number is not your number. He makes a note.|Your estimate includes a flock that left last week. The warden is very nice about it, which is worse.|Your estimate misses a new colony on the far slope. The warden found it yesterday and was waiting to see if you would.}
+opt.right.say.2 [60dffb] = {站长也数了。他的数不是你的数。他记了一笔。|你的估计里包括了一群上周就飞走的鸟。站长对此非常客气，这更糟。|你的估算漏掉了远坡上一个新的鸟群。站长昨天就发现了，一直在等着看你会不会发现。}
 
 @event intern_field_station_patient
 # en: The Patient in Paddock Three
@@ -541,14 +541,14 @@ text [a5113d] = {野外站最新的病号是一头荒原幼龙，翅膀上着夹
 scene [ddabad] = 泥泞的围场里一头上着夹板的生物在草窝里瞪着眼，一个学生伸长胳膊递出一只桶。
 # en: Feed it by hand
 opt.left.label [cc2f18] = 亲手喂它
-# en: {It takes the food from your hand, very gently. Then it bites the bucket, to make a point.|It lets you check the splint, grumbling the whole time like an old man at the barber's.}
-opt.left.say.1 [db3bdc] = {它从你手里非常轻地叼走食物。然后咬了一口桶，以示立场。|它让你检查了夹板，全程嘟嘟囔囔，像理发店里的老头。}
-# en: {It takes the food, a bit of your sleeve and a bruise's worth of your arm.|It butts you into the mud and then looks pleased with itself.}
-opt.left.say.2 [1e4413] = {它叼走了食物、一截你的袖子，还在你胳膊上留了一块淤青。|它把你拱进泥里，然后一脸得意。}
+# en: {It takes the food from your hand, very gently. Then it bites the bucket, to make a point.|It lets you check the splint, grumbling the whole time like an old man at the barber's.|It eats from your hand and then opens the bucket to check you haven't kept any back.}
+opt.left.say.1 [c27074] = {它从你手里非常轻地叼走食物。然后咬了一口桶，以示立场。|它让你检查了夹板，全程嘟嘟囔囔，像理发店里的老头。|它从你手里吃完，又自己打开桶，确认你没私藏。}
+# en: {It takes the food, a bit of your sleeve and a bruise's worth of your arm.|It butts you into the mud and then looks pleased with itself.|It opens the bucket itself and eats the lot, then bites you for being slow.}
+opt.left.say.2 [69facb] = {它叼走了食物、一截你的袖子，还在你胳膊上留了一块淤青。|它把你拱进泥里，然后一脸得意。|它自己打开桶吃了个精光，然后因为你太慢咬了你一口。}
 # en: Use the long tongs
 opt.right.label [cd0b4c] = 用长夹子喂
-# en: {You feed it from a safe distance. It eats, and looks at you with deep contempt.|The tongs work perfectly. You feel you've let the patient down, somehow.}
-opt.right.say.1 [ee76c5] = {你隔着安全距离喂它。它吃了，用深深的鄙夷看着你。|夹子好用极了。可你总觉得自己辜负了这位病号。}
+# en: {You feed it from a safe distance. It eats, and looks at you with deep contempt.|The tongs work perfectly. You feel you've let the patient down, somehow.|It takes the tongs off you and drops them in the mud. You feed it by hand after all.}
+opt.right.say.1 [06f014] = {你隔着安全距离喂它。它吃了，用深深的鄙夷看着你。|夹子好用极了。可你总觉得自己辜负了这位病号。|它把夹子从你手里夺走，丢进了泥里。你最后还是用手喂了它。}
 
 @event intern_thornwick_pastries
 # en: Thornwick Hospitality
@@ -559,14 +559,14 @@ text [5adad2] = {每天早上，荆木的东道主都在你桌上放一盘点心
 scene [7a642b] = 对手学院一张光洁的实验桌上，一盘完美的点心摆在来访学生面前。
 # en: Eat one and smile
 opt.left.label [bb9a84] = 吃一块，再笑一笑
-# en: {It's real, and very good. The Thornwick interns look almost disappointed.|It's real. You eat it slowly, in front of everyone, and thank them warmly.}
-opt.left.say.1 [b5047c] = {是真的，而且非常好吃。荆木的实习生看起来几乎有点失望。|是真的。你当着所有人的面慢慢吃完，热情地道谢。}
-# en: {It's a glamour over something dry and joyless. You eat the whole thing with a smile, and the lab respects that.|It tastes of nothing at all. You compliment the baker, and someone in the corner laughs.}
-opt.left.say.2 [49f444] = {是套在某种又干又无趣的东西上的魅影。你笑着吃完了整块，实验室对此肃然起敬。|它什么味道都没有。你夸了夸烘焙师，角落里有人笑出了声。}
+# en: {It's real, and very good. The Thornwick interns look almost disappointed.|It's real. You eat it slowly, in front of everyone, and thank them warmly.|You eat the plain biscuit with every sign of delight. Nobody in the lab can tell if it was real, including you.}
+opt.left.say.1 [95343d] = {是真的，而且非常好吃。荆木的实习生看起来几乎有点失望。|是真的。你当着所有人的面慢慢吃完，热情地道谢。|你满脸欣喜地吃下了那块素饼干。实验室里没人知道它是不是真的，包括你。}
+# en: {It's a glamour over something dry and joyless. You eat the whole thing with a smile, and the lab respects that.|It tastes of nothing at all. You compliment the baker, and someone in the corner laughs.|The biscuit turns to air in your mouth. You keep chewing anyway, and the lab gives you a small round of applause.}
+opt.left.say.2 [452496] = {是套在某种又干又无趣的东西上的魅影。你笑着吃完了整块，实验室对此肃然起敬。|它什么味道都没有。你夸了夸烘焙师，角落里有人笑出了声。|饼干在你嘴里化成了空气。你还是照嚼不误，实验室为你鼓了一小阵掌。}
 # en: Bring my own breakfast
 opt.right.label [34615e] = 自带早饭
-# en: {You eat your own bread, very pointedly. The Thornwick students write something down.|You leave the plate untouched. Your supervisor here calls it "a very Lumenhold choice", and doesn't mean it nicely.}
-opt.right.say.1 [6a6530] = {你意味深长地吃着自己的面包。荆木的学生记了点什么。|你没碰那盘点心。这里的导师说这是“非常流明堡的选择”，不是好话。}
+# en: {You eat your own bread, very pointedly. The Thornwick students write something down.|You leave the plate untouched. Your supervisor here calls it "a very Lumenhold choice", and doesn't mean it nicely.|You eat your own bread and offer them some. They check it for glamours, which is the friendliest thing they've done.}
+opt.right.say.1 [d95cb8] = {你意味深长地吃着自己的面包。荆木的学生记了点什么。|你没碰那盘点心。这里的导师说这是“非常流明堡的选择”，不是好话。|你吃着自己的面包，还分给他们一些。他们查了查有没有魅影，这是他们做过最友好的事。}
 
 @event intern_thornwick_rivalry
 # en: The Old Grudge
@@ -577,14 +577,14 @@ text [ffc4d0] = {荆木的学生对流明堡有些问题。大多是关于两校
 scene [07d8c1] = 一群对手学院的学生围在实验台边，其中一个朝穿着不同长袍的访客探过身去，笑得意味深长。
 # en: Out-charm them
 opt.left.label [a1eb25] = 用魅力压过他们
-# en: {You answer every barb with a better one. By lunch they're laughing with you rather than at you.|You make the room laugh at their joke, and then at them. Their supervisor smiles behind her notes.}
-opt.left.say.1 [31cc49] = {每句挖苦你都回以更妙的一句。到午饭时，他们是在跟你一起笑，而不是笑你。|你让满屋人先笑他们的笑话，再笑他们。他们的导师在笔记后面露出微笑。}
-# en: {You try to be witty. It comes out as a speech about the founders. They let you finish, kindly.|You lose the exchange so badly that one of them takes a bow on your behalf.}
-opt.left.say.2 [f20d86] = {你想说点俏皮话，结果说成了一篇关于创始者的演讲。他们好心地让你讲完了。|你输得太惨，他们中有人替你鞠了一躬。}
+# en: {You answer every barb with a better one. By lunch they're laughing with you rather than at you.|You make the room laugh at their joke, and then at them. Their supervisor smiles behind her notes.|You do a better impression of them than they did of you. The lab agrees, and so, grudgingly, do they.}
+opt.left.say.1 [476851] = {每句挖苦你都回以更妙的一句。到午饭时，他们是在跟你一起笑，而不是笑你。|你让满屋人先笑他们的笑话，再笑他们。他们的导师在笔记后面露出微笑。|你学他们学得比他们学你还像。全实验室都同意，他们也不情不愿地同意了。}
+# en: {You try to be witty. It comes out as a speech about the founders. They let you finish, kindly.|You lose the exchange so badly that one of them takes a bow on your behalf.|Their impression of you is so good that you forget your answer. They finish it for you, in your voice.}
+opt.left.say.2 [8aa82a] = {你想说点俏皮话，结果说成了一篇关于创始者的演讲。他们好心地让你讲完了。|你输得太惨，他们中有人替你鞠了一躬。|他们学你学得太像了，你把要说的话都忘了。他们用你的声音替你说完了。}
 # en: Let it slide
 opt.right.label [344baa] = 随它去
-# en: {You smile and go back to work. Your supervisor here notices, and approves, and you feel like you lost anyway.|You say nothing. It takes them all morning to realise you've won.}
-opt.right.say.1 [0375c0] = {你笑笑，回去干活。这里的导师注意到了，也赞许，可你还是觉得自己输了。|你什么也没说。他们花了一上午才意识到你赢了。}
+# en: {You smile and go back to work. Your supervisor here notices, and approves, and you feel like you lost anyway.|You say nothing. It takes them all morning to realise you've won.|You let it go, as usual. They seem almost disappointed, and one of them saves you a seat at lunch.}
+opt.right.say.1 [bf66ed] = {你笑笑，回去干活。这里的导师注意到了，也赞许，可你还是觉得自己输了。|你什么也没说。他们花了一上午才意识到你赢了。|你照常没接茬。他们看起来几乎有点失望，其中一个午饭时给你留了座。}
 
 @event intern_unseen_office_coffee
 # en: The Coffee Machine
@@ -595,14 +595,14 @@ text [82c4dc] = {署里没人谈论任何事，除了咖啡机。它非常好用
 scene [2a796e] = 一间没有窗户的朴素房间，一台锃亮的咖啡机，几个穿着普通外套的安静的人站在旁边，不太算是在交谈。
 # en: Linger at the machine
 opt.left.label [a4aa91] = 在咖啡机边多待会儿
-# en: {You learn three things nobody told you, and one thing nobody knows you know.|You drink your coffee slowly and listen. By the second cup you understand what nobody is saying.}
-opt.left.say.1 [79111b] = {你知道了三件没人告诉你的事，还有一件没人知道你知道的事。|你慢慢喝着咖啡听着。到第二杯，你听懂了没人说出口的东西。}
-# en: {Someone notices you listening and asks, very kindly, how your day is going. You don't sleep that night.|You overhear something you very much wish you hadn't. It can't be unheard.}
-opt.left.say.2 [a0295b] = {有人发现你在听，非常和气地问你今天过得怎样。那晚你没睡着。|你无意中听到一件真希望没听到的事。听到了就忘不掉了。}
+# en: {You learn three things nobody told you, and one thing nobody knows you know.|You drink your coffee slowly and listen. By the second cup you understand what nobody is saying.|You stand in the queue long enough to be part of it. Someone tells you something, and you understand it was meant for you.}
+opt.left.say.1 [f0d88c] = {你知道了三件没人告诉你的事，还有一件没人知道你知道的事。|你慢慢喝着咖啡听着。到第二杯，你听懂了没人说出口的东西。|你在队伍里站得够久，成了它的一部分。有人跟你说了件事，你明白那是说给你听的。}
+# en: {Someone notices you listening and asks, very kindly, how your day is going. You don't sleep that night.|You overhear something you very much wish you hadn't. It can't be unheard.|The machine hisses mid-sentence and the room goes silent. When it stops, everyone is looking at you.}
+opt.left.say.2 [006b70] = {有人发现你在听，非常和气地问你今天过得怎样。那晚你没睡着。|你无意中听到一件真希望没听到的事。听到了就忘不掉了。|机器在话说到一半时嘶嘶作响，屋里一片寂静。等它停下，所有人都在看着你。}
 # en: Take my cup back to my desk
 opt.right.label [f05b97] = 端回自己桌上
-# en: {You work through the evening with your coffee. The work is dull and your supervisor approves, which is a little chilling.|Your desk is very quiet. It's the most anyone at the Office will say about you, and here that's high praise.}
-opt.right.say.1 [bb2e49] = {你就着咖啡工作了一晚。活很枯燥，导师很满意，这有点让人发冷。|你的桌子非常安静。这是署里任何人对你说过的最多的话，在这里这是高度赞扬。}
+# en: {You work through the evening with your coffee. The work is dull and your supervisor approves, which is a little chilling.|Your desk is very quiet. It's the most anyone at the Office will say about you, and here that's high praise.|You take your cup to your desk. When you come back for the next one, the queue has saved your place.}
+opt.right.say.1 [d9c64f] = {你就着咖啡工作了一晚。活很枯燥，导师很满意，这有点让人发冷。|你的桌子非常安静。这是署里任何人对你说过的最多的话，在这里这是高度赞扬。|你把杯子端回了桌上。等你回来续杯时，队伍给你留着位置。}
 
 @event intern_unseen_office_wrong_file
 # en: The Wrong File
@@ -613,11 +613,11 @@ text [d1b2bf] = {有份卷宗被留在你桌上。不是你的，也没有标签
 scene [395e41] = 一盏孤灯下的空桌上，放着一个没有标签的朴素文件夹。
 # en: Read it before returning it
 opt.left.label [6c5a88] = 先读再归还
-# en: {You read it, retie the ribbon perfectly and hand it in. Your supervisor checks the knot and smiles, very slightly.|You read every page. It's about a man who sells hats. Nothing has ever made you more nervous.}
-opt.left.say.1 [e2e299] = {你读完了，把丝带系得一模一样，交了回去。导师检查了那个结，非常轻微地笑了笑。|你读了每一页。讲的是一个卖帽子的人。从没有什么让你这么紧张过。}
-# en: {Your supervisor takes the file back and glances at the ribbon. "Interesting knot," she says.|You put the pages back in the wrong order. Somehow, everyone knows by morning.}
-opt.left.say.2 [1a6e0f] = {导师拿回卷宗，瞥了一眼丝带。“有意思的结。”她说。|你把书页放回去时顺序错了。不知怎么，第二天早上人人都知道了。}
+# en: {You read it, retie the ribbon perfectly and hand it in. Your supervisor checks the knot and smiles, very slightly.|You read every page. It's about a man who sells hats. Nothing has ever made you more nervous.|You read it, retie the unfamiliar knot from memory and hand it in. Your supervisor checks it twice and then teaches you a new one.}
+opt.left.say.1 [b5d200] = {你读完了，把丝带系得一模一样，交了回去。导师检查了那个结，非常轻微地笑了笑。|你读了每一页。讲的是一个卖帽子的人。从没有什么让你这么紧张过。|你读完了，凭记忆系回那个陌生的结，交了回去。导师检查了两遍，然后教了你一个新的。}
+# en: {Your supervisor takes the file back and glances at the ribbon. "Interesting knot," she says.|You put the pages back in the wrong order. Somehow, everyone knows by morning.|You can't retie the knot. You hand it in with an ordinary bow, and your supervisor looks at it for a long time.}
+opt.left.say.2 [bfe2f7] = {导师拿回卷宗，瞥了一眼丝带。“有意思的结。”她说。|你把书页放回去时顺序错了。不知怎么，第二天早上人人都知道了。|你系不回那个结。你系了个普通的蝴蝶结交上去，导师盯着它看了很久。}
 # en: Return it unopened
 opt.right.label [ab3e46] = 原封不动地归还
-# en: {You hand it back without looking. Your supervisor says nothing, which here is approval. You'll wonder about it for weeks.|You return it with the ribbon untouched. The next day there's a slightly better coffee waiting on your desk.}
-opt.right.say.1 [c70ca8] = {你看都没看就交了回去。导师什么也没说，在这里这就是认可。你会为此琢磨好几个星期。|你把丝带原样未动地还了回去。第二天你桌上多了一杯稍好一点的咖啡。}
+# en: {You hand it back without looking. Your supervisor says nothing, which here is approval. You'll wonder about it for weeks.|You return it with the ribbon untouched. The next day there's a slightly better coffee waiting on your desk.|You return it unopened, as always. The files stop coming for a week, and then there are two.}
+opt.right.say.1 [dc565a] = {你看都没看就交了回去。导师什么也没说，在这里这就是认可。你会为此琢磨好几个星期。|你把丝带原样未动地还了回去。第二天你桌上多了一杯稍好一点的咖啡。|你照旧原封不动地还了回去。卷宗停了一个星期，然后一下来了两份。}
