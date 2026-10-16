@@ -49,7 +49,7 @@ text: {friend} has come down to the village with you "for one thing", which turn
   mood -tiny
   chance likely:
     queue village_errand_third_thing in 1 with friend chance unlikely
-    say: {You talk {friend} out of the third thing. {They} sulk{s} the whole way back to the barge.|You win. {friend} says you'd make a terrible shopkeeper and a worse friend, then takes your arm anyway.}
+    say: {You talk {friend} out of the third thing. {They} sulk{s} the whole way back to the barge.|You win. {friend} says you'd make a terrible shopkeeper and a worse friend, then takes your arm anyway.|You talk {friend} out of the third thing. The market cat follows {them} home anyway, which is a sort of purchase.}
   else:
     say: Your argument is excellent. {friend} buys the thing anyway, and now you've been wrong in public.
 
@@ -74,13 +74,13 @@ text: {The last barge back leaves at the bell, and the bell is ringing.|The last
   chance even:
     if gold > 0:
       gold -small
-      say: {A fisherman rows you back for a ruinous fare and a story you didn't ask for.|You pay the night ferryman far too much. He rows like he has somewhere better to be.}
+      say: {A fisherman rows you back for a ruinous fare and a story you didn't ask for.|You pay the night ferryman far too much. He rows like he has somewhere better to be.|The fisherman who rows you back knows you by now and charges you the regular's rate, which is still a great deal.}
     else:
       health -small
       say: You have no fare for the night ferryman, so you sleep on a bench under the Newt's eaves and wake with a cat on your feet.
   else:
     health -small
-    say: {You sleep on a bench under the Newt's eaves and wake up with a cat on your feet.|The first barge of morning finds you yawning on the quay.}
+    say: {You sleep on a bench under the Newt's eaves and wake up with a cat on your feet.|The first barge of morning finds you yawning on the quay.|You sleep under the Newt's eaves again. The cat has started saving you the warm end of the bench.}
 
 # ---------------- The Gilded Newt ----------------
 
@@ -123,10 +123,10 @@ text: {There's a card game in the back room of the Gilded Newt, and an empty cha
     win:
       gold +medium
       mood +tiny
-      say: {You win a handful of crowns and a reputation for an honest face.|You win, and the widow asks where you learned to bluff like that.}
+      say: {You win a handful of crowns and a reputation for an honest face.|You win, and the widow asks where you learned to bluff like that.|The Duskgate second-year loses to you as cheerfully as to everyone. You win a few crowns and an invitation to lose them back.}
     lose:
       mood -tiny
-      say: {You lose your crowns slowly, and then all at once.|The tinker takes your last coin and buys you a drink with it, which somehow makes it worse.}
+      say: {You lose your crowns slowly, and then all at once.|The tinker takes your last coin and buys you a drink with it, which somehow makes it worse.|The Duskgate second-year wins for once, delighted. You lose your stake and keep your good humour, mostly.}
 > right: Watch for the tells
   guile +small
   mood -tiny
@@ -155,7 +155,7 @@ text: {here} is at the corner table with {a jug of cider and no plans to leave.|
   lore +small
   rel here -tiny
   mood -tiny
-  say: {You wave and get back to your book. {here} toasts your back, a little hurt.|{term: You plead an early lecture. It's even true, and you read for it before bed.|You plead an early start, and read in your room instead.}}
+  say: {You wave and get back to your book. {here} toasts your back, a little hurt.|{term: You plead an early lecture. It's even true, and you read for it before bed.|You plead an early start, and read in your room instead.}|You wave. {here} raises the jug at you as if you'll be back. You will.}
 
 # ---------------- Mabel's Tea Shop ----------------
 
@@ -178,10 +178,10 @@ text: {Mabel looks up as you open the door and is already reaching for a tin.|Ma
   challenge deceive journeyman:
     win:
       mood +small
-      say: {She brings you the cheerful tea and waves your coins away, "for the performance". It's so good you actually cheer up, which may have been her plan all along.|Mabel looks fooled, and doesn't charge you. Then she adds a biscuit, which means she wasn't.}
+      say: {She brings you the cheerful tea and waves your coins away, "for the performance". It's so good you actually cheer up, which may have been her plan all along.|Mabel looks fooled, and doesn't charge you. Then she adds a biscuit, which means she wasn't.|You've practised the door. Mabel gives you the cheerful tea and a long look, and charges you for neither.}
     lose:
       mood -tiny
-      say: {She brings you a pot labelled, in her own hand, "for people pretending". She doesn't charge for it, which is somehow worse.|"Nice try, dear," says Mabel, and brings the strong one, on the house.}
+      say: {She brings you a pot labelled, in her own hand, "for people pretending". She doesn't charge for it, which is somehow worse.|"Nice try, dear," says Mabel, and brings the strong one, on the house.|Mabel watches your cheerful entrance the way a doctor watches a cough, and brings the strong one, free.}
 
 @event mabels_window_seat
 title: The Window Seat
@@ -193,7 +193,7 @@ weight: 10
 art: book
 tags: study
 scene: A window seat in a tea shop looking across a still lake to seven distant towers, a teapot and open notes on the sill.
-text: {Mabel's window seat looks out over the lake to the castle, and it's free.|Mabel has stopped asking if you're waiting for someone at the window seat.|Your window seat. Mabel puts a cushion on it when she sees you on the quay.} {season == "winter": Frost has drawn ferns on the glass.|{season == "spring": Blossom keeps landing on the sill.|{The towers look small from here, almost friendly.|Rain streaks the glass and blurs the towers.}}}
+text: {Mabel's window seat looks out over the lake to the castle, and it's free.|Mabel has stopped asking if you're waiting for someone at the window seat.|Your window seat. Mabel puts a cushion on it when she sees you on the quay.} {season == "winter": Frost has drawn ferns on the glass.|{season == "spring": Blossom keeps landing on the sill.|{The towers look small from here, almost friendly.|Rain streaks the glass and blurs the towers.|Below, the barges come and go, slow as thoughts.}}}
 > left: Make one pot last all day
   lore +small
   mood -tiny
@@ -216,7 +216,7 @@ tags: social
 cast:
   friend: any where rel(friend) >= 6 and tagged(friend, student) and around(friend)
 scene: Two students at a small tea-shop table crowded with mismatched teapots, one writing in a notebook.
-text: {friend} wants to try one of Mabel's forty teas, and Mabel insists on choosing. {Today she starts a chart of who has tried what.|Mabel's chart of your friends' teas is pinned behind the counter now; {friend}'s column gets a tick.|Mabel's chart runs to a second sheet. {friend}'s column is the shortest, and Mabel looks at it pointedly.} {Mabel pretends not to be interested.|Mabel has opinions about the order.}
+text: {friend} wants to try one of Mabel's forty teas, and Mabel insists on choosing. {Today she starts a chart of who has tried what.|Mabel's chart of your friends' teas is pinned behind the counter now; {friend}'s column gets a tick.|Mabel's chart runs to a second sheet. {friend}'s column is the shortest, and Mabel looks at it pointedly.} {Mabel pretends not to be interested.|Mabel has opinions about the order.|Mabel insists on the order, and on the chart.}
 > left: Pay for both pots
   gold -small
   rel friend +small
@@ -247,11 +247,11 @@ text: {You ask Mr Grimsby for a textbook. He vanishes into the shelves and comes
   challenge research apprentice wild:
     win:
       lore +small
-      say: {You find it behind a stack of almanacs, exactly where he said it wasn't, and read the chapter you need at the counter.|You find it. Mr Grimsby looks wounded and lets you read it at the counter for free, since you found it yourself.}
+      say: {You find it behind a stack of almanacs, exactly where he said it wasn't, and read the chapter you need at the counter.|You find it. Mr Grimsby looks wounded and lets you read it at the counter for free, since you found it yourself.|You find it yourself, above the weather guides. Mr Grimsby insists it's a weather guide too, in a way.}
     lose:
       health -tiny
       mood -small
-      say: {A shelf leans on you for support. You hold it up for a long time.|An afternoon, a sneezing fit, and no book.}
+      say: {A shelf leans on you for support. You hold it up for a long time.|An afternoon, a sneezing fit, and no book.|You search and find only more guides to the moods of weather. The weather today is a sulk.}
 
 @event grimsbys_damp_barrow
 title: The Damp Barrow
@@ -296,12 +296,12 @@ text: There's one copy left of the book you need, and {friend} has {their} hand 
     win:
       lore +small
       rel friend -tiny
-      say: {Mr Grimsby takes your side for reasons of his own. {friend} won't speak to you until the quay.|You win it fair and square, and {friend} says so in a voice that means the opposite.}
+      say: {Mr Grimsby takes your side for reasons of his own. {friend} won't speak to you until the quay.|You win it fair and square, and {friend} says so in a voice that means the opposite.|You haggle, and win. Mr Grimsby promises {friend} the second copy he ordered. You both know it won't come.}
     lose:
       gold +tiny
       rel friend -tiny
       mood -tiny
-      say: {{friend} outbids you, and Mr Grimsby hands your crowns back with a sympathetic look.|You argue so long that a third-year buys it while you're both talking. Mr Grimsby gives your crowns back.}
+      say: {{friend} outbids you, and Mr Grimsby hands your crowns back with a sympathetic look.|You argue so long that a third-year buys it while you're both talking. Mr Grimsby gives your crowns back.|{friend} wins, and Mr Grimsby promises you the second copy. It never arrives as two.}
 
 # ---------------- Pell & Daughters ----------------
 
@@ -340,11 +340,11 @@ text: {The queue at Pell & Daughters notices your academy robes. A woman shows y
     win:
       renown +small
       mood +tiny
-      say: {Your advice is sound. One of the daughters nods, which in this shop is a medal.|The farmer tries your remedy and comes back to thank you. Old Pell grumbles about lost trade.}
+      say: {Your advice is sound. One of the daughters nods, which in this shop is a medal.|The farmer tries your remedy and comes back to thank you. Old Pell grumbles about lost trade.|You guess the old man's "usual" from the way he walks. Old Pell grunts, which is agreement.}
     lose:
       renown -tiny
       mood -small
-      say: {Old Pell corrects you in front of the whole queue, kindly, which is worse.|Your advice would have worked on a horse. A daughter says so.}
+      say: {Old Pell corrects you in front of the whole queue, kindly, which is worse.|Your advice would have worked on a horse. A daughter says so.|You guess the old man's "usual" wrong, out loud. He tells the queue what it actually is. Everyone wishes he hadn't.}
 > right: Study a drawer intently
   guile +small
   say: {You pretend to be fascinated by a drawer of buttons until the queue moves on.|You say "Hm" like Professor Thorne and leave quickly.|You become very interested in the floor. The woman with the rash tells her friend you were rude.}
@@ -364,10 +364,10 @@ text: {One of Pell's daughters has a new tonic and needs someone to try it. Her 
   chance likely:
     health +small
     mood +tiny
-    say: {You feel wonderful, and briefly taller. The daughters take notes.|Your cold vanishes. So, for an hour, does your sense of smell.}
+    say: {You feel wonderful, and briefly taller. The daughters take notes.|Your cold vanishes. So, for an hour, does your sense of smell.|The clear one does nothing at all, then everything at once. You feel marvellous. The daughters look nervous.}
   else:
     health -small
-    say: {You hiccup bubbles all the way back to the barge.|Your ears go warm and stay warm. The daughters take very interested notes.}
+    say: {You hiccup bubbles all the way back to the barge.|Your ears go warm and stay warm. The daughters take very interested notes.|The clear one turns your tongue blue. The daughters write "clear: not clear" in the notebook.}
 > right: Buy a proper remedy
   gold -small
   health +small
@@ -385,7 +385,7 @@ weight: 10
 art: meal
 tags: life
 scene: A queue of villagers and students outside a little bakery at dawn, steam and the smell of cinnamon pouring out of the door.
-text: {There's a queue outside the bakery for the afternoon batch, and it smells like a promise.|The baker's son counts heads in the bun queue and knows you by your scarf.|The bun queue. You know everyone in it by their order.} {season == "winter": Breath steams in the cold.|{season == "autumn": Leaves skitter round everyone's ankles.|{The baker's son is singing off-key.|A goat has joined the queue and nobody has the heart to send it away.}}}
+text: {There's a queue outside the bakery for the afternoon batch, and it smells like a promise.|The baker's son counts heads in the bun queue and knows you by your scarf.|The bun queue. You know everyone in it by their order.} {season == "winter": Breath steams in the cold.|{season == "autumn": Leaves skitter round everyone's ankles.|{The baker's son is singing off-key.|A goat has joined the queue and nobody has the heart to send it away.|The queue is swapping recipes it will never use.}}}
 > left: Buy a bag for your corridor
   gold -small
   renown +small
@@ -429,12 +429,12 @@ text: {Behind the bakery a window stands open, and on the sill a tray of buns is
   challenge deceive apprentice:
     win:
       mood +small
-      say: {You get away with it. It tastes slightly of guilt and mostly of cinnamon.|Clean away. The crow watches you with professional respect.}
+      say: {You get away with it. It tastes slightly of guilt and mostly of cinnamon.|Clean away. The crow watches you with professional respect.|You lift one through the steam. Nobody sees except the crow, who takes the next.}
     lose:
       renown -tiny
       if gold > 0:
         gold -small
-        say: {A floury hand appears from the window, palm up. You pay double.|Caught by the baker's son, who makes you pay double and tells everyone in the queue.}
+        say: {A floury hand appears from the window, palm up. You pay double.|Caught by the baker's son, who makes you pay double and tells everyone in the queue.|The steam gives you away. A floury hand takes your coins, twice over.}
       else:
         mood -small
         say: A floury hand appears from the window, palm up. Your pockets are empty, so you spend an hour scrubbing trays instead.
@@ -462,7 +462,7 @@ text: {Your old room is exactly as you left it, except smaller.|Someone has been
   say: {You sleep like a stone. Downstairs, someone has done all your chores, loudly.|You wake to the smell of supper and a pointed silence.|You sleep through the afternoon. You feel human, and slightly ashamed.}
 > right: Go down and help
   mood +small
-  say: {final_year: {You go down and realise there won't be many more afternoons like this.|You memorise the kitchen without meaning to.}|{You help with the fire. Nobody says much. Nobody needs to.|The creaky stair announces you. Someone hands you a cup before you've asked.}}
+  say: {final_year: {You go down and realise there won't be many more afternoons like this.|You memorise the kitchen without meaning to.|You go down and help, and try to learn how every sound in the house goes, for later.}|{You help with the fire. Nobody says much. Nobody needs to.|The creaky stair announces you. Someone hands you a cup before you've asked.|You go down and are handed the job you always had. Your hands know it before you do.}}
 
 @event home_cottage_list
 title: The List on the Table
@@ -474,7 +474,7 @@ weight: 10
 art: paper
 tags: home
 scene: A kitchen table with a long handwritten list of chores weighted down by a teapot, a student in academy robes reading it with dismay.
-text: {Home has remembered that you know where everything is.|A day home, and already a list.|The list. Your name, underlined.} {has(origin_noble): {&The steward wants the ledgers checked.|The steward wants the tenants' letters answered.}|{has(origin_merchant): {&The shop's stock needs counting.|The shop sign needs repainting.}|{has(origin_hedge): {&Your grandmother wants herbs hung to dry.|Your grandmother wants every jar labelled.}|{~The woodpile needs splitting.|The hen house door argues.}}}}
+text: {&Home has remembered that you know where everything is.|A day home, and already a list.|The list. Your name, underlined.} {has(origin_noble): {&The steward wants the ledgers checked.|The steward wants the tenants' letters answered.|The steward wants you to sit in on a dispute about a fence.}|{has(origin_merchant): {&The shop's stock needs counting.|The shop sign needs repainting.|The shop's ledger has a column nobody can explain.}|{has(origin_hedge): {&Your grandmother wants herbs hung to dry.|Your grandmother wants every jar labelled.|Your grandmother wants the bees told the news.}|{&The woodpile needs splitting.|The hen house door argues.|The well rope has frayed.}}}}
 > left: Work through the whole list
   if has(origin_noble):
     lore +tiny
@@ -482,17 +482,17 @@ text: {Home has remembered that you know where everything is.|A day home, and al
     vigor +tiny
   mood +small
   health -tiny
-  say: {~By supper the list is done, and someone you love says "Well." It's the highest praise in the house.|It takes all day. You sleep better than you have all term.|You finish, and the list grows a second page in a different hand.}
+  say: {&By supper the list is done, and someone you love says "Well." It's the highest praise in the house.|It takes all day. You sleep better than you have all term.|You finish, and the list grows a second page in a different hand.}
 > right: Do it with magic
   challenge enchant using arcana apprentice wild:
     win:
       arcana +small
       mood +tiny
-      say: {~The work does itself while you supervise from a chair. The family is impressed and slightly unnerved.|It works. Your mother says it's cheating, then asks if you can do the gutters.}
+      say: {&The work does itself while you supervise from a chair. The family is impressed and slightly unnerved.|It works. Your mother says it's cheating, then asks if you can do the gutters.|It works so well that a neighbour asks to borrow you.}
     lose:
       mood -small
       health -tiny
-      say: {~The spell goes slightly wrong. Something is now upside down that wasn't before.|Soot. Everywhere. Someone laughs until they cry, then hands you a broom.}
+      say: {&The spell goes slightly wrong. Something is now upside down that wasn't before.|Soot. Everywhere. Someone laughs until they cry, then hands you a broom.|The spell does the list twice, including the things that were already done.}
 
 @event home_cottage_after_supper
 title: The Same Question
@@ -571,11 +571,11 @@ text: {season == "winter": The pond at the bottom of the fields has frozen over,
   chance likely:
     mood +small
     vigor +tiny
-    say: {season == "winter": {You skate across and back to roaring applause from three farmhands and a dog.|You slide the whole length on your back. It counts.}|{You drop off the willow into the green. It's colder than memory, and better.|A perfect splash. The scorekeeper gives it top marks.}}
+    say: {season == "winter": {You skate across and back to roaring applause from three farmhands and a dog.|You slide the whole length on your back. It counts.|You skate past your old initials frozen into the willow's roots. The apprentice gives you full marks for nostalgia.}|{You drop off the willow into the green. It's colder than memory, and better.|A perfect splash. The scorekeeper gives it top marks.|You drop off the branch beside your old initials. The score is one you'll be proud of for a week.}}
   else:
     health -small
     mood -tiny
-    say: {season == "winter": {You go through the ice up to your knees and limp home to a lecture and a fire.|The ice cracks under you and you scramble back, soaked and laughed at.}|{You belly-flop. The sound carries across three fields. Everyone heard.|You slip off the willow early and land in the reeds, muddy to the ears.}}
+    say: {season == "winter": {You go through the ice up to your knees and limp home to a lecture and a fire.|The ice cracks under you and you scramble back, soaked and laughed at.|You stop to look at your initials, and the ice stops holding you.}|{You belly-flop. The sound carries across three fields. Everyone heard.|You slip off the willow early and land in the reeds, muddy to the ears.|You climb to your old initials and slip on them. The splash is not dignified.}}
 > right: Hold the coats
   charm +small
   say: {You hold the coats and referee the arguments. Someone has to be the grown-up now.|You keep score and are accused of bias by every side.|Holding the coats, you feel very old and quite content.}
@@ -620,11 +620,11 @@ text: {A stall in the market is selling "genuine Lumenhold charms, blessed in th
     win:
       renown +small
       mood -tiny
-      say: {The crowd turns on him. A grandmother gets her coin back and gives you a cake. The seller gives you a look.|He folds, and offers you a share of the trade. You decline. He seems genuinely surprised.}
+      say: {The crowd turns on him. A grandmother gets her coin back and gives you a cake. The seller gives you a look.|He folds, and offers you a share of the trade. You decline. He seems genuinely surprised.|You point out the glowing one. The seller goes pale and hands it to you to take away, free. The crowd cheers you anyway.}
     lose:
       renown -tiny
       mood -small
-      say: {The crowd takes his side. "Academy snob," someone says, buying two.|He out-talks you in front of everyone. You'd admire it if it were happening to someone else.}
+      say: {The crowd takes his side. "Academy snob," someone says, buying two.|He out-talks you in front of everyone. You'd admire it if it were happening to someone else.|You call out the glowing one, and it glows brighter, as if insulted. The crowd decides it's genuine and buys the lot.}
 > right: Buy one for an aunt
   gold -tiny
   mood +small
