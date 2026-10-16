@@ -31,6 +31,20 @@ The figures come from a scan of the compiled content: the title, text, scene, op
 - 43 fields hold two random groups each (two flavour details in one sentence).
 - Outside events: 11 `say:` lines in states use `{~}`; endings use none.
 
+## Does current writing actually desync? (sampled)
+
+- **A random sample of 20 cards with random variants in two or more fields:** 2 desync clearly and 2 mildly. Most outcomes are written to fit any setup, as the critic asked.
+  - `alch_original_remedy`: "your headache lifts" when the setup made the remedy for a cold or nerves.
+  - `gig_kitchens_staff_supper`: "the swan story" and "the mystery cake" when the setup named neither.
+  - `gig_post_wrong_parcel`: "the ticking was a clock" on showings whose setup has no ticking parcel.
+  - `kitchen_night_baker`: "the cooling tray" and "the heel of bread" introduced only by one setup.
+- **A keyword scan** (an outcome naming something only one setup variant introduces) flagged 133 cards, mostly false positives.
+- **Confirmed by reading:** `illu_find_vey` (the pigeon, the back-row student), `gig_pell_remedy_rush` (the cow), `tavern_regulars_corner` (the eel story), `intern_alchemists_vat_watch` (cinnamon), `evo_rain_barrel` (Marisol), `lyra_date_dawn_duel` (the coffee), `newt_company` (the magistrate). Measured with the engine's own picker over 1,600 seed and turn pairs each: whenever the payoff shows, its setup is missing 65–71% of the time. That's the independent-pick rate for three setups.
+- **Estimate:** about one card in five of the 384 multi-field cards has a real desync, roughly 50–80 cards.
+- **Two kinds, only one fixed by linking:**
+  - *Random against random* (the pigeon, the cow, the headache): linking fixes it once each payoff sits at the same position as its setup. Several are at different positions today (`illu_find_vey`'s back-row payoff is variant 1 of an outcome, its setup is variant 2), so the migration reorders, not only pads.
+  - *Random outcome against sequence setup* (`gig_post_wrong_parcel`, the baker's heel of bread): the two channels stay separate by design, so linking can't fix it. The outcome has to stop depending on the step, or move into the sequence channel. The lint can't see this; the critic's rule should name it.
+
 ## The rule
 
 **Within one card, every `{~…}` group has the same number of parts, or the field has none. The same holds, separately, for sequence groups and for cycle groups.**
