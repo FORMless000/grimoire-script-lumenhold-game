@@ -174,7 +174,7 @@ details.adv input { margin-top: 8px; }
 .choice.single { justify-content: center; text-align: center; }
 
 /* ---------------- Side panel ---------------- */
-.side { grid-area: side; border-left: 1px solid var(--line); background: rgba(14, 17, 36, 0.6); display: flex; flex-direction: column; min-height: 0; }
+.side { grid-area: side; border-left: 1px solid var(--line); background: rgba(14, 17, 36, 0.92); display: flex; flex-direction: column; min-height: 0; }
 .tabs { display: flex; border-bottom: 1px solid var(--line); }
 .tabs button { flex: 1; background: none; border: 0; padding: 12px 6px; font-weight: 600; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; }
 .tabs button.on { color: var(--gold-2); border-bottom-color: var(--gold); }
@@ -322,6 +322,12 @@ details.adv input { margin-top: 8px; }
 .fb-rate .fb-r.on { opacity: 1; }
 .fb-dialog textarea { width: 100%; min-height: 66px; resize: vertical; background: var(--night); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; font: 14px/1.45 var(--sans); }
 .fb-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+.set-row { border-top: 1px solid var(--line); padding: 12px 0; }
+.set-row b { display: block; font-size: 15px; margin-bottom: 2px; }
+.set-row .fb-intro { margin-bottom: 8px; }
+.seg { display: flex; flex-wrap: wrap; gap: 8px; }
+.seg-b { padding: 6px 14px; font-size: 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--night); color: var(--text); opacity: .7; cursor: pointer; }
+.seg-b.on { opacity: 1; border-color: var(--gold-2); color: var(--gold-2); }
 .fb-mini { display: flex; gap: 2px; margin-top: 4px; }
 .fb-mini .fb-r, .fb-mini .fb-c { width: 24px; height: 24px; font-size: 12px; }
 .fb-note { font-size: 12.5px; color: var(--gold-2); font-style: italic; margin-top: 2px; white-space: pre-line; }
@@ -331,7 +337,7 @@ details.adv input { margin-top: 8px; }
 
 /* ---------------- Previews, spells, bars (v0.3) ---------------- */
 .pv { display: flex; flex-wrap: wrap; gap: 2px 6px; margin-top: 3px; font-size: 11px; font-weight: 600; opacity: .92; }
-.pv i { font-style: normal; display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
+.pv i { font-style: normal; display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; font-weight: 700; font-size: 1.1em; letter-spacing: -.02em; }
 .pv i.pos { color: var(--good); } .pv i.neg { color: var(--bad); } .pv i.more { color: var(--muted); }
 .pv .ico { width: 12px; height: 12px; }
 .pv.multi { flex-direction: column; gap: 1px; }
@@ -351,16 +357,34 @@ details.adv input { margin-top: 8px; }
 .map-fest { margin: 0 0 10px; padding: 8px 12px; border-radius: 12px; background: rgba(240, 200, 104, .12); border: 1px solid rgba(240, 200, 104, .35); color: var(--gold-2); font-size: 13.5px; }
 .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 60; max-width: min(520px, calc(100vw - 32px)); padding: 10px 16px; border-radius: 14px; background: var(--night-3); border: 1px solid var(--line); color: var(--text); font-size: 13.5px; box-shadow: 0 12px 30px rgba(0, 0, 0, .45); animation: toast 2.6s ease forwards; pointer-events: none; }
 @keyframes toast { 0% { opacity: 0; transform: translate(-50%, 8px); } 10%, 80% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
-/* Time of day (M7): a faint wash over the page in the slot being played. */
-body { transition: background-color 1.5s ease; }
-body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; background: var(--slot-tint, transparent); transition: background 1.5s ease; }
-/* Time of day: the page takes the slot's colour, strong enough to notice, dark enough to keep the cards' contrast. */
-body[data-slot="morning"] { background-color: #2a2236; --slot-tint: linear-gradient(180deg, rgba(255, 200, 130, .20), rgba(255, 214, 150, .05) 70%); }
-body[data-slot="noon"] { background-color: #262d48; --slot-tint: linear-gradient(180deg, rgba(255, 246, 210, .18), rgba(200, 220, 255, .05) 70%); }
-body[data-slot="afternoon"] { background-color: #2c2230; --slot-tint: linear-gradient(180deg, rgba(255, 176, 100, .20), rgba(255, 190, 120, .05) 70%); }
-body[data-slot="evening"] { background-color: #2a1a2e; --slot-tint: linear-gradient(180deg, rgba(235, 110, 140, .22), rgba(120, 60, 140, .08) 70%); }
-body[data-slot="night"] { background-color: #0f1430; --slot-tint: linear-gradient(180deg, rgba(70, 90, 210, .20), rgba(40, 50, 140, .06) 70%); }
-body[data-slot="midnight"] { background-color: #08061a; --slot-tint: linear-gradient(180deg, rgba(60, 25, 120, .32), rgba(20, 10, 50, .20) 70%); }
+/* Time of day and season (M7; feedback 2026-10-15b): src/sky.js draws a scene behind the game. The tint is strong at
+   the top and gone by the middle of the screen, so the bottom half keeps the page's own colour. */
+#sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+/* Beside the side panel on wide screens, so the sun and the skyline sit in the play area. */
+@media (min-width: 901px) { #sky { right: 340px; } }
+#sky > * { position: absolute; left: 0; right: 0; top: 0; }
+#sky .sky-tint, #sky .sky-season { height: 100%; transition: opacity 1.2s ease; }
+#sky .sky-tint { background: var(--sky, none); }
+#sky .sky-season { background: var(--sky-season, none); }
+#sky .sky-svg { height: 62vh; opacity: .9; }
+#sky .sky-svg svg { width: 100%; height: 100%; display: block; animation: fade 1.2s ease; }
+#sky canvas { width: 100%; height: 100%; }
+#sky[data-slot="morning"] { --sky: linear-gradient(180deg, rgba(255, 168, 120, .74) 0%, rgba(255, 196, 150, .42) 22%, rgba(255, 214, 170, .12) 38%, transparent 52%); }
+#sky[data-slot="noon"] { --sky: linear-gradient(180deg, rgba(110, 170, 255, .76) 0%, rgba(160, 205, 255, .44) 22%, rgba(220, 235, 255, .12) 38%, transparent 52%); }
+#sky[data-slot="afternoon"] { --sky: linear-gradient(180deg, rgba(255, 186, 80, .72) 0%, rgba(255, 200, 120, .4) 22%, rgba(255, 210, 150, .12) 38%, transparent 52%); }
+#sky[data-slot="evening"] { --sky: linear-gradient(180deg, rgba(120, 60, 160, .62) 0%, rgba(230, 100, 120, .42) 20%, rgba(255, 150, 110, .2) 36%, transparent 52%); }
+#sky[data-slot="night"] { --sky: linear-gradient(180deg, rgba(30, 50, 160, .66) 0%, rgba(40, 60, 170, .36) 22%, rgba(50, 70, 170, .12) 38%, transparent 52%); }
+#sky[data-slot="midnight"] { --sky: linear-gradient(180deg, rgba(60, 20, 130, .72) 0%, rgba(70, 30, 140, .4) 22%, rgba(60, 30, 120, .14) 38%, transparent 52%); }
+#sky[data-season="autumn"] { --sky-season: linear-gradient(180deg, rgba(220, 120, 40, .16), transparent 45%); }
+#sky[data-season="winter"] { --sky-season: linear-gradient(180deg, rgba(200, 225, 255, .2), transparent 45%); }
+#sky[data-season="spring"] { --sky-season: linear-gradient(180deg, rgba(190, 240, 190, .12), rgba(250, 190, 215, .08) 25%, transparent 45%); }
+#sky[data-season="summer"] { --sky-season: linear-gradient(180deg, rgba(255, 225, 120, .14), transparent 45%); }
+.sky-clouds { animation: sky-drift 90s ease-in-out infinite alternate; }
+.sky-rays { animation: sky-spin 120s linear infinite; }
+.sky-aurora { animation: sky-shimmer 9s ease-in-out infinite alternate; }
+@keyframes sky-drift { from { transform: translateX(-40px); } to { transform: translateX(60px); } }
+@keyframes sky-spin { to { transform: rotate(360deg); } }
+@keyframes sky-shimmer { from { opacity: .2; } to { opacity: .45; } }
 .panel-res { display: flex; gap: 8px; margin: 2px 0 10px; flex-wrap: wrap; }
 .pres { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 10px; font-size: 13px; color: var(--muted); }
 .pres b { color: var(--text); font-variant-numeric: tabular-nums; }
@@ -435,6 +459,7 @@ body[data-slot="midnight"] { background-color: #08061a; --slot-tint: linear-grad
   .overlay { padding-bottom: 64px; }
 }
 @media (max-width: 520px) {
+  .meter.number .due { white-space: normal; line-height: 1.05; height: auto; min-height: 19px; max-width: 64px; font-size: 10px; text-align: center; }
   .top { gap: 8px; padding: 8px 12px; }
   .top-actions { gap: 4px; }
   .icon-btn { width: 34px; height: 34px; }

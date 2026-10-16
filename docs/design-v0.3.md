@@ -300,7 +300,7 @@ The tentative live harness will build its prompts from the same files, so the pa
 
 **Break day:** morning = `plan` (break-plan pool), two visits (afternoon and evening; the evening one added after playtest 2), night = `world`. About 6–7 cards.
 
-**Played in order** (playtest 2, M1): the day runs slot by slot, and each visit is picked on the map when its slot comes, so the morning's cards can change where the afternoon goes. Most places are open for both visits (M2). Social and world cards are not tied to noon and night: `spread: social world` keeps their count but deals them across the day's slots, and an event whose text names a time (`time: evening`) is drawn three times as often then and a third as often elsewhere (M43). A slot is tinted by its time of day.
+**Played in order** (playtest 2, M1): the day runs slot by slot, and each visit is picked on the map when its slot comes, so the morning's cards can change where the afternoon goes. Most places are open for both visits (M2). Social and world cards are not tied to noon and night: `spread: social world` keeps their count but deals them across the day's slots, and an event whose text names a time (`time: evening`) is drawn three times as often then and a third as often elsewhere (M43). A slot shows its time of day and the season behind the game (`src/sky.js`, feedback 2026-10-15b): a tint strong at the top and gone by mid-screen, so the bottom half keeps the page's colour; a sun or moon placed by the hour, clouds, and a skyline whose trees follow the season; and particles: dust, glints, fireflies, stars and shooting stars, or wisps by the hour, and leaves, snow, petals or pollen by the season. Motion stops for reduced-motion settings.
 
 Declared in `@game`:
 
@@ -419,7 +419,7 @@ Friends are found the way they are in life: in the courses, clubs, jobs and plac
 - **Schedules** (M42): an entry can hold on a share of days (`observatory@midnight:30`), and `schedule_break:` gives a break schedule, or `away`.
 - **Milestones** (M13) are pushed, not drawn: `ramp: rel(npc) 18..30` pushes the card each month at 40% from the low mark, certain at the high mark.
 - **One bar per character** (M37): length is closeness (rel), colour runs friendly ↔ romantic with spark. Friendship gains carry spark along in proportion to the spark already there (at most 2×, 3× for a partner), and crossing spark 30 asks once whether you want it (`spark_cooldown`).
-- **Off campus** (M38, M19, M29, M31): at home or on an internship, the day draws that place's pools, a letter comes each night, anyone who reaches you writes, and friendship and spark fade at half the pace. A character away over a break (`schedule_break: away`) is reachable only by letter.
+- **Off campus** (M38, M19, M29, M31): at home or on an internship, the day draws that place's pools, a letter comes each night, anyone who reaches you writes, and spark fades at half the pace. A character away over a break (`schedule_break: away`) is reachable only by letter.
 - **Warmth (0–100, per character)** is recent, chosen contact:
   - meeting sets it to 35;
   - visiting where they are: +12 (it counts as seeking them, playtest 2 M18);
@@ -619,7 +619,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 
 **Exams:**
 - In the term's last month, each course's exam is a card (playtest 2): the player chooses to answer steadily or to go for top marks (the swing of §9.2), and the card shows the pass and A chances. The exam is on the course's skill, at the **course standard** for its level (§8.6: I apprentice+, II adept+, III master+, a track's `standard:` overriding), with low drift; `@balance exam_tiers` sets each level's offset (`standard+1` at every level). Measured (feedback 2026-10-15, 40 games a style): a balanced player passes level I about 87% of the time, II about 75%, III about 70%, with A rates of about 44%, 29% and 18%; before, the standards were two rungs apart and every level passed about 92%, because the players who reach a higher level are further ahead in its skill. Until the check ladder (2026-10) it was a legacy tier by level (easy, medium, hard), eased in L when harder exams sent careful players to "Barely", and exams passed about 90% of the time; on the ladder about 83% (GPA about 2.9). The enrolment menu shows each course's skill, exam tier, spells and pass chance up front.
-- **Study modifiers:** attendance and study choices during the term add up to +15 to the roll (L: a course card adds 2 by itself, so choices and skipped lectures decide the rest; `@balance study`).
+- **Study modifiers:** attendance and study choices during the term add up to +15 to the roll (each course's monthly coursework adds 2, shown with it, so choices decide the rest; `@balance study: attend 0 cap 15 monthly 2`. Until feedback 2026-10-15b a course card added 2 silently; the median preparation at an exam stayed about 8–11).
 - Until the exam minigame exists (§T1), it **auto-resolves**.
 
 **Grades:**
@@ -753,7 +753,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - The framing is the default pending decision D1.
 
 **Relationships: two axes.**
-- **Friendship (`rel`, −100…100; negative = hostility):** slow and sticky. A one-character focus reaches 100 at about 2 years. It decays only after 6 months without interaction (−2 a month toward 0).
+- **Friendship (`rel`, −100…100; negative = hostility):** slow and sticky. A one-character focus reaches 100 at about 2 years. It never decays (feedback 2026-10-15b; it used to fade after 6 months without interaction).
 - **Spark (`spark`, 0–100; replaces `love`):**
   - can start at first meeting;
   - **−15% a month** without a romance interaction;
@@ -769,7 +769,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - `if` is evaluated against the running state.
 - `chance` / `check` / `challenge` become labelled branches with probabilities, nested at most 2 deep; deeper nesting collapses to ranges.
 - Queues and flags show as a small "something follows" mark.
-- **UI:** numbers on the choice button; branches as "win +8 renown / lose −5 mood (62%)".
+- **UI:** the changes on the choice button, by a setting (feedback 2026-10-15, 2026-10-15b; the gear menu, with the illustrative-text switch): signs by size (+ for tiny or small, ++ medium, +++ large or huge; − for losses), numbers, or icons only. Crowns and Mana always show numbers, and so does every outcome after a choice. Exam preparation for several courses at once shows as one icon. Branches as "win ++ renown / lose − mood (62%)".
 - **Hard invariants:**
   - lint rejects any effect it can't preview;
   - the simulator property test asserts that every actual outcome falls within its preview, over 1,000 runs.

@@ -515,8 +515,8 @@ opt.wish.say.1 [c0d3b2] = 你爬到屋顶的最高处，老习俗说愿望都从
 @event year_two
 # en: Second Year
 title [c51ea2] = 第二学年
-# en: The barge brings new first-years, and you watch them gawp at the towers. Was that really you a year ago? You know which staircases move now, and which professors you can charm. Second-years, a prefect announces, may apply for summer research posts in Stormbloom.
-text [cc8f28] = 驳船载来了新的一年级生，你看着他们仰望七塔，目瞪口呆。一年前那真的是你吗？如今你知道哪些楼梯会动，哪些教授能哄得住。一位级长宣布：二年级生可以在风暴月申请暑期研究职位。
+# en: The barge brings new first-years, and you watch them gawp at the towers. Was that really you a year ago? You know which staircases move now, and which professors you can charm. Second-years, a prefect announces, may apply for summer research posts in Stormbloom.{chosen(break_plan, home):  Your trunk still smells of home, and there's a cake in it you were told to share.|}
+text [b83f07] = 驳船载来了新的一年级生，你看着他们仰望七塔，目瞪口呆。一年前那真的是你吗？如今你知道哪些楼梯会动，哪些教授能哄得住。一位级长宣布：二年级生可以在风暴月申请暑期研究职位。{chosen(break_plan, home): 你的箱子里还带着家的味道，里面还有一块蛋糕，家里人叮嘱你一定要分给大家。|}
 # en: The seven towers in autumn colours, the first-year barge arriving below, tiny and nervous.
 scene [aa7c3d] = 秋色中的七座高塔，下方新生的驳船正在靠岸，渺小而紧张。
 # en: Begin the second year
@@ -524,11 +524,27 @@ opt.ok.label [338fd8] = 开始第二学年
 # en: You unpack faster than last year, and in the right order. Someone in your year already has a list of the research posts, and the castle's midnight doors, side by side.
 opt.ok.say.1 [08f4a0] = 你收拾行李比去年快，顺序也对了。你们年级已经有人列好了研究职位的清单，旁边并排列着城堡午夜开放的门。
 
+@event term_begins
+# en: The Spring Term
+title [c548b1] = 春季学期
+# en: {chosen(break_plan, home): You come back from home with a tin of something your family insists you'll need, and the castle feels enormous after a winter of small rooms.|{chosen(break_plan, work): Your holiday wages are in your purse and your feet still ache from earning them. The castle fills up around you, trunk by trunk.|After a winter of empty corridors, the castle fills up around you again, and the noise of it is almost too much.}} The spring term begins, and the registrar's hall is already queueing.
+text [f78fe0] = {chosen(break_plan, home): 你从家里回来，带着一罐家人坚持说你用得上的东西。过了一个冬天的小屋子，城堡显得大得出奇。|{chosen(break_plan, work): 假期挣的工钱揣在钱袋里，挣钱时磨疼的脚还没缓过来。城堡里一只只箱子搬进来，又热闹起来了。|空荡荡的走廊过了一个冬天，城堡又热闹起来，吵得你几乎有点受不了。}}春季学期开始了，教务大厅已经排起了长队。
+# en: The castle steps after the winter break, trunks stacked by the doors and the first lamps lit in the towers.
+scene [6e70cd] = 寒假过后的城堡台阶，门边堆着箱子，塔楼里亮起了第一批灯。
+# en: Get a head start on the reading
+opt.left.label [62ecd0] = 先把书读起来
+# en: You find a window seat in the library before the term has properly started. By the time the others arrive, you have a list of questions and a crick in your neck.
+opt.left.say.1 [1998c7] = 学期还没正式开始，你就在图书馆占了个靠窗的位子。等别人到了，你已经攒了一串问题，脖子也落了枕。
+# en: Catch up with everyone first
+opt.right.label [55ea0a] = 先和大家叙叙旧
+# en: You spend the first evening in the common room, then at the Newt, hearing everyone's winter. The reading can wait a day. It waits three.
+opt.right.say.1 [ceec42] = 第一个晚上你先泡在公共休息室，后来又去了镀金蝾螈酒馆，听每个人讲自己的冬天。书可以晚一天再读。结果晚了三天。
+
 @event year_three
 # en: Third Year
 title [c19627] = 第三年
-# en: "Third years," the headmistress says, "you are past the middle of your time here. Next year will ask a great deal of you; spend this one finding out what you want from it." She looks, for a moment, directly at you.
-text [f9a2f2] = “三年级的同学们，”院长说，“你们在这里的时光已经过半。明年会对你们提出很多要求；今年就用来弄明白，你们想从中得到什么。”有那么一刻，她直直地看着你。
+# en: "Third years," the headmistress says, "you are past the middle of your time here. Next year will ask a great deal of you; spend this one finding out what you want from it." She looks, for a moment, directly at you.{chosen(break_plan, home):  You came straight from home, and the summer's quiet is still on you.|}
+text [320bae] = “三年级的同学们，”院长说，“你们在这里的时光已经过半。明年会对你们提出很多要求；今年就用来弄明白，你们想从中得到什么。”有那么一刻，她直直地看着你。{chosen(break_plan, home): 你是从家里直接回来的，夏天的那份安静还留在身上。|}
 # en: The headmistress addressing a hall of third-years, every candle in the room leaning toward her.
 scene [3c61bc] = 院长向满堂的三年级生讲话，屋里的每一支蜡烛都向她倾斜。
 # en: Begin the third year

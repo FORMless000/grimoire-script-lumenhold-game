@@ -154,6 +154,26 @@
       '<path d="M17 32c0-13 6-20 15-20s15 7 15 20l-2 10c-1-8-3-14-6-16-4 2-10 2-14 0-3 2-5 8-6 16z" fill="' + hair + '"/>',
     ][style % 5];
     const s = size || 48;
+    // A goblin (feedback 2026-10-15b, `look: … body:1`): green skin, long ears, a big nose, a toothy grin, a waistcoat.
+    if (look.body === 1) {
+      const g = ['#7fa35a', '#6b8f4e', '#93a85c', '#5f8a6a'][(look.skin || 0) % 4], gd = '#4d6b38';
+      return '<svg class="avatar" viewBox="0 0 64 64" width="' + s + '" height="' + s + '" aria-hidden="true">' +
+        '<circle cx="32" cy="32" r="32" fill="' + col + '"/>' +
+        '<path d="M12 64c2-10 9-16 20-16s18 6 20 16z" fill="#4a1f3a"/><path d="M24 50l8 10 8-10" fill="#e9d9a8"/><path d="M32 52v12" stroke="#2a1420" stroke-width="1"/>' +
+        '<circle cx="35" cy="57" r="1.1" fill="#d8b468"/><circle cx="35" cy="61" r="1.1" fill="#d8b468"/>' +
+        '<rect x="28" y="40" width="8" height="9" fill="' + g + '"/>' +
+        '<path d="M21 28L3 17l6 9-4 1 16 11z" fill="' + g + '" stroke="' + gd + '" stroke-width="1"/><path d="M43 28l18-11-6 9 4 1-16 11z" fill="' + g + '" stroke="' + gd + '" stroke-width="1"/>' +
+        '<path d="M8 21l10 8 M56 21l-10 8" stroke="' + gd + '" stroke-width="1" opacity=".7"/>' +
+        '<ellipse cx="32" cy="32" rx="13" ry="12.5" fill="' + g + '"/>' +
+        '<path d="M22 22c3-4 7-5 10-5s7 1 10 5c-3-1-6-2-10-2s-7 1-10 2z" fill="' + gd + '"/>' +
+        '<path d="M23 27l7 1 M41 27l-7 1" stroke="#2a2418" stroke-width="1.6" stroke-linecap="round"/>' +
+        '<ellipse cx="27" cy="31" rx="2.6" ry="2" fill="#f2d65a"/><ellipse cx="37" cy="31" rx="2.6" ry="2" fill="#f2d65a"/>' +
+        '<circle cx="27.4" cy="31" r="1" fill="#1a1420"/><circle cx="37.4" cy="31" r="1" fill="#1a1420"/>' +
+        '<circle cx="37" cy="31" r="4" fill="none" stroke="#d8b468" stroke-width="1"/><path d="M41 32c2 3 2 8 1 12" fill="none" stroke="#d8b468" stroke-width=".7"/>' +
+        '<path d="M31 30c3 2 6 7 4 10-2 1-5 0-6-1z" fill="' + gd + '"/>' +
+        '<path d="M24 39c4 4 12 4 16 0-3 5-13 5-16 0z" fill="#3a1a1a"/><path d="M27 40l1.5 2.5 1.5-2 M36 40l-1.5 2.5-1.5-2" fill="#f5efd8"/>' +
+        '</svg>';
+    }
     return '<svg class="avatar" viewBox="0 0 64 64" width="' + s + '" height="' + s + '" aria-hidden="true">' +
       '<circle cx="32" cy="32" r="32" fill="' + col + '"/>' +
       '<path d="M10 64c2-12 10-18 22-18s20 6 22 18z" fill="#1b1830"/><path d="M26 46l6 8 6-8" fill="none" stroke="#e9d9a8" stroke-width="2"/>' +

@@ -726,12 +726,10 @@ tags: away
 map_id: internship
 desc: A research placement away from the castle, with a stipend and a supervisor.
 tick: gold +6
-# One summer each (M16): a strong one brings an offer to come back; otherwise the post ends.
+# One summer each (M16): the supervisor's report (feedback 2026-10-15b) comes first, and a strong one brings an offer
+# to come back; otherwise the post ends.
 on_expire:
-  if (member(intern_royal_library) and performance(intern_royal_library) >= 80) or (member(intern_conclave) and performance(intern_conclave) >= 80) or (member(intern_alchemists) and performance(intern_alchemists) >= 80) or (member(intern_expedition) and performance(intern_expedition) >= 80) or (member(intern_field_station) and performance(intern_field_station) >= 80) or (member(intern_thornwick) and performance(intern_thornwick) >= 80) or (member(intern_unseen_office) and performance(intern_unseen_office) >= 80):
-    queue intern_asked_back
-  else:
-    leave internship
+  queue intern_assessment
 
 # ---------------- The midnight turn (playtest 2, M41) ----------------
 

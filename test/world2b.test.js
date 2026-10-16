@@ -350,7 +350,7 @@ test('schedules: a chance per entry, decided per day without the RNG; break sche
   assert.ok(eng.isAway('corvin') && !eng.presentAt('courtyard', 'noon').includes('corvin'), 'away for the break');
 });
 
-test('off campus: halved drift, a letter each night; milestones ramp; spark follows friendship (M13, M37, M38)', () => {
+test('off campus: spark fades at half the pace, a letter each night; milestones ramp; spark follows friendship (M13, M37, M38)', () => {
   const eng = new Engine(content);
   quiet(() => { eng.newGame({ seed: 12, name: 'T' }); });
   const ctx = eng.newCtx(null, null);
@@ -360,7 +360,7 @@ test('off campus: halved drift, a letter each night; milestones ramp; spark foll
   assert.ok(ix.letter.length >= 3 && ix.ramp.length >= 10);
   eng.s.npcs.lyra = Object.assign(eng.s.npcs.lyra || {}, { met: true, rel: 40, spark: 20, touched: 0 });
   const sum = []; eng.relationshipDrift(sum);
-  assert.equal(eng.s.npcs.lyra.rel, 39, 'friendship fades by 1 off campus, not 2');
+  assert.equal(eng.s.npcs.lyra.rel, 40, 'friendship never fades (feedback 2026-10-15b)');
   // spark follows a friendship gain, in proportion to the spark already there
   const n = eng.s.npcs.lyra; n.spark = 28; n.bond = 'none';
   const c2 = eng.newCtx(null, null);

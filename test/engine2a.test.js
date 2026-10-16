@@ -288,14 +288,14 @@ text: t
   assert.deepEqual(eng.s.memories[0], { npc: 'lyra', event: 'meet', kind: 'helped', turn: 1 });
 });
 
-test('spark fades and partnerships end; friendships fade after 6 months', () => {
+test('spark fades and partnerships end; friendship never fades', () => {
   const eng = engineWith('@event e\ntitle: E\ntext: t\n> ok: Go\n  mood +tiny\n');
   const n = eng.s.npcs.lyra;
   Object.assign(n, { met: true, rel: 30, spark: 25, bond: 'partner', touched: 1, sparked: 1 });
   for (let i = 0; i < 9; i++) { eng.s.deck = []; eng.s.cur = null; eng.endMonth(); }
   assert.equal(n.bond, 'ex', 'two months below spark 20 ends it');
   assert.ok(n.spark < 10);
-  assert.ok(n.rel < 30, 'no contact for more than 6 months');
+  assert.equal(n.rel, 30, 'no contact for 9 months, and friendship holds (feedback 2026-10-15b)');
 });
 
 test('variant hard: one tier harder, rewards ×1.5', () => {

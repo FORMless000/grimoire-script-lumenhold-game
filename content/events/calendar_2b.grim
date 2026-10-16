@@ -485,6 +485,49 @@ text: The spring post brings answers. {applied(internship): There are sealed let
   mood -tiny
   say: You fold them carefully. Next year, perhaps.
 
+# The end of a placement (feedback 2026-10-15b): the supervisor's report, by performance. A strong one (80+) brings an
+# offer to come back (M16); otherwise the post ends.
+@event intern_assessment
+title: The Supervisor's Report
+trigger: queued
+priority: 90
+class: milestone
+tone: tense
+art: paper
+tags: study job
+scene: A supervisor's desk on the last day of a placement, a written report face down under a pen.
+text: Your last day at {member(intern_royal_library): the Royal Library Archives|{member(intern_conclave): the Conclave Laboratory|{member(intern_alchemists): the Guild of Alchemists' Works|{member(intern_expedition): the Observatory Expedition|{member(intern_field_station): the Beastcraft Field Station|{member(intern_thornwick): the Thornwick Exchange|the office with no name}}}}}}. Your supervisor turns the report over. {performance(internship) >= 80: "Exceptional," it says at the top, underlined, and the rest is better.|{performance(internship) >= 60: "Reliable and capable." A few notes in the margin, all of them fair.|{performance(internship) >= 40: "Adequate." The word sits on the page by itself.|"Did not meet expectations." Your supervisor doesn't quite look at you.}}}
+> left: Ask for a letter of reference
+  if performance(internship) >= 60:
+    renown +small
+    say: The letter comes a week later, sealed, and the registrar files a copy with a look you haven't had from her before.
+  else:
+    mood -small
+    say: The letter comes a month later: two lines, your name spelled wrong in one of them. You put it at the bottom of a drawer.
+  if performance(internship) >= 80:
+    queue intern_asked_back
+  else:
+    leave internship
+> right: Ask what you could have done better
+  mood -tiny
+  if member(intern_royal_library) or member(intern_expedition):
+    lore +small
+  elif member(intern_conclave):
+    arcana +small
+  elif member(intern_alchemists):
+    alchemy +small
+  elif member(intern_field_station):
+    vigor +small
+  elif member(intern_thornwick):
+    charm +small
+  else:
+    guile +small
+  say: Your supervisor talks for twenty minutes without notes. Some of it stings. You write all of it down on the coach home, and read it twice.
+  if performance(internship) >= 80:
+    queue intern_asked_back
+  else:
+    leave internship
+
 # An internship lasts one summer (M16). The host asks you back only after a strong one.
 @event intern_asked_back
 title: Asked Back

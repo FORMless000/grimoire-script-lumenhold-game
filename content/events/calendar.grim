@@ -704,11 +704,32 @@ priority: 55
 art: tower
 tags: story
 scene: The seven towers in autumn colours, the first-year barge arriving below, tiny and nervous.
-text: The barge brings new first-years, and you watch them gawp at the towers. Was that really you a year ago? You know which staircases move now, and which professors you can charm. Second-years, a prefect announces, may apply for summer research posts in Stormbloom.
+text: The barge brings new first-years, and you watch them gawp at the towers. Was that really you a year ago? You know which staircases move now, and which professors you can charm. Second-years, a prefect announces, may apply for summer research posts in Stormbloom.{chosen(break_plan, home):  Your trunk still smells of home, and there's a cake in it you were told to share.|}
 > ok: Begin the second year
   mood +small
   renown +small
   say: You unpack faster than last year, and in the right order. Someone in your year already has a list of the research posts, and the castle's midnight doors, side by side.
+
+@event term_begins
+title: The Spring Term
+class: story
+tone: light
+trigger: auto
+when: term and month == 7
+repeat: 4
+priority: 85
+art: tower
+tags: story
+scene: The castle steps after the winter break, trunks stacked by the doors and the first lamps lit in the towers.
+text: {chosen(break_plan, home): You come back from home with a tin of something your family insists you'll need, and the castle feels enormous after a winter of small rooms.|{chosen(break_plan, work): Your holiday wages are in your purse and your feet still ache from earning them. The castle fills up around you, trunk by trunk.|After a winter of empty corridors, the castle fills up around you again, and the noise of it is almost too much.}} The spring term begins, and the registrar's hall is already queueing.
+> left: Get a head start on the reading
+  lore +small
+  mood -tiny
+  say: You find a window seat in the library before the term has properly started. By the time the others arrive, you have a list of questions and a crick in your neck.
+> right: Catch up with everyone first
+  mood +small
+  gold -tiny
+  say: You spend the first evening in the common room, then at the Newt, hearing everyone's winter. The reading can wait a day. It waits three.
 
 @event year_three
 title: Third Year
@@ -720,7 +741,7 @@ priority: 55
 art: crown
 tags: story
 scene: The headmistress addressing a hall of third-years, every candle in the room leaning toward her.
-text: "Third years," the headmistress says, "you are past the middle of your time here. Next year will ask a great deal of you; spend this one finding out what you want from it." She looks, for a moment, directly at you.
+text: "Third years," the headmistress says, "you are past the middle of your time here. Next year will ask a great deal of you; spend this one finding out what you want from it." She looks, for a moment, directly at you.{chosen(break_plan, home):  You came straight from home, and the summer's quiet is still on you.|}
 > ok: Begin the third year
   mood +tiny
   study +tiny

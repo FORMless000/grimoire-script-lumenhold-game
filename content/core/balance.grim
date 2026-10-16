@@ -48,8 +48,9 @@ drift: none 0 low 0.15 mid 0.3 high 0.5
 course_standard: apprentice+ adept+ master+
 course_step: 5
 course_drift: low
-# Exam preparation (L-3): a course card adds `attend` by itself (options add or cost more); at most `cap` counts.
-study: attend 2 cap 15
+# Exam preparation (L-3): a course card adds `attend` by itself (options add or cost more); each term month's
+# coursework adds `monthly` (feedback 2026-10-15b: it replaced the silent per-card 2, so preparation shows); at most `cap` counts.
+study: attend 0 cap 15 monthly 2
 # A course exam's difficulty at course level I, II and III: the course standard ± rungs, with low drift (checks.md).
 # Level III sits two rungs up, because only the stronger players reach it (skill-check survey, 2026-10-15).
 exam_tiers: standard+1 standard+1 standard+1

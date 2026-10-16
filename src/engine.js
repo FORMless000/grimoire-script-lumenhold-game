@@ -339,7 +339,7 @@
     oddsRange(milestone) { const o = Object.assign({ min: 5, max: 95 }, (this.c.balance && this.c.balance.odds) || {}); return [o.min, milestone ? 100 : o.max]; }
     // Exam preparation (L-3, `@balance study: attend 1 cap 15`): what a course card adds by itself, and the most it counts.
     examRule() { return Object.assign({ a: 15, b: 5, pass: -5, ambitious: 8, ambitious_sigma: 20 }, (this.c.balance && this.c.balance.exam_bands) || {}); }
-    studyRule() { return Object.assign({ attend: 3, cap: 15 }, (this.c.balance && this.c.balance.study) || {}); }
+    studyRule() { return Object.assign({ attend: 3, cap: 15, monthly: 0 }, (this.c.balance && this.c.balance.study) || {}); }
     // A known spell's bonus on checks that test its discipline's skill (design §9.2; L-3, `@balance spell_check: per 2 cap 6`).
     spellCheck() { return Object.assign({ per: 3, cap: 15 }, (this.c.balance && this.c.balance.spell_check) || {}); }
     // An exam's bar before study and the advisor: a legacy tier is the expected skill + its offset; a ladder tier
@@ -381,6 +381,9 @@
       // level train equally.
       const xp = this.tierAmount('xp', tiers[Math.min(tiers.length, Math.max(1, t.level || 1)) - 1]);
       this.run([{ t: 'delta', name: sk, min: xp, max: xp }], ctx);
+      // And exam preparation (feedback 2026-10-15b): `@balance study: monthly N`, shown like any study.
+      const prep = this.studyRule().monthly || 0;
+      if (prep) this.run([{ t: 'study', track: id, min: prep, max: prep }], ctx);
       return true;
     }
     // One shift's pay (M10): the job's `pay:` at your rank × the wage word's share (`@balance wage:`), less while
@@ -1340,16 +1343,15 @@
       return { kind: 'month', turn: s.turn, month: this.monthName(), monthIndex: this.monthIndex(), year: this.yearOf(), maxTurns: this.maxTurns, summary: shown, deckSize: s.deck.length, ended: !!s.ended };
     }
 
-    // Design §8.2: friendship fades after 6 months without contact (−2 a month toward 0); spark fades
-    // 15% a month without a romantic moment; a partnership ends after 2 months below spark 20.
+    // Design §8.2: spark fades 15% a month without a romantic moment; a partnership ends after 2 months below spark
+    // 20. Friendship doesn't fade (feedback 2026-10-15b; it used to after 6 months without contact).
     relationshipDrift(summary) {
       const s = this.s;
       for (const [id, n] of Object.entries(s.npcs)) {
         if (!n.met) continue;
         const notes = [], deltas = {};
-        // Off campus, both fade at half the pace (M29, M38).
-        const off = this.offCampus(), step = off ? 1 : 2, keep = off ? 0.925 : 0.85;
-        if (s.turn - (n.touched || 0) > 6 && n.rel !== 0) { const d = n.rel > 0 ? -Math.min(step, n.rel) : Math.min(step, -n.rel); n.rel += d; deltas['rel:' + id] = d; }
+        // Off campus, spark fades at half the pace (M29, M38).
+        const keep = this.offCampus() ? 0.925 : 0.85;
         if (n.spark > 0 && n.sparked !== s.turn - 1) { const nv = Math.floor(n.spark * keep); if (nv !== n.spark) { deltas['spark:' + id] = nv - n.spark; n.spark = nv; } }
         if (n.bond === 'partner') {
           n.lowSpark = n.spark < 20 ? (n.lowSpark || 0) + 1 : 0;
@@ -1627,7 +1629,7 @@
       // Track cards (design §6.2, §7.3): a course card is study for the exam; outcomes move performance.
       if (item.track && s.tracks && s.tracks[item.track]) {
         const t = s.tracks[item.track];
-        if (t.status === 'enrolled') { const sr = this.studyRule(); t.study = Math.min(sr.cap, (t.study || 0) + sr.attend); }
+        if (t.status === 'enrolled' && this.studyRule().attend) { const sr = this.studyRule(); t.study = Math.min(sr.cap, (t.study || 0) + sr.attend); }
         if (t.status === 'member') for (const c of ctx.checks) { const good = c.challenge ? c.result === 'win' : c.ok; const bad = c.challenge ? c.result === 'lose' : !c.ok; if (good) t.perf = Math.min(100, t.perf + 5); if (bad) t.perf = Math.max(0, t.perf - 5); }
       }
       this._cast = null; this._ctxTrack = null; this._ctxPlace = null;

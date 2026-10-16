@@ -122,6 +122,7 @@
     ui.notice = t('title.oldSave');
   }
   function titleScreen() {
+    if (window.Sky) window.Sky.set('night', null);
     ui.mode = 'title';
     closeOverlay(); closeFeedback(); removeFeedbackBar();
     let saved = store.get(SAVE_KEY);
@@ -204,8 +205,7 @@
       '<div class="top-actions">' +
       '<button class="icon-btn side-toggle" id="sideToggle" title="' + esc(t('top.people')) + '">' + Art.icon('group', 20) + '</button>' +
       (languages.length > 1 ? '<button class="icon-btn" id="langToggle" title="' + esc(t('top.lang') + ' → ' + nextLang.name) + '">' + Art.icon('globe', 18) + '</button>' : '') +
-      '<button class="icon-btn" id="notesToggle" title="' + esc(t('top.notes')) + '">' + Art.icon('feather', 18) + '</button>' +
-      '<button class="icon-btn" id="amountsToggle" title="' + esc(t('top.amounts', { mode: t('amounts.' + (settings.amounts || 'marks')) })) + '">' + Art.icon('scales', 18) + '</button>' +
+      '<button class="icon-btn" id="settingsBtn" title="' + esc(t('settings.heading')) + '">' + Art.icon('gear', 18) + '</button>' +
       '<button class="icon-btn" id="slotsTop" title="' + esc(t('slots.heading')) + '">' + Art.icon('scroll', 18) + '</button>' +
       '<button class="icon-btn" id="quit" title="' + esc(t('top.quit')) + '">' + Art.icon('door', 18) + '</button></div></header>' +
       '<div class="meters" id="meters"></div>' +
@@ -219,13 +219,7 @@
     document.getElementById('slotsTop').onclick = () => openSlots();
     const lt = document.getElementById('langToggle');
     if (lt) lt.onclick = () => switchLang(nextLang.code, true);
-    document.getElementById('notesToggle').onclick = () => { settings.notes = !settings.notes; saveSettings(); document.querySelectorAll('.scene-note').forEach((n) => { n.style.display = settings.notes ? '' : 'none'; }); };
-    document.getElementById('amountsToggle').onclick = (e) => {
-      settings.amounts = AMOUNT_MODES[(AMOUNT_MODES.indexOf(settings.amounts || 'marks') + 1) % AMOUNT_MODES.length]; saveSettings();
-      e.currentTarget.title = t('top.amounts', { mode: t('amounts.' + settings.amounts) });
-      toast(t('top.amounts', { mode: t('amounts.' + settings.amounts) }));
-      if (ui.mode === 'card' && ui.view) showCard(ui.view); else if (ui.mode === 'menu' && ui.view) showMenu(ui.view, true);
-    };
+    document.getElementById('settingsBtn').onclick = () => openSettings();
     document.getElementById('sideToggle').onclick = () => { ui.sideOpen = !ui.sideOpen; document.getElementById('side').classList.toggle('open', ui.sideOpen); };
     document.getElementById('tabs').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; ui.tab = b.dataset.tab; renderSide(); };
     const meters = document.getElementById('meters');
@@ -394,7 +388,11 @@
   }
   // Time of day (M7): the page takes a faint tint of the slot being played.
   // A card or screen without a slot keeps the colour of the last one.
-  function setSlotTint(slot) { if (slot) document.body.dataset.slot = slot; }
+  // Time of day and season behind the game (src/sky.js); a view with no single slot keeps the last one.
+  function setSlotTint(slot) {
+    if (slot) document.body.dataset.slot = slot;
+    if (window.Sky) window.Sky.set(slot, eng && eng.s ? eng.seasonOf() : null);
+  }
   function floatDeltas(deltas) {
     for (const [k, v] of Object.entries(deltas || {})) {
       const el = document.getElementById('m-' + k);
@@ -528,19 +526,24 @@
   }
   // Values are stored with fractions (the coursework curve); show whole numbers, and one decimal only below 1.
   function shownAmount(x) { const r = Math.round(x); return r === 0 && x > 0 ? String(Math.round(x * 10) / 10) : String(r); }
-  // How amounts show (feedback 2026-10-15; a setting): 'marks', one to five pips by size tier; 'numbers'; or 'icons', the
-  // icon alone. Colour gives the direction, so there is no sign. Crowns and Mana are always exact.
+  // How amounts show in a preview (feedback 2026-10-15, 2026-10-15b; a setting): 'marks', + ++ +++ (− −− −−−) by size
+  // (tiny and small, medium, large and huge); 'numbers'; or 'icons', the icon alone. Crowns and Mana are always exact,
+  // and an outcome (`full`) always shows the numbers.
   const AMOUNT_MODES = ['marks', 'numbers', 'icons'];
   const TIER_WORDS = ['tiny', 'small', 'medium', 'large', 'huge'];
   const exactAmount = (k) => k === 'mana' || k === 'gold';
-  function amountShown(k, lo, hi) {
+  const signed = (x) => (x > 0 ? '+' : x < 0 ? '−' : '') + shownAmount(Math.abs(x));
+  function amountShown(k, lo, hi, full) {
     if (hi == null) hi = lo;
     const big = Math.abs(hi) >= Math.abs(lo) ? hi : lo;
-    const mode = exactAmount(k) ? 'numbers' : settings.amounts || 'marks';
+    const mode = full || exactAmount(k) ? 'numbers' : settings.amounts || 'marks';
     if (mode === 'icons') return { text: '', title: '' };
-    if (mode === 'marks') { const n = eng.sizeOf(k, big); return { text: '•'.repeat(n + 1), title: t('size.' + TIER_WORDS[n]) }; }
-    const a = Math.abs(Math.round(lo)), b = Math.abs(Math.round(hi));
-    return { text: lo === hi ? shownAmount(Math.abs(lo)) : Math.min(a, b) + '~' + Math.max(a, b), title: '' };
+    if (mode === 'marks') {
+      const n = eng.sizeOf(k, big), marks = n <= 1 ? 1 : n === 2 ? 2 : 3;
+      return { text: (lo < 0 && hi > 0 ? '±' : big < 0 ? '−' : '+').repeat(marks), title: t('size.' + TIER_WORDS[n]) };
+    }
+    const a = Math.round(lo), b = Math.round(hi);
+    return { text: lo === hi ? signed(lo) : signed(Math.min(a, b)) + '~' + signed(Math.max(a, b)), title: '' };
   }
   const deltaClass = (lo, hi) => (hi == null ? (lo > 0 ? 'pos' : lo < 0 ? 'neg' : '') : hi > 0 && lo >= 0 ? 'pos' : lo < 0 && hi <= 0 ? 'neg' : hi > 0 ? 'pos' : '');
   function skillName(id) { return (content.skills[id] && content.skills[id].name) || id; }
@@ -549,12 +552,17 @@
   function previewHtml(v, o) {
     let pv;
     try { pv = eng.preview(v.id, o.key, v.actor ? v.actor.id : null); } catch (e) { return ''; }
-    const amt = (k, r) => {
+    const amt = (k, r, name) => {
       const d = deltaLook(k); if (!d) return '';
       const a = amountShown(k, r[0], r[1]);
-      return '<i class="' + deltaClass(r[0], r[1]) + '" title="' + esc(d.name + (a.title ? ' · ' + a.title : '')) + '">' + Art.icon(d.icon, 12) + esc(a.text) + '</i>';
+      return '<i class="' + deltaClass(r[0], r[1]) + '" title="' + esc((name || d.name) + (a.title ? ' · ' + a.title : '')) + '">' + Art.icon(d.icon, 12) + esc(a.text) + '</i>';
     };
-    const line = (d) => Object.entries(d).filter(([, r]) => r[0] || r[1]).map(([k, r]) => amt(k, r)).join('');
+    // Exam preparation for several courses at once (`study` with no track) shows once (feedback 2026-10-15b).
+    const line = (d) => {
+      const keys = Object.keys(d).filter((k) => d[k][0] || d[k][1]), studies = keys.filter((k) => k.startsWith('study:'));
+      return keys.filter((k) => !k.startsWith('study:') || k === studies[0])
+        .map((k) => amt(k, d[k], studies.length > 1 && k === studies[0] ? t('chip.studyAll', { n: studies.length }) : null)).join('');
+    };
     const label = (pth) => {
       const d = pth.labels[0]; if (!d) return '';
       if (d.kind === 'check') return (d.choice === 0 ? '✓ ' : '✗ ');
@@ -663,7 +671,8 @@
     if (content.skills[k]) return { icon: content.skills[k].icon, name: content.skills[k].name };
     const [kind, id] = k.split(':');
     if ((kind === 'rel' || kind === 'spark') && content.npcs[id]) return { icon: kind === 'spark' ? 'rose' : 'group', name: shortName(id), npc: true, kind };
-    if (/^(perf|progress|study)$/.test(kind) && content.tracks && content.tracks[id]) return { icon: kind === 'study' ? 'book' : 'star', name: t('chip.' + kind, { track: content.tracks[id].name, delta: '' }).trim(), kind };
+    // Icons apart from Lore's book and Renown's star (feedback 2026-10-15b).
+    if (/^(perf|progress|study)$/.test(kind) && content.tracks && content.tracks[id]) return { icon: { study: 'paper', perf: 'trophy', progress: 'scroll' }[kind], name: t('chip.' + kind, { track: content.tracks[id].name, delta: '' }).trim(), kind };
     return null;
   }
   function chipsFor(out) {
@@ -676,12 +685,12 @@
     for (const [k, v] of Object.entries(out.capped || {})) {
       if ((out.deltas || {})[k]) continue;
       const [kind, id] = k.split(':'); if (!content.npcs[id]) continue;
-      h += '<span class="chip pos capped">' + Art.icon(kind === 'spark' ? 'rose' : 'group', 14) + esc(t(kind === 'spark' ? 'chip.love' : 'chip.rel', { name: shortName(id), delta: amountShown(k, v).text }).trim() + ' · ' + t('chip.max')) + '</span>';
+      h += '<span class="chip pos capped">' + Art.icon(kind === 'spark' ? 'rose' : 'group', 14) + esc(t(kind === 'spark' ? 'chip.love' : 'chip.rel', { name: shortName(id), delta: amountShown(k, v, null, true).text }).trim() + ' · ' + t('chip.max')) + '</span>';
     }
     for (const [k, v] of Object.entries(out.deltas || {})) {
       if (!v) continue;
       const d = deltaLook(k); if (!d) continue;
-      const a = amountShown(k, v), cls = v > 0 ? 'pos' : 'neg';
+      const a = amountShown(k, v, null, true), cls = v > 0 ? 'pos' : 'neg';
       // Track numbers (design §6.2, §7.3) and relationships read as a phrase; the rest as a name and an amount.
       const label = d.kind === 'spark' || d.kind === 'rel' ? t(d.kind === 'spark' ? 'chip.love' : 'chip.rel', { name: d.name, delta: a.text })
         : d.kind ? t('chip.' + d.kind, { track: content.tracks[k.split(':')[1]].name, delta: a.text }) : d.name + (a.text ? ' ' + a.text : '');
@@ -1123,6 +1132,26 @@
     };
     render();
   }
+  // Settings (feedback 2026-10-15b): how amounts show in previews, and the illustrative text under each card.
+  function openSettings() {
+    closeSettings();
+    const wrap = document.createElement('div'); wrap.className = 'fb-wrap'; wrap.id = 'settingsDialog';
+    const seg = (name, opts, cur) => '<div class="seg" role="radiogroup">' + opts.map(([v, label]) => '<button class="seg-b' + (v === cur ? ' on' : '') + '" role="radio" aria-checked="' + (v === cur) + '" data-' + name + '="' + v + '">' + esc(label) + '</button>').join('') + '</div>';
+    const render = () => {
+      wrap.innerHTML = '<div class="fb-dialog settings" role="dialog" aria-modal="true" aria-labelledby="setH"><h3 id="setH">' + esc(t('settings.heading')) + '</h3>' +
+        '<div class="set-row"><b>' + esc(t('settings.amounts')) + '</b><p class="fb-intro">' + esc(t('settings.amountsHint')) + '</p>' + seg('amounts', AMOUNT_MODES.map((m) => [m, t('amounts.' + m)]), settings.amounts || 'marks') + '</div>' +
+        '<div class="set-row"><b>' + esc(t('settings.notes')) + '</b><p class="fb-intro">' + esc(t('settings.notesHint')) + '</p>' + seg('notes', [['on', t('settings.on')], ['off', t('settings.off')]], settings.notes ? 'on' : 'off') + '</div>' +
+        '<div class="fb-actions"><button class="btn" id="settingsClose">' + esc(t('slots.close')) + '</button></div></div>';
+      wrap.querySelectorAll('[data-amounts]').forEach((b) => { b.onclick = () => { settings.amounts = b.dataset.amounts; saveSettings(); render(); refreshCard(); }; });
+      wrap.querySelectorAll('[data-notes]').forEach((b) => { b.onclick = () => { settings.notes = b.dataset.notes === 'on'; saveSettings(); render(); document.querySelectorAll('.scene-note').forEach((n) => { n.style.display = settings.notes ? '' : 'none'; }); }; });
+      document.getElementById('settingsClose').onclick = closeSettings;
+    };
+    document.body.appendChild(wrap);
+    wrap.onclick = (e) => { if (e.target === wrap) closeSettings(); };
+    render();
+  }
+  function closeSettings() { const w = document.getElementById('settingsDialog'); if (w) w.remove(); }
+  function refreshCard() { if (ui.mode === 'card' && ui.view) showCard(ui.view); else if (ui.mode === 'menu' && ui.view) showMenu(ui.view, true); }
   function closeSlots() { const w = document.getElementById('slotDialog'); if (w) w.remove(); }
 
   /* ------------------------------------------------------------------ debug panel (developer-facing, English only) */
