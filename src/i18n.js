@@ -223,6 +223,7 @@
     'map.festivalLater': '{name} is closed while it gets ready for the festival this {slot}.',
     'map.sessionsLeft': 'Session · {n} left',
     'menu.confirm': 'Confirm ({n}/{max})',
+    'due.next': '{delta} next month', 'due.heading': 'Next month:', 'due.other': 'Other',
     'menu.tagline': 'A choice', 'menu.lead': 'Make your choice', 'menu.leadMany': 'Choose up to {n}',
     'menu.prompt': 'Choose one.', 'menu.promptMany': 'Choose up to {n}, then confirm.',
     'top.amounts': 'Amounts: {mode}', 'amounts.marks': 'size marks', 'amounts.numbers': 'numbers', 'amounts.icons': 'icons only',

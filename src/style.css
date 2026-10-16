@@ -103,7 +103,10 @@ details.adv input { margin-top: 8px; }
 .meter.number .num { height: 46px; display: flex; align-items: center; gap: 4px; color: var(--c); font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .meter.number .num .val { font-size: inherit; font-weight: inherit; color: var(--text); }
 .meter.number.low .num .val { color: var(--bad); }
-.meter.number .lbl { margin-top: 19px; }   /* level with the orbs' labels, which sit under a value line */
+.meter.number .due { height: 19px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }   /* level with the orbs' value line */
+.meter.number .due.neg { color: var(--bad); } .meter.number .due.pos { color: var(--good); }
+.meter-group { display: flex; gap: inherit; }
+.meter-group.numbers { padding-left: clamp(6px, 2vw, 22px); border-left: 1px solid var(--line); }
 .meter .dot { position: absolute; top: -9px; width: 8px; height: 8px; border-radius: 50%; background: var(--gold-2); box-shadow: 0 0 8px var(--gold); opacity: 0; transform: scale(.4); transition: opacity .15s, transform .15s; }
 .meter.preview .dot { opacity: 1; transform: scale(1); }
 .float-chip { position: absolute; top: 4px; left: 50%; transform: translateX(-50%); font-weight: 700; font-size: 13px; pointer-events: none; animation: floatUp 1.6s ease-out forwards; text-shadow: 0 1px 3px #000; white-space: nowrap; }

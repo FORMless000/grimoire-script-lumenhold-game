@@ -229,12 +229,13 @@
     document.getElementById('sideToggle').onclick = () => { ui.sideOpen = !ui.sideOpen; document.getElementById('side').classList.toggle('open', ui.sideOpen); };
     document.getElementById('tabs').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; ui.tab = b.dataset.tab; renderSide(); };
     const meters = document.getElementById('meters');
-    // `display: number` (step 5: Crowns) sits in the middle of the row as a plain number, not an orb to fill.
+    // The meters together, then the `display: number` resources (Crowns, Renown) as plain numbers, each with what next
+    // month's start will take or give under it (feedback 2026-10-15).
     const orbIds = content.order.resources.filter((id) => !content.resources[id].display);
-    const numIds = content.order.resources.filter((id) => content.resources[id].display === 'number');
-    const numberMeter = (id) => { const r = content.resources[id]; return '<div class="meter number" id="m-' + id + '" style="--c:' + esc(r.color || '#888') + '" title="' + esc(r.name + ' — ' + (r.desc || '')) + '"><span class="dot"></span><div class="num">' + Art.icon(r.icon || 'coin', 16) + '<span class="val"></span></div><div class="lbl">' + esc(r.name || id) + '</div></div>'; };
-    const mid = Math.ceil(orbIds.length / 2);
-    meters.innerHTML = orbIds.slice(0, mid).map(orbMeter).join('') + numIds.map(numberMeter).join('') + orbIds.slice(mid).map(orbMeter).join('');
+    const numIds = content.order.resources.filter((id) => content.resources[id].display === 'number').sort((a, b) => (b === 'gold') - (a === 'gold'));
+    const numberMeter = (id) => { const r = content.resources[id]; return '<div class="meter number" id="m-' + id + '" style="--c:' + esc(r.color || '#888') + '" title="' + esc(r.name + ' — ' + (r.desc || '')) + '"><span class="dot"></span><div class="num">' + Art.icon(r.icon || 'coin', 16) + '<span class="val"></span></div><div class="due"></div><div class="lbl">' + esc(r.name || id) + '</div></div>'; };
+    meters.innerHTML = '<div class="meter-group">' + orbIds.map(orbMeter).join('') + '</div><div class="meter-group numbers">' + numIds.map(numberMeter).join('') + '</div>';
+    ui.dueKey = null;
     function orbMeter(id) {
       const r = content.resources[id];
       return '<div class="meter" id="m-' + id + '" style="--c:' + esc(r.color || '#888') + '" title="' + esc(r.name + ' — ' + (r.desc || '')) + '">' +
@@ -267,10 +268,27 @@
       el.querySelector('.val').textContent = Math.round(r.value);
       el.classList.toggle('low', r.warn_below != null && r.value <= r.warn_below);
     }
+    renderDue();
     // No count of the day's cards (M3): the day isn't planned ahead any more.
     renderSide(snap);
   }
 
+  // Under each plain number: next month's charges and changes (rent, tuition, fading renown), from engine.upcoming().
+  // Hovering lists them by label. Recomputed only when the state has moved on.
+  function renderDue() {
+    const key = eng.s.turn + ':' + (eng.s.hist || []).length;
+    if (ui.dueKey === key) return; ui.dueKey = key;
+    const items = eng.upcoming();
+    for (const el of document.querySelectorAll('.meter.number')) {
+      const id = el.id.slice(2), r = content.resources[id];
+      const rows = items.filter((x) => x.deltas[id]).map((x) => ({ label: x.label || t('due.other'), v: Math.round(x.deltas[id]) })).filter((x) => x.v);
+      const total = rows.reduce((a, x) => a + x.v, 0);
+      const due = el.querySelector('.due');
+      due.textContent = total ? t('due.next', { delta: (total > 0 ? '+' : '−') + Math.abs(total) }) : '';
+      due.className = 'due ' + (total > 0 ? 'pos' : total < 0 ? 'neg' : '');
+      el.title = r.name + ' — ' + (r.desc || '') + (rows.length ? '\n\n' + t('due.heading') + '\n' + rows.map((x) => '  ' + x.label + ' ' + (x.v > 0 ? '+' : '−') + Math.abs(x.v)).join('\n') : '');
+    }
+  }
   const bondLabel = (b) => t('bond.' + b);
   const shortName = (npcOrId) => { const d = typeof npcOrId === 'string' ? content.npcs[npcOrId] : npcOrId; return d ? Engine.shortName(d) : String(npcOrId); };
 
@@ -512,7 +530,7 @@
   // icon alone. Colour gives the direction, so there is no sign. Crowns and Mana are always exact.
   const AMOUNT_MODES = ['marks', 'numbers', 'icons'];
   const TIER_WORDS = ['tiny', 'small', 'medium', 'large', 'huge'];
-  const exactAmount = (k) => k === 'mana' || !!(content.resources[k] && content.resources[k].display === 'number');
+  const exactAmount = (k) => k === 'mana' || k === 'gold';
   function amountShown(k, lo, hi) {
     if (hi == null) hi = lo;
     const big = Math.abs(hi) >= Math.abs(lo) ? hi : lo;

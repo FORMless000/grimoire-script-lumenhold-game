@@ -46,7 +46,8 @@ intro: The sky-barge lurches. Below, the lake glitters; above, the seven towers 
 
 # ---------------- Resources ----------------
 # The top bars (design §8.1) are Health · Mood · Mana · Renown · Alignment, in this order;
-# `display: panel` resources are shown in the You panel instead; `display: number` (Crowns) sits in the top row as a plain number.
+# `display: panel` resources are shown in the You panel instead; `display: number` (Crowns, Renown) sits in the top row
+# as a plain number, after the meters, with what next month's start will take or give under it.
 
 @resource health
 name: Health
@@ -89,6 +90,8 @@ min: 0
 max: 100
 start: 5
 color: #b58ae0
+# A plain number beside Crowns (feedback 2026-10-15), with next month's fading shown under it.
+display: number
 desc: How much the academy talks about you — for better or worse. Fades a little every month.
 
 @resource alignment

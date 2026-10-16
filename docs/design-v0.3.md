@@ -711,7 +711,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 
 | Top bar (fast, always previewed) | You panel (slow) |
 |---|---|
-| Health · Mood · **Mana** · Renown · **Alignment**, with Crowns as a plain number in the middle (playtest 2, step 5) | 6 skills · GPA · course levels and each enrolled course's standing (exam preparation, months to the exam, today's pass chance) · club/job rank and performance · thesis progress · spells · conditions · discovered facts |
+| Health · Mood · **Mana** · **Alignment** as meters, then Crowns and Renown as plain numbers, each with what next month's start will take or give under it, itemised on hover (feedback 2026-10-15) | 6 skills · GPA · course levels and each enrolled course's standing (exam preparation, months to the exam, today's pass chance) · club/job rank and performance · thesis progress · spells · conditions · discovered facts |
 
 ### 8.2 Resources *(all numbers tunable)*
 
