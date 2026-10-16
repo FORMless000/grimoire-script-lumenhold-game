@@ -27,10 +27,10 @@ text: {Illusion I opens with a row of cold candles. Make them burn, Professor Ve
     win:
       charm +small
       mood +tiny
-      say: {You add a thread of smoke and a little gutter. The student behind you reaches to pinch it out.|Your candle drips wax that isn't there onto a desk that is. Vey watches it fall and says nothing, which means yes.}
+      say: {You add a thread of smoke and a little gutter. The student behind you reaches to pinch it out.|Your candle drips wax that isn't there onto a desk that is. Vey watches it fall and says nothing, which means yes.|Your candle gutters and smokes so well that the student beside you lends it their flame. Vey writes "two for one".}
     lose:
       mood -small
-      say: {The smoke goes up and the flame goes out, as though embarrassed by its own ambition.|Vey waves a hand through the whole performance. "A candle doesn't try this hard," she says.}
+      say: {The smoke goes up and the flame goes out, as though embarrassed by its own ambition.|Vey waves a hand through the whole performance. "A candle doesn't try this hard," she says.|You add so much smoke the drill becomes a fog. Vey opens a window that isn't there, and the fog obligingly leaves.}
 
 @event illu_one_small_change
 title: One Small Change
@@ -75,10 +75,10 @@ text: {Partner work. {partner} lays out three crowns, and one of them is an illu
     win:
       charm +small
       rel partner +tiny
-      say: {{partner} glances at the left coin a fraction too fondly. You point. {They} groan{s}.|You keep smiling until {partner} gives it away by smiling back. Vey notes that this isn't the exercise, and that it worked.}
+      say: {{partner} glances at the left coin a fraction too fondly. You point. {They} groan{s}.|You keep smiling until {partner} gives it away by smiling back. Vey notes that this isn't the exercise, and that it worked.|You know {partner}'s face by now. {They} know{s} you know, and pick{s} a coin with a straight face to beat you. It doesn't work.}
     lose:
       mood -small
-      say: {{partner} has a better face than you'd thought. Your wrong guess buys {them} a cup of tea.|You watch {partner} so hard you miss the coin blinking out of existence entirely.}
+      say: {{partner} has a better face than you'd thought. Your wrong guess buys {them} a cup of tea.|You watch {partner} so hard you miss the coin blinking out of existence entirely.|{partner} has been practising a blank face in the mirror. It shows. You lose a point and buy the tea.}
 
 @event illu_bread_smell
 title: The Smell of Bread
@@ -100,11 +100,11 @@ text: {Illusion II adds the other senses. Today, a loaf that looks, smells and s
     win:
       charm +small
       renown +tiny
-      say: {Vey picks your loaf up and puts it down hastily, as if it had burnt her. The class actually applauds.|The bench beside you swears the room got warmer. It didn't. That's the point.}
+      say: {Vey picks your loaf up and puts it down hastily, as if it had burnt her. The class actually applauds.|The bench beside you swears the room got warmer. It didn't. That's the point.|You add the warmth of the oven and the smell of the morning after. Vey takes your loaf home, she claims, by mistake.}
     lose:
       mana -small
       mood -tiny
-      say: {The warmth arrives and the loaf leaves. You're left holding a hot, empty board.|Your bread steams, then smokes, then smells of a cupboard. Vey writes something short.}
+      say: {The warmth arrives and the loaf leaves. You're left holding a hot, empty board.|Your bread steams, then smokes, then smells of a cupboard. Vey writes something short.|You add warmth, and the smell goes with it. The loaf is perfect and hot and smells of absolutely nothing.}
 
 @event illu_find_vey
 title: Find the Professor
@@ -121,16 +121,16 @@ text: {Professor Vey is rarely at the lectern in Illusion II. She is somewhere i
 > left: Watch everyone, all lesson
   study illusion +small
   mood -small
-  say: {You don't find her, but you notice who blinks late. Vey turns out to have been the pigeon.|You learn three classmates' nervous habits and nothing about Vey, who was the chair.|At the end she steps out of the porter's coat. You'd suspected the mop. The mop was real.}
+  say: {You don't find her, but you notice who blinks late. Vey turns out to have been the pigeon.|At the end she steps out of the porter's coat. You'd suspected the mop. The mop was real.|You learn three classmates' nervous habits and nothing about Vey, who was the attentive portrait all along.}
 > right: Name her early
   challenge deceive using charm standard+2:
     win:
       charm +small
       mood +tiny
-      say: {"Professor," you say to the new student in the back row. The glamour falls away like a dropped shawl. Vey looks almost pleased.|You name her before the bell has finished ringing. She says, "Hm," which from Vey means a great deal.}
+      say: {You name her before the bell has finished ringing. She says, "Hm," which from Vey means a great deal.|"Professor," you say to the new student in the back row. The glamour falls away like a dropped shawl. Vey looks almost pleased.|You name the attentive portrait. The paint slides off Vey's face like a curtain. "Hm," she says.}
     lose:
       mood -small
-      say: {You accuse a perfectly ordinary classmate. He will remember it. So will Vey, who was standing behind you.|You point at the portrait. The portrait points back. Vey, at the lectern after all, makes a note.}
+      say: {You accuse a perfectly ordinary classmate. He will remember it. So will Vey, who was standing behind you.|You accuse the quiet student in the back row, who turns out to be a quiet student in the back row. Vey was the mop.|You point at the portrait. The portrait points back. Vey, at the lectern after all, makes a note.}
 
 @event illu_courtyard_hour
 title: Holding the Courtyard
@@ -150,7 +150,7 @@ text: {Advanced Illusion leaves the classroom. Hold an illusion over the busy co
   say: {By the end your head rings like a struck bell. Nobody looked up once, which is how you know it worked.|A first-year holds out a hand to catch something you made. You keep it falling for her until the bell.|You hold it, then sit on the fountain's edge for longer than you'd like anyone to see.}
 > right: Keep it small and steady
   study illusion +small
-  say: {You keep only a corner of it, perfect, for an hour. Vey says ambition is cheap and an hour is not.|You shrink it to a patch of weather over one bench. It never frays, and nobody notices, which is the point and the pity.}
+  say: {You keep only a corner of it, perfect, for an hour. Vey says ambition is cheap and an hour is not.|You shrink it to a patch of weather over one bench. It never frays, and nobody notices, which is the point and the pity.|You keep it small: a few flakes over one bench, falling for the hour. A first-year sits under it and doesn't know why she's happy.}
 
 @event illu_original_work
 title: An Illusion of Your Own
@@ -167,17 +167,17 @@ text: {Original work, an illusion nobody taught you. Vey asks one question of ea
 > left: Make something true
   study illusion +small
   mood -small
-  say: {You make the window of a house you grew up near, at dusk. Vey stands in front of it a long time and writes nothing down.|You make a corridor that remembers who walked down it. It's sadder than you meant. Vey says that's usually the good sign.}
+  say: {You make the window of a house you grew up near, at dusk. Vey stands in front of it a long time and writes nothing down.|You make a corridor that remembers who walked down it. It's sadder than you meant. Vey says that's usually the good sign.|You make the hum of a kitchen at night, kettle cooling. Vey sits down in front of it, which she never does.}
 > right: Make something dazzling
   challenge enchant using charm standard+1 steady:
     win:
       charm +small
       renown +small
-      say: {A staircase of light climbs into the ceiling and keeps going. The class goes quiet. "Yes," says Vey. "But what does it feel like?"|Your piece fills the room with lanterns, one for each person watching. Vey counts them, and finds one for herself.}
+      say: {A staircase of light climbs into the ceiling and keeps going. The class goes quiet. "Yes," says Vey. "But what does it feel like?"|Your piece fills the room with lanterns, one for each person watching. Vey counts them, and finds one for herself.|Your piece hums and blazes and then, at the end, goes very quiet and small. Vey writes "that last part" in her notes.}
     lose:
       mana -small
       mood -small
-      say: {It's dazzling for a breath and then empty, like a fair after the fair has gone.|Vey watches it all, politely. "Very bright," she says. You'd have preferred anything else.}
+      say: {It's dazzling for a breath and then empty, like a fair after the fair has gone.|Vey watches it all, politely. "Very bright," she says. You'd have preferred anything else.|It hums, and blazes, and Vey waits politely for it to stop. "And when it's over?" she asks. You don't have an answer.}
 
 # ---------------- Beastcraft & Flight (track: beastcraft) ----------------
 
@@ -202,10 +202,10 @@ text: {Beastcraft I begins in the stables, with a pitchfork. Professor Brask say
     win:
       study beastcraft +small
       mood +tiny
-      say: {You bow low and hold it. The hippogriff considers, then bows back. Brask writes your name on the board, without comment.|The hippogriff lets you near enough to see where its feathers turn to fur. You'll remember the exact line.}
+      say: {You bow low and hold it. The hippogriff considers, then bows back. Brask writes your name on the board, without comment.|The hippogriff lets you near enough to see where its feathers turn to fur. You'll remember the exact line.|You bow to the hippogriff in the end stall, as you always do now. It bows back before you've finished.}
     lose:
       health -small
-      say: {You bow too fast. The hippogriff takes it as a challenge and accepts.|The hippogriff looks at your bow, then at your hat, and shoves you into the barrow to get at it. It eats the hat.}
+      say: {You bow too fast. The hippogriff takes it as a challenge and accepts.|The hippogriff looks at your bow, then at your hat, and shoves you into the barrow to get at it. It eats the hat.|You bow and the hippogriff ignores you entirely, which is worse than the hat. You muck out under its scorn.}
 
 @event beast_hover_line
 title: The Hover Line
@@ -226,7 +226,7 @@ text: {Flight is half the course. Brask lines you up on the lawn to hover a foot
 > right: Study how the others fall off
   study beastcraft +small
   mood -tiny
-  say: {You stand at the end and watch. You learn a great deal about balance, and nobody lets you forget you didn't fly.|You take notes on every wobble. Brask reads them and says you should consider a career in inquests.}
+  say: {You stand at the end and watch. You learn a great deal about balance, and nobody lets you forget you didn't fly.|You take notes on every wobble. Brask reads them and says you should consider a career in inquests.|You watch the owl on the broom-end win the hover line. Brask writes down the owl's name.}
 
 @event beast_feeding_round
 title: Feeding Round
@@ -247,10 +247,10 @@ text: {Feeding round, in pairs. You and {partner} have two buckets and a list, a
     win:
       vigor +small
       rel partner +tiny
-      say: {The chick eats from the bucket, then from your hand, then tries your sleeve. {partner} applauds quietly.|It sulks, then eats, then sulks about having eaten. Brask says that's progress for a griffon.}
+      say: {The chick eats from the bucket, then from your hand, then tries your sleeve. {partner} applauds quietly.|It sulks, then eats, then sulks about having eaten. Brask says that's progress for a griffon.|You and {partner} feed the chick in turns, humming. It sulks, but eats in rhythm.}
     lose:
       health -small
-      say: {The chick bites the bucket, then the hand holding it. {partner} finishes the round alone, kindly.|It knocks the bucket over, and you with it, and sits in it, glaring. You spend the hour, bruised and soaked, fishing out its breakfast.}
+      say: {The chick bites the bucket, then the hand holding it. {partner} finishes the round alone, kindly.|It knocks the bucket over, and you with it, and sits in it, glaring. You spend the hour, bruised and soaked, fishing out its breakfast.|{partner}'s humming puts the chick in a mood. It takes the mood out on your hand.}
 > right: Take the owls instead
   study beastcraft +small
   rel partner +tiny
@@ -274,7 +274,7 @@ text: {Beastcraft II teaches haste the old way. Run with the hares until their s
   say: {For three strides you're faster than you've any right to be. Then you're in the hedge.|You catch it on the fourth lap, a lightness behind the knees. You pay for it with a nap you can't refuse.|The hares let you keep up for a moment, out of curiosity. It's the best moment of your week.}
 > right: Watch the hares and take notes
   study beastcraft +small
-  say: {You sketch the way a hare turns, everything at once, no warning. Brask says your sketch is better than your running.|You note how the hares rest between bursts. Brask reads it and says, "Yes. That's the half everyone forgets."}
+  say: {You sketch the way a hare turns, everything at once, no warning. Brask says your sketch is better than your running.|You note how the hares rest between bursts. Brask reads it and says, "Yes. That's the half everyone forgets."|You sketch the hares in sudden right angles. Brask pins your page up by the paddock gate.}
 
 @event beast_complaints
 title: The Complaints Hour
@@ -295,7 +295,7 @@ text: {Beast-speech practice. You sit on a bucket in the stables and listen. Eve
 > right: Fix the draught yourself
   vigor +small
   health -tiny
-  say: {You climb into the rafters with a hammer and a plank. The owls supervise. The draught stops, and so do the complaints, briefly.|You patch the gap with straw and a board. The owls say thank you, then mention the window.}
+  say: {You climb into the rafters with a hammer and a plank. The owls supervise. The draught stops, and so do the complaints, briefly.|You patch the gap with straw and a board. The owls say thank you, then mention the window.|You fix the draught. The owls thank you, then move on to the window, the hay and the mouse, in order.}
 
 @event beast_lake_flight
 title: Over the Lake
@@ -315,14 +315,14 @@ text: {Advanced Beastcraft. A hippogriff each, over the lake, no saddle unless y
     win:
       vigor +small
       mood +small
-      say: {You skim so low a wingtip draws a line across the lake. For one breath you and your reflection touch hands.|The hippogriff banks and you go with it, as if you'd always known how. Brask says nothing at all, then grins.}
+      say: {You skim so low a wingtip draws a line across the lake. For one breath you and your reflection touch hands.|The hippogriff banks and you go with it, as if you'd always known how. Brask says nothing at all, then grins.|You fly low enough for your reflection to keep pace, wingtip to wingtip. You don't want to land.}
     lose:
       health -small
       mood -tiny
-      say: {The hippogriff dips and you don't. The lake is colder than it looks. It always is.|You slide off on the turn and hang on by a fistful of feathers, all the way back to shore.}
+      say: {The hippogriff dips and you don't. The lake is colder than it looks. It always is.|You slide off on the turn and hang on by a fistful of feathers, all the way back to shore.|You race your reflection and your reflection wins. You surface laughing, and very cold.}
 > right: Take the saddle and the high circuit
   study beastcraft +small
-  say: {Saddled, high and steady. You see all seven towers at once, and nobody sees you.|The safe circuit, twice. Brask remembers, as promised, and nods at you all the same.}
+  say: {Saddled, high and steady. You see all seven towers at once, and nobody sees you.|The safe circuit, twice. Brask remembers, as promised, and nods at you all the same.|You take the saddle and the high circuit, and look down at the lake as if memorising it. Brask lets you take a second lap.}
 
 @event beast_manticore_rounds
 title: Manticore Rounds
@@ -341,13 +341,13 @@ text: {Advanced students check the manticore once a month. Someone holds the tai
     win:
       vigor +small
       renown +tiny
-      say: {You hold the tail still while Brask checks the sting. It's warm and heavy and does not, at any point, stab you.|The manticore lets you hold its tail the way a cat lets you hold a paw. Under protest, briefly, as a favour.}
+      say: {You hold the tail still while Brask checks the sting. It's warm and heavy and does not, at any point, stab you.|The manticore lets you hold its tail the way a cat lets you hold a paw. Under protest, briefly, as a favour.|You hold the tail while Brask feeds it from the bucket. It eats from her hand and watches you the whole time.}
     lose:
       health -small
-      say: {The tail flicks. You let go just in time, mostly. Sister Amaranth asks no questions; she's seen this course before.|It rolls over, tail and all, onto you. Nothing breaks, but you're bruised in the exact shape of a manticore.}
+      say: {The tail flicks. You let go just in time, mostly. Sister Amaranth asks no questions; she's seen this course before.|It rolls over, tail and all, onto you. Nothing breaks, but you're bruised in the exact shape of a manticore.|It's in a mood, and the tail knows. You let go a moment too late and spend an hour with Sister Amaranth.}
 > right: Hum the lullaby
   study beastcraft +small
-  say: {You hum the whole lullaby twice, off-key on the high bit. The manticore sleeps through its own check-up.|You hum. A classmate holds the tail. Brask says the humming is the harder job, and nobody believes her.}
+  say: {You hum the whole lullaby twice, off-key on the high bit. The manticore sleeps through its own check-up.|You hum. A classmate holds the tail. Brask says the humming is the harder job, and nobody believes her.|You hum while Brask brings the meat. The manticore eats, slowly, and for once the mood lifts.}
 
 # ---------------- Umbral Theory (track: umbral) ----------------
 
@@ -370,10 +370,10 @@ text: {Umbral Theory I, top of the tower, lamps low on purpose. Name what's unde
   challenge deceive standard:
     win:
       guile +small
-      say: {You add the shadow of a cat to the wall. Three classmates write "cat". The professor writes your name, and underlines it.|Your false shadow passes all morning. The professor only catches it when it doesn't move with the lamp.}
+      say: {You add the shadow of a cat to the wall. Three classmates write "cat". The professor writes your name, and underlines it.|Your false shadow passes all morning. The professor only catches it when it doesn't move with the lamp.|Your false shadow shivers with the rain like the real ones. Nobody finds it. The professor shakes your hand, which is cold.}
     lose:
       mood -small
-      say: {Your false shadow points the wrong way. The professor turns it round gently, like straightening a picture.|Your shadow-cat sits up and leaves. It wasn't meant to do that. The professor doesn't seem surprised.}
+      say: {Your false shadow points the wrong way. The professor turns it round gently, like straightening a picture.|Your shadow-cat sits up and leaves. It wasn't meant to do that. The professor doesn't seem surprised.|The rain makes every shadow shiver except yours. The professor notices the one that keeps still.}
 
 @event umbral_chalk_ward
 title: Pale Shells
@@ -393,7 +393,7 @@ text: {Ward drill, in pairs. One of you raises a pale shell over the other, and 
   say: {You stretch your shell over your partner as well. The shadows nose along its edge for an hour and find nothing. You feel every touch in your teeth.|Two people under one ward is twice the weight. Yours holds until the bell, just.|The shadows give up on your shell and go after the next pair. The professor nods at you, once.}
 > right: Coach your partner through theirs
   guile +small
-  say: {You talk your partner through it, breath by breath. Their shell holds for nine minutes, then a shadow slips under it and makes you both jump. "Teaching," says the professor, "is also a ward."|You keep your own shell down and watch for the gaps in theirs. By the end, they've stopped flickering. You've learned where shadows like to get in.}
+  say: {You talk your partner through it, breath by breath. Their shell holds for nine minutes, then a shadow slips under it and makes you both jump. "Teaching," says the professor, "is also a ward."|You keep your own shell down and watch for the gaps in theirs. By the end, they've stopped flickering. You've learned where shadows like to get in.|You coach your nervous partner, and you're nervous too. The shadows come low and from behind; you both turn in time.}
 
 @event umbral_quiet_minutes
 title: The Quiet Minutes
@@ -415,10 +415,10 @@ text: {Each lesson opens with ten minutes of silence. "Listen to what's hidden,"
   challenge deceive adept-:
     win:
       guile +small
-      say: {You finish a whole essay by feel in the dark. The professor never notices, or never says.|Not a scratch of the quill. When the lamps come up, your essay is done and your face is innocent.}
+      say: {You finish a whole essay by feel in the dark. The professor never notices, or never says.|Not a scratch of the quill. When the lamps come up, your essay is done and your face is innocent.|You write in the dark with the wind humming the rhythm. The essay is done when the lamps come up.}
     lose:
       mood -small
-      say: {When the lamps come up the professor is behind you, reading your essay. "Your third paragraph is weak," she says.|Your quill squeaks. In that silence it sounds like a scream. Everyone turns.}
+      say: {When the lamps come up the professor is behind you, reading your essay. "Your third paragraph is weak," she says.|Your quill squeaks. In that silence it sounds like a scream. Everyone turns.|A gust slams the stairwell door and you drop your quill. It rolls, loudly, to the professor's feet.}
 
 @event umbral_short_distances
 title: Short Distances
@@ -436,14 +436,14 @@ text: {Umbral Theory II brings the shadowstep, desk to desk. "The shadows in bet
   challenge deceive standard:
     win:
       guile +small
-      say: {In, through, out. It takes no time and lasts forever. You come out under the far desk with frost on your sleeves.|Four desks, clean. Something in between brushes your ankle, curious, and lets you pass.}
+      say: {In, through, out. It takes no time and lasts forever. You come out under the far desk with frost on your sleeves.|Four desks, clean. Something in between brushes your ankle, curious, and lets you pass.|You take your set route and come out exactly where the professor pointed. The cold in between nods at you, almost.}
     lose:
       health -small
       mood -tiny
-      say: {You come out one desk short and somewhat upside down. The cold stays in your fingers until lunch.|You linger, just for a moment. It's enough. You come back pale, and the professor sits you by the one warm lamp.}
+      say: {You come out one desk short and somewhat upside down. The cold stays in your fingers until lunch.|You linger, just for a moment. It's enough. You come back pale, and the professor sits you by the one warm lamp.|The professor's route is longer than you'd like. You come out at the end, but so does the cold, with you.}
 > right: Map the route on paper first
   study umbral +small
-  say: {You draw every shadow in the room, and where it goes at each hour. The professor keeps your map.|You work out the route in ink and walk it once, slowly, in the light. It's dull, and correct.}
+  say: {You draw every shadow in the room, and where it goes at each hour. The professor keeps your map.|You work out the route in ink and walk it once, slowly, in the light. It's dull, and correct.|You map the set route desk by desk. The professor checks your map and adds one shadow you'd missed.}
 
 @event umbral_hidden_object
 title: Present but Unseen
@@ -462,13 +462,13 @@ text: {Hide a small key in this room, present but unseen. "Hiding is not removal
     win:
       guile +small
       mood +tiny
-      say: {You leave the key on the desk in plain sight, in your own shadow. Nobody sees it. The professor smiles, which is rarer than a key.|You hide it in the dark behind your own ear. They search the room twice and never once look at you.}
+      say: {You leave the key on the desk in plain sight, in your own shadow. Nobody sees it. The professor smiles, which is rarer than a key.|You hide it in the dark behind your own ear. They search the room twice and never once look at you.|You hide the key in a shadow and leave it there for two days, like the last one. Nobody finds it. The professor does, and approves.}
     lose:
       mood -small
-      say: {A first-rate hiding place, found in under a minute by someone who simply asked the shadow.|You hide it so well you can't find it yourself. The professor retrieves it from the wall with a sigh.}
+      say: {A first-rate hiding place, found in under a minute by someone who simply asked the shadow.|You hide it so well you can't find it yourself. The professor retrieves it from the wall with a sigh.|You hide it in a shadow, and the shadow moves with the afternoon. By the bell the key is in the corridor.}
 > right: Search for everyone else's
   study umbral +small
-  say: {You find four keys, one in a hat, one in a hinge, one in a shadow that didn't want to let go.|You find one key and a pencil nobody has missed for years. The professor counts both.}
+  say: {You find four keys, one in a hat, one in a hinge, one in a shadow that didn't want to let go.|You find one key and a pencil nobody has missed for years. The professor counts both.|You find the key that hid for two days. It's still in its shadow, and you have to ask it nicely to come out.}
 
 @event umbral_stair_wards
 title: The Old Stair Wards
@@ -489,7 +489,7 @@ text: {Advanced students renew the small wards on the tower's old stair. Some ar
 > right: Study the oldest ward instead
   guile +small
   mood -small
-  say: {You trace the oldest ring with one finger. The pattern folds in on itself like a knot nobody was meant to untie, and you feel watched for noticing even that.|The old ward is cold, careful work, made by someone who was afraid. You can feel the fear still in the stone.}
+  say: {You trace the oldest ring with one finger. The pattern folds in on itself like a knot nobody was meant to untie, and you feel watched for noticing even that.|The old ward is cold, careful work, made by someone who was afraid. You can feel the fear still in the stone.|You study the oldest ward by your hands alone, the lamps being no help. It's older than the stair. You're sure of that much.}
 
 @event umbral_errand
 title: The Shadow's Errand
@@ -508,12 +508,12 @@ text: {Original work. Send your own shadow on an errand across the room, the pro
     win:
       guile +small
       mood +tiny
-      say: {Your shadow crosses the room, lifts a book, and brings it back open at a page you needed. You didn't ask it to.|It comes back with a feather from the rafters, which wasn't the errand. The professor counts it as initiative.}
+      say: {Your shadow crosses the room, lifts a book, and brings it back open at a page you needed. You didn't ask it to.|It comes back with a feather from the rafters, which wasn't the errand. The professor counts it as initiative.|Your shadow goes out long and comes back short, carrying a stub of candle. You don't know where it got it.}
     lose:
       mood -small
       health -tiny
-      say: {It comes back an hour late and a little the wrong shape. For a day it lags behind you on stairs, sulking, and you can't get warm.|It doesn't come back until dusk. When it does, it smells of the lake. The professor makes you sit with the lamp until your hands stop shaking with cold.}
+      say: {It comes back an hour late and a little the wrong shape. For a day it lags behind you on stairs, sulking, and you can't get warm.|It doesn't come back until dusk. When it does, it smells of the lake. The professor makes you sit with the lamp until your hands stop shaking with cold.|It stretches out under the low lamps and doesn't want to come back. When it does, it's longer than you for a day.}
 > right: Keep it on a short leash
   study umbral +small
   mana -small
-  say: {Your shadow goes as far as the window and no further. It looks out a long time before it comes back.|Two yards and home. Dull, safe and precise. The professor says precision is how shadow-workers get old.}
+  say: {Your shadow goes as far as the window and no further. It looks out a long time before it comes back.|Two yards and home. Dull, safe and precise. The professor says precision is how shadow-workers get old.|You keep it close under the low lamps. It strains toward the long shadows and comes back to you, reluctantly.}

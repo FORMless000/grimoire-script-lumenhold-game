@@ -49,11 +49,11 @@ text: {The rule chalked on the observatory door says one star each, then pass it
 > left: Share the eyepiece
   rel here +small
   health -tiny
-  say: {cast_as(here, seraphine): {"That one," Seraphine says, "is going to matter in, oh." She doesn't finish.|"Left of it," Seraphine says. "Next spring's left." You look anyway.}|{cast_as(here, kael): {Kael steps aside and points. When your hands get cold, he stands closer.|Kael says the star's name in a Northern word, once, and doesn't explain.}|You take turns until neither of you remembers whose star it was.}}
+  say: {cast_as(here, seraphine): {"That one," Seraphine says, "is going to matter in, oh." She doesn't finish.|"Left of it," Seraphine says. "Next spring's left." You look anyway.|"There," Seraphine says, and moves your hand an inch. "That's the one you'll want. Don't ask me when."}|{cast_as(here, kael): {Kael steps aside and points. When your hands get cold, he stands closer.|Kael says the star's name in a Northern word, once, and doesn't explain.|Kael shares the eyepiece without being asked. Below, the bridges go out one by one, and neither of you counts them.}|You take turns until neither of you remembers whose star it was.}}
 > right: Wait your turn properly
   lore +small
   mood -tiny
-  say: {cast_as(here, seraphine): {Seraphine leaves mid-sentence. "You'll want it," she says. "Later. Now, I mean."|"Yours is the next one," Seraphine says, and it is.}|{cast_as(here, kael): {Kael yields with a formal nod and goes out onto the roof. Frost follows.|Kael waits behind you. When you turn round, he's gone.}|By your turn the star has set. The next one is nearly as good.}}
+  say: {cast_as(here, seraphine): {Seraphine leaves mid-sentence. "You'll want it," she says. "Later. Now, I mean."|"Yours is the next one," Seraphine says, and it is.|Seraphine steps back as you arrive, as if she'd been holding your place. "Right on time," she says, puzzling you.}|{cast_as(here, kael): {Kael yields with a formal nod and goes out onto the roof. Frost follows.|Kael waits behind you. When you turn round, he's gone.|Kael gives up the eyepiece the moment you arrive and stays to watch the bridges go out with you.}|By your turn the star has set. The next one is nearly as good.}}
 
 @event observatory_roof_ledge
 title: The Roof Ledge
@@ -71,14 +71,14 @@ text: {A window in the dome opens onto the roof, and onto a ledge that everyone 
     win:
       mood +small
       lore +tiny
-      say: {You sit with the whole sky to yourself until the stars begin to wheel.|The castle looks small from here, and kind, and very old.}
+      say: {You sit with the whole sky to yourself until the stars begin to wheel.|The castle looks small from here, and kind, and very old.|You step over the loose tile without looking. Someone's scarf is still on the gutter; you leave it, for whoever comes next.}
     lose:
       health -small
       mood -tiny
-      say: {The loose tile is loose in a new place. You slide, grab, and hang on, and climb back in with skinned palms.|A gust takes your balance and most of your dignity. The gutter keeps the rest.}
+      say: {The loose tile is loose in a new place. You slide, grab, and hang on, and climb back in with skinned palms.|A gust takes your balance and most of your dignity. The gutter keeps the rest.|You reach for the snagged scarf and the gutter reaches for you. You get back in with the scarf and a bruise.}
 > right: Watch through the glass
   lore +tiny
-  say: {You see half the sky and all of the smudges.|Through the glass the stars look like they're behind a shop window. You can look; you can't have.}
+  say: {You see half the sky and all of the smudges.|Through the glass the stars look like they're behind a shop window. You can look; you can't have.|You watch through the glass. On the ledge outside, someone else is sitting where you'd have sat, and they wave.}
 
 @event observatory_scraped_word
 time: evening night
@@ -97,10 +97,10 @@ text: {In the night log's oldest volume, every entry by a student who had finish
   find heard_of_starcalling
   lore +small
   mana -small
-  say: You feed a thread of witchlight into the gaps, and it drinks more than you meant to give. {The words around the gaps say "called", "named", "down". Whoever taught it taught it aloud, to people who had finished Advanced Astromancy.|"...and the light came down when I said its name..." Then the gap. You will need someone to tell you the word.}
+  say: You feed a thread of witchlight into the gaps, and it drinks more than you meant to give. {The words around the gaps say "called", "named", "down". Whoever taught it taught it aloud, to people who had finished Advanced Astromancy.|"...and the light came down when I said its name..." Then the gap. You will need someone to tell you the word.|The shape around the gap is a verb. Whatever it was, it was done to a star, and it was taught, not written.}
 > right: Ask the telescope, half joking
   lore +tiny
-  say: {The telescope swings to one bright star and stays there, patient as a teacher who knows you aren't ready.|It turns to a named star and holds it. You get the feeling you have to finish Advanced Astromancy before it explains.}
+  say: {The telescope swings to one bright star and stays there, patient as a teacher who knows you aren't ready.|It turns to a named star and holds it. You get the feeling you have to finish Advanced Astromancy before it explains.|The telescope turns, very slowly, to the same star as always. You're beginning to think it's a reminder, not an answer.}
 
 # ---------------- Mir's Workshop ----------------
 
@@ -143,14 +143,14 @@ text: {"Perfect timing! I need a volunteer and you have hands!" {maker} holds up
     alchemy +small
     rel maker +tiny
     mood +tiny
-    say: {It works! For eleven glorious minutes, it works, and {maker} writes down every one of them.|It does exactly what it should. {maker} looks almost suspicious and walks round it three times.}
+    say: {It works! For eleven glorious minutes, it works, and {maker} writes down every one of them.|It does exactly what it should. {maker} looks almost suspicious and walks round it three times.|It works. You still don't know what it was for, and {maker} is too delighted to tell you.}
   else:
     health -small
     rel maker +small
-    say: {It works in the wrong direction. You spend a while upside down. {maker} apologises at length, with diagrams.|There's a bang, a smell of singed eyebrow, and {maker} saying "Interesting!" in a voice that means sorry.}
+    say: {It works in the wrong direction. You spend a while upside down. {maker} apologises at length, with diagrams.|There's a bang, a smell of singed eyebrow, and {maker} saying "Interesting!" in a voice that means sorry.|It goes off with a pop and a smell of hot brass. {maker} writes "promising" and hands you the bucket.}
 > right: Hold the fire bucket
   rel maker +tiny
-  say: {You hold the bucket. You don't need the bucket. {maker} looks faintly disappointed.|You need the bucket. Briefly, splendidly, you need the bucket.}
+  say: {You hold the bucket. You don't need the bucket. {maker} looks faintly disappointed.|You need the bucket. Briefly, splendidly, you need the bucket.|You hold the bucket. You need it twice, which {maker} calls an improvement.}
 
 @event workshop_stirring_cauldron
 title: The Self-Stirring Cauldron
@@ -168,14 +168,14 @@ text: {The self-stirring cauldron in the corner wears a note. DO NOT ADJUST. IT 
     win:
       alchemy +small
       mood +tiny
-      say: {It settles into a slow, contented clockwise. Mir, passing, says "Oh!" and then "Huh," and then "Teach me."|The spoon taps the rim twice, like a thank-you, and gets on with it.}
+      say: {It settles into a slow, contented clockwise. Mir, passing, says "Oh!" and then "Huh," and then "Teach me."|The spoon taps the rim twice, like a thank-you, and gets on with it.|You adjust it, gently, the way it seems to want. It stirs the soup for nobody a little more cheerfully.}
     lose:
       health -tiny
       mood -small
-      say: {It stirs your sleeve, then you, then your sleeve again.|It speeds up instead. The ceiling now has toffee on it, and so do you.}
+      say: {It stirs your sleeve, then you, then your sleeve again.|It speeds up instead. The ceiling now has toffee on it, and so do you.|It recognises you, and holds a grudge. The spoon flicks soup at you until you back away.}
 > right: Take notes from a safe distance
   lore +tiny
-  say: {You write down everything it's doing wrong. The list is long and slightly envious.|You sketch the rune on its base. The cauldron splashes your page, on purpose you think.}
+  say: {You write down everything it's doing wrong. The list is long and slightly envious.|You sketch the rune on its base. The cauldron splashes your page, on purpose you think.|You take notes from the doorway. The spoon pauses, as if waiting for you to finish the sentence.}
 
 @event workshop_glass_cabinet
 title: The Glass Cabinet
@@ -191,18 +191,18 @@ scene: A tall glass cabinet at the back of a workshop, clockwork animals inside 
 text: {At the back of the workshop is a glass cabinet that isn't Mir's, full of faculty machines, very still.|A clockwork mouse in the glass cabinet has moved since your last visit, and now faces the door.|The cabinet. Mir says the machines in it think, probably, and are waiting for the right student.} A card in old ink: "Artifice. By invitation, to those who have passed Alchemy II and Evocation II."
 > left: Study the machines through the glass
   alchemy +small
-  say: {Nothing moves while you watch. The moment you look away, something ticks.|You count the gears in a brass beetle and lose count. Somebody made this who could make things and make them burn.}
+  say: {Nothing moves while you watch. The moment you look away, something ticks.|You count the gears in a brass beetle and lose count. Somebody made this who could make things and make them burn.|The machines don't move, but you're sure they're thinking. One of them, very slightly, nods.}
 > right: Try the cabinet lock
   alignment -tiny
   challenge deceive journeyman-:
     win:
       guile +small
       mood +tiny
-      say: {The lock gives. The mouse winds itself up, bows, and goes back to sleep. You close the door very quietly.|The door swings open an inch, and every machine inside turns its head to look at you. You close it again, politely.}
+      say: {The lock gives. The mouse winds itself up, bows, and goes back to sleep. You close the door very quietly.|The door swings open an inch, and every machine inside turns its head to look at you. You close it again, politely.|The lock opens at a touch, as if it had been waiting. The machines look at you, and then, satisfied, at each other.}
     lose:
       mood -small
       renown -tiny
-      say: {The cabinet shrieks like a kettle. Mir is delighted. The corridor is not.|The lock bites your pick and keeps it. Mir says it does that, probably, to people it likes.}
+      say: {The cabinet shrieks like a kettle. Mir is delighted. The corridor is not.|The lock bites your pick and keeps it. Mir says it does that, probably, to people it likes.|The lock doesn't bite this time. It simply refuses, the way a cat refuses, and Mir says that's progress.}
 
 # ---------------- The Lumen Ledger Office ----------------
 
@@ -225,10 +225,10 @@ text: {By the Ledger's door sits a basket marked LETTERS WE WILL NOT PRINT. Visi
   chance unlikely:
     renown +small
     mood +tiny
-    say: {They print it. Two people quote it at you at breakfast; one of them disagrees with it loudly.|It runs on the back page, under your initials. You feel oddly famous for a day.}
+    say: {They print it. Two people quote it at you at breakfast; one of them disagrees with it loudly.|It runs on the back page, under your initials. You feel oddly famous for a day.|They print it, with a footnote from the editor disagreeing. It's the most-read thing in the issue.}
   else:
     mood -tiny
-    say: {It goes in the basket. By next week, someone is reading it aloud.|It's rejected with a note: "Too sensible." You aren't sure that's a criticism.}
+    say: {It goes in the basket. By next week, someone is reading it aloud.|It's rejected with a note: "Too sensible." You aren't sure that's a criticism.|It goes in the basket. You find it there next week, with someone else's reply pinned to it.}
 
 @event ledger_office_deadline_night
 title: Deadline Night
@@ -247,12 +247,12 @@ text: {The press is groaning like a dragon on deadline, and {here} eyes you like
   flag ledger_folded
   rel here +small
   health -small
-  say: {cast_as(here, nessa): {"Good. Fast. Again," says Nessa. From her, that's a sonnet.|Nessa folds twice as fast as you and reads every page as she goes.}|{By dawn your fingers are grey with ink, and you know tomorrow's news before anyone.|You fold until the stacks are taller than you. Then you fold the ones that fell over.}}
+  say: {cast_as(here, nessa): {"Good. Fast. Again," says Nessa. From her, that's a sonnet.|Nessa folds twice as fast as you and reads every page as she goes.|Nessa doesn't say anything. She just slides the next stack to you, which is the highest honour on deadline night.}|{By dawn your fingers are grey with ink, and you know tomorrow's news before anyone.|You fold until the stacks are taller than you. Then you fold the ones that fell over.|You fold in rhythm with the press. When it stops, you keep going for a moment, out of habit.}}
 > right: Make your excuses
   mood +small
   rel here -small
   renown -tiny
-  say: {cast_as(here, nessa): {"Deserter," Nessa calls. "Noted. Quoted. Forgiven by Thursday."|Nessa doesn't look up. "Coward," she says, almost fondly, and writes something down.}|{You slip away before the second stack. The press groans after you, reproachfully.|You plead an essay. Nobody believes you. Tomorrow's paper mentions a certain absent volunteer.}}
+  say: {cast_as(here, nessa): {"Deserter," Nessa calls. "Noted. Quoted. Forgiven by Thursday."|Nessa doesn't look up. "Coward," she says, almost fondly, and writes something down.|Nessa looks up for once. "Fine. Go. You owe me a Thursday." You do, and she collects.}|{You slip away before the second stack. The press groans after you, reproachfully.|You plead an essay. Nobody believes you. Tomorrow's paper mentions a certain absent volunteer.|You leave, and the press shudders to a stop as you go. Somebody blames you, and it goes in the paper.}}
 
 @event ledger_office_drying_line
 title: The Drying Line
@@ -270,14 +270,14 @@ text: {Tomorrow's gossip column is pegged on a line to dry, and nobody is watchi
     win:
       guile +small
       mood +small
-      say: {You read it all and hang it back exactly as crooked as it was.|You know tomorrow's scandal tonight. It is much smaller than it will look in print.}
+      say: {You read it all and hang it back exactly as crooked as it was.|You know tomorrow's scandal tonight. It is much smaller than it will look in print.|You read the item under the red peg. It's about you, and it's true, and it's very short. You leave it exactly as it was.}
     lose:
       renown -small
       mood -tiny
-      say: {Caught. The next column has an item beginning "Which nosy visitor..."|A peg snaps. The page lands face-down in the ink tray, and everyone turns round.}
+      say: {Caught. The next column has an item beginning "Which nosy visitor..."|A peg snaps. The page lands face-down in the ink tray, and everyone turns round.|You lift the red peg and the whole line comes down. Tomorrow's column has a new item, and it's about you.}
 > right: Leave the line alone
   mood -tiny
-  say: {You spend the night wondering. That's the price of manners.|You find out with everyone else, at breakfast. It was about you anyway.}
+  say: {You spend the night wondering. That's the price of manners.|You find out with everyone else, at breakfast. It was about you anyway.|You leave it. You know which peg it is, and that's almost the same as knowing.}
 
 # ---------------- The Headmistress's Tower ----------------
 
@@ -298,14 +298,14 @@ text: {The stone owl on the stair opens one eye. "A question first," it says, in
     win:
       lore +small
       rel isolde +tiny
-      say: {The owl closes its eyes and the stair is yours. Upstairs, someone laughs, short and pleased.|"Adequate," says the owl, which from a stone owl is a standing ovation.}
+      say: {The owl closes its eyes and the stair is yours. Upstairs, someone laughs, short and pleased.|"Adequate," says the owl, which from a stone owl is a standing ovation.|You answer before it finishes asking. The owl looks at you with both eyes for a long time, then closes them.}
     lose:
       mood -small
-      say: {"No," says the owl, and closes both eyes. You climb anyway, feeling marked down.|The owl repeats your answer back to you, slowly. It sounds worse.}
+      say: {"No," says the owl, and closes both eyes. You climb anyway, feeling marked down.|The owl repeats your answer back to you, slowly. It sounds worse.|Your answer is right and the owl says "No" anyway, to see what you'll do. You climb on. It seems satisfied.}
 > right: Climb past without a word
   guile +small
   rel isolde -tiny
-  say: {The owl says nothing. At the top, the door is shut. You have the strong feeling you've been noted.|You get past. The owl's eye follows you all the way up, and all the way down again.}
+  say: {The owl says nothing. At the top, the door is shut. You have the strong feeling you've been noted.|You get past. The owl's eye follows you all the way up, and all the way down again.|You climb past and nod to it, as you'd nod to a porter. It nods back, very slightly.}
 
 @event headmistress_tower_tea
 title: Two Cups Poured
@@ -323,17 +323,17 @@ text: {The headmistress pours two cups unasked. "Sit. Tell me how your term is g
 > left: Tell her the truth
   rel host +small
   mood -small
-  say: {She listens without interrupting, which is worse than any lecture and better than most comfort.|She hears all of it and says only, "Yes. I thought so." Somehow that helps, later.}
+  say: {She listens without interrupting, which is worse than any lecture and better than most comfort.|She hears all of it and says only, "Yes. I thought so." Somehow that helps, later.|You tell her before she asks. She hears it all, then tells you something true about her own first years. It doesn't help, and then it does.}
 > right: Give her the polished version
   challenge deceive vs isolde.guile -2:
     win:
       charm +small
       mood +tiny
-      say: {She laughs, short and delighted, and lets you get away with it. You aren't sure that's a good sign.|"Very good," she says. "Next time, the true one." She means both halves.}
+      say: {She laughs, short and delighted, and lets you get away with it. You aren't sure that's a good sign.|"Very good," she says. "Next time, the true one." She means both halves.|She lets the polished version stand and pours more tea. "You've got better at it," she says. You can't tell if that's praise.}
     lose:
       rel host -tiny
       mood -small
-      say: {"Mm," she says, and pours you more tea, and waits. You end up telling her anyway.|She lets the silence go on until it says everything you didn't.}
+      say: {"Mm," she says, and pours you more tea, and waits. You end up telling her anyway.|She lets the silence go on until it says everything you didn't.|She hears the polished version, then repeats the one sentence of it that was true. You talk for an hour after that.}
 
 @event headmistress_tower_window_seat
 title: The Window Seat
@@ -353,7 +353,7 @@ text: {The headmistress waves you to the window seat without looking up from her
   mood +small
   health +tiny
   rel isolde -tiny
-  say: {You wake to find a blanket over you and no comment at all, which is its own kind of comment.|You sleep through most of the visit. When you wake, she is still writing, and gives you a look over her spectacles that says she had hoped you would read.}
+  say: {You wake to find a blanket over you and no comment at all, which is its own kind of comment.|You sleep through most of the visit. When you wake, she is still writing, and gives you a look over her spectacles that says she had hoped you would read.|You doze in your window seat. You wake to find she's moved her desk lamp so it doesn't shine in your eyes.}
 
 # ---------------- The Restricted Section ----------------
 
@@ -371,11 +371,11 @@ text: {The black-bound books breathe in the dark, slow as sleepers. You find a c
 > left: Read until the candle gutters
   lore +small
   mood -small
-  say: {You read about wards that were old when the towers were new. Afterwards you can't sleep, and don't quite want to.|You read a whole chapter before you notice the book has been reading along, a line ahead.}
+  say: {You read about wards that were old when the towers were new. Afterwards you can't sleep, and don't quite want to.|You read a whole chapter before you notice the book has been reading along, a line ahead.|You read in your chair by a low blue candle. The shelves breathe with you, and the chapter goes in like a held breath.}
 > right: Read only the spines
   lore +tiny
   mana -tiny
-  say: {Even the titles take something out of you. One of them is just your house's name.|You walk the shelves by candlelight. The spines lean towards you, and then politely away.}
+  say: {Even the titles take something out of you. One of them is just your house's name.|You walk the shelves by candlelight. The spines lean towards you, and then politely away.|You walk the spines, and they make room for you as you pass. One spine you haven't seen before has no title at all.}
 
 @event restricted_section_lantern
 title: Holding the Lantern
@@ -394,11 +394,11 @@ text: {{friend} came with you, for courage, and is holding the lantern in both h
   lore +small
   rel friend -tiny
   mood -tiny
-  say: {You read; {friend} keeps watch and keeps count of every noise, out loud.|You lose an hour in a book. {friend} loses an hour staring at a shelf that keeps staring back.}
+  say: {You read; {friend} keeps watch and keeps count of every noise, out loud.|You lose an hour in a book. {friend} loses an hour staring at a shelf that keeps staring back.|You read; {friend} holds the light where you point, and the shadows walk where {they} hold{s} it. Neither of you says much on the way back.}
 > right: Take the lantern for a while
   rel friend +small
   mood -tiny
-  say: {You hold the light so {friend} can read. Something in the dark rustles the whole time, and you don't let it show.|{friend} reads aloud in a whisper. The books seem to lean in to listen.}
+  say: {You hold the light so {friend} can read. Something in the dark rustles the whole time, and you don't let it show.|{friend} reads aloud in a whisper. The books seem to lean in to listen.|You take the lantern and {friend} reads to you, a page you'll both remember. The shadows stop walking to listen.}
 
 @event restricted_section_chained_book
 time: evening
@@ -417,15 +417,15 @@ text: {One book here is chained to its shelf, and tonight it has opened itself t
     win:
       lore +small
       mana +small
-      say: A thread of stored power runs up your arm from the page. {The words make sense for exactly as long as you're reading them. Afterwards you only remember that they did.|You read it, and the book turns its own page, satisfied, as if you'd passed something.}
+      say: A thread of stored power runs up your arm from the page. {The words make sense for exactly as long as you're reading them. Afterwards you only remember that they did.|You read it, and the book turns its own page, satisfied, as if you'd passed something.|The page stays blank while you look and fills when you blink. You read it in blinks. It takes all night.}
     lose:
       mood -small
       health -tiny
-      say: {The words read you back. For a day afterwards you keep feeling underlined.|The candle goes out mid-line. In the dark, the page keeps going.}
+      say: {The words read you back. For a day afterwards you keep feeling underlined.|The candle goes out mid-line. In the dark, the page keeps going.|You look away and the page fills; you look back and it's blank, and smug. Your eyes ache for a day.}
 > right: Close it and step back
   mood -tiny
   mana +tiny
-  say: As the cover shuts, something that had been quietly drawing on your magic lets go. {The chain rattles as the cover shuts, like a sigh. You stand with your back to it until your hands stop shaking.|You close it gently, the way you'd close a door on someone sleeping.}
+  say: As the cover shuts, something that had been quietly drawing on your magic lets go. {The chain rattles as the cover shuts, like a sigh. You stand with your back to it until your hands stop shaking.|You close it gently, the way you'd close a door on someone sleeping.|You close it before it can finish expecting you. The chain lies still, a link shorter.}
 
 @event restricted_section_handleless_door
 time: evening
@@ -443,11 +443,11 @@ text: {At the very back is a door with no handle and no window. On it, in chalk 
 > left: Knock
   rel isolde +tiny
   mood -small
-  say: {Nobody answers. Then, very far away, a pleasant voice says, "Not yet."|Your knock doesn't echo. It just stops, as if something on the other side caught it. Next day the headmistress nods to you in the corridor, as if she heard.}
+  say: {Nobody answers. Then, very far away, a pleasant voice says, "Not yet."|Your knock doesn't echo. It just stops, as if something on the other side caught it. Next day the headmistress nods to you in the corridor, as if she heard.|You knock, as you always do. This time, from far away, someone knocks back, once, as if to say they've noted it.}
 > right: Copy the chalk into your notes
   lore +small
   mana -small
-  say: Copying the chalk draws on your magic like a cold draught. {The chalk makes your pencil cold. Two courses and a question, and the question is the hard part.|You copy it word for word. Back in your room, your notes have the same words, and one more underline than you made.}
+  say: Copying the chalk draws on your magic like a cold draught. {The chalk makes your pencil cold. Two courses and a question, and the question is the hard part.|You copy it word for word. Back in your room, your notes have the same words, and one more underline than you made.|You copy it from memory and check it against the door. The chalk agrees with you, which feels like being agreed with.}
 
 # ---------------- The Third Gargoyle ----------------
 
@@ -466,11 +466,11 @@ text: {The passage walls are covered in initials, dates and tiny arrows, scratch
   renown +tiny
   guile +tiny
   health -tiny
-  say: {You scratch your initials small and low, with a tiny arrow pointing nowhere. It feels like signing something.|{final_year and flag(left_wall_mark): You add the year beside your old mark. It looks so much younger than you.|A knuckle pays for it. The mark is crooked and entirely yours.}}
+  say: {You scratch your initials small and low, with a tiny arrow pointing nowhere. It feels like signing something.|{final_year and flag(left_wall_mark): You add the year beside your old mark. It looks so much younger than you.|A knuckle pays for it. The mark is crooked and entirely yours.}|You add your mark beside the initials that keep coming back. Next time, there's a tiny arrow pointing to yours.}
   flag left_wall_mark
 > right: Follow an old arrow
   lore +small
-  say: {The arrow leads to another arrow, which leads to a wall, which has a joke scratched on it.|The arrow leads to a slit window with a view of the lake no plan admits to. Your knees disagree with the route.}
+  say: {The arrow leads to another arrow, which leads to a wall, which has a joke scratched on it.|The arrow leads to a slit window with a view of the lake no plan admits to. Your knees disagree with the route.|You follow the arrow you know lies, to see how it lies. It lies beautifully, all the way to a view of the stars.}
 
 @event gargoyle_passage_offering_dish
 time: evening
@@ -487,16 +487,16 @@ text: {The third gargoyle has a dish worn into its paw, and in the dish are offe
 > left: Leave a few crowns in the dish
   gold -tiny
   mood +small
-  say: {By morning the crowns are gone, and so is the biscuit. Nobody admits to either.|The crowns clink in. The gargoyle's expression doesn't change, but the wind drops.}
+  say: {By morning the crowns are gone, and so is the biscuit. Nobody admits to either.|The crowns clink in. The gargoyle's expression doesn't change, but the wind drops.|You pay the gargoyle its crowns, like rent. The night is calm, and the stair doesn't move once on your way back.}
 > right: Borrow the biscuit
   alignment -tiny
   chance even:
     mood +small
     health +tiny
-    say: {It's a very good biscuit. Somebody's mother made it. You feel a little bad, and then less.|Shortbread, still crisp. The gargoyle allows it, this once.}
+    say: {It's a very good biscuit. Somebody's mother made it. You feel a little bad, and then less.|Shortbread, still crisp. The gargoyle allows it, this once.|You borrow the peeled grape. The gargoyle's look follows you down the stair, but the grape is excellent.}
   else:
     mood -small
-    say: {It's made of stone. The gargoyle's joke, and it's been waiting a long time to tell it.|The wind gets up the moment you take it, and stays up all night, rattling your window.}
+    say: {It's made of stone. The gargoyle's joke, and it's been waiting a long time to tell it.|The wind gets up the moment you take it, and stays up all night, rattling your window.|You take the grape, and the gargoyle collects. Your boots are full of rainwater by the bottom of the stair.}
 
 @event gargoyle_passage_parapet_cards
 title: Cards on the Parapet
@@ -518,16 +518,16 @@ text: {On the parapet, by lantern-light, {here} is dealing cards for buttons, an
     win:
       gold +tiny
       mood +small
-      say: {cast_as(here, corvin): {"Well, look at you," Corvin says, paying out. "Who taught you that? Don't say me."|"Remind me never to owe you money," Corvin tells the pigeon, and pays you in buttons and, grudgingly, crowns.}|{You win the pot, buttons and a few actual crowns.|You bluff with nothing and the wind turns your card over at the right moment. You take the buttons, and the crowns under them, with dignity.}}
+      say: {cast_as(here, corvin): {"Well, look at you," Corvin says, paying out. "Who taught you that? Don't say me."|"Remind me never to owe you money," Corvin tells the pigeon, and pays you in buttons and, grudgingly, crowns.|Corvin deals you in, loses, and laughs. "You're getting good. I'll have to start cheating properly."}|{You win the pot, buttons and a few actual crowns.|You bluff with nothing and the wind turns your card over at the right moment. You take the buttons, and the crowns under them, with dignity.|You're dealt in before you sit and win before you've warmed up. The pot is mostly buttons, and some of it is crowns.}}
     lose:
       gold -small
       mood -tiny
-      say: {cast_as(here, corvin): {Corvin scoops the pot and winces. "Saint, you're the worst liar I love playing." He gives you your buttons back, at least.|"Never bluff a man who owes three people money," Corvin says, kindly.}|{You lose your buttons, then some crowns, then the will to bluff.|The wind takes your best card over the parapet. It was the only one you had.}}
+      say: {cast_as(here, corvin): {Corvin scoops the pot and winces. "Saint, you're the worst liar I love playing." He gives you your buttons back, at least.|"Never bluff a man who owes three people money," Corvin says, kindly.|Corvin deals from the bottom and you know it and can't prove it. You lose with a smile, which annoys him.}|{You lose your buttons, then some crowns, then the will to bluff.|The wind takes your best card over the parapet. It was the only one you had.|You lose the hand to a card the pigeon was standing on. The pigeon will not be questioned.}}
 > right: Watch the lake instead
   mood +tiny
   health -tiny
   rel here +tiny
-  say: {cast_as(here, corvin): {"Saint," Corvin says, not looking up, "you'll never be rich." He passes you his scarf.|Corvin deals you out without a word and tosses you his scarf when the wind picks up.}|{You sit with your back to the stone and watch the dark water while the cards slap behind you. It's cold, and peaceful.|You count the lights in the village until the game's over.}}
+  say: {cast_as(here, corvin): {"Saint," Corvin says, not looking up, "you'll never be rich." He passes you his scarf.|Corvin deals you out without a word and tosses you his scarf when the wind picks up.|Corvin deals you out without asking and hands you his scarf before the wind does. "Lake's nice tonight," he says. It is.}|{You sit with your back to the stone and watch the dark water while the cards slap behind you. It's cold, and peaceful.|You count the lights in the village until the game's over.|You watch the lake hold the lantern still. Behind you, someone wins, and someone else blames the pigeon.}}
 
 # ---------------- The Seventh Tower ----------------
 
@@ -550,7 +550,7 @@ text: {The seventh tower's stair never has the same number of steps twice. Schol
 > right: Climb without counting
   mana +small
   health -tiny
-  say: {You climb by feel, in the dark between windows. The stair seems to like that better.|You stop counting and the climb is suddenly short, as if the tower was in a hurry too.}
+  say: {You climb by feel, in the dark between windows. The stair seems to like that better.|You stop counting and the climb is suddenly short, as if the tower was in a hurry too.|You climb without counting, candle leaning ahead. You're at the top before you've thought about it, and it feels allowed.}
 
 @event seventh_tower_dust_room
 time: evening
@@ -567,11 +567,11 @@ text: {At the top is one room of dust and moonlight, with a star-shaped hollow i
 > left: Sit in the moonlight
   mana +small
   mood -small
-  say: {The light is cold and kind. You sit until your shadow forgets which way to fall.|You sit where the moon is brightest. It feels like being looked at by someone very old and very tired.}
+  say: {The light is cold and kind. You sit until your shadow forgets which way to fall.|You sit where the moon is brightest. It feels like being looked at by someone very old and very tired.|You sit with the moth tapping at the glass and the moon in the window. Nothing happens, very deeply, for an hour.}
 > right: Sweep away your footprints
   guile +small
   health -tiny
-  say: {You sweep your way out backwards with your sleeve. The dust settles behind you, and then, you'd swear, rearranges itself.|You cough your way to the door. The other footprints you leave alone. They seem to want to stay.}
+  say: {You sweep your way out backwards with your sleeve. The dust settles behind you, and then, you'd swear, rearranges itself.|You cough your way to the door. The other footprints you leave alone. They seem to want to stay.|You sweep your prints away and leave the others. By the next visit, yours are back, in the same places.}
 
 @event seventh_tower_lake_window
 title: The Window Over the Lake
@@ -589,12 +589,12 @@ text: {The tower's one window looks down on the Mirror Lake, and the latch isn't
     win:
       mana +small
       lore +tiny
-      say: {You hear water, and under it a sound too low to be wind. You decide it was the pipes, and don't quite believe yourself.|Nothing but wind and water. You stay until you're sure, and you're never quite sure.}
+      say: {You hear water, and under it a sound too low to be wind. You decide it was the pipes, and don't quite believe yourself.|Nothing but wind and water. You stay until you're sure, and you're never quite sure.|You open it without deciding to. The lake is quiet, and then not, and then quiet again, as if it changed its mind about you.}
     lose:
       mood -small
       health -tiny
-      say: {The cold comes in and won't leave. For days you hear dripping in dry rooms.|The lake is silent, entirely, the way a room goes silent when you walk in on a conversation.}
+      say: {The cold comes in and won't leave. For days you hear dripping in dry rooms.|The lake is silent, entirely, the way a room goes silent when you walk in on a conversation.|The window opens on its own before your hand gets there. You shut it fast, and the latch is cold for a week.}
 > right: Leave it latched
   mood -tiny
   health +tiny
-  say: {You leave the latch alone and go down to bed, and lie awake wondering what you didn't hear.|You put your palm flat on the cold glass instead. The lake does nothing. It's very good at that.}
+  say: {You leave the latch alone and go down to bed, and lie awake wondering what you didn't hear.|You put your palm flat on the cold glass instead. The lake does nothing. It's very good at that.|You leave it latched and rest your hand on the latch a while. It feels like keeping a promise to someone.}
