@@ -15,6 +15,8 @@
  *   node tools/grim.js graph <id>       the event graph around an event, state or hook: who leads to it (queues it, with
                                       odds; sets what its gates read) and what it leads to (queues, and who reads what it sets)
   node tools/grim.js ids [kind]       list ids (event|state|npc|ending|resource|skill|flag|var)
+  node tools/grim.js leads [--all]    "hinted now, act later" pairs (a flag or card a place/slot/track card waits for) and
+                                      whether the card that sets it leaves a lead for the Clues panel
  *   node tools/grim.js check            build + lint + sim 200 (what agents should run before finishing)
  *   node tools/grim.js fmt [FILE…] [--check]
  *                                       rewrite .grim files in canonical layout (lossless; refuses any change in meaning).
@@ -557,14 +559,21 @@ function analyzeWorld(content, P, scanExpr, scanText) {
   for (const d of Object.values(content.arcs)) for (const k of d.clues || []) if (!content.clues[k]) P('error', loc(d), 'clue "' + k + '" has no @clue');
   for (const d of Object.values(content.arcs)) if (d.act_names && d.acts && d.act_names.split(/\s*[,，、]\s*/).length !== d.acts.length) P('error', loc(d), 'act_names: one name per act');
   for (const d of Object.values(content.clues)) {
-    const arc = content.arcs[d.arc];
-    if (!arc) { P('error', loc(d), '@clue ' + d.id + ': unknown arc "' + d.arc + '"'); continue; }
     if (d.kind && !['clue', 'lead'].includes(d.kind)) P('error', loc(d), 'kind must be clue or lead');
-    const listed = (arc.clues || []).includes(d.id);
-    if (d.kind === 'lead' ? listed : !listed) P('error', loc(d), d.kind === 'lead' ? 'a lead must not be in its arc\'s clues:' : 'not in ' + d.arc + '\'s clues: (or make it kind: lead)');
     if (d.followed && d.kind !== 'lead') P('error', loc(d), 'followed: is for leads');
     if (!d.name || !d.text) P('error', loc(d), '@clue needs name and text');
     if (d.followed) scanExpr(d.followed, loc(d), false);
+    // A side thread's clue (feedback 2026-10-15): no arc, a thread name, and never one of an arc's clues.
+    if (!d.arc) {
+      if (!d.thread) P('error', loc(d), '@clue ' + d.id + ': needs an arc: or a thread:');
+      if (Object.values(content.arcs).some((a) => (a.clues || []).includes(d.id))) P('error', loc(d), '@clue ' + d.id + ': listed in an arc\'s clues: but names no arc');
+      continue;
+    }
+    if (d.thread) P('error', loc(d), '@clue ' + d.id + ': an arc clue takes its arc\'s name; drop thread:');
+    const arc = content.arcs[d.arc];
+    if (!arc) { P('error', loc(d), '@clue ' + d.id + ': unknown arc "' + d.arc + '"'); continue; }
+    const listed = (arc.clues || []).includes(d.id);
+    if (d.kind === 'lead' ? listed : !listed) P('error', loc(d), d.kind === 'lead' ? 'a lead must not be in its arc\'s clues:' : 'not in ' + d.arc + '\'s clues: (or make it kind: lead)');
   }
   for (const d of Object.values(content.lore)) {
     if (!['hard', 'soft'].includes(d.canon)) P('error', loc(d), '@lore canon must be hard or soft');
@@ -1468,6 +1477,7 @@ switch (cmd) {
   case 'show': show(rest[0]); break;
   case 'odds': { const { content, errors } = compileAll(); if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); } console.log(require('./odds.js').odds(content, rest.filter((x) => !x.startsWith('--')))); break; }
   case 'graph': { const { content } = compileAll(); const out = require('./graph.js').describe(content, rest[0]); if (!out) { console.error('graph: no event, state or hook "' + rest[0] + '"'); process.exit(1); } console.log(out); break; }
+  case 'leads': { const { content } = compileAll(); console.log(require('./leads.js').report(content, !!flag('all'))); break; }
   case 'ids': ids(rest[0]); break;
   case 'rename': {
     const [kind, from, to] = rest.filter((x) => !x.startsWith('--'));

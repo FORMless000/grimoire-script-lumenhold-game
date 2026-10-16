@@ -134,3 +134,34 @@ text: Letters run around the bell's rim on the lakebed: a name you don't know, a
 arc: lyra_and_her_mother
 name: Letters under a black seal
 text: House Vaneshade writes to Lyra under its black seal. Her mother asks who beat her, never how she is.
+
+# ---------------- Side threads (feedback 2026-10-15): hinted now, to be followed up later ----------------
+# A side thread's lead names no arc; the Clues panel groups it under its thread:. They never touch the mystery.
+
+@clue lead_moonpetal
+thread: The cold that won't leave
+kind: lead
+name: Moonpetal
+text: Old Maud says the cure is a moonpetal from the Whisperwood, which blooms only after dark, and that you have to fetch it yourself.
+followed: not has(umbral_curse)
+
+@clue lead_second_timetable
+thread: The unsigned note
+kind: lead
+name: A second timetable
+text: Someone slipped a note under your door: the castle has a second timetable, and it starts at midnight. Whoever wrote it knows the passages.
+followed: seen(corvin_note_was_mine) > 0
+
+@clue lead_grisk_jetty
+thread: Grisk's parcels
+kind: lead
+name: The jetty at midnight
+text: Grisk's arrangement: a parcel collected at the boathouse jetty at midnight, carried to a cobbler's back door in the village by day.
+followed: seen(grisk_pickup) > 0 or flag(grisk_gone)
+
+@clue lead_sky_championship
+thread: The Skyrace team
+kind: lead
+name: The championship
+text: You made the team. The championship against Thornwick is flown at the flight field later in the year.
+followed: seen(sky_championship) > 0

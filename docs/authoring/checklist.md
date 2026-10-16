@@ -15,6 +15,7 @@ Validators check the first group automatically; the critic (a separate pass, wit
 - **Length:** text under 400 characters, labels under 36, `say` under 300.
 - **Gating:** `when` conditions are reachable and sensible; queued events are queued by something; flags read are set somewhere (`grim reach` proves it; lint fails on an unreachable event).
 - **Plot safety:** only hard-canon story events grant key clues or move arc clocks.
+- **Leads:** a hint the player has to follow up later (a card at a place, slot or track waiting on this card's flag) leaves a side-thread lead in the Clues panel; `grim leads` shows none missing.
 - **Checks** (`checks.md`): the difficulty is what you're actually up against, not who is on the card; odds by nature, luck and drift each carry their own reason, none counted twice; a gamble is on `luck`; grandmaster+ is only on story or milestone cards, with `partial:` and a route without the check; a loss that ends the run has `partial:` or `likely`+; pure luck is `chance <word>`, and a roll a skill or relationship should move isn't a bare `chance`.
 - **Alignment:** a choice with moral weight (cruelty, theft, cheating, exploiting someone, reaching for the Star's power; or honesty, protection, generosity at a cost) moves `alignment` (`-tiny`…`-medium` Hollow, `+tiny`…`+medium` Lumen). Ordinary choices don't. Never use alignment, or any counter, as plot progress: plot gates read `clock(arc)` and `clues(arc)`.
 - **Duplication:** no event repeats an existing one's premise (check `grim query event --grep <word>`).

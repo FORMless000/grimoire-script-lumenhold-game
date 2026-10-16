@@ -51,6 +51,7 @@
 
     'tab.you': 'You',
     'tab.people': 'People',
+    'tab.clues': 'Clues', 'side.noClues': 'Nothing to follow yet. Odd things you notice, and where they point, gather here.', 'journal.finished': 'Followed up',
     'tab.journal': 'Journal',
 
     'side.conditions': 'Conditions & commitments',
@@ -349,7 +350,7 @@
     fact: ['text'],
     faction: ['name', 'desc'],
     arc: ['name', 'act_names', 'desc'],
-    clue: ['name', 'text'],
+    clue: ['thread', 'name', 'text'],
   };
   const EFFECT_FIELDS = { resource: ['on_zero'], state: ['on_add', 'tick', 'on_expire', 'on_remove'], hook: ['do'], event: ['on_show'] };
 

@@ -716,6 +716,32 @@
         clues: found.filter((d) => d.kind !== 'lead').map(row),
         leads: found.filter((d) => d.kind === 'lead').map((d) => Object.assign(row(d), { followed: !!(d.followed && this.test(d.followed, null)) })) };
     }
+    // Every thread in the Clues panel (feedback 2026-10-15): the arcs with something to show (journalOf), then the side
+    // threads (`@clue thread:`) with anything found, in the order they began. A side thread whose leads are all
+    // followed is `done`.
+    threads() {
+      const s = this.s, out = [];
+      for (const id of Object.keys(this.c.arcs || {})) {
+        const j = this.journalOf(id); if (!j || (!j.clues.length && !j.leads.length && !j.act)) continue;
+        if (!j.clues.length && !j.leads.length && this.c.arcs[id].canon !== 'hard') continue;
+        out.push(Object.assign(j, { arc: true, hard: this.c.arcs[id].canon === 'hard' }));
+      }
+      out.sort((a, b) => b.hard - a.hard);
+      const side = {};
+      for (const d of Object.values(this.c.clues || {})) {
+        if (d.arc || !d.thread || (s.clues || {})[d.id] == null) continue;
+        const th = side[d.thread] = side[d.thread] || { id: 'thread:' + d.thread, name: d.thread, clues: [], leads: [], first: 999 };
+        const row = { id: d.id, name: d.name, text: d.text, turn: s.clues[d.id] };
+        th.first = Math.min(th.first, row.turn);
+        if (d.kind === 'lead') th.leads.push(Object.assign(row, { followed: !!(d.followed && this.test(d.followed, null)) })); else th.clues.push(row);
+      }
+      for (const th of Object.values(side).sort((a, b) => a.first - b.first)) {
+        th.clues.sort((a, b) => a.turn - b.turn); th.leads.sort((a, b) => a.turn - b.turn);
+        th.done = th.leads.length > 0 && th.leads.every((x) => x.followed);
+        out.push(th);
+      }
+      return out;
+    }
     actOf(arcId) { const a = this.c.arcs && this.c.arcs[arcId]; if (!a || !a.acts) return 0; return a.acts.filter((x) => x.year <= this.yearOf()).length; }
     monthlyWorld(summary) {
       const s = this.s, ctx = this.newCtx(null, null);

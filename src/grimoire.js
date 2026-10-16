@@ -253,7 +253,9 @@
     arc: { props: ['name', 'canon', 'acts', 'act_names', 'clock', 'beats', 'clues', 'key_clues', 'cast', 'desc'], effects: [] },
     // A clue or a lead as the Journal shows it (X11): `kind: clue` (the default) is one of its arc's `clues:`, counted by
     // clues(arc); `kind: lead` points somewhere to look and is never counted; `followed: <expr>` strikes a lead through.
-    clue: { props: ['arc', 'name', 'text', 'kind', 'followed'], effects: [] },
+    // A clue may instead name a side `thread:` (feedback 2026-10-15): anything hinted now that the player has to go
+    // after later. Such a clue belongs to no arc and clues(arc) never counts it.
+    clue: { props: ['arc', 'thread', 'name', 'text', 'kind', 'followed'], effects: [] },
     lore: { props: ['keys', 'canon', 'text'], effects: [] },
     timeline: { props: ['date', 'kind', 'event', 'text'], effects: [] },
   };

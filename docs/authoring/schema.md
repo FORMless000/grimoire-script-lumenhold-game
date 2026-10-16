@@ -307,6 +307,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `cast` | list |  |
 |  | `desc` | text | yes |
 | `@clue id` | `arc` | text |  |
+|  | `thread` | text | yes |
 |  | `name` | text | yes |
 |  | `text` | text | yes |
 |  | `kind` | text |  |
