@@ -28,13 +28,13 @@ text: {The Stargazers have set up tables under the dome, and everyone is making 
   gold -tiny
   mood +tiny
   starfall_jar = 1
-  say: {Thick glass, a cork sealed with wax, a rune for luck scratched into the lid. "Better odds tonight," says one of the Stargazers. "Theoretically."|You buy the good glass and take your time over it. It's the best jar on the table, and you know it.}
+  say: {Thick glass, a cork sealed with wax, a rune for luck scratched into the lid. "Better odds tonight," says one of the Stargazers. "Theoretically."|You buy the good glass and take your time over it. It's the best jar on the table, and you know it.|You pick the glass that holds in the cold without thinking, and seal it twice. It's the jar the first-years copy.}
 > right: Help the Stargazers set up the roof
   renown +tiny
   health -tiny
   mood +small
   starfall_jar = 0
-  say: {You haul blankets and telescopes up the observatory stairs all afternoon. Your arms ache. The Stargazers save you the best spot on the roof.|Blankets, cushions, a kettle that has to be carried up four hundred steps. The Stargazers know your name by the end of it.}
+  say: {You haul blankets and telescopes up the observatory stairs all afternoon. Your arms ache. The Stargazers save you the best spot on the roof.|Blankets, cushions, a kettle that has to be carried up four hundred steps. The Stargazers know your name by the end of it.|You haul the blankets up and turn the telescope back from the lake three times. It keeps swinging back. The Stargazers give up and save you a spot.}
 
 @event starfall_together
 title: A Blanket for Two
@@ -118,11 +118,11 @@ text: {Starfall at home. There's no observatory here, only the cottage roof and 
   mood +medium
   charm +tiny
   health -tiny
-  say: {You tell them about the towers and the lake and the staircase that moves, and they ask questions until the stars run out. It's past three when you climb down, cold to the bone and glad.|Everyone wants a story. You give them the best ones, slightly improved, until your feet have gone numb on the slates. Nobody minds.}
+  say: {You tell them about the towers and the lake and the staircase that moves, and they ask questions until the stars run out. It's past three when you climb down, cold to the bone and glad.|Everyone wants a story. You give them the best ones, slightly improved, until your feet have gone numb on the slates. Nobody minds.|You tell them about the academy, and then the neighbour tells the one about the duck pond, which is better. You laugh until the slates are cold.}
 > right: Slip off to the hill alone
   lore +small
   mood +small
-  say: {From the hill behind the cottage you name every star the way they taught you, and a few the way you learned as a child. Both names are right.|Alone on the hill, you watch the sky the way an academy student does now, and miss, a little, the way you used to.}
+  say: {From the hill behind the cottage you name every star the way they taught you, and a few the way you learned as a child. Both names are right.|Alone on the hill, you watch the sky the way an academy student does now, and miss, a little, the way you used to.|From the hill you can still hear the neighbour telling the one about the duck pond. You find you'd rather be on the roof, and walk back before the end.}
 
 @event starfall_on_internship
 slot: night
@@ -160,12 +160,12 @@ priority: 25
 art: mirror
 tags: festival money
 scene: A dormitory room strewn with robes, a student holding up a moth-eaten formal robe against themselves before a cracked mirror.
-text: {year == 1: The Midwinter Ball is tonight, and you have nothing to wear that isn't a uniform or a nightshirt.|{final_year: The last ball of your life as a student. The old robes look very tired.|{~Ball night again, and last year's robes have shrunk, somehow, in the trunk.|Ball night again. Your robes have a stain on the cuff you'd forgotten about.}}} {~The village tailor is open till three.|Your roommate is already dressed and gloating.|The mirror has opinions.}
+text: {year == 1: The Midwinter Ball is tonight, and you have nothing to wear that isn't a uniform or a nightshirt.|{final_year: The last ball of your life as a student. The old robes look very tired.|{~Ball night again, and last year's robes have shrunk, somehow, in the trunk.|Ball night again. Your robes have a stain on the cuff you'd forgotten about.|Ball night again. The robes fit, but you're tired of the sight of them.}}} {~The village tailor is open till three.|Your roommate is already dressed and gloating.|The mirror has opinions.}
 > left: Buy new robes in the village
   gold -small
   mood +small
   charm +tiny
-  say: {~Deep blue, with a lining like the night sky. In the tailor's mirror you look, for once, like someone in a portrait.|New robes, a sensible colour and an insensible price. They fit as if they were waiting for you.}
+  say: {~Deep blue, with a lining like the night sky. In the tailor's mirror you look, for once, like someone in a portrait.|New robes, a sensible colour and an insensible price. They fit as if they were waiting for you.|Something bold, chosen in a hurry. The mirror's opinions, for once, are all good ones.}
 > right: Glamour your old ones
   challenge spell apprentice+:
     win:
@@ -192,12 +192,12 @@ text: {The frost-mages have turned the courtyard into an ice garden for the ball
 > left: Walk it slowly
   mood +small
   health -tiny
-  say: {You walk every path twice, until your toes are numb and your head is clear. The fountain's frozen spray catches the light like a held breath.|You find the centre of the maze, where someone has left a frozen bench and a frozen apple. You sit a while, until the cold comes up through your shoes.}
+  say: {You walk every path twice, until your toes are numb and your head is clear. The fountain's frozen spray catches the light like a held breath.|You find the centre of the maze, where someone has left a frozen bench and a frozen apple. You sit a while, until the cold comes up through your shoes.|You know the paths by heart, so you take the ones nobody else finds. Under the blue lanterns you have the garden to yourself for a while.}
 > right: Help the frost-mages finish it
   arcana +tiny
   renown +tiny
   health -tiny
-  say: {They show you how to hold the cold in a petal until it sets. Your hands ache for an hour. One of the roses on the path is yours.|You shape a whole archway of ice under instruction, fingers stiff with cold, and it holds. The frost-mages nod, which is how they applaud.}
+  say: {They show you how to hold the cold in a petal until it sets. Your hands ache for an hour. One of the roses on the path is yours.|You shape a whole archway of ice under instruction, fingers stiff with cold, and it holds. The frost-mages nod, which is how they applaud.|This year they let you shape a lantern of ice. It glows blue on the path, and nobody knows it's yours but you.}
 
 @event ball_last_dance
 title: The Last Waltz
@@ -247,4 +247,4 @@ text: {After the ball, someone throws the first snowball in the courtyard, and w
 > right: Watch from the cloister with cocoa
   mood +small
   health +tiny
-  say: {You watch from the cloister, warm and dry, and cheer for whoever's losing. Nobody throws at you. Mostly.|You hold the cocoa and the coats, and you're the only one who goes to bed warm.}
+  say: {You watch from the cloister, warm and dry, and cheer for whoever's losing. Nobody throws at you. Mostly.|You hold the cocoa and the coats, and you're the only one who goes to bed warm.|You watch the first-years' fort hold against all comers. Yours are the only robes in the courtyard that survive the night.}

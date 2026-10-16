@@ -13,14 +13,14 @@ weight: 20
 art: meal
 tags: food money
 scene: A refectory kitchen door at closing time, a cook scraping the last of a stew into a bowl for a student waiting in the doorway.
-text: {The refectory is closing, and the kitchens are scraping the pots. A cook sees you hovering in the doorway and holds up a ladle, eyebrows raised.|The same cook, the same ladle. She doesn't ask any more; she just raises her eyebrows.|You know the kitchens' closing time to the minute now.} {A prefect is still at the end table, finishing an essay.|Two first-years are sweeping, and watching.}
+text: {The refectory is closing, and the kitchens are scraping the pots. A cook sees you hovering in the doorway and holds up a ladle, eyebrows raised.|The same cook, the same ladle. She doesn't ask any more; she just raises her eyebrows.|You know the kitchens' closing time to the minute now.} {A prefect is still at the end table, finishing an essay.|Two first-years are sweeping, and watching.|The cook is humming, which means there's plenty.}
 > left: Take the bowl
   health +small
   renown -tiny
-  say: {It's the burnt bit at the bottom of the stew and it is the best thing you've ever eaten. The prefect looks up from her essay and remembers your face.|The cook fills the bowl to the brim. The first-years see, and by breakfast half your year knows why.}
+  say: {It's the burnt bit at the bottom of the stew and it is the best thing you've ever eaten. The prefect looks up from her essay and remembers your face.|The cook fills the bowl to the brim. The first-years see, and by breakfast half your year knows why.|You know the closing time to the minute, and so does the cook. She fills the bowl before you're through the door, humming.}
 > right: Shake your head and leave
   health -tiny
-  say: {"Not hungry," you say, to nobody in particular, and go upstairs on an empty stomach that disagrees.|You walk out with your pride and nothing else. Your stomach complains all night.}
+  say: {"Not hungry," you say, to nobody in particular, and go upstairs on an empty stomach that disagrees.|You walk out with your pride and nothing else. Your stomach complains all night.|You know the closing time, and leave a minute before it. The humming follows you up the stairs, and so does the smell.}
 
 @event hungry_pocketed_rolls
 title: Rolls for Later
@@ -32,13 +32,13 @@ weight: 20
 art: meal
 tags: food money
 scene: A breakfast table heaped with bread rolls, a student's hand hovering near a pocket while a prefect patrols the aisle.
-text: {The refectory's bread rolls are piled high. Board-payers only, says the sign; it doesn't say how many.|The rolls again, and the sign again, and your empty pockets.|Another meal. You've got good at looking as if you've paid.} {The prefect on duty is reading a letter.|The prefect on duty is looking straight at the bread.}
+text: {The refectory's bread rolls are piled high. Board-payers only, says the sign; it doesn't say how many.|The rolls again, and the sign again, and your empty pockets.|Another meal. You've got good at looking as if you've paid.} {The prefect on duty is reading a letter.|The prefect on duty is looking straight at the bread.|The prefect on duty has gone for more tea.}
 > left: Pocket a few for later
   health +small
   alignment -tiny
   say: {Three rolls in your robe, still warm. They last a day, and so does the guilt.|You fill your pockets and walk out at an even pace, crumbs and all.|Two rolls and an apple. Nobody stops you. You eat them on the stairs, a little ashamed.}
 > right: Eat what's on your plate
-  say: {One roll, eaten slowly, and nothing taken that isn't yours. By the next meal you're light-headed and honest.|You eat what you're given, and the hunger keeps you company for hours.}
+  say: {One roll, eaten slowly, and nothing taken that isn't yours. By the next meal you're light-headed and honest.|You eat what you're given, and the hunger keeps you company for hours.|One roll, slowly, with the look of someone who has paid. The hunger knows better.}
 
 @event hungry_maud_soup
 title: Soup at the Cottage
@@ -74,20 +74,20 @@ weight: 20
 art: cauldron
 tags: study
 scene: A dim potions storeroom, a student up to the elbows in a crusted cauldron while a prefect reads by a lamp at the door.
-text: {Detention, and a row of crusted cauldrons and a prefect by the door with a book.|Detention again. The cauldrons are the same; the crust is worse.|You know these cauldrons by name now. One of them, you suspect, knows you.} {Something in the third one is still bubbling.|The prefect is pretending not to be bored.}
+text: {Detention, and a row of crusted cauldrons and a prefect by the door with a book.|Detention again. The cauldrons are the same; the crust is worse.|You know these cauldrons by name now. One of them, you suspect, knows you.} {Something in the third one is still bubbling.|The prefect is pretending not to be bored.|The prefect has brought a second book this time.}
 > left: Scrub them properly
   alchemy +small
   health -tiny
-  say: {You scrub until your knuckles are raw, and learn which residues bite back and which only sulk.|By the last cauldron you can tell a week-old draught from a month-old one by the smell alone. Your hands sting for days.}
+  say: {You scrub until your knuckles are raw, and learn which residues bite back and which only sulk.|By the last cauldron you can tell a week-old draught from a month-old one by the smell alone. Your hands sting for days.|You scrub your old acquaintances one by one. The one that knows you gives up its crust almost gently.}
 > right: Talk your way to an early night
   challenge negotiate apprentice+:
     win:
       mood +small
-      say: {You talk about the prefect's book until the prefect is talking about it too, and at nine they wave you off. "Same time next week. Possibly."|You find out you're both from the same county. The cauldrons can wait for someone less charming.}
+      say: {You talk about the prefect's book until the prefect is talking about it too, and at nine they wave you off. "Same time next week. Possibly."|You find out you're both from the same county. The cauldrons can wait for someone less charming.|The prefect is on the second book and glad of the interruption. You talk until nine, and the cauldrons stay crusted another week.}
     lose:
       mood -small
       health -tiny
-      say: {"Nice try," says the prefect, and hands you the worst cauldron in the row.|The prefect hears you out, then points at the third cauldron, the bubbling one. "For the speech."}
+      say: {"Nice try," says the prefect, and hands you the worst cauldron in the row.|The prefect hears you out, then points at the third cauldron, the bubbling one. "For the speech."|The prefect doesn't look up from the second book. "The one that knows you," they say. "Start there."}
 
 @event detention_lines
 title: Lines, With Company
@@ -106,14 +106,14 @@ text: Detention means lines, a hundred of them, and {other} is at the next desk 
   challenge deceive apprentice likely:
     win:
       study +small
-      say: {~A hundred lines and an evening's revision for every course. The quill at the front records nothing but scratching.|You alternate a line and a page of notes. Nobody checks. Your whole week's reading is the better for it.}
+      say: {~A hundred lines and an evening's revision for every course. The quill at the front records nothing but scratching.|You alternate a line and a page of notes. Nobody checks. Your whole week's reading is the better for it.|You write "Stairs are for walking" with one hand and a week's notes with the other. The quill at the front records only the stairs.}
     lose:
       mood -small
       study -tiny
-      say: {~The prefect lifts your lines, finds your notes underneath and confiscates them until the end of term.|Your notes fall on the floor at exactly the wrong moment. The prefect keeps them, and makes you start the lines again.}
+      say: {~The prefect lifts your lines, finds your notes underneath and confiscates them until the end of term.|Your notes fall on the floor at exactly the wrong moment. The prefect keeps them, and makes you start the lines again.|Between the stairs and the notes you lose track. The prefect finds forty lines of notes among the stairs, and you start again.}
 > right: Talk to {other}
   rel other +small
-  say: {~By the fortieth line you know why {other} is here, and it's a better story than yours. The quill at the front writes it all down, word for word.|You compare crimes. {other} laughs so hard the quill at the front writes "LAUGHTER" in capitals.}
+  say: {~By the fortieth line you know why {other} is here, and it's a better story than yours. The quill at the front writes it all down, word for word.|You compare crimes. {other} laughs so hard the quill at the front writes "LAUGHTER" in capitals.|{other} tells you which staircase is to blame. You laugh until the quill at the front writes "STAIRS?" in the margin.}
 
 # ---------------- Probation ----------------
 
@@ -211,13 +211,13 @@ weight: 16
 art: pouch
 tags: money
 scene: A student emptying a coin purse on a dormitory bed, three coins and a button rolling out across the blanket.
-text: {You tip out your purse on the bed. Three coins and a button.|The purse again. The button is still there; the coins are fewer.} Board is due at the start of every month. {On the way to breakfast you passed the Job Board in the entrance hall, and someone was taking down a notice.|Someone in your year says the Newt is hiring again.|There's a hardship notice by the bursar's door, someone says, and professors who pay for errands.}
+text: {You tip out your purse on the bed. Three coins and a button.|The purse again. The button is still there; the coins are fewer.|The purse, the button, and fewer coins than ever. You've stopped counting the button.} Board is due at the start of every month. {On the way to breakfast you passed the Job Board in the entrance hall, and someone was taking down a notice.|Someone in your year says the Newt is hiring again.|There's a hardship notice by the bursar's door, someone says, and professors who pay for errands.}
 > left: Sell your second-best cloak
   gold +small
   mood -small
-  say: {A second-hand stall in the village gives you a fair price and an unfair look. The castle is draughty without it.|You sell the cloak. It was your grandmother's. You're nearly sure she'd understand.}
+  say: {A second-hand stall in the village gives you a fair price and an unfair look. The castle is draughty without it.|You sell the cloak. It was your grandmother's. You're nearly sure she'd understand.|The second-hand stall knows you by now. The price is fair, and the look is kinder than last time.}
 > right: Look at the Job Board later
-  say: {You make a note. The Job Board, entrance hall, morning to evening. One job at a time, paid by the shift.|You'll go and read the notices. Probably. Board is due either way.}
+  say: {You make a note. The Job Board, entrance hall, morning to evening. One job at a time, paid by the shift.|You'll go and read the notices. Probably. Board is due either way.|You'll look at the Job Board, and at the hardship notice by the bursar's door. Board is due either way.}
 
 # ---------------- Familiars (N8): cards instead of a monthly tick ----------------
 
@@ -235,11 +235,11 @@ text: {Ember has chosen your week's coursework to sleep on, and her tail is smou
 > left: Rescue the essay
   study +tiny
   mood -tiny
-  say: {You slide the pile out from under her. She opens one eye, says something rude in fox and sulks under the bed until supper.|You rescue the pages and lose a fox: she spends the evening on your pillow with her back to you.}
+  say: {You slide the pile out from under her. She opens one eye, says something rude in fox and sulks under the bed until supper.|You rescue the pages and lose a fox: she spends the evening on your pillow with her back to you.|You lift her off Monday's work in one piece. She lets you, which is worse: she's planning something.}
 > right: Let her sleep and write around her
   mood +small
   study -tiny
-  say: {You write the conclusion in the margin, round a sleeping fox. Your essays come back scorched at one corner and marked down for it.|She's warm, she's purring in her own way, and your notes have a hole in them now. It's worth it.}
+  say: {You write the conclusion in the margin, round a sleeping fox. Your essays come back scorched at one corner and marked down for it.|She's warm, she's purring in her own way, and your notes have a hole in them now. It's worth it.|You write Monday's work round her, a paragraph at a time, while her tail smoulders in the margin. It smells of smoke, and it's marked down for it, and it's in.}
 
 @event ember_night_hunt
 title: Ember Goes Hunting
@@ -297,11 +297,11 @@ text: {Bedtime. "HOMEWORK," says the clockwork owl, and then, because you haven'
 > left: Stay up and write it now
   study +small
   health -tiny
-  say: {You write it all by candlelight with your eyes half shut. It's not your best work, but it's in. The owl says "GOOD," which you didn't know it could.|Two hours of frantic quill-work by the last of the candle. You hand it in on time and nod off in the next lecture.}
+  say: {You write it all by candlelight with your eyes half shut. It's not your best work, but it's in. The owl says "GOOD," which you didn't know it could.|Two hours of frantic quill-work by the last of the candle. You hand it in on time and nod off in the next lecture.|You write until the owl stops saying "LATE" and says nothing at all. It goes in on time, just.}
 > right: Hand it in late
   health +tiny
   study -tiny
-  say: {You go to sleep. The owl says "DISAPPOINTED" twice and goes quiet. Your work goes in a day late and is marked accordingly.|You sleep until eight. The owl doesn't speak to you until lunch, and then only to say "LATE."}
+  say: {You go to sleep. The owl says "DISAPPOINTED" twice and goes quiet. Your work goes in a day late and is marked accordingly.|You sleep until eight. The owl doesn't speak to you until lunch, and then only to say "LATE."|"LATE," says the owl, and it is. You hand the work in a day after, and the owl says it again at breakfast.}
 
 @event owl_birthday
 title: "BIRTHDAY"

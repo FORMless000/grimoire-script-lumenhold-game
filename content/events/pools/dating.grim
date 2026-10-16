@@ -21,11 +21,11 @@ text: {Market day in the village, and {partner} has decided you're going togethe
 > left: Buy {them} something silly
   gold -small
   spark partner +small
-  say: {You buy {partner} the worst hat at the market. {They} wear{s} it all day, with enormous dignity.|A tin ring from a pedlar, too big for any finger. {partner} threads it on a string and doesn't take it off.}
+  say: {You buy {partner} the worst hat at the market. {They} wear{s} it all day, with enormous dignity.|A tin ring from a pedlar, too big for any finger. {partner} threads it on a string and doesn't take it off.|Halfway down {partner}'s list, between flour and string, you find "something silly" in your own handwriting. A paper crown. {They} wear{s} it home.}
 > right: Just walk and talk
   rel partner +small
   mood +tiny
-  say: {You walk the whole market twice and buy nothing at all. You talk the entire time and remember none of it, only the voice.|An afternoon of nothing in particular, which is exactly what you both needed.}
+  say: {You walk the whole market twice and buy nothing at all. You talk the entire time and remember none of it, only the voice.|An afternoon of nothing in particular, which is exactly what you both needed.|You ignore the list together and just walk. {partner} crosses things off anyway, one by one, as if you'd bought them.}
 
 @event date_study_together
 title: Studying Together
@@ -45,11 +45,11 @@ text: {{partner} suggests studying together. In theory, this is efficient.|Anoth
 > left: Actually study
   study +small
   spark partner -tiny
-  say: {You study, properly, in companionable silence. {partner} sighs once, theatrically. You both pass the next quiz.|Two hours of real work. {partner} quizzes you on the walk back, a little wistful that it was only studying, and you get them all right.}
+  say: {You study, properly, in companionable silence. {partner} sighs once, theatrically. You both pass the next quiz.|Two hours of real work. {partner} quizzes you on the walk back, a little wistful that it was only studying, and you get them all right.|You keep your knees to yourself and your eyes on the page, mostly. {partner} stacked the books in the right order, and you get through all of them.}
 > right: Don't study at all
   spark partner +small
   study -tiny
-  say: {You pass notes, then drawings, then you're both thrown out of the library for laughing. Worth it.|Not a page is turned. The librarian moves you apart, which only makes it worse.}
+  say: {You pass notes, then drawings, then you're both thrown out of the library for laughing. Worth it.|Not a page is turned. The librarian moves you apart, which only makes it worse.|Your knees keep touching and neither of you moves. The books stay stacked exactly as {partner} left them.}
 
 @event date_first_quarrel
 title: A Quarrel
@@ -118,11 +118,11 @@ text: {Rain all afternoon, and {partner} has found the window seat in the west t
 > left: Play to win
   spark partner +tiny
   guile +tiny
-  say: {You win, ruthlessly. {partner} demands a rematch and wins that. Neither of you will ever forget the score.|You cheat; {partner} cheats better. The game ends in a pillow fight and a broken teacup.}
+  say: {You win, ruthlessly. {partner} demands a rematch and wins that. Neither of you will ever forget the score.|You cheat; {partner} cheats better. The game ends in a pillow fight and a broken teacup.|You invent a rule; {partner} invents a better one. A soap piece wins in the end, and you both agree it earned it.}
 > right: Forget the game
   spark partner +small
   mood -tiny
-  say: {The game is abandoned by the second move. You talk about your families until the rain stops and the room is dark and you're late for supper.|You fall asleep under the blanket and wake up cold and late and very happy.}
+  say: {The game is abandoned by the second move. You talk about your families until the rain stops and the room is dark and you're late for supper.|You fall asleep under the blanket and wake up cold and late and very happy.|You carve another soap piece together while the rain goes on. Nobody can say what it was meant to be, and {partner} keeps it anyway.}
 
 @event date_forgotten_day
 title: The Day You Forgot
@@ -170,11 +170,11 @@ text: With the {month == 4: Midwinter Ball|Starfall dance} coming, {partner} has
   vigor +tiny
   spark partner +small
   health -tiny
-  say: {~By the end of the hour you can do the turn without looking. {partner} says "There," very softly, and doesn't let go straight away.|Your feet ache, and you can dance. Nearly.}
+  say: {~By the end of the hour you can do the turn without looking. {partner} says "There," very softly, and doesn't let go straight away.|Your feet ache, and you can dance. Nearly.|Whoever is watching from the door claps when you finally get the turn. {partner} bows to them, and then to you.|Your feet stop arguing about halfway through the hour. By the end you can do the turn, and {partner} is insufferably pleased.|You count until the counting turns into a tune, and the turn comes out right on the last beat.}
 > right: Make it a joke
   mood +small
   rel partner +small
-  say: {~You invent a new dance, mostly flailing. {partner} laughs so hard {they} ha{s} to sit down, then joins in.|You never learn the turn. You learn that {partner} snorts when {they} laugh{s}, which is better.}
+  say: {~You invent a new dance, mostly flailing. {partner} laughs so hard {they} ha{s} to sit down, then joins in.|You never learn the turn. You learn that {partner} snorts when {they} laugh{s}, which is better.|You play it up for whoever is watching at the door. They laugh, {partner} laughs, and nobody learns the turn.|You let your feet do what they like. {partner} copies them exactly, and it becomes a dance of its own.|You count in the wrong order on purpose. {partner} loses count laughing, and that's the end of the lesson.}
 
 @event date_after_graduation
 title: After
@@ -220,15 +220,15 @@ text: {Lyra's idea of a romantic afternoon is a duel in the empty courtyard, "to
     win:
       spark lyra +small
       arcana +tiny
-      say: {You win. Lyra stares at you as if you'd proposed. "Again," she says, breathless, and then, "Tomorrow." It's the best thing anyone has ever said to you.|A clean win. She shakes your hand, then doesn't let go of it.}
+      say: {You win. Lyra stares at you as if you'd proposed. "Again," she says, breathless, and then, "Tomorrow." It's the best thing anyone has ever said to you.|A clean win. She shakes your hand, then doesn't let go of it.|No holding back, so you don't, and you win. She grins as if she'd won herself, and demands you show her how.}
     lose:
       spark lyra +tiny
       health -small
-      say: {She wins, because she always does, and then sits beside you on the cold steps with the coffee and explains your mistake, very gently, for her.|You lose. She bandages your knuckle herself and pretends it's an inspection.}
+      say: {She wins, because she always does, and then sits beside you on the cold steps with the coffee and explains your mistake, very gently, for her.|You lose. She bandages your knuckle herself and pretends it's an inspection.|No holding back on either side. She wins, just, and admits on the steps that it was closer than she'll ever tell anyone else.}
 > right: Let her win, and tell her so
   rel lyra -tiny
   mood +small
-  say: {She knows the moment you drop your guard. "Don't you dare," she says, and then kisses you, furious, and then makes you do it again properly.|She's outraged. She's also, for the rest of the day, unusually soft.}
+  say: {She knows the moment you drop your guard. "Don't you dare," she says, and then kisses you, furious, and then makes you do it again properly.|She's outraged. She's also, for the rest of the day, unusually soft.|"I said I'd know," she says, the moment you drop your guard. She makes you start again, and this time you don't dare.}
 
 @event tobias_date_greenhouse_supper
 title: Lunch Among the Tomatoes
@@ -246,12 +246,12 @@ text: {Tobias has cooked lunch in the greenhouse, at a table between the tomato 
 > left: Eat everything, and ask for seconds
   spark tobias +small
   health +tiny
-  say: {You eat three bowls and he beams like the sun. He tells you about the farm, the goats, the year the river froze. You could listen for ever, and nearly do.|Seconds, thirds, a slice of pie. Tobias watches you eat with an expression you want to keep in a jar.}
+  say: {You eat three bowls and he beams like the sun. He tells you about the farm, the goats, the year the river froze. You could listen for ever, and nearly do.|Seconds, thirds, a slice of pie. Tobias watches you eat with an expression you want to keep in a jar.|You eat until the bread is gone, which takes some doing. Tobias lights the second candle off the first and says he'll bake less next time. He won't.}
 > right: Help him in the beds after
   rel tobias +small
   vigor +tiny
   health -tiny
-  say: {You weed the beds in the afternoon sun, side by side. Your back aches; your hands smell of tomato leaves. He hums the whole time.|An hour of planting. He shows you how to tell a seedling it's doing well. You feel ridiculous, and do it anyway, until your knees ache from the kneeling.}
+  say: {You weed the beds in the afternoon sun, side by side. Your back aches; your hands smell of tomato leaves. He hums the whole time.|An hour of planting. He shows you how to tell a seedling it's doing well. You feel ridiculous, and do it anyway, until your knees ache from the kneeling.|You work off the bread in the beds after. He picks you a wildflower for the jar and pretends it was a weed.}
 
 @event seraphine_date_a_future
 title: A Future She Saw
@@ -269,11 +269,11 @@ text: {Seraphine says she's seen a future with the two of you in it, and wants t
 > left: Ask her to tell you
   spark seraphine +small
   lore +tiny
-  say: {She tells you. A kitchen, a cat, a terrible argument about curtains, a garden. It's so ordinary you could cry. She says it's her favourite one.|A future with snow in it, and an old friend who comes to stay and never leaves. She stops halfway and holds your hand.}
+  say: {She tells you. A kitchen, a cat, a terrible argument about curtains, a garden. It's so ordinary you could cry. She says it's her favourite one.|A future with snow in it, and an old friend who comes to stay and never leaves. She stops halfway and holds your hand.|She tells you about the older two of you: slower, quieter, still arguing about curtains. She laughs at her own future and holds your hand all the way through it.}
 > right: Ask her not to
   rel seraphine +small
   mood -tiny
-  say: {"Let it surprise us," you say. She looks at you as if no one has ever asked her that. Then she puts the cards away, all of them.|She's quiet a while, then laughs. "You're the only person I can't read," she says. "It's very restful."}
+  say: {"Let it surprise us," you say. She looks at you as if no one has ever asked her that. Then she puts the cards away, all of them.|She's quiet a while, then laughs. "You're the only person I can't read," she says. "It's very restful."|"Then don't tell me," you say. She doesn't. For a whole hour she's only here, with you, and that's the best future yet.}
 
 @event corvin_date_rooftop_supper
 title: Supper on the Roof
@@ -292,11 +292,11 @@ text: {Corvin leads you through three passages and a window to a rooftop between
   guile +tiny
   spark corvin +tiny
   alignment -tiny
-  say: {"Borrowed," he says. From the headmistress's kitchen. You eat it anyway, and it tastes of getting away with something. He grins all evening.|"Don't ask, saint." You don't. The pastries are perfect.}
+  say: {"Borrowed," he says. From the headmistress's kitchen. You eat it anyway, and it tastes of getting away with something. He grins all evening.|"Don't ask, saint." You don't. The pastries are perfect.|"Mostly legal," he repeats, when you ask. The supper is from the prefects' pantry. You eat it on his cushions and laugh until a window opens below.}
 > right: Just enjoy it
   spark corvin +small
   health -tiny
-  say: {You eat supper on the roof until the candle gutters and the cold comes up through the slates. He doesn't make a single joke for a whole hour, and when you notice, he kisses you to stop you saying so.|The chimneys are warm, the air is cold, and you climb down at midnight scraped and happy.}
+  say: {You eat supper on the roof until the candle gutters and the cold comes up through the slates. He doesn't make a single joke for a whole hour, and when you notice, he kisses you to stop you saying so.|The chimneys are warm, the air is cold, and you climb down at midnight scraped and happy.|You lean back on the cushions and watch the towers go dark one by one. He says nothing clever all evening, and you like him better for it.}
 
 @event mir_date_invention
 title: They Built You Something
@@ -315,15 +315,15 @@ text: {Mir has built you a present, a brass bird that sings your name, mostly.|A
   chance likely:
     spark mir +small
     mood +small
-    say: {It sings your name, slightly wrong, all the way round the workshop, and lands in your hand. Mir bursts into happy tears and pretends it's soot.|It works. It works! They kiss you on the cheek and immediately start on version two.}
+    say: {It sings your name, slightly wrong, all the way round the workshop, and lands in your hand. Mir bursts into happy tears and pretends it's soot.|It works. It works! They kiss you on the cheek and immediately start on version two.|It's probably safe, and for once it is. It hums a tune you both know and settles on your shoulder. Mir puts the fire bucket down, astonished.}
   else:
     spark mir +tiny
     health -small
-    say: {It sings for three seconds and then explodes, gently, into springs. Mir is mortified. You laugh until they do too, and help them pick up every piece.|It sets your sleeve on fire. Mir has the bucket ready. "Version two," they say grimly.}
+    say: {It sings for three seconds and then explodes, gently, into springs. Mir is mortified. You laugh until they do too, and help them pick up every piece.|It sets your sleeve on fire. Mir has the bucket ready. "Version two," they say grimly.|It's probably not safe after all. The fire bucket earns its keep, and Mir chalks "probably" on the bench as a warning to themself.}
 > right: Ask them how it works first
   rel mir +small
   alchemy +tiny
-  say: {They explain for an hour, with diagrams. You understand a third of it and love all of it. You wind it up together, very carefully, and it works.|Two hours of explanation and three cups of tea. The bird sings at the end. You've never been so proud of a thing you didn't make.}
+  say: {They explain for an hour, with diagrams. You understand a third of it and love all of it. You wind it up together, very carefully, and it works.|Two hours of explanation and three cups of tea. The bird sings at the end. You've never been so proud of a thing you didn't make.|They explain why it's probably safe, at length, with the fire bucket close by. It is. You wind it up together, and it works.}
 
 @event kael_date_snow
 title: Snow, Just for You
@@ -341,12 +341,12 @@ text: {Kael leads you to a corner of the lawn and makes it snow, only there, onl
 > left: Catch the flakes
   spark kael +small
   health -tiny
-  say: {You catch them on your tongue until your teeth ache with cold, and laugh, and Kael, astonishingly, laughs too, out loud. The snow falls harder when he's happy, it turns out.|You're both soaked and frozen. He warms your hands in his, which have warmed, against all habit.}
+  say: {You catch them on your tongue until your teeth ache with cold, and laugh, and Kael, astonishingly, laughs too, out loud. The snow falls harder when he's happy, it turns out.|You're both soaked and frozen. He warms your hands in his, which have warmed, against all habit.|You catch a star-shaped flake on your glove and it doesn't melt for a whole minute. Kael watches it more than you do, and smiles when it goes.}
 > right: Ask him what it costs
   rel kael +small
   lore +tiny
   mood -tiny
-  say: {"Nothing," he says. Then, honestly, "A little cold in the chest, for a day." You make him stop. He looks at you as if no one had ever asked him to.|He tells you about Northern frost-craft and what it takes. Then he makes one last snowflake, small, and lets you keep it.}
+  say: {"Nothing," he says. Then, honestly, "A little cold in the chest, for a day." You make him stop. He looks at you as if no one had ever asked him to.|He tells you about Northern frost-craft and what it takes. Then he makes one last snowflake, small, and lets you keep it.|"Less, now," he says, which isn't an answer. You make him stop anyway, and he lets the last star land in your hair.}
 
 @event nessa_date_off_record
 title: Off the Record
@@ -363,7 +363,7 @@ scene: A newspaper office late at night, an enchanted quill lying still on a des
 text: {Nessa locks the Ledger office, puts her quill in a drawer and says, "Off the record. For as long as you like."|Another hour off the record. The quill sulks in its drawer.|Nessa has started saying "off the record" when she means "I love you". You've noticed.} {There's a pot of tea and a plate of toast.|The proofs are stacked and, for once, ignored.|It's raining on the skylight.}
 > left: Ask her about herself
   spark nessa +small
-  say: {She talks about her childhood for an hour, which she never does. A printing shop, a father who read the news aloud. You don't take a single note. She notices.|Nessa, off the record, is quieter and funnier. You stay until the lamp runs out.}
+  say: {She talks about her childhood for an hour, which she never does. A printing shop, a father who read the news aloud. You don't take a single note. She notices.|Nessa, off the record, is quieter and funnier. You stay until the lamp runs out.|You ask about her, and she says "off the record" first, and then, quietly, a great deal. The rain on the skylight keeps it between the two of you.}
 > right: Tell her a secret of your own
   rel nessa +small
-  say: {You tell her something nobody knows. She holds it like it's the most valuable story she's ever had, and never writes it down.|She listens, and then tells you one back. Off the record. It feels like a promise.}
+  say: {You tell her something nobody knows. She holds it like it's the most valuable story she's ever had, and never writes it down.|She listens, and then tells you one back. Off the record. It feels like a promise.|You tell her your secret. She says "off the record" back, and you both know what she means.}

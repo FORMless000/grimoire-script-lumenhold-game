@@ -18,16 +18,16 @@ text: {The caretaker has a list of jobs that can only be done when the castle is
   vigor +small
   health -tiny
   mood -tiny
-  say: {season == "winter": {You shovel snow off the battlements until you can't feel your ears. The view is worth one of them.|You and the caretaker clear a whole parapet in silence. At the end you're handed a biscuit, which is how the caretaker says thank you.}|{You beat forty mattresses. Two of them contained socks, one a love letter, and one a very surprised mouse.|You carry mattresses down six flights of moving stairs. One flight moves halfway through, with you and the mattress on it.}}
+  say: {season == "winter": {You shovel snow off the battlements until you can't feel your ears. The view is worth one of them.|You and the caretaker clear a whole parapet in silence. At the end you're handed a biscuit, which is how the caretaker says thank you.|You drink the tea, then shovel the battlements till noon. The caretaker ticks you off the list, which feels like a medal.}|{You beat forty mattresses. Two of them contained socks, one a love letter, and one a very surprised mouse.|You carry mattresses down six flights of moving stairs. One flight moves halfway through, with you and the mattress on it.|Tea first, then mattresses until the sun goes down. The caretaker ticks you off the list with a flourish.}}
 > right: Make myself scarce
   challenge deceive apprentice:
     win:
       mood +small
-      say: {You remember an urgent appointment with a book and vanish round a corner. The caretaker's sigh follows you a long way.|You hide in a window seat until the list has moved on to someone else.}
+      say: {You remember an urgent appointment with a book and vanish round a corner. The caretaker's sigh follows you a long way.|You hide in a window seat until the list has moved on to someone else.|You drink the tea, hand back the list and disappear before the mug is cold.}
     lose:
       mood -small
       vigor +tiny
-      say: {The caretaker finds you behind a tapestry and hands you a shovel without comment.|You get as far as the stairs, which choose that moment to move you straight back to the caretaker.}
+      say: {The caretaker finds you behind a tapestry and hands you a shovel without comment.|You get as far as the stairs, which choose that moment to move you straight back to the caretaker.|You finish the tea and try to slip off. The caretaker taps the list, and you work down it until supper.}
 
 @event break_castle_flight_field
 title: The Field to Yourself
@@ -45,15 +45,15 @@ text: {With the flying lessons over for the break, the flight field is empty and
     win:
       vigor +small
       mood +small
-      say: {You thread every hoop and pull up so late that the grass brushes your boots. Nobody saw. That's almost a shame.|You lap the field until the hoops blur. Landing, you find you're grinning like a first-year.}
+      say: {You thread every hoop and pull up so late that the grass brushes your boots. Nobody saw. That's almost a shame.|You lap the field until the hoops blur. Landing, you find you're grinning like a first-year.|You take the broom that pulls left and fly the hoops leaning right. Below you, the fox's tracks blur into one long line.}
     lose:
       health -small
       mood -tiny
-      say: {The wind cheats, as it always does, and you meet the far hoop with your shoulder.|You land in the long grass, which has caught a great many students before you. It does not catch gently.}
+      say: {The wind cheats, as it always does, and you meet the far hoop with your shoulder.|You land in the long grass, which has caught a great many students before you. It does not catch gently.|You forget which broom pulls left until the far hoop reminds you. You land in the fox's tracks, hard.}
 > right: Practise slow, careful turns
   vigor +small
   mood -small
-  say: {Left, right, left, at walking pace, for an hour. It is deeply dull and, annoyingly, it works.|You practise the turn that always throws you until it doesn't. Your arms ache all evening.}
+  say: {Left, right, left, at walking pace, for an hour. It is deeply dull and, annoyingly, it works.|You practise the turn that always throws you until it doesn't. Your arms ache all evening.|You turn against the broom that pulls left until it gives up and flies straight. You land beside the fox's tracks, pleased with you both.}
 
 @event break_castle_bored_stairs
 title: The Bored Staircases
@@ -70,16 +70,16 @@ text: {With nobody to carry up and down, the castle's staircases have grown rest
   chance likely:
     guile +small
     mood +small
-    say: {It carries you to a corridor you've never seen, full of portraits who are thrilled to have a visitor.|It takes you the long way, through three towers, and sets you down exactly where you wanted to be.}
+    say: {It carries you to a corridor you've never seen, full of portraits who are thrilled to have a visitor.|It takes you the long way, through three towers, and sets you down exactly where you wanted to be.|The eager flight carries you off like a dog with a stick, the long way round, and brings you back very pleased with itself. It was a good ride.}
   else:
     health -tiny
     mood -small
-    say: {It drops you on a landing in the east wing and refuses to come back. You walk for an hour.|It swings out over the stairwell and stops. You wait there, cramped and cold, with nothing to read, until it gets bored again.}
+    say: {It drops you on a landing in the east wing and refuses to come back. You walk for an hour.|It swings out over the stairwell and stops. You wait there, cramped and cold, with nothing to read, until it gets bored again.|The eager flight carries you off like a dog with a stick and drops you somewhere it thinks you'll like. You don't. It takes an hour to walk back.}
 > right: Take the long way, on foot
   vigor +small
   mood -small
   health -tiny
-  say: {You take the servants' stair, all two hundred steps of it. The staircases watch you go, disappointed.|You walk round by the bridges. It takes all morning, and your legs will remember it.}
+  say: {You take the servants' stair, all two hundred steps of it. The staircases watch you go, disappointed.|You walk round by the bridges. It takes all morning, and your legs will remember it.|You walk past the eager flight. It follows you the length of the stairwell, nudging the banister, and you don't give in.}
 
 @event break_castle_night_rounds
 title: The Lone Prefect
@@ -97,15 +97,15 @@ text: {Only one prefect has stayed for the break, and at breakfast they sigh tha
     win:
       guile +small
       mood +small
-      say: {You have the castle to yourself for an hour. Moonlit bridges, sleeping portraits, the whole lake laid out below.|You slip past the lantern twice and watch the lake from a window nobody uses. It feels like owning the place.}
+      say: {You have the castle to yourself for an hour. Moonlit bridges, sleeping portraits, the whole lake laid out below.|You slip past the lantern twice and watch the lake from a window nobody uses. It feels like owning the place.|You know the rounds to the quarter-hour, and you're never where the lantern is. The banging door covers your footsteps all the way to the roof.}
     lose:
       mood -small
       guile +tiny
-      say: {The lantern swings round and finds you. The prefect writes your name in the demerit ledger with visible relief at having something to write.|You walk straight into the prefect on a dark landing. You both scream, and then you get a demerit.}
+      say: {The lantern swings round and finds you. The prefect writes your name in the demerit ledger with visible relief at having something to write.|You walk straight into the prefect on a dark landing. You both scream, and then you get a demerit.|The prefect changed the rounds after pinning them up. The lantern is exactly where you are, and a moment later so is your name, in the ledger.}
 > right: Offer to walk the rounds
   charm +small
   health -tiny
-  say: {The prefect is glad of the company and tells you which portraits snore. You go to bed very late.|You carry the lantern while the prefect checks doors. Somewhere in the fourth tower you become friends, a little.}
+  say: {The prefect is glad of the company and tells you which portraits snore. You go to bed very late.|You carry the lantern while the prefect checks doors. Somewhere in the fourth tower you become friends, a little.|You walk the rounds you already know by heart. The prefect is impressed, then suspicious, and you shut the banging door together.}
 
 # ---------------- Break: at home (plan: home) ----------------
 
@@ -124,12 +124,12 @@ text: {Someone at home has decided you're old enough for the family recipe, and 
 > left: Write it all down
   alchemy +small
   mood -small
-  say: {You take notes like it's a potions practical. You're corrected on every line, and then on the corrections.|Your notes are thorough, exact and, you're told, missing the point.}
+  say: {You take notes like it's a potions practical. You're corrected on every line, and then on the corrections.|Your notes are thorough, exact and, you're told, missing the point.|You write down the first half. When the second half begins, your notebook is gently confiscated.}
 > right: Learn it by hand, the old way
   mood +small
   alchemy +tiny
   health -tiny
-  say: {You burn a finger and get a nod. In this kitchen, that's a diploma.|You get it wrong in a way that turns out to be how your grandmother made it. Everyone goes quiet, and then they eat it all.}
+  say: {You burn a finger and get a nod. In this kitchen, that's a diploma.|You get it wrong in a way that turns out to be how your grandmother made it. Everyone goes quiet, and then they eat it all.|Your hands learn a step of the second half before anyone means to teach it. Nobody says a word, but you're the one left stirring the old pot.}
 
 @event break_home_own_bed
 title: Your Own Bed
@@ -146,11 +146,11 @@ text: {Your own bed, after a term in the dormitory. You wake at the academy's ho
 > left: Sleep until noon
   health +small
   mood -tiny
-  say: {You sleep like a stone. At lunch you're called "the scholar" with a new and pointed emphasis.|You wake at noon, rested and ashamed. The whole house has done a morning's work, and mentions it.}
+  say: {You sleep like a stone. At lunch you're called "the scholar" with a new and pointed emphasis.|You wake at noon, rested and ashamed. The whole house has done a morning's work, and mentions it.|You sleep through the door banging a third time. When you finally come down, you miss the creaky floorboard, and nobody hears how late you are.}
 > right: Get up with everyone
   vigor +small
   health -tiny
-  say: {season == "winter": {You break the ice on the water butt and carry wood in before breakfast. Your hands sting all morning.|You're out in the dark with a lantern before the cockerel. The cockerel resents the competition.}|{You're in the yard by sunrise, hauling and fetching. Breakfast, when it comes, is the best of the year.|You work the cool hours with everyone else and see why they swear by them.}}
+  say: {season == "winter": {You break the ice on the water butt and carry wood in before breakfast. Your hands sting all morning.|You're out in the dark with a lantern before the cockerel. The cockerel resents the competition.|You step over the creaking floorboard and are at the woodpile before anyone knows you're up. Your fingers sting till noon.}|{You're in the yard by sunrise, hauling and fetching. Breakfast, when it comes, is the best of the year.|You work the cool hours with everyone else and see why they swear by them.|You step over the creaking floorboard and are in the yard before the door bangs again. By breakfast the work is half done.}}
 
 @event break_home_mending_chair
 title: The Mending Chair
@@ -168,14 +168,14 @@ text: {Word goes round the house that the scholar can fix things.|The things tha
     win:
       arcana +small
       mood +small
-      say: {It mends with a click and a little puff of light. The family applauds, then brings out three more things.|You fix it so well that it works better than new. Now everyone wants their things to work better than new.}
+      say: {It mends with a click and a little puff of light. The family applauds, then brings out three more things.|You fix it so well that it works better than new. Now everyone wants their things to work better than new.|The teapot mends without a crack showing. Somebody looks very relieved, and the chair fills up again by supper.}
     lose:
       mana -small
       mood -small
-      say: {It's mended, technically. It also hums now, and nobody can make it stop.|The spell fixes it and then, for good measure, everything else on the chair. Most of it did not need fixing that way.}
+      say: {It's mended, technically. It also hums now, and nobody can make it stop.|The spell fixes it and then, for good measure, everything else on the chair. Most of it did not need fixing that way.|The teapot mends, and now pours only for whoever broke it. Nobody will pick it up.}
 > right: Mend it by hand
   vigor +small
-  say: {Glue, string, a borrowed hammer and the whole morning. It holds. You don't trust it, but it holds.|You fix it the way your family always has: slowly, with a lot of opinions from the doorway.}
+  say: {Glue, string, a borrowed hammer and the whole morning. It holds. You don't trust it, but it holds.|You fix it the way your family always has: slowly, with a lot of opinions from the doorway.|You glue the teapot together crack by crack. Nobody admits to anything, but someone brings you tea in it.}
 
 @event break_home_the_trunk
 title: The Trunk in the Corner
@@ -191,11 +191,11 @@ text: {Your trunk stands open in the corner, and the family keeps putting things
 > left: Take everything
   health +small
   gold -tiny
-  say: {The bargeman charges you double for the weight, but you eat well for a month.|You pay the barge extra for the weight and haul it all back across the lake. Half the corridor smells of pickles until spring.}
+  say: {The bargeman charges you double for the weight, but you eat well for a month.|You pay the barge extra for the weight and haul it all back across the lake. Half the corridor smells of pickles until spring.|You take everything. The bargeman charges for the weight, and somewhere in the third cloth you find a note from home.}
 > right: Sneak half of it back
   guile +small
   mood -tiny
-  say: {You smuggle the jars back into the pantry at night. In the morning they're in the trunk again, wrapped tighter.|You leave the cake on a shelf by the door. You feel worse about it than you expected.}
+  say: {You smuggle the jars back into the pantry at night. In the morning they're in the trunk again, wrapped tighter.|You leave the cake on a shelf by the door. You feel worse about it than you expected.|You manage to leave one jar behind. In its place, someone has tucked a note.}
 
 # ---------------- Break: working full-time (plan: work) ----------------
 
@@ -215,15 +215,15 @@ text: {The quiet days of the break are, says whoever is in charge, the time to c
     win:
       guile +small
       gold +tiny
-      say: {You find it wedged behind the counter, where it has been since the last stocktake. You're tipped for your thoroughness.|You find the mistake in the ledger itself: someone counted a box as a crate. You're paid a little extra, and nothing else is said.}
+      say: {You find it wedged behind the counter, where it has been since the last stocktake. You're tipped for your thoroughness.|You find the mistake in the ledger itself: someone counted a box as a crate. You're paid a little extra, and nothing else is said.|You count faster than your boss and find it first, under a sack nobody has moved in years. You're tipped, a little grudgingly.}
     lose:
       mood -small
       health -tiny
-      say: {You search until dusk, on your knees in the dust. It stays missing, and your boss looks at you as if you might have eaten it.|You count everything again and get a different number. Then a third.}
+      say: {You search until dusk, on your knees in the dust. It stays missing, and your boss looks at you as if you might have eaten it.|You count everything again and get a different number. Then a third.|You count faster than your boss, and wrong. The missing one stays missing, and now so does another.}
 > right: Write it off and move on
   mood +small
   gold -tiny
-  say: {"Breakage," you write. A coin is docked from your pay, on principle.|You write it off, and your boss sighs and takes it from your wages.}
+  say: {"Breakage," you write. A coin is docked from your pay, on principle.|You write it off, and your boss sighs and takes it from your wages.|You write it off before your boss has finished counting. It comes out of your wages all the same.}
 
 @event break_work_complaint
 title: The Complaint
@@ -241,14 +241,14 @@ text: {Someone has come back with a complaint and a voice built for it.|Another 
     win:
       charm +small
       gold +tiny
-      say: {You agree with everything until there's nothing left to agree with. They leave calm, and they leave a tip.|You listen, nod and offer them a chair. By the end they're telling you about their sister.}
+      say: {You agree with everything until there's nothing left to agree with. They leave calm, and they leave a tip.|You listen, nod and offer them a chair. By the end they're telling you about their sister.|You let them say a week's worth of complaint without interrupting once. By the end they're almost apologetic, and they tip.}
     lose:
       mood -medium
-      say: {It gets louder, and then it leaves, still loud, to tell everyone in the valley about you.|They demand your boss, then you, then your boss again, and you spend the rest of the day hearing about it.}
+      say: {It gets louder, and then it leaves, still loud, to tell everyone in the valley about you.|They demand your boss, then you, then your boss again, and you spend the rest of the day hearing about it.|A week's worth of complaint, and you interrupt it once. That's once too many.}
 > right: Give them what they want
   gold -tiny
   mood +tiny
-  say: {You hand over a refund out of your wages. They leave. The quiet afterwards is worth a coin.|A free one, on you. They take it without thanks, and the next one is lovely.}
+  say: {You hand over a refund out of your wages. They leave. The quiet afterwards is worth a coin.|A free one, on you. They take it without thanks, and the next one is lovely.|You give in before they're halfway through a week's worth of complaint. They seem almost disappointed.}
 
 @event break_work_half_hour
 title: Half an Hour Off
@@ -265,10 +265,10 @@ text: {Half an hour off in the middle of a long holiday shift.|Your half hour ag
   mood +small
   health -tiny
   gold -tiny
-  say: {season == "winter": {You buy roast chestnuts and eat them walking, snow in your collar. You come back soaked and much happier.|You buy a hot pie for the walk to the lake's edge and back. Your nose will not forgive you.}|{You buy a cold drink and sit in the sun until your neck burns. Worth it.|You buy a lemonade and walk to the water and stand there. Half an hour is longer outside.}}
+  say: {season == "winter": {You buy roast chestnuts and eat them walking, snow in your collar. You come back soaked and much happier.|You buy a hot pie for the walk to the lake's edge and back. Your nose will not forgive you.|You spend a minute deciding and the rest in the snow, to the end of the lane and back. A clock strikes the wrong hour as you come in.}|{You buy a cold drink and sit in the sun until your neck burns. Worth it.|You buy a lemonade and walk to the water and stand there. Half an hour is longer outside.|You spend a minute deciding and the rest in the sun. A clock strikes the wrong hour, and you nearly believe it.}}
 > right: Nap in the back room
   health +small
-  say: {You sleep sitting up and wake with the shape of a crate on your cheek.|You doze off and dream of work, which seems unfair. The bell wakes you mid-shift in the dream.}
+  say: {You sleep sitting up and wake with the shape of a crate on your cheek.|You doze off and dream of work, which seems unfair. The bell wakes you mid-shift in the dream.|You spend a minute deciding, and wake to a clock striking the wrong hour. You're late, or early. Nobody can say.}
 
 @event break_work_short_wages
 title: A Coin Short
@@ -286,16 +286,16 @@ text: {Wages, counted out into your hand. You count them again.|Wage day. You co
     win:
       gold +small
       charm +tiny
-      say: {You show your sums. Your boss checks them, coughs, and pays you the difference with a little extra for the embarrassment.|You point it out politely and firmly. The missing coin appears, with an apology and a pastry.}
+      say: {You show your sums. Your boss checks them, coughs, and pays you the difference with a little extra for the embarrassment.|You point it out politely and firmly. The missing coin appears, with an apology and a pastry.|You count as slowly as your boss did, aloud, coin by coin. The difference is paid before you reach the end.}
     lose:
       gold +tiny
       mood -small
-      say: {Your boss recounts, gets the same wrong answer, and looks hurt that you asked.|You're told it's for the breakage. You don't remember any breakage. Nobody else does either.}
+      say: {Your boss recounts, gets the same wrong answer, and looks hurt that you asked.|You're told it's for the breakage. You don't remember any breakage. Nobody else does either.|You count aloud, slowly. Your boss counts back, slower, and reaches a different number. You give up before supper.}
 > right: Let it go this once
   gold +tiny
   mood -tiny
   charm +tiny
-  say: {You pocket it without a word. Your boss sees you notice, and you're given the easy shift next week.|One coin. You decide you can afford to be the bigger person, just about.}
+  say: {You pocket it without a word. Your boss sees you notice, and you're given the easy shift next week.|One coin. You decide you can afford to be the bigger person, just about.|Short by just enough to notice, and you notice, and say nothing. Your boss counts faster next time.}
 
 # ---------------- Regulars (one-time milestones at public places) ----------------
 
