@@ -610,7 +610,7 @@ function lint(opts = {}) {
 // block uses one mode (sequence, cycle or random) with one part count. Conditionals {cond: a|b} are exempt.
 // The scan mirrors the engine's variant(): {=…} is an expression, {~…} random, {&…} cycle, a colon in the first part
 // makes a conditional, otherwise two or more parts make a sequence.
-const VARIANTS_LEVEL = 'warn';   // 'error' once the migration is done
+const VARIANTS_LEVEL = 'error';
 function variantGroups(text) {
   const out = [];
   (function scan(t) {

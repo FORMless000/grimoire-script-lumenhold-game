@@ -2,6 +2,16 @@
 
 > Goal: a card's text variants never contradict each other. Variant *k* of the setup always meets variant *k* of the outcome, so authors can write setup ↔ payoff pairs instead of making every outcome fit every setup.
 
+## Status: done (2026-10-15)
+
+The designer's decisions differ from the recommendations below:
+- **Mixed sequence + random cards became full sequence**, not full random. Their prose was written as steps ("first time / again / by now"), so their random groups became sequence groups (migration `0032-variation-sequence`). A short group was padded with a final step that later showings keep.
+- **Pad, not trim.** Every short group was padded to its card's largest count, in English and zh-CN.
+- **No `shown` symbol.** Sequence makes framing conditionals unnecessary.
+- Cards that were random only stay random, padded and paired. Five cycle mixes became full cycle (`evo_bucket_duty`, `evo_shaping_hour`, `alch_chopping_board`, `alch_bandage_round`, `home_cottage_list`); `slice_late_lamps` became full random.
+
+The `variants` lint is an error now. The sections below are the plan as it was written.
+
 ## The rule
 
 **A card uses one variation mode, with one part count.** Every variation group in the card is a sequence `{a|b|c}`, or every one is a cycle `{&a|b|c}`, or every one is random `{~a|b|c}`. All of them have the same number of parts. A field may also have no variation at all.
