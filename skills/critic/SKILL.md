@@ -59,7 +59,7 @@ For every event, ask the questions below. Write down an issue only when you can 
 - The event will be seen 3–6 times in a run. Do the variation lines (`{~a|b|c}`, `{season=…}`, `{final_year: …|…}`) make each showing read differently?
 - Cast roles are re-filled each showing: a sequence that implies the same companion as last time is a bug. Classmate roles should be `tagged(<role>, student)`.
 - Sequences count showings, not choices: a sequence line that describes a choice's payoff (readers you helped, respect you earned) is a bug unless it is gated on state.
-- `{~…}` in the text and in a `say:` pick independently: a say that refers to a detail only one text alternative contains is a bug.
+- Variation is linked: variant *k* of every field shows together (one mode, one count per card; the lint checks counts). Read each position as one set: variant *k* of a `say:` must fit variant *k* of the text, and a sequence's step *k* must fit the *k*-th showing. A set that contradicts itself is a bug; a payoff whose setup sits at a different position is a bug.
 - Would the fourth showing still be welcome, or does the joke wear out? A repeatable event shouldn't hinge on a one-time surprise.
 
 **Items and recipes** (design §9.3)

@@ -588,6 +588,7 @@ function lint(opts = {}) {
   for (const u of canonCheck(content)) A.problems.push({ level: /^content\/batches\//.test(u.where[0]) ? 'error' : 'warn', where: u.where[0], msg: 'unknown proper noun "' + u.name + '" (add it to the worldbook, a @lore key or @vocab canon_allowlist)' + (u.where.length > 1 ? ' [+' + (u.where.length - 1) + ' more]' : '') });
   for (const lang of localeLangs()) lintLocale(content, lang, A.problems, opts);
   reachLint(content, A.problems);
+  lintVariants(content, A.problems);
   // Every map a place sits on needs its base art (src/map.js loads content/world/maps/<map>.svg).
   // A plan's `map_id:` (and @game map_id:) names a map some place sits on, or a track kind (A1).
   const MAPS = new Set(Object.values(content.places || {}).map((pl) => pl.map && pl.map.map).filter(Boolean)), KINDS = new Set(Object.values(content.tracks || {}).map((d) => d.kind));
@@ -603,6 +604,63 @@ function lint(opts = {}) {
   console.log((by.error.length ? C.r : C.g) + 'lint: ' + by.error.length + ' error(s), ' + by.warn.length + ' warning(s), ' + by.info.length + ' info' + C.x + C.d + ', ' + A.legacy.length + ' legacy (phase 3 migrates; --legacy lists)' + C.x + ' — ' + Object.keys(content.events).length + ' events, ' + Object.keys(content.states).length + ' states, ' + Object.keys(content.npcs).length + ' npcs, ' + Object.keys(content.endings).length + ' endings');
   if (by.error.length && !opts.noExit) process.exit(1);
   return !by.error.length;
+}
+
+// Linked variation (docs/grimoire-script.md § Inline variation): every group of a block picks the same position, so a
+// block uses one mode (sequence, cycle or random) with one part count. Conditionals {cond: a|b} are exempt.
+// The scan mirrors the engine's variant(): {=…} is an expression, {~…} random, {&…} cycle, a colon in the first part
+// makes a conditional, otherwise two or more parts make a sequence.
+const VARIANTS_LEVEL = 'warn';   // 'error' once the migration is done
+function variantGroups(text) {
+  const out = [];
+  (function scan(t) {
+    let i = 0;
+    while (i < t.length) {
+      if (t[i] !== '{') { i++; continue; }
+      let d = 0, j = i;
+      for (; j < t.length; j++) { if (t[j] === '{') d++; else if (t[j] === '}' && --d === 0) break; }
+      if (j >= t.length) return;
+      const inner = t.slice(i + 1, j), parts = []; let dd = 0, st = 0;
+      for (let k = 0; k < inner.length; k++) { const c = inner[k]; if (c === '{') dd++; else if (c === '}') dd--; else if (c === '|' && !dd) { parts.push(inner.slice(st, k)); st = k + 1; } }
+      parts.push(inner.slice(st));
+      let mode = null;
+      if (inner[0] === '~') mode = 'random'; else if (inner[0] === '&') mode = 'cycle';
+      else if (inner[0] !== '=') {
+        let colon = -1; dd = 0;
+        for (let k = 0; k < parts[0].length; k++) { const c = parts[0][k]; if (c === '{') dd++; else if (c === '}') dd--; else if (c === ':' && !dd) { colon = k; break; } }
+        mode = colon > 0 ? 'cond' : 'sequence';
+      }
+      if (mode && mode !== 'cond' && parts.length > 1) out.push(mode + '×' + parts.length);
+      if (inner[0] !== '=') parts.forEach((x) => scan(x));
+      i = j + 1;
+    }
+  })(text || '');
+  return out;
+}
+// Per block: the groups of each translatable string, keyed by string key.
+function variantsByBlock(strings) {
+  const by = {};
+  for (const x of strings) { const g = variantGroups(x.text); if (g.length) (by[x.block] = by[x.block] || {})[x.key] = g; }
+  return by;
+}
+function lintVariants(content, problems) {
+  const strings = I18n.extract(content), eng = {};
+  for (const x of strings) eng[x.block + ' ' + x.key] = x;
+  for (const [block, keys] of Object.entries(variantsByBlock(strings))) {
+    const kinds = new Set(Object.values(keys).flat());
+    if (kinds.size < 2) continue;
+    const x = strings.find((y) => y.block === block);
+    const [kind, id] = block.split(':'), d = id && content[kind + 's'] && content[kind + 's'][id];
+    problems.push({ level: VARIANTS_LEVEL, where: d ? rel(d.file) + ':' + d.line : x.file, msg: block + ' mixes variation (one mode and one count per block): ' + Object.entries(keys).map(([k, g]) => k + ' ' + g.join(',')).join('; ') });
+  }
+  for (const lang of localeLangs()) {
+    const loc = I18n.loadLocale(lang, loadLocaleSources(lang).filter((x) => !x.path.endsWith('/_obsolete.lang')));
+    for (const [block, keys] of Object.entries(loc.blocks)) for (const [key, e] of Object.entries(keys)) {
+      const src = eng[block + ' ' + key]; if (!src || !e.text) continue;
+      const a = variantGroups(src.text).sort().join(','), b = variantGroups(e.text).sort().join(',');
+      if (a !== b) problems.push({ level: VARIANTS_LEVEL, where: 'locales/' + lang + ' ' + block + ' ' + key, msg: '[' + lang + '] variation differs from English (' + (a || 'none') + ' vs ' + (b || 'none') + ')' });
+    }
+  }
 }
 
 // Reachability (tools/reach.js): a static fixpoint over producible facts. Anything it calls unreachable needs
@@ -1292,6 +1350,8 @@ function show(id) {
     const src = sources.find((s) => s.path === d.file).text.split('\n');
     let end = d.line; while (end < src.length && !src[end].startsWith('@')) end++;
     console.log(C.b + d.file + ':' + d.line + C.x + '\n' + src.slice(d.line - 1, end).join('\n').trimEnd());
+    const kind = k.slice(0, -1), v = variantsByBlock(I18n.extract(content).filter((x) => x.block === kind + ':' + id))[kind + ':' + id];
+    if (v) console.log(C.b + '\nvariation:' + C.x + '\n' + Object.entries(v).map(([key, g]) => '  ' + key.padEnd(24) + g.join(', ')).join('\n'));
   }
   if (!found) console.log('(no block with id "' + id + '")');
   const re = new RegExp('\\b' + id + '\\b');

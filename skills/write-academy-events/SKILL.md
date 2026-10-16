@@ -31,7 +31,7 @@ For each event decide:
 - **Newer constructs** (each documented in `docs/grimoire-script.md`; `node tools/grim.js schema` lists what the format has gained): `time:` / `slot:` (time of day), `defer:`, `up[spell]` options, `wage`, `locked:` on menu options, milestone `ramp:`, track `intro:`, `@game appeal` with `regrade`, `display:` on resources.
 - **Use tiers and presets, never raw numbers:** `mood -small`, `grind arcana`, `study evocation +small` (exam preparation; never `grades`), `perform duelling +small`, `spark lyra +tiny` (never `love`). Pitch every `challenge` (with `win:` / `partial:` / `lose:`) and every `chance` with `docs/authoring/checks.md`: difficulty, odds by nature, luck, drift; never `check`.
 
-**Repeatable pool events** (places, class days, practice, shifts, plans) have `class: routine`, `repeat: 4`–`6` (the cooldown in months), and must read differently each time: at least 3 inline variants (`{~a|b|c}`) across text and says, plus `{season=autumn: …|winter: …|…}` or `{final_year: …|…}` lines where they fit. Don't hinge a repeatable on a one-time surprise.
+**Repeatable pool events** (places, class days, practice, shifts, plans) have `class: routine`, `repeat: 4`–`6` (the cooldown in months), and must read differently each time: at least 3 inline variants across text and says, all in one mode with one count (usually a sequence `{a|b|c}`, where showing *k* reads variant *k* of every field; `docs/authoring/pools.md`), plus `{season=autumn: …|winter: …|…}` or `{final_year: …|…}` lines where they fit. Don't hinge a repeatable on a one-time surprise.
 
 For a **chain**, sketch the graph first: every queued event must be queued by something, and every flag tested must be set somewhere (lint enforces both).
 

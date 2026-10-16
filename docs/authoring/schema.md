@@ -30,7 +30,7 @@ text: Two to four sentences. Present tense, second person. Set up a real dilemma
       say: What losing looks like: a real outcome, not "it doesn't work".
 ```
 
-- **Where it's drawn:** `place:` (a map visit), `track:` with `level:` or `rank:` (class mornings, practice, shifts), `plan:` (break mornings), or none (the night's world slot). `class:` and `tone:` are required (`classes.md`). A pool card has `repeat:` (its cooldown) and at least three `{~a|b|c}` variants (`pools.md`); a one-off has neither.
+- **Where it's drawn:** `place:` (a map visit), `track:` with `level:` or `rank:` (class mornings, practice, shifts), `plan:` (break mornings), or none (the night's world slot). `class:` and `tone:` are required (`classes.md`). A pool card has `repeat:` (its cooldown) and at least three variants, one mode and one count per card (`pools.md`); a one-off has neither.
 - **Effects** are tier words and presets (`presets.md`), never raw numbers; checks are `challenge <kind> [using <skill>] <difficulty> [<odds>] [<luck>] [drift <word>]:` with `win:` / `lose:` (and `partial:`), pitched with `checks.md`; romance is `spark`. How the options should trade is `costs.md`.
 
 **Menus**: 3–8 options with keys other than left/right, each with a `hint:`; at least one option without `when:`.

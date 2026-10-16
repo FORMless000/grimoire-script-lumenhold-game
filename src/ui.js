@@ -342,10 +342,10 @@
       for (const l of log.slice(0, 120)) {
         // Re-render title and choice in the current language when possible.
         const ev = content.events[l.id];
-        const title = ev ? eng.interp(ev.title, l.actor) : l.title;
+        const title = ev ? eng.interpLogged(ev.title, l) : l.title;
         const opt = ev && l.key ? ev.options.find((o) => o.key === l.key) : null;
-        const choice = opt ? eng.interp(opt.label, l.actor) : l.choice;
-        const say = l.sayIds && l.sayIds.length && l.sayIds.every((id) => eng.sayIndex[id]) ? l.sayIds.map((id) => eng.interp(eng.sayIndex[id].text, l.actor)).join(' ') : l.say;
+        const choice = opt ? eng.interpLogged(opt.label, l) : l.choice;
+        const say = l.sayIds && l.sayIds.length && l.sayIds.every((id) => eng.sayIndex[id]) ? l.sayIds.map((id) => eng.interpLogged(eng.sayIndex[id].text, l)).join(' ') : l.say;
         h += '<div class="log-item"><div class="when">' + esc(t('journal.when', { month: eng.monthName(l.turn), year: eng.yearOf(l.turn) })) + '</div><b>' + esc(title) + '</b> — <span class="ch">' + esc(choice) + '</span>' + (say ? '<div class="say">' + esc(say) + '</div>' : '') + (l.n != null ? journalFeedback(l.n) : '') + '</div>';
       }
     }
@@ -669,7 +669,7 @@
     const l = eng.s.log[eng.s.log.length - 1];
     let say = rec.out.say;
     if (l && l.n === rec.n && l.sayIds && l.sayIds.length) {
-      const parts = l.sayIds.map((id) => { const [sid, who] = id.split('@'); const e = eng.sayIndex[sid]; return e ? eng.interp(e.text, who || l.actor) : null; });
+      const parts = l.sayIds.map((id) => { const [sid, who] = id.split('@'); const e = eng.sayIndex[sid]; return e ? eng.interpLogged(e.text, l, who || l.actor) : null; });
       if (parts.every((x) => x != null)) say = parts.join(' ');
     }
     return { say, deltas: rec.out.deltas || {}, notes: rec.out.notes || [], checks: rec.out.checks || [] };

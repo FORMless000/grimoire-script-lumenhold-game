@@ -17,15 +17,15 @@ weight: 10
 art: wave
 tags: life
 scene: A stone fountain in a flagstone courtyard, coins glinting under a skin of {season == "winter": ice|water}.
-text: {The courtyard fountain is taking wishes again.|The fountain again. Someone has left a button in it.|You know this fountain's moods by now.} {season == "winter": A thin ice has formed over the coins.|{~A first-year is fishing for a coin with a quill.|Two prefects argue over whether it counts as littering.|The water hums faintly, which it shouldn't.}}
+text: {The courtyard fountain is taking wishes again.|The fountain again. Someone has left a button in it.|You know this fountain's moods by now.} {season == "winter": A thin ice has formed over the coins.|{A first-year is fishing for a coin with a quill.|Two prefects argue over whether a button counts as littering.|The water hums faintly, which it shouldn't.}}
 > left: Toss a crown and wish
   gold -tiny
   mood +small
-  say: {~It sinks with a satisfying plink.|It lands on someone else's wish.|The fountain burps it back up. You decide that counts.}
+  say: {It sinks with a satisfying plink.|It lands on someone else's wish, and the button.|The fountain burps it back up. You decide that counts.}
 > right: Walk past, wish unspent
   mood -tiny
   arcana +tiny
-  say: {~You spend the minute reading the old runes on the rim instead.|A second-year tells you the runes say "No refunds". They probably do.}
+  say: {You spend the minute reading the old runes on the rim instead.|A second-year tells you the runes say "No refunds". They probably do.|You know the runes by heart now. You still don't know what the hum is.}
 ```
 
 - **Required:** `title`, `text`, `art` (see `src/art.js`), `tags`, `scene`, `class: routine`, `tone:` (light, warm, tense, grim, eerie) and `repeat:` (4–6, the cooldown in months). Then one draw field:
@@ -44,19 +44,17 @@ text: {The courtyard fountain is taking wishes again.|The fountain again. Someon
 
 ## Making repeats read differently (required)
 
-Each event will be seen several times. Use at least three variation points across `text` and `say:` lines. Every option the player will pick repeatedly needs varied `say:` lines too; that includes spell (`up[…]`) options, which a player who knows the spell picks every time. A `say:` must never claim rarity ("which never happens") or a one-time milestone unless it sits in a sequence:
-- `{first time|second time|third and after}` (no prefix) is a **sequence**: it follows how often the event has been seen, and the last alternative sticks. Use it for familiarity and a detail that *develops* (the chipped jar you always get, the cook who now saves your seat). Avoid stock ladders like "X again." / "X, as usual.": they read the same across every event.
-- `{&a|b|c}` **cycles** a, b, c, a, b … with each showing. Use it only for lines that are fine to come back around.
-- `{~a|b|c}` picks one at random per showing. Use it for incidental detail: who's there, what's on the board, the weather.
-- `{season == "winter": …|…}` picks by season (autumn, winter, spring, summer; nest them for more than two).
-- `{final_year: …|…}` gives a last-year line ("the last time you'll…").
-- `{year == 1: …|…}`, `{gpa >= 3: …|…}`, and conditions on the player's state make a line respond to where they are.
+Each event will be seen several times. Use at least three variation points across `text` and `say:` lines. Every option the player will pick repeatedly needs varied `say:` lines too; that includes spell (`up[…]`) options, which a player who knows the spell picks every time. A `say:` must never claim rarity ("which never happens") or a one-time milestone unless it sits in a sequence.
+
+**One mode per card, one count.** Every variation group in a card (title, text, scene, labels, hints, `locked:`, every `say:` and override, nested groups too) uses the same mode and the same number of parts; a field may have none. All groups then pick the same position, so variant *k* of the text always meets variant *k* of each `say:`. Write the variants as matched sets, and pad a short group rather than leave it short. `grim lint` checks this (`variants`); `grim show <id>` prints each field's groups.
+- `{first time|second time|third and after}` (no prefix) is a **sequence**: showing *k* reads variant *k* everywhere, and the last one sticks. It's the usual mode for a pool card: familiarity, and a detail that *develops* (the chipped jar you always get, the cook who now saves your seat). Incidental detail rides along with the step. Avoid stock ladders like "X again." / "X, as usual.": they read the same across every event.
+- `{&a|b|c}` **cycles** a, b, c, a, b … with each showing. Use it only when every set is fine to come back around.
+- `{~a|b|c}` picks **at random** per showing, the same position in every group. Use it when nothing in the card develops and each set is a self-contained variant: who's there, what went wrong, the weather, and the outcome that answers it.
+- Conditions are not variation and mix with any mode: `{season == "winter": …|…}` picks by season (autumn, winter, spring, summer; nest them for more than two), `{final_year: …|…}` gives a last-year line, and `{year == 1: …|…}`, `{gpa >= 3: …|…}` or any condition on the player's state makes a line respond to where they are. A random card can still frame its first showing with `{seen(<own id>) <= 1: …|…}`.
 
 **Cast roles are re-filled on every showing.** A sequence must never imply the same companion as last time ("a scarf to go with last time's hat", "you each suspect the other"): anchor the progression on the place or the player, and let `{friend}` be new each time. Restrict classmate roles with `tagged(friend, student)` (a character's `role:` counts as a tag), so outsiders and staff aren't cast as fellow students.
 
 **Sequences count showings, not choices.** A sequence advances every time the card is shown, whatever the player picked. So it must never describe the payoff of a choice ("a reader you helped last time", "Lyra respects your calls now"): a player who always took the other option, or lost the challenge, never earned it. Gate such lines on state instead (`performance(track) >= 60`, `rel(lyra) >= 20`).
-
-**Random picks are independent.** A `{~…}` in the text and a `{~…}` in a `say:` are chosen separately, so a say must not refer to a detail only one text alternative mentions (the bees, the red scarf). Write says that fit every alternative.
 
 Don't build a repeatable on a one-time surprise (a secret door, a confession). Those are milestones, not pool events. The premise should be a *situation that recurs*: the queue at the refectory, the draft in the observatory, the lecturer's habit.
 

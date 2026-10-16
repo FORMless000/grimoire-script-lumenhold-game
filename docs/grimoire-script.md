@@ -457,6 +457,8 @@ The line is `challenge <kind> [using <skill>] <difficulty> [<odds>] [<luck>] [dr
 
 **Inline text variation** (Ink-style; in any text, including `say:`): `{~a|b|c}` one of them (deterministic per seed, turn and event), `{&a|b}` cycles each time the event is seen, `{a|b|c}` runs through them and stays on the last, `{cond: a|b}` picks by a condition (`{gold > 20: rich|poor}`); a colon inside `{~…}` or `{&…}` is plain text. `cast_as(role, npc)` tests who filled a role (`{cast_as(here, maud): …|…}`). Alternatives may contain other tokens. Translations keep the same structure.
 
+**Variation is linked within a block.** Every variation group of an event (title, text, scene, labels, hints, `locked:`, every `say:` and override, nested groups too) picks the same position: the showing number for a sequence or a cycle, one hash of seed, turn and event for `{~…}`. So a block uses **one mode with one part count**, and variant *k* of every field belongs together; a field may have no variation. Conditionals are not variation and mix freely. States and hooks are linked the same way within each block. Translations keep each line's mode and count. The lint (`variants`) checks all of this.
+
 **Previews.** Every option's outcome is previewed exactly on the buttons: the engine runs the option's effects on a scratch copy of the state for each path through its chances, checks and challenges. Lint rejects `rand()` in option effects (use a chance or a range). `grim balance` asserts, over 1,000 random games, that every real outcome lies within its preview.
 
 ---

@@ -137,7 +137,7 @@
     applyOrigin(key) {
       const e = this.c.events[this.c.game.origins], o = e && e.options.find((x) => x.key === key);
       if (!o) throw new Error('no origin "' + key + '"');
-      const ctx = this.newCtx(null, null);
+      const ctx = this.newCtx(null, null, e.id);
       this.run(o.effects, ctx);
       this.handleZeroed(ctx);
       const s = this.s;
@@ -145,7 +145,7 @@
       s.hist.push({ t: 'origin', key, at: now() });
       // Its numbers show in month 1's summary; its words belong to the mirror scene in the game itself.
       ctx.say = []; ctx.sayIds = [];
-      s.pending.push(this.summaryItem(ctx, this.interp(o.label)));
+      s.pending.push(this.summaryItem(ctx, this.interp(o.label, null, e.id)));
     }
     save() { return JSON.stringify(this.s); }
     load(json) {
@@ -852,7 +852,9 @@
     /* ---------------- Text ---------------- */
     // Inline variation (design §12, Ink-style): {~a|b} one at random, {&a|b} cycle, {a|b} sequence (stays on the
     // last), {cond: a|b} conditional. `key` is the event id: cycles and sequences follow how often it was seen.
-    // Deterministic and RNG-free (a hash of seed, turn and text), so it never changes what happens.
+    // Deterministic and RNG-free (a hash of seed, turn and event), so it never changes what happens. Every group of a
+    // card picks the same position, so variant k of the text meets variant k of the outcome (the lint keeps one mode
+    // and one count per card).
     vary(text, actor, key) {
       // Fast path: no braces, or nothing that could be a variant. (A variant may open with a token, `{~{partner} …|…}`.)
       if (text.indexOf('{') < 0 || !/[|:]/.test(text)) return text;
@@ -887,9 +889,16 @@
       const seen = Math.max(1, (key && s.seen[key]) || 1);
       if (mode === 'cycle') return parts[(seen - 1) % parts.length];
       if (mode === 'seq') return parts[Math.min(seen - 1, parts.length - 1)];
-      let h = 2166136261; const str = s.seed + ':' + s.turn + ':' + (key || '') + ':' + inner;
+      let h = 2166136261; const str = s.seed + ':' + s.turn + ':' + (key || '');
       for (let k = 0; k < str.length; k++) { h ^= str.charCodeAt(k); h = Math.imul(h, 16777619); }
       return parts[(h >>> 0) % parts.length];
+    }
+    // Re-render text from a run-log entry as it was shown: its event, turn and showing count.
+    interpLogged(text, l, actor) {
+      const s = this.s, turn = s.turn, had = l.id in s.seen, seen = s.seen[l.id];
+      s.turn = l.turn; if (l.seen != null) s.seen[l.id] = l.seen;
+      try { return this.interp(text, actor === undefined ? l.actor : actor, l.id); }
+      finally { s.turn = turn; if (had) s.seen[l.id] = seen; else delete s.seen[l.id]; }
     }
     interp(text, actor, key, castOverride) {
       if (!text) return '';
@@ -1181,7 +1190,7 @@
     runHooks(on, summary) {
       for (const h of this.hooks) {
         if (h.on !== on || !this.test(h.when, null)) continue;
-        const ctx = this.newCtx(null, h.label || h.desc || h.id);
+        const ctx = this.newCtx(null, h.label || h.desc || h.id, h.id);
         this.run(h.do, ctx);
         this.handleZeroed(ctx);
         if (summary) summary.push(Object.assign(this.summaryItem(ctx, h.label || null), { src: 'hook ' + h.id }));
@@ -1199,7 +1208,7 @@
       for (const id of Object.keys(s.states)) {
         const def = this.c.states[id]; const st = s.states[id];
         if (!def || !st) continue;
-        const ctx = this.newCtx(null, def.name || id);
+        const ctx = this.newCtx(null, def.name || id, id);
         if (st.since < s.turn) {
           this.run(def.tick, ctx);
           if (st.left != null) { st.left--; if (st.left <= 0) this.removeState(id, ctx, true); }
@@ -1518,8 +1527,8 @@
       s.cur = null;
       const out = this.outcome(ctx);
       const h = item.n != null ? this.histEntry(item.n) : null;
-      if (h) Object.assign(h, { choice: key, label: this.interp(opt.label, item.actor), out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() });
-      s.log.push({ n: item.n, turn: s.turn, id: e.id, key, title: this.interp(e.title, item.actor), choice: this.interp(opt.label, item.actor), say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null });
+      if (h) Object.assign(h, { choice: key, label: this.interp(opt.label, item.actor, e.id), out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() });
+      s.log.push({ n: item.n, turn: s.turn, id: e.id, key, title: this.interp(e.title, item.actor, e.id), choice: this.interp(opt.label, item.actor, e.id), say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null, seen: s.seen[e.id] || 0 });
       if (s.log.length > 400) s.log.shift();
       return out;
     }
@@ -1544,7 +1553,7 @@
       const label = chosen.map((o) => this.interp(o.label, item.actor, e.id)).join(' · ');
       const h = item.n != null ? this.histEntry(item.n) : null;
       if (h) Object.assign(h, { choice: keys.join('+'), label, out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() });
-      s.log.push({ n: item.n, turn: s.turn, id: e.id, key: keys.join('+'), title: this.interp(e.title, item.actor), choice: label, say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null });
+      s.log.push({ n: item.n, turn: s.turn, id: e.id, key: keys.join('+'), title: this.interp(e.title, item.actor, e.id), choice: label, say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null, seen: s.seen[e.id] || 0 });
       return out;
     }
 
