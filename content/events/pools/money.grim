@@ -12,14 +12,14 @@ weight: 14
 art: scales
 tags: money
 scene: A notice pinned beside the bursar's office door, half covered by a newer notice about lost owls, a queue of three students pretending not to queue.
-text: {A small notice by the bursar's door reads "Hardship fund. Applications in writing. All circumstances considered."|The hardship notice again, under a new one about lost owls.|Someone has underlined "all circumstances" on the hardship notice.} {~Three students are pretending not to queue.|The ink on the forms is still wet.|The bursar's door is ajar.}
+text: {A small notice by the bursar's door reads "Hardship fund. Applications in writing. All circumstances considered."|The hardship notice again, under a new one about lost owls.|Someone has underlined "all circumstances" on the hardship notice.} {Three students are pretending not to queue.|The ink on the forms is still wet.|The bursar's door is ajar.}
 > left: Fill in the forms
   mood -tiny
   queue aid_interview in 1
-  say: {~Four pages. One asks you to list everything you own. It doesn't take long, and that is the hard part.|You fill in the forms at a library table with your arm around them so nobody can see.}
+  say: {Four pages. One asks you to list everything you own. It doesn't take long, and that is the hard part.|You fill in the forms at a library table with your arm around them so nobody can see.}
 > right: Not yet
   mood +tiny
-  say: {~You walk past. Your pride is intact, and so is your empty purse.|Another month, you tell yourself. You have a button left.}
+  say: {You walk past. Your pride is intact, and so is your empty purse.|Another month, you tell yourself. You have a button left.}
 
 @event aid_interview
 title: The Bursar Will See You
@@ -129,20 +129,20 @@ weight: 8
 art: pouch
 tags: money social
 scene: A crowded common room, a lounging upper-year holding out a coin and a list, a younger student taking the list with a sigh.
-text: {Upper-years pay for errands, a book fetched or a queue stood in or a letter carried to the owlery.|An upper-year waves a list and a coin at you. Word has got round.|"You again," says the upper-year, pleased. "Good. The usual, plus my laundry."} {~The list is long.|The coin is small.|One item on the list just says "find my cat".}
+text: {Upper-years pay for errands, a book fetched or a queue stood in or a letter carried to the owlery.|An upper-year waves a list and a coin at you. Word has got round.|"You again," says the upper-year, pleased. "Good. The usual, plus my laundry."} {The list is long.|The coin is small.|One item on the list just says "find my cat".}
 > left: Run the errands
   gold +small
   mood -small
-  say: {~You run up and down the towers all evening and are paid in coins and condescension.|You fetch, carry and queue. Your legs are tired; your purse is less light.}
+  say: {You run up and down the towers all evening and are paid in coins and condescension.|You fetch, carry and queue. Your legs are tired; your purse is less light.}
 > right: Name your price
   challenge negotiate apprentice+:
     win:
       gold +medium
-      say: {~"More, or find your own cat." They pay. You find the cat anyway; it was in the laundry.|You haggle like a merchant's child. The upper-year pays with grudging respect.}
+      say: {"More, or find your own cat." They pay. You find the cat anyway; it was in the laundry.|You haggle like a merchant's child. The upper-year pays with grudging respect.}
     lose:
       renown -tiny
       mood -tiny
-      say: {~"Never mind," says the upper-year, and gives the list to a first-year behind you. Word gets round of that too.|They laugh, and find someone cheaper. You keep your dignity and nothing else.}
+      say: {"Never mind," says the upper-year, and gives the list to a first-year behind you. Word gets round of that too.|They laugh, and find someone cheaper. You keep your dignity and nothing else.}
 
 @event pawnbroker_window
 title: The Pawnbroker's Window
@@ -155,11 +155,11 @@ weight: 12
 art: scales
 tags: money
 scene: A dusty village shop window crowded with pawned treasures, wands, rings and a stuffed owl, a student looking in with their hands in empty pockets.
-text: {The pawnbroker's window is full of other people's treasures, wands and rings and a stuffed owl. The sign says "Fair prices. Redemption within the year."|{flag(pawned_something): The pawnbroker's window again. Something of yours is in it now.|The pawnbroker's window again, the same treasures in new places.}|The pawnbroker nods at you through the glass like an acquaintance.} {~A first-year's silver locket is in the front row.|There's a familiar's collar, empty.|The stuffed owl seems to judge you.}
+text: {The pawnbroker's window is full of other people's treasures, wands and rings and a stuffed owl. The sign says "Fair prices. Redemption within the year."|{flag(pawned_something): The pawnbroker's window again. Something of yours is in it now.|The pawnbroker's window again, the same treasures in new places.}|The pawnbroker nods at you through the glass like an acquaintance.} {A first-year's silver locket is in the front row.|There's a familiar's collar, empty.|The stuffed owl seems to judge you.}
 > left: Pawn something you'd miss
   flag pawned_something
   gold +medium
   mood -small
-  say: {~Your good boots, or your grandmother's ring, or the wand-case with your name burned in it. The money is fair; the ticket says "within the year". You put the ticket somewhere safe and try not to look at it.|You hand over something you love, and take the money, and walk home faster than usual.}
+  say: {Your good boots, or your grandmother's ring, or the wand-case with your name burned in it. The money is fair; the ticket says "within the year". You put the ticket somewhere safe and try not to look at it.|You hand over something you love, and take the money, and walk home faster than usual.}
 > right: Walk on
-  say: {~You walk on with your hands in your pockets. They're empty, but they're yours.|Not today. The owl watches you go.}
+  say: {You walk on with your hands in your pockets. They're empty, but they're yours.|Not today. The owl watches you go.}

@@ -18,16 +18,16 @@ text: {The caretaker has a list of jobs that can only be done when the castle is
   vigor +small
   health -tiny
   mood -tiny
-  say: {season == "winter": {~You shovel snow off the battlements until you can't feel your ears. The view is worth one of them.|You and the caretaker clear a whole parapet in silence. At the end you're handed a biscuit, which is how the caretaker says thank you.}|{~You beat forty mattresses. Two of them contained socks, one a love letter, and one a very surprised mouse.|You carry mattresses down six flights of moving stairs. One flight moves halfway through, with you and the mattress on it.}}
+  say: {season == "winter": {You shovel snow off the battlements until you can't feel your ears. The view is worth one of them.|You and the caretaker clear a whole parapet in silence. At the end you're handed a biscuit, which is how the caretaker says thank you.}|{You beat forty mattresses. Two of them contained socks, one a love letter, and one a very surprised mouse.|You carry mattresses down six flights of moving stairs. One flight moves halfway through, with you and the mattress on it.}}
 > right: Make myself scarce
   challenge deceive apprentice:
     win:
       mood +small
-      say: {~You remember an urgent appointment with a book and vanish round a corner. The caretaker's sigh follows you a long way.|You hide in a window seat until the list has moved on to someone else.}
+      say: {You remember an urgent appointment with a book and vanish round a corner. The caretaker's sigh follows you a long way.|You hide in a window seat until the list has moved on to someone else.}
     lose:
       mood -small
       vigor +tiny
-      say: {~The caretaker finds you behind a tapestry and hands you a shovel without comment.|You get as far as the stairs, which choose that moment to move you straight back to the caretaker.}
+      say: {The caretaker finds you behind a tapestry and hands you a shovel without comment.|You get as far as the stairs, which choose that moment to move you straight back to the caretaker.}
 
 @event break_castle_flight_field
 title: The Field to Yourself
@@ -39,21 +39,21 @@ weight: 10
 art: broom
 tags: home
 scene: An empty flight field in the holidays, hoops at either end, a single student on a broom high above the grass.
-text: {With the flying lessons over for the break, the flight field is empty and nobody has locked the broom shed.|The broom shed is unlocked again. You suspect it's on purpose now.|The flight field in the break. You know which broom in the shed pulls left.} {season == "winter": The hoops are rimed with frost and the wind has teeth.|The air shimmers with heat, and the wind is lazy for once.} {~A crow is using the far hoop as a perch.|Somebody's lost scarf is snagged on the near hoop.|The grass is printed with a fox's tracks.}
+text: {With the flying lessons over for the break, the flight field is empty and nobody has locked the broom shed.|The broom shed is unlocked again. You suspect it's on purpose now.|The flight field in the break. You know which broom in the shed pulls left.} {season == "winter": The hoops are rimed with frost and the wind has teeth.|The air shimmers with heat, and the wind is lazy for once.} {A crow is using the far hoop as a perch.|Somebody's lost scarf is snagged on the near hoop.|The grass is printed with a fox's tracks.}
 > left: Fly the hoops, fast
   challenge feat apprentice wild:
     win:
       vigor +small
       mood +small
-      say: {~You thread every hoop and pull up so late that the grass brushes your boots. Nobody saw. That's almost a shame.|You lap the field until the hoops blur. Landing, you find you're grinning like a first-year.}
+      say: {You thread every hoop and pull up so late that the grass brushes your boots. Nobody saw. That's almost a shame.|You lap the field until the hoops blur. Landing, you find you're grinning like a first-year.}
     lose:
       health -small
       mood -tiny
-      say: {~The wind cheats, as it always does, and you meet the far hoop with your shoulder.|You land in the long grass, which has caught a great many students before you. It does not catch gently.}
+      say: {The wind cheats, as it always does, and you meet the far hoop with your shoulder.|You land in the long grass, which has caught a great many students before you. It does not catch gently.}
 > right: Practise slow, careful turns
   vigor +small
   mood -small
-  say: {~Left, right, left, at walking pace, for an hour. It is deeply dull and, annoyingly, it works.|You practise the turn that always throws you until it doesn't. Your arms ache all evening.}
+  say: {Left, right, left, at walking pace, for an hour. It is deeply dull and, annoyingly, it works.|You practise the turn that always throws you until it doesn't. Your arms ache all evening.}
 
 @event break_castle_bored_stairs
 title: The Bored Staircases
@@ -65,21 +65,21 @@ weight: 10
 art: tower
 tags: home
 scene: A grand castle stairwell with several staircases swinging slowly through the air, a lone student waiting on a landing.
-text: {With nobody to carry up and down, the castle's staircases have grown restless.|The staircases are bored again, and they've noticed you.|The stairs know you're one of the few left. One swings over the moment you reach the landing.} {season == "winter": The stairwell is cold enough to see your breath.|Warm air drifts up the stairwell with the smell of cut grass.} {~A flight is drifting past with a lost shoe on its top step.|Two staircases are sulking against the wall.|One flight keeps nudging the landing, like a dog with a stick.}
+text: {With nobody to carry up and down, the castle's staircases have grown restless.|The staircases are bored again, and they've noticed you.|The stairs know you're one of the few left. One swings over the moment you reach the landing.} {season == "winter": The stairwell is cold enough to see your breath.|Warm air drifts up the stairwell with the smell of cut grass.} {A flight is drifting past with a lost shoe on its top step.|Two staircases are sulking against the wall.|One flight keeps nudging the landing, like a dog with a stick.}
 > left: Ride whichever one comes
   chance likely:
     guile +small
     mood +small
-    say: {~It carries you to a corridor you've never seen, full of portraits who are thrilled to have a visitor.|It takes you the long way, through three towers, and sets you down exactly where you wanted to be.}
+    say: {It carries you to a corridor you've never seen, full of portraits who are thrilled to have a visitor.|It takes you the long way, through three towers, and sets you down exactly where you wanted to be.}
   else:
     health -tiny
     mood -small
-    say: {~It drops you on a landing in the east wing and refuses to come back. You walk for an hour.|It swings out over the stairwell and stops. You wait there, cramped and cold, with nothing to read, until it gets bored again.}
+    say: {It drops you on a landing in the east wing and refuses to come back. You walk for an hour.|It swings out over the stairwell and stops. You wait there, cramped and cold, with nothing to read, until it gets bored again.}
 > right: Take the long way, on foot
   vigor +small
   mood -small
   health -tiny
-  say: {~You take the servants' stair, all two hundred steps of it. The staircases watch you go, disappointed.|You walk round by the bridges. It takes all morning, and your legs will remember it.}
+  say: {You take the servants' stair, all two hundred steps of it. The staircases watch you go, disappointed.|You walk round by the bridges. It takes all morning, and your legs will remember it.}
 
 @event break_castle_night_rounds
 title: The Lone Prefect
@@ -91,21 +91,21 @@ weight: 10
 art: lantern
 tags: home
 scene: A single lantern bobbing along a bridge between dark towers at night, a student watching it from a window.
-text: {Only one prefect has stayed for the break, and at breakfast they sigh that seven towers are a lot to patrol tonight.|The lone prefect is pinning tonight's rounds to the noticeboard again.|You know the lone prefect's rounds by now, to the quarter-hour, and tonight's are on the noticeboard.} {season == "winter": The corridors are cold enough to frost the portraits.|The nights are warm, and every window in the castle stands open after dark.} {~A staircase shifts somewhere below with a long stone sigh.|An owl has got into the east wing.|Somewhere a door bangs in a draught.}
+text: {Only one prefect has stayed for the break, and at breakfast they sigh that seven towers are a lot to patrol tonight.|The lone prefect is pinning tonight's rounds to the noticeboard again.|You know the lone prefect's rounds by now, to the quarter-hour, and tonight's are on the noticeboard.} {season == "winter": The corridors are cold enough to frost the portraits.|The nights are warm, and every window in the castle stands open after dark.} {A staircase shifts somewhere below with a long stone sigh.|An owl has got into the east wing.|Somewhere a door bangs in a draught.}
 > left: Wander the towers tonight
   challenge deceive apprentice+:
     win:
       guile +small
       mood +small
-      say: {~You have the castle to yourself for an hour: moonlit bridges, sleeping portraits, the whole lake laid out below.|You slip past the lantern twice and watch the lake from a window nobody uses. It feels like owning the place.}
+      say: {You have the castle to yourself for an hour. Moonlit bridges, sleeping portraits, the whole lake laid out below.|You slip past the lantern twice and watch the lake from a window nobody uses. It feels like owning the place.}
     lose:
       mood -small
       guile +tiny
-      say: {~The lantern swings round and finds you. The prefect writes your name in the demerit ledger with visible relief at having something to write.|You walk straight into the prefect on a dark landing. You both scream, and then you get a demerit.}
+      say: {The lantern swings round and finds you. The prefect writes your name in the demerit ledger with visible relief at having something to write.|You walk straight into the prefect on a dark landing. You both scream, and then you get a demerit.}
 > right: Offer to walk the rounds
   charm +small
   health -tiny
-  say: {~The prefect is glad of the company and tells you which portraits snore. You go to bed very late.|You carry the lantern while the prefect checks doors. Somewhere in the fourth tower you become friends, a little.}
+  say: {The prefect is glad of the company and tells you which portraits snore. You go to bed very late.|You carry the lantern while the prefect checks doors. Somewhere in the fourth tower you become friends, a little.}
 
 # ---------------- Break: at home (plan: home) ----------------
 
@@ -120,16 +120,16 @@ weight: 10
 art: cauldron
 tags: home
 scene: A warm family kitchen, an older relative guiding a student's hands over a steaming pot, jars and bowls everywhere.
-text: {Someone at home has decided you're old enough for the family recipe, and ties an apron on you before breakfast.|The recipe lessons resume. You're trusted with the knife now, if not the salt.|You know the first half of the recipe by heart. The second half is still guarded like a treaty.} {season == "winter": It's the stew for the cold months, which takes all day.|It's the summer preserve, and every fruit in the house is involved.} {~Nobody measures anything.|A pinch turns out to mean a handful.|The pot is older than you are.}
+text: {Someone at home has decided you're old enough for the family recipe, and ties an apron on you before breakfast.|The recipe lessons resume. You're trusted with the knife now, if not the salt.|You know the first half of the recipe by heart. The second half is still guarded like a treaty.} {season == "winter": It's the stew for the cold months, which takes all day.|It's the summer preserve, and every fruit in the house is involved.} {Nobody measures anything.|A pinch turns out to mean a handful.|The pot is older than you are.}
 > left: Write it all down
   alchemy +small
   mood -small
-  say: {~You take notes like it's a potions practical. You're corrected on every line, and then on the corrections.|Your notes are thorough, exact and, you're told, missing the point.}
+  say: {You take notes like it's a potions practical. You're corrected on every line, and then on the corrections.|Your notes are thorough, exact and, you're told, missing the point.}
 > right: Learn it by hand, the old way
   mood +small
   alchemy +tiny
   health -tiny
-  say: {~You burn a finger and get a nod. In this kitchen, that's a diploma.|You get it wrong in a way that turns out to be how your grandmother made it. Everyone goes quiet, and then they eat it all.}
+  say: {You burn a finger and get a nod. In this kitchen, that's a diploma.|You get it wrong in a way that turns out to be how your grandmother made it. Everyone goes quiet, and then they eat it all.}
 
 @event break_home_own_bed
 title: Your Own Bed
@@ -142,15 +142,15 @@ weight: 10
 art: bed
 tags: home
 scene: A narrow bed under a cottage window in early light, a student buried in blankets while the house bustles below.
-text: {Your own bed, after a term in the dormitory. You wake at the academy's hour anyway.|The house wakes at dawn. It always has; you'd forgotten.|You know which floorboard creaks on the way down, and that everyone else learned it first.} {season == "winter": There's frost on the window and the blankets weigh a ton.|Sunlight is coming through the curtains, and someone is already whistling in the yard.} Downstairs, {~the kettle is going.|someone is calling your name.|the door bangs for the third time.}
+text: {Your own bed, after a term in the dormitory. You wake at the academy's hour anyway.|The house wakes at dawn. It always has; you'd forgotten.|You know which floorboard creaks on the way down, and that everyone else learned it first.} {season == "winter": There's frost on the window and the blankets weigh a ton.|Sunlight is coming through the curtains, and someone is already whistling in the yard.} Downstairs, {the kettle is going.|someone is calling your name.|the door bangs for the third time.}
 > left: Sleep until noon
   health +small
   mood -tiny
-  say: {~You sleep like a stone. At lunch you're called "the scholar" with a new and pointed emphasis.|You wake at noon, rested and ashamed. The whole house has done a morning's work, and mentions it.}
+  say: {You sleep like a stone. At lunch you're called "the scholar" with a new and pointed emphasis.|You wake at noon, rested and ashamed. The whole house has done a morning's work, and mentions it.}
 > right: Get up with everyone
   vigor +small
   health -tiny
-  say: {season == "winter": {~You break the ice on the water butt and carry wood in before breakfast. Your hands sting all morning.|You're out in the dark with a lantern before the cockerel. The cockerel resents the competition.}|{~You're in the yard by sunrise, hauling and fetching. Breakfast, when it comes, is the best of the year.|You work the cool hours with everyone else and see why they swear by them.}}
+  say: {season == "winter": {You break the ice on the water butt and carry wood in before breakfast. Your hands sting all morning.|You're out in the dark with a lantern before the cockerel. The cockerel resents the competition.}|{You're in the yard by sunrise, hauling and fetching. Breakfast, when it comes, is the best of the year.|You work the cool hours with everyone else and see why they swear by them.}}
 
 @event break_home_mending_chair
 title: The Mending Chair
@@ -162,20 +162,20 @@ weight: 10
 art: wand
 tags: home
 scene: A chair by a cottage door piled with broken household things, a student in academy robes eyeing them with a wand.
-text: {Word goes round the house that the scholar can fix things.|The things that need fixing have been waiting for you on a chair by the door.|The mending chair fills up between breaks, like a well.} {season == "winter": Today it's a stove door that won't stay shut.|Today it's a window that sticks in the heat.} {~Also a clock that strikes thirteen.|Also a doll with a missing eye.|Also a teapot nobody admits to breaking.}
+text: {Word goes round the house that the scholar can fix things.|The things that need fixing have been waiting for you on a chair by the door.|The mending chair fills up between breaks, like a well.} {season == "winter": Today it's a stove door that won't stay shut.|Today it's a window that sticks in the heat.} {Also a clock that strikes thirteen.|Also a doll with a missing eye.|Also a teapot nobody admits to breaking.}
 > left: Mend it with a spell
   challenge spell apprentice:
     win:
       arcana +small
       mood +small
-      say: {~It mends with a click and a little puff of light. The family applauds, then brings out three more things.|You fix it so well that it works better than new. Now everyone wants their things to work better than new.}
+      say: {It mends with a click and a little puff of light. The family applauds, then brings out three more things.|You fix it so well that it works better than new. Now everyone wants their things to work better than new.}
     lose:
       mana -small
       mood -small
-      say: {~It's mended, technically. It also hums now, and nobody can make it stop.|The spell fixes it and then, for good measure, everything else on the chair. Most of it did not need fixing that way.}
+      say: {It's mended, technically. It also hums now, and nobody can make it stop.|The spell fixes it and then, for good measure, everything else on the chair. Most of it did not need fixing that way.}
 > right: Mend it by hand
   vigor +small
-  say: {~Glue, string, a borrowed hammer and the whole morning. It holds. You don't trust it, but it holds.|You fix it the way your family always has: slowly, with a lot of opinions from the doorway.}
+  say: {Glue, string, a borrowed hammer and the whole morning. It holds. You don't trust it, but it holds.|You fix it the way your family always has: slowly, with a lot of opinions from the doorway.}
 
 @event break_home_the_trunk
 title: The Trunk in the Corner
@@ -187,15 +187,15 @@ weight: 10
 art: house
 tags: home
 scene: An open travelling trunk in the corner of a small bedroom, overflowing with jars, socks and parcels in cloth.
-text: {Your trunk stands open in the corner, and the family keeps putting things in it.|The trunk is open again, and it's filling up again.|The trunk is a family project now.} {season == "winter": Woollen socks, a jar of something pickled, a cake wrapped in three cloths.|Dried fruit, a straw hat nobody asked for, a cake wrapped in three cloths.} {final_year: Someone says "for next term", then stops.|{~The lid won't close.|Someone sits on the lid.|A note is tucked into a sock, not to be read till later.}}
+text: {Your trunk stands open in the corner, and the family keeps putting things in it.|The trunk is open again, and it's filling up again.|The trunk is a family project now.} {season == "winter": Woollen socks, a jar of something pickled, a cake wrapped in three cloths.|Dried fruit, a straw hat nobody asked for, a cake wrapped in three cloths.} {final_year: Someone says "for next term", then stops.|{The lid won't close.|Someone sits on the lid.|A note is tucked into a sock, not to be read till later.}}
 > left: Take everything
   health +small
   gold -tiny
-  say: {~The bargeman charges you double for the weight, but you eat well for a month.|You pay the barge extra for the weight and haul it all back across the lake. Half the corridor smells of pickles until spring.}
+  say: {The bargeman charges you double for the weight, but you eat well for a month.|You pay the barge extra for the weight and haul it all back across the lake. Half the corridor smells of pickles until spring.}
 > right: Sneak half of it back
   guile +small
   mood -tiny
-  say: {~You smuggle the jars back into the pantry at night. In the morning they're in the trunk again, wrapped tighter.|You leave the cake on a shelf by the door. You feel worse about it than you expected.}
+  say: {You smuggle the jars back into the pantry at night. In the morning they're in the trunk again, wrapped tighter.|You leave the cake on a shelf by the door. You feel worse about it than you expected.}
 
 # ---------------- Break: working full-time (plan: work) ----------------
 
@@ -215,15 +215,15 @@ text: {The quiet days of the break are, says whoever is in charge, the time to c
     win:
       guile +small
       gold +tiny
-      say: {~You find it wedged behind the counter, where it has been since the last stocktake. You're tipped for your thoroughness.|You find the mistake in the ledger itself: someone counted a box as a crate. You're paid a little extra, and nothing else is said.}
+      say: {You find it wedged behind the counter, where it has been since the last stocktake. You're tipped for your thoroughness.|You find the mistake in the ledger itself: someone counted a box as a crate. You're paid a little extra, and nothing else is said.}
     lose:
       mood -small
       health -tiny
-      say: {~You search until dusk, on your knees in the dust. It stays missing, and your boss looks at you as if you might have eaten it.|You count everything again and get a different number. Then a third.}
+      say: {You search until dusk, on your knees in the dust. It stays missing, and your boss looks at you as if you might have eaten it.|You count everything again and get a different number. Then a third.}
 > right: Write it off and move on
   mood +small
   gold -tiny
-  say: {~"Breakage," you write. A coin is docked from your pay, on principle.|You write it off, and your boss sighs and takes it from your wages.}
+  say: {"Breakage," you write. A coin is docked from your pay, on principle.|You write it off, and your boss sighs and takes it from your wages.}
 
 @event break_work_complaint
 title: The Complaint
@@ -241,14 +241,14 @@ text: {Someone has come back with a complaint and a voice built for it.|Another 
     win:
       charm +small
       gold +tiny
-      say: {~You agree with everything until there's nothing left to agree with. They leave calm, and they leave a tip.|You listen, nod and offer them a chair. By the end they're telling you about their sister.}
+      say: {You agree with everything until there's nothing left to agree with. They leave calm, and they leave a tip.|You listen, nod and offer them a chair. By the end they're telling you about their sister.}
     lose:
       mood -medium
-      say: {~It gets louder, and then it leaves, still loud, to tell everyone in the valley about you.|They demand your boss, then you, then your boss again, and you spend the rest of the day hearing about it.}
+      say: {It gets louder, and then it leaves, still loud, to tell everyone in the valley about you.|They demand your boss, then you, then your boss again, and you spend the rest of the day hearing about it.}
 > right: Give them what they want
   gold -tiny
   mood +tiny
-  say: {~You hand over a refund out of your wages. They leave. The quiet afterwards is worth a coin.|A free one, on you. They take it without thanks, and the next one is lovely.}
+  say: {You hand over a refund out of your wages. They leave. The quiet afterwards is worth a coin.|A free one, on you. They take it without thanks, and the next one is lovely.}
 
 @event break_work_half_hour
 title: Half an Hour Off
@@ -260,15 +260,15 @@ weight: 10
 art: cup
 tags: job
 scene: A tired student in a work apron standing in a back doorway, looking out at the weather with a cup in hand.
-text: {Half an hour off in the middle of a long holiday shift.|Your half hour again. You know exactly how far it goes now.|Half an hour. You spend the first minute deciding.} {season == "winter": Outside, the snow is coming down sideways.|Outside, the sun is bright enough to hurt.} {~The back room has one chair and one draught.|A colleague has left half a pie, possibly for sharing.|A clock somewhere strikes the wrong hour.}
+text: {Half an hour off in the middle of a long holiday shift.|Your half hour again. You know exactly how far it goes now.|Half an hour. You spend the first minute deciding.} {season == "winter": Outside, the snow is coming down sideways.|Outside, the sun is bright enough to hurt.} {The back room has one chair and one draught.|A colleague has left half a pie, possibly for sharing.|A clock somewhere strikes the wrong hour.}
 > left: Walk out into the weather
   mood +small
   health -tiny
   gold -tiny
-  say: {season == "winter": {~You buy roast chestnuts and eat them walking, snow in your collar. You come back soaked and much happier.|You buy a hot pie for the walk to the lake's edge and back. Your nose will not forgive you.}|{~You buy a cold drink and sit in the sun until your neck burns. Worth it.|You buy a lemonade and walk to the water and stand there. Half an hour is longer outside.}}
+  say: {season == "winter": {You buy roast chestnuts and eat them walking, snow in your collar. You come back soaked and much happier.|You buy a hot pie for the walk to the lake's edge and back. Your nose will not forgive you.}|{You buy a cold drink and sit in the sun until your neck burns. Worth it.|You buy a lemonade and walk to the water and stand there. Half an hour is longer outside.}}
 > right: Nap in the back room
   health +small
-  say: {~You sleep sitting up and wake with the shape of a crate on your cheek.|You doze off and dream of work, which seems unfair. The bell wakes you mid-shift in the dream.}
+  say: {You sleep sitting up and wake with the shape of a crate on your cheek.|You doze off and dream of work, which seems unfair. The bell wakes you mid-shift in the dream.}
 
 @event break_work_short_wages
 title: A Coin Short
@@ -280,22 +280,22 @@ weight: 10
 art: coin
 tags: job money
 scene: A student counting a small pile of coins on a counter for the second time, frowning, an employer pretending not to watch.
-text: {Wages, counted out into your hand. You count them again.|Wage day. You count your coins at the counter, in front of everyone, on principle.|Wage day. Your boss counts slowly, and so do you.} {~It's short by one.|It's short, and there's a button where a coin should be.|It's short by just enough to notice.} {has(gig_newt): The landlady remembers every tab to the penny, and has somehow forgotten this one.|{has(gig_pell): Old Pell counted it himself, drop by drop.|{has(gig_post): The dispatch ledger says otherwise, in smudged ink.|{has(gig_library): The pay envelope says otherwise, in very small writing.|{has(gig_kitchens): The head cook's tally is written in gravy.|{has(gig_grounds): Maud's pay book says otherwise, in pencil.|Someone's sums say otherwise.}}}}}}
+text: {Wages, counted out into your hand. You count them again.|Wage day. You count your coins at the counter, in front of everyone, on principle.|Wage day. Your boss counts slowly, and so do you.} {It's short by one.|It's short, and there's a button where a coin should be.|It's short by just enough to notice.} {has(gig_newt): The landlady remembers every tab to the penny, and has somehow forgotten this one.|{has(gig_pell): Old Pell counted it himself, drop by drop.|{has(gig_post): The dispatch ledger says otherwise, in smudged ink.|{has(gig_library): The pay envelope says otherwise, in very small writing.|{has(gig_kitchens): The head cook's tally is written in gravy.|{has(gig_grounds): Maud's pay book says otherwise, in pencil.|Someone's sums say otherwise.}}}}}}
 > left: Point it out
   challenge negotiate apprentice:
     win:
       gold +small
       charm +tiny
-      say: {~You show your sums. Your boss checks them, coughs, and pays you the difference with a little extra for the embarrassment.|You point it out politely and firmly. The missing coin appears, with an apology and a pastry.}
+      say: {You show your sums. Your boss checks them, coughs, and pays you the difference with a little extra for the embarrassment.|You point it out politely and firmly. The missing coin appears, with an apology and a pastry.}
     lose:
       gold +tiny
       mood -small
-      say: {~Your boss recounts, gets the same wrong answer, and looks hurt that you asked.|You're told it's for the breakage. You don't remember any breakage. Nobody else does either.}
+      say: {Your boss recounts, gets the same wrong answer, and looks hurt that you asked.|You're told it's for the breakage. You don't remember any breakage. Nobody else does either.}
 > right: Let it go this once
   gold +tiny
   mood -tiny
   charm +tiny
-  say: {~You pocket it without a word. Your boss sees you notice, and you're given the easy shift next week.|One coin. You decide you can afford to be the bigger person, just about.}
+  say: {You pocket it without a word. Your boss sees you notice, and you're given the easy shift next week.|One coin. You decide you can afford to be the bigger person, just about.}
 
 # ---------------- Regulars (one-time milestones at public places) ----------------
 

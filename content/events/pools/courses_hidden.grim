@@ -14,21 +14,21 @@ weight: 10
 art: gear
 tags: class study
 scene: A cluttered workshop bench covered in tiny brass gears, files and loupes, a row of half-built clockwork hearts ticking out of time with one another.
-text: {Artifice begins with a heart, a fist of clockwork that must tick evenly before it is allowed to think.|Your clockwork heart is waiting where you left it, sulking at the wrong speed.|You can hear your own heart on the bench from the doorway now. Its tick is almost yours.} {~The bench beside you ticks like hail.|One heart near the door is running backwards, proudly.|The lecturer listens to each bench with eyes closed.} {season == "winter": The brass is cold enough to bite.|The workshop smells of solder.}
+text: {Artifice begins with a heart, a fist of clockwork that must tick evenly before it is allowed to think.|Your clockwork heart is waiting where you left it, sulking at the wrong speed.|You can hear your own heart on the bench from the doorway now. Its tick is almost yours.} {The bench beside you ticks like hail.|One heart near the door is running backwards, proudly.|The lecturer listens to each bench with eyes closed.} {season == "winter": The brass is cold enough to bite.|The workshop smells of solder.}
 > left: File every tooth by hand
   alchemy +small
   mood -small
-  say: {~Tooth by tooth, under a loupe, until your eyes water. The tick evens out by the bell.|You file all morning and burn one thumb on the solder. The heart ticks steady and slightly smug.|It's slow, fiddly work, and your hands learn it faster than your head does.}
+  say: {Tooth by tooth, under a loupe, until your eyes water. The tick evens out by the bell.|You file all morning and burn one thumb on the solder. The heart ticks steady and slightly smug.|It's slow, fiddly work, and your hands learn it faster than your head does.}
 > right: Charm the spring to keep time
   challenge enchant standard:
     win:
       arcana +small
       study artifice +tiny
-      say: {~The charm settles into the spring like a cat into a basket. Your heart ticks like a metronome.|You whisper the rhythm into the coil and it keeps it. The lecturer opens one eye, then closes it again.}
+      say: {The charm settles into the spring like a cat into a basket. Your heart ticks like a metronome.|You whisper the rhythm into the coil and it keeps it. The lecturer opens one eye, then closes it again.}
     lose:
       health -tiny
       mood -tiny
-      say: {~The spring takes the charm too literally and unwinds all at once, across the room.|Your heart ticks perfectly for a minute, then very fast, then not at all. Someone hands you a fire bucket just in case.}
+      say: {The spring takes the charm too literally and unwinds all at once, across the room.|Your heart ticks perfectly for a minute, then very fast, then not at all. Someone hands you a fire bucket just in case.}
 
 @event art_stirring_cauldron
 title: The Cauldron That Stirs
@@ -41,20 +41,20 @@ weight: 10
 art: cauldron
 tags: class magic
 scene: A copper cauldron on iron legs stirring itself with a long brass arm while students crowd round with notebooks and a wary distance.
-text: {The class project is a cauldron that stirs itself. It does, mostly, in whatever direction it pleases.|The cauldron has been rebuilt again. It stirs with a new brass arm and the same old temper.|The cauldron recognises you, or behaves as if it does.} {~Today it stirs clockwise, then argues.|Today it stirs so fast the porridge in it is climbing out.|Today the arm keeps tapping the rim like an impatient guest.} {final_year: You'll miss its moods, a little.|The fire buckets by the door are full, for once.}
+text: {The class project is a cauldron that stirs itself. It does, mostly, in whatever direction it pleases.|The cauldron has been rebuilt again. It stirs with a new brass arm and the same old temper.|The cauldron recognises you, or behaves as if it does.} {Today it stirs clockwise, then argues.|Today it stirs so fast the porridge in it is climbing out.|Today the arm keeps tapping the rim like an impatient guest.} {final_year: You'll miss its moods, a little.|The fire buckets by the door are full, for once.}
 > left: Recut the runes on the arm
   study artifice +small
   health -tiny
-  say: {~You spend the morning with a graver and a magnifier, recutting the stirring runes one stroke at a time. Your fingers are nicked; the arm moves sweetly.|Fine work in brass, the whole lesson long. The arm stirs evenly, and you have solder burns in a neat little row.}
+  say: {You spend the morning with a graver and a magnifier, recutting the stirring runes one stroke at a time. Your fingers are nicked; the arm moves sweetly.|Fine work in brass, the whole lesson long. The arm stirs evenly, and you have solder burns in a neat little row.}
 > right: Test it on a live brew
   challenge brew standard:
     win:
       alchemy +small
       study artifice +tiny
-      say: {~The cauldron stirs your brew exactly as the recipe asks, and you take the credit for both.|The brew turns the right colour at the right minute. The cauldron seems to know it did well.}
+      say: {The cauldron stirs your brew exactly as the recipe asks, and you take the credit for both.|The brew turns the right colour at the right minute. The cauldron seems to know it did well.}
     lose:
       mood -small
-      say: {~The arm speeds up, the brew climbs the walls, and the whole class steps back as one.|The cauldron stirs your brew into something with the texture of an argument. You scrub it out until the bell.}
+      say: {The arm speeds up, the brew climbs the walls, and the whole class steps back as one.|The cauldron stirs your brew into something with the texture of an argument. You scrub it out until the bell.}
 
 # ---------------- Starcalling (track: starcalling, skills lore arcana; the Observatory, at night) ----------------
 
@@ -69,20 +69,20 @@ weight: 10
 art: star
 tags: class study
 scene: A dark brass dome open to a sky full of stars, a student at the eyepiece of a great telescope while another recites from memory, breath steaming.
-text: {Starcalling is taught by appointment, at night, and this morning's note gives you tonight's hour. It begins with names. "You cannot call what you cannot name."|Another note at breakfast, another night appointment under the dome. The list of names is longer than it was.|Tonight's appointment under the dome again. You know where the draught comes in.} {~The note warns that the great telescope has been swinging round on its own.|Meteors are expected tonight.|The note is written on the back of a star chart.} {season == "winter": Tonight your breath will freeze on the eyepiece.|Tonight the air will smell of cut grass from the lawns below.}
+text: {Starcalling is taught by appointment, at night, and this morning's note gives you tonight's hour. It begins with names. "You cannot call what you cannot name."|Another note at breakfast, another night appointment under the dome. The list of names is longer than it was.|Tonight's appointment under the dome again. You know where the draught comes in.} {The note warns that the great telescope has been swinging round on its own.|Meteors are expected tonight.|The note is written on the back of a star chart.} {season == "winter": Tonight your breath will freeze on the eyepiece.|Tonight the air will smell of cut grass from the lawns below.}
 > left: Recite the names until perfect
   lore +small
   mood -small
-  say: {~You say them over and over into the cold until they stop being words and start being places.|Name after name, in order and then backwards. By the end you could find them blindfold, and nearly have to.|You stumble on the same name four times. The fifth time it comes out right, and you feel it land somewhere.}
+  say: {You say them over and over into the cold until they stop being words and start being places.|Name after name, in order and then backwards. By the end you could find them blindfold, and nearly have to.|You stumble on the same name four times. The fifth time it comes out right, and you feel it land somewhere.}
 > right: Let the telescope choose a star
   challenge research standard-1:
     win:
       study starcalling +small
-      say: {~The telescope settles on a star you've never heard of. You find its name in the old charts before the lecturer can tell you.|Wherever it points, you follow, and the charts agree with it. That's a whole lesson learned the other way round.}
+      say: {The telescope settles on a star you've never heard of. You find its name in the old charts before the lecturer can tell you.|Wherever it points, you follow, and the charts agree with it. That's a whole lesson learned the other way round.}
     lose:
       health -tiny
       mood -tiny
-      say: {~The telescope picks a star and then changes its mind every ten minutes. You chase it round the dome until midnight.|You spend the night at the eyepiece and come down with a stiff neck and one name you aren't sure of.}
+      say: {The telescope picks a star and then changes its mind every ten minutes. You chase it round the dome until midnight.|You spend the night at the eyepiece and come down with a stiff neck and one name you aren't sure of.}
 
 @event star_thread_of_light
 title: A Thread of Light
@@ -95,17 +95,17 @@ weight: 10
 art: sparkle
 tags: class magic
 scene: A student in a dark observatory with hands cupped upward, a single silver thread of starlight running down through the open dome into their palms.
-text: {Tonight's lesson, says the morning note, is to call down a single thread of a named star's light, no thicker than a hair.|Tonight's lesson is the same as ever: one thread, one star, held as long as you can bear it.|You've called down threads before. The morning note says tonight the lecturer wants it held longer.} {~The morning sky is clear, and the night promises to be.|Thin cloud is forecast to cross the star you've chosen.|At breakfast the others are already practising the hand positions.}
+text: {Tonight's lesson, says the morning note, is to call down a single thread of a named star's light, no thicker than a hair.|Tonight's lesson is the same as ever: one thread, one star, held as long as you can bear it.|You've called down threads before. The morning note says tonight the lecturer wants it held longer.} {The morning sky is clear, and the night promises to be.|Thin cloud is forecast to cross the star you've chosen.|At breakfast the others are already practising the hand positions.}
 > left: Call the thread down yourself
   study starcalling +small
   mana -small
-  say: {~The thread comes down cold and bright and pours into your palms. You hold it until your hands shake.|It takes three tries. On the third, the light drops into your hands like water from a great height.|A hair of light, the length of the whole tower. When it fades, your fingers glow for an hour.}
+  say: {The thread comes down cold and bright and pours into your palms. You hold it until your hands shake.|It takes three tries. On the third, the light drops into your hands like water from a great height.|A hair of light, the length of the whole tower. When it fades, your fingers glow for an hour.}
 > right: Keep the night log instead
   arcana +small
-  say: {~You write down every thread the others call: the star, the minute, how long it held. It's dull, cold work, and you start to see the pattern.|You hold the lamp and the log while the others call. Watching from outside, you see exactly where their hands go wrong.} {season == "winter": Your ink keeps freezing.|The lecturer reads your log twice.}
+  say: {You write down every thread the others call, with the star, the minute and how long it held. It's dull, cold work, and you start to see the pattern.|You hold the lamp and the log while the others call. Watching from outside, you see exactly where their hands go wrong.} {season == "winter": Your ink keeps freezing.|The lecturer reads your log twice.}
 > up[starlight]: Hold your own starlight up to it
   study starcalling +small
-  say: {~You light your own starlight and the thread finds it, like calling to like. It holds twice as long.|Your starlight steadies the thread, and the lecturer has you show the others how.|The thread drops straight into the light you're already holding. For a moment the dome is bright as noon.}
+  say: {You light your own starlight and the thread finds it, like calling to like. It holds twice as long.|Your starlight steadies the thread, and the lecturer has you show the others how.|The thread drops straight into the light you're already holding. For a moment the dome is bright as noon.}
 
 # ---------------- Hollow Studies (track: hollow_studies, skills guile lore; the headmistress, a room without windows) ----------------
 
@@ -120,20 +120,20 @@ weight: 10
 art: lock
 tags: class mystery
 scene: A windowless room lined with black-bound books, a single lamp on a table, a tall calm woman setting a small locked box in front of a student.
-text: {Each lesson, the headmistress sets a sealed thing in front of you. "Tell me how it was closed," she says. "Not what is inside. How."|Another sealed thing on the table. Today it is {~a letter with a wax seal|a small lacquered box|a jar with its lid charmed shut}.|The headmistress places today's sealed thing with a little smile. She has started choosing harder ones.} {~The lamp hisses.|The books on the shelves breathe slowly in the dark.|She sits with her hands folded, unhurried.}
+text: {Each lesson, the headmistress sets a sealed thing in front of you. "Tell me how it was closed," she says. "Not what is inside. How."|Another sealed thing on the table. Today it is {a letter with a wax seal|a small lacquered box|a jar with its lid charmed shut}.|The headmistress places today's sealed thing with a little smile. She has started choosing harder ones.} {The lamp hisses.|The books on the shelves breathe slowly in the dark.|She sits with her hands folded, unhurried.}
 > left: Study the seal for the hour
   lore +small
   mood -small
-  say: {~You trace every line of it without touching. At the end you can name each step of the sealing, in order. She nods once.|It takes the whole hour and a headache, but you work it out backwards, layer by layer.|You get two layers right and one wrong. She tells you which, kindly, and you'll remember.}
+  say: {You trace every line of it without touching. At the end you can name each step of the sealing, in order. She nods once.|It takes the whole hour and a headache, but you work it out backwards, layer by layer.|You get two layers right and one wrong. She tells you which, kindly, and you'll remember.}
 > right: Open it without leaving a trace
   challenge deceive standard:
     win:
       guile +small
       study hollow_studies +tiny
-      say: {~You open it and close it again, and nothing shows. She looks at it, then at you, and laughs, short and delighted.|Open, closed, not a mark. "Good," she says. "Now never do that to a door."}
+      say: {You open it and close it again, and nothing shows. She looks at it, then at you, and laughs, short and delighted.|Open, closed, not a mark. "Good," she says. "Now never do that to a door."}
     lose:
       mood -small
-      say: {~The seal cracks with a tiny, final sound. The headmistress writes something in her book. She remembers every mistake, and now there is one more.|It opens, and it shows. "Everyone breaks one," she says pleasantly. "Rarely so loudly."}
+      say: {The seal cracks with a tiny, final sound. The headmistress writes something in her book. She remembers every mistake, and now there is one more.|It opens, and it shows. "Everyone breaks one," she says pleasantly. "Rarely so loudly."}
 
 @event hollow_reading_the_blank
 title: Reading the Blank Page
@@ -146,15 +146,15 @@ weight: 10
 art: book
 tags: class mystery
 scene: A student bent over an apparently blank page by lamplight, faint lines of ink surfacing under their fingertips, black-bound books leaning in from the shelves.
-text: {"Most things that are hidden are not gone," the headmistress says, and gives you a blank page. "Find what was written. Gently."|A new blank page today. It feels warmer than paper should.|You know the weight of hidden writing in a page by now, like a pocket with something in it.} {~The books on the nearest shelf seem to lean closer.|The lamp burns low and blue.|Somewhere in the stacks, a book turns its own page.} {final_year: She asks where you'll go after graduation, and listens.|She is reading while you work, and doesn't look up.}
+text: {"Most things that are hidden are not gone," the headmistress says, and gives you a blank page. "Find what was written. Gently."|A new blank page today. It feels warmer than paper should.|You know the weight of hidden writing in a page by now, like a pocket with something in it.} {The books on the nearest shelf seem to lean closer.|The lamp burns low and blue.|Somewhere in the stacks, a book turns its own page.} {final_year: She asks where you'll go after graduation, and listens.|She is reading while you work, and doesn't look up.}
 > left: Coax the ink up slowly
   study hollow_studies +small
   mana -small
-  say: {~You warm the page with a thread of power, a breath at a time. The writing surfaces slowly, safe and dull: someone's laundry list, very carefully hidden.|Line by line, the ink comes up. It's an old timetable. The lesson was in the finding.|It takes most of your strength. The page gives up a single sentence about the weather, decades ago.}
+  say: {You warm the page with a thread of power, a breath at a time. The writing surfaces slowly, safe and dull. It's someone's laundry list, very carefully hidden.|Line by line, the ink comes up. It's an old timetable. The lesson was in the finding.|It takes most of your strength. The page gives up a single sentence about the weather, decades ago.}
 > right: Read it bare-handed
   guile +small
   health -tiny
-  say: {~The ink comes up fast under your fingers, and so does a chill that stays in your hand until morning.|You read it quickly and well. Your fingertips ache for an hour, and the headmistress hands you a cup of tea without comment.}
+  say: {The ink comes up fast under your fingers, and so does a chill that stays in your hand until morning.|You read it quickly and well. Your fingertips ache for an hour, and the headmistress hands you a cup of tea without comment.}
 > up[ward]: Let your ward do the reading
   lore +small
-  say: {~Your ward settles over the page like a held breath, and the writing rises into it. The headmistress raises an eyebrow, pleased.|You read through the ward as if through glass. It costs you, but not your hands.|The hidden lines surface inside your shell, one by one, in no hurry.}
+  say: {Your ward settles over the page like a held breath, and the writing rises into it. The headmistress raises an eyebrow, pleased.|You read through the ward as if through glass. It costs you, but not your hands.|The hidden lines surface inside your shell, one by one, in no hurry.}

@@ -55,14 +55,14 @@ tone: light
 art: paper
 tags: job money
 scene: A noticeboard by the castle gates near the end of term, fresh notices for holiday work pinned over the old ones, students stopping to read.
-text: {Holiday work notices are going up by the gates, for the grounds and the kitchens, both paying better than any term job.|The holiday notices again, the same two, in fresher ink.|The notices by the gate. You know them by heart.} {rank(library_assistant) >= 3 or rank(tavern) >= 3 or rank(apothecary_clerk) >= 3 or rank(broom_courier) >= 3: One is addressed to you by name, from your own job.|{~Someone has written "and board!" under one.|A first-year is copying them out.|The wind is trying to take them.}}
+text: {Holiday work notices are going up by the gates, for the grounds and the kitchens, both paying better than any term job.|The holiday notices again, the same two, in fresher ink.|The notices by the gate. You know them by heart.} {rank(library_assistant) >= 3 or rank(tavern) >= 3 or rank(apothecary_clerk) >= 3 or rank(broom_courier) >= 3: One is addressed to you by name, from your own job.|{Someone has written "and board!" under one.|A first-year is copying them out.|The wind is trying to take them.}}
 > left: Pin them up for the cook
   gold +tiny
   mood -tiny
-  say: {~The head cook pays you a coin to pin the new notices straight. Working the break would mean no lie-ins, and real money.|You pin them up, get a coin for it, and read the hours. It's tempting, and tiring just to read.}
+  say: {The head cook pays you a coin to pin the new notices straight. Working the break would mean no lie-ins, and real money.|You pin them up, get a coin for it, and read the hours. It's tempting, and tiring just to read.}
 > right: Walk past
   mood +tiny
-  say: {~The break is for sleeping, you decide, and walk on. The notices flap behind you.|Not this time. You'll choose when the break comes.}
+  say: {The break is for sleeping, you decide, and walk on. The notices flap behind you.|Not this time. You'll choose when the break comes.}
 
 # ---------------- The grounds (gig_grounds) ----------------
 
@@ -154,11 +154,11 @@ text: {The holiday kitchens feed fewer mouths and work no fewer hours.|Back at t
 > left: Peel the whole sack
   gold +large
   mood -small
-  say: {~A hundred onions and not one tear left in you. The head cook pays you and adds a heel of fresh bread.|You finish the sack. The head cook counts the onions, then your wages, both correctly.}
+  say: {A hundred onions and not one tear left in you. The head cook pays you and adds a heel of fresh bread.|You finish the sack. The head cook counts the onions, then your wages, both correctly.}
 > right: Peel, then help at the stove
   gold +medium
   alchemy +tiny
-  say: {~Half a sack and an hour at the stove. Less pay, but now you know why the soup tastes like home.|The head cook lets you stir. Somehow the stew tastes of your grandmother's. You get paid for the onions.}
+  say: {Half a sack and an hour at the stove. Less pay, but now you know why the soup tastes like home.|The head cook lets you stir. Somehow the stew tastes of your grandmother's. You get paid for the onions.}
 
 @event gig_kitchens_burnt_pan
 title: The Burnt Pan
@@ -218,16 +218,16 @@ weight: 26
 art: paw
 tags: job nature money
 scene: A goat standing triumphantly on the roof of a garden shed, a student with a rope below, an old woman laughing behind them.
-text: {Bartholomew the goat has got out again and is standing on the shed roof, eating the thatch.|Bartholomew is on the shed roof. He has made this a habit.|The goat is on the roof. You don't even ask how any more.} Maud is laughing too hard to help. {~The thatch is going fast.|He has a cabbage in his mouth.|He looks at you like a duke.}
+text: {Bartholomew the goat has got out again and is standing on the shed roof, eating the thatch.|Bartholomew is on the shed roof. He has made this a habit.|The goat is on the roof. You don't even ask how any more.} Maud is laughing too hard to help. {The thatch is going fast.|He has a cabbage in his mouth.|He looks at you like a duke.}
 > left: Climb up after him
   gold +large
   health -small
   vigor +tiny
-  say: {~You get him down after an hour and a fall. Maud pays you double for the entertainment, she says, and a little for the bruises.|Up the ladder, along the ridge, one hand on his horn. He comes down when he's ready, which is later than you are.}
+  say: {You get him down after an hour and a fall. Maud pays you double for the entertainment, she says, and a little for the bruises.|Up the ladder, along the ridge, one hand on his horn. He comes down when he's ready, which is later than you are.}
 > right: Bribe him down with an apple
   gold +medium
   mood +tiny
-  say: {~One apple, held very still. He considers it for a long time, like a merchant, and comes down. Maud pays for the hour you saved.|He takes the apple and stays where he is. Then, at his own pace, he comes down. Maud pays you for patience.}
+  say: {One apple, held very still. He considers it for a long time, like a merchant, and comes down. Maud pays for the hour you saved.|He takes the apple and stays where he is. Then, at his own pace, he comes down. Maud pays you for patience.}
 
 @event gig_kitchens_staff_supper
 title: The Staff Supper
@@ -240,15 +240,15 @@ weight: 26
 art: meal
 tags: job money
 scene: Cooks and kitchen hands crowded round a scrubbed table late at night, eating the day's leftovers, one student serving.
-text: {At the morning briefing the head cook announces a staff supper tonight, after the last service. The whole kitchen eats at the scrubbed table, on leftovers, bread and the head cook's opinions.|Staff supper again tonight. They're saving you a place now.|The head cook bangs a ladle at breakfast. "Staff supper tonight. Sit, or serve."} {~Somebody is already promising a story about a swan.|The pot-boy is asleep on his feet.|There's a cake cooling that nobody will admit to making.}
+text: {At the morning briefing the head cook announces a staff supper tonight, after the last service. The whole kitchen eats at the scrubbed table, on leftovers, bread and the head cook's opinions.|Staff supper again tonight. They're saving you a place now.|The head cook bangs a ladle at breakfast. "Staff supper tonight. Sit, or serve."} {Somebody is already promising a story about a swan.|The pot-boy is asleep on his feet.|There's a cake cooling that nobody will admit to making.}
 > left: Serve, then wash up
   gold +large
   health -small
-  say: {~You serve forty bowls, wash forty bowls, and are paid for the extra hour in coins and a slice of the mystery cake.|You finish the washing-up at midnight. The head cook pays you extra and calls you "the useful one".}
+  say: {You serve forty bowls, wash forty bowls, and are paid for the extra hour in coins and a slice of the mystery cake.|You finish the washing-up at midnight. The head cook pays you extra and calls you "the useful one".}
 > right: Sit and eat with them
   gold +medium
   mood +small
-  say: {~You eat, and laugh at the swan story, and leave earlier with a smaller purse and a full stomach.|You sit. The cooks tell you which professors send back their soup. It's worth more than the wages.}
+  say: {You eat, and laugh at the swan story, and leave earlier with a smaller purse and a full stomach.|You sit. The cooks tell you which professors send back their soup. It's worth more than the wages.}
 
 # ---------------- The holiday versions of term jobs (X15), at their top rank ----------------
 
@@ -263,16 +263,16 @@ weight: 30
 art: book
 tags: job study money
 scene: A deserted library in the holidays, a student on a tall ladder with a ledger, books stacked on every table, dust in the lamplight.
-text: {The library in the holidays is all yours and all to be counted.|The stocktake ledger is half full; the shelves are not half counted.|You've stopped counting books and started counting floors.} {~A shelf of atlases has migrated to the poetry section.|One book is not on any list and seems pleased about it.|The lamp in the east wing keeps going out, politely.}
+text: {The library in the holidays is all yours and all to be counted.|The stocktake ledger is half full; the shelves are not half counted.|You've stopped counting books and started counting floors.} {A shelf of atlases has migrated to the poetry section.|One book is not on any list and seems pleased about it.|The lamp in the east wing keeps going out, politely.}
 > left: Count the restricted shelves too
   gold +large
   lore +small
   health -small
-  say: {~The restricted shelves count back. You finish with the right number and a bite on the thumb. The librarian dresses the bite and writes it in the ledger, under "damages".|You count every chained volume. One of them counts you. The pay is better than term-time's by a good margin.}
+  say: {The restricted shelves count back. You finish with the right number and a bite on the thumb. The librarian dresses the bite and writes it in the ledger, under "damages".|You count every chained volume. One of them counts you. The pay is better than term-time's by a good margin.}
 > right: Keep to the open stacks
   gold +large
   mood -tiny
-  say: {~Open stacks only, every book counted, the ledger perfect. The librarian pays you in full and says nothing about the shelves you left.|A long, dusty, honest day. You go to bed counting.}
+  say: {Open stacks only, every book counted, the ledger perfect. The librarian pays you in full and says nothing about the shelves you left.|A long, dusty, honest day. You go to bed counting.}
 
 @event gig_library_lost_shelf
 title: The Shelf That Wasn't There
@@ -285,16 +285,16 @@ weight: 24
 art: book
 tags: job mystery money
 scene: A narrow library aisle that seems to go on further than the building, a student holding a lamp up to an unfamiliar shelf.
-text: {The stocktake finds a shelf that isn't in any ledger.|The extra shelf again. It has grown a book since yesterday.|The shelf is longer than the room it's in, now.} {~The books on it have no titles.|One is warm.|One is labelled with the date of tomorrow.}
+text: {The stocktake finds a shelf that isn't in any ledger.|The extra shelf again. It has grown a book since yesterday.|The shelf is longer than the room it's in, now.} {The books on it have no titles.|One is warm.|One is labelled with the date of tomorrow.}
 > left: Catalogue it
   gold +large
   lore +small
   mood -small
-  say: {~You list every book. The librarian reads your list, goes pale and pays you to forget it. You don't.|You catalogue the shelf by lamplight. In the morning, it's gone, and your list is the only proof.}
+  say: {You list every book. The librarian reads your list, goes pale and pays you to forget it. You don't.|You catalogue the shelf by lamplight. In the morning, it's gone, and your list is the only proof.}
 > right: Leave it off the ledger
   gold +medium
   guile +tiny
-  say: {~You don't write it down. Some shelves don't want to be counted. The librarian, passing, nods as if you'd passed a test.|You skip it. The ledger balances. The shelf, you'd swear, looks relieved.}
+  say: {You don't write it down. Some shelves don't want to be counted. The librarian, passing, nods as if you'd passed a test.|You skip it. The ledger balances. The shelf, you'd swear, looks relieved.}
 
 @event gig_library_last_day
 title: The Ledger Balances
@@ -307,16 +307,16 @@ weight: 20
 art: scroll
 tags: job money
 scene: A head librarian signing a thick stocktake ledger at a desk under a window, a tired student waiting with ink on every finger.
-text: {The last page of the stocktake. The librarian reads it slowly, all of it.|Another stocktake done, another ledger signed.|The librarian signs, and blots, and signs again for luck.} {~"Not one missing," she says. "That has never happened."|"Three missing, and one extra. Normal."|She closes the ledger with both hands.}
+text: {The last page of the stocktake. The librarian reads it slowly, all of it.|Another stocktake done, another ledger signed.|The librarian signs, and blots, and signs again for luck.} {"Not one missing," she says. "That has never happened."|"Three missing, and one extra. Normal."|She closes the ledger with both hands.}
 > left: Ask for a reference
   gold +large
   renown +tiny
   mood -tiny
-  say: {~She writes one on the spot: three lines, and the third makes you blush. The pay is good and the reference is better.|She writes you a reference in a hand like engraving. It's worth more than the wages, someone tells you later.}
+  say: {She writes one on the spot, three lines, and the third makes you blush. The pay is good and the reference is better.|She writes you a reference in a hand like engraving. It's worth more than the wages, someone tells you later.}
 > right: Ask for the afternoon off
   gold +medium
   mood +small
-  say: {~She gives you the afternoon and a little less pay. You spend it asleep in the reading room, which is the best use of it.|An afternoon off, and a library to yourself. You read for pleasure for the first time in months.}
+  say: {She gives you the afternoon and a little less pay. You spend it asleep in the reading room, which is the best use of it.|An afternoon off, and a library to yourself. You read for pleasure for the first time in months.}
 
 @event gig_newt_rush
 title: The Holiday Rush
@@ -329,16 +329,16 @@ weight: 30
 art: cup
 tags: job money
 scene: A packed village tavern at the holidays, garlands over the bar, every table full, a student manager behind the bar with three jugs in hand.
-text: {The landlady hands you the keys over breakfast. Tonight, she warns, the Newt will be full to the rafters with farmers, barge crews and families home for the season.|Another holiday night ahead, and the Newt is already promised to a full house.|By morning, half the valley has said it's coming to the Newt tonight.} {~A wedding party has sent word.|The fiddler has promised a song with forty verses.|The firewood is stacked to the ceiling.}
+text: {The landlady hands you the keys over breakfast. Tonight, she warns, the Newt will be full to the rafters with farmers, barge crews and families home for the season.|Another holiday night ahead, and the Newt is already promised to a full house.|By morning, half the valley has said it's coming to the Newt tonight.} {A wedding party has sent word.|The fiddler has promised a song with forty verses.|The firewood is stacked to the ceiling.}
 > left: Keep the bar open till the last song
   gold +large
   charm +small
   health -small
-  say: {~You pour till the song ends, then pour for the encore. The till is the heaviest you've ever counted, and your feet will never forgive you.|Closing at three, the till heavy, the floor sticky. The landlady's note says "Well done" in two places.}
+  say: {You pour till the song ends, then pour for the encore. The till is the heaviest you've ever counted, and your feet will never forgive you.|Closing at three, the till heavy, the floor sticky. The landlady's note says "Well done" in two places.}
 > right: Close at the proper hour
   gold +large
   mood -tiny
-  say: {~You call time at midnight, firmly and politely. Some grumble. The till is lighter, and you sleep.|Last orders on the stroke. The till loses some takings; you keep your temper.}
+  say: {You call time at midnight, firmly and politely. Some grumble. The till is lighter, and you sleep.|Last orders on the stroke. The till loses some takings; you keep your temper.}
 
 @event gig_newt_brawl
 title: A Fight Over a Song
@@ -351,21 +351,21 @@ weight: 24
 art: cup
 tags: job danger money
 scene: Two barge crews squaring up in the middle of a crowded tavern, a student manager stepping between them with a tray.
-text: {Two barge crews disagree about the last verse of a song, loudly.|The barge crews again, and the song again, and the same verse.|This time it's a farmer and a fisherman, and the song is a different one.} {~A chair is already in the air.|Somebody has taken their coat off.|The fiddler has stopped playing.}
+text: {Two barge crews disagree about the last verse of a song, loudly.|The barge crews again, and the song again, and the same verse.|This time it's a farmer and a fisherman, and the song is a different one.} {A chair is already in the air.|Somebody has taken their coat off.|The fiddler has stopped playing.}
 > left: Step between them
   challenge combat apprentice+:
     win:
       gold +large
       renown +tiny
-      say: {~You stop the first punch with a tray and the second with a look. Both crews buy a round to make up. You take the tips.|You walk between them and stay there. Eventually somebody laughs, and the song goes on.}
+      say: {You stop the first punch with a tray and the second with a look. Both crews buy a round to make up. You take the tips.|You walk between them and stay there. Eventually somebody laughs, and the song goes on.}
     lose:
       gold +medium
       health -medium
-      say: {~The tray takes one punch and your jaw takes the other. They pay for the chair, at least.|You get a black eye and a free drink, which you can't drink, being on duty.}
+      say: {The tray takes one punch and your jaw takes the other. They pay for the chair, at least.|You get a black eye and a free drink, which you can't drink, being on duty.}
 > right: Bribe them with a free round
   gold +medium
   charm +tiny
-  say: {~One round on the house, and they're singing together by the second verse. The house is a little poorer.|A free round fixes most things. The landlady's ledger will notice.}
+  say: {One round on the house, and they're singing together by the second verse. The house is a little poorer.|A free round fixes most things. The landlady's ledger will notice.}
 
 @event gig_newt_fire
 title: The Fire Must Not Go Out
@@ -378,15 +378,15 @@ weight: 20
 art: candle
 tags: job money
 scene: The great hearth of a village tavern late at night, embers banked low, a student kneeling with tongs and a bucket of ash.
-text: {The landlady's fire has never gone out in her lifetime or her mother's. She's away tonight, and this morning the wind is already in the chimney.|The landlady is away again tonight, and the fire is already low. The wind is from the north.|The fire flickered last night as you locked up, as if to test you. Tonight it's yours again.} {~The wood is damp.|There's frost on the inside of the windows.|The cat is sitting on the warmest stone, unhelpfully.}
+text: {The landlady's fire has never gone out in her lifetime or her mother's. She's away tonight, and this morning the wind is already in the chimney.|The landlady is away again tonight, and the fire is already low. The wind is from the north.|The fire flickered last night as you locked up, as if to test you. Tonight it's yours again.} {The wood is damp.|There's frost on the inside of the windows.|The cat is sitting on the warmest stone, unhelpfully.}
 > left: Sit up with it all night
   gold +large
   health -small
-  say: {~You feed it one stick at a time until dawn. When the landlady comes back, she puts a hand on the stones and nods at you without a word.|You sleep in the chair with the tongs in your lap. The fire lives. So, nearly, do you.}
+  say: {You feed it one stick at a time until dawn. When the landlady comes back, she puts a hand on the stones and nods at you without a word.|You sleep in the chair with the tongs in your lap. The fire lives. So, nearly, do you.}
 > right: Bank it and trust it
   gold +large
   mood -small
-  say: {~You bank it the way she showed you and go to bed. You dream of ash. In the morning, it's alive, and you're shaking.|You trust it. It holds. You don't sleep a wink anyway.}
+  say: {You bank it the way she showed you and go to bed. You dream of ash. In the morning, it's alive, and you're shaking.|You trust it. It holds. You don't sleep a wink anyway.}
 
 @event gig_pell_remedy_rush
 title: Cough Season
@@ -399,16 +399,16 @@ weight: 30
 art: bottle
 tags: job alchemy money
 scene: A crowded village apothecary in winter, a queue of coughing villagers, a student and an old man filling bottles as fast as they can.
-text: {The whole valley is coughing, and Pell's queue is out of the door.|Day three of the cough. Pell is humming. You are not.|The queue at Pell's has its own gossip by now.} {~A carter wants the cherry one.|A farmer wants something for his cow.|A professor in disguise wants something "for a friend".}
+text: {The whole valley is coughing, and Pell's queue is out of the door.|Day three of the cough. Pell is humming. You are not.|The queue at Pell's has its own gossip by now.} {A carter wants the cherry one.|A farmer wants something for his cow.|A professor in disguise wants something "for a friend".}
 > left: Mix to order, carefully
   gold +large
   alchemy +small
   health -tiny
-  say: {~Every bottle mixed for the person in front of you. It's slow, and Pell pays you for every one of them.|You learn sixty coughs by ear. Pell says you're wasted on students.}
+  say: {Every bottle mixed for the person in front of you. It's slow, and Pell pays you for every one of them.|You learn sixty coughs by ear. Pell says you're wasted on students.}
 > right: Mix in big batches
   gold +large
   mood -tiny
-  say: {~One cauldron, one recipe, three hundred bottles. It works for nearly everyone. Pell pays you and looks at the cauldron for a long time.|Fast and efficient. A farmer comes back the next day about the cow.}
+  say: {One cauldron, one recipe, three hundred bottles. It works for nearly everyone. Pell pays you and looks at the cauldron for a long time.|Fast and efficient. A farmer comes back the next day about the cow.}
 
 @event gig_pell_night_knock
 title: A Knock After Closing
@@ -421,20 +421,20 @@ weight: 24
 art: bottle
 tags: job alchemy money
 scene: An apothecary's door at night, a lantern held up to a frightened villager in the doorway, a student in a nightcap behind the counter.
-text: {Pell asks you over breakfast to sleep above the shop tonight. There's a fever about, and the knocks come after closing.|Another night above the shop, Pell asks. The knocks keep coming after dark.|You're sleeping above the shop again tonight. You've stopped bothering to unlace your boots.} {~Pell sleeps like a stone.|The fire goes out at ten.|The ledger says not to open after dark.}
+text: {Pell asks you over breakfast to sleep above the shop tonight. There's a fever about, and the knocks come after closing.|Another night above the shop, Pell asks. The knocks keep coming after dark.|You're sleeping above the shop again tonight. You've stopped bothering to unlace your boots.} {Pell sleeps like a stone.|The fire goes out at ten.|The ledger says not to open after dark.}
 > left: Mix any remedy yourself
   challenge brew adept-:
     win:
       gold +large
       alchemy +small
-      say: {~The knock comes at midnight: a shepherd with a wife burning with fever. You mix the remedy by candlelight from memory. She's better by morning; he pays in eggs and coins, and Pell pays you for the night.|The remedy is right. Pell, in the morning, checks your work and says nothing, which from him is a medal.}
+      say: {The knock comes at midnight. A shepherd, his wife burning with fever. You mix the remedy by candlelight from memory. She's better by morning; he pays in eggs and coins, and Pell pays you for the night.|The remedy is right. Pell, in the morning, checks your work and says nothing, which from him is a medal.}
     lose:
       gold +medium
       mood -small
-      say: {~The first batch is wrong. You wake Pell, who fixes it in a minute and pays you anyway, for trying.|You get it right on the third try, at dawn, and you shake all the next day.}
+      say: {The first batch is wrong. You wake Pell, who fixes it in a minute and pays you anyway, for trying.|You get it right on the third try, at dawn, and you shake all the next day.}
 > right: Wake Pell for anything
   gold +medium
-  say: {~When the knock comes, Pell comes down grumbling, mixes it in two minutes and goes back to bed. You learn more watching than mixing.|You wake him. He's not cross. "That's what I'm for," he says.}
+  say: {When the knock comes, Pell comes down grumbling, mixes it in two minutes and goes back to bed. You learn more watching than mixing.|You wake him. He's not cross. "That's what I'm for," he says.}
 
 @event gig_pell_ledger
 title: Pell's Books
@@ -447,16 +447,16 @@ weight: 20
 art: scroll
 tags: job money
 scene: A cluttered apothecary back room, an old man and a student bent over a ledger full of crossings-out, jars all around them.
-text: {Pell's account books have not been balanced since his daughters left home.|The account books again. Pell has found another drawer of receipts.|You're nearly at the bottom of the receipts. Pell is nearly at the bottom of his patience.} {~Half the debts are owed to him.|Half the debts are owed by him.|Some debts are in a currency that no longer exists.}
+text: {Pell's account books have not been balanced since his daughters left home.|The account books again. Pell has found another drawer of receipts.|You're nearly at the bottom of the receipts. Pell is nearly at the bottom of his patience.} {Half the debts are owed to him.|Half the debts are owed by him.|Some debts are in a currency that no longer exists.}
 > left: Balance them properly
   gold +large
   lore +tiny
   mood -small
-  say: {~Three days of receipts. At the end, Pell is owed more than he thought. He pays you out of it, generously.|You balance every page. Pell signs it as if it were a treaty.}
+  say: {Three days of receipts. At the end, Pell is owed more than he thought. He pays you out of it, generously.|You balance every page. Pell signs it as if it were a treaty.}
 > right: Forgive the small debts
   gold +medium
   alignment +tiny
-  say: {~You strike out every small debt owed to Pell, everything under a crown. Pell reads the list and nods. "They'd never have paid," he says. "Now they'll come back."|Small debts forgiven, the book is simpler and the village is kinder to Pell. The pay is a little less.}
+  say: {You strike out every small debt owed to Pell, everything under a crown. Pell reads the list and nods. "They'd never have paid," he says. "Now they'll come back."|Small debts forgiven, the book is simpler and the village is kinder to Pell. The pay is a little less.}
 
 @event gig_post_storm_run
 title: The Storm Run
@@ -469,21 +469,21 @@ weight: 30
 art: feather
 tags: job danger money
 scene: A courier on a broom flying low over snowy fields in a storm, a sack of parcels strapped behind them, a farmhouse light ahead.
-text: {The holiday post doesn't wait for weather. Tonight's route crosses the ridge in a storm.|The ridge again, and the wind again.|You've flown this route so often the farm dogs know your broom.} {~The sack is heavier than the broom likes.|One parcel is labelled "fragile" in four languages.|The light at the last farm is always on for you.}
+text: {The holiday post doesn't wait for weather. Tonight's route crosses the ridge in a storm.|The ridge again, and the wind again.|You've flown this route so often the farm dogs know your broom.} {The sack is heavier than the broom likes.|One parcel is labelled "fragile" in four languages.|The light at the last farm is always on for you.}
 > left: Fly straight over the ridge
   challenge feat adept wild:
     win:
       gold +large
       vigor +small
-      say: {~Over the ridge and down to the farms in half the time. The bonus for early delivery is very good.|The wind does its worst and you do better. Every parcel delivered, dry.}
+      say: {Over the ridge and down to the farms in half the time. The bonus for early delivery is very good.|The wind does its worst and you do better. Every parcel delivered, dry.}
     lose:
       gold +medium
       health -medium
-      say: {~The wind takes you into a hedge. The parcels survive. You are less sure about yourself.|You deliver everything, late and frozen, with a sprained wrist.}
+      say: {The wind takes you into a hedge. The parcels survive. You are less sure about yourself.|You deliver everything, late and frozen, with a sprained wrist.}
 > right: Take the valley road
   gold +large
   mood -tiny
-  say: {~The long way round, low and slow. Late, but every parcel's in one piece, and so are you.|The valley road adds two hours and no danger. The pay is the pay.}
+  say: {The long way round, low and slow. Late, but every parcel's in one piece, and so are you.|The valley road adds two hours and no danger. The pay is the pay.}
 
 @event gig_post_wrong_parcel
 title: The Wrong Parcel
@@ -496,15 +496,15 @@ weight: 24
 art: letter
 tags: job money
 scene: A farmhouse doorway in the snow, an old woman holding up a parcel that is clearly ticking, a courier on the step looking worried.
-text: {A parcel you delivered yesterday has come back. The old woman says it isn't hers, and it's ticking.|Another wrong address. The holiday post is chaos.|The labels are getting worse. One just says "Aunt".} {~The ticking is getting faster.|It smells of oranges.|It's addressed to someone who died years ago.}
+text: {A parcel you delivered yesterday has come back. The old woman says it isn't hers, and it's ticking.|Another wrong address. The holiday post is chaos.|The labels are getting worse. One just says "Aunt".} {The ticking is getting faster.|It smells of oranges.|It's addressed to someone who died years ago.}
 > left: Find the right house tonight
   gold +large
   health -tiny
-  say: {~You fly the valley till midnight and find the right house. The ticking was a clock, a present for a grandfather. He gives you a slice of cake and a coin.|You find the owner three farms over. The bonus for "lost and found" is surprisingly good.}
+  say: {You fly the valley till midnight and find the right house. The ticking was a clock, a present for a grandfather. He gives you a slice of cake and a coin.|You find the owner three farms over. The bonus for "lost and found" is surprisingly good.}
 > right: Return it to the loft
   gold +medium
   mood -tiny
-  say: {~You take it back to the loft. Someone else will fly it tomorrow, and get the bonus.|The loft-master sighs and puts it on the shelf of the lost. It ticks there all week.}
+  say: {You take it back to the loft. Someone else will fly it tomorrow, and get the bonus.|The loft-master sighs and puts it on the shelf of the lost. It ticks there all week.}
 
 @event gig_post_last_parcel
 title: The Last Parcel
@@ -517,12 +517,12 @@ weight: 20
 art: letter
 tags: job money
 scene: An empty courier loft at the end of a holiday shift, one small parcel left on the shelf, addressed in shaky handwriting.
-text: {The last parcel of the day is small, and addressed in a shaky hand to a cottage on the far moor.|One parcel left again. Always one.|The last parcel, and the last daylight.} {~It's light as a feather.|It's warm.|It rattles like a box of buttons.}
+text: {The last parcel of the day is small, and addressed in a shaky hand to a cottage on the far moor.|One parcel left again. Always one.|The last parcel, and the last daylight.} {It's light as a feather.|It's warm.|It rattles like a box of buttons.}
 > left: Fly it out now
   gold +large
   health -small
-  say: {~The cottage is an hour into the dark. An old man opens the door and holds the parcel as if it were alive. "From my son," he says. The pay feels like the least of it.|You deliver it at dusk to a woman who cries. You don't ask why. You fly home slowly.}
+  say: {The cottage is an hour into the dark. An old man opens the door and holds the parcel as if it were alive. "From my son," he says. The pay feels like the least of it.|You deliver it at dusk to a woman who cries. You don't ask why. You fly home slowly.}
 > right: Leave it for the morning
   gold +large
   mood -small
-  say: {~It waits on the shelf all night and you think about it all night. You fly it at dawn.|In the morning you deliver it, a day late. Nobody minds but you.}
+  say: {It waits on the shelf all night and you think about it all night. You fly it at dawn.|In the morning you deliver it, a day late. Nobody minds but you.}

@@ -19,11 +19,11 @@ text: {Halfway through the placement, your supervisor asks to see you. There's a
 > left: Ask for honest criticism
   perform internship +small
   mood -small
-  say: {~You get it: three things you do badly, in order. You fix two of them by the end of the summer. Your supervisor notices both.|"Most interns ask for praise," your supervisor says, and turns the sheet over. It's a long list. You're grateful for every line, eventually.}
+  say: {You get it, three things you do badly, in order. You fix two of them by the end of the summer. Your supervisor notices both.|"Most interns ask for praise," your supervisor says, and turns the sheet over. It's a long list. You're grateful for every line, eventually.}
 > right: Ask what you've done well
   mood +small
   perform internship -tiny
-  say: {~Your supervisor reads the good half aloud. You leave glowing, and never hear the other half.|"Your handwriting," your supervisor says, after a pause, "is excellent." You decide to take it.}
+  say: {Your supervisor reads the good half aloud. You leave glowing, and never hear the other half.|"Your handwriting," your supervisor says, after a pause, "is excellent." You decide to take it.}
 
 @event intern_credit_taken
 title: Someone Else's Name
@@ -35,21 +35,21 @@ weight: 10
 art: paper
 tags: study job
 scene: A report pinned on a wall, a student staring at the name at the bottom of it, which is not their own.
-text: {The report you spent a week on is pinned up in the corridor, praised by everyone, with another intern's name at the bottom.|Another piece of your work, another name on it.|It's happened again, and this time the other intern doesn't even look away.} {~Your supervisor is reading it with approval.|The other intern is being congratulated.|Your notes are still on your desk, in your hand.}
+text: {The report you spent a week on is pinned up in the corridor, praised by everyone, with another intern's name at the bottom.|Another piece of your work, another name on it.|It's happened again, and this time the other intern doesn't even look away.} {Your supervisor is reading it with approval.|The other intern is being congratulated.|Your notes are still on your desk, in your hand.}
 > left: Take it to your supervisor
   challenge negotiate journeyman+:
     win:
       perform internship +medium
       mood -tiny
-      say: {~You bring your notes, your drafts, your dates. Your supervisor reads them in silence and changes the name in red ink. The corridor goes very quiet around you.|You make your case calmly. The name is changed. The other intern doesn't speak to you again, which is fine.}
+      say: {You bring your notes, your drafts, your dates. Your supervisor reads them in silence and changes the name in red ink. The corridor goes very quiet around you.|You make your case calmly. The name is changed. The other intern doesn't speak to you again, which is fine.}
     lose:
       perform internship -small
       mood -small
-      say: {~Your supervisor hears you out and says it's "a matter for the two of you". It isn't. You go back to your desk with your face burning.|Without proof enough, you sound petty, and you know it. The name stays.}
+      say: {Your supervisor hears you out and says it's "a matter for the two of you". It isn't. You go back to your desk with your face burning.|Without proof enough, you sound petty, and you know it. The name stays.}
 > right: Let it go and work faster
   perform internship +tiny
   mood -medium
-  say: {~You say nothing and do the next one twice as well, in ink that's hard to copy. It doesn't feel like justice. It feels like work.|You let it go. You write your name on every page from then on, small, in the corner.}
+  say: {You say nothing and do the next one twice as well, in ink that's hard to copy. It doesn't feel like justice. It feels like work.|You let it go. You write your name on every page from then on, small, in the corner.}
 
 @event intern_city_evening
 title: An Evening Off
@@ -61,16 +61,16 @@ weight: 10
 art: lantern
 tags: social
 scene: A lamplit street far from the academy, interns spilling out of a busy inn, one looking back at the lit window of the workplace.
-text: {{member(intern_expedition) or member(intern_field_station): The other interns are going out tonight, three miles to a village dance, with a fiddler and a supper laid on at a few coins a head.|The other interns are going out tonight, to an inn with music and a stall that sells fried bread at midnight.}|Another evening off, and the others are already at the door.|"Coming?" says the intern with the biscuits. "Last time you said next time."} {member(intern_expedition) or member(intern_field_station): {~The track is dark, but somebody has a lantern.|It's the only dance for thirty miles.}|{~The streets are bright.|There's a fair on the river.|Somebody knows a band.}} Your work for tomorrow isn't done.
+text: {{member(intern_expedition) or member(intern_field_station): The other interns are going out tonight, three miles to a village dance, with a fiddler and a supper laid on at a few coins a head.|The other interns are going out tonight, to an inn with music and a stall that sells fried bread at midnight.}|Another evening off, and the others are already at the door.|"Coming?" says the intern with the biscuits. "Last time you said next time."} {member(intern_expedition) or member(intern_field_station): {The track is dark, but somebody has a lantern.|It's the only dance for thirty miles.}|{The streets are bright.|There's a fair on the river.|Somebody knows a band.}} Your work for tomorrow isn't done.
 > left: Go out with them
   mood +medium
   perform internship -tiny
   gold -tiny
-  say: {~You pay your share of the supper, dance badly, laugh well and walk home at two in the morning, arm in arm with people you met last month. Tomorrow's work is a little worse for it.|You go, and stand your round. You learn more about the place from the other interns in one evening than from a month of briefings, and remember half of it.}
+  say: {You pay your share of the supper, dance badly, laugh well and walk home at two in the morning, arm in arm with people you met last month. Tomorrow's work is a little worse for it.|You go, and stand your round. You learn more about the place from the other interns in one evening than from a month of briefings, and remember half of it.}
 > right: Finish tomorrow's work
   perform internship +small
   mood -small
-  say: {~You finish the work by lamplight. You hear them come home, singing. In the morning your work is the best on the table.|You stay in. The work is good. The evening is long.}
+  say: {You finish the work by lamplight. You hear them come home, singing. In the morning your work is the best on the table.|You stay in. The work is good. The evening is long.}
 
 @event intern_letter_from_campus
 title: A Letter From the Castle
@@ -84,15 +84,15 @@ tags: social
 cast:
   friend: any where rel(friend) >= 8 and tagged(friend, student)
 scene: A letter open on a desk far from the academy, its margins full of little drawings of the castle, a student smiling at it.
-text: {A letter from {friend}, forwarded twice, with the castle drawn in the margins.|Another letter from campus, this one from {friend}.|{friend}'s handwriting on the envelope. You open it before your coat is off.} {~The letter misses you, in a roundabout way.|{They} {are} bored without you, {they} say{s}.|There's gossip, and a pressed flower.} Answering it properly would take the evening.
+text: {A letter from {friend}, forwarded twice, with the castle drawn in the margins.|Another letter from campus, this one from {friend}.|{friend}'s handwriting on the envelope. You open it before your coat is off.} {The letter misses you, in a roundabout way.|{They} {are} bored without you, {they} say{s}.|There's gossip, and a pressed flower.} Answering it properly would take the evening.
 > left: Write back at length
   rel friend +small
   perform internship -tiny
-  say: {~Six pages, with drawings of your own. You post it at dawn and are late for the briefing, and don't mind.|You write back everything: the work, the place, the interns. It's like talking to {them}.}
+  say: {Six pages, with drawings of your own. You post it at dawn and are late for the briefing, and don't mind.|You write back everything: the work, the place, the interns. It's like talking to {them}.}
 > right: Send a quick note
   perform internship +tiny
   rel friend -tiny
-  say: {~"Busy. Miss you. More soon." It's true, and it's thin, and you know it.|Three lines and a promise. You mean to write more. The summer is very full.}
+  say: {"Busy. Miss you. More soon." It's true, and it's thin, and you know it.|Three lines and a promise. You mean to write more. The summer is very full.}
 
 # ---------------- One card per host that reaches past the summer ----------------
 

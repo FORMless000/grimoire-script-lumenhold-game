@@ -15,25 +15,25 @@ weight: 10
 art: shield
 tags: club duel
 scene: A row of students holding shimmering shields across a scorched hall while seniors lob sparks at them.
-text: {Ward drill. Members hold shields in a line while the seniors lob stinging hexes down the hall.|You know by now which senior aims low, and which one apologises.|You could hold a shield in your sleep, and one night you did.} {~A dummy at the end of the line has a shield of its own, out of pity.|Someone has chalked a tally of scorched floorboards. It is long.|A first-year holds the shield upside down and does surprisingly well.}
+text: {Ward drill. Members hold shields in a line while the seniors lob stinging hexes down the hall.|You know by now which senior aims low, and which one apologises.|You could hold a shield in your sleep, and one night you did.} {A dummy at the end of the line has a shield of its own, out of pity.|Someone has chalked a tally of scorched floorboards. It is long.|A first-year holds the shield upside down and does surprisingly well.}
 > left: Take the front of the line
   challenge combat apprentice+ steady:
     win:
       perform duelling +small
       vigor +small
-      say: {~Your shield takes everything and hums about it afterwards.|Hexes splash off your ward like rain off a good hat.|You hold until the bell. {around(lyra): Lyra|The senior on the whistle} writes something down, which is either praise or a list of your faults.}
+      say: {Your shield takes everything and hums about it afterwards.|Hexes splash off your ward like rain off a good hat.|You hold until the bell. {around(lyra): Lyra|The senior on the whistle} writes something down, which is either praise or a list of your faults.}
     lose:
       health -small
       perform duelling +tiny
-      say: {~A hex finds the gap by your elbow. Your arm fizzes until supper.|Your ward folds like wet paper. The senior apologises, mostly to the floor.}
+      say: {A hex finds the gap by your elbow. Your arm fizzes until supper.|Your ward folds like wet paper. The senior apologises, mostly to the floor.}
 > right: Hold the back row tonight
   arcana +small
   perform duelling -tiny
-  say: {~From the back you watch how the good shields bend instead of break. Nobody watches you.|You spend the drill studying the front row's mistakes, which feels useful and looks like hiding.|Safe at the back, you learn a great deal about the ceiling.}
+  say: {From the back you watch how the good shields bend instead of break. Nobody watches you.|You spend the drill studying the front row's mistakes, which feels useful and looks like hiding.|Safe at the back, you learn a great deal about the ceiling.}
 > up[ward]: Hold the line with a real ward
   perform duelling +small
   arcana +small
-  say: {~You raise a proper ward, the one from Umbral Theory, and the seniors' hexes slide off it like rain off glass. {around(lyra): Lyra stops the drill to look.|The seniors stop the drill to look.}|Your ward holds the whole line's flank. Your arm aches from the mana, not the hexes.}
+  say: {You raise a proper ward, the one from Umbral Theory, and the seniors' hexes slide off it like rain off glass. {around(lyra): Lyra stops the drill to look.|The seniors stop the drill to look.}|Your ward holds the whole line's flank. Your arm aches from the mana, not the hexes.}
 
 @event duelling_dummy_mending
 title: Mending the Dummies
@@ -46,16 +46,16 @@ weight: 10
 art: duel
 tags: club
 scene: A student alone in a duelling hall at night, stitching straw back into a battered practice dummy.
-text: {After practice someone has to mend the dummies, and tonight the rota says it's you.|Mending night again, and the rota has your name on it.|You know every dummy here by its scars. They look at you with something like trust.} {~The tall dummy is missing an arm. Someone always takes the arm.|One dummy is now mostly scorch mark.|Someone has painted a new name on a dummy's chest, and a grudge beneath it.}
+text: {After practice someone has to mend the dummies, and tonight the rota says it's you.|Mending night again, and the rota has your name on it.|You know every dummy here by its scars. They look at you with something like trust.} {The tall dummy is missing an arm. Someone always takes the arm.|One dummy is now mostly scorch mark.|Someone has painted a new name on a dummy's chest, and a grudge beneath it.}
 > left: Stay late and stitch them up
   mood -small
   perform duelling +small
   rank_xp duelling +tiny
-  say: {~By midnight every dummy is whole and you have straw in places straw should not be.|You sew one dummy's arm on slightly backwards. It looks more dangerous for it.|The hall is quiet, the needle is steady, and for an hour nobody is shouting about footwork.}
+  say: {By midnight every dummy is whole and you have straw in places straw should not be.|You sew one dummy's arm on slightly backwards. It looks more dangerous for it.|The hall is quiet, the needle is steady, and for an hour nobody is shouting about footwork.}
 > right: Leave them for the morning
   mood +tiny
   perform duelling -tiny
-  say: {~In the morning the dummies are still in pieces, and so is the seniors' patience.|You slip out early. Someone finds the dummies and puts your name on next week's rota, underlined twice.}
+  say: {In the morning the dummies are still in pieces, and so is the seniors' patience.|You slip out early. Someone finds the dummies and puts your name on next week's rota, underlined twice.}
 
 @event duelling_refereeing_lyra
 title: Refereeing Lyra
@@ -70,19 +70,19 @@ when: around(lyra)
 art: duel
 tags: club duel
 scene: A student with a whistle watching a noble duellist in a chalk circle, her opponent's shield just failing.
-text: {Officers referee, so tonight you hold the whistle while Lyra duels a second-year.|You know the circle's chalk by heart now, and Lyra's footwork better.|{rel(lyra) >= 12: Lyra no longer asks who is refereeing. She looks for you.|The whistle has a dent in it from some earlier, unrecorded argument.}} {~Her last spell landed a breath after the bell.|She stepped out of the circle by a boot's width, and knows it.|Her last hex went in after her opponent had called the yield.} {final_year: One of the last bouts you will call for her.|}
+text: {Officers referee, so tonight you hold the whistle while Lyra duels a second-year.|You know the circle's chalk by heart now, and Lyra's footwork better.|{rel(lyra) >= 12: Lyra no longer asks who is refereeing. She looks for you.|The whistle has a dent in it from some earlier, unrecorded argument.}} {Her last spell landed a breath after the bell.|She stepped out of the circle by a boot's width, and knows it.|Her last hex went in after her opponent had called the yield.} {final_year: One of the last bouts you will call for her.|}
 > left: Call it against her
   rel lyra -small
   alignment +tiny
   perform duelling +small
   rank_xp duelling +small
-  say: {~"Noted," Lyra says, in a voice that could chill wine. Next day her feet are perfect.|Lyra stares at you, then shakes her opponent's hand. Later a cup of tea appears on your bench.|The hall goes silent. Lyra bows to the second-year, very correctly, and to you, slightly less.}
+  say: {"Noted," Lyra says, in a voice that could chill wine. Next day her feet are perfect.|Lyra stares at you, then shakes her opponent's hand. Later a cup of tea appears on your bench.|The hall goes silent. Lyra bows to the second-year, very correctly, and to you, slightly less.}
 > right: Let it stand
   rel lyra +tiny
   alignment -tiny
   perform duelling -tiny
   mood -tiny
-  say: {~Lyra wins. The second-year looks at you, and you find something interesting about your whistle.|Nobody objects. Lyra does not thank you; if anything, she looks a little disappointed in you.|The bout goes in the book as hers. It sits there all week like a stone in your shoe.}
+  say: {Lyra wins. The second-year looks at you, and you find something interesting about your whistle.|Nobody objects. Lyra does not thank you; if anything, she looks a little disappointed in you.|The bout goes in the book as hers. It sits there all week like a stone in your shoe.}
 
 @event duelling_running_practice
 title: Running Practice
@@ -119,17 +119,17 @@ weight: 10
 art: letter
 tags: club
 scene: A battered wooden box under a library staircase, overflowing with folded letters and one sock.
-text: {The letters box is full. Stringers sort it, Nessa says, having no dignity yet to lose.|Sorting day. A regular correspondent has started numbering their letters.|Under the stairs the box has burst its lid. You know the regulars by their handwriting now.} {~Porridge complaints, a poem about the lake and a sock.|A furious letter about the crossword, in a professor's hand.|An anonymous tip in lemon juice, noticed only because it smells nice.}
+text: {The letters box is full. Stringers sort it, Nessa says, having no dignity yet to lose.|Sorting day. A regular correspondent has started numbering their letters.|Under the stairs the box has burst its lid. You know the regulars by their handwriting now.} {Porridge complaints, a poem about the lake and a sock.|A furious letter about the crossword, in a professor's hand.|An anonymous tip in lemon juice, noticed only because it smells nice.}
 > left: Print the angriest letter
   perform lumen_ledger +small
   renown +tiny
   mood -tiny
-  say: {~It runs on page four. By breakfast several people are angry about the angry letter, which Nessa calls "engagement".|The letter runs. Its author glares at you over the porridge, as if you had written it.}
+  say: {It runs on page four. By breakfast several people are angry about the angry letter, which Nessa calls "engagement".|The letter runs. Its author glares at you over the porridge, as if you had written it.}
 > right: Answer them all by hand
   charm +small
   mood -small
   perform lumen_ledger +tiny
-  say: {~You write back to every one of them, even the ones that weren't really letters. Your hand cramps; somewhere in the castle a lonely first-year gets a reply.|A pile of replies, all polite. Nessa calls it "a waste of a perfectly good grudge", then borrows your phrasing.}
+  say: {You write back to every one of them, even the ones that weren't really letters. Your hand cramps; somewhere in the castle a lonely first-year gets a reply.|A pile of replies, all polite. Nessa calls it "a waste of a perfectly good grudge", then borrows your phrasing.}
 
 @event lumen_ledger_courtyard_quotes
 title: A Word from the Courtyard
@@ -142,21 +142,21 @@ weight: 10
 art: paper
 tags: club social
 scene: A student with a notebook stopping passers-by in a busy courtyard.
-text: {Every issue needs a word from the courtyard. One question, many opinions.|Word has got round the courtyard that the Ledger is asking questions.|Half the courtyard now takes the long way round your notebook.} This week: {~is the soup getting thinner?|who will win the Spring Tournament?|is the lake louder lately?} {season == "winter": Everyone is hurrying indoors.|{~Some second-years pretend not to see you.|A passing professor looks very quotable.}}
+text: {Every issue needs a word from the courtyard. One question, many opinions.|Word has got round the courtyard that the Ledger is asking questions.|Half the courtyard now takes the long way round your notebook.} This week: {is the soup getting thinner?|who will win the Spring Tournament?|is the lake louder lately?} {season == "winter": Everyone is hurrying indoors.|{Some second-years pretend not to see you.|A passing professor looks very quotable.}}
 > left: Stop strangers and ask
   challenge negotiate apprentice:
     win:
       perform lumen_ledger +small
       charm +small
-      say: {~A gardener, a prefect and a very small first-year give you the best quotes of the term. The first-year's is unprintable, and perfect.|You get a quote so good Nessa moves it to the front page and pretends it was her idea to ask.}
+      say: {A gardener, a prefect and a very small first-year give you the best quotes of the term. The first-year's is unprintable, and perfect.|You get a quote so good Nessa moves it to the front page and pretends it was her idea to ask.}
     lose:
       mood -small
       perform lumen_ledger +tiny
-      say: {~Everyone is busy, cold or suddenly deaf. You come back with "no comment" in five different tones of voice.|A fourth-year answers at length, entirely about himself.}
+      say: {Everyone is busy, cold or suddenly deaf. You come back with "no comment" in five different tones of voice.|A fourth-year answers at length, entirely about himself.}
 > right: Just quote your friends
   mood +tiny
   perform lumen_ledger -tiny
-  say: {~Every opinion comes from someone you had lunch with. Nessa reads them and says, "Interesting. Your friends are very consistent."|It's quick. It's also the courtyard as represented by one person in several scarves.}
+  say: {Every opinion comes from someone you had lunch with. Nessa reads them and says, "Interesting. Your friends are very consistent."|It's quick. It's also the courtyard as represented by one person in several scarves.}
 
 @event lumen_ledger_red_ink
 title: Red Ink
@@ -170,21 +170,21 @@ actor: nessa
 art: scroll
 tags: club
 scene: A cramped office papered with old front pages, an editor slashing a manuscript with a red quill.
-text: {Nessa edits your story with a red quill and no mercy.|Nessa has your draft, and this time the red quill hesitates once before it moves.|Edit night. You have learned to bring two copies, one for Nessa to kill.} "{~Kill your darlings. Bury them. Page six.|Lead's buried. Dig it up. Headline it.|Good. Too long. Shorter. Shorter than that.}" She has cut your favourite paragraph.
+text: {Nessa edits your story with a red quill and no mercy.|Nessa has your draft, and this time the red quill hesitates once before it moves.|Edit night. You have learned to bring two copies, one for Nessa to kill.} "{Kill your darlings. Bury them. Page six.|Lead's buried. Dig it up. Headline it.|Good. Too long. Shorter. Shorter than that.}" She has cut your favourite paragraph.
 > left: Fight for the paragraph
   challenge negotiate vs nessa.charm:
     win:
       perform lumen_ledger +small
       rank_xp lumen_ledger +small
-      say: {~Nessa reads it again, out loud, and puts it back. "Fine. Stays. Don't get used to it."|You win the paragraph. Nessa makes you cut a different one, as a tax.}
+      say: {Nessa reads it again, out loud, and puts it back. "Fine. Stays. Don't get used to it."|You win the paragraph. Nessa makes you cut a different one, as a tax.}
     lose:
       mood -small
       rel nessa -tiny
-      say: {~"No," says Nessa, and that is the whole argument.|She listens to your case with great interest, then cuts the paragraph anyway, plus the one you defended it with.}
+      say: {"No," says Nessa, and that is the whole argument.|She listens to your case with great interest, then cuts the paragraph anyway, plus the one you defended it with.}
 > right: Let her cut it
   perform lumen_ledger +small
   mood -small
-  say: {~It reads better without it. You will never forgive her.|The story runs, tighter and less yours. Nessa scribbles "good" in the margin, a word Nessa hands out like gold.}
+  say: {It reads better without it. You will never forgive her.|The story runs, tighter and less yours. Nessa scribbles "good" in the margin, a word Nessa hands out like gold.}
 
 @event lumen_ledger_front_page
 title: Front Page
@@ -221,22 +221,22 @@ weight: 10
 art: leaf
 tags: club nature
 scene: A student with a watering can and a huge chart in a steaming greenhouse, ferns leaning in hungrily.
-text: {You're on the watering rota, a chart the size of a door.|The ferns have learned your footsteps and lean in.|You no longer need the chart, luckily, since a fern ate it.} {season == "winter": Frost outside the glass, drips down your collar inside.|{season == "summer": It's so hot the cacti look smug.|{~The biting ferns are in a mood.|Something in the far bed grew overnight.|The moonflowers do nothing, beautifully, as they will for years.}}}
+text: {You're on the watering rota, a chart the size of a door.|The ferns have learned your footsteps and lean in.|You no longer need the chart, luckily, since a fern ate it.} {season == "winter": Frost outside the glass, drips down your collar inside.|{season == "summer": It's so hot the cacti look smug.|{The biting ferns are in a mood.|Something in the far bed grew overnight.|The moonflowers do nothing, beautifully, as they will for years.}}}
 > left: Follow the chart exactly
   perform verdant +small
   alchemy +tiny
   mood -small
-  say: {~Warm rainwater for the ferns, cold tea for the moss, nothing at all for the cactus that bites. It takes all afternoon.|By the chart, to the drop. {around(tobias): Tobias says the plants look "right pleased", and they do, in a leafy way.|The plants look pleased, in a leafy way.}}
+  say: {Warm rainwater for the ferns, cold tea for the moss, nothing at all for the cactus that bites. It takes all afternoon.|By the chart, to the drop. {around(tobias): Tobias says the plants look "right pleased", and they do, in a leafy way.|The plants look pleased, in a leafy way.}}
 > right: Water by feel
   challenge research using alchemy apprentice:
     win:
       alchemy +small
       perform verdant +small
-      say: {~You read the leaves instead of the chart. Everything perks up, and one fern makes a sound suspiciously like purring.|You guess right on every bed. {around(tobias): Tobias asks how you knew. You honestly don't.|You couldn't say how you knew.}}
+      say: {You read the leaves instead of the chart. Everything perks up, and one fern makes a sound suspiciously like purring.|You guess right on every bed. {around(tobias): Tobias asks how you knew. You honestly don't.|You couldn't say how you knew.}}
     lose:
       health -tiny
       perform verdant -tiny
-      say: {~You drown a pot of sundew, and a biting fern takes a polite nip of your thumb.|The moss wanted tea, not water. It sulks visibly, and the cactus you reach past bites.}
+      say: {You drown a pot of sundew, and a biting fern takes a polite nip of your thumb.|The moss wanted tea, not water. It sulks visibly, and the cactus you reach past bites.}
 
 @event verdant_repotting_day
 title: Repotting Day
@@ -249,18 +249,18 @@ weight: 10
 art: flower
 tags: club nature
 scene: Students in earmuffs wrestling squalling mandrakes into bigger pots on a crowded greenhouse bench.
-text: {Repotting day. The mandrakes have outgrown their pots and have opinions about it.|Someone always takes the good earmuffs, so you bring your own now.|You know which mandrakes kick, and which only pretend to.} {~Tobias's own mandrake watches from a shelf in a knitted hat, superior.|A seed tray of something blue has started to hum.|{season == "spring": Everything is trying to grow at once.|The glass is fogged and the benches crowded.}}
+text: {Repotting day. The mandrakes have outgrown their pots and have opinions about it.|Someone always takes the good earmuffs, so you bring your own now.|You know which mandrakes kick, and which only pretend to.} {Tobias's own mandrake watches from a shelf in a knitted hat, superior.|A seed tray of something blue has started to hum.|{season == "spring": Everything is trying to grow at once.|The glass is fogged and the benches crowded.}}
 > left: Take on the mandrakes
   health -tiny
   mood -tiny
   perform verdant +small
   rank_xp verdant +tiny
-  say: {~One mandrake has rooted into the bench itself. It takes a trowel, a lullaby and both hands to talk it out.|Mandrake after mandrake, each into a bigger pot. Your ears ring all the way to supper.|The biggest one goes in headfirst and comes out, somehow, the right way up. You are not sure who won.}
+  say: {One mandrake has rooted into the bench itself. It takes a trowel, a lullaby and both hands to talk it out.|Mandrake after mandrake, each into a bigger pot. Your ears ring all the way to supper.|The biggest one goes in headfirst and comes out, somehow, the right way up. You are not sure who won.}
 > right: Take the quiet seed trays
   alchemy +small
   health -tiny
   perform verdant +tiny
-  say: {~Hundreds of seedlings, pricked out one by one. Your back will remember this tomorrow.|The seed trays are peaceful and endless. By dusk you have names for most of them.}
+  say: {Hundreds of seedlings, pricked out one by one. Your back will remember this tomorrow.|The seed trays are peaceful and endless. By dusk you have names for most of them.}
 
 @event verdant_tobias_cuttings
 title: The Cuttings Question
@@ -281,12 +281,12 @@ text: {The benches are full and someone must choose which cuttings stay. Tobias 
   rank_xp verdant +small
   rel tobias -tiny
   mood -tiny
-  say: {~You keep the strongest and compost the rest. Tobias says "fair's fair", then goes very quiet over the heap.|The benches breathe again. Tobias thanks you, then tells you a long story about a goat he couldn't sell. You understand it is about the cuttings.}
+  say: {You keep the strongest and compost the rest. Tobias says "fair's fair", then goes very quiet over the heap.|The benches breathe again. Tobias thanks you, then tells you a long story about a goat he couldn't sell. You understand it is about the cuttings.}
 > right: Find room for every one
   rel tobias +small
   perform verdant -tiny
   mood +tiny
-  say: {~You find room on windowsills, under benches and in a teacup. Nothing grows well, but everything grows. Tobias laughs from the belly.|"Ma always said a crowded field still feeds you," Tobias says, beaming. The benches groan. So does Old Maud, when she sees.}
+  say: {You find room on windowsills, under benches and in a teacup. Nothing grows well, but everything grows. Tobias laughs from the belly.|"Ma always said a crowded field still feeds you," Tobias says, beaming. The benches groan. So does Old Maud, when she sees.}
 
 @event verdant_greenhouse_keys
 title: The Greenhouse Keys
@@ -325,19 +325,19 @@ weight: 10
 art: map
 tags: club mystery
 scene: A student pacing a dark stone passage by candlelight, chalking marks on the wall.
-text: {Initiates do the pacing. Corvin hands you chalk and a passage to measure before the castle changes its mind.|Your chalk is a stub now, so you mark the turns with notches.|Your stride is a unit of measurement on the master map now, and the castle seems to know it.} {~The passage smells of oranges, which nobody can explain.|Behind the wall, a clock ticks that no one has ever found.|Your candle leans, very slightly, toward the left-hand turning.}
+text: {Initiates do the pacing. Corvin hands you chalk and a passage to measure before the castle changes its mind.|Your chalk is a stub now, so you mark the turns with notches.|Your stride is a unit of measurement on the master map now, and the castle seems to know it.} {The passage smells of oranges, which nobody can explain.|Behind the wall, a clock ticks that no one has ever found.|Your candle leans, very slightly, toward the left-hand turning.}
 > left: Pace it properly
   challenge research using guile apprentice:
     win:
       guile +small
-      say: {~Every turning chalked and counted. The passage is exactly where it was last month, which on the master map counts as a scandal.|The passage is two strides longer from this end than from the other. Corvin is delighted.}
+      say: {Every turning chalked and counted. The passage is exactly where it was last month, which on the master map counts as a scandal.|The passage is two strides longer from this end than from the other. Corvin is delighted.}
     lose:
       mood -small
-      say: {~Your chalk marks lead neatly into a wall that wasn't there when you started.|You lose count somewhere in the dark and have to admit it, which in this club is rarer than a map.}
+      say: {Your chalk marks lead neatly into a wall that wasn't there when you started.|You lose count somewhere in the dark and have to admit it, which in this club is rarer than a map.}
 > right: Copy last month's figures
   alignment -tiny
   mood +tiny
-  say: {~You copy the old figures and sit in an alcove eating toffee. The castle, as if offended, moves the passage a foot.|The figures match last month's exactly. Corvin looks at them, then at you. "Forger," he says, approvingly.}
+  say: {You copy the old figures and sit in an alcove eating toffee. The castle, as if offended, moves the passage a foot.|The figures match last month's exactly. Corvin looks at them, then at you. "Forger," he says, approvingly.}
 
 @event cartographers_lantern_patrol
 title: The Prefect's Lantern
@@ -349,19 +349,19 @@ weight: 10
 art: lantern
 tags: club mystery
 scene: Students pressed into a stone alcove as a lantern's glow sweeps along a dark corridor.
-text: {Every expedition has the moment a lantern comes round the corner. Tonight's has a red sash behind it.|A lantern, a red sash, footsteps. You know this part.|You can tell the prefects on patrol apart by their footsteps now.} {~The alcove beside you is just big enough for one.|A loose flagstone ahead clanks if you step on it.|The tapestry here already has feet showing under it, and they aren't yours.}
+text: {Every expedition has the moment a lantern comes round the corner. Tonight's has a red sash behind it.|A lantern, a red sash, footsteps. You know this part.|You can tell the prefects on patrol apart by their footsteps now.} {The alcove beside you is just big enough for one.|A loose flagstone ahead clanks if you step on it.|The tapestry here already has feet showing under it, and they aren't yours.}
 > left: Freeze in the shadows
   challenge deceive apprentice+:
     win:
       guile +tiny
-      say: {~The light slides over you like water off a duck. The footsteps go on.|You don't breathe for a very long time. The prefect sneezes, apologises to nobody and walks on.}
+      say: {The light slides over you like water off a duck. The footsteps go on.|You don't breathe for a very long time. The prefect sneezes, apologises to nobody and walks on.}
     lose:
       mood -small
-      say: {~The lantern stops on your face. You spend Saturday scrubbing pans and inventing a reason you were inside a wall.|You talk your way out with a story about a lost cat. It costs you the night's mapping and most of your dignity.}
+      say: {The lantern stops on your face. You spend Saturday scrubbing pans and inventing a reason you were inside a wall.|You talk your way out with a story about a lost cat. It costs you the night's mapping and most of your dignity.}
 > right: Go back the long way
   guile +tiny
   health -tiny
-  say: {~The long way is four flights of freezing stairs. You learn every one of them by heart.|You double back through the kitchens and arrive late, cold and unseen. Corvin raises a mug of milk he certainly didn't pay for.}
+  say: {The long way is four flights of freezing stairs. You learn every one of them by heart.|You double back through the kitchens and arrive late, cold and unseen. Corvin raises a mug of milk he certainly didn't pay for.}
 
 @event cartographers_inking_night
 title: Inking Night
@@ -374,14 +374,14 @@ actor: corvin
 art: map
 tags: club
 scene: Two students bent over a huge map drawn in silver ink that shifts as they watch, in a hidden candlelit room.
-text: {Mappers ink the master map. Corvin unrolls it, silver lines shifting like breath, and passes you the pen.|Inking night. The map has redrawn a stair since your last visit, out of spite.|The map has started leaving a blank wherever you hesitate.} {~"Leave the one behind the kitchens off," he says. "Not for long. For me."|"The stair under the clock. Don't draw it. Don't ask why."|He taps a corridor. "That one stays off the map. Humour me."}
+text: {Mappers ink the master map. Corvin unrolls it, silver lines shifting like breath, and passes you the pen.|Inking night. The map has redrawn a stair since your last visit, out of spite.|The map has started leaving a blank wherever you hesitate.} {"Leave the one behind the kitchens off," he says. "Not for long. For me."|"The stair under the clock. Don't draw it. Don't ask why."|He taps a corridor. "That one stays off the map. Humour me."}
 > left: Ink it anyway
   rel corvin -small
   alignment +tiny
-  say: {~You draw it, line by honest line. Corvin watches, then laughs, a little too late. "Saint," he says, without the usual smile.|It goes on the map. Corvin is quiet for the rest of the night, which on him is very loud.}
+  say: {You draw it, line by honest line. Corvin watches, then laughs, a little too late. "Saint," he says, without the usual smile.|It goes on the map. Corvin is quiet for the rest of the night, which on him is very loud.}
 > right: Leave it off for him
   rel corvin +small
-  say: {~You leave a careful blank. Corvin squeezes your shoulder and doesn't make a joke, which is how you know it matters.|The map gets a gap and Corvin keeps his secret. You wonder, later, what it's for.}
+  say: {You leave a careful blank. Corvin squeezes your shoulder and doesn't make a joke, which is how you know it matters.|The map gets a gap and Corvin keeps his secret. You wonder, later, what it's for.}
 
 @event cartographers_silver_pen
 title: A Pen of Your Own
@@ -415,23 +415,23 @@ weight: 10
 art: book
 tags: job study
 scene: A library aisle with an empty gap where a whole bookcase should be, a student holding a catalogue.
-text: {The shelves rearranged themselves overnight. History is missing, and a queue is forming for it.|The shelves have wandered, this time the {~poetry|herbals|atlases}. You have brought string to mark the way.|The head librarian simply hands you the catalogue now and points upward.} {~Footnote sits where the section used to be.|A first-year swears she saw it go upstairs.|There is a faint trail in the dust, as if something heavy had tiptoed.}
+text: {The shelves rearranged themselves overnight. History is missing, and a queue is forming for it.|The shelves have wandered, this time the {poetry|herbals|atlases}. You have brought string to mark the way.|The head librarian simply hands you the catalogue now and points upward.} {Footnote sits where the section used to be.|A first-year swears she saw it go upstairs.|There is a faint trail in the dust, as if something heavy had tiptoed.}
 > left: Hunt it down by catalogue
   wage
   challenge research apprentice+ wild:
     win:
       lore +small
       perform library_assistant +small
-      say: {~You find it on the fifth floor, wedged between the cookery books, looking innocent.|You track it by its shelfmarks to a landing that wasn't there yesterday. The queue cheers, quietly, because it's a library.}
+      say: {You find it on the fifth floor, wedged between the cookery books, looking innocent.|You track it by its shelfmarks to a landing that wasn't there yesterday. The queue cheers, quietly, because it's a library.}
     lose:
       mood -small
       perform library_assistant -tiny
-      say: {~You search until closing. In the morning the section is back where it started, faintly smug.|You find the wrong section, twice. The queue disperses with sighs you will hear in your sleep.}
+      say: {You search until closing. In the morning the section is back where it started, faintly smug.|You find the wrong section, twice. The queue disperses with sighs you will hear in your sleep.}
 > right: Put up a sign and wait
   wage
   mood +tiny
   perform library_assistant -tiny
-  say: {~"Back shortly," says your sign. The section returns in the afternoon. The queue does not.|You sit at the desk and wait. A student asks whether the sign means you or the books.}
+  say: {"Back shortly," says your sign. The section returns in the afternoon. The queue does not.|You sit at the desk and wait. A student asks whether the sign means you or the books.}
 
 @event library_assistant_hush_round
 title: The Hush Round
@@ -444,18 +444,18 @@ weight: 10
 art: candle
 tags: job
 scene: A student assistant with a lamp walking between study tables in a dim library, one finger to her lips.
-text: {Hush round. One lap of the reading room, a lamp, a finger to your lips.|The reading room has learned the sound of your lamp. Whispers stop a table ahead of you.|The regulars hear your step and straighten up before you reach them.} {~A table of second-years is giggling.|An old scholar snores on his notes, in a scholarly key.|Somebody's quill is scratching so loudly it echoes.} {final_year: Soon this will be someone else's lap.|}
+text: {Hush round. One lap of the reading room, a lamp, a finger to your lips.|The reading room has learned the sound of your lamp. Whispers stop a table ahead of you.|The regulars hear your step and straighten up before you reach them.} {A table of second-years is giggling.|An old scholar snores on his notes, in a scholarly key.|Somebody's quill is scratching so loudly it echoes.} {final_year: Soon this will be someone else's lap.|}
 > left: Hush them firmly
   wage
   mood -tiny
   perform library_assistant +small
   rank_xp library_assistant +tiny
-  say: {~One look and the room falls silent. Somewhere a bookcase seems to approve.|You hush them. They glare. In the morning one of them leaves a note on the desk: "sorry", in very small writing.}
+  say: {One look and the room falls silent. Somewhere a bookcase seems to approve.|You hush them. They glare. In the morning one of them leaves a note on the desk: "sorry", in very small writing.}
 > right: Let them be
   wage
   mood +tiny
   perform library_assistant -tiny
-  say: {~You let it go. The noise rises, the head librarian appears from nowhere, and looks at you, not at them.|You leave them to it. For a while the murmur is the nicest sound in the building.}
+  say: {You let it go. The noise rises, the head librarian appears from nowhere, and looks at you, not at them.|You leave them to it. For a while the murmur is the nicest sound in the building.}
 
 @event library_assistant_reference_desk
 title: The Reference Desk
@@ -468,7 +468,7 @@ weight: 10
 art: scroll
 tags: job study
 scene: A student behind a reference desk facing a line of readers, one of them holding up a green ribbon.
-text: {Clerks take the reference desk alone. The first question arrives before you sit down.|The desk has a worn patch now, exactly where your elbows go.|You keep a list of the strangest questions now, and it is long.} {~A professor wants "the green book, about this thick, I read it in my youth".|A first-year wants the book their professor "definitely mentioned".|A visiting scholar wants the one book that explains why bees hum in thirds, by tonight.}
+text: {Clerks take the reference desk alone. The first question arrives before you sit down.|The desk has a worn patch now, exactly where your elbows go.|You keep a list of the strangest questions now, and it is long.} {A professor wants "the green book, about this thick, I read it in my youth".|A first-year wants the book their professor "definitely mentioned".|A visiting scholar wants the one book that explains why bees hum in thirds, by tonight.}
 > left: Dig until you find it
   wage
   challenge research journeyman+:
@@ -476,16 +476,16 @@ text: {Clerks take the reference desk alone. The first question arrives before y
       lore +small
       perform library_assistant +small
       rank_xp library_assistant +tiny
-      say: {~You find it in the end, in the wrong section, under a cat. The reader looks at you as if you had worked a miracle, and you have.|Three ladders, two catalogues and an educated guess. It is the right book.}
+      say: {You find it in the end, in the wrong section, under a cat. The reader looks at you as if you had worked a miracle, and you have.|Three ladders, two catalogues and an educated guess. It is the right book.}
     lose:
       mood -small
       health -tiny
-      say: {~Hours later you admit defeat. The book, it turns out, was on the desk all along, propping up the inkpot.|You never find it. You dream of card catalogues all night.}
+      say: {Hours later you admit defeat. The book, it turns out, was on the desk all along, propping up the inkpot.|You never find it. You dream of card catalogues all night.}
 > right: Send them off with a good guess
   wage
   mood +tiny
   perform library_assistant -tiny
-  say: {~You point confidently at a staircase. They come back an hour later with a different book, which they say they liked better.|"Try the fourth floor." They do. You hope the fourth floor helps.}
+  say: {You point confidently at a staircase. They come back an hour later with a different book, which they say they liked better.|"Try the fourth floor." They do. You hope the fourth floor helps.}
 
 @event library_assistant_stack_keys
 title: The Stack Keys
@@ -523,23 +523,23 @@ weight: 10
 art: cup
 tags: job money
 scene: A crowded low-beamed tavern, a server balancing a tray of steaming mugs through the press of bodies.
-text: {The rush at the Gilded Newt. A dozen orders shouted at once, and a tray that holds fewer.|The door won't stay shut. You have started remembering faces by their drink, which works until two people want spiced cider.|The regulars just point now, and you know what the points mean.} {~A barge crew has come in soaked and thirsty.|The card table is arguing about the rules again.|{season == "winter": Snow is melting off every coat in the room.|Half the village is on the step.}}
+text: {The rush at the Gilded Newt. A dozen orders shouted at once, and a tray that holds fewer.|The door won't stay shut. You have started remembering faces by their drink, which works until two people want spiced cider.|The regulars just point now, and you know what the points mean.} {A barge crew has come in soaked and thirsty.|The card table is arguing about the rules again.|{season == "winter": Snow is melting off every coat in the room.|Half the village is on the step.}}
 > left: Keep every order in your head
   wage
   challenge research apprentice:
     win:
       gold +tiny
       perform tavern +small
-      say: {~Every mug to the right hand. The whole room tips like it's payday.|You don't miss once. The landlady, who remembers every tab to the penny, gives you a look of professional respect.}
+      say: {Every mug to the right hand. The whole room tips like it's payday.|You don't miss once. The landlady, who remembers every tab to the penny, gives you a look of professional respect.}
     lose:
       mood -tiny
       perform tavern -tiny
-      say: {~The spiced cider goes to the wrong table. The right table has opinions. The wrong table drinks it anyway.|You mix up two orders and three tempers.}
+      say: {The spiced cider goes to the wrong table. The right table has opinions. The wrong table drinks it anyway.|You mix up two orders and three tempers.}
 > right: Write every order down
   wage
   perform tavern +tiny
   mood -tiny
-  say: {~Slow but sure. Nobody gets the wrong drink; nobody tips the slow server either.|Your order pad fills with a shorthand only you can read. By closing, you can't either.}
+  say: {Slow but sure. Nobody gets the wrong drink; nobody tips the slow server either.|Your order pad fills with a shorthand only you can read. By closing, you can't either.}
 
 @event tavern_regulars_corner
 title: The Regulars' Corner
@@ -552,18 +552,18 @@ weight: 10
 art: group
 tags: job social
 scene: An old barge-man, a herb-wife from the lane and a quiet traveller at a fireside table, beckoning a server over.
-text: {The regulars' corner by the fire wants you to sit for a minute. The fire is warm, and the minute is tempting.|The regulars' corner has saved you a stool now, with a cushion on it.|The regulars wave you over by name. They want to know how your exams went, all of them, in order.} {~The old barge-man is telling the eel story again.|The herb-wife from the lane wants her pie warmed "exactly as before".|A quiet traveller is listening to everything.}
+text: {The regulars' corner by the fire wants you to sit for a minute. The fire is warm, and the minute is tempting.|The regulars' corner has saved you a stool now, with a cushion on it.|The regulars wave you over by name. They want to know how your exams went, all of them, in order.} {The old barge-man is telling the eel story again.|The herb-wife from the lane wants her pie warmed "exactly as before".|A quiet traveller is listening to everything.}
 > left: Sit with them a while
   wage
   charm +small
   gold +tiny
   perform tavern -tiny
-  say: {~You hear the latest instalment of everyone's story. They tip you for listening, which is a better rate than serving.|You sit for one minute and stay for ten. The landlady clears her throat across the room like a falling tree.}
+  say: {You hear the latest instalment of everyone's story. They tip you for listening, which is a better rate than serving.|You sit for one minute and stay for ten. The landlady clears her throat across the room like a falling tree.}
 > right: Keep the trays moving
   wage
   perform tavern +small
   mood -tiny
-  say: {~You wave and keep going. The corner toasts your back. The eel story will keep.|You work the room like weather. The corner calls you "the brisk one" now, which is not a compliment.}
+  say: {You wave and keep going. The corner toasts your back. The eel story will keep.|You work the room like weather. The corner calls you "the brisk one" now, which is not a compliment.}
 
 @event tavern_tab_book
 title: The Tab Book
@@ -578,19 +578,19 @@ cast:
 art: coin
 tags: job money
 scene: A ledger open on a tavern bar, a long column of figures, a hopeful customer at the far end.
-text: {Barkeeps keep the tab book, and the tab book says {regular} owes the Newt rather a lot.|The tab book has grown a second volume, and {regular} has a page in it.|{regular} is at the end of the bar, and so, in the book, is a long column of figures.} {~{They} smile{s} at you hopefully.|{They} {are} pretending to be fascinated by the fire.|{They} {are} counting coins that clearly won't be enough.}
+text: {Barkeeps keep the tab book, and the tab book says {regular} owes the Newt rather a lot.|The tab book has grown a second volume, and {regular} has a page in it.|{regular} is at the end of the bar, and so, in the book, is a long column of figures.} {{They} smile{s} at you hopefully.|{They} {are} pretending to be fascinated by the fire.|{They} {are} counting coins that clearly won't be enough.}
 > left: Call the tab in
   wage
   gold +tiny
   perform tavern +small
   rel regular -small
   mood -tiny
-  say: {~{regular} pays, slowly, coin by coin, as if each one were a friend leaving. The landlady slides you a few crowns for the collecting.|You call it in. {regular} pays half and an apology. The landlady counts both, and gives you a few crowns of it for your trouble.}
+  say: {{regular} pays, slowly, coin by coin, as if each one were a friend leaving. The landlady slides you a few crowns for the collecting.|You call it in. {regular} pays half and an apology. The landlady counts both, and gives you a few crowns of it for your trouble.}
 > right: Let it ride another week
   wage
   rel regular +small
   perform tavern -tiny
-  say: {~{regular} looks at you as if you had hung the moon. The landlady looks at you as if you had lost it.|Another week. The column grows, and so, oddly, does {regular}'s loyalty.}
+  say: {{regular} looks at you as if you had hung the moon. The landlady looks at you as if you had lost it.|Another week. The column grows, and so, oddly, does {regular}'s loyalty.}
 
 @event tavern_behind_the_bar
 title: Behind the Bar
@@ -629,24 +629,24 @@ weight: 10
 art: bottle
 tags: job
 scene: A student squinting at a glass dropper over a tiny vial at an apothecary counter, a wall of labelled drawers behind.
-text: {Old Pell's first rule is to count every drop aloud. Today the counter is lined with tinctures waiting to be measured.|Drop-counting. Your tongue knows the numbers before your eyes do.|Counting drops. Old Pell says you count like a metronome now, which from him is a sonnet.} {~A customer is waiting, tapping a coin on the glass.|One of the daughters is humming, which throws off your count.|Today's tincture is the colour of a bruise and smells of violets.}
+text: {Old Pell's first rule is to count every drop aloud. Today the counter is lined with tinctures waiting to be measured.|Drop-counting. Your tongue knows the numbers before your eyes do.|Counting drops. Old Pell says you count like a metronome now, which from him is a sonnet.} {A customer is waiting, tapping a coin on the glass.|One of the daughters is humming, which throws off your count.|Today's tincture is the colour of a bruise and smells of violets.}
 > left: Count aloud, every drop
   wage
   perform apothecary_clerk +small
   alchemy +tiny
   mood -small
-  say: {~Every vial exact. Anyone in the shop has now heard you count higher than anyone should.|Aloud, drop by drop. Old Pell, passing, nods once without breaking stride.}
+  say: {Every vial exact. Anyone in the shop has now heard you count higher than anyone should.|Aloud, drop by drop. Old Pell, passing, nods once without breaking stride.}
 > right: Count by eye, faster
   wage
   challenge brew apprentice wild:
     win:
       perform apothecary_clerk +small
       gold +tiny
-      say: {~Quick and true. You clear the counter before the tea goes cold, and a satisfied customer leaves a coin.|By eye, and spot on. One of the daughters raises an eyebrow and says nothing to her father.}
+      say: {Quick and true. You clear the counter before the tea goes cold, and a satisfied customer leaves a coin.|By eye, and spot on. One of the daughters raises an eyebrow and says nothing to her father.}
     lose:
       perform apothecary_clerk -small
       mood -tiny
-      say: {~One drop over. Old Pell can tell from across the shop. He tips the vial out and makes you count the next one aloud, twice.|You overshoot. The tincture turns from violet to a colour with no name, and Pell sighs like a closing door.}
+      say: {One drop over. Old Pell can tell from across the shop. He tips the vial out and makes you count the next one aloud, twice.|You overshoot. The tincture turns from violet to a colour with no name, and Pell sighs like a closing door.}
 
 @event apothecary_clerk_drawer_check
 title: The Thousand Drawers
@@ -659,24 +659,24 @@ weight: 10
 art: potion
 tags: job mystery
 scene: A wall of tiny labelled wooden drawers, one of them rattling on its own.
-text: {Each shift a clerk checks a row of drawers against the stock book. Today's row starts with one that is stuck.|A different row today, and the same feeling that something in it is awake.|Your row for the week. You have learned that the wrong drawer is never just the wrong drawer.} {~One is labelled in a hand that isn't Pell's.|One is rattling, very gently, as if politely.|One smells of snow, in {season == "winter": a shop this warm|the wrong season entirely}.}
+text: {Each shift a clerk checks a row of drawers against the stock book. Today's row starts with one that is stuck.|A different row today, and the same feeling that something in it is awake.|Your row for the week. You have learned that the wrong drawer is never just the wrong drawer.} {One is labelled in a hand that isn't Pell's.|One is rattling, very gently, as if politely.|One smells of snow, in {season == "winter": a shop this warm|the wrong season entirely}.}
 > left: Open the odd drawer
   wage
   challenge research using alchemy apprentice wild:
     win:
       alchemy +small
       perform apothecary_clerk +small
-      say: {~Inside, a nest of dried moonpetals that belong on the top row. You move them, and the drawer stops sulking.|You coax it open and find the missing powdered newt. Pell crosses something off a list he has kept for a year.}
+      say: {Inside, a nest of dried moonpetals that belong on the top row. You move them, and the drawer stops sulking.|You coax it open and find the missing powdered newt. Pell crosses something off a list he has kept for a year.}
     lose:
       health -tiny
       mood -tiny
-      say: {~The drawer opens with a sneeze of pepperwort. You sneeze until closing.|Something small and grey bolts out of the drawer and into another, and you never find out which.}
+      say: {The drawer opens with a sneeze of pepperwort. You sneeze until closing.|Something small and grey bolts out of the drawer and into another, and you never find out which.}
 > right: Sign it off unchecked
   wage
   alignment -tiny
   mood +tiny
   perform apothecary_clerk -tiny
-  say: {~You tick the row and move on. Behind you a drawer rattles, as if to say it noticed.|"Checked," you write. Pell reads it, opens one drawer at random, and closes it again with a look.}
+  say: {You tick the row and move on. Behind you a drawer rattles, as if to say it noticed.|"Checked," you write. Pell reads it, opens one drawer at random, and closes it again with a look.}
 
 @event apothecary_clerk_counter_advice
 title: Asking the Dispenser
@@ -689,23 +689,23 @@ weight: 10
 art: potion
 tags: job
 scene: A worried customer leaning over an apothecary counter, a student behind it consulting a heavy recipe book.
-text: {Dispensers advise, and today a customer asks you instead of Pell.|Pell has moved your stool to the end of the counter, where the customers come.|You know the regular coughs by sound now, before anyone opens the door.} {~A farmer has a cough that sounds like a gate.|A nervous student wants something for courage before exams.|A barge-hand has a back that hasn't straightened since autumn.}
+text: {Dispensers advise, and today a customer asks you instead of Pell.|Pell has moved your stool to the end of the counter, where the customers come.|You know the regular coughs by sound now, before anyone opens the door.} {A farmer has a cough that sounds like a gate.|A nervous student wants something for courage before exams.|A barge-hand has a back that hasn't straightened since autumn.}
 > left: Prescribe it yourself
   wage
   challenge brew journeyman:
     win:
       perform apothecary_clerk +small
       rank_xp apothecary_clerk +small
-      say: {~You mix it, label it and explain the dose twice. A week later they come back just to say it worked.|Your remedy, your writing on the bottle. Pell reads the label, reaches for his pen, and leaves it as it is.}
+      say: {You mix it, label it and explain the dose twice. A week later they come back just to say it worked.|Your remedy, your writing on the bottle. Pell reads the label, reaches for his pen, and leaves it as it is.}
     lose:
       mood -small
       perform apothecary_clerk -tiny
-      say: {~It helps a little, then not at all. They come back, and this time they ask for Pell.|Pell takes the bottle from your hand, adds one thing and gives it back. He doesn't say a word, which is worse.}
+      say: {It helps a little, then not at all. They come back, and this time they ask for Pell.|Pell takes the bottle from your hand, adds one thing and gives it back. He doesn't say a word, which is worse.}
 > right: Fetch one of the daughters
   wage
   alchemy +small
   perform apothecary_clerk -tiny
-  say: {~The elder daughter takes over and talks the customer down like a nervous horse. You watch and write it all down.|The younger daughter mixes it in half the time you would have. She lets you hold the funnel.}
+  say: {The elder daughter takes over and talks the customer down like a nervous horse. You watch and write it all down.|The younger daughter mixes it in half the time you would have. She lets you hold the funnel.}
 
 @event apothecary_clerk_labelling_pen
 title: The Labelling Pen
@@ -743,22 +743,22 @@ weight: 10
 art: broom
 tags: job
 scene: A courier on a broom skimming low over a mirror-still lake at dawn, a mail sack over one shoulder.
-text: {The dispatch bell rings. The village sack is ready, and the quickest way is over the lake.|You have started timing yourself against the gulls.|The lake knows your shadow by now.} {season == "winter": Ice fog sits on the water like a lid.|{season == "summer": The water is so still you fly over your own reflection.|{~A headwind is coming off the hills.|Gulls are holding a meeting on your route.|The far shore is lost in mist.}}}
+text: {The dispatch bell rings. The village sack is ready, and the quickest way is over the lake.|You have started timing yourself against the gulls.|The lake knows your shadow by now.} {season == "winter": Ice fog sits on the water like a lid.|{season == "summer": The water is so still you fly over your own reflection.|{A headwind is coming off the hills.|Gulls are holding a meeting on your route.|The far shore is lost in mist.}}}
 > left: Fly straight across
   wage
   challenge feat apprentice wild:
     win:
       perform broom_courier +small
       gold +tiny
-      say: {~Straight as a thrown stone. You're early, and the village postmistress tips early couriers.|You skim the water so low your boots leave a wake. Nobody sees, which is a shame.}
+      say: {Straight as a thrown stone. You're early, and the village postmistress tips early couriers.|You skim the water so low your boots leave a wake. Nobody sees, which is a shame.}
     lose:
       health -small
       perform broom_courier -tiny
-      say: {~A gust drops you into the shallows. The sack stays dry; you do not.|The far shore vanishes and you fly a slow circle round a buoy. You arrive late and very damp.}
+      say: {A gust drops you into the shallows. The sack stays dry; you do not.|The far shore vanishes and you fly a slow circle round a buoy. You arrive late and very damp.}
 > right: Take the long way round
   wage
   perform track -tiny
-  say: {~Round the shore, safe and slow. The dispatcher checks the clock and sighs.|The long way. You wave to a fisherman, who does not wave back.}
+  say: {Round the shore, safe and slow. The dispatcher checks the clock and sighs.|The long way. You wave to a fisherman, who does not wave back.}
 
 @event broom_courier_broom_scramble
 title: The Broom Scramble
@@ -771,18 +771,18 @@ weight: 10
 art: broom
 tags: job
 scene: A draughty loft rack of battered brooms, couriers jostling to grab the least battered one.
-text: {Only one loft broom is in a good state, and every courier on shift wants it.|You have started arriving early for the brooms, and so has everyone else.|You could pick the good broom blindfold, by the smell of its varnish.} {~What's left is one that pulls left.|What's left sheds twigs when nervous.|What's left only flies if you're polite to it.} {season == "winter": Frost has got into all their bristles.|}
+text: {Only one loft broom is in a good state, and every courier on shift wants it.|You have started arriving early for the brooms, and so has everyone else.|You could pick the good broom blindfold, by the smell of its varnish.} {What's left is one that pulls left.|What's left sheds twigs when nervous.|What's left only flies if you're polite to it.} {season == "winter": Frost has got into all their bristles.|}
 > left: Shoulder in for the good broom
   wage
   perform broom_courier +small
   alignment -tiny
-  say: {~You get there first, by a whisker and an elbow. The second-year you elbowed will remember.|You shoulder a second-year aside and the good broom is yours. It flies like a dream; theirs flies like a complaint.}
+  say: {You get there first, by a whisker and an elbow. The second-year you elbowed will remember.|You shoulder a second-year aside and the good broom is yours. It flies like a dream; theirs flies like a complaint.}
 > right: Take the difficult one
   wage
   vigor +small
   health -tiny
   perform broom_courier +tiny
-  say: {~It fights you the whole way across the lake. Your arms will remember this, and so will you.|It takes the whole route to come to an understanding with it. You win, narrowly.}
+  say: {It fights you the whole way across the lake. Your arms will remember this, and so will you.|It takes the whole route to come to an understanding with it. You win, narrowly.}
 
 @event broom_courier_dead_letters
 title: The Dead-Letter Shelf
@@ -795,22 +795,22 @@ weight: 10
 art: letter
 tags: job mystery
 scene: A dusty shelf of undeliverable parcels in a courier loft, one tied with a faded ribbon.
-text: {Couriers sort the dead letters, post with no proper address, waiting on a dusty shelf.|The dead-letter shelf has grown a second row.|You know which parcels have waited longest now, and which have stopped expecting anyone.} Today, a parcel addressed only to {~"the tall one in the red scarf, third tower"|"whoever plays the flute at dawn"|"my brother, the one who never writes"}.
+text: {Couriers sort the dead letters, post with no proper address, waiting on a dusty shelf.|The dead-letter shelf has grown a second row.|You know which parcels have waited longest now, and which have stopped expecting anyone.} Today, a parcel addressed only to {"the tall one in the red scarf, third tower"|"whoever plays the flute at dawn"|"my brother, the one who never writes"}.
 > left: Track down the recipient
   wage
   challenge research apprentice+:
     win:
       perform broom_courier +small
       rank_xp broom_courier +tiny
-      say: {~It takes three towers and a dozen questions, but the parcel reaches the right hands. They open it at once and cry a little, in a good way.|Found them. The look on their face is worth every stair.}
+      say: {It takes three towers and a dozen questions, but the parcel reaches the right hands. They open it at once and cry a little, in a good way.|Found them. The look on their face is worth every stair.}
     lose:
       mood -small
-      say: {~You knock on every door you can think of. The parcel goes back on the shelf, a little more crumpled, a little more sad.|Wrong door. Wrong tower. Wrong week.}
+      say: {You knock on every door you can think of. The parcel goes back on the shelf, a little more crumpled, a little more sad.|Wrong door. Wrong tower. Wrong week.}
 > right: Leave it on the shelf
   wage
   mood +tiny
   perform broom_courier -tiny
-  say: {~It goes back with the others. Some of them have been waiting longer than you have been alive.|You leave it. That night you dream of a parcel on a high tower, waiting.}
+  say: {It goes back with the others. Some of them have been waiting longer than you have been alive.|You leave it. That night you dream of a parcel on a high tower, waiting.}
 
 @event broom_courier_own_pigeonhole
 title: Your Own Pigeonhole

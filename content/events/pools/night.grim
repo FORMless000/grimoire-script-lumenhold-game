@@ -16,23 +16,23 @@ weight: 10
 art: cup
 tags: money danger
 scene: An upstairs room at a tavern after hours, card tables under low lamps, well-dressed guests laughing, a student in borrowed finery refilling a glass.
-text: {The woman who runs the upstairs room looks you over. "The guests like good company. Laugh at the jokes, keep the glasses full, lose gracefully at cards. Nothing more. Guests who want more are shown the stair."|The upstairs room again: velvet, lamplight, guests from the capital who tip in silver.|You know the room now, and which guests to sit beside.} {~Tonight it's a merchant's birthday.|Tonight, a card party for a visiting magistrate.|Tonight the guests are masked, for no reason anyone gives.}
+text: {The woman who runs the upstairs room looks you over. "The guests like good company. Laugh at the jokes, keep the glasses full, lose gracefully at cards. Nothing more. Guests who want more are shown the stair."|The upstairs room again: velvet, lamplight, guests from the capital who tip in silver.|You know the room now, and which guests to sit beside.} {Tonight it's a merchant's birthday.|Tonight, a card party for a visiting magistrate.|Tonight the guests are masked, for no reason anyone gives.}
 > left: Work the evening
   challenge negotiate journeyman:
     win:
       gold +medium
       mood -tiny
-      say: {~You laugh in all the right places and lose at cards exactly as much as you're meant to. The tips are heavy, and so is your head on the way home.|A guest tells you the story of their life. You listen as if it mattered. Perhaps it did. The tip says it did.}
+      say: {You laugh in all the right places and lose at cards exactly as much as you're meant to. The tips are heavy, and so is your head on the way home.|A guest tells you the story of their life. You listen as if it mattered. Perhaps it did. The tip says it did.}
     lose:
       gold +tiny
       mood -small
       queue night_suspicion chance unlikely
-      say: {~A guest's hand wanders and doesn't take the hint. You leave by the back stair with a few coins and a cold feeling that lasts the week.|You say the wrong thing to the wrong magistrate, and are paid off early and shown the stair. Someone from the castle is drinking at the bar below.}
+      say: {A guest's hand wanders and doesn't take the hint. You leave by the back stair with a few coins and a cold feeling that lasts the week.|You say the wrong thing to the wrong magistrate, and are paid off early and shown the stair. Someone from the castle is drinking at the bar below.}
   if bonds(partner) > 0:
     queue night_partner_asks chance unlikely
 > right: Not tonight
   mood -tiny
-  say: {~You turn the work down and walk home past the lit windows, a little poorer and quite sure of yourself.|"Another night, then," says the woman, writing something in a small book. You wonder what.}
+  say: {You turn the work down and walk home past the lit windows, a little poorer and quite sure of yourself.|"Another night, then," says the woman, writing something in a small book. You wonder what.}
 
 @event newt_high_table
 title: The High Table
@@ -47,7 +47,7 @@ weight: 9
 art: cards
 tags: money danger
 scene: A round table in a back room under a single green lamp, piles of coins, a goblin in a velvet waistcoat keeping the bank.
-text: {Behind the upstairs room there's a back room, and in it the high table. Grisk keeps the bank. Nobody here plays for crowns alone.|The high table again. Grisk nods to you as if you were a regular. You are becoming one.|Grisk has kept your seat warm, he says. It is not a comforting thought.} {~A first-year's familiar sits in a cage beside the pot.|Someone has staked a silver wand and is sweating about it.|Somebody's signed promise is in the pot, folded small.}
+text: {Behind the upstairs room there's a back room, and in it the high table. Grisk keeps the bank. Nobody here plays for crowns alone.|The high table again. Grisk nods to you as if you were a regular. You are becoming one.|Grisk has kept your seat warm, he says. It is not a comforting thought.} {A first-year's familiar sits in a cage beside the pot.|Someone has staked a silver wand and is sweating about it.|Somebody's signed promise is in the pot, folded small.}
 > purse: Stake your purse
   hint: Guile against the table.
   meet grisk
@@ -58,10 +58,10 @@ text: {Behind the upstairs room there's a back room, and in it the high table. G
       gold +large
       gold +medium
       mood +small
-      say: {~You read the table like a book you've already finished. The pot slides over, and Grisk applauds politely with two fingers.|Your nerve holds and theirs doesn't. You walk home heavy with silver and hollow with nerves.}
+      say: {You read the table like a book you've already finished. The pot slides over, and Grisk applauds politely with two fingers.|Your nerve holds and theirs doesn't. You walk home heavy with silver and hollow with nerves.}
     lose:
       queue night_suspicion chance even
-      say: {~The cards turn on you, then the room does. You leave lighter, and a prefect's lamp is going round the courtyard.|You lose the pot and your temper with it. Grisk sympathises, with interest.}
+      say: {The cards turn on you, then the room does. You leave lighter, and a prefect's lamp is going round the courtyard.|You lose the pot and your temper with it. Grisk sympathises, with interest.}
 > favour: Stake a favour to Grisk
   hint: Win big, or owe him a job.
   when: not flag(owes_grisk)
@@ -89,7 +89,7 @@ text: {Behind the upstairs room there's a back room, and in it the high table. G
       gold +small
       say: You win the pot and lose a fair amount of skin from your left hand. Amaranth, in the morning, asks no questions, very loudly.
 > leave: Watch one hand, then go
-  say: {~You watch a student lose a familiar on a bluff, and go home and hug yours, or your pillow.|You watch, learn and leave. Grisk raises his glass to your back.}
+  say: {You watch a student lose a familiar on a bluff, and go home and hug yours, or your pillow.|You watch, learn and leave. Grisk raises his glass to your back.}
 
 @event night_partner_asks
 title: Where Were You?
@@ -155,7 +155,7 @@ weight: 9
 art: sword
 tags: danger money
 scene: A lantern-lit cellar under a boathouse, a chalk ring on wet flagstones, a bookmaker holding up a slate of odds, a crowd in scarves.
-text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yourself?" he says. "Put your money where your fists are."|The bookmaker knows your name and your odds, and they've shortened.|Your name is on the slate tonight before you've said you'll fight.} {~The water slaps under the floor.|Somebody is collecting teeth in a jar, as a joke, probably.|The crowd is bigger than last time.}
+text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yourself?" he says. "Put your money where your fists are."|The bookmaker knows your name and your odds, and they've shortened.|Your name is on the slate tonight before you've said you'll fight.} {The water slaps under the floor.|Somebody is collecting teeth in a jar, as a joke, probably.|The crowd is bigger than last time.}
 > left: Bet your purse on yourself
   alignment -tiny
   gold -medium
@@ -165,11 +165,11 @@ text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yo
       gold +medium
       renown +tiny
       health -small
-      say: {~You win, bloodied and grinning, and the bookmaker pays out through his teeth.|The crowd roars. You collect your bet and your opponent's grudging handshake, and limp home rich.}
+      say: {You win, bloodied and grinning, and the bookmaker pays out through his teeth.|The crowd roars. You collect your bet and your opponent's grudging handshake, and limp home rich.}
     lose:
       health -medium
       queue night_suspicion chance even
-      say: {~You go down in the third exchange, and your purse goes with you. On the way home a light is on in the prefects' corridor.|A bad loss: the bet, a tooth's worth of pride and most of your skin.}
+      say: {You go down in the third exchange, and your purse goes with you. On the way home a light is on in the prefects' corridor.|A bad loss: the bet, a tooth's worth of pride and most of your skin.}
   if met(lyra):
     queue lyra_ring_word chance unlikely
 > right: Fight for the purse only
@@ -177,10 +177,10 @@ text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yo
     win:
       gold +small
       health -small
-      say: {~A clean win for a small purse. Nobody's rich, nobody's hurt much.|You win, bow to your opponent and leave before the bookmaker can talk you into more.}
+      say: {A clean win for a small purse. Nobody's rich, nobody's hurt much.|You win, bow to your opponent and leave before the bookmaker can talk you into more.}
     lose:
       health -medium
-      say: {~You lose, bow, and spend the walk home finding new bruises.|A loss, and the loser's purse, which is nothing at all.}
+      say: {You lose, bow, and spend the walk home finding new bruises.|A loss, and the loser's purse, which is nothing at all.}
 
 @event lyra_ring_word
 title: Lyra Has Heard
@@ -215,17 +215,17 @@ when: flag(grisk_contact) and not flag(grisk_parcel) and not flag(grisk_gone)
 art: pouch
 tags: money danger
 scene: A dark boathouse jetty at midnight, a small goblin holding out a parcel wrapped in oilcloth, the lake black behind him.
-text: {Grisk is waiting on the jetty, a parcel in oilcloth under his arm. "Into the village by tomorrow afternoon. A cobbler's back door. Don't open it, don't drop it, don't be seen."|The jetty, the oilcloth, Grisk's teeth in the dark. "Same arrangement," he says.|Grisk again, and a heavier parcel than last time.} {~It ticks faintly.|It's cold enough to frost your gloves.|It smells of oranges and something under the oranges.}
+text: {Grisk is waiting on the jetty, a parcel in oilcloth under his arm. "Into the village by tomorrow afternoon. A cobbler's back door. Don't open it, don't drop it, don't be seen."|The jetty, the oilcloth, Grisk's teeth in the dark. "Same arrangement," he says.|Grisk again, and a heavier parcel than last time.} {It ticks faintly.|It's cold enough to frost your gloves.|It smells of oranges and something under the oranges.}
 > left: Take the parcel
   meet grisk
   alignment -tiny
   flag grisk_parcel
   queue grisk_delivery in 1
-  say: {~You take it. It is heavier than it looks, and the walk back to your room is very long.|You hide it under your bed. You don't sleep well with it there.}
+  say: {You take it. It is heavier than it looks, and the walk back to your room is very long.|You hide it under your bed. You don't sleep well with it there.}
 > right: Not this month
   meet grisk
   mood -tiny
-  say: {~"Next month, then," says Grisk, as if it were already arranged. He tucks the parcel away. You feel watched all the way back up the lawn.|Grisk shrugs. "There's always someone." You don't like how true it sounds.}
+  say: {"Next month, then," says Grisk, as if it were already arranged. He tucks the parcel away. You feel watched all the way back up the lawn.|Grisk shrugs. "There's always someone." You don't like how true it sounds.}
 
 @event grisk_delivery
 title: The Cobbler's Back Door
@@ -300,15 +300,15 @@ weight: 9
 art: meal
 tags: money danger
 scene: A dark storeroom behind a castle kitchen, sacks of sugar and crates of oranges stacked high, a student with an empty satchel.
-text: {Behind the kitchens is the storeroom, full of sugar, spices and oranges from the south. The village pays well for oranges in winter, and nobody counts the crates.|The storeroom again. You know which crate is at the back and never counted.|The stores have a new padlock, which is mostly decorative.} {~A mouse watches you without judgement.|The kitchen cat does judge you.|Somewhere a pot is still dripping.}
+text: {Behind the kitchens is the storeroom, full of sugar, spices and oranges from the south. The village pays well for oranges in winter, and nobody counts the crates.|The storeroom again. You know which crate is at the back and never counted.|The stores have a new padlock, which is mostly decorative.} {A mouse watches you without judgement.|The kitchen cat does judge you.|Somewhere a pot is still dripping.}
 > left: Fill a satchel to sell
   alignment -small
   gold +small
   queue night_suspicion chance even
-  say: {~Oranges, a cone of sugar, a jar of saffron. The village grocer asks no questions and pays in coppers. Somebody in the castle will be short of saffron.|A full satchel and an empty conscience, or nearly. On the way out, the scullery door bangs behind you.}
+  say: {Oranges, a cone of sugar, a jar of saffron. The village grocer asks no questions and pays in coppers. Somebody in the castle will be short of saffron.|A full satchel and an empty conscience, or nearly. On the way out, the scullery door bangs behind you.}
 > right: Take one orange and go
   mood +tiny
-  say: {~You eat it in the dark by the banked fire. It's the best orange you have ever eaten, and you know exactly why.|One orange. You leave the peel in the fire so nobody finds it.}
+  say: {You eat it in the dark by the banked fire. It's the best orange you have ever eaten, and you know exactly why.|One orange. You leave the peel in the fire so nobody finds it.}
 
 @event kitchen_night_baker
 title: The Night Baker
@@ -321,16 +321,16 @@ weight: 9
 art: meal
 tags: nature
 scene: A warm castle bakehouse at midnight, a flour-dusted old baker kneading dough by the light of an open oven, a student leaning in the doorway.
-text: {The bakehouse behind the kitchens is lit. The night baker, flour to the elbows, looks up. "Hungry or helpful?" she says. "Both is allowed."|The night baker waves you in without looking up. "Dough's waiting."|The bakehouse smells of tomorrow's bread. The baker has saved you a heel of yesterday's.} {~The oven sighs.|A tray of rolls is cooling by the door.|She is humming something old.}
+text: {The bakehouse behind the kitchens is lit. The night baker, flour to the elbows, looks up. "Hungry or helpful?" she says. "Both is allowed."|The night baker waves you in without looking up. "Dough's waiting."|The bakehouse smells of tomorrow's bread. The baker has saved you a heel of yesterday's.} {The oven sighs.|A tray of rolls is cooling by the door.|She is humming something old.}
 > left: Knead until the oven's hot
   lose hungry
   health -tiny
   mood +small
-  say: {~You knead until your arms shake. She gives you the first roll out of the oven and no lecture at all.|An hour of flour and warmth, and a hot roll for your trouble. You go back to bed with your hands smelling of bread, and sleep like a stone.}
+  say: {You knead until your arms shake. She gives you the first roll out of the oven and no lecture at all.|An hour of flour and warmth, and a hot roll for your trouble. You go back to bed with your hands smelling of bread, and sleep like a stone.}
 > right: Just sit by the oven
   lose hungry
   mood +tiny
-  say: {~You sit by the oven with a roll from the cooling tray while she works. She doesn't ask why you're up. You don't ask why she is.|You eat the heel of bread and warm your feet. Upstairs, the castle is cold; down here, it never is.}
+  say: {You sit by the oven with a roll from the cooling tray while she works. She doesn't ask why you're up. You don't ask why she is.|You eat the heel of bread and warm your feet. Upstairs, the castle is cold; down here, it never is.}
 
 # ---------------- The Restricted Section ----------------
 
@@ -346,17 +346,17 @@ when: met(grisk)
 art: book
 tags: money danger mystery
 scene: A dim Restricted Section aisle at midnight, a student holding a razor over an illuminated page, a black book watching from the shelf above.
-text: {Grisk mentioned, once, that a collector pays for illuminated pages "of a certain age". The Restricted Section is full of them.|{flag(sold_page): There's a gap on the shelf where the last page you sold came from.|The illuminated book you read last time is back on its shelf, untouched.}|The illuminated books lean away from you as you pass.} {~A gold-leaf dragon glints on one page.|One margin is full of tiny stars, all black.|A page here is worth a month's board.}
+text: {Grisk mentioned, once, that a collector pays for illuminated pages "of a certain age". The Restricted Section is full of them.|{flag(sold_page): There's a gap on the shelf where the last page you sold came from.|The illuminated book you read last time is back on its shelf, untouched.}|The illuminated books lean away from you as you pass.} {A gold-leaf dragon glints on one page.|One margin is full of tiny stars, all black.|A page here is worth a month's board.}
 > left: Cut a page
   flag sold_page
   alignment -small
   gold +medium
   queue night_suspicion chance even
-  say: {~One clean cut. The book doesn't cry out, which is somehow worse. The collector pays well, and never asks where.|You sell the page and keep the guilt, which no one will buy.}
+  say: {One clean cut. The book doesn't cry out, which is somehow worse. The collector pays well, and never asks where.|You sell the page and keep the guilt, which no one will buy.}
 > right: Read it instead
   lore +small
   mana -tiny
-  say: {~You read the illuminated page by moonlight. It's a recipe for honey cakes, in exquisite gold leaf, and the gilding draws at your mana the whole time you read. You leave it where it is.|The page is a list of stars, by name, and each name pulls a little magic out of you as you read it. You learn three, and put the book back.}
+  say: {You read the illuminated page by moonlight. It's a recipe for honey cakes, in exquisite gold leaf, and the gilding draws at your mana the whole time you read. You leave it where it is.|The page is a list of stars, by name, and each name pulls a little magic out of you as you read it. You learn three, and put the book back.}
 
 # ---------------- The observatory roof ----------------
 
@@ -373,16 +373,16 @@ cast:
 art: star
 tags: romance nature
 scene: Two students lying side by side on an observatory roof at midnight under a sky full of stars, one blanket between them.
-text: {You've brought {partner} up to the observatory roof, with a stolen blanket and two cups of cocoa going cold.|{partner} knows the way up now, and goes first.|{partner} has brought the blanket this time.} {~The stars are very close.|A meteor, then another.|The castle below is all asleep.}
+text: {You've brought {partner} up to the observatory roof, with a stolen blanket and two cups of cocoa going cold.|{partner} knows the way up now, and goes first.|{partner} has brought the blanket this time.} {The stars are very close.|A meteor, then another.|The castle below is all asleep.}
 > left: Stay until the sky turns
   spark partner +small
   health -small
   queue night_suspicion chance unlikely
-  say: {~You name the stars between you, wrong, and argue about it, and stay until the sky goes grey. The stair down is lit by a prefect's lamp you just avoid.|You fall asleep up there and wake to the first bell, frozen and happy.}
+  say: {You name the stars between you, wrong, and argue about it, and stay until the sky goes grey. The stair down is lit by a prefect's lamp you just avoid.|You fall asleep up there and wake to the first bell, frozen and happy.}
 > right: An hour, then back
   rel partner +small
   mood +tiny
-  say: {~One hour, one blanket, back in bed before anyone stirs. You can still feel where {partner} was leaning on you.|You go down early. {partner} squeezes your hand on the stair, which is better than any star.}
+  say: {One hour, one blanket, back in bed before anyone stirs. You can still feel where {partner} was leaning on you.|You go down early. {partner} squeezes your hand on the stair, which is better than any star.}
 
 @event kael_midnight_roof
 title: Kael at Midnight
@@ -396,17 +396,17 @@ weight: 12
 art: snow
 tags: social
 scene: A northern student sitting on the observatory parapet at midnight with frost spreading from his hands, the lake far below, the sky thick with stars.
-text: {Kael is on the observatory parapet, which he shouldn't be, with frost spreading from his fingers into the stone. He moves over to make room.|Kael again, on the parapet, the night's cold not touching him.|Kael has left room on the parapet before you arrive.} {~"I can't sleep south of the mountains," he says. "Too warm."|He is watching the lake, not the stars.|"Northern stars," he says, pointing at nothing you can see.}
+text: {Kael is on the observatory parapet, which he shouldn't be, with frost spreading from his fingers into the stone. He moves over to make room.|Kael again, on the parapet, the night's cold not touching him.|Kael has left room on the parapet before you arrive.} {"I can't sleep south of the mountains," he says. "Too warm."|He is watching the lake, not the stars.|"Northern stars," he says, pointing at nothing you can see.}
 > left: Sit with him
   meet kael
   rel kael +small
   health -tiny
-  say: {~You sit until your fingers ache from the cold. He names northern constellations in a language that sounds like snow falling. It's the most he's ever said.|He doesn't talk. Neither do you. When you go, he says "Goodnight," as if it were difficult, and it was.}
+  say: {You sit until your fingers ache from the cold. He names northern constellations in a language that sounds like snow falling. It's the most he's ever said.|He doesn't talk. Neither do you. When you go, he says "Goodnight," as if it were difficult, and it was.}
 > right: Ask what he's watching for
   meet kael
   lore +tiny
   rel kael -tiny
-  say: {~"For it to wake," he says, and then shuts up like a book. You've pressed too hard. But you know which way he faces now.|"Nothing," he says, too fast. He's watching the middle of the lake. You leave him to it, colder than when you came.}
+  say: {"For it to wake," he says, and then shuts up like a book. You've pressed too hard. But you know which way he faces now.|"Nothing," he says, too fast. He's watching the middle of the lake. You leave him to it, colder than when you came.}
 
 # ---------------- The gargoyle passage ----------------
 
@@ -445,16 +445,16 @@ weight: 10
 art: lantern
 tags: social
 scene: A dark corridor at midnight, a dark-haired student leaning out of a niche to wave someone past, a prefect's lantern turning a far corner.
-text: {Corvin leans out of a niche as you pass. "Bram's on the east stair. Take the west. You owe me nothing, I'm a saint."|Corvin's in his niche again with an apple and a list of where every prefect is.|"West stair," says Corvin, before you ask.} {~He looks tired.|He has a new scratch on his cheek.|He's whistling, which he shouldn't.}
+text: {Corvin leans out of a niche as you pass. "Bram's on the east stair. Take the west. You owe me nothing, I'm a saint."|Corvin's in his niche again with an apple and a list of where every prefect is.|"West stair," says Corvin, before you ask.} {He looks tired.|He has a new scratch on his cheek.|He's whistling, which he shouldn't.}
 > left: Keep him company
   meet corvin
   rel corvin +small
   health -tiny
-  say: {~You share his apple and his niche. He tells you which tapestry hides a cupboard full of confiscated wands. You're up till the bells.|You keep watch with him for an hour. He's funnier at midnight, and sadder, and pretends to be neither.}
+  say: {You share his apple and his niche. He tells you which tapestry hides a cupboard full of confiscated wands. You're up till the bells.|You keep watch with him for an hour. He's funnier at midnight, and sadder, and pretends to be neither.}
 > right: Take the west stair
   meet corvin
   guile +tiny
-  say: {~The west stair is dark and empty, as promised. Corvin's map is never wrong. You wonder who taught him to be so careful.|You slip past Bram's lamp with a corridor to spare.}
+  say: {The west stair is dark and empty, as promised. Corvin's map is never wrong. You wonder who taught him to be so careful.|You slip past Bram's lamp with a corridor to spare.}
 
 # ---------------- The lakeshore ----------------
 
