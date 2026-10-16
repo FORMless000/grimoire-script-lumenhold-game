@@ -20,14 +20,14 @@ text: {friend} has written. {~Three pages, mostly about nothing, which is the be
   rel friend +small
   gold -tiny
   mood -tiny
-  say: {~You write until the candle gutters and spend the postage you meant for something else. It's worth it.|Four pages back, and a pressed flower of your own. You pay the extra stamp.}
+  say: {~You write until the candle gutters and spend the postage you meant for something else. It's worth it.|Four pages back, and a pressed flower of your own. You pay the extra stamp.|You write back pages and draw them in the margin, just as badly. The postage costs more than you meant it to.}
 > right: Send a short note
   rel friend +tiny
   chance likely:
-    say: {~A few lines, warm enough. They'll know you read it.|"Missing you. More soon." It says enough.}
+    say: {~A few lines, warm enough. They'll know you read it.|"Missing you. More soon." It says enough.|A few lines, and a drawing of them in return. They'll laugh.}
   else:
     rel friend -tiny
-    say: {~Your note is so short it reads as cross. You meant it kindly.|Two lines. You can picture their face reading it, and it isn't pleased.}
+    say: {~Your note is so short it reads as cross. You meant it kindly.|Two lines. You can picture their face reading it, and it isn't pleased.|A short note, and no drawing. They'll notice the missing drawing more than the words.}
 
 @event letter_castle_news
 title: News From the Castle
@@ -44,14 +44,14 @@ text: Someone has forwarded the Lumen Ledger to you at home. {~A professor's hat
 > left: Read it cover to cover
   lore +small
   mood -tiny
-  say: {~You read every word, even the notices. By the end you're homesick for a place you're not at.|The whole paper, twice. Home feels very far from the castle tonight, and the castle very far from home.}
+  say: {~You read every word, even the notices. By the end you're homesick for a place you're not at.|The whole paper, twice. Home feels very far from the castle tonight, and the castle very far from home.|You read every word, down to the furious letter about the soup, and find you miss even the soup.}
 > right: Just the gossip page
   chance likely:
     mood +small
-    say: {~The gossip is excellent. You laugh out loud and have to explain it to everyone at the table.|Someone you know is in it, for something ridiculous. Perfect.}
+    say: {~The gossip is excellent. You laugh out loud and have to explain it to everyone at the table.|Someone you know is in it, for something ridiculous. Perfect.|The gossip is good, but the furious letter about the soup is better. You read it aloud at the table.}
   else:
     mood -tiny
-    say: {~The gossip is about someone you like, and it's unkind.|There's nothing in it you didn't already know. Somehow that's worse.}
+    say: {~The gossip is about someone you like, and it's unkind.|There's nothing in it you didn't already know. Somehow that's worse.|The gossip is all about a quarrel you'd rather not hear of. Even the letter about the soup can't save it.}
 
 @event letter_writing_home
 title: Writing Home
@@ -68,14 +68,14 @@ text: The placement keeps you busy, and home feels further away than the miles. 
 > left: Write a proper letter home
   mood +small
   gold -tiny
-  say: {~Four pages about the work, the food and the people. The postage is dear from here. You send it anyway.|You tell them everything, and in telling it you find out how much you like it here.}
+  say: {~Four pages about the work, the food and the people. The postage is dear from here. You send it anyway.|You tell them everything, and in telling it you find out how much you like it here.|You owe them a letter, so you write a long one, and the debt feels paid with interest. The postage hurts.}
 > right: A few lines and back to work
   chance likely:
     mood +tiny
-    say: {~Short and cheerful. It'll do, and they'll be glad of it.|"All well, more soon." True, mostly.}
+    say: {~Short and cheerful. It'll do, and they'll be glad of it.|"All well, more soon." True, mostly.|A few lines to settle what you owe. They'll be glad of it, and you'll owe them a longer one.}
   else:
     mood -tiny
-    say: {~You write three lines and feel guilty for a week.|The letter is so brief it reads like a receipt.}
+    say: {~You write three lines and feel guilty for a week.|The letter is so brief it reads like a receipt.|You pay what you owe with three lines. It doesn't feel paid.}
 
 # ---------------- More letters (playtest 2, N14): general ones, then two for each romanceable character ----------------
 
@@ -112,10 +112,10 @@ scene: A brown paper parcel tied with string, opened to show a squashed cake, a 
 text: A parcel from home, squashed by the post: {~a cake that has become a different shape of cake|a tin of biscuits and a jar of jam|knitted socks and a fruit loaf}, and a letter that says, in four different hands, that everyone is well and the cat is not.
 > left: Share it with everyone around you
   charm +small
-  say: {~You pass it round and it vanishes in minutes. People you barely know thank you by name the next day.|You share it out to the last crumb. Someone gives you a biscuit back, out of pity.}
+  say: {~You pass it round and it vanishes in minutes. People you barely know thank you by name the next day.|You share it out to the last crumb. Someone gives you a biscuit back, out of pity.|You cut the fruit loaf into as many slices as there are hands. The socks you keep.}
 > right: Keep it for yourself
   health +small
-  say: {~You eat it slowly, over a week, a slice a night. It tastes like your kitchen table.|You hide it under your bed and ration it. It lasts, and so does the feeling of home.}
+  say: {~You eat it slowly, over a week, a slice a night. It tastes like your kitchen table.|You hide it under your bed and ration it. It lasts, and so does the feeling of home.|You keep the loaf for the cold nights and wear the socks to bed. Both last till the end of the month.}
 
 @event letter_wrong_address
 title: Not For You

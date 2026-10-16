@@ -177,7 +177,7 @@ do:
     if board_missed >= 2 and not has(in_debt) and not flag(grisk_done):
       board_missed = 0
       queue grisk_board_debt
-  say: {board_missed == 0: {~The bursar takes the board money with a nod and a tick in a very large book.|Board paid: a bed, three meals and the right to complain about both.|You pay the board and count what's left twice.}|{~The board went unpaid. The refectory still feeds you, a little less each day.|No board money this month. Lunch is a pocketed roll.}}
+  say: {board_missed == 0: {~The bursar takes the board money with a nod and a tick in a very large book.|Board paid: a bed, three meals and the right to complain about both.|You pay the board and count what's left twice.}|{~The board went unpaid. The refectory still feeds you, a little less each day.|No board money this month. Lunch is a pocketed roll.|Board unpaid again. Your name in the bursar's very large book is underlined now.}}
 
 @hook break_rent
 on: month_start

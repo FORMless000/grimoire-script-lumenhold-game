@@ -121,10 +121,10 @@ scene: A silent exam hall in late light, rows of bent heads, an hourglass on the
 text: Exam day for {track}. The hall is silent except for quills and somebody's knee bouncing under a desk. {~The paper is long.|The first question is one you revised.|The first question is one you didn't.|The invigilator turns the hourglass with a click you feel in your teeth.}
 > left: Answer what you know, carefully
   sit_exam steady
-  say: {~You write slowly: everything you're sure of, and nothing you aren't.|You check every answer twice and hand in at the bell.}
+  say: {~You write slowly: everything you're sure of, and nothing you aren't.|You check every answer twice and hand in at the bell.|The first question is one you didn't revise, so you leave it and bank the rest.|You pace yourself by the hourglass and finish with sand to spare.}
 > right: Go for top marks
   sit_exam wild
-  say: {~You take the hardest question first and gamble the essay on an idea you had at breakfast.|You write the answer you'd want to read, not the safe one.}
+  say: {~You take the hardest question first and gamble the essay on an idea you had at breakfast.|You write the answer you'd want to read, not the safe one.|The first question is one you didn't revise. You answer it anyway, boldly, from first principles.|You race the hourglass and write until the last grain, and past it.}
 
 @event track_warning
 title: A Word About Your Attendance
@@ -154,11 +154,11 @@ tags: job money
 scene: A staff rota pinned to a door, last term's names crossed off, a blank column waiting for next term's.
 text: The term is over, and so is the rota for {track}. A fresh one goes up for next term, and there's a gap where your name usually goes. {~Nobody would blame you either way.|Your feet have an opinion. So does your purse.|Someone has already pencilled a question mark next to it.}
 > left: Stay on next term
-  say: {~You write your name in the gap. Another term of shifts, another term of wages.|Your name goes back on the rota, in ink this time.}
+  say: {~You write your name in the gap. Another term of shifts, another term of wages.|Your name goes back on the rota, in ink this time.|You rub out the question mark and write your name over it.}
 > right: Resign
   leave track
   mood +tiny
-  say: {~You hand in your notice, politely. The evenings are yours again; the purse is lighter for it.|You leave the gap empty. You can always find work again, if you need to.}
+  say: {~You hand in your notice, politely. The evenings are yours again; the purse is lighter for it.|You leave the gap empty. You can always find work again, if you need to.|You leave the question mark where it is. Someone else can answer it.}
 
 @event track_promotion
 title: A Step Up

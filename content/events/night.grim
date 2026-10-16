@@ -33,16 +33,16 @@ tone: eerie
 art: moon
 tags: mystery
 scene: A dormitory window at midnight, the castle dark beyond it, one lantern moving along a far battlement.
-text: {month == 12: Starfall is close, and the sky over the towers is already restless.|{month == 4 or month == 10: Exams soon. Half the windows on your corridor are still lit.|{season == "winter": {~Frost on the window, and the corridors are colder than the snow.|Snow on the sills; the tower creaks like a ship.}|{season == "summer": {~The night is warm and the castle's windows are all open.|Moths at the window, and somebody laughing on the lawn.}|{~The castle settles for the night, beam by beam.|Rain on the leads, and a gargoyle gargling it.|The wind finds every keyhole in the tower.}}}}} {has(watched): Bram does his rounds earlier these nights. You've learned the sound of his boots.|{health < 30: Every bone you own would like to stay in bed.|{mood < 25: You can't sleep anyway.|{gold < 10: Your purse is light, and some doors after midnight pay.|{bonds(partner) > 0: {~A note under your door, in a hand you know: "Roof?"|You could be on the observatory roof with someone right now.|Somewhere across the castle, someone you love is also awake.}|{final_year: {~Your last year. The castle at night won't be yours much longer.|The doors you know by heart will open for someone else next year.}|{~Somewhere a door that should be locked isn't.|Down in the courtyard, a lantern goes out on purpose.|Someone has left the servants' stair unbolted again.}}}}}}}
+text: {month == 12: Starfall is close, and the sky over the towers is already restless.|{month == 4 or month == 10: Exams soon. Half the windows on your corridor are still lit.|{season == "winter": {~Frost on the window, and the corridors are colder than the snow.|Snow on the sills; the tower creaks like a ship.|Ice in the water jug, and the tower silent with snow.}|{season == "summer": {~The night is warm and the castle's windows are all open.|Moths at the window, and somebody laughing on the lawn.|The night is short and never quite dark.}|{~The castle settles for the night, beam by beam.|Rain on the leads, and a gargoyle gargling it.|The wind finds every keyhole in the tower.}}}}} {has(watched): Bram does his rounds earlier these nights. You've learned the sound of his boots.|{health < 30: Every bone you own would like to stay in bed.|{mood < 25: You can't sleep anyway.|{gold < 10: Your purse is light, and some doors after midnight pay.|{bonds(partner) > 0: {~A note under your door, in a hand you know: "Roof?"|You could be on the observatory roof with someone right now.|Somewhere across the castle, someone you love is also awake.}|{final_year: {~Your last year. The castle at night won't be yours much longer.|The doors you know by heart will open for someone else next year.|Next year someone else will lie awake in this bed.}|{~Somewhere a door that should be locked isn't.|Down in the courtyard, a lantern goes out on purpose.|Someone has left the servants' stair unbolted again.}}}}}}}
 > left: Sleep
-  say: {~You blow out the candle and let the castle keep its secrets for one more night.|Sleep. The night can wait. It always does.}
+  say: {~You blow out the candle and let the castle keep its secrets for one more night.|Sleep. The night can wait. It always does.|You pull the blanket up and listen to the castle until you're asleep.}
 > right: Go out
   mood -small
   health -small
   visit midnight
   if term:
     queue night_suspicion chance unlikely
-  say: {~You wait for the last footsteps to fade, then ease the door open.|Boots in hand, you take the servants' stair.}
+  say: {~You wait for the last footsteps to fade, then ease the door open.|Boots in hand, you take the servants' stair.|You slip out while the castle is still settling, and nobody hears.}
 
 # The morning after you were noticed (queued by the night's cards, I4): the only source of lockouts.
 @event night_suspicion
