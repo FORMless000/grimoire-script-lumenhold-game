@@ -9,9 +9,9 @@
 | Content | 989 events (lint's count), 69 states, 21 characters (12 core, 8 fixtures, Tamsin of Thornwick), 43 places, 25 tracks, 12 spells, 35 endings (5 game-overs + yearbook lines) |
 | Format | schema v1, frozen; 0 lint errors, **0 legacy constructs** left in content |
 | Reachability | `grim reach`: every event, option, ending, place and track can be reached; each key clue has ≥ 2 sources |
-| Translation | zh-CN 100% (8,788 strings), 0 stale |
+| Translation | zh-CN 100% (8,802 strings), 0 stale |
 | Checks | `npm run verify` passes: build, lint, format, docs, 100+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
-| A run | 48 months (the last two are the wrap-up), about 340 cards; random play graduates 80% of the time, social and careful styles 97–99% |
+| A run | 48 months (the last two are the wrap-up), about 340 cards; in `grim balance`, random play leaves early 68% of the time, social 37% and cautious 24%; the other 14 styles finish 94–100% |
 
 ## Frequency and economy audit
 
@@ -100,6 +100,9 @@ October 15, 2026: [the frequency and economy review](docs/reviews/event-economy-
   - Card fixes: alignment on costly kindness and on theft or cheating; absent people's relationship changes, private renown and five- or six-year students removed; term, slot and month gates; continuity flags (Tobias away, Bram's sash, Mir's padlock, Maud's tea, Ilse gone, facts tied to the branch that tells them); wages and prices that match their text; variants for repeats.
   - The critic has a mechanical audit of its 659 unreviewed cards to read next.
   - Second batch (reports 24–40): 80 more findings fixed. `around(n)` and `apart(n)` check presence and per-person contact; repeat cards no longer assume history the player never made; stakes are gated; the thesis defence reads progress.
+- **The event critique, reports 41–159 and the rechecks (October 15):** the 9 recheck failures and the 251 findings on 508 cards are acted on, in five commits (`2fba618` … `8244797`; per card in the critique's `handoff/checks-wave2-2026-10-15.md`).
+  - One function, `bonds_around(status)`: bonds of a kind among the people present.
+  - Card fixes: presence for every in-person cast and cameo; night and dawn scenes either slotted or framed as the morning's plan for tonight; holiday work branches on the gig actually held; stakes paid up front and empty purses handled where a cost is nested; amounts in the text match the tiers moved; alignment on the decision, not the dice, and off ordinary acts; adults throughout; once-only lifecycles (the Thornwick exchange); the bursar's loan repays exactly sixty.
 
 ## Known gaps and deviations from the design
 
@@ -109,7 +112,12 @@ October 15, 2026: [the frequency and economy review](docs/reviews/event-economy-
 - **Finale allies** count at rel ≥ 18, not the design's friendship ≥ 50. Ilse, Isolde and Maud still have few personal events.
 - **Card text and crown amounts:** many cards name a crown amount ("fifteen crowns"). Lint checks them against the gold row (3 8 15 30 60); retuning gold means rewriting them (or a `{=…}` amount token).
 - **Relationship lines** in the yearbook: partners have a named line each; friends are still generic (three friends; Ilse's chain), not one line per bond (§10.5).
-- **Skill checks (design §8.6, the check ladder):** the engine, lint, `grim odds` and the guide (`docs/authoring/checks.md`) read the ladder (rungs, odds by nature, luck, drift, circumstance steps, course standards, `chance <word>`). Wave 1 (the events of critique reports 01–40: 216 challenges, 64 `chance` blocks) is rewritten; the other 177 challenges and 47 `chance` blocks still use the legacy tiers and raw percentages, on the old formula (expected skill from the refit curve), until wave 2. Exams are on the ladder (`exam_tiers: standard standard standard+2`): about 83% pass and GPA about 2.9 in the bots, against 92% and 3.2 before. With wave 1 alone, balanced bots win 71% of their checks (was 81%) and 18% sit at the cap (was 36%). The bots that take every check and ignore their condition end early more often (quick balance: aggressive 27%, social 40%, from 13% and 30%), and two headline alarms are new near the 35% line (social sent home 40%, hollow archmage 37%); the balanced, truant, lumen and hollow styles still finish every run. The combat stub's value runs well above the curve (`docs/skill-checks-2026-10-15.md`), so fights stay easy until the minigame.
+- **Skill checks (design §8.6, the check ladder):** every challenge and roll in content is on the ladder (rungs, odds by nature, luck, drift, circumstance steps, course standards, `chance <word>`, `queue … chance <word>`). No legacy tier or raw percentage is left, though the parser still reads them. Exams: about 82% pass, GPA about 2.96. Balanced bots win 65% of their checks (81% before the ladder) and 9% sit at the cap (was 36%); all styles span 48–69%.
+  - **The cost:** the bots that take every check leave early more often. In `grim balance` random leaves 68% of the time (47% after wave 1) and aggressive 38% (32%), mostly through `crisis_despair`: they lose more of their checks, and many losses cost a little mood. The careful and focused styles are unaffected.
+  - Feat stays the hardest kind (52%) because vigor lags.
+  - The combat stub's value still runs above the curve, so fights stay easy until the minigame.
+  - Details and levers: `docs/skill-checks-2026-10-15.md`, section 7.
+- **Tamsin's authored letters** (`trigger: social`, `actor: tamsin`) aren't in the away letter pool, so off campus only the generic letters can come from them (event critique, reports 138–139). Reason: routing an actor's social cards into the letter pool is a director change (a pool rule, or a `letter` tag the director reads), which belongs with the next format addition rather than a content pass.
 - **Advisor relationship** (a §9.2 challenge modifier) has nothing to read: no track names an advisor character.
 - **The thesis (§7.6) is simplified:** `thesis_setup` picks an ambition only; there is no discipline choice (level III passed) and no named advisor (Thorne sets the topics, but his standing doesn't modify the thesis), and a player with no courses still qualifies. Progress does count: at the defence, 70+ adds a point to the score and under 30 takes one away (event critique, report 27). Reason: the discipline and advisor systems need menus, a track lead and modifier wiring that would land with the minigames' rework of checks; the bounded version keeps the thesis playable and its work meaningful until then.
 - **Friendship growth** (L-2: the `rel` row is 1 2 4 6 9): courting one character reaches 100 around month 24 for most (Kael, Tobias, Seraphine, Corvin; Nessa ~90); Lyra's median at month 24 is ~63 and Mir's ~43, because their early ladders are thin (content, for X). The minor characters' trust cards open at rel 20 (were 30).
@@ -135,7 +143,7 @@ October 15, 2026: [the frequency and economy review](docs/reviews/event-economy-
 
 ## Next
 
-1. **Skill-check rewrite** (design §8.6, `docs/authoring/checks.md`): wave 1 (the events of critique reports 01–40), ladder exams and the curve refit are done, and the critic's rechecks of reports 01–40 cover them. Wave 2 (177 challenges, 47 `chance` blocks), reports 41 onward and the unreviewed events, goes with the next critic-driven revision pass once the critic finishes.
+1. **After the check rewrite:** the critic rechecks reports 41–159 (`handoff/checks-wave2-2026-10-15.md`). Then decide the careless-player floor (`docs/skill-checks-2026-10-15.md` §7: soften losing's mood cost on routine cards, or give `crisis_despair` a route without friends).
 2. **Human playtest #2** (`docs/playtest-2.md`): a full run in each language, then `grim feedback`.
 3. Address its notes; then a spell-options batch, skill growth, the finale allies' ladders, and the aggressive and windfall alarms.
 4. When the minigames settle: combat wiring (X5) and social spells (X1), then the final pass (L28 economy re-check, C4, baseline).

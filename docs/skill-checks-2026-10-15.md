@@ -235,3 +235,44 @@ Wave 1 put the 216 challenges and 64 `chance` blocks of critique reports 01–40
 - Exam tiers were chosen from three seeds of 24 games each: `standard` at every level left level III the easiest (only strong players reach it), and `standard+1` everywhere pushed GPA to about 2.7.
 - Feat checks are now the hardest kind, because vigor still lags every other skill.
 - The bots that take every check end early more often (quick balance: aggressive 27%, social 40%, from 13% and 30%). The careful styles still finish every run.
+
+## 7. Re-run after wave 2 (every check on the ladder)
+
+Wave 2 (critique reports 41–159, commits `2fba618` … `8244797`) put the other 177 challenges, 47 `chance` blocks, 17 queued-card chances and the `risk` preset on the ladder: no legacy tier or raw percentage is left in content. The same 18 styles × 5 games, plus `grim balance` (17 styles × 100 games) and `tools/economy.js` (200 games, seed 777), each against the wave-1 commit `ac628f5`.
+
+| | after wave 1 | after wave 2 |
+|---|---|---|
+| balanced: win% / at the 95+ cap | 71 / 18% | 65 / 9% |
+| all styles: win% range | 56–78 | 48–69 |
+| random / cautious: win% | 63 / 56 | 48 / 55 |
+| negotiate / deceive / research | 69 / 68 / 66 | 68 / 60 / 59 |
+| spell / combat / brew / feat | 81 / 78 / 72 / 54 | 72 / 76 / 61 / 52 |
+| milestone / story / incident / crisis | 80 / 70 / 60 / 37 | 77 / 64 / 64 / 57 |
+| story checks at ≤30% shown | 6% | 15% |
+| `wild` / `steady` rolls | 1,351 / 185 | 1,732 / 264 |
+| at the 95+ cap, `normal` rolls | 25% | 12% |
+| exams: pass p̄ L1 / L2 / L3 | 82 / 84 / 85 | 81 / 82 / 84 |
+| exams: A / F, GPA | 45 / 8%, 3.08 | 40 / 9%, 2.96 |
+
+`grim balance`, 100 games a style:
+
+| style | early, wave 1 | early, wave 2 | what changed |
+|---|---|---|---|
+| random | 47% | 68% | quiet departure 35% → 54% (economy, 200 games: early 57% → 72%) |
+| aggressive | 32% | 38% | archmage 37% → 22%, quiet departure 32% → 35% (economy: early 37% → 45%) |
+| cautious, social | 25%, 37% | 24%, 37% | unchanged |
+| every other style | 0–5% | 0–6% | unchanged |
+
+- **Checks run about six points harder overall and much less often at the cap.** Balanced bots win 65% of what they take, and only 9% of their rolls sit at the 95% ceiling. That's what the ladder was for: skill still pays (focused charm 68%, random 48%), but a strong player no longer wins everything.
+- **The random bot now leaves early three games in four.** Its mood runs −1.0 a month against −0.4. No single card does it. It loses more of the checks it takes (48% against 63%), most failures cost a little mood, and the crisis cards fire more (`crisis_despair` 0.06 → 0.10 a month). The aggressive bot, which also takes every check, shows the same pattern more mildly. The careful and focused styles are unaffected. The random bot is crude, but a careless human playing a first run will look like it. Levers, in order of preference:
+  - soften the mood cost of losing on routine cards;
+  - make `crisis_despair`'s "Reach out" work without a friend (a first-year counsellor or the night porter on every route);
+  - ease routine checks a rung where they guard mood rather than progress.
+- **Feat is still the hardest kind** (52%), because vigor lags (41 at month 48 over all styles, against 59–64 for the others). The fix is skill growth, not the checks.
+- **Story checks got harder on purpose** (15% shown at ≤30%). The plot cards with no drift (`hs_frost_ring`, `hs_dark_tower`, `rival_contest`, the career interview) are pitched at what the scene is, and a passive player meets them late.
+- **Crises are easier** (57% from 37%): `crisis_probation` is `likely`, and Grisk's collectors are easier to outrun.
+- **Exams barely moved** (GPA 2.96). The exam tiers didn't change, and only the course cards' practice checks did.
+- **New `grim balance` alarms:** random quiet departure 54%, moneymaxx merchant 41% (crowns climb 6.1 a month in year 4, from 5.3), and `ending_ilse_taken` unreached (its chain is unchanged: Ilse is taken only if you lose the fight in the lane, or run for help without knowing Kael, and no bot did in 1,700 games). Gone: aggressive archmage, lumen alchemist.
+- **Never seen** (18, from 16): the top-rank holiday gigs (unchanged; they need rank 3 and the gig chosen), `crisis_probation` (the bots now fail fewer terms), `pell_daughters` (Pell's friendship at 20) and `break_work_regular` (a top-rank Newt or Pell gig, like the gig cards). All are gated on rare states, not broken.
+
+Scripts as before (`sim.js`, `an.js`, `exs.js`, and `endings.js` for run length), in the job's temp folder.
