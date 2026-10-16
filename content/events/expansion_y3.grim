@@ -21,28 +21,34 @@ text: Every guild, order and institution in the kingdom has sent someone to the 
   hint: Apprentice archmages. The interview tests your Arcana.
   flag career_conclave
   queue y3_interview now
+  say: You leave your name with the mage in silver, who writes it down without looking up. The interview is set.
 > library: The Royal Library
   hint: Keepers of every book ever written. The interview tests your Lore.
   flag career_library
   queue y3_interview now
+  say: The librarian takes your name and asks what you're reading at the moment. You answer. The interview is set.
 > guild: The Guild of Alchemists
   hint: Potions, profit, explosions. The interview tests your Alchemy.
   flag career_guild
   queue y3_interview now
+  say: The alchemist at the guild's booth shakes your hand and checks it for burns. The interview is set.
 > unseen: The Crown's Office of Unseen Affairs
   hint: They found you, actually. The interview tests your Guile.
   flag career_unseen
   queue y3_interview now
+  say: A woman nobody else seems to notice takes your name and tells you where to be. The interview is set.
 > circus: The Travelling Circus of Wonders
   hint: Wagons, crowds, illusions. The interview tests your Charm.
   flag career_circus
   queue y3_interview now
+  say: The ringmaster juggles your name into the air, catches it and writes it down. The interview is set.
 > teaching: Stay at Lumenhold as a junior teacher
   hint: Needs a faculty member who trusts you: Thorne, Maud or the Headmistress.
   when: rel(thorne) >= 15 or rel(maud) >= 15 or rel(isolde) >= 15
   locked: Nobody on the faculty knows you well enough to vouch for you.
   flag career_teaching
   queue y3_interview now
+  say: Your old professor puts your name forward to the faculty, with a few words you don't hear. The interview is set.
 > none: Not yet — you'd rather not decide
   mood +tiny
   if month < 4:

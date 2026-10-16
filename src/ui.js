@@ -24,7 +24,7 @@
     set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } },
     del(k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } },
   };
-  let settings = { notes: true, lang: null };
+  let settings = { notes: true, lang: null, amounts: 'marks' };
   try { Object.assign(settings, JSON.parse(store.get(SETTINGS_KEY) || '{}')); } catch (e) { /* ignore */ }
   const saveSettings = () => store.set(SETTINGS_KEY, JSON.stringify(settings));
 
@@ -205,6 +205,7 @@
       '<button class="icon-btn side-toggle" id="sideToggle" title="' + esc(t('top.people')) + '">' + Art.icon('group', 20) + '</button>' +
       (languages.length > 1 ? '<button class="icon-btn" id="langToggle" title="' + esc(t('top.lang') + ' → ' + nextLang.name) + '">' + Art.icon('globe', 18) + '</button>' : '') +
       '<button class="icon-btn" id="notesToggle" title="' + esc(t('top.notes')) + '">' + Art.icon('feather', 18) + '</button>' +
+      '<button class="icon-btn" id="amountsToggle" title="' + esc(t('top.amounts', { mode: t('amounts.' + (settings.amounts || 'marks')) })) + '">' + Art.icon('scales', 18) + '</button>' +
       '<button class="icon-btn" id="slotsTop" title="' + esc(t('slots.heading')) + '">' + Art.icon('scroll', 18) + '</button>' +
       '<button class="icon-btn" id="quit" title="' + esc(t('top.quit')) + '">' + Art.icon('door', 18) + '</button></div></header>' +
       '<div class="meters" id="meters"></div>' +
@@ -219,6 +220,12 @@
     const lt = document.getElementById('langToggle');
     if (lt) lt.onclick = () => switchLang(nextLang.code, true);
     document.getElementById('notesToggle').onclick = () => { settings.notes = !settings.notes; saveSettings(); document.querySelectorAll('.scene-note').forEach((n) => { n.style.display = settings.notes ? '' : 'none'; }); };
+    document.getElementById('amountsToggle').onclick = (e) => {
+      settings.amounts = AMOUNT_MODES[(AMOUNT_MODES.indexOf(settings.amounts || 'marks') + 1) % AMOUNT_MODES.length]; saveSettings();
+      e.currentTarget.title = t('top.amounts', { mode: t('amounts.' + settings.amounts) });
+      toast(t('top.amounts', { mode: t('amounts.' + settings.amounts) }));
+      if (ui.mode === 'card' && ui.view) showCard(ui.view); else if (ui.mode === 'menu' && ui.view) showMenu(ui.view, true);
+    };
     document.getElementById('sideToggle').onclick = () => { ui.sideOpen = !ui.sideOpen; document.getElementById('side').classList.toggle('open', ui.sideOpen); };
     document.getElementById('tabs').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; ui.tab = b.dataset.tab; renderSide(); };
     const meters = document.getElementById('meters');
@@ -366,7 +373,8 @@
     document.body.appendChild(el); setTimeout(() => el.remove(), 2600);
   }
   // Time of day (M7): the page takes a faint tint of the slot being played.
-  function setSlotTint(slot) { document.body.dataset.slot = slot || ''; }
+  // A card or screen without a slot keeps the colour of the last one.
+  function setSlotTint(slot) { if (slot) document.body.dataset.slot = slot; }
   function floatDeltas(deltas) {
     for (const [k, v] of Object.entries(deltas || {})) {
       const el = document.getElementById('m-' + k);
@@ -500,6 +508,21 @@
   }
   // Values are stored with fractions (the coursework curve); show whole numbers, and one decimal only below 1.
   function shownAmount(x) { const r = Math.round(x); return r === 0 && x > 0 ? String(Math.round(x * 10) / 10) : String(r); }
+  // How amounts show (feedback 2026-10-15; a setting): 'marks', one to five pips by size tier; 'numbers'; or 'icons', the
+  // icon alone. Colour gives the direction, so there is no sign. Crowns and Mana are always exact.
+  const AMOUNT_MODES = ['marks', 'numbers', 'icons'];
+  const TIER_WORDS = ['tiny', 'small', 'medium', 'large', 'huge'];
+  const exactAmount = (k) => k === 'mana' || !!(content.resources[k] && content.resources[k].display === 'number');
+  function amountShown(k, lo, hi) {
+    if (hi == null) hi = lo;
+    const big = Math.abs(hi) >= Math.abs(lo) ? hi : lo;
+    const mode = exactAmount(k) ? 'numbers' : settings.amounts || 'marks';
+    if (mode === 'icons') return { text: '', title: '' };
+    if (mode === 'marks') { const n = eng.sizeOf(k, big); return { text: '•'.repeat(n + 1), title: t('size.' + TIER_WORDS[n]) }; }
+    const a = Math.abs(Math.round(lo)), b = Math.abs(Math.round(hi));
+    return { text: lo === hi ? shownAmount(Math.abs(lo)) : Math.min(a, b) + '~' + Math.max(a, b), title: '' };
+  }
+  const deltaClass = (lo, hi) => (hi == null ? (lo > 0 ? 'pos' : lo < 0 ? 'neg' : '') : hi > 0 && lo >= 0 ? 'pos' : lo < 0 && hi <= 0 ? 'neg' : hi > 0 ? 'pos' : '');
   function skillName(id) { return (content.skills[id] && content.skills[id].name) || id; }
   function spellName(id) { return (content.spells[id] && content.spells[id].name) || id; }
   // Exact outcome preview (design §8.3) for one option: one line of changes, or one line per outcome.
@@ -507,14 +530,9 @@
     let pv;
     try { pv = eng.preview(v.id, o.key, v.actor ? v.actor.id : null); } catch (e) { return ''; }
     const amt = (k, r) => {
-      const sign = (x) => (x > 0 ? '+' : x < 0 ? '−' : '') + shownAmount(Math.abs(x));
-      const val = r[0] === r[1] ? sign(r[0]) : (r[0] < 0 && r[1] <= 0 ? '−' + Math.abs(Math.round(r[1])) + '~' + Math.abs(Math.round(r[0])) : sign(r[0]) + '~' + Math.abs(Math.round(r[1])));
-      let icon = 'star', title = k;
-      if (content.resources[k]) { icon = content.resources[k].icon; title = content.resources[k].name; }
-      else if (content.skills[k]) { icon = content.skills[k].icon; title = content.skills[k].name; }
-      else if (k.startsWith('rel:') || k.startsWith('spark:')) { const [kind, id] = k.split(':'); icon = kind === 'spark' ? 'rose' : 'group'; title = shortName(id); }
-      else return '';
-      return '<i class="' + (r[1] > 0 ? 'pos' : r[0] < 0 ? 'neg' : '') + '" title="' + esc(title) + '">' + Art.icon(icon, 12) + val + '</i>';
+      const d = deltaLook(k); if (!d) return '';
+      const a = amountShown(k, r[0], r[1]);
+      return '<i class="' + deltaClass(r[0], r[1]) + '" title="' + esc(d.name + (a.title ? ' · ' + a.title : '')) + '">' + Art.icon(d.icon, 12) + esc(a.text) + '</i>';
     };
     const line = (d) => Object.entries(d).filter(([, r]) => r[0] || r[1]).map(([k, r]) => amt(k, r)).join('');
     const label = (pth) => {
@@ -619,6 +637,15 @@
     if (n.kind === 'fact') return t('note.fact', { name: shortName(n.fact.split('.')[0]) });
     return n.text || '';
   }
+  // A delta's icon and name: resources, skills, relationships and track numbers (performance, progress, exam preparation).
+  function deltaLook(k) {
+    if (content.resources[k]) return { icon: content.resources[k].icon, name: content.resources[k].name };
+    if (content.skills[k]) return { icon: content.skills[k].icon, name: content.skills[k].name };
+    const [kind, id] = k.split(':');
+    if ((kind === 'rel' || kind === 'spark') && content.npcs[id]) return { icon: kind === 'spark' ? 'rose' : 'group', name: shortName(id), npc: true, kind };
+    if (/^(perf|progress|study)$/.test(kind) && content.tracks && content.tracks[id]) return { icon: kind === 'study' ? 'book' : 'star', name: t('chip.' + kind, { track: content.tracks[id].name, delta: '' }).trim(), kind };
+    return null;
+  }
   function chipsFor(out) {
     let h = '';
     for (const c of out.checks || []) {
@@ -629,23 +656,16 @@
     for (const [k, v] of Object.entries(out.capped || {})) {
       if ((out.deltas || {})[k]) continue;
       const [kind, id] = k.split(':'); if (!content.npcs[id]) continue;
-      h += '<span class="chip pos capped">' + Art.icon(kind === 'spark' ? 'rose' : 'group', 14) + esc(t(kind === 'spark' ? 'chip.love' : 'chip.rel', { name: shortName(id), delta: '+' + shownAmount(v) }) + ' · ' + t('chip.max')) + '</span>';
+      h += '<span class="chip pos capped">' + Art.icon(kind === 'spark' ? 'rose' : 'group', 14) + esc(t(kind === 'spark' ? 'chip.love' : 'chip.rel', { name: shortName(id), delta: amountShown(k, v).text }).trim() + ' · ' + t('chip.max')) + '</span>';
     }
     for (const [k, v] of Object.entries(out.deltas || {})) {
       if (!v) continue;
-      const sign = (v > 0 ? '+' : v < 0 ? '−' : '') + shownAmount(Math.abs(v));
-      const cls = v > 0 ? 'pos' : 'neg';
-      if (content.resources[k]) h += '<span class="chip ' + cls + '">' + Art.icon(content.resources[k].icon, 14) + esc(content.resources[k].name) + ' ' + sign + '</span>';
-      else if (content.skills[k]) h += '<span class="chip ' + cls + '">' + Art.icon(content.skills[k].icon, 14) + esc(content.skills[k].name) + ' ' + sign + '</span>';
-      else if (k.startsWith('rel:') || k.startsWith('spark:')) {
-        const [kind, id] = k.split(':'); if (!content.npcs[id]) continue;
-        h += '<span class="chip ' + cls + '">' + Art.icon(kind === 'spark' ? 'rose' : 'group', 14) + esc(t(kind === 'spark' ? 'chip.love' : 'chip.rel', { name: shortName(id), delta: sign })) + '</span>';
-      }
-      else if (/^(perf|progress|study):/.test(k)) {
-        // Track numbers (design §6.2, §7.3): performance, thesis progress, exam preparation.
-        const [kind, id] = k.split(':'); const d = content.tracks && content.tracks[id]; if (!d) continue;
-        h += '<span class="chip ' + cls + '">' + Art.icon(kind === 'study' ? 'book' : 'star', 14) + esc(t('chip.' + kind, { track: d.name, delta: sign })) + '</span>';
-      }
+      const d = deltaLook(k); if (!d) continue;
+      const a = amountShown(k, v), cls = v > 0 ? 'pos' : 'neg';
+      // Track numbers (design §6.2, §7.3) and relationships read as a phrase; the rest as a name and an amount.
+      const label = d.kind === 'spark' || d.kind === 'rel' ? t(d.kind === 'spark' ? 'chip.love' : 'chip.rel', { name: d.name, delta: a.text })
+        : d.kind ? t('chip.' + d.kind, { track: content.tracks[k.split(':')[1]].name, delta: a.text }) : d.name + (a.text ? ' ' + a.text : '');
+      h += '<span class="chip ' + cls + '"' + (a.title ? ' title="' + esc(a.title) + '"' : '') + '>' + Art.icon(d.icon, 14) + esc(label.trim()) + '</span>';
     }
     // A new spell gets a banner of its own, first in line (B4); other notes stay chips.
     for (const n of out.notes || []) if (n.kind === 'spell') h = '<div class="spell-banner">' + Art.icon('wand', 20) + '<span>' + esc(noteText(n)) + '</span></div>' + h;
@@ -684,7 +704,9 @@
   // A course up front (M4): what it tests, its exam, its spells, and the pass chance if the exam were today.
   function courseLine(c) {
     if (!c) return '';
-    const parts = [t('course.tests', { skill: c.skills.map(skillName).join(' + ') }), t('course.exam', { tier: t('tier.' + c.exam), p: c.pass })];
+    // The exam tier is a legacy word or a ladder one (`standard`, `standard+2`): an offset reads as harder or easier.
+    const m = /^standard([+-]\d+)?$/.exec(c.exam || ''), tier = m ? (m[1] ? (+m[1] > 0 ? 'hard' : 'easy') : 'standard') : c.exam;
+    const parts = [t('course.tests', { skill: c.skills.map(skillName).join(' + ') }), t('course.exam', { tier: t('tier.' + tier), p: c.pass })];
     if (c.teaches.length) parts.push(t('course.teaches', { spells: c.teaches.map(spellName).join(', ') }));
     return '<small class="course">' + Art.icon('scroll', 12) + ' ' + esc(parts.join(' · ')) + '</small>';
   }
@@ -699,7 +721,22 @@
     const d = content.tracks[sw.from], rank = (d.ranks || '').split(/\s*[,，、]\s*/)[sw.rank] || '';
     return '<small class="course warn">' + esc(t('track.switch', { from: d.name, rank, perf: sw.perf })) + '</small>';
   }
-  function showMenu(v) {
+  // Every menu opens with a lead-in card (feedback 2026-10-15): the scene alone, no options and no outcome, and one
+  // button that says a choice follows. The menu after it shows the title, a prompt and the options.
+  function showMenuLead(v) {
+    ui.mode = 'lead'; ui.view = v; ui.busy = false; setSlotTint(v.slot);
+    closeOverlay();
+    const card = cardShell('<div class="card-body">' + actorRow(v.actor) + '<h2>' + esc(v.title) + '</h2><p class="text">' + esc(v.text) + '</p>' + sceneNote(v.scene, !settings.notes) + '</div>', v.art, v.tags, v.id);
+    card.querySelector('.card-art').insertAdjacentHTML('beforeend', '<span class="tagline">' + esc(t('menu.tagline')) + '</span>');
+    const choices = document.getElementById('choices');
+    choices.innerHTML = '<button class="choice single" id="leadBtn"><span>' + esc(v.pick > 1 ? t('menu.leadMany', { n: v.pick }) : t('menu.lead')) + '</span></button>';
+    const open = () => { if (ui.mode !== 'lead' || ui.view !== v) return; ui.mode = 'leading'; setTimeout(() => showMenu(v, true), 220); };
+    ui.leadGo = () => { if (ui.mode === 'lead') { flyOut(card, 'right'); open(); } };
+    document.getElementById('leadBtn').onclick = ui.leadGo;
+    attachSwipe(card, { commit: open, tap: ui.leadGo });
+  }
+  function showMenu(v, led) {
+    if (!led) return showMenuLead(v);
     ui.mode = 'menu'; ui.view = v; ui.busy = false; ui.multi = v.pick > 1 ? [] : null;
     const deck = document.getElementById('deck'); deck.querySelectorAll('.card').forEach((c) => c.remove());
     document.getElementById('choices').innerHTML = '';
@@ -711,7 +748,7 @@
         (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') + courseLine(o.course) + jobLine(o.job) + switchLine(o.switching) + (previewHtml(v, o) || (aff ? '<span class="aff">' + aff + '</span>' : '')) + '</button>';
     }).join('');
     openOverlay('<div class="modal dark"><div class="modal-art">' + Art.scene(v.art, v.tags, v.id) + '</div><div class="modal-body">' + (v.actor ? actorRow(v.actor).replace('actor-row', 'actor-row" style="color:var(--text)') : '') +
-      '<h2>' + esc(v.title) + '</h2><p class="text">' + esc(v.text) + '</p>' + (settings.notes ? sceneNote(v.scene) : '') +
+      '<h2>' + esc(v.title) + '</h2><p class="text prompt">' + esc(v.pick > 1 ? t('menu.promptMany', { n: v.pick }) : t('menu.prompt')) + '</p>' +
       '<div class="opt-grid">' + opts + '</div>' + (ui.multi ? '<div class="row" style="margin-top:14px"><button class="btn primary grow" id="multiGo" disabled style="width:100%">' + esc(t('menu.confirm', { n: 0, max: v.pick })) + '</button></div>' : '') + '</div></div>');
     if (ui.multi) document.getElementById('multiGo').onclick = () => { if (ui.multi.length) { const keys = ui.multi.slice(); ui.busy = true; closeOverlay(); setPreview(null); resolve(keys); } };
     document.querySelectorAll('.opt').forEach((b) => {
@@ -755,8 +792,8 @@
         try { out = eng.pickPlaces(picks); } catch (e) { console.warn(e); return; }
         ui.mode = null; ui.mapCtl = null; closeOverlay();
         // No "…" card after a pick (M9): pay floats up from the meters, notes (a shift counted) show as a toast.
+        // No toast either (feedback 2026-10-15): it covered the options; what's left of a term is in the You panel.
         renderChrome(); floatDeltas(out.deltas); save();
-        if (out.notes.length) toast(out.notes.map(noteText).filter(Boolean).join(' · '));
         next();
       },
     });
@@ -838,6 +875,8 @@
       else if (story && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); commitCard('right'); }
     } else if (ui.mode === 'outcome') {
       if (['Enter', ' ', 'ArrowLeft', 'ArrowRight'].includes(e.key)) { e.preventDefault(); const c = document.querySelector('#deck .card'); if (c) flyOut(c, e.key === 'ArrowLeft' ? 'left' : 'right'); setTimeout(continueOutcome, 180); }
+    } else if (ui.mode === 'lead') {
+      if (['Enter', ' ', 'ArrowRight', 'ArrowLeft'].includes(e.key)) { e.preventDefault(); ui.leadGo && ui.leadGo(); }
     } else if (ui.mode === 'menu') {
       const n = parseInt(e.key, 10);
       if (n >= 1 && n <= 9 && ui.view.options[n - 1]) pickMenu(ui.view.options[n - 1].key);

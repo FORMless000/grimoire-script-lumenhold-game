@@ -244,7 +244,7 @@
     // `intro:` the card where you first meet the track's `lead:` (playtest 2, N1): queued on enrolling or joining, instead of
     // meeting them silently.
     // `standard:` a course's rung at each level (checks.md), else @balance course_standard
-    track: { props: ['kind', 'name', 'skill', 'levels', 'level_names', 'place', 'teaches', 'hidden', 'prereq', 'ranks', 'pay', 'due', 'lead', 'desc', 'legacy', 'opens', 'intro', 'standard'], effects: [] },
+    track: { props: ['kind', 'name', 'skill', 'levels', 'level_names', 'place', 'teaches', 'hidden', 'prereq', 'ranks', 'pay', 'due', 'lead', 'desc', 'legacy', 'opens', 'intro', 'standard', 'picked'], effects: [] },
     spell: { props: ['name', 'discipline', 'cost', 'power', 'desc', 'art'], effects: [] },
     fact: { dotted: true, props: ['npc', 'tier', 'unlock', 'text'], effects: [] },
     archetype: { props: ['names', 'age', 'traits', 'pronouns', 'house', 'role', 'desc'], effects: [] },

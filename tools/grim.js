@@ -589,6 +589,7 @@ function lint(opts = {}) {
   for (const lang of localeLangs()) lintLocale(content, lang, A.problems, opts);
   reachLint(content, A.problems);
   lintVariants(content, A.problems);
+  lintMenus(content, A.problems);
   // Every map a place sits on needs its base art (src/map.js loads content/world/maps/<map>.svg).
   // A plan's `map_id:` (and @game map_id:) names a map some place sits on, or a track kind (A1).
   const MAPS = new Set(Object.values(content.places || {}).map((pl) => pl.map && pl.map.map).filter(Boolean)), KINDS = new Set(Object.values(content.tracks || {}).map((d) => d.kind));
@@ -643,6 +644,24 @@ function variantsByBlock(strings) {
   for (const x of strings) { const g = variantGroups(x.text); if (g.length) (by[x.block] = by[x.block] || {})[x.key] = g; }
   return by;
 }
+// Menus (feedback 2026-10-15): a menu opens with a lead-in card, so it needs text; every option the player can pick
+// says what happened (one ending the run is exempt); a course, club or job a generated menu offers has a `picked:` line.
+function lintMenus(content, problems) {
+  const P = (d, msg) => problems.push({ level: 'warn', where: rel(d.file) + ':' + d.line, msg });
+  const kinds = { courses: 'course', clubs: 'club', jobs: 'job' }, offered = new Set();
+  for (const e of Object.values(content.events)) {
+    if (e.type !== 'menu' || /^\s*false\s*$/.test((e.when && e.when.src) || '')) continue;
+    if (e.offers) offered.add(kinds[e.offers]);
+    if (!String(e.text || '').trim()) P(e, 'menu "' + e.id + '" has no text for its lead-in card');
+    for (const o of e.options) {
+      let says = false, ends = false;
+      G.walkEffects(o.effects, (st) => { if (st.t === 'say') says = true; if (st.t === 'end') ends = true; });
+      if (!says && !ends) P(e, 'menu "' + e.id + '" option "' + o.key + '" has no say: (its outcome would be empty)');
+    }
+  }
+  for (const d of Object.values(content.tracks || {})) if (offered.has(d.kind) && !d.hidden && !d.picked) P(d, d.kind + ' "' + d.id + '" has no picked: line (the outcome of choosing it in a menu)');
+}
+
 function lintVariants(content, problems) {
   const strings = I18n.extract(content), eng = {};
   for (const x of strings) eng[x.block + ' ' + x.key] = x;

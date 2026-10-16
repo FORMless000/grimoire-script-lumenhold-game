@@ -348,13 +348,15 @@ details.adv input { margin-top: 8px; }
 .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 60; max-width: min(520px, calc(100vw - 32px)); padding: 10px 16px; border-radius: 14px; background: var(--night-3); border: 1px solid var(--line); color: var(--text); font-size: 13.5px; box-shadow: 0 12px 30px rgba(0, 0, 0, .45); animation: toast 2.6s ease forwards; pointer-events: none; }
 @keyframes toast { 0% { opacity: 0; transform: translate(-50%, 8px); } 10%, 80% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
 /* Time of day (M7): a faint wash over the page in the slot being played. */
-body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; background: var(--slot-tint, transparent); transition: background 1.2s ease; }
-body[data-slot="morning"] { --slot-tint: radial-gradient(120% 80% at 50% 0%, rgba(255, 214, 150, .10), transparent 60%); }
-body[data-slot="noon"] { --slot-tint: radial-gradient(120% 80% at 50% 0%, rgba(255, 244, 200, .09), transparent 60%); }
-body[data-slot="afternoon"] { --slot-tint: radial-gradient(120% 80% at 50% 0%, rgba(255, 190, 120, .09), transparent 60%); }
-body[data-slot="evening"] { --slot-tint: radial-gradient(120% 80% at 50% 0%, rgba(230, 120, 140, .10), transparent 60%); }
-body[data-slot="night"] { --slot-tint: radial-gradient(120% 80% at 50% 0%, rgba(80, 90, 200, .12), transparent 60%); }
-body[data-slot="midnight"] { --slot-tint: radial-gradient(120% 80% at 50% 0%, rgba(40, 20, 90, .22), transparent 65%); }
+body { transition: background-color 1.5s ease; }
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; background: var(--slot-tint, transparent); transition: background 1.5s ease; }
+/* Time of day: the page takes the slot's colour, strong enough to notice, dark enough to keep the cards' contrast. */
+body[data-slot="morning"] { background-color: #2a2236; --slot-tint: linear-gradient(180deg, rgba(255, 200, 130, .20), rgba(255, 214, 150, .05) 70%); }
+body[data-slot="noon"] { background-color: #262d48; --slot-tint: linear-gradient(180deg, rgba(255, 246, 210, .18), rgba(200, 220, 255, .05) 70%); }
+body[data-slot="afternoon"] { background-color: #2c2230; --slot-tint: linear-gradient(180deg, rgba(255, 176, 100, .20), rgba(255, 190, 120, .05) 70%); }
+body[data-slot="evening"] { background-color: #2a1a2e; --slot-tint: linear-gradient(180deg, rgba(235, 110, 140, .22), rgba(120, 60, 140, .08) 70%); }
+body[data-slot="night"] { background-color: #0f1430; --slot-tint: linear-gradient(180deg, rgba(70, 90, 210, .20), rgba(40, 50, 140, .06) 70%); }
+body[data-slot="midnight"] { background-color: #08061a; --slot-tint: linear-gradient(180deg, rgba(60, 25, 120, .32), rgba(20, 10, 50, .20) 70%); }
 .panel-res { display: flex; gap: 8px; margin: 2px 0 10px; flex-wrap: wrap; }
 .pres { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 10px; font-size: 13px; color: var(--muted); }
 .pres b { color: var(--text); font-variant-numeric: tabular-nums; }

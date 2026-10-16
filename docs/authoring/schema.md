@@ -273,6 +273,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `opens` | text |  |
 |  | `intro` | text |  |
 |  | `standard` | structured |  |
+|  | `picked` | text | yes |
 | `@spell id` | `name` | text | yes |
 |  | `discipline` | text |  |
 |  | `cost` | structured |  |

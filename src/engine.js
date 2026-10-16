@@ -75,6 +75,8 @@
         let n = 0;
         G.walkEffects(o.effects, (st) => { if (st.t === 'say') { st.sid = e.id + '.' + o.key + '.' + (++n); this.sayIndex[st.sid] = st; } });
       }
+      // A track's `picked:` line, the outcome of choosing it in a generated menu (feedback 2026-10-15).
+      for (const d of Object.values(content.tracks || {})) if (d.picked) this.sayIndex['track:' + d.id] = { t: 'say', text: d.picked, sid: 'track:' + d.id };
       // Static analysis: which resources each option may touch (for the Reigns-style preview dots).
       for (const e of this.events) for (const o of e.options) {
         const set = new Set();
@@ -207,6 +209,23 @@
       const sizes = (this.c.balance && this.c.balance.sizes) || {};
       const r = sizes[row] || (this.c.skills[row] ? sizes.xp : null) || DEFAULT_SIZES[row] || (this.c.skills[row] ? DEFAULT_SIZES.xp : DEFAULT_SIZES._);
       return r[TIER_INDEX[tier]];
+    }
+    // The size tier an amount falls in (0 tiny … 4 huge), for compact displays: the largest tier it reaches, at least
+    // tiny. A skill's points are turned back into XP at the current level's cost; track numbers use their own rows.
+    sizeOf(key, amount) {
+      const a = Math.abs(amount || 0), sizes = (this.c.balance && this.c.balance.sizes) || {};
+      const [kind, id] = String(key).split(':');
+      let row = null, x = a;
+      if (id && ['perf', 'progress', 'study'].includes(kind)) row = sizes[{ perf: 'performance' }[kind] || kind] || { perf: [2, 5, 8, 15, 25], progress: [2, 4, 8, 15, 25], study: [1, 3, 5, 8, 12] }[kind];
+      else if (id) row = sizes[kind] || DEFAULT_SIZES[kind] || DEFAULT_SIZES._;
+      else if (this.c.skills[key]) {
+        const cost = (this.c.balance && this.c.balance.xp_cost) || { a: 1, b: 0 };
+        x = a * Math.max(0.05, cost.a + cost.b * ((this.s && this.s.vals[key]) || 0));
+        row = sizes.xp || DEFAULT_SIZES.xp;
+      } else row = sizes[key] || DEFAULT_SIZES[key] || DEFAULT_SIZES._;
+      let k = 0;
+      for (let i = 1; i < row.length; i++) if (x >= row[i] * 0.85) k = i;
+      return k;
     }
     // Expected skill of a balanced player at a turn (the @balance curve; a straight line until it's fitted).
     expectedSkill(turn = this.s.turn) {
@@ -618,16 +637,18 @@
           if (d.hidden) { if (ti < 5 || !(d.prereq && this.test(d.prereq, null))) continue; }
           else if (lv === 1 ? ti < (d.opens || 1) : ti < ({ 2: 2, 3: 4 }[lv] || 99)) continue;
           const names = (d.level_names || d.name).split(/\s*[,，、]\s*/);
-          out.push({ key: d.id, label: names[lv - 1] || d.name, hint: d.desc || null, effects: [{ t: 'enrol', track: d.id, level: lv }] });
+          out.push({ key: d.id, label: names[lv - 1] || d.name, hint: d.desc || null, effects: [{ t: 'enrol', track: d.id, level: lv }].concat(this.pickedSay(d)) });
         } else if ((kind === 'clubs' && d.kind === 'club') || (kind === 'jobs' && d.kind === 'job')) {
           if (d.hidden || (t && t.status === 'member') || (t && t.unreliableUntil && ti < t.unreliableUntil)) continue;
           // Switching (M35): joining leaves the one you're in, its rank and performance with it.
           const cur = Object.entries(s.tracks || {}).find(([k, o]) => o.status === 'member' && o.kind === d.kind && k !== d.id);
-          out.push({ key: d.id, label: d.name, hint: d.desc || null, effects: [{ t: 'join', track: d.id }], switching: cur ? { from: cur[0], rank: cur[1].rank || 0, perf: Math.round(cur[1].perf || 0) } : null });
+          out.push({ key: d.id, label: d.name, hint: d.desc || null, effects: [{ t: 'join', track: d.id }].concat(this.pickedSay(d)), switching: cur ? { from: cur[0], rank: cur[1].rank || 0, perf: Math.round(cur[1].perf || 0) } : null });
         }
       }
       return out;
     }
+    // A generated option's outcome: the track's `picked:` line. A multi-pick menu joins the chosen ones in order.
+    pickedSay(d) { return d.picked ? [this.sayIndex['track:' + d.id] || { t: 'say', text: d.picked, sid: 'track:' + d.id }] : []; }
     optionsOf(e) {
       if (!e.offers) return e.options;
       const gen = this.offered(e.offers).map((o) => ({ ...o, when: null, memory: null, spell: null, line: e.line, affects: [], firstCheck: null, generated: true }));
