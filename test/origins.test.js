@@ -89,7 +89,7 @@ test('origins: the funding card arrives at home too, at every date, and pays by 
     assert.deepEqual(cards.map((h) => h.turn), [6, 12, 18, 24, 30, 36, 42].filter((t) => t <= eng.s.turn), 'seed ' + seed);
     for (const h of cards) pays.add((h.out && h.out.deltas && h.out.deltas.gold) || 0);
   }
-  assert.ok(pays.has(0) && pays.has(120), 'both trading outcomes: ' + [...pays]);
+  assert.ok(pays.has(0) && pays.has(78), 'both trading outcomes: ' + [...pays]);
 });
 
 test('origins: the noble allowance always pays, with the gift on top sometimes, and costs Mood', () => {
@@ -98,7 +98,7 @@ test('origins: the noble allowance always pays, with the gift on top sometimes, 
     const { eng } = quiet(() => Policies.play(new Engine(content), Object.assign({}, Policies.get('balanced'), { pickOrigin: () => 'noble' }), { seed, name: 'N', maxSteps: 6000 }));
     for (const h of eng.s.hist) if (h.t === 'card' && h.id === 'noble_letter' && h.out) { seen.add(h.out.deltas.gold); assert.ok(h.out.deltas.mood < 0, 'expectations cost mood'); }
   }
-  assert.ok(seen.has(60) && seen.has(75) && [...seen].every((g) => g === 60 || g === 75), [...seen].join(','));
+  assert.ok(seen.has(38) && seen.has(49) && [...seen].every((g) => g === 38 || g === 49), [...seen].join(','));
 });
 
 test('origins: a drawn funding card keeps its roll across save and reload', () => {
@@ -109,7 +109,7 @@ test('origins: a drawn funding card keeps its roll across save and reload', () =
   assert.equal(!!again.s.flags.trade_good, flag);
   assert.equal(again.view(again.s.cur).text, text);
   const out = again.choose('ok');
-  assert.equal(out.deltas.gold || 0, flag ? 120 : 0);
+  assert.equal(out.deltas.gold || 0, flag ? 78 : 0);
 });
 
 test('term_gpa: the latest completed term only, appeals included; no grades is 0; gpa stays cumulative', () => {
@@ -117,9 +117,9 @@ test('term_gpa: the latest completed term only, appeals included; no grades is 0
   const stipend = () => { const ctx = eng.newCtx(null, null, 'scholarship_award'); eng.run(content.events.scholarship_award.options[0].effects, ctx); return ctx.deltas.gold || 0; };
   eng.s.turn = 6;   // the winter break: term 1 is complete
   const term = (gs) => { eng.s.termGrades = { 1: gs.map((g, i) => ({ track: 'c' + i, level: 1, grade: g })) }; };
-  term(['A', 'B']); assert.equal(eng.termGpa(), 3.5); assert.equal(stipend(), 68);
-  term(['A', 'A', 'B', 'C']); assert.equal(eng.termGpa(), 3.25); assert.equal(stipend(), 60);
-  term(['B', 'B']); assert.equal(eng.termGpa(), 3); assert.equal(stipend(), 60);
+  term(['A', 'B']); assert.equal(eng.termGpa(), 3.5); assert.equal(stipend(), 46);
+  term(['A', 'A', 'B', 'C']); assert.equal(eng.termGpa(), 3.25); assert.equal(stipend(), 38);
+  term(['B', 'B']); assert.equal(eng.termGpa(), 3); assert.equal(stipend(), 38);
   term(['B', 'B', 'C']); assert.equal(eng.termGpa(), 2.67); assert.equal(stipend(), 0);
   term([]); assert.equal(eng.termGpa(), 0); assert.equal(stipend(), 0);
   eng.s.termGrades = {}; assert.equal(eng.termGpa(), 0);

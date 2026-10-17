@@ -58,8 +58,8 @@ Course standard at levels I–III: `apprentice+` · `adept+` · `master+`; a cou
 | `origin_hedge_start` | Alchemy 30, Arcana 15, Lore 6; 45 crowns in all. `alchemy += 40.8; arcana += 10.08; lore -= 2; gold +medium` |
 | `origin_street_start` | Guile 30, Vigor 18; 38 crowns in all. `guile += 40.8; vigor += 15; gold +small` |
 | `origin_merchant_start` | Charm 25, Guile 15; 150 crowns in all. `charm += 27.88; guile += 12.6; gold +huge; gold +huge` |
-| `noble_allowance` | The family's allowance, 60 crowns, and the expectations that come with it. `gold +huge; mood -small` |
-| `noble_gift` | A family gift on top, 15 crowns (30% of terms, rolled when the letter comes). `gold +medium` |
-| `scholarship_stipend` | By the latest completed term's GPA: 3.5 or higher, 68 crowns (with an 8-crown merit bonus); 3.0 or higher, 60; below, nothing. `if term_gpa >= 3.5: gold +huge; gold +small; elif term_gpa >= 3.0: gold +huge` |
-| `trade_returns` | The company's share after a good trading period, 120 crowns (70% of terms, rolled when the report comes). `gold +huge; gold +huge` |
+| `noble_allowance` | The family's allowance, 38 crowns, and the expectations that come with it. `gold +large; gold +small; mood -small` |
+| `noble_gift` | A family gift on top, 11 crowns (30% of terms, rolled when the letter comes). `gold +small; gold +tiny` |
+| `scholarship_stipend` | By the latest completed term's GPA: 3.5 or higher, 46 crowns (with an 8-crown merit bonus); 3.0 or higher, 38; below, nothing. `if term_gpa >= 3.5: gold +large; gold +small; gold +small; elif term_gpa >= 3.0: gold +large; gold +small` |
+| `trade_returns` | The company's share after a good trading period, 78 crowns (70% of terms, rolled when the report comes). `gold +huge; gold +medium; gold +tiny` |
 <!-- END GENERATED: tiers -->
