@@ -8,47 +8,108 @@
 # ============================================================
 
 # ---------------- The Restricted Section ----------------
+# Feedback 2026-10-16: the key (umbral_forbidden_notes) is a lead, and the chain is played by going there: each step is
+# a card at the Restricted Section after hours (evening or midnight), waiting on the key and the step before.
+
+@event forbidden_annotations
+title: Three Colours of Ink
+place: library
+class: story
+tone: eerie
+when: flag(forbidden_key) and seen(forbidden_section_1) == 0 and not flag(forbidden_abandoned)
+weight: 14
+art: book
+tags: mystery study
+chain: forbidden
+scene: A battered notebook open on a library desk, its margins crowded with notes in red, green and black ink, a silver key lying across the page.
+text: You read Odile's notebook properly at last, at a desk within sight of the locked door. Black ink for the shelves, green for the prefects' rounds, red for warnings. Half the red is underlined twice.
+> left: Learn the prefects' rounds
+  hint: Easier to slip in unseen.
+  guile +small
+  flag forbidden_rounds
+  say: Green ink: the prefect on library duty walks the east stacks at nine and the west at ten, and stops for tea in between. You learn it like a timetable.
+> right: Learn the shelf marks
+  hint: Know what not to touch.
+  lore +small
+  flag forbidden_shelfmarks
+  say: Black ink and red: which shelves are safe, which books are bound in something that isn't leather, and, underlined twice, "never with bare hands".
 
 @event forbidden_section_1
 title: The Silver Key
 class: story
 tone: eerie
-trigger: queued
-slot: night
-defer: off_campus
+place: restricted_section
+time: evening midnight
+when: flag(forbidden_key) and not flag(forbidden_inside) and not flag(forbidden_abandoned)
+repeat: 3
+weight: 16
 art: key
 tags: mystery
 chain: forbidden
 scene: A heavy iron door at the end of a library aisle, a silver key turning in its lock, a candle held low.
-text: Late at night. The silver key fits the Restricted Section door perfectly. Beyond it, shelves of black-bound books breathe softly in the dark. Somewhere, a prefect's footsteps.
+text: After hours. The silver key fits the Restricted Section door perfectly. Beyond it, shelves of black-bound books breathe softly in the dark. Somewhere, a prefect's footsteps.
 > left: Turn back
   mood -tiny
   flag forbidden_abandoned
   say: You lock the door again and hang the key on a nail in your wardrobe. Some nights you hear it rattling.
 > right: Slip inside
-  challenge deceive apprentice+:
+  challenge deceive apprentice+ +1 if flag(forbidden_rounds):
     win:
       lore +medium
-      queue forbidden_section_2 in 2
-      say: You spend two hours reading by candle-stub. You leave with a head full of things no student should know.
+      flag forbidden_inside
+      find lead_restricted_shelves
+      say: You spend two hours reading by candle-stub. You leave with a head full of things no student should know, and the certainty that you'll come back.
     lose:
       gain detention
       gain watched
       rel bram -medium
       say: Bram Hollis is waiting by the door when you come out. He is smiling. It's the worst smile you've ever seen.
 
+@event forbidden_bram_watch
+title: The Prefect at the Door
+class: story
+tone: tense
+place: restricted_section
+time: evening midnight
+when: flag(forbidden_key) and seen(forbidden_section_1) > 0 and not flag(forbidden_read) and not flag(forbidden_abandoned)
+repeat: 4
+weight: 12
+actor: bram
+art: lock
+tags: mystery danger
+chain: forbidden
+scene: A broad prefect leaning against an iron library door with folded arms, a lantern at his feet, a student watching from behind a bookcase.
+text: {Bram Hollis is leaning on the Restricted Section door, lantern at his feet, as if he has all night. Somebody has told him about the key, or he has guessed.|Bram is at the door again. He has brought a sandwich this time.|Bram's watch on the door has become a habit. He hums while he waits, badly.}
+> left: Wait him out in the stacks
+  hint: Cold and cramped, but unseen.
+  health -tiny
+  lore +small
+  say: {You crouch behind the history shelves for an hour, reading by the light of his lantern, until he gives up and goes to bed.|You wait him out, and he eats the whole sandwich first. Your knees will never forgive you.|You know his humming now. When it stops, he's asleep on his feet, and you slip past.}
+> right: Bluff your way past
+  hint: Guile against a prefect who wants to catch you.
+  challenge deceive vs bram.guile:
+    win:
+      guile +small
+      say: {You tell him a professor is looking for him in the east tower. He goes. You are inside before his lantern reaches the stair.|"Thorne wants you," you say, and Bram's face goes pale. Nobody checks whether Thorne wants them.|You tell him there's a fight in the courtyard. There isn't. He's gone before you finish the sentence.}
+    lose:
+      gain watched
+      rel bram -small
+      say: {"Nice try," says Bram, and writes your name in his little book with great pleasure.|He laughs, actually laughs, and walks you back to your dormitory by the ear.|Bram has heard that one before, from you. He takes your name, and his time over it.}
+
 @event forbidden_section_2
 title: The Codex of Hollow Names
 class: story
 tone: eerie
-trigger: queued
-slot: night
-defer: off_campus
+place: restricted_section
+time: evening midnight
+when: flag(forbidden_inside) and flag(forbidden_key) and not flag(forbidden_read) and since(forbidden_section_1) >= 1
+repeat: 2
+weight: 16
 art: book
 tags: mystery hollowstar
 chain: forbidden
 scene: A book bound in something that is not leather, open on a reading stand, its letters slowly rearranging themselves.
-text: You keep going back. One night, a book finds you. It falls from a high shelf and lands open at your feet: the Codex of Hollow Names. The first page is a list of names. The last one is still being written. It's yours.
+text: You keep going back. One night, a book finds you. It falls from a high shelf and lands open at your feet: the Codex of Hollow Names. The first page is a list of names. The last one is still being written. It's yours.{flag(forbidden_warned):  Odile's warning comes back to you: don't let a book choose you.|}
 > left: Put it back
   mood -tiny
   say: You shelve it. When you look back, it has fallen again, open at the same page.
@@ -57,20 +118,44 @@ text: You keep going back. One night, a book finds you. It falls from a high she
   arcana +medium
   alignment -tiny
   find codex_names
-  queue forbidden_section_3 in 2
-  chance even:
+  flag forbidden_read
+  find lead_codex_open
+  chance even -1 if flag(forbidden_shelfmarks):
     gain umbral_curse
     say: You read until dawn. You learn about the thing under the lake. When you finally close the book, your fingertips are grey.
   else:
     say: You read until dawn and close the book with shaking hands. Some things you can't unread.
 
+@event forbidden_fourth_year
+title: Odile's Last Week
+place: library
+class: story
+tone: warm
+when: flag(forbidden_key) and seen(forbidden_section_1) > 0 and seen(forbidden_section_3) == 0
+weight: 14
+art: book
+tags: mystery social
+chain: forbidden
+scene: A fourth-year with a packed satchel leaning on a library shelf, talking quietly to a younger student between the stacks.
+text: Odile Varn finds you between the stacks with her satchel already packed. She leaves at the end of term. "You used the key," she says. It isn't a question. "I won't ask what you found. Unless you want to tell me."
+> left: Tell her what you've seen
+  hint: She has a warning for you.
+  mood +small
+  flag forbidden_warned
+  say: She listens to all of it, then puts a hand on your notebook. "Some books want readers," she says. "If one falls open at your feet, don't let it choose you." Then she hugs you, briefly, and is gone.
+> right: Keep it to yourself
+  hint: Your secret stays yours.
+  guile +small
+  say: She smiles, as if that were the right answer. "Good," she says. "That's how I kept it too." She leaves you her spare candle-stubs and a list of the quietest desks.
+
 @event forbidden_section_3
 title: Caught
 class: story
 tone: eerie
-trigger: queued
-slot: night
-defer: off_campus
+place: restricted_section
+time: evening midnight
+when: flag(forbidden_read) and flag(forbidden_key) and since(forbidden_section_2) >= 1
+weight: 16
 actor: isolde
 art: lock
 tags: mystery

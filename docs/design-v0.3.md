@@ -389,7 +389,7 @@ time_fit  = 3 in an event's `time:` slots, 0.3 elsewhere, 1 without one; 0 outsi
 | `unqueue x` | cancel |
 
 - **No daily card cap** (removed after playtest 2: it held back pushed cards and would hinder future content). `max_cards_per_day` stays an optional `@game` setting; when one is set, priority classes decide the overflow: `story > track > pushed > friend > social > ambient` (`friend`: §5.5), and overflow goes to the next day.
-- A pushed event re-checks its `when` when drawn and skips quietly if it fails.
+- A pushed event re-checks its `when`, and the `where:` of any cast it was pushed with, when drawn, and skips quietly if either fails (feedback 2026-10-16).
 
 ### 5.4 Radiant casting
 

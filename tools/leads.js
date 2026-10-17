@@ -7,6 +7,11 @@
  * already has a lead: the setter `find`s a `kind: lead` @clue whose `followed:` names the reader (or the flag).
  *
  *   node tools/grim.js leads [--all]     pairs without a lead (--all: every pair)
+ *   node tools/grim.js leads --queued [--out <file>]
+ *                                        timed follow-ups (`queue x in N`, `within`, `by month`; not `now`, not at odds),
+ *                                        the candidates to turn into leads the player acts on (feedback 2026-10-16, §6).
+ *                                        `act` marks a payoff the player would plausibly go and do: the card waits on a
+ *                                        meeting, a place or a time, or asks for a check.
  */
 const G = require('../src/grimoire.js');
 
@@ -60,4 +65,36 @@ function report(content, all) {
   return lines.join('\n') + '\n' + pairs.length + ' pair(s)' + (all ? '' : ' without a lead') + '; ' + leads(content).filter((p) => p.lead).length + ' with one';
 }
 
-module.exports = { leads, report };
+// Timed follow-ups: every `queue x in N` / `within a..b` / `by month m` without odds, from events, states and hooks.
+const ACT_RE = /\b(meet(s|ing)?|come (to|by|and)|visit|go (to|and|back)|waiting (for you )?(at|by|in|on)|tonight|tomorrow|at midnight|the next time|when you('re| are) ready)\b/i;
+function queued(content) {
+  const out = [];
+  const scan = (from, kind, effects, sayText) => G.walkEffects(effects || [], (st) => {
+    if (st.t !== 'queue' || st.now || st.chance != null || st.chanceWord || st.tagged) return;
+    const timed = st.window || st.byMonth || !st.delay || !(st.delay.ast && st.delay.ast.t === 'num' && st.delay.ast.v === 0);
+    if (!timed) return;
+    const target = content.events[st.event]; if (!target) return;
+    const when = st.window ? 'within ' + st.window.from + '..' + st.window.to : st.byMonth ? 'by month ' + st.byMonth : 'in ' + (st.delay ? st.delay.src : '1');
+    const prose = (target.text || '') + ' ' + (sayText || '');
+    const act = ACT_RE.test(prose) || target.options.some((o) => { let c = false; G.walkEffects(o.effects, (x) => { if (x.t === 'challenge') c = true; }); return c; });
+    out.push({ from, kind, target: st.event, when, act, file: (content.events[from] || {}).file || null });
+  });
+  for (const e of Object.values(content.events)) {
+    scan(e.id, 'event', e.on_show);
+    for (const o of e.options) { let say = ''; G.walkEffects(o.effects, (x) => { if (x.t === 'say') say += ' ' + x.text; }); scan(e.id, 'event', o.effects, say); }
+  }
+  for (const d of Object.values(content.states || {})) for (const k of ['on_add', 'tick', 'on_expire', 'on_remove']) scan(d.id, 'state', d[k]);
+  for (const h of Object.values(content.hooks || {})) scan(h.id, 'hook', h.do);
+  return out;
+}
+function queuedReport(content) {
+  const rows = queued(content);
+  const lines = ['# Timed follow-ups: candidates to turn into leads (grim leads --queued)', '',
+    'Each row is a `queue` with a delay and no odds. "act" marks a payoff the player would go and do (a meeting, a place, a time, a check): the first candidates to become a lead and a card where the player goes, the way the silver key became one (feedback 2026-10-16, §5.1).', '',
+    '| act | from | queues | when | file |', '|---|---|---|---|---|'];
+  for (const r of rows.sort((a, b) => (b.act - a.act) || a.from.localeCompare(b.from))) lines.push('| ' + (r.act ? 'act' : '') + ' | ' + r.kind + ' `' + r.from + '` | `' + r.target + '` | ' + r.when + ' | ' + (r.file || '') + ' |');
+  lines.push('', rows.length + ' timed follow-up(s); ' + rows.filter((r) => r.act).length + ' marked act.');
+  return lines.join('\n') + '\n';
+}
+
+module.exports = { leads, report, queued, queuedReport };

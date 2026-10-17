@@ -26,6 +26,8 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
   const SLOTS = ['morning', 'noon', 'afternoon', 'evening', 'night', 'midnight'];
+  // `@place always: a b|c` -> [['a'], ['b', 'c']]   (= Grimoire.alwaysGroups)
+  const alwaysGroups = (t) => String(t || '').split(/\s+/).filter(Boolean).map((g) => g.split('|').filter(Boolean));
   const PRIORITY = { story: 5, track: 4, pushed: 3, friend: 2.5, social: 2, ambient: 1 };
   // Two tracks for people (design §5.5). Warmth (0–100) is recent, chosen contact with one character.
   //   base: every met character's standing pull · presence: visiting a place where they are (seeking them, M18) · engage / cool: a card with them where you did / didn't warm to them
@@ -174,7 +176,9 @@
         s.visitsTo[id] = (s.visitsTo[id] || 0) + 1;
         const p = this.c.places[id];
         // Each visit counts; a job visit off shift (I1, I2) is an ordinary one, remembered for the slot's draw.
-        if (p && p.track && this.attend(p.track, ctx) === 'off') (d.offDuty = d.offDuty || []).push(d.picks.length - 1);
+        // An opened slot (midnight, M41) is never a shift or a class (feedback 2026-10-16): it isn't attended.
+        const opened = this.recipe()[d.at] && this.recipe()[d.at].source !== 'visit';
+        if (p && p.track && !opened && this.attend(p.track, ctx) === 'off') (d.offDuty = d.offDuty || []).push(d.picks.length - 1);
       }
       this.handleZeroed(ctx);
       s.hist.push(Object.assign({ t: 'pick', turn: s.turn, slot: sl, picks: [id || null], at: Date.now() }, Object.keys(ctx.deltas).length ? { deltas: { ...ctx.deltas } } : {}));   // attendance pay etc.
@@ -306,6 +310,17 @@
       used.add(pick.e.id);
       return Object.assign({ id: pick.e.id, actor: pick.actor || null, cast: pick.cast || undefined }, extra || {});
     },
+    // `queue any tagged <tag>` (feedback 2026-10-16): one `trigger: queued` event with the tag, drawn by the usual score
+    // (`when`, cast, cooldown, novelty, weight) when it falls due; null when none is eligible. The month's plot cap
+    // doesn't apply: a queued follow-up is a scene already under way.
+    drawTagged(tag, used) {
+      const pool = this.events.filter((e) => e.trigger === 'queued' && (e.tags || []).includes(tag));
+      const plot = this._plotLeft; this._plotLeft = null;
+      try {
+        const it = this.draw(pool, used || new Set(this.s.deck.map((d) => d.id)), [], {});
+        return it ? it.id : null;
+      } finally { this._plotLeft = plot; }
+    },
     /* ---------------- the day, slot by slot (design §4.2, §5; playtest 2: M1, M3, M43) ----------------
      * startDay() rolls what the day holds (pushed cards and their slots, who comes looking for you, how many social and
      * world cards each slot gets); stepDay() then fills one slot at a time: its pushed cards first (so a plan chosen in
@@ -324,6 +339,7 @@
         if (q.until != null && q.until > s.turn && this.rand() >= 1 / (q.until - s.turn + 1)) { keep.push(q); continue; }
         // `queue … chance N` (I4): pushed with probability N when due, else dropped; two copies give at most one card.
         if (q.chance != null && (used.has(q.id) || this.rand() * 100 >= q.chance)) continue;
+        if (q.tagged) { const id = this.drawTagged(q.tagged, used); if (!id) continue; q.id = id; }
         pushed.push({ id: q.id, actor: q.actor || null, src: 'queued', track: q.track, cast: q.cast, prio: this.c.events[q.id] && this.c.events[q.id].class === 'story' ? 'story' : q.track ? 'track' : 'pushed' });
         used.add(q.id);
       }
@@ -480,13 +496,21 @@
           // An opened slot (midnight, M41) draws only events that name it; no ambient fallback.
           const names = (e) => !r.opened || e.slot === r.slot || (e.time || []).includes(r.slot);
           // Off shift in term (I1): @game off_shift's hint card comes first, as often as its `repeat:` allows.
-          const hint = off && this.phaseOf() !== 'break' && this.c.game.off_shift && this.c.events[this.c.game.off_shift];
+          const hint = off && !r.opened && this.phaseOf() !== 'break' && this.c.game.off_shift && this.c.events[this.c.game.off_shift];
           if (hint && this.eligible(hint, used) && this.test(hint.when, null)) { items.push({ id: hint.id, actor: null, place, prio: 'track', src: 'hint' }); used.add(hint.id); }
-          // A place's fixed card (`@place always:`, feedback 2026-10-15): first on every visit while its `when` holds,
-          // whatever its cooldown, and one drawn card after it, so a visit always has both.
-          const fixed = !r.opened && p.always && this.c.events[p.always];
-          let draws = n;
-          if (fixed && !used.has(fixed.id) && this.test(fixed.when, null)) { items.push({ id: fixed.id, actor: null, place, prio: 'track', src: 'always' }); used.add(fixed.id); draws = 1; }
+          // A place's fixed cards (`@place always:`, feedback 2026-10-15 and 2026-10-16): first on every visit, in the
+          // order listed, each while its `when` holds, whatever its cooldown; a group `a|b` plays one of its eligible
+          // events by weight. An event with `slot:` counts only in that slot (midnight included), one without only on
+          // daytime visits. One drawn card follows, so a visit always has both.
+          let draws = n, fixedAny = false;
+          for (const group of alwaysGroups(p.always)) {
+            const ok = group.map((id) => this.c.events[id]).filter((e) => e && !used.has(e.id) && (e.slot ? e.slot === r.slot : !r.opened) && this.test(e.when, null));
+            const pick = ok.length > 1 ? this.pickWeighted(ok.map((e) => ({ e, w: e.weight ? this.value(e.weight, null, 10) : 10 })).filter((x) => x.w > 0)) : ok.length ? { e: ok[0] } : null;
+            if (!pick) continue;
+            // the group's other members sit this visit out, so the drawn card can't be a second one of them
+            items.push({ id: pick.e.id, actor: null, place, prio: 'track', src: 'always' }); for (const id of group) used.add(id); fixedAny = true;
+          }
+          if (fixedAny) draws = 1;
           for (let k = 0; k < draws; k++) {
             const t = !off && p.track && s.tracks[p.track] && s.tracks[p.track].status === 'member' ? p.track : null;
             const it = (t && k === 0 && this.draw((ix.byTrack[t] || []).filter((e) => (!e.rank || e.rank <= s.tracks[t].rank + 1) && names(e)), used, day.concat(items), { place, track: t, prio: 'track' }))

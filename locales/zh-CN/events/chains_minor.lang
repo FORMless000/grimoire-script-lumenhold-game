@@ -4,11 +4,31 @@
 # lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
 
 
+@event forbidden_annotations
+# en: Three Colours of Ink
+title [287aa3] = 三色墨水
+# en: You read Odile's notebook properly at last, at a desk within sight of the locked door. Black ink for the shelves, green for the prefects' rounds, red for warnings. Half the red is underlined twice.
+text [b5e905] = 你终于认真读起了奥迪尔的笔记本，就坐在能望见那扇锁着的门的书桌前。黑墨水记书架，绿墨水记级长巡逻，红墨水记警告。一半的红字下面画了两道线。
+# en: A battered notebook open on a library desk, its margins crowded with notes in red, green and black ink, a silver key lying across the page.
+scene [904394] = 图书馆书桌上摊开一本破旧的笔记本，页边挤满红、绿、黑三色批注，一把银钥匙横放在书页上。
+# en: Learn the prefects' rounds
+opt.left.label [be7ef0] = 记下级长的巡逻
+# en: Easier to slip in unseen.
+opt.left.hint [fd6b1e] = 更容易悄悄溜进去。
+# en: Green ink: the prefect on library duty walks the east stacks at nine and the west at ten, and stops for tea in between. You learn it like a timetable.
+opt.left.say.1 [e877ee] = 绿墨水写着：图书馆值班的级长九点巡东边书架，十点巡西边，中间要喝一杯茶。你像背课表一样把它背了下来。
+# en: Learn the shelf marks
+opt.right.label [9e4e50] = 记下书架标记
+# en: Know what not to touch.
+opt.right.hint [d93e85] = 知道什么不能碰。
+# en: Black ink and red: which shelves are safe, which books are bound in something that isn't leather, and, underlined twice, "never with bare hands".
+opt.right.say.1 [06490c] = 黑墨水和红墨水写着：哪些书架是安全的，哪些书的封皮不是皮革，还有一句画了两道线的——“千万别用手直接碰”。
+
 @event forbidden_section_1
 # en: The Silver Key
 title [f6e05e] = 银钥匙
-# en: Late at night. The silver key fits the Restricted Section door perfectly. Beyond it, shelves of black-bound books breathe softly in the dark. Somewhere, a prefect's footsteps.
-text [58977f] = 夜深了。银钥匙严丝合缝地插进了禁书区的门锁。门后，一排排黑皮书在黑暗中轻轻呼吸。不知哪里，传来级长的脚步声。
+# en: After hours. The silver key fits the Restricted Section door perfectly. Beyond it, shelves of black-bound books breathe softly in the dark. Somewhere, a prefect's footsteps.
+text [190679] = 过了闭馆时间。银钥匙严丝合缝地插进了禁书区的门锁。门后，一排排黑皮书在黑暗中轻轻呼吸。不知哪里，传来级长的脚步声。
 # en: A heavy iron door at the end of a library aisle, a silver key turning in its lock, a candle held low.
 scene [f9b84e] = 图书馆过道尽头一扇沉重的铁门，一把银钥匙在锁孔里转动，一支蜡烛压得很低。
 # en: Turn back
@@ -17,16 +37,38 @@ opt.left.label [2f9f2d] = 回头
 opt.left.say.1 [9742c9] = 你把门重新锁好，把钥匙挂在衣柜里的钉子上。有些夜里，你能听见它在哗啦作响。
 # en: Slip inside
 opt.right.label [316541] = 溜进去
-# en: You spend two hours reading by candle-stub. You leave with a head full of things no student should know.
-opt.right.say.1 [b2abde] = 你借着蜡烛头读了两个小时。离开时，脑子里装满了任何学生都不该知道的东西。
+# en: You spend two hours reading by candle-stub. You leave with a head full of things no student should know, and the certainty that you'll come back.
+opt.right.say.1 [ed65bb] = 你借着蜡烛头读了两个小时。离开时，脑子里装满了任何学生都不该知道的东西，也确信自己还会再来。
 # en: Bram Hollis is waiting by the door when you come out. He is smiling. It's the worst smile you've ever seen.
 opt.right.say.2 [84c17d] = 你出来时，布拉姆·霍利斯正等在门边。他在笑。那是你见过最糟糕的笑容。
+
+@event forbidden_bram_watch
+# en: The Prefect at the Door
+title [056c09] = 门口的级长
+# en: {Bram Hollis is leaning on the Restricted Section door, lantern at his feet, as if he has all night. Somebody has told him about the key, or he has guessed.|Bram is at the door again. He has brought a sandwich this time.|Bram's watch on the door has become a habit. He hums while he waits, badly.}
+text [c78094] = {布拉姆·霍利斯靠在禁书区的门上，提灯放在脚边，好像有一整夜的时间。有人跟他说了钥匙的事，要不就是他猜到了。|布拉姆又守在门口。这回他还带了个三明治。|布拉姆守门已经成了习惯。他一边等一边哼歌，哼得很难听。}
+# en: A broad prefect leaning against an iron library door with folded arms, a lantern at his feet, a student watching from behind a bookcase.
+scene [6c3388] = 一个身材魁梧的级长抱着胳膊靠在图书馆的铁门上，提灯放在脚边，一个学生躲在书架后面偷看。
+# en: Wait him out in the stacks
+opt.left.label [33dbcb] = 躲在书架间等他走
+# en: Cold and cramped, but unseen.
+opt.left.hint [b9f103] = 又冷又挤，但不会被发现。
+# en: {You crouch behind the history shelves for an hour, reading by the light of his lantern, until he gives up and goes to bed.|You wait him out, and he eats the whole sandwich first. Your knees will never forgive you.|You know his humming now. When it stops, he's asleep on his feet, and you slip past.}
+opt.left.say.1 [176864] = {你蹲在历史书架后面一个小时，借着他的提灯光看书，直到他放弃回去睡觉。|你等他走，可他先把整个三明治吃完了。你的膝盖永远不会原谅你。|你现在听得出他的哼歌了。歌声一停，他就站着睡着了，你从他身边溜了过去。}
+# en: Bluff your way past
+opt.right.label [24be4a] = 骗过他
+# en: Guile against a prefect who wants to catch you.
+opt.right.hint [8e22c2] = 用诡术对付一个一心想抓你的级长。
+# en: {You tell him a professor is looking for him in the east tower. He goes. You are inside before his lantern reaches the stair.|"Thorne wants you," you say, and Bram's face goes pale. Nobody checks whether Thorne wants them.|You tell him there's a fight in the courtyard. There isn't. He's gone before you finish the sentence.}
+opt.right.say.1 [bd8b7f] = {你告诉他有位教授在东塔找他。他走了。他的提灯还没到楼梯口，你已经进去了。|“索恩教授找你。”你说，布拉姆的脸一下子白了。没人会去核实索恩教授是不是真在找自己。|你告诉他院子里有人打架。根本没有。你话还没说完他就跑了。}
+# en: {"Nice try," says Bram, and writes your name in his little book with great pleasure.|He laughs, actually laughs, and walks you back to your dormitory by the ear.|Bram has heard that one before, from you. He takes your name, and his time over it.}
+opt.right.say.2 [779b9f] = {“想得美。”布拉姆说，兴高采烈地把你的名字记进他的小本子。|他笑了，真的笑出了声，然后揪着你的耳朵把你送回了宿舍。|这套说辞布拉姆已经从你嘴里听过一次了。他记下你的名字，慢条斯理，不慌不忙。}
 
 @event forbidden_section_2
 # en: The Codex of Hollow Names
 title [b71797] = 《空洞名录》
-# en: You keep going back. One night, a book finds you. It falls from a high shelf and lands open at your feet: the Codex of Hollow Names. The first page is a list of names. The last one is still being written. It's yours.
-text [a441b0] = 你一次又一次地回去。某天夜里，一本书找上了你。它从高高的书架上掉下来，摊开落在你脚边：《空洞名录》。第一页是一串名字。最后一个名字还在书写中。是你的名字。
+# en: You keep going back. One night, a book finds you. It falls from a high shelf and lands open at your feet: the Codex of Hollow Names. The first page is a list of names. The last one is still being written. It's yours.{flag(forbidden_warned):  Odile's warning comes back to you: don't let a book choose you.|}
+text [64e882] = 你一次又一次地回去。某天夜里，一本书找上了你。它从高高的书架上掉下来，摊开落在你脚边：《空洞名录》。第一页是一串名字。最后一个名字还在书写中。是你的名字。{flag(forbidden_warned): 奥迪尔的警告浮上心头：别让一本书选中你。|}
 # en: A book bound in something that is not leather, open on a reading stand, its letters slowly rearranging themselves.
 scene [a07d02] = 一本用某种不是皮革的东西装订的书摊在阅读架上，字母正缓缓重新排列。
 # en: Put it back
@@ -39,6 +81,26 @@ opt.right.label [fb8482] = 读它
 opt.right.say.1 [f6835c] = 你一直读到天亮。你了解了湖底的那个东西。终于合上书时，你的指尖变成了灰色。
 # en: You read until dawn and close the book with shaking hands. Some things you can't unread.
 opt.right.say.2 [c47a6e] = 你一直读到天亮，用颤抖的手合上了书。有些东西，读过就再也忘不掉。
+
+@event forbidden_fourth_year
+# en: Odile's Last Week
+title [e07520] = 奥迪尔的最后一周
+# en: Odile Varn finds you between the stacks with her satchel already packed. She leaves at the end of term. "You used the key," she says. It isn't a question. "I won't ask what you found. Unless you want to tell me."
+text [67d7ff] = 奥迪尔·瓦恩在书架间找到你，书包已经收拾好了。她这学期结束就走。“你用过钥匙了。”她说。这不是问句。“我不问你发现了什么。除非你想告诉我。”
+# en: A fourth-year with a packed satchel leaning on a library shelf, talking quietly to a younger student between the stacks.
+scene [91edf1] = 一个背着收拾好的书包的四年级生靠在图书馆书架上，在书架间低声和一个年轻学生说话。
+# en: Tell her what you've seen
+opt.left.label [d36021] = 告诉她你看到的
+# en: She has a warning for you.
+opt.left.hint [a01664] = 她有一句警告给你。
+# en: She listens to all of it, then puts a hand on your notebook. "Some books want readers," she says. "If one falls open at your feet, don't let it choose you." Then she hugs you, briefly, and is gone.
+opt.left.say.1 [05ed28] = 她听完了一切，然后把手按在你的笔记本上。“有些书想要读者，”她说，“要是有一本摊开落在你脚边，别让它选中你。”然后她匆匆抱了你一下，走了。
+# en: Keep it to yourself
+opt.right.label [09de43] = 守口如瓶
+# en: Your secret stays yours.
+opt.right.hint [9d2616] = 你的秘密只属于你。
+# en: She smiles, as if that were the right answer. "Good," she says. "That's how I kept it too." She leaves you her spare candle-stubs and a list of the quietest desks.
+opt.right.say.1 [2312ee] = 她笑了，好像这才是正确答案。“很好，”她说，“我当年也是这么守着的。”她把剩下的蜡烛头和一张最安静书桌的清单留给了你。
 
 @event forbidden_section_3
 # en: Caught

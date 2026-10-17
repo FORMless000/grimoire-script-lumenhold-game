@@ -89,6 +89,8 @@ text: {has(watched): Bram is waiting at the foot of the stair, and this time he 
 title: Upstairs at the Newt
 place: gilded_newt
 slot: midnight
+# Retired (feedback 2026-10-16): the Newt's nights are the company offer, then the high table (`@place always:`).
+when: false
 class: routine
 tone: tense
 repeat: 2
@@ -117,29 +119,38 @@ place: boathouse
 slot: midnight
 class: routine
 tone: tense
+# The ring (feedback 2026-10-16): one of the two entry cards opens every boathouse night (`@place always:`). A win
+# leads to the next bout (ring_bout_2 … 4), each harder and better paid. Some nights the house runs last-standing
+# rules, rolled when the card is drawn and said before you choose: once you step in, you fight until you lose or
+# have won four. Declining sends you to the side bets.
 repeat: 2
 weight: 10
 art: sword
 tags: danger money
 scene: A cellar under a boathouse, lanterns hung from the beams, students in a ring around two duellists, coins changing hands.
-text: Under the boathouse, by lantern light, someone has chalked a ring on the flagstones. Purses go to whoever is still standing. "Next," says the student holding the money, looking at you.
+on_show:
+  unflag ring_last_standing
+  chance unlikely:
+    flag ring_last_standing
+text: {Under the boathouse, by lantern light, someone has chalked a ring on the flagstones. Purses go to whoever is still standing.|The chalk ring under the boathouse again, freshly drawn. The student holding the money knows your face.|The ring is busier than ever, and the money-holder nods to you like a regular.} {flag(ring_last_standing): Tonight a slate by the steps reads LAST STANDING: whoever steps in fights until they drop or have beaten four.|"Next," says the student holding the money, looking at you. Win, and you can fight on for a bigger purse.}
 > left: Step into the ring
+  hint: Four bouts at most, each harder and richer.
   challenge combat adept-:
     win:
       gold +medium
       renown +tiny
-      say: {~You win the purse and the ring's respect, which is worth less and lasts longer.|Your opponent yields. Somebody whistles. The purse is heavier than you expected.}
+      queue ring_bout_2 now
+      say: {You win the first bout and the ring's respect, which is worth less and lasts longer.|Your opponent yields. Somebody whistles, and the money-holder looks at you: another?|You put your opponent down in the first exchange, and the crowd starts calling your name.}
     lose:
+      unflag ring_last_standing
       health -medium
       queue night_suspicion chance even
-      say: {~You lose, and limp home past a window where a light is still burning.|A bruising loss, and a lantern somewhere on the path home. Maybe it saw you; maybe not.}
-> right: Bet on someone else
-  gold -small
-  chance even:
-    gold +medium
-    say: {~Your fighter wins. You collect, quietly.|A good bet. You leave before anyone remembers your face.}
-  else:
-    say: {~Your fighter goes down in the first exchange. So does your stake.|You picked badly. The bookmaker smiles.}
+      say: {You lose, and limp home past a window where a light is still burning.|A bruising loss, and a lantern somewhere on the path home. Maybe it saw you; maybe not.|You go down to a first-year with long arms. The crowd enjoys it more than you do.}
+> right: Not tonight
+  hint: Watch, and bet if you like.
+  unflag ring_last_standing
+  queue ring_side_bets now
+  say: {You stay at the edge of the crowd and watch someone else's turn.|You shake your head. The money-holder shrugs and looks for somebody braver.|"Not tonight," you say, and find a place on the cellar steps to watch.}
 
 @event midnight_kitchen_raid
 title: The Kitchens at Midnight

@@ -16,7 +16,8 @@
                                       odds; sets what its gates read) and what it leads to (queues, and who reads what it sets)
   node tools/grim.js ids [kind]       list ids (event|state|npc|ending|resource|skill|flag|var)
   node tools/grim.js leads [--all]    "hinted now, act later" pairs (a flag or card a place/slot/track card waits for) and
-                                      whether the card that sets it leaves a lead for the Clues panel
+                                      whether the card that sets it leaves a lead for the Clues panel; --queued [--out f]:
+                                      the timed follow-ups (queue in N / within / by month), candidates to turn into leads
  *   node tools/grim.js check            build + lint + sim 200 (what agents should run before finishing)
  *   node tools/grim.js fmt [FILE…] [--check]
  *                                       rewrite .grim files in canonical layout (lossless; refuses any change in meaning).
@@ -210,8 +211,15 @@ function analyze(content) {
         case 'unflag': break;
         case 'gain': case 'lose': if (!content.states[st.state]) P('error', w, st.t + ': unknown state "' + st.state + '"'); add(A.statesRef, st.state, w); if (st.dur) scanExpr(st.dur, w, hasActor); break;
         case 'queue':
-          if (!content.events[st.event]) P('error', w, 'queue: unknown event "' + st.event + '"');
-          add(A.queued, st.event, w);
+          if (st.tagged) {
+            // `queue any tagged <tag>` (feedback 2026-10-16): the pool is every queued event with the tag.
+            const pool = Object.values(content.events).filter((e) => e.trigger === 'queued' && (e.tags || []).includes(st.tagged));
+            if (!pool.length) P('error', w, 'queue any tagged ' + st.tagged + ': no queued event has that tag');
+            for (const e of pool) add(A.queued, e.id, w);
+          } else {
+            if (!content.events[st.event]) P('error', w, 'queue: unknown event "' + st.event + '"');
+            add(A.queued, st.event, w);
+          }
           if (st.with === 'npc' && !hasActor) P('error', w, 'queue ... with npc: block has no actor');
           else if (st.with && st.with !== 'npc' && !content.npcs[st.with] && !ROLES.has(st.with)) P('error', w, 'queue ... with: unknown npc "' + st.with + '"');
           if (st.delay) scanExpr(st.delay, w, hasActor);
@@ -525,8 +533,8 @@ function analyzeWorld(content, P, scanExpr, scanText) {
     const visitSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || [])].filter((r) => r.source === 'visit').map((r) => r.slot));
     if (d.open && d.kind !== 'internship' && visitSlots.size && !d.open.some((sl) => visitSlots.has(sl))) P('error', loc(d), 'open: ' + d.open.join(' ') + ' — never a visit slot (' + [...visitSlots].join(', ') + '), so the place can never be visited');
     scanExpr(d.discover, loc(d), false); scanExpr(d.closed_when, loc(d), false); scanExpr(d.hinted_when, loc(d), false);
-    // `always:` (feedback 2026-10-15): the place's fixed card, an event of this place.
-    if (d.always) { const e = content.events[d.always]; if (!e) P('error', loc(d), 'always: no event "' + d.always + '"'); else if (e.place !== d.id) P('error', loc(d), 'always: "' + d.always + '" is not an event of this place (place: ' + (e.place || 'none') + ')'); }
+    // `always:` (feedback 2026-10-15, -16): the place's fixed cards in order, each an event of this place; a group a|b.
+    if (d.always) for (const id of G.alwaysGroups(d.always).flat()) { const e = content.events[id]; if (!e) P('error', loc(d), 'always: no event "' + id + '"'); else if (e.place !== d.id) P('error', loc(d), 'always: "' + id + '" is not an event of this place (place: ' + (e.place || 'none') + ')'); }
   }
   const TRACK_KINDS = new Set(['course', 'club', 'job', 'internship', 'thesis', 'society']);
   for (const d of Object.values(content.tracks)) {
@@ -1485,7 +1493,15 @@ switch (cmd) {
   case 'show': show(rest[0]); break;
   case 'odds': { const { content, errors } = compileAll(); if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); } console.log(require('./odds.js').odds(content, rest.filter((x) => !x.startsWith('--')))); break; }
   case 'graph': { const { content } = compileAll(); const out = require('./graph.js').describe(content, rest[0]); if (!out) { console.error('graph: no event, state or hook "' + rest[0] + '"'); process.exit(1); } console.log(out); break; }
-  case 'leads': { const { content } = compileAll(); console.log(require('./leads.js').report(content, !!flag('all'))); break; }
+  case 'leads': {
+    const { content } = compileAll(), L = require('./leads.js');
+    if (flag('queued')) {
+      const text = L.queuedReport(content), out = flag('out');
+      if (out) { fs.mkdirSync(path.dirname(out), { recursive: true }); fs.writeFileSync(out, text); console.log('wrote ' + out + ' (' + L.queued(content).length + ' timed follow-ups)'); } else console.log(text);
+      break;
+    }
+    console.log(L.report(content, !!flag('all'))); break;
+  }
   case 'ids': ids(rest[0]); break;
   case 'rename': {
     const [kind, from, to] = rest.filter((x) => !x.startsWith('--'));

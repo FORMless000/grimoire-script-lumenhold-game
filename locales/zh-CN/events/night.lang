@@ -77,22 +77,24 @@ opt.right.say.1 [b1d011] = {~你看了一把，看见有人虚张声势输掉了
 @event midnight_boathouse_ring
 # en: The Ring Under the Boathouse
 title [31b605] = 船屋下的擂台
-# en: Under the boathouse, by lantern light, someone has chalked a ring on the flagstones. Purses go to whoever is still standing. "Next," says the student holding the money, looking at you.
-text [f5dc25] = 船屋底下，借着提灯的光，有人在石板上用粉笔画了个圈。钱袋归最后还站着的人。“下一个。”管钱的学生看着你说。
+# en: {Under the boathouse, by lantern light, someone has chalked a ring on the flagstones. Purses go to whoever is still standing.|The chalk ring under the boathouse again, freshly drawn. The student holding the money knows your face.|The ring is busier than ever, and the money-holder nods to you like a regular.} {flag(ring_last_standing): Tonight a slate by the steps reads LAST STANDING: whoever steps in fights until they drop or have beaten four.|"Next," says the student holding the money, looking at you. Win, and you can fight on for a bigger purse.}
+text [e01954] = {船屋底下，借着提灯的光，有人在石板上用粉笔画了个圈。钱袋归最后还站着的人。|船屋底下的粉笔圈又画好了，线条还很新。管钱的学生认得你的脸。|擂台比以往都热闹，管钱的学生朝你点点头，像对熟客一样。} {flag(ring_last_standing): 今晚台阶旁的石板上写着“站到最后”：谁进场，就要一直打到倒下，或者连赢四场。|“下一个。”管钱的学生看着你说。赢了，你就能接着打，钱袋更大。}
 # en: A cellar under a boathouse, lanterns hung from the beams, students in a ring around two duellists, coins changing hands.
 scene [faa793] = 船屋下的地窖，梁上挂着提灯，学生们围成一圈看两个决斗者，硬币在人手间传递。
 # en: Step into the ring
 opt.left.label [bf566a] = 走进圈里
-# en: {~You win the purse and the ring's respect, which is worth less and lasts longer.|Your opponent yields. Somebody whistles. The purse is heavier than you expected.}
-opt.left.say.1 [e69adc] = {~你赢了钱袋和擂台的尊重，后者不值钱，却更持久。|对手认输了。有人吹了声口哨。钱袋比你想的要沉。}
-# en: {~You lose, and limp home past a window where a light is still burning.|A bruising loss, and a lantern somewhere on the path home. Maybe it saw you; maybe not.}
-opt.left.say.2 [77e262] = {~你输了，一瘸一拐地回去，路过一扇还亮着灯的窗。|输得鼻青脸肿，回去的路上远处有一盏提灯。也许它看见了你，也许没有。}
-# en: Bet on someone else
-opt.right.label [c75252] = 押别人
-# en: {~Your fighter wins. You collect, quietly.|A good bet. You leave before anyone remembers your face.}
-opt.right.say.1 [663262] = {~你押的人赢了。你悄悄领了钱。|押得好。你在别人记住你的脸之前就走了。}
-# en: {~Your fighter goes down in the first exchange. So does your stake.|You picked badly. The bookmaker smiles.}
-opt.right.say.2 [fc67b4] = {~你押的人第一回合就倒下了。你的赌本也是。|你押错了。庄家笑了。}
+# en: Four bouts at most, each harder and richer.
+opt.left.hint [df632b] = 最多四场，一场比一场难，一场比一场肥。
+# en: {You win the first bout and the ring's respect, which is worth less and lasts longer.|Your opponent yields. Somebody whistles, and the money-holder looks at you: another?|You put your opponent down in the first exchange, and the crowd starts calling your name.}
+opt.left.say.1 [764973] = {你赢下第一场，也赢得了擂台的尊重，后者不值钱，却更持久。|对手认输了。有人吹了声口哨，管钱的学生看着你：再来一场？|第一回合你就把对手撂倒了，人群开始喊你的名字。}
+# en: {You lose, and limp home past a window where a light is still burning.|A bruising loss, and a lantern somewhere on the path home. Maybe it saw you; maybe not.|You go down to a first-year with long arms. The crowd enjoys it more than you do.}
+opt.left.say.2 [443821] = {你输了，一瘸一拐地回去，路过一扇还亮着灯的窗。|输得鼻青脸肿，回去的路上远处有一盏提灯。也许它看见了你，也许没有。|你栽在一个胳膊很长的一年级生手里。人群比你开心多了。}
+# en: Not tonight
+opt.right.label [4bf72b] = 今晚算了
+# en: Watch, and bet if you like.
+opt.right.hint [6e4615] = 在旁边看，想押就押。
+# en: {You stay at the edge of the crowd and watch someone else's turn.|You shake your head. The money-holder shrugs and looks for somebody braver.|"Not tonight," you say, and find a place on the cellar steps to watch.}
+opt.right.say.1 [6e2d17] = {你待在人群边上，看别人上场。|你摇摇头。管钱的学生耸耸肩，去找更勇敢的人。|“今晚算了。”你说，然后在地窖台阶上找了个位置看。}
 
 @event midnight_kitchen_raid
 # en: The Kitchens at Midnight

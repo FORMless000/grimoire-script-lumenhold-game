@@ -466,21 +466,99 @@ opt.ok.say.2 [efa14a] = 通过了，只是结论部分写满了某位考官的�
 # en: They send you away to resubmit. It isn't the end. It feels like it. The idea was good, says the chair. The proof wasn't there yet.
 opt.ok.say.3 [c92bcd] = 他们让你回去重交。这不是终点。只是感觉像。主席说，想法是好的。只是证明还没到位。
 
+@event lantern_making
+# en: A Lantern to Launch
+title [38e8b8] = 一盏要放的灯
+# en: {year == 1: Tonight is Lantern Night, and everyone else seems to have known for weeks. You need a lantern.|{final_year: Your last Lantern Night. The lantern should be a good one.|Lantern Night again, and last year's lantern did not survive the trunk.}} {~The village stationer has fine rice paper, at a price.|Your roommate is folding theirs with their tongue between their teeth.|The common room is ankle-deep in paper offcuts.}
+text [741bc8] = {year == 1: 今晚是灯笼夜，好像别人几个星期前就都知道了。你需要一盏灯笼。|{final_year: 你的最后一个灯笼夜。这盏灯得做得好一点。|又是灯笼夜，去年的灯笼没能在箱子里活下来。}} {~山下小镇的文具店有上好的宣纸，价钱也上好。|你的室友正咬着舌尖叠灯笼。|公共休息室里的碎纸片没过了脚踝。}
+# en: A dormitory table covered in paper, wire and candle stubs, a student folding a lopsided paper lantern.
+scene [db9f44] = 宿舍桌上铺满纸、铁丝和蜡烛头，一个学生正在叠一盏歪歪扭扭的纸灯笼。
+# en: Buy fine paper in the village
+opt.left.label [7b1bfd] = 去镇上买好纸
+# en: {~Rice paper so thin you can read through it, and a proper beeswax candle. It folds like a dream.|The stationer sells you paper the colour of the dawn sky. Your lantern will be the finest on the shore.|Gold-flecked paper, too dear and entirely worth it. You fold it slowly, as if it might mind.}
+opt.left.say.1 [7c81ac] = {~纸薄得能透过它看字，还配了一支真正的蜂蜡蜡烛。叠起来顺得像做梦。|文具店卖给你一张黎明天色的纸。你的灯笼会是湖岸上最漂亮的。|洒金纸，贵得离谱，也完全值得。你叠得很慢，好像它会介意似的。}
+# en: Make your own from scraps
+opt.middle.label [dc142c] = 用碎料自己做
+# en: {~Old exam paper, a bent wire and a candle stub. Your fingers smell of wax for a day, and one of them is burnt.|You glue it with porridge and patience. It's lopsided, and it's yours.|You fold it from a letter from home. It feels right to send that out over the water.}
+opt.middle.say.1 [cf0c1a] = {~旧考卷、一根弯铁丝、一截蜡烛头。你的手指一整天都是蜡味，还烫伤了一根。|你用麦片粥和耐心把它粘好。它歪歪扭扭，但它是你的。|你用一封家信叠成了它。把它放到水面上，感觉刚刚好。}
+# en: Glamour a plain one
+opt.right.label [0b61bd] = 给普通灯笼施幻术
+# en: {~A plain paper bag becomes a lantern of stained glass. Nobody guesses.|You glamour your lantern into a little silver moon. Three people ask where you bought it.|Your lantern shimmers like mother-of-pearl. You'll have to keep it lit all evening, or it'll show.}
+opt.right.say.1 [6cf5ed] = {~一只普通纸袋变成了一盏彩色玻璃灯笼。没人看得出来。|你把灯笼幻化成一轮小小的银月亮。三个人问你在哪儿买的。|你的灯笼泛着珍珠母的光泽。你得让它整晚亮着，否则就要露馅。}
+# en: {~The glamour slips at dusk, and your stained-glass lantern turns back into a paper bag in front of everyone.|Your silver moon fades to brown paper halfway to the shore. A first-year points.|The pearl sheen peels off like old paint. You carry it lit-side-in, and fool nobody.}
+opt.right.say.2 [552a81] = {~黄昏时幻术滑落，你的彩色玻璃灯笼当着所有人的面变回了纸袋。|去湖岸的半路上，你的银月亮褪成了牛皮纸。一个一年级生指着它看。|珍珠光泽像旧油漆一样剥落。你把亮的那面朝里拿着，谁也没骗过。}
+
 @event lantern_night_v3
 # en: Lantern Night
 title [0b1f19] = 灯笼夜
-# en: Lantern Night. The whole academy gathers on the lakeshore with paper lanterns, each carrying a wish out over the water. {month == 2 and year == 1: Your first one.|Another year, another wish.}
-text [b3014a] = 灯笼夜。全院的人带着纸灯笼聚在湖岸，每盏灯都载着一个愿望飘向水面。{month == 2 and year == 1: 这是你的第一次。|又一年，又一个愿望。}
+# en: Lantern Night. The whole academy gathers on the lakeshore with paper lanterns, each carrying a wish out over the water. {month == 2 and year == 1: Your first one.|{final_year: Your last one, and you know it.|Another year, another wish.}}{flag(lantern_fine):  Yours is one of the finest on the shore.|} Lanterns that wash back up are read by whoever finds them, they say.
+text [91047a] = 灯笼夜。全院的人带着纸灯笼聚在湖岸，每盏灯都载着一个愿望飘向水面。{month == 2 and year == 1: 这是你的第一次。|{final_year: 这是你的最后一次，你心里清楚。|又一年，又一个愿望。}}{flag(lantern_fine): 你的灯笼是湖岸上最漂亮的之一。|}据说，漂回岸边的灯笼，谁捡到谁就可以读。
 # en: The Mirror Lake at night, hundreds of paper lanterns drifting over the water, students crowding the shore.
 scene [cd9b4c] = 夜晚的镜湖，数百盏纸灯笼在水面上漂，学生们挤满湖岸。
 # en: Wish for something selfish
 opt.left.label [7e0393] = 许一个自私的愿望
-# en: Your lantern goes out over the water and keeps its secret. You feel lighter for having asked.
-opt.left.say.1 [0210ff] = 你的灯笼飘向湖面，守着它的秘密。问出口之后，你觉得轻松了些。
+# en: {year == 1: Your lantern goes out over the water and keeps its secret. You feel lighter for having asked.|{final_year: You wish for what comes after. The lantern climbs high and goes out of sight before anyone else's.|You wish for the same thing as last year, more firmly. The lantern seems to take note.}}
+opt.left.say.1 [ce2302] = {year == 1: 你的灯笼飘向湖面，守着它的秘密。问出口之后，你觉得轻松了些。|{final_year: 你许愿给毕业之后。灯笼升得很高，比谁的都先消失在视线里。|你许下和去年一样的愿望，这次更坚定。灯笼似乎记下了。}}
 # en: Wish for someone else
 opt.right.label [bc6686] = 为别人许愿
-# en: You don't tell anyone who. The lantern seems to know; it flies straight.
-opt.right.say.1 [00b286] = 你没告诉任何人是谁。灯笼似乎知道，它飞得笔直。
+# en: Someone close may ask you about it.
+opt.right.hint [611278] = 亲近的人也许会问起。
+# en: {year == 1: You don't tell anyone who. The lantern seems to know; it flies straight.|{final_year: You wish for everyone you'll leave behind here. It's a heavy lantern, and it flies anyway.|You wish for someone you love, and keep their name behind your teeth. The lantern flies straight.}}
+opt.right.say.1 [66afea] = {year == 1: 你没告诉任何人是谁。灯笼似乎知道，它飞得笔直。|{final_year: 你为所有要留在这里的人许愿。这是一盏沉甸甸的灯笼，它照样飞了起来。|你为一个你爱的人许愿，把名字咽在齿间。灯笼飞得笔直。}}
+# en: Read other people's wishes
+opt.read.label [58ac33] = 偷看别人的愿望
+# en: Tempting. Not kind.
+opt.read.hint [f010be] = 很诱人。不太厚道。
+# en: {year == 1: You fish a lantern out of the shallows and read it by its own candle. Someone wants to pass Alchemy. Someone wants a kiss. You feel like a thief, and read another.|{final_year: In your last year you finally do what everyone dares: you read the wishes caught on the jetty. Half are about leaving. You put them back very carefully.|You read three wishes caught in the reeds. One of them has your name on it. You put it back, and don't sleep.}}
+opt.read.say.1 [614390] = {year == 1: 你从浅水里捞起一盏灯笼，借着它自己的烛光读。有人想通过炼金课。有人想要一个吻。你觉得自己像个小偷，又读了一盏。|{final_year: 最后一年，你终于做了大家都敢做的事：读了卡在栈桥边的愿望。一半都是关于离开的。你小心翼翼地把它们放了回去。|你读了三个卡在芦苇里的愿望。其中一个写着你的名字。你把它放了回去，一夜没睡。}}
+
+@event lantern_reeds
+# en: Caught in the Reeds
+title [4c3cbe] = 困在芦苇里
+# en: Further along the shore a first-year is crying quietly. Their lantern caught in the reeds a few yards out, and it is guttering, wish and all.
+text [a9e7ef] = 湖岸更远处，一个一年级生在悄悄地哭。他的灯笼卡在离岸几码的芦苇丛里，烛火摇摇欲灭，愿望也跟着要灭了。
+# en: A small paper lantern tangled in lake reeds near the shore, its candle guttering, a tearful first-year on the bank.
+scene [be3133] = 一盏小纸灯笼缠在岸边的湖芦苇里，烛火摇曳，岸上站着一个泪汪汪的一年级生。
+# en: Wade in and free it
+opt.left.label [d9da23] = 蹚水去解救它
+# en: The water is shockingly cold. You lift the lantern clear and push it out, and it catches the air and goes. The first-year looks at you as if you'd done magic, which, in a way, you have.
+opt.left.say.1 [7e27c9] = 湖水冷得吓人。你把灯笼托出来往外一推，它乘着风飞走了。那个一年级生看着你，好像你施了魔法——某种意义上，你确实施了。
+# en: Tell them wishes don't need lanterns
+opt.right.label [33fdb0] = 告诉他愿望不需要灯笼
+# en: You sit with them on the bank and say the true thing: the wish counts when you make it. They stop crying. The lantern goes out in the reeds, and neither of you watches.
+opt.right.say.1 [ea7e74] = 你陪他坐在岸边，说了句实话：许下愿望的那一刻，它就算数了。他不哭了。灯笼在芦苇里熄灭，你们谁也没去看。
+
+@event lantern_washed_up
+# en: A Lantern Washes Up
+title [acaa04] = 漂回来的灯笼
+# en: A week after Lantern Night a lantern washes up at your feet on the shore, burnt out, the wish still folded inside it. The handwriting is neat and nervous.
+text [0656d3] = 灯笼夜一周后，一盏烧尽的灯笼漂到你脚边的岸上，里面还折着那张愿望。字迹工整，带着几分紧张。
+# en: A burnt-out paper lantern lying on the wet stones of a lakeshore at dawn, a folded wish still tucked inside it.
+scene [4fb291] = 黎明时分，一盏烧尽的纸灯笼躺在湖岸湿漉漉的石头上，里面还夹着一张折好的愿望。
+# en: Read it
+opt.left.label [fb8482] = 读一读
+# en: It's a wish about someone, a student who "never notices anything". You recognise the handwriting from the library sign-out book, and say nothing, ever.
+opt.left.say.1 [22c2f2] = 那是一个关于某人的愿望，关于一个“什么都注意不到”的学生。你从图书馆借书登记簿上认出了这笔迹，从此一个字也没说。
+# en: Send it back out unread
+opt.right.label [d12536] = 原封不动送回水里
+# en: You relight the stub with a snap of your fingers and push it out again. It wobbles off over the water, its secret intact, and you never find out.
+opt.right.say.1 [08d45b] = 你打个响指重新点燃蜡烛头，把它推回水里。它摇摇晃晃地漂远了，秘密完好无损，你永远也不会知道。
+
+@event lantern_asked
+# en: What Did You Wish For?
+title [4bee90] = 你许了什么愿？
+# en: {dear} drops onto the window seat beside you with two mugs of cocoa. "So," {they} say{s}. "Lantern Night. What did you wish for? You can tell me. I won't tell the lake."
+text [a5829e] = {dear}端着两杯可可，一屁股坐到你身边的窗台上。“说吧，”{they}说，“灯笼夜。你许了什么愿？可以告诉我。我不会告诉湖的。”
+# en: Two students on a window seat with mugs of cocoa, one teasing the other, a paper lantern on the sill between them.
+scene [1e266f] = 两个学生端着可可坐在窗台上，一个在逗另一个，两人之间的窗台上放着一盏纸灯笼。
+# en: Tell {them} the truth
+opt.left.label [9b4c6a] = 跟{them}说实话
+# en: You tell {them}. {dear} goes quiet for a moment, and then bumps {their} shoulder against yours and doesn't move it away. Saying it out loud was harder than writing it.
+opt.left.say.1 [50b05d] = 你告诉了{them}。{dear}沉默了一会儿，然后用肩膀轻轻撞了你一下，就那么靠着，没有挪开。说出口比写下来难多了。
+# en: "If I tell you, it won't come true."
+opt.right.label [b8838d] = “说出来就不灵了。”
+# en: {dear} groans, and spends the rest of the cocoa guessing, each guess more ridiculous than the last. You laugh so hard you spill yours.
+opt.right.say.1 [c4c44a] = {dear}哀嚎一声，接下来一整杯可可的工夫都在猜，一个比一个离谱。你笑得把自己的可可都洒了。
 
 @event year_four
 # en: The Final Year

@@ -60,7 +60,7 @@ Translators (human or LLM) must follow this table so names and terms stay consis
 | tamsin | Tamsin Reed (they/them) | 塔姆辛·里德 | 塔姆辛（代词用 TA） |
 | ilse | Ilse Dumont | 伊尔泽·杜蒙 | 伊尔泽 |
 
-Minor characters: Professor Marisol 玛丽索尔教授 · Professor Vey 维伊教授 · Professor Brask 布拉斯克教授 · Sister Amaranth 阿玛兰斯修女 · Grisk 格里斯克（地精放贷人） · the man in grey 灰衣人 · Pim 皮姆（你带的一年级生） · Footnote (library cat) 脚注 · Bartholomew (Maud's goat) 巴塞洛缪 · Edmund 埃德蒙 · the Duchess of Ambry 安布里公爵夫人 · the Oracle of Vell 维尔神谕 · Lady Vaneshade 凡妮希德夫人 · Gregory (moth) 格雷戈里 · Prudence Ashworth 普鲁登丝·阿什沃斯 · Gerald (mandrake) 杰拉尔德 · Ember (fox) 余烬 · Old Pell 老佩尔.
+Minor characters: Professor Marisol 玛丽索尔教授 · Professor Vey 维伊教授 · Professor Brask 布拉斯克教授 · Sister Amaranth 阿玛兰斯修女 · Grisk 格里斯克（地精放贷人） · the man in grey 灰衣人 · Pim 皮姆（你带的一年级生） · Footnote (library cat) 脚注 · Bartholomew (Maud's goat) 巴塞洛缪 · Edmund 埃德蒙 · the Duchess of Ambry 安布里公爵夫人 · the Oracle of Vell 维尔神谕 · Lady Vaneshade 凡妮希德夫人 · Gregory (moth) 格雷戈里 · Prudence Ashworth 普鲁登丝·阿什沃斯 · Gerald (mandrake) 杰拉尔德 · Ember (fox) 余烬 · Old Pell 老佩尔 · Odile Varn 奥迪尔·瓦恩（把银钥匙交给你的四年级生）.
 
 Houses: Emberhall 烬厅 · Rootward 根庐 · Stillwater 静水 · Duskgate 暮门 · Brasswick 铜芯 · Faculty 教职员.
 

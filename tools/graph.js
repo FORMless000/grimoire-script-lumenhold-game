@@ -21,12 +21,12 @@ function blocksOf(content) {
 }
 
 // Everything a block produces: [{ token, via, note }].
-function produces(b) {
+function produces(b, content) {
   const out = [];
   for (const [via, effs] of b.effects) G.walkEffects(effs, (st) => {
     const add = (token, note) => out.push({ token, via, note: note || '' });
     switch (st.t) {
-      case 'queue': add('event:' + st.event, st.chanceWord ? 'chance ' + st.chanceWord : st.chance != null ? 'chance ' + st.chance + '%' : st.now ? 'now' : ''); break;
+      case 'queue': if (st.tagged) { for (const e of Object.values(content.events)) if (e.trigger === 'queued' && (e.tags || []).includes(st.tagged)) add('event:' + e.id, 'any tagged ' + st.tagged); break; } add('event:' + st.event, st.chanceWord ? 'chance ' + st.chanceWord : st.chance != null ? 'chance ' + st.chance + '%' : st.now ? 'now' : ''); break;
       case 'flag': for (const n of st.names) add('flag:' + n); break;
       case 'gain': add('state:' + st.state); break;
       case 'find': add('clue:' + st.clue); break;
@@ -57,7 +57,7 @@ function build(content) {
   const blocks = blocksOf(content), by = {}, prod = {}, read = {};
   for (const b of blocks) {
     by[b.kind + ':' + b.id] = b;
-    for (const p of produces(b)) (prod[p.token] = prod[p.token] || []).push({ from: b, ...p });
+    for (const p of produces(b, content)) (prod[p.token] = prod[p.token] || []).push({ from: b, ...p });
     for (const r of reads(b, content)) (read[r.token] = read[r.token] || []).push({ to: b, ...r });
   }
   // The engine pushes these by name (@game) or by trigger.
@@ -89,7 +89,7 @@ function describe(content, id) {
       lines.push('  ' + r.token + ' [' + r.via + '] ← ' + (set.length ? [...new Set(set)].slice(0, 8).join(', ') + (set.length > 8 ? ' …+' + (set.length - 8) : '') : '(nothing sets it)'));
     }
   }
-  const pr = produces(b);
+  const pr = produces(b, content);
   if (pr.length) {
     lines.push('\nleads to (what it produces, and who reads it):');
     for (const p of pr) {

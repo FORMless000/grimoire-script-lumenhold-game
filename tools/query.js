@@ -86,7 +86,7 @@ function statementFields(st) {
     case 'flag': case 'unflag': return { name: st.names[0], count: st.names.length };
     case 'gain': return { state: st.state, dur_src: st.dur ? st.dur.src : null };
     case 'lose': return { state: st.state };
-    case 'queue': return { target: st.event, now: st.now, delay_src: st.delay ? st.delay.src : null, with: st.with, chance: st.chance != null ? st.chance : st.chanceWord || null };
+    case 'queue': return { target: st.event, tagged: st.tagged || null, now: st.now, delay_src: st.delay ? st.delay.src : null, with: st.with, chance: st.chance != null ? st.chance : st.chanceWord || null };
     case 'bond': return { npc: st.npc, status: st.status };
     case 'meet': return { npc: st.npc };
     case 'end': return { ending: st.ending };

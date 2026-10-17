@@ -1120,23 +1120,28 @@
           case 'gain': this.addState(st.state, st.dur ? this.value(st.dur, ctx.actor) : null, ctx); break;
           case 'lose': this.removeState(st.state, ctx, false); break;
           case 'queue': {
-            if (!c.events[st.event]) { this.warn(new Error('queue: unknown event ' + st.event), st); break; }
-            const actor = st.with ? this.npcOf(st.with, ctx) : (c.events[st.event].actor === 'npc' ? ctx.actor : null);
+            // `queue any tagged <tag>` (feedback 2026-10-16): `now` (or no delay) draws from the pool at once; a later
+            // one is drawn when it falls due (the queue item's id stays null and `tagged` names the pool).
+            const later = !!st.tagged && !st.now && !!(st.window || st.byMonth || !st.delay || Math.round(this.value(st.delay, ctx.actor)) > 0);
+            const ev = st.tagged ? (later ? null : this.drawTagged(st.tagged)) : st.event;
+            if (st.tagged && !later && !ev) break;   // nothing in the pool is eligible
+            if (ev && !c.events[ev]) { this.warn(new Error('queue: unknown event ' + ev), st); break; }
+            const actor = st.with ? this.npcOf(st.with, ctx) : (ev && c.events[ev].actor === 'npc' ? ctx.actor : null);
             const carry = { track: ctx.track || undefined, cast: st.with && ctx.cast && ctx.cast[st.with] ? { npc: ctx.cast[st.with] } : undefined };
             // `chance N` (I4): rolled when the card falls due (at once for `now`); a failed roll drops it.
             const qc = st.chanceWord ? this.likelihoodP(st.chanceWord) : st.chance;   // `chance <word>` (checks.md)
             if (qc != null) carry.chance = qc;
             if (qc != null && (st.now || (!st.window && !st.byMonth && st.delay && Math.round(this.value(st.delay, ctx.actor)) <= 0)) && this.rand() * 100 >= qc) break;
-            if (st.now) s.deck.splice(ctx.nowIdx++, 0, { id: st.event, actor, src: 'queued', ...carry });
+            if (st.now) s.deck.splice(ctx.nowIdx++, 0, { id: ev, actor, src: 'queued', ...carry });
             else if (st.window || st.byMonth) {
               // A window (design §5.3): the chance rises each month (1 / months left), forced on the last one.
               const to = st.window ? s.turn + st.window.to : s.turn + (((st.byMonth - this.monthIndex()) + this.months.length) % this.months.length || this.months.length);
               const from = st.window ? s.turn + st.window.from : s.turn + 1;
-              s.queue.push({ id: st.event, actor, due: from, until: to, src: 'queued', ...carry });
+              s.queue.push({ id: ev, actor, due: from, until: to, src: 'queued', ...carry, ...(st.tagged ? { tagged: st.tagged } : {}) });
             } else {
               const delay = st.delay ? Math.max(0, Math.round(this.value(st.delay, ctx.actor))) : 1;
-              if (delay === 0) s.deck.push({ id: st.event, actor, src: 'queued' });
-              else s.queue.push({ id: st.event, actor, due: s.turn + delay, ...carry });
+              if (delay === 0) s.deck.push({ id: ev, actor, src: 'queued' });
+              else s.queue.push({ id: ev, actor, due: s.turn + delay, ...carry, ...(st.tagged ? { tagged: st.tagged } : {}) });
             }
             break;
           }
@@ -1425,6 +1430,24 @@
       };
       try { return fill(0, {}); } finally { s.rng = rng; }
     }
+    // A cast bound earlier (a push, a queue `with`) still meets each role's `where:` now: a card re-checks its cast
+    // before it shows, as it re-checks its `when` (feedback 2026-10-16: a confession pushed in the morning dropped
+    // once the spark was cooled that day). Roles the binding leaves unfilled aren't tested.
+    castHolds(e, cast) {
+      if (!e.cast || !cast) return true;
+      const prev = this._cast, part = {};
+      try {
+        for (const r of e.cast) {
+          const id = cast[r.role];
+          if (!id) continue;
+          // as fillCast tests it: the roles filled so far plus this one
+          this._cast = { ...part, [r.role]: id };
+          if (r.where && !this.test(r.where, part.npc || id)) return false;
+          part[r.role] = id;
+        }
+        return true;
+      } finally { this._cast = prev; }
+    }
     // [{e, actor, w}] for an event, honouring actor binding
     candidates(e) {
       if (e.cast) {
@@ -1467,7 +1490,7 @@
       const due = s.queue.filter((q) => q.due <= s.turn);
       s.queue = s.queue.filter((q) => q.due > s.turn);
       const prio = (id, src) => { const e = this.c.events[id]; return e && e.priority != null ? e.priority : DEFAULT_PRIORITY[src]; };
-      for (const q of due) { if (q.chance != null && (used.has(q.id) || this.rand() * 100 >= q.chance)) continue; head.push({ id: q.id, actor: q.actor, src: 'queued', p: prio(q.id, 'queued') }); used.add(q.id); }
+      for (const q of due) { if (q.chance != null && (used.has(q.id) || this.rand() * 100 >= q.chance)) continue; if (q.tagged) { const id = this.drawTagged(q.tagged, used); if (!id) continue; q.id = id; } head.push({ id: q.id, actor: q.actor, src: 'queued', p: prio(q.id, 'queued') }); used.add(q.id); }
       for (const e of this.byTrigger.auto) {
         if (!this.eligible(e, used)) continue;
         const c = this.candidates(e);
@@ -1552,7 +1575,7 @@
           item.actor = pick.actor; if (pick.cast) item.cast = pick.cast;
         } else if (!item.force) {
           this._cast = item.cast || null; this._place = item.place || null; this._slot = item.slot || null;
-          const ok = this.test(e.when, item.actor);
+          const ok = this.test(e.when, item.actor) && this.castHolds(e, item.cast);
           this._cast = null; this._place = null; this._slot = null;
           if (!ok) continue;
         }

@@ -138,14 +138,20 @@ scene: A velvet-curtained classroom, a professor in a violet coat fanning out a 
 text: Professor Vey's glamour lesson is a card game. Each student glamours a plain card to look like the queen of stars, and Vey picks out the true queen from the pile. Nobody, she says, has ever made her pick wrong. "Fool me, and you may skip the essay."
 > left: Glamour your card
   meet vey
-  challenge deceive master- slim:
+  challenge deceive master- unlikely +1 if spell_level(glamour) >= 2:
     win:
+      renown +medium
+      rel vey +medium
       charm +small
-      rel vey +small
-      say: Vey picks your card, turns it over and finds a plain two. She laughs out loud, a real laugh, and the class goes silent. "Well," she says. "Well, well. No essay for you."
+      if enrolled(illusion):
+        study illusion +huge
+      else:
+        charm +small
+      say: Vey picks your card, turns it over and finds a plain two. She laughs out loud, a real laugh, and the class goes silent. "Well," she says. "Well, well. No essay for you." By supper the whole tower knows, and Vey has started calling you "my card sharp".
     lose:
       mood -tiny
-      say: Vey passes over your card without a glance. "The queen of stars," she says kindly, "does not blush."
+      guile +small
+      say: Vey passes over your card without a glance. "The queen of stars," she says kindly, "does not blush." But you saw how she chose: by the hands, not the cards.
 > right: Watch how she catches them
   meet vey
   guile +small

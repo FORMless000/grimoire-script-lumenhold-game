@@ -578,6 +578,34 @@ desc: A pale, star-shaped mark on your palm that hums near old magic.
 tick:
   arcana +1
 
+@state star_taste
+name: A Taste of the Star
+kind: buff
+art: star
+duration: 3
+# hs_grey_offer (feedback 2026-10-16): what the man in grey showed you. Every skill comes easier; the nights are cold.
+desc: Since the man in grey showed you, everything comes easier, and every night you dream of cold water.
+tick:
+  arcana +1
+  lore +1
+  alchemy +1
+  charm +1
+  vigor +1
+  guile +1
+  mood -4
+  say: {~Spells come easier, and the dreams come colder.|You wake with frost on the inside of the window, and the day's work goes like a song.}
+
+@state grey_watching
+name: He Remembers
+kind: debuff
+art: mask
+duration: 3
+# hs_grey_offer (feedback 2026-10-16): you told the man in grey to get out, and he remembers.
+desc: You told the man in grey to get out. Candles burn blue when you're alone in the library, and you've learned to look over your shoulder.
+tick:
+  mood -2
+  guile +1
+
 @state summer_away
 name: Summer Away
 kind: neutral

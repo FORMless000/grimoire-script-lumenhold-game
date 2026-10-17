@@ -767,8 +767,9 @@ text: {keeper} shows you a rope, frayed and black with lake water, that she's ke
 > left: Ask who cut it
   find bell_rope
   rel keeper +small
-  queue bell_answer within 1..3 with keeper
-  say: "That," says {keeper}, "is the question I've been asking for sixty years." She promises to tell you what she knows, when she's ready.
+  flag bell_asked
+  find lead_maud_answer
+  say: "That," says {keeper}, "is the question I've been asking for sixty years." She promises to tell you what she knows, when she's ready. "Come by the cottage, dearie. Not tonight."
 > right: Leave her to her memories
   find bell_rope
   rel keeper +tiny
@@ -776,15 +777,17 @@ text: {keeper} shows you a rope, frayed and black with lake water, that she's ke
 
 @event bell_answer
 title: What Maud Remembers
-trigger: queued
-defer: off_campus
-actor: npc
+# Feedback 2026-10-16: no longer on a timer. Asking about the rope leaves a lead; she tells you at her cottage.
+place: maud_cottage
+when: flag(bell_asked) and met(maud)
+weight: 18
+actor: maud
 class: story
 tone: warm
 art: lantern
 tags: mystery
 scene: An old woman and a student sitting by a cottage fire, a waterlogged rope coiled between them.
-text: {npc} finds you by the boathouse. "The rope," she says. "Edmund cut it. To stop the bell ringing the thing awake. It went on ringing anyway."
+text: {npc} has the kettle on before you knock. "The rope," she says, once the tea is poured. "Edmund cut it. To stop the bell ringing the thing awake. It went on ringing anyway."
 > ok: Listen
   rel npc +small
   mood -tiny
@@ -809,25 +812,143 @@ text: The bell has rung every night for a week. The boathouse has an old diving 
       say: Far down, the bell lies on its side, and around its rim, letters: a name you don't know. You surface gasping, and you keep the name.
     lose:
       health -medium
-      say: The cold drives you back up before you see anything. Old Maud is waiting on the jetty with a blanket and a look.
+      find lead_bell_dive
+      say: The cold drives you back up before you see anything. Old Maud is waiting on the jetty with a blanket and a look. The helmet stays in the boathouse, if you want to try again.
 > right: Wait for the bell to stop
   mood -small
   lore +small
-  say: You wait for a week, listening from the shore, until you know its rhythm by heart. It doesn't stop. Something in you decides it will have to be you, next time.
+  find lead_bell_dive
+  say: You wait for a week, listening from the shore, until you know its rhythm by heart. It doesn't stop. Something in you decides it will have to be you, next time: the helmet is still in the boathouse.
 
 @event bell_silence
-title: The Bell Falls Silent
+title: The Bell Calls
 arc: the_bell
 beat: 4
 slot: night
 when: clue(bell_name) or clue(bell_rope)
 class: story
+tone: eerie
+art: bell
+tags: mystery
+# Feedback 2026-10-16: beat 4 no longer ends the arc by itself. It names where to go; the silencing is played at the
+# lakeshore after hours (bell_laid_to_rest), with the name or the rope.
+scene: A dormitory window at night, the Mirror Lake beyond it silver under the moon, rings spreading across the water.
+text: The bell is ringing every night now, louder, and tonight it rings your way: you can feel it in your teeth. {clue(bell_name): You have the name from its rim.|You have Maud's rope.} You know, the way you know your own handwriting, that it wants you at the lakeshore after dark.
+> ok: Tonight, then
+  find lead_bell_shore
+  say: You lie awake counting the rings. Seven, always seven. Whenever you go down to the shore after dark, it will be waiting.
+
+@event bell_laid_to_rest
+title: The Bell Falls Silent
+arc: the_bell
+place: lakeshore
+time: evening midnight
+when: seen(bell_silence) > 0 and (clue(bell_name) or clue(bell_rope)) and not flag(bell_silenced)
+repeat: 1
+weight: 20
+type: menu
+class: story
 tone: warm
 art: bell
 tags: mystery
-scene: The Mirror Lake at dawn, perfectly still, a student standing at the water's edge with a lantern.
-text: {clue(bell_name): You say the name from the bell's rim out loud, over the water.|You stand at the shore with Maud's rope in your hands.} The bell rings one last time, and then the lake is just a lake.
-> ok: Let it rest
+scene: The Mirror Lake at dusk, perfectly still, a student standing at the water's edge with a lantern.
+text: The shore is empty and the lake is glass. Then the bell begins, slow and low, from the very middle. {clue(bell_name) and clue(bell_rope): You have the name from its rim and Maud's rope in your hands.|{clue(bell_name): You have the name from its rim.|You have Maud's rope, cut sixty years ago.}}
+> name: Say the name over the water
+  when: clue(bell_name)
+  flag bell_silenced
   mood +medium
   alignment +small
-  say: For the first time in sixty years, the lake is quiet. Somewhere in her cottage, you think, Maud sleeps through the night.
+  rel maud +small
+  say: You say the name from the bell's rim out loud. The bell rings once more, as if answering to it, and then the lake is just a lake. Somewhere in her cottage, you think, Maud sleeps through the night.
+> rope: Give the rope back to the lake
+  when: clue(bell_rope)
+  flag bell_silenced
+  mood +small
+  alignment +small
+  health -tiny
+  say: You wade in to your knees and let the rope sink. It goes down straight, as if something below were pulling it home. The bell rings one last time, muffled, and stops. The cold stays in your legs all night.
+> wait: Not tonight
+  say: You stand at the shore until the ringing stops on its own, and go back up the lawn. It will ring again tomorrow.
+
+@event bell_dive_again
+title: The Helmet in the Boathouse
+arc: the_bell
+place: boathouse
+time: afternoon evening
+when: clue(lead_bell_dive) and not clue(bell_name)
+repeat: 2
+weight: 16
+class: story
+tone: tense
+art: wave
+tags: mystery danger
+scene: An old brass diving helmet on a boathouse workbench beside a coil of rope, the lake glinting through the open doors.
+text: The old diving helmet is where you left it, on the workbench by the doors. Somebody has oiled the rope since last time. The lake is still, and under it the bell is waiting.
+> left: Dive again
+  hint: You know the cold now.
+  challenge research adept- wild +1 if clue(lead_bell_dive):
+    win:
+      find bell_name
+      lore +medium
+      say: You go down slower this time, and further. The bell lies on its side, and around its rim, letters: a name you don't know. You surface gasping, and you keep the name.
+    lose:
+      health -medium
+      say: The cold finds you again, halfway down. You come up blue and shaking, with nothing but the certainty that it's down there.
+> right: Not today
+  say: You put the helmet back on the bench. The bell can wait one more day. It has waited sixty years.
+
+@event bell_echo_lakeshore
+title: Rings on Still Water
+place: lakeshore
+when: clue(bell_heard) and not flag(bell_silenced)
+class: routine
+tone: eerie
+art: wave
+tags: mystery
+scene: A calm lake at dusk, perfect rings spreading from its centre although nothing has fallen in, a student crouched at the water's edge.
+text: The lake is flat calm, and still rings spread from its middle, slow and even, like the ripples from a bell that nobody hears. A heron on the shallows lifts its head at each one.
+> left: Count the rings
+  lore +small
+  mood -tiny
+  say: Seven, then a pause, then seven. The heron counts them too, you'd swear. You walk back up the lawn with the number stuck in your head.
+> right: Skim a stone across them
+  mood +small
+  say: Your stone skips four times and sinks in the middle of a ring. For a moment the rings stop. Then they start again, patient as anything.
+
+@event bell_echo_boathouse
+title: The Boats Keep Time
+place: boathouse
+when: clue(bell_heard) and not flag(bell_silenced)
+class: routine
+tone: eerie
+art: wave
+tags: mystery
+scene: Rowing boats tied in an old boathouse, all knocking gently against their posts in the same rhythm, a student listening in the doorway.
+text: Inside the boathouse every boat is knocking against its post in the same slow rhythm, though there's no wind and the water outside is still. Knock, knock, knock: seven, then a pause.
+> left: Steady the boats
+  vigor +small
+  health -tiny
+  say: You go from boat to boat with wet sleeves, holding each one still. As soon as you let go, they take up the rhythm again.
+> right: Sit and listen
+  lore +small
+  mood -tiny
+  say: You sit on an upturned hull and listen until you can hear the bell under the knocking. It is very far down, and very patient.
+
+@event bell_echo_cottage
+title: Maud's Teacups
+place: maud_cottage
+when: clue(bell_heard) and met(maud) and not flag(bell_silenced)
+class: routine
+tone: warm
+art: cup
+tags: mystery
+scene: A cottage dresser full of mismatched teacups, all trembling and chiming together, an old woman pretending not to notice.
+text: In Maud's cottage the teacups on the dresser are chiming against each other, all together, though nobody has touched them. Maud pours your tea as if she can't hear a thing. "Biscuit, dearie?"
+> left: Ask her about the cups
+  rel maud +small
+  mood -tiny
+  say: "Old cups," says Maud. "Old lake." She looks at the window a long time. "They've done that since I was a girl, on the nights it rings. You get used to it. You don't."
+> right: Help her wrap them in cloth
+  rel maud +tiny
+  mood +small
+  say: You wrap every cup in an old tea towel. The chiming stops, and Maud's shoulders come down an inch. "There," she says. "Now we can hear ourselves think."

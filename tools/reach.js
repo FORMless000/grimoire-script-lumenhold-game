@@ -85,7 +85,10 @@ function reach(content) {
         case 'find': F.clue.add(st.clue); break;
         case 'discover': F.place.add(st.place); break;
         case 'meet': case 'rel': case 'spark': case 'bond': if (st.npc && c.npcs[st.npc]) F.npc.add(st.npc); break;
-        case 'queue': F.queued.add(st.event || st.target); break;
+        case 'queue':
+          if (st.tagged) { for (const e of Object.values(c.events)) if (e.trigger === 'queued' && (e.tags || []).includes(st.tagged)) F.queued.add(e.id); }   // a pool queue reaches the whole pool
+          else F.queued.add(st.event || st.target);
+          break;
         case 'end': F.ending.add(st.ending); break;
         case 'learn_spell': F.spell.add(st.spell); break;
         case 'enrol': case 'join': case 'apply': if (st.track && c.tracks[st.track]) { F.track.add(st.track); const p = c.tracks[st.track].place; if (p && st.t === 'join') F.place.add(p); } break;

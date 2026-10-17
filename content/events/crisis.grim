@@ -37,24 +37,48 @@ trigger: queued
 priority: 90
 art: rain
 tags: crisis
+# Mood at zero (rules.grim: mood on_zero). Feedback 2026-10-16: the card says so, and reaching out is no longer a free
+# cure: it brings Mood back only after a breakdown that costs something else (one of four, at random).
 scene: A student sitting on the edge of a dormitory bed, rain on the window, a packed trunk by the door.
-text: Everything has gone grey. You have packed your trunk twice this week and unpacked it once. It would be so easy to take the next barge and simply stop.
+text: Your spirits have hit bottom. Everything has gone grey: food tastes of nothing, lectures are noise, and you have packed your trunk twice this week and unpacked it once. It would be so easy to take the next barge and simply stop.
 > left: Reach out to someone
-  if bonds(friend) + bonds(close) + bonds(partner) > 0:
-    mood +huge
-    rest
-    say: You knock on a friend's door. They don't ask questions. They just make tea, and stay.
-  elif met(maud):
-    mood +huge
-    rel maud +medium
-    say: Old Maud finds you in the gardens and puts a trowel in your hand. "Dig," she says. You dig. It helps more than it should.
-  elif despairs >= 1:
-    end ending_quiet_departure
+  hint: Spirits come back, after a night that breaks something else.
+  if bonds(friend) + bonds(close) + bonds(partner) > 0 or met(maud) or despairs < 1:
+    chance even:
+      chance even:
+        study -small
+        mood -tiny
+        say: First you cry, properly, the way you haven't since you were small, until the window goes pale. Then you sleep straight through the morning's lectures, and wake ashamed of it.
+      else:
+        mana -large
+        say: You walk out to the empty practice field and cast until there is nothing left to cast: fire, wind, light, anything. You come back hollow and shaking, and lighter.
+    else:
+      chance even:
+        health -small
+        renown -small
+        say: You walk the grounds in the rain all night without a cloak, round and round the lawns. A prefect finds you at dawn, soaked to the skin, and the story is round the dormitory by breakfast.
+      else:
+        gold -medium
+        mood -tiny
+        say: You throw your inkwell at the wall, then the chair, then the little mirror. Afterwards you sit among the pieces, oddly calm. Replacing it all costs a small fortune.
+    if bonds(friend) + bonds(close) + bonds(partner) > 0:
+      mood +huge
+      health +small
+      say: In the morning you knock on a friend's door. They don't ask questions. They just make tea, and stay.
+    elif met(maud):
+      mood +huge
+      health +small
+      rel maud +small
+      say: Old Maud finds you in the gardens and puts a trowel in your hand. "Dig," she says. You dig. It helps more than it should.
+    else:
+      mood +huge
+      health +small
+      despairs += 1
+      say: Afterwards you talk to the night porter, of all people. He tells you about his own first year. It's enough, for now.
   else:
-    mood +large
-    despairs += 1
-    say: You talk to the night porter, of all people. He tells you about his own first year. It's enough, for now.
+    end ending_quiet_departure
 > right: Take the next barge
+  hint: Spirits back for now; a second time, you go.
   if despairs >= 1:
     end ending_quiet_departure
   else:

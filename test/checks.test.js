@@ -124,7 +124,7 @@ test('exams on the ladder: the course standard with low drift, less study', () =
 });
 
 test('the odds tool prints every check and roll', () => {
-  const text = require('../tools/odds.js').odds(content, ['midnight_boathouse_ring']);
+  const text = require('../tools/odds.js').odds(content, ['midnight_boathouse_ring', 'crisis_despair']);
   assert.match(text, /challenge combat adept-\s+\d+ \d+ \d+ \d+\s+\d+ \d+ \d+ \d+/);
   assert.match(text, /chance even\s+50%/);
 });

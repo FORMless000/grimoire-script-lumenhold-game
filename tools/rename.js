@@ -64,7 +64,7 @@ function references(content) {
       case 'flag': case 'unflag': st.names.forEach((n) => add('flag', n)); break;
       case 'gain': add('state', st.state); scanExpr(st.dur); break;
       case 'lose': add('state', st.state); break;
-      case 'queue': add('event', st.event); if (st.with && st.with !== 'npc') add('npc', st.with); scanExpr(st.delay); break;
+      case 'queue': if (st.event) add('event', st.event); if (st.with && st.with !== 'npc') add('npc', st.with); scanExpr(st.delay); break;
       case 'rel': case 'spark': case 'bond': case 'meet': if (st.npc !== 'npc') add('npc', st.npc); break;
       case 'end': add('ending', st.ending); break;
       case 'learn_spell': add('spell', st.spell); break;

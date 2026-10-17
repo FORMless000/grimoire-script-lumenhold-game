@@ -128,6 +128,27 @@ arc: the_bell
 name: The name on the rim
 text: Letters run around the bell's rim on the lakebed: a name you don't know, and now keep.
 
+@clue lead_maud_answer
+arc: the_bell
+kind: lead
+name: What Maud knows
+text: Maud has kept the bell's rope for sixty years, and she has promised to tell you who cut it. Go and see her at her cottage.
+followed: seen(bell_answer) > 0
+
+@clue lead_bell_dive
+arc: the_bell
+kind: lead
+name: The diving helmet
+text: There's an old diving helmet in the boathouse. Whatever is written on the bell, you'll only read it from the lakebed.
+followed: clue(bell_name)
+
+@clue lead_bell_shore
+arc: the_bell
+kind: lead
+name: The lakeshore after dark
+text: The bell wants you at the lakeshore after dark, in the evening or at midnight, with what you have: the name from its rim, or Maud's rope.
+followed: flag(bell_silenced)
+
 # ---------------- Second Place ----------------
 
 @clue black_seal_letters
@@ -158,6 +179,34 @@ kind: lead
 name: The jetty at midnight
 text: Grisk's arrangement: a parcel collected at the boathouse jetty at midnight, carried to a cobbler's back door in the village by day.
 followed: seen(grisk_pickup) > 0 or flag(grisk_gone)
+
+@clue lead_silver_key
+thread: The silver key
+kind: lead
+name: The Restricted Section
+text: Odile Varn's notebook came with a silver key to the Restricted Section, the locked door at the back of the library. It's yours to use after hours, in the evening or at midnight.
+followed: seen(forbidden_section_1) > 0 or flag(forbidden_abandoned)
+
+@clue lead_restricted_shelves
+thread: The silver key
+kind: lead
+name: Deeper in the stacks
+text: You've been inside the Restricted Section once, and there are shelves you didn't reach. The key still works after hours.
+followed: flag(forbidden_read) or seen(forbidden_section_3) > 0
+
+@clue lead_codex_open
+thread: The silver key
+kind: lead
+name: The Codex, left open
+text: The Codex of Hollow Names is still lying where it fell in the Restricted Section, open at your name. Sooner or later, someone will notice you've been there.
+followed: seen(forbidden_section_3) > 0
+
+@clue lead_newt_upstairs
+thread: The upstairs room
+kind: lead
+name: A regular at the Newt
+text: The landlady of the Gilded Newt's upstairs room keeps a jacket for you now. Any night out at the Newt, there's a party upstairs that pays.
+followed: seen(newt_company_regular) > 0
 
 @clue lead_sky_championship
 thread: The Skyrace team

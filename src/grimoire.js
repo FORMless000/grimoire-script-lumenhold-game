@@ -384,6 +384,8 @@
     lose: new RegExp('^lose\\s+(' + ID + ')$'),
     // `chance N` (playtest 2, I4): when due, the card is pushed with probability N%, else dropped.
     queue: new RegExp('^queue\\s+(' + ID + ')(?:\\s+(now|in\\s+.+?|within\\s+\\d+\\s*\\.\\.\\s*\\d+|by\\s+month\\s+\\d+))?(?:\\s+with\\s+(' + ID + '))?(?:\\s+chance\\s+(\\d+|' + ODDS_WORDS.join('|') + '))?$'),
+    // `queue any tagged <tag> …` (feedback 2026-10-16): one queued event with the tag, drawn when it falls due.
+    queueAny: new RegExp('^queue\\s+any\\s+tagged\\s+(' + ID + ')(?:\\s+(now|in\\s+.+?|within\\s+\\d+\\s*\\.\\.\\s*\\d+|by\\s+month\\s+\\d+))?(?:\\s+with\\s+(' + ID + '))?(?:\\s+chance\\s+(\\d+|' + ODDS_WORDS.join('|') + '))?$'),
     unqueue: new RegExp('^unqueue\\s+(' + ID + ')$'),
     sayAs: new RegExp('^say\\[(' + ID + ')\\]\\s*:\\s*(.*)$'),
     trackOp: new RegExp('^(enrol|join|leave|promote|apply)\\s+(' + ID + ')(?:\\s+(\\d))?$'),
@@ -465,8 +467,9 @@
     if ((m = content.match(RE.unflag))) return { t: 'unflag', names: m[1].split(/\s+/), line };
     if ((m = content.match(RE.gain))) return { t: 'gain', state: m[1], dur: m[2] ? E(m[2]) : null, line };
     if ((m = content.match(RE.lose))) return { t: 'lose', state: m[1], line };
-    if ((m = content.match(RE.queue))) {
-      const st = { t: 'queue', event: m[1], now: false, delay: null, with: m[3] || null, line };
+    if ((m = content.match(RE.queueAny)) || (m = content.match(RE.queue))) {
+      const any = RE.queueAny.test(content);
+      const st = Object.assign({ t: 'queue', event: any ? null : m[1], now: false, delay: null, with: m[3] || null, line }, any ? { tagged: m[1] } : {});
       if (m[4] != null) { if (/^\d+$/.test(m[4])) st.chance = +m[4]; else st.chanceWord = m[4]; }
       let w;
       if (m[2] === 'now') st.now = true;
@@ -853,5 +856,7 @@
     return { tokens, conds };
   }
 
-  return { textTokens, parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES, CHALLENGE_KINDS, RANKS, RUNG_RE, ODDS_WORDS, SWINGS, DRIFTS, isLadderTier };
+  // `@place always: a b|c` (feedback 2026-10-16): the place's fixed cards in order; `|` makes a group that plays one.
+  const alwaysGroups = (t) => String(t || '').split(/\s+/).filter(Boolean).map((g) => g.split('|').filter(Boolean));
+  return { alwaysGroups, textTokens, parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES, CHALLENGE_KINDS, RANKS, RUNG_RE, ODDS_WORDS, SWINGS, DRIFTS, isLadderTier };
 });

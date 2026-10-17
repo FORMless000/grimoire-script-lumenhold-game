@@ -597,8 +597,8 @@ text [090813] = {keeper}给你看一根绳子，磨损了，被湖水浸得发�
 scene [609899] = 花园棚屋里，一位老妇人举着一根磨损、浸透了水的钟绳。
 # en: Ask who cut it
 opt.left.label [a6108f] = 问是谁割断的
-# en: "That," says {keeper}, "is the question I've been asking for sixty years." She promises to tell you what she knows, when she's ready.
-opt.left.say.1 [4bd3a1] = “这个嘛，”{keeper}说，“我问了六十年了。”她答应等她准备好，就把知道的告诉你。
+# en: "That," says {keeper}, "is the question I've been asking for sixty years." She promises to tell you what she knows, when she's ready. "Come by the cottage, dearie. Not tonight."
+opt.left.say.1 [9ea41a] = “这个嘛，”{keeper}说，“我问了六十年了。”她答应等她准备好，就把知道的告诉你。“来小屋找我吧，亲爱的。别今晚。”
 # en: Leave her to her memories
 opt.right.label [9f94d2] = 让她独自回忆
 # en: You leave her with the rope in her lap. She doesn't notice you go.
@@ -607,8 +607,8 @@ opt.right.say.1 [10a7b7] = 你留她抱着膝上的绳子。她没注意到你�
 @event bell_answer
 # en: What Maud Remembers
 title [7f91ce] = 莫德记得的事
-# en: {npc} finds you by the boathouse. "The rope," she says. "Edmund cut it. To stop the bell ringing the thing awake. It went on ringing anyway."
-text [b0e638] = {npc}在船屋边找到你。“那根绳子，”她说，“是埃德蒙割的。为了不让钟声把那东西敲醒。可钟还是一直在响。”
+# en: {npc} has the kettle on before you knock. "The rope," she says, once the tea is poured. "Edmund cut it. To stop the bell ringing the thing awake. It went on ringing anyway."
+text [62a789] = 你还没敲门，{npc}就已经把水壶坐上了。“那根绳子，”茶倒好后她说，“是埃德蒙割的。为了不让钟声把那东西敲醒。可钟还是一直在响。”
 # en: An old woman and a student sitting by a cottage fire, a waterlogged rope coiled between them.
 scene [6145b3] = 小屋炉火边坐着一位老妇人和一名学生，两人之间盘着一根浸透水的绳子。
 # en: Listen
@@ -627,21 +627,109 @@ scene [f56404] = 一名学生戴着借来的潜水头盔，站在黑水之上的
 opt.left.label [ad77f7] = 潜下去
 # en: Far down, the bell lies on its side, and around its rim, letters: a name you don't know. You surface gasping, and you keep the name.
 opt.left.say.1 [f03244] = 在很深的地方，钟侧躺着，钟沿上刻着字：一个你不认识的名字。你喘着气浮出水面，把那个名字记在了心里。
-# en: The cold drives you back up before you see anything. Old Maud is waiting on the jetty with a blanket and a look.
-opt.left.say.2 [32863f] = 你还没看见什么，寒冷就把你逼了回去。老莫德拿着毯子和一个眼神等在栈桥上。
+# en: The cold drives you back up before you see anything. Old Maud is waiting on the jetty with a blanket and a look. The helmet stays in the boathouse, if you want to try again.
+opt.left.say.2 [0a29d9] = 你还没看见什么，寒冷就把你逼了回去。老莫德拿着毯子和一个眼神等在栈桥上。头盔就留在船屋里，你想再试的话。
 # en: Wait for the bell to stop
 opt.right.label [d2920e] = 等钟声停下
-# en: You wait for a week, listening from the shore, until you know its rhythm by heart. It doesn't stop. Something in you decides it will have to be you, next time.
-opt.right.say.1 [211b61] = 你在岸边听了一个星期，直到把它的节奏背得滚瓜烂熟。它没有停。你心里有什么东西决定了：下一次，得是你去。
+# en: You wait for a week, listening from the shore, until you know its rhythm by heart. It doesn't stop. Something in you decides it will have to be you, next time: the helmet is still in the boathouse.
+opt.right.say.1 [445e1b] = 你在岸边听了一个星期，直到把它的节奏背得滚瓜烂熟。它没有停。你心里有什么东西决定了：下一次，得是你去——头盔还在船屋里。
 
 @event bell_silence
+# en: The Bell Calls
+title [cdbef4] = 钟声召唤
+# en: The bell is ringing every night now, louder, and tonight it rings your way: you can feel it in your teeth. {clue(bell_name): You have the name from its rim.|You have Maud's rope.} You know, the way you know your own handwriting, that it wants you at the lakeshore after dark.
+text [b84c67] = 现在钟每夜都响，越来越响，今晚它朝着你响：你的牙齿都能感觉到。{clue(bell_name): 你记着钟沿上的那个名字。|你有莫德的绳子。}你就像认得自己的笔迹一样清楚，它要你天黑后去湖岸。
+# en: A dormitory window at night, the Mirror Lake beyond it silver under the moon, rings spreading across the water.
+scene [844d87] = 夜里的宿舍窗户，窗外的镜湖在月光下泛着银光，一圈圈涟漪在水面散开。
+# en: Tonight, then
+opt.ok.label [c74f69] = 那就今晚吧
+# en: You lie awake counting the rings. Seven, always seven. Whenever you go down to the shore after dark, it will be waiting.
+opt.ok.say.1 [4b1224] = 你醒着躺在床上数钟声。七下，总是七下。不管哪天天黑后你去湖岸，它都会在那里等着。
+
+@event bell_laid_to_rest
 # en: The Bell Falls Silent
 title [6d5cb4] = 钟声沉寂
-# en: {clue(bell_name): You say the name from the bell's rim out loud, over the water.|You stand at the shore with Maud's rope in your hands.} The bell rings one last time, and then the lake is just a lake.
-text [721f49] = {clue(bell_name): 你对着湖面，大声念出钟沿上的那个名字。|你站在岸边，手里握着莫德的绳子。}钟最后响了一次，然后湖就只是一片湖了。
-# en: The Mirror Lake at dawn, perfectly still, a student standing at the water's edge with a lantern.
-scene [82908a] = 黎明的镜湖，平静如镜，一名学生提着灯站在水边。
-# en: Let it rest
-opt.ok.label [657b8b] = 让它安息
-# en: For the first time in sixty years, the lake is quiet. Somewhere in her cottage, you think, Maud sleeps through the night.
-opt.ok.say.1 [e9634e] = 六十年来第一次，湖安静了下来。你想，此刻在小屋里，莫德一定一觉睡到了天亮。
+# en: The shore is empty and the lake is glass. Then the bell begins, slow and low, from the very middle. {clue(bell_name) and clue(bell_rope): You have the name from its rim and Maud's rope in your hands.|{clue(bell_name): You have the name from its rim.|You have Maud's rope, cut sixty years ago.}}
+text [47584d] = 湖岸空无一人，湖面如镜。然后钟声响起，又慢又低，来自湖的正中央。{clue(bell_name) and clue(bell_rope): 你记着钟沿上的名字，手里握着莫德的绳子。|{clue(bell_name): 你记着钟沿上的那个名字。|你手里握着莫德的绳子，六十年前被割断的那根。}}
+# en: The Mirror Lake at dusk, perfectly still, a student standing at the water's edge with a lantern.
+scene [78f3ef] = 黄昏的镜湖，平静如镜，一名学生提着灯站在水边。
+# en: Say the name over the water
+opt.name.label [ddcf78] = 对着湖念出名字
+# en: You say the name from the bell's rim out loud. The bell rings once more, as if answering to it, and then the lake is just a lake. Somewhere in her cottage, you think, Maud sleeps through the night.
+opt.name.say.1 [c94703] = 你大声念出钟沿上的名字。钟又响了一下，像是在应答，然后湖就只是一片湖了。你想，此刻在小屋里，莫德一定能一觉睡到天亮。
+# en: Give the rope back to the lake
+opt.rope.label [3b03b9] = 把绳子还给湖
+# en: You wade in to your knees and let the rope sink. It goes down straight, as if something below were pulling it home. The bell rings one last time, muffled, and stops. The cold stays in your legs all night.
+opt.rope.say.1 [7139e3] = 你蹚到齐膝深的水里，让绳子沉下去。它笔直地往下沉，好像底下有什么在把它拉回家。钟最后闷闷地响了一声，停了。那股寒意在你腿里待了一整夜。
+# en: Not tonight
+opt.wait.label [4bf72b] = 今晚算了
+# en: You stand at the shore until the ringing stops on its own, and go back up the lawn. It will ring again tomorrow.
+opt.wait.say.1 [1d0f14] = 你站在岸边，直到钟声自己停下，然后走回草坪上。明天它还会再响。
+
+@event bell_dive_again
+# en: The Helmet in the Boathouse
+title [237b11] = 船屋里的头盔
+# en: The old diving helmet is where you left it, on the workbench by the doors. Somebody has oiled the rope since last time. The lake is still, and under it the bell is waiting.
+text [51fef3] = 那顶旧潜水头盔还在你上次放的地方，门边的工作台上。从那以后有人给绳子上过油。湖面平静，湖底，那口钟在等着。
+# en: An old brass diving helmet on a boathouse workbench beside a coil of rope, the lake glinting through the open doors.
+scene [ae496f] = 船屋工作台上放着一顶旧黄铜潜水头盔，旁边是一卷绳子，敞开的门外湖光闪烁。
+# en: Dive again
+opt.left.label [986ddf] = 再潜一次
+# en: You know the cold now.
+opt.left.hint [aa31ec] = 你已经熟悉那种冷了。
+# en: You go down slower this time, and further. The bell lies on its side, and around its rim, letters: a name you don't know. You surface gasping, and you keep the name.
+opt.left.say.1 [376aec] = 这次你下得更慢，也更深。那口钟侧躺着，钟沿上一圈字母：一个你不认识的名字。你喘着气浮出水面，把那个名字留在了心里。
+# en: The cold finds you again, halfway down. You come up blue and shaking, with nothing but the certainty that it's down there.
+opt.left.say.2 [74a681] = 下到一半，寒冷又找上了你。你浮上来时嘴唇发紫、浑身发抖，只确定一件事：它就在下面。
+# en: Not today
+opt.right.label [479f6f] = 今天算了
+# en: You put the helmet back on the bench. The bell can wait one more day. It has waited sixty years.
+opt.right.say.1 [ba32f8] = 你把头盔放回工作台。钟可以再等一天。它已经等了六十年。
+
+@event bell_echo_lakeshore
+# en: Rings on Still Water
+title [838278] = 静水上的涟漪
+# en: The lake is flat calm, and still rings spread from its middle, slow and even, like the ripples from a bell that nobody hears. A heron on the shallows lifts its head at each one.
+text [335d77] = 湖面风平浪静，可一圈圈涟漪仍从湖心散开，缓慢而均匀，像一口没人听见的钟荡开的波纹。浅滩上的一只苍鹭，每来一圈就抬一下头。
+# en: A calm lake at dusk, perfect rings spreading from its centre although nothing has fallen in, a student crouched at the water's edge.
+scene [874c57] = 黄昏平静的湖面，完美的涟漪从湖心散开，却什么也没落进水里，一个学生蹲在水边。
+# en: Count the rings
+opt.left.label [da2550] = 数涟漪
+# en: Seven, then a pause, then seven. The heron counts them too, you'd swear. You walk back up the lawn with the number stuck in your head.
+opt.left.say.1 [94cdf4] = 七圈，停一下，又是七圈。你敢发誓那只苍鹭也在数。你走回草坪时，那个数字一直在脑子里打转。
+# en: Skim a stone across them
+opt.right.label [1cacee] = 打个水漂穿过去
+# en: Your stone skips four times and sinks in the middle of a ring. For a moment the rings stop. Then they start again, patient as anything.
+opt.right.say.1 [273dff] = 你的石子跳了四下，沉在一圈涟漪正中。有那么一会儿，涟漪停了。然后又开始了，耐心得不得了。
+
+@event bell_echo_boathouse
+# en: The Boats Keep Time
+title [9afc35] = 船在打拍子
+# en: Inside the boathouse every boat is knocking against its post in the same slow rhythm, though there's no wind and the water outside is still. Knock, knock, knock: seven, then a pause.
+text [8b40ee] = 船屋里，每条船都以同样缓慢的节奏撞着桩子，可外面没有风，水面也一动不动。咚，咚，咚：七下，然后停一下。
+# en: Rowing boats tied in an old boathouse, all knocking gently against their posts in the same rhythm, a student listening in the doorway.
+scene [edb22d] = 旧船屋里拴着的划艇都以同样的节奏轻撞着桩子，一个学生站在门口听。
+# en: Steady the boats
+opt.left.label [621b6f] = 把船稳住
+# en: You go from boat to boat with wet sleeves, holding each one still. As soon as you let go, they take up the rhythm again.
+opt.left.say.1 [58f606] = 你湿着袖子一条船一条船地扶稳。可你一松手，它们又跟上了那个节奏。
+# en: Sit and listen
+opt.right.label [1a3cf5] = 坐下来听
+# en: You sit on an upturned hull and listen until you can hear the bell under the knocking. It is very far down, and very patient.
+opt.right.say.1 [049ba8] = 你坐在一条倒扣的船身上听，直到在撞击声底下听见了那口钟。它在很深很深的地方，非常有耐心。
+
+@event bell_echo_cottage
+# en: Maud's Teacups
+title [f4e077] = 莫德的茶杯
+# en: In Maud's cottage the teacups on the dresser are chiming against each other, all together, though nobody has touched them. Maud pours your tea as if she can't hear a thing. "Biscuit, dearie?"
+text [0e7e4a] = 莫德小屋里，碗柜上的茶杯一齐互相碰得叮当响，可谁也没碰过它们。莫德给你倒茶，好像什么也没听见。“来块饼干吗，亲爱的？”
+# en: A cottage dresser full of mismatched teacups, all trembling and chiming together, an old woman pretending not to notice.
+scene [237588] = 小屋碗柜上摆满不成套的茶杯，全都在颤抖着一齐叮当作响，一位老妇人假装没注意到。
+# en: Ask her about the cups
+opt.left.label [43049c] = 问她茶杯的事
+# en: "Old cups," says Maud. "Old lake." She looks at the window a long time. "They've done that since I was a girl, on the nights it rings. You get used to it. You don't."
+opt.left.say.1 [4bd3fc] = “老杯子，”莫德说，“老湖。”她望着窗外看了很久。“从我还是个小姑娘起，每到它响的夜里，它们就这样。你会习惯的。其实不会。”
+# en: Help her wrap them in cloth
+opt.right.label [d143f6] = 帮她用布包好
+# en: You wrap every cup in an old tea towel. The chiming stops, and Maud's shoulders come down an inch. "There," she says. "Now we can hear ourselves think."
+opt.right.say.1 [1b0b76] = 你用旧茶巾把每只杯子都包好。叮当声停了，莫德的肩膀松下来一点。“好了，”她说，“这下我们能听见自己想事情了。”

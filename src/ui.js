@@ -190,7 +190,10 @@
     if (!content.events[id]) return fatal(['No event with id "' + id + '"']);
     const actor = params.get('actor') || (content.events[id].actor && !['any', 'npc'].includes(content.events[id].actor) ? content.events[id].actor : null) || (content.events[id].actor ? Object.keys(content.npcs)[0] : null);
     if (actor && eng.s.npcs[actor]) eng.s.npcs[actor].met = true;
-    eng.s.deck.unshift({ id, actor, src: 'preview', force: true });
+    // A cast event (`cast:` roles): `&actor=` fills its first role, so `{guest}` or `{dear}` render.
+    const roles = content.events[id].cast;
+    const cast = actor && roles && roles.length ? { [roles[0].role]: actor } : undefined;
+    eng.s.deck.unshift({ id, actor, cast, src: 'preview', force: true });
     buildGame();
     step(eng.advance());
   }
@@ -637,7 +640,7 @@
   function noteText(n) {
     if (n.kind === 'meet') return t('note.meet', { name: content.npcs[n.npc] ? content.npcs[n.npc].name : n.npc });
     // A rivalry can sit alongside friendship (respect with an edge), so say so when it starts (B14).
-    if (n.kind === 'bond') return t(n.status === 'rival' ? 'note.bondRival' : 'note.bond', { name: shortName(n.npc), status: bondLabel(n.status) });
+    if (n.kind === 'bond') return t('note.bond', { name: shortName(n.npc), status: bondLabel(n.status) });
     if (n.kind === 'gain' || n.kind === 'lose') return t('note.' + n.kind, { state: content.states[n.state] ? content.states[n.state].name : n.state });
     if (n.kind === 'spell') {
       const lv = ['', 'I', 'II', 'III'][n.level] || n.level;

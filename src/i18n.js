@@ -112,7 +112,6 @@
     'chip.love': '{name} (spark) {delta}',
     'note.meet': 'You met {name}.',
     'note.bond': '{name}: {status}',
-    'note.bondRival': '{name} now sees you as a rival: respect with an edge, which can sit alongside friendship',
     'note.gain': '+ {state}',
     'note.lose': '− {state}',
     'note.spell': 'New spell: {spell} {level}',

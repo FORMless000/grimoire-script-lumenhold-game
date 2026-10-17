@@ -11,28 +11,46 @@ place: gilded_newt
 slot: midnight
 class: routine
 tone: tense
-repeat: 5
+# The first offer (feedback 2026-10-16): first on every Newt night (`@place always:`) until you take it; turning it
+# down rests it for a few months. Once you are a regular, `newt_company_regular` takes its place.
+when: not flag(newt_regular) and not (chosen(newt_company, right) and since(newt_company) < 3)
 weight: 10
 art: cup
 tags: money danger
 scene: An upstairs room at a tavern after hours, card tables under low lamps, well-dressed guests laughing, a student in borrowed finery refilling a glass.
-text: {The woman who runs the upstairs room looks you over. "The guests like good company. Laugh at the jokes, keep the glasses full, lose gracefully at cards. Nothing more. Guests who want more are shown the stair."|The upstairs room again: velvet, lamplight, guests from the capital who tip in silver.|You know the room now, and which guests to sit beside.} {Tonight it's a merchant's birthday.|Tonight, a card party for a visiting magistrate.|Tonight the guests are masked, for no reason anyone gives.}
-> left: Work the evening
-  challenge negotiate journeyman:
-    win:
-      gold +medium
-      mood -tiny
-      say: {You laugh in all the right places and lose at cards exactly as much as you're meant to. The tips are heavy, and so is your head on the way home.|A guest tells you the story of their life. You listen as if it mattered. Perhaps it did. The tip says it did.|Behind the masks the guests are easier, and so are you. You sit beside the right ones and come home with heavy pockets and no names.}
-    lose:
-      gold +tiny
-      mood -small
-      queue night_suspicion chance unlikely
-      say: {A guest's hand wanders and doesn't take the hint. You leave by the back stair with a few coins and a cold feeling that lasts the week.|You say the wrong thing to the wrong magistrate, and are paid off early and shown the stair. Someone from the castle is drinking at the bar below.|A masked guest won't take no for an answer, and nobody can see who it is. You leave by the back stair with a few coins and a very bad feeling.}
+text: The woman who runs the upstairs room looks you over. "The guests like good company. Laugh at the jokes, keep the glasses full, lose gracefully at cards. Nothing more: guests who want more are shown the stair. Every night is a different party, and every party pays."
+> left: Take a seat upstairs
+  hint: Paid company, a different guest each night.
+  flag newt_regular
+  find lead_newt_upstairs
+  queue any tagged company_night now
   if bonds(partner) > 0:
     queue night_partner_asks chance unlikely
+  say: She hands you a borrowed jacket that almost fits. "Smile with your eyes," she says. "The guests can tell."
 > right: Not tonight
-  mood -tiny
-  say: {You turn the work down and walk home past the lit windows, a little poorer and quite sure of yourself.|"Another night, then," says the woman, writing something in a small book. You wonder what.|You turn it down. The woman nods as if she expected it, and puts a small mark by your name in her book.}
+  say: "Another night, then," says the woman, writing something in a small book. You wonder what.
+
+@event newt_company_regular
+title: The Upstairs Room
+place: gilded_newt
+slot: midnight
+class: routine
+tone: tense
+# The regular's offer (feedback 2026-10-16): first on every Newt night once you've taken the work; a refusal rests it.
+when: flag(newt_regular) and not (chosen(newt_company_regular, right) and since(newt_company_regular) < 3)
+weight: 10
+art: cup
+tags: money danger
+scene: An upstairs room at a tavern after hours, a landlady holding out a borrowed jacket to a student at the top of the stair.
+text: {The woman who runs the upstairs room knows your face now. "There's a party tonight," she says, already holding out the jacket.|The landlady has your jacket on a peg with your name chalked above it. "Your table's waiting," she says.|"Your regulars asked after you," says the landlady, which is either flattering or a warning. Upstairs the lamps are lit.}
+> left: Work the room
+  hint: Paid company; tonight's guests decide the rest.
+  queue any tagged company_night now
+  if bonds(partner) > 0:
+    queue night_partner_asks chance unlikely
+  say: {You button the jacket and go up. It fits a little better than last time.|You take your jacket from its peg and climb the stair into the lamplight.|Your regulars wave you over before you've reached the top of the stair.}
+> right: Not tonight
+  say: {"Next week, then," she says, and the jacket goes back on its peg.|She shrugs and chalks a line through tonight beside your name.|"They'll miss you," she says, and it sounds like the truth and the bill at once.}
 
 @event newt_high_table
 title: The High Table
@@ -41,7 +59,7 @@ slot: midnight
 type: menu
 class: routine
 tone: tense
-repeat: 4
+# Every Newt night ends here, after the company (feedback 2026-10-16: `@place always:`, no cooldown).
 when: not flag(grisk_gone)
 weight: 9
 art: cards
@@ -143,20 +161,197 @@ text: Grisk is waiting in the library alcove with your promise between two finge
   mood -small
   say: You count out the crowns and Grisk gives you back the promise with a small bow. It feels like buying your own name back. It is, more or less.
 
+# ---------------- Company nights (feedback 2026-10-16) ----------------
+# The pool behind `queue any tagged company_night`: each night upstairs is one party, drawn by the usual score. The
+# pay is better than any shift, and so is the price: late nights, guests who push, and the castle finding out.
+
+@event company_birthday
+title: A Merchant's Birthday
+trigger: queued
+class: routine
+tone: light
+repeat: 3
+art: cup
+tags: money company_night
+scene: A loud birthday party in a tavern's upstairs room, a stout merchant in a paper crown, a cake shaped like a ship.
+text: {A cloth merchant from the capital is sixty tonight and wants a room full of young people laughing at his stories.|The cloth merchant is back, a year older by his own count, and he remembers which stories you laughed at.|The merchant's birthday again. He has started inviting his rivals, so that they can watch him be adored.} The cake is shaped like one of his ships.
+> left: Be the life of the party
+  hint: Charm the room; big tips, a long night.
+  challenge negotiate journeyman+:
+    win:
+      gold +large
+      health -small
+      say: {You laugh, sing, and dance with his aunt. He tips like a man buying a ship. You get home with the dawn and a sore throat.|He tells the story about the storm off the southern coast again, and you gasp in the right place. The tip is heavy; so are your feet.|You toast him in front of his rivals and he nearly cries. The purse he presses on you is shaped, faintly, like a ship.}
+    lose:
+      gold +small
+      mood -small
+      queue night_suspicion chance unlikely
+      say: {You laugh a moment too late at the wrong story, and he notices. A thin tip, and a long walk home past the castle's lit windows.|You call his ship by his rival's ship's name. The room goes quiet. The landlady pays you off early.|His rivals are funnier than he is, and you show it. He doesn't forgive it, and the tip says so.}
+> right: Keep the glasses full
+  hint: A quiet night's pay, on your feet.
+  gold +medium
+  health -tiny
+  say: {You pour, smile and stay out of the stories. The pay is fair, and the floor is very hard.|You keep the glasses full and your mouth shut. The merchant never learns your name, which suits you.|You pour for him and his rivals alike. Nobody notices you, and you go home with honest money and sore feet.}
+
+@event company_magistrate
+title: The Magistrate's Card Party
+trigger: queued
+class: routine
+tone: tense
+repeat: 3
+art: cards
+tags: money company_night
+scene: A card table under a green lamp, a stern magistrate in a fur collar studying her hand, a student opposite her looking at the ceiling.
+text: {A magistrate from the county court is holding a card party, and she likes to win, but not too easily.|The magistrate again. She deals you in without asking, and her eyes say she hasn't forgotten the last game.|The magistrate's party, and a new rule: whoever lets her win too obviously pays for the wine.} The landlady's look says: lose, gracefully.
+> left: Lose exactly enough
+  hint: Throw the game without being seen to.
+  alignment -tiny
+  challenge deceive adept-:
+    win:
+      gold +large
+      mood -tiny
+      say: {You lose by a hair after a brave fight. She is delighted, and tips accordingly. You feel faintly like a forger.|You let her catch your bluff in the last hand. She laughs for the first time all night, and pays you twice over.|You lose so well she thinks she beat you fairly. The money is good. Lying with cards is still lying.}
+    lose:
+      gold +tiny
+      renown -small
+      queue night_suspicion chance unlikely
+      say: {She catches you discarding an ace and puts her cards down. "Don't patronise me." Word gets about, as word from a magistrate does.|You lose too obviously, and pay for the wine, and the story of it is round the village by noon.|She sees through you in three hands and says so to the whole table. The landlady doesn't look at you on the stair.}
+> right: Deal and keep score
+  hint: Honest work at the table, smaller pay.
+  gold +medium
+  mood -tiny
+  say: {You deal, count and say nothing. It is the dullest money you've ever earned, and it's clean.|You keep the score, honestly, and she loses honestly, and doesn't tip the scorer.|You deal for four hours. The magistrate wins without help, and nods at you as if you'd had something to do with it.}
+
+@event company_masked
+title: The Masked Night
+trigger: queued
+class: routine
+tone: eerie
+repeat: 3
+art: mask
+tags: money company_night
+scene: A candlelit upstairs room full of guests in feathered and lacquered masks, one masked figure watching a student without moving.
+text: {Tonight every guest wears a mask, and nobody says why. The landlady hands you one too, plain black, no feathers.|The masks again. One guest, in lacquered silver, asks for you by the colour of your mask.|The masked night. The silver mask is here, and has saved you the seat beside it.} Without faces the room is easier to read, and harder.
+> left: Sit with the masks
+  hint: The best tips, and nobody's name.
+  challenge negotiate adept- wild:
+    win:
+      gold +large
+      guile +small
+      mood -small
+      say: {You learn to read a room by its hands. You go home with heavy pockets, no names, and a feeling you can't put down.|The silver mask asks you nothing at all, and tips like a duke. You lie awake wondering who that was.|Behind the masks the guests say what they mean. You come home rich and a little colder.}
+    lose:
+      gold +tiny
+      mood -medium
+      queue night_suspicion chance even
+      say: {A masked guest won't take no for an answer, and nobody can see who it is. You leave by the back stair with a few coins and a very bad feeling.|The silver mask leans too close, and nobody else in the room seems to notice. You go home by the long way.|A guest takes your mask off, laughing, in front of everyone. Someone at the far table looks very like a prefect.}
+> right: Work the door
+  hint: Fair pay in the cold stairwell.
+  gold +medium
+  health -small
+  say: {You take coats at the door all night. The stairwell is freezing, and every coat smells of a different perfume.|You keep the door, and turn away a guest the landlady points out. The draught gets into your bones.|You work the door and watch the masks arrive one by one. The silver one bows to you, which is worse than being spoken to.}
+
+@event company_patron
+title: A Guest Who Offers Patronage
+trigger: queued
+class: routine
+tone: warm
+repeat: 3
+art: book
+tags: money study company_night
+scene: An elderly scholar in a moth-eaten velvet coat at a tavern table, a pile of rare books beside a purse, talking earnestly to a student.
+text: {An old collector of books has asked for "the student who reads". He wants company and argument, and he says he funds promising young minds.|The old collector is back with a new pile of books and a new argument. He has been thinking about what you said, for a month.|The collector again. He calls you his protégé to the whole room now, which is flattering and a little alarming.}
+> left: Take the patron's purse
+  hint: Generous, and he'll want your evenings.
+  gold +large
+  study -small
+  say: {He funds your books for the term, and wants you at his table every week. You argue till two, and sleep through a lecture.|The purse is generous and so is the argument, which runs until the candles do. Your coursework waits.|He pays you to disagree with him. You are good at it, and your exam reading is not getting done.}
+> right: Ask to borrow his books
+  hint: Learning instead of money.
+  lore +medium
+  gold +small
+  say: {He beams, and lends you three books older than the castle. You read them on the walk home by moonlight.|He lends you his annotated copy, full of furious notes in the margin. They are better than the book.|"Finally," he says, "someone who wants the books more than the money." He gives you a small purse anyway.}
+
+@event company_castle
+title: Someone from the Castle
+trigger: queued
+class: routine
+tone: tense
+repeat: 3
+art: eye
+tags: money danger company_night
+cast:
+  guest: any where tagged(guest, teacher) and met(guest)
+scene: A professor out of academic dress at a tavern card table, a glass of wine halfway to their mouth, looking up at a student holding a tray.
+text: {Halfway up the stair you see {guest} at the corner table, out of robes, with a glass of wine and the air of someone who would rather not be seen either.|{guest} is at the corner table tonight. You both pretend this is a coincidence.|Tonight it is {guest} in the corner. Half the faculty seem to drink here, and there is an arrangement: nobody has seen anybody.}
+> left: Serve {them} as if you'd never met
+  hint: Discretion pays; a slip gets talked about.
+  challenge deceive adept:
+    win:
+      gold +large
+      rel guest +tiny
+      say: {You serve {guest} like any guest, and {they} tip{s} like one, too generously. At breakfast {they} nod{s} to you as if nothing ever happened.|You keep a straight face all night. On the way out {guest} leaves a coin under {their} glass and, beside it, a very small nod.|Neither of you blinks. In class next week {guest} calls on you with something almost like respect.}
+    lose:
+      gold +small
+      rel guest -small
+      queue night_suspicion chance likely
+      say: {You drop a glass when {guest} looks up. Everyone turns. {guest} leaves early, and is cold to you all week.|You say "Professor" before you can stop yourself. The table laughs. {guest} does not.|{guest} catches your eye and you both flinch, in front of everyone. By morning half the village knows who was where.}
+> right: Slip back downstairs
+  hint: Give up the night's pay to stay unseen.
+  gold +tiny
+  mood -small
+  say: {You give the landlady an excuse and go down the back stair. It's a lost night's pay, and the walk home is sulky.|You hand your tray to another student and leave. {guest} never sees you; your purse notices.|You go home early, and lie awake doing the sum of what you didn't earn.}
+
+@event company_wants_more
+title: A Guest Who Wants More
+trigger: queued
+class: routine
+tone: grim
+repeat: 3
+art: mask
+tags: money danger company_night
+scene: A well-dressed guest at a tavern table holding out a heavy purse, a student standing back from the table with arms folded, a landlady watching from the door.
+text: {A guest with rings on every finger has been generous all night, and now pushes a heavy purse across the table. "Come back to my inn," he says. "Just to talk." The house rule is clear.|Another guest, another heavy purse, another invitation "just to talk". The landlady is busy across the room.|You know the look now: the generous hour, then the purse, then the invitation. Tonight it comes from a woman in pearls.}
+> left: Call the landlady
+  hint: The house rule; the tip goes with the guest.
+  alignment +tiny
+  gold +small
+  mood -small
+  say: {The landlady has the guest down the stair in a minute, purse and all. You're paid for the hours, and shaky for the rest of the night.|"The stair," says the landlady, and the guest takes it. You keep your wage and lose the tip, and your hands won't stop shaking.|The guest is shown out. The landlady pours you something strong and pays you for the night. It doesn't feel like enough.}
+> right: Keep the purse, promise nothing
+  hint: Talk them round and keep it; it can go wrong.
+  alignment -tiny
+  challenge deceive adept:
+    win:
+      gold +large
+      mood -small
+      say: {You let him believe tomorrow, and then the day after. He leaves the purse. You feel like a pickpocket with good manners.|You laugh, and keep the purse, and see the guest into a carriage, alone. It's the most you've earned in a night. You don't sleep.|You promise nothing in a way that sounds like something. She leaves happy and you leave rich, and a little ashamed.}
+    lose:
+      mood -medium
+      health -tiny
+      queue night_suspicion chance even
+      say: {He sees through you, and takes his purse back with a hand that grips too hard. The landlady throws him out, too late.|The guest makes a scene on the stair, loudly calling you a cheat. A prefect on the stair hears every word.|She wants the purse back, loudly, and the landlady gives it to her. You go home with nothing but a bruise on your wrist.}
+
 # ---------------- The boathouse ----------------
 
 @event ring_on_yourself
 title: Bet on Yourself
 place: boathouse
 slot: midnight
+type: menu
 class: routine
 tone: tense
+# The ring's other door (feedback 2026-10-16): the same chain as midnight_boathouse_ring, with a bookmaker.
 repeat: 4
 weight: 9
 art: sword
 tags: danger money
 scene: A lantern-lit cellar under a boathouse, a chalk ring on wet flagstones, a bookmaker holding up a slate of odds, a crowd in scarves.
-text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yourself?" he says. "Put your money where your fists are."|The bookmaker knows your name and your odds, and they've shortened.|Your name is on the slate tonight before you've said you'll fight.} {The water slaps under the floor.|Somebody is collecting teeth in a jar, as a joke, probably.|The crowd is bigger than last time.}
+on_show:
+  unflag ring_last_standing
+  chance unlikely:
+    flag ring_last_standing
+text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yourself?" he says. "Put your money where your fists are."|The bookmaker knows your name and your odds, and they've shortened.|Your name is on the slate tonight before you've said you'll fight.} {flag(ring_last_standing): Across the top of his slate he has chalked LAST STANDING: step in tonight and you fight until you drop or have beaten four.|Win, and the next bout pays more.}
 > left: Bet your purse on yourself
   alignment -tiny
   gold -medium
@@ -166,8 +361,10 @@ text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yo
       gold +medium
       renown +tiny
       health -small
-      say: {You win, bloodied and grinning, and the bookmaker pays out through his teeth.|The crowd roars. You collect your bet and your opponent's grudging handshake, and limp home rich.|Your name was on the slate before you agreed, and the crowd is bigger for it. You win, and the bookmaker pays you in front of all of them.}
+      queue ring_bout_2 now
+      say: {You win, bloodied and grinning, and the bookmaker pays out through his teeth.|The crowd roars. You collect your bet and your opponent's grudging handshake.|Your name was on the slate before you agreed, and the crowd is bigger for it. You win, and the bookmaker pays you in front of all of them.}
     lose:
+      unflag ring_last_standing
       health -medium
       queue night_suspicion chance even
       say: {You go down in the third exchange, and your purse goes with you. On the way home a light is on in the prefects' corridor.|A bad loss: the bet, a tooth's worth of pride and most of your skin.|The bigger crowd came to see you lose, it turns out. You oblige, and your purse goes with your pride.}
@@ -178,10 +375,138 @@ text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yo
     win:
       gold +small
       health -small
-      say: {A clean win for a small purse. Nobody's rich, nobody's hurt much.|You win, bow to your opponent and leave before the bookmaker can talk you into more.|You fight for the purse alone and win it in front of the biggest crowd yet. The bookmaker sighs at the money he didn't make on you.}
+      queue ring_bout_2 now
+      say: {A clean win for a small purse. The money-holder asks if you'll go again.|You win and bow to your opponent. The bookmaker is already chalking your name for the next bout.|You win the purse in front of the biggest crowd yet. The bookmaker sighs at the money he didn't make on you.}
     lose:
+      unflag ring_last_standing
       health -medium
       say: {You lose, bow, and spend the walk home finding new bruises.|A loss, and the loser's purse, which is nothing at all.|You lose in front of the biggest crowd yet. At least it was only the purse.}
+> no: Not tonight
+  hint: Watch, and bet if you like.
+  unflag ring_last_standing
+  queue ring_side_bets now
+  say: {The bookmaker shrugs and rubs your name off the slate.|"Your loss," says the bookmaker. "Or someone else's gain. Care to back one?"|You leave your name on the slate and your fists in your pockets.}
+
+@event ring_bout_2
+title: The Second Bout
+trigger: queued
+class: routine
+tone: tense
+art: sword
+tags: danger money
+scene: A chalk ring under a boathouse, a fresh opponent rolling their shoulders, a crowd pressing in with coins in their fists.
+text: The money-holder points at the chalk again. {~A broad second-year from the rowing crew steps in, cracking her knuckles.|A wiry villager with a boxer's nose steps in, and the crowd knows him.|A quiet student in a scarf steps in and doesn't take the scarf off.} {flag(ring_last_standing): Last standing: there's no stepping out now.|The purse has doubled. Or you can take what you've won and go.}
+> left: Fight on
+  hint: A harder bout, a bigger purse.
+  challenge combat adept:
+    win:
+      gold +large
+      queue ring_bout_3 now
+      say: {~The rower is strong and slow. You make her chase you until she's tired, and the crowd loves it.|You take two of his punches to give one, and the one is enough. The purse is heavier.|The scarf comes off in the second exchange, and so does your opponent's footing.}
+    lose:
+      unflag ring_last_standing
+      health -medium
+      mood -small
+      queue night_suspicion chance even
+      say: {~The rower puts you on the flagstones and helps you up, which is worse.|He knows every trick you know, and three more. You limp up the steps with the night's winnings and a split lip.|The quiet one is quick. You never see the move that ends it.}
+> right: Take the purse and go
+  hint: Keep what you've won.
+  when: not flag(ring_last_standing)
+  mood +tiny
+  say: {~You bow out with the purse in your fist. The rower shrugs and finds someone else.|You leave him to the next fool, and count your winnings on the walk home.|The scarf nods to you as you go, as if to say: some other night.}
+
+@event ring_bout_3
+title: The Third Bout
+trigger: queued
+class: routine
+tone: tense
+art: sword
+tags: danger money
+scene: A packed boathouse cellar roaring at a chalk ring, a hulking fighter with taped hands stepping in, lantern light swinging.
+text: Two down. The cellar is packed now and the betting is loud. {~The house sends in a champion: a fourth-year duellist with a name on the club's board.|The house sends in a farrier's apprentice who lifts horses for a living.|The house sends in someone in a hood who won't give a name.} {flag(ring_last_standing): Last standing: the chalk is the only way out.|One more win and the purse is the biggest yet. Or walk away a winner.}
+> left: Fight on
+  hint: Harder still, and worth it.
+  challenge combat adept+:
+    win:
+      gold +large
+      gold +small
+      renown +small
+      queue ring_bout_4 now
+      say: {~You beat a name off the duelling board, and the cellar shakes with it.|You use the farrier's weight against him and he goes down like a felled tree. The purse is fat.|The hood comes off as they fall: nobody you know. The crowd chants your name instead.}
+    lose:
+      unflag ring_last_standing
+      health -large
+      queue night_suspicion chance even
+      say: {~The duellist dismantles you, politely. You wake on the steps with the purse still in your pocket and a ringing ear.|The farrier's apprentice lifts you like a foal and sets you down hard. Your ribs remember it all week.|The hooded fighter is something else. You go down and stay down, and someone carries you to the door.}
+> right: Take the purse and go
+  hint: Leave a winner.
+  when: not flag(ring_last_standing)
+  mood +small
+  say: {~You leave the duellist waiting in the chalk. The crowd boos, and your purse doesn't care.|Nobody calls you a coward to your face; you're holding too much money.|You bow to the hood and climb the steps. Some fights are better not known.}
+
+@event ring_bout_4
+title: The Last Bout
+trigger: queued
+class: routine
+tone: tense
+art: trophy
+tags: danger money
+scene: A boathouse cellar gone silent around a chalk ring, the night's champion stepping in, every lantern turned toward the fighters.
+text: Three down, and the cellar has gone quiet. {~The ring's own champion steps in: a silent graduate who has not lost in a year.|The bookmaker himself takes off his coat. Nobody knew he could fight.|A tall stranger in sailor's oilskins steps in, and the old hands start betting against you.} {flag(ring_last_standing): Last standing: win this and the night is yours.|Win, and the cellar will talk about you for a term. Or go while you can still walk.}
+> left: Fight the last bout
+  hint: Expert opposition; the night's whole purse.
+  challenge combat expert-:
+    win:
+      gold +huge
+      renown +small
+      health -small
+      if flag(ring_last_standing):
+        gold +large
+        renown +small
+      unflag ring_last_standing
+      say: {~The champion falls, and the cellar stamps until dust comes down from the boathouse floor. You go home with a purse you can barely lift.|The bookmaker goes down laughing and pays you from his own coat. Your name will be on the slate for a year.|The stranger yields, grinning, and buys you a drink you can't hold. You walk home sore and rich and famous in one cellar.}
+    lose:
+      unflag ring_last_standing
+      health -large
+      queue night_suspicion chance likely
+      say: {~The champion ends it in one move, and you understand why nobody has beaten them. You wake on the steps with your night's winnings and a long walk.|The bookmaker fights dirty and wins clean. You crawl up the steps holding your purse and your ribs.|The stranger fights like the sea, and you go under. The crowd is so loud the prefects must hear it.}
+> right: Take the purse and go
+  hint: Three wins is a fine night.
+  when: not flag(ring_last_standing)
+  mood +small
+  say: {~You bow out with three wins and a heavy purse. The champion nods: next time.|You don't fight the man who sets the odds. You take your winnings before he can change his mind.|You look at the stranger's hands and decide three is plenty.}
+
+@event ring_side_bets
+title: Side Bets
+trigger: queued
+type: menu
+class: routine
+tone: tense
+art: dice
+tags: money danger
+scene: Students on the steps of a boathouse cellar passing coins to a bookmaker while two fighters circle in a chalk ring below.
+text: {You find a place on the cellar steps. The bookmaker works his way along them, slate in hand.|From the steps you can see the fighters' feet, which tell you more than their faces. The bookmaker is coming round.|You know the regulars on the steps now, and who bets with their heart. The bookmaker holds out his slate.}
+> left: Back the favourite
+  hint: A small stake on the likely winner.
+  gold -small
+  challenge research using guile journeyman luck:
+    win:
+      gold +medium
+      say: {Your fighter wins. You collect quietly and leave before anyone remembers your face.|You read the footwork right. The bookmaker pays you as if it hurt.|The favourite wins, as favourites do. You pocket a small, sensible profit.}
+    lose:
+      say: {Your fighter goes down in the first exchange. So does your stake.|You picked the footwork, not the fighter. The bookmaker smiles.|The favourite slips on the wet stone, and your crowns slip with them.}
+> under: Back the underdog
+  hint: A bigger stake against the odds.
+  gold -medium
+  challenge research using guile adept unlikely luck:
+    win:
+      gold +large
+      gold +medium
+      say: {The underdog wins, and you're the only one on the steps who backed them. The bookmaker counts it out very slowly.|Your long shot lands one punch, and it's enough. The steps turn round to look at you.|You saw what nobody else did, the limp in the favourite's step. You walk home heavy with silver.}
+    lose:
+      say: {The underdog is an underdog for a reason. Your stake is gone in a minute.|A brave fight, a long fall, and your crowns go with it.|You backed your heart. Your purse pays for it.}
+> home: Go home
+  say: {You watch one bout and go home with your purse unopened.|You leave before the bookmaker reaches you.|You climb the steps into the cold and leave the ring to its noise.}
 
 @event lyra_ring_word
 title: Lyra Has Heard

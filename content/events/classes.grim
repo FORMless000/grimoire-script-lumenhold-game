@@ -716,12 +716,13 @@ art: book
 tags: class mystery
 chain: forbidden
 scene: A battered notebook with a cracked leather cover being slid across a library table, a silver key tucked into its spine.
-text: A fourth-year slides a battered notebook across the table. "My notes on the Restricted Section. I'm graduating. You look like you'd use them." A silver key is tucked in the spine.
+text: A fourth-year, Odile Varn, slides a battered notebook across the table. "My notes on the Restricted Section. I'm graduating. You look like you'd use them." A silver key is tucked in the spine.
 > left: Decline
   say: The fourth-year shrugs and slides the notebook to the next student. You watch it go.
 > right: Take the notebook
   alignment -tiny
   lore +medium
   flag forbidden_key
-  queue forbidden_section_1 in 1
-  say: The notes are brilliant, half-mad and annotated in three colours of ink. The key is cold in your pocket.
+  find lead_silver_key
+  discover restricted_section
+  say: The notes are brilliant, half-mad and annotated in three colours of ink. The key is cold in your pocket: it opens the Restricted Section, the locked door at the back of the library, after hours.

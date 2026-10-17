@@ -172,7 +172,7 @@ region: castle
 map: campus 352,245
 kind: public
 open: afternoon evening midnight
-discover: seen(forbidden_section_1) > 0
+discover: flag(forbidden_key) or seen(forbidden_section_1) > 0
 hint: A door at the back of the library that is always locked, and always slightly warm.
 hinted_when: turn >= 2
 art: lock
@@ -274,6 +274,8 @@ kind: public
 open: afternoon evening night midnight
 art: wave
 draws: social mystery romance
+# A boathouse night (feedback 2026-10-16): the ring first (either door), then one drawn card.
+always: midnight_boathouse_ring|ring_on_yourself
 desc: An old wooden boathouse and a jetty out over the water. People come here to say the things they can't say indoors.
 
 @place orchard
@@ -333,6 +335,8 @@ track: tavern
 open: afternoon evening night midnight
 art: cup
 draws: job money social
+# A Newt night (feedback 2026-10-16): the company offer first, then the high table.
+always: newt_company newt_company_regular newt_high_table
 desc: The village tavern: low beams, a fire that never goes out, and a landlady who remembers every student's tab to the penny.
 
 @place mabels

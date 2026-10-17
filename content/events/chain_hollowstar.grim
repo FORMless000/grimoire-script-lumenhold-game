@@ -248,15 +248,53 @@ chain: hollowstar
 scene: A grey-coated man sitting uninvited at a library table, a black velvet box open in front of him, the candles around him burning blue.
 text: The man in grey is waiting at your library table. "You've been asking questions about the Star," he says pleasantly. "It's noticed you. It could make you extraordinary. All it wants is for someone to open a door."
 > left: "Get out."
+  hint: He leaves. He remembers.
   alignment +small
   flag grey_offer_seen
   mood +tiny
-  say: He inclines his head and leaves. The candles return to yellow. You realise your hands are trembling.
+  gain grey_watching
+  queue hs_grey_return within 2..4
+  say: He inclines his head and leaves. The candles return to yellow. You realise your hands are trembling, and that he looked at you on the way out the way a man looks at a lock.
 > right: "...What would it give me?"
+  hint: Everything, a little. The nights turn cold.
   flag grey_offer_seen hollow_tempted
-  arcana +medium
+  arcana +small
+  lore +small
+  alchemy +small
+  charm +small
+  vigor +small
+  guile +small
   alignment -medium
-  say: He shows you, just for a moment. Power, endless and cold. When he's gone, you can still taste it.
+  gain star_taste
+  queue hs_grey_return within 2..4
+  say: He shows you, just for a moment. Power, endless and cold, in everything you can do at once. When he's gone you can still taste it, and that night you dream of water closing over your head.
+
+@event hs_grey_return
+title: A Small Service
+trigger: queued
+defer: off_campus
+class: story
+tone: eerie
+art: mask
+tags: mystery hollowstar danger
+chain: hollowstar
+# hs_grey_offer's follow-up (feedback 2026-10-16): the man in grey comes back with a first, small ask.
+scene: A grey-coated man on a frozen garden bench, a sealed letter held out between two gloved fingers, the fountain beside him iced over.
+text: {flag(hollow_tempted): The man in grey is on a bench in the winter garden, and the fountain beside him has frozen mid-splash. "You liked what you tasted," he says. "Here is how it continues." He holds out a sealed letter. "Leave this under the third plank of the boathouse jetty. Nothing more."|The man in grey is on a bench in the winter garden, and the fountain beside him has frozen mid-splash. "You told me to get out," he says, pleasantly. "I did. Now a small thing, and I'll stay out." He holds out a sealed letter. "The third plank of the boathouse jetty. Nothing more."}
+> left: Take the letter to the jetty
+  hint: Hollow. He pays in what he promised.
+  alignment -small
+  flag hollow_tempted grey_errand
+  gold +medium
+  gain star_taste
+  say: You do it at midnight, with the lake breathing under the planks. In the morning there's a purse on your pillow and the cold dreams are back, sweeter than before.
+> right: Drop it in the fountain unread
+  hint: Lumen. He won't thank you.
+  alignment +small
+  mood -small
+  lose star_taste
+  gain grey_watching
+  say: You break the ice and push the letter under. The ink runs blue. He watches it sink, then you, and then he isn't there, and the fountain starts to splash again as if nothing had happened.
 
 @event hs_grey_invitation
 time: evening night

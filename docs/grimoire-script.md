@@ -293,6 +293,7 @@ One statement per line. Blocks end with `:` and nest by indentation.
 | `queue event in 3` | …in 3 months (`in 0` means later this month). |
 | `queue event now` | It becomes the **very next card** (this is how menus lead to sub-scenes). |
 | `queue event … with npc` / `with lyra` | Carry an actor into the queued event (the target uses `actor: npc`). |
+| `queue any tagged <tag> …` | (Feedback 2026-10-16.) A pool instead of one event: when it falls due (at once for `now`), one `trigger: queued` event with that tag is drawn by the usual score (`when`, cast, cooldown, novelty, weight); none eligible, nothing comes. It takes the same `now` / `in N` / `within a..b` / `with` / `chance` as a named queue. Lint wants at least one queued event with the tag; those events are not orphans, and `grim reach` and `grim graph` treat the queue as reaching the whole pool. |
 | `queue event … chance unlikely` (or a % such as `chance 33`, legacy) | When it falls due, push the card with those odds by nature (`@balance likelihood`), else drop it (playtest 2, I4); `now` and `in 0` roll at once. Copies of one event due the same month give at most one card. The card shows no odds. The budget lint counts it as a risk when the queued card is an `incident` or `crisis`, and the simulated players score it as a risk weighted by its odds (I8). |
 | `rel lyra +small` · `spark lyra +tiny` · `bond lyra friend` · `meet lyra` | Relationships. Use a cast role (or `npc` for the bound actor) instead of an id. Each implies `meet`. (`love` is *legacy* for `spark`.) |
 | `end ending_id` | Game over with that ending (after the outcome card). |
@@ -329,7 +330,7 @@ Avoid contractions that break with "they" (`{they}'s`, `{they}'ve`).
    - **random** events until the deck holds `cards_per_month` (3), and at least `min_random_per_month` (1) of them.
 
    Social and random cards are shuffled.
-3. Cards are played in order. `queue … now` inserts at the front. Each card re-checks its `when` before showing (so a queued follow-up can quietly skip itself).
+3. Cards are played in order. `queue … now` inserts at the front. Each card re-checks its `when`, and the cast roles' `where:` for a cast bound when it was pushed (feedback 2026-10-16), before showing (so a queued follow-up can quietly skip itself).
 4. When the deck is empty, `month_end` hooks run, then the next month begins, or the final ending is chosen after the last month.
 
 **Triggers in short**
@@ -471,7 +472,7 @@ Worldbook blocks are **data**: canon for authors, briefs and lint. Until phase 2
 |---|---|---|
 | `@npc` (extended) | `age` (required; romance needs 18+), `role`, `year`, `traits` / `interests` (from `@vocab`), `voice` | `stats: arcana 34 lore 22 wealth 5` · `schedule: place@slot,slot … place@slot:30` (a number: there that share of days, decided per month without the RNG; M42) · `schedule_break: …` (the schedule on breaks, or `away`: gone for the break, reachable only by letter) · `gone_when: <condition>` (review fixes: while it holds the character is nowhere on the map, fills no cast role and is drawn for no card except letters, e.g. `flag(ilse_taken)` or `flag(tobias_went_home) and since(tobias_bad_harvest) < 2`; scenes queued for them still play) · `distant: true` (feedback 2026-10-15: a pen pal; never on the map or `around()`, fills no cast role and no `actor: any`, letters included, and reaches you only through their own `actor:` cards, which are `trigger: letter`, at a steady rate of their own; auto and queued scenes with them still play) · `relations: npc:value …` |
 | `@fact npc.key` | what can be learned about a character: `tier` surface / personal / secret, `unlock` (expression), `text` | |
-| `@place` | `region`, `kind` (public, club, job, thesis, internship, plan), `track`, `always: <event>` (feedback 2026-10-15: that event of the place comes first on every visit while its `when` holds, whatever its cooldown, followed by one drawn card), `open` slots, `discover` / `closed_when` / `hinted_when` (expressions), `hint`, `desc` | `map: campus x,y` |
+| `@place` | `region`, `kind` (public, club, job, thesis, internship, plan), `track`, `always: <event> …` (feedback 2026-10-15 and 2026-10-16: the listed events of the place come first on every visit, in order, each while its `when` holds, whatever its cooldown, followed by one drawn card; a group `a|b` plays one of its eligible events by weight, and the others aren't drawn on that visit; an event with `slot:` counts only in that slot, midnight included, one without only on daytime visits), `open` slots, `discover` / `closed_when` / `hinted_when` (expressions), `hint`, `desc` | `map: campus x,y` |
 | `@track` | `kind` (course, club, job, internship, thesis), `skill`, `levels` + `level_names`, `place`, `hidden`, `prereq`, `ranks`, `due`, `lead`, `standard` (a course's rung per level, for `standard` checks) | `teaches: spell@level …` · `pay: 8, 12, 18` |
 | `@spell` | `discipline` (a course track) | `cost: 8, 6, 5` · `power: 1, 2, 3` |
 | `@arc` | `canon`, `clues`, `key_clues`, `cast`, `act_names` (the acts as players read them, comma-separated) | `acts: name@yN …` · `clock: 0..12` · `beats: clock@yNmM …` |

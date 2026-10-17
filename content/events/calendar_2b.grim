@@ -737,24 +737,136 @@ text: They send you out. Twenty minutes on a bench in the corridor, with the clo
 
 # ---------------- Festivals that take a visit (design §4.4) ----------------
 
+@event lantern_making
+slot: noon
+title: A Lantern to Launch
+type: menu
+class: routine
+tone: light
+trigger: auto
+# Lantern Night as a festival (feedback 2026-10-16): the lantern first, on the Ball's pattern (ball_robes).
+when: month == 2 and term
+repeat: 4
+priority: 25
+art: lantern
+tags: festival money
+scene: A dormitory table covered in paper, wire and candle stubs, a student folding a lopsided paper lantern.
+text: {year == 1: Tonight is Lantern Night, and everyone else seems to have known for weeks. You need a lantern.|{final_year: Your last Lantern Night. The lantern should be a good one.|Lantern Night again, and last year's lantern did not survive the trunk.}} {~The village stationer has fine rice paper, at a price.|Your roommate is folding theirs with their tongue between their teeth.|The common room is ankle-deep in paper offcuts.}
+> left: Buy fine paper in the village
+  gold -small
+  mood +small
+  flag lantern_fine
+  say: {~Rice paper so thin you can read through it, and a proper beeswax candle. It folds like a dream.|The stationer sells you paper the colour of the dawn sky. Your lantern will be the finest on the shore.|Gold-flecked paper, too dear and entirely worth it. You fold it slowly, as if it might mind.}
+> middle: Make your own from scraps
+  alchemy +small
+  health -tiny
+  say: {~Old exam paper, a bent wire and a candle stub. Your fingers smell of wax for a day, and one of them is burnt.|You glue it with porridge and patience. It's lopsided, and it's yours.|You fold it from a letter from home. It feels right to send that out over the water.}
+> right: Glamour a plain one
+  challenge spell apprentice+:
+    win:
+      mood +small
+      guile +tiny
+      flag lantern_fine
+      say: {~A plain paper bag becomes a lantern of stained glass. Nobody guesses.|You glamour your lantern into a little silver moon. Three people ask where you bought it.|Your lantern shimmers like mother-of-pearl. You'll have to keep it lit all evening, or it'll show.}
+    lose:
+      mood -small
+      renown -tiny
+      say: {~The glamour slips at dusk, and your stained-glass lantern turns back into a paper bag in front of everyone.|Your silver moon fades to brown paper halfway to the shore. A first-year points.|The pearl sheen peels off like old paint. You carry it lit-side-in, and fool nobody.}
+
 @event lantern_night_v3
 title: Lantern Night
 place: lakeshore
 replaces: visit2
 when: month == 2
 repeat: 12
+type: menu
 class: milestone
 tone: warm
 art: lantern
 tags: festival
 scene: The Mirror Lake at night, hundreds of paper lanterns drifting over the water, students crowding the shore.
-text: Lantern Night. The whole academy gathers on the lakeshore with paper lanterns, each carrying a wish out over the water. {month == 2 and year == 1: Your first one.|Another year, another wish.}
+text: Lantern Night. The whole academy gathers on the lakeshore with paper lanterns, each carrying a wish out over the water. {month == 2 and year == 1: Your first one.|{final_year: Your last one, and you know it.|Another year, another wish.}}{flag(lantern_fine):  Yours is one of the finest on the shore.|} Lanterns that wash back up are read by whoever finds them, they say.
 > left: Wish for something selfish
+  unflag lantern_fine
   mood +medium
-  say: Your lantern goes out over the water and keeps its secret. You feel lighter for having asked.
+  queue lantern_reeds now chance even
+  say: {year == 1: Your lantern goes out over the water and keeps its secret. You feel lighter for having asked.|{final_year: You wish for what comes after. The lantern climbs high and goes out of sight before anyone else's.|You wish for the same thing as last year, more firmly. The lantern seems to take note.}}
 > right: Wish for someone else
+  hint: Someone close may ask you about it.
+  unflag lantern_fine
   mood +medium
-  say: You don't tell anyone who. The lantern seems to know; it flies straight.
+  alignment +tiny
+  queue lantern_asked in 1
+  say: {year == 1: You don't tell anyone who. The lantern seems to know; it flies straight.|{final_year: You wish for everyone you'll leave behind here. It's a heavy lantern, and it flies anyway.|You wish for someone you love, and keep their name behind your teeth. The lantern flies straight.}}
+> read: Read other people's wishes
+  hint: Tempting. Not kind.
+  unflag lantern_fine
+  alignment -small
+  guile +small
+  queue lantern_washed_up in 1 chance likely
+  say: {year == 1: You fish a lantern out of the shallows and read it by its own candle. Someone wants to pass Alchemy. Someone wants a kiss. You feel like a thief, and read another.|{final_year: In your last year you finally do what everyone dares: you read the wishes caught on the jetty. Half are about leaving. You put them back very carefully.|You read three wishes caught in the reeds. One of them has your name on it. You put it back, and don't sleep.}}
+
+@event lantern_reeds
+title: Caught in the Reeds
+trigger: queued
+class: routine
+tone: warm
+repeat: 12
+art: lantern
+tags: festival
+scene: A small paper lantern tangled in lake reeds near the shore, its candle guttering, a tearful first-year on the bank.
+text: Further along the shore a first-year is crying quietly. Their lantern caught in the reeds a few yards out, and it is guttering, wish and all.
+> left: Wade in and free it
+  alignment +tiny
+  health -tiny
+  mood +small
+  say: The water is shockingly cold. You lift the lantern clear and push it out, and it catches the air and goes. The first-year looks at you as if you'd done magic, which, in a way, you have.
+> right: Tell them wishes don't need lanterns
+  charm +small
+  mood -tiny
+  say: You sit with them on the bank and say the true thing: the wish counts when you make it. They stop crying. The lantern goes out in the reeds, and neither of you watches.
+
+@event lantern_washed_up
+title: A Lantern Washes Up
+trigger: queued
+defer: off_campus
+class: routine
+tone: warm
+repeat: 12
+art: lantern
+tags: festival
+scene: A burnt-out paper lantern lying on the wet stones of a lakeshore at dawn, a folded wish still tucked inside it.
+text: A week after Lantern Night a lantern washes up at your feet on the shore, burnt out, the wish still folded inside it. The handwriting is neat and nervous.
+> left: Read it
+  alignment -tiny
+  mood +small
+  say: It's a wish about someone, a student who "never notices anything". You recognise the handwriting from the library sign-out book, and say nothing, ever.
+> right: Send it back out unread
+  alignment +tiny
+  mood -tiny
+  say: You relight the stub with a snap of your fingers and push it out again. It wobbles off over the water, its secret intact, and you never find out.
+
+@event lantern_asked
+title: What Did You Wish For?
+trigger: queued
+defer: off_campus
+class: routine
+tone: warm
+repeat: 12
+art: heart
+tags: festival social
+cast:
+  dear: any where (bond(dear) == "partner" or bond(dear) == "close" or bond(dear) == "friend") and around(dear)
+scene: Two students on a window seat with mugs of cocoa, one teasing the other, a paper lantern on the sill between them.
+text: {dear} drops onto the window seat beside you with two mugs of cocoa. "So," {they} say{s}. "Lantern Night. What did you wish for? You can tell me. I won't tell the lake."
+> left: Tell {them} the truth
+  rel dear +small
+  mood -tiny
+  say: You tell {them}. {dear} goes quiet for a moment, and then bumps {their} shoulder against yours and doesn't move it away. Saying it out loud was harder than writing it.
+> right: "If I tell you, it won't come true."
+  rel dear +tiny
+  mood +small
+  say: {dear} groans, and spends the rest of the cocoa guessing, each guess more ridiculous than the last. You laugh so hard you spill yours.
 
 # ---------------- Calendar beats ----------------
 
