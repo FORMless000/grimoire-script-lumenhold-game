@@ -7,7 +7,9 @@
  * random, cautious and social are the v0.2 policies, unchanged (same RNG use, so old sim results
  * reproduce). The others score each option by estimate(): the expected change of every resource,
  * skill and relationship from the engine's exact preview (design §8.3), plus the commitments
- * (electives, clubs, jobs) an option starts.
+ * (electives, clubs, jobs) an option starts. The strategy styles (scholar, nightlife, sleuth, romantic, homebody,
+ * explorer) add a goal on top of a scorer: cards they always answer one way, where they go, their origin. about(name)
+ * says what each one plays for.
  */
 'use strict';
 const G = require('../src/grimoire.js');
@@ -241,6 +243,184 @@ function pickMany(eng, view, opts) {
   return orFirst(view, keys);
 }
 
+// ---------------- Strategy styles (2026-10-17): players with a goal, each testing one part of the design ----------------
+// Each wraps a scorer with the decisions its goal makes for it: the cards it always answers one way, where it goes on
+// the map, its origin. `about` says what the strategy is, in a player's words; `node tools/grim.js styles` prints them.
+
+// Wraps a style: `rules(eng, view)` returns a key to force (when that option is open) or null to let the base decide.
+function withRules(base, name, rules, extra) {
+  return Object.assign({}, base, { name, pick(eng, view) {
+    const k = rules(eng, view);
+    if (k && view.options.some((o) => o.key === k && !o.disabled)) return k;
+    return base.pick(eng, view);
+  } }, extra || {});
+}
+const open = (view, key) => view.options.some((o) => o.key === key && !o.disabled);
+// Map routing for a style with its own idea of where to go: the default picks first (so obligations and festivals are
+// kept, design §6.3), then `choose(openPlaces, slot)` replaces each free pick; null keeps the default.
+function route(eng, view, choose, opts) {
+  const def = pickPlaces(eng, view, opts);
+  return view.slots.map((sl, i) => {
+    if (def[i] == null) return null;
+    const openPl = view.places.filter((p) => p.state === 'open' && p.open[i]), d = openPl.find((p) => p.id === def[i]);
+    if ((d && d.track && d.track.due > 0) || (view.festivals || []).some((f) => f.slot === sl && f.place === def[i])) return def[i];
+    return choose(openPl, sl) || def[i];
+  });
+}
+// A place's waiting story (sleuth): eligible cards there now that are story, plot or mystery, for this slot.
+function storyAt(eng, place, slot) {
+  const ix = eng.directorIndex(), pool = ix.byPlace[place] || [];
+  const prev = [eng._place, eng._slot]; eng._place = place; eng._slot = slot;
+  let n = 0;
+  try {
+    for (const e of pool) {
+      const story = eng.isPlot(e) || e.class === 'story';
+      if (!story && !(e.tags || []).includes('mystery')) continue;
+      if (!eng.eligible(e, new Set()) || !eng.timeFit(e)) continue;
+      if (eng.candidates(e).length) n += story ? 3 : 1;
+    }
+  } finally { [eng._place, eng._slot] = prev; }
+  return n;
+}
+// Places open at midnight that the player has found (the night card is answered before the midnight map exists).
+const nightPlaces = (eng) => Object.values(eng.c.places || {}).filter((p) => eng.s.places[p.id] && (p.open || []).includes('midnight') && eng.placeOpen(p, 'midnight') && (!p.map || p.map.map === (eng.c.game.map_id || 'campus')));
+// The romanceable character the player is closest to: spark first, then friendship.
+function favourite(eng) {
+  let best = null, bs = -1;
+  for (const [id, n] of Object.entries(eng.s.npcs || {})) {
+    if (!n.met || !(eng.c.npcs[id] || {}).romance || eng.distant(id)) continue;
+    const sc = n.spark * 2 + Math.max(0, n.rel);
+    if (sc > bs) { bs = sc; best = id; }
+  }
+  return best;
+}
+// Expected grade points of sitting an exam carefully (steady) or for top marks (wild).
+function gradePoints(eng, track, swing) { const o = eng.examOdds(track, swing); return (4 * o.probs[0] + 3 * o.probs[1] + 2 * o.probs[2]) / 100; }
+
+const STRATEGIES = {
+  // The scholarship student: the Crown pays for marks (term_gpa >= 3.0, more at 3.5), so everything serves the exams.
+  scholar: {
+    about: 'Scholarship origin. Studies above all (exam preparation weighs 4x a skill point), takes the courses it is strongest in, and on exam day picks careful or top marks by whichever has the higher expected grade points. Sleeps every night and never goes out. Crowns weigh 0.3 and a job nothing; a queued penalty\'s odds weigh -4.',
+    make() {
+      const base = scorer('scholar', { health: 1, mood: 1, gold: 0.3, renown: 0.3, skill: 1.2, lore: 2, 'study:': 4, 'rel:': 0.2, 'spark:': 0.1, 'bond:': 0.1, 'gain:': 2, 'gain:job': 0, risk: -4 });
+      return withRules(base, 'scholar', (eng, v) => {
+        if (v.id === 'night_out') return 'left';
+        if (v.id === eng.c.game.exam) { const t = (eng.s.cur && eng.s.cur.track) || v.track; if (t) return gradePoints(eng, t, 'wild') > gradePoints(eng, t, 'steady') ? 'right' : 'left'; }
+        return null;
+      }, {
+        pickOrigin: () => 'scholar',
+        pickMany: (eng, view, opts) => {
+          const strength = (o) => { try { return eng.c.tracks[o.key] ? eng.examOdds(o.key).a : -1; } catch (e) { return -1; } };
+          return orFirst(view, opts.slice().sort((a, b) => strength(b) - strength(a)).slice(0, view.pick).map((o) => o.key));
+        },
+      });
+    },
+  },
+  // The midnight regular: every night out, the Newt's upstairs room and table, the ring, its bouts and its bets.
+  nightlife: {
+    about: 'A balanced player by day who goes out every night it can, alternating the Gilded Newt (always takes a seat upstairs or works the room; the cards there by score) and the boathouse ring (steps in, bets its purse on itself, fights on while health is above 40, else takes the purse and goes). Crowns weigh 0.8 and a queued penalty\'s odds only -1, so suspicion barely deters it.',
+    make() {
+      const base = scorer('nightlife', { health: 1, mood: 1, gold: 0.8, renown: 0.4, skill: 1, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5, risk: -1 });
+      return withRules(base, 'nightlife', (eng, v) => {
+        if (v.id === 'night_out') return 'right';
+        if (v.id === 'newt_company' || v.id === 'newt_company_regular' || v.id === 'midnight_boathouse_ring') return 'left';
+        if (v.id === 'ring_on_yourself') return open(v, 'left') ? 'left' : 'right';
+        if (/^ring_bout_\d$/.test(v.id)) return eng.s.vals.health > 40 ? 'left' : 'right';
+        return null;
+      }, {
+        pickPlaces: (eng, view) => route(eng, view, (openPl, sl) => {
+          if (sl !== 'midnight') return null;
+          const want = eng.s.turn % 2 ? ['boathouse', 'gilded_newt'] : ['gilded_newt', 'boathouse'];
+          return want.find((id) => openPl.some((p) => p.id === id)) || null;
+        }),
+      });
+    },
+  },
+  // The detective: goes where the story is. Leads and plot cards wait at places; this player goes to them.
+  sleuth: {
+    about: 'A plot player who routes itself: each visit goes to the open place with the most eligible story, plot or mystery cards waiting (story cards count triple), and it goes out at night only when a story card (not just an eerie one) waits at a midnight place it has found. Values clues, leads and follow-ups (find 20, queue 10, flag 2) on top of a balanced player.',
+    make() {
+      const base = scorer('sleuth', { health: 1, mood: 1, gold: 0.4, renown: 0.3, skill: 1.2, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5, find: 20, queue: 10, flag: 2 });
+      return withRules(base, 'sleuth', (eng, v) => {
+        if (v.id === 'night_out') return nightPlaces(eng).some((p) => storyAt(eng, p.id, 'midnight') >= 3) ? 'right' : 'left';
+        return null;
+      }, {
+        pickPlaces: (eng, view) => route(eng, view, (openPl, sl) => {
+          let best = null, bs = 0;
+          for (const p of openPl) { const n = storyAt(eng, p.id, sl); if (n > 0 && n + rnd(eng) * 0.5 > bs) { bs = n + rnd(eng) * 0.5; best = p.id; } }
+          return best;
+        }),
+      });
+    },
+  },
+  // The romantic: lets every spark grow and goes where the one it likes best is.
+  romantic: {
+    about: 'Pursues romance: spark weighs 3 a point and friendship 0.5, it always lets a spark grow ("Let it grow" on spark_cooldown), and it visits the places where its favourite (the met romanceable character with the most spark, then friendship) is scheduled. Otherwise a balanced player; sleeps every night.',
+    make() {
+      const base = scorer('romantic', { health: 1, mood: 1, gold: 0.3, renown: 0.2, skill: 0.8, 'rel:': 0.5, 'spark:': 3, 'bond:': 1, 'gain:': 3 });
+      return withRules(base, 'romantic', (eng, v) => (v.id === (eng.c.game.spark_cooldown || 'spark_cooldown') ? 'left' : null), {
+        pickPlaces: (eng, view) => pickPlaces(eng, view, { seek: favourite(eng) }),
+      });
+    },
+  },
+  // The homebody: the careful player bedtime is built for. Every night in bed, every break at home.
+  homebody: {
+    about: 'A careful player: sleeps every night, spends every break at home (the +20/+10 sleep), weighs the odds of a queued penalty card at -8 (balanced: -3), and values health and mood at 1.5. Keeps its obligations on the map.',
+    make() {
+      const base = scorer('homebody', { health: 1.5, mood: 1.5, gold: 0.5, renown: 0.2, skill: 1, 'rel:': 0.3, 'spark:': 0.1, 'bond:': 0.1, 'gain:': 3, risk: -8 });
+      return withRules(base, 'homebody', (eng, v) => {
+        if (v.id === 'night_out') return 'left';
+        if (v.id === 'break_plan') return 'home';
+        return null;
+      });
+    },
+  },
+  // The explorer: sees as much of the game as it can.
+  explorer: {
+    about: 'Goes to the least-visited open place (weight 1 / (1 + visits), places with news first), goes out on half its nights to the least-visited midnight place, and on a card it has answered before prefers a different option from last time. Values anything that leads somewhere (find, queue, flag 3 each). For coverage: it reaches content the goal-driven styles skip.',
+    make() {
+      const base = scorer('explorer', { health: 1, mood: 1, gold: 0.4, renown: 0.3, skill: 1, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 4, find: 3, queue: 3, flag: 3 });
+      const leastVisited = (eng, openPl) => {
+        if (!openPl.length) return null;
+        const pool = openPl.some((p) => p.news) ? openPl.filter((p) => p.news) : openPl;
+        const seen = eng.s.visitsTo || {}, w = pool.map((p) => 1 / (1 + (seen[p.id] || 0)));
+        let x = rnd(eng) * w.reduce((a, b) => a + b, 0), k = 0;
+        for (; k < pool.length - 1; k++) { x -= w[k]; if (x < 0) break; }
+        return pool[k].id;
+      };
+      return Object.assign({}, base, {
+        name: 'explorer',
+        pick(eng, view) {
+          if (view.id === 'night_out' && open(view, 'right') && open(view, 'left')) return rnd(eng) < 0.5 ? 'right' : 'left';
+          const last = (eng.s.choices || {})[view.id], fresh = view.options.filter((o) => !o.disabled && o.key !== last);
+          if (last && fresh.length) return base.pick(eng, Object.assign({}, view, { options: fresh }));
+          return base.pick(eng, view);
+        },
+        pickPlaces: (eng, view) => route(eng, view, (openPl) => leastVisited(eng, openPl)),
+      });
+    },
+  },
+};
+// What each style plays for (`grim styles`): the strategy styles above, and a line for the older ones.
+const ABOUT = Object.assign({
+  random: 'Picks any open option at random, and goes anywhere. The careless-player floor.',
+  cautious: 'Random among options that can\'t lower a resource at 25 or below and don\'t give up a club or job.',
+  social: 'Picks the option that raises friendship, spark or a bond most.',
+  balanced: 'Scores every option by its previewed expected change: health and mood 1, skills 1.2, crowns 0.4, renown 0.3, friendship 0.3, commitments 5; minds exam preparation and performance. Keeps obligations on the map.',
+  aggressive: 'Skills 2.5 and crowns 0.8; ignores health, mood and people. The grinder the breakdown alarms are about.',
+  moneymaxx: 'Crowns 3 and a job 12; the money-maxxer the sinks are about.',
+  'focused:<skill>': 'One skill at 6, the rest 0.4; enrols in courses that train it.',
+  caster: 'A balanced player who learns and casts every spell it can.',
+  truant: 'A balanced player who never keeps its obligations on the map.',
+  lumen: 'A plot player who leans Lumen (alignment 2).',
+  hollow: 'A plot player who leans Hollow (alignment -2).',
+  plot: 'A balanced player who values clues (20), follow-ups (10) and flags (2).',
+  'social:<npc>': 'Courts one character: their friendship 5, spark 4, and goes where they are.',
+  nightowl: 'A balanced player who always goes out at night (default places).',
+  nojob: 'A balanced player who never takes a job.',
+}, Object.fromEntries(Object.entries(STRATEGIES).map(([k, v]) => [k, v.about])));
+function about(name) { const base = String(name).split(':')[0]; return ABOUT[name] || ABOUT[base] || ABOUT[base + ':<skill>'] || ABOUT[base + ':<npc>'] || ''; }
+
 function get(name) {
   name = name || 'random';
   if (LEGACY[name]) return LEGACY[name];
@@ -256,10 +436,11 @@ function get(name) {
   }
   if (base === 'truant') return Object.assign(STYLES.balanced(), { name: 'truant', pickPlaces: (eng, view) => pickPlaces(eng, view, { truant: true }) });
   if (base === 'social') return Object.assign(STYLES.social(arg), { pickPlaces: (eng, view) => pickPlaces(eng, view, { seek: arg }) });
+  if (STRATEGIES[base]) return STRATEGIES[base].make();
   if (STYLES[base]) return STYLES[base](arg);
   throw new Error('unknown play style "' + name + '" (' + list().join(', ') + ')');
 }
-function list() { return ['random', 'cautious', 'social', 'balanced', 'focused:<skill>', 'aggressive', 'moneymaxx', 'caster', 'truant', 'lumen', 'hollow', 'plot', 'social:<npc>', 'nightowl', 'nojob']; }
+function list() { return ['random', 'cautious', 'social', 'balanced', 'focused:<skill>', 'aggressive', 'moneymaxx', 'caster', 'truant', 'lumen', 'hollow', 'plot', 'social:<npc>', 'nightowl', 'nojob'].concat(Object.keys(STRATEGIES)); }
 
 // The origin screen (playtest 2, M32): a sim picks its origin up front, spread evenly over seeds (no RNG used),
 // so origin effects apply before month 1's charges, as in play.
@@ -329,4 +510,4 @@ function replay(eng, record) {
   return { eng, r };
 }
 
-module.exports = { get, list, estimate, pickPlaces, pickMany, pickOrigin, newGame, choiceFor, play, replay };
+module.exports = { get, list, about, STRATEGIES: Object.keys(STRATEGIES), estimate, pickPlaces, pickMany, pickOrigin, newGame, choiceFor, play, replay };

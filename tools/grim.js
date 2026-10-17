@@ -31,6 +31,7 @@
  *   node tools/grim.js balance [--quick] [--games N]
  *                                       play every play style; invariants fail (exit 1), alarms warn; includes the
  *                                       preview property test (every outcome within its preview; 1000 games, 100 with --quick)
+ *   node tools/grim.js styles             the simulated play styles and what each one plays for (tools/policies.js)
  *   node tools/grim.js curve [--games N] [--write]
  *                                       fit the expected-skill curve E(turn) from the balanced play style
  *   node tools/grim.js snapshot [NAME] [--out FILE]
@@ -1061,7 +1062,7 @@ function balance(opts = {}) {
   const { content, errors } = compileAll();
   if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
   const games = opts.games || (opts.quick ? 30 : 100);
-  const styles = opts.quick ? ['random', 'balanced', 'social', 'aggressive', 'truant', 'lumen', 'hollow'] : ['random', 'cautious', 'social', 'balanced', 'aggressive', 'moneymaxx', 'caster', 'truant', 'focused:arcana', 'focused:lore', 'focused:alchemy', 'focused:guile', 'social:lyra', 'social:corvin', 'lumen', 'hollow', 'plot'];
+  const styles = opts.quick ? ['random', 'balanced', 'social', 'aggressive', 'truant', 'lumen', 'hollow'] : ['random', 'cautious', 'social', 'balanced', 'aggressive', 'moneymaxx', 'caster', 'truant', 'focused:arcana', 'focused:lore', 'focused:alchemy', 'focused:guile', 'social:lyra', 'social:corvin', 'lumen', 'hollow', 'plot'].concat(Policies.STRATEGIES);
   const report = { format: 'lumenhold-balance', v: 1, contentHash: contentHash(), createdAt: new Date().toISOString(), games, styles: {}, invariants: [], alarms: [] };
   const fail = (msg) => report.invariants.push(msg), alarm = (msg) => report.alarms.push(msg);
   // Static invariants
@@ -1106,12 +1107,13 @@ function balance(opts = {}) {
     // since the yearbook's other lines still vary, but not a majority.
     const top = Object.entries(st.endings).sort((a, b) => b[1] - a[1])[0];
     const fallback = top && content.endings[top[0]] && content.endings[top[0]].kind !== 'early' && !content.endings[top[0]].when;
-    // focused:* styles chase one skill's ending on purpose, so dominance there is the point.
-    if (top && !name.startsWith('focused:') && top[1] / st.games > (fallback ? 0.5 : 0.35)) alarm(name + ': ' + top[0] + ' is ' + Math.round(100 * top[1] / st.games) + '% of headlines (> ' + (fallback ? 50 : 35) + '%)');
+    // focused:* styles and the scholar chase one skill's (or the scholar's) ending on purpose, so dominance there is the point.
+    if (top && !name.startsWith('focused:') && name !== 'scholar' && top[1] / st.games > (fallback ? 0.5 : 0.35)) alarm(name + ': ' + top[0] + ' is ' + Math.round(100 * top[1] / st.games) + '% of headlines (> ' + (fallback ? 50 : 35) + '%)');
     if (name === 'balanced') for (const k of ['health', 'mood']) if (st.zero[k] / st.games > 0.15) alarm('balanced: ' + k + ' hits 0 in ' + Math.round(100 * st.zero[k] / st.games) + '% of runs (> 15%)');
   }
   console.warn = origWarn;
-  for (const [name, st] of Object.entries(report.styles)) { designAlarms(name, st.runs || [], alarm); delete st.runs; }
+  for (const [name, st] of Object.entries(report.styles)) designAlarms(name, st.runs || [], alarm, report.styles);
+  for (const st of Object.values(report.styles)) delete st.runs;
   for (const [k, v] of Object.entries(warns)) alarm('runtime warning ×' + v + ': ' + k);
   // Every final ending (headline or yearbook line) should be reached by some play style that wants it.
   const reached = new Set(Object.values(report.styles).flatMap((st) => Object.keys(st.endings).concat(Object.keys(st.lines))));
@@ -1158,10 +1160,11 @@ function runMetrics(content, eng) {
   const early = eng.s.ended && eng.s.turn < eng.maxTurns ? eng.s.ended.id : null;
   const firstZero = (k) => { let n = 0; for (const m of termMonths) { n++; if (m.vals[k] <= 0) return n; } return (k === 'health' && early === 'ending_sent_home') || (k === 'mood' && early === 'ending_quiet_departure') ? termMonths.length : null; };
   const cls = (c) => h.filter((x) => x.t === 'card' && x.class === c).length;
+  const cards = h.filter((x) => x.t === 'card'), leads = eng.threads().flatMap((t) => t.leads || []);
   const years = Math.max(1, Math.ceil(eng.s.turn / 12));
   return {
     m24: at(24), end: eng.s.vals, skills,
-    goldY3: (at(36) || {}).gold, goldEnd: eng.s.vals.gold, turn: eng.s.turn,
+    goldY3: (at(36) || {}).gold, goldEnd: eng.s.vals.gold, turn: eng.s.turn, gpaEnd: eng.gpa(),
     tightPerYear: months.filter((m) => isTerm(m) && m.vals.gold < 8).length / years,
     manaHighShare: termMonths.length ? termMonths.filter((m) => m.vals.mana > 0.4 * manaMax(m.vals)).length / termMonths.length : 0,
     manaFullShare: termMonths.length ? termMonths.filter((m) => m.vals.mana >= 0.95 * manaMax(m.vals)).length / termMonths.length : 0,
@@ -1169,10 +1172,17 @@ function runMetrics(content, eng) {
     relAt24, swing, sparked: Object.keys(spark).length > 0,
     dropped: h.some((x) => (x.out && x.out.notes || []).some((n) => n.kind === 'dropped')) || h.some((x) => (x.summary || []).some((it) => (it.notes || []).some((n) => n.kind === 'dropped'))),
     incidentsPerYear: cls('incident') / years, windfallsPerYear: cls('windfall') / years,
+    // for the strategy styles (tools/policies.js): nights out, the scholarship, leads, romance, coverage
+    nightsOut: cards.filter((x) => x.id === 'night_out' && x.choice === 'right').length,
+    stipendPaid: cards.filter((x) => x.id === 'scholarship_award' && x.out && x.out.deltas && x.out.deltas.gold > 0).length,
+    stipendTerms: cards.filter((x) => x.id === 'scholarship_award').length,
+    leads: leads.length, followed: leads.filter((x) => x.followed).length,
+    firstPartner: (cards.find((x) => ((x.out && x.out.notes) || []).some((n) => n.kind === 'bond' && n.status === 'partner')) || {}).turn ?? null,
+    distinct: new Set(cards.map((x) => x.id)).size, early,
   };
 }
 // The design's Level-2 alarms (§8.8): wide tolerances, each judged on the median run of the style it is about.
-function designAlarms(name, runs, alarm) {
+function designAlarms(name, runs, alarm, all) {
   if (!runs.length) return;
   const med = (a) => { const b = a.filter((x) => x != null).sort((x, y) => x - y); return b.length ? b[Math.floor(b.length / 2)] : null; };
   const share = (f) => runs.filter(f).length / runs.length;
@@ -1210,6 +1220,32 @@ function designAlarms(name, runs, alarm) {
     if (rom.length && rom.filter((r) => r.swing >= 20).length / rom.length < 0.5) alarm(name + ': romance swings ≥ 20 within 3 months in only ' + Math.round(100 * rom.filter((r) => r.swing >= 20).length / rom.length) + '% of romance runs (design: volatile)');
   }
   if (name === 'truant' && !share((r) => r.dropped)) alarm('truant: never dropped or fired (design: skipping hurts)');
+  // The strategy styles (tools/policies.js `about`). Wide tolerances: each says a system no longer does its job.
+  const other = (n, f) => (all && all[n] && all[n].runs && all[n].runs.length ? med(all[n].runs.map(f)) : null);
+  if (name === 'scholar') {
+    const paid = runs.reduce((a, r) => a + r.stipendPaid, 0) / Math.max(1, runs.reduce((a, r) => a + r.stipendTerms, 0));
+    if (paid < 0.4 || paid > 0.95) alarm('scholar: the stipend is paid in ' + Math.round(100 * paid) + '% of terms (design: a real stake a study-first scholar mostly keeps; 40–95%)');
+    const g = med(runs.map((r) => r.gpaEnd)), gb = other('balanced', (r) => r.gpaEnd);
+    if (gb != null && g <= gb) alarm('scholar: GPA ' + g.toFixed(2) + ' is no better than balanced\'s ' + gb.toFixed(2) + ' (studying should pay in grades)');
+  }
+  if (name === 'nightlife') {
+    if (share((r) => r.early) > 0.2) alarm('nightlife: ' + Math.round(100 * share((r) => r.early)) + '% of runs end early (going out every night should cost, not end the run)');
+    const g = med(runs.map((r) => r.goldEnd)), gm = other('moneymaxx', (r) => r.goldEnd);
+    if (gm != null && g > gm) alarm('nightlife: ends with ' + Math.round(g) + ' crowns, more than moneymaxx\'s ' + Math.round(gm) + ' (the night pays better than any job)');
+  }
+  if (name === 'sleuth') {
+    const f = runs.reduce((a, r) => a + r.followed, 0) / Math.max(1, runs.reduce((a, r) => a + r.leads, 0));
+    if (f < 0.6) alarm('sleuth: follows ' + Math.round(100 * f) + '% of its leads (a lead names a place a player can go; ≥ 60%)');
+  }
+  if (name === 'romantic') {
+    const fp = med(runs.map((r) => r.firstPartner ?? 99));
+    if (fp > 24) alarm('romantic: first partner at month ' + (fp === 99 ? 'never' : fp) + ' (median; a player courting from the start finds one within two years)');
+  }
+  if (name === 'homebody' && share((r) => r.early) > 0.05) alarm('homebody: ' + Math.round(100 * share((r) => r.early)) + '% of runs end early (> 5%; a careful player who sleeps every night should graduate)');
+  if (name === 'explorer') {
+    const d = med(runs.map((r) => r.distinct)), db = other('balanced', (r) => r.distinct);
+    if (db != null && d <= db) alarm('explorer: sees ' + d + ' different cards, no more than balanced\'s ' + db + ' (variety should reward exploring)');
+  }
 }
 
 /* ------------------------------------------------------------------ curve */
@@ -1520,6 +1556,7 @@ switch (cmd) {
     if (ran.length && !flag('dry-run')) console.log('Next: node tools/grim.js build && node tools/grim.js lint && node tools/grim.js diff');
     break;
   }
+  case 'styles': for (const n of Policies.list()) console.log(n.padEnd(16) + ' ' + Policies.about(n)); break;
   case 'curve': curve({ games: Number(flag('games')) || 100, write: !!flag('write') }); break;
   case 'balance': if (!balance({ quick: !!flag('quick'), games: Number(flag('games')) || 0 })) process.exit(1); break;
   case 'snapshot': snapshot(path.resolve(flag('out') || path.join(ROOT, 'build', 'snapshots', (rest.find((x) => !x.startsWith('--') && rest[rest.indexOf(x) - 1] !== '--out') || 'latest') + '.json'))); break;
