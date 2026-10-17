@@ -4,7 +4,7 @@ For the agent who wires `experiments/combat-f5/` into the main game. Read this, 
 
 ## Where things stand (2026-10-17)
 
-- **The minigame is canon as of `spells-v2 F5.7`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
+- **The minigame is canon as of `spells-v2 F5.8`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
   1. `node experiments/combat-f5/tools/build.mjs`
   2. `PORT=61096 node experiments/combat-f5/out/site/server.mjs`
 - **One implementation per function.**
@@ -132,6 +132,7 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
   - classes win 23–70% (sd 14 at F5.7); Scholar and Hollow adept are lowest.
 
   F5.6 gives every class Flame by level 10 (`kits.flameBy`). Lowering the skill pivot or Strike's rate didn't narrow the spread. Early fights probably want hand-picked opponent kits, or fewer classes.
+- **Showman is the weakest class at both depths (about 41%):** its Charm has no combat spell to drive, because Glamour and Rapport do nothing in a fight. Giving charm a combat use (crowd support, a taunt) would fix the cause.
 - **Showman and Healer at levels 60–80:** at depth 5, Showman wins about 25–31% and Healer about 72–76%. Stat offsets didn't move either (variant `h1`). It needs a kit change: Showman's charm spells are out of combat kits, and Healer plays Shadowstep+Mend best.
 - **Run-to-run noise:** the search's transposition table carries over between fights on a worker thread, so tied moves break differently from run to run. One class in one level band can move ±7 points between identical runs, even at depth 5. Compare whole suites, use `--seeds 3` when screening, and don't tune to a single band.
 - **Untested below level 20,** where the main game starts (skills ≈ 12). Run a level-12 arm before release. If fights drag, raise the factor's floor or lower the pivot.

@@ -1,6 +1,6 @@
 # Combat: spell redesign v2 (F5)
 
-## F5 rule changes (spells-v2 F5.7 · 2026-10-17; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5–F5.7 its follow-ups, all below)
+## F5 rule changes (spells-v2 F5.8 · 2026-10-17; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5–F5.8 its follow-ups, all below)
 
 These override anything below that disagrees.
 
@@ -61,6 +61,7 @@ These override anything below that disagrees.
 - HP grows past skill 40, and the Mana pool grows faster (see Stats).
 - Late spells are cheaper by rank: Flame and Mend cost 9/8/7, Foresight 7/6/5.
 - Brawler's offsets are −4/−8/−6/2/11/5 and Prefect's 5/3/−4/−4/4/−4.
+- **F5.8:** Scholar's offsets are 5/7/1/−2/−4/−7, a little less frail.
 - Tried and rejected: HP scaling around skill 50 (it shortened low-level fights from 20 to 14 exchanges and steepened level gaps to 87/94% at +5/+10).
 
 **Kits:** Glamour, Rapport, Sleight, Index and Quickquill are out of combat kits (no combat effect). Scholar's extras are Starlight and Seal; Illusionist's are Reflect and Rapport.
