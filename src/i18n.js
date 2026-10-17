@@ -55,6 +55,7 @@
 
     'side.conditions': 'Conditions & commitments',
     'side.nothing': 'Nothing yet.',
+    'side.close': 'Close',
     'side.monthsLeft': '{n} mo',
     'side.noPeople': "You haven't really met anyone yet.",
     'side.relationship': 'Relationship {n}',

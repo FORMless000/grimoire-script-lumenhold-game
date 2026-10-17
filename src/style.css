@@ -175,6 +175,9 @@ details.adv input { margin-top: 8px; }
 
 /* ---------------- Side panel ---------------- */
 .side { grid-area: side; border-left: 1px solid var(--line); background: rgba(14, 17, 36, 0.92); display: flex; flex-direction: column; min-height: 0; }
+.side-top { display: flex; align-items: center; border-bottom: 1px solid var(--line); }
+.side-top .tabs { flex: 1; min-width: 0; border-bottom: 0; }
+.side-close, .side-scrim { display: none; }
 .tabs { display: flex; border-bottom: 1px solid var(--line); }
 .tabs button { flex: 1; background: none; border: 0; padding: 12px 6px; font-weight: 600; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; }
 .tabs button.on { color: var(--gold-2); border-bottom-color: var(--gold); }
@@ -361,7 +364,8 @@ details.adv input { margin-top: 8px; }
    the top and gone by the middle of the screen, so the bottom half keeps the page's own colour. */
 #sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
 /* Beside the side panel on wide screens, so the sun and the skyline sit in the play area. */
-@media (min-width: 901px) { #sky { right: 340px; } }
+/* Only while the panel is there: the title page and other full-width screens get the sky edge to edge. */
+@media (min-width: 901px) { body:has(.game) #sky { right: 340px; } }
 #sky > * { position: absolute; left: 0; right: 0; top: 0; }
 #sky .sky-tint, #sky .sky-season { height: 100%; transition: opacity 1.2s ease; }
 #sky .sky-tint { background: var(--sky, none); }
@@ -453,6 +457,9 @@ details.adv input { margin-top: 8px; }
   .side { position: fixed; inset: 0 0 0 auto; width: min(380px, 92vw); z-index: 15; transform: translateX(100%); transition: transform .3s cubic-bezier(.2, .8, .2, 1); background: #10142b; box-shadow: -20px 0 60px rgba(0, 0, 0, .5); }
   .side.open { transform: none; }
   .side-toggle { display: grid; }
+  .side-close { display: grid; flex-shrink: 0; margin: 0 10px 0 4px; width: 34px; height: 34px; font-size: 22px; line-height: 1; color: var(--muted); }
+  .side-scrim { display: block; position: fixed; inset: 0; z-index: 14; background: rgba(4, 5, 14, .55); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+  .side-scrim.on { opacity: 1; pointer-events: auto; }
   .brand { display: none; }
   .top { padding: 10px 16px; }
   .stage { padding-bottom: 60px; }

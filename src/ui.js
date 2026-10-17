@@ -199,6 +199,13 @@
   }
 
   /* ------------------------------------------------------------------ layout */
+  // The side panel on a narrow screen (a drawer; on a wide one it is always shown and these classes do nothing).
+  function setSide(open) {
+    ui.sideOpen = !!open;
+    const side = document.getElementById('side'), scrim = document.getElementById('sideScrim');
+    if (side) side.classList.toggle('open', ui.sideOpen);
+    if (scrim) scrim.classList.toggle('on', ui.sideOpen);
+  }
   function buildGame() {
     const nextLang = languages[(languages.findIndex((l) => l.code === I18n.lang()) + 1) % languages.length];
     app.innerHTML =
@@ -214,8 +221,11 @@
       '<div class="meters" id="meters"></div>' +
       '<main class="stage"><div class="deck" id="deck"><div class="ghost two"></div><div class="ghost"></div></div>' +
       '<div class="choices" id="choices"></div></main>' +
-      '<aside class="side" id="side"><div class="tabs" id="tabs">' +
+      // On a narrow screen the panel slides over the page: a close button and a scrim behind it (tap outside, or Escape).
+      '<div class="side-scrim" id="sideScrim"></div>' +
+      '<aside class="side" id="side"><div class="side-top"><div class="tabs" id="tabs">' +
       '<button data-tab="you">' + esc(t('tab.you')) + '</button><button data-tab="people">' + esc(t('tab.people')) + '</button><button data-tab="clues">' + esc(t('tab.clues')) + '</button><button data-tab="journal">' + esc(t('tab.journal')) + '</button></div>' +
+      '<button class="icon-btn side-close" id="sideClose" title="' + esc(t('side.close')) + '" aria-label="' + esc(t('side.close')) + '">&times;</button></div>' +
       '<div class="tab-body" id="tabBody"></div></aside>' +
       '</div>';
     document.getElementById('quit').onclick = () => { save(true); Net.flush(eng, runRecordMeta()); titleScreen(); };
@@ -223,7 +233,10 @@
     const lt = document.getElementById('langToggle');
     if (lt) lt.onclick = () => switchLang(nextLang.code, true);
     document.getElementById('settingsBtn').onclick = () => openSettings();
-    document.getElementById('sideToggle').onclick = () => { ui.sideOpen = !ui.sideOpen; document.getElementById('side').classList.toggle('open', ui.sideOpen); };
+    ui.sideOpen = false;
+    document.getElementById('sideToggle').onclick = () => setSide(!ui.sideOpen);
+    document.getElementById('sideClose').onclick = () => setSide(false);
+    document.getElementById('sideScrim').onclick = () => setSide(false);
     document.getElementById('tabs').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; ui.tab = b.dataset.tab; renderSide(); };
     const meters = document.getElementById('meters');
     // The meters together, then the `display: number` resources (Crowns, Renown) as plain numbers, each with what next
@@ -896,6 +909,7 @@
       return;
     }
     if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
+    if (e.key === 'Escape' && ui.sideOpen && document.getElementById('side')) { e.preventDefault(); setSide(false); return; }
     if ((e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey && document.getElementById('fbBar')) { e.preventDefault(); openFeedback(); return; }
     if (ui.mode === 'origin') { if (/^[1-9]$/.test(e.key) && ui.originPick) { e.preventDefault(); ui.originPick(+e.key - 1); } else if (e.key === 'Escape') { e.preventDefault(); closeOverlay(); ui.mode = 'title'; } return; }
     if (ui.mode === 'map') { if (ui.mapCtl && ui.mapCtl.key(e)) e.preventDefault(); return; }

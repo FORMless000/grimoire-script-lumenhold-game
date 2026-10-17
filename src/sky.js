@@ -199,6 +199,8 @@
     still = !!(mq && mq.matches);
     if (mq && mq.addEventListener) mq.addEventListener('change', (e) => { still = e.matches; if (still) draw(0); else start(); });
     root.addEventListener('resize', resize);
+    // The sky also changes width without a window resize (the side panel comes and goes with the screen).
+    if (root.ResizeObserver) new root.ResizeObserver(() => resize()).observe(el);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) start(); });
     resize();
   }
