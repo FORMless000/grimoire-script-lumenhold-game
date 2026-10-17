@@ -537,21 +537,26 @@ function dealGig(job, gig, seed) {
 }
 
 test('break work: term jobs pay nothing on a break, the holiday gigs still do (I9)', () => {
-  const eng = new Engine(content);
-  quiet(() => { eng.newGame({ seed: 12, name: 'T' }); });
-  const ctx = eng.newCtx(null, null);
-  eng.trackOp({ t: 'join', track: 'library_assistant' }, ctx);
-  eng.s.places.library = { found: 1 };
-  eng.s.turn = 5; eng.s.deck = []; eng.s.queue = []; eng.s.cur = null;
-  assert.equal(eng.phaseOf(), 'break');
-  eng.startDay();
-  const cards = [], gold = [];
-  driveMonth(eng, (view) => (view.places.find((p) => p.id === 'library' && p.state === 'open' && p.open[0]) ? 'library' : null),
-    (v) => { cards.push(v.id); gold.push(eng.s.vals.gold); return { break_plan: 'work', holiday_gigs: 'grounds' }[v.id]; });
-  assert.ok(eng.s.states.plan_work && eng.s.states.gig_grounds, 'working on campus, on the grounds');
-  assert.ok(cards.some((id) => /^gig_grounds_/.test(id)), 'a gig card');
-  assert.ok(!cards.some((id) => content.events[id] && content.events[id].track === 'library_assistant'), 'no shift card on a break');
-  assert.ok(!eng.s.hist.some((h) => h.t === 'pick' && h.deltas && h.deltas.gold > 0), 'no job pay for the visit');
+  // One break month's draws are random, so a gig card is asked of the seeds together; the rest holds for each.
+  let gigs = 0;
+  for (let seed = 12; seed < 18; seed++) {
+    const eng = new Engine(content);
+    quiet(() => { eng.newGame({ seed, name: 'T' }); });
+    const ctx = eng.newCtx(null, null);
+    eng.trackOp({ t: 'join', track: 'library_assistant' }, ctx);
+    eng.s.places.library = { found: 1 };
+    eng.s.turn = 5; eng.s.deck = []; eng.s.queue = []; eng.s.cur = null;
+    assert.equal(eng.phaseOf(), 'break');
+    eng.startDay();
+    const cards = [], gold = [];
+    driveMonth(eng, (view) => (view.places.find((p) => p.id === 'library' && p.state === 'open' && p.open[0]) ? 'library' : null),
+      (v) => { cards.push(v.id); gold.push(eng.s.vals.gold); return { break_plan: 'work', holiday_gigs: 'grounds' }[v.id]; });
+    assert.ok(eng.s.states.plan_work && eng.s.states.gig_grounds, 'working on campus, on the grounds');
+    if (cards.some((id) => /^gig_grounds_/.test(id))) gigs++;
+    assert.ok(!cards.some((id) => content.events[id] && content.events[id].track === 'library_assistant'), 'no shift card on a break');
+    assert.ok(!eng.s.hist.some((h) => h.t === 'pick' && h.deltas && h.deltas.gold > 0), 'no job pay for the visit');
+  }
+  assert.ok(gigs > 0, 'a gig card');
   assert.ok(Object.values(content.events).filter((e) => (e.track || '').startsWith('intern_')).every((e) => e.options.every((o) => JSON.stringify(o.effects).includes('"wage"'))), 'internships still pay through their host cards');
 });
 

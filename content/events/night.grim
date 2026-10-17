@@ -37,14 +37,37 @@ tags: mystery
 scene: A dormitory window at midnight, the castle dark beyond it, one lantern moving along a far battlement.
 text: {month == 12: Starfall is close, and the sky over the towers is already restless.|{month == 4 or month == 10: Exams soon. Half the windows on your corridor are still lit.|{season == "winter": {~Frost on the window, and the corridors are colder than the snow.|Snow on the sills; the tower creaks like a ship.|Ice in the water jug, and the tower silent with snow.}|{season == "summer": {~The night is warm and the castle's windows are all open.|Moths at the window, and somebody laughing on the lawn.|The night is short and never quite dark.}|{~The castle settles for the night, beam by beam.|Rain on the leads, and a gargoyle gargling it.|The wind finds every keyhole in the tower.}}}}} {has(watched): Bram does his rounds earlier these nights. You've learned the sound of his boots.|{health < 30: Every bone you own would like to stay in bed.|{mood < 25: You can't sleep anyway.|{gold < 10: Your purse is light, and some doors after midnight pay.|{bonds(partner) > 0: {~A note under your door, in a hand you know: "Roof?"|You could be on the observatory roof with someone right now.|Somewhere across the castle, someone you love is also awake.}|{final_year: {~Your last year. The castle at night won't be yours much longer.|The doors you know by heart will open for someone else next year.|Next year someone else will lie awake in this bed.}|{~Somewhere a door that should be locked isn't.|Down in the courtyard, a lantern goes out on purpose.|Someone has left the servants' stair unbolted again.}}}}}}}
 > left: Sleep
+  hint: A night's rest.
+  sleep
   say: {~You blow out the candle and let the castle keep its secrets for one more night.|Sleep. The night can wait. It always does.|You pull the blanket up and listen to the castle until you're asleep.}
 > right: Go out
-  mood -small
-  health -small
+  hint: No rest tonight.
   visit midnight
   if term:
     queue night_suspicion chance unlikely
   say: {~You wait for the last footsteps to fade, then ease the door open.|Boots in hand, you take the servants' stair.|You slip out while the castle is still settling, and nobody hears.}
+
+# Bedtime (2026-10-17): every ordinary month ends with a night's sleep, the only steady way back to health and
+# mood. On campus once the night is open, night_out offers it ("Sleep"); this card is the bedtime everywhere else:
+# before the unlock, at home, on an internship or other plan away, while locked out, or when the night card dropped
+# out of a day already scheduled. It steps aside once night_out has shown this month, so going out never also rests.
+@event night_sleep
+title: Lights Out
+trigger: auto
+slot: midnight
+when: since(night_out) > 0 and turn < max_turns
+repeat: 1
+priority: 10
+class: story
+tone: warm
+art: bed
+tags: life home
+scene: A narrow bed under a slanting ceiling, a candle just blown out, its thread of smoke curling up in the moonlight.
+text: {has(locked_out): {~The lock on your door turns at curfew now, from the outside. The castle has decided where you sleep.|Bram's boots go past your door twice before midnight. There's nowhere to go, so you go to bed.|Locked in for the night. You can hear the castle's second timetable starting without you.}|{break and has(plan_home): {~Your old bed at home, too short now, and the smell of the kitchen still in the walls.|At home the night is so quiet you can hear the kettle cooling downstairs.|Your own pillow, your own ceiling, and nobody's footsteps but family's.}|{has(plan_internship): {~Your lodgings are small, the bed is narrow, and you're too tired to mind.|The city doesn't stop at night, but you do.|Tomorrow's work is already laid out on the chair. The bed is the only other furniture.}|{off_campus: {~A borrowed bed, a strange ceiling, and the day finally over.|The night is quiet here, far from the towers.|You fall asleep before you've finished deciding to.}|{season == "winter": {~Frost on the window, and the blankets pulled up to your ears.|Snow on the sills; the tower creaks like a ship.|Ice in the water jug, and the warmest place in the castle is your bed.}|{~The castle settles for the night, beam by beam.|Rain on the leads, and a gargoyle gargling it.|The day is done, and the candle is low.}}}}}}
+> ok: Sleep
+  hint: A night's rest.
+  sleep
+  say: {break and has(plan_home): {~You sleep the way you only sleep at home: all night, without a single dream you remember.|Somebody looks in on you before they go to bed, as if you were still small. You pretend to be asleep, and then you are.|You wake late, to bread and the smell of the garden. Home mends things.}|{~You blow out the candle, and the day goes with it.|You're asleep before the candle has stopped smoking.|You lie awake a little, listening, and then you don't.}}
 
 # The morning after you were noticed (queued by the night's cards, I4): the only source of lockouts.
 @event night_suspicion

@@ -252,13 +252,8 @@ do:
   health -5
   say: {~A grey month. You eat little and sleep badly.|Low spirits sit in your chest like a cold.|The gloom gets into your bones; even the stairs feel steeper.}
 
-@hook natural_recovery
-on: month_start
-label: Rest
-when: health < 70 and not has(sick) and not has(injured)
-do:
-  health +10
-  say: {~A few early nights and a warm meal put some colour back in your face.|You rest, and your body thanks you slowly.|Sleep, soup and a quiet week. You feel more like yourself.}
+# Health no longer comes back by itself at month start (bedtime, 2026-10-17): recovery is the night's sleep
+# (`sleep` preset, on night_out and night_sleep in content/events/night.grim).
 
 @hook fame_fades
 on: month_start

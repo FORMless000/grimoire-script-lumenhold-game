@@ -29,12 +29,30 @@ text [5904cb] = {month == 12: 星坠节快到了，塔楼上方的天空已经�
 scene [0df004] = 午夜的宿舍窗户，窗外城堡一片漆黑，远处城垛上有一盏提灯在移动。
 # en: Sleep
 opt.left.label [a62ca8] = 睡觉
+# en: A night's rest.
+opt.left.hint [dfe4c4] = 好好睡一晚。
 # en: {~You blow out the candle and let the castle keep its secrets for one more night.|Sleep. The night can wait. It always does.|You pull the blanket up and listen to the castle until you're asleep.}
 opt.left.say.1 [5e979b] = {~你吹灭蜡烛，让城堡再守住一晚它的秘密。|睡吧。夜晚可以等。它向来会等。|你把毯子拉上来，听着城堡的声音，直到睡着。}
 # en: Go out
 opt.right.label [1d9fab] = 出去
+# en: No rest tonight.
+opt.right.hint [abd6a5] = 今晚不休息。
 # en: {~You wait for the last footsteps to fade, then ease the door open.|Boots in hand, you take the servants' stair.|You slip out while the castle is still settling, and nobody hears.}
 opt.right.say.1 [c72d45] = {~你等最后的脚步声消失，然后轻轻推开门。|你拎着靴子，走仆人用的楼梯。|你趁城堡还在安顿下来时溜了出去，谁也没听见。}
+
+@event night_sleep
+# en: Lights Out
+title [794e40] = 熄灯
+# en: {has(locked_out): {~The lock on your door turns at curfew now, from the outside. The castle has decided where you sleep.|Bram's boots go past your door twice before midnight. There's nowhere to go, so you go to bed.|Locked in for the night. You can hear the castle's second timetable starting without you.}|{break and has(plan_home): {~Your old bed at home, too short now, and the smell of the kitchen still in the walls.|At home the night is so quiet you can hear the kettle cooling downstairs.|Your own pillow, your own ceiling, and nobody's footsteps but family's.}|{has(plan_internship): {~Your lodgings are small, the bed is narrow, and you're too tired to mind.|The city doesn't stop at night, but you do.|Tomorrow's work is already laid out on the chair. The bed is the only other furniture.}|{off_campus: {~A borrowed bed, a strange ceiling, and the day finally over.|The night is quiet here, far from the towers.|You fall asleep before you've finished deciding to.}|{season == "winter": {~Frost on the window, and the blankets pulled up to your ears.|Snow on the sills; the tower creaks like a ship.|Ice in the water jug, and the warmest place in the castle is your bed.}|{~The castle settles for the night, beam by beam.|Rain on the leads, and a gargoyle gargling it.|The day is done, and the candle is low.}}}}}}
+text [cfe782] = {has(locked_out): {~现在每到宵禁，你的房门就会从外面锁上。城堡替你决定了在哪儿睡。|午夜前，布拉姆的靴子声两次经过你的门口。无处可去，你只好上床。|今晚被锁在屋里。你能听见城堡的第二张时间表在没有你的情况下开始了。}|{break and has(plan_home): {~家里你那张旧床，如今已经嫌短了，墙里还留着厨房的味道。|家里的夜那么安静，你能听见楼下的水壶慢慢变凉。|自己的枕头，自己的天花板，除了家人，没有别人的脚步声。}|{has(plan_internship): {~你的住处很小，床很窄，可你累得顾不上计较。|城市夜里不会停下，但你会。|明天的活儿已经摆在椅子上了。除了床，那是屋里唯一的家具。}|{off_campus: {~借来的床，陌生的天花板，这一天总算结束了。|远离七塔的地方，夜很安静。|你还没想好要不要睡，就已经睡着了。}|{season == "winter": {~窗上结了霜，被子一直拉到耳朵。|窗台上积着雪，塔楼像船一样吱呀作响。|水罐里结了冰，城堡里最暖和的地方就是你的床。}|{~城堡一根梁一根梁地安顿下来。|雨落在铅皮屋顶上，一只滴水兽咕噜咕噜地漱着口。|一天过完了，蜡烛也快燃尽了。}}}}}}
+# en: A narrow bed under a slanting ceiling, a candle just blown out, its thread of smoke curling up in the moonlight.
+scene [a78cfa] = 斜顶下的一张窄床，刚吹灭的蜡烛冒出一缕细烟，在月光里袅袅升起。
+# en: Sleep
+opt.ok.label [a62ca8] = 睡觉
+# en: A night's rest.
+opt.ok.hint [dfe4c4] = 好好睡一晚。
+# en: {break and has(plan_home): {~You sleep the way you only sleep at home: all night, without a single dream you remember.|Somebody looks in on you before they go to bed, as if you were still small. You pretend to be asleep, and then you are.|You wake late, to bread and the smell of the garden. Home mends things.}|{~You blow out the candle, and the day goes with it.|You're asleep before the candle has stopped smoking.|You lie awake a little, listening, and then you don't.}}
+opt.ok.say.1 [84548d] = {break and has(plan_home): {~你睡得只有在家才睡得那样沉：一整夜，一个梦也不记得。|睡前有人进来看了你一眼，好像你还是个孩子。你假装睡着了，然后就真的睡着了。|你很晚才醒，闻到面包和花园的味道。家能治好很多事。}|{~你吹灭蜡烛，这一天也跟着熄了。|蜡烛还没停止冒烟，你就已经睡着了。|你醒着躺了一会儿，听着，然后就不再听了。}}
 
 @event night_suspicion
 # en: A Word in the Morning

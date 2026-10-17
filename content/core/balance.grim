@@ -86,6 +86,16 @@ do:
   mood +medium
   health +small
 
+@preset sleep
+desc: A night's sleep (bedtime, 2026-10-17): 8 Health and 4 Mood; at home on a break, 20 and 10. Taken when you go to bed, whatever your condition.
+do:
+  if break and has(plan_home):
+    health += 20
+    mood += 10
+  else:
+    health += 8
+    mood += 4
+
 @preset social
 params: who
 desc: Time with someone.

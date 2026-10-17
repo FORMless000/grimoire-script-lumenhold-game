@@ -49,6 +49,7 @@ Course standard at levels I–III: `apprentice+` · `adept+` · `master+`; a cou
 |---|---|
 | `grind <skill>` | Hard work on one skill. `$skill +medium; mood -small; health -tiny` |
 | `rest` | A real rest. `mood +medium; health +small` |
+| `sleep` | A night's sleep (bedtime, 2026-10-17): 8 Health and 4 Mood; at home on a break, 20 and 10. Taken when you go to bed, whatever your condition. `if break and has(plan_home): health += 20; mood += 10; else: health += 8; mood += 4` |
 | `social <who>` | Time with someone. `rel $who +small; mood +small; gold -tiny` |
 | `work` | Paid work. `gold +medium; mood -small; health -tiny` |
 | `splurge` | Spending to feel better. `mood +large; gold -medium` |
