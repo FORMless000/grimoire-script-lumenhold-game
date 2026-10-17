@@ -1,6 +1,6 @@
 # Combat: spell redesign v2 (F5)
 
-## F5 rule changes (spells-v2 F5.6 · 2026-10-17; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5 and F5.6 its follow-ups, all below)
+## F5 rule changes (spells-v2 F5.7 · 2026-10-17; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5–F5.7 its follow-ups, all below)
 
 These override anything below that disagrees.
 
@@ -19,10 +19,10 @@ These override anything below that disagrees.
 **Extraction** moves up to 9 of their ready Mana into your flux, and your Mana plus flux can't pass capacity.
 
 **Stats (F5.4: skills drive progression; numbers in `COMBAT_TUNING`, `setup/roster.mjs`):**
-- **Skill factor:** every amount (damage, healing, banks) × 1 + perPoint × (skill − 50), averaged over the spell's skills. The main combat skills, Arcana, Vigor and Alchemy, scale at **1% a point** (0.7 at skill 20, 1.3 at 80); Lore, Charm and Guile at **0.4%** (0.88–1.12).
+- **Skill factor:** every amount (damage, healing, banks) × 1 + **1% × (skill − 50)**, averaged over the spell's skills: 0.7 at skill 20, 1.3 at 80. Since F5.7 every skill scales its own spells alike. Arcana, Vigor and Alchemy matter more only because more spells use them, and because Vigor and Arcana also feed HP and Mana.
 - **Strike:** 9 base, scaling with Vigor at **1.4% a point** (about 5 at Vigor 20, 13 at 80).
-- **Max HP:** 70 at every level; combat HP stands for the player's Health and isn't scaled by skill.
-- **Mana capacity:** 43 + 0.25 × (Arcana − 50): about 36 at level 20, 43 at 50 and 51 at 80.
+- **Max HP (F5.7):** 70 up to skill 40, then +0.8% a point of the skills, with Vigor counted twice: about 76 at level 50 and 92–95 at level 80. Low-Vigor classes are barely behind. Late fights run longer (median 28 exchanges at level 80, against 20 at level 20) without steeper level gaps.
+- **Mana capacity (F5.7):** 43 + 0.35 × (weighted skill − 50), Arcana counted twice, never below 34: 34 at level 20, 43 at 50, about 54 at 80.
 - **Condition on entering** (campaign fights): you start with HP = max × (0.9 + 0.1 × min(1, Health / 70)) and ready Mana up to capacity × (0.9 + 0.1 × min(1, Mana / capacity)). Fit means Health 70+ and full Mana; entering with nothing costs you a tenth of each.
 
 **F5.4 spell changes:** Flame 9/9/8 Mana; Mend 9/9/8; Foresight 7/7/6; Haste 5 Mana, 3/3/4 exchanges, three-action bundles at rank 3; Shadowstep 12 Mana at every rank, 1/2/2 exchanges; Starlight 9; Distil costs 14 HP; Tailwind 5 Mana and +4/+8/+12; Reflect 8; Lodestar 4; Extraction 10.
@@ -55,6 +55,13 @@ These override anything below that disagrees.
 - **Haste** lasts 2/3/4 exchanges (was 3/3/4).
 - **Illusionist** starts with Mend instead of Foresight (course weights Foresight 1, Mend 2).
 - **Generated kits learn Flame by level 10** at the latest (`COMBAT_TUNING.kits.flameBy`, was 25). Below level 15, some classes used to have no damaging spell.
+
+**F5.7, scaling and late fights:**
+- Every skill scales its spells at 1% a point.
+- HP grows past skill 40, and the Mana pool grows faster (see Stats).
+- Late spells are cheaper by rank: Flame and Mend cost 9/8/7, Foresight 7/6/5.
+- Brawler's offsets are −4/−8/−6/2/11/5 and Prefect's 5/3/−4/−4/4/−4.
+- Tried and rejected: HP scaling around skill 50 (it shortened low-level fights from 20 to 14 exchanges and steepened level gaps to 87/94% at +5/+10).
 
 **Kits:** Glamour, Rapport, Sleight, Index and Quickquill are out of combat kits (no combat effect). Scholar's extras are Starlight and Seal; Illusionist's are Reflect and Rapport.
 

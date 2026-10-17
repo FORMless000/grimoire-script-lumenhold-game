@@ -1,6 +1,6 @@
-# Bringing the combat minigame into Lumenhold (design, F5.6)
+# Bringing the combat minigame into Lumenhold (design, F5.7)
 
-How a card's fight becomes a played minigame and how it feeds back into the game. The numbers live in `COMBAT_TUNING` (`setup/roster.mjs`) and `content/core/balance.grim`. This doc gives the shape and the reasons, and the measured effects as of F5.4–F5.6 (2026-10-17). The step-by-step plan for implementing it is `HANDOFF.md`.
+How a card's fight becomes a played minigame and how it feeds back into the game. The numbers live in `COMBAT_TUNING` (`setup/roster.mjs`) and `content/core/balance.grim`. This doc gives the shape and the reasons, and the measured effects as of F5.4–F5.7 (2026-10-17). The step-by-step plan for implementing it is `HANDOFF.md`.
 
 ## 1. Where fights come from
 
@@ -15,10 +15,10 @@ The minigame replaces that roll **for the player's own fights**. The card's thre
 
 | Main game | Fight |
 |---|---|
-| Six skills | the kit's skills, unchanged: Arcana, Vigor and Alchemy scale amounts by 1% a point and the others by 0.4%; Strike follows Vigor at 1.4% |
+| Six skills | the kit's skills, unchanged: every skill scales its own spells by 1% a point (Strike follows Vigor at 1.4%), and the skills also set combat HP and Mana capacity |
 | Learned spells and their levels | the kit's spells and ranks (only spells with a combat effect) |
-| Arcana | Mana capacity: 43 + 0.25 × (Arcana − 50) |
-| Health | combat HP is 70 for everyone. Health sets how much of it you start with (below) |
+| Skills (Arcana counted twice) | Mana capacity: 43 + 0.35 × (weighted skill − 50), at least 34 |
+| Health | combat max HP is 70, growing with skill past 40 (about 92 at level 80); Health sets how much of it you start with (below) |
 | Mana | ready Mana at the start, up to capacity |
 | Mood, Renown, Crowns, alignment | the fight's own resources, for the spells that move them |
 
@@ -78,9 +78,23 @@ For scale (`balance.grim`): medium is 10 Health, large 16 and huge 25, and a nig
 
 ## 5. Flavor
 
-`setup/flavor.mjs` gives every action a cast line (several rotate by exchange), and spells a finish line: the impact, a lasting effect fading, a construct collapsing. Channels also have Hold and Release lines. The lines carry no names or numbers, so one line serves both sides. The browser shows the opponent's line on the telegraph, each action's line in the log, and finish lines under the exchange.
+`setup/flavor.mjs` says, in one plain sentence, what each fighter visibly did and what it does in this fight. For example:
+- "A translucent ward appears before Ash, blocking off the Duellist's spells."
+- "A quill flies around Ash, but it does little in this situation."
+- "The Duellist falls before Ash's fire."
 
-**For the main game:** the lines are English source text. They move to a `.lang`-style string table under `locales/` so translation works like the rest of the UI, keyed by spell id (`flavor.<id>.cast.<n>`). Lines that name a place (the Duelling Circle) must stay consistent with the worldbook.
+Every line names both sides with `{name}` (who acts) and `{foe}`.
+- **Kinds of line:**
+  - `cast`, the action itself;
+  - `hold` and `release`, for channels;
+  - `end`, a lasting effect or construct ending (and Mend healing, or `broken` when a hit spoils it);
+  - `ko`, the finishing action knocking the foe out;
+  - `tired`, a Guard giving way;
+  - `ENDINGS`, for points, draws and concessions.
+- **Names:** `fighterNames({playerName, opponentName})` gives the pair. The main game passes the player's name and the opponent as the card names them. Without names, the bench uses "the Duellist" or a character's name.
+- **Where they show:** the opponent's line on the telegraph, each action's line in the log, and the finish lines under each exchange.
+
+**For the main game:** the lines are English source text. They move to string tables under `locales/` (`flavor.<id>.cast.<n>`, `.hold`, `.release`, `.end`, `.ko`), with `{name}` and `{foe}` kept intact. Word order differs between languages, which is why the names are tokens, not prefixes.
 
 ## 6. Technical integration
 
@@ -94,7 +108,7 @@ For scale (`balance.grim`): medium is 10 Health, large 16 and huge 25, and a nig
 
 1. **Spells v2 in content.** The main game's `content/world/spells.grim` still has the old 12 spells. Migrate it to the v2 list (`docs/spells-v2-list.md` §K), with `grim migrate` for the ids saves reference, before fights can read learned spells.
 2. **Expected skills.** The main game's expected skill curve runs about 12 → 62 over the run. The F5.4 suite was tuned at levels 20–80. Below 20, Strike and spells fall to about 60–70% of base, so early fights run longer. Check a level-12 arm before release, and lift the pivot or the floor of the factor if fights there drag.
-3. **Mana in the main game** tops out at 40 + Arcana/2 (65 at Arcana 50). A fight holds less: 43 + (Arcana − 50)/4 (43 at Arcana 50). A player is fit for Mana once they have the fight's capacity, and the fight readies only that much. Settlement charges only what the fight spent, so the rest of the pool is safe.
+3. **Mana in the main game** tops out at 40 + Arcana/2 (65 at Arcana 50). A fight holds less: 43 + 0.35 × (weighted skill − 50), at least 34 (43 at skill 50). A player is fit for Mana once they have the fight's capacity, and the fight readies only that much. Settlement charges only what the fight spent, so the rest of the pool is safe.
 4. Wire the challenge resolution (opt-out, pacing), then the UI shell (the fight as an overlay over the card), then saves.
 5. Playtest with people. The simulated players are crude: they find gross imbalances, not fun.
 

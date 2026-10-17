@@ -3,7 +3,9 @@
 import {LOADOUTS,CONTEXTS,RESOURCES,COMBAT_TUNING,SPELLS,LOADOUT_SKILLS,generateLoadout,levelRng,manaCapacity} from './roster.mjs';
 const maps=n=>Object.fromEntries(RESOURCES.map(k=>[k,n]));
 // The tuning's skill factor: the average over keys of 1 + perPoint × (skill − pivot).
-export const skillFactor=(skills,keys,perPoint)=>keys.reduce((n,k)=>n+1+perPoint*(skills[k]-COMBAT_TUNING.skill.pivot),0)/keys.length;
+export const skillFactor=(skills,keys,perPoint,pivot=COMBAT_TUNING.skill.pivot)=>keys.reduce((n,k)=>n+1+perPoint*(skills[k]-pivot),0)/keys.length;
+// Combat max HP's factor: hp.perPoint around hp.pivot (default the skill pivot), never below hp.min (default none).
+export const hpFactor=skills=>{const h=COMBAT_TUNING.hp;return Math.max(h.min??-Infinity,skillFactor(skills,h.skills,h.perPoint,h.pivot??COMBAT_TUNING.skill.pivot));};
 // Condition on entering ({health, mana} as fractions, 1 = fit and full) → the share of max HP and of Mana capacity the fight starts with.
 export function combatStart(condition={}){
  const c=COMBAT_TUNING.condition,clamp=x=>Math.min(1,Math.max(0,x??1));
@@ -34,7 +36,7 @@ export function createState(options={}){
   if(side&&!overrides&&config.playerLoadout===enemy&&config.playerLevel===config.opponentLevel&&options.playerResources){const {crowns,...mirrored}=options.playerResources;overrides=mirrored;}
   const entry={health:standard?70:35,mood:standard?60:30,renown:standard?30:5,mana:standard?kit.capacity:Math.min(30,kit.capacity),crowns:standard?30:6,alignment:0,...overrides};
   for(const [k,n]of Object.entries(entry))if(!RESOURCES.includes(k)||!Number.isFinite(n)||n<(k==='alignment'?-100:0)||n>(k==='mana'?kit.capacity:k==='crowns'?99999:100))throw Error('Invalid entry '+k);
-  const maxHP=(config.healthModel==='offset'?entry.health+40+Math.floor((kit.skills.arcana+kit.skills.vigor)/4):Math.round(entry.health*skillFactor(kit.skills,COMBAT_TUNING.hp.skills,COMBAT_TUNING.hp.perPoint)))*(config.hpScale??1);
+  const maxHP=(config.healthModel==='offset'?entry.health+40+Math.floor((kit.skills.arcana+kit.skills.vigor)/4):Math.round(entry.health*hpFactor(kit.skills)))*(config.hpScale??1);
   if(maxHP<=0)throw Error('Positive entry HP required');
   // A worn or drained side starts below full (playerCondition / opponentCondition).
   const condition=side?options.opponentCondition:options.playerCondition,start=combatStart(condition);

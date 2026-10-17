@@ -6,8 +6,8 @@ export const LOADOUTS={
  Scholar:{salt:2,offsets:[5,7,0,-2,-6,-4],flameBase:.4,course:[4,1,1,.5,1],extras:{starlight:3,seal:1},hidden:{starlight:2,seal:1,moonwell:1}},
  Healer:{salt:3,offsets:[2,2,8,2,-4,-10],flameBase:.6,course:[1,4,.5,1,.5],extras:{bramble:3,purify:2},hidden:{animate:1,moonwell:1}},
  Illusionist:{salt:4,offsets:[4,-4,-3,4,-2,1],flameBase:.4,course:[1,2,4,.5,3],extras:{reflect:3,rapport:2},hidden:{reflect:2,seal:1}},
- Brawler:{salt:5,offsets:[-4,-8,-6,2,12,4],flameBase:.6,course:[.5,1,.5,4,1],extras:{tailwind:3,brace:2,rapport:1},hidden:{rime:1}},
- Prefect:{salt:6,offsets:[4,4,-6,-4,4,-2],flameBase:.7,course:[2,2,.5,1,1],extras:{brace:3,index:1},hidden:{lodestar:2,seal:1}},
+ Brawler:{salt:5,offsets:[-4,-8,-6,2,11,5],flameBase:.6,course:[.5,1,.5,4,1],extras:{tailwind:3,brace:2,rapport:1},hidden:{rime:1}},
+ Prefect:{salt:6,offsets:[5,3,-4,-4,4,-4],flameBase:.7,course:[2,2,.5,1,1],extras:{brace:3,index:1},hidden:{lodestar:2,seal:1}},
  Showman:{salt:7,offsets:[3,-4,-6,10,3,-6],flameBase:.6,course:[1,.5,4,2,.5],extras:{rapport:3,tailwind:1},hidden:{reflect:1}},
  'Underground tough':{salt:8,offsets:[-2,-8,-4,-2,8,8],flameBase:.7,course:[.5,1,1,3,3],extras:{tailwind:2,brace:1,rapport:1},hidden:{rime:1},underground:true,forbidden:{extraction:3,torment:2,heartprice:1}},
  'Hollow adept':{salt:9,offsets:[6,6,-4,-6,-6,4],flameBase:.5,course:[3,1,.5,.5,3],extras:{index:1},hidden:{seal:2,rime:2,moonwell:1},underground:true,forbidden:{siphon:3,eclipse:2,torment:1,compel:.5}}

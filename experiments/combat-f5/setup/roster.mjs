@@ -6,17 +6,18 @@ export const RESOURCES=['health','mood','renown','mana','crowns','alignment'];
 export const FLUX_RATIO=2/3;
 export const ALIGNMENT_COST={tiny:3,small:6}; // content/core/balance.grim, 2026-10-16.
 // Combat tuning, the one home of these numbers (exported to the Rust core with the spells; setup.mjs reads it too).
-// skill: every amount (damage, healing, banks, Strike) × 1 + perPoint × (skill − pivot), averaged over the spell's skills;
-//   main combat skills scale at mainPerPoint, the others at minorPerPoint.
-// hp: combat max HP = hp.base × the same kind of factor over hp.skills (healthModel 'direct').
+// skill: every amount (damage, healing, banks, Strike) × 1 + perPoint × (skill − pivot), averaged over the spell's skills.
+//   Since F5.7 every skill scales its spells alike (mainPerPoint = minorPerPoint); Arcana, Vigor and Alchemy matter more only
+//   because more spells use them, and Vigor and Arcana also feed HP and Mana.
+// hp: combat max HP = entry Health × max(hp.min, the same kind of factor over hp.skills around hp.pivot) (healthModel 'direct').
 // capacity: combat Mana capacity (manaCapacity below).
 // condition: how the player's state on entering shapes the start (see setup.mjs combatStart).
 // settle: what a fight costs the player afterwards (setup/campaign.mjs settle).
 export const COMBAT_TUNING={
- skill:{pivot:50,main:['arcana','vigor','alchemy'],mainPerPoint:.01,minorPerPoint:.004},
+ skill:{pivot:50,main:['arcana','vigor','alchemy'],mainPerPoint:.01,minorPerPoint:.01},
  strike:{damage:9,perPoint:.014}, // Strike follows Vigor a little faster than other amounts (F5.4: Brawler's lever)
- hp:{skills:['vigor'],perPoint:0}, // combat HP is not scaled by skill: it stands for the player's Health
- capacity:{base:43,slope:.25,weights:{arcana:1}},
+ hp:{skills:['vigor','vigor','arcana','lore','alchemy','charm','guile'],perPoint:.008,pivot:40,min:1}, // F5.7: grows past skill 40 (Vigor counted twice), never below Health; ~92 at level 80
+ capacity:{base:43,slope:.35,weights:{arcana:2,lore:1,alchemy:1,charm:1,vigor:1,guile:1},min:34}, // F5.7: a bigger pool late (~54 at level 80), never below 34
  guard:{repeatLeak:.5,lookback:1}, // Guard fatigue (F5.5): a Guard within `lookback` exchanges of the last stops only half a Strike
  shadowstep:{breakOnCast:false}, // true: casting any spell but Ward breaks your own Shadowstep (tried in F5.5: kills comebacks, see rulebook)
  decision:{quietExchanges:5}, // a stalemate (no HP lost, no Mana spent) is called on points after this many exchanges
@@ -28,9 +29,9 @@ export const LEARN_XP={medium:6,large:10,huge:16};
 export const cap=(x,lo,hi)=>Math.max(lo,Math.min(hi,x));
 const spell=(name,source,skills,cost,extra={})=>({name,source,skills,cost,levels:cost.length,group:cost.length===3?'course':'other',...extra});
 export const SPELLS={
- flame:spell('Flame','Evocation',['arcana'],[9,9,8],{verb:'Burn',damage:[18,19,20],negotiation:'Fails the meeting.'}),
- foresight:spell('Foresight','Astromancy',['lore'],[7,7,6],{verb:'Foresee',duration:[3,4,5],negotiation:'Rolling next-request reveal for 3/4/5 turns.'}),
- mend:spell('Mend','Alchemy & Healing',['alchemy'],[9,9,8],{verb:'Mend',healing:[25,26,27],negotiation:'None.'}),
+ flame:spell('Flame','Evocation',['arcana'],[9,8,7],{verb:'Burn',damage:[18,19,20],negotiation:'Fails the meeting.'}),
+ foresight:spell('Foresight','Astromancy',['lore'],[7,6,5],{verb:'Foresee',duration:[3,4,5],negotiation:'Rolling next-request reveal for 3/4/5 turns.'}),
+ mend:spell('Mend','Alchemy & Healing',['alchemy'],[9,8,7],{verb:'Mend',healing:[25,26,27],negotiation:'None.'}),
  glamour:spell('Glamour','Illusion',['charm'],[9,7,5],{verb:'Dazzle',renown:[3,5,8],negotiation:'Charm/Guile responses cheaper; +2 Suspicion.'}),
  haste:spell('Haste','Beastcraft & Flight',['vigor'],[5,5,5],{verb:'Hasten',actions:[2,2,3],duration:[2,3,4],negotiation:'Response costs 1/1/2 less Patience.'}),
  shadowstep:spell('Shadowstep','Umbral Theory',['guile'],[8,10,12],{verb:'Step',duration:[1,2,2],negotiation:'Leave and settle progress.'}),
@@ -91,8 +92,8 @@ export function fixedLoadoutLevel(name){
 // Spell gains have no rolls: descending preference, with table order breaking
 // ties. Skill jitter is the only level-seeded random draw in a generated kit.
 // Two thirds of F4's tank (52 + mean/4 = 64.5 at par), with arcana counted twice and the slope cut to 2/3.
-// Combat Mana capacity: base + slope × (weighted mean skill − 50), weights and slope from COMBAT_TUNING.capacity.
-export function manaCapacity(skills){const c=COMBAT_TUNING.capacity,ws=Object.entries(c.weights),w=ws.reduce((n,[k,x])=>n+x*skills[k],0)/(c.divisor??ws.reduce((n,[,x])=>n+x,0));return Math.round(c.base+c.slope*(w-50));}
+// Combat Mana capacity: base + slope × (weighted mean skill − 50), at least min; weights, slope and min from COMBAT_TUNING.capacity.
+export function manaCapacity(skills){const c=COMBAT_TUNING.capacity,ws=Object.entries(c.weights),w=ws.reduce((n,[k,x])=>n+x*skills[k],0)/(c.divisor??ws.reduce((n,[,x])=>n+x,0));return Math.max(c.min??0,Math.round(c.base+c.slope*(w-50)));}
 // Spells whose only effect is Renown or Crowns are for the campaign, not for combat kits.
 export const COMBAT_EXCLUDED=new Set(['glamour','rapport','sleight','index','quickquill']);
 const keepInCombat=([id])=>!COMBAT_EXCLUDED.has(id);

@@ -1,88 +1,118 @@
-// What each action looks like, for the fight log and the telegraph. Subjectless on purpose: the log already says who acted,
-// so one line serves "You" and "Opponent" alike. No numbers and no rules here (the action's description gives those).
-//   cast:    the action as it happens (shown when it is committed and in the log; a list rotates by exchange)
-//   finish:  how it ends or lands: impact for instant spells, fading for lasting ones, collapse for constructs
-//   hold / release: a channel's held and released exchanges (the cast line is its first exchange)
-// Style: docs/authoring/style.md (warm, specific, a little dry; no gore). Spells follow docs/spells-v2-list.md and content/world/spells.grim.
-import {COMBAT_TUNING} from './roster.mjs';
+// What each action looks like, for the fight log and the telegraph: one plain sentence of what the fighter visibly does
+// and what it does in this fight. No numbers or rules (the action's description gives those), no inner states, no gore.
+// When a spell is no use in a fight, the line says so ("…, but it does little here").
+//   {name}  the fighter acting (or holding the effect, for `end`); {foe}  the other fighter
+//   cast:    the action as it happens (a list rotates by exchange)
+//   hold / release:  a channel's held and released exchanges (cast is its first exchange)
+//   end:     a lasting effect or construct ending (Mend: the wounds closing; `broken` when a hit spoils it)
+//   ko:      this action finishing the foe
+//   tired:   (Guard) a Guard raised again too soon, against a Strike
+// Names come from the fight (fighterNames below): the player's name and the opponent's as the card sets them.
+import {COMBAT_TUNING,NAMED_LOADOUTS} from './roster.mjs';
 export const FLAVOR={
  // Basics
- strike:{cast:['A quick step in and a jab with the wand hand, the way the Duelling Circle drills it.','A shoulder dropped, a fist following it: unglamorous and honest.','A lunge, wand held like a fencing foil and used like a cudgel.']},
- guard:{cast:['Feet planted, forearm up, chin tucked: the first thing every first-year learns.','A half-step back and both hands raised, ready for whatever comes.'],tired:'The guard has been held a beat too long; the arms are getting heavy, and blows start to slip through.'},
- reclaim:{cast:['A long breath in. The spent magic drifting about the room is coaxed back, a thread at a time.','Fingers curl, and the loose sparks of earlier spells come home like moths to a lamp.']},
- frozen:{cast:['Frost holds everything still. Somewhere under it, a heartbeat keeps patient time.'],finish:'The ice cracks, sighs and lets go.'},
+ strike:{cast:['{name} lunges in and swings at {foe}.','{name} closes the distance and strikes at {foe}.','{name} throws a quick blow at {foe}.'],ko:'{foe} goes down under {name}’s blows.'},
+ guard:{cast:['{name} raises a guard against {foe}’s blows.','{name} steps back, arms up, ready for {foe}.'],tired:'{name}’s guard sags, and {foe}’s blows start to get through.'},
+ reclaim:{cast:['{name} draws the spent magic in the air back in.','{name} gathers up the loose sparks of magic left in the air.']},
+ frozen:{cast:['{name} is frozen solid in rime and can’t move.'],end:'The rime around {name} cracks, and {name} moves again.'},
 
  // Course spells and Ward
- flame:{cast:['Fire blooms at the fingertips: a candle at first, then something with opinions.','A cupped hand, a breath, and a fist of flame thrown overarm.'],finish:'The fire spends itself in a gust of heat and the smell of singed wool.'},
- foresight:{cast:['Eyes unfocus. For a moment the next few heartbeats are as plain as a timetable.'],finish:'The glimpse of what comes next fades back into the ordinary fog of the present.'},
- mend:{cast:['Warm hands pressed to the hurt, and the ache begins to sew itself shut.','A murmured recipe, and the torn places start drawing closed like a well-mended hem.'],finish:'The mending settles. Hearts take longer.'},
- glamour:{cast:['A smile that is slightly more charming than its owner, and a posture borrowed from someone braver.'],finish:'The crowd will remember liking it, and not quite why.'},
- haste:{cast:['Speed borrowed from hares and hawks floods the legs: everything else seems to wade.'],finish:'The borrowed speed runs out, leaving a strong wish for a long nap.'},
- shadowstep:{cast:['A step into one shadow and out of another, a little to the left of where anyone was looking.'],finish:'The shadows let go, not entirely willingly.'},
- ward:{cast:['A pale shell unfolds like a soap bubble that has decided to be brave.','Two fingers trace a circle, and the air inside it goes quiet and firm.'],finish:'The shell thins to nothing.'},
+ flame:{cast:['A burst of flame leaps from {name}’s hand at {foe}.','{name} hurls a ball of fire at {foe}.'],ko:'{foe} falls before {name}’s fire.'},
+ foresight:{cast:['{name}’s eyes glaze over, reading {foe}’s next moves before they happen.'],end:'{name} can no longer read {foe}’s moves ahead.'},
+ mend:{cast:['{name} lays a glowing hand on the wounds and starts to knit them shut.'],end:'{name}’s wounds close up.',broken:'{foe}’s attack breaks {name}’s mending before it can take hold.'},
+ glamour:{cast:['{name} strikes a dazzling pose for the onlookers, but it does nothing to {foe}.']},
+ haste:{cast:['{name} speeds up, moving twice as fast as {foe}.'],end:'{name} slows back to a normal pace.'},
+ shadowstep:{cast:['{name} steps into the shadows, out of {foe}’s reach.'],end:'{name} steps back out of the shadows.'},
+ ward:{cast:['A translucent ward appears before {name}, blocking off {foe}’s spells.']},
 
  // Hidden courses
- animate:{cast:['A chair leg, a teapot and a coil of wire stand up and look around for someone to hit.'],finish:'The made thing clatters apart into honest furniture again.'},
- starlight:{cast:['A named star is called down, its light gathering in an open palm like water in a cupped hand.'],hold:'The starlight brightens, and the shadows in the room shuffle to the walls.',release:'The gathered light leaves the hand as a clean, silver beam.'},
- seal:{cast:['A sharp twist of the wrist, like locking a door and pocketing the key.'],finish:'The loose magic in the air is shut away, every last spark of it.'},
+ animate:{cast:['A chair, a coat stand and a bucket lurch to life and lumber at {foe} on {name}’s command.'],end:'{name}’s animated furniture clatters apart.',ko:'{foe} goes down under {name}’s animated furniture.'},
+ starlight:{cast:['Starlight gathers in {name}’s open palm.'],hold:'The starlight in {name}’s palm grows brighter.',release:'A beam of starlight shoots from {name}’s palm at {foe}.',ko:'{foe} falls in a flood of {name}’s starlight.'},
+ seal:{cast:['{name} twists a hand, snuffing out the loose magic around {foe}.']},
 
  // Peer capstones
- wildfire:{cast:['Fire let off its leash: it runs along the floorboards, delighted with itself.'],hold:'The blaze is kept running, licking at both ends of the duel and at the caster’s sleeves.',release:'All of it at once: the wildfire breaks like a wave across the floor.'},
- heartwood:{cast:['Roots crack the flagstones and a sapling shoulders up, already leaning protectively.'],finish:'The little tree folds back into the floor, leaving a ring of moss and good intentions.'},
- omen:{cast:['A prophecy is spoken aloud, slowly, the way you read out a sentence nobody wants to hear.'],finish:'The foretold moment arrives exactly on time.'},
- sleight:{cast:['A friendly clap on the shoulder, and a purse changes owners on the way past.'],finish:'Somewhere, coins clink in the wrong pocket.'},
- contraption:{cast:['Springs, a kettle and something that used to be a clock assemble themselves into a machine that hums.'],finish:'The contraption shudders, whines and bursts in a shower of sparks and cogs.'},
- hoarfrost:{cast:['Breath turns white, and a lance of winter frost leaps across the room.'],finish:'Rime feathers the floor where the cold passed.'},
- candour:{cast:['A gentle question, asked in exactly the tone that makes people answer it.'],finish:'Something true slips out before anyone can stop it.'},
+ wildfire:{cast:['A cluster of flames sparks to life before {name}.'],hold:'The cluster of flames enlarges before {name}, radiating fiery sparks.',release:'The wildfire breaks loose from {name} and sweeps over {foe}.',ko:'{foe} falls before {name}’s wildfire.'},
+ heartwood:{cast:['A sapling bursts from the floor beside {name}, ready to shelter and mend.'],end:'{name}’s sapling withers back into the floor.'},
+ omen:{cast:['{name} speaks an omen over {foe}: it will strike in two exchanges.'],end:'The omen {name} spoke comes true and strikes {foe}.'},
+ sleight:{cast:['{name} slips a hand into {foe}’s purse in passing.']},
+ contraption:{cast:['{name} snaps together a whirring contraption and aims it at {foe}.'],end:'{name}’s contraption bursts in a shower of sparks and cogs.'},
+ hoarfrost:{cast:['A lance of frost flies from {name} at {foe}.'],ko:'{foe} falls, frozen stiff by {name}’s frost.'},
+ candour:{cast:['{name} asks {foe} a disarming question, but it does little here.']},
 
  // Club and job spells
- brace:{cast:['Weight down, heels dug in, the whole body set like a post in hard ground.'],finish:'The stance loosens; the stubbornness takes a while longer.'},
- quickquill:{cast:['A quill scratches across a notebook by itself, faster than anyone can talk.'],finish:'The page is full, word for word, and slightly smug about it.'},
- bramble:{cast:['Thorny vines shoot up between the flagstones and start looking for ankles.'],finish:'The brambles wither back into a few brown twigs.'},
- index:{cast:['Fingers flick through an invisible card catalogue, looking for exactly the right page.'],finish:'The right page is found, and of no use whatsoever in a fight.'},
- rapport:{cast:['A grin at the audience, a joke at one’s own expense, and a round bought for the nearest table.'],finish:'The crowd is firmly on one side now, and has the drinks to prove it.'},
- purify:{cast:['Something is drawn out of the body, bitter and bright, and stoppered into magic.'],finish:'The cure had to come from somewhere; it leaves a tiredness behind.'},
- tailwind:{cast:['A breeze from nowhere fills the coat like a sail, pushing every step forward.'],finish:'The wind drops, and the coat hangs still.'},
+ brace:{cast:['{name} plants both feet, braced to take {foe}’s hits.'],end:'{name} eases out of the braced stance.'},
+ quickquill:{cast:['A quill flies around {name}, but it does little in this situation.']},
+ bramble:{cast:['Thorny vines burst from the floor around {foe} at {name}’s call.'],end:'{name}’s brambles wither away.'},
+ index:{cast:['{name} leafs through a conjured index, but it does little here.']},
+ rapport:{cast:['{name} flaunts a handful of crowns, and the crowd cheers.']},
+ purify:{cast:['{name} draws some of their own strength out and distils it into magic.']},
+ tailwind:{cast:['A wind rises at {name}’s back, driving each blow harder.'],end:'The wind at {name}’s back dies down.'},
 
  // Hidden pool
- rime:{cast:['A sliver of winter is sewn into a collar, quietly, for later.'],finish:'The winter in the collar wakes and takes hold.'},
- reflect:{cast:['The air turns glassy, and a second, mirrored duel flickers into being just behind it.'],finish:'The mirror folds away like a closing book.'},
- moonwell:{cast:['A pool of moonlight opens at the feet, too deep to see the bottom of.'],hold:'The moonwell fills, silver lapping at its edges.',release:'The moonwell is drunk in a single draught, cold and bright.'},
- lodestar:{cast:['A small steady star is set turning overhead, bending loose force towards itself.'],hold:'The lodestar turns faster, gathering pull.',release:'The lodestar settles close, a bright shield that drinks the next blows.'},
- toll:{cast:['A single bell note, from no bell anyone can see.']},
+ rime:{cast:['{name} sews a sliver of rime into their collar, against a fall.']},
+ reflect:{cast:['A mirror-bright sheen settles over {name}, ready to throw {foe}’s spells back.'],end:'The mirror sheen around {name} fades.'},
+ moonwell:{cast:['A pool of moonlight opens at {name}’s feet.'],hold:'The moonwell at {name}’s feet fills higher.',release:'{name} drinks the moonwell down and fills with magic.'},
+ lodestar:{cast:['A small star kindles above {name}.'],hold:'The star above {name} grows heavier, pulling in loose force.',release:'The star settles around {name} as a shield.'},
+ toll:{cast:['A single bell note sounds from nowhere.']},
 
  // Forbidden pool
- torment:{cast:['A spiteful little curse is muttered and tied to every move the opponent will make.'],finish:'The curse unpicks itself, its spite used up.'},
- extraction:{cast:['A hand closes on empty air and pulls, and someone else’s magic comes away with it.'],finish:'The stolen magic settles in, cold and not quite at home.'},
- siphon:{cast:['A thin dark thread is spun between the duellists, and it starts to drink.'],hold:'The thread drinks again, and the caster’s colour comes back a little.',release:'The thread is snapped, and everything it drank is swallowed down.'},
- compel:{cast:['A voice that is not quite a voice says: again. And the opponent’s body listens.'],finish:'The compulsion lets go, leaving the opponent shaking out their hands.'},
- eclipse:{cast:['A dark disc slides across the caster’s light, hungry for whatever hurts it.'],finish:'The eclipse passes, full of borrowed power.'},
- heartprice:{cast:['A bargain is struck with the heart instead of the wand. From now on, every spell is paid in breath.'],finish:'The bargain is over, and the heart is relieved to have it so.'}
+ torment:{cast:['{name} lays a curse on {foe}: every move will hurt.'],end:'{name}’s curse on {foe} wears off.'},
+ extraction:{cast:['{name} pulls the ready magic straight out of {foe}.']},
+ siphon:{cast:['A dark thread links {name} to {foe} and starts to drink.'],hold:'The dark thread drinks more from {foe}.',release:'{name} snaps the thread and takes in everything it drank.',ko:'{foe} sags, drained by {name}’s dark thread.'},
+ compel:{cast:['{name} speaks a word of command: {foe} will repeat the last move.'],end:'{name} shakes off the compulsion.'},
+ eclipse:{cast:['A dark disc slides over {name}, turning the next blows into magic.'],end:'The eclipse over {name} passes.'},
+ heartprice:{cast:['{name} strikes a bargain: from now on, spells cost life instead of magic.']}
 };
-// The line to show for an action: a channel's hold/release, a Haste bundle as its parts, else the cast line (rotating by exchange).
-export function flavorLine(id,{channel=null,round=1}={}){
- const pick=x=>Array.isArray(x)?x[(round-1)%x.length]:x;
- if(id==='hold'||id==='release')return FLAVOR[channel]?.[id]??null;
- if(id?.startsWith('bundle:'))return id.slice(7).split('+').map(p=>pick(FLAVOR[p]?.cast)).filter(Boolean).join(' Then: ');
- return pick(FLAVOR[id]?.cast)??null;
+// How a fight ends, when the finishing action has no ko line of its own (or it isn't a knockout).
+export const ENDINGS={knockout:'{foe} can fight no more, and {name} wins.',decision:'Neither falls; {name} wins on points.',stalemate:'Neither {name} nor {foe} can finish it: a draw.',conceded:'{foe} yields to {name}.'};
+// Effects that end with a line, by effect key → the spell whose `end` it uses. {name} is the effect's holder, except for
+// Torment, whose effect sits on the cursed side but is told from the caster's.
+const LASTING={brace:'brace',haste:'haste',shadowstep:'shadowstep',tailwind:'tailwind',reflect:'reflect',torment:'torment',eclipse:'eclipse',compelled:'compel'};
+const HELD_BY_FOE=new Set(['torment']);
+
+// The two fighters' names, [player, opponent]. The main game passes the player's name and the card's opponent; the bench
+// names generic loadouts "the Duellist" and characters by name. Names starting "The" read lower-case mid-sentence.
+export function fighterNames({playerName,opponentName,playerLoadout,opponentLoadout}={}){
+ const of=l=>!l?null:NAMED_LOADOUTS[l]?l.replace(/^The /,'the '):'the '+l;
+ const a=playerName??of(playerLoadout)??'the player',b=opponentName??of(opponentLoadout)??'the opponent';
+ return [a,b===a?'the rival '+b.replace(/^the /,''):b];
 }
-// Finish lines for one resolved exchange, from plain snapshots of the state before and after it (no rules involved):
-// instant spells land; lasting effects, Foresight and constructs end; a foretold Omen arrives; a Mend that healed settles;
-// a Guard raised again too soon tires (Guard fatigue).
-const LASTING={ward:'ward',brace:'brace',haste:'haste',shadowstep:'shadowstep',tailwind:'tailwind',reflect:'reflect',torment:'torment',eclipse:'eclipse',compelled:'compel'};
-const LATER=new Set(['animate','heartwood','bramble','contraption','omen','mend','rime','foresight','heartprice','starlight','wildfire','moonwell','lodestar','siphon',...Object.values(LASTING)]);
-export function finishLines(before,after,pair,round){
- const out=new Set();
+const fill=(line,name,foe)=>{if(!line)return null;const s=line.replaceAll('{name}',name).replaceAll('{foe}',foe);return s[0].toUpperCase()+s.slice(1);};
+const pick=(x,round)=>Array.isArray(x)?x[(round-1)%x.length]:x;
+const BUNDLE_PART={strike:'a blow',guard:'a guard',reclaim:'a breath to gather magic'};
+
+// The line for one side's action: a channel's Hold/Release, a Haste bundle as its parts, else the cast line.
+//   names: [player, opponent]; side: who acts.
+export function flavorLine(id,{channel=null,round=1,names=['the player','the opponent'],side=0}={}){
+ const name=names[side],foe=names[1-side];
+ if(id==='hold'||id==='release')return fill(FLAVOR[channel]?.[id],name,foe);
+ if(id?.startsWith('bundle:'))return fill('{name} moves at double speed: '+id.slice(7).split('+').map(p=>BUNDLE_PART[p]).join(', then ')+'.',name,foe);
+ return fill(pick(FLAVOR[id]?.cast,round),name,foe);
+}
+// Lines for what one resolved exchange finished, from plain snapshots of the state before and after it (no rules involved):
+// a Mend heals or is broken, a tired Guard gives, lasting effects, Foresight and constructs end, a foretold Omen arrives,
+// the rime thaws, and the fight ends (the finishing action's ko line, else ENDINGS).
+export function finishLines(before,after,pair,round,names=['the player','the opponent']){
+ const out=[],add=(line,side)=>{const l=fill(line,names[side],names[1-side]);if(l&&!out.includes(l))out.push(l);};
+ const g=COMBAT_TUNING.guard;
  for(const side of [0,1]){
   const id=pair[side],b=before.actors[side],a=after.actors[side];
-  if(FLAVOR[id]?.finish&&!LATER.has(id))out.add(FLAVOR[id].finish);
-  if(id==='mend'&&a.hp>b.hp)out.add(FLAVOR.mend.finish);
-  const g=COMBAT_TUNING.guard;if(g?.repeatLeak>0&&(id==='guard'||id?.startsWith('bundle:')&&id.includes('guard'))&&b.guardRound>0&&round-b.guardRound<=(g.lookback??1)&&pair[1-side]?.includes('strike'))out.add(FLAVOR.guard.tired); // only felt against a Strike
-  for(const k of Object.keys(b.effects))if(!a.effects[k]&&LASTING[k])out.add(FLAVOR[LASTING[k]].finish);
-  if(before.earlyCommit[side]>0&&!after.earlyCommit[side])out.add(FLAVOR.foresight.finish);
-  for(const c of b.constructs)if(!a.constructs.some(x=>x.id===c.id))out.add(FLAVOR[c.id]?.finish);
-  if(b.omens.some(o=>o.due===round))out.add(FLAVOR.omen.finish);
+  if(id==='mend'&&!after.result)add(a.hp>b.hp?FLAVOR.mend.end:FLAVOR.mend.broken,side);
+  if(g?.repeatLeak>0&&(id==='guard'||id?.startsWith('bundle:')&&id.includes('guard'))&&b.guardRound>0&&round-b.guardRound<=(g.lookback??1)&&pair[1-side]?.includes('strike'))add(FLAVOR.guard.tired,side);
+  for(const k of Object.keys(b.effects))if(!a.effects[k]&&LASTING[k])add(FLAVOR[LASTING[k]].end,HELD_BY_FOE.has(k)?1-side:side);
+  if(before.earlyCommit[side]>0&&!after.earlyCommit[side])add(FLAVOR.foresight.end,1-side);
+  for(const c of b.constructs)if(!a.constructs.some(x=>x.id===c.id))add(FLAVOR[c.id]?.end,side);
+  if(b.omens.some(o=>o.due===round))add(FLAVOR.omen.end,side);
+  if(id==='frozen'&&a.freezeUntil<=round)add(FLAVOR.frozen.end,side);
  }
- out.delete(undefined);
- return [...out];
+ const r=after.result;
+ if(r&&!before.result){
+  const w=r.winner;
+  if(w===undefined||w===null)add(ENDINGS.stalemate,0);
+  else{
+   const id=pair[w],key=id==='hold'||id==='release'?before.actors[w].channel?.id:id?.startsWith('bundle:')&&id.includes('strike')?'strike':id;
+   add(r.reason==='knockout'?FLAVOR[key]?.ko??ENDINGS.knockout:ENDINGS[r.reason]??ENDINGS.knockout,w);
+  }
+ }
+ return out;
 }

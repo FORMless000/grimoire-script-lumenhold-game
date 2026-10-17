@@ -62,11 +62,11 @@ A log has the same shape as the browser's exported log, plus structured events:
 - `skill`: the per-point rates of the main combat skills (Arcana, Vigor, Alchemy) and the others;
 - `strike`: Strike's base damage and its Vigor rate;
 - `guard`, `shadowstep`, `decision`: Guard fatigue, whether casting breaks your own Shadowstep, and the quiet exchanges before a stalemate is called on points;
-- `hp`, `capacity`: combat max HP and Mana capacity;
+- `hp`, `capacity`: combat max HP (with its own pivot and floor) and Mana capacity (with a floor);
 - `condition`: how a worn or drained player starts (floors);
 - `settle`: what a fight costs afterwards.
 
-**Variants** try a balance idea without editing the roster. A variant is a module in `tools/variants/` whose default export mutates the roster objects: `R => { R.SPELLS.flame.cost = [9]; … }`. Pass it with `--variant` to `tools/suite.mjs` and `tools/condition-study.mjs`, or as `VARIANT=…` to `playtest.sh` and `suite-f5.sh`. It's recorded in each arm, so replays reproduce it. Each variant sets values on top of the roster as it was when it was written, so applying an old variant to today's roster isn't the same experiment. `v1`–`v8c` are the F5.4 tuning steps (F5.4 baked in `v8c` plus the 0.9 floors), `g1`–`g9` are the F5.5 trace-review steps (F5.5 baked in `g7`), and `g10`–`g11` plus `l3` the F5.6 low-level steps (F5.6 baked in `g11` and `l3`). `l1`, `l2` and `h1` were tried and rejected.
+**Variants** try a balance idea without editing the roster. A variant is a module in `tools/variants/` whose default export mutates the roster objects: `R => { R.SPELLS.flame.cost = [9]; … }`. Pass it with `--variant` to `tools/suite.mjs` and `tools/condition-study.mjs`, or as `VARIANT=…` to `playtest.sh` and `suite-f5.sh`. It's recorded in each arm, so replays reproduce it. Each variant sets values on top of the roster as it was when it was written, so applying an old variant to today's roster isn't the same experiment. `v1`–`v8c` are the F5.4 tuning steps (F5.4 baked in `v8c` plus the 0.9 floors), `g1`–`g9` are the F5.5 trace-review steps (F5.5 baked in `g7`), and `g10`–`g11` plus `l3` the F5.6 low-level steps (F5.6 baked in `g11` and `l3`). `l1`, `l2` and `h1` were tried and rejected. `p1`–`p6` are the F5.7 scaling steps (F5.7 baked in `p6` plus a Mana floor of 34).
 - `node tools/suite.mjs <name> --depth 4 [--variant f] [--trace] [--all] [--arms cross,gaps,all] [--seeds 3]` runs the suite directly (about 2 minutes at depth 4). One seed leaves about ±8 points of noise per class and level band. Use `--seeds 3` when you screen class changes.
 - `node tools/condition-study.mjs [--variant f] [--grid '[{"health":0.5},…]']` measures how entering worn or drained changes the player's win rate (432 fights per condition; about 10 minutes at depth 4).
 
@@ -76,7 +76,7 @@ A log has the same shape as the browser's exported log, plus structured events:
 
 See `INTEGRATION.md` for the design and `HANDOFF.md` for the plan to wire it into the main game.
 
-**Flavor** (`setup/flavor.mjs`): a cast line per spell and basic (several rotate), plus finish lines (impact, fading, collapse) and channels' Hold and Release lines. The browser shows them in the telegraph, the log and under each exchange.
+**Flavor** (`setup/flavor.mjs`): one plain sentence of what each fighter did, naming both sides (`{name}` and `{foe}`, from `fighterNames`). There are cast lines, Hold and Release lines for channels, `end` lines for effects and constructs, `ko` lines for the finishing action, and endings. The browser shows them in the telegraph, the log and under each exchange. The setup panel's "Your name" sets the player's name.
 
 ## Changing the rules
 

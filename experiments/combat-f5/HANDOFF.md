@@ -4,17 +4,17 @@ For the agent who wires `experiments/combat-f5/` into the main game. Read this, 
 
 ## Where things stand (2026-10-17)
 
-- **The minigame is canon as of `spells-v2 F5.6`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
+- **The minigame is canon as of `spells-v2 F5.7`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
   1. `node experiments/combat-f5/tools/build.mjs`
   2. `PORT=61096 node experiments/combat-f5/out/site/server.mjs`
 - **One implementation per function.**
   - The rules and the AI search are Rust (`rust/core`), compiled to WebAssembly for the browser (`web/core.mjs` is its JS face) and natively for simulations.
   - Spell data, kits and the campaign bridge are JS (`setup/`).
   - Never copy the rules into the main game; build from here.
-- **Balance as of F5.6,** from `tools/playtest.sh F56_D5 5`; the report is regenerated in `out/`, which is gitignored:
-  - Every class wins 39–57% at equal level (sd 5).
-  - The higher level wins 77/86/100% at +5/+10/+20.
-  - Fights last about 20 exchanges, and 14 of 504 end on points.
+- **Balance as of F5.7,** from `tools/playtest.sh F57_D5 5`; the report is regenerated in `out/`, which is gitignored:
+  - Every class wins 38–58% at equal level (sd 6).
+  - The higher level wins 78/90/100% at +5/+10/+20.
+  - Fights last about 21 exchanges at levels 20–50 and 28 at levels 60–80; 24 of 504 end on points.
   - Entering with no Health costs 17 points of win rate, and no Mana 10.
 - **Already built for the main game:**
   - `setup/campaign.mjs`:
@@ -68,6 +68,7 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 ### 4. The bridge
 
 - **Player:** the engine's six skills, learned spells and their levels, health, mana, mood, renown, gold and alignment map straight into `fightOptions`; the field names are in the file header.
+- **Names for the fight text:** pass the player's name and the opponent's (a character's short name, or the card's description of a generic foe, e.g. "the hooded duellist") to `fighterNames` (`setup/flavor.mjs`).
 - **Opponents:**
   - `vs lyra.arcana` and similar name a character: use `NAMED_LOADOUTS` (canon skills from `setup/cast-stats.mjs`, a snapshot of `content/world/cast.grim`; refresh it with `setup/sync-loadout-stats.mjs` when the cast changes).
   - A difficulty word (`adept-`, `apprentice+`) means a generic foe: pick a preset class by place or story (the nine in `setup/loadouts.mjs`), and set its level from the expected skill at that point of the run plus the rung (the ladder in `@balance dc_tiers`).
@@ -95,7 +96,7 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
   - Action descriptions: these come from Rust, `rust/core/src/text.rs`, through `describe`.
   - Event texts.
 - **The plan:**
-  - Move flavor into string tables under `locales/` keyed `flavor.<id>.cast.<n>` / `.finish` / `.hold` / `.release` / `.tired`.
+  - Move flavor into string tables under `locales/` keyed `flavor.<id>.cast.<n>` / `.hold` / `.release` / `.end` / `.broken` / `.ko` / `.tired`, plus `flavor.ending.<reason>`. Keep `{name}` and `{foe}`.
   - For descriptions, either move the templates to JS (the numbers stay in Rust), or have Rust return a template key plus values. Pick one and keep `{tokens}`.
   - New UI strings go in `UI_EN` in `src/i18n.js`; follow `locales/<lang>/GLOSSARY.md` for spell names.
 
@@ -124,11 +125,11 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 ## Known open issues
 
 - **Shadowstep then Mend** is the most common two-action sequence in high-level fights, and it's the game's main comeback. Switches that end it are built in but off: `SPELLS.mend.exposes` and `COMBAT_TUNING.shadowstep.breakOnCast`. Turning them on removed the back-and-forth (`rulebook.md`, F5.5). If players find it dull, give the opponent an answer to it rather than removing it.
-- **Levels 20–30 vary most** (class sd ≈ 8 after F5.6). Which spell a class gets second matters more than its stats.
+- **Levels 20–30 vary most** (class sd ≈ 8–13). Which spell a class gets second matters more than its stats.
 - **Below level 20 is rough,** and the main game starts there. At levels 10–15 (depth 4, three seeds):
   - fights run a median 24 exchanges;
   - in 46% of exchanges neither side casts;
-  - classes win 26–77% (sd 17); Scholar and Hollow adept are lowest.
+  - classes win 23–70% (sd 14 at F5.7); Scholar and Hollow adept are lowest.
 
   F5.6 gives every class Flame by level 10 (`kits.flameBy`). Lowering the skill pivot or Strike's rate didn't narrow the spread. Early fights probably want hand-picked opponent kits, or fewer classes.
 - **Showman and Healer at levels 60–80:** at depth 5, Showman wins about 25–31% and Healer about 72–76%. Stat offsets didn't move either (variant `h1`). It needs a kit change: Showman's charm spells are out of combat kits, and Healer plays Shadowstep+Mend best.
