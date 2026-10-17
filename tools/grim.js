@@ -32,6 +32,10 @@
  *                                       play every play style; invariants fail (exit 1), alarms warn; includes the
  *                                       preview property test (every outcome within its preview; 1000 games, 100 with --quick)
  *   node tools/grim.js styles             the simulated play styles and what each one plays for (tools/policies.js)
+ *   node tools/grim.js analyze [--styles all|quick|a,b] [--games N] [--baseline FILE] [--name NAME]
+ *                                       trajectories per play style (tools/analyze.js): resource and skill curves by
+ *                                       month, survival, pace and run time, milestones, check odds, findings and a
+ *                                       comparison with an earlier run; writes build/analysis/NAME.{json,md,html}
  *   node tools/grim.js curve [--games N] [--write]
  *                                       fit the expected-skill curve E(turn) from the balanced play style
  *   node tools/grim.js snapshot [NAME] [--out FILE]
@@ -1556,6 +1560,7 @@ switch (cmd) {
     if (ran.length && !flag('dry-run')) console.log('Next: node tools/grim.js build && node tools/grim.js lint && node tools/grim.js diff');
     break;
   }
+  case 'analyze': { const r = require('child_process').spawnSync(process.execPath, [path.join(__dirname, 'analyze.js'), ...rest], { stdio: 'inherit' }); if (r.status) process.exit(r.status); break; }
   case 'styles': for (const n of Policies.list()) console.log(n.padEnd(16) + ' ' + Policies.about(n)); break;
   case 'curve': curve({ games: Number(flag('games')) || 100, write: !!flag('write') }); break;
   case 'balance': if (!balance({ quick: !!flag('quick'), games: Number(flag('games')) || 0 })) process.exit(1); break;
