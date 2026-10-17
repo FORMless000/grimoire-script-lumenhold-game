@@ -5,7 +5,7 @@ export const LOADOUTS={
  Duellist:{salt:1,offsets:[6,-1,-8,-1,5,-1],flameBase:.9,course:[2,1,.5,3,2],extras:{brace:3,tailwind:1},hidden:{reflect:1,lodestar:1,starlight:.5}},
  Scholar:{salt:2,offsets:[5,7,0,-2,-6,-4],flameBase:.4,course:[4,1,1,.5,1],extras:{starlight:3,seal:1},hidden:{starlight:2,seal:1,moonwell:1}},
  Healer:{salt:3,offsets:[2,2,8,2,-4,-10],flameBase:.6,course:[1,4,.5,1,.5],extras:{bramble:3,purify:2},hidden:{animate:1,moonwell:1}},
- Illusionist:{salt:4,offsets:[4,-4,-3,4,-2,1],flameBase:.4,course:[1,.5,4,.5,3],extras:{reflect:3,rapport:2},hidden:{reflect:2,seal:1}},
+ Illusionist:{salt:4,offsets:[4,-4,-3,4,-2,1],flameBase:.4,course:[1,2,4,.5,3],extras:{reflect:3,rapport:2},hidden:{reflect:2,seal:1}},
  Brawler:{salt:5,offsets:[-4,-8,-6,2,12,4],flameBase:.6,course:[.5,1,.5,4,1],extras:{tailwind:3,brace:2,rapport:1},hidden:{rime:1}},
  Prefect:{salt:6,offsets:[4,4,-6,-4,4,-2],flameBase:.7,course:[2,2,.5,1,1],extras:{brace:3,index:1},hidden:{lodestar:2,seal:1}},
  Showman:{salt:7,offsets:[3,-4,-6,10,3,-6],flameBase:.6,course:[1,.5,4,2,.5],extras:{rapport:3,tailwind:1},hidden:{reflect:1}},

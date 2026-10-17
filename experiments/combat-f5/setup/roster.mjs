@@ -18,8 +18,9 @@ export const COMBAT_TUNING={
  hp:{skills:['vigor'],perPoint:0}, // combat HP is not scaled by skill: it stands for the player's Health
  capacity:{base:43,slope:.25,weights:{arcana:1}},
  guard:{repeatLeak:.5,lookback:1}, // Guard fatigue (F5.5): a Guard within `lookback` exchanges of the last stops only half a Strike
- shadowstep:{breakOnCast:false}, // true: casting any spell but Ward breaks your own Shadowstep (tried in F5.5: fights −35%, wider spread)
+ shadowstep:{breakOnCast:false}, // true: casting any spell but Ward breaks your own Shadowstep (tried in F5.5: kills comebacks, see rulebook)
  decision:{quietExchanges:5}, // a stalemate (no HP lost, no Mana spent) is called on points after this many exchanges
+ kits:{flameBy:10}, // generated kits learn Flame by this level at the latest (F5.6; was 25, which left some classes without an attack below 15)
  condition:{healthFull:70,healthFloor:.9,manaFloor:.9},
  settle:{healthStake:40,mood:{win:3,lose:-4,draw:0}}
 };
@@ -31,8 +32,8 @@ export const SPELLS={
  foresight:spell('Foresight','Astromancy',['lore'],[7,7,6],{verb:'Foresee',duration:[3,4,5],negotiation:'Rolling next-request reveal for 3/4/5 turns.'}),
  mend:spell('Mend','Alchemy & Healing',['alchemy'],[9,9,8],{verb:'Mend',healing:[25,26,27],negotiation:'None.'}),
  glamour:spell('Glamour','Illusion',['charm'],[9,7,5],{verb:'Dazzle',renown:[3,5,8],negotiation:'Charm/Guile responses cheaper; +2 Suspicion.'}),
- haste:spell('Haste','Beastcraft & Flight',['vigor'],[5,5,5],{verb:'Hasten',actions:[2,2,3],duration:[3,3,4],negotiation:'Response costs 1/1/2 less Patience.'}),
- shadowstep:spell('Shadowstep','Umbral Theory',['guile'],[12,12,12],{verb:'Step',duration:[1,2,2],negotiation:'Leave and settle progress.'}),
+ haste:spell('Haste','Beastcraft & Flight',['vigor'],[5,5,5],{verb:'Hasten',actions:[2,2,3],duration:[2,3,4],negotiation:'Response costs 1/1/2 less Patience.'}),
+ shadowstep:spell('Shadowstep','Umbral Theory',['guile'],[8,10,12],{verb:'Step',duration:[1,2,2],negotiation:'Leave and settle progress.'}),
  ward:spell('Ward','Orientation safety talk',[],[7],{verb:'Ward',baseline:true,negotiation:'None.'}),
  animate:spell('Animate','Artifice (hidden)',['alchemy','arcana'],[14],{verb:'Animate',construct:true,negotiation:'Later.'}),
  starlight:spell('Starlight','Starcalling (hidden)',['lore'],[9],{verb:'Illuminate',release:[36,60],channel:true,holdCost:2,negotiation:'+2 Patience.'}),
@@ -95,11 +96,13 @@ export function manaCapacity(skills){const c=COMBAT_TUNING.capacity,ws=Object.en
 // Spells whose only effect is Renown or Crowns are for the campaign, not for combat kits.
 export const COMBAT_EXCLUDED=new Set(['glamour','rapport','sleight','index','quickquill']);
 const keepInCombat=([id])=>!COMBAT_EXCLUDED.has(id);
+// The level a generated kit learns Flame: earlier the more the class favours it (flameBase), by COMBAT_TUNING.kits.flameBy at the latest.
+export const flameUnlock=def=>Math.max(1,Math.ceil((COMBAT_TUNING.kits?.flameBy??25)*(1-def.flameBase)-1e-9));
 function priority(weights={}){return Object.entries(weights).filter(keepInCombat).filter(([,w])=>w>0).sort((a,b)=>b[1]-a[1]).map(([id])=>id);}
 function spellUnlocks(def,named,growing,year){
  const levels={ward:1},grant=(id,at)=>{levels[id]=Math.min(levels[id]??101,at);};
  // First level where the former Flame probability would have been certain.
- grant('flame',Math.max(1,Math.ceil(25*(1-def.flameBase)-1e-9)));
+ grant('flame',flameUnlock(def));
  for(const id of def.iconic??[])if(!COMBAT_EXCLUDED.has(id))grant(id,1);
  if(def.place&&!COMBAT_EXCLUDED.has(def.place))grant(def.place,25);
  for(const [id,at]of def.grants??[])if(!COMBAT_EXCLUDED.has(id))grant(id,at);

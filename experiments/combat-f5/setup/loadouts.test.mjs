@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import crypto from 'node:crypto';
-import {LOADOUTS,NAMED_LOADOUTS,LOADOUT_SKILLS,COURSE_PICKS,generateLoadout,courseRank,fixedLoadoutLevel,SPELLS,COMBAT_EXCLUDED,manaCapacity} from './roster.mjs';
+import {LOADOUTS,NAMED_LOADOUTS,LOADOUT_SKILLS,COURSE_PICKS,generateLoadout,courseRank,fixedLoadoutLevel,SPELLS,COMBAT_EXCLUDED,manaCapacity,flameUnlock} from './roster.mjs';
 import {CAST_STATS,CAST_STATS_HASH} from './cast-stats.mjs';
 import {createState} from './setup.mjs';
 const peerSpells=['wildfire','heartwood','omen','sleight','contraption','hoarfrost','candour'];
@@ -69,10 +69,10 @@ test('all loadouts keep spells as level or study year rises, including low level
 test('spell unlock levels do not depend on jitter or rerolls, and preferences determine the ladder',()=>{
  for(const [name,def]of Object.entries(LOADOUTS)){
   const low=generateLoadout(name,1),top=generateLoadout(name,100);assert.deepEqual(low.unlockLevels,top.unlockLevels);assert.equal(low.draws.length,6);assert.equal(top.draws.length,6);
-  assert.equal(top.unlockLevels.flame,Math.max(1,Math.ceil(25*(1-def.flameBase)-1e-9)));
+  assert.equal(top.unlockLevels.flame,flameUnlock(def));
   for(let level=1;level<=100;level++){const a=generateLoadout(name,level);for(const [id,at]of Object.entries(a.unlockLevels))assert.equal(id in a.spells,level>=at,`${name} ${id}@${level}`);}
  }
- assert.deepEqual(generateLoadout('Duellist',100).unlockLevels,{ward:1,flame:3,foresight:1,haste:15,shadowstep:40,mend:65,brace:45,reflect:70});
- const hf=generateLoadout('Healer',100).unlockLevels.flame;assert.equal(hf,Math.ceil(25*(1-LOADOUTS.Healer.flameBase)-1e-9));assert(!generateLoadout('Healer',hf-1).spells.flame);assert(generateLoadout('Healer',hf).spells.flame);
+  assert.deepEqual(generateLoadout('Duellist',100).unlockLevels,{ward:1,flame:flameUnlock(LOADOUTS.Duellist),foresight:1,haste:15,shadowstep:40,mend:65,brace:45,reflect:70});
+ const hf=generateLoadout('Healer',100).unlockLevels.flame;assert.equal(hf,flameUnlock(LOADOUTS.Healer));assert(!generateLoadout('Healer',hf-1).spells.flame);assert(generateLoadout('Healer',hf).spells.flame);
  assert.equal(generateLoadout('Lyra',50).draws.length,0);
 });

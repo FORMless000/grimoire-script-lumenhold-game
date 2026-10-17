@@ -30,10 +30,10 @@ PORT=61096 node experiments/combat-f5/out/site/server.mjs
 **The playtest pipeline** (rerun after every rule change):
 
 ```bash
-experiments/combat-f5/tools/playtest.sh F55_D5 5
+experiments/combat-f5/tools/playtest.sh F56_D5 5
 ```
 
-This runs the balance suite with every side searching 5 exchanges per decision: 504 class-matrix fights at levels 20–80 and 432 level-gap fights, all with the fallible AI. It takes about 10 minutes on 8 cores (40 s at depth 4). It writes `out/F55_D5-report.md`, which has:
+This runs the balance suite with every side searching 5 exchanges per decision: 504 class-matrix fights at levels 20–80 and 432 level-gap fights, all with the fallible AI. It takes about 10 minutes on 8 cores (40 s at depth 4). It writes `out/F56_D5-report.md`, which has:
 - class win rates by level band;
 - fight statistics (knockouts, decisions, draws, lengths, search depth);
 - level-gap win rates;
@@ -66,7 +66,7 @@ A log has the same shape as the browser's exported log, plus structured events:
 - `condition`: how a worn or drained player starts (floors);
 - `settle`: what a fight costs afterwards.
 
-**Variants** try a balance idea without editing the roster. A variant is a module in `tools/variants/` whose default export mutates the roster objects: `R => { R.SPELLS.flame.cost = [9]; … }`. Pass it with `--variant` to `tools/suite.mjs` and `tools/condition-study.mjs`, or as `VARIANT=…` to `playtest.sh` and `suite-f5.sh`. It's recorded in each arm, so replays reproduce it. Each variant sets values on top of the roster as it was when it was written, so applying an old variant to today's roster isn't the same experiment. `v1`–`v8c` are the F5.4 tuning steps (F5.4 baked in `v8c` plus the 0.9 floors), and `g1`–`g8` are the F5.5 trace-review steps (F5.5 baked in `g7`).
+**Variants** try a balance idea without editing the roster. A variant is a module in `tools/variants/` whose default export mutates the roster objects: `R => { R.SPELLS.flame.cost = [9]; … }`. Pass it with `--variant` to `tools/suite.mjs` and `tools/condition-study.mjs`, or as `VARIANT=…` to `playtest.sh` and `suite-f5.sh`. It's recorded in each arm, so replays reproduce it. Each variant sets values on top of the roster as it was when it was written, so applying an old variant to today's roster isn't the same experiment. `v1`–`v8c` are the F5.4 tuning steps (F5.4 baked in `v8c` plus the 0.9 floors), `g1`–`g9` are the F5.5 trace-review steps (F5.5 baked in `g7`), and `g10`–`g11` plus `l3` the F5.6 low-level steps (F5.6 baked in `g11` and `l3`). `l1`, `l2` and `h1` were tried and rejected.
 - `node tools/suite.mjs <name> --depth 4 [--variant f] [--trace] [--all] [--arms cross,gaps,all] [--seeds 3]` runs the suite directly (about 2 minutes at depth 4). One seed leaves about ±8 points of noise per class and level band. Use `--seeds 3` when you screen class changes.
 - `node tools/condition-study.mjs [--variant f] [--grid '[{"health":0.5},…]']` measures how entering worn or drained changes the player's win rate (432 fights per condition; about 10 minutes at depth 4).
 
@@ -105,4 +105,4 @@ Before the JS rules and search were retired, the Rust core (F5.2) was checked ag
 - 50 seeded fallible-AI fights played the same actions.
 - 200 fights through the WebAssembly glue answered 3.9 M UI queries identically, including every `describe` text.
 
-The goldens froze that behaviour. They have since been refreshed for F5.3 (Foresight), F5.4 (the integration pass: skill scaling, kits, Compel, condition) and F5.5 (Guard fatigue, stalemates, Starlight, Reflect, class offsets). The oracle, its differential checker (`out/oracle/tools/check.mjs`) and the frozen F5.2 Rust builds it was compared with are kept in `out/oracle/`. These checks apply only to F5.2 and are not part of the ongoing pipeline.
+The goldens froze that behaviour. They have since been refreshed for F5.3 (Foresight), F5.4 (the integration pass: skill scaling, kits, Compel, condition) F5.5 (Guard fatigue, stalemates, Starlight, Reflect, class offsets) and F5.6 (Shadowstep and Haste at rank 1, Illusionist's course). The oracle, its differential checker (`out/oracle/tools/check.mjs`) and the frozen F5.2 Rust builds it was compared with are kept in `out/oracle/`. These checks apply only to F5.2 and are not part of the ongoing pipeline.

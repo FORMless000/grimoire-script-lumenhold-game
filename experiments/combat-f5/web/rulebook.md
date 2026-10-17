@@ -1,6 +1,6 @@
 # Combat: spell redesign v2 (F5)
 
-## F5 rule changes (spells-v2 F5.5 · 2026-10-17; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass and F5.5 its trace-review follow-up, both below)
+## F5 rule changes (spells-v2 F5.6 · 2026-10-17; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5 and F5.6 its follow-ups, all below)
 
 These override anything below that disagrees.
 
@@ -46,9 +46,15 @@ These override anything below that disagrees.
   The main combat skills now carry more weight, so each class's main-skill total moved toward zero.
 - **Available but off:**
   - `COMBAT_TUNING.shadowstep.breakOnCast`: any spell but Ward breaks your own Shadowstep.
-  - A spell's `exposes` (set on Mend): casting it breaks your own Shadowstep.
+  - A spell's `exposes` (for Mend): casting it breaks your own Shadowstep.
 
-  Both end the Shadowstep-then-Mend loop. That loop is a heal the opponent can't answer, and the most common pair of actions in high-level fights. Both also made fights about a third shorter and widened the class spread, so they wait for a class retune.
+  Both end the Shadowstep-then-Mend loop. **Keep that loop:** it's the game's main comeback. Turning it off, even with Mend raised to 26/31/36, cut HP lead changes at levels 60–80 from 2.7 to 0.9 per fight, shortened fights by about a third, and let the strongest stats run away with fights (Duellist 78%). It's a trade, not a free heal: about 21 Mana for one timed heal, while the opponent takes the free exchanges to Reclaim or charge.
+
+**F5.6, levels 20–30:** the second course spell decided the low levels.
+- **Shadowstep** costs 8/10/12 Mana by rank (was 12 at every rank): a fair price for one dodged exchange at rank 1.
+- **Haste** lasts 2/3/4 exchanges (was 3/3/4).
+- **Illusionist** starts with Mend instead of Foresight (course weights Foresight 1, Mend 2).
+- **Generated kits learn Flame by level 10** at the latest (`COMBAT_TUNING.kits.flameBy`, was 25). Below level 15, some classes used to have no damaging spell.
 
 **Kits:** Glamour, Rapport, Sleight, Index and Quickquill are out of combat kits (no combat effect). Scholar's extras are Starlight and Seal; Illusionist's are Reflect and Rapport.
 

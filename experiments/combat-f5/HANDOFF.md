@@ -4,17 +4,18 @@ For the agent who wires `experiments/combat-f5/` into the main game. Read this, 
 
 ## Where things stand (2026-10-17)
 
-- **The minigame is canon as of `spells-v2 F5.5`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
+- **The minigame is canon as of `spells-v2 F5.6`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
   1. `node experiments/combat-f5/tools/build.mjs`
   2. `PORT=61096 node experiments/combat-f5/out/site/server.mjs`
 - **One implementation per function.**
   - The rules and the AI search are Rust (`rust/core`), compiled to WebAssembly for the browser (`web/core.mjs` is its JS face) and natively for simulations.
   - Spell data, kits and the campaign bridge are JS (`setup/`).
   - Never copy the rules into the main game; build from here.
-- **Balance as of F5.5,** from `tools/playtest.sh F55_D5 5`; the report is regenerated in `out/`, which is gitignored:
-  - Every class wins 42–60% at equal level.
-  - The higher level wins 76/87/100% at +5/+10/+20.
-  - Fights last about 19 exchanges.
+- **Balance as of F5.6,** from `tools/playtest.sh F56_D5 5`; the report is regenerated in `out/`, which is gitignored:
+  - Every class wins 39–57% at equal level (sd 5).
+  - The higher level wins 77/86/100% at +5/+10/+20.
+  - Fights last about 20 exchanges, and 14 of 504 end on points.
+  - Entering with no Health costs 17 points of win rate, and no Mana 10.
 - **Already built for the main game:**
   - `setup/campaign.mjs`:
     - `fightOptions({player, opponent, context})` turns the player's state into a fight;
@@ -122,8 +123,16 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 
 ## Known open issues
 
-- **Shadowstep then Mend** is a heal the opponent can't answer, and the most common two-action sequence in high-level fights. A fix is built in but off: `SPELLS.mend.exposes` and `COMBAT_TUNING.shadowstep.breakOnCast`. Turning it on shortens high-level fights by about a third and widens the class spread, so it needs a class retune first (`rulebook.md`, F5.5).
-- **Levels 20–30 vary most** (class sd ≈ 13). Which spell a class gets second matters more than its stats: Mend beats Haste and Shadowstep there.
+- **Shadowstep then Mend** is the most common two-action sequence in high-level fights, and it's the game's main comeback. Switches that end it are built in but off: `SPELLS.mend.exposes` and `COMBAT_TUNING.shadowstep.breakOnCast`. Turning them on removed the back-and-forth (`rulebook.md`, F5.5). If players find it dull, give the opponent an answer to it rather than removing it.
+- **Levels 20–30 vary most** (class sd ≈ 8 after F5.6). Which spell a class gets second matters more than its stats.
+- **Below level 20 is rough,** and the main game starts there. At levels 10–15 (depth 4, three seeds):
+  - fights run a median 24 exchanges;
+  - in 46% of exchanges neither side casts;
+  - classes win 26–77% (sd 17); Scholar and Hollow adept are lowest.
+
+  F5.6 gives every class Flame by level 10 (`kits.flameBy`). Lowering the skill pivot or Strike's rate didn't narrow the spread. Early fights probably want hand-picked opponent kits, or fewer classes.
+- **Showman and Healer at levels 60–80:** at depth 5, Showman wins about 25–31% and Healer about 72–76%. Stat offsets didn't move either (variant `h1`). It needs a kit change: Showman's charm spells are out of combat kits, and Healer plays Shadowstep+Mend best.
+- **Run-to-run noise:** the search's transposition table carries over between fights on a worker thread, so tied moves break differently from run to run. One class in one level band can move ±7 points between identical runs, even at depth 5. Compare whole suites, use `--seeds 3` when screening, and don't tune to a single band.
 - **Untested below level 20,** where the main game starts (skills ≈ 12). Run a level-12 arm before release. If fights drag, raise the factor's floor or lower the pivot.
 - **Rarely picked spells:** Starlight, Reflect and Lodestar are picked about 1% of the time they're legal. Tailwind and Foresight are niche.
 - **Design questions are in `INTEGRATION.md` §8:** the cost of a won fight, how much condition weighs, the draw → partial mapping, and how a card names its context.

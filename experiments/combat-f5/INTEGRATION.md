@@ -1,6 +1,6 @@
-# Bringing the combat minigame into Lumenhold (design, F5.5)
+# Bringing the combat minigame into Lumenhold (design, F5.6)
 
-How a card's fight becomes a played minigame and how it feeds back into the game. The numbers live in `COMBAT_TUNING` (`setup/roster.mjs`) and `content/core/balance.grim`. This doc gives the shape and the reasons, and the measured effects as of F5.4/F5.5 (2026-10-17). The step-by-step plan for implementing it is `HANDOFF.md`.
+How a card's fight becomes a played minigame and how it feeds back into the game. The numbers live in `COMBAT_TUNING` (`setup/roster.mjs`) and `content/core/balance.grim`. This doc gives the shape and the reasons, and the measured effects as of F5.4–F5.6 (2026-10-17). The step-by-step plan for implementing it is `HANDOFF.md`.
 
 ## 1. Where fights come from
 
@@ -43,6 +43,8 @@ The player's win rate entering worn or drained, against a fresh opponent (V8c wi
 | Mana 20% | 100% / 92% | 35% | −12 |
 | Mana 0 | 100% / 90% | 33% | −15 |
 | Health 35 and Mana 50% | 95% / 95% | 33% | −14 |
+
+At depth 5 (F5.5, 432 fights per row) the effect matches: half Health −4, no Health −17, half Mana −6, no Mana −10, both at half −12.
 
 So being worn matters (roughly the gap of five levels at most) but never decides the fight on its own. The game should still warn the player before a fight when they enter below fit.
 
