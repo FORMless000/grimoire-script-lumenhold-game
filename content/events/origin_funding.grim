@@ -1,0 +1,65 @@
+# ============================================================
+#  Origin funding (docs/origin-design.md, 2026-10-16): the money a family, the Crown or a company sends before each
+#  later term (terms 2–8), as one card in the last break month (turns 6, 12 … 42), wherever you spend the break.
+#  The amounts and odds are presets in content/core/balance.grim. A roll happens once, when the card is drawn
+#  (`on_show`), so the text matches what arrives and a reload doesn't change it. Payment needs no choice.
+# ============================================================
+
+@event noble_letter
+title: A Letter from Home
+class: story
+tone: warm
+trigger: auto
+when: has(origin_noble) and (month == 6 or month == 12) and term_index <= 7
+repeat: 6
+priority: 60
+art: letter
+tags: home money
+scene: A heavy envelope with a wax family seal on a writing desk, a bank draft half out of it.
+on_show:
+  unflag family_gift
+  chance unlikely:
+    flag family_gift
+text: {month == 6: Before the spring term|Before the new year} a letter comes with your family's seal and a draft on the family bank. {flag(family_gift): {&Folded inside is a smaller note from your grandmother, and a little more money "for something nice".|There's an extra sum this time, marked "a gift", which in your family means it will be mentioned at dinner for a year.|Your father has added something on top, with a line about how proud he would be of better marks.}|{&The allowance, to the crown, and three pages about cousins who are doing very well.|The usual sum, and a reminder that the family name goes wherever you go.|The allowance, and a postscript asking whether you have met anyone suitable.}}
+> ok: Fold the letter away
+  noble_allowance
+  if flag(family_gift):
+    noble_gift
+  say: {&You read it twice: once for the money, once for what it wants from you.|You put the draft in your purse and the letter in a drawer, and the letter is heavier.|You write back the same night: thank you, yes, of course, you'll try.}
+
+@event scholarship_award
+title: The Bursary List
+class: story
+tone: tense
+trigger: auto
+when: has(origin_scholar) and (month == 6 or month == 12) and term_index <= 7
+repeat: 6
+priority: 60
+art: scroll
+tags: study money
+scene: A list of names pinned outside the registrar's office, a clerk's red ink beside some of them.
+text: The bursary list {month == 6: for the spring term|for the new year} goes up outside the registrar's office. {term_gpa >= 3.5: {&Your name is near the top with a small star beside it: the full stipend, and a merit bonus.|The clerk hands you the envelope herself. The full stipend, and a little extra "for distinction".|Your name, the full sum, and the word "Merit" in red ink, which the clerk says she rarely gets to use.}|{term_gpa >= 3.0: {&Your name is there: the stipend is renewed for another term.|"Renewed," says the list, in the clerk's tidy hand. You breathe out.|Your stipend stands for another term. The marks held, if only just.}|{term_gpa > 0: {&Your name is there with a line through the amount. Last term's marks fell below the 3.0 the Crown pays for, and the stipend waits until they come back up.|The clerk is apologetic: the Crown pays for marks of 3.0 and above, and last term yours were not. Next term, perhaps.|No stipend this term. Your marks dipped below what the Crown pays for, and the list says so in plain ink.}|{&Your name isn't on the list. No marks were recorded for you last term, and the Crown pays for marks.|The clerk checks twice. No grades last term means no stipend this one.|An empty line where your amount should be: the Crown pays for marks, and last term you had none.}}}}
+> ok: Read your line again
+  scholarship_stipend
+  say: {term_gpa >= 3.0: {&You fold the envelope into your book and walk a little taller to breakfast.|Tuition, board and something left over. You allow yourself one good dinner.|You write home that the stipend held. Your family will read the letter aloud to the neighbours.}|{&You do the sums on the back of a lecture note, and they come out short. Work, then, or thinner meals.|You walk away from the list without looking back at it. Next term the marks will be better; they have to be.|You go straight to the library, which is free, and stay until it closes.}}
+
+@event trading_report
+title: The Company's Report
+class: story
+tone: tense
+trigger: auto
+when: has(origin_merchant) and (month == 6 or month == 12) and term_index <= 7
+repeat: 6
+priority: 60
+art: scales
+tags: home money
+scene: A merchant company's ledger report on thick paper, columns of figures, a bank draft clipped to the first page or not.
+on_show:
+  unflag trade_good
+  chance likely:
+    flag trade_good
+text: {month == 6: The company's half-year report|The company's year-end report} arrives with a clerk's note on top. {flag(trade_good): {&The spice fleet came in early and whole. Your share is paid in full.|A good season: the northern warehouses sold out by midsummer. Your share comes with your mother's compliments.|Profit on every route but one. Your share is enclosed, and so is a list of what it cost.}|{&A ship lost off the southern coast, and a cargo of silk ruined by rain. There is no share this term.|The markets turned. The report is long and the envelope is empty: no share until trade recovers.|Pirates, tariffs and a warehouse fire, in that order. Your mother writes that the company cannot spare anything this term.}}
+> ok: Fold the report away
+  if flag(trade_good):
+    trade_returns
+  say: {flag(trade_good): {&You count it twice and lock it away. Next term's tuition is safe.|You read the figures like a story with a happy ending, and put the draft somewhere safe.|You think about what the good season cost someone else, and then about tuition, and put the draft away.}|{&You count what's in your purse instead. It will have to do.|You read the figures twice, as if they might change. They don't.|You write back that you understand, and then go and look at the job board.}}

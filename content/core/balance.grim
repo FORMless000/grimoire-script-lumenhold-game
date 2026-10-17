@@ -68,7 +68,7 @@ spell_bonus: medium large huge
 # Spark follows friendship (M37): a friendship gain adds spark × (spark / per), at most cap× (partner× for a partner);
 # spark crossing `cooldown` asks whether you want it (@game spark_cooldown).
 spark_follow: per 25 cap 2 partner 3 cooldown 30
-curve: 8 9 11 12 15 15 16 18 20 21 23 24 25 26 27 29 31 32 32 34 35 36 39 39 39 41 42 43 46 46 47 48 49 50 53 53 53 54 55 55 57 58 58 59 59 60 62 62
+curve: 12 13 14 16 18 19 19 21 23 24 26 26 27 28 29 31 33 33 34 35 36 37 39 40 40 41 42 43 46 46 47 48 49 50 52 53 53 54 54 55 57 57 58 58 59 60 61 62
 
 # ---------------- Presets (design §8.4): named groups of effects ----------------
 
@@ -115,3 +115,73 @@ do:
     $res +large
   else:
     $res -medium
+
+# ---------------- Origins (docs/origin-design.md, 2026-10-16) ----------------
+# Starting packages, applied before the first term's charges. Skills are XP grants through the ordinary XP cost
+# (xp_cost: 1 0.04), calibrated to land on the design's levels from the base values in rules.grim: each grant is
+# the sum of 1 + 0.04 × level from the base to the target (test/origins.test.js recomputes them). Purses are added
+# to the base 30 crowns.
+
+@preset origin_noble_start
+desc: Charm 25, Lore 12; 90 crowns in all.
+do:
+  charm += 27.88
+  lore += 5.52
+  gold +huge
+
+@preset origin_scholar_start
+desc: Lore 28, Arcana 12; 60 crowns in all.
+do:
+  lore += 34
+  arcana += 5.52
+  gold +large
+
+@preset origin_hedge_start
+desc: Alchemy 30, Arcana 15, Lore 6; 45 crowns in all.
+do:
+  alchemy += 40.8
+  arcana += 10.08
+  lore -= 2
+  gold +medium
+
+@preset origin_street_start
+desc: Guile 30, Vigor 18; 38 crowns in all.
+do:
+  guile += 40.8
+  vigor += 15
+  gold +small
+
+@preset origin_merchant_start
+desc: Charm 25, Guile 15; 150 crowns in all.
+do:
+  charm += 27.88
+  guile += 12.6
+  gold +huge
+  gold +huge
+
+# Support before each later term (terms 2–8), paid by the origin's funding card in the last break month.
+@preset noble_allowance
+desc: The family's allowance, 60 crowns, and the expectations that come with it.
+do:
+  gold +huge
+  mood -small
+
+@preset noble_gift
+desc: A family gift on top, 15 crowns (30% of terms, rolled when the letter comes).
+do:
+  gold +medium
+
+@preset scholarship_stipend
+desc: By the latest completed term's GPA: 3.5 or higher, 68 crowns (with an 8-crown merit bonus); 3.0 or higher, 60; below, nothing.
+do:
+  if term_gpa >= 3.5:
+    gold +huge
+    gold +small
+  elif term_gpa >= 3.0:
+    gold +huge
+
+@preset trade_returns
+desc: The company's share after a good trading period, 120 crowns (70% of terms, rolled when the report comes).
+do:
+  gold +huge
+  gold +huge

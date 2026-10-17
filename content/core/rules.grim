@@ -190,15 +190,13 @@ do:
   gold -8
   say: {~The castle in the holidays still wants its board.|A bed in an empty dormitory costs the same as a full one.}
 
-# Tuition each term (design §8.2): noble and merchant families pay it (L24); the scholarship pays half.
+# Tuition each term (design §8.2): everyone pays it (origin design 2026-10-16). A family's or the Crown's support
+# arrives as cash before the term, on the origin's funding card (content/events/origin_funding.grim).
 @hook tuition
 on: term_start
 label: Tuition
 do:
-  if has(origin_scholar):
-    gold -8
-  elif not (has(origin_noble) or has(origin_merchant)):
-    gold -16
+  gold -16
   say: {~Term fees, paid at a window with a very small grille.|The bursar's quill scratches. Another term is paid for.}
 
 # Course fees (review fixes): charged with the term, like tuition, not by the enrolment card.

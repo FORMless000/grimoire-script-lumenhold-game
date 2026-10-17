@@ -1,0 +1,41 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/origin_funding.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@event noble_letter
+# en: A Letter from Home
+title [56bb53] = 家书
+# en: {month == 6: Before the spring term|Before the new year} a letter comes with your family's seal and a draft on the family bank. {flag(family_gift): {&Folded inside is a smaller note from your grandmother, and a little more money "for something nice".|There's an extra sum this time, marked "a gift", which in your family means it will be mentioned at dinner for a year.|Your father has added something on top, with a line about how proud he would be of better marks.}|{&The allowance, to the crown, and three pages about cousins who are doing very well.|The usual sum, and a reminder that the family name goes wherever you go.|The allowance, and a postscript asking whether you have met anyone suitable.}}
+text [f5f6d8] = {month == 6: 春季学期开学前|新学年开始前}，一封盖着家族印章的信寄到了，里面夹着一张家族银行的汇票。{flag(family_gift): {&信里还折着一张祖母写的小纸条，外加一点钱，“买点好东西”。|这次多了一笔，标着“礼物”——在你们家，这意味着接下来一年的晚饭桌上都会被提起。|父亲在上面又添了一笔，附了一句：要是成绩再好些，他会多么骄傲。}|{&零花钱一个克朗不差，外加三页纸讲表亲们过得多么出色。|还是那个数目，外加一句提醒：家族的姓氏走到哪儿都跟着你。|零花钱，外加一句附言，问你有没有遇到合适的人。}}
+# en: A heavy envelope with a wax family seal on a writing desk, a bank draft half out of it.
+scene [72b255] = 书桌上一个厚重的信封，封着家族的蜡印，一张银行汇票露出一半。
+# en: Fold the letter away
+opt.ok.label [81ff5f] = 把信折好收起
+# en: {&You read it twice: once for the money, once for what it wants from you.|You put the draft in your purse and the letter in a drawer, and the letter is heavier.|You write back the same night: thank you, yes, of course, you'll try.}
+opt.ok.say.1 [704304] = {&你读了两遍：一遍为了钱，一遍为了信里对你的期望。|你把汇票放进钱袋，把信放进抽屉，而信要沉得多。|你当晚就回了信：谢谢，好的，当然，我会努力。}
+
+@event scholarship_award
+# en: The Bursary List
+title [a6c6d0] = 助学金名单
+# en: The bursary list {month == 6: for the spring term|for the new year} goes up outside the registrar's office. {term_gpa >= 3.5: {&Your name is near the top with a small star beside it: the full stipend, and a merit bonus.|The clerk hands you the envelope herself. The full stipend, and a little extra "for distinction".|Your name, the full sum, and the word "Merit" in red ink, which the clerk says she rarely gets to use.}|{term_gpa >= 3.0: {&Your name is there: the stipend is renewed for another term.|"Renewed," says the list, in the clerk's tidy hand. You breathe out.|Your stipend stands for another term. The marks held, if only just.}|{term_gpa > 0: {&Your name is there with a line through the amount. Last term's marks fell below the 3.0 the Crown pays for, and the stipend waits until they come back up.|The clerk is apologetic: the Crown pays for marks of 3.0 and above, and last term yours were not. Next term, perhaps.|No stipend this term. Your marks dipped below what the Crown pays for, and the list says so in plain ink.}|{&Your name isn't on the list. No marks were recorded for you last term, and the Crown pays for marks.|The clerk checks twice. No grades last term means no stipend this one.|An empty line where your amount should be: the Crown pays for marks, and last term you had none.}}}}
+text [2fe469] = {month == 6: 春季学期|新学年}的助学金名单贴在了教务处门外。{term_gpa >= 3.5: {&你的名字排在前头，旁边画着一颗小星：全额津贴，外加一笔奖学金。|教务员亲手把信封递给你。全额津贴，外加一点“以资嘉奖”。|你的名字、全额数目，还有用红墨水写的“优秀”二字——教务员说她难得用上这个词。}|{term_gpa >= 3.0: {&你的名字在上面：津贴续发一个学期。|名单上，教务员工整地写着“续发”。你松了口气。|你的津贴又保住了一个学期。成绩撑住了，虽然只是勉强。}|{term_gpa > 0: {&你的名字在上面，金额却被划掉了。上学期的成绩没达到王室资助所要求的 3.0，津贴要等成绩回来才会恢复。|教务员一脸歉意：王室只资助 3.0 及以上的成绩，而你上学期没有达到。下学期吧，也许。|这学期没有津贴。你的成绩掉到了王室资助的线下，名单上白纸黑字写着。}|{&名单上没有你的名字。上学期你没有任何成绩记录，而王室资助的是成绩。|教务员查了两遍。上学期没有成绩，这学期就没有津贴。|你的金额那一栏空着：王室资助的是成绩，而上学期你一门也没有。}}}}
+# en: A list of names pinned outside the registrar's office, a clerk's red ink beside some of them.
+scene [fa74fa] = 教务处门外钉着的一张名单，有些名字旁边写着教务员的红墨水字。
+# en: Read your line again
+opt.ok.label [7b4222] = 再读一遍你那一行
+# en: {term_gpa >= 3.0: {&You fold the envelope into your book and walk a little taller to breakfast.|Tuition, board and something left over. You allow yourself one good dinner.|You write home that the stipend held. Your family will read the letter aloud to the neighbours.}|{&You do the sums on the back of a lecture note, and they come out short. Work, then, or thinner meals.|You walk away from the list without looking back at it. Next term the marks will be better; they have to be.|You go straight to the library, which is free, and stay until it closes.}}
+opt.ok.say.1 [075262] = {term_gpa >= 3.0: {&你把信封夹进书里，走去吃早饭时腰板都挺直了些。|学费、膳宿，还能剩一点。你允许自己吃一顿好的。|你写信回家说津贴保住了。家里人会把信念给邻居们听。}|{&你在一张讲义背面算了算，钱不够。那就打工，或者吃得更省些。|你离开名单，没有回头看。下学期成绩会更好的；必须更好。|你径直去了图书馆——那里不要钱——一直待到闭馆。}}
+
+@event trading_report
+# en: The Company's Report
+title [79d431] = 商行的报告
+# en: {month == 6: The company's half-year report|The company's year-end report} arrives with a clerk's note on top. {flag(trade_good): {&The spice fleet came in early and whole. Your share is paid in full.|A good season: the northern warehouses sold out by midsummer. Your share comes with your mother's compliments.|Profit on every route but one. Your share is enclosed, and so is a list of what it cost.}|{&A ship lost off the southern coast, and a cargo of silk ruined by rain. There is no share this term.|The markets turned. The report is long and the envelope is empty: no share until trade recovers.|Pirates, tariffs and a warehouse fire, in that order. Your mother writes that the company cannot spare anything this term.}}
+text [0265ca] = {month == 6: 商行的半年报告|商行的年终报告}寄到了，最上面是一位书记员的便条。{flag(trade_good): {&香料船队提早到港，完好无损。你的分红全额付清。|好年景：北方的货栈仲夏就卖空了。你的分红随信附上，还有母亲的问候。|除了一条航线，条条都赚了钱。你的分红附在里面，还有一张清单，写着这一切的代价。}|{&一艘船在南方海岸外沉没，一批丝绸被雨水泡坏。这学期没有分红。|行情变了。报告写得很长，信封却是空的：要等生意好转才有分红。|海盗、关税、一场货栈大火，依次而来。母亲写信说，商行这学期一分钱也挪不出来。}}
+# en: A merchant company's ledger report on thick paper, columns of figures, a bank draft clipped to the first page or not.
+scene [3a2c29] = 厚纸上的商行账目报告，一栏栏数字，第一页上别着一张银行汇票——或者没有。
+# en: Fold the report away
+opt.ok.label [452c3d] = 把报告折好收起
+# en: {flag(trade_good): {&You count it twice and lock it away. Next term's tuition is safe.|You read the figures like a story with a happy ending, and put the draft somewhere safe.|You think about what the good season cost someone else, and then about tuition, and put the draft away.}|{&You count what's in your purse instead. It will have to do.|You read the figures twice, as if they might change. They don't.|You write back that you understand, and then go and look at the job board.}}
+opt.ok.say.1 [8a9933] = {flag(trade_good): {&你数了两遍，锁了起来。下学期的学费有着落了。|你像读一个圆满结局的故事那样读那些数字，然后把汇票收好。|你想了想这个好年景让别人付出了什么，又想了想学费，然后把汇票收了起来。}|{&你转而数了数钱袋里的钱。只能将就了。|你把数字读了两遍，仿佛它们会变。它们没有。|你回信说你理解，然后去看了看招工告示板。}}

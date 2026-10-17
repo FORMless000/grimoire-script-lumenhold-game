@@ -32,7 +32,7 @@
     // `offered(courses)`: how many options an `offers:` menu of that kind would generate now (playtest 2, I10)
     'offered']);
   // Built-in identifiers the engine answers (env.ident); content can read but never assign them.
-  const IDENTS = ['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa', 'runs_completed', 'wrapup', 'off_campus'];
+  const IDENTS = ['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa', 'runs_completed', 'wrapup', 'off_campus', 'term_gpa'];
   const FUNCS = new Set([...SYMBOLIC, 'rand', 'min', 'max', 'abs', 'floor', 'round', 'clamp', 'known', 'chance_of']);
   // Reference kinds for linting: which argument of which function refers to what.
   const FUNC_REFS = {

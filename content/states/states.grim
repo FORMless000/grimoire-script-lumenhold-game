@@ -16,13 +16,10 @@ name: Minor Nobility
 kind: origin
 group: origin
 art: crown
-desc: A family name that opens doors and an allowance that arrives every month — with letters attached.
-money: Comfortable: your family pays your tuition, and there are some savings. You will rarely need to work.
-tick:
-  gold +1
+desc: A family name that opens doors, and letters from home that bring money and expectations in the same envelope.
+money: Comfortable: 90 crowns to start, and 60 from the family before each later term, now and then with a gift. Every letter weighs on you a little. Tuition is yours to pay.
 on_add:
-  gold +40
-  charm +3
+  origin_noble_start
   renown +6
 
 @state origin_scholar
@@ -30,27 +27,22 @@ name: Scholarship Student
 kind: origin
 group: origin
 art: scroll
-desc: The Crown pays half your tuition, and a little more while your grades hold.
-money: Tight: half tuition, and a small stipend while your GPA stays at 2.0 or above. Expect to work some terms.
-tick:
-  if gpa >= 2.0:
-    gold +2
+desc: The Crown pays for clever students, for as long as they stay clever.
+money: Tight: 60 crowns to start. Before each later term, 60 crowns if last term's GPA was 3.0 or better, 68 at 3.5 or better, and nothing below. Tuition is yours to pay.
 on_add:
-  lore +5
-  study +large
+  origin_scholar_start
 
 @state origin_hedge
 name: Hedge-Witch's Grandchild
 kind: origin
 group: origin
 art: mushroom
-desc: Raised among drying herbs and muttered charms. Proper magic still feels a little too proper.
-money: Poor: a few crowns, no allowance, and tuition to pay yourself. You will need a job from the first term.
+desc: Raised among drying herbs and muttered charms: a practical hand with potions, and not much patience for theory.
+money: Poor: 45 crowns and no money from home. You will need a job from the first term.
 tags: poor
 on_add:
-  alchemy +6
+  origin_hedge_start
   mood +6
-  gold +15
 
 @state origin_street
 name: Street-Raised
@@ -58,12 +50,10 @@ kind: origin
 group: origin
 art: mask
 desc: You learned to read crowds before you learned to read runes.
-money: Poor: almost nothing in your pockets, and tuition to pay yourself. You will need a job from the first term.
+money: Poor: 38 crowns and no one to send more. You will need a job from the first term.
 tags: poor
 on_add:
-  guile +7
-  vigor +3
-  gold +10
+  origin_street_start
 
 @state origin_merchant
 name: Merchant's Child
@@ -71,10 +61,9 @@ kind: origin
 group: origin
 art: scales
 desc: Everything has a price, and you were taught to haggle it down.
-money: Comfortable: the company pays your tuition, and you arrive with the largest purse.
+money: Rich but unsteady: 150 crowns to start, and 120 from the company before each later term when trade goes well, about two terms in three; nothing when it doesn't. Tuition is yours to pay.
 on_add:
-  gold +70
-  charm +3
+  origin_merchant_start
 
 # ---------------- Electives (one per term) ----------------
 

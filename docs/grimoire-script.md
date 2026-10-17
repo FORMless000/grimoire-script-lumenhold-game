@@ -248,7 +248,7 @@ Used in `when`, `weight`, `if`, `chance`, `check`, assignments and `{=…}`.
 | `turn` | 1…47 (months elapsed; each month is one day) |
 | `month` | 1…12 within the year (1 Harvestmoon … 4 Frostcall term, 5–6 winter break, 7–10 term, 11–12 summer break) |
 | `year` | 1…4 |
-| `term` `break` `season` `final_year` `wrapup` `term_index` `gpa` `slot` | the calendar and tracks (§6c) |
+| `term` `break` `season` `final_year` `wrapup` `term_index` `gpa` `term_gpa` `slot` | the calendar and tracks (§6c) |
 | `runs_completed` | how many runs this player has finished on this machine or server. Flavour text only: never use it in a `when` that changes odds |
 | `turns_left`, `max_turns`, `cards_this_month` | as named |
 | `npc` | the bound actor's id (only in events with `actor`) |
@@ -523,7 +523,7 @@ origins: choose_origin               # the origin screen before the game lists t
 - *Off campus* (M38): on a break under a plan state tagged `away` (home, an internship), the day draws that plan's own pool (and, when the plan's `map_id:` is a track kind, your track of that kind's events) instead of campus pools, a `trigger: letter` card comes each night, anyone who calls writes instead, and friendship and spark fade at half the pace. The identifier `off_campus` is true then.
 - So a character needs a ladder of personal events starting near `rel 0` (a rival's too): if every one of their events is gated at `rel >= 10`, a new acquaintance has nothing to bring you and the friendship stalls.
 
-**Identifiers:** `term` and `break` (booleans), `season` (`"autumn"` …), `final_year`, `wrapup` (the final year's wrap-up months), `off_campus` (M38), `term_index` (1–8), `gpa` (0–4), `slot` (the slot being drawn). `month` is 1–12 within the academic year; `year` is 1–4; `turn` is 1–48.
+**Identifiers:** `term` and `break` (booleans), `season` (`"autumn"` …), `final_year`, `wrapup` (the final year's wrap-up months), `off_campus` (M38), `term_index` (1–8), `gpa` (0–4, cumulative), `term_gpa` (0–4: the latest completed term's grades only, appeals included; 0 when that term graded no course; origin design 2026-10-16), `slot` (the slot being drawn). `month` is 1–12 within the academic year; `year` is 1–4; `turn` is 1–48.
 
 **Event fields**
 

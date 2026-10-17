@@ -464,6 +464,15 @@
       for (const t of Object.values(this.s.tracks || {})) for (const g of t.grades || []) all.push(pts[g]);
       return all.length ? Math.round((all.reduce((a, b) => a + b, 0) / all.length) * 100) / 100 : 0;
     }
+    // `term_gpa` (origin design 2026-10-16): the GPA of the latest completed term, appeals included; 0 when that
+    // term graded no course. Grades are recorded by term as they are sat (sitExam) and rewritten by `regrade`.
+    termGpa() {
+      const s = this.s, pts = { A: 4, B: 3, C: 2, F: 0 };
+      let last = this.termIndex();
+      if (this.phaseOf() === 'term' && !this.isTermEnd()) last -= 1;   // the current term isn't complete yet
+      const gs = ((s.termGrades || {})[last] || []).map((x) => pts[x.grade]);
+      return gs.length ? Math.round((gs.reduce((a, b) => a + b, 0) / gs.length) * 100) / 100 : 0;
+    }
     trackSize(row, tier, dflt) { const sz = this.c.balance && this.c.balance.sizes && this.c.balance.sizes[row]; return (sz || dflt)[TIER_INDEX[tier]]; }
     // Legacy states a track stands for (compat: old class/club/job events stay gated on them).
     grantLegacy(id, ctx, on) {
@@ -612,6 +621,7 @@
       const o = this.examOdds(id, swing);
       const grade = ['A', 'B', 'C', 'F'][this.pick('exam', o.probs, { exam: id })];
       t.grades.push(grade); t.passed[t.level] = grade; t.status = grade === 'F' ? 'failed' : 'done';
+      const ti = this.termIndex(); s.termGrades = s.termGrades || {}; (s.termGrades[ti] = s.termGrades[ti] || []).push({ track: id, level: t.level, grade });
       // Why (B7): the skill tested, its value, the exam's bar (after study and the advisor) and the pass chance.
       ctx.notes.push({ kind: 'grade', track: id, level: t.level, grade, skills: o.skills, value: Math.round(o.value), bar: Math.round(o.bar), pass: o.pass });
       // The professor notices (design §5.5): A warms them a good deal, B a little, F cools them.
@@ -631,6 +641,9 @@
       const was = t.grades[t.grades.length - 1], lv = t.level;
       if (was === st.grade) return;
       t.grades[t.grades.length - 1] = st.grade; t.passed[lv] = st.grade;
+      // The term record too (term_gpa): the latest grade of this course at this level.
+      const rec = Object.values(this.s.termGrades || {}).flat().filter((x) => x.track === id && x.level === lv).pop();
+      if (rec) rec.grade = st.grade;
       if (t.status === 'failed' || t.status === 'done') t.status = st.grade === 'F' ? 'failed' : 'done';
       ctx.notes.push({ kind: 'regrade', track: id, level: lv, from: was, grade: st.grade });
       if (was === 'F' && st.grade !== 'F') this.teachLevel(id, lv, ctx);
@@ -854,6 +867,7 @@
             case 'slot': return eng._slot || (s.cur && s.cur.slot) || '';   // the slot being drawn (director) or shown
             case 'term_index': return eng.termIndex();
             case 'gpa': return eng.gpa();
+            case 'term_gpa': return eng.termGpa();
             case 'runs_completed': return s.runsCompleted || 0;
           }
           if (n.includes('.')) { const [who, stat] = n.split('.'); return eng.statOf(R(who), stat, actor); }
@@ -1685,7 +1699,7 @@
       const s = this.s;
       const cost = opt.spell ? this.spellCost(opt.spell, (s.spells || {})[opt.spell] || 1) : 0;
       // `day`: a `visit <slot>` in a previewed option must not open the slot (A1: hovering "Go out" opened midnight).
-      const KEYS = ['vals', 'flags', 'states', 'npcs', 'queue', 'deck', 'ended', 'spells', 'facts', 'memories', 'npcRel', 'rng', 'cur', 'tracks', 'places', 'arcs', 'clues', 'skillGain', 'peak', 'day'];
+      const KEYS = ['vals', 'flags', 'states', 'npcs', 'queue', 'deck', 'ended', 'spells', 'facts', 'memories', 'npcRel', 'rng', 'cur', 'tracks', 'places', 'arcs', 'clues', 'skillGain', 'peak', 'day', 'termGrades'];
       const runOnce = (prefix, mode) => {
         const saved = {}; for (const k of KEYS) saved[k] = s[k];
         if (saved.day) s.day = { ...saved.day };
@@ -1695,6 +1709,7 @@
         s.tracks = {}; for (const [k, v] of Object.entries(saved.tracks || {})) s.tracks[k] = { ...v, passed: { ...v.passed }, grades: (v.grades || []).slice() };
         s.places = { ...(saved.places || {}) }; s.arcs = {}; for (const [k, v] of Object.entries(saved.arcs || {})) s.arcs[k] = { ...v };
         s.clues = { ...(saved.clues || {}) }; s.skillGain = { ...(saved.skillGain || {}) }; s.peak = { ...(saved.peak || {}) };
+        s.termGrades = {}; for (const [k, v] of Object.entries(saved.termGrades || {})) s.termGrades[k] = v.map((x) => ({ ...x }));
         s.npcs = {}; for (const [k, v] of Object.entries(saved.npcs)) s.npcs[k] = { ...v };
         const decisions = [];
         this._oracle = {
