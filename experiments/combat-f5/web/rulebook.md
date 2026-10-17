@@ -1,0 +1,164 @@
+# Combat: spell redesign v2 (F5)
+
+## F5 rule changes (spells-v2 F5.5 · 2026-10-17; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass and F5.5 its trace-review follow-up, both below)
+
+These override anything below that disagrees.
+
+**Defence:**
+- **Ward** blocks every opposing spell effect this exchange: damage, Torment (and its charge), Extraction, Seal and Compel. It halves each Strike.
+- **Shadowstep** evades the same spell effects, plus attacks, while it's active. Attacking or recovering Mana breaks it before that exchange's hits land, so it never evades on the exchange it breaks.
+- **Guard** halves spell damage and stops a Strike.
+- **Brace** blocks all opposing damage on the exchange it's cast, then 50%, 25% and 25% over the next three. Spell effects still land.
+
+**Mend** heals 25/26/27 at par at the end of the exchange, but only if you took no damage that exchange.
+
+**Wildfire:**
+- each Hold deals 14 to them and a fixed 4 to you;
+- the Release deals 36, plus 5 per Hold.
+
+**Extraction** moves up to 9 of their ready Mana into your flux, and your Mana plus flux can't pass capacity.
+
+**Stats (F5.4: skills drive progression; numbers in `COMBAT_TUNING`, `setup/roster.mjs`):**
+- **Skill factor:** every amount (damage, healing, banks) × 1 + perPoint × (skill − 50), averaged over the spell's skills. The main combat skills, Arcana, Vigor and Alchemy, scale at **1% a point** (0.7 at skill 20, 1.3 at 80); Lore, Charm and Guile at **0.4%** (0.88–1.12).
+- **Strike:** 9 base, scaling with Vigor at **1.4% a point** (about 5 at Vigor 20, 13 at 80).
+- **Max HP:** 70 at every level; combat HP stands for the player's Health and isn't scaled by skill.
+- **Mana capacity:** 43 + 0.25 × (Arcana − 50): about 36 at level 20, 43 at 50 and 51 at 80.
+- **Condition on entering** (campaign fights): you start with HP = max × (0.9 + 0.1 × min(1, Health / 70)) and ready Mana up to capacity × (0.9 + 0.1 × min(1, Mana / capacity)). Fit means Health 70+ and full Mana; entering with nothing costs you a tenth of each.
+
+**F5.4 spell changes:** Flame 9/9/8 Mana; Mend 9/9/8; Foresight 7/7/6; Haste 5 Mana, 3/3/4 exchanges, three-action bundles at rank 3; Shadowstep 12 Mana at every rank, 1/2/2 exchanges; Starlight 9; Distil costs 14 HP; Tailwind 5 Mana and +4/+8/+12; Reflect 8; Lodestar 4; Extraction 10.
+
+**Compel (F5.4):** 16 Mana. It no longer rewrites the action the target has already committed: for the **next** exchange, their action is replaced with their last legal public action. (It was the pick a third to a half of the time it was legal when every spell was available.)
+
+**F5.5, from reviewing the traces:**
+- **Guard fatigue:** a Guard (or a Haste bundle with Guard) raised again straight after a Guard stops only **half** of each Strike. Spell damage is still halved either way. Without it, fighters out of Mana traded Guard and Strike for ten exchanges until the fight ran out on points.
+- **Stalemates:** five quiet exchanges in a row (no HP lost, no Mana spent) end the fight on points (was ten).
+- **Starlight:** a Release deals 36, or 60 after a Hold (was 30/48). It is telegraphed for two or three exchanges, and the opponent can Guard or Ward the Release.
+- **Reflect** lasts this exchange and the next: a stance against spell-heavy opponents.
+- **Class offsets** (arcana, lore, alchemy, charm, vigor, guile):
+
+  | Class | Offsets |
+  |---|---|
+  | Duellist | 6/−1/−8/−1/5/−1 |
+  | Scholar | 5/7/0/−2/−6/−4 |
+  | Illusionist | 4/−4/−3/4/−2/1 |
+  | Showman | 3/−4/−6/10/3/−6 |
+
+  The main combat skills now carry more weight, so each class's main-skill total moved toward zero.
+- **Available but off:**
+  - `COMBAT_TUNING.shadowstep.breakOnCast`: any spell but Ward breaks your own Shadowstep.
+  - A spell's `exposes` (set on Mend): casting it breaks your own Shadowstep.
+
+  Both end the Shadowstep-then-Mend loop. That loop is a heal the opponent can't answer, and the most common pair of actions in high-level fights. Both also made fights about a third shorter and widened the class spread, so they wait for a class retune.
+
+**Kits:** Glamour, Rapport, Sleight, Index and Quickquill are out of combat kits (no combat effect). Scholar's extras are Starlight and Seal; Illusionist's are Reflect and Rapport.
+
+
+This implements the supplied spell redesign in the standalone **combat** testplay. The separate negotiation prototype and campaign content have not been migrated. Learning XP, source, single card verb and negotiation descriptions are retained as roster metadata; no courses, faculty head starts, club/job chains or story scenes are fabricated here. Toll is explicitly story-only; the other 34 entries can be cast, including spells with no combat effect.
+
+## Prototype defaults where the plan leaves a gap
+
+- Skill factor is `0.5 + skill / 100`. Skill 50 gives the listed base amount. Animate averages Alchemy and Arcana. The shared HP scale remains 3. Damage has an additional global `damageMultiplier`, now **0.5** by default and adjustable in Setup. It affects physical/spell hits, channel ticks/releases, delayed hits, construct attacks/bursts, Wildfire self-damage and Torment. Healing, shields, construct thresholds and voluntary HP prices (Haste, Distil, Heartprice) are unchanged. Outgoing damage rounds up after skill/HP/multiplier scaling; damage remaining after defenses rounds up again, with zero remaining zero. Reflected hits reuse the original outgoing amount without applying the multiplier twice. Actual HP loss is capped by remaining HP (which may be fractional from HP prices). Descriptions show these final outgoing amounts **before defenses**, never unscaled bases. The table below records roster inputs; Mana amounts use the skill factor without that HP scale. Mana prices default to the listed costs (setup multiplier ×1). Counts, durations, Renown and Crowns transfers are fixed. Ward has no scaling skill.
+- Provisional pool skills: Rime, Extraction and Eclipse use Arcana; Reflect and Lodestar use Lore; Moonwell and Siphon use Alchemy; Torment and Compel use Guile; Heartprice uses Vigor. These assignments are marked `provisionalSkill` in the roster. They are implementation defaults, not agreed canon.
+- Alignment tier amounts are taken from `content/core/balance.grim`: tiny 3, small 6. Course learning XP metadata is medium/large/huge = 6/10/16 per level; other spells use large 10 per assigned skill. No learning XP is applied to the preset combat skills.
+
+## Exchanges, ending and basic actions
+
+One actor commits publicly, then the other responds; both actions resolve. Normal commitment order alternates in the background. Foresight can force the actual first committer. Ordinary hits land together; a mutual knockout goes to that exchange's telegraphed actor. Both actions and costs still happen.
+
+There is **no exchange limit**. A fight ends by knockout, concession, or a structural stalemate where neither actor has a way to damage the other. Choosing Guard repeatedly is not itself a stalemate. Temporary evasion/freezing/shields are not treated as permanent invulnerability. Simulation runs may be censored at a work budget; censoring is never a draw, victory or settlement.
+
+Strike deals base 6 physical damage using Vigor. Guard stops **all Strike damage and one third of spell damage** this exchange. Reclaim collects all your flux after primary attacks. Basics cost nothing. Each Mana payment generates **two-thirds** of that payment as flux. HP payments generate no flux. Concede is a separate terminal control.
+
+## Casts
+
+| Spell | Mana | Combat |
+|---|---:|---|
+| Flame | 10/9/7 | Base 8/9/10 spell damage |
+| Foresight | 8/7/6 | Target commits first for the following 3/4/5 exchanges (F5.3: no damage bonus) |
+| Mend | 10/9/7 | Heal base 6/7/8 up to entry HP/Health |
+| Glamour | 9/7/5 | With observers, earn 2/3/4 Renown at settlement |
+| Haste | 10/8/8 + base 2 HP | Next exchange requires a single public bundle of 2/2/3 basic actions |
+| Shadowstep | 12/10/8 | Evade every hit for 1/2/3 exchanges, including casting exchange; breaks on outgoing damage or actual Mana recovery |
+| Ward | 7 | Block the next damaging action this exchange; Starlight pierces one third |
+| Animate | 14 | Construct: base 3 Strike, base 1 reduction, base 10 damage threshold |
+| Starlight | 16; Hold 2 | Channel: Release base 9 immediately, or base 18 after at least one Hold; one third pierces Ward |
+| Seal | 10 | Erase opposing flux, including flux from this exchange's paid spell |
+| Wildfire | 10; Hold 2 | Channel: each Hold base 3 to them and base 1 to you; Release base 14 |
+| Heartwood | 16 | Construct: base 2 healing, base 2 reduction, base 15 threshold |
+| Omen | 16 | Public base 24 spell hit two exchanges later |
+| Sleight | 6; alignment −tiny | Transfer up to 5 opposing Crowns to you |
+| Contraption | 12 | Construct: base 6 spell hit, no reduction, base 8 threshold; ending bursts base 4 to both sides |
+| Hoarfrost | 10 | Base 7 cold; cancels against opposing Flame or Wildfire Hold/Release, including the cancelled Hold's self-damage |
+| Candour | 6 | No combat effect |
+| Brace | 10 | Ward now, then base 3/2/1 flat reduction per hit over the following three exchanges |
+| Quickquill | 6 | No combat effect |
+| Bramble | 10 | Construct: base 2 spell hit, base 1 reduction, base 8 threshold; can coexist with Heartwood |
+| Index | 6 | No combat effect |
+| Rapport | 6 | With observers, automatically spend the largest even amount up to 10 available Crowns; earn half that as Renown at settlement |
+| Distil (`purify`) | 0; base 4 HP | Gain skill-scaled 24 ready Mana |
+| Tailwind | 8 | Following three exchanges: consecutive Strikes gain base +2/+4/+6; any other action ends it |
+| Rime | 12 | Once-per-fight first-knockout rescue: 1 HP, frozen and invulnerable through the next exchange, then thaw |
+| Reflect | 16 | Return damaging spells this exchange in full; physical Strikes are not reflected |
+| Moonwell | 0; free Holds | Channel: each Hold banks skill-scaled 10 Mana; Release makes it ready |
+| Lodestar | 8; Hold 2 | Channel: each Hold banks base 6 absorb; Release protects against the next hit |
+| Toll | — | Story-only, not a combat action |
+| Torment | 14 | Current and following two exchanges: each opposing action pays base 2 HP |
+| Extraction | 6 | Transfer skill-scaled 16 opposing ready Mana, limited by available Mana and your capacity |
+| Siphon | 12; Hold 12 | Channel: start and each Hold deal base 4; Release heals the actual total dealt |
+| Compel | 20 | Replace current and next actions with the target's last legal public action |
+| Eclipse | 6 | Damage actually taken next exchange becomes ready Mana, 1:1, capped at capacity |
+| Heartprice | 0 | Permanently replace spell Mana payments with 1 HP per 2 Mana for this fight |
+
+## Channel and bundle rules
+
+A channel's start is its own public action. Subsequent exchanges allow only Hold or Release; there is no duration limit. Hold costs are paid each time. Release is free. Frozen actors skip their action and keep their channel. Damage alone does not interrupt a channel: the supplied rules specify no damage-interrupt threshold.
+
+Haste bundles are atomic public commands, not extra turns. The UI lists the small set of unique basic combinations; repeated Guard or Reclaim adds nothing, while repeated Strikes each hit. Ward covers every Strike belonging to its chosen incoming action bundle. Guard/reduction applies to each hit. A Tailwind bundle containing Guard/Reclaim ends Tailwind; a pure Strike bundle advances the +2/+4/+6 sequence within the bundle.
+
+## Constructs and damage ordering
+
+Constructs cannot be selected or targeted and have no HP. They act once at exchange end, including their casting exchange. Each hit on the caster loses the construct's flat reduction. Actual HP damage accumulates toward its threshold; healing does not reset it. At the threshold it ends before a later end-of-exchange action. Heartwood and Bramble can coexist in either casting order; otherwise summoning replaces existing constructs. Replacing Contraption also triggers its ending burst.
+
+HP **costs** (Haste, Distil, Heartprice and Torment) bypass Guard, Ward, evasion and flat hit reductions and do not accumulate construct damage. Wildfire's self-damage is a hit, so Brace/construct reduction can absorb it.
+
+Both spell costs are paid and preparations apply. Reclaim with recoverable flux and room in the Mana pool breaks Shadowstep before primary damage, exposing the caster to this exchange's attacks. Empty, capacity-capped or Sealed Reclaim does not break it. The Mana payout still occurs after primary damage, if combat continues, then due Omens and surviving construct actions resolve. Each damage phase is simultaneous; Shadowstep breaks after its outgoing damage phase, so later phases can hit the exposed caster. Reflection is one bounce only, applies to damaging spells (including construct/Omen spell hits), and does not return HP costs. Lodestar's stored absorb is consumed by the next positive hit after other reduction.
+
+Unspecified Compel edge cases use explicit prototype conventions: no previous legal action means cancellation; an unaffordable or channel-incompatible replay cancels rather than creating negative resources. Two opposing Compels cancel each other, both paying their casting/alignment costs. It never chooses from an opponent's menu. Replayed forbidden spells count as casts for costs/reporting. Current/next refers to actual exchanges, not search nodes.
+
+## Economy, observers and records
+
+Standard/depleted fixtures bring 30/6 Crowns per side; setup can override each. Crowns theft transfers existing money. Crowns and alignment are never rebated. Mana is capped at kit capacity; healing is capped at entry HP/Health. Renown is capped at 100. Genuine gains can exceed entry resources; a rebate itself never does.
+
+At settlement remaining flux is collected once, earned Renown is paid, then context rebates apply only to net losses. Receipts record spending, restoration, gain, refund and final balances separately. Optional skill-offset HP remains `entry Health + 40 + floor((Arcana + Vigor)/4)`.
+
+Every forbidden cast charges alignment −small. A channel Hold/Release continues its existing cast and does not pay alignment again. With observers, every forbidden cast produces a recorded post-fight `forbidden_cast_report` follow-up. This prototype exports the follow-up payload and displays the report; an academy story event is not invented or run. Spells never award plot clues or advance arc clocks.
+
+## Interface and random encounters
+
+Basics and all learned spells share one icon grid, including explicit zero-Mana badges. Spell and action icons use the supplied 64×64 SVG artwork from `docs/spell-icons/` and `docs/action-icons/`, tinted through `currentColor`. Each channel's Hold uses its spell motif inside a dashed ring; Release uses the same motif with outward rays. Haste bundles compose the basic icons, while Cast and Concede use their supplied control icons. Select any action or spell for scaled details, then click its selected icon again to execute it, with no timing limit. Clicking a different icon changes the selection. Commit/Cast also executes the selection. Channels and Haste replace the grid with their legal commands. The opponent's most recent resolved action stays visible separately from its current telegraph. Log shows both actors' committed/executed actions, initiative and actual damage/resource events; Debug retains search information. The complete all-spell grid is checked at 320×568 without gameplay scrolling; the history view scrolls internally.
+
+## Loadout generation
+
+`docs/spells-v2-loadouts.md` supplies nine generic loadouts and 22 named-character loadouts. “Loadout” is used in controls, `LOADOUTS` / `NAMED_LOADOUTS`, `generateLoadout`, `playerLoadout` / `opponentLoadout`, generated-kit identifiers and exported records. Old result snapshots keep their original schema.
+
+Generic skills use `levelRng(L + 1000 × salt)`, six independent offsets and uniform jitter ±(2 + L/20), rounded/clamped to 1–100. Mana capacity remains floor(40 + Arcana/2).
+
+**Spell gains have no rolls.** Preferences rank choices by descending weight, with table order breaking ties; hidden extras win ties against club/job extras once eligible. Ward unlocks at 1. Flame unlocks at max(1, ceil(25 × (1 − flameBase))), always by 25. Generic course slots unlock at 1/15/40/65; the starter comes from Foresight/Mend/Glamour, later slots use remaining preferences. Course ranks rise at 44/68. Zero-weight spells never fill a slot.
+
+Normal extra slots unlock at 45/70; hidden extras become eligible at 70, and a slot with no eligible choice waits. Underground forbidden slots unlock at 35/80. Named iconic spells unlock at 1, place spells at 25, and specified grants retain their explicit gates. Flame and guaranteed course spells reserve named curriculum slots. Study year promotes remaining course gates earlier (Haste/Shadowstep never below 12); from year 3 the peer's preferred extra unlocks at 1, including hidden extras. The exported `unlockLevels` map shows every ordinary gain. Higher level/year retains known spells; this is checked for every preset at every level.
+
+The bench exposes named peers' study year (1–4) and Ilse's `ilse_taken` fixture flag. Same loadout mirrors those settings. Generic kits never contain peer capstones, forbidden spells without the underground flag, or story-only Toll. All-spells stress access overrides normal learning restrictions explicitly.
+
+**Named skills:** `cast-stats.mjs` is an explicit snapshot of `content/world/cast.grim`, with a SHA-256 hash checked in tests. Refresh via `node experiments/minigames/iterations/v04/sync-loadout-stats.mjs`. Faculty and villagers use their unchanged canon skills and fixed level (floor of the mean of the two strongest skills); Setup disables their level input. The standalone bench has no campaign turn: growing characters keep canon stat ratios and set the documented encounter stat to L (Arcana for Lyra/Kael/Ilse; Vigor for Tobias/Bram; Lore for Seraphine; Guile for Corvin; Alchemy for Mir; Charm for Nessa/Tamsin). Encounter adapters can pass `playerSkills` / `opponentSkills` to use exact current `Engine.statOf` values instead.
+
+**Provisional details:** the man in grey has no NPC stat block, so his fixture uses all six skills at L and exports `provisionalSkills: true`. Faculty “Rest” lists have no numeric weights: listed choices use equal weight 1; unspecified choices have zero weight. These are fixture assumptions, not new canon. Mir's proposed two-construct synergy is not part of this loadout migration; combat retains the agreed construct rules above.
+
+Opponent **Random loadout** chooses uniformly among the nine generic loadouts. `encounterSeed` selects the loadout independently of its deterministic level/preset kit and AI randomness. Browser Begin generates a fresh seed when blank; explicit seeds and Replay reproduce it. Exports record the selected loadout, actual level, study year, flags, skills and generation seed. All-spells stress access deliberately grants the full roster regardless of restrictions on normal generated kits.
+
+## AI and testing
+
+The rules and the AI are one Rust core (`rust/core`): natively for simulations, as WebAssembly in this bench. Rule constants are named at the top of `rust/core/src/rules.rs` (Brace shares, Wildfire, Strike, Rime thaw, the 10-exchange decision clock, channel and spell amounts); action descriptions use the same constants.
+
+The AI is alpha–beta over resolved exchanges, with iterative deepening, principal-variation search, aspiration windows, a transposition table, killer and history move ordering, and an optional extension for tactical horizons. Live play is time-based: Fast 100 ms and Deep 500 ms (compute profiles `live_fast` and `live_deep`); the engine view searches for the chosen budget (1.5 s by default). Profiles `full`, `fallible` and the rest set depth and seeded bounded mistakes. Channels and bundles are ordinary commands, and every mutable counter, construct and delayed hit is part of the search state. Search runs in workers, off the UI thread.
+
+Build and test from `experiments/combat-f5/`: `node tools/build.mjs`, `cargo test --release` in `rust/`, `node tools/golden.mjs`. See `README.md` there.
