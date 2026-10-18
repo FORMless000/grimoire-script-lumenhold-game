@@ -130,7 +130,14 @@ Port the fight screen from `web/app.mjs` and its look from `web/style.css` as an
   - in `web/index.html`: the shell markup and the "Main game around the fight" fieldset.
 
   Leave the game's real top bar, meters, side panel and card as they are. The fight's numbers on the meters (for example the Mana orb during the fight) are a separate decision, not part of this port.
-- **Drop the bench parts:** the setup panel, the welcome text, the engine view and evaluation bar, and the debug controls.
+- **Do not graft the bench's control UI either.** It drives the experiment, not the fight:
+  - the Bench dock: `renderBench`, `setDifficulty`, `.bench*`, and the `.bench-tool` gear in the fight header;
+  - the setup panel: `#setup`, `config()`, `setup()`, the presets, the "Return to current fight" button and the welcome text;
+  - the engine view and evaluation bar;
+  - the search journal (`debug()`);
+  - the result panel's Replay, Next bout and Export log buttons. In the game the result hands the outcome back to the card (§3).
+
+  The game sets up a fight from the card and the run (§4), not from a form. Difficulty is a player setting (default Medium) that belongs in the game's own settings; pass it as `ai[1].preset`. Only Leave (Concede), Inspect and the log stay in the fight's header.
 - **Portraits:** `web/art.mjs` shows `portraits/<npc>.png` when one exists (`NAMED_LOADOUTS[name].npc`), else an SVG placeholder. The player's frame stays blank.
 - **Layout:** no panel scrolls except the track, sideways.
   - It must work at phone width (375 px). With room (a 640 px container or wider) the state sits on the left and the choices on the right.

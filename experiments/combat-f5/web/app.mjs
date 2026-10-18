@@ -1,4 +1,4 @@
-import {SPELL_ICONS,ACTION_ICONS,PORTRAITS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,createState,applyChoice,actorToMove,legalActions,available,cost,describe,label,concede,hpCost,has,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState} from './engine.mjs';
+import {SPELL_ICONS,ACTION_ICONS,PORTRAITS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,createState,applyChoice,actorToMove,legalActions,available,cost,describe,label,concede,hpCost,has,expandAI,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState} from './engine.mjs';
 import {brief} from './brief.mjs';
 import {portrait,BLANK} from './art.mjs';
 // The same served module supplies a worker, preserving the existing localhost server.
@@ -227,6 +227,27 @@ function renderChrome(){const on=!!game&&view!=='setup';
  $('shell').classList.toggle('with-side',on&&chrome.side);
  for(const [id,key,fn]of [['stub-top','top',stubTop],['stub-meters','meters',stubMeters],['stub-side','side',stubSide]]){const el=$(id),show=on&&chrome[key];el.hidden=!show;if(show)el.innerHTML=fn();}}
 
+// ---- The bench's own controls: out of the fight, in the engine's look (not part of the game) ----
+let benchOpen=false;
+function setDifficulty(preset){$('ai-difficulty').value=preset;
+ // Live: the opponent's next decision uses it. The export's config then holds the latest difficulty.
+ if(game&&!game.result){const ai=game.config.ai[1];game.config.ai[1]=expandAI({...LIVE_AI,seed:ai.seed,preset},game.config.resolvedOpponentLoadout);}}
+function renderBench(){const el=$('bench'),on=!!game&&view!=='setup';el.hidden=!on;if(!on){benchOpen=false;return;}
+ el.classList.toggle('open',benchOpen);
+ el.innerHTML=`<button class="bench-tab" data-bench title="Test bench controls" aria-expanded="${benchOpen}">Bench</button>${benchOpen?`<div class="bench-pop" role="dialog" aria-label="Test bench controls"><header><b>Test bench</b><button class="bench-x" data-bench aria-label="Close">×</button></header>
+  <label>Opponent difficulty<select id="bench-difficulty">${[...$('ai-difficulty').options].map(o=>`<option value="${o.value}"${o.value===(game.config.ai[1]?.preset??$('ai-difficulty').value)?' selected':''}>${esc(o.textContent)}</option>`).join('')}</select></label>
+  <label class="check"><input type="checkbox" id="engine-toggle"${engineOn?' checked':''}> Engine analysis</label>
+  <fieldset><legend>Main game around the fight</legend>${[['top','Top bar'],['meters','Meters'],['side','Side panel'],['card','Card behind']].map(([k,t])=>`<label class="check"><input type="checkbox" data-bench-chrome="${k}"${chrome[k]?' checked':''}> ${t}</label>`).join('')}</fieldset>
+  <div class="bench-row"><button data-bench-view="setup">Setup…</button><button data-bench-view="debug">Search journal</button></div></div>`:''}`;
+ for(const b of document.querySelectorAll('[data-bench]'))b.onclick=()=>{benchOpen=!benchOpen;renderBench();};
+ if(!benchOpen)return;
+ $('bench-difficulty').onchange=e=>setDifficulty(e.target.value);
+ $('engine-toggle').onchange=e=>setEngine(e.target.checked);
+ for(const box of el.querySelectorAll('[data-bench-chrome]'))box.onchange=()=>{const k=box.dataset.benchChrome;chrome[k]=box.checked;store.set('chrome.'+k,box.checked?'1':'0');const twin=document.querySelector(`#setup [data-chrome="${k}"]`);if(twin)twin.checked=box.checked;render();};
+ for(const b of el.querySelectorAll('[data-bench-view]'))b.onclick=()=>{view=b.dataset.benchView;benchOpen=false;render();window.scrollTo(0,0);};
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&benchOpen&&!sheet){benchOpen=false;renderBench();}});
+
 // ---- The engine (optional) ----
 const evalText=v=>v===undefined?'…':v>=9000?'KO':v<=-9000?'−KO':(v>0?'+':v<0?'−':'')+Math.abs(v).toFixed(1);
 const evalShare=v=>v>=9000?100:v<=-9000?0:100/(1+Math.exp(-v/12));
@@ -259,13 +280,13 @@ function requestAnalysis(){
 function result(){const r=game.result,won=r.winner===0,lost=r.winner===1;return `<div class="result ${won?'win':lost?'loss':'draw'}"><h2>${won?'Victory':lost?'Defeat':'Draw'}</h2><p>${esc(r.reason)}${r.tiebreak?' · the telegraphed initiative wins':''}</p><div class="net-costs">${COMBAT_RESOURCES.map(k=>{const n=game.settlement[0][k].netLoss;return `<span>${k} <b class="${n>0?'neg':n<0?'pos':''}">${n<0?'+':n>0?'−':'±'}${fmt(Math.abs(n))}</b></span>`;}).join('')}</div><p class="fine">Flux is collected; rebates cover net losses only. Crowns and alignment are never rebated.${r.followUps.length?` Witnesses reported ${game.reports.length} forbidden cast${game.reports.length===1?'':'s'}.`:''}</p><div class="result-actions"><button id="replay" class="primary">Replay same setup</button><button id="carry" ${game.config.healthModel==='direct'&&game.actors[0].resources.health<=0?'disabled':''}>Next bout · carry balances</button><button id="export">Export log</button></div></div>`;}
 function head(){const lead=game.leader;
  return `<header class="fight-head"><div class="fh-title"><b>${game.result?'The fight is over':'Exchange '+game.round}</b><small>${game.result?'':lead===0?'you lead':'they lead'}</small></div><div class="fh-tools">
-  <button class="tool" data-sheet="inspect" title="Inspect the opponent" aria-label="Inspect the opponent">${EYE}</button><button class="tool" data-sheet="log" title="Full log" aria-label="Full log">${SCROLL}</button><button id="engine-toggle" class="tool text${engineOn?' active':''}" aria-pressed="${engineOn}" title="Show or hide the engine's analysis of your turns">Engine</button><button class="tool" data-view="setup" title="Setup" aria-label="Setup">${GEAR}</button><button class="tool text debug-btn" data-view="debug" title="Search journal">Debug</button>${!game.result?`<button id="leave" class="tool text leave" title="Concede the fight"><span class="control-icon" aria-hidden="true">${ACTION_ICONS.concede}</span><span class="tlabel">Leave</span></button>`:''}</div></header>`;}
+  <button class="tool" data-sheet="inspect" title="Inspect the opponent" aria-label="Inspect the opponent">${EYE}</button><button class="tool" data-sheet="log" title="Full log" aria-label="Full log">${SCROLL}</button><button class="tool bench-tool" data-bench title="Test bench controls" aria-label="Test bench controls">${GEAR}</button>${!game.result?`<button id="leave" class="tool text leave" title="Concede the fight"><span class="control-icon" aria-hidden="true">${ACTION_ICONS.concede}</span><span class="tlabel">Leave</span></button>`:''}</div></header>`;}
 function fight(){return `<div class="fight-wrap${chrome.card?' with-card':''}">${chrome.card?cardStub():''}<section class="fight">${head()}<div class="fighters${engineOn?' with-eval':''}">${engineOn?`<div class="evalbar" id="evalbar" title="Engine evaluation for you, in HP">${evalBar()}</div>`:''}${fighter(0)}${fighter(1)}</div><div class="fight-body"><div class="fight-main">${engineOn?'<div class="engine" id="engine"></div>':''}${track()}</div><div class="controls">${intent()}${game.result?result():actions()}</div></div></section></div>`;}
 function debug(){return `<div class="debug"><nav><button data-view="play">← Back to the fight</button></nav><h3>Search and exchange journal</h3><p>Decisions ${stats.length}; deepest completed ${Math.max(0,...stats.map(a=>a.completedDepth))}; slowest ${Math.max(0,...stats.map(a=>a.elapsedMs)).toFixed(1)} ms; accepted weaker choices ${stats.filter(a=>a.degraded).length} / ${stats.length}.</p><details><summary>Kits and ledgers</summary><pre>${esc(JSON.stringify({kits:game.actors.map(a=>a.kit),settlement:game.settlement,reports:game.reports},null,2))}</pre></details>${history.slice().reverse().map(r=>`<details open><summary>Exchange ${r.round}: ${r.pair.map(label).join(' / ')}</summary><ul>${r.events.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></details>`).join('')}</div>`;}
 function render(){
  document.body.classList.toggle('playing',!!game);document.body.classList.toggle('setup-open',!game||view==='setup');
  $('setup').hidden=!!game&&view!=='setup';$('play').hidden=!!game&&view==='setup';
- renderChrome();if(!game)return;
+ renderChrome();renderBench();if(!game)return;
  snapshotBars();const kept=$('tk-scroll')?.scrollLeft;
  $('play').innerHTML=view==='debug'?debug():fight();
  const sc=$('tk-scroll');if(sc)sc.scrollLeft=focusEx!==null&&kept!==undefined?kept:sc.scrollWidth;
@@ -275,7 +296,7 @@ function render(){
  for(const b of document.querySelectorAll('[data-ex]'))b.onclick=()=>{focusEx=b.dataset.ex==='latest'?null:Number(b.dataset.ex);render();};
  for(const b of document.querySelectorAll('[data-action]'))b.onclick=()=>{const id=b.dataset.action;if(selected===id)commit(id);else selectAction(id);};
  if($('commit'))$('commit').onclick=()=>commit();
- if($('engine-toggle'))$('engine-toggle').onclick=()=>setEngine(!engineOn);
+ renderBench();
  if($('leave'))$('leave').onclick=()=>{token++;busy=false;concede(game,0);render();};
  if($('replay'))$('replay').onclick=()=>start(game.config);
  if($('carry'))$('carry').onclick=()=>start({...game.config,playerResources:{...game.actors[0].resources},opponentResources:undefined});
