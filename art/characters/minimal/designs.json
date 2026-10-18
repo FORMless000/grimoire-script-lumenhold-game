@@ -1,0 +1,796 @@
+{
+  "sourcePriority": [
+    "direct appearance in card text and authored card scenes",
+    "worldbook facts and cast prose",
+    "current procedural SVG appearance",
+    "free design inferred from characterisation"
+  ],
+  "defaultState": "Baseline appearances; event-only transformations are excluded.",
+  "style": "minimal flat shapes with one crisp white catchlight inside every visible pupil",
+  "characters": [
+    {
+      "id": "lyra",
+      "name": "Lyra Vaneshade",
+      "age": 19,
+      "pronouns": "she/her",
+      "appearance": "Pale, long straight crimson hair, a narrow face and sharply arched brows; a neat crimson shoulder cape over academy navy. Proud, exacting noble pyromancer.",
+      "canon": "Crimson hair and tall stature are explicit; hair colour overrides the black SVG.",
+      "design": "Long loose hair and pale skin follow the SVG; the sharp face and cape express noble precision.",
+      "sourceEvents": [
+        {
+          "id": "lyra_intro",
+          "file": "content/events/people_students.grim",
+          "line": 12
+        },
+        {
+          "id": "pyro_lyra_spar",
+          "file": "content/events/classes.grim",
+          "line": 61
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "lyra.prodigy",
+          "file": "content/world/facts/lyra.grim",
+          "line": 4
+        }
+      ],
+      "svg": {
+        "look": "hair:7 skin:5 style:1",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 9
+      }
+    },
+    {
+      "id": "tobias",
+      "name": "Tobias Fennick",
+      "age": 19,
+      "pronouns": "he/him",
+      "appearance": "Pale, short ginger crop, a broad square face and very broad shoulders; a worn green collar over plain academy clothes. Gentle farm boy with an open, slightly sheepish smile.",
+      "canon": "Big, broad-shouldered farm boy; worldbook says built like a barn door.",
+      "design": "Ginger crop and pale skin follow the SVG; the square face and work-worn green collar are design choices.",
+      "sourceEvents": [
+        {
+          "id": "tobias_intro",
+          "file": "content/events/people_students.grim",
+          "line": 236
+        },
+        {
+          "id": "heal_tobias_sting",
+          "file": "content/events/classes.grim",
+          "line": 641
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "tobias.scholarship",
+          "file": "content/world/facts/tobias.grim",
+          "line": 3
+        }
+      ],
+      "svg": {
+        "look": "hair:2 skin:0 style:2",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 31
+      }
+    },
+    {
+      "id": "seraphine",
+      "name": "Seraphine Hale",
+      "age": 19,
+      "pronouns": "she/her",
+      "appearance": "Pale, slight face; loose ivory hair framing the cheeks, silver-grey irises around dark highlighted pupils, and a dark blue scarf with a few large stars. Dreamy, perceptive seer.",
+      "canon": "Silver-grey eyes and star scarf are explicit in her introductory card scene; pale fingers in the tarot scene take precedence over the darker SVG skin.",
+      "design": "Ivory hair and loose cheek-length shape follow the SVG; the narrow face is a design choice. Normal portrait, without a trance.",
+      "sourceEvents": [
+        {
+          "id": "seraphine_intro",
+          "file": "content/events/people_students.grim",
+          "line": 425
+        },
+        {
+          "id": "seraphine_tarot",
+          "file": "content/events/people_students.grim",
+          "line": 444
+        },
+        {
+          "id": "div_seraphine_vision",
+          "file": "content/events/classes.grim",
+          "line": 360
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "seraphine.seer",
+          "file": "content/world/facts/seraphine.grim",
+          "line": 3
+        }
+      ],
+      "svg": {
+        "look": "hair:4 skin:3 style:4",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 54
+      }
+    },
+    {
+      "id": "corvin",
+      "name": "Corvin Ashby",
+      "age": 19,
+      "pronouns": "he/him",
+      "appearance": "Warm tan, dark brown hair swept into a small high knot, a lean angular face and crooked grin; an open navy collar and charcoal scarf. Charming, reckless passage-finder.",
+      "canon": "A grinning dark-haired student; he lends the player his scarf.",
+      "design": "Dark brown hair, topknot and tan skin follow the SVG; the narrow face and untidy open collar are design choices.",
+      "sourceEvents": [
+        {
+          "id": "corvin_note_was_mine",
+          "file": "content/events/pools/night.grim",
+          "line": 739
+        },
+        {
+          "id": "gargoyle_passage_parapet_cards",
+          "file": "content/events/pools/castle_towers.grim",
+          "line": 501
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "corvin.locks",
+          "file": "content/world/facts/corvin.grim",
+          "line": 3
+        }
+      ],
+      "svg": {
+        "look": "hair:0 skin:1 style:3",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 75
+      }
+    },
+    {
+      "id": "mir",
+      "name": "Mir Ten",
+      "age": 19,
+      "pronouns": "they/them",
+      "appearance": "Copper-brown skin, wild brick-red hair, brass goggles pushed above the forehead, a round face and an eager grin; teal apron straps over academy navy, one soot smudge. Curious clockworks inventor.",
+      "canon": "Goggles, wild hair and soot are explicit.",
+      "design": "Brick-red hair and copper-brown skin follow the SVG; round cheeks and teal workwear distinguish their inventive enthusiasm.",
+      "sourceEvents": [
+        {
+          "id": "mir_intro",
+          "file": "content/events/people_students.grim",
+          "line": 767
+        },
+        {
+          "id": "art_mir_collab",
+          "file": "content/events/classes.grim",
+          "line": 408
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "mir.artificer",
+          "file": "content/world/facts/mir.grim",
+          "line": 4
+        },
+        {
+          "id": "mir.family",
+          "file": "content/world/facts/mir.grim",
+          "line": 18
+        }
+      ],
+      "svg": {
+        "look": "hair:5 skin:2 style:0",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 100
+      }
+    },
+    {
+      "id": "nessa",
+      "name": "Nessa Quill",
+      "age": 19,
+      "pronouns": "she/her",
+      "appearance": "Deep brown skin, dark hair in a large high bun with a short side fringe, a heart-shaped face and keen raised brows; ochre lapels and a small ink mark on her nose. Bold, overworked student editor.",
+      "canon": "Ink on her nose is explicit after the Ledger deadline.",
+      "design": "Dark brown hair, bun and deep brown skin follow the SVG; the heart-shaped face, fringe and ochre lapels are design choices.",
+      "sourceEvents": [
+        {
+          "id": "nessa_intro",
+          "file": "content/events/people_students.grim",
+          "line": 951
+        },
+        {
+          "id": "ledger_deadline",
+          "file": "content/events/clubs.grim",
+          "line": 289
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "nessa.editor",
+          "file": "content/world/facts/nessa.grim",
+          "line": 3
+        }
+      ],
+      "svg": {
+        "look": "hair:0 skin:4 style:3",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 143
+      }
+    },
+    {
+      "id": "bram",
+      "name": "Bram Hollis",
+      "age": 19,
+      "pronouns": "he/him",
+      "appearance": "Warm tan, a clipped blond crop, a broad square jaw and heavy angled brows; a red prefect sash across a stiff navy collar. Officious and insecure behind a tight, self-important mouth.",
+      "canon": "Burly prefect and red sash are explicit.",
+      "design": "Blond cropped hair and tan skin follow the SVG; the square jaw and rigid collar are design choices.",
+      "sourceEvents": [
+        {
+          "id": "bram_intro",
+          "file": "content/events/people_others.grim",
+          "line": 77
+        },
+        {
+          "id": "duel_bram_hazing",
+          "file": "content/events/clubs.grim",
+          "line": 38
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "bram.prefect",
+          "file": "content/world/facts/bram.grim",
+          "line": 3
+        }
+      ],
+      "svg": {
+        "look": "hair:3 skin:1 style:2",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 164
+      }
+    },
+    {
+      "id": "kael",
+      "name": "Kael Dumont",
+      "age": 20,
+      "pronouns": "he/him",
+      "appearance": "Pale, short ivory hair with an angular fringe, a long narrow face and restrained blue-grey eyes with dark highlighted pupils; dark slate fur-lined collar, a little frost at the lashes. Guarded Northern transfer.",
+      "canon": "Pale, fur-lined coat and frost in his eyelashes are explicit; Ilse shares his eyes.",
+      "design": "Short ivory hair follows the SVG; the angular fringe, narrow face and blue-grey iris colour are design choices shared with Ilse.",
+      "sourceEvents": [
+        {
+          "id": "kael_arrives",
+          "file": "content/events/calendar.grim",
+          "line": 244
+        },
+        {
+          "id": "astro_kael_roof",
+          "file": "content/events/classes.grim",
+          "line": 551
+        },
+        {
+          "id": "ilse_village",
+          "file": "content/events/chain_ilse.grim",
+          "line": 11
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "kael.north",
+          "file": "content/world/facts/kael.grim",
+          "line": 3
+        }
+      ],
+      "svg": {
+        "look": "hair:4 skin:0 style:0",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 121
+      }
+    },
+    {
+      "id": "ilse",
+      "name": "Ilse Dumont",
+      "age": 18,
+      "pronouns": "she/her",
+      "appearance": "Pale, long straight ivory hair, a small pointed face and the same blue-grey eyes as Kael, with dark highlighted pupils; a high collar of white fur. Fierce, wary Northern outsider.",
+      "canon": "White furs, pale siblings and eyes recognisably like Kael’s are explicit.",
+      "design": "Long ivory hair and pale skin follow the SVG; the pointed face and shared iris colour are design choices.",
+      "sourceEvents": [
+        {
+          "id": "ilse_village",
+          "file": "content/events/chain_ilse.grim",
+          "line": 11
+        },
+        {
+          "id": "ilse_kael_reunion",
+          "file": "content/events/chain_ilse.grim",
+          "line": 99
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "ilse.furs",
+          "file": "content/world/facts/ilse.grim",
+          "line": 3
+        }
+      ],
+      "svg": {
+        "look": "hair:4 skin:5 style:1",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 253
+      }
+    },
+    {
+      "id": "tamsin",
+      "name": "Tamsin Reed",
+      "age": 19,
+      "pronouns": "they/them",
+      "appearance": "Warm brown skin, short choppy golden hair, a slim triangular face, prominent ears and a sly asymmetric smile; a green Thornwick collar. Curious illusionist raised around travelling theatre.",
+      "canon": "Thornwick students wear green robes; no stable personal appearance is specified in their cards.",
+      "design": "Golden cropped hair and brown skin follow the SVG; ears, face shape and smile distinguish their theatrical wit.",
+      "sourceEvents": [
+        {
+          "id": "life_rival_academy",
+          "file": "content/events/life.grim",
+          "line": 841
+        },
+        {
+          "id": "rival_return_visit",
+          "file": "content/events/chain_thornwick.grim",
+          "line": 192
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "tamsin.thornwick",
+          "file": "content/world/facts/tamsin.grim",
+          "line": 3
+        },
+        {
+          "id": "tamsin.theatre",
+          "file": "content/world/facts/tamsin.grim",
+          "line": 7
+        }
+      ],
+      "svg": {
+        "look": "hair:3 skin:3 style:2",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 274
+      }
+    },
+    {
+      "id": "isolde",
+      "name": "Headmistress Isolde Marrow",
+      "age": 57,
+      "pronouns": "she/her",
+      "appearance": "Pale, long straight black hair with faint grey temples, a long oval face, thin oval spectacles and a high plum collar. A calm, watchful headmistress whose slight smile carries authority.",
+      "canon": "Tall and pale; dark robes and spectacles are explicit. Newly white hair belongs to a later outcome, not this default portrait.",
+      "design": "Long black hair and pale skin follow the SVG; faint greying, long face and structured plum collar are design choices.",
+      "sourceEvents": [
+        {
+          "id": "isolde_intro",
+          "file": "content/events/people_others.grim",
+          "line": 501
+        },
+        {
+          "id": "hs_two_shadows",
+          "file": "content/events/chain_hollowstar_acts.grim",
+          "line": 204
+        },
+        {
+          "id": "hs_aftermath_lost",
+          "file": "content/events/chain_hollowstar.grim",
+          "line": 802
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "isolde.names",
+          "file": "content/world/facts/isolde.grim",
+          "line": 3
+        }
+      ],
+      "svg": {
+        "look": "hair:7 skin:5 style:1",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 231
+      }
+    },
+    {
+      "id": "thorne",
+      "name": "Professor Aldric Thorne",
+      "age": 68,
+      "pronouns": "he/him",
+      "appearance": "Pale, short swept-back grey hair, a pointed grey beard, a long jaw scar and severe brows; a high charcoal collar edged in muted indigo. Exacting elderly arcana teacher with watchful, humane eyes.",
+      "canon": "Grey beard, elderly appearance and long jaw scar are explicit in card scenes.",
+      "design": "Pale skin and short light hair follow the SVG; beard shape and high collar are design choices.",
+      "sourceEvents": [
+        {
+          "id": "thorne_intro",
+          "file": "content/events/people_others.grim",
+          "line": 228
+        },
+        {
+          "id": "thorne_storm_story",
+          "file": "content/events/people_others.grim",
+          "line": 278
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "thorne.storm",
+          "file": "content/world/facts/thorne.grim",
+          "line": 3
+        },
+        {
+          "id": "thorne.lost",
+          "file": "content/world/facts/thorne.grim",
+          "line": 7
+        }
+      ],
+      "svg": {
+        "look": "hair:4 skin:0 style:0",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 187
+      }
+    },
+    {
+      "id": "maud",
+      "name": "Old Maud",
+      "age": 81,
+      "pronouns": "she/her",
+      "appearance": "Warm brown, wispy ivory hair in an untidy cheek-length halo, small round spectacles and a deeply lined round face; a frayed moss-green shawl. Kindly, sharp-eyed eighty-one-year-old hedge-witch.",
+      "canon": "Spectacles, shawl and age eighty-one are explicit.",
+      "design": "Ivory loose hair and warm brown skin follow the SVG; the wispy silhouette, deep face lines and worn green shawl distinguish the groundskeeper.",
+      "sourceEvents": [
+        {
+          "id": "align_maud_way_back",
+          "file": "content/events/alignment.grim",
+          "line": 56
+        },
+        {
+          "id": "hs_maud_locks",
+          "file": "content/events/chain_hollowstar_acts.grim",
+          "line": 180
+        },
+        {
+          "id": "maud_ill",
+          "file": "content/events/people_others.grim",
+          "line": 474
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "maud.groundskeeper",
+          "file": "content/world/facts/maud.grim",
+          "line": 3
+        },
+        {
+          "id": "maud.age",
+          "file": "content/world/facts/maud.grim",
+          "line": 27
+        }
+      ],
+      "svg": {
+        "look": "hair:4 skin:2 style:4",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 209
+      }
+    },
+    {
+      "id": "amaranth",
+      "name": "Sister Amaranth",
+      "age": 54,
+      "pronouns": "she/her",
+      "appearance": "Dark warm brown, close-cropped copper hair, narrow rectangular spectacles and a firm rectangular face; a starched white apron over claret clothing. Severe, dependable middle-aged healer with a small reassuring smile.",
+      "canon": "Spectacles and white/starched apron are explicit.",
+      "design": "Copper cropped hair and brown skin follow the SVG; spectacle shape, rectangular face and claret underlayer are design choices.",
+      "sourceEvents": [
+        {
+          "id": "crisis_collapse",
+          "file": "content/events/crisis.grim",
+          "line": 7
+        },
+        {
+          "id": "amaranth_intro",
+          "file": "content/events/fixtures.grim",
+          "line": 12
+        },
+        {
+          "id": "alch_bandage_round",
+          "file": "content/events/pools/courses_a.grim",
+          "line": 416
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "amaranth.healer",
+          "file": "content/world/facts/amaranth.grim",
+          "line": 3
+        },
+        {
+          "id": "amaranth.rounds",
+          "file": "content/world/facts/amaranth.grim",
+          "line": 12
+        }
+      ],
+      "svg": {
+        "look": "hair:2 skin:3 style:0",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 299
+      }
+    },
+    {
+      "id": "brask",
+      "name": "Professor Hedda Brask",
+      "age": 61,
+      "pronouns": "she/her",
+      "appearance": "Deep brown weathered skin, a shaggy grey crop, broad cheekbones and heavy straight brows; a thick leather apron collar over earth-coloured clothing. Dry, brave older beastcraft professor.",
+      "canon": "Grey hair, weathered appearance and leather apron are explicit; grey overrides the blond SVG.",
+      "design": "Deep brown skin and the shaggy hair silhouette follow the SVG; broad cheekbones and straight brows are design choices.",
+      "sourceEvents": [
+        {
+          "id": "brask_intro",
+          "file": "content/events/people_others.grim",
+          "line": 604
+        },
+        {
+          "id": "brask_shovel",
+          "file": "content/events/fixtures.grim",
+          "line": 109
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "brask.beasts",
+          "file": "content/world/facts/brask.grim",
+          "line": 3
+        }
+      ],
+      "svg": {
+        "look": "hair:3 skin:4 style:4",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 321
+      }
+    },
+    {
+      "id": "vey",
+      "name": "Professor Ottilie Vey",
+      "age": 46,
+      "pronouns": "she/her",
+      "appearance": "Warm tan, long blue-black hair framing a tapered face, one elegantly lifted brow and an amused smile; a violet coat and broad violet scarf. Sly, theatrical middle-aged illusion teacher.",
+      "canon": "Violet coat and scarf are explicit.",
+      "design": "Blue-black long hair and tan skin follow the SVG; the tapered face and lifted brow are design choices.",
+      "sourceEvents": [
+        {
+          "id": "vey_intro",
+          "file": "content/events/people_others.grim",
+          "line": 578
+        },
+        {
+          "id": "vey_pop_quiz",
+          "file": "content/events/fixtures.grim",
+          "line": 183
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "vey.illusion",
+          "file": "content/world/facts/vey.grim",
+          "line": 3
+        },
+        {
+          "id": "vey.revue",
+          "file": "content/world/facts/vey.grim",
+          "line": 12
+        }
+      ],
+      "svg": {
+        "look": "hair:6 skin:1 style:1",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 343
+      }
+    },
+    {
+      "id": "marisol",
+      "name": "Professor Ines Marisol",
+      "age": 39,
+      "pronouns": "she/her",
+      "appearance": "Warm dark brown, tousled chestnut hair around a soft oval face, a floppy blue rain hat tipped back clear of her eyes, and a lake-blue collar. Warm, weather-loving tidecaller with a delighted smile.",
+      "canon": "Soaked hat and wind-tossed hair are explicit.",
+      "design": "Brown loose hair and dark warm skin follow the SVG; blue hat, rounded face and blue collar are design choices.",
+      "sourceEvents": [
+        {
+          "id": "marisol_intro",
+          "file": "content/events/fixtures.grim",
+          "line": 263
+        },
+        {
+          "id": "marisol_storm",
+          "file": "content/events/fixtures.grim",
+          "line": 312
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "marisol.tides",
+          "file": "content/world/facts/marisol.grim",
+          "line": 3
+        },
+        {
+          "id": "marisol.storms",
+          "file": "content/world/facts/marisol.grim",
+          "line": 12
+        }
+      ],
+      "svg": {
+        "look": "hair:1 skin:3 style:4",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 366
+      }
+    },
+    {
+      "id": "mabel",
+      "name": "Mabel Thistlewood",
+      "age": 63,
+      "pronouns": "she/her",
+      "appearance": "Copper-brown, a neat rounded ivory bob with curved fringe, full cheeks and warm smile lines; a cream apron with broad ochre shoulders. Brisk, perceptive village tea-shop keeper.",
+      "canon": "Older village tea-shop keeper; no stable hair or skin description in her cards.",
+      "design": "Ivory cheek-length hair and copper-brown skin follow the SVG; a smooth rounded bob, full cheeks and ochre apron outfit are design choices.",
+      "sourceEvents": [
+        {
+          "id": "mabel_intro",
+          "file": "content/events/fixtures.grim",
+          "line": 365
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "mabel.teashop",
+          "file": "content/world/facts/mabel.grim",
+          "line": 3
+        },
+        {
+          "id": "mabel.door",
+          "file": "content/world/facts/mabel.grim",
+          "line": 7
+        }
+      ],
+      "svg": {
+        "look": "hair:4 skin:2 style:4",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 388
+      }
+    },
+    {
+      "id": "grimsby",
+      "name": "Mr Alder Grimsby",
+      "age": 72,
+      "pronouns": "he/him",
+      "appearance": "Warm tan, a full short cap of ivory hair, feathery white eyebrows, a rounded long-nosed face and an absent-minded smile; a rust-brown coat over a soft cream collar. Courteous, eccentric elderly bookseller.",
+      "canon": "Elderly bookseller, enthusiastic and vague; no stable face details in his cards.",
+      "design": "Short ivory hair and tan skin follow the SVG; eyebrows, face shape and rust-brown shop coat are design choices.",
+      "sourceEvents": [
+        {
+          "id": "grimsby_intro",
+          "file": "content/events/fixtures.grim",
+          "line": 433
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "grimsby.books",
+          "file": "content/world/facts/grimsby.grim",
+          "line": 3
+        },
+        {
+          "id": "grimsby.wrong",
+          "file": "content/world/facts/grimsby.grim",
+          "line": 7
+        }
+      ],
+      "svg": {
+        "look": "hair:4 skin:1 style:0",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 409
+      }
+    },
+    {
+      "id": "pell",
+      "name": "Old Pell",
+      "age": 77,
+      "pronouns": "he/him",
+      "appearance": "Copper-brown, closely trimmed ivory hair, narrow spectacles, a long creased face and a small straight white moustache; a bottle-green high collar and plain apron. Proud, exacting elderly village apothecary.",
+      "canon": "Old apothecary with spectacles is explicit.",
+      "design": "Short ivory hair and copper-brown skin follow the SVG; narrow frames, long face, small moustache and green collar are design choices.",
+      "sourceEvents": [
+        {
+          "id": "pell_intro",
+          "file": "content/events/fixtures.grim",
+          "line": 502
+        },
+        {
+          "id": "apothecary_clerk_labelling_pen",
+          "file": "content/events/pools/clubs_jobs.grim",
+          "line": 710
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "pell.apothecary",
+          "file": "content/world/facts/pell.grim",
+          "line": 3
+        },
+        {
+          "id": "pell.counting",
+          "file": "content/world/facts/pell.grim",
+          "line": 7
+        }
+      ],
+      "svg": {
+        "look": "hair:4 skin:2 style:0",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 430
+      }
+    },
+    {
+      "id": "grisk",
+      "name": "Grisk",
+      "age": 58,
+      "pronouns": "he/him",
+      "appearance": "Olive-green goblin, long pointed ears, a hooked nose, short dark-olive scalp tuft and a courteous toothy grin; clear pince-nez and a plum velvet waistcoat. Patient, calculating village moneylender.",
+      "canon": "Goblin, velvet waistcoat and pince-nez are explicit; pince-nez overrides the SVG monocle.",
+      "design": "Olive skin, long ears, nose, scalp tuft and toothy grin follow the goblin SVG; clear lens styling keeps highlighted pupils visible.",
+      "sourceEvents": [
+        {
+          "id": "grisk_offer",
+          "file": "content/events/chains_minor.grim",
+          "line": 242
+        },
+        {
+          "id": "life_shady_offer",
+          "file": "content/events/life.grim",
+          "line": 595
+        }
+      ],
+      "sourceFacts": [
+        {
+          "id": "grisk.lender",
+          "file": "content/world/facts/grisk.grim",
+          "line": 3
+        },
+        {
+          "id": "grisk.ledger",
+          "file": "content/world/facts/grisk.grim",
+          "line": 7
+        }
+      ],
+      "svg": {
+        "look": "hair:0 skin:0 style:1 body:1",
+        "file": "src/art.js",
+        "castFile": "content/world/cast.grim",
+        "castLine": 451
+      }
+    }
+  ]
+}

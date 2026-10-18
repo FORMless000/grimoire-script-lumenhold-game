@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lumenhold · character portrait workshop</title>
+  <link rel="stylesheet" href="review.css">
+  <script src="review.js" defer></script>
+</head>
+<body>
+  <main>
+    <h1>Character portrait workshop</h1>
+    <p class="intro">21 characters · minimal shapes · white pupil highlights. Tune the framing here before integrating the artwork into the game.</p>
+    <p class="muted">Appearance priority: card descriptions → worldbook → SVG → inferred design. The evidence under each character distinguishes written anchors from styling choices.</p>
+    <details class="reference"><summary>Style reference</summary><img src="style-reference.png" alt="Minimal storybook art with white highlights inside dark pupils"></details>
+    <nav class="toolbar" aria-label="Review views">
+      <button data-tab="portraits" aria-pressed="true">Portraits</button>
+      <button data-tab="concepts" aria-pressed="false">Concept sheets</button>
+      <button id="shape" aria-pressed="false">Square previews</button>
+      <a href="README.md">How to use</a><a href="DESIGNS.md">Design notes</a>
+    </nav>
+    <p id="loadStatus" role="status">Loading artwork…</p>
+    <section id="portraits"><div class="grid" id="roster"></div></section>
+    <section id="concepts" hidden></section>
+    <footer>Saving updates the repository portrait PNG and its crop manifest. Original concept sheets stay intact. Game integration is documented in <code>docs/portrait-integration-handoff.md</code>.</footer>
+  </main>
+  <dialog id="editor" aria-labelledby="editorTitle">
+    <div class="editor-heading"><h2 id="editorTitle">Adjust portrait</h2><button id="closeEditor" aria-label="Close crop editor">Close</button></div>
+    <label class="character-picker">Character <select id="character"></select></label>
+    <div class="editor-layout">
+      <div>
+        <div class="crop-stage" id="stage">
+          <canvas id="cropCanvas" width="512" height="512" tabindex="0" aria-label="Portrait crop. Drag to move; arrow keys adjust by one pixel, shift for ten pixels; plus and minus zoom."></canvas>
+          <svg id="guides" viewBox="0 0 512 512" aria-hidden="true">
+            <path class="center-guide" d="M256 0V512 M0 256H512"/>
+            <path class="head-guide" d="M0 51.2H512 M0 430.1H512"/>
+            <ellipse class="head-guide" cx="256" cy="240.6" rx="148.5" ry="189.4"/>
+            <text x="8" y="45">head top · 10%</text><text x="8" y="423">chin · 84%</text>
+            <text class="center-label" x="8" y="250">center · 50%</text>
+          </svg>
+          <svg id="roundMask" viewBox="0 0 512 512" aria-hidden="true"><path fill="#151721" fill-opacity=".75" fill-rule="evenodd" d="M0 0H512V512H0Z M512 256A256 256 0 1 0 0 256A256 256 0 1 0 512 256Z"/></svg>
+        </div>
+        <p class="hint">Drag the image to align the head. Scroll over it to zoom, or use the controls. Guides and the round mask are preview overlays only.</p>
+        <div class="checks"><label><input id="showGuides" type="checkbox" checked> Alignment guides</label><label><input id="showRound" type="checkbox" checked> Round mask</label></div>
+      </div>
+      <div class="controls">
+        <div class="coordinate"><label for="leftRange">Left (px)</label><input id="leftNumber" aria-label="Left pixels" type="number" step="1"><input id="leftRange" aria-label="Left position" type="range" min="0" step="1"></div>
+        <div class="coordinate"><label for="topRange">Top (px)</label><input id="topNumber" aria-label="Top pixels" type="number" step="1"><input id="topRange" aria-label="Top position" type="range" min="0" step="1"></div>
+        <div class="coordinate"><label for="sizeRange">Crop size (px)</label><input id="sizeNumber" aria-label="Crop size pixels" type="number" min="32" step="1"><input id="sizeRange" aria-label="Crop size" type="range" min="32" step="1"></div>
+        <p id="cropInfo" class="muted"></p>
+        <div class="sample-previews" id="liveSizes"></div>
+        <div class="actions"><button id="resetSaved">Saved alignment</button><button id="resetInitial">Initial alignment</button></div>
+        <button id="savePortrait" class="primary">Save portrait to repo</button>
+        <button id="downloadPortrait">Download 256px PNG</button>
+        <p id="saveStatus" role="status" aria-live="polite"></p>
+        <p class="hint">Save replaces this character’s <code>portraits/&lt;id&gt;.png</code> and updates <code>portrait-manifest.json</code>. The previous files are backed up locally. Unsaved adjustments remain in this tab until it is reloaded.</p>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>
