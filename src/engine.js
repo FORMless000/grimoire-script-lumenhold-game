@@ -515,6 +515,8 @@
           if (d.kind !== 'course' && d.kind !== 'thesis') return;
           t.status = 'enrolled'; t.level = st.level || Math.min(d.levels || 1, this.levelPassed(id) + 1); t.study = 0;
           ctx.notes.push({ kind: 'enrol', track: id, level: t.level });
+          // A course's `start:` card (spells v2: the lesson that teaches its spell) comes later the same month, in its context.
+          if (d.start && this.c.events[d.start] && !s.deck.some((q) => q.id === d.start)) s.deck.push({ id: d.start, actor: null, track: id, src: 'queued' });
           this.meetLead(id, d, ctx);   // you meet the course's professor (design §5.5)
           this.grantLegacy(id, ctx, true);
           break;
@@ -644,7 +646,15 @@
       else if (this.c.game.appeal) this.pushTrackEvent(this.c.game.appeal, id);
       this.grantLegacy(id, ctx, false);
     }
-    teachLevel(id, level, ctx) { for (const x of this.c.tracks[id].teaches || []) if (x.level === level && this.c.spells[x.spell]) this.run([{ t: 'learn_spell', spell: x.spell, level: null }], ctx); }
+    // A course with a `start:` card teaches at the start of each level; passing then only makes up what the start card
+    // missed (the spell up to the number of its `teaches:` entries so far), so it never teaches ahead of the next start.
+    teachLevel(id, level, ctx) {
+      const d = this.c.tracks[id], all = d.teaches || [];
+      for (const x of all) if (x.level === level && this.c.spells[x.spell]) {
+        const lv = d.start ? all.filter((y) => y.spell === x.spell && y.level <= level).length : null;
+        this.run([{ t: 'learn_spell', spell: x.spell, level: lv }], ctx);
+      }
+    }
     // `regrade track C` (N4): the course's latest grade becomes another; a pass where there was an F teaches the level.
     regrade(st, ctx) {
       const id = this.trackTarget(st, ctx.track || this._ctxTrack), t = this.trackState(id), d = this.c.tracks[id];

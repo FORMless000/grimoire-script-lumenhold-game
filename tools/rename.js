@@ -79,7 +79,7 @@ function references(content) {
   for (const [kind, col] of Object.entries(HEADER_KINDS)) for (const id of Object.keys(content[col])) add(kind, id);
   // Worldbook references in data properties
   for (const d of Object.values(content.places || {})) { if (d.track) add('track', d.track); }
-  for (const d of Object.values(content.tracks || {})) { if (d.place) add('place', d.place); if (d.lead) add('npc', d.lead); (d.teaches || []).forEach((x) => add('spell', x.spell)); scanExpr(d.prereq); }
+  for (const d of Object.values(content.tracks || {})) { if (d.place) add('place', d.place); if (d.lead) add('npc', d.lead); if (d.intro) add('event', d.intro); if (d.start) add('event', d.start); (d.teaches || []).forEach((x) => add('spell', x.spell)); scanExpr(d.prereq); }
   for (const d of Object.values(content.spells || {})) if (d.discipline) add('track', d.discipline);
   for (const d of Object.values(content.facts || {})) { add('npc', d.npc || d.id.split('.')[0]); scanExpr(d.unlock); }
   for (const d of Object.values(content.factions || {})) (d.members || []).forEach((m) => add('npc', m));

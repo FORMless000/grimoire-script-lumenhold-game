@@ -122,7 +122,7 @@ function reach(content) {
     const offered = new Set([...R].map((id) => c.events[id].offers).filter(Boolean));
     for (const t of Object.values(c.tracks)) if (offered.has(t.kind + 's') && (!t.prereq || !need(t.prereq.ast))) { F.track.add(t.id); if (t.kind === 'club' && t.place) F.place.add(t.place); }
     // the engine pushes track notices at term end for any track
-    if (F.track.size) { F.queued.add('track_warning'); F.queued.add('track_promotion'); F.queued.add('job_term_review'); if (c.game.spark_cooldown) F.queued.add(c.game.spark_cooldown); if (c.game.exam) F.queued.add(c.game.exam); if (c.game.off_shift) F.queued.add(c.game.off_shift); if (c.game.appeal) F.queued.add(c.game.appeal); for (const d of Object.values(c.tracks || {})) if (d.intro && F.track.has(d.id)) F.queued.add(d.intro); }
+    if (F.track.size) { F.queued.add('track_warning'); F.queued.add('track_promotion'); F.queued.add('job_term_review'); if (c.game.spark_cooldown) F.queued.add(c.game.spark_cooldown); if (c.game.exam) F.queued.add(c.game.exam); if (c.game.off_shift) F.queued.add(c.game.off_shift); if (c.game.appeal) F.queued.add(c.game.appeal); for (const d of Object.values(c.tracks || {})) { if (d.intro && F.track.has(d.id)) F.queued.add(d.intro); if (d.start && F.track.has(d.id)) F.queued.add(d.start); } }
     // a passed course level teaches its spells (`teaches: flame@1`)
     for (const d of Object.values(c.tracks || {})) if (d.teaches && F.track.has(d.id)) for (const t of d.teaches) F.spell.add(t.spell);
     for (const e of Object.values(c.events)) {

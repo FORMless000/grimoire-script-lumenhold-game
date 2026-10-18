@@ -281,6 +281,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `intro` | text |  |
 |  | `standard` | structured |  |
 |  | `picked` | text | yes |
+|  | `start` | number |  |
 | `@spell id` | `name` | text | yes |
 |  | `discipline` | text |  |
 |  | `cost` | structured |  |

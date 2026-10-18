@@ -380,6 +380,7 @@ function analyze(content) {
   // The appeal card (`@game appeal:`, N4) after a failed course, and a track's `intro:` card when you join it (N1).
   if (content.game.appeal) A.queued[content.game.appeal] = A.queued[content.game.appeal] || ['engine'];
   for (const d of Object.values(content.tracks)) if (d.intro) A.queued[d.intro] = A.queued[d.intro] || ['track ' + d.id];
+  for (const d of Object.values(content.tracks)) if (d.start) A.queued[d.start] = A.queued[d.start] || ['track ' + d.id + ' start'];
   for (const k of ['appeal', 'off_shift', 'exam', 'spark_cooldown']) if (content.game[k] && !content.events[content.game[k]]) P('error', 'content/core/rules.grim', '@game ' + k + ': unknown event "' + content.game[k] + '"');
   // `@game afford:` (review fixes) names a resource; options that charge it up front lock when you can't pay.
   if (content.game.afford && !content.resources[content.game.afford]) P('error', 'content/core/rules.grim', '@game afford: unknown resource "' + content.game.afford + '"');
@@ -556,6 +557,8 @@ function analyzeWorld(content, P, scanExpr, scanText, taught = new Set()) {
     if (d.place && !content.places[d.place]) P('error', loc(d), 'place: unknown place "' + d.place + '"');
     if (d.lead && !content.npcs[d.lead]) P('error', loc(d), 'lead: unknown npc "' + d.lead + '"');
     if (d.intro && !content.events[d.intro]) P('error', loc(d), 'intro: unknown event "' + d.intro + '"');
+    if (d.start && !content.events[d.start]) P('error', loc(d), 'start: unknown event "' + d.start + '"');
+    if (d.start && d.kind !== 'course') P('error', loc(d), 'start: only a course has a start card');
     if (d.intro && !d.lead) P('warn', loc(d), 'intro: without a lead: nobody to meet');
     for (const t of d.teaches || []) { taught.add(t.spell); const sp = content.spells[t.spell]; if (sp && sp.cost && t.level > sp.cost.length) P('error', loc(d), 'teaches ' + t.spell + '@' + t.level + ': the spell has ' + sp.cost.length + ' level(s)'); if (!sp) P('error', loc(d), 'teaches: unknown spell "' + t.spell + '"'); if (d.levels && t.level > d.levels) P('error', loc(d), 'teaches ' + t.spell + '@' + t.level + ': the track has ' + d.levels + ' level(s)'); }
     if (d.level_names && d.levels && d.level_names.split(/\s*,\s*/).length !== d.levels) P('error', loc(d), 'level_names should list ' + d.levels + ' names');

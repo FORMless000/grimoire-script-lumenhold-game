@@ -53,6 +53,7 @@ function texts(content) {
   const push = (text, d, line) => { if (text) out.push({ text: String(text), where: d.file + ':' + (line || d.line) }); };
   for (const col of ['events', 'endings', 'states', 'npcs', 'hooks', 'places', 'tracks', 'spells', 'facts', 'factions', 'arcs']) {
     for (const d of Object.values(content[col] || {})) {
+      if ((d.tags || []).includes('retired')) continue;   // a retired card is never shown
       // Prose only: titles, names and option labels are Title Case by convention.
       for (const f of ['text', 'scene', 'desc', 'hint']) push(d[f], d);
       for (const f of ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do']) G.walkEffects(d[f], (st) => { if (st.t === 'say') push(st.text, d, st.line); });

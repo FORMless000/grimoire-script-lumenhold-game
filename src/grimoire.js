@@ -250,7 +250,7 @@
     // `intro:` the card where you first meet the track's `lead:` (playtest 2, N1): queued on enrolling or joining, instead of
     // meeting them silently.
     // `standard:` a course's rung at each level (checks.md), else @balance course_standard
-    track: { props: ['kind', 'name', 'skill', 'levels', 'level_names', 'place', 'teaches', 'hidden', 'prereq', 'ranks', 'pay', 'due', 'lead', 'desc', 'legacy', 'opens', 'intro', 'standard', 'picked'], effects: [] },
+    track: { props: ['kind', 'name', 'skill', 'levels', 'level_names', 'place', 'teaches', 'hidden', 'prereq', 'ranks', 'pay', 'due', 'lead', 'desc', 'legacy', 'opens', 'intro', 'standard', 'picked', 'start'], effects: [] },
     // Spells v2 (docs/spells-v2-list.md): `skill:` (one or two skills; none for Ward), `cost:` one value per level (one or
     // three levels), `verb:` the one verb its cards use, `pool: hidden | forbidden` (no source yet), `alignment:` a tier
     // a cast moves alignment by (down: casting it is wrong); `discipline:` and `power:` are optional.
@@ -728,7 +728,7 @@
         try { def[key] = STRUCT_PROPS[key](text); } catch (e) { throw new GrimError(typeof e === 'string' ? e : e.message, file, L.line); }
         if (key === 'ramp') def.ramp.expr = expr(def.ramp.expr, file, L.line);
       } else if (EXPR_PROPS.has(key) || (key === 'max' && b.kind === 'resource' && !isFinite(Number(text)))) def[key] = expr(text, file, L.line);
-      else if (NUM_PROPS.has(key) && !(key === 'alignment' && b.kind === 'spell')) {
+      else if (NUM_PROPS.has(key) && !(key === 'alignment' && b.kind === 'spell') && !(key === 'start' && b.kind === 'track')) {
         const n = Number(text);
         if (!isFinite(n)) throw new GrimError('property "' + key + '" must be a number, got "' + text + '"', file, L.line);
         def[key] = n;
