@@ -52,20 +52,17 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
 .card-stub .tag{font:600 9.5px var(--sans);letter-spacing:.14em;color:var(--ink-2);background:rgba(42,34,56,.08);padding:2px 7px;border-radius:6px}.card-stub h3{font:700 20px var(--display);margin:0}.card-stub p{display:none}
 .fight{position:relative;flex:none;display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px;background:rgba(22,26,53,.94);border:1px solid var(--line-2);border-radius:var(--radius);box-shadow:0 18px 50px rgba(0,0,0,.45)}
 .fight>*{flex:none}
-.fight-head{display:flex;align-items:center;gap:8px}.fh-title{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px}.fh-title b{font:600 20px var(--display);color:var(--gold-2)}.fh-title small{color:var(--muted);font-size:12px}
-.fh-tools{display:flex;gap:4px}.tool{height:30px;min-width:30px;padding:0 6px;border-radius:9px;background:var(--night-2);color:var(--muted);display:inline-flex;align-items:center;justify-content:center;gap:4px;font-size:11.5px;font-weight:500}.tool svg{width:16px;height:16px}.tool.text{padding:0 8px}.tool:hover:not(:disabled){color:var(--text)}
-.tool.active{border-color:#7fd18b;color:#9fe0a7}.tool .control-icon svg{width:13px;height:13px}
 
 /* Fighters: portrait, name, then HP and Mana with big numbers */
 .fighters{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fighters.with-eval{grid-template-columns:14px 1fr 1fr}
-.fighter{display:flex;gap:10px;align-items:center;min-width:0;padding:6px 10px;border-radius:14px;background:var(--night-2);border:1px solid var(--line)}
+.fighter{display:flex;gap:10px;align-items:center;min-width:0;padding:5px 10px;border-radius:14px;background:var(--night-2);border:1px solid var(--line)}
 .fighter.opp{flex-direction:row-reverse;cursor:pointer}.fighter.opp:hover{border-color:var(--line-2)}.fighter.opp .fname{text-align:right}
-.pf{position:relative;flex:none;width:54px;height:54px;border-radius:50%;overflow:hidden;border:2px solid var(--line-2);background:var(--night)}.fighter.you .pf{border-color:rgba(240,213,140,.55)}.fighter.opp .pf{border-color:rgba(143,201,232,.55)}
+.pf{position:relative;flex:none;width:48px;height:48px;border-radius:50%;overflow:hidden;border:2px solid var(--line-2);background:var(--night)}.fighter.you .pf{border-color:rgba(240,213,140,.55)}.fighter.opp .pf{border-color:rgba(143,201,232,.55)}
 .pf img,.pf svg{display:block;width:100%;height:100%;object-fit:cover}.pf.blank{border-style:dashed}
 .pf-eye{position:absolute;right:-1px;bottom:-1px;width:20px;height:20px;border-radius:50%;background:var(--night-3);border:1px solid var(--line-2);display:grid;place-items:center;color:var(--opp)}.pf-eye svg{width:12px;height:12px}
 .fi{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
-.fname b{display:block;font:600 17px var(--display);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fighter.you .fname b{color:var(--you)}.fighter.opp .fname b{color:var(--opp)}
-.fname small{display:block;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fname small em{font-style:normal;color:var(--good)}
+.fname{display:flex;align-items:baseline;gap:6px;min-width:0}.fighter.opp .fname{flex-direction:row-reverse}.fname b{flex:0 1 auto;min-width:0;font:600 17px var(--display);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fighter.you .fname b{color:var(--you)}.fighter.opp .fname b{color:var(--opp)}
+.fname small{flex:none;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fname small em{font-style:normal;color:var(--good)}
 .bar{position:relative;display:grid;grid-template-columns:auto minmax(24px,1fr) auto;align-items:center;gap:6px}
 .bnum{position:relative;min-width:62px;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.05;white-space:nowrap}.bnum small{font-size:11px;font-weight:500;color:var(--muted)}.bk{font-size:11px;margin-right:3px;vertical-align:2px}
 .hp .bk{color:var(--hp)}.mana .bk{color:var(--mana)}
@@ -75,7 +72,7 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
 .mana .fill{background:linear-gradient(90deg,#3a7fb5,var(--mana))}.mana .trail{background:#d7e9f3}.mana .flux{background:repeating-linear-gradient(135deg,#8b7fd6 0 4px,#6d64b6 4px 8px);opacity:.85}
 .hp .shield{background:linear-gradient(90deg,#c9a24a,var(--gold-2));opacity:.9;transition:width .45s,left .45s}
 .bshield{font-size:11px;font-weight:700;color:var(--k-guard);font-variant-numeric:tabular-nums;min-width:28px;text-align:right}
-.cx{display:inline-flex;align-items:center;gap:1px;margin:0 4px;padding:0 5px 0 2px;height:17px;border-radius:9px;vertical-align:2px;font:700 10.5px var(--sans);color:var(--k-heal);background:var(--night-3);border:1px solid var(--line)}.cx .mini-icon{width:14px;height:14px}.cx .mini-icon svg{width:12px;height:12px}.fighter.you .cx .mini-icon{color:var(--you)}.fighter.opp .cx .mini-icon{color:var(--opp)}
+.cx{flex:none;display:inline-flex;align-items:center;gap:1px;margin:0;align-self:center;padding:0 5px 0 2px;height:17px;border-radius:9px;vertical-align:2px;font:700 10.5px var(--sans);color:var(--k-heal);background:var(--night-3);border:1px solid var(--line)}.cx .mini-icon{width:14px;height:14px}.cx .mini-icon svg{width:12px;height:12px}.fighter.you .cx .mini-icon{color:var(--you)}.fighter.opp .cx .mini-icon{color:var(--opp)}
 .bflux{font-size:11px;font-weight:600;color:#b9b0f2;font-variant-numeric:tabular-nums;min-width:28px;text-align:right}.bflux.none{opacity:.35}
 .bar>.bnum{position:static}.delta{position:absolute;right:30px;top:-13px;font-size:13px;font-weight:700;pointer-events:none;animation:floatUp 1.6s ease-out forwards;text-shadow:0 1px 3px #000}.delta.neg{color:var(--bad)}.delta.pos{color:var(--good)}
 @keyframes floatUp{0%{opacity:0;transform:translateY(6px)}15%{opacity:1}100%{opacity:0;transform:translateY(-22px)}}
@@ -173,17 +170,16 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
 .card-eval{position:absolute;top:4px;left:6px;font-size:9px;font-style:normal;color:#a0b0b8;font-variant-numeric:tabular-nums}.act.best .card-eval{color:#9fe0a7}
 
 /* The bench's controls (difficulty, engine, the mock chrome, setup, journal): a tab at the left edge, in the engine's look */
-.bench{position:fixed;z-index:15;left:0;top:50%;transform:translateY(-50%);font:12px/1.35 system-ui,sans-serif;color:#efeadd}
+.bench{position:fixed;z-index:15;left:0;top:calc(50% - 32px);font:12px/1.35 system-ui,sans-serif;color:#efeadd}
 .bench-tab{display:block;writing-mode:vertical-rl;transform:rotate(180deg);padding:12px 3px;border-radius:7px 0 0 7px;border:1px solid #3d4f5c;border-right:0;background:#161f27;color:#a0b0b8;font:600 9.5px system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase}
 .bench-tab:hover:not(:disabled){border-color:#7d97a8;color:#efeadd}.bench.open .bench-tab{color:#efeadd;background:#22303a}
-.bench-pop{position:absolute;left:20px;top:50%;transform:translateY(-50%);width:250px;padding:9px 12px 11px;background:#161f27;border:1px solid #3d4f5c;border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.bench-pop{position:absolute;left:20px;top:50%;transform:translateY(-50%);width:290px;padding:9px 12px 11px;background:#161f27;border:1px solid #3d4f5c;border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.6)}
 .bench-pop header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}.bench-pop header b{font-size:12px;font-weight:600}
 .bench-x{width:24px;height:24px;padding:0;border-radius:5px;background:#22303a;border-color:#33434e;font-size:15px;line-height:1}
 .bench-pop label{display:block;margin:8px 0;color:#a0b0b8;font-size:11px}.bench-pop select{display:block;width:100%;margin-top:3px;padding:4px 6px;font-size:12px;background:#10171d;color:#efeadd;border:1px solid #33434e;border-radius:5px}
 .bench-pop label.check{display:flex;gap:6px;align-items:center;color:#efeadd;font-size:12px;margin:5px 0}
 .bench-pop fieldset{margin:8px 0;padding:2px 9px 4px;border:1px solid #33434e;border-radius:6px;display:grid;grid-template-columns:1fr 1fr}.bench-pop legend{font-size:10px;color:#a0b0b8;padding:0 3px}
-.bench-row{display:flex;gap:6px}.bench-row button{flex:1;padding:5px 6px;font-size:11.5px;font-weight:500;border-radius:5px;background:#22303a;border-color:#33434e}
-.bench-tool{display:none;background:#161f27;border-color:#3d4f5c;color:#a0b0b8}
+.bench-row{display:flex;gap:6px}.bench-row+.bench-row{margin-top:6px}.bench-row .control-icon{margin-right:3px;vertical-align:-2px}.bench-row button{flex:1;padding:5px 6px;font-size:11.5px;font-weight:500;border-radius:5px;background:#22303a;border-color:#33434e}
 
 /* Debug view */
 .debug{padding:14px;border-radius:var(--radius);background:rgba(22,26,53,.9);border:1px solid var(--line);color:var(--muted);font-size:12px;overflow:auto}.debug pre{font-size:10.5px;overflow:auto}.debug nav{margin-bottom:8px}
@@ -204,10 +200,9 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
  .stub-meters{gap:6px;padding:5px 6px 0}.meter{width:44px;gap:1px}.meter .orb{width:30px;height:30px}.meter .orb span{font-size:12px}.meter>b{font-size:10.5px}.meter small{font-size:7.5px;letter-spacing:.04em}.meter.num{padding-left:6px}.meter.num .numv{height:30px;font-size:14px}
  .card-stub{margin:0 10px -14px;padding:6px 12px 18px}.card-stub h3{font-size:15px}
  .fight{padding:7px 7px 8px;gap:6px;border-radius:14px}
- .fh-title{white-space:nowrap}.fh-title b{font-size:16px}.fh-title small{font-size:10.5px}.leave .tlabel{display:none}.tool{height:26px;min-width:26px;font-size:10.5px;padding:0 4px}.tool.text{padding:0 5px}.tool svg{width:14px;height:14px}
  .fighters{gap:5px}.fighters.with-eval{grid-template-columns:10px 1fr 1fr}.fighter{flex-direction:column;align-items:stretch;gap:4px;padding:6px}.fighter.opp{flex-direction:column}
  .fighter .pf{width:34px;height:34px;position:absolute;top:6px}.fighter{position:relative}.fighter.you .pf{left:6px}.fighter.opp .pf{right:6px}.pf-eye{width:14px;height:14px}.pf-eye svg{width:9px;height:9px}
- .fname{min-height:34px}.fighter.you .fname{padding-left:40px}.fighter.opp .fname{padding-right:40px}.fname b{font-size:14.5px}.fname small{font-size:9.5px}
+ .fname{min-height:34px;flex-wrap:wrap;align-content:center;column-gap:4px}.fighter.you .fname{padding-left:40px}.fighter.opp .fname{padding-right:40px}.fname b{font-size:14.5px}.fname small{font-size:9.5px}
  .bar{gap:4px}.bnum{min-width:0;font-size:16px}.bnum small{font-size:9px}.bk{display:none}.btrack{height:7px}.bflux,.bshield{font-size:9.5px;min-width:0}.bshield.none{display:none}
  .intent{padding:4px 7px;gap:7px}.tele-icon{width:28px;height:28px}.tele-icon svg{width:20px;height:20px}.intent b{font-size:12px}.intent small{font-size:10.5px}.intent .flavor{font-size:12.5px}
  .track{--cw:27px;--ch:24px;padding:3px 5px 5px}.track{--lw:42px}.tk-l{padding-right:3px}.tk-who{font-size:13px}.tk-head .tk-c>*{font-size:9.5px}
@@ -219,7 +214,7 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
  .commit-bar{padding:5px 7px;gap:6px}.preview{font-size:11.5px}.preview p{font-size:10.5px;line-height:1.25}#commit{min-width:64px;padding:8px 8px;font-size:12px}
  .card-eval{display:none}.engine{padding:6px 8px;font-size:11px}.lines li:nth-child(n+2){display:none}.engine .fine{display:none}
  .result{padding:8px}.result h2{font-size:26px}.result-actions button{padding:7px 10px;font-size:12px}
- .bench-tab{display:none}.bench-tool{display:inline-flex}.bench{top:auto;bottom:0;left:0;right:0;transform:none}.bench:not(.open){display:none}.bench-pop{position:static;transform:none;width:auto;border-radius:12px 12px 0 0}
+ .bench-tab{padding:9px 1px;font-size:7.5px;letter-spacing:.1em}.bench-pop{position:fixed;left:0;right:0;bottom:0;top:auto;transform:none;width:auto;border-radius:12px 12px 0 0}
  .sheet{place-items:end center;padding:0}.sheet-card{border-radius:var(--radius) var(--radius) 0 0;max-height:82dvh;padding:12px}.sk{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:600px) and (max-height:700px){.hfull .flavor:not(.finish),.intent .flavor,.intent .it>small,.intent .eff small,.hx-full h4{display:none}.intent b{font-size:12px}}

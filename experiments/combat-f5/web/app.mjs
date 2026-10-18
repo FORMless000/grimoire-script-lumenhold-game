@@ -38,8 +38,6 @@ let analysis=null,analysisToken=0,analysisFor=-1,analysisRunning=false,engineBud
 const chrome=Object.fromEntries(['top','meters','side','card'].map(k=>[k,store.get('chrome.'+k,'1')==='1']));
 const QUESTION='<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="32" cy="32" r="26"/><path d="M24 25a8 8 0 1 1 11 7.4c-2 .9-3 2.4-3 4.6v2"/><path d="M32 46v1"/></svg>';
 const EYE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
-const SCROLL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M7 4h11v13a3 3 0 0 1-3 3H6"/><path d="M7 4a2 2 0 0 0-2 2v2h2M6 20a2 2 0 0 1-2-2v-1h11"/><path d="M10 9h5M10 12.5h5"/></svg>';
-const GEAR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>';
 const worker=new Worker(new URL('app.mjs?worker=1',import.meta.url),{type:'module'});
 function makeAnalyst(){const w=new Worker(new URL('app.mjs?worker=analysis',import.meta.url),{type:'module'});w.onmessage=onAnalysis;w.onerror=e=>{analysisRunning=false;$('setup-error').textContent='Engine: '+e.message;};return w;}
 let analyst=null;
@@ -115,7 +113,7 @@ const constructChips=(a,i)=>a.constructs.map(c=>{const left=Math.round(Math.max(
 function fighter(i){const a=game.actors[i],purse=[game.config.observers?`★${fmt(a.resources.renown)}${a.pendingRenown?`<em>+${fmt(a.pendingRenown)}</em>`:''}`:'',a.resources.crowns!==a.entry.crowns?`◎${fmt(a.resources.crowns)}`:'',a.resources.alignment!==a.entry.alignment?`☾${fmt(a.resources.alignment)}`:''].filter(Boolean).join(' ');
  return `<article class="fighter ${i?'opp':'you'}"${i?' data-sheet="inspect" role="button" tabindex="0" title="Inspect the opponent"':''}>
   <div class="pf${i?'':' blank'}">${portraitOf(i)}${i?`<span class="pf-eye">${EYE}</span>`:''}</div>
-  <div class="fi"><div class="fname"><b>${esc(nameOf(i))}${constructChips(a,i)}</b><small>${i?esc(game.actors[1].kit.loadout==='custom'?'':'Level '+a.kit.level):'Level '+a.kit.level}${purse?' · '+purse:''}</small></div>
+  <div class="fi"><div class="fname"><b>${esc(nameOf(i))}</b><small>${i&&game.actors[1].kit.loadout==='custom'?'':'Lv '+a.kit.level}${purse?' · '+purse:''}</small>${constructChips(a,i)}</div>
   ${bar(i,'hp',a.hp,a.maxHP,0,a.effects.lodestar?.value??0)}${bar(i,'mana',a.resources.mana,a.kit.capacity,a.flux)}</div></article>`;}
 
 function intent(){
@@ -238,13 +236,17 @@ function renderBench(){const el=$('bench'),on=!!game&&view!=='setup';el.hidden=!
   <label>Opponent difficulty<select id="bench-difficulty">${[...$('ai-difficulty').options].map(o=>`<option value="${o.value}"${o.value===(game.config.ai[1]?.preset??$('ai-difficulty').value)?' selected':''}>${esc(o.textContent)}</option>`).join('')}</select></label>
   <label class="check"><input type="checkbox" id="engine-toggle"${engineOn?' checked':''}> Engine analysis</label>
   <fieldset><legend>Main game around the fight</legend>${[['top','Top bar'],['meters','Meters'],['side','Side panel'],['card','Card behind']].map(([k,t])=>`<label class="check"><input type="checkbox" data-bench-chrome="${k}"${chrome[k]?' checked':''}> ${t}</label>`).join('')}</fieldset>
-  <div class="bench-row"><button data-bench-view="setup">Setup…</button><button data-bench-view="debug">Search journal</button></div></div>`:''}`;
+  <div class="bench-row"><button data-bench-view="setup">Setup…</button><button data-bench-view="debug">Search journal</button></div>
+  <div class="bench-row"><button data-sheet="log">Full log</button><button id="bench-export">Export log</button>${game.result?'':`<button id="leave" title="Bench only: the game has no concession"><span class="control-icon" aria-hidden="true">${ACTION_ICONS.concede}</span>Concede</button>`}</div></div>`:''}`;
  for(const b of document.querySelectorAll('[data-bench]'))b.onclick=()=>{benchOpen=!benchOpen;renderBench();};
  if(!benchOpen)return;
  $('bench-difficulty').onchange=e=>setDifficulty(e.target.value);
  $('engine-toggle').onchange=e=>setEngine(e.target.checked);
  for(const box of el.querySelectorAll('[data-bench-chrome]'))box.onchange=()=>{const k=box.dataset.benchChrome;chrome[k]=box.checked;store.set('chrome.'+k,box.checked?'1':'0');const twin=document.querySelector(`#setup [data-chrome="${k}"]`);if(twin)twin.checked=box.checked;render();};
  for(const b of el.querySelectorAll('[data-bench-view]'))b.onclick=()=>{view=b.dataset.benchView;benchOpen=false;render();window.scrollTo(0,0);};
+ for(const b of el.querySelectorAll('[data-sheet]'))b.onclick=()=>{benchOpen=false;sheet=b.dataset.sheet;render();};
+ $('bench-export').onclick=exportLog;
+ if($('leave'))$('leave').onclick=()=>{token++;busy=false;benchOpen=false;concede(game,0);render();};
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&benchOpen&&!sheet){benchOpen=false;renderBench();}});
 
@@ -278,10 +280,7 @@ function requestAnalysis(){
 
 // ---- The fight ----
 function result(){const r=game.result,won=r.winner===0,lost=r.winner===1;return `<div class="result ${won?'win':lost?'loss':'draw'}"><h2>${won?'Victory':lost?'Defeat':'Draw'}</h2><p>${esc(r.reason)}${r.tiebreak?' · the telegraphed initiative wins':''}</p><div class="net-costs">${COMBAT_RESOURCES.map(k=>{const n=game.settlement[0][k].netLoss;return `<span>${k} <b class="${n>0?'neg':n<0?'pos':''}">${n<0?'+':n>0?'−':'±'}${fmt(Math.abs(n))}</b></span>`;}).join('')}</div><p class="fine">Flux is collected; rebates cover net losses only. Crowns and alignment are never rebated.${r.followUps.length?` Witnesses reported ${game.reports.length} forbidden cast${game.reports.length===1?'':'s'}.`:''}</p><div class="result-actions"><button id="replay" class="primary">Replay same setup</button><button id="carry" ${game.config.healthModel==='direct'&&game.actors[0].resources.health<=0?'disabled':''}>Next bout · carry balances</button><button id="export">Export log</button></div></div>`;}
-function head(){const lead=game.leader;
- return `<header class="fight-head"><div class="fh-title"><b>${game.result?'The fight is over':'Exchange '+game.round}</b><small>${game.result?'':lead===0?'you lead':'they lead'}</small></div><div class="fh-tools">
-  <button class="tool" data-sheet="inspect" title="Inspect the opponent" aria-label="Inspect the opponent">${EYE}</button><button class="tool" data-sheet="log" title="Full log" aria-label="Full log">${SCROLL}</button><button class="tool bench-tool" data-bench title="Test bench controls" aria-label="Test bench controls">${GEAR}</button>${!game.result?`<button id="leave" class="tool text leave" title="Concede the fight"><span class="control-icon" aria-hidden="true">${ACTION_ICONS.concede}</span><span class="tlabel">Leave</span></button>`:''}</div></header>`;}
-function fight(){return `<div class="fight-wrap${chrome.card?' with-card':''}">${chrome.card?cardStub():''}<section class="fight">${head()}<div class="fighters${engineOn?' with-eval':''}">${engineOn?`<div class="evalbar" id="evalbar" title="Engine evaluation for you, in HP">${evalBar()}</div>`:''}${fighter(0)}${fighter(1)}</div><div class="fight-body"><div class="fight-main">${engineOn?'<div class="engine" id="engine"></div>':''}${track()}</div><div class="controls">${intent()}${game.result?result():actions()}</div></div></section></div>`;}
+function fight(){return `<div class="fight-wrap${chrome.card?' with-card':''}">${chrome.card?cardStub():''}<section class="fight"><div class="fighters${engineOn?' with-eval':''}">${engineOn?`<div class="evalbar" id="evalbar" title="Engine evaluation for you, in HP">${evalBar()}</div>`:''}${fighter(0)}${fighter(1)}</div><div class="fight-body"><div class="fight-main">${engineOn?'<div class="engine" id="engine"></div>':''}${track()}</div><div class="controls">${intent()}${game.result?result():actions()}</div></div></section></div>`;}
 function debug(){return `<div class="debug"><nav><button data-view="play">← Back to the fight</button></nav><h3>Search and exchange journal</h3><p>Decisions ${stats.length}; deepest completed ${Math.max(0,...stats.map(a=>a.completedDepth))}; slowest ${Math.max(0,...stats.map(a=>a.elapsedMs)).toFixed(1)} ms; accepted weaker choices ${stats.filter(a=>a.degraded).length} / ${stats.length}.</p><details><summary>Kits and ledgers</summary><pre>${esc(JSON.stringify({kits:game.actors.map(a=>a.kit),settlement:game.settlement,reports:game.reports},null,2))}</pre></details>${history.slice().reverse().map(r=>`<details open><summary>Exchange ${r.round}: ${r.pair.map(label).join(' / ')}</summary><ul>${r.events.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></details>`).join('')}</div>`;}
 function render(){
  document.body.classList.toggle('playing',!!game);document.body.classList.toggle('setup-open',!game||view==='setup');
@@ -297,10 +296,11 @@ function render(){
  for(const b of document.querySelectorAll('[data-action]'))b.onclick=()=>{const id=b.dataset.action;if(selected===id)commit(id);else selectAction(id);};
  if($('commit'))$('commit').onclick=()=>commit();
  renderBench();
- if($('leave'))$('leave').onclick=()=>{token++;busy=false;concede(game,0);render();};
  if($('replay'))$('replay').onclick=()=>start(game.config);
  if($('carry'))$('carry').onclick=()=>start({...game.config,playerResources:{...game.actors[0].resources},opponentResources:undefined});
- if($('export'))$('export').onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify({rulesVersion:RULES_VERSION,config:game.config,kits:game.actors.map(a=>a.kit),history,stats,result:game.result,settlement:game.settlement,reports:game.reports},null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='lumenhold-combat-'+Date.now()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+ if($('export'))$('export').onclick=exportLog;
+}
+function exportLog(){{const url=URL.createObjectURL(new Blob([JSON.stringify({rulesVersion:RULES_VERSION,config:game.config,kits:game.actors.map(a=>a.kit),history,stats,result:game.result,settlement:game.settlement,reports:game.reports},null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='lumenhold-combat-'+Date.now()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 }
 // Version shown in the setup panel and the tab title, straight from the engine build.
 if($('version'))$('version').textContent=RULES_VERSION;document.title='Lumenhold · Combat '+RULES_VERSION;

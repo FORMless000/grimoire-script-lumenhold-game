@@ -115,8 +115,8 @@ Port the fight screen from `web/app.mjs` and its look from `web/style.css` as an
     - Below the track, the latest exchange in full, or any one picked on the track.
   - **Beside the actions:** the telegraph (the foe's committed move, with its effect and flavor line), which opens the full text.
   - **The square action buttons:** icon, name, effect (`web/brief.mjs`, read from `describe()`), turns, and the Mana or HP cost.
-  - **The inspect sheet** (the foe's skills, kit with prices, recent moves) and **the full log**.
-  - **Concede.**
+  - **The inspect sheet** (the foe's skills, kit with prices, recent moves), opened by tapping the foe's portrait or card.
+  - **No header and no concession.** The fight opens on the fighters: the track already shows the exchange and who leads, and the telegraph shows their move. There is no Leave: a played fight runs until someone falls, or until a stalemate or a decision on points. Don't wire `concede()` to any control; a player who wants to skip fights has the "auto-resolve fights" setting (§3).
   - **Interaction rules:**
     - An HP or Mana change animates once: re-renders don't replay it.
     - The track's name column has a fixed width, so the columns stay aligned.
@@ -134,10 +134,10 @@ Port the fight screen from `web/app.mjs` and its look from `web/style.css` as an
   - the Bench dock: `renderBench`, `setDifficulty`, `.bench*`, and the `.bench-tool` gear in the fight header;
   - the setup panel: `#setup`, `config()`, `setup()`, the presets, the "Return to current fight" button and the welcome text;
   - the engine view and evaluation bar;
-  - the search journal (`debug()`);
+  - the search journal (`debug()`), the full log sheet (the track and the latest exchange in full replace it) and the bench's Concede;
   - the result panel's Replay, Next bout and Export log buttons. In the game the result hands the outcome back to the card (§3).
 
-  The game sets up a fight from the card and the run (§4), not from a form. Difficulty is a player setting (default Medium) that belongs in the game's own settings; pass it as `ai[1].preset`. Only Leave (Concede), Inspect and the log stay in the fight's header.
+  The game sets up a fight from the card and the run (§4), not from a form. Difficulty is a player setting (default Medium) that belongs in the game's own settings; pass it as `ai[1].preset`. The fight has no header bar.
 - **Portraits:** `web/art.mjs` shows `portraits/<npc>.png` when one exists (`NAMED_LOADOUTS[name].npc`), else an SVG placeholder. The player's frame stays blank.
 - **Layout:** no panel scrolls except the track, sideways.
   - It must work at phone width (375 px). With room (a 640 px container or wider) the state sits on the left and the choices on the right.
