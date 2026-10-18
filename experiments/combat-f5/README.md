@@ -89,6 +89,7 @@ Tools:
 - `node tools/ai-study.mjs [--grid '[{"preset":"easy"},{"slack":8}]']`: what an AI setting costs against the optimal AI;
 - `node tools/foe-study.mjs "Shadow stag"`: a foe against every class;
 - `node tools/named-study.mjs [--stats '{…}'] [--kits '{…}']`: each named character's equivalent class level, optionally with worldbook stat or kit changes;
+- `node tools/spell-value.mjs [--spells wildfire,omen] [--variant …]`: what a spell is worth to its holder (engine AI against every class, with and without it), and how often it's cast and held;
 - `node tools/event-coverage.mjs [--list]`: that every combat card has a decision;
 - `node tools/event-levels.mjs`: each played card's foe level by month, from the card's challenge level, next to the player's skills;
 - `node tools/player-study.mjs`: the main game's measured player against every class at E − 10, E and E + 10.
@@ -97,7 +98,7 @@ Tools:
 
 ## Changing the rules
 
-1. Spell numbers: edit `setup/roster.mjs`. Rule logic and rule constants (named at the top of `rust/core/src/rules.rs`): edit Rust. Action descriptions are in `rust/core/src/text.rs` and use those same constants.
+1. Spell numbers: edit `setup/roster.mjs`, including the special spells' named `amounts` (Wildfire, Omen, Siphon, Moonwell, Lodestar, Rime). Rule logic and the remaining rule constants (named at the top of `rust/core/src/rules.rs`): edit Rust. Action descriptions are in `rust/core/src/text.rs` and use those same constants.
 2. Run `node tools/build.mjs`.
 3. Run `cargo test --release` (in `rust/`), `node tools/golden.mjs` (about 2 minutes) and `node --test setup/loadouts.test.mjs`. These check every transition, UI query, search and AI decision, natively and in WebAssembly.
 4. If the change is meant to alter play, run `node tools/golden.mjs update` and commit the new goldens with the change. Bump `RULES_VERSION` in `rust/core/src/lib.rs`.

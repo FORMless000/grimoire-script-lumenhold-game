@@ -33,16 +33,17 @@ pub fn describe(enc: &Encounter, s: &State, side: usize, a: Act) -> String {
         let c = x.channel;
         let holds = c.map_or(0, |c| c.holds);
         match sp {
-            Some(sp) if sp == ids.starlight => if release { format!("Deal {} spell damage.", dmg(sp, starlight_base(holds != 0))) }
-                else { format!("Charge the release to {} spell damage. Further Holds add no damage.", dmg(sp, STARLIGHT_CHARGED)) },
-            Some(sp) if sp == ids.wildfire => if release { format!("Deal {} spell damage.", dmg(sp, WILDFIRE_RELEASE + WILDFIRE_PER_HOLD * holds as f64)) }
-                else { format!("Deal {} spell damage to them and {} to yourself; the Release grows by {}.", dmg(sp, WILDFIRE_HOLD), js_num(WILDFIRE_SELF), dmg(sp, WILDFIRE_PER_HOLD)) },
+            Some(sp) if sp == ids.starlight => if release { format!("Deal {} spell damage{}.", dmg(sp, starlight_base(holds != 0)), if holds != 0 && data().amt(sp, "chargedWardPierce") >= 1.0 { "; Ward doesn't stop it" } else { "" }) }
+                else { format!("Charge the release to {} spell damage{}. Further Holds add no damage.", dmg(sp, starlight_base(true)), if data().amt(sp, "chargedWardPierce") >= 1.0 { " that Ward doesn't stop" } else { "" }) },
+            Some(sp) if sp == ids.wildfire => { let w = |key: &str| data().amt(sp, key);
+                if release { if holds > 0 { format!("Deal {} spell damage, plus {} from the Holds that gets through Guard and Ward.", dmg(sp, w("release")), dmg(sp, w("perHold") * holds as f64)) } else { format!("Deal {} spell damage.", dmg(sp, w("release"))) } }
+                else { format!("Deal {} spell damage to them and {} to yourself; the Release gains {} that gets through Guard and Ward.", dmg(sp, w("hold")), js_num(w("self")), dmg(sp, w("perHold"))) } },
             Some(sp) if sp == ids.siphon => if release { format!("Heal {} HP from damage dealt.", fmt2(c.map_or(0.0, |c| c.total))) }
-                else { format!("Deal {} spell damage; bank actual damage for healing.", dmg(sp, SIPHON_HIT)) },
+                else { format!("Deal {} spell damage; bank actual damage for healing.", dmg(sp, data().amt(sp, "hit"))) },
             Some(sp) if sp == ids.moonwell => if release { format!("Gain up to {} ready Mana, capped at capacity.", fmt2(c.map_or(0.0, |c| c.bank))) }
-                else { format!("Bank {} more Mana; Release makes it ready.", v(sp, MOONWELL_BANK, false)) },
+                else { format!("Bank {} more Mana; Release makes it ready.", v(sp, data().amt(sp, "bank"), false)) },
             Some(sp) if sp == ids.lodestar => if release { format!("Turn on a {}-point absorb pool, used up across hits.", fmt2(c.map_or(0.0, |c| c.bank))) }
-                else { format!("Bank {} more absorb.", v(sp, LODESTAR_BANK, true)) },
+                else { format!("Bank {} more absorb; the bank soaks up hits while you hold.", v(sp, data().amt(sp, "bank"), true)) },
             _ => String::new(),
         }
     };
@@ -94,11 +95,11 @@ pub fn describe(enc: &Encounter, s: &State, side: usize, a: Act) -> String {
         _ if sp == ids.haste => format!("For the next {} exchanges, commit {} basic actions as one bundle each exchange.", at(&spell.duration), at(&spell.actions)),
         _ if sp == ids.shadowstep => format!("Evade attacks and every opposing spell effect for {} exchanges including this one; breaks before the hits land on any exchange you attack or recover Mana.", at(&spell.duration)),
         _ if sp == ids.ward => "This exchange: block every opposing spell (damage, Torment, Extraction, Seal, Compel) and half of each Strike.".into(),
-        _ if sp == ids.starlight => format!("Start channel. Release for {} spell damage, or {} after a Hold. Holds cost {} Mana.", dmg(sp, starlight_base(false)), dmg(sp, starlight_base(true)), hold_cost()),
+        _ if sp == ids.starlight => format!("Start channel. Release for {} spell damage, or {} after a Hold{}. Holds cost {} Mana.", dmg(sp, starlight_base(false)), dmg(sp, starlight_base(true)), if data().amt(sp, "chargedWardPierce") >= 1.0 { ", which Ward doesn't stop" } else { "" }, hold_cost()),
         _ if sp == ids.seal => "Erase all opposing flux. Ward and Shadowstep stop it.".into(),
-        _ if sp == ids.wildfire => format!("Start channel. Each Hold: {} spell damage to them, {} to you, and +{} on the Release. Release: {} spell damage plus what the Holds added. Before defenses.",
-            dmg(sp, WILDFIRE_HOLD), js_num(WILDFIRE_SELF), dmg(sp, WILDFIRE_PER_HOLD), dmg(sp, WILDFIRE_RELEASE)),
-        _ if sp == ids.omen => format!("Public hit of {} spell damage before defenses two exchanges later.", dmg(sp, OMEN_HIT)),
+        _ if sp == ids.wildfire => { let w = |key: &str| data().amt(sp, key); format!("Start channel{}. Each Hold: {} spell damage to them, {} to you, and +{} on the Release that gets through Guard and Ward. Release: {} spell damage plus what the Holds added. Before defenses.",
+            if w("ignite") > 0.0 { format!(", dealing {} spell damage now", dmg(sp, w("ignite"))) } else { String::new() }, dmg(sp, w("hold")), js_num(w("self")), dmg(sp, w("perHold")), dmg(sp, w("release"))) },
+        _ if sp == ids.omen => format!("Public hit of {} spell damage before defenses two exchanges later{}.", dmg(sp, data().amt(sp, "hit")), match (data().amt(sp, "wardPierce") >= 1.0, data().amt(sp, "guardPierce") >= 1.0) { (true, true) if data().amt(sp, "bracePierce") >= 1.0 => "; only evading stops it", (true, true) => "; Guard and Ward don't stop it", (true, false) => "; Ward doesn't stop it", (false, true) => "; Guard doesn't stop it", _ => "" }),
         _ if sp == ids.sleight => "Steal up to 8 Crowns; alignment −tiny.".into(),
         _ if sp == ids.hoarfrost => format!("Deal {} cold spell damage before defenses; opposing Flame or Wildfire damage cancels with it.", ap(a)),
         _ if sp == ids.candour || sp == ids.quickquill || sp == ids.index => "No combat effect.".into(),
@@ -107,14 +108,14 @@ pub fn describe(enc: &Encounter, s: &State, side: usize, a: Act) -> String {
         _ if sp == ids.purify => format!("Pay {} HP; gain up to {} ready Mana, capped at capacity.", fmt2(hp_cost(enc, s, side, a)), v(sp, PURIFY_MANA, false)),
         _ if sp == ids.tailwind => format!("Next three exchanges: consecutive Strikes add {} damage that gets through Guard. Any other action ends the bonus.",
             (1..=3).map(|i| js_num((amount(enc, side, Some(sp), tailwind_step() * i as f64, true) - EPS).ceil())).collect::<Vec<_>>().join("/")),
-        _ if sp == ids.rime => format!("Arm once-per-fight rescue: first knockout freezes you through the following exchange, then you thaw with {} HP.", js_num(RIME_THAW_HP)),
+        _ if sp == ids.rime => format!("Arm once-per-fight rescue: first knockout freezes you through the following exchange, then you thaw with {} HP.", js_num(data().amt(ids.rime, "thaw"))),
         _ if sp == ids.reflect => { let n = dt.spells[sp].duration.as_ref().map_or(1.0, |v| v[0]); if n > 1.0 { format!("Return incoming damaging spells in full this exchange and the next {}; reflected hits cannot bounce again.", if n == 2.0 { "one".to_string() } else { js_num(n - 1.0) }) } else { "Return incoming damaging spells this exchange in full; reflected hits cannot bounce again.".into() } },
-        _ if sp == ids.moonwell => format!("Start channel: bank {} Mana now and {} per free Hold; Release makes it ready.", v(sp, MOONWELL_BANK, false), v(sp, MOONWELL_BANK, false)),
-        _ if sp == ids.lodestar => format!("Start channel: bank {} absorb now and {} per free Hold; Release turns on a pool used up across hits.", v(sp, LODESTAR_BANK, true), v(sp, LODESTAR_BANK, true)),
+        _ if sp == ids.moonwell => format!("Start channel: bank {} Mana now and {} per free Hold; Release makes it ready.", v(sp, data().amt(sp, "bank"), false), v(sp, data().amt(sp, "bank"), false)),
+        _ if sp == ids.lodestar => format!("Start channel: bank {} absorb now and {} per free Hold. The bank soaks up hits while you hold; Release turns what's left into a pool used up across hits.", v(sp, data().amt(sp, "bank"), true), v(sp, data().amt(sp, "bank"), true)),
         _ if sp == ids.toll => "Cards/story only; not a combat cast.".into(),
         _ if sp == ids.torment => format!("For three exchanges including this one, each opposing action pays {} HP, bypassing hit reductions. Ward and Shadowstep stop it.", dmg(sp, TORMENT_TOLL)),
         _ if sp == ids.extraction => format!("Move up to {} of their ready Mana into your flux; your Mana plus flux can't pass capacity. Ward and Shadowstep stop it.", v(sp, EXTRACTION_MANA, false)),
-        _ if sp == ids.siphon => format!("Start and each Hold deal {} spell damage before defenses. Release heals actual damage dealt; Holds cost {} Mana.", dmg(sp, SIPHON_HIT), hold_cost()),
+        _ if sp == ids.siphon => format!("Start and each Hold deal {} spell damage before defenses. Release heals actual damage dealt; Holds cost {} Mana.", dmg(sp, data().amt(sp, "hit")), hold_cost()),
         _ if sp == ids.compel => { let n = spell.duration.as_ref().map_or(2.0, |v| v[0]); if spell.immediate { format!("Their action this exchange becomes their last move, and so does their next {}: forced and shown in advance. If they can't repeat it, their turn is lost.", if n == 1.0 { "one".to_string() } else { format!("{} exchanges", js_num(n)) }) } else { format!("For the next {}, their action is replaced with their last legal public action. No history: cancel.", if n == 1.0 { "exchange".to_string() } else { format!("{} exchanges", js_num(n)) }) } }
         _ if sp == ids.eclipse => "This exchange and the next, damage you actually take also gives you twice that in ready Mana, capped at capacity.".into(),
         _ if sp == ids.heartprice => "For the rest of the fight, spell Mana costs are paid as HP at 1 HP per 2 Mana (healing still costs Mana); no flux from HP payments.".into(),

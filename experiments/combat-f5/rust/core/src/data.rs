@@ -34,6 +34,7 @@ struct RawSpell {
     release: Option<Vec<f64>>,
     exposes: Option<bool>,
     physical: Option<bool>,
+    amounts: Option<HashMap<String, f64>>,
 }
 
 #[derive(Deserialize)]
@@ -129,6 +130,8 @@ pub struct Spell {
     pub exposes: bool,
     /// A plain damage spell that lands like a Strike (Guard stops it, Ward halves it): creature attacks.
     pub physical: bool,
+    /// A special spell's named amounts (Wildfire's hold, self, release, perHold; Siphon's hit; Moonwell's and Lodestar's bank; Omen's hit).
+    pub amounts: HashMap<String, f64>,
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -189,6 +192,8 @@ impl Data {
     pub fn spell(&self, id: &str) -> Option<usize> { self.spell_index.get(id).copied() }
     pub fn act(&self, name: &str) -> Option<Act> { self.acts.index.get(name).copied() }
     pub fn name(&self, a: Act) -> &str { &self.acts.names[a as usize] }
+    /// A spell's named amount from the roster (`amounts`); 0 when the roster leaves it out.
+    pub fn amt(&self, sp: usize, key: &str) -> f64 { self.spells[sp].amounts.get(key).copied().unwrap_or(0.0) }
     pub fn is_spell(&self, a: Act) -> bool { (a as usize) < self.acts.n_spells }
 }
 
@@ -217,6 +222,7 @@ fn load() -> Data {
             release: s.release.clone(),
             exposes: s.exposes.unwrap_or(false),
             physical: s.physical.unwrap_or(false),
+            amounts: s.amounts.clone().unwrap_or_default(),
         });
     }
     let spell_index: HashMap<String, usize> = spells.iter().enumerate().map(|(i, s)| (s.id.clone(), i)).collect();

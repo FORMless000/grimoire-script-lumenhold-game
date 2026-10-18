@@ -47,7 +47,7 @@ Every number that grows with skill now uses one rule, anchored at skill 50: fact
 | Combat max HP (weighted skills, Vigor ×2) | 0.8 + skill/250, on 70 | 56 / 70 / 84 (+50% from 0 to 100; gentler so low-Vigor classes aren't squishy) |
 
 - **Class skill offsets** are now percentages of the level, and so is the jitter (±9%). F5.8's fixed points ×2 equal the new percentages at level 50. A class keeps its shape at every level, so a level-20 Brawler is as lopsided as a level-80 one.
-- **Named characters** already scaled by ratio (canon skills × level / their reference skill), and so does the main game's `npc_growth`.
+- **Named characters** scale by ratio, as the main game's `npc_growth` does: since F5.9c, canon skills × the factor that makes their mean skill the level (`scaleToMean`); F5.9–F5.9b used × level / their reference skill.
 
 Class matrix, depth 4, 2 seeds (1,260 fights per suite), class win rate at equal level:
 
@@ -217,8 +217,8 @@ A class's mean skill is its level, so a foe at level DC is as strong as the rung
 **The luck word** (`steady` / `wild`) changes nothing: the fight has its own variance.
 
 **Named foes:**
-- `vs npc.stat ±n` keeps the character's shape: their current skills (canon × the main game's `npc_growth`) × level / stat, so the named stat lands on the foe's level (`namedFoeSkills`).
-- A character on a generic rung (Tamsin in `rival_contest`) plays with their reference skill at the foe's level.
+- `vs npc.stat ±n` keeps the character's shape: their current skills (canon × the main game's `npc_growth`), scaled to a mean skill of the foe's level (`namedFoeSkills` → `scaleToMean`). A peer then spends a class's skill points at the same level, so the card's challenge level is their strength, as for any foe. (F5.9b put the named stat on the foe's level instead; the canon's low secondary skills left peers about 15 levels weaker than the card's DC.)
+- A character on a generic rung (Tamsin in `rival_contest`) plays at a mean skill of the foe's level the same way.
 - The man in grey has no canon skills: all of his are the level.
 
 **Is a matched rung fair?** `tools/player-study.mjs` puts the main game's balanced player (best, 2nd, average and weakest skills by month, from the 40-game measurements) against every class at E − 10, E and E + 10. An even rung's DC is E at any drift. The kit is the generated one at level E.
@@ -284,6 +284,45 @@ From `node tools/event-levels.mjs`:
 - **The man in grey distracted** (`ilse_grey_returns`, journeyman likely) is only level 23 against a player averaging 36–63. The stub's odds there are likely as well, so it matches the card, but the fight reads easy.
 
 ## 5. Named characters: strength and the worldbook
+
+**F5.9c: peers at their level, with signature spells that pull their weight.** Growing peers now play at a mean skill of the level (canon shape kept), and the channel and signature spells were buffed (rulebook, F5.9c). Same study at reference 50, 1 seed:
+
+| Peer | F5.9b | **F5.9c** | Mean skill | Notes |
+|---|---:|---:|---:|---|
+| Ilse | 35 | **55** | 50 | Rime and Arcana 95. |
+| Lyra | 35 | **50** | 50 | Wildfire is now worth +13 to her (`tools/spell-value.mjs`), and she Holds it. |
+| Bram | 36 | **50** | 50 | |
+| Tobias | 31 | **47** | 50 | Heartwood +27: he leans on it (8% without it). |
+| Kael | 35 | **46** | 50 | Hoarfrost +5. |
+| Seraphine | 30 | **45** | 50 | Omen +20, Starlight +5; Vigor 24, so little HP. |
+| Mir | 34 | **39** | 50 | Contraption +12, but Charm 38, Vigor 27. |
+| Tamsin | 34 | **39** | 50 | Charm 71 drives no combat spell; Glamour has no combat effect. |
+| Corvin | 30 | **37** | 50 | Guile 89 (Shadowstep only); Sleight has no combat effect. |
+| Nessa | 27 | **35** | 50 | Charm 79; Candour has no combat effect. |
+
+The fighters (Ilse, Lyra, Bram) sit at their level; the Charm- and Guile-heavy peers stay 10–15 below, the Showman's problem: Charm drives no combat spell. The F5.9b study below is kept for the record.
+
+**Spell value** (`node tools/spell-value.mjs`): the holder (engine AI) plays every class at levels 35/50/65, with the spell and without it; the gap is the spell's worth.
+
+| Spell | Holder | F5.9b value | **F5.9c value** | F5.9c casts / Holds a fight |
+|---|---|---:|---:|---|
+| Wildfire | Lyra | +3 | **+13** | 1.2 / 0.6 |
+| Heartwood | Tobias | 0 | **+27** | 2.7 / – |
+| Omen | Seraphine | +2 | **+20** | 2.4 / – |
+| Contraption | Mir | 0 | **+12** | 1.1 / – |
+| Hoarfrost | Kael | −2 | **+5** | 4.4 / – |
+| Starlight | Seraphine | +3 | **+5** | 0.3 / 0.1 |
+| Rime | Ilse | −3 | **+5** | 0.6 / – |
+| Moonwell | Healer | −7 | **+13** | 1.4 / 0.1 |
+| Lodestar | Bram | 0 | **+8** | 0.8 / 2.2 |
+| Siphon | Hollow adept | +2 | **−2** | 1.2 / 1.6 |
+| Compel | the man in grey | +2 | +4 (unchanged) | 4.3 / – |
+
+60 fights a row (final F5.9c numbers), so ±6 is noise. Siphon is used now but still adds nothing measurable; Compel wasn't changed (the man in grey's weakness is his kit, not the spell).
+
+**Classes** (suite `F59D2`, depth 4, 2 seeds): 40–57% (sd 5, was 4), gaps 75/89/98%. Scholar 57% (Starlight is its extra; at 7 Mana it reached 63%, so Starlight stays 9), Hollow adept 54% (Siphon, Moonwell), Duellist lowest at 40% (34% at levels 60–80).
+
+### F5.9b study
 
 Each character played every class at levels 10–90: depth 4, the suite's fallible AIs, both leaders, 2 seeds, F5.9b kits. Growing peers played at reference skill 50 (canon ratios kept, study year 2); fixed characters played at their canon skills. The **equivalent class level** is where the classes' win rate crosses 50%. F5.9's numbers, with the old rank steps at 44 and 68, are in brackets.
 

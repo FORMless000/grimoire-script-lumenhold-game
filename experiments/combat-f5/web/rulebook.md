@@ -1,6 +1,6 @@
 # Combat: spell redesign v2 (F5)
 
-## F5 rule changes (spells-v2 F5.9b · 2026-10-18; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5–F5.9b its follow-ups, all below)
+## F5 rule changes (spells-v2 F5.9c · 2026-10-18; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5–F5.9c its follow-ups, all below)
 
 These override anything below that disagrees.
 
@@ -12,9 +12,10 @@ These override anything below that disagrees.
 
 **Mend** heals 25/26/27 at par at the end of the exchange, but only if you took no damage that exchange.
 
-**Wildfire:**
-- each Hold deals 14 to them and a fixed 4 to you;
-- the Release deals 36, plus 5 per Hold.
+**Wildfire** (F5.9c):
+- the cast deals 8 at once;
+- each Hold deals 14 to them and a fixed 3 to you, and adds 7 embers to the Release;
+- the Release deals 36, plus the embers, which get through Guard and Ward.
 
 **Extraction** moves up to 9 of their ready Mana into your flux, and your Mana plus flux can't pass capacity.
 
@@ -97,6 +98,21 @@ These override anything below that disagrees.
   - each line ends with the result: "Lyra takes 11 damage", "You regain 5 Mana", "Lyra can't be hit for 2 exchanges".
 
   The core reports every hit (`hit`: raw power, damage dealt, the defences that touched it) and every Mana move (`moved`: Extraction, Seal, Distil) for this.
+
+**F5.9c, channels and signature spells, and peers at their level:**
+- **Peers play at their level.** A growing character's canon skills are scaled to a mean of the level, keeping their shape (`scaleToMean`, `setup/roster.mjs`), so they spend a class's skill points at the same level, and a card foe's challenge level is their strength directly. Points capped at 100 go to the other skills. (F5.9b set their reference skill to the level, which left peers about 15 levels weaker.) Faculty and villagers still play their canon skills.
+- **Signature and channel spells were worth almost nothing** to the engine: taking one out of its holder's kit changed its win rate by −7 to +3 points (`tools/spell-value.mjs`). Each now has a reason to cast it, and Holding a channel buys something:
+  - **Wildfire:** above.
+  - **Starlight:** a Release after a Hold deals 64 (was 60), and Ward doesn't stop it. (At 7 Mana it lifted Scholar, whose extra it is, to 63%; it stays 9.)
+  - **Omen:** 8 Mana (was 10), a 44 hit (was 40). The foretold hit gets through Guard, Ward and Brace: only evading stops it. (Telegraphed two exchanges ahead, it used to land 3% of its damage: the opponent timed a Brace or Shadowstep.)
+  - **Hoarfrost:** 7 Mana (was 9), 22 damage (was 18).
+  - **Heartwood:** heals 5 an exchange (was 3), with 3 damage reduction (was 2).
+  - **Contraption:** 10 Mana (was 12); hits for 12 (was 8), takes 24 damage to break (was 16), bursts for 8 (was 6).
+  - **Lodestar:** the bank soaks up hits while you hold it, not only after the Release.
+  - **Moonwell:** banks 16 Mana a Hold (was 12).
+  - **Siphon:** Holds cost 3 Mana (was 6) and hit for 18 (was 14).
+  - **Rime:** you thaw with 24 HP (was 12).
+- **The special spells' amounts are roster data** (`amounts` in `SPELLS`, `setup/roster.mjs`), not Rust constants, so `tools/arms.mjs` variants can tune them.
 
 **Kits:** Glamour, Rapport, Sleight, Index and Quickquill are out of combat kits (no combat effect). Scholar's extras are Starlight and Seal; Illusionist's are Reflect and Rapport.
 

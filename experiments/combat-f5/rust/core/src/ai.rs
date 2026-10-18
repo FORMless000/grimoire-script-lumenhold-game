@@ -66,13 +66,13 @@ pub fn move_value(enc: &Encounter, s: &State, side: usize, id: Act) -> f64 {
     if id == k.hold {
         let c = a.channel.unwrap();
         return if c.spell == ids.moonwell { 6.0 } else if c.spell == ids.lodestar { 5.0 } else if c.spell == ids.starlight { if c.holds != 0 { 0.0 } else { 15.0 } }
-            else if c.spell == ids.wildfire { damage_power(enc, side, ids.wildfire, 19.0) - 4.0 } else if c.spell == ids.siphon { damage_power(enc, side, ids.siphon, 4.0) } else { 0.0 };
+            else if c.spell == ids.wildfire { damage_power(enc, side, ids.wildfire, d.amt(ids.wildfire, "hold") + d.amt(ids.wildfire, "perHold")) - d.amt(ids.wildfire, "self") } else if c.spell == ids.siphon { damage_power(enc, side, ids.siphon, 4.0) } else { 0.0 };
     }
     if id == k.release {
         let c = a.channel.unwrap();
         return if c.spell == ids.moonwell { c.bank.min(enc.sides[side].capacity - a.res[R_MANA]) * 0.3 } else if c.spell == ids.lodestar { c.bank * 0.5 }
             else if c.spell == ids.starlight { damage_power(enc, side, ids.starlight, if c.holds != 0 { 18.0 } else { 9.0 }) }
-            else if c.spell == ids.wildfire { damage_power(enc, side, ids.wildfire, 36.0 + 5.0 * c.holds as f64) }
+            else if c.spell == ids.wildfire { damage_power(enc, side, ids.wildfire, d.amt(ids.wildfire, "release") + d.amt(ids.wildfire, "perHold") * c.holds as f64) }
             else if c.spell == ids.siphon { c.total.min(a.max_hp - a.hp) * 0.85 } else { 0.0 };
     }
     let attack = attack_power(enc, s, side, id);

@@ -30,13 +30,15 @@ test('ten generic presets follow fixed level gates, course ranks, restrictions a
  }
  assert.notDeepEqual(generateLoadout('Duellist',50).draws,generateLoadout('Scholar',50).draws);
 });
-test('worldbook snapshot is current; named skills are fixed or preserve their canon ratios',()=>{
+test('worldbook snapshot is current; named skills are fixed or keep their canon shape at a mean of the level',()=>{
  const hash=crypto.createHash('sha256').update(fs.readFileSync(new URL('../../../content/world/cast.grim',import.meta.url))).digest('hex');assert.equal(CAST_STATS_HASH,hash);
  assert.equal(Object.keys(NAMED_LOADOUTS).length,22);
  for(const [name,def]of Object.entries(NAMED_LOADOUTS)){
   if(!def.npc)continue;const canon=CAST_STATS[def.npc];
   if(def.fixed){const a=generateLoadout(name,1),b=generateLoadout(name,100);assert.deepEqual(a,b);assert.deepEqual(a.skills,canon.skills);const top=Object.values(canon.skills).sort((a,b)=>b-a);assert.equal(a.level,Math.floor((top[0]+top[1])/2));}
-  else{const a=generateLoadout(name,canon.skills[def.reference]);assert.deepEqual(a.skills,canon.skills);assert.equal(generateLoadout(name,80).skills[def.reference],80);}
+  // Growing characters: mean skill = level (the class rule), canon shape kept; capped points move to the other skills.
+  else for(const level of [10,30,50,70,95]){const k=generateLoadout(name,level).skills,v=LOADOUT_SKILLS.map(s=>k[s]),mean=v.reduce((a,b)=>a+b)/6,sum=LOADOUT_SKILLS.reduce((a,s)=>a+canon.skills[s],0);
+   assert(Math.abs(mean-level)<=.5,name+' '+level+' mean '+mean);if(Math.max(...v)<100)for(const s of LOADOUT_SKILLS)assert(Math.abs(k[s]-canon.skills[s]*6*level/sum)<=.5+1e-9,name+' '+level+' '+s);}
  }
  assert.equal(fixedLoadoutLevel('Thorne'),81);assert.equal(fixedLoadoutLevel('Grisk'),64);assert(generateLoadout('The man in grey',28).provisionalSkills);
  const exact={arcana:40,lore:20,alchemy:10,charm:25,vigor:30,guile:15};assert.deepEqual(generateLoadout('Lyra',40,'kit',{skills:exact}).skills,exact);

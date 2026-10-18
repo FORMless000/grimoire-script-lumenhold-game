@@ -1,4 +1,4 @@
-# Bringing the combat minigame into Lumenhold (design, F5.9b)
+# Bringing the combat minigame into Lumenhold (design, F5.9c)
 
 How a card's fight becomes a played minigame and how it feeds back into the game. The numbers live in `COMBAT_TUNING` (`setup/roster.mjs`) and `content/core/balance.grim`. This doc gives the shape and the reasons, and the measured effects as of F5.4–F5.7 (2026-10-17). The step-by-step plan for implementing it is `HANDOFF.md`.
 
@@ -71,7 +71,7 @@ For scale (`balance.grim`): medium is 10 Health, large 16 and huge 25, and a nig
 
 ## 4. Opponents
 
-- **Named characters** use their canon skills (`cast-stats.mjs`, from `content/world/cast.grim`) and fixed or growing levels (`NAMED_LOADOUTS`).
+- **Named characters** use their canon skills (`cast-stats.mjs`, from `content/world/cast.grim`) and fixed or growing levels (`NAMED_LOADOUTS`). A growing peer's skills are scaled to a mean of the fight's level, keeping their shape (`scaleToMean`), so the card's challenge level sets their strength.
 - **Generic foes** use the ten class presets (pools by archetype) or special loadouts at a level set by the card: its rung mapped to a level near the player's expected skill for the month, level = the card's own DC as the engine computes it, plus the odds word's shift (`challengeDC`, `foeLevel`, `setup/foes.mjs`). Every current card's foe, context and edits are in `EVENTS.md`.
 - **The AI** searches 5 exchanges ahead and plays at the player's difficulty (Easy, Medium, Hard or Engine, `AI_PRESETS`) with the foe's persona (`PERSONAS`): see `EVENTS.md` §3.
 - Their Health and Mana are full unless the story says otherwise (`opponentCondition`).

@@ -54,14 +54,14 @@ export const SPELLS={
  shadowstep:spell('Shadowstep','Umbral Theory',['guile'],[8,10,12],{verb:'Step',duration:[1,2,2],negotiation:'Leave and settle progress.'}),
  ward:spell('Ward','Orientation safety talk',[],[7],{verb:'Ward',baseline:true,negotiation:'None.'}),
  animate:spell('Animate','Artifice (hidden)',['alchemy','arcana'],[14],{verb:'Animate',construct:true,negotiation:'Later.'}),
- starlight:spell('Starlight','Starcalling (hidden)',['lore'],[9],{verb:'Illuminate',release:[36,60],channel:true,holdCost:2,negotiation:'+2 Patience.'}),
+ starlight:spell('Starlight','Starcalling (hidden)',['lore'],[9],{verb:'Illuminate',release:[36,64],channel:true,holdCost:2,amounts:{chargedWardPierce:1},negotiation:'+2 Patience.'}),
  seal:spell('Seal','Hollow Studies (hidden)',['guile'],[8],{verb:'Seal',negotiation:'None.'}),
- wildfire:spell('Wildfire',"Lyra's capstone",['arcana'],[8],{verb:'Burn',channel:true,holdCost:2,negotiation:'Fails the meeting.'}),
+ wildfire:spell('Wildfire',"Lyra's capstone",['arcana'],[8],{verb:'Burn',channel:true,holdCost:2,amounts:{ignite:8,hold:14,self:3,release:36,perHold:7},negotiation:'Fails the meeting.'}),
  heartwood:spell('Heartwood',"Tobias's capstone",['vigor'],[14],{verb:'Root',construct:true,negotiation:'None.'}),
- omen:spell('Omen',"Seraphine's capstone",['lore'],[10],{verb:'Foretell',negotiation:'None.'}),
+ omen:spell('Omen',"Seraphine's capstone",['lore'],[8],{verb:'Foretell',amounts:{hit:44,wardPierce:1,guardPierce:1,bracePierce:1},negotiation:'None.'}),
  sleight:spell('Sleight',"Corvin's capstone",['guile'],[4],{verb:'Lift',alignment:'tiny',negotiation:'Steal 5 Crowns.'}),
- contraption:spell('Contraption',"Mir's capstone",['alchemy'],[12],{verb:'Build',construct:true,negotiation:'Later.'}),
- hoarfrost:spell('Hoarfrost',"Kael's capstone",['arcana'],[9],{verb:'Freeze',damage:[18],negotiation:'Fails the meeting.'}),
+ contraption:spell('Contraption',"Mir's capstone",['alchemy'],[10],{verb:'Build',construct:true,negotiation:'Later.'}),
+ hoarfrost:spell('Hoarfrost',"Kael's capstone",['arcana'],[7],{verb:'Freeze',damage:[22],negotiation:'Fails the meeting.'}),
  candour:spell('Candour',"Nessa's capstone",['charm'],[6],{verb:'Confess',negotiation:'−3 Suspicion; following Quickquill adds Agreement/alignment/event flag.'}),
  brace:spell('Brace','Duelling Circle',['vigor'],[10],{verb:'Brace',negotiation:'None.'}),
  quickquill:spell('Quickquill','Lumen Ledger',['guile'],[4],{verb:'Scribble',negotiation:'Next Confront raises no pressure.'}),
@@ -71,14 +71,14 @@ export const SPELLS={
  purify:spell('Distil','Apothecary Clerk',['alchemy'],[0],{verb:'Distil',hpCost:20,negotiation:'None.'}),
  tailwind:spell('Tailwind','Broom Courier',['vigor'],[5],{verb:'Surge',damage:[4],negotiation:'None.'}),
  // Skill assignments below are provisional: the supplied pool tables omit them.
- rime:spell('Rime','Hidden pool',['arcana'],[4],{verb:'Freeze',group:'hidden',provisionalSkill:true,negotiation:'None.'}),
+ rime:spell('Rime','Hidden pool',['arcana'],[4],{verb:'Freeze',group:'hidden',amounts:{thaw:24},provisionalSkill:true,negotiation:'None.'}),
  reflect:spell('Reflect','Hidden pool',['lore'],[8],{verb:'Reflect',duration:[2],group:'hidden',provisionalSkill:true,negotiation:'This Confront: +2 Agreement and +2 pressure.'}),
- moonwell:spell('Moonwell','Hidden pool',['alchemy'],[0],{verb:'Gather',group:'hidden',channel:true,holdCost:0,provisionalSkill:true,negotiation:'None.'}),
- lodestar:spell('Lodestar','Hidden pool',['lore'],[4],{verb:'Gather',group:'hidden',channel:true,holdCost:0,provisionalSkill:true,negotiation:'None.'}),
+ moonwell:spell('Moonwell','Hidden pool',['alchemy'],[0],{verb:'Gather',group:'hidden',channel:true,holdCost:0,amounts:{bank:16},provisionalSkill:true,negotiation:'None.'}),
+ lodestar:spell('Lodestar','Hidden pool',['lore'],[4],{verb:'Gather',group:'hidden',channel:true,holdCost:0,amounts:{bank:16},provisionalSkill:true,negotiation:'None.'}),
  toll:spell('Toll','Hidden pool',[],[0],{verb:'Toll',group:'hidden',castable:false,negotiation:'Cards/story only.'}),
  torment:spell('Torment','Forbidden pool',['guile'],[14],{verb:'Torment',group:'forbidden',duration:[3],provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  extraction:spell('Extraction','Forbidden pool',['arcana'],[10],{verb:'Extract',group:'forbidden',provisionalSkill:true,negotiation:'Underground mind-reading later; otherwise fails with consequences.'}),
- siphon:spell('Siphon','Forbidden pool',['alchemy'],[12],{verb:'Siphon',group:'forbidden',channel:true,holdCost:6,provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
+ siphon:spell('Siphon','Forbidden pool',['alchemy'],[12],{verb:'Siphon',group:'forbidden',channel:true,holdCost:3,amounts:{hit:18},provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  compel:spell('Compel','Forbidden pool',['guile'],[16],{verb:'Compel',group:'forbidden',duration:[1],immediate:true,provisionalSkill:true,negotiation:'Underground: 1 Agreement without Suspicion; otherwise fails with consequences.'}),
  eclipse:spell('Eclipse','Forbidden pool',['arcana'],[6],{verb:'Convert',group:'forbidden',provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  heartprice:spell('Heartprice','Forbidden pool',['vigor'],[0],{verb:'Sacrifice',group:'forbidden',provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
@@ -92,9 +92,9 @@ for(const s of Object.values(SPELLS)){
 }
 export const CONSTRUCTS={
  animate:{action:'strike',power:10,reduction:1,threshold:20,maxExchanges:4},
- heartwood:{action:'heal',power:3,reduction:2,threshold:24,maxExchanges:4},
+ heartwood:{action:'heal',power:5,reduction:3,threshold:24,maxExchanges:4},
  bramble:{action:'spell',power:6,reduction:1,threshold:20,maxExchanges:4},
- contraption:{action:'spell',power:8,reduction:0,threshold:16,burst:6,maxExchanges:3}
+ contraption:{action:'spell',power:12,reduction:0,threshold:24,burst:8,maxExchanges:3}
 };
 export const CONTEXTS={
  practice_duel:{health:.8,mood:.8,renown:.8,mana:.8,crowns:0,alignment:0},
@@ -148,6 +148,19 @@ function spellUnlocks(def,named,growing,year){
  if(def.underground)for(const [i,id]of priority(def.forbidden).filter(id=>!levels[id]).slice(0,g.forbidden.length).entries())grant(id,g.forbidden[i]);
  return levels;
 }
+// A character at level L (F5.9c): their canon skills scaled to a mean of L, so they spend a class's skill points at the
+// same level and the card's challenge level sets their strength directly (F5.9b scaled the reference skill to L instead,
+// and the canon's low secondary skills left peers ~15 levels weaker). Their shape is kept; points capped at 100 go to
+// the other skills, in proportion.
+export function scaleToMean(skills,level){
+ const keys=Object.keys(skills),target=level*keys.length,fixed={};
+ for(let pass=0;pass<keys.length;pass++){
+  const free=keys.filter(k=>!(k in fixed)),left=target-Object.values(fixed).reduce((a,b)=>a+b,0),sum=free.reduce((a,k)=>a+skills[k],0);
+  const over=free.filter(k=>skills[k]*left/sum>100);if(!over.length)return Object.fromEntries(keys.map(k=>[k,k in fixed?fixed[k]:cap(Math.round(skills[k]*left/sum),1,100)]));
+  for(const k of over)fixed[k]=100;
+ }
+ return Object.fromEntries(keys.map(k=>[k,100]));
+}
 export function generateLoadout(loadout,level,access='kit',options={}){
  const named=NAMED_LOADOUTS[loadout],special=SPECIAL_LOADOUTS[loadout],base=LOADOUTS[loadout]??named??special;
  if(!base||!Number.isInteger(level)||level<1||level>100||!['kit','all'].includes(access))throw Error('Choose loadout, level 1–100, and kit/all access.');
@@ -159,10 +172,9 @@ export function generateLoadout(loadout,level,access='kit',options={}){
  const seed=level+1000*def.salt,source=levelRng(seed),draws=[],rng=()=>{const n=source();draws.push(n);return n;};
  let skills;
  if(named){
-  // The bench has a level rather than a campaign turn. Preserve the canon stat
-  // ratios, setting its documented relevant stat to L. An encounter adapter can
-  // instead supply the exact current worldbook/Engine.statOf skill values.
-  skills=options.skills?{...options.skills}:canon?Object.fromEntries(LOADOUT_SKILLS.map(k=>[k,cap(Math.round(canon.skills[k]*(growing?level/canon.skills[def.reference]:1)),1,100)])):Object.fromEntries(LOADOUT_SKILLS.map(k=>[k,level]));
+  // The bench has a level rather than a campaign turn: a growing character keeps the canon stat ratios at a mean skill
+  // of L (scaleToMean); fixed ones play their canon skills. An encounter adapter can instead supply exact skill values.
+  skills=options.skills?{...options.skills}:canon?growing?scaleToMean(Object.fromEntries(LOADOUT_SKILLS.map(k=>[k,canon.skills[k]])),level):{...canon.skills}:Object.fromEntries(LOADOUT_SKILLS.map(k=>[k,level]));
  }else{
   // F5.9: offsets are percentages of the level (F5.8 and before: fixed points; ×2 converts at level 50), and so is the
   // jitter (±9%), so a class keeps its shape at every level: a level-20 Brawler is as lopsided as a level-80 one.

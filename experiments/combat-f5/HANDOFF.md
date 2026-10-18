@@ -4,7 +4,7 @@ For the agent who wires `experiments/combat-f5/` into the main game. Read this, 
 
 ## Where things stand (2026-10-17)
 
-- **The minigame is canon as of `spells-v2 F5.9b`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
+- **The minigame is canon as of `spells-v2 F5.9c`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
   1. `node experiments/combat-f5/tools/build.mjs`
   2. `PORT=61096 node experiments/combat-f5/out/site/server.mjs`
 - **One implementation per function.**
@@ -127,7 +127,8 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 ## Known open issues
 
 - **F5.9's linear scaling shortened low-level fights** (14 exchanges at level 20, was 20) and weakened Brawler and Sailor at levels 20–30 (33–42%). Strike no longer scales faster than spells. See `EVENTS.md` §2 for levers.
-- **Named characters' strength is set by spell ranks more than stats** (`EVENTS.md` §5): Lyra isn't clearly ahead of her peers, and Thorne is too weak for his canon. Calibrate against the player's equivalent class level, which hasn't been measured yet.
+- **Named characters** (`EVENTS.md` §5): since F5.9c, peers play at a mean skill of their level, so the card's DC is their strength. Ilse, Lyra and Bram sit at their level (equivalent 50–55 at 50); the Charm- and Guile-heavy peers (Tamsin, Corvin, Nessa) and Mir stay 10–15 below, because Charm drives no combat spell. Thorne is still too weak for his canon (faculty play their canon skills). Lyra isn't ahead of Bram and Ilse.
+- **Duellist is lowest after F5.9c** (40%, 34% at levels 60–80; suite `F59D2`): the other classes' extras got stronger (Starlight, Moonwell, Siphon), its kit didn't.
 - **The Shadow stag** is even overall (classes 51%) but stronger at levels 20–40 than from 50.
 
 - **Shadowstep then Mend** is the most common two-action sequence in high-level fights, and it's the game's main comeback. Switches that end it are built in but off: `SPELLS.mend.exposes` and `COMBAT_TUNING.shadowstep.breakOnCast`. Turning them on removed the back-and-forth (`rulebook.md`, F5.5). If players find it dull, give the opponent an answer to it rather than removing it.

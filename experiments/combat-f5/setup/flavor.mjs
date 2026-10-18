@@ -33,7 +33,7 @@ export const FLAVOR={
  seal:{cast:['{name} {v:twists|twist} a hand, snuffing out the loose magic around {foe}.']},
 
  // Peer capstones
- wildfire:{cast:['A cluster of flames sparks to life before {name}.'],hold:'The cluster of flames enlarges before {name}, radiating fiery sparks.',release:'The wildfire breaks loose from {name} and sweeps over {foe}.',ko:'{foe} {fv:falls|fall} before {name’s} wildfire.'},
+ wildfire:{cast:['A cluster of flames sparks to life before {name} and lashes out at {foe}.'],hold:'The cluster of flames enlarges before {name}, radiating fiery sparks.',release:'The wildfire breaks loose from {name} and sweeps over {foe}.',ko:'{foe} {fv:falls|fall} before {name’s} wildfire.'},
  heartwood:{cast:['A sapling bursts from the floor beside {name}, ready to shelter and mend.'],end:'{name’s} sapling withers back into the floor.'},
  omen:{cast:['{name} {v:speaks|speak} an omen over {foe}: it will strike in two exchanges.'],end:'The omen {name} spoke comes true and strikes {foe}.'},
  sleight:{cast:['{name} {v:slips|slip} a hand into {foe’s} purse in passing.']},
@@ -116,7 +116,7 @@ export const ATTACK_LINES={
  flame:{evaded:'{name’s} fireball passes through the shadows where {foe} stood.',warded:'{name’s} fireball splashes against {foe’s} ward and fizzles out.',guarded:'{foe} {fv:takes|take} {name’s} fireball on crossed arms, smothering half the burn.',braced:'{foe} {fv:plants|plant} {fpos} feet and {fv:weathers|weather} {name’s} fireball.',reflected:'{name’s} fireball bounces off {foe’s} mirror sheen and flies back at {name}.'},
  hoarfrost:{evaded:'{name’s} frost lance flies through the shadows where {foe} stood.',warded:'{name’s} frost lance shatters on {foe’s} ward.',guarded:'{foe} {fv:knocks|knock} {name’s} frost lance aside, taking half the chill.',reflected:'{name’s} frost lance glances off {foe’s} mirror sheen and turns back on {name}.'},
  gore:{evaded:'{name} {v:charges|charge} into the shadows and finds no one there.',guarded:'{foe} {fv:catches|catch} {name’s} antlers on a raised guard.',warded:'{name’s} antlers drive into {foe’s} ward, which takes half the charge.',braced:'{foe} {fv:meets|meet} {name’s} charge braced and {fv:holds|hold} firm.'},
- wildfire:{evaded:'{name’s} wildfire sweeps through the shadows where {foe} stood.',warded:'{name’s} wildfire breaks against {foe’s} ward and burns out.',guarded:'{foe} {fv:shields|shield} {fpos} face from {name’s} wildfire, taking half of it.',reflected:'{name’s} wildfire rolls off {foe’s} mirror sheen and back over {name}.'},
+ wildfire:{embers:'{foe’s} defences stop the heart of {name’s} wildfire, but its embers burn through.',evaded:'{name’s} wildfire sweeps through the shadows where {foe} stood.',warded:'{name’s} wildfire breaks against {foe’s} ward and burns out.',guarded:'{foe} {fv:shields|shield} {fpos} face from {name’s} wildfire, taking half of it.',reflected:'{name’s} wildfire rolls off {foe’s} mirror sheen and back over {name}.'},
  starlight:{evaded:'{name’s} beam of starlight lights up empty shadows.',warded:'{name’s} beam of starlight scatters on {foe’s} ward.',guarded:'{foe} {fv:turns|turn} {fpos} guard to {name’s} starlight, taking half of it.',reflected:'{name’s} starlight bounces off {foe’s} mirror sheen straight back at {name}.'}
 };
 const ATTACK_DEFENDED={evaded:'{foe} {fv:is|are} in the shadows: {name’s} {noun} passes straight through.',warded:'{foe’s} ward stops {name’s} {noun}.',guarded:'{foe} {fv:takes|take} {name’s} {noun} on a raised guard.',tiredGuard:'{foe’s} tired guard lets part of {name’s} {noun} through.',braced:'{foe} {fv:weathers|weather} {name’s} {noun} in a braced stance.',reflected:'{foe’s} mirror sheen throws {name’s} {noun} back at {name}.',absorbed:'{foe’s} shield soaks up part of {name’s} {noun}.',frozen:'{foe} {fv:is|are} frozen in rime, and {name’s} {noun} can’t touch {foe}.'};
@@ -153,7 +153,8 @@ export function resolvedLines(before,after,r,names=['the player','the opponent']
   let usedHead=false;
   for(const [aid,hits]of Object.entries(byId)){
    const dealt=hits.reduce((n,e)=>n+e.amount,0),def=hits.map(e=>defence(e.by)).find(Boolean);
-   const special=def&&(ATTACK_LINES[aid]?.[def]??(def==='tiredGuard'?ATTACK_LINES[aid]?.guarded:null));
+   // Wildfire's embers (F5.9c) get through Guard and Ward, so a defended Release can still burn.
+   const special=def&&(def!=='evaded'&&def!=='reflected'&&dealt>0&&ATTACK_LINES[aid]?.embers&&hits.length>1?ATTACK_LINES[aid].embers:ATTACK_LINES[aid]?.[def]??(def==='tiredGuard'?ATTACK_LINES[aid]?.guarded:null));
    const line=def?special??ATTACK_DEFENDED[def].replaceAll('{noun}',ATTACK_NOUN[aid]??'attack'):null;
    const own=aid===spell||aid==='strike'&&id?.startsWith('bundle:');
    if(line)parts.push(F(line));else if(own&&!usedHead&&head){parts.push(head);usedHead=true;}else if(!own)parts.push(F(`{name’s} ${ATTACK_NOUN[aid]??'attack'} hits {foe}.`));

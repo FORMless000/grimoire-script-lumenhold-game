@@ -9,7 +9,7 @@
 //   context  the fight's stakes (CONTEXTS); default from the card's kind (combat → real_conflict, duel → practice_duel)
 //   start    {hp, mana} shares the foe starts with (createState's opponentStart, no condition floors), for a foe hurt before
 //            the fight; unused so far: a card's rung and odds word already price circumstances, so don't count them twice
-import {LOADOUTS,NAMED_LOADOUTS,SPECIAL_LOADOUTS} from './roster.mjs';
+import {LOADOUTS,NAMED_LOADOUTS,SPECIAL_LOADOUTS,scaleToMean} from './roster.mjs';
 
 // Personas: points added to an action's value when the AI chooses (about 4 points = 1 HP of lead), so it favours these
 // even when slightly worse, never past its maxRegret. Applied by every preset but engine (AI_PRESETS), scaled by its tiltScale.
@@ -150,10 +150,11 @@ export const defaultDrift=cardClass=>cardClass==='story'?'none':['milestone','cr
 // {base: the rung's DC or the character's stat, rungs: ±n, drift: word, expected: E(turn)} → the DC.
 export function challengeDC({base,rungs=0,drift='high',expected,rungStep=4}){const b=base+rungs*rungStep;return b+(DRIFT[drift]??0)*(expected-b);}
 export function foeLevel({dc,nature='even'}){return Math.max(1,Math.min(100,Math.round(dc+(NATURE_LEVELS[nature]??0))));}
-// A character named by `vs npc.stat ±n` keeps their shape: their current skills (canon × the main game's npc_growth) × level/stat,
-// so the named stat lands on the foe's level. A character on a generic rung (Tamsin in rival_contest) plays with their
-// reference skill at the foe's level, as generateLoadout already does.
-export const namedFoeSkills=(skills,stat,level)=>Object.fromEntries(Object.entries(skills).map(([k,v])=>[k,Math.max(1,Math.min(100,Math.round(v*level/skills[stat])))]));
+// A character named by `vs npc.stat ±n` keeps their shape: their current skills (canon × the main game's npc_growth),
+// scaled to a mean skill of the foe's level (scaleToMean, as generateLoadout does), so the card's challenge level is their
+// strength, as it is a class's. `stat` stays in the signature for the card's record; F5.9b set that stat to the level,
+// which left a character about 15 levels weaker than the card's DC.
+export const namedFoeSkills=(skills,stat,level)=>scaleToMean(skills,level);
 
 // Every loadout a foe names must exist (checked by tools/event-coverage.mjs).
 export const foeLoadouts=()=>Object.values(FOES).flatMap(f=>f.pool?POOLS[f.pool]:[f.loadout]).filter(l=>!l.startsWith('('));

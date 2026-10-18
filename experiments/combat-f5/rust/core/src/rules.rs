@@ -6,20 +6,14 @@ use serde_json::{json, Map, Value};
 pub const EPS: f64 = 1e-9;
 /// Brace blocks 100%, then 50%, 25% and 25% of opposing damage.
 pub const BRACE_BLOCK: [f64; 4] = [1.0, 0.5, 0.25, 0.25];
-/// Wildfire: each Hold deals `hold` now, costs the caster `self_damage` (unscaled), and grows the Release by `per_hold`.
-pub const WILDFIRE_HOLD: f64 = 14.0;
-pub const WILDFIRE_SELF: f64 = 4.0;
-pub const WILDFIRE_RELEASE: f64 = 36.0;
-pub const WILDFIRE_PER_HOLD: f64 = 5.0;
+/// The special spells' amounts live in the roster (`amounts`, setup/roster.mjs): Wildfire's hold, self, release and perHold
+/// (Hold deals `hold` and costs the caster `self` unscaled; the Release deals `release` + `perHold` a Hold), Siphon's hit,
+/// Moonwell's and Lodestar's bank, Omen's hit.
+#[inline] fn amt(sp: usize, key: &str) -> f64 { data().amt(sp, key) }
 pub const STRIKE_DAMAGE: f64 = 9.0;
-pub const RIME_THAW_HP: f64 = 12.0;
 pub const DECISION_QUIET_EXCHANGES: i32 = 10;
 pub const STARLIGHT_RELEASE: f64 = 30.0;
 pub const STARLIGHT_CHARGED: f64 = 48.0;
-pub const SIPHON_HIT: f64 = 14.0;
-pub const MOONWELL_BANK: f64 = 12.0;
-pub const LODESTAR_BANK: f64 = 16.0;
-pub const OMEN_HIT: f64 = 40.0;
 pub const PURIFY_MANA: f64 = 24.0;
 pub const TORMENT_TOLL: f64 = 8.0;
 pub const EXTRACTION_MANA: f64 = 9.0;
@@ -34,7 +28,8 @@ pub fn tailwind_step() -> f64 { let d = data(); d.spells[d.ids.tailwind].damage.
 pub fn js_round(x: f64) -> f64 { let f = x.floor(); if x - f >= 0.5 { f + 1.0 } else { f } }
 
 #[derive(Clone, Copy, Default)]
-pub struct Hit { pub source: u8, pub target: u8, pub id: Act, pub power: f64, pub spell: bool, pub fixed: bool, pub pierce_guard: bool, pub reflected: bool, pub hot: bool }
+/// `ward_pierce`: the share of a spell hit that gets through Ward (0: Ward stops it all); `pierce_brace`: Brace doesn't reduce it.
+pub struct Hit { pub source: u8, pub target: u8, pub id: Act, pub power: f64, pub spell: bool, pub fixed: bool, pub pierce_guard: bool, pub reflected: bool, pub hot: bool, pub ward_pierce: f64, pub pierce_brace: bool }
 pub type Hits = Small<Hit, 40>;
 
 /// Scratch for one resolve (the former module-level hurtNow/mendNow and s.bursts).
@@ -193,7 +188,7 @@ fn reduce_hp(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, n: f64,
     }
     let x = &mut s.actors[side];
     if x.hp <= EPS && x.rime_ready && !x.rime_used {
-        x.rime_ready = false; x.rime_used = true; x.hp = RIME_THAW_HP; x.freeze_until = s.round + 1;
+        x.rime_ready = false; x.rime_used = true; x.hp = data().amt(data().ids.rime, "thaw"); x.freeze_until = s.round + 1;
         if enc.health_direct { gain(enc, s, side, R_HEALTH, 1.0); }
         ctx.event(|| Event::Froze { side: side as u8 });
     }
@@ -280,8 +275,8 @@ fn hits(enc: &Encounter, s: &mut State, ctx: &mut Ctx, initial: &Hits) {
                     n *= if h.spell { 1.0 / 2.0 } else { 1.0 - g };
                     by |= DEF_GUARD | if !h.spell && g < 1.0 - EPS { DEF_GUARD_TIRED } else { 0 };
                 }
-                if n > EPS && opposing && has(s, t, Eff::Ward) { n = if h.spell { 0.0 } else { n / 2.0 }; by |= DEF_WARD; }
-                if n > EPS && opposing && has(s, t, Eff::Brace) {
+                if n > EPS && opposing && has(s, t, Eff::Ward) && h.ward_pierce < 1.0 - EPS { n = if h.spell { n * h.ward_pierce } else { n / 2.0 }; by |= DEF_WARD; }
+                if n > EPS && opposing && !h.pierce_brace && has(s, t, Eff::Brace) {
                     let from = s.actors[t].effects[Eff::Brace as usize].unwrap().from;
                     n *= 1.0 - BRACE_BLOCK[3.min((s.round - from) as usize)];
                     by |= DEF_BRACE;
@@ -289,6 +284,12 @@ fn hits(enc: &Encounter, s: &mut State, ctx: &mut Ctx, initial: &Hits) {
                 let reduction = s.actors[t].constructs.iter().fold(0.0, |sum, c| sum + c.reduction);
                 if n > EPS && reduction > EPS { by |= DEF_CONSTRUCT; }
                 n = 0f64.max(n - reduction);
+            }
+            // Lodestar shields while it is held (F5.9c): opposing hits draw on the bank before the Release turns it on.
+            if n > EPS && !h.fixed && opposing {
+                if let Some(mut c) = s.actors[t].channel { if c.spell == d.ids.lodestar && c.bank > EPS {
+                    let used = n.min(c.bank); n -= used; c.bank -= used; by |= DEF_LODESTAR; s.actors[t].channel = Some(c);
+                } }
             }
             if n > EPS && !h.fixed {
                 if let Some(mut l) = s.actors[t].effects[Eff::Lodestar as usize] {
@@ -334,9 +335,10 @@ fn prepared(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act, 
         let spell = &d.spells[sp];
         if spell.construct.is_some() { summon(enc, s, ctx, side, sp); return; }
         if spell.channel {
-            let bank = if sp == ids.moonwell { amount(enc, side, Some(sp), MOONWELL_BANK, false) } else if sp == ids.lodestar { amount(enc, side, Some(sp), LODESTAR_BANK, true) } else { 0.0 };
+            let bank = if sp == ids.moonwell { amount(enc, side, Some(sp), amt(sp, "bank"), false) } else if sp == ids.lodestar { amount(enc, side, Some(sp), amt(sp, "bank"), true) } else { 0.0 };
             s.actors[side].channel = Some(Channel { spell: sp, holds: 0, bank, total: 0.0 });
-            if sp == ids.siphon { attacks.push(hit(side, a, damage_power(enc, side, sp, SIPHON_HIT))); }
+            if sp == ids.siphon { attacks.push(hit(side, a, damage_power(enc, side, sp, amt(sp, "hit")))); }
+            if sp == ids.wildfire && amt(sp, "ignite") > 0.0 { attacks.push(Hit { hot: true, ..hit(side, a, damage_power(enc, side, sp, amt(sp, "ignite"))) }); }
             return;
         }
     }
@@ -346,20 +348,24 @@ fn prepared(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act, 
     if a == k.hold {
         let mut c = s.actors[side].channel.unwrap();
         c.holds += 1;
-        if c.spell == ids.moonwell { c.bank += amount(enc, side, Some(c.spell), MOONWELL_BANK, false); }
-        if c.spell == ids.lodestar { c.bank += amount(enc, side, Some(c.spell), LODESTAR_BANK, true); }
+        if c.spell == ids.moonwell { c.bank += amount(enc, side, Some(c.spell), amt(c.spell, "bank"), false); }
+        if c.spell == ids.lodestar { c.bank += amount(enc, side, Some(c.spell), amt(c.spell, "bank"), true); }
         s.actors[side].channel = Some(c);
         if c.spell == ids.wildfire {
-            attacks.push(Hit { hot: true, ..hit(side, c.spell as Act, damage_power(enc, side, c.spell, WILDFIRE_HOLD)) });
-            attacks.push(Hit { target: side as u8, fixed: true, hot: true, ..hit(side, c.spell as Act, WILDFIRE_SELF) });
+            attacks.push(Hit { hot: true, ..hit(side, c.spell as Act, damage_power(enc, side, c.spell, amt(c.spell, "hold"))) });
+            attacks.push(Hit { target: side as u8, fixed: true, hot: true, ..hit(side, c.spell as Act, amt(c.spell, "self")) });
         }
-        if c.spell == ids.siphon { attacks.push(hit(side, c.spell as Act, damage_power(enc, side, c.spell, SIPHON_HIT))); }
+        if c.spell == ids.siphon { attacks.push(hit(side, c.spell as Act, damage_power(enc, side, c.spell, amt(c.spell, "hit")))); }
         return;
     }
     if a == k.release {
         let c = s.actors[side].channel.take().unwrap();
-        if c.spell == ids.starlight { attacks.push(hit(side, c.spell as Act, damage_power(enc, side, c.spell, starlight_base(c.holds != 0)))); }
-        if c.spell == ids.wildfire { attacks.push(Hit { hot: true, ..hit(side, c.spell as Act, damage_power(enc, side, c.spell, WILDFIRE_RELEASE + WILDFIRE_PER_HOLD * c.holds as f64)) }); }
+        if c.spell == ids.starlight { attacks.push(Hit { ward_pierce: if c.holds != 0 { amt(c.spell, "chargedWardPierce") } else { 0.0 }, ..hit(side, c.spell as Act, damage_power(enc, side, c.spell, starlight_base(c.holds != 0))) }); }
+        // Wildfire's Release: the base, then the embers the Holds added, which get through Guard and Ward (F5.9c).
+        if c.spell == ids.wildfire {
+            attacks.push(Hit { hot: true, ..hit(side, c.spell as Act, damage_power(enc, side, c.spell, amt(c.spell, "release"))) });
+            if c.holds > 0 { attacks.push(Hit { hot: true, pierce_guard: true, ward_pierce: 1.0, ..hit(side, c.spell as Act, damage_power(enc, side, c.spell, amt(c.spell, "perHold") * c.holds as f64)) }); }
+        }
         if c.spell == ids.siphon { heal(enc, s, side, c.total); }
         if c.spell == ids.moonwell { gain(enc, s, side, R_MANA, c.bank); }
         if c.spell == ids.lodestar { put(s, side, Eff::Lodestar, c.bank, round, None); }
@@ -376,7 +382,7 @@ fn prepared(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act, 
         if enc.observers && !s.actors[side].glamour_done { s.actors[side].pending_renown += spell.renown.as_ref().unwrap()[r(sp)]; s.actors[side].glamour_done = true; }
     }
     else if sp == ids.seal { let blocked = shielded(s, 1 - side); let n = if blocked { 0.0 } else { s.actors[1 - side].flux }; if !blocked { s.actors[1 - side].flux = 0.0; } ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: n, blocked }); }
-    else if sp == ids.omen { let power = damage_power(enc, side, sp, OMEN_HIT); s.actors[side].omens.push(Omen { due: round + 2, power }); }
+    else if sp == ids.omen { let power = damage_power(enc, side, sp, amt(sp, "hit")); s.actors[side].omens.push(Omen { due: round + 2, power }); }
     else if sp == ids.purify { let n = amount(enc, side, Some(sp), PURIFY_MANA, false); let got = gain(enc, s, side, R_MANA, n); ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: got, blocked: false }); }
     else if sp == ids.tailwind { put(s, side, Eff::Tailwind, 0.0, round + 1, Some(round + 3)); }
     else if sp == ids.rime { if !s.actors[side].rime_used { s.actors[side].rime_ready = true; } }
@@ -606,7 +612,7 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
     let mut endings = Hits::default();
     for side in 0..2 {
         let round = s.round;
-        for o in s.actors[side].omens.iter() { if o.due == round { endings.push(hit(side, ids.omen as Act, o.power)); } }
+        for o in s.actors[side].omens.iter() { if o.due == round { endings.push(Hit { ward_pierce: amt(ids.omen, "wardPierce"), pierce_guard: amt(ids.omen, "guardPierce") >= 1.0, pierce_brace: amt(ids.omen, "bracePierce") >= 1.0, ..hit(side, ids.omen as Act, o.power) }); } }
         s.actors[side].omens.retain(|o| o.due > round);
         let cs = s.actors[side].constructs;
         for c in cs.iter() {
