@@ -1,4 +1,6 @@
-import {SPELL_ICONS,ACTION_ICONS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,createState,applyChoice,actorToMove,legalActions,available,cost,describe,label,concede,hpCost,has,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState} from './engine.mjs';
+import {SPELL_ICONS,ACTION_ICONS,PORTRAITS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,createState,applyChoice,actorToMove,legalActions,available,cost,describe,label,concede,hpCost,has,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState} from './engine.mjs';
+import {brief} from './brief.mjs';
+import {portrait,BLANK} from './art.mjs';
 // The same served module supplies a worker, preserving the existing localhost server.
 if(typeof document==='undefined'){
   self.onmessage=e=>{try{if(e.data.type==='analyze')analyze(e.data);else self.postMessage({token:e.data.token,decision:chooseAIAction(e.data.state,e.data.options)});}catch(error){self.postMessage({token:e.data.token,error:error.message});}};
@@ -28,14 +30,22 @@ function analyze({token,state,budgetMs,maxDepth}){
   self.postMessage({token,done:true});
 }
 if(typeof document!=='undefined'){
-const $=id=>document.getElementById(id),esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),fmt=n=>Number.isInteger(n)?n:n.toFixed(1);
-let names=['the player','the opponent'],game=null,selected=null,view='play',busy=false,history=[],stats=[],token=0,moves=0,bars={},targets={};
-let analysis=null,analysisToken=0,analysisFor=-1,analysisRunning=false,engineBudget=(()=>{try{return Number(localStorage.getItem('engineBudget'))||1500;}catch{return 1500;}})(),engineOn=(()=>{try{return localStorage.getItem('engineOn')!=='0';}catch{return true;}})();
+const $=id=>document.getElementById(id),esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),fmt=n=>Number.isInteger(n)?n:Math.abs(n-Math.round(n))<.05?Math.round(n):n.toFixed(1);
+const store={get:(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:v;}catch{return d;}},set:(k,v)=>{try{localStorage.setItem(k,v);}catch{}}};
+let names=['you','the opponent'],game=null,selected=null,view='play',busy=false,history=[],stats=[],token=0,moves=0,bars={},seen={},sheet=null,focusEx=null;
+let analysis=null,analysisToken=0,analysisFor=-1,analysisRunning=false,engineBudget=Number(store.get('engineBudget',1500))||1500,engineOn=store.get('engineOn','0')==='1';
+// Which pieces of the main game's screen to imitate around the fight (stubs, for judging the look in context).
+const chrome=Object.fromEntries(['top','meters','side','card'].map(k=>[k,store.get('chrome.'+k,'1')==='1']));
 const QUESTION='<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="32" cy="32" r="26"/><path d="M24 25a8 8 0 1 1 11 7.4c-2 .9-3 2.4-3 4.6v2"/><path d="M32 46v1"/></svg>';
-function makeAnalyst(){const w=new Worker('/app.mjs?worker=analysis',{type:'module'});w.onmessage=onAnalysis;w.onerror=e=>{analysisRunning=false;$('setup-error').textContent='Engine: '+e.message;};return w;}
+const EYE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+const SCROLL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M7 4h11v13a3 3 0 0 1-3 3H6"/><path d="M7 4a2 2 0 0 0-2 2v2h2M6 20a2 2 0 0 1-2-2v-1h11"/><path d="M10 9h5M10 12.5h5"/></svg>';
+const GEAR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>';
+const worker=new Worker(new URL('app.mjs?worker=1',import.meta.url),{type:'module'});
+function makeAnalyst(){const w=new Worker(new URL('app.mjs?worker=analysis',import.meta.url),{type:'module'});w.onmessage=onAnalysis;w.onerror=e=>{analysisRunning=false;$('setup-error').textContent='Engine: '+e.message;};return w;}
 let analyst=null;
 const COMBAT_RESOURCES=['health','mana','crowns','renown','alignment'];
-const worker=new Worker('/app.mjs?worker=1',{type:'module'});
+
+// ---- Setup (the bench's side panel) ----
 for(const id of ['player-loadout','opponent-loadout'])for(const [group,items]of Object.entries({General:LOADOUTS,Characters:NAMED_LOADOUTS,...(id==='opponent-loadout'?{Creatures:SPECIAL_LOADOUTS}:{})}))$(id).insertAdjacentHTML('beforeend',`<optgroup label="${group}">${Object.keys(items).map(name=>`<option>${name}</option>`).join('')}</optgroup>`);
 $('rebates').innerHTML=['health','mana'].map(k=>`<label>${k} rebate %<input data-rebate="${k}" type="number" min="0" max="100"></label>`).join('');
 function setRebates(){for(const input of document.querySelectorAll('[data-rebate]'))input.value=CONTEXTS[$('context').value][input.dataset.rebate]*100;}
@@ -48,93 +58,149 @@ function setup(){
  for(const [side,name]of [['player',player],['opponent',opponent]]){const growing=!!NAMED_LOADOUTS[name]&&!fixedLoadoutLevel(name)&&name!=='The man in grey';$(side+'-year-label').hidden=!growing||side==='opponent'&&!$('opponent-loadout').value;$(side+'-ilse-label').hidden=name!=='Ilse'||side==='opponent'&&!$('opponent-loadout').value;}
  $('begin').textContent=`Begin combat · level ${$('player-level').value} →`;
 }
-
 for(const b of document.querySelectorAll('[data-level]'))b.onclick=()=>{$('player-level').value=b.dataset.level;setup();};
 $('player-loadout').onchange=setup;$('opponent-loadout').onchange=setup;$('player-level').oninput=setup;$('match-level').onchange=setup;$('context').onchange=setRebates;
+for(const box of document.querySelectorAll('[data-chrome]')){box.checked=chrome[box.dataset.chrome];box.onchange=()=>{chrome[box.dataset.chrome]=box.checked;store.set('chrome.'+box.dataset.chrome,box.checked?'1':'0');render();};}
 // The opponent (F5.9b): a fixed depth-5 search with no seeded mistakes; the difficulty preset is its only knob.
 const LIVE_AI={maxDepth:5,nodeBudget:3e6,mistakeChance:0};
 function config(){const same=!$('opponent-loadout').value;return {playerYear:Number($('player-year').value),opponentYear:Number($(same?'player-year':'opponent-year').value),playerIlseTaken:$('player-ilse-taken').checked,opponentIlseTaken:$(same?'player-ilse-taken':'opponent-ilse-taken').checked,encounterSeed:$('encounter-seed').value===''?crypto.getRandomValues(new Uint32Array(1))[0]:Number($('encounter-seed').value),damageMultiplier:Number($('damage-multiplier').value),mode:'combat',ai:[null,{...LIVE_AI,seed:Number($('ai-seed').value),preset:$('ai-difficulty').value}],playerLoadout:$('player-loadout').value,opponentLoadout:$('opponent-loadout').value||$('player-loadout').value,playerLevel:Number($('player-level').value),opponentLevel:Number($('opponent-level').value),firstLeader:Number($('first-leader').value),healthModel:$('health-model').value,resourceBudget:$('budget').value,spellAccess:$('all-spells').checked?'all':'kit',manaCostScale:Number($('mana-scale').value),observers:$('observers').checked,playerResources:$('player-crowns').value===''?undefined:{crowns:Number($('player-crowns').value)},opponentResources:$('opponent-crowns').value===''?undefined:{crowns:Number($('opponent-crowns').value)},context:$('context').value,rebates:Object.fromEntries([...document.querySelectorAll('[data-rebate]')].map(i=>[i.dataset.rebate,Number(i.value)/100]))};}
-function start(c=config()){try{const seed=c.ai?.[1]?.seed;if(seed!==undefined&&(!Number.isInteger(seed)||seed<0||seed>4294967295))throw Error('Choose an integer AI seed from 0 to 4294967295');token++;busy=false;game=createState(c);names=fighterNames({opponentLoadout:game.actors[1].kit.loadout});history=[];stats=[];selected=null;moves++;bars={};targets={};analysis=null;view='play';$('setup-error').textContent='';$('return').hidden=false;render();pump();window.scrollTo(0,0);}catch(e){$('setup-error').textContent=e.message;}}
+function start(c=config()){try{const seed=c.ai?.[1]?.seed;if(seed!==undefined&&(!Number.isInteger(seed)||seed<0||seed>4294967295))throw Error('Choose an integer AI seed from 0 to 4294967295');token++;busy=false;game=createState(c);names=fighterNames({opponentLoadout:game.actors[1].kit.loadout});history=[];stats=[];selected=null;moves++;bars={};seen={};analysis=null;sheet=null;focusEx=null;view='play';$('setup-error').textContent='';$('return').hidden=false;render();pump();window.scrollTo(0,0);}catch(e){$('setup-error').textContent=e.message;}}
 $('begin').onclick=()=>start();$('return').onclick=()=>{view='play';render();};setRebates();setup();
+
+// ---- Playing ----
 function submit(id,ai){const channels=game.actors.map(a=>a.channel?.id),mover=actorToMove(game),commits=game.pending.map((p,i)=>i===mover?id:p),descs=commits.map((c,i)=>{try{return c?describe(game,i,c):'';}catch{return '';}}),before=structuredClone(game),r=applyChoice(game,id);moves++;if(ai)stats.push({round:r.round??game.round,side:1,...ai});if(r.resolved){r.pair.forEach((id,i)=>{if(r.committed?.[i]!==id&&!['hold','release','cancel','frozen'].includes(id)){try{descs[i]=describe(game,i,id);}catch{}}});   // a compelled side: describe what it actually did
- const actionNames=r.pair.map((id,i)=>['hold','release'].includes(id)?`${label(id)} ${label(channels[i])}`:label(id));history.push({...r,channels,descs,lines:resolvedLines(before,game,{...r,channels,actionNames},names),finish:finishLines(before,game,r.pair,r.round,names),actionNames,hp:game.actors.map(a=>a.hp),ready:game.actors.map(a=>a.resources.mana),flux:game.actors.map(a=>a.flux)})};selected=null;render();}
+ const actionNames=r.pair.map((id,i)=>['hold','release'].includes(id)?`${label(id)} ${label(channels[i])}`:label(id));history.push({...r,channels,descs,lines:resolvedLines(before,game,{...r,channels,actionNames},names),finish:finishLines(before,game,r.pair,r.round,names),actionNames,hp:game.actors.map(a=>a.hp),ready:game.actors.map(a=>a.resources.mana),flux:game.actors.map(a=>a.flux)});focusEx=null;}selected=null;render();}
 function pump(){if(!game||game.result||actorToMove(game)!==1)return;
  const actions=legalActions(game);if(actions.length===1){submit(actions[0]);pump();return;}
  busy=true;render();const current=++token;worker.postMessage({token:current,state:game,options:{}});
 }
 worker.onmessage=e=>{if(e.data.token!==token)return;busy=false;if(e.data.error){$('setup-error').textContent=e.data.error;render();return;}submit(e.data.decision.id,e.data.decision);pump();};
 worker.onerror=e=>{busy=false;$('setup-error').textContent=e.message;render();};
-// Vertical bars: height scales with the actual maximum; layers start at their last shown value and
-// move to the new one on the next frame (fill quickly, the pale trail after a delay, the gain preview at once).
-const UNIT=1.9;
-function layer(cls,key,to,bottom){const from=bars[key]??to,fromBottom=bars[key+'@']??bottom;return `<i class="${cls}" data-bar="${key}" data-to="${to}"${bottom!==undefined?` data-bottom="${bottom}"`:''} style="height:${from}%${bottom!==undefined?`;bottom:${fromBottom}%`:''}"></i>`;}
-function vbar(side,kind,value,max,flux=0,col=1){
- const k=side+kind,pct=v=>Math.max(0,Math.min(100,100*v/max)),now=pct(value),before=targets[k],change=before===undefined?'':now<before-1e-6?'drop':now>before+1e-6?'rise':'';
- const fluxShown=Math.min(flux,Math.max(0,max-value));targets[k]=now;
- return `<div class="vbar ${kind} ${change}" title="${kind==='hp'?'HP':'Mana'} ${fmt(value)} / ${fmt(max)}${kind==='mana'?` · flux ${fmt(flux)} (Reclaim restores up to ${fmt(Math.min(flux,max-value))})`:''}">
-  <b class="vnum" style="grid-column:${col}">${fmt(value)}<small>/${fmt(max)}</small></b>
-  <div class="vtrack" title="${kind==='hp'?'HP':'Mana'} ${fmt(value)} / ${fmt(max)}" style="grid-column:${col};height:${max*UNIT}px">${layer('trail',k+'trail',now)}${layer('gain',k+'gain',now)}${kind==='mana'?layer('flux',k+'flux',pct(fluxShown),now):''}${layer('fill',k+'fill',now)}</div>
-  <span class="vlabels" style="grid-column:${col}"><span class="vlabel">${kind==='hp'?'♥ HP':'✧ Mana'}</span>${kind==='mana'?`<span class="vflux">↻ ${fmt(flux)} flux</span>`:''}</span></div>`;
-}
-// Start each new bar from its current on-screen height, so a re-render mid-animation doesn't snap.
-function snapshotBars(){for(const el of document.querySelectorAll('[data-bar]')){const t=el.parentElement.clientHeight;if(!t)continue;bars[el.dataset.bar]=100*el.offsetHeight/t;if(el.dataset.bottom!==undefined)bars[el.dataset.bar+"@"]=100*(t-el.offsetTop-el.offsetHeight)/t;}}
-function animateBars(){requestAnimationFrame(()=>requestAnimationFrame(()=>{for(const el of document.querySelectorAll('[data-bar]')){el.style.height=el.dataset.to+'%';bars[el.dataset.bar]=Number(el.dataset.to);if(el.dataset.bottom!==undefined){el.style.bottom=el.dataset.bottom+'%';bars[el.dataset.bar+'@']=Number(el.dataset.bottom);}}}));}
-// One track row for both panels: the tallest bar of either side, so every bar shares one bottom line.
-const trackRow=()=>Math.max(...game.actors.flatMap(a=>[a.maxHP,a.kit.capacity]))*UNIT;
-function actorPanel(i){const a=game.actors[i];
- return `<article class="actor ${i?'opp':'you'}"><div class="actor-heading"><b>${i===0?'You':'Opponent'}</b><span>${esc(a.kit.loadout)} · ${a.kit.level}</span></div>
- <div class="vbars" style="grid-template-rows:${trackRow()}px auto auto">${(i?[1,0]:[0,1]).map((k,j)=>k?vbar(i,'mana',a.resources.mana,a.kit.capacity,a.flux,j+1):vbar(i,'hp',a.hp,a.maxHP,0,j+1)).join('')}</div>
- <div class="purse">${fmt(a.resources.crowns)} Crowns${game.config.observers?` · Renown ${fmt(a.resources.renown)} (+${fmt(a.pendingRenown)})`:''}${a.resources.alignment!==a.entry.alignment?` · Align ${a.resources.alignment}`:''}</div>
- <div class="effects">${effects(i)}</div></article>`;}
-function effects(i){const a=game.actors[i],out=[];
- if(a.channel)out.push(`${label(a.channel.id)} · ${a.channel.holds} Hold${a.channel.holds===1?'':'s'}${a.channel.bank?` · bank ${fmt(a.channel.bank)}`:''}`);
- for(const c of a.constructs)out.push(`${label(c.id)} ${fmt(c.taken)}/${fmt(c.threshold)}`);
- for(const [k,e]of Object.entries(a.effects))if(e.until===null||e.until>=game.round)out.push(esc(k)+(e.until!==null&&e.until>game.round?` → E${e.until}`:''));
- return out.map(x=>`<span>${x}</span>`).join('')||'<span class="none">no effects</span>';}
-function arena(){return `<div class="arena ${engineOn?'':'no-eval'}">${engineOn?`<div class="evalbar" id="evalbar" title="Engine evaluation for you, in HP">${evalBar()}</div>`:''}${actorPanel(0)}<section class="center-log" id="center-log" aria-label="Combat log">${centerLog()}</section>${actorPanel(1)}</div>`;}
-// The full log, oldest first; every action carries its icon and the effect it had when committed.
-function logAction(r,i){const id=r.pair[i],committed=r.committed[i],desc=r.descs?.[i]??'';
- return `<div class="log-act ${i?'opp':'you'}"><span class="mini-icon">${actionIcon(id,i,r.channels?.[i])}</span><div><b>${i===0?'You':'Opponent'}</b> ${esc(r.actionNames[i])}${committed!==id?` <small>(committed ${esc(label(committed))})</small>`:''}${flavorOf(r,i)}${desc?`<p class="${i?'':'own'}">${esc(desc)}</p>`:''}</div></div>`;}
-function flavorOf(r,i){const line=r.lines?.[i]??flavorLine(r.pair[i],{channel:r.channels?.[i],round:r.round,names,side:i});return line?`<p class="flavor">${esc(line)}</p>`:'';}
-function centerLog(){
- const rows=history.map(r=>`<article><h3>Exchange ${r.round} <small>· ${r.leader===0?'you':'opponent'} led</small></h3>${[r.leader,1-r.leader].map(i=>logAction(r,i)).join('')}${(r.finish??[]).map(f=>`<p class="flavor finish">${esc(f)}</p>`).join('')}<ul>${r.events.map(e=>`<li>${esc(e)}</li>`).join('')||'<li>No damage or resource events.</li>'}</ul><small class="after">HP ${r.hp.map(fmt).join(' / ')} · Mana ${r.ready.map(fmt).join(' / ')} · flux ${r.flux.map(fmt).join(' / ')}</small></article>`);
- if(!game.result){const lead=game.leader,p=game.pending;
-  rows.push(`<article class="now"><h3>Exchange ${game.round} <small>· ${lead===0?'you lead':'opponent leads'}</small></h3>${[lead,1-lead].map(i=>`<div class="log-act ${i?'opp':'you'}"><span class="mini-icon">${p[i]?actionIcon(p[i],i):QUESTION}</span><div><b>${i===0?'You':'Opponent'}</b> ${p[i]?esc(label(p[i])):i===actorToMove(game)?(i===0?'choosing…':'thinking…'):'hidden until the leader commits'}${p[i]&&i===1?`<p>${esc(describe(game,1,p[i]))}</p>`:''}</div></div>`).join('')}</article>`);}
- return `<h2>Log</h2>${rows.join('')||'<p class="fine">No exchanges yet.</p>'}`;}
 
-function forecasts(){
- const rows=[];
- if(game.earlyCommit.some(n=>n>0))rows.push(game.earlyCommit.map((n,i)=>n?`${i===0?'You':'Opponent'} reveal first: ${n}`:'').filter(Boolean).join(' · '));
- for(const [side,a]of game.actors.entries())if(a.omens.length)rows.push(`${side===0?'Your':'Enemy'} Omen → `+a.omens.map(o=>`E${o.due} (${fmt(o.power)})`).join(', '));
- return rows.length?'<div class="forecasts">'+rows.join('<br>')+'</div>':'';
-}
-function intent(){const opponent=game.pending[1];
- if(busy)return `<div class="tele"><span class="tele-icon hidden-move">${QUESTION}</span><div><b>Opponent is committing…</b><p>The game stays responsive while search runs.</p></div></div>`;
- // A compelled opponent's move is forced, so it shows in advance even when you lead; who commits first doesn't change.
- const forced=isCompelled(game,1)?(opponent??legalActions(game,1)[0]):null;
- if(forced)return `<div class="tele"><span class="tele-icon">${actionIcon(forced,1)}</span><div><b>Telegraph · compelled: ${esc(label(forced))}</b><p class="flavor">${esc(compelledLine(label(forced),{names,side:1}))}</p><p>${esc(describe(game,1,forced))}</p></div></div>`;
- if(opponent)return `<div class="tele"><span class="tele-icon">${actionIcon(opponent,1)}</span><div><b>Telegraph · initiative: ${esc(label(opponent))}</b>${(l=>l?`<p class="flavor">${esc(l)}</p>`:'')(flavorLine(opponent,{channel:game.actors[1].channel?.id,round:game.round,names,side:1}))}<p>${esc(describe(game,1,opponent))}</p></div></div>`;
- return `<div class="tele"><span class="tele-icon hidden-move">${QUESTION}</span><div><b>You commit first · initiative</b><p>The opponent's reply stays hidden until you commit. Initiative breaks mutual knockouts.</p></div></div>`;
-}
-function price(id){const h=hpCost(game,0,id),m=has(game,0,'heartprice')?0:cost(game,0,id);return [m?fmt(m)+' Mana':'',h?fmt(h)+' HP':''].filter(Boolean).join(' + ')||'No cost';}
+// ---- Pieces ----
 // Haste composes the same basic icons; Hold/Release use the active spell motif.
 function actionIcon(id,side=0,channel=game.actors[side].channel?.id){
  if(id.startsWith('bundle:'))return `<span class="bundle-icons">${id.slice(7).split('+').map(p=>ACTION_ICONS[p]).join('')}</span>`;
  const key=['hold','release'].includes(id)?channel+'_'+id:id;
  return SPELL_ICONS[id]??ACTION_ICONS[key]??(SPELLS[id]?.physical?ACTION_ICONS.strike:id==='frozen'?'<b class="glyph">❄</b>':id==='cancel'?'<b class="glyph">∅</b>':QUESTION);
 }
-function card(id){const reason=available(game,0,id),disabled=busy||actorToMove(game)!==0||reason,m=has(game,0,'heartprice')?0:cost(game,0,id),h=hpCost(game,0,id),bundle=id.startsWith('bundle:'),name=label(id);
- return `<button class="action ${selected===id?'selected':''} ${bundle?'bundle':''}" data-action="${id}" aria-label="${esc(name+' · '+price(id)+(reason?' · '+reason:''))}" aria-pressed="${selected===id}" title="${esc(name+' · '+price(id)+(reason?' · '+reason:''))}" ${disabled?'disabled':''}><span class="action-icon ${SPELL_ICONS[id]?'spell-art':id!=='frozen'?'action-art':''}" aria-hidden="true">${actionIcon(id)}</span><span class="action-name">${esc(name)}</span><em class="card-eval" data-eval="${id}"></em><small class="mana-cost" aria-label="${fmt(m)} Mana">✧${fmt(m)}</small>${h?`<small class="hp-cost">♥${fmt(h)}</small>`:''}</button>`;}
-function preview(){return `<div class="preview">${selected?`<b>${esc(label(selected))} · ${price(selected)}</b><p>${esc(describe(game,0,selected))}</p>`:'Select an icon for details. Click it again to act.'}</div><button id="commit" class="primary" ${!selected||busy||actorToMove(game)!==0?'disabled':''}>${SPELLS[selected]?`<span class="control-icon" aria-hidden="true">${ACTION_ICONS.cast}</span>Cast`:'Commit'}</button>`;}
+const actionName=(id,side)=>['hold','release'].includes(id)?`${label(id)} ${label(game.actors[side].channel?.id??'')}`:label(id);
+const briefOf=(side,id)=>{let t='';try{t=describe(game,side,id);}catch{}return brief(id,t,game.actors[side].channel?.id);};
+// same: the label repeats the action's name, which the button already shows (hidden there unless the name is).
+const effHtml=(b,name)=>{const v=b.value!==''&&b.value!==null&&b.value!==undefined;return `<span class="eff k-${b.kind}${v?' has-v':''}">${v?`<b>${esc(b.value)}</b>`:''}${b.label?`<small class="lbl${name&&name.toLowerCase()===b.label.toLowerCase()?' same':''}">${esc(b.label)}</small>`:''}${b.turns?`<small class="t">${b.turns}t</small>`:''}</span>`;};
+function price(side,id){const h=hpCost(game,side,id),m=has(game,side,'heartprice')?0:cost(game,side,id);return [m?fmt(m)+' Mana':'',h?fmt(h)+' HP':''].filter(Boolean).join(' + ')||'Free';}
+const costHtml=(side,id)=>{const h=hpCost(game,side,id),m=has(game,side,'heartprice')?0:cost(game,side,id);return `<span class="a-cost">${m?`<b class="c-mana" aria-label="${fmt(m)} Mana">${fmt(m)}</b>`:''}${h?`<b class="c-hp" aria-label="${fmt(h)} HP">${fmt(h)}</b>`:''}</span>`;};
+const npcOf=a=>NAMED_LOADOUTS[a.kit.loadout]?.npc;
+const nameOf=i=>i===0?'You':NAMED_LOADOUTS[game.actors[1].kit.loadout]?game.actors[1].kit.loadout:game.actors[1].kit.loadout==='custom'?'Opponent':game.actors[1].kit.loadout;
+const portraitOf=i=>{const a=game.actors[i];return i===0?BLANK:portrait({npc:npcOf(a),loadout:a.kit.loadout,creature:!!SPECIAL_LOADOUTS[a.kit.loadout],underground:a.kit.underground,portraits:PORTRAITS});};
+
+// Horizontal bars: layers start at their last shown width and move on the next frame (fill quickly, the pale trail after
+// a delay), so a re-render mid-animation doesn't snap. A changed value floats its difference above the number.
+function layer(cls,key,to,left){const from=bars[key]??to,fromLeft=bars[key+'@']??left;return `<i class="${cls}" data-bar="${key}" data-to="${to}"${left!==undefined?` data-left="${left}"`:''} style="width:${from}%${left!==undefined?`;left:${fromLeft}%`:''}"></i>`;}
+function bar(side,kind,value,max,flux=0){
+ const k=side+kind,pct=v=>Math.max(0,Math.min(100,100*v/max)),now=pct(value),fluxShown=Math.min(flux,Math.max(0,max-value)),prev=seen[k];
+ let delta='';if(prev&&prev.v!==value&&prev.at!==moves){seen[k]={v:value,at:moves,d:value-prev.v};}else if(!prev)seen[k]={v:value,at:-1,d:0};
+ const s=seen[k];if(s.at===moves&&Math.abs(s.d)>=.5)delta=`<span class="delta ${s.d<0?'neg':'pos'}">${s.d<0?'−':'+'}${fmt(Math.abs(s.d))}</span>`;
+ return `<div class="bar ${kind} ${s.at===moves&&s.d?s.d<0?'drop':'rise':''}" title="${kind==='hp'?'HP':'Mana'} ${fmt(value)} / ${fmt(max)}${kind==='mana'?` · flux ${fmt(flux)}: Reclaim restores up to ${fmt(Math.min(flux,max-value))}`:''}">
+  <span class="bnum"><span class="bk">${kind==='hp'?'♥':'✦'}</span>${Math.round(value)}<small>/${Math.round(max)}</small>${delta}</span>
+  <span class="btrack">${layer('trail',k+'trail',now)}${kind==='mana'?layer('flux',k+'flux',pct(fluxShown),now):''}${layer('fill',k+'fill',now)}</span>
+  ${kind==='mana'?`<span class="bflux${flux>0?'':' none'}" title="Flux: Reclaim turns it back into Mana">↻${fmt(flux)}</span>`:''}</div>`;
+}
+function snapshotBars(){for(const el of document.querySelectorAll('[data-bar]')){const t=el.parentElement.clientWidth;if(!t)continue;bars[el.dataset.bar]=100*el.offsetWidth/t;if(el.dataset.left!==undefined)bars[el.dataset.bar+'@']=100*el.offsetLeft/t;}}
+function animateBars(){requestAnimationFrame(()=>requestAnimationFrame(()=>{for(const el of document.querySelectorAll('[data-bar]')){el.style.width=el.dataset.to+'%';bars[el.dataset.bar]=Number(el.dataset.to);if(el.dataset.left!==undefined){el.style.left=el.dataset.left+'%';bars[el.dataset.bar+'@']=Number(el.dataset.left);}}}));}
+
+function fighter(i){const a=game.actors[i],purse=[game.config.observers?`★${fmt(a.resources.renown)}${a.pendingRenown?`<em>+${fmt(a.pendingRenown)}</em>`:''}`:'',a.resources.crowns!==a.entry.crowns?`◎${fmt(a.resources.crowns)}`:'',a.resources.alignment!==a.entry.alignment?`☾${fmt(a.resources.alignment)}`:''].filter(Boolean).join(' ');
+ return `<article class="fighter ${i?'opp':'you'}"${i?' data-sheet="inspect" role="button" tabindex="0" title="Inspect the opponent"':''}>
+  <div class="pf${i?'':' blank'}">${portraitOf(i)}${i?`<span class="pf-eye">${EYE}</span>`:''}</div>
+  <div class="fi"><div class="fname"><b>${esc(nameOf(i))}</b><small>${i?esc(game.actors[1].kit.loadout==='custom'?'':'Level '+a.kit.level):'Level '+a.kit.level}${purse?' · '+purse:''}</small></div>
+  ${bar(i,'hp',a.hp,a.maxHP)}${bar(i,'mana',a.resources.mana,a.kit.capacity,a.flux)}</div></article>`;}
+
+function intent(){
+ if(game.result)return '';
+ const opponent=game.pending[1],forced=isCompelled(game,1)?(opponent??legalActions(game,1)[0]):null,shown=forced??opponent;
+ if(busy)return `<div class="intent wait"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>${esc(nameOf(1))} is choosing…</b><small>Their move appears when they commit.</small></div></div>`;
+ if(shown){const b=briefOf(1,shown),fl=forced?compelledLine(label(shown),{names,side:1}):flavorLine(shown,{channel:game.actors[1].channel?.id,round:game.round,names,side:1});
+  return `<div class="intent shown${forced?' forced':''}" data-sheet="intent" role="button" tabindex="0" title="What their move does"><span class="tele-icon">${actionIcon(shown,1)}</span><div class="it"><b>${forced?'Compelled: ':'They commit: '}${esc(actionName(shown,1))} ${effHtml(b)}</b>${fl?`<small class="flavor">${esc(fl)}</small>`:''}</div><span class="it-more">${EYE}</span></div>`;}
+ return `<div class="intent hidden"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>You commit first</b><small>Their reply stays hidden until you commit. Initiative breaks a double knockout.</small></div></div>`;
+}
+
+// Lasting effects, channels, constructs and foretold hits for both sides, on the next few exchanges.
+const SPAN=5,EFFECT_ICON={compelled:'compel',guard:'guard',frozen:'frozen'};
+function timelineRows(){
+ const r=game.round,rows=[];
+ game.actors.forEach((a,side)=>{
+  for(const [k,e]of Object.entries(a.effects)){if(e.until!==null&&e.until<r)continue;const id=EFFECT_ICON[k]??k;rows.push({side,icon:id,name:k==='compelled'?'Compelled':label(k),from:Math.max(e.from??r,r),until:e.until??Infinity,note:k==='lodestar'?String(Math.round(e.value)):k==='tailwind'?'+'+Math.round(e.value):''});}
+  if(a.channel)rows.push({side,icon:a.channel.id,name:label(a.channel.id),from:r,until:Infinity,note:`${a.channel.holds} hold${a.channel.holds===1?'':'s'}${a.channel.bank?' · '+Math.round(a.channel.bank):''}`,channel:true});
+  for(const c of a.constructs)rows.push({side,icon:c.id,name:label(c.id),from:r,until:c.expires,note:`${Math.round(c.taken)}/${Math.round(c.threshold)}`});
+  if(game.earlyCommit[side]>0)rows.push({side,icon:'foresight',name:'Reveals first',from:r,until:r+game.earlyCommit[side]-1,note:''});
+  if(a.freezeUntil>=r)rows.push({side,icon:'frozen',name:'Frozen',from:r,until:a.freezeUntil,note:''});
+  if(a.rimeReady)rows.push({side,icon:'rime',name:'Rime ready',from:r,until:Infinity,note:''});
+  for(const o of a.omens)rows.push({side,icon:'omen',name:'Omen',due:o.due,note:fmt(o.power)});
+ });
+ return rows;
+}
+function timeline(){
+ const rows=timelineRows();if(!rows.length)return '';const r=game.round;
+ const cell=(row,c)=>{const ex=r+c;if(row.due!==undefined)return row.due===ex?`<i class="tl-hit" title="Omen lands in exchange ${ex}: ${row.note} damage">◆<b>${row.note}</b></i>`:'';
+  if(ex<row.from||ex>row.until)return '';const open=row.until===Infinity&&c===SPAN-1;return `<i class="tl-on${ex===row.from?' first':''}${ex===row.until||open?' last':''}${open?' open':''}"></i>`;};
+ return `<section class="timeline" aria-label="Effects on the next exchanges"><div class="tl-row tl-head"><span></span>${Array.from({length:SPAN},(_,c)=>`<span>${c?'+'+c:'now'}</span>`).join('')}</div>
+  ${rows.map(row=>`<div class="tl-row s${row.side}"><span class="tl-name"><span class="mini-icon">${actionIcon(row.icon,row.side,row.icon)}</span><span><em>${row.side?esc(nameOf(1)):'You'}</em> ${esc(row.name)}${row.note&&row.due===undefined?` <small>${esc(row.note)}</small>`:''}</span></span>${Array.from({length:SPAN},(_,c)=>`<span class="tl-c">${cell(row,c)}</span>`).join('')}</div>`).join('')}</section>`;
+}
+
+// History: every exchange as a pair of icons; the latest two (or the one picked) in full.
+function exchangeFull(r,k){
+ return `<article class="hx-full"><h4>Exchange ${r.round} <small>· ${r.leader===0?'you led':'they led'}</small></h4>${[r.leader,1-r.leader].map(i=>`<div class="hl ${i?'opp':'you'}"><span class="mini-icon">${actionIcon(r.pair[i],i,r.channels?.[i])}</span><p><b>${i?esc(nameOf(1)):'You'}</b> · ${esc(r.actionNames[i])}${r.committed[i]!==r.pair[i]?` <small>(committed ${esc(label(r.committed[i]))})</small>`:''}${r.lines?.[i]?` <span class="flavor">${esc(r.lines[i])}</span>`:''}</p></div>`).join('')}${(r.finish??[]).map(f=>`<p class="flavor finish">${esc(f)}</p>`).join('')}</article>`;}
+function historyView(){
+ if(!history.length)return '';
+ const last=history.length-1,pick=focusEx??last,full=focusEx===null?[last-1,last].filter(k=>k>=0):[pick];
+ return `<section class="hist"><div class="hstrip" id="hstrip" role="list">${history.map((r,k)=>`<button class="hx${full.includes(k)?' on':''}" data-ex="${k}" title="Exchange ${r.round}: you ${esc(r.actionNames[0])}, ${esc(nameOf(1))} ${esc(r.actionNames[1])}" role="listitem"><span class="mini-icon you">${actionIcon(r.pair[0],0,r.channels?.[0])}</span><span class="mini-icon opp">${actionIcon(r.pair[1],1,r.channels?.[1])}</span><i>${r.round}</i></button>`).join('')}</div>
+  <div class="hfull" id="hfull">${full.map(k=>exchangeFull(history[k],k)).join('')}${focusEx!==null?'<button class="link" data-ex="latest">Back to the latest</button>':''}</div></section>`;
+}
+
+function actionButton(id){const reason=available(game,0,id),disabled=busy||actorToMove(game)!==0||reason,name=actionName(id,0),b=briefOf(0,id);
+ return `<button class="act k-${b.kind}${selected===id?' selected':''}" data-action="${id}" aria-label="${esc(name+' · '+price(0,id)+(reason?' · '+reason:''))}" aria-pressed="${selected===id}" title="${esc(name+' · '+price(0,id)+(reason?' · '+reason:''))}" ${disabled?'disabled':''}><span class="a-ico" aria-hidden="true">${actionIcon(id)}</span>${id.startsWith('bundle:')?'':`<span class="a-name">${esc(['hold','release'].includes(id)?label(id):name)}</span>`}${effHtml(b,name)}${costHtml(0,id)}<em class="card-eval" data-eval="${id}"></em></button>`;}
+function preview(){if(!selected)return `<div class="preview hint">${busy||actorToMove(game)!==0?'Waiting for the opponent…':'Pick an action to see what it does. Pick it again to act.'}</div><button id="commit" class="primary" disabled>Commit</button>`;
+ return `<div class="preview"><b>${esc(actionName(selected,0))}</b> <span class="price">${price(0,selected)}</span><p>${esc(describe(game,0,selected))}</p></div><button id="commit" class="primary" ${busy||actorToMove(game)!==0?'disabled':''}>${SPELLS[selected]?`<span class="control-icon" aria-hidden="true">${ACTION_ICONS.cast}</span>Cast`:'Commit'}</button>`;}
+function actions(){
+ const a=game.actors[0],forced=a.channel||has(game,0,'haste')||a.freezeUntil>=game.round;
+ const ids=forced?legalActions(game,0):['strike','guard','reclaim',...Object.keys(a.kit.spells)];
+ return `${forced?`<div class="action-state">${a.freezeUntil>=game.round?'Frozen · you thaw after this exchange':a.channel?label(a.channel.id)+' · Hold or Release':'Haste · one bundle of basic actions'}</div>`:''}<div class="acts${forced?' forced':''}">${ids.map(actionButton).join('')}</div><div class="commit-bar">${preview()}</div>`;
+}
 function commit(id=selected){if(!id||busy||actorToMove(game)!==0||available(game,0,id))return;try{submit(id);pump();}catch(e){$('setup-error').textContent=e.message;}}
 // Selection stays until execution or a different choice; there is no click timer.
 function selectAction(id){selected=id;for(const b of document.querySelectorAll('[data-action]')){const active=b.dataset.action===id;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(active));}document.querySelector('.commit-bar').innerHTML=preview();$('commit').onclick=()=>commit();}
-function choices(){
- const a=game.actors[0],forced=a.channel||has(game,0,'haste')||a.freezeUntil>=game.round;
- const ids=forced?legalActions(game,0):['strike','guard','reclaim',...Object.keys(a.kit.spells)];
- return `${forced?`<div class="action-state">${a.freezeUntil>=game.round?'Frozen · thaw after this exchange':a.channel?label(a.channel.id)+' · Hold or Release':'Haste · one public basic bundle'}</div>`:''}<div class="action-grid ${forced?'forced':''}">${ids.map(card).join('')}</div><div class="commit-bar">${preview()}</div>`;
-}
 
+// ---- Sheets: inspect the opponent, their committed move, the full log ----
+function inspectSheet(){const a=game.actors[1],forced=a.channel||has(game,1,'haste')||a.freezeUntil>=game.round;
+ const ids=forced?legalActions(game,1):['strike','guard','reclaim',...Object.keys(a.kit.spells)],recent=history.slice(-6).reverse();
+ const sk=['arcana','lore','alchemy','charm','vigor','guile'];
+ return `<header class="sh-head"><div class="pf">${portraitOf(1)}</div><div><b>${esc(nameOf(1))}</b><small>${NAMED_LOADOUTS[a.kit.loadout]?'':esc(a.kit.loadout)+' · '}Level ${a.kit.level} · HP ${fmt(a.hp)}/${fmt(a.maxHP)} · Mana ${fmt(a.resources.mana)}/${a.kit.capacity}${a.flux?` (+${fmt(a.flux)} flux)`:''}</small></div><button class="close" data-close aria-label="Close">×</button></header>
+  <div class="sk">${sk.map(k=>`<span><small>${k}</small><i style="--w:${a.kit.skills[k]}%"></i><b>${a.kit.skills[k]}</b></span>`).join('')}</div>
+  <h4>What they can do${forced?' now':''}</h4><ul class="kit">${ids.map(id=>{const reason=available(game,1,id),b=briefOf(1,id);let d='';try{d=describe(game,1,id);}catch{}return `<li class="${reason?'off':''}"><span class="mini-icon">${actionIcon(id,1)}</span><div><b>${esc(actionName(id,1))}</b> ${effHtml(b)} <span class="price">${price(1,id)}</span>${reason?` <em>${esc(reason)}</em>`:''}<p>${esc(d)}</p></div></li>`;}).join('')}</ul>
+  ${recent.length?`<h4>Their last moves</h4><div class="recent">${recent.map(r=>`<span class="ply opp" title="Exchange ${r.round}"><span class="mini-icon">${actionIcon(r.pair[1],1,r.channels?.[1])}</span>${esc(r.actionNames[1])}</span>`).join('')}</div>`:''}`;}
+function intentSheet(){const id=isCompelled(game,1)?(game.pending[1]??legalActions(game,1)[0]):game.pending[1];if(!id)return inspectSheet();
+ return `<header class="sh-head"><span class="tele-icon">${actionIcon(id,1)}</span><div><b>${esc(nameOf(1))}: ${esc(actionName(id,1))}</b><small>${price(1,id)}</small></div><button class="close" data-close aria-label="Close">×</button></header><p>${esc(describe(game,1,id))}</p><button class="link" data-sheet="inspect">Everything they can do →</button>`;}
+function logSheet(){
+ const rows=history.map(r=>`<article><h3>Exchange ${r.round} <small>· ${r.leader===0?'you led':'they led'}</small></h3>${[r.leader,1-r.leader].map(i=>`<div class="log-act ${i?'opp':'you'}"><span class="mini-icon">${actionIcon(r.pair[i],i,r.channels?.[i])}</span><div><b>${i?esc(nameOf(1)):'You'}</b> ${esc(r.actionNames[i])}${r.committed[i]!==r.pair[i]?` <small>(committed ${esc(label(r.committed[i]))})</small>`:''}${r.lines?.[i]?`<p class="flavor">${esc(r.lines[i])}</p>`:''}${r.descs?.[i]?`<p>${esc(r.descs[i])}</p>`:''}</div></div>`).join('')}${(r.finish??[]).map(f=>`<p class="flavor finish">${esc(f)}</p>`).join('')}<ul>${r.events.map(e=>`<li>${esc(e)}</li>`).join('')||'<li>No damage or resource events.</li>'}</ul><small class="after">HP ${r.hp.map(fmt).join(' / ')} · Mana ${r.ready.map(fmt).join(' / ')} · flux ${r.flux.map(fmt).join(' / ')}</small></article>`);
+ return `<header class="sh-head"><div><b>Fight log</b><small>${history.length} exchange${history.length===1?'':'s'}</small></div><button class="close" data-close aria-label="Close">×</button></header><div class="log">${rows.join('')||'<p class="fine">No exchanges yet.</p>'}</div>`;}
+function renderSheet(){const el=$('sheet');if(!sheet||!game){el.hidden=true;el.innerHTML='';return;}
+ el.hidden=false;el.innerHTML=`<div class="sheet-card sheet-${sheet}" role="dialog" aria-modal="true">${sheet==='inspect'?inspectSheet():sheet==='intent'?intentSheet():logSheet()}</div>`;
+ el.onclick=e=>{if(e.target===el||e.target.closest('[data-close]')){sheet=null;renderSheet();}else{const s=e.target.closest('[data-sheet]');if(s){sheet=s.dataset.sheet;renderSheet();}}};
+ if(sheet==='log'){const log=el.querySelector('.log');log.scrollTop=log.scrollHeight;}}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sheet){sheet=null;renderSheet();}});
+
+// ---- The main game's screen, as stubs: what the fight sits inside ----
+const ORB={health:['#e06a6a','♥','Health',100],mood:['#e2b23f','☀','Mood',100],mana:['#5fa8e8','✦','Mana'],alignment:['#8a7fd6','☾','Alignment',100]};
+function stubTop(){return `<div class="brand">Lumenhold Academy</div><div class="date"><div class="when">Harvestmoon<small>YEAR 1 · MONTH 3 OF 48</small></div><div class="tl48">${Array.from({length:48},(_,i)=>`<i class="${i<2?'done':i===2?'now':''}"></i>`).join('')}</div></div><div class="top-actions">${['⌘','☼','✎','☖'].map(c=>`<span class="icon-btn">${c}</span>`).join('')}</div>`;}
+function stubMeters(){const a=game.actors[0],v={health:a.entry.health,mood:a.resources.mood,mana:a.resources.mana,alignment:a.resources.alignment};
+ return `${Object.entries(ORB).map(([k,[c,ico,lbl,max]])=>{const m=max??a.kit.capacity,p=k==='alignment'?50+v[k]/2:100*v[k]/m;return `<div class="meter"><div class="orb"><i style="height:${Math.max(0,Math.min(100,p))}%;background:${c}"></i><span>${ico}</span></div><b>${Math.round(v[k])}</b><small>${lbl}</small></div>`;}).join('')}<div class="meter num"><div class="numv">◎<b>${fmt(a.resources.crowns)}</b></div><small>Crowns</small></div><div class="meter num"><div class="numv">★<b>${fmt(a.resources.renown)}</b></div><small>Renown</small></div>`;}
+function stubSide(){const k=game.actors[0].kit.skills;return `<nav class="side-tabs"><b class="on">You</b><b>People</b><b>Clues</b><b>Journal</b></nav><h5>YOUR SKILLS</h5>${Object.entries(k).map(([s,v])=>`<div class="skill"><span>${s[0].toUpperCase()+s.slice(1)}</span><b>${v}</b><i style="--w:${v}%"></i></div>`).join('')}<h5>CONDITIONS &amp; COMMITMENTS</h5><div class="cond"><b>${esc(CONTEXTS[game.config.context]?game.config.context.replace('_',' '):'')}</b><small>The fight's stakes: ${Math.round(100*game.rebates.health)}% of lost Health and ${Math.round(100*game.rebates.mana)}% of spent Mana come back after it.</small></div>`;}
+function cardStub(){return `<div class="card-stub"><span class="tag">CHALLENGE</span><h3>${esc(SPECIAL_LOADOUTS[game.actors[1].kit.loadout]?'Between You and the Flower':NAMED_LOADOUTS[game.actors[1].kit.loadout]?'A Duel with '+game.actors[1].kit.loadout:'The Ring Under the Boathouse')}</h3></div>`;}
+function renderChrome(){const on=!!game&&view!=='setup';
+ $('shell').classList.toggle('with-side',on&&chrome.side);
+ for(const [id,key,fn]of [['stub-top','top',stubTop],['stub-meters','meters',stubMeters],['stub-side','side',stubSide]]){const el=$(id),show=on&&chrome[key];el.hidden=!show;if(show)el.innerHTML=fn();}}
+
+// ---- The engine (optional) ----
 const evalText=v=>v===undefined?'…':v>=9000?'KO':v<=-9000?'−KO':(v>0?'+':v<0?'−':'')+Math.abs(v).toFixed(1);
 const evalShare=v=>v>=9000?100:v<=-9000?0:100/(1+Math.exp(-v/12));
 function evalBar(){const v=analysis?.scores?.[analysis.best];return `<i style="height:${v===undefined?50:evalShare(v)}%"></i><span>${v===undefined?'':evalText(v)}</span>`;}
@@ -146,14 +212,14 @@ function enginePanel(){
  return `<div class="engine-head"><b>${head}</b><select id="engine-budget" aria-label="Engine time">${[[500,'0.5 s'],[1500,'1.5 s'],[4000,'4 s']].map(([v,t])=>`<option value="${v}" ${v===engineBudget?'selected':''}>${t}</option>`).join('')}</select></div>${analysis?.lines?`<ol class="lines">${analysis.lines.map((l,k)=>`<li class="${k===0?'best':''}"><span class="eval">${evalText(l.value)}</span><span class="line">${lineHtml(l.line)}</span></li>`).join('')}</ol>`:''}<p class="fine">Values are in HP from your side: + is good for you. The line is each side's best reply as the engine sees it: gold chips are your moves, blue chips the opponent's, and | separates exchanges.</p>`;
 }
 function paintEngine(){
- const panel=$('engine');if(panel&&engineOn){panel.innerHTML=enginePanel();$('engine-budget').onchange=e=>{engineBudget=Number(e.target.value);try{localStorage.setItem('engineBudget',engineBudget);}catch{}analysisFor=-1;analysis=null;requestAnalysis();paintEngine();};}
+ const panel=$('engine');if(panel&&engineOn){panel.innerHTML=enginePanel();$('engine-budget').onchange=e=>{engineBudget=Number(e.target.value);store.set('engineBudget',engineBudget);analysisFor=-1;analysis=null;requestAnalysis();paintEngine();};}
  if($('evalbar'))$('evalbar').innerHTML=evalBar();
  const live=engineOn&&analysis&&analysisFor===moves;
  for(const b of document.querySelectorAll('[data-action]'))b.classList.toggle('best',!!live&&b.dataset.action===analysis.best);
  for(const e of document.querySelectorAll('[data-eval]')){const v=live?analysis.scores[e.dataset.eval]:undefined;e.textContent=v===undefined?'':evalText(v);}
 }
 function onAnalysis(e){if(e.data.token!==analysisToken)return;if(e.data.error){analysisRunning=false;$('setup-error').textContent='Engine: '+e.data.error;paintEngine();return;}if(e.data.done)analysisRunning=false;else analysis=e.data.analysis;paintEngine();}
-function setEngine(on){engineOn=on;try{localStorage.setItem('engineOn',on?'1':'0');}catch{}
+function setEngine(on){engineOn=on;store.set('engineOn',on?'1':'0');
  if(!on){analyst?.terminate();analyst=null;analysisRunning=false;analysis=null;analysisFor=-1;}render();}
 function requestAnalysis(){
  if(!game||game.result||!engineOn||actorToMove(game)!==0||busy||analysisFor===moves)return;
@@ -161,21 +227,36 @@ function requestAnalysis(){
  if(analysisRunning||!analyst){analyst?.terminate();analyst=makeAnalyst();}
  analysisFor=moves;analysis=null;analysisRunning=true;analyst.postMessage({type:'analyze',token:++analysisToken,state:game,budgetMs:engineBudget,maxDepth:8});
 }
-function result(){const r=game.result;return `<div class="result ${r.outcome}"><h2>${r.outcome.toUpperCase()}</h2><p>${r.reason}${r.tiebreak?' · telegraphed initiative wins':''}</p><div class="net-costs">${COMBAT_RESOURCES.map(k=>`${k}: ${game.settlement[0][k].netLoss<0?'+':'−'}${fmt(Math.abs(game.settlement[0][k].netLoss))}`).join(' · ')}</div><p class="fine">Flux collected; rebates cover net loss only. Crowns and alignment are never rebated.${game.result.followUps.length?` Observers reported ${game.reports.length} forbidden cast(s).`:""}</p><button id="replay" class="primary">Replay same setup</button><button id="carry" ${game.config.healthModel==='direct'&&game.actors[0].resources.health<=0?'disabled':''}>Next bout · carry balances</button><button id="export">Export log</button></div>`;}
-function debug(){return `<div class="debug"><h3>Search and exchange journal</h3><p>Decisions ${stats.length}; deepest completed ${Math.max(0,...stats.map(a=>a.completedDepth))}; slowest ${Math.max(0,...stats.map(a=>a.elapsedMs)).toFixed(1)} ms; accepted weaker choices ${stats.filter(a=>a.degraded).length} / ${stats.length}.</p><details><summary>Kits and ledgers</summary><pre>${esc(JSON.stringify({kits:game.actors.map(a=>a.kit),settlement:game.settlement,reports:game.reports},null,2))}</pre></details>${history.slice().reverse().map(r=>`<details open><summary>Exchange ${r.round}: ${r.pair.map(label).join(' / ')}</summary><ul>${r.events.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></details>`).join('')}</div>`;}
-function render(){if(!game)return;document.body.classList.add('playing');document.body.classList.toggle('setup-open',view==='setup');document.body.classList.toggle('debug-open',view==='debug');document.body.classList.toggle('log-open',view==='log');
- snapshotBars();const keep=$('center-log'),stick=!keep||keep.scrollHeight-keep.scrollTop-keep.clientHeight<40;
- $('play').innerHTML=`<nav><b>Combat · ${game.result?'Complete':'Exchange '+game.round}</b><button data-view="setup">Setup</button><button data-view="play">Play</button><button data-view="debug">Debug</button><button id="engine-toggle" class="${engineOn?'active':''}" aria-pressed="${engineOn}" title="Show or hide the engine's analysis of your turns">Engine: ${engineOn?'on':'off'}</button></nav><div class="play-stage"><div class="intent">${game.result?'Encounter settled.':intent()}</div>${arena()}${forecasts()}${engineOn?'<div class="engine" id="engine"></div>':''}${game.result?result():choices()}${!game.result?`<button id="leave" class="leave"><span class="control-icon" aria-hidden="true">${ACTION_ICONS.concede}</span>Leave encounter</button>`:''}</div>${debug()}`;
- const log=$('center-log');if(log&&stick)log.scrollTop=log.scrollHeight;animateBars();paintEngine();requestAnalysis();
- for(const b of document.querySelectorAll('[data-view]'))b.onclick=()=>{view=b.dataset.view;render();window.scrollTo(0,0);};for(const b of document.querySelectorAll('[data-action]'))b.onclick=()=>{const id=b.dataset.action;if(selected===id)commit(id);else selectAction(id);};
+
+// ---- The fight ----
+function result(){const r=game.result,won=r.winner===0,lost=r.winner===1;return `<div class="result ${won?'win':lost?'loss':'draw'}"><h2>${won?'Victory':lost?'Defeat':'Draw'}</h2><p>${esc(r.reason)}${r.tiebreak?' · the telegraphed initiative wins':''}</p><div class="net-costs">${COMBAT_RESOURCES.map(k=>{const n=game.settlement[0][k].netLoss;return `<span>${k} <b class="${n>0?'neg':n<0?'pos':''}">${n<0?'+':n>0?'−':'±'}${fmt(Math.abs(n))}</b></span>`;}).join('')}</div><p class="fine">Flux is collected; rebates cover net losses only. Crowns and alignment are never rebated.${r.followUps.length?` Witnesses reported ${game.reports.length} forbidden cast${game.reports.length===1?'':'s'}.`:''}</p><div class="result-actions"><button id="replay" class="primary">Replay same setup</button><button id="carry" ${game.config.healthModel==='direct'&&game.actors[0].resources.health<=0?'disabled':''}>Next bout · carry balances</button><button id="export">Export log</button></div></div>`;}
+function head(){const lead=game.leader;
+ return `<header class="fight-head"><div class="fh-title"><b>${game.result?'The fight is over':'Exchange '+game.round}</b><small>${game.result?'':lead===0?'you lead':'they lead'}</small></div><div class="fh-tools">
+  <button class="tool" data-sheet="inspect" title="Inspect the opponent" aria-label="Inspect the opponent">${EYE}</button><button class="tool" data-sheet="log" title="Full log" aria-label="Full log">${SCROLL}</button><button id="engine-toggle" class="tool text${engineOn?' active':''}" aria-pressed="${engineOn}" title="Show or hide the engine's analysis of your turns">Engine</button><button class="tool" data-view="setup" title="Setup" aria-label="Setup">${GEAR}</button><button class="tool text debug-btn" data-view="debug" title="Search journal">Debug</button>${!game.result?`<button id="leave" class="tool text leave" title="Concede the fight"><span class="control-icon" aria-hidden="true">${ACTION_ICONS.concede}</span><span class="tlabel">Leave</span></button>`:''}</div></header>`;}
+function fight(){return `<div class="fight-wrap${chrome.card?' with-card':''}">${chrome.card?cardStub():''}<section class="fight">${head()}<div class="fighters${engineOn?' with-eval':''}">${engineOn?`<div class="evalbar" id="evalbar" title="Engine evaluation for you, in HP">${evalBar()}</div>`:''}${fighter(0)}${fighter(1)}</div>${intent()}<div class="mid" id="mid">${engineOn?'<div class="engine" id="engine"></div>':''}${timeline()}${historyView()}</div>${game.result?result():actions()}</section></div>`;}
+function debug(){return `<div class="debug"><nav><button data-view="play">← Back to the fight</button></nav><h3>Search and exchange journal</h3><p>Decisions ${stats.length}; deepest completed ${Math.max(0,...stats.map(a=>a.completedDepth))}; slowest ${Math.max(0,...stats.map(a=>a.elapsedMs)).toFixed(1)} ms; accepted weaker choices ${stats.filter(a=>a.degraded).length} / ${stats.length}.</p><details><summary>Kits and ledgers</summary><pre>${esc(JSON.stringify({kits:game.actors.map(a=>a.kit),settlement:game.settlement,reports:game.reports},null,2))}</pre></details>${history.slice().reverse().map(r=>`<details open><summary>Exchange ${r.round}: ${r.pair.map(label).join(' / ')}</summary><ul>${r.events.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></details>`).join('')}</div>`;}
+function render(){
+ document.body.classList.toggle('playing',!!game);document.body.classList.toggle('setup-open',!game||view==='setup');
+ $('setup').hidden=!!game&&view!=='setup';$('play').hidden=!!game&&view==='setup';
+ renderChrome();if(!game)return;
+ snapshotBars();const keep=$('hstrip'),stickStrip=!keep||keep.scrollWidth-keep.scrollLeft-keep.clientWidth<40;
+ $('play').innerHTML=view==='debug'?debug():fight();
+ const strip=$('hstrip');if(strip&&stickStrip)strip.scrollLeft=strip.scrollWidth;// The middle (engine, timeline, history) scrolls when space is short; keep the latest exchange in view.
+ const mid=$('mid');if(mid&&focusEx===null)mid.scrollTop=mid.scrollHeight;
+ animateBars();paintEngine();requestAnalysis();renderSheet();
+ for(const b of document.querySelectorAll('#play [data-view]'))b.onclick=()=>{view=b.dataset.view;render();window.scrollTo(0,0);};
+ for(const b of document.querySelectorAll('#play [data-sheet]')){const open=()=>{sheet=b.dataset.sheet;renderSheet();};b.onclick=open;b.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}};}
+ for(const b of document.querySelectorAll('[data-ex]'))b.onclick=()=>{focusEx=b.dataset.ex==='latest'?null:Number(b.dataset.ex);render();};
+ for(const b of document.querySelectorAll('[data-action]'))b.onclick=()=>{const id=b.dataset.action;if(selected===id)commit(id);else selectAction(id);};
  if($('commit'))$('commit').onclick=()=>commit();
  if($('engine-toggle'))$('engine-toggle').onclick=()=>setEngine(!engineOn);
  if($('leave'))$('leave').onclick=()=>{token++;busy=false;concede(game,0);render();};
  if($('replay'))$('replay').onclick=()=>start(game.config);
  if($('carry'))$('carry').onclick=()=>start({...game.config,playerResources:{...game.actors[0].resources},opponentResources:undefined});
- if($('export'))$('export').onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify({rulesVersion:RULES_VERSION,config:game.config,kits:game.actors.map(a=>a.kit),history,stats,result:game.result,settlement:game.settlement,reports:game.reports},null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='lumenhold-combat-v04-'+Date.now()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+ if($('export'))$('export').onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify({rulesVersion:RULES_VERSION,config:game.config,kits:game.actors.map(a=>a.kit),history,stats,result:game.result,settlement:game.settlement,reports:game.reports},null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='lumenhold-combat-'+Date.now()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 }
-// Version shown in the header and the tab title, straight from the engine build.
+// Version shown in the setup panel and the tab title, straight from the engine build.
 if($('version'))$('version').textContent=RULES_VERSION;document.title='Lumenhold · Combat '+RULES_VERSION;
+render();
 const params=new URLSearchParams(location.search);if(params.has('quickstart')){const n=Number(params.get('quickstart'));if([20,50,80].includes(n)){$('player-level').value=n;setup();start();}}
 }

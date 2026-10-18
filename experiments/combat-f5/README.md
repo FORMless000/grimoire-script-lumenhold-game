@@ -8,7 +8,7 @@ The combat rules and the AI search exist once, in Rust (`rust/core`). They are c
 | `rust/core/` | the rules (`rules.rs`), the state and its JSON form (`state.rs`), the search and AI policy (`ai.rs`), action descriptions (`text.rs`); spell numbers come from `data/rules-data.json`, generated from `setup/roster.mjs` |
 | `rust/sim/` | `combat-sim`: `run` (parallel fights for `tools/sim.mjs`), `step`, `search`, `fight` (line-based JSON, for tests) |
 | `rust/wasm/` | the browser build: a small C ABI over linear memory, no wasm-bindgen |
-| `web/` | the test bench UI (`app.mjs`, `index.html`, `style.css`, `server.mjs`), `core.mjs` (the JS face of the core: `applyChoice`, `legalActions`, `describe`, `chooseAIAction`, `searchAction`, …), `rulebook.md` |
+| `web/` | the test bench UI (`app.mjs`, `index.html`, `style.css`, `server.mjs`; `brief.mjs` for the effect on each action button, `art.mjs` for portraits and placeholders), `core.mjs` (the JS face of the core: `applyChoice`, `legalActions`, `describe`, `chooseAIAction`, `searchAction`, …), `rulebook.md` |
 | `tools/` | `build.mjs`, `playtest.sh`, `suite-f5.sh`, `sim.mjs`, `arms.mjs`, `replay.mjs`, `report.mjs`, `action-report.mjs`, `golden.mjs`, `export-data.mjs`, `bench-live.js` |
 | `test/golden.json` | regression goldens (see below) |
 | `out/` | gitignored: the built site, suite results, and the retired JS oracle (`out/oracle/`) |

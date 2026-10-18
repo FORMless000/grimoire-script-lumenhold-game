@@ -104,13 +104,17 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 
 ### 5. The UI
 
-- **Port the fight screen from `web/app.mjs`** as an overlay over the card, which stays visible. Keep:
-  - the telegraph with its flavor line;
-  - the action grid with descriptions;
-  - the exchange log with finish lines;
+- **Port the fight screen from `web/app.mjs`** as an overlay over the card, which stays visible. It already uses the main game's tokens and fonts (`src/style.css`). Keep:
+  - the two fighters: portrait, Health and Mana with flux as big numbers on bars;
+  - the telegraph (the foe's committed action with its effect and flavor line), which opens the full text;
+  - the timeline: buffs, constructs, channels, Foresight and pending Omens over the next 5 exchanges;
+  - the history: older exchanges as an icon strip, the last two in full, any one on a tap;
+  - the square action buttons: icon, name, effect (`web/brief.mjs`, read from `describe()`), turns and the Mana or HP cost;
+  - the inspect sheet (the foe's skills, kit with prices and recent moves) and the full log;
   - Concede.
-- **Drop the bench parts:** the setup panel, the engine view and the debug controls.
-- **Layout:** it must work at phone width (375 px).
+- **Portraits:** `web/art.mjs` shows `portraits/<npc>.png` when one exists (`NAMED_LOADOUTS[name].npc`), else an SVG placeholder; the player's frame stays blank.
+- **Drop the bench parts:** the setup panel, the engine view and evaluation bar, the debug controls, and the stubs that imitate the main game around the fight (top bar, meters, side panel, card; toggled in setup).
+- **Layout:** it must work at phone width (375 px); the bench fits 320×568 without page scroll.
 - **Saves:** a fight in progress is plain JSON (the state from `createState`, then the core's). Save it with the run so a closed tab resumes mid-fight, and apply settlement once, at the end.
 
 ### 6. Localization
