@@ -399,6 +399,23 @@ Animate counts under both of its skills; Ward has no skill. Charm is light. Comp
 
 ## K. Changes from today, for the later implementation pass
 
+**Implemented 2026-10-17**, except the fight wiring and card-side fight data, which wait for the loadouts. How it
+landed, and where it differs:
+- Format and engine as below, but with no channel or construct data in content: the minigame owns those, and the
+  fight prices spells itself (content `cost:` is the card cost from §C).
+- Course spells come at the start of each level, from the course's own start card (`@track start:`); passing is only
+  the fallback. Every enrolment in 18 bot games learned its level's spell in the enrolment month.
+- Saves: removed ids are dropped and levels clamped on load (`load()`), not mapped. Saves from before were already
+  refused by `SAVE_VERSION`. The three cut lessons are retired by migration 0033.
+- §G chains: the start is pushed (`trigger: auto`) once you reach rank 2, while the spell is unknown and before month
+  45; preparations weigh 60 and the final 40 (§G's ~8 left most chains unfinished in a four-year run). The final opens
+  two months after the start, with two preparations done, or after six months. Measured over 200 bot games: every member
+  who reaches rank 2 by month 42 sees the start, and the bots take it up 40–85% of the time; of the chains taken up,
+  about a third finish in a club (it meets twice a term) and 70% in a job. Clubs may want a third meeting or lighter
+  preparations once humans have played it.
+- Peer capstones are §F's stubs: `trigger: social`, close or partner, one beat.
+- Exams are a rung harder (`exam_tiers`, design §7), since the course spell's XP now comes before the exam.
+
 - **Removed or folded:**
   - Tide, Beast-speech and Mirror go. Purify becomes Distil (id kept).
   - Starlight moves to Starcalling.

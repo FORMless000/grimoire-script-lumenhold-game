@@ -553,22 +553,24 @@ Concept: `docs/map-concept.svg` / `.png`.
 
 ### 7.1 The list
 
-**Courses: 6 disciplines × 3 levels, plus 3 hidden.** One skill per discipline. Each discipline teaches 2 spells (§9.1).
+**Courses: 6 disciplines × 3 levels, plus 3 hidden.** One skill per discipline. Each course teaches one spell (spells v2, §9.1), a level of it at the start of each course level, on the course's own start card (`start:`); a hidden course teaches its one-level spell the same way.
 
-| Discipline | Skill | Merges (today) | Spells |
+| Discipline | Skill | Merges (today) | Spell |
 |---|---|---|---|
-| Evocation | arcana | Pyromancy, Tidecalling | Flame, Tide |
-| Astromancy & Divination | lore | Astromancy, Divination | Foresight, Starlight |
-| Alchemy & Healing | alchemy | Practical Alchemy, Healing Arts | Mend, Purify |
-| Illusion & Glamour | charm | Illusion & Glamour | Glamour, Mirror |
-| Beastcraft & Flight | vigor | Beastcraft (+ flight) | Haste, Beast-speech |
-| Umbral Theory | guile | Umbral Theory | Ward, Shadowstep |
+| Evocation | arcana | Pyromancy, Tidecalling | Flame |
+| Astromancy & Divination | lore | Astromancy, Divination | Foresight |
+| Alchemy & Healing | alchemy | Practical Alchemy, Healing Arts | Mend |
+| Illusion & Glamour | charm | Illusion & Glamour | Glamour |
+| Beastcraft & Flight | vigor | Beastcraft (+ flight) | Haste |
+| Umbral Theory | guile | Umbral Theory | Shadowstep |
 
-| Hidden course | Prerequisite |
-|---|---|
-| Artifice | Alchemy II + Evocation II |
-| Starcalling | Astromancy III + clue `heard_of_starcalling` |
-| Hollow Studies | Umbral II + Astromancy II + clue `knows_founders_seal` |
+| Hidden course | Prerequisite | Spell |
+|---|---|---|
+| Artifice | Alchemy II + Evocation II | Animate |
+| Starcalling | Astromancy III + clue `heard_of_starcalling` | Starlight |
+| Hollow Studies | Umbral II + Astromancy II + clue `knows_founders_seal` | Seal |
+
+Ward is no course's: every first-year learns it in the first month, at the orientation safety talk.
 
 **Clubs (4, one at a time):**
 - Duelling Circle (arcana / vigor)
@@ -592,7 +594,8 @@ skill: arcana
 levels: 3
 level_names: Evocation I, Evocation II, Advanced Evocation
 place: lecture_tower             # where its events happen / obligation location for clubs & jobs
-teaches: flame@1 flame@2 tide@2 flame@3 tide@3
+teaches: flame@1 flame@2 flame@3
+start: evo_first_flame           # courses: the card that teaches the level's spell, pushed on enrolment
 hidden: false
 prereq: true                     # hidden courses: e.g. passed(alchemy,2) and passed(evocation,2)
 # clubs/jobs:
@@ -619,7 +622,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - **Hint events** (2–3 per hidden course) point at the prerequisites.
 
 **Exams:**
-- In the term's last month, each course's exam is a card (playtest 2): the player chooses to answer steadily or to go for top marks (the swing of §9.2), and the card shows the pass and A chances. The exam is on the course's skill, at the **course standard** for its level (§8.6: I apprentice+, II adept+, III master+, a track's `standard:` overriding), with low drift; `@balance exam_tiers` sets each level's offset (`standard+1` at every level). Measured (feedback 2026-10-15, 40 games a style): a balanced player passes level I about 87% of the time, II about 75%, III about 70%, with A rates of about 44%, 29% and 18%; before, the standards were two rungs apart and every level passed about 92%, because the players who reach a higher level are further ahead in its skill. Until the check ladder (2026-10) it was a legacy tier by level (easy, medium, hard), eased in L when harder exams sent careful players to "Barely", and exams passed about 90% of the time; on the ladder about 83% (GPA about 2.9). The enrolment menu shows each course's skill, exam tier, spells and pass chance up front.
+- In the term's last month, each course's exam is a card (playtest 2): the player chooses to answer steadily or to go for top marks (the swing of §9.2), and the card shows the pass and A chances. The exam is on the course's skill, at the **course standard** for its level (§8.6: I apprentice+, II adept+, III master+, a track's `standard:` overriding), with low drift; `@balance exam_tiers` sets each level's offset (`standard+2 standard+3 standard+3` since spells v2, 2026-10-17: the course spell and its XP now come before the exam; measured over 40 balanced games, pass and A rates of 87 / 52, 75 / 41 and 80 / 44% at levels I–III, against 87 / 47, 81 / 33 and 86 / 28% just before, at `standard+1`). Measured (feedback 2026-10-15, 40 games a style): a balanced player passes level I about 87% of the time, II about 75%, III about 70%, with A rates of about 44%, 29% and 18%; before, the standards were two rungs apart and every level passed about 92%, because the players who reach a higher level are further ahead in its skill. Until the check ladder (2026-10) it was a legacy tier by level (easy, medium, hard), eased in L when harder exams sent careful players to "Barely", and exams passed about 90% of the time; on the ladder about 83% (GPA about 2.9). The enrolment menu shows each course's skill, exam tier, spells and pass chance up front.
 - **Study modifiers:** attendance and study choices during the term add up to +15 to the roll (each course's monthly coursework adds 2, shown with it, so choices decide the rest; `@balance study: attend 0 cap 15 monthly 2`. Until feedback 2026-10-15b a course card added 2 silently; the median preparation at an exam stayed about 8–11).
 - Until the exam minigame exists (§T1), it **auto-resolves**.
 
@@ -893,24 +896,42 @@ So automation catches **gross errors and regressions only**. **Human playtests**
 
 ### 9.1 Spells
 
-- 12 spells: 2 per discipline (§7.1), each with 3 levels.
+Spells v2 (2026-10-17; the list and its reasons: `docs/spells-v2-list.md`). The ids are the combat minigame's
+(`experiments/combat-f5/setup/roster.mjs`), so a fight can take the player's spells as they are.
+
+- **35 spells.** The six course spells have three levels; every other spell has one.
+  - Course spells: Flame, Foresight, Mend, Glamour, Haste, Shadowstep. Hidden courses: Animate, Starlight, Seal.
+  - Ward: everyone's, from the first month's safety talk.
+  - Peer capstones, one per close friend (bond close or partner): Wildfire (Lyra), Heartwood (Tobias), Omen (Seraphine),
+    Sleight (Corvin), Contraption (Mir), Hoarfrost (Kael), Candour (Nessa).
+  - Club and job spells, each at the end of a five-card chain that starts at rank 2: Brace (Duelling Circle), Quickquill
+    (Lumen Ledger), Bramble (Verdant Circle), Index (Library), Rapport (Gilded Newt), Distil (Apothecary; id `purify`),
+    Tailwind (Courier).
+  - With no source yet: the hidden pool (Rime, Reflect, Moonwell, Lodestar, Toll) and the forbidden pool (Torment,
+    Extraction, Siphon, Compel, Eclipse, Heartprice), marked `pool:`.
 
 ```
-@spell ward
-name: Ward
-discipline: umbral
-cost: 8, 6, 5          # mana per level (tunable)
-power: 1, 2, 3
-desc: A pale shell that turns aside the next harm.
+@spell sleight
+name: Sleight
+skill: guile           # the skill it trains when learned and adds to on checks (one or two; none for Ward)
+verb: Lift             # the verb its cards use
+cost: 6                # Mana for a card's up[] option, per level (three values for a course spell)
+alignment: tiny        # taken off alignment on every cast (Sleight; the forbidden pool: small)
+art: spell_sleight
+desc: Palm, swap, pocket. …
 ```
 
-- **Learned from:** `teaches:` on course levels, club and job ranks, events (`learn_spell ward`), close friends (rel ≥ 70 events).
-- **A reward** (playtest 2, L-6): learning a spell, or a level of one, gives skill XP in its discipline's skill (`@balance spell_bonus`, one tier per spell level: medium, large, huge), shown on the "New spell" note, so passing a course feels like a reward.
+- **Learned from:** a course's start card (`start:`, each level at the level's start; passing the level is the fallback
+  and never teaches ahead), cards (`learn_spell x`), and `teaches:`. A fight prices spells itself; `cost:` is the card's.
+- **A reward** (playtest 2, L-6): learning a spell, or a level of one, gives skill XP in its skill (`@balance spell_bonus`
+  by level for a three-level spell: medium, large, huge; `spell_bonus_one`, large, for a one-level spell), shown on the
+  "New spell" note.
 - **Options:** `> up[ward]: Raise a ward` is the swipe-up / ↑ option.
   - Invisible unless the spell is known; shown but disabled if mana is short.
-  - Mana is deducted automatically and shown in the preview.
+  - Mana (and alignment, for a spell with `alignment:`) is taken automatically and shown in the preview.
   - Effects can read `spell_level(ward)`.
   - Translation keys: `opt.up.*`.
+- **Saves:** a spell content no longer has is dropped on load, and a level past the spell's levels is clamped.
 
 ### 9.2 Challenges
 
@@ -926,7 +947,7 @@ challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam |
 
 | Challenge | Skill(s) |
 |---|---|
-| combat | the combat stub: arcana, vigor and guile, plus condition (health, mood, mana) and total spell levels; costs mana to enter |
+| combat | the combat stub: arcana, vigor and guile, plus condition (health, mood, mana) and the levels of every spell content knows; costs mana to enter |
 | duel | (vigor + arcana) / 2 |
 | negotiate | charm |
 | deceive | guile |
@@ -936,7 +957,7 @@ challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam |
 
 - **Modifiers** (each capped at ±15):
   - `vs <role>.<stat>`: the opponent's stat is the DC (legacy tiers: it shifts the DC by the stat minus E(turn)). Peers grow with you (feedback 2026-10-15, `@balance npc_growth`): classmates (tag `peer`) and the pen pal (`thornwick`) have every skill stat × k(turn) = 1 + (K − 1)·(E(t) − E(1))/(E(end) − E(1)), where K brings their best skill to 0.9 × the final E(turn) (Lyra's arcana 34 → 56). Faculty and villagers keep fixed stats. Every classmate, Corvin, Nessa and Bram (still a prefect) included, is a first-year with you;
-  - study points; the advisor relationship (the track's `lead:` regard, rel / 5, within ±15, inside that track's cards and at its exams); spells known (+2 each for relevant ones, at most +6; L-3); items (§T2).
+  - study points; the advisor relationship (the track's `lead:` regard, rel / 5, within ±15, inside that track's cards and at its exams); spells known (+2 for each known spell whose `skill:` is tested, at most +6; L-3); items (§T2).
 - **Combat stub** (playtest 2): until the combat minigame (X5), fights use `combat`, so how rested, cheerful and charged the player is matters, and so does every spell learned. Entering a fight spends mana.
 - **Luck (swing)**: how much of the outcome is chance rather than skill (§8.6): `steady` (practice decides), `normal`, `wild` (partly luck), `luck` (gambles, searches). It is independent of difficulty and stakes.
 - **Kind and skill**: the kind is the shape of the action (talk round, mislead, work out, brew, a feat, cast, fight; `exam` only in a course); the skill is what the player uses against the obstacle, with `using` only when it differs from the kind's default.
