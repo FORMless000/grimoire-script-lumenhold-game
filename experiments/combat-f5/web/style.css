@@ -16,7 +16,7 @@ a{color:var(--gold-2)}[hidden]{display:none!important}.fine{font-size:11.5px;lin
 .shell{position:relative;z-index:1;height:100dvh;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr);grid-template-areas:"top" "meters" "stage"}
 .shell.with-side{grid-template-columns:minmax(0,1fr) 320px;grid-template-areas:"top top" "meters side" "stage side"}
 .stage{grid-area:stage;min-height:0;overflow:auto;padding:10px 16px 14px;display:flex;justify-content:center;align-items:stretch;gap:20px}
-#play{flex:1 1 auto;max-width:640px;min-width:0;min-height:0;display:flex;flex-direction:column}
+#play{flex:1 1 auto;max-width:980px;min-width:0;min-height:0;display:flex;flex-direction:column;align-items:center;container:play/inline-size}
 
 /* Stubs of the main game's chrome (src/style.css .top, .meters, .side) */
 .stub-top{grid-area:top;display:flex;align-items:center;gap:16px;padding:10px 20px;border-bottom:1px solid var(--line);background:rgba(14,17,36,.7);backdrop-filter:blur(6px)}
@@ -46,10 +46,11 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
 .welcome{margin:auto 0;padding:40px 28px;text-align:center;border:1px solid var(--line);border-radius:var(--radius);background:rgba(22,26,53,.6);color:var(--muted);font-family:var(--serif);font-size:17px}.welcome h2{font:600 38px var(--display);color:var(--gold-2);margin:0 0 10px}
 
 /* ---- The fight: one compact panel, laid over the card ---- */
-.fight-wrap{flex:1;min-height:0;display:flex;flex-direction:column}
+.fight-wrap{flex:none;width:100%;max-width:640px;display:flex;flex-direction:column}
+.fight-body,.fight-main,.controls{display:flex;flex-direction:column;gap:8px;min-width:0}
 .card-stub{flex:none;margin:0 14px -14px;padding:8px 16px 20px;display:flex;align-items:baseline;gap:10px;background:var(--parch);color:var(--ink);border-radius:var(--radius) var(--radius) 0 0;box-shadow:0 10px 30px rgba(0,0,0,.4)}
 .card-stub .tag{font:600 9.5px var(--sans);letter-spacing:.14em;color:var(--ink-2);background:rgba(42,34,56,.08);padding:2px 7px;border-radius:6px}.card-stub h3{font:700 20px var(--display);margin:0}.card-stub p{display:none}
-.fight{position:relative;flex:0 1 auto;min-height:0;display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px;background:rgba(22,26,53,.94);border:1px solid var(--line-2);border-radius:var(--radius);box-shadow:0 18px 50px rgba(0,0,0,.45);overflow:auto;overscroll-behavior:contain}
+.fight{position:relative;flex:none;display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px;background:rgba(22,26,53,.94);border:1px solid var(--line-2);border-radius:var(--radius);box-shadow:0 18px 50px rgba(0,0,0,.45)}
 .fight>*{flex:none}
 .fight-head{display:flex;align-items:center;gap:8px}.fh-title{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px}.fh-title b{font:600 20px var(--display);color:var(--gold-2)}.fh-title small{color:var(--muted);font-size:12px}
 .fh-tools{display:flex;gap:4px}.tool{height:30px;min-width:30px;padding:0 6px;border-radius:9px;background:var(--night-2);color:var(--muted);display:inline-flex;align-items:center;justify-content:center;gap:4px;font-size:11.5px;font-weight:500}.tool svg{width:16px;height:16px}.tool.text{padding:0 8px}.tool:hover:not(:disabled){color:var(--text)}
@@ -84,33 +85,41 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
 .intent b{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;font-size:13.5px;font-weight:600}.intent small{display:block;color:var(--muted);font-size:12px;line-height:1.3}.intent .flavor{font:italic 14px/1.3 var(--serif);color:#d9cfe9}
 .intent.shown{cursor:pointer;border-color:rgba(143,201,232,.4)}.intent.forced{border-color:var(--k-debuff)}.intent.shown:hover{border-color:var(--opp)}
 .it-more{color:var(--muted);display:flex}.it-more svg{width:18px;height:18px}
-.tele-icon{flex:none;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;border:1px solid rgba(143,201,232,.45);background:var(--night-2);color:var(--opp)}.tele-icon svg{width:26px;height:26px}.tele-icon .bundle-icons svg{width:15px;height:15px}.hidden-move{color:var(--muted);border-style:dashed;border-color:var(--line-2)}
+.tele-icon{flex:none;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;border:1px solid rgba(143,201,232,.45);background:var(--night-2);color:var(--opp)}.tele-icon svg{width:26px;height:26px}.tele-icon .bundle-icons{display:flex;flex-wrap:wrap;justify-content:center;max-width:32px}.tele-icon .bundle-icons svg{width:13px;height:13px}.hidden-move{color:var(--muted);border-style:dashed;border-color:var(--line-2)}
 
 /* Effect summaries (buttons, telegraph, inspect) */
 .eff{display:inline-flex;align-items:baseline;gap:3px;white-space:nowrap}.eff b{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}.eff small{font-size:10.5px;font-weight:500;opacity:.85}
 .k-dmg .eff,.eff.k-dmg{color:var(--k-dmg)}.k-heal .eff,.eff.k-heal{color:var(--k-heal)}.k-mana .eff,.eff.k-mana{color:var(--k-mana)}.k-guard .eff,.eff.k-guard{color:var(--k-guard)}.k-buff .eff,.eff.k-buff{color:var(--k-buff)}.k-debuff .eff,.eff.k-debuff{color:var(--k-debuff)}.k-gold .eff,.eff.k-gold{color:var(--k-gold)}
 
-/* Timeline of lasting effects */
-.timeline{padding:5px 8px 6px;border-radius:12px;background:rgba(14,17,36,.5);border:1px solid var(--line)}
-.tl-row{display:grid;grid-template-columns:minmax(0,1fr) repeat(5,minmax(30px,46px));align-items:center;min-height:22px}
-.tl-head span{font-size:10px;color:var(--muted);text-align:center;letter-spacing:.06em}.tl-head span:nth-child(2){color:var(--gold-2)}
-.tl-name{display:flex;align-items:center;gap:5px;min-width:0;font-size:12px}.tl-name>span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tl-name em{font-style:normal;color:var(--you);font-size:10.5px}.s1 .tl-name em{color:var(--opp)}.tl-name small{color:var(--muted)}
-.s0 .tl-name .mini-icon{color:var(--you)}.s1 .tl-name .mini-icon{color:var(--opp)}
-.tl-c{position:relative;height:22px;display:flex;align-items:center}.tl-c:nth-child(2){background:rgba(240,213,140,.06)}
-.tl-on{display:block;width:100%;height:8px;background:var(--you);opacity:.75}.s1 .tl-on{background:var(--opp)}.tl-on.first{border-radius:4px 0 0 4px;margin-left:3px}.tl-on.last{border-radius:0 4px 4px 0;margin-right:3px}.tl-on.first.last{border-radius:4px}
+/* The exchange track: every past exchange, this one and the next few on one axis (scrolls sideways into the past),
+   lasting effects as thin lines along it, each with its icon at the start */
+.track{--cw:40px;--ch:28px;--tk-bg:#13172f;padding:4px 8px 6px;border-radius:12px;background:var(--tk-bg);border:1px solid var(--line)}
+.tk-scroll{overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent;overscroll-behavior-x:contain}
+.tk-row{display:flex;align-items:center;width:max-content;min-width:100%}
+.tk-l{flex:1 0 48px;position:sticky;left:0;z-index:2;align-self:stretch;display:flex;align-items:center;background:var(--tk-bg);padding-right:6px}
+.tk-c{flex:none;width:var(--cw);height:22px;display:flex;align-items:center;justify-content:center;position:relative}
+.tk-c.now{background:rgba(240,213,140,.07);box-shadow:inset 1px 0 0 var(--line-2),inset -1px 0 0 var(--line-2)}.tk-head .tk-c.now{border-radius:8px 8px 0 0}.tk-scroll>.tk-row:last-child .tk-c.now{border-radius:0 0 8px 8px}
+.tk-c.past.on{background:rgba(255,255,255,.05)}.tk-c.past.last{margin-right:4px}
+.tk-head{min-height:18px}.tk-head .tk-c{height:18px}.tk-head .tk-c>*{font-size:10.5px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums;background:none;border:0;padding:0}.tk-head .tk-c.now b{color:var(--gold-2);font-weight:700}.tk-head .past.on button{color:var(--text)}
+.tk-act .tk-c{height:var(--ch)}.tk-who{font:600 15px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.s0 .tk-who{color:var(--you)}.s1 .tk-who{color:var(--opp)}
+.tk-act .past .mini-icon{width:26px;height:26px;padding:0;border:0;border-radius:7px;background:none}.tk-act .past .mini-icon svg{width:19px;height:19px}.tk-act .past .mini-icon .bundle-icons svg{width:10px;height:10px}
+.s0 .past .mini-icon{color:var(--you)}.s1 .past .mini-icon{color:var(--opp)}.tk-act .past .mini-icon:hover{background:var(--night-3)}
+.slot{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--muted);border:1px dashed var(--line-2);background:none;padding:0}
+.slot svg{width:18px;height:18px}.slot .bundle-icons{display:flex}.slot .bundle-icons svg{width:10px;height:10px}
+.slot.open{border-color:var(--line);width:8px;height:8px;border-radius:50%;border-style:solid}
+.slot.shows{border:1px solid rgba(143,201,232,.55);color:var(--opp);background:var(--night-2)}.slot.shows:not(button) svg{width:15px;height:15px;opacity:.85}
+.slot.forced{border:1px solid var(--k-debuff);color:var(--k-debuff)}.slot.lost{border:1px solid rgba(143,201,232,.4);color:#bfe6ff;opacity:.8}
+.slot.mine{border:1px solid rgba(240,213,140,.5);color:var(--you);font-size:10px}.slot.now-you{border-style:solid;border-color:rgba(240,213,140,.5);color:var(--you);font-size:10px}.slot.now-you:empty{border-style:dashed}.slot.wait{font-size:14px}
+.tk-eff{min-height:15px}.tk-eff .tk-c{height:15px}
+.tl-on{position:relative;display:block;width:100%;height:3px;background:var(--you);opacity:.8}.s1 .tl-on{background:var(--opp)}.tl-on.first{border-radius:2px 0 0 2px;margin-left:12px}.tl-on.last{border-radius:0 2px 2px 0;margin-right:6px}.tl-on.first.last{border-radius:2px}
 .tl-on.open{background:linear-gradient(90deg,var(--you),transparent)}.s1 .tl-on.open{background:linear-gradient(90deg,var(--opp),transparent)}
-.tl-hit{margin:auto;font-style:normal;color:var(--k-dmg);font-size:12px;display:flex;align-items:center;gap:2px}.tl-hit b{font-size:12px}
+.tk-ico{display:inline-flex;width:15px;height:15px;align-items:center;justify-content:center;color:var(--you)}.s1 .tk-ico{color:var(--opp)}.tk-ico svg{width:13px;height:13px}.tk-ico .bundle-icons svg{width:7px;height:7px}
+.tl-on .tk-ico{position:absolute;left:-12px;top:50%;transform:translateY(-50%)}
+.tl-hit{margin:auto;display:inline-flex;align-items:center;gap:1px;font-style:normal;color:var(--k-dmg);font-size:11px;font-weight:700;white-space:nowrap}.tl-hit .tk-ico{color:var(--k-dmg)}
 
-/* History: icons for every exchange, the latest in full */
-.mid{flex:0 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:8px}.mid>*{flex:none}
-.hist{display:flex;flex-direction:column;gap:6px;padding:6px 8px;border-radius:12px;background:rgba(14,17,36,.5);border:1px solid var(--line)}
-.hist.empty{flex:0 0 auto;min-height:0;justify-content:center}.hist.empty p{margin:2px 0}
-.hstrip{flex:none;display:flex;gap:3px;overflow-x:auto;scrollbar-width:thin;padding-bottom:2px}
-.hx{flex:none;width:24px;padding:2px 0 1px;display:flex;flex-direction:column;align-items:center;gap:0;border-radius:7px;background:transparent;border:1px solid transparent}.hx.on{border-color:var(--line-2);background:var(--night-3)}
-.hx .mini-icon{width:17px;height:17px}.hx .mini-icon svg{width:15px;height:15px}.hx .mini-icon .bundle-icons svg{width:8px;height:8px}.hx .you{color:var(--you)}.hx .opp{color:var(--opp)}.hx i{font-style:normal;font-size:8.5px;line-height:1;color:var(--muted);font-weight:500}
-.hfull{display:flex;flex-direction:column;gap:6px}
+.hfull{display:flex;flex-direction:column;gap:4px;margin-top:5px;padding:6px 2px 0;border-top:1px solid var(--line)}.hfull .link{align-self:flex-start}
 .hx-full h4{margin:0 0 2px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}.hx-full h4 small{text-transform:none;font-weight:400}
-.hl{display:flex;gap:7px;align-items:flex-start}.hl p{margin:0;font-size:13px;line-height:1.35}.hl b{font-weight:600}.hl.you b{color:var(--you)}.hl.opp b{color:var(--opp)}.hl .mini-icon{margin-top:1px}.hl.you .mini-icon{color:var(--you)}.hl.opp .mini-icon{color:var(--opp)}
+.hl{display:flex;gap:7px;align-items:flex-start}.hl p{margin:0;font-size:13px;line-height:1.35}.hl b{font-weight:600}.hl.you b{color:var(--you)}.hl.opp b{color:var(--opp)}.hl .mini-icon{margin-top:1px;width:auto;min-width:20px}.hl.you .mini-icon{color:var(--you)}.hl.opp .mini-icon{color:var(--opp)}
 .flavor{font:italic 14.5px/1.35 var(--serif);color:#e2d9ef}.flavor.finish{display:block;margin:2px 0 0 27px;font-size:14px;color:var(--gold-2)}
 .mini-icon{flex:none;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;color:var(--text)}.mini-icon svg{width:18px;height:18px}.mini-icon .bundle-icons{display:inline-flex}.mini-icon .bundle-icons svg{width:11px;height:11px}.glyph{font-size:13px}
 
@@ -162,6 +171,13 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
 /* Debug view */
 .debug{padding:14px;border-radius:var(--radius);background:rgba(22,26,53,.9);border:1px solid var(--line);color:var(--muted);font-size:12px;overflow:auto}.debug pre{font-size:10.5px;overflow:auto}.debug nav{margin-bottom:8px}
 
+/* With room, the state on the left and the choices on the right, so the whole fight fits without scrolling. */
+@container play (min-width:640px){.fight-wrap{max-width:980px}.fight-body{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:10px;align-items:start}.acts{grid-template-columns:repeat(4,1fr);gap:5px}.act .a-ico svg{width:24px;height:24px}.a-name{font-size:9.5px;letter-spacing:-.01em}.track{--cw:34px}}
+@container play (min-width:840px){.fight-body{grid-template-columns:minmax(0,1fr) minmax(330px,370px);gap:12px}.acts{grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px}.act .a-ico svg{width:30px;height:30px}.a-name{font-size:11px}.track{--cw:40px}}
+
+/* The card behind is decoration: it gives way first when height is short. */
+@media(max-height:720px){.card-stub{display:none}}
+
 /* ---- Narrow screens: the main game hides the side panel; the fight keeps every part, smaller ---- */
 @media(max-width:900px){.shell.with-side{grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "meters" "stage"}.stub-side{display:none}}
 @media(max-width:760px){.stage{padding:8px 8px 10px;flex-direction:column}#setup{flex:none;width:100%;align-self:stretch}body.playing.setup-open #play{display:none}#play{max-width:none}.top-actions{display:none}}
@@ -177,8 +193,9 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
  .fname{min-height:34px}.fighter.you .fname{padding-left:40px}.fighter.opp .fname{padding-right:40px}.fname b{font-size:14.5px}.fname small{font-size:9.5px}
  .bar{gap:4px}.bnum{min-width:0;font-size:16px}.bnum small{font-size:9px}.bk{display:none}.btrack{height:7px}.bflux{font-size:9.5px;min-width:0}
  .intent{padding:4px 7px;gap:7px}.tele-icon{width:28px;height:28px}.tele-icon svg{width:20px;height:20px}.intent b{font-size:12px}.intent small{font-size:10.5px}.intent .flavor{font-size:12.5px}
- .timeline{padding:3px 5px}.tl-row{grid-template-columns:minmax(0,1fr) repeat(5,26px);min-height:18px}.tl-c{height:18px}.tl-name{font-size:10.5px}.tl-name .mini-icon{width:15px;height:15px}.tl-name .mini-icon svg{width:13px;height:13px}.tl-head span{font-size:8.5px}.tl-hit,.tl-hit b{font-size:10px}
- .hist{padding:4px 6px;gap:4px}.hx{width:24px}.hx .mini-icon{width:17px;height:17px}.hx .mini-icon svg{width:15px;height:15px}.hl p{font-size:11.5px}.flavor{font-size:13px}.hx-full:not(:last-child){display:none}.hfull{gap:3px}
+ .track{--cw:27px;--ch:24px;padding:3px 5px 5px}.tk-l{flex-basis:38px;padding-right:3px}.tk-who{font-size:13px}.tk-head .tk-c>*{font-size:9.5px}
+ .slot{width:22px;height:22px;border-radius:6px}.slot svg{width:15px;height:15px}.tk-act .past .mini-icon{width:22px;height:22px}.tk-act .past .mini-icon svg{width:16px;height:16px}.tl-hit{font-size:10px}
+ .hl p{font-size:11.5px}.flavor{font-size:13px}.hfull{gap:3px;margin-top:3px;padding-top:4px}
  .acts{grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:4px}.act{border-radius:10px;padding:3px 2px 3px;gap:0}.a-ico svg{width:22px;height:22px}.a-ico .bundle-icons svg{width:12px;height:12px}.a-name{display:none}
  .act .eff b{font-size:12.5px}.act .eff small{font-size:8.5px}.act .eff.has-v .lbl{display:none}.act .eff.has-v .lbl+.t::before{content:none}.act .eff:not(.has-v) .lbl.same{display:inline}.act .eff:not(.has-v) .lbl.same+.t::before{content:'· '}.a-cost{top:2px;right:3px}.a-cost b{font-size:11px}.c-mana::before{width:5px;height:5px}.c-hp::before{font-size:7px}
  .acts.forced .a-name{display:block;font-size:8.5px}
@@ -187,4 +204,5 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
  .result{padding:8px}.result h2{font-size:26px}.result-actions button{padding:7px 10px;font-size:12px}
  .sheet{place-items:end center;padding:0}.sheet-card{border-radius:var(--radius) var(--radius) 0 0;max-height:82dvh;padding:12px}.sk{grid-template-columns:repeat(2,1fr)}
 }
-@media(max-width:600px) and (max-height:620px){.card-stub{display:none}.stub-meters .meter small{display:none}.intent .it>small:not(.flavor){display:none}.fname small{display:none}.fname{min-height:24px}}
+@media(max-width:600px) and (max-height:700px){.hfull .flavor:not(.finish),.intent .flavor,.intent .it>small,.intent .eff small,.hx-full h4{display:none}.intent b{font-size:12px}}
+@media(max-width:600px) and (max-height:620px){.card-stub,.stub-top{display:none}.stub-meters .meter small{display:none}.intent .it>small:not(.flavor){display:none}.fname small{display:none}.fname{min-height:24px}}

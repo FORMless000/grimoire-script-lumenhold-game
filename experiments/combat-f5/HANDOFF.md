@@ -106,15 +106,14 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 
 - **Port the fight screen from `web/app.mjs`** as an overlay over the card, which stays visible. It already uses the main game's tokens and fonts (`src/style.css`). Keep:
   - the two fighters: portrait, Health and Mana with flux as big numbers on bars;
-  - the telegraph (the foe's committed action with its effect and flavor line), which opens the full text;
-  - the timeline: buffs, constructs, channels, Foresight and pending Omens over the next 5 exchanges;
-  - the history: older exchanges as an icon strip, the last two in full, any one on a tap;
+  - the exchange track: one axis with every past exchange (both moves as icons; it scrolls sideways into the past), this exchange and the next four. Each future slot shows who commits first (their move will show, or stays hidden) and any move forced by Compel or lost to a freeze. Lasting effects, channels, constructs and Foresight run along it as thin lines with their icon at the start, and Omens sit on the exchange they land. Below it, the latest exchange in full, or any one picked on the track;
+  - beside the actions, the telegraph (the foe's committed move with its effect and flavor line), which opens the full text;
   - the square action buttons: icon, name, effect (`web/brief.mjs`, read from `describe()`), turns and the Mana or HP cost;
   - the inspect sheet (the foe's skills, kit with prices and recent moves) and the full log;
   - Concede.
 - **Portraits:** `web/art.mjs` shows `portraits/<npc>.png` when one exists (`NAMED_LOADOUTS[name].npc`), else an SVG placeholder; the player's frame stays blank.
 - **Drop the bench parts:** the setup panel, the engine view and evaluation bar, the debug controls, and the stubs that imitate the main game around the fight (top bar, meters, side panel, card; toggled in setup).
-- **Layout:** it must work at phone width (375 px); the bench fits 320×568 without page scroll.
+- **Layout:** no panel scrolls except the track, sideways. It must work at phone width (375 px); with room (a 640 px stage or wider) the state sits left and the choices right. The bench fits 1280×800 with every stub; below 720 px of height the card stub gives way (so 1024×700 fits), and on a 320×568 phone the top-bar stub too.
 - **Saves:** a fight in progress is plain JSON (the state from `createState`, then the core's). Save it with the run so a closed tab resumes mid-fight, and apply settlement once, at the end.
 
 ### 6. Localization

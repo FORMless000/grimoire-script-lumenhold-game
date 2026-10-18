@@ -124,38 +124,59 @@ function intent(){
  return `<div class="intent hidden"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>You commit first</b><small>Their reply stays hidden until you commit. Initiative breaks a double knockout.</small></div></div>`;
 }
 
-// Lasting effects, channels, constructs and foretold hits for both sides, on the next few exchanges.
-const SPAN=5,EFFECT_ICON={compelled:'compel',guard:'guard',frozen:'frozen'};
-function timelineRows(){
+// The exchange track: one axis through the past (both moves, as icons), this exchange and the next few (who commits first,
+// so whether their move will show) with every lasting effect, channel, construct and foretold hit as a bar along it.
+const AHEAD=4,EFFECT_ICON={compelled:'compel',guard:'guard',frozen:'frozen'};
+// Who commits first c exchanges from now, as things stand: turns alternate and Foresight makes its target lead.
+function leaderAt(c){if(!c)return game.leader;const e=game.earlyCommit.map(n=>n-c>0),normal=c%2?1-game.normalLeader:game.normalLeader;return e[0]===e[1]?normal:e[0]?0:1;}
+function effectRows(){
  const r=game.round,rows=[];
  game.actors.forEach((a,side)=>{
-  for(const [k,e]of Object.entries(a.effects)){if(e.until!==null&&e.until<r)continue;const id=EFFECT_ICON[k]??k;rows.push({side,icon:id,name:k==='compelled'?'Compelled':label(k),from:Math.max(e.from??r,r),until:e.until??Infinity,note:k==='lodestar'?String(Math.round(e.value)):k==='tailwind'?'+'+Math.round(e.value):''});}
-  if(a.channel)rows.push({side,icon:a.channel.id,name:label(a.channel.id),from:r,until:Infinity,note:`${a.channel.holds} hold${a.channel.holds===1?'':'s'}${a.channel.bank?' · '+Math.round(a.channel.bank):''}`,channel:true});
+  for(const [k,e]of Object.entries(a.effects)){if(e.until!==null&&e.until<r)continue;rows.push({side,icon:EFFECT_ICON[k]??k,name:k==='compelled'?'Compelled':label(k),from:Math.max(e.from??r,r),until:e.until??Infinity,note:k==='lodestar'?String(Math.round(e.value)):k==='tailwind'?'+'+Math.round(e.value):''});}
+  if(a.channel)rows.push({side,icon:a.channel.id,name:label(a.channel.id),from:r,until:Infinity,note:`${a.channel.holds} hold${a.channel.holds===1?'':'s'}${a.channel.bank?' · '+Math.round(a.channel.bank):''}`});
   for(const c of a.constructs)rows.push({side,icon:c.id,name:label(c.id),from:r,until:c.expires,note:`${Math.round(c.taken)}/${Math.round(c.threshold)}`});
-  if(game.earlyCommit[side]>0)rows.push({side,icon:'foresight',name:'Reveals first',from:r,until:r+game.earlyCommit[side]-1,note:''});
+  if(game.earlyCommit[side]>0)rows.push({side,icon:'foresight',name:'Commits first',from:r,until:r+game.earlyCommit[side]-1,note:''});
   if(a.freezeUntil>=r)rows.push({side,icon:'frozen',name:'Frozen',from:r,until:a.freezeUntil,note:''});
   if(a.rimeReady)rows.push({side,icon:'rime',name:'Rime ready',from:r,until:Infinity,note:''});
   for(const o of a.omens)rows.push({side,icon:'omen',name:'Omen',due:o.due,note:fmt(o.power)});
  });
  return rows;
 }
-function timeline(){
- const rows=timelineRows();if(!rows.length)return '';const r=game.round;
- const cell=(row,c)=>{const ex=r+c;if(row.due!==undefined)return row.due===ex?`<i class="tl-hit" title="Omen lands in exchange ${ex}: ${row.note} damage">◆<b>${row.note}</b></i>`:'';
-  if(ex<row.from||ex>row.until)return '';const open=row.until===Infinity&&c===SPAN-1;return `<i class="tl-on${ex===row.from?' first':''}${ex===row.until||open?' last':''}${open?' open':''}"></i>`;};
- return `<section class="timeline" aria-label="Effects on the next exchanges"><div class="tl-row tl-head"><span></span>${Array.from({length:SPAN},(_,c)=>`<span>${c?'+'+c:'now'}</span>`).join('')}</div>
-  ${rows.map(row=>`<div class="tl-row s${row.side}"><span class="tl-name"><span class="mini-icon">${actionIcon(row.icon,row.side,row.icon)}</span><span><em>${row.side?esc(nameOf(1)):'You'}</em> ${esc(row.name)}${row.note&&row.due===undefined?` <small>${esc(row.note)}</small>`:''}</span></span>${Array.from({length:SPAN},(_,c)=>`<span class="tl-c">${cell(row,c)}</span>`).join('')}</div>`).join('')}</section>`;
+const who=i=>i?esc(nameOf(1)):'You';
+// A future slot: lost to a freeze, forced by Compel (their last move again), or open; the leader's move shows first.
+function futureSlot(side,c){
+ const ex=game.round+c,a=game.actors[side],lead=leaderAt(c)===side,last=history.at(-1)?.pair[side],comp=a.effects.compelled;
+ if(a.freezeUntil>=ex)return `<span class="slot lost" title="Exchange ${ex}: ${who(side)} ${side?'is':'are'} frozen">${actionIcon('frozen',side)}</span>`;
+ if(comp&&comp.until!==null&&comp.until>=ex&&last)return `<span class="slot forced${lead?' lead':''}" title="Exchange ${ex}: compelled to repeat ${esc(label(last))}">${actionIcon(last,side)}</span>`;
+ if(side)return lead?`<span class="slot shows lead" title="Exchange ${ex}: they commit first, so you see their move">${EYE}</span>`:`<span class="slot hid" title="Exchange ${ex}: you commit first; their move stays hidden">?</span>`;
+ return lead?`<span class="slot lead mine" title="Exchange ${ex}: you commit first and they see your move">1st</span>`:'<span class="slot open"></span>';
+}
+function nowSlot(side){
+ if(side===0)return `<span class="slot now-you${leaderAt(0)===0?' lead':''}" id="tk-you-now" title="Your move this exchange">${selected?actionIcon(selected):leaderAt(0)===0?'1st':''}</span>`;
+ const forced=isCompelled(game,1)?(game.pending[1]??legalActions(game,1)[0]):null,shown=forced??game.pending[1];
+ if(busy)return '<span class="slot hid wait" title="They are choosing">…</span>';
+ if(shown)return `<button class="slot shows lead${forced?' forced':''}" data-sheet="intent" title="${forced?'Compelled':'They commit'}: ${esc(actionName(shown,1))}">${actionIcon(shown,1)}</button>`;
+ return '<span class="slot hid" title="Their move stays hidden until you commit">?</span>';
+}
+function track(){
+ const r=game.round,shown=focusEx??history.length-1,rows=effectRows(),done=!!game.result;
+ const pastCells=f=>history.map((h,k)=>`<span class="tk-c past${k===shown?' on':''}${k===history.length-1?' last':''}">${f(h,k)}</span>`).join('');
+ const ahead=f=>done?'':Array.from({length:AHEAD+1},(_,c)=>`<span class="tk-c ${c?'fut':'now'}">${f(c)}</span>`).join('');
+ const head=`<div class="tk-row tk-head"><span class="tk-l"></span>${pastCells((h,k)=>`<button data-ex="${k}" title="Exchange ${h.round}: show it in full">${h.round}</button>`)}${ahead(c=>`<b title="${c?'Exchange '+(r+c):'This exchange'}: ${leaderAt(c)?'they lead':'you lead'}">${r+c}</b>`)}</div>`;
+ const moves=side=>`<div class="tk-row tk-act s${side}"><span class="tk-l"><span class="tk-who">${who(side)}</span></span>${pastCells((h,k)=>`<button class="mini-icon" data-ex="${k}" title="Exchange ${h.round}: ${who(side)} · ${esc(h.actionNames[side])}">${actionIcon(h.pair[side],side,h.channels?.[side])}</button>`)}${ahead(c=>c?futureSlot(side,c):nowSlot(side))}</div>`;
+ // A lasting effect: a thin line from the exchange it starts, with its icon at the start; name and numbers on hover.
+ const cell=(row,c)=>{const ex=r+c,tip=esc(`${who(row.side)} · ${row.name}${row.note?' · '+row.note:''}`),ico=`<span class="tk-ico">${actionIcon(row.icon,row.side,row.icon)}</span>`;
+  if(row.due!==undefined)return row.due===ex?`<i class="tl-hit" title="${tip} damage, lands in exchange ${ex}">${ico}${row.note}</i>`:'';
+  if(ex<row.from||ex>row.until)return '';const first=ex===row.from,open=row.until===Infinity&&c===AHEAD;
+  return `<i class="tl-on${first?' first':''}${ex===row.until||open?' last':''}${open?' open':''}" title="${tip}${row.until===Infinity?'':` · until exchange ${row.until}`}">${first?ico:''}</i>`;};
+ const effects=done?'':rows.map(row=>`<div class="tk-row tk-eff s${row.side}"><span class="tk-l"></span>${pastCells(()=>'')}${ahead(c=>cell(row,c))}</div>`).join('');
+ const full=history[shown];
+ return `<section class="track" aria-label="Exchanges: the past, this one and the next ones"><div class="tk-scroll" id="tk-scroll">${head}${moves(1)}${moves(0)}${effects}</div>${full?`<div class="hfull">${exchangeFull(full)}${focusEx!==null?'<button class="link" data-ex="latest">Back to the latest</button>':''}</div>`:''}</section>`;
 }
 
-// History: every exchange as a pair of icons; the latest two (or the one picked) in full.
-function exchangeFull(r,k){
- return `<article class="hx-full"><h4>Exchange ${r.round} <small>· ${r.leader===0?'you led':'they led'}</small></h4>${[r.leader,1-r.leader].map(i=>`<div class="hl ${i?'opp':'you'}"><span class="mini-icon">${actionIcon(r.pair[i],i,r.channels?.[i])}</span><p><b>${i?esc(nameOf(1)):'You'}</b> · ${esc(r.actionNames[i])}${r.committed[i]!==r.pair[i]?` <small>(committed ${esc(label(r.committed[i]))})</small>`:''}${r.lines?.[i]?` <span class="flavor">${esc(r.lines[i])}</span>`:''}</p></div>`).join('')}${(r.finish??[]).map(f=>`<p class="flavor finish">${esc(f)}</p>`).join('')}</article>`;}
-function historyView(){
- if(!history.length)return '';
- const last=history.length-1,pick=focusEx??last,full=focusEx===null?[last-1,last].filter(k=>k>=0):[pick];
- return `<section class="hist"><div class="hstrip" id="hstrip" role="list">${history.map((r,k)=>`<button class="hx${full.includes(k)?' on':''}" data-ex="${k}" title="Exchange ${r.round}: you ${esc(r.actionNames[0])}, ${esc(nameOf(1))} ${esc(r.actionNames[1])}" role="listitem"><span class="mini-icon you">${actionIcon(r.pair[0],0,r.channels?.[0])}</span><span class="mini-icon opp">${actionIcon(r.pair[1],1,r.channels?.[1])}</span><i>${r.round}</i></button>`).join('')}</div>
-  <div class="hfull" id="hfull">${full.map(k=>exchangeFull(history[k],k)).join('')}${focusEx!==null?'<button class="link" data-ex="latest">Back to the latest</button>':''}</div></section>`;
-}
+// The exchange picked on the track (the latest by default), in full.
+function exchangeFull(r){
+ return `<article class="hx-full"><h4>Exchange ${r.round} <small>· ${r.leader===0?'you led':'they led'}</small></h4>${[r.leader,1-r.leader].map(i=>`<div class="hl ${i?'opp':'you'}"><span class="mini-icon">${actionIcon(r.pair[i],i,r.channels?.[i])}</span><p><b>${who(i)}</b> · ${esc(r.actionNames[i])}${r.committed[i]!==r.pair[i]?` <small>(committed ${esc(label(r.committed[i]))})</small>`:''}${r.lines?.[i]?` <span class="flavor">${esc(r.lines[i])}</span>`:''}</p></div>`).join('')}${(r.finish??[]).map(f=>`<p class="flavor finish">${esc(f)}</p>`).join('')}</article>`;}
 
 function actionButton(id){const reason=available(game,0,id),disabled=busy||actorToMove(game)!==0||reason,name=actionName(id,0),b=briefOf(0,id);
  return `<button class="act k-${b.kind}${selected===id?' selected':''}" data-action="${id}" aria-label="${esc(name+' · '+price(0,id)+(reason?' · '+reason:''))}" aria-pressed="${selected===id}" title="${esc(name+' · '+price(0,id)+(reason?' · '+reason:''))}" ${disabled?'disabled':''}><span class="a-ico" aria-hidden="true">${actionIcon(id)}</span>${id.startsWith('bundle:')?'':`<span class="a-name">${esc(['hold','release'].includes(id)?label(id):name)}</span>`}${effHtml(b,name)}${costHtml(0,id)}<em class="card-eval" data-eval="${id}"></em></button>`;}
@@ -168,7 +189,7 @@ function actions(){
 }
 function commit(id=selected){if(!id||busy||actorToMove(game)!==0||available(game,0,id))return;try{submit(id);pump();}catch(e){$('setup-error').textContent=e.message;}}
 // Selection stays until execution or a different choice; there is no click timer.
-function selectAction(id){selected=id;for(const b of document.querySelectorAll('[data-action]')){const active=b.dataset.action===id;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(active));}document.querySelector('.commit-bar').innerHTML=preview();$('commit').onclick=()=>commit();}
+function selectAction(id){selected=id;for(const b of document.querySelectorAll('[data-action]')){const active=b.dataset.action===id;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(active));}document.querySelector('.commit-bar').innerHTML=preview();const now=$('tk-you-now');if(now)now.innerHTML=actionIcon(id);$('commit').onclick=()=>commit();}
 
 // ---- Sheets: inspect the opponent, their committed move, the full log ----
 function inspectSheet(){const a=game.actors[1],forced=a.channel||has(game,1,'haste')||a.freezeUntil>=game.round;
@@ -233,16 +254,15 @@ function result(){const r=game.result,won=r.winner===0,lost=r.winner===1;return 
 function head(){const lead=game.leader;
  return `<header class="fight-head"><div class="fh-title"><b>${game.result?'The fight is over':'Exchange '+game.round}</b><small>${game.result?'':lead===0?'you lead':'they lead'}</small></div><div class="fh-tools">
   <button class="tool" data-sheet="inspect" title="Inspect the opponent" aria-label="Inspect the opponent">${EYE}</button><button class="tool" data-sheet="log" title="Full log" aria-label="Full log">${SCROLL}</button><button id="engine-toggle" class="tool text${engineOn?' active':''}" aria-pressed="${engineOn}" title="Show or hide the engine's analysis of your turns">Engine</button><button class="tool" data-view="setup" title="Setup" aria-label="Setup">${GEAR}</button><button class="tool text debug-btn" data-view="debug" title="Search journal">Debug</button>${!game.result?`<button id="leave" class="tool text leave" title="Concede the fight"><span class="control-icon" aria-hidden="true">${ACTION_ICONS.concede}</span><span class="tlabel">Leave</span></button>`:''}</div></header>`;}
-function fight(){return `<div class="fight-wrap${chrome.card?' with-card':''}">${chrome.card?cardStub():''}<section class="fight">${head()}<div class="fighters${engineOn?' with-eval':''}">${engineOn?`<div class="evalbar" id="evalbar" title="Engine evaluation for you, in HP">${evalBar()}</div>`:''}${fighter(0)}${fighter(1)}</div>${intent()}<div class="mid" id="mid">${engineOn?'<div class="engine" id="engine"></div>':''}${timeline()}${historyView()}</div>${game.result?result():actions()}</section></div>`;}
+function fight(){return `<div class="fight-wrap${chrome.card?' with-card':''}">${chrome.card?cardStub():''}<section class="fight">${head()}<div class="fighters${engineOn?' with-eval':''}">${engineOn?`<div class="evalbar" id="evalbar" title="Engine evaluation for you, in HP">${evalBar()}</div>`:''}${fighter(0)}${fighter(1)}</div><div class="fight-body"><div class="fight-main">${engineOn?'<div class="engine" id="engine"></div>':''}${track()}</div><div class="controls">${intent()}${game.result?result():actions()}</div></div></section></div>`;}
 function debug(){return `<div class="debug"><nav><button data-view="play">← Back to the fight</button></nav><h3>Search and exchange journal</h3><p>Decisions ${stats.length}; deepest completed ${Math.max(0,...stats.map(a=>a.completedDepth))}; slowest ${Math.max(0,...stats.map(a=>a.elapsedMs)).toFixed(1)} ms; accepted weaker choices ${stats.filter(a=>a.degraded).length} / ${stats.length}.</p><details><summary>Kits and ledgers</summary><pre>${esc(JSON.stringify({kits:game.actors.map(a=>a.kit),settlement:game.settlement,reports:game.reports},null,2))}</pre></details>${history.slice().reverse().map(r=>`<details open><summary>Exchange ${r.round}: ${r.pair.map(label).join(' / ')}</summary><ul>${r.events.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></details>`).join('')}</div>`;}
 function render(){
  document.body.classList.toggle('playing',!!game);document.body.classList.toggle('setup-open',!game||view==='setup');
  $('setup').hidden=!!game&&view!=='setup';$('play').hidden=!!game&&view==='setup';
  renderChrome();if(!game)return;
- snapshotBars();const keep=$('hstrip'),stickStrip=!keep||keep.scrollWidth-keep.scrollLeft-keep.clientWidth<40;
+ snapshotBars();const kept=$('tk-scroll')?.scrollLeft;
  $('play').innerHTML=view==='debug'?debug():fight();
- const strip=$('hstrip');if(strip&&stickStrip)strip.scrollLeft=strip.scrollWidth;// The middle (engine, timeline, history) scrolls when space is short; keep the latest exchange in view.
- const mid=$('mid');if(mid&&focusEx===null)mid.scrollTop=mid.scrollHeight;
+ const sc=$('tk-scroll');if(sc)sc.scrollLeft=focusEx!==null&&kept!==undefined?kept:sc.scrollWidth;
  animateBars();paintEngine();requestAnalysis();renderSheet();
  for(const b of document.querySelectorAll('#play [data-view]'))b.onclick=()=>{view=b.dataset.view;render();window.scrollTo(0,0);};
  for(const b of document.querySelectorAll('#play [data-sheet]')){const open=()=>{sheet=b.dataset.sheet;renderSheet();};b.onclick=open;b.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}};}
