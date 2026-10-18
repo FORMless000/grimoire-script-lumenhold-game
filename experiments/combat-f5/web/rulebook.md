@@ -24,7 +24,7 @@ These override anything below that disagrees.
 - **Strike:** 9 base, scaling with Vigor the same way (about 7 at Vigor 20, 11 at 80).
 - **Max HP:** 70 × (0.8 + skill/250) of the skills, with Vigor counted twice: about 62 at level 20, 70 at 50 and 78 at 80. A gentler slope, so low-Vigor classes aren't squishy.
 - **Mana capacity:** 43 × (2/3 + skill/150), Arcana counted twice: 34 at level 20, 43 at 50, about 52 at 80.
-- **Condition on entering** (campaign fights): you start with HP = max × (0.9 + 0.1 × min(1, Health / 70)) and ready Mana up to capacity × (0.9 + 0.1 × min(1, Mana / capacity)). Fit means Health 70+ and full Mana; entering with nothing costs you a tenth of each.
+- **Condition on entering** (campaign fights, F5.9c): you start with HP = max × (0.9 + 0.1 × Health / 70) down to Health 30 (94%), then straight down to 70% at Health 0. You start with exactly the Mana you had, and the rest of capacity is flux: 10 of 43 is 10 ready and 33 flux. Fit means Health 70+ and full Mana. (F5.9b: 90–100% of each.)
 
 **F5.4 spell changes:** Flame 9/9/8 Mana; Mend 9/9/8; Foresight 7/7/6; Haste 5 Mana, 3/3/4 exchanges, three-action bundles at rank 3; Shadowstep 12 Mana at every rank, 1/2/2 exchanges; Starlight 9; Distil costs 14 HP; Tailwind 5 Mana and +4/+8/+12; Reflect 8; Lodestar 4; Extraction 10.
 
@@ -195,7 +195,7 @@ Standard/depleted fixtures bring 30/6 Crowns per side; setup can override each. 
 
 At settlement remaining flux is collected once, earned Renown is paid, then context rebates apply only to net losses. Receipts record spending, restoration, gain, refund and final balances separately. Optional skill-offset HP remains `entry Health + 40 + floor((Arcana + Vigor)/4)`.
 
-Every forbidden cast charges alignment −small. A channel Hold/Release continues its existing cast and does not pay alignment again. With observers, every forbidden cast produces a recorded post-fight `forbidden_cast_report` follow-up. This prototype exports the follow-up payload and displays the report; an academy story event is not invented or run. Spells never award plot clues or advance arc clocks.
+Every forbidden cast charges alignment −small. A channel Hold/Release continues its existing cast and does not pay alignment again. With witnesses (`witnesses`, default `observers`: an audience always is one), every forbidden cast produces a recorded post-fight `forbidden_cast_report` follow-up. Observers alone decide Glamour's and Rapport's Renown. This prototype exports the follow-up payload and displays the report; an academy story event is not invented or run. Spells never award plot clues or advance arc clocks.
 
 ## Interface and random encounters
 

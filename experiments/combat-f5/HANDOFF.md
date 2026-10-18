@@ -63,6 +63,7 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 
   So `grim diff` should stay unchanged while the minigame is off.
 - **Entry cost:** drop `combat_cost` (`@balance combat_cost`) for played fights, since settlement charges the Mana actually spent. Keep it for stub fights.
+- **Follow-ups:** `settle()` returns `followUps` (a witnessed forbidden cast's `forbidden_cast_report`). Queue the main game's consequence from them; the minigame invents no story.
 - **Double charging:** check each card's outcome effects. Ones written for the stub may already charge Health for the fight.
 
 ### 4. The bridge
@@ -75,10 +76,31 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
   - The AI: a fixed depth-5 search with no seeded mistakes (`LIVE_AI` in `web/app.mjs`), plus `preset: 'easy'|'medium'|'hard'|'engine'` (a player setting, default Medium); `createState` adds the foe's persona.
   - The foe's level is the card's challenge level: `challengeDC` and `foeLevel` in `setup/foes.mjs` (the engine's `ladderOdds` DC, plus the odds word); `vs npc.stat` characters via `namedFoeSkills`. `tools/event-levels.mjs` lists every card's levels by month.
   - A few points of level are a big step (+10 levels wins 87%).
-- **Context:**
-  - The stake depends on the context: `practice_duel`, `public_duel`, `real_conflict` or `rehearsal` (`CONTEXTS` in `setup/roster.mjs`, and the rebates in `INTEGRATION.md` §3).
-  - Cards don't say which yet. Default by kind (`duel` → practice duel, `combat` → real conflict), or add a card field. A new field is a schema addition: follow AGENTS.md "The format and the engine".
-- **Condition:** handled inside `fightOptions`. Warn the player before a fight when they enter below fit (health under 70, or mana under the fight's capacity).
+- **The fight setting, per challenge:** `fightSetting(cardKey, i, foe)` (`setup/foes.mjs`) gives `{context, observers, witnesses}` for the card's i-th challenge; pass all three to `fightOptions`. Every played card has them (`EVENTS.md` §6 lists them), and `tools/event-coverage.mjs` fails if any is missing. What each one does:
+  - **`context`: the rebates.** The share of the fight's Health and Mana losses refunded at settlement (`CONTEXTS`, `setup/roster.mjs`): practice duel 80%, public duel 80%, the ring 65%, real conflict 50%. It comes from the card, else from the foe.
+  - **`observers`: an audience whose Renown counts.** With one, Glamour pays its Renown and Rapport turns Crowns into Renown at settlement, so `fightOptions` keeps both in the player's kit; without one they do nothing and stay out. Tournaments, public challenges, Thornwick contests, the ring and any scene with spectators.
+  - **`witnesses`: someone who would report a forbidden cast.** A forbidden cast always costs alignment; witnessed, it also adds a `forbidden_cast_report` follow-up, which the main game turns into its consequence (an academy story event, not written yet). An audience is always a witness. Witnesses without an audience: a sparring partner, a friend at your side (Kael in the tunnel, Ilse in the lane). Nobody: the shadow stag, and the man in grey when you face him alone.
+  - **Not rebated, not an observer matter:** Crowns and alignment are never refunded. Mood is the outcome's (`settle.mood`). Renown, Mood and gold the story gives for winning stay on the card's outcomes; the fight only adds what its spells move.
+  - Cards don't carry these yet; `EVENTS` is the lookup. A card field (`context`, an audience word) would be a schema addition (`EVENTS.md` §7): follow AGENTS.md "The format and the engine".
+- **Condition:** handled inside `fightOptions` (`combatStart`, `setup/setup.mjs`; numbers in `COMBAT_TUNING.condition`). Warn the player before a fight when they enter below fit (Health under 70, or Mana under capacity).
+  - **Health:** combat max HP comes from the skills; Health sets the share you start with. Down to Health 30 it costs little: 90% + 10% × Health/70 of max HP, so 94% at Health 30. Below 30 it falls steeply, to 70% at Health 0 (`healthKnee` 30, `hpAtZero` 0.7). A badly hurt student fights hurt.
+  - **What it costs** (`tools/condition-study.mjs`, depth 4, 480 fights a row, ±2.4): Health 50 −2 points of win rate, 30 −10, 15 −28, 0 −33; Mana 50% −14, 10 of 43 −19, none −24; Health 30 with half Mana −20. (F5.9b's floors: no Health −15, no Mana −15.) Resting before a fight now matters.
+  - **Mana:** you start with exactly the Mana you had, and the rest of your capacity starts as **flux**. Entering with 10 of 43 gives 10 ready Mana and 33 flux. Flux is loose magic: one Reclaim takes it all back into Mana, but costs that exchange and breaks your Shadowstep, and the opponent's Seal can snuff it first (`manaAsFlux`). Until then a cast makes no new flux, since Mana plus flux can't pass capacity. Settlement never returns more Mana than you brought: flux reclaimed in the fight is the fight's, not a refill.
+
+### 4b. Mana on one scale in both games
+
+- **The change:** the main game's Mana pool becomes the fight's capacity, so a point of Mana means the same in both. `content/core/rules.grim`, `@resource mana`:
+  ```
+  max: round(43 * (2/3 + (2 * arcana + lore + alchemy + charm + vigor + guile) / 1050))
+  ```
+  This is `manaCapacity` (`setup/roster.mjs`, `COMBAT_TUNING.capacity`): 43 × (2/3 + weighted skill/150), Arcana counted twice. 32 at the starting skills (about 12), 43 at 50, 53 at 80. It replaces 40 + Arcana/2 (46 at the start, 65 at Arcana 50), so the pool shrinks by about a third.
+- **Why:** with one scale, "Mana under capacity" is simply "Mana under max", the fight starts from the main game's own number (above), and settlement charges the same points the fight spent. No conversion, nothing to explain.
+- **Rebalance with it, in the same change:**
+  - `start: 30` stays (under the starting max of 32).
+  - Monthly regen (`mana_regen`, 10 + Arcana/10) and the mana preset sizes (`@balance sizes: mana 3 6 10 16 25`) were tuned against the larger pool. Re-measure before touching them: `node tools/grim.js balance`, `tools/economy.js --by event` against `docs/playtest-2-flows.md`, and the design's mana invariants (`docs/design-v0.3.md`: a caster's Mana stays above 40% most term months; a balanced player's stays full). If casting dries up, scale the sizes by about 0.7 (2 4 7 11 17).
+  - Exam nerves (−15) become a larger share of the pool.
+  - Record the change in `docs/design-v0.3.md` (the source of truth for numbers) and refresh the golden games (`grim snapshot`) in the same commit: `grim diff` will change.
+- **Done when:** the main game's max Mana equals `manaCapacity` for the same skills (add a test), and `grim balance` passes.
 
 ### 5. The UI
 
@@ -107,7 +129,8 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 - **Minigame:**
   - `cargo test --release` (in `rust/`);
   - `node tools/golden.mjs`;
-  - `node --test setup/loadouts.test.mjs`.
+  - `node --test setup/ web/` (kits, the campaign bridge, icons);
+  - `node tools/event-coverage.mjs` (every combat card has a decision, a context and an audience).
 - **Main game:**
   - `node tools/grim.js check`;
   - `npm run verify`;

@@ -225,10 +225,10 @@ A class's mean skill is its level, so a foe at level DC is as strong as the rung
 
 | Month | E | Fighter layout (Arcana best): E − 10 / E / E + 10 | Talker layout (Charm best): E − 10 / E / E + 10 |
 |---:|---:|---|---|
-| 12 | 26 | 100 / **80** / 3% | 98 / **20** / 0% |
-| 24 | 40 | 98 / **78** / 50% | 85 / **35** / 8% |
-| 36 | 53 | 95 / **63** / 25% | 55 / **38** / 8% |
-| 47 | 61 | 80 / **38** / 28% | 75 / **23** / 13% |
+| 12 | 26 | 100 / **80** / 3% | 98 / **20** / 0% | | —
+| 24 | 40 | 98 / **78** / 50% | 85 / **35** / 8% | | —
+| 36 | 53 | 95 / **63** / 25% | 55 / **38** / 8% | | —
+| 47 | 61 | 80 / **38** / 28% | 75 / **23** / 13% | | —
 
 - **Averaged over the two layouts,** a matched rung is close to even (50–57%) through month 36, and harder in the final year (30%).
 - **The spread between layouts is the stub's own:** its combat value reads Arcana, Vigor and Guile, so a talker also rolls worse there.
@@ -385,49 +385,51 @@ Card edits apply when the minigame plays the card.
 - **Health.** "Drop health" means removing the outcome's `health` lines: settlement charges the Health the fight actually cost (about 5–8 in practice, 10–13 in the ring, 13–20 in a real fight). Keep every other effect: flags, relations, renown, gold, `queue`.
 - **Partial.** `partial` means a draw or a loss on points.
 - **Level.** Every foe's level is the card's challenge level (§4); the per-month levels are in §4's table.
+- **Context** sets the rebates: practice and public 80% of the fight's Health and Mana losses refunded, the ring 65%, real 50%.
+- **Audience** (`observers` / `witnesses` in `EVENTS`, F5.9c): *audience* is a crowd whose Renown counts (Glamour and Rapport pay out) and who would also report a forbidden cast; *witnesses* is someone who would report one but no crowd (a sparring partner, a friend at your side); *nobody* is no one from the academy. A forbidden cast always costs alignment. `tools/event-coverage.mjs` fails if a played card doesn't state its context and audience.
 
-| # | Card / option | Challenge | Decision | Foe | Context | Card edits |
-|---:|---|---|---|---|---|---|
-| 1 | spring_tournament / right | combat journeyman+ drift mid | play | `tournament_entrant` (student pool) | public | Drop health. Lose text "knocked out of the ring in eleven seconds": cut the timing, since a played fight can be long. |
-| 2 | spring_tournament_circle / left | combat journeyman drift mid | play | `tournament_entrant` | public | Drop health. |
-| 3 | spring_tournament_circle / right | combat journeyman+ drift mid | play | `tournament_entrant` | public | Drop health; same timing fix as #1. |
-| 4 | tournament_semifinal / left | combat expert- drift mid | play | `tournament_unbeaten`: Duellist, persona Flame / Haste / Strike | public | Drop health. |
-| 5 | tournament_final / left | combat vs lyra.arcana +3 | play | Lyra, scaled to the DC (her Arcana + 12) | public | None (no health lines). |
-| 6 | hs_tunnel / fight (with Kael) | combat master- | play | the man in grey, rung | real | Drop health (win −small, lose −large). The odds word prices Kael's help: no extra handicap. Text: "Kael's frost and your spell hit him together" suits a fight. |
-| 7 | hs_tunnel / fight (alone) | combat master- unlikely | play | the man in grey, rung +5 levels | real | Drop health. |
-| 8 | ilse_grey_returns / left | combat journeyman likely | play | the man in grey, rung −5 levels | real | Drop health. His hand on Ilse is in the rung; no extra handicap. Hard-canon story card: `find ilse_truth` stays on both outcomes. |
-| 9 | rival_contest / left (thornwick_secrets) | combat adept likely | play | Tamsin if met, else `thornwick_illusionist` | public | Drop health. Play the secret plan instead of the odds word: the foe commits first for 3 exchanges (as under Foresight) at the even level. The win text, "you counter every planned trick before it's cast", then describes the fight. |
-| 10 | rival_contest / left | combat adept | play | Tamsin, else `thornwick_illusionist` | public | Drop health. |
-| 11 | rival_last_match / left | combat adept+ | play | Tamsin, else `thornwick_final_year` (Thornwick pool) | practice ("nothing at stake") | Drop health. |
-| 12 | curse_cure_2 / right | combat adept- | play | `shadow_stag` (special) | real | Drop health. Its defeat line matches the win text ("lowers its head — and steps aside"). |
-| 13 | pyro_lyra_spar / right | combat vs lyra.arcana | play | Lyra, named | practice | Drop health. |
-| 14 | duel_practice_bout / left | combat apprentice+ steady | play | `quick_fourth_year`: Duellist, Haste-happy | practice | Drop health. Stance: "hold your ground" means the fourth-year leads (`firstLeader: 1`). |
-| 15 | duel_practice_bout / right | combat apprentice+ wild | play | `quick_fourth_year` | practice | Drop health. Stance: "go on the attack" means you lead (`firstLeader: 0`). |
-| 16 | duel_bram_hazing / right | combat vs bram.vigor | play | Bram, named | public (members watching) | Drop health. |
-| 17 | y3_last_duel / left | combat vs lyra.arcana +2 | play | Lyra, scaled to the DC (her Arcana + 8) | practice | Drop health. |
-| 18 | xchg_farewell / right | combat adept- wild | play | `thornwick_sketcher`: Illusionist, persona Shadowstep | practice | Drop health. |
-| 19 | tavern_brawl / right | combat apprentice+ wild | **convert** | — | — | `challenge feat apprentice+ wild`: stepping into a brawl between a troll and a dwarf is nerve and a loud voice, not a duel. Text unchanged. |
-| 20 | life_pixies / left | combat apprentice- wild | **convert** | — | — | `challenge feat apprentice- wild`: catching a swarm with a laundry bag. Text unchanged. |
-| 21 | life_rival_academy / right | combat apprentice+ | play | `thornwick_best` (Thornwick pool) | public | Drop health. |
-| 22 | midnight_boathouse_ring / left | combat adept- | play | `ring_opener` (ring pool) | ring | Drop health. |
-| 23 | bram_duel / right | combat vs bram.vigor | play | Bram, named | public (formal challenge) | Drop health. |
-| 24 | courtyard_seasonal_game / left | duel using vigor apprentice wild | **convert** | — | — | `challenge feat apprentice wild`: a team game. Text unchanged. |
-| 25 | lyra_date_dawn_duel / left | duel vs lyra.arcana | play | Lyra, named | practice | Drop health. |
-| 26 | duel_hall_gallery / left | combat vs here.arcana | play | the peer cast as `here`, named | practice | Drop health. Every `peer`-tagged character has a named loadout. |
-| 27 | flight_field_pickup_race / left | duel using vigor journeyman+ wild | **convert** | — | — | `challenge feat journeyman+ wild`: a broom race. Text unchanged. |
-| 28 | newt_high_table / health | combat adept- wild | **convert** | — | — | `challenge feat adept- wild`: the bone-dice knife game is steadiness, not a fight. The hint "Win or bleed" stays. |
-| 29 | ring_on_yourself / left | combat adept- | play | `ring_opener` | ring | Drop health. |
-| 30 | ring_on_yourself / right | combat adept- | play | `ring_opener` | ring | Drop health. |
-| 31 | ring_bout_2 / left | combat adept | play | by text variant: `ring_rower` (Brawler), `ring_villager` (Underground tough), `ring_scarf` (Illusionist) | ring | Drop health. Needs the variant index (§7). |
-| 32 | ring_bout_3 / left | combat adept+ | play | `ring_duellist`, `ring_farrier` (Brawler, Strike / Brace), `ring_hood` (Hollow adept) | ring | Drop health. |
-| 33 | ring_bout_4 / left | combat expert- | play | `ring_champion` (Prefect, Brace / Guard), `ring_bookmaker` (Underground tough, dirty), `ring_sailor` (Sailor) | ring | Drop health; the ring's last-standing bonus stays. |
-| 34 | gig_newt_brawl / left | combat apprentice+ | **convert** | — | — | `challenge feat apprentice+`: defusing a fight between two crews while on duty. Text unchanged. |
-| 35 | duelling_captain_challenge / left | combat expert drift mid | play | `visiting_champion` (champion pool) | public | Drop health (both outcomes). |
-| 36 | slice_candle_flame / right | duel vs lyra.arcana | play | Lyra, named | practice | Drop health (partial and lose). Partial = draw or loss on points. |
-| 37 | slice_frost_duel / left | combat vs kael.arcana +1 | play | Kael, scaled to the DC (his Arcana + 4) | practice | Drop health. |
-| 38 | duel_first_practice / right | combat vs lyra.vigor -1 | play | `club_partner` (student pool), at the rung lyra.vigor −1 | practice | Drop health. The opponent is "your partner", not Lyra: `vs lyra.vigor` is only the DC. |
-| 39 | duel_fixture / left | combat adept- | play | `thornwick_duellist` (Thornwick pool) | public | Drop health (lose). |
-| 40 | lake_skimming / left | duel apprentice wild | **convert** | — | — | `challenge feat apprentice wild`: skimming stones with a friend. Text unchanged. |
+| # | Card / option | Challenge | Decision | Foe | Context | Audience | Card edits |
+|---:|---|---|---|---|---|---|---|
+| 1 | spring_tournament / right | combat journeyman+ drift mid | play | `tournament_entrant` (student pool) | public | audience | Drop health. Lose text "knocked out of the ring in eleven seconds": cut the timing, since a played fight can be long. |
+| 2 | spring_tournament_circle / left | combat journeyman drift mid | play | `tournament_entrant` | public | audience | Drop health. |
+| 3 | spring_tournament_circle / right | combat journeyman+ drift mid | play | `tournament_entrant` | public | audience | Drop health; same timing fix as #1. |
+| 4 | tournament_semifinal / left | combat expert- drift mid | play | `tournament_unbeaten`: Duellist, persona Flame / Haste / Strike | public | audience | Drop health. |
+| 5 | tournament_final / left | combat vs lyra.arcana +3 | play | Lyra, scaled to the DC (her Arcana + 12) | public | audience | None (no health lines). |
+| 6 | hs_tunnel / fight (with Kael) | combat master- | play | the man in grey, rung | real | witnesses | Drop health (win −small, lose −large). The odds word prices Kael's help: no extra handicap. Text: "Kael's frost and your spell hit him together" suits a fight. |
+| 7 | hs_tunnel / fight (alone) | combat master- unlikely | play | the man in grey, rung +5 levels | real | nobody | Drop health. |
+| 8 | ilse_grey_returns / left | combat journeyman likely | play | the man in grey, rung −5 levels | real | witnesses | Drop health. His hand on Ilse is in the rung; no extra handicap. Hard-canon story card: `find ilse_truth` stays on both outcomes. |
+| 9 | rival_contest / left (thornwick_secrets) | combat adept likely | play | Tamsin if met, else `thornwick_illusionist` | public | audience | Drop health. Play the secret plan instead of the odds word: the foe commits first for 3 exchanges (as under Foresight) at the even level. The win text, "you counter every planned trick before it's cast", then describes the fight. |
+| 10 | rival_contest / left | combat adept | play | Tamsin, else `thornwick_illusionist` | public | audience | Drop health. |
+| 11 | rival_last_match / left | combat adept+ | play | Tamsin, else `thornwick_final_year` (Thornwick pool) | practice ("nothing at stake") | audience | Drop health. |
+| 12 | curse_cure_2 / right | combat adept- | play | `shadow_stag` (special) | real | nobody | Drop health. Its defeat line matches the win text ("lowers its head — and steps aside"). |
+| 13 | pyro_lyra_spar / right | combat vs lyra.arcana | play | Lyra, named | practice | audience | Drop health. |
+| 14 | duel_practice_bout / left | combat apprentice+ steady | play | `quick_fourth_year`: Duellist, Haste-happy | practice | witnesses | Drop health. Stance: "hold your ground" means the fourth-year leads (`firstLeader: 1`). |
+| 15 | duel_practice_bout / right | combat apprentice+ wild | play | `quick_fourth_year` | practice | witnesses | Drop health. Stance: "go on the attack" means you lead (`firstLeader: 0`). |
+| 16 | duel_bram_hazing / right | combat vs bram.vigor | play | Bram, named | public (members watching) | audience | Drop health. |
+| 17 | y3_last_duel / left | combat vs lyra.arcana +2 | play | Lyra, scaled to the DC (her Arcana + 8) | practice | witnesses | Drop health. |
+| 18 | xchg_farewell / right | combat adept- wild | play | `thornwick_sketcher`: Illusionist, persona Shadowstep | practice | witnesses | Drop health. |
+| 19 | tavern_brawl / right | combat apprentice+ wild | **convert** | — | — | — | `challenge feat apprentice+ wild`: stepping into a brawl between a troll and a dwarf is nerve and a loud voice, not a duel. Text unchanged. |
+| 20 | life_pixies / left | combat apprentice- wild | **convert** | — | — | — | `challenge feat apprentice- wild`: catching a swarm with a laundry bag. Text unchanged. |
+| 21 | life_rival_academy / right | combat apprentice+ | play | `thornwick_best` (Thornwick pool) | public | audience | Drop health. |
+| 22 | midnight_boathouse_ring / left | combat adept- | play | `ring_opener` (ring pool) | ring | audience | Drop health. |
+| 23 | bram_duel / right | combat vs bram.vigor | play | Bram, named | public (formal challenge) | audience | Drop health. |
+| 24 | courtyard_seasonal_game / left | duel using vigor apprentice wild | **convert** | — | — | — | `challenge feat apprentice wild`: a team game. Text unchanged. |
+| 25 | lyra_date_dawn_duel / left | duel vs lyra.arcana | play | Lyra, named | practice | witnesses | Drop health. |
+| 26 | duel_hall_gallery / left | combat vs here.arcana | play | the peer cast as `here`, named | practice | witnesses | Drop health. Every `peer`-tagged character has a named loadout. |
+| 27 | flight_field_pickup_race / left | duel using vigor journeyman+ wild | **convert** | — | — | — | `challenge feat journeyman+ wild`: a broom race. Text unchanged. |
+| 28 | newt_high_table / health | combat adept- wild | **convert** | — | — | — | `challenge feat adept- wild`: the bone-dice knife game is steadiness, not a fight. The hint "Win or bleed" stays. |
+| 29 | ring_on_yourself / left | combat adept- | play | `ring_opener` | ring | audience | Drop health. |
+| 30 | ring_on_yourself / right | combat adept- | play | `ring_opener` | ring | audience | Drop health. |
+| 31 | ring_bout_2 / left | combat adept | play | by text variant: `ring_rower` (Brawler), `ring_villager` (Underground tough), `ring_scarf` (Illusionist) | ring | audience | Drop health. Needs the variant index (§7). |
+| 32 | ring_bout_3 / left | combat adept+ | play | `ring_duellist`, `ring_farrier` (Brawler, Strike / Brace), `ring_hood` (Hollow adept) | ring | audience | Drop health. |
+| 33 | ring_bout_4 / left | combat expert- | play | `ring_champion` (Prefect, Brace / Guard), `ring_bookmaker` (Underground tough, dirty), `ring_sailor` (Sailor) | ring | audience | Drop health; the ring's last-standing bonus stays. |
+| 34 | gig_newt_brawl / left | combat apprentice+ | **convert** | — | — | — | `challenge feat apprentice+`: defusing a fight between two crews while on duty. Text unchanged. |
+| 35 | duelling_captain_challenge / left | combat expert drift mid | play | `visiting_champion` (champion pool) | public | audience | Drop health (both outcomes). |
+| 36 | slice_candle_flame / right | duel vs lyra.arcana | play | Lyra, named | practice | witnesses | Drop health (partial and lose). Partial = draw or loss on points. |
+| 37 | slice_frost_duel / left | combat vs kael.arcana +1 | play | Kael, scaled to the DC (his Arcana + 4) | practice | audience | Drop health. |
+| 38 | duel_first_practice / right | combat vs lyra.vigor -1 | play | `club_partner` (student pool), at the rung lyra.vigor −1 | practice | witnesses | Drop health. The opponent is "your partner", not Lyra: `vs lyra.vigor` is only the DC. |
+| 39 | duel_fixture / left | combat adept- | play | `thornwick_duellist` (Thornwick pool) | public | audience | Drop health (lose). |
+| 40 | lake_skimming / left | duel apprentice wild | **convert** | — | — | — | `challenge feat apprentice wild`: skimming stones with a friend. Text unchanged. |
 
 **Converted cards** keep their rung, odds and text; only the challenge kind changes. A `feat` tests Vigor by default, like the stub's `duel using vigor`. The texts already describe a contest of nerve or body, not a duel.
 

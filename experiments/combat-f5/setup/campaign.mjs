@@ -3,16 +3,24 @@
 //   const state=createState(fightOptions({player,opponent,context}))   … play with web/core.mjs …   settle(state,player)
 // player:   {skills:{arcana,lore,alchemy,charm,vigor,guile}, spells:{id:rank}, health, mana, mood, renown, gold, alignment}
 // opponent: {loadout, level} for a preset or named character, or {skills, spells} for a custom one; optional condition {health, mana}
-import {COMBAT_TUNING,manaCapacity} from './roster.mjs';
+// context, observers, witnesses: the card's fight setting (fightSetting in setup/foes.mjs: the rebates, an audience whose
+// Renown counts, someone who would report a forbidden cast).
+// The main game's Mana uses the fight's scale (INTEGRATION.md §2): its pool is manaCapacity(skills), so player.mana ≤ capacity.
+import {COMBAT_TUNING,COMBAT_EXCLUDED,manaCapacity} from './roster.mjs';
+// Spells with no effect in this fight stay out of the kit: Glamour and Rapport act only before an audience; Index and
+// Quickquill never do. Sleight steals Crowns, so it stays.
+const inFight=(id,observers)=>!COMBAT_EXCLUDED.has(id)||id==='sleight'||observers&&(id==='glamour'||id==='rapport');
 
-export function fightOptions({player,opponent,context='practice_duel',observers=false,firstLeader=1,encounterSeed}){
+export function fightOptions({player,opponent,context='practice_duel',observers=false,witnesses=observers,firstLeader=1,encounterSeed}){
  const c=COMBAT_TUNING.condition,capacity=manaCapacity(player.skills);
- // Fit means Health at or above healthFull and Mana at or above the combat capacity; below that the start drops (combatStart).
+ // Fit means Health at or above healthFull and Mana at or above the combat capacity. Below that: HP drops a little down to
+ // Health 30 and steeply after; you keep exactly the Mana you had, and the rest of capacity starts as flux (combatStart).
  const playerCondition={health:Math.min(1,player.health/c.healthFull),mana:Math.min(1,player.mana/capacity)};
  const foe=opponent.loadout?{opponentLoadout:opponent.loadout,opponentLevel:opponent.level}:{opponentKit:{skills:opponent.skills,spells:opponent.spells,level:opponent.level}};
- return {playerKit:{skills:player.skills,spells:player.spells,level:player.level},playerCondition,...foe,...(opponent.condition?{opponentCondition:opponent.condition}:{}),
+ const spells=Object.fromEntries(Object.entries(player.spells).filter(([id])=>inFight(id,observers)));
+ return {playerKit:{skills:player.skills,spells,level:player.level},playerCondition,...foe,...(opponent.condition?{opponentCondition:opponent.condition}:{}),
   playerResources:{mood:clamp(player.mood??60,0,100),renown:clamp(player.renown??0,0,100),crowns:clamp(player.gold??0,0,99999),alignment:clamp(player.alignment??0,-100,100)},
-  context,observers,firstLeader,...(encounterSeed!==undefined?{encounterSeed}:{})};
+  context,observers,witnesses,firstLeader,...(encounterSeed!==undefined?{encounterSeed}:{})};
 }
 
 // The settled fight → changes to the player's resources. Health: the share of combat HP lost × the stake, less the context's

@@ -206,7 +206,7 @@ fn pay(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act) {
     }
     if let Some(sp) = spell_of(a) {
         if let Some(tier) = d.spells[sp].alignment_cost { debit(&mut s.actors[side], R_ALIGNMENT, tier); }
-        if d.spells[sp].forbidden && enc.observers {
+        if d.spells[sp].forbidden && enc.witnesses {
             let round = s.round;
             if let Some(p) = ctx.public.as_mut() { p.reports.push((side as u8, sp, round)); }
             ctx.event(|| Event::Witnessed { spell: sp });

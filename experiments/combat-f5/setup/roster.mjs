@@ -28,7 +28,10 @@ export const COMBAT_TUNING={
  // 35/80, place 25, ranks 44/68 (F5.0–F5.9), which left most of a kit unseen below level 65.
  kits:{flameBy:10,courses:[1,8,16,26],courseMin:{haste:10,shadowstep:10},place:16,extras:[20,34,46,58],ownExtrasBelow:34,forbidden:[28,58],ranks:[22,36],undergroundExtras:2},
  offsets:{jitter:.09},   // F5.9: class skill offsets are % of level (setup/loadouts.mjs); jitter ± this share of the level // generated kits learn Flame by this level at the latest (F5.6; was 25, which left some classes without an attack below 15)
- condition:{healthFull:70,healthFloor:.9,manaFloor:.9},
+ // F5.9c: Health above healthKnee costs little (the old line, 90% of max HP at Health 0 if extended); below it the start
+ // falls steeply, to hpAtZero at Health 0. Mana: you start with the ready Mana you had, and the rest of capacity is flux
+ // (manaAsFlux), so a drained fighter can Reclaim it but spends exchanges doing so. (F5.4–F5.9b: ready Mana at 90–100%.)
+ condition:{healthFull:70,healthFloor:.9,healthKnee:30,hpAtZero:.7,manaAsFlux:true,manaFloor:.9},
  settle:{healthStake:40,mood:{win:3,lose:-4,draw:0}}
 };
 // AI difficulty presets (F5.9b), merged into a side's AI settings by expandAI (setup/setup.mjs); the live opponent searches a

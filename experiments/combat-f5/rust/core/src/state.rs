@@ -98,6 +98,8 @@ pub struct Side {
 pub struct Encounter {
     pub sides: [Side; 2],
     pub observers: bool,
+    /// Someone who would report a forbidden cast (F5.9c): defaults to `observers`; an audience is always a witness.
+    pub witnesses: bool,
     pub combat_scale: f64,
     pub damage_multiplier: f64,
     pub mana_cost_scale: f64,
@@ -182,6 +184,7 @@ impl Encounter {
         Encounter {
             sides,
             observers: config.get("observers").and_then(|v| v.as_bool()).unwrap_or(false),
+            witnesses: config.get("witnesses").and_then(|v| v.as_bool()).unwrap_or(false) || config.get("observers").and_then(|v| v.as_bool()).unwrap_or(false),
             combat_scale: f("combatScale", 1.0),
             damage_multiplier: f("damageMultiplier", 1.0),
             mana_cost_scale,
