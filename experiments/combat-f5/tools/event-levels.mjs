@@ -1,6 +1,6 @@
 // Every played combat card's foe level over the months it can appear, from the card's own challenge (challengeDC → foeLevel),
 // next to the player's skills in those months (the main game's measured progression, below).
-//   node tools/event-levels.mjs
+//   node tools/event-levels.mjs [--at 6,24,42]   (--at: each card's foe level in those months; · when it can't appear)
 // Months come from the card's `when:` (month, year, turn comparisons joined by `and`); a card queued by another (the
 // tournament rounds, the ring bouts) or with no such condition counts as any month. Characters' stats grow as the main game's
 // npc_growth does (peers and Thornwick students: every skill × k(turn), the best one reaching 0.9 × the last E).
@@ -53,11 +53,15 @@ for(const [key,dec]of Object.entries(EVENTS)){if(!dec.play)continue;const [id,op
   const at=t=>{const vsPeers=p.vs?.who==='here'?peers:p.vs?[p.vs.who]:null;
    const bases=vsPeers?vsPeers.map(n=>statAt(n,p.vs.stat,t)).filter(x=>x!=null):[tiers[p.rung]];
    return bases.map(base=>foeLevel({dc:challengeDC({base,rungs:p.rungs,drift,expected:E(t)}),nature:p.nature}));};
-  const levels=ts.flatMap(at),foes=[dec.play].flat().map(f=>FOES[f]?.name??FOES[f]?.loadout??f).join(' / ');
-  rows.push({key,challenge:ch.text,cls:card.cls,drift,months:months(card)?(ts.length>12?ts[0]+'–'+ts.at(-1):ts.join(',')):'any',E:range(ts.map(E)),level:range(levels),avg:range(ts.map(t=>playerAt('average',t))),best:range(ts.map(t=>playerAt('best',t))),foes});
+  const byMonth=Object.fromEntries(ts.map(t=>[t,at(t)])),levels=ts.flatMap(at),foes=[dec.play].flat().map(f=>FOES[f]?.name??FOES[f]?.loadout??f).join(' / ');
+  rows.push({key,challenge:ch.text,cls:card.cls,drift,months:months(card)?(ts.length>12?ts[0]+'–'+ts.at(-1):ts.join(',')):'any',byMonth,E:range(ts.map(E)),level:range(levels),avg:range(ts.map(t=>playerAt('average',t))),best:range(ts.map(t=>playerAt('best',t))),foes});
  }}
 return rows;}
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){const rows=eventLevels();
+const ai=process.argv.indexOf('--at');
+if(ai>0){const ms=process.argv[ai+1].split(',').map(Number);
+ console.log(`| Card / option | Challenge | ${ms.map(m=>'month '+m+' (E '+E(m)+', avg '+playerAt('average',m)+', best '+playerAt('best',m)+')').join(' | ')} |\n|---|---|${ms.map(()=>'---:').join('|')}|`);
+ for(const r of rows)console.log(`| ${r.key} | ${r.challenge} | ${ms.map(m=>{const v=r.byMonth[m];return v?(Math.min(...v)===Math.max(...v)?v[0]:Math.min(...v)+'–'+Math.max(...v)):'·';}).join(' | ')} |`);process.exit(0);}
 console.log('| Card / option | Challenge | Drift | Months | E(turn) | **Foe level** | Player average / best | Foe |\n|---|---|---|---|---|---:|---|---|');
 for(const r of rows)console.log(`| ${r.key} | ${r.challenge} | ${r.drift} | ${r.months} | ${r.E} | **${r.level}** | ${r.avg} / ${r.best} | ${r.foes} |`);
 }
