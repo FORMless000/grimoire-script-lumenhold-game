@@ -124,12 +124,12 @@ function intent(){
  if(busy)return `<div class="intent wait"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>${esc(nameOf(1))} is choosing…</b><small>Their move appears when they commit.</small></div></div>`;
  if(shown){const b=briefOf(1,shown),fl=forced?compelledLine(label(shown),{names,side:1}):flavorLine(shown,{channel:game.actors[1].channel?.id,round:game.round,names,side:1});
   return `<div class="intent shown${forced?' forced':''}" data-sheet="intent" role="button" tabindex="0" title="What their move does"><span class="tele-icon">${actionIcon(shown,1)}</span><div class="it"><b>${forced?'Compelled: ':'They commit: '}${esc(actionName(shown,1))} ${effHtml(b)}</b>${fl?`<small class="flavor">${esc(fl)}</small>`:''}</div><span class="it-more">${EYE}</span></div>`;}
- return `<div class="intent hidden"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>You commit first</b><small>Their reply stays hidden until you commit. Initiative breaks a double knockout.</small></div></div>`;
+ return `<div class="intent hidden"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>You commit first</b><small title="Initiative breaks a double knockout.">Their reply stays hidden until you do.</small></div></div>`;
 }
 
 // The exchange track: one axis through the past (both moves, as icons), this exchange and the next few (who commits first,
 // so whether their move will show) with every lasting effect, channel, construct and foretold hit as a bar along it.
-const AHEAD=4,EFFECT_ICON={compelled:'compel',guard:'guard',frozen:'frozen'};
+const AHEAD=4,CAST_ON_FOE=new Set(['compelled','torment']),EFFECT_ICON={compelled:'compel',guard:'guard',frozen:'frozen'};
 // Who commits first c exchanges from now, as things stand: turns alternate and Foresight makes its target lead.
 function leaderAt(c){if(!c)return game.leader;const e=game.earlyCommit.map(n=>n-c>0),normal=c%2?1-game.normalLeader:game.normalLeader;return e[0]===e[1]?normal:e[0]?0:1;}
 // The exchange a side last cast this spell: where its line starts, so a line stays put as exchanges pass.
@@ -137,10 +137,11 @@ const castAt=(side,id)=>history.findLast(h=>h.pair[side]===id)?.round;
 function effectRows(){
  const r=game.round,rows=[];
  game.actors.forEach((a,side)=>{
-  for(const [k,e]of Object.entries(a.effects)){if(e.until!==null&&e.until<r)continue;rows.push({side,icon:EFFECT_ICON[k]??k,name:k==='compelled'?'Compelled':label(k),from:e.from??e.born??r,until:e.until??Infinity,note:k==='lodestar'?Math.round(e.value)+' shield':k==='tailwind'?'+'+Math.round(e.value):''});}
+  // Every line is a spell's duration in its caster's colour: Compel, Torment and Foresight sit on the other side.
+  for(const [k,e]of Object.entries(a.effects)){if(e.until!==null&&e.until<r)continue;const on=CAST_ON_FOE.has(k);rows.push({side:on?1-side:side,icon:EFFECT_ICON[k]??k,name:k==='compelled'?label('compel'):label(k),on:on?side:null,from:e.from??e.born??r,until:e.until??Infinity,note:k==='lodestar'?Math.round(e.value)+' shield':k==='tailwind'?'+'+Math.round(e.value):''});}
   if(a.channel)rows.push({side,icon:a.channel.id,name:label(a.channel.id),from:castAt(side,a.channel.id)??r,until:Infinity,note:`${a.channel.holds} hold${a.channel.holds===1?'':'s'}${a.channel.bank?' · '+Math.round(a.channel.bank)+' banked':''}`});
   for(const c of a.constructs)rows.push({side,icon:c.id,name:label(c.id),from:castAt(side,c.id)??r,until:c.expires,note:`${Math.round(Math.max(0,c.threshold-c.taken))} of ${Math.round(c.threshold)} HP`});
-  if(game.earlyCommit[side]>0)rows.push({side,icon:'foresight',name:'Commits first',from:(castAt(1-side,'foresight')??r-1)+1,until:r+game.earlyCommit[side]-1,note:''});
+  if(game.earlyCommit[side]>0)rows.push({side:1-side,on:side,icon:'foresight',name:label('foresight'),from:(castAt(1-side,'foresight')??r-1)+1,until:r+game.earlyCommit[side]-1,note:side?'they commit first':'you commit first'});
   if(a.freezeUntil>=r)rows.push({side,icon:'frozen',name:'Frozen',from:a.freezeUntil,until:a.freezeUntil,note:''});
   if(a.rimeReady)rows.push({side,icon:'rime',name:'Rime ready',from:castAt(side,'rime')??r,until:Infinity,note:''});
   for(const o of a.omens)rows.push({side,icon:'omen',name:'Omen',due:o.due,note:fmt(o.power)});
@@ -170,7 +171,7 @@ function track(){
  const head=`<div class="tk-row tk-head"><span class="tk-l"></span>${pastCells((h,k)=>`<button data-ex="${k}" title="Exchange ${h.round}: show it in full">${h.round}</button>`)}${ahead(c=>`<b title="${c?'Exchange '+(r+c):'This exchange'}: ${leaderAt(c)?'they lead':'you lead'}">${r+c}</b>`)}</div>`;
  const moves=side=>`<div class="tk-row tk-act s${side}"><span class="tk-l"><span class="tk-who">${who(side)}</span></span>${pastCells((h,k)=>`<button class="mini-icon" data-ex="${k}" title="Exchange ${h.round}: ${who(side)} · ${esc(h.actionNames[side])}">${actionIcon(h.pair[side],side,h.channels?.[side])}</button>`)}${ahead(c=>c?futureSlot(side,c):nowSlot(side))}</div>`;
  // A lasting effect: a thin line from the exchange it starts, with its icon at the start; name and numbers on hover.
- const cell=(row,at)=>{const past=typeof at==='object',ex=past?at.round:r+at,c=past?-1:at,tip=esc(`${who(row.side)} · ${row.name}${row.note?' · '+row.note:''}`),ico=`<span class="tk-ico">${actionIcon(row.icon,row.side,row.icon)}</span>`;
+ const cell=(row,at)=>{const past=typeof at==='object',ex=past?at.round:r+at,c=past?-1:at,tip=esc(`${who(row.side)} · ${row.name}${row.on!=null?' on '+(row.on?nameOf(1):'you'):''}${row.note?' · '+row.note:''}`),ico=`<span class="tk-ico">${actionIcon(row.icon,row.side,row.icon)}</span>`;
   if(row.due!==undefined)return row.due===ex?`<i class="tl-hit" title="${tip} damage, lands in exchange ${ex}">${ico}${row.note}</i>`:'';
   if(ex<row.from||ex>row.until)return '';const first=ex===row.from,open=row.until===Infinity&&c===AHEAD;
   return `<i class="tl-on${first?' first':''}${ex===row.until||open?' last':''}${open?' open':''}" title="${tip}${row.until===Infinity?'':` · until exchange ${row.until}`}">${first?ico:''}</i>`;};
