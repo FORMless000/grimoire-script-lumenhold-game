@@ -119,6 +119,7 @@ Depth 4, 2 seeds:
   - class personas are about 1.5× F5.9's (Duellist Flame 9);
   - characters' signature spells get 14–16: Lyra's Wildfire and Kael's Hoarfrost 16, Bram's Brace 14, Ilse's Rime 14, the man in grey's Compel 16;
   - the faculty now have personas too: Isolde's Seal, Brask's Haste, Amaranth's Mend.
+- **A channel's Hold and Release** can be favoured on their own, as `<spell>_hold` / `<spell>_release` (Lyra's `wildfire_hold` 12: she lets Wildfire build before releasing it). A plain `hold` would favour every channel's Hold.
 
 **Difficulty.** On top of the persona, `slack` lets the AI pick at random among every move within that many points of the best tilted move. `maxRegret` caps how bad a chosen move may be, measured by the untilted search. The core is `choose()` in `rust/core/src/ai.rs`. The settings come from the side's AI options (`tilt`, `tiltScale`, `slack`, `maxRegret`), expanded from a preset by `expandAI` (`setup/setup.mjs`).
 

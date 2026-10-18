@@ -623,9 +623,13 @@ pub fn choose(enc: &Encounter, s: &State, overrides: &Value, ctx: &mut Context, 
             let sign = if side == 0 { 1.0 } else { -1.0 };
             let best_u = ranked.ranked.iter().map(|&(_, v)| sign * v).fold(f64::NEG_INFINITY, f64::max);
             let k = &d.acts;
+            // A channel's Hold and Release also take `<spell>_hold` / `<spell>_release` (e.g. wildfire_hold), so a persona can
+            // favour holding one channel rather than every Hold.
+            let channel = s.actors[side].channel.map(|c| d.spells[c.spell].id.as_str());
             let bonus = |id: Act| -> f64 {
                 let name = d.name(id);
-                let own = tilt.iter().find(|(t, _)| t == name).map_or(0.0, |x| x.1);
+                let mut own = tilt.iter().find(|(t, _)| t == name).map_or(0.0, |x| x.1);
+                if let Some(ch) = channel { if name == "hold" || name == "release" { let key = format!("{ch}_{name}"); own += tilt.iter().find(|(t, _)| *t == key).map_or(0.0, |x| x.1); } }
                 let parts = if k.is_bundle[id as usize] { k.parts[id as usize].iter().map(|&p| { let n = d.name(p); tilt.iter().find(|(t, _)| t == n).map_or(0.0, |x| x.1) }).fold(f64::NEG_INFINITY, f64::max) } else { f64::NEG_INFINITY };
                 own.max(if parts.is_finite() { parts } else { own })
             };

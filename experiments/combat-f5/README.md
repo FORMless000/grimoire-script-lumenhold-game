@@ -83,7 +83,7 @@ See `INTEGRATION.md` for the design and `HANDOFF.md` for the plan to wire it int
 - `EVENTS`: every `challenge combat` / `challenge duel` in `content/`, played (against which foe) or converted to a feat;
 - `foeLevel`: a generic foe's level from the card's rung and odds word.
 
-`AI_PRESETS` (`setup/roster.mjs`) are the difficulty levels (easy, medium, hard, engine). Pass `ai: [null, {preset: 'medium'}]` to `createState`, which expands it with `expandAI` and adds the loadout's persona. The bench's opponent searches a fixed depth 5 with no seeded mistakes (`LIVE_AI`, `web/app.mjs`). The AI's own knobs are `tilt`, `tiltScale`, `slack` and `maxRegret` (`rust/core/src/ai.rs`).
+`AI_PRESETS` (`setup/roster.mjs`) are the difficulty levels (easy, medium, hard, engine). Pass `ai: [null, {preset: 'medium'}]` to `createState`, which expands it with `expandAI` and adds the loadout's persona. The bench's opponent searches a fixed depth 5 with no seeded mistakes (`LIVE_AI`, `web/app.mjs`). The AI's own knobs are `tilt`, `tiltScale`, `slack` and `maxRegret` (`rust/core/src/ai.rs`); a tilt key names an action, or `<spell>_hold` / `<spell>_release` for one channel's Hold or Release.
 
 Tools:
 - `node tools/ai-study.mjs [--grid '[{"preset":"easy"},{"slack":8}]']`: what an AI setting costs against the optimal AI;

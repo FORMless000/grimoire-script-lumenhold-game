@@ -13,6 +13,7 @@ import {LOADOUTS,NAMED_LOADOUTS,SPECIAL_LOADOUTS} from './roster.mjs';
 
 // Personas: points added to an action's value when the AI chooses (about 4 points = 1 HP of lead), so it favours these
 // even when slightly worse, never past its maxRegret. Applied by every preset but engine (AI_PRESETS), scaled by its tiltScale.
+// A channel's Hold and Release can be favoured on their own as `<spell>_hold` / `<spell>_release`.
 export const PERSONAS={
  // Classes (F5.9b: about 1.5× F5.9's)
  Duellist:{flame:9,ward:5},
@@ -26,7 +27,7 @@ export const PERSONAS={
  'Hollow adept':{siphon:9,eclipse:9,seal:6},
  Sailor:{tailwind:9,haste:6,brace:6},
  // Characters: their unique spell pulls hardest (their canon leanings: content/world/cast.grim)
- Lyra:{wildfire:16,flame:12},
+ Lyra:{wildfire:16,wildfire_hold:12,flame:12},   // she lets the wildfire build before she releases it
  Tobias:{heartwood:16,bramble:9,mend:6},
  Seraphine:{omen:16,foresight:9},
  Corvin:{shadowstep:12,seal:6},
