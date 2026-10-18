@@ -1,6 +1,6 @@
 # Combat: spell redesign v2 (F5)
 
-## F5 rule changes (spells-v2 F5.9 · 2026-10-17; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5–F5.9 its follow-ups, all below)
+## F5 rule changes (spells-v2 F5.9b · 2026-10-18; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5–F5.9b its follow-ups, all below)
 
 These override anything below that disagrees.
 
@@ -70,7 +70,26 @@ These override anything below that disagrees.
 - **Sailor:** a new Vigor-led class with Charm second, Tailwind and Brace (barge crews, the ring's sailor).
 - **Special foes** (`SPECIAL_LOADOUTS`): a fixed kit and creature-only moves. The **Shadow stag** has **Gore**: 6 Mana, 15 damage, **physical**: it hits like a Strike, so Guard stops it, Ward halves it and Reflect can't turn it. It also has Brace at 15, Shadowstep at 30 and Tailwind at 45. When it loses, it steps aside rather than falls.
 - **`ring_bout` context:** 65% Health rebate, 50% Renown.
-- **AI personas and difficulty:** a persona adds points to favoured actions. `slack` picks at random among moves within that many points of the best, and `maxRegret` caps how bad a pick may be. Presets: **Easy** (slack 24, persona ×1.5) wins 7% against the optimal AI, **Medium** (slack 10, persona) 26%, and **Hard** (the best move) 50%.
+- **AI personas and difficulty:** a persona adds points to favoured actions. `slack` picks at random among moves within that many points of the best, and `maxRegret` caps how bad a pick may be.
+
+**F5.9b, kits for the main game's range, and the live AI:**
+- **Kit gates** (`COMBAT_TUNING.kits`):
+  - course spells at 1 / 8 / 16 / 26;
+  - extras at 20 / 34 (the class's own) and 46 / 58 (own or hidden), at most two for underground classes;
+  - forbidden spells at 28 / 58;
+  - a character's place spell at 16;
+  - **ranks 2 and 3 at levels 22 and 36** (were 44 and 68).
+
+  Card foes run at about level 12–65, and players reach course level II from year 1 spring and III from year 2 spring, so every kit now fills out by 50–60.
+- **Distil costs 20 HP** (was 14).
+- **Brawler and Sailor** are 6% more Vigor-heavy, and get Distil at 58. Healer's Distil also moves to 58 (it drops Animate).
+- **The live opponent** searches 5 exchanges ahead with no seeded mistakes. Its difficulty is the only knob:
+  - **Easy:** slack 40, persona ×2;
+  - **Medium:** slack 24, persona ×1.5 (F5.9's Easy);
+  - **Hard:** slack 10, persona ×1 (F5.9's Medium);
+  - **Engine:** the best move (F5.9's Hard).
+- **Personas** are about 1.5× stronger, and strongest for each character's unique spell.
+- **The fight text calls the player "you".**
 
 **Kits:** Glamour, Rapport, Sleight, Index and Quickquill are out of combat kits (no combat effect). Scholar's extras are Starlight and Seal; Illusionist's are Reflect and Rapport.
 
@@ -163,7 +182,7 @@ Basics and all learned spells share one icon grid, including explicit zero-Mana 
 
 `docs/spells-v2-loadouts.md` supplies nine generic loadouts and 22 named-character loadouts. “Loadout” is used in controls, `LOADOUTS` / `NAMED_LOADOUTS`, `generateLoadout`, `playerLoadout` / `opponentLoadout`, generated-kit identifiers and exported records. Old result snapshots keep their original schema.
 
-Generic skills use `levelRng(L + 1000 × salt)`, six independent offsets (each a % of L since F5.9) and uniform jitter ±9% of L, rounded/clamped to 1–100. Mana capacity remains floor(40 + Arcana/2).
+Generic skills use `levelRng(L + 1000 × salt)`, six independent offsets (each a % of L since F5.9) and uniform jitter ±9% of L, rounded/clamped to 1–100. Spell gates are in `COMBAT_TUNING.kits` (F5.9b). Mana capacity remains floor(40 + Arcana/2).
 
 **Spell gains have no rolls.** Preferences rank choices by descending weight, with table order breaking ties; hidden extras win ties against club/job extras once eligible. Ward unlocks at 1. Flame unlocks at max(1, ceil(25 × (1 − flameBase))), always by 25. Generic course slots unlock at 1/15/40/65; the starter comes from Foresight/Mend/Glamour, later slots use remaining preferences. Course ranks rise at 44/68. Zero-weight spells never fill a slot.
 

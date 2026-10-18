@@ -22,19 +22,25 @@ export const COMBAT_TUNING={
  guard:{repeatLeak:.5,lookback:1}, // Guard fatigue (F5.5): a Guard within `lookback` exchanges of the last stops only half a Strike
  shadowstep:{breakOnCast:false}, // true: casting any spell but Ward breaks your own Shadowstep (tried in F5.5: kills comebacks, see rulebook)
  decision:{quietExchanges:5}, // a stalemate (no HP lost, no Mana spent) is called on points after this many exchanges
- kits:{flameBy:10},
+ // Kit gates (F5.9b, fitted to the main game: card foes run about level 12–65; players reach course level II from year 1
+ // spring, E ≈ 20, and III from year 2 spring, E ≈ 34): the level each course slot, extra, forbidden and place spell is
+ // learned, and the levels where three-level spells reach rank 2 and 3. Was courses 1/15/40/65, extras 45/70, forbidden
+ // 35/80, place 25, ranks 44/68 (F5.0–F5.9), which left most of a kit unseen below level 65.
+ kits:{flameBy:10,courses:[1,8,16,26],courseMin:{haste:10,shadowstep:10},place:16,extras:[20,34,46,58],ownExtrasBelow:34,forbidden:[28,58],ranks:[22,36],undergroundExtras:2},
  offsets:{jitter:.09},   // F5.9: class skill offsets are % of level (setup/loadouts.mjs); jitter ± this share of the level // generated kits learn Flame by this level at the latest (F5.6; was 25, which left some classes without an attack below 15)
  condition:{healthFull:70,healthFloor:.9,manaFloor:.9},
  settle:{healthStake:40,mood:{win:3,lose:-4,draw:0}}
 };
-// AI difficulty presets (F5.9), merged into a side's AI settings by expandAI (setup/setup.mjs). slack: pick at random among
-// moves within that many points of the best tilted one (about 4 points = 1 HP of lead); maxRegret: never a move worse than
-// that; tiltScale: how strongly the persona (PERSONAS in setup/foes.mjs) pulls; persona: whether it applies at all.
-// Against an optimal AI at depth 4 (tools/ai-study.mjs, levels 15/30/60): easy wins about 6%, medium about 30%, hard 50%.
+// AI difficulty presets (F5.9b), merged into a side's AI settings by expandAI (setup/setup.mjs); the live opponent searches a
+// fixed 5 exchanges with no seeded mistakes, so these are its only knob. slack: pick at random among moves within that many
+// points of the best tilted one (about 4 points = 1 HP of lead); maxRegret: never a move worse than that; tiltScale: how
+// strongly the persona (PERSONAS in setup/foes.mjs) pulls; persona: whether it applies at all. F5.9's easy/medium/hard are
+// now medium/hard/engine. Measured win rates against the engine: EVENTS.md §3.
 export const AI_PRESETS={
- easy:{mistakeChance:0,slack:24,maxRegret:60,tiltScale:1.5,persona:true},    // picks loosely among decent moves, leans hard on its favourites
- medium:{mistakeChance:0,slack:10,maxRegret:24,tiltScale:1,persona:true},    // has habits and slips, but never throws a fight away
- hard:{mistakeChance:0,slack:0,tiltScale:0,persona:false}                    // the search's best move, every time
+ easy:{mistakeChance:0,slack:40,maxRegret:100,tiltScale:2,persona:true},     // forgiving: drifts among anything not ruinous, plays its favourites
+ medium:{mistakeChance:0,slack:24,maxRegret:60,tiltScale:1.5,persona:true},  // loose, leans hard on its favourites (F5.9 easy)
+ hard:{mistakeChance:0,slack:10,maxRegret:24,tiltScale:1,persona:true},      // habits and small slips, never throws a fight away (F5.9 medium)
+ engine:{mistakeChance:0,slack:0,tiltScale:0,persona:false}                  // the search's best move, every time (F5.9 hard)
 };
 export const LEARN_XP={medium:6,large:10,huge:16};
 export const cap=(x,lo,hi)=>Math.max(lo,Math.min(hi,x));
@@ -62,7 +68,7 @@ export const SPELLS={
  bramble:spell('Bramble','Verdant Circle',['alchemy'],[10],{verb:'Entangle',construct:true,negotiation:'Fails the meeting.'}),
  index:spell('Index','Library Assistant',['lore'],[4],{verb:'Recall',negotiation:'Answer current request with Lore.'}),
  rapport:spell('Rapport','Gilded Newt',['charm'],[4],{verb:'Befriend',negotiation:'Next Deflect costs no Mood and adds no Suspicion.'}),
- purify:spell('Distil','Apothecary Clerk',['alchemy'],[0],{verb:'Distil',hpCost:14,negotiation:'None.'}),
+ purify:spell('Distil','Apothecary Clerk',['alchemy'],[0],{verb:'Distil',hpCost:20,negotiation:'None.'}),
  tailwind:spell('Tailwind','Broom Courier',['vigor'],[5],{verb:'Surge',damage:[4],negotiation:'None.'}),
  // Skill assignments below are provisional: the supplied pool tables omit them.
  rime:spell('Rime','Hidden pool',['arcana'],[4],{verb:'Freeze',group:'hidden',provisionalSkill:true,negotiation:'None.'}),
@@ -99,7 +105,7 @@ export const CONTEXTS={
  ring_bout:{health:.65,mood:.8,renown:.5,mana:.8,crowns:0,alignment:0}
 };
 export function levelRng(level){let state=level|0;return()=>{let a=(state=(state+0x6D2B79F5)|0);let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};}
-export const courseRank=level=>level>=68?3:level>=44?2:1;
+export const courseRank=level=>{const [r2,r3]=COMBAT_TUNING.kits.ranks;return level>=r3?3:level>=r2?2:1;};
 export function fixedLoadoutLevel(name){
  const def=NAMED_LOADOUTS[name];if(!def?.fixed)return null;
  const top=Object.values(CAST_STATS[def.npc].skills).sort((a,b)=>b-a);return Math.floor((top[0]+top[1])/2);
@@ -120,23 +126,26 @@ function spellUnlocks(def,named,growing,year){
  // First level where the former Flame probability would have been certain.
  grant('flame',flameUnlock(def));
  for(const id of def.iconic??[])if(!COMBAT_EXCLUDED.has(id))grant(id,1);
- if(def.place&&!COMBAT_EXCLUDED.has(def.place))grant(def.place,25);
+ const g=COMBAT_TUNING.kits;
+ if(def.place&&!COMBAT_EXCLUDED.has(def.place))grant(def.place,g.place);
  for(const [id,at]of def.grants??[])if(!COMBAT_EXCLUDED.has(id))grant(id,at);
  const weights=Object.fromEntries(COURSE_PICKS.map((id,i)=>[id,def.course[i]]));
  let courses=priority(weights).filter(id=>!levels[id]);
  const reserved=named?1+(def.iconic??[]).filter(id=>COURSE_PICKS.includes(id)&&!COMBAT_EXCLUDED.has(id)).length:0;
  if(!named){const starter=courses.find(id=>!['haste','shadowstep'].includes(id));courses=[starter,...courses.filter(id=>id!==starter)];}
  for(const [i,id]of courses.slice(0,4-reserved).entries()){
-  const at=growing&&year>=i+reserved+1?1:[1,15,40,65][i+reserved];
-  grant(id,Math.max(at,['haste','shadowstep'].includes(id)?12:1));
+  const at=growing&&year>=i+reserved+1?1:g.courses[i+reserved];
+  grant(id,Math.max(at,g.courseMin[id]??1));
  }
- const extras=priority({...def.hidden,...def.extras});let waiting=0;
- for(const gate of [45,70]){
+ // One extra per gate: the class's own extras first (only those below ownExtrasBelow), then its hidden spells too.
+ // Underground classes take at most undergroundExtras: their forbidden spells fill the other places.
+ const extras=priority({...def.hidden,...def.extras});let waiting=0,granted=0;
+ for(const gate of g.extras){
   waiting++;
-  while(waiting){const id=extras.find(id=>!levels[id]&&(gate>=70||id in (def.extras??{})));if(!id)break;grant(id,gate);waiting--;}
+  while(waiting&&(!def.underground||granted<(g.undergroundExtras??Infinity))){const id=extras.find(id=>!levels[id]&&(gate>=g.ownExtrasBelow||id in (def.extras??{})));if(!id)break;grant(id,gate);waiting--;granted++;}
  }
  if(growing&&year>=3&&extras.length)grant(extras[0],1);
- if(def.underground)for(const [i,id]of priority(def.forbidden).filter(id=>!levels[id]).slice(0,2).entries())grant(id,[35,80][i]);
+ if(def.underground)for(const [i,id]of priority(def.forbidden).filter(id=>!levels[id]).slice(0,g.forbidden.length).entries())grant(id,g.forbidden[i]);
  return levels;
 }
 export function generateLoadout(loadout,level,access='kit',options={}){

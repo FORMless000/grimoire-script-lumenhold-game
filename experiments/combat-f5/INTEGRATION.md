@@ -1,4 +1,4 @@
-# Bringing the combat minigame into Lumenhold (design, F5.9)
+# Bringing the combat minigame into Lumenhold (design, F5.9b)
 
 How a card's fight becomes a played minigame and how it feeds back into the game. The numbers live in `COMBAT_TUNING` (`setup/roster.mjs`) and `content/core/balance.grim`. This doc gives the shape and the reasons, and the measured effects as of F5.4–F5.7 (2026-10-17). The step-by-step plan for implementing it is `HANDOFF.md`.
 
@@ -72,17 +72,17 @@ For scale (`balance.grim`): medium is 10 Health, large 16 and huge 25, and a nig
 ## 4. Opponents
 
 - **Named characters** use their canon skills (`cast-stats.mjs`, from `content/world/cast.grim`) and fixed or growing levels (`NAMED_LOADOUTS`).
-- **Generic foes** use the ten class presets (pools by archetype) or special loadouts at a level set by the card: its rung mapped to a level near the player's expected skill for the month, level = E + 0.35 × (DC − E) + the odds word's shift (`foeLevel`, `setup/foes.mjs`). Every current card's foe, context and edits are in `EVENTS.md`.
-- **The AI** plays at the player's difficulty (Easy, Medium or Hard, `AI_PRESETS`) with the foe's persona (`PERSONAS`): see `EVENTS.md` §3.
+- **Generic foes** use the ten class presets (pools by archetype) or special loadouts at a level set by the card: its rung mapped to a level near the player's expected skill for the month, level = the card's own DC as the engine computes it, plus the odds word's shift (`challengeDC`, `foeLevel`, `setup/foes.mjs`). Every current card's foe, context and edits are in `EVENTS.md`.
+- **The AI** searches 5 exchanges ahead and plays at the player's difficulty (Easy, Medium, Hard or Engine, `AI_PRESETS`) with the foe's persona (`PERSONAS`): see `EVENTS.md` §3.
 - Their Health and Mana are full unless the story says otherwise (`opponentCondition`).
 - Level matters: in the F5.5 depth-5 suite the higher side wins 76% at +5 levels, 87% at +10 and 100% at +20. A card's difficulty word should move the foe's level by a few points, not tens.
 
 ## 5. Flavor
 
 `setup/flavor.mjs` says, in one plain sentence, what each fighter visibly did and what it does in this fight. For example:
-- "A translucent ward appears before Ash, blocking off the Duellist's spells."
-- "A quill flies around Ash, but it does little in this situation."
-- "The Duellist falls before Ash's fire."
+- "A translucent ward appears before you, blocking off the Duellist’s spells."
+- "The Duellist hurls a ball of fire at you."
+- "The Duellist falls before your fire."
 
 Every line names both sides with `{name}` (who acts) and `{foe}`.
 - **Kinds of line:**
@@ -92,7 +92,7 @@ Every line names both sides with `{name}` (who acts) and `{foe}`.
   - `ko`, the finishing action knocking the foe out;
   - `tired`, a Guard giving way;
   - `ENDINGS`, for points, draws and concessions.
-- **Names:** `fighterNames({playerName, opponentName})` gives the pair. The main game passes the player's name and the opponent as the card names them. Without names, the bench uses "the Duellist" or a character's name.
+- **Names:** `fighterNames({opponentName})` gives the pair: the player is always "you", and the main game passes the opponent as the card names them. Without names, the bench uses "the Duellist" or a character's name.
 - **Where they show:** the opponent's line on the telegraph, each action's line in the log, and the finish lines under each exchange.
 
 **For the main game:** the lines are English source text. They move to string tables under `locales/` (`flavor.<id>.cast.<n>`, `.hold`, `.release`, `.end`, `.ko`), with `{name}` and `{foe}` kept intact. Word order differs between languages, which is why the names are tokens, not prefixes.

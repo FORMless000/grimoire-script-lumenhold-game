@@ -67,7 +67,7 @@ A log has the same shape as the browser's exported log, plus structured events:
 - `condition`: how a worn or drained player starts (floors);
 - `settle`: what a fight costs afterwards.
 
-**Variants** try a balance idea without editing the roster. A variant is a module in `tools/variants/` whose default export mutates the roster objects: `R => { R.SPELLS.flame.cost = [9]; … }`. Pass it with `--variant` to `tools/suite.mjs` and `tools/condition-study.mjs`, or as `VARIANT=…` to `playtest.sh` and `suite-f5.sh`. It's recorded in each arm, so replays reproduce it. Each variant sets values on top of the roster as it was when it was written, so applying an old variant to today's roster isn't the same experiment. `v1`–`v8c` are the F5.4 tuning steps (F5.4 baked in `v8c` plus the 0.9 floors), `g1`–`g9` are the F5.5 trace-review steps (F5.5 baked in `g7`), and `g10`–`g11` plus `l3` the F5.6 low-level steps (F5.6 baked in `g11` and `l3`). `l1`, `l2` and `h1` were tried and rejected. `p1`–`p6` are the F5.7 scaling steps (F5.7 baked in `p6` plus a Mana floor of 34), F5.8 baked in `s1`, and F5.9 baked in `f59-linear-b` plus percentage offsets (`f59-linear` was too steep for HP).
+**Variants** try a balance idea without editing the roster. A variant is a module in `tools/variants/` whose default export mutates the roster objects: `R => { R.SPELLS.flame.cost = [9]; … }`. Pass it with `--variant` to `tools/suite.mjs` and `tools/condition-study.mjs`, or as `VARIANT=…` to `playtest.sh` and `suite-f5.sh`. It's recorded in each arm, so replays reproduce it. Each variant sets values on top of the roster as it was when it was written, so applying an old variant to today's roster isn't the same experiment. `v1`–`v8c` are the F5.4 tuning steps (F5.4 baked in `v8c` plus the 0.9 floors), `g1`–`g9` are the F5.5 trace-review steps (F5.5 baked in `g7`), and `g10`–`g11` plus `l3` the F5.6 low-level steps (F5.6 baked in `g11` and `l3`). `l1`, `l2` and `h1` were tried and rejected. `p1`–`p6` are the F5.7 scaling steps (F5.7 baked in `p6` plus a Mana floor of 34), F5.8 baked in `s1`, F5.9 baked in `f59-linear-b` plus percentage offsets (`f59-linear` was too steep for HP), and F5.9b baked in `f59b-kits3` with the new kit gates (`f59b-vigor`, `f59b-kits`, `f59b-kits2` were its steps).
 - `node tools/suite.mjs <name> --depth 4 [--variant f] [--trace] [--all] [--arms cross,gaps,all] [--seeds 3]` runs the suite directly (about 2 minutes at depth 4). One seed leaves about ±8 points of noise per class and level band. Use `--seeds 3` when you screen class changes.
 - `node tools/condition-study.mjs [--variant f] [--grid '[{"health":0.5},…]']` measures how entering worn or drained changes the player's win rate (432 fights per condition; about 10 minutes at depth 4).
 
@@ -83,15 +83,17 @@ See `INTEGRATION.md` for the design and `HANDOFF.md` for the plan to wire it int
 - `EVENTS`: every `challenge combat` / `challenge duel` in `content/`, played (against which foe) or converted to a feat;
 - `foeLevel`: a generic foe's level from the card's rung and odds word.
 
-`AI_PRESETS` (`setup/roster.mjs`) are the difficulty levels (easy, medium, hard). Pass `ai: [null, {preset: 'medium'}]` to `createState`, which expands it with `expandAI` and adds the loadout's persona. The AI's own knobs are `tilt`, `tiltScale`, `slack` and `maxRegret` (`rust/core/src/ai.rs`).
+`AI_PRESETS` (`setup/roster.mjs`) are the difficulty levels (easy, medium, hard, engine). Pass `ai: [null, {preset: 'medium'}]` to `createState`, which expands it with `expandAI` and adds the loadout's persona. The bench's opponent searches a fixed depth 5 with no seeded mistakes (`LIVE_AI`, `web/app.mjs`). The AI's own knobs are `tilt`, `tiltScale`, `slack` and `maxRegret` (`rust/core/src/ai.rs`).
 
 Tools:
 - `node tools/ai-study.mjs [--grid '[{"preset":"easy"},{"slack":8}]']`: what an AI setting costs against the optimal AI;
 - `node tools/foe-study.mjs "Shadow stag"`: a foe against every class;
 - `node tools/named-study.mjs [--stats '{…}'] [--kits '{…}']`: each named character's equivalent class level, optionally with worldbook stat or kit changes;
-- `node tools/event-coverage.mjs [--list]`: that every combat card has a decision.
+- `node tools/event-coverage.mjs [--list]`: that every combat card has a decision;
+- `node tools/event-levels.mjs`: each played card's foe level by month, from the card's challenge level, next to the player's skills;
+- `node tools/player-study.mjs`: the main game's measured player against every class at E − 10, E and E + 10.
 
-**Flavor** (`setup/flavor.mjs`): one plain sentence of what each fighter did, naming both sides (`{name}` and `{foe}`, from `fighterNames`). There are cast lines, Hold and Release lines for channels, `end` lines for effects and constructs, `ko` lines for the finishing action, and endings. The browser shows them in the telegraph, the log and under each exchange. The setup panel's "Your name" sets the player's name.
+**Flavor** (`setup/flavor.mjs`): one plain sentence of what each fighter did, naming both sides (`{name}` and `{foe}`, from `fighterNames`). The player is "you", so lines mark possessives (`{name’s}`) and verb forms (`{v:lunges|lunge}`, `{fv:…}` for the foe). There are cast lines, Hold and Release lines for channels, `end` lines for effects and constructs, `ko` lines for the finishing action, and endings. The browser shows them in the telegraph, the log and under each exchange. 
 
 ## Changing the rules
 

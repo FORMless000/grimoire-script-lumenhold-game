@@ -5,13 +5,13 @@ export const COURSE_PICKS=['foresight','mend','glamour','haste','shadowstep'];
 export const LOADOUTS={
  Duellist:{salt:1,offsets:[12,-2,-16,-2,10,-2],flameBase:.9,course:[2,1,.5,3,2],extras:{brace:3,tailwind:1},hidden:{reflect:1,lodestar:1,starlight:.5}},
  Scholar:{salt:2,offsets:[10,14,2,-4,-8,-14],flameBase:.4,course:[4,1,1,.5,1],extras:{starlight:3,seal:1},hidden:{starlight:2,seal:1,moonwell:1}},
- Healer:{salt:3,offsets:[4,4,16,4,-8,-20],flameBase:.6,course:[1,4,.5,1,.5],extras:{bramble:3,purify:2},hidden:{animate:1,moonwell:1}},
- Illusionist:{salt:4,offsets:[8,-8,-6,8,-4,2],flameBase:.4,course:[1,2,4,.5,3],extras:{reflect:3,rapport:2},hidden:{reflect:2,seal:1}},
- Brawler:{salt:5,offsets:[-8,-16,-12,4,22,10],flameBase:.6,course:[.5,1,.5,4,1],extras:{tailwind:3,brace:2,rapport:1},hidden:{rime:1}},
+ Healer:{salt:3,offsets:[4,4,16,4,-8,-20],flameBase:.6,course:[1,4,.5,1,.5],extras:{bramble:3},hidden:{moonwell:1,purify:.5}},
+ Illusionist:{salt:4,offsets:[8,-8,-6,8,-4,2],flameBase:.4,course:[1,2,4,.5,3],extras:{reflect:3,rapport:2},hidden:{reflect:2,seal:1,starlight:.5}},
+ Brawler:{salt:5,offsets:[-8,-19,-15,4,28,10],flameBase:.6,course:[.5,1,.5,4,1],extras:{tailwind:3,brace:2,rapport:1},hidden:{rime:1,purify:.5}},
  Prefect:{salt:6,offsets:[10,6,-8,-8,8,-8],flameBase:.7,course:[2,2,.5,1,1],extras:{brace:3,index:1},hidden:{lodestar:2,seal:1}},
- Showman:{salt:7,offsets:[6,-8,-12,20,6,-12],flameBase:.6,course:[1,.5,4,2,.5],extras:{rapport:3,tailwind:1},hidden:{reflect:1}},
+ Showman:{salt:7,offsets:[6,-8,-12,20,6,-12],flameBase:.6,course:[1,.5,4,2,.5],extras:{rapport:3,tailwind:1},hidden:{reflect:1,brace:.5,starlight:.5}},
  'Underground tough':{salt:8,offsets:[-4,-16,-8,-4,16,16],flameBase:.7,course:[.5,1,1,3,3],extras:{tailwind:2,brace:1,rapport:1},hidden:{rime:1},underground:true,forbidden:{extraction:3,torment:2,heartprice:1}},
- Sailor:{salt:32,offsets:[-4,-12,-4,8,16,-4],flameBase:.5,course:[.5,1,.5,4,1],extras:{tailwind:3,brace:2},hidden:{lodestar:1}}, // F5.9: barge crews, deckhands, the ring's sailor
+ Sailor:{salt:32,offsets:[-4,-15,-7,8,22,-4],flameBase:.5,course:[.5,1,.5,4,1],extras:{tailwind:3,brace:2},hidden:{lodestar:1,purify:.5}}, // F5.9: barge crews, deckhands, the ring's sailor
  'Hollow adept':{salt:9,offsets:[12,12,-8,-12,-12,8],flameBase:.5,course:[3,1,.5,.5,3],extras:{index:1},hidden:{seal:2,rime:2,moonwell:1},underground:true,forbidden:{siphon:3,eclipse:2,torment:1,compel:.5}}
 };
 // Special foes (F5.9): creatures and other fighters outside the classes. Skills from offsets like a class; the spells are a

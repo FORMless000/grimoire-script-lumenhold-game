@@ -4,7 +4,7 @@ For the agent who wires `experiments/combat-f5/` into the main game. Read this, 
 
 ## Where things stand (2026-10-17)
 
-- **The minigame is canon as of `spells-v2 F5.9`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
+- **The minigame is canon as of `spells-v2 F5.9b`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
   1. `node experiments/combat-f5/tools/build.mjs`
   2. `PORT=61096 node experiments/combat-f5/out/site/server.mjs`
 - **One implementation per function.**
@@ -68,11 +68,12 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 ### 4. The bridge
 
 - **Player:** the engine's six skills, learned spells and their levels, health, mana, mood, renown, gold and alignment map straight into `fightOptions`; the field names are in the file header.
-- **Names for the fight text:** pass the player's name and the opponent's (a character's short name, or the card's description of a generic foe, e.g. "the hooded duellist") to `fighterNames` (`setup/flavor.mjs`).
+- **Names for the fight text:** the player is always "you"; pass the opponent's name (a character's short name, or the card's description of a generic foe, e.g. "the hooded duellist") to `fighterNames` (`setup/flavor.mjs`).
 - **Opponents:**
   - `vs lyra.arcana` and similar name a character: use `NAMED_LOADOUTS` (canon skills from `setup/cast-stats.mjs`, a snapshot of `content/world/cast.grim`; refresh it with `setup/sync-loadout-stats.mjs` when the cast changes).
   - A difficulty word (`adept-`, `apprentice+`) means a generic foe: `EVENTS` in `setup/foes.mjs` names it for every current card (a pool, an archetype or a special foe), and `foeLevel` sets its level from the rung. `node experiments/combat-f5/tools/event-coverage.mjs` checks that every combat card has a decision. Seven cards become feats instead (`EVENTS.md` §6).
-  - The AI: pass `ai: [null, {preset: 'easy'|'medium'|'hard'}]` (a player setting, default Medium); `createState` adds the foe's persona.
+  - The AI: a fixed depth-5 search with no seeded mistakes (`LIVE_AI` in `web/app.mjs`), plus `preset: 'easy'|'medium'|'hard'|'engine'` (a player setting, default Medium); `createState` adds the foe's persona.
+  - The foe's level is the card's challenge level: `challengeDC` and `foeLevel` in `setup/foes.mjs` (the engine's `ladderOdds` DC, plus the odds word); `vs npc.stat` characters via `namedFoeSkills`. `tools/event-levels.mjs` lists every card's levels by month.
   - A few points of level are a big step (+10 levels wins 87%).
 - **Context:**
   - The stake depends on the context: `practice_duel`, `public_duel`, `real_conflict` or `rehearsal` (`CONTEXTS` in `setup/roster.mjs`, and the rebates in `INTEGRATION.md` §3).

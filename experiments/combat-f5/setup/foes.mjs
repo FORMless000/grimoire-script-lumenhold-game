@@ -12,35 +12,44 @@
 import {LOADOUTS,NAMED_LOADOUTS,SPECIAL_LOADOUTS} from './roster.mjs';
 
 // Personas: points added to an action's value when the AI chooses (about 4 points = 1 HP of lead), so it favours these
-// even when slightly worse, never past its maxRegret. Applied by the medium and easy presets (AI_PRESETS), not by hard.
+// even when slightly worse, never past its maxRegret. Applied by every preset but engine (AI_PRESETS), scaled by its tiltScale.
 export const PERSONAS={
- // Classes
- Duellist:{flame:6,ward:3},
- Scholar:{foresight:8,starlight:6,seal:4},
- Healer:{mend:8,bramble:4,guard:2},
- Illusionist:{shadowstep:6,reflect:6},
- Brawler:{strike:6,tailwind:6,haste:4},
- Prefect:{brace:6,guard:4,ward:3},
- Showman:{haste:6,tailwind:4,flame:2},
- 'Underground tough':{strike:4,extraction:6,torment:4},
- 'Hollow adept':{siphon:6,eclipse:6,seal:4},
- Sailor:{tailwind:6,haste:4,brace:4},
- // Characters (their canon leanings: content/world/cast.grim)
- Lyra:{flame:8,wildfire:8},
- Tobias:{heartwood:8,bramble:6,mend:4},
- Seraphine:{omen:8,foresight:6},
- Corvin:{shadowstep:6,seal:4},
- Mir:{contraption:8,animate:6},
- Kael:{hoarfrost:8,ward:4},
- Nessa:{foresight:4,ward:4},
- Bram:{brace:8,strike:4,guard:2},
- Ilse:{rime:8,ward:4},
- Tamsin:{reflect:6,shadowstep:4},
- 'The man in grey':{compel:8,eclipse:6,rime:4},
- Grisk:{extraction:8,compel:4},
- Thorne:{flame:6,brace:4},
+ // Classes (F5.9b: about 1.5× F5.9's)
+ Duellist:{flame:9,ward:5},
+ Scholar:{foresight:12,starlight:9,seal:6},
+ Healer:{mend:12,bramble:6,guard:3},
+ Illusionist:{shadowstep:9,reflect:9},
+ Brawler:{strike:9,tailwind:9,haste:6},
+ Prefect:{brace:9,guard:6,ward:5},
+ Showman:{haste:9,tailwind:6,flame:3},
+ 'Underground tough':{strike:6,extraction:9,torment:6},
+ 'Hollow adept':{siphon:9,eclipse:9,seal:6},
+ Sailor:{tailwind:9,haste:6,brace:6},
+ // Characters: their unique spell pulls hardest (their canon leanings: content/world/cast.grim)
+ Lyra:{wildfire:16,flame:12},
+ Tobias:{heartwood:16,bramble:9,mend:6},
+ Seraphine:{omen:16,foresight:9},
+ Corvin:{shadowstep:12,seal:6},
+ Mir:{contraption:16,animate:9},
+ Kael:{hoarfrost:16,ward:6},
+ Nessa:{foresight:8,ward:6},
+ Bram:{brace:14,strike:6,guard:3},
+ Ilse:{rime:14,ward:6},
+ Tamsin:{reflect:12,shadowstep:6},
+ 'The man in grey':{compel:16,eclipse:9,rime:6},
+ Grisk:{extraction:14,compel:6},
+ Thorne:{flame:12,brace:6},
+ Isolde:{seal:14,foresight:6},
+ Vey:{reflect:10,shadowstep:6},
+ Brask:{haste:14,tailwind:6},
+ Marisol:{moonwell:14},
+ Amaranth:{mend:14,purify:6},
+ Maud:{mend:12,bramble:9},
+ Pell:{purify:12},
+ Mabel:{ward:6,mend:6},
+ Grimsby:{foresight:8},
  // Special foes
- 'Shadow stag':{gore:6,shadowstep:4,brace:4}
+ 'Shadow stag':{gore:12,shadowstep:6,brace:6}
 };
 export const personaOf=loadout=>PERSONAS[loadout]??{};
 
@@ -55,29 +64,28 @@ export const POOLS={
 export const FOES={
  // Academy duellists
  tournament_entrant:{name:'your opponent',pool:'student',context:'public_duel'},
- tournament_unbeaten:{name:'the unbeaten fourth-year',loadout:'Duellist',persona:{flame:6,haste:4,strike:2},context:'public_duel'},
- quick_fourth_year:{name:'the fourth-year',loadout:'Duellist',persona:{flame:4,strike:4,haste:6},context:'practice_duel'},
+ tournament_unbeaten:{name:'the unbeaten fourth-year',loadout:'Duellist',persona:{flame:9,haste:6,strike:3},context:'public_duel'},
+ quick_fourth_year:{name:'the fourth-year',loadout:'Duellist',persona:{flame:6,strike:6,haste:9},context:'practice_duel'},
  club_partner:{name:'your sparring partner',pool:'student',context:'practice_duel'},
  visiting_champion:{name:'the visiting champion',pool:'champion',context:'public_duel'},
  // Thornwick
  thornwick_best:{name:'Thornwick’s best',pool:'thornwick',context:'public_duel'},
  thornwick_duellist:{name:'the Thornwick duellist',pool:'thornwick',context:'public_duel'},
  thornwick_illusionist:{name:'the Thornwick illusionist',loadout:'Illusionist',context:'public_duel'},
- thornwick_sketcher:{name:'the boy with the sketchbook',loadout:'Illusionist',persona:{shadowstep:8,reflect:4},context:'practice_duel'},
+ thornwick_sketcher:{name:'the boy with the sketchbook',loadout:'Illusionist',persona:{shadowstep:12,reflect:6},context:'practice_duel'},
  thornwick_final_year:{name:'the Thornwick final-year',pool:'thornwick',context:'practice_duel'},
  // The boathouse ring
  ring_opener:{name:'your opponent',pool:'ring',context:'ring_bout'},
- ring_rower:{name:'the rower',loadout:'Brawler',persona:{strike:6,guard:4},context:'ring_bout'},
- ring_villager:{name:'the villager',loadout:'Underground tough',persona:{strike:6,extraction:4},context:'ring_bout'},
+ ring_rower:{name:'the rower',loadout:'Brawler',persona:{strike:9,guard:6},context:'ring_bout'},
+ ring_villager:{name:'the villager',loadout:'Underground tough',persona:{strike:9,extraction:6},context:'ring_bout'},
  ring_scarf:{name:'the student in the scarf',loadout:'Illusionist',context:'ring_bout'},
  ring_duellist:{name:'the club duellist',loadout:'Duellist',context:'ring_bout'},
- ring_farrier:{name:'the farrier’s apprentice',loadout:'Brawler',persona:{strike:8,brace:6},context:'ring_bout'},
+ ring_farrier:{name:'the farrier’s apprentice',loadout:'Brawler',persona:{strike:12,brace:9},context:'ring_bout'},
  ring_hood:{name:'the hooded fighter',loadout:'Hollow adept',context:'ring_bout'},
- ring_champion:{name:'the ring’s champion',loadout:'Prefect',persona:{brace:6,guard:6},context:'ring_bout'},
- ring_bookmaker:{name:'the bookmaker',loadout:'Underground tough',persona:{extraction:6,torment:6},context:'ring_bout'},
+ ring_champion:{name:'the ring’s champion',loadout:'Prefect',persona:{brace:9,guard:9},context:'ring_bout'},
+ ring_bookmaker:{name:'the bookmaker',loadout:'Underground tough',persona:{extraction:9,torment:9},context:'ring_bout'},
  ring_sailor:{name:'the sailor',loadout:'Sailor',context:'ring_bout'},
- // Characters: the main game names them (a character's short name). `vs npc.stat ±n`: their current skills (canon × peer
-// growth, Engine.statOf) × (1 + 0.03 n). A generic rung (rival_contest): their canon shape at the rung's level (foeLevel).
+ // Characters: the main game names them (a character's short name); their skills from namedFoeSkills below.
  lyra:{loadout:'Lyra'},bram:{loadout:'Bram'},kael:{loadout:'Kael'},tamsin:{loadout:'Tamsin'},
  peer:{loadout:'(the peer present)'},   // duel_hall_gallery: whichever peer the card cast as `here`
  // Danger
@@ -86,7 +94,7 @@ export const FOES={
 };
 
 // Every current combat card, by event/option. play: a minigame fight against `foe` (several foes: matched to the card's
-// random text variant, in order); convert: not a fight, the challenge line becomes this (same rung and odds). Level: the challenge's rung → foeLevel.
+// random text variant, in order); convert: not a fight, the challenge line becomes this (same rung and odds). Level: challengeDC → foeLevel.
 // `setup` lists extra fight setup the card implies. EVENTS.md gives the reasons.
 export const EVENTS={
  'spring_tournament/right':{play:'tournament_entrant'},
@@ -129,12 +137,22 @@ export const EVENTS={
  'lake_skimming/left':{convert:'challenge feat apprentice wild'}
 };
 
-// A generic foe's level from the card's challenge, so a fight is about as hard as the roll it replaces. The stub rolls
-// skill against a DC (the rung, drifted toward the expected skill E); one DC point moves its odds ~2%, one level here ~6%,
-// so the foe sits at E + 0.35 × (DC − E). The odds word shifts it: sure −6, likely −3, even 0, unlikely +3, slim +6.
-export const LEVEL_PER_DC=.35;
-export const NATURE_LEVELS={certain:-9,sure:-6,likely:-3,even:0,unlikely:3,slim:6,long_shot:9,freak:12};
-export function foeLevel({expected,dc,nature='even'}){return Math.max(1,Math.min(100,Math.round(expected+LEVEL_PER_DC*(dc-expected)+(NATURE_LEVELS[nature]??0))));}
+// A foe's level is the card's own challenge level (F5.9b): the DC the stub would roll against, computed as the main engine's
+// ladderOdds does: the rung (dc_tiers) or a character's stat, ± 4 per rung (rungStep), pulled toward the expected skill
+// E(turn) by the drift (story none, milestone and crisis low, otherwise high, or the card's own word). A class's mean skill
+// is its level, so a foe at level DC is the opponent the rung describes. The odds word moves the level by the measured
+// fight odds instead of the stub's: in F5.9 the higher side wins 69% at +5 levels and 91% at +10, so likely (70%) is −5
+// levels and sure (90%) −10. The luck word (steady, wild) changes nothing: a fight has its own variance.
+export const DRIFT={none:0,low:.15,mid:.3,high:.5};
+export const NATURE_LEVELS={certain:-15,sure:-10,likely:-5,even:0,unlikely:5,slim:8,long_shot:12,freak:20};
+export const defaultDrift=cardClass=>cardClass==='story'?'none':['milestone','crisis'].includes(cardClass)?'low':'high';
+// {base: the rung's DC or the character's stat, rungs: ±n, drift: word, expected: E(turn)} → the DC.
+export function challengeDC({base,rungs=0,drift='high',expected,rungStep=4}){const b=base+rungs*rungStep;return b+(DRIFT[drift]??0)*(expected-b);}
+export function foeLevel({dc,nature='even'}){return Math.max(1,Math.min(100,Math.round(dc+(NATURE_LEVELS[nature]??0))));}
+// A character named by `vs npc.stat ±n` keeps their shape: their current skills (canon × the main game's npc_growth) × level/stat,
+// so the named stat lands on the foe's level. A character on a generic rung (Tamsin in rival_contest) plays with their
+// reference skill at the foe's level, as generateLoadout already does.
+export const namedFoeSkills=(skills,stat,level)=>Object.fromEntries(Object.entries(skills).map(([k,v])=>[k,Math.max(1,Math.min(100,Math.round(v*level/skills[stat])))]));
 
 // Every loadout a foe names must exist (checked by tools/event-coverage.mjs).
 export const foeLoadouts=()=>Object.values(FOES).flatMap(f=>f.pool?POOLS[f.pool]:[f.loadout]).filter(l=>!l.startsWith('('));

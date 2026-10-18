@@ -1,24 +1,27 @@
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import crypto from 'node:crypto';
-import {LOADOUTS,NAMED_LOADOUTS,LOADOUT_SKILLS,COURSE_PICKS,generateLoadout,courseRank,fixedLoadoutLevel,SPELLS,COMBAT_EXCLUDED,manaCapacity,flameUnlock} from './roster.mjs';
+import {COMBAT_TUNING,LOADOUTS,NAMED_LOADOUTS,LOADOUT_SKILLS,COURSE_PICKS,generateLoadout,courseRank,fixedLoadoutLevel,SPELLS,COMBAT_EXCLUDED,manaCapacity,flameUnlock} from './roster.mjs';
 import {CAST_STATS,CAST_STATS_HASH} from './cast-stats.mjs';
 import {createState} from './setup.mjs';
 const peerSpells=['wildfire','heartwood','omen','sleight','contraption','hoarfrost','candour'];
 test('ten generic presets follow fixed level gates, course ranks, restrictions and skill seeds',()=>{
- assert.equal(Object.keys(LOADOUTS).length,10);assert.deepEqual([43,44,67,68].map(courseRank),[1,2,2,3]);
+ const g=COMBAT_TUNING.kits,[r2,r3]=g.ranks,open=(gates,level)=>gates.filter(x=>x<=level).length;
+ assert.equal(Object.keys(LOADOUTS).length,10);assert.deepEqual([r2-1,r2,r3-1,r3].map(courseRank),[1,2,2,3]);
  for(const [name,def]of Object.entries(LOADOUTS)){
   assert.equal(def.offsets.reduce((a,b)=>a+b),0,name);
   for(let level=1;level<=100;level++){
    const a=generateLoadout(name,level);assert.deepEqual(a,generateLoadout(name,level));assert.equal(a.seed,level+1000*def.salt);assert.equal(a.spells.ward,1);
-   if(level>=25)assert.equal(a.spells.flame,courseRank(level));
-   const courses=COURSE_PICKS.filter(id=>id in a.spells);assert.equal(courses.length,level<15?1:level<40?2:level<65?3:4);
-   if(level<12){assert(!a.spells.haste);assert(!a.spells.shadowstep);}
+   if(level>=g.flameBy)assert.equal(a.spells.flame,courseRank(level));
+   // A course slot opens at its gate; Haste and Shadowstep wait for courseMin, so a slot can open a little late.
+   const courses=COURSE_PICKS.filter(id=>id in a.spells),slots=open(g.courses,level);assert(courses.length<=slots&&courses.length>=Math.min(slots,open(g.courses,level-2)),name+' '+level);
+   if(level<g.courseMin.haste)assert(!a.spells.haste);if(level<g.courseMin.shadowstep)assert(!a.spells.shadowstep);
    const extra=Object.keys(a.spells).filter(id=>id!=='ward'&&SPELLS[id].group!=='course'&&SPELLS[id].group!=='forbidden');
    // Extras with no combat effect (COMBAT_EXCLUDED) never take a slot, so a class can have fewer.
    const usable=Object.keys(def.extras??{}).filter(id=>!COMBAT_EXCLUDED.has(id)).length,pool=new Set([...Object.keys(def.extras??{}),...Object.keys(def.hidden??{})].filter(id=>!COMBAT_EXCLUDED.has(id))).size;
-   assert.equal(extra.length,level<45?0:level<70?Math.min(1,usable):Math.min(2,pool));
-   for(const id of extra)assert(id in def.extras||level>=70&&id in (def.hidden??{}),name+' '+level+' '+id);
+   assert(extra.length<=open(g.extras,level)&&extra.length<=pool&&(!def.underground||extra.length<=g.undergroundExtras),name+' '+level);
+   if(!def.underground&&open(g.extras,level)>=2&&usable)assert(extra.length>=1,name+' '+level);
+   for(const [id,at]of Object.entries(a.unlockLevels))if(extra.includes(id))assert(id in (def.extras??{})||at>=g.ownExtrasBelow&&id in (def.hidden??{}),name+' '+level+' '+id);
    const forbidden=Object.keys(a.spells).filter(id=>SPELLS[id].group==='forbidden');
-   assert.equal(forbidden.length,!def.underground||level<35?0:level<80?1:2);
+   assert(def.underground?forbidden.length===Math.min(open(g.forbidden,level),Object.keys(def.forbidden).length):forbidden.length===0,name+' '+level);
    assert(!a.spells.toll);for(const id of peerSpells)assert(!a.spells[id]);
    for(const [i,k]of LOADOUT_SKILLS.entries()){assert(Number.isInteger(a.skills[k])&&a.skills[k]>=1&&a.skills[k]<=100);assert(Math.abs(a.skills[k]-Math.max(1,Math.min(100,level*(1+def.offsets[i]/100))))<=level*.09+.5);}
    assert.equal(a.capacity,manaCapacity(a.skills));
@@ -39,17 +42,18 @@ test('worldbook snapshot is current; named skills are fixed or preserve their ca
  const exact={arcana:40,lore:20,alchemy:10,charm:25,vigor:30,guile:15};assert.deepEqual(generateLoadout('Lyra',40,'kit',{skills:exact}).skills,exact);
 });
 test('named spells, place guarantees, prodigies, study years and Ilse flags are reproducible',()=>{
+ const g=COMBAT_TUNING.kits;
  for(const [name,def]of Object.entries(NAMED_LOADOUTS))for(let level=1;level<=100;level++)for(const year of [1,4]){
   const a=generateLoadout(name,level,'kit',{year});assert.deepEqual(a,generateLoadout(name,level,'kit',{year}));
-  for(const id of def.iconic??[])if(!COMBAT_EXCLUDED.has(id))assert(a.spells[id],name+' '+id);if(def.place&&!COMBAT_EXCLUDED.has(def.place)&&level>=25)assert(a.spells[def.place]);
+  for(const id of def.iconic??[])if(!COMBAT_EXCLUDED.has(id))assert(a.spells[id],name+' '+id);if(def.place&&!COMBAT_EXCLUDED.has(def.place)&&level>=g.place)assert(a.spells[def.place]);
   for(const [id,min]of def.grants??[])if(a.level>=min&&!COMBAT_EXCLUDED.has(id))assert(a.spells[id],name+' grant '+id);
   for(const id of peerSpells)if(!(def.iconic??[]).includes(id))assert(!a.spells[id]);
   if(!a.underground)assert(!Object.keys(a.spells).some(id=>SPELLS[id].group==='forbidden'));
-  if(a.year===4&&level>=25)assert(Object.keys(a.spells).filter(id=>SPELLS[id].group==='course').length>=4,name+' year4');
+  if(a.year===4&&level>=g.courses[3])assert(Object.keys(a.spells).filter(id=>SPELLS[id].group==='course').length>=4,name+' year4');
   if(def.prodigy&&!COMBAT_EXCLUDED.has(def.prodigy))assert.equal(a.spells[def.prodigy],Math.min(3,courseRank(a.level)+1));
  }
  const free=generateLoadout('Ilse',80),taken=generateLoadout('Ilse',80,'kit',{ilseTaken:true});assert(!free.underground);assert(taken.underground);assert(taken.spells.eclipse);assert(Object.keys(taken.spells).filter(id=>SPELLS[id].group==='forbidden').length>=2);
- assert.equal(Object.keys(generateLoadout('Lyra',34).spells).filter(id=>SPELLS[id].group==='course').length,2);assert.equal(Object.keys(generateLoadout('Lyra',56,'kit',{year:4}).spells).filter(id=>SPELLS[id].group==='course').length,4);assert(!generateLoadout('Lyra',80).spells.mend);assert(!generateLoadout('Lyra',80).spells.glamour);
+ assert.equal(Object.keys(generateLoadout('Lyra',12).spells).filter(id=>SPELLS[id].group==='course').length,2);assert.equal(Object.keys(generateLoadout('Lyra',56,'kit',{year:4}).spells).filter(id=>SPELLS[id].group==='course').length,4);assert(!generateLoadout('Lyra',80).spells.mend);assert(!generateLoadout('Lyra',80).spells.glamour);
  const a=createState({playerLoadout:'Lyra',playerLevel:50,playerYear:4});assert.deepEqual(a.actors[0].kit,a.actors[1].kit);
  const b=createState({playerLoadout:'Thorne',playerLevel:20});assert.equal(b.config.resolvedPlayerLevel,81);
 });
@@ -72,7 +76,7 @@ test('spell unlock levels do not depend on jitter or rerolls, and preferences de
   assert.equal(top.unlockLevels.flame,flameUnlock(def));
   for(let level=1;level<=100;level++){const a=generateLoadout(name,level);for(const [id,at]of Object.entries(a.unlockLevels))assert.equal(id in a.spells,level>=at,`${name} ${id}@${level}`);}
  }
-  assert.deepEqual(generateLoadout('Duellist',100).unlockLevels,{ward:1,flame:flameUnlock(LOADOUTS.Duellist),foresight:1,haste:15,shadowstep:40,mend:65,brace:45,reflect:70});
+  assert.deepEqual(generateLoadout('Duellist',100).unlockLevels,{ward:1,flame:flameUnlock(LOADOUTS.Duellist),foresight:1,haste:10,shadowstep:16,mend:26,brace:20,reflect:34,lodestar:46,tailwind:58});
  const hf=generateLoadout('Healer',100).unlockLevels.flame;assert.equal(hf,flameUnlock(LOADOUTS.Healer));assert(!generateLoadout('Healer',hf-1).spells.flame);assert(generateLoadout('Healer',hf).spells.flame);
  assert.equal(generateLoadout('Lyra',50).draws.length,0);
 });
