@@ -209,6 +209,70 @@ text: t
   assert.equal(eng.choose('ok').notes.filter((n) => n.kind === 'spell').length, 0);
 });
 
+test('spells v2: one-level spells, skills, alignment per cast, and saves from before', () => {
+  const eng = engineWith(`@spell brace
+name: Brace
+skill: arcana charm
+cost: 10
+
+@spell sleight
+name: Sleight
+skill: charm
+cost: 6
+alignment: small
+
+@spell nothing
+name: Nothing
+cost: 7
+
+@event teach
+title: T
+text: t
+> ok: Go
+  learn_spell brace
+  learn_spell nothing
+
+@event lift
+title: L
+text: t
+> left: L
+  mood +small
+> right: R
+  learn_spell sleight
+> up[sleight]: Lift it
+  gold +small
+`);
+  eng.c.balance.spell_bonus = ['medium', 'large', 'huge'];
+  eng.c.balance.spell_bonus_one = 'huge';
+  assert.equal(eng.spellLevels('brace'), 1); assert.equal(eng.spellLevels('ward'), 3);
+  assert.deepEqual(eng.spellSkills('brace'), ['arcana', 'charm']); assert.deepEqual(eng.spellSkills('nothing'), []);
+  const a0 = eng.s.vals.arcana, c0 = eng.s.vals.charm;
+  show(eng, 'teach');
+  const notes = eng.choose('ok').notes.filter((n) => n.kind === 'spell');
+  assert.equal(eng.s.spells.brace, 1);
+  assert.ok(eng.s.vals.arcana > a0 && eng.s.vals.charm > c0, 'a two-skill spell trains both skills');
+  assert.ok(!notes.find((n) => n.spell === 'nothing').bonus, 'a spell with no skill gives no XP');
+  // A one-level spell can't go past level 1.
+  show(eng, 'teach');
+  assert.equal(eng.choose('ok').notes.filter((n) => n.kind === 'spell').length, 0);
+  assert.equal(eng.s.spells.brace, 1);
+  // spell_check is keyed by the spell's skill: Brace counts on a charm check.
+  eng.c.balance.spell_check = { per: 2, cap: 6 };
+  const sv = (skill) => eng.checkValue({ kind: 'negotiate', using: skill }).value - eng.s.vals[skill];
+  assert.equal(sv('charm'), 2);
+  // A spell with `alignment:` moves alignment on every cast, and the preview shows it.
+  eng.s.vals.mana = 30; const al = eng.s.vals.alignment;
+  show(eng, 'lift'); eng.choose('right');
+  show(eng, 'lift');
+  assert.deepEqual([].concat(eng.preview('lift', 'up').deltas.alignment), [-4, -4]);
+  const out = eng.choose('up');
+  assert.equal(out.deltas.mana, -6); assert.equal(eng.s.vals.alignment, al - 4);
+  // A save holding a removed spell and a level past the spell's levels loads cleanly.
+  const saved = JSON.parse(eng.save()); saved.spells = { tide: 2, brace: 3, ward: 2 };
+  const again = new Engine(eng.c).load(saved);
+  assert.deepEqual(again.s.spells, { brace: 1, ward: 2 });
+});
+
 test('spells: hidden until known, disabled without mana, cost paid on choose', () => {
   const eng = engineWith(`@event cold
 title: C

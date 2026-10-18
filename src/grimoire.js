@@ -217,8 +217,8 @@
       // exam preparation: what a course card adds by itself and the most it counts (L-3); a known spell's bonus on
       // checks of its discipline, per spell and at most (L-3)
       'study', 'spell_check',
-      // the skill XP a spell gives in its discipline when learned, one tier per spell level (L-6)
-      'spell_bonus',
+      // the skill XP a spell gives in its skill when learned, one tier per spell level (L-6); a one-level spell's tier
+      'spell_bonus', 'spell_bonus_one',
       // a course exam's difficulty tier at each course level (L alarms); rungs or `standard±N` use the check ladder
       'exam_tiers',
       // the check ladder (docs/authoring/checks.md, design §8.6): each rung's DC, the odds of each odds-by-nature word (%),
@@ -251,7 +251,10 @@
     // meeting them silently.
     // `standard:` a course's rung at each level (checks.md), else @balance course_standard
     track: { props: ['kind', 'name', 'skill', 'levels', 'level_names', 'place', 'teaches', 'hidden', 'prereq', 'ranks', 'pay', 'due', 'lead', 'desc', 'legacy', 'opens', 'intro', 'standard', 'picked'], effects: [] },
-    spell: { props: ['name', 'discipline', 'cost', 'power', 'desc', 'art'], effects: [] },
+    // Spells v2 (docs/spells-v2-list.md): `skill:` (one or two skills; none for Ward), `cost:` one value per level (one or
+    // three levels), `verb:` the one verb its cards use, `pool: hidden | forbidden` (no source yet), `alignment:` a tier
+    // a cast moves alignment by (down: casting it is wrong); `discipline:` and `power:` are optional.
+    spell: { props: ['name', 'discipline', 'cost', 'power', 'desc', 'art', 'skill', 'verb', 'pool', 'alignment'], effects: [] },
     fact: { dotted: true, props: ['npc', 'tier', 'unlock', 'text'], effects: [] },
     archetype: { props: ['names', 'age', 'traits', 'pronouns', 'house', 'role', 'desc'], effects: [] },
     faction: { props: ['name', 'desc', 'members', 'alignment', 'stance'], effects: [] },
@@ -359,6 +362,7 @@
     course_drift(t) { const w = t.trim(); if (!/^[a-z_]+$/.test(w)) throw 'course_drift: expected a drift word (none, low, mid, high)'; return w; },
     standard(t) { const w = words(t); for (const x of w) if (!RUNG_RE.test(x)) throw 'standard: expected a rung per course level, got "' + x + '"'; return w; },
     coursework(t) { const w = words(t); for (const x of w) if (!TIERS.includes(x)) throw 'coursework: expected a size tier per course level (tiny … huge), got "' + x + '"'; return w; },
+    spell_bonus_one(t) { const w = words(t); if (w.length !== 1 || !TIERS.includes(w[0])) throw 'spell_bonus_one: expected one size tier (tiny … huge), got "' + t + '"'; return w[0]; },
     spell_bonus(t) { const w = words(t); for (const x of w) if (!TIERS.includes(x)) throw 'spell_bonus: expected a size tier per spell level (tiny … huge), got "' + x + '"'; return w; },
     ramp(t) { const m = t.trim().match(/^(.+?)\s+(-?\d+)\s*\.\.\s*(-?\d+)$/); if (!m || +m[3] <= +m[2]) throw 'ramp: expected "<expression> low..high", e.g. ramp: rel(npc) 18..30'; return { expr: m[1], lo: +m[2], hi: +m[3] }; },
   };
@@ -720,11 +724,11 @@
       if (!schema.props.includes(key)) throw new GrimError('unknown property "' + key + '" for @' + b.kind + ' (allowed: ' + schema.props.concat(schema.effects).join(', ') + ')', file, L.line);
       if (key in def && key !== 'options') throw new GrimError('duplicate property "' + key + '"', file, L.line);
       const text = joinText(val, sub);
-      if (STRUCT_PROPS[key] && !(key === 'skill' && b.kind !== 'track')) {
+      if (STRUCT_PROPS[key] && !(key === 'skill' && b.kind !== 'track' && b.kind !== 'spell')) {
         try { def[key] = STRUCT_PROPS[key](text); } catch (e) { throw new GrimError(typeof e === 'string' ? e : e.message, file, L.line); }
         if (key === 'ramp') def.ramp.expr = expr(def.ramp.expr, file, L.line);
       } else if (EXPR_PROPS.has(key) || (key === 'max' && b.kind === 'resource' && !isFinite(Number(text)))) def[key] = expr(text, file, L.line);
-      else if (NUM_PROPS.has(key)) {
+      else if (NUM_PROPS.has(key) && !(key === 'alignment' && b.kind === 'spell')) {
         const n = Number(text);
         if (!isFinite(n)) throw new GrimError('property "' + key + '" must be a number, got "' + text + '"', file, L.line);
         def[key] = n;

@@ -122,6 +122,7 @@ function analyze(content) {
   const A = { flagsSet: {}, flagsRead: {}, varsSet: {}, varsRead: {}, queued: {}, statesRef: {}, npcsRef: {}, endingsRef: {}, eventsRef: {}, problems: [], legacy: [] };
   const add = (map, k, where) => { (map[k] = map[k] || []).push(where); };
   const P = (level, where, msg) => A.problems.push({ level, where, msg });
+  const taught = A.taught = new Set();   // spells some card or track teaches (spells v2: a spell with no source needs a pool)
 
   function scanExpr(ex, where, hasActor) {
     if (!ex) return;
@@ -252,7 +253,13 @@ function analyze(content) {
         case 'advance': if (!content.arcs[st.arc]) P('error', w, 'advance: unknown arc "' + st.arc + '"'); else if (/^content\/batches\//.test(w)) P('error', w, 'advance: only hard-canon events move an arc clock'); break;
         case 'spawn': if (!content.archetypes[st.archetype]) P('error', w, 'spawn: unknown archetype "' + st.archetype + '"'); break;
         case 'unqueue': if (!content.events[st.event]) P('error', w, 'unqueue: unknown event "' + st.event + '"'); break;
-        case 'learn_spell': if (!content.spells[st.spell]) P('error', w, 'learn_spell: unknown spell "' + st.spell + '"'); break;
+        case 'learn_spell': {
+          const sp = content.spells[st.spell];
+          if (!sp) { P('error', w, 'learn_spell: unknown spell "' + st.spell + '"'); break; }
+          taught.add(st.spell);
+          if (st.level && sp.cost && st.level > sp.cost.length) P('error', w, 'learn_spell ' + st.spell + ' ' + st.level + ': the spell has ' + sp.cost.length + ' level(s)');
+          break;
+        }
         case 'regrade': if (st.track !== 'track' && !(content.tracks[st.track] && content.tracks[st.track].kind === 'course')) P('error', w, 'regrade: "' + st.track + '" is not a course'); break;
         case 'npc_rel': for (const x of [st.a, st.b]) { if (x === 'npc') { if (!hasActor) P('error', w, 'npc_rel npc: block has no actor'); } else if (!content.npcs[x]) P('error', w, 'npc_rel: unknown npc "' + x + '"'); } break;
         case 'challenge':
@@ -356,7 +363,7 @@ function analyze(content) {
   if (!Object.values(content.endings).some((en) => en.kind !== 'early' && (en.slot || 'headline') === 'headline' && !en.when)) P('error', '-', 'no headline fallback ending (a final ending with no slot or slot: headline, and no when)');
   for (const n of Object.values(content.npcs)) { if (!n.name) P('error', loc(n), 'npc needs a name'); if (n.pronouns && !/^(she|he|they)\b/.test(n.pronouns)) P('warn', loc(n), 'pronouns should start with she/he/they'); }
 
-  analyzeWorld(content, P, scanExpr, scanText);
+  analyzeWorld(content, P, scanExpr, scanText, taught);
 
   // Cross-reference results
   for (const [f, ws] of Object.entries(A.flagsRead)) if (!A.flagsSet[f]) P('warn', ws[0], 'flag "' + f + '" is read but never set (typo?)' + (ws.length > 1 ? ' [+' + (ws.length - 1) + ' more]' : ''));
@@ -502,7 +509,7 @@ function budgetCheck(e, content, P) {
   if (e.class === 'incident' && e.options.length < 2) P('warn', 'an incident must offer agency: at least two options');
 }
 
-function analyzeWorld(content, P, scanExpr, scanText) {
+function analyzeWorld(content, P, scanExpr, scanText, taught = new Set()) {
   const loc = (d) => d.file + ':' + d.line;
   const vocab = (id) => (content.vocab[id] ? new Set(content.vocab[id].values || []) : null);
   const inVocab = (list, id, d, what) => { const v = vocab(id); if (!v) return; for (const x of [].concat(list || [])) if (!v.has(x)) P('error', loc(d), what + ' "' + x + '" is not in @vocab ' + id); };
@@ -550,7 +557,7 @@ function analyzeWorld(content, P, scanExpr, scanText) {
     if (d.lead && !content.npcs[d.lead]) P('error', loc(d), 'lead: unknown npc "' + d.lead + '"');
     if (d.intro && !content.events[d.intro]) P('error', loc(d), 'intro: unknown event "' + d.intro + '"');
     if (d.intro && !d.lead) P('warn', loc(d), 'intro: without a lead: nobody to meet');
-    for (const t of d.teaches || []) { if (!content.spells[t.spell]) P('error', loc(d), 'teaches: unknown spell "' + t.spell + '"'); if (d.levels && t.level > d.levels) P('error', loc(d), 'teaches ' + t.spell + '@' + t.level + ': the track has ' + d.levels + ' level(s)'); }
+    for (const t of d.teaches || []) { taught.add(t.spell); const sp = content.spells[t.spell]; if (sp && sp.cost && t.level > sp.cost.length) P('error', loc(d), 'teaches ' + t.spell + '@' + t.level + ': the spell has ' + sp.cost.length + ' level(s)'); if (!sp) P('error', loc(d), 'teaches: unknown spell "' + t.spell + '"'); if (d.levels && t.level > d.levels) P('error', loc(d), 'teaches ' + t.spell + '@' + t.level + ': the track has ' + d.levels + ' level(s)'); }
     if (d.level_names && d.levels && d.level_names.split(/\s*,\s*/).length !== d.levels) P('error', loc(d), 'level_names should list ' + d.levels + ' names');
     if (d.pay && d.ranks && d.pay.length !== d.ranks.split(/\s*,\s*/).length) P('error', loc(d), 'pay should have one amount per rank');
     if (d.kind === 'course' && !d.levels) P('error', loc(d), 'a course needs levels:');
@@ -559,8 +566,15 @@ function analyzeWorld(content, P, scanExpr, scanText) {
   for (const d of Object.values(content.spells)) {
     if (!d.name) P('error', loc(d), '@spell needs a name');
     if (d.discipline && !(content.tracks[d.discipline] && content.tracks[d.discipline].kind === 'course')) P('error', loc(d), 'discipline: "' + d.discipline + '" is not a course @track');
-    for (const k of ['cost', 'power']) if (!d[k] || d[k].length !== 3) P('error', loc(d), k + ': three values, one per spell level');
+    // Spells v2: one or three levels (one cost per level); power, when given, matches; skills are skill ids.
+    if (!d.cost || ![1, 3].includes(d.cost.length)) P('error', loc(d), 'cost: one value per spell level (one or three levels)');
+    else if (d.power && d.power.length !== d.cost.length) P('error', loc(d), 'power: one value per spell level (' + d.cost.length + ')');
+    for (const k of [].concat(d.skill || [])) if (!content.skills[k]) P('error', loc(d), 'skill: unknown skill "' + k + '"');
+    if (d.skill && [].concat(d.skill).length > 2) P('error', loc(d), 'skill: at most two skills');
+    if (d.pool && !['hidden', 'forbidden'].includes(d.pool)) P('error', loc(d), 'pool: hidden or forbidden');
+    if (d.alignment && !G.TIERS.includes(d.alignment)) P('error', loc(d), 'alignment: a size tier (tiny … huge), charged per cast');
   }
+  for (const d of Object.values(content.spells)) if (!d.pool && !taught.has(d.id)) P('info', loc(d), 'spell ' + d.id + ' has no source (no teaches:, no learn_spell) and no pool:');
   for (const d of Object.values(content.facts)) {
     const npc = d.id.split('.')[0];
     if (!content.npcs[npc]) P('error', loc(d), '@fact ' + d.id + ': unknown npc "' + npc + '"');

@@ -157,6 +157,8 @@
       if ((s.version || 1) < SAVE_VERSION) throw new SaveVersionError(s.version || 1);
       if (!s.visitsTo) s.visitsTo = {};
       this.s = s;
+      // Spells v2: a spell content no longer has is dropped, and a level past the spell's levels is clamped (Ward 3 → 1).
+      for (const [id, lv] of Object.entries(s.spells || {})) { if (!(this.c.spells || {})[id]) delete s.spells[id]; else s.spells[id] = Math.min(lv, this.spellLevels(id)); }
       if (this.dayMode) this.upgradeDay();   // a save from before the slot-by-slot day (M1)
       return this;
     }
@@ -262,11 +264,11 @@
       // A resource in `using` (renown, M15) isn't on the skill scale: 50 reads as the expected skill now, ±25 at the ends.
       const val = (k) => (this.c.resources[k] && !this.c.skills[k] ? this.expectedSkill() + ((this.s.vals[k] || 0) - 50) / 2 : this.s.vals[k] || 0);
       let sv = combat ? this.combatValue() : skills.reduce((a, k) => a + val(k), 0) / skills.length;
-      // Modifiers (design §9.2): per known spell of a discipline whose skill is tested (`@balance spell_check`); study points for an exam.
+      // Modifiers (design §9.2): per known spell whose skill is tested (`@balance spell_check`); study points for an exam.
       // (Combat counts every spell level in its own value.)
       let sp = 0;
       const spc = this.spellCheck();
-      if (!combat) for (const id of Object.keys(this.s.spells || {})) { const d = this.c.spells[id]; if (d && d.discipline && this.trackSkills(d.discipline).some((k) => skills.includes(k))) sp += spc.per; }
+      if (!combat) for (const id of Object.keys(this.s.spells || {})) if (this.c.spells[id] && this.spellSkills(id).some((k) => skills.includes(k))) sp += spc.per;
       sv += Math.min(spc.cap, sp);
       if (st.kind === 'exam' && ct && ct.status === 'enrolled') sv += Math.min(this.studyRule().cap, ct.study || 0);
       sv += this.advisorBonus(this._ctxTrack);
@@ -365,7 +367,7 @@
       for (const k of Object.keys(w)) if (this.c.skills[k] && w[k]) { sum += w[k] * (s.vals[k] || 0); tw += w[k]; }
       const cond = ['health', 'mood', this.spellResource].filter((k) => this.c.resources[k]);
       const shape = cond.length ? cond.reduce((a, k) => a + (s.vals[k] || 0), 0) / cond.length - 50 : 0;
-      const levels = Object.values(s.spells || {}).reduce((a, b) => a + (b || 0), 0);
+      const levels = Object.entries(s.spells || {}).reduce((a, [id, lv]) => a + (this.c.spells[id] ? lv || 0 : 0), 0);
       return (tw ? sum / tw : 0) + (w.condition || 0) * shape + Math.min(15, (w.spells || 0) * levels);
     }
     // Coursework (feedback 2026-10-15): each enrolled course trains its main skill once a term month, at its level's
@@ -429,6 +431,15 @@
     advisorBonus(trackId) {
       const d = trackId && this.c.tracks[trackId], n = d && d.lead && this.s.npcs[d.lead];
       return n && n.met ? clamp(Math.round(n.rel / 5), -15, 15) : 0;
+    }
+    // Spells v2: a spell has one or three levels (its `cost:` values), and its skills (`skill:`, else its discipline's).
+    spellLevels(id) { const d = this.c.spells && this.c.spells[id]; return d && d.cost && d.cost.length ? d.cost.length : 1; }
+    spellSkills(id) { const d = this.c.spells && this.c.spells[id]; if (!d) return []; if (d.skill) return [].concat(d.skill).filter((k) => this.c.skills[k]); return d.discipline ? this.trackSkills(d.discipline) : []; }
+    // Casting a known spell from an `up[]` option: its Mana, and alignment for a spell that moves it (`alignment: small`).
+    chargeCast(id, cost, ctx) {
+      this.change(this.spellResource, -cost, ctx);
+      const d = this.c.spells[id], al = d && d.alignment && this.c.resources.alignment ? this.tierAmount('alignment', d.alignment) : 0;
+      if (al) this.change('alignment', -al, ctx);
     }
     spellCost(id, level) { const d = this.c.spells && this.c.spells[id]; return d && d.cost ? d.cost[clamp((level || 1) - 1, 0, d.cost.length - 1)] : 0; }
     get spellResource() { return this.c.game.spell_resource || 'mana'; }
@@ -1206,12 +1217,13 @@
           case 'regrade': this.regrade(st, ctx); break;
           case 'learn_spell': {
             s.spells = s.spells || {};
-            const lv = st.level || Math.min(3, (s.spells[st.spell] || 0) + 1);
+            const max = this.spellLevels(st.spell), lv = Math.min(max, st.level || (s.spells[st.spell] || 0) + 1);
             if (lv > (s.spells[st.spell] || 0)) {
               s.spells[st.spell] = lv;
-              // Learning or upgrading a spell is a reward (L-6): skill XP in its discipline, `@balance spell_bonus` by level.
-              const tier = ((this.c.balance && this.c.balance.spell_bonus) || [])[lv - 1], sp = this.c.spells[st.spell], bonus = {};
-              if (tier && sp && sp.discipline) for (const k of this.trackSkills(sp.discipline)) { const before = s.vals[k] || 0; this.change(k, this.tierAmount('xp', tier), ctx); bonus[k] = Math.round(((s.vals[k] || 0) - before) * 100) / 100; }
+              // Learning or upgrading a spell is a reward (L-6): skill XP in its skill, `@balance spell_bonus` by level for a
+              // three-level spell, `spell_bonus_one` for a one-level spell.
+              const b = this.c.balance || {}, tier = max > 1 ? (b.spell_bonus || [])[lv - 1] : b.spell_bonus_one || (b.spell_bonus || [])[1], bonus = {};
+              if (tier) for (const k of this.spellSkills(st.spell)) { const before = s.vals[k] || 0; this.change(k, this.tierAmount('xp', tier), ctx); bonus[k] = Math.round(((s.vals[k] || 0) - before) * 100) / 100; }
               ctx.notes.push(Object.assign({ kind: 'spell', spell: st.spell, level: lv }, Object.keys(bonus).length ? { bonus } : {}));
             }
             break;
@@ -1657,7 +1669,7 @@
         if (!lv) throw new Error('spell ' + opt.spell + ' is not known');
         const cost = this.spellCost(opt.spell, lv);
         if ((s.vals[this.spellResource] || 0) < cost) throw new Error('not enough ' + this.spellResource + ' for ' + opt.spell);
-        this.change(this.spellResource, -cost, ctx);
+        this.chargeCast(opt.spell, cost, ctx);
       }
       this.run(opt.effects, ctx);
       if (item.track) this.courseworkFor(item.track, ctx);
@@ -1749,7 +1761,7 @@
         this._variant = cur.variant || null; ctx.cast = cur.cast || null; ctx.track = cur.track || null;
         this._cast = ctx.cast; this._ctxTrack = ctx.track;
         try {
-          if (opt.spell) this.change(this.spellResource, -cost, ctx);
+          if (opt.spell) this.chargeCast(opt.spell, cost, ctx);
           this.run(opt.effects, ctx);
           if (ctx.track) this.courseworkFor(ctx.track, ctx);
           this.handleZeroed(ctx);

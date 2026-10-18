@@ -26,7 +26,7 @@ const FIELDS = {
   npc: 'id name romance start_rel age role year voice (has(trait) also matches traits and interests)',
   place: 'id name region map x y kind track discover_src',
   track: 'id name kind skill levels place lead due hidden',
-  spell: 'id name discipline',
+  spell: 'id name skill pool levels',
   fact: 'id npc tier unlock_src text len',
   'lore': 'id canon keys (has(key) matches a key or the id) text len',
   'arc, faction, archetype, timeline, vocab': 'id name canon kind date event',
@@ -106,7 +106,7 @@ function blockFields(kind, d) {
     case 'skill': return { ...base, name: d.name, start: d.start || 0, max: d.max == null ? 100 : d.max };
     case 'place': return { ...base, name: d.name, region: d.region || null, map: d.map ? d.map.map : null, x: d.map ? d.map.x : null, y: d.map ? d.map.y : null, kind: d.kind || 'public', track: d.track || null, discover_src: d.discover ? d.discover.src : null };
     case 'track': return { ...base, name: d.name, kind: d.kind, skill: [].concat(d.skill || []).join(' '), levels: d.levels || null, place: d.place || null, lead: d.lead || null, due: d.due || null, hidden: !!d.hidden };
-    case 'spell': return { ...base, name: d.name, discipline: d.discipline || null };
+    case 'spell': return { ...base, name: d.name, discipline: d.discipline || null, skill: [].concat(d.skill || []).join(' ') || null, verb: d.verb || null, pool: d.pool || null, levels: (d.cost || []).length, alignment: d.alignment || null };
     case 'fact': return { ...base, npc: d.npc || d.id.split('.')[0], tier: d.tier || null, unlock_src: d.unlock ? d.unlock.src : null, text: d.text, len: (d.text || '').length };
     case 'lore': return { ...base, canon: d.canon || null, keys: (d.keys || []).join(', '), text: d.text, len: (d.text || '').length };
     case 'clue': return { ...base, name: d.name || null, arc: d.arc || null, kind: d.kind || 'clue', text: d.text, len: (d.text || '').length };

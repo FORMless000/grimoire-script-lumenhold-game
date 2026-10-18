@@ -126,6 +126,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `study` | structured |  |
 |  | `spell_check` | structured |  |
 |  | `spell_bonus` | structured |  |
+|  | `spell_bonus_one` | structured |  |
 |  | `exam_tiers` | structured |  |
 |  | `dc_tiers` | structured |  |
 |  | `likelihood` | structured |  |
@@ -286,6 +287,10 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `power` | structured |  |
 |  | `desc` | text | yes |
 |  | `art` | text |  |
+|  | `skill` | text |  |
+|  | `verb` | text |  |
+|  | `pool` | text |  |
+|  | `alignment` | number |  |
 | `@fact npc.key` | `npc` | text |  |
 |  | `tier` | text |  |
 |  | `unlock` | expression |  |
