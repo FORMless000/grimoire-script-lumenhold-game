@@ -97,23 +97,26 @@ const portraitOf=i=>{const a=game.actors[i];return i===0?BLANK:portrait({npc:npc
 // Horizontal bars: layers start at their last shown width and move on the next frame (fill quickly, the pale trail after
 // a delay), so a re-render mid-animation doesn't snap. A changed value floats its difference above the number.
 function layer(cls,key,to,left){const from=bars[key]??to,fromLeft=bars[key+'@']??left;return `<i class="${cls}" data-bar="${key}" data-to="${to}"${left!==undefined?` data-left="${left}"`:''} style="width:${from}%${left!==undefined?`;left:${fromLeft}%`:''}"></i>`;}
-function bar(side,kind,value,max,flux=0){
+function bar(side,kind,value,max,flux=0,shield=0){
  const k=side+kind,pct=v=>Math.max(0,Math.min(100,100*v/max)),now=pct(value),fluxShown=Math.min(flux,Math.max(0,max-value)),prev=seen[k];
- let delta='';if(prev&&prev.v!==value&&prev.at!==moves){seen[k]={v:value,at:moves,d:value-prev.v};}else if(!prev)seen[k]={v:value,at:-1,d:0};
- const s=seen[k];if(s.at===moves&&Math.abs(s.d)>=.5)delta=`<span class="delta ${s.d<0?'neg':'pos'}">${s.d<0?'−':'+'}${fmt(Math.abs(s.d))}</span>`;
- return `<div class="bar ${kind} ${s.at===moves&&s.d?s.d<0?'drop':'rise':''}" title="${kind==='hp'?'HP':'Mana'} ${fmt(value)} / ${fmt(max)}${kind==='mana'?` · flux ${fmt(flux)}: Reclaim restores up to ${fmt(Math.min(flux,max-value))}`:''}">
+ let delta='';if(prev&&prev.v!==value&&prev.at!==moves){seen[k]={v:value,at:moves,d:value-prev.v,fresh:true};}else if(!prev)seen[k]={v:value,at:-1,d:0};
+ // A change animates on the first render that shows it only: re-renders (a click on the track, a sheet) don't replay it.
+ const s=seen[k],fresh=s.fresh;s.fresh=false;if(fresh&&Math.abs(s.d)>=.5)delta=`<span class="delta ${s.d<0?'neg':'pos'}">${s.d<0?'−':'+'}${fmt(Math.abs(s.d))}</span>`;
+ return `<div class="bar ${kind} ${fresh&&s.d?s.d<0?'drop':'rise':''}" title="${kind==='hp'?'HP':'Mana'} ${fmt(value)} / ${fmt(max)}${kind==='mana'?` · flux ${fmt(flux)}: Reclaim restores up to ${fmt(Math.min(flux,max-value))}`:''}">
   <span class="bnum"><span class="bk">${kind==='hp'?'♥':'✦'}</span>${Math.round(value)}<small>/${Math.round(max)}</small>${delta}</span>
-  <span class="btrack">${layer('trail',k+'trail',now)}${kind==='mana'?layer('flux',k+'flux',pct(fluxShown),now):''}${layer('fill',k+'fill',now)}</span>
-  ${kind==='mana'?`<span class="bflux${flux>0?'':' none'}" title="Flux: Reclaim turns it back into Mana">↻${fmt(flux)}</span>`:''}</div>`;
+  <span class="btrack">${layer('trail',k+'trail',now)}${kind==='mana'?layer('flux',k+'flux',pct(fluxShown),now):''}${layer('fill',k+'fill',now)}${kind==='hp'?layer('shield',k+'shield',pct(shield),Math.max(0,Math.min(now,100-pct(shield)))):''}</span>
+  ${kind==='mana'?`<span class="bflux${flux>0?'':' none'}" title="Flux: Reclaim turns it back into Mana">↻${fmt(flux)}</span>`:`<span class="bshield${shield>0?'':' none'}" title="Shield: absorbs damage before HP">${shield>0?'◈'+Math.round(shield):''}</span>`}</div>`;
 }
 function snapshotBars(){for(const el of document.querySelectorAll('[data-bar]')){const t=el.parentElement.clientWidth;if(!t)continue;bars[el.dataset.bar]=100*el.offsetWidth/t;if(el.dataset.left!==undefined)bars[el.dataset.bar+'@']=100*el.offsetLeft/t;}}
 function animateBars(){requestAnimationFrame(()=>requestAnimationFrame(()=>{for(const el of document.querySelectorAll('[data-bar]')){el.style.width=el.dataset.to+'%';bars[el.dataset.bar]=Number(el.dataset.to);if(el.dataset.left!==undefined){el.style.left=el.dataset.left+'%';bars[el.dataset.bar+'@']=Number(el.dataset.left);}}}));}
 
+// Constructs standing for a side, each with the HP it has left before it breaks.
+const constructChips=(a,i)=>a.constructs.map(c=>{const left=Math.round(Math.max(0,c.threshold-c.taken));return `<span class="cx" title="${esc(label(c.id))}: ${left} of ${Math.round(c.threshold)} HP left, until exchange ${c.expires}"><span class="mini-icon">${actionIcon(c.id,i)}</span>♥${left}</span>`;}).join('');
 function fighter(i){const a=game.actors[i],purse=[game.config.observers?`★${fmt(a.resources.renown)}${a.pendingRenown?`<em>+${fmt(a.pendingRenown)}</em>`:''}`:'',a.resources.crowns!==a.entry.crowns?`◎${fmt(a.resources.crowns)}`:'',a.resources.alignment!==a.entry.alignment?`☾${fmt(a.resources.alignment)}`:''].filter(Boolean).join(' ');
  return `<article class="fighter ${i?'opp':'you'}"${i?' data-sheet="inspect" role="button" tabindex="0" title="Inspect the opponent"':''}>
   <div class="pf${i?'':' blank'}">${portraitOf(i)}${i?`<span class="pf-eye">${EYE}</span>`:''}</div>
-  <div class="fi"><div class="fname"><b>${esc(nameOf(i))}</b><small>${i?esc(game.actors[1].kit.loadout==='custom'?'':'Level '+a.kit.level):'Level '+a.kit.level}${purse?' · '+purse:''}</small></div>
-  ${bar(i,'hp',a.hp,a.maxHP)}${bar(i,'mana',a.resources.mana,a.kit.capacity,a.flux)}</div></article>`;}
+  <div class="fi"><div class="fname"><b>${esc(nameOf(i))}${constructChips(a,i)}</b><small>${i?esc(game.actors[1].kit.loadout==='custom'?'':'Level '+a.kit.level):'Level '+a.kit.level}${purse?' · '+purse:''}</small></div>
+  ${bar(i,'hp',a.hp,a.maxHP,0,a.effects.lodestar?.value??0)}${bar(i,'mana',a.resources.mana,a.kit.capacity,a.flux)}</div></article>`;}
 
 function intent(){
  if(game.result)return '';
@@ -129,15 +132,17 @@ function intent(){
 const AHEAD=4,EFFECT_ICON={compelled:'compel',guard:'guard',frozen:'frozen'};
 // Who commits first c exchanges from now, as things stand: turns alternate and Foresight makes its target lead.
 function leaderAt(c){if(!c)return game.leader;const e=game.earlyCommit.map(n=>n-c>0),normal=c%2?1-game.normalLeader:game.normalLeader;return e[0]===e[1]?normal:e[0]?0:1;}
+// The exchange a side last cast this spell: where its line starts, so a line stays put as exchanges pass.
+const castAt=(side,id)=>history.findLast(h=>h.pair[side]===id)?.round;
 function effectRows(){
  const r=game.round,rows=[];
  game.actors.forEach((a,side)=>{
-  for(const [k,e]of Object.entries(a.effects)){if(e.until!==null&&e.until<r)continue;rows.push({side,icon:EFFECT_ICON[k]??k,name:k==='compelled'?'Compelled':label(k),from:Math.max(e.from??r,r),until:e.until??Infinity,note:k==='lodestar'?String(Math.round(e.value)):k==='tailwind'?'+'+Math.round(e.value):''});}
-  if(a.channel)rows.push({side,icon:a.channel.id,name:label(a.channel.id),from:r,until:Infinity,note:`${a.channel.holds} hold${a.channel.holds===1?'':'s'}${a.channel.bank?' · '+Math.round(a.channel.bank):''}`});
-  for(const c of a.constructs)rows.push({side,icon:c.id,name:label(c.id),from:r,until:c.expires,note:`${Math.round(c.taken)}/${Math.round(c.threshold)}`});
-  if(game.earlyCommit[side]>0)rows.push({side,icon:'foresight',name:'Commits first',from:r,until:r+game.earlyCommit[side]-1,note:''});
-  if(a.freezeUntil>=r)rows.push({side,icon:'frozen',name:'Frozen',from:r,until:a.freezeUntil,note:''});
-  if(a.rimeReady)rows.push({side,icon:'rime',name:'Rime ready',from:r,until:Infinity,note:''});
+  for(const [k,e]of Object.entries(a.effects)){if(e.until!==null&&e.until<r)continue;rows.push({side,icon:EFFECT_ICON[k]??k,name:k==='compelled'?'Compelled':label(k),from:e.from??e.born??r,until:e.until??Infinity,note:k==='lodestar'?Math.round(e.value)+' shield':k==='tailwind'?'+'+Math.round(e.value):''});}
+  if(a.channel)rows.push({side,icon:a.channel.id,name:label(a.channel.id),from:castAt(side,a.channel.id)??r,until:Infinity,note:`${a.channel.holds} hold${a.channel.holds===1?'':'s'}${a.channel.bank?' · '+Math.round(a.channel.bank)+' banked':''}`});
+  for(const c of a.constructs)rows.push({side,icon:c.id,name:label(c.id),from:castAt(side,c.id)??r,until:c.expires,note:`${Math.round(Math.max(0,c.threshold-c.taken))} of ${Math.round(c.threshold)} HP`});
+  if(game.earlyCommit[side]>0)rows.push({side,icon:'foresight',name:'Commits first',from:(castAt(1-side,'foresight')??r-1)+1,until:r+game.earlyCommit[side]-1,note:''});
+  if(a.freezeUntil>=r)rows.push({side,icon:'frozen',name:'Frozen',from:a.freezeUntil,until:a.freezeUntil,note:''});
+  if(a.rimeReady)rows.push({side,icon:'rime',name:'Rime ready',from:castAt(side,'rime')??r,until:Infinity,note:''});
   for(const o of a.omens)rows.push({side,icon:'omen',name:'Omen',due:o.due,note:fmt(o.power)});
  });
  return rows;
@@ -165,11 +170,11 @@ function track(){
  const head=`<div class="tk-row tk-head"><span class="tk-l"></span>${pastCells((h,k)=>`<button data-ex="${k}" title="Exchange ${h.round}: show it in full">${h.round}</button>`)}${ahead(c=>`<b title="${c?'Exchange '+(r+c):'This exchange'}: ${leaderAt(c)?'they lead':'you lead'}">${r+c}</b>`)}</div>`;
  const moves=side=>`<div class="tk-row tk-act s${side}"><span class="tk-l"><span class="tk-who">${who(side)}</span></span>${pastCells((h,k)=>`<button class="mini-icon" data-ex="${k}" title="Exchange ${h.round}: ${who(side)} · ${esc(h.actionNames[side])}">${actionIcon(h.pair[side],side,h.channels?.[side])}</button>`)}${ahead(c=>c?futureSlot(side,c):nowSlot(side))}</div>`;
  // A lasting effect: a thin line from the exchange it starts, with its icon at the start; name and numbers on hover.
- const cell=(row,c)=>{const ex=r+c,tip=esc(`${who(row.side)} · ${row.name}${row.note?' · '+row.note:''}`),ico=`<span class="tk-ico">${actionIcon(row.icon,row.side,row.icon)}</span>`;
+ const cell=(row,at)=>{const past=typeof at==='object',ex=past?at.round:r+at,c=past?-1:at,tip=esc(`${who(row.side)} · ${row.name}${row.note?' · '+row.note:''}`),ico=`<span class="tk-ico">${actionIcon(row.icon,row.side,row.icon)}</span>`;
   if(row.due!==undefined)return row.due===ex?`<i class="tl-hit" title="${tip} damage, lands in exchange ${ex}">${ico}${row.note}</i>`:'';
   if(ex<row.from||ex>row.until)return '';const first=ex===row.from,open=row.until===Infinity&&c===AHEAD;
   return `<i class="tl-on${first?' first':''}${ex===row.until||open?' last':''}${open?' open':''}" title="${tip}${row.until===Infinity?'':` · until exchange ${row.until}`}">${first?ico:''}</i>`;};
- const effects=done?'':rows.map(row=>`<div class="tk-row tk-eff s${row.side}"><span class="tk-l"></span>${pastCells(()=>'')}${ahead(c=>cell(row,c))}</div>`).join('');
+ const effects=done?'':rows.map(row=>`<div class="tk-row tk-eff s${row.side}"><span class="tk-l"></span>${pastCells(h=>cell(row,h))}${ahead(c=>cell(row,c))}</div>`).join('');
  const full=history[shown];
  return `<section class="track" aria-label="Exchanges: the past, this one and the next ones"><div class="tk-scroll" id="tk-scroll">${head}${moves(1)}${moves(0)}${effects}</div>${full?`<div class="hfull">${exchangeFull(full)}${focusEx!==null?'<button class="link" data-ex="latest">Back to the latest</button>':''}</div>`:''}</section>`;
 }

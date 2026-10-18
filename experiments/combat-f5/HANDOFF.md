@@ -105,8 +105,8 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 ### 5. The UI
 
 - **Port the fight screen from `web/app.mjs`** as an overlay over the card, which stays visible. It already uses the main game's tokens and fonts (`src/style.css`). Keep:
-  - the two fighters: portrait, Health and Mana with flux as big numbers on bars;
-  - the exchange track: one axis with every past exchange (both moves as icons; it scrolls sideways into the past), this exchange and the next four. Each future slot shows who commits first (their move will show, or stays hidden) and any move forced by Compel or lost to a freeze. Lasting effects, channels, constructs and Foresight run along it as thin lines with their icon at the start, and Omens sit on the exchange they land. Below it, the latest exchange in full, or any one picked on the track;
+  - the two fighters: portrait, Health and Mana with flux as big numbers on bars, a Lodestar shield as a gold band on the HP bar with its value, and standing constructs beside the name with the HP they have left;
+  - the exchange track: one axis with every past exchange (both moves as icons; it scrolls sideways into the past), this exchange and the next four. Each future slot shows who commits first (their move will show, or stays hidden) and any move forced by Compel or lost to a freeze. Lasting effects, channels, constructs and Foresight run along it as thin lines with their icon at the exchange they began (a line stays put as exchanges pass), and Omens sit on the exchange they land. Below it, the latest exchange in full, or any one picked on the track;
   - beside the actions, the telegraph (the foe's committed move with its effect and flavor line), which opens the full text;
   - the square action buttons: icon, name, effect (`web/brief.mjs`, read from `describe()`), turns and the Mana or HP cost;
   - the inspect sheet (the foe's skills, kit with prices and recent moves) and the full log;

@@ -73,6 +73,9 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
 .btrack i{position:absolute;left:0;top:0;bottom:0;display:block}.btrack .fill{transition:width .45s cubic-bezier(.2,.8,.2,1)}.btrack .trail{transition:width .7s ease .45s}.btrack .flux{transition:width .45s,left .45s}
 .hp .fill{background:linear-gradient(90deg,#b6463d,var(--hp))}.hp .trail{background:#f3d3a8}
 .mana .fill{background:linear-gradient(90deg,#3a7fb5,var(--mana))}.mana .trail{background:#d7e9f3}.mana .flux{background:repeating-linear-gradient(135deg,#8b7fd6 0 4px,#6d64b6 4px 8px);opacity:.85}
+.hp .shield{background:linear-gradient(90deg,#c9a24a,var(--gold-2));opacity:.9;transition:width .45s,left .45s}
+.bshield{font-size:11px;font-weight:700;color:var(--k-guard);font-variant-numeric:tabular-nums;min-width:28px;text-align:right}
+.cx{display:inline-flex;align-items:center;gap:1px;margin:0 4px;padding:0 5px 0 2px;height:17px;border-radius:9px;vertical-align:2px;font:700 10.5px var(--sans);color:var(--k-heal);background:var(--night-3);border:1px solid var(--line)}.cx .mini-icon{width:14px;height:14px}.cx .mini-icon svg{width:12px;height:12px}.fighter.you .cx .mini-icon{color:var(--you)}.fighter.opp .cx .mini-icon{color:var(--opp)}
 .bflux{font-size:11px;font-weight:600;color:#b9b0f2;font-variant-numeric:tabular-nums;min-width:28px;text-align:right}.bflux.none{opacity:.35}
 .bar>.bnum{position:static}.delta{position:absolute;right:30px;top:-13px;font-size:13px;font-weight:700;pointer-events:none;animation:floatUp 1.6s ease-out forwards;text-shadow:0 1px 3px #000}.delta.neg{color:var(--bad)}.delta.pos{color:var(--good)}
 @keyframes floatUp{0%{opacity:0;transform:translateY(6px)}15%{opacity:1}100%{opacity:0;transform:translateY(-22px)}}
@@ -93,15 +96,15 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
 
 /* The exchange track: every past exchange, this one and the next few on one axis (scrolls sideways into the past),
    lasting effects as thin lines along it, each with its icon at the start */
-.track{--cw:40px;--ch:28px;--tk-bg:#13172f;padding:4px 8px 6px;border-radius:12px;background:var(--tk-bg);border:1px solid var(--line)}
+.track{--cw:40px;--ch:28px;--lw:64px;--tk-bg:#13172f;padding:4px 8px 6px;border-radius:12px;background:var(--tk-bg);border:1px solid var(--line)}
 .tk-scroll{overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent;overscroll-behavior-x:contain}
 .tk-row{display:flex;align-items:center;width:max-content;min-width:100%}
-.tk-l{flex:1 0 48px;position:sticky;left:0;z-index:2;align-self:stretch;display:flex;align-items:center;background:var(--tk-bg);padding-right:6px}
+.tk-l{flex:0 0 var(--lw);width:var(--lw);margin-right:auto;overflow:hidden;position:sticky;left:0;z-index:2;align-self:stretch;display:flex;align-items:center;background:var(--tk-bg);padding-right:6px}
 .tk-c{flex:none;width:var(--cw);height:22px;display:flex;align-items:center;justify-content:center;position:relative}
 .tk-c.now{background:rgba(240,213,140,.07);box-shadow:inset 1px 0 0 var(--line-2),inset -1px 0 0 var(--line-2)}.tk-head .tk-c.now{border-radius:8px 8px 0 0}.tk-scroll>.tk-row:last-child .tk-c.now{border-radius:0 0 8px 8px}
-.tk-c.past.on{background:rgba(255,255,255,.05)}.tk-c.past.last{margin-right:4px}
+.tk-c.past.on{background:rgba(255,255,255,.05)}
 .tk-head{min-height:18px}.tk-head .tk-c{height:18px}.tk-head .tk-c>*{font-size:10.5px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums;background:none;border:0;padding:0}.tk-head .tk-c.now b{color:var(--gold-2);font-weight:700}.tk-head .past.on button{color:var(--text)}
-.tk-act .tk-c{height:var(--ch)}.tk-who{font:600 15px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.s0 .tk-who{color:var(--you)}.s1 .tk-who{color:var(--opp)}
+.tk-act .tk-c{height:var(--ch)}.tk-who{min-width:0;font:600 15px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.s0 .tk-who{color:var(--you)}.s1 .tk-who{color:var(--opp)}
 .tk-act .past .mini-icon{width:26px;height:26px;padding:0;border:0;border-radius:7px;background:none}.tk-act .past .mini-icon svg{width:19px;height:19px}.tk-act .past .mini-icon .bundle-icons svg{width:10px;height:10px}
 .s0 .past .mini-icon{color:var(--you)}.s1 .past .mini-icon{color:var(--opp)}.tk-act .past .mini-icon:hover{background:var(--night-3)}
 .slot{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--muted);border:1px dashed var(--line-2);background:none;padding:0}
@@ -191,9 +194,9 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
  .fighters{gap:5px}.fighters.with-eval{grid-template-columns:10px 1fr 1fr}.fighter{flex-direction:column;align-items:stretch;gap:4px;padding:6px}.fighter.opp{flex-direction:column}
  .fighter .pf{width:34px;height:34px;position:absolute;top:6px}.fighter{position:relative}.fighter.you .pf{left:6px}.fighter.opp .pf{right:6px}.pf-eye{width:14px;height:14px}.pf-eye svg{width:9px;height:9px}
  .fname{min-height:34px}.fighter.you .fname{padding-left:40px}.fighter.opp .fname{padding-right:40px}.fname b{font-size:14.5px}.fname small{font-size:9.5px}
- .bar{gap:4px}.bnum{min-width:0;font-size:16px}.bnum small{font-size:9px}.bk{display:none}.btrack{height:7px}.bflux{font-size:9.5px;min-width:0}
+ .bar{gap:4px}.bnum{min-width:0;font-size:16px}.bnum small{font-size:9px}.bk{display:none}.btrack{height:7px}.bflux,.bshield{font-size:9.5px;min-width:0}.bshield.none{display:none}
  .intent{padding:4px 7px;gap:7px}.tele-icon{width:28px;height:28px}.tele-icon svg{width:20px;height:20px}.intent b{font-size:12px}.intent small{font-size:10.5px}.intent .flavor{font-size:12.5px}
- .track{--cw:27px;--ch:24px;padding:3px 5px 5px}.tk-l{flex-basis:38px;padding-right:3px}.tk-who{font-size:13px}.tk-head .tk-c>*{font-size:9.5px}
+ .track{--cw:27px;--ch:24px;padding:3px 5px 5px}.track{--lw:42px}.tk-l{padding-right:3px}.tk-who{font-size:13px}.tk-head .tk-c>*{font-size:9.5px}
  .slot{width:22px;height:22px;border-radius:6px}.slot svg{width:15px;height:15px}.tk-act .past .mini-icon{width:22px;height:22px}.tk-act .past .mini-icon svg{width:16px;height:16px}.tl-hit{font-size:10px}
  .hl p{font-size:11.5px}.flavor{font-size:13px}.hfull{gap:3px;margin-top:3px;padding-top:4px}
  .acts{grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:4px}.act{border-radius:10px;padding:3px 2px 3px;gap:0}.a-ico svg{width:22px;height:22px}.a-ico .bundle-icons svg{width:12px;height:12px}.a-name{display:none}
