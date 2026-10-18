@@ -49,6 +49,7 @@ export function formatEvent(e){
     case 'hoarfrostCancel':return 'Hoarfrost and opposing fire cancel.';
     case 'dealt':return `${label(e.id)} dealt ${Math.round(e.amount*100)/100} HP to ${e.target===0?'you':'opponent'}.`;
     case 'reclaimed':return `${who(e.side)} reclaimed ${e.amount.toFixed(2)} Mana.`;
+    case 'hit':case 'moved':return null;   // structured only: the fight text (resolvedLines) tells these
   }
   throw Error('Unknown event '+e.type);
 }
@@ -65,7 +66,7 @@ export function applyChoice(s,id){
   use(s);
   if(call('apply',id))throw Error(read());
   const r=JSON.parse(read());writeBack(s);
-  if(r.resolved)s.lastEvents=r.events=r.events.map(formatEvent);
+  if(r.resolved){r.eventData=r.events;s.lastEvents=r.events=r.events.map(formatEvent).filter(Boolean);}
   return r;
 }
 export function concede(s,side=0){if(![0,1].includes(side))throw Error('Invalid actor');use(s);call('concede',side);writeBack(s);}

@@ -93,7 +93,7 @@ Tools:
 - `node tools/event-levels.mjs`: each played card's foe level by month, from the card's challenge level, next to the player's skills;
 - `node tools/player-study.mjs`: the main game's measured player against every class at E − 10, E and E + 10.
 
-**Flavor** (`setup/flavor.mjs`): one plain sentence of what each fighter did, naming both sides (`{name}` and `{foe}`, from `fighterNames`). The player is "you", so lines mark possessives (`{name’s}`) and verb forms (`{v:lunges|lunge}`, `{fv:…}` for the foe). There are cast lines, Hold and Release lines for channels, `end` lines for effects and constructs, `ko` lines for the finishing action, and endings. The browser shows them in the telegraph, the log and under each exchange. 
+**Flavor** (`setup/flavor.mjs`): one plain sentence of what each fighter did, naming both sides (`{name}` and `{foe}`, from `fighterNames`). The player is "you", so lines mark possessives (`{name’s}`), verb forms (`{v:lunges|lunge}`, `{fv:…}` for the foe) and pronouns (`{pos}`, `{fpos}`, `{fobj}`, from `fighterNames({opponentPronouns})`). `resolvedLines(before, after, exchange, names)` writes each logged action with its result: per-attack lines for each defence (`ATTACK_LINES`), then the damage, Mana or duration in plain words, from the core's `hit` and `moved` events. There are cast lines, Hold and Release lines for channels, `end` lines for effects and constructs, `ko` lines for the finishing action, and endings. The browser shows them in the telegraph, the log and under each exchange. 
 
 ## Changing the rules
 

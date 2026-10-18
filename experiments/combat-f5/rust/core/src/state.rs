@@ -117,6 +117,9 @@ pub struct Public {
     pub follow_ups: Option<Value>,
 }
 
+pub const DEF_SHADOWSTEP: u16 = 1; pub const DEF_REFLECT: u16 = 2; pub const DEF_GUARD: u16 = 4; pub const DEF_GUARD_TIRED: u16 = 8;
+pub const DEF_WARD: u16 = 16; pub const DEF_BRACE: u16 = 32; pub const DEF_CONSTRUCT: u16 = 64; pub const DEF_LODESTAR: u16 = 128; pub const DEF_FROZEN: u16 = 256;
+pub const DEF_NAMES: [(u16, &str); 9] = [(DEF_SHADOWSTEP, "shadowstep"), (DEF_REFLECT, "reflect"), (DEF_GUARD, "guard"), (DEF_GUARD_TIRED, "tiredGuard"), (DEF_WARD, "ward"), (DEF_BRACE, "brace"), (DEF_CONSTRUCT, "construct"), (DEF_LODESTAR, "lodestar"), (DEF_FROZEN, "frozen")];
 #[derive(Clone, Debug)]
 pub enum Event {
     ConstructEnded { spell: usize },
@@ -126,6 +129,11 @@ pub enum Event {
     TormentCharged { value: f64, side: u8 },
     HoarfrostCancel,
     Dealt { id: Act, amount: f64, target: u8, source: u8, reflected: bool },
+    // Every opposing hit (F5.9b, for the fight text): its power before defences, what it dealt, and the defences that
+    // touched it (DEF_* bits). A hit thrown back by Reflect is reported again as its own hit.
+    Hit { id: Act, raw: f64, amount: f64, target: u8, source: u8, by: u16, reflected: bool },
+    // A spell that moves Mana or flux (F5.9b, for the fight text): Extraction's take, Seal's snuffed flux, Distil's Mana.
+    Moved { side: u8, id: Act, amount: f64, blocked: bool },
     Reclaimed { side: u8, amount: f64 },
 }
 

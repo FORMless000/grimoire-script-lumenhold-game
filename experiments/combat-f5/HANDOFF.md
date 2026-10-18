@@ -68,7 +68,7 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 ### 4. The bridge
 
 - **Player:** the engine's six skills, learned spells and their levels, health, mana, mood, renown, gold and alignment map straight into `fightOptions`; the field names are in the file header.
-- **Names for the fight text:** the player is always "you"; pass the opponent's name (a character's short name, or the card's description of a generic foe, e.g. "the hooded duellist") to `fighterNames` (`setup/flavor.mjs`).
+- **Names for the fight text:** the player is always "you"; pass the opponent's pronouns (`opponentPronouns`, from the character's `pronouns:`) and the opponent's name (a character's short name, or the card's description of a generic foe, e.g. "the hooded duellist") to `fighterNames` (`setup/flavor.mjs`).
 - **Opponents:**
   - `vs lyra.arcana` and similar name a character: use `NAMED_LOADOUTS` (canon skills from `setup/cast-stats.mjs`, a snapshot of `content/world/cast.grim`; refresh it with `setup/sync-loadout-stats.mjs` when the cast changes).
   - A difficulty word (`adept-`, `apprentice+`) means a generic foe: `EVENTS` in `setup/foes.mjs` names it for every current card (a pool, an archetype or a special foe), and `foeLevel` sets its level from the rung. `node experiments/combat-f5/tools/event-coverage.mjs` checks that every combat card has a decision. Seven cards become feats instead (`EVENTS.md` §6).

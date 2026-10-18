@@ -137,6 +137,8 @@ pub fn legal_for(enc: &Encounter, s: &State, side: usize) -> Moves {
     let x = &s.actors[side];
     let mut consider = |a: Act| if unavailable(enc, s, side, a).is_none() { out.push(a); };
     if x.freeze_until >= s.round { consider(k.frozen); }
+    // Compelled (F5.9b): the only move is the replayed one (a cancelled turn when it can't be repeated), known to both sides.
+    else if has(s, side, Eff::Compelled) { out.push(replay(enc, s, side)); }
     else if x.channel.is_some() { consider(k.hold); consider(k.release); }
     else if has(s, side, Eff::Haste) { for &b in &k.bundles_by_count[x.effects[Eff::Haste as usize].unwrap().value as usize] { consider(b); } }
     else { consider(k.strike); consider(k.guard); consider(k.reclaim); for &(sp, _) in &enc.sides[side].kit { consider(sp as Act); } }
@@ -152,6 +154,8 @@ fn gain(enc: &Encounter, s: &mut State, side: usize, key: usize, n: f64) -> f64 
     let x = &mut s.actors[side];
     let actual = 0f64.max(n.min(limit - x.res[key]));
     x.res[key] += actual; x.restored[key] += actual;
+    // F5.9b: Mana plus flux never exceeds capacity, so gaining Mana spills flux that no longer fits (no banking past the pool).
+    if key == R_MANA { x.flux = 0f64.max(x.flux.min(limit - x.res[key])); }
     if key == R_MANA && actual > EPS { delete(s, side, Eff::Shadowstep); }
     actual
 }
@@ -201,7 +205,8 @@ fn pay(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act) {
     let h = hp_cost(enc, s, side, a);
     if blood(s, side, a) { reduce_hp(enc, s, ctx, side, h, false); } else {
         let paid = debit(&mut s.actors[side], R_MANA, c);
-        s.actors[side].flux += paid * d.flux_ratio;
+        let room = 0f64.max(enc.sides[side].capacity - s.actors[side].res[R_MANA] - s.actors[side].flux);
+        s.actors[side].flux += (paid * d.flux_ratio).min(room);
         if h != 0.0 { reduce_hp(enc, s, ctx, side, h, false); }
     }
     if let Some(sp) = spell_of(a) {
@@ -258,31 +263,44 @@ fn hits(enc: &Encounter, s: &mut State, ctx: &mut Ctx, initial: &Hits) {
             let t = h.target as usize;
             let mut n = h.power;
             let opposing = h.source != h.target;
-            if n <= EPS || s.actors[t].freeze_until >= s.round { continue; }
-            if !h.fixed && has(s, t, Eff::Shadowstep) { continue; }
+            let mut by: u16 = 0;
+            let (hid, raw, hsrc, htgt, hrefl) = (h.id, h.power, h.source, h.target, h.reflected);
+            if n <= EPS { continue; }
+            if s.actors[t].freeze_until >= s.round { if opposing { ctx.event(|| Event::Hit { id: hid, raw, amount: 0.0, target: htgt, source: hsrc, by: DEF_FROZEN, reflected: hrefl }); } continue; }
+            if !h.fixed && has(s, t, Eff::Shadowstep) { if opposing { ctx.event(|| Event::Hit { id: hid, raw, amount: 0.0, target: htgt, source: hsrc, by: DEF_SHADOWSTEP, reflected: hrefl }); } continue; }
             if h.spell && h.source != h.target && has(s, t, Eff::Reflect) && !h.reflected {
+                ctx.event(|| Event::Hit { id: hid, raw, amount: 0.0, target: htgt, source: hsrc, by: DEF_REFLECT, reflected: false });
                 queue.push(Hit { source: h.target, target: h.source, reflected: true, ..*h });
                 continue;
             }
             if !h.fixed {
                 // Guard's value is the share of a Strike it stops: 1, or less when it repeats the last exchange's Guard (fatigue).
-                if has(s, t, Eff::Guard) && !h.pierce_guard { n *= if h.spell { 1.0 / 2.0 } else { 1.0 - s.actors[t].effects[Eff::Guard as usize].unwrap().value }; }
-                if n > EPS && opposing && has(s, t, Eff::Ward) { n = if h.spell { 0.0 } else { n / 2.0 }; }
+                if has(s, t, Eff::Guard) && !h.pierce_guard {
+                    let g = s.actors[t].effects[Eff::Guard as usize].unwrap().value;
+                    n *= if h.spell { 1.0 / 2.0 } else { 1.0 - g };
+                    by |= DEF_GUARD | if !h.spell && g < 1.0 - EPS { DEF_GUARD_TIRED } else { 0 };
+                }
+                if n > EPS && opposing && has(s, t, Eff::Ward) { n = if h.spell { 0.0 } else { n / 2.0 }; by |= DEF_WARD; }
                 if n > EPS && opposing && has(s, t, Eff::Brace) {
                     let from = s.actors[t].effects[Eff::Brace as usize].unwrap().from;
                     n *= 1.0 - BRACE_BLOCK[3.min((s.round - from) as usize)];
+                    by |= DEF_BRACE;
                 }
-                n = 0f64.max(n - s.actors[t].constructs.iter().fold(0.0, |sum, c| sum + c.reduction));
+                let reduction = s.actors[t].constructs.iter().fold(0.0, |sum, c| sum + c.reduction);
+                if n > EPS && reduction > EPS { by |= DEF_CONSTRUCT; }
+                n = 0f64.max(n - reduction);
             }
             if n > EPS && !h.fixed {
                 if let Some(mut l) = s.actors[t].effects[Eff::Lodestar as usize] {
                     let used = n.min(l.value);
                     n -= used;
                     l.value -= used;
+                    by |= DEF_LODESTAR;
                     s.actors[t].effects[Eff::Lodestar as usize] = if l.value <= EPS { None } else { Some(l) };
                 }
             }
             let actual = reduce_hp(enc, s, ctx, t, 0f64.max((n - EPS).ceil()), true);
+            if opposing { ctx.event(|| Event::Hit { id: hid, raw, amount: actual, target: htgt, source: hsrc, by, reflected: hrefl }); }
             if actual > EPS {
                 if h.source != h.target { expose[h.source as usize] = true; }
                 let src = h.source as usize;
@@ -357,9 +375,9 @@ fn prepared(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act, 
     else if sp == ids.glamour {
         if enc.observers && !s.actors[side].glamour_done { s.actors[side].pending_renown += spell.renown.as_ref().unwrap()[r(sp)]; s.actors[side].glamour_done = true; }
     }
-    else if sp == ids.seal { if !shielded(s, 1 - side) { s.actors[1 - side].flux = 0.0; } }
+    else if sp == ids.seal { let blocked = shielded(s, 1 - side); let n = if blocked { 0.0 } else { s.actors[1 - side].flux }; if !blocked { s.actors[1 - side].flux = 0.0; } ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: n, blocked }); }
     else if sp == ids.omen { let power = damage_power(enc, side, sp, OMEN_HIT); s.actors[side].omens.push(Omen { due: round + 2, power }); }
-    else if sp == ids.purify { let n = amount(enc, side, Some(sp), PURIFY_MANA, false); gain(enc, s, side, R_MANA, n); }
+    else if sp == ids.purify { let n = amount(enc, side, Some(sp), PURIFY_MANA, false); let got = gain(enc, s, side, R_MANA, n); ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: got, blocked: false }); }
     else if sp == ids.tailwind { put(s, side, Eff::Tailwind, 0.0, round + 1, Some(round + 3)); }
     else if sp == ids.rime { if !s.actors[side].rime_used { s.actors[side].rime_ready = true; } }
     else if sp == ids.reflect { let n = d.spells[sp].duration.as_ref().map_or(1, |v| v[r(sp).min(v.len() - 1)] as i32); put(s, side, Eff::Reflect, 1.0, round, Some(round + n - 1)); }
@@ -527,6 +545,7 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
         } else { 0.0 }
     });
     for side in 0..2 { debit(&mut s.actors[1 - side], R_MANA, transfers[side]); }
+    for side in 0..2 { if pair!()[side] == ids.extraction as Act { let (n, blocked) = (transfers[side], shielded(s, 1 - side)); ctx.event(|| Event::Moved { side: side as u8, id: ids.extraction as Act, amount: n, blocked }); } }
     for side in 0..2 { s.actors[side].flux += transfers[side]; }
     for side in 0..2 { let id = pair!()[side]; if !special(id) { prepared(enc, s, &mut ctx, side, id, &mut attacks); } }
     for side in 0..2 {

@@ -79,7 +79,7 @@ export const SPELLS={
  torment:spell('Torment','Forbidden pool',['guile'],[14],{verb:'Torment',group:'forbidden',duration:[3],provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  extraction:spell('Extraction','Forbidden pool',['arcana'],[10],{verb:'Extract',group:'forbidden',provisionalSkill:true,negotiation:'Underground mind-reading later; otherwise fails with consequences.'}),
  siphon:spell('Siphon','Forbidden pool',['alchemy'],[12],{verb:'Siphon',group:'forbidden',channel:true,holdCost:6,provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
- compel:spell('Compel','Forbidden pool',['guile'],[16],{verb:'Compel',group:'forbidden',duration:[1],immediate:false,provisionalSkill:true,negotiation:'Underground: 1 Agreement without Suspicion; otherwise fails with consequences.'}),
+ compel:spell('Compel','Forbidden pool',['guile'],[16],{verb:'Compel',group:'forbidden',duration:[1],immediate:true,provisionalSkill:true,negotiation:'Underground: 1 Agreement without Suspicion; otherwise fails with consequences.'}),
  eclipse:spell('Eclipse','Forbidden pool',['arcana'],[6],{verb:'Convert',group:'forbidden',provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  heartprice:spell('Heartprice','Forbidden pool',['vigor'],[0],{verb:'Sacrifice',group:'forbidden',provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  // Creature attacks (F5.9): special foes only (SPECIAL_LOADOUTS), never a player's or a class's kit.

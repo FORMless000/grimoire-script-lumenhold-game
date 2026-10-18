@@ -39,7 +39,7 @@ export function play(cases,threads){
 // A trace in the browser's exported-log shape: event texts formatted as the game shows them.
 export async function formatTrace(trace){
  const {formatEvent}=await import('../web/core.mjs');
- for(const h of trace.history){h.eventData=h.events;h.events=h.events.map(formatEvent);} // text as the game shows it; eventData keeps the structured events
+ for(const h of trace.history){h.eventData=h.events;h.events=h.events.map(formatEvent).filter(Boolean);} // text as the game shows it; eventData keeps the structured events
  return trace;
 }
 // The arm a results file was made with, saved next to it.

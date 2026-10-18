@@ -26,6 +26,9 @@ pub fn event_json(e: &Event) -> Value {
         Event::HoarfrostCancel => json!({"type": "hoarfrostCancel"}),
         Event::Dealt { id, amount, target, source, reflected } => json!({"type": "dealt", "id": d.name(*id), "amount": amount, "target": target, "source": source, "reflected": reflected}),
         Event::Reclaimed { side, amount } => json!({"type": "reclaimed", "side": side, "amount": amount}),
+        Event::Moved { side, id, amount, blocked } => json!({"type": "moved", "side": side, "id": d.name(*id), "amount": amount, "blocked": blocked}),
+        Event::Hit { id, raw, amount, target, source, by, reflected } => json!({"type": "hit", "id": d.name(*id), "raw": raw, "amount": amount, "target": target, "source": source, "reflected": reflected,
+            "by": crate::state::DEF_NAMES.iter().filter(|(b, _)| by & b != 0).map(|(_, n)| *n).collect::<Vec<_>>()}),
     }
 }
 

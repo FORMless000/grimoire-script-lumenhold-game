@@ -90,6 +90,13 @@ These override anything below that disagrees.
   - **Engine:** the best move (F5.9's Hard).
 - **Personas** are about 1.5× stronger, and strongest for each character's unique spell.
 - **The fight text calls the player "you".**
+- **Mana plus flux never exceeds Mana capacity.** Gaining Mana (Distil, Moonwell, Siphon, Extraction) spills any flux that no longer fits, and a cast's flux only fills the room left. Nothing can be banked past the pool.
+- **Compel** (16 Mana) replaces the target's action this exchange with their last move, even one already committed in the open. They must repeat it again next exchange too. That forced move shows as a telegraph ("compelled") even when you lead, and who commits first doesn't change. If the move can't be repeated, their turn is lost. Ward or Shadowstep shuts it out. (F5.4–F5.9 changed only the next exchange.)
+- **The fight log says what each action did, in plain words:**
+  - attacks get their own lines when warded, guarded, evaded, braced or reflected;
+  - each line ends with the result: "Lyra takes 11 damage", "You regain 5 Mana", "Lyra can't be hit for 2 exchanges".
+
+  The core reports every hit (`hit`: raw power, damage dealt, the defences that touched it) and every Mana move (`moved`: Extraction, Seal, Distil) for this.
 
 **Kits:** Glamour, Rapport, Sleight, Index and Quickquill are out of combat kits (no combat effect). Scholar's extras are Starlight and Seal; Illusionist's are Reflect and Rapport.
 

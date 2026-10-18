@@ -92,10 +92,10 @@ Every line names both sides with `{name}` (who acts) and `{foe}`.
   - `ko`, the finishing action knocking the foe out;
   - `tired`, a Guard giving way;
   - `ENDINGS`, for points, draws and concessions.
-- **Names:** `fighterNames({opponentName})` gives the pair: the player is always "you", and the main game passes the opponent as the card names them. Without names, the bench uses "the Duellist" or a character's name.
+- **Names:** `fighterNames({opponentName, opponentPronouns})` gives the pair: the player is always "you", and the main game passes the opponent as the card names them, with a character's pronouns from their worldbook entry (generic foes "they", creatures "it"). The log uses `resolvedLines`: what each action did and its result in plain words (damage dealt, what blocked it, Mana gained, how long an effect lasts). Without names, the bench uses "the Duellist" or a character's name.
 - **Where they show:** the opponent's line on the telegraph, each action's line in the log, and the finish lines under each exchange.
 
-**For the main game:** the lines are English source text. They move to string tables under `locales/` (`flavor.<id>.cast.<n>`, `.hold`, `.release`, `.end`, `.ko`), with `{name}` and `{foe}` kept intact. Word order differs between languages, which is why the names are tokens, not prefixes.
+**For the main game:** the lines are English source text. They move to string tables under `locales/` (`flavor.<id>.cast.<n>`, `.hold`, `.release`, `.end`, `.ko`), with `{name}` and `{foe}` kept intact. Word order differs between languages, which is why the names are tokens, not prefixes. The agreement tokens (`{v:…|…}`, `{fv:…|…}`, `{pos}`, `{fpos}`, `{fobj}`) are English grammar; each language needs its own forms for a second-person player and a named foe.
 
 ## 6. Technical integration
 
