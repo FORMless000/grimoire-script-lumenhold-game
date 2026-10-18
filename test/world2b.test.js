@@ -139,6 +139,36 @@ test('term end: exams give grades, a GPA, and passing teaches spells', () => {
   }
 });
 
+test('spells v2: every spell outside a pool has a live source; ids match the combat roster', async () => {
+  const live = new Set();
+  const walk = (effs) => { for (const f of effs || []) { if (f.t === 'learn_spell') live.add(f.spell); for (const k of ['then', 'else', 'win', 'lose', 'partial', 'effects']) if (Array.isArray(f[k])) walk(f[k]); } };
+  for (const e of Object.values(content.events)) if (!(e.tags || []).includes('retired')) { walk(e.on_show); for (const o of e.options || []) walk(o.effects); }
+  for (const t of Object.values(content.tracks)) for (const x of t.teaches || []) live.add(x.spell);
+  const missing = Object.values(content.spells).filter((d) => !d.pool && !live.has(d.id)).map((d) => d.id);
+  assert.deepEqual(missing, [], 'spells with no source');
+  for (const id of live) assert.ok(content.spells[id], 'taught spell exists: ' + id);
+  const roster = path.join(ROOT, 'experiments/combat-f5/setup/roster.mjs');
+  if (!fs.existsSync(roster)) return;
+  const { SPELLS } = await import(roster);
+  assert.deepEqual(Object.keys(content.spells).sort(), Object.keys(SPELLS).sort());
+});
+
+test('spells v2: a course\'s spell is taught in the month the level starts (track start: card)', () => {
+  let total = 0;
+  for (const [style, seed] of [['balanced', 3], ['scholar', 5], ['random', 8]]) {
+    const { eng } = play(seed, style, (e) => e.s.turn >= 14);
+    const learned = {};   // spell@level -> the month it was first known at that level
+    for (const h of eng.s.hist) if (h.t === 'card') for (const n of (h.out && h.out.notes) || []) if (n.kind === 'spell') for (let l = 1; l <= n.level; l++) if (!(n.spell + '@' + l in learned)) learned[n.spell + '@' + l] = h.turn;
+    for (const h of eng.s.hist) if (h.t === 'card') for (const n of (h.out && h.out.notes) || []) if (n.kind === 'enrol') {
+      const t = content.tracks[n.track]; const x = (t.teaches || []).find((y) => y.level === n.level); if (!x || h.turn > 13) continue;
+      total++;
+      assert.ok(learned[x.spell + '@' + n.level] <= h.turn, style + ' ' + seed + ': ' + n.track + '@' + n.level + ' teaches ' + x.spell + ' by month ' + h.turn);
+      if (n.level > 1) assert.ok(!(learned[x.spell + '@' + n.level] < h.turn), 'not taught ahead of the level: ' + n.track + '@' + n.level);
+    }
+  }
+  assert.ok(total >= 4, 'enough enrolments checked');
+});
+
 test('obligations: a truant loses performance; a dutiful member keeps it', () => {
   // Both join the Duelling Circle and the library job on day one, then play two terms.
   const join = (eng) => { const ctx = eng.newCtx(null, null); eng.trackOp({ t: 'join', track: 'duelling' }, ctx); eng.trackOp({ t: 'join', track: 'library_assistant' }, ctx); };

@@ -1,101 +1,324 @@
 # ============================================================
-#  Spells (design §9.1): 2 per discipline, 3 levels each.
-#  cost: mana per level · power: strength per level (tunable).
-#  Data only until phase 2a adds the swipe-up spell option.
+#  Spells (design §9.1; docs/spells-v2-list.md, revision 2).
+#  Ids are the combat minigame's (experiments/combat-f5/setup/roster.mjs, SPELLS).
+#  skill: the skill it trains when learned and adds to on checks · verb: the one verb its cards use
+#  cost: Mana per level for a card's up[] option (three levels for a course spell, else one); a fight
+#  prices spells itself · pool: hidden | forbidden, no source yet · alignment: taken off per cast.
 # ============================================================
+
+# ---------------- Course spells (3 levels) and Ward ----------------
 
 @spell flame
 name: Flame
 discipline: evocation
+skill: arcana
+verb: Burn
 cost: 10, 9, 7
-power: 1, 2, 3
-art: flame
-desc: Fire from the fingertips: a candle's worth at first, a bonfire's later. Burns through wards that only expect cleverness.
-
-@spell tide
-name: Tide
-discipline: evocation
-cost: 14, 10, 9
-power: 1, 2, 3
-art: wave
-desc: Water called up and moved: a wave, a wall, a lake politely asked to step aside.
+art: spell_flame
+desc: Fire from the fingertips: a candle's worth at first, a bonfire's later. Every duellist you'll ever face has it ready, and so should you.
 
 @spell foresight
 name: Foresight
 discipline: astromancy
+skill: lore
+verb: Foresee
 cost: 10, 9, 7
-power: 1, 2, 3
-art: eye
+art: spell_foresight
 desc: A glimpse of the next few moments. Enough to know which way the dice will fall, sometimes.
-
-@spell starlight
-name: Starlight
-discipline: astromancy
-cost: 18, 14, 10
-power: 1, 2, 3
-art: star
-desc: The light of a named star, held in the hand. Darkness that eats light finds it hard to swallow.
 
 @spell mend
 name: Mend
 discipline: alchemy
+skill: alchemy
+verb: Mend
 cost: 10, 9, 7
-power: 1, 2, 3
-art: heart
+art: spell_mend
 desc: Knits cuts, cracks and broken teacups. Hearts take longer.
-
-@spell purify
-name: Purify
-discipline: alchemy
-cost: 14, 10, 9
-power: 1, 2, 3
-art: potion
-desc: Draws out poison, curse-cold and bad ingredients. The cure has to come from somewhere; it leaves you tired.
 
 @spell glamour
 name: Glamour
 discipline: illusion
+skill: charm
+verb: Glamour
 cost: 9, 7, 5
-power: 1, 2, 3
-art: mask
+art: spell_glamour
 desc: A little more charm than you really have. People remember liking you and not quite why.
-
-@spell mirror
-name: Mirror
-discipline: illusion
-cost: 14, 10, 9
-power: 1, 2, 3
-art: mirror
-desc: A double of yourself, or of anything you can see. It doesn't talk, which is its only flaw.
 
 @spell haste
 name: Haste
 discipline: beastcraft
-cost: 10, 9, 7
-power: 1, 2, 3
-art: bolt
+skill: vigor
+verb: Hasten
+cost: 10, 8, 8
+art: spell_haste
 desc: Speed borrowed from hares and hawks. You act first; you pay for it with a long nap.
-
-@spell beast_speech
-name: Beast-speech
-discipline: beastcraft
-cost: 10, 9, 7
-power: 1, 2, 3
-art: paw
-desc: Talk with animals, briefly. Most of them have been waiting to complain.
-
-@spell ward
-name: Ward
-discipline: umbral
-cost: 14, 10, 9
-power: 1, 2, 3
-art: shield
-desc: A pale shell that turns aside the next harm.
 
 @spell shadowstep
 name: Shadowstep
 discipline: umbral
-cost: 18, 14, 10
-power: 1, 2, 3
-art: ghost
+skill: guile
+verb: Step
+cost: 12, 10, 8
+art: spell_shadowstep
 desc: Step into one shadow and out of another. Short distances only; the shadows in between are not friendly.
+
+@spell ward
+name: Ward
+verb: Ward
+cost: 7
+art: spell_ward
+desc: A pale shell that turns aside the next harm. Every first-year is taught it in the first week, before anything else, and told to keep it close.
+
+# ---------------- Hidden courses (1 level) ----------------
+
+@spell animate
+name: Animate
+discipline: artifice
+skill: alchemy arcana
+verb: Animate
+cost: 14
+art: spell_animate
+desc: A made thing gets up and moves by itself: a broom that sweeps, a chair that follows. It does one thing, and keeps doing it.
+
+@spell starlight
+name: Starlight
+discipline: starcalling
+skill: lore
+verb: Illuminate
+cost: 16
+art: spell_starlight
+desc: The light of a named star, held in the hand. Darkness that eats light finds it hard to swallow.
+
+@spell seal
+name: Seal
+discipline: hollow_studies
+skill: guile
+verb: Seal
+cost: 10
+art: spell_seal
+desc: Closes what is open and locks it away: a box, a door, a spell half-spent. What's sealed stays where you put it.
+
+# ---------------- Peer capstones (1 level) ----------------
+
+@spell wildfire
+name: Wildfire
+skill: arcana
+verb: Burn
+cost: 10
+art: spell_wildfire
+desc: Fire you stop holding small. It grows while you hold it and runs when you let go, and it never quite forgets you're there.
+
+@spell heartwood
+name: Heartwood
+skill: vigor
+verb: Root
+cost: 16
+art: spell_heartwood
+desc: A young tree out of bare ground, grown in a breath to stand over you. It shelters whoever stands under it.
+
+@spell omen
+name: Omen
+skill: lore
+verb: Foretell
+cost: 16
+art: spell_omen
+desc: Say what will happen, out loud, and it lands. Not soon; but it lands.
+
+@spell sleight
+name: Sleight
+skill: guile
+verb: Lift
+cost: 6
+alignment: tiny
+art: spell_sleight
+desc: Palm, swap, pocket. A coin walks out of a purse and into yours, and nobody saw a thing. It is still theft.
+
+@spell contraption
+name: Contraption
+skill: alchemy
+verb: Build
+cost: 12
+art: spell_contraption
+desc: A machine out of whatever is in reach, that works at once and mostly as meant. Stand back when it stops.
+
+@spell hoarfrost
+name: Hoarfrost
+skill: arcana
+verb: Freeze
+cost: 10
+art: spell_hoarfrost
+desc: Cold called down hard: it freezes, cools and quenches. Set against a flame, the two of them cancel out.
+
+@spell candour
+name: Candour
+skill: charm
+verb: Confess
+cost: 6
+art: spell_candour
+desc: Ask the right question and get the honest answer, sometimes more honest than anyone wanted.
+
+# ---------------- Club and job spells (1 level) ----------------
+
+@spell brace
+name: Brace
+skill: vigor
+verb: Brace
+cost: 10
+art: spell_brace
+desc: Plant your feet and hold. The first blow breaks on you, and the next few land softer.
+
+@spell quickquill
+name: Quickquill
+skill: guile
+verb: Scribble
+cost: 6
+art: spell_quickquill
+desc: A quill that takes it all down, word for word, as fast as anyone can talk. It has opinions about your handwriting.
+
+@spell bramble
+name: Bramble
+skill: alchemy
+verb: Entangle
+cost: 10
+art: spell_bramble
+desc: A hedge or a vine, now, where there wasn't one. The thorns are not for decoration.
+
+@spell index
+name: Index
+skill: lore
+verb: Recall
+cost: 6
+art: spell_index
+desc: Find the page. Any book you've held falls open where you need it, and a library starts to make sense.
+
+@spell rapport
+name: Rapport
+skill: charm
+verb: Befriend
+cost: 6
+art: spell_rapport
+desc: The right joke at the right moment. A room that was about to turn on you laughs instead.
+
+@spell purify
+name: Distil
+skill: alchemy
+verb: Distil
+cost: 0
+art: spell_distil
+desc: Draws out and concentrates: the strength from a root, the magic from yourself. It costs no Mana; it costs you.
+
+@spell tailwind
+name: Tailwind
+skill: vigor
+verb: Surge
+cost: 8
+art: spell_tailwind
+desc: Go fast, then faster. The wind gets behind you and keeps pushing as long as you don't stop.
+
+# ---------------- Hidden pool (no source yet) ----------------
+
+@spell rime
+name: Rime
+skill: arcana
+verb: Freeze
+cost: 12
+pool: hidden
+art: spell_rime
+desc: A sliver of winter sewn into your collar. The blow that should fell you finds you frozen instead, and you thaw.
+
+@spell reflect
+name: Reflect
+skill: lore
+verb: Reflect
+cost: 16
+pool: hidden
+art: spell_reflect
+desc: What is thrown at you goes back where it came from, all of it.
+
+@spell moonwell
+name: Moonwell
+skill: alchemy
+verb: Gather
+cost: 0
+pool: hidden
+art: spell_moonwell
+desc: Sit still and let magic pool in you, like moonlight in a basin. It is slow, and it is free.
+
+@spell lodestar
+name: Lodestar
+skill: lore
+verb: Gather
+cost: 8
+pool: hidden
+art: spell_lodestar
+desc: Gather a guiding light around you, a little more each breath, until it is ready to stand between you and harm.
+
+@spell toll
+name: Toll
+verb: Toll
+cost: 0
+pool: hidden
+art: spell_toll
+desc: One low note, held, like a bell heard under water. Nobody teaches it.
+
+# ---------------- Forbidden pool (no source yet; alignment per cast) ----------------
+
+@spell torment
+name: Torment
+skill: guile
+verb: Torment
+cost: 14
+pool: forbidden
+alignment: small
+art: spell_torment
+desc: Every move your opponent makes hurts them. It is forbidden for good reason.
+
+@spell extraction
+name: Extraction
+skill: arcana
+verb: Extract
+cost: 6
+pool: forbidden
+alignment: small
+art: spell_extraction
+desc: Reach into someone and take their magic for yours. Forbidden, and everyone who has felt it remembers.
+
+@spell siphon
+name: Siphon
+skill: alchemy
+verb: Siphon
+cost: 12
+pool: forbidden
+alignment: small
+art: spell_siphon
+desc: Draw the life out of someone, slowly, and keep it. Forbidden.
+
+@spell compel
+name: Compel
+skill: guile
+verb: Compel
+cost: 20
+pool: forbidden
+alignment: small
+art: spell_compel
+desc: Make someone do again what they just did, whether they want to or not. Forbidden.
+
+@spell eclipse
+name: Eclipse
+skill: arcana
+verb: Convert
+cost: 6
+pool: forbidden
+alignment: small
+art: spell_eclipse
+desc: Pain taken becomes power held. You still feel all of it. Forbidden.
+
+@spell heartprice
+name: Heartprice
+skill: vigor
+verb: Sacrifice
+cost: 0
+pool: forbidden
+alignment: small
+art: spell_heartprice
+desc: Pay for magic with your own strength instead of Mana, for as long as you can stand it. Forbidden.

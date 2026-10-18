@@ -18,7 +18,8 @@ skill: arcana
 levels: 3
 level_names: Evocation I, Evocation II, Advanced Evocation
 place: lecture_tower
-teaches: flame@1 flame@2 tide@2 flame@3 tide@3
+teaches: flame@1 flame@2 flame@3
+start: evo_first_flame
 lead: thorne
 intro: thorne_intro
 desc: Fire and water, called up and held. Pyromancy and Tidecalling, taught together because they keep putting each other out.
@@ -31,7 +32,8 @@ skill: lore
 levels: 3
 level_names: Astromancy I, Astromancy II, Advanced Astromancy
 place: observatory
-teaches: foresight@1 foresight@2 starlight@2 foresight@3 starlight@3
+teaches: foresight@1 foresight@2 foresight@3
+start: astro_first_foresight
 desc: Reading the sky and the time that hasn't happened yet. Tea leaves in the first year; star charts that move in the third.
 picked: You sign up for Astromancy. Someone hands you a teacup and tells you not to drink from it.
 
@@ -42,7 +44,8 @@ skill: alchemy
 levels: 3
 level_names: Alchemy I, Alchemy II, Advanced Alchemy
 place: alchemy_lab
-teaches: mend@1 mend@2 purify@2 mend@3 purify@3
+teaches: mend@1 mend@2 mend@3
+start: alch_first_mend
 lead: amaranth
 intro: amaranth_intro
 desc: Potions, remedies and the patience to stir clockwise. Half of it happens in the laboratory and half in the infirmary.
@@ -55,7 +58,8 @@ skill: charm
 levels: 3
 level_names: Illusion I, Illusion II, Advanced Illusion
 place: lecture_tower
-teaches: glamour@1 glamour@2 mirror@2 glamour@3 mirror@3
+teaches: glamour@1 glamour@2 glamour@3
+start: illu_first_glamour
 lead: vey
 intro: vey_intro
 desc: Making people see what you choose. Professor Vey grades on whether you fooled her, and she is very hard to fool.
@@ -68,7 +72,8 @@ skill: vigor
 levels: 3
 level_names: Beastcraft I, Beastcraft II, Advanced Beastcraft
 place: stables
-teaches: haste@1 haste@2 beast_speech@2 haste@3 beast_speech@3
+teaches: haste@1 haste@2 haste@3
+start: beast_first_haste
 opens: 2
 lead: brask
 intro: brask_intro
@@ -82,7 +87,8 @@ skill: guile
 levels: 3
 level_names: Umbral Theory I, Umbral Theory II, Advanced Umbral Theory
 place: lecture_tower
-teaches: ward@1 ward@2 shadowstep@2 ward@3 shadowstep@3
+teaches: shadowstep@1 shadowstep@2 shadowstep@3
+start: umbral_first_shadowstep
 opens: 2
 desc: Shadow, wards and the magic of what is hidden. Taught at the top of the tower, where the lamps burn dim on purpose.
 picked: You sign up for Umbral Theory. The lamps at the top of the tower are dim on purpose.
@@ -94,6 +100,8 @@ kind: course
 name: Artifice
 skill: alchemy arcana
 levels: 1
+teaches: animate@1
+start: art_first_animate
 # taken late, after level II–III elsewhere: its classwork is pitched at expert (docs/authoring/checks.md)
 standard: expert
 level_names: Artifice
@@ -108,6 +116,8 @@ kind: course
 name: Starcalling
 skill: lore arcana
 levels: 1
+teaches: starlight@1
+start: star_first_starlight
 # taken late, after level II–III elsewhere: its classwork is pitched at expert (docs/authoring/checks.md)
 standard: expert
 level_names: Starcalling
@@ -122,6 +132,8 @@ kind: course
 name: Hollow Studies
 skill: guile lore
 levels: 1
+teaches: seal@1
+start: hollow_first_seal
 # taken late, after level II–III elsewhere: its classwork is pitched at expert (docs/authoring/checks.md)
 standard: expert
 level_names: Hollow Studies

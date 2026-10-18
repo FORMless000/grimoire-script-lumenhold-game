@@ -47,6 +47,11 @@ text: Professor Thorne returns a book that is eleven years overdue. The fine, by
   rel thorne +small
   mood -tiny
   say: A long silence. Then he pays, in exact change. "Good," he says, and you could swear he almost smiles.
+> up[index]: Recall the amnesty clause
+  wage
+  rel thorne +small
+  lore +tiny
+  say: The ledger falls open at a rule from three hundred years ago: books returned by a professor on a wet Tuesday are forgiven. It is a wet Tuesday. Thorne reads the page twice and says, "Hm," which in this case means you'll go far.
 
 @event lib_restricted_cart
 title: The Restricted Cart
@@ -70,6 +75,10 @@ text: You are asked to wheel the Restricted Section returns to the vault. The ca
     say: The words crawl off the page and up your sleeve. That night, you can't get warm.
   else:
     say: A spell for walking through mirrors. You will never try it. Probably.
+> up[seal]: Seal the book shut
+  wage
+  perform track +small
+  say: You seal the book shut before you've read a line. It stops writing. The vault keeper takes it from you, tries the clasp, and gives you a look you can't read. "Good," he says, eventually.
 
 # ---------------- The Gilded Newt ----------------
 
@@ -96,6 +105,10 @@ text: A dwarf and a troll disagree about the price of turnips, and the Gilded Ne
     lose:
       health -medium
       say: You step in. Someone's elbow steps into your face.
+> up[rapport]: Tap the bar twice
+  wage
+  renown +small
+  say: You tap the bar twice and say the one thing about turnips that makes a dwarf and a troll both laugh. The chair comes down. The owner comes out from behind the bar and pours you a cider, staring.
 
 @event tavern_star_coin
 title: A Generous Stranger
@@ -247,6 +260,11 @@ text: A note arrives with a sealed purse: a large order of nightshade, grave-mos
   rel isolde +small
   renown +small
   say: The headmistress listens to your report in silence. "Thank you," she says. "Tell no one else." She looks worried.
+> up[seal]: Seal the order for the wardens
+  wage
+  rel isolde +small
+  alignment +tiny
+  say: You seal the note and the purse together, so nobody can change a word, and send them up to the castle. The headmistress writes back the same day: one line, thanking you for the seal, which is how she knows it's true.
 
 # ---------------- Familiar Stables ----------------
 
@@ -364,6 +382,10 @@ text: Your tutee has been trying to levitate a feather for three weeks. The feat
     lose:
       mood -tiny
       say: You tell them to imagine the feather is in love with the ceiling. They are confused. So is the feather.
+> up[contraption]: Build them a feather-lifter
+  mood +small
+  arcana -tiny
+  say: You build a little machine of springs and a fan that lifts the feather on a puff. Your tutee laughs so hard they lift the next one themselves, by accident, out of sheer surprise. Neither of you is sure what the lesson was.
 
 @event tutor_bribe
 title: An Indecent Proposal
@@ -435,6 +457,10 @@ text: An urgent parcel needs to cross the lake tonight. There's a storm. The dis
       health -large
       gain injured
       say: Lightning strikes close enough to stand your hair on end. You lose the broom, the parcel and the pay, and gain a limp.
+> up[tailwind]: Surge across before the worst
+  wage overtime
+  health -tiny
+  say: You call the wind behind you and go flat out, under the worst of the storm, and never stop. You land on the far bank soaked and shaking, with the parcel dry. The dispatcher pays double without a word.
 
 @event courier_whispering_parcel
 title: The Whispering Parcel

@@ -52,8 +52,9 @@ course_drift: low
 # coursework adds `monthly` (feedback 2026-10-15b: it replaced the silent per-card 2, so preparation shows); at most `cap` counts.
 study: attend 0 cap 15 monthly 2
 # A course exam's difficulty at course level I, II and III: the course standard ± rungs, with low drift (checks.md).
-# Level III sits two rungs up, because only the stronger players reach it (skill-check survey, 2026-10-15).
-exam_tiers: standard+1 standard+1 standard+1
+# One rung higher since spells v2 (2026-10-17), two at II and III: the course spell, and its skill XP, now come at the
+# start of each level, before its exam, not after the pass. Balanced pass rates stay about 87 / 75 / 80%.
+exam_tiers: standard+2 standard+3 standard+3
 # An exam's grades (feedback 2026-10-15): A from `a` over the bar, B from `b`, a pass from `pass`, each on the bell (no
 # hard A gate). Going for top marks (`sit_exam wild`) lowers the A mark by `ambitious` and is sat at `ambitious_sigma`.
 exam_bands: a 15 b 5 pass -5 ambitious 8 ambitious_sigma 20
@@ -61,10 +62,12 @@ exam_bands: a 15 b 5 pass -5 ambitious 8 ambitious_sigma 20
 # Thornwick) has every skill stat scaled up with E(turn), so that by the last month their best skill is `share` of the
 # final E(turn). Faculty and villagers keep theirs.
 npc_growth: share 0.9 tags peer thornwick
-# A known spell adds `per` to checks of its discipline's skill, at most `cap` (design §9.2; L-3).
+# A known spell adds `per` to checks of its skill (`@spell skill:`), at most `cap` (design §9.2; L-3).
 spell_check: per 2 cap 6
-# Learning a spell, or a level of one, gives skill XP in its discipline (L-6): one tier per spell level.
+# Learning a spell, or a level of one, gives skill XP in its skill (L-6): one tier per level of a course spell, and
+# `spell_bonus_one` for a one-level spell (spells v2 §B: every other spell large).
 spell_bonus: medium large huge
+spell_bonus_one: large
 # Spark follows friendship (M37): a friendship gain adds spark × (spark / per), at most cap× (partner× for a partner);
 # spark crossing `cooldown` asks whether you want it (@game spark_cooldown).
 spark_follow: per 25 cap 2 partner 3 cooldown 30

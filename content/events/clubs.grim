@@ -34,6 +34,10 @@ text: Wednesday practice. The captain pairs you with a fourth-year who has a rep
     lose:
       health -small
       say: She sidesteps and you hex the wall. The wall wins.
+> up[brace]: Brace and let them come
+  vigor +small
+  renown +tiny
+  say: You plant your feet and the fourth-year's whole attack breaks on you, each blow softer than the last, until they run out of ideas. The captain marks the bout a draw and looks at you for a long moment.
 
 @event duel_bram_hazing
 title: Initiation, Prefect-Style
@@ -65,6 +69,11 @@ text: Bram Hollis, prefect and the Circle's loudest member, has decided new memb
       health -medium
       rel bram -small
       say: Bram flattens you with a single bored flick. "Toughening up," he reminds the room.
+> up[brace]: Brace and outlast him
+  meet bram
+  vigor +small
+  rel bram +small
+  say: You brace, and the hour stops hurting. At the end Bram is out of breath and you are still standing. "Section nine," he mutters. "Unusual fortitude." He writes it down, which from Bram is a medal.
 
 @event duel_lyra_training
 title: Training Partners
@@ -86,6 +95,11 @@ text: Lyra finds you after practice. "The tournament is in two months. You're th
   gain training
   rel lyra +medium
   say: She's a merciless coach. Somewhere around the third week, you notice she's started bringing two cups of tea.
+> up[wildfire]: Train at her fire, not her side
+  arcana +small
+  rel lyra +small
+  health -tiny
+  say: You tell her you'll come at dawn, but to spar, not to drill. Lyra's eyes narrow, then light up. Every morning for a week you both let the fire run and come in scorched to breakfast.
 
 # ---------------- Choir of the Spheres ----------------
 
@@ -182,6 +196,12 @@ text: Skyrace tryouts: three laps around the towers, through the hoops, without 
     lose:
       health -medium
       say: You go full speed into the north tower. The tower is fine.
+> up[tailwind]: Surge round the towers
+  flag sky_team
+  find lead_sky_championship
+  renown +small
+  health -tiny
+  say: The wind gets behind you on the first lap and you never let it go. Three laps, every hoop, faster each time, and your hands are raw on the handle. The captain looks at the stopwatch, then at you, and writes your name down.
 
 @event sky_crash
 title: A Bad Landing
@@ -258,6 +278,10 @@ text: Nessa slams a file on your desk. "Pies. Forty-two of them, gone from the k
       mood -tiny
       rel nessa +tiny
       say: You stake out the kitchens for three nights and catch nothing but a cold. Nessa pats your head.
+> up[quickquill]: Scribble every alibi down
+  rel nessa +small
+  guile +small
+  say: Your quill takes down every alibi in the kitchens word for word. Laid side by side, two of them describe the same pie differently. Nessa reads your notes and goes very quiet, which means it's good.
 
 @event ledger_bram_story
 title: The Prefect's Bribes
@@ -285,6 +309,12 @@ text: An anonymous tip: Bram Hollis has been taking bribes from first-years to s
   if rel(bram) < -18:
     bond bram nemesis
   say: The story runs. Bram is stripped of his sash for a month. He gets it back. And now he knows exactly who you are.
+> up[quickquill]: Take the witness down word for word
+  renown +small
+  rel nessa +medium
+  rel bram -medium
+  alignment +tiny
+  say: Your quill takes the witness down word for word, every hesitation included, and the story runs on what was said and nothing more. Bram can't deny a word of it. He tries, at length, in the corridor.
 
 @event ledger_deadline
 title: Deadline Night
@@ -351,6 +381,11 @@ text: "The moonflower's going to bloom tonight," Tobias says, a little breathles
   spark tobias +small
   mood +small
   say: At 2am the flower opens and fills the greenhouse with silver light. Tobias doesn't look at the flower. He looks at you.
+> up[bramble]: Grow a hedge against the wind
+  health -tiny
+  rel tobias +medium
+  spark tobias +tiny
+  say: You stay, and when the wind gets up you grow a thorny screen round the bed. The moonflower opens at midnight in perfect stillness. Tobias doesn't say anything for a long time. Then he says, "Thank you," and means all of it.
 
 @event garden_maud_secret
 title: The Secret Garden
@@ -421,6 +456,9 @@ text: The club is running a betting pool on tonight's meteor count. The current 
 > right: Stay out of it
   mood +tiny
   say: You watch the meteors for their own sake. Turns out that's the best seat in the house.
+> up[index]: Recall the old meteor charts
+  gold +small
+  say: The observatory's oldest chart book falls open at this exact night a century ago: sixty-one meteors. You bet on sixty. You win, and the club demands to know what you know. You don't tell them.
 
 @event stars_constellation
 title: An Unnamed Shape

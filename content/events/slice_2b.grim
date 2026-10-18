@@ -251,6 +251,11 @@ text: Thornwick Academy's duelling team has crossed the hills for a fixture. The
   perform track +tiny
   mood +tiny
   say: You hold coats and bring water. It turns out reserves see everything, including how Thornwick cheats.
+> up[wildfire]: Let the fire run
+  renown +medium
+  perform track +small
+  health -tiny
+  say: You hold the fire until it bites, and then let it go. It runs across the hall and through the Thornwick duellist's wards like paper. The Circle goes mad. Your sleeve is on fire, which you notice afterwards.
 
 @event duel_captain_call
 title: The Captain's Question
@@ -293,6 +298,11 @@ text: Exam week, and every book in the library has been borrowed, read and retur
   perform track -tiny
   mood +tiny
   say: The books are on shelves. Most of them are even on the right shelves. Someone will find out in a decade.
+> up[animate]: Animate the cart
+  wage
+  perform track +small
+  mood -tiny
+  say: The cart trundles off by itself, putting books back in roughly the right places, and you follow behind it fixing the rough parts. It takes everything you've got to keep it from shelving Footnote.
 
 @event lib_overdue_mage
 title: The Overdue Mage
@@ -352,6 +362,10 @@ text: The courtyard fountain has frozen in the middle of a splash. The water han
 > right: Study the ice
   lore +small
   say: The ice is colder than ice should be. Your notes say "colder than ice should be" three times.
+> up[hoarfrost]: Freeze the first-year free
+  alignment +tiny
+  arcana +small
+  say: You put a hand on the ice and pull the cold back into yourself, just round the first-year's tongue. They come free with a pop and a look of betrayal at the fountain. Your hand aches with cold all afternoon.
 
 @event court_rumour_mill
 title: The Rumour Mill
@@ -375,6 +389,10 @@ text: {gossip} has news, which is to say gossip, which is to say three different
   renown +tiny
   alignment -tiny
   say: Your story is better than all three. By dinner it's the official version.
+> up[candour]: Ask what really happened
+  rel gossip -tiny
+  lore +small
+  say: You ask the right question and {gossip} tells you the truth, startled: the window broke because someone sneezed during a levitation. It is the least interesting story of the four. {They} look{s} at you as if you'd cheated.
 
 @event lake_skimming
 title: Skimming Stones
@@ -419,6 +437,10 @@ text: Your reflection in the Mirror Lake is holding a coin you don't have. It fl
   alignment +tiny
   mood +tiny
   say: Your reflection shrugs, pockets the coin and walks out of the frame before you do.
+> up[sleight]: Lift it before it offers
+  gold +small
+  mood -tiny
+  say: You lift the coin from your reflection's hand before it can offer it. The reflection looks at its empty hand, then at you, deeply affronted. For a week you can't quite meet your own eye in the washroom mirror.
 
 @event ref_food_fight
 title: Pudding Diplomacy
@@ -440,6 +462,10 @@ text: A pudding sails across the refectory and lands in Bram's lap. The hall goe
   rel bram -small
   mood +small
   say: The second pudding starts a war that the refectory will talk about for years. Historians will argue about who won. You know.
+> up[rapport]: Turn the hall with a joke
+  renown +small
+  rel bram +tiny
+  say: You stand up, bow to Bram, and say the pudding was meant as a tribute. The hall laughs, and so, against his will, does Bram. He fishes the cherry out of his lap and eats it.
 
 @event ref_cook_secret
 title: The Cook's Secret
@@ -458,6 +484,10 @@ text: The cook catches you lingering by the kitchen door. "You look like someone
   alchemy +tiny
   mood +tiny
   say: "Ha," says the cook, which means no, which means you'll have to keep coming back.
+> up[candour]: Ask for the honest recipe
+  alchemy +small
+  mood +tiny
+  say: The cook tells you the truth before she can stop herself: the secret is a spoon of the faculty's good sherry. She laughs, then makes you promise. You promise, and get a second bowl.
 
 @event obs_comet_watch
 slot: evening
@@ -477,6 +507,10 @@ text: A comet is due tonight and the observatory is full of students pretending 
   mood +small
   rel kael +tiny
   say: The comet crosses the sky slowly, like it's looking for something. Kael is already on the roof. He moves over to make room.
+> up[foresight]: Foresee where it will cross
+  lore +small
+  mood +small
+  say: You look a moment ahead and point at an empty patch of sky. Everyone on the roof looks, and the comet crosses exactly there. Half the roof claps. The other half accuses you of reading the charts.
 
 @event obs_star_chart
 title: The Missing Star
@@ -530,6 +564,9 @@ text: In a forgotten corner of the greenhouse, a moonflower seed has sprouted on
   when: around(tobias)
   rel tobias +medium
   say: Tobias is speechless, then very loud. The seedling gets a sign, a fence and a rota.
+> up[bramble]: Entangle a hedge round it
+  alchemy +small
+  say: A ring of thorns comes up round the seedling, knee-high and very sure of itself. Nobody is treading on this one by accident. The seedling glows a little brighter, or you imagine it does.
 
 # ---------------- Break days ----------------
 

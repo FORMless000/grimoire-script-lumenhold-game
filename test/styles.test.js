@@ -10,7 +10,7 @@ const { ROOT } = require('./helpers.js');
 
 const { content } = project(ROOT).compileAll();
 const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
-const SEEDS = [1, 2, 3, 4];
+const SEEDS = [1, 2, 3, 4, 5, 6, 7, 8];   // four were too few once spells v2 moved exam grades (2026-10-17)
 const cache = {};
 // Plays a style on the shared seeds (strict: a soft-lock or an unfinished game throws) and keeps the games.
 const games = (style, opts = {}) => (cache[style] = cache[style] || SEEDS.map((seed) => quiet(() => Policies.play(new Engine(content), Policies.get(style), Object.assign({ seed, name: 'S', maxSteps: 9000, strict: true }, opts))).eng));
@@ -19,7 +19,7 @@ const mean = (style, f) => games(style).reduce((a, e) => a + f(e), 0) / SEEDS.le
 const chose = (eng, id, key) => cards(eng).filter((h) => h.id === id && h.choice === key).length;
 const leads = (eng) => eng.threads().flatMap((t) => t.leads || []);
 
-test('styles: every strategy is listed, explained, and plays four games to the end without a soft-lock', () => {
+test('styles: every strategy is listed, explained, and plays its games to the end without a soft-lock', () => {
   assert.deepEqual(Policies.STRATEGIES, ['scholar', 'nightlife', 'sleuth', 'romantic', 'homebody', 'explorer']);
   for (const name of Policies.STRATEGIES) {
     assert.ok(Policies.list().includes(name), name + ' is listed');

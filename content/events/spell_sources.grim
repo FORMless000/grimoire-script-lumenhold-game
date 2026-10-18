@@ -1,0 +1,365 @@
+# ============================================================
+#  Where spells come from (spells v2, docs/spells-v2-list.md §B, §F).
+#  Course spells: each course's `start:` card comes in the month you
+#  enrol and teaches that level of the course's spell (`level(x)` is
+#  the levels passed, so each card has a scene per level). Passing
+#  the level would teach it too (`teaches:`), but by then it is known. Ward is the
+#  orientation safety talk (slice_ward_lesson). Club and job spells
+#  are in club_spell_chains.grim.
+# ============================================================
+
+# ---------------- Course spells (3 levels) ----------------
+
+@event evo_first_flame
+title: Flame, Properly
+class: milestone
+tone: light
+trigger: queued
+when: enrolled(evocation) and spell_level(flame) <= level(evocation)
+art: spell_flame
+tags: class magic
+scene: A lecture hall with one word chalked on the board, students holding small flames on their palms, a grey-bearded professor watching from the lectern.
+text: {level(evocation) == 0: Professor Thorne writes one word on the board: FLAME. "Every duellist you will ever face has this ready before their wand is out," he says. "So will you. By Friday."|{level(evocation) == 1: Evocation II meets at the duel hall, not the lectern. Thorne has set a straw target forty paces off. "Last year you lit candles. This year the fire goes where you send it, and arrives."|Advanced Evocation opens with Thorne standing in a ring of fire he did not light. "This is what a duel looks like when it goes wrong," he says. "Your flame must hold while you are hit." He has hired a senior to hit you.}}
+> left: Drill it until it comes
+  learn_spell flame
+  arcana +small
+  health -tiny
+  say: {level(evocation) == 0: By Friday the flame comes when you call it, and your fingertips are pink and tender. Thorne looks at your palm for a long moment. "Hm," he says.|{level(evocation) == 1: You throw until your sleeves smoke. On the sixtieth try the straw target goes up with a satisfying whump. Thorne writes something down, without comment.|The senior hits you nine times. On the tenth your flame stays lit through it, and the senior, singed, asks for a rest. Thorne says "Better," which is new.}}
+> right: Learn the shape of it first
+  learn_spell flame
+  study evocation +small
+  mood -tiny
+  say: {level(evocation) == 0: You work it out on paper while the room fills with small fires. Yours comes last, on Thursday night, alone in your room. It's a very correct flame.|{level(evocation) == 1: You chart the target's distance and the arc a flame takes. Your fire lands late but dead centre. Nobody saw, because they'd gone to lunch.|You watch how Thorne's ring keeps burning when the senior hits him. It takes a week of evenings to copy it, and the class teases you for every one.}}
+
+@event astro_first_foresight
+title: A Moment Ahead
+class: milestone
+tone: light
+trigger: queued
+when: enrolled(astromancy) and spell_level(foresight) <= level(astromancy)
+art: spell_foresight
+tags: class magic
+scene: An observatory classroom by day, a coin spinning on a brass desk, students leaning in with their eyes half-closed.
+text: {level(astromancy) == 0: Astromancy I begins with a coin. The lecturer spins it on the brass desk and asks which way it will fall. "Don't guess," the lecturer says. "Look a moment ahead and read it."|{level(astromancy) == 1: Astromancy II, and Foresight must reach further. The lecturer deals star cards face down. "The next three, in order, before I turn them."|Advanced Astromancy: the lecturer sits opposite you and says nothing at all. "Foresee what I am about to say," the lecturer says at last, "and say it first."}}
+> left: Look ahead until you see it
+  learn_spell foresight
+  lore +small
+  mana -small
+  say: {level(astromancy) == 0: The coin falls heads eleven times before you see it fall heads first. Then you see it every time, and your head aches with how far you're leaning.|{level(astromancy) == 1: You see the third card before the first, which is the wrong order and still counts as a start. By the bell you read all three, drained to the soles of your feet.|You say "Tuesday" a heartbeat before the lecturer does. It costs you an afternoon of feeling hollowed out, and a small, rare nod.}}
+> right: Ask how far ahead to look
+  learn_spell foresight
+  study astromancy +small
+  mood -tiny
+  say: {level(astromancy) == 0: "Less far than you think," says the lecturer, and makes you read the rules of it twice. You get the coin right on the last try of the hour, with the class watching.|{level(astromancy) == 1: The answer is a chart, and the chart is long. You copy it all and read the cards the next week, after everyone else.|"A breath," says the lecturer. "Anything past a breath is fortune-telling." You learn the breath slowly, and are the last in the room to get it.}}
+
+@event alch_first_mend
+title: The Mending Practical
+class: milestone
+tone: warm
+trigger: queued
+when: enrolled(alchemy) and spell_level(mend) <= level(alchemy)
+art: spell_mend
+tags: class magic
+scene: An alchemy bench with a row of cracked teacups, a healer setting down the last one, students holding their hands above them.
+text: {level(alchemy) == 0: Alchemy I's first practical is a cracked teacup on every bench. Sister Amaranth sets them down without looking up. "Mend it," she says. "Then I'll let you near a person."|{level(alchemy) == 1: Alchemy II moves into the infirmary. Sister Amaranth hands you a first-year with a split lip from the Duelling Circle. "Skin this time," she says. "It argues more than china."|Advanced Alchemy: Mend for what's deep. Sister Amaranth gives you a sprained wrist, its unhappy owner and her own pocket watch. "Bone takes patience," she says. "Patients don't."}}
+> left: Mend it until it holds
+  learn_spell mend
+  alchemy +small
+  mana -small
+  say: {level(alchemy) == 0: Your cup holds tea on the fifth try and leaks on the sixth, and you've spent everything getting there. Sister Amaranth pours some anyway and drinks it. "Keep doing that," she says.|{level(alchemy) == 1: The lip closes under your hand, slowly, and you feel every bit of it leave you. The first-year says it tickles. Sister Amaranth says that means it worked.|The sprain knits with the watch ticking beside you. You're wrung out by the end, and the wrist bends like a wrist. Sister Amaranth puts the watch away. "Again tomorrow," she says, which is praise.}}
+> right: Watch her do one first
+  learn_spell mend
+  study alchemy +small
+  mood -tiny
+  say: {level(alchemy) == 0: She mends hers without stopping her conversation with the next bench. You copy her hands. Yours takes the whole hour, and the bench beside you finishes first.|{level(alchemy) == 1: You watch her close a cut from the inside out. When your turn comes it's slower than hers by a mile, and the first-year sighs the whole time.|You watch her set a wrist and mend it in one quiet minute. Yours takes twenty, and the patient tells you about every one.}}
+
+@event illu_first_glamour
+title: Lighting, Not Lying
+class: milestone
+tone: light
+trigger: queued
+when: enrolled(illusion) and spell_level(glamour) <= level(illusion)
+art: spell_glamour
+tags: class magic
+scene: A bright classroom where a smiling professor in a violet scarf sits on her own desk, students across from her trying very hard to look likeable.
+text: {level(illusion) == 0: Illusion I begins with Professor Vey asking the class to make her like them more, without saying a word. "Glamour," she says, "is not lying. It's lighting."|{level(illusion) == 1: Illusion II: glamour that lasts past the door. Vey sends you to the refectory at lunch with one rule. "Be remembered for something you didn't do."|Advanced Illusion opens with Vey wearing your face. She teaches the first ten minutes in your voice, quite well. "Now take it back," she says.}}
+> left: Try it on Vey herself
+  learn_spell glamour
+  charm +small
+  mana -small
+  say: {level(illusion) == 0: Vey likes you a great deal for almost a minute, then shakes it off and applauds. You feel wrung out, as if you'd smiled all day.|{level(illusion) == 1: By supper three people remember you saving the cook from a falling ladle. There was no ladle. You're too tired to enjoy it.|You take your face back from her a feature at a time. It costs you everything you had. Vey hands over the last one, your frown, with regret.}}
+> right: Practise on a mirror first
+  learn_spell glamour
+  study illusion +small
+  mood -tiny
+  say: {level(illusion) == 0: You glamour your reflection, which likes you and is no help at all. Vey catches you at it. "Start with a harder audience," she says, and the class laughs.|{level(illusion) == 1: You rehearse in the washroom mirror until a prefect walks in on you being charming at nobody. The glamour works on the second day.|You practise your own face for a week before you try to take it back. By then everyone has met Vey-as-you, and they liked her better.}}
+
+@event beast_first_haste
+title: Borrowed Speed
+class: milestone
+tone: light
+trigger: queued
+when: enrolled(beastcraft) and spell_level(haste) <= level(beastcraft)
+art: spell_haste
+tags: class magic nature
+scene: A muddy paddock at the stables, a weathered professor pointing at a hare while a student crouches to sprint.
+text: {level(beastcraft) == 0: Beastcraft I's first spell is taught at a run. Professor Brask points at a hare in the paddock. "Catch it. You won't, on your legs." She teaches you Haste in four words and lets the hare go.|{level(beastcraft) == 1: Beastcraft II: Haste in the air. Brask has a hawk on her glove and a broom against the fence. "Keep up with her," she says, "to the far tower and back."|Advanced Beastcraft: Brask's test is to keep pace with a hippogriff at full gallop, the length of the flight field, and still be able to talk at the end.}}
+> left: Run it down
+  learn_spell haste
+  vigor +small
+  health -tiny
+  say: {level(beastcraft) == 0: You catch the hare on the fourth go, briefly, and it bites you. You sleep eleven hours. Brask says that's the price, and the hare agrees.|{level(beastcraft) == 1: You reach the far tower a wingbeat behind the hawk, and the hawk looks smug about it. Your legs shake all through supper.|You run the field at the hippogriff's shoulder and say "good afternoon" at the end, gasping. Brask laughs once. You're stiff for three days.}}
+> right: Watch how the hare moves
+  learn_spell haste
+  study beastcraft +small
+  mood -tiny
+  say: {level(beastcraft) == 0: You watch the hare for an hour, then borrow its speed properly, once, at the end. Everyone else is already muddy and proud of it.|{level(beastcraft) == 1: You watch the hawk's turns from the fence and only fly the course at dusk, alone. It's tidy. Nobody sees.|You study the gallop from the rail until you can feel it in your knees. You run it last, slower than the rest, and very sure.}}
+
+@event umbral_first_shadowstep
+title: The Shadows in Between
+class: milestone
+tone: eerie
+trigger: queued
+when: enrolled(umbral) and spell_level(shadowstep) <= level(umbral)
+art: spell_shadowstep
+tags: class magic
+scene: The top of the lecture tower in near darkness, two pools of lamplight on the floor and a long shadow between them, a student stepping into it.
+text: {level(umbral) == 0: Umbral Theory I. The lecturer snuffs every lamp but two and stands in the dark between them. "Shadowstep," says the voice. "In at one shadow, out at another. Don't stop in the middle."|{level(umbral) == 1: Umbral Theory II: Shadowstep under watch. The lecturer sits a prefect in the doorway with a lantern. "Out of the room," says the lecturer, "without being seen leaving it."|Advanced Umbral Theory: step, and keep stepping. At dusk the lecturer lays a path of shadows across the tower roof, chimney to chimney. "To the far side. Without the floor."}}
+> left: Step through and trust it
+  learn_spell shadowstep
+  guile +small
+  health -tiny
+  say: {level(umbral) == 0: You step in, and the dark is cold, and you come out against a desk with your shin. It counts. The lecturer's voice says, "Again," from somewhere new.|{level(umbral) == 1: You leave by the prefect's own shadow and arrive in the corridor with your elbow in a coat rack. The prefect is still watching the door.|Chimney to chimney, six steps, and on the fifth the shadow is thinner than you thought. You land on the far side with grazed palms and a grin.}}
+> right: Map the shadows first
+  learn_spell shadowstep
+  study umbral +small
+  mood -tiny
+  say: {level(umbral) == 0: You sketch where every shadow falls before you trust one. The class has stepped twice by then and is bored of watching you. Your step, when it comes, is clean.|{level(umbral) == 1: You learn where the lantern can't reach before you move, and the bell goes first. You get out the next day, unseen and unhurried.|You chart the roof's shadows as the sun goes down and miss the light for it. You cross at full dark, alone, to no applause.}}
+
+# ---------------- Hidden courses (1 level) ----------------
+
+@event art_first_animate
+title: Make It Want One Thing
+class: milestone
+tone: light
+trigger: queued
+when: enrolled(artifice) and spell_level(animate) == 0
+art: spell_animate
+tags: class magic
+scene: A cluttered workshop with a broom sweeping the floor by itself in uneven circles, a student dodging it, brass gears on every bench.
+text: Artifice begins with a broom. The lecturer says one word and the broom sweeps the workshop by itself, badly and with enthusiasm. "Animate," the lecturer says. "Give a made thing one want, and only one. Yours next."
+> left: Give your broom its want
+  learn_spell animate
+  alchemy +small
+  health -tiny
+  say: Your broom wants to sweep, and sweeps. It also wants to sweep you, and does, out of the door and halfway down the stairs. The lecturer marks it a pass.
+> right: Read how the old ones were made
+  learn_spell animate
+  study artifice +small
+  mood -tiny
+  say: You read the workshop's oldest notes on wanting things until your broom is the last one still lying down. When it rises, it sweeps one perfect circle and stops, satisfied.
+
+@event star_first_starlight
+title: A Name to Call
+class: milestone
+tone: warm
+trigger: queued
+when: enrolled(starcalling) and spell_level(starlight) == 0
+art: spell_starlight
+tags: class magic
+scene: The observatory dome open to a black sky, a tutor pointing out one faint star to a student whose hand is raised toward it.
+text: The first appointment is under the open dome, past midnight. Your tutor says a star's name aloud, the old name, the one on no chart, and points. "Ask it for a thread of its light," the tutor says. "Ask properly. It has been asked rudely before."
+> left: Call until it answers
+  learn_spell starlight
+  lore +small
+  health -tiny
+  say: You call until your voice goes and your hands are numb on the rail. At four the thread comes down, no thicker than a hair, and rests in your palm, warm. You don't feel the cold again until breakfast.
+> right: Learn whose name it is first
+  learn_spell starlight
+  study starcalling +small
+  mood -tiny
+  say: You ask about the name instead, and get an hour of history you'll need later. The thread comes for you at dawn, the last in the dome, with the tutor already yawning.
+
+@event hollow_first_seal
+title: Closed, Even to Me
+class: milestone
+tone: eerie
+trigger: queued
+when: enrolled(hollow_studies) and spell_level(seal) == 0
+art: spell_seal
+tags: class magic
+scene: A room without windows lined with black-bound books, a headmistress setting an open, empty wooden box on the table in front of a student.
+text: The headmistress sets a small wooden box on the table and opens it. It is empty. "Close it," she says, "so that it stays closed. To anyone. Even to me." She sits down across from you with her hands folded. "That is Seal."
+> left: Seal it as tight as you can
+  learn_spell seal
+  guile +small
+  mana -small
+  say: It takes everything you have and the rest of the hour. The headmistress tries the lid with one finger, then two, then not at all. "Good," she says. You feel scraped hollow until supper.
+> right: Ask what she keeps sealed
+  learn_spell seal
+  study hollow_studies +small
+  mood -tiny
+  say: "Many things," she says, "for good reasons." She doesn't say more, and you seal the box with that sitting in your stomach. It holds. She doesn't try it.
+
+# ---------------- Peer capstones (1 level) ----------------
+# stub: each is a placeholder milestone at the "close" rung (or as partner), one teaching beat, to be replaced by a
+# 5–7 card chain (docs/spells-v2-list.md §F). Turning it down keeps the offer open: it comes back after `repeat`.
+
+@event lyra_teaches_wildfire
+title: Let It Run
+class: milestone
+tone: warm
+trigger: social
+actor: lyra
+when: (bond(lyra) == "close" or bond(lyra) == "partner") and spell_level(wildfire) == 0
+repeat: 4
+weight: 20
+art: spell_wildfire
+tags: social magic
+scene: An empty duel hall at night, a crimson-haired student holding a fire that keeps growing in her cupped hands, its light up to the rafters.
+text: Lyra lets you into the duel hall after it has closed. She cups her hands and the fire in them grows, and grows, until it lights the rafters. "They taught me to keep it small," she says. "This is what it does when I stop. I've never shown anyone."
+> left: Ask her to teach you
+  learn_spell wildfire
+  rel lyra +small
+  health -tiny
+  say: She teaches it the way she does everything, without explaining, twice. Your fire runs on the third try and bites your wrist on the way out. "It does that," she says. "You stop apologising for it eventually."
+> right: Just watch her let it run
+  arcana +small
+  rel lyra +tiny
+  say: You sit on the bench and watch her let it run to the rafters and back. She doesn't offer again tonight. On the way out she says, "Another time," which from Lyra is a promise.
+
+@event tobias_teaches_heartwood
+title: Something to Stand Under
+class: milestone
+tone: warm
+trigger: social
+actor: tobias
+when: (bond(tobias) == "close" or bond(tobias) == "partner") and spell_level(heartwood) == 0
+repeat: 4
+weight: 20
+art: spell_heartwood
+tags: social magic nature
+scene: A greenhouse at dusk, a broad young man kneeling over bare soil as a sapling shoots up into a sheltering tree between two students.
+text: Tobias kneels in an empty bed at the back of the greenhouse. "Ma used to say a farm's only as good as its shelter," he says, and presses his hands into the soil. A sapling comes up between you, then a trunk, then branches overhead. "Took me a year. I'll show you in an evening, if you like."
+> left: Kneel down beside him
+  learn_spell heartwood
+  rel tobias +small
+  health -tiny
+  say: You kneel in the cold soil until your knees ache and your back complains. Near midnight a little tree stands up out of your bed, wobbling, and spreads one branch over you. Tobias laughs from the belly and apologises for the mud.
+> right: Sit under his tree instead
+  mood +small
+  rel tobias +tiny
+  say: You sit under his tree and he tells you a long story about a goat. It is very peaceful. "Another evening, then," he says, and means it.
+
+@event seraphine_teaches_omen
+title: Say It So It Lands
+class: milestone
+tone: eerie
+trigger: social
+actor: seraphine
+when: (bond(seraphine) == "close" or bond(seraphine) == "partner") and spell_level(omen) == 0
+repeat: 4
+weight: 20
+art: spell_omen
+tags: social magic
+scene: The observatory at night, a pale student with distant eyes speaking softly while a candle across the room gutters out exactly as she finishes.
+text: Seraphine stops halfway through a sentence and looks at the candle across the observatory. "That will go out," she says, quite clearly, "when I've finished the next word." It does. "Saying it is the spell. Seeing it is just… I can teach you the saying part."
+> left: Learn to say it out loud
+  learn_spell omen
+  rel seraphine +small
+  mood -tiny
+  say: It takes the whole night, and it's unsettling to hear your own voice go flat and certain. Near dawn you foretell a dropped spoon and the spoon drops. Seraphine smiles at something next week.
+> right: Ask what she sees for you
+  lore +small
+  rel seraphine +tiny
+  say: "Quiet," she says. "Yours is always quiet." She doesn't teach you tonight. She says you'll ask again, and you know she's right, which is the strange part.
+
+@event corvin_teaches_sleight
+title: Watch the Other Hand
+class: milestone
+tone: light
+trigger: social
+actor: corvin
+when: (bond(corvin) == "close" or bond(corvin) == "partner") and spell_level(sleight) == 0
+repeat: 4
+weight: 20
+art: spell_sleight
+tags: social magic
+scene: A corner table at a tavern in the evening, a grinning student holding up a coin that is clearly not where it was a moment ago.
+text: At the Gilded Newt, Corvin rolls a coin across his knuckles, and then it's in your pocket, and then it's back in his. "Grandfather's trick," he says. "I'd teach it to a saint, if the saint promised to only use it on people who deserve it." The jokes stop. "Do you promise?"
+> left: Promise, and learn it
+  learn_spell sleight
+  rel corvin +small
+  say: You promise. He teaches you over three drinks you don't pay for, and by the last one you lift his coin without him feeling it. He looks at you for a long moment. "Don't make me sorry," he says, quietly.
+> right: "Not that one, Corvin."
+  rel corvin +tiny
+  say: "Saint," he says, fondly, and the coin goes back in his own pocket. He buys the next round anyway. You suspect he's relieved.
+
+@event mir_teaches_contraption
+title: It Probably Works
+class: milestone
+tone: light
+trigger: social
+actor: mir
+when: (bond(mir) == "close" or bond(mir) == "partner") and spell_level(contraption) == 0
+repeat: 4
+weight: 20
+art: spell_contraption
+tags: social magic
+scene: A cluttered workshop, an artificer flinging together a whirring machine from a kettle, a clock and a spoon while another student ducks.
+text: Mir sweeps a bench clear with one arm. "Watch!" A kettle, a mantel clock and a spoon jump together into a whirring thing that pours tea, mostly into the cup. "No plans, no drawings, just ask the bits what they want to be! It's my own. It probably won't explode. Want it?"
+> left: Yes, show me how
+  learn_spell contraption
+  rel mir +small
+  health -tiny
+  say: Your first one is a teapot that walks and the second one sparks and singes your eyebrows. The third pours tea. Mir writes your name in a notebook, which you understand is the highest honour Mir has.
+> right: Help them clean up instead
+  alchemy +small
+  rel mir +tiny
+  say: You help sort the bits back into their drawers while Mir explains every one. "Next time," Mir says, "you're building. Probably."
+
+@event kael_teaches_hoarfrost
+title: Cold Hands
+class: milestone
+tone: warm
+trigger: social
+actor: kael
+when: (bond(kael) == "close" or bond(kael) == "partner") and spell_level(hoarfrost) == 0
+repeat: 4
+weight: 20
+art: spell_hoarfrost
+tags: social magic
+scene: A frosty courtyard at night, a quiet student holding a hand over a brazier as rime creeps across its coals and the fire dies down.
+text: Kael holds his hand over a brazier in the courtyard, and the coals grey over with frost until the fire gives up. "Where I come from, everyone learns this before they learn to read," he says. A pause. "It's for putting fires out. Mostly. I could teach you, if you wanted it."
+> left: "I want it."
+  learn_spell hoarfrost
+  rel kael +small
+  health -tiny
+  say: He seems startled that you said it out loud. He takes your hands to show you, and his are as cold as ever. By the end your fingers ache and the brazier is frosted grey. "Good," he says, and doesn't let go at once.
+> right: Warm his hands instead
+  mood +small
+  rel kael +tiny
+  say: You take his hands and hold them over the last of the fire. He doesn't say anything for a long time. "Another night," he says, eventually, about the spell or the hands.
+
+@event nessa_teaches_candour
+title: Off the Record
+class: milestone
+tone: warm
+trigger: social
+actor: nessa
+when: (bond(nessa) == "close" or bond(nessa) == "partner") and spell_level(candour) == 0
+repeat: 4
+weight: 20
+art: spell_candour
+tags: social magic
+scene: A newspaper office after midnight, an editor setting down her quill which goes still, two students talking quietly over cold tea.
+text: Nessa puts her quill down, says "off the record", and it goes still. "Here's the real trick of interviews," she says. "Ask the question they want to answer. And then this." She says a word, and you find yourself telling her the truth about your exams. "That's Candour. Want it?"
+> left: Learn it from her
+  learn_spell candour
+  rel nessa +small
+  mood -tiny
+  say: She practises on you until you've told her three embarrassing things, then lets you practise on her. She tells you one true thing, quietly, and asks you never to print it. You won't.
+> right: Ask it on the record
+  charm +small
+  rel nessa +tiny
+  say: She laughs, picks up the quill and interviews you about why you won't learn it. It runs on page four. "Another night," she says. "Off the record."

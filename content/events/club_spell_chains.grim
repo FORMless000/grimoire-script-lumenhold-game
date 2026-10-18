@@ -1,0 +1,913 @@
+# ============================================================
+#  Club and job spells (spells v2, docs/spells-v2-list.md §G).
+#  Every chain has the same shape:
+#   - a start card, pushed once you reach the track's second rank (and again later if you turn it down): it sets
+#     <spell>_chain and leaves a lead;
+#   - three preparation cards, each a check or a resource spent, each leaving a flag (skipped, they come back);
+#   - the final milestone check on the spell's skill (once two preparations are done, or six months on), one step
+#     easier per preparation done (`even` plus three steps is
+#     near certain), with a paid route at better odds for the underprepared. On a loss it comes back later, and the
+#     preparation is kept.
+#  Measured 2026-10-17: a club meets about twice a term and a track pool is ~20 cards, so with §G's weight ~8 for a
+#  drawn start card most rank-2 members never saw the chain. The start is pushed instead, and the chain's cards
+#  outweigh the pool while it runs (preparation 60, final 40).
+# ============================================================
+
+# ---------------- Duelling Circle → Brace (vigor) ----------------
+
+@event duel_dummy_hexes
+title: The Dummy Hits Back
+track: duelling
+rank: 2
+class: routine
+tone: light
+trigger: auto
+when: rank(duelling) >= 2 and spell_level(brace) == 0 and not flag(brace_chain) and turn <= 44
+repeat: 3
+art: shield
+tags: club duel
+scene: A duel hall's practice corner, an eyepatched straw dummy flinging a crackling hex back at a startled student, stuffing spilling from a split seam.
+text: The eyepatched dummy has started throwing hexes back. Lyra splits its seam and pulls out an old captain's charm, sewn in decades ago and still humming. "It empties if someone holds firm in the circle while it fires," she says. "Nobody's managed it. Nobody's tried properly."
+> left: "I'll try properly."
+  flag brace_chain
+  find lead_brace
+  perform duelling +tiny
+  say: Lyra sews the charm back in, looks at you, and writes your name on the board under the dummy. Underneath, someone adds a small drawing of a stretcher.
+> right: Leave it to the seniors
+  mood +tiny
+  say: You go back to your bout, and the dummy goes back to hexing whoever passes. A senior limps past at the end of practice, still smoking slightly.
+
+@event duel_captains_notes
+title: The Captain's Notes
+track: duelling
+rank: 2
+class: routine
+tone: light
+when: flag(brace_chain) and not flag(brace_notes) and spell_level(brace) == 0
+repeat: 2
+weight: 60
+art: scroll
+tags: club study
+scene: A dusty cupboard in the duel hall, a student reading a cracked leather notebook by the light of a single lamp.
+text: The captain who made the charm left notes, in a cupboard under the trophy shelf, in a hand like barbed wire. Half of it is about footwork and the other half is insults addressed to people long graduated.
+> left: Read them properly
+  challenge research journeyman:
+    win:
+      flag brace_notes
+      lore +small
+      say: Between the insults is the trick: you don't stop the first blow, you let it land on something that isn't you. You copy the page out and put the notebook back where the captain would have wanted it.
+    lose:
+      mood -tiny
+      say: You read until the lamp gutters and learn a great deal about a student called Pim, who could not parry. The trick is in there somewhere. You'll have to come back for it.
+> right: Spar instead tonight
+  perform duelling +small
+  say: You leave the notes for another evening and take a bout instead. You win it, which is the other kind of useful.
+
+@event duel_bram_barrage
+title: Inside the Chalk Circle
+track: duelling
+rank: 2
+class: routine
+tone: tense
+when: flag(brace_chain) and not flag(brace_circle) and spell_level(brace) == 0
+repeat: 2
+weight: 60
+art: bolt
+tags: club duel
+scene: A student standing in a chalk circle on a scorched floor while a broad prefect hurls a stream of stinging hexes from the edge.
+text: Word reaches Bram that you mean to empty the captain's charm. He turns up with his sleeves rolled. "Regulation hazing," he announces, "section four. You stand in the circle. I throw. You don't step out. Ready?"
+> left: Hold the circle against him
+  challenge feat vs bram.vigor:
+    win:
+      flag brace_circle
+      vigor +small
+      say: You don't step out. By the twentieth hex Bram is red in the face and you are still in the circle, scorched and planted. "Adequate," he says, gruffly, and doesn't put you on report.
+    lose:
+      health -small
+      say: The ninth hex knocks you clean out of the circle. Bram notes it in his book. "Section four, failed," he says. "Again next week."
+> right: Take it all on your shield arm
+  flag brace_circle
+  health -medium
+  say: You don't try to be clever. You just stand there and take it, every hex, on your arm, until Bram runs out. Your arm is purple for a week. Bram looks almost impressed.
+
+@event duel_footwork_lyra
+title: Footwork Until Dark
+track: duelling
+rank: 2
+class: routine
+tone: light
+when: flag(brace_chain) and not flag(brace_footwork) and spell_level(brace) == 0
+repeat: 2
+weight: 60
+art: wand
+tags: club duel
+scene: An empty duel hall at dusk, two students drilling footwork across chalk marks, one of them pointing sharply at the other's feet.
+text: Lyra finds you after practice. "The captain's notes say the stance is everything," she says. "Your stance is a disgrace. Three hours. Now." She has already chalked the marks on the floor.
+> left: Drill until dark
+  flag brace_footwork
+  mood -small
+  rel lyra +tiny
+  say: She is merciless and exact. By dark you can set your feet without thinking, and you never want to see a chalk mark again. "Better," she says, which from Lyra is a sonnet.
+> right: "Tomorrow. I have an essay."
+  study +tiny
+  rel lyra -tiny
+  say: She looks at you as if you'd chosen to lose. You write the essay. It is a fine essay, and Lyra mentions your stance at breakfast.
+
+@event duel_brace_final
+title: Hold Firm
+track: duelling
+rank: 2
+class: milestone
+tone: tense
+when: flag(brace_chain) and spell_level(brace) == 0 and since(duel_dummy_hexes) >= 2 and (flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2 or since(duel_dummy_hexes) >= 6)
+repeat: 2
+weight: 40
+art: spell_brace
+tags: club duel magic
+scene: A student standing firm in a chalk circle in a crowded duel hall as an eyepatched dummy fires hex after hex, the club watching from the benches.
+text: The club gathers on the benches. You step into the chalk circle, and the eyepatched dummy turns its head toward you with an audible creak. The captain's charm begins to fire. {flag(brace_notes) and flag(brace_circle) and flag(brace_footwork): You know how to stand, and why.|You have done some of the work. Not all of it.}
+> left: Hold firm
+  challenge feat adept- +1 if flag(brace_notes) +1 if flag(brace_circle) +1 if flag(brace_footwork):
+    win:
+      learn_spell brace
+      perform duelling +small
+      say: The hexes break on you one after another, and each lands softer than the last. When the charm finally sputters out, the club is on its feet. Lyra doesn't clap. She nods, once, which is louder.
+    lose:
+      health -small
+      say: The fourteenth hex lifts you out of the circle and into the benches. The dummy turns its head back with a creak. It will be there at practice, waiting.
+> right: Borrow the captain's old gauntlets
+  gold -small
+  challenge feat adept- likely +1 if flag(brace_notes) +1 if flag(brace_circle) +1 if flag(brace_footwork):
+    win:
+      learn_spell brace
+      perform duelling +small
+      say: The club quartermaster rents you the captain's own gauntlets for the night. They take the first blow for you, and the rest you take yourself. When the charm sputters out, the benches roar.
+    lose:
+      health -small
+      say: Even in the gauntlets, the fourteenth hex lifts you out of the circle. The rental is not refunded. The dummy creaks its head back and waits.
+
+# ---------------- The Lumen Ledger → Quickquill (guile) ----------------
+
+@event ledger_spare_quill
+title: The Spare Quill
+track: lumen_ledger
+rank: 2
+class: routine
+tone: light
+trigger: auto
+when: rank(lumen_ledger) >= 2 and spell_level(quickquill) == 0 and not flag(quickquill_chain) and turn <= 44
+repeat: 3
+art: paper
+tags: club
+scene: A newspaper office with proofs pegged on a drying line, a lone quill hanging among them scribbling on a proof by itself.
+text: A spare quill on the drying line has been finishing your sentences. Today it started inventing them: your proof now says the refectory serves dragon. "Oh, it's woken up," says Nessa, delighted. "Tame it and it's yours. Nobody's tamed one since I've been editor."
+> left: Take the quill home
+  flag quickquill_chain
+  find lead_quickquill
+  perform lumen_ledger +tiny
+  say: You wrap it in a handkerchief. It writes "kidnapped" on the handkerchief. Nessa writes your name on the office board under QUILL, with a question mark.
+> right: Peg it back on the line
+  mood +tiny
+  say: You peg it back. It writes a small, hurt editorial about you on the next proof, which Nessa cuts, laughing.
+
+@event ledger_soup_complaint
+title: The Soup Complaint
+track: lumen_ledger
+rank: 2
+class: routine
+tone: light
+when: flag(quickquill_chain) and not flag(quickquill_soup) and spell_level(quickquill) == 0
+repeat: 2
+weight: 60
+art: letter
+tags: club
+scene: A desk buried in angry letters about soup, a student dictating firmly to a quill that keeps trying to add flourishes.
+text: Forty furious letters about the refectory soup have arrived. Nessa wants one calm reply, printed. You decide to dictate it to the quill, which wants very badly to make it more exciting.
+> left: Keep the quill to the facts
+  challenge spell using guile journeyman:
+    win:
+      flag quickquill_soup
+      guile +small
+      say: Every time it reaches for a flourish, you catch it. The reply comes out calm, true and very dull. Nessa prints it. The quill sulks, and then, grudgingly, writes the next one straight.
+    lose:
+      mood -small
+      say: You blink and the quill has written that the soup contains a mild curse. It prints. You spend Thursday apologising to the cooks.
+> right: Write the reply by hand
+  perform lumen_ledger +tiny
+  say: You write it yourself, slowly. It's a good reply. The quill watches from the inkwell, offended at being left out.
+
+@event ledger_proper_ink
+title: Proper Ink
+track: lumen_ledger
+rank: 2
+class: routine
+tone: light
+when: flag(quickquill_chain) and not flag(quickquill_ink) and spell_level(quickquill) == 0
+repeat: 2
+weight: 60
+art: coin
+tags: club
+scene: A stationer's counter in the village, a student holding a small dark bottle of ink up to the light while a quill pokes out of their pocket.
+text: The quill refuses the school ink. It blots, it sulks, it writes "no" in large letters. The stationer in the village has proper ink, black as a well and priced like it.
+> left: Buy the proper ink
+  gold -small
+  flag quickquill_ink
+  say: The quill drinks the new ink and writes a whole page of your notes, neatly, in a better hand than yours. It underlines the bits you'll need. You feel slightly managed.
+> right: Make it use the school ink
+  mood -tiny
+  say: It uses the school ink under protest and blots every third word, including, pointedly, your name.
+
+@event ledger_deadline_night
+title: Deadline Night
+track: lumen_ledger
+rank: 2
+class: routine
+tone: tense
+when: flag(quickquill_chain) and not flag(quickquill_deadline) and spell_level(quickquill) == 0
+repeat: 2
+weight: 60
+art: candle
+tags: club
+scene: A newspaper office after midnight, cold tea and candle stubs everywhere, a student and a quill working side by side while an editor paces.
+text: Deadline night. The front page fell through at nine and Nessa is pacing. "We need eight hundred words by four," she says. "Anybody with a quill that writes fast, now is the time."
+> left: Sit it out with the quill
+  flag quickquill_deadline
+  perform lumen_ledger +small
+  mood -medium
+  say: You and the quill write until four. By the end it finishes your sentences only when you want it to. You are both too tired to argue. Nessa puts your name on the page, small.
+> right: Go to bed
+  health +tiny
+  say: You sleep. In the morning the front page is late and Nessa is hoarse, and the quill has written a bitter little poem about you on the pillowcase.
+
+@event ledger_quill_interview
+title: Deny Everything
+track: lumen_ledger
+rank: 2
+class: milestone
+tone: tense
+when: flag(quickquill_chain) and spell_level(quickquill) == 0 and since(ledger_spare_quill) >= 2 and (flag(quickquill_soup) + flag(quickquill_ink) + flag(quickquill_deadline) >= 2 or since(ledger_spare_quill) >= 6)
+repeat: 2
+weight: 40
+art: spell_quickquill
+tags: club magic
+scene: A stuffy committee room, a smooth official smiling across a table at a student whose quill writes furiously on its own.
+text: Nessa sends you to interview the chair of the refectory committee, who will deny everything, including the soup. "Get it word for word," she says. "Every word. They'll deny the words too." {flag(quickquill_soup) and flag(quickquill_ink) and flag(quickquill_deadline): Your quill sits up in your pocket, ready.|Your quill is half-tamed at best.}
+> left: Interview them with the quill
+  challenge negotiate using guile adept- +1 if flag(quickquill_soup) +1 if flag(quickquill_ink) +1 if flag(quickquill_deadline):
+    win:
+      learn_spell quickquill
+      perform lumen_ledger +small
+      say: The chair denies everything, and the quill takes every denial down word for word, including the one that contradicts the other three. Nessa reads it and goes very quiet. "Front page," she says.
+    lose:
+      mood -small
+      say: The quill gets bored halfway and starts improving the chair's answers. Nothing is printable. The quill sulks in the WILL NOT PRINT basket until your next front page.
+> right: Prepare all night first
+  mood -small
+  challenge negotiate using guile adept- likely +1 if flag(quickquill_soup) +1 if flag(quickquill_ink) +1 if flag(quickquill_deadline):
+    win:
+      learn_spell quickquill
+      perform lumen_ledger +small
+      say: You go in tired and over-prepared, with every question written out. The quill follows your lead all the way through. Nessa reads the transcript twice. "Front page."
+    lose:
+      mood -tiny
+      say: All night's preparation, and the chair simply doesn't turn up. The quill sulks in the WILL NOT PRINT basket until your next front page.
+
+# ---------------- Verdant Circle → Bramble (alchemy) ----------------
+
+@event verdant_far_bed
+title: The Far Bed Answers
+track: verdant
+rank: 2
+class: routine
+tone: light
+trigger: auto
+when: rank(verdant) >= 2 and spell_level(bramble) == 0 and not flag(bramble_chain) and turn <= 44
+repeat: 3
+art: leaf
+tags: club nature
+scene: The far end of a greenhouse, a tangle of vines reaching toward a student who has just found a green shoot curling out of their coat pocket.
+text: The far bed answers back today: every vine in it turns to follow you. On the way out you find a seed in your coat pocket that wasn't there this morning, and it has already put out a shoot.
+> left: Keep it and grow it
+  flag bramble_chain
+  find lead_bramble
+  alchemy +tiny
+  say: You cup it in your palm. The shoot curls round your finger, firmly. Tobias, when you show him, goes pale and then delighted. "That's a hedge-seed," he says. "They choose people."
+> right: Give it to Tobias
+  rel tobias +tiny
+  say: Tobias takes it gently and puts it in a pot by the door. "It'll want you back," he says. "They usually do."
+
+@event verdant_plant_seed
+title: Somewhere to Grow
+track: verdant
+rank: 2
+class: routine
+tone: warm
+when: flag(bramble_chain) and not flag(bramble_planted) and spell_level(bramble) == 0
+repeat: 2
+weight: 60
+art: leaf
+tags: club nature
+scene: Two students kneeling in a greenhouse bed planting a seedling, a lantern between them and earth up to their elbows.
+text: The seed has outgrown your pocket. It needs a bed. Tobias offers the corner of his own in the greenhouse. Old Maud, passing, says there's a corner in her garden that never gets frost, "if you can keep a secret, dearie."
+> left: Plant it with Tobias
+  flag bramble_planted
+  rel tobias +small
+  say: You plant it together by lantern light, and Tobias tells it a long story about a goat to help it settle. It settles. So does Tobias, eventually.
+> right: Plant it in Maud's garden
+  flag bramble_planted
+  rel maud +small
+  say: Maud leads you through a door you'd never noticed into a garden you'll never find on your own. You plant it there. "It'll be happy," she says, "for a while."
+
+@event verdant_cold_snap
+time: night
+title: The Cold Snap
+track: verdant
+rank: 2
+class: routine
+tone: tense
+when: flag(bramble_planted) and not flag(bramble_fed) and spell_level(bramble) == 0
+repeat: 2
+weight: 60
+art: snow
+tags: club nature
+scene: Frost creeping over a greenhouse bed at night, a student wrapped in a blanket sitting beside a shivering seedling with a lantern.
+text: A hard frost is coming tonight, the first of the season. Your seedling is too young for it. Somebody would have to sit with it till dawn, feeding it warmth.
+> left: Sit up with it all night
+  flag bramble_fed
+  health -small
+  say: You sit wrapped round the lantern till dawn, feeding it what warmth you have. By morning you're stiff and coughing, and the seedling has grown a thorn, which it seems proud of.
+> right: Cover it and hope
+  mood -tiny
+  say: You cover it with sacking and go to bed. It survives, sulking, and loses a leaf. It is noticeably cooler towards you.
+
+@event verdant_mandrake_choir
+title: The Mandrake Choir
+track: verdant
+rank: 2
+class: routine
+tone: light
+when: flag(bramble_planted) and not flag(bramble_choir) and spell_level(bramble) == 0
+repeat: 2
+weight: 60
+art: music
+tags: club nature
+scene: A row of potted mandrakes in knitted hats screaming in chorus at a nervous seedling, a student with earmuffs approaching with a watering can.
+text: The mandrakes in the next bed have taken against your seedling and scream at it in chorus every evening. It's wilting from the noise. Gerald is conducting.
+> left: Quiet the choir
+  challenge enchant journeyman:
+    win:
+      flag bramble_choir
+      alchemy +small
+      say: A drop of valerian in each pot and a firm word with Gerald, and the choir settles into a low hum. Your seedling straightens up and puts out a vine.
+    lose:
+      health -tiny
+      say: The choir screams at you instead. Your ears ring till supper. Gerald looks unrepentant in his hat.
+> right: Move the seedling's pot
+  mood +tiny
+  say: You move it to the quiet end. It perks up, but it's away from the warm pipes now, and it isn't growing.
+
+@event verdant_bramble_bolts
+time: night
+title: The Night It Bolts
+track: verdant
+rank: 2
+class: milestone
+tone: tense
+when: flag(bramble_chain) and spell_level(bramble) == 0 and since(verdant_far_bed) >= 2 and (flag(bramble_planted) + flag(bramble_fed) + flag(bramble_choir) >= 2 or since(verdant_far_bed) >= 6)
+repeat: 2
+weight: 40
+art: spell_bramble
+tags: club nature magic
+scene: A greenhouse at night, a thorny hedge surging across the beds toward a row of pale flowers, a student with arms outstretched trying to hold it back.
+text: Tobias wakes you at midnight. Your plant has bolted: a hedge of thorns is surging across the greenhouse toward the moonflower beds, and it is not stopping for anyone but you. {flag(bramble_fed) and flag(bramble_choir): It knows your voice.|You're not sure it knows you at all.}
+> left: Call it to heel
+  challenge enchant adept- +1 if flag(bramble_planted) +1 if flag(bramble_fed) +1 if flag(bramble_choir):
+    win:
+      learn_spell bramble
+      perform verdant +small
+      say: You put out your hand and the hedge stops a finger's width from the moonflowers, then folds itself back into your palm like a sleeping cat. Tobias sits down on a bucket and laughs from the belly.
+    lose:
+      health -small
+      say: The thorns take your sleeve and some of your arm before Tobias shears it back. Maud keeps a cutting, and says she'll offer it to you again in Stormbloom.
+> right: Wade in and grab the root
+  health -small
+  challenge enchant adept- likely +1 if flag(bramble_planted) +1 if flag(bramble_fed) +1 if flag(bramble_choir):
+    win:
+      learn_spell bramble
+      perform verdant +small
+      say: You wade through thorns to the root and hold it. The hedge goes still, then curls round you instead, gently. You're scratched to ribbons and it's yours.
+    lose:
+      health -tiny
+      say: You get the root and it gets you. Tobias shears the hedge back by dawn. Maud keeps a cutting for Stormbloom.
+
+# ---------------- Library Assistant → Index (lore) ----------------
+
+@event library_footnote_drawer
+title: Footnote's Drawer
+track: library_assistant
+rank: 2
+class: routine
+tone: light
+trigger: auto
+when: rank(library_assistant) >= 2 and spell_level(index) == 0 and not flag(index_chain) and turn <= 44
+repeat: 3
+art: cat
+tags: job study
+scene: A long library catalogue cabinet, a large cat sitting immovably on one drawer, a student crouching to read its label.
+text: Footnote has sat on one catalogue drawer for a week and hisses at anyone who comes near it. The label underneath him says OVERDUE, ELEVEN YEARS. The head librarian says whoever finds that book is welcome to the trick of finding books.
+> left: Find out what he's guarding
+  flag index_chain
+  find lead_index
+  lore +tiny
+  say: You read the card around his tail. A book on wards, borrowed by a Professor Thorne, eleven years ago. Footnote looks at you as if you've finally asked the right question.
+> right: Shelve around him
+  perform library_assistant +tiny
+  say: You shelve around Footnote for the rest of the shift. He watches every book you put away, as if marking them.
+
+@event library_fish_footnote
+title: Bribing the Cat
+track: library_assistant
+rank: 2
+class: routine
+tone: light
+when: flag(index_chain) and not flag(index_fish) and spell_level(index) == 0
+repeat: 2
+weight: 60
+art: cat
+tags: job
+scene: A student offering a small paper parcel of fish to a large, unimpressed cat on a library cabinet.
+text: Footnote won't move from the drawer for less than fish. Good fish, from the village, not the refectory's. The head librarian says this is "between you and the cat".
+> left: Buy him a proper herring
+  gold -small
+  flag index_fish
+  say: Footnote eats the herring slowly, looking at you the whole time, then steps off the drawer and onto your lap. The card is yours. So, apparently, is the cat.
+> right: Wait him out
+  mood -tiny
+  say: You wait. Footnote waits better. At closing he yawns, stretches, and lies back down on the drawer.
+
+@event library_hush_lamp
+time: evening
+title: The Night Hush
+track: library_assistant
+rank: 2
+class: routine
+tone: eerie
+when: flag(index_chain) and not flag(index_hush) and spell_level(index) == 0
+repeat: 2
+weight: 60
+art: lantern
+tags: job study
+scene: A dark library reading room at night, a student walking the shelves with a lamp held high while the books seem to lean toward the light.
+text: The overdue book will only be on the shelves the night hush sends it to. The head librarian lends you the old lamp. "Walk the hush," she says, "and listen to which shelf goes quiet last."
+> left: Walk the hush and listen
+  challenge research journeyman:
+    win:
+      flag index_hush
+      lore +small
+      say: Three laps, and on the third, the shelves on the north side go quiet a heartbeat after the rest. You mark it on your map. The lamp seems pleased with you.
+    lose:
+      mood -small
+      say: Every shelf goes quiet at once, which is either very helpful or a joke at your expense. You walk until midnight and mark nothing.
+> right: Ask the head librarian outright
+  perform library_assistant -tiny
+  say: "If I told you," she says, "you wouldn't have found it." She gives you extra shelving for asking.
+
+@event library_wandering_section
+title: The Wandering Section
+track: library_assistant
+rank: 2
+class: routine
+tone: light
+when: flag(index_chain) and not flag(index_string) and spell_level(index) == 0
+repeat: 2
+weight: 60
+art: book
+tags: job
+scene: A student trailing a long ball of string through a maze of library shelves that have visibly rearranged themselves behind them.
+text: The section the book belongs to wanders. It was by the stairs on Monday and in the map room on Wednesday. The only way to follow it is to tie a string to the end shelf and walk where it goes, however long that takes.
+> left: Follow it with string
+  flag index_string
+  mood -small
+  say: You follow it for six hours, through rooms you didn't know the library had. At the end you know its route by heart and never want to see a ball of string again.
+> right: Wait for it to come back
+  lore +tiny
+  say: You read at the desk until the section wanders past again, a day later. You learn nothing about its route, and a little about medieval ward-lattices.
+
+@event library_overdue_book
+title: Eleven Years Overdue
+track: library_assistant
+rank: 2
+class: milestone
+tone: eerie
+when: flag(index_chain) and spell_level(index) == 0 and since(library_footnote_drawer) >= 2 and (flag(index_fish) + flag(index_hush) + flag(index_string) >= 2 or since(library_footnote_drawer) >= 6)
+repeat: 2
+weight: 40
+art: spell_index
+tags: job study magic
+scene: A student high on a rolling ladder in a library where the shelves are visibly moving, a cat on their shoulder, one dusty book glowing faintly.
+text: Tonight the shelves are moving. Somewhere in the wandering section is the book, eleven years overdue, and every book you touch tries to fall open at the wrong page. {flag(index_fish): Footnote is on your shoulder.|You're on your own.}
+> left: Find the page
+  challenge research adept- +1 if flag(index_fish) +1 if flag(index_hush) +1 if flag(index_string):
+    win:
+      learn_spell index
+      perform library_assistant +small
+      say: Your hand finds the spine before your eyes do, and the book falls open at exactly the page it was borrowed for. Every book you touch afterwards does the same. The head librarian stamps the card, eleven years late, without a word.
+    lose:
+      mood -small
+      say: You get lost on the seventh floor among shelves that don't exist by day. Footnote leads you out at dawn, looking smug. The card is still on the drawer.
+> right: Pay a senior clerk for their map
+  gold -small
+  challenge research adept- likely +1 if flag(index_fish) +1 if flag(index_hush) +1 if flag(index_string):
+    win:
+      learn_spell index
+      perform library_assistant +small
+      say: The senior clerk's map is ten years out of date and exactly right where it matters. You find the book, and it falls open at the page it was borrowed for. Every book does, after that.
+    lose:
+      mood -tiny
+      say: The map is ten years out of date and mostly wrong. Footnote leads you out at dawn. The book stays lost, for now.
+
+# ---------------- The Gilded Newt → Rapport (charm) ----------------
+
+@event tavern_two_taps
+time: evening
+title: Two Taps on the Bar
+track: tavern
+rank: 2
+class: routine
+tone: light
+trigger: auto
+when: rank(tavern) >= 2 and spell_level(rapport) == 0 and not flag(rapport_chain) and turn <= 44
+repeat: 3
+art: cup
+tags: job
+scene: A crowded tavern on the edge of a brawl, a landlady tapping the bar twice and the whole room suddenly laughing instead.
+text: Two barge-men are halfway out of their chairs when the landlady taps the bar twice, says one sentence you don't catch, and the whole room laughs instead. The fight is over before it began. She catches you staring. "Want to know how?"
+> left: "Yes. Teach me."
+  flag rapport_chain
+  find lead_rapport
+  charm +tiny
+  say: "Can't teach it," she says. "You earn it. Learn the room, buy the room, work the room." She taps the bar twice at you, and you laugh, and you don't know why.
+> right: Keep pouring
+  perform tavern +tiny
+  say: You keep pouring. The barge-men buy each other a drink and sing. The landlady watches you, thoughtfully, for the rest of the shift.
+
+@event tavern_eel_story
+time: evening
+title: The Eel Story
+track: tavern
+rank: 2
+class: routine
+tone: light
+when: flag(rapport_chain) and not flag(rapport_eel) and spell_level(rapport) == 0
+repeat: 2
+weight: 60
+art: wave
+tags: job
+scene: A barge-man at a tavern table with his arms spread wide, telling a story to a student taking notes on a bar napkin.
+text: The old barge-man's eel story is the most famous story at the Newt. Regulars mouth along. The landlady says if you can tell it as well as he does, the room will be half yours. He's willing to teach it, slowly, for an evening.
+> left: Learn it and tell it back
+  challenge negotiate journeyman wild:
+    win:
+      flag rapport_eel
+      charm +small
+      say: You tell it back that same night, to the same corner, and get the laugh at the eel's second escape. The barge-man wipes his eyes and buys you a cider.
+    lose:
+      mood -small
+      say: You get the eel's name wrong and the ending backwards. The regulars are very kind about it, which is worse.
+> right: Just enjoy the story
+  mood +small
+  say: You sit and listen to the eel story twice through, and laugh both times. You couldn't tell it, but you've rarely had a better evening.
+
+@event tavern_regulars_round
+time: evening
+title: The Regulars' Corner
+track: tavern
+rank: 2
+class: routine
+tone: light
+when: flag(rapport_chain) and not flag(rapport_round) and spell_level(rapport) == 0
+repeat: 2
+weight: 60
+art: coin
+tags: job
+scene: A student setting down a tray of mugs at a crowded corner table in a tavern, the regulars raising them in a toast.
+text: The regulars' corner has never had a round bought by staff. The landlady says that's exactly why you should. "Nobody listens to a story from someone who's never stood them a drink."
+> left: Stand the corner a round
+  gold -small
+  flag rapport_round
+  say: The corner raises the mugs to you, by name, which you didn't know they knew. For the rest of the night they call you over to settle every argument.
+> right: Keep your tips
+  gold +tiny
+  say: You pocket your tips. The corner doesn't notice either way, which is rather the point.
+
+@event tavern_double_shift
+title: The Double Shift
+track: tavern
+rank: 2
+class: routine
+tone: tense
+when: flag(rapport_chain) and not flag(rapport_shift) and spell_level(rapport) == 0
+repeat: 2
+weight: 60
+art: cup
+tags: job
+scene: A tired student wiping down a bar at closing time after a very long day, the landlady counting the till beside them.
+text: Two servers are down with Lake Fever, and the landlady needs a double shift: lunch through closing. "You'll learn more about a room in fourteen hours," she says, "than in a term of evenings."
+> left: Work the double
+  wage
+  flag rapport_shift
+  health -small
+  say: Fourteen hours on your feet. By closing you can tell who wants to talk and who wants to be left alone from across the room. Your feet are a separate, angrier person.
+> right: Turn it down
+  perform tavern -tiny
+  say: You say you can't. The landlady works it herself, and is short with you for a week.
+
+@event tavern_festival_room
+time: evening
+title: The Room Is Yours
+track: tavern
+rank: 2
+class: milestone
+tone: tense
+when: flag(rapport_chain) and spell_level(rapport) == 0 and since(tavern_two_taps) >= 2 and (flag(rapport_eel) + flag(rapport_round) + flag(rapport_shift) >= 2 or since(tavern_two_taps) >= 6)
+repeat: 2
+weight: 40
+art: spell_rapport
+tags: job magic
+scene: A packed tavern on a festival night, a student standing on a chair telling a story while the crowd hangs on every word.
+text: The landlady is away for the night and the Newt is packed to the rafters, two barges in and a fight brewing by the fire. It's yours to hold. {flag(rapport_eel) and flag(rapport_round) and flag(rapport_shift): You know this room now.|You know some of this room.}
+> left: Tap the bar twice
+  challenge negotiate adept- +1 if flag(rapport_eel) +1 if flag(rapport_round) +1 if flag(rapport_shift):
+    win:
+      learn_spell rapport
+      renown +small
+      say: You tap the bar twice, say one sentence about an eel, and the room laughs. The fight by the fire turns into a song. When the landlady comes back, she knows at once. She just nods.
+    lose:
+      gold -small
+      say: The tap comes out as a knock and the laugh never comes. A chair breaks, and so do some glasses, and the fine comes out of your wages. Next festival night, she says, you can try again.
+> right: Buy the first round, then talk
+  gold -small
+  challenge negotiate adept- likely +1 if flag(rapport_eel) +1 if flag(rapport_round) +1 if flag(rapport_shift):
+    win:
+      learn_spell rapport
+      renown +small
+      say: A round on the house first, then a story while they drink it. By the time the mugs are empty, nobody remembers wanting to fight. The landlady hears about it before she's through the door.
+    lose:
+      gold -tiny
+      say: They drink the round and fight anyway. You mop up with the rest of the staff. Next festival night, the landlady says.
+
+# ---------------- Apothecary Clerk → Distil (alchemy) ----------------
+
+@event pell_oldest_drawer
+title: The Oldest Drawer
+track: apothecary_clerk
+rank: 2
+class: routine
+tone: eerie
+trigger: auto
+when: rank(apothecary_clerk) >= 2 and spell_level(purify) == 0 and not flag(distil_chain) and turn <= 44
+repeat: 3
+art: potion
+tags: job
+scene: An old apothecary's wall of tiny drawers, one at the very bottom pulled open to reveal a yellowed recipe card, a gruff old man watching from the counter.
+text: Restocking, you open the oldest drawer at the bottom of Pell's wall. Inside is one yellowed card: a draught "of your own strength", in a hand older than Pell's. Pell sees it and counts to three under his breath. "That one costs the brewer," he says. "Measure twice."
+> left: Copy the recipe
+  flag distil_chain
+  find lead_distil
+  alchemy +tiny
+  say: You copy it out carefully. Pell watches you do it and says nothing, then corrects one of your measures in your copy. That is the closest he comes to permission.
+> right: Close the drawer
+  rel pell +tiny
+  say: You close it. Pell nods once and goes back to his scales. Later you notice he has relabelled the drawer, clearly, "Not yet."
+
+@event pell_counting_drops
+time: night
+title: Counting Drops
+track: apothecary_clerk
+rank: 2
+class: routine
+tone: light
+when: flag(distil_chain) and not flag(distil_drops) and spell_level(purify) == 0
+repeat: 2
+weight: 60
+art: potion
+tags: job
+scene: A dim apothecary at night, an old man and a student bent over a slowly dripping still, both counting under their breath.
+text: Pell distils by the drop, all night, counting aloud. "If you mean to try the old draught," he says, "you'll count with me first. Lose count once and we start again."
+> left: Count all night with him
+  challenge brew journeyman:
+    win:
+      flag distil_drops
+      alchemy +small
+      say: Four hundred and twelve drops, and you don't lose count once. At dawn Pell says "Fair," which is once a decade, and lets you stopper the bottle.
+    lose:
+      mood -small
+      say: You lose count at three hundred and something. Pell starts again without comment. So do you. You lose it again.
+> right: Go home and sleep
+  health +tiny
+  say: You go home. Pell counts on alone, steadily, through the night. In the morning the bottle is full and labelled, and he says nothing about it.
+
+@event pell_buy_moonwort
+title: Moonwort
+track: apothecary_clerk
+rank: 2
+class: routine
+tone: light
+when: flag(distil_chain) and not flag(distil_moonwort) and spell_level(purify) == 0
+repeat: 2
+weight: 60
+art: leaf
+tags: job
+scene: An apothecary counter with a small jar labelled "Moonwort. Do not hum near.", a student counting out coins beside it.
+text: The old draught needs moonwort, and the only good moonwort in the village is the jar on Pell's top shelf, labelled "Do not hum near." Pell sells it to staff at cost. The cost is not small.
+> left: Buy the moonwort
+  gold -small
+  flag distil_moonwort
+  say: Pell weighs it twice and wraps it in waxed paper. You carry it home without humming, which is harder than it sounds.
+> right: Try the cheap substitute
+  mood -tiny
+  say: The substitute smells wrong the moment you open it. Pell takes it from you without a word and puts it in the bin.
+
+@event pell_daughters_shortcut
+title: The Daughters' Shortcut
+track: apothecary_clerk
+rank: 2
+class: routine
+tone: tense
+when: flag(distil_chain) and not flag(distil_shortcut) and spell_level(purify) == 0
+repeat: 2
+weight: 60
+art: potion
+tags: job
+scene: The back room of an apothecary, a student drinking a small cup of something dark while two women watch with professional interest.
+text: Pell's daughters say there's a shortcut: learn what the draught takes out of a brewer by tasting a little of it first. "Father hates it," says one. "It works," says the other. "You'll be ill for a day."
+> left: Try it on yourself
+  flag distil_shortcut
+  health -small
+  say: It takes the strength out of your knees and then, slowly, gives it back. You spend a day in bed. When you get up, you know exactly where the draught will pull from.
+> right: Do it Pell's way
+  rel pell +tiny
+  say: You decline. The daughters shrug. Pell, who was listening, corrects a label more firmly than it needed.
+
+@event pell_draught
+title: Of Your Own Strength
+track: apothecary_clerk
+rank: 2
+class: milestone
+tone: eerie
+when: flag(distil_chain) and spell_level(purify) == 0 and since(pell_oldest_drawer) >= 2 and (flag(distil_drops) + flag(distil_moonwort) + flag(distil_shortcut) >= 2 or since(pell_oldest_drawer) >= 6)
+repeat: 2
+weight: 40
+art: spell_distil
+tags: job magic
+scene: An apothecary's still at night, a student drawing a single shining drop out of a dark mixture while an old man holds the lamp.
+text: Pell closes the shop early, sets the old still on the bench and holds the lamp himself. "Brew it," he says. "I'll count." The recipe card lies beside you. {flag(distil_drops) and flag(distil_moonwort) and flag(distil_shortcut): You know every step of it.|There are steps you haven't practised.}
+> left: Brew the draught
+  challenge brew adept- +1 if flag(distil_drops) +1 if flag(distil_moonwort) +1 if flag(distil_shortcut):
+    win:
+      learn_spell purify
+      perform apothecary_clerk +small
+      say: The draught comes down to one shining drop, and as it falls you feel exactly what it took from you, and how to take it again. Pell stops counting. "Fair," he says, twice in one year.
+    lose:
+      health -small
+      say: The mixture boils over and takes more out of you than it should. Pell puts the card back in the drawer and writes "Don't." on the front. Next term, perhaps.
+> right: Use Pell's own moonwort stock
+  gold -small
+  challenge brew adept- likely +1 if flag(distil_drops) +1 if flag(distil_moonwort) +1 if flag(distil_shortcut):
+    win:
+      learn_spell purify
+      perform apothecary_clerk +small
+      say: With the good stock, it comes down clean to one drop. You feel it pull, and you feel where it pulls from. Pell writes the cost in his ledger, and your name beside the recipe.
+    lose:
+      health -tiny
+      say: Even with his best stock it boils over. Pell writes "Don't." on the drawer and the cost in the ledger. Next term, perhaps.
+
+# ---------------- Broom Courier → Tailwind (vigor) ----------------
+
+@event courier_wind_jar
+title: Wind in a Jar
+track: broom_courier
+rank: 2
+class: routine
+tone: light
+trigger: auto
+when: rank(broom_courier) >= 2 and spell_level(tailwind) == 0 and not flag(tailwind_chain) and turn <= 44
+repeat: 3
+art: broom
+tags: job
+scene: A courier loft with a dusty shelf of unclaimed letters, a student holding up a stoppered jar in which a small wind is visibly whirling.
+text: On the dead-letter shelf, behind a parcel addressed to nobody, is a stoppered jar with a wind in it, going round and round. The label says FOR WHOEVER IS FAST ENOUGH. The loft master says someone flew with it once, before her time.
+> left: Take the jar down
+  flag tailwind_chain
+  find lead_tailwind
+  vigor +tiny
+  say: The jar hums in your hands, and every broom in the loft leans toward you. The loft master writes your name on the jar's label, under a name too faded to read.
+> right: Leave it on the shelf
+  perform broom_courier +tiny
+  say: You leave it for whoever is fast enough. You fly your round. The jar's wind stirs the dead letters as you go.
+
+@event courier_fisherman_waves
+title: The Fisherman Waves
+track: broom_courier
+rank: 2
+class: routine
+tone: warm
+when: flag(tailwind_chain) and not flag(tailwind_fisherman) and spell_level(tailwind) == 0
+repeat: 2
+weight: 60
+art: wave
+tags: job
+scene: An old fisherman in a small boat on a grey lake waving up at a student on a broom flying low overhead.
+text: The old fisherman in the reed beds has never waved at a courier. Today, seeing the jar strapped to your broom, he waves, and beckons you down. "That jar," he says. "I flew it once. Fastest year of my life."
+> left: Land and ask him about it
+  challenge negotiate journeyman:
+    win:
+      flag tailwind_fisherman
+      charm +small
+      say: He tells you, slowly, between casts: you don't fly the wind, you let it get behind you and keep going. Never stop. "Stopping's what kills it," he says, and goes back to his line.
+    lose:
+      mood -tiny
+      say: He talks about fish for an hour, then says the light's going, and rows off. You'll have to come back.
+> right: Wave back and fly on
+  perform broom_courier +small
+  say: You wave and fly on with your round, on time. He watches you go, and doesn't wave again.
+
+@event courier_race_gulls
+title: Racing the Gulls
+track: broom_courier
+rank: 2
+class: routine
+tone: light
+when: flag(tailwind_chain) and not flag(tailwind_gulls) and spell_level(tailwind) == 0
+repeat: 2
+weight: 60
+art: broom
+tags: job
+scene: A student on a broom flying flat out over a lake in a cloud of wheeling gulls, letters fluttering in a satchel.
+text: The gulls over the lake race couriers for fun. The fisherman says the jar's wind won't follow you until you've beaten them once, flat out, from the jetty to the far bank.
+> left: Race them flat out
+  challenge feat journeyman wild:
+    win:
+      flag tailwind_gulls
+      vigor +small
+      say: You hit the far bank a beak ahead of the lead gull. The wind in the jar turns over once, like a cat settling. The gulls follow you home, offended.
+    lose:
+      health -small
+      say: You clip a wave at full speed and skip across the lake like a stone. The gulls are delighted. You are wet to the bone.
+> right: Fly your round steady
+  perform broom_courier +tiny
+  say: You fly the round steady and deliver everything dry. The gulls lose interest. So does the jar.
+
+@event courier_fix_broom
+title: The Broom That Pulls Left
+track: broom_courier
+rank: 2
+class: routine
+tone: light
+when: flag(tailwind_chain) and not flag(tailwind_broom) and spell_level(tailwind) == 0
+repeat: 2
+weight: 60
+art: broom
+tags: job
+scene: A broom-maker's bench in the village, a craftsman sighting along a broom handle while a student waits with their satchel.
+text: Your loft broom pulls left, always has. With the jar's wind behind it, it would pull you into the lake. The broom-maker in the village can true it, for a price.
+> left: Pay to have it trued
+  gold -small
+  flag tailwind_broom
+  say: The broom-maker sights along it, tuts, and spends an afternoon on it. It flies straight for the first time in living memory. You miss the pull, a little.
+> right: Learn to fly it crooked
+  mood -tiny
+  say: You learn to lean right all the time. Your back complains, and the broom keeps pulling left out of habit.
+
+@event courier_storm_delivery
+title: The Storm Run
+track: broom_courier
+rank: 2
+class: milestone
+tone: tense
+when: flag(tailwind_chain) and spell_level(tailwind) == 0 and since(courier_wind_jar) >= 2 and (flag(tailwind_fisherman) + flag(tailwind_gulls) + flag(tailwind_broom) >= 2 or since(courier_wind_jar) >= 6)
+repeat: 2
+weight: 40
+art: spell_tailwind
+tags: job magic
+scene: A student on a broom flying through a storm over a dark lake, a jar of wind unstoppered at their belt, lightning behind them.
+text: A storm is down on the lake, and a parcel must cross it tonight. The loft master looks at the jar at your belt, then at you. "Nobody else will go," she says. {flag(tailwind_fisherman) and flag(tailwind_gulls) and flag(tailwind_broom): You know how to let the wind get behind you.|You've never flown it in weather.}
+> left: Open the jar and go
+  challenge feat adept- +1 if flag(tailwind_fisherman) +1 if flag(tailwind_gulls) +1 if flag(tailwind_broom):
+    win:
+      learn_spell tailwind
+      perform broom_courier +small
+      say: You pull the stopper and the wind gets behind you and doesn't stop. You cross the lake faster than the lightning can find you. The parcel arrives dry. The wind stays with you after, when you call it.
+    lose:
+      health -small
+      say: Halfway across, a gust takes you and you ditch in the shallows. The parcel survives. You barely do. The next storm season, the loft master says, you can try again.
+> right: Wait for the lull, then go
+  mood -small
+  challenge feat adept- likely +1 if flag(tailwind_fisherman) +1 if flag(tailwind_gulls) +1 if flag(tailwind_broom):
+    win:
+      learn_spell tailwind
+      perform broom_courier +small
+      say: You wait, nerves screaming, for the gap in the storm, then open the jar and go. The wind gets behind you and stays. The parcel arrives an hour late and dry, and the wind is yours.
+    lose:
+      health -tiny
+      say: The lull never comes, and you go anyway and ditch in the shallows. The next storm season, the loft master says.

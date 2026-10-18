@@ -95,9 +95,8 @@ tags: social magic
 scene: An infirmary storeroom at night lit by a single lamp, a healer pressing a small brass key into a student's palm, shelves of labelled bottles all around.
 text: Sister Amaranth closes the storeroom door behind you both. "I'm away for the solstice and the junior healer faints at blood," she says. "You don't." She holds out the key to the tonic cupboard, and with it a page of her own notes on the mending charm.
 > left: Take the key and the notes
-  learn_spell mend
   rel amaranth +small
-  alchemy +small
+  alchemy +medium
   say: "Mend what you can, send the rest to me, and lie to nobody," she says. The notes are written for someone she expects to be good at this. You read them twice and try very hard to be.
 > right: "I'm not ready for that."
   rel amaranth +small
@@ -127,10 +126,10 @@ text: {Professor Brask holds out a shovel as you pass the stables. She doesn't s
 > right: Decline, politely
   rel brask -tiny
   say: {"Suit yourself," she says, and takes the shovel back. "The straw won't mind."|"The hippogriff doesn't want to either," says Brask. "It helps anyway."|You hand the shovel back. Brask takes it, and the hippogriff looks at your gloves with interest. You leave quickly.}
-> up[beast_speech]: Ask the stalls what they need
+> up[haste]: Hasten through the stalls
   rel brask +small
   vigor +tiny
-  say: {The hippogriffs want the window open and the owls want it shut. You negotiate. Brask watches you with her arms folded and something almost like a smile.|The griffon chick tells you, at length, about a grievance. You pass it on. Brask nods. "She's right, actually."|The hippogriff confesses to the glove, more or less, and you negotiate its return. Brask takes it back, damp, and says nothing, which from her is thanks.}
+  say: {You clear six stalls before the hippogriff has finished glaring at you. Brask watches with her arms folded and something almost like a smile.|You muck out, refill and re-straw in a blur. The griffon chick follows your hands, dizzy. "Show-off," says Brask, approving.|You're done before Brask has found her own shovel. The hippogriff, outpaced, gives back the glove. Brask takes it, damp, and says nothing, which from her is thanks.}
 
 @event brask_night_owl
 time: evening
@@ -167,12 +166,12 @@ weight: 20
 art: feather
 tags: nature magic
 scene: A professor and a student at the edge of a forest at dusk, both bowing low to a great antlered stag half-hidden in the trees.
-text: Brask takes you to the edge of the Whisperwood one afternoon. "Most people talk at animals," she says. "A few talk to them. Fewer listen." She bows, very low, to something in the trees. "Do as I do. I'll teach you the rest."
+text: Brask takes you to the edge of the Whisperwood one afternoon. "Most people talk at animals," she says. "A few talk to them. Fewer listen." She bows, very low, to something in the trees. "Do as I do. Keep still, and keep your eyes down."
 > left: Bow, and learn
-  learn_spell beast_speech
+  vigor +medium
   rel brask +small
   health -tiny
-  say: It takes until full dark, bent double until your back aches, and something huge breathes on your neck for most of it. Then, faintly, you understand a word. It is "rude". Brask laughs once, loudly, the way she does once a term.
+  say: It takes until full dark, bent double until your back aches, and something huge breathes on your neck for most of it. Then the stag bows back, very slightly. Brask laughs once, loudly, the way she does once a term.
 > right: Keep your distance
   rel brask -tiny
   vigor +small
@@ -247,12 +246,12 @@ weight: 20
 art: mirror
 tags: magic
 scene: An empty classroom at twilight, two identical students standing either side of a tall mirror, a professor seated on a desk between them, clapping softly.
-text: Vey keeps you after class and tilts a tall mirror towards you. Your reflection steps out of it and sits on a desk. "The trick isn't making a copy," she says. "It's knowing which of you to send. Want to learn it?"
-> left: Learn it
-  learn_spell mirror
+text: Vey keeps you after class and tilts a tall mirror towards you. Your reflection steps out of it and sits on a desk. "The trick isn't making a copy," she says. "It's knowing which of you to send. Want to see how it's done?"
+> left: Study the trick with her
+  charm +medium
   rel vey +small
   mood -small
-  say: It takes a week. On the last night your reflection refuses to go back. Vey talks it round over tea, then says, "Now you know why I don't do this in public." You are not sure which of you walked home.
+  say: It takes a week of evenings, and you never manage the copy. On the last night your reflection refuses to go back for her. Vey talks it round over tea, then says, "Now you know why I don't do this in public." You know a great deal more about faces.
 > right: Keep your own face, thanks
   rel vey +tiny
   charm +small
@@ -304,10 +303,10 @@ text: {Professor Marisol is in the lake, waist-deep, and waves at you as though 
 > right: Wave back from the jetty
   rel marisol -tiny
   say: {She waves again, unoffended, and goes under.|"Coward," she calls cheerfully. You are fine with that.|"Next time, then," she calls, and goes back to her book, held perfectly dry above the water.}
-> up[tide]: Raise a wave to say hello
+> up[flame]: Burn the chill off the shallows
   rel marisol +small
   arcana +tiny
-  say: {A small, neat wave rolls across the lake and taps her on the shoulder. She laughs so hard she sinks.|Your wave arrives slightly late and very large. Marisol rides it in to shore, delighted.|Your wave rolls in neatly and stops just short of her book. Marisol applauds with her free hand.}
+  say: {You hold a flame under the surface until the shallows steam. Marisol swims over to sit in your warm patch, delighted.|Your flame warms the water around your ankles and, briefly, a very surprised heron. Marisol laughs so hard she sinks.|The shallows steam around you like a bath. "Cheating," calls Marisol, and paddles over to share it.}
 
 @event marisol_storm
 title: Weather
@@ -336,6 +335,10 @@ text: There's a knock at your window during the worst storm of the year. Profess
   rel marisol -tiny
   mood -tiny
   say: She shrugs, cheerful, and runs off into the rain. You lie awake listening to the lake and wondering what you missed.
+> up[heartwood]: Root yourselves a shelter
+  arcana +small
+  rel marisol +medium
+  say: On the point you grow a tree out of bare rock, roots and all, and the two of you watch the storm from under it. Marisol is delighted and soaked. "That's not tidecalling," she shouts, "but I'll allow it!"
 
 @event marisol_trust
 title: The Last Line
@@ -348,9 +351,9 @@ weight: 20
 art: scroll
 tags: magic
 scene: A quiet lakeside at sunset, a professor handing a student a worn book of poems with a ribbon in it, the water perfectly still before them.
-text: Marisol presses her old book of water poems into your hands. "I never remember the last lines," she says. "You will. The tidecalling's in the margins; I wrote it there when I was your age. Read it on the shore. It works better on the shore."
+text: Marisol presses her old book of water poems into your hands. "I never remember the last lines," she says. "You will. My notes are in the margins; I wrote them there when I was your age. Read it on the shore. It works better on the shore."
 > left: Read it on the shore
-  learn_spell tide
+  arcana +medium
   rel marisol +small
   mood +small
   health -tiny

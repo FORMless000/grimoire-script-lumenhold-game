@@ -24,14 +24,15 @@ text: Flame is yours now. Professor Thorne gathers the year's new Flame casters 
   say: "For the student who doesn't ask," says Thorne, and empties it over the brazier of the boy beside you. Then he explains, for an hour, how every great fire he has known began.
 
 @event lesson_tide
+# retired by spells v2 (was "spell_level(tide) >= 1 and term"): tide is cut
 title: Waist-Deep at Dawn
 trigger: auto
-when: spell_level(tide) >= 1 and term
+when: false
 class: routine
 tone: light
 actor: marisol
 art: wave
-tags: magic study
+tags: magic study retired
 scene: A misty lake at dawn, a professor standing waist-deep in the water with arms raised, students hesitating on the pebbled shore.
 text: Professor Marisol teaches Tide where it lives: waist-deep in the lake at dawn. "Cold water," she says happily, "is good for everyone." She recites a poem about waves and stops before the last line, frowning. The lake waits for you.
 > left: Wade in and call a wave
@@ -73,7 +74,7 @@ slot: night
 art: star
 tags: magic study
 scene: A flat observatory roof at night, a student holding up a glass jar toward a sky crowded with stars, breath steaming.
-text: Starlight is taught after midnight on the observatory roof, where the astromancy lecturer hands you a glass jar and tells you to hold it up "until something falls in". The stars are very far away. The roof is very cold.
+text: Starlight is practised after midnight on the observatory roof, where your Starcalling tutor hands you a glass jar and tells you to hold it up "until something falls in". The stars are very far away. The roof is very cold.
 > left: Hold the jar until it fills
   lore +small
   health -tiny
@@ -105,7 +106,7 @@ text: Sister Amaranth teaches Mend with teacups. She drops one on the infirmary 
   say: She tells you, still rolling bandages, about the worst break she ever set. It was a student's; that student is a professor now. You go a little pale, and listen to every word.
 
 @event lesson_purify
-title: Make It Water
+title: Make It Stronger
 trigger: auto
 when: spell_level(purify) >= 1 and term
 class: routine
@@ -114,16 +115,16 @@ actor: amaranth
 art: cauldron
 tags: magic study
 scene: An alchemy lab bench with a cauldron of thick green liquid, a healer standing over a student who holds a wand above it.
-text: Purify is taught over a cauldron of something green that Sister Amaranth will not name. "Make it water," she says, and goes back to her own work. That is the whole of the instruction. The smell is a kind of instruction too.
-> left: Purify it layer by layer
+text: Sister Amaranth has heard that Pell taught you to Distil. She sets a cauldron of something green in front of you that she will not name. "Pell teaches it fast," she says. "I teach it so you're still standing afterwards. Make it stronger." Then she goes back to her own work.
+> left: Distil it drop by drop
   meet amaranth
   alchemy +small
   health -tiny
-  say: Slowly, layer by layer, the green turns grey, then cloudy, then clear. You breathe the fumes for two hours and get a headache for one. Amaranth tastes the result, nods and pours it into the kettle.
+  say: Drop by drop, the green comes down to one dark spoonful, and each drop costs you a little. You sit down halfway, as she said you would. Amaranth tastes the result, nods and puts it on the high shelf.
 > right: Ask what it was
   meet amaranth
   rel amaranth +small
-  say: "Last term's soup," she says. You decide not to believe her, then decide you do. She shows you the trick of it while you laugh, and you purify half a cup, badly.
+  say: "Last term's soup," she says. You decide not to believe her, then decide you do. She shows you where to stop before it takes too much from you, and you distil half a cup, badly.
 
 @event lesson_glamour
 title: Pick a Card
@@ -158,14 +159,15 @@ text: Professor Vey's glamour lesson is a card game. Each student glamours a pla
   say: You watch her eyes instead of the cards. She never looks at the faces, only at the hands holding them. You write that down, and she sees you write it, and smiles.
 
 @event lesson_mirror
+# retired by spells v2 (was "spell_level(mirror) >= 1 and term"): mirror is cut
 title: Gently
 trigger: auto
-when: spell_level(mirror) >= 1 and term
+when: false
 class: routine
 tone: warm
 actor: vey
 art: mirror
-tags: magic study
+tags: magic study retired
 scene: A dim classroom with the curtains drawn, a hand mirror on every desk, a professor standing well to one side of the glass.
 text: Professor Vey teaches Mirror in an empty classroom with the curtains drawn, which is not like her. "A mirror charm shows people themselves," she says. "Do it gently. Most people have not asked to see." She stands to one side of every glass in the room.
 > left: Practise on yourself first
@@ -205,14 +207,15 @@ text: Professor Brask teaches Haste on the flight field, with a stopwatch and a 
   say: You hold the stopwatch and watch the fast ones. They aren't running harder; they start the spell a step before they need it. Brask sees you notice, and hands you the next race.
 
 @event lesson_beast_speech
+# retired by spells v2 (was "spell_level(beast_speech) >= 1 and term"): beast_speech is cut
 title: The Mule Has Views
 trigger: auto
-when: spell_level(beast_speech) >= 1 and term
+when: false
 class: routine
 tone: warm
 actor: brask
 art: paw
-tags: magic study
+tags: magic study retired
 scene: A warm stall with straw on the floor, a student sitting cross-legged opposite a grey old mule who stares back without blinking.
 text: Beast-speech, says Professor Brask, is mostly listening. She sits you in a stall beside an old mule who has, she says, "views". You are to hear them. The mule looks at you as if you're the one being taught.
 > left: Sit with him all afternoon
@@ -235,7 +238,7 @@ tone: light
 art: shield
 tags: magic study
 scene: A dim room at the top of a tower, low lamps, a lecturer mid-throw with a piece of chalk while students hold up shimmering wards.
-text: At the top of the lecture tower, where the lamps burn dim on purpose, the umbral lecturer teaches Ward by throwing chalk. Hard, and without warning. "A ward that only works when you're ready," says the lecturer, "is a decoration."
+text: At the top of the lecture tower, where the lamps burn dim on purpose, the umbral lecturer drills first-years in their Ward by throwing chalk. Hard, and without warning. "A ward that only works when you're ready," says the lecturer, "is a decoration."
 > left: Hold the ward all hour
   guile +small
   mana -small
@@ -263,3 +266,295 @@ text: Shadowstep is taught in the dark. The umbral lecturer puts out the last di
 > right: Wait for your eyes to adjust
   lore +small
   say: You stand still until the dark has edges. The lecturer, somewhere, says that's cheating, and that cheating is half of umbral magic. You step only once, but you step exactly.
+
+# ---------------- Spells v2: practice for the new spells (one each, after you learn it) ----------------
+
+@event lesson_animate
+title: The Chair That Follows
+trigger: auto
+when: spell_level(animate) >= 1 and term
+class: routine
+tone: light
+art: spell_animate
+tags: magic study
+scene: A workshop corridor, a wooden chair trotting after a student like a dog, a teapot waddling behind it.
+text: The Artifice homework is to animate something and live with it for a day. You pick a chair, which follows you to every lecture. The teapot is the other option. It has opinions about being carried.
+> left: Live with the chair
+  alchemy +small
+  health -tiny
+  say: The chair follows you everywhere and offers itself whenever you stop, including on the stairs, at speed. By evening you have bruised shins and a very loyal chair.
+> right: Animate the teapot instead
+  arcana +small
+  mana -small
+  say: The teapot waddles after you all day, pouring when you sit. It takes more out of you than the chair would, but your friends have never been so well looked after.
+
+@event lesson_seal
+title: Only for the Addressee
+trigger: auto
+when: spell_level(seal) >= 1 and term
+class: routine
+tone: eerie
+art: spell_seal
+tags: magic study
+scene: A windowless room, a student pressing their thumb to a folded letter while a headmistress watches with her hands folded.
+text: Today's Hollow Studies exercise: seal a letter so that only the person it's addressed to can open it. The headmistress will try to open it first. "If I can," she says mildly, "you haven't."
+> left: Seal it against her
+  guile +small
+  mana -small
+  say: She tries the letter for a long minute with one finger, then hands it back unopened. "Better than I was at your age," she says, which doesn't sound like a compliment. You feel hollowed out till supper.
+> right: Ask how she'd break it
+  lore +small
+  mood -tiny
+  say: She shows you, kindly and very quickly, how she'd break yours. You leave the room knowing a great deal more about seals and rather less sure of your own.
+
+@event lesson_wildfire
+title: Longer Each Night
+trigger: auto
+when: spell_level(wildfire) >= 1 and term
+class: routine
+tone: tense
+actor: lyra
+art: spell_wildfire
+tags: magic duel
+scene: An empty duel hall at night, two students each holding a growing fire, one watching the other's with narrowed eyes.
+text: Lyra wants you in the duel hall after hours. "You let it go too early," she says, and lights her own. "Hold it. Longer each night. It will bite you; let it."
+> left: Hold it until it bites
+  arcana +small
+  health -tiny
+  say: You hold it until the heat is in your teeth and then a breath longer. When you let it go it runs to the rafters. Lyra looks at your blistered palm and says nothing, which is approval.
+> right: Ask her how she stands it
+  rel lyra +small
+  mood -tiny
+  say: She doesn't answer at first. Then she shows you her palms, scarred and old, and tells you about the first time, and her mother. You don't practise much. It's still the right night.
+
+@event lesson_heartwood
+title: A Tree by the Window
+trigger: auto
+when: spell_level(heartwood) >= 1 and term
+class: routine
+tone: warm
+actor: tobias
+art: spell_heartwood
+tags: magic nature
+scene: A dormitory courtyard at dusk, a young tree that wasn't there that morning, two students sitting under it looking pleased with themselves.
+text: Tobias wants you to grow a heartwood every evening for a week, "so your hands remember". Today he suggests the courtyard under your dormitory window, where nothing has grown in years.
+> left: Grow it properly, roots and all
+  vigor +small
+  health -tiny
+  say: It takes everything you've got and a blister. By dusk there's a young tree under your window, and your back aches like a harvest. Tobias says it's the best one he's seen, and apologises for saying so.
+> right: Sit under his instead
+  mood +small
+  rel tobias +tiny
+  say: You let him grow it and sit under it with him, talking about nothing. Your hands don't remember much. The rest of you does.
+
+@event lesson_omen
+title: The Spoon Will Fall
+trigger: auto
+when: spell_level(omen) >= 1 and term
+class: routine
+tone: eerie
+actor: seraphine
+art: spell_omen
+tags: magic study
+scene: A refectory table at breakfast, a pale student pointing at a spoon balanced on the edge of a bowl, a second student staring at it.
+text: At breakfast Seraphine says, without looking up, "Practise on small things. Spoons. Doors. The weather. Never people, not yet." Then she looks at you, quite clearly, for once.
+> left: Foretell small things all day
+  lore +small
+  mood -tiny
+  say: The spoon falls. The door sticks. It rains at four. By evening it unnerves you how well it works, and you catch yourself foretelling the soup.
+> right: Ask what "not yet" means
+  rel seraphine +small
+  say: "Later," she says, then, "I mean that exactly." She doesn't explain. She does pass you the salt before you've asked for it.
+
+@event lesson_sleight
+title: Pockets and Decks
+trigger: auto
+when: spell_level(sleight) >= 1 and term
+class: routine
+tone: light
+actor: corvin
+art: spell_sleight
+tags: magic
+scene: A dim corner of a common room, a grinning student fanning a deck of cards while another student palms a coin under the table.
+text: Corvin is teaching you to keep your hand in. "Decks are practice," he says, shuffling. "Pockets are performance." Bram is asleep in an armchair nearby, his whistle on a ribbon round his neck.
+> left: Practise on the deck
+  guile +small
+  mood -tiny
+  say: Two hours of coins and cards until your fingers cramp. It's dull, and by the end the coin vanishes so cleanly even Corvin blinks. "Saint," he says, "with very quick hands."
+> right: Lift Bram's whistle and return it
+  guile +medium
+  alignment -tiny
+  say: The whistle comes off its ribbon without a sound and goes back on it the same way. Bram snores through all of it. Corvin is delighted and slightly worried about you.
+
+@event lesson_contraption
+title: The Breakfast Engine
+trigger: auto
+when: spell_level(contraption) >= 1 and term
+class: routine
+tone: light
+actor: mir
+art: spell_contraption
+tags: magic
+scene: A breakfast table where a clattering machine made of a toast rack, a spoon and a teapot is buttering toast at alarming speed.
+text: Mir slides a breakfast tray across to you. "Practice! Make it do breakfast. Toast, butter, tea. It's the hardest machine there is, probably." Half the refectory has already turned to watch.
+> left: Build the breakfast engine
+  alchemy +small
+  health -tiny
+  say: Your engine butters four slices, pours one cup and singes your eyebrow before it falls apart in a shower of crumbs. The refectory applauds. Mir writes something down, beaming.
+> right: Build it with Mir, slowly
+  rel mir +small
+  mood +tiny
+  say: You build it together, Mir explaining every joint. It makes one perfect slice of toast and then retires. Mir says it's the best machine of the year, probably.
+
+@event lesson_hoarfrost
+title: Putting Out Fires
+trigger: auto
+when: spell_level(hoarfrost) >= 1 and term
+class: routine
+tone: light
+actor: kael
+art: spell_hoarfrost
+tags: magic duel
+scene: A duel hall where one student's flame is frosting over and going out, its caster glaring, a quiet student standing nearby.
+text: "It's for putting fires out," Kael says again, and nods across the duel hall to where Lyra is practising, very loudly, with a very large flame. He waits to see whether you'll take the hint.
+> left: Put out Lyra's flame
+  arcana +small
+  rel lyra -tiny
+  say: Your frost meets her flame and they cancel with a hiss and a cloud of steam. Lyra's face, when it clears, is magnificent. Kael makes a sound you think is a laugh.
+> right: Practise on the braziers instead
+  arcana +tiny
+  rel kael +tiny
+  say: You frost the braziers one by one. It's useful, and dull, and Kael stays with you for all of it without saying anything. You suspect that was the point.
+
+@event lesson_candour
+title: Questions People Want to Answer
+trigger: auto
+when: spell_level(candour) >= 1 and term
+class: routine
+tone: warm
+actor: nessa
+art: spell_candour
+tags: magic social
+scene: A busy refectory, a bossy editor pointing out students at random tables to another student holding a notebook.
+text: Nessa hands you a notebook in the refectory. "Three people, three true answers, by the end of lunch," she says. "Ask the question they want to answer. Use the spell only when you have to."
+> left: Use the spell on all three
+  charm +small
+  mood -tiny
+  say: Three truths by the pudding course, and one of them is about you, and not kind. Nessa reads your notes and says, "Now you know why I don't use it much."
+> right: Ask good questions instead
+  rel nessa +small
+  charm +tiny
+  say: You only manage two truths without the spell, but they're good ones, and nobody minded telling you. Nessa says that's the better trick, and that she won't print either.
+
+@event lesson_brace
+title: Planted
+trigger: auto
+when: spell_level(brace) >= 1 and term
+class: routine
+tone: light
+art: spell_brace
+tags: magic duel
+scene: A duel hall's practice corner, an eyepatched dummy firing weak hexes at a student who stands planted and unmoving.
+text: The eyepatched dummy is empty now, but it still throws a hex or two out of habit. The Circle uses it to practise bracing. Today the seniors are taking bets on how long you'll stand.
+> left: Stand until it gives up
+  vigor +small
+  health -tiny
+  say: You stand there for an hour while the dummy throws everything it has left. The seniors pay out to whoever bet longest. Your shins are a mess and you are unmovable.
+> right: Coach the first-years instead
+  charm +small
+  mood -tiny
+  say: You stand behind a row of first-years and fix their feet, one by one, while they get hexed. They're grateful. You're bored. The dummy throws one at you on the way out, out of spite.
+
+@event lesson_quickquill
+title: Lecture Notes
+trigger: auto
+when: spell_level(quickquill) >= 1 and term
+class: routine
+tone: light
+art: spell_quickquill
+tags: magic study
+scene: A lecture hall, a quill writing busily by itself in a notebook while its owner sits back with folded arms, the lecturer squinting at them.
+text: Your quill wants to take your lecture notes for you. It writes everything down, word for word, faster than the lecturer can talk. It also writes what it thinks of the lecturer, in the margins.
+> left: Let it take the notes
+  study +small
+  mood -tiny
+  say: You have perfect notes, every word, and a margin full of the quill's views on the lecturer's waistcoat. You spend the evening inking them out before anyone sees.
+> right: Make it take only what you say
+  guile +small
+  mana -tiny
+  say: It sulks, and then takes down exactly what you tell it, no more. It's work keeping it honest. You come out with half the notes and the full trust of your quill.
+
+@event lesson_bramble
+title: A Hedge on Demand
+trigger: auto
+when: spell_level(bramble) >= 1 and term
+class: routine
+tone: light
+art: spell_bramble
+tags: magic nature
+scene: Old Maud's cottage garden, a groundskeeper pointing at a gap in her fence while a student coaxes a thorny hedge up out of the ground to fill it.
+text: Old Maud has heard about your hedge. "There's a gap in my fence the rabbits use, dearie," she says. "Grow me one there. Thorns on the outside, mind." The rabbits are watching from the cabbages.
+> left: Grow it thorns and all
+  alchemy +small
+  health -tiny
+  say: The hedge comes up thick and thorny, and takes a strip off your knuckles on the way. Maud inspects it and says it'll do. The rabbits look betrayed.
+> right: Grow it gently, for the cabbages
+  rel maud +small
+  mood +tiny
+  say: You grow it soft and plant a row of cabbages beyond it for the rabbits. Maud laughs until she has to sit down. "You'll understand that in two weeks," she says.
+
+@event lesson_index
+title: The Right Page
+trigger: auto
+when: spell_level(index) >= 1 and term
+class: routine
+tone: light
+art: spell_index
+tags: magic study
+scene: A library table piled with heavy books, every one falling open at a different marked page as a student touches it, a cat watching from the top of the pile.
+text: Every book you touch falls open at the page you need, now. The trouble is the library knows it, and books are leaving their shelves to come and find you. Footnote is sitting on the biggest.
+> left: Read every page they offer
+  lore +small
+  mood -tiny
+  say: You read every page that offers itself until the lamps go out. You learn a great deal, most of it useful, and none of it what you came in for.
+> right: Find one thing for your exams
+  study +small
+  say: You ask for one thing, firmly. Twelve books bring it. You take your page and leave the others, who sulk on the table until a clerk shelves them.
+
+@event lesson_rapport
+title: A Room That Was Turning
+trigger: auto
+when: spell_level(rapport) >= 1 and term
+class: routine
+tone: light
+art: spell_rapport
+tags: magic social
+scene: A refectory at supper where two tables are on the edge of an argument, a student stepping between them with a raised mug and a grin.
+text: Two tables in the refectory are on the edge of a food fight, and every head is turning. It's the Newt all over again, with worse gravy.
+> left: Step in and turn it
+  renown +small
+  mood -tiny
+  say: One joke about the gravy, at exactly the right moment, and both tables laugh instead of throwing it. The prefects look relieved and slightly suspicious. Your heart doesn't slow down until bed.
+> right: Let it happen
+  charm +tiny
+  mood +small
+  say: You let it go, and the food fight is magnificent. You watch from under the table, laughing. Nobody remembers it was nearly stopped.
+
+@event lesson_tailwind
+title: Never Stop
+trigger: auto
+when: spell_level(tailwind) >= 1 and term
+class: routine
+tone: light
+art: spell_tailwind
+tags: magic
+scene: A student on a broom skimming low over a lake at tremendous speed, a wake of spray behind them and a fisherman waving from a boat.
+text: The fisherman's rule for the wind is "never stop". You take the long way round the lake on your free afternoon to practise it, and the wind gets behind you as soon as you're off the jetty.
+> left: Never stop
+  vigor +small
+  health -tiny
+  say: You go round the lake three times without stopping, faster each lap, until your hands are numb on the handle. The fisherman waves every lap now.
+> right: Land and talk to him
+  mood +small
+  charm +tiny
+  say: You land by his boat and tell him about the storm run. He listens, nods, and says, "Never stop," again, and hands you a fish to take home.

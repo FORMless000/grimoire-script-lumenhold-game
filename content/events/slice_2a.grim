@@ -3,32 +3,32 @@
 #  construct of the new event format — classes and tones, size
 #  tiers and presets, challenges with partial results and `vs`,
 #  spells and the swipe-up option, inline text variation, facts,
-#  memories and relations between characters — and teach two
-#  spells, Ward and Flame.
+#  memories and relations between characters. Since spells v2
+#  only the safety talk teaches a spell (Ward); Flame is Evocation's.
 # ============================================================
 
 @event slice_ward_lesson
-title: The First Ward
+# Spells v2: the orientation safety talk (docs/spells-v2-list.md §C, Ward). Every first-year learns Ward in the first
+# week, whichever side they take; the id is the old Thorne lesson's.
+title: The Safety Talk
 class: milestone
 tone: warm
-actor: thorne
-when: met(thorne) and turn >= 3 and spell_level(ward) == 0
-weight: 24
+trigger: auto
+when: spell_level(ward) == 0
 art: shield
 tags: class study magic
-scene: An office lit by one lamp, an old professor holding a pale shell of light between his palms like a soap bubble.
-text: Professor Thorne holds up a hand and the lamplight bends around it into a pale shell. "A ward," he says. "{~It stops one blow.|One blow. That's all it ever stops.} Learn it properly or not at all."
-> left: Practise until it holds
-  grind arcana
+scene: The Great Hall in the first week of term, rows of first-years on benches holding up wobbling pale shells, a healer walking the aisle with a roll of bandages.
+text: First week, the Great Hall: the safety talk. Sister Amaranth gives it while re-bandaging a prefect. "You will be hexed," she says, "by accident and on purpose. One spell before any other: a ward. It stops one blow." She looks up. "Practise in pairs. Aim low."
+> left: Pair up and take the hexes
   learn_spell ward
-  rel thorne +small
-  memory: confided thorne
-  say: By midnight your shell holds for a full breath. Thorne says "Hm," which from him is a standing ovation.
-> right: Ask about the theory first
+  arcana +small
+  health -tiny
+  say: Your partner's practice hex stings your knuckles twice before your shell holds. The third one splashes off it like rain off glass. Amaranth, passing, says "Keep doing that," and keeps walking.
+> right: Copy her notes and practise alone
+  learn_spell ward
   lore +small
   mood -tiny
-  rel thorne +tiny
-  say: He talks for an hour about lattices and intent. You understand perhaps a third of it. "Come back when the third is a half," he says.
+  say: You take down every word and practise in your room that night. The shell comes on the eleventh try, lopsided, while your roommate watches. It holds, which is the part that counts.
 
 @event slice_candle_flame
 title: Borrowed Fire
@@ -42,7 +42,7 @@ tags: class magic rival
 scene: A crimson-haired student balancing a flame on one fingertip while another student squints at a sputtering candle.
 text: Lyra watches you fail to light a candle for the third time. "You're asking it," she says. "Fire doesn't want to be asked. {rel(lyra) >= 12: Here — watch my hand.|Watch, if you can keep up.}"
 > left: Watch her hand
-  learn_spell flame
+  arcana +small
   rel lyra +small
   spark lyra +tiny
   learn lyra.prodigy
@@ -50,11 +50,11 @@ text: Lyra watches you fail to light a candle for the third time. "You're asking
 > right: Challenge her to teach you properly
   challenge duel vs lyra.arcana:
     win:
-      learn_spell flame
+      arcana +small
       rel lyra +medium
       say: You hold your own long enough that she stops and actually explains. "Fine," she says. "You'll do."
     partial:
-      learn_spell flame
+      arcana +tiny
       health -small
       say: She wins, and you hit the floor hard enough to feel it tomorrow, but she shows you the trick on the way out, as if it were nothing.
     lose:

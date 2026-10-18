@@ -214,3 +214,55 @@ kind: lead
 name: The championship
 text: You made the team. The championship against Thornwick is flown at the flight field later in the year.
 followed: seen(sky_championship) > 0
+
+# Spells v2 club and job chains (docs/spells-v2-list.md §G; content/events/club_spell_chains.grim): each start card
+# leaves a lead, followed once the spell is learned.
+
+@clue lead_brace
+thread: The captain's charm
+kind: lead
+name: The dummy that hexes back
+text: An old duelling captain's charm is sewn into the practice dummy, and it throws hexes back. Read the captain's notes, stand Bram's barrage, drill your footwork: then hold firm inside the circle while it empties.
+followed: spell_level(brace) >= 1
+
+@clue lead_quickquill
+thread: The quill that talks back
+kind: lead
+name: A quill of your own
+text: A spare quill from the Ledger's drying line finishes your sentences, and then invents them. Teach it, give it proper ink and sit a deadline night with it, before the interview where everyone denies everything.
+followed: spell_level(quickquill) >= 1
+
+@clue lead_bramble
+thread: The seed in your pocket
+kind: lead
+name: A seed that answers back
+text: A seed from the Verdant Circle's far bed sprouted in your pocket. Plant it, see it through a cold snap, and quiet the mandrakes around it before the night it bolts.
+followed: spell_level(bramble) >= 1
+
+@clue lead_index
+thread: Footnote's drawer
+kind: lead
+name: The drawer Footnote guards
+text: Footnote sits on one catalogue drawer in the library and won't move. Under him is the card for a book eleven years overdue, somewhere on shelves that wander.
+followed: spell_level(index) >= 1
+
+@clue lead_rapport
+thread: Two taps on the bar
+kind: lead
+name: How the landlady does it
+text: The Newt's landlady taps the bar twice and a fight turns into a laugh. Learn the regulars' stories, stand them a round and work a double shift, and one festival night the room will be yours to hold.
+followed: spell_level(rapport) >= 1
+
+@clue lead_distil
+thread: Pell's oldest drawer
+kind: lead
+name: A draught of your own strength
+text: Pell's oldest drawer holds a recipe for a draught "of your own strength". Count drops with Pell, buy moonwort, try the daughters' shortcut, and then brew it.
+followed: spell_level(purify) >= 1
+
+@clue lead_tailwind
+thread: The jar of wind
+kind: lead
+name: Wind in a jar
+text: A jar of wind sits on the courier loft's dead-letter shelf, and someone once flew with it. Find out who, race the gulls and fix the broom that pulls left, then fly a storm delivery across the lake.
+followed: spell_level(tailwind) >= 1
