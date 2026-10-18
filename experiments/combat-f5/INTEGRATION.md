@@ -1,4 +1,4 @@
-# Bringing the combat minigame into Lumenhold (design, F5.7)
+# Bringing the combat minigame into Lumenhold (design, F5.9)
 
 How a card's fight becomes a played minigame and how it feeds back into the game. The numbers live in `COMBAT_TUNING` (`setup/roster.mjs`) and `content/core/balance.grim`. This doc gives the shape and the reasons, and the measured effects as of F5.4–F5.7 (2026-10-17). The step-by-step plan for implementing it is `HANDOFF.md`.
 
@@ -15,10 +15,10 @@ The minigame replaces that roll **for the player's own fights**. The card's thre
 
 | Main game | Fight |
 |---|---|
-| Six skills | the kit's skills, unchanged: every skill scales its own spells by 1% a point (Strike follows Vigor at 1.4%), and the skills also set combat HP and Mana capacity |
+| Six skills | the kit's skills, unchanged: every skill scales its own spells (and Vigor Strike) by 2/3 + skill/150, ×1 at 50; the skills also set combat HP and Mana capacity |
 | Learned spells and their levels | the kit's spells and ranks (only spells with a combat effect) |
-| Skills (Arcana counted twice) | Mana capacity: 43 + 0.35 × (weighted skill − 50), at least 34 |
-| Health | combat max HP is 70, growing with skill past 40 (about 92 at level 80); Health sets how much of it you start with (below) |
+| Skills (Arcana counted twice) | Mana capacity: 43 × (2/3 + weighted skill/150): 34 at 20, 43 at 50, 53 at 80 |
+| Health | combat max HP is 70 × (0.8 + weighted skill/250), Vigor counted twice (62 at level 20, 79 at 80); Health sets how much of it you start with (below) |
 | Mana | ready Mana at the start, up to capacity |
 | Mood, Renown, Crowns, alignment | the fight's own resources, for the spells that move them |
 
@@ -72,7 +72,8 @@ For scale (`balance.grim`): medium is 10 Health, large 16 and huge 25, and a nig
 ## 4. Opponents
 
 - **Named characters** use their canon skills (`cast-stats.mjs`, from `content/world/cast.grim`) and fixed or growing levels (`NAMED_LOADOUTS`).
-- **Generic foes** use the nine class presets at a level set by the card: its difficulty rung mapped to a level near the player's expected skill for the month (the curve in `balance.grim`'s `dc_tiers`).
+- **Generic foes** use the ten class presets (pools by archetype) or special loadouts at a level set by the card: its rung mapped to a level near the player's expected skill for the month, level = E + 0.35 × (DC − E) + the odds word's shift (`foeLevel`, `setup/foes.mjs`). Every current card's foe, context and edits are in `EVENTS.md`.
+- **The AI** plays at the player's difficulty (Easy, Medium or Hard, `AI_PRESETS`) with the foe's persona (`PERSONAS`): see `EVENTS.md` §3.
 - Their Health and Mana are full unless the story says otherwise (`opponentCondition`).
 - Level matters: in the F5.5 depth-5 suite the higher side wins 76% at +5 levels, 87% at +10 and 100% at +20. A card's difficulty word should move the foe's level by a few points, not tens.
 
@@ -108,7 +109,7 @@ Every line names both sides with `{name}` (who acts) and `{foe}`.
 
 1. **Spells v2 in content.** The main game's `content/world/spells.grim` still has the old 12 spells. Migrate it to the v2 list (`docs/spells-v2-list.md` §K), with `grim migrate` for the ids saves reference, before fights can read learned spells.
 2. **Expected skills.** The main game's expected skill curve runs about 12 → 62 over the run. The F5.4 suite was tuned at levels 20–80. Below 20, Strike and spells fall to about 60–70% of base, so early fights run longer. Check a level-12 arm before release, and lift the pivot or the floor of the factor if fights there drag.
-3. **Mana in the main game** tops out at 40 + Arcana/2 (65 at Arcana 50). A fight holds less: 43 + 0.35 × (weighted skill − 50), at least 34 (43 at skill 50). A player is fit for Mana once they have the fight's capacity, and the fight readies only that much. Settlement charges only what the fight spent, so the rest of the pool is safe.
+3. **Mana in the main game** tops out at 40 + Arcana/2 (65 at Arcana 50). A fight holds less: 43 × (2/3 + weighted skill/150) (43 at skill 50). A player is fit for Mana once they have the fight's capacity, and the fight readies only that much. Settlement charges only what the fight spent, so the rest of the pool is safe.
 4. Wire the challenge resolution (opt-out, pacing), then the UI shell (the fight as an overlay over the card), then saves.
 5. Playtest with people. The simulated players are crude: they find gross imbalances, not fun.
 

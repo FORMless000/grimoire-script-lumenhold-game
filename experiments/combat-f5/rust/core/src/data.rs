@@ -33,6 +33,7 @@ struct RawSpell {
     immediate: Option<bool>,
     release: Option<Vec<f64>>,
     exposes: Option<bool>,
+    physical: Option<bool>,
 }
 
 #[derive(Deserialize)]
@@ -126,6 +127,8 @@ pub struct Spell {
     pub release: Option<Vec<f64>>,
     /// Casting it breaks your own Shadowstep (Mend: healing needs you still and in the open).
     pub exposes: bool,
+    /// A plain damage spell that lands like a Strike (Guard stops it, Ward halves it): creature attacks.
+    pub physical: bool,
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -213,6 +216,7 @@ fn load() -> Data {
             immediate: s.immediate.unwrap_or(true),
             release: s.release.clone(),
             exposes: s.exposes.unwrap_or(false),
+            physical: s.physical.unwrap_or(false),
         });
     }
     let spell_index: HashMap<String, usize> = spells.iter().enumerate().map(|(i, s)| (s.id.clone(), i)).collect();

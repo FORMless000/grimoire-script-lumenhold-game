@@ -40,7 +40,16 @@
     'title.continue': 'Continue · {info}',
     'title.saveInfo': '{name} — {month}, Year {year}',
     'title.howto_html': '<b>Swipe</b> each card left or right (or press ← / →) to choose. Some moments open a <b>menu</b> with more options. Keep your <b>Health, Mood, Gold and Standing</b> above zero for three years — 36 months — and see who you become. Glowing dots above a meter show what a choice will touch.',
-    'title.names': 'Wren, Ash, Rowan, Elowen, Fenn, Isla, Corin, Sable, Theo, Marlo, Juniper, Ezra',
+    // Name pools for the title screen's random name: by pronouns (`they` names suit anyone), and `world_*` pools drawn
+    // now and then (I18n.randomName). No first name of a named character or a word the content uses as a name.
+    'title.names.she': 'Elowen, Isla, Maren, Briony, Clemency, Delphine, Eira, Fenella, Greer, Hesper, Imogen, Iona, Linnea, Mae, Morwenna, Sabine, Philippa, Rosalind, Saoirse, Tegan, Wilhelmina, Yseult, Aveline, Beatrix, Cordelia, Edith, Esme, Flora, Gwendolyn, Hazel, Ivy, Lettice, Lilias, Mirabel, Nell, Opal, Petra, Rhiannon, Rosamund, Thea, Verity, Winifred, Agnes, Dulcie, Effie, Honor, Leda, Clover, Bettany, Sidony',
+    'title.names.he': 'Theo, Ezra, Alaric, Ambrose, Barnaby, Caspian, Cedric, Cormac, Crispin, Declan, Rupert, Emrys, Evander, Felix, Gideon, Godric, Hamish, Ignatius, Jasper, Lachlan, Lucan, Magnus, Malachy, Merrick, Oisin, Osric, Percival, Peregrine, Piers, Quentin, Rafferty, Roderick, Rufus, Silas, Tristan, Ulric, Valentine, Wystan, Augustin, Desmond, Fergus, Gareth, Leopold, Matthias, Niall, Anselm, Benedict, Hugo, Lorcan, Dorian',
+    'title.names.they': 'Wren, Ash, Rowan, Sable, Marlo, Juniper, Avery, Bryn, Ellis, Emery, Finch, Indigo, Jude, Kit, Linden, Morgan, Quinn, Robin, Sage, Shay, Sparrow, Tarn, Vale, Wynn, Arden, Blair, Briar, Cass, Darcy, Aubrey, Lark, Sorrel, Teagan, Rumer, Perry, Ainsley, Merritt, Remy, Tansy, Reese',
+    'title.names.world_she': 'Adaeze, Amaya, Anahí, Chiyo, Esi, Farida, Haeun, Imani, Itzel, Leilani, Mei, Mirela, Parisa, Priya, Saanvi, Sakura, Shirin, Sigrún, Solveig, Tala, Thandiwe, Yara, Zainab, Zarina, Ximena, Aigerim, Nilufar, Ngaio, Aroha, Malia',
+    'title.names.world_he': 'Arjun, Bao, Chidi, Dawit, Emeka, Haruto, Ilyas, Inti, Kwame, Kofi, Mateo, Nikolai, Oren, Rustam, Santiago, Tariq, Yusuf, Zoltan, Ruslan, Ikaika, Kaito, Anwar, Bayani, Matiu, Temir, Hemi, Bohdan, Farhan, Jun, Thabo',
+    'title.names.world_they': 'Akira, Hikaru, Rei, Yuki, Noor, Kalani, Tenzin, Ayodele, Nima, Dara, Lumi, Rumi, Sami, Amani, Chidera, Eun, Sasha, Ariya, Sefa, Ola',
+    'title.randomName': 'Random name',
+    'title.pronouns': 'Pronouns', 'title.pronoun.she': 'she/her', 'title.pronoun.he': 'he/him', 'title.pronoun.they': 'they/them',
     'title.defaultName': 'Wren',
 
     'top.people': 'Character & people',
@@ -442,6 +451,15 @@
     return s;
   }
   function lang() { return current.lang; }
+  // A random first name for the title screen, fitting the chosen pronouns: she/her and he/him draw their own pool, or
+  // now and then a they/them one; they/them only that. One time in five from the world pools. Never `avoid` (the last).
+  const NAME_SHARE = { world: 0.2, neutral: 0.25 };
+  function randomName(pronouns, rand = Math.random, avoid = null) {
+    const p = ['she', 'he'].includes(pronouns) ? pronouns : 'they';
+    const pool = (rand() < NAME_SHARE.world ? 'world_' : '') + (p !== 'they' && rand() < NAME_SHARE.neutral ? 'they' : p);
+    const names = t('title.names.' + pool).split(/\s*[,，、]\s*/).filter((n) => n && n !== avoid);
+    return names[Math.floor(rand() * names.length)] || t('title.defaultName');
+  }
 
-  return { UI_EN, hash, enc, dec, parseLang, loadLocale, visit, extract, applyContent, pronounTable, use, t, lang, FIELDS };
+  return { UI_EN, hash, enc, dec, parseLang, loadLocale, visit, extract, applyContent, pronounTable, use, t, lang, randomName, FIELDS };
 });

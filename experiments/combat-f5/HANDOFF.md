@@ -1,21 +1,21 @@
 # Handoff: putting the combat minigame into Lumenhold
 
-For the agent who wires `experiments/combat-f5/` into the main game. Read this, then `INTEGRATION.md` (the design: what goes in, what comes out, and why) and `web/rulebook.md` (the rules). `README.md` covers building, testing and balancing the minigame on its own.
+For the agent who wires `experiments/combat-f5/` into the main game. Read this, then `INTEGRATION.md` (the design: what goes in, what comes out, and why), `EVENTS.md` (every current combat card: its foe, context, level and edits) and `web/rulebook.md` (the rules). `README.md` covers building, testing and balancing the minigame on its own.
 
 ## Where things stand (2026-10-17)
 
-- **The minigame is canon as of `spells-v2 F5.8`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
+- **The minigame is canon as of `spells-v2 F5.9`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
   1. `node experiments/combat-f5/tools/build.mjs`
   2. `PORT=61096 node experiments/combat-f5/out/site/server.mjs`
 - **One implementation per function.**
   - The rules and the AI search are Rust (`rust/core`), compiled to WebAssembly for the browser (`web/core.mjs` is its JS face) and natively for simulations.
   - Spell data, kits and the campaign bridge are JS (`setup/`).
   - Never copy the rules into the main game; build from here.
-- **Balance as of F5.7,** from `tools/playtest.sh F57_D5 5`; the report is regenerated in `out/`, which is gitignored:
-  - Every class wins 38–58% at equal level (sd 6).
-  - The higher level wins 78/90/100% at +5/+10/+20.
-  - Fights last about 21 exchanges at levels 20–50 and 28 at levels 60–80; 24 of 504 end on points.
-  - Entering with no Health costs 17 points of win rate, and no Mana 10.
+- **Balance as of F5.9, at depth 4** (`node tools/suite.mjs F59 --depth 4 --seeds 2`; reports go to `out/`, which is gitignored). F5.9 has no depth-5 run yet; F5.8's depth-5 numbers (classes 42–60%, gaps 80/91/100%) are the last at that depth.
+  - Every class wins 42–61% at equal level (sd 5).
+  - The higher level wins 69/91/99% at +5/+10/+20.
+  - Fights last a median 14 exchanges at level 20, 23 at 50 and 27 at 80; 84 of 1,260 end on points.
+  - Entering with no Health costs about 17 points of win rate, and no Mana 10 (F5.5–F5.7 measurements).
 - **Already built for the main game:**
   - `setup/campaign.mjs`:
     - `fightOptions({player, opponent, context})` turns the player's state into a fight;
@@ -71,7 +71,8 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 - **Names for the fight text:** pass the player's name and the opponent's (a character's short name, or the card's description of a generic foe, e.g. "the hooded duellist") to `fighterNames` (`setup/flavor.mjs`).
 - **Opponents:**
   - `vs lyra.arcana` and similar name a character: use `NAMED_LOADOUTS` (canon skills from `setup/cast-stats.mjs`, a snapshot of `content/world/cast.grim`; refresh it with `setup/sync-loadout-stats.mjs` when the cast changes).
-  - A difficulty word (`adept-`, `apprentice+`) means a generic foe: pick a preset class by place or story (the nine in `setup/loadouts.mjs`), and set its level from the expected skill at that point of the run plus the rung (the ladder in `@balance dc_tiers`).
+  - A difficulty word (`adept-`, `apprentice+`) means a generic foe: `EVENTS` in `setup/foes.mjs` names it for every current card (a pool, an archetype or a special foe), and `foeLevel` sets its level from the rung. `node experiments/combat-f5/tools/event-coverage.mjs` checks that every combat card has a decision. Seven cards become feats instead (`EVENTS.md` §6).
+  - The AI: pass `ai: [null, {preset: 'easy'|'medium'|'hard'}]` (a player setting, default Medium); `createState` adds the foe's persona.
   - A few points of level are a big step (+10 levels wins 87%).
 - **Context:**
   - The stake depends on the context: `practice_duel`, `public_duel`, `real_conflict` or `rehearsal` (`CONTEXTS` in `setup/roster.mjs`, and the rebates in `INTEGRATION.md` §3).
@@ -123,6 +124,10 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 - **Simulated players are crude.** Human playtests are the judge.
 
 ## Known open issues
+
+- **F5.9's linear scaling shortened low-level fights** (14 exchanges at level 20, was 20) and weakened Brawler and Sailor at levels 20–30 (33–42%). Strike no longer scales faster than spells. See `EVENTS.md` §2 for levers.
+- **Named characters' strength is set by spell ranks more than stats** (`EVENTS.md` §5): Lyra isn't clearly ahead of her peers, and Thorne is too weak for his canon. Calibrate against the player's equivalent class level, which hasn't been measured yet.
+- **The Shadow stag** is even overall (classes 51%) but stronger at levels 20–40 than from 50.
 
 - **Shadowstep then Mend** is the most common two-action sequence in high-level fights, and it's the game's main comeback. Switches that end it are built in but off: `SPELLS.mend.exposes` and `COMBAT_TUNING.shadowstep.breakOnCast`. Turning them on removed the back-and-forth (`rulebook.md`, F5.5). If players find it dull, give the opponent an answer to it rather than removing it.
 - **Levels 20–30 vary most** (class sd ≈ 8–13). Which spell a class gets second matters more than its stats.

@@ -544,7 +544,7 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
                 attacks.push(Hit { spell: false, ..hit(side, k.strike, power) });
                 if bonus != 0.0 { attacks.push(Hit { spell: false, pierce_guard: true, ..hit(side, k.strike, bonus) }); }
             } else if let Some(sp) = spell_of(part) {
-                if d.spells[sp].damage.is_some() { let p = attack_power(enc, s, side, part); attacks.push(Hit { hot: sp == ids.flame, ..hit(side, part, p) }); }
+                if d.spells[sp].damage.is_some() { let p = attack_power(enc, s, side, part); attacks.push(Hit { hot: sp == ids.flame, spell: !d.spells[sp].physical, ..hit(side, part, p) }); }
             }
         }
         if has(s, side, Eff::Torment) && id != k.cancel && id != k.frozen && !shielded(s, side) {

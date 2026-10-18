@@ -118,6 +118,8 @@ pub fn describe(enc: &Encounter, s: &State, side: usize, a: Act) -> String {
         _ if sp == ids.compel => { let n = spell.duration.as_ref().map_or(2.0, |v| v[0]); if spell.immediate { format!("Replace their action with their last legal public action, now and for the next {} exchange{}. No history: cancel.", js_num(n), if n == 1.0 { "" } else { "s" }) } else { format!("For the next {}, their action is replaced with their last legal public action. No history: cancel.", if n == 1.0 { "exchange".to_string() } else { format!("{} exchanges", js_num(n)) }) } }
         _ if sp == ids.eclipse => "This exchange and the next, damage you actually take also gives you twice that in ready Mana, capped at capacity.".into(),
         _ if sp == ids.heartprice => "For the rest of the fight, spell Mana costs are paid as HP at 1 HP per 2 Mana (healing still costs Mana); no flux from HP payments.".into(),
+        // A plain damage spell (creature attacks and any later data-only spell): physical ones land like a Strike.
+        _ if spell.damage.is_some() => if spell.physical { format!("Deal {} physical damage before defenses. Guard stops it; Ward halves it.", ap(a)) } else { format!("Deal {} spell damage before defenses. Guard halves it; Ward stops it.", ap(a)) },
         _ => String::new(),
     };
     text + if spell.forbidden { " Forbidden: alignment −small each cast; witnessed casts are reported." } else { "" }

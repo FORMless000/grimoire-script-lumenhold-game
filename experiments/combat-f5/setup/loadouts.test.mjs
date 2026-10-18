@@ -3,8 +3,8 @@ import {LOADOUTS,NAMED_LOADOUTS,LOADOUT_SKILLS,COURSE_PICKS,generateLoadout,cour
 import {CAST_STATS,CAST_STATS_HASH} from './cast-stats.mjs';
 import {createState} from './setup.mjs';
 const peerSpells=['wildfire','heartwood','omen','sleight','contraption','hoarfrost','candour'];
-test('nine generic presets follow fixed level gates, course ranks, restrictions and skill seeds',()=>{
- assert.equal(Object.keys(LOADOUTS).length,9);assert.deepEqual([43,44,67,68].map(courseRank),[1,2,2,3]);
+test('ten generic presets follow fixed level gates, course ranks, restrictions and skill seeds',()=>{
+ assert.equal(Object.keys(LOADOUTS).length,10);assert.deepEqual([43,44,67,68].map(courseRank),[1,2,2,3]);
  for(const [name,def]of Object.entries(LOADOUTS)){
   assert.equal(def.offsets.reduce((a,b)=>a+b),0,name);
   for(let level=1;level<=100;level++){
@@ -20,7 +20,7 @@ test('nine generic presets follow fixed level gates, course ranks, restrictions 
    const forbidden=Object.keys(a.spells).filter(id=>SPELLS[id].group==='forbidden');
    assert.equal(forbidden.length,!def.underground||level<35?0:level<80?1:2);
    assert(!a.spells.toll);for(const id of peerSpells)assert(!a.spells[id]);
-   for(const [i,k]of LOADOUT_SKILLS.entries()){assert(Number.isInteger(a.skills[k])&&a.skills[k]>=1&&a.skills[k]<=100);assert(Math.abs(a.skills[k]-Math.max(1,Math.min(100,level+def.offsets[i])))<=2+level/20+.5);}
+   for(const [i,k]of LOADOUT_SKILLS.entries()){assert(Number.isInteger(a.skills[k])&&a.skills[k]>=1&&a.skills[k]<=100);assert(Math.abs(a.skills[k]-Math.max(1,Math.min(100,level*(1+def.offsets[i]/100))))<=level*.09+.5);}
    assert.equal(a.capacity,manaCapacity(a.skills));
    for(const [id,r]of Object.entries(a.spells))assert.equal(r,SPELLS[id].levels===3?courseRank(level):1);
   }

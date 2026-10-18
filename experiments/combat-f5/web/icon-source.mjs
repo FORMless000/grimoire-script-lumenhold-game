@@ -9,7 +9,8 @@ function readIcon(folder,asset){
  return `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${match[1]}</svg>`;
 }
 export function readSpellIcons(){
- return Object.fromEntries(Object.keys(SPELLS).map(id=>[id,readIcon('spell-icons',id==='purify'?'distil':id)]));
+ // Creature moves (group 'creature') have no art of their own; the UI shows a physical one with Strike's icon.
+ return Object.fromEntries(Object.keys(SPELLS).filter(id=>SPELLS[id].group!=='creature').map(id=>[id,readIcon('spell-icons',id==='purify'?'distil':id)]));
 }
 export function readActionIcons(){
  const ids=['strike','guard','reclaim','cast','concede',...Object.keys(SPELLS).filter(id=>SPELLS[id].channel).flatMap(id=>[id+'_hold',id+'_release'])];

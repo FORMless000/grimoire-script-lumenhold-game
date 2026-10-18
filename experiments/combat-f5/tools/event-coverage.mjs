@@ -1,0 +1,28 @@
+// Checks that every `challenge combat` / `challenge duel` in the main game's content has a decision in EVENTS
+// (setup/foes.mjs), that every decision still matches a card, and that every foe's loadout exists.
+//   node tools/event-coverage.mjs [--list]   (--list prints each card's decision)
+import {readFileSync,readdirSync,statSync} from 'node:fs';
+import {join} from 'node:path';
+import {EVENTS,FOES,POOLS,foeLoadouts,knownLoadout} from '../setup/foes.mjs';
+const root=new URL('../../../content',import.meta.url).pathname;
+const walk=d=>readdirSync(d).flatMap(f=>{const p=join(d,f);return statSync(p).isDirectory()?walk(p):p.endsWith('.grim')?[p]:[];});
+const found=[];
+for(const file of walk(root)){
+ let event=null,option=null;
+ readFileSync(file,'utf8').split('\n').forEach((line,i)=>{
+  const e=line.match(/^@event\s+(\S+)/);if(e){event=e[1];option=null;}else if(/^@/.test(line))event=null;
+  const o=line.match(/^>\s*([\w-]+)\s*:/);if(o)option=o[1];
+  const c=line.match(/^\s*challenge\s+(combat|duel)\b(.*)$/);
+  if(c&&event)found.push({key:event+'/'+option,kind:c[1],rest:c[2].trim().replace(/:$/,''),where:file.slice(root.length-7)+':'+(i+1)});
+ });
+}
+const problems=[];
+for(const f of found)if(!EVENTS[f.key])problems.push(`no decision for ${f.key} (${f.where})`);
+for(const k of Object.keys(EVENTS))if(!found.some(f=>f.key===k))problems.push(`decision ${k} matches no card`);
+for(const [k,v]of Object.entries(EVENTS))for(const foe of [v.play??[]].flat())if(!FOES[foe])problems.push(`${k}: unknown foe ${foe}`);
+for(const [k,f]of Object.entries(FOES))if(f.pool&&!POOLS[f.pool])problems.push(`foe ${k}: unknown pool ${f.pool}`);
+for(const l of new Set(foeLoadouts()))if(!knownLoadout(l))problems.push(`unknown loadout ${l}`);
+if(process.argv.includes('--list'))for(const f of found){const d=EVENTS[f.key]??{};console.log(`${f.key.padEnd(34)} ${f.kind.padEnd(6)} ${f.rest.padEnd(36)} ${d.convert?'convert → '+d.convert:'play '+[d.play].flat().join(' / ')}`);}
+const played=found.filter(f=>EVENTS[f.key]?.play).length;
+console.log(`${found.length} combat challenges on ${new Set(found.map(f=>f.key.split('/')[0])).size} cards: ${played} played, ${found.length-played} converted.`);
+if(problems.length){console.log(problems.join('\n'));process.exit(1);}

@@ -150,7 +150,8 @@ test('spells v2: every spell outside a pool has a live source; ids match the com
   const roster = path.join(ROOT, 'experiments/combat-f5/setup/roster.mjs');
   if (!fs.existsSync(roster)) return;
   const { SPELLS } = await import(roster);
-  assert.deepEqual(Object.keys(content.spells).sort(), Object.keys(SPELLS).sort());
+  // Creature-only spells (`group: creature`, for monsters in fights) are the minigame's own; content has the rest.
+  assert.deepEqual(Object.keys(content.spells).sort(), Object.keys(SPELLS).filter((id) => SPELLS[id].group !== 'creature').sort());
 });
 
 test('spells v2: a course\'s spell is taught in the month the level starts (track start: card)', () => {

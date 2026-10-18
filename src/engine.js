@@ -108,7 +108,7 @@
     newGame(opts = {}) {
       const seed = opts.seed != null && opts.seed !== '' ? (Number(opts.seed) | 0) : Math.floor(Math.random() * 2147483647);
       const s = this.s = {
-        version: SAVE_VERSION, seed, rng: seed, name: opts.name || 'Wren', turn: 0,
+        version: SAVE_VERSION, seed, rng: seed, name: opts.name || 'Wren', pronouns: opts.pronouns || 'they', turn: 0,
         vals: {}, flags: {}, states: {}, npcs: {}, seen: {}, last: {}, lastBy: {}, choices: {},
         queue: [], deck: [], cur: null, log: [], ended: null, pending: [], cardsThisMonth: 0,
         runId: opts.runId || newRunId(seed), hist: [], seq: 0,

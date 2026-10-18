@@ -1,6 +1,7 @@
 // Fight setup: config defaults and validation, kits from the roster, entry resources and max HP. Plain data in, plain state out;
 // the rules that play the fight live in the Rust core (web/core.mjs in the browser, rust/ natively).
-import {LOADOUTS,CONTEXTS,RESOURCES,COMBAT_TUNING,SPELLS,LOADOUT_SKILLS,generateLoadout,levelRng,manaCapacity} from './roster.mjs';
+import {LOADOUTS,CONTEXTS,RESOURCES,COMBAT_TUNING,SPELLS,LOADOUT_SKILLS,AI_PRESETS,generateLoadout,levelRng,manaCapacity} from './roster.mjs';
+import {personaOf} from './foes.mjs';
 const maps=n=>Object.fromEntries(RESOURCES.map(k=>[k,n]));
 // The tuning's skill factor: the average over keys of 1 + perPoint × (skill − pivot).
 export const skillFactor=(skills,keys,perPoint,pivot=COMBAT_TUNING.skill.pivot)=>keys.reduce((n,k)=>n+1+perPoint*(skills[k]-pivot),0)/keys.length;
@@ -18,12 +19,23 @@ export function customKit({skills,spells,level}){
  const lv=level??Math.round(Math.max(...LOADOUT_SKILLS.map(k=>skills[k])));
  return {loadout:'custom',level:lv,progression:'learned',skills:{...skills},spells:{...spells},capacity:manaCapacity(skills)};
 }
+// A side's AI settings: {preset} expands to AI_PRESETS[preset] (the side's own keys win); persona true takes the loadout's
+// persona (PERSONAS), an object is the persona itself; the persona joins `tilt`. Hard's persona:false drops it.
+export function expandAI(ai,loadout){
+ if(!ai)return ai;
+ const {preset,persona,...own}=ai,base=preset?AI_PRESETS[preset]:{};
+ if(preset&&!base)throw Error('Unknown AI preset '+preset);
+ const {persona:presetPersona,...settings}=base??{},use=persona??presetPersona;
+ const tilt=use===false||use===undefined?own.tilt:{...(use===true?personaOf(loadout):use),...own.tilt};
+ return {...settings,...own,...(tilt&&Object.keys(tilt).length?{tilt}:{}),...(preset?{preset}:{})};
+}
 export function createState(options={}){
  const config={mode:'combat',playerLoadout:'Duellist',opponentLoadout:options.playerLoadout??'Duellist',playerYear:1,opponentYear:options.playerYear??1,playerIlseTaken:false,opponentIlseTaken:options.playerIlseTaken??false,playerLevel:50,opponentLevel:options.playerLevel??50,
   spellAccess:'kit',resourceBudget:'standard',manaCostScale:1,combatScale:1,damageMultiplier:1,encounterSeed:options.opponentLevel??options.playerLevel??50,firstLeader:1,healthModel:'direct',context:'practice_duel',observers:false,...options};
  if(!Number.isInteger(config.encounterSeed)||config.encounterSeed<0||config.encounterSeed>0xffffffff)throw Error('Encounter seed must be an integer from 0 to 4294967295');
  const enemy=config.opponentLoadout==='random'?Object.keys(LOADOUTS)[Math.floor(levelRng(config.encounterSeed)()*Object.keys(LOADOUTS).length)]:config.opponentLoadout;
  config.resolvedOpponentLoadout=enemy;
+ if(Array.isArray(config.ai))config.ai=config.ai.map((a,side)=>expandAI(a,side?enemy:config.playerLoadout));
  if(config.mode!=='combat'||!['direct','offset'].includes(config.healthModel)||!['standard','depleted'].includes(config.resourceBudget)||![0,1].includes(config.firstLeader)||!CONTEXTS[config.context]||typeof config.observers!=='boolean')throw Error('Invalid combat setup');
  if(!Number.isFinite(config.manaCostScale)||config.manaCostScale<=0||!Number.isFinite(config.combatScale)||config.combatScale<=0||!Number.isFinite(config.damageMultiplier)||config.damageMultiplier<=0)throw Error('Positive scales required');
  const rebates={...CONTEXTS[config.context],...options.rebates,crowns:0,alignment:0};
@@ -40,8 +52,11 @@ export function createState(options={}){
   if(maxHP<=0)throw Error('Positive entry HP required');
   // A worn or drained side starts below full (playerCondition / opponentCondition).
   const condition=side?options.opponentCondition:options.playerCondition,start=combatStart(condition);
-  const hp=condition?Math.max(1,Math.round(maxHP*start.hp)):maxHP;
+  const story=side?options.opponentStart:options.playerStart;   // the story's own handicap ({hp, mana} shares, no floors)
+  let hp=condition?Math.max(1,Math.round(maxHP*start.hp)):maxHP;
   if(condition)entry.mana=Math.min(entry.mana,Math.round(kit.capacity*start.mana));
+  if(story?.hp!==undefined)hp=Math.max(1,Math.round(hp*story.hp));
+  if(story?.mana!==undefined)entry.mana=Math.round(entry.mana*story.mana);
   return {kit,entry,resources:{...entry},spent:maps(0),restored:maps(0),hp,maxHP,startHP:hp,flux:0,effects:{},channel:null,constructs:[],omens:[],lastAction:null,rimeReady:false,rimeUsed:false,freezeUntil:0,pendingRenown:0,glamourDone:false,guardRound:0};
  });
  config.resolvedPlayerLevel=actors[0].kit.level;config.resolvedOpponentLevel=actors[1].kit.level;

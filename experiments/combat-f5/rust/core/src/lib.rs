@@ -10,7 +10,7 @@ use data::{data, Act};
 use serde_json::{json, Value};
 use state::*;
 
-pub const RULES_VERSION: &str = "spells-v2 F5.8 · 2026-10-17";
+pub const RULES_VERSION: &str = "spells-v2 F5.9 · 2026-10-17";
 
 /// A public fight: static encounter, dynamic state, and the public-only log/settlement.
 pub struct Fight { pub enc: Encounter, pub s: State, pub public: Public, template: Value }

@@ -1,6 +1,6 @@
 # Combat: spell redesign v2 (F5)
 
-## F5 rule changes (spells-v2 F5.8 · 2026-10-17; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5–F5.8 its follow-ups, all below)
+## F5 rule changes (spells-v2 F5.9 · 2026-10-17; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5–F5.9 its follow-ups, all below)
 
 These override anything below that disagrees.
 
@@ -18,11 +18,11 @@ These override anything below that disagrees.
 
 **Extraction** moves up to 9 of their ready Mana into your flux, and your Mana plus flux can't pass capacity.
 
-**Stats (F5.4: skills drive progression; numbers in `COMBAT_TUNING`, `setup/roster.mjs`):**
-- **Skill factor:** every amount (damage, healing, banks) × 1 + **1% × (skill − 50)**, averaged over the spell's skills: 0.7 at skill 20, 1.3 at 80. Since F5.7 every skill scales its own spells alike. Arcana, Vigor and Alchemy matter more only because more spells use them, and because Vigor and Arcana also feed HP and Mana.
-- **Strike:** 9 base, scaling with Vigor at **1.4% a point** (about 5 at Vigor 20, 13 at 80).
-- **Max HP (F5.7):** 70 up to skill 40, then +0.8% a point of the skills, with Vigor counted twice: about 76 at level 50 and 92–95 at level 80. Low-Vigor classes are barely behind. Late fights run longer (median 28 exchanges at level 80, against 20 at level 20) without steeper level gaps.
-- **Mana capacity (F5.7):** 43 + 0.35 × (weighted skill − 50), Arcana counted twice, never below 34: 34 at level 20, 43 at 50, about 54 at 80.
+**Stats (F5.9: one linear rule, ×1 at skill 50; numbers in `COMBAT_TUNING`, `setup/roster.mjs`):**
+- **Skill factor:** every amount (damage, healing, banks) × **2/3 + skill/150**, averaged over the spell's skills: 0.8 at skill 20, 1 at 50, 1.2 at 80, and double from skill 0 to 100. Every skill scales its own spells alike. Arcana, Vigor and Alchemy matter more only because more spells use them, and because Vigor and Arcana also feed HP and Mana.
+- **Strike:** 9 base, scaling with Vigor the same way (about 7 at Vigor 20, 11 at 80).
+- **Max HP:** 70 × (0.8 + skill/250) of the skills, with Vigor counted twice: about 62 at level 20, 70 at 50 and 78 at 80. A gentler slope, so low-Vigor classes aren't squishy.
+- **Mana capacity:** 43 × (2/3 + skill/150), Arcana counted twice: 34 at level 20, 43 at 50, about 52 at 80.
 - **Condition on entering** (campaign fights): you start with HP = max × (0.9 + 0.1 × min(1, Health / 70)) and ready Mana up to capacity × (0.9 + 0.1 × min(1, Mana / capacity)). Fit means Health 70+ and full Mana; entering with nothing costs you a tenth of each.
 
 **F5.4 spell changes:** Flame 9/9/8 Mana; Mend 9/9/8; Foresight 7/7/6; Haste 5 Mana, 3/3/4 exchanges, three-action bundles at rank 3; Shadowstep 12 Mana at every rank, 1/2/2 exchanges; Starlight 9; Distil costs 14 HP; Tailwind 5 Mana and +4/+8/+12; Reflect 8; Lodestar 4; Extraction 10.
@@ -63,6 +63,14 @@ These override anything below that disagrees.
 - Brawler's offsets are −4/−8/−6/2/11/5 and Prefect's 5/3/−4/−4/4/−4.
 - **F5.8:** Scholar's offsets are 5/7/1/−2/−4/−7, a little less frail.
 - Tried and rejected: HP scaling around skill 50 (it shortened low-level fights from 20 to 14 exchanges and steepened level gaps to 87/94% at +5/+10).
+
+**F5.9, scaling, opponents and the AI** (plan for the main game's cards: `EVENTS.md`):
+- **One scaling rule:** spells, Strike, HP and Mana capacity are all linear and ×1 at skill 50 (see Stats). It replaces F5.7's HP pivot at 40 and Strike's faster 1.4%. The cost: level-20 fights run a median 14 exchanges (was 20), and Brawler and Sailor dip at levels 20–30.
+- **Class offsets are percentages of the level** (twice the old fixed points, which equal them at level 50), and so is the ±9% jitter. A class keeps its shape at every level, and the class spread at levels 20–30 fell from sd 11 to 4 on its own.
+- **Sailor:** a new Vigor-led class with Charm second, Tailwind and Brace (barge crews, the ring's sailor).
+- **Special foes** (`SPECIAL_LOADOUTS`): a fixed kit and creature-only moves. The **Shadow stag** has **Gore**: 6 Mana, 15 damage, **physical**: it hits like a Strike, so Guard stops it, Ward halves it and Reflect can't turn it. It also has Brace at 15, Shadowstep at 30 and Tailwind at 45. When it loses, it steps aside rather than falls.
+- **`ring_bout` context:** 65% Health rebate, 50% Renown.
+- **AI personas and difficulty:** a persona adds points to favoured actions. `slack` picks at random among moves within that many points of the best, and `maxRegret` caps how bad a pick may be. Presets: **Easy** (slack 24, persona ×1.5) wins 7% against the optimal AI, **Medium** (slack 10, persona) 26%, and **Hard** (the best move) 50%.
 
 **Kits:** Glamour, Rapport, Sleight, Index and Quickquill are out of combat kits (no combat effect). Scholar's extras are Starlight and Seal; Illusionist's are Reflect and Rapport.
 
@@ -155,7 +163,7 @@ Basics and all learned spells share one icon grid, including explicit zero-Mana 
 
 `docs/spells-v2-loadouts.md` supplies nine generic loadouts and 22 named-character loadouts. “Loadout” is used in controls, `LOADOUTS` / `NAMED_LOADOUTS`, `generateLoadout`, `playerLoadout` / `opponentLoadout`, generated-kit identifiers and exported records. Old result snapshots keep their original schema.
 
-Generic skills use `levelRng(L + 1000 × salt)`, six independent offsets and uniform jitter ±(2 + L/20), rounded/clamped to 1–100. Mana capacity remains floor(40 + Arcana/2).
+Generic skills use `levelRng(L + 1000 × salt)`, six independent offsets (each a % of L since F5.9) and uniform jitter ±9% of L, rounded/clamped to 1–100. Mana capacity remains floor(40 + Arcana/2).
 
 **Spell gains have no rolls.** Preferences rank choices by descending weight, with table order breaking ties; hidden extras win ties against club/job extras once eligible. Ward unlocks at 1. Flame unlocks at max(1, ceil(25 × (1 − flameBase))), always by 25. Generic course slots unlock at 1/15/40/65; the starter comes from Foresight/Mend/Glamour, later slots use remaining preferences. Course ranks rise at 44/68. Zero-weight spells never fill a slot.
 
@@ -167,7 +175,7 @@ The bench exposes named peers' study year (1–4) and Ilse's `ilse_taken` fixtur
 
 **Provisional details:** the man in grey has no NPC stat block, so his fixture uses all six skills at L and exports `provisionalSkills: true`. Faculty “Rest” lists have no numeric weights: listed choices use equal weight 1; unspecified choices have zero weight. These are fixture assumptions, not new canon. Mir's proposed two-construct synergy is not part of this loadout migration; combat retains the agreed construct rules above.
 
-Opponent **Random loadout** chooses uniformly among the nine generic loadouts. `encounterSeed` selects the loadout independently of its deterministic level/preset kit and AI randomness. Browser Begin generates a fresh seed when blank; explicit seeds and Replay reproduce it. Exports record the selected loadout, actual level, study year, flags, skills and generation seed. All-spells stress access deliberately grants the full roster regardless of restrictions on normal generated kits.
+Opponent **Random loadout** chooses uniformly among the ten generic loadouts. `encounterSeed` selects the loadout independently of its deterministic level/preset kit and AI randomness. Browser Begin generates a fresh seed when blank; explicit seeds and Replay reproduce it. Exports record the selected loadout, actual level, study year, flags, skills and generation seed. All-spells stress access deliberately grants the full roster regardless of restrictions on normal generated kits.
 
 ## AI and testing
 

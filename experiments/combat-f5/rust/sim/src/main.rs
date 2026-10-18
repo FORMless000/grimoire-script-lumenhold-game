@@ -78,6 +78,7 @@ fn play(case: &Value) -> Value {
     let search = case.get("search").cloned().unwrap_or(json!({}));
     let mut acts = [serde_json::Map::new(), serde_json::Map::new()];
     let (mut depth, mut count, mut nodes) = ([0.0f64; 2], [0u32; 2], [0u64; 2]);
+    let (mut degraded, mut regrets) = ([0u32; 2], [Vec::new(), Vec::new()]);
     let trace = case.get("trace").and_then(|x| x.as_bool()).unwrap_or(false);
     let (mut history, mut stats) = (Vec::new(), Vec::new());
     while f.s.result.is_none() && f.s.round <= max_rounds {
@@ -85,6 +86,7 @@ fn play(case: &Value) -> Value {
         let d = match ai::choose(&f.enc, &f.s, &search, &mut ctx[side], &now) { Ok(d) => d, Err(e) => return json!({"error": e, "case": case["meta"]}) };
         depth[side] += d["completedDepth"].as_f64().unwrap(); count[side] += 1;
         nodes[side] += d["totalNodes"].as_u64().unwrap();
+        if d["degraded"].as_bool() == Some(true) { degraded[side] += 1; regrets[side].push(d["regret"].as_f64().unwrap_or(0.0)); }
         let id = d["id"].as_str().unwrap();
         let a = Fight::act(id).unwrap();
         for &p in &combat_core::data::data().acts.parts[a as usize] {
@@ -113,6 +115,9 @@ fn play(case: &Value) -> Value {
     out.insert("acts".into(), json!(acts));
     out.insert("depth".into(), json!([depth[0] / 1f64.max(count[0] as f64), depth[1] / 1f64.max(count[1] as f64)]));
     out.insert("nodes".into(), json!(nodes));
+    out.insert("decisions".into(), json!(count));
+    out.insert("degraded".into(), json!(degraded));
+    out.insert("regrets".into(), json!(regrets));
     out.insert("cpuMs".into(), json!(t0.elapsed().as_secs_f64() * 1000.0));
     if trace {
         out.insert("trace".into(), json!({"rulesVersion": combat_core::RULES_VERSION, "config": st["config"], "kits": [st["actors"][0]["kit"], st["actors"][1]["kit"]],

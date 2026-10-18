@@ -609,6 +609,46 @@ pub fn choose(enc: &Encounter, s: &State, overrides: &Value, ctx: &mut Context, 
         ("computeProfile", json!(cp.clone().unwrap_or_else(|| "legacy".into()))), ("budgetMs", o.get("budgetMs").cloned().unwrap_or(Value::Null)), ("nodeBudget", json!(node_budget))] { m.insert(k.into(), v); }
     let elapsed = |m: &mut Map<String, Value>| { m.insert("elapsedMs".into(), json!(now() - start)); };
     elapsed(&mut m);
+    // Personality and difficulty (F5.9): `tilt` adds to chosen actions' values (× tiltScale), and `slack` lets the AI pick at
+    // random among moves within that many points of the best tilted one; either way never a move worse than maxRegret.
+    let tilt_scale = get_f(&o, "tiltScale").unwrap_or(1.0);
+    let tilt: Vec<(String, f64)> = o.get("tilt").and_then(|t| t.as_object()).map(|t| t.iter().filter_map(|(k, v)| v.as_f64().map(|x| (k.clone(), x * tilt_scale))).filter(|(_, x)| *x != 0.0).collect()).unwrap_or_default();
+    let slack = get_f(&o, "slack").unwrap_or(0.0);
+    if (!tilt.is_empty() || slack > 0.0) && legal_count > 1 && best.completed_depth > 0 {
+        let mut ro = options.clone();
+        ro.max_depth = best.completed_depth; ro.rank_actions = true;
+        let ranked = search(enc, s, &ro, ctx, now)?;
+        m.insert("totalNodes".into(), json!(best.nodes + ranked.nodes));
+        if ranked.completed_depth == best.completed_depth && !ranked.ranked.is_empty() {
+            let sign = if side == 0 { 1.0 } else { -1.0 };
+            let best_u = ranked.ranked.iter().map(|&(_, v)| sign * v).fold(f64::NEG_INFINITY, f64::max);
+            let k = &d.acts;
+            let bonus = |id: Act| -> f64 {
+                let name = d.name(id);
+                let own = tilt.iter().find(|(t, _)| t == name).map_or(0.0, |x| x.1);
+                let parts = if k.is_bundle[id as usize] { k.parts[id as usize].iter().map(|&p| { let n = d.name(p); tilt.iter().find(|(t, _)| t == n).map_or(0.0, |x| x.1) }).fold(f64::NEG_INFINITY, f64::max) } else { f64::NEG_INFINITY };
+                own.max(if parts.is_finite() { parts } else { own })
+            };
+            // Candidates: the best move, and plausible weaker ones within maxRegret.
+            let cands: Vec<(Act, f64, f64)> = ranked.ranked.iter().filter_map(|&(id, v)| {
+                let regret = best_u - sign * v;
+                if regret <= 1e-6 || (regret <= max_regret && plausible_mistake(enc, s, id)) { Some((id, regret, sign * v + bonus(id))) } else { None }
+            }).collect();
+            let top = cands.iter().map(|c| c.2).fold(f64::NEG_INFINITY, f64::max);
+            let pool: Vec<&(Act, f64, f64)> = cands.iter().filter(|c| c.2 >= top - slack - 1e-9).collect();
+            let pick = if pool.len() > 1 { pool[(policy_draw(seed, s, 2) * pool.len() as f64).floor() as usize] } else { pool[0] };
+            m.insert("persona".into(), json!(true));
+            m.insert("pool".into(), json!(pool.len()));
+            if pick.0 != best.id {
+                m.insert("id".into(), json!(d.name(pick.0)));
+                m.insert("value".into(), json!(sign * (best_u - pick.1)));
+                m.insert("degraded".into(), json!(true));
+                m.insert("regret".into(), json!(pick.1));
+            }
+        }
+        elapsed(&mut m);
+        return Ok(Value::Object(m));
+    }
     if mistake_chance == 0.0 || legal_count < 2 { return Ok(Value::Object(m)); }
     let roll = roll.unwrap();
     m.insert("mistakeRoll".into(), json!(roll));

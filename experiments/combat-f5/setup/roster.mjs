@@ -1,6 +1,6 @@
-import {LOADOUTS,NAMED_LOADOUTS,LOADOUT_SKILLS,COURSE_PICKS} from './loadouts.mjs';
+import {LOADOUTS,NAMED_LOADOUTS,SPECIAL_LOADOUTS,LOADOUT_SKILLS,COURSE_PICKS} from './loadouts.mjs';
 import {CAST_STATS} from './cast-stats.mjs';
-export {LOADOUTS,NAMED_LOADOUTS,LOADOUT_SKILLS,COURSE_PICKS};
+export {LOADOUTS,NAMED_LOADOUTS,SPECIAL_LOADOUTS,LOADOUT_SKILLS,COURSE_PICKS};
 // Combat spell redesign v2. Campaign acquisition and negotiation text are metadata.
 export const RESOURCES=['health','mood','renown','mana','crowns','alignment'];
 export const FLUX_RATIO=2/3;
@@ -14,16 +14,27 @@ export const ALIGNMENT_COST={tiny:3,small:6}; // content/core/balance.grim, 2026
 // condition: how the player's state on entering shapes the start (see setup.mjs combatStart).
 // settle: what a fight costs the player afterwards (setup/campaign.mjs settle).
 export const COMBAT_TUNING={
- skill:{pivot:50,main:['arcana','vigor','alchemy'],mainPerPoint:.01,minorPerPoint:.01},
- strike:{damage:9,perPoint:.014}, // Strike follows Vigor a little faster than other amounts (F5.4: Brawler's lever)
- hp:{skills:['vigor','vigor','arcana','lore','alchemy','charm','guile'],perPoint:.008,pivot:40,min:1}, // F5.7: grows past skill 40 (Vigor counted twice), never below Health; ~92 at level 80
- capacity:{base:43,slope:.35,weights:{arcana:2,lore:1,alchemy:1,charm:1,vigor:1,guile:1},min:34}, // F5.7: a bigger pool late (~54 at level 80), never below 34
+ // F5.9: every scaling is linear and anchored at skill 50 (×1): factor = 1 + perPoint × (skill − 50).
+ skill:{pivot:50,main:['arcana','vigor','alchemy'],mainPerPoint:1/150,minorPerPoint:1/150},   // 2/3 + skill/150: ×1 at 50, doubles from 0 to 100
+ strike:{damage:9,perPoint:1/150}, // like every spell (F5.9; F5.4–F5.8 ran faster, 1.4% a point, as Brawler's lever)
+ hp:{skills:['vigor','vigor','arcana','lore','alchemy','charm','guile'],perPoint:1/250,pivot:50}, // 0.8 + skill/250 (Vigor counted twice): 70 at 50, +50% from 0 to 100 (gentler, so low-Vigor classes aren't squishy)
+ capacity:{base:43,slope:43/150,weights:{arcana:2,lore:1,alchemy:1,charm:1,vigor:1,guile:1}}, // 43 × (2/3 + skill/150): 34 at 20, 52 at 80
  guard:{repeatLeak:.5,lookback:1}, // Guard fatigue (F5.5): a Guard within `lookback` exchanges of the last stops only half a Strike
  shadowstep:{breakOnCast:false}, // true: casting any spell but Ward breaks your own Shadowstep (tried in F5.5: kills comebacks, see rulebook)
  decision:{quietExchanges:5}, // a stalemate (no HP lost, no Mana spent) is called on points after this many exchanges
- kits:{flameBy:10}, // generated kits learn Flame by this level at the latest (F5.6; was 25, which left some classes without an attack below 15)
+ kits:{flameBy:10},
+ offsets:{jitter:.09},   // F5.9: class skill offsets are % of level (setup/loadouts.mjs); jitter ± this share of the level // generated kits learn Flame by this level at the latest (F5.6; was 25, which left some classes without an attack below 15)
  condition:{healthFull:70,healthFloor:.9,manaFloor:.9},
  settle:{healthStake:40,mood:{win:3,lose:-4,draw:0}}
+};
+// AI difficulty presets (F5.9), merged into a side's AI settings by expandAI (setup/setup.mjs). slack: pick at random among
+// moves within that many points of the best tilted one (about 4 points = 1 HP of lead); maxRegret: never a move worse than
+// that; tiltScale: how strongly the persona (PERSONAS in setup/foes.mjs) pulls; persona: whether it applies at all.
+// Against an optimal AI at depth 4 (tools/ai-study.mjs, levels 15/30/60): easy wins about 6%, medium about 30%, hard 50%.
+export const AI_PRESETS={
+ easy:{mistakeChance:0,slack:24,maxRegret:60,tiltScale:1.5,persona:true},    // picks loosely among decent moves, leans hard on its favourites
+ medium:{mistakeChance:0,slack:10,maxRegret:24,tiltScale:1,persona:true},    // has habits and slips, but never throws a fight away
+ hard:{mistakeChance:0,slack:0,tiltScale:0,persona:false}                    // the search's best move, every time
 };
 export const LEARN_XP={medium:6,large:10,huge:16};
 export const cap=(x,lo,hi)=>Math.max(lo,Math.min(hi,x));
@@ -64,7 +75,9 @@ export const SPELLS={
  siphon:spell('Siphon','Forbidden pool',['alchemy'],[12],{verb:'Siphon',group:'forbidden',channel:true,holdCost:6,provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  compel:spell('Compel','Forbidden pool',['guile'],[16],{verb:'Compel',group:'forbidden',duration:[1],immediate:false,provisionalSkill:true,negotiation:'Underground: 1 Agreement without Suspicion; otherwise fails with consequences.'}),
  eclipse:spell('Eclipse','Forbidden pool',['arcana'],[6],{verb:'Convert',group:'forbidden',provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
- heartprice:spell('Heartprice','Forbidden pool',['vigor'],[0],{verb:'Sacrifice',group:'forbidden',provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'})
+ heartprice:spell('Heartprice','Forbidden pool',['vigor'],[0],{verb:'Sacrifice',group:'forbidden',provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
+ // Creature attacks (F5.9): special foes only (SPECIAL_LOADOUTS), never a player's or a class's kit.
+ gore:spell('Gore','Creature',['vigor'],[6],{verb:'Gore',damage:[15],physical:true,group:'creature',negotiation:'None.'})
 };
 for(const s of Object.values(SPELLS)){
  if(s.group==='course')s.baseline=true;
@@ -81,7 +94,9 @@ export const CONTEXTS={
  practice_duel:{health:.8,mood:.8,renown:.8,mana:.8,crowns:0,alignment:0},
  real_conflict:{health:.5,mood:.5,renown:.5,mana:.5,crowns:0,alignment:0},
  public_duel:{health:.8,mood:.8,renown:.2,mana:.8,crowns:0,alignment:0},
- rehearsal:{health:.8,mood:.8,renown:.8,mana:.8,crowns:0,alignment:0}
+ rehearsal:{health:.8,mood:.8,renown:.8,mana:.8,crowns:0,alignment:0},
+ // F5.9: the boathouse ring's bare-knuckle bouts, hurt more than a duel and less than a real fight; a small crowd
+ ring_bout:{health:.65,mood:.8,renown:.5,mana:.8,crowns:0,alignment:0}
 };
 export function levelRng(level){let state=level|0;return()=>{let a=(state=(state+0x6D2B79F5)|0);let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};}
 export const courseRank=level=>level>=68?3:level>=44?2:1;
@@ -125,7 +140,7 @@ function spellUnlocks(def,named,growing,year){
  return levels;
 }
 export function generateLoadout(loadout,level,access='kit',options={}){
- const named=NAMED_LOADOUTS[loadout],base=LOADOUTS[loadout]??named;
+ const named=NAMED_LOADOUTS[loadout],special=SPECIAL_LOADOUTS[loadout],base=LOADOUTS[loadout]??named??special;
  if(!base||!Number.isInteger(level)||level<1||level>100||!['kit','all'].includes(access))throw Error('Choose loadout, level 1–100, and kit/all access.');
  const year=options.year??1;if(!Number.isInteger(year)||year<1||year>4||options.ilseTaken!==undefined&&typeof options.ilseTaken!=='boolean')throw Error('Choose year 1–4 and a boolean Ilse flag');
  level=fixedLoadoutLevel(loadout)??level;
@@ -139,10 +154,13 @@ export function generateLoadout(loadout,level,access='kit',options={}){
   // ratios, setting its documented relevant stat to L. An encounter adapter can
   // instead supply the exact current worldbook/Engine.statOf skill values.
   skills=options.skills?{...options.skills}:canon?Object.fromEntries(LOADOUT_SKILLS.map(k=>[k,cap(Math.round(canon.skills[k]*(growing?level/canon.skills[def.reference]:1)),1,100)])):Object.fromEntries(LOADOUT_SKILLS.map(k=>[k,level]));
- }else{const jitter=2+level/20;skills=Object.fromEntries(LOADOUT_SKILLS.map((k,i)=>[k,cap(Math.round(level+def.offsets[i]+(rng()*2-1)*jitter),1,100)]));}
+ }else{
+  // F5.9: offsets are percentages of the level (F5.8 and before: fixed points; ×2 converts at level 50), and so is the
+  // jitter (±9%), so a class keeps its shape at every level: a level-20 Brawler is as lopsided as a level-80 one.
+  const jitter=level*(COMBAT_TUNING.offsets?.jitter??.09);skills=Object.fromEntries(LOADOUT_SKILLS.map((k,i)=>[k,cap(Math.round(level*(1+def.offsets[i]/100)+(rng()*2-1)*jitter),1,100)]));}
  if(LOADOUT_SKILLS.some(k=>!Number.isFinite(skills[k])||skills[k]<1||skills[k]>100)||Object.keys(skills).length!==6)throw Error('Six skill values in 1–100 required');
- const unlockLevels=spellUnlocks(def,!!named,growing,year);
- const ids=access==='all'?Object.keys(SPELLS):Object.keys(unlockLevels).filter(id=>unlockLevels[id]<=level),r=courseRank(level);
+ const unlockLevels=def.kit?{...def.kit}:spellUnlocks(def,!!named,growing,year);
+ const ids=access==='all'?Object.keys(SPELLS).filter(id=>SPELLS[id].group!=='creature'):Object.keys(unlockLevels).filter(id=>unlockLevels[id]<=level),r=courseRank(level);
  const spells=Object.fromEntries(ids.map(id=>[id,SPELLS[id].levels===3?Math.min(3,r+Number(def.prodigy===id)):1]));
  return {loadout,level,...(growing?{year}:{}),progression:'level-gated',unlockLevels,underground:!!def.underground,skills,spells,capacity:manaCapacity(skills),seed,draws,...(!canon&&named?{provisionalSkills:true}:{})};
 }

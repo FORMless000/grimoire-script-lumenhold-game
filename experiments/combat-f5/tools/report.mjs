@@ -1,6 +1,6 @@
 // node report.mjs F4 D3 D4 V4 — markdown tables: class win% by level band, fight stats, level-gap win%.
 import fs from 'node:fs';
-const G=['Duellist','Scholar','Healer','Illusionist','Brawler','Prefect','Showman','Underground tough','Hollow adept'];
+const G=['Duellist','Scholar','Healer','Illusionist','Brawler','Prefect','Showman','Underground tough','Sailor','Hollow adept'];
 const BANDS=[['20–30',[20,30]],['40–50',[40,50]],['60–80',[60,70,80]]];
 const load=f=>fs.existsSync(new URL('../out/'+f+'.jsonl',import.meta.url))?fs.readFileSync(new URL('../out/'+f+'.jsonl',import.meta.url),'utf8').trim().split('\n').map(l=>JSON.parse(l)):null;
 const med=a=>{a=[...a].sort((x,y)=>x-y);return a.length?a[a.length>>1]:NaN;};

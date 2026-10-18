@@ -27,6 +27,7 @@
   let settings = { notes: true, lang: null, amounts: 'marks' };
   try { Object.assign(settings, JSON.parse(store.get(SETTINGS_KEY) || '{}')); } catch (e) { /* ignore */ }
   const saveSettings = () => store.set(SETTINGS_KEY, JSON.stringify(settings));
+  const PRONOUN_KEYS = ['she', 'he', 'they'];
 
   let content = null, eng = null;
   const ui = { tab: 'you', mode: null, view: null, busy: false, sideOpen: false };
@@ -131,6 +132,8 @@
     if (saved) { try { const s = JSON.parse(saved); const e = new Engine(content).load(s); savedInfo = t('title.saveInfo', { name: esc(s.name), month: esc(e.monthName()), year: e.yearOf() }); } catch (e) { savedInfo = ''; } }
     const g = content.game;
     const cur = I18n.lang();
+    // Pronouns (remembered in settings and kept on the run; nothing reads them yet). The name randomizer follows them.
+    let pron = PRONOUN_KEYS.includes(settings.pronouns) ? settings.pronouns : 'they';
     app.innerHTML =
       '<div class="title-screen"><div class="title-panel">' +
       '<div class="title-crest">' + Art.icon('tower', 64) + '</div>' +
@@ -138,7 +141,10 @@
       '<p class="sub">' + esc(g.subtitle || '') + '</p>' +
       '<div class="title-form">' +
       (languages.length > 1 ? '<div class="lang-row">' + Art.icon('globe', 16) + languages.map((l) => '<button class="lang-btn' + (l.code === cur ? ' on' : '') + '" data-lang="' + esc(l.code) + '">' + esc(l.name) + '</button>').join('') + '</div>' : '') +
-      '<label for="pname">' + esc(t('title.yourName')) + '</label><input id="pname" maxlength="24" value="' + esc(randomName()) + '" autocomplete="off">' +
+      '<label for="pname">' + esc(t('title.yourName')) + '</label><div class="name-row"><input id="pname" maxlength="24" value="' + esc(I18n.randomName(pron)) + '" autocomplete="off">' +
+      '<button class="btn dice-btn" id="rollName" type="button" title="' + esc(t('title.randomName')) + '" aria-label="' + esc(t('title.randomName')) + '">' + Art.icon('dice', 20) + '</button></div>' +
+      '<label class="pron-label">' + esc(t('title.pronouns')) + '</label><div class="pron-row" role="radiogroup" aria-label="' + esc(t('title.pronouns')) + '">' +
+      PRONOUN_KEYS.map((k) => '<button type="button" role="radio" aria-checked="' + (k === pron) + '" class="lang-btn pron-btn' + (k === pron ? ' on' : '') + '" data-pron="' + k + '">' + esc(t('title.pronoun.' + k)) + '</button>').join('') + '</div>' +
       '<details class="adv"><summary>' + esc(t('title.seed')) + '</summary><input id="pseed" inputmode="numeric" placeholder="' + esc(t('title.seedPlaceholder')) + '"></details>' +
       '<div class="row"><button class="btn primary grow" id="begin">' + esc(t('title.begin')) + '</button>' +
       (savedInfo ? '<button class="btn grow" id="cont">' + esc(t('title.continue', { info: '' })) + savedInfo + '</button>' : '') + '</div>' +
@@ -147,7 +153,18 @@
       '<div class="howto">' + t('title.howto_html') + '</div>' + runLogLine() +
       '</div></div></div>';
     ui.notice = null;
-    document.querySelectorAll('.lang-btn').forEach((b) => { b.onclick = () => { if (b.dataset.lang !== cur) switchLang(b.dataset.lang, false); }; });
+    const nameIn = document.getElementById('pname');
+    let rolled = true;   // the name on screen came from the randomizer: changing pronouns rolls a fitting one
+    nameIn.oninput = () => { rolled = false; };
+    const roll = () => { nameIn.value = I18n.randomName(pron, Math.random, nameIn.value.trim()); rolled = true; };
+    document.getElementById('rollName').onclick = roll;
+    document.querySelectorAll('.pron-btn').forEach((b) => { b.onclick = () => {
+      if (b.dataset.pron === pron) return;
+      pron = settings.pronouns = b.dataset.pron; saveSettings();
+      document.querySelectorAll('.pron-btn').forEach((x) => { x.classList.toggle('on', x === b); x.setAttribute('aria-checked', String(x === b)); });
+      if (rolled) roll();
+    }; });
+    document.querySelectorAll('.lang-btn:not(.pron-btn)').forEach((b) => { b.onclick = () => { if (b.dataset.lang !== cur) switchLang(b.dataset.lang, false); }; });
     document.getElementById('begin').onclick = async () => {
       const name = document.getElementById('pname').value.trim() || t('title.defaultName');
       const seed = document.getElementById('pseed').value.trim();
@@ -158,7 +175,7 @@
         ui.mode = null; closeOverlay();
         eng = new Engine(content);
         buildGame();
-        step(eng.newGame({ name, seed: seed === '' ? null : seed, ...seen, ...(origin ? { origin } : {}) }));
+        step(eng.newGame({ name, pronouns: pron, seed: seed === '' ? null : seed, ...seen, ...(origin ? { origin } : {}) }));
       };
       const choices = new Engine(content).originChoices();
       if (choices.length) showOrigins(choices, start); else start(null);
@@ -182,7 +199,6 @@
     document.getElementById('originBack').onclick = () => { closeOverlay(); ui.mode = 'title'; };
     ui.originPick = (i) => { const o = choices[i]; if (o && ui.mode === 'origin') start(o.key); };
   }
-  function randomName() { const n = t('title.names').split(/\s*[,，、]\s*/).filter(Boolean); return n[Math.floor(Math.random() * n.length)] || 'Wren'; }
 
   function previewEvent(id) {
     eng = new Engine(content);

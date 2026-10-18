@@ -59,14 +59,15 @@ A log has the same shape as the browser's exported log, plus structured events:
 ## Tuning, variants and the campaign bridge
 
 **`COMBAT_TUNING`** (`setup/roster.mjs`) is the one home of the scaling numbers, exported to Rust with the spells:
-- `skill`: the per-point rates of the main combat skills (Arcana, Vigor, Alchemy) and the others;
+- `skill`: the per-point rates of the main combat skills (Arcana, Vigor, Alchemy) and the others (since F5.9 all 1/150: factor 2/3 + skill/150);
 - `strike`: Strike's base damage and its Vigor rate;
+- `offsets`: the jitter of class skills (class offsets are % of level since F5.9);
 - `guard`, `shadowstep`, `decision`: Guard fatigue, whether casting breaks your own Shadowstep, and the quiet exchanges before a stalemate is called on points;
-- `hp`, `capacity`: combat max HP (with its own pivot and floor) and Mana capacity (with a floor);
+- `hp`, `capacity`: combat max HP and Mana capacity (each with an optional pivot and floor, unused since F5.9);
 - `condition`: how a worn or drained player starts (floors);
 - `settle`: what a fight costs afterwards.
 
-**Variants** try a balance idea without editing the roster. A variant is a module in `tools/variants/` whose default export mutates the roster objects: `R => { R.SPELLS.flame.cost = [9]; … }`. Pass it with `--variant` to `tools/suite.mjs` and `tools/condition-study.mjs`, or as `VARIANT=…` to `playtest.sh` and `suite-f5.sh`. It's recorded in each arm, so replays reproduce it. Each variant sets values on top of the roster as it was when it was written, so applying an old variant to today's roster isn't the same experiment. `v1`–`v8c` are the F5.4 tuning steps (F5.4 baked in `v8c` plus the 0.9 floors), `g1`–`g9` are the F5.5 trace-review steps (F5.5 baked in `g7`), and `g10`–`g11` plus `l3` the F5.6 low-level steps (F5.6 baked in `g11` and `l3`). `l1`, `l2` and `h1` were tried and rejected. `p1`–`p6` are the F5.7 scaling steps (F5.7 baked in `p6` plus a Mana floor of 34), and F5.8 baked in `s1`.
+**Variants** try a balance idea without editing the roster. A variant is a module in `tools/variants/` whose default export mutates the roster objects: `R => { R.SPELLS.flame.cost = [9]; … }`. Pass it with `--variant` to `tools/suite.mjs` and `tools/condition-study.mjs`, or as `VARIANT=…` to `playtest.sh` and `suite-f5.sh`. It's recorded in each arm, so replays reproduce it. Each variant sets values on top of the roster as it was when it was written, so applying an old variant to today's roster isn't the same experiment. `v1`–`v8c` are the F5.4 tuning steps (F5.4 baked in `v8c` plus the 0.9 floors), `g1`–`g9` are the F5.5 trace-review steps (F5.5 baked in `g7`), and `g10`–`g11` plus `l3` the F5.6 low-level steps (F5.6 baked in `g11` and `l3`). `l1`, `l2` and `h1` were tried and rejected. `p1`–`p6` are the F5.7 scaling steps (F5.7 baked in `p6` plus a Mana floor of 34), F5.8 baked in `s1`, and F5.9 baked in `f59-linear-b` plus percentage offsets (`f59-linear` was too steep for HP).
 - `node tools/suite.mjs <name> --depth 4 [--variant f] [--trace] [--all] [--arms cross,gaps,all] [--seeds 3]` runs the suite directly (about 2 minutes at depth 4). One seed leaves about ±8 points of noise per class and level band. Use `--seeds 3` when you screen class changes.
 - `node tools/condition-study.mjs [--variant f] [--grid '[{"health":0.5},…]']` measures how entering worn or drained changes the player's win rate (432 fights per condition; about 10 minutes at depth 4).
 
@@ -75,6 +76,20 @@ A log has the same shape as the browser's exported log, plus structured events:
 - `settle(state, player)` turns a finished fight into resource changes: Health (the share of combat HP lost × `settle.healthStake`, less the context's rebate, never below 1), Mana, Mood, Renown, Crowns and alignment.
 
 See `INTEGRATION.md` for the design and `HANDOFF.md` for the plan to wire it into the main game.
+
+**Opponents and the AI** (`setup/foes.mjs`, F5.9; the plan for every current combat card is `EVENTS.md`):
+- `PERSONAS`: the actions each class, character and special foe favours (points added to their value when choosing);
+- `FOES`, `POOLS`: the foes the cards name, with display names, loadouts or pools, persona overrides and contexts;
+- `EVENTS`: every `challenge combat` / `challenge duel` in `content/`, played (against which foe) or converted to a feat;
+- `foeLevel`: a generic foe's level from the card's rung and odds word.
+
+`AI_PRESETS` (`setup/roster.mjs`) are the difficulty levels (easy, medium, hard). Pass `ai: [null, {preset: 'medium'}]` to `createState`, which expands it with `expandAI` and adds the loadout's persona. The AI's own knobs are `tilt`, `tiltScale`, `slack` and `maxRegret` (`rust/core/src/ai.rs`).
+
+Tools:
+- `node tools/ai-study.mjs [--grid '[{"preset":"easy"},{"slack":8}]']`: what an AI setting costs against the optimal AI;
+- `node tools/foe-study.mjs "Shadow stag"`: a foe against every class;
+- `node tools/named-study.mjs [--stats '{…}'] [--kits '{…}']`: each named character's equivalent class level, optionally with worldbook stat or kit changes;
+- `node tools/event-coverage.mjs [--list]`: that every combat card has a decision.
 
 **Flavor** (`setup/flavor.mjs`): one plain sentence of what each fighter did, naming both sides (`{name}` and `{foe}`, from `fighterNames`). There are cast lines, Hold and Release lines for channels, `end` lines for effects and constructs, `ko` lines for the finishing action, and endings. The browser shows them in the telegraph, the log and under each exchange. The setup panel's "Your name" sets the player's name.
 

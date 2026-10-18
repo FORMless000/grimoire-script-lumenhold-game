@@ -8,7 +8,7 @@
 //   ko:      this action finishing the foe
 //   tired:   (Guard) a Guard raised again too soon, against a Strike
 // Names come from the fight (fighterNames below): the player's name and the opponent's as the card sets them.
-import {COMBAT_TUNING,NAMED_LOADOUTS} from './roster.mjs';
+import {COMBAT_TUNING,NAMED_LOADOUTS,SPECIAL_LOADOUTS} from './roster.mjs';
 export const FLAVOR={
  // Basics
  strike:{cast:['{name} lunges in and swings at {foe}.','{name} closes the distance and strikes at {foe}.','{name} throws a quick blow at {foe}.'],ko:'{foe} goes down under {name}’s blows.'},
@@ -46,6 +46,8 @@ export const FLAVOR={
  index:{cast:['{name} leafs through a conjured index, but it does little here.']},
  rapport:{cast:['{name} flaunts a handful of crowns, and the crowd cheers.']},
  purify:{cast:['{name} draws some of their own strength out and distils it into magic.']},
+ // Creatures (SPECIAL_LOADOUTS)
+ gore:{cast:['{name} lowers its antlers and charges at {foe}.','{name} paws the ground, then drives its antlers at {foe}.'],ko:'{foe} is flung down by {name}’s charge.'},
  tailwind:{cast:['A wind rises at {name}’s back, driving each blow harder.'],end:'The wind at {name}’s back dies down.'},
 
  // Hidden pool
@@ -64,6 +66,8 @@ export const FLAVOR={
  heartprice:{cast:['{name} strikes a bargain: from now on, spells cost life instead of magic.']}
 };
 // How a fight ends, when the finishing action has no ko line of its own (or it isn't a knockout).
+// A foe whose defeat isn't a fall (F5.9): its own line however the fight ends, {name} the winner, {foe} the foe.
+export const DEFEAT={'Shadow stag':'{foe} lowers its head and steps aside for {name}.'};
 export const ENDINGS={knockout:'{foe} can fight no more, and {name} wins.',decision:'Neither falls; {name} wins on points.',stalemate:'Neither {name} nor {foe} can finish it: a draw.',conceded:'{foe} yields to {name}.'};
 // Effects that end with a line, by effect key → the spell whose `end` it uses. {name} is the effect's holder, except for
 // Torment, whose effect sits on the cursed side but is told from the caster's.
@@ -73,7 +77,7 @@ const HELD_BY_FOE=new Set(['torment']);
 // The two fighters' names, [player, opponent]. The main game passes the player's name and the card's opponent; the bench
 // names generic loadouts "the Duellist" and characters by name. Names starting "The" read lower-case mid-sentence.
 export function fighterNames({playerName,opponentName,playerLoadout,opponentLoadout}={}){
- const of=l=>!l?null:NAMED_LOADOUTS[l]?l.replace(/^The /,'the '):'the '+l;
+ const of=l=>!l?null:NAMED_LOADOUTS[l]?l.replace(/^The /,'the '):SPECIAL_LOADOUTS[l]?'the '+l.toLowerCase():'the '+l;
  const a=playerName??of(playerLoadout)??'the player',b=opponentName??of(opponentLoadout)??'the opponent';
  return [a,b===a?'the rival '+b.replace(/^the /,''):b];
 }
@@ -111,7 +115,7 @@ export function finishLines(before,after,pair,round,names=['the player','the opp
   if(w===undefined||w===null)add(ENDINGS.stalemate,0);
   else{
    const id=pair[w],key=id==='hold'||id==='release'?before.actors[w].channel?.id:id?.startsWith('bundle:')&&id.includes('strike')?'strike':id;
-   add(r.reason==='knockout'?FLAVOR[key]?.ko??ENDINGS.knockout:ENDINGS[r.reason]??ENDINGS.knockout,w);
+   add(DEFEAT[after.actors[1-w].kit?.loadout]??(r.reason==='knockout'?FLAVOR[key]?.ko??ENDINGS.knockout:ENDINGS[r.reason]??ENDINGS.knockout),w);
   }
  }
  return out;
