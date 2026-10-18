@@ -104,16 +104,37 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 
 ### 5. The UI
 
-- **Port the fight screen from `web/app.mjs`** as an overlay over the card, which stays visible. It already uses the main game's tokens and fonts (`src/style.css`). Keep:
-  - the two fighters: portrait, Health and Mana with flux as big numbers on bars, a Lodestar shield as a gold band on the HP bar with its value, and standing constructs beside the name with the HP they have left;
-  - the exchange track: one axis with every past exchange (both moves as icons; it scrolls sideways into the past), this exchange and the next four. Each future slot shows who commits first (their move will show, or stays hidden) and any move forced by Compel or lost to a freeze. Lasting effects, channels, constructs and Foresight run along it as thin lines with their icon at the exchange they began (a line stays put as exchanges pass), and Omens sit on the exchange they land. Below it, the latest exchange in full, or any one picked on the track;
-  - beside the actions, the telegraph (the foe's committed move with its effect and flavor line), which opens the full text;
-  - the square action buttons: icon, name, effect (`web/brief.mjs`, read from `describe()`), turns and the Mana or HP cost;
-  - the inspect sheet (the foe's skills, kit with prices and recent moves) and the full log;
-  - Concede.
-- **Portraits:** `web/art.mjs` shows `portraits/<npc>.png` when one exists (`NAMED_LOADOUTS[name].npc`), else an SVG placeholder; the player's frame stays blank.
-- **Drop the bench parts:** the setup panel, the engine view and evaluation bar, the debug controls, and the stubs that imitate the main game around the fight (top bar, meters, side panel, card; toggled in setup).
-- **Layout:** no panel scrolls except the track, sideways. It must work at phone width (375 px); with room (a 640 px stage or wider) the state sits left and the choices right. The bench fits 1280×800 with every stub; below 720 px of height the card stub gives way (so 1024×700 fits), and on a 320×568 phone the top-bar stub too.
+Port the fight screen from `web/app.mjs` and its look from `web/style.css` as an overlay over the card, which stays visible. Port the fight itself, not the bench around it.
+
+- **Keep, as built:**
+  - **The two fighters:** portrait, then Health and Mana as big numbers on bars, with flux on the Mana bar. A Lodestar shield is a gold band on the HP bar with its value. Standing constructs sit beside the name with the HP they have left.
+  - **The exchange track:** one axis for every past exchange (both moves as icons; it scrolls sideways into the past), this exchange and the next four.
+    - Each future slot shows who commits first (their move will show, or stays hidden), and any move forced by Compel or lost to a freeze.
+    - Every line is a spell's duration, drawn in its caster's colour with its icon at the exchange it began. A line stays put as exchanges pass. Foresight, Compel and Torment live on their target in the state but draw as the caster's line (`CAST_ON_FOE`, `effectRows`); the tooltip says who a line is on.
+    - Omens sit on the exchange they land.
+    - Below the track, the latest exchange in full, or any one picked on the track.
+  - **Beside the actions:** the telegraph (the foe's committed move, with its effect and flavor line), which opens the full text.
+  - **The square action buttons:** icon, name, effect (`web/brief.mjs`, read from `describe()`), turns, and the Mana or HP cost.
+  - **The inspect sheet** (the foe's skills, kit with prices, recent moves) and **the full log**.
+  - **Concede.**
+  - **Interaction rules:**
+    - An HP or Mana change animates once: re-renders don't replay it.
+    - The track's name column has a fixed width, so the columns stay aligned.
+- **Keep the styles.** Move the fight's rules from `web/style.css` into `src/style.css`, scoped under the overlay's class:
+  - **What to move:** the fight, fighters and bars, telegraph, effect summaries, exchange track, actions and commit bar, result, sheets, the `@container play` two-column rules and the ≤600 px rules.
+  - **Tokens and fonts:** they already match the main game's, so take `--night*`, `--line`, `--gold*`, `--parch`, `--ink*`, `--muted`, `--text`, `--good`, `--bad`, `--radius` and `--serif` / `--display` / `--sans` from `src/style.css` rather than redefining them. That way the zh-CN font swap applies to the fight too. Add only the fight's own tokens: `--line-2`, `--hp`, `--mana`, `--flux`, `--you`, `--opp`, `--k-*` and `--tk-bg`; `--cw`, `--ch` and `--lw` are local to the track.
+  - **The container:** declare `container: play/inline-size` on the overlay's parent, so the two-column layout follows the space the fight actually has.
+- **Do not graft the mock UI.** The bench imitates the main game around the fight so the visuals could be judged in place. These are stand-ins for screens the game already has:
+  - in `web/app.mjs`: `stubTop`, `stubMeters`, `stubSide`, `cardStub`, `renderChrome` and the `chrome` toggles;
+  - in `web/style.css`: `.shell`, `.stage`, `.stub-*`, `.card-stub`, the `max-height:720px` rule that hides the card stub, the `.stub-top` hiding on small phones, and `body{overflow:hidden}`;
+  - in `web/index.html`: the shell markup and the "Main game around the fight" fieldset.
+
+  Leave the game's real top bar, meters, side panel and card as they are. The fight's numbers on the meters (for example the Mana orb during the fight) are a separate decision, not part of this port.
+- **Drop the bench parts:** the setup panel, the welcome text, the engine view and evaluation bar, and the debug controls.
+- **Portraits:** `web/art.mjs` shows `portraits/<npc>.png` when one exists (`NAMED_LOADOUTS[name].npc`), else an SVG placeholder. The player's frame stays blank.
+- **Layout:** no panel scrolls except the track, sideways.
+  - It must work at phone width (375 px). With room (a 640 px container or wider) the state sits on the left and the choices on the right.
+  - The bench fits 1280×800 inside its mock chrome. The real chrome differs, so check the fit again in the game at 1280×800, 1024×700 and 375×812. If height runs short, let the card behind give way first, as the bench's mock card does.
 - **Saves:** a fight in progress is plain JSON (the state from `createState`, then the core's). Save it with the run so a closed tab resumes mid-fight, and apply settlement once, at the end.
 
 ### 6. Localization
