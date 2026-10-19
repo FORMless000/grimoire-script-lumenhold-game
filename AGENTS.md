@@ -62,4 +62,4 @@ Code: `src/grimoire.js` (parser), `src/engine.js` and `src/director.js` (DOM-fre
 - `boot()` must stay at the very end of `src/ui.js` (earlier calls hit the temporal dead zone of later `const`s).
 - `{npc}` prints `short:` or the first word of `name` (split on spaces or `·`), hence the faculty's `short:` and the `·` in Chinese names.
 - Preview cards (`index.html?event=<id>&debug`) are forced past their `when`.
-- Once auto-deploy is set up (`docs/hosting.md`), every commit on `main` goes live (a self-test only catches a server that won't boot): commit working states only.
+- Every `git push` of `main` goes live on the server as well as GitHub (`docs/hosting.md`; a self-test only catches a server that won't boot): push working states only.

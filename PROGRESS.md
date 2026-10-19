@@ -19,7 +19,7 @@ October 18, 2026: the server is ready to host online ([docs/hosting.md](docs/hos
 - **Players.** Each browser gets a player code that is also its sync code: Saved games → Play on another device shares the saves. With `INVITE_CODE` set, new players need the invite link.
 - **Admin.** `/admin` needs `ADMIN_TOKEN`, also behind a reverse proxy (`PUBLIC=1`), and shows Notes, Players (with revoke), client errors and Export runs.
 - **Logs.** Every finished, replaced or offline run waits in the browser's outbox until the server has it.
-- **Deploys.** Every commit on `main` deploys to the EC2 server through `deploy/` (git hooks and systemd; a self-test gates each release). It is not set up on the server yet: run `deploy/setup.sh <ssh-destination>` once.
+- **Deploys.** Every `git push` of `main` goes to GitHub and deploys to the EC2 server through `deploy/` (git hooks and systemd; a self-test gates each release); `deploy/doctor.sh` checks and installs the server's dependencies. Set up on October 19, 2026 (Node 24 LTS in `/opt/node`). Still to do: a domain in the server's Caddy config forwarding to 127.0.0.1:4173.
 - **Old data.** Saves from before player codes (`data/saves/`, `data/seen.json`) are no longer read; old run logs stay readable.
 
 ## Frequency and economy audit

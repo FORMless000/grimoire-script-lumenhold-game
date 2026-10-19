@@ -1,31 +1,40 @@
 # Hosting Lumenhold online
 
-The game runs on a small Linux server (we use an EC2 instance) behind the reverse proxy you already have. Every commit on `main` deploys itself. Nothing extra is installed: the server needs **Node.js 20+, git, systemd and sudo**, and runs no `npm install`, because the server has no runtime dependencies.
+The game runs on a small Linux server (we use an EC2 instance) behind the reverse proxy you already have. Every `git push` of `main` updates GitHub and deploys the game. Nothing extra is installed: the server needs **Node.js 20+, git, systemd and sudo** (`deploy/doctor.sh` checks them and installs what's missing), and runs no `npm install`, because the server has no runtime dependencies.
 
 ```
-your machine ── git commit ──▶ post-commit hook ── git push live main ──▶ EC2: /srv/lumenhold/repo.git
-                                                                            │ post-receive hook
-                                                                            ▼
-                         releases/<sha>  (unpacked, self-tested)  ◀── current (symlink) ◀── systemd: lumenhold
-                         data/           (saves, run logs: survives deploys)                  127.0.0.1:4173
-                                                                                                 ▲
-                                                                       your reverse proxy (TLS) ─┘
+your machine ── git push ──┬──▶ GitHub
+                           └──▶ EC2: /srv/lumenhold/repo.git
+                                         │ post-receive hook
+                                         ▼
+          releases/<sha>  (unpacked, self-tested)  ◀── current (symlink) ◀── systemd: lumenhold
+          data/           (saves, run logs: survives deploys)                  127.0.0.1:4173
+                                                                                  ▲
+                                                        your reverse proxy (TLS) ─┘
 ```
 
 ## First-time setup
 
-1. **SSH access.** Check that `ssh <dest>` works from this machine, where `<dest>` is something like `ec2-user@1.2.3.4`. A `Host` alias in `~/.ssh/config` with your key is easiest.
-2. **Node.js 20+ on the server.** Check with `ssh <dest> node -v`. If it's missing, install it from nodejs.org or with nvm; the setup finds an nvm install.
+1. **SSH access.** Check that `ssh <dest>` works from this machine, where `<dest>` is something like `ubuntu@1.2.3.4`. A `Host` alias in `~/.ssh/config` with your key is easiest (we use `lumenhold`).
+2. **Check the server and install what's missing:**
+   ```
+   deploy/doctor.sh <dest>          # checks this machine, the connection and the server
+   deploy/doctor.sh <dest> --fix    # installs git, curl, tar, xz and Node.js (the current LTS, from nodejs.org, into /opt/node)
+   ```
+   It never edits your reverse proxy; it only says whether one forwards to the game. Re-run it any time something seems off.
 3. **Run the setup from the project folder:**
    ```
-   deploy/setup.sh <dest>            # auto-deploy on every commit
-   deploy/setup.sh <dest> --no-auto  # or: deploy only when you run `git push live main`
+   deploy/setup.sh <dest>               # deploy on every git push (GitHub and the server together)
+   deploy/setup.sh <dest> --on-commit   # or: deploy on every commit on main
+   deploy/setup.sh <dest> --manual      # or: deploy only when you run `git push live main`
    ```
    The script does four things:
    - creates `/srv/lumenhold/`;
    - generates the admin token and the invite code (kept in `/srv/lumenhold/env`) and prints the admin and invite links;
    - installs the systemd service;
-   - adds the git remote `live` and pushes `main` once. The first push sends the whole history; later pushes are small.
+   - adds the git remote `live`, adds the server as a second push address of `origin` (in the default mode), and pushes `main` once. The first push sends the whole history; later pushes are small.
+
+   It's safe to re-run, for example to change the mode or the server's address.
 4. **Point your reverse proxy at `127.0.0.1:4173`.** With nginx, inside your existing `server { … }` block that has TLS:
    ```nginx
    location / {
@@ -45,9 +54,9 @@ your machine ── git commit ──▶ post-commit hook ── git push live m
 
 | You want to | Do |
 |---|---|
-| Deploy | Commit on `main`. The push runs in the background and is logged in `.git/deploy.log`. A manual deploy is `git push live main`, which shows the server's output. |
-| Know whether a deploy worked | `tail .git/deploy.log`: look for `lumenhold: live: <sha>`, or `DEPLOY REFUSED` with the reason. The old version keeps running after a refusal. |
-| Stop or start auto-deploy | `git config lumenhold.autodeploy false` / `true` |
+| Deploy | Commit, then `git push`. The push goes to GitHub and the server; the server's lines in its output say `lumenhold: live: <sha>`, or `DEPLOY REFUSED` with the reason. `git push live main` deploys without GitHub. (With `--on-commit`, each commit pushes in the background, logged in `.git/deploy.log`.) |
+| Know whether a deploy worked | Read the `remote: lumenhold:` lines of the push (or `tail .git/deploy.log` with `--on-commit`). The old version keeps running after a refusal. `deploy/doctor.sh` shows which release is live. |
+| Push to GitHub without deploying | `git push https://github.com/FORMless000/grimoire-script-lumenhold-game.git main` (or switch modes: `deploy/setup.sh <dest> --manual`) |
 | Roll back | `ssh <dest>`, then `ls -t /srv/lumenhold/releases`, then `ln -sfn /srv/lumenhold/releases/<older> /srv/lumenhold/current && sudo systemctl restart lumenhold` |
 | See server logs | `ssh <dest> journalctl -u lumenhold -n 100` |
 | Read feedback and run logs | `/admin` has these tabs: Feedback by event, Notes (every comment, newest first), Runs (with client errors), Players. **Export runs** downloads every run; `node tools/grim.js feedback <file>` reads that file locally. |
