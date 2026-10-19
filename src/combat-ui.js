@@ -227,7 +227,10 @@
     function futureSlot(side, c) {
       const ex = game.round + c, a = game.actors[side], lead = leaderAt(c) === side, last = history.length ? history[history.length - 1].pair[side] : null, comp = a.effects.compelled;
       if (a.freezeUntil >= ex) return '<span class="slot lost" title="' + esc(tr('slotFrozen', { n: ex, who: side ? nameOf(1) : tr('you') })) + '">' + actionIcon('frozen', side) + '</span>';
-      if (comp && comp.until !== null && comp.until >= ex && last) return '<span class="slot forced' + (lead ? ' lead' : '') + '" title="' + esc(tr('slotCompelled', { n: ex, action: label(last) })) + '">' + actionIcon(last, side) + '</span>';
+      if (comp && comp.until !== null && comp.until >= ex && last) {
+        const lost = last === 'cancel' || !!C().available(game, side, last);
+        return '<span class="slot forced' + (lead ? ' lead' : '') + '" title="' + esc(tr(lost ? 'slotCompelledLost' : 'slotCompelled', { n: ex, action: label(last) })) + '">' + actionIcon(lost ? 'cancel' : last, side) + '</span>';
+      }
       if (side) return lead ? '<span class="slot shows lead" title="' + esc(tr('slotTheyLead', { n: ex })) + '">' + EYE + '</span>' : '<span class="slot hid" title="' + esc(tr('slotYouLead', { n: ex })) + '">?</span>';
       return lead ? '<span class="slot lead mine" title="' + esc(tr('slotYouLead', { n: ex })) + '">' + esc(tr('first')) + '</span>' : '<span class="slot open"></span>';
     }
@@ -271,8 +274,17 @@
 
     // The player's actions: square buttons; pick one to see it, pick it again (or Commit) to act.
     const myTurn = () => !busy && !game.result && C().actorToMove(game) === 0 && !game.config.ai[0];
+    // Their Compel, committed in the open, rewrites the player's move this exchange (unless Ward or Shadowstep stops it):
+    // the menu stays open, since Ward is an answer, but says what any other pick turns into.
+    function incomingCompel(prev) {
+      if (game.pending[1] !== 'compel' || C().actorToMove(game) !== 0 || C().has(game, 0, 'shadowstep')) return '';
+      const ward = game.actors[0].kit.spells.ward ? tr('compelWard') : '';
+      return prev && !C().available(game, 0, prev) ? tr('compelIncoming', { action: label(prev) }) + ward : tr('compelIncomingLost') + ward;
+    }
+    // A compelled turn that can't be paid is a cancel: legal, though `available` (a menu check) refuses it.
+    const forcedLegal = (id) => id === 'cancel' && C().legalActions(game, 0).includes('cancel');
     function actionButton(id) {
-      const reason = C().available(game, 0, id), disabled = !myTurn() || reason, name = actionName(id, 0), b = briefOf(0, id), tip = esc(name + ' · ' + price(0, id) + (reason ? ' · ' + reason : ''));
+      const reason = forcedLegal(id) ? null : C().available(game, 0, id), disabled = !myTurn() || reason, name = actionName(id, 0), b = briefOf(0, id), tip = esc(name + ' · ' + price(0, id) + (reason ? ' · ' + reason : ''));
       return '<button class="act k-' + b.kind + (selected === id ? ' selected' : '') + '" data-action="' + id + '" aria-label="' + tip + '" aria-pressed="' + (selected === id) + '" title="' + tip + '"' + (disabled ? ' disabled' : '') + '>' +
         (engineOn ? '<i class="a-eval" data-eval="' + id + '"></i>' : '') + '<span class="a-ico" aria-hidden="true">' + actionIcon(id) + lvBadge(0, id) + '</span>' + (id.startsWith('bundle:') ? '' : '<span class="a-name">' + esc(['hold', 'release'].includes(id) ? label(id) : name) + '</span>') + effHtml(b, name) + costHtml(0, id) + '</button>';
     }
@@ -283,13 +295,18 @@
         '<button class="fl-commit primary"' + (myTurn() ? '' : ' disabled') + '>' + (spell ? '<span class="control-icon" aria-hidden="true">' + C().ACTION_ICONS.cast + '</span>' + esc(tr('cast')) : esc(tr('commit'))) + '</button>';
     }
     function actions() {
-      const a = game.actors[0], C_ = C(), forced = a.channel || C_.has(game, 0, 'haste') || a.freezeUntil >= game.round;
+      const a = game.actors[0], C_ = C(), frozen = a.freezeUntil >= game.round, compelled = !frozen && C_.isCompelled(game, 0);
+      const forced = frozen || compelled || a.channel || C_.has(game, 0, 'haste');
       const ids = forced ? C_.legalActions(game, 0) : ['strike', 'guard', 'reclaim'].concat(Object.keys(a.kit.spells));
-      return (forced ? '<div class="action-state">' + esc(a.freezeUntil >= game.round ? tr('frozen') : a.channel ? tr('channel', { spell: label(a.channel.id) }) : tr('haste')) + '</div>' : '') +
+      // Compelled: the only move is the repeat, or a lost turn when it can't be paid (the core cancels it either way).
+      const prev = a.lastAction && a.lastAction !== 'cancel' ? a.lastAction : null;
+      const state = frozen ? tr('frozen') : compelled ? (ids[0] !== 'cancel' ? tr('compelledYou', { action: actionName(ids[0], 0) }) : prev ? tr('compelledLost', { action: label(prev) }) : tr('compelledNone'))
+        : a.channel ? tr('channel', { spell: label(a.channel.id) }) : forced ? tr('haste') : incomingCompel(prev);
+      return (state ? '<div class="action-state">' + esc(state) + '</div>' : '') +
         '<div class="acts' + (forced ? ' forced' : '') + '">' + ids.map(actionButton).join('') + '</div><div class="commit-bar">' + preview() + '</div>';
     }
     function commit(id = selected) {
-      if (!id || !myTurn() || C().available(game, 0, id)) return;
+      if (!id || !myTurn() || (!forcedLegal(id) && C().available(game, 0, id))) return;
       try { submit(id); pump(); } catch (e) { console.error(e); }
     }
     function selectAction(id) {

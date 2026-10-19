@@ -371,7 +371,11 @@
     document.querySelectorAll('#tabs button').forEach((b) => b.classList.toggle('on', b.dataset.tab === ui.tab));
     let h = '';
     if (ui.tab === 'you') {
-      h += '<div class="sec-h">' + esc(snap.name) + '</div>';
+      // Skills first, untitled; then studies and commitments, conditions and circumstances, and spells.
+      for (const s of snap.skills) {
+        const pct = Math.min(100, (s.value / (s.max || 100)) * 100);   // the skill's real range (was drawn against 60: B8)
+        h += '<div class="skill" title="' + esc(s.desc || '') + '">' + Art.icon(s.icon || 'star', 18) + '<div><div class="nm">' + esc(s.name) + '</div><div class="bar"><b style="width:' + pct + '%"></b></div></div><div class="v">' + Math.round(s.value) + '</div></div>';
+      }
       const panel = snap.resources.filter((r) => r.display === 'panel');
       if (panel.length) h += '<div class="panel-res">' + panel.map((r) => '<div class="pres' + (r.warn_below != null && r.value <= r.warn_below ? ' low' : '') + '" title="' + esc(r.desc || '') + '">' + Art.icon(r.icon || 'star', 16) + '<span>' + esc(r.name) + '</span><b>' + Math.round(r.value) + '</b></div>').join('') + '</div>';
       const tracks = snap.tracks || [];
@@ -396,20 +400,16 @@
           h += '<div class="state track ' + esc(tr.kind) + '"' + (standing ? ' title="' + esc(t('side.oddsTip', { pass: tr.pass, top: tr.top })) + '"' : '') + '>' + Art.icon(tr.kind === 'job' ? 'coin' : tr.kind === 'club' ? 'group' : tr.kind === 'society' ? 'map' : 'book', 20) + '<div class="grow"><b>' + esc(tr.levelName || tr.name) + '</b>' + body + '</div>' + (right ? '<span class="left">' + esc(right) + '</span>' : '') + '</div>';
         }
       }
-      if (snap.spells.length) {
-        h += '<div class="sec-h">' + esc(t('side.spells')) + '</div>';
-        for (const sp of snap.spells) h += '<div class="state spell">' + Art.icon(sp.art || 'wand', 20) + '<div><b>' + esc(sp.name) + ' ' + ['', 'I', 'II', 'III'][sp.level] + '</b><p>' + esc(sp.desc || '') + '</p></div><span class="left">' + esc(t('side.spellCost', { n: sp.cost })) + '</span></div>';
-      }
-      for (const s of snap.skills) {
-        const pct = Math.min(100, (s.value / (s.max || 100)) * 100);   // the skill's real range (was drawn against 60: B8)
-        h += '<div class="skill" title="' + esc(s.desc || '') + '">' + Art.icon(s.icon || 'star', 18) + '<div><div class="nm">' + esc(s.name) + '</div><div class="bar"><b style="width:' + pct + '%"></b></div></div><div class="v">' + Math.round(s.value) + '</div></div>';
-      }
       h += '<div class="sec-h">' + esc(t('side.conditions')) + '</div>';
       if (!snap.states.length) h += '<div class="empty">' + esc(t('side.nothing')) + '</div>';
       const order = { origin: 0, class: 1, club: 2, job: 3 };
       snap.states.slice().sort((a, b) => (order[a.kind] ?? 9) - (order[b.kind] ?? 9)).forEach((s) => {
         h += '<div class="state ' + esc(s.kind || '') + '">' + Art.icon(s.art || 'sparkle', 20) + '<div><b>' + esc(s.name) + '</b><p>' + esc(s.desc) + '</p></div>' + (s.left != null ? '<span class="left">' + esc(t('side.monthsLeft', { n: s.left })) + '</span>' : '') + '</div>';
       });
+      if (snap.spells.length) {
+        h += '<div class="sec-h">' + esc(t('side.spells')) + '</div>';
+        for (const sp of snap.spells) h += '<div class="state spell">' + Art.icon(sp.art || 'wand', 20) + '<div><b>' + esc(sp.name) + ' ' + ['', 'I', 'II', 'III'][sp.level] + '</b><p>' + esc(sp.desc || '') + '</p></div><span class="left">' + esc(t('side.spellCost', { n: sp.cost })) + '</span></div>';
+      }
     } else if (ui.tab === 'people') {
       if (!snap.npcs.length) h += '<div class="empty">' + esc(t('side.noPeople')) + '</div>';
       for (const n of snap.npcs) {
