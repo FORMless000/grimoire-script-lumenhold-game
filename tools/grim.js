@@ -354,6 +354,7 @@ function analyze(content) {
     ROLES = new Set(); IN_EVENT = false;
   }
   for (const s of Object.values(content.states)) ['tick', 'on_add', 'on_expire', 'on_remove'].forEach((k) => scanEffects(s[k], loc(s), false));
+  fightLint(content, P, loc);
   for (const h of Object.values(content.hooks)) { scanExpr(h.when, loc(h), false); scanEffects(h.do, loc(h), false); if (!['game_start', 'month_start', 'month_end', 'term_start', 'term_end'].includes(h.on)) P('error', loc(h), 'hook "on" must be game_start, month_start, month_end, term_start or term_end'); }
   for (const r of Object.values(content.resources)) scanEffects(r.on_zero, loc(r), false);
   for (const en of Object.values(content.endings)) {
@@ -451,6 +452,35 @@ function crownCheck(e, content, P) {
     const v = CROWN_WORDS[m[1].toLowerCase()] != null ? CROWN_WORDS[m[1].toLowerCase()] : +m[1];
     if (!moved.has(v)) P('warn', 'names "' + m[0] + '" but the card moves ' + [...moved].sort((a, b) => a - b).join(', ') + ' gold');
   }
+}
+// Fights (2026-10-18): every combat and duel challenge is played in the combat minigame, so it must sit on an option (the UI
+// plays it before the choice resolves), at most one on any path through that option, and the minigame must know its foe
+// (combat/setup/foes.mjs EVENTS, read from build/combat.bundle.js; without a decision a generic student is fought).
+function fightLint(content, P, loc) {
+  const isFight = (st) => st.t === 'challenge' && (st.kind === 'combat' || st.kind === 'duel');
+  // The most fights any one path through these effects can meet.
+  const most = (effs) => (effs || []).reduce((n, st) => {
+    if (st.t === 'if') return n + Math.max(...st.branches.map((b) => most(b.body)), most(st.else));
+    if (st.t === 'challenge') return n + (isFight(st) ? 1 : 0) + Math.max(most(st.win), most(st.partial), most(st.lose));
+    if (st.body) return n + Math.max(most(st.body), most(st.else));
+    return n;
+  }, 0);
+  let EVENTS = null;
+  try { EVENTS = require('../build/combat.bundle.js').EVENTS; } catch (e) { P('warn', 'build/combat.bundle.js', 'cannot read the combat bundle (' + e.message + '): fight foes unchecked'); }
+  const used = new Set();
+  for (const e of Object.values(content.events)) {
+    G.walkEffects(e.on_show, (st) => { if (isFight(st)) P('error', e.file + ':' + st.line, 'a ' + st.kind + ' challenge must be on an option (fights are played before the choice resolves), not in on_show'); });
+    for (const o of e.options) {
+      if (most(o.effects) > 1) P('error', e.file + ':' + o.line, 'option "' + o.key + '" can meet more than one fight on one path (a choice plays at most one)');
+      let n = 0; G.walkEffects(o.effects, (st) => { if (isFight(st)) n++; });
+      if (!n || !EVENTS) continue;
+      const key = e.id + '/' + o.key; used.add(key);
+      if (!EVENTS[key] || !EVENTS[key].play) P('warn', e.file + ':' + o.line, 'fight with no foe decision in combat/setup/foes.mjs EVENTS["' + key + '"] (a generic student will be fought)');
+    }
+  }
+  for (const [what, list] of [['state', Object.values(content.states).flatMap((s) => ['tick', 'on_add', 'on_expire', 'on_remove'].map((k) => [s, s[k]]))], ['hook', Object.values(content.hooks).map((h) => [h, h.do])]])
+    for (const [d, effs] of list) G.walkEffects(effs, (st) => { if (isFight(st)) P('error', loc(d), 'a ' + st.kind + ' challenge must be on an event\'s option, not in a ' + what); });
+  if (EVENTS) for (const k of Object.keys(EVENTS)) if (!used.has(k)) P('warn', 'combat/setup/foes.mjs', 'EVENTS["' + k + '"] matches no fight in content');
 }
 function budgetCheck(e, content, P) {
   const bal = content.balance || {};

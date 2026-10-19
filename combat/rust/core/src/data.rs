@@ -72,6 +72,7 @@ struct RawTuning {
 #[serde(rename_all = "camelCase")]
 struct RawDecisionTuning {
     quiet_exchanges: Option<i32>,
+    max_exchanges: Option<i32>,
 }
 
 #[derive(Deserialize)]
@@ -158,7 +159,7 @@ pub struct Ids {
 
 /// How skills scale amounts: factor = 1 + perPoint × (skill − pivot), main combat skills at the steeper rate.
 /// Strike: its base damage and its own Vigor rate (None: Vigor's rate, as for any spell).
-pub struct SkillTuning { pub pivot: f64, pub per_point: [f64; 6], pub strike_damage: f64, pub strike_per_point: Option<f64>, pub guard_repeat_leak: f64, pub guard_lookback: i32, pub shadowstep_break_on_cast: bool, pub decision_quiet: i32 }
+pub struct SkillTuning { pub pivot: f64, pub per_point: [f64; 6], pub strike_damage: f64, pub strike_per_point: Option<f64>, pub guard_repeat_leak: f64, pub guard_lookback: i32, pub shadowstep_break_on_cast: bool, pub decision_quiet: i32, pub decision_max: i32 }
 
 pub struct Data {
     pub skill: SkillTuning,
@@ -248,8 +249,9 @@ fn load() -> Data {
     let guard_repeat_leak = raw.tuning.guard.as_ref().and_then(|g| g.repeat_leak).unwrap_or(0.0);
     let guard_lookback = raw.tuning.guard.as_ref().and_then(|g| g.lookback).unwrap_or(1);
     let decision_quiet = raw.tuning.decision.as_ref().and_then(|g| g.quiet_exchanges).unwrap_or(crate::rules::DECISION_QUIET_EXCHANGES);
+    let decision_max = raw.tuning.decision.as_ref().and_then(|g| g.max_exchanges).unwrap_or(crate::rules::DECISION_MAX_EXCHANGES);
     let shadowstep_break_on_cast = raw.tuning.shadowstep.as_ref().and_then(|g| g.break_on_cast).unwrap_or(false);
-    Data { skill: SkillTuning { pivot: t.pivot, per_point, strike_damage, strike_per_point, guard_repeat_leak, guard_lookback, shadowstep_break_on_cast, decision_quiet }, spells, constructs, construct_spell, contexts: raw.contexts, flux_ratio: raw.flux_ratio, ids, acts, spell_index }
+    Data { skill: SkillTuning { pivot: t.pivot, per_point, strike_damage, strike_per_point, guard_repeat_leak, guard_lookback, shadowstep_break_on_cast, decision_quiet, decision_max }, spells, constructs, construct_spell, contexts: raw.contexts, flux_ratio: raw.flux_ratio, ids, acts, spell_index }
 }
 
 fn build_acts(spells: &[Spell]) -> Acts {

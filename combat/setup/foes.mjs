@@ -95,12 +95,17 @@ export const FOES={
 };
 
 // Every current combat card, by event/option. play: a minigame fight against `foe` (several foes: matched to the card's
-// random text variant, in order); convert: not a fight, the challenge line becomes this (same rung and odds). Level: challengeDC → foeLevel.
+// random text variant, in order). The seven cards that weren't fights (races, sports, brawls you defuse) became `challenge feat`
+// in content (2026-10-18, EVENTS.md §6). Level: the engine's DC → foeLevel.
 // `setup` lists extra fight setup the card implies. EVENTS.md gives the reasons.
 // Every played card states its audience (F5.9c), since it's the scene's, not the foe's: `observers` (a crowd whose Renown
 // counts: Glamour and Rapport pay out) and `witnesses` (someone from the academy sees it, so a forbidden cast is reported;
 // an audience always is one). A list gives one value per challenge on the card, in source order. `context` (the rebates)
 // comes from the card, else the foe; fightSetting() resolves all three.
+// Fight setup the card implies, read by the main game's bridge (src/combat.js); a list gives one value per challenge:
+//   firstLeader      0: the player leads the first exchange, 1: the foe does (createState's firstLeader)
+//   foeCommitsFirst  n: the foe commits its move first, visibly, for n exchanges (as under the player's Foresight)
+//   nature           the odds word the foe's level uses instead of the card's (the setup already prices the circumstance)
 export const EVENTS={
  'spring_tournament/right':{play:'tournament_entrant',observers:true,witnesses:true},
  'spring_tournament_circle/left':{play:'tournament_entrant',observers:true,witnesses:true},
@@ -109,37 +114,30 @@ export const EVENTS={
  'tournament_final/left':{play:'lyra',context:'public_duel',observers:true,witnesses:true},
  'hs_tunnel/fight':{play:'man_in_grey',setup:'two challenges: with Kael (master-) and alone (master- unlikely, +3 levels); the odds word already prices Kael’s help, so no extra handicap',observers:false,witnesses:[true,false]},
  'ilse_grey_returns/left':{play:'man_in_grey',setup:'his hand on Ilse is in the rung (journeyman likely): no extra handicap',observers:false,witnesses:true},
- 'rival_contest/left':{play:['tamsin','thornwick_illusionist'],setup:'Tamsin if met, else the Thornwick illusionist. With thornwick_secrets (adept likely): the foe commits first for 3 exchanges (as if under your Foresight) at the even level, instead of the likely −3 levels',context:'public_duel',observers:true,witnesses:true},
+ 'rival_contest/left':{play:['tamsin','thornwick_illusionist'],foeCommitsFirst:[3,0],nature:['even',null],setup:'Tamsin if met, else the Thornwick illusionist. With thornwick_secrets (adept likely): the foe commits first for 3 exchanges (as if under your Foresight) at the even level, instead of the likely −3 levels',context:'public_duel',observers:true,witnesses:true},
  'rival_last_match/left':{play:['tamsin','thornwick_final_year'],context:'practice_duel',setup:'Tamsin if met, else a Thornwick final-year',observers:true,witnesses:true},
  'curse_cure_2/right':{play:'shadow_stag',observers:false,witnesses:false},
  'pyro_lyra_spar/right':{play:'lyra',context:'practice_duel',observers:true,witnesses:true},
- 'duel_practice_bout/left':{play:'quick_fourth_year',setup:'Hold your ground: the fourth-year leads every exchange (firstLeader 1)',observers:false,witnesses:true},
- 'duel_practice_bout/right':{play:'quick_fourth_year',setup:'Go on the attack: you lead the first exchange (firstLeader 0)',observers:false,witnesses:true},
+ 'duel_practice_bout/left':{play:'quick_fourth_year',firstLeader:1,setup:'Hold your ground: the fourth-year leads every exchange (firstLeader 1)',observers:false,witnesses:true},
+ 'duel_practice_bout/right':{play:'quick_fourth_year',firstLeader:0,setup:'Go on the attack: you lead the first exchange (firstLeader 0)',observers:false,witnesses:true},
  'duel_bram_hazing/right':{play:'bram',context:'public_duel',observers:true,witnesses:true},
  'y3_last_duel/left':{play:'lyra',context:'practice_duel',observers:false,witnesses:true},
  'xchg_farewell/right':{play:'thornwick_sketcher',observers:false,witnesses:true},
- 'tavern_brawl/right':{convert:'challenge feat apprentice+ wild'},
- 'life_pixies/left':{convert:'challenge feat apprentice- wild'},
  'life_rival_academy/right':{play:'thornwick_best',observers:true,witnesses:true},
  'midnight_boathouse_ring/left':{play:'ring_opener',observers:true,witnesses:true},
  'bram_duel/right':{play:'bram',context:'public_duel',observers:true,witnesses:true},
- 'courtyard_seasonal_game/left':{convert:'challenge feat apprentice wild'},
  'lyra_date_dawn_duel/left':{play:'lyra',context:'practice_duel',observers:false,witnesses:true},
  'duel_hall_gallery/left':{play:'peer',context:'practice_duel',observers:false,witnesses:true},
- 'flight_field_pickup_race/left':{convert:'challenge feat journeyman+ wild'},
- 'newt_high_table/health':{convert:'challenge feat adept- wild'},
  'ring_on_yourself/left':{play:'ring_opener',observers:true,witnesses:true},
  'ring_on_yourself/right':{play:'ring_opener',observers:true,witnesses:true},
  'ring_bout_2/left':{play:['ring_rower','ring_villager','ring_scarf'],observers:true,witnesses:true},
  'ring_bout_3/left':{play:['ring_duellist','ring_farrier','ring_hood'],observers:true,witnesses:true},
  'ring_bout_4/left':{play:['ring_champion','ring_bookmaker','ring_sailor'],observers:true,witnesses:true},
- 'gig_newt_brawl/left':{convert:'challenge feat apprentice+'},
  'duelling_captain_challenge/left':{play:'visiting_champion',observers:true,witnesses:true},
  'slice_candle_flame/right':{play:'lyra',context:'practice_duel',observers:false,witnesses:true},
  'slice_frost_duel/left':{play:'kael',context:'practice_duel',observers:true,witnesses:true},
  'duel_first_practice/right':{play:'club_partner',observers:false,witnesses:true},
  'duel_fixture/left':{play:'thornwick_duellist',observers:true,witnesses:true},
- 'lake_skimming/left':{convert:'challenge feat apprentice wild'}
 };
 
 // A foe's level is the card's own challenge level (F5.9b): the DC the stub would roll against, computed as the main engine's

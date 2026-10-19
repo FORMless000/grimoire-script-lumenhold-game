@@ -12,6 +12,8 @@ pub const BRACE_BLOCK: [f64; 4] = [1.0, 0.5, 0.25, 0.25];
 #[inline] fn amt(sp: usize, key: &str) -> f64 { data().amt(sp, key) }
 pub const STRIKE_DAMAGE: f64 = 9.0;
 pub const DECISION_QUIET_EXCHANGES: i32 = 10;
+/// A fight that is never quiet (both sides hurt and heal) is called on points after this many exchanges.
+pub const DECISION_MAX_EXCHANGES: i32 = 60;
 pub const STARLIGHT_RELEASE: f64 = 30.0;
 pub const STARLIGHT_CHARGED: f64 = 48.0;
 pub const PURIFY_MANA: f64 = 24.0;
@@ -647,7 +649,7 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
     }
     let quiet = (0..2).all(|i| (s.actors[i].hp - hp_before[i]).abs() < 1e-9 && (s.actors[i].spent[R_MANA] - spent_before[i]).abs() < 1e-9);
     s.quiet = if quiet { s.quiet + 1 } else { 0 };
-    if s.quiet >= d.skill.decision_quiet {
+    if s.quiet >= d.skill.decision_quiet || s.round >= d.skill.decision_max {
         let f = [s.actors[0].hp / s.actors[0].max_hp, s.actors[1].hp / s.actors[1].max_hp];
         if (f[0] - f[1]).abs() < 1e-9 { finish(enc, s, ctx.public.as_deref_mut(), Outcome::Draw, Reason::Stalemate, None, false); }
         else { let w = if f[0] > f[1] { 0 } else { 1 }; finish(enc, s, ctx.public.as_deref_mut(), if w == 0 { Outcome::Win } else { Outcome::Lose }, Reason::Decision, Some(w), false); }

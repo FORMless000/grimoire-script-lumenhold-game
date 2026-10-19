@@ -19,6 +19,7 @@
   const DEFAULT_PRIORITY = { queued: 60, auto: 50, social: 20, random: 10 };
   const ANY_EVENT_REST = 2;
   const SAVE_VERSION = 3;
+  const FIGHT_BARS = ['health', 'mana', 'mood', 'renown', 'gold', 'alignment'];   // what a played fight's settlement moves
   const YEARBOOK = [['headline', 1], ['mystery', 1], ['relationships', 3], ['personal', 2]];   // design §10.5
   // Defaults when content has no @balance block (design §8.4).
   const TIER_INDEX = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4 };
@@ -428,6 +429,71 @@
     }
     // Entering a fight spends mana (M5): `@balance combat_cost:` (a tier, default small).
     combatCost() { return this.tierAmount(this.spellResource, (this.c.balance && this.c.balance.combat_cost) || 'small') || 0; }
+
+    /* ---------------- Fights: the combat minigame (combat/, wired 2026-10-18) ----------------
+     * Every combat and duel challenge is played. The engine stays DOM-free: it describes the fight (fightRequest), and a
+     * result comes back either from the UI (fightAhead before choose, then choose(key, {fights: [result]})) or from a
+     * resolver set as `eng.fights = request => result` (the simulated players, tools/combat-sim.js). A result is
+     * {outcome: win|lose|draw, reason: knockout|decision|stalemate|conceded, deltas: {health, mana, mood, renown, gold,
+     * alignment}, followUps: [], foe, exchanges, rules} (src/combat.js turns the minigame's settle() into one). */
+    // The player as the fight reads them: skills, the spells content knows and their levels, the bars.
+    fightPlayer() {
+      const s = this.s, skills = {}, spells = {};
+      for (const k of this.c.order.skills || Object.keys(this.c.skills)) skills[k] = Math.round((s.vals[k] || 0) * 100) / 100;
+      for (const [id, lv] of Object.entries(s.spells || {})) if (this.c.spells[id] && lv > 0) spells[id] = lv;
+      const v = (k) => s.vals[k] || 0;
+      return { name: s.name, pronouns: s.pronouns || 'they', skills, spells, health: v('health'), mana: v(this.spellResource), maxMana: this.resMax(this.c.resources[this.spellResource]),
+        mood: v('mood'), renown: v('renown'), gold: v('gold'), alignment: v('alignment') };
+    }
+    // Everything the bridge needs to set up a challenge's fight. `id` (event/option#index) ties a result to its fight.
+    fightRequest(st, ctx) {
+      const s = this.s, e = this.c.events[ctx.key] || {}, key = this._optKey || 'show';
+      const list = []; G.walkEffects(this._optEffects || e.on_show || [], (x) => { if (x.t === 'challenge' && (x.kind === 'combat' || x.kind === 'duel')) list.push(x); });
+      const index = Math.max(0, list.indexOf(st));
+      const odds = this.challengeOdds(st, ctx.actor, ctx.key);
+      let vs = null;
+      if (st.vs) { const who = (this._cast && this._cast[st.vs.who]) || (st.vs.who === 'npc' ? ctx.actor : st.vs.who); if (who && this.c.npcs[who]) vs = { npc: who, stat: st.vs.stat }; }
+      let h = 2166136261; const str = s.seed + ':' + s.turn + ':' + e.id + ':' + key + ':' + index;
+      for (let k = 0; k < str.length; k++) { h ^= str.charCodeAt(k); h = Math.imul(h, 16777619); }
+      return { id: e.id + '/' + key + '#' + index, event: e.id, option: key, index, kind: st.kind, cls: e.class || null, line: st.line || null,
+        dc: Math.round(odds.dc * 100) / 100, odds: st.odds || 'even', swing: st.swing || null, vs, partial: !!(st.partial && st.partial.length),
+        actor: ctx.actor || null, cast: this._cast || null, variantHash: this.variantHash(e.id), seed: h >>> 0,
+        turn: s.turn, year: this.yearOf(), met: Object.keys(s.npcs).filter((id) => s.npcs[id].met), player: this.fightPlayer() };
+    }
+    // A played fight: its result picks the challenge's outcome; the fight's own costs are applied, and the outcome runs without
+    // its Health lines. win → win; a draw, or a loss on points, → partial when the challenge has one, else lose; a knockout → lose.
+    playFight(st, ctx) {
+      const s = this.s, req = this.fightRequest(st, ctx);
+      const res = this._fightQueue && this._fightQueue.length ? this._fightQueue.shift() : this.fights(req);
+      if (!res || !['win', 'lose', 'draw'].includes(res.outcome)) throw new Error('fight ' + req.id + ': no result');
+      (ctx.fights = ctx.fights || []).push(res);   // the run log keeps the results, so a logged run replays without its fights
+      if (res.request && res.request !== req.id) throw new Error('fight result for ' + res.request + ' handed to ' + req.id);
+      const partial = !!(st.partial && st.partial.length);
+      const result = res.outcome === 'win' ? 'win' : (res.outcome === 'draw' || res.reason === 'decision') && partial ? 'partial' : 'lose';
+      for (const [k, v] of Object.entries(res.deltas || {})) if (v && (this.c.resources[k] || this.c.skills[k])) this.change(k, v, ctx);
+      ctx.checks.push({ challenge: st.kind, fight: true, result, ok: result !== 'lose', outcome: res.outcome, reason: res.reason || null });
+      ctx.notes.push({ kind: 'fight', outcome: res.outcome, reason: res.reason || null, foe: res.foe || null, exchanges: res.exchanges || null });
+      (s.fights = s.fights || []).push({ turn: s.turn, id: req.id, foe: res.foe ? res.foe.id || res.foe.name || null : null, level: res.foe ? res.foe.level || null : null,
+        outcome: res.outcome, reason: res.reason || null, result, exchanges: res.exchanges || null, rules: res.rules || null });
+      if (s.fights.length > 300) s.fights.shift();
+      // The minigame invents no story: a witnessed forbidden cast becomes the academy's consequence (`@game forbidden_report`).
+      for (const f of res.followUps || []) {
+        const ev = f === 'forbidden_cast_report' || (f && f.kind === 'forbidden_cast_report') ? (this.c.game || {}).forbidden_report : null;
+        if (ev && this.c.events[ev]) s.deck.push({ id: ev, actor: null, src: 'queued' });
+      }
+      const was = this._fightOutcome; this._fightOutcome = true;
+      try { this.run(st[result], ctx); } finally { this._fightOutcome = was; }
+    }
+    // The fight choosing `key` would start, before anything happens: the option is played on a copy of the run (same random
+    // state) up to its first fight. null when the option starts none on this path.
+    fightAhead(key) {
+      if (!this.s.cur) return null;
+      const twin = new this.constructor(this.c).load(JSON.parse(this.save()));
+      const STOP = {}; let found = null;
+      twin.fights = (req) => { found = req; throw STOP; };
+      try { twin.choose(key); } catch (err) { if (err !== STOP) throw err; }
+      return found;
+    }
     // The advisor modifier (design §9.2): how the track's `lead:` (its professor, captain or employer) feels about you, rel / 5, within ±15.
     advisorBonus(trackId) {
       const d = trackId && this.c.tracks[trackId], n = d && d.lead && this.s.npcs[d.lead];
@@ -672,7 +738,8 @@
     }
     // What an option's first roll looks like on its button: a challenge (with its swing, and combat's mana), an exam, a legacy check.
     checkView(st, actor, item) {
-      if (st.t === 'challenge') { const odds = this.challengeOdds(st, actor, item && item.id); return { skill: st.kind, using: odds.skill, p: odds.win, challenge: true, swing: st.swing || null, combat: st.kind === 'combat', cost: st.kind === 'combat' ? this.combatCost() : 0 }; }
+      // A fight (combat, duel) is played (fight: true): its p is the stub's estimate, and it charges no entry Mana.
+      if (st.t === 'challenge') { const odds = this.challengeOdds(st, actor, item && item.id), fight = st.kind === 'combat' || st.kind === 'duel'; return { skill: st.kind, using: odds.skill, p: odds.win, challenge: true, swing: st.swing || null, combat: st.kind === 'combat', fight, cost: st.kind === 'combat' && !fight ? this.combatCost() : 0 }; }
       if (st.t === 'sit_exam') { const id = (item && item.track) || this._ctxTrack; const o = id && this.trackState(id) ? this.examOdds(id, st.swing) : null; return o ? { exam: true, skill: 'exam', using: o.skills.join('+'), p: o.pass, top: o.top, a: o.a, swing: st.swing || null } : null; }
       return { skill: st.skill, p: this.checkChance(st.skill, this.value(st.dc, actor)) };
     }
@@ -1010,9 +1077,15 @@
       const seen = Math.max(1, (key && s.seen[key]) || 1);
       if (mode === 'cycle') return parts[(seen - 1) % parts.length];
       if (mode === 'seq') return parts[Math.min(seen - 1, parts.length - 1)];
+      return parts[this.variantHash(key) % parts.length];
+    }
+    // The shuffled variant's index this month ({~a|b|c}: hash % parts): a fight that names its foe by the card's text
+    // variant (ring_bout_2: the rower, the villager, the student in the scarf) takes the same index.
+    variantHash(key) {
+      const s = this.s;
       let h = 2166136261; const str = s.seed + ':' + s.turn + ':' + (key || '');
       for (let k = 0; k < str.length; k++) { h ^= str.charCodeAt(k); h = Math.imul(h, 16777619); }
-      return parts[(h >>> 0) % parts.length];
+      return h >>> 0;
     }
     // Re-render text from a run-log entry as it was shown: its event, turn and showing count.
     interpLogged(text, l, actor) {
@@ -1124,7 +1197,8 @@
       for (const st of effects) {
         if (s.ended && st.t !== 'say') return;
         switch (st.t) {
-          case 'delta': this.change(st.name, this.amountOf(st, st.name), ctx); break;
+          // A played fight settles Health itself: its outcome's own `health` lines (written for the dice) are skipped.
+          case 'delta': if (!(this._fightOutcome && st.name === 'health')) this.change(st.name, this.amountOf(st, st.name), ctx); break;
           case 'assign': {
             const v = this.value(st.expr, ctx.actor);
             if (st.op === '=') this.change(st.name, v - (s.vals[st.name] || 0), ctx);
@@ -1240,7 +1314,12 @@
             break;
           }
           case 'challenge': {
-            if (st.kind === 'combat') this.change(this.spellResource, -this.combatCost(), ctx);
+            // A fight (combat, duel) is played, never rolled (2026-10-18): a result handed to choose() (the UI played it), or
+            // the resolver's (`eng.fights`, the simulated players). Previews keep the stub's odds as the expected value.
+            if ((st.kind === 'combat' || st.kind === 'duel') && !this._oracle && ((this._fightQueue && this._fightQueue.length) || this.fights)) { this.playFight(st, ctx); break; }
+            if ((st.kind === 'combat' || st.kind === 'duel') && this._oracle) this._oracle.fight = true;
+            // The stub's entry cost (Mana) only where fights are still rolled: unit-test fixtures with no resolver.
+            if (st.kind === 'combat' && !this.fights) this.change(this.spellResource, -this.combatCost(), ctx);
             const o = this.challengeOdds(st, ctx.actor, ctx.key);
             const probs = [o.win, st.partial ? o.atLeastPartial - o.win : 0, 100 - o.atLeastPartial];
             const result = ['win', 'partial', 'lose'][this.pick('challenge', probs, { challenge: st.kind })];
@@ -1662,7 +1741,9 @@
       };
     }
 
-    choose(key) {
+    // `opts.fights`: results of fights the UI played (fightAhead → the minigame → its result), used in order by the
+    // option's combat and duel challenges instead of the resolver.
+    choose(key, opts = {}) {
       const s = this.s;
       if (!s.cur) throw new Error('no current card');
       const item = s.cur, e = this.c.events[item.id];
@@ -1682,7 +1763,8 @@
         if ((s.vals[this.spellResource] || 0) < cost) throw new Error('not enough ' + this.spellResource + ' for ' + opt.spell);
         this.chargeCast(opt.spell, cost, ctx);
       }
-      this.run(opt.effects, ctx);
+      this._fightQueue = opts.fights ? opts.fights.slice() : null; this._optKey = key; this._optEffects = opt.effects;
+      try { this.run(opt.effects, ctx); } finally { this._fightQueue = null; this._optKey = null; this._optEffects = null; }
       if (item.track) this.courseworkFor(item.track, ctx);
       this.handleZeroed(ctx);
       this._variant = null;
@@ -1703,7 +1785,7 @@
       s.cur = null;
       const out = this.outcome(ctx);
       const h = item.n != null ? this.histEntry(item.n) : null;
-      if (h) Object.assign(h, { choice: key, label: this.interp(opt.label, item.actor, e.id), out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() });
+      if (h) Object.assign(h, { choice: key, label: this.interp(opt.label, item.actor, e.id), out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() }, ctx.fights ? { fights: ctx.fights } : {});
       s.log.push({ n: item.n, turn: s.turn, id: e.id, key, title: this.interp(e.title, item.actor, e.id), choice: this.interp(opt.label, item.actor, e.id), say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null, seen: s.seen[e.id] || 0 });
       if (s.log.length > 400) s.log.shift();
       return out;
@@ -1758,7 +1840,7 @@
         s.termGrades = {}; for (const [k, v] of Object.entries(saved.termGrades || {})) s.termGrades[k] = v.map((x) => ({ ...x }));
         s.npcs = {}; for (const [k, v] of Object.entries(saved.npcs)) s.npcs[k] = { ...v };
         const decisions = [];
-        this._oracle = {
+        const fightSeen = this._oracle = {
           branch: (kind, probs, label) => {
             const i = decisions.length;
             const choice = i < prefix.length ? prefix[i] : probs.findIndex((x) => x > 0);
@@ -1781,7 +1863,7 @@
             Object.keys(s.flags).length !== Object.keys(saved.flags).length || Object.keys(s.flags).some((k) => !saved.flags[k]);
           this._oracle = null; this._variant = null; this._cast = null; this._ctxTrack = null;
           for (const k of KEYS) s[k] = saved[k];
-          runOnce.last = { decisions, deltas: ctx.deltas, follows };
+          runOnce.last = { decisions, deltas: ctx.deltas, follows, fight: !!fightSeen.fight };
         }
         return runOnce.last;
       };
@@ -1794,7 +1876,7 @@
         for (const k of new Set([...Object.keys(lo.deltas), ...Object.keys(hi.deltas)])) { const a = lo.deltas[k] || 0, b = hi.deltas[k] || 0; deltas[k] = [Math.min(a, b), Math.max(a, b)]; }
         let p = 1;
         lo.decisions.forEach((d) => { p *= (d.probs[d.choice] || 0) / 100; });
-        paths.push({ p, decisions: lo.decisions.map((d) => ({ kind: d.kind, choice: d.choice, label: d.label })), deltas, follows: lo.follows || hi.follows });
+        paths.push({ p, decisions: lo.decisions.map((d) => ({ kind: d.kind, choice: d.choice, label: d.label })), deltas, follows: lo.follows || hi.follows, fight: lo.fight || hi.fight });
         for (let i = prefix.length; i < lo.decisions.length; i++) {
           lo.decisions[i].probs.forEach((x, a) => { if (x > 0 && a !== lo.decisions[i].choice) queue.push(lo.decisions.slice(0, i).map((d) => d.choice).concat([a])); });
         }
@@ -1805,8 +1887,8 @@
         const head = pth.decisions.slice(0, 2);
         const k = head.map((d) => d.kind + d.choice).join('/');
         const m = merged.get(k);
-        if (!m) { merged.set(k, { p: pth.p, labels: head, deltas: { ...pth.deltas }, follows: pth.follows }); continue; }
-        m.p += pth.p; m.follows = m.follows || pth.follows;
+        if (!m) { merged.set(k, { p: pth.p, labels: head, deltas: { ...pth.deltas }, follows: pth.follows, fight: pth.fight }); continue; }
+        m.p += pth.p; m.follows = m.follows || pth.follows; m.fight = m.fight || pth.fight;
         for (const key2 of new Set([...Object.keys(m.deltas), ...Object.keys(pth.deltas)])) {
           const a = m.deltas[key2] || [0, 0], b = pth.deltas[key2] || [0, 0];
           m.deltas[key2] = [Math.min(a[0], b[0]), Math.max(a[1], b[1])];
@@ -1816,13 +1898,16 @@
       const envelope = {};
       for (const pth of out) for (const [k, [a, b]] of Object.entries(pth.deltas)) { const cur = envelope[k] || [Infinity, -Infinity]; envelope[k] = [Math.min(cur[0], a), Math.max(cur[1], b)]; }
       for (const pth of out) for (const k of Object.keys(envelope)) if (!pth.deltas[k]) { envelope[k] = [Math.min(envelope[k][0], 0), Math.max(envelope[k][1], 0)]; }
-      return { paths: out, deltas: envelope, follows: out.some((x) => x.follows), cost, spell: opt.spell || null };
+      // `fight`: the option plays a fight; its odds are the stub's estimate, and the fight settles its own bars (FIGHT_BARS).
+      return { paths: out, deltas: envelope, follows: out.some((x) => x.follows), cost, spell: opt.spell || null, fight: out.some((x) => x.fight) };
     }
     // Does a real outcome fit one of the preview's paths? (The preview property test, design §8.3.)
+    // A path through a played fight doesn't predict the bars the fight settles (FIGHT_BARS).
     static fits(preview, deltas) {
       const keys = (d) => Object.keys(d).filter((k) => d[k]);
       return preview.paths.some((pth) => {
         for (const k of new Set([...keys(deltas), ...Object.keys(pth.deltas)])) {
+          if (pth.fight && FIGHT_BARS.includes(k)) continue;
           const v = deltas[k] || 0, r = pth.deltas[k] || [0, 0];
           if (v < r[0] - 1e-9 || v > r[1] + 1e-9) return false;
         }

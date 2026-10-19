@@ -92,9 +92,10 @@ test('styles: the homebody sleeps every night, spends every break at home, and g
     const plans = cards(eng).filter((h) => h.id === 'break_plan');
     assert.ok(plans.length >= 4 && plans.every((h) => h.choice === 'home'), 'home every break: ' + plans.map((h) => h.choice));
     assert.ok(eng.s.turn >= eng.maxTurns, 'no early ending (' + (eng.s.ended && eng.s.ended.id) + ')');
-    // (a healthy homebody's +20 is often clamped at the maximum: more than the ordinary 8 / 4 is enough)
-    assert.ok(cards(eng).some((h) => h.id === 'night_sleep' && (h.out.deltas.health > 8 || h.out.deltas.mood > 4)), 'the home sleep pays');
   }
+  // (a healthy homebody's +20 is often clamped at the maximum, all run in a well-rested game: more than the ordinary 8 / 4,
+  // somewhere in the homebody's games, is enough)
+  assert.ok(games('homebody').some((eng) => cards(eng).some((h) => h.id === 'night_sleep' && (h.out.deltas.health > 8 || h.out.deltas.mood > 4))), 'the home sleep pays');
   assert.ok(mean('homebody', (e) => e.s.vals.health) >= 80, 'healthy at the end');
 });
 

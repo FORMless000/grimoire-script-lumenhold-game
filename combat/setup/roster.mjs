@@ -21,7 +21,8 @@ export const COMBAT_TUNING={
  capacity:{base:43,slope:43/150,weights:{arcana:2,lore:1,alchemy:1,charm:1,vigor:1,guile:1}}, // 43 × (2/3 + skill/150): 34 at 20, 52 at 80
  guard:{repeatLeak:.5,lookback:1}, // Guard fatigue (F5.5): a Guard within `lookback` exchanges of the last stops only half a Strike
  shadowstep:{breakOnCast:false}, // true: casting any spell but Ward breaks your own Shadowstep (tried in F5.5: kills comebacks, see rulebook)
- decision:{quietExchanges:5}, // a stalemate (no HP lost, no Mana spent) is called on points after this many exchanges
+ decision:{quietExchanges:5,maxExchanges:60}, // a stalemate (no HP lost, no Mana spent) is called on points after quietExchanges exchanges; any fight
+   // after maxExchanges (one where both sides hurt and heal forever; a fight's p99 is under 40)
  // Kit gates (F5.9b, fitted to the main game: card foes run about level 12–65; players reach course level II from year 1
  // spring, E ≈ 20, and III from year 2 spring, E ≈ 34): the level each course slot, extra, forbidden and place spell is
  // learned, and the levels where three-level spells reach rank 2 and 3. Was courses 1/15/40/65, extras 45/70, forbidden
