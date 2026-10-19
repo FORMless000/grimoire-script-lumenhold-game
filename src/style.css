@@ -116,6 +116,8 @@ details.adv input { margin-top: 8px; }
 .meter.preview .dot { opacity: 1; transform: scale(1); }
 .float-chip { position: absolute; top: 4px; left: 50%; transform: translateX(-50%); font-weight: 700; font-size: 13px; pointer-events: none; animation: floatUp 1.6s ease-out forwards; text-shadow: 0 1px 3px #000; white-space: nowrap; }
 .float-chip.pos { color: var(--good); } .float-chip.neg { color: var(--bad); }
+/* Mana's changes float in blue (lighter for a gain), apart from the other meters' green and red. */
+#m-mana .float-chip.pos { color: #a9dcff; } #m-mana .float-chip.neg { color: #6fa8e8; }
 @keyframes floatUp { 0% { opacity: 0; transform: translate(-50%, 6px); } 15% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -34px); } }
 @keyframes pulse { 50% { box-shadow: 0 0 0 4px rgba(255, 138, 128, 0.2); } }
 

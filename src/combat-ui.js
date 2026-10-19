@@ -150,7 +150,12 @@
     function bar(side, kind, value, max, flux = 0, shield = 0) {
       const k = side + kind, pct = (v) => Math.max(0, Math.min(100, 100 * v / max)), now = pct(value), fluxShown = Math.min(flux, Math.max(0, max - value)), prev = seen[k];
       let delta = '';
-      if (prev && prev.v !== value && prev.at !== moves) seen[k] = { v: value, at: moves, d: value - prev.v, fresh: true };
+      // The Mana a fight hands back at its end (flux collected, rebates) shows at once: no floating number, no sliding bar.
+      if (kind === 'mana' && game.result && prev && prev.v !== value) {
+        seen[k] = { v: value, at: moves, d: 0 };
+        for (const key of [k + 'trail', k + 'flux', k + 'fill']) { bars[key] = key === k + 'flux' ? pct(fluxShown) : now; }
+        bars[k + 'flux@'] = now;
+      } else if (prev && prev.v !== value && prev.at !== moves) seen[k] = { v: value, at: moves, d: value - prev.v, fresh: true };
       else if (!prev) seen[k] = { v: value, at: -1, d: 0 };
       const s = seen[k], fresh = s.fresh; s.fresh = false;
       if (fresh && Math.abs(s.d) >= 0.5) delta = '<span class="delta ' + (s.d < 0 ? 'neg' : 'pos') + '">' + (s.d < 0 ? '−' : '+') + fmt(Math.abs(s.d)) + '</span>';
