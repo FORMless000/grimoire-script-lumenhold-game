@@ -16,11 +16,11 @@ The combat rules and the AI search exist once, in Rust (`rust/core`). They are c
 ## Build and play
 
 ```bash
-node experiments/combat-f5/tools/build.mjs
+node combat/tools/build.mjs
 ```
 
 ```bash
-PORT=61096 node experiments/combat-f5/out/site/server.mjs
+PORT=61096 node combat/out/site/server.mjs
 ```
 
 `build.mjs` exports the spell data to Rust, builds the native simulator and the WebAssembly core (`rustup target add wasm32-unknown-unknown` once), and writes the site to `out/site/`. Needs Rust (stable) and Node 20+.
@@ -30,7 +30,7 @@ PORT=61096 node experiments/combat-f5/out/site/server.mjs
 **The playtest pipeline** (rerun after every rule change):
 
 ```bash
-experiments/combat-f5/tools/playtest.sh F56_D5 5
+combat/tools/playtest.sh F56_D5 5
 ```
 
 This runs the balance suite with every side searching 5 exchanges per decision: 504 class-matrix fights at levels 20–80 and 432 level-gap fights, all with the fallible AI. It takes about 10 minutes on 8 cores (40 s at depth 4). It writes `out/F56_D5-report.md`, which has:

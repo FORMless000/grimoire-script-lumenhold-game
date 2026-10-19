@@ -109,7 +109,7 @@ Every line names both sides with `{name}` (who acts) and `{foe}`.
 - **Workers:** the AI search runs in a worker so the UI stays responsive. Under `file://`, create it from a Blob URL of the bundled worker code and pass the wasm bytes in the first message. With no worker support, fall back to the main thread at the Fast budget.
 - **Saves:** a fight in progress is a plain JSON state (`createState` and the core's state). Save it with the run, so closing the tab mid-fight resumes it. Settlement applies once, when the fight ends.
 - **One rules core:** the main game imports `setup/` (data, kits, campaign bridge, flavor) and `web/core.mjs`, never a copy. `RULES_VERSION` is stored with each fight so replays and logs can be checked.
-- **The bench stays:** `experiments/combat-f5/` remains the place to balance the minigame (suite, playtest, condition study), and the main game takes its builds.
+- **The bench stays:** `combat/` remains the place to balance the minigame (suite, playtest, condition study), and the main game takes its builds.
 
 ## 7. Prerequisites and order
 

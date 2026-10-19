@@ -5,7 +5,7 @@ import {readFileSync,readdirSync,statSync} from 'node:fs';
 import {join} from 'node:path';
 import {EVENTS,FOES,POOLS,foeLoadouts,knownLoadout,fightSetting} from '../setup/foes.mjs';
 import {CONTEXTS} from '../setup/roster.mjs';
-const root=new URL('../../../content',import.meta.url).pathname;
+const root=new URL('../../content',import.meta.url).pathname;
 const walk=d=>readdirSync(d).flatMap(f=>{const p=join(d,f);return statSync(p).isDirectory()?walk(p):p.endsWith('.grim')?[p]:[];});
 const found=[];
 for(const file of walk(root)){

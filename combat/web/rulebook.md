@@ -225,4 +225,4 @@ The rules and the AI are one Rust core (`rust/core`): natively for simulations, 
 
 The AI is alpha–beta over resolved exchanges, with iterative deepening, principal-variation search, aspiration windows, a transposition table, killer and history move ordering, and an optional extension for tactical horizons. Live play is time-based: Fast 100 ms and Deep 500 ms (compute profiles `live_fast` and `live_deep`); the engine view searches for the chosen budget (1.5 s by default). Profiles `full`, `fallible` and the rest set depth and seeded bounded mistakes. Channels and bundles are ordinary commands, and every mutable counter, construct and delayed hit is part of the search state. Search runs in workers, off the UI thread.
 
-Build and test from `experiments/combat-f5/`: `node tools/build.mjs`, `cargo test --release` in `rust/`, `node tools/golden.mjs`. See `README.md` there.
+Build and test from `combat/`: `node tools/build.mjs`, `cargo test --release` in `rust/`, `node tools/golden.mjs`. See `README.md` there.

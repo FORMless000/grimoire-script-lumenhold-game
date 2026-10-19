@@ -8,7 +8,7 @@ import {readFileSync,readdirSync,statSync} from 'node:fs';
 import {join} from 'node:path';import {pathToFileURL} from 'node:url';
 import {EVENTS,FOES,challengeDC,foeLevel,defaultDrift} from '../setup/foes.mjs';
 import {CAST_STATS} from '../setup/cast-stats.mjs';
-const root=new URL('../../../content',import.meta.url).pathname;
+const root=new URL('../../content',import.meta.url).pathname;
 const balance=readFileSync(join(root,'core/balance.grim'),'utf8');
 const field=k=>balance.match(new RegExp('^'+k+':((?:.*\\n)(?:  .*\\n)*)','m'))[1].replace(/\s+/g,' ').trim().split(' ');
 const tiers=Object.fromEntries(field('dc_tiers').reduce((a,x,i,arr)=>i%2?a:[...a,[x,Number(arr[i+1])]],[]));

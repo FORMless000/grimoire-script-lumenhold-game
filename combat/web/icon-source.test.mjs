@@ -7,7 +7,7 @@ test('all 35 player spells receive their supplied SVG artwork, retaining fills, 
  const icons=readSpellIcons();assert.deepEqual(Object.keys(icons),Object.keys(SPELLS).filter(id=>SPELLS[id].group!=='creature'));
  for(const [id,svg]of Object.entries(icons)){
   assert.match(svg,/viewBox="0 0 64 64"/);assert.match(svg,/stroke="currentColor"/);assert(!svg.includes('#2b2f4a'));
-  const source=fs.readFileSync(new URL(`../../../docs/spell-icons/${id==='purify'?'distil':id}.svg`,import.meta.url),'utf8');
+  const source=fs.readFileSync(new URL(`../../docs/spell-icons/${id==='purify'?'distil':id}.svg`,import.meta.url),'utf8');
   assert.equal(svg.slice(svg.indexOf('>')+1,-6),source.slice(source.indexOf('>')+1,source.lastIndexOf('</svg>')),id);
  }
  assert.match(icons.eclipse,/fill="currentColor"/);assert.match(icons.heartprice,/fill="currentColor"/);
@@ -16,7 +16,7 @@ test('all 35 player spells receive their supplied SVG artwork, retaining fills, 
 test('combat basics, controls and all five channel pairs retain their supplied action artwork',()=>{
  const icons=readActionIcons();assert.equal(Object.keys(icons).length,15);
  for(const [id,svg]of Object.entries(icons)){
-  const source=fs.readFileSync(new URL(`../../../docs/action-icons/${id}.svg`,import.meta.url),'utf8');
+  const source=fs.readFileSync(new URL(`../../docs/action-icons/${id}.svg`,import.meta.url),'utf8');
   assert.match(svg,/stroke="currentColor"/);assert(!svg.includes('#2b2f4a'));
   assert.equal(svg.slice(svg.indexOf('>')+1,-6),source.slice(source.indexOf('>')+1,source.lastIndexOf('</svg>')),id);
  }

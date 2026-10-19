@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import {SPELLS} from '../setup/roster.mjs';
 function readIcon(folder,asset){
- const source=fs.readFileSync(`${process.env.LUMENHOLD_DOCS??new URL('../../../docs',import.meta.url).pathname}/${folder}/${asset}.svg`,'utf8');
+ const source=fs.readFileSync(`${process.env.LUMENHOLD_DOCS??new URL('../../docs',import.meta.url).pathname}/${folder}/${asset}.svg`,'utf8');
  const match=source.trim().match(/^<svg\b[^>]*>([\s\S]*)<\/svg>$/);
  if(!match||!source.includes('viewBox="0 0 64 64"'))throw Error('Invalid icon: '+asset);
  return `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${match[1]}</svg>`;

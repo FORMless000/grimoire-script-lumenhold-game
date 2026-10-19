@@ -897,7 +897,7 @@ So automation catches **gross errors and regressions only**. **Human playtests**
 ### 9.1 Spells
 
 Spells v2 (2026-10-17; the list and its reasons: `docs/spells-v2-list.md`). The ids are the combat minigame's
-(`experiments/combat-f5/setup/roster.mjs`), so a fight can take the player's spells as they are.
+(`combat/setup/roster.mjs`), so a fight can take the player's spells as they are.
 
 - **35 spells.** The six course spells have three levels; every other spell has one.
   - Course spells: Flame, Foresight, Mend, Glamour, Haste, Shadowstep. Hidden courses: Animate, Starlight, Seal.

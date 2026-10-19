@@ -31,7 +31,7 @@ test('ten generic presets follow fixed level gates, course ranks, restrictions a
  assert.notDeepEqual(generateLoadout('Duellist',50).draws,generateLoadout('Scholar',50).draws);
 });
 test('worldbook snapshot is current; named skills are fixed or keep their canon shape at a mean of the level',()=>{
- const hash=crypto.createHash('sha256').update(fs.readFileSync(new URL('../../../content/world/cast.grim',import.meta.url))).digest('hex');assert.equal(CAST_STATS_HASH,hash);
+ const hash=crypto.createHash('sha256').update(fs.readFileSync(new URL('../../content/world/cast.grim',import.meta.url))).digest('hex');assert.equal(CAST_STATS_HASH,hash);
  assert.equal(Object.keys(NAMED_LOADOUTS).length,22);
  for(const [name,def]of Object.entries(NAMED_LOADOUTS)){
   if(!def.npc)continue;const canon=CAST_STATS[def.npc];

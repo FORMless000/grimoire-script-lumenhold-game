@@ -147,7 +147,7 @@ test('spells v2: every spell outside a pool has a live source; ids match the com
   const missing = Object.values(content.spells).filter((d) => !d.pool && !live.has(d.id)).map((d) => d.id);
   assert.deepEqual(missing, [], 'spells with no source');
   for (const id of live) assert.ok(content.spells[id], 'taught spell exists: ' + id);
-  const roster = path.join(ROOT, 'experiments/combat-f5/setup/roster.mjs');
+  const roster = path.join(ROOT, 'combat/setup/roster.mjs');
   if (!fs.existsSync(roster)) return;
   const { SPELLS } = await import(roster);
   // Creature-only spells (`group: creature`, for monsters in fights) are the minigame's own; content has the rest.

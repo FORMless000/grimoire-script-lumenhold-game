@@ -18,7 +18,7 @@ export function armCases(arm){
   return {meta:c,state,search:arm.search??{},maxRounds:arm.maxRounds??80,tableLimit:arm.tableLimit??16384};
  });
 }
-// A variant: a module (path from experiments/combat-f5/) whose default export edits the roster in memory, e.g.
+// A variant: a module (path from combat/) whose default export edits the roster in memory, e.g.
 //   export default R=>{R.SPELLS.purify.cost=[2];R.COMBAT_TUNING.skill.mainPerPoint=.01;}
 // Setup sees the edits directly; the Rust core gets them as an exported data file (COMBAT_DATA). Returns that environment.
 let variantEnv=null;

@@ -1,12 +1,12 @@
 # Handoff: putting the combat minigame into Lumenhold
 
-For the agent who wires `experiments/combat-f5/` into the main game. Read this, then `INTEGRATION.md` (the design: what goes in, what comes out, and why), `EVENTS.md` (every current combat card: its foe, context, level and edits) and `web/rulebook.md` (the rules). `README.md` covers building, testing and balancing the minigame on its own.
+For the agent who wires `combat/` into the main game. Read this, then `INTEGRATION.md` (the design: what goes in, what comes out, and why), `EVENTS.md` (every current combat card: its foe, context, level and edits) and `web/rulebook.md` (the rules). `README.md` covers building, testing and balancing the minigame on its own.
 
 ## Where things stand (2026-10-17)
 
 - **The minigame is canon as of `spells-v2 F5.9c`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
-  1. `node experiments/combat-f5/tools/build.mjs`
-  2. `PORT=61096 node experiments/combat-f5/out/site/server.mjs`
+  1. `node combat/tools/build.mjs`
+  2. `PORT=61096 node combat/out/site/server.mjs`
 - **One implementation per function.**
   - The rules and the AI search are Rust (`rust/core`), compiled to WebAssembly for the browser (`web/core.mjs` is its JS face) and natively for simulations.
   - Spell data, kits and the campaign bridge are JS (`setup/`).
@@ -44,7 +44,7 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
   - inline `core.wasm` as base64 (about 480 KB, or 160 KB gzipped) and instantiate it from bytes;
   - expose one global, e.g. `window.LumenholdCombat`.
 
-  Commit it, like `build/content.bundle.js`. The source of truth stays in `experiments/combat-f5/` (or move the folder to a permanent home such as `combat/`, keeping its tools working).
+  Commit it, like `build/content.bundle.js`. The source of truth stays in `combat/` (or move the folder to a permanent home such as `combat/`, keeping its tools working).
 - **The AI search:** it runs in a worker. Under `file://`, create the worker from a Blob URL of the bundled worker code and post it the wasm bytes. Fall back to the main thread at the Fast budget when workers are unavailable.
 - **Done when:** a fight can start from the browser console on `index.html` opened from `file://`, with no server.
 
@@ -72,7 +72,7 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 - **Names for the fight text:** the player is always "you"; pass the opponent's pronouns (`opponentPronouns`, from the character's `pronouns:`) and the opponent's name (a character's short name, or the card's description of a generic foe, e.g. "the hooded duellist") to `fighterNames` (`setup/flavor.mjs`).
 - **Opponents:**
   - `vs lyra.arcana` and similar name a character: use `NAMED_LOADOUTS` (canon skills from `setup/cast-stats.mjs`, a snapshot of `content/world/cast.grim`; refresh it with `setup/sync-loadout-stats.mjs` when the cast changes).
-  - A difficulty word (`adept-`, `apprentice+`) means a generic foe: `EVENTS` in `setup/foes.mjs` names it for every current card (a pool, an archetype or a special foe), and `foeLevel` sets its level from the rung. `node experiments/combat-f5/tools/event-coverage.mjs` checks that every combat card has a decision. Seven cards become feats instead (`EVENTS.md` §6).
+  - A difficulty word (`adept-`, `apprentice+`) means a generic foe: `EVENTS` in `setup/foes.mjs` names it for every current card (a pool, an archetype or a special foe), and `foeLevel` sets its level from the rung. `node combat/tools/event-coverage.mjs` checks that every combat card has a decision. Seven cards become feats instead (`EVENTS.md` §6).
   - The AI: a fixed depth-5 search with no seeded mistakes (`LIVE_AI` in `web/app.mjs`), plus `preset: 'easy'|'medium'|'hard'|'engine'` (a player setting, default Medium); `createState` adds the foe's persona.
   - The foe's level is the card's challenge level: `challengeDC` and `foeLevel` in `setup/foes.mjs` (the engine's `ladderOdds` DC, plus the odds word); `vs npc.stat` characters via `namedFoeSkills`. `tools/event-levels.mjs` lists every card's levels by month.
   - A few points of level are a big step (+10 levels wins 87%).
