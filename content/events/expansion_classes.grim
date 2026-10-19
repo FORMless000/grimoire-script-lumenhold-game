@@ -95,7 +95,7 @@ text: Professor Vey's exam: a maze of enchanted mirrors. Find the exit. Some ref
   challenge deceive standard:
     win:
       guile +medium
-      study illusion +small
+      study illusion +tiny
       say: You spot the reflection that blinks late, and follow it out. Vey awards top marks and says, "Most people trust the one that looks happiest."
     lose:
       mood -small
@@ -123,7 +123,7 @@ scene: A pink, glittering potion in a heart-shaped flask on a workbench, a stude
 text: This week's assignment: brew a love potion — "for analytical purposes only". Your flask glows a suspicious pink. Someone at the next bench asks if they can buy it. Several people ask.
 > left: Brew it perfectly, then pour it away
   alchemy +medium
-  study alchemy +small
+  study alchemy +tiny
   say: Perfect colour, perfect scent. You pour it down the sink. The pipes are affectionate for a week.
 > right: Sell it
   alignment -small
@@ -146,18 +146,18 @@ scene: A dim divination classroom, a single student staring into a crystal ball,
 text: The mock Divination exam: gaze into the crystal and make one prophecy about the coming month. The examiner will check. "Vague prophecies," she warns, "fail."
 > left: Make a bold, specific prophecy
   chance even:
-    study astromancy +large
+    study astromancy +medium
     renown +small
     say: "On the eighth, the kitchen cat will have kittens in the headmistress's hat." On the eighth, she does. Top marks in the mock.
   else:
     study astromancy -small
     say: "On the eighth, it will snow indoors." It does not snow indoors. The examiner writes "ambitious".
 > right: Make a careful, safe prophecy
-  study astromancy +small
+  study astromancy +tiny
   lore +tiny
   say: "Someone will be late to breakfast." Someone is. The examiner sighs and gives you a bare pass: it was vague, but it was checkable.
 > up[omen]: Foretell it, out loud, so it lands
-  study astromancy +medium
+  study astromancy +small
   mood -tiny
   say: You say it plainly, in that flat certain voice: the examiner's kettle will boil dry on Friday. It does. She gives you full marks and looks at you as if you'd done it on purpose. You aren't sure you didn't.
 
@@ -174,7 +174,7 @@ text: Your term project: a knee-high clay golem that carries books. It works! It
 > left: Add a "stop" command
   challenge research standard-2:
     win:
-      study artifice +medium
+      study artifice +small
       lore +small
       say: The golem stops. It also waits politely. The professor asks if she can borrow it for her office.
     lose:
@@ -246,7 +246,7 @@ text: Sister Amaranth's triage drill: twelve "injured" students, one healer — 
   challenge brew standard-1:
     win:
       alchemy +medium
-      study alchemy +small
+      study alchemy +tiny
       say: You spot the real injury in the first minute. Amaranth nods, once, which is the highest honour in the infirmary.
     lose:
       study alchemy +tiny

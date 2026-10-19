@@ -13,6 +13,22 @@
 | Checks | `npm run verify` passes: build, lint, format, docs, 100+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 48 months (the last two are the wrap-up), about 630–720 cards (15 a term month, 9.4 a break month; about half pushed rather than drawn); in `grim analyze` (100 games a style, 2026-10-17), random play leaves early 30–40% of the time, social 27–30%, aggressive 18–29% and cautious 10–17%; the other 23 styles finish 98–100% |
 
+## Manageable exams
+
+October 19, 2026: exam preparation now comes mostly from routine sources, so passing is predictable (design §7.3):
+- **Class:** each course gives +3 in each of the three term months before its exam, or +5 when a check in that class is won. It counts once a month per course, and nothing is added in the exam month (`@balance study`).
+- **Library:** the revision card (`library_revision`) gives +3 to every course, once a term. It is the library's first card on a term visit before exam month, and the enrolment card points to it.
+- **Floors:** being prepared lifts the low end smoothly. 12 makes a pass certain and 15 makes at least a B certain. The careful exam's σ went from 12 to 16 (`@balance exam_bands`).
+- **Cards:** card study gains dropped one size (migration 0034: 120 gains in 103 cards). The cards' net gain is now about +2 per course per term, down from 4–6.
+- **Measured** (25 games per style):
+
+  | | Pass rate, levels I / II / III | GPA |
+  |---|---|---|
+  | Balanced, before | 90 / 72 / 72% | 2.7 |
+  | Balanced, after | 96 / 94 / 92% | 3.2 |
+
+  The higher GPAs make the scholar ending, the internship GPA gates and probation easier to reach or avoid. Watch them in playtests.
+
 ## NPC portraits
 
 October 18, 2026: the 21 minimal PNG portraits are the default NPC art on every surface (card and menu actors, People, map pins, ending), per [the handoff](docs/portrait-integration-handoff.md). Settings → Portrait art → Original restores the procedural SVGs, which also stand in for a missing or broken PNG and are archived in `art/characters/original-svg/`. After a crop edit in the workshop, run `node tools/portraits.js sync`.

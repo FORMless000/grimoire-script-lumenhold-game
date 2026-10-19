@@ -843,3 +843,26 @@ text: {Old Maud's notice asks for clay pots scrubbed before planting, for a smal
   gold +tiny
   alchemy +small
   say: {Maud talks while you scrub, about which leaf cures what and which leaf kills. She pays a little less, because of the talking.|You learn three remedies and a poison you should never brew. The wage is smaller; the lesson isn't.|Maud tests you on last month's lesson while you scrub. You pass, mostly. The wage is small and the tea is good.}
+
+# Exam revision (2026-10-19): once a term, before exam month, the library's first card. Studying adds `study +small`
+# (3) to every course: with the three months of class (9), one afternoon here makes the 12 that is a sure pass.
+@event library_revision
+title: The Revision Tables
+place: library
+class: routine
+tone: light
+repeat: 8
+weight: 10
+art: book
+tags: study
+scene: A long library table under green-shaded lamps, stacked with past exam papers, students bent over them and a cat asleep at the far end.
+when: term and month != 4 and month != 10 and revised_term != term_index
+text: The librarians have set out the revision tables early this term: past papers, model answers, and a sign promising the lamps stay lit until the bell. {~Footnote is asleep on last year's Evocation paper.|A shelf has rearranged itself into exam order, which it has never done for anyone before.|Someone has left a full set of notes behind, with a note of their own: "Take them. I passed."}
+> left: Sit down and revise
+  study +small
+  revised_term = term_index
+  say: {~You work through two past papers and most of a third. The questions start to look like ones you have seen before, which is the point.|You copy out the model answers until your hand aches, then close the book and write them again from memory. Mostly right.|By the bell you have a page of everything you didn't know this morning. It is a shorter page than you feared.}
+> right: Not today
+  mood +small
+  revised_term = term_index
+  say: {~You leave the tables to the people who look more worried than you. The afternoon is yours.|You borrow a novel instead and read it in the window seat. The exams can wait for another day, you hope.|You nod at the revision tables on your way past, like an acquaintance you mean to call on.}

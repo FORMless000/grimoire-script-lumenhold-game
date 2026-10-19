@@ -20,7 +20,7 @@ scene: A student at the centre of a crowd in the courtyard collecting coins from
 text: {loop_exploit == 0: You know which way every coin will fall, and what's on this afternoon's quiz.|{loop_exploit == 1: The bets again. Your classmates are starting to look at you oddly when you win.|The bets, the quiz, the same faces losing. Their groans have stopped being funny.}} {~The quiz is on the founders.|A fourth-year bets you can't name every tower.|Someone bets on which way the prefect will fall.}
 > left: Take everything you can
   gold +medium
-  study +small
+  study +tiny
   alignment -small
   loop_exploit += 1
   if loop_exploit >= 3:
@@ -37,7 +37,7 @@ text: {loop_exploit == 0: You know which way every coin will fall, and what's on
       queue life_timeloop_2 now
     say: {~The coins are real when you wake, and the marks stay in the ledger. So does the hollow feeling, a little deeper each time.|You win again. The crowns carry over into the next Tuesday. So does the weight of them.|You win the bet on the prefect, who falls exactly where you knew. The coins carry over; so does the look on the prefect's face.}
 > right: Just the quiz, then stop
-  study +small
+  study +tiny
   alignment -tiny
   mood -tiny
   loop_n += 1

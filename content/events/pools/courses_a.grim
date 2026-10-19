@@ -43,7 +43,7 @@ tags: class study
 scene: A student standing at the edge of a busy lecture hall beside a bucket of sand and a bucket of water, watching sparks fly.
 text: Every Evocation I lesson needs someone on the buckets: sand for the pyromancers, water for everyone else. {&Today it's your name on the board.|It's your turn again. The rota has a sense of humour.|Your name is on the board. You suspect the rota is personal.} {&The water bucket has a frog in it.|Someone has labelled the sand bucket "Hope".|The water bucket is half empty, because the tidecallers borrowed it.}
 > left: Mind the buckets, watch closely
-  study evocation +small
+  study evocation +tiny
   say: {&You put out four sleeves and a textbook, and learn more from their mistakes than from your own.|Watching from the side, you finally see what the lecturer means by "breathe first".|You keep the buckets full and borrowed back from the tidecallers, and watch the whole lesson from the best seat in the hall.} {month == 4 or month == 10: It's the best revision you've done all term.|Nobody thanks the bucket monitor.}
 > right: Swap for a turn up front
   arcana +small
@@ -68,7 +68,7 @@ text: {Professor Marisol's Tidecalling mornings begin with a full cup held at ar
   mood -small
   say: {Your arm burns by the third stanza. The water doesn't move.|By the end your arm is shaking and the water isn't.|The gull lands on your wrist in the last verse. The water doesn't notice, and neither, quite, do you.} The poem goes on for ever, and so, it feels, do you. Marisol closes the book at last. "There. The lake would approve."
 > right: Spill, and study her hands
-  study evocation +small
+  study evocation +tiny
   say: {Your cup tips over in the second verse. You spend the rest watching how Marisol turns her wrist, and write it down.|You give up on the cup and watch Marisol instead. She holds a whole pond steady while turning pages.|The gull takes your cup the moment you spill it. You watch Marisol hold hers steady through the gull's attempt on hers too.} {final_year: You'll miss her terrible poems.|Your shoes are wet.}
 
 @event evo_shaping_hour
@@ -91,7 +91,7 @@ text: Evocation II is shaping: flame made into a sphere, a key, a bird. The lect
   challenge exam standard+1:
     win:
       arcana +small
-      study evocation +small
+      study evocation +tiny
       say: {&Your bird flaps twice, circles the lectern and goes out on a perch.|Your key turns in the air, with a click you feel more than hear.|Your initial hangs in the air, crisp at every edge.} The lecturer turns the ledger round to show it hasn't moved.
     lose:
       health -tiny
@@ -99,7 +99,7 @@ text: Evocation II is shaping: flame made into a sphere, a key, a bird. The lect
       say: {&Your bird has opinions, and leaves through the window.|Your key comes out as a fork, and a hot one.|Your initial comes out as somebody else's, and singes your cuff.} You sign the ledger. The lecturer blots it for you, almost kindly.
       flag scorched_ledger
 > up[flame]: Shape it at a whisper
-  study evocation +small
+  study evocation +tiny
   say: {&You call the flame softly and it comes, small and obedient as a candle. The lecturer leans in to watch.|The shape comes out right first time, at a whisper. Your page in the ledger stays clean.|The flame stays the size you asked for, which is the whole lesson.}
 
 @event evo_kettle_pairs
@@ -119,14 +119,14 @@ text: {This is why Pyromancy and Tidecalling are taught together. One of you hea
   challenge exam standard:
     win:
       arcana +small
-      study evocation +small
+      study evocation +tiny
       say: {You and your partner find the rhythm together, and the kettle hums all hour.|Push, give, push. The kettle simmers like a contented cat.|Your partner yawns through the whole hour, and the kettle simmers anyway. You've been doing both halves.}
     lose:
       health -small
       mood -tiny
       say: {The kettle boils, then whistles, then lifts its lid at you. You both get a faceful of steam.|You push too hard. Your partner panics and freezes the spout, and the trapped steam bursts out of the lid at you.|Your partner falls asleep mid-lesson and the kettle boils. You both wake up very suddenly.}
 > right: Take the water side
-  study evocation +small
+  study evocation +tiny
   mana -small
   say: {Cooling is the patient half. You hold the kettle back all hour and your partner gets the credit.|You lend the kettle your cold for an hour and feel drained by noon.|You hold the water side alone while your partner yawns. The lecturer notices who did the work.} {final_year: The kettle has been here longer than you, and will stay after you've gone.|Your fingertips stay damp until lunch.}
 
@@ -153,7 +153,7 @@ text: {Advanced Evocation calls water from the lake bed, where it is cold and ol
       mana -small
       say: {The lake pulls back. You're on your knees on the jetty, cold to the bone.|The water rises, considers you, and drops onto your head.|You reach for the deep water and something reaches back, gently, and lets go. You sit down on the jetty for a while.} The lecturer pulls you up with no comment, which is a comment.
 > right: Keep to the shallows
-  study evocation +small
+  study evocation +tiny
   mood -small
   say: {You keep to safer water and log what the others bring up. It's useful and it's dull.|You hold your column at a sensible depth and watch someone else go white with the cold.|You keep to the shallows. The others bring up nothing today, and look at the water a long time.} {gpa >= 3: The lecturer says you have nothing to prove. You'd like to.|You'll go deeper next time, perhaps.}
 
@@ -179,7 +179,7 @@ text: Advanced Evocation asks every student for a signature flame: its own colou
       mood -small
       say: {Your flame flares white, takes a bite of your hand and goes back to orange as if nothing happened.|The new colour lasts a heartbeat. The blister lasts a week.|Your flame reaches for something new and finds your sleeve. It knows you, apparently, and still bites.}
 > right: Refine what it already is
-  study evocation +small
+  study evocation +tiny
   say: {You spend the morning making it steadier, not stranger. It's a better flame by noon, and a less exciting one.|You tune the heat by a hair, then another hair.|You refine it until it leans toward you on its own. That's all it does, and it's enough.} {final_year: You'll carry this fire out of Lumenhold with you.|It's yours, at least.}
 
 # ---------------- Astromancy & Divination (track: astromancy, skill lore) ----------------
@@ -201,7 +201,7 @@ text: Astromancy I has a tea-leaf morning every week, and tea leaves require tea
   health -tiny
   say: {By the fourth cup your hands are shaking and the leaves are making more sense.|You read six cups in a row and see the pattern underneath the shapes.|Your cup shows rain again. It rains. You're starting to think that's the reading.} {season == "winter": At least the tea is warm.|You will not sleep tonight.}
 > right: Brew the next pot
-  study astromancy +small
+  study astromancy +tiny
   say: {You take the rota and brew for the room. Watching leaves settle in a whole pot teaches you more than any one cup.|You brew it strong, the way the lecturer likes it, and learn the shapes as they sink.|You brew the pot as the teapot likes it, which is the lecturer's way plus a pinch. The room reads better for it.} {season == "summer": The classroom is a steam bath by ten.|Nobody thanks the brewer, but everyone notices weak tea.}
 
 @event astro_star_names
@@ -218,7 +218,7 @@ tags: class study
 scene: Students craning their necks under a painted dome of constellations while a lecturer points upward with a very long pole.
 text: {Astromancy I begins with names. Three hundred stars painted on the dome, to be recited on request.|The long pole comes out. The lecturer points; you name.|You dream the star names some nights now, and wake reciting.} {Today it's the winter constellations.|Today it's the faint stars nobody can see without squinting.|Today the lecturer points at a patch of bare plaster and waits to see who invents a name.}
 > left: Recite them until perfect
-  study astromancy +small
+  study astromancy +tiny
   mood -small
   say: {You chant star names under your breath all morning, like a prayer you don't quite believe in.|By noon you can name the whole southern sky backwards.|You recite them in your sleep, apparently, and again at breakfast. Your roommate can name the southern sky now too.} {month == 4 or month == 10: The exam is close, and the names are finally sticking.|Your neck aches from looking up.}
 > right: Volunteer to go first
@@ -250,7 +250,7 @@ text: {Astromancy mornings start before the sun, under a dome cranked open to th
   health -tiny
   say: {You track a planet across the eyepiece until {season == "winter": your eyelashes stick to it|your eyes water and your neck gives up}.|The great telescope wanders, as it does. You coax it back to the sky you were assigned.|The eyepiece fits your eye. You find the planet before the lecturer has finished saying where it is.} {final_year: You've looked through it more times than you can count, and you'll still miss it.|{season == "winter": Your fingers take an hour to thaw.|You yawn through the whole of breakfast.}}
 > right: Stay by the stove with charts
-  study astromancy +small
+  study astromancy +tiny
   mood -tiny
   say: {The stove students form a little society of the warm and the guilty. You copy charts and hear every complaint.|You annotate the charts while the others shiver. The lecturer notices who is warm.|You keep the stove and the charts. Someone else takes the telescope and complains it's shaped wrong.}
 
@@ -270,13 +270,13 @@ text: {Foresight at Astromancy II is practised on chalk. The lecturer drops a st
   challenge exam standard wild:
     win:
       lore +small
-      study astromancy +small
+      study astromancy +tiny
       say: {Your hand is there before the chalk is. The lecturer looks at it, then at you, then drops another.|You catch it a breath before the drop.|Two sticks at once. You catch one in each hand, and the lecturer drops a third out of spite.}
     lose:
       mood -small
       say: {You see it falling, clearly, half a second after it lands.|You catch a stick of chalk that wasn't dropped. The real one hits your shoe.|Two sticks at once, and you catch the one in the past.}
 > right: Time the drops instead
-  study astromancy +small
+  study astromancy +tiny
   mana -small
   say: {You keep a tally of every drop and every catch and start to see the lecturer's rhythm.|You work out that the lecturer always blinks first. It's not foresight, but it helps.|Your tally shows the lecturer drops the second stick a beat after the first, always. It's not foresight. It works.} Holding a little seeing-charm open the whole hour to check your tally leaves your head aching. {gpa >= 3: The lecturer asks to see your tally.|You'd rather have caught one.}
 > up[foresight]: Let foresight do it
@@ -300,14 +300,14 @@ text: {Starlight is gathered before dawn, one star at a time, in glass jars on t
   challenge research standard:
     win:
       lore +small
-      study astromancy +small
+      study astromancy +tiny
       say: {Your jar fills slowly with a cool, pale light that lasts all day in your pocket.|The faint stars come one at a time.|You wait out the cloud with your chipped jar. The faint stars come back for you, one by one.} The lecturer holds your jar up and says, "That will keep."
     lose:
       health -tiny
       mood -small
       say: {The cloud comes in before your jar is half full, and you're cold for nothing.|You wait so long the sun rises on you and burns the jar to plain glass.|The cloud from the lake settles in for the morning. Your chipped jar stays empty, and you stay cold.}
 > right: Take the bright, easy ones
-  study astromancy +small
+  study astromancy +tiny
   say: {Your jar is full in ten minutes and glows like a lamp. The lecturer calls it a lamp.|Easy light, quickly gathered and gone by noon.|You fill your chipped jar with the bright ones before the cloud arrives. It's gone by lunch, as usual.} {season == "summer": The short nights are no help.|You're back in bed before the bell.}
 
 @event astro_moving_charts
@@ -332,7 +332,7 @@ text: {Advanced Astromancy uses charts that move. The inked stars drift to where
       mood -small
       say: {You pour magic into the pins to hold it, and the chart slides out from under them anyway, leaving ink on your sleeves.|You hold the chart down with a binding until your magic runs thin, then trace the drift for an hour. It goes back to where it started, laughing at you in its own way.|The fast chart drags the pins with it across the table and onto the floor. You chase it on your knees.}
 > right: Sketch every shape it makes
-  study astromancy +small
+  study astromancy +tiny
   mood -small
   say: {You fill four pages with the shapes the chart passes through. Most are nothing. One is almost something.|You draw it as it moves, like a portrait of someone who won't sit still.|You sketch the fast chart at its own pace. Your drawing hand is exhausted. The shapes are beautiful.} {final_year: Soon the stars will move without you watching.|The lecturer collects your pages without a word.}
 
@@ -352,14 +352,14 @@ text: {At this level Foresight reaches a season ahead. The lecturer allows one g
   challenge exam standard+1 wild:
     win:
       lore +small
-      study astromancy +small
+      study astromancy +tiny
       say: {You see a lit window and a cup going cold, and you know exactly where and when it will be. You keep it to yourself.|You see something small and true. You'll remember it when it happens.|You see a season ahead before the hourglass is half gone. You stop yourself, which the lecturer notes.}
     lose:
       health -small
       mood -small
       say: {The mirror shows you too much at once. You come out with a nosebleed and a headache that lasts till dinner.|You see nothing, and then you see everything.|You look until the sand runs out, and a little after. The lecturer pulls you back by the shoulder.}
 > right: Look only as far as tomorrow
-  study astromancy +small
+  study astromancy +tiny
   mana -small
   say: {Tomorrow, says the mirror, it will rain at noon. It does. It's not much, but it's right.|You look only one day ahead. Lunch will be soup.|You look only to tomorrow, in your timed turn. It will be cold. It is.} {gpa >= 3: The lecturer says caution is a talent too.|It's safe, and it feels small.}
 
@@ -378,7 +378,7 @@ tags: class study
 scene: A laboratory of identical cauldrons, a whole class stirring in unison while the lecturer counts aloud from the front.
 text: {Alchemy I is mostly stirring, and the stirring is counted aloud by the whole class, in unison, like a choir with spoons.|The chorus is getting good. Someone has started harmonising.|You count stirs in your sleep now, and sometimes on the stairs.} {Today's draught is a simple tonic.|Today's draught is meant to turn blue at forty.|Today the lecturer keeps changing the count to see who's listening.}
 > left: Count every stir aloud
-  study alchemy +small
+  study alchemy +tiny
   health -tiny
   say: {By the hundredth stir your voice is gone and your tonic is perfect.|Your count is right and your draught is dull. Both are what was asked.|The lecturer changes the count; you change with it, aloud. Your tonic is the only one that's right.} {month == 4 or month == 10: The exam recipes come back to you in rhythm.|Your wrist aches.}
 > right: Stir by the colour instead
@@ -409,7 +409,7 @@ text: {&Half of alchemy, says the lecturer, is cutting things up correctly. The 
   mood -small
   say: {&You cut enough roots for six. Your bench-mates bring you tea, which is fair.|You crush beetles for an hour and think firmly about other things.|You prepare enough berries for six, and your hands stay purple till dinner.} The crate is empty when you're done.
 > right: Prep yours, read ahead
-  study alchemy +small
+  study alchemy +tiny
   health -tiny
   say: You rush your share and get to the reading, plus a small cut on your thumb you'll be explaining all day.
 
@@ -427,7 +427,7 @@ tags: class study
 scene: A sunny infirmary ward where students roll bandages at a long table while a nun in a starched apron checks their work.
 text: {&The healing half of Alchemy I is taught in the infirmary, where Sister Amaranth has the class roll bandages and watch her work.|Sister Amaranth inspects every roll, and unrolls one of yours.|Sister Amaranth hands you a roll without looking up.} {&A third-year is in with a burnt hand from Evocation.|A first-year is in with a scraped knee and a great deal to say about it.|A second-year is in with a sprained wrist from the flight field.}
 > left: Roll bandages and watch
-  study alchemy +small
+  study alchemy +tiny
   say: {&You roll, and watch Sister Amaranth clean a cut in about three movements.|Your bandages pass inspection.|You roll, and watch Sister Amaranth strap a wrist so it can't move and doesn't hurt. You try it on your own wrist later.} {season == "winter": The ward fills with sniffling students all morning.|She says nothing, which is high praise.}
 > right: Offer to treat a patient
   challenge exam standard:
@@ -455,7 +455,7 @@ text: {Alchemy II hands out jars of murky lake water, to be made fit to drink. T
   challenge brew standard:
     win:
       alchemy +small
-      study alchemy +small
+      study alchemy +tiny
       say: {Your water comes out clear and sweet. The lecturer drinks it, pauses and nods.|Clean as rainwater.|Your water goes into the lecturer's chipped cup, and the lecturer drinks it to the bottom.} {flag(purified_well): The lecturer drinks a second glass, and pretends not to.|The lecturer drinks a second glass, which nobody has seen before.}
       flag purified_well
     lose:
@@ -463,7 +463,7 @@ text: {Alchemy II hands out jars of murky lake water, to be made fit to drink. T
       mood -small
       say: {You test it first, just a sip, as the lecturer always does. You spend the afternoon close to the washroom.|Your water clears, then clouds again. You taste it anyway, to be sure, and regret it all afternoon.|You purify it so hard the snail you set free comes back to complain. The water tastes of snail anyway.}
 > right: Filter it the slow way
-  study alchemy +small
+  study alchemy +tiny
   mood -small
   say: {Cloth, sand and charcoal, the old way. It takes the whole lesson.|You filter it by hand and write every step down. The lecturer drinks it and says, "Patient."|You filter it slowly and the snail goes back to the lake in a cup of its own. The lecturer approves of both.} {final_year: You'll be filtering water like this for the rest of your life, probably.|Your hands are grey with charcoal.}
 
@@ -486,7 +486,7 @@ text: {Some potions simmer for hours and must be watched. Whoever is on watch wh
 > right: Set a charm to watch it
   challenge enchant standard:
     win:
-      study alchemy +small
+      study alchemy +tiny
       mood +tiny
       say: {Your charm rings like a bell when the colour turns. You come back from lunch in time to take it off the fire.|The charm works and you get to eat.|You set the charm and leave a note of your own under the lecturer's: "I didn't, technically." It works.}
     lose:
@@ -516,7 +516,7 @@ text: {Advanced Alchemy handles reagents that react to being looked at the wrong
       mood -tiny
       say: {The vial pops like a cork. Your eyebrows survive; your gloves do not.|A drop too many. The flask hisses and coughs out blue smoke, and you spend the hour in the infirmary.|You handle it gently, which turns out not to be gently enough. The label lands in your hair.}
 > right: Pass it to the steadiest hand
-  study alchemy +small
+  study alchemy +tiny
   mood -small
   say: {You hand the vial to someone with steadier hands and take careful notes. It stings a little.|You watch someone else do it right. You'll know how next time.|You pass the "Gently" vial on. The steady hand drops it, very gently, into the sink. Everyone breathes again.} {gpa >= 3: The lecturer says you're allowed to be cautious.|You note every step.}
 
@@ -544,7 +544,7 @@ text: {Advanced Alchemy asks for an original remedy, invented, written up, and t
       mood -small
       say: {It does something, but not what you wanted. Your ears are warm for the rest of the day.|It cures the sniffles and replaces them with hiccups.|It calms your nerves so thoroughly that you fall asleep at the bench.}
 > right: Ask Sister Amaranth to review it
-  study alchemy +small
+  study alchemy +tiny
   mood -small
   say: {She crosses out three ingredients and one adjective.|She reads it twice, then hands it back. "Sound," she says. "Dull."|She reads it and takes one dose herself, before the exam she's invigilating. "Adequate," she says, calmly.} {final_year: You'll keep this recipe long after you leave Lumenhold.|It's better already, and you hate it a little.}
 > up[purify]: Distil the base first

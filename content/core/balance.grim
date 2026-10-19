@@ -51,14 +51,19 @@ course_step: 5
 course_drift: low
 # Exam preparation (L-3): a course card adds `attend` by itself (options add or cost more); each term month's
 # coursework adds `monthly` (feedback 2026-10-15b: it replaced the silent per-card 2, so preparation shows); at most `cap` counts.
-study: attend 0 cap 15 monthly 2
+# 2026-10-19: `monthly` only in the three months before the exam (9 a term), and `check` instead when a check in that
+# course's class is won (once a month per course); the library's revision card adds 3 a term.
+study: attend 0 cap 15 monthly 3 check 5
 # A course exam's difficulty at course level I, II and III: the course standard ± rungs, with low drift (checks.md).
 # One rung higher since spells v2 (2026-10-17), two at II and III: the course spell, and its skill XP, now come at the
 # start of each level, before its exam, not after the pass. Balanced pass rates stay about 87 / 75 / 80%.
 exam_tiers: standard+2 standard+3 standard+3
 # An exam's grades (feedback 2026-10-15): A from `a` over the bar, B from `b`, a pass from `pass`, each on the bell (no
-# hard A gate). Going for top marks (`sit_exam wild`) lowers the A mark by `ambitious` and is sat at `ambitious_sigma`.
-exam_bands: a 15 b 5 pass -5 ambitious 8 ambitious_sigma 20
+# hard A gate), at `sigma` (2026-10-19: 16, was the steady 12, so skill shades the odds more gently). Going for top marks
+# (`sit_exam wild`) lowers the A mark by `ambitious` and is sat at `ambitious_sigma`.
+# Preparation floors (2026-10-19): the pass chance can't fall below a smooth ramp from `pass_from` to certain at
+# `pass_at`, nor B-or-better below one from `b_from` to `b_at`: 12 prepared is a sure pass, 15 a sure B.
+exam_bands: a 15 b 5 pass -5 ambitious 8 ambitious_sigma 20 sigma 16 pass_from 6 pass_at 12 b_from 9 b_at 15
 # Peers grow with the player (feedback 2026-10-15): a character with one of these tags (classmates, and the pen pal at
 # Thornwick) has every skill stat scaled up with E(turn), so that by the last month their best skill is `share` of the
 # final E(turn). Faculty and villagers keep theirs.

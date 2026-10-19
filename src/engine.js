@@ -341,8 +341,11 @@
     // (a `class: milestone` card, an exam) has no forced fail: enough skill makes it certain.
     oddsRange(milestone) { const o = Object.assign({ min: 5, max: 95 }, (this.c.balance && this.c.balance.odds) || {}); return [o.min, milestone ? 100 : o.max]; }
     // Exam preparation (L-3, `@balance study: attend 1 cap 15`): what a course card adds by itself, and the most it counts.
-    examRule() { return Object.assign({ a: 15, b: 5, pass: -5, ambitious: 8, ambitious_sigma: 20 }, (this.c.balance && this.c.balance.exam_bands) || {}); }
-    studyRule() { return Object.assign({ attend: 3, cap: 15, monthly: 0 }, (this.c.balance && this.c.balance.study) || {}); }
+    // Exams (2026-10-19): `sigma` is the careful exam's spread; preparation lifts the pass chance smoothly from `pass_from`
+    // to certain at `pass_at`, and B-or-better from `b_from` to certain at `b_at`.
+    examRule() { return Object.assign({ a: 15, b: 5, pass: -5, ambitious: 8, ambitious_sigma: 20, sigma: 12, pass_from: 99, pass_at: 100, b_from: 99, b_at: 100 }, (this.c.balance && this.c.balance.exam_bands) || {}); }
+    // `check`: a month's class preparation when a check in that course's class is won (instead of `monthly`).
+    studyRule() { return Object.assign({ attend: 3, cap: 15, monthly: 0, check: 0 }, (this.c.balance && this.c.balance.study) || {}); }
     // A known spell's bonus on checks that test its discipline's skill (design §9.2; L-3, `@balance spell_check: per 2 cap 6`).
     spellCheck() { return Object.assign({ per: 3, cap: 15 }, (this.c.balance && this.c.balance.spell_check) || {}); }
     // An exam's bar before study and the advisor: a legacy tier is the expected skill + its offset; a ladder tier
@@ -385,10 +388,21 @@
       // level train equally.
       const xp = this.tierAmount('xp', tiers[Math.min(tiers.length, Math.max(1, t.level || 1)) - 1]);
       this.run([{ t: 'delta', name: sk, min: xp, max: xp }], ctx);
-      // And exam preparation (feedback 2026-10-15b): `@balance study: monthly N`, shown like any study.
-      const prep = this.studyRule().monthly || 0;
+      // And exam preparation (feedback 2026-10-15b): `@balance study: monthly N`, shown like any study. Only in the
+      // months before the exam (2026-10-19): the exam month's class comes too late to count.
+      const prep = this.isTermEnd() ? 0 : this.studyRule().monthly || 0;
       if (prep) this.run([{ t: 'study', track: id, min: prep, max: prep }], ctx);
       return true;
+    }
+    // A check won in a course's class (2026-10-19) makes that month's preparation `@balance study: check` instead of
+    // `monthly`: once a month per course, however many checks its cards hold, and not in the exam month.
+    classCheckPrep(id, ctx) {
+      const s = this.s, t = s.tracks && s.tracks[id], d = this.c.tracks[id], sr = this.studyRule();
+      if (!t || !d || d.kind !== 'course' || t.status !== 'enrolled' || this.phaseOf() !== 'term' || this.isTermEnd() || t.cw !== s.turn || t.cwCheck === s.turn) return;
+      const extra = (sr.check || 0) - (sr.monthly || 0);
+      if (extra <= 0 || !ctx.checks.some((c) => (c.challenge ? c.result === 'win' : c.ok))) return;
+      t.cwCheck = s.turn;
+      this.run([{ t: 'study', track: id, min: extra, max: extra }], ctx);
     }
     // One shift's pay (M10): the job's `pay:` at your rank × the wage word's share (`@balance wage:`), less while
     // benched. No double wage on a break (M6): holiday work is the gigs'.
@@ -689,9 +703,15 @@
       const slope = this.swingSlope(swing), [lo, hi] = this.oddsRange(true), ex = this.examRule(), wild = swing === 'wild';
       // Grade bands on the bell (feedback 2026-10-15): A, B and a pass each at their margin over the bar. Going for top
       // marks lowers the A mark and is sat at its own spread, so it trades B for A and some F, at about the same GPA.
-      const bell = (x) => wild ? Math.round(100 * Phi((sv - x) / ex.ambitious_sigma)) : this.bellOdds(sv, x, 0, swing, true);
+      const bell = (x) => Math.round(100 * Phi((sv - x) / (wild ? ex.ambitious_sigma : ex.sigma)));
       const odds = ladder ? bell : (x) => clamp(Math.round(50 + slope * (sv - x)), lo, hi);
-      const pass = odds(dc + ex.pass), top = Math.min(pass, odds(dc + ex.b)), a = Math.min(top, odds(dc + ex.a - (wild ? ex.ambitious : 0)));
+      // Preparation keeps the floor up (2026-10-19): each floor rises smoothly (smoothstep) to certain, and joins the
+      // skill's chance as either one being enough, so 12 prepared is a sure pass and 15 a sure B, whatever the skill.
+      const p = Math.min(this.studyRule().cap, (t && t.study) || 0);
+      const ramp = (from, at) => { const u = clamp((p - from) / Math.max(1, at - from), 0, 1); return u * u * (3 - 2 * u); };
+      const lift = (q, f) => Math.round(100 - (100 - q) * (1 - f));
+      const pass = lift(odds(dc + ex.pass), ramp(ex.pass_from, ex.pass_at)), top = Math.min(pass, lift(odds(dc + ex.b), ramp(ex.b_from, ex.b_at)));
+      const a = Math.min(top, odds(dc + ex.a - (wild ? ex.ambitious : 0)));
       return { skills: sk, value: sv, bar: dc, probs: [a, top - a, pass - top, 100 - pass], pass, top, a };
     }
     // Sitting a course's exam (M4: an exam card's `sit_exam`, else at term end): the grade, its reasons, the professor's regard, spells.
@@ -1768,7 +1788,7 @@
       }
       this._fightQueue = opts.fights ? opts.fights.slice() : null; this._optKey = key; this._optEffects = opt.effects;
       try { this.run(opt.effects, ctx); } finally { this._fightQueue = null; this._optKey = null; this._optEffects = null; }
-      if (item.track) this.courseworkFor(item.track, ctx);
+      if (item.track) { this.courseworkFor(item.track, ctx); this.classCheckPrep(item.track, ctx); }
       this.handleZeroed(ctx);
       this._variant = null;
       // Track cards (design §6.2, §7.3): a course card is study for the exam; outcomes move performance.
@@ -1860,7 +1880,7 @@
         try {
           if (opt.spell) this.chargeCast(opt.spell, cost, ctx);
           this.run(opt.effects, ctx);
-          if (ctx.track) this.courseworkFor(ctx.track, ctx);
+          if (ctx.track) { this.courseworkFor(ctx.track, ctx); this.classCheckPrep(ctx.track, ctx); }
           this.handleZeroed(ctx);
         } finally {
           const follows = ctx.notes.some((n) => n.kind !== 'wage') || s.queue.length !== saved.queue.length || s.deck.length !== saved.deck.length || !!s.ended !== !!saved.ended ||

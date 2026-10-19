@@ -27,6 +27,7 @@
 | Statement | Use it when |
 |---|---|
 | `study <course> -tiny` / `study -tiny` | you skip a lecture, a revision night, a class's homework: that course's exam readiness drops (`study -tiny` without a course: every enrolled course) |
+| `study <course> +tiny` / `study +tiny` | (a gain, 2026-10-19) extra work beyond class: a card's study gain is `+tiny`; preparation comes mostly from routine sources (each class month +3, +5 with a check won in class, the library's revision card +3), so exams stay predictable. A larger gain needs a matching price (a night, money, a favour), and study costs elsewhere balance the gains |
 | `perform <track> -tiny` | you slack, leave early or annoy the boss at a club or job (`perform track` in the track's own cards) |
 | `progress thesis -tiny` | the thesis waits while you do something else |
 | `rel <npc> -tiny` / `spark <npc> -tiny` | you snub, disappoint, refuse or embarrass someone; a romantic moment goes flat |
