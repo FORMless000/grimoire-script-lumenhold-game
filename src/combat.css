@@ -1,15 +1,16 @@
-/* The fight screen (src/combat-ui.js): the combat minigame's fight laid over the card, its look ported from
+/* The fight screen (src/combat-ui.js): the combat minigame's fight played in place of the card, its look ported from
  * combat/web/style.css (HANDOFF §5) and scoped under .fight-layer. The game's tokens (--night*, --line, --gold*, --parch,
  * --ink*, --muted, --text, --good, --bad, --radius, the fonts) come from src/style.css, so the zh-CN font swap applies here
  * too; only the fight's own tokens are defined. Generated selectors keep the bench's names: when the bench's look changes,
  * port the rule here. */
-.stage.fighting { position: relative; }
+/* While a fight is on, the card is suspended: the deck (the card and the stack behind it) and the choices are hidden, and
+ * the fight takes their place in the stage. The card's outcome follows when the fight ends. */
+.stage.fighting > .deck, .stage.fighting > .choices { display: none; }
 .fight-layer {
   --line-2: rgba(233, 214, 160, .3); --hp: #e06a6a; --mana: #5fa8e8; --flux: #8a7fd6; --you: #f0d58c; --opp: #8fc9e8;
   --k-dmg: #ff9d90; --k-heal: #8fe39b; --k-mana: #8fc9f2; --k-guard: #e9d49c; --k-buff: #c9b9ff; --k-debuff: #f2a8d6; --k-gold: #f0d58c;
-  position: absolute; inset: 0; z-index: 30; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
-  padding: 8px 12px 12px; overflow-x: hidden; overflow-y: auto; container: fight / inline-size;
-  background: linear-gradient(180deg, rgba(14, 17, 36, 0) 0, rgba(14, 17, 36, .55) 22%, rgba(14, 17, 36, .82) 60%);
+  position: relative; flex: 1 1 auto; width: 100%; min-height: 0; margin-top: 8px; display: flex; flex-direction: column; align-items: center;
+  overflow-x: hidden; overflow-y: auto; container: fight / inline-size;
   font: 14px/1.4 var(--sans); color: var(--text); -webkit-font-smoothing: antialiased;
 }
 .fight-layer, .fight-layer * { box-sizing: border-box; }
@@ -18,7 +19,6 @@
 .fight-layer .fight-loading { padding: 18px; text-align: center; color: var(--muted); font: italic 16px var(--serif); }
 .fight-layer .result .fl-continue { margin-top: 10px; min-width: 160px; }
 .fight-layer .pf svg.avatar { width: 100%; height: 100%; }
-@media (max-width: 600px) { .fight-layer { padding: 4px 6px 8px; } }
 .fight-layer button,.fight-layer input,.fight-layer select{font:inherit;color:inherit}
 .fight-layer button{cursor:pointer;border:1px solid var(--line);border-radius:12px;background:var(--night-3);padding:9px 14px;font-weight:600;transition:border-color .2s,background .2s,transform .12s}
 .fight-layer button:hover:not(:disabled){border-color:var(--gold)}
@@ -29,7 +29,7 @@
 .fight-layer .link{background:none;border:0;padding:4px 0;color:var(--gold-2);font-weight:500;font-size:12px}
 .fight-layer .fight-wrap{flex:none;width:100%;max-width:640px;display:flex;flex-direction:column}
 .fight-layer .fight-body,.fight-layer .fight-main,.fight-layer .controls{display:flex;flex-direction:column;gap:8px;min-width:0}
-.fight-layer .fight{position:relative;flex:none;display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px;background:rgba(22,26,53,.94);border:1px solid var(--line-2);border-radius:var(--radius);box-shadow:0 18px 50px rgba(0,0,0,.45)}
+.fight-layer .fight{position:relative;flex:none;display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px;background:rgba(22,26,53,.9);border:1px solid var(--line-2);border-radius:var(--radius)}
 .fight-layer .fight>*{flex:none}
 .fight-layer .fighters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .fight-layer .fighter{display:flex;gap:10px;align-items:center;min-width:0;padding:5px 10px;border-radius:14px;background:var(--night-2);border:1px solid var(--line)}

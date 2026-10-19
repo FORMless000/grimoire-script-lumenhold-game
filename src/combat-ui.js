@@ -1,6 +1,6 @@
 /*
- * The fight screen: a combat or duel challenge played in the combat minigame (combat/, build/combat.bundle.js), laid over
- * the card (HANDOFF §5). Ported from combat/web/app.mjs, the fight only: the fighters, the exchange track, the telegraph,
+ * The fight screen: a combat or duel challenge played in the combat minigame (combat/, build/combat.bundle.js), in the
+ * stage in place of the card, which waits until the fight ends (HANDOFF §5; the host gets .fighting, src/combat.css). Ported from combat/web/app.mjs, the fight only: the fighters, the exchange track, the telegraph,
  * the square actions and the inspect sheet. None of the bench (setup, dock, engine view, journal, log), no header and no
  * concession: a fight runs until someone falls, a stalemate or a decision on points.
  *   CombatUI.open({host, request, content, t, difficulty, avatar, saved, onSave, onDone})

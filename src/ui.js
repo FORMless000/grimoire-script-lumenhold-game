@@ -497,7 +497,7 @@
   // The card again, as it was before the swipe (a choice that couldn't go through).
   function keepCard() { ui.busy = false; ui.mode = null; if (ui.view && ui.view.type === 'menu') showMenu(ui.view); else if (ui.view) showCard(ui.view); }
   // The fight an option starts (a combat or duel challenge on the path it takes), or null: played in the combat minigame
-  // (src/combat-ui.js) over the card, its result handed to choose(). A fight in progress is saved with the run.
+  // (src/combat-ui.js) in place of the card (the card waits, hidden, until the fight ends), its result handed to choose(). A fight in progress is saved with the run.
   function fightAhead(key) {
     if (typeof key !== 'string' || !window.CombatUI) return null;
     try { return eng.fightAhead(key); } catch (e) { console.error(e); return null; }
