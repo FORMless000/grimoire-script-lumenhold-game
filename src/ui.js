@@ -488,13 +488,18 @@
 
   function resolve(key) {
     const req = fightAhead(key);
+    // The minigame didn't load (build/combat.bundle.js missing or a server that doesn't serve it): say so and keep the card,
+    // rather than choosing an option whose fight can't be played.
+    if (req && !window.LumenholdCombat) { console.error('[fight] build/combat.bundle.js did not load: ' + req.id + ' cannot be played'); toast(t('fight.noEngine')); return keepCard(); }
     if (req) return startFight(key, req, null);
     settle(key);
   }
+  // The card again, as it was before the swipe (a choice that couldn't go through).
+  function keepCard() { ui.busy = false; ui.mode = null; if (ui.view && ui.view.type === 'menu') showMenu(ui.view); else if (ui.view) showCard(ui.view); }
   // The fight an option starts (a combat or duel challenge on the path it takes), or null: played in the combat minigame
   // (src/combat-ui.js) over the card, its result handed to choose(). A fight in progress is saved with the run.
   function fightAhead(key) {
-    if (typeof key !== 'string' || !window.CombatUI || !window.LumenholdCombat) return null;
+    if (typeof key !== 'string' || !window.CombatUI) return null;
     try { return eng.fightAhead(key); } catch (e) { console.error(e); return null; }
   }
   function startFight(key, req, saved) {
@@ -509,8 +514,9 @@
     });
   }
   function settle(key, opts) {
-    let out;
-    try { out = eng.choose(key, opts); } catch (e) { console.error(e); ui.busy = false; return; }
+    // A choice that throws part-way (a fight that can't be played, a bug) is undone, so no half-applied option is saved.
+    let out; const before = eng.save();
+    try { out = eng.choose(key, opts); } catch (e) { console.error(e); eng.load(before); toast(t('error.choice')); return keepCard(); }
     renderChrome();
     floatDeltas(out.deltas);
     if (out.say || out.notes.length || out.checks.length || hasVisibleDeltas(out.deltas)) showOutcome(out);

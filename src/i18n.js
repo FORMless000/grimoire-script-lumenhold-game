@@ -246,7 +246,8 @@
     // A fight: the combat minigame played over the card (src/combat-ui.js). The minigame's own lines (flavor, what an
     // action does) are translated with its tables, not here.
     'check.fight': 'Fight', 'check.fightButton': 'Fight · {foe} · level {level}', 'check.fightChip': 'Fight: {result} · {reason}',
-    'fight.loading': 'The fight is starting…', 'fight.you': 'You', 'fight.lv': 'Lv {n}', 'fight.inspect': 'Look at your opponent',
+    'fight.loading': 'The fight is starting…', 'fight.noEngine': 'The fight couldn’t load. Reload the page; if you play on a local server, restart it.',
+    'error.choice': 'That choice couldn’t go through, so nothing changed. Try again, or pick another option.', 'fight.you': 'You', 'fight.lv': 'Lv {n}', 'fight.inspect': 'Look at your opponent',
     'fight.choosing': '{name} is choosing…', 'fight.choosingHint': 'Their move appears when they commit.',
     'fight.theirMove': 'What their move does', 'fight.theyCommit': 'They commit:', 'fight.compelled': 'Compelled:',
     'fight.youFirst': 'You commit first', 'fight.youFirstHint': 'Their reply stays hidden until you do.', 'fight.theyFirst': 'they commit first',
