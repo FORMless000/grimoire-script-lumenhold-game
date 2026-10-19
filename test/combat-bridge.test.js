@@ -28,3 +28,12 @@ test('combat: the main game\'s max Mana is the fight\'s capacity, at any skills'
     assert.equal(eng.resMax(content.resources.mana), manaCapacity(skills), JSON.stringify(skills));
   }
 });
+
+test('combat: build/combat.bundle.js is current and starts the core in Node', () => {
+  const H = require('../combat/tools/bundle-hash.cjs');
+  assert.equal(H.staleReason(), null);
+  const C = require('../build/combat.bundle.js');
+  C.initSync();
+  assert.equal(C.RULES_VERSION, H.bundleHeader().rules);
+  for (const k of ['createState', 'fightOptions', 'settle', 'fightSetting', 'foeLevel', 'EVENTS', 'FOES', 'chooseAIAction', 'applyChoice', 'describe', 'createAI']) assert.ok(C[k], k);
+});

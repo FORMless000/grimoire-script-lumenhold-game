@@ -5,18 +5,9 @@
 
 const SYNC=Symbol('core-sync');
 const imports={env:{now:()=>performance.now()}};
-const source=new URL('./core.wasm',import.meta.url);
-// A worker compiles synchronously: a module worker that awaited here would miss the messages posted while it loads.
-function bytesSync(url){const x=new XMLHttpRequest();x.open('GET',url,false);x.responseType='arraybuffer';x.send();if(x.status!==200)throw Error('core.wasm: HTTP '+x.status);return x.response;}
-const coreModule=globalThis.process?.versions?.node
-  ?new WebAssembly.Module((await import('node:fs')).readFileSync(source))
-  :typeof document==='undefined'
-    ?new WebAssembly.Module(bytesSync(source))
-    :await WebAssembly.compileStreaming(fetch(source)).catch(async()=>WebAssembly.compile(await (await fetch(source)).arrayBuffer()));
-let W,loaded=null,serial=0;
+let coreModule=null,W,loaded=null,serial=0;
 // A trap (a panic in the core) poisons the instance; start a fresh one and report the core's message.
 function instantiate(){W=new WebAssembly.Instance(coreModule,imports).exports;W.init();loaded=null;}
-instantiate();
 
 const encoder=new TextEncoder(),decoder=new TextDecoder();
 const read=()=>decoder.decode(new Uint8Array(W.memory.buffer,W.out_ptr(),W.out_len()));
@@ -32,9 +23,12 @@ function use(s){if(loaded!==s||s[SYNC]!==serial){call('load',JSON.stringify(s));
 // The core's state after a change, written into the caller's object.
 function writeBack(s){call('dump');const next=JSON.parse(read());for(const k of Object.keys(s))if(!(k in next))delete s[k];Object.assign(s,next);loaded=s;s[SYNC]=++serial;}
 
-call('rules_version');
-export const RULES_VERSION=read();
+export let RULES_VERSION=null;
 export const POLICY_VERSION='alpha-beta-2';
+// Starts the core from a compiled WebAssembly.Module: the loader at the end of this file (the bench, Node), or the main game's
+// bundle (build/combat.bundle.js, from combat/tools/bundle.mjs), which cuts that loader and passes the module it compiled.
+export function initCore(module){coreModule=module;instantiate();call('rules_version');RULES_VERSION=read();}
+export const coreReady=()=>!!coreModule;
 
 export function label(id){if(typeof id!=='string')return id;call('label',id);return read();}
 // Event text, from the structured events the core returns.
@@ -85,3 +79,14 @@ export function chooseAIAction(state,opts={},ctx){use(state);if(call('choose',ha
 // The analysis view follows stored best moves: the "key" of a position is the state itself.
 export function searchPositionKey(ctx,s){return s;}
 export function probeSearchCache(ctx,s){use(s);call('best',handle(ctx));const id=read();return id?{bestId:id}:undefined;}
+
+// <loader> The bench and Node: core.wasm next to this file. A worker compiles synchronously: a module worker that awaited here
+// would miss the messages posted while it loads. combat/tools/bundle.mjs cuts from here to </loader>.
+const source=new URL('./core.wasm',import.meta.url);
+function bytesSync(url){const x=new XMLHttpRequest();x.open('GET',url,false);x.responseType='arraybuffer';x.send();if(x.status!==200)throw Error('core.wasm: HTTP '+x.status);return x.response;}
+initCore(globalThis.process?.versions?.node
+  ?new WebAssembly.Module((await import('node:fs')).readFileSync(source))
+  :typeof document==='undefined'
+    ?new WebAssembly.Module(bytesSync(source))
+    :await WebAssembly.compileStreaming(fetch(source)).catch(async()=>WebAssembly.compile(await (await fetch(source)).arrayBuffer())));
+// </loader>

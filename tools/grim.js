@@ -100,7 +100,10 @@ function build(opts = {}) {
   if (opts.check) {
     const fresh = fs.existsSync(BUNDLE) && fs.readFileSync(BUNDLE, 'utf8') === text;
     console.log(fresh ? 'build: bundle is up to date' : C.r + 'build: build/content.bundle.js is stale' + C.x + ' — run node tools/grim.js build (the file:// game loads it)');
-    return fresh;
+    // The combat minigame's bundle (combat/tools/bundle.mjs): built from combat/, committed like the content bundle.
+    const stale = require('../combat/tools/bundle-hash.cjs').staleReason();
+    console.log(stale ? C.r + 'build: ' + stale + C.x : 'build: combat bundle is up to date');
+    return fresh && !stale;
   }
   fs.writeFileSync(BUNDLE, text);
   const nLoc = Object.values(locales).reduce((n, a) => n + a.length, 0);
