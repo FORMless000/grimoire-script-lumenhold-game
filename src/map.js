@@ -49,6 +49,7 @@
       const ok = free.find((i) => p.open[i]);
       if (ok == null) { status = t('map.closed', { name: p.name, hours: (p.hours || []).map((h) => t('slot.' + h)).join(', ') }); return draw(); }
       picks[ok] = id;
+      status = t('map.again', { place: p.name });
       draw();
       if (twice) go();
     }

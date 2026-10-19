@@ -236,8 +236,8 @@
     const opts = choices.map((o, i) => '<button class="opt origin-opt' + (o.poor ? ' poor' : '') + '" data-k="' + esc(o.key) + '"><span class="num">' + (i + 1) + '</span>' +
       '<b>' + (o.art ? Art.icon(o.art, 16) + ' ' : '') + esc(o.label) + '</b>' + (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') +
       (o.money ? '<small class="money">' + Art.icon('coin', 13) + ' ' + esc(o.money) + '</small>' : '') +
-      (o.poor ? '<small class="warn">' + esc(t('origin.poorWarning')) + '</small>' : '') + '</button>').join('');
-    openOverlay('<div class="modal dark origin-modal"><div class="modal-body"><h2>' + esc(t('origin.heading')) + '</h2><p class="text">' + esc(t('origin.intro')) + '</p>' +
+      (o.poor ? '<small class="warn">' + esc(t('origin.poorWarning')) + '</small>' : '') + againLine() + '</button>').join('');
+    openOverlay('<div class="modal dark origin-modal"><div class="modal-body"><h2>' + esc(t('origin.heading')) + '</h2><p class="text">' + esc(t('origin.intro')) + ' ' + esc(t('menu.prompt')) + '</p>' +
       '<div class="opt-grid">' + opts + '</div><div class="row" style="margin-top:14px"><button class="btn ghost-btn grow" id="originBack">' + esc(t('origin.back')) + '</button>' +
       '<button class="btn primary grow" id="originGo" disabled>' + esc(t('menu.confirmOne')) + '</button></div></div></div>');
     // As in every menu: a click picks, a double-click (or Confirm, or Enter) starts.
@@ -247,7 +247,7 @@
       if (ui.mode !== 'origin') return;
       const now = Date.now(), twice = !!last && last.k === k && now - last.t < DOUBLE_MS;
       last = { k, t: now }; sel = k;
-      document.querySelectorAll('.origin-opt').forEach((b) => b.classList.toggle('sel', b.dataset.k === k));
+      document.querySelectorAll('.origin-opt').forEach((b) => { b.classList.toggle('sel', b.dataset.k === k); b.classList.toggle('last-pick', b.dataset.k === k); });
       document.getElementById('originGo').disabled = false;
       if (twice) go();
     };
@@ -954,7 +954,7 @@
       const aff = o.affects.map((id) => content.resources[id] ? Art.icon(content.resources[id].icon, 14) : '').join('');
       return '<button class="opt' + (o.locked ? ' locked' : '') + '" data-k="' + esc(o.key) + '"' + (o.disabled ? ' disabled' : '') + '><span class="num">' + (i < 9 ? i + 1 : '') + '</span><b>' + (o.locked ? '🔒 ' : '') + esc(o.label) + '</b>' +
         (o.locked ? '<small class="why">' + esc(o.locked) + '</small>' : '') +
-        (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') + courseLine(o.course) + jobLine(o.job) + switchLine(o.switching) + (previewHtml(v, o) || (aff ? '<span class="aff">' + aff + '</span>' : '')) + '</button>';
+        (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') + courseLine(o.course) + jobLine(o.job) + switchLine(o.switching) + (previewHtml(v, o) || (aff ? '<span class="aff">' + aff + '</span>' : '')) + againLine() + '</button>';
     }).join('');
     openOverlay('<div class="modal dark"><div class="modal-art">' + Art.scene(v.art, v.tags, v.id) + '</div><div class="modal-body">' + (v.actor ? actorRow(v.actor).replace('actor-row', 'actor-row" style="color:var(--text)') : '') +
       '<h2>' + esc(v.title) + '</h2><p class="text prompt">' + esc(v.pick > 1 ? t('menu.promptMany', { n: v.pick }) : t('menu.prompt')) + '</p>' +
@@ -969,6 +969,8 @@
     });
   }
   const DOUBLE_MS = 450;   // two clicks (taps) on the same choice within this: a double-click, which confirms
+  // Said on the tile just picked (CSS shows it on .last-pick): how to confirm it.
+  const againLine = () => '<small class="again">' + esc(t('menu.again')) + '</small>';
   function pickMenu(key) {
     if (ui.busy || ui.mode !== 'menu') return;
     const o = ui.view.options.find((x) => x.key === key);
@@ -981,7 +983,7 @@
       else if (i >= 0) ui.multi.splice(i, 1); else if (ui.multi.length < ui.view.pick) ui.multi.push(key);
     } else ui.sel = key;
     const picked = ui.multi || [ui.sel];
-    document.querySelectorAll('.opt').forEach((b) => b.classList.toggle('sel', picked.includes(b.dataset.k)));
+    document.querySelectorAll('.opt').forEach((b) => { b.classList.toggle('sel', picked.includes(b.dataset.k)); b.classList.toggle('last-pick', b.dataset.k === key && picked.includes(key)); });
     const go = document.getElementById('multiGo');
     if (go) { go.disabled = ui.multi ? !ui.multi.length : !ui.sel; go.textContent = ui.multi ? t('menu.confirm', { n: ui.multi.length, max: ui.view.pick }) : t('menu.confirmOne'); }
     if (twice) confirmMenu();
