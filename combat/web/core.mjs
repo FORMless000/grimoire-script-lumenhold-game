@@ -2,6 +2,7 @@
 // This file only moves data across the boundary and keeps the engine's JS API, so app.mjs and its workers call the same names.
 // A state stays a plain JS object (setup.mjs makes it; workers receive copies). Rule calls load it into the core when it is not
 // the one already loaded; applyChoice and concede write the core's next state back into the same object.
+import {tx,textInUse} from '../setup/text.mjs';
 
 const SYNC=Symbol('core-sync');
 const imports={env:{now:()=>performance.now()}};
@@ -30,7 +31,13 @@ export const POLICY_VERSION='alpha-beta-2';
 export function initCore(module){coreModule=module;instantiate();call('rules_version');RULES_VERSION=read();}
 export const coreReady=()=>!!coreModule;
 
-export function label(id){if(typeof id!=='string')return id;call('label',id);return read();}
+// An action's name: in the main game's language when it handed translations (useText: label.<id>; spells by their id).
+export const BASIC_LABELS={strike:'Strike',guard:'Guard',reclaim:'Reclaim',hold:'Hold',release:'Release',frozen:'Frozen',cancel:'Cancelled'};
+export function label(id){
+  if(typeof id!=='string')return id;
+  if(textInUse()){if(id.startsWith('bundle:'))return id.slice(7).split('+').map(label).join(' + ');const t=tx('label.'+id,null);if(t)return t;}
+  call('label',id);return read();
+}
 // Event text, from the structured events the core returns.
 export function formatEvent(e){
   const who=side=>side===0?'You':'Opponent';
@@ -51,11 +58,26 @@ export function formatEvent(e){
 export function cloneState(s){return structuredClone(s);}
 export function actorToMove(s){use(s);const side=call('actor');return side<0?null:side;}
 export function legalActions(s,side){use(s);call('legal',side??-1);return JSON.parse(read());}
-export function available(s,side,id){use(s);call('unavailable',side,id);return read();}
+// Why an action can't be taken (rust/core/src/rules.rs unavailable), by key for translations.
+export const UNAVAILABLE={frozen:'Frozen this exchange',notAction:'Not an available action',channeling:'Hold or Release while channeling',notChanneling:'Not channeling',hasteBundle:'Haste requires one basic-action bundle',noBundle:'No Haste bundle available',notLearned:'Not learned',cardsOnly:'Cards/story only',mana:'Not enough ready Mana',hp:'Not enough HP'};
+const UNAVAILABLE_KEY=Object.fromEntries(Object.entries(UNAVAILABLE).map(([k,v])=>[v,k]));
+export function available(s,side,id){use(s);call('unavailable',side,id);const r=read();return r&&textInUse()&&UNAVAILABLE_KEY[r]?tx('unavailable.'+UNAVAILABLE_KEY[r],r):r;}
 export function cost(s,side,id){use(s);return call('cost',side,id);}
 export function hpCost(s,side,id){use(s);return call('hp_cost',side,id);}
 export function has(s,side,key){use(s);return !!call('has',side,key);}
-export function describe(s,side,id){use(s);call('describe',side,id);return read();}
+// What an action does, from the core's template (rust/core/src/text.rs): English from the core, or rendered here with the
+// translations (useText: the template keys of textTable()). describeData is the template itself (web/brief.mjs reads it).
+export function describe(s,side,id){if(textInUse())return renderText(describeData(s,side,id));use(s);call('describe',side,id);return read();}
+export function describeData(s,side,id){use(s);call('describe_data',side,id);return JSON.parse(read());}
+let TEXT_EN=null;
+export function textTable(){if(!TEXT_EN){call('text_table');TEXT_EN=JSON.parse(read());}return TEXT_EN;}
+export function renderText(v){
+  if(typeof v==='string')return v;
+  if(Array.isArray(v))return v.map(renderText).join(tx('w.listSep',', '));
+  if(!v||typeof v!=='object')return '';
+  if(v.label!==undefined)return label(v.label);
+  return tx(v.k,textTable()[v.k]??'').replace(/\{(\w+)\}/g,(m,n)=>n in v?renderText(v[n]):'');
+}
 export function applyChoice(s,id){
   use(s);
   if(call('apply',id))throw Error(read());

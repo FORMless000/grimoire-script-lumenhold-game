@@ -21,7 +21,7 @@ const { createStore, httpError } = require('./store.js');
 const ROOT = path.resolve(__dirname, '..');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.woff2': 'font/woff2', '.ico': 'image/x-icon' };
 // Only these paths are served as static files.
-const STATIC = [/^\/index\.html$/, /^\/src\/[\w./-]+$/, /^\/build\/content\.bundle\.js$/, /^\/content\/world\/maps\/[\w.-]+\.svg$/, /^\/docs\/[\w.-]+\.(svg|png)$/, /^\/server\/admin\.html$/];
+const STATIC = [/^\/index\.html$/, /^\/src\/[\w./-]+$/, /^\/build\/content\.bundle\.js$/, /^\/build\/combat\.bundle\.js$/, /^\/content\/world\/maps\/[\w.-]+\.svg$/, /^\/docs\/[\w.-]+\.(svg|png)$/, /^\/server\/admin\.html$/];
 const LOOPBACK = /^(127\.\d+\.\d+\.\d+|::1|localhost)$/;
 
 function createServer({ root = ROOT, dataDir = path.join(root, 'data'), token = null, requireToken = false } = {}) {

@@ -47,15 +47,17 @@ async function playthrough(browser, lang) {
   const errs = [], english = new Set();
   const p = await newPage(browser, errs);
   await p.goto(URL + '?lang=' + lang); await p.waitForTimeout(300);
+  // Fights (the combat minigame) are played with real clicks against a foe that searches little, to keep the run quick.
+  await p.evaluate(() => { if (window.CombatUI) window.CombatUI.foeAI = { maxDepth: 2, nodeBudget: 2e4 }; });
   await p.click('#begin'); await p.waitForTimeout(300);
   await pickOrigin(p);
   const visible = () => p.evaluate(() => (document.querySelector('#deck .card') || document.querySelector('#overlay') || {}).innerText || '');
   const scan = async () => { if (lang === 'en') return; for (const m of (await visible()).match(ENGLISH_RUN) || []) english.add(m); };
   let steps = 0, ended = false;
-  const n = { menu: 0, multi: 0, map: 0, card: 0, outcome: 0, month: 0 };
+  const n = { menu: 0, multi: 0, map: 0, card: 0, outcome: 0, month: 0, fight: 0 };
   let idle = 0;
   while (steps++ < 5000) {
-    if (await p.$('#deck .card, .opt, #mapGo, #contBtn, #beginMonth, #again')) idle = 0;
+    if (await p.$('#deck .card, .opt, #mapGo, #contBtn, #beginMonth, #again, #fightLayer')) idle = 0;
     if (await p.$('#again')) { ended = true; break; }
     if (await p.$('#beginMonth')) { n.month++; await scan(); await p.click('#beginMonth'); await p.waitForTimeout(80); continue; }
     if (await p.$('#mapGo')) { n.map++; await scan(); if (!(await mapPick(p, steps))) break; await p.waitForTimeout(200); continue; }
@@ -68,6 +70,12 @@ async function playthrough(browser, lang) {
         await p.click('#multiGo'); await p.waitForTimeout(120);
       }
       continue;
+    }
+    if (await p.$('#fightLayer')) {   // a fight: an open action each exchange, then back to the card
+      if (await p.$('#fightDone')) { n.fight++; await p.click('#fightDone'); await p.waitForTimeout(300); continue; }
+      const a = await p.$$('#fightLayer .act:not([disabled])');
+      if (a.length) { await a[steps % a.length].click(); await p.click('#fightLayer .fl-commit'); }
+      await p.waitForTimeout(150); continue;
     }
     if (await p.$('#contBtn')) { n.outcome++; await scan(); await p.keyboard.press('Enter'); await p.waitForTimeout(240); continue; }
     if (await p.$('#deck .card')) {
@@ -85,7 +93,7 @@ async function playthrough(browser, lang) {
   if (SERVER && ended) serverOk = await checkServer(p, lang, errs);
   await p.close();
   const ok = ended && serverOk && !errs.length && !english.size;
-  console.log((ok ? 'PASS' : 'FAIL') + ` playthrough [${lang}]: ended=${ended} months=${n.month} days=${n.map} cards=${n.card} menus=${n.menu} (multi-pick ${n.multi})`);
+  console.log((ok ? 'PASS' : 'FAIL') + ` playthrough [${lang}]: ended=${ended} months=${n.month} days=${n.map} cards=${n.card} fights=${n.fight} menus=${n.menu} (multi-pick ${n.multi})`);
   if (!n.map || !n.multi) { console.log('  expected at least one map screen and one multi-pick menu'); return false; }
   if (english.size) console.log('  English text in ' + lang + ': ' + [...english].slice(0, 8).join(' | '));
   errs.forEach((e) => console.log('  error: ' + e));

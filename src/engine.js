@@ -1315,16 +1315,19 @@
           }
           case 'challenge': {
             // A fight (combat, duel) is played, never rolled (2026-10-18): a result handed to choose() (the UI played it), or
-            // the resolver's (`eng.fights`, the simulated players). Previews keep the stub's odds as the expected value.
-            if ((st.kind === 'combat' || st.kind === 'duel') && !this._oracle && ((this._fightQueue && this._fightQueue.length) || this.fights)) { this.playFight(st, ctx); break; }
-            if ((st.kind === 'combat' || st.kind === 'duel') && this._oracle) this._oracle.fight = true;
+            // the resolver's (`eng.fights`: the simulated players, and the UI's safety net). Previews keep the stub's odds as
+            // the expected value and, where fights are played, run the outcome as a played fight does (no Health lines).
+            const fight = st.kind === 'combat' || st.kind === 'duel', played = fight && !!(this.fights || (this._fightQueue && this._fightQueue.length));
+            if (played && !this._oracle) { this.playFight(st, ctx); break; }
+            if (fight && this._oracle) this._oracle.fight = true;
             // The stub's entry cost (Mana) only where fights are still rolled: unit-test fixtures with no resolver.
-            if (st.kind === 'combat' && !this.fights) this.change(this.spellResource, -this.combatCost(), ctx);
+            if (st.kind === 'combat' && !played) this.change(this.spellResource, -this.combatCost(), ctx);
             const o = this.challengeOdds(st, ctx.actor, ctx.key);
             const probs = [o.win, st.partial ? o.atLeastPartial - o.win : 0, 100 - o.atLeastPartial];
             const result = ['win', 'partial', 'lose'][this.pick('challenge', probs, { challenge: st.kind })];
             ctx.checks.push({ challenge: st.kind, skill: o.skill, p: o.win, partial: st.partial ? o.atLeastPartial - o.win : null, result, ok: result !== 'lose', swing: st.swing || null });
-            this.run(st[result], ctx);
+            const was = this._fightOutcome; if (played) this._fightOutcome = true;
+            try { this.run(st[result], ctx); } finally { this._fightOutcome = was; }
             break;
           }
           case 'bond': {

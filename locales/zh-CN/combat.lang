@@ -1,0 +1,695 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of combat.lang
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@combat
+# en: One public bundle: {parts}. Each Strike deals {dmg} physical damage before defenses{tailwind}. Repeated Guard/Reclaim add nothing.
+d.bundle [cec8bd] = 一次公开的组合行动：{parts}。每次打击在防御前造成 {dmg} 点物理伤害{tailwind}。重复的格挡或回收不会叠加。
+# en: , plus the active Tailwind sequence
+d.bundle.tailwind [3d4981] = ，外加正在进行的顺风连击
+# en: Deal {dmg} physical damage before defenses{extra}; {guard}.
+d.strike [d0a61f] = 在防御前造成 {dmg} 点物理伤害{extra}；{guard}。
+# en:  plus {n} Tailwind damage that gets through Guard
+d.strike.tailwind [e19258] = ，另加 {n} 点能穿透格挡的顺风伤害
+# en: Guard stops all of it, Ward half
+d.strike.guard [b18b05] = 格挡可全部挡下，护界挡下一半
+# en: Guard stops all of it (less from a Guard that has just guarded), Ward half
+d.strike.guardLeak [272844] = 格挡可全部挡下（刚格挡过又格挡则挡得较少），护界挡下一半
+# en: Stop all Strike damage and half of spell damage this exchange.
+d.guard [5ff6ca] = 本回合挡下全部打击伤害和一半的法术伤害。
+# en: Still guarding, and tiring: stop {pct}% of Strike damage and half of spell damage this exchange.
+d.guard.tired [54705b] = 仍在格挡，但已疲惫：本回合挡下 {pct}% 的打击伤害和一半的法术伤害。
+# en: Stop all Strike damage and half of spell damage this exchange. Guarding again {when} stops only {pct}% of a Strike.
+d.guard.fresh [308ff8] = 本回合挡下全部打击伤害和一半的法术伤害。{when}再次格挡，只能挡下一次打击的 {pct}%。
+# en: straight after
+d.guard.straightAfter [e541a9] = 紧接着
+# en: within {n} exchanges
+d.guard.within [af17d4] = {n} 个回合内
+# en: Recover up to {n} flux after attacks, capped at capacity; recovering Mana breaks Shadowstep before this exchange's attacks.
+d.reclaim [bb6d42] = 在攻击结算后回收至多 {n} 点游离法力，不超过上限；回收法力会在本回合的攻击之前打破影步。
+# en: {action} {spell}. {text}
+d.channelAction [0f2284] = {action}{spell}。{text}
+# en: Cannot act or be hurt this exchange; then thaw.
+d.frozen [581faa] = 本回合无法行动，也不会受伤；之后解冻。
+# en: Deal {dmg} spell damage.
+d.dealSpell [7e711a] = 造成 {dmg} 点法术伤害。
+# en: Deal {dmg} spell damage{pierce}.
+d.starlight.release [ba5f1e] = 造成 {dmg} 点法术伤害{pierce}。
+# en: ; Ward doesn't stop it
+d.starlight.releasePierce [7d8227] = ；护界挡不住
+# en: Charge the release to {dmg} spell damage{pierce}. Further Holds add no damage.
+d.starlight.hold [e6beb4] = 将释放蓄至 {dmg} 点法术伤害{pierce}。继续蓄持不再增加伤害。
+# en:  that Ward doesn't stop
+d.starlight.holdPierce [e63892] = ，且护界挡不住
+# en: Deal {dmg} spell damage, plus {extra} from the Holds that gets through Guard and Ward.
+d.wildfire.releaseHeld [ce1252] = 造成 {dmg} 点法术伤害，另加蓄持积攒的 {extra} 点，这部分能穿透格挡与护界。
+# en: Deal {dmg} spell damage to them and {self} to yourself; the Release gains {per} that gets through Guard and Ward.
+d.wildfire.hold [edc2b7] = 对对方造成 {dmg} 点法术伤害，对自己造成 {self} 点；释放时多 {per} 点能穿透格挡与护界的伤害。
+# en: Heal {n} HP from damage dealt.
+d.siphon.release [6444ac] = 按造成的伤害治疗 {n} 点生命。
+# en: Deal {dmg} spell damage; bank actual damage for healing.
+d.siphon.hold [c836c7] = 造成 {dmg} 点法术伤害；实际造成的伤害存起来用于治疗。
+# en: Gain up to {n} ready Mana, capped at capacity.
+d.moonwell.release [ddd74e] = 获得至多 {n} 点可用法力，不超过上限。
+# en: Bank {n} more Mana; Release makes it ready.
+d.moonwell.hold [2b54fa] = 再存入 {n} 点法力；释放后即可使用。
+# en: Turn on a {n}-point absorb pool, used up across hits.
+d.lodestar.release [c44559] = 开启一个 {n} 点的吸收池，在多次攻击中逐渐耗尽。
+# en: Bank {n} more absorb; the bank soaks up hits while you hold.
+d.lodestar.hold [1278d0] = 再存入 {n} 点吸收；蓄持期间，存量会替你吸收攻击。
+# en: {effect} each exchange end; reduce each hit by {reduce}; ends after {threshold} HP damage taken.{burst}
+d.construct [683601] = 每回合结束时{effect}；每次受击减免 {reduce} 点；累计承受 {threshold} 点伤害后消失。{burst}
+# en: Heal {n} HP
+d.construct.heal [3e1ba5] = 治疗 {n} 点生命
+# en: Deal {n} physical damage before defenses
+d.construct.strike [c98e9d] = 在防御前造成 {n} 点物理伤害
+# en: Deal {n} spell damage before defenses
+d.construct.spell [6aecba] = 在防御前造成 {n} 点法术伤害
+# en:  On ending: {n} spell damage to both sides before defenses.
+d.construct.burst [013006] = 消失时：在防御前对双方各造成 {n} 点法术伤害。
+# en: {text} Forbidden: alignment −small each cast; witnessed casts are reported.
+d.forbidden [723e0d] = {text}禁咒：每次施放，立场小幅偏向空洞；被人目击的施放会遭举报。
+# en: Deal {dmg} spell damage before defenses. Guard halves it; Ward stops it.
+d.spellHit [778ecc] = 在防御前造成 {dmg} 点法术伤害。格挡减半；护界完全挡下。
+# en: Deal {dmg} physical damage before defenses. Guard stops it; Ward halves it.
+d.physicalHit [fe27a3] = 在防御前造成 {dmg} 点物理伤害。格挡完全挡下；护界减半。
+# en: Opponent commits first for {n} subsequent exchanges.
+d.foresight [3d1490] = 接下来 {n} 个回合，对手必须先出招。
+# en: At the end of the exchange, heal {n} HP, unless you take any damage this exchange.{exposes}
+d.mend [6a05ec] = 回合结束时治疗 {n} 点生命，前提是本回合没有受到任何伤害。{exposes}
+# en:  Breaks your own Shadowstep.
+d.mend.exposes [33ddae] = 会打破你自己的影步。
+# en: With observers: earn {n} Renown at settlement, once per fight.
+d.glamour [1bff0d] = 有观众时：结算时获得 {n} 点声望，每场限一次。
+# en: For the next {n} exchanges, commit {actions} basic actions as one bundle each exchange.
+d.haste [6a38b3] = 接下来 {n} 个回合，每回合可把 {actions} 个基础行动组合成一次出招。
+# en: Evade attacks and every opposing spell effect for {n} exchanges including this one; breaks before the hits land on any exchange you attack or recover Mana.
+d.shadowstep [a23a8c] = 包括本回合在内的 {n} 个回合中，闪避攻击和对方的一切法术效果；在你攻击或回收法力的回合，影步会在攻击命中之前破除。
+# en: This exchange: block every opposing spell (damage, Torment, Extraction, Seal, Compel) and half of each Strike.
+d.ward [89d3d2] = 本回合：挡下对方的一切法术（伤害、折磨、汲取、封缄、强令）以及每次打击的一半。
+# en: Start channel. Release for {dmg} spell damage, or {charged} after a Hold{pierce}. Holds cost {cost} Mana.
+d.starlight [88ab27] = 开始引导。释放可造成 {dmg} 点法术伤害，蓄持一次后为 {charged} 点{pierce}。每次蓄持消耗 {cost} 点法力。
+# en: , which Ward doesn't stop
+d.starlight.pierce [4202b2] = ，且护界挡不住
+# en: Erase all opposing flux. Ward and Shadowstep stop it.
+d.seal [f0edf0] = 抹去对方全部游离法力。护界与影步可以挡下。
+# en: Start channel{ignite}. Each Hold: {hold} spell damage to them, {self} to you, and +{per} on the Release that gets through Guard and Ward. Release: {release} spell damage plus what the Holds added. Before defenses.
+d.wildfire [254438] = 开始引导{ignite}。每次蓄持：对对方造成 {hold} 点法术伤害，对自己造成 {self} 点，并让释放多出 {per} 点能穿透格挡与护界的伤害。释放：造成 {release} 点法术伤害，再加上蓄持积攒的部分。以上均为防御前数值。
+# en: , dealing {n} spell damage now
+d.wildfire.ignite [1bf9c0] = ，立即造成 {n} 点法术伤害
+# en: Public hit of {n} spell damage before defenses two exchanges later{pierce}.
+d.omen [da2977] = 两个回合后公开降下 {n} 点法术伤害（防御前）{pierce}。
+# en: ; only evading stops it
+d.omen.evadeOnly [66abb8] = ；只有闪避才能躲开
+# en: ; Guard and Ward don't stop it
+d.omen.guardWard [9064c7] = ；格挡与护界都挡不住
+# en: ; Ward doesn't stop it
+d.omen.ward [7d8227] = ；护界挡不住
+# en: ; Guard doesn't stop it
+d.omen.guard [3af4bc] = ；格挡挡不住
+# en: Steal up to {n} Crowns; alignment −tiny.
+d.sleight [7ed810] = 偷取至多 {n} 克朗；立场略微偏向空洞。
+# en: Deal {dmg} cold spell damage before defenses; opposing Flame or Wildfire damage cancels with it.
+d.hoarfrost [b5a08d] = 在防御前造成 {dmg} 点寒冰法术伤害；对方的火焰或野火伤害会与之相互抵消。
+# en: No combat effect.
+d.noEffect [5d3a9f] = 在战斗中没有效果。
+# en: Block all opposing damage this exchange, then {a}, {b} and {c} of it over the next three exchanges. Spell effects still land.
+d.brace [256a35] = 本回合挡下对方的全部伤害，之后三个回合依次挡下 {a}、{b} 和 {c}。法术效果照常生效。
+# en: With observers, spend up to 10 Crowns automatically; earn 1 Renown per 2 spent at settlement.
+d.rapport [42a258] = 有观众时，自动花费至多 10 克朗；结算时每花 2 克朗获得 1 点声望。
+# en: Pay {hp} HP; gain up to {n} ready Mana, capped at capacity.
+d.purify [0850c9] = 支付 {hp} 点生命；获得至多 {n} 点可用法力，不超过上限。
+# en: Next three exchanges: consecutive Strikes add {n} damage that gets through Guard. Any other action ends the bonus.
+d.tailwind [86a6d1] = 接下来三个回合：连续打击额外造成 {n} 点能穿透格挡的伤害。做任何别的行动都会中断加成。
+# en: Arm once-per-fight rescue: first knockout freezes you through the following exchange, then you thaw with {n} HP.
+d.rime [21a421] = 布下每场一次的保命术：第一次被击倒时，你会被冻住直到下一个回合结束，然后以 {n} 点生命解冻。
+# en: Return incoming damaging spells this exchange in full; reflected hits cannot bounce again.
+d.reflect [8c76d5] = 本回合将来袭的伤害法术全数反弹；被反弹的攻击不会再弹回来。
+# en: Return incoming damaging spells in full this exchange and the next {n}; reflected hits cannot bounce again.
+d.reflect.more [5dc506] = 本回合及之后的 {n}，将来袭的伤害法术全数反弹；被反弹的攻击不会再弹回来。
+# en: Start channel: bank {n} Mana now and {more} per free Hold; Release makes it ready.
+d.moonwell [521190] = 开始引导：现在存入 {n} 点法力，之后每次蓄持再存 {more} 点；释放后即可使用。
+# en: Start channel: bank {n} absorb now and {more} per free Hold. The bank soaks up hits while you hold; Release turns what's left into a pool used up across hits.
+d.lodestar [09b864] = 开始引导：现在存入 {n} 点吸收，之后每次蓄持再存 {more} 点。蓄持期间，存量替你吸收攻击；释放后，剩余部分化作一个在多次攻击中逐渐耗尽的吸收池。
+# en: Cards/story only; not a combat cast.
+d.toll [12e20a] = 仅用于卡牌与剧情；战斗中无法施放。
+# en: For three exchanges including this one, each opposing action pays {n} HP, bypassing hit reductions. Ward and Shadowstep stop it.
+d.torment [a29509] = 包括本回合在内的三个回合里，对方每做一个行动都要付出 {n} 点生命，无视减伤。护界与影步可以挡下。
+# en: Move up to {n} of their ready Mana into your flux; your Mana plus flux can't pass capacity. Ward and Shadowstep stop it.
+d.extraction [3cbc57] = 把对方至多 {n} 点可用法力转为你的游离法力；你的法力加游离法力不能超过上限。护界与影步可以挡下。
+# en: Start and each Hold deal {n} spell damage before defenses. Release heals actual damage dealt; Holds cost {cost} Mana.
+d.siphon [10e812] = 开始时及每次蓄持，在防御前造成 {n} 点法术伤害。释放时按实际造成的伤害治疗；每次蓄持消耗 {cost} 点法力。
+# en: Their action this exchange becomes their last move, and so does their next {n}: forced and shown in advance. If they can't repeat it, their turn is lost.
+d.compel.immediate [2b5b0b] = 对方本回合的行动变成其上一招，接下来的 {n} 也是如此：被迫重复，并提前公开。若无法重复，该回合作废。
+# en: For the next {n}, their action is replaced with their last legal public action. No history: cancel.
+d.compel [937b87] = 接下来的 {n}，对方的行动会被替换为其上一个合法的公开行动。没有可重复的行动则作废。
+# en: This exchange and the next, damage you actually take also gives you twice that in ready Mana, capped at capacity.
+d.eclipse [bcd0f9] = 本回合与下一回合，你实际受到的伤害会转化为两倍的可用法力，不超过上限。
+# en: For the rest of the fight, spell Mana costs are paid as HP at 1 HP per 2 Mana (healing still costs Mana); no flux from HP payments.
+d.heartprice [f6d618] = 本场战斗余下的时间里，法术的法力消耗改以生命支付，每 2 点法力折 1 点生命（治疗仍需法力）；以生命支付不会产生游离法力。
+# en: one
+w.one [2719ef] = 1 个回合
+# en: exchange
+w.exchange [e3eb60] = 1 个回合
+# en: {n} exchanges
+w.exchanges [673775] = {n} 个回合
+# en: , 
+w.listSep [d000f1] = 、
+# en: Strike
+label.strike [42926f] = 打击
+# en: Guard
+label.guard [8e660e] = 格挡
+# en: Reclaim
+label.reclaim [f73aec] = 回收
+# en: Hold
+label.hold [f295d8] = 蓄持
+# en: Release
+label.release [1e9b1e] = 释放
+# en: Frozen
+label.frozen [c114a3] = 冰封
+# en: Cancelled
+label.cancel [2b09bc] = 作废
+# en: Gore
+label.gore [c0939a] = 冲撞
+# en: Frozen this exchange
+unavailable.frozen [178ede] = 本回合被冰封
+# en: Not an available action
+unavailable.notAction [271b7c] = 不是可用的行动
+# en: Hold or Release while channeling
+unavailable.channeling [564846] = 引导中只能蓄持或释放
+# en: Not channeling
+unavailable.notChanneling [28f077] = 没有在引导
+# en: Haste requires one basic-action bundle
+unavailable.hasteBundle [9267d9] = 疾速时须选择一组基础行动
+# en: No Haste bundle available
+unavailable.noBundle [6e41e4] = 没有可用的疾速组合
+# en: Not learned
+unavailable.notLearned [ee3631] = 尚未学会
+# en: Cards/story only
+unavailable.cardsOnly [5be244] = 仅限卡牌与剧情
+# en: Not enough ready Mana
+unavailable.mana [2918ec] = 可用法力不足
+# en: Not enough HP
+unavailable.hp [96d38a] = 生命不足
+# en: 1 action
+brief.actions1 [7a2a96] = 1 个行动
+# en: {n} actions
+brief.actions [3782a8] = {n} 个行动
+# en: Bank
+brief.bank [74c5b7] = 存入
+# en: Mana
+brief.mana [78ad2a] = 法力
+# en: Absorb
+brief.absorb [714a98] = 吸收
+# en: Shield
+brief.shield [8a26d0] = 护盾
+# en: Heal
+brief.heal [97377b] = 治疗
+# en: Charge
+brief.charge [90e891] = 蓄力
+# en: Release
+brief.release [1e9b1e] = 释放
+# en: Hold
+brief.hold [f295d8] = 蓄持
+# en: Physical
+brief.physical [c1ee80] = 物理
+# en: Block
+brief.block [074002] = 格挡
+# en: Ward
+brief.ward [a11053] = 护界
+# en: Flux
+brief.flux [351e82] = 游离
+# en: If unhit
+brief.ifUnhit [c9a466] = 未受击时
+# en: Each turn
+brief.eachTurn [485277] = 每回合
+# en: Channel
+brief.channel [5d8a44] = 引导
+# en: In 2 turns
+brief.in2 [da11dc] = 两回合后
+# en: Evade
+brief.evade [676b06] = 闪避
+# en: Brace
+brief.brace [3cb458] = 坚守
+# en: Reflect
+brief.reflect [70544a] = 反弹
+# en: Rescue
+brief.rescue [ff23ac] = 保命
+# en: Reveal
+brief.reveal [a2a3f0] = 看穿
+# en: Haste
+brief.haste [2f6010] = 疾速
+# en: Strikes
+brief.strikes [cc0214] = 打击
+# en: Snuff flux
+brief.snuffFlux [353286] = 抹去游离
+# en: Steal
+brief.steal [407a00] = 汲取
+# en: Per action
+brief.perAction [13603e] = 每个行动
+# en: Force
+brief.force [64fa24] = 强令
+# en: Hurt → Mana
+brief.hurtToMana [370425] = 受伤→法力
+# en: HP for Mana
+brief.hpForMana [7be059] = 以血代法
+# en: Renown
+brief.renown [996fb2] = 声望
+# en: Crowns → Renown
+brief.crownsToRenown [49e286] = 克朗→声望
+# en: Steal Crowns
+brief.stealCrowns [efbab8] = 偷克朗
+# en: Drain
+brief.drain [103bb9] = 吸取
+# en: Spell
+brief.spell [58ec69] = 法术
+# en: No effect
+brief.noEffect [4a05e3] = 无效果
+# en: {name} {v:lunges|lunge} in and {v:swings|swing} at {foe}.
+flavor.strike.cast.0 [7e9945] = {name}猛地上前，朝{foe}挥出一拳。
+# en: {name} {v:closes|close} the distance and {v:strikes|strike} at {foe}.
+flavor.strike.cast.1 [4acd82] = {name}拉近距离，向{foe}出手。
+# en: {name} {v:throws|throw} a quick blow at {foe}.
+flavor.strike.cast.2 [bc06d8] = {name}朝{foe}飞快地打出一击。
+# en: {foe} {fv:goes|go} down under {name’s} blows.
+flavor.strike.ko [0b13d5] = {foe}在{name’s}连击下倒地。
+# en: {name} {v:raises|raise} a guard against {foe’s} blows.
+flavor.guard.cast.0 [52408b] = {name}举起双臂，挡住{foe’s}攻势。
+# en: {name} {v:steps|step} back, arms up, ready for {foe}.
+flavor.guard.cast.1 [80d536] = {name}后退一步，双臂护在身前，严阵以待。
+# en: {name’s} guard sags, and {foe’s} blows start to get through.
+flavor.guard.tired [7e11a9] = {name’s}格挡渐渐松懈，{foe’s}拳头开始打了进来。
+# en: {name} {v:draws|draw} the spent magic in the air back in.
+flavor.reclaim.cast.0 [86eafd] = {name}把空气中散逸的魔力重新吸了回来。
+# en: {name} {v:gathers|gather} up the loose sparks of magic left in the air.
+flavor.reclaim.cast.1 [b6a6b2] = {name}收拢起空中残留的零星魔力火花。
+# en: {name} {v:is|are} frozen solid in rime and can’t move.
+flavor.frozen.cast.0 [18af5e] = {name}被雾凇冻得结结实实，动弹不得。
+# en: The rime around {name} cracks, and {name} {v:moves|move} again.
+flavor.frozen.end [6b740f] = {name}身上的雾凇裂开了，{name}又能动了。
+# en: A burst of flame leaps from {name’s} hand at {foe}.
+flavor.flame.cast.0 [de79a6] = 一团火焰从{name’s}掌中蹿出，扑向{foe}。
+# en: {name} {v:hurls|hurl} a ball of fire at {foe}.
+flavor.flame.cast.1 [95e20d] = {name}朝{foe}掷出一颗火球。
+# en: {foe} {fv:falls|fall} before {name’s} fire.
+flavor.flame.ko [a74b88] = {foe}倒在了{name’s}烈火之前。
+# en: {name’s} eyes glaze over, reading {foe’s} next moves before they happen.
+flavor.foresight.cast.0 [b38fa3] = {name’s}眼神变得空茫，提前读出了{foe’s}后招。
+# en: {name} can no longer read {foe’s} moves ahead.
+flavor.foresight.end [a08669] = {name}再也读不出{foe’s}后招了。
+# en: {name} {v:lays|lay} a glowing hand on {pos} wounds and {v:starts|start} to knit them shut.
+flavor.mend.cast.0 [1acb94] = {name}把发光的手按在{pos}伤口上，开始将它们缝合。
+# en: {name’s} wounds close up.
+flavor.mend.end [7f51c1] = {name’s}伤口愈合了。
+# en: {foe’s} attack breaks {name’s} mending before it can take hold.
+flavor.mend.broken [45c97c] = {foe’s}攻击打断了{name’s}愈合，法术还没来得及生效。
+# en: {name} {v:strikes|strike} a dazzling pose for the onlookers, but it does nothing to {foe}.
+flavor.glamour.cast.0 [7203b1] = {name}为围观的人摆出一个耀眼的姿势，可这对{foe}毫无作用。
+# en: {name} {v:speeds|speed} up, moving twice as fast as {foe}.
+flavor.haste.cast.0 [296d94] = {name}骤然加速，动作比{foe}快了一倍。
+# en: {name} {v:slows|slow} back to a normal pace.
+flavor.haste.end [fbc506] = {name}慢了下来，恢复了平常的速度。
+# en: {name} {v:steps|step} into the shadows, out of {foe’s} reach.
+flavor.shadowstep.cast.0 [7451e1] = {name}踏入阴影，脱离了{foe’s}攻击范围。
+# en: {name} {v:steps|step} back out of the shadows.
+flavor.shadowstep.end [7f8b87] = {name}从阴影中走了出来。
+# en: A translucent ward appears before {name}, blocking off {foe’s} spells.
+flavor.ward.cast.0 [deb340] = 一道半透明的护界在{name}面前展开，挡住了{foe’s}法术。
+# en: A chair, a coat stand and a bucket lurch to life and lumber at {foe} on {name’s} command.
+flavor.animate.cast.0 [c0e6e8] = 在{name’s}命令下，一把椅子、一个衣帽架和一只水桶摇摇晃晃地活了过来，笨重地朝{foe}冲去。
+# en: {name’s} animated furniture clatters apart.
+flavor.animate.end [08b605] = {name’s}活化家具哐啷一声散了架。
+# en: {foe} {fv:goes|go} down under {name’s} animated furniture.
+flavor.animate.ko [35d4ff] = {foe}被{name’s}活化家具压倒在地。
+# en: Starlight gathers in {name’s} open palm.
+flavor.starlight.cast.0 [c3d37f] = 星光在{name’s}摊开的掌心汇聚。
+# en: The starlight in {name’s} palm grows brighter.
+flavor.starlight.hold [6ab2d3] = {name’s}掌心的星光越来越亮。
+# en: A beam of starlight shoots from {name’s} palm at {foe}.
+flavor.starlight.release [d68a3e] = 一道星光从{name’s}掌心射向{foe}。
+# en: {foe} {fv:falls|fall} in a flood of {name’s} starlight.
+flavor.starlight.ko [d6a81e] = {foe}倒在了{name’s}倾泻而下的星光里。
+# en: {name} {v:twists|twist} a hand, snuffing out the loose magic around {foe}.
+flavor.seal.cast.0 [81ea08] = {name}一拧手腕，掐灭了{foe}周围的游离魔力。
+# en: A cluster of flames sparks to life before {name} and lashes out at {foe}.
+flavor.wildfire.cast.0 [0d5402] = 一簇火焰在{name}面前燃起，向{foe}猛扑过去。
+# en: The cluster of flames enlarges before {name}, radiating fiery sparks.
+flavor.wildfire.hold [bff3e4] = {name}面前的火簇越烧越旺，迸出炽热的火星。
+# en: The wildfire breaks loose from {name} and sweeps over {foe}.
+flavor.wildfire.release [e9f6f3] = 野火从{name}身边挣脱，席卷了{foe}。
+# en: {foe} {fv:falls|fall} before {name’s} wildfire.
+flavor.wildfire.ko [189e30] = {foe}倒在了{name’s}野火之前。
+# en: A sapling bursts from the floor beside {name}, ready to shelter and mend.
+flavor.heartwood.cast.0 [771791] = 一株树苗从{name}身旁的地板里钻出，随时准备遮护与疗愈。
+# en: {name’s} sapling withers back into the floor.
+flavor.heartwood.end [a3c488] = {name’s}树苗枯萎了，缩回地板里。
+# en: {name} {v:speaks|speak} an omen over {foe}: it will strike in two exchanges.
+flavor.omen.cast.0 [df2373] = {name}对{foe}念出一句预兆：两个回合后，它将应验。
+# en: The omen {name} spoke comes true and strikes {foe}.
+flavor.omen.end [0d81a9] = {name}念出的预兆应验了，击中了{foe}。
+# en: {name} {v:slips|slip} a hand into {foe’s} purse in passing.
+flavor.sleight.cast.0 [b81c62] = {name}擦身而过时，顺手把手探进了{foe’s}钱袋。
+# en: {name} {v:snaps|snap} together a whirring contraption and {v:aims|aim} it at {foe}.
+flavor.contraption.cast.0 [1a1b7b] = {name}三两下拼出一台嗡嗡作响的奇械，对准了{foe}。
+# en: {name’s} contraption bursts in a shower of sparks and cogs.
+flavor.contraption.end [9f7d70] = {name’s}奇械炸开了，迸出一阵火花和齿轮。
+# en: A lance of frost flies from {name} at {foe}.
+flavor.hoarfrost.cast.0 [4396d3] = 一支冰枪从{name}手中飞向{foe}。
+# en: {foe} {fv:falls|fall}, frozen stiff by {name’s} frost.
+flavor.hoarfrost.ko [f72a68] = {foe}被{name’s}寒霜冻得僵直，倒了下去。
+# en: {name} {v:asks|ask} {foe} a disarming question, but it does little here.
+flavor.candour.cast.0 [dd1743] = {name}向{foe}抛出一个叫人卸下心防的问题，可在这里没什么用。
+# en: {name} {v:plants|plant} both feet, braced to take {foe’s} hits.
+flavor.brace.cast.0 [31bae1] = {name}双脚扎稳，准备硬接{foe’s}攻击。
+# en: {name} {v:eases|ease} out of the braced stance.
+flavor.brace.end [e7b394] = {name}放松了坚守的架势。
+# en: A quill flies around {name}, but it does little in this situation.
+flavor.quickquill.cast.0 [9640fa] = 一支羽毛笔绕着{name}飞舞，可眼下派不上什么用场。
+# en: Thorny vines burst from the floor around {foe} at {name’s} call.
+flavor.bramble.cast.0 [3276f4] = 在{name’s}召唤下，带刺的藤蔓从{foe}周围的地板里破土而出。
+# en: {name’s} brambles wither away.
+flavor.bramble.end [8d7237] = {name’s}荆棘枯萎了。
+# en: {name} {v:leafs|leaf} through a conjured index, but it does little here.
+flavor.index.cast.0 [595226] = {name}翻阅一本变出来的索引，可在这里没什么用。
+# en: {name} {v:flaunts|flaunt} a handful of crowns, and the crowd cheers.
+flavor.rapport.cast.0 [47a830] = {name}亮出一把克朗，人群欢呼起来。
+# en: {name} {v:draws|draw} some of {pos} own strength out and {v:distils|distil} it into magic.
+flavor.purify.cast.0 [e8196f] = {name}从自己身上抽出一点力气，萃取成魔力。
+# en: {name} {v:lowers|lower} its antlers and {v:charges|charge} at {foe}.
+flavor.gore.cast.0 [0a65f1] = {name}低下鹿角，朝{foe}冲了过去。
+# en: {name} {v:paws|paw} the ground, then {v:drives|drive} its antlers at {foe}.
+flavor.gore.cast.1 [8cb2b5] = {name}刨了刨地，随即用鹿角顶向{foe}。
+# en: {foe} {fv:is|are} flung down by {name’s} charge.
+flavor.gore.ko [69a96d] = {foe}被{name’s}冲撞掀翻在地。
+# en: A wind rises at {name’s} back, driving each blow harder.
+flavor.tailwind.cast.0 [13a2bf] = 一阵风在{name}背后升起，推着每一击更加有力。
+# en: The wind at {name’s} back dies down.
+flavor.tailwind.end [da9550] = {name}背后的风渐渐停了。
+# en: {name} {v:sews|sew} a sliver of rime into {pos} collar, against a fall.
+flavor.rime.cast.0 [eb7223] = {name}把一缕雾凇缝进衣领，以防跌倒。
+# en: A mirror-bright sheen settles over {name}, ready to throw {foe’s} spells back.
+flavor.reflect.cast.0 [3ee8fc] = 一层镜面般的光泽覆上{name}全身，随时准备把{foe’s}法术弹回去。
+# en: The mirror sheen around {name} fades.
+flavor.reflect.end [218e9f] = {name}身上的镜面光泽褪去了。
+# en: A pool of moonlight opens at {name’s} feet.
+flavor.moonwell.cast.0 [a0a7dd] = 一汪月光在{name}脚下铺开。
+# en: The moonwell at {name’s} feet fills higher.
+flavor.moonwell.hold [fb7658] = {name}脚下的月泉越积越满。
+# en: {name} {v:drinks|drink} the moonwell down and {v:fills|fill} with magic.
+flavor.moonwell.release [9896a8] = {name}将月泉一饮而尽，周身充盈着魔力。
+# en: A small star kindles above {name}.
+flavor.lodestar.cast.0 [3e740b] = 一颗小小的星辰在{name}头顶点亮。
+# en: The star above {name} grows heavier, pulling in loose force.
+flavor.lodestar.hold [bae623] = {name}头顶的星辰愈发沉重，吸纳着四散的力量。
+# en: The star settles around {name} as a shield.
+flavor.lodestar.release [82d960] = 星辰落下，化作护盾环绕在{name}周身。
+# en: A single bell note sounds from nowhere.
+flavor.toll.cast.0 [9e6185] = 不知从哪里传来一声钟鸣。
+# en: {name} {v:lays|lay} a curse on {foe}: every move will hurt.
+flavor.torment.cast.0 [182c9e] = {name}对{foe}下了诅咒：每动一下都会痛。
+# en: {name’s} curse on {foe} wears off.
+flavor.torment.end [32b03c] = {name}施在{foe}身上的诅咒消退了。
+# en: {name} {v:pulls|pull} the ready magic straight out of {foe}.
+flavor.extraction.cast.0 [2a0ddd] = {name}把{foe}体内可用的魔力直接抽了出来。
+# en: A dark thread links {name} to {foe} and starts to drink.
+flavor.siphon.cast.0 [971a5c] = 一缕暗线连起{name}与{foe}，开始吸取。
+# en: The dark thread drinks more from {foe}.
+flavor.siphon.hold [beadda] = 暗线从{foe}身上吸走了更多。
+# en: {name} {v:snaps|snap} the thread and {v:takes|take} in everything it drank.
+flavor.siphon.release [9d894f] = {name}掐断暗线，把它吸来的一切尽数纳入体内。
+# en: {foe} {fv:sags|sag}, drained by {name’s} dark thread.
+flavor.siphon.ko [ea9177] = {foe}瘫软下去，被{name’s}暗线吸干了力气。
+# en: {name} {v:speaks|speak} a word of command, and {foe} {fv:repeats|repeat} {fpos} last move.
+flavor.compel.cast.0 [c0c9c9] = {name}说出一个命令的字眼，{foe}重复了{fpos}上一招。
+# en: {name} {v:shakes|shake} off the compulsion.
+flavor.compel.end [1eba16] = {name}挣脱了强令。
+# en: {name} {v:is|are} compelled to repeat {pos} last move: {action}.
+flavor.compel.forced [968a2a] = {name}被迫重复{pos}上一招：{action}。
+# en: {foe’s} defences shut out {name’s} command.
+flavor.compel.shut [6e0dbc] = {foe’s}防御挡住了{name’s}命令。
+# en: A dark disc slides over {name}, turning the next blows into magic.
+flavor.eclipse.cast.0 [746799] = 一轮暗盘滑过{name}上空，把接下来的打击化为魔力。
+# en: The eclipse over {name} passes.
+flavor.eclipse.end [d4053f] = {name}上空的蚀过去了。
+# en: {name} {v:strikes|strike} a bargain: from now on, spells cost life instead of magic.
+flavor.heartprice.cast.0 [f963af] = {name}立下一笔交易：从今往后，法术要付出的是生命，而不是魔力。
+# en: {name} {v:swings|swing} at {foe}, but {foe} {fv:is|are} in the shadows and the blow meets nothing.
+attack.strike.evaded [2d8491] = {name}朝{foe}挥去，可{foe}隐在阴影里，这一击落了空。
+# en: {foe} {fv:catches|catch} {name’s} blow on a raised guard.
+attack.strike.guarded [afc42f] = {foe}举臂挡住了{name’s}这一击。
+# en: {foe’s} tired guard gives, and part of {name’s} blow gets through.
+attack.strike.tiredGuard [518578] = {foe’s}格挡已经疲软，{name’s}这一击有一部分打了进去。
+# en: {name’s} blow thuds into {foe’s} ward, losing half its force.
+attack.strike.warded [c0af5a] = {name’s}拳头砸在{foe’s}护界上，力道减了一半。
+# en: {foe} {fv:takes|take} {name’s} blow braced, barely moving.
+attack.strike.braced [540d39] = {foe}稳稳扎住，硬接下{name’s}这一击，几乎纹丝不动。
+# en: {name’s} fireball passes through the shadows where {foe} stood.
+attack.flame.evaded [a43bf5] = {name’s}火球穿过了{foe}方才所在的阴影。
+# en: {name’s} fireball splashes against {foe’s} ward and fizzles out.
+attack.flame.warded [72ce9d] = {name’s}火球撞上{foe’s}护界，噼啪几声熄灭了。
+# en: {foe} {fv:takes|take} {name’s} fireball on crossed arms, smothering half the burn.
+attack.flame.guarded [78d1ec] = {foe}交叉双臂接住{name’s}火球，压灭了一半的灼烧。
+# en: {foe} {fv:plants|plant} {fpos} feet and {fv:weathers|weather} {name’s} fireball.
+attack.flame.braced [776120] = {foe}扎稳脚跟，扛住了{name’s}火球。
+# en: {name’s} fireball bounces off {foe’s} mirror sheen and flies back at {name}.
+attack.flame.reflected [fc7d70] = {name’s}火球从{foe’s}镜面光泽上弹开，飞回了{name}这边。
+# en: {name’s} frost lance flies through the shadows where {foe} stood.
+attack.hoarfrost.evaded [8e49af] = {name’s}冰枪穿过了{foe}方才所在的阴影。
+# en: {name’s} frost lance shatters on {foe’s} ward.
+attack.hoarfrost.warded [671a16] = {name’s}冰枪在{foe’s}护界上碎裂。
+# en: {foe} {fv:knocks|knock} {name’s} frost lance aside, taking half the chill.
+attack.hoarfrost.guarded [9578ee] = {foe}把{name’s}冰枪拨到一旁，只承受了一半的寒意。
+# en: {name’s} frost lance glances off {foe’s} mirror sheen and turns back on {name}.
+attack.hoarfrost.reflected [02a971] = {name’s}冰枪擦过{foe’s}镜面光泽，掉头刺回了{name}。
+# en: {name} {v:charges|charge} into the shadows and finds no one there.
+attack.gore.evaded [54858b] = {name}冲进阴影，却扑了个空。
+# en: {foe} {fv:catches|catch} {name’s} antlers on a raised guard.
+attack.gore.guarded [7a6e5c] = {foe}举臂架住了{name’s}鹿角。
+# en: {name’s} antlers drive into {foe’s} ward, which takes half the charge.
+attack.gore.warded [6e3eda] = {name’s}鹿角顶上{foe’s}护界，冲势被挡下一半。
+# en: {foe} {fv:meets|meet} {name’s} charge braced and {fv:holds|hold} firm.
+attack.gore.braced [d2497c] = {foe}稳稳扎住，迎上{name’s}冲撞，寸步不让。
+# en: {foe’s} defences stop the heart of {name’s} wildfire, but its embers burn through.
+attack.wildfire.embers [3e222e] = {foe’s}防御挡住了{name’s}野火的核心，但余烬还是烧了进来。
+# en: {name’s} wildfire sweeps through the shadows where {foe} stood.
+attack.wildfire.evaded [502664] = {name’s}野火扫过了{foe}方才所在的阴影。
+# en: {name’s} wildfire breaks against {foe’s} ward and burns out.
+attack.wildfire.warded [f0d162] = {name’s}野火撞上{foe’s}护界，烧尽熄灭了。
+# en: {foe} {fv:shields|shield} {fpos} face from {name’s} wildfire, taking half of it.
+attack.wildfire.guarded [48d591] = {foe}护住脸挡下{name’s}野火，只承受了一半。
+# en: {name’s} wildfire rolls off {foe’s} mirror sheen and back over {name}.
+attack.wildfire.reflected [73b19a] = {name’s}野火从{foe’s}镜面光泽上翻卷回去，扑向了{name}。
+# en: {name’s} beam of starlight lights up empty shadows.
+attack.starlight.evaded [b42374] = {name’s}星光照亮了空荡荡的阴影。
+# en: {name’s} beam of starlight scatters on {foe’s} ward.
+attack.starlight.warded [ba2620] = {name’s}星光在{foe’s}护界上四散开来。
+# en: {foe} {fv:turns|turn} {fpos} guard to {name’s} starlight, taking half of it.
+attack.starlight.guarded [4215be] = {foe}迎着{name’s}星光举起格挡，承受了一半。
+# en: {name’s} starlight bounces off {foe’s} mirror sheen straight back at {name}.
+attack.starlight.reflected [651e01] = {name’s}星光从{foe’s}镜面光泽上弹开，直直射回了{name}。
+# en: {foe} {fv:is|are} in the shadows: {name’s} {noun} passes straight through.
+defended.evaded [1ed393] = {foe}隐在阴影里：{name’s}{noun}径直穿了过去。
+# en: {foe’s} ward stops {name’s} {noun}.
+defended.warded [c628b9] = {foe’s}护界挡住了{name’s}{noun}。
+# en: {foe} {fv:takes|take} {name’s} {noun} on a raised guard.
+defended.guarded [d8621c] = {foe}举臂接下了{name’s}{noun}。
+# en: {foe’s} tired guard lets part of {name’s} {noun} through.
+defended.tiredGuard [65cefc] = {foe’s}格挡已经疲软，{name’s}{noun}有一部分穿了进来。
+# en: {foe} {fv:weathers|weather} {name’s} {noun} in a braced stance.
+defended.braced [bc4bd8] = {foe}以坚守的架势扛住了{name’s}{noun}。
+# en: {foe’s} mirror sheen throws {name’s} {noun} back at {name}.
+defended.reflected [9a85de] = {foe’s}镜面光泽把{name’s}{noun}弹回给了{name}。
+# en: {foe’s} shield soaks up part of {name’s} {noun}.
+defended.absorbed [0c6c25] = {foe’s}护盾吸收了{name’s}{noun}的一部分。
+# en: {foe} {fv:is|are} frozen in rime, and {name’s} {noun} can’t touch {foe}.
+defended.frozen [6ae96f] = {foe}被冻在雾凇里，{name’s}{noun}碰不到{foe}。
+# en: blow
+noun.strike [bcc521] = 拳头
+# en: fireball
+noun.flame [bad9b8] = 火球
+# en: frost lance
+noun.hoarfrost [1f14ca] = 冰枪
+# en: charge
+noun.gore [ca2371] = 冲撞
+# en: wildfire
+noun.wildfire [98f3e9] = 野火
+# en: beam of starlight
+noun.starlight [0d15b3] = 星光
+# en: dark thread
+noun.siphon [66ac8f] = 暗线
+# en: thorns
+noun.bramble [b8a203] = 荆棘
+# en: furniture
+noun.animate [500965] = 活化家具
+# en: contraption
+noun.contraption [3efede] = 奇械
+# en: omen
+noun.omen [7acd5e] = 预兆
+# en: sapling
+noun.heartwood [c9115b] = 树苗
+# en: attack
+noun.attack [95b8fd] = 攻击
+# en: {name} can’t be hit for {n}, until {name} {v:attacks|attack} or {v:gathers|gather} Mana.
+effect.shadowstep [e42435] = 接下来 {n} 里，{name}无法被击中，直到{name}发动攻击或回收法力。
+# en: {name} {v:acts|act} {x} times in each of the next {n}.
+effect.haste [a86e86] = 接下来 {n} 里，{name}每回合可行动{x}次。
+# en: {name} {v:blocks|block} all damage this exchange, then half, a quarter and a quarter.
+effect.brace [72df63] = {name}本回合挡下全部伤害，之后依次挡下一半、四分之一和四分之一。
+# en: {name’s} blows hit harder for {n}.
+effect.tailwind [c2b7e5] = 接下来 {n} 里，{name’s}打击更加有力。
+# en: Spells cast at {name} bounce back for {n}.
+effect.reflect [0f9e07] = 接下来 {n} 里，对{name}施放的法术都会被弹回。
+# en: Every move {foe} {fv:makes|make} costs {fobj} Health for {n}.
+effect.torment [b2285a] = 接下来 {n} 里，{foe}每做一个动作都要付出生命。
+# en: Blows that hit {name} turn into Mana for {n}.
+effect.eclipse [ab0c02] = 接下来 {n} 里，击中{name}的打击会化为法力。
+# en: {foe} must repeat {fpos} last move next exchange.
+effect.compelled [ed8be0] = {foe}下回合必须重复{fpos}上一招。
+# en: {name’s} spells cost Health instead of Mana from now on.
+effect.heartprice [265df1] = 从现在起，{name’s}法术改用生命代替法力支付。
+# en: A shield of {x} absorbs the next damage {name} {v:takes|take}.
+effect.lodestar [612b7d] = 一面 {x} 点的护盾将吸收{name}接下来受到的伤害。
+# en: a blow
+bundle.strike [ca6028] = 一拳
+# en: a guard
+bundle.guard [cff789] = 一次格挡
+# en: a breath to gather magic
+bundle.reclaim [e48fbd] = 一口气收拢魔力
+# en: {name} {v:moves|move} at double speed: {parts}.
+line.bundle [7773a0] = {name}以双倍速度出手：{parts}。
+# en: {name’s} {noun} hits {foe}.
+line.hits [fe6048] = {name’s}{noun}击中了{foe}。
+# en: {name} {v:takes|take} {n} damage from {pos} own {noun}.
+line.reflectedBack [08ea34] = {name}被自己的{noun}反伤了 {n} 点。
+# en: It does no damage.
+line.noDamage [4cca69] = 没有造成伤害。
+# en: {foe} {fv:takes|take} {n} damage.
+line.takes [542453] = {foe}受到 {n} 点伤害。
+# en: {foe} {fv:takes|take} {n} damage from {hits} hits.
+line.takesHits [b04be9] = {foe}挨了 {hits} 下，共受到 {n} 点伤害。
+# en: {name} {v:regains|regain} {n} Mana.
+line.regains [3f633e] = {name}恢复了 {n} 点法力。
+# en: There is no loose magic left to gather.
+line.noLooseMagic [bbc322] = 空气中已没有可以收拢的游离魔力。
+# en: {name} {v:heals|heal} {n} HP.
+line.heals [7048df] = {name}恢复了 {n} 点生命。
+# en: The mending breaks: no healing.
+line.mendBreaks [9e71cf] = 愈合被打断了：没有治疗。
+# en: {foe’s} defences keep {fpos} Mana in place: it takes nothing.
+line.extractionBlocked [bd3e16] = {foe’s}防御护住了{fpos}法力：什么也没抽到。
+# en: {n} of {foe’s} Mana becomes {pos} loose magic.
+line.extraction [44202a] = {foe’s} {n} 点法力变成了{pos}游离魔力。
+# en: There is no room for more magic: it takes nothing.
+line.extractionFull [87ddb4] = 已经装不下更多魔力：什么也没抽到。
+# en: {foe’s} defences keep {fpos} loose magic safe.
+line.sealBlocked [07a63f] = {foe’s}防御护住了{fpos}游离魔力。
+# en: {foe} {fv:loses|lose} {n} loose magic.
+line.seal [fa0f33] = {foe}失去了 {n} 点游离魔力。
+# en: There was no loose magic to snuff out.
+line.sealNothing [77b307] = 没有可以掐灭的游离魔力。
+# en: {name} {v:pays|pay} Health for {n} Mana.
+line.purify [803aef] = {name}以生命换取了 {n} 点法力。
+# en: {foe} must commit first for the next {ex}.
+line.commitFirst [006f83] = 接下来 {ex} 里，{foe}必须先出招。
+# en: {foe} must repeat it again next exchange.
+line.repeatAgain [c985a4] = {foe}下回合还得重复这一招。
+# en: {foe} must repeat it again next exchange: {action}.
+line.repeatAgainAction [f27bd4] = {foe}下回合还得重复这一招：{action}。
+# en: Compelled, {name} {v:repeats|repeat} {pos} last move.
+line.compelledRepeat [f74843] = 受强令所迫，{name}重复了{pos}上一招。
+# en: {foe} can fight no more, and {name} {v:wins|win}.
+ending.knockout [c16566] = {foe}再也打不动了，{name}获胜。
+# en: Neither falls; {name} {v:wins|win} on points.
+ending.decision [119097] = 谁也没有倒下；{name}以点数获胜。
+# en: Neither {name} nor {foe} can finish it: a draw.
+ending.stalemate [179269] = {name}和{foe}谁也拿不下对方：平局。
+# en: {foe} {fv:yields|yield} to {name}.
+ending.conceded [c6f4c2] = {foe}向{name}认输。
+# en: {foe} {fv:lowers|lower} its head and {fv:steps|step} aside for {name}.
+defeat.shadow_stag [b81b70] = {foe}低下头，退到一旁，为{name}让开了路。
+# en: you
+grammar.you [b8d09c] = 你
+# en: your
+grammar.your [f0e6aa] = 你的
+# en: {n}’s
+grammar.possessive [71a797] = {n}的
+# en: , then 
+grammar.then [43c04e] = ，然后
+# en: 1 exchange
+grammar.exchange1 [3812e1] = 1 个回合
+# en: {n} exchanges
+grammar.exchanges [673775] = {n} 个回合
+# en: the rest of the fight
+grammar.restOfFight [d8f962] = 本场战斗余下的时间
+# en: two
+grammar.two [248829] = 两
+# en: three
+grammar.three [8603c3] = 三
+# en: your
+grammar.you.pos [f0e6aa] = 你的
+# en: you
+grammar.you.obj [b8d09c] = 你
+# en: their
+grammar.they.pos [fd3c67] = TA的
+# en: them
+grammar.they.obj [22e7e3] = TA
+# en: her
+grammar.she.pos [b48d8c] = 她的
+# en: her
+grammar.she.obj [b48d8c] = 她
+# en: his
+grammar.he.pos [d2b0cb] = 他的
+# en: him
+grammar.he.obj [d2c6d5] = 他
+# en: its
+grammar.it.pos [f867d9] = 它的
+# en: it
+grammar.it.obj [388410] = 它
+# en:  
+grammar.sentenceSep [0c8f7f] = ​
+# en: your opponent
+foe.tournament_entrant [124943] = 你的对手
+# en: the unbeaten fourth-year
+foe.tournament_unbeaten [50a17e] = 那位不败的四年级生
+# en: the fourth-year
+foe.quick_fourth_year [53e4ee] = 那位四年级生
+# en: your sparring partner
+foe.club_partner [e1feaa] = 你的陪练
+# en: the visiting champion
+foe.visiting_champion [6ca4e8] = 来访的冠军
+# en: Thornwick’s best
+foe.thornwick_best [10ffbe] = 荆木学院的头号好手
+# en: the Thornwick duellist
+foe.thornwick_duellist [a62f33] = 荆木学院的决斗手
+# en: the Thornwick illusionist
+foe.thornwick_illusionist [6033f2] = 荆木学院的幻术师
+# en: the boy with the sketchbook
+foe.thornwick_sketcher [3452a2] = 拿速写本的男孩
+# en: the Thornwick final-year
+foe.thornwick_final_year [e1bc13] = 荆木学院的毕业班学生
+# en: your opponent
+foe.ring_opener [124943] = 你的对手
+# en: the rower
+foe.ring_rower [af5ac7] = 那个划船的
+# en: the villager
+foe.ring_villager [c469a2] = 那个村民
+# en: the student in the scarf
+foe.ring_scarf [2a5ad8] = 围围巾的学生
+# en: the club duellist
+foe.ring_duellist [531156] = 决斗社的社员
+# en: the farrier’s apprentice
+foe.ring_farrier [35b57a] = 蹄铁匠的学徒
+# en: the hooded fighter
+foe.ring_hood [1319c6] = 戴兜帽的斗士
+# en: the ring’s champion
+foe.ring_champion [08ac99] = 擂台的冠军
+# en: the bookmaker
+foe.ring_bookmaker [6075d3] = 那个庄家
+# en: the sailor
+foe.ring_sailor [102160] = 那个水手
+# en: the man in grey
+foe.man_in_grey [47b3be] = 灰衣人
+# en: the shadow stag
+foe.shadow_stag [c41cbf] = 影鹿

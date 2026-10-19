@@ -27,6 +27,9 @@
   let settings = { notes: true, lang: null, amounts: 'marks' };
   try { Object.assign(settings, JSON.parse(store.get(SETTINGS_KEY) || '{}')); } catch (e) { /* ignore */ }
   const saveSettings = () => store.set(SETTINGS_KEY, JSON.stringify(settings));
+  // Fights (the combat minigame): how hard the opponent plays, the AI preset (HANDOFF §5). Default Medium.
+  const FIGHT_DIFFICULTIES = ['easy', 'medium', 'hard', 'engine'];
+  if (!FIGHT_DIFFICULTIES.includes(settings.fightDifficulty)) settings.fightDifficulty = 'medium';
   const PRONOUN_KEYS = ['she', 'he', 'they'];
 
   let content = null, eng = null;
@@ -62,7 +65,10 @@
     I18n.use(locale);
     document.documentElement.lang = lang;
     if (/^zh/.test(lang)) loadCjkFonts();
-    window.lumen = { content, get eng() { return eng; }, Grimoire, Engine, Art, I18n };
+    window.lumen = { content, get eng() { return eng; }, Grimoire, Engine, Art, I18n, CombatUI: window.CombatUI };
+    if (window.LumenholdCombat) window.LumenholdCombat.init().catch((e) => console.error('[fight] the combat core did not start', e));
+    // The fight speaks the game's language: its own strings (combat.lang) and the spell names content translated.
+    if (window.LumenholdCombat && lang !== 'en') window.LumenholdCombat.useText(Object.assign(Object.fromEntries(Object.entries(content.spells || {}).map(([id, d]) => ['label.' + id, d.name])), I18n.combatText()));
     document.addEventListener('keydown', onKey);
     if (params.get('event')) return previewEvent(params.get('event'));
     window.addEventListener('pagehide', () => { if (eng && eng.s) Net.flush(eng, runRecordMeta(), { final: true }); });
@@ -223,6 +229,9 @@
     if (scrim) scrim.classList.toggle('on', ui.sideOpen);
   }
   function buildGame() {
+    // Fights are played on screen (startFight); one that reaches the engine otherwise is played by the AI (logged), never
+    // rolled. Installed with every game, so previews know fights are played.
+    if (eng && window.CombatUI) eng.fights = (req) => CombatUI.autoResolve(req, content);
     const nextLang = languages[(languages.findIndex((l) => l.code === I18n.lang()) + 1) % languages.length];
     app.innerHTML =
       '<div class="game">' +
@@ -455,6 +464,13 @@
       return showEnding(r);
     }
     if (r.onShow) floatDeltas(r.onShow.deltas);
+    const fip = eng.s.fightInProgress;
+    if (fip && fip.request && fip.request.event === r.view.id) {
+      const req = fightAhead(fip.key);
+      if (r.view.type !== 'menu') showCard(r.view); else ui.view = r.view;
+      if (req && req.id === fip.request.id) return startFight(fip.key, req, fip);
+      delete eng.s.fightInProgress;   // the run moved on (the save is from another build): the card is played as new
+    }
     if (r.view.type === 'menu') return showMenu(r.view);
     return showCard(r.view);
   }
@@ -471,8 +487,30 @@
   }
 
   function resolve(key) {
+    const req = fightAhead(key);
+    if (req) return startFight(key, req, null);
+    settle(key);
+  }
+  // The fight an option starts (a combat or duel challenge on the path it takes), or null: played in the combat minigame
+  // (src/combat-ui.js) over the card, its result handed to choose(). A fight in progress is saved with the run.
+  function fightAhead(key) {
+    if (typeof key !== 'string' || !window.CombatUI || !window.LumenholdCombat) return null;
+    try { return eng.fightAhead(key); } catch (e) { console.error(e); return null; }
+  }
+  function startFight(key, req, saved) {
+    ui.busy = true; ui.mode = 'fight'; setPreview(null); closeOverlay();
+    const card = document.querySelector('#deck .card');
+    if (card) { card.classList.remove('dragging'); card.style.transform = ''; card.style.opacity = ''; }
+    CombatUI.open({
+      host: document.querySelector('.stage'), key, request: req, saved, content, t, difficulty: settings.fightDifficulty,
+      avatar: (npc, size) => Art.avatar(npc, size), skillName, resName: (k) => (content.resources[k] && content.resources[k].name) || k,
+      onSave: (snap) => { eng.s.fightInProgress = snap; save(); },
+      onDone: (res) => { delete eng.s.fightInProgress; settle(key, { fights: [res] }); },
+    });
+  }
+  function settle(key, opts) {
     let out;
-    try { out = eng.choose(key); } catch (e) { console.error(e); ui.busy = false; return; }
+    try { out = eng.choose(key, opts); } catch (e) { console.error(e); ui.busy = false; return; }
     renderChrome();
     floatDeltas(out.deltas);
     if (out.say || out.notes.length || out.checks.length || hasVisibleDeltas(out.deltas)) showOutcome(out);
@@ -506,11 +544,21 @@
   // A challenge names its kind and the skill(s) it rolls (B24): "Enchanting · Charm".
   const challengeLabel = (kind, using) => t('challenge.' + kind) + (using ? ' · ' + using.split('+').map(skillName).join(' + ') : '');
   const swingText = (c) => (c.swing ? ' · ' + t('swing.' + c.swing) : '');
-  const checkText = (c) => c.exam ? t('check.examButton', { skill: c.using.split('+').map(skillName).join(' + '), p: c.p, top: c.top, a: c.a }) + swingText(c)
+  const checkText = (c, key) => c.exam ? t('check.examButton', { skill: c.using.split('+').map(skillName).join(' + '), p: c.p, top: c.top, a: c.a }) + swingText(c)
+    : c.fight ? fightText(key) + swingText(c)
     : c.combat ? t('check.combatButton', { p: c.p, cost: c.cost }) + swingText(c)
     : c.challenge ? t('check.challengeButton', { kind: challengeLabel(c.skill, c.using), p: c.p }) + swingText(c) : t('check.button', { skill: skillName(c.skill), p: c.p });
   // The roll on an option's button (B24, M11): combat, the future minigame, is marked apart from skill checks.
-  const checkLine = (c) => (c ? '<span class="chk roll' + (c.combat ? ' combat' : '') + '">' + Art.icon(c.combat ? 'sword' : c.exam ? 'scroll' : 'dice', 12) + ' ' + esc(checkText(c)) + '</span>' : '');
+  const checkLine = (c, key) => (c ? '<span class="chk roll' + (c.combat || c.fight ? ' combat' : '') + '">' + Art.icon(c.combat || c.fight ? 'sword' : c.exam ? 'scroll' : 'dice', 12) + ' ' + esc(checkText(c, key)) + '</span>' : '');
+  // "Fight · Lyra · level 34": who the option fights, before it starts (the same foe the fight will bring).
+  function fightText(key) {
+    const req = key && fightAhead(key);
+    if (!req || !window.CombatBridge) return t('check.fight');
+    try {
+      const foe = CombatBridge.foeOf(req, { content, foeName: (id, en) => LumenholdCombat.tx('foe.' + id, en) });
+      return t('check.fightButton', { foe: foe.name, level: foe.level });
+    } catch (e) { console.error(e); return t('check.fight'); }
+  }
 
   function showCard(v) {
     ui.mode = 'card'; ui.view = v; ui.busy = false; setSlotTint(v.slot);
@@ -527,7 +575,7 @@
       (v.slot ? '<span class="slotchip">' + esc([t('slot.' + v.slot), v.place && content.places[v.place] ? content.places[v.place].name : null, v.track && content.tracks[v.track] ? content.tracks[v.track].name : null].filter(Boolean).join(' · ')) + '</span>' : ''));
     const choices = document.getElementById('choices');
     const pv = (o) => previewHtml(v, o);
-    const chk = (o) => (o.hint ? '<span class="chk">' + esc(o.hint) + '</span>' : '') + checkLine(o.check) + pv(o);
+    const chk = (o) => (o.hint ? '<span class="chk">' + esc(o.hint) + '</span>' : '') + checkLine(o.check, o.key) + pv(o);
     if (story) {
       choices.innerHTML = '<button class="choice single" data-k="' + esc(L.key) + '"><span>' + esc(L.label) + chk(L) + '</span></button>';
     } else {
@@ -604,8 +652,9 @@
     };
     const more = pv.follows ? '<i class="more" title="' + esc(t('preview.follows')) + '">…</i>' : '';
     if (pv.paths.length <= 1) { const l = line(pv.deltas); return l || more ? '<span class="pv">' + l + more + '</span>' : ''; }
-    const paths = pv.paths.slice().sort((a, b) => b.p - a.p);
-    return '<span class="pv multi">' + paths.slice(0, 3).map((pth) => '<span class="pvl"><b>' + esc(label(pth)) + Math.round(pth.p * 100) + '%</b>' + (line(pth.deltas) || '—') + (pth.follows ? '<i class="more">…</i>' : '') + '</span>').join('') + (paths.length > 3 ? '<span class="pvl">…</span>' : '') + '</span>';
+    // A fight's paths are its outcomes (win, partial, lose), with no odds: the fight decides, not a roll.
+    const paths = pv.fight ? pv.paths.slice().sort((a, b) => ((a.labels[0] || {}).choice || 0) - ((b.labels[0] || {}).choice || 0)) : pv.paths.slice().sort((a, b) => b.p - a.p);
+    return '<span class="pv multi">' + paths.slice(0, 3).map((pth) => '<span class="pvl"><b>' + esc(pth.fight ? label(pth).trim() + ' ' : label(pth) + Math.round(pth.p * 100) + '%') + '</b>' + (line(pth.deltas) || '—') + (pth.follows ? '<i class="more">…</i>' : '') + '</span>').join('') + (paths.length > 3 ? '<span class="pvl">…</span>' : '') + '</span>';
   }
   function commitCard(dir) {
     if (ui.busy || ui.mode !== 'card') return;
@@ -710,7 +759,8 @@
   function chipsFor(out) {
     let h = '';
     for (const c of out.checks || []) {
-      if (c.challenge) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + (c.challenge === 'combat' ? ' combat' : '') + '">' + Art.icon(c.challenge === 'combat' ? 'sword' : 'dice', 14) + esc(t('check.challengeChip', { kind: challengeLabel(c.challenge, c.skill), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
+      if (c.fight) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + ' combat">' + Art.icon('sword', 14) + esc(t('check.fightChip', { result: t('fight.' + c.outcome), reason: t('fight.reason.' + c.reason) })) + '</span>';
+      else if (c.challenge) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + (c.challenge === 'combat' ? ' combat' : '') + '">' + Art.icon(c.challenge === 'combat' ? 'sword' : 'dice', 14) + esc(t('check.challengeChip', { kind: challengeLabel(c.challenge, c.skill), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
       else h += '<span class="chip ' + (c.ok ? 'check-ok' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.chip', { skill: skillName(c.skill), p: c.p, result: t(c.ok ? 'check.success' : 'check.failed') })) + '</span>';
     }
     // A gain at the cap (M37): shown, marked as at the maximum.
@@ -730,7 +780,8 @@
     }
     // A new spell gets a banner of its own, first in line (B4); other notes stay chips.
     for (const n of out.notes || []) if (n.kind === 'spell') h = '<div class="spell-banner">' + Art.icon('wand', 20) + '<span>' + esc(noteText(n)) + '</span></div>' + h;
-    for (const n of out.notes || []) if (n.kind !== 'spell') h += '<span class="chip note">' + esc(noteText(n)) + '</span>';
+    // A note with nothing to say (a fight's, which its chip above covers) shows nothing.
+    for (const n of out.notes || []) { const x = n.kind !== 'spell' && noteText(n); if (x) h += '<span class="chip note">' + esc(x) + '</span>'; }
     return h;
   }
   function showOutcome(out) {
@@ -1174,9 +1225,11 @@
       wrap.innerHTML = '<div class="fb-dialog settings" role="dialog" aria-modal="true" aria-labelledby="setH"><h3 id="setH">' + esc(t('settings.heading')) + '</h3>' +
         '<div class="set-row"><b>' + esc(t('settings.amounts')) + '</b><p class="fb-intro">' + esc(t('settings.amountsHint')) + '</p>' + seg('amounts', AMOUNT_MODES.map((m) => [m, t('amounts.' + m)]), settings.amounts || 'marks') + '</div>' +
         '<div class="set-row"><b>' + esc(t('settings.notes')) + '</b><p class="fb-intro">' + esc(t('settings.notesHint')) + '</p>' + seg('notes', [['on', t('settings.on')], ['off', t('settings.off')]], settings.notes ? 'on' : 'off') + '</div>' +
+        '<div class="set-row"><b>' + esc(t('settings.fight')) + '</b><p class="fb-intro">' + esc(t('settings.fightHint')) + '</p>' + seg('difficulty', FIGHT_DIFFICULTIES.map((m) => [m, t('difficulty.' + m)]), settings.fightDifficulty) + '</div>' +
         '<div class="fb-actions"><button class="btn" id="settingsClose">' + esc(t('slots.close')) + '</button></div></div>';
       wrap.querySelectorAll('[data-amounts]').forEach((b) => { b.onclick = () => { settings.amounts = b.dataset.amounts; saveSettings(); render(); refreshCard(); }; });
       wrap.querySelectorAll('[data-notes]').forEach((b) => { b.onclick = () => { settings.notes = b.dataset.notes === 'on'; saveSettings(); render(); document.querySelectorAll('.scene-note').forEach((n) => { n.style.display = settings.notes ? '' : 'none'; }); }; });
+      wrap.querySelectorAll('[data-difficulty]').forEach((b) => { b.onclick = () => { settings.fightDifficulty = b.dataset.difficulty; saveSettings(); render(); }; });
       document.getElementById('settingsClose').onclick = closeSettings;
     };
     document.body.appendChild(wrap);

@@ -914,14 +914,33 @@ function schemaCmd(opts = {}) {
   return true;
 }
 
+// The fight's strings (the combat minigame's text table, build/combat.bundle.js): block @combat in locales/<lang>/combat.lang.
+// Spell names come from content, with its own translations, so only spells content doesn't have are listed.
+function combatStrings(content) {
+  const C = require('../build/combat.bundle.js'); C.initSync();
+  return Object.entries(C.combatTextTable()).filter(([k]) => !(k.startsWith('label.') && content.spells[k.slice(6)]))
+    .map(([key, text]) => ({ file: 'combat.lang', block: 'combat', key, text, hash: I18n.hash(text) }));
+}
+// A fight line's placeholders: the values ({n}, {dmg}, {noun}…) must all stay; names and pronouns may change form; the
+// {v:…|…} agreement forms are English grammar.
+const FIGHT_GRAMMAR = new Set(['name', 'foe', 'name’s', 'foe’s', 'pos', 'fpos', 'fobj']);
+function fightTokens(text) { return [...String(text).matchAll(/\{([^{}]+)\}/g)].map((m) => m[1]).filter((k) => !/^f?v:/.test(k)); }
 function lintLocale(content, lang, problems, opts = {}) {
   const P = (level, where, msg) => problems.push({ level, where, msg });
   const loc = I18n.loadLocale(lang, loadLocaleSources(lang).filter((s) => !s.path.endsWith('/_obsolete.lang')));
   loc.errors.forEach((e) => P('error', e.split(': ')[0], e.split(': ').slice(1).join(': ')));
-  const strings = I18n.extract(content);
-  const known = new Set(strings.map((s) => s.block + ' ' + s.key));
+  const strings = I18n.extract(content), fight = combatStrings(content);
+  const known = new Set(strings.concat(fight).map((s) => s.block + ' ' + s.key));
   let missing = 0, stale = 0;
   const where = (block, key) => { for (const [f, p] of Object.entries(loc.files)) if (p.blocks[block] && p.blocks[block][key]) return f + ':' + p.blocks[block][key].line; return 'locales/' + lang; };
+  for (const s of fight) {
+    const e = loc.blocks.combat && loc.blocks.combat[s.key];
+    if (!e || e.text === '') { missing++; continue; }
+    const w = where('combat', s.key), en = fightTokens(s.text), tr = fightTokens(e.text);
+    if (e.hash && e.hash !== s.hash) { stale++; if (opts.verbose) P('info', w, 'stale translation (English changed): combat ' + s.key); }
+    const lost = en.filter((k) => !FIGHT_GRAMMAR.has(k) && !tr.includes(k)), extra = tr.filter((k) => !en.includes(k) && !FIGHT_GRAMMAR.has(k));
+    if (lost.length || extra.length) P('warn', w, '[' + lang + '] combat ' + s.key + ': placeholders differ from English (' + (lost.length ? 'missing {' + lost.join('} {') + '}' : '') + (extra.length ? ' unknown {' + extra.join('} {') + '}' : '') + ')');
+  }
   for (const s of strings) {
     const e = loc.blocks[s.block] && loc.blocks[s.block][s.key];
     if (!e || e.text === '') { missing++; continue; }
@@ -970,7 +989,7 @@ function i18nSync(lang) {
   const langName = loc.ui['lang.name'] || lang;
   const used = new Set();
   const byFile = {};
-  for (const s of I18n.extract(content)) (byFile[s.file] = byFile[s.file] || []).push(s);
+  for (const s of I18n.extract(content).concat(combatStrings(content))) (byFile[s.file] = byFile[s.file] || []).push(s);
   const report = [];
   const written = new Set();
   for (const [file, list] of Object.entries(byFile)) {

@@ -241,6 +241,32 @@
     'settings.amountsHint': 'How a choice\'s effects show before you make it. Afterwards the outcome always shows the numbers; Crowns and Mana are always exact.',
     'settings.notes': 'Illustrative text', 'settings.notesHint': 'The line under each card that describes its picture.',
     'settings.on': 'Show', 'settings.off': 'Hide',
+    'settings.fight': 'Fights', 'settings.fightHint': 'How well your opponents fight. Medium is the game as designed; Engine plays its best every time.',
+    'difficulty.easy': 'Easy', 'difficulty.medium': 'Medium', 'difficulty.hard': 'Hard', 'difficulty.engine': 'Engine',
+    // A fight: the combat minigame played over the card (src/combat-ui.js). The minigame's own lines (flavor, what an
+    // action does) are translated with its tables, not here.
+    'check.fight': 'Fight', 'check.fightButton': 'Fight · {foe} · level {level}', 'check.fightChip': 'Fight: {result} · {reason}',
+    'fight.loading': 'The fight is starting…', 'fight.you': 'You', 'fight.lv': 'Lv {n}', 'fight.inspect': 'Look at your opponent',
+    'fight.choosing': '{name} is choosing…', 'fight.choosingHint': 'Their move appears when they commit.',
+    'fight.theirMove': 'What their move does', 'fight.theyCommit': 'They commit:', 'fight.compelled': 'Compelled:',
+    'fight.youFirst': 'You commit first', 'fight.youFirstHint': 'Their reply stays hidden until you do.', 'fight.theyFirst': 'they commit first',
+    'fight.pickHint': 'Pick an action to see what it does. Pick it again to act.', 'fight.waiting': 'Waiting for your opponent…',
+    'fight.commit': 'Commit', 'fight.cast': 'Cast', 'fight.free': 'Free', 'fight.mana': '{n} Mana', 'fight.hp': '{n} HP',
+    'fight.hpBar': 'HP {v} / {max}', 'fight.manaBar': 'Mana {v} / {max} · flux {flux}: Reclaim turns flux back into Mana',
+    'fight.flux': 'Flux: Reclaim turns it back into Mana', 'fight.shield': 'Shield: absorbs damage before HP',
+    'fight.construct': '{name}: {left} of {of} HP left, until exchange {until}',
+    'fight.frozen': 'Frozen · you thaw after this exchange', 'fight.channel': '{spell} · Hold or Release', 'fight.haste': 'Haste · one bundle of basic actions',
+    'fight.frozenName': 'Frozen', 'fight.rimeReady': 'Rime ready', 'fight.shieldNote': '{n} shield', 'fight.holds': 'held {n}×', 'fight.banked': '{n} banked', 'fight.hpOf': '{left} of {of} HP',
+    'fight.exchange': 'Exchange {n}', 'fight.exchangeShow': 'Exchange {n}: show it in full', 'fight.youLed': 'you led', 'fight.theyLed': 'they led',
+    'fight.youLead': 'you lead', 'fight.theyLead': 'they lead', 'fight.committed': 'committed {action}', 'fight.latest': 'Back to the latest',
+    'fight.first': '1st', 'fight.yourMove': 'Your move this exchange', 'fight.until': 'until exchange {n}', 'fight.trackLabel': 'Exchanges: the past, this one and the next ones',
+    'fight.slotFrozen': 'Exchange {n}: {who} frozen', 'fight.slotCompelled': 'Exchange {n}: compelled to repeat {action}',
+    'fight.slotTheyLead': 'Exchange {n}: they commit first, so you see their move', 'fight.slotYouLead': 'Exchange {n}: you commit first; their move stays hidden',
+    'fight.canDo': 'What they can do', 'fight.canDoNow': 'What they can do now', 'fight.lastMoves': 'Their last moves', 'fight.everything': 'Everything they can do →', 'fight.close': 'Close',
+    'fight.sheetLine': 'Level {level} · HP {hp}/{maxHp} · Mana {mana}/{maxMana}', 'fight.plusFlux': '(+{n} flux)',
+    'fight.unfitHealth': 'You come in hurt (Health {n}): your HP in the fight starts low.', 'fight.unfitMana': 'Your Mana isn\'t full ({n} of {max}): the rest starts as flux, which takes a Reclaim.',
+    'fight.win': 'Victory', 'fight.lose': 'Defeat', 'fight.draw': 'Draw', 'fight.continue': 'Continue',
+    'fight.reason.knockout': 'by knockout', 'fight.reason.decision': 'on points', 'fight.reason.stalemate': 'neither can finish it', 'fight.reason.conceded': 'by concession',
     'size.tiny': 'tiny', 'size.small': 'small', 'size.medium': 'medium', 'size.large': 'large', 'size.huge': 'huge',
     'note.grade': '{track}: {grade}',
     'note.regrade': '{track}: {from} → {grade} on appeal',
@@ -442,8 +468,13 @@
   }
 
   /* ------------------------------------------------------------------ runtime (UI) */
-  let current = { lang: 'en', ui: {} };
-  function use(locale) { current = locale ? { lang: locale.lang, ui: locale.ui || {} } : { lang: 'en', ui: {} }; }
+  let current = { lang: 'en', ui: {}, combat: {} };
+  // The fight's strings (locales/<lang>/combat.lang, @combat) are kept for the combat minigame (src/ui.js hands them over).
+  function use(locale) {
+    const combat = locale && locale.blocks && locale.blocks.combat ? Object.fromEntries(Object.entries(locale.blocks.combat).filter(([, v]) => v.text !== '').map(([k, v]) => [k, v.text])) : {};
+    current = locale ? { lang: locale.lang, ui: locale.ui || {}, combat } : { lang: 'en', ui: {}, combat: {} };
+  }
+  function combatText() { return current.combat; }
   function t(key, vars) {
     let s = current.ui[key] != null ? current.ui[key] : UI_EN[key];
     if (s == null) return key;
@@ -461,5 +492,5 @@
     return names[Math.floor(rand() * names.length)] || t('title.defaultName');
   }
 
-  return { UI_EN, hash, enc, dec, parseLang, loadLocale, visit, extract, applyContent, pronounTable, use, t, lang, randomName, FIELDS };
+  return { UI_EN, hash, enc, dec, parseLang, loadLocale, visit, extract, applyContent, pronounTable, use, t, lang, combatText, randomName, FIELDS };
 });

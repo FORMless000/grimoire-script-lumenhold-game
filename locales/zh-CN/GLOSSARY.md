@@ -126,3 +126,7 @@ Tracks: Enrolment 选课 · course fees 课程费 · GPA（保留英文）· ter
 Break plans: Stay at the castle 留在城堡 · Go home 回家 · Work full-time 全职打工 · Board at the castle 城堡食宿. Home places: The Family Cottage 老家小屋 · The Fields 田野 · The Market Town 集镇.
 
 Arcs: The Bell Under the Water 水下的钟 · the drowned bell 沉钟 · bell-rope 钟绳.
+
+## 战斗（战斗小游戏，`locales/zh-CN/combat.lang` 与 ui.lang 的 `fight.*`）
+
+Actions: Strike 打击 · Guard 格挡 · Reclaim 回收 · Hold 蓄持 · Release 释放 · Frozen 冰封 · channel 引导 · commit 出招 · bundle (Haste) 组合行动. Numbers: HP (in a fight) 生命 · Mana 法力 · flux 游离法力（叙述里说“游离魔力”）· shield 护盾 · absorb 吸收 · construct 造物. The fight: exchange 回合 · leads / commits first 先手 / 先出招 · knockout 击倒 · on points 点数判定 · stalemate 双方都无法取胜 · draw 平局 · Victory 胜利 · Defeat 落败 · observers 观众 · difficulty 难度（简单 / 中等 / 困难 / 引擎）. Grammar in fight lines: the player is 你; {name’s} 读作“…的”，后面不要再加“的”; 无名对手代词用 TA; 句子之间不留空格（`grammar.sentenceSep` 是一个零宽空格，不要删）.

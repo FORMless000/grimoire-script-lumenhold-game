@@ -1,4 +1,4 @@
-import {SPELL_ICONS,ACTION_ICONS,PORTRAITS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,createState,applyChoice,actorToMove,legalActions,available,cost,describe,label,concede,hpCost,has,expandAI,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState} from './engine.mjs';
+import {SPELL_ICONS,ACTION_ICONS,PORTRAITS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,createState,applyChoice,actorToMove,legalActions,available,cost,describe,describeData,label,concede,hpCost,has,expandAI,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState} from './engine.mjs';
 import {brief} from './brief.mjs';
 import {portrait,BLANK} from './art.mjs';
 // The same served module supplies a worker, preserving the existing localhost server.
@@ -83,7 +83,7 @@ function actionIcon(id,side=0,channel=game.actors[side].channel?.id){
  return SPELL_ICONS[id]??ACTION_ICONS[key]??(SPELLS[id]?.physical?ACTION_ICONS.strike:id==='frozen'?'<b class="glyph">❄</b>':id==='cancel'?'<b class="glyph">∅</b>':QUESTION);
 }
 const actionName=(id,side)=>['hold','release'].includes(id)?`${label(id)} ${label(game.actors[side].channel?.id??'')}`:label(id);
-const briefOf=(side,id)=>{let t='';try{t=describe(game,side,id);}catch{}return brief(id,t,game.actors[side].channel?.id);};
+const briefOf=(side,id)=>{let d=null;try{d=describeData(game,side,id);}catch{}return brief(id,d,game.actors[side].channel?.id);};
 // same: the label repeats the action's name, which the button already shows (hidden there unless the name is).
 const effHtml=(b,name)=>{const v=b.value!==''&&b.value!==null&&b.value!==undefined;return `<span class="eff k-${b.kind}${v?' has-v':''}">${v?`<b>${esc(b.value)}</b>`:''}${b.label?`<small class="lbl${name&&name.toLowerCase()===b.label.toLowerCase()?' same':''}">${esc(b.label)}</small>`:''}${b.turns?`<small class="t">${b.turns}t</small>`:''}</span>`;};
 function price(side,id){const h=hpCost(game,side,id),m=has(game,side,'heartprice')?0:cost(game,side,id);return [m?fmt(m)+' Mana':'',h?fmt(h)+' HP':''].filter(Boolean).join(' + ')||'Free';}

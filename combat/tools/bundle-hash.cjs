@@ -12,7 +12,7 @@ const COMBAT = path.join(__dirname, '..');
 const ROOT = path.join(COMBAT, '..');
 const BUNDLE = path.join(ROOT, 'build', 'combat.bundle.js');
 // The modules in the bundle, in load order (no two share a top-level name; checked when bundling).
-const MODULES = ['setup/cast-stats.mjs', 'setup/loadouts.mjs', 'setup/roster.mjs', 'setup/foes.mjs', 'setup/setup.mjs', 'setup/flavor.mjs', 'setup/campaign.mjs', 'web/core.mjs', 'web/brief.mjs'];
+const MODULES = ['setup/text.mjs', 'setup/cast-stats.mjs', 'setup/loadouts.mjs', 'setup/roster.mjs', 'setup/foes.mjs', 'setup/setup.mjs', 'setup/flavor.mjs', 'setup/campaign.mjs', 'web/core.mjs', 'web/brief.mjs', 'web/text-table.mjs'];
 
 function walk(dir, ext) {
   if (!fs.existsSync(dir)) return [];
@@ -29,8 +29,8 @@ function sourceFiles() {
 function sourcesHash() {
   const h = crypto.createHash('sha256');
   for (const f of sourceFiles()) { h.update(path.relative(COMBAT, f).replace(/\\/g, '/')); h.update('\0'); h.update(fs.readFileSync(f)); h.update('\0'); }
-  // The action icons the bundle inlines.
-  for (const f of walk(path.join(ROOT, 'docs', 'action-icons'), ['.svg'])) { h.update(path.basename(f)); h.update(fs.readFileSync(f)); }
+  // The action and spell icons the bundle inlines.
+  for (const d of ['action-icons', 'spell-icons']) for (const f of walk(path.join(ROOT, 'docs', d), ['.svg'])) { h.update(d + '/' + path.basename(f)); h.update(fs.readFileSync(f)); }
   return h.digest('hex');
 }
 // The header line the bundler writes: {rules, sources, wasm}.

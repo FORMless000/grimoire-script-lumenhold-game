@@ -62,7 +62,8 @@ test('styles: the scholar is a scholarship student who sleeps, picks its exam ap
 test('styles: the nightlife regular goes out every night it can, takes the company, and fights at the ring', () => {
   for (const eng of games('nightlife')) {
     const nights = cards(eng).filter((h) => h.id === 'night_out');
-    assert.ok(nights.length > 10 && nights.every((h) => h.choice === 'right'), 'out every night: ' + nights.length);
+    // per month played: the ring's fights (played since 2026-10-18) can send a run home early
+    assert.ok(nights.length >= 0.35 * eng.s.turn && nights.every((h) => h.choice === 'right'), 'out every night: ' + nights.length + ' in ' + eng.s.turn + ' months');
     assert.equal(chose(eng, 'newt_company', 'right') + chose(eng, 'newt_company_regular', 'right'), 0, 'never refuses the company');
     for (const h of cards(eng).filter((x) => /^ring_bout_\d$/.test(x.id))) assert.ok(['left', 'right'].includes(h.choice));
   }

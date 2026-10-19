@@ -137,3 +137,58 @@ test('combat: a bot fight is deterministic and its result is the engine\'s shape
   assert.equal(a.request, req.id);
   assert.ok(['win', 'lose', 'draw'].includes(a.outcome) && a.deltas && typeof a.exchanges === 'number');
 });
+
+// ---- The fight in the game's language (combat/setup/text.mjs, locales/<lang>/combat.lang)
+const I18n = require('../src/i18n.js');
+const fs = require('fs');
+
+test('combat: a fight in progress is found again after a save and load (the fight screen resumes it)', () => {
+  const eng = fresh(7);
+  show(eng, 'duel_fixture');
+  const req = eng.fightAhead('left');
+  const again = new Engine(content).load(JSON.parse(eng.save()));
+  assert.deepEqual(again.fightAhead('left'), req);
+});
+
+test('combat: rendered from its templates, a description is the core\'s English word for word', () => {
+  const C = Bridge.combat(); C.initSync();
+  const s = C.createState({ playerLoadout: 'Duellist', opponentLoadout: 'Illusionist', playerLevel: 60, opponentLevel: 60, spellAccess: 'all' });
+  const ids = ['strike', 'guard', 'reclaim', 'hold', 'release'].concat(Object.keys(C.SPELLS));
+  try {
+    for (let i = 0; i < 25 && !s.result; i++) {
+      for (const side of [0, 1]) for (const id of ids.concat(C.legalActions(s, side).filter((a) => a.startsWith('bundle:')))) {
+        C.useText(null); const en = C.describe(s, side, id);
+        C.useText({ 'not.a.key': 'x' }); assert.equal(C.describe(s, side, id), en, id);
+      }
+      const l = C.legalActions(s); C.applyChoice(s, l[i % l.length]);
+    }
+  } finally { C.useText(null); }
+});
+
+test('combat: zh-CN translates every fight string, and a fight told in it has no English left', () => {
+  const C = Bridge.combat(); C.initSync();
+  const dir = path.join(ROOT, 'locales/zh-CN');
+  const loc = I18n.loadLocale('zh-CN', [{ path: 'locales/zh-CN/combat.lang', text: fs.readFileSync(path.join(dir, 'combat.lang'), 'utf8') }]);
+  const zh = Object.fromEntries(Object.entries(loc.blocks.combat).map(([k, v]) => [k, v.text]));
+  for (const k of Object.keys(C.combatTextTable())) if (!(k.startsWith('label.') && content.spells[k.slice(6)])) assert.ok(zh[k], 'untranslated ' + k);
+  // Spell names come from content's own translation; here any name without Latin letters stands in for it.
+  for (const id of Object.keys(C.SPELLS)) zh['label.' + id] = zh['label.' + id] || '咒' + id.length;
+  const english = /[A-Za-z]{3,}/;
+  try {
+    C.useText(zh);
+    const names = C.fighterNames({ opponentName: '莱拉', opponentPronouns: 'she' });
+    const loadouts = Object.keys(C.LOADOUTS);
+    for (let f = 0; f < 12; f++) {
+      const s = C.createState({ playerLoadout: loadouts[f % loadouts.length], opponentLoadout: loadouts[(f * 5 + 1) % loadouts.length], playerLevel: 30 + f * 4, opponentLevel: 40, spellAccess: 'all', firstLeader: f % 2 });
+      for (let i = 0; i < 40 && !s.result; i++) {
+        for (const side of [0, 1]) for (const id of C.legalActions(s, side)) {
+          for (const text of [C.describe(s, side, id), C.label(id), C.flavorLine(id, { channel: s.actors[side].channel && s.actors[side].channel.id, round: s.round, names, side }) || ''])
+            assert.ok(!english.test(text), id + ': ' + text);
+        }
+        const before = JSON.parse(JSON.stringify(s)), channels = s.actors.map((a) => a.channel && a.channel.id);
+        const l = C.legalActions(s), r = C.applyChoice(s, l[(i * 3 + f) % l.length]);
+        if (r.resolved) for (const text of C.resolvedLines(before, s, Object.assign({}, r, { channels, actionNames: r.pair.map((x) => C.label(x)) }), names).concat(C.finishLines(before, s, r.pair, r.round, names))) assert.ok(!text || !english.test(text), text);
+      }
+    }
+  } finally { C.useText(null); }
+});

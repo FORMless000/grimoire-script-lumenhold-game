@@ -61,6 +61,9 @@ fn status(r: Result<String, String>) -> i32 { match r { Ok(s) => { out(s); 0 } E
     with(|f| rules::has(&f.s, side as usize, e) as i32)
 }
 #[no_mangle] pub extern "C" fn describe(side: i32, p: *const u8, n: usize) { let a = act(p, n); let t = with(|f| text::describe(&f.enc, &f.s, side as usize, a)); out(t); }
+/// The description as a template (text::TEXT keys and values), for the main game to render in its language; and TEXT itself.
+#[no_mangle] pub extern "C" fn describe_data(side: i32, p: *const u8, n: usize) { let a = act(p, n); let t = with(|f| text::describe_t(&f.enc, &f.s, side as usize, a)); out(t.to_string()); }
+#[no_mangle] pub extern "C" fn text_table() { out(text::text_table().to_string()); }
 #[no_mangle] pub extern "C" fn label(p: *const u8, n: usize) { let a = data().act(input(p, n)); out(match a { Some(a) => text::label(Some(a)), None => input(p, n).to_string() }); }
 
 /// A search context (transposition table, history, killers) that lives across calls.
