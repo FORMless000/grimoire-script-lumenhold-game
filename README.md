@@ -1,6 +1,6 @@
 # Lumenhold Academy
 
-*Four years. Forty-seven moons. One apprentice.*
+*Four years. Forty-eight moons. One apprentice.*
 
 A swipe-card life simulation at a magical academy. Each month is one day: pick two places on the campus map, then swipe through the day's cards to choose. Enrol in courses, keep up with a club and a job, plan your breaks, keep your Health and Mood up and your purse from emptying, grow six skills and twelve spells, befriend, romance or feud with twelve characters (and get to know eight more: the professors, the healer, the shopkeepers and a moneylender), lean toward the Lumen or the Hollow, and decide what to do about the secret beneath the lake. At graduation your yearbook collects what you became: a headline, the Hollow Star's outcome, your bonds and how you're remembered. Playable in **English** and **简体中文** (Simplified Chinese).
 
