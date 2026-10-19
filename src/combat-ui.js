@@ -38,7 +38,8 @@
   const BLANK = '<svg viewBox="0 0 64 64" aria-hidden="true" class="ph blank"><rect width="64" height="64" fill="#1b2043"/></svg>';
     const AHEAD = 4, CAST_ON_FOE = new Set(['compelled', 'torment']), EFFECT_ICON = { compelled: 'compel', guard: 'guard', frozen: 'frozen' };
   const RESULT_BARS = ['health', 'mana', 'mood', 'renown', 'gold', 'alignment'];
-  const ENGINE_BUDGETS = [500, 1500, 4000, Infinity];   // the engine analysis's time per turn, ms
+  const ENGINE_BUDGETS = [500, 1500, 4000, Infinity];
+  const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V'];   // the engine analysis's time per turn, ms
 
   function open(opts) {
     const { host, content } = opts;
@@ -46,13 +47,17 @@
     const layer = document.createElement('div');
     layer.className = 'fight-layer'; layer.id = 'fightLayer';
     layer.innerHTML = '<div class="fight-wrap"><div class="fight-loading">' + esc(tr('loading')) + '</div></div><div class="sheet" hidden></div>';
-    host.classList.add('fighting'); host.appendChild(layer);
+    // The entrance (src/combat.css): the fight's panels rise over the card view, then the fight takes the card's place.
+    const animate = document.documentElement.dataset.motion !== 'reduced' && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    host.classList.add('fighting'); if (animate) host.classList.add('fight-enter'); host.appendChild(layer);
+    let entered = !animate;
+    const settleIn = () => { if (entered) return; entered = true; setTimeout(() => host.classList.remove('fight-enter'), 900); };
     const $ = (sel) => layer.querySelector(sel);
     let fight = null, game = null, names = null, history = [], selected = null, busy = false, moves = 0, bars = {}, seen = {}, sheet = null, focusEx = null, ai = null, closed = false, done = false;
     let analyst = null, analysis = null, analysisFor = -1, analysisRunning = false, engineOn = !!(opts.engineHelp && opts.engineShown);
     let engineBudget = ENGINE_BUDGETS.includes(opts.engineBudget) ? opts.engineBudget : 1500;
 
-    const close = () => { closed = true; if (ai) ai.terminate(); if (analyst) analyst.terminate(); document.removeEventListener('keydown', onKey); layer.remove(); host.classList.remove('fighting'); };
+    const close = () => { closed = true; if (ai) ai.terminate(); if (analyst) analyst.terminate(); document.removeEventListener('keydown', onKey); layer.remove(); host.classList.remove('fighting', 'fight-enter'); };
     const foeName = (id, en) => C().tx('foe.' + id, en);
     const snapshot = () => ({ key: opts.key, request: fight.request, state: game, history, foe: fight.foe, setting: fight.setting, names, rules: fight.rules });
 
@@ -72,7 +77,7 @@
       if (CombatUI.foeAI) game.config.ai[1] = Object.assign({}, game.config.ai[1], CombatUI.foeAI);
       if (CombatUI.playerAI) game.config.ai[0] = C().expandAI(Object.assign({ maxDepth: 2, nodeBudget: 2e4, mistakeChance: 0, seed: 7, preset: 'medium' }, CombatUI.playerAI), null);
       ai = C().createAI();
-      render(); pump();
+      render(); settleIn(); pump();
     }).catch((e) => { console.error(e); if (!closed) { close(); opts.onDone(autoResolve(opts.request, content)); } });
 
     // ---- Playing ----
@@ -123,6 +128,9 @@
     const nameOf = (i) => (i === 0 ? tr('you') : fight.foe.name);
     // The level shown for a fighter: the average of their six skills (a player's kit.level is their best skill, a label the
     // rules never read; a generated foe's skills already average its level).
+    // A spell's level in a fighter's kit (I–III), shown on the action buttons and in the opponent's sheet.
+    const spellLevel = (side, id) => (game.actors[side].kit.spells || {})[id] || 0;
+    const lvBadge = (side, id) => (spellLevel(side, id) ? '<small class="a-lv" title="' + esc(tr('spellLevel', { n: ROMAN[spellLevel(side, id)] })) + '">' + ROMAN[spellLevel(side, id)] + '</small>' : '');
     const levelOf = (i) => { const v = Object.values(game.actors[i].kit.skills || {}).filter(Number.isFinite); return v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : game.actors[i].kit.level; };
     const who = (i) => (i ? esc(nameOf(1)) : esc(tr('you')));
     function portraitOf(i) {
@@ -175,8 +183,7 @@
     }).join('');
     function fighter(i) {
       const a = game.actors[i];
-      const purse = [game.config.observers ? '★' + fmt(a.resources.renown) + (a.pendingRenown ? '<em>+' + fmt(a.pendingRenown) + '</em>' : '') : '',
-        a.resources.crowns !== a.entry.crowns ? '◎' + fmt(a.resources.crowns) : '', a.resources.alignment !== a.entry.alignment ? '☾' + fmt(a.resources.alignment) : ''].filter(Boolean).join(' ');
+      const purse = [a.resources.crowns !== a.entry.crowns ? '◎' + fmt(a.resources.crowns) : '', a.resources.alignment !== a.entry.alignment ? '☾' + fmt(a.resources.alignment) : ''].filter(Boolean).join(' ');
       return '<article class="fighter ' + (i ? 'opp' : 'you') + '"' + (i ? ' data-sheet="inspect" role="button" tabindex="0" title="' + esc(tr('inspect')) + '"' : '') + '>' +
         '<div class="pf' + (i ? '' : ' blank') + '">' + portraitOf(i) + (i ? '<span class="pf-eye">' + EYE + '</span>' : '') + '</div>' +
         '<div class="fi"><div class="fname"><b>' + esc(nameOf(i)) + '</b><small>' + esc(tr('lv', { n: levelOf(i) })) + (purse ? ' · ' + purse : '') + '</small>' + constructChips(a, i) + '</div>' +
@@ -267,7 +274,7 @@
     function actionButton(id) {
       const reason = C().available(game, 0, id), disabled = !myTurn() || reason, name = actionName(id, 0), b = briefOf(0, id), tip = esc(name + ' · ' + price(0, id) + (reason ? ' · ' + reason : ''));
       return '<button class="act k-' + b.kind + (selected === id ? ' selected' : '') + '" data-action="' + id + '" aria-label="' + tip + '" aria-pressed="' + (selected === id) + '" title="' + tip + '"' + (disabled ? ' disabled' : '') + '>' +
-        (engineOn ? '<i class="a-eval" data-eval="' + id + '"></i>' : '') + '<span class="a-ico" aria-hidden="true">' + actionIcon(id) + '</span>' + (id.startsWith('bundle:') ? '' : '<span class="a-name">' + esc(['hold', 'release'].includes(id) ? label(id) : name) + '</span>') + effHtml(b, name) + costHtml(0, id) + '</button>';
+        (engineOn ? '<i class="a-eval" data-eval="' + id + '"></i>' : '') + '<span class="a-ico" aria-hidden="true">' + actionIcon(id) + lvBadge(0, id) + '</span>' + (id.startsWith('bundle:') ? '' : '<span class="a-name">' + esc(['hold', 'release'].includes(id) ? label(id) : name) + '</span>') + effHtml(b, name) + costHtml(0, id) + '</button>';
     }
     function preview() {
       if (!selected) return '<div class="preview hint">' + esc(myTurn() ? tr('pickHint') : tr('waiting')) + '</div><button class="fl-commit primary" disabled>' + esc(tr('commit')) + '</button>';
@@ -303,7 +310,7 @@
         '<div class="sk">' + skills.map((k) => '<span><small>' + esc(opts.skillName ? opts.skillName(k) : k) + '</small><i style="--w:' + a.kit.skills[k] + '%"></i><b>' + a.kit.skills[k] + '</b></span>').join('') + '</div>' +
         '<h4>' + esc(forced ? tr('canDoNow') : tr('canDo')) + '</h4><ul class="kit">' + ids.map((id) => {
           const reason = C_.available(game, 1, id), b = briefOf(1, id);
-          return '<li class="' + (reason ? 'off' : '') + '"><span class="mini-icon">' + actionIcon(id, 1) + '</span><div><b>' + esc(actionName(id, 1)) + '</b> ' + effHtml(b) + ' <span class="price">' + esc(price(1, id)) + '</span>' + (reason ? ' <em>' + esc(reason) + '</em>' : '') + '<p>' + esc(describe(1, id)) + '</p></div></li>';
+          return '<li class="' + (reason ? 'off' : '') + '"><span class="mini-icon">' + actionIcon(id, 1) + '</span><div><b>' + esc(actionName(id, 1)) + (spellLevel(1, id) ? ' ' + ROMAN[spellLevel(1, id)] : '') + '</b> ' + effHtml(b) + ' <span class="price">' + esc(price(1, id)) + '</span>' + (reason ? ' <em>' + esc(reason) + '</em>' : '') + '<p>' + esc(describe(1, id)) + '</p></div></li>';
         }).join('') + '</ul>' +
         (recent.length ? '<h4>' + esc(tr('lastMoves')) + '</h4><div class="recent">' + recent.map((r) => '<span class="ply opp" title="' + esc(tr('exchange', { n: r.round })) + '"><span class="mini-icon">' + actionIcon(r.pair[1], 1, r.channels && r.channels[1]) + '</span>' + esc(r.actionNames[1]) + '</span>').join('') + '</div>' : '');
     }

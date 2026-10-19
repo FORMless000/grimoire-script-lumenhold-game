@@ -489,8 +489,16 @@
     if (now) push(); else serverSaveTimer = setTimeout(push, 1500);
   }
 
+  // Whether choosing `dir` on the card starts a fight: asked once as the card leaves, and kept for resolve().
+  function fightOnChoice(dir) {
+    const v = ui.view; if (!v || !v.options || !v.options.length) return false;
+    const key = v.type === 'story' || v.options.length === 1 ? v.options[0].key : dir;
+    ui.fightAhead = { key, req: fightAhead(key) };
+    return !!ui.fightAhead.req;
+  }
   function resolve(key) {
-    const req = fightAhead(key);
+    const known = ui.fightAhead && ui.fightAhead.key === key ? ui.fightAhead : null; ui.fightAhead = null;
+    const req = known ? known.req : fightAhead(key);
     // The minigame didn't load (build/combat.bundle.js missing or a server that doesn't serve it): say so and keep the card,
     // rather than choosing an option whose fight can't be played.
     if (req && !window.LumenholdCombat) { console.error('[fight] build/combat.bundle.js did not load: ' + req.id + ' cannot be played'); toast(t('fight.noEngine')); return keepCard(); }
@@ -688,6 +696,8 @@
     setTimeout(() => resolve(key), 260);
   }
   function flyOut(card, dir) {
+    // A choice that starts a fight keeps its card: it settles back and waits under the fight, suspended (src/combat.css).
+    if (ui.mode === 'card' && card.closest('#deck') && fightOnChoice(dir)) { card.classList.remove('dragging'); card.style.transform = ''; card.style.opacity = ''; return; }
     const s = dir === 'left' ? -1 : 1;
     card.classList.remove('dragging');
     card.style.transform = dir === 'up' ? 'translate(0, -' + Math.round(window.innerHeight * 0.9) + 'px)' : 'translate(' + (s * (window.innerWidth * 0.9)) + 'px, 40px) rotate(' + (s * 24) + 'deg)';

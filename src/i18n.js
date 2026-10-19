@@ -253,7 +253,7 @@
     'fight.engineWaits': 'Engine · waits for your turn', 'fight.engineTime': 'Engine time per turn', 'fight.seconds': '{n} s',
     'fight.engineNote': 'Values are in Health from your side: + favours you. Each line is both sides’ best play as the engine sees it: gold chips are your moves, blue chips your opponent’s, and | separates exchanges.',
     'fight.lineWin': 'KO · you win', 'fight.lineLoss': 'KO · you lose', 'fight.lineDraw': 'draw', 'fight.noEngine': 'The fight couldn’t load. Reload the page; if you play on a local server, restart it.',
-    'error.choice': 'That choice couldn’t go through, so nothing changed. Try again, or pick another option.', 'fight.you': 'You', 'fight.lv': 'Lv {n}', 'fight.inspect': 'Look at your opponent',
+    'error.choice': 'That choice couldn’t go through, so nothing changed. Try again, or pick another option.', 'fight.you': 'You', 'fight.lv': 'Lv {n}', 'fight.spellLevel': 'Level {n}', 'fight.inspect': 'Look at your opponent',
     'fight.choosing': '{name} is choosing…', 'fight.choosingHint': 'Their move appears when they commit.',
     'fight.theirMove': 'What their move does', 'fight.theyCommit': 'They commit:', 'fight.compelled': 'Compelled:',
     'fight.youFirst': 'You commit first', 'fight.youFirstHint': 'Their reply stays hidden until you do.', 'fight.theyFirst': 'they commit first',
