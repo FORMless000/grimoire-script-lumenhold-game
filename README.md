@@ -1,8 +1,8 @@
 # Grimoire Script · Lumenhold Academy
 
-An experiment in letting language models write a game. **Grimoire Script** is a small scripting language invented for this project, together with the tools and skills that let LLM agents author content in it. **Lumenhold Academy** is the game they are writing.
+An experiment in letting language models write a game. **Grimoire Script** is a small scripting language invented for this project, together with the tools and skills that let LLM agents author content in it. 
 
-Inspired by *Reigns*, *Princess Maker*, *Griftlands*, and loosely by storylet-driven narrative and chess engines.
+**Lumenhold Academy** is the game they are writing: inspired by *Reigns*, *Princess Maker*, *Griftlands*, and loosely by storylet-driven narrative and chess engines.
 
 ## Ambitions
 
