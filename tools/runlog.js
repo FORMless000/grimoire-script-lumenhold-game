@@ -83,7 +83,7 @@ function aggregateFeedback(runs, { event = null, contentHash = null } = {}) {
     const key = h.t === 'end' ? h.id + ' (ending)' : h.id;
     const b = byEvent[key] = byEvent[key] || { id: h.id, ending: h.t === 'end', up: 0, down: 0, notes: [] };
     if (h.fb.rating === 'up') b.up++; else if (h.fb.rating === 'down') b.down++;
-    b.notes.push({ rating: h.fb.rating, comment: h.fb.comment, choice: h.label || null, actor: h.actor || null, turn: h.turn, run: r.runId, lang: r.lang, sim: r.sim || null, stale: !!(contentHash && r.contentHash && r.contentHash !== contentHash), title: h.title });
+    b.notes.push({ rating: h.fb.rating, comment: h.fb.comment, choice: h.label || null, actor: h.actor || null, turn: h.turn, run: r.runId, player: r.player || null, at: h.fb.at || h.chosenAt || h.at || null, lang: r.lang, sim: r.sim || null, stale: !!(contentHash && r.contentHash && r.contentHash !== contentHash), title: h.title });
     total++;
   });
   const rows = Object.entries(byEvent).sort((a, b) => (b[1].down - b[1].up) - (a[1].down - a[1].up) || b[1].notes.length - a[1].notes.length);
@@ -95,8 +95,8 @@ function summarize(r) {
   const cards = r.hist.filter((h) => h.t === 'card');
   const decide = cards.filter((h) => h.chosenAt && h.at).map((h) => h.chosenAt - h.at);
   return {
-    runId: r.runId, name: r.name, seed: r.seed, lang: r.lang, sim: r.sim || null, contentHash: r.contentHash,
-    startedAt: r.startedAt, updatedAt: r.updatedAt, turn: r.turn, ended: r.ended, feedback: r.feedback,
+    runId: r.runId, name: r.name, seed: r.seed, lang: r.lang, sim: r.sim || null, contentHash: r.contentHash, player: r.player || null,
+    startedAt: r.startedAt, updatedAt: r.updatedAt, turn: r.turn, ended: r.ended, feedback: r.feedback, errors: r.hist.filter((h) => h.t === 'error').length,
     cards: cards.length, medianDecideMs: decide.length ? decide.sort((a, b) => a - b)[Math.floor(decide.length / 2)] : null,
   };
 }

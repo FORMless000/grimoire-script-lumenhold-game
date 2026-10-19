@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Git hook on the server (installed by deploy/setup-server.sh into /srv/lumenhold/repo.git/hooks/).
+# On a push to main: unpack the commit into releases/<sha>, self-test it, and only then make it live
+# (current -> releases/<sha>) and restart. A failed self-test leaves the live version running.
+# Its output shows up in your `git push`. After each successful deploy it replaces itself with the
+# deploy/post-receive of that commit, so changes to this file deploy like everything else.
+set -euo pipefail
+BASE="${LUMENHOLD_BASE:-/srv/lumenhold}"
+RESTART="${LUMENHOLD_RESTART:-sudo systemctl restart lumenhold}"
+PORT="${LUMENHOLD_PORT:-4173}"
+NODE="$BASE/node"
+TIMEOUT="$(command -v timeout >/dev/null && echo 'timeout 60' || true)"
+say() { echo "lumenhold: $*"; }
+
+while read -r _old new ref; do
+  [ "$ref" = "refs/heads/main" ] || { say "$ref pushed; only main deploys"; continue; }
+  [ "$new" = "0000000000000000000000000000000000000000" ] && continue
+  sha="$(git rev-parse --short=12 "$new")"
+  dir="$BASE/releases/$sha"
+  rm -rf "$dir.tmp"; mkdir -p "$dir.tmp"
+  git archive "$new" | tar -x -C "$dir.tmp"
+  rm -rf "$dir"; mv "$dir.tmp" "$dir"
+
+  say "self-test $sha"
+  # A commit whose server doesn't know --selftest would just start serving: the timeout catches that.
+  if ! (cd "$dir" && NODE_ENV=production $TIMEOUT "$NODE" server/index.js --selftest); then
+    say "DEPLOY REFUSED: the self-test failed; the live version is unchanged"
+    rm -rf "$dir"; exit 1
+  fi
+
+  ln -sfn "$dir" "$BASE/current"
+  $RESTART
+  ok=""
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    sleep 1
+    if "$NODE" -e "fetch('http://127.0.0.1:$PORT/api/health').then((r) => r.json()).then((j) => process.exit(j.server === 'lumenhold' ? 0 : 1), () => process.exit(1))"; then ok=1; break; fi
+  done
+  if [ -n "$ok" ]; then say "live: $sha ($(git log -1 --format=%s "$new"))"; else say "WARNING: restarted $sha but /api/health does not answer; see journalctl -u lumenhold"; fi
+
+  # Keep the three newest releases (the live one is among them).
+  ls -1dt "$BASE"/releases/*/ 2>/dev/null | tail -n +4 | while read -r old_dir; do [ "$(readlink -f "$BASE/current")" = "$(readlink -f "$old_dir")" ] || rm -rf "$old_dir"; done
+  # Update this hook from the commit just deployed.
+  if [ -f "$dir/deploy/post-receive" ]; then cp "$dir/deploy/post-receive" "$0.new" && chmod +x "$0.new" && mv "$0.new" "$0"; fi
+done

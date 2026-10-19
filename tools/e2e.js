@@ -126,9 +126,10 @@ async function checkServer(p, lang, errs) {
   await p.waitForTimeout(800);
   const r = await p.evaluate(async () => {
     const runId = lumen.eng.s.runId;
+    const me = { headers: { 'X-Player': Net.code() } };   // the page minted a player code on its first visit
     const run = await fetch('api/runs/' + runId).then((x) => x.json());
-    const seen = await fetch('api/seen').then((x) => x.json());
-    const saves = await fetch('api/saves').then((x) => x.json());
+    const seen = await fetch('api/seen', me).then((x) => x.json());
+    const saves = await fetch('api/saves', me).then((x) => x.json());
     const local = lumen.eng.s.hist.filter((h) => h.t === 'card').length;
     return { stored: run.hist.filter((h) => h.t === 'card').length, local, ended: !!run.ended, unresolved: run.hist.filter((h) => h.t === 'card' && h.choice == null).length, fb: run.hist.filter((h) => h.fb).length, seen: Object.values(seen).some((c) => c.last_run === runId), auto: saves.find((x) => x.slot === 'auto').empty };
   });

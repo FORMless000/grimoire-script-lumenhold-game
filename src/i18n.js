@@ -318,6 +318,16 @@
     'slots.whereLocal': 'Stored in this browser. Loading a slot continues it as a new run.',
     'net.connected': 'Connected: runs and feedback are saved on the server.',
     'net.admin': 'Admin',
+    'net.needInvite': 'This server needs an invite link to save online. Playing in this browser only.',
+    'net.badSync': 'That sync link didn’t work. Playing in this browser only.',
+    'sync.heading': 'Play on another device',
+    'sync.hint': 'This code is the only key to your online saves. Open the link (or enter the code) on another device to continue there.',
+    'sync.show': 'Show code',
+    'sync.copyLink': 'Copy link',
+    'sync.copied': 'Link copied.',
+    'sync.use': 'Use a code',
+    'sync.confirm': 'Switch to that code’s saves? The game in this browser is set aside (its log and feedback are kept).',
+    'sync.bad': 'That code wasn’t found.',
 
     // Pronoun tables used by {they} {them} {their} {theirs} {are} {s} in content text.
     'pronoun.she.they': 'she', 'pronoun.she.them': 'her', 'pronoun.she.their': 'her', 'pronoun.she.theirs': 'hers', 'pronoun.she.are': 'is', 'pronoun.she.s': 's',

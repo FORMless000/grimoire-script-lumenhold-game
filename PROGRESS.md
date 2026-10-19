@@ -13,6 +13,15 @@
 | Checks | `npm run verify` passes: build, lint, format, docs, 100+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 48 months (the last two are the wrap-up), about 630–720 cards (15 a term month, 9.4 a break month; about half pushed rather than drawn); in `grim analyze` (100 games a style, 2026-10-17), random play leaves early 30–40% of the time, social 27–30%, aggressive 18–29% and cautious 10–17%; the other 23 styles finish 98–100% |
 
+## Online hosting
+
+October 18, 2026: the server is ready to host online ([docs/hosting.md](docs/hosting.md), design §1).
+- **Players.** Each browser gets a player code that is also its sync code: Saved games → Play on another device shares the saves. With `INVITE_CODE` set, new players need the invite link.
+- **Admin.** `/admin` needs `ADMIN_TOKEN`, also behind a reverse proxy (`PUBLIC=1`), and shows Notes, Players (with revoke), client errors and Export runs.
+- **Logs.** Every finished, replaced or offline run waits in the browser's outbox until the server has it.
+- **Deploys.** Every commit on `main` deploys to the EC2 server through `deploy/` (git hooks and systemd; a self-test gates each release). It is not set up on the server yet: run `deploy/setup.sh <ssh-destination>` once.
+- **Old data.** Saves from before player codes (`data/saves/`, `data/seen.json`) are no longer read; old run logs stay readable.
+
 ## Frequency and economy audit
 
 October 15, 2026: [the frequency and economy review](docs/reviews/event-economy-2026-10-15/README.md) measures a preserved 963-event snapshot over 1,050 games and additional validation runs. Unresolved design deviations include midnight character cards appearing after Sleep or before unlock, incompatible schedule and slot requirements on `gargoyle_passage_parapet_cards`, and the probation hook ignoring an exactly zero GPA. The review also records mana and mood saturation, uneven relationship access, slow specialization in five disciplines, and scarce senior-job opportunities. No gameplay retuning was applied; the report includes per-event frequencies, resource flows and reproduction commands.

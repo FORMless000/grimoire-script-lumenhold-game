@@ -32,20 +32,37 @@
   <div class="muted" id="sub">Loading…</div>
   <nav>
     <button class="btn on" data-view="feedback">Feedback by event</button>
+    <button class="btn" data-view="notes">Notes</button>
     <button class="btn" data-view="runs">Runs</button>
+    <button class="btn" data-view="players">Players</button>
     <button class="btn" data-view="batches">Batches</button>
+    <button class="btn" id="export" title="Every run as one file, for node tools/grim.js feedback FILE">Export runs</button>
     <label class="muted" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="sim"> include simulated runs</label>
   </nav>
   <div id="view"></div>
 </div>
 <script>
 'use strict';
-const token = new URLSearchParams(location.search).get('token');
-const api = (p) => fetch(p + (token ? (p.includes('?') ? '&' : '?') + 'token=' + encodeURIComponent(token) : ''), { cache: 'no-store' }).then((r) => r.ok ? r.json() : r.json().then((e) => Promise.reject(new Error(e.error || r.status))));
+// The admin token arrives once as ?token=…; it is kept for this tab only and removed from the address bar.
+let token = new URLSearchParams(location.search).get('token');
+try { if (token) sessionStorage.setItem('lumenhold.admin', token); else token = sessionStorage.getItem('lumenhold.admin'); } catch (e) { /* storage unavailable */ }
+if (location.search) history.replaceState(null, '', location.pathname);
+const api = (p, opts = {}) => fetch(p, Object.assign({ cache: 'no-store', headers: Object.assign({ 'Content-Type': 'application/json' }, token ? { 'X-Admin-Token': token } : {}) }, opts))
+  .then((r) => r.ok ? r.json() : r.json().then((e) => Promise.reject(new Error(e.error || r.status))));
+const short = (pid) => pid ? '<span class="pill" title="' + esc(pid) + '">' + esc(pid.slice(0, 6)) + '</span>' : '<span class="muted">—</span>';
+let playerFilter = null;
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const when = (t) => t ? new Date(t).toLocaleString() : '—';
 let view = 'feedback';
-document.querySelectorAll('nav button').forEach((b) => { b.onclick = () => { view = b.dataset.view; document.querySelectorAll('nav button').forEach((x) => x.classList.toggle('on', x === b)); render(); }; });
+const show = (v) => { view = v; document.querySelectorAll('nav button[data-view]').forEach((x) => x.classList.toggle('on', x.dataset.view === v)); render(); };
+document.querySelectorAll('nav button[data-view]').forEach((b) => { b.onclick = () => { if (b.dataset.view === 'runs') playerFilter = null; show(b.dataset.view); }; });
+document.getElementById('export').onclick = async () => {
+  const data = await api('/api/export');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: 'application/json' }));
+  a.download = 'lumenhold-runs-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+};
 document.getElementById('sim').onchange = render;
 
 async function render() {
@@ -59,6 +76,26 @@ async function render() {
       el.innerHTML = '<div class="wrap"><table><tr><th>Event</th><th class="num">👍</th><th class="num">👎</th><th>Notes</th></tr>' + r.events.map(([key, b]) =>
         '<tr><td><b>' + esc(key) + '</b></td><td class="num up">' + b.up + '</td><td class="num down">' + b.down + '</td><td>' + b.notes.map((n) =>
           '<div><span class="' + (n.rating || '') + '">' + (n.rating === 'up' ? '👍' : n.rating === 'down' ? '👎' : '·') + '</span> <span class="muted">turn ' + n.turn + (n.choice ? ' → ' + esc(n.choice) : '') + ' · ' + esc(n.lang) + (n.stale ? ' · older content' : '') + '</span>' + (n.comment ? '<div class="note">' + esc(n.comment) + '</div>' : '') + '</div>').join('') + '</td></tr>').join('') + '</table></div>';
+    } else if (view === 'notes') {
+      const r = await api('/api/report' + (sim ? '?sim=1' : ''));
+      const notes = r.events.flatMap(([key, b]) => b.notes.map((n) => Object.assign({ event: key }, n))).sort((a, b) => (b.at || 0) - (a.at || 0));
+      document.getElementById('sub').textContent = notes.length + ' note(s), newest first';
+      if (!notes.length) { el.innerHTML = '<p class="muted">No feedback yet.</p>'; return; }
+      el.innerHTML = '<div class="wrap"><table><tr><th>When</th><th>Player</th><th>Event</th><th></th><th>Choice</th><th>Comment</th><th>Run</th></tr>' + notes.map((n) =>
+        '<tr><td class="muted">' + when(n.at) + '</td><td>' + short(n.player) + '</td><td><b>' + esc(n.event) + '</b>' + (n.stale ? ' <span class="muted">· older content</span>' : '') + '</td><td>' + (n.rating === 'up' ? '👍' : n.rating === 'down' ? '👎' : '·') + '</td><td class="muted">' + esc(n.choice || '') + '</td><td>' + (n.comment ? '<span class="note">' + esc(n.comment) + '</span>' : '') + '</td><td><a href="#" data-run="' + esc(n.run) + '">' + esc(n.run) + '</a> <span class="muted">turn ' + n.turn + ' · ' + esc(n.lang) + '</span></td></tr>').join('') + '</table></div><div id="run"></div>';
+      el.querySelectorAll('[data-run]').forEach((a) => { a.onclick = (e) => { e.preventDefault(); showRun(a.dataset.run); }; });
+    } else if (view === 'players') {
+      const ps = await api('/api/players');
+      document.getElementById('sub').textContent = ps.length + ' player(s) · a player is one sync code, on any number of devices';
+      if (!ps.length) { el.innerHTML = '<p class="muted">No players yet.</p>'; return; }
+      el.innerHTML = '<div class="wrap"><table><tr><th>Player</th><th>Created</th><th>Last seen</th><th class="num">Runs</th><th class="num">Notes</th><th class="num">Errors</th><th></th></tr>' + ps.map((p) =>
+        '<tr><td>' + short(p.pid) + (p.revoked ? ' <span class="down">revoked</span>' : '') + '</td><td>' + when(p.createdAt) + '</td><td>' + when(p.lastSeenAt) + '</td><td class="num"><a href="#" data-runs="' + esc(p.pid) + '">' + p.runs + '</a></td><td class="num">' + p.feedback + '</td><td class="num' + (p.errors ? ' down' : '') + '">' + p.errors + '</td><td><button class="linkish" data-pid="' + esc(p.pid) + '" data-rev="' + (p.revoked ? '' : '1') + '">' + (p.revoked ? 'restore' : 'revoke') + '</button></td></tr>').join('') + '</table></div>';
+      el.querySelectorAll('[data-runs]').forEach((a) => { a.onclick = (e) => { e.preventDefault(); playerFilter = a.dataset.runs; show('runs'); }; });
+      el.querySelectorAll('[data-pid]').forEach((b) => { b.onclick = async () => {
+        if (b.dataset.rev && !confirm('Revoke this player? Their code stops working on every device; their runs stay.')) return;
+        await api('/api/players/' + b.dataset.pid, { method: 'POST', body: JSON.stringify({ revoked: !!b.dataset.rev }) });
+        render();
+      }; });
     } else if (view === 'batches') {
       const bs = await api('/api/batches');
       document.getElementById('sub').textContent = bs.length + ' batch(es) · accepted ' + bs.filter((b) => b.accepted).length;
@@ -76,18 +113,25 @@ async function render() {
           (issues ? '<div class="wrap"><table><tr><th>Event</th><th>Critic: problem</th><th>Fix</th></tr>' + issues + '</table></div>' : '') + '<p class="muted">Events: ' + esc(b.events.join(', ')) + '</p>';
       }; });
     } else {
-      const runs = (await api('/api/runs')).filter((r) => sim || !r.sim);
-      document.getElementById('sub').textContent = runs.length + ' run(s)';
-      el.innerHTML = '<div class="wrap"><table><tr><th>Run</th><th>Player</th><th>Lang</th><th class="num">Turn</th><th>Ending</th><th class="num">Cards</th><th class="num">Notes</th><th class="num">Median decide</th><th>Updated</th></tr>' + runs.map((r) =>
-        '<tr class="click" data-id="' + esc(r.runId) + '"><td>' + esc(r.runId) + (r.sim ? ' <span class="pill">sim:' + esc(r.sim) + '</span>' : '') + '</td><td>' + esc(r.name) + '</td><td>' + esc(r.lang) + '</td><td class="num">' + r.turn + '</td><td>' + esc(r.ended ? r.ended.id : '(in progress)') + '</td><td class="num">' + r.cards + '</td><td class="num">' + r.feedback + '</td><td class="num">' + (r.medianDecideMs != null ? (r.medianDecideMs / 1000).toFixed(1) + ' s' : '—') + '</td><td>' + when(r.updatedAt) + '</td></tr>').join('') + '</table></div><div id="run"></div>';
-      el.querySelectorAll('tr.click').forEach((tr) => { tr.onclick = async () => {
-        const r = await api('/api/runs/' + encodeURIComponent(tr.dataset.id));
-        const rows = r.hist.filter((h) => h.t === 'card' || h.t === 'end').map((h) => '<tr><td class="num">' + h.turn + '</td><td>' + esc(h.id) + (h.actor ? ' <span class="muted">@' + esc(h.actor) + '</span>' : '') + '</td><td>' + esc(h.label || '') + '</td><td class="muted">' + esc(h.out ? h.out.say : '') + '</td><td>' + (h.fb ? (h.fb.rating === 'up' ? '👍' : h.fb.rating === 'down' ? '👎' : '') + (h.fb.comment ? ' <span class="note">' + esc(h.fb.comment) + '</span>' : '') : '') + '</td></tr>').join('');
-        document.getElementById('run').innerHTML = '<h2>' + esc(r.runId) + '</h2><p class="muted">seed ' + esc(r.seed) + ' · ' + esc(r.lang) + ' · content ' + esc(r.contentHash) + '</p><div class="wrap"><table><tr><th class="num">Turn</th><th>Event</th><th>Choice</th><th>Outcome</th><th>Feedback</th></tr>' + rows + '</table></div>';
-        document.getElementById('run').scrollIntoView({ behavior: 'smooth' });
-      }; });
+      const runs = (await api('/api/runs')).filter((r) => (sim || !r.sim) && (!playerFilter || r.player === playerFilter));
+      document.getElementById('sub').textContent = runs.length + ' run(s)' + (playerFilter ? ' of player ' + playerFilter.slice(0, 6) : '');
+      el.innerHTML = '<div class="wrap"><table><tr><th>Run</th><th>Player</th><th>Name</th><th>Lang</th><th class="num">Turn</th><th>Ending</th><th class="num">Cards</th><th class="num">Notes</th><th class="num">Errors</th><th class="num">Median decide</th><th>Updated</th></tr>' + runs.map((r) =>
+        '<tr class="click" data-id="' + esc(r.runId) + '"><td>' + esc(r.runId) + (r.sim ? ' <span class="pill">sim:' + esc(r.sim) + '</span>' : '') + '</td><td>' + short(r.player) + '</td><td>' + esc(r.name) + '</td><td>' + esc(r.lang) + '</td><td class="num">' + r.turn + '</td><td>' + esc(r.ended ? r.ended.id : '(in progress)') + '</td><td class="num">' + r.cards + '</td><td class="num">' + r.feedback + '</td><td class="num' + (r.errors ? ' down' : '') + '">' + (r.errors || 0) + '</td><td class="num">' + (r.medianDecideMs != null ? (r.medianDecideMs / 1000).toFixed(1) + ' s' : '—') + '</td><td>' + when(r.updatedAt) + '</td></tr>').join('') + '</table></div><div id="run"></div>';
+      el.querySelectorAll('tr.click').forEach((tr) => { tr.onclick = () => showRun(tr.dataset.id); });
     }
   } catch (e) { el.innerHTML = '<p class="err">' + esc(e.message) + '</p>'; }
+}
+// One run's history: cards, endings, forks (continued from another run or device) and client errors.
+async function showRun(id) {
+  const r = await api('/api/runs/' + encodeURIComponent(id));
+  const row = (h) => {
+    if (h.t === 'fork') return '<tr><td class="num">' + h.turn + '</td><td colspan="4" class="muted">continued from run ' + esc(h.from) + ' (a loaded save or another device)</td></tr>';
+    if (h.t === 'error') return '<tr><td class="num"></td><td colspan="4" class="err">error: ' + esc(h.msg) + ' <span class="muted">' + esc(h.src || '') + ' · ' + when(h.at) + '</span></td></tr>';
+    return '<tr><td class="num">' + h.turn + '</td><td>' + esc(h.id) + (h.actor ? ' <span class="muted">@' + esc(h.actor) + '</span>' : '') + '</td><td>' + esc(h.label || '') + '</td><td class="muted">' + esc(h.out ? h.out.say : '') + '</td><td>' + (h.fb ? (h.fb.rating === 'up' ? '👍' : h.fb.rating === 'down' ? '👎' : '') + (h.fb.comment ? ' <span class="note">' + esc(h.fb.comment) + '</span>' : '') : '') + '</td></tr>';
+  };
+  const rows = r.hist.filter((h) => ['card', 'end', 'fork', 'error', 'survey'].includes(h.t)).map(row).join('');
+  document.getElementById('run').innerHTML = '<h2>' + esc(r.runId) + '</h2><p class="muted">player ' + esc(r.player || '—') + ' · seed ' + esc(r.seed) + ' · ' + esc(r.lang) + ' · content ' + esc(r.contentHash) + (r.userAgent ? '<br>' + esc(r.userAgent) : '') + '</p><div class="wrap"><table><tr><th class="num">Turn</th><th>Event</th><th>Choice</th><th>Outcome</th><th>Feedback</th></tr>' + rows + '</table></div>';
+  document.getElementById('run').scrollIntoView({ behavior: 'smooth' });
 }
 render();
 </script>

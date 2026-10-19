@@ -57,36 +57,47 @@ All three share one authoring spec, one worldbook and one set of validators. The
 
 ### 1.1 Shape
 
-- `npm start` runs a Node server: Node ≥ 20, built-in `http`, a small router, no framework and no dependencies.
+- `npm start` runs a Node server: Node ≥ 20, built-in `http` and `zlib`, a small router, no framework and no runtime dependencies.
 - It binds to `127.0.0.1:4173` by default; `HOST` and `PORT` override that.
-- If it binds to anything other than localhost, `/admin` and the write APIs need `ADMIN_TOKEN`.
+- If it binds to anything other than localhost, or `PUBLIC=1` is set (behind a reverse proxy), `/admin` and the reports need `ADMIN_TOKEN`.
+- `NODE_ENV=production` serves the committed content bundle; otherwise the bundle is compiled live from `content/` and `locales/`.
+- Online hosting is push-to-deploy to one Linux server (git, systemd and a reverse proxy); see `docs/hosting.md`.
 
 ```
 server/
-  index.js          # boot, router, static files, live content bundle
+  index.js          # boot, static files, gzip, live or committed content bundle, --selftest
+  routes.js         # the API (§1.2)
+  auth.js           # player codes, admin token, rate limits
   store.js          # file storage: atomic JSON writes, append-only NDJSON
-  routes.js         # content, saves, log, seen, admin
+deploy/             # push-to-deploy: setup, git hooks, systemd unit
 data/               # gitignored
-  runs/<runId>.ndjson   # one run: meta line + hist entries (re-appended when feedback changes)
-  saves/<slot>.json     # auto, 1, 2, 3
-  seen.json             # cross-run "seen" counters
+  runs/<runId>.ndjson         # one run: meta line + hist entries (re-appended when feedback changes)
+  players/<pid>/              # player.json, saves/<slot>.json (auto, 1, 2, 3), seen.json
 ```
 
 Storage is plain files rather than SQLite, so the project keeps zero runtime dependencies on Node 20. Reports read the files; if volume ever makes that slow, `store.js` is the one place to swap in SQLite.
 
+**Players.**
+- **The code.** A player is a **player code**: 80 random bits, shown as `XXXX-XXXX-XXXX-XXXX`, minted by the server on a browser's first visit. The server keeps only its hash (the player id, `pid`).
+- **Sync.** The code is also the sync code: opening `/?sync=<code>`, or entering the code under Saved games, on another device shares that player's saves. There are no accounts.
+- **Invite.** With `INVITE_CODE` set, minting needs `/?invite=<code>`; without it, anyone may mint, limited per address.
+- **Revoking.** An admin can revoke a code.
+- **Moving between devices.** An autosave written by another device continues as a new run (`Engine.forkRun`, as loading a slot does), so one run's log never mixes two devices.
+
 ### 1.2 Routes
 
-| Route | Method | Purpose |
-|---|---|---|
-| `/` | GET | game client (`index.html`, `src/`, `build/`) |
-| `/api/content?lang=` | GET | content bundle (chunking is tentative, §T3) |
-| `/api/saves` / `/api/saves/:slot` | GET / PUT / DELETE | 3 manual slots + autosave |
-| `/api/health` | GET | lets the client detect the server |
-| `/api/log` | POST | batched run-history entries (§1.4), including feedback and the end-of-run survey |
-| `/api/seen` | GET / POST | cross-run "seen" counters for the director (§5.2) |
-| `/admin` | GET | runs, per-event statistics, `grim report` view, worldbook browser |
+| Route | Method | Who | Purpose |
+|---|---|---|---|
+| `/` | GET | public | game client (`index.html`, `src/`, `build/`) |
+| `/api/health` | GET | public | lets the client detect the server; says whether an invite is needed |
+| `/api/content?lang=` | GET | public | content sources (chunking is tentative, §T3) |
+| `/api/player` | POST / GET | public / player | mint a player code / check one |
+| `/api/saves` / `/api/saves/:slot` | GET / PUT / DELETE | player | 3 manual slots + autosave |
+| `/api/log` | POST | player | batched run-history entries (§1.4), including feedback, the end-of-run survey and client errors |
+| `/api/seen` | GET / POST | player | cross-run "seen" counters for the director (§5.2) |
+| `/admin`, `/api/runs`, `/api/report`, `/api/players`, `/api/export`, `/api/batches` | GET (POST to revoke) | admin | runs, feedback by event and in time order, players, an export for `grim feedback`, authoring batches |
 
-**Client.** The client detects the server. Without one (static build), it falls back to localStorage saves, no telemetry, and local "seen" counters. `grim build --static` still produces a standalone `index.html` for demos.
+**Client.** The client detects the server. Without one (static build, or no player code), it falls back to localStorage saves and local "seen" counters; telemetry waits in the local archive (§1.4). `grim build --static` still produces a standalone `index.html` for demos.
 
 ### 1.3 Records (exists)
 
@@ -98,15 +109,20 @@ The engine already records every run completely (`s.hist`), and `Engine.exportRu
 | card | `hist` entry `t:'card'`: `n` (seq), `turn`, `id` (event), `actor` (cast), `src`, `type`, `title`, `text`, `options` (keys, labels, checks), `choice`, `label`, `out` (outcome), `vals` (state after), `at`, `chosenAt` (`ms_to_decide = chosenAt − at`). `slot`, `place`, `class` and full `cast` are added when those systems land (2a/2b). |
 | month, ending | `hist` entries `t:'month'` (start-of-month effects) and `t:'end'` |
 | feedback | `fb {rating: up/down, comment, at}` on the card or ending entry it refers to. "Felt wrong" is a 👎 with a comment. The end-of-run survey is a `t:'survey'` entry. |
-| save | `data/saves/<slot>.json`: the engine save (`version`, full state) |
-| seen | `data/seen.json`: `{event_id: {runs_seen, last_run, last_at}}` |
+| run owner | `player` on the run's meta: the player id, set by the server; a run only accepts entries from its owner |
+| client error | `hist` entry `t:'error'` (`msg`, `src`, `at`), sent with the run's next batch |
+| save | `data/players/<pid>/saves/<slot>.json`: `{updatedAt, device, data}`, where `data` is the engine save (`version`, full state) |
+| seen | `data/players/<pid>/seen.json`: `{event_id: {runs_seen, last_run, last_at}}` |
+| player | `data/players/<pid>/player.json`: `{createdAt, lastSeenAt, revoked}` |
 
 ### 1.4 Telemetry
 
 - The client sends the `hist` entries added (or whose feedback changed) since the last acknowledged batch, at each month screen and on page hide.
+- **Outbox.** Every finished, replaced or retired run is kept in the browser's archive, flagged as not yet synced. The client uploads unsynced runs whenever the server is reachable; re-sending is harmless because the reader keeps the last copy of each entry. So runs played offline, or whose last batch was lost, still arrive.
+- Client errors (`window.onerror`, unhandled rejections) are sent as `t:'error'` entries, at most 20 a visit.
 - Rating (👍 / 👎) and comments on the current or previous card already exist: the feedback bar, the F dialog and the Journal (**exists**).
 - The simulator logs runs in the same format with `grim sim --log DIR`, tagging them `sim: <policy>` (**exists**).
-- Everything is local and single-owner. There's no external analytics.
+- All data stays on the project's own server. There's no external analytics.
 
 ---
 

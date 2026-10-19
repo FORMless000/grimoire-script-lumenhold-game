@@ -21,8 +21,9 @@ This file holds only the standing principles and where to look. It carries no lo
 | The combat minigame (every fight is played in it) | `combat/HANDOFF.md` (how it's wired in), `combat/README.md` (building and testing it alone); design §9.2 |
 | Translation terms | `locales/<lang>/GLOSSARY.md` |
 | Playtesting | `docs/playtest-2.md`; feedback with `node tools/grim.js feedback` |
+| Hosting online, deploys, players and sync codes | `docs/hosting.md`; design §1 |
 
-Code: `src/grimoire.js` (parser), `src/engine.js` and `src/director.js` (DOM-free game logic), `src/ui.js` / `src/map.js` / `src/art.js` / `src/combat-ui.js` (presentation), `src/combat.js` (the bridge to the combat minigame in `combat/`), `src/i18n.js`, `src/net.js`, `server/`, `tools/`, `test/`. `build/content.bundle.js` and `build/combat.bundle.js` are generated.
+Code: `src/grimoire.js` (parser), `src/engine.js` and `src/director.js` (DOM-free game logic), `src/ui.js` / `src/map.js` / `src/art.js` / `src/combat-ui.js` (presentation), `src/combat.js` (the bridge to the combat minigame in `combat/`), `src/i18n.js`, `src/net.js`, `server/`, `deploy/`, `tools/`, `test/`. `build/content.bundle.js` and `build/combat.bundle.js` are generated.
 
 ## Principles
 
@@ -57,7 +58,8 @@ Code: `src/grimoire.js` (parser), `src/engine.js` and `src/director.js` (DOM-fre
 - A compiled block's type is `def.block`; `kind` is a real property (`kind: early`, track kinds).
 - Translation keys count `say:` lines in source order through all branches (`opt.left.say.2`): reordering `say:` lines moves their translations. Add new branches after existing ones, then check `i18n` for STALE.
 - Inbox files (`locales/<lang>/_in/`) merge last; an empty line never overwrites a translation.
-- `build/combat.bundle.js` is committed too (the minigame with its wasm inlined): rebuild it after any change in `combat/` (`node combat/tools/bundle.mjs`; the wasm needs cargo, `--no-wasm` reuses the built one). `grim check` fails when it's stale.
+- `build/combat.bundle.js` is committed too (the minigame with its wasm inlined): rebuild it after any change in `combat/` (`node combat/tools/bundle.mjs`; the wasm needs cargo, `--no-wasm` reuses the built one). `grim build --check` and the tests fail when it's stale.
 - `boot()` must stay at the very end of `src/ui.js` (earlier calls hit the temporal dead zone of later `const`s).
 - `{npc}` prints `short:` or the first word of `name` (split on spaces or `·`), hence the faculty's `short:` and the `·` in Chinese names.
 - Preview cards (`index.html?event=<id>&debug`) are forced past their `when`.
+- Once auto-deploy is set up (`docs/hosting.md`), every commit on `main` goes live (a self-test only catches a server that won't boot): commit working states only.

@@ -75,7 +75,11 @@
     document.addEventListener('keydown', onKey);
     if (params.get('event')) return previewEvent(params.get('event'));
     window.addEventListener('pagehide', () => { if (eng && eng.s) Net.flush(eng, runRecordMeta(), { final: true }); });
+    // Client errors go to the server with the current run's next batch (the run log shows them).
+    window.addEventListener('error', (e) => Net.reportError(e.message, (e.filename || '').replace(/^.*\//, '') + ':' + e.lineno));
+    window.addEventListener('unhandledrejection', (e) => Net.reportError(e.reason && e.reason.message || String(e.reason), 'promise'));
     Net.detect().then(syncAutosave).catch((e) => console.warn(e)).then(() => {
+      uploadArchive();
       const resume = store.get(RESUME_KEY);
       if (resume) {
         store.del(RESUME_KEY);
@@ -93,14 +97,29 @@
     });
   }
   // With a server, the newer of the local and the server autosave wins (by the time of its last event).
+  // An autosave another device wrote continues here as a new run (Engine.forkRun, as loading a slot does),
+  // so the two devices' logs never mix in one run.
   async function syncAutosave() {
     if (!Net.available) return;
     const lastAt = (s) => { try { const h = (typeof s === 'string' ? JSON.parse(s) : s).hist || []; return h.length ? h[h.length - 1].at || 0 : 0; } catch (e) { return 0; } };
-    const local = store.get(SAVE_KEY);
+    let local = store.get(SAVE_KEY);
     let remote = null;
-    try { remote = await Net.getSave('auto'); } catch (e) { console.warn('[net] autosave', e.message); }
-    if (remote && lastAt(remote) > lastAt(local)) store.set(SAVE_KEY, JSON.stringify(remote));
-    else if (local && lastAt(local) > lastAt(remote)) Net.putSave('auto', local).catch((e) => console.warn(e));
+    try { remote = await Net.getSave('auto', true); } catch (e) { console.warn('[net] autosave', e.message); }
+    const data = remote && remote.data;
+    // Just switched to a sync code that has a game: that game takes over; this browser's own is set aside.
+    if (Net.takeSwitched() && data && local) { setAsideAutosave(); local = null; }
+    if (data && lastAt(data) > lastAt(local)) {
+      let json = JSON.stringify(data);
+      if (remote.device && remote.device !== Net.device) {
+        try { const e = new Engine(content).load(json); e.forkRun(); json = e.save(); } catch (e) { /* an old save: the title screen retires it */ }
+      }
+      store.set(SAVE_KEY, json);
+    } else if (local && lastAt(local) > lastAt(data)) Net.putSave('auto', local).catch((e) => console.warn(e));
+  }
+  // Moves the local autosave's run to the archive (its log and feedback are kept, and uploaded) and clears it.
+  function setAsideAutosave() {
+    const saved = store.get(SAVE_KEY); if (!saved) return;
+    try { archiveRun(new Engine(content).load(saved)); store.del(SAVE_KEY); } catch (e) { if (e.code === 'SAVE_VERSION') retireOldSave(saved); else store.del(SAVE_KEY); }
   }
   function loadCjkFonts() {
     const l = document.createElement('link');
@@ -119,11 +138,11 @@
 
   /* ------------------------------------------------------------------ title */
   // Saves from an older version can't be loaded (design: saves may break until 1.0). Their run log is
-  // kept: in the local archive without a server (the server already has it).
+  // kept in the local archive, which is uploaded to the server when there is one.
   function retireOldSave(raw) {
     try {
       const o = JSON.parse(raw);
-      if (o && o.hist && !Net.available) {
+      if (o && o.hist) {
         const meta = runMeta();
         archiveRecord({ format: 'lumenhold-run', v: 1, runId: o.runId || 'old-' + Date.now().toString(36), name: o.name, seed: o.seed, startedAt: o.hist[0] && o.hist[0].at, updatedAt: Date.now(), turn: o.turn, ended: null, feedback: o.hist.filter((h) => h.fb).length, ...meta, retired: 'save version ' + (o.version || 1), hist: o.hist });
       }
@@ -1030,24 +1049,43 @@
     return { game: content.game.title || 'Lumenhold', contentHash, lang: I18n.lang(), userAgent: navigator.userAgent };
   }
   function loadRuns() { try { const r = JSON.parse(store.get(RUNS_KEY) || '[]'); return Array.isArray(r) ? r : []; } catch (e) { return []; } }
-  // Upsert a run into the archive (oldest first). When full, drop the oldest runs without feedback first.
+  // Upsert a run into the archive (oldest first). It is also the outbox: runs not yet on the server
+  // (`synced` false) are uploaded whenever the server is there. When full, drop runs the server already
+  // has first, then the oldest without feedback.
   function archiveRun(engine) {
-    if (!engine || !engine.s || !engine.s.hist || params.get('event') || Net.available) return;
+    if (!engine || !engine.s || !engine.s.hist || params.get('event')) return;
     archiveRecord(engine.exportRun(runMeta()));
   }
   function archiveRecord(rec) {
     const runs = loadRuns().filter((r) => r.runId !== rec.runId);
+    rec.synced = false;
     runs.push(rec);
     const dropOne = () => {
-      let i = runs.findIndex((r) => r !== rec && !r.feedback);
+      let i = runs.findIndex((r) => r !== rec && r.synced);
+      if (i < 0) i = runs.findIndex((r) => r !== rec && !r.feedback);
       if (i < 0) i = runs.findIndex((r) => r !== rec);
       if (i < 0) return false;
       runs.splice(i, 1); return true;
     };
     while (runs.length > MAX_RUNS && dropOne());
     for (;;) {
-      try { localStorage.setItem(RUNS_KEY, JSON.stringify(runs)); return; } catch (e) { if (!dropOne()) { console.warn('[runs] could not archive run', e); return; } }
+      try { localStorage.setItem(RUNS_KEY, JSON.stringify(runs)); break; } catch (e) { if (!dropOne()) { console.warn('[runs] could not archive run', e); return; } }
     }
+    uploadArchive();
+  }
+  // The outbox: sends archived runs the server doesn't have yet, one at a time.
+  let uploading = false;
+  async function uploadArchive() {
+    if (!Net.available || uploading) return;
+    uploading = true;
+    try {
+      for (const rec of loadRuns().filter((r) => !r.synced)) {
+        const res = await Net.uploadRun(rec);
+        if (!res) break;   // server unreachable: try again on the next visit or archive
+        const runs = loadRuns(), cur = runs.find((r) => r.runId === rec.runId && r.updatedAt === rec.updatedAt);
+        if (cur) { cur.synced = true; store.set(RUNS_KEY, JSON.stringify(runs)); }
+      }
+    } finally { uploading = false; }
   }
   // Archived runs plus the one in the save, if any.
   function allRuns() {
@@ -1065,7 +1103,8 @@
     return runs;
   }
   function runLogLine() {
-    if (Net.available) return '<div class="fb-log"><span>' + esc(t('net.connected')) + '</span><a class="linkish" href="admin" target="_blank" rel="noopener">' + esc(t('net.admin')) + '</a></div>';
+    if (Net.available) return '<div class="fb-log"><span>' + esc(t('net.connected')) + '</span>' + (Net.info.admin ? '<a class="linkish" href="admin" target="_blank" rel="noopener">' + esc(t('net.admin')) + '</a>' : '') + '</div>';
+    if (Net.problem) return '<div class="fb-log"><span>' + esc(t(Net.problem === 'sync' ? 'net.badSync' : 'net.needInvite')) + '</span></div>';
     const runs = allRuns();
     if (!runs.length) return '';
     const notes = runs.reduce((a, r) => a + (r.feedback || 0), 0);
@@ -1206,10 +1245,11 @@
     const inGame = !!(eng && eng.s && !eng.s.ended && ui.mode !== 'title' && !params.get('event'));
     const wrap = document.createElement('div'); wrap.className = 'fb-wrap'; wrap.id = 'slotDialog';
     wrap.innerHTML = '<div class="fb-dialog slots" role="dialog" aria-modal="true" aria-labelledby="slotsH"><h3 id="slotsH">' + esc(t('slots.heading')) + '</h3><p class="fb-intro">' + esc(t(Net.available ? 'slots.whereServer' : 'slots.whereLocal')) + '</p><div id="slotRows" class="fb-intro">…</div>' +
-      '<div class="fb-actions"><button class="btn" id="slotsClose">' + esc(t('slots.close')) + '</button></div></div>';
+      syncSection() + '<div class="fb-actions"><button class="btn" id="slotsClose">' + esc(t('slots.close')) + '</button></div></div>';
     document.body.appendChild(wrap);
     wrap.onclick = (e) => { if (e.target === wrap) closeSlots(); };
     document.getElementById('slotsClose').onclick = closeSlots;
+    bindSync(inGame);
     const tmp = new Engine(content);
     const render = async (note) => {
       let list;
@@ -1262,6 +1302,31 @@
   function closeSettings() { const w = document.getElementById('settingsDialog'); if (w) w.remove(); }
   function refreshCard() { if (ui.mode === 'card' && ui.view) showCard(ui.view); else if (ui.mode === 'menu' && ui.view) showMenu(ui.view, true); }
   function closeSlots() { const w = document.getElementById('slotDialog'); if (w) w.remove(); }
+  // Cloud saves: this browser's player code is also the sync code; the same code on another device shares the saves.
+  function syncSection() {
+    if (!Net.available) return '';
+    const code = Net.code();
+    return '<div class="slot-row sync-row"><div><b>' + esc(t('sync.heading')) + '</b><span>' + esc(t('sync.hint')) + '</span>' +
+      '<code class="sync-code" id="syncCode">••••-••••-••••-' + esc(code.slice(-4)) + '</code></div><div class="slot-acts"><button class="linkish" id="syncShow">' + esc(t('sync.show')) + '</button><button class="linkish" id="syncCopy">' + esc(t('sync.copyLink')) + '</button></div></div>' +
+      '<div class="slot-row sync-row"><input id="syncIn" class="sync-in" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" aria-label="' + esc(t('sync.use')) + '"><div class="slot-acts"><button class="linkish" id="syncUse">' + esc(t('sync.use')) + '</button></div></div>' +
+      '<p class="fb-intro" id="syncMsg"></p>';
+  }
+  function bindSync(inGame) {
+    const show = document.getElementById('syncShow'); if (!show) return;
+    const msg = (k) => { document.getElementById('syncMsg').textContent = t(k); };
+    show.onclick = () => { document.getElementById('syncCode').textContent = Net.code(); };
+    document.getElementById('syncCopy').onclick = async () => {
+      try { await navigator.clipboard.writeText(Net.syncLink()); msg('sync.copied'); } catch (e) { document.getElementById('syncMsg').textContent = Net.syncLink(); }
+    };
+    document.getElementById('syncUse').onclick = async () => {
+      const typed = document.getElementById('syncIn').value;
+      if (!typed.trim()) return;
+      if (!confirm(t('sync.confirm'))) return;
+      // The game here is saved and its log flushed first; after the reload, the code's own autosave takes over.
+      if (inGame) { clearTimeout(serverSaveTimer); store.set(SAVE_KEY, eng.save()); await Net.flush(eng, runRecordMeta(), { final: true }); }
+      if (await Net.useCode(typed)) location.reload(); else msg('sync.bad');
+    };
+  }
 
   /* ------------------------------------------------------------------ debug panel (developer-facing, English only) */
   function buildDebug() {

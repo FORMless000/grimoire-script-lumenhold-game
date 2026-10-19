@@ -1,0 +1,17 @@
+# systemd unit for the Lumenhold server (installed by deploy/setup-server.sh; __USER__ and __BASE__ are filled in).
+# Secrets (ADMIN_TOKEN, INVITE_CODE) live in __BASE__/env. Logs: journalctl -u lumenhold
+[Unit]
+Description=Lumenhold Academy
+After=network.target
+
+[Service]
+User=__USER__
+WorkingDirectory=__BASE__/current
+Environment=NODE_ENV=production PUBLIC=1 TRUST_PROXY=1 HOST=127.0.0.1 PORT=4173 DATA_DIR=__BASE__/data
+EnvironmentFile=__BASE__/env
+ExecStart=__BASE__/node server/index.js
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
