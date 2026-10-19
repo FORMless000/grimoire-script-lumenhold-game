@@ -17,6 +17,24 @@
 
 October 15, 2026: [the frequency and economy review](docs/reviews/event-economy-2026-10-15/README.md) measures a preserved 963-event snapshot over 1,050 games and additional validation runs. Unresolved design deviations include midnight character cards appearing after Sleep or before unlock, incompatible schedule and slot requirements on `gargoyle_passage_parapet_cards`, and the probation hook ignoring an exactly zero GPA. The review also records mana and mood saturation, uneven relationship access, slow specialization in five disciplines, and scarce senior-job opportunities. No gameplay retuning was applied; the report includes per-event frequencies, resource flows and reproduction commands.
 
+## The combat minigame
+
+October 19, 2026: every `challenge combat` and `challenge duel` is a fight in the combat minigame (`combat/`, its hand-over `combat/HANDOFF.md`; design §9.2). None is rolled, for players and bots alike. The bots play both sides with the minigame's AI (`tools/combat-sim.js`).
+- **The connection.**
+  - `build/combat.bundle.js` (committed; works from file://).
+  - The engine's fight requests and results (`eng.fights`, `fightAhead`, `choose(key, {fights})`); outcome `health` lines are skipped.
+  - Max Mana is the fight's capacity, and a spell costs the same on a card and in a fight. The monthly exam-nerves drain is gone.
+  - The fight screen sits in place of the card. The fight text is in English and Chinese.
+- **Settings.** The opponent's difficulty (Easy by default) changes only its decisions. Engine analysis is a cheat, off by default.
+- **Rules F5.9d.** Glamour and Rapport stack up to a cap. An opponent grows an urge to deal damage when it deals none. A side destined to lose goes down dealing the most damage it can.
+- **A play style for fight testing:** `combatmaxx`.
+- **Measured** (`grim analyze`, 40 games a style, against the run before fights were played; `build/analysis/combat-f59d.md`).
+  - Fights cost Health. Early endings rise for the careless styles: random 33 → 65%, cautious 10 → 25%, social 31 → 40%, aggressive 16 → 23%. The other styles still finish.
+  - Health at the end falls for every style that fights (aggressive 63 → 35, sleuth 65 → 42, explorer 71 → 50, balanced 100 → 85).
+  - Mana at the end is lower everywhere (about 70 → 46), as the one scale meant.
+  - `combatmaxx` never leaves early, fights about 50 times a run and wins about three in four, and ends with about 770 Crowns (fights pay).
+  - Not yet retuned: these are the fight balance pass's numbers.
+
 ## Phases
 
 - **0 · Platform and safety net: done.** Local server (saves, run logs, feedback, `/admin`), play styles, balance invariants, golden snapshots, `migrate`, `rename`, browser tests.
@@ -134,7 +152,7 @@ October 15, 2026: [the frequency and economy review](docs/reviews/event-economy-
 - **Skill checks (design §8.6, the check ladder):** every challenge and roll in content is on the ladder (rungs, odds by nature, luck, drift, circumstance steps, course standards, `chance <word>`, `queue … chance <word>`). No legacy tier or raw percentage is left, though the parser still reads them. Exams: about 82% pass, GPA about 2.96. Balanced bots win 65% of their checks (81% before the ladder) and 9% sit at the cap (was 36%); all styles span 48–69%.
   - **The cost:** the bots that take every check leave early more often. In `grim balance` random leaves 68% of the time (47% after wave 1) and aggressive 38% (32%), mostly through `crisis_despair`: they lose more of their checks, and many losses cost a little mood. The careful and focused styles are unaffected.
   - Feat stays the hardest kind (52%) because vigor lags.
-  - The combat stub's value still runs above the curve, so fights stay easy until the minigame.
+  - (The combat stub is retired: fights are played in the minigame, 2026-10-19.)
   - Details and levers: `docs/skill-checks-2026-10-15.md`, section 7.
 - **Feedback 2026-10-16 deviations:**
   - *The careless-player floor:* reaching out at `crisis_despair` now gives mood +huge and health +small with a breakdown (was mood +huge plus a rest, about +43). At 120 games, random play leaves early in 66% of runs (55% before); social play 19% (25%), since the breakdowns spare health. Putting `rest` back restores random to about 58%, at the cost of the "too much mood" the note asked to remove.
@@ -189,5 +207,5 @@ October 15, 2026: [the frequency and economy review](docs/reviews/event-economy-
 2. **Queued follow-ups into leads** (feedback 2026-10-16, §6): convert the "act" rows of `grim leads --queued` (`build/worklists/queued-leads.md`) the way the silver key was converted: the setter leaves a lead, and the payoff becomes a card at the place, slot or track where the player goes.
 3. **Human playtest #2** (`docs/playtest-2.md`): a full run in each language, then `grim feedback`.
 4. Address its notes; then a spell-options batch, skill growth, the finale allies' ladders, and the aggressive and windfall alarms.
-5. When the minigames settle: combat wiring (X5) and social spells (X1), then the final pass (L28 economy re-check, C4, baseline).
+5. The fight balance pass (the numbers above: early endings, fight costs against card odds, low-level fight length, the authoring guideline in `combat/EVENTS.md` §8); then social spells (X1) and the final pass (L28 economy re-check, C4, baseline). Combat wiring (X5) is done.
 6. Phase 4, starting with what playtest #2 says matters most.

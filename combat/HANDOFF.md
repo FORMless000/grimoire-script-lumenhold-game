@@ -2,7 +2,32 @@
 
 For the agent who wires `combat/` into the main game. Read this, then `INTEGRATION.md` (the design: what goes in, what comes out, and why), `EVENTS.md` (every current combat card: its foe, context, level and edits) and `web/rulebook.md` (the rules). `README.md` covers building, testing and balancing the minigame on its own.
 
-## Where things stand (2026-10-17)
+## Integrated (2026-10-19; rules F5.9d)
+
+The minigame is wired in: every `challenge combat` and `challenge duel` a player meets is played, and none is rolled. The rest of this file is the hand-over as it was written; where the build differs from its suggestions, this section wins.
+
+- **Entry points in the main game:**
+  - `build/combat.bundle.js` (`node combat/tools/bundle.mjs`; `--no-wasm` reuses the built `web/core.wasm`): one global `LumenholdCombat`, also `require()`-able. It's committed; `grim build --check` and `test/combat-bridge.test.js` fail when it's stale.
+  - `src/engine.js`: `eng.fights` (a resolver), `fightRequest`, `playFight`, `fightAhead(key)` and `choose(key, {fights})`.
+  - `src/combat.js`: the bridge (`foeOf`, `createFight`, `fightResult`, `autoplay`). The foe's level uses the engine's own DC (`foeLevel`), not `challengeDC`.
+  - `src/combat-ui.js` and `src/combat.css`: the fight screen, in place of the card, which waits under it.
+  - `web/analysis.mjs`: the engine's analysis for the player, shared by the bench's engine panel and the game's "engine analysis" setting (a cheat; `createAnalyst()` in the bundle runs it in its own worker).
+  - `tools/combat-sim.js`: the simulated players' resolver, both sides played by the AI.
+  - `locales/<lang>/combat.lang`: the fight's text by key (`combat/setup/text.mjs`, `web/text-table.mjs`), written by `grim i18n`.
+- **Decisions that replace §3's suggestions:**
+  - There's no stub path for bots and no auto-resolve setting.
+  - There's no pacing limit.
+  - Outcome `health` lines are skipped when a fight settles.
+  - There's no `combat_cost`.
+  - Difficulty is a player setting, Easy by default. It changes only the opponent's decisions (`AI_PRESETS`), never the numbers.
+  - A fighter's level shows as the average of their six skills.
+  - The UI asks `fightAhead(key)` instead of reading `firstCheck`, so fights inside `if` branches play too.
+- **After a change here:**
+  1. Rebuild the bundle (and, after a Rust change, the wasm: `node tools/build.mjs`, with cargo on PATH; then `node tools/golden.mjs`, and `update` when the change is meant).
+  2. Run `node --test test/combat-bridge.test.js`.
+  3. Run `grim diff`: fights change the golden games. When the change is meant, refresh the baseline.
+
+## Where things stood (2026-10-17)
 
 - **The minigame is canon as of `spells-v2 F5.9c`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:
   1. `node combat/tools/build.mjs`
@@ -116,7 +141,7 @@ Port the fight screen from `web/app.mjs` and its look from `web/style.css` as an
   - **Beside the actions:** the telegraph (the foe's committed move, with its effect and flavor line), which opens the full text.
   - **The square action buttons:** icon, name, effect (`web/brief.mjs`, read from `describe()`), turns, and the Mana or HP cost.
   - **The inspect sheet** (the foe's skills, kit with prices, recent moves), opened by tapping the foe's portrait or card.
-  - **No header and no concession.** The fight opens on the fighters: the track already shows the exchange and who leads, and the telegraph shows their move. There is no Leave: a played fight runs until someone falls, or until a stalemate or a decision on points. Don't wire `concede()` to any control; a player who wants to skip fights has the "auto-resolve fights" setting (§3).
+  - **No header and no concession.** The fight opens on the fighters: the track already shows the exchange and who leads, and the telegraph shows their move. There is no Leave: a played fight runs until someone falls, or until a stalemate or a decision on points. Don't wire `concede()` to any control. (Integrated: there's no auto-resolve setting; a player who finds fights hard lowers the difficulty.)
   - **Interaction rules:**
     - An HP or Mana change animates once: re-renders don't replay it.
     - The track's name column has a fixed width, so the columns stay aligned.

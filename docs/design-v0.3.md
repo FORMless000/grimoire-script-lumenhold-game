@@ -943,12 +943,14 @@ challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam |
   lose:    health -medium
 ```
 
-**Auto-resolve** (committed; it's the only mode until §T1): the odds of a check on the mapped skill(s), against `DC(tier)`, plus modifiers.
+**Fights are played** (2026-10-19): every `combat` and `duel` challenge is a fight in the combat minigame (`combat/`, §T1), for the player and for the simulated players alike; none is rolled. Its result picks the branch: a win is `win`; a draw, or a loss on points, is `partial` when there is one, else `lose`; a knockout is `lose`. The fight's own Health and Mana changes are applied, and the branch runs without its `health` lines (they stay in content for compatibility). The DC below still sets the foe's level (`foeLevel`: the DC plus the odds word), and the card's odds are only the preview's estimate.
+
+**Auto-resolve** (every other kind; it's their only mode until §T1): the odds of a check on the mapped skill(s), against `DC(tier)`, plus modifiers.
 
 | Challenge | Skill(s) |
 |---|---|
-| combat | the combat stub: arcana, vigor and guile, plus condition (health, mood, mana) and the levels of every spell content knows; costs mana to enter |
-| duel | (vigor + arcana) / 2 |
+| combat | played (above); the old stub, compatibility only: arcana, vigor and guile, plus condition (health, mood, mana) and the levels of every spell content knows |
+| duel | played (above); the stub, compatibility only: (vigor + arcana) / 2 |
 | negotiate | charm |
 | deceive | guile |
 | exam | the course's skill |
@@ -958,11 +960,11 @@ challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam |
 - **Modifiers** (each capped at ±15):
   - `vs <role>.<stat>`: the opponent's stat is the DC (legacy tiers: it shifts the DC by the stat minus E(turn)). Peers grow with you (feedback 2026-10-15, `@balance npc_growth`): classmates (tag `peer`) and the pen pal (`thornwick`) have every skill stat × k(turn) = 1 + (K − 1)·(E(t) − E(1))/(E(end) − E(1)), where K brings their best skill to 0.9 × the final E(turn) (Lyra's arcana 34 → 56). Faculty and villagers keep fixed stats. Every classmate, Corvin, Nessa and Bram (still a prefect) included, is a first-year with you;
   - study points; the advisor relationship (the track's `lead:` regard, rel / 5, within ±15, inside that track's cards and at its exams); spells known (+2 for each known spell whose `skill:` is tested, at most +6; L-3); items (§T2).
-- **Combat stub** (playtest 2): until the combat minigame (X5), fights use `combat`, so how rested, cheerful and charged the player is matters, and so does every spell learned. Entering a fight spends mana.
+- **Combat stub** (playtest 2, retired 2026-10-19): before the minigame, fights rolled `combat` and entering one spent Mana. The engine keeps it only for unit-test fixtures with no fight resolver (`eng.fights`); real runs never reach it. The fight's opponent plays at a player setting, Easy by default (Easy / Medium / Hard / Engine).
 - **Luck (swing)**: how much of the outcome is chance rather than skill (§8.6): `steady` (practice decides), `normal`, `wild` (partly luck), `luck` (gambles, searches). It is independent of difficulty and stakes.
 - **Kind and skill**: the kind is the shape of the action (talk round, mislead, work out, brew, a feat, cast, fight; `exam` only in a course); the skill is what the player uses against the obstacle, with `using` only when it differs from the kind's default.
 - **Renown** can be the tested value (`using renown`) where popularity is the advantage.
-- The simulator always auto-resolves.
+- The simulator auto-resolves every other kind; its fights are played by the minigame's AI on both sides (`tools/combat-sim.js`: the player's side at a preset by style, the foe at Easy).
 
 ### 9.3 Crafting policy
 
@@ -1112,7 +1114,7 @@ Every batch and every tuning pass runs `i18n zh-CN` and translates per the gloss
 | presets, size and difficulty tiers, `variant` | 2a | full |
 | new resources (`mana`, `alignment`, crowns, renown decay), `rel` + `spark` | 2a | full |
 | `> up[spell]:`, `spell_level()`, `learn_spell` | 2a | full |
-| `challenge … win/partial/lose`, `vs role.stat` | 2a | **auto-resolve** (minigames tentative) |
+| `challenge … win/partial/lose`, `vs role.stat` | 2a | **auto-resolve**; `combat` and `duel` are played in the combat minigame (2026-10-19) |
 | inline text `{a\|b}`, `{cond: x\|y}`, `{season=…}`, `{slot=…}` | 2a | full |
 | `learn npc.fact`, `knows()` | 2a | stored + conditions; panel in Phase 4 |
 | `memory: kind role` | 2a | stored; recall in Phase 4 |
@@ -1301,6 +1303,8 @@ Defaults apply until changed; none blocks Phase 0.
 These sections record the direction agreed so far. Their **only** effect on Phases 0–4 is the hooks in §12 (`challenge`, `lesson:`, `scope:`, `gen.*`). Everything else waits.
 
 ## T1. Minigames *(tentative; Phase 5 if approved)*
+
+**Built: fights** (2026-10-19). The combat minigame (`combat/`; its hand-over, `combat/HANDOFF.md`) plays every `combat` and `duel` challenge (§9.2). By the user's decision there is no auto-resolve for fights and no monthly limit on them. Everything else in this section stays tentative.
 
 **Shared direction:**
 - **Short:** 30–90 seconds, 5–8 decisions, swipe or tap, no reflex tests.
