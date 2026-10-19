@@ -99,6 +99,17 @@ server/, deploy/      the optional server (saves, run logs, /admin) and push-to-
 AGENTS.md             the standing guide for contributors and agents
 ```
 
+## Inspirations
+
+**The game:**
+- **Reigns:** the card you swipe left or right, two choices that each cost something, and the dots that show which meters a choice will touch.
+- **Princess Maker:** years of choices that grow a handful of skills, and an ending that reads off who you became, here the graduation yearbook.
+- **Storylets** (the design behind Failbetter's *Fallen London*): the game is many small cards, each one waiting for its conditions on your state, so new cards slot in without rewiring the old ones. Grimoire Script is built around them.
+
+**The minigames:**
+- **Griftlands:** fights and negotiations as their own turn-based games inside the story, with the outcome feeding back into it.
+- **Chess engines:** opponents search their moves the way a chess engine does. The hardest setting plays the engine's best move, and the optional engine analysis shows an evaluation and the lines it expects, like an analysis board.
+
 ## License
 
 © 2026 FORMless000. Released under the [WTFPL](LICENSE): do what you want with it.
