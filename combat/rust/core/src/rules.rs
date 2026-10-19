@@ -35,7 +35,8 @@ pub struct Hit { pub source: u8, pub target: u8, pub id: Act, pub power: f64, pu
 pub type Hits = Small<Hit, 40>;
 
 /// Scratch for one resolve (the former module-level hurtNow/mendNow and s.bursts).
-struct Ctx<'p> { hurt_now: [bool; 2], mend_now: [f64; 2], bursts: Hits, public: Option<&'p mut Public> }
+/// tried / dealt: whether each side aimed damage at the other this exchange, and whether any landed (the urge, F5.9d).
+struct Ctx<'p> { hurt_now: [bool; 2], mend_now: [f64; 2], bursts: Hits, public: Option<&'p mut Public>, tried: [bool; 2], dealt: [bool; 2] }
 impl Ctx<'_> {
     fn event(&mut self, e: impl FnOnce() -> Event) { if let Some(p) = self.public.as_mut() { p.events.push(e()); } }
 }
@@ -57,6 +58,20 @@ fn spell_of(a: Act) -> Option<usize> { let d = data(); if (a as usize) < d.acts.
 /// Rank index into per-rank arrays (kit rank, or 1 when not learned).
 #[inline]
 pub fn rank(enc: &Encounter, side: usize, spell: usize) -> i32 { enc.sides[side].rank[spell] }
+/// The most Renown a side can win in one fight from Glamour and Rapport together (F5.9d): 2.5 × what one Glamour of theirs earns
+/// (Glamour I's when they don't know it). Their casts stack up to it.
+pub const RENOWN_CAP_GLAMOURS: f64 = 2.5;
+pub fn renown_cap(enc: &Encounter, side: usize) -> f64 {
+    let d = data(); let g = d.ids.glamour;
+    let lv = rank(enc, side, g).max(1) as usize;
+    RENOWN_CAP_GLAMOURS * d.spells[g].renown.as_ref().map_or(0.0, |v| v[(lv - 1).min(v.len() - 1)])
+}
+/// Renown still to be won this fight from Glamour and Rapport.
+pub fn renown_room(enc: &Encounter, s: &State, side: usize) -> f64 { 0f64.max(renown_cap(enc, side) - s.actors[side].pending_renown) }
+/// The urge to deal damage (F5.9d): + URGE_STEP each exchange a side deals no damage, up to URGE_MAX; 0 when it deals some; halved
+/// when its damage is all blocked. In the AI policy's points (as a persona's tilt), × the preset's tiltScale.
+pub const URGE_STEP: f64 = 3.0;
+pub const URGE_MAX: f64 = 18.0;
 /// amount(): base × skill factor (× combat scale when physical). `spell` = None means Strike.
 #[inline]
 pub fn amount(enc: &Encounter, side: usize, spell: Option<usize>, base: f64, physical: bool) -> f64 {
@@ -263,6 +278,7 @@ fn hits(enc: &Encounter, s: &mut State, ctx: &mut Ctx, initial: &Hits) {
             let mut by: u16 = 0;
             let (hid, raw, hsrc, htgt, hrefl) = (h.id, h.power, h.source, h.target, h.reflected);
             if n <= EPS { continue; }
+            if opposing { ctx.tried[h.source as usize] = true; }
             if s.actors[t].freeze_until >= s.round { if opposing { ctx.event(|| Event::Hit { id: hid, raw, amount: 0.0, target: htgt, source: hsrc, by: DEF_FROZEN, reflected: hrefl }); } continue; }
             if !h.fixed && has(s, t, Eff::Shadowstep) { if opposing { ctx.event(|| Event::Hit { id: hid, raw, amount: 0.0, target: htgt, source: hsrc, by: DEF_SHADOWSTEP, reflected: hrefl }); } continue; }
             if h.spell && h.source != h.target && has(s, t, Eff::Reflect) && !h.reflected {
@@ -305,7 +321,7 @@ fn hits(enc: &Encounter, s: &mut State, ctx: &mut Ctx, initial: &Hits) {
             let actual = reduce_hp(enc, s, ctx, t, 0f64.max((n - EPS).ceil()), true);
             if opposing { ctx.event(|| Event::Hit { id: hid, raw, amount: actual, target: htgt, source: hsrc, by, reflected: hrefl }); }
             if actual > EPS {
-                if h.source != h.target { expose[h.source as usize] = true; }
+                if h.source != h.target { expose[h.source as usize] = true; ctx.dealt[h.source as usize] = true; }
                 let src = h.source as usize;
                 if h.id as usize == d.ids.siphon {
                     if let Some(c) = s.actors[src].channel.as_mut() { if c.spell == d.ids.siphon { c.total += actual; } }
@@ -381,7 +397,8 @@ fn prepared(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act, 
     else if sp == ids.haste { put(s, side, Eff::Haste, spell.actions.as_ref().unwrap()[r(sp)], round + 1, Some(round + spell.duration.as_ref().unwrap()[r(sp)] as i32)); }
     else if sp == ids.shadowstep { put(s, side, Eff::Shadowstep, 1.0, round, Some(round + spell.duration.as_ref().unwrap()[r(sp)] as i32 - 1)); }
     else if sp == ids.glamour {
-        if enc.observers && !s.actors[side].glamour_done { s.actors[side].pending_renown += spell.renown.as_ref().unwrap()[r(sp)]; s.actors[side].glamour_done = true; }
+        // Casts stack (F5.9d), with Rapport's, up to renown_cap.
+        if enc.observers { let n = spell.renown.as_ref().unwrap()[r(sp)].min(renown_room(enc, s, side)); s.actors[side].pending_renown += n; s.actors[side].glamour_done = true; }
     }
     else if sp == ids.seal { let blocked = shielded(s, 1 - side); let n = if blocked { 0.0 } else { s.actors[1 - side].flux }; if !blocked { s.actors[1 - side].flux = 0.0; } ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: n, blocked }); }
     else if sp == ids.omen { let power = damage_power(enc, side, sp, amt(sp, "hit")); s.actors[side].omens.push(Omen { due: round + 2, power }); }
@@ -492,7 +509,7 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
     let d = data();
     let k = &d.acts;
     let ids = &d.ids;
-    let mut ctx = Ctx { hurt_now: [false; 2], mend_now: [0.0; 2], bursts: Hits::default(), public };
+    let mut ctx = Ctx { hurt_now: [false; 2], mend_now: [0.0; 2], bursts: Hits::default(), public, tried: [false; 2], dealt: [false; 2] };
     if let Some(p) = ctx.public.as_mut() { p.events.clear(); }
     let hp_before = [s.actors[0].hp, s.actors[1].hp];
     let spent_before = [s.actors[0].spent[R_MANA], s.actors[1].spent[R_MANA]];
@@ -536,8 +553,9 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
     if enc.observers {
         for side in 0..2 {
             if pair!()[side] == ids.rapport as Act {
+                let room = renown_room(enc, s, side);
                 let x = &mut s.actors[side];
-                let n = (10f64.min(x.res[R_CROWNS]) / 2.0).floor() * 2.0;
+                let n = (10f64.min(x.res[R_CROWNS]).min(room * 2.0) / 2.0).floor() * 2.0;
                 debit(x, R_CROWNS, n);
                 x.pending_renown += n / 2.0;
             }
@@ -646,6 +664,10 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
         if pair!()[side] == ids.foresight as Act {
             s.early_commit[1 - side] = d.spells[ids.foresight].duration.as_ref().unwrap()[(rank(enc, side, ids.foresight) - 1) as usize] as i32;
         }
+    }
+    for side in 0..2 {
+        let x = &mut s.actors[side];
+        x.urge = if ctx.dealt[side] { 0.0 } else if ctx.tried[side] { x.urge / 2.0 } else { URGE_MAX.min(x.urge + URGE_STEP) };
     }
     let quiet = (0..2).all(|i| (s.actors[i].hp - hp_before[i]).abs() < 1e-9 && (s.actors[i].spent[R_MANA] - spent_before[i]).abs() < 1e-9);
     s.quiet = if quiet { s.quiet + 1 } else { 0 };

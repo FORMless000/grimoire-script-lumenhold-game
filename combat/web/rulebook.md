@@ -1,6 +1,6 @@
 # Combat: spell redesign v2 (F5)
 
-## F5 rule changes (spells-v2 F5.9c · 2026-10-18; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5–F5.9c its follow-ups, all below)
+## F5 rule changes (spells-v2 F5.9d · 2026-10-19; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5–F5.9c its follow-ups, all below)
 
 These override anything below that disagrees.
 
@@ -73,6 +73,11 @@ These override anything below that disagrees.
 - **`ring_bout` context:** 65% Health rebate, 50% Renown.
 - **AI personas and difficulty:** a persona adds points to favoured actions. `slack` picks at random among moves within that many points of the best, and `maxRegret` caps how bad a pick may be.
 
+**F5.9d, Renown and the AI's last stand (2026-10-19):**
+- **Glamour and Rapport stack.** Renown from them adds up across casts, to at most 2.5 × what one Glamour of the caster's earns (Glamour I's when they don't know it), shared between the two. At the cap they do nothing, so the search prunes them. Renown is still worth nothing in the AI's evaluation.
+- **The urge to deal damage.** Each side's urge grows by 3 every exchange it deals no damage (to 18), resets to 0 when it deals some, and halves when its damage is all blocked (Guard, Ward, Shadowstep, Reflect, a freeze). The AI policy adds it to damaging spells as it does a persona's tilt (× tiltScale, never past maxRegret), so Engine never feels it. The search doesn't read it.
+- **Going down swinging.** A knockout's score carries a tiebreak worth up to 100 points: the winner's lost share of HP. A side whose every line loses picks the one that hurts the winner most; a winner prefers the knockout that costs it least.
+
 **F5.9b, kits for the main game's range, and the live AI:**
 - **Kit gates** (`COMBAT_TUNING.kits`):
   - course spells at 1 / 8 / 16 / 26;
@@ -140,7 +145,7 @@ Strike deals base 6 physical damage using Vigor. Guard stops **all Strike damage
 | Flame | 10/9/7 | Base 8/9/10 spell damage |
 | Foresight | 8/7/6 | Target commits first for the following 3/4/5 exchanges (F5.3: no damage bonus) |
 | Mend | 10/9/7 | Heal base 6/7/8 up to entry HP/Health |
-| Glamour | 9/7/5 | With observers, earn 2/3/4 Renown at settlement |
+| Glamour | 9/7/5 | With observers, earn 3/5/8 Renown at settlement. Casts stack, with Rapport's, up to 2.5 × one Glamour's Renown a fight (F5.9d) |
 | Haste | 10/8/8 + base 2 HP | Next exchange requires a single public bundle of 2/2/3 basic actions |
 | Shadowstep | 12/10/8 | Evade every hit for 1/2/3 exchanges, including casting exchange; breaks on outgoing damage or actual Mana recovery |
 | Ward | 7 | Block the next damaging action this exchange; Starlight pierces one third |
@@ -158,7 +163,7 @@ Strike deals base 6 physical damage using Vigor. Guard stops **all Strike damage
 | Quickquill | 6 | No combat effect |
 | Bramble | 10 | Construct: base 2 spell hit, base 1 reduction, base 8 threshold; can coexist with Heartwood |
 | Index | 6 | No combat effect |
-| Rapport | 6 | With observers, automatically spend the largest even amount up to 10 available Crowns; earn half that as Renown at settlement |
+| Rapport | 4 | With observers, automatically spend the largest even amount up to 10 available Crowns; earn half that as Renown at settlement, within the same cap as Glamour's (2.5 × one Glamour of the caster's, Glamour I's if they don't know it; F5.9d) |
 | Distil (`purify`) | 0; base 4 HP | Gain skill-scaled 24 ready Mana |
 | Tailwind | 8 | Following three exchanges: consecutive Strikes gain base +2/+4/+6; any other action ends it |
 | Rime | 12 | Once-per-fight first-knockout rescue: 1 HP, frozen and invulnerable through the next exchange, then thaw |

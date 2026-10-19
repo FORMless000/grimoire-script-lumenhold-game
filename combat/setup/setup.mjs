@@ -64,7 +64,7 @@ export function createState(options={}){
   if(story?.hp!==undefined)hp=Math.max(1,Math.round(hp*story.hp));
   if(story?.mana!==undefined)entry.mana=Math.round(entry.mana*story.mana);
   flux=Math.max(0,Math.min(flux,kit.capacity-entry.mana));
-  return {kit,entry,resources:{...entry},spent:maps(0),restored:maps(0),hp,maxHP,startHP:hp,flux,effects:{},channel:null,constructs:[],omens:[],lastAction:null,rimeReady:false,rimeUsed:false,freezeUntil:0,pendingRenown:0,glamourDone:false,guardRound:0};
+  return {kit,entry,resources:{...entry},spent:maps(0),restored:maps(0),hp,maxHP,startHP:hp,flux,effects:{},channel:null,constructs:[],omens:[],lastAction:null,rimeReady:false,rimeUsed:false,freezeUntil:0,pendingRenown:0,glamourDone:false,urge:0,guardRound:0};
  });
  config.resolvedPlayerLevel=actors[0].kit.level;config.resolvedOpponentLevel=actors[1].kit.level;
  return {config,rebates,actors,quiet:0,round:1,normalLeader:config.firstLeader,leader:config.firstLeader,earlyCommit:[0,0],pending:[null,null],lastPair:null,lastEvents:[],reports:[],bursts:[],result:null,settlement:null};

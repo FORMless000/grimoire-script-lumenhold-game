@@ -56,6 +56,9 @@ pub struct Actor {
     pub freeze_until: i32,
     pub pending_renown: f64,
     pub glamour_done: bool,
+    /// The urge to deal damage (F5.9d): grows each exchange this side deals none, resets when it does, halves when its damage is
+    /// fully blocked. The AI policy leans toward damaging spells by it (ai::choose); the search never reads it.
+    pub urge: f64,
     /// The last exchange this side guarded (0: never), for Guard fatigue.
     pub guard_round: i32,
 }
@@ -238,6 +241,7 @@ impl State {
                 freeze_until: int(&a["freezeUntil"], "freezeUntil"),
                 pending_renown: num(&a["pendingRenown"], "pendingRenown"),
                 glamour_done: a.get("glamourDone").and_then(|v| v.as_bool()).unwrap_or(false),
+                urge: a.get("urge").and_then(|v| v.as_f64()).unwrap_or(0.0),
                 guard_round: a.get("guardRound").and_then(|v| v.as_i64()).unwrap_or(0) as i32,
             }
         });
@@ -322,6 +326,7 @@ pub fn state_json(template: &Value, s: &State, public: &Public) -> Value {
         t.insert("freezeUntil".into(), json!(a.freeze_until));
         t.insert("pendingRenown".into(), json!(a.pending_renown));
         t.insert("glamourDone".into(), json!(a.glamour_done));
+        t.insert("urge".into(), json!(a.urge));
         t.insert("guardRound".into(), json!(a.guard_round));
     }
     out

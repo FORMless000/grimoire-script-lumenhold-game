@@ -1,7 +1,7 @@
 // Evaluation, move ordering, alpha-beta search (PVS, aspiration, iterative deepening, tactical extension,
 // optional LMR and no-op pruning), the transposition table, and the AI policy (profiles, seeded mistakes).
 use crate::data::{data, Act, ConstructAction, R_CROWNS, R_MANA};
-use crate::rules::{self, actor_to_move, amount, apply_known, attack_power, cost, damage_power, has, legal_actions, Moves, EPS};
+use crate::rules::{self, actor_to_move, amount, apply_known, attack_power, cost, damage_power, has, legal_actions, renown_room, Moves, EPS};
 use crate::state::*;
 use serde_json::{json, Map, Value};
 
@@ -40,7 +40,13 @@ fn influence(enc: &Encounter, s: &State, side: usize, hp: f64) -> f64 {
 }
 
 pub fn evaluate(enc: &Encounter, s: &State) -> f64 {
-    if let Some(r) = s.result { return match r.winner { Some(0) => 10000.0, Some(1) => -10000.0, _ => 0.0 }; }
+    // A knockout's score has a tiebreak inside it (F5.9d): the winner's lost share of HP, up to 100 points. A side destined to be
+    // knocked out goes down dealing the most damage it can; a winner prefers the knockout that costs it least. Renown is worth
+    // nothing here.
+    if let Some(r) = s.result {
+        let worn = |w: usize| if r.reason == Reason::Knockout { 100.0 * (1.0 - s.actors[w].hp / s.actors[w].max_hp).clamp(0.0, 1.0) } else { 0.0 };
+        return match r.winner { Some(0) => 10000.0 - worn(0), Some(1) => -10000.0 + worn(1), _ => 0.0 };
+    }
     let (a, b) = (&s.actors[0], &s.actors[1]);
     let lead = a.hp / a.max_hp - b.hp / b.max_hp;
     // Points per HP at this encounter's HP scale, so Mana (1.1 HP) and flux (0.75 HP) keep their HP price under any max HP.
@@ -94,7 +100,7 @@ pub fn move_value(enc: &Encounter, s: &State, side: usize, id: Act) -> f64 {
         else if sp == ids.extraction { 0f64.max(other.res[R_MANA].min(enc.sides[side].capacity - a.res[R_MANA] - a.flux)) * 0.4 }
         else if sp == ids.torment { 13.0 } else if sp == ids.compel { 10.0 } else if sp == ids.eclipse { if inc { 7.0 } else { 0.0 } }
         else if sp == ids.heartprice { if a.res[R_MANA] < 10.0 { 6.0 } else { -3.0 } } else if sp == ids.tailwind { 8.0 }
-        else if sp == ids.glamour { if enc.observers { 2.0 } else { -2.0 } } else if sp == ids.rapport { if enc.observers && a.res[R_CROWNS] >= 2.0 { 1.0 } else { -3.0 } }
+        else if sp == ids.glamour { if enc.observers && renown_room(enc, s, side) > EPS { 2.0 } else { -2.0 } } else if sp == ids.rapport { if enc.observers && a.res[R_CROWNS] >= 2.0 && renown_room(enc, s, side) >= 1.0 { 1.0 } else { -3.0 } }
         else if sp == ids.sleight { if other.res[R_CROWNS] > 0.0 { 1.0 } else { -2.0 } } else { -3.0 };
     base - cost(enc, s, side, id) * 0.12
 }
@@ -121,8 +127,8 @@ pub fn no_op_action(enc: &Encounter, s: &State, side: usize, id: Act) -> bool {
     if sp == ids.mend { return a.hp >= a.max_hp; }
     if sp == ids.seal { return other.flux <= 1e-9; }
     if sp == ids.extraction { return other.res[R_MANA] <= 0.0 || a.res[R_MANA] + a.flux >= cap; }
-    if sp == ids.glamour { return !enc.observers; }
-    if sp == ids.rapport { return !enc.observers || a.res[R_CROWNS] < 2.0; }
+    if sp == ids.glamour { return !enc.observers || renown_room(enc, s, side) <= EPS; }
+    if sp == ids.rapport { return !enc.observers || a.res[R_CROWNS] < 2.0 || renown_room(enc, s, side) < 1.0; }
     if sp == ids.sleight { return other.res[R_CROWNS] <= 0.0; }
     if sp == ids.rime { return a.rime_used || a.rime_ready; }
     if sp == ids.heartprice { return has(s, side, Eff::Heartprice); }
@@ -614,7 +620,10 @@ pub fn choose(enc: &Encounter, s: &State, overrides: &Value, ctx: &mut Context, 
     let tilt_scale = get_f(&o, "tiltScale").unwrap_or(1.0);
     let tilt: Vec<(String, f64)> = o.get("tilt").and_then(|t| t.as_object()).map(|t| t.iter().filter_map(|(k, v)| v.as_f64().map(|x| (k.clone(), x * tilt_scale))).filter(|(_, x)| *x != 0.0).collect()).unwrap_or_default();
     let slack = get_f(&o, "slack").unwrap_or(0.0);
-    if (!tilt.is_empty() || slack > 0.0) && legal_count > 1 && best.completed_depth > 0 {
+    // The urge to deal damage (F5.9d, rules::URGE_STEP): a side that has dealt none for a while leans toward damaging spells, as a
+    // tilt that grows (× tiltScale, so Engine never feels it).
+    let urge = s.actors[side].urge * tilt_scale;
+    if (!tilt.is_empty() || slack > 0.0 || urge > 0.0) && legal_count > 1 && best.completed_depth > 0 {
         let mut ro = options.clone();
         ro.max_depth = best.completed_depth; ro.rank_actions = true;
         let ranked = search(enc, s, &ro, ctx, now)?;
@@ -626,12 +635,14 @@ pub fn choose(enc: &Encounter, s: &State, overrides: &Value, ctx: &mut Context, 
             // A channel's Hold and Release also take `<spell>_hold` / `<spell>_release` (e.g. wildfire_hold), so a persona can
             // favour holding one channel rather than every Hold.
             let channel = s.actors[side].channel.map(|c| d.spells[c.spell].id.as_str());
+            // A damaging spell: one with damage, or a bundle with one in it (Strike is not a spell).
+            let damaging = |id: Act| k.parts[id as usize].iter().any(|&p| (p as usize) < k.n_spells && d.spells[p as usize].damage.is_some());
             let bonus = |id: Act| -> f64 {
                 let name = d.name(id);
                 let mut own = tilt.iter().find(|(t, _)| t == name).map_or(0.0, |x| x.1);
                 if let Some(ch) = channel { if name == "hold" || name == "release" { let key = format!("{ch}_{name}"); own += tilt.iter().find(|(t, _)| *t == key).map_or(0.0, |x| x.1); } }
                 let parts = if k.is_bundle[id as usize] { k.parts[id as usize].iter().map(|&p| { let n = d.name(p); tilt.iter().find(|(t, _)| t == n).map_or(0.0, |x| x.1) }).fold(f64::NEG_INFINITY, f64::max) } else { f64::NEG_INFINITY };
-                own.max(if parts.is_finite() { parts } else { own })
+                own.max(if parts.is_finite() { parts } else { own }) + if urge > 0.0 && damaging(id) { urge } else { 0.0 }
             };
             // Candidates: the best move, and plausible weaker ones within maxRegret.
             let cands: Vec<(Act, f64, f64)> = ranked.ranked.iter().filter_map(|&(id, v)| {
