@@ -45,7 +45,7 @@
   }
 
   // createFight(request, opts) → {state, foe, setting, names, request}
-  //   opts.difficulty  the AI preset for the foe: easy | medium | hard | engine (a player setting, default medium)
+  //   opts.difficulty  the AI preset for the foe: easy | medium | hard | engine (a player setting, default easy)
   //   opts.content     the game's content (localized): a character's short name and pronouns
   //   opts.foeName     (id, englishName) → the name to show for a generic foe (the UI translates it)
   //   opts.ai          {player, foe}: AI options (simulated players fight both sides; the UI leaves the player to the human)
@@ -79,7 +79,7 @@
       context: setting.context, observers: setting.observers, witnesses: setting.witnesses, firstLeader, encounterSeed: u32(req.seed),
     });
     const ai = opts.ai || {};
-    const foeAI = Object.assign({}, LIVE_AI, ai.foe || {}, { seed: u32(req.seed + 1), preset: opts.difficulty || 'medium' }, foe.persona ? { persona: foe.persona } : {});
+    const foeAI = Object.assign({}, LIVE_AI, ai.foe || {}, { seed: u32(req.seed + 1), preset: opts.difficulty || 'easy' }, foe.persona ? { persona: foe.persona } : {});
     const playerAI = ai.player ? Object.assign({}, LIVE_AI, ai.player, { seed: u32(req.seed + 2) }) : null;
     const state = C.createState(Object.assign(base, { ai: [playerAI, foeAI] }));
     // The foe commits first, visibly, for n exchanges (rival_contest with the stolen plan): as under the player's Foresight.

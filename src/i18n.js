@@ -241,7 +241,7 @@
     'settings.amountsHint': 'How a choice\'s effects show before you make it. Afterwards the outcome always shows the numbers; Crowns and Mana are always exact.',
     'settings.notes': 'Illustrative text', 'settings.notesHint': 'The line under each card that describes its picture.',
     'settings.on': 'Show', 'settings.off': 'Hide',
-    'settings.fight': 'Fights', 'settings.fightHint': 'How well your opponents fight. Medium is the game as designed; Engine plays its best every time.',
+    'settings.fight': 'Fights', 'settings.fightHint': 'How well your opponents fight. Easy forgives mistakes; Hard and Engine make you pay for each one.',
     'difficulty.easy': 'Easy', 'difficulty.medium': 'Medium', 'difficulty.hard': 'Hard', 'difficulty.engine': 'Engine',
     // A fight: the combat minigame played over the card (src/combat-ui.js). The minigame's own lines (flavor, what an
     // action does) are translated with its tables, not here.

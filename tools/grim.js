@@ -1253,6 +1253,7 @@ function runMetrics(content, eng) {
     leads: leads.length, followed: leads.filter((x) => x.followed).length,
     firstPartner: (cards.find((x) => ((x.out && x.out.notes) || []).some((n) => n.kind === 'bond' && n.status === 'partner')) || {}).turn ?? null,
     distinct: new Set(cards.map((x) => x.id)).size, early,
+    fights: (eng.s.fights || []).length, fightsWon: (eng.s.fights || []).filter((f) => f.outcome === 'win').length,
   };
 }
 // The design's Level-2 alarms (§8.8): wide tolerances, each judged on the median run of the style it is about.
@@ -1316,6 +1317,13 @@ function designAlarms(name, runs, alarm, all) {
     if (fp > 24) alarm('romantic: first partner at month ' + (fp === 99 ? 'never' : fp) + ' (median; a player courting from the start finds one within two years)');
   }
   if (name === 'homebody' && share((r) => r.early) > 0.05) alarm('homebody: ' + Math.round(100 * share((r) => r.early)) + '% of runs end early (> 5%; a careful player who sleeps every night should graduate)');
+  if (name === 'combatmaxx') {
+    const f = med(runs.map((r) => r.fights)), fb = other('balanced', (r) => r.fights);
+    if (fb != null && f < 2 * fb) alarm('combatmaxx: ' + f + ' fights, under twice balanced\'s ' + fb + ' (a player who seeks fights should find them)');
+    const won = runs.reduce((a, r) => a + r.fightsWon, 0) / Math.max(1, runs.reduce((a, r) => a + r.fights, 0));
+    if (won < 0.5) alarm('combatmaxx: wins ' + Math.round(100 * won) + '% of its fights (it takes only fights a card calls winnable; ≥ 50%)');
+    if (share((r) => r.early) > 0.2) alarm('combatmaxx: ' + Math.round(100 * share((r) => r.early)) + '% of runs end early (fighting often should cost, not end the run)');
+  }
   if (name === 'explorer') {
     const d = med(runs.map((r) => r.distinct)), db = other('balanced', (r) => r.distinct);
     if (db != null && d <= db) alarm('explorer: sees ' + d + ' different cards, no more than balanced\'s ' + db + ' (variety should reward exploring)');

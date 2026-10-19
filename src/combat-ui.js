@@ -59,7 +59,7 @@
           names: C().fighterNames({ opponentName: foe.name, opponentLoadout: foe.loadout, opponentPronouns: foe.pronouns }) };
         history = s.history || [];
       } else {
-        fight = B().createFight(opts.request, { content, difficulty: opts.difficulty || 'medium', foeName });
+        fight = B().createFight(opts.request, { content, difficulty: opts.difficulty || 'easy', foeName });
       }
       game = fight.state; names = fight.names;
       if (CombatUI.foeAI) game.config.ai[1] = Object.assign({}, game.config.ai[1], CombatUI.foeAI);

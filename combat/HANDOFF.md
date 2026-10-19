@@ -73,7 +73,7 @@ Each step should leave the game working and `node tools/grim.js check` passing. 
 - **Opponents:**
   - `vs lyra.arcana` and similar name a character: use `NAMED_LOADOUTS` (canon skills from `setup/cast-stats.mjs`, a snapshot of `content/world/cast.grim`; refresh it with `setup/sync-loadout-stats.mjs` when the cast changes).
   - A difficulty word (`adept-`, `apprentice+`) means a generic foe: `EVENTS` in `setup/foes.mjs` names it for every current card (a pool, an archetype or a special foe), and `foeLevel` sets its level from the rung. `node combat/tools/event-coverage.mjs` checks that every combat card has a decision. Seven cards become feats instead (`EVENTS.md` §6).
-  - The AI: a fixed depth-5 search with no seeded mistakes (`LIVE_AI` in `web/app.mjs`), plus `preset: 'easy'|'medium'|'hard'|'engine'` (a player setting, default Medium); `createState` adds the foe's persona.
+  - The AI: a fixed depth-5 search with no seeded mistakes (`LIVE_AI` in `web/app.mjs`), plus `preset: 'easy'|'medium'|'hard'|'engine'` (a player setting; the game defaults to Easy); `createState` adds the foe's persona.
   - The foe's level is the card's challenge level: `challengeDC` and `foeLevel` in `setup/foes.mjs` (the engine's `ladderOdds` DC, plus the odds word); `vs npc.stat` characters via `namedFoeSkills`. `tools/event-levels.mjs` lists every card's levels by month.
   - A few points of level are a big step (+10 levels wins 87%).
 - **The fight setting, per challenge:** `fightSetting(cardKey, i, foe)` (`setup/foes.mjs`) gives `{context, observers, witnesses}` for the card's i-th challenge; pass all three to `fightOptions`. Every played card has them (`EVENTS.md` §6 lists them), and `tools/event-coverage.mjs` fails if any is missing. What each one does:
@@ -137,7 +137,7 @@ Port the fight screen from `web/app.mjs` and its look from `web/style.css` as an
   - the search journal (`debug()`), the full log sheet (the track and the latest exchange in full replace it) and the bench's Concede;
   - the result panel's Replay, Next bout and Export log buttons. In the game the result hands the outcome back to the card (§3).
 
-  The game sets up a fight from the card and the run (§4), not from a form. Difficulty is a player setting (default Medium) that belongs in the game's own settings; pass it as `ai[1].preset`. The fight has no header bar.
+  The game sets up a fight from the card and the run (§4), not from a form. Difficulty is a player setting (the game defaults to Easy) that belongs in the game's own settings; pass it as `ai[1].preset`. The fight has no header bar.
 - **Portraits:** `web/art.mjs` shows `portraits/<npc>.png` when one exists (`NAMED_LOADOUTS[name].npc`), else an SVG placeholder. The player's frame stays blank.
 - **Layout:** no panel scrolls except the track, sideways.
   - It must work at phone width (375 px). With room (a 640 px container or wider) the state sits on the left and the choices on the right.

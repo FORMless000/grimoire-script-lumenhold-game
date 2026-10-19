@@ -27,9 +27,9 @@
   let settings = { notes: true, lang: null, amounts: 'marks' };
   try { Object.assign(settings, JSON.parse(store.get(SETTINGS_KEY) || '{}')); } catch (e) { /* ignore */ }
   const saveSettings = () => store.set(SETTINGS_KEY, JSON.stringify(settings));
-  // Fights (the combat minigame): how hard the opponent plays, the AI preset (HANDOFF §5). Default Medium.
+  // Fights (the combat minigame): how hard the opponent plays, the AI preset (HANDOFF §5). Default Easy (2026-10-19).
   const FIGHT_DIFFICULTIES = ['easy', 'medium', 'hard', 'engine'];
-  if (!FIGHT_DIFFICULTIES.includes(settings.fightDifficulty)) settings.fightDifficulty = 'medium';
+  if (!FIGHT_DIFFICULTIES.includes(settings.fightDifficulty)) settings.fightDifficulty = 'easy';
   const PRONOUN_KEYS = ['she', 'he', 'they'];
 
   let content = null, eng = null;

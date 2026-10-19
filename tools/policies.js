@@ -8,7 +8,7 @@
  * reproduce). The others score each option by estimate(): the expected change of every resource,
  * skill and relationship from the engine's exact preview (design §8.3), plus the commitments
  * (electives, clubs, jobs) an option starts. The strategy styles (scholar, nightlife, sleuth, romantic, homebody,
- * explorer) add a goal on top of a scorer: cards they always answer one way, where they go, their origin. about(name)
+ * combatmaxx, explorer) add a goal on top of a scorer: cards they always answer one way, where they go, their origin. about(name)
  * says what each one plays for.
  */
 'use strict';
@@ -294,6 +294,23 @@ function favourite(eng) {
   }
   return best;
 }
+// Eligible cards with a fight (a combat or duel challenge) at a place now, for this slot (combatmaxx).
+function fightsAt(eng, place, slot) {
+  const ix = eng.directorIndex(), pool = ix.byPlace[place] || [];
+  const prev = [eng._place, eng._slot]; eng._place = place; eng._slot = slot;
+  let n = 0;
+  try {
+    for (const e of pool) {
+      let fight = false;
+      for (const o of eng.optionsOf(e)) G.walkEffects(o.effects || [], (x) => { if (x.t === 'challenge' && (x.kind === 'combat' || x.kind === 'duel')) fight = true; });
+      if (fight && eng.eligible(e, new Set()) && eng.timeFit(e) && eng.candidates(e).length) n++;
+    }
+  } finally { [eng._place, eng._slot] = prev; }
+  return n;
+}
+// Tracks that train a fighter's skills (arcana, vigor).
+const FIGHT_SKILLS = ['arcana', 'vigor'];
+const trainsFight = (eng, id) => [].concat((eng.c.tracks[id] || {}).skill || []).some((k) => FIGHT_SKILLS.includes(k));
 // Expected grade points of sitting an exam carefully (steady) or for top marks (wild).
 function gradePoints(eng, track, swing) { const o = eng.examOdds(track, swing); return (4 * o.probs[0] + 3 * o.probs[1] + 2 * o.probs[2]) / 100; }
 
@@ -372,6 +389,36 @@ const STRATEGIES = {
         if (v.id === 'night_out') return 'left';
         if (v.id === 'break_plan') return 'home';
         return null;
+      });
+    },
+  },
+  // The fighter: trains for the combat minigame and takes every fight it can win (playtests of the fight, 2026-10-19).
+  combatmaxx: {
+    about: 'Combat maxxing: arcana and vigor weigh 4 a point (other skills 0.6), learning a spell 40 and casting one 30; it takes the fight on any card whose fight is not too unwinnable (the card\'s odds at least 35%, 60% when Health is 35 or lower), joins any club, job or internship that trains arcana or vigor, enrols in those courses first, and goes where fights wait (by day, and out at night when Health is above 50 and a fight waits at a midnight place). Its own side fights at Hard.',
+    make() {
+      const base = scorer('combatmaxx', { health: 1, mood: 0.8, gold: 0.3, renown: 0.4, skill: 0.6, arcana: 4, vigor: 4, 'rel:': 0.2, 'spark:': 0.1, 'bond:': 0.1, 'gain:': 3, learn: 40, cast: 30 });
+      const winnable = (eng, o) => o.check && o.check.fight && o.check.p >= (eng.s.vals.health <= 35 ? 60 : 35);
+      return withRules(base, 'combatmaxx', (eng, v) => {
+        if (v.id === 'night_out') return eng.s.vals.health > 50 && nightPlaces(eng).some((p) => fightsAt(eng, p.id, 'midnight')) ? 'right' : 'left';
+        // A fight it can win, the best odds first (never one that ends the run).
+        const fights = v.options.filter((o) => !o.disabled && winnable(eng, o) && !endsEarly(eng, v, o.key)).sort((a, b) => b.check.p - a.check.p);
+        if (fights.length) return fights[0].key;
+        // A club, job or internship that trains a fighter.
+        const ev = eng.c.events[v.id];
+        for (const o of v.options) {
+          if (o.disabled) continue;
+          const def = eng.optionsOf(ev).find((q) => q.key === o.key); let join = false;
+          if (def) G.walkEffects(def.effects, (st) => { if (st.t === 'join' && joining(eng, st) && trainsFight(eng, st.track)) join = true; });
+          if (join) return o.key;
+        }
+        return null;
+      }, {
+        pickMany: (eng, view, opts) => orFirst(view, opts.filter((o) => trainsFight(eng, o.key)).concat(opts.filter((o) => !trainsFight(eng, o.key))).slice(0, view.pick).map((o) => o.key)),
+        pickPlaces: (eng, view) => route(eng, view, (openPl, sl) => {
+          let best = null, bs = 0;
+          for (const p of openPl) { const n = fightsAt(eng, p.id, sl); if (n > 0 && n + rnd(eng) * 0.5 > bs) { bs = n + rnd(eng) * 0.5; best = p.id; } }
+          return best;
+        }),
       });
     },
   },
