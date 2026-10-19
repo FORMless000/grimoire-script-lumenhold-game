@@ -10,19 +10,21 @@
 <body>
   <main>
     <h1>Character portrait workshop</h1>
-    <p class="intro">21 characters · minimal shapes · white pupil highlights. Tune the framing here before integrating the artwork into the game.</p>
+    <p class="intro">21 characters · minimal shapes · white pupil highlights. Saved crop adjustments update the live game portraits directly.</p>
     <p class="muted">Appearance priority: card descriptions → worldbook → SVG → inferred design. The evidence under each character distinguishes written anchors from styling choices.</p>
     <details class="reference"><summary>Style reference</summary><img src="style-reference.png" alt="Minimal storybook art with white highlights inside dark pupils"></details>
     <nav class="toolbar" aria-label="Review views">
       <button data-tab="portraits" aria-pressed="true">Portraits</button>
+      <button data-tab="characters" aria-pressed="false">Individual concepts</button>
       <button data-tab="concepts" aria-pressed="false">Concept sheets</button>
       <button id="shape" aria-pressed="false">Square previews</button>
       <a href="README.md">How to use</a><a href="DESIGNS.md">Design notes</a>
     </nav>
     <p id="loadStatus" role="status">Loading artwork…</p>
     <section id="portraits"><div class="grid" id="roster"></div></section>
+    <section id="characters" hidden><p class="muted">Individual upper-body concepts · 1024 × 1024 · padded square PNGs. Each portrait is cropped from its own concept.</p><div class="grid" id="characterConcepts"></div></section>
     <section id="concepts" hidden></section>
-    <footer>Saving updates the repository portrait PNG and its crop manifest. Original concept sheets stay intact. Game integration is documented in <code>docs/portrait-integration-handoff.md</code>.</footer>
+    <footer>Saving updates <code>src/portraits/minimal/</code> and the crop manifest directly. Original concept sheets stay intact. The pipeline is documented in <code>docs/portrait-integration-handoff.md</code>.</footer>
   </main>
   <dialog id="editor" aria-labelledby="editorTitle">
     <div class="editor-heading"><h2 id="editorTitle">Adjust portrait</h2><button id="closeEditor" aria-label="Close crop editor">Close</button></div>
@@ -33,9 +35,9 @@
           <canvas id="cropCanvas" width="512" height="512" tabindex="0" aria-label="Portrait crop. Drag to move; arrow keys adjust by one pixel, shift for ten pixels; plus and minus zoom."></canvas>
           <svg id="guides" viewBox="0 0 512 512" aria-hidden="true">
             <path class="center-guide" d="M256 0V512 M0 256H512"/>
-            <path class="head-guide" d="M0 51.2H512 M0 430.1H512"/>
-            <ellipse class="head-guide" cx="256" cy="240.6" rx="148.5" ry="189.4"/>
-            <text x="8" y="45">head top · 10%</text><text x="8" y="423">chin · 84%</text>
+            <path class="head-guide" d="M0 51.2H512 M0 317.4H512"/>
+            <ellipse class="head-guide" cx="256" cy="184.3" rx="128" ry="133.1"/>
+            <text x="8" y="45">head top · 10%</text><text x="8" y="310">chin · 62%</text>
             <text class="center-label" x="8" y="250">center · 50%</text>
           </svg>
           <svg id="roundMask" viewBox="0 0 512 512" aria-hidden="true"><path fill="#151721" fill-opacity=".75" fill-rule="evenodd" d="M0 0H512V512H0Z M512 256A256 256 0 1 0 0 256A256 256 0 1 0 512 256Z"/></svg>
@@ -53,7 +55,7 @@
         <button id="savePortrait" class="primary">Save portrait to repo</button>
         <button id="downloadPortrait">Download 256px PNG</button>
         <p id="saveStatus" role="status" aria-live="polite"></p>
-        <p class="hint">Save replaces this character’s <code>portraits/&lt;id&gt;.png</code> and updates <code>portrait-manifest.json</code>. The previous files are backed up locally. Unsaved adjustments remain in this tab until it is reloaded.</p>
+        <p class="hint">Save replaces this character’s live <code>src/portraits/minimal/&lt;id&gt;.png</code> and updates <code>portrait-manifest.json</code>. The previous files are backed up locally. Unsaved adjustments remain in this tab until it is reloaded.</p>
       </div>
     </div>
   </dialog>

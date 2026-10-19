@@ -30,7 +30,7 @@ your machine ── git push ──┬──▶ GitHub
    ```
    The script does four things:
    - creates `/srv/lumenhold/`;
-   - generates the admin token and the invite code (kept in `/srv/lumenhold/env`) and prints the admin and invite links;
+   - generates the admin token and a spare invite code, switched off (kept in `/srv/lumenhold/env`), and prints the admin and player links;
    - installs the systemd service;
    - adds the git remote `live`, adds the server as a second push address of `origin` (in the default mode), and pushes `main` once. The first push sends the whole history; later pushes are small.
 
@@ -48,7 +48,7 @@ your machine ── git push ──┬──▶ GitHub
 5. **Check it.**
    - Open `https://your.domain/api/health`: it should show `"server":"lumenhold"`.
    - Open the admin link the setup printed.
-   - Send playtesters the invite link.
+   - Send playtesters the link. Each browser gets its own player code on its first visit.
 
 ## Day to day
 
@@ -61,8 +61,8 @@ your machine ── git push ──┬──▶ GitHub
 | See server logs | `ssh <dest> journalctl -u lumenhold -n 100` |
 | Read feedback and run logs | `/admin` has these tabs: Feedback by event, Notes (every comment, newest first), Runs (with client errors), Players. **Export runs** downloads every run; `node tools/grim.js feedback <file>` reads that file locally. |
 | Copy the server's data home (saves, logs, feedback) for analysis | `deploy/pull-data.sh` (the `live` remote's server; or `deploy/pull-data.sh <dest>`). Each pull goes into its own dated folder, `data-live/<date-time>/`, and `data-live/latest` points at the newest. It only reads the server. Then `node tools/grim.js feedback data-live/latest/runs`, or play the live saves locally with `DATA_DIR=data-live/latest PORT=4174 npm start`. `data-live/` is gitignored and holds every player's saves and codes, so keep it private. |
-| Change the invite code or admin token | Edit `/srv/lumenhold/env` on the server, then run `sudo systemctl restart lumenhold`. Players who already have a code keep it. |
-| Open sign-up to anyone | Delete the `INVITE_CODE=` line from `env` and restart. Each address can then make 5 new players an hour. |
+| Change the admin token | Edit `/srv/lumenhold/env` on the server, then run `sudo systemctl restart lumenhold`. |
+| Require an invite for new players | Remove the `#` before `INVITE_CODE=` in `env` and restart; new players then need `https://<domain>/?invite=<code>`. Players who already have a code keep it. Without it (the default), anyone gets a code, at most 5 new players an hour per address. |
 | Block a player | `/admin` → Players → revoke. Their code stops working on every device; their runs stay. |
 | Back up | Everything is in `/srv/lumenhold/data` (plus `env`). Take an EBS snapshot of the volume, or run `tar czf lumenhold-data-$(date +%F).tgz -C /srv/lumenhold data`. |
 | Update the service settings | Change `deploy/lumenhold.service` or `deploy/setup-server.sh`, commit, then re-run `deploy/setup.sh <dest>` (it's safe to re-run). `deploy/post-receive` updates itself on each deploy. |
@@ -71,7 +71,7 @@ Only **committed** files deploy. Work in progress in your folder stays local unt
 
 ## Players and saves
 
-- **Getting a code.** On a player's first visit (through the invite link), the server gives that browser a **player code**. The code holds the player's saves (autosave and three slots), their "seen" counters and their run logs.
+- **Getting a code.** On a player's first visit (through the invite link, if one is required), the server gives that browser a **player code**. The code holds the player's saves (autosave and three slots), their "seen" counters and their run logs.
 - **Moving between devices.** In the game, open **Saved games → Play on another device**. Copy the link, or type the code on the other device, and that device then shares the same saves.
   - When a game moves to another device, it continues there as a new run in the logs (marked "continued from…").
   - If you play on two devices at the same moment, the newest autosave wins.

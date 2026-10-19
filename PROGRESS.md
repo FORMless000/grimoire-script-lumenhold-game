@@ -13,6 +13,10 @@
 | Checks | `npm run verify` passes: build, lint, format, docs, 100+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 48 months (the last two are the wrap-up), about 630–720 cards (15 a term month, 9.4 a break month; about half pushed rather than drawn); in `grim analyze` (100 games a style, 2026-10-17), random play leaves early 30–40% of the time, social 27–30%, aggressive 18–29% and cautious 10–17%; the other 23 styles finish 98–100% |
 
+## NPC portraits
+
+October 18, 2026: the 21 minimal PNG portraits are the default NPC art on every surface (card and menu actors, People, map pins, ending), per [the handoff](docs/portrait-integration-handoff.md). Settings → Portrait art → Original restores the procedural SVGs, which also stand in for a missing or broken PNG and are archived in `art/characters/original-svg/`. After a crop edit in the workshop, run `node tools/portraits.js sync`.
+
 ## Online hosting
 
 October 18, 2026: the server is ready to host online ([docs/hosting.md](docs/hosting.md), design §1).
@@ -24,7 +28,7 @@ October 18, 2026: the server is ready to host online ([docs/hosting.md](docs/hos
 
 ## Frequency and economy audit
 
-October 15, 2026: [the frequency and economy review](docs/reviews/event-economy-2026-10-15/README.md) measures a preserved 963-event snapshot over 1,050 games and additional validation runs. Unresolved design deviations include midnight character cards appearing after Sleep or before unlock, incompatible schedule and slot requirements on `gargoyle_passage_parapet_cards`, and the probation hook ignoring an exactly zero GPA. The review also records mana and mood saturation, uneven relationship access, slow specialization in five disciplines, and scarce senior-job opportunities. No gameplay retuning was applied; the report includes per-event frequencies, resource flows and reproduction commands.
+October 15, 2026: [the frequency and economy review](/Users/accessair/Desktop/Workspaces/lifesim-reviews/event-economy-2026-10-15/README.md) measures a preserved 963-event snapshot over 1,050 games and additional validation runs. Unresolved design deviations include midnight character cards appearing after Sleep or before unlock, incompatible schedule and slot requirements on `gargoyle_passage_parapet_cards`, and the probation hook ignoring an exactly zero GPA. The review also records mana and mood saturation, uneven relationship access, slow specialization in five disciplines, and scarce senior-job opportunities. No gameplay retuning was applied; the report includes per-event frequencies, resource flows and reproduction commands.
 
 ## The combat minigame
 

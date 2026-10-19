@@ -89,14 +89,30 @@ async function playthrough(browser, lang) {
     await p.waitForTimeout(150); continue;
   }
   if (SHOTS) await p.screenshot({ path: path.join(OUT, lang + '_ending.png') });
+  const portraitsOk = !ended || (await endingPortraits(p, lang));
   let serverOk = true;
   if (SERVER && ended) serverOk = await checkServer(p, lang, errs);
   await p.close();
-  const ok = ended && serverOk && !errs.length && !english.size;
+  const ok = ended && serverOk && portraitsOk && !errs.length && !english.size;
   console.log((ok ? 'PASS' : 'FAIL') + ` playthrough [${lang}]: ended=${ended} months=${n.month} days=${n.map} cards=${n.card} fights=${n.fight} menus=${n.menu} (multi-pick ${n.multi})`);
   if (!n.map || !n.multi) { console.log('  expected at least one map screen and one multi-pick menu'); return false; }
   if (english.size) console.log('  English text in ' + lang + ': ' + [...english].slice(0, 8).join(' | '));
   errs.forEach((e) => console.log('  error: ' + e));
+  return ok;
+}
+
+// The ending's people (docs/portrait-integration-handoff.md): PNG portraits in Minimal; switching to Original from
+// the settings swaps them in place and leaves the ending up.
+async function endingPortraits(p, lang) {
+  await p.waitForTimeout(300);
+  const count = () => p.evaluate(() => ({ all: document.querySelectorAll('.final-people svg.avatar').length, png: document.querySelectorAll('.final-people svg.avatar .av-min').length }));
+  const style = async (s) => { await p.$eval('#settingsBtn', (el) => el.click()); await p.waitForTimeout(100); await p.click('[data-portraits=' + s + ']'); await p.click('#settingsClose'); await p.waitForTimeout(150); };
+  const min = await count();
+  if (!min.all) { console.log('PASS ending portraits [' + lang + ']: nobody close enough to list'); return true; }
+  await style('original'); const orig = await count(); const still = !!(await p.$('#again'));
+  await style('minimal'); const back = await count();
+  const ok = min.png === min.all && orig.png === 0 && orig.all === min.all && still && back.png === back.all;
+  console.log((ok ? 'PASS' : 'FAIL') + ` ending portraits [${lang}]: ${min.png}/${min.all} PNG, Original ${orig.png}/${orig.all}, ending kept=${still}, back ${back.png}/${back.all}`);
   return ok;
 }
 

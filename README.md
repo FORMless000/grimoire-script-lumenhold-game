@@ -41,7 +41,7 @@ Or run the local server (Node 20+, no install needed): `npm start`, then open ht
 
 - **Your local network:** run `./scripts/host.sh` (Linux, macOS), `scripts\host.cmd` or `scripts\host.ps1` (Windows). It prints the links. Each browser gets its own player code.
 - **Another device:** Saved games → **Play on another device** carries your saves over.
-- **Hosting online:** see [`docs/hosting.md`](docs/hosting.md). Every `git push` updates GitHub and deploys to a small server, and playtesters join through an invite link.
+- **Hosting online:** see [`docs/hosting.md`](docs/hosting.md). Every `git push` updates GitHub and deploys to a small server, and every playtester's browser gets its own player code.
 
 **Controls:**
 - **Swipe** the card, click a choice button, or press **← / →**. **Enter** continues. In menus, click a tile or press **1–9**.
@@ -101,4 +101,4 @@ AGENTS.md             the standing guide for contributors and agents
 
 ## License
 
-[WTFPL](LICENSE).
+© 2026 FORMless000. Released under the [WTFPL](LICENSE): do what you want with it.

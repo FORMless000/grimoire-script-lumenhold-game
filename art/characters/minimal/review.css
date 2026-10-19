@@ -15,7 +15,9 @@ button:focus-visible, canvas:focus-visible, input:focus-visible, select:focus-vi
 .intro { max-width: 1000px; }
 .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 22px 0; }
 .grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
-.person { background: #1d2030; border: 1px solid #3b3d50; border-radius: 15px; padding: 16px; min-width: 0; }
+.person, .concept-person { background: #1d2030; border: 1px solid #3b3d50; border-radius: 15px; padding: 16px; min-width: 0; }
+.character-concept { display: block; width: 100%; height: auto; margin: 14px 0; }
+.concept-person > a { font-size: 12px; }
 .identity { font-size: 12px; color: var(--muted); margin: 0 0 12px; }
 .portrait-link { display: block; text-align: center; }
 .face { border-radius: 50%; max-width: 100%; height: auto; }
@@ -25,7 +27,7 @@ button:focus-visible, canvas:focus-visible, input:focus-visible, select:focus-vi
 .sizes img, .sample-previews canvas { border-radius: 50%; display: block; }
 .sizes small, .sample-previews small { font-size: 10px; display: block; text-align: center; color: var(--muted); }
 .description { font-size: 13px; line-height: 1.5; }
-.person > button { width: 100%; margin: 8px 0; }
+.person > button, .concept-person > button { width: 100%; margin: 8px 0; }
 details { font-size: 12px; color: var(--muted); margin-top: 12px; }
 summary { cursor: pointer; }
 details p { margin: 10px 0; }
@@ -66,5 +68,5 @@ select { background: #282b3d; color: inherit; padding: 8px; border: 1px solid #6
 @media(max-width: 1200px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media(max-width: 960px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media(max-width: 760px) { .editor-layout { grid-template-columns: 1fr; } dialog { padding: 15px; } }
-@media(max-width: 670px) { main { padding: 18px; } .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; } .person { padding: 12px; } .sheet ol { font-size: 11px; } .sizes { gap: 10px; } }
+@media(max-width: 670px) { main { padding: 18px; } .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; } .person, .concept-person { padding: 12px; } .sheet ol { font-size: 11px; } .sizes { gap: 10px; } }
 @media(max-width: 360px) { .grid { grid-template-columns: 1fr; } }

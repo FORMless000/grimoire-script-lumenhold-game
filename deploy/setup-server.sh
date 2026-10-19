@@ -25,7 +25,8 @@ install -m 755 "$HERE/post-receive" "$BASE/repo.git/hooks/post-receive"
 if [ ! -f "$BASE/env" ]; then
   umask 077
   { echo "ADMIN_TOKEN=$("$NODE_BIN" -p "require('crypto').randomBytes(16).toString('hex')")"
-    echo "INVITE_CODE=$("$NODE_BIN" -p "require('crypto').randomBytes(5).toString('hex')")"; } > "$BASE/env"
+    echo "# Remove the # below to require ?invite=<code> for new players (then: sudo systemctl restart lumenhold)."
+    echo "# INVITE_CODE=$("$NODE_BIN" -p "require('crypto').randomBytes(5).toString('hex')")"; } > "$BASE/env"
 fi
 
 sed -e "s#__USER__#$ME#g" -e "s#__BASE__#$BASE#g" "$HERE/lumenhold.service" | sudo tee /etc/systemd/system/lumenhold.service >/dev/null
@@ -39,6 +40,7 @@ sudo systemctl enable lumenhold >/dev/null 2>&1
 . "$BASE/env"
 echo
 echo "Server side ready in $BASE. After the first push it listens on 127.0.0.1:4173; point your reverse proxy there (docs/hosting.md)."
-echo "  Invite link for players:  https://<your-domain>/?invite=$INVITE_CODE"
+if [ -n "${INVITE_CODE:-}" ]; then echo "  Invite link for players:  https://<your-domain>/?invite=$INVITE_CODE"
+else echo "  Link for players:         https://<your-domain>/   (anyone gets a player code; an invite can be required in env)"; fi
 echo "  Admin:                    https://<your-domain>/admin?token=$ADMIN_TOKEN"
-echo "  (Both are kept in $BASE/env; edit it and run: sudo systemctl restart lumenhold)"
+echo "  (The token and the invite setting are in $BASE/env; edit it and run: sudo systemctl restart lumenhold)"

@@ -1,6 +1,6 @@
 /*
  * Placeholder art: a small library of line-art SVG icons (64x64, stroke = currentColor),
- * a card-scene composer and a procedural NPC portrait. Real art can replace these later —
+ * a card-scene composer and NPC portraits: the final PNGs (Minimal, the default) over the procedural SVG (Original). Real art can replace the rest later —
  * every event also carries a `scene:` description for artists / image generators.
  *
  * To add an icon: add an entry to ICONS (inner SVG markup, 64x64 viewBox). Content refers to it by key (`art: key`).
@@ -172,8 +172,8 @@
 
   const SKIN = ['#f1d3b3', '#e0b48c', '#c68c62', '#a0673f', '#7a4a2a', '#f5dccb'];
   const HAIR = ['#2a1d14', '#5a3820', '#a8682c', '#d8b468', '#e9e2d0', '#7a2a2a', '#2a2a40', '#1a1a1a'];
-  // Procedural portrait. look: optional "hair:N skin:N style:N" overrides.
-  function avatar(npc, size) {
+  // Procedural ("Original") portrait, inner markup of a 64x64 viewBox. look: optional "hair:N skin:N style:N" overrides.
+  function procedural(npc) {
     const id = npc.id || npc.name || 'x';
     let h = hash(id);
     const look = {};
@@ -189,12 +189,10 @@
       '<path d="M18 30c0-12 6-18 14-18s14 6 14 18c-6-2-10-8-12-12-4 6-10 10-16 12z" fill="' + hair + '"/><circle cx="32" cy="10" r="5" fill="' + hair + '"/>',
       '<path d="M17 32c0-13 6-20 15-20s15 7 15 20l-2 10c-1-8-3-14-6-16-4 2-10 2-14 0-3 2-5 8-6 16z" fill="' + hair + '"/>',
     ][style % 5];
-    const s = size || 48;
     // A goblin (feedback 2026-10-15b, `look: … body:1`): green skin, long ears, a big nose, a toothy grin, a waistcoat.
     if (look.body === 1) {
       const g = ['#7fa35a', '#6b8f4e', '#93a85c', '#5f8a6a'][(look.skin || 0) % 4], gd = '#4d6b38';
-      return '<svg class="avatar" viewBox="0 0 64 64" width="' + s + '" height="' + s + '" aria-hidden="true">' +
-        '<circle cx="32" cy="32" r="32" fill="' + col + '"/>' +
+      return '<circle cx="32" cy="32" r="32" fill="' + col + '"/>' +
         '<path d="M12 64c2-10 9-16 20-16s18 6 20 16z" fill="#4a1f3a"/><path d="M24 50l8 10 8-10" fill="#e9d9a8"/><path d="M32 52v12" stroke="#2a1420" stroke-width="1"/>' +
         '<circle cx="35" cy="57" r="1.1" fill="#d8b468"/><circle cx="35" cy="61" r="1.1" fill="#d8b468"/>' +
         '<rect x="28" y="40" width="8" height="9" fill="' + g + '"/>' +
@@ -207,18 +205,73 @@
         '<circle cx="27.4" cy="31" r="1" fill="#1a1420"/><circle cx="37.4" cy="31" r="1" fill="#1a1420"/>' +
         '<circle cx="37" cy="31" r="4" fill="none" stroke="#d8b468" stroke-width="1"/><path d="M41 32c2 3 2 8 1 12" fill="none" stroke="#d8b468" stroke-width=".7"/>' +
         '<path d="M31 30c3 2 6 7 4 10-2 1-5 0-6-1z" fill="' + gd + '"/>' +
-        '<path d="M24 39c4 4 12 4 16 0-3 5-13 5-16 0z" fill="#3a1a1a"/><path d="M27 40l1.5 2.5 1.5-2 M36 40l-1.5 2.5-1.5-2" fill="#f5efd8"/>' +
-        '</svg>';
+        '<path d="M24 39c4 4 12 4 16 0-3 5-13 5-16 0z" fill="#3a1a1a"/><path d="M27 40l1.5 2.5 1.5-2 M36 40l-1.5 2.5-1.5-2" fill="#f5efd8"/>';
     }
-    return '<svg class="avatar" viewBox="0 0 64 64" width="' + s + '" height="' + s + '" aria-hidden="true">' +
-      '<circle cx="32" cy="32" r="32" fill="' + col + '"/>' +
+    return '<circle cx="32" cy="32" r="32" fill="' + col + '"/>' +
       '<path d="M10 64c2-12 10-18 22-18s20 6 22 18z" fill="#1b1830"/><path d="M26 46l6 8 6-8" fill="none" stroke="#e9d9a8" stroke-width="2"/>' +
       '<rect x="28" y="38" width="8" height="8" fill="' + skin + '"/>' +
       '<ellipse cx="32" cy="30" rx="12" ry="14" fill="' + skin + '"/>' + hairPath +
       '<circle cx="27" cy="31" r="1.6" fill="#1a1420"/><circle cx="37" cy="31" r="1.6" fill="#1a1420"/>' +
-      '<path d="M29 37c2 1.5 4 1.5 6 0" fill="none" stroke="#6a3a30" stroke-width="1.4" stroke-linecap="round"/>' +
-      '</svg>';
+      '<path d="M29 37c2 1.5 4 1.5 6 0" fill="none" stroke="#6a3a30" stroke-width="1.4" stroke-linecap="round"/>';
   }
 
-  return { icon, scene, avatar, has, list, paletteFor, ICONS };
+
+  // Minimal portraits (docs/portrait-integration-handoff.md): final 256x256 PNGs by stable NPC id, copied from
+  // art/characters/minimal/portraits/ by `node tools/portraits.js sync`. Document-relative, so they load from file:// too.
+  const PORTRAIT_DIR = 'src/portraits/minimal/';
+  const PORTRAITS = {};
+  'lyra tobias seraphine corvin mir nessa bram kael ilse tamsin isolde thorne maud amaranth brask vey marisol mabel grimsby pell grisk'
+    .split(' ').forEach((id) => { PORTRAITS[id] = id + '.png'; });
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  let portraitStyle = 'minimal', clipSeq = 0, preloaded = false;
+  const hasDoc = typeof document !== 'undefined';
+
+  // 'minimal' (default) or 'original'; anything else selects minimal.
+  function setPortraitStyle(style) {
+    portraitStyle = style === 'original' ? 'original' : 'minimal';
+    if (portraitStyle === 'minimal' && hasDoc && !preloaded && typeof Image === 'function') {
+      preloaded = true;
+      for (const id in PORTRAITS) new Image().src = PORTRAIT_DIR + PORTRAITS[id];
+    }
+    return portraitStyle;
+  }
+  function portraitLayer(id) {
+    const cid = 'avc' + (++clipSeq).toString(36) + '-' + id;
+    return '<g class="av-min"><clipPath id="' + cid + '"><circle cx="32" cy="32" r="32"/></clipPath>' +
+      '<image class="av-img" href="' + PORTRAIT_DIR + PORTRAITS[id] + '" x="0" y="0" width="64" height="64" preserveAspectRatio="xMidYMid slice" clip-path="url(#' + cid + ')"/></g>';
+  }
+  // NPC portrait. The procedural portrait is always drawn; in Minimal mode a known id's PNG, clipped to a circle, covers it.
+  // The procedural layer stays in the markup as the fallback if the PNG fails (see the listener below).
+  function avatar(npc, size, opts) {
+    const id = npc.id || npc.name || 'x', s = size || 48;
+    const style = (opts && opts.style) || portraitStyle;
+    const png = style === 'minimal' && Object.prototype.hasOwnProperty.call(PORTRAITS, id);
+    return '<svg class="avatar" viewBox="0 0 64 64" width="' + s + '" height="' + s + '" aria-hidden="true" data-npc="' + String(id).replace(/[&<>"]/g, '') + '">' +
+      '<g class="av-orig">' + procedural(npc) + '</g>' + (png ? portraitLayer(id) : '') + '</svg>';
+  }
+  // After a style change: add or remove only the image layers of the avatars already on screen (nothing else re-renders).
+  function refreshAvatars(scope) {
+    if (!hasDoc) return;
+    (scope || document).querySelectorAll('svg.avatar[data-npc]').forEach((el) => {
+      const id = el.getAttribute('data-npc'), layer = el.querySelector('.av-min');
+      const want = portraitStyle === 'minimal' && Object.prototype.hasOwnProperty.call(PORTRAITS, id);
+      if (!want && layer) layer.remove();
+      if (want && !layer) {
+        const tmp = document.createElementNS(SVGNS, 'svg');
+        tmp.innerHTML = portraitLayer(id);
+        el.appendChild(tmp.firstChild);
+      }
+    });
+  }
+  // One capture listener, scoped to portrait images: a missing or corrupt PNG is removed, which reveals the procedural
+  // portrait under it (style.css hides that layer only while an image layer is present).
+  if (hasDoc && document.addEventListener) {
+    document.addEventListener('error', (e) => {
+      const t = e.target;
+      if (!t || !t.classList || !t.classList.contains('av-img')) return;
+      (t.closest('.av-min') || t).remove();
+    }, true);
+  }
+
+  return { icon, scene, avatar, setPortraitStyle, refreshAvatars, getPortraitStyle: () => portraitStyle, has, list, paletteFor, ICONS, PORTRAITS, PORTRAIT_DIR };
 });

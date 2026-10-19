@@ -64,6 +64,11 @@ button:disabled { cursor: not-allowed; }
 .btn.grow { flex: 1; }
 .howto { margin-top: 18px; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
 .howto b { color: var(--text); font-weight: 600; }
+.credits { margin-top: 22px; display: flex; flex-wrap: wrap; justify-content: center; column-gap: 6px; row-gap: 2px; font-size: 12px; line-height: 1.6; color: var(--muted); }
+.credits a { color: inherit; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 2px; }
+.credits a:hover, .credits a:focus-visible { color: var(--text); text-decoration-color: currentColor; }
+.credits > span:not(:last-child)::after { content: '·'; margin-left: 6px; opacity: 0.5; }
+.fb-dialog .credits { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
 details.adv { margin-top: 14px; color: var(--muted); font-size: 13px; }
 details.adv summary { cursor: pointer; }
 details.adv input { margin-top: 8px; }
@@ -139,6 +144,8 @@ details.adv input { margin-top: 8px; }
 .card-body .text { font-family: var(--serif); font-size: 17.5px; line-height: 1.42; margin: 0; color: #2f2640; white-space: pre-line; }
 .card-body .scene-note { font-family: var(--serif); font-style: italic; font-size: 13.5px; color: var(--ink-2); border-left: 2px solid rgba(90, 78, 102, 0.3); padding-left: 8px; margin: 2px 0 0; }
 .actor-row { display: flex; align-items: center; gap: 10px; }
+/* NPC portraits (src/art.js): the PNG layer covers the procedural one, which shows again if the image fails and is removed. */
+.avatar:has(.av-min) .av-orig { visibility: hidden; }
 .actor-row .avatar { flex: 0 0 auto; border-radius: 50%; box-shadow: 0 0 0 2px var(--parch), 0 0 0 3px rgba(42, 34, 56, .25); }
 .actor-row .who b { display: block; font-weight: 600; font-size: 14px; }
 .actor-row .who span { font-size: 12px; color: var(--ink-2); }
@@ -495,9 +502,11 @@ details.adv input { margin-top: 8px; }
 @media (max-height: 760px) {
   .card-art { aspect-ratio: 400 / 160; }
 }
-@media (prefers-reduced-motion: reduce) {
-  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-}
+/* Reduced motion: Settings → Motion → Reduced (on the first visit it copies the device's reduce-motion preference;
+   the device setting itself is not followed after that). Animations and transitions finish at once, and run once:
+   an endless loop squeezed to .01ms would flicker thousands of times a second. The sky's endless loops stop outright. */
+html[data-motion="reduced"] *, html[data-motion="reduced"] *::before, html[data-motion="reduced"] *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+html[data-motion="reduced"] .sky-clouds, html[data-motion="reduced"] .sky-rays, html[data-motion="reduced"] .sky-aurora { animation: none !important; }
 
 /* ---------------- Simplified Chinese ---------------- */
 html:lang(zh-CN), html:lang(zh) {

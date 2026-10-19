@@ -12,7 +12,8 @@
 
   function selectTab(id) {
     for (const b of document.querySelectorAll('[data-tab]')) b.setAttribute('aria-pressed', String(b.dataset.tab === id));
-    $('portraits').hidden = id !== 'portraits'; $('concepts').hidden = id !== 'concepts'; $('shape').hidden = id !== 'portraits';
+    for (const section of ['portraits', 'characters', 'concepts']) $(section).hidden = id !== section;
+    $('shape').hidden = id !== 'portraits';
   }
   for (const b of document.querySelectorAll('[data-tab]')) b.onclick = () => selectTab(b.dataset.tab);
   $('shape').onclick = function () { document.body.classList.toggle('square'); this.setAttribute('aria-pressed', String(document.body.classList.contains('square'))); };
@@ -27,6 +28,12 @@
       const p = saved(c.id), src = p.file + '?v=' + p.sha256;
       const sources = [...c.sourceEvents, ...c.sourceFacts].map((s) => `${esc(s.id)} (${esc(s.file)}:${s.line})`).join('<br>');
       return `<article class="person" id="${c.id}"><h2>${esc(c.name)}</h2><p class="identity">${c.age} · ${esc(c.pronouns)}</p><a class="portrait-link" href="${src}" target="_blank"><img class="face" src="${src}" width="160" height="160" alt="${esc(c.name)}"></a><div class="sizes">${[26, 40, 48].map((n) => `<span><img src="${src}" width="${n}" height="${n}" alt="${n}px ${esc(c.name)}"><small>${n}px</small></span>`).join('')}</div><button data-edit="${c.id}">Adjust crop</button><p class="description">${esc(c.appearance)}</p><details><summary>Evidence and chosen details</summary><p><b>Written anchor:</b> ${esc(c.canon)}</p><p><b>SVG / design:</b> ${esc(c.design)}</p><p class="sources">${sources}</p></details></article>`;
+    }).join('');
+    $('characterConcepts').innerHTML = data.designs.characters.map((c) => {
+      const p = saved(c.id);
+      if (!['concepts/' + c.id + '.png', 'colored/' + c.id + '.png'].includes(p.source)) return '';
+      const src = p.source + '?v=' + p.sourceSha256;
+      return `<article class="concept-person"><h2>${esc(c.name)}</h2><a href="${src}" target="_blank"><img class="character-concept" src="${src}" width="1024" height="1024" alt="${esc(c.name)} upper-body concept"></a><a href="${src}" download="${c.id}-concept.png">Download square concept</a><button data-edit="${c.id}">Adjust portrait crop</button></article>`;
     }).join('');
     for (const button of document.querySelectorAll('[data-edit]')) button.onclick = () => openEditor(button.dataset.edit);
     $('concepts').innerHTML = data.batches.map((b) => `<section class="sheet"><a href="${b.file}" target="_blank"><img src="${b.file}" alt="Concept batch ${b.batch}"></a><ol style="--n:${b.ids.length}">${b.ids.map((id) => `<li><a href="#${id}" data-person="${id}">${esc(data.designs.characters.find((c) => c.id === id).name)}</a></li>`).join('')}</ol></section>`).join('');

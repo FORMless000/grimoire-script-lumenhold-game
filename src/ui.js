@@ -24,15 +24,30 @@
     set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } },
     del(k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } },
   };
-  let settings = { notes: true, lang: null, amounts: 'marks' };
+  const PORTRAIT_STYLES = ['minimal', 'original'];   // NPC portraits: the final PNGs, or the procedural SVGs (src/art.js)
+  let settings = { notes: true, lang: null, amounts: 'marks', portraitArt: 'minimal', motion: null };
   try { Object.assign(settings, JSON.parse(store.get(SETTINGS_KEY) || '{}')); } catch (e) { /* ignore */ }
+  if (!PORTRAIT_STYLES.includes(settings.portraitArt)) settings.portraitArt = 'minimal';
+  Art.setPortraitStyle(settings.portraitArt);
   const saveSettings = () => store.set(SETTINGS_KEY, JSON.stringify(settings));
+  // Motion: 'full' or 'reduced' (style.css, sky.js), the game's own setting. The first visit copies the device's
+  // reduce-motion preference; after that only Settings → Motion changes it.
+  const MOTION_MODES = ['full', 'reduced'];
   // Fights (the combat minigame): how hard the opponent plays, the AI preset (HANDOFF §5). Default Easy (2026-10-19).
   const FIGHT_DIFFICULTIES = ['easy', 'medium', 'hard', 'engine'];
   if (!FIGHT_DIFFICULTIES.includes(settings.fightDifficulty)) settings.fightDifficulty = 'easy';
   // Engine analysis in fights (a cheat, off by default): the setting, the fight's toggle as last left, and its time per turn
   // ('inf' stands for no limit: JSON has no Infinity).
   settings.fightEngine = settings.fightEngine === true;
+  if (!MOTION_MODES.includes(settings.motion)) {
+    settings.motion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduced' : 'full';
+    saveSettings();
+  }
+  function applyMotion() {
+    document.documentElement.dataset.motion = settings.motion;
+    if (window.Sky) window.Sky.setMotion(settings.motion);
+  }
+  applyMotion();
   const PRONOUN_KEYS = ['she', 'he', 'they'];
 
   let content = null, eng = null;
@@ -179,7 +194,7 @@
       '<div class="row"><button class="btn ghost-btn grow" id="slotsBtn">' + esc(t('slots.heading')) + '</button></div>' +
       (ui.notice ? '<div class="notice">' + esc(ui.notice) + '</div>' : '') +
       '<div class="howto">' + t('title.howto_html') + '</div>' + runLogLine() +
-      '</div></div></div>';
+      '</div>' + creditsLine() + '</div></div>';
     ui.notice = null;
     const nameIn = document.getElementById('pname');
     let rolled = true;   // the name on screen came from the randomizer: changing pronouns rolls a fitting one
@@ -1277,7 +1292,7 @@
     };
     render();
   }
-  // Settings (feedback 2026-10-15b): how amounts show in previews, and the illustrative text under each card.
+  // Settings (feedback 2026-10-15b): how amounts show in previews, the illustrative text under each card, and the portrait art.
   function openSettings() {
     closeSettings();
     const wrap = document.createElement('div'); wrap.className = 'fb-wrap'; wrap.id = 'settingsDialog';
@@ -1286,11 +1301,16 @@
       wrap.innerHTML = '<div class="fb-dialog settings" role="dialog" aria-modal="true" aria-labelledby="setH"><h3 id="setH">' + esc(t('settings.heading')) + '</h3>' +
         '<div class="set-row"><b>' + esc(t('settings.amounts')) + '</b><p class="fb-intro">' + esc(t('settings.amountsHint')) + '</p>' + seg('amounts', AMOUNT_MODES.map((m) => [m, t('amounts.' + m)]), settings.amounts || 'marks') + '</div>' +
         '<div class="set-row"><b>' + esc(t('settings.notes')) + '</b><p class="fb-intro">' + esc(t('settings.notesHint')) + '</p>' + seg('notes', [['on', t('settings.on')], ['off', t('settings.off')]], settings.notes ? 'on' : 'off') + '</div>' +
+        '<div class="set-row"><b>' + esc(t('settings.portraits')) + '</b><p class="fb-intro">' + esc(t('settings.portraitsHint')) + '</p>' + seg('portraits', PORTRAIT_STYLES.map((m) => [m, t('portraits.' + m)]), settings.portraitArt) + '</div>' +
+        '<div class="set-row"><b>' + esc(t('settings.motion')) + '</b><p class="fb-intro">' + esc(t('settings.motionHint')) + '</p>' + seg('motion', MOTION_MODES.map((m) => [m, t('motion.' + m)]), settings.motion) + '</div>' +
         '<div class="set-row"><b>' + esc(t('settings.fight')) + '</b><p class="fb-intro">' + esc(t('settings.fightHint')) + '</p>' + seg('difficulty', FIGHT_DIFFICULTIES.map((m) => [m, t('difficulty.' + m)]), settings.fightDifficulty) + '</div>' +
         '<div class="set-row"><b>' + esc(t('settings.fightEngine')) + '</b><p class="fb-intro">' + esc(t('settings.fightEngineHint')) + '</p>' + seg('fightengine', [['off', t('settings.engineOff')], ['on', t('settings.engineOn')]], settings.fightEngine ? 'on' : 'off') + '</div>' +
-        '<div class="fb-actions"><button class="btn" id="settingsClose">' + esc(t('slots.close')) + '</button></div></div>';
+        '<div class="fb-actions"><button class="btn" id="settingsClose">' + esc(t('slots.close')) + '</button></div>' + creditsLine() + '</div>';
       wrap.querySelectorAll('[data-amounts]').forEach((b) => { b.onclick = () => { settings.amounts = b.dataset.amounts; saveSettings(); render(); refreshCard(); }; });
       wrap.querySelectorAll('[data-notes]').forEach((b) => { b.onclick = () => { settings.notes = b.dataset.notes === 'on'; saveSettings(); render(); document.querySelectorAll('.scene-note').forEach((n) => { n.style.display = settings.notes ? '' : 'none'; }); }; });
+      // Only the avatars' image layers change: no re-render, so the card, map picks and focus stay as they are.
+      wrap.querySelectorAll('[data-portraits]').forEach((b) => { b.onclick = () => { settings.portraitArt = Art.setPortraitStyle(b.dataset.portraits); saveSettings(); Art.refreshAvatars(); render(); }; });
+      wrap.querySelectorAll('[data-motion]').forEach((b) => { b.onclick = () => { settings.motion = b.dataset.motion; saveSettings(); applyMotion(); render(); }; });
       wrap.querySelectorAll('[data-difficulty]').forEach((b) => { b.onclick = () => { settings.fightDifficulty = b.dataset.difficulty; saveSettings(); render(); }; });
       wrap.querySelectorAll('[data-fightengine]').forEach((b) => { b.onclick = () => { settings.fightEngine = b.dataset.fightengine === 'on'; saveSettings(); render(); }; });
       document.getElementById('settingsClose').onclick = closeSettings;
@@ -1300,6 +1320,14 @@
     render();
   }
   function closeSettings() { const w = document.getElementById('settingsDialog'); if (w) w.remove(); }
+  // The credit line: author, license and source, at the bottom of the title screen and of Settings.
+  const CREDIT = { author: 'FORMless000', year: 2026, repo: 'https://github.com/FORMless000/grimoire-script-lumenhold-game' };
+  function creditsLine() {
+    const a = (href, text) => '<a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(text) + '</a>';
+    return '<footer class="credits">' + ['© ' + CREDIT.year + ' ' + esc(CREDIT.author), esc(t('credits.made')),
+      a(CREDIT.repo + '/blob/main/LICENSE', t('credits.license')), a(CREDIT.repo, t('credits.source')), a(CREDIT.repo + '/issues', t('credits.issues'))]
+      .map((x) => '<span>' + x + '</span>').join('') + '</footer>';
+  }
   function refreshCard() { if (ui.mode === 'card' && ui.view) showCard(ui.view); else if (ui.mode === 'menu' && ui.view) showMenu(ui.view, true); }
   function closeSlots() { const w = document.getElementById('slotDialog'); if (w) w.remove(); }
   // Cloud saves: this browser's player code is also the sync code; the same code on another device shares the saves.

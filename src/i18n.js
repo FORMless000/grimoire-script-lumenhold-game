@@ -241,10 +241,17 @@
     'settings.amountsHint': 'How a choice\'s effects show before you make it. Afterwards the outcome always shows the numbers; Crowns and Mana are always exact.',
     'settings.notes': 'Illustrative text', 'settings.notesHint': 'The line under each card that describes its picture.',
     'settings.on': 'Show', 'settings.off': 'Hide',
+    'settings.portraits': 'Portrait art', 'settings.portraitsHint': 'How the people you meet are drawn.',
+    'portraits.minimal': 'Minimal', 'portraits.original': 'Original',
+    'settings.motion': 'Motion', 'settings.motionHint': 'Animations and the moving sky. Reduced keeps the screen still, for anyone who finds motion uncomfortable.',
+    'motion.full': 'Full', 'motion.reduced': 'Reduced',
     'settings.fight': 'Fights', 'settings.fightHint': 'How your opponents choose their moves. It changes only their decisions, never the numbers: their level, Health, Mana and spells stay the same. Engine takes the best move it can find every turn; the lower settings play more naturally, drifting from the best move and leaning on the habits that fit who they are.',
     'settings.fightEngine': 'Engine analysis', 'settings.fightEngineHint': 'Cheating: during a fight, a toggle shows the engine’s analysis of your turn: how good each move is, the best one, and the lines it expects.',
     'settings.engineOff': 'Off', 'settings.engineOn': 'On (cheating)',
     'difficulty.easy': 'Easy', 'difficulty.medium': 'Medium', 'difficulty.hard': 'Hard', 'difficulty.engine': 'Engine',
+    // The credit line at the bottom of the title screen and of Settings, after '© year author'.
+    'credits.made': 'Made in Grimoire Script', 'credits.license': 'Free to use: WTFPL',
+    'credits.source': 'Source on GitHub', 'credits.issues': 'Report a problem',
     // A fight: the combat minigame played over the card (src/combat-ui.js). The minigame's own lines (flavor, what an
     // action does) are translated with its tables, not here.
     'check.fight': 'Fight', 'check.fightButton': 'Fight · {foe} · level {level}', 'check.fightChip': 'Fight: {result} · {reason}',

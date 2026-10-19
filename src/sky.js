@@ -3,11 +3,13 @@
  *
  *   Sky.mount()                      once, after <body> exists
  *   Sky.set(slot, season)            morning | noon | afternoon | evening | night | midnight; autumn | winter | spring | summer
+ *   Sky.setMotion(mode)              'full' (the default) | 'reduced': the game's Motion setting (src/ui.js)
  *
  * Three layers, fixed behind #app: a tint that is strong at the top and gone by the middle of the screen (the bottom
  * half keeps the page's own colour), an SVG of the sky (sun or moon by the hour, clouds, a skyline with trees dressed
  * for the season), and a canvas of particles (dust, glints, fireflies, stars and wisps by the hour; leaves, snow,
- * petals or pollen by the season). Motion stops for prefers-reduced-motion and while the tab is hidden.
+ * petals or pollen by the season). Motion stops for the Reduced setting and while the tab is hidden.
+ * Particles move by elapsed time, not by frame, so they run at the same speed on 60 Hz and 120 Hz screens.
  */
 (function (root) {
   'use strict';
@@ -15,6 +17,8 @@
   const SEASONS = ['autumn', 'winter', 'spring', 'summer'];
   const DARK = { night: 1, midnight: 1 };
   let el = null, canvas = null, ctx = null, parts = [], raf = 0, last = 0, state = { slot: null, season: null }, still = false;
+  let motion = 'full';
+  const isStill = () => motion === 'reduced';
 
   // A small deterministic random, so the skyline doesn't jump between redraws.
   function rng(seed) { let s = seed >>> 0 || 1; return () => ((s = Math.imul(s ^ (s >>> 15), 2246822519) ^ Math.imul(s ^ (s >>> 13), 3266489917)) >>> 0) / 4294967296; }
@@ -195,9 +199,7 @@
     el.innerHTML = '<div class="sky-tint"></div><div class="sky-season"></div><div class="sky-svg"></div><canvas class="sky-fx"></canvas>';
     document.body.insertBefore(el, document.body.firstChild);
     canvas = el.querySelector('canvas'); ctx = canvas.getContext && canvas.getContext('2d');
-    const mq = root.matchMedia && root.matchMedia('(prefers-reduced-motion: reduce)');
-    still = !!(mq && mq.matches);
-    if (mq && mq.addEventListener) mq.addEventListener('change', (e) => { still = e.matches; if (still) draw(0); else start(); });
+    still = isStill();
     root.addEventListener('resize', resize);
     // The sky also changes width without a window resize (the side panel comes and goes with the screen).
     if (root.ResizeObserver) new root.ResizeObserver(() => resize()).observe(el);
@@ -215,5 +217,8 @@
     seed(); draw(0); start();
   }
 
-  root.Sky = { mount, set, SLOTS, SEASONS };
+  function applyMotion() { still = isStill(); if (still) draw(0); else start(); }
+  function setMotion(mode) { motion = mode === 'reduced' ? 'reduced' : 'full'; if (el) applyMotion(); }
+
+  root.Sky = { mount, set, setMotion, SLOTS, SEASONS };
 })(typeof self !== 'undefined' ? self : this);
