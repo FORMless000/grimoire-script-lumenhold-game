@@ -7,9 +7,10 @@
  * kind, track, present[], news, festival[], hint}], locked: [{slot, place, event}], season, phase}.
  * The base art is content/world/maps/<map>.svg (an <img>, so it works from file:// too); markers are
  * positioned in percent of its 960 × 680 frame. The map is shown before each visit (playtest 2, M1), for
- * that slot alone: tapping an open place goes there at once (M9); "Stay in" skips the visit. A festival's place
- * is highlighted in its slot (picking it joins the festival). A list view shows the same states as text; arrow
- * keys move between markers and Enter picks. (Several slots still work: then the button confirms them.)
+ * that slot alone: tapping an open place picks it, and a double-click (a second tap within DOUBLE_MS) or the button goes
+ * there, so a misclick costs nothing; "Stay in" skips the visit. A festival's place is highlighted in its slot (picking
+ * it joins the festival). A list view shows the same states as text; arrow keys move between markers and Enter picks
+ * (Enter twice goes). (Several slots still work: then a double-click on the last pick or the button confirms them.)
  */
 (function (root) {
   'use strict';
@@ -25,11 +26,21 @@
     const order = view.places.slice().sort((a, b) => a.y - b.y || a.x - b.x);
 
     function pickedIdx(id) { return picks.map((p, i) => (p === id && !lockedAt(i) ? i : -1)).filter((i) => i >= 0); }
+    // A tap picks a place (or unpicks it); a second tap on it within DOUBLE_MS, a double-click, goes (misclicks cost a day).
+    const DOUBLE_MS = 450;
+    let lastTap = null;
+    const isReady = () => view.slots.length === 1 ? !!picks[0] : picks.every((p, i) => p || lockedAt(i) || !view.places.some((x) => x.open[i]));
+    function go() {
+      if (!isReady()) { status = t('map.notReady'); return draw(); }
+      o.onConfirm(picks.slice());
+    }
     function tap(id) {
       const p = byId[id]; if (!p) return;
+      const now = Date.now(), twice = !!lastTap && lastTap.id === id && now - lastTap.t < DOUBLE_MS;
+      lastTap = { id, t: now };
       status = '';
       const already = pickedIdx(id);
-      if (already.length) { picks[already[already.length - 1]] = null; return draw(); }
+      if (already.length) { if (twice) return go(); picks[already[already.length - 1]] = null; return draw(); }
       if (p.state === 'hinted') { status = p.hint || t('map.undiscovered'); return draw(); }
       if (p.visited) { status = t('map.visitedToday', { name: p.name }); return draw(); }
       if (p.festLater) { status = t('map.festivalLater', { name: p.name, slot: t('slot.' + p.festLater).toLowerCase() }); return draw(); }
@@ -39,8 +50,7 @@
       if (ok == null) { status = t('map.closed', { name: p.name, hours: (p.hours || []).map((h) => t('slot.' + h)).join(', ') }); return draw(); }
       picks[ok] = id;
       draw();
-      // One visit at a time (M9): the pick is the decision.
-      if (view.slots.length === 1) o.onConfirm(picks.slice());
+      if (twice) go();
     }
     function markerClass(p) {
       const c = ['mk', 'st-' + p.state];
@@ -91,20 +101,20 @@
     }
     function draw() {
       const single = view.slots.length === 1;
-      const ready = single || picks.every((p, i) => p || lockedAt(i) || !view.places.some((x) => x.open[i]));
+      const ready = single || isReady(), chosen = single && picks[0];
       const q = single ? t('map.q.' + view.slots[0]) + (view.visits > 1 && view.visit ? ' · ' + t('map.visitOf', { n: view.visit, of: view.visits }) : '') : t('map.question2');
       el.innerHTML = '<div class="mapwrap">' +
         '<div class="map-head"><div><div class="map-title">' + esc(o.title || '') + '</div><div class="map-q">' + esc(q) + '</div></div>' +
         (single ? '' : '<div class="map-picks">' + chips() + '</div>') + '</div>' + festBanner() +
         (listMode ? '<div class="map-list">' + order.map(listRow).join('') + '</div>'
           : '<div class="map-frame season-' + esc(view.season || 'none') + '"><img class="map-base" alt="" src="content/world/maps/' + esc(view.map) + '.svg"><div class="map-tint"></div>' + order.map(marker).join('') + '</div>') +
-        '<div class="map-status" role="status">' + esc(status) + '</div>' +
+        '<div class="map-status" role="status">' + esc(status || t('map.howToPick')) + '</div>' +
         '<div class="map-actions"><button class="btn ghost-btn" id="mapList">' + esc(listMode ? t('map.showMap') : t('map.showList')) + '</button>' +
-        '<button class="btn ' + (single ? 'ghost-btn' : 'primary') + '" id="mapGo"' + (ready ? '' : ' disabled') + '>' + esc(single ? t('map.stayIn') : t('map.go')) + '</button></div></div>';
+        '<button class="btn ' + (single && !chosen ? 'ghost-btn' : 'primary') + '" id="mapGo"' + (ready ? '' : ' disabled') + '>' + esc(single ? (chosen ? t('map.goTo', { place: byId[picks[0]] ? byId[picks[0]].name : picks[0] }) : t('map.stayIn')) : t('map.go')) + '</button></div></div>';
       el.querySelectorAll('[data-id]').forEach((b) => { b.onclick = () => tap(b.dataset.id); });
       el.querySelectorAll('.pick-chip:not([disabled])').forEach((b) => { b.onclick = () => { picks[+b.dataset.slot] = null; status = ''; draw(); }; });
       el.querySelector('#mapList').onclick = () => { listMode = !listMode; draw(); };
-      el.querySelector('#mapGo').onclick = () => o.onConfirm(single ? [null] : picks.slice());
+      el.querySelector('#mapGo').onclick = () => (single && !chosen ? o.onConfirm([null]) : go());
     }
     function key(e) {
       const btns = [...el.querySelectorAll('[data-id]')];

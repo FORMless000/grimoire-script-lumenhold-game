@@ -65,7 +65,7 @@ async function checkSurface(p, sel, size, what, label) {
 async function tour(p, base, lang, label, toggles) {
   await p.goto(base + '?lang=' + lang); await wait(p, 300);
   await p.click('#begin'); await wait(p, 250);
-  const o = await p.$$('.origin-opt'); await o[0].click(); await wait(p, 250);
+  const o = await p.$$('.origin-opt'); await o[0].click(); await wait(p, 80); await p.click('#originGo'); await wait(p, 250);
   const seen = {};
   const at = async (key, sel, size) => {
     if (seen[key] || !(await p.$(sel))) return;
@@ -83,7 +83,8 @@ async function tour(p, base, lang, label, toggles) {
     if (await p.$('#beginMonth')) await click(await p.$('#beginMonth'));
     else if (await p.$('#mapGo')) {
       const open = await p.$$('#mapRoot .mk.st-open .mk-dot, #mapRoot .ml-row.st-open');
-      if (open.length) await click(open[i % open.length]); else await click(await p.$('#mapGo'));
+      if (open.length) { await click(open[i % open.length]); await wait(p, 60); }
+      const go = await p.$('#mapGo:not([disabled])'); if (go) await click(go);   // a tap picks; the button goes (or stays in)
     } else if (await p.$('.opt:not([disabled])')) {
       await click((await p.$$('.opt:not([disabled])'))[0]); await wait(p, 80);
       if (await p.$('#multiGo')) await click(await p.$('#multiGo'));

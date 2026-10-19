@@ -64,9 +64,11 @@ async function playthrough(browser, lang) {
     if (await p.$('.opt')) {
       n.menu++; await scan();
       const o = await p.$$('.opt:not([disabled])'); await o[steps % o.length].click(); await p.waitForTimeout(120);
-      if (await p.$('#multiGo')) {   // pick: N menus: add a second option when there is one, then confirm
-        n.multi++;
-        const rest = await p.$$('.opt:not([disabled]):not(.sel)'); if (rest.length) { await rest[0].click(); await p.waitForTimeout(80); }
+      if (await p.$('#multiGo')) {   // a click only picks; Confirm (or a double-click) chooses. pick: N menus add a second option first
+        if (await p.$eval('#multiGo', (b) => /\d+\/\d+/.test(b.textContent))) {
+          n.multi++;
+          const rest = await p.$$('.opt:not([disabled]):not(.sel)'); if (rest.length) { await rest[0].click(); await p.waitForTimeout(80); }
+        }
         await p.click('#multiGo'); await p.waitForTimeout(120);
       }
       continue;
@@ -120,10 +122,12 @@ async function endingPortraits(p, lang) {
 async function pickOrigin(p) {
   const opts = await p.$$('.origin-opt');
   if (!opts.length) throw new Error('no origin screen after Begin');
-  await opts[Math.floor(Math.random() * opts.length)].click(); await p.waitForTimeout(250);
+  await opts[Math.floor(Math.random() * opts.length)].click(); await p.waitForTimeout(80);
+  await p.click('#originGo'); await p.waitForTimeout(250);   // a click picks; Confirm starts
 }
 
-// The map screen (M1): one visit at a time; tapping an open place goes there at once, "Stay in" skips it.
+// The map screen (M1): one visit at a time; tapping an open place picks it and the button ("Go to …") goes; with no
+// pick the button is "Stay in".
 async function mapPick(p, steps) {
   if (SHOTS && steps < 40) await p.screenshot({ path: path.join(OUT, 'map.png') });
   const turn = () => p.evaluate(() => lumen.eng.s.hist.filter((h) => h.t === 'pick').length);
@@ -163,7 +167,7 @@ async function languageSwitch(browser) {
   await p.click('#begin'); await p.waitForTimeout(200); await pickOrigin(p); await p.click('#beginMonth'); await p.waitForTimeout(300);
   // Play until an outcome card is on screen: switching there must keep it (B1), not skip to the next card.
   for (let i = 0; i < 30 && !(await p.$('#contBtn')); i++) {
-    if (await p.$('.opt:not([disabled])')) await (await p.$$('.opt:not([disabled])'))[0].click();
+    if (await p.$('.opt:not([disabled])')) { await (await p.$$('.opt:not([disabled])'))[0].click(); const go = await p.$('#multiGo:not([disabled])'); if (go) await go.click(); }
     else if (await p.$('#mapGo')) await mapPick(p, i);
     else if (await p.$('#beginMonth')) await p.click('#beginMonth');
     else await p.keyboard.press('ArrowRight');

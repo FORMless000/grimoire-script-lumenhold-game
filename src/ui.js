@@ -238,10 +238,24 @@
       (o.money ? '<small class="money">' + Art.icon('coin', 13) + ' ' + esc(o.money) + '</small>' : '') +
       (o.poor ? '<small class="warn">' + esc(t('origin.poorWarning')) + '</small>' : '') + '</button>').join('');
     openOverlay('<div class="modal dark origin-modal"><div class="modal-body"><h2>' + esc(t('origin.heading')) + '</h2><p class="text">' + esc(t('origin.intro')) + '</p>' +
-      '<div class="opt-grid">' + opts + '</div><div class="row" style="margin-top:14px"><button class="btn ghost-btn grow" id="originBack">' + esc(t('origin.back')) + '</button></div></div></div>');
-    document.querySelectorAll('.origin-opt').forEach((b) => { b.onclick = () => { if (ui.mode === 'origin') start(b.dataset.k); }; });
+      '<div class="opt-grid">' + opts + '</div><div class="row" style="margin-top:14px"><button class="btn ghost-btn grow" id="originBack">' + esc(t('origin.back')) + '</button>' +
+      '<button class="btn primary grow" id="originGo" disabled>' + esc(t('menu.confirmOne')) + '</button></div></div></div>');
+    // As in every menu: a click picks, a double-click (or Confirm, or Enter) starts.
+    let sel = null, last = null;
+    const go = () => { if (ui.mode === 'origin' && sel) start(sel); };
+    const pick = (k) => {
+      if (ui.mode !== 'origin') return;
+      const now = Date.now(), twice = !!last && last.k === k && now - last.t < DOUBLE_MS;
+      last = { k, t: now }; sel = k;
+      document.querySelectorAll('.origin-opt').forEach((b) => b.classList.toggle('sel', b.dataset.k === k));
+      document.getElementById('originGo').disabled = false;
+      if (twice) go();
+    };
+    document.querySelectorAll('.origin-opt').forEach((b) => { b.onclick = () => pick(b.dataset.k); });
+    document.getElementById('originGo').onclick = go;
     document.getElementById('originBack').onclick = () => { closeOverlay(); ui.mode = 'title'; };
-    ui.originPick = (i) => { const o = choices[i]; if (o && ui.mode === 'origin') start(o.key); };
+    ui.originPick = (i) => { const o = choices[i]; if (o) pick(o.key); };
+    ui.originGo = go;
   }
 
   function previewEvent(id) {
@@ -641,6 +655,7 @@
     }
     choices.querySelectorAll('.choice').forEach((b) => {
       const opt = v.options.find((o) => o.key === b.dataset.k);
+      longPressReveal(b);
       b.onmouseenter = () => setPreview(opt.affects);
       b.onmouseleave = () => setPreview(null);
       b.onclick = () => commitCard(story ? 'right' : b.dataset.k);
@@ -704,11 +719,37 @@
       if (d.kind === 'exam') return ['A', 'B', 'C', 'F'][d.choice] + ' ';
       return '';
     };
-    const more = pv.follows ? '<i class="more" title="' + esc(t('preview.follows')) + '">…</i>' : '';
-    if (pv.paths.length <= 1) { const l = line(pv.deltas); return l || more ? '<span class="pv">' + l + more + '</span>' : ''; }
+    const items = whatFollows(pv.what), full = items.length ? '<span class="pv-more">' + items.map((x) => '<em>' + esc(x) + '</em>').join('') + '</span>' : '';
+    const more = pv.follows ? '<i class="more" title="' + esc(items.join(' · ') || t('preview.follows')) + '">…</i>' : '';
+    if (pv.paths.length <= 1) { const l = line(pv.deltas); return l || more ? '<span class="pv">' + l + more + full + '</span>' : ''; }
     // A fight's paths are its outcomes (win, partial, lose), with no odds: the fight decides, not a roll.
     const paths = pv.fight ? pv.paths.slice().sort((a, b) => ((a.labels[0] || {}).choice || 0) - ((b.labels[0] || {}).choice || 0)) : pv.paths.slice().sort((a, b) => b.p - a.p);
-    return '<span class="pv multi">' + paths.slice(0, 3).map((pth) => '<span class="pvl"><b>' + esc(pth.fight ? label(pth).trim() + ' ' : label(pth) + Math.round(pth.p * 100) + '%') + '</b>' + (line(pth.deltas) || '—') + (pth.follows ? '<i class="more">…</i>' : '') + '</span>').join('') + (paths.length > 3 ? '<span class="pvl">…</span>' : '') + '</span>';
+    return '<span class="pv multi">' + paths.slice(0, 3).map((pth) => '<span class="pvl"><b>' + esc(pth.fight ? label(pth).trim() + ' ' : label(pth) + Math.round(pth.p * 100) + '%') + '</b>' + (line(pth.deltas) || '—') + (pth.follows ? '<i class="more">…</i>' : '') + '</span>').join('') + (paths.length > 3 ? '<span class="pvl">…</span>' : '') + full + '</span>';
+  }
+  // The "…" spelled out (preview.what): notes (a spell, a meeting…), a follow-up later, something remembered, the end.
+  function whatFollows(w) {
+    if (!w) return [];
+    const out = [];
+    for (const n of w.notes || []) { const x = noteText(n); if (x && !out.includes(x)) out.push(x); }
+    if (w.followUp) out.push(t('preview.followUp'));
+    if (w.remembered) out.push(t('preview.remembered'));
+    if (w.ends) out.push(t('preview.ends'));
+    return out;
+  }
+  // Long-press (touch) on a choice or a menu tile spells out its "…" instead of choosing; hover does it with a mouse (CSS).
+  function longPressReveal(b) {
+    let timer = null, shown = false, x0 = 0, y0 = 0;
+    const hide = () => { b.classList.remove('show-more'); };
+    b.addEventListener('touchstart', (e) => {
+      const t0 = e.touches[0]; x0 = t0.clientX; y0 = t0.clientY; shown = false;
+      timer = setTimeout(() => { if (!b.querySelector('.pv-more')) return; shown = true; b.classList.add('show-more'); setTimeout(hide, 4000); }, 450);
+    }, { passive: true });
+    b.addEventListener('touchmove', (e) => { const t1 = e.touches[0]; if (Math.hypot(t1.clientX - x0, t1.clientY - y0) > 10) clearTimeout(timer); }, { passive: true });
+    b.addEventListener('touchend', () => clearTimeout(timer), { passive: true });
+    b.addEventListener('touchcancel', () => clearTimeout(timer), { passive: true });
+    b.addEventListener('contextmenu', (e) => { if (b.querySelector('.pv-more')) e.preventDefault(); });
+    // The click a long-press ends with only reveals.
+    b.addEventListener('click', (e) => { if (shown) { shown = false; e.stopImmediatePropagation(); e.preventDefault(); } }, true);
   }
   function commitCard(dir) {
     if (ui.busy || ui.mode !== 'card') return;
@@ -905,7 +946,7 @@
   }
   function showMenu(v, led) {
     if (!led) return showMenuLead(v);
-    ui.mode = 'menu'; ui.view = v; ui.busy = false; ui.multi = v.pick > 1 ? [] : null;
+    ui.mode = 'menu'; ui.view = v; ui.busy = false; ui.multi = v.pick > 1 ? [] : null; ui.sel = null; ui.lastPick = null;
     const deck = document.getElementById('deck'); deck.querySelectorAll('.card').forEach((c) => c.remove());
     document.getElementById('choices').innerHTML = '';
     const opts = v.options.map((o, i) => {
@@ -917,30 +958,41 @@
     }).join('');
     openOverlay('<div class="modal dark"><div class="modal-art">' + Art.scene(v.art, v.tags, v.id) + '</div><div class="modal-body">' + (v.actor ? actorRow(v.actor).replace('actor-row', 'actor-row" style="color:var(--text)') : '') +
       '<h2>' + esc(v.title) + '</h2><p class="text prompt">' + esc(v.pick > 1 ? t('menu.promptMany', { n: v.pick }) : t('menu.prompt')) + '</p>' +
-      '<div class="opt-grid">' + opts + '</div>' + (ui.multi ? '<div class="row" style="margin-top:14px"><button class="btn primary grow" id="multiGo" disabled style="width:100%">' + esc(t('menu.confirm', { n: 0, max: v.pick })) + '</button></div>' : '') + '</div></div>');
-    if (ui.multi) document.getElementById('multiGo').onclick = () => { if (ui.multi.length) { const keys = ui.multi.slice(); ui.busy = true; closeOverlay(); setPreview(null); resolve(keys); } };
+      '<div class="opt-grid">' + opts + '</div><div class="row" style="margin-top:14px"><button class="btn primary grow" id="multiGo" disabled style="width:100%">' + esc(ui.multi ? t('menu.confirm', { n: 0, max: v.pick }) : t('menu.confirmOne')) + '</button></div></div></div>');
+    document.getElementById('multiGo').onclick = confirmMenu;
     document.querySelectorAll('.opt').forEach((b) => {
       const o = v.options.find((x) => x.key === b.dataset.k);
       b.onmouseenter = () => setPreview(o.affects);
       b.onmouseleave = () => setPreview(null);
       b.onclick = () => pickMenu(o.key);
+      longPressReveal(b);
     });
   }
+  const DOUBLE_MS = 450;   // two clicks (taps) on the same choice within this: a double-click, which confirms
   function pickMenu(key) {
     if (ui.busy || ui.mode !== 'menu') return;
     const o = ui.view.options.find((x) => x.key === key);
     if (!o || o.disabled) return;
+    const now = Date.now(), twice = !!ui.lastPick && ui.lastPick.k === key && now - ui.lastPick.t < DOUBLE_MS;
+    ui.lastPick = { k: key, t: now };
     if (ui.multi) {
       const i = ui.multi.indexOf(key);
-      if (i >= 0) ui.multi.splice(i, 1); else if (ui.multi.length < ui.view.pick) ui.multi.push(key);
-      document.querySelectorAll('.opt').forEach((b) => b.classList.toggle('sel', ui.multi.includes(b.dataset.k)));
-      const go = document.getElementById('multiGo');
-      go.disabled = !ui.multi.length; go.textContent = t('menu.confirm', { n: ui.multi.length, max: ui.view.pick });
-      return;
-    }
+      if (twice) { if (i < 0 && ui.multi.length < ui.view.pick) ui.multi.push(key); }   // the second click keeps it picked
+      else if (i >= 0) ui.multi.splice(i, 1); else if (ui.multi.length < ui.view.pick) ui.multi.push(key);
+    } else ui.sel = key;
+    const picked = ui.multi || [ui.sel];
+    document.querySelectorAll('.opt').forEach((b) => b.classList.toggle('sel', picked.includes(b.dataset.k)));
+    const go = document.getElementById('multiGo');
+    if (go) { go.disabled = ui.multi ? !ui.multi.length : !ui.sel; go.textContent = ui.multi ? t('menu.confirm', { n: ui.multi.length, max: ui.view.pick }) : t('menu.confirmOne'); }
+    if (twice) confirmMenu();
+  }
+  function confirmMenu() {
+    if (ui.busy || ui.mode !== 'menu') return;
+    const keys = ui.multi ? (ui.multi.length ? ui.multi.slice() : null) : ui.sel;
+    if (!keys) return;
     ui.busy = true;
     closeOverlay(); setPreview(null);
-    resolve(key);
+    resolve(keys);
   }
 
   /* ------------------------------------------------------------------ map (design §6.3) */
@@ -1034,7 +1086,7 @@
     if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
     if (e.key === 'Escape' && ui.sideOpen && document.getElementById('side')) { e.preventDefault(); setSide(false); return; }
     if ((e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey && document.getElementById('fbBar')) { e.preventDefault(); openFeedback(); return; }
-    if (ui.mode === 'origin') { if (/^[1-9]$/.test(e.key) && ui.originPick) { e.preventDefault(); ui.originPick(+e.key - 1); } else if (e.key === 'Escape') { e.preventDefault(); closeOverlay(); ui.mode = 'title'; } return; }
+    if (ui.mode === 'origin') { if (/^[1-9]$/.test(e.key) && ui.originPick) { e.preventDefault(); ui.originPick(+e.key - 1); } else if (e.key === 'Enter' && ui.originGo) { e.preventDefault(); ui.originGo(); } else if (e.key === 'Escape') { e.preventDefault(); closeOverlay(); ui.mode = 'title'; } return; }
     if (ui.mode === 'map') { if (ui.mapCtl && ui.mapCtl.key(e)) e.preventDefault(); return; }
     if (ui.mode === 'card') {
       const v = ui.view; const story = v.type === 'story' || v.options.length === 1;
@@ -1049,6 +1101,7 @@
     } else if (ui.mode === 'menu') {
       const n = parseInt(e.key, 10);
       if (n >= 1 && n <= 9 && ui.view.options[n - 1]) pickMenu(ui.view.options[n - 1].key);
+      else if (e.key === 'Enter') { e.preventDefault(); confirmMenu(); }
     } else if (ui.mode === 'month') {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ui.monthGo && ui.monthGo(); }
     }
@@ -1183,7 +1236,7 @@
     const bar = document.getElementById('fbBar'); if (!bar) return;
     const targets = fbTargets();
     bar.style.display = targets.length ? '' : 'none';
-    bar.innerHTML = targets.map(({ e, label }) => '<div class="fb-t" title="' + esc(e.title || '') + '"><span class="fb-lbl">' + esc(label) + '</span>' + fbBtn(e.n, 'up', e.fb) + fbBtn(e.n, 'down', e.fb) + '</div>').join('') +
+    bar.innerHTML = targets.slice().reverse().map(({ e, label }) => '<div class="fb-t" title="' + esc(e.title || '') + '"><span class="fb-lbl">' + esc(label) + '</span>' + fbBtn(e.n, 'up', e.fb) + fbBtn(e.n, 'down', e.fb) + '</div>').join('') +
       '<button class="fb-open' + (targets.some(({ e }) => e.fb && e.fb.comment) ? ' has' : '') + '" title="' + esc(t('fb.open')) + '">✎</button>';
   }
   function journalFeedback(n) {

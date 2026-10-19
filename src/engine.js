@@ -1822,7 +1822,8 @@
     // Every way an option can turn out, by running its effects on a scratch copy of the state for each path
     // through its chances, checks and challenges, with random amounts at both ends of their range. Nothing
     // in the real state (or the RNG) changes. Paths more than 2 branches deep are merged into ranges.
-    //   -> { paths: [{p, labels, deltas: {key: [lo, hi]}, follows}], deltas (envelope), follows, cost }
+    //   -> { paths: [{p, labels, deltas: {key: [lo, hi]}, follows, what}], deltas (envelope), follows, what, cost }
+    //   what: what the "…" stands for: {notes, followUp, remembered, ends} (no titles or flag names)
     preview(eventId, key, actor) {
       const e = this.c.events[eventId];
       const opt = e && this.optionsOf(e).find((o) => o.key === key);
@@ -1864,14 +1865,25 @@
         } finally {
           const follows = ctx.notes.some((n) => n.kind !== 'wage') || s.queue.length !== saved.queue.length || s.deck.length !== saved.deck.length || !!s.ended !== !!saved.ended ||
             Object.keys(s.flags).length !== Object.keys(saved.flags).length || Object.keys(s.flags).some((k) => !saved.flags[k]);
+          // What follows, for the preview's "…": the notes (a spell learned, someone met…), a follow-up card, something
+          // remembered (a flag), or the end of the run. No card titles or flag names: those could give a story away.
+          const what = { notes: ctx.notes.filter((n) => n.kind !== 'wage').map((n) => JSON.parse(JSON.stringify(n))),
+            followUp: s.queue.length > saved.queue.length || s.deck.length !== saved.deck.length,
+            remembered: Object.keys(s.flags).length !== Object.keys(saved.flags).length || Object.keys(s.flags).some((k) => !saved.flags[k]),
+            ends: !!s.ended && !saved.ended };
           this._oracle = null; this._variant = null; this._cast = null; this._ctxTrack = null;
           for (const k of KEYS) s[k] = saved[k];
-          runOnce.last = { decisions, deltas: ctx.deltas, follows, fight: !!fightSeen.fight };
+          runOnce.last = { decisions, deltas: ctx.deltas, follows, what, fight: !!fightSeen.fight };
         }
         return runOnce.last;
       };
       const paths = [];
       const queue = [[]];
+      const mergeWhat = (a, b) => {
+        if (!a) return b; if (!b) return a;
+        const seen = new Set(a.notes.map((n) => JSON.stringify(n)));
+        return { notes: a.notes.concat(b.notes.filter((n) => !seen.has(JSON.stringify(n)))), followUp: a.followUp || b.followUp, remembered: a.remembered || b.remembered, ends: a.ends || b.ends };
+      };
       while (queue.length && paths.length < 64) {
         const prefix = queue.shift();
         const lo = runOnce(prefix, 'min'), hi = runOnce(lo.decisions.map((d) => d.choice), 'max');
@@ -1879,7 +1891,7 @@
         for (const k of new Set([...Object.keys(lo.deltas), ...Object.keys(hi.deltas)])) { const a = lo.deltas[k] || 0, b = hi.deltas[k] || 0; deltas[k] = [Math.min(a, b), Math.max(a, b)]; }
         let p = 1;
         lo.decisions.forEach((d) => { p *= (d.probs[d.choice] || 0) / 100; });
-        paths.push({ p, decisions: lo.decisions.map((d) => ({ kind: d.kind, choice: d.choice, label: d.label })), deltas, follows: lo.follows || hi.follows, fight: lo.fight || hi.fight });
+        paths.push({ p, decisions: lo.decisions.map((d) => ({ kind: d.kind, choice: d.choice, label: d.label })), deltas, follows: lo.follows || hi.follows, what: mergeWhat(lo.what, hi.what), fight: lo.fight || hi.fight });
         for (let i = prefix.length; i < lo.decisions.length; i++) {
           lo.decisions[i].probs.forEach((x, a) => { if (x > 0 && a !== lo.decisions[i].choice) queue.push(lo.decisions.slice(0, i).map((d) => d.choice).concat([a])); });
         }
@@ -1890,8 +1902,8 @@
         const head = pth.decisions.slice(0, 2);
         const k = head.map((d) => d.kind + d.choice).join('/');
         const m = merged.get(k);
-        if (!m) { merged.set(k, { p: pth.p, labels: head, deltas: { ...pth.deltas }, follows: pth.follows, fight: pth.fight }); continue; }
-        m.p += pth.p; m.follows = m.follows || pth.follows; m.fight = m.fight || pth.fight;
+        if (!m) { merged.set(k, { p: pth.p, labels: head, deltas: { ...pth.deltas }, follows: pth.follows, what: pth.what, fight: pth.fight }); continue; }
+        m.p += pth.p; m.follows = m.follows || pth.follows; m.what = mergeWhat(m.what, pth.what); m.fight = m.fight || pth.fight;
         for (const key2 of new Set([...Object.keys(m.deltas), ...Object.keys(pth.deltas)])) {
           const a = m.deltas[key2] || [0, 0], b = pth.deltas[key2] || [0, 0];
           m.deltas[key2] = [Math.min(a[0], b[0]), Math.max(a[1], b[1])];
@@ -1902,7 +1914,7 @@
       for (const pth of out) for (const [k, [a, b]] of Object.entries(pth.deltas)) { const cur = envelope[k] || [Infinity, -Infinity]; envelope[k] = [Math.min(cur[0], a), Math.max(cur[1], b)]; }
       for (const pth of out) for (const k of Object.keys(envelope)) if (!pth.deltas[k]) { envelope[k] = [Math.min(envelope[k][0], 0), Math.max(envelope[k][1], 0)]; }
       // `fight`: the option plays a fight; its odds are the stub's estimate, and the fight settles its own bars (FIGHT_BARS).
-      return { paths: out, deltas: envelope, follows: out.some((x) => x.follows), cost, spell: opt.spell || null, fight: out.some((x) => x.fight) };
+      return { paths: out, deltas: envelope, follows: out.some((x) => x.follows), what: out.reduce((w, x) => mergeWhat(w, x.what), null), cost, spell: opt.spell || null, fight: out.some((x) => x.fight) };
     }
     // Does a real outcome fit one of the preview's paths? (The preview property test, design §8.3.)
     // A path through a played fight doesn't predict the bars the fight settles (FIGHT_BARS).
