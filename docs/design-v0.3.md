@@ -742,9 +742,9 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - **Origins** (`docs/origin-design.md`, 2026-10-16): each starts with its skill levels and purse (presets `origin_*_start`): noble Charm 25, Lore 12, 90 crowns, +6 Renown; scholarship Lore 28, Arcana 12, 60; witch-raised Alchemy 30, Arcana 15, Lore 6, 45, +6 Mood; street-raised Guile 30, Vigor 18, 38; trading heir Charm 25, Guile 15, 150. Support comes as cash on one card in the last break month before each later term (turns 6, 12 … 42), wherever the break is spent: the noble's family letter (38, an 11 gift in 30% of terms, Mood −small), the scholarship's bursary list (38 at a latest-term GPA of 3.0, 46 at 3.5, `term_gpa`; nothing below or with no grades), the company's report (78 in 70% of terms, else nothing). These are about two thirds of `origin-design.md`'s 60/15/60/68/120 (2026-10-16: at full size the supported origins ended runs with 400–700 crowns). Witch- and street-raised get nothing. Rolls happen when the card is drawn, so a reload keeps them.
 
 **Mana (0–max).**
-- Max = 40 + arcana/2. Regen per month = 10 + arcana/10.
+- Max = the combat minigame's Mana capacity, one scale in both games (2026-10-18; `combat/INTEGRATION.md` §2): round(43 × (2/3 + (2·arcana + lore + alchemy + charm + vigor + guile)/1050)), Arcana counted twice: 32 at the starting skills, 43 at 50, 53 at 80. It was 40 + arcana/2. Regen per month = 10 + arcana/10, unchanged, so the pool refills nearly every month (measured, 80 games a style: every style's Mana sits at or near its max).
 - Restored by some events (the observatory at night, ley lines, a professor's tea).
-- Ambient drains: wards failing, wild magic, exam nerves.
+- Ambient drains: wards failing, wild magic. (Exam nerves, −15 in each term's exam month, were removed with the one Mana scale.)
 - Spent by spells (§9.1).
 
 **Renown (0–100).**
@@ -915,14 +915,14 @@ Spells v2 (2026-10-17; the list and its reasons: `docs/spells-v2-list.md`). The 
 name: Sleight
 skill: guile           # the skill it trains when learned and adds to on checks (one or two; none for Ward)
 verb: Lift             # the verb its cards use
-cost: 6                # Mana for a card's up[] option, per level (three values for a course spell)
+cost: 4                # Mana per level (three values for a course spell), on a card and in a fight alike
 alignment: tiny        # taken off alignment on every cast (Sleight; the forbidden pool: small)
 art: spell_sleight
 desc: Palm, swap, pocket. …
 ```
 
 - **Learned from:** a course's start card (`start:`, each level at the level's start; passing the level is the fallback
-  and never teaches ahead), cards (`learn_spell x`), and `teaches:`. A fight prices spells itself; `cost:` is the card's.
+  and never teaches ahead), cards (`learn_spell x`), and `teaches:`. A spell costs the same Mana on a card as in a fight: `cost:` is the roster's (`combat/setup/roster.mjs`), and a test keeps them equal.
 - **A reward** (playtest 2, L-6): learning a spell, or a level of one, gives skill XP in its skill (`@balance spell_bonus`
   by level for a three-level spell: medium, large, huge; `spell_bonus_one`, large, for a one-level spell), shown on the
   "New spell" note.

@@ -77,7 +77,9 @@ on_zero:
 name: Mana
 icon: sparkle
 min: 0
-max: 40 + arcana / 2
+# One scale with the combat minigame (combat/INTEGRATION.md §2): the fight's Mana capacity, 43 × (2/3 + weighted skill/150),
+# Arcana counted twice: 32 at the starting skills, 43 at 50, 53 at 80 (`manaCapacity`, combat/setup/roster.mjs).
+max: round(43 * (2 / 3 + (2 * arcana + lore + alchemy + charm + vigor + guile) / 1050))
 start: 30
 color: #5fa8e8
 desc: The magic you can spend on spells. Refills each month, faster the stronger your Arcana.
@@ -270,15 +272,6 @@ when: turn > 1
 do:
   mana += 10 + arcana / 10
   say: {~The magic seeps back into you overnight, like warmth into cold hands.|Your fingertips tingle again by morning.|Whatever you spent, the castle quietly gives some back.}
-
-# Ambient drains (design §8.2): exam nerves in the finals months, so mana matters even without casting.
-@hook exam_nerves
-on: month_start
-label: Exam nerves
-when: month == 4 or month == 10
-do:
-  mana -= 15
-  say: {~Exam nerves eat at your magic: your wand hand won't stay still.|Revision drinks your mana before you can cast a thing.}
 
 # ---------------- Game start ----------------
 

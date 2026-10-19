@@ -359,14 +359,15 @@
     // How much skill moves the odds (playtest 2, M14): `wild` checks swing whatever your skill, `steady` ones follow it closely.
     swingSlope(sw) { const d = (this.c.balance && this.c.balance.swing) || {}, k = sw || 'normal'; return d[k] != null ? d[k] : { normal: 2.5, wild: 1.2, steady: 4 }[k]; }
     // The combat stub (playtest 2, M39), until the minigame: a mix of arcana, vigor and guile, how you are right now
-    // (health, mood, mana around 50) and every spell level you know. Weights in `@balance combat:`.
+    // (health, mood and mana, each around half its max) and every spell level you know. Weights in `@balance combat:`.
     combatWeights() { return Object.assign({ arcana: 1, vigor: 1, guile: 0.5, condition: 0.2, spells: 1.5 }, (this.c.balance && this.c.balance.combat) || {}); }
     combatValue() {
       const s = this.s, w = this.combatWeights();
       let sum = 0, tw = 0;
       for (const k of Object.keys(w)) if (this.c.skills[k] && w[k]) { sum += w[k] * (s.vals[k] || 0); tw += w[k]; }
       const cond = ['health', 'mood', this.spellResource].filter((k) => this.c.resources[k]);
-      const shape = cond.length ? cond.reduce((a, k) => a + (s.vals[k] || 0), 0) / cond.length - 50 : 0;
+      // Each as a share of its max (one Mana scale with the fight, 2026-10-18: Mana's pool is about 32–53, not 100).
+      const shape = cond.length ? cond.reduce((a, k) => a + 100 * (s.vals[k] || 0) / Math.max(1, this.resMax(this.c.resources[k])), 0) / cond.length - 50 : 0;
       const levels = Object.entries(s.spells || {}).reduce((a, [id, lv]) => a + (this.c.spells[id] ? lv || 0 : 0), 0);
       return (tw ? sum / tw : 0) + (w.condition || 0) * shape + Math.min(15, (w.spells || 0) * levels);
     }

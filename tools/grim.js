@@ -455,7 +455,8 @@ function budgetCheck(e, content, P) {
   // A neutral mid-range state, so costs never clamp away (a fresh game may start broke after tuition).
   const eng = budgetCheck.eng = budgetCheck.eng || (() => {
     const x = new Engine(content); x.newGame({ seed: 1, name: 'Lint' });
-    for (const [id, r] of Object.entries(content.resources)) x.s.vals[id] = id === 'gold' ? 200 : r.min < 0 ? 0 : 50;
+    // Mid-range of each bar (half its max, at most 50: Mana's pool is about 32 early, 2026-10-18), so a cost isn't clamped.
+    for (const [id, r] of Object.entries(content.resources)) x.s.vals[id] = id === 'gold' ? 200 : r.min < 0 ? 0 : Math.min(50, Math.round(x.resMax(r) / 2));
     x.sparkFollow = () => ({ per: 25, cap: 0, partner: 0, cooldown: 101 });   // value what the card says, not spark carried along (M37)
     // Every course enrolled with some preparation, so `study … -tiny` (a skipped lecture) shows as the cost it is (A3).
     // Coursework counts as already given this month: it is the same on every option, so it stays out of their value.
