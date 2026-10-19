@@ -51,6 +51,7 @@
     'title.randomName': 'Random name',
     'title.pronouns': 'Pronouns', 'title.pronoun.she': 'she/her', 'title.pronoun.he': 'he/him', 'title.pronoun.they': 'they/them',
     'title.defaultName': 'Wren',
+    'title.wip': 'Work in progress: the game is still changing, and saves from older versions may stop loading.',
 
     'top.people': 'Character & people',
     'top.quit': 'Save & return to title',
@@ -250,7 +251,7 @@
     'settings.engineOff': 'Off', 'settings.engineOn': 'On (cheating)',
     'difficulty.easy': 'Easy', 'difficulty.medium': 'Medium', 'difficulty.hard': 'Hard', 'difficulty.engine': 'Engine',
     // The credit line at the bottom of the title screen and of Settings, after '© year author'.
-    'credits.made': 'Made in Grimoire Script', 'credits.license': 'Free to use: WTFPL',
+    'credits.license': 'Free to use: WTFPL',
     'credits.source': 'Source on GitHub', 'credits.issues': 'Report a problem',
     // A fight: the combat minigame played over the card (src/combat-ui.js). The minigame's own lines (flavor, what an
     // action does) are translated with its tables, not here.

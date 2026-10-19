@@ -182,6 +182,7 @@
       '<div class="title-crest">' + Art.icon('tower', 64) + '</div>' +
       '<h1>' + esc(g.title || 'Lumenhold Academy') + '</h1>' +
       '<p class="sub">' + esc(g.subtitle || '') + '</p>' +
+      '<p class="wip">' + esc(t('title.wip')) + '</p>' +
       '<div class="title-form">' +
       (languages.length > 1 ? '<div class="lang-row">' + Art.icon('globe', 16) + languages.map((l) => '<button class="lang-btn' + (l.code === cur ? ' on' : '') + '" data-lang="' + esc(l.code) + '">' + esc(l.name) + '</button>').join('') + '</div>' : '') +
       '<label for="pname">' + esc(t('title.yourName')) + '</label><div class="name-row"><input id="pname" maxlength="24" value="' + esc(I18n.randomName(pron)) + '" autocomplete="off">' +
@@ -1324,7 +1325,7 @@
   const CREDIT = { author: 'FORMless000', year: 2026, repo: 'https://github.com/FORMless000/grimoire-script-lumenhold-game' };
   function creditsLine() {
     const a = (href, text) => '<a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(text) + '</a>';
-    return '<footer class="credits">' + ['© ' + CREDIT.year + ' ' + esc(CREDIT.author), esc(t('credits.made')),
+    return '<footer class="credits">' + ['© ' + CREDIT.year + ' ' + esc(CREDIT.author),
       a(CREDIT.repo + '/blob/main/LICENSE', t('credits.license')), a(CREDIT.repo, t('credits.source')), a(CREDIT.repo + '/issues', t('credits.issues'))]
       .map((x) => '<span>' + x + '</span>').join('') + '</footer>';
   }
