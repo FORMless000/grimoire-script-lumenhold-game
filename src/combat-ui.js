@@ -3,11 +3,15 @@
  * stage in place of the card, which waits until the fight ends (HANDOFF §5; the host gets .fighting, src/combat.css). Ported from combat/web/app.mjs, the fight only: the fighters, the exchange track, the telegraph,
  * the square actions and the inspect sheet. None of the bench (setup, dock, engine view, journal, log), no header and no
  * concession: a fight runs until someone falls, a stalemate or a decision on points.
- *   CombatUI.open({host, request, content, t, difficulty, avatar, saved, onSave, onDone})
+ *   CombatUI.open({host, request, content, t, difficulty, avatar, saved, onSave, onDone, engineHelp, engineShown, onEngineShown})
  *     request   the engine's fightRequest (eng.fightAhead(key))
  *     saved     a fight in progress to resume (what onSave was last handed)
  *     onSave    (snapshot) after every exchange: plain JSON, kept with the run (s.fightInProgress)
  *     onDone    (result) once, when the player leaves the result: the engine's result (choose(key, {fights: [result]}))
+ *     engineHelp   the "engine analysis" setting (a cheat): a toggle in the fight shows the engine's analysis on the player's
+ *                  turn (combat/web/analysis.mjs, in its own worker): an eval bar, each action's score, the best move outlined
+ *                  and its top lines. engineShown is the toggle's last state; onEngineShown(on) when it changes.
+ *                  engineBudget: its time per turn in ms (Infinity: it searches until the turn ends); onEngineBudget(ms).
  *   CombatUI.autoResolve(request, content)  a fight played by two AIs at once (a safety net; never the normal path)
  * Look: src/combat.css. Text: the UI's fight.* strings (src/i18n.js); the fight's own lines come from the minigame.
  */
@@ -34,6 +38,7 @@
   const BLANK = '<svg viewBox="0 0 64 64" aria-hidden="true" class="ph blank"><rect width="64" height="64" fill="#1b2043"/></svg>';
     const AHEAD = 4, CAST_ON_FOE = new Set(['compelled', 'torment']), EFFECT_ICON = { compelled: 'compel', guard: 'guard', frozen: 'frozen' };
   const RESULT_BARS = ['health', 'mana', 'mood', 'renown', 'gold', 'alignment'];
+  const ENGINE_BUDGETS = [500, 1500, 4000, Infinity];   // the engine analysis's time per turn, ms
 
   function open(opts) {
     const { host, content } = opts;
@@ -44,8 +49,10 @@
     host.classList.add('fighting'); host.appendChild(layer);
     const $ = (sel) => layer.querySelector(sel);
     let fight = null, game = null, names = null, history = [], selected = null, busy = false, moves = 0, bars = {}, seen = {}, sheet = null, focusEx = null, ai = null, closed = false, done = false;
+    let analyst = null, analysis = null, analysisFor = -1, analysisRunning = false, engineOn = !!(opts.engineHelp && opts.engineShown);
+    let engineBudget = ENGINE_BUDGETS.includes(opts.engineBudget) ? opts.engineBudget : 1500;
 
-    const close = () => { closed = true; if (ai) ai.terminate(); document.removeEventListener('keydown', onKey); layer.remove(); host.classList.remove('fighting'); };
+    const close = () => { closed = true; if (ai) ai.terminate(); if (analyst) analyst.terminate(); document.removeEventListener('keydown', onKey); layer.remove(); host.classList.remove('fighting'); };
     const foeName = (id, en) => C().tx('foe.' + id, en);
     const snapshot = () => ({ key: opts.key, request: fight.request, state: game, history, foe: fight.foe, setting: fight.setting, names, rules: fight.rules });
 
@@ -72,6 +79,7 @@
     function submit(id) {
       const C_ = C(), channels = game.actors.map((a) => a.channel && a.channel.id), before = C_.cloneState(game), r = C_.applyChoice(game, id);
       moves++;
+      if (analyst && analysisRunning) { analyst.stop(); analysisRunning = false; }   // that position is gone
       if (r.resolved) {
         const actionNames = r.pair.map((x, i) => (['hold', 'release'].includes(x) ? C_.label(x) + ' ' + C_.label(channels[i]) : C_.label(x)));
         history.push(Object.assign({}, r, { channels, lines: C_.resolvedLines(before, game, Object.assign({}, r, { channels, actionNames }), names), finish: C_.finishLines(before, game, r.pair, r.round, names), actionNames }));
@@ -113,6 +121,9 @@
     const price = (side, id) => { const { h, m } = costs(side, id); return [m ? tr('mana', { n: fmt(m) }) : '', h ? tr('hp', { n: fmt(h) }) : ''].filter(Boolean).join(' + ') || tr('free'); };
     const costHtml = (side, id) => { const { h, m } = costs(side, id); return '<span class="a-cost">' + (m ? '<b class="c-mana" aria-label="' + esc(tr('mana', { n: fmt(m) })) + '">' + fmt(m) + '</b>' : '') + (h ? '<b class="c-hp" aria-label="' + esc(tr('hp', { n: fmt(h) })) + '">' + fmt(h) + '</b>' : '') + '</span>'; };
     const nameOf = (i) => (i === 0 ? tr('you') : fight.foe.name);
+    // The level shown for a fighter: the average of their six skills (a player's kit.level is their best skill, a label the
+    // rules never read; a generated foe's skills already average its level).
+    const levelOf = (i) => { const v = Object.values(game.actors[i].kit.skills || {}).filter(Number.isFinite); return v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : game.actors[i].kit.level; };
     const who = (i) => (i ? esc(nameOf(1)) : esc(tr('you')));
     function portraitOf(i) {
       if (i === 0) return BLANK;
@@ -168,7 +179,7 @@
         a.resources.crowns !== a.entry.crowns ? '◎' + fmt(a.resources.crowns) : '', a.resources.alignment !== a.entry.alignment ? '☾' + fmt(a.resources.alignment) : ''].filter(Boolean).join(' ');
       return '<article class="fighter ' + (i ? 'opp' : 'you') + '"' + (i ? ' data-sheet="inspect" role="button" tabindex="0" title="' + esc(tr('inspect')) + '"' : '') + '>' +
         '<div class="pf' + (i ? '' : ' blank') + '">' + portraitOf(i) + (i ? '<span class="pf-eye">' + EYE + '</span>' : '') + '</div>' +
-        '<div class="fi"><div class="fname"><b>' + esc(nameOf(i)) + '</b><small>' + esc(tr('lv', { n: a.kit.level })) + (purse ? ' · ' + purse : '') + '</small>' + constructChips(a, i) + '</div>' +
+        '<div class="fi"><div class="fname"><b>' + esc(nameOf(i)) + '</b><small>' + esc(tr('lv', { n: levelOf(i) })) + (purse ? ' · ' + purse : '') + '</small>' + constructChips(a, i) + '</div>' +
         bar(i, 'hp', a.hp, a.maxHP, 0, (a.effects.lodestar && a.effects.lodestar.value) || 0) + bar(i, 'mana', a.resources.mana, a.kit.capacity, a.flux) + '</div></article>';
     }
     // Their move: committed and shown, compelled, or hidden until the player commits.
@@ -256,7 +267,7 @@
     function actionButton(id) {
       const reason = C().available(game, 0, id), disabled = !myTurn() || reason, name = actionName(id, 0), b = briefOf(0, id), tip = esc(name + ' · ' + price(0, id) + (reason ? ' · ' + reason : ''));
       return '<button class="act k-' + b.kind + (selected === id ? ' selected' : '') + '" data-action="' + id + '" aria-label="' + tip + '" aria-pressed="' + (selected === id) + '" title="' + tip + '"' + (disabled ? ' disabled' : '') + '>' +
-        '<span class="a-ico" aria-hidden="true">' + actionIcon(id) + '</span>' + (id.startsWith('bundle:') ? '' : '<span class="a-name">' + esc(['hold', 'release'].includes(id) ? label(id) : name) + '</span>') + effHtml(b, name) + costHtml(0, id) + '</button>';
+        (engineOn ? '<i class="a-eval" data-eval="' + id + '"></i>' : '') + '<span class="a-ico" aria-hidden="true">' + actionIcon(id) + '</span>' + (id.startsWith('bundle:') ? '' : '<span class="a-name">' + esc(['hold', 'release'].includes(id) ? label(id) : name) + '</span>') + effHtml(b, name) + costHtml(0, id) + '</button>';
     }
     function preview() {
       if (!selected) return '<div class="preview hint">' + esc(myTurn() ? tr('pickHint') : tr('waiting')) + '</div><button class="fl-commit primary" disabled>' + esc(tr('commit')) + '</button>';
@@ -287,7 +298,7 @@
       const a = game.actors[1], C_ = C(), forced = a.channel || C_.has(game, 1, 'haste') || a.freezeUntil >= game.round;
       const ids = forced ? C_.legalActions(game, 1) : ['strike', 'guard', 'reclaim'].concat(Object.keys(a.kit.spells)), recent = history.slice(-6).reverse();
       const skills = Object.keys(a.kit.skills);
-      return '<header class="sh-head"><div class="pf">' + portraitOf(1) + '</div><div><b>' + esc(nameOf(1)) + '</b><small>' + esc(tr('sheetLine', { level: a.kit.level, hp: fmt(a.hp), maxHp: fmt(a.maxHP), mana: fmt(a.resources.mana), maxMana: a.kit.capacity })) +
+      return '<header class="sh-head"><div class="pf">' + portraitOf(1) + '</div><div><b>' + esc(nameOf(1)) + '</b><small>' + esc(tr('sheetLine', { level: levelOf(1), hp: fmt(a.hp), maxHp: fmt(a.maxHP), mana: fmt(a.resources.mana), maxMana: a.kit.capacity })) +
         (a.flux ? ' ' + esc(tr('plusFlux', { n: fmt(a.flux) })) : '') + '</small></div><button class="close" data-close aria-label="' + esc(tr('close')) + '">×</button></header>' +
         '<div class="sk">' + skills.map((k) => '<span><small>' + esc(opts.skillName ? opts.skillName(k) : k) + '</small><i style="--w:' + a.kit.skills[k] + '%"></i><b>' + a.kit.skills[k] + '</b></span>').join('') + '</div>' +
         '<h4>' + esc(forced ? tr('canDoNow') : tr('canDo')) + '</h4><ul class="kit">' + ids.map((id) => {
@@ -340,7 +351,9 @@
       if (closed || !game) return;
       snapshotBars();
       const sc = $('.tk-scroll'), kept = sc ? sc.scrollLeft : undefined;
-      $('.fight-wrap').innerHTML = '<section class="fight">' + unfitNote() + '<div class="fighters">' + fighter(0) + fighter(1) + '</div><div class="fight-body"><div class="fight-main">' + track() + '</div>' +
+      $('.fight-wrap').innerHTML = '<section class="fight">' + unfitNote() + '<div class="fighters' + (engineOn ? ' with-eval' : '') + '">' + (engineOn ? '<div class="evalbar" title="' + esc(tr('evalBar')) + '"></div>' : '') + fighter(0) + fighter(1) + '</div><div class="fight-body"><div class="fight-main">' + track() +
+        (opts.engineHelp ? '<button class="eng-toggle" aria-pressed="' + engineOn + '">' + esc(tr('engine')) + '</button>' + (engineOn ? '<div class="engine"><div class="engine-top"><b class="engine-head"></b><select class="eng-budget" aria-label="' + esc(tr('engineTime')) + '">' +
+          ENGINE_BUDGETS.map((ms) => '<option value="' + ms + '"' + (ms === engineBudget ? ' selected' : '') + '>' + (ms === Infinity ? '∞' : esc(tr('seconds', { n: ms / 1000 }))) + '</option>').join('') + '</select></div><div class="engine-lines"></div><p class="fine">' + esc(tr('engineNote')) + '</p></div>' : '') : '') + '</div>' +
         '<div class="controls">' + intent() + (game.result ? result() : actions()) + '</div></div></section>';
       const sc2 = $('.tk-scroll'); if (sc2) sc2.scrollLeft = focusEx !== null && kept !== undefined ? kept : sc2.scrollWidth;
       animateBars(); renderSheet();
@@ -352,6 +365,52 @@
       for (const b of layer.querySelectorAll('[data-action]')) b.onclick = () => { const id = b.dataset.action; if (selected === id) commit(id); else selectAction(id); };
       const cb = $('.fl-commit'); if (cb) cb.onclick = () => commit();
       const d = $('#fightDone'); if (d) { d.onclick = finish; d.focus({ preventScroll: true }); }
+      const et = $('.eng-toggle'); if (et) et.onclick = () => setEngine(!engineOn);
+      const eb = $('.eng-budget'); if (eb) eb.onchange = () => { engineBudget = Number(eb.value); if (opts.onEngineBudget) opts.onEngineBudget(engineBudget); analysisFor = -1; analysis = null; requestAnalysis(); paintEngine(); };
+      requestAnalysis(); paintEngine();
+    }
+
+    // ---- The engine's analysis (a cheat, behind the engineHelp setting) ----
+    const evalText = (v) => (v === undefined ? '…' : v >= 9000 ? 'KO' : v <= -9000 ? '−KO' : (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(1));
+    const evalShare = (v) => (v >= 9000 ? 100 : v <= -9000 ? 0 : 100 / (1 + Math.exp(-v / 12)));
+    function plyChip(p) {
+      if (p.end) return '<span class="ply end">' + esc(tr(p.end === 'win' ? 'lineWin' : p.end === 'loss' ? 'lineLoss' : 'lineDraw')) + '</span>';
+      return '<span class="ply ' + (p.side ? 'opp' : 'you') + '" title="' + esc(nameOf(p.side) + ' · ' + tr('exchange', { n: p.round })) + '"><span class="mini-icon">' + actionIcon(p.id, p.side, p.channel) + '</span>' + esc(label(p.id)) + '</span>';
+    }
+    function lineHtml(line) {
+      let out = '', round = null;
+      for (const p of line) { if (!p.end && round !== null && p.round !== round) out += '<span class="sep">|</span>'; if (!p.end) round = p.round; out += plyChip(p); }
+      return out;
+    }
+    const live = () => engineOn && analysis && analysisFor === moves;
+    function paintEngine() {
+      if (!engineOn || closed) return;
+      // The head and the lines only: the time menu stays as it is (a re-render would close it while open).
+      const head = $('.engine-head'), lines = $('.engine-lines');
+      if (head) head.textContent = live() ? tr('engineHead', { depth: analysis.depth, nodes: Math.round(analysis.nodes / 1000), s: (analysis.ms / 1000).toFixed(1) }) + (analysisRunning ? ' · ' + tr('engineDeeper') : '')
+        : myTurn() ? tr('engineThinking') : tr('engineWaits');
+      if (lines) lines.innerHTML = live() ? '<ol class="lines">' + analysis.lines.map((l, k) => '<li class="' + (k === 0 ? 'best' : '') + '"><span class="eval">' + evalText(l.value) + '</span><span class="line">' + lineHtml(l.line) + '</span></li>').join('') + '</ol>' : '';
+      const v = live() ? analysis.scores[analysis.best] : undefined, bar = $('.evalbar');
+      if (bar) bar.innerHTML = '<i style="height:' + (v === undefined ? 50 : evalShare(v)) + '%"></i><span>' + (v === undefined ? '' : evalText(v)) + '</span>';
+      for (const b of layer.querySelectorAll('[data-action]')) b.classList.toggle('best', !!live() && b.dataset.action === analysis.best);
+      for (const e of layer.querySelectorAll('[data-eval]')) { const x = live() ? analysis.scores[e.dataset.eval] : undefined; e.textContent = x === undefined ? '' : evalText(x); }
+    }
+    // On the player's turn only (a value is from the side to move); a new turn restarts it.
+    function requestAnalysis() {
+      if (!engineOn || !myTurn() || analysisFor === moves) return;
+      if (!analyst) analyst = C().createAnalyst({
+        update: (a) => { analysis = a; paintEngine(); },
+        done: () => { analysisRunning = false; paintEngine(); },
+        error: (m) => { console.error('[fight] engine analysis: ' + m); analysisRunning = false; paintEngine(); },
+      });
+      analysisFor = moves; analysis = null; analysisRunning = true;
+      analyst.analyze(game, engineBudget === Infinity ? { budgetMs: Infinity } : { budgetMs: engineBudget, maxDepth: 8 });
+    }
+    function setEngine(on) {
+      engineOn = !!on;
+      if (!engineOn && analyst) { analyst.stop(); analysisRunning = false; analysis = null; analysisFor = -1; }
+      if (opts.onEngineShown) opts.onEngineShown(engineOn);
+      render();
     }
     return { close, get state() { return game; } };
   }

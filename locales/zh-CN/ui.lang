@@ -27,8 +27,8 @@ origin.back = 返回
 title.continue = 继续 · {info}
 # en: {name} — {month}, Year {year}
 title.saveInfo = {name} — 第 {year} 年{month}
-# en: <b>Swipe</b> each card left or right (or press ← / →) to choose. Some moments open a <b>menu</b> with more options. Keep your <b>Health, Mood, Gold and Standing</b> above zero for three years — 36 months — and see who you become. Glowing dots above a meter show what a choice will touch.
-title.howto_html = 左右<b>滑动</b>卡牌（或按 ← / →）做出选择。某些时刻会弹出<b>菜单</b>，提供更多选项。在三年——共 36 个月——里，让你的<b>健康、心情、金币和学业</b>都保持在零以上，看看你会成为怎样的人。属性上方亮起的光点，提示这个选择会影响什么。
+# en: <b>Swipe</b> each card left or right (or press ← / →) to choose. Some moments open a <b>menu</b> with more options. Keep your <b>Health, Mood and Crowns</b> above zero for four years — 48 months — and see who you become. Glowing dots above a meter show what a choice will touch.
+title.howto_html = 左右<b>滑动</b>卡牌（或按 ← / →）做出选择。某些时刻会弹出<b>菜单</b>，提供更多选项。在四年——共 48 个月——里，让你的<b>健康、心情和金币</b>都保持在零以上，看看你会成为怎样的人。属性上方亮起的光点，提示这个选择会影响什么。
 # en: Elowen, Isla, Maren, Briony, Clemency, Delphine, Eira, Fenella, Greer, Hesper, Imogen, Iona, Linnea, Mae, Morwenna, Sabine, Philippa, Rosalind, Saoirse, Tegan, Wilhelmina, Yseult, Aveline, Beatrix, Cordelia, Edith, Esme, Flora, Gwendolyn, Hazel, Ivy, Lettice, Lilias, Mirabel, Nell, Opal, Petra, Rhiannon, Rosamund, Thea, Verity, Winifred, Agnes, Dulcie, Effie, Honor, Leda, Clover, Bettany, Sidony
 title.names.she = 埃洛温, 艾拉, 玛伦, 布里奥妮, 克莱门西, 德尔菲娜, 艾拉妮, 费内拉, 格丽尔, 赫丝珀, 伊莫金, 艾奥娜, 林奈娅, 梅伊, 莫温娜, 萨宾, 菲利帕, 罗莎琳德, 瑟莎, 蒂根, 威廉明娜, 伊瑟特, 艾芙琳, 比阿特丽克丝, 科迪莉亚, 伊迪丝, 埃丝梅, 弗洛拉, 格温德琳, 黑兹尔, 艾薇, 莱蒂丝, 莉莉亚斯, 米拉贝尔, 内尔, 奥帕尔, 佩特拉, 里安农, 罗莎蒙德, 西娅, 维里蒂, 温妮弗雷德, 艾格尼丝, 达尔茜, 埃菲, 霍诺尔, 丽达, 克洛弗, 贝塔妮, 西多妮
 # en: Theo, Ezra, Alaric, Ambrose, Barnaby, Caspian, Cedric, Cormac, Crispin, Declan, Rupert, Emrys, Evander, Felix, Gideon, Godric, Hamish, Ignatius, Jasper, Lachlan, Lucan, Magnus, Malachy, Merrick, Oisin, Osric, Percival, Peregrine, Piers, Quentin, Rafferty, Roderick, Rufus, Silas, Tristan, Ulric, Valentine, Wystan, Augustin, Desmond, Fergus, Gareth, Leopold, Matthias, Niall, Anselm, Benedict, Hugo, Lorcan, Dorian
@@ -481,8 +481,16 @@ settings.on = 显示
 settings.off = 隐藏
 # en: Fights
 settings.fight = 战斗
-# en: How well your opponents fight. Easy forgives mistakes; Hard and Engine make you pay for each one.
-settings.fightHint = 对手的战斗水平。“简单”更宽容；“困难”与“引擎”会让你为每个失误付出代价。
+# en: How your opponents choose their moves. It changes only their decisions, never the numbers: their level, Health, Mana and spells stay the same. Engine takes the best move it can find every turn; the lower settings play more naturally, drifting from the best move and leaning on the habits that fit who they are.
+settings.fightHint = 对手如何选择招式。它只影响对手的决策，不改变任何数值：等级、生命、法力和法术都保持不变。“引擎”每回合都选它能找到的最佳招式；较低的难度出招更自然，会偏离最佳招式，更依赖符合其性格的习惯。
+# en: Engine analysis
+settings.fightEngine = 引擎分析
+# en: Cheating: during a fight, a toggle shows the engine’s analysis of your turn: how good each move is, the best one, and the lines it expects.
+settings.fightEngineHint = 作弊：战斗中可用开关显示引擎对你这一回合的分析：每个招式的优劣、最佳招式，以及它预计的走向。
+# en: Off
+settings.engineOff = 关闭
+# en: On (cheating)
+settings.engineOn = 开启（作弊）
 # en: Easy
 difficulty.easy = 简单
 # en: Medium
@@ -499,6 +507,30 @@ check.fightButton = 战斗 · {foe} · {level} 级
 check.fightChip = 战斗：{result} · {reason}
 # en: The fight is starting…
 fight.loading = 战斗即将开始……
+# en: Engine analysis
+fight.engine = 引擎分析
+# en: The engine’s evaluation for you, in Health
+fight.evalBar = 引擎对你局势的评估（以生命计）
+# en: Engine · depth {depth} · {nodes}k positions · {s} s
+fight.engineHead = 引擎 · 深度 {depth} · {nodes}k 个局面 · {s} 秒
+# en: searching deeper…
+fight.engineDeeper = 继续深入搜索……
+# en: Engine · thinking…
+fight.engineThinking = 引擎 · 思考中……
+# en: Engine · waits for your turn
+fight.engineWaits = 引擎 · 等待你的回合
+# en: Engine time per turn
+fight.engineTime = 引擎每回合用时
+# en: {n} s
+fight.seconds = {n} 秒
+# en: Values are in Health from your side: + favours you. Each line is both sides’ best play as the engine sees it: gold chips are your moves, blue chips your opponent’s, and | separates exchanges.
+fight.engineNote = 数值以生命计，从你的角度看：+ 对你有利。每一行是引擎眼中双方的最佳应对：金色是你的招式，蓝色是对手的，| 分隔每次交锋。
+# en: KO · you win
+fight.lineWin = 击倒 · 你获胜
+# en: KO · you lose
+fight.lineLoss = 击倒 · 你落败
+# en: draw
+fight.lineDraw = 平局
 # en: The fight couldn’t load. Reload the page; if you play on a local server, restart it.
 fight.noEngine = 战斗无法加载。请刷新页面；如果你在本地服务器上游玩，请重启服务器。
 # en: That choice couldn’t go through, so nothing changed. Try again, or pick another option.

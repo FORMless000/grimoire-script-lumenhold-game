@@ -12,7 +12,7 @@ const COMBAT = path.join(__dirname, '..');
 const ROOT = path.join(COMBAT, '..');
 const BUNDLE = path.join(ROOT, 'build', 'combat.bundle.js');
 // The modules in the bundle, in load order (no two share a top-level name; checked when bundling).
-const MODULES = ['setup/text.mjs', 'setup/cast-stats.mjs', 'setup/loadouts.mjs', 'setup/roster.mjs', 'setup/foes.mjs', 'setup/setup.mjs', 'setup/flavor.mjs', 'setup/campaign.mjs', 'web/core.mjs', 'web/brief.mjs', 'web/text-table.mjs'];
+const MODULES = ['setup/text.mjs', 'setup/cast-stats.mjs', 'setup/loadouts.mjs', 'setup/roster.mjs', 'setup/foes.mjs', 'setup/setup.mjs', 'setup/flavor.mjs', 'setup/campaign.mjs', 'web/core.mjs', 'web/analysis.mjs', 'web/brief.mjs', 'web/text-table.mjs'];
 
 function walk(dir, ext) {
   if (!fs.existsSync(dir)) return [];

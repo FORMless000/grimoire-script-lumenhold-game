@@ -1,32 +1,13 @@
-import {SPELL_ICONS,ACTION_ICONS,PORTRAITS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,createState,applyChoice,actorToMove,legalActions,available,cost,describe,describeData,label,concede,hpCost,has,expandAI,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState} from './engine.mjs';
+import {SPELL_ICONS,ACTION_ICONS,PORTRAITS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,createState,applyChoice,actorToMove,legalActions,available,cost,describe,describeData,label,concede,hpCost,has,expandAI,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState,analyzePosition} from './engine.mjs';
 import {brief} from './brief.mjs';
 import {portrait,BLANK} from './art.mjs';
 // The same served module supplies a worker, preserving the existing localhost server.
 if(typeof document==='undefined'){
   self.onmessage=e=>{try{if(e.data.type==='analyze')analyze(e.data);else self.postMessage({token:e.data.token,decision:chooseAIAction(e.data.state,e.data.options)});}catch(error){self.postMessage({token:e.data.token,error:error.message});}};
 }
-// Player analysis: iterative deepening with every root move scored, streamed after each completed depth.
-// Lines follow the best move stored in the transposition table from each position.
-function principal(state,first,ctx,limit){
-  const s=cloneState(state),line=[];let id=first;
-  for(let i=0;i<limit&&id&&!s.result;i++){
-    const side=actorToMove(s);if(!legalActions(s).includes(id))break;
-    line.push({side,id,round:s.round,channel:s.actors[side].channel?.id??null});applyChoice(s,id);
-    if(s.result){line.push({end:s.result.winner===0?'win':s.result.winner===1?'loss':'draw'});break;}
-    id=probeSearchCache(ctx,searchPositionKey(ctx,s))?.bestId;
-  }
-  return line;
-}
+// Player analysis (web/analysis.mjs): every root move scored, streamed after each completed depth.
 function analyze({token,state,budgetMs,maxDepth}){
-  const ctx=createSearchContext({tableLimit:65536}),start=performance.now();let nodes=0;
-  for(let depth=1;depth<=maxDepth;depth++){
-    const left=budgetMs-(performance.now()-start);if(left<=0)break;
-    const r=searchAction(state,{maxDepth:depth,nodeBudget:20000000,budgetMs:left,rankActions:true,prune:true,horizonMode:'tactical'},ctx);nodes+=r.nodes;
-    if(r.completedDepth<depth)break;
-    const ranked=[...r.rankedActions].sort((a,b)=>b.value-a.value);
-    self.postMessage({token,analysis:{depth,nodes,ms:performance.now()-start,best:ranked[0].id,scores:Object.fromEntries(ranked.map(a=>[a.id,a.value])),lines:ranked.slice(0,3).map(a=>({id:a.id,value:a.value,line:principal(state,a.id,ctx,10)}))}});
-    if(Math.abs(ranked[0].value)>=9000)break;
-  }
+  analyzePosition(state,{budgetMs,maxDepth,onDepth:analysis=>self.postMessage({token,analysis})});
   self.postMessage({token,done:true});
 }
 if(typeof document!=='undefined'){

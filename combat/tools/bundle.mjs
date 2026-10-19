@@ -7,6 +7,7 @@
 //   init()       the same, asynchronously (a browser's main thread): a promise of the API
 //   createAI()   the AI search in a worker made from a Blob of this bundle (works from file://), or on the main thread at a
 //                small node budget when workers are unavailable: {choose(state, options) → promise, reset(), terminate()}
+//   createAnalyst(on)  the engine's analysis for the player in its own worker: {analyze(state, {budgetMs, maxDepth}), stop(), terminate()}
 //   …and every export of the bundled modules (createState, fightOptions, settle, EVENTS, FOES, chooseAIAction, describe…).
 // The source of truth stays in combat/; the bundle is committed, like build/content.bundle.js (combat/tools/bundle-hash.cjs
 // says when it is stale).
@@ -38,7 +39,7 @@ const bodies=MODULES.map(file=>{
  if(/\bimport\.meta\b|\bawait\b(?![^\n]*\/\/)/.test(src.replace(/\basync\b[\s\S]*?\bawait\b/g,'')))console.warn(file+': check for import.meta or top-level await');
  return `// ---- combat/${file}\n${src.trim()}\n`;
 });
-const RUNTIME=['WASM','ACTION_ICONS','SPELL_ICONS','wasmBytes','initSync','init','createAI','serveWorker','api'];
+const RUNTIME=['WASM','ACTION_ICONS','SPELL_ICONS','wasmBytes','initSync','init','createAI','createAnalyst','serveWorker','api'];
 for(const n of RUNTIME)if(declared.has(n))throw Error(`${n} (bundle runtime) is also declared in ${declared.get(n)}`);
 
 const runtime=`// ---- the bundle's runtime
@@ -49,11 +50,14 @@ function wasmBytes(){
 let starting=null;
 function initSync(){if(!coreReady())initCore(new WebAssembly.Module(wasmBytes()));return api;}
 function init(){return starting||(starting=coreReady()?Promise.resolve(api):WebAssembly.compile(wasmBytes()).then(m=>{if(!coreReady())initCore(m);return api;}));}
-// Inside the AI worker: one search context per fight (reset between fights), decisions posted back by token.
+// Inside the AI worker: one search context per fight (reset between fights), decisions posted back by token. An analyst's
+// worker (createAnalyst) gets 'analyze': each completed depth, then done.
 function serveWorker(){
  initSync();let ctx=createSearchContext();
  self.onmessage=e=>{const d=e.data||{};
   if(d.type==='reset'){freeSearchContext(ctx);ctx=createSearchContext();return;}
+  if(d.type==='analyze'){try{analyzePosition(d.state,{budgetMs:d.budgetMs,maxDepth:d.maxDepth,onDepth:a=>self.postMessage({token:d.token,analysis:a})});self.postMessage({token:d.token,done:true});}
+   catch(err){self.postMessage({token:d.token,error:String(err&&err.message||err)});}return;}
   try{self.postMessage({token:d.token,decision:chooseAIAction(d.state,d.options,ctx)});}
   catch(err){self.postMessage({token:d.token,error:String(err&&err.message||err)});}};
 }
@@ -76,8 +80,32 @@ function createAI(opts={}){
   terminate(){if(worker){worker.terminate();worker=null;}if(url)URL.revokeObjectURL(url);if(ctx){freeSearchContext(ctx);ctx=null;}for(const p of pending.values())p.reject(Error('AI stopped'));pending.clear();}
  };
 }
+// The engine's analysis for the player (web/analysis.mjs) in a worker of its own, so it never delays the opponent's move.
+// on: {update(analysis), done(), error(message)}. A new analyze() replaces a running one (its worker is restarted: a search
+// can't be interrupted). Without workers it runs once on the main thread at a short budget.
+function createAnalyst(on={}){
+ let worker=null,url=null,token=0;
+ const canThread=typeof Worker!=='undefined'&&typeof Blob!=='undefined'&&typeof URL!=='undefined'&&!!URL.createObjectURL;
+ const stop=()=>{token++;if(worker){worker.terminate();worker=null;}};
+ return {
+  analyze(state,{budgetMs=1500,maxDepth=8}={}){
+   stop();const t=token;
+   if(canThread){
+    try{
+     url=url||URL.createObjectURL(new Blob([api.workerSource],{type:'text/javascript'}));worker=new Worker(url);
+     worker.onmessage=e=>{const d=e.data||{};if(d.token!==t)return;if(d.error){if(on.error)on.error(d.error);}else if(d.done){if(on.done)on.done();}else if(on.update)on.update(d.analysis);};
+     worker.onerror=e=>{if(e&&e.preventDefault)e.preventDefault();if(t===token&&on.error)on.error(String(e&&e.message||'worker failed'));};
+     worker.postMessage({type:'analyze',token:t,state,budgetMs,maxDepth});return;
+    }catch(e){worker=null;}
+   }
+   init().then(()=>{if(t!==token)return;const a=analyzePosition(state,{budgetMs:Math.min(budgetMs,300),maxDepth});if(t!==token)return;if(a&&on.update)on.update(a);if(on.done)on.done();},err=>{if(on.error)on.error(String(err&&err.message||err));});
+  },
+  stop,
+  terminate(){stop();if(url){URL.revokeObjectURL(url);url=null;}}
+ };
+}
 const api={};
-for(const [k,get] of Object.entries({${[...names,'ACTION_ICONS','SPELL_ICONS','initSync','init','createAI','serveWorker'].map(n=>`${n}:()=>${n}`).join(',')}}))Object.defineProperty(api,k,{get,enumerable:true});
+for(const [k,get] of Object.entries({${[...names,'ACTION_ICONS','SPELL_ICONS','initSync','init','createAI','createAnalyst','serveWorker'].map(n=>`${n}:()=>${n}`).join(',')}}))Object.defineProperty(api,k,{get,enumerable:true});
 return api;`;
 
 const header={rules:RULES_VERSION,sources:sourcesHash(),wasm:(await import('node:crypto')).createHash('sha256').update(wasm).digest('hex')};

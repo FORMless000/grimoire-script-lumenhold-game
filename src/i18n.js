@@ -39,7 +39,7 @@
     'origin.poorWarning': 'Hard mode for money: plan on working a job most terms.', 'origin.back': 'Back',
     'title.continue': 'Continue · {info}',
     'title.saveInfo': '{name} — {month}, Year {year}',
-    'title.howto_html': '<b>Swipe</b> each card left or right (or press ← / →) to choose. Some moments open a <b>menu</b> with more options. Keep your <b>Health, Mood, Gold and Standing</b> above zero for three years — 36 months — and see who you become. Glowing dots above a meter show what a choice will touch.',
+    'title.howto_html': '<b>Swipe</b> each card left or right (or press ← / →) to choose. Some moments open a <b>menu</b> with more options. Keep your <b>Health, Mood and Crowns</b> above zero for four years — 48 months — and see who you become. Glowing dots above a meter show what a choice will touch.',
     // Name pools for the title screen's random name: by pronouns (`they` names suit anyone), and `world_*` pools drawn
     // now and then (I18n.randomName). No first name of a named character or a word the content uses as a name.
     'title.names.she': 'Elowen, Isla, Maren, Briony, Clemency, Delphine, Eira, Fenella, Greer, Hesper, Imogen, Iona, Linnea, Mae, Morwenna, Sabine, Philippa, Rosalind, Saoirse, Tegan, Wilhelmina, Yseult, Aveline, Beatrix, Cordelia, Edith, Esme, Flora, Gwendolyn, Hazel, Ivy, Lettice, Lilias, Mirabel, Nell, Opal, Petra, Rhiannon, Rosamund, Thea, Verity, Winifred, Agnes, Dulcie, Effie, Honor, Leda, Clover, Bettany, Sidony',
@@ -241,12 +241,18 @@
     'settings.amountsHint': 'How a choice\'s effects show before you make it. Afterwards the outcome always shows the numbers; Crowns and Mana are always exact.',
     'settings.notes': 'Illustrative text', 'settings.notesHint': 'The line under each card that describes its picture.',
     'settings.on': 'Show', 'settings.off': 'Hide',
-    'settings.fight': 'Fights', 'settings.fightHint': 'How well your opponents fight. Easy forgives mistakes; Hard and Engine make you pay for each one.',
+    'settings.fight': 'Fights', 'settings.fightHint': 'How your opponents choose their moves. It changes only their decisions, never the numbers: their level, Health, Mana and spells stay the same. Engine takes the best move it can find every turn; the lower settings play more naturally, drifting from the best move and leaning on the habits that fit who they are.',
+    'settings.fightEngine': 'Engine analysis', 'settings.fightEngineHint': 'Cheating: during a fight, a toggle shows the engine’s analysis of your turn: how good each move is, the best one, and the lines it expects.',
+    'settings.engineOff': 'Off', 'settings.engineOn': 'On (cheating)',
     'difficulty.easy': 'Easy', 'difficulty.medium': 'Medium', 'difficulty.hard': 'Hard', 'difficulty.engine': 'Engine',
     // A fight: the combat minigame played over the card (src/combat-ui.js). The minigame's own lines (flavor, what an
     // action does) are translated with its tables, not here.
     'check.fight': 'Fight', 'check.fightButton': 'Fight · {foe} · level {level}', 'check.fightChip': 'Fight: {result} · {reason}',
-    'fight.loading': 'The fight is starting…', 'fight.noEngine': 'The fight couldn’t load. Reload the page; if you play on a local server, restart it.',
+    'fight.loading': 'The fight is starting…', 'fight.engine': 'Engine analysis', 'fight.evalBar': 'The engine’s evaluation for you, in Health',
+    'fight.engineHead': 'Engine · depth {depth} · {nodes}k positions · {s} s', 'fight.engineDeeper': 'searching deeper…', 'fight.engineThinking': 'Engine · thinking…',
+    'fight.engineWaits': 'Engine · waits for your turn', 'fight.engineTime': 'Engine time per turn', 'fight.seconds': '{n} s',
+    'fight.engineNote': 'Values are in Health from your side: + favours you. Each line is both sides’ best play as the engine sees it: gold chips are your moves, blue chips your opponent’s, and | separates exchanges.',
+    'fight.lineWin': 'KO · you win', 'fight.lineLoss': 'KO · you lose', 'fight.lineDraw': 'draw', 'fight.noEngine': 'The fight couldn’t load. Reload the page; if you play on a local server, restart it.',
     'error.choice': 'That choice couldn’t go through, so nothing changed. Try again, or pick another option.', 'fight.you': 'You', 'fight.lv': 'Lv {n}', 'fight.inspect': 'Look at your opponent',
     'fight.choosing': '{name} is choosing…', 'fight.choosingHint': 'Their move appears when they commit.',
     'fight.theirMove': 'What their move does', 'fight.theyCommit': 'They commit:', 'fight.compelled': 'Compelled:',

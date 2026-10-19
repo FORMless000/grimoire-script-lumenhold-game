@@ -345,3 +345,41 @@
 .fight-layer .fname{min-height:24px}}
 /* The feedback bar would sit over the fight's corner: it waits until the fight is over. */
 body:has(.fight-layer) #fbBar { display: none; }
+/* The engine's analysis (the "engine analysis" setting, a cheat): its toggle, the eval bar beside the fighters, each
+ * action's score, the best move outlined, and the panel of top lines. Ported from combat/web/style.css, in the game's tokens. */
+.fight-layer .eng-toggle{align-self:flex-start;padding:4px 10px;font-size:12px;font-weight:600;border-radius:999px;border-style:dashed;color:var(--muted);background:transparent}
+.fight-layer .eng-toggle[aria-pressed="true"]{border-style:solid;border-color:rgba(159,224,167,.6);color:#9fe0a7;background:rgba(159,224,167,.08)}
+.fight-layer .fighters.with-eval{grid-template-columns:14px 1fr 1fr}
+.fight-layer .evalbar{position:relative;width:14px;background:var(--night);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.fight-layer .evalbar i{position:absolute;left:0;right:0;bottom:0;background:var(--parch);transition:height .5s ease}
+.fight-layer .evalbar span{position:absolute;left:0;right:0;bottom:3px;text-align:center;font-size:8px;font-weight:700;color:var(--ink);writing-mode:vertical-rl;transform:rotate(180deg)}
+.fight-layer .engine{padding:8px 10px;background:var(--night-2);border:1px solid rgba(159,224,167,.3);border-radius:12px;font-size:12px}
+.fight-layer .engine-head{display:block;font-size:12px;font-weight:600;color:#9fe0a7}
+.fight-layer .lines{list-style:none;margin:6px 0 2px;padding:0}
+.fight-layer .lines li{display:flex;gap:8px;align-items:center;padding:4px 0;border-top:1px solid var(--line)}
+.fight-layer .lines .eval{flex:none;min-width:46px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums;padding:2px 6px;border-radius:6px;background:var(--night-3)}
+.fight-layer .lines li.best .eval{background:var(--parch);color:var(--ink)}
+.fight-layer .lines .line{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.fight-layer .ply{display:inline-flex;align-items:center;gap:2px;padding:1px 6px 1px 2px;border-radius:10px;font-size:11px;background:var(--night-3)}
+.fight-layer .ply.you{box-shadow:inset 0 0 0 1px rgba(240,213,140,.55)}
+.fight-layer .ply.opp{box-shadow:inset 0 0 0 1px rgba(143,201,232,.55)}
+.fight-layer .ply.end{padding:1px 8px;background:#3a2a2a;color:#f3d3a8}
+.fight-layer .ply .mini-icon{width:18px;height:18px;display:inline-grid;place-items:center}
+.fight-layer .ply .mini-icon svg{width:16px;height:16px}
+.fight-layer .ply.you .mini-icon{color:var(--you)}
+.fight-layer .ply.opp .mini-icon{color:var(--opp)}
+.fight-layer .ply .bundle-icons svg{width:9px;height:9px}
+.fight-layer .sep{color:var(--muted)}
+.fight-layer .engine .fine{margin:4px 0 0;font-size:10.5px}
+.fight-layer .act.best{outline:2px solid #9fe0a7;box-shadow:0 0 12px rgba(159,224,167,.45)}
+.fight-layer .a-eval{position:absolute;top:4px;left:6px;font-size:9.5px;font-style:normal;color:var(--muted);font-variant-numeric:tabular-nums}
+.fight-layer .act.best .a-eval{color:#9fe0a7}
+@media(max-width:600px){.fight-layer .fighters.with-eval{grid-template-columns:10px 1fr 1fr}
+.fight-layer .evalbar{width:10px}
+.fight-layer .engine{padding:6px 8px;font-size:11px}
+.fight-layer .lines li:nth-child(n+2){display:none}
+.fight-layer .engine .fine{display:none}
+.fight-layer .a-eval{top:2px;left:4px;font-size:8.5px}}
+.fight-layer .engine-top{display:flex;align-items:center;gap:8px}
+.fight-layer .engine-top .engine-head{margin-right:auto}
+.fight-layer .eng-budget{width:auto;margin:0;padding:2px 6px;font-size:11px;background:var(--night);color:var(--text);border:1px solid var(--line);border-radius:6px}

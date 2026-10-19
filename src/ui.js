@@ -30,6 +30,9 @@
   // Fights (the combat minigame): how hard the opponent plays, the AI preset (HANDOFF §5). Default Easy (2026-10-19).
   const FIGHT_DIFFICULTIES = ['easy', 'medium', 'hard', 'engine'];
   if (!FIGHT_DIFFICULTIES.includes(settings.fightDifficulty)) settings.fightDifficulty = 'easy';
+  // Engine analysis in fights (a cheat, off by default): the setting, the fight's toggle as last left, and its time per turn
+  // ('inf' stands for no limit: JSON has no Infinity).
+  settings.fightEngine = settings.fightEngine === true;
   const PRONOUN_KEYS = ['she', 'he', 'they'];
 
   let content = null, eng = null;
@@ -508,6 +511,8 @@
     if (card) { card.classList.remove('dragging'); card.style.transform = ''; card.style.opacity = ''; }
     CombatUI.open({
       host: document.querySelector('.stage'), key, request: req, saved, content, t, difficulty: settings.fightDifficulty,
+      engineHelp: settings.fightEngine, engineShown: settings.fightEngineShown !== false, engineBudget: settings.fightEngineBudget === 'inf' ? Infinity : settings.fightEngineBudget,
+      onEngineShown: (on) => { settings.fightEngineShown = on; saveSettings(); }, onEngineBudget: (ms) => { settings.fightEngineBudget = ms === Infinity ? 'inf' : ms; saveSettings(); },
       avatar: (npc, size) => Art.avatar(npc, size), skillName, resName: (k) => (content.resources[k] && content.resources[k].name) || k,
       onSave: (snap) => { eng.s.fightInProgress = snap; save(); },
       onDone: (res) => { delete eng.s.fightInProgress; settle(key, { fights: [res] }); },
@@ -1232,10 +1237,12 @@
         '<div class="set-row"><b>' + esc(t('settings.amounts')) + '</b><p class="fb-intro">' + esc(t('settings.amountsHint')) + '</p>' + seg('amounts', AMOUNT_MODES.map((m) => [m, t('amounts.' + m)]), settings.amounts || 'marks') + '</div>' +
         '<div class="set-row"><b>' + esc(t('settings.notes')) + '</b><p class="fb-intro">' + esc(t('settings.notesHint')) + '</p>' + seg('notes', [['on', t('settings.on')], ['off', t('settings.off')]], settings.notes ? 'on' : 'off') + '</div>' +
         '<div class="set-row"><b>' + esc(t('settings.fight')) + '</b><p class="fb-intro">' + esc(t('settings.fightHint')) + '</p>' + seg('difficulty', FIGHT_DIFFICULTIES.map((m) => [m, t('difficulty.' + m)]), settings.fightDifficulty) + '</div>' +
+        '<div class="set-row"><b>' + esc(t('settings.fightEngine')) + '</b><p class="fb-intro">' + esc(t('settings.fightEngineHint')) + '</p>' + seg('fightengine', [['off', t('settings.engineOff')], ['on', t('settings.engineOn')]], settings.fightEngine ? 'on' : 'off') + '</div>' +
         '<div class="fb-actions"><button class="btn" id="settingsClose">' + esc(t('slots.close')) + '</button></div></div>';
       wrap.querySelectorAll('[data-amounts]').forEach((b) => { b.onclick = () => { settings.amounts = b.dataset.amounts; saveSettings(); render(); refreshCard(); }; });
       wrap.querySelectorAll('[data-notes]').forEach((b) => { b.onclick = () => { settings.notes = b.dataset.notes === 'on'; saveSettings(); render(); document.querySelectorAll('.scene-note').forEach((n) => { n.style.display = settings.notes ? '' : 'none'; }); }; });
       wrap.querySelectorAll('[data-difficulty]').forEach((b) => { b.onclick = () => { settings.fightDifficulty = b.dataset.difficulty; saveSettings(); render(); }; });
+      wrap.querySelectorAll('[data-fightengine]').forEach((b) => { b.onclick = () => { settings.fightEngine = b.dataset.fightengine === 'on'; saveSettings(); render(); }; });
       document.getElementById('settingsClose').onclick = closeSettings;
     };
     document.body.appendChild(wrap);
