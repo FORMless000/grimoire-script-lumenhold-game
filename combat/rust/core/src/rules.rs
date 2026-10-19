@@ -472,6 +472,9 @@ pub fn finish(enc: &Encounter, s: &mut State, public: Option<&mut Public>, outco
     s.result = Some(FightResult { outcome, reason, round: s.round, winner: winner.map(|w| w as u8), tiebreak });
     let Some(p) = public else { return; };
     let d = data();
+    // The settlement is the fight's summary, worked out on a copy: the fight itself keeps its last numbers (no Mana handed back
+    // into its bars, its flux and pending Renown as they were), and the main game reads the ledger (setup/campaign.mjs settle).
+    let s = &mut s.clone();
     let mut settlement = Vec::new();
     for side in 0..2 {
         let flux = s.actors[side].flux;
