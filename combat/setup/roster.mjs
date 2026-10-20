@@ -47,9 +47,12 @@ export const COMBAT_TUNING={
 // channel plans and a sanity veto, on node budgets (moves simulated) so every device plays the same opponent. Measured against
 // simulated players (combat/tools/lab.mjs human; PROGRESS.md): a novice wins about 70% against Easy and 34% against Medium at
 // an equal level, a decent player 94% and 78%. Hard is F5.9's Easy; Engine searches with LMR and the distilled MLP eval.
+// PERSONA_LEVEL_SCALE: the persona opponents' node budget by the fight's level, [level, × the budget], so they play about as
+// well at every level (persona.rs budget; measured against a depth-4 oracle at levels 5–80, PROGRESS.md).
+export const PERSONA_LEVEL_SCALE=[[10,1],[20,4.5],[35,4.3],[50,1],[65,1.6],[80,2]];
 export const AI_PRESETS={
- easy:{algorithm:'persona',mctsNodes:1000,plans:true,veto:40,persona:true},   // plays its character, forgiving: its habits are there to be read
- medium:{algorithm:'persona',mctsNodes:4500,plans:true,veto:40,persona:true}, // plays its character and looks further ahead
+ easy:{algorithm:'persona',mctsNodes:1000,mctsLevelScale:PERSONA_LEVEL_SCALE,plans:true,veto:40,persona:true},   // plays its character, forgiving: its habits are there to be read
+ medium:{algorithm:'persona',mctsNodes:4500,mctsLevelScale:PERSONA_LEVEL_SCALE,plans:true,veto:40,persona:true}, // plays its character and looks further ahead
  hard:{mistakeChance:0,slack:40,maxRegret:100,tiltScale:2,persona:true},      // the full search, drifting among moves that aren't ruinous (F5.9 easy)
  engine:{mistakeChance:0,slack:0,tiltScale:0,persona:false,lmr:3,eval:'mlp'}  // the search's best move, every time, with the Engine eval (F5.10)
 };

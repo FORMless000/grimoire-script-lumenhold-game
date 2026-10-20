@@ -254,6 +254,25 @@ fn veto(enc: &Encounter, s: &State, me: usize, tilt: &[(String, f64)], choice: A
 
 fn get_f(o: &Map<String, Value>, k: &str, d: f64) -> f64 { o.get(k).and_then(|v| v.as_f64()).unwrap_or(d) }
 
+/// The node budget: mctsNodes times mctsLevelScale's multiplier at the fight's level (the two sides' mean), linear between its
+/// [level, multiplier] points and flat beyond the ends. The same budget doesn't buy the same play at every level (measured in
+/// combat/lab against a depth-4 oracle: level-20 and level-80 fights need about 4x and 2x level 50's nodes for its quality), so
+/// the curve keeps an opponent about as sharp in a first-year fight as in a final-year one. No mctsLevelScale: the budget as given.
+pub fn budget(enc: &Encounter, o: &Map<String, Value>) -> u64 {
+    let nodes = get_f(o, "mctsNodes", 2000.0);
+    let mut pts: Vec<(f64, f64)> = o.get("mctsLevelScale").and_then(|v| v.as_array())
+        .map(|a| a.iter().filter_map(|p| Some((p.get(0)?.as_f64()?, p.get(1)?.as_f64()?))).collect()).unwrap_or_default();
+    if pts.is_empty() { return nodes as u64; }
+    pts.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
+    let lv = (enc.sides[0].level + enc.sides[1].level) as f64 / 2.0;
+    let m = match pts.iter().position(|p| p.0 >= lv) {
+        None => pts[pts.len() - 1].1,
+        Some(0) => pts[0].1,
+        Some(i) => { let ((l0, m0), (l1, m1)) = (pts[i - 1], pts[i]); m0 + (m1 - m0) * (lv - l0) / (l1 - l0) }
+    };
+    (nodes * m.max(0.0)).round().max(1.0) as u64
+}
+
 /// chooseAIAction for algorithm "persona": settings mctsNodes, mctsC, mctsAlpha, mctsK, mctsRollout, mctsEps, mctsTemp,
 /// plans, veto, eval ("mlp"), tilt × tiltScale (the persona), seed. The answer has chooseAIAction's usual fields.
 pub fn choose(enc: &Encounter, s: &State, o: &Map<String, Value>) -> Value {
@@ -261,7 +280,7 @@ pub fn choose(enc: &Encounter, s: &State, o: &Map<String, Value>) -> Value {
     let side = actor_to_move(s).unwrap();
     let scale = get_f(o, "tiltScale", 1.0);
     let tilt: Vec<(String, f64)> = o.get("tilt").and_then(|t| t.as_object()).map(|t| t.iter().filter_map(|(k, v)| v.as_f64().map(|x| (k.clone(), x * scale))).filter(|(_, x)| *x != 0.0).collect()).unwrap_or_default();
-    let opts = Opts { nodes: get_f(o, "mctsNodes", 2000.0) as u64, c: get_f(o, "mctsC", 1.5), alpha: get_f(o, "mctsAlpha", 0.5), k: get_f(o, "mctsK", 72.0),
+    let opts = Opts { nodes: budget(enc, o), c: get_f(o, "mctsC", 1.5), alpha: get_f(o, "mctsAlpha", 0.5), k: get_f(o, "mctsK", 72.0),
         rollout: get_f(o, "mctsRollout", 4.0) as i32, eps: get_f(o, "mctsEps", 0.2), temp: get_f(o, "mctsTemp", 8.0), mlp: o.get("eval").and_then(|v| v.as_str()) == Some("mlp"),
         tilt, seed: get_f(o, "seed", 0.0) as u64, plans: o.get("plans").and_then(|v| v.as_bool()).unwrap_or(false), veto: get_f(o, "veto", 0.0) };
     let legal = legal_actions(enc, s);

@@ -86,16 +86,18 @@ fn play(case: &Value) -> Value {
     let n = combat_core::data::data().acts.names.len();
     // What each side has seen the other do this fight (decayed counts by action code): the `belief` model's data.
     let mut model = [vec![0.0f64; n], vec![0.0f64; n]];
-    let (mut ms, mut depth, mut nodes, mut count, mut blinded) = ([0.0f64; 2], [0.0f64; 2], [0u64; 2], [0u32; 2], [0u32; 2]);
+    let (mut ms, mut depth, mut nodes, mut count, mut blinded, mut legal) = ([0.0f64; 2], [0.0f64; 2], [0u64; 2], [0u32; 2], [0u32; 2], [0.0f64; 2]);
     let salt = f(case, "salt", 0.0) as u64;
     let mut acts = [serde_json::Map::new(), serde_json::Map::new()];
     let (mut plan, mut pst): ([Option<plans::Plan>; 2], [plans::Stats; 2]) = ([None, None], Default::default());
     let mut dealt = [serde_json::Map::new(), serde_json::Map::new()];
     // Oracle: a depth-4 alpha-beta rates side 1's every choice; regret overall and where long-term effects are in play.
     let oracle = b(case, "oracle", false);
-    let (mut orc, mut ctx_o) = ([0.0f64; 6], ab::Context::new(65536));
+    // orc[6..9]: scale-free, over all positions: picks of the oracle's best move, regret over the oracle's best − worst spread.
+    let (mut orc, mut ctx_o) = ([0.0f64; 8], ab::Context::new(65536));
     while fight.s.result.is_none() && fight.s.round <= max_rounds {
         let side = actor_to_move(&fight.s).unwrap();
+        legal[side] += fight.legal().len() as f64;
         let t = Instant::now();
         let ranked = if oracle && side == 1 && fight.legal().len() > 1 { Some(ab::search(&fight.enc, &fight.s, &ab::Opts { max_depth: 4, node_budget: 400_000, prune: true, ..Default::default() }, &mut ctx_o, true).ranked) } else { None };
         let long = long_term(&fight.s);
@@ -119,6 +121,9 @@ fn play(case: &Value) -> Value {
             let regret = r.iter().find(|x| x.0 == p.id).map_or(0.0, |x| best + x.1).max(0.0);
             let i = if long { 3 } else { 0 };
             orc[i] += 1.0; orc[i + 1] += regret.min(200.0); if regret > 40.0 { orc[i + 2] += 1.0; }
+            let worst = r.iter().map(|x| -x.1).fold(f64::INFINITY, f64::min);
+            if regret <= 1e-9 { orc[6] += 1.0; }
+            if best - worst > 1e-9 { orc[7] += regret / (best - worst); }
         }
         ms[side] += t.elapsed().as_secs_f64() * 1000.0; depth[side] += p.depth as f64; nodes[side] += p.nodes; count[side] += 1;
         let decay = f(&case["algos"][1 - side], "decay", 0.85);
@@ -145,6 +150,7 @@ fn play(case: &Value) -> Value {
     out.insert("result".into(), match &st["result"] { Value::Null => Value::Null, r => { let mut o = json!({"outcome": r["outcome"], "reason": r["reason"]}); if let Some(w) = r.get("winner") { o["winner"] = w.clone(); } o } });
     out.insert("rounds".into(), json!(fight.s.round - 1));
     out.insert("decisions".into(), json!(count));
+    out.insert("legal".into(), json!(legal));
     out.insert("ms".into(), json!(ms));
     out.insert("depth".into(), json!(depth));
     out.insert("nodes".into(), json!(nodes));

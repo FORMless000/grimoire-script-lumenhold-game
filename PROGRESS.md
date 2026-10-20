@@ -53,7 +53,12 @@ October 20, 2026, from feedback that fights were too hard even on Easy. The expe
   - A small MCTS whose priors lean towards the character's favourite moves (PERSONAS in `combat/setup/foes.mjs`).
   - Channel plans (cast, hold, release) for attacking channels and the persona's own, with a cooldown after each Release.
   - A veto on moves whose payoff the next exchange punishes, and on lines that end in its own knockout within 3 exchanges.
-  - Budgets are in nodes (moves simulated), not ms, so a slow device plays the same opponent: Easy 1,000, Medium 4,500.
+  - Budgets are in nodes (moves simulated), not ms, so a slow device plays the same opponent: Easy 1,000, Medium 4,500 at level 50.
+  - **The budget follows the fight's level** (`PERSONA_LEVEL_SCALE` in `combat/setup/roster.mjs`). It is 1× up to level 10, 4.5× at 20, 4.3× at 35, 1× at 50, 1.6× at 65 and 2× from 80.
+    - Without it, the same budget played worse at levels 20–35 and above 50. This was measured against a depth-4 oracle at levels 5–80: the regret as a share of the oracle's best-to-worst spread. The neutral twin dips the same way, so the cause isn't the persona.
+    - With it, that share stays at 27–31% for Easy and 21–26% for Medium at every level (was 27–37% and 22–31%).
+    - The most it costs is Medium at levels 20–35, about 20k nodes, or 40 ms a decision natively.
+    - Branching (legal moves on both sides) was tried first and rejected: the needed multiplier isn't monotone in it.
 - **Hard** is F5.9's Easy. **Engine** is the alpha-beta search with LMR and the Engine eval. Engine analysis uses the same.
 - **The bots** (`tools/combat-sim.js`): their own side keeps F5.9's skill levels by value, and their foe is the new Easy. In the 120 golden games fewer runs are sent home (social 23 → 16, cautious 12 → 10); the baseline is refreshed.
 - **The Engine eval** (`neural.rs`) is a 16-unit MLP over the hand eval's terms plus 12 more. It is antisymmetric by construction and distilled from deeper searches (weights: `tools/export-mlp.mjs`). At 10 ms a decision it is about +110–140 Elo over the hand eval. It scored 7.5/10 in mirror games at depth 5 and at depth 6.
@@ -76,7 +81,7 @@ October 20, 2026, from feedback that fights were too hard even on Easy. The expe
 ## UI pass
 
 October 19, 2026, from feedback:
-- **Menus and the map** take the card's place in the stage, as a fight does: there is no backdrop and no cards behind them, and the top bar and side panel stay usable. A click picks and a click on the pick confirms, with no time limit. With several to pick, the last pick confirms and a click on an earlier one takes it back. Map markers carry no slot numbers, and the map is scaled to fit the stage.
+- **Menus and the map** take the card's place in the stage, as a fight does: there is no backdrop and no cards behind them, and the top bar and side panel stay usable. A click picks and a click on the pick confirms, with no time limit. With several to pick, the last pick confirms and a click on an earlier one takes it back. Map markers carry no slot numbers. The map has no box: one toolbar (title, question, status, buttons) sits above it and the map fills the rest of the stage, never under 600 px wide (a phone pans it). Dots scale with the map, and each caption takes a free spot around its dot, so none overlap; a caption with no room shows on hover or focus, and a picked place always shows its caption.
 - **Previews** show amounts past a cap, for example a Health gain at full Health. The outcome shows what actually changed. Lint now counts large changes it used to miss in its test state: 7 romance milestones have 3 (cap 2), which leaves 7 warnings for a content pass.
 - **The "…" reveal** never repeats what the preview already shows. For example, the exam card no longer lists one grade note per outcome. Each option has a single "…".
 - **Rolls on a button** show only the skill and the chance. A roll of pure luck shows the dice and its chance.

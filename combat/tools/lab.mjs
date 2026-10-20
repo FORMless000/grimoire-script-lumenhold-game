@@ -192,9 +192,13 @@ if(cmd==='human'){
   // The game's own persona opponents (rust/core persona.rs, through chooseAIAction): CP<n> = n nodes, plans and veto on.
   ...Object.fromEntries([500,1000,1500,2000,3000,4000,4500,5000].map(n=>[`CP${n}`,o=>core(o,{algorithm:'persona',mctsNodes:n,plans:true,veto:40,persona:true})])),
   EngineNew:o=>core(o,{maxDepth:5,lmr:3,eval:'mlp',slack:0,tiltScale:0,persona:false}),
+  Easy:o=>core(o,{preset:'easy'}),Medium:o=>core(o,{preset:'medium'}),Hard:o=>core(o,{preset:'hard',maxDepth:5}),Engine:o=>core(o,{preset:'engine',maxDepth:5}), // the game's presets
   MCTS2Pr6:o=>({algo:'mcts',ms:2,k:72,tilt:neutral?{}:personaOf(o),rollout:6}),   // …with longer rollouts
  };
  const cands=opt('cands','EasyLow,Policy,MCTS2,Disc,Belief1,Belief2,Blind,Soft,Director,Combo').split(','),players=opt('players','novice,decent,reader').split(',');
+ // CP<n> on any budget; CP<n>n without its persona; CP<n>L: on the level curve (persona.rs budget, mctsLevelScale).
+ for(const c of cands){const m=/^CP(\d+)(n|L)?$/.exec(c);if(!m||CANDS[c])continue;
+  CANDS[c]=o=>core(o,{algorithm:'persona',mctsNodes:+m[1],plans:true,veto:40,persona:m[2]!=='n',...(m[2]==='L'?{mctsLevelScale:R.PERSONA_LEVEL_SCALE}:{})});}
  if(args.includes('--longterm')){
   // Long-term spells: against the novice, characters built around them. Per opponent: share of its decisions on long-term
   // actions, Holds per channel and how many channels it releases, the share of its damage from long-term sources and how
@@ -250,23 +254,26 @@ if(cmd==='human'){
   }
   process.exit(0);
  }
- const cases=[],tags=[];let i=0;
- for(const c of cands)for(const p of players)for(const gap of [0,10])for(const g of kits)for(const o of G)for(const firstLeader of [0,1]){
-  const {lastEvents,...state}=createState({playerLoadout:g,opponentLoadout:o,playerLevel:50,opponentLevel:50+gap,firstLeader});
-  cases.push({state,algos:[{...PLAYERS[p],seed:i*2+1},{...CANDS[c](o),seed:i*2+2}],maxRounds:120,salt:i,meta:{},oracle:args.includes('--oracle')&&p==='novice'&&gap===0});tags.push({c,p,gap});i++;
+ // --levels 20,50,80: the same at each player level (one row per opponent and level), with the legal moves per decision.
+ const levels=opt('levels','50').split(',').map(Number),cases=[],tags=[];let i=0;
+ const gaps=opt('gaps','0,10').split(',').map(Number);
+ for(const c of cands)for(const lv of levels)for(const p of players)for(const gap of gaps)for(const g of kits)for(const o of G)for(const firstLeader of [0,1]){
+  const {lastEvents,...state}=createState({playerLoadout:g,opponentLoadout:o,playerLevel:lv,opponentLevel:Math.min(100,lv+gap),firstLeader});
+  cases.push({state,algos:[{...PLAYERS[p],seed:i*2+1},{...CANDS[c](o),seed:i*2+2}],maxRounds:120,salt:i,meta:{},oracle:args.includes('--oracle')&&p==='novice'&&gap===0});tags.push({c,p,gap,lv});i++;
  }
  const t=Date.now(),rs=lab('run',cases);
  fs.writeFileSync(path.join(OUT,`human-${opt('name','run')}.jsonl`),rs.map((r,k)=>JSON.stringify({...r,tag:tags[k]})).join('\n')+'\n');
  const sel=f=>rs.filter((_,k)=>f(tags[k])),win=a=>a.length?Math.round(100*a.reduce((s,r)=>s+(!r.result||r.result.winner===undefined?.5:r.result.winner===0?1:0),0)/a.length):NaN;
  const q=(a,x)=>{const v=[...a].sort((m,n)=>m-n);return v.length?v[Math.min(v.length-1,Math.floor(v.length*x))]:NaN;};
- console.log(`# Beatable opponents: ${rs.length} fights, ${((Date.now()-t)/1e3).toFixed(0)} s. Player kits ${kits.join(', ')} vs every class, both leaders, level 50 (player 10 below: foe 60).\n`);
- console.log(`| Opponent | ${players.map(p=>`${p} wins (equal / 10 below)`).join(' | ')} | Reading pays (reader − novice, equal) | Length median / p90 | Player HP left when winning (median) | Opponent ms/decision${args.includes('--oracle')?' | Mean regret, other / long-term positions (points) | Blunders over 40 points, other / long-term':''} |\n|---|${players.map(()=>'---:').join('|')}|---:|---:|---:|---:|${args.includes('--oracle')?'---:|---:|':''}`);
- for(const c of cands){
-  const all=sel(t=>t.c===c),w=(p,g)=>win(sel(t=>t.c===c&&t.p===p&&t.gap===g));
+ console.log(`# Beatable opponents: ${rs.length} fights, ${((Date.now()-t)/1e3).toFixed(0)} s. Player kits ${kits.join(', ')} vs every class, both leaders, player level ${levels.join(' / ')} (10 below: the foe 10 levels up).\n`);
+ console.log(`| Opponent | ${players.map(p=>`${p} wins (equal / 10 below)`).join(' | ')} | Reading pays (reader − novice, equal) | Length median / p90 | Player HP left when winning (median) | Opponent ms/decision | Opponent nodes/decision${args.includes('--oracle')?' | Mean regret, other / long-term positions (points) | Blunders over 40 points, other / long-term | Oracle best move picked | Regret / oracle spread':''} |\n|---|${players.map(()=>'---:').join('|')}|---:|---:|---:|---:|---:|${args.includes('--oracle')?'---:|---:|---:|---:|':''}`.replace('| Opponent |','| Opponent | Level | Legal moves (player / foe) |').replace('|---|','|---|---:|---:|'));
+ for(const c of cands)for(const lv of levels){
+  const all=sel(t=>t.c===c&&t.lv===lv),w=(p,g)=>win(sel(t=>t.c===c&&t.lv===lv&&t.p===p&&t.gap===g));
+  const lg=j=>(all.reduce((a,r)=>a+(r.legal?.[j]??0),0)/Math.max(1,all.reduce((a,r)=>a+r.decisions[j],0))).toFixed(1);
   const wins=all.filter(r=>r.result?.winner===0),ms=all.reduce((a,r)=>a+r.ms[1],0)/all.reduce((a,r)=>a+r.decisions[1],0);
   const gapRead=players.includes('reader')&&players.includes('novice')?w('reader',0)-w('novice',0):NaN;
-  const O=all.filter(r=>r.oracle).reduce((a,r)=>a.map((x,j)=>x+r.oracle[j]),[0,0,0,0,0,0]);
-  const orc=O[0]+O[3]?` | ${(O[1]/Math.max(1,O[0])).toFixed(1)} / ${(O[4]/Math.max(1,O[3])).toFixed(1)} | ${(100*O[2]/Math.max(1,O[0])).toFixed(1)}% / ${(100*O[5]/Math.max(1,O[3])).toFixed(1)}%`:'';
-  console.log(`| ${c} | ${players.map(p=>`${w(p,0)}% / ${w(p,10)}%`).join(' | ')} | ${gapRead>0?'+':''}${gapRead} | ${q(all.map(r=>r.rounds),.5)} / ${q(all.map(r=>r.rounds),.9)} | ${Math.round(100*q(wins.map(r=>r.hp[0]),.5))}% | ${ms.toFixed(2)}${orc} |`);
+  const O=all.filter(r=>r.oracle).reduce((a,r)=>a.map((x,j)=>x+(r.oracle[j]??0)),[0,0,0,0,0,0,0,0]);
+  const orc=O[0]+O[3]?` | ${(O[1]/Math.max(1,O[0])).toFixed(1)} / ${(O[4]/Math.max(1,O[3])).toFixed(1)} | ${(100*O[2]/Math.max(1,O[0])).toFixed(1)}% / ${(100*O[5]/Math.max(1,O[3])).toFixed(1)}% | ${(100*O[6]/Math.max(1,O[0]+O[3])).toFixed(1)}% | ${(100*O[7]/Math.max(1,O[0]+O[3])).toFixed(1)}%`:'';
+  console.log(`| ${c} | ${lv} | ${lg(0)} / ${lg(1)} | ${players.map(p=>`${w(p,0)}% / ${w(p,10)}%`).join(' | ')} | ${gapRead>0?'+':''}${gapRead} | ${q(all.map(r=>r.rounds),.5)} / ${q(all.map(r=>r.rounds),.9)} | ${Math.round(100*q(wins.map(r=>r.hp[0]),.5))}% | ${ms.toFixed(2)} | ${Math.round(all.reduce((a,r)=>a+(r.nodes?.[1]??0),0)/Math.max(1,all.reduce((a,r)=>a+r.decisions[1],0)))}${orc} |`);
  }
 }
