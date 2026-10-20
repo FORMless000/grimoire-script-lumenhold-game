@@ -1034,7 +1034,7 @@
     ui.mode = 'map'; ui.busy = false; setSlotTint(view.slots.length === 1 ? view.slots[0] : null);
     document.querySelectorAll('#deck .card').forEach((c) => c.remove());
     document.getElementById('choices').innerHTML = '';
-    openPanel('<div class="modal dark map-modal"><div class="modal-body" id="mapRoot"></div></div>', 'map-panel');
+    openPanel('<div class="map-shell" id="mapRoot"></div>', 'map-panel');
     const snap = eng.snapshot();
     ui.mapCtl = MapView.render(document.getElementById('mapRoot'), view, {
       t, esc, Art, npcs: content.npcs,

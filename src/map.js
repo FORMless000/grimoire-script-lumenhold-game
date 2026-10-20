@@ -11,7 +11,8 @@
  * the button goes there, so a misclick costs nothing; "Stay in" skips the visit. A festival's place is highlighted in its slot (picking
  * it joins the festival). A list view shows the same states as text; arrow keys move between markers and Enter picks
  * (Enter twice goes). (Several slots still work: then a tap on the last pick or the button confirms them; a tap on an
- * earlier pick takes it back.) Markers carry no slot numbers (feedback 2026-10-19).
+ * earlier pick takes it back.) Markers carry no slot numbers (feedback 2026-10-19). The map fills the space under one
+ * toolbar, dots scale with it, and captions are laid out so they never cover each other (feedback 2026-10-20).
  *
  *   MapView.browse(container, views, { …, name(view), subtitle, onClose })   the map button: look, don't pick
  */
@@ -84,9 +85,10 @@
     }
     function marker(p) {
       const title = p.state === 'hinted' ? (p.hint || t('map.undiscovered')) : p.name + (p.visited ? ' — ' + t('map.visitedNow') : p.festLater ? ' — ' + t('map.festivalSoon', { slot: t('slot.' + p.festLater).toLowerCase() }) : p.state === 'closed' ? ' — ' + t('map.closedNow') : '') + (p.festival.length ? ' — ' + t('map.festival', { slot: t('slot.' + p.festival[0].slot) }) : '');
+      const cap = (p.state !== 'hinted' ? '<span class="mk-label">' + esc(p.name) + '</span>' : '') + badge(p) + pins(p);
       return '<button class="' + markerClass(p) + '" data-id="' + esc(p.id) + '" style="left:' + (100 * p.x / W) + '%;top:' + (100 * p.y / H) + '%" title="' + esc(title) + '" aria-label="' + esc(title) + '">' +
         '<span class="mk-dot">' + (p.state === 'hinted' ? '?' : Art.icon(p.art || 'star', 18)) + (p.news ? '<i class="mk-news">✦</i>' : '') + '</span>' +
-        (p.state !== 'hinted' ? '<span class="mk-label">' + esc(p.name) + '</span>' : '') + badge(p) + pins(p) + '</button>';
+        (cap ? '<span class="mk-cap">' + cap + '</span>' : '') + '</button>';
     }
     function listRow(p) {
       const states = [p.state === 'hinted' ? t('map.hinted') : o.browse ? (p.hours || []).map((h) => t('slot.' + h)).join(', ') || t('map.open') : p.visited ? t('map.visitedNow') : p.festLater ? t('map.festivalSoon', { slot: t('slot.' + p.festLater).toLowerCase() }) : p.state === 'closed' ? t('map.closedNow') : t('map.open')];
@@ -112,21 +114,68 @@
       const single = view.slots.length === 1;
       const ready = single || isReady(), chosen = single && picks[0];
       const q = o.browse ? o.subtitle || '' : single ? t('map.q.' + view.slots[0]) + (view.visits > 1 && view.visit ? ' · ' + t('map.visitOf', { n: view.visit, of: view.visits }) : '') : t('map.question2');
+      // One toolbar above the map (feedback 2026-10-20: the map got more room): title, question and status on the left,
+      // the picks and the buttons on the right; the map takes all the space left below.
+      const goBtn = o.browse ? '<button class="btn primary" id="mapClose">' + esc(t('map.close')) + '</button>'
+        : '<button class="btn ' + (single && !chosen ? 'ghost-btn' : 'primary') + '" id="mapGo"' + (ready ? '' : ' disabled') + '>' + esc(single ? (chosen ? t('map.goTo', { place: byId[picks[0]] ? byId[picks[0]].name : picks[0] }) : t('map.stayIn')) : t('map.go')) + '</button>';
       el.innerHTML = '<div class="mapwrap">' + (o.tabs || '') +
-        '<div class="map-head"><div><div class="map-title">' + esc(o.title || '') + '</div><div class="map-q">' + esc(q) + '</div></div>' +
-        (single || o.browse ? '' : '<div class="map-picks">' + chips() + '</div>') + '</div>' + (o.browse ? '' : festBanner()) +
+        '<div class="map-head"><div class="map-heading"><div class="map-titles"><span class="map-title">' + esc(o.title || '') + '</span>' + (q ? '<span class="map-q">' + esc(q) + '</span>' : '') + '</div>' +
+        '<div class="map-status" role="status">' + esc(status || (o.browse ? t('map.howToLook') : t('map.howToPick'))) + '</div></div>' +
+        '<div class="map-actions">' + (single || o.browse ? '' : '<div class="map-picks">' + chips() + '</div>') +
+        '<button class="btn ghost-btn" id="mapList">' + esc(listMode ? t('map.showMap') : t('map.showList')) + '</button>' + goBtn + '</div></div>' + (o.browse ? '' : festBanner()) +
         (listMode ? '<div class="map-list">' + order.map(listRow).join('') + '</div>'
-          : '<div class="map-frame season-' + esc(view.season || 'none') + '"><img class="map-base" alt="" src="content/world/maps/' + esc(view.map) + '.svg"><div class="map-tint"></div>' + order.map(marker).join('') + '</div>') +
-        '<div class="map-status" role="status">' + esc(status || (o.browse ? t('map.howToLook') : t('map.howToPick'))) + '</div>' +
-        '<div class="map-actions"><button class="btn ghost-btn" id="mapList">' + esc(listMode ? t('map.showMap') : t('map.showList')) + '</button>' +
-        (o.browse ? '<button class="btn primary" id="mapClose">' + esc(t('map.close')) + '</button></div></div>'
-          : '<button class="btn ' + (single && !chosen ? 'ghost-btn' : 'primary') + '" id="mapGo"' + (ready ? '' : ' disabled') + '>' + esc(single ? (chosen ? t('map.goTo', { place: byId[picks[0]] ? byId[picks[0]].name : picks[0] }) : t('map.stayIn')) : t('map.go')) + '</button></div></div>');
+          : '<div class="map-fit"><div class="map-frame season-' + esc(view.season || 'none') + '"><img class="map-base" alt="" src="content/world/maps/' + esc(view.map) + '.svg"><div class="map-tint"></div>' + order.map(marker).join('') + '</div></div>') +
+        '</div>';
+      watch(el.querySelector('.map-frame'));
       el.querySelectorAll('[data-id]').forEach((b) => { b.onclick = () => tap(b.dataset.id); });
       el.querySelectorAll('.pick-chip:not([disabled])').forEach((b) => { b.onclick = () => { picks[+b.dataset.slot] = null; status = ''; draw(); }; });
       el.querySelectorAll('[data-map]').forEach((b) => { b.onclick = () => o.onTab(b.dataset.map); });
       el.querySelector('#mapList').onclick = () => { listMode = !listMode; draw(); };
       if (o.browse) { el.querySelector('#mapClose').onclick = () => o.onClose(); return; }
       el.querySelector('#mapGo').onclick = () => (single && !chosen ? o.onConfirm([null]) : go());
+    }
+    // Captions make room for each other (feedback 2026-10-20: places overlapped). Each place's name, count and people
+    // take the first free spot around its dot (below, above, beside, on a diagonal, then below or above to one side), the picked place and your own
+    // commitments first, closed places last; a caption with no room left shows only on hover or focus. Laid out again
+    // whenever the map changes size.
+    let ro = null;
+    function watch(frame) {
+      if (ro) { ro.disconnect(); ro = null; }
+      if (!frame) return;
+      layout(frame);
+      const fit = frame.parentNode;   // a map wider than the stage (a phone) starts centred
+      if (fit.scrollWidth > fit.clientWidth) fit.scrollLeft = (fit.scrollWidth - fit.clientWidth) / 2;
+      if (typeof ResizeObserver !== 'undefined') { ro = new ResizeObserver(() => layout(frame)); ro.observe(frame); }
+      if (typeof document !== 'undefined' && document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (frame.isConnected) layout(frame); });
+    }
+    function rank(m) {
+      const c = m.classList;
+      return c.contains('picked') ? 0 : c.contains('mine') || c.contains('fest') ? 1 : m.querySelector('.mk-news') ? 2 : c.contains('st-open') && !c.contains('visited') && !c.contains('fest-later') ? 3 : 4;
+    }
+    function layout(frame) {
+      const fw = frame.clientWidth, fh = frame.clientHeight, dot = frame.querySelector('.mk-dot');
+      if (!fw || !fh || !dot) return;
+      const r = dot.offsetWidth / 2 + 1, g = 3, d = r * 0.72;
+      const pts = [...frame.querySelectorAll('.mk')].map((m) => ({ m, cap: m.querySelector('.mk-cap'), x: parseFloat(m.style.left) * fw / 100, y: parseFloat(m.style.top) * fh / 100 }));
+      const taken = pts.map((p) => ({ own: p, box: [p.x - r, p.y - r, p.x + r, p.y + r] }));
+      const hit = (a, b) => a[0] < b[2] + 4 && b[0] < a[2] + 4 && a[1] < b[3] + 1 && b[1] < a[3] + 1;   // a word's gap apart
+      pts.filter((p) => p.cap).sort((a, b) => rank(a.m) - rank(b.m)).forEach((p) => {
+        const w = p.cap.offsetWidth, h = p.cap.offsetHeight;
+        const spots = [['b', -w / 2, r + g], ['t', -w / 2, -r - g - h], ['r', r + g, -h / 2], ['l', -r - g - w, -h / 2],
+          ['br', d, d], ['bl', -d - w, d], ['tr', d, -d - h], ['tl', -d - w, -d - h],
+          ['br', -r, r + g], ['bl', r - w, r + g], ['tr', -r, -r - g - h], ['tl', r - w, -r - g - h]];
+        let spot = null, box = null;
+        for (const s of spots) {
+          const b = [p.x + s[1], p.y + s[2], p.x + s[1] + w, p.y + s[2] + h];
+          if (b[0] < 0 || b[1] < 0 || b[2] > fw || b[3] > fh || taken.some((x) => x.own !== p && hit(x.box, b))) continue;
+          spot = s; box = b; break;
+        }
+        const s = spot || spots[0];
+        p.cap.style.transform = 'translate(' + Math.round(s[1]) + 'px,' + Math.round(s[2]) + 'px)';
+        p.cap.dataset.side = s[0];
+        p.m.classList.toggle('cap-off', !spot && rank(p.m) > 0);
+        if (box) taken.push({ own: p, box });
+      });
     }
     function key(e) {
       const btns = [...el.querySelectorAll('[data-id]')];

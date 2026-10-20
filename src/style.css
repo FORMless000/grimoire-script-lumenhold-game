@@ -256,10 +256,9 @@ details.adv input { margin-top: 8px; }
 .stage-panel { flex: 1 1 auto; width: 100%; min-height: 0; margin-top: 8px; padding-bottom: 56px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; scrollbar-width: thin; container: panel / size; }
 .stage-panel .modal { width: min(720px, 100%); max-height: none; overflow: visible; flex-shrink: 0; box-shadow: 0 18px 50px rgba(0, 0, 0, .45); }
 .stage-panel .modal-art { aspect-ratio: 400 / 52; }
-.stage-panel .modal.map-modal { width: min(1000px, 100%); }
-/* The map fits the stage's height (the panel minus its title, status and buttons), so the day's choice needs no scroll. */
-.map-panel .map-frame { width: min(100%, max(280px, (100cqh - 196px) * 960 / 680)); margin-inline: auto; }
-.map-panel .map-list { max-height: max(240px, 100cqh - 196px); }
+/* The day's map has no box (feedback 2026-10-20): one toolbar, then the map as large as the stage allows, no scroll. */
+.stage-panel.map-panel { margin-top: 2px; padding-bottom: 6px; }   /* the feedback bar may cover the frame's empty lower-left corner */
+.map-shell { flex: 1 1 auto; width: 100%; min-height: 0; display: flex; flex-direction: column; }
 .overlay { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 16px; background: rgba(6, 8, 20, 0.72); backdrop-filter: blur(5px); animation: fade .25s; overflow-y: auto; }
 @keyframes fade { from { opacity: 0; } }
 .modal { width: min(720px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; background: var(--night-2); border: 1px solid var(--line); border-radius: 22px; box-shadow: 0 40px 100px rgba(0, 0, 0, .6); animation: rise .35s cubic-bezier(.2, .8, .2, 1); }
@@ -439,24 +438,39 @@ details.adv input { margin-top: 8px; }
 /* ---------------- The map and the day (v0.3 phase 2b) ---------------- */
 .map-modal { width: min(1000px, 100%); }
 .map-modal .modal-body { padding: 16px 18px 18px; }
-.mapwrap { display: flex; flex-direction: column; gap: 10px; }
-.map-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
-.map-title { font-family: var(--display); font-size: 24px; color: var(--gold-2); font-weight: 700; }
+/* The toolbar on top, then .map-fit takes what is left; the frame is the largest 960 × 680 box that fits in it. */
+.mapwrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
+.map-head { display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; }
+.map-panel .map-head { padding: 7px 8px 7px 14px; border: 1px solid var(--line); border-radius: 14px; background: rgba(14, 17, 36, .78); backdrop-filter: blur(6px); }
+.map-heading { min-width: 0; flex: 1 1 320px; }
+.map-titles { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 12px; }
+.map-title { font-family: var(--display); font-size: 21px; line-height: 1.2; color: var(--gold-2); font-weight: 700; }
 .map-q { font-family: var(--serif); font-style: italic; color: var(--muted); }
+.map-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.map-actions .btn { padding-block: 9px; }
 .map-picks { display: flex; gap: 8px; flex-wrap: wrap; }
 .pick-chip { display: inline-flex; align-items: center; gap: 6px; border: 1px dashed var(--line); background: transparent; border-radius: 999px; padding: 6px 12px; font-size: 13px; color: var(--muted); min-height: 36px; }
 .pick-chip.set { border-style: solid; border-color: var(--gold); color: var(--gold-2); background: rgba(217, 180, 90, .1); }
 .pick-chip.locked { border-color: #e8b04a; color: #f2c46d; }
 .pc-n { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; border: 1px solid currentColor; font-size: 11px; }
-.map-frame { position: relative; width: 100%; aspect-ratio: 960 / 680; border-radius: 14px; overflow: hidden; background: #0d1222; }
+/* Never below 600 px wide, so the castle's places stay apart: a narrower stage (a phone) pans the map instead. */
+.map-fit { flex: 1 1 auto; min-height: 260px; display: grid; place-items: start; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; container-type: size; }
+.map-frame { position: relative; flex-shrink: 0; margin-inline: auto; width: max(600px, min(100cqw, 100cqh * 960 / 680)); aspect-ratio: 960 / 680; border-radius: 14px; overflow: hidden; background: #0d1222; box-shadow: 0 18px 50px rgba(0, 0, 0, .45); container-type: inline-size; }
 .map-base { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .map-tint { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: soft-light; }
 .season-autumn .map-tint { background: rgba(214, 140, 60, .22); } .season-winter .map-tint { background: rgba(190, 215, 255, .25); }
 .season-spring .map-tint { background: rgba(240, 170, 210, .16); } .season-summer .map-tint { background: rgba(240, 210, 110, .2); }
-/* The dot sits on the place's position and is the only hit area; labels, badges and pins never block a neighbour. */
-.mk { position: absolute; transform: translate(-50%, -21px); pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: 0; padding: 4px; min-width: 44px; min-height: 44px; color: var(--text); }
-.mk-dot { pointer-events: auto; position: relative; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: rgba(28, 34, 64, .92); border: 2px solid #c7cbe6; box-shadow: 0 3px 10px rgba(0, 0, 0, .5); font-weight: 700; }
-.mk-label { font-family: var(--serif); font-size: 13px; text-shadow: 0 1px 3px #000, 0 0 6px #000; white-space: nowrap; }
+/* A marker is a point on the place: the dot is centred on it and scales with the map; the caption (name, count, people)
+   is placed by MapView's layout so captions never cover each other or a dot. */
+.mk { --dot: clamp(24px, 3.5cqw, 40px); position: absolute; width: 0; height: 0; padding: 0; border: 0; background: none; outline: none; pointer-events: none; color: var(--text); }
+.mk-dot { pointer-events: auto; position: absolute; left: 0; top: 0; width: var(--dot); height: var(--dot); transform: translate(-50%, -50%); border-radius: 50%; display: grid; place-items: center; background: rgba(28, 34, 64, .92); border: 2px solid #c7cbe6; box-shadow: 0 3px 10px rgba(0, 0, 0, .5); font-weight: 700; font-size: calc(var(--dot) * .42); }
+.mk-dot svg { width: 54%; height: 54%; }
+.mk-cap { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; pointer-events: auto; cursor: pointer; transform: translate(-50%, calc(var(--dot) / 2 + 4px)); }
+.mk-cap[data-side="r"], .mk-cap[data-side="tr"], .mk-cap[data-side="br"] { align-items: flex-start; }
+.mk-cap[data-side="l"], .mk-cap[data-side="tl"], .mk-cap[data-side="bl"] { align-items: flex-end; }
+.mk.cap-off .mk-cap { visibility: hidden; pointer-events: none; }
+.mk.cap-off:hover .mk-cap, .mk.cap-off:focus-visible .mk-cap { visibility: visible; background: rgba(12, 15, 32, .88); border-radius: 8px; padding: 2px 6px; }
+.mk-label { font-family: var(--serif); font-size: clamp(11px, 1.4cqw, 14.5px); line-height: 1.2; text-shadow: 0 1px 3px #000, 0 0 6px #000; white-space: nowrap; }
 .mk.st-closed .mk-dot { opacity: .5; border-color: #8a8fae; } .mk.st-closed .mk-label { opacity: .6; }
 .mk.visited .mk-dot { border-style: dashed; }
 .mk.st-hinted .mk-dot { border-style: dashed; border-color: #b9bde0; background: rgba(28, 34, 64, .6); color: #cfd3f0; }
@@ -465,23 +479,22 @@ details.adv input { margin-top: 8px; }
 .mk.fest .mk-dot { border-color: #f2c46d; box-shadow: 0 0 14px 4px rgba(242, 196, 109, .55); }
 .mk.fest-later .mk-dot { border-color: #f2c46d; border-style: dotted; }
 .mk.picked .mk-dot { background: var(--gold); color: #23190a; }
-.mk:hover, .mk:focus-visible { z-index: 2; }
+.mk.picked { z-index: 1; } .mk:hover, .mk:focus-visible { z-index: 3; }
 .mk:focus-visible .mk-dot { outline: 2px solid var(--gold-2); outline-offset: 2px; }
 .mk-news { pointer-events: none; position: absolute; top: -9px; left: -9px; font-style: normal; color: #fff4c2; text-shadow: 0 0 6px #f2c46d; }
 .mk-badge { font-size: 11px; font-weight: 600; background: #e8b04a; color: #23190a; border-radius: 999px; padding: 1px 7px; }
 .mk.k-job .mk-badge { background: #e8875a; } .mk-badge.urgent { background: #ff8a80; }
 .mk-pins { display: flex; gap: 2px; } .mk-pins .pin { display: inline-block; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 1px #000; } .mk-pins .more { font-size: 10px; padding: 0 3px; background: #333a5c; border-radius: 6px; }
-.map-list { display: flex; flex-direction: column; gap: 4px; max-height: 60vh; overflow: auto; }
-.ml-row { position: static; transform: none; pointer-events: auto; flex-direction: row; justify-content: flex-start; gap: 10px; text-align: left; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; min-height: 44px; }
+.map-list { flex: 1 1 auto; min-height: 240px; display: flex; flex-direction: column; gap: 4px; overflow: auto; }
+.ml-row { position: static; width: auto; height: auto; flex: none; display: flex; align-items: center; transform: none; pointer-events: auto; flex-direction: row; justify-content: flex-start; gap: 10px; text-align: left; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; min-height: 44px; }
 .ml-row b { min-width: 180px; } .ml-row span { color: var(--muted); font-size: 13px; } .ml-row em { margin-left: auto; color: var(--gold-2); font-style: normal; font-size: 13px; }
 .ml-row.picked { border-color: var(--gold); }
-.map-status { min-height: 18px; font-size: 13px; color: var(--gold-2); }
-.map-actions { display: flex; justify-content: space-between; gap: 10px; }
+.map-status { min-height: 18px; margin-top: 2px; font-size: 13px; color: var(--gold-2); }
 .slotchip { position: absolute; right: 12px; bottom: 10px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #fff; background: rgba(20, 16, 34, .7); border-radius: 999px; padding: 3px 9px; }
 .opt.sel { border-color: var(--gold); background: rgba(217, 180, 90, .14); }
 .sec-h .gpa { float: right; color: var(--gold-2); text-transform: none; letter-spacing: 0; }
 .state.track.job .left { color: #e8875a; }
-@media (max-width: 600px) { .mk-label { font-size: 11px; } .mk-dot { width: 28px; height: 28px; } .map-title { font-size: 20px; } }
+@media (max-width: 600px) { .map-title { font-size: 19px; } }
 
 /* ---------------- Saved games ---------------- */
 .btn.ghost-btn { background: transparent; }
@@ -504,6 +517,7 @@ details.adv input { margin-top: 8px; }
   .brand { display: none; }
   .top { padding: 10px 16px; }
   .stage { padding-bottom: 60px; }
+  .stage-panel.map-panel { padding-bottom: 0; }
   .overlay { padding-bottom: 64px; }
 }
 @media (max-width: 520px) {
@@ -545,7 +559,6 @@ html:lang(zh-CN) .modal .text, html:lang(zh-CN) .outcome .say, html:lang(zh) .mo
 html:lang(zh-CN) .meter .lbl, html:lang(zh-CN) .sec-h, html:lang(zh-CN) .tagline, html:lang(zh-CN) .kicker, html:lang(zh-CN) .yr { letter-spacing: .04em; }
 html:lang(zh-CN) .title-panel h1 { letter-spacing: .08em; }
 /* The map button (feedback 2026-10-20): the maps you know, to look at. One tab a map; the map fits the window's height. */
-.map-modal.atlas { max-height: calc(100vh - 32px); }
+.map-modal.atlas { width: min(1240px, 100%); height: calc(100vh - 32px); max-height: none; display: flex; flex-direction: column; overflow: hidden; }
+.atlas .modal-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; padding: 14px 16px 16px; }
 .map-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
-.atlas .map-frame { width: min(100%, max(260px, (100vh - 290px) * 960 / 680)); margin-inline: auto; }
-.atlas .map-list { max-height: max(240px, 100vh - 290px); overflow-y: auto; }
