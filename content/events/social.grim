@@ -238,8 +238,8 @@ trigger: social
 repeat: 7
 art: gem
 tags: social
-scene: A small wrapped parcel tied with ribbon left on a dormitory pillow, a pressed flower tucked into the bow.
-text: There's a small parcel on your pillow. A note in {npc}'s handwriting: "Saw this and thought of you. Don't make it weird."
+scene: A small brown-paper parcel tied with string, wedged into a student's pigeonhole in the porters' lodge.
+text: There's a small parcel wedged into your pigeonhole, tied with string. A note in {npc}'s handwriting: "Saw this and thought of you. Don't make it weird."
 > left: Thank {them} later
   mood +tiny
   rel npc +tiny
@@ -248,7 +248,7 @@ text: There's a small parcel on your pillow. A note in {npc}'s handwriting: "Saw
   gold -small
   mood +small
   rel npc +medium
-  say: You find {them} {~a book {they}'d wanted for months|a scarf in exactly {their} colour|a sketchbook with good paper}. {npc}'s face when {they} open{s} it is worth twice the price.
+  say: You find {them} {~a book {they}'d wanted for months|a tin of the good biscuits from the village|a sketchbook with good paper}. {npc} grins and calls you a menace, which is worth twice the price.
 
 @event soc_drift
 title: Drifting Apart
@@ -709,8 +709,8 @@ class: routine
 tone: tense
 trigger: social
 cast:
-  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and around(suitor)
-  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and around(other)
+  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and rel(suitor) >= 0 and around(suitor)
+  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and rel(other) >= 0 and around(other)
 per: suitor
 repeat: 2
 weight: 20
@@ -735,8 +735,8 @@ class: routine
 tone: tense
 trigger: social
 cast:
-  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and around(suitor)
-  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and around(other)
+  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and rel(suitor) >= 0 and around(suitor)
+  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and rel(other) >= 0 and around(other)
 per: suitor
 repeat: 2
 weight: 20
@@ -764,8 +764,8 @@ class: routine
 tone: tense
 trigger: social
 cast:
-  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and around(suitor)
-  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and around(other)
+  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and rel(suitor) >= 0 and around(suitor)
+  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and rel(other) >= 0 and around(other)
 per: suitor
 repeat: 2
 weight: 20

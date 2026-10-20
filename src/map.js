@@ -12,6 +12,8 @@
  * it joins the festival). A list view shows the same states as text; arrow keys move between markers and Enter picks
  * (Enter twice goes). (Several slots still work: then a tap on the last pick or the button confirms them; a tap on an
  * earlier pick takes it back.) Markers carry no slot numbers (feedback 2026-10-19).
+ *
+ *   MapView.browse(container, views, { …, name(view), subtitle, onClose })   the map button: look, don't pick
  */
 (function (root) {
   'use strict';
@@ -22,7 +24,7 @@
     const picks = view.slots.map((sl) => { const l = view.locked.find((x) => x.slot === sl); return l ? l.place : null; });
     const lockedAt = (i) => !!view.locked.find((x) => x.slot === view.slots[i]);
     // On phones the campus is too dense for 44 px targets: start in the list view (the map is one tap away).
-    let listMode = !!(typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 600px)').matches), status = '';
+    let listMode = !o.browse && !!(typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 600px)').matches), status = '';
     const byId = Object.fromEntries(view.places.map((p) => [p.id, p]));
     const order = view.places.slice().sort((a, b) => a.y - b.y || a.x - b.x);
 
@@ -37,6 +39,11 @@
     function tap(id) {
       const p = byId[id]; if (!p) return;
       status = '';
+      // Looking, not picking (the map button): a tap says what the place is.
+      if (o.browse) {
+        status = p.state === 'hinted' ? (p.hint || t('map.undiscovered')) : p.name + (p.hours && p.hours.length ? ' · ' + p.hours.map((h) => t('slot.' + h)).join(', ') : '') + (p.desc ? ' — ' + p.desc : '');
+        lastPick = id; return draw();
+      }
       const already = pickedIdx(id);
       if (already.length) {
         if (lastPick === id) return go();
@@ -61,12 +68,13 @@
       if (p.visited) c.push('visited');
       if (p.festLater) c.push('fest-later');
       if (p.festival.length) c.push('fest');
-      if (picks.includes(p.id)) c.push('picked');
+      if (picks.includes(p.id) || (o.browse && lastPick === p.id)) c.push('picked');
       return c.join(' ');
     }
     function badge(p) {
-      if (!p.track || p.track.due == null) return '';
-      const label = p.track.done ? t('map.shiftsDone') : p.track.kind === 'job' ? t('map.shiftsLeft', { n: p.track.due }) : p.track.kind === 'thesis' ? t('map.sessionsLeft', { n: p.track.due }) : t('map.practiceLeft', { n: p.track.due });
+      // A club shows no count (feedback 2026-10-20): it is open-ended; the one visit a term it expects goes unsaid.
+      if (!p.track || p.track.due == null || p.track.kind === 'club' || p.track.kind === 'society') return '';
+      const label = p.track.done ? t('map.shiftsDone') : p.track.kind === 'job' ? t('map.shiftsLeft', { n: p.track.due }) : t('map.sessionsLeft', { n: p.track.due });
       return '<span class="mk-badge' + (p.track.urgent ? ' urgent' : '') + '">' + esc(label) + '</span>';
     }
     function pins(p) {
@@ -81,7 +89,7 @@
         (p.state !== 'hinted' ? '<span class="mk-label">' + esc(p.name) + '</span>' : '') + badge(p) + pins(p) + '</button>';
     }
     function listRow(p) {
-      const states = [p.state === 'hinted' ? t('map.hinted') : p.visited ? t('map.visitedNow') : p.festLater ? t('map.festivalSoon', { slot: t('slot.' + p.festLater).toLowerCase() }) : p.state === 'closed' ? t('map.closedNow') : t('map.open')];
+      const states = [p.state === 'hinted' ? t('map.hinted') : o.browse ? (p.hours || []).map((h) => t('slot.' + h)).join(', ') || t('map.open') : p.visited ? t('map.visitedNow') : p.festLater ? t('map.festivalSoon', { slot: t('slot.' + p.festLater).toLowerCase() }) : p.state === 'closed' ? t('map.closedNow') : t('map.open')];
       if (p.track) states.push(badge(p).replace(/<[^>]+>/g, ''));
       if (p.festival.length) states.push(t('map.festival', { slot: t('slot.' + p.festival[0].slot) }));
       if (p.present.length) states.push(t('map.here', { names: p.present.map((id) => (o.npcs[id] || {}).short || ((o.npcs[id] || {}).name || id).split(' ')[0]).join(', ') }));
@@ -103,18 +111,21 @@
     function draw() {
       const single = view.slots.length === 1;
       const ready = single || isReady(), chosen = single && picks[0];
-      const q = single ? t('map.q.' + view.slots[0]) + (view.visits > 1 && view.visit ? ' · ' + t('map.visitOf', { n: view.visit, of: view.visits }) : '') : t('map.question2');
-      el.innerHTML = '<div class="mapwrap">' +
+      const q = o.browse ? o.subtitle || '' : single ? t('map.q.' + view.slots[0]) + (view.visits > 1 && view.visit ? ' · ' + t('map.visitOf', { n: view.visit, of: view.visits }) : '') : t('map.question2');
+      el.innerHTML = '<div class="mapwrap">' + (o.tabs || '') +
         '<div class="map-head"><div><div class="map-title">' + esc(o.title || '') + '</div><div class="map-q">' + esc(q) + '</div></div>' +
-        (single ? '' : '<div class="map-picks">' + chips() + '</div>') + '</div>' + festBanner() +
+        (single || o.browse ? '' : '<div class="map-picks">' + chips() + '</div>') + '</div>' + (o.browse ? '' : festBanner()) +
         (listMode ? '<div class="map-list">' + order.map(listRow).join('') + '</div>'
           : '<div class="map-frame season-' + esc(view.season || 'none') + '"><img class="map-base" alt="" src="content/world/maps/' + esc(view.map) + '.svg"><div class="map-tint"></div>' + order.map(marker).join('') + '</div>') +
-        '<div class="map-status" role="status">' + esc(status || t('map.howToPick')) + '</div>' +
+        '<div class="map-status" role="status">' + esc(status || (o.browse ? t('map.howToLook') : t('map.howToPick'))) + '</div>' +
         '<div class="map-actions"><button class="btn ghost-btn" id="mapList">' + esc(listMode ? t('map.showMap') : t('map.showList')) + '</button>' +
-        '<button class="btn ' + (single && !chosen ? 'ghost-btn' : 'primary') + '" id="mapGo"' + (ready ? '' : ' disabled') + '>' + esc(single ? (chosen ? t('map.goTo', { place: byId[picks[0]] ? byId[picks[0]].name : picks[0] }) : t('map.stayIn')) : t('map.go')) + '</button></div></div>';
+        (o.browse ? '<button class="btn primary" id="mapClose">' + esc(t('map.close')) + '</button></div></div>'
+          : '<button class="btn ' + (single && !chosen ? 'ghost-btn' : 'primary') + '" id="mapGo"' + (ready ? '' : ' disabled') + '>' + esc(single ? (chosen ? t('map.goTo', { place: byId[picks[0]] ? byId[picks[0]].name : picks[0] }) : t('map.stayIn')) : t('map.go')) + '</button></div></div>');
       el.querySelectorAll('[data-id]').forEach((b) => { b.onclick = () => tap(b.dataset.id); });
       el.querySelectorAll('.pick-chip:not([disabled])').forEach((b) => { b.onclick = () => { picks[+b.dataset.slot] = null; status = ''; draw(); }; });
+      el.querySelectorAll('[data-map]').forEach((b) => { b.onclick = () => o.onTab(b.dataset.map); });
       el.querySelector('#mapList').onclick = () => { listMode = !listMode; draw(); };
+      if (o.browse) { el.querySelector('#mapClose').onclick = () => o.onClose(); return; }
       el.querySelector('#mapGo').onclick = () => (single && !chosen ? o.onConfirm([null]) : go());
     }
     function key(e) {
@@ -124,12 +135,24 @@
       if (['ArrowRight', 'ArrowDown'].includes(e.key)) { btns[(i + 1) % btns.length].focus(); return true; }
       if (['ArrowLeft', 'ArrowUp'].includes(e.key)) { btns[(i - 1 + btns.length) % btns.length].focus(); return true; }
       if (e.key === 'Enter' && i >= 0) { tap(btns[i].dataset.id); const again = el.querySelector('[data-id="' + btns[i].dataset.id + '"]'); if (again) again.focus(); return true; }
-      if (e.key === 'Enter' && i < 0) { const go = el.querySelector('#mapGo'); if (go && !go.disabled) { go.click(); return true; } }
+      if (e.key === 'Enter' && i < 0 && !o.browse) { const go = el.querySelector('#mapGo'); if (go && !go.disabled) { go.click(); return true; } }
       return false;
     }
     draw();
     return { key, picks: () => picks.slice() };
   }
 
-  root.MapView = { render };
+  // The map button (feedback 2026-10-20): the maps you know (Engine.atlas()), one at a time, to look at. A tab per map
+  // when there are several; a tap on a place says what it is. o: { t, esc, Art, npcs, name(view), subtitle, onClose }.
+  function browse(el, views, o) {
+    let cur = 0, ctl = null;
+    const show = () => {
+      const tabs = views.length > 1 ? '<div class="map-tabs" role="tablist">' + views.map((v, i) => '<button class="seg-b' + (i === cur ? ' on' : '') + '" role="tab" aria-selected="' + (i === cur) + '" data-map="' + i + '">' + o.esc(o.name(v)) + '</button>').join('') + '</div>' : '';
+      ctl = render(el, views[cur], Object.assign({}, o, { browse: true, tabs, title: o.name(views[cur]), onTab: (i) => { cur = +i; show(); } }));
+    };
+    show();
+    return { key: (e) => ctl.key(e) };
+  }
+
+  root.MapView = { render, browse };
 })(typeof self !== 'undefined' ? self : this);

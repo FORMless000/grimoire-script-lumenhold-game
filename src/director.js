@@ -98,8 +98,8 @@
       return out;
     },
     // The map for the visit being picked now (M1): one slot. Outside a pick, every visit slot (tools, the start-of-month check).
-    mapView() {
-      const s = this.s, d = s.day, picking = d && d.v === 2 && d.at < this.recipe().length && this.isVisitAt(d.at);
+    mapView(only) {
+      const s = this.s, d = s.day, picking = !only && d && d.v === 2 && d.at < this.recipe().length && this.isVisitAt(d.at);
       const vi = picking ? this.visitIndex(d.at) : 0;
       const slots = picking ? [this.recipe()[d.at].slot] : this.visitSlots();
       // Festivals (B3, M1) no longer take the visit: their place is highlighted in their slot, and picking it draws the festival.
@@ -115,6 +115,7 @@
         const pl = host && this.c.tracks[host] && this.c.places[this.c.tracks[host].place];
         if (pl && pl.map) breakMap = pl.map.map;
       } else if (planMap) breakMap = planMap;
+      if (only) breakMap = only;
       const places = [];
       for (const p of Object.values(this.c.places || {})) {
         if (!p.map || p.map.map !== breakMap) continue;
@@ -132,16 +133,29 @@
         const here = found ? [...new Set(slots.flatMap((sl) => this.presentAt(p.id, sl).filter((id) => s.npcs[id] && s.npcs[id].met)))] : [];
         const ix = this.directorIndex();
         const news = found && (ix.byPlace[p.id] || []).some((e) => !s.seen[e.id] && this.eligible(e, new Set()) && this.test(e.when, null));
-        places.push({ id: p.id, name: p.name, x: p.map.x, y: p.map.y, kind: p.kind || 'public', art: p.art || null, hint: hinted ? p.hint || '' : null, state: found ? (open.some(Boolean) ? 'open' : 'closed') : 'hinted', open, hours: p.open || null,
+        places.push({ id: p.id, name: p.name, x: p.map.x, y: p.map.y, kind: p.kind || 'public', art: p.art || null, hint: hinted ? p.hint || '' : null, state: found ? (only || open.some(Boolean) ? 'open' : 'closed') : 'hinted', open, hours: p.open || null, desc: only ? p.desc || '' : undefined, region: p.region || null,
           // Breaks pause term obligations (B6): the place is still marked as yours, without what's due.
           // A job whose shifts are all done this term (I1) says so.
-          track: t ? Object.assign({ id: p.track, kind: this.c.tracks[p.track].kind }, this.phaseOf() === 'break' ? { due: null, urgent: false } : { due: Math.max(0, (t.due || 0) - (t.visits || 0)), urgent: this.isTermEnd() && t.visits < t.due },
+          track: t ? Object.assign({ id: p.track, kind: this.c.tracks[p.track].kind }, this.phaseOf() === 'break' || this.c.tracks[p.track].kind === 'club' ? { due: null, urgent: false } : { due: Math.max(0, (t.due || 0) - (t.visits || 0)), urgent: this.isTermEnd() && t.visits < t.due },
             this.phaseOf() !== 'break' && this.c.tracks[p.track].kind === 'job' && t.visits >= (t.due || 0) ? { done: true } : {}) : null,
           visited: visited || undefined, festLater: waiting ? this.visitSlots()[waiting.visit] : undefined,
           present: here, news, festival: fest.filter((f) => f.place === p.id).map((f) => ({ slot: slots[f.visit], event: f.event })) });
       }
       return { map: breakMap, slots, places, locked: [], festivals: fest.filter((f) => f.visit < slots.length).map((f) => ({ slot: slots[f.visit], place: f.place, event: f.event })),
         visit: picking ? vi + 1 : null, visits: this.visitSlots().length + (d && d.extraVisit && !this.visitSlots().includes(d.extraVisit) ? 1 : 0), season: this.seasonOf(), phase: this.isWrapUp() ? 'wrapup' : this.phaseOf() };
+    },
+    // The map button (feedback 2026-10-20): the maps you know, to look at, not to pick from: the one you're on now first,
+    // the term map, and any other you've visited a place on (a break at home, an internship). Each is a mapView of that
+    // map with the name to show: the game's for the term map, the place's for a map of one place, else null (the UI
+    // names it by its places' region).
+    atlas() {
+      const s = this.s, now = this.mapView().map, home = this.c.game.map_id || 'campus', ids = [now];
+      if (!ids.includes(home)) ids.push(home);
+      for (const p of Object.values(this.c.places || {})) if (p.map && s.places[p.id] && (s.visitsTo || {})[p.id] && !ids.includes(p.map.map)) ids.push(p.map.map);
+      return ids.map((m) => {
+        const v = this.mapView(m), mine = v.places.filter((p) => p.state !== 'hinted');
+        return Object.assign(v, { now: m === now, name: m === home ? this.c.game.title || null : Object.values(this.c.places).filter((p) => p.map && p.map.map === m).length === 1 && mine[0] ? mine[0].name : null, region: mine[0] ? mine[0].region : null });
+      }).filter((v) => v.places.some((p) => p.state !== 'hinted'));
     },
     // The active plan's `map_id:` (A1), or null.
     planMap() {

@@ -208,6 +208,14 @@ const STYLES = {
   social: (npc) => scorer('social:' + npc, { health: 0.6, mood: 0.6, gold: 0.3, renown: 0.2, skill: 0.3, 'rel:': (k) => (k === 'rel:' + npc ? 5 : 0.2), 'spark:': (k) => (k === 'spark:' + npc ? 4 : 0), 'bond:': (k) => (k === 'bond:' + npc ? 1 : 0), 'gain:': 3 }),
 };
 
+// What a track still asks of a member this term, as a player sees it: the map's count, and for a club (which shows none
+// since 2026-10-20) the habit of going about twice a term.
+function owed(eng, tr) {
+  if (tr.due != null) return tr.due;
+  if (tr.kind !== 'club' || eng.phaseOf() === 'break') return 0;
+  const t = (eng.s.tracks || {})[tr.id];
+  return t ? Math.max(0, 2 - (t.visits || 0)) : 0;
+}
 // Places (design §6.3): by default, keep obligations (club/job/thesis places with visits due), then go
 // somewhere new, else anywhere open. `truant` never keeps obligations.
 function pickPlaces(eng, view, opts = {}) {
@@ -219,7 +227,7 @@ function pickPlaces(eng, view, opts = {}) {
     // A festival on today's map (M1: highlighted, no longer forced): most players go.
     const fest = (view.festivals || []).find((f) => f.slot === sl && open.some((p) => p.id === f.place));
     if (fest && rnd(eng) < 0.8) { picks.push(fest.place); return; }
-    const duty = opts.truant ? [] : open.filter((p) => p.track && p.track.due > picks.filter((x) => x === p.id).length);
+    const duty = opts.truant ? [] : open.filter((p) => p.track && owed(eng, p.track) > picks.filter((x) => x === p.id).length);
     const fresh = open.filter((p) => p.news && !picks.includes(p.id));
     // social:<npc> seeks out the places where that character is
     // (by the character's schedule: someone courting the tea-shop owner knows where the tea shop is, met or not).
@@ -263,7 +271,7 @@ function route(eng, view, choose, opts) {
   return view.slots.map((sl, i) => {
     if (def[i] == null) return null;
     const openPl = view.places.filter((p) => p.state === 'open' && p.open[i]), d = openPl.find((p) => p.id === def[i]);
-    if ((d && d.track && d.track.due > 0) || (view.festivals || []).some((f) => f.slot === sl && f.place === def[i])) return def[i];
+    if ((d && d.track && owed(eng, d.track) > 0) || (view.festivals || []).some((f) => f.slot === sl && f.place === def[i])) return def[i];
     return choose(openPl, sl) || def[i];
   });
 }

@@ -64,7 +64,7 @@ tone: light
 art: paper
 tags: job money
 scene: A cork board crowded with notices, a student running a finger down a column of shift times.
-text: Notices for work, three layers deep: the library, the Gilded Newt, Pell & Daughters, the courier loft. Each wants someone reliable. Each says so twice.
+text: Notices for work, three layers deep: the library, the Gilded Newt, Pell & Daughters, the courier loft. Each wants someone reliable. Each says so twice.{term and (month == 4 or month == 10):  This week every notice ends the same way: new staff start next term.|}
 > look: Just looking
   say: You read every notice twice and take none of them down.
 > quit: Hand in your notice
@@ -73,6 +73,27 @@ text: Notices for work, three layers deep: the library, the Gilded Newt, Pell & 
   leave job
   mood +small
   say: You hand in your notice. Your evenings are yours again; so is your empty purse.
+
+# A term's last month takes on no staff (feedback 2026-10-20); one evening's odd job makes up for it, for someone without work.
+@event job_board_odd_job
+title: One Evening's Work
+place: job_board
+class: routine
+tone: light
+repeat: 6
+weight: 40
+art: paper
+tags: job money
+scene: A cork board of notices that all say "from next term", and one small card pinned low and crooked beneath them.
+when: term and (month == 4 or month == 10) and not member(job)
+text: Every notice says "from next term", except one, pinned low and crooked: {~the refectory wants hands for the end-of-term clear-out|the porters want someone to carry exam desks back to the store rooms|a professor wants her rooms boxed up before the break}. One evening, paid on the night.
+> left: Take the evening's work
+  gold +medium
+  health -small
+  say: {~You scrub, carry and stack until the lamps go out. The pay is counted into your hand, coin by coin, by someone too tired to talk.|It is heavier work than the card let on. Your arms ache all the next day, and your purse is heavier for it.|You finish late, sore and paid. Nobody remembers your name, which is the restful part.}
+> right: Leave it for someone else
+  mood +tiny
+  say: {~You leave the card where it is. Somebody poorer will want it more, and you want your evening.|You read it twice and walk on. The term is nearly over; so is your patience for work.|You let the card be. The evening goes on a long walk instead, which pays nothing and feels like a lot.}
 
 # ---------------- Break plans (design §4.3) ----------------
 
@@ -134,7 +155,7 @@ tone: tense
 art: paper
 tags: job club
 scene: A folded note on official paper, the words "performance" and "concern" underlined twice.
-text: A note about {track}: your attendance and your efforts have slipped, and it has been noticed. One more term like this and there will be consequences.
+text: {kind_is(track, club): A note about {track}: you haven't shown up once all term, and it has been noticed. Members who never come stop being members.|A note about {track}: your attendance and your efforts have slipped, and it has been noticed. One more term like this and there will be consequences.}
 > left: Promise to do better
   mood -small
   say: You write back a promise in your neatest hand. Now you'll have to keep it.
@@ -762,7 +783,11 @@ text: {year == 1: Tonight is Lantern Night, and everyone else seems to have know
   health -tiny
   say: {~Old exam paper, a bent wire and a candle stub. Your fingers smell of wax for a day, and one of them is burnt.|You glue it with porridge and patience. It's lopsided, and it's yours.|You fold it from a letter from home. It feels right to send that out over the water.}
 > right: Glamour a plain one
-  challenge spell apprentice+:
+  # Only with Glamour known, and it costs its Mana (2026-10-20: it used to be open to anyone).
+  when: spell_level(glamour) >= 1
+  hint: Needs Glamour.
+  mana -small
+  challenge spell using charm apprentice+:
     win:
       mood +small
       guile +tiny
@@ -836,7 +861,7 @@ repeat: 12
 art: lantern
 tags: festival
 scene: A burnt-out paper lantern lying on the wet stones of a lakeshore at dawn, a folded wish still tucked inside it.
-text: A week after Lantern Night a lantern washes up at your feet on the shore, burnt out, the wish still folded inside it. The handwriting is neat and nervous.
+text: Weeks after Lantern Night a lantern washes up at your feet on the shore, burnt out, the wish still folded inside it. The handwriting is neat and nervous.
 > left: Read it
   alignment -tiny
   mood +small

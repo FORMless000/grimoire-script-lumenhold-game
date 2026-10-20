@@ -127,6 +127,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `spell_check` | structured |  |
 |  | `spell_bonus` | structured |  |
 |  | `spell_bonus_one` | structured |  |
+|  | `forbidden_cast` | structured |  |
 |  | `exam_tiers` | structured |  |
 |  | `dc_tiers` | structured |  |
 |  | `likelihood` | structured |  |
@@ -334,5 +335,5 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 
 ### Functions in expressions
 
-`abs()` · `act()` · `apart()` · `applied()` · `around()` · `bond()` · `bonds()` · `bonds_around()` · `cast_as()` · `chance_of()` · `chosen()` · `clamp()` · `clock()` · `clue()` · `clues()` · `discovered()` · `due()` · `enrolled()` · `flag()` · `floor()` · `has()` · `known()` · `knows()` · `left()` · `level()` · `love()` · `max()` · `member()` · `met()` · `min()` · `npc_is()` · `npc_rel()` · `offered()` · `passed()` · `performance()` · `plan()` · `present()` · `progress()` · `rand()` · `rank()` · `rel()` · `romanceable()` · `round()` · `seen()` · `since()` · `spark()` · `spell_level()` · `tagged()` · `visits()` · `visits_to()`
+`abs()` · `act()` · `apart()` · `applied()` · `around()` · `bond()` · `bonds()` · `bonds_around()` · `cast_as()` · `chance_of()` · `chosen()` · `clamp()` · `clock()` · `clue()` · `clues()` · `discovered()` · `due()` · `enrolled()` · `flag()` · `floor()` · `has()` · `kind_is()` · `known()` · `knows()` · `left()` · `level()` · `love()` · `max()` · `member()` · `met()` · `min()` · `npc_is()` · `npc_rel()` · `offered()` · `passed()` · `performance()` · `plan()` · `present()` · `progress()` · `rand()` · `rank()` · `rel()` · `romanceable()` · `round()` · `seen()` · `since()` · `spark()` · `spell_level()` · `tagged()` · `visits()` · `visits_to()`
 <!-- END GENERATED: schema -->

@@ -789,7 +789,7 @@ text: The lake glitters as if nothing happened. Most of the academy believes the
   mood +medium
   say: You watch the water. It's just water, now. Kael's tea, for once, doesn't freeze.
 > right: Tell him how you feel
-  if spark(kael) >= 25:
+  if spark(kael) >= 25 and rel(kael) >= 0:
     spark kael +large
     bond kael partner
     say: He kisses you, and for the first time since you've known him, his hands are warm.

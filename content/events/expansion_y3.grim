@@ -424,7 +424,7 @@ text: Dawn, the empty dueling ring, no crowd. Lyra is waiting. "No referee," she
 > right: Lower your wand and just talk
   study -tiny
   rel lyra +large
-  if spark(lyra) >= 20:
+  if spark(lyra) >= 20 and rel(lyra) >= 0:
     spark lyra +small
   say: You talk until the mist burns off. About fire, and mothers, and what comes after. You both miss the morning lecture. It turns out you didn't need to duel to know.
 

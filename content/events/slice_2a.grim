@@ -35,7 +35,7 @@ title: Borrowed Fire
 class: milestone
 tone: light
 actor: lyra
-when: met(lyra) and turn >= 4 and spell_level(flame) == 0
+when: met(lyra) and turn >= 4 and spell_level(flame) == 0 and rel(lyra) >= 0
 weight: 24
 art: flame
 tags: class magic rival
@@ -166,6 +166,7 @@ scene: A student kneeling at the edge of a still lake at night, their reflection
 text: At the lakeshore your reflection speaks before you do. "You're running low," it says, kindly. "{mana < 15: I could fill you up.|I could make you stronger.} Just say yes. Saying yes costs nothing."
 > left: Say yes
   mana +large
+  arcana +medium
   alignment -medium
   say: Cold pours into you, generous and endless. When you stand, your reflection is a little slower to stand with you.
 > right: Walk away

@@ -412,7 +412,9 @@
       const share = Object.assign({ short: 0.5, full: 1, overtime: 2 }, (this.c.balance && this.c.balance.wage) || {})[size || 'full'];
       return Math.round(d.pay[Math.min(t.rank || 0, d.pay.length - 1)] * (share == null ? 1 : share) * (t.benched ? 0.6 : 1));
     }
-    sparkFollow() { return Object.assign({ per: 25, cap: 2, partner: 3, cooldown: 30 }, (this.c.balance && this.c.balance.spark_follow) || {}); }
+    // Rivalry bottoms out at −50 (feedback 2026-10-20); friendship still runs to 100.
+    relFloor() { return -50; }
+    sparkFollow() { return Object.assign({ per: 25, cap: 2, partner: 3, cooldown: 30, from: 0 }, (this.c.balance && this.c.balance.spark_follow) || {}); }
     // Crossing the cooldown mark upward pushes `@game spark_cooldown` once (until spark falls back below it), so the
     // player can say whether they want this (M37). Partners aren't asked.
     sparkCheck(id, n) {
@@ -420,7 +422,7 @@
       if (!ev || !this.c.events[ev]) return;
       if (n.spark < th) { n.coolAsked = false; return; }
       if (n.coolAsked || n.bond === 'partner') return;
-      n.coolAsked = true;
+      n.coolAsked = true; n.sparkAsked = true;   // from now on, spark that friendship carries along shows (2026-10-20)
       this.s.queue.push({ id: ev, actor: id, due: this.s.turn + 1, src: 'queued' });
     }
     // A job up front (M23): what one shift pays a new hire, read from the job's own cards (wages, tips and fines
@@ -610,8 +612,9 @@
           // One club, one job and one internship at a time (decision D3; M16).
           for (const [oid, o] of Object.entries(s.tracks)) if (oid !== id && o.status === 'member' && o.kind === d.kind && (d.kind === 'club' || d.kind === 'job' || d.kind === 'internship')) { o.status = 'left'; this.grantLegacy(oid, ctx, false); ctx.notes.push({ kind: 'leave', track: oid }); }
           t.status = 'member'; t.perf = t.dropped ? 30 : 50; t.visits = 0; t.due = d.due || 0; t.benched = false;
-          // Joining mid-term (M34): at most one visit is due per month left in the term, this one included.
-          if (this.phaseOf() === 'term') { let left = 0; for (let k = s.turn; k <= this.maxTurns && this.phaseOf(k) === 'term'; k++) left++; t.due = Math.min(t.due, left); }
+          // Joining mid-term (M34): at most one visit is due per month left in the term, this one included; a job one fewer
+          // (feedback 2026-10-20: a month's grace to settle in).
+          if (this.phaseOf() === 'term') { let left = 0; for (let k = s.turn; k <= this.maxTurns && this.phaseOf(k) === 'term'; k++) left++; t.due = Math.min(t.due, Math.max(0, left - (d.kind === 'job' ? 1 : 0))); }
           ctx.notes.push({ kind: 'join', track: id });
           // A member is shown the way in: the track's place is discovered (the duel hall, the courier loft, …).
           if (d.place && this.c.places[d.place] && !s.places[d.place]) { s.places[d.place] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: d.place }); }
@@ -644,15 +647,18 @@
       // A job is a fixed number of shifts a term (playtest 2, I1, I2): on a break, or once the term's shifts are done,
       // a visit to its place is an ordinary one (no shift card, pay or attendance).
       if (d.kind === 'job' && (brk || t.visits >= (t.due || 0))) return 'off';
-      // An internship is the break's work (M16): every visit there counts in full.
-      const extra = d.kind !== 'internship' && (brk || t.visits >= t.due);
+      // An internship is the break's work (M16): every visit there counts in full; so does every club visit in term
+      // (feedback 2026-10-20: clubs are open-ended, expecting one visit a term unsaid).
+      const extra = d.kind !== 'internship' && (brk || (d.kind !== 'club' && t.visits >= t.due));
       if (!brk) t.visits++;
       t.perf = clamp((t.perf || 0) + (extra ? 2 : 8), 0, 100);
       t.rankXp = (t.rankXp || 0) + (extra ? 1 : 2);
       // A job pays through its shift cards (`wage`, M10); only a shift with no card to draw pays here.
       if (d.kind === 'job' && d.pay && !(this.hasShift && this.hasShift(id))) this.change('gold', this.wageFor(id, null), ctx);
       if (d.kind === 'thesis') t.progress = clamp((t.progress || 0) + (extra ? 2 : 5), 0, 100);
-      ctx.notes.push(Object.assign({ kind: 'attend', track: id }, brk ? {} : { left: Math.max(0, t.due - t.visits) }));
+      // A club's visit in term says nothing (feedback 2026-10-20: clubs are open-ended; the one visit a term they expect goes
+      // unsaid, and only missing it all term is noticed).
+      if (!(d.kind === 'club' && !brk)) ctx.notes.push(Object.assign({ kind: 'attend', track: id }, brk ? {} : { left: Math.max(0, t.due - t.visits) }));
       return 'on';
     }
     // End of a term (design §6.2, §7.3): exams for enrolled courses, missed obligations, warnings, promotions.
@@ -669,7 +675,7 @@
           if (missed) {
             t.perf = clamp(t.perf - 15 * missed, 0, 100);
             if (d.kind === 'thesis') t.progress = clamp((t.progress || 0) - 8 * missed, 0, 100);
-            if (d.lead && s.npcs[d.lead]) s.npcs[d.lead].rel = clamp(s.npcs[d.lead].rel - 5 * missed, -100, 100);
+            if (d.lead && s.npcs[d.lead]) s.npcs[d.lead].rel = clamp(s.npcs[d.lead].rel - 5 * missed, this.relFloor(), 100);
             ctx.notes.push({ kind: 'missed', track: id, n: missed });
           }
           t.visits = 0;
@@ -801,6 +807,8 @@
           out.push({ key: d.id, label: names[lv - 1] || d.name, hint: d.desc || null, effects: [{ t: 'enrol', track: d.id, level: lv }].concat(this.pickedSay(d)) });
         } else if ((kind === 'clubs' && d.kind === 'club') || (kind === 'jobs' && d.kind === 'job')) {
           if (d.hidden || (t && t.status === 'member') || (t && t.unreliableUntil && ti < t.unreliableUntil)) continue;
+          // No one takes on staff in a term's last month (feedback 2026-10-20): jobs start next term (or on a break).
+          if (d.kind === 'job' && this.phaseOf() === 'term' && this.isTermEnd()) continue;
           // Switching (M35): joining leaves the one you're in, its rank and performance with it.
           const cur = Object.entries(s.tracks || {}).find(([k, o]) => o.status === 'member' && o.kind === d.kind && k !== d.id);
           out.push({ key: d.id, label: d.name, hint: d.desc || null, effects: [{ t: 'join', track: d.id }].concat(this.pickedSay(d)), switching: cur ? { from: cur[0], rank: cur[1].rank || 0, perf: Math.round(cur[1].perf || 0) } : null });
@@ -1005,6 +1013,7 @@
               if (!eng.c.tracks[a[0]] && eng.trackKinds().has(a[0])) return Object.values(eng.s.tracks || {}).some((t) => t.kind === a[0] && t.status === 'member');
               const t = eng.trackState(a[0]); return !!t && t.status === 'member'; }
             case 'offered': return eng.offered(a[0]).length;   // offered(courses): what an `offers:` menu would list (I10)
+            case 'kind_is': { const id = a[0] === 'track' ? eng._ctxTrack : a[0], d = id && eng.c.tracks[id]; return !!d && d.kind === a[1]; }
             case 'applied': {   // applied(internship): to any of that kind
               if (!eng.c.tracks[a[0]] && eng.trackKinds().has(a[0])) return Object.values(eng.s.tracks || {}).some((t) => t.kind === a[0] && t.status === 'applied');
               const t = eng.trackState(a[0]); return !!t && t.status === 'applied'; }
@@ -1273,18 +1282,21 @@
             if (!n) break;
             const amt = this.amountOf(st, st.t);
             const old = n[st.t];
-            n[st.t] = st.t === 'rel' ? clamp(old + amt, -100, 100) : clamp(old + amt, 0, 100);
+            n[st.t] = st.t === 'rel' ? clamp(old + amt, this.relFloor(), 100) : clamp(old + amt, 0, 100);
             if (st.t === 'spark' && amt > 0) n.sparked = s.turn;
             if (amt) { ctx.contact = ctx.contact || {}; ctx.contact[id] = Math.max(ctx.contact[id] || -1, Math.sign(amt)); if (amt < 0) (ctx.contact.neg = ctx.contact.neg || {})[id] = true; }   // warmth (design §5.5, M17)
             const key = st.t + ':' + id;
             if (this._oracle && amt) { ctx.deltas[key] = (ctx.deltas[key] || 0) + amt; if (n[st.t] - old !== amt) (ctx.over = ctx.over || {})[key] = true; }   // a preview shows it past the cap
             else if (n[st.t] !== old) ctx.deltas[key] = (ctx.deltas[key] || 0) + (n[st.t] - old);
             else if (amt > 0) (ctx.capped = ctx.capped || {})[key] = amt;   // a gain at the cap still shows (M37)
-            // Spark follows friendship (M37): with some spark already there, a friendship gain carries spark along.
-            if (st.t === 'rel' && amt > 0 && n.spark > 0 && this.c.npcs[id] && this.c.npcs[id].romance) {
-              const f = this.sparkFollow(), mult = Math.min(n.bond === 'partner' ? f.partner : f.cap, n.spark / f.per);
-              const add = Math.round(amt * mult), sOld = n.spark;
-              if (add > 0) { n.spark = clamp(sOld + add, 0, 100); n.sparked = s.turn; const dd = this._oracle ? add : n.spark - sOld; if (dd) ctx.deltas['spark:' + id] = (ctx.deltas['spark:' + id] || 0) + dd; if (this._oracle && add !== n.spark - sOld) (ctx.over = ctx.over || {})['spark:' + id] = true; }
+            // Spark follows friendship (M37): with some spark already there (at least `from`, 2026-10-20: a romantic moment
+            // has to start it), a friendship gain carries spark along. Until the card asking whether you want this has come
+            // (`sparkAsked`) or you're partners, the spark it carries is applied but not shown (feedback 2026-10-20).
+            const f = this.sparkFollow();
+            if (st.t === 'rel' && amt > 0 && n.spark > 0 && n.spark >= (f.from || 0) && this.c.npcs[id] && this.c.npcs[id].romance) {
+              const mult = Math.min(n.bond === 'partner' ? f.partner : f.cap, n.spark / f.per);
+              const add = Math.round(amt * mult), sOld = n.spark, shown = n.sparkAsked || n.bond === 'partner';
+              if (add > 0) { n.spark = clamp(sOld + add, 0, 100); n.sparked = s.turn; if (!shown && !this._oracle) n.sparkHid = (n.sparkHid || 0) + (n.spark - sOld); const dd = this._oracle ? add : n.spark - sOld; if (dd && shown) ctx.deltas['spark:' + id] = (ctx.deltas['spark:' + id] || 0) + dd; if (this._oracle && shown && add !== n.spark - sOld) (ctx.over = ctx.over || {})['spark:' + id] = true; }
             }
             if (n.spark !== undefined) this.sparkCheck(id, n);
             break;
@@ -2013,7 +2025,7 @@
         spells: Object.entries(s.spells || {}).filter(([id]) => c.spells && c.spells[id]).map(([id, level]) => ({ id, level, ...pick(c.spells[id], ['name', 'desc', 'art', 'skill']), cost: this.spellCost(id, level) })),
         skills: c.order.skills.map((id) => ({ id, ...pick(c.skills[id], ['name', 'icon', 'color', 'max', 'desc']), value: s.vals[id] })),
         states: Object.keys(s.states).filter((id) => c.states[id] && !c.states[id].hidden).map((id) => ({ id, name: c.states[id].name || id, desc: this.interp(c.states[id].desc || ''), art: c.states[id].art, kind: c.states[id].kind || null, group: c.states[id].group || null, left: s.states[id].left })),
-        npcs: c.order.npcs.filter((id) => s.npcs[id].met).map((id) => ({ id, ...pick(c.npcs[id], ['name', 'short', 'title', 'house', 'desc', 'color', 'romance', 'pronouns', 'look']), ...s.npcs[id] })),
+        npcs: c.order.npcs.filter((id) => s.npcs[id].met).map((id) => { const n = s.npcs[id]; return { id, ...pick(c.npcs[id], ['name', 'short', 'title', 'house', 'desc', 'color', 'romance', 'pronouns', 'look']), ...n, ...(n.sparkHid && !n.sparkAsked && n.bond !== 'partner' ? { spark: Math.max(0, (n.spark || 0) - n.sparkHid) } : {}) }; }),   // carried spark stays out of sight until asked (2026-10-20)
         log: s.log,
       };
     }

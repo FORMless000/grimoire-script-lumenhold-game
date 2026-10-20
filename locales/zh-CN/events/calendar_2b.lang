@@ -39,8 +39,8 @@ opt.quit.say.1 [0a0a06] = {~你在当初领徽章的那张桌子前把社团徽�
 @event job_board_visit
 # en: The Job Board
 title [377c1b] = 招工告示板
-# en: Notices for work, three layers deep: the library, the Gilded Newt, Pell & Daughters, the courier loft. Each wants someone reliable. Each says so twice.
-text [358cb2] = 招工启事叠了三层：图书馆、镀金蝾螈酒馆、佩尔父女药铺、信使阁楼。每家都要个靠得住的人，每家都说了两遍。
+# en: Notices for work, three layers deep: the library, the Gilded Newt, Pell & Daughters, the courier loft. Each wants someone reliable. Each says so twice.{term and (month == 4 or month == 10):  This week every notice ends the same way: new staff start next term.|}
+text [b2a7f4] = 招工启事叠了三层：图书馆、镀金蝾螈酒馆、佩尔父女药铺、信使阁楼。每家都要个靠得住的人，每家都说了两遍。{term and (month == 4 or month == 10):这周每张启事的结尾都一样：新人下学期开始上工。|}
 # en: A cork board crowded with notices, a student running a finger down a column of shift times.
 scene [62cc7b] = 一块挤满告示的软木板，一名学生用手指顺着一列排班时间往下划。
 # en: Just looking
@@ -53,6 +53,22 @@ opt.quit.label [e9edc6] = 递交辞呈
 opt.quit.hint [974ede] = 以后还能再找工作。
 # en: You hand in your notice. Your evenings are yours again; so is your empty purse.
 opt.quit.say.1 [3dd0ab] = 你递交了辞呈。晚上又归你自己了，空荡荡的钱袋也是。
+
+@event job_board_odd_job
+# en: One Evening's Work
+title [edcb06] = 一晚上的活
+# en: Every notice says "from next term", except one, pinned low and crooked: {~the refectory wants hands for the end-of-term clear-out|the porters want someone to carry exam desks back to the store rooms|a professor wants her rooms boxed up before the break}. One evening, paid on the night.
+text [347c76] = 每张启事都写着“下学期起”，只有一张例外，钉得又低又歪：{~食堂要人手做学期末的大扫除|门房要人把考试用的课桌搬回储藏室|一位教授想在放假前把房间打包好}。就一晚上，当晚结钱。
+# en: A cork board of notices that all say "from next term", and one small card pinned low and crooked beneath them.
+scene [4dee36] = 一块软木板上的启事全写着“下学期起”，下面钉着一张又低又歪的小卡片。
+# en: Take the evening's work
+opt.left.label [f36d9c] = 接下这晚的活
+# en: {~You scrub, carry and stack until the lamps go out. The pay is counted into your hand, coin by coin, by someone too tired to talk.|It is heavier work than the card let on. Your arms ache all the next day, and your purse is heavier for it.|You finish late, sore and paid. Nobody remembers your name, which is the restful part.}
+opt.left.say.1 [2de5ef] = {~你擦洗、搬运、码放，一直干到熄灯。工钱由一个累得不想说话的人一枚一枚数到你手里。|活比卡片上写的重。第二天你胳膊酸了一整天，钱袋也沉了些。|你干到很晚，浑身酸痛，钱也拿到了。没人记得你的名字，这倒挺省心。}
+# en: Leave it for someone else
+opt.right.label [43df3f] = 留给别人吧
+# en: {~You leave the card where it is. Somebody poorer will want it more, and you want your evening.|You read it twice and walk on. The term is nearly over; so is your patience for work.|You let the card be. The evening goes on a long walk instead, which pays nothing and feels like a lot.}
+opt.right.say.1 [5f075c] = {~你让卡片留在原处。总有更缺钱的人更需要它，而你想要你的晚上。|你读了两遍，走开了。学期快结束了，你干活的耐心也是。|你没动那张卡片。这个晚上换成一次长长的散步，一分钱不挣，却觉得值。}
 
 @event break_plan
 # en: The Break
@@ -105,8 +121,8 @@ opt.right.say.1 [ab3ae7] = {~你先做最难的题，把整篇论述押在早饭
 @event track_warning
 # en: A Word About Your Attendance
 title [6bd5a3] = 关于你的出勤
-# en: A note about {track}: your attendance and your efforts have slipped, and it has been noticed. One more term like this and there will be consequences.
-text [2da6ae] = 一张关于{track}的便条：你的出勤和努力都在下滑，有人注意到了。再这样一个学期，就要有后果了。
+# en: {kind_is(track, club): A note about {track}: you haven't shown up once all term, and it has been noticed. Members who never come stop being members.|A note about {track}: your attendance and your efforts have slipped, and it has been noticed. One more term like this and there will be consequences.}
+text [86e8d5] = {kind_is(track, club): 一张关于{track}的便条：你整个学期一次都没来，有人注意到了。从不露面的成员，迟早不再是成员。|一张关于{track}的便条：你的出勤和努力都在下滑，有人注意到了。再这样一个学期，就要有后果了。}
 # en: A folded note on official paper, the words "performance" and "concern" underlined twice.
 scene [7cac89] = 一张折起来的公文纸，“表现”和“关切”两个词下面各划了两道线。
 # en: Promise to do better
@@ -483,6 +499,8 @@ opt.middle.label [dc142c] = 用碎料自己做
 opt.middle.say.1 [cf0c1a] = {~旧考卷、一根弯铁丝、一截蜡烛头。你的手指一整天都是蜡味，还烫伤了一根。|你用麦片粥和耐心把它粘好。它歪歪扭扭，但它是你的。|你用一封家信叠成了它。把它放到水面上，感觉刚刚好。}
 # en: Glamour a plain one
 opt.right.label [0b61bd] = 给普通灯笼施幻术
+# en: Needs Glamour.
+opt.right.hint [e70ce7] = 需要魅影。
 # en: {~A plain paper bag becomes a lantern of stained glass. Nobody guesses.|You glamour your lantern into a little silver moon. Three people ask where you bought it.|Your lantern shimmers like mother-of-pearl. You'll have to keep it lit all evening, or it'll show.}
 opt.right.say.1 [6cf5ed] = {~一只普通纸袋变成了一盏彩色玻璃灯笼。没人看得出来。|你把灯笼幻化成一轮小小的银月亮。三个人问你在哪儿买的。|你的灯笼泛着珍珠母的光泽。你得让它整晚亮着，否则就要露馅。}
 # en: {~The glamour slips at dusk, and your stained-glass lantern turns back into a paper bag in front of everyone.|Your silver moon fades to brown paper halfway to the shore. A first-year points.|The pearl sheen peels off like old paint. You carry it lit-side-in, and fool nobody.}
@@ -531,8 +549,8 @@ opt.right.say.1 [ea7e74] = 你陪他坐在岸边，说了句实话：许下愿�
 @event lantern_washed_up
 # en: A Lantern Washes Up
 title [acaa04] = 漂回来的灯笼
-# en: A week after Lantern Night a lantern washes up at your feet on the shore, burnt out, the wish still folded inside it. The handwriting is neat and nervous.
-text [0656d3] = 灯笼夜一周后，一盏烧尽的灯笼漂到你脚边的岸上，里面还折着那张愿望。字迹工整，带着几分紧张。
+# en: Weeks after Lantern Night a lantern washes up at your feet on the shore, burnt out, the wish still folded inside it. The handwriting is neat and nervous.
+text [3a0729] = 灯笼夜几周后，一盏烧尽的灯笼漂到你脚边的岸上，里面还折着那张愿望。字迹工整，带着几分紧张。
 # en: A burnt-out paper lantern lying on the wet stones of a lakeshore at dawn, a folded wish still tucked inside it.
 scene [4fb291] = 黎明时分，一盏烧尽的纸灯笼躺在湖岸湿漉漉的石头上，里面还夹着一张折好的愿望。
 # en: Read it

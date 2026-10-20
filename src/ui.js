@@ -292,6 +292,7 @@
       '<div class="top-actions">' +
       '<button class="icon-btn side-toggle" id="sideToggle" title="' + esc(t('top.people')) + '">' + Art.icon('group', 20) + '</button>' +
       (languages.length > 1 ? '<button class="icon-btn" id="langToggle" title="' + esc(t('top.lang') + ' → ' + nextLang.name) + '">' + Art.icon('globe', 18) + '</button>' : '') +
+      '<button class="icon-btn" id="atlasBtn" title="' + esc(t('top.map')) + '" aria-label="' + esc(t('top.map')) + '">' + Art.icon('map', 18) + '</button>' +
       '<button class="icon-btn" id="settingsBtn" title="' + esc(t('settings.heading')) + '">' + Art.icon('gear', 18) + '</button>' +
       '<button class="icon-btn" id="slotsTop" title="' + esc(t('slots.heading')) + '">' + Art.icon('scroll', 18) + '</button>' +
       '<button class="icon-btn" id="quit" title="' + esc(t('top.quit')) + '">' + Art.icon('door', 18) + '</button></div></header>' +
@@ -310,6 +311,7 @@
     const lt = document.getElementById('langToggle');
     if (lt) lt.onclick = () => switchLang(nextLang.code, true);
     document.getElementById('settingsBtn').onclick = () => openSettings();
+    document.getElementById('atlasBtn').onclick = () => openAtlas();
     ui.sideOpen = false;
     document.getElementById('sideToggle').onclick = () => setSide(!ui.sideOpen);
     document.getElementById('sideClose').onclick = () => setSide(false);
@@ -400,7 +402,8 @@
           if (tr.kind === 'course') line = tr.status === 'enrolled' ? '' : tr.grades.length ? t('side.grades', { grades: tr.grades.join(' ') }) : '';
           else if (tr.kind === 'job' && tr.status === 'member' && snap.phase !== 'term') line = t('side.noShifts', { rank: tr.rank || '' });
           else if (tr.kind === 'job' && tr.done) line = t('side.shiftsDone', { rank: tr.rank || '' });
-          else if (tr.kind === 'club' || tr.kind === 'job') line = t('side.rankLine', { rank: tr.rank || '', perf: tr.perf, due: tr.due });
+          else if (tr.kind === 'club') line = t('side.clubLine', { rank: tr.rank || '' });   // clubs keep no count (feedback 2026-10-20)
+          else if (tr.kind === 'job') line = t('side.rankLine', { rank: tr.rank || '', perf: tr.perf, due: tr.due });
           else if (tr.kind === 'thesis') line = t('side.progress', { n: tr.progress });
           else if (tr.kind === 'society') line = t('side.society');
           else if (tr.status === 'applied') line = t('side.applied');
@@ -411,7 +414,7 @@
             ? '<p>' + esc(t('side.prep', { n: tr.study, cap: tr.studyCap }) + ' · ' + when) + '</p><div class="prep"><b style="width:' + Math.round((tr.study / Math.max(1, tr.studyCap)) * 100) + '%"></b></div>'
             : '<p>' + esc(line) + '</p>';
           const right = tr.kind === 'club' || tr.kind === 'job' ? t('side.perf', { n: tr.perf }) : standing ? t('side.passToday', { p: tr.pass }) : '';
-          h += '<div class="state track ' + esc(tr.kind) + '"' + (standing ? ' title="' + esc(t('side.oddsTip', { pass: tr.pass, top: tr.top })) + '"' : '') + '>' + Art.icon(tr.kind === 'job' ? 'coin' : tr.kind === 'club' ? 'group' : tr.kind === 'society' ? 'map' : 'book', 20) + '<div class="grow"><b>' + esc(tr.levelName || tr.name) + '</b>' + body + '</div>' + (right ? '<span class="left">' + esc(right) + '</span>' : '') + '</div>';
+          h += '<div class="state track ' + esc(tr.kind) + '"' + (standing ? ' title="' + esc(t('side.oddsTip', { pass: tr.pass, top: tr.top })) + '"' : '') + '>' + Art.icon(tr.kind === 'job' ? 'coin' : tr.kind === 'club' ? 'group' : tr.kind === 'society' ? 'map' : 'paper', 20) + '<div class="grow"><b>' + esc(tr.levelName || tr.name) + '</b>' + body + '</div>' + (right ? '<span class="left">' + esc(right) + '</span>' : '') + '</div>';
         }
       }
       h += '<div class="sec-h">' + esc(t('side.conditions')) + '</div>';
@@ -429,7 +432,7 @@
       for (const n of snap.npcs) {
         // One bar per character (M37): its length is how close you are (rel; a rival's runs red), its colour how
         // friendly ↔ romantic it is (spark's share).
-        const rel = n.rel, w = Math.min(100, Math.abs(rel));
+        const rel = n.rel, w = Math.min(100, rel < 0 ? Math.abs(rel) * 2 : rel);   // a rival's bar is full at −50
         const mix = (a, b, f) => '#' + [0, 2, 4].map((i) => Math.round(parseInt(a.substr(i, 2), 16) * (1 - f) + parseInt(b.substr(i, 2), 16) * f).toString(16).padStart(2, '0')).join('');
         const col = rel < 0 ? '#ff8a80' : mix('7fd18b', 'e0708a', n.romance ? Math.min(1, (n.spark || 0) / 60) : 0);
         h += '<div class="person" data-id="' + esc(n.id) + '">' + Art.avatar(n, 44) + '<div class="info"><div class="nm">' + esc(n.name) + (n.bond !== 'none' ? '<span class="bond-badge bond-' + esc(n.bond) + '">' + esc(bondLabel(n.bond)) + '</span>' : '') + '</div>' +
@@ -612,15 +615,16 @@
   }
   const sceneNote = (scene, hidden) => scene ? '<p class="scene-note"' + (hidden ? ' style="display:none"' : '') + '>' + esc(scene) + '</p>' : '';
   // A challenge names its kind and the skill(s) it rolls (B24): "Enchanting · Charm".
-  // A roll on a button says only the skill it tests and the chance (feedback 2026-10-19): not the kind of check, its
-  // nature or its swing (the option's own words say those). A roll of pure luck is the dice and its chance alone.
+  // A roll on a button says only the skill it tests (feedback 2026-10-19): not the kind of check, its nature or its swing
+  // (the option's own words say those), and not the chance, which the outcome lines already give (2026-10-20). A roll
+  // of pure luck is the dice alone.
   const skillsOf = (using) => String(using || '').split('+').filter(Boolean).map(skillName).join(' + ');
   const checkText = (c, key) => c.fight ? fightText(key)
     : c.combat ? t('check.combatButton', { p: c.p, cost: c.cost })
-    : c.luck ? t('check.luckButton', { p: c.p })
-    : t('check.button', { skill: c.exam || c.challenge ? skillsOf(c.using) : skillName(c.skill), p: c.p });
+    : c.luck ? ''
+    : t('check.button', { skill: c.exam || c.challenge ? skillsOf(c.using) : skillName(c.skill) });
   // The roll on an option's button (B24, M11): combat, the future minigame, is marked apart from skill checks.
-  const checkLine = (c, key) => (c ? '<span class="chk roll' + (c.combat || c.fight ? ' combat' : '') + '">' + Art.icon(c.combat || c.fight ? 'sword' : c.exam ? 'scroll' : 'dice', 12) + ' ' + esc(checkText(c, key)) + '</span>' : '');
+  const checkLine = (c, key) => (c ? '<span class="chk roll' + (c.combat || c.fight ? ' combat' : '') + '">' + Art.icon(c.combat || c.fight ? 'sword' : c.exam ? 'paper' : 'dice', 12) + ' ' + esc(checkText(c, key)) + '</span>' : '');
   // "Fight · Lyra · level 34": who the option fights, before it starts (the same foe the fight will bring).
   function fightText(key) {
     const req = key && fightAhead(key);
@@ -862,7 +866,7 @@
     }
     if (n.kind === 'leave' && content.tracks[n.track] && content.tracks[n.track].kind === 'thesis') return t('note.thesisDone', { track: tn(n.track) });
     if (['enrol', 'join', 'leave', 'promote', 'dropped'].includes(n.kind)) return t('note.' + n.kind, { track: tn(n.track) });
-    if (n.kind === 'missed') return t('note.missed', { track: tn(n.track), n: n.n });
+    if (n.kind === 'missed') return content.tracks[n.track] && content.tracks[n.track].kind === 'club' ? t('note.missedClub', { track: tn(n.track) }) : t('note.missed', { track: tn(n.track), n: n.n });
     if (n.kind === 'wage') return t('note.wage', { track: tn(n.track), gold: n.gold });
     if (n.kind === 'attend') return n.left == null ? t('note.attendBreak', { track: tn(n.track) }) : t('note.attend', { track: tn(n.track), n: n.left });
     if (n.kind === 'discover') return t('note.discover', { place: content.places[n.place] ? content.places[n.place].name : n.place });
@@ -944,7 +948,7 @@
     const m = /^standard([+-]\d+)?$/.exec(c.exam || ''), tier = m ? (m[1] ? (+m[1] > 0 ? 'hard' : 'easy') : 'standard') : c.exam;
     const parts = [t('course.tests', { skill: c.skills.map(skillName).join(' + ') }), t('course.exam', { tier: t('tier.' + tier), p: c.pass })];
     if (c.teaches.length) parts.push(t('course.teaches', { spells: c.teaches.map(spellName).join(', ') }));
-    return '<small class="course">' + Art.icon('scroll', 12) + ' ' + esc(parts.join(' · ')) + '</small>';
+    return '<small class="course">' + Art.icon('paper', 12) + ' ' + esc(parts.join(' · ')) + '</small>';
   }
   // A job up front (M23): a new hire's pay per shift, read from the job's cards, and the shifts a term asks for.
   function jobLine(j) {
@@ -1125,6 +1129,7 @@
   /* ------------------------------------------------------------------ keys */
   function onKey(e) {
     if (document.getElementById('slotDialog')) { if (e.key === 'Escape') { e.preventDefault(); closeSlots(); } return; }
+    if (document.getElementById('atlasDialog')) { if (e.key === 'Escape') { e.preventDefault(); closeAtlas(); } else if (ui.atlasCtl && ui.atlasCtl.key(e)) e.preventDefault(); return; }
     if (fbOpen) {
       if (e.key === 'Escape') { e.preventDefault(); closeFeedback(); }
       else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); saveFeedback(); }
@@ -1421,6 +1426,26 @@
     render();
   }
   function closeSettings() { const w = document.getElementById('settingsDialog'); if (w) w.remove(); }
+  // The map button (feedback 2026-10-20): the maps you know with the places found on them, to look at; a tap on a
+  // place says what it is. Picking where to go stays on the visit's own map.
+  function openAtlas() {
+    closeAtlas();
+    let views;
+    try { views = eng.atlas(); } catch (e) { console.error(e); return; }
+    if (!views.length) return;
+    const wrap = document.createElement('div'); wrap.className = 'fb-wrap'; wrap.id = 'atlasDialog';
+    wrap.innerHTML = '<div class="modal dark map-modal atlas" role="dialog" aria-modal="true" aria-label="' + esc(t('top.map')) + '"><div class="modal-body" id="atlasRoot"></div></div>';
+    wrap.addEventListener('click', (e) => { if (e.target === wrap) closeAtlas(); });
+    document.body.appendChild(wrap);
+    const snap = eng.snapshot();
+    ui.atlasCtl = MapView.browse(document.getElementById('atlasRoot'), views, {
+      t, esc, Art, npcs: content.npcs,
+      name: (v) => v.name || t('region.' + String(v.region || '').split(':')[0]),
+      subtitle: t('map.title', { month: snap.month, year: snap.year, phase: t('phase.' + (views[0].phase || 'term')) }),
+      onClose: closeAtlas,
+    });
+  }
+  function closeAtlas() { const w = document.getElementById('atlasDialog'); if (w) w.remove(); ui.atlasCtl = null; }
   // The credit line: author, license and source, at the bottom of the title screen and of Settings.
   const CREDIT = { author: 'FORMless000', year: 2026, repo: 'https://github.com/FORMless000/grimoire-script-lumenhold-game' };
   function creditsLine() {

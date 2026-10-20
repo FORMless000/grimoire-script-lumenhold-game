@@ -282,7 +282,7 @@ details.adv input { margin-top: 8px; }
 .opt.locked small.why { display: block; color: var(--bad); }
 .opt .aff { display: flex; gap: 4px; margin-top: 4px; color: var(--gold); }
 .opt:disabled { opacity: .45; }
-.opt:disabled b::before { content: "🔒 "; font-size: 12px; }
+.opt:disabled:not(.locked) > b::before { content: "🔒 "; font-size: 12px; }
 .opt .num { font-size: 11px; color: var(--muted); }
 
 .origin-modal { width: min(760px, 100%); }
@@ -368,7 +368,9 @@ details.adv input { margin-top: 8px; }
 .pv i { font-style: normal; display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; font-weight: 700; font-size: 1.1em; letter-spacing: -.02em; }
 .pv i.pos { color: var(--good); } .pv i.neg { color: var(--bad); } .pv i.more { color: var(--muted); }
 .pv .ico { width: 12px; height: 12px; }
-.pv.multi { flex-direction: column; gap: 1px; }
+.pv.multi { flex-direction: column; flex-wrap: nowrap; gap: 1px; min-width: 0; }
+.pv.multi .pv-more { flex-basis: auto; }   /* the reveal goes below the outcome rows, not beside them */
+.pv .pv-more em { overflow-wrap: anywhere; }
 .pvl { display: flex; flex-wrap: wrap; gap: 2px 6px; align-items: center; }
 .pvl b { font-weight: 700; color: var(--gold-2); margin-right: 2px; }
 /* The "…" spelled out: on hover (mouse), a long-press (touch, .show-more) or a selected menu tile. */
@@ -542,3 +544,8 @@ html:lang(zh-CN) .card-body h2, html:lang(zh) .card-body h2 { font-size: 24px; l
 html:lang(zh-CN) .modal .text, html:lang(zh-CN) .outcome .say, html:lang(zh) .modal .text, html:lang(zh) .outcome .say { line-height: 1.7; font-size: 16.5px; }
 html:lang(zh-CN) .meter .lbl, html:lang(zh-CN) .sec-h, html:lang(zh-CN) .tagline, html:lang(zh-CN) .kicker, html:lang(zh-CN) .yr { letter-spacing: .04em; }
 html:lang(zh-CN) .title-panel h1 { letter-spacing: .08em; }
+/* The map button (feedback 2026-10-20): the maps you know, to look at. One tab a map; the map fits the window's height. */
+.map-modal.atlas { max-height: calc(100vh - 32px); }
+.map-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.atlas .map-frame { width: min(100%, max(260px, (100vh - 290px) * 960 / 680)); margin-inline: auto; }
+.atlas .map-list { max-height: max(240px, 100vh - 290px); overflow-y: auto; }

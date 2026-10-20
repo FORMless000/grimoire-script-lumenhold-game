@@ -93,6 +93,7 @@ text: {&{npc} has dragged a blanket up to the roof.|{npc} is on the roof again w
   rel npc +small
   say: You don't see a single meteor. You talk about home and fear and what you'd do if you could do anything. When you look up, the sky's gone grey with dawn.
 
+# retired 2026-10-20 (was "known() >= 4"): jealousy is for romance only (social.grim's jealousy_* cards)
 @event soc_jealous_friend
 title: Jealousy
 class: routine
@@ -101,10 +102,10 @@ cast:
   npc: any where tagged(npc, peer) and (bond(npc) == "friend" or bond(npc) == "close")
 per: npc
 trigger: social
-when: known() >= 4
+when: false
 repeat: 10
 art: mask
-tags: social
+tags: social retired
 scene: A student standing alone at the edge of a laughing group, arms folded, watching someone else take what used to be their seat.
 text: {~{npc} has been odd all week. Finally it comes out.|{npc} has been short with you at every meal. Finally, on the stairs, it comes out.|{npc} cancels on you twice and then turns up at your door. It comes out in a rush.} "You've got all these new friends now. I just — I don't know where I fit anymore."
 > left: Reassure {them}
@@ -148,7 +149,7 @@ title: A Secret Admirer
 class: routine
 tone: warm
 cast:
-  npc: any where romanceable(npc) and spark(npc) >= 15 and bond(npc) != "partner"
+  npc: any where romanceable(npc) and spark(npc) >= 15 and bond(npc) != "partner" and rel(npc) >= 0
 per: npc
 trigger: social
 art: letter

@@ -30,7 +30,9 @@
     // `bonds_around(partner)`: like `bonds()`, counting only those who are `around` (review fixes, batch 41-159).
     'bonds_around',
     // `offered(courses)`: how many options an `offers:` menu of that kind would generate now (playtest 2, I10)
-    'offered']);
+    'offered',
+    // `kind_is(track, club)`: the track (in a track notice, `track` is the one that triggered it) is of that kind (2026-10-20)
+    'kind_is']);
   // Built-in identifiers the engine answers (env.ident); content can read but never assign them.
   const IDENTS = ['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa', 'runs_completed', 'wrapup', 'off_campus', 'term_gpa'];
   const FUNCS = new Set([...SYMBOLIC, 'rand', 'min', 'max', 'abs', 'floor', 'round', 'clamp', 'known', 'chance_of']);
@@ -40,7 +42,7 @@
     met: ['npc'], seen: ['event'], since: ['event'], chosen: ['event', null], npc_is: ['npc'], bonds: [null], romanceable: ['npc'], tagged: ['npc', null],
     passed: ['track', null], clue: ['clue'], spark: ['npc'], spell_level: ['spell'], knows: ['fact'], npc_rel: ['npc', 'npc'],
     enrolled: ['track'], member: ['track'], rank: ['track'], performance: ['track'], level: ['track'], progress: ['track'], due: ['track'], visits: ['track'], applied: ['track'],
-    present: ['place'], act: ['arc'], clock: ['arc'], discovered: ['place'], cast_as: [null, 'npc'], plan: [null], visits_to: ['place'], clues: ['arc'], offered: [null], around: ['npc'], apart: ['npc'], bonds_around: [null],
+    present: ['place'], act: ['arc'], clock: ['arc'], discovered: ['place'], cast_as: [null, 'npc'], plan: [null], visits_to: ['place'], clues: ['arc'], offered: [null], kind_is: ['track', null], around: ['npc'], apart: ['npc'], bonds_around: [null],
   };
 
   function tokenize(s, file, line) {

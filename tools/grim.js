@@ -144,7 +144,7 @@ function analyze(content) {
           else if (kind === 'state') add(A.statesRef, a.v, where);
           else if (kind === 'npc') { if (!ROLES.has(a.v)) add(A.npcsRef, a.v, where); }
           else if (kind === 'event') add(A.eventsRef, a.v, where);
-          else if (kind === 'track') { if (!content.tracks[a.v] && !(['member', 'applied', 'rank', 'performance'].includes(n.n) && KIND_ARGS.has(a.v))) P('error', where, n.n + '(): unknown track "' + a.v + '"'); }
+          else if (kind === 'track') { if (!content.tracks[a.v] && !(['member', 'applied', 'rank', 'performance'].includes(n.n) && KIND_ARGS.has(a.v)) && !(n.n === 'kind_is' && a.v === 'track')) P('error', where, n.n + '(): unknown track "' + a.v + '"'); }
           else if (kind === 'clue') { if (!content.clues[a.v]) P('error', where, 'clue(' + a.v + '): no @clue ' + a.v); }
           if ((n.n === 'bonds' || n.n === 'bonds_around') && !KNOWN_BONDS.has(a.v)) P('warn', where, 'unknown bond status "' + a.v + '"');
           if (n.n === 'offered' && !['courses', 'clubs', 'jobs'].includes(a.v)) P('error', where, 'offered(): takes courses, clubs or jobs, not "' + a.v + '"');

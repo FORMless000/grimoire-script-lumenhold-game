@@ -24,6 +24,7 @@ text: The woman who runs the upstairs room looks you over. "The guests like good
   flag newt_regular
   find lead_newt_upstairs
   queue any tagged company_night now
+  queue company_late_hour now
   if bonds(partner) > 0:
     queue night_partner_asks chance unlikely
   say: She hands you a borrowed jacket that almost fits. "Smile with your eyes," she says. "The guests can tell."
@@ -46,6 +47,7 @@ text: {The woman who runs the upstairs room knows your face now. "There's a part
 > left: Work the room
   hint: Paid company; tonight's guests decide the rest.
   queue any tagged company_night now
+  queue company_late_hour now
   if bonds(partner) > 0:
     queue night_partner_asks chance unlikely
   say: {You button the jacket and go up. It fits a little better than last time.|You take your jacket from its peg and climb the stair into the lamplight.|Your regulars wave you over before you've reached the top of the stair.}
@@ -76,6 +78,7 @@ text: {Behind the upstairs room there's a back room, and in it the high table. G
       gold +large
       gold +medium
       mood +small
+      queue newt_high_table_raise now
       say: {You read the table like a book you've already finished. The pot slides over, and Grisk applauds politely with two fingers.|Your nerve holds and theirs doesn't. You walk home heavy with silver and hollow with nerves.|Somebody's folded promise is in the pot. You win it, and give it back to the owner unread. Grisk thinks that's hilarious.}
     lose:
       queue night_suspicion chance even
@@ -331,6 +334,146 @@ text: {A guest with rings on every finger has been generous all night, and now p
       health -tiny
       queue night_suspicion chance even
       say: {He sees through you, and takes his purse back with a hand that grips too hard. The landlady throws him out, too late.|The guest makes a scene on the stair, loudly calling you a cheat. A prefect on the stair hears every word.|She wants the purse back, loudly, and the landlady gives it to her. You go home with nothing but a bruise on your wrist.}
+
+# ---------------- The high table, round after round (feedback 2026-10-20) ----------------
+# A win with your purse at the high table doesn't end the night: Grisk offers the next hand at once (`queue … now`),
+# each round dearer and harder than the last, three in all. Walking away is always open; a loss ends the run.
+
+@event newt_high_table_raise
+title: Let It Ride
+trigger: queued
+class: routine
+tone: tense
+repeat: 6
+art: cards
+tags: money danger
+scene: A goblin banker in a velvet waistcoat pushing a tall stack of coins back into the middle of a green-lamped card table.
+text: {Grisk sweeps your winnings into one neat stack and pushes it back into the middle of the table. "Let it ride," he says. "The second hand pays double. Most people stop here. Most people are dull."|Grisk is already shuffling. "Again?" he says, as if it were your idea. Your winnings sit in the middle of the table, waiting.|"Second hand," says Grisk, and the players at the next table stop pretending not to watch.} The new dealer is a woman who hasn't smiled once tonight.
+> left: Let it ride
+  hint: Your winnings on one hand; the table plays harder.
+  alignment -tiny
+  gold -large
+  challenge deceive adept+ unlikely wild:
+    win:
+      gold +huge
+      queue newt_high_table_last now
+      say: {The unsmiling dealer turns her last card and looks at you properly for the first time. The pot is yours, and it's heavy.|You bluff on nothing and the whole table folds. Grisk laughs so hard he has to sit down.|You win the second hand by a single card. Somewhere behind you somebody says your name, which is not ideal.}
+    lose:
+      mood -small
+      queue night_suspicion chance even
+      say: {The dealer takes the hand without a flicker. Your winnings go back to the bank, and the walk home is very long.|You read her wrong, and she lets you know it. Grisk pats your shoulder. "That's the second hand," he says. "It's always the second hand."|The pot goes the other way. On the stair down, a lamp moves in the courtyard and you have to wait in the dark for it to pass.}
+> right: Cash out
+  hint: Walk away with what you won.
+  mood +tiny
+  say: {You stand, pocket your winnings and bow to the table. Grisk looks almost disappointed in you.|"Dull," says Grisk fondly, as you go. Your purse doesn't think so.|You leave while the leaving is good, and whistle all the way back to the castle, very quietly.}
+
+@event newt_high_table_last
+title: Everything on One Hand
+trigger: queued
+class: routine
+tone: tense
+repeat: 4
+art: cards
+tags: money danger
+scene: A crowd of gamblers standing around one card table in a tavern back room, a goblin banker taking off his rings one by one.
+text: {The room has gone quiet. Players from every other table have drifted over to stand around yours. Grisk takes off his rings, one by one, and sets them on the pot. "Everything," he says. "One hand. Then we see who goes home."|Grisk deals this one himself. Nobody has done that in years, someone whispers.|The whole back room is standing around your table now. Grisk rolls up his velvet sleeves.} Whatever is in the pot tonight is in it again, and more besides.
+> left: Everything on one hand
+  hint: The biggest pot in the room; Grisk deals.
+  alignment -small
+  gold -large
+  challenge deceive expert- unlikely wild:
+    win:
+      gold +huge
+      gold +medium
+      renown +small
+      say: {Grisk turns his last card, looks at yours, and starts to laugh. He puts his rings back on, one by one, and pushes the pot to you. "Don't come back for a month," he says. "I mean it kindly."|You win, and the back room applauds. By morning the village has three versions of the story, and in all of them you are taller.|The whole room breathes out at once. Grisk shakes your hand with both of his. "A real player," he says, and it sounds like a warning.}
+    lose:
+      mood -small
+      queue night_suspicion chance likely
+      say: {Grisk turns a card you didn't think was left in the deck. Everything you won tonight goes back to him, and then some. He's very kind about it, which is worse.|You lose it all on one card. The crowd drifts back to their own tables as if nothing happened. On the stair, a prefect's lamp is waiting.|The pot goes to Grisk. He counts it slowly, in front of you, and offers to call you a carriage. There are no carriages.}
+> right: Leave on a winning streak
+  hint: Two hands won, and a story to tell.
+  renown +tiny
+  mood +small
+  say: {You stand up in the middle of the hush. "Another night," you say, and leave with two pots in your coat. Grisk applauds, alone, and then everyone does.|You refuse the last hand. The back room is torn between booing and admiration. Your purse settles it.|"Not tonight," you say. Grisk grins all his teeth. "That," he says, "is how you get to play again."}
+
+# ---------------- Company nights that run late (feedback 2026-10-20) ----------------
+
+@event company_late_hour
+title: The Second Party
+trigger: queued
+class: routine
+tone: tense
+repeat: 8
+art: cup
+tags: money danger
+scene: A landlady catching a tired student by the sleeve on a tavern stair long after midnight, a second party arriving noisily below.
+text: {Past two, the landlady catches your sleeve on the stair. "Another party's just come up, and I'm a pair of hands short. Same pay again."|A second party is coming up the stair as yours goes down it. The landlady looks at you and raises an eyebrow.|"One more," says the landlady, "and I'll owe you." The castle will be waking in four hours.}
+> left: Stay till dawn
+  hint: Another party's pay; no sleep, and a later walk home.
+  health -small
+  queue any tagged company_night now
+  queue night_suspicion chance unlikely
+  say: {You take your jacket back off the peg. The second party is louder than the first.|You splash cold water on your face and go back up. The lamps are still lit, and so are the guests.|You stay. It will be light when you get home, and the castle's early risers will see you come in.}
+> right: Go home to bed
+  hint: One party is enough for one night.
+  mood +tiny
+  say: {You hand back the jacket and walk home under the last of the stars. Your bed has never been so welcome.|"Next time," you tell the landlady. You're asleep before the castle clock strikes three.|You leave the second party to someone else and sleep the four hours you have left like a stone.}
+
+@event company_wedding
+title: A Wedding Upstairs
+trigger: queued
+class: routine
+tone: light
+repeat: 3
+art: music
+tags: money company_night
+scene: A noisy wedding party in a tavern's upstairs room, a fiddler on a table, a bride in a crooked flower crown dancing with her grandmother.
+text: {A miller's daughter from the next valley married this afternoon, and the party has moved upstairs at the Newt to keep going.|Another wedding upstairs: a carter and a dressmaker, and both families determined to out-dance the other.|A wedding again, and the fiddler from last time, who waves at you with his bow.} The landlady wants the dancing kept going and the families kept apart.
+> left: Keep everyone dancing
+  hint: Dance with every aunt; big tips if the families mix.
+  challenge negotiate journeyman:
+    win:
+      gold +large
+      health -small
+      say: {You dance with every aunt, two uncles and the bride. By midnight the families are singing the same song. Both fathers tip you.|You get the two grandmothers dancing together, and after that nobody can remember the feud. The tips are enormous; your feet are not.|The fiddler and you keep it going until the candles go out. You walk home with a pocket of coins and a flower in your hair.}
+    lose:
+      gold +small
+      mood -small
+      say: {You ask the wrong cousin to dance, and the families end up on opposite sides of the room. A thin tip, and a long night.|The groom's brother picks a fight with the bride's, and you're the one standing between them. The landlady pays you off early.|Nobody wants to dance with the hired help tonight. You stand by the wall for four hours.}
+> right: Mind the food and the fire
+  hint: Steady pay, no dancing.
+  gold +medium
+  health -tiny
+  say: {You keep the platters full and the fire fed. Nobody notices you, which at a wedding is a kind of success.|You carry cake until your arms ache. The bride kisses your cheek on her way out, and you go home sticky and paid.|You mind the fire and watch the dancing. It's honest money, and the music is good.}
+
+@event company_poets
+title: The Poets' Supper
+trigger: queued
+class: routine
+tone: light
+repeat: 3
+art: book
+tags: money study company_night
+scene: A long tavern table covered in wine bottles and loose manuscript pages, ink-stained poets arguing, one standing on a chair to recite.
+text: {A society of village poets has taken the upstairs room for its yearly supper, and needs someone to judge the contest.|The poets are back. Their president remembers your verdict from last year and has not forgiven it.|The poets' supper again, and this year the contest is in rhyming couplets only, including the toasts.} The landlady says: whoever wins, the wine bill gets paid.
+> left: Judge the contest
+  hint: A clever verdict pleases everyone; a bad one pleases nobody.
+  challenge negotiate journeyman-:
+    win:
+      gold +large
+      lore +tiny
+      mood -tiny
+      say: {You give a prize to everyone, each for something different, and each of them thinks theirs is the real one. The wine bill gets paid with a flourish.|Your verdict, in rhyming couplets, gets a standing ovation. The president pays you himself and asks for a copy.|You find something true to say about every poem, even the long one about turnips. They tip in verse and in coin.}
+    lose:
+      gold +tiny
+      renown -tiny
+      say: {You give the prize to the poem about the president's late wife. It was, it turns out, written by her rival. The supper ends early.|Your verdict starts an argument that becomes a fight that becomes a poem about you. It is not a kind poem.|Nobody agrees with you, loudly, in couplets.}
+> right: Pour and listen
+  hint: Plain pay, and a night of poems.
+  gold +medium
+  lore +tiny
+  say: {You pour wine and listen to forty poems. Three of them are good, and you remember one for weeks.|You keep the glasses full and the poets talking. You go home with fair pay and a head full of rhymes.|You pour and say nothing, and learn more about metre than a term of lectures taught you.}
 
 # ---------------- The boathouse ----------------
 

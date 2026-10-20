@@ -333,11 +333,12 @@ test('jobs and clubs: prorated dues, the term-end review, promotions and switchi
   eng.s.turn = 3;   // the term's third month of four: two months left, this one included
   eng.trackOp({ t: 'join', track: 'tavern' }, ctx);
   const t = eng.s.tracks.tavern;
-  assert.equal(t.due, Math.min(content.tracks.tavern.due, 2), 'at most one visit due per month left');
+  assert.equal(t.due, Math.min(content.tracks.tavern.due, 2 - 1), 'a job: one visit due per month left, less one (2026-10-20)');
   t.perf = 90; t.rankXp = 99;
   eng.trackOp({ t: 'promote', track: 'tavern' }, ctx);
   assert.equal(t.rank, 1); assert.equal(t.perf, 50, 'a new rank starts its performance afresh');
   eng.s.turn = 4; eng.s.queue = [];
+  assert.equal(eng.offered('jobs').length, 0, 'no one takes on staff in a term\'s last month');
   quiet(() => eng.endTerm([]));
   assert.ok(eng.s.queue.some((q) => q.id === 'job_term_review' && q.track === 'tavern'), 'keep or resign, every term end');
   eng.trackOp({ t: 'join', track: 'duelling' }, ctx);

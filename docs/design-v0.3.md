@@ -333,7 +333,7 @@ spread: social world
 
 **Run length:** 32 term months × ~11 cards + 15 break months × ~5 ≈ **425 decisions** *(checked at playtest #1)*.
 
-**The midnight turn** (playtest 2, M41; content X13): after an unsigned note in year 1 Stormbloom, a night card opens the midnight slot each on-campus month, after the night's cards (term, or a break at the castle or working on campus; not at home, on an internship, while locked out, or on the last day). "Sleep" is the night's rest (below, bedtime); "Go out" costs nothing at the door, rests nothing, and opens the midnight pick (`visit midnight`) among the places open then: the Gilded Newt, the boathouse, the refectory kitchens, the restricted section, the observatory and the gargoyle passage. Suspicion (I4): going out in term queues the suspicion card at 33% (`queue night_suspicion chance 33`), and a risky outcome queues it at its own odds (about 50%, by event); the cards never say whether you were seen, and two copies bring at most one card the next morning (about 66% for a risky night). Caught in a term's last month and off home or to an internship, the card waits until you're back on campus (`defer: off_campus`, I6). If you weren't watched, you are now; if you were, a three-month lockout and detention, with gold and mood losses, and `watched` is cleared. Day events that give `watched` never lock you out.
+**The midnight turn** (playtest 2, M41; content X13): after an unsigned note in year 1 Stormbloom, a night card opens the midnight slot each on-campus month, after the night's cards (term, or a break at the castle or working on campus; not at home, on an internship, while locked out, or on the last day). "Sleep" is the night's rest (below, bedtime); "Go out" costs nothing at the door, rests nothing, and opens the midnight pick (`visit midnight`) among the places open then: the Gilded Newt, the boathouse, the refectory kitchens, the restricted section, the observatory and the gargoyle passage. Suspicion (I4): going out in term queues the suspicion card at 33% (`queue night_suspicion chance 33`), and a risky outcome queues it at its own odds (about 50%, by event); the cards never say whether you were seen, and two copies bring at most one card the next morning (about 66% for a risky night). Caught in a term's last month and off home or to an internship, the card waits until you're back on campus (`defer: off_campus`, I6). If you weren't watched, you are now; if you were, a three-month lockout and detention, with gold and mood losses, and `watched` is cleared. Day events that give `watched` never lock you out. At the Newt (feedback 2026-10-20) a purse won at the high table brings the next hand at once, each dearer and harder, three in all, with walking away always open; a company night can run into a second party (more pay, more Health and suspicion).
 
 ### 4.3 Break plans
 
@@ -435,7 +435,7 @@ Friends are found the way they are in life: in the courses, clubs, jobs and plac
 - **A character's pool:** their events (a fixed `actor:`, no place, track, plan or slot), plus generic social events cast with them in the `per:` role.
 - **Schedules** (M42): an entry can hold on a share of days (`observatory@midnight:30`), and `schedule_break:` gives a break schedule, or `away`.
 - **Milestones** (M13) are pushed, not drawn: `ramp: rel(npc) 18..30` pushes the card each month at 40% from the low mark, certain at the high mark.
-- **One bar per character** (M37): length is closeness (rel), colour runs friendly ↔ romantic with spark. Friendship gains carry spark along in proportion to the spark already there (at most 2×, 3× for a partner), and crossing spark 30 asks once whether you want it (`spark_cooldown`).
+- **One bar per character** (M37): length is closeness (rel), colour runs friendly ↔ romantic with spark. Friendship gains carry spark along in proportion to the spark already there (at most 2×, 3× for a partner), and crossing spark 30 asks once whether you want it (`spark_cooldown`). Friendship carries spark only from spark 12 (`@balance spark_follow from`: a romantic moment has to start it), and until that question has come (or you're partners) the spark it carries is applied but not shown, in outcomes or on the bar (feedback 2026-10-20). A rival's bar is full at −50.
 - **Off campus** (M38, M19, M29, M31): at home or on an internship, the day draws that place's pools, a letter comes each night, anyone who reaches you writes, and spark fades at half the pace. A character away over a break (`schedule_break: away`) is reachable only by letter.
 - **Warmth (0–100, per character)** is recent, chosen contact:
   - meeting sets it to 35;
@@ -556,6 +556,7 @@ Concept: `docs/map-concept.svg` / `.png`.
 **Interaction:**
 - The map opens once per visit, when its slot comes (playtest 2, M1): "Where will you spend the afternoon?", then later "…the evening?". A tap on an open place picks it and a second tap on it goes there, whenever it comes, as a spell is cast in a fight (feedback 2026-10-19); "Stay in" skips the visit. The map takes the card's place in the stage, scaled to fit it, and its markers carry no slot numbers.
 - Picking a closed place shows its opening hours instead.
+- **The map button** (top bar, feedback 2026-10-20) shows the maps you know, to look at, not to pick from: the one you're on now, the term map, and any other where you've visited a place (home, an internship host), one tab each. A tap on a place gives its hours and description.
 - The outcome of a pick (attendance, pay) shows as a short toast, not a card.
 
 **Accessibility:**
@@ -660,7 +661,8 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 ### 7.4 Clubs and jobs
 
 - **Joining or changing:** the Club Fair (Emberwane) and the **Job Board place**. Visiting it *is* the change event. At the fair a member stays, resigns or switches; a switch shows what it leaves (rank and performance). The job board lists each job's pay per shift. Declining gives no mood (playtest 2, M23, M35).
-- **Each term:** joining mid-term asks at most one visit per month left (M34). At term end every job asks whether you stay on (`job_term_review`, M33).
+- **Each term:** joining a job mid-term asks at most one shift fewer than the months left, and no job can be taken in a term's last month (the job board says new staff start next term, and offers one evening's odd job instead; feedback 2026-10-20). At term end every job asks whether you stay on (`job_term_review`, M33).
+- **Clubs are open-ended** (feedback 2026-10-20): every club visit in term counts in full, and the map shows no count. Each club except the Cartographers still expects one visit a term (`due: 1`, unshown); a member who never comes gets the term-end warning in the club's words ("you haven't shown up once all term").
 - **Pay through events** (M10): a job visit draws a shift card first, and its options pay the wage (`wage`, a share of `pay:` at your rank) with tips and fines as the spread.
 - **Pay by hazard** (playtest 2, L-1): one base (15 / 21 / 27 a shift by rank); the hazardous jobs (the courier's flights, the Newt's nights) pay a quarter more and show the hazard in minor incident cards (a bad landing, a lost parcel, broken glass, the walk home after closing); the quiet ones (the library, the apothecary's counter) pay a fifth less.
 - **Fixed shifts** (playtest 2, I1, I2): `due:` is the number of shifts a term, not a minimum. Only those visits are shifts (shift card, pay, performance, rank XP); later visits that term, and every visit on a break, are ordinary visits to the place. Vacation work comes from the break plan ("Work on campus" and its gigs).
@@ -781,12 +783,13 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - The framing is the default pending decision D1.
 
 **Relationships: two axes.**
-- **Friendship (`rel`, −100…100; negative = hostility):** slow and sticky. A one-character focus reaches 100 at about 2 years. It never decays (feedback 2026-10-15b; it used to fade after 6 months without interaction).
+- **Friendship (`rel`, −50…100; negative = hostility; rivalry bottoms out at −50, feedback 2026-10-20):** slow and sticky. A one-character focus reaches 100 at about 2 years. It never decays (feedback 2026-10-15b; it used to fade after 6 months without interaction).
 - **Spark (`spark`, 0–100; replaces `love`):**
   - can start at first meeting;
   - **−15% a month** without a romance interaction; the month's summary says it once for everyone it touched, in words ("Fading sparks: no romantic moment last month…"), and a partnership it ends gets its own line (feedback 2026-10-19);
   - −10 to −25 on hurtful choices;
-  - **jealousy** events if spark ≥ 30 with more than one person;
+  - **jealousy** events if spark ≥ 30 with more than one person (romance only: friends aren't jealous, 2026-10-20);
+  - no card raises spark with someone hostile to you (friendship below 0), unless the card is itself the reason (2026-10-20);
   - partnership needs spark ≥ 60 at a confession, and breaks after 2 months below 20.
 - **Adults only** (§3.2).
 
@@ -800,7 +803,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - **UI:** the changes on the choice button, by a setting (feedback 2026-10-15, 2026-10-15b; the gear menu, with the scene-description switch): signs by size (+ for tiny or small, ++ medium, +++ large or huge; − for losses), numbers, or icons only. Crowns and Mana always show numbers, and so does every outcome after a choice. Exam preparation for several courses at once shows as one icon. Branches as "win ++ renown / lose − mood (62%)".
 - **Previews past a cap** (feedback 2026-10-19): a preview shows the amounts as written, also where they meet a cap or a floor (a Health gain at full Health still shows); the outcome after the choice shows what changed. The preview records the keys that met one (`over`), and the property test allows those to fall short.
 - **The "…" reveal** (hover, long-press, a selected menu tile; feedback 2026-10-19) never repeats the preview: notes an outcome's label already says are dropped (an exam's grade), a spell is named without the skill bonus the icons show, what every outcome shares is listed once, and what only some do is listed once with those outcomes after it ("A, B, C"). The option carries one "…", not one per outcome.
-- **The roll on a button** (feedback 2026-10-19) says only the skill it tests and the chance ("Arcana · 62%"): not the kind of check, its odds word or its swing, which the option's own words carry. A roll of pure luck (`chance`) shows the dice and its chance alone. Fights keep their line (foe and level).
+- **The roll on a button** (feedback 2026-10-19) says only the skill it tests ("Arcana"): not the kind of check, its odds word or its swing, which the option's own words carry, and not the chance, which the outcome lines under it give (2026-10-20). A roll of pure luck (`chance`) shows the dice alone. When an option's "…" is spelled out, it opens below the outcome lines. Fights keep their line (foe and level).
 - **Spells** name the skill they scale with under their description (the You panel, a fight's action preview and the foe's intent; feedback 2026-10-19).
 - **Menus and the map** take the card's place in the stage, as a fight does (feedback 2026-10-19): no backdrop and no cards behind them, and the top bar and the side panel stay usable. A click picks; a click on the pick confirms, whenever it comes. With several to pick, the last pick confirms and a click on an earlier one takes it back.
 - **Scene descriptions:** a card's `scene:` line shows in italics under it (Settings → Scene descriptions hides it). Cards keep their composed icon art; no other card art is planned.

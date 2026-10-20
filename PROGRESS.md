@@ -13,6 +13,30 @@
 | Checks | `npm run verify` passes: build, lint, format, docs, 100+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 48 months (the last two are the wrap-up), about 630–720 cards (15 a term month, 9.4 a break month; about half pushed rather than drawn); in `grim analyze` (100 games a style, 2026-10-17), random play leaves early 30–40% of the time, social 27–30%, aggressive 18–29% and cautious 10–17%; the other 23 styles finish 98–100% |
 
+## Feedback notes (October 20)
+
+October 20, 2026 (design §6.3, §7.4, §5.5, §8.3; the midnight turn):
+- **Jobs:** joining mid-term asks one shift fewer than the months left; no job can be taken in a term's last month. The job board says why and offers one evening's odd job instead (`job_board_odd_job`).
+- **Clubs:** every visit in term counts, and the map shows no count. The Duelling Circle, the Ledger and the Verdant Circle still expect one visit a term (`due: 1`, unshown). A member who never comes gets the term-end warning in the club's words (new function `kind_is(track, club)`). The Cartographers expect none.
+- **Spark:** friendship carries spark only from spark 12 (`spark_follow from`). Until the "do you want this?" card has come (or you're partners), the spark it carries is applied but shown neither in outcomes nor on the People bar.
+- **Spark and hostility:** friend jealousy (`soc_jealous_friend`) is retired; jealousy is for romance. 16 spark cards now need friendship ≥ 0 (migration `0036`). Story cards keep their scene and gate only the spark line.
+- **Rivalry** bottoms out at −50 (`relFloor()`); a rival's bar is full there. Friendship losses are not rescaled.
+- **The Newt:** a purse won at the high table leads to `newt_high_table_raise`, then `newt_high_table_last`. Each hand is dearer and harder, and walking away is always open. A company night can run into a second party (`company_late_hour`), and two new parties join the pool (`company_wedding`, `company_poets`).
+- **Content fixes:**
+  - the lake's whisper raises Arcana as well as Mana;
+  - the curfew card no longer says Starfall is coming after it;
+  - the friend's gift reads as a friend's;
+  - funding Nessa's print gives more Renown;
+  - the lantern card's charm option needs Glamour;
+  - the washed-up lantern comes weeks later.
+- **UI:**
+  - the map button (top bar) shows the maps you know, to look at;
+  - a roll on a button names the skill only, since the outcome lines give the chance, and a luck roll shows the dice alone;
+  - an option's spelled-out "…" opens below its outcome lines;
+  - courses use the exam-preparation icon;
+  - jobs say "work", not "shifts";
+  - a locked menu tile shows one lock.
+
 ## Fights: Health in and out, the setting on screen
 
 October 20, 2026, from feedback (design §9.2):
