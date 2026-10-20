@@ -83,7 +83,14 @@ See `INTEGRATION.md` for the design and `HANDOFF.md` for the plan to wire it int
 - `EVENTS`: every `challenge combat` / `challenge duel` in `content/`, played (against which foe) or converted to a feat;
 - `foeLevel`: a generic foe's level from the card's rung and odds word.
 
-`AI_PRESETS` (`setup/roster.mjs`) are the difficulty levels (easy, medium, hard, engine). Pass `ai: [null, {preset: 'medium'}]` to `createState`, which expands it with `expandAI` and adds the loadout's persona. The bench's opponent searches a fixed depth 5 with no seeded mistakes (`LIVE_AI`, `web/app.mjs`). The AI's own knobs are `tilt`, `tiltScale`, `slack` and `maxRegret` (`rust/core/src/ai.rs`); a tilt key names an action, or `<spell>_hold` / `<spell>_release` for one channel's Hold or Release.
+`AI_PRESETS` (`setup/roster.mjs`) are the difficulty levels (easy, medium, hard, engine). Pass `ai: [null, {preset: 'medium'}]` to `createState`, which expands it with `expandAI` and adds the loadout's persona.
+- **Easy and Medium (F5.10)** are persona opponents (`algorithm: 'persona'`, `rust/core/src/persona.rs`). A small MCTS is steered by the persona's tilt, a channel plan layer builds and releases channels on purpose (`plans`), and a sanity veto (`veto`, in points) stops a favourite thrown into a defence that punishes it or that knocks the caster out. They're memoryless, and their budgets are node counts (`mctsNodes`), so a slower device plays the same opponent, only slower.
+- **Hard and Engine** use the alpha-beta search at the bench's fixed depth 5 with no seeded mistakes (`LIVE_AI`, `web/app.mjs`). Engine adds LMR and the Engine eval (`lmr: 3`, `eval: 'mlp'`), and so does the engine analysis (`web/analysis.mjs`).
+- **The Engine eval** is a 16-unit MLP over the hand eval's terms, distilled from deep searches (`rust/core/src/neural.rs`; weights from `tools/export-mlp.mjs`).
+
+The search's own knobs are `tilt`, `tiltScale`, `slack` and `maxRegret` (`rust/core/src/ai.rs`); a tilt key names an action, or `<spell>_hold` / `<spell>_release` for one channel's Hold or Release.
+
+The experiments behind these choices live in `lab/` (a standalone crate over the core) and `tools/lab.mjs`: arenas, simulated players (novice, decent, reader), persona distinctness and long-term spell use. Build the lab with `(cd lab && cargo build --release)`.
 
 Tools:
 - `node tools/ai-study.mjs [--grid '[{"preset":"easy"},{"slack":8}]']`: what an AI setting costs against the optimal AI;

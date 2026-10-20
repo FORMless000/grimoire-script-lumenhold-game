@@ -1,0 +1,19 @@
+# Search experiments (not part of the game): alpha-beta variants, tuned evals and MCTS over the frozen combat core.
+# Outside combat/rust on purpose, so the game's bundle hash and the goldens never see it. Driven by combat/tools/lab.mjs.
+[package]
+name = "combat-lab"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+
+[dependencies]
+combat-core = { path = "../rust/core" }
+serde_json = { version = "1", features = ["preserve_order", "float_roundtrip"] }
+rayon = "1"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 4
+panic = "abort"

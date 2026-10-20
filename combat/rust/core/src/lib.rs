@@ -4,13 +4,16 @@ pub mod data;
 pub mod state;
 pub mod rules;
 pub mod ai;
+pub mod neural;
+pub mod neural_weights;
+pub mod persona;
 pub mod text;
 
 use data::{data, Act};
 use serde_json::{json, Value};
 use state::*;
 
-pub const RULES_VERSION: &str = "spells-v2 F5.9d · renown cap, damage urge, knockout tiebreak · 2026-10-19";
+pub const RULES_VERSION: &str = "spells-v2 F5.10 · persona opponents, Engine eval · 2026-10-19";
 
 /// A public fight: static encounter, dynamic state, and the public-only log/settlement.
 pub struct Fight { pub enc: Encounter, pub s: State, pub public: Public, template: Value }

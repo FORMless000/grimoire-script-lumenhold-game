@@ -46,6 +46,33 @@ October 20, 2026, from feedback (design §9.2):
 - **Forbidden casts** cost 2 alignment, on a card and in a fight (`@balance forbidden_cast`; was 6).
 - **Build:** the fight bundle was built from a clean checkout so that the combat agent's unfinished F5.10 work stays out of it. The minigame's goldens were refreshed for the new rules.
 
+## Fight opponents (F5.10)
+
+October 20, 2026, from feedback that fights were too hard even on Easy. The experiments are in `combat/lab/` and `combat/tools/lab.mjs`; their reports are in `combat/out/lab/` (not committed).
+- **Easy and Medium are persona opponents** (`combat/rust/core/src/persona.rs`, `algorithm: 'persona'`).
+  - A small MCTS whose priors lean towards the character's favourite moves (PERSONAS in `combat/setup/foes.mjs`).
+  - Channel plans (cast, hold, release) for attacking channels and the persona's own, with a cooldown after each Release.
+  - A veto on moves whose payoff the next exchange punishes, and on lines that end in its own knockout within 3 exchanges.
+  - Budgets are in nodes (moves simulated), not ms, so a slow device plays the same opponent: Easy 1,000, Medium 4,500.
+- **Hard** is F5.9's Easy. **Engine** is the alpha-beta search with LMR and the Engine eval. Engine analysis uses the same.
+- **The bots** (`tools/combat-sim.js`): their own side keeps F5.9's skill levels by value, and their foe is the new Easy. In the 120 golden games fewer runs are sent home (social 23 → 16, cautious 12 → 10); the baseline is refreshed.
+- **The Engine eval** (`neural.rs`) is a 16-unit MLP over the hand eval's terms plus 12 more. It is antisymmetric by construction and distilled from deeper searches (weights: `tools/export-mlp.mjs`). At 10 ms a decision it is about +110–140 Elo over the hand eval. It scored 7.5/10 in mirror games at depth 5 and at depth 6.
+- **Measured** against simulated players: all 10 kits, 200 fights a cell, equal level / player 10 levels below. Novice: depth 1 with wide slack. Decent: depth 2. Reader: models the opponent's habits.
+
+  | Opponent | Novice wins | Decent wins | Reader wins |
+  |---|---:|---:|---:|
+  | Easy | 70% / 54% | 94% / 87% | 91% / 75% |
+  | Medium | 34% / 26% | 78% / 70% | 68% / 56% |
+  | F5.9 Easy (now Hard) | 12% / 6% | | |
+
+  - The persona shows: the favoured-action share is +16 points (Easy) and +14 (Medium) above a neutral twin.
+  - Lyra holds Wildfire about 2.7 times a cast.
+  - Fights over within 4 exchanges: 8% (Easy) and 4% (Medium).
+- **Not done:**
+  - Fight length (median 19 exchanges, p90 39 against F5.9 Easy) isn't fixed by the opponent alone; it needs rules-side pacing.
+  - Hard and Engine were not re-measured against the simulated players.
+  - Simulated players are crude; a human playtest is the judge.
+
 ## UI pass
 
 October 19, 2026, from feedback:

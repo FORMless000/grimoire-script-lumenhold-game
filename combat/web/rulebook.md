@@ -71,7 +71,10 @@ These override anything below that disagrees.
 - **Sailor:** a new Vigor-led class with Charm second, Tailwind and Brace (barge crews, the ring's sailor).
 - **Special foes** (`SPECIAL_LOADOUTS`): a fixed kit and creature-only moves. The **Shadow stag** has **Gore**: 6 Mana, 15 damage, **physical**: it hits like a Strike, so Guard stops it, Ward halves it and Reflect can't turn it. It also has Brace at 15, Shadowstep at 30 and Tailwind at 45. When it loses, it steps aside rather than falls.
 - **`ring_bout` context:** 65% Health rebate, 50% Renown.
-- **AI personas and difficulty:** a persona adds points to favoured actions. `slack` picks at random among moves within that many points of the best, and `maxRegret` caps how bad a pick may be.
+- **AI personas and difficulty:** a persona adds points to favoured actions.
+  - **Hard:** `slack` picks at random among moves within that many points of the best, and `maxRegret` caps how bad a pick may be.
+  - **Easy and Medium (F5.10):** a small node-budgeted MCTS uses the persona as its priors. Channel plans hold and release channels on purpose. A sanity veto stops a favourite the board punishes, or one that would knock the caster out.
+  - **Engine:** searches with late-move reductions and a distilled MLP eval.
 
 **F5.9d, Renown and the AI's last stand (2026-10-19):**
 - **Glamour and Rapport stack.** Renown from them adds up across casts, to at most 2.5 × what one Glamour of the caster's earns (Glamour I's when they don't know it), shared between the two. At the cap they do nothing, so the search prunes them. Renown is still worth nothing in the AI's evaluation.

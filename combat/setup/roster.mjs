@@ -43,11 +43,15 @@ export const COMBAT_TUNING={
 // points of the best tilted one (about 4 points = 1 HP of lead); maxRegret: never a move worse than that; tiltScale: how
 // strongly the persona (PERSONAS in setup/foes.mjs) pulls; persona: whether it applies at all. F5.9's easy/medium/hard are
 // now medium/hard/engine. Measured win rates against the engine: EVENTS.md §3.
+// F5.10: Easy and Medium are persona opponents (rust/core/src/persona.rs): a small MCTS steered by the character's persona,
+// channel plans and a sanity veto, on node budgets (moves simulated) so every device plays the same opponent. Measured against
+// simulated players (combat/tools/lab.mjs human; PROGRESS.md): a novice wins about 70% against Easy and 34% against Medium at
+// an equal level, a decent player 94% and 78%. Hard is F5.9's Easy; Engine searches with LMR and the distilled MLP eval.
 export const AI_PRESETS={
- easy:{mistakeChance:0,slack:40,maxRegret:100,tiltScale:2,persona:true},     // forgiving: drifts among anything not ruinous, plays its favourites
- medium:{mistakeChance:0,slack:24,maxRegret:60,tiltScale:1.5,persona:true},  // loose, leans hard on its favourites (F5.9 easy)
- hard:{mistakeChance:0,slack:10,maxRegret:24,tiltScale:1,persona:true},      // habits and small slips, never throws a fight away (F5.9 medium)
- engine:{mistakeChance:0,slack:0,tiltScale:0,persona:false}                  // the search's best move, every time (F5.9 hard)
+ easy:{algorithm:'persona',mctsNodes:1000,plans:true,veto:40,persona:true},   // plays its character, forgiving: its habits are there to be read
+ medium:{algorithm:'persona',mctsNodes:4500,plans:true,veto:40,persona:true}, // plays its character and looks further ahead
+ hard:{mistakeChance:0,slack:40,maxRegret:100,tiltScale:2,persona:true},      // the full search, drifting among moves that aren't ruinous (F5.9 easy)
+ engine:{mistakeChance:0,slack:0,tiltScale:0,persona:false,lmr:3,eval:'mlp'}  // the search's best move, every time, with the Engine eval (F5.10)
 };
 export const LEARN_XP={medium:6,large:10,huge:16};
 export const cap=(x,lo,hi)=>Math.max(lo,Math.min(hi,x));

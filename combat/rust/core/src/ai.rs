@@ -5,7 +5,8 @@ use crate::rules::{self, actor_to_move, amount, apply_known, attack_power, cost,
 use crate::state::*;
 use serde_json::{json, Map, Value};
 
-pub const POLICY_VERSION: &str = "alpha-beta-2";
+/// alpha-beta-2 → persona-3 (F5.10): the persona opponents (persona.rs) and the Engine's MLP eval (neural.rs, `eval: "mlp"`).
+pub const POLICY_VERSION: &str = "persona-3";
 /// Expected opposing damage per exchange, in HP: what a construct copies onto its threshold and what Brace can stop.
 const EXPECTED_HIT: f64 = 12.0;
 const BRACE_SHARE: [f64; 4] = [1.0, 0.5, 0.25, 0.25];
@@ -244,9 +245,11 @@ pub struct SearchOptions {
     /// Absolute deadline on the clock, in ms.
     pub deadline: Option<f64>,
     pub table: bool,
+    /// The Engine eval (neural.rs) instead of evaluate().
+    pub mlp: bool,
 }
 impl Default for SearchOptions {
-    fn default() -> Self { SearchOptions { max_depth: 3, node_budget: 5000, rank_actions: false, prune: false, lmr: 0, tactical: false, pvs: true, aspiration: true, deadline: None, table: true } }
+    fn default() -> Self { SearchOptions { max_depth: 3, node_budget: 5000, rank_actions: false, prune: false, lmr: 0, tactical: false, pvs: true, aspiration: true, deadline: None, table: true, mlp: false } }
 }
 
 #[derive(Clone, Debug, Default)]
@@ -294,6 +297,8 @@ fn before(a: &Row, b: &Row) -> bool {
 
 impl Searcher<'_> {
     #[inline]
+    fn eval(&self, s: &State) -> f64 { if self.o.mlp { crate::neural::evaluate(self.enc, s) } else { evaluate(self.enc, s) } }
+    #[inline]
     fn check(&mut self) -> Sr<()> {
         if self.r.nodes >= self.o.node_budget { self.r.stopping_reason = "nodes"; return Err(Abort); }
         if let Some(dl) = self.o.deadline {
@@ -336,10 +341,10 @@ impl Searcher<'_> {
         self.check()?;
         self.r.nodes += 1;
         if in_ext { self.r.extension_nodes += 1; }
-        if s.result.is_some() { return Ok(evaluate(self.enc, s)); }
+        if s.result.is_some() { return Ok(self.eval(s)); }
         if depth <= 0 {
             if self.o.tactical && ext != 0 && tactical_threat(s) { depth = 1; ext = 0; in_ext = true; self.r.extensions += 1; }
-            else { return Ok(evaluate(self.enc, s)); }
+            else { return Ok(self.eval(s)); }
         }
         let horizon = depth * 4 + ext * 2 + self.tactical;
         let (orig_alpha, orig_beta) = (alpha, beta);
@@ -419,7 +424,7 @@ pub fn search(enc: &Encounter, root: &State, o: &SearchOptions, ctx: &mut Contex
     if legal.is_empty() { return Err("No legal decision".into()); }
     let moves = sr.ordered(root, legal.as_slice(), root_pref, 0);
     let mut best = moves.as_slice()[0];
-    let mut value = evaluate(enc, root);
+    let mut value = sr.eval(root);
     let mut completed = 0;
     let mut ranked = Vec::new();
     for depth in 1..=o.max_depth {
@@ -535,6 +540,7 @@ pub fn search_options(o: &Map<String, Value>) -> Result<SearchOptions, String> {
         aspiration: o.get("aspiration").and_then(|v| v.as_bool()).unwrap_or(true),
         deadline: get_f(o, "deadline"),
         table: o.get("table").and_then(|v| v.as_bool()).unwrap_or(true),
+        mlp: match o.get("eval").and_then(|v| v.as_str()) { None | Some("hand") => false, Some("mlp") => true, Some(_) => return Err("Unknown eval".into()) },
     })
 }
 
@@ -596,6 +602,12 @@ pub fn choose(enc: &Encounter, s: &State, overrides: &Value, ctx: &mut Context, 
     if !(0.0..=1.0).contains(&mistake_chance) || !max_regret.is_finite() || max_regret < 0.0 || seed.fract() != 0.0 || seed < 0.0 || seed > 4294967295.0 { return Err("Invalid AI degradation settings".into()); }
     let seed = seed as u32;
     let options = search_options(&o)?;
+    // The persona opponents (Easy, Medium; persona.rs): their own choice, never the alpha-beta below.
+    if o.get("algorithm").and_then(|v| v.as_str()) == Some("persona") {
+        let mut m = crate::persona::choose(enc, s, &o);
+        m["seed"] = json!(seed); m["mistakeChance"] = json!(mistake_chance); m["elapsedMs"] = json!(now() - start);
+        return Ok(m);
+    }
     let node_budget = options.node_budget;
     let legal_count = legal_actions(enc, s).len();
     // Reserve half the compute budget on seeded mistake attempts, so a deep main search can't disable fallibility.

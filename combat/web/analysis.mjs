@@ -23,7 +23,7 @@ export function analyzePosition(state,{budgetMs=1500,maxDepth,onDepth=null}={}){
  try{
   for(let depth=1;depth<=maxDepth;depth++){
    const left=unlimited?null:budgetMs-(clock()-start);if(left!==null&&left<=0)break;
-   const r=searchAction(state,{maxDepth:depth,nodeBudget:unlimited?1e15:20000000,...(left===null?{}:{budgetMs:left}),rankActions:true,prune:true,horizonMode:'tactical'},ctx);nodes+=r.nodes;
+   const r=searchAction(state,{maxDepth:depth,nodeBudget:unlimited?1e15:20000000,...(left===null?{}:{budgetMs:left}),rankActions:true,prune:true,horizonMode:'tactical',lmr:3,eval:'mlp'},ctx);nodes+=r.nodes;
    if(r.completedDepth<depth)break;
    const ranked=[...r.rankedActions].sort((a,b)=>b.value-a.value);
    last={depth,nodes,ms:clock()-start,best:ranked[0].id,scores:Object.fromEntries(ranked.map(a=>[a.id,a.value])),lines:ranked.slice(0,3).map(a=>({id:a.id,value:a.value,line:principalLine(state,a.id,ctx,10)}))};

@@ -25,7 +25,7 @@ function use(s){if(loaded!==s||s[SYNC]!==serial){call('load',JSON.stringify(s));
 function writeBack(s){call('dump');const next=JSON.parse(read());for(const k of Object.keys(s))if(!(k in next))delete s[k];Object.assign(s,next);loaded=s;s[SYNC]=++serial;}
 
 export let RULES_VERSION=null;
-export const POLICY_VERSION='alpha-beta-2';
+export const POLICY_VERSION='persona-3';
 // Starts the core from a compiled WebAssembly.Module: the loader at the end of this file (the bench, Node), or the main game's
 // bundle (build/combat.bundle.js, from combat/tools/bundle.mjs), which cuts that loader and passes the module it compiled.
 export function initCore(module){coreModule=module;instantiate();call('rules_version');RULES_VERSION=read();}

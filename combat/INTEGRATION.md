@@ -79,7 +79,7 @@ For scale (`balance.grim`): medium is 10 Health, large 16 and huge 25, and a nig
 
 - **Named characters** use their canon skills (`cast-stats.mjs`, from `content/world/cast.grim`) and fixed or growing levels (`NAMED_LOADOUTS`). A growing peer's skills are scaled to a mean of the fight's level, keeping their shape (`scaleToMean`), so the card's challenge level sets their strength.
 - **Generic foes** use the ten class presets (pools by archetype) or special loadouts at a level set by the card: its rung mapped to a level near the player's expected skill for the month, level = the card's own DC as the engine computes it, plus the odds word's shift (`challengeDC`, `foeLevel`, `setup/foes.mjs`). Every current card's foe, context and edits are in `EVENTS.md`.
-- **The AI** searches 5 exchanges ahead and plays at the player's difficulty (Easy, Medium, Hard or Engine, `AI_PRESETS`) with the foe's persona (`PERSONAS`): see `EVENTS.md` §3.
+- **The AI** plays at the player's difficulty (`AI_PRESETS`) with the foe's persona (`PERSONAS`), see `EVENTS.md` §3. Easy and Medium are persona opponents: they play their character, with habits a player can read (F5.10, `rust/core/src/persona.rs`). Hard and Engine search 5 exchanges ahead.
 - Their Health and Mana are full unless the story says otherwise (`opponentCondition`).
 - Level matters: in the F5.5 depth-5 suite the higher side wins 76% at +5 levels, 87% at +10 and 100% at +20. A card's difficulty word should move the foe's level by a few points, not tens.
 
