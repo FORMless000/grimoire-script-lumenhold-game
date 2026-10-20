@@ -93,6 +93,10 @@ side.romance = 心动 {n}
 side.spells = 咒语
 # en: {n} mana
 side.spellCost = {n} 法力
+# en: Scales with {skill}
+spell.scales = 随{skill}增强
+# en: Doesn’t scale with a skill
+spell.flat = 不随技能增强
 # en: Your story is yet unwritten.
 side.emptyJournal = 你的故事尚未落笔。
 # en: {month} · Y{year}
@@ -159,16 +163,16 @@ tag.magic = 魔法
 tag.default = 学院生活
 # en: consequence
 card.consequence = 后果
-# en: Illustration: {text}
-card.illustration = 插图：{text}
 # en: Not available
 card.notAvailable = 无法选择
 # en: Not enough crowns ({cost} needed)
 card.cantAfford = 克朗不够（需要 {cost}）
-# en: {skill} check · {p}%
-check.button = {skill}检定 · {p}%
-# en: {skill} check ({p}%) · {result}
-check.chip = {skill}检定（{p}%）· {result}
+# en: {skill} · {p}%
+check.button = {skill} · {p}%
+# en: {p}%
+check.luckButton = {p}%
+# en: {skill} ({p}%) · {result}
+check.chip = {skill}（{p}%）· {result}
 # en: success
 check.success = 成功
 # en: failed
@@ -203,18 +207,8 @@ note.spellBonus = 新咒语：{spell} {level}（{bonus}）
 note.fact = 你对{name}多了一分了解。
 # en: {kind} ({p}%) · {result}
 check.challengeChip = {kind}（{p}%）· {result}
-# en: {kind} · {p}%
-check.challengeButton = {kind} · {p}%
 # en: Combat · {p}% · −{cost} mana
 check.combatButton = 战斗 · {p}% · 法力 −{cost}
-# en: Exam: {skill} · pass {p}% · A {a}%
-check.examButton = 考试：{skill} · 及格 {p}% · A {a}%
-# en: wild
-swing.wild = 起伏大
-# en: steady
-swing.steady = 稳定
-# en: luck
-swing.luck = 看运气
 # en: Combat
 challenge.combat = 战斗
 # en: Tests {skill}
@@ -285,6 +279,18 @@ outcome.continue = 继续
 month.header = 第 {year} 年 · 第 {turn} / {max} 月
 # en: This month
 month.thisMonth = 本月
+# en: Fading sparks
+month.fading = 渐淡的火花
+# en: No romantic moment last month: the spark with {names} cools a little.
+month.fadingSay = 上个月没有浪漫时刻：你与{names}之间的火花淡了一些。
+# en: Apart for now, the spark with {names} cools, more slowly than it would on campus.
+month.fadingAway = 暂时分隔两地，你与{names}之间的火花在变淡，只是比在校时慢些。
+# en: The spark with {name} has gone out, and the partnership with it.
+month.partnerEnded = 你与{name}之间的火花熄灭了，恋人关系也随之结束。
+# en: {a} and {b}
+list.and = {a}和{b}
+# en: , 
+list.sep = 、
 # en: Begin {month}
 month.begin = 开始{month}
 # en: Continue
@@ -407,12 +413,12 @@ map.visitOf = 第 {n} / {of} 次拜访
 map.stayIn = 待在住处
 # en: Go to {place}
 map.goTo = 前往{place}
-# en: Tap a place to pick it; tap it again (or double-click) to go.
-map.howToPick = 点一个地点选中它；再点一次（或双击）即出发。
+# en: Tap a place to pick it; tap it again to go.
+map.howToPick = 点一个地点选中它；再点一次即出发。
 # en: Pick a place for each part of the day first.
 map.notReady = 请先为一天中的每个时段选好地点。
-# en: Double-click (double-tap) {place} to go there, or press the button.
-map.again = 双击{place}即可前往，或点下方按钮。
+# en: Tap {place} again to go there, or press the button.
+map.again = 再点一次{place}即可前往，或点下方按钮。
 # en: {event}: at {place}, this {slot}
 map.festivalHere = {event}：这个{slot}在{place}
 # en: choose…
@@ -461,8 +467,8 @@ map.sessionsLeft = 课时 · 还剩 {n} 次
 menu.confirm = 确认（{n}/{max}）
 # en: Confirm
 menu.confirmOne = 确认
-# en: Double-click (double-tap) to confirm
-menu.again = 双击确认
+# en: Tap again to confirm
+menu.again = 再点一次确认
 # en: {delta} next month
 due.next = 下月 {delta}
 # en: Next month:
@@ -475,10 +481,10 @@ menu.tagline = 抉择
 menu.lead = 做出选择
 # en: Choose up to {n}
 menu.leadMany = 最多选 {n} 项
-# en: Choose one: double-click it, or pick it and confirm.
-menu.prompt = 选一项：双击它，或选中后点确认。
-# en: Choose up to {n}, then confirm, or double-click your last pick.
-menu.promptMany = 最多选 {n} 项，然后确认，或双击最后一项。
+# en: Choose one: pick it, then tap it again or confirm.
+menu.prompt = 选一项：选中后再点一次，或点确认。
+# en: Choose up to {n}, then tap your last pick again or confirm.
+menu.promptMany = 最多选 {n} 项，然后再点一次最后选的那项，或点确认。
 # en: Signs (+ ++ +++)
 amounts.marks = 符号（+ ++ +++）
 # en: Numbers
@@ -491,10 +497,10 @@ settings.heading = 设置
 settings.amounts = 预览中的数值
 # en: How a choice's effects show before you make it. Afterwards the outcome always shows the numbers; Crowns and Mana are always exact.
 settings.amountsHint = 选择之前，效果如何显示。选择之后，结果总会显示具体数字；克朗和魔力始终显示确切数值。
-# en: Illustrative text
-settings.notes = 插图说明
-# en: The line under each card that describes its picture.
-settings.notesHint = 每张卡片下方描述其画面的那一行文字。
+# en: Scene descriptions
+settings.notes = 场景描写
+# en: A line in italics under each card that sets the scene.
+settings.notesHint = 每张卡片下方的一行斜体文字，交代场景。
 # en: Show
 settings.on = 显示
 # en: Hide

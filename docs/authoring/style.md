@@ -23,7 +23,7 @@ Warm, witty and slightly melancholy, like a cosy fantasy novel. Humour comes fro
 | `text` | under 400 characters (lint warns at 480); two to four sentences, ending on the moment of choice |
 | option label | under about 36 characters; imperative or first person ("Open the book", "I'll be there.") |
 | `say:` | one or two sentences, under 300 characters |
-| `scene:` | one sentence describing an illustration |
+| `scene:` | one sentence describing the scene (shown under the card) |
 | zh-CN label | 14 characters or fewer |
 
 ## Choices

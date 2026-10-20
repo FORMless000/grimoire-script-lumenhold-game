@@ -82,7 +82,7 @@
       for (const e of this.events) for (const o of e.options) {
         const set = new Set();
         G.walkEffects(o.effects, (st) => { if ((st.t === 'delta' || st.t === 'assign') && content.resources[st.name]) set.add(st.name); });
-        o.firstCheck = o.effects.find((st) => st.t === 'check' || st.t === 'challenge' || st.t === 'sit_exam') || null;
+        o.firstCheck = o.effects.find((st) => st.t === 'check' || st.t === 'challenge' || st.t === 'sit_exam' || st.t === 'chance') || null;
         if (o.spell) set.add(content.game.spell_resource || 'mana');
         o.affects = [...set];
       }
@@ -761,6 +761,8 @@
       // A fight (combat, duel) is played (fight: true): its p is the stub's estimate, and it charges no entry Mana.
       if (st.t === 'challenge') { const odds = this.challengeOdds(st, actor, item && item.id), fight = st.kind === 'combat' || st.kind === 'duel'; return { skill: st.kind, using: odds.skill, p: odds.win, challenge: true, swing: st.swing || null, combat: st.kind === 'combat', fight, cost: st.kind === 'combat' && !fight ? this.combatCost() : 0 }; }
       if (st.t === 'sit_exam') { const id = (item && item.track) || this._ctxTrack; const o = id && this.trackState(id) ? this.examOdds(id, st.swing) : null; return o ? { exam: true, skill: 'exam', using: o.skills.join('+'), p: o.pass, top: o.top, a: o.a, swing: st.swing || null } : null; }
+      // Pure luck (`chance likely:`): the roll's odds and no skill (feedback 2026-10-19: drawn as a roll all the same).
+      if (st.t === 'chance') return { luck: true, p: Math.round(st.word ? this.likelihoodP(st.word, st.steps, actor) : clamp(this.value(st.p, actor), 0, 100)) };
       return { skill: st.skill, p: this.checkChance(st.skill, this.value(st.dc, actor)) };
     }
     // An enrolled course as it stands (playtest 2, step 5): exam preparation, the exam's odds if it were sat today,
@@ -1111,7 +1113,7 @@
     interpLogged(text, l, actor) {
       const s = this.s, turn = s.turn, had = l.id in s.seen, seen = s.seen[l.id];
       s.turn = l.turn; if (l.seen != null) s.seen[l.id] = l.seen;
-      try { return this.interp(text, actor === undefined ? l.actor : actor, l.id); }
+      try { return this.withContext(l, () => this.interp(text, actor === undefined ? l.actor : actor, l.id)); }
       finally { s.turn = turn; if (had) s.seen[l.id] = seen; else delete s.seen[l.id]; }
     }
     interp(text, actor, key, castOverride) {
@@ -1161,17 +1163,20 @@
       const def = c.resources[name] || c.skills[name];
       const old = s.vals[name] == null ? 0 : s.vals[name];
       if (def && def.drag && amount > 0 && old < def.drag.below) amount *= def.drag.factor;
-      let nv = old + amount;
+      let nv = old + amount, bound = false;
       if (def) {
         const min = def.min == null ? 0 : def.min;
         const max = this.resMax(def);
+        bound = nv > max || nv < min;
         nv = clamp(nv, min, max);
         if (c.resources[name] && nv <= min && old > min) ctx.zeroed.push(name);
       }
       nv = Math.round(nv * 100) / 100;
       s.vals[name] = nv;
       if (c.skills[name] && nv > (s.peak[name] || 0)) s.peak[name] = nv;
-      const d = nv - old;
+      // A preview shows what the option does even past a cap or a floor (feedback 2026-10-19); the outcome shows what changed.
+      const d = this._oracle && bound ? amount : nv - old;
+      if (this._oracle && bound) (ctx.over = ctx.over || {})[name] = true;
       if (d) ctx.deltas[name] = (ctx.deltas[name] || 0) + d;
     }
 
@@ -1270,13 +1275,14 @@
             if (st.t === 'spark' && amt > 0) n.sparked = s.turn;
             if (amt) { ctx.contact = ctx.contact || {}; ctx.contact[id] = Math.max(ctx.contact[id] || -1, Math.sign(amt)); if (amt < 0) (ctx.contact.neg = ctx.contact.neg || {})[id] = true; }   // warmth (design §5.5, M17)
             const key = st.t + ':' + id;
-            if (n[st.t] !== old) ctx.deltas[key] = (ctx.deltas[key] || 0) + (n[st.t] - old);
+            if (this._oracle && amt) { ctx.deltas[key] = (ctx.deltas[key] || 0) + amt; if (n[st.t] - old !== amt) (ctx.over = ctx.over || {})[key] = true; }   // a preview shows it past the cap
+            else if (n[st.t] !== old) ctx.deltas[key] = (ctx.deltas[key] || 0) + (n[st.t] - old);
             else if (amt > 0) (ctx.capped = ctx.capped || {})[key] = amt;   // a gain at the cap still shows (M37)
             // Spark follows friendship (M37): with some spark already there, a friendship gain carries spark along.
             if (st.t === 'rel' && amt > 0 && n.spark > 0 && this.c.npcs[id] && this.c.npcs[id].romance) {
               const f = this.sparkFollow(), mult = Math.min(n.bond === 'partner' ? f.partner : f.cap, n.spark / f.per);
               const add = Math.round(amt * mult), sOld = n.spark;
-              if (add > 0) { n.spark = clamp(sOld + add, 0, 100); n.sparked = s.turn; if (n.spark !== sOld) ctx.deltas['spark:' + id] = (ctx.deltas['spark:' + id] || 0) + (n.spark - sOld); }
+              if (add > 0) { n.spark = clamp(sOld + add, 0, 100); n.sparked = s.turn; const dd = this._oracle ? add : n.spark - sOld; if (dd) ctx.deltas['spark:' + id] = (ctx.deltas['spark:' + id] || 0) + dd; if (this._oracle && add !== n.spark - sOld) (ctx.over = ctx.over || {})['spark:' + id] = true; }
             }
             if (n.spark !== undefined) this.sparkCheck(id, n);
             break;
@@ -1489,20 +1495,23 @@
 
     // Design §8.2: spark fades 15% a month without a romantic moment; a partnership ends after 2 months below spark
     // 20. Friendship doesn't fade (feedback 2026-10-15b; it used to after 6 months without contact).
+    // The month's fading is one summary line for everyone (src 'spark fade', `away` off campus); a partnership that
+    // ends is a line of its own (src 'relationship drift'). Feedback 2026-10-19: one line per character was clutter.
     relationshipDrift(summary) {
-      const s = this.s;
+      const s = this.s, away = this.offCampus(), fade = { label: null, deltas: {}, notes: [], say: [], src: 'spark fade', away };
       for (const [id, n] of Object.entries(s.npcs)) {
         if (!n.met) continue;
-        const notes = [], deltas = {};
+        const notes = [];
         // Off campus, spark fades at half the pace (M29, M38).
-        const keep = this.offCampus() ? 0.925 : 0.85;
-        if (n.spark > 0 && n.sparked !== s.turn - 1) { const nv = Math.floor(n.spark * keep); if (nv !== n.spark) { deltas['spark:' + id] = nv - n.spark; n.spark = nv; } }
+        const keep = away ? 0.925 : 0.85;
+        if (n.spark > 0 && n.sparked !== s.turn - 1) { const nv = Math.floor(n.spark * keep); if (nv !== n.spark) { fade.deltas['spark:' + id] = nv - n.spark; n.spark = nv; } }
         if (n.bond === 'partner') {
           n.lowSpark = n.spark < 20 ? (n.lowSpark || 0) + 1 : 0;
           if (n.lowSpark >= 2) { n.bond = 'ex'; n.lowSpark = 0; notes.push({ kind: 'bond', npc: id, status: 'ex', text: shortName(this.c.npcs[id]) + ': ex' }); }
         }
-        if (notes.length || Object.keys(deltas).length) summary.push({ label: null, deltas, notes, say: [], src: 'relationship drift' });
+        if (notes.length) summary.push({ label: null, deltas: {}, notes, say: [], src: 'relationship drift', npc: id });
       }
+      if (Object.keys(fade.deltas).length) summary.push(fade);
     }
     unlockFacts() {
       const s = this.s;
@@ -1726,6 +1735,8 @@
       return this.endMonth();
     }
 
+    // What a journal entry keeps of its card's context, to name people and places when it is shown again.
+    logContext(item) { const o = {}; for (const k of ['cast', 'track', 'place']) if (item[k]) o[k] = item[k]; return o; }
     withContext(item, fn) {
       const prev = [this._cast, this._ctxTrack, this._ctxPlace, this._place];
       this._cast = item.cast || null; this._ctxTrack = item.track || null; this._ctxPlace = item.place || null; this._place = item.place || null;
@@ -1808,8 +1819,10 @@
       s.cur = null;
       const out = this.outcome(ctx);
       const h = item.n != null ? this.histEntry(item.n) : null;
-      if (h) Object.assign(h, { choice: key, label: this.interp(opt.label, item.actor, e.id), out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() }, ctx.fights ? { fights: ctx.fights } : {});
-      s.log.push({ n: item.n, turn: s.turn, id: e.id, key, title: this.interp(e.title, item.actor, e.id), choice: this.interp(opt.label, item.actor, e.id), say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null, seen: s.seen[e.id] || 0 });
+      // Titles and labels in the card's own context (its cast, track and place), so a log names people, not {friend}.
+      const said = (x) => this.withContext(item, () => this.interp(x, item.actor, e.id));
+      if (h) Object.assign(h, { choice: key, label: said(opt.label), out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() }, ctx.fights ? { fights: ctx.fights } : {});
+      s.log.push({ n: item.n, turn: s.turn, id: e.id, key, title: said(e.title), choice: said(opt.label), say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null, seen: s.seen[e.id] || 0, ...this.logContext(item) });
       if (s.log.length > 400) s.log.shift();
       return out;
     }
@@ -1831,10 +1844,11 @@
       s.choices[e.id] = keys.join('+');
       s.cur = null;
       const out = this.outcome(ctx);
-      const label = chosen.map((o) => this.interp(o.label, item.actor, e.id)).join(' · ');
+      const said = (x) => this.withContext(item, () => this.interp(x, item.actor, e.id));
+      const label = chosen.map((o) => said(o.label)).join(' · ');
       const h = item.n != null ? this.histEntry(item.n) : null;
       if (h) Object.assign(h, { choice: keys.join('+'), label, out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() });
-      s.log.push({ n: item.n, turn: s.turn, id: e.id, key: keys.join('+'), title: this.interp(e.title, item.actor, e.id), choice: label, say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null, seen: s.seen[e.id] || 0 });
+      s.log.push({ n: item.n, turn: s.turn, id: e.id, key: keys.join('+'), title: said(e.title), choice: label, say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null, seen: s.seen[e.id] || 0, ...this.logContext(item) });
       return out;
     }
 
@@ -1842,7 +1856,8 @@
     // Every way an option can turn out, by running its effects on a scratch copy of the state for each path
     // through its chances, checks and challenges, with random amounts at both ends of their range. Nothing
     // in the real state (or the RNG) changes. Paths more than 2 branches deep are merged into ranges.
-    //   -> { paths: [{p, labels, deltas: {key: [lo, hi]}, follows, what}], deltas (envelope), follows, what, cost }
+    //   -> { paths: [{p, labels, deltas: {key: [lo, hi]}, follows, what, over}], deltas (envelope), follows, what, cost }
+    //   deltas are the amounts as written, also past a cap or floor (feedback 2026-10-19); over: the keys that met one
     //   what: what the "…" stands for: {notes, followUp, remembered, ends} (no titles or flag names)
     preview(eventId, key, actor) {
       const e = this.c.events[eventId];
@@ -1893,7 +1908,7 @@
             ends: !!s.ended && !saved.ended };
           this._oracle = null; this._variant = null; this._cast = null; this._ctxTrack = null;
           for (const k of KEYS) s[k] = saved[k];
-          runOnce.last = { decisions, deltas: ctx.deltas, follows, what, fight: !!fightSeen.fight };
+          runOnce.last = { decisions, deltas: ctx.deltas, follows, what, fight: !!fightSeen.fight, over: Object.keys(ctx.over || {}) };
         }
         return runOnce.last;
       };
@@ -1911,7 +1926,7 @@
         for (const k of new Set([...Object.keys(lo.deltas), ...Object.keys(hi.deltas)])) { const a = lo.deltas[k] || 0, b = hi.deltas[k] || 0; deltas[k] = [Math.min(a, b), Math.max(a, b)]; }
         let p = 1;
         lo.decisions.forEach((d) => { p *= (d.probs[d.choice] || 0) / 100; });
-        paths.push({ p, decisions: lo.decisions.map((d) => ({ kind: d.kind, choice: d.choice, label: d.label })), deltas, follows: lo.follows || hi.follows, what: mergeWhat(lo.what, hi.what), fight: lo.fight || hi.fight });
+        paths.push({ p, decisions: lo.decisions.map((d) => ({ kind: d.kind, choice: d.choice, label: d.label })), deltas, follows: lo.follows || hi.follows, what: mergeWhat(lo.what, hi.what), fight: lo.fight || hi.fight, over: [...new Set(lo.over.concat(hi.over))] });
         for (let i = prefix.length; i < lo.decisions.length; i++) {
           lo.decisions[i].probs.forEach((x, a) => { if (x > 0 && a !== lo.decisions[i].choice) queue.push(lo.decisions.slice(0, i).map((d) => d.choice).concat([a])); });
         }
@@ -1922,8 +1937,8 @@
         const head = pth.decisions.slice(0, 2);
         const k = head.map((d) => d.kind + d.choice).join('/');
         const m = merged.get(k);
-        if (!m) { merged.set(k, { p: pth.p, labels: head, deltas: { ...pth.deltas }, follows: pth.follows, what: pth.what, fight: pth.fight }); continue; }
-        m.p += pth.p; m.follows = m.follows || pth.follows; m.what = mergeWhat(m.what, pth.what); m.fight = m.fight || pth.fight;
+        if (!m) { merged.set(k, { p: pth.p, labels: head, deltas: { ...pth.deltas }, follows: pth.follows, what: pth.what, fight: pth.fight, over: pth.over.slice() }); continue; }
+        m.p += pth.p; m.follows = m.follows || pth.follows; m.what = mergeWhat(m.what, pth.what); m.fight = m.fight || pth.fight; m.over = [...new Set(m.over.concat(pth.over))];
         for (const key2 of new Set([...Object.keys(m.deltas), ...Object.keys(pth.deltas)])) {
           const a = m.deltas[key2] || [0, 0], b = pth.deltas[key2] || [0, 0];
           m.deltas[key2] = [Math.min(a[0], b[0]), Math.max(a[1], b[1])];
@@ -1944,6 +1959,8 @@
         for (const k of new Set([...keys(deltas), ...Object.keys(pth.deltas)])) {
           if (pth.fight && FIGHT_BARS.includes(k)) continue;
           const v = deltas[k] || 0, r = pth.deltas[k] || [0, 0];
+          // A preview shows the amounts as written; where one met a cap or floor (`over`), the real change differs.
+          if (pth.over && pth.over.includes(k)) continue;
           if (v < r[0] - 1e-9 || v > r[1] + 1e-9) return false;
         }
         return true;
@@ -1991,7 +2008,7 @@
           return { id, name: d.name, kind: d.kind, status: t.status, level: t.level || null, levelName: t.level ? levels[t.level - 1] || d.name : null, passed: this.levelPassed(id), grades: (t.grades || []).slice(), rank: ranks[t.rank] || null, perf: Math.round(t.perf || 0), due: Math.max(0, (t.due || 0) - (t.visits || 0)), progress: Math.round(t.progress || 0),
             done: d.kind === 'job' && t.status === 'member' && t.visits >= (t.due || 0), ...(d.kind === 'course' && t.status === 'enrolled' ? this.courseStanding(id) : {}) };
         }),
-        spells: Object.entries(s.spells || {}).filter(([id]) => c.spells && c.spells[id]).map(([id, level]) => ({ id, level, ...pick(c.spells[id], ['name', 'desc', 'art']), cost: this.spellCost(id, level) })),
+        spells: Object.entries(s.spells || {}).filter(([id]) => c.spells && c.spells[id]).map(([id, level]) => ({ id, level, ...pick(c.spells[id], ['name', 'desc', 'art', 'skill']), cost: this.spellCost(id, level) })),
         skills: c.order.skills.map((id) => ({ id, ...pick(c.skills[id], ['name', 'icon', 'color', 'max', 'desc']), value: s.vals[id] })),
         states: Object.keys(s.states).filter((id) => c.states[id] && !c.states[id].hidden).map((id) => ({ id, name: c.states[id].name || id, desc: this.interp(c.states[id].desc || ''), art: c.states[id].art, kind: c.states[id].kind || null, group: c.states[id].group || null, left: s.states[id].left })),
         npcs: c.order.npcs.filter((id) => s.npcs[id].met).map((id) => ({ id, ...pick(c.npcs[id], ['name', 'short', 'title', 'house', 'desc', 'color', 'romance', 'pronouns', 'look']), ...s.npcs[id] })),

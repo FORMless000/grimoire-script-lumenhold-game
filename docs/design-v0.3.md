@@ -554,7 +554,7 @@ Concept: `docs/map-concept.svg` / `.png`.
 - a season tint (autumn amber, winter snow, spring blossom, summer gold).
 
 **Interaction:**
-- The map opens once per visit, when its slot comes (playtest 2, M1): "Where will you spend the afternoon?", then later "…the evening?". A tap on an open place goes there at once; "Stay in" skips the visit.
+- The map opens once per visit, when its slot comes (playtest 2, M1): "Where will you spend the afternoon?", then later "…the evening?". A tap on an open place picks it and a second tap on it goes there, whenever it comes, as a spell is cast in a fight (feedback 2026-10-19); "Stay in" skips the visit. The map takes the card's place in the stage, scaled to fit it, and its markers carry no slot numbers.
 - Picking a closed place shows its opening hours instead.
 - The outcome of a pick (attendance, pay) shows as a short toast, not a card.
 
@@ -784,7 +784,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - **Friendship (`rel`, −100…100; negative = hostility):** slow and sticky. A one-character focus reaches 100 at about 2 years. It never decays (feedback 2026-10-15b; it used to fade after 6 months without interaction).
 - **Spark (`spark`, 0–100; replaces `love`):**
   - can start at first meeting;
-  - **−15% a month** without a romance interaction;
+  - **−15% a month** without a romance interaction; the month's summary says it once for everyone it touched, in words ("Fading sparks: no romantic moment last month…"), and a partnership it ends gets its own line (feedback 2026-10-19);
   - −10 to −25 on hurtful choices;
   - **jealousy** events if spark ≥ 30 with more than one person;
   - partnership needs spark ≥ 60 at a confession, and breaks after 2 months below 20.
@@ -797,7 +797,13 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - `if` is evaluated against the running state.
 - `chance` / `check` / `challenge` become labelled branches with probabilities, nested at most 2 deep; deeper nesting collapses to ranges.
 - Queues and flags show as a small "something follows" mark.
-- **UI:** the changes on the choice button, by a setting (feedback 2026-10-15, 2026-10-15b; the gear menu, with the illustrative-text switch): signs by size (+ for tiny or small, ++ medium, +++ large or huge; − for losses), numbers, or icons only. Crowns and Mana always show numbers, and so does every outcome after a choice. Exam preparation for several courses at once shows as one icon. Branches as "win ++ renown / lose − mood (62%)".
+- **UI:** the changes on the choice button, by a setting (feedback 2026-10-15, 2026-10-15b; the gear menu, with the scene-description switch): signs by size (+ for tiny or small, ++ medium, +++ large or huge; − for losses), numbers, or icons only. Crowns and Mana always show numbers, and so does every outcome after a choice. Exam preparation for several courses at once shows as one icon. Branches as "win ++ renown / lose − mood (62%)".
+- **Previews past a cap** (feedback 2026-10-19): a preview shows the amounts as written, also where they meet a cap or a floor (a Health gain at full Health still shows); the outcome after the choice shows what changed. The preview records the keys that met one (`over`), and the property test allows those to fall short.
+- **The "…" reveal** (hover, long-press, a selected menu tile; feedback 2026-10-19) never repeats the preview: notes an outcome's label already says are dropped (an exam's grade), a spell is named without the skill bonus the icons show, what every outcome shares is listed once, and what only some do is listed once with those outcomes after it ("A, B, C"). The option carries one "…", not one per outcome.
+- **The roll on a button** (feedback 2026-10-19) says only the skill it tests and the chance ("Arcana · 62%"): not the kind of check, its odds word or its swing, which the option's own words carry. A roll of pure luck (`chance`) shows the dice and its chance alone. Fights keep their line (foe and level).
+- **Spells** name the skill they scale with under their description (the You panel, a fight's action preview and the foe's intent; feedback 2026-10-19).
+- **Menus and the map** take the card's place in the stage, as a fight does (feedback 2026-10-19): no backdrop and no cards behind them, and the top bar and the side panel stay usable. A click picks; a click on the pick confirms, whenever it comes. With several to pick, the last pick confirms and a click on an earlier one takes it back.
+- **Scene descriptions:** a card's `scene:` line shows in italics under it (Settings → Scene descriptions hides it). Cards keep their composed icon art; no other card art is planned.
 - **Hard invariants:**
   - lint rejects any effect it can't preview;
   - the simulator property test asserts that every actual outcome falls within its preview, over 1,000 runs.
@@ -928,7 +934,9 @@ Spells v2 (2026-10-17; the list and its reasons: `docs/spells-v2-list.md`). The 
     Sleight (Corvin), Contraption (Mir), Hoarfrost (Kael), Candour (Nessa).
   - Club and job spells, each at the end of a five-card chain that starts at rank 2: Brace (Duelling Circle), Quickquill
     (Lumen Ledger), Bramble (Verdant Circle), Index (Library), Rapport (Gilded Newt), Distil (Apothecary; id `purify`),
-    Tailwind (Courier).
+    Tailwind (Courier). A chain card that does its part pulls the next one into the same visit, once a visit (feedback
+    2026-10-19, migration 0035): the start and a preparation on one visit, a preparation and the final on the next. The
+    final comes a month after the start once two preparations are done, or at four months.
   - With no source yet: the hidden pool (Rime, Reflect, Moonwell, Lodestar, Toll) and the forbidden pool (Torment,
     Extraction, Siphon, Compel, Eclipse, Heartprice), marked `pool:`.
 

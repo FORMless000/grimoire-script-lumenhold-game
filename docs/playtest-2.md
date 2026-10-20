@@ -33,4 +33,4 @@ open http://127.0.0.1:4173/admin     # runs, per-event feedback, decision times
 - The finale is one sealing challenge, not the design's sequence of duel, negotiation and research.
 - Relationship lines in the yearbook are generic (partner; three friends; Ilse's chain), not one line per bond.
 - Renown tiers, spotlights and scandals, fact discovery in the People panel and the arc Journal tab are phase 4.
-- Art is placeholder: every card's *Illustration:* note describes the intended scene.
+- Cards use composed icon art; the italic line under each card describes the scene (Settings → Scene descriptions hides it).

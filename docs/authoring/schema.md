@@ -14,7 +14,7 @@ repeat: 5
 weight: 10
 art: book
 tags: study
-scene: One sentence describing the illustration an artist should draw.
+scene: One sentence describing the scene, shown in italics under the card.
 text: Two to four sentences. Present tense, second person. Set up a real dilemma; end on the moment of choice.
 > left: Short label
   lore +small

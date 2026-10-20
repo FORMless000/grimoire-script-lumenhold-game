@@ -240,13 +240,13 @@
     openOverlay('<div class="modal dark origin-modal"><div class="modal-body"><h2>' + esc(t('origin.heading')) + '</h2><p class="text">' + esc(t('origin.intro')) + ' ' + esc(t('menu.prompt')) + '</p>' +
       '<div class="opt-grid">' + opts + '</div><div class="row" style="margin-top:14px"><button class="btn ghost-btn grow" id="originBack">' + esc(t('origin.back')) + '</button>' +
       '<button class="btn primary grow" id="originGo" disabled>' + esc(t('menu.confirmOne')) + '</button></div></div></div>');
-    // As in every menu: a click picks, a double-click (or Confirm, or Enter) starts.
-    let sel = null, last = null;
+    // As in every menu: a click picks, a click on the pick (or Confirm, or Enter) starts.
+    let sel = null;
     const go = () => { if (ui.mode === 'origin' && sel) start(sel); };
     const pick = (k) => {
       if (ui.mode !== 'origin') return;
-      const now = Date.now(), twice = !!last && last.k === k && now - last.t < DOUBLE_MS;
-      last = { k, t: now }; sel = k;
+      const twice = sel === k;
+      sel = k;
       document.querySelectorAll('.origin-opt').forEach((b) => { b.classList.toggle('sel', b.dataset.k === k); b.classList.toggle('last-pick', b.dataset.k === k); });
       document.getElementById('originGo').disabled = false;
       if (twice) go();
@@ -422,7 +422,7 @@
       });
       if (snap.spells.length) {
         h += '<div class="sec-h">' + esc(t('side.spells')) + '</div>';
-        for (const sp of snap.spells) h += '<div class="state spell">' + Art.icon(sp.art || 'wand', 20) + '<div><b>' + esc(sp.name) + ' ' + ['', 'I', 'II', 'III'][sp.level] + '</b><p>' + esc(sp.desc || '') + '</p></div><span class="left">' + esc(t('side.spellCost', { n: sp.cost })) + '</span></div>';
+        for (const sp of snap.spells) h += '<div class="state spell">' + Art.icon(sp.art || 'wand', 20) + '<div><b>' + esc(sp.name) + ' ' + ['', 'I', 'II', 'III'][sp.level] + '</b><p>' + esc(sp.desc || '') + '</p><small class="scales">' + esc(spellScales(sp.skill)) + '</small></div><span class="left">' + esc(t('side.spellCost', { n: sp.cost })) + '</span></div>';
       }
     } else if (ui.tab === 'people') {
       if (!snap.npcs.length) h += '<div class="empty">' + esc(t('side.noPeople')) + '</div>';
@@ -456,10 +456,12 @@
       for (const l of log.slice(0, 120)) {
         // Re-render title and choice in the current language when possible.
         const ev = content.events[l.id];
-        const title = ev ? eng.interpLogged(ev.title, l) : l.title;
+        // An entry from before logs kept their card's cast can't name everyone again: then the words it was saved with.
+        const kept = (x, saved) => (saved && /\{[^{}]+\}/.test(x) && !/\{[^{}]+\}/.test(saved) ? saved : x);
+        const title = ev ? kept(eng.interpLogged(ev.title, l), l.title) : l.title;
         const opt = ev && l.key ? ev.options.find((o) => o.key === l.key) : null;
-        const choice = opt ? eng.interpLogged(opt.label, l) : l.choice;
-        const say = l.sayIds && l.sayIds.length && l.sayIds.every((id) => eng.sayIndex[id]) ? l.sayIds.map((id) => eng.interpLogged(eng.sayIndex[id].text, l)).join(' ') : l.say;
+        const choice = opt ? kept(eng.interpLogged(opt.label, l), l.choice) : l.choice;
+        const say = l.sayIds && l.sayIds.length && l.sayIds.every((id) => eng.sayIndex[id]) ? kept(l.sayIds.map((id) => eng.interpLogged(eng.sayIndex[id].text, l)).join(' '), l.say) : l.say;
         h += '<div class="log-item"><div class="when">' + esc(t('journal.when', { month: eng.monthName(l.turn), year: eng.yearOf(l.turn) })) + '</div><b>' + esc(title) + '</b> — <span class="ch">' + esc(choice) + '</span>' + (say ? '<div class="say">' + esc(say) + '</div>' : '') + (l.n != null ? journalFeedback(l.n) : '') + '</div>';
       }
     }
@@ -608,14 +610,15 @@
     deck.appendChild(card);
     return card;
   }
-  const sceneNote = (scene, hidden) => scene ? '<p class="scene-note"' + (hidden ? ' style="display:none"' : '') + '>' + esc(t('card.illustration', { text: scene })) + '</p>' : '';
+  const sceneNote = (scene, hidden) => scene ? '<p class="scene-note"' + (hidden ? ' style="display:none"' : '') + '>' + esc(scene) + '</p>' : '';
   // A challenge names its kind and the skill(s) it rolls (B24): "Enchanting · Charm".
-  const challengeLabel = (kind, using) => t('challenge.' + kind) + (using ? ' · ' + using.split('+').map(skillName).join(' + ') : '');
-  const swingText = (c) => (c.swing ? ' · ' + t('swing.' + c.swing) : '');
-  const checkText = (c, key) => c.exam ? t('check.examButton', { skill: c.using.split('+').map(skillName).join(' + '), p: c.p, top: c.top, a: c.a }) + swingText(c)
-    : c.fight ? fightText(key) + swingText(c)
-    : c.combat ? t('check.combatButton', { p: c.p, cost: c.cost }) + swingText(c)
-    : c.challenge ? t('check.challengeButton', { kind: challengeLabel(c.skill, c.using), p: c.p }) + swingText(c) : t('check.button', { skill: skillName(c.skill), p: c.p });
+  // A roll on a button says only the skill it tests and the chance (feedback 2026-10-19): not the kind of check, its
+  // nature or its swing (the option's own words say those). A roll of pure luck is the dice and its chance alone.
+  const skillsOf = (using) => String(using || '').split('+').filter(Boolean).map(skillName).join(' + ');
+  const checkText = (c, key) => c.fight ? fightText(key)
+    : c.combat ? t('check.combatButton', { p: c.p, cost: c.cost })
+    : c.luck ? t('check.luckButton', { p: c.p })
+    : t('check.button', { skill: c.exam || c.challenge ? skillsOf(c.using) : skillName(c.skill), p: c.p });
   // The roll on an option's button (B24, M11): combat, the future minigame, is marked apart from skill checks.
   const checkLine = (c, key) => (c ? '<span class="chk roll' + (c.combat || c.fight ? ' combat' : '') + '">' + Art.icon(c.combat || c.fight ? 'sword' : c.exam ? 'scroll' : 'dice', 12) + ' ' + esc(checkText(c, key)) + '</span>' : '');
   // "Fight · Lyra · level 34": who the option fights, before it starts (the same foe the fight will bring).
@@ -696,6 +699,8 @@
   }
   const deltaClass = (lo, hi) => (hi == null ? (lo > 0 ? 'pos' : lo < 0 ? 'neg' : '') : hi > 0 && lo >= 0 ? 'pos' : lo < 0 && hi <= 0 ? 'neg' : hi > 0 ? 'pos' : '');
   function skillName(id) { return (content.skills[id] && content.skills[id].name) || id; }
+  // The skill a spell scales with (feedback 2026-10-19): "Scales with Arcana", or that it doesn't.
+  function spellScales(skill) { const sk = String(skill || '').split(/[,\s]+/).filter(Boolean).map(skillName); return sk.length ? t('spell.scales', { skill: sk.join(' + ') }) : t('spell.flat'); }
   function spellName(id) { return (content.spells[id] && content.spells[id].name) || id; }
   // Exact outcome preview (design §8.3) for one option: one line of changes, or one line per outcome.
   function previewHtml(v, o) {
@@ -719,22 +724,44 @@
       if (d.kind === 'exam') return ['A', 'B', 'C', 'F'][d.choice] + ' ';
       return '';
     };
-    const items = whatFollows(pv.what), full = items.length ? '<span class="pv-more">' + items.map((x) => '<em>' + esc(x) + '</em>').join('') + '</span>' : '';
-    const more = pv.follows ? '<i class="more" title="' + esc(items.join(' · ') || t('preview.follows')) + '">…</i>' : '';
-    if (pv.paths.length <= 1) { const l = line(pv.deltas); return l || more ? '<span class="pv">' + l + more + full + '</span>' : ''; }
     // A fight's paths are its outcomes (win, partial, lose), with no odds: the fight decides, not a roll.
-    const paths = pv.fight ? pv.paths.slice().sort((a, b) => ((a.labels[0] || {}).choice || 0) - ((b.labels[0] || {}).choice || 0)) : pv.paths.slice().sort((a, b) => b.p - a.p);
-    return '<span class="pv multi">' + paths.slice(0, 3).map((pth) => '<span class="pvl"><b>' + esc(pth.fight ? label(pth).trim() + ' ' : label(pth) + Math.round(pth.p * 100) + '%') + '</b>' + (line(pth.deltas) || '—') + (pth.follows ? '<i class="more">…</i>' : '') + '</span>').join('') + (paths.length > 3 ? '<span class="pvl">…</span>' : '') + full + '</span>';
+    const paths = pv.paths.length <= 1 ? pv.paths : pv.fight ? pv.paths.slice().sort((a, b) => ((a.labels[0] || {}).choice || 0) - ((b.labels[0] || {}).choice || 0)) : pv.paths.slice().sort((a, b) => b.p - a.p);
+    const items = revealItems(paths, label), full = items.length ? '<span class="pv-more">' + items.map((x) => '<em>' + esc(x.text) + (x.on ? ' <small>' + esc(x.on) + '</small>' : '') + '</em>').join('') + '</span>' : '';
+    // One "…" for the whole option (it stands for what the reveal spells out), not one per outcome.
+    const more = pv.follows ? '<i class="more" title="' + esc(items.map((x) => x.text + (x.on ? ' (' + x.on + ')' : '')).join(' · ') || t('preview.follows')) + '">…</i>' : '';
+    if (paths.length <= 1) { const l = line(pv.deltas); return l || more ? '<span class="pv">' + l + more + full + '</span>' : ''; }
+    const rows = paths.slice(0, 3).map((pth) => '<b>' + esc(pth.fight ? label(pth).trim() + ' ' : label(pth) + Math.round(pth.p * 100) + '%') + '</b>' + (line(pth.deltas) || '—'));
+    if (paths.length > 3) rows.push('…');
+    rows[rows.length - 1] += more;
+    return '<span class="pv multi">' + rows.map((r) => '<span class="pvl">' + r + '</span>').join('') + full + '</span>';
   }
-  // The "…" spelled out (preview.what): notes (a spell, a meeting…), a follow-up later, something remembered, the end.
-  function whatFollows(w) {
-    if (!w) return [];
-    const out = [];
-    for (const n of w.notes || []) { const x = noteText(n); if (x && !out.includes(x)) out.push(x); }
-    if (w.followUp) out.push(t('preview.followUp'));
-    if (w.remembered) out.push(t('preview.remembered'));
-    if (w.ends) out.push(t('preview.ends'));
-    return out;
+  // The "…" spelled out (feedback 2026-10-19: the exam's listed every grade, each with the same odds), built so that
+  // nothing repeats what the preview already shows:
+  //   - a note an outcome's label already says is dropped (an exam's grade; the odds are on the check line);
+  //   - amounts are left to the icons (a spell learned is named without its skill bonus);
+  //   - what every outcome shares is listed once; what only some do, once, with those outcomes after it ("A, B, C").
+  function revealItems(paths, label) {
+    const per = paths.map((pth) => {
+      const out = [], w = pth.what || {}, examPath = (pth.labels[0] || {}).kind === 'exam';
+      for (const n of w.notes || []) {
+        if (examPath && n.kind === 'grade') continue;
+        const x = noteText(n.kind === 'spell' ? Object.assign({}, n, { bonus: null }) : n);
+        if (x && !out.includes(x)) out.push(x);
+      }
+      if (w.followUp) out.push(t('preview.followUp'));
+      if (w.remembered) out.push(t('preview.remembered'));
+      if (w.ends) out.push(t('preview.ends'));
+      return out;
+    });
+    const seen = [], items = [];
+    per.forEach((xs) => xs.forEach((x) => { if (!seen.includes(x)) seen.push(x); }));
+    for (const x of seen) {
+      const on = paths.filter((_, i) => per[i].includes(x));
+      const tag = on.length === paths.length ? '' : on.map((pth) => label(pth).trim() || Math.round(pth.p * 100) + '%').join(', ');
+      items.push({ text: x, on: tag });
+    }
+    // Shared items first, then the ones that depend on how it goes.
+    return items.filter((x) => !x.on).concat(items.filter((x) => x.on));
   }
   // Long-press (touch) on a choice or a menu tile spells out its "…" instead of choosing; hover does it with a mouse (CSS).
   function longPressReveal(b) {
@@ -857,7 +884,7 @@
     let h = '';
     for (const c of out.checks || []) {
       if (c.fight) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + ' combat">' + Art.icon('sword', 14) + esc(t('check.fightChip', { result: t('fight.' + c.outcome), reason: t('fight.reason.' + c.reason) })) + '</span>';
-      else if (c.challenge) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + (c.challenge === 'combat' ? ' combat' : '') + '">' + Art.icon(c.challenge === 'combat' ? 'sword' : 'dice', 14) + esc(t('check.challengeChip', { kind: challengeLabel(c.challenge, c.skill), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
+      else if (c.challenge) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + (c.challenge === 'combat' ? ' combat' : '') + '">' + Art.icon(c.challenge === 'combat' ? 'sword' : 'dice', 14) + esc(t('check.challengeChip', { kind: skillsOf(c.skill), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
       else h += '<span class="chip ' + (c.ok ? 'check-ok' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.chip', { skill: skillName(c.skill), p: c.p, result: t(c.ok ? 'check.success' : 'check.failed') })) + '</span>';
     }
     // A gain at the cap (M37): shown, marked as at the maximum.
@@ -956,7 +983,7 @@
         (o.locked ? '<small class="why">' + esc(o.locked) + '</small>' : '') +
         (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') + courseLine(o.course) + jobLine(o.job) + switchLine(o.switching) + (previewHtml(v, o) || (aff ? '<span class="aff">' + aff + '</span>' : '')) + againLine() + '</button>';
     }).join('');
-    openOverlay('<div class="modal dark"><div class="modal-art">' + Art.scene(v.art, v.tags, v.id) + '</div><div class="modal-body">' + (v.actor ? actorRow(v.actor).replace('actor-row', 'actor-row" style="color:var(--text)') : '') +
+    openPanel('<div class="modal dark"><div class="modal-art">' + Art.scene(v.art, v.tags, v.id) + '</div><div class="modal-body">' + (v.actor ? actorRow(v.actor).replace('actor-row', 'actor-row" style="color:var(--text)') : '') +
       '<h2>' + esc(v.title) + '</h2><p class="text prompt">' + esc(v.pick > 1 ? t('menu.promptMany', { n: v.pick }) : t('menu.prompt')) + '</p>' +
       '<div class="opt-grid">' + opts + '</div><div class="row" style="margin-top:14px"><button class="btn primary grow" id="multiGo" disabled style="width:100%">' + esc(ui.multi ? t('menu.confirm', { n: 0, max: v.pick }) : t('menu.confirmOne')) + '</button></div></div></div>');
     document.getElementById('multiGo').onclick = confirmMenu;
@@ -968,22 +995,23 @@
       longPressReveal(b);
     });
   }
-  const DOUBLE_MS = 450;   // two clicks (taps) on the same choice within this: a double-click, which confirms
   // Said on the tile just picked (CSS shows it on .last-pick): how to confirm it.
   const againLine = () => '<small class="again">' + esc(t('menu.again')) + '</small>';
   function pickMenu(key) {
     if (ui.busy || ui.mode !== 'menu') return;
     const o = ui.view.options.find((x) => x.key === key);
     if (!o || o.disabled) return;
-    const now = Date.now(), twice = !!ui.lastPick && ui.lastPick.k === key && now - ui.lastPick.t < DOUBLE_MS;
-    ui.lastPick = { k: key, t: now };
+    // A click picks; a click on the pick confirms, as a spell in a fight (feedback 2026-10-19), whenever it comes. With
+    // several to pick, it is the last pick that confirms; a click on an earlier one takes it back.
+    let twice = false;
     if (ui.multi) {
       const i = ui.multi.indexOf(key);
-      if (twice) { if (i < 0 && ui.multi.length < ui.view.pick) ui.multi.push(key); }   // the second click keeps it picked
+      if (i >= 0 && ui.lastPick === key) twice = true;
       else if (i >= 0) ui.multi.splice(i, 1); else if (ui.multi.length < ui.view.pick) ui.multi.push(key);
-    } else ui.sel = key;
+    } else { twice = ui.sel === key; ui.sel = key; }
+    if (!twice) ui.lastPick = ui.multi && !ui.multi.includes(key) ? ui.multi[ui.multi.length - 1] || null : key;
     const picked = ui.multi || [ui.sel];
-    document.querySelectorAll('.opt').forEach((b) => { b.classList.toggle('sel', picked.includes(b.dataset.k)); b.classList.toggle('last-pick', b.dataset.k === key && picked.includes(key)); });
+    document.querySelectorAll('.opt').forEach((b) => { b.classList.toggle('sel', picked.includes(b.dataset.k)); b.classList.toggle('last-pick', b.dataset.k === ui.lastPick && picked.includes(ui.lastPick)); });
     const go = document.getElementById('multiGo');
     if (go) { go.disabled = ui.multi ? !ui.multi.length : !ui.sel; go.textContent = ui.multi ? t('menu.confirm', { n: ui.multi.length, max: ui.view.pick }) : t('menu.confirmOne'); }
     if (twice) confirmMenu();
@@ -1002,7 +1030,7 @@
     ui.mode = 'map'; ui.busy = false; setSlotTint(view.slots.length === 1 ? view.slots[0] : null);
     document.querySelectorAll('#deck .card').forEach((c) => c.remove());
     document.getElementById('choices').innerHTML = '';
-    openOverlay('<div class="modal dark map-modal"><div class="modal-body" id="mapRoot"></div></div>');
+    openPanel('<div class="modal dark map-modal"><div class="modal-body" id="mapRoot"></div></div>', 'map-panel');
     const snap = eng.snapshot();
     ui.mapCtl = MapView.render(document.getElementById('mapRoot'), view, {
       t, esc, Art, npcs: content.npcs,
@@ -1022,6 +1050,8 @@
     const first = document.querySelector('#mapRoot .mk.st-open'); if (first) first.focus({ preventScroll: true });
   }
 
+  // "A, B and C" in the current language.
+  const listOf = (xs) => (xs.length < 2 ? xs.join('') : t('list.and', { a: xs.slice(0, -1).join(t('list.sep')), b: xs[xs.length - 1] }));
   /* ------------------------------------------------------------------ month */
   function showMonth(r) {
     ui.mode = 'month'; ui.busy = false;
@@ -1030,10 +1060,14 @@
     let rows = '';
     if (r.turn === 1 && content.game.intro) rows += '<div class="row say">' + esc(content.game.intro) + '</div>';
     for (const s of r.summary) {
-      const chips = chipsFor({ deltas: s.deltas, notes: s.notes, checks: [] });
-      if (!chips && !s.say.length) continue;
-      rows += '<div class="row"><span class="lbl">' + esc(s.label || t('month.thisMonth')) + '</span><span class="chips">' + chips + '</span></div>';
-      if (s.say.length) rows += '<div class="row say">' + esc(s.say.join(' ')) + '</div>';
+      // Fading sparks: one line for everyone, said in words (feedback 2026-10-19); a partnership that ends, its own.
+      const fading = s.src === 'spark fade', ended = s.src === 'relationship drift' && s.npc;
+      const names = fading ? listOf(Object.keys(s.deltas).map((k) => shortName(k.split(':')[1]))) : '';
+      const say = fading ? [t(s.away ? 'month.fadingAway' : 'month.fadingSay', { names })] : ended ? [t('month.partnerEnded', { name: shortName(s.npc) })] : s.say;
+      const chips = chipsFor({ deltas: s.deltas, notes: ended ? [] : s.notes, checks: [] });
+      if (!chips && !say.length) continue;
+      if (chips) rows += '<div class="row"><span class="lbl">' + esc(fading ? t('month.fading') : s.label || t('month.thisMonth')) + '</span><span class="chips">' + chips + '</span></div>';
+      if (say.length) rows += '<div class="row say">' + esc(say.join(' ')) + '</div>';
     }
     const total = {};
     r.summary.forEach((s) => Object.entries(s.deltas).forEach(([k, v]) => { total[k] = (total[k] || 0) + v; }));
@@ -1075,7 +1109,18 @@
     document.body.appendChild(o);
     const f = o.querySelector('button:not(:disabled)'); if (f && ui.mode !== 'menu') f.focus({ preventScroll: true });
   }
-  function closeOverlay() { const o = document.getElementById('overlay'); if (o) o.remove(); }
+  // A choice among many (a menu, the map) takes the card's place in the stage, as a fight does (feedback 2026-10-19):
+  // no backdrop and no cards behind it, and the top bar and side panel stay in reach. It shares the overlay's id, so
+  // whatever closes the overlay closes it too.
+  function openPanel(html, cls) {
+    closeOverlay();
+    const stage = document.querySelector('.stage');
+    if (!stage) return openOverlay(html);
+    const o = document.createElement('div'); o.className = 'stage-panel' + (cls ? ' ' + cls : ''); o.id = 'overlay'; o.innerHTML = html;
+    stage.classList.add('paneled'); stage.appendChild(o);
+    o.scrollTop = 0;
+  }
+  function closeOverlay() { const o = document.getElementById('overlay'); if (o) o.remove(); const st = document.querySelector('.stage.paneled'); if (st) st.classList.remove('paneled'); }
 
   /* ------------------------------------------------------------------ keys */
   function onKey(e) {
@@ -1348,7 +1393,7 @@
     };
     render();
   }
-  // Settings (feedback 2026-10-15b): how amounts show in previews, the illustrative text under each card, and the portrait art.
+  // Settings (feedback 2026-10-15b): how amounts show in previews, the scene description under each card, and the portrait art.
   function openSettings() {
     closeSettings();
     const wrap = document.createElement('div'); wrap.className = 'fb-wrap'; wrap.id = 'settingsDialog';

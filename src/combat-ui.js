@@ -116,6 +116,12 @@
     const label = (id) => C().label(id);
     const actionName = (id, side) => (['hold', 'release'].includes(id) ? label(id) + ' ' + label((game.actors[side].channel && game.actors[side].channel.id) || '') : label(id));
     const describe = (side, id) => { try { return C().describe(game, side, id); } catch (e) { return ''; } };
+    // The skill a spell scales with (feedback 2026-10-19), under its description; nothing for an action that isn't a spell.
+    const scales = (id) => {
+      const sp = content && content.spells && content.spells[id]; if (!sp) return '';
+      const sk = String(sp.skill || '').split(/[,\s]+/).filter(Boolean).map((k) => (opts.skillName ? opts.skillName(k) : k));
+      return '<small class="scales">' + esc(sk.length ? opts.t('spell.scales', { skill: sk.join(' + ') }) : opts.t('spell.flat')) + '</small>';
+    };
     const briefOf = (side, id) => { let d = null; try { d = C().describeData(game, side, id); } catch (e) { /* not an action now */ } return C().brief(id, d, game.actors[side].channel && game.actors[side].channel.id); };
     const effHtml = (b, name) => {
       const v = b.value !== '' && b.value !== null && b.value !== undefined;
@@ -291,7 +297,7 @@
     function preview() {
       if (!selected) return '<div class="preview hint">' + esc(myTurn() ? tr('pickHint') : tr('waiting')) + '</div><button class="fl-commit primary" disabled>' + esc(tr('commit')) + '</button>';
       const spell = C().SPELLS[selected];
-      return '<div class="preview"><b>' + esc(actionName(selected, 0)) + '</b> <span class="price">' + esc(price(0, selected)) + '</span><p>' + esc(describe(0, selected)) + '</p></div>' +
+      return '<div class="preview"><b>' + esc(actionName(selected, 0)) + '</b> <span class="price">' + esc(price(0, selected)) + '</span><p>' + esc(describe(0, selected)) + '</p>' + scales(selected) + '</div>' +
         '<button class="fl-commit primary"' + (myTurn() ? '' : ' disabled') + '>' + (spell ? '<span class="control-icon" aria-hidden="true">' + C().ACTION_ICONS.cast + '</span>' + esc(tr('cast')) : esc(tr('commit'))) + '</button>';
     }
     function actions() {
@@ -335,7 +341,7 @@
       const C_ = C(), id = C_.isCompelled(game, 1) ? (game.pending[1] || C_.legalActions(game, 1)[0]) : game.pending[1];
       if (!id) return inspectSheet();
       return '<header class="sh-head"><span class="tele-icon">' + actionIcon(id, 1) + '</span><div><b>' + esc(nameOf(1) + ': ' + actionName(id, 1)) + '</b><small>' + esc(price(1, id)) + '</small></div><button class="close" data-close aria-label="' + esc(tr('close')) + '">×</button></header>' +
-        '<p>' + esc(describe(1, id)) + '</p><button class="link" data-sheet="inspect">' + esc(tr('everything')) + '</button>';
+        '<p>' + esc(describe(1, id)) + '</p>' + scales(id) + '<button class="link" data-sheet="inspect">' + esc(tr('everything')) + '</button>';
     }
     function renderSheet() {
       const el = $('.sheet');

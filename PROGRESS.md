@@ -13,6 +13,19 @@
 | Checks | `npm run verify` passes: build, lint, format, docs, 100+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 48 months (the last two are the wrap-up), about 630–720 cards (15 a term month, 9.4 a break month; about half pushed rather than drawn); in `grim analyze` (100 games a style, 2026-10-17), random play leaves early 30–40% of the time, social 27–30%, aggressive 18–29% and cautious 10–17%; the other 23 styles finish 98–100% |
 
+## UI pass
+
+October 19, 2026, from feedback:
+- **Menus and the map** take the card's place in the stage, as a fight does: there is no backdrop and no cards behind them, and the top bar and side panel stay usable. A click picks and a click on the pick confirms, with no time limit. With several to pick, the last pick confirms and a click on an earlier one takes it back. Map markers carry no slot numbers, and the map is scaled to fit the stage.
+- **Previews** show amounts past a cap, for example a Health gain at full Health. The outcome shows what actually changed. Lint now counts large changes it used to miss in its test state: 7 romance milestones have 3 (cap 2), which leaves 7 warnings for a content pass.
+- **The "…" reveal** never repeats what the preview already shows. For example, the exam card no longer lists one grade note per outcome. Each option has a single "…".
+- **Rolls on a button** show only the skill and the chance. A roll of pure luck shows the dice and its chance.
+- **Spell descriptions** name the skill the spell scales with.
+- **The month summary** shows fading sparks as one line in words.
+- **The journal** names people: entries keep their card's cast, track and place. Entries from older saves fall back to the text they were saved with.
+- **Scene descriptions:** the "Illustration:" prefix is gone, and the setting is renamed. No other card art is planned.
+- **Club and job spell chains** play two beats a visit (migration 0035).
+
 ## Manageable exams
 
 October 19, 2026: exam preparation now comes mostly from routine sources, so passing is predictable (design §7.3):

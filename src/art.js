@@ -1,7 +1,7 @@
 /*
- * Placeholder art: a small library of line-art SVG icons (64x64, stroke = currentColor),
- * a card-scene composer and NPC portraits: the final PNGs (Minimal, the default) over the procedural SVG (Original). Real art can replace the rest later —
- * every event also carries a `scene:` description for artists / image generators.
+ * The game's art: a small library of line-art SVG icons (64x64, stroke = currentColor), a card-scene composer
+ * (gradient, starfield and icon) and NPC portraits: the final PNGs (Minimal, the default) over the procedural SVG
+ * (Original). Cards keep this composed art; a card's `scene:` is a line of description shown under it, not an art brief.
  *
  * To add an icon: add an entry to ICONS (inner SVG markup, 64x64 viewBox). Content refers to it by key (`art: key`).
  */

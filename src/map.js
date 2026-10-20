@@ -7,10 +7,11 @@
  * kind, track, present[], news, festival[], hint}], locked: [{slot, place, event}], season, phase}.
  * The base art is content/world/maps/<map>.svg (an <img>, so it works from file:// too); markers are
  * positioned in percent of its 960 × 680 frame. The map is shown before each visit (playtest 2, M1), for
- * that slot alone: tapping an open place picks it, and a double-click (a second tap within DOUBLE_MS) or the button goes
- * there, so a misclick costs nothing; "Stay in" skips the visit. A festival's place is highlighted in its slot (picking
+ * that slot alone: tapping an open place picks it, and tapping it again (as a spell in a fight, whenever it comes) or
+ * the button goes there, so a misclick costs nothing; "Stay in" skips the visit. A festival's place is highlighted in its slot (picking
  * it joins the festival). A list view shows the same states as text; arrow keys move between markers and Enter picks
- * (Enter twice goes). (Several slots still work: then a double-click on the last pick or the button confirms them.)
+ * (Enter twice goes). (Several slots still work: then a tap on the last pick or the button confirms them; a tap on an
+ * earlier pick takes it back.) Markers carry no slot numbers (feedback 2026-10-19).
  */
 (function (root) {
   'use strict';
@@ -26,9 +27,8 @@
     const order = view.places.slice().sort((a, b) => a.y - b.y || a.x - b.x);
 
     function pickedIdx(id) { return picks.map((p, i) => (p === id && !lockedAt(i) ? i : -1)).filter((i) => i >= 0); }
-    // A tap picks a place (or unpicks it); a second tap on it within DOUBLE_MS, a double-click, goes (misclicks cost a day).
-    const DOUBLE_MS = 450;
-    let lastTap = null;
+    // A tap picks a place; a tap on the last pick goes (feedback 2026-10-19: no time limit, as a spell in a fight).
+    let lastPick = null;
     const isReady = () => view.slots.length === 1 ? !!picks[0] : picks.every((p, i) => p || lockedAt(i) || !view.places.some((x) => x.open[i]));
     function go() {
       if (!isReady()) { status = t('map.notReady'); return draw(); }
@@ -36,22 +36,23 @@
     }
     function tap(id) {
       const p = byId[id]; if (!p) return;
-      const now = Date.now(), twice = !!lastTap && lastTap.id === id && now - lastTap.t < DOUBLE_MS;
-      lastTap = { id, t: now };
       status = '';
       const already = pickedIdx(id);
-      if (already.length) { if (twice) return go(); picks[already[already.length - 1]] = null; return draw(); }
+      if (already.length) {
+        if (lastPick === id) return go();
+        picks[already[already.length - 1]] = null; lastPick = null; return draw();
+      }
       if (p.state === 'hinted') { status = p.hint || t('map.undiscovered'); return draw(); }
       if (p.visited) { status = t('map.visitedToday', { name: p.name }); return draw(); }
       if (p.festLater) { status = t('map.festivalLater', { name: p.name, slot: t('slot.' + p.festLater).toLowerCase() }); return draw(); }
+      if (view.slots.length === 1 && picks[0] && !lockedAt(0) && p.open[0]) picks[0] = null;   // one slot: a new tap moves the pick
       const free = view.slots.map((_, i) => i).filter((i) => !picks[i] && !lockedAt(i));
       if (!free.length) { status = t('map.full'); return draw(); }
       const ok = free.find((i) => p.open[i]);
       if (ok == null) { status = t('map.closed', { name: p.name, hours: (p.hours || []).map((h) => t('slot.' + h)).join(', ') }); return draw(); }
-      picks[ok] = id;
+      picks[ok] = id; lastPick = id;
       status = t('map.again', { place: p.name });
       draw();
-      if (twice) go();
     }
     function markerClass(p) {
       const c = ['mk', 'st-' + p.state];
@@ -74,10 +75,9 @@
       return '<span class="mk-pins">' + shown + (p.present.length > 3 ? '<span class="pin more">+' + (p.present.length - 3) + '</span>' : '') + '</span>';
     }
     function marker(p) {
-      const n = picks.map((x, i) => (x === p.id ? i + 1 : 0)).filter(Boolean);
       const title = p.state === 'hinted' ? (p.hint || t('map.undiscovered')) : p.name + (p.visited ? ' — ' + t('map.visitedNow') : p.festLater ? ' — ' + t('map.festivalSoon', { slot: t('slot.' + p.festLater).toLowerCase() }) : p.state === 'closed' ? ' — ' + t('map.closedNow') : '') + (p.festival.length ? ' — ' + t('map.festival', { slot: t('slot.' + p.festival[0].slot) }) : '');
       return '<button class="' + markerClass(p) + '" data-id="' + esc(p.id) + '" style="left:' + (100 * p.x / W) + '%;top:' + (100 * p.y / H) + '%" title="' + esc(title) + '" aria-label="' + esc(title) + '">' +
-        '<span class="mk-dot">' + (p.state === 'hinted' ? '?' : Art.icon(p.art || 'star', 18)) + (n.length ? '<b class="mk-n">' + n.join('·') + '</b>' : '') + (p.news ? '<i class="mk-news">✦</i>' : '') + '</span>' +
+        '<span class="mk-dot">' + (p.state === 'hinted' ? '?' : Art.icon(p.art || 'star', 18)) + (p.news ? '<i class="mk-news">✦</i>' : '') + '</span>' +
         (p.state !== 'hinted' ? '<span class="mk-label">' + esc(p.name) + '</span>' : '') + badge(p) + pins(p) + '</button>';
     }
     function listRow(p) {
@@ -86,7 +86,7 @@
       if (p.festival.length) states.push(t('map.festival', { slot: t('slot.' + p.festival[0].slot) }));
       if (p.present.length) states.push(t('map.here', { names: p.present.map((id) => (o.npcs[id] || {}).short || ((o.npcs[id] || {}).name || id).split(' ')[0]).join(', ') }));
       if (p.news) states.push(t('map.new'));
-      const n = picks.map((x, i) => (x === p.id ? t('slot.' + view.slots[i]) : null)).filter(Boolean);
+      const n = view.slots.length > 1 ? picks.map((x, i) => (x === p.id ? t('slot.' + view.slots[i]) : null)).filter(Boolean) : [];
       return '<button class="ml-row ' + markerClass(p) + '" data-id="' + esc(p.id) + '"><b>' + esc(p.state === 'hinted' ? '?' : p.name) + '</b><span>' + esc(states.join(' · ')) + '</span>' + (n.length ? '<em>' + esc(n.join(', ')) + '</em>' : '') + '</button>';
     }
     function chips() {

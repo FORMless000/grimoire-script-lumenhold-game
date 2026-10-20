@@ -4,13 +4,18 @@
 #   - a start card, pushed once you reach the track's second rank (and again later if you turn it down): it sets
 #     <spell>_chain and leaves a lead;
 #   - three preparation cards, each a check or a resource spent, each leaving a flag (skipped, they come back);
-#   - the final milestone check on the spell's skill (once two preparations are done, or six months on), one step
+#   - the final milestone check on the spell's skill (once two preparations are done and a month has passed, or four
+#     months on), one step
 #     easier per preparation done (`even` plus three steps is
 #     near certain), with a paid route at better odds for the underprepared. On a loss it comes back later, and the
 #     preparation is kept.
 #  Measured 2026-10-17: a club meets about twice a term and a track pool is ~20 cards, so with §G's weight ~8 for a
 #  drawn start card most rank-2 members never saw the chain. The start is pushed instead, and the chain's cards
 #  outweigh the pool while it runs (preparation 60, final 40).
+#  Two beats a visit (feedback 2026-10-19, migration 0035): the start's accepting option queues the first preparation
+#  `now`, and a preparation's working option queues, once a visit (`chain_beat`), the final when it is ready or else
+#  the next preparation not done. Measured over 90 games: learned 60% of chains started (was 43%), median 6 months
+#  from start to spell (was 8).
 # ============================================================
 
 # ---------------- Duelling Circle → Brace (vigor) ----------------
@@ -33,6 +38,8 @@ text: The eyepatched dummy has started throwing hexes back. Lyra splits its seam
   find lead_brace
   perform duelling +tiny
   say: Lyra sews the charm back in, looks at you, and writes your name on the board under the dummy. Underneath, someone adds a small drawing of a stretcher.
+  chain_beat = turn
+  queue duel_captains_notes now
 > right: Leave it to the seniors
   mood +tiny
   say: You go back to your bout, and the dummy goes back to hexing whoever passes. A senior limps past at the end of practice, still smoking slightly.
@@ -59,6 +66,14 @@ text: The captain who made the charm left notes, in a cupboard under the trophy 
     lose:
       mood -tiny
       say: You read until the lamp gutters and learn a great deal about a student called Pim, who could not parry. The trick is in there somewhere. You'll have to come back for it.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(duel_dummy_hexes) >= 1 and flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2:
+      queue duel_brace_final now
+    elif not flag(brace_circle):
+      queue duel_bram_barrage now
+    elif not flag(brace_footwork):
+      queue duel_footwork_lyra now
 > right: Spar instead tonight
   perform duelling +small
   say: You leave the notes for another evening and take a bout instead. You win it, which is the other kind of useful.
@@ -85,10 +100,26 @@ text: Word reaches Bram that you mean to empty the captain's charm. He turns up 
     lose:
       health -small
       say: The ninth hex knocks you clean out of the circle. Bram notes it in his book. "Section four, failed," he says. "Again next week."
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(duel_dummy_hexes) >= 1 and flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2:
+      queue duel_brace_final now
+    elif not flag(brace_notes):
+      queue duel_captains_notes now
+    elif not flag(brace_footwork):
+      queue duel_footwork_lyra now
 > right: Take it all on your shield arm
   flag brace_circle
   health -medium
   say: You don't try to be clever. You just stand there and take it, every hex, on your arm, until Bram runs out. Your arm is purple for a week. Bram looks almost impressed.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(duel_dummy_hexes) >= 1 and flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2:
+      queue duel_brace_final now
+    elif not flag(brace_notes):
+      queue duel_captains_notes now
+    elif not flag(brace_footwork):
+      queue duel_footwork_lyra now
 
 @event duel_footwork_lyra
 title: Footwork Until Dark
@@ -108,6 +139,14 @@ text: Lyra finds you after practice. "The captain's notes say the stance is ever
   mood -small
   rel lyra +tiny
   say: She is merciless and exact. By dark you can set your feet without thinking, and you never want to see a chalk mark again. "Better," she says, which from Lyra is a sonnet.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(duel_dummy_hexes) >= 1 and flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2:
+      queue duel_brace_final now
+    elif not flag(brace_notes):
+      queue duel_captains_notes now
+    elif not flag(brace_circle):
+      queue duel_bram_barrage now
 > right: "Tomorrow. I have an essay."
   study +tiny
   rel lyra -tiny
@@ -119,7 +158,7 @@ track: duelling
 rank: 2
 class: milestone
 tone: tense
-when: flag(brace_chain) and spell_level(brace) == 0 and since(duel_dummy_hexes) >= 2 and (flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2 or since(duel_dummy_hexes) >= 6)
+when: flag(brace_chain) and spell_level(brace) == 0 and since(duel_dummy_hexes) >= 1 and (flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2 or since(duel_dummy_hexes) >= 4)
 repeat: 2
 weight: 40
 art: spell_brace
@@ -166,6 +205,8 @@ text: A spare quill on the drying line has been finishing your sentences. Today 
   find lead_quickquill
   perform lumen_ledger +tiny
   say: You wrap it in a handkerchief. It writes "kidnapped" on the handkerchief. Nessa writes your name on the office board under QUILL, with a question mark.
+  chain_beat = turn
+  queue ledger_soup_complaint now
 > right: Peg it back on the line
   mood +tiny
   say: You peg it back. It writes a small, hurt editorial about you on the next proof, which Nessa cuts, laughing.
@@ -192,6 +233,14 @@ text: Forty furious letters about the refectory soup have arrived. Nessa wants o
     lose:
       mood -small
       say: You blink and the quill has written that the soup contains a mild curse. It prints. You spend Thursday apologising to the cooks.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(ledger_spare_quill) >= 1 and flag(quickquill_soup) + flag(quickquill_ink) + flag(quickquill_deadline) >= 2:
+      queue ledger_quill_interview now
+    elif not flag(quickquill_ink):
+      queue ledger_proper_ink now
+    elif not flag(quickquill_deadline):
+      queue ledger_deadline_night now
 > right: Write the reply by hand
   perform lumen_ledger +tiny
   say: You write it yourself, slowly. It's a good reply. The quill watches from the inkwell, offended at being left out.
@@ -213,6 +262,14 @@ text: The quill refuses the school ink. It blots, it sulks, it writes "no" in la
   gold -small
   flag quickquill_ink
   say: The quill drinks the new ink and writes a whole page of your notes, neatly, in a better hand than yours. It underlines the bits you'll need. You feel slightly managed.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(ledger_spare_quill) >= 1 and flag(quickquill_soup) + flag(quickquill_ink) + flag(quickquill_deadline) >= 2:
+      queue ledger_quill_interview now
+    elif not flag(quickquill_soup):
+      queue ledger_soup_complaint now
+    elif not flag(quickquill_deadline):
+      queue ledger_deadline_night now
 > right: Make it use the school ink
   mood -tiny
   say: It uses the school ink under protest and blots every third word, including, pointedly, your name.
@@ -235,6 +292,14 @@ text: Deadline night. The front page fell through at nine and Nessa is pacing. "
   perform lumen_ledger +small
   mood -medium
   say: You and the quill write until four. By the end it finishes your sentences only when you want it to. You are both too tired to argue. Nessa puts your name on the page, small.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(ledger_spare_quill) >= 1 and flag(quickquill_soup) + flag(quickquill_ink) + flag(quickquill_deadline) >= 2:
+      queue ledger_quill_interview now
+    elif not flag(quickquill_soup):
+      queue ledger_soup_complaint now
+    elif not flag(quickquill_ink):
+      queue ledger_proper_ink now
 > right: Go to bed
   health +tiny
   say: You sleep. In the morning the front page is late and Nessa is hoarse, and the quill has written a bitter little poem about you on the pillowcase.
@@ -245,7 +310,7 @@ track: lumen_ledger
 rank: 2
 class: milestone
 tone: tense
-when: flag(quickquill_chain) and spell_level(quickquill) == 0 and since(ledger_spare_quill) >= 2 and (flag(quickquill_soup) + flag(quickquill_ink) + flag(quickquill_deadline) >= 2 or since(ledger_spare_quill) >= 6)
+when: flag(quickquill_chain) and spell_level(quickquill) == 0 and since(ledger_spare_quill) >= 1 and (flag(quickquill_soup) + flag(quickquill_ink) + flag(quickquill_deadline) >= 2 or since(ledger_spare_quill) >= 4)
 repeat: 2
 weight: 40
 art: spell_quickquill
@@ -292,6 +357,8 @@ text: The far bed answers back today: every vine in it turns to follow you. On t
   find lead_bramble
   alchemy +tiny
   say: You cup it in your palm. The shoot curls round your finger, firmly. Tobias, when you show him, goes pale and then delighted. "That's a hedge-seed," he says. "They choose people."
+  chain_beat = turn
+  queue verdant_plant_seed now
 > right: Give it to Tobias
   rel tobias +tiny
   say: Tobias takes it gently and puts it in a pot by the door. "It'll want you back," he says. "They usually do."
@@ -313,10 +380,26 @@ text: The seed has outgrown your pocket. It needs a bed. Tobias offers the corne
   flag bramble_planted
   rel tobias +small
   say: You plant it together by lantern light, and Tobias tells it a long story about a goat to help it settle. It settles. So does Tobias, eventually.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(verdant_far_bed) >= 1 and flag(bramble_planted) + flag(bramble_fed) + flag(bramble_choir) >= 2:
+      queue verdant_bramble_bolts now
+    elif not flag(bramble_fed):
+      queue verdant_cold_snap now
+    elif not flag(bramble_choir):
+      queue verdant_mandrake_choir now
 > right: Plant it in Maud's garden
   flag bramble_planted
   rel maud +small
   say: Maud leads you through a door you'd never noticed into a garden you'll never find on your own. You plant it there. "It'll be happy," she says, "for a while."
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(verdant_far_bed) >= 1 and flag(bramble_planted) + flag(bramble_fed) + flag(bramble_choir) >= 2:
+      queue verdant_bramble_bolts now
+    elif not flag(bramble_fed):
+      queue verdant_cold_snap now
+    elif not flag(bramble_choir):
+      queue verdant_mandrake_choir now
 
 @event verdant_cold_snap
 time: night
@@ -336,6 +419,14 @@ text: A hard frost is coming tonight, the first of the season. Your seedling is 
   flag bramble_fed
   health -small
   say: You sit wrapped round the lantern till dawn, feeding it what warmth you have. By morning you're stiff and coughing, and the seedling has grown a thorn, which it seems proud of.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(verdant_far_bed) >= 1 and flag(bramble_planted) + flag(bramble_fed) + flag(bramble_choir) >= 2:
+      queue verdant_bramble_bolts now
+    elif not flag(bramble_planted):
+      queue verdant_plant_seed now
+    elif not flag(bramble_choir):
+      queue verdant_mandrake_choir now
 > right: Cover it and hope
   mood -tiny
   say: You cover it with sacking and go to bed. It survives, sulking, and loses a leaf. It is noticeably cooler towards you.
@@ -362,6 +453,14 @@ text: The mandrakes in the next bed have taken against your seedling and scream 
     lose:
       health -tiny
       say: The choir screams at you instead. Your ears ring till supper. Gerald looks unrepentant in his hat.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(verdant_far_bed) >= 1 and flag(bramble_planted) + flag(bramble_fed) + flag(bramble_choir) >= 2:
+      queue verdant_bramble_bolts now
+    elif not flag(bramble_planted):
+      queue verdant_plant_seed now
+    elif not flag(bramble_fed):
+      queue verdant_cold_snap now
 > right: Move the seedling's pot
   mood +tiny
   say: You move it to the quiet end. It perks up, but it's away from the warm pipes now, and it isn't growing.
@@ -373,7 +472,7 @@ track: verdant
 rank: 2
 class: milestone
 tone: tense
-when: flag(bramble_chain) and spell_level(bramble) == 0 and since(verdant_far_bed) >= 2 and (flag(bramble_planted) + flag(bramble_fed) + flag(bramble_choir) >= 2 or since(verdant_far_bed) >= 6)
+when: flag(bramble_chain) and spell_level(bramble) == 0 and since(verdant_far_bed) >= 1 and (flag(bramble_planted) + flag(bramble_fed) + flag(bramble_choir) >= 2 or since(verdant_far_bed) >= 4)
 repeat: 2
 weight: 40
 art: spell_bramble
@@ -420,6 +519,8 @@ text: Footnote has sat on one catalogue drawer for a week and hisses at anyone w
   find lead_index
   lore +tiny
   say: You read the card around his tail. A book on wards, borrowed by a Professor Thorne, eleven years ago. Footnote looks at you as if you've finally asked the right question.
+  chain_beat = turn
+  queue library_fish_footnote now
 > right: Shelve around him
   perform library_assistant +tiny
   say: You shelve around Footnote for the rest of the shift. He watches every book you put away, as if marking them.
@@ -441,6 +542,14 @@ text: Footnote won't move from the drawer for less than fish. Good fish, from th
   gold -small
   flag index_fish
   say: Footnote eats the herring slowly, looking at you the whole time, then steps off the drawer and onto your lap. The card is yours. So, apparently, is the cat.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(library_footnote_drawer) >= 1 and flag(index_fish) + flag(index_hush) + flag(index_string) >= 2:
+      queue library_overdue_book now
+    elif not flag(index_hush):
+      queue library_hush_lamp now
+    elif not flag(index_string):
+      queue library_wandering_section now
 > right: Wait him out
   mood -tiny
   say: You wait. Footnote waits better. At closing he yawns, stretches, and lies back down on the drawer.
@@ -468,6 +577,14 @@ text: The overdue book will only be on the shelves the night hush sends it to. T
     lose:
       mood -small
       say: Every shelf goes quiet at once, which is either very helpful or a joke at your expense. You walk until midnight and mark nothing.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(library_footnote_drawer) >= 1 and flag(index_fish) + flag(index_hush) + flag(index_string) >= 2:
+      queue library_overdue_book now
+    elif not flag(index_fish):
+      queue library_fish_footnote now
+    elif not flag(index_string):
+      queue library_wandering_section now
 > right: Ask the head librarian outright
   perform library_assistant -tiny
   say: "If I told you," she says, "you wouldn't have found it." She gives you extra shelving for asking.
@@ -489,6 +606,14 @@ text: The section the book belongs to wanders. It was by the stairs on Monday an
   flag index_string
   mood -small
   say: You follow it for six hours, through rooms you didn't know the library had. At the end you know its route by heart and never want to see a ball of string again.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(library_footnote_drawer) >= 1 and flag(index_fish) + flag(index_hush) + flag(index_string) >= 2:
+      queue library_overdue_book now
+    elif not flag(index_fish):
+      queue library_fish_footnote now
+    elif not flag(index_hush):
+      queue library_hush_lamp now
 > right: Wait for it to come back
   lore +tiny
   say: You read at the desk until the section wanders past again, a day later. You learn nothing about its route, and a little about medieval ward-lattices.
@@ -499,7 +624,7 @@ track: library_assistant
 rank: 2
 class: milestone
 tone: eerie
-when: flag(index_chain) and spell_level(index) == 0 and since(library_footnote_drawer) >= 2 and (flag(index_fish) + flag(index_hush) + flag(index_string) >= 2 or since(library_footnote_drawer) >= 6)
+when: flag(index_chain) and spell_level(index) == 0 and since(library_footnote_drawer) >= 1 and (flag(index_fish) + flag(index_hush) + flag(index_string) >= 2 or since(library_footnote_drawer) >= 4)
 repeat: 2
 weight: 40
 art: spell_index
@@ -547,6 +672,8 @@ text: Two barge-men are halfway out of their chairs when the landlady taps the b
   find lead_rapport
   charm +tiny
   say: "Can't teach it," she says. "You earn it. Learn the room, buy the room, work the room." She taps the bar twice at you, and you laugh, and you don't know why.
+  chain_beat = turn
+  queue tavern_eel_story now
 > right: Keep pouring
   perform tavern +tiny
   say: You keep pouring. The barge-men buy each other a drink and sing. The landlady watches you, thoughtfully, for the rest of the shift.
@@ -574,6 +701,14 @@ text: The old barge-man's eel story is the most famous story at the Newt. Regula
     lose:
       mood -small
       say: You get the eel's name wrong and the ending backwards. The regulars are very kind about it, which is worse.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(tavern_two_taps) >= 1 and flag(rapport_eel) + flag(rapport_round) + flag(rapport_shift) >= 2:
+      queue tavern_festival_room now
+    elif not flag(rapport_round):
+      queue tavern_regulars_round now
+    elif not flag(rapport_shift):
+      queue tavern_double_shift now
 > right: Just enjoy the story
   mood +small
   say: You sit and listen to the eel story twice through, and laugh both times. You couldn't tell it, but you've rarely had a better evening.
@@ -596,6 +731,14 @@ text: The regulars' corner has never had a round bought by staff. The landlady s
   gold -small
   flag rapport_round
   say: The corner raises the mugs to you, by name, which you didn't know they knew. For the rest of the night they call you over to settle every argument.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(tavern_two_taps) >= 1 and flag(rapport_eel) + flag(rapport_round) + flag(rapport_shift) >= 2:
+      queue tavern_festival_room now
+    elif not flag(rapport_eel):
+      queue tavern_eel_story now
+    elif not flag(rapport_shift):
+      queue tavern_double_shift now
 > right: Keep your tips
   gold +tiny
   say: You pocket your tips. The corner doesn't notice either way, which is rather the point.
@@ -618,6 +761,14 @@ text: Two servers are down with Lake Fever, and the landlady needs a double shif
   flag rapport_shift
   health -small
   say: Fourteen hours on your feet. By closing you can tell who wants to talk and who wants to be left alone from across the room. Your feet are a separate, angrier person.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(tavern_two_taps) >= 1 and flag(rapport_eel) + flag(rapport_round) + flag(rapport_shift) >= 2:
+      queue tavern_festival_room now
+    elif not flag(rapport_eel):
+      queue tavern_eel_story now
+    elif not flag(rapport_round):
+      queue tavern_regulars_round now
 > right: Turn it down
   perform tavern -tiny
   say: You say you can't. The landlady works it herself, and is short with you for a week.
@@ -629,7 +780,7 @@ track: tavern
 rank: 2
 class: milestone
 tone: tense
-when: flag(rapport_chain) and spell_level(rapport) == 0 and since(tavern_two_taps) >= 2 and (flag(rapport_eel) + flag(rapport_round) + flag(rapport_shift) >= 2 or since(tavern_two_taps) >= 6)
+when: flag(rapport_chain) and spell_level(rapport) == 0 and since(tavern_two_taps) >= 1 and (flag(rapport_eel) + flag(rapport_round) + flag(rapport_shift) >= 2 or since(tavern_two_taps) >= 4)
 repeat: 2
 weight: 40
 art: spell_rapport
@@ -676,6 +827,8 @@ text: Restocking, you open the oldest drawer at the bottom of Pell's wall. Insid
   find lead_distil
   alchemy +tiny
   say: You copy it out carefully. Pell watches you do it and says nothing, then corrects one of your measures in your copy. That is the closest he comes to permission.
+  chain_beat = turn
+  queue pell_counting_drops now
 > right: Close the drawer
   rel pell +tiny
   say: You close it. Pell nods once and goes back to his scales. Later you notice he has relabelled the drawer, clearly, "Not yet."
@@ -703,6 +856,14 @@ text: Pell distils by the drop, all night, counting aloud. "If you mean to try t
     lose:
       mood -small
       say: You lose count at three hundred and something. Pell starts again without comment. So do you. You lose it again.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(pell_oldest_drawer) >= 1 and flag(distil_drops) + flag(distil_moonwort) + flag(distil_shortcut) >= 2:
+      queue pell_draught now
+    elif not flag(distil_moonwort):
+      queue pell_buy_moonwort now
+    elif not flag(distil_shortcut):
+      queue pell_daughters_shortcut now
 > right: Go home and sleep
   health +tiny
   say: You go home. Pell counts on alone, steadily, through the night. In the morning the bottle is full and labelled, and he says nothing about it.
@@ -724,6 +885,14 @@ text: The old draught needs moonwort, and the only good moonwort in the village 
   gold -small
   flag distil_moonwort
   say: Pell weighs it twice and wraps it in waxed paper. You carry it home without humming, which is harder than it sounds.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(pell_oldest_drawer) >= 1 and flag(distil_drops) + flag(distil_moonwort) + flag(distil_shortcut) >= 2:
+      queue pell_draught now
+    elif not flag(distil_drops):
+      queue pell_counting_drops now
+    elif not flag(distil_shortcut):
+      queue pell_daughters_shortcut now
 > right: Try the cheap substitute
   mood -tiny
   say: The substitute smells wrong the moment you open it. Pell takes it from you without a word and puts it in the bin.
@@ -745,6 +914,14 @@ text: Pell's daughters say there's a shortcut: learn what the draught takes out 
   flag distil_shortcut
   health -small
   say: It takes the strength out of your knees and then, slowly, gives it back. You spend a day in bed. When you get up, you know exactly where the draught will pull from.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(pell_oldest_drawer) >= 1 and flag(distil_drops) + flag(distil_moonwort) + flag(distil_shortcut) >= 2:
+      queue pell_draught now
+    elif not flag(distil_drops):
+      queue pell_counting_drops now
+    elif not flag(distil_moonwort):
+      queue pell_buy_moonwort now
 > right: Do it Pell's way
   rel pell +tiny
   say: You decline. The daughters shrug. Pell, who was listening, corrects a label more firmly than it needed.
@@ -755,7 +932,7 @@ track: apothecary_clerk
 rank: 2
 class: milestone
 tone: eerie
-when: flag(distil_chain) and spell_level(purify) == 0 and since(pell_oldest_drawer) >= 2 and (flag(distil_drops) + flag(distil_moonwort) + flag(distil_shortcut) >= 2 or since(pell_oldest_drawer) >= 6)
+when: flag(distil_chain) and spell_level(purify) == 0 and since(pell_oldest_drawer) >= 1 and (flag(distil_drops) + flag(distil_moonwort) + flag(distil_shortcut) >= 2 or since(pell_oldest_drawer) >= 4)
 repeat: 2
 weight: 40
 art: spell_distil
@@ -802,6 +979,8 @@ text: On the dead-letter shelf, behind a parcel addressed to nobody, is a stoppe
   find lead_tailwind
   vigor +tiny
   say: The jar hums in your hands, and every broom in the loft leans toward you. The loft master writes your name on the jar's label, under a name too faded to read.
+  chain_beat = turn
+  queue courier_fisherman_waves now
 > right: Leave it on the shelf
   perform broom_courier +tiny
   say: You leave it for whoever is fast enough. You fly your round. The jar's wind stirs the dead letters as you go.
@@ -828,6 +1007,14 @@ text: The old fisherman in the reed beds has never waved at a courier. Today, se
     lose:
       mood -tiny
       say: He talks about fish for an hour, then says the light's going, and rows off. You'll have to come back.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(courier_wind_jar) >= 1 and flag(tailwind_fisherman) + flag(tailwind_gulls) + flag(tailwind_broom) >= 2:
+      queue courier_storm_delivery now
+    elif not flag(tailwind_gulls):
+      queue courier_race_gulls now
+    elif not flag(tailwind_broom):
+      queue courier_fix_broom now
 > right: Wave back and fly on
   perform broom_courier +small
   say: You wave and fly on with your round, on time. He watches you go, and doesn't wave again.
@@ -854,6 +1041,14 @@ text: The gulls over the lake race couriers for fun. The fisherman says the jar'
     lose:
       health -small
       say: You clip a wave at full speed and skip across the lake like a stone. The gulls are delighted. You are wet to the bone.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(courier_wind_jar) >= 1 and flag(tailwind_fisherman) + flag(tailwind_gulls) + flag(tailwind_broom) >= 2:
+      queue courier_storm_delivery now
+    elif not flag(tailwind_fisherman):
+      queue courier_fisherman_waves now
+    elif not flag(tailwind_broom):
+      queue courier_fix_broom now
 > right: Fly your round steady
   perform broom_courier +tiny
   say: You fly the round steady and deliver everything dry. The gulls lose interest. So does the jar.
@@ -875,6 +1070,14 @@ text: Your loft broom pulls left, always has. With the jar's wind behind it, it 
   gold -small
   flag tailwind_broom
   say: The broom-maker sights along it, tuts, and spends an afternoon on it. It flies straight for the first time in living memory. You miss the pull, a little.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(courier_wind_jar) >= 1 and flag(tailwind_fisherman) + flag(tailwind_gulls) + flag(tailwind_broom) >= 2:
+      queue courier_storm_delivery now
+    elif not flag(tailwind_fisherman):
+      queue courier_fisherman_waves now
+    elif not flag(tailwind_gulls):
+      queue courier_race_gulls now
 > right: Learn to fly it crooked
   mood -tiny
   say: You learn to lean right all the time. Your back complains, and the broom keeps pulling left out of habit.
@@ -885,7 +1088,7 @@ track: broom_courier
 rank: 2
 class: milestone
 tone: tense
-when: flag(tailwind_chain) and spell_level(tailwind) == 0 and since(courier_wind_jar) >= 2 and (flag(tailwind_fisherman) + flag(tailwind_gulls) + flag(tailwind_broom) >= 2 or since(courier_wind_jar) >= 6)
+when: flag(tailwind_chain) and spell_level(tailwind) == 0 and since(courier_wind_jar) >= 1 and (flag(tailwind_fisherman) + flag(tailwind_gulls) + flag(tailwind_broom) >= 2 or since(courier_wind_jar) >= 4)
 repeat: 2
 weight: 40
 art: spell_tailwind
