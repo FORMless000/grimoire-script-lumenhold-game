@@ -143,6 +143,13 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
 .result{padding:14px 16px;border-radius:14px;border:1px solid var(--gold);background:var(--night-3);text-align:center}.result h2{margin:0;font:700 34px var(--display);color:var(--gold-2)}.result.loss h2{color:var(--bad)}.result.draw h2{color:var(--muted)}
 .result>p{margin:2px 0 8px;color:var(--muted)}.net-costs{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;font-size:13px;text-transform:capitalize}.net-costs b{font-variant-numeric:tabular-nums}.net-costs .neg{color:var(--bad)}.net-costs .pos{color:var(--good)}
 .result-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.net-costs .none{text-transform:none;color:var(--muted)}.res-h{margin:8px 0 2px;font:600 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+/* The main game's lines above the fight (src/combat.css): the setting, coming in hurt, a lesson's coach mark, leaving a free fight, a wind-up. */
+.fight-setting{margin:0;padding:5px 10px;border-radius:10px;border:1px solid var(--line);background:rgba(20,24,48,.6);color:var(--muted);font-size:12px;line-height:1.45;display:flex;flex-wrap:wrap;gap:2px 14px}.fight-setting b{color:var(--gold-2);font-weight:700}
+.fight-note{margin:0;padding:5px 10px;border-radius:10px;border:1px solid rgba(255,138,128,.4);background:rgba(60,20,30,.55);color:#f3c9c3;font-size:12.5px}
+.coach{padding:6px 10px;border-radius:10px;border:1px solid rgba(240,200,120,.45);background:rgba(48,40,18,.6);color:#f3e2b8;font-size:12.5px;line-height:1.4}.coach b{color:var(--gold-2);margin-right:4px}
+.fl-leave{display:block;margin:0 auto;background:none;border-radius:999px;padding:5px 14px;font-size:12px;font-weight:500;color:var(--muted)}
+.intent.windup{border-color:rgba(255,170,110,.55)}.intent.windup b{color:#ffc28a}
 
 /* Sheets: inspect, their move, the log */
 .sheet{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:16px;background:rgba(6,8,20,.6);backdrop-filter:blur(3px)}
@@ -217,5 +224,5 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
  .bench-tab{padding:9px 1px;font-size:7.5px;letter-spacing:.1em}.bench-pop{position:fixed;left:0;right:0;bottom:0;top:auto;transform:none;width:auto;border-radius:12px 12px 0 0}
  .sheet{place-items:end center;padding:0}.sheet-card{border-radius:var(--radius) var(--radius) 0 0;max-height:82dvh;padding:12px}.sk{grid-template-columns:repeat(2,1fr)}
 }
-@media(max-width:600px) and (max-height:700px){.hfull .flavor:not(.finish),.intent .flavor,.intent .it>small,.intent .eff small,.hx-full h4{display:none}.intent b{font-size:12px}}
+@media(max-width:600px) and (max-height:700px){.fight-setting{display:none}.hfull .flavor:not(.finish),.intent .flavor,.intent .it>small,.intent .eff small,.hx-full h4{display:none}.intent b{font-size:12px}}
 @media(max-width:600px) and (max-height:620px){.card-stub,.stub-top{display:none}.stub-meters .meter small{display:none}.intent .it>small:not(.flavor){display:none}.fname small{display:none}.fname{min-height:24px}}

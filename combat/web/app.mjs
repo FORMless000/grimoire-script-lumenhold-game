@@ -1,4 +1,4 @@
-import {SPELL_ICONS,ACTION_ICONS,PORTRAITS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,createState,applyChoice,actorToMove,legalActions,available,cost,describe,describeData,label,concede,hpCost,has,expandAI,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState,analyzePosition} from './engine.mjs';
+import {SPELL_ICONS,ACTION_ICONS,PORTRAITS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,createState,applyChoice,actorToMove,legalActions,available,cost,describe,describeData,label,concede,hpCost,has,expandAI,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,EVENTS,FOES,POOLS,fightSetting,levelRng,generateLoadout,COMBAT_TUNING,settle,GAME_TEXT,WORN_ITEMS,GAME_NPCS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState,analyzePosition} from './engine.mjs';
 import {brief} from './brief.mjs';
 import {portrait,BLANK} from './art.mjs';
 // The same served module supplies a worker, preserving the existing localhost server.
@@ -13,7 +13,7 @@ function analyze({token,state,budgetMs,maxDepth}){
 if(typeof document!=='undefined'){
 const $=id=>document.getElementById(id),esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),fmt=n=>Number.isInteger(n)?n:Math.abs(n-Math.round(n))<.05?Math.round(n):n.toFixed(1);
 const store={get:(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:v;}catch{return d;}},set:(k,v)=>{try{localStorage.setItem(k,v);}catch{}}};
-let names=['you','the opponent'],game=null,selected=null,view='play',busy=false,history=[],stats=[],token=0,moves=0,bars={},seen={},sheet=null,focusEx=null;
+let names=['you','the opponent'],game=null,setting={},selected=null,view='play',busy=false,history=[],stats=[],token=0,moves=0,bars={},seen={},sheet=null,focusEx=null;
 let analysis=null,analysisToken=0,analysisFor=-1,analysisRunning=false,engineBudget=Number(store.get('engineBudget',1500))||1500,engineOn=store.get('engineOn','0')==='1';
 // Which pieces of the main game's screen to imitate around the fight (stubs, for judging the look in context).
 const chrome=Object.fromEntries(['top','meters','side','card'].map(k=>[k,store.get('chrome.'+k,'1')==='1']));
@@ -25,30 +25,97 @@ let analyst=null;
 const COMBAT_RESOURCES=['health','mana','crowns','renown','alignment'];
 
 // ---- Setup (the bench's side panel) ----
-for(const id of ['player-loadout','opponent-loadout'])for(const [group,items]of Object.entries({General:LOADOUTS,Characters:NAMED_LOADOUTS,...(id==='opponent-loadout'?{Creatures:SPECIAL_LOADOUTS}:{})}))$(id).insertAdjacentHTML('beforeend',`<optgroup label="${group}">${Object.keys(items).map(name=>`<option>${name}</option>`).join('')}</optgroup>`);
+// The main game's English UI text (src/i18n.js, fight.* and kit.slot.*, read by tools/build.mjs), with the bench's own as fallback.
+const gt=(k,v={},fallback=k)=>Object.entries(v).reduce((t,[a,b])=>t.replaceAll('{'+a+'}',b),GAME_TEXT[k]??fallback);
+// Special foes split as the main game sees them: creatures (race, "it", no healing) and humans outside the classes.
+const pick=f=>Object.fromEntries(Object.entries(SPECIAL_LOADOUTS).filter(([,d])=>f(d)));
+for(const id of ['player-loadout','opponent-loadout'])for(const [group,items]of Object.entries({General:LOADOUTS,Characters:NAMED_LOADOUTS,Creatures:pick(d=>d.creature),'Special foes':pick(d=>!d.creature)}))$(id).insertAdjacentHTML('beforeend',`<optgroup label="${group}">${Object.keys(items).map(name=>`<option>${esc(name)}</option>`).join('')}</optgroup>`);
+// The pools generic foes are drawn from (POOLS in setup/foes.mjs); the encounter seed picks one, as a card's seed does.
+$('opponent-loadout').insertAdjacentHTML('beforeend',`<optgroup label="Pools · the encounter seed picks">${Object.entries(POOLS).map(([k,v])=>`<option value="pool:${k}" title="${esc(v.join(', '))}">Pool · ${k}</option>`).join('')}</optgroup>`);
+// Every played combat card (EVENTS): picking one sets the foe and the setting as the main game's bridge (src/combat.js) does.
+const at=(v,i=0)=>Array.isArray(v)?v[i]:v;
+$('card').insertAdjacentHTML('beforeend',Object.entries(EVENTS).filter(([,e])=>e.play).map(([k,e])=>`<option value="${esc(k)}">${esc(k)} · ${esc([e.play].flat().join(' / '))}</option>`).join(''));
+// A card's foe: the first it names (the main game picks among several by who you've met or the card's text).
+function cardFoe(key){const e=EVENTS[key];if(!e?.play)return null;const id=[e.play].flat()[0];return {id,...FOES[id]};}
+function applyCard(){
+ const key=$('card').value,e=EVENTS[key],note=$('card-note');note.hidden=!e;if(!e)return;
+ const f=cardFoe(key),st=fightSetting(key,0,f.id),foes=[e.play].flat();
+ if(f.pool)$('opponent-loadout').value='pool:'+f.pool;else if(f.loadout&&!f.loadout.startsWith('('))$('opponent-loadout').value=f.loadout;
+ $('context').value=st.context??f.context??'practice_duel';setRebates();
+ $('observers').checked=st.observers??false;$('witnesses').value=(st.witnesses??true)?'1':'0';
+ $('first-leader').value=String(at(e.firstLeader)??1);
+ note.textContent=[foes.length>1?`The card picks among ${foes.join(', ')}; the bench plays ${f.id}.`:'',f.id==='peer'?'The peer present: pick the character above.':'',e.setup??'',
+  e.tutorial?'A lesson: a coach mark each exchange; nothing is at stake.':at(e.stakes)==='none'?'Nothing at stake: "Walk away" costs nothing.':'',
+  at(e.foeCommitsFirst)?`The foe commits first, in the open, for ${at(e.foeCommitsFirst)} exchanges.`:'',f.persona?'Its own persona: '+Object.entries(f.persona).map(([k,v])=>k+' '+v).join(', ')+'.':''].filter(Boolean).join(' ');
+ note.hidden=!note.textContent;setup();
+}
+// The worn kit (content/world/items.grim, read by tools/build.mjs): one item a slot, summed as the main game's Engine#wornMods.
+const SLOTS=['wand','robe','trinket'];
+const wornText=w=>[w.hp?`HP +${w.hp}`:'',w.mana?`Mana +${w.mana}`:'',...Object.entries(w.cost??{}).map(([k,n])=>`${k} costs ${n>0?'+':'−'}${Math.abs(n)}`),...Object.entries(w.onCast??{}).map(([k,n])=>`${k} casts deal +${n}`),w.onDefend?`blocked blows shock ${w.onDefend}`:'',...(w.taken??[]).map(t=>`−${t.n} from ${t.from.join('/')}`)].filter(Boolean).join(', ');
+$('worn').innerHTML=Object.keys(WORN_ITEMS).length?SLOTS.map(slot=>`<label>Worn ${esc(gt('kit.slot.'+slot,{},slot).toLowerCase())}<select data-worn="${slot}"><option value="">Nothing with an effect</option>${Object.entries(WORN_ITEMS).filter(([,d])=>d.slot===slot&&d.worn).map(([id,d])=>`<option value="${id}">${esc(d.name)} · ${esc(wornText(d.worn))}</option>`).join('')}</select></label>`).join(''):'<p class="fine">No worn items: the bench was built without the main game\'s content.</p>';
+function wornMods(){
+ const m={hp:0,mana:0,cost:{},onCast:{},onDefend:0,taken:[]};let any=false;
+ for(const sel of document.querySelectorAll('[data-worn]')){const w=WORN_ITEMS[sel.value]?.worn;if(!w)continue;any=true;
+  m.hp+=w.hp||0;m.mana+=w.mana||0;m.onDefend+=w.onDefend||0;
+  for(const [k,v]of Object.entries(w.cost??{}))m.cost[k]=(m.cost[k]||0)+v;for(const [k,v]of Object.entries(w.onCast??{}))m.onCast[k]=(m.onCast[k]||0)+v;
+  for(const t of w.taken??[])m.taken.push({n:t.n,from:[...t.from]});}
+ return any?m:null;
+}
 $('rebates').innerHTML=['health','mana'].map(k=>`<label>${k} rebate %<input data-rebate="${k}" type="number" min="0" max="100"></label>`).join('');
 function setRebates(){for(const input of document.querySelectorAll('[data-rebate]'))input.value=CONTEXTS[$('context').value][input.dataset.rebate]*100;}
 function setup(){
- const player=$('player-loadout').value,opponent=$('opponent-loadout').value||player,pFixed=fixedLoadoutLevel(player),oFixed=fixedLoadoutLevel(opponent);
+ const player=$('player-loadout').value,chosen=$('opponent-loadout').value,opponent=chosen.startsWith('pool:')?'':chosen||player,pFixed=fixedLoadoutLevel(player),oFixed=opponent?fixedLoadoutLevel(opponent):null;
  if(pFixed)$('player-level').value=pFixed;if(oFixed&&oFixed!==Number($('player-level').value))$('match-level').checked=false;$('player-level').disabled=!!pFixed;
  if($('match-level').checked)$('opponent-level').value=$('player-level').value;if(oFixed)$('opponent-level').value=oFixed;
  $('opponent-level').disabled=$('match-level').checked||!!oFixed;$('match-level').disabled=!!oFixed;
  for(const b of document.querySelectorAll('[data-level]')){b.disabled=!!pFixed;b.classList.toggle('active',b.dataset.level===$('player-level').value);}
  for(const [side,name]of [['player',player],['opponent',opponent]]){const growing=!!NAMED_LOADOUTS[name]&&!fixedLoadoutLevel(name)&&name!=='The man in grey';$(side+'-year-label').hidden=!growing||side==='opponent'&&!$('opponent-loadout').value;$(side+'-ilse-label').hidden=name!=='Ilse'||side==='opponent'&&!$('opponent-loadout').value;}
+ // A creature wears nothing; the witnesses follow the observers when a crowd watches (an audience always is one).
+ for(const sel of document.querySelectorAll('[data-worn]'))sel.disabled=!!SPECIAL_LOADOUTS[player]?.creature;
+ $('witnesses').disabled=$('observers').checked;
  $('begin').textContent=`Begin combat · level ${$('player-level').value} →`;
 }
 for(const b of document.querySelectorAll('[data-level]'))b.onclick=()=>{$('player-level').value=b.dataset.level;setup();};
-$('player-loadout').onchange=setup;$('opponent-loadout').onchange=setup;$('player-level').oninput=setup;$('match-level').onchange=setup;$('context').onchange=setRebates;
+$('player-loadout').onchange=setup;$('opponent-loadout').onchange=()=>{$('card').value='';applyCard();setup();};$('card').onchange=applyCard;$('player-level').oninput=setup;$('match-level').onchange=setup;$('context').onchange=setRebates;$('observers').onchange=setup;
 for(const box of document.querySelectorAll('[data-chrome]')){box.checked=chrome[box.dataset.chrome];box.onchange=()=>{chrome[box.dataset.chrome]=box.checked;store.set('chrome.'+box.dataset.chrome,box.checked?'1':'0');render();};}
 // The opponent (F5.9b): a fixed depth-5 search with no seeded mistakes; the difficulty preset is its only knob.
 const LIVE_AI={maxDepth:5,nodeBudget:3e6,mistakeChance:0};
-function config(){const same=!$('opponent-loadout').value;return {playerYear:Number($('player-year').value),opponentYear:Number($(same?'player-year':'opponent-year').value),playerIlseTaken:$('player-ilse-taken').checked,opponentIlseTaken:$(same?'player-ilse-taken':'opponent-ilse-taken').checked,encounterSeed:$('encounter-seed').value===''?crypto.getRandomValues(new Uint32Array(1))[0]:Number($('encounter-seed').value),damageMultiplier:Number($('damage-multiplier').value),mode:'combat',ai:[null,{...LIVE_AI,seed:Number($('ai-seed').value),preset:$('ai-difficulty').value}],playerLoadout:$('player-loadout').value,opponentLoadout:$('opponent-loadout').value||$('player-loadout').value,playerLevel:Number($('player-level').value),opponentLevel:Number($('opponent-level').value),firstLeader:Number($('first-leader').value),healthModel:$('health-model').value,resourceBudget:$('budget').value,spellAccess:$('all-spells').checked?'all':'kit',manaCostScale:Number($('mana-scale').value),observers:$('observers').checked,playerResources:$('player-crowns').value===''?undefined:{crowns:Number($('player-crowns').value)},opponentResources:$('opponent-crowns').value===''?undefined:{crowns:Number($('opponent-crowns').value)},context:$('context').value,rebates:Object.fromEntries([...document.querySelectorAll('[data-rebate]')].map(i=>[i.dataset.rebate,Number(i.value)/100]))};}
-function start(c=config()){try{const seed=c.ai?.[1]?.seed;if(seed!==undefined&&(!Number.isInteger(seed)||seed<0||seed>4294967295))throw Error('Choose an integer AI seed from 0 to 4294967295');token++;busy=false;game=createState(c);names=fighterNames({opponentLoadout:game.actors[1].kit.loadout});history=[];stats=[];selected=null;moves++;bars={};seen={};analysis=null;sheet=null;focusEx=null;view='play';$('setup-error').textContent='';$('return').hidden=false;render();pump();window.scrollTo(0,0);}catch(e){$('setup-error').textContent=e.message;}}
+// The opponent's AI for a preset, with the card's own persona when its foe has one (FOES persona), as the main game sets it.
+const foeAI=(preset,seed,card)=>{const persona=card?cardFoe(card)?.persona:null;return {...LIVE_AI,seed,preset,...(persona?{persona}:{})};};
+const num=id=>$(id).value===''?undefined:Number($(id).value);
+function config(){const same=!$('opponent-loadout').value,card=$('card').value||undefined,encounterSeed=$('encounter-seed').value===''?crypto.getRandomValues(new Uint32Array(1))[0]:Number($('encounter-seed').value);
+ let opponentLoadout=$('opponent-loadout').value||$('player-loadout').value;
+ if(opponentLoadout.startsWith('pool:')){const pool=POOLS[opponentLoadout.slice(5)];opponentLoadout=pool[Math.floor(levelRng(encounterSeed%1e9)()*pool.length)];}
+ const c={playerYear:Number($('player-year').value),opponentYear:Number($(same?'player-year':'opponent-year').value),playerIlseTaken:$('player-ilse-taken').checked,opponentIlseTaken:$(same?'player-ilse-taken':'opponent-ilse-taken').checked,encounterSeed,damageMultiplier:Number($('damage-multiplier').value),mode:'combat',ai:[null,foeAI($('ai-difficulty').value,Number($('ai-seed').value),card)],playerLoadout:$('player-loadout').value,opponentLoadout,playerLevel:Number($('player-level').value),opponentLevel:Number($('opponent-level').value),firstLeader:Number($('first-leader').value),healthModel:$('health-model').value,resourceBudget:$('budget').value,spellAccess:$('all-spells').checked?'all':'kit',manaCostScale:Number($('mana-scale').value),observers:$('observers').checked,opponentResources:$('opponent-crowns').value===''?undefined:{crowns:Number($('opponent-crowns').value)},context:$('context').value,rebates:Object.fromEntries([...document.querySelectorAll('[data-rebate]')].map(i=>[i.dataset.rebate,Number(i.value)/100])),...(card?{card}:{})};
+ if(!c.observers&&$('witnesses').value!=='')c.witnesses=$('witnesses').value==='1';
+ // Entering from the main game (setup/campaign.mjs fightOptions): Health and Mana set the condition, the rest the purse.
+ const kit=generateLoadout(c.playerLoadout,c.playerLevel,c.spellAccess,{year:c.playerYear,ilseTaken:c.playerIlseTaken}),mods=SPECIAL_LOADOUTS[c.playerLoadout]?.creature?null:wornMods();
+ const health=num('entry-health'),mana=num('entry-mana'),purse=Object.fromEntries([['mood','entry-mood'],['renown','entry-renown'],['crowns','player-crowns'],['alignment','entry-alignment']].map(([k,id])=>[k,num(id)]).filter(([,v])=>v!==undefined));
+ if(Object.keys(purse).length)c.playerResources=purse;
+ if(health!==undefined||mana!==undefined)c.playerCondition={health:Math.min(1,(health??COMBAT_TUNING.condition.healthFull)/COMBAT_TUNING.condition.healthFull),mana:Math.min(1,(mana??kit.capacity)/kit.capacity)};
+ // The worn kit: the player's kit as the main game hands it over (its skills and spells, no class), with the items' modifiers.
+ if(mods)c.playerKit={skills:kit.skills,spells:Object.fromEntries(Object.entries(kit.spells).filter(([id])=>SPELLS[id].castable!==false)),level:kit.level,mods};
+ c.mainGame={health:health??null,mana:mana??null,maxMana:kit.capacity};
+ return c;}
+// Names in the fight text, as the main game gives them: a character by their short name and pronouns (content/world/cast.grim),
+// a special foe as its card's foe (FOES) calls it, anyone else by their loadout.
+function opponentNames(c){
+ const l=game.actors[1].kit.loadout,n=GAME_NPCS[NAMED_LOADOUTS[l]?.npc];
+ if(n)return fighterNames({opponentName:n.short??String(n.name).split(/[\s·]+/)[0],opponentLoadout:l,opponentPronouns:n.pronouns});
+ const f=c.card&&cardFoe(c.card)?.loadout===l?cardFoe(c.card):SPECIAL_LOADOUTS[l]?Object.values(FOES).find(f=>f.loadout===l):null;
+ return fighterNames({opponentName:f?.name,opponentLoadout:l,opponentPronouns:f?.pronouns});
+}
+function start(c){try{c??=config();const seed=c.ai?.[1]?.seed;if(seed!==undefined&&(!Number.isInteger(seed)||seed<0||seed>4294967295))throw Error('Choose an integer AI seed from 0 to 4294967295');token++;busy=false;game=createState(c);
+ // The card's lesson or free fight, and a foe that commits first in the open (rival_contest), as src/combat.js sets them.
+ const e=c.card?EVENTS[c.card]:null,early=at(e?.foeCommitsFirst);if(early>0){game.earlyCommit[1]=early;game.leader=1;}
+ // `tutorial` is the lesson's list of coach keys (combat/HANDOFF.md), not one value per challenge like the card's other fields.
+ setting={tutorial:e?.tutorial?[].concat(e.tutorial):null,free:!!(e?.tutorial||at(e?.stakes)==='none'),left:null};
+ names=opponentNames(c);history=[];stats=[];selected=null;moves++;bars={};seen={};analysis=null;sheet=null;focusEx=null;view='play';$('setup-error').textContent='';$('return').hidden=false;render();pump();window.scrollTo(0,0);}catch(e){$('setup-error').textContent=e.message;}}
 $('begin').onclick=()=>start();$('return').onclick=()=>{view='play';render();};setRebates();setup();
 
 // ---- Playing ----
 function submit(id,ai){const channels=game.actors.map(a=>a.channel?.id),mover=actorToMove(game),commits=game.pending.map((p,i)=>i===mover?id:p),descs=commits.map((c,i)=>{try{return c?describe(game,i,c):'';}catch{return '';}}),before=structuredClone(game),r=applyChoice(game,id);moves++;if(ai)stats.push({round:r.round??game.round,side:1,...ai});if(r.resolved){r.pair.forEach((id,i)=>{if(r.committed?.[i]!==id&&!['hold','release','cancel','frozen'].includes(id)){try{descs[i]=describe(game,i,id);}catch{}}});   // a compelled side: describe what it actually did
- const actionNames=r.pair.map((id,i)=>['hold','release'].includes(id)?`${label(id)} ${label(channels[i])}`:label(id));history.push({...r,channels,descs,lines:resolvedLines(before,game,{...r,channels,actionNames},names),finish:finishLines(before,game,r.pair,r.round,names),actionNames,hp:game.actors.map(a=>a.hp),ready:game.actors.map(a=>a.resources.mana),flux:game.actors.map(a=>a.flux)});focusEx=null;}selected=null;render();}
+ const actionNames=r.pair.map((id,i)=>['hold','release'].includes(id)?`${label(id)} ${sideLabel(channels[i],i)}`:sideLabel(id,i));history.push({...r,channels,descs,lines:resolvedLines(before,game,{...r,channels,actionNames},names),finish:finishLines(before,game,r.pair,r.round,names),actionNames,hp:game.actors.map(a=>a.hp),ready:game.actors.map(a=>a.resources.mana),flux:game.actors.map(a=>a.flux)});focusEx=null;}selected=null;render();}
 function pump(){if(!game||game.result||actorToMove(game)!==1)return;
  const actions=legalActions(game);if(actions.length===1){submit(actions[0]);pump();return;}
  busy=true;render();const current=++token;worker.postMessage({token:current,state:game,options:{}});
@@ -63,7 +130,12 @@ function actionIcon(id,side=0,channel=game.actors[side].channel?.id){
  const key=['hold','release'].includes(id)?channel+'_'+id:id;
  return SPELL_ICONS[id]??ACTION_ICONS[key]??(SPELLS[id]?.physical?ACTION_ICONS.strike:id==='frozen'?'<b class="glyph">❄</b>':id==='cancel'?'<b class="glyph">∅</b>':QUESTION);
 }
-const actionName=(id,side)=>['hold','release'].includes(id)?`${label(id)} ${label(game.actors[side].channel?.id??'')}`:label(id);
+// A creature's own name for a base rule (kit.labels: {shadowstep: 'skitter'}, world expansion 1), as the main game shows it.
+const labelsOf=side=>game.actors[side].kit?.labels??null;
+const sideLabel=(id,side)=>{const al=labelsOf(side)?.[id];return al?SPELLS[al]?.name??label(al):label(id);};
+const actionName=(id,side)=>['hold','release'].includes(id)?`${label(id)} ${sideLabel(game.actors[side].channel?.id??'',side)}`:sideLabel(id,side);
+// A telegraphed channel (a creature's maul, charge, …): its wind-up shows while it's held.
+const telegraphed=side=>{const ch=game.actors[side].channel,al=ch&&labelsOf(side)?.[ch.id];return !!(al&&SPELLS[al]?.telegraph);};
 const briefOf=(side,id)=>{let d=null;try{d=describeData(game,side,id);}catch{}return brief(id,d,game.actors[side].channel?.id);};
 // same: the label repeats the action's name, which the button already shows (hidden there unless the name is).
 const effHtml=(b,name)=>{const v=b.value!==''&&b.value!==null&&b.value!==undefined;return `<span class="eff k-${b.kind}${v?' has-v':''}">${v?`<b>${esc(b.value)}</b>`:''}${b.label?`<small class="lbl${name&&name.toLowerCase()===b.label.toLowerCase()?' same':''}">${esc(b.label)}</small>`:''}${b.turns?`<small class="t">${b.turns}t</small>`:''}</span>`;};
@@ -90,7 +162,7 @@ function snapshotBars(){for(const el of document.querySelectorAll('[data-bar]'))
 function animateBars(){requestAnimationFrame(()=>requestAnimationFrame(()=>{for(const el of document.querySelectorAll('[data-bar]')){el.style.width=el.dataset.to+'%';bars[el.dataset.bar]=Number(el.dataset.to);if(el.dataset.left!==undefined){el.style.left=el.dataset.left+'%';bars[el.dataset.bar+'@']=Number(el.dataset.left);}}}));}
 
 // Constructs standing for a side, each with the HP it has left before it breaks.
-const constructChips=(a,i)=>a.constructs.map(c=>{const left=Math.round(Math.max(0,c.threshold-c.taken));return `<span class="cx" title="${esc(label(c.id))}: ${left} of ${Math.round(c.threshold)} HP left, until exchange ${c.expires}"><span class="mini-icon">${actionIcon(c.id,i)}</span>♥${left}</span>`;}).join('');
+const constructChips=(a,i)=>a.constructs.map(c=>{const left=Math.round(Math.max(0,c.threshold-c.taken));return `<span class="cx" title="${esc(sideLabel(c.id,i))}: ${left} of ${Math.round(c.threshold)} HP left, until exchange ${c.expires}"><span class="mini-icon">${actionIcon(c.id,i)}</span>♥${left}</span>`;}).join('');
 function fighter(i){const a=game.actors[i],purse=[game.config.observers?`★${fmt(a.resources.renown)}${a.pendingRenown?`<em>+${fmt(a.pendingRenown)}</em>`:''}`:'',a.resources.crowns!==a.entry.crowns?`◎${fmt(a.resources.crowns)}`:'',a.resources.alignment!==a.entry.alignment?`☾${fmt(a.resources.alignment)}`:''].filter(Boolean).join(' ');
  return `<article class="fighter ${i?'opp':'you'}"${i?' data-sheet="inspect" role="button" tabindex="0" title="Inspect the opponent"':''}>
   <div class="pf${i?'':' blank'}">${portraitOf(i)}${i?`<span class="pf-eye">${EYE}</span>`:''}</div>
@@ -101,14 +173,16 @@ function intent(){
  if(game.result)return '';
  const opponent=game.pending[1],forced=isCompelled(game,1)?(opponent??legalActions(game,1)[0]):null,shown=forced??opponent;
  if(busy)return `<div class="intent wait"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>${esc(nameOf(1))} is choosing…</b><small>Their move appears when they commit.</small></div></div>`;
- if(shown){const b=briefOf(1,shown),fl=forced?compelledLine(label(shown),{names,side:1}):flavorLine(shown,{channel:game.actors[1].channel?.id,round:game.round,names,side:1});
+ if(shown){const b=briefOf(1,shown),fl=forced?compelledLine(sideLabel(shown,1),{names,side:1}):flavorLine(shown,{channel:game.actors[1].channel?.id,round:game.round,names,side:1,labels:labelsOf(1)});
   return `<div class="intent shown${forced?' forced':''}" data-sheet="intent" role="button" tabindex="0" title="What their move does"><span class="tele-icon">${actionIcon(shown,1)}</span><div class="it"><b>${forced?'Compelled: ':'They commit: '}${esc(actionName(shown,1))} ${effHtml(b)}</b>${fl?`<small class="flavor">${esc(fl)}</small>`:''}</div><span class="it-more">${EYE}</span></div>`;}
+ if(telegraphed(1)){const ch=game.actors[1].channel.id;return `<div class="intent hidden windup"><span class="tele-icon">${actionIcon(ch,1)}</span><div class="it"><b>${esc(gt('fight.windUp',{name:nameOf(1),move:sideLabel(ch,1)},'{name} is winding up: {move}'))}</b><small>${esc(gt('fight.windUpHint',{},'It lands when released: step aside, brace or ward for it.'))}</small></div></div>`;}
  return `<div class="intent hidden"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>You commit first</b><small title="Initiative breaks a double knockout.">Their reply stays hidden until you do.</small></div></div>`;
 }
 
 // The exchange track: one axis through the past (both moves, as icons), this exchange and the next few (who commits first,
 // so whether their move will show) with every lasting effect, channel, construct and foretold hit as a bar along it.
-const AHEAD=4,CAST_ON_FOE=new Set(['compelled','torment']),EFFECT_ICON={compelled:'compel',guard:'guard',frozen:'frozen'};
+// Bound and poison sit on the foe too (setup/flavor.mjs EFFECT_ON_FOE); the main game's track still lists only the first two.
+const AHEAD=4,CAST_ON_FOE=new Set(['compelled','torment','bound','poison']),EFFECT_ICON={compelled:'compel',guard:'guard',frozen:'frozen'};
 // Who commits first c exchanges from now, as things stand: turns alternate and Foresight makes its target lead.
 function leaderAt(c){if(!c)return game.leader;const e=game.earlyCommit.map(n=>n-c>0),normal=c%2?1-game.normalLeader:game.normalLeader;return e[0]===e[1]?normal:e[0]?0:1;}
 // The exchange a side last cast this spell: where its line starts, so a line stays put as exchanges pass.
@@ -117,9 +191,9 @@ function effectRows(){
  const r=game.round,rows=[];
  game.actors.forEach((a,side)=>{
   // Every line is a spell's duration in its caster's colour: Compel, Torment and Foresight sit on the other side.
-  for(const [k,e]of Object.entries(a.effects)){if(e.until!==null&&e.until<r)continue;const on=CAST_ON_FOE.has(k);rows.push({side:on?1-side:side,icon:EFFECT_ICON[k]??k,name:k==='compelled'?label('compel'):label(k),on:on?side:null,from:e.from??e.born??r,until:e.until??Infinity,note:k==='lodestar'?Math.round(e.value)+' shield':k==='tailwind'?'+'+Math.round(e.value):''});}
-  if(a.channel)rows.push({side,icon:a.channel.id,name:label(a.channel.id),from:castAt(side,a.channel.id)??r,until:Infinity,note:`${a.channel.holds} hold${a.channel.holds===1?'':'s'}${a.channel.bank?' · '+Math.round(a.channel.bank)+' banked':''}`});
-  for(const c of a.constructs)rows.push({side,icon:c.id,name:label(c.id),from:castAt(side,c.id)??r,until:c.expires,note:`${Math.round(Math.max(0,c.threshold-c.taken))} of ${Math.round(c.threshold)} HP`});
+  for(const [k,e]of Object.entries(a.effects)){if(e.until!==null&&e.until<r)continue;const on=CAST_ON_FOE.has(k);rows.push({side:on?1-side:side,icon:EFFECT_ICON[k]??k,name:k==='compelled'?label('compel'):sideLabel(k,on?1-side:side),on:on?side:null,from:e.from??e.born??r,until:e.until??Infinity,note:k==='lodestar'?Math.round(e.value)+' shield':k==='tailwind'?'+'+Math.round(e.value):''});}
+  if(a.channel)rows.push({side,icon:a.channel.id,name:sideLabel(a.channel.id,side),from:castAt(side,a.channel.id)??r,until:Infinity,note:`${a.channel.holds} hold${a.channel.holds===1?'':'s'}${a.channel.bank?' · '+Math.round(a.channel.bank)+' banked':''}${telegraphed(side)?' · '+gt('fight.windUpNote',{},'winding up'):''}`});
+  for(const c of a.constructs)rows.push({side,icon:c.id,name:sideLabel(c.id,side),from:castAt(side,c.id)??r,until:c.expires,note:`${Math.round(Math.max(0,c.threshold-c.taken))} of ${Math.round(c.threshold)} HP`});
   if(game.earlyCommit[side]>0)rows.push({side:1-side,on:side,icon:'foresight',name:label('foresight'),from:(castAt(1-side,'foresight')??r-1)+1,until:r+game.earlyCommit[side]-1,note:side?'they commit first':'you commit first'});
   if(a.freezeUntil>=r)rows.push({side,icon:'frozen',name:'Frozen',from:a.freezeUntil,until:a.freezeUntil,note:''});
   if(a.rimeReady)rows.push({side,icon:'rime',name:'Rime ready',from:castAt(side,'rime')??r,until:Infinity,note:''});
@@ -132,7 +206,7 @@ const who=i=>i?esc(nameOf(1)):'You';
 function futureSlot(side,c){
  const ex=game.round+c,a=game.actors[side],lead=leaderAt(c)===side,last=history.at(-1)?.pair[side],comp=a.effects.compelled;
  if(a.freezeUntil>=ex)return `<span class="slot lost" title="Exchange ${ex}: ${who(side)} ${side?'is':'are'} frozen">${actionIcon('frozen',side)}</span>`;
- if(comp&&comp.until!==null&&comp.until>=ex&&last)return `<span class="slot forced${lead?' lead':''}" title="Exchange ${ex}: compelled to repeat ${esc(label(last))}">${actionIcon(last,side)}</span>`;
+ if(comp&&comp.until!==null&&comp.until>=ex&&last)return `<span class="slot forced${lead?' lead':''}" title="Exchange ${ex}: compelled to repeat ${esc(sideLabel(last,side))}">${actionIcon(last,side)}</span>`;
  if(side)return lead?`<span class="slot shows lead" title="Exchange ${ex}: they commit first, so you see their move">${EYE}</span>`:`<span class="slot hid" title="Exchange ${ex}: you commit first; their move stays hidden">?</span>`;
  return lead?`<span class="slot lead mine" title="Exchange ${ex}: you commit first and they see your move">1st</span>`:'<span class="slot open"></span>';
 }
@@ -161,7 +235,7 @@ function track(){
 
 // The exchange picked on the track (the latest by default), in full.
 function exchangeFull(r){
- return `<article class="hx-full"><h4>Exchange ${r.round} <small>· ${r.leader===0?'you led':'they led'}</small></h4>${[r.leader,1-r.leader].map(i=>`<div class="hl ${i?'opp':'you'}"><span class="mini-icon">${actionIcon(r.pair[i],i,r.channels?.[i])}</span><p><b>${who(i)}</b> · ${esc(r.actionNames[i])}${r.committed[i]!==r.pair[i]?` <small>(committed ${esc(label(r.committed[i]))})</small>`:''}${r.lines?.[i]?` <span class="flavor">${esc(r.lines[i])}</span>`:''}</p></div>`).join('')}${(r.finish??[]).map(f=>`<p class="flavor finish">${esc(f)}</p>`).join('')}</article>`;}
+ return `<article class="hx-full"><h4>Exchange ${r.round} <small>· ${r.leader===0?'you led':'they led'}</small></h4>${[r.leader,1-r.leader].map(i=>`<div class="hl ${i?'opp':'you'}"><span class="mini-icon">${actionIcon(r.pair[i],i,r.channels?.[i])}</span><p><b>${who(i)}</b> · ${esc(r.actionNames[i])}${r.committed[i]!==r.pair[i]?` <small>(committed ${esc(sideLabel(r.committed[i],i))})</small>`:''}${r.lines?.[i]?` <span class="flavor">${esc(r.lines[i])}</span>`:''}</p></div>`).join('')}${(r.finish??[]).map(f=>`<p class="flavor finish">${esc(f)}</p>`).join('')}</article>`;}
 
 function actionButton(id){const reason=available(game,0,id),disabled=busy||actorToMove(game)!==0||reason,name=actionName(id,0),b=briefOf(0,id);
  return `<button class="act k-${b.kind}${selected===id?' selected':''}" data-action="${id}" aria-label="${esc(name+' · '+price(0,id)+(reason?' · '+reason:''))}" aria-pressed="${selected===id}" title="${esc(name+' · '+price(0,id)+(reason?' · '+reason:''))}" ${disabled?'disabled':''}><span class="a-ico" aria-hidden="true">${actionIcon(id)}</span>${id.startsWith('bundle:')?'':`<span class="a-name">${esc(['hold','release'].includes(id)?label(id):name)}</span>`}${effHtml(b,name)}${costHtml(0,id)}<em class="card-eval" data-eval="${id}"></em></button>`;}
@@ -170,7 +244,7 @@ function preview(){if(!selected)return `<div class="preview hint">${busy||actorT
 function actions(){
  const a=game.actors[0],forced=a.channel||has(game,0,'haste')||a.freezeUntil>=game.round;
  const ids=forced?legalActions(game,0):['strike','guard','reclaim',...Object.keys(a.kit.spells)];
- return `${forced?`<div class="action-state">${a.freezeUntil>=game.round?'Frozen · you thaw after this exchange':a.channel?label(a.channel.id)+' · Hold or Release':'Haste · one bundle of basic actions'}</div>`:''}<div class="acts${forced?' forced':''}">${ids.map(actionButton).join('')}</div><div class="commit-bar">${preview()}</div>`;
+ return `${forced?`<div class="action-state">${a.freezeUntil>=game.round?'Frozen · you thaw after this exchange':a.channel?sideLabel(a.channel.id,0)+' · Hold or Release':'Haste · one bundle of basic actions'}</div>`:''}<div class="acts${forced?' forced':''}">${ids.map(actionButton).join('')}</div><div class="commit-bar">${preview()}</div>`;
 }
 function commit(id=selected){if(!id||busy||actorToMove(game)!==0||available(game,0,id))return;try{submit(id);pump();}catch(e){$('setup-error').textContent=e.message;}}
 // Selection stays until execution or a different choice; there is no click timer.
@@ -187,7 +261,7 @@ function inspectSheet(){const a=game.actors[1],forced=a.channel||has(game,1,'has
 function intentSheet(){const id=isCompelled(game,1)?(game.pending[1]??legalActions(game,1)[0]):game.pending[1];if(!id)return inspectSheet();
  return `<header class="sh-head"><span class="tele-icon">${actionIcon(id,1)}</span><div><b>${esc(nameOf(1))}: ${esc(actionName(id,1))}</b><small>${price(1,id)}</small></div><button class="close" data-close aria-label="Close">×</button></header><p>${esc(describe(game,1,id))}</p><button class="link" data-sheet="inspect">Everything they can do →</button>`;}
 function logSheet(){
- const rows=history.map(r=>`<article><h3>Exchange ${r.round} <small>· ${r.leader===0?'you led':'they led'}</small></h3>${[r.leader,1-r.leader].map(i=>`<div class="log-act ${i?'opp':'you'}"><span class="mini-icon">${actionIcon(r.pair[i],i,r.channels?.[i])}</span><div><b>${i?esc(nameOf(1)):'You'}</b> ${esc(r.actionNames[i])}${r.committed[i]!==r.pair[i]?` <small>(committed ${esc(label(r.committed[i]))})</small>`:''}${r.lines?.[i]?`<p class="flavor">${esc(r.lines[i])}</p>`:''}${r.descs?.[i]?`<p>${esc(r.descs[i])}</p>`:''}</div></div>`).join('')}${(r.finish??[]).map(f=>`<p class="flavor finish">${esc(f)}</p>`).join('')}<ul>${r.events.map(e=>`<li>${esc(e)}</li>`).join('')||'<li>No damage or resource events.</li>'}</ul><small class="after">HP ${r.hp.map(fmt).join(' / ')} · Mana ${r.ready.map(fmt).join(' / ')} · flux ${r.flux.map(fmt).join(' / ')}</small></article>`);
+ const rows=history.map(r=>`<article><h3>Exchange ${r.round} <small>· ${r.leader===0?'you led':'they led'}</small></h3>${[r.leader,1-r.leader].map(i=>`<div class="log-act ${i?'opp':'you'}"><span class="mini-icon">${actionIcon(r.pair[i],i,r.channels?.[i])}</span><div><b>${i?esc(nameOf(1)):'You'}</b> ${esc(r.actionNames[i])}${r.committed[i]!==r.pair[i]?` <small>(committed ${esc(sideLabel(r.committed[i],i))})</small>`:''}${r.lines?.[i]?`<p class="flavor">${esc(r.lines[i])}</p>`:''}${r.descs?.[i]?`<p>${esc(r.descs[i])}</p>`:''}</div></div>`).join('')}${(r.finish??[]).map(f=>`<p class="flavor finish">${esc(f)}</p>`).join('')}<ul>${r.events.map(e=>`<li>${esc(e)}</li>`).join('')||'<li>No damage or resource events.</li>'}</ul><small class="after">HP ${r.hp.map(fmt).join(' / ')} · Mana ${r.ready.map(fmt).join(' / ')} · flux ${r.flux.map(fmt).join(' / ')}</small></article>`);
  return `<header class="sh-head"><div><b>Fight log</b><small>${history.length} exchange${history.length===1?'':'s'}</small></div><button class="close" data-close aria-label="Close">×</button></header><div class="log">${rows.join('')||'<p class="fine">No exchanges yet.</p>'}</div>`;}
 function renderSheet(){const el=$('sheet');if(!sheet||!game){el.hidden=true;el.innerHTML='';return;}
  el.hidden=false;el.innerHTML=`<div class="sheet-card sheet-${sheet}" role="dialog" aria-modal="true">${sheet==='inspect'?inspectSheet():sheet==='intent'?intentSheet():logSheet()}</div>`;
@@ -198,10 +272,10 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sheet){sheet=null;r
 // ---- The main game's screen, as stubs: what the fight sits inside ----
 const ORB={health:['#e06a6a','♥','Health',100],mood:['#e2b23f','☀','Mood',100],mana:['#5fa8e8','✦','Mana'],alignment:['#8a7fd6','☾','Alignment',100]};
 function stubTop(){return `<div class="brand">Lumenhold Academy</div><div class="date"><div class="when">Harvestmoon<small>YEAR 1 · MONTH 3 OF 48</small></div><div class="tl48">${Array.from({length:48},(_,i)=>`<i class="${i<2?'done':i===2?'now':''}"></i>`).join('')}</div></div><div class="top-actions">${['⌘','☼','✎','☖'].map(c=>`<span class="icon-btn">${c}</span>`).join('')}</div>`;}
-function stubMeters(){const a=game.actors[0],v={health:a.entry.health,mood:a.resources.mood,mana:a.resources.mana,alignment:a.resources.alignment};
+function stubMeters(){const a=game.actors[0],v={health:game.config.mainGame?.health??a.entry.health,mood:a.resources.mood,mana:a.resources.mana,alignment:a.resources.alignment};
  return `${Object.entries(ORB).map(([k,[c,ico,lbl,max]])=>{const m=max??a.kit.capacity,p=k==='alignment'?50+v[k]/2:100*v[k]/m;return `<div class="meter"><div class="orb"><i style="height:${Math.max(0,Math.min(100,p))}%;background:${c}"></i><span>${ico}</span></div><b>${Math.round(v[k])}</b><small>${lbl}</small></div>`;}).join('')}<div class="meter num"><div class="numv">◎<b>${fmt(a.resources.crowns)}</b></div><small>Crowns</small></div><div class="meter num"><div class="numv">★<b>${fmt(a.resources.renown)}</b></div><small>Renown</small></div>`;}
 function stubSide(){const k=game.actors[0].kit.skills;return `<nav class="side-tabs"><b class="on">You</b><b>People</b><b>Clues</b><b>Journal</b></nav><h5>YOUR SKILLS</h5>${Object.entries(k).map(([s,v])=>`<div class="skill"><span>${s[0].toUpperCase()+s.slice(1)}</span><b>${v}</b><i style="--w:${v}%"></i></div>`).join('')}<h5>CONDITIONS &amp; COMMITMENTS</h5><div class="cond"><b>${esc(CONTEXTS[game.config.context]?game.config.context.replace('_',' '):'')}</b><small>The fight's stakes: ${Math.round(100*game.rebates.health)}% of lost Health and ${Math.round(100*game.rebates.mana)}% of spent Mana come back after it.</small></div>`;}
-function cardStub(){return `<div class="card-stub"><span class="tag">CHALLENGE</span><h3>${esc(SPECIAL_LOADOUTS[game.actors[1].kit.loadout]?'Between You and the Flower':NAMED_LOADOUTS[game.actors[1].kit.loadout]?'A Duel with '+game.actors[1].kit.loadout:'The Ring Under the Boathouse')}</h3></div>`;}
+function cardStub(){return `<div class="card-stub"><span class="tag">CHALLENGE</span><h3>${esc(game.config.card?game.config.card.split('/')[0].replaceAll('_',' '):SPECIAL_LOADOUTS[game.actors[1].kit.loadout]?'Between You and the Flower':NAMED_LOADOUTS[game.actors[1].kit.loadout]?'A Duel with '+game.actors[1].kit.loadout:'The Ring Under the Boathouse')}</h3></div>`;}
 function renderChrome(){const on=!!game&&view!=='setup';
  $('shell').classList.toggle('with-side',on&&chrome.side);
  for(const [id,key,fn]of [['stub-top','top',stubTop],['stub-meters','meters',stubMeters],['stub-side','side',stubSide]]){const el=$(id),show=on&&chrome[key];el.hidden=!show;if(show)el.innerHTML=fn();}}
@@ -210,7 +284,7 @@ function renderChrome(){const on=!!game&&view!=='setup';
 let benchOpen=false;
 function setDifficulty(preset){$('ai-difficulty').value=preset;
  // Live: the opponent's next decision uses it. The export's config then holds the latest difficulty.
- if(game&&!game.result){const ai=game.config.ai[1];game.config.ai[1]=expandAI({...LIVE_AI,seed:ai.seed,preset},game.config.resolvedOpponentLoadout);}}
+ if(game&&!game.result){const ai=game.config.ai[1];game.config.ai[1]=expandAI(foeAI(preset,ai.seed,game.config.card),game.config.resolvedOpponentLoadout);}}
 function renderBench(){const el=$('bench'),on=!!game&&view!=='setup';el.hidden=!on;if(!on){benchOpen=false;return;}
  el.classList.toggle('open',benchOpen);
  el.innerHTML=`<button class="bench-tab" data-bench title="Test bench controls" aria-expanded="${benchOpen}">Bench</button>${benchOpen?`<div class="bench-pop" role="dialog" aria-label="Test bench controls"><header><b>Test bench</b><button class="bench-x" data-bench aria-label="Close">×</button></header>
@@ -236,7 +310,7 @@ const evalText=v=>v===undefined?'…':v>=9000?'KO':v<=-9000?'−KO':(v>0?'+':v<0
 const evalShare=v=>v>=9000?100:v<=-9000?0:100/(1+Math.exp(-v/12));
 function evalBar(){const v=analysis?.scores?.[analysis.best];return `<i style="height:${v===undefined?50:evalShare(v)}%"></i><span>${v===undefined?'':evalText(v)}</span>`;}
 function plyChip(p){if(p.end)return `<span class="ply end">${p.end==='win'?'KO · you win':p.end==='loss'?'KO · you lose':'draw'}</span>`;
- return `<span class="ply ${p.side?'opp':'you'}" title="${p.side?'Opponent':'You'} · exchange ${p.round}"><span class="mini-icon">${actionIcon(p.id,p.side,p.channel)}</span>${esc(label(p.id))}</span>`;}
+ return `<span class="ply ${p.side?'opp':'you'}" title="${p.side?'Opponent':'You'} · exchange ${p.round}"><span class="mini-icon">${actionIcon(p.id,p.side,p.channel)}</span>${esc(sideLabel(p.id,p.side))}</span>`;}
 function lineHtml(line){let out='',round=null;for(const p of line){if(!p.end&&round!==null&&p.round!==round)out+='<span class="sep">|</span>';if(!p.end)round=p.round;out+=plyChip(p);}return out;}
 function enginePanel(){
  const mine=!game.result&&actorToMove(game)===0,head=!analysis?(mine?'Engine · starting…':'Engine · waits for your turn'):`Engine · depth ${analysis.depth}${analysisRunning?'…':''} · ${(analysis.nodes/1000).toFixed(0)}k nodes · ${(analysis.ms/1000).toFixed(1)} s`;
@@ -260,8 +334,42 @@ function requestAnalysis(){
 }
 
 // ---- The fight ----
-function result(){const r=game.result,won=r.winner===0,lost=r.winner===1;return `<div class="result ${won?'win':lost?'loss':'draw'}"><h2>${won?'Victory':lost?'Defeat':'Draw'}</h2><p>${esc(r.reason)}${r.tiebreak?' · the telegraphed initiative wins':''}</p><div class="net-costs">${COMBAT_RESOURCES.map(k=>{const n=game.settlement[0][k].netLoss;return `<span>${k} <b class="${n>0?'neg':n<0?'pos':''}">${n<0?'+':n>0?'−':'±'}${fmt(Math.abs(n))}</b></span>`;}).join('')}</div><p class="fine">Flux is collected; rebates cover net losses only. Crowns and alignment are never rebated.${r.followUps.length?` Witnesses reported ${game.reports.length} forbidden cast${game.reports.length===1?'':'s'}.`:''}</p><div class="result-actions"><button id="replay" class="primary">Replay same setup</button><button id="carry" ${game.config.healthModel==='direct'&&game.settlement[0].health.final<=0?'disabled':''}>Next bout · carry balances</button><button id="export">Export log</button></div></div>`;}
-function fight(){return `<div class="fight-wrap${chrome.card?' with-card':''}">${chrome.card?cardStub():''}<section class="fight"><div class="fighters${engineOn?' with-eval':''}">${engineOn?`<div class="evalbar" id="evalbar" title="Engine evaluation for you, in HP">${evalBar()}</div>`:''}${fighter(0)}${fighter(1)}</div><div class="fight-body"><div class="fight-main">${engineOn?'<div class="engine" id="engine"></div>':''}${track()}</div><div class="controls">${intent()}${game.result?result():actions()}</div></div></section></div>`;}
+// What the main game takes from the fight (setup/campaign.mjs settle, as src/combat.js fightResult): Health only below 30 HP
+// left, Mana net of flux and the rebate, Mood by the outcome, the Renown, Crowns and alignment it moved. A lesson or a fight
+// with nothing at stake changes nothing; a skipped lesson is a draw.
+const MAIN_BARS=[['health','Health'],['mana','Mana'],['mood','Mood'],['renown','Renown'],['gold','Crowns'],['alignment','Alignment']];
+function mainResult(){const m=game.config.mainGame??{},a=game.actors[0],st=settle(game,{health:m.health??a.entry.health,mana:m.mana??m.maxMana??a.kit.capacity});
+ return {...st,...(setting.left==='lesson'?{outcome:'draw',reason:'conceded'}:{}),...(setting.free?{deltas:{},followUps:[]}:{})};}
+function result(){const r=game.result,main=mainResult(),won=main.outcome==='win',lost=main.outcome==='lose',ds=MAIN_BARS.filter(([k])=>main.deltas[k]).map(([k,n])=>{const d=main.deltas[k];return `<span>${n} <b class="${d<0?'neg':'pos'}">${d<0?'−':'+'}${fmt(Math.abs(d))}</b></span>`;}).join('');
+ return `<div class="result ${won?'win':lost?'loss':'draw'}"><h2>${won?'Victory':lost?'Defeat':'Draw'}</h2><p>${esc(setting.left==='lesson'?'lesson skipped':setting.left==='walk'?'walked away':r.reason)}${r.tiebreak?' · the telegraphed initiative wins':''}</p>
+ <h4 class="res-h">In the main game</h4><div class="net-costs">${ds||'<span class="none">nothing changes</span>'}</div>
+ <h4 class="res-h">The fight's ledger</h4><div class="net-costs">${COMBAT_RESOURCES.map(k=>{const n=game.settlement[0][k].netLoss;return `<span>${k} <b class="${n>0?'neg':n<0?'pos':''}">${n<0?'+':n>0?'−':'±'}${fmt(Math.abs(n))}</b></span>`;}).join('')}</div>
+ <p class="fine">Flux is collected; rebates cover net losses only. Crowns and alignment are never rebated. The main game loses Health only below ${COMBAT_TUNING.settle.healthFreeAbove} HP, and never past 1.${main.followUps.length?` Witnesses reported ${game.reports.length} forbidden cast${game.reports.length===1?'':'s'}.`:''}</p><div class="result-actions"><button id="replay" class="primary">Replay same setup</button><button id="carry" title="Apply the main game's changes to the entry fields and fight again">Next bout · carry the bars</button><button id="export">Export log</button></div></div>`;}
+// The setting as the main game shows it above the fight (src/combat-ui.js settingLine): the situation and what comes back,
+// the Health rule, whether a crowd watches and, for a forbidden-spell user, whether anyone would report one.
+function settingLine(){const c=game.config,rb=game.rebates,free=COMBAT_TUNING.settle.healthFreeAbove,pct=x=>Math.round((x||0)*100);
+ if(setting.free)return `<p class="fight-setting"><span><b>${esc(gt(setting.tutorial?'fight.lessonTitle':'fight.freeTitle'))}</b> · ${esc(gt('fight.nothingAtStake'))}</span></p>`;
+ const parts=[`<b>${esc(gt('fight.context.'+c.context,{},c.context.replace('_',' ')))}</b>`];
+ if(free)parts.push(esc(gt('fight.healthBelow',{n:free})));
+ if(rb.health===rb.mana){if(rb.health)parts.push(esc(gt('fight.rebateBoth',{pct:pct(rb.health)})));}else{if(rb.health)parts.push(esc(gt('fight.rebateHealth',{pct:pct(rb.health)})));if(rb.mana)parts.push(esc(gt('fight.rebateMana',{pct:pct(rb.mana)})));}
+ const lines=[`<span>${parts.join(' · ')}</span>`,`<span>${esc(c.observers?gt('fight.watched',{pct:pct(rb.renown)}):gt('fight.unwatched'))}</span>`];
+ if(Object.keys(game.actors[0].kit.spells).some(id=>SPELLS[id]?.group==='forbidden'))lines.push(`<span>${esc(gt((c.witnesses??c.observers)?'fight.witnessed':'fight.unwitnessed'))}</span>`);
+ return `<p class="fight-setting">${lines.join('')}</p>`;}
+// Coming in hurt or drained (src/combat-ui.js unfitNote), before the first exchange.
+function unfitNote(){const m=game.config.mainGame??{},full=COMBAT_TUNING.condition.healthFull,lines=[];if(history.length||game.result)return '';
+ if(m.health!=null&&m.health<full)lines.push(gt('fight.unfitHealth',{n:Math.round(m.health),full}));
+ if(m.mana!=null&&m.mana<m.maxMana)lines.push(gt('fight.unfitMana',{n:Math.round(m.mana),max:Math.round(m.maxMana)}));
+ return lines.length?`<p class="fight-note">${esc(lines.join(' '))}</p>`:'';}
+// A lesson (EVENTS tutorial): one coach mark an exchange, the last staying up; a free fight can be left (src/combat-ui.js).
+function coach(){const keys=setting.tutorial??[];if(!keys.length||game.result)return '';const k=keys[Math.min(history.length,keys.length-1)];return `<div class="coach" role="note"><b>${esc(gt('fight.coachTitle'))}</b> ${esc(gt('fight.coach.'+k))}</div>`;}
+function leaveButton(){return game.result||!setting.free?'':`<button class="fl-leave" data-leave="${setting.tutorial?'lesson':'walk'}">${esc(gt(setting.tutorial?'fight.skipLesson':'fight.walkAway'))}</button>`;}
+// Next bout: the main game's changes applied to the entry fields (blank fields start from what this fight began with).
+function carry(){const main=mainResult(),d=main.deltas,a=game.actors[0],m=game.config.mainGame??{},clamp=(x,lo,hi)=>Math.round(Math.min(hi,Math.max(lo,x)));
+ const set=(id,base,delta,lo,hi)=>{$(id).value=clamp(base+(delta||0),lo,hi);};
+ set('entry-health',m.health??a.entry.health,d.health,0,100);set('entry-mana',m.mana??m.maxMana,d.mana,0,99999);set('entry-mood',a.entry.mood,d.mood,0,100);
+ set('entry-renown',a.entry.renown,d.renown,0,100);set('player-crowns',a.entry.crowns,d.gold,0,99999);set('entry-alignment',a.entry.alignment,d.alignment,-100,100);
+ start();}
+function fight(){return `<div class="fight-wrap${chrome.card?' with-card':''}">${chrome.card?cardStub():''}<section class="fight">${settingLine()}${unfitNote()}${coach()}<div class="fighters${engineOn?' with-eval':''}">${engineOn?`<div class="evalbar" id="evalbar" title="Engine evaluation for you, in HP">${evalBar()}</div>`:''}${fighter(0)}${fighter(1)}</div><div class="fight-body"><div class="fight-main">${engineOn?'<div class="engine" id="engine"></div>':''}${track()}</div><div class="controls">${intent()}${game.result?result():actions()}${leaveButton()}</div></div></section></div>`;}
 function debug(){return `<div class="debug"><nav><button data-view="play">← Back to the fight</button></nav><h3>Search and exchange journal</h3><p>Decisions ${stats.length}; deepest completed ${Math.max(0,...stats.map(a=>a.completedDepth))}; slowest ${Math.max(0,...stats.map(a=>a.elapsedMs)).toFixed(1)} ms; accepted weaker choices ${stats.filter(a=>a.degraded).length} / ${stats.length}.</p><details><summary>Kits and ledgers</summary><pre>${esc(JSON.stringify({kits:game.actors.map(a=>a.kit),settlement:game.settlement,reports:game.reports},null,2))}</pre></details>${history.slice().reverse().map(r=>`<details open><summary>Exchange ${r.round}: ${r.pair.map(label).join(' / ')}</summary><ul>${r.events.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></details>`).join('')}</div>`;}
 function render(){
  document.body.classList.toggle('playing',!!game);document.body.classList.toggle('setup-open',!game||view==='setup');
@@ -278,7 +386,8 @@ function render(){
  if($('commit'))$('commit').onclick=()=>commit();
  renderBench();
  if($('replay'))$('replay').onclick=()=>start(game.config);
- if($('carry'))$('carry').onclick=()=>start({...game.config,playerResources:Object.fromEntries(Object.entries(game.settlement[0]).map(([k,v])=>[k,v.final])),opponentResources:undefined});
+ if($('carry'))$('carry').onclick=carry;
+ const lv=document.querySelector('[data-leave]');if(lv)lv.onclick=()=>{token++;busy=false;setting.left=lv.dataset.leave;concede(game,0);render();};
  if($('export'))$('export').onclick=exportLog;
 }
 function exportLog(){{const url=URL.createObjectURL(new Blob([JSON.stringify({rulesVersion:RULES_VERSION,config:game.config,kits:game.actors.map(a=>a.kit),history,stats,result:game.result,settlement:game.settlement,reports:game.reports},null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='lumenhold-combat-'+Date.now()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
