@@ -1,0 +1,505 @@
+# ============================================================
+#  Rivalry (world expansion 1, plan §2b): Lyra and Bram, the two written rivals, get a rivalry worth
+#  having (eight cards each, with the generic truce no longer pre-empting them: migration 0040); Corvin
+#  and Ilse, who are never rivals, get two cards each for when things have soured.
+#  Lyra's way out is lyra_rival_respect; Bram's is bram_turns, opened by bram_crying or bram_steps_in.
+# ============================================================
+
+# ---------------- Lyra ----------------
+
+@event lyra_rankings_war
+title: The Rankings War
+class: routine
+tone: tense
+trigger: social
+actor: lyra
+when: bond(lyra) == "rival" and term
+repeat: 3
+weight: 10
+art: book
+tags: rival study
+scene: A noticeboard outside the Great Hall with the term's rankings pinned up, two names side by side at the top, a red-haired student tapping one with her wand.
+text: The rankings are up outside the Great Hall. {~You're one place above Lyra.|Lyra is one place above you.} She's standing in front of the list when you get there, and she doesn't move aside. "Enjoy it," she says. "It's the last time."
+> left: Out-study her this term
+  study +medium
+  health -small
+  rel lyra -tiny
+  say: {~You take the library table opposite hers and don't leave it for a month. She doesn't either. Thorne remarks that he's never seen the library so tense. The next list has you in the same order. Neither of you is satisfied.|You study every night. So does she; you can see her lamp from your window. It's the best work either of you has done, and you'd both rather die than say so.}
+> right: Leave a note on her desk
+  mood +small
+  renown +tiny
+  rel lyra -small
+  say: {~"Second suits you." She finds it in front of the whole class, and goes the colour of her hair. The next morning there's a note on yours: "Says the person who'll be third."|You leave a single word: "Close." It drives her mad for a week. It was meant to.}
+
+@event lyra_sabotage_returned
+title: Pink Bubbles, Returned
+class: routine
+tone: tense
+trigger: social
+actor: lyra
+when: bond(lyra) == "rival" and chosen(lyra_rival_sabotage, left)
+weight: 10
+art: potion
+tags: rival
+scene: A student's wand producing a cloud of blue smoke shaped like a donkey in the middle of a lecture, a red-haired student three rows away not looking.
+text: In the middle of Thorne's lecture your wand produces a cloud of blue smoke shaped like a donkey. Three rows away, Lyra is taking very careful notes. It's your move. It's always your move.
+> left: Call a ceasefire
+  rel lyra +small
+  mood -small
+  say: You slip her a note: "Truce? I'm running out of eyebrows." She reads it twice, and writes underneath: "Truce. For now. The donkey was very good though." It was.
+> right: Escalate
+  challenge deceive vs lyra.guile:
+    win:
+      renown +small
+      rel lyra -small
+      say: Her next spell comes out as a choir of tiny frogs singing her family motto. The whole class applauds. Lyra stands there with her wand out, absolutely white, and then, unbelievably, starts to laugh.
+    lose:
+      gain detention
+      rel lyra -small
+      say: She sees it coming a mile off and turns it round. You spend detention scrubbing cauldrons. She spends it in the next room, also scrubbing cauldrons, for the donkey.
+
+@event lyra_glove_thrown
+title: The Glove Thrown
+class: routine
+tone: tense
+trigger: social
+actor: lyra
+when: bond(lyra) == "rival" and rel(lyra) <= 0
+weight: 10
+art: duel
+tags: rival danger
+scene: A white duelling glove on the flagstones of a crowded courtyard, a red-haired student standing over it with her wand drawn, a ring of watching students.
+text: Lyra drops a glove at your feet in the courtyard, in front of everyone. "The ring. Tonight. No referee but the crowd." She's been waiting for this all term. So, if you're honest, have you.
+> left: Leave the glove where it lies
+  renown -small
+  rel lyra -tiny
+  say: You step over it. The crowd mutters. Lyra picks it up herself, very slowly. "Next time," she says. "There's always a next time." There is.
+> right: Pick it up
+  challenge combat vs lyra.arcana +1:
+    win:
+      renown +large
+      rel lyra +small
+      say: You win, barely, in front of half the school. Lyra gets up off the flagstones and, after a long moment, holds out the glove. "Keep it," she says. "Until I win it back."
+    lose:
+      health -medium
+      renown +small
+      say: She wins, and it costs her: she's limping, and she knows you made her work for every point. "Good," she says, breathing hard. "Good. Again, soon."
+
+@event lyra_allies_thornwick
+title: Allies, for an Afternoon
+class: routine
+tone: tense
+trigger: social
+actor: lyra
+when: (bond(lyra) == "rival" or rel(lyra) <= -6) and seen(life_rival_academy) > 0 and around(lyra)
+weight: 9
+art: flame
+tags: rival
+scene: Two rival students standing shoulder to shoulder in a corridor facing a group of visitors in green Thornwick colours, both wands half-drawn.
+text: Three Thornwick students in green are laughing at the Lumenhold crest in the entrance hall. Lyra hears it at the same moment you do. She looks at you. You look at her. For the first time all year, you're on the same side.
+> left: Stand with her
+  rel lyra +medium
+  health -tiny
+  say: You stand shoulder to shoulder. The Thornwick students take one look at the two of you and remember an appointment elsewhere. Lyra doesn't thank you. She does walk with you as far as the stairs, which is unheard of.
+> right: Let her handle it
+  study +small
+  rel lyra -tiny
+  say: You leave her to it. She handles it alone, magnificently, and you hear about it at dinner from four different people. "You missed it," she says, passing. She sounds as if she minds.
+
+@event lyra_mother_watches
+title: Her Mother Watches You Win
+class: routine
+tone: tense
+trigger: social
+actor: lyra
+when: bond(lyra) == "rival" and year >= 2
+weight: 10
+art: duel
+tags: rival
+scene: An exhibition duelling ring with a gallery above, an elegant woman in black watching a red-haired student who is losing.
+text: An exhibition bout, and you're paired with Lyra. Up in the gallery, in black, is Lady Vaneshade. Halfway through, you're winning, clearly, and Lyra knows it, and you see her glance up once at the gallery and then not again.
+> left: Win it
+  renown +medium
+  rel lyra -small
+  say: You win cleanly. The gallery applauds. Lady Vaneshade doesn't. She leaves before the bows. Lyra watches her go, and then turns and shakes your hand properly. "Don't you dare go easy on me," she says. "Ever." You won't.
+> right: Let her come back
+  rel lyra +medium
+  renown -small
+  alignment +tiny
+  say: You slow down, just enough. Lyra wins. In the gallery, her mother nods once. Afterwards Lyra corners you, furious. "You let me," she says. Then, so quietly you nearly miss it: "Thank you. Never again."
+
+@event lyra_rival_letter
+title: A Rival's Letter
+class: routine
+tone: light
+trigger: letter
+actor: lyra
+when: bond(lyra) == "rival" and break
+repeat: 6
+weight: 10
+art: letter
+tags: rival letter
+scene: A letter with a black Vaneshade seal on a windowsill, inside it a neatly ruled table of marks with one line underlined twice.
+text: A letter with the Vaneshade seal. Inside: a ruled table of her term marks, beside yours, with every subject she beat you in underlined. {~At the bottom: "Enjoy your holiday. I'm not taking one."|At the bottom: "You're welcome to check my sums. They're right."}
+> left: Write back with corrections
+  lore +small
+  rel lyra +small
+  mood -tiny
+  say: {~You find one mistake in her sums, in your favour, and write back about it at length. Her reply is two words: "Noted. Grrr."|You send back her table with your own column added: hours slept. She doesn't answer for a week. Then: "Fine. I'll sleep. Some."}
+> right: Pin it above your desk
+  mood +small
+  study +tiny
+  say: {~You pin it up where you'll see it every morning. It works better than any timetable.|Up it goes, above your desk. Every time you want to stop, there it is, underlined twice.}
+
+@event lyra_last_match
+title: The Last Rankings
+class: routine
+tone: warm
+trigger: social
+actor: lyra
+when: bond(lyra) == "rival" and final_year and month >= 6
+weight: 12
+art: book
+tags: rival
+scene: A final rankings list on a noticeboard, two names tied at the top, two students standing in front of it in silence.
+text: The last rankings you'll ever see at Lumenhold. You and Lyra are tied. Exactly. She stands in front of the list for a long time. "Four years," she says. "And it comes to that." She doesn't sound angry. She sounds almost happy.
+> left: Share it
+  rel lyra +large
+  renown -tiny
+  say: "Joint," you say. She looks at you, and then holds out her hand. You shake. "It was never going to be anyone else," she says. "I'm glad it was you I didn't beat."
+> right: Ask Thorne for a decider
+  challenge research expert-:
+    win:
+      renown +medium
+      rel lyra +small
+      say: Thorne sets you both one question, the hardest he has. You get it by a hair. Lyra reads your answer, and nods, and says, "That's right. That's annoyingly right." She's proud of you. She'll never say it.
+    lose:
+      renown +small
+      rel lyra +small
+      say: Thorne sets you both one question. She gets it. You don't. She doesn't gloat, which is how you know she means it when she says, "Thank you. That's the only one I wanted."
+
+# ---------------- Bram ----------------
+
+@event bram_marked
+title: Top of the Ledger
+class: milestone
+tone: tense
+trigger: social
+actor: bram
+when: year == 1 and month >= 2 and month <= 3 and bond(bram) == "none" and rel(bram) <= -12
+weight: 14
+art: shield
+tags: rival
+scene: A big student in a red prefect's sash writing a name at the top of a demerit ledger with great ceremony, another student watching from a doorway.
+text: Bram opens his demerit ledger in the middle of the corridor and writes your name at the top of a fresh page, slowly, so you can watch him do it. "A page of your own," he says. "You've earned it."
+> left: Keep your head down
+  rel bram +small
+  mood -small
+  say: You walk past without a word. He looks almost disappointed. The page stays empty for a while. It doesn't stay empty for long.
+> right: Meet his eye
+  bond bram rival
+  renown +tiny
+  rel bram -tiny
+  say: You stop, and look at him, and don't look away. "Good," says Bram, and snaps the ledger shut. "I was hoping you would." It's war, and you're both, somehow, pleased about it.
+
+@event bram_demerit_ledger
+title: The Demerit Ledger
+class: routine
+tone: light
+trigger: social
+actor: bram
+when: bond(bram) == "rival" or bond(bram) == "nemesis"
+repeat: 3
+weight: 10
+art: shield
+tags: rival
+scene: A prefect's ledger open on a windowsill, a column of demerits next to one name, each with a reason in neat block capitals.
+text: Bram has given you a demerit for {~"walking in a smug manner".|"breathing in a provocative direction".} It's the fourth this month. The ledger is starting to look like a novel.
+> left: Accept it with dignity
+  mood -small
+  alignment +tiny
+  say: {~You thank him for his diligence. He has no idea what to do with that. He writes "THANKED ME" in the margin, puzzled.|You nod gravely and walk on. He follows you for a corridor, waiting for you to crack. You don't.}
+> right: Appeal it to his face
+  challenge appeal journeyman:
+    win:
+      renown +tiny
+      rel bram -tiny
+      say: {~You point out, with diagrams, that it's impossible to walk smugly. A crowd gathers. Bram crosses it out to make you stop.|You argue it so well that two first-years applaud. Bram crosses it out, then gives you a fresh one for "public speaking".}
+    lose:
+      gain detention
+      say: {~"Arguing with a prefect," Bram says happily, writing. "That's a detention." It is.|You argue, and he writes, and the demerit becomes a detention. "Thank you," he says. "That's my quota."}
+
+@event bram_inspection
+title: Inspection
+class: routine
+tone: tense
+trigger: social
+actor: bram
+when: bond(bram) == "rival" or bond(bram) == "nemesis"
+weight: 9
+art: shield
+tags: rival
+scene: A big prefect going through a student's dormitory trunk with exaggerated care, holding up a sock with two fingers, the owner standing in the doorway.
+text: "Room inspection," Bram announces, at your door, with a clipboard. There is no such thing as room inspection. He's already in. He's already opening your trunk.
+> left: Let him search
+  mood -small
+  chance unlikely:
+    gain detention
+    say: He finds the kitchen's missing jar of honey under your bed. You have no idea how it got there. He does, you suspect. Detention.
+  else:
+    rel bram +tiny
+    say: He finds nothing worse than socks. He's almost disappointed. On his way out he straightens your books, without thinking, and then glares at you as if you made him do it.
+> right: Inspect him back
+  challenge deceive vs bram.guile:
+    win:
+      renown +small
+      rel bram -small
+      say: While he's in your trunk, you inspect his clipboard. It's mostly a drawing of a horse, quite good. You hold it up for the corridor to see. He leaves. Quickly.
+    lose:
+      rel bram -small
+      gain detention
+      say: He catches you reading his clipboard. "Interfering with an inspection," he says. "Detention." He covers the clipboard with his hand as he goes.
+
+@event bram_rumour
+title: The Rumour He Started
+class: routine
+tone: tense
+trigger: social
+actor: bram
+when: (bond(bram) == "rival" or bond(bram) == "nemesis") and renown >= 10
+weight: 9
+art: paper
+tags: rival
+scene: Students whispering behind their hands in a corridor as one student passes, a big prefect at the far end leaning on a wall, looking innocent.
+text: There's a rumour going round that you cried at the Sorting Mirror. There's a rumour that you're afraid of owls. People are being very nice to you about the owls. You know exactly where it started.
+> left: Rise above it
+  renown -small
+  mood -tiny
+  say: You let it run. It dies in a fortnight, as rumours do. Bram looks faintly cheated. You catch him later telling a first-year that the owl one wasn't true, quite firmly.
+> right: Start one back
+  alignment -tiny
+  renown +tiny
+  rel bram -medium
+  say: By Friday the whole school believes Bram sleeps with a night-light shaped like a duck. He doesn't deny it fast enough. It is, it turns out, true.
+
+@event bram_hall_tax_escalated
+title: The Hall Tax, Escalated
+class: routine
+tone: tense
+trigger: social
+actor: bram
+when: knows(bram.hall_tax) and rel(bram) < 0 and not flag(bram_softened)
+weight: 9
+art: coin
+tags: rival
+scene: A big prefect standing at the foot of a second staircase with a collecting tin, a hand-lettered sign beside him reading WEST STAIRS, a queue of first-years.
+text: The hall tax has spread. There's a tin at the foot of the west stairs now, too, and a hand-lettered sign, and Bram behind it looking enormously pleased with himself. A queue of first-years are emptying their pockets.
+> left: Pay, and the first-years' too
+  gold -small
+  alignment +tiny
+  rel bram -tiny
+  say: You drop in enough for the whole queue. The first-years look at you like you've slain a dragon. Bram looks at the tin, and at you, and for some reason shuts it. The sign is gone the next day.
+> right: Organise a boycott
+  challenge appeal journeyman:
+    win:
+      renown +small
+      rel bram -small
+      say: By lunch, nobody in the castle is using the west stairs. They're using the windows, a laundry chute and, in one case, a broom. Bram stands by his empty tin until dinner. Then he quietly takes the sign down.
+    lose:
+      mood -small
+      rel bram -tiny
+      say: Nobody joins your boycott. The stairs are the shortest way to lunch. Bram waves at you, cheerfully, from behind his tin.
+
+@event bram_after_curfew
+title: Caught After Curfew
+class: routine
+tone: tense
+trigger: social
+actor: bram
+when: bond(bram) == "rival" or bond(bram) == "nemesis"
+time: night
+weight: 9
+art: candle
+tags: rival
+scene: A dark castle corridor at night, a lantern held high by a big prefect, a student caught halfway up a staircase.
+text: Bram's lantern catches you halfway up the north stairs, an hour after curfew. He smiles, slowly. He's been waiting all year for this. "Well," he says. "Well, well, well."
+> left: Take the detention
+  gain detention
+  rel bram +tiny
+  say: "Fair," you say. It throws him; he'd prepared a speech. He writes you up. Then, as you go, he says, "Use the east stairs next time. They don't creak." You decide not to wonder why he told you.
+> right: Talk your way past
+  challenge deceive vs bram.guile:
+    win:
+      guile +small
+      rel bram -small
+      say: You tell him Professor Vey sent you for a book. He doesn't believe you. But he can't prove it, and he's not brave enough to ask Vey. He lets you go, fuming.
+    lose:
+      gain detention
+      rel bram -small
+      say: You try a story about sleepwalking. He lets you finish. Then he writes you up for curfew and for "insulting my intelligence", which he underlines.
+
+@event bram_rematch
+title: The Rematch
+class: routine
+tone: tense
+trigger: social
+actor: bram
+when: (bond(bram) == "rival" or bond(bram) == "nemesis") and seen(bram_duel) > 0
+weight: 10
+art: duel
+tags: rival danger
+scene: The duelling green at dusk, a big student in a prefect's sash pulling on his gloves, a crowd forming a ring around him.
+text: Bram has been practising. Everyone knows; you've heard him on the duelling green every evening for a month. Tonight he's waiting for you there. "Last time doesn't count," he says. "Again. Properly."
+> left: Not tonight
+  renown -tiny
+  rel bram -tiny
+  say: "Scared," says Bram, but he doesn't sound sure. He practises alone until dark. You can hear him from your window.
+> right: Accept
+  challenge combat vs bram.vigor +1:
+    win:
+      renown +medium
+      rel bram +small
+      say: He's better. Much better. You win anyway, by one exchange. He lies on the grass looking at the sky for a while. "A month," he says. "A whole month." Then he laughs, and you help him up, and he doesn't let go of your hand at once.
+    lose:
+      health -medium
+      rel bram +small
+      say: He wins. He stands over you, breathing hard, and doesn't gloat, and holds out a hand. "Now we're even," he says. "Now it's interesting."
+
+@event bram_steps_in
+title: He Steps In
+class: routine
+tone: tense
+trigger: social
+actor: bram
+when: (bond(bram) == "rival" or bond(bram) == "nemesis") and not flag(bram_softened)
+weight: 9
+art: shield
+tags: rival
+scene: A big prefect standing between two older students and a frightened first-year at the boathouse, another student arriving at a run.
+text: Two fourth-years have a first-year backed against the boathouse wall. Before you can move, Bram is there, between them, sash and all. "Problem?" he says. There are two of them, and they're bigger. He doesn't step aside.
+> left: Stand beside him
+  flag bram_softened
+  health -tiny
+  rel bram +medium
+  say: You step up next to him. The fourth-years look at the two of you and decide it isn't worth it. Bram watches them go. Then he looks at you as if you've done something he can't file. "Don't make it weird," he says. He walks the first-year back to the castle himself.
+> right: Run for a professor
+  alignment +tiny
+  rel bram +tiny
+  say: You bring Brask at a run. By the time you get there it's over: Bram has a split lip and the first-year is fine. He doesn't say thank you. He doesn't give you a demerit that week, either.
+
+@event bram_fathers_shadow
+title: His Father's Shadow
+class: routine
+tone: tense
+trigger: social
+actor: bram
+when: (bond(bram) == "rival" or bond(bram) == "nemesis") and year >= 2
+weight: 9
+art: shield
+tags: rival
+scene: A big man in an old-fashioned prefect's pin standing in the entrance hall with a student who looks smaller than usual, another student watching from the stairs.
+text: There's a big man in the entrance hall with Bram's jaw, talking to Bram in a low steady voice. Bram is standing very straight and getting smaller. Then the man sees you on the stairs. "Is that the one?" he says. "The one beating you?"
+> left: Walk on as if you didn't hear
+  learn bram.father
+  rel bram +small
+  say: You keep walking. Behind you, Bram says nothing at all. That evening he finds you, and stands there, and says, "You didn't hear that." "Hear what?" you say. He nods once and goes.
+> right: Tell his father he's the best prefect here
+  learn bram.father
+  alignment +tiny
+  rel bram +medium
+  mood -tiny
+  say: The man looks at you as if a chair had spoken. Bram looks at you as if you've hit him. Later, he finds you. "Why," he says. Not a question. You shrug. He gives you no demerits for a month, and never says why either.
+
+# ---------------- Corvin, soured ----------------
+
+@event corvin_locked_out
+title: Locked Out
+class: routine
+tone: tense
+trigger: social
+actor: corvin
+when: rel(corvin) <= -12
+weight: 9
+art: key
+tags: rival
+scene: A dormitory door with a new padlock on it, a lanky student leaning beside it and spinning a key on one finger.
+text: There's a new padlock on your door. Corvin is leaning beside it, spinning a key on one finger. "Funny thing," he says. "Locks. They don't care whose side you're on. Make it worth my while."
+> left: Pay him off
+  gold -small
+  rel corvin +small
+  say: He takes the coins, unlocks the door and bows you in. "Pleasure doing business," he says. He sounds tired, not pleased. The padlock is gone in the morning.
+> right: Pick it yourself
+  challenge deceive journeyman:
+    win:
+      guile +small
+      rel corvin +tiny
+      say: You pick it in four minutes with two hairpins. Corvin watches, and stops spinning the key. "Huh," he says. "Huh." It's the first thing he's said to you in a month that isn't a joke.
+    lose:
+      mood -small
+      rel corvin -tiny
+      say: You can't. He lets you struggle for twenty minutes, then unlocks it without a word and walks off. It's worse than if he'd laughed.
+
+@event corvin_bad_odds
+title: Bad Odds
+class: routine
+tone: tense
+trigger: social
+actor: corvin
+when: rel(corvin) <= -12 and renown >= 10
+weight: 8
+art: mask
+tags: rival
+scene: A chalked odds board in a dim corner of the common room, a student's name on it with long odds against them, a lanky bookmaker taking coins.
+text: Corvin is running a book on you: whether you'll fail your next exam. The odds aren't flattering. Half the common room has a coin on it. He catches your eye across the room and raises the chalk, as if to say: well?
+> left: Bet on yourself
+  gold -small
+  study +small
+  rel corvin -tiny
+  say: You put your coin on yourself, at his long odds. Then you study like you've never studied. You pass. Corvin pays out, every coin, and says, "Fine. I'll stop." He doesn't quite, but he shortens the odds.
+> right: Shrug it off
+  mood -small
+  rel corvin +tiny
+  say: You let it go. The book runs for a week and closes. Corvin wipes the board clean himself and doesn't start another. He nods to you after, which is something.
+
+# ---------------- Ilse, soured ----------------
+
+@event ilse_frost_door
+title: Frost on the Door
+class: routine
+tone: eerie
+trigger: social
+actor: ilse
+when: met(ilse) and rel(ilse) <= -12
+weight: 8
+art: snow
+tags: rival
+scene: A dormitory door completely sealed in clear ice, a student with a kettle staring at it, a single word scratched into the frost.
+text: Your door is sealed in ice, a hand thick, clear as glass. Someone has scratched a word into the frost: a Northern word you don't know. It doesn't sound kind. In the village, they say, a girl in white furs bought nothing today, and smiled.
+> left: Thaw it the slow way
+  health -tiny
+  study -tiny
+  say: Kettle after kettle. It takes all evening. When the last of it goes, the Northern word goes with it. You never find out what it meant, which might be the point.
+> right: Go and find her
+  rel ilse +small
+  mood -tiny
+  say: You find her by the frozen pond. "Your door," you say. She looks at you without blinking. "Your fault," she says. Then, after a long time, "It was a stupid word. I take it back." The ice is gone when you get home.
+
+@event ilse_contempt
+title: Beneath Her
+class: routine
+tone: tense
+trigger: social
+actor: ilse
+when: met(ilse) and rel(ilse) <= -12
+weight: 8
+art: snow
+tags: rival
+scene: A girl in white furs walking past another student in the village square without looking, a gust of snow following her that soaks the other student's shoes.
+text: Ilse walks past you in the village square as if you were weather. Her private storm, by accident or not, empties itself into your shoes. Two villagers laugh. She doesn't look back.
+> left: Say her name
+  rel ilse +small
+  renown -tiny
+  say: She stops. She doesn't turn round. "What," she says. You don't have an answer. Neither does she. But the storm over her head thins, just a little, before she goes.
+> right: Let it go
+  mood -small
+  say: You squelch home. It's the kind of small cold that lasts all day.

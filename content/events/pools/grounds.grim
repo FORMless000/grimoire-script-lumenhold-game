@@ -80,6 +80,10 @@ text: {The near end of the hall belongs to the practice dummies, who watch you c
   mood +small
   health -tiny
   say: {You haul a bale of straw over from the stables and restuff three dummies. They look almost grateful, which is unsettling.|You restuff the moustached one with special care. It still looks like it's planning something.|You restuff the moustached one and straighten its eyepatch. It's the best-dressed thing in the hall.}
+> up[item:ashwood_wand]: Draw the ashwood
+  arcana +small
+  health -tiny
+  say: {The moustached dummy blocks, as dummies do, and the ashwood answers with a crack that singes its straw. Your wrist buzzes for an hour.|Every time a dummy's ward goes up, the ashwood bites through it with a spark. You stop when the hall smells of toast.|You duel the whole row. The ashwood jolts each block back at you, a little, and you learn to like it.}
 
 @event duel_hall_gallery
 title: From the Gallery
@@ -157,6 +161,11 @@ text: {season == "winter": Outside it's snowing. Inside, the glass runs with war
   health +tiny
   renown -tiny
   say: {You wake with a seed tray for a pillow and a first-year staring at you. By supper it's a story.|You wake to a mandrake humming a lullaby. You choose not to tell anyone. Someone tells everyone.|You nap on your cushion among the ferns. Someone has put a sign by your feet. It says "Do not water".}
+> up[item:hazel_wand]: Let the hazel find water
+  alchemy +tiny
+  mood +tiny
+  health -tiny
+  say: {The hazel dips over a bed of wilting seedlings. Under it you find a cracked pipe, and an hour of mud later the bed is drinking.|The wand tugs you to the far corner, where a rain barrel has silted up. You clear it with your sleeves rolled and come out filthy and pleased.|The hazel points at the mandrakes, firmly. They have been overwatered. You move them; they sulk; the wand seems satisfied.}
 
 @event greenhouses_repotting
 title: Repotting Day
@@ -212,7 +221,7 @@ text: {A row of silver-leaf cuttings is drying on the bench|A tray of night-orch
 
 @event flight_field_cheating_wind
 title: The Cheating Wind
-place: flight_field
+place: stables
 class: routine
 tone: light
 repeat: 5
@@ -233,7 +242,7 @@ text: {season == "winter": The flight field is white, the hoops wearing caps of 
 
 @event flight_field_pickup_race
 title: The Pick-Up Race
-place: flight_field
+place: stables
 class: routine
 tone: light
 repeat: 5
@@ -265,7 +274,7 @@ text: {A pick-up race is forming at the far hoops. Three brooms, two rules, no r
 
 @event flight_field_long_grass
 title: The Long Grass
-place: flight_field
+place: stables
 class: routine
 tone: light
 repeat: 5
@@ -339,7 +348,7 @@ tags: nature
 scene: A griffon chick with puffed-up feathers glaring from the corner of a stall, a student holding out a morsel at arm's length.
 text: {The griffon chick is sulking in the corner stall, feathers puffed, refusing breakfast.|The griffon chick is sulking again. It's bigger this time, and so is the sulk.|The griffon is hardly a chick any more, and still sulks like one. It watches you come in.} {year == 1: The sign on the stall says not to hand-feed it, underlined twice.|{The sign on the stall now has a drawing of a bitten hand.|The sign on the stall has been underlined until the paper tore.|Someone has added "I mean it" to the sign, in Brask's hand.}}
 > left: Offer it breakfast by hand
-  challenge negotiate apprentice wild:
+  challenge soothe apprentice wild:
     win:
       charm +small
       mood +small
@@ -377,6 +386,11 @@ text: {{date} is at the end of the jetty, boots over the water. {They} move{s} o
   mood +small
   health -tiny
   say: {final_year: You talk about where you'll both be next year. Neither of you says "together", and both of you hear it.|{You talk until the lantern gutters. The jetty is cold and you don't notice until you stand.|You say one of the things you couldn't say indoors. {date} listens all the way to the end.|You stay on the jetty, on the plank that creaks. {date} says it sounds like you, and won't explain.}}
+> up[item:edmunds_silver_wand]: Let Edmund's wand hum
+  spark date +small
+  mood +tiny
+  health -tiny
+  say: {Over the water the silver wand hums one low note. {date} goes quiet to listen, and so do you, until the lantern gutters.|The wand hums, and a ring spreads on the still water as if something answered. {date} takes your hand without asking why.|You hold the wand out over the lake and it hums its one note. {date} says it sounds like someone remembering. You think so too.}
 
 @event boathouse_green_boat
 title: The Leaky Green Boat
@@ -428,7 +442,7 @@ text: {Two voices out on the jetty, low and urgent. People come to the boathouse
 
 @event orchard_under_the_trees
 title: Under the Old Trees
-place: orchard
+place: maud_cottage
 class: routine
 tone: warm
 repeat: 5
@@ -451,7 +465,7 @@ text: {season == "spring": Blossom is coming down like snow, and {date} has some
 
 @event orchard_windfalls
 title: Windfalls
-place: orchard
+place: maud_cottage
 class: routine
 tone: warm
 repeat: 5
@@ -476,7 +490,7 @@ text: {The orchard trees are older than the towers, and never tidy.|The oldest t
 
 @event orchard_cider_shed
 title: The Cider Shed
-place: orchard
+place: maud_cottage
 class: routine
 tone: light
 repeat: 5

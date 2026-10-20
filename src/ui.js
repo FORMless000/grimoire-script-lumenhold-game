@@ -189,7 +189,8 @@
       '<button class="btn dice-btn" id="rollName" type="button" title="' + esc(t('title.randomName')) + '" aria-label="' + esc(t('title.randomName')) + '">' + Art.icon('dice', 20) + '</button></div>' +
       '<label class="pron-label">' + esc(t('title.pronouns')) + '</label><div class="pron-row" role="radiogroup" aria-label="' + esc(t('title.pronouns')) + '">' +
       PRONOUN_KEYS.map((k) => '<button type="button" role="radio" aria-checked="' + (k === pron) + '" class="lang-btn pron-btn' + (k === pron ? ' on' : '') + '" data-pron="' + k + '">' + esc(t('title.pronoun.' + k)) + '</button>').join('') + '</div>' +
-      '<details class="adv"><summary>' + esc(t('title.seed')) + '</summary><input id="pseed" inputmode="numeric" placeholder="' + esc(t('title.seedPlaceholder')) + '"></details>' +
+      '<details class="adv"><summary>' + esc(t('title.options')) + '</summary><label for="pseed">' + esc(t('title.seed')) + '</label><input id="pseed" inputmode="numeric" placeholder="' + esc(t('title.seedPlaceholder')) + '">' +
+      '<label class="adv-check"><input type="checkbox" id="pskip"' + (settings.skipIntros ? ' checked' : '') + '> ' + esc(t('title.skipIntros')) + '</label></details>' +
       '<div class="row"><button class="btn primary grow" id="begin">' + esc(t('title.begin')) + '</button>' +
       (savedInfo ? '<button class="btn grow" id="cont">' + esc(t('title.continue', { info: '' })) + savedInfo + '</button>' : '') + '</div>' +
       '<div class="row"><button class="btn ghost-btn grow" id="slotsBtn">' + esc(t('slots.heading')) + '</button></div>' +
@@ -212,6 +213,9 @@
     document.getElementById('begin').onclick = async () => {
       const name = document.getElementById('pname').value.trim() || t('title.defaultName');
       const seed = document.getElementById('pseed').value.trim();
+      // Skip the introductions (E7): remembered as the default for the next run, and set as a flag on this one.
+      settings.skipIntros = document.getElementById('pskip').checked; saveSettings();
+      const flags = settings.skipIntros ? ['skip_intros'] : [];
       // The run being replaced keeps its log (and any feedback) in the archive.
       if (saved) { try { const old = new Engine(content).load(saved); archiveRun(old); Net.flush(old, runRecordMeta(old), { final: true }); } catch (e) { console.warn(e); } store.del(SAVE_KEY); }
       const seen = await loadSeen();
@@ -219,7 +223,7 @@
         ui.mode = null; closeOverlay();
         eng = new Engine(content);
         buildGame();
-        step(eng.newGame({ name, pronouns: pron, seed: seed === '' ? null : seed, ...seen, ...(origin ? { origin } : {}) }));
+        step(eng.newGame({ name, pronouns: pron, seed: seed === '' ? null : seed, flags, ...seen, ...(origin ? { origin } : {}) }));
       };
       const choices = new Engine(content).originChoices();
       if (choices.length) showOrigins(choices, start); else start(null);
@@ -302,7 +306,7 @@
       // On a narrow screen the panel slides over the page: a close button and a scrim behind it (tap outside, or Escape).
       '<div class="side-scrim" id="sideScrim"></div>' +
       '<aside class="side" id="side"><div class="side-top"><div class="tabs" id="tabs">' +
-      '<button data-tab="you">' + esc(t('tab.you')) + '</button><button data-tab="people">' + esc(t('tab.people')) + '</button><button data-tab="clues">' + esc(t('tab.clues')) + '</button><button data-tab="journal">' + esc(t('tab.journal')) + '</button></div>' +
+      '<button data-tab="you">' + esc(t('tab.you')) + '</button><button data-tab="kit">' + esc(t('tab.kit')) + '</button><button data-tab="people">' + esc(t('tab.people')) + '</button><button data-tab="clues">' + esc(t('tab.clues')) + '</button><button data-tab="journal">' + esc(t('tab.journal')) + '</button></div>' +
       '<button class="icon-btn side-close" id="sideClose" title="' + esc(t('side.close')) + '" aria-label="' + esc(t('side.close')) + '">&times;</button></div>' +
       '<div class="tab-body" id="tabBody"></div></aside>' +
       '</div>';
@@ -427,6 +431,21 @@
         h += '<div class="sec-h">' + esc(t('side.spells')) + '</div>';
         for (const sp of snap.spells) h += '<div class="state spell">' + Art.icon(sp.art || 'wand', 20) + '<div><b>' + esc(sp.name) + ' ' + ['', 'I', 'II', 'III'][sp.level] + '</b><p>' + esc(sp.desc || '') + '</p><small class="scales">' + esc(spellScales(sp.skill)) + '</small></div><span class="left">' + esc(t('side.spellCost', { n: sp.cost })) + '</span></div>';
       }
+    } else if (ui.tab === 'kit') {
+      // The kit (E4): one wand, one robe and one trinket worn; tap an item you own to wear it. Worn items act only in fights.
+      const locked = eng.kitLocked();
+      h += '<p class="kit-intro">' + esc(t(locked ? 'kit.locked' : 'kit.intro')) + '</p>';
+      for (const slot of ['wand', 'robe', 'trinket']) {
+        const mine = snap.items.filter((it) => it.slot === slot);
+        h += '<div class="sec-h">' + esc(t('kit.slot.' + slot)) + '</div>';
+        if (!mine.length) { h += '<div class="empty">' + esc(t('kit.none')) + '</div>'; continue; }
+        for (const it of mine) {
+          const eff = wornText(it.effects);
+          h += '<button class="state item' + (it.worn ? ' worn' : '') + '" data-slot="' + esc(slot) + '" data-item="' + esc(it.id) + '"' + (locked || it.worn ? ' disabled' : '') + '>' + Art.icon(it.art || 'wand', 20) +
+            '<div><b>' + esc(it.name) + '</b><p>' + esc(it.desc || '') + '</p>' + (eff ? '<small class="scales">' + esc(t('kit.inFights', { what: eff })) + '</small>' : '') + '</div>' +
+            '<span class="left">' + esc(it.worn ? t('kit.wearing') : t('kit.wear')) + '</span></button>';
+        }
+      }
     } else if (ui.tab === 'people') {
       if (!snap.npcs.length) h += '<div class="empty">' + esc(t('side.noPeople')) + '</div>';
       for (const n of snap.npcs) {
@@ -470,12 +489,26 @@
     }
     body.innerHTML = h;
     body.querySelectorAll('.person').forEach((p) => { p.onclick = () => p.classList.toggle('open'); });
+    body.querySelectorAll('.state.item[data-item]').forEach((b) => { b.onclick = () => { try { eng.equip(b.dataset.slot, b.dataset.item); save(); } catch (e) { console.warn(e); } renderSide(); }; });
     body.querySelectorAll('.fb-mini button').forEach((b) => {
       const n = Number(b.parentNode.dataset.n);
       b.onclick = () => (b.dataset.r ? quickRate(n, b.dataset.r) : openFeedback([n]));
     });
   }
 
+  // A worn item's effect in words (E4): "Health +3 · Brace costs 1 less Mana".
+  function wornText(w) {
+    if (!w) return '';
+    const name = (k) => (content.spells[k] ? spellName(k) : t('kit.group.' + k));
+    const out = [];
+    if (w.hp) out.push(t('kit.hp', { n: w.hp }));
+    if (w.mana) out.push(t('kit.mana', { n: w.mana }));
+    for (const [k, v] of Object.entries(w.cost || {})) out.push(t('kit.cost', { spell: name(k), n: -v }));
+    for (const [k, v] of Object.entries(w.onCast || {})) out.push(t('kit.onCast', { spell: name(k), n: v }));
+    if (w.onDefend) out.push(t('kit.onDefend', { n: w.onDefend }));
+    for (const x of w.taken || []) out.push(t('kit.taken', { n: x.n, from: x.from.map(name).join(', ') }));
+    return out.join(' · ');
+  }
   function setPreview(affects) {
     document.querySelectorAll('.meter').forEach((m) => m.classList.toggle('preview', !!affects && affects.includes(m.id.slice(2))));
   }
@@ -576,9 +609,16 @@
       engineHelp: settings.fightEngine, engineShown: settings.fightEngineShown !== false, engineBudget: settings.fightEngineBudget === 'inf' ? Infinity : settings.fightEngineBudget,
       onEngineShown: (on) => { settings.fightEngineShown = on; saveSettings(); }, onEngineBudget: (ms) => { settings.fightEngineBudget = ms === Infinity ? 'inf' : ms; saveSettings(); },
       avatar: (npc, size) => Art.avatar(npc, size), skillName, resName: (k) => (content.resources[k] && content.resources[k].name) || k,
+      // The kit on the fight's opening screen (world expansion 1): the slots where you own a choice, and a way to change it.
+      kit: kitForFight(),
       onSave: (snap) => { eng.s.fightInProgress = snap; save(); },
       onDone: (res) => { delete eng.s.fightInProgress; settle(key, { fights: [res] }); },
     });
+  }
+  function kitForFight() {
+    const snap = eng.snapshot(); if (!snap.items || !snap.items.length) return null;
+    const slots = ['wand', 'robe', 'trinket'].map((slot) => ({ slot, worn: snap.worn[slot] || null, items: snap.items.filter((it) => it.slot === slot).map((it) => ({ id: it.id, name: it.name })) }));
+    return { slots, equip: (slot, id) => { eng.equip(slot, id); save(); return eng.wornMods(); } };
   }
   function settle(key, opts) {
     // A choice that throws part-way (a fight that can't be played, a bug) is undone, so no half-applied option is saved.
@@ -620,11 +660,13 @@
   // of pure luck is the dice alone.
   const skillsOf = (using) => String(using || '').split('+').filter(Boolean).map(skillName).join(' + ');
   const checkText = (c, key) => c.fight ? fightText(key)
+    : c.parley ? t('check.parleyButton', { skill: skillsOf(c.using) })
     : c.combat ? t('check.combatButton', { p: c.p, cost: c.cost })
     : c.luck ? ''
     : t('check.button', { skill: c.exam || c.challenge ? skillsOf(c.using) : skillName(c.skill) });
   // The roll on an option's button (B24, M11): combat, the future minigame, is marked apart from skill checks.
-  const checkLine = (c, key) => (c ? '<span class="chk roll' + (c.combat || c.fight ? ' combat' : '') + '">' + Art.icon(c.combat || c.fight ? 'sword' : c.exam ? 'paper' : 'dice', 12) + ' ' + esc(checkText(c, key)) + '</span>' : '');
+  // A negotiation (E8) is marked too: the scroll, and the word on the button.
+  const checkLine = (c, key) => (c ? '<span class="chk roll' + (c.combat || c.fight ? ' combat' : c.parley ? ' parley' : '') + '">' + Art.icon(c.combat || c.fight ? 'sword' : c.parley ? 'scroll' : c.exam ? 'paper' : 'dice', 12) + ' ' + esc(checkText(c, key)) + '</span>' : '');
   // "Fight · Lyra · level 34": who the option fights, before it starts (the same foe the fight will bring).
   function fightText(key) {
     const req = key && fightAhead(key);
@@ -658,7 +700,7 @@
       const U = v.options.find((o) => o.key === 'up');
       choices.innerHTML = '<button class="choice left" data-k="left"' + lock(L) + '><span class="arrow">' + (L.disabled ? '🔒' : '←') + '</span><span>' + esc(L.label) + chk(L) + '</span></button>' +
         '<button class="choice right" data-k="right"' + lock(R) + '><span>' + esc(R.label) + chk(R) + '</span><span class="arrow">' + (R.disabled ? '🔒' : '→') + '</span></button>' +
-        (U ? '<button class="choice up" data-k="up"' + (U.disabled ? ' disabled title="' + esc(t('spell.short')) + '"' : '') + '><span class="arrow">' + (U.disabled ? '🔒' : '↑') + '</span><span>' + esc(U.label) + '<span class="chk">' + esc(t('spell.button', { spell: spellName(U.spell.id), level: ['', 'I', 'II', 'III'][U.spell.level], cost: U.spell.cost })) + '</span>' + pv(U) + '</span></button>' : '');
+        (U ? '<button class="choice up" data-k="up"' + (U.disabled ? ' disabled title="' + esc(t('spell.short')) + '"' : '') + '><span class="arrow">' + (U.disabled ? '🔒' : '↑') + '</span><span>' + esc(U.label) + '<span class="chk">' + (U.item ? Art.icon((content.items[U.item.id] || {}).art || 'pouch', 12) + ' ' + esc(t('item.button', { item: (content.items[U.item.id] || {}).name || U.item.id })) : esc(t('spell.button', { spell: spellName(U.spell.id), level: ['', 'I', 'II', 'III'][U.spell.level], cost: U.spell.cost }))) + '</span>' + pv(U) + '</span></button>' : '');
     }
     choices.querySelectorAll('.choice').forEach((b) => {
       const opt = v.options.find((o) => o.key === b.dataset.k);
@@ -869,6 +911,7 @@
     if (n.kind === 'missed') return content.tracks[n.track] && content.tracks[n.track].kind === 'club' ? t('note.missedClub', { track: tn(n.track) }) : t('note.missed', { track: tn(n.track), n: n.n });
     if (n.kind === 'wage') return t('note.wage', { track: tn(n.track), gold: n.gold });
     if (n.kind === 'attend') return n.left == null ? t('note.attendBreak', { track: tn(n.track) }) : t('note.attend', { track: tn(n.track), n: n.left });
+    if (n.kind === 'item') { const d = content.items && content.items[n.item]; return t(n.gained ? (n.worn ? 'note.itemWorn' : 'note.itemGained') : 'note.itemLost', { item: d ? d.name : n.item }); }
     if (n.kind === 'discover') return t('note.discover', { place: content.places[n.place] ? content.places[n.place].name : n.place });
     if (n.kind === 'clue') return t('note.clue');
     if (n.kind === 'fact') return t('note.fact', { name: shortName(n.fact.split('.')[0]) });
@@ -888,6 +931,7 @@
     let h = '';
     for (const c of out.checks || []) {
       if (c.fight) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + ' combat">' + Art.icon('sword', 14) + esc(t('check.fightChip', { result: t('fight.' + c.outcome), reason: t('fight.reason.' + c.reason) })) + '</span>';
+      else if (c.parley) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + ' parley" title="' + esc(t('check.parleyStub')) + '">' + Art.icon('scroll', 14) + esc(t('check.parleyChip', { p: c.p, result: t('challenge.' + c.result) })) + '</span>' + (c.played ? '' : '<span class="chip-note">' + esc(t('check.parleyStub')) + '</span>');
       else if (c.challenge) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + (c.challenge === 'combat' ? ' combat' : '') + '">' + Art.icon(c.challenge === 'combat' ? 'sword' : 'dice', 14) + esc(t('check.challengeChip', { kind: skillsOf(c.skill), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
       else h += '<span class="chip ' + (c.ok ? 'check-ok' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.chip', { skill: skillName(c.skill), p: c.p, result: t(c.ok ? 'check.success' : 'check.failed') })) + '</span>';
     }
@@ -908,6 +952,7 @@
     }
     // A new spell gets a banner of its own, first in line (B4); other notes stay chips.
     for (const n of out.notes || []) if (n.kind === 'spell') h = '<div class="spell-banner">' + Art.icon('wand', 20) + '<span>' + esc(noteText(n)) + '</span></div>' + h;
+    for (const n of out.notes || []) if (n.kind === 'item' && n.gained) h = '<div class="spell-banner item-banner">' + Art.icon((content.items[n.item] || {}).art || 'pouch', 20) + '<span>' + esc(noteText(n)) + '</span></div>' + h;
     // A note with nothing to say (a fight's, which its chip above covers) shows nothing.
     for (const n of out.notes || []) { const x = n.kind !== 'spell' && noteText(n); if (x) h += '<span class="chip note">' + esc(x) + '</span>'; }
     return h;
@@ -1409,6 +1454,7 @@
         '<div class="set-row"><b>' + esc(t('settings.notes')) + '</b><p class="fb-intro">' + esc(t('settings.notesHint')) + '</p>' + seg('notes', [['on', t('settings.on')], ['off', t('settings.off')]], settings.notes ? 'on' : 'off') + '</div>' +
         '<div class="set-row"><b>' + esc(t('settings.portraits')) + '</b><p class="fb-intro">' + esc(t('settings.portraitsHint')) + '</p>' + seg('portraits', PORTRAIT_STYLES.map((m) => [m, t('portraits.' + m)]), settings.portraitArt) + '</div>' +
         '<div class="set-row"><b>' + esc(t('settings.motion')) + '</b><p class="fb-intro">' + esc(t('settings.motionHint')) + '</p>' + seg('motion', MOTION_MODES.map((m) => [m, t('motion.' + m)]), settings.motion) + '</div>' +
+        '<div class="set-row"><b>' + esc(t('settings.intros')) + '</b><p class="fb-intro">' + esc(t('settings.introsHint')) + '</p>' + seg('intros', [['on', t('settings.on')], ['off', t('settings.off')]], settings.skipIntros ? 'off' : 'on') + '</div>' +
         '<div class="set-row"><b>' + esc(t('settings.fight')) + '</b><p class="fb-intro">' + esc(t('settings.fightHint')) + '</p>' + seg('difficulty', FIGHT_DIFFICULTIES.map((m) => [m, t('difficulty.' + m)]), settings.fightDifficulty) + '</div>' +
         '<div class="set-row"><b>' + esc(t('settings.fightEngine')) + '</b><p class="fb-intro">' + esc(t('settings.fightEngineHint')) + '</p>' + seg('fightengine', [['off', t('settings.engineOff')], ['on', t('settings.engineOn')]], settings.fightEngine ? 'on' : 'off') + '</div>' +
         '<div class="fb-actions"><button class="btn" id="settingsClose">' + esc(t('slots.close')) + '</button></div>' + creditsLine() + '</div>';
@@ -1417,6 +1463,8 @@
       // Only the avatars' image layers change: no re-render, so the card, map picks and focus stay as they are.
       wrap.querySelectorAll('[data-portraits]').forEach((b) => { b.onclick = () => { settings.portraitArt = Art.setPortraitStyle(b.dataset.portraits); saveSettings(); Art.refreshAvatars(); render(); }; });
       wrap.querySelectorAll('[data-motion]').forEach((b) => { b.onclick = () => { settings.motion = b.dataset.motion; saveSettings(); applyMotion(); render(); }; });
+      // Introductions: the default for new runs, and this run's flag (the just-in-time cards read it when they come).
+      wrap.querySelectorAll('[data-intros]').forEach((b) => { b.onclick = () => { settings.skipIntros = b.dataset.intros === 'off'; saveSettings(); if (eng && eng.s) { if (settings.skipIntros) eng.s.flags.skip_intros = true; else delete eng.s.flags.skip_intros; } render(); }; });
       wrap.querySelectorAll('[data-difficulty]').forEach((b) => { b.onclick = () => { settings.fightDifficulty = b.dataset.difficulty; saveSettings(); render(); }; });
       wrap.querySelectorAll('[data-fightengine]').forEach((b) => { b.onclick = () => { settings.fightEngine = b.dataset.fightengine === 'on'; saveSettings(); render(); }; });
       document.getElementById('settingsClose').onclick = closeSettings;

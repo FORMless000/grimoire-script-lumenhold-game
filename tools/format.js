@@ -16,7 +16,7 @@ const G = require('../src/grimoire.js');
 
 const ID = '[a-z_][a-z0-9_]*';
 const RE_HEADER = /^@([a-z]+)(?:\s+([a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)?))?\s*$/;
-const RE_OPTION = /^>\s*([a-z_][a-z0-9_]*)\s*:\s*(.*)$/;
+const RE_OPTION = /^>\s*([a-z_][a-z0-9_]*(?:\[(?:item:)?[a-z_][a-z0-9_]*\])?)\s*:\s*(.*)$/;   // `> up[ward]:`, `> up[item:x]:` (E4)
 const RE_PROP = /^([a-z_][a-z0-9_]*)\s*:\s*(.*)$/;
 // perform/rank_xp/progress <track> ±n|tier, and study [track] ±n|tier
 const RE_TRACK_AMOUNT = new RegExp('^(perform|rank_xp|progress|study)(?:\\s+(' + ID + '))?\\s*([+-])\\s*(\\d+|tiny|small|medium|large|huge)$');

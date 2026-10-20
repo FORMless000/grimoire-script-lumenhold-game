@@ -1,0 +1,437 @@
+# ============================================================
+#  Romance sets (world expansion 1, plan §2a): Kael and Nessa. See lyra_tobias.grim for the shape.
+#  Kael's family and the lake are hard canon: nothing here touches them. His sets read cold hands, his mother, the North.
+# ============================================================
+
+# ---------------- Kael ----------------
+
+@event kael_warm_enough
+title: Warm Enough
+class: routine
+tone: warm
+trigger: social
+actor: kael
+when: rel(kael) >= 9 and bond(kael) != "partner" and bond(kael) != "ex" and spark(kael) < 40
+repeat: 4
+time: evening night
+weight: 10
+art: snow
+tags: social romance
+scene: Two students on a cold stone bench under a lamp, one with frost on his sleeves holding his bare hands near the other's mug of tea.
+text: Kael sits down beside you on the cold bench outside the library. {~Frost creeps from his sleeves onto the stone.|Your tea steams; his breath doesn't.} He holds his bare hands near your mug, not quite touching it, the way you'd hold them near a fire you weren't sure you were allowed to use.
+> left: Wrap his hands round the mug
+  learn kael.cold_hands
+  spark kael +small
+  mood -tiny
+  say: {~You fold his fingers round the mug, your hands over his. The tea goes cold in a minute. He doesn't let go. "Warm enough," he says, as if it's a thing he's never said.|You give him the mug and keep your hands on his. Your fingers ache with cold. His, slowly, don't. "Warm enough," he says, testing the words.}
+> right: Fetch him a second cup
+  rel kael +small
+  gold -tiny
+  say: {~You bring him a cup of his own. It freezes at the rim. He drinks it anyway, solemnly, as if it were a ceremony.|You fetch him a cup from the kitchens. He holds it like something alive. "Nobody brings me hot things," he says. "They assume."}
+
+@event kael_frost_drawings
+title: Frost Drawings
+class: routine
+tone: warm
+trigger: social
+actor: kael
+when: rel(kael) >= 9 and spark(kael) >= 5 and bond(kael) != "partner" and bond(kael) != "ex"
+weight: 10
+art: snow
+tags: social romance
+scene: A tall classroom window covered in delicate frost-ferns that, looked at closely, make the shape of a face; a pale boy wiping at it with his sleeve.
+text: The window by your seat in the lecture tower is frosted over, in a lecture hall that's too warm. Looked at closely, the frost-ferns make a face. Yours. Kael, two rows back, has gone very red, which on him is a faint pink.
+> left: Breathe on the glass and draw one back
+  spark kael +small
+  arcana +tiny
+  say: You breathe on the glass and draw, badly, a boy in a fur coat with a speech bubble that says "...". By the end of the lecture the frost has added a smile to your drawing. Neither of you mentions it afterwards.
+> right: Let him wipe it off
+  rel kael +small
+  say: He leans over and wipes it away with his sleeve, mortified. "It does that," he says. "When I'm not paying attention." He paid attention to the rest of the lecture very hard.
+
+@event kael_until_the_thaw
+title: Until the Thaw
+class: routine
+tone: warm
+trigger: social
+actor: kael
+when: rel(kael) >= 12 and spark(kael) >= 10 and bond(kael) != "partner" and bond(kael) != "ex"
+weight: 10
+art: star
+tags: social romance
+scene: Two students parting at the foot of a spiral staircase at night, one of them touching his forehead briefly to the other's.
+text: At the foot of your staircase, Kael stops. "In the North we don't say goodbye," he says. "It's unlucky. You say 'until the thaw', and touch foreheads, so the cold knows you're coming back." He hasn't said it to anyone here. He's waiting to see if you'll laugh.
+> left: Touch foreheads
+  learn kael.north
+  spark kael +small
+  say: You bend your head to his. His forehead is cold as a windowpane. "Until the thaw," you say. He stands there after you've gone up. You can hear him not moving.
+> right: Say it back, carefully
+  learn kael.north
+  rel kael +small
+  lore +tiny
+  say: "Until the thaw," you say, getting the vowels wrong. He corrects them, gently, three times, until you sound like you were born to it. He looks absurdly pleased.
+
+@event kael_bakery_window
+title: Wanting
+class: routine
+tone: light
+trigger: social
+actor: kael
+when: rel(kael) >= 9 and bond(kael) != "partner" and bond(kael) != "ex" and spark(kael) < 25
+repeat: 6
+weight: 9
+art: house
+tags: social romance
+scene: A pale boy standing outside a village bakery window in the snow, looking at a tray of iced buns, hands in his pockets.
+text: You find Kael standing outside the bakery window in the village, looking at the iced buns. He's been there, by the snow on his shoulders, a while. "I'm not hungry," he says, before you ask. He doesn't move.
+> left: Buy him one
+  gold -tiny
+  spark kael +small
+  say: {~You buy two. He holds his like an unexploded charm. "I wasn't going to," he says. "We weren't — I wasn't supposed to want things." Then he eats it in four bites and looks at you as if you've done something dangerous.|You put a bun in his hands. He looks at it, and at you, and says nothing for a long time. Then: "Thank you for not asking." He eats it slowly, as if someone might take it.}
+> right: Ask which one he'd pick
+  rel kael +small
+  say: {~"The one with the cherry," he says, at once, and then looks shocked at himself. You don't buy it. You just let him have said it, which seems to matter more.|He thinks about it seriously. "None," he says. "All of them." Then, quietly: "Is that allowed?" You tell him it is.}
+
+@event kael_lets_himself_want
+title: One Thing a Month
+class: routine
+tone: warm
+trigger: social
+actor: kael
+when: bond(kael) == "partner"
+repeat: 3
+weight: 12
+art: heart
+tags: romance
+scene: A boy and his partner on the castle roof at dusk, him counting something on his cold fingers, very seriously.
+text: Kael has a practice now: once a month, he tells you one thing he wants, out loud. {~This month he's been working up to it for days.|He has it ready. He's written it down so he won't back out.} "I want," he says, and stops, and starts again. "I want to see the sea. With you. Not for a reason."
+> left: "Then we'll go."
+  spark kael +small
+  mood +small
+  say: {~"Just like that?" he says. "Just like that," you say. He laughs, out loud, and frost blooms on every slate of the roof at once.|He nods slowly, as if you've signed something. "Next month," he says, "I'll want something bigger." You find you're looking forward to it.}
+> right: Tell him one of yours
+  rel kael +small
+  spark kael +tiny
+  say: {~You tell him something you want. He listens like it's a lesson, and then says, "Yes. That too. I want that for you," and seems surprised that he can.|You trade wants with him until the stars come out. His are small and precise. Yours make him laugh. It's the best lesson either of you has had.}
+
+@event kael_dont_protect_me
+title: Don't Protect Me
+class: routine
+tone: tense
+trigger: social
+actor: kael
+when: bond(kael) == "partner"
+weight: 10
+art: bolt
+tags: romance
+scene: A corridor floor glazed with ice around another student's boots, a pale boy standing between them and his partner, frost in the air.
+text: An older student says something sharp to you in the corridor, and the floor under his boots freezes solid. He goes down hard. Kael steps between you, frost in the air around him. "Where I'm from," he says, very quietly, "you guard what's yours."
+> left: "I'm not yours to guard."
+  spark kael -tiny
+  rel kael +small
+  alignment +tiny
+  say: The frost stops. He stares at you. "I didn't — " he says, and then, slowly, "No. You're not." He helps the other boy up himself. Later he says, "Tell me when I do it again," and you do, twice, and then he stops.
+> right: Let him, this once
+  spark kael +small
+  renown +tiny
+  rel kael -tiny
+  say: The corridor clears around you both. People step aside for you for a week. Kael walks you to every lesson, and you start to understand that he doesn't know another way to say it.
+
+@event kael_proud_of_you
+title: Proud of You
+class: routine
+tone: warm
+trigger: social
+actor: kael
+when: bond(kael) == "partner" and knows(kael.mother)
+weight: 12
+art: letter
+tags: romance
+scene: A pale boy on the edge of a bed with an unopened letter in Northern script, his partner sitting down beside him.
+text: Kael has done something hard, a practical he wasn't sure he'd pass, and passed it well. There's a letter from home on his bed. He hasn't opened it. "It won't say it," he tells you. "It never does. I don't know why I keep hoping."
+> left: Say it for her
+  spark kael +medium
+  if flag(kael_kindness):
+    say: "I'm proud of you," you say. He looks at you the way he did his first night here, at a piece of bread nobody had to offer. Then he puts the letter in a drawer, unopened, and doesn't take it out again.
+  else:
+    say: "I'm proud of you," you say. He doesn't move for a long time. Then he puts the letter in a drawer, unopened, and asks you to say it again, just once, so he'll know he didn't imagine it.
+> right: Open it together
+  rel kael +medium
+  mood -tiny
+  say: You open it together. It's about the weather and his uncle's knee. At the bottom, after the signature, in a different, hurried hand: "Well done." He reads it eleven times. It's more than he's ever had.
+
+@event kael_ex
+title: Frost Recedes
+specializes: soc_ex_encounter
+class: milestone
+tone: warm
+trigger: social
+actor: kael
+repeat: 6
+art: snow
+tags: romance
+scene: A long corridor of tall windows, frost on every pane except the ones nearest a student walking past alone.
+text: You notice it on a cold morning: the corridor windows are frosted over, every one, except the panes you walk past. Kael is at the far end. When he sees you, the frost on his side of the hall draws back, carefully, the way you'd step out of someone's road.
+> left: Walk on
+  mood -small
+  say: You walk on. The frost closes behind you. It's a kindness, you think, of a kind: he's keeping out of your way so precisely that it must take all his attention.
+> right: Walk up to him
+  rel kael +small
+  challenge appeal journeyman:
+    win:
+      bond kael friend
+      say: You say his name. He flinches, and then doesn't. "Until the thaw?" you ask, and he almost smiles. "Until the thaw," he says. The frost comes back across the windows, slowly, all of them, yours too.
+    lose:
+      mood -tiny
+      say: "Don't," he says, very gently. "Please. I'm not good at this part. I wasn't taught it." He goes. The windows stay clear where you stand.
+
+@event kael_gift_given
+title: A Snowflake Under Glass
+specializes: soc_gift_given
+class: routine
+tone: warm
+trigger: social
+actor: kael
+weight: 10
+repeat: 7
+art: snow
+tags: social
+scene: A tiny glass dome in a student's palm, a single perfect snowflake inside it that has not melted.
+text: There's a parcel in your pigeonhole, cold to the touch. Inside, wrapped in a scrap of fur, is a tiny glass dome with a single snowflake in it. It hasn't melted. A note in sharp Northern handwriting: "It won't. I asked it not to."
+> left: Keep it on your windowsill
+  rel kael +small
+  mood +small
+  say: It catches the light every morning. On the hottest day of the year you check it, worried. The snowflake is still there, perfect. So, you think, is he: careful, and very stubborn about what lasts.
+> right: Give him something warm back
+  gold -small
+  rel kael +medium
+  say: You find him a scarf, thick and red and absurd. He wears it at once, even indoors. Frost forms on it and he picks it off, flake by flake, as if he's protecting it.
+
+# ---------------- Nessa ----------------
+
+@event nessa_the_one_phrase
+title: The One Phrase
+class: routine
+tone: light
+trigger: social
+actor: nessa
+when: rel(nessa) >= 9 and bond(nessa) != "partner" and bond(nessa) != "ex" and spark(nessa) < 40
+repeat: 4
+weight: 10
+art: feather
+tags: social romance
+scene: A girl at a cluttered desk with a self-writing quill scratching beside her, glaring at it, while another student leans on the desk.
+text: You tell Nessa something about your day and her quill writes it down. {~It always does.|You're used to it by now.} "Sorry," she says. "It takes everything. There's one phrase that stops it, you know. I've never used it." She doesn't say what it is. She looks at you as if she's deciding.
+> left: Don't ask; let her decide
+  learn nessa.off_record
+  spark nessa +small
+  say: {~You say nothing. She keeps looking, and the quill keeps writing, and then she tells you what the phrase is, which is not the same as using it. "Off the record," she says. "Not yet." The quill writes that down too.|You wait. "Off the record," she says at last, as a definition, not a command. "That's the phrase. Someday I'll say it to somebody." The quill underlines "someday" twice.}
+> right: Guess the phrase
+  rel nessa +small
+  charm +tiny
+  say: {~You guess "please stop". The quill writes "PLEASE STOP" in capitals and keeps going. Nessa laughs so hard she has to sit down.|You guess "the end". The quill writes "THE END" and then, to make a point, a sequel. Nessa gives you a mark out of ten. It's a four.}
+
+@event nessa_quill_draft
+title: The Quill's Draft
+class: routine
+tone: light
+trigger: social
+actor: nessa
+when: rel(nessa) >= 9 and spark(nessa) >= 5 and bond(nessa) != "partner" and bond(nessa) != "ex"
+weight: 10
+art: paper
+tags: social romance
+scene: A sheet of newsprint on a desk with an over-written headline about two students, a mortified girl snatching for it.
+text: There's a draft on Nessa's desk in the quill's handwriting, headed "EXCLUSIVE: THE EDITOR AND THE SOURCE." It's about you. And her. And a great many moonlit walks that never happened. Nessa comes in, sees you reading it, and turns the colour of red ink.
+> left: Hand it back unread
+  learn nessa.quill
+  spark nessa +small
+  say: You fold it and hand it back. "I didn't read past the headline," you lie. "It invents things," she says, too fast. "Left alone. It makes up the news." She folds it smaller. She doesn't throw it away.
+> right: Read the best line aloud
+  learn nessa.quill
+  rel nessa +small
+  mood +small
+  say: You read out "their eyes met over the proofs like two scandals". Nessa puts her face in her hands. "It makes things up," she says, through her fingers. "When I'm not watching it." Then, muffled: "That line's not even good."
+
+@event nessa_deadline_night
+title: Deadline Night
+class: routine
+tone: tense
+trigger: social
+actor: nessa
+when: rel(nessa) >= 9 and bond(nessa) != "ex"
+repeat: 3
+time: evening night
+weight: 10
+art: paper
+tags: social romance
+scene: A newspaper office at night, proofs everywhere, a girl with ink on her face, a printing press waiting under a dust sheet.
+text: The Ledger goes to the printer at midnight and Nessa is three columns short. {~Ink on her face, ink in her hair.|The press is waiting under its dust sheet.} "I don't need help," she says. "I need a miracle, or a typesetter who doesn't sleep."
+> left: Set type until midnight
+  spark nessa +small
+  health -tiny
+  study -tiny
+  say: {~You set type with her until your fingers are black. At two minutes to midnight she slots in the last line, and kisses the press, and then, quickly, as if it were the same thing, your cheek.|You read proofs aloud while she sets them. You catch four errors. She catches you yawning, and calls it the fifth. The paper goes out on time.}
+> right: Write the third column yourself
+  challenge research journeyman:
+    win:
+      renown +tiny
+      rel nessa +small
+      say: {~You write it in an hour. She cuts a third and calls it "almost good", which from Nessa is a medal. It runs under "Staff".|Your column runs. Nessa edits it so hard it bleeds, and then pins the proof on her wall.}
+    lose:
+      rel nessa +tiny
+      mood -tiny
+      say: {~She reads it, says "no", kindly, and writes the column herself in twenty minutes. She keeps your draft anyway.|It's not good. She tells you so, and why, for ten minutes, and you learn more about writing than in a year of essays.}
+
+@event nessa_shared_byline
+title: A Shared Byline
+class: routine
+tone: warm
+trigger: social
+actor: nessa
+when: rel(nessa) >= 12 and spark(nessa) >= 10 and bond(nessa) != "partner" and bond(nessa) != "ex"
+weight: 10
+art: paper
+tags: social romance
+scene: A newspaper proof with two names printed side by side under a headline, one student pointing at them, the other pretending not to care.
+text: Nessa shows you the proof of next week's lead story. You helped with it, a little: one interview, one fact you checked. Under the headline it says "by Nessa Quill and" — and then your name. "It's accurate," she says, too casually. "I only print what's accurate."
+> left: Keep your name on it
+  renown +small
+  spark nessa +small
+  say: The story runs with both your names. People stop you in the corridor about it. Nessa cuts the byline out of the proof copy and keeps it in her notebook, where you're not supposed to see.
+> right: "It's your story. Take it."
+  rel nessa +small
+  alignment +tiny
+  say: She looks almost hurt, then very much not. "You're the first person who's ever tried to give me credit back," she says. "Fine. But you're in the acknowledgements. In large type."
+
+@event nessa_corrections_column
+title: Corrections
+class: routine
+tone: warm
+trigger: social
+actor: nessa
+when: bond(nessa) == "partner"
+repeat: 3
+weight: 12
+art: paper
+tags: romance
+scene: A student reading the back page of a school newspaper over breakfast, smiling at a tiny paragraph in the corrections box.
+text: Every week the Ledger's corrections column has a paragraph only you can read. {~This week: "Correction: last Tuesday we reported the weather as fair. It was, in fact, lovely, for reasons the editor declines to give."|This week: "Correction: the editor did not, as reported, sleep at her desk. She slept on someone's shoulder, which is not a desk."}
+> left: Write one back
+  spark nessa +small
+  charm +tiny
+  say: {~You slip a correction under her door: "Correction: the reader was not 'mildly pleased'. She was delighted." It runs the next week, verbatim, in a box with a border.|You send in a correction of the correction. She prints it with a correction of that. It goes on for a month. The rest of the school thinks the Ledger's lost its mind.}
+> right: Read it aloud at breakfast
+  rel nessa +small
+  renown +tiny
+  say: {~You read it aloud. Nobody else understands it. Nessa, three tables away, puts her head down on her toast.|You read it aloud with feeling. Half the table works it out. Nessa runs no corrections the following week, which is its own sort of correction.}
+
+@event nessa_not_a_story
+title: Not a Story
+class: routine
+tone: tense
+trigger: social
+actor: nessa
+when: bond(nessa) == "partner"
+weight: 10
+art: feather
+tags: romance
+scene: A girl holding out a typed draft to her partner across a desk, eager, the partner not taking it, the quill between them frozen mid-word.
+text: Nessa has written a feature. It's beautiful. It's about you: where you came from, what you told her late at night, what you're afraid of. Names changed. "Nobody would know," she says. "It's the best thing I've ever written."
+> left: "I'm not a story."
+  hint: She means it kindly; make her hear you.
+  challenge negotiate journeyman:
+    win:
+      spark nessa +medium
+      rel nessa +small
+      say: It takes an hour. She argues like an editor; you argue like someone who's been edited. At the end she stops, and looks at the draft, and puts it in the drawer with the quill. "Off the record," she says. "All of it. Always. I'm sorry."
+    lose:
+      spark nessa -small
+      rel nessa -tiny
+      say: She doesn't print it. She doesn't understand why, either, and she says so, at length, and you both go to bed angry. In the morning the draft is gone from her desk. You don't know where.
+> right: Let her print it
+  renown +small
+  spark nessa -tiny
+  mood -tiny
+  say: It runs. People cry over it in the refectory. Nobody guesses it's you, quite. Nessa is radiant all week, and you feel, oddly, like a photograph of yourself.
+
+@event nessa_press_breaks
+title: The Press Breaks
+class: routine
+tone: tense
+trigger: social
+actor: nessa
+when: bond(nessa) == "partner" and year >= 2
+weight: 10
+art: gear
+tags: romance
+scene: An old iron printing press with a cracked frame, a girl sitting on the floor beside it with her knees drawn up, ink on her hands.
+text: The Ledger's press has cracked down the middle, a hundred years old and done. Nessa is sitting on the floor beside it. "Forty years we haven't missed an issue," she says, very steady. "I'll copy it out by hand. Every copy. I'll chain myself to it if I have to." She isn't joking.
+> left: Copy it out with her, all night
+  learn nessa.press
+  spark nessa +small
+  health -small
+  say: You copy out three hundred Ledgers by hand, by candlelight, with half the club. At dawn the last one dries. Nessa falls asleep on the stack, ink on her nose, and the issue goes out on time, every copy in a different hand.
+> right: Find Mir
+  if met(mir):
+    learn nessa.press
+    rel nessa +small
+    rel mir +small
+    say: Mir looks at the press for a long minute, says "oh, you poor old thing", and spends three nights with a welding charm. It prints again, louder than before. Nessa hugs Mir so hard their goggles come off.
+  else:
+    learn nessa.press
+    rel nessa +small
+    gold -small
+    say: You don't know anyone who can mend it, so you hire someone from the village. It costs. It prints. Nessa says she'll pay you back; you both know she'll pay you back in column inches.
+
+@event nessa_ex
+title: Retraction
+specializes: soc_ex_encounter
+class: milestone
+tone: warm
+trigger: social
+actor: nessa
+repeat: 6
+art: paper
+tags: romance
+scene: A tiny boxed paragraph on the back page of a school newspaper, a student reading it alone in a window seat.
+text: In this week's Ledger, at the very bottom of the back page, in the smallest type the press has: "Retraction. The editor regrets an earlier statement, made off the record, that she was certain. She was not. She is sorry." Nessa is in the doorway, watching you read it.
+> left: Fold the paper and go
+  mood -small
+  say: You fold the Ledger and put it in your bag. You don't look back. Weeks later you find it again, the little paragraph worn soft where you've folded it, over and over.
+> right: Go and talk to her
+  rel nessa +small
+  challenge appeal journeyman:
+    win:
+      bond nessa friend
+      say: "On the record," you say, "I'd like to be friends." Her quill, at her shoulder, writes it down, and she lets it. "Printed," she says. "No retractions."
+    lose:
+      mood -tiny
+      say: She starts to say something, and then her quill starts writing, and she looks at it, and at you, and puts it away. "Not yet," she says. "I'm still drafting."
+
+@event nessa_argument
+title: On the Record
+specializes: soc_argument
+class: routine
+tone: light
+trigger: social
+actor: nessa
+weight: 8
+repeat: 6
+art: bolt
+tags: social
+scene: Two students arguing in a corridor, one of them with a notebook out, a quill floating at her shoulder taking it all down.
+text: You and Nessa are arguing about something small, and it's getting less small, and halfway through you realise her quill is taking it down. Verbatim. With stage directions. "Ignore it," she says. "Go on. You were saying I'm 'impossible'?"
+> left: Make her put the quill away
+  rel nessa +small
+  mood -tiny
+  say: "Not with that thing listening." She glares, and then, astonishingly, puts it in her pocket. The argument dies without an audience. "You're right," she says. "Don't quote me."
+> right: Argue for the record
+  mood -tiny
+  chance even:
+    rel nessa -small
+    say: You argue for the record. She wins on points, and prints a column the next week about "people who say 'impossible' when they mean 'right'". You aren't named. Everyone knows.
+  else:
+    rel nessa +medium
+    charm +small
+    say: You argue it out for the record, both of you playing to the quill, until you're laughing too hard to finish. The transcript is pinned on her wall under "best interview of the year".

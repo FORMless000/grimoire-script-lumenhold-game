@@ -1,0 +1,3 @@
+import fs from 'node:fs';import path from 'node:path';import {fileURLToPath} from 'node:url';
+if(!process.argv[2])throw Error('Usage: node build.mjs <temporary preview directory>');const out=path.resolve(process.argv[2]),root=path.dirname(fileURLToPath(import.meta.url));fs.mkdirSync(out,{recursive:true});
+for(const f of ['index.html','style.css','app.mjs','ai-worker.mjs','engine.mjs','ai.mjs','reference-engine.mjs','reference-ai.mjs','core.mjs','negotiation.wasm','cards.mjs','encounters.mjs','schema.mjs','rulebook.md','server.mjs'])fs.copyFileSync(path.join(root,f),path.join(out,f));console.log(out);

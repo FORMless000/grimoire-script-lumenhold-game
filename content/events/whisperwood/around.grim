@@ -1,0 +1,638 @@
+# ============================================================
+#  Around the Whisperwood (world expansion 1, plan §1 and K4): the talking trees (delve cards in bands 2–3, one per
+#  peer, each a plot-safe personal fact), the clues that the Hush keeps midnight hours (ww_midnight_known), Old
+#  Maud's cards about Tuppence and her old trail map, the delve items' own stories, and the two offers the delve's
+#  finds open (the heartwood splinter for Mir, the Spinner's silk for the tailor).
+# ============================================================
+
+# ---------------- The talking trees (delve, bands 2–3) ----------------
+# Right listens (the fact) and goes on; a month later, `ww_tree_tell` asks whether you tell them you heard it.
+
+@event ww_tree_tobias
+title: The Trees Gossip
+trigger: queued
+class: routine
+tone: light
+when: ww_depth >= 3 and ww_depth <= 6
+art: tree
+tags: ww nature social
+cast:
+  peer: tobias where met(tobias) and not knows(tobias.gerald)
+scene: Two old trees leaning their crowns together in a misty forest, as if whispering, a student listening beneath.
+text: Two old trees have their crowns together, whispering. You catch your own name, and then Tobias's. The trees know him: he talks to plants, and plants, it turns out, talk back about him. Something about a hat.
+> left: Leave them to it; turn back
+  queue ww_way_home now
+  say: You leave the trees to their gossip and go home. Whatever it was about the hat, it can wait.
+> right: Listen in
+  learn tobias.gerald
+  queue ww_tree_tell in 1 with peer
+  ww_depth += 1
+  queue any tagged ww now
+  say: Tobias, say the trees, is raising a mandrake called Gerald, who wears a knitted hat and screams softly. They approve of Gerald. They're less sure about the hat.
+
+@event ww_tree_lyra
+title: The Trees Gossip
+trigger: queued
+class: routine
+tone: light
+when: ww_depth >= 3 and ww_depth <= 6
+art: tree
+tags: ww nature social
+cast:
+  peer: lyra where met(lyra) and not knows(lyra.toast)
+scene: Two old trees leaning their crowns together in a misty forest, as if whispering, a student listening beneath.
+text: Two old trees have their crowns together, whispering. The name that comes up is Lyra's, and the trees sound amused. One of them has a scorch mark low on its trunk, and it's still a little sore about it.
+> left: Leave them to it; turn back
+  queue ww_way_home now
+  say: You leave the trees to their gossip. Some things about Lyra you'd rather hear from Lyra.
+> right: Listen in
+  learn lyra.toast
+  queue ww_tree_tell in 1 with peer
+  ww_depth += 1
+  queue any tagged ww now
+  say: Lyra Vaneshade, say the trees, can incinerate a target at forty paces and cannot make toast. She tried, out here, alone, at dawn. The scorched tree was the toast.
+
+@event ww_tree_bram
+title: The Trees Gossip
+trigger: queued
+class: routine
+tone: light
+when: ww_depth >= 3 and ww_depth <= 6
+art: tree
+tags: ww nature social
+cast:
+  peer: bram where met(bram) and not knows(bram.hall_tax)
+scene: Two old trees leaning their crowns together in a misty forest, as if whispering, a student listening beneath.
+text: Two old trees have their crowns together, whispering, and the word you catch is "prefect", said with relish. They know Bram: a red sash comes through here on patrol, they say, and talks to itself about money.
+> left: Leave them to it; turn back
+  queue ww_way_home now
+  say: You leave the trees to their gossip. Bram has enough people talking about him.
+> right: Listen in
+  learn bram.hall_tax
+  queue ww_tree_tell in 1 with peer
+  ww_depth += 1
+  queue any tagged ww now
+  say: Bram, say the trees, once invented a hall tax for the east staircase, and collected it for a week before anyone checked. They think it was very enterprising. They would.
+
+@event ww_tree_mir
+title: The Trees Gossip
+trigger: queued
+class: routine
+tone: light
+when: ww_depth >= 3 and ww_depth <= 6
+art: tree
+tags: ww nature social
+cast:
+  peer: mir where met(mir) and not knows(mir.owl)
+scene: Two old trees leaning their crowns together in a misty forest, as if whispering, a student listening beneath.
+text: Two old trees have their crowns together, whispering about a bird that isn't a bird. It ticks, they say. It flew through here once with Mir chasing it and shouting about a deadline.
+> left: Leave them to it; turn back
+  queue ww_way_home now
+  say: You leave the trees to their gossip, and go home listening for ticking.
+> right: Listen in
+  learn mir.owl
+  queue ww_tree_tell in 1 with peer
+  ww_depth += 1
+  queue any tagged ww now
+  say: Mir, say the trees, built a clockwork owl that remembers deadlines, birthdays, and grudges, slightly. The owl landed here and told an oak it was overdue. The oak is still upset.
+
+@event ww_tree_kael
+title: The Trees Gossip
+trigger: queued
+class: routine
+tone: warm
+when: ww_depth >= 3 and ww_depth <= 6
+art: tree
+tags: ww nature social
+cast:
+  peer: kael where met(kael) and not knows(kael.cold_hands)
+scene: Two old trees leaning their crowns together in a misty forest, frost on one side of their trunks, a student listening.
+text: Two old trees are whispering, and one side of each trunk is frosted, as if someone leaned there. The Northern boy, they say. He walks out here when he can't sleep, and puts his hands on their bark.
+> left: Leave them to it; turn back
+  queue ww_way_home now
+  say: You leave the trees to their whispering. It feels like his to tell.
+> right: Listen in
+  learn kael.cold_hands
+  queue ww_tree_tell in 1 with peer
+  ww_depth += 1
+  queue any tagged ww now
+  say: His hands are always cold, the trees say. He puts them on the bark to see if anything is ever warm enough. Nothing has been, yet. The trees sound sorry about it.
+
+@event ww_tree_nessa
+title: The Trees Gossip
+trigger: queued
+class: routine
+tone: light
+when: ww_depth >= 3 and ww_depth <= 6
+art: tree
+tags: ww nature social
+cast:
+  peer: nessa where met(nessa) and not knows(nessa.quill)
+scene: Two old trees leaning their crowns together in a misty forest, a quill-scratched message on one trunk, a student listening.
+text: Two old trees are whispering about a quill. Somebody's quill was left out here overnight, they say, and by morning it had written a headline on a birch. The birch would like a retraction.
+> left: Leave them to it; turn back
+  queue ww_way_home now
+  say: You leave the trees to their gossip, which is at least partly about the press.
+> right: Listen in
+  learn nessa.quill
+  queue ww_tree_tell in 1 with peer
+  ww_depth += 1
+  queue any tagged ww now
+  say: Nessa's quill, say the trees, starts inventing the news if she leaves it unsupervised. The birch's headline is about the birch. It's very unflattering, and, the trees admit, mostly true.
+
+@event ww_tree_corvin
+title: The Trees Gossip
+trigger: queued
+class: routine
+tone: light
+when: ww_depth >= 3 and ww_depth <= 6
+art: tree
+tags: ww nature social
+cast:
+  peer: corvin where met(corvin) and not knows(corvin.trolls)
+scene: Two old trees leaning their crowns together in a misty forest, a goat grazing beneath, a student listening.
+text: Two old trees are whispering, and laughing, in the creaking way trees laugh. It's about Corvin. It's about a debt. It's about, as far as you can make out, a goat.
+> left: Leave them to it; turn back
+  queue ww_way_home now
+  say: You leave the trees laughing. You'll hear about the goat eventually. Everyone does.
+> right: Listen in
+  learn corvin.trolls
+  queue ww_tree_tell in 1 with peer
+  ww_depth += 1
+  queue any tagged ww now
+  say: Corvin, say the trees, once owed thirty crowns to trolls, and offered to pay them back with a goat. The trolls took the goat. The goat now runs the trolls.
+
+@event ww_tree_tell
+title: Something the Trees Said
+trigger: queued
+actor: npc
+class: routine
+tone: light
+repeat: 1
+art: tree
+tags: social nature
+scene: Two students talking in a castle corridor, one looking surprised and caught out, the other trying not to smile.
+text: {npc} is right there, and you know something about {them} that {they} didn't tell you. The Whisperwood did. It's on the tip of your tongue.
+> left: Keep it to yourself
+  alignment +tiny
+  say: You keep it. Whatever the trees say, it's {npc}'s to tell. It sits in you like a small warm stone.
+> right: Tell {them} you heard it
+  if npc_is(tobias) or npc_is(mir) or npc_is(corvin) or npc_is(kael):
+    rel npc +small
+  else:
+    rel npc -tiny
+  say: {npc_is(tobias): Tobias goes pink to the ears. "They told you about Gerald?" Then, proudly: "Do you want to meet him?"|{npc_is(mir): "The owl went to the WOOD?" Mir is delighted. "It's famous. It's going to be unbearable."|{npc_is(corvin): Corvin laughs until he has to lean on the wall. "The goat," he says. "Everyone always hears about the goat."|{npc_is(kael): Kael is quiet for a long moment. Then he holds out a hand, and you take it. "Not yet," he says. "But warmer."|{npc_is(lyra): Lyra turns the colour of her own fire. "Trees," she says, "are liars," and stalks off, and doesn't speak to you until Thursday.|{npc_is(bram): Bram goes rigid. "That was a legitimate levy," he says, and writes something down that is probably your name.|Nessa narrows her eyes. "Who's your source? A tree. A TREE." She writes it down anyway.}}}}}}
+
+# ---------------- The midnight clues ----------------
+
+@event jit_maud_warning
+title: Maud's Warning
+trigger: queued
+class: story
+tone: warm
+art: tree
+tags: intro nature
+scene: An old woman in a shawl with a basket of mushrooms catching a student's sleeve at the edge of a misty forest.
+text: Old Maud is at the edge of the wood with a basket, and catches your sleeve. "Off the path, are we? Listen, dearie. Press on as far as you like, turn back whenever you like, and what you bring out, Pell will buy. Fall once and you'll get up. Twice, and someone'll have to come and find you."
+> left: Thank her
+  meet maud
+  say: "And mind the Hush," she adds, letting go. "It keeps the castle's hours. It wakes when you're meant to be asleep."
+> right: Ask about the deep part
+  meet maud
+  flag ww_midnight_known
+  find lead_the_hush
+  say: "The Hush," she says. "Past the heartwood. It keeps the castle's hours, dearie: it wakes at midnight, when you're meant to be asleep." She looks at the wood a long moment. "Don't go down there without a friend."
+
+@event brask_deep_hours
+title: Midnight Hours
+place: stables
+class: routine
+tone: eerie
+when: met(brask) and not flag(ww_midnight_known) and visits_to(whisperwood) > 0
+weight: 8
+art: owl
+tags: nature mystery
+cast:
+  brask: brask where around(brask)
+scene: A professor in a riding coat feeding a barn owl in a dim stable loft at dusk, the forest dark through the window.
+text: Professor Brask is feeding the old barn owl in the loft. "You've been in the wood," she says, without turning round. "By day, I hope. The deep things keep midnight hours. Most of them would rather you didn't."
+> left: Ask her what deep things
+  flag ww_midnight_known
+  find lead_the_hush
+  lore +tiny
+  rel brask -tiny
+  say: "Old ones," says Brask. "In the Hush, past the heartwood. Wakes at midnight. Go down by day and it's just quiet." She feeds the owl another mouse. "That was a warning, not an invitation." It didn't sound like either.
+> right: Help with the owl instead
+  rel brask +small
+  health -tiny
+  say: You hold the bucket and the owl regards you with deep contempt. Brask says nothing more about the wood, and you leave with a peck on the thumb and her good opinion.
+
+@event carto_hush_margin
+title: A Note in the Margin
+track: cartographers
+class: routine
+tone: eerie
+when: not flag(ww_midnight_known)
+weight: 10
+art: map
+tags: club mystery
+scene: An old hand-drawn map of a forest spread on a table by candlelight, one margin crowded with tiny ink notes.
+text: The Cartographers' oldest map of the grounds has a margin crowded with notes in a dozen hands. Over the Whisperwood someone has written, very small: "W. wood: HUSH. Twelfth bell only." Corvin taps it. "Never checked that one," he says. "Nobody's that brave. Or that stupid."
+> left: Ink it onto the new map
+  flag ww_midnight_known
+  find lead_the_hush
+  lore +tiny
+  say: You copy the note onto the new map in your neatest hand, and the Cartographers watch you do it with the particular silence of people placing bets.
+> right: Leave the margin alone
+  guile +tiny
+  say: You leave the old note where it is. The Cartographers move on to the third floor's missing corridor. The margin stays in your head anyway.
+
+@event grimsbys_field_guide
+title: A Field Guide
+place: grimsbys_books
+class: routine
+tone: light
+when: not flag(ww_midnight_known) and visits_to(whisperwood) > 0
+weight: 8
+art: book
+tags: nature shop
+scene: A small battered green field guide open on a bookshop counter, a long footnote circled in pencil.
+text: Grimsby has put a field guide to the western woods on the counter, open at moonpetal. There's a long footnote, in tiny print, and someone has circled it. "I think," says Grimsby mildly, "that you should read the footnote."
+> left: Buy the book
+  gold -small
+  lore +small
+  flag ww_midnight_known
+  find lead_the_hush
+  say: The footnote says moonpetal in the deep wood opens only "in the Hush, at the twelfth bell". You buy the book and read the rest on the way home. It's mostly about mushrooms, and very good.
+> right: Read the footnote and go
+  flag ww_midnight_known
+  find lead_the_hush
+  rel grimsby -tiny
+  say: You read the footnote standing up: moonpetal in the deep wood opens only "in the Hush, at the twelfth bell". Grimsby closes the book with a sigh that says browsers are a cross he bears.
+
+# ---------------- Old Maud and Tuppence ----------------
+
+@event maud_tuppence
+title: My Girl in the Hush
+place: maud_cottage
+class: routine
+tone: warm
+when: rel(maud) >= 12 and not knows(maud.tuppence)
+weight: 10
+art: spider
+tags: social nature
+cast:
+  maud: maud where around(maud)
+scene: An old woman pouring tea in a cluttered cottage kitchen, an old drawing of a tiny spider pinned above the stove.
+text: Over tea, Maud nods at a drawing pinned over the stove: a spider, no bigger than a hand. "My Tuppence," she says. "Found her in the greenhouses, my first winter as groundskeeper. Kept her in the potting shed till she got too big for it. She's in the Hush now, the deep part of the wood. Keeps the worse things out." She sips. "Only wakes at midnight, the Hush."
+> left: Ask how big she is now
+  learn maud.tuppence
+  flag ww_midnight_known
+  find lead_the_hush
+  rel maud +tiny
+  mood -tiny
+  say: "Oh, carriage-sized," says Maud fondly. "Bit more." She pours more tea. You find you don't want any.
+> right: Ask if she misses her
+  learn maud.tuppence
+  flag ww_midnight_known
+  find lead_the_hush
+  rel maud +small
+  say: "Every day," says Maud. "But you can't keep a thing in a potting shed because you'd miss it. That's not love, that's a jar." She looks at you over the cup. "Tell her I said hello, if you're ever that foolish."
+
+@event maud_worse_out
+title: She Kept Worse Out
+place: maud_cottage
+class: routine
+tone: tense
+when: flag(ww_spinner_beaten) and met(maud)
+weight: 14
+art: spider
+tags: social nature
+cast:
+  maud: maud where around(maud)
+scene: An old woman standing at her cottage door at dusk, looking toward a dark forest with an expression half proud, half afraid.
+text: Maud knows. Of course she knows: the bees told her, or the wood did. "You beat my Tuppence," she says, and she's proud, you can hear it, and frightened too. "Good for you, dearie. Only she kept worse things out. Now she's let one in. Sits by a lantern, I hear. Polite." She doesn't say his name.
+> left: Promise to be careful
+  rel maud +small
+  say: "Careful," says Maud, "is what people say instead of 'not going'." But she pats your hand, and gives you a jar of honey for the road you haven't said you'll take.
+> right: Ask who he is
+  lore +small
+  mood -tiny
+  say: "Somebody they sent away," says Maud, "before my time, almost. He was clever. They always are." She shuts the door very firmly, as if on a draught.
+
+@event ww_mastery_map
+title: Maud's Old Map
+place: maud_cottage
+class: story
+tone: warm
+when: (flag(ww_spinner_beaten) or ww_descents >= 3) and not flag(ww_mastery) and met(maud)
+weight: 16
+art: map
+tags: nature social
+cast:
+  maud: maud where around(maud)
+scene: An old woman handing a creased, hand-drawn map of a forest to a student across a cottage table.
+text: Maud slides a creased old map across the table. The Whisperwood, drawn in her young hand, every carved bee marked, every path to the heartwood, and a careful line down into the Hush. "Mine," she says, "from when I used to go down to visit. My knees won't take it now. Yours will."
+> left: Take it, gratefully
+  flag ww_mastery
+  rel maud +small
+  say: You fold it into your coat. From now on, at midnight, you can go straight down past the heartwood. "Bring it back," says Maud, "when you're old."
+> right: Ask her to come with you, once
+  flag ww_mastery
+  rel maud +medium
+  health -tiny
+  say: She laughs till she coughs. "Once," she says. And one night she does, slowly, on your arm, as far as the heartwood, and stands there smiling at the dark. Then she gives you the map.
+
+# ---------------- The delve's finds: offers ----------------
+
+@event offer_heartwood_wand
+title: Mir Carves the Heartwood
+place: village
+class: routine
+tone: warm
+weight: 14
+when: flag(ww_heartwood) and not has_item(heartwood_wand) and met(mir)
+art: wand
+tags: money shop offer item
+scene: An artificer at a market stall turning a red-gold splinter of wood in their fingers, a carving knife ready.
+text: Mir is at the market stall, mending a clockwork hen, when you put the heartwood splinter on the counter. They stop. They pick it up as if it might bite, then as if it might sing. "Where," they say, "did you get THIS?" Then: "I can carve it. It's work. Not much money."
+> left: Not yet
+  say: Mir hands it back with real reluctance. "Don't lose it," they say. "Don't use it to stir anything. Don't..." You leave while they're still listing.
+> right: Have Mir carve it
+  hint: A wand for fights: more Mana.
+  gold -small
+  give heartwood_wand
+  rel mir +small
+  say: Mir carves it in an evening, talking to it the whole time. The grain moves under their knife as if it's helping. When they hand it over, it's warm, and so are their hands. "Don't tell anyone I made a thing that isn't a machine," they say.
+
+@event offer_spinner_silk_robe
+title: Spinner Silk
+place: village
+class: routine
+tone: light
+weight: 14
+when: flag(ww_spinner_silk) and not has_item(spinner_silk_robe)
+art: spider
+tags: money shop offer item
+scene: A village tailor holding up a length of shimmering grey silk to the window light, her mouth open in astonishment.
+text: The village tailor unrolls the Spinner's silk across her table and goes very quiet. She holds it to the window. Light goes into it and doesn't come out. "I can make you a robe of this," she says at last. "It will cost you. Not for the silk. For my nerves."
+> left: Keep the silk for now
+  say: She rolls it up again, very carefully, as if it might roll her up. "Come back," she says. "Please come back. I want to have made it."
+> right: Have the robe made
+  hint: A robe for fights: much more Health, quicker steps.
+  gold -large
+  give spinner_silk_robe
+  say: It takes her a week and two sleepless nights. When you put it on, you move like a rumour. The tailor sits down. "I'll never make anything like it again," she says, happily.
+
+# ---------------- The delve's items: their own stories ----------------
+
+@event item_quill_brask
+title: Brask Knows That Owl
+place: stables
+class: routine
+tone: warm
+when: has_item(owl_quill) and met(brask)
+weight: 8
+art: feather
+tags: item nature
+cast:
+  brask: brask where around(brask)
+scene: A professor in a riding coat holding up a white owl-feather quill to the light, an old barn owl in the rafters above.
+text: Professor Brask sees your quill and takes it out of your hand without asking. She turns it to the light. Above you, in the rafters, the old barn owl shifts. "That's hers," says Brask. "From the winter she moulted in the wood. I looked for that feather for a month."
+> left: Offer it back
+  rel brask +small
+  learn brask.owl
+  say: Brask looks at the quill a long time, then hands it back. "Keep it. She'd want it used." Then, gruffly, she tells you how old the owl is, and how many colleagues it has outlived, and doesn't say which loss hurt most.
+> right: Ask her about the owl
+  lore +tiny
+  learn brask.owl
+  say: "Older than the beastcraft syllabus," says Brask. "Outlived three professors." She hands back the quill. "Wouldn't say which one I miss most," she says, and then doesn't.
+
+@event item_quill_nessa
+title: The Quill Writes Back
+place: ledger_office
+class: routine
+tone: light
+when: has_item(owl_quill) and met(nessa)
+weight: 8
+art: feather
+tags: item social
+cast:
+  nessa: nessa where around(nessa)
+scene: Two quills scratching furiously at each other on a sheet of paper in a cluttered newspaper office, a student and an editor watching aghast.
+text: You leave your owl quill on Nessa's desk for one minute. When you come back, her enchanted quill and yours are writing at each other on a sheet of foolscap: hers in headlines, yours in very tidy footnotes. It is, as far as you can tell, an argument about accuracy.
+> left: Let them finish
+  rel nessa +small
+  learn nessa.quill
+  say: Nessa reads the finished sheet aloud. Her quill invented a scandal; yours corrected it, line by line. "I'm printing this," says Nessa, "as a warning to my quill."
+> right: Separate them
+  lore +tiny
+  rel nessa -tiny
+  say: You pull your quill away mid-footnote. Nessa's quill sulks for a week and invents nothing, which Nessa says is worse.
+
+@event item_lodestone_kael
+title: North, Always North
+class: routine
+tone: warm
+when: has_item(lodestone_pendant) and met(kael)
+weight: 8
+art: compass
+tags: item social
+cast:
+  kael: kael where around(kael)
+scene: A pale Northern student looking at a dark pendant turning slowly on a cord, his frosted hand held out beneath it.
+text: Kael notices the lodestone turning on its cord, slowly, to face north. He watches it for a long moment. "It points home," he says. "My home." He doesn't sound as if he's decided how he feels about that.
+> left: Let him hold it
+  rel kael +small
+  learn kael.north
+  say: He holds it in his cold palm and the stone keeps turning north, steady as a promise. "It doesn't know I left," he says, and gives it back.
+> right: Ask about the North
+  lore +tiny
+  rel kael -tiny
+  say: "Cold," says Kael, which is the whole answer, and the subject is closed. The pendant keeps pointing at it.
+
+@event item_lodestone_stacks
+title: Lost in the Stacks
+place: library
+class: routine
+tone: light
+when: has_item(lodestone_pendant)
+weight: 8
+art: compass
+tags: item study
+scene: A student following a turning pendant between tall dim library shelves, a misshelved book glowing faintly at the end of a row.
+text: In the deep stacks the lodestone stops pointing north and starts pointing at a shelf. Then at a book, misshelved forty years ago between two treatises on drainage. It's very old, and very interesting, and nobody has missed it.
+> left: Read it here and now
+  lore +small
+  study +tiny
+  mood -tiny
+  say: You read it on the floor of the stacks until the lamps are put out. It's about the wood. Most of it you already knew, the hard way.
+> right: Return it to its shelf
+  rel grimsby +tiny
+  alignment +tiny
+  say: You find where it belongs and put it there. Grimsby, when you tell him, is so pleased he gives you tea.
+
+@event item_tine_brask
+title: Brask Bows to It
+place: stables
+class: routine
+tone: warm
+when: has_item(stag_tine) and met(brask)
+weight: 8
+art: paw
+tags: item nature
+cast:
+  brask: brask where around(brask)
+scene: A sturdy professor bowing low to a dark antler tine held by a student, horses watching from their stalls.
+text: Professor Brask sees the stag's tine at your belt and stops in the middle of a sentence. Then she bows to it, deeply, the way she bows in the bracken. Every horse in the stable goes quiet.
+> left: Bow back
+  rel brask +small
+  say: You bow to the tine too, which feels silly, and then doesn't. Brask straightens and nods. "You'll do," she says, which from her is a sonnet.
+> right: Ask why she bowed
+  lore +small
+  say: "It's not yours," she says. "It's lent. The stag lends it to people it means to see again." She looks at you hard. "Don't make it regret that."
+
+@event item_heartwood_tobias
+title: It Hums
+place: greenhouses
+class: routine
+tone: warm
+when: has_item(heartwood_wand) and met(tobias)
+weight: 8
+art: leaf
+tags: item social
+cast:
+  tobias: tobias where around(tobias)
+scene: A large gentle student in a greenhouse surrounded by potted plants all leaning toward a red-gold wand in another student's hand.
+text: You walk into the greenhouses with the heartwood wand, and every plant in the place leans toward it. Tobias looks up from his potting. "Oh," he says. "Oh, they like that. It's humming. Can you hear it? It's humming to them."
+> left: Let him listen
+  rel tobias +small
+  learn tobias.plants
+  say: Tobias holds the wand to his ear with his eyes shut and smiles. "It says it's far from home," he says. "But it doesn't mind." The plants agree. You almost hear it.
+> right: Get on with your work
+  study +tiny
+  rel tobias -tiny
+  say: You put the wand away and get on with your herbology. The plants lean back to their own business, disappointed, and so does Tobias.
+
+@event item_thorn_wants
+title: It Wants to Be Used
+slot: night
+class: routine
+tone: grim
+when: has_item(thorn_wand)
+weight: 8
+art: rose
+tags: item magic
+scene: A blackthorn wand lying on a dormitory desk at night, faintly green at its heart, thorns bristling toward a sleeping student.
+text: You wake at night with the thorn wand in your hand and no memory of picking it up. It's warm. It's telling you, in the way wands tell you things, how much stronger you could be by morning. There's a potted fern on the windowsill.
+> left: Put it away in a drawer
+  mood -small
+  say: You shut it in the drawer and lie awake listening to it not be quiet. In the morning the fern is fine. You're not, quite.
+> right: Just the fern
+  alignment -small
+  mana +small
+  say: The fern greys. You feel wonderful, and then you look at the fern. The thorn wand is cool again, satisfied, for now.
+
+@event item_thorn_brask
+title: Brask Smells It
+place: stables
+class: routine
+tone: tense
+when: has_item(thorn_wand) and met(brask)
+weight: 10
+art: rose
+tags: item nature
+cast:
+  brask: brask where around(brask)
+scene: A stern professor in a stable holding out her hand for a blackthorn wand, a student hesitating.
+text: Professor Brask stops beside you and sniffs, like a horse. "Thorn," she says. "Blackthorn. Where did you get it?" She holds out her hand. "I know that wand. I know the woman who cuts them. Give it to me, and I'll snap it, and we'll say no more."
+> left: Hand it over
+  take thorn_wand
+  alignment +small
+  rel brask +small
+  say: Brask snaps it over her knee. It screams, very faintly. "Good," she says, and drops the pieces in the stove, and gives you a hippogriff to muck out, as a kindness.
+> right: Argue you can handle it
+  rel brask -small
+  guile +tiny
+  say: "Can you," says Brask flatly. She doesn't take it. She doesn't say anything else, either, and she doesn't need to.
+
+@event item_thorn_snap
+title: Snap It
+slot: midnight
+class: routine
+tone: warm
+when: has_item(thorn_wand)
+weight: 6
+art: rose
+tags: item magic
+scene: A student alone on a castle rampart at midnight, holding a blackthorn wand bent nearly to breaking.
+text: Alone on the ramparts, at midnight, you take out the thorn wand and look at it. It knows what you're thinking. It's very still, the way a cat is still.
+> left: Snap it
+  take thorn_wand
+  alignment +small
+  mood +small
+  say: It takes both hands. It doesn't want to go, and then it goes, with a crack like ice. You drop the pieces over the parapet and feel lighter than you have in months.
+> right: Not yet
+  alignment -tiny
+  say: You put it away. It's warm against your side all the way back to bed, purring, if wands purr.
+
+@event item_locket_midnight
+title: The Locket Opens
+slot: midnight
+class: routine
+tone: eerie
+when: has_item(moonpetal_locket)
+weight: 8
+art: moon
+tags: item nature
+scene: A plain silver locket opening on its own in a student's palm at midnight, a pressed silver flower glowing inside.
+text: At the twelfth bell the moonpetal locket opens in your hand on its own. The pressed petal inside glows, very faintly, and for a moment you smell the Hush: cold stone, moonlight, silence.
+> left: Close it gently
+  mood +tiny
+  say: You close it. The glow stays on your fingers for a while, like pollen.
+> right: Let it glow
+  mana +small
+  health -tiny
+  say: You hold it open until the glow fades, and you're full of quiet, and very cold, and you sleep badly and well.
+
+@event item_silk_corvin
+title: Corvin Is Jealous
+class: routine
+tone: light
+when: has_item(spinner_silk_robe) and met(corvin)
+weight: 8
+art: spider
+tags: item social
+cast:
+  corvin: corvin where around(corvin)
+scene: A lanky student in a patched coat circling another student in a shimmering grey silk robe, looking deeply envious.
+text: Corvin walks round you twice. "That," he says, "is Spinner silk. You can't buy Spinner silk. You have to..." He stops. "You didn't." He looks at you with a whole new kind of respect, and also as if calculating what the robe would fetch.
+> left: Let him touch the sleeve
+  rel corvin +small
+  say: He touches the sleeve with one finger, reverently. "I would sell my grandfather's deck for this," he says. "Don't tell him I said that. He's dead. He'd still mind."
+> right: Keep it out of his reach
+  guile +tiny
+  rel corvin -tiny
+  say: You step back. Corvin grins. "Smart," he says. "I'd have had it off you by Thursday."
+
+@event item_grimoire_isolde
+title: The Headmistress Asks
+actor: isolde
+class: story
+tone: tense
+when: has_item(outcast_grimoire) and flag(outcast_beaten)
+weight: 20
+art: book
+tags: item magic
+scene: A silver-haired headmistress on a castle stair, looking at a black-bound book in a student's hands, her face very still.
+text: The headmistress stops you on the stair. She doesn't look at you. She looks at the black grimoire. "Absalom Vrell," she says. "Expelled long before my time. His name is still in the ledger, crossed out. I wondered when he'd find a way to give that away." Now she looks at you. "What do you mean to do with it?"
+> left: Offer it to her
+  take outcast_grimoire
+  alignment +small
+  rel isolde +small
+  say: She takes it without touching the pages and locks it in a drawer. "Thank you," she says. "Some things are safest where people can see them not being used." She means it as praise. You think.
+> right: Keep it, and say so
+  alignment -tiny
+  rel isolde -tiny
+  renown +tiny
+  say: She looks at you for a long time. "Then use it as he never did," she says, "carefully." She doesn't ask for it again. That's somehow worse.

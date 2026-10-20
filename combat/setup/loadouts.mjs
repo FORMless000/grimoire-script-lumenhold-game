@@ -17,7 +17,25 @@ export const LOADOUTS={
 // Special foes (F5.9): creatures and other fighters outside the classes. Skills from offsets like a class; the spells are a
 // fixed kit, {spell: level it is learned at}; no Flame or Ward unless listed.
 export const SPECIAL_LOADOUTS={
- 'Shadow stag':{salt:40,offsets:[-12,-20,-20,-20,44,28],kit:{gore:1,brace:15,shadowstep:30,tailwind:45},creature:true}
+ 'Shadow stag':{salt:40,offsets:[-12,-20,-20,-20,44,28],kit:{gore:1,brace:15,shadowstep:30,tailwind:45},creature:true},
+ // The Whisperwood (world expansion 1; the plan's M4). race: critter | beast | monster | boss scales HP and Mana and forbids
+ // healing (RACES in setup/roster.mjs); hp / mana set a creature's own multipliers within its race's band. Humans have no
+ // race. mods: a foe's own modifiers, the worn-kit form (cost, onCast, onDefend, taken).
+ 'Practice mannequin':{salt:41,offsets:[-30,-40,-40,-40,-10,-30],kit:{nip:1},creature:true,race:'critter',mana:.3},
+ 'Bramble ferret':{salt:42,offsets:[-30,-30,-30,-20,-10,30],kit:{nip:1,skitter:1,burrow:5,filch:10},creature:true,race:'critter'},
+ Bristleback:{salt:43,offsets:[-30,-30,-30,-20,40,-10],kit:{maul:1,hide:1,roar:10},creature:true,race:'monster',hp:1.75,mana:.6},
+ 'Stag beetle':{salt:44,offsets:[-30,-30,-30,-30,30,0],kit:{charge:1,carapace:1,nip:5},creature:true,race:'monster',hp:1.5,mana:.5},
+ 'Grumpy oak':{salt:45,offsets:[-20,10,-10,-30,30,-30],kit:{root:1,maul:1,bark:1},creature:true,race:'monster',hp:2,mana:.5},
+ 'Elder oak':{salt:46,offsets:[-10,30,0,-30,40,-30],kit:{root:1,slow_fall:1,bark:1,brood:10},creature:true,race:'monster',hp:2.5,mana:.6},
+ 'Spiderling swarm':{salt:47,offsets:[-30,-30,-30,-40,-10,20],kit:{swarm:1,skitter:1,burrow:5},creature:true,race:'critter'},
+ 'The Spinner':{salt:48,offsets:[10,30,0,20,40,20],kit:{venom:1,web:1,brood:1,the_long_wait:1,carapace:1},creature:true,race:'boss'},
+ // Weakened (she showed you her blind side): no brood.
+ 'The Spinner, weakened':{salt:49,offsets:[10,30,0,20,40,20],kit:{venom:1,web:1,the_long_wait:1,carapace:1},creature:true,race:'boss'},
+ // Forbidden practitioners: human, so no race; they may heal (Siphon is the thornwitch's whole style).
+ Thornwitch:{salt:50,offsets:[10,0,30,0,-10,20],kit:{siphon:1,ward:1,bramble:5,torment:10},mods:{onCast:{forbidden:2}}},
+ 'Masked circle':{salt:51,offsets:[20,10,0,10,0,30],kit:{compel:1,torment:1,flame:1,ward:1,shadowstep:5,eclipse:10}},
+ // The Outcast: a grandmaster human duellist with every forbidden spell and his grimoire's buff. No scaling: only level and kit.
+ 'The Outcast':{salt:52,offsets:[50,40,40,20,20,50],kit:{torment:1,extraction:1,siphon:1,compel:1,eclipse:1,heartprice:1,ward:1,shadowstep:1,flame:1},mods:{cost:{forbidden:-2},onCast:{forbidden:2}}}
 };
 // Stable salts 10–31 follow the document's named-character order. Faculty Rest
 // lists have no numerical weights: their listed choices use equal weight 1.

@@ -310,7 +310,7 @@ function fightsAt(eng, place, slot) {
   try {
     for (const e of pool) {
       let fight = false;
-      for (const o of eng.optionsOf(e)) G.walkEffects(o.effects || [], (x) => { if (x.t === 'challenge' && (x.kind === 'combat' || x.kind === 'duel')) fight = true; });
+      for (const o of eng.optionsOf(e)) G.walkEffects(o.effects || [], (x) => { if (x.t === 'challenge' && G.MINIGAME_KINDS[x.kind] === 'fight') fight = true; });
       if (fight && eng.eligible(e, new Set()) && eng.timeFit(e) && eng.candidates(e).length) n++;
     }
   } finally { [eng._place, eng._slot] = prev; }
@@ -427,6 +427,50 @@ const STRATEGIES = {
           for (const p of openPl) { const n = fightsAt(eng, p.id, sl); if (n > 0 && n + rnd(eng) * 0.5 > bs) { bs = n + rnd(eng) * 0.5; best = p.id; } }
           return best;
         }),
+      });
+    },
+  },
+  // The spender (world expansion 1, K3): buys the kit. Gold is for gear and tonics, so the shops' sinks are measured.
+  spender: {
+    about: 'A balanced player with a purse: takes any option that gives it an item it lacks or a tonic it doesn\'t hold (when it can pay), goes to the village shops whenever it has 40 crowns or more, and wears its best piece in each slot (worn Health 1, Mana 1.5, a cheaper spell 1, a hit 2 a point). Crowns weigh 0.2.',
+    make() {
+      const base = scorer('spender', { health: 1, mood: 1, gold: 0.2, renown: 0.3, skill: 1.2, 'rel:': 0.3, 'spark:': 0.1, 'bond:': 0.1, 'gain:': 3 });
+      const SHOPS = ['village', 'mabels', 'grimsbys_books', 'pell_apothecary', 'gilded_newt'];
+      const wornValue = (d) => { const w = (d && d.worn) || {}; return (w.hp || 0) + 1.5 * (w.mana || 0) + Object.values(w.cost || {}).reduce((a, n) => a - n, 0) + 2 * Object.values(w.onCast || {}).reduce((a, n) => a + n, 0) + 2 * (w.onDefend || 0) + (w.taken || []).reduce((a, t) => a + t.n, 0); };
+      const dressBest = (eng) => {
+        if (!eng.equip || !eng.s.items) return;
+        for (const slot of ['wand', 'robe', 'trinket']) {
+          const own = Object.keys(eng.s.items).filter((id) => eng.c.items[id] && eng.c.items[id].slot === slot);
+          const best = own.sort((a, b) => wornValue(eng.c.items[b]) - wornValue(eng.c.items[a]))[0];
+          if (best && eng.s.worn[slot] !== best && wornValue(eng.c.items[best]) > wornValue(eng.c.items[eng.s.worn[slot]])) { try { eng.equip(slot, best); } catch (e) { /* locked mid-minigame */ } }
+        }
+      };
+      const buys = (eng, v, o) => {
+        const def = eng.optionsOf(eng.c.events[v.id]).find((q) => q.key === o.key); let n = 0;
+        if (def) G.walkEffects(def.effects, (st) => {
+          if (st.t === 'give' && eng.c.items[st.item] && !eng.hasItem(st.item)) n += 2 + wornValue(eng.c.items[st.item]);
+          if (st.t === 'gain' && eng.c.states[st.state] && (eng.c.states[st.state].boost || []).length && !eng.s.states[st.state]) n += 1;
+          if (st.t === 'take' && eng.hasItem(st.item)) n -= 3;
+        });
+        return n;
+      };
+      const ruled = withRules(base, 'spender', (eng, v) => {
+        dressBest(eng);
+        const want = v.options.filter((o) => !o.disabled && !endsEarly(eng, v, o.key)).map((o) => [o.key, buys(eng, v, o)]).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]);
+        return want.length ? want[0][0] : null;
+      });
+      return Object.assign(ruled, {
+        pickPlaces: (eng, view) => {
+          dressBest(eng);
+          const used = new Set();   // one visit per place a day
+          return route(eng, view, (openPl) => {
+            if ((eng.s.vals.gold || 0) < 40) return null;
+            const shops = openPl.filter((p) => SHOPS.includes(p.id) && !used.has(p.id));
+            const pick = shops.length ? shops[Math.floor(rnd(eng) * shops.length)].id : null;
+            if (pick) used.add(pick);
+            return pick;
+          });
+        },
       });
     },
   },

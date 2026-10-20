@@ -1,6 +1,7 @@
-// Prototype 0.2. Deterministic mechanics; only kit generation uses a level seed.
+// Prototype 0.2.2. Deterministic mechanics; AI fallibility is a separate policy.
 import {ARCHETYPES,SPELLS,CONTEXTS,RESOURCES,generateKit,cap} from './roster.mjs';
 export {ARCHETYPES,SPELLS,CONTEXTS,RESOURCES,generateKit};
+export const RULES_VERSION='prototype-0.2.2';
 export const BASICS=['strike','guard','reclaim'];
 export const label=id=>SPELLS[id]?.name??({strike:'Strike',guard:'Guard',reclaim:'Reclaim'}[id]??id);
 const offensive=new Set(['strike','flame','tide','starlight']);
@@ -21,12 +22,12 @@ export function createState(options={}) {
     for(const k of RESOURCES)if(!Number.isFinite(entry[k])||entry[k]<0||entry[k]>(k==='mana'?kit.capacity:k==='crowns'?99999:100))throw Error('Invalid '+k);
     if(config.healthModel==='direct'&&entry.health===0)throw Error('Direct Health mode requires positive Health');
     const maxHP=entry.health+(config.healthModel==='offset'?40+Math.floor((kit.skills.arcana+kit.skills.vigor)/4):0);
-    return {kit,entry,resources:{...entry},spent:resourceMap(0),restored:resourceMap(0),hp:maxHP,maxHP,flux:0,effects:{},queue:[]};
+    return {kit,entry,resources:{...entry},spent:resourceMap(0),restored:resourceMap(0),hp:maxHP,maxHP,flux:0,effects:{}};
   });
-  return {config,rebates,actors,round:1,leader:config.firstLeader,pending:[null,null],planGoals:[0,0],planOrder:[0,1],range:'near',agreement:0,patience:8,suspicion:0,claims:[],demonstrationUsed:false,materialsSecured:false,result:null,settlement:null,lastEvents:[],lastPair:null};
+  return {config,rebates,actors,round:1,normalLeader:config.firstLeader,leader:config.firstLeader,earlyCommit:[0,0],pending:[null,null],range:'near',agreement:0,patience:8,suspicion:0,claims:[],demonstrationUsed:false,materialsSecured:false,result:null,settlement:null,lastEvents:[],lastPair:null};
 }
-// Search forks share immutable config/kit data, not mutable resources, queues or effects.
-export function cloneState(s){return {...s,pending:[...s.pending],planGoals:[...s.planGoals],planOrder:[...s.planOrder],claims:s.claims.map(c=>({...c})),lastEvents:[],actors:s.actors.map(a=>({...a,entry:a.entry,resources:{...a.resources},spent:{...a.spent},restored:{...a.restored},effects:Object.fromEntries(Object.entries(a.effects).map(([k,v])=>[k,{...v}])),queue:[...a.queue]}))};}
+// Search forks share immutable config/kit data, not mutable resources or effects.
+export function cloneState(s){return {...s,pending:[...s.pending],earlyCommit:[...s.earlyCommit],claims:s.claims.map(c=>({...c})),lastEvents:[],actors:s.actors.map(a=>({...a,entry:a.entry,resources:{...a.resources},spent:{...a.spent},restored:{...a.restored},effects:Object.fromEntries(Object.entries(a.effects).map(([k,v])=>[k,{...v}]))}))};}
 export const has=(s,side,key)=>!!s.actors[side].effects[key]&&s.actors[side].effects[key].until>=s.round;
 const put=(s,side,key,value=1,until=s.round+1)=>s.actors[side].effects[key]={value,until,born:s.round};
 const take=(s,side,key)=>{const e=has(s,side,key)?s.actors[side].effects[key]:null;delete s.actors[side].effects[key];return e?.value??0;};
@@ -34,22 +35,16 @@ const event=(s,text)=>s.lastEvents.push(text);
 const debit=(a,k,n)=>{const v=Math.min(a.resources[k],Math.max(0,n));a.resources[k]-=v;a.spent[k]+=v;return v;};
 const restore=(a,k,n)=>{const v=Math.min(a.entry[k]-a.resources[k],Math.max(0,n));a.resources[k]+=v;a.restored[k]+=v;return v;};
 export const cost=(s,side,id)=>SPELLS[id]?SPELLS[id].cost[s.actors[side].kit.spells[id]-1]*s.config.manaCostScale:0;
-export const planningSide=s=>s.planOrder.find(side=>s.actors[side].queue.length<s.planGoals[side])??null;
-export function actorToMove(s){if(s.result)return null;const p=planningSide(s);if(p!==null)return p;return s.pending[s.leader]===null?s.leader:1-s.leader;}
-export function projectedMana(s,side){
-  const a=s.actors[side];let ready=a.resources.mana,flux=a.flux;
-  for(const id of a.queue){if(id==='reclaim'){ready+=flux;flux=0;}else{const c=cost(s,side,id);ready-=c;flux+=.8*c;}}
-  return {ready,flux};
-}
-export function available(s,side,id,planning=planningSide(s)===side){
+export const wardBlock=(s,side)=>(10+2*((s.actors[side].kit.spells.ward??1)-1))*s.config.combatScale;
+export function actorToMove(s){if(s.result)return null;return s.pending[s.leader]===null?s.leader:1-s.leader;}
+export function available(s,side,id){
   if(!BASICS.includes(id)&&!SPELLS[id])return 'Unknown action';
   if(SPELLS[id]&&!s.actors[side].kit.spells[id])return 'Not learned';
-  const mana=planning?projectedMana(s,side).ready:s.actors[side].resources.mana;
+  const mana=s.actors[side].resources.mana;
   return mana+1e-9<cost(s,side,id)?'Not enough ready mana':'';
 }
 export function legalActions(s,side=actorToMove(s)){
   if(side===null)return [];
-  if(planningSide(s)===null&&s.actors[side].queue.length)return [s.actors[side].queue[0]];
   return [...BASICS,...Object.keys(s.actors[side].kit.spells)].filter(id=>!available(s,side,id));
 }
 export function strength(s,side,id){
@@ -71,9 +66,9 @@ function prepareCombat(s,side,id){
     case 'shape':put(s,side,'barricade',(8+b)*k);break;
     case 'glamour':put(s,side,'decoy',(4+b)*k);break;
     case 'hush':put(s,1-side,'suppressed',(4+b)*k);break;
-    case 'ward':put(s,side,'ward',(8+b)*k);break;
+    case 'ward':put(s,side,'ward',wardBlock(s,side));break;
     case 'foresight':put(s,side,'foreAim',10);break;
-    case 'haste':damage(s,side,2*k);put(s,side,'haste');event(s,'Haste costs 6 Health/HP in fatigue.');break;
+    case 'haste':damage(s,side,2*k);put(s,side,'haste');event(s,`Haste costs ${2*k} Health/HP in fatigue.`);break;
     case 'attune':put(s,side,'attuneAim',10);put(s,side,'rhythm',(3+b)*k);break;
     case 'shadowstep':s.range='near';put(s,side,'evasion',(3+b)*k);break;
   }
@@ -116,14 +111,15 @@ function negotiate(s,pair){
   }
   for(const side of [0,1])if(pair[side]==='starlight')take(s,1-side,side===0?'authority':'presentation');
   if(pair[0]==='strike'){
-    const bonus=Math.max(take(s,0,'presentation'),s.config.approach==='bluff'?0:take(s,0,'connection'));
+    const presentation=take(s,0,'presentation'),connection=take(s,0,'connection');
+    const bonus=Math.max(s.config.approach==='reason'?0:presentation,s.config.approach==='bluff'?0:connection);
     const pref=ARCHETYPES[s.actors[1].kit.archetype].preference===s.config.approach?1:0;
     const credit=Math.max(1,Math.round(((s.config.approach==='bluff'?6:4)+pref+bonus)*strength(s,0,'strike')));
     s.agreement+=credit;take(s,0,'foreAim');
     if(s.config.approach==='bluff'){s.suspicion++;s.claims.push({credit});}event(s,`Argument gained ${credit} Agreement.`);
   }
   if(pair[1]==='strike'){
-    if(s.claims.length){const c=s.claims.shift();s.agreement=Math.max(0,s.agreement-c.credit);s.suspicion+=2;debit(s.actors[0],'renown',4);event(s,'Audience exposed a false claim.');}
+    if(s.claims.length){if(strength(s,1,'strike')>=1){const c=s.claims.shift();s.agreement=Math.max(0,s.agreement-c.credit);s.suspicion+=2;debit(s.actors[0],'renown',4);event(s,'Audience exposed a false claim (Lore meets Guile).');}else event(s,'Audience scrutiny cannot overcome your Guile.');}
     else {const n=Math.max(1,Math.round((2+take(s,1,'connection'))*strength(s,1,'strike')));s.agreement=Math.max(0,s.agreement-n);event(s,`Objection removed ${n} Agreement.`);}
     take(s,1,'foreAim');if(has(s,1,'haste')&&s.actors[1].effects.haste.born<s.round){s.patience--;take(s,1,'haste');}
   }
@@ -134,9 +130,9 @@ function negotiate(s,pair){
   if(s.suspicion>=6)finish(s,'lose','suspicion');else if(s.agreement>=18)finish(s,'win','agreement reached');else if(s.patience<=0||s.round===8)finish(s,closeOutcome(s),'conversation ended');
 }
 export const closeOutcome=s=>s.agreement>=18?'win':s.agreement>=10?'partial':'lose';
-export function finish(s,outcome,reason){
+export function finish(s,outcome,reason,details={}){
   if(s.result)return;
-  s.result={outcome,reason,round:s.round};
+  s.result={outcome,reason,round:s.round,...details};
   // Safe post-encounter collection is separate from context rebates. No double refund.
   s.settlement=s.actors.map(a=>{
     const collected=a.flux;restore(a,'mana',collected);a.flux=0;
@@ -147,7 +143,7 @@ function resolve(s){
   const pair=[...s.pending];s.lastPair=pair;s.lastEvents=[];
   for(const side of [0,1]){
     const a=s.actors[side],id=pair[side],c=cost(s,side,id);
-    debit(a,'mana',c);a.flux+=.8*c;if(a.queue.length)a.queue.shift();
+    debit(a,'mana',c);a.flux+=.8*c;
   }
   if(s.config.mode==='combat'){
     const fast=[0,1].filter(side=>has(s,side,'haste')&&s.actors[side].effects.haste.born<s.round);
@@ -155,30 +151,35 @@ function resolve(s){
     for(const side of [0,1])prepareCombat(s,side,pair[side]);
     if(fast.length===1){attackBatch(s,fast,pair);attackBatch(s,[1-fast[0]],pair);}else attackBatch(s,[0,1],pair);
     const alive=s.actors.map(a=>a.hp>0);
-    if(!alive[0]||!alive[1])finish(s,alive[0]?'win':alive[1]?'lose':'partial','defeat');
+    // Adjudicate mutual defeat only; neither damage nor costs are rewound.
+    if(!alive[0]&&!alive[1]){event(s,'Mutual defeat: the telegraphed action wins on initiative.');finish(s,s.leader===0?'win':'lose','defeat',{winner:s.leader,tiebreak:'telegraphed initiative'});}
+    else if(!alive[0]||!alive[1])finish(s,alive[0]?'win':'lose','defeat');
     else if(s.round===8){const lead=s.actors[0].hp/s.actors[0].maxHP-s.actors[1].hp/s.actors[1].maxHP;finish(s,lead>=.25?'win':lead>-.25&&s.actors[1].hp<=.75*s.actors[1].maxHP?'partial':'lose','eight-exchange limit');}
   }else negotiate(s,pair);
   // Reclaim is an action, and never funds another cast in the same exchange.
   if(!s.result)for(const side of [0,1])if(pair[side]==='reclaim'){const a=s.actors[side],n=a.flux;restore(a,'mana',n);a.flux=0;event(s,`${side===0?'You':'Opponent'} reclaimed ${n.toFixed(1)} mana.`);}
   if(!s.result){
-    const remaining=Math.min(3,8-s.round);s.planOrder=[s.leader,1-s.leader];
-    for(const side of [0,1])if(pair[side]==='foresight'&&remaining){s.planGoals[1-side]=Math.max(s.actors[1-side].queue.length,remaining);event(s,`Foresight binds ${remaining} actions from exchange ${s.round+1}.`);}
+    // Old durations consume this exchange; fresh casts start next exchange.
+    s.earlyCommit=s.earlyCommit.map(n=>Math.max(0,n-1));
+    const remaining=Math.min(3,8-s.round);
+    for(const side of [0,1])if(pair[side]==='foresight'&&remaining){s.earlyCommit[1-side]=remaining;event(s,`Foresight forces the opponent to commit first for ${remaining} exchanges, starting exchange ${s.round+1}.`);}
     for(const a of s.actors)for(const [k,e]of Object.entries(a.effects))if(e.until<=s.round)delete a.effects[k];
-    s.round++;s.leader=1-s.leader;s.pending=[null,null];
+    s.round++;s.normalLeader=1-s.normalLeader;
+    s.leader=(s.earlyCommit[0]>0)===(s.earlyCommit[1]>0)?s.normalLeader:s.earlyCommit[0]>0?0:1;
+    s.pending=[null,null];
   }
 }
 export function applyChoice(s,id){
   const side=actorToMove(s);if(side===null)throw Error('Encounter finished');
   if(!legalActions(s,side).includes(id))throw Error('Illegal or unaffordable action');
-  if(planningSide(s)!==null){s.actors[side].queue.push(id);if(s.actors[side].queue.length>=s.planGoals[side])s.planGoals[side]=0;return {resolved:false,planning:true,side};}
-  s.pending[side]=id;if(s.pending[0]!==null&&s.pending[1]!==null){const round=s.round;resolve(s);return {resolved:true,round,pair:s.lastPair,events:[...s.lastEvents],result:s.result};}return {resolved:false,side};
+  s.pending[side]=id;if(s.pending[0]!==null&&s.pending[1]!==null){const round=s.round,leader=s.leader;resolve(s);return {resolved:true,round,leader,pair:s.lastPair,events:[...s.lastEvents],result:s.result};}return {resolved:false,side};
 }
 export function describe(s,side,id){
   const b=(s.actors[side].kit.spells[id]??1)-1,k=s.config.combatScale;
   if(id==='reclaim')return 'Recover all your flux as ready mana after this exchange. No extra action.';
   if(s.config.mode==='combat')return {
-    strike:`Deal ${attackPower(s,side,id)} HP at near range.`,guard:`Block ${4*k} from Strike this exchange. Spells bypass Guard.`,flame:`Deal ${attackPower(s,side,id)} HP; destroys Shape.`,tide:`Deal ${attackPower(s,side,id)} HP; Wet weakens the next Flame.`,starlight:`Deal ${attackPower(s,side,id)} HP; removes Glamour.`,restoration:`Restore up to ${(6+b)*k} HP and Health, capped at entry.`,shape:`Block ${(8+b)*k} from the next Strike; Flame destroys it.`,glamour:`Absorb ${(4+b)*k} from the next attack.`,hush:`Reduce the next offensive spell by ${(4+b)*k}.`,ward:`Absorb ${(8+b)*k} from the next attack.`,foresight:'Bind and reveal the next three opponent commands, starting next exchange. +10 power points once.',haste:`Pay ${2*k} Health/HP; next exchange your attack resolves first.`,attune:`+10 Strike power points once; absorb ${(3+b)*k} from the next Strike.`,shadowstep:`Move near; evade ${(3+b)*k} from the next attack.`}[id];
-  if(id==='strike')return side===0?`Use ${s.config.approach} to gain Agreement; bluff adds risky claims.`:'Object; if a false claim exists, expose it instead.';
+    strike:`Deal ${attackPower(s,side,id)} HP at near range.`,guard:`Block ${4*k} from Strike this exchange. Spells bypass Guard.`,flame:`Deal ${attackPower(s,side,id)} HP; destroys Shape.`,tide:`Deal ${attackPower(s,side,id)} HP; Wet weakens the next Flame.`,starlight:`Deal ${attackPower(s,side,id)} HP; removes Glamour.`,restoration:`Restore up to ${(6+b)*k} HP and Health, capped at entry.`,shape:`Block ${(8+b)*k} from the next Strike; Flame destroys it.`,glamour:`Absorb ${(4+b)*k} from the next attack.`,hush:`Reduce the next offensive spell by ${(4+b)*k}.`,ward:`Absorb ${wardBlock(s,side)} from the next attack.`,foresight:'Force early opponent commitment for the next three exchanges. +10 power points once.',haste:`Pay ${2*k} Health/HP; next exchange your attack resolves first.`,attune:`+10 Strike power points once; absorb ${(3+b)*k} from the next Strike.`,shadowstep:`Move near; evade ${(3+b)*k} from the next attack.`}[id];
+  if(id==='strike')return side===0?`Use ${s.config.approach} to gain Agreement; bluff adds risky claims.`:'Object; scrutinize a false claim instead if present (Lore must meet Guile).';
   if(id==='guard')return side===0?'Reduce Suspicion by 1; time still passes.':'Listen without applying pressure.';
-  return {foresight:'Bind and reveal three future commands, starting next exchange.',flame:s.config.fixture==='formal_petition'?'Hostile cast: the caster loses the meeting.':'One workshop demonstration, if relevant.',tide:s.config.fixture==='formal_petition'?'Hostile cast: the caster loses the meeting.':'One workshop demonstration, if relevant.',restoration:'Repair a workshop demonstration; audience restores Health.',shape:'Secure workshop materials.',starlight:'Remove opposing Glamour.',glamour:side===0?'+1 Suspicion, −2 Renown; boost next argument.':'Authority weakens the next Appeal.',hush:'Suppress the workshop noise if active on exchange 5.',haste:side===0?'Next exchange avoids base Patience loss.':'Next objection spends extra Patience.',attune:'Boost next argument/objection with consent; formal petition has no consent.',ward:'Protect workshop materials from scattering.',shadowstep:'Leave the meeting; pay mana and settle the outcome.'}[id];
+  return {foresight:'Force early opponent commitment for the next three exchanges.',flame:s.config.fixture==='formal_petition'?'Hostile cast: the caster loses the meeting.':'One workshop demonstration, if relevant.',tide:s.config.fixture==='formal_petition'?'Hostile cast: the caster loses the meeting.':'One workshop demonstration, if relevant.',restoration:'Repair a workshop demonstration; audience restores Health.',shape:'Secure workshop materials.',starlight:'Remove opposing Glamour.',glamour:side===0?'+1 Suspicion, −2 Renown; boost next argument.':'Authority weakens the next Appeal.',hush:'Suppress the workshop noise if active on exchange 5.',haste:side===0?'Next exchange avoids base Patience loss.':'Next objection spends extra Patience.',attune:'Boost next argument/objection with consent; formal petition has no consent.',ward:'Protect workshop materials from scattering.',shadowstep:'Leave the meeting; pay mana and settle the outcome.'}[id];
 }

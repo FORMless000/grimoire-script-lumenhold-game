@@ -37,6 +37,9 @@ fn influence(enc: &Encounter, s: &State, side: usize, hp: f64) -> f64 {
         let banked = if c.spell == ids.moonwell { c.bank.min(enc.sides[side].capacity - a.res[R_MANA]) } else { c.bank.min(a.max_hp) };
         value += banked * 0.12 + c.total * 0.6 + if c.spell == ids.starlight && c.holds != 0 { 10.0 } else { 0.0 };
     }
+    // World expansion 1: poison still to come counts against its holder; being bound costs a little.
+    if let Some(p) = a.effects[Eff::Poison as usize] { let left = 0.max(p.until.unwrap_or(s.round) - s.round.max(p.from) + 1) as f64; value -= p.value * left * hp; }
+    if has(s, side, Eff::Bound) { value -= 4.0; }
     value
 }
 
@@ -91,6 +94,14 @@ pub fn move_value(enc: &Encounter, s: &State, side: usize, id: Act) -> f64 {
     }
     if sp == ids.purify {
         return amount(enc, side, Some(sp), 24.0, false).min(enc.sides[side].capacity - a.res[R_MANA]) * 0.3 - amount(enc, side, Some(sp), 4.0, true) * 0.65;
+    }
+    // Creature mechanics by property (world expansion 1): poison by its damage over time, a bind, a drain by the Mana it takes.
+    if let Some(spl) = d.spells.get(sp).filter(|x| x.poison.is_some() || x.bind.is_some() || x.drain.is_some()) {
+        let mut v = 0.0;
+        if let Some((per, n)) = spl.poison { if !has(s, 1 - side, Eff::Poison) { v += damage_power(enc, side, sp, per) * n as f64 * 0.6; } }
+        if spl.bind.is_some() && !has(s, 1 - side, Eff::Bound) { v += 8.0; }
+        if let Some(dr) = spl.drain { v += amount(enc, side, Some(sp), dr, false).min(other.res[R_MANA]) * 0.4; }
+        return v - cost(enc, s, side, id) * 0.12;
     }
     let inc = incoming.is_some();
     let base = if sp == ids.ward { if inc { 25.0 } else { 3.0 } } else if sp == ids.brace { if inc { 27.0 } else { 9.0 } } else if sp == ids.shadowstep { if inc { 23.0 } else { 8.0 } }

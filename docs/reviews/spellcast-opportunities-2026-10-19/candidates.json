@@ -1,0 +1,2223 @@
+[
+  {
+    "id": "align_cold_candles",
+    "title": "The Candles Lean Away",
+    "spell": "flame",
+    "spellName": "Flame",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/alignment.grim",
+      "line": 14
+    },
+    "currentType": "card",
+    "currentGate": "alignment <= -30",
+    "repeat": 12,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Let them lean",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Stop and relight one by hand",
+        "when": null
+      }
+    ],
+    "evidence": "{You notice it on the east stair. As you pass, the candle flames bend away from you, all of them, like grass from a wind. A first-year on the landing notices too.|The candles lean away again. You have started to time it. It is getting faster.}",
+    "why": "Candles bend away from a Hollow-aligned student; the present caring route relights one by hand.",
+    "action": "Offer Flame to relight one candle deliberately, then let the rest keep leaning.",
+    "trade": "Spend level-appropriate Mana for one controlled light; the hand-relighting option remains free and slower.",
+    "caveat": "Keep the effect to one candle; do not make Flame alter the alignment, cause, or all candles.",
+    "scout": "narrative"
+  },
+  {
+    "id": "fox_injured",
+    "title": "Smoke in the Woods",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/chains_minor.grim",
+      "line": 345
+    },
+    "currentType": "card",
+    "currentGate": "turn >= 4 and not flag(fox_met)",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Leave it — it's wild",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Free it and bandage the paw",
+        "when": null
+      }
+    ],
+    "evidence": "At the edge of the forest, a thin plume of smoke. A small fox is caught in a rusted snare, its tail smouldering like an ember. It snarls at you, then whimpers.",
+    "why": "A fox is caught in a rusted snare; helping frees it and bandages its paw.",
+    "action": "Free the fox, then Mend its injured paw instead of applying a bandage.",
+    "trade": "Mana buys actual healing practice and immediate comfort for the fox; preserve the rescue’s bodily risk and modest moral reward.",
+    "caveat": "Keep fox_met and queue fox_returns in 2 on the helping path. Do not remove a bite that occurs while freeing it, cure an unrelated injury state, or command the animal’s loyalty.",
+    "scout": "narrative"
+  },
+  {
+    "id": "pyro_candle",
+    "title": "Light the Candle",
+    "spell": "flame",
+    "spellName": "Flame",
+    "priority": "P1",
+    "status": "formalization",
+    "source": {
+      "file": "content/events/classes.grim",
+      "line": 9
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "A careful spark",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Show them real fire",
+        "when": null
+      }
+    ],
+    "evidence": "Professor Thorne places a candle at the far end of the hall. \"Light it. From there.\" The class holds its breath. Last week a boy lit his own sleeve.",
+    "why": "Thorne asks students to light a distant candle; an earlier attempt burned a sleeve.",
+    "action": "Burn a measured Flame at the far candle as a deliberate known-spell drill.",
+    "trade": "Spend Mana for a controlled, modest result; retain cautious improvisation and the ambitious risky demonstration.",
+    "caveat": "This is an existing magical exercise, not a new scene. Decide whether a distinct third route is worthwhile; avoid repeating evo_first_spark without a different teaching purpose.",
+    "scout": "parent"
+  },
+  {
+    "id": "heal_first_patient",
+    "title": "Your First Patient",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "needs-level-gate",
+    "source": {
+      "file": "content/events/classes.grim",
+      "line": 607
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Fetch Sister Amaranth",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Heal it yourself",
+        "when": null
+      }
+    ],
+    "evidence": "A first-year stumbles into the practice ward with a wrist that bends the wrong way. Sister Amaranth is busy. The first-year looks at you with enormous, trusting eyes.",
+    "why": "A first-year arrives with a badly bent wrist while Amaranth is busy.",
+    "action": "Mend the wrongly bent wrist with a properly pitched clinical check.",
+    "trade": "Spend Mana for a specific learned treatment, while fetching Amaranth remains the sound free alternative and failure still brings her intervention.",
+    "caveat": "Use the curriculum’s bone-work example to choose level and supervision. Do not auto-pass a serious fracture or grant the full reputation payoff merely for knowing Mend.",
+    "scout": "academic"
+  },
+  {
+    "id": "verdant_cold_snap",
+    "title": "The Cold Snap",
+    "spell": "flame",
+    "spellName": "Flame",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/club_spell_chains.grim",
+      "line": 321
+    },
+    "currentType": "card",
+    "currentGate": "flag(bramble_planted) and not flag(bramble_fed) and spell_level(bramble) == 0",
+    "repeat": 2,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Sit up with it all night",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Cover it and hope",
+        "when": null
+      }
+    ],
+    "evidence": "A hard frost is coming tonight, the first of the season. Your seedling is too young for it. Somebody would have to sit with it till dawn, feeding it warmth.",
+    "why": "A young seedling needs warmth and company through an overnight frost.",
+    "action": "Burn a small, steady warming Flame beside the lantern while staying with the seedling.",
+    "trade": "Mana can replace part of the bodily strain, but the player still spends the night caring for it; the preparation flag is earned by that care.",
+    "caveat": "Prefer this basic application to Heartwood. Shelter is not heat. One brief ignition does not warm a greenhouse all night; preserve an overnight cost and the existing bramble_fed requirement.",
+    "scout": "academic"
+  },
+  {
+    "id": "sky_crash",
+    "title": "A Bad Landing",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/clubs.grim",
+      "line": 206
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Walk it off",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Straight to the infirmary",
+        "when": null
+      }
+    ],
+    "evidence": "Practice. A gust catches you mid-turn, and the ground arrives rather sooner than expected. Your ankle is making an interesting shape.",
+    "why": "After a broom crash the player has an injured ankle and must choose whether to keep going.",
+    "action": "Mend the newly injured ankle as a bounded treatment, with a suitable check or level requirement.",
+    "trade": "Mend can close a cut or set a small crack, while not erasing broader harm, with mana cost against help/rest.",
+    "caveat": "An odd-shaped ankle is a serious physical injury, not automatic permission to fly again. Preserve help/rest and do not erase unrelated persistent injuries.",
+    "scout": "academic"
+  },
+  {
+    "id": "grisk_collectors",
+    "title": "Grisk's Collectors",
+    "spell": "shadowstep",
+    "spellName": "Shadowstep",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/crisis.grim",
+      "line": 148
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Hand over everything you have",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Run",
+        "when": null
+      }
+    ],
+    "evidence": "Two trolls in waistcoats are waiting outside your dormitory. \"Mister Grisk,\" says the larger one, \"is disappointed.\" The smaller one cracks his knuckles, which sounds like a rockslide.",
+    "why": "Debt collectors block the dormitory door; the existing escape delays collection without forgiving the loan.",
+    "action": "Step between nearby shadows past the doorway, then escape the immediate collection attempt.",
+    "trade": "Pay Mana for a local escape rather than paying the collectors; keep the debt, missed-payment bookkeeping, and prospect of their return.",
+    "caveat": "Match the existing escape state rather than clearing in_debt or debt_paid. No long rooftop teleport, arbitrary wall crossing, or cancelled loan.",
+    "scout": "narrative"
+  },
+  {
+    "id": "life_library_cat",
+    "title": "The Library Cat",
+    "spell": "ward",
+    "spellName": "Ward",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/expansion_life.grim",
+      "line": 193
+    },
+    "currentType": "card",
+    "currentGate": "term and not wrapup",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Move the cat",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Bribe the cat",
+        "when": null
+      }
+    ],
+    "evidence": "The library cat — a vast, ancient beast called Footnote — is asleep on the only copy of the book you need. You have an essay due tomorrow. Footnote has no deadlines.",
+    "why": "Footnote sleeps on the only needed book; moving the cat can earn a scratch.",
+    "action": "Ward against one scratch while making the existing attempt to move Footnote.",
+    "trade": "Pay Mana to mitigate one injury while still risking failure to obtain the book; moving the cat normally and paying for a sardine stay distinct.",
+    "caveat": "Do not bypass the move-cat check or guarantee the book. Ward is one-harm protection.",
+    "scout": "spatial"
+  },
+  {
+    "id": "life_bell_tower",
+    "title": "The Midnight Bell",
+    "spell": "shadowstep",
+    "spellName": "Shadowstep",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/expansion_life.grim",
+      "line": 346
+    },
+    "currentType": "card",
+    "currentGate": "turn >= 4",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Climb and ring it",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Decline the dare",
+        "when": null
+      }
+    ],
+    "evidence": "Tradition: once in your time at Lumenhold, you must ring the old bell at midnight without getting caught. Your dorm has decided tonight is your night.",
+    "why": "The dare is to ring the midnight bell and get away before the prefects arrive.",
+    "action": "Cross a short, visible shadow gap on the ascent or return.",
+    "trade": "Mana buys a shortcut; the loud bell and patrol can still lead to detention.",
+    "caveat": "Shadowstep is short distance; it does not teleport to the top or guarantee stealth.",
+    "scout": "spatial"
+  },
+  {
+    "id": "life_double_trouble",
+    "title": "Your Double Is Loose",
+    "spell": "glamour",
+    "spellName": "Glamour",
+    "priority": "P1",
+    "status": "needs-setup-rewrite",
+    "source": {
+      "file": "content/events/expansion_life.grim",
+      "line": 452
+    },
+    "currentType": "card",
+    "currentGate": "(enrolled(illusion) or passed(illusion, 1)) or seen(illusion_mirror_self) > 0",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Catch it",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Let it run its course",
+        "when": null
+      }
+    ],
+    "evidence": "An illusion of you — one you thought you'd dismissed — is still wandering the castle. It has been to three of your classes, flirted with a prefect, and volunteered you for the choir.",
+    "why": "An old illusion of the player is making commitments and causing mistaken identity.",
+    "action": "Glamour your own appearance so people can distinguish you from the wandering double.",
+    "trade": "Mana buys a temporary way to reduce mistaken identity, rather than dismissing the copy; the double’s outstanding commitments still require handling.",
+    "caveat": "The source does not establish that an illusion follows bait. Do not claim Glamour controls or dispels the existing double. Define this narrower outcome before authoring.",
+    "scout": "spatial"
+  },
+  {
+    "id": "soc_injured_friend",
+    "title": "Carried",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/expansion_social.grim",
+      "line": 171
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 10,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Carry {them} on your back",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Run for help",
+        "when": null
+      }
+    ],
+    "evidence": "{npc} has twisted an ankle on the far side of the grounds, a long way from the infirmary, and it's getting dark. {They} {are} trying very hard to pretend it doesn't hurt.",
+    "why": "A friend has twisted an ankle far from the infirmary at dusk.",
+    "action": "Mend the sprain enough to reach care, then take them to the infirmary.",
+    "trade": "Mana for reduced pain; still spend time and preserve the infirmary route / relationship payoff.",
+    "caveat": "A sprain is within the established Mend example (sprained wrist); do not make Mend cure Lake Fever or eliminate the need for care.",
+    "scout": "spatial"
+  },
+  {
+    "id": "inc_broken_wand",
+    "title": "Snapped on the Stairs",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "needs-scope-decision",
+    "source": {
+      "file": "content/events/incidents.grim",
+      "line": 33
+    },
+    "currentType": "card",
+    "currentGate": "turn >= 3 and gold >= 30 and seen(inc_broken_wand) == 0",
+    "repeat": 1,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Have it properly rebound",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Bind it with string and hope",
+        "when": null
+      }
+    ],
+    "evidence": "The moving stairs shift without warning. You catch yourself; your wand doesn't. It lies in two pieces on the landing, still fizzing at the break like a sulking firework.",
+    "why": "A wand has snapped on the stairs; expert rebinding competes with a risky string repair.",
+    "action": "Offer Mend for a visible structural join only.",
+    "trade": "Mana for a limited repair attempt; preserve uncertainty, cost, and the option of expert repair.",
+    "caveat": "Do not imply restoration of the magical core/function or erase the repair economy; gate to an established Mend skill if needed.",
+    "scout": "spatial"
+  },
+  {
+    "id": "tavern_broken_glass",
+    "title": "Broken Glass",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/jobs.grim",
+      "line": 156
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 6,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Clear it by hand, fast",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Fetch the broom and do it properly",
+        "when": null
+      }
+    ],
+    "evidence": "{A tray of tankards meets a regular's elbow, and the floor is suddenly all glass.|Another tray, another floor of glass. The Newt goes through tankards the way other places go through napkins.|Glass on the floor again, and the same regular's elbow to blame.} {The regular is very sorry, loudly.|Everyone lifts their feet.|The dog is already heading for it.}",
+    "why": "Broken tankards cover the tavern floor and a dog is approaching.",
+    "action": "Mend broken tankards before handling the loose shards.",
+    "trade": "Pay Mana for material repair and a safer cleanup, while preserving pay and the broom route’s lost time.",
+    "caveat": "Do not heal a cut before it exists or assume one cast clears every shard on the floor. Bound the repair and keep any remaining cleanup/dog handling visible.",
+    "scout": "academic"
+  },
+  {
+    "id": "stables_hippogriff",
+    "title": "Bow to the Hippogriff",
+    "spell": "ward",
+    "spellName": "Ward",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/jobs.grim",
+      "line": 271
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Leave the feed and run",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Bow and hold its gaze",
+        "when": null
+      }
+    ],
+    "evidence": "The new hippogriff won't let anyone near the feed trough. The stablemaster says to bow, keep eye contact and not blink. \"Whatever you do, don't blink.\"",
+    "why": "A hippogriff guards its feed trough; a failed respectful approach knocks the player down.",
+    "action": "Ward against one blow while making the respectful approach and bow.",
+    "trade": "Ward can absorb one sudden blow while retreating/handling it, with mana cost and animal behaviour unresolved.",
+    "caveat": "Keep the gaze/approach challenge. Protection is not a successful introduction, feeding, taming, or immunity to repeated attacks.",
+    "scout": "academic"
+  },
+  {
+    "id": "broom_courier_bad_landing",
+    "title": "A Bad Landing",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/jobs.grim",
+      "line": 521
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 6,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Finish the round anyway",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Hand your sack to another courier",
+        "when": null
+      }
+    ],
+    "evidence": "{The courtyard flagstones are wet, and your broom has opinions about wet flagstones.|Another wet landing. Your knees remember the last one.|Wet flagstones again. You've learned to dread this courtyard.} {You come in too fast.|A gust takes the tail as you drop.|A pigeon chooses this moment to exist.} You hit the ground rolling, and your ankle says no.",
+    "why": "A wet courier landing injures the ankle before the round is finished.",
+    "action": "Mend or stabilize the injured ankle before deciding how the remaining deliveries are handled.",
+    "trade": "Mend can address a limited sprain/crack while leaving shift completion and flight safety unresolved, trading mana against paid rest/hand-off.",
+    "caveat": "Do not reverse the earlier crash, restore all Health or remove an unrelated injured state. Retain a bodily consequence if full repair is beyond the known spell level.",
+    "scout": "academic"
+  },
+  {
+    "id": "life_staircase",
+    "title": "The Staircase Moves",
+    "spell": "foresight",
+    "spellName": "Foresight",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/life.grim",
+      "line": 9
+    },
+    "currentType": "card",
+    "currentGate": "term and not wrapup",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Hold on and see where it goes",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Jump for the landing",
+        "when": null
+      }
+    ],
+    "evidence": "Halfway up the west staircase, it decides to be somewhere else. You're now heading toward a floor you've never seen, at speed, and you're late for class.",
+    "why": "A moving stair approaches an unfamiliar floor while the player is late for class.",
+    "action": "Cast to glimpse the next few moments and time a jump for the nearest visible landing.",
+    "trade": "Mana for a better-timed move; preserve the existing chance of being deposited elsewhere and late.",
+    "caveat": "Only immediate visible timing, not knowledge of the castle route.",
+    "scout": "spatial"
+  },
+  {
+    "id": "life_midnight_snack",
+    "title": "Midnight Hunger",
+    "spell": "shadowstep",
+    "spellName": "Shadowstep",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/life.grim",
+      "line": 182
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Go back to bed hungry",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Sneak down",
+        "when": null
+      }
+    ],
+    "evidence": "It's midnight and you're starving. The kitchens are three floors down, past a prefect's post.",
+    "why": "The kitchens are three floors away, with a prefect’s post on the route.",
+    "action": "Cross one nearby shadowed corridor to bypass the post on the way to the kitchen.",
+    "trade": "Mana for a shortcut; detection/detention remains possible, while going hungry remains available.",
+    "caveat": "Strictly short distance, never three floors in one cast.",
+    "scout": "spatial"
+  },
+  {
+    "id": "life_storm_night",
+    "title": "The Lights Go Out",
+    "spell": "flame",
+    "spellName": "Flame",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/life.grim",
+      "line": 340
+    },
+    "currentType": "card",
+    "currentGate": "month >= 6 and month <= 8",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Tell an even scarier story",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Light the room with a spell",
+        "when": null
+      }
+    ],
+    "evidence": "A storm knocks out every light-crystal in the dormitory. The common room fills with students, blankets and somebody's terrible ghost story.",
+    "why": "The dormitory crystals are out during a storm; the generic lighting attempt can set the sofa alight.",
+    "action": "Offer a controlled fingertip Flame as a small, local light source.",
+    "trade": "Mana buys a small, controlled source of light and warmth; the ordinary storytelling route and riskier full-room floating-light attempt remain useful.",
+    "caveat": "The source has no ordinary candle-lighting choice. Use the fingertip flame established by the roster; do not claim it relights the crystals or the whole room.",
+    "scout": "spatial"
+  },
+  {
+    "id": "maud_chickens",
+    "title": "The Great Chicken Escape",
+    "spell": "haste",
+    "spellName": "Haste",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/people_others.grim",
+      "line": 350
+    },
+    "currentType": "card",
+    "currentGate": "not met(maud) and turn >= 2",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Keep walking",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Grab the speckled one",
+        "when": null
+      }
+    ],
+    "evidence": "Forty chickens are loose on the main lawn, pursued by an old woman in a straw hat. \"Don't just stand there, dearie!\" she shouts at you. \"Grab the speckled one, she's the ringleader!\"",
+    "why": "Maud’s chickens have escaped and the speckled ringleader is the immediate target.",
+    "action": "Hasten a short dash to catch the speckled ringleader.",
+    "trade": "Spend Mana for speed rather than relying only on the ordinary tackle; keep the chance of being pecked and the actual introduction to Maud.",
+    "caveat": "This often appears before Beastcraft opens. Keep the ordinary route and meet maud on a casting route too; do not change the event gate just to guarantee spell availability.",
+    "scout": "narrative"
+  },
+  {
+    "id": "job_board_message_run",
+    "title": "Messages Across the Castle",
+    "spell": "haste",
+    "spellName": "Haste",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 706
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 4,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Run the round yourself",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Send the owls instead",
+        "when": null
+      }
+    ],
+    "evidence": "{A professor wants a runner for the afternoon, with notes for every tower before the bell. A small fee, and no reading them.|The runner's notice is back, with a longer list of towers.|The runner's notice, and a list you could walk in your sleep. The staircases have learned your face.}",
+    "why": "Notes must reach seven towers before the bell, through moving stairs.",
+    "action": "Hasten through the urgent delivery round.",
+    "trade": "Saves some of the ordinary leg strain at a fatigue cost; preserve the honest fee and ordinary run.",
+    "caveat": "Do not guarantee the moving staircases cooperate; show the nap/fatigue consequence in flavor.",
+    "scout": "spatial"
+  },
+  {
+    "id": "observatory_roof_ledge",
+    "title": "The Roof Ledge",
+    "spell": "ward",
+    "spellName": "Ward",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 58
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Climb out onto the ledge",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Watch through the glass",
+        "when": null
+      }
+    ],
+    "evidence": "{A window in the dome opens onto the roof, and onto a ledge that everyone swears they have never sat on.|Someone else who never sits there has oiled the latch.|The ledge. You know where the loose tile is now.} {season == \"winter\": The tiles are white with frost.|{The lake below is a second sky.|A warm wind comes up from the village.|Someone's scarf is snagged on the gutter.}}",
+    "why": "The roof ledge has loose tiles, frost or gusts, and skinned-palm failure outcomes.",
+    "action": "Ward before stepping onto the narrow ledge so the shell can turn aside the next harm if footing slips or a gust catches the climber.",
+    "trade": "Modest protection while retaining the climb challenge and ordinary injury risk; normal spell costs apply.",
+    "caveat": "Does not grant balance or guarantee the view; preserve the ordinary routes.",
+    "scout": "spatial"
+  },
+  {
+    "id": "ledger_office_drying_line",
+    "title": "The Drying Line",
+    "spell": "glamour",
+    "spellName": "Glamour",
+    "priority": "P1",
+    "status": "needs-setup-rewrite",
+    "source": {
+      "file": "content/events/pools/castle_towers.grim",
+      "line": 257
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Read ahead",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Leave the line alone",
+        "when": null
+      }
+    ],
+    "evidence": "{Tomorrow's gossip column is pegged on a line to dry, and nobody is watching it.|The proofs hang on the line, and the peg on the gossip column is a new red one.|The drying line. You know which peg holds the gossip column.} {One item names your house.|One item begins \"Which second-year was seen...\"|{final_year: One item is about the graduating year. Possibly you.|A whole paragraph is about a broken window.}}",
+    "why": "Reading tomorrow’s gossip proof risks being caught or bringing down the line.",
+    "action": "Glamour your own appearance while taking an unauthorized look at the proofs.",
+    "trade": "Mana buys a disguise, not immunity to being caught or to a falling drying line. A dishonest pretext should retain moral and reputation stakes.",
+    "caveat": "Specify how the disguise helps and its limits. Do not make the text vanish, erase evidence, or automatically succeed at the existing deception challenge.",
+    "scout": "spatial"
+  },
+  {
+    "id": "duelling_dummy_mending",
+    "title": "Mending the Dummies",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 38
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Stay late and stitch them up",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Leave them for the morning",
+        "when": null
+      }
+    ],
+    "evidence": "{After practice someone has to mend the dummies, and tonight the rota says it's you.|Mending night again, and the rota has your name on it.|You know every dummy here by its scars. They look at you with something like trust.} {The tall dummy is missing an arm. Someone always takes the arm.|One dummy is now mostly scorch mark.|Someone has painted a new name on a dummy's chest, and a grudge beneath it.}",
+    "why": "After practice, battered dummies need stitching and available parts reattached.",
+    "action": "Mend torn seams and reattach available pieces of a practice dummy.",
+    "trade": "Mana reduces some late stitching, while ordinary repair retains its club work/rank practice and leaving still costs performance.",
+    "caveat": "Do not regrow burned straw or a missing arm from nothing. Show available parts and retain real work for badly damaged dummies.",
+    "scout": "academic"
+  },
+  {
+    "id": "broom_courier_morning_crossing",
+    "title": "The Lake Crossing",
+    "spell": "haste",
+    "spellName": "Haste",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 735
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 4,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Fly straight across",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Take the long way round",
+        "when": null
+      }
+    ],
+    "evidence": "{The dispatch bell rings. The village sack is ready, and the quickest way is over the lake.|You have started timing yourself against the gulls.|The lake knows your shadow by now.} {season == \"winter\": Ice fog sits on the water like a lid.|{season == \"summer\": The water is so still you fly over your own reflection.|{A headwind is coming off the hills.|Gulls are holding a meeting on your route.|The far shore is lost in mist.}}}",
+    "why": "A quick lake crossing faces headwind, gulls or fog; the shore route is slower.",
+    "action": "Use Haste for a brief fast passage, paying through exhaustion and keeping the weather risk; preserve the safe shore route. Preserve current choices: Fly straight across / Take the long way round.",
+    "trade": "Pay Mana automatically and retain the existing meaningful non-cast route.",
+    "caveat": "Do not guarantee arrival or remove visibility risk.",
+    "scout": "academic"
+  },
+  {
+    "id": "broom_courier_broom_scramble",
+    "title": "The Broom Scramble",
+    "spell": "haste",
+    "spellName": "Haste",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 763
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 4,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Shoulder in for the good broom",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Take the difficult one",
+        "when": null
+      }
+    ],
+    "evidence": "{Only one loft broom is in a good state, and every courier on shift wants it.|You have started arriving early for the brooms, and so has everyone else.|You could pick the good broom blindfold, by the smell of its varnish.} {What's left is one that pulls left.|What's left sheds twigs when nervous.|What's left only flies if you're polite to it.} {season == \"winter\": Frost has got into all their bristles.|}",
+    "why": "Everyone wants the one sound broom; shouldering someone aside has a moral cost.",
+    "action": "Use Haste to reach or mount the sound broom first, trading the spell’s exhaustion for the rough-broom handling route. Preserve current choices: Shoulder in for the good broom / Take the difficult one.",
+    "trade": "Pay Mana automatically and retain the existing meaningful non-cast route.",
+    "caveat": "Haste gives speed, not ownership or a permanent repair.",
+    "scout": "academic"
+  },
+  {
+    "id": "astro_moving_charts",
+    "title": "The Charts Move",
+    "spell": "foresight",
+    "spellName": "Foresight",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/courses_a.grim",
+      "line": 313
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Pin it and trace the drift",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Sketch every shape it makes",
+        "when": null
+      }
+    ],
+    "evidence": "{Advanced Astromancy uses charts that move. The inked stars drift to where they will be, not where they are.|The charts are livelier this morning, and one has crept off the table.|You've stopped flinching when the stars move. You still check twice.} {Your chart keeps rearranging itself into a shape like a doorway.|Your chart is sulking in one corner.|Your chart is going faster than the others.} Pin it and read it, or read it as it goes.",
+    "why": "The stars printed on an advanced chart physically drift as it is read.",
+    "action": "Foresee the chart’s next physical movement, then sketch one brief, stable segment.",
+    "trade": "Foresight can give a brief next-moment glimpse to compare with the moving ink, not resolve the whole chart. Preserve the manual tracing alternatives and charge mana.",
+    "caveat": "Do not read a season of the future from a short glimpse. Keep interpretation of the chart and its existing academic gates as work.",
+    "scout": "academic"
+  },
+  {
+    "id": "alch_bandage_round",
+    "title": "Bandage Round",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/courses_a.grim",
+      "line": 416
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Roll bandages and watch",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Offer to treat a patient",
+        "when": null
+      }
+    ],
+    "evidence": "{&The healing half of Alchemy I is taught in the infirmary, where Sister Amaranth has the class roll bandages and watch her work.|Sister Amaranth inspects every roll, and unrolls one of yours.|Sister Amaranth hands you a roll without looking up.} {&A third-year is in with a burnt hand from Evocation.|A first-year is in with a scraped knee and a great deal to say about it.|A second-year is in with a sprained wrist from the flight field.}",
+    "why": "Amaranth supervises infirmary practice on a burn, scraped knee or sprained wrist.",
+    "action": "Mend the selected physical injury under Amaranth’s supervision.",
+    "trade": "Mend offers a limited physical-injury treatment under Amaranth’s watch, not a disease cure, with mana cost and the slower bandage route retained.",
+    "caveat": "Choose a level/check that fits the burn, scrape and wrist variants. Keep bandaging/observation useful; no disease cure or automatic final-exam credit.",
+    "scout": "academic"
+  },
+  {
+    "id": "beast_manticore_rounds",
+    "title": "Manticore Rounds",
+    "spell": "ward",
+    "spellName": "Ward",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/courses_b.grim",
+      "line": 327
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 4,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Hold the tail",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Hum the lullaby",
+        "when": null
+      }
+    ],
+    "evidence": "{Advanced students check the manticore once a month. Someone holds the tail; someone hums the lullaby. Brask lets you choose.|Manticore rounds. It knows the lullaby better than you do.|The manticore yawns at you, which is either a welcome or a threat.} {Its tail twitches in its sleep.|It has been off its food, Brask says, and is in a mood.|{final_year: You wonder who'll hold the tail after you.|Brask has brought a bucket of meat and a smaller one of patience.}}",
+    "why": "One student holds the manticore’s twitching tail while another hums.",
+    "action": "Ward against one tail strike while assisting Brask with the check-up.",
+    "trade": "Ward can protect the student while holding it, with mana cost and no change to the animal’s behavior or the lullaby option.",
+    "caveat": "Keep the physical tail-handling challenge and the humming alternative; the spell does not pacify the manticore or last through unlimited blows.",
+    "scout": "academic"
+  },
+  {
+    "id": "alch_third_floor_still",
+    "title": "The Still Cracks",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/courses_upper.grim",
+      "line": 307
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Mend the crack, still hot",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Shout, and clear the bench",
+        "when": null
+      }
+    ],
+    "evidence": "{Advanced Alchemy distils essences that would rather be gas. The ventilation charm gave up on the third floor years ago. Today your still cracks.|Distilling day, and a hiss from your still that you know.|Your still has cracked again. You're getting fast at noticing.} {The vapour is green and smells of mint.|The vapour is pale and smells of nothing, which is worse.|The vapour is curling toward the next bench.}",
+    "why": "A hot copper still cracks and vapour curls toward the next bench.",
+    "action": "Mend the crack directly before vapour spreads, with mana cost and heat exposure",
+    "trade": "retain the manual hot repair versus evacuation choice.",
+    "caveat": "Do not make Mend a cure for vapour exposure or broader alchemical damage.",
+    "scout": "academic"
+  },
+  {
+    "id": "duel_hall_dummies",
+    "title": "The Practice Dummies",
+    "spell": "flame",
+    "spellName": "Flame",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/grounds.grim",
+      "line": 64
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Drill your hexes on it",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Restuff the battered ones",
+        "when": null
+      }
+    ],
+    "evidence": "{The near end of the hall belongs to the practice dummies, who watch you come in. The one with the painted moustache looks especially unforgiving.|The dummy with the moustache is still here, with a new scorch mark and, you'd swear, a new grudge.|The moustached dummy greets you with its usual silence. Someone has given it an eyepatch.} {The floorboards are still warm from the last session.|A singed glove lies abandoned on the rack.|Rain drums on the high windows.}",
+    "why": "Ordinary hex practice spends Mana, while restuffing the dummies is physical work.",
+    "action": "Shape a candle-small, controlled Flame against one dummy as a specific practice drill.",
+    "trade": "A named spell action beside the generic hex routine; preserve mana cost and scorch risk.",
+    "caveat": "Keep the effect small and practice-focused; do not replace training with a powerful attack.",
+    "scout": "spatial"
+  },
+  {
+    "id": "flight_field_pickup_race",
+    "title": "The Pick-Up Race",
+    "spell": "haste",
+    "spellName": "Haste",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/grounds.grim",
+      "line": 234
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Borrow a broom and race",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Bet a few crowns on the outsider",
+        "when": null
+      }
+    ],
+    "evidence": "{A pick-up race is forming at the far hoops. Three brooms, two rules, no referee.|The pick-up racers are back. The rules have grown to four.|The pick-up race is a fixture now. Someone has painted a finish line, crookedly.} {A second-year from Emberhall is taking bets.|A Brasswick student has bolted a lantern to their broom-tail.|A Rootward student is flying barefoot, for grip.}",
+    "why": "An informal broom race has a short finish and unpredictable gusts.",
+    "action": "Hasten for a short speed burst near the finish.",
+    "trade": "Improves the chance of placing well but carries Haste's fatigue; preserve collision/injury stakes.",
+    "caveat": "Foresight could be a mutually exclusive alternative to read the next gust, but do not offer both spells on this card.",
+    "scout": "spatial"
+  },
+  {
+    "id": "boathouse_green_boat",
+    "title": "The Leaky Green Boat",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/grounds.grim",
+      "line": 381
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Patch the green boat",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Carve your initials in a beam",
+        "when": null
+      }
+    ],
+    "evidence": "{The boathouse smells of tar and old rope. Its rowing boats are mostly leaks held together by paint, the green one worst of all.|Someone has patched the green boat since your last visit, badly, with what looks like a cake tin.|The boathouse knows you. The green boat still leaks.} {Initials are carved into every beam, some so old they've gone soft.|Rain patters on the roof.|A spider has strung a web across the oars, and seems proud of it.}",
+    "why": "The old green boat repeatedly leaks despite tar patches.",
+    "action": "Mend one visible crack/seam in the hull instead of making another temporary tar patch.",
+    "trade": "Saves the manual effort but consumes spell costs; nonmagical patching remains a valid repair route.",
+    "caveat": "Mend covers cracks, but should fix only the visible leak; don't make the old boat permanently maintenance-free.",
+    "scout": "spatial"
+  },
+  {
+    "id": "secret_garden_silver_bees",
+    "title": "The Silver Bees",
+    "spell": "ward",
+    "spellName": "Ward",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/grounds.grim",
+      "line": 603
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Take a little comb",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Follow a bee home",
+        "when": null
+      }
+    ],
+    "evidence": "{The silver bees are working the ferns; their hive in the old stump drips honey the colour of moonlight.|The silver bees have built a second comb, lopsided, as if in a hurry.|The silver bees know you now, more or less.} {season == \"winter\": Even in winter they fly, slowly, like snow going the wrong way.|{The comb is fuller than you've ever seen it.|One of them lands on your sleeve and stays.|They're dancing a direction you can't read.}}",
+    "why": "Taking a little honeycomb risks one silver sting; following a bee is the other route.",
+    "action": "Ward before taking only a thumb-width of comb, turning aside one sting.",
+    "trade": "A single protective margin for the harvest, not a way to secure more honey for free.",
+    "caveat": "Preserve the bees' objection and non-harvesting route; Ward does not command them.",
+    "scout": "spatial"
+  },
+  {
+    "id": "courier_loft_dispatch_bell",
+    "title": "The Dispatch Bell",
+    "spell": "haste",
+    "spellName": "Haste",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/grounds.grim",
+      "line": 671
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Run the parcel across campus",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Hand it back, politely",
+        "when": null
+      }
+    ],
+    "evidence": "{The dispatch bell clangs and the loft explodes into brooms. A courier shoves a parcel at you. \"You've got legs. Lecture tower!\"|The couriers have started eyeing the ladder whenever someone climbs it.|The bell. A parcel. A look. You know the drill.} {The parcel is ticking.|The parcel is addressed to \"Whoever Is On Duty\".|The parcel is very cold.}",
+    "why": "A dispatch rush sends the visitor running a parcel to the lecture tower.",
+    "action": "Hasten the campus crossing and deliver the parcel in time.",
+    "trade": "Spell fatigue replaces some physical exertion, not a free source of gold.",
+    "caveat": "Keep the ordinary run's health cost/tip and the polite refusal choice.",
+    "scout": "spatial"
+  },
+  {
+    "id": "intern_alchemists_safety",
+    "title": "The Cracked Vat",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/internships.grim",
+      "line": 127
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Report it to the Guild masters",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Mend it yourself, quietly",
+        "when": null
+      }
+    ],
+    "evidence": "The seventh vat at the Guild works has a crack in it. Everyone knows. The foreman says it'll last the season, and the season's quota depends on it. Workers walk past it without looking. You've seen what the steam does to brass.",
+    "why": "The neglected seventh vat is cracked and leaking dangerous steam.",
+    "action": "Use Mend on the actual crack as a named route beside the sealant-and-brew check",
+    "trade": "make the cast consume Mana and keep the failure hazard and whistleblower route.",
+    "caveat": "Mend closes the vessel crack only; it does not neutralize steam or erase the foreman/worker consequences.",
+    "scout": "academic"
+  },
+  {
+    "id": "favour_amaranth_shift",
+    "title": "The Night Shift",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "needs-level-gate",
+    "source": {
+      "file": "content/events/pools/money.grim",
+      "line": 98
+    },
+    "currentType": "card",
+    "currentGate": "met(amaranth) and gold < 25 and term",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Take the shift",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Offer to roll bandages by day instead",
+        "when": null
+      }
+    ],
+    "evidence": "Sister Amaranth needs a pair of hands for the infirmary's night shift. \"Basins, bandages, and sitting with whoever can't sleep. Eight crowns. Don't faint. If you faint, you're a patient, and patients don't get paid.\"",
+    "why": "The paid night shift includes a fever patient, a broken wrist and someone needing company.",
+    "action": "Mend the broken wrist under Amaranth’s supervision as part of the night shift.",
+    "trade": "Mana buys supervised clinical practice; keep the shift’s pay, sleeplessness, other patients, and the daytime bandaging alternative.",
+    "caveat": "The wrist appears in the current shift outcome, so introduce this patient before the new choice. Choose an appropriate Mend level/check for bone work. Do not cure the fever patient or finish the whole shift instantly.",
+    "scout": "spatial"
+  },
+  {
+    "id": "newt_high_table",
+    "title": "The High Table",
+    "spell": "foresight",
+    "spellName": "Foresight",
+    "priority": "P1",
+    "status": "needs-menu-redesign",
+    "source": {
+      "file": "content/events/pools/night.grim",
+      "line": 55
+    },
+    "currentType": "menu",
+    "currentGate": "not flag(grisk_gone)",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "purse",
+        "label": "Stake your purse",
+        "when": null
+      },
+      {
+        "key": "favour",
+        "label": "Stake a favour to Grisk",
+        "when": "not flag(owes_grisk)"
+      },
+      {
+        "key": "health",
+        "label": "Play the bone-dice",
+        "when": null
+      },
+      {
+        "key": "leave",
+        "label": "Watch one hand, then go",
+        "when": null
+      }
+    ],
+    "evidence": "{Behind the upstairs room there's a back room, and in it the high table. Grisk keeps the bank. Nobody here plays for crowns alone.|The high table again. Grisk nods to you as if you were a regular. You are becoming one.|Grisk has kept your seat warm, he says. It is not a comforting thought.} {A first-year's familiar sits in a cage beside the pot.|Someone has staked a silver wand and is sweating about it.|Somebody's signed promise is in the pot, folded small.}",
+    "why": "The four-option high-table menu includes a knife-between-fingers wager called bone-dice.",
+    "action": "Foresee the next knife movement during the bone-dice game before attempting it.",
+    "trade": "Mana could mitigate one immediate hand injury, with the wager, moral cost, and table consequences preserved.",
+    "caveat": "The source is a four-option menu; up[] is illegal here. The bone-dice branch is a knife-between-fingers game, not a normal dice-outcome prediction. Any separate casting card is new structure and must return to the right wager outcome.",
+    "scout": "spatial"
+  },
+  {
+    "id": "gig_grounds_storm_damage",
+    "title": "After the Storm",
+    "spell": "ward",
+    "spellName": "Ward",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 91
+    },
+    "currentType": "card",
+    "currentGate": "has(gig_grounds)",
+    "repeat": 4,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Climb up and cut it down",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Rope it off and clear the rest",
+        "when": null
+      }
+    ],
+    "evidence": "{season == \"winter\": Last night's storm brought down half a pear tree.|A summer storm in the night has stripped the orchard.} Maud wants it cleared before the stay-behinds go walking. A cracked limb still hangs over the path.",
+    "why": "A cracked branch hangs over a path that must be cleared after a storm.",
+    "action": "Raise a Ward before climbing to limit the immediate impact if the limb shifts, spending Mana and retaining the danger and work.",
+    "trade": "Keep the rope-off alternative and do not make Ward remove the limb or guarantee a safe climb.",
+    "caveat": "Ward protects the climber narrowly; it does not secure the branch or protect future walkers.",
+    "scout": "academic"
+  },
+  {
+    "id": "gig_grounds_hive_check",
+    "title": "Checking the Hives",
+    "spell": "ward",
+    "spellName": "Ward",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 115
+    },
+    "currentType": "card",
+    "currentGate": "has(gig_grounds)",
+    "repeat": 4,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Introduce yourself properly",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Get it done quickly",
+        "when": null
+      }
+    ],
+    "evidence": "Maud's hives sit at the end of the orchard and she checks them {season == \"winter\": by ear in winter, knocking and listening|by hand in summer, slow and bare-armed}. Today she wants you to do it. \"Tell them who you are,\" she says. \"They like manners.\"",
+    "why": "Maud asks for a hive inspection; even the polite method earns one sting.",
+    "action": "Raise a close Ward for the inspection, paying Mana and risking that bees resist the barrier; preserve the unshielded manners route. Preserve current choices: Introduce yourself properly / Get it done quickly.",
+    "trade": "Pay Mana automatically and retain the existing meaningful non-cast route.",
+    "caveat": "Ward protects the student narrowly; it cannot control bees or complete the hive check.",
+    "scout": "academic"
+  },
+  {
+    "id": "gig_newt_fire",
+    "title": "The Fire Must Not Go Out",
+    "spell": "flame",
+    "spellName": "Flame",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 370
+    },
+    "currentType": "card",
+    "currentGate": "has(gig_newt)",
+    "repeat": 3,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Sit up with it all night",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Bank it and trust it",
+        "when": null
+      }
+    ],
+    "evidence": "{The landlady's fire has never gone out in her lifetime or her mother's. She's away tonight, and this morning the wind is already in the chimney.|The landlady is away again tonight, and the fire is already low. The wind is from the north.|The fire flickered last night as you locked up, as if to test you. Tonight it's yours again.} {The wood is damp.|There's frost on the inside of the windows.|The cat is sitting on the warmest stone, unhelpfully.}",
+    "why": "The landlady’s long-burning hearth is low, with damp fuel and a troublesome draught.",
+    "action": "Use a controlled Flame to revive the banked coals, with Mana and a risk of flaring the chimney; preserve sitting up and ordinary banking. Preserve current choices: Sit up with it all night / Bank it and trust it.",
+    "trade": "Pay Mana automatically and retain the existing meaningful non-cast route.",
+    "caveat": "Keep the hearth’s long tradition and consequences intact; do not make the spell automatically safe.",
+    "scout": "academic"
+  },
+  {
+    "id": "gig_post_storm_run",
+    "title": "The Storm Run",
+    "spell": "haste",
+    "spellName": "Haste",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 461
+    },
+    "currentType": "card",
+    "currentGate": "has(gig_post)",
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Fly straight over the ridge",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Take the valley road",
+        "when": null
+      }
+    ],
+    "evidence": "{The holiday post doesn't wait for weather. Tonight's route crosses the ridge in a storm.|The ridge again, and the wind again.|You've flown this route so often the farm dogs know your broom.} {The sack is heavier than the broom likes.|One parcel is labelled \"fragile\" in four languages.|The light at the last farm is always on for you.}",
+    "why": "A stormy ridge route promises quick delivery; the valley road is slower and safe.",
+    "action": "Use Haste for one burst over the ridge, gaining time but carrying the spell’s exhaustion cost and the weather risk",
+    "trade": "retain the valley-road alternative.",
+    "caveat": "Do not guarantee early delivery or cancel storm damage.",
+    "scout": "academic"
+  },
+  {
+    "id": "break_home_mending_chair",
+    "title": "The Mending Chair",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "needs-setup-rewrite",
+    "source": {
+      "file": "content/events/pools/plans_more.grim",
+      "line": 155
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Mend it with a spell",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Mend it by hand",
+        "when": null
+      }
+    ],
+    "evidence": "{Word goes round the house that the scholar can fix things.|The things that need fixing have been waiting for you on a chair by the door.|The mending chair fills up between breaks, like a well.} {season == \"winter\": Today it's a stove door that won't stay shut.|Today it's a window that sticks in the heat.} {Also a clock that strikes thirteen.|Also a doll with a missing eye.|Also a teapot nobody admits to breaking.}",
+    "why": "Broken household things accumulate on a chair, with season and showing-specific repairs.",
+    "action": "Use Mend as a named, controlled repair route with the spell’s Mana cost",
+    "trade": "the existing hand repair remains slower and material-based.",
+    "caveat": "The chair holds household items; the chair itself is not broken. A stuck hot-weather window, a missing doll eye, and a thirteen-striking clock are not all straightforward cracks. Give every showing an actually damaged object and available material; do not promise universal repair.",
+    "scout": "academic"
+  },
+  {
+    "id": "intern_royal_library_mending",
+    "title": "The Mending Table",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 543
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 4,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Mend it myself",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Watch the binder work",
+        "when": null
+      }
+    ],
+    "evidence": "{Today you're at the mending table, where crumbling records are put back together one flake at a time.|The binder hands you the tweezers without a word, which counts as a greeting.|The binder trusts you with the older pages now, which are the worst.} {The page is a royal decree on the correct length of goose necks.|The page is a recipe, half eaten by something.|The page is a list of names, one crossed out very hard.}",
+    "why": "A fragile manuscript must be restored one surviving flake at a time.",
+    "action": "Offer a known Mend cast to join the fragile paper at a controlled pace, paying Mana while preserving the careful tweezer route and risk of losing a flake.",
+    "trade": "Offer a known Mend cast to join the fragile paper at a controlled pace, paying Mana while preserving the careful tweezer route and risk of losing a flake.",
+    "caveat": "Do not restore missing words, undo the crossed-out name, or replace conservation skill.",
+    "scout": "academic"
+  },
+  {
+    "id": "intern_conclave_test_chamber",
+    "title": "The Test Chamber",
+    "spell": "ward",
+    "spellName": "Ward",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 573
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 4,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Step into the chamber",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Take readings behind the glass",
+        "when": null
+      }
+    ],
+    "evidence": "{The Conclave's researchers need someone to cast their newest spell for the first time. The walls are thick for a reason.|Someone has chalked a new circle on the floor. The old one is scorched.|You know every scorch mark in the chamber by now, and who made each one.} {Today's spell is meant to make a candle burn backwards.|Today's spell is meant to tidy a room. It has opinions about what tidy means.|Today's spell is unnamed. Nobody will say why.}",
+    "why": "An experimental spell is tested in a scorched chamber while researchers watch behind glass.",
+    "action": "Raise a Ward before the trial to reduce immediate exposure, spending Mana while leaving the experimental spell’s outcome uncertain",
+    "trade": "preserve the behind-glass observation option.",
+    "caveat": "Ward turns aside one damaging discharge. Keep the actual test challenge and any failed performance or odd non-injury outcome; it does not identify the spell or automatically fix enchanted robes.",
+    "scout": "academic"
+  },
+  {
+    "id": "intern_thornwick_rivalry",
+    "title": "The Old Grudge",
+    "spell": "glamour",
+    "spellName": "Glamour",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 833
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Out-charm them",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Let it slide",
+        "when": null
+      }
+    ],
+    "evidence": "{The Thornwick students have questions about Lumenhold. Most of them are about the last time the two schools met on the duelling field.|The Thornwick students have found a new angle on the old grudge.|You and the Thornwick students have a routine now. It's almost friendly.} {Today they want to know if Lumenhold's towers still lean.|Today they ask, sweetly, if Lumenhold teaches illusion yet.|Today one of them pretends to be you, very well.}",
+    "why": "Thornwick interns trade school-rivalry barbs and occasionally imitate the player.",
+    "action": "Use mild Glamour to land one barb with extra poise, paying Mana",
+    "trade": "leave wit and the option to disengage intact.",
+    "caveat": "Charm only affects the player’s impression; it cannot compel agreement or rewrite the exchange.",
+    "scout": "academic"
+  },
+  {
+    "id": "renown_ice_rescue",
+    "title": "A First-Year on the Ice",
+    "spell": "flame",
+    "spellName": "Flame",
+    "priority": "P1",
+    "status": "needs-outcome-rewrite",
+    "source": {
+      "file": "content/events/pools/renown.grim",
+      "line": 112
+    },
+    "currentType": "card",
+    "currentGate": "season == \"winter\" and term",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Go out on the ice",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Run for the prefects",
+        "when": null
+      }
+    ],
+    "evidence": "A first-year has gone through the ice on the lake. A crowd is shouting on the shore, and nobody is moving. You're nearest.",
+    "why": "A first-year is through the lake ice, with onlookers and a ladder rescue available.",
+    "action": "Call for the prefects and ladders, then Burn a warming flame for the rescued first-year on shore.",
+    "trade": "Spend Mana to provide practical aftercare, forgoing the dangerous solo rescue and its large public reward; retain the ordinary call-for-help route.",
+    "caveat": "Replace the scout’s Ward suggestion: Ward does not prevent immersion or hypothermia. The spell does not rescue someone through the ice, create a bridge, or ensure the solo rescue check succeeds.",
+    "scout": "spatial"
+  },
+  {
+    "id": "lesson_mend",
+    "title": "Teacups First",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "formalization",
+    "source": {
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 86
+    },
+    "currentType": "card",
+    "currentGate": "spell_level(mend) >= 1 and term",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Mend cup after cup",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Ask her about the bones",
+        "when": null
+      }
+    ],
+    "evidence": "Sister Amaranth teaches Mend with teacups. She drops one on the infirmary floor without looking. \"Mend it.\" When it's whole she drops another. \"Bones are harder,\" she says, rolling bandages. \"Cups first.\"",
+    "why": "An already-known Mend lesson practices physical repairs and discusses treating bones.",
+    "action": "Formalize the current cup-mending practice as a named Mend cast with its Mana cost, rather than inventing a new repair effect.",
+    "trade": "Pay Mana automatically and retain the existing meaningful non-cast route.",
+    "caveat": "This already describes casting a known spell. Rework the existing practice/observation structure rather than adding an identical third choice; avoid copying a manual Mana debit into up[] as well.",
+    "scout": "academic"
+  },
+  {
+    "id": "lesson_ward",
+    "title": "Chalk",
+    "spell": "ward",
+    "spellName": "Ward",
+    "priority": "P1",
+    "status": "formalization",
+    "source": {
+      "file": "content/events/pools/spell_lessons.grim",
+      "line": 232
+    },
+    "currentType": "card",
+    "currentGate": "spell_level(ward) >= 1 and term",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Hold the ward all hour",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Watch the lecturer's wrist",
+        "when": null
+      }
+    ],
+    "evidence": "At the top of the lecture tower, where the lamps burn dim on purpose, the umbral lecturer drills first-years in their Ward by throwing chalk. Hard, and without warning. \"A ward that only works when you're ready,\" says the lecturer, \"is a decoration.\"",
+    "why": "An already-known Ward lesson uses thrown chalk, with an observational alternative.",
+    "action": "Formalize the current ward-holding action as a named Ward cast with its Mana cost, not a new defensive shortcut.",
+    "trade": "Pay Mana automatically and retain the existing meaningful non-cast route.",
+    "caveat": "This already describes casting a known spell. Rework the existing practice/observation structure rather than adding an identical third choice; avoid copying a manual Mana debit into up[] as well.",
+    "scout": "academic"
+  },
+  {
+    "id": "injured_on_the_stairs",
+    "title": "The Moving Stairs, Limping",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/statuses.grim",
+      "line": 178
+    },
+    "currentType": "card",
+    "currentGate": "has(injured) and term",
+    "repeat": 2,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Take the long way, slowly",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Hop the gap as it swings",
+        "when": null
+      }
+    ],
+    "evidence": "{Your ankle is bandaged and the stairs are moving, as stairs here do. The lecture is three landings up and starts in five minutes.|The stairs again, the ankle again. The lecture, as ever, is at the top.}",
+    "why": "An already bandaged ankle makes a moving-stair gap difficult before a lecture.",
+    "action": "Mend the sprained ankle before attempting the moving-stair route, then take the gap carefully.",
+    "trade": "Could reduce injury pressure and make attendance possible at spell cost; preserve the feat risk and the slower recovery route's study cost.",
+    "caveat": "Do not guarantee a safe landing or erase the deadline; keep to the established sprain-healing scope.",
+    "scout": "spatial"
+  },
+  {
+    "id": "courier_chief_urgent_crossing",
+    "title": "The Urgent Crossing",
+    "spell": "foresight",
+    "spellName": "Foresight",
+    "priority": "P1",
+    "status": "needs-localized-setup",
+    "source": {
+      "file": "content/events/pools/upper_ranks.grim",
+      "line": 350
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 3,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Fly the pass tonight",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Wait for the storm to pass",
+        "when": null
+      }
+    ],
+    "evidence": "{A red-sealed package for the far side of the mountains, by tomorrow, and only the chief courier flies red seals.|Another red seal, another gale over the pass.|The red seals come to you by name now.} {The pass is in cloud.|A storm is coming in from the west.|The package is humming.}",
+    "why": "A chief courier must cross a mountain pass overnight in threatening weather.",
+    "action": "Foresee the next gust at one immediate dangerous gap in the pass, then attempt the crossing.",
+    "trade": "Mana helps with one maneuver while the expert flight challenge, fatigue, and route consequences remain.",
+    "caveat": "Localize the benefit in the prose. A few moments of foresight do not provide a safe forecast for an overnight mountain flight.",
+    "scout": "academic"
+  },
+  {
+    "id": "village_last_barge",
+    "title": "The Last Barge",
+    "spell": "haste",
+    "spellName": "Haste",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/village_home.grim",
+      "line": 56
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Run for it",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Stay a little longer",
+        "when": null
+      }
+    ],
+    "evidence": "{The last barge back leaves at the bell, and the bell is ringing.|The last-barge bell, and you're nowhere near the quay. The bargeman knows your running by now.|The bell. Of course the bell.} {season == \"winter\": Snow is coming down thick over the square.|{The inn has started a song with too many verses.|The lamps are only half lit.|The lake has gone the colour of pewter.}} {final_year: Not many evenings like this are left.|You could run. You could stay.}",
+    "why": "The last barge is leaving as the bell rings; staying risks a fare or a night outdoors.",
+    "action": "Hasten the final dash to catch the departing barge.",
+    "trade": "Avoids the ordinary exhausted arrival but incurs the spell's long-nap fatigue.",
+    "caveat": "Keep the ordinary run and stay/overnight-fare outcomes; no free route.",
+    "scout": "spatial"
+  },
+  {
+    "id": "evo_first_spark",
+    "title": "The First Spark",
+    "spell": "flame",
+    "spellName": "Flame",
+    "priority": "P1",
+    "status": "formalization",
+    "source": {
+      "file": "content/events/slice_2b.grim",
+      "line": 12
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Aim for heat, carefully",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Aim for fire, boldly",
+        "when": null
+      }
+    ],
+    "evidence": "Evocation I begins with a single instruction from the lectern: \"Make heat. Not fire. Heat.\" Half the class makes nothing. One student makes a small, apologetic fire.",
+    "why": "Evocation-I students choose a tiny warming effect or an overbold flame.",
+    "action": "Burn a small, controlled Flame rather than only warming the palm or making an excessive blaze.",
+    "trade": "Spend Mana for a practiced result instead of the daring attempt’s larger possible training reward.",
+    "caveat": "This level-I practice may be adjacent to the actual course-start lesson. Keep learning in evo_first_flame and do not require knowledge before teaching it.",
+    "scout": "parent"
+  },
+  {
+    "id": "evo_lattice",
+    "title": "The Flame Lattice",
+    "spell": "flame",
+    "spellName": "Flame",
+    "priority": "P1",
+    "status": "formalization",
+    "source": {
+      "file": "content/events/slice_2b.grim",
+      "line": 99
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Build it slowly",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Build it big",
+        "when": null
+      }
+    ],
+    "evidence": "Fire woven into a lattice, each strand holding the others up. The lecturer says the founders built wards like this. The lecturer also says you have twenty minutes.",
+    "why": "A fire-weaving practical rewards precision or an ambitious, risky lattice.",
+    "action": "Burn one compact lattice as a known-spell precision exercise.",
+    "trade": "Mana buys deliberate practice rather than the larger ambitious weave; keep a challenge if precision is the obstacle.",
+    "caveat": "Do not let Flame I automatically perform advanced lattice work. This is optional formalization of an existing spell practical.",
+    "scout": "parent"
+  },
+  {
+    "id": "home_family_supper",
+    "title": "Supper at Home",
+    "spell": "flame",
+    "spellName": "Flame",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/slice_2b.grim",
+      "line": 610
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Show them a spell",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Just listen",
+        "when": null
+      }
+    ],
+    "evidence": "Supper at home. Everyone wants to know what you've learned. You try to explain evocation to an aunt who thinks it's a kind of cheese.",
+    "why": "At home, the family asks to see a spell; the current demonstration lights every candle in the room.",
+    "action": "Burn a small, controlled flame to light a candle in the family demonstration.",
+    "trade": "Pay Mana for focused Flame practice with a different skill payoff, rather than the ordinary display’s larger shared amusement. Listening retains its comfort payoff.",
+    "caveat": "Do not charge Mana for the same or worse payoff as the current free candle demonstration. Give the controlled practice its own modest Arcana-versus-mood trade; no forced affection or rare spell is needed.",
+    "scout": "narrative"
+  },
+  {
+    "id": "home_market_day",
+    "title": "Market Day",
+    "spell": "mend",
+    "spellName": "Mend",
+    "priority": "P1",
+    "status": "outline",
+    "source": {
+      "file": "content/events/slice_2b.grim",
+      "line": 646
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Fix it with magic",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Just buy sweets",
+        "when": null
+      }
+    ],
+    "evidence": "Market day in town. A stallholder recognises your academy robes and asks if you can do anything about his leaky roof. For a price.",
+    "why": "A village stallholder asks for a paid magical fix to a leaky roof; the other route is to buy sweets.",
+    "action": "Use Mend on the leaking roof section as the precise repair route.",
+    "trade": "Spend level-appropriate Mana to repair the roof and earn the agreed payment; the sweets route still spends crowns for mood.",
+    "caveat": "Limit to the roof/object and only one repairable leak; do not imply a large building or general restoration.",
+    "scout": "narrative"
+  },
+  {
+    "id": "courier_fix_broom",
+    "title": "The Broom That Pulls Left",
+    "spell": "contraption",
+    "spellName": "Contraption",
+    "priority": "P2",
+    "status": "needs-chain-redesign",
+    "source": {
+      "file": "content/events/club_spell_chains.grim",
+      "line": 861
+    },
+    "currentType": "card",
+    "currentGate": "flag(tailwind_chain) and not flag(tailwind_broom) and spell_level(tailwind) == 0",
+    "repeat": 2,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Pay to have it trued",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Learn to fly it crooked",
+        "when": null
+      }
+    ],
+    "evidence": "Your loft broom pulls left, always has. With the jar's wind behind it, it would pull you into the lake. The broom-maker in the village can true it, for a price.",
+    "why": "Your loft broom pulls left, always has. With the jar's wind behind it, it would pull you into the lake. The broom-maker in the village can true it, for a price.",
+    "action": "A broom that pulls left needs repair",
+    "trade": "a Contraption could build a temporary steering aid, not permanently repair the broom, trading mana and failure risk against paying a maker.",
+    "caveat": "A temporary Contraption steering aid does not automatically satisfy tailwind_broom. Do not award that flag, skip payment, or open the final without a lasting, safe truing solution supported by the scene.",
+    "scout": "academic"
+  },
+  {
+    "id": "life_summer_heat",
+    "title": "The Heat",
+    "spell": "hoarfrost",
+    "spellName": "Hoarfrost",
+    "priority": "P2",
+    "status": "outline",
+    "source": {
+      "file": "content/events/life.grim",
+      "line": 797
+    },
+    "currentType": "card",
+    "currentGate": "month == 10 or month == 11 or month == 12",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Cast a cooling charm on your room",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Sleep on the roof",
+        "when": null
+      }
+    ],
+    "evidence": "The heat is unbearable. Even the gargoyles are sweating. The lake is crowded, the library stifling, the dormitories ovens.",
+    "why": "The dormitory is an oven; a generic cooling charm competes with sleeping on the roof.",
+    "action": "Cool the room briefly with Hoarfrost.",
+    "trade": "Mana for temporary comfort, preserving the roof-sleep option and a distinct failed-cast mishap.",
+    "caveat": "Peer capstone, so P2 after course spells. Do not imply permanent climate control.",
+    "scout": "spatial"
+  },
+  {
+    "id": "job_board_copying",
+    "title": "Fair Copies Wanted",
+    "spell": "quickquill",
+    "spellName": "Quickquill",
+    "priority": "P2",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/castle_halls.grim",
+      "line": 685
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 3,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Copy them for the pay",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Copy them slowly, and learn them too",
+        "when": null
+      }
+    ],
+    "evidence": "{A notice in a shaky hand. A student down with fever needs a fortnight of lecture notes copied out fair, and will pay for neatness.|Another fever, another fortnight of notes to copy fair. The notice says \"neat hand preferred\", and someone has written your name beside it.|The copying notice again. By now you can copy a page without reading a word of it, if you want to.}",
+    "why": "A sick student pays for fair copies of lecture notes; careful handwriting takes two evenings.",
+    "action": "Read the notes aloud and let Quickquill Scribble the fair copy, then proofread it.",
+    "trade": "Spend Mana to spare handwriting strain, forgoing some of the slow copying route’s learning or accepting time spent checking the work.",
+    "caveat": "It records spoken words; it does not silently read or compose notes. Do not award full pay, saved time, and the slow-study Lore gain together without a corresponding trade.",
+    "scout": "spatial"
+  },
+  {
+    "id": "library_assistant_reference_desk",
+    "title": "The Reference Desk",
+    "spell": "index",
+    "spellName": "Index",
+    "priority": "P2",
+    "status": "needs-setup-rewrite",
+    "source": {
+      "file": "content/events/pools/clubs_jobs.grim",
+      "line": 460
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Dig until you find it",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Send them off with a good guess",
+        "when": null
+      }
+    ],
+    "evidence": "{Clerks take the reference desk alone. The first question arrives before you sit down.|The desk has a worn patch now, exactly where your elbows go.|You keep a list of the strangest questions now, and it is long.} {A professor wants \"the green book, about this thick, I read it in my youth\".|A first-year wants the book their professor \"definitely mentioned\".|A visiting scholar wants the one book that explains why bees hum in thirds, by tonight.}",
+    "why": "Readers ask for vaguely described or possibly nonexistent books, and the clerk must research them.",
+    "action": "Recall a relevant page in a catalogue the clerk is holding, then use it to continue the book search.",
+    "trade": "Mana reduces some catalogue work, while the research challenge and the reader’s vague description still matter. The guessed-direction route remains quick and less helpful.",
+    "caveat": "Place the catalogue in hand before the choice. Index does not locate an unknown book remotely, determine an unnamed title, or make the nonexistent bee book exist. Keep synthesis and physical retrieval as work.",
+    "scout": "parent"
+  },
+  {
+    "id": "date_meet_friends",
+    "title": "Meeting the Friends",
+    "spell": "rapport",
+    "spellName": "Rapport",
+    "priority": "P2",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/dating.grim",
+      "line": 76
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Steer the talk to something they share",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Let them find their own way",
+        "when": null
+      }
+    ],
+    "evidence": "{friend} and {partner} have heard a great deal about each other, all from you, and now they're at the same supper table. {friend} is being very polite. {partner} is being very polite back. You are dying.",
+    "why": "A partner and friend are painfully polite to each other at supper.",
+    "action": "Use Rapport's well-timed joke to break the tension and get them laughing together.",
+    "trade": "A social opening at spell cost; preserve the ordinary negotiation check and possible awkward silence.",
+    "caveat": "Do not imply compulsion or guaranteed friendship.",
+    "scout": "spatial"
+  },
+  {
+    "id": "letter_registrar_forms",
+    "title": "Forms in Triplicate",
+    "spell": "quickquill",
+    "spellName": "Quickquill",
+    "priority": "P2",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/letters.grim",
+      "line": 227
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Fill them in properly now",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Leave them until the barge",
+        "when": null
+      }
+    ],
+    "evidence": "The registrar's office has sent forms, in triplicate, about next term: your courses, your board, your \"intentions regarding extracurricular activities\". There is a box marked \"Other (explain)\". It is very small.",
+    "why": "Three identical sets of registrar forms require an afternoon of copying.",
+    "action": "Dictate identical form answers for Quickquill to copy across the three copies.",
+    "trade": "Reduces repetitive copying but the player still chooses answers and handles the cramped box.",
+    "caveat": "Alternative to Quickquill in letter_nessa_deadline, not an additional proposal to add both to one card.",
+    "scout": "spatial"
+  },
+  {
+    "id": "letter_nessa_deadline",
+    "title": "URGENT",
+    "spell": "quickquill",
+    "spellName": "Quickquill",
+    "priority": "P2",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/letters.grim",
+      "line": 496
+    },
+    "currentType": "card",
+    "currentGate": "rel(nessa) >= 10",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Write the piece",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Write back off the record",
+        "when": null
+      }
+    ],
+    "evidence": "A letter from Nessa, URGENT underlined three times: the Ledger needs three hundred words on holidays for the first issue of term, \"interesting ones please, the last six were about weather\". Deadline circled. Twice.",
+    "why": "Nessa urgently needs a short holiday article; writing it competes with a personal reply.",
+    "action": "Dictate a draft for Quickquill to transcribe, then revise it before sending.",
+    "trade": "Saves copying time but not the work of thinking/editing; preserve effort and the editor's cuts.",
+    "caveat": "Quickquill transcribes spoken words; it cannot compose the essay or guarantee a winning entry.",
+    "scout": "spatial"
+  },
+  {
+    "id": "gig_newt_brawl",
+    "title": "A Fight Over a Song",
+    "spell": "rapport",
+    "spellName": "Rapport",
+    "priority": "P2",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/plans_gigs.grim",
+      "line": 343
+    },
+    "currentType": "card",
+    "currentGate": "has(gig_newt)",
+    "repeat": 4,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Step between them",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Bribe them with a free round",
+        "when": null
+      }
+    ],
+    "evidence": "{Two barge crews disagree about the last verse of a song, loudly.|The barge crews again, and the song again, and the same verse.|This time it's a farmer and a fisherman, and the song is a different one.} {A chair is already in the air.|Somebody has taken their coat off.|The fiddler has stopped playing.}",
+    "why": "Two crews, or a farmer and fisherman, are about to fight over a song.",
+    "action": "Use Rapport to turn the room together before a punch lands, paying Mana and risking the spell failing to catch",
+    "trade": "preserve stepping between them and buying a round.",
+    "caveat": "Do not make it coercive or erase the cost of a free round.",
+    "scout": "academic"
+  },
+  {
+    "id": "intern_conclave_minutes",
+    "title": "Taking the Minutes",
+    "spell": "quickquill",
+    "spellName": "Quickquill",
+    "priority": "P2",
+    "status": "outline",
+    "source": {
+      "file": "content/events/pools/plans_thesis.grim",
+      "line": 602
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 5,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Offer an opinion when asked",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Keep my head down and write",
+        "when": null
+      }
+    ],
+    "evidence": "{You've been asked to take the minutes of a Conclave research committee. There are nine members, and none of them ever agrees.|The committee is still arguing about last time's question, and now about the minutes too.|You could take these minutes in your sleep, and some of the committee do attend them that way.} {Two of them are not speaking to each other, and want it recorded.|One of them asks what you think.|One of them falls asleep, and wakes up to vote.}",
+    "why": "Nine committee members argue while the intern records the minutes.",
+    "action": "Scribble the audible committee discussion word for word with Quickquill, while checking names and votes.",
+    "trade": "Pay Mana to reduce handwriting strain, preserving the choice between contributing an opinion and concentrating on the minutes.",
+    "caveat": "The quill cannot untangle inaudible simultaneous speech or invent the vote. Ask speakers to repeat themselves when needed; proofread its opinions and factual transcription.",
+    "scout": "academic"
+  },
+  {
+    "id": "lumen_ledger_editor_scoop",
+    "title": "The Story That Could Close Us",
+    "spell": "candour",
+    "spellName": "Candour",
+    "priority": "P2",
+    "status": "needs-setup-rewrite",
+    "source": {
+      "file": "content/events/pools/upper_ranks.grim",
+      "line": 63
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": 3,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Run it on the front page",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Hold it until it's airtight",
+        "when": null
+      }
+    ],
+    "evidence": "{A reporter brings you a story about a governor of the academy, apparently true and well sourced, and dangerous.|Another story with teeth, on your desk with a dawn deadline.|Nessa calls it \"the kind of story that closes papers\". She says it admiringly.} {The evidence is a stack of letters.|The source wants to stay unnamed.|The printer needs the pages by dawn.}",
+    "why": "A reporter brings a dangerous story with a dawn deadline; one wrong fact can cost the paper dearly.",
+    "action": "Confess: ask the reporter which facts they personally verified and get an honest account of that limited knowledge.",
+    "trade": "Spend Mana and time on a candid interview before deciding whether to publish. Keep the research challenge, deadline, and consequences of an inaccurate story.",
+    "caveat": "Make the reporter present in every showing. Do not compel a source to reveal their identity, establish objective truth from honest belief, or automatically make the governor resign. This is a setup/outcome proposal, not an evidence-verification spell.",
+    "scout": "parent"
+  },
+  {
+    "id": "tobias_scarecrow",
+    "title": "The Scarecrow Project",
+    "spell": "animate",
+    "spellName": "Animate",
+    "priority": "P3",
+    "status": "outline",
+    "source": {
+      "file": "content/events/expansion_people.grim",
+      "line": 82
+    },
+    "currentType": "card",
+    "currentGate": "rel(tobias) >= 6",
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Help enchant it",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Suggest a cat instead",
+        "when": null
+      }
+    ],
+    "evidence": "Tobias has built a scarecrow for the greenhouse plots and wants to enchant it to scare crows. \"Just a little life,\" he says. \"Just enough to wave. Nothing creepy.\"",
+    "why": "Tobias wants a handmade scarecrow to do one thing: wave at the crows.",
+    "action": "Animate the completed scarecrow so it repeats one simple waving motion to deter crows.",
+    "trade": "Pays Animate’s Mana; gets a predictable working scarecrow, while the cat is free and immediately effective.",
+    "caveat": "Animate is in a hidden course, so this is conditional on that course becoming learnable. One task only; do not add extra sentience or claim it learns/responds beyond waving.",
+    "scout": "narrative"
+  },
+  {
+    "id": "lib_biting_book",
+    "title": "The Book That Bites",
+    "spell": "seal",
+    "spellName": "Seal",
+    "priority": "P3",
+    "status": "outline",
+    "source": {
+      "file": "content/events/jobs.grim",
+      "line": 8
+    },
+    "currentType": "card",
+    "currentGate": null,
+    "repeat": null,
+    "currentChoices": [
+      {
+        "key": "left",
+        "label": "Muzzle it with a belt",
+        "when": null
+      },
+      {
+        "key": "right",
+        "label": "Stroke the spine and read it",
+        "when": null
+      }
+    ],
+    "evidence": "Reshelving in the zoology section, a fat leather book clamps onto your finger and refuses to let go. The head librarian, without looking up, says: \"Stroke the spine.\"",
+    "why": "A book already clamps a finger; muzzling it or reading it has further consequences.",
+    "action": "Free the trapped finger, then Seal the book shut for reshelving.",
+    "trade": "Pay Mana to prevent further bites and complete the job, giving up the belt route’s Vigor or the reading route’s Lore.",
+    "caveat": "The initial bite has already happened; do not undo it. Closing the book must not trap the finger. Seal contains the book; it does not make the text safe or teach its contents.",
+    "scout": "academic"
+  }
+]

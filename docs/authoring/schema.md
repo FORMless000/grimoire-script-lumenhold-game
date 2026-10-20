@@ -117,6 +117,8 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `combat` | structured |  |
 |  | `combat_cost` | text |  |
 |  | `swing` | structured |  |
+|  | `negotiate` | structured |  |
+|  | `tonic` | text |  |
 |  | `wage` | structured |  |
 |  | `coursework` | structured |  |
 |  | `exam_bands` | structured |  |
@@ -191,6 +193,9 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `kind` | text |  |
 |  | `money` | text | yes |
 |  | `map_id` | text |  |
+|  | `day` | structured |  |
+|  | `deprecated` | text |  |
+|  | `boost` | text |  |
 | | `tick:` | effects | `say:` lines |
 | | `on_add:` | effects | `say:` lines |
 | | `on_expire:` | effects | `say:` lines |
@@ -229,6 +234,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `ramp` | structured |  |
 |  | `per` | text |  |
 |  | `defer` | text |  |
+|  | `specializes` | text |  |
 | | `on_show:` | effects | `say:` lines |
 | | `> key: Label` | option (`when:`, `hint:`, effects) | label, hint, `say:` |
 | `@ending id` | `title` | text | yes |
@@ -263,6 +269,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `art` | text |  |
 |  | `draws` | text |  |
 |  | `always` | text |  |
+|  | `deprecated` | text |  |
 | `@track id` | `kind` | text |  |
 |  | `name` | text | yes |
 |  | `skill` | structured |  |
@@ -328,6 +335,17 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 | `@lore id` | `keys` | structured |  |
 |  | `canon` | text |  |
 |  | `text` | text |  |
+| `@item id` | `name` | text | yes |
+|  | `slot` | text |  |
+|  | `art` | text |  |
+|  | `desc` | text | yes |
+|  | `worn` | structured |  |
+|  | `legacy` | text |  |
+|  | `bound` | text |  |
+|  | `start` | number |  |
+|  | `price` | text |  |
+|  | `tags` | list |  |
+| | `tick:` | effects | `say:` lines |
 | `@timeline id` | `date` | text |  |
 |  | `kind` | text |  |
 |  | `event` | text |  |
@@ -335,5 +353,5 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 
 ### Functions in expressions
 
-`abs()` · `act()` · `apart()` · `applied()` · `around()` · `bond()` · `bonds()` · `bonds_around()` · `cast_as()` · `chance_of()` · `chosen()` · `clamp()` · `clock()` · `clue()` · `clues()` · `discovered()` · `due()` · `enrolled()` · `flag()` · `floor()` · `has()` · `kind_is()` · `known()` · `knows()` · `left()` · `level()` · `love()` · `max()` · `member()` · `met()` · `min()` · `npc_is()` · `npc_rel()` · `offered()` · `passed()` · `performance()` · `plan()` · `present()` · `progress()` · `rand()` · `rank()` · `rel()` · `romanceable()` · `round()` · `seen()` · `since()` · `spark()` · `spell_level()` · `tagged()` · `visits()` · `visits_to()`
+`abs()` · `act()` · `apart()` · `applied()` · `around()` · `bond()` · `bonds()` · `bonds_around()` · `cast_as()` · `chance_of()` · `chosen()` · `clamp()` · `clock()` · `clue()` · `clues()` · `discovered()` · `due()` · `enrolled()` · `flag()` · `floor()` · `has()` · `has_item()` · `kind_is()` · `known()` · `knows()` · `left()` · `level()` · `love()` · `max()` · `member()` · `met()` · `min()` · `npc_is()` · `npc_rel()` · `offered()` · `on_shift()` · `passed()` · `performance()` · `plan()` · `present()` · `progress()` · `rand()` · `rank()` · `rel()` · `romanceable()` · `round()` · `seen()` · `since()` · `spark()` · `spell_level()` · `tagged()` · `visits()` · `visits_to()` · `worn()`
 <!-- END GENERATED: schema -->

@@ -19,7 +19,7 @@ export const SPELLS = {
   hush:{name:'Hush',cost:[10,9,7],school:'Illusion'},
   haste:{name:'Haste',cost:[10,9,7],school:'Beastcraft'},
   attune:{name:'Attune',cost:[10,9,7],school:'Beastcraft'},
-  ward:{name:'Ward',cost:[14,10,9],school:'Umbral'},
+  ward:{name:'Ward',cost:[10,8,6],school:'Umbral'},
   shadowstep:{name:'Shadowstep',cost:[18,14,10],school:'Umbral'}
 };
 export const CONTEXTS = {

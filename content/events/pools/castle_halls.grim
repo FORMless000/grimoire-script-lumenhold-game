@@ -188,7 +188,7 @@ text: {The book you borrowed in a hurry is overdue, and the library knows it. Th
 @event refectory_late_supper
 slot: evening
 title: Late Supper
-place: refectory
+place: great_hall
 class: routine
 tone: warm
 repeat: 5
@@ -208,7 +208,7 @@ text: {You come in late. The benches are empty and the cooks are wiping the far 
 @event refectory_house_tables
 time: evening
 title: Where to Sit
-place: refectory
+place: great_hall
 class: routine
 tone: light
 repeat: 4
@@ -229,7 +229,7 @@ text: {Supper, and the question of where to sit.|Your house table has started sa
 @event refectory_pudding_tax
 time: evening
 title: The Pudding Tax
-place: refectory
+place: great_hall
 class: routine
 tone: light
 repeat: 5
@@ -377,7 +377,7 @@ text: {The choir is rehearsing on the stage, a foot off the floor, and one voice
   gold -tiny
   say: {The collection hat comes round. It is worth every coin.|You listen until the candles gutter. The hat comes round twice.|You listen from the back with your name pencilled into a book you're not singing from. It's the best of both.}
 > right: Fill the missing voice
-  challenge negotiate apprentice:
+  challenge perform apprentice:
     win:
       renown +small
       charm +tiny
@@ -416,7 +416,7 @@ text: {Someone dares you to sit in the headmistress's chair at the empty high ta
 
 @event infirmary_spare_bed
 title: The Spare Bed
-place: infirmary
+place: alchemy_lab
 class: routine
 tone: warm
 repeat: 5
@@ -436,7 +436,7 @@ text: {You only came in for a plaster.|Your name is on the slate by the end bed,
 
 @event infirmary_visiting_hour
 title: Visiting Hour
-place: infirmary
+place: alchemy_lab
 class: routine
 tone: warm
 repeat: 5
@@ -462,7 +462,7 @@ text: {Visiting hour. {friend} is in the bed by the window,|Visiting hour. Siste
 
 @event infirmary_tonic_cupboard
 title: The Tonic Cupboard
-place: infirmary
+place: alchemy_lab
 class: routine
 tone: tense
 repeat: 5
@@ -586,7 +586,7 @@ text: {Under the proper postings, someone has pinned an odd job.|Under the prope
   health -tiny
   say: {It takes all afternoon and pays exactly what it said, which is rarer than it should be.|It is stranger than the notice suggested, and pays slightly less.|You take the gargoyle for its walk. It doesn't want to go, and then it doesn't want to come back. The pay is fair.}
 > right: Haggle first
-  challenge negotiate apprentice:
+  challenge appeal apprentice:
     win:
       gold +small
       gold +tiny
@@ -866,3 +866,9 @@ text: The librarians have set out the revision tables early this term: past pape
   mood +small
   revised_term = term_index
   say: {~You leave the tables to the people who look more worried than you. The afternoon is yours.|You borrow a novel instead and read it in the window seat. The exams can wait for another day, you hope.|You nod at the revision tables on your way past, like an acquaintance you mean to call on.}
+> up[item:owl_quill]: Take notes with the owl quill
+  study +small
+  lore +tiny
+  revised_term = term_index
+  mood -tiny
+  say: {~The owl quill takes your notes tidier than your hand could, and then underlines the bits you'll be asked. You argue with it for an hour.|The quill writes faster than you think. By the bell you have a page of everything, in a hand you could almost be proud of.|You let the quill copy out the model answers. It corrects your spelling, then your reasoning, then your posture.}

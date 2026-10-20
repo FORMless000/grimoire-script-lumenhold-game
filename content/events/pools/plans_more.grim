@@ -237,7 +237,7 @@ tags: job
 scene: An irate customer leaning over a counter, finger raised, while a young worker stands very still behind it.
 text: {Someone has come back with a complaint and a voice built for it.|Another complaint, another raised voice. You've learned to breathe out first.|This one has been saving the complaint all week. You can tell.} {has(gig_newt): The cider was too warm, or too cold, or too cider.|{has(gig_pell): The tonic did nothing, which is worse, they say, than doing something.|{has(gig_post): The parcel arrived wet, late and somehow smug.|{has(gig_library): The book they want is out, and they want it in.|{has(gig_kitchens): The stew had a button in it, and they want to know whose.|{has(gig_grounds): A visitor's boots are ruined, and the mud on the path is apparently your mud.|The complaint has several parts, all of them loud.}}}}}} Whoever's in charge is out.
 > left: Talk them down
-  challenge negotiate apprentice+:
+  challenge appeal apprentice+:
     win:
       charm +small
       gold +tiny
@@ -301,11 +301,11 @@ text: {Wages, counted out into your hand. You count them again.|Wage day. You co
 
 @event refectory_cooks_taster
 title: The Cook's Taster
-place: refectory
+place: great_hall
 class: milestone
 tone: warm
 weight: 30
-when: visits_to(refectory) >= 6
+when: visits_to(great_hall) >= 6
 art: meal
 tags: life
 scene: A refectory cook holding out a small spoon over the counter to a student, a new pot steaming behind her.
@@ -359,11 +359,11 @@ text: You haven't even reached the counter. Mabel already has your cup out, the 
 
 @event bakery_bun_set_aside
 title: The Bun Set Aside
-place: bakery
+place: village
 class: milestone
 tone: warm
 weight: 30
-when: visits_to(bakery) >= 6
+when: visits_to(village) >= 6
 art: meal
 tags: life
 scene: A baker's son handing a paper-wrapped bun across a flour-dusted counter, a letter written on the paper in flour.

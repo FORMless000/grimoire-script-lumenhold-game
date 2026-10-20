@@ -56,7 +56,7 @@ class: milestone
 tone: warm
 trigger: social
 actor: kael
-when: spark(kael) >= 25 and rel(kael) >= 18 and bond(kael) != "partner"
+when: spark(kael) >= 25 and rel(kael) >= 18 and bond(kael) != "partner" and bond(kael) != "ex"
 weight: 30
 art: snow
 tags: romance
@@ -182,7 +182,7 @@ class: milestone
 tone: light
 trigger: social
 actor: bram
-when: flag(bram_softened) and rel(bram) >= 6 and bond(bram) != "friend"
+when: flag(bram_softened) and rel(bram) >= 6 and (bond(bram) == "none" or bond(bram) == "rival" or bond(bram) == "nemesis")
 weight: 12
 art: shield
 tags: social
@@ -533,7 +533,7 @@ tags: social
 scene: A round tower study at twilight, two delicate teacups on a small table, a headmistress pouring tea with a perfectly steady hand.
 text: An invitation to tea with the headmistress. Students talk about these the way soldiers talk about battles. She pours. "Tell me, {player}: what do you want to become?"
 > left: Give an ambitious answer
-  challenge negotiate apprentice+:
+  challenge appeal apprentice+:
     win:
       rel isolde +medium
       renown +small

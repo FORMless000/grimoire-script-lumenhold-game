@@ -88,7 +88,7 @@ title: Something Like Friendship
 class: milestone
 tone: light
 cast:
-  npc: any where tagged(npc, peer) and bond(npc) == "none" and rel(npc) >= 18
+  npc: any where tagged(npc, peer) and bond(npc) == "none" and rel(npc) >= 18 and not (npc_is(bram) and not flag(bram_softened))
 per: npc
 trigger: social
 weight: 20
@@ -156,7 +156,7 @@ title: Words Exchanged
 class: routine
 tone: light
 cast:
-  npc: any where tagged(npc, peer) and rel(npc) >= 6 and bond(npc) != "partner"
+  npc: any where tagged(npc, peer) and rel(npc) >= 6 and bond(npc) != "partner" and not npc_is(tobias) and not npc_is(seraphine) and not npc_is(kael)
 per: npc
 trigger: social
 repeat: 6
@@ -207,7 +207,7 @@ title: Sick Friend
 class: routine
 tone: light
 cast:
-  npc: any where tagged(npc, peer) and (bond(npc) == "friend" or bond(npc) == "close" or bond(npc) == "partner")
+  npc: any where tagged(npc, peer) and (bond(npc) == "friend" or bond(npc) == "close" or bond(npc) == "partner") and not npc_is(kael)
 per: npc
 trigger: social
 repeat: 8
@@ -226,6 +226,10 @@ text: {npc} has Lake Fever and is miserable in the infirmary. Sister Amaranth sa
     say: You keep {them} company for a week. Then you're in the next bed. You both find this hilarious.
   else:
     say: {~You read aloud, badly, doing voices. {npc} recovers and claims it was the voices.|You teach {them} every card game you know and lose all of them. {npc} recovers, insufferably.|You bring soup from the kitchens every evening and tell {them} all the gossip. {npc} recovers mostly out of curiosity.}
+> up[item:honey_tin]: Bring a spoon of Maud's honey
+  rel npc +small
+  mood +tiny
+  say: {~You stir silver honey into {npc}'s tea. {They} sit{s} up, sniff, and ask for more. Sister Amaranth pretends not to see.|{npc} takes one spoonful of the honey and colour comes back into {their} face. Amaranth asks where you got it, then asks for some.|The honey tastes of summer. {npc} is up and complaining by the end of the week, which Amaranth calls a full recovery.}
 
 @event soc_gift_given
 title: A Small Gift
@@ -255,7 +259,7 @@ title: Drifting Apart
 class: routine
 tone: light
 cast:
-  npc: any where tagged(npc, peer) and rel(npc) >= 6 and rel(npc) < 24 and apart(npc) >= 2
+  npc: any where tagged(npc, peer) and rel(npc) >= 6 and rel(npc) < 24 and apart(npc) >= 2 and not npc_is(lyra) and not npc_is(kael)
 per: npc
 trigger: social
 when: since(soc_drift) > 3
@@ -283,7 +287,7 @@ title: Rumours About {npc}
 class: routine
 tone: light
 cast:
-  npc: any where rel(npc) >= 9 and not tagged(npc, villager)
+  npc: any where rel(npc) >= 9 and not tagged(npc, villager) and not npc_is(nessa)
 per: npc
 trigger: social
 repeat: 8
@@ -296,7 +300,7 @@ text: A nasty rumour about {npc} is going round {~the common room|the refectory|
   say: It blows over. {npc} never finds out you heard it. You find out you don't like yourself for it, a little.
 > right: Shut it down
   alignment +tiny
-  challenge negotiate apprentice:
+  challenge appeal apprentice:
     win:
       rel npc +medium
       renown +small
@@ -311,7 +315,7 @@ title: Desperate Homework
 class: routine
 tone: light
 cast:
-  npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 0
+  npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 0 and not npc_is(lyra) and not npc_is(mir)
 per: npc
 trigger: social
 when: term and not wrapup
@@ -415,7 +419,7 @@ text: You could ask {npc} to {&the lantern show in the village|the travelling pl
   say: You pay for both tickets and the hot cider. It's a lovely evening. You're both very careful about elbows.
 > right: Ask as more than friends
   if spark(npc) >= 25:
-    challenge negotiate apprentice likely wild:
+    challenge appeal apprentice likely wild:
       win:
         spark npc +medium
         mood +medium
@@ -425,7 +429,7 @@ text: You could ask {npc} to {&the lantern show in the village|the travelling pl
         mood -small
         say: {npc} hesitates, then says {they}'d rather go as friends. It's a nice evening. It's a long evening.
   else:
-    challenge negotiate apprentice wild:
+    challenge appeal apprentice wild:
       win:
         spark npc +medium
         mood +medium
@@ -441,7 +445,7 @@ title: Feelings, Spoken
 class: milestone
 tone: warm
 cast:
-  npc: any where romanceable(npc) and spark(npc) >= 30 and rel(npc) >= 18 and bond(npc) != "partner" and bond(npc) != "ex"
+  npc: any where romanceable(npc) and spark(npc) >= 30 and rel(npc) >= 18 and bond(npc) != "partner" and bond(npc) != "ex" and not npc_is(lyra)
 per: npc
 trigger: social
 weight: 10
@@ -453,7 +457,7 @@ text: On the bridge between the towers, the wind snatching at your robes, you re
   spark npc -small
   say: The moment passes. You walk back together, a careful inch apart.
 > right: Tell {them}
-  challenge negotiate apprentice likely +1 if spark(npc) >= 60:
+  challenge appeal apprentice likely +1 if spark(npc) >= 60:
     win:
       bond npc partner
       spark npc +medium
@@ -546,7 +550,7 @@ title: Found Out
 class: incident
 tone: grim
 cast:
-  npc: any where bond(npc) == "partner"
+  npc: any where bond(npc) == "partner" and not npc_is(seraphine)
 per: npc
 trigger: social
 when: bonds(partner) >= 2
@@ -591,7 +595,7 @@ text: {~You turn into the library aisle and there's {npc}. Your ex. Holding the 
   say: You find a different book in a different aisle and read the same paragraph six times.
 > right: Say hello like a person
   rel npc +medium
-  challenge negotiate apprentice-:
+  challenge appeal apprentice-:
     win:
       bond npc friend
       say: It's awkward for one minute, then it isn't. You end up laughing about the worst of the dates you went on. Friends, maybe. Really.
@@ -606,7 +610,7 @@ title: A Public Taunt
 class: routine
 tone: tense
 cast:
-  npc: any where tagged(npc, peer) and (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -12)
+  npc: any where tagged(npc, peer) and (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -12) and (npc_is(lyra) or npc_is(bram))
 per: npc
 trigger: social
 repeat: 4
@@ -618,7 +622,7 @@ text: In the middle of a crowded {~meal|common room|library queue}, {npc} loudly
   mood -small
   say: The laughter dies down. {~You carry on with as much dignity as you can find.|You wait it out, and stare at a fixed point on the wall.|Someone nearby passes you a biscuit in silent solidarity.}
 > right: Fire back
-  challenge negotiate vs npc.charm:
+  challenge appeal vs npc.charm:
     win:
       renown +small
       rel npc -small
@@ -635,7 +639,7 @@ title: Burying the Hatchet
 class: milestone
 tone: tense
 cast:
-  npc: any where tagged(npc, peer) and (bond(npc) == "rival" or bond(npc) == "nemesis") and rel(npc) >= 3
+  npc: any where tagged(npc, peer) and (bond(npc) == "rival" or bond(npc) == "nemesis") and rel(npc) >= 3 and not npc_is(lyra) and not npc_is(bram)
 per: npc
 trigger: social
 weight: 18

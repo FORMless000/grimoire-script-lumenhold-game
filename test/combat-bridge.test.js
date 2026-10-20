@@ -153,7 +153,7 @@ test('combat: a fight in progress is found again after a save and load (the figh
 test('combat: rendered from its templates, a description is the core\'s English word for word', () => {
   const C = Bridge.combat(); C.initSync();
   const s = C.createState({ playerLoadout: 'Duellist', opponentLoadout: 'Illusionist', playerLevel: 60, opponentLevel: 60, spellAccess: 'all' });
-  const ids = ['strike', 'guard', 'reclaim', 'hold', 'release'].concat(Object.keys(C.SPELLS));
+  const ids = ['strike', 'guard', 'reclaim', 'hold', 'release'].concat(Object.keys(C.SPELLS).filter((id) => !C.SPELLS[id].as));   // an alias is its base rule
   try {
     for (let i = 0; i < 25 && !s.result; i++) {
       for (const side of [0, 1]) for (const id of ids.concat(C.legalActions(s, side).filter((a) => a.startsWith('bundle:')))) {

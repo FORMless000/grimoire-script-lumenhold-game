@@ -1,7 +1,75 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "lumenhold", "runtimeExecutable": "node", "runtimeArgs": ["server/index.js"], "port": 4173 },
-    { "name": "lumenhold-static", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "8791", "--bind", "127.0.0.1"], "port": 8791 }
+    {
+      "name": "lumenhold",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "server/index.js"
+      ],
+      "port": 4173
+    },
+    {
+      "name": "lumenhold-static",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8791",
+        "--bind",
+        "127.0.0.1"
+      ],
+      "port": 8791
+    },
+    {
+      "name": "spells-f5",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "PORT=61095",
+        "node",
+        "/private/tmp/claude-501/-Users-accessair-Desktop-Workspaces-lifesim/87b132df-84c3-4526-a13e-dac9500789a5/scratchpad/sim/F5build/server.mjs"
+      ],
+      "port": 61095
+    },
+    {
+      "name": "combat-f5-wasm",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "PORT=61096",
+        "node",
+        "experiments/combat-f5/out/site/server.mjs"
+      ],
+      "port": 61096
+    },
+    {
+      "name": "combat-f5-js-oracle",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "PORT=61097",
+        "node",
+        "experiments/combat-f5/out/site-js/server.mjs"
+      ],
+      "port": 61097
+    },
+    {
+      "name": "f4-fork-ui",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "PORT=61090",
+        "node",
+        "/private/tmp/claude-501/-Users-accessair-Desktop-Workspaces-lifesim/9c0469ce-2ffd-4938-b613-f885c43d40a4/scratchpad/build/server.mjs"
+      ],
+      "port": 61090
+    },
+    {
+      "name": "combat-bench",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "PORT=61098",
+        "node",
+        "combat/out/site/server.mjs"
+      ],
+      "port": 61098
+    }
   ]
 }

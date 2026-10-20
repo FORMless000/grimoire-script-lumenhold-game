@@ -41,7 +41,8 @@
     else if (f.pool) { const pool = C.POOLS[f.pool]; loadout = pool[Math.floor(C.levelRng(req.seed % 1e9)() * pool.length)]; }
     else { loadout = f.loadout; npc = npcOfLoadout(C, loadout); }
     if (!loadout || !(C.LOADOUTS[loadout] || C.NAMED_LOADOUTS[loadout] || C.SPECIAL_LOADOUTS[loadout])) throw new Error('fight ' + req.id + ': no loadout for foe ' + id);
-    return { id, loadout, npc, persona: f.persona || null, special: !!C.SPECIAL_LOADOUTS[loadout], defaultName: f.name || null, decided: !!ids.length };
+    const sp = C.SPECIAL_LOADOUTS[loadout];
+    return { id, loadout, npc, persona: f.persona || null, special: !!sp, creature: !!(sp && sp.creature), pronouns: f.pronouns || null, defaultName: f.name || null, decided: !!ids.length };
   }
 
   // createFight(request, opts) → {state, foe, setting, names, request}
@@ -60,7 +61,7 @@
     // card describes them; a creature is "it".
     const npc = foe.npc && opts.content && opts.content.npcs[foe.npc];
     foe.name = npc ? npc.short || String(npc.name).split(/[\s·]+/)[0] : opts.foeName ? opts.foeName(foe.id, foe.defaultName) : foe.defaultName;
-    foe.pronouns = npc ? String(npc.pronouns || 'they') : foe.special ? 'it' : 'they';
+    foe.pronouns = npc ? String(npc.pronouns || 'they') : foe.pronouns || (foe.creature ? 'it' : 'they');
     return foe;
   }
   function createFight(req, opts = {}) {
@@ -71,10 +72,13 @@
     setting.context = setting.context || (C.FOES[foe.id] && C.FOES[foe.id].context) || DEFAULT_CONTEXT[req.kind] || 'practice_duel';
     if (typeof setting.observers !== 'boolean') setting.observers = false;
     if (typeof setting.witnesses !== 'boolean') setting.witnesses = true;
+    // A lesson (`tutorial: [keys]`) or a fight with nothing at stake (`stakes: none`, world expansion 1): no bar moves.
+    if (ev && at(ev.tutorial, i)) setting.tutorial = [].concat(at(ev.tutorial, i));
+    if (ev && at(ev.stakes, i) === 'none') setting.stakes = 'none';
     const firstLeader = ev && at(ev.firstLeader, i) != null ? at(ev.firstLeader, i) : 1;
     const p = req.player;
     const base = C.fightOptions({
-      player: { skills: p.skills, spells: p.spells, health: p.health, mana: Math.min(p.mana, C.manaCapacity(p.skills)), mood: p.mood, renown: p.renown, gold: p.gold, alignment: p.alignment },
+      player: { skills: p.skills, spells: p.spells, health: p.health, mana: Math.min(p.mana, C.manaCapacity(p.skills)), mood: p.mood, renown: p.renown, gold: p.gold, alignment: p.alignment, mods: p.mods || null },
       opponent: { loadout: foe.loadout, level: foe.level },
       context: setting.context, observers: setting.observers, witnesses: setting.witnesses, firstLeader, encounterSeed: u32(req.seed),
     });
@@ -93,7 +97,8 @@
   function fightResult(fight) {
     const C = combat(), req = fight.request, p = req.player;
     const st = C.settle(fight.state, { health: p.health, mana: Math.min(p.mana, C.manaCapacity(p.skills)) });
-    return { request: req.id, outcome: st.outcome, reason: st.reason, deltas: st.deltas, followUps: st.followUps,
+    const free = fight.setting && (fight.setting.tutorial || fight.setting.stakes === 'none');
+    return { request: req.id, outcome: st.outcome, reason: st.reason, deltas: free ? {} : st.deltas, followUps: free ? [] : st.followUps,
       foe: { id: fight.foe.id, loadout: fight.foe.loadout, name: fight.foe.name, level: fight.foe.level }, exchanges: fight.state.round, rules: C.RULES_VERSION };
   }
 

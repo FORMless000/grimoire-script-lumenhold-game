@@ -1,0 +1,408 @@
+# The village shops (world expansion 1, K3). Each shop's counter is its place's `always:` card: a menu of what it sells,
+# priced in tier words (an option you can't pay for is locked), and a way out with no `when`. Shops that are also job
+# places skip the counter on a shift (`not on_shift()`). Special pieces are offers (tag `offer`): cards in the shop's
+# pool that ask for more than money.
+#   The earlier buying cards (life_new_robes, ball_robes) stay as they are; the tailor takes those robes in exchange.
+
+@event shop_square
+title: Market Day
+place: village
+type: menu
+class: routine
+tone: light
+repeat: 1
+weight: 10
+art: house
+tags: money shop
+scene: A cobbled market square, a bakery stall steaming, a tailor's window full of robes, a pawnbroker's sign and a student's stall of odd wands.
+text: {The square is all stalls this morning, with the bakery's trestle, the tailor's rail of robes, the pawnbroker's sign creaking over his door.|Market day again. The baker's girl is shouting the price of buns as if it were news.|The tailor has put a new robe in the window and is standing behind it, watching people's faces.} {met(mir): {Mir has a stall by the well, under a sign that says WANDS, IMPROVED (PROBABLY).|Mir's stall has grown a canopy and a small, worried sign: PLEASE DO NOT TEST ON THE BAKERY.|Mir is at the stall, rewinding something that should not need rewinding.}|{A pigeon is eating the display.|Somebody is haggling over a cabbage with real feeling.|A barge horn sounds from the jetty.}}
+> buns: A bag of warm buns
+  hint: A little Health.
+  gold -tiny
+  health +tiny
+  say: {The buns are still hot enough to hurt. You eat two on the walk back and save one, nearly.|The baker's girl throws in a crooked one for free. It's the best of the lot.|Sugar on your fingers, sugar on your robes. Worth it.}
+> coat: The quilted duelling coat
+  hint: A robe for fights: more Health, and Brace costs less.
+  when: not has_item(duelling_coat) and not member(duelling)
+  gold -medium
+  give duelling_coat
+  say: {The tailor buttons you into it and thumps you on the chest. "There. Now you're a wall."|It's heavier than it looks and smells faintly of the duelling hall. You feel braver at once, which may be the padding.|"Singed in the duelling hall? Bring it back and I'll patch it," says the tailor, which is not reassuring.}
+> coat_circle: The duelling coat, at the Circle's price
+  hint: A robe for fights: more Health, and Brace costs less.
+  when: not has_item(duelling_coat) and member(duelling)
+  gold -small
+  give duelling_coat
+  say: {"Circle members pay what the Circle pays," says the tailor, and charges you half. "Don't tell the others."|The tailor knows the Circle's crest and knocks the price down without being asked.|"Half price for the Circle. Your captain sent three of you last week. Two came back singed."}
+> robes: Midnight-blue robes
+  hint: A good robe: a little more Health in a fight, and people stand up straighter.
+  when: not has_item(midnight_robes) and not (chosen(life_new_robes, right) or chosen(ball_robes, left))
+  gold -large
+  give midnight_robes
+  say: {Deep blue wool, silver at the hem, a lining like the night sky. In the tailor's mirror you look like someone in a portrait.|The tailor pins the hem with her mouth full of pins and still manages to say "Lovely".|It costs more than you meant to spend. It also fits as if it had been waiting for you.}
+> robes_swap: Midnight-blue robes, for your old ones
+  hint: Bring the robes you bought before; the tailor takes them off your hands at half price.
+  when: not has_item(midnight_robes) and (chosen(life_new_robes, right) or chosen(ball_robes, left))
+  gold -small
+  give midnight_robes
+  say: {"Stained at the Ball? Bring them here." The tailor takes your old robes, sniffs them, and fits you properly at half price.|She holds your old robes up to the light, tuts at a stain, and takes them off your hands. The new ones are the same blue, properly cut.|"Half price for the old ones back. I'll turn them into cushions." You don't ask whose cushions.}
+> hazel: A hazelwood wand from Mir's stall
+  hint: A light, quick wand: a little more Mana in a fight.
+  when: met(mir) and not has_item(hazel_wand) and not has_item(borrowed_wand)
+  gold -medium
+  give hazel_wand
+  say: {Mir wraps it in a page of their own notes. "This one likes to be used. Probably."|"I re-cored it twice," Mir says. "The second time on purpose."|Mir waves it once over the stall and a cabbage rolls politely out of the way. "See? Improved."}
+> hazel_swap: Trade the borrowed wand to Mir for hazel
+  hint: Mir takes the academy's loaner in part-exchange: a little more Mana in a fight.
+  when: met(mir) and not has_item(hazel_wand) and has_item(borrowed_wand)
+  gold -small
+  take borrowed_wand
+  give hazel_wand
+  say: {"That borrowed wand's held together with hope," says Mir, taking it gently. "I'll give it a better one. Hope, I mean."|Mir weighs the old wand, winces at the chipped tip and hands you a hazel one, warm from the sun.|"I'll fix this one up for next year's first-years," Mir says. "Someone will need it. Probably you, in spirit."}
+> pawn: Sell something at the pawnbroker's
+  hint: He buys what you no longer want, at less than you paid.
+  when: has_item(hazel_wand) or has_item(ashwood_wand) or has_item(heartwood_wand) or has_item(duelling_coat) or has_item(ward_cloak) or has_item(midnight_robes) or has_item(spinner_silk_robe) or has_item(lodestone_pendant) or has_item(stag_tine) or has_item(owl_quill) or has_item(moonpetal_locket) or has_item(pocket_almanac) or has_item(measuring_spoon) or has_item(honey_tin)
+  queue shop_pawn now
+  say: {The pawnbroker's bell rings like a sigh.|The stuffed owl in his window watches you go in.|"Ah," says the pawnbroker, who says "ah" to everyone.}
+> look: Just looking
+  say: {You walk the stalls with your hands in your pockets. The smell of the bakery is free.|You admire the tailor's window from a safe, inexpensive distance.|You buy nothing and enjoy the noise. Market days are good for that.}
+
+@event shop_pawn
+title: The Pawnbroker's Counter
+place: village
+trigger: queued
+type: menu
+class: routine
+tone: tense
+repeat: 1
+art: scales
+tags: money shop
+scene: A narrow shop crammed with other people's treasures, a stuffed owl on a shelf and a pawnbroker with a loupe in one eye.
+text: {The pawnbroker turns each thing over twice, as if it might be hiding a second, cheaper thing underneath.|"Ah," says the pawnbroker, screwing in his loupe. "Let's see what you're tired of."|Behind him, the stuffed owl. In front of him, a ledger. Neither looks sentimental.} He pays fair, he says, for what is no longer loved.
+> hazel: The hazelwood wand
+  when: has_item(hazel_wand)
+  take hazel_wand
+  gold +small
+  say: He tests it on a candle and nods. "Light. Some student will like it."
+> ashwood: The ashwood duelling wand
+  when: has_item(ashwood_wand)
+  take ashwood_wand
+  gold +medium
+  say: He holds it at arm's length, as if it might bite. "Duellists come in here sometimes. Usually limping."
+> heartwood: The heartwood wand
+  when: has_item(heartwood_wand)
+  take heartwood_wand
+  gold +medium
+  mood -small
+  say: He goes quiet over the grain. "That's not from any wood I sell." He pays well. You feel it go, the whole way home.
+> coat: The quilted duelling coat
+  when: has_item(duelling_coat)
+  take duelling_coat
+  gold +small
+  say: He pokes a finger through a singed patch and docks the price for it.
+> cloak: The ward-stitched cloak
+  when: has_item(ward_cloak)
+  take ward_cloak
+  gold +medium
+  say: He holds the hem to the lamp and the ward thread flickers. "Sister Amaranth's work. I'll keep it out of the window."
+> robes: The midnight-blue robes
+  when: has_item(midnight_robes)
+  take midnight_robes
+  gold +small
+  say: "Lovely cut," he says, and pays you a third of it.
+> silk: The Spinner-silk robe
+  when: has_item(spinner_silk_robe)
+  take spinner_silk_robe
+  gold +large
+  say: He touches the silk and takes his hand back very quickly. Then he pays, a great deal, without haggling.
+> lodestone: The lodestone pendant
+  when: has_item(lodestone_pendant)
+  take lodestone_pendant
+  gold +small
+  say: He sets it on the counter and it turns, slowly, to the north wall. "Huh," he says, and pays.
+> tine: The stag's tine
+  when: has_item(stag_tine)
+  take stag_tine
+  gold +small
+  alignment -tiny
+  say: He doesn't ask where you got it. The stuffed owl seems to.
+> quill: The owl-feather quill
+  when: has_item(owl_quill)
+  take owl_quill
+  gold +tiny
+  say: "A quill's a quill," he says. It writes "a quill's a quill" on his ledger by itself, and he pays a little more.
+> locket: The moonpetal locket
+  when: has_item(moonpetal_locket)
+  take moonpetal_locket
+  gold +small
+  say: He opens it, sees the petal, closes it again. "Pretty," he says. It's the kindest word he's used all day.
+> almanac: The pocket almanac
+  when: has_item(pocket_almanac)
+  take pocket_almanac
+  gold +tiny
+  say: He flicks through Grimsby's pencil notes and snorts. "He'll buy it back off me by Tuesday."
+> spoon: Pell's measuring spoon
+  when: has_item(measuring_spoon)
+  take measuring_spoon
+  gold +tiny
+  say: "Brass," he says, "worn thin." He pays for the brass.
+> honey: The honey tin
+  when: has_item(honey_tin)
+  take honey_tin
+  gold +tiny
+  say: He shakes it, sniffs it and pays a few coins. A silver bee follows you all the way to the jetty, looking disappointed.
+> keep: Keep it all
+  say: {You put everything back in your bag. The pawnbroker shrugs. "Ah."|Not today. The owl watches you go.|You find you're fond of it all after all.}
+
+@event shop_mabels
+title: Mabel's Counter
+place: mabels
+type: menu
+class: routine
+tone: warm
+repeat: 1
+weight: 10
+art: cup
+tags: money shop
+scene: A small warm tea shop with forty tins on the shelves, three cakes under glass and a woman behind the counter already reaching for a pot.
+text: {Mabel looks at you once as you come in and is already reaching for a tin. "Sit, petal. I know what you want; let's see if you do."|"There's my petal," says Mabel. "You've the look of someone who needs something steeped."|The bell over the door. Mabel doesn't turn round. "Ginger, by the sound of that door," she says.} {The courage blend is in the green tin; the calm blend in the blue.|A sign on the counter reads: TONICS — ONE AT A TIME. MABEL.|The cups on the hooks behind her catch the light.}
+> tea: A pot of tea
+  hint: A little Mood.
+  gold -tiny
+  mood +small
+  say: {She brings it before you've sat down. It's exactly right, which is worrying.|A pot, a cup and a slice of cake you didn't order and don't pay for. "Crumbs," she says. "Day-old."|You drink it by the window and watch the barge come in. The day gets a little easier.}
+> courage: The courage blend
+  hint: A tonic for a month: asking for things and performing come easier.
+  when: not has(courage_blend)
+  gold -small
+  gain courage_blend
+  say: {"Ginger, honey and something I don't tell," says Mabel, screwing the lid on. "One cup a morning. Speak up, petal."|She weighs it out on her little scales. "For the nerve," she says. "Not for being rude. Different tin."|You drink a cup there and then. Your voice comes out a size bigger when you thank her.}
+> calm: The calm blend
+  hint: A tonic for a month: exams and frightened animals come easier.
+  when: not has(calm_blend)
+  gold -small
+  gain calm_blend
+  say: {"Chamomile, lavender, a pinch of moonwort," says Mabel. "For exams. And for your hands, petal. They're shaking."|She hands you the blue tin. "Breathe before you open the paper. The tea only does half."|"Good for nerves and nervous beasts," says Mabel. "Don't ask me why. It just is."}
+> chat: Just say hello
+  say: {Mabel tells you three things about the village and one about yourself. The last one is right.|You lean on the counter and let her talk. It costs nothing and helps more than tea.|"Off you go, then," she says, "and come back with better news."}
+
+@event shop_grimsbys
+title: Grimsby's Counter
+place: grimsbys_books
+type: menu
+class: routine
+tone: light
+repeat: 1
+weight: 10
+art: book
+tags: money shop study
+scene: A bookshop crowded to the rafters, shelves leaning on each other, an old man in half-moon glasses sniffing the spine of a book.
+text: {Mr Grimsby is up a ladder, sniffing a spine. "Ah! Not that one," he says, and hands you a different one.|Grimsby greets you by the title of what you bought last year. He has no idea what you came in for today.|The shop smells of dust and pipe smoke and one shelf, somewhere, of the sea.} {A stack of exam primers leans on the counter like a tired student.|A box by the door says BOOKS BOUGHT BACK, FAIR PRICES, NO QUESTIONS (SOME QUESTIONS).|A lighthouse print hangs crooked behind the till.}
+> pick: Let him choose you a book
+  hint: Skill XP, in whatever he thinks you need.
+  gold -small
+  chance even:
+    lore +small
+    say: He sniffs three books and hands you the fourth. It's on a subject you'd never have picked, and you can't put it down.
+  else:
+    chance even:
+      arcana +small
+      say: "This one," he says, holding out a battered spellbook. "It smells of thunder." It does, and it's very good.
+    else:
+      alchemy +small
+      say: He gives you a herbal with someone's pressed flowers still inside. "The flowers were extra. I mean free. I mean extra."
+> primer: An exam primer
+  hint: A little exam preparation for every course you're taking.
+  when: term
+  gold -small
+  study +tiny
+  say: {The primer is dog-eared in all the right places. Someone passed with this book before you.|Grimsby hands it over reluctantly. "Exams," he says, as if naming a sad illness.|You read the first chapter on the barge home and, for once, the questions look like ones you could answer.}
+> sell: Sell a book back
+  hint: A few crowns, and a book fewer.
+  gold +tiny
+  mood -tiny
+  say: {He pays for it and puts it on a shelf you'll never find again. You miss it at once.|"Fair price," he says, and it is. You miss the book anyway.|He sniffs it, approves, and pays. Your shelf at the castle looks a little emptier tonight.}
+> browse: Browse the shelves
+  say: {You spend an hour reading the first pages of twenty books. It's the best hour of the week.|You find a book you want and can't afford, and read a chapter of it standing up.|Grimsby recommends a book by its smell. You leave with nothing and an appetite.}
+
+@event shop_pell
+title: Pell's Counter
+place: pell_apothecary
+type: menu
+class: routine
+tone: light
+repeat: 1
+weight: 10
+when: not on_shift()
+art: bottle
+tags: money shop
+scene: An apothecary of a thousand labelled drawers, a daughter behind the counter, an old man counting drops at the back.
+text: {One of Pell's daughters is at the counter. Behind her, Old Pell counts drops aloud and doesn't look up.|"Tonic or draught?" asks the daughter on the counter. "Dad will say draught. Dad always says draught."|The drawers rattle as you come in, as if they were sorting themselves.} {A card on the till reads MEASURED TWICE, SOLD ONCE.|Old Pell is arguing with a label.|The smell of mint and something sterner.}
+> tonic: Pell's tonic
+  hint: A little Health.
+  gold -small
+  health +small
+  say: {It tastes of mint and iron. Halfway back to the castle you realise you've stopped yawning.|The daughter pours it; Pell checks the measure from across the room. "Right," he says. It is.|"Two spoons at bedtime," says the daughter. "Not three. Dad will know."}
+> draught: The steadying draught
+  hint: A tonic for a month: research, brewing and enchanting come easier.
+  when: not has(steadying_draught)
+  gold -small
+  gain steadying_draught
+  say: {Old Pell measures it himself, counting aloud. "Steady hands," he says. "That's all it does. That's all anyone needs."|The draught tastes of nothing at all, which the daughter says is the expensive part.|"For the fine work," says Pell, corking it. "Don't waste it on the coarse work."}
+> look: Just looking
+  say: {You read labels until the daughter asks if you're lost. You are, a little.|You leave with nothing but the smell of mint in your robes.|Pell glances up once, decides you're not buying, and goes back to his drops.}
+
+@event shop_newt
+title: The Newt by Day
+place: gilded_newt
+type: menu
+class: routine
+tone: warm
+repeat: 1
+weight: 10
+when: not on_shift()
+art: cup
+tags: money shop social
+scene: A low-beamed tavern in the afternoon, sunlight through small windows, a fire that never goes out and a landlady polishing glasses.
+text: {By day the Gilded Newt is quiet, just a fire, a few regulars and the landlady with a cloth over her shoulder.|The Newt in the afternoon smells of bread and last night's cider. Someone is asleep by the fire.|The landlady nods at you over the bar. "Supper's on. Cider's cold. Table's free."} {The slate says HOT SUPPER, A ROUND, CIDER.|A cat is asleep in the bread basket.|A barge crew is arguing about weather.}
+> supper: A hot supper
+  hint: Health and Mood; it ends a hungry month.
+  gold -small
+  health +small
+  mood +tiny
+  lose hungry
+  say: {Stew, bread, an apple you didn't ask for. You leave warm all the way through.|The landlady watches you eat as if she'd been worried about you. Perhaps she had.|You finish the bowl and she fills it again without asking. "Growing," she says, though you're not.}
+> round: Buy a round for the table
+  hint: Renown; the regulars will remember.
+  gold -small
+  renown +tiny
+  mood +small
+  say: {The regulars lift their cups to you. One of them, very drunk, makes a speech about students.|"To the castle!" someone shouts, and the whole room drinks to it, and to you.|The barge crew drink your health and then argue about whether you're a good sort. They decide you are.}
+> cider: A cup of cider
+  hint: A little Mood.
+  gold -tiny
+  mood +small
+  say: {Cold, sharp and tasting of last autumn's apples.|You drink it by the window and watch the lake turn gold.|The cat in the bread basket opens one eye at you and closes it again.}
+> look: Just warm your hands at the fire
+  say: {Nobody minds. The fire never goes out; that's the point of it.|You sit by the fire until your hands remember they're hands.|The landlady leaves you be. Sometimes that's the service.}
+
+# ---------------- Special offers ----------------
+
+@event offer_ashwood_wand
+title: Prove It
+place: village
+class: routine
+tone: tense
+weight: 8
+when: met(mir) and year >= 2 and not has_item(ashwood_wand)
+art: wand
+tags: money shop offer
+scene: A market stall with a single dark wand on a velvet cloth, an artificer student holding a hand over it protectively.
+text: Under a cloth at the back of Mir's stall is an ashwood duelling wand, dense and dark. "It bites anything that blocks it," says Mir. "I'm not selling it to just anyone. Show me you can hold it, and it's yours, for what the ash cost me."
+> left: Leave it under its cloth
+  say: Mir covers it again, relieved. "It'd probably bite me too."
+> right: Pay up, and prove it
+  hint: A dear price, handed back if it won't answer you. A wand for fights: anything that blocks it takes a jolt.
+  price_dear
+  challenge spell adept-:
+    win:
+      give ashwood_wand
+      say: The wand jumps in your hand like a live thing and a spark cracks off the well. Mir whoops. "It likes you! Probably."
+    lose:
+      gold +huge
+      gold +large
+      mood -small
+      say: The wand sulks in your hand and won't so much as spark. Mir gives you your money back, kindly, which is worse.
+
+@event offer_ward_cloak
+title: Ward Thread
+place: village
+class: routine
+tone: warm
+weight: 8
+when: (rel(amaranth) >= 12 or spell_level(ward) >= 2) and not has_item(ward_cloak)
+art: shield
+tags: money shop offer
+scene: A tailor's back room, a spool of faintly shining thread on the table, a grey cloak half-hemmed beside it.
+text: The tailor beckons you into her back room. On the table is a spool of thread that shines faintly when you aren't looking at it. "Sister Amaranth sent it down. Ward thread. She says you're to have a cloak with it, if you can pay for the hemming. Fire and frost slide off it like rain."
+> left: You can't afford a cloak
+  say: The tailor puts the spool away in a drawer marked YOURS. "It'll keep," she says.
+> right: Have the cloak made
+  hint: A robe for fights: more Health, and spells of fire, frost and starlight hit softer.
+  gold -large
+  give ward_cloak
+  say: She hems it in an afternoon, muttering. When you put it on, the thread warms, and the draught from the door stops at your collar.
+
+@event offer_pocket_almanac
+title: The Lighthouse Page
+place: grimsbys_books
+class: routine
+tone: light
+weight: 8
+when: not has_item(pocket_almanac)
+art: book
+tags: money shop offer
+scene: An old bookseller holding a tiny thick book out of reach, its margins crowded with pencil notes.
+text: On Grimsby's counter is a pocket almanac: fifty years of tides and moons, every margin full of his own pencil notes. You reach for it and he moves it, gently, out of reach. "Not for sale," he says. "Well. Not for sale to someone who doesn't know what it's for."
+> left: Leave him his almanac
+  say: He tucks it back in his waistcoat pocket and pats it. "Thank you," he says, oddly formal.
+> right: {knows(grimsby.lighthouses): Talk to him about lighthouses|Argue that you'd use it}
+  hint: {knows(grimsby.lighthouses): You know what he loves.|A negotiation.} A pocket almanac: tides, moons and weather on the right cards.
+  if knows(grimsby.lighthouses):
+    gold -tiny
+    give pocket_almanac
+    rel grimsby +small
+    say: You ask him about the lighthouse at the point and he talks for an hour. At the end he presses the almanac into your hands for a few coins. "Page forty," he says. "That's the good one."
+  else:
+    challenge negotiate journeyman:
+      win:
+        gold -small
+        give pocket_almanac
+        say: You tell him what you'd look up first: the next spring tide, the next new moon. He considers this for a long time. "Yes," he says at last, and sells it to you.
+      lose:
+        rel grimsby -tiny
+        say: "No, no," he says kindly, "you'd look up the weather and nothing else." He's right, and that's the worst of it.
+
+@event offer_measuring_spoon
+title: Measure Twice
+place: pell_apothecary
+class: routine
+tone: light
+weight: 8
+when: not on_shift() and not has_item(measuring_spoon) and year >= 2
+art: bottle
+tags: money shop offer
+scene: An old apothecary holding a thin brass spoon up to the light, a row of empty vials in front of a student.
+text: Old Pell is holding up a brass spoon worn thin on one side. "Forty years," he says. "It's never been wrong. I'm getting a new one." He sets six vials in front of you. "Measure these. If you count right, it's yours, for what the brass is worth."
+> left: Not today
+  say: He shrugs and puts the spoon in his waistcoat pocket. "It'll wait. Spoons are patient."
+> right: Count the drops aloud
+  hint: Money down, handed back if you miscount. A spoon for brewing cards.
+  gold -medium
+  challenge brew journeyman steady:
+    win:
+      give measuring_spoon
+      rel pell +small
+      say: You count aloud, every drop, and every vial is right. Pell says nothing for a long moment. Then: "Measure twice," and hands you the spoon.
+    lose:
+      gold +medium
+      say: You lose count in the fifth vial. Pell hands your money back. "Count aloud," he says. "Every time. Then come back."
+
+@event offer_honey_tin
+title: A Tin of Silver
+place: maud_cottage
+class: routine
+tone: warm
+weight: 10
+when: rel(maud) >= 12 and not has_item(honey_tin)
+art: flower
+tags: offer
+scene: A thatched cottage's garden full of beehives, an old woman in a veil lifting a frame of silver comb.
+text: Maud is at the hives, veil down, lifting out a frame of comb that shines like poured silver. "Silver bees," she says. "They don't take to everyone. They've taken to you, dearie. Help me with the frames and there's a tin in it."
+> left: Keep well back from the bees
+  say: Maud laughs and does it herself. A silver bee follows you to the gate anyway, curious.
+> right: Help with the frames
+  hint: A tin of honey: a way to sweeten someone on the right cards.
+  health -tiny
+  give honey_tin
+  rel maud +small
+  say: You get stung once, politely, on the thumb. Maud fills a dented tin with silver honey and presses it into your hands. "Share it," she says. "That's what it's for."

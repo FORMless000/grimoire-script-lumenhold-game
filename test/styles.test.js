@@ -11,6 +11,7 @@ const { ROOT } = require('./helpers.js');
 const { content } = project(ROOT).compileAll();
 const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
 const SEEDS = [1, 2, 3, 4, 5, 6, 7, 8];   // four were too few once spells v2 moved exam grades (2026-10-17)
+const EXTRA = [9, 10, 11, 12, 13, 14, 15, 16];
 const cache = {};
 // Plays a style on the shared seeds (strict: a soft-lock or an unfinished game throws) and keeps the games.
 const games = (style, opts = {}) => (cache[style] = cache[style] || SEEDS.map((seed) => quiet(() => Policies.play(new Engine(content), Policies.get(style), Object.assign({ seed, name: 'S', maxSteps: 9000, strict: true }, opts))).eng));
@@ -20,7 +21,7 @@ const chose = (eng, id, key) => cards(eng).filter((h) => h.id === id && h.choice
 const leads = (eng) => eng.threads().flatMap((t) => t.leads || []);
 
 test('styles: every strategy is listed, explained, and plays its games to the end without a soft-lock', () => {
-  assert.deepEqual(Policies.STRATEGIES, ['scholar', 'nightlife', 'sleuth', 'romantic', 'homebody', 'combatmaxx', 'explorer']);
+  assert.deepEqual(Policies.STRATEGIES, ['scholar', 'nightlife', 'sleuth', 'romantic', 'homebody', 'combatmaxx', 'spender', 'explorer']);
   for (const name of Policies.STRATEGIES) {
     assert.ok(Policies.list().includes(name), name + ' is listed');
     assert.ok(Policies.about(name).length > 60, name + ' says what it plays for');
@@ -87,7 +88,11 @@ test('styles: the romantic lets every spark grow, finds a partner, and grows mor
   const spark = (e) => Object.values(e.s.npcs).reduce((a, n) => a + (n.spark || 0), 0);
   for (const eng of games('romantic')) assert.equal(chose(eng, 'spark_cooldown', 'right'), 0, 'never lets a spark cool');
   assert.ok(games('romantic').filter(partner).length >= SEEDS.length - 1, 'a partner in nearly every game');
-  assert.ok(mean('romantic', spark) > 1.2 * mean('balanced', spark), 'spark: ' + mean('romantic', spark) + ' vs ' + mean('balanced', spark));
+  // (a second partner doubles a game's spark, so eight seeds swing with luck: 2026-10-20 the spark is measured on sixteen)
+  const wide = (style) => games(style).concat(EXTRA.map((seed) => quiet(() => Policies.play(new Engine(content), Policies.get(style), { seed, name: 'S', maxSteps: 9000, strict: true })).eng));
+  const wideMean = (style) => { const g = wide(style); return g.reduce((a, e) => a + spark(e), 0) / g.length; };
+  const r = wideMean('romantic'), b = wideMean('balanced');
+  assert.ok(r > 1.2 * b, 'spark: ' + r + ' vs ' + b);
   assert.ok(mean('romantic', (e) => Math.max(...Object.values(e.s.npcs).map((n) => n.spark || 0))) >= 90, 'a spark near the top');
 });
 

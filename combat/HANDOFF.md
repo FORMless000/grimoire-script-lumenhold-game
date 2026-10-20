@@ -27,6 +27,17 @@ The minigame is wired in: every `challenge combat` and `challenge duel` a player
   2. Run `node --test test/combat-bridge.test.js`.
   3. Run `grim diff`: fights change the golden games. When the change is meant, refresh the baseline.
 
+## World expansion 1 (2026-10-20)
+
+Creatures, the worn kit and lessons. Tests: `setup/expansion.test.mjs`; the design is §9.2 of `docs/design-v0.3.md`.
+
+- **Races** (`RACES` in `setup/roster.mjs`): a `SPECIAL_LOADOUTS` entry with `race:` scales that actor's HP and Mana capacity (`kit.hpScale`) and sets `kit.noHeal` (the core's `heal` returns 0). Humans have no race.
+- **Aliases:** a `SPELLS` entry with `as: <spell>` is learned as its base rule. `generateLoadout` records `kit.labels[base] = alias` (the fight text and buttons show the alias) and the cost difference in `mods.costDelta`. The core never sees an alias id; `export-data.mjs` leaves them out. A `telegraph: true` alias shows its channel as "winding up".
+- **New rules** (`rust/core/src/rules.rs`): spell properties `bind`, `drain`/`drainKeep`, `poison: [per, n]` and `hits`; effects `bound` and `poison`.
+- **Modifiers:** `kit.mods` = `{hp, mana, cost, costDelta, onCast, onDefend, taken, takenAll}`, from the player's worn items (`fightOptions({player: {mods}})`) or a foe loadout's `mods:`. Groups (`forbidden`, `umbral`, `nonhuman`…) are resolved by `expandMods` against the opponent: `taken … from nonhuman` becomes `takenAll` only against a creature.
+- **Foes:** `FOES[id].pronouns` (`she`, `he`); creatures are "it" by default.
+- **Card decisions** (`EVENTS` in `setup/foes.mjs`): `tutorial: [coach keys]` (a lesson: coach marks from `fight.coach.<key>`, "Skip the lesson" settles as a draw) and `stakes: 'none'` ("Walk away"). Either zeroes the result's deltas and follow-ups (`src/combat.js` `fightResult`).
+
 ## Where things stood (2026-10-17)
 
 - **The minigame is canon as of `spells-v2 F5.9c`** (`RULES_VERSION` in `rust/core/src/lib.rs`). It's playable on its own:

@@ -52,6 +52,8 @@ Course standard at levels I–III: `apprentice+` · `adept+` · `master+`; a cou
 | `sleep` | A night's sleep (bedtime, 2026-10-17): 8 Health and 4 Mood; at home on a break, 20 and 10. Taken when you go to bed, whatever your condition. `if break and has(plan_home): health += 20; mood += 10; else: health += 8; mood += 4` |
 | `social <who>` | Time with someone. `rel $who +small; mood +small; gold -tiny` |
 | `work` | Paid work. `gold +medium; mood -small; health -tiny` |
+| `price_dear` | A dear price (world expansion 1, K3): what a shop asks for a special piece, 90 crowns. `gold -huge; gold -large` |
+| `price_fortune` | A small fortune, 150 crowns: what the rarest pieces cost. `gold -huge; gold -huge; gold -large` |
 | `splurge` | Spending to feel better. `mood +large; gold -medium` |
 | `risk <res>` | A gamble: a large gain or a medium loss. `chance even: $res +large; else: $res -medium` |
 | `origin_noble_start` | Charm 25, Lore 12; 90 crowns in all. `charm += 27.88; lore += 5.52; gold +huge` |

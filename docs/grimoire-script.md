@@ -80,6 +80,7 @@ text: Professor Thorne places a candle at the far end of the hall. "Light it. Fr
 | `actor` | The NPC the card is about: an npc id, `any` (engine picks one), or `npc` (inherited from the `queue … with` that scheduled it). Enables `npc` and `{npc}`. | none |
 | `repeat` | Cooldown in months. Without it, the event happens **once per game** (once per character with `per: <role>`). | once |
 | `priority` | Ordering among forced cards (higher first). | queued 60, auto 50 |
+| `specializes` | An event id (E1). This card (`actor: <npc>`, same `trigger:`) is one character's own version of a generic card drawn per character (`per:` or `actor: any`): whenever the generic is drawn for them and this card's `when` holds, it plays instead, and counts as the generic for them (its once / repeat bookkeeping). It is never drawn by itself. One per character per generic card. Excluding someone from a generic card is still `not npc_is(x)` in its cast. | — |
 | `defer` | Expression (playtest 2, I6). When a pushed card is about to show and this is true, it goes back to the queue for next month instead (a failed `when` drops it). Lumenhold: `night_suspicion` waits with `defer: off_campus`. | — |
 | `type` | `card`, `story` or `menu` — inferred from the options (below). | inferred |
 | `chain` | Free-text chain name, for documentation and `stats`. | — |
@@ -128,10 +129,39 @@ A state's `tick:` (like a hook's `do:`) may use raw amounts: they are monthly ru
 | `money` | An origin's money situation in one line, shown on the origin screen (`tags: poor` adds a warning). |
 | `duration` | Default length in months; omit for "until removed". `gain x 3` overrides it. |
 | `hidden: true` | Not shown in the UI (internal bookkeeping). |
+| `day:` | On a plan (`kind: plan`, E2): the break day's recipe while the plan lasts, in place of `@game day_break` (same form, `slot=source[:min-max]`). Start it with the same slot as `day_break` (the plan is often picked in it). Lumenhold: four visits at the castle or at home, three around a gig. |
+| `deprecated: true` | Retired (E11): kept so saves that hold it still load, but never shown, never ticking and never announced; `has()` still reads it. An `@item`'s `legacy:` usually takes over. |
+| `boost: appeal perform` | A tonic (world expansion 1, K3): while held, plain checks of these kinds (any challenge kind but the minigames `combat`, `duel` and `negotiate`; `exam` for course exams) add `@balance tonic` to your side. Give tonics `group: tonic` and a `duration:`, so one holds at a time; two states naming one kind add it once. Owned items never change checks; tonics are the only bought check bonus. |
 | `tick:` | Effects run at the start of every month while active (not in the month it was gained). |
 | `on_add:` / `on_remove:` / `on_expire:` | Effects when gained / removed for any reason / removed because the duration ran out (`on_expire` runs before `on_remove`). |
 
 Duration semantics: `gain sick 2` ticks at the next two month-starts, then expires. Gaining a state you already have extends its duration and does not re-run `on_add`.
+
+### `@item` — the kit (world expansion 1, E4)
+
+```
+@item duelling_coat
+name: Quilted Duelling Coat
+slot: robe                       # wand | robe | trinket: one of each is worn
+art: shield
+price: small                     # what the pawnbroker pays (none: it can't be sold)
+worn: hp +3, cost brace -1       # fights only; flat numbers
+desc: Padded, stitched in diamonds, smelling faintly of the duelling hall.
+```
+
+Items live in the worldbook (`content/world/items.grim`). You **own** any number and **wear** one per slot; changing what you wear is free (the Kit tab, or a fight's opening screen) except while a minigame is under way.
+
+| Property | Meaning |
+|---|---|
+| `slot` | `wand`, `robe` or `trinket` (required). |
+| `worn` | What wearing it does **in a fight**, comma-separated: `hp +N`, `mana +N`, `cost <spell or group> -N`, `on_cast <spell or group> spell N` (each cast also deals N spell damage, blockable and wardable), `on_defend strike N` (a foe who guards, wards or braces takes N), `taken -N from <spell or group> …`. Groups: `forbidden hidden umbral creature nonhuman any`. Ordinary checks never read worn items. The fight gets the sum over the slots as `fightPlayer().mods`; a foe's loadout may carry the same table (`mods:`). |
+| `tick:` | Effects at each month's start while you own it (rare: owning things isn't a stat bonus). |
+| `legacy: <expr>` | Granted whenever this holds, at load and each month start: once ever, so an old flag- or state-giving event needs no rewrite (`legacy: flag(edmunds_wand)`). |
+| `bound: true` | With `legacy:`, the item also goes when its condition stops holding (the black-star coin). |
+| `start: true` | Owned and worn from the first month (one per slot). |
+| `price` | A size tier: what selling it pays. |
+
+Statements: `give <item>` (worn at once if its slot is empty), `take <item>` (a worn item gives way to the slot's start item, if you have it). Functions: `has_item(x)`, `worn(x)`. On a card, `> up[item:lodestone_pendant]: Follow the lodestone` is the swipe-up option an owned item opens: hidden unless you own it, like a spell's. A card has one `up` option, a spell's or an item's. What owning an item is for is these options, written for that item in that scene.
 
 ### `@npc` — a character
 
@@ -419,7 +449,7 @@ These constructs are the new event format. Older forms keep working through a co
 **Challenges** replace `check` (legacy). How to pitch one is `docs/authoring/checks.md`; the numbers are `@balance` (`presets.md`).
 
 ```grim
-challenge duel vs lyra.arcana +2 wild:  # combat | duel | negotiate | deceive | exam | research | brew | enchant | feat | spell
+challenge duel vs lyra.arcana +2 wild:  # combat | duel | negotiate | deceive | exam | research | brew | enchant | feat | spell | appeal | perform | soothe
   win:
     renown +medium
   partial:                              # optional: a band of ±5 around the DC
@@ -430,7 +460,7 @@ challenge duel vs lyra.arcana +2 wild:  # combat | duel | negotiate | deceive | 
 
 The line is `challenge <kind> [using <skill>] <difficulty> [<odds>] [<luck>] [drift <word>] [±N if <cond>]…:`.
 
-- **The skill** is mapped from the kind (duel: (vigor + arcana) / 2; negotiate: charm; deceive: guile; research and exam: lore; brew and enchant: alchemy; feat: vigor; spell: arcana), or set with `using <skill>`. `using` may also name a resource such as `renown`; a resource isn't on the skill scale, so it reads as E(turn) + (value − 50) / 2.
+- **The skill** is mapped from the kind (duel: (vigor + arcana) / 2; negotiate: the negotiation stub, below; appeal, perform and soothe: charm (a quick ask or small talk; a show, a song, a story; calming a creature); deceive: guile; research and exam: lore; brew and enchant: alchemy; feat: vigor; spell: arcana), or set with `using <skill>`. `using` may also name a resource such as `renown`; a resource isn't on the skill scale, so it reads as E(turn) + (value − 50) / 2.
 - **Difficulty** is the DC: a rung of the ladder (`novice-` … `archmage+`, `@balance dc_tiers`); `standard` / `standard±N` on a course card (the course's `standard:` at the card's `level:`, else `@balance course_standard`); or `vs <who>.<stat> [±N]` (that character's stat, ± N rungs; a character with a tag in `@balance npc_growth: share 0.9 tags peer thornwick` has every skill stat scaled up with E(turn), so their best skill ends at `share` of the final E). A course card shown in a course level above its own `level:` rises `course_step` rungs per level; the hard variant adds 2.
 - **Odds by nature** (`certain sure likely even unlikely slim long_shot freak`, default `even`) is the chance when your skill matches the DC (`@balance likelihood`). **Circumstance steps** (`+1 if renown >= 60`) move it by `odds_step` in z.
 - **Luck** (`steady normal wild luck`, default `normal`) is the bell's σ (`@balance sigma`).
@@ -443,6 +473,8 @@ The line is `challenge <kind> [using <skill>] <difficulty> [<odds>] [<luck>] [dr
 **Exams.** `@balance exam_tiers` gives the bar at each course level: a legacy tier (E + offset), or a rung / `standard±N` (that difficulty with low drift). Study and the advisor lower it; the exam reads the same bell (0–100). Grades come from bands over the bar, `@balance exam_bands: a 15 b 5 pass -5 ambitious 8 ambitious_sigma 20`: P(A) = odds(bar + a), P(B or better) = odds(bar + b), P(pass) = odds(bar + pass). `sit_exam wild` (going for top marks) lowers the A mark by `ambitious` and is sat at σ `ambitious_sigma`; the careful exam at σ `sigma` (default 12). **Preparation floors** (2026-10-19): `pass_from`/`pass_at` and `b_from`/`b_at` lift the pass and B-or-better chances smoothly (smoothstep) to certain at `pass_at` and `b_at` prepared, joined to the skill's chance as either being enough (`1 − (1 − skill) × (1 − floor)`); unset, there are none. Preparation itself: `@balance study: monthly N check M cap C` gives each course N in each term month before its exam (none in the exam month), M instead when a check on that course's card is won (once a month per course). `node tools/exam-odds.js` prints the table.
 
 **Combat and duel are played** (2026-10-19). `challenge combat <tier>:` and `challenge duel …:` are fights (duels, spars, the ring, the tournament), and each is played in the combat minigame (`combat/`, design §9.2), never rolled. The engine hands the fight to a resolver (`eng.fights`: the fight screen, or the simulated players' AI), and its result picks the branch: a win is `win`; a draw, or a loss on points, is `partial` when there is one, else `lose`; a knockout is `lose`. The fight's own Health and Mana changes apply, and the branch runs **without its `health` lines** (write the fight's aftermath in other lines; `health` stays valid for compatibility). The difficulty tier and odds word set the foe's level, and `vs` names the foe; who the foe is comes from the minigame's `EVENTS` (`combat/setup/foes.mjs`), and lint lists a fight card without a decision there. Lint allows **at most one fight on any path through an option**. A non-fight contest (a race, a brawl you talk down) is `feat`. A card drawn as its `variant: hard` is one tier harder and pays positive tier rewards ×1.5 (the director chooses when, phase 2b).
+
+**Negotiations are bound to a minigame too** (E8, world expansion 1). `challenge negotiate …:` is a real negotiation: a person across a table, an argument, stakes. Like a fight it sits on an option, at most one on any path through it, and each has an entry in `src/negotiation.js` `PARLEYS["<event>/<option>"]` (`profile`: debater, scholar, social_operator, skeptic, official or committee; `context`: workshop, broker, formal, public or practice; lint warns without one). The routing table is `MINIGAME_KINDS` in the parser: combat and duel are `fight`, negotiate is `parley`. When the engine has a resolver (`eng.parleys`, the future minigame) the negotiation is played and its result (`win`, `partial` or `lose`, with the meeting's own `deltas`) picks the branch. Until then **the stub rolls**: the value is the weighted mean of charm, lore and guile (`@balance negotiate: charm 1 lore 1 guile 1 mood 0.15 renown 0.15`; `using <skill>` doubles that skill's weight), plus mood and renown × their change since the run's start (as % of their max), plus the usual spell bonus for known spells of those skills; the difficulty, odds and luck are the ladder's. The button says "Negotiation" and the result says it was settled by charm, lore and guile. A trivial ask is not a negotiation: write it as `appeal`, `perform` or `soothe`.
 
 *Compatibility:* with no resolver (unit-test fixtures only), the old stub still rolls: arcana, vigor and guile weighted, condition × (the mean of health, mood and mana − 50), spells × total spell levels (at most +15), and an entry cost in Mana (`@balance combat:` and `combat_cost:`).
 
@@ -511,7 +543,7 @@ origins: choose_origin               # the origin screen before the game lists t
 
 **Fixed shifts** (I1, I2): a job track's `due:` is its shifts a term. A visit to the job's place after the last one, or on a break, is an ordinary visit (`attend` keeps no attendance or pay, and the slot draws the place's events, not the track's). In term, `@game off_shift: <event>` is pushed first on such a visit, as often as the event's `repeat:` allows (Lumenhold's has none: once a run). **One visit per place a day** (I3): a place picked earlier today is not open again (the map marks it visited), except in an opened slot.
 
-**Opening a slot** (M41): `visit midnight` in a card makes that slot of today a visit. When it comes, the map opens for it, listing only places open then that have an event naming the slot (`slot: midnight` or `time: … midnight`), and the visit draws only such events (no ambient fallback). Lumenhold's night card uses it for the midnight turn.
+**Opening a slot** (M41): `visit midnight` in a card makes that slot of today a visit. When it comes, the map opens for it, listing only places open then that have an event naming the slot (`slot: midnight` or `time: … midnight`) that can play now (a fixed `always:` card whose `when` holds, or a drawable one: a card that names the slot but waits on a flag doesn't open the place), and the visit draws only such events (no ambient fallback), so an opened slot never offers an empty visit. Lumenhold's night card uses it for the midnight turn.
 
 **Simulated players** (`tools/policies.js`, A1) drive the engine exactly as the UI does: `newGame` with an origin, then `advance`, one `pickPlaces` per map and one `choose` per card, all through `Policies.play` (with `record: true` it keeps every pick and choice; `Policies.replay` plays a record back and must give the same game). Bots draw their own random numbers, seeded from the game's seed, never the game's RNG. `eng.preview` leaves the game untouched (a test checks it), and `eng.trackTarget(st, track)` says which track a track statement acts on.
 
@@ -571,7 +603,9 @@ Roles are filled on a scratch copy of the RNG, with backtracking, favouring stro
 
 **Hooks:** `on: term_start` and `on: term_end` run at the first and last month of each term (rules use them for tuition, term marks and probation).
 
-**Places** (`@place`): `map: campus 585,278` positions the marker; `open:` lists the slots it is open in; `season:`, `closed_when:` close it; `discover:` (a condition) finds it, else it starts found unless `hinted_when:` shows it as "?"; `track:` makes it a club or job place; `draws:` lets old tag-only random events be drawn there. Statements: `discover library`. Functions: `discovered(p)`, `present(p)` (who is there now), `visits_to(p)` (lifetime visits picked on the map).
+**Places** (`@place`): `map: campus 585,278` positions the marker; `open:` lists the slots it is open in; `season:`, `closed_when:` close it; `discover:` (a condition) finds it, else it starts found unless `hinted_when:` shows it as "?"; `track:` makes it a club or job place; `draws:` lets old tag-only random events be drawn there. Statements: `discover library`. Functions: `discovered(p)`, `present(p)` (who is there now), `visits_to(p)` (lifetime visits picked on the map), `on_shift()` (E6: this visit attends your track at its place, a job's shift or a club's meeting; a shop's counter carries `when: not on_shift()` so the worker gets the shift card and the customer the counter).
+
+**Merged places** (E11): `deprecated: great_hall` on a place retires it into another. It keeps its definition so old saves load, but it is never on the map, never discovered and never offered; when a save loads, its discoveries, visit counts, picks and cards waiting at it move to the survivor, and `discovered()`, `visits_to()` and `discover` on the old id answer for the survivor. Run logs keep the old id. Lint: the survivor exists and isn't deprecated itself, no event names the old place, and the old place keeps no `always:`. Move content with a migration (`grim migrate`).
 
 **Arcs** (`@arc` in `content/world/arcs.grim`): `clock: 0..12` and `beats: 1@y1m3 2@y1m9 …` advance the clock on schedule whatever the player does. Statements: `find bell_rope` (a clue), `advance hollowstar +1`. Functions: `clue(x)`, `clues(arc)` (how many of the arc's clues are found), `clock(arc)`, `act(arc)` (the current act by year).
 

@@ -1,0 +1,177 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/whisperwood/hush.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@event ww_spinner_meet
+# en: The Spinner
+title [2903b9] = 织网者
+# en: Silk across the path, then silk everywhere, and then the Spinner comes down her thread: grey, vast, older than the oaks, with more eyes than you'd like and one of them milky. {knows(maud.tuppence): She lowers her head to you. "You smell of her bees," she says.|"A student," she says, in a voice like a cello. "It's been a while."} {flag(ww_spinner_angry): "You took my hippogriff."|}
+text [536dd4] = 先是横在路上的蛛丝，然后到处都是蛛丝，接着织网者顺着丝线降了下来：灰色，庞大，比橡树还老，眼睛多得让人不舒服，其中一只蒙着乳白的翳。{knows(maud.tuppence): 她朝你低下头来。“你身上有她那些蜜蜂的味道，”她说。|“一个学生，”她说，嗓音像大提琴。“好久没见过了。”} {flag(ww_spinner_angry): “你偷走了我的鹰头马身有翼兽。”|}
+# en: A great grey spider the size of a carriage descending on a silver thread in a moonlit forest, many eyes gleaming.
+scene [c84908] = 一只马车大小的灰色巨蛛顺着银丝降落在月光下的森林里，许多只眼睛闪着光。
+# en: Bow and back away
+opt.left.label [224649] = 鞠躬，慢慢退开
+# en: {~You bow, very low, and back away. She lets you go. "Another night," she says. It sounds like a promise.|You bow and retreat. Her eyes follow you a long way, all but the milky one.}
+opt.left.say.1 [8b406b] = {~你深深鞠了一躬，往后退。她放你走了。“改天晚上，”她说。听起来像一个承诺。|你鞠躬后撤。她的眼睛一路跟着你，除了那只蒙翳的。}
+# en: Ask for a fair fight
+opt.right.label [9d1c3a] = 要求一场公平的较量
+# en: {flag(ww_spinner_secret): You know her blind side.|She's proud: bargain well and she'll fight fair.}
+opt.right.hint [054d10] = {flag(ww_spinner_secret): 你知道她的盲侧。|她很骄傲：谈得好，她就会公平地打。}
+# en: {flag(ww_spinner_weak): You step to her left and speak to her like a lady. She hesitates, then laughs. "Fair, then," she says, and sends her brood away.|{flag(ww_spinner_angry): "You stole from my larder," she says. "There's no bargaining after that."|She doesn't care for your terms. Her brood comes down the threads behind her.}}
+opt.right.say.1 [69fa47] = {flag(ww_spinner_weak): 你站到她的左侧，像对一位贵妇那样跟她说话。她迟疑了一下，然后笑了。“那就公平地来，”她说，把幼蛛们打发走了。|{flag(ww_spinner_angry): “你偷了我的储粮，”她说。“那之后就没什么好谈的了。”|她不喜欢你的条件。她身后，幼蛛们顺着丝线爬了下来。}}
+
+@event ww_spinner_fight
+# en: The Long Wait
+title [0171eb] = 漫长的等待
+# en: She comes down at you with all her brood. Venom, then web, then the long wait: she'll bind you, and then she'll strike when you can't move. ⚠ Nobody comes to catch you down here. {flag(ww_spinner_offended): She won't let you leave now.|}
+text [369e1a] = 她带着所有幼蛛朝你扑下来。先是毒，然后是网，然后是漫长的等待：她会缚住你，等你动弹不得时再出手。⚠ 在这底下，没人会来接住你。{flag(ww_spinner_offended): 现在她不会让你走了。|}
+# en: A giant grey spider rearing in a moonlit web hall, venom glistening, a student braced below with a wand raised.
+scene [aeb15c] = 月光下的蛛网大厅里，一只灰色巨蛛人立而起，毒液闪亮，下方一个学生举着魔杖严阵以待。
+# en: Yield
+opt.left.label [0bde4e] = 认输
+# en: {~You lower your wand. She takes her toll from your bag and lets you go. "Another night," she says.|You yield. She considers this, and takes half your haul, and lets you walk away.}
+opt.left.say.1 [32e5fa] = {~你放下魔杖。她从你包里取走她的过路费，放你走了。“改天晚上，”她说。|你认输了。她想了想，拿走了你一半的收获，让你离开。}
+# en: Fight her
+opt.right.label [d6ea52] = 跟她打
+# en: She binds, then strikes: keep a way out.
+opt.right.hint [d885a4] = 她先缚后击：给自己留条退路。
+# en: {~She falls back, legs folded, and bows her head to the ground. "Well," she says. "Well. It's been a long time since anyone did that."|Her last strike misses. She stops, and lowers herself, and the web halls go still.}
+opt.right.say.1 [f937de] = {~她退开了，腿收拢起来，头低到地上。“好，”她说。“好啊。很久没人做到过了。”|她最后一击落空了。她停下来，伏低身子，蛛网大厅静了下来。}
+# en: {~The web holds you. The long wait ends. Silk, everywhere, warm and tight, and then nothing.|She binds you and you can't answer the blow. The silk comes up over your eyes.}
+opt.right.say.2 [2c21f7] = {~蛛网缠住了你。漫长的等待结束了。到处都是蛛丝，温暖而紧，然后什么都没有了。|她缚住了你，你接不住那一击。蛛丝漫过了你的眼睛。}
+
+@event ww_spinner_fight_weak
+# en: A Fair Fight
+title [bf4310] = 公平的较量
+# en: She's sent the brood away. You stand on her left, where the milky eye can't see you, and she knows that you know. She's still the oldest thing in the wood. ⚠ Nobody comes to catch you down here.
+text [98d35a] = 她把幼蛛打发走了。你站在她的左侧，那只蒙翳的眼睛看不见你，而她知道你知道。她依然是这片森林里最古老的东西。⚠ 在这底下，没人会来接住你。
+# en: A giant grey spider facing a student alone in a moonlit clearing, the student standing on her blind left side.
+scene [d0fbd6] = 月光下的林间空地上，一只灰色巨蛛独自面对一个学生，学生站在她看不见的左侧。
+# en: Yield
+opt.left.label [0bde4e] = 认输
+# en: {~You lower your wand. "Sensible," she says, and takes her toll from your bag, and lets you go.|You yield. She bows, a little mocking, and takes a fee from your bag.}
+opt.left.say.1 [874e6a] = {~你放下魔杖。“明智，”她说，从你包里取走过路费，放你走了。|你认输了。她略带嘲弄地欠了欠身，从你包里拿走一份报酬。}
+# en: Fight her
+opt.right.label [d6ea52] = 跟她打
+# en: Stay on her blind side.
+opt.right.hint [7898a2] = 一直待在她的盲侧。
+# en: {~You stay on her blind side and she can't find you in time. At last she folds her legs and bows. "Fairly done," she says.|She turns and turns, and you're always on her left. In the end she laughs and stops.}
+opt.right.say.1 [ffc3ad] = {~你一直待在她的盲侧，她总是来不及找到你。最后她收拢腿，低头致意。“打得公道，”她说。|她转了又转，而你总在她左边。最后她笑了，停了下来。}
+# en: {~Even half-blind, she's faster. The silk comes up warm and tight.|She finds you by your breathing. The web closes.}
+opt.right.say.2 [d2bf6e] = {~就算瞎了半边，她还是更快。蛛丝温暖而紧地漫了上来。|她听着你的呼吸找到了你。蛛网合拢了。}
+
+@event ww_spinner_hoard
+# en: The Spinner's Hoard
+title [6b5f51] = 织网者的宝藏
+# en: She bows her forelegs to you, the way the old courts did. Behind her, in the oldest web, is a hoard: lost coins, a christening spoon, a hundred years of things that fell out of foragers' pockets, and bolts of her own grey silk, which a tailor could make into anything. "Take what you like," she says. "You've earned the left side."
+text [10b714] = 她向你屈下前腿，像古时的宫廷那样行礼。在她身后最古老的那张网里，有一堆宝藏：遗失的硬币，一把洗礼银勺，一百年来从采集者口袋里掉出来的东西，还有一卷卷她自己的灰色蛛丝，裁缝能用它做出任何东西。“喜欢什么就拿吧，”她说。“左侧是你赢来的。”
+# en: A great grey spider bowing her forelegs to a student amid a hoard of glittering trinkets and bolts of silver silk.
+scene [974f18] = 一只灰色巨蛛在一堆闪亮的小玩意儿和一卷卷银色蛛丝中间，向一个学生屈下前腿。
+# en: Take silk and silver
+opt.ok.label [ac4ea7] = 拿走蛛丝和银子
+# en: You take a bolt of silk and as much silver as you can carry. She watches you go. "Tell the girl I'm well," she says, and you don't yet know who she means. Behind you, the Hush feels emptier, and something else in it shifts, interested.
+opt.ok.say.1 [4706a3] = 你拿了一卷蛛丝，还有能带走的所有银子。她看着你离开。“告诉那姑娘我很好，”她说，而你还不知道她指的是谁。在你身后，寂境显得更空了，而里面另有什么东西动了动，来了兴趣。
+
+@event ww_cocooned
+# en: Cut Free
+title [834867] = 割开蛛茧
+# en: Silk, warm and tight and everywhere. Then a voice outside it: "Tuppence. Let go, dearie. That one's ours." A pruning knife slits the silk, and Old Maud's face is there, lit by a lantern, very cross. Above her the Spinner is waiting, quite still, as if she'd been told off.
+text [b69b18] = 蛛丝，温暖，紧密，无处不在。然后外面传来一个声音：“塔彭丝。松开，亲爱的。那个是我们的人。”一把修枝刀划开了蛛丝，老莫德的脸出现了，被灯笼照着，非常生气。在她上方，织网者一动不动地等着，像是挨了训。
+# en: An old woman with a pruning knife cutting a silk cocoon open in a moonlit forest, a giant spider watching quietly above.
+scene [4eb6a2] = 月光下的森林里，一位老妇人用修枝刀割开一个蛛茧，一只巨蛛在上方安静地看着。
+# en: Let Maud take you home
+opt.left.label [64f10a] = 让莫德送你回家
+# en: Maud walks you all the way home without a word. At the door she says, "She was the size of my hand, once. I kept her in the potting shed." Then she goes back into the dark, toward the wood.
+opt.left.say.1 [2a7107] = 莫德一路把你送回家，一句话也没说。到了门口，她说：“她以前只有我的手那么大。我把她养在育苗棚里。”然后她又走回黑暗里，朝森林去了。
+# en: Ask her who Tuppence is
+opt.right.label [7d3de9] = 问她塔彭丝是谁
+# en: "Mine," says Maud. "Once. She outgrew the potting shed, and I let her go." She looks back at the trees. "She keeps worse things out, you know. Don't you go thinking she's the worst thing down there."
+opt.right.say.1 [ed89bb] = “我的，”莫德说。“以前是。她长得育苗棚装不下了，我就放她走了。”她回头望着树林。“她把更糟的东西挡在外面，你知道吗。可别以为她是那底下最糟的东西。”
+
+@event ww_outcast_meet
+# en: A Lantern Left Burning
+title [89529a] = 一盏留着的灯
+# en: Where the Spinner's webs were, there's a ring of silvered trees and a lantern left burning. An old man in a frayed academy robe, decades out of date, is sitting on a root beside it. "Absalom Vrell," he says. "Expelled, before your parents were born. I've been waiting for her to fall. The lake hums at night, down here. I don't ask what about. Nobody sensible does."
+text [f5e08a] = 织网者的网原来所在的地方，现在是一圈泛着银光的树，和一盏留着没灭的灯笼。一个穿着磨旧了的学院长袍的老人坐在灯旁的树根上，那长袍的式样已经过时几十年了。“阿布萨隆·弗雷尔，”他说。“被开除了，在你父母出生之前。我一直在等她倒下。夜里，这底下的湖会嗡嗡作响。我不问它在响什么。明白人都不问。”
+# en: A gaunt elegant old man in a frayed academy robe sitting on a tree root beside a lantern in a ring of silver trees.
+scene [318be1] = 一圈银色的树中间，一个清瘦优雅、穿着磨旧学院长袍的老人坐在灯笼旁的树根上。
+# en: Not tonight
+opt.left.label [4bf72b] = 今晚不了
+# en: {~"Another night, then," he says, amused, and turns the lantern down.|He waves you off without getting up. "I'll be here. I'm always here."}
+opt.left.say.1 [035786] = {~“那就改天晚上，”他说，觉得挺有意思，把灯笼调暗了。|他坐着没起身，挥手让你走。“我会在这儿。我一直都在这儿。”}
+# en: Sit down with him
+opt.right.label [c106ad] = 在他对面坐下
+# en: {~You sit on the other side of the lantern. He looks pleased, and then hungry, and then polite again.|You sit. He offers you tea from a flask. It's very good, and you drink it carefully.}
+opt.right.say.1 [034c10] = {~你在灯笼另一边坐下。他看起来很高兴，然后很饥渴，然后又恢复了礼貌。|你坐下了。他从水壶里给你倒了杯茶。茶很好，你喝得很小心。}
+
+@event ww_outcast_table
+# en: Absalom Vrell
+title [e09229] = 阿布萨隆·弗雷尔
+# en: "I taught the thornwitch," he says. "And those children in masks, after a fashion, though they never paid attention. I know every spell they burned me for. I'd teach you one. Or," and his eyes light, "you could try me. Nobody has in forty years. Nothing would be at stake but my pride."
+text [249da2] = “荆棘女巫是我教的，”他说。“那些戴面具的孩子，也算是吧，虽然他们从来不认真听。他们为之把我烧出去的每一条咒语，我都会。我可以教你一条。或者，”他眼睛亮了起来，“你可以跟我比一场。四十年没人试过了。除了我的面子，什么都不赌。”
+# en: An old man and a student sitting across a lantern in a moonlit forest, a black book open on his knee.
+scene [c35fdc] = 月光下的森林里，一个老人和一个学生隔着灯笼相对而坐，他膝上摊着一本黑色的书。
+# en: Bargain for a lesson
+opt.left.label [27795b] = 讨价还价，换一课
+# en: Forbidden spells; he drives a hard bargain.
+opt.left.hint [f209d6] = 禁咒；他很会讨价还价。
+# en: {~He teaches you, there by the lantern, with a patience that's almost kind. It's a terrible thing, beautifully explained. You go home with it under your tongue.|"Good," he says. "You argue like we used to." He teaches you one thing, and makes you promise nothing.}
+opt.left.say.1 [09a114] = {~他就在灯旁教了你，耐心得近乎温柔。一件可怕的东西，讲解得很美。你把它含在舌下带回了家。|“很好，”他说。“你吵架的样子像我们那时候。”他教了你一样东西，没让你承诺任何事。}
+# en: {~"Almost," he says, delighted. "Another night." He turns the lantern down.|He laughs and shakes his head. "Not tonight. But you're close."}
+opt.left.say.2 [4c7098] = {~“差一点，”他说，很开心。“改天晚上。”他把灯笼调暗了。|他笑着摇头。“今晚不行。不过你很接近了。”}
+# en: {~He shrugs. "Another night." He doesn't seem disappointed. He has a great many nights.|He listens to your terms, and then to the Hush, and then says no, kindly.}
+opt.left.say.3 [f387d9] = {~他耸耸肩。“改天晚上。”他看起来并不失望。他有很多很多个晚上。|他听完你的条件，又听了听寂境，然后和气地说了不。}
+# en: Challenge him to a duel
+opt.right.label [617dec] = 向他提出决斗
+# en: Nothing at stake but pride.
+opt.right.hint [6a06fe] = 除了面子，什么都不赌。
+# en: {~He stands, and his old robe straightens itself. "Oh," he says. "Oh, lovely."|He puts down his tea. For the first time, he looks young.}
+opt.right.say.1 [ec84a5] = {~他站起身，那件旧长袍自己抚平了。“噢，”他说。“噢，太好了。”|他放下茶杯。第一次，他看起来年轻了。}
+
+@event ww_outcast_fight
+# en: Every Forbidden Thing
+title [9640d5] = 每一样禁忌
+# en: He fights with everything they expelled him for: Heartprice and Siphon, Compel and Eclipse, all at once, at a grandmaster's speed, and he's laughing. There's nothing at stake. He promised. It doesn't feel like nothing.
+text [071d3f] = 他用他们开除他的所有理由来跟你打：心价与虹吸，强令与蚀，全都一起上，以大宗师的速度，而且他在笑。什么都不赌。他保证过。可感觉并不像什么都不赌。
+# en: An old wizard in a frayed robe casting dark spells in a ring of silver trees, a student dodging, a lantern on the ground between them.
+scene [1d35c8] = 一圈银色的树中间，一个穿着磨旧长袍的老巫师施放着黑暗的咒语，一个学生在闪躲，两人之间的地上放着一盏灯笼。
+# en: Walk away
+opt.left.label [96da1a] = 走开
+# en: {~You lower your wand. He bows. "Another night," he says. "Come back when you're bored of winning."|You step back out of the ring. He's not offended. He's already pouring more tea.}
+opt.left.say.1 [a15818] = {~你放下魔杖。他欠身行礼。“改天晚上，”他说。“等你赢腻了再来。”|你退出了那个圈子。他并不介意。他已经在倒第二杯茶了。}
+# en: Fight him
+opt.right.label [b8f327] = 跟他打
+# en: A grandmaster; you lose nothing by losing.
+opt.right.hint [25c197] = 一位大宗师；输了你也什么都不会失去。
+# en: {~His last spell fizzles. He looks at his hand, then at you, and laughs until he has to sit down.|You catch him between Heartprice and Siphon, with nothing left to pay. He bows, very low.}
+opt.right.say.1 [db3835] = {~他最后一个咒语哧地灭了。他看看自己的手，又看看你，笑得不得不坐下。|你在心价和虹吸之间抓住了他，他已经没什么可付了。他深深地鞠了一躬。}
+# en: {~You give him the fight of his life, nearly. He stops you, gently, a breath from winning.|You come close. He knows it. So do you.}
+opt.right.say.2 [73bf60] = {~你差一点就给了他这辈子最好的一场。他轻轻拦住了你，离赢只差一口气。|你很接近了。他知道。你也知道。}
+# en: {~He takes you apart with great courtesy. Then he helps you up.|You don't touch him. He doesn't hurt you either, much.}
+opt.right.say.3 [1f4b63] = {~他彬彬有礼地把你拆了个七零八落。然后扶你起来。|你连碰都没碰到他。他也没怎么伤你。}
+
+@event ww_outcast_victory
+# en: The Hush Is Yours
+title [23e658] = 寂境归你了
+# en: Absalom Vrell bows to you as deep as his old back allows. "Forty years," he says. "Well. The Hush is yours, then. Mind the lake." He sets his black grimoire on the root, and laughs, and is gone in a breath of silver frost. The lantern goes out on its own.
+text [d0ff0b] = 阿布萨隆·弗雷尔向你鞠躬，深到他那把老骨头所能及。“四十年，”他说。“好吧。那寂境就归你了。当心那片湖。”他把那本黑色魔典放在树根上，笑了一声，化作一口银霜的气息不见了。灯笼自己熄了。
+# en: An old wizard bowing deeply to a student in a moonlit forest, then dissolving into silver frost, a black book left on the root.
+scene [91e1c7] = 月光下的森林里，一个老巫师向一个学生深深鞠躬，随即化作银霜消散，一本黑色的书留在树根上。
+# en: Take the grimoire
+opt.ok.label [1c76c9] = 拿起魔典
+# en: You pick up the grimoire. It's cold, and some of its pages are blank, and they won't stay blank. Somewhere in the castle, someone will hear of this by breakfast. The headmistress, probably.
+opt.ok.say.1 [bef35b] = 你拿起了魔典。它很冷，有些书页是空白的，而它们不会一直空白。城堡里某个人，早饭前就会听说这件事。多半是院长。
+
+@event ww_outcast_loss
+# en: Another Night
+title [5f8bc2] = 改天晚上
+# en: Absalom helps you up, brushes the leaves off your shoulder, and pours you a cup of tea from his flask. "Come back when you're bored of winning," he says. "I'm not going anywhere. That's rather the point of me."
+text [29eefb] = 阿布萨隆扶你起来，拍掉你肩上的落叶，从水壶里给你倒了一杯茶。“等你赢腻了再来，”他说。“我哪儿也不去。这正是我存在的意义。”
+# en: An old wizard helping a student up off the forest floor beside a lantern, both smiling.
+scene [f57fe8] = 灯笼旁，一个老巫师把一个学生从林地上扶起来，两人都在笑。
+# en: Drink the tea, and go home
+opt.ok.label [66e590] = 喝完茶，回家
+# en: {~The tea is very good. You walk home under the moon, beaten and oddly cheerful.|You drink it, thank him, and go home. Next time, you think.}
+opt.ok.say.1 [a5cc0d] = {~茶很好。你在月光下走回家，输了，却莫名地高兴。|你喝了茶，谢过他，回家了。下次吧，你想。}

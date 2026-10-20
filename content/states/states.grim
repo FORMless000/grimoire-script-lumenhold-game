@@ -654,6 +654,8 @@ desc: A student at the rival academy who writes you long, funny letters full of 
 name: Ilse's Frost-Ward
 kind: buff
 art: snow
+# Now an item (world expansion 1, E4): @item ilse_frost_ward, granted while you have this state, carries its tick.
+deprecated: true
 desc: A sliver of Northern winter that Ilse sewed into your collar. Cold things think twice about you.
 tick:
   arcana +1
@@ -668,6 +670,8 @@ kind: plan
 group: plan
 duration: 2
 art: tower
+# Four visits a day (E2): the castle is yours to wander.
+day: morning=plan:0-1 noon=visit afternoon=visit evening=visit night=visit midnight=special:0
 desc: A skeleton crew, empty corridors and secrets. Board costs 6 crowns a month.
 
 @state plan_home
@@ -678,6 +682,8 @@ duration: 2
 art: house
 tags: away
 map_id: home
+# Four visits a day at home (E2).
+day: morning=plan:0-1 noon=visit afternoon=visit evening=visit night=visit midnight=special:0
 desc: Family, old friends and free board. The days are slower here.
 on_add:
   gain summer_away 2
@@ -731,6 +737,8 @@ kind: plan
 group: plan
 duration: 2
 art: coin
+# Three visits around the gig (E2): its shift card comes in the morning.
+day: morning=plan noon=visit afternoon=visit evening=visit night=world:1 midnight=special:0
 desc: Working on campus through the break: a holiday gig, and board as usual. Tiring.
 
 @state plan_internship

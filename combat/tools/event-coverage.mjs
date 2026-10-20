@@ -12,7 +12,7 @@ for(const file of walk(root)){
  let event=null,option=null;
  readFileSync(file,'utf8').split('\n').forEach((line,i)=>{
   const e=line.match(/^@event\s+(\S+)/);if(e){event=e[1];option=null;}else if(/^@/.test(line))event=null;
-  const o=line.match(/^>\s*([\w-]+)\s*:/);if(o)option=o[1];
+  const o=line.match(/^>\s*([\w-]+)(?:\[[^\]]*\])?\s*:/);if(o)option=o[1];   // `> up[flame]:` / `> up[item:x]:` is the `up` option
   const c=line.match(/^\s*challenge\s+(combat|duel)\b(.*)$/);
   if(c&&event)found.push({key:event+'/'+option,kind:c[1],rest:c[2].trim().replace(/:$/,''),where:file.slice(root.length-7)+':'+(i+1)});
  });

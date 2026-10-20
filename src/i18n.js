@@ -61,6 +61,18 @@
     'date.sub': 'YEAR {year} · MONTH {turn} OF {max}',
 
     'tab.you': 'You',
+    // The kit (E4, world expansion 1): the Kit tab, worn effects in words, and the notes when an item comes or goes.
+    'tab.kit': 'Kit',
+    'kit.intro': 'One wand, one robe and one trinket. What you wear matters only in fights; what you own opens ways through cards. Tap an item to wear it.',
+    'kit.locked': 'Your kit is locked until the fight is over.',
+    'kit.slot.wand': 'Wand', 'kit.slot.robe': 'Robe', 'kit.slot.trinket': 'Trinket',
+    'kit.none': 'Nothing yet.', 'kit.wear': 'Wear', 'kit.wearing': 'Wearing', 'kit.inFights': 'In fights: {what}',
+    'kit.hp': 'Health +{n}', 'kit.mana': 'Mana +{n}', 'kit.cost': '{spell} costs {n} less Mana', 'kit.onCast': 'each {spell} cast also deals {n} spell damage',
+    'kit.onDefend': 'a foe who guards, wards or braces takes {n} damage', 'kit.taken': '{n} less damage from {from}',
+    'kit.group.forbidden': 'forbidden spells', 'kit.group.umbral': 'umbral spells', 'kit.group.hidden': 'hidden spells', 'kit.group.creature': 'creature moves',
+    'kit.group.nonhuman': 'creatures', 'kit.group.any': 'any spell',
+    'item.button': 'Use · {item}',
+    'note.itemGained': 'New in your kit: {item}', 'note.itemWorn': 'New in your kit, and worn: {item}', 'note.itemLost': 'Gone from your kit: {item}',
     'tab.people': 'People',
     'tab.clues': 'Clues', 'side.noClues': 'Nothing to follow yet. Odd things you notice, and where they point, gather here.', 'journal.finished': 'Followed up',
     'tab.journal': 'Journal',
@@ -258,6 +270,20 @@
     // A fight: the combat minigame played over the card (src/combat-ui.js). The minigame's own lines (flavor, what an
     // action does) are translated with its tables, not here.
     'check.fight': 'Fight', 'check.fightButton': 'Fight · {foe} · level {level}', 'check.fightChip': 'Fight: {result} · {reason}',
+    // A negotiation (E8): bound to the negotiation minigame; until it arrives, settled by charm, lore and guile.
+    'check.parleyButton': 'Negotiation · {skill}', 'check.parleyChip': 'Negotiation ({p}%) · {result}',
+    'check.parleyStub': 'Settled by charm, lore and guile until the negotiation game arrives.',
+    // Introductions (E7): the title screen's option and Settings.
+    'title.options': 'More options', 'title.skipIntros': 'Skip the introductions (you know the academy already)',
+    'settings.intros': 'Introductions', 'settings.introsHint': 'The cards that explain a system the first time you meet it. Off for players who know the academy. The orientation at the start is separate: the first card of a new game lets you skip it.',
+    // World expansion 1: a creature's wind-up, lessons and fights with nothing at stake, the kit on the opening screen.
+    'fight.windUp': '{name} is winding up: {move}', 'fight.windUpHint': 'It lands when released: step aside, brace or ward for it.', 'fight.windUpNote': 'winding up',
+    'fight.coachTitle': 'Thorne:', 'fight.skipLesson': 'Skip the lesson', 'fight.walkAway': 'Walk away', 'fight.kit': 'Your kit',
+    'fight.coach.lead': 'The mannequin moves first and shows you its move: read it before you pick yours.',
+    'fight.coach.read': 'Each button shows what it does and what it costs. Strike is free; spells cost Mana.',
+    'fight.coach.ward': 'A ward stops a spell and halves a blow. Raise it when something is coming.',
+    'fight.coach.mana': 'Spent Mana becomes loose magic (the ↻ on your bar): Reclaim gathers it back.',
+    'fight.coach.finish': 'Now finish it. Losing a lesson costs nothing; losing well is a skill too.',
     'fight.loading': 'The fight is starting…', 'fight.engine': 'Engine analysis', 'fight.evalBar': 'The engine’s evaluation for you, in Health',
     'fight.engineHead': 'Engine · depth {depth} · {nodes}k positions · {s} s', 'fight.engineDeeper': 'searching deeper…', 'fight.engineThinking': 'Engine · thinking…',
     'fight.engineWaits': 'Engine · waits for your turn', 'fight.engineTime': 'Engine time per turn', 'fight.seconds': '{n} s',
@@ -287,6 +313,7 @@
     'fight.unfitHealth': 'You come in hurt (Health {n}, under {full}): your HP in the fight starts low.',
     'fight.context.practice_duel': 'Practice duel', 'fight.context.real_conflict': 'A real fight', 'fight.context.public_duel': 'Public duel',
     'fight.context.rehearsal': 'Rehearsal', 'fight.context.ring_bout': 'Ring bout',
+    'fight.lessonTitle': 'A lesson', 'fight.freeTitle': 'Nothing at stake', 'fight.nothingAtStake': 'win or lose, nothing is lost and nothing changes afterwards',
     'fight.healthBelow': 'Health is lost only if you end below {n} HP', 'fight.rebateBoth': '{pct}% of the Health and Mana lost comes back',
     'fight.rebateHealth': '{pct}% of the Health lost comes back', 'fight.rebateMana': '{pct}% of the Mana spent comes back',
     'fight.watched': 'A crowd is watching: Renown is won and lost ({pct}% of a loss comes back)', 'fight.unwatched': 'No crowd: Renown isn’t at stake',
@@ -426,8 +453,9 @@
     faction: ['name', 'desc'],
     arc: ['name', 'act_names', 'desc'],
     clue: ['thread', 'name', 'text'],
+    item: ['name', 'desc'],
   };
-  const EFFECT_FIELDS = { resource: ['on_zero'], state: ['on_add', 'tick', 'on_expire', 'on_remove'], hook: ['do'], event: ['on_show'] };
+  const EFFECT_FIELDS = { resource: ['on_zero'], state: ['on_add', 'tick', 'on_expire', 'on_remove'], hook: ['do'], event: ['on_show'], item: ['tick'] };
 
   function walkSays(effects, fn) {
     if (!effects) return;
@@ -443,7 +471,7 @@
     const defs = [];
     const g = content.game || {};
     defs.push(g.block ? g : Object.assign({ block: 'game', id: 'game' }, g));
-    for (const col of ['resources', 'skills', 'npcs', 'states', 'events', 'endings', 'hooks', 'places', 'tracks', 'spells', 'facts', 'factions', 'arcs', 'clues']) defs.push(...Object.values(content[col] || {}));
+    for (const col of ['resources', 'skills', 'npcs', 'states', 'events', 'endings', 'hooks', 'places', 'tracks', 'spells', 'facts', 'factions', 'arcs', 'clues', 'items']) defs.push(...Object.values(content[col] || {}));
     defs.sort((a, b) => (a.file || '').localeCompare(b.file || '') || (a.line || 0) - (b.line || 0));
     for (const d of defs) {
       const kind = d.block || 'game';

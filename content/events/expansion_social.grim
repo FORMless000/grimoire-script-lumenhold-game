@@ -7,7 +7,7 @@ title: The Borrowed Notes
 class: routine
 tone: light
 cast:
-  npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 3
+  npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 3 and not npc_is(lyra)
 per: npc
 trigger: social
 repeat: 8
@@ -52,7 +52,7 @@ title: Bad News From Home
 class: routine
 tone: light
 cast:
-  npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 12
+  npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 12 and not npc_is(kael)
 per: npc
 trigger: social
 repeat: 12
@@ -174,7 +174,7 @@ title: Carried
 class: routine
 tone: tense
 cast:
-  npc: any where tagged(npc, peer) and rel(npc) >= 6
+  npc: any where tagged(npc, peer) and rel(npc) >= 6 and not npc_is(seraphine)
 per: npc
 trigger: social
 repeat: 10

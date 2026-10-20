@@ -8,7 +8,7 @@ trigger: letter
 class: routine
 tone: warm
 cast:
-  friend: any where met(friend) and rel(friend) >= 6
+  friend: any where met(friend) and rel(friend) >= 6 and not npc_is(tamsin)
 per: friend
 repeat: 6
 weight: 20
@@ -150,7 +150,7 @@ text: A bill from the village bookshop for a book called "On Small Explosions", 
   gold -small
   say: You pay it. A week later the book arrives, and it's actually quite good. You still don't know who signed for it.
 > right: Write back and dispute it
-  challenge negotiate apprentice:
+  challenge appeal apprentice:
     win:
       charm +small
       say: You write a polite, firm letter. The bookseller writes back: wrong student, same name, profuse apologies, and a bookmark by way of sorry.

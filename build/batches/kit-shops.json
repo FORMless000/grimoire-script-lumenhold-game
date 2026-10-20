@@ -1,0 +1,87 @@
+{
+  "name": "kit-shops",
+  "at": 1792493474431,
+  "files": [
+    "content/events/kit/shops.grim",
+    "content/events/kit/item_stories.grim",
+    "content/states/tonics.grim"
+  ],
+  "events": [
+    "item_borrowed_initials",
+    "item_borrowed_sideways",
+    "item_hazel_tuned",
+    "item_hazel_water",
+    "item_robes_singed",
+    "item_robes_copied",
+    "item_ashwood_lyra",
+    "item_frost_ward_cold",
+    "item_frost_ward_thread",
+    "item_star_coin_turning",
+    "item_star_coin_kael",
+    "item_almanac_lighthouse",
+    "item_spoon_daughters",
+    "item_honey_bees",
+    "shop_square",
+    "shop_pawn",
+    "shop_mabels",
+    "shop_grimsbys",
+    "shop_pell",
+    "shop_newt",
+    "offer_ashwood_wand",
+    "offer_ward_cloak",
+    "offer_pocket_almanac",
+    "offer_measuring_spoon",
+    "offer_honey_tin"
+  ],
+  "contentHash": "b5d4d1",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 267,
+      "total": 267
+    }
+  },
+  "critic": {
+    "batch": "kit-shops",
+    "accept": true,
+    "summary": "Author's own review against the critic checklist (no independent critic was run). Voices hold (Mabel's petal, Maud's dearie, Mir's probably, Pell counting aloud, Grimsby vague, Kael terse, Lyra without a please); the counters trade money against small goods with a free way out. Fixed during review: the coin dream named the door under the lake (a key clue; now only cold water), and two item options were dominated (the quill now trades lore for mood; Edmund's wand moves spark).",
+    "issues": [
+      {
+        "event": "shop_square",
+        "problem": "Mir keeps a market stall, though Mir's schedule never places them in the village.",
+        "fix": "Acceptable as a market-day stall (gated on met(mir)); if it grates in playtest, make the wand options read as Mir's stock sold through the tailor."
+      },
+      {
+        "event": "shop_pawn",
+        "problem": "Option says are single lines on a menu that can repeat.",
+        "fix": "Polish later with sequence variants if players sell often; the menu is queued only on request."
+      }
+    ]
+  },
+  "spotCheck": [
+    "item_borrowed_initials",
+    "shop_grimsbys",
+    "shop_square"
+  ],
+  "accepted": true
+}

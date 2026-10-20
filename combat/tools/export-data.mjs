@@ -3,9 +3,10 @@
 // rulesData() is also used by tools/arms.mjs to export a variant's data for a native run (COMBAT_DATA).
 import fs from 'node:fs';import {fileURLToPath} from 'node:url';
 import {SPELLS,CONSTRUCTS,CONTEXTS,RESOURCES,FLUX_RATIO,ALIGNMENT_COST,COMBAT_TUNING} from '../setup/roster.mjs';
-const keep=['name','skills','cost','damage','healing','duration','actions','renown','holdCost','hpCost','channel','construct','castable','group','alignment','immediate','release','exposes','physical','amounts'];
+const keep=['name','skills','cost','damage','healing','duration','actions','renown','holdCost','hpCost','channel','construct','castable','group','alignment','immediate','release','exposes','physical','amounts','bind','drain','drainKeep','poison','hits'];
 export function rulesData(){
- const spells=Object.entries(SPELLS).map(([id,s])=>({id,...Object.fromEntries(keep.filter(k=>s[k]!==undefined).map(k=>[k,s[k]]))}));
+ // Aliases (`as`, world expansion 1) never reach the core: a kit learns their base spell.
+ const spells=Object.entries(SPELLS).filter(([,s])=>!s.as).map(([id,s])=>({id,...Object.fromEntries(keep.filter(k=>s[k]!==undefined).map(k=>[k,s[k]]))}));
  const constructs=Object.entries(CONSTRUCTS).map(([id,c])=>({id,...c}));
  return {tuning:COMBAT_TUNING,spells,constructs,contexts:CONTEXTS,resources:RESOURCES,fluxRatio:FLUX_RATIO,alignmentCost:ALIGNMENT_COST};
 }

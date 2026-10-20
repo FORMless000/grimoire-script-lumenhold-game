@@ -32,10 +32,13 @@
     // `offered(courses)`: how many options an `offers:` menu of that kind would generate now (playtest 2, I10)
     'offered',
     // `kind_is(track, club)`: the track (in a track notice, `track` is the one that triggered it) is of that kind (2026-10-20)
-    'kind_is']);
+    'kind_is',
+    // `has_item(x)`: you own the item; `worn(x)`: you wear it (E4, the kit)
+    'has_item', 'worn']);
   // Built-in identifiers the engine answers (env.ident); content can read but never assign them.
   const IDENTS = ['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa', 'runs_completed', 'wrapup', 'off_campus', 'term_gpa'];
-  const FUNCS = new Set([...SYMBOLIC, 'rand', 'min', 'max', 'abs', 'floor', 'round', 'clamp', 'known', 'chance_of']);
+  // `on_shift()` (E6): this visit attends your track at its place (a job's shift, a club's meeting), so a shop's counter steps aside.
+  const FUNCS = new Set([...SYMBOLIC, 'rand', 'min', 'max', 'abs', 'floor', 'round', 'clamp', 'known', 'chance_of', 'on_shift']);
   // Reference kinds for linting: which argument of which function refers to what.
   const FUNC_REFS = {
     has: ['flagOrState'], flag: ['flag'], left: ['state'], rel: ['npc'], love: ['npc'], bond: ['npc'],
@@ -43,6 +46,7 @@
     passed: ['track', null], clue: ['clue'], spark: ['npc'], spell_level: ['spell'], knows: ['fact'], npc_rel: ['npc', 'npc'],
     enrolled: ['track'], member: ['track'], rank: ['track'], performance: ['track'], level: ['track'], progress: ['track'], due: ['track'], visits: ['track'], applied: ['track'],
     present: ['place'], act: ['arc'], clock: ['arc'], discovered: ['place'], cast_as: [null, 'npc'], plan: [null], visits_to: ['place'], clues: ['arc'], offered: [null], kind_is: ['track', null], around: ['npc'], apart: ['npc'], bonds_around: [null],
+    has_item: ['item'], worn: ['item'],
   };
 
   function tokenize(s, file, line) {
@@ -203,6 +207,10 @@
     balance: { noId: true, props: ['sizes', 'difficulty', 'weights', 'curve', 'desc', 'xp_cost', 'rank_xp', 'performance',
       // the combat stub's mix and entry cost (playtest 2, M39, M5); odds slopes per swing word (M14)
       'combat', 'combat_cost', 'swing',
+      // the negotiation stub's mix until the minigame (E8): skill weights, and mood and renown around their middle
+      'negotiate',
+      // what a tonic adds to the checks its state's `boost:` names (world expansion 1, K3)
+      'tonic',
       // a shift's pay per wage word (`wage short`), as a share of the job's `pay:` at your rank (M10)
       'wage',
       // coursework: the size tier of a course's monthly skill XP at each course level (feedback 2026-10-15)
@@ -236,7 +244,9 @@
     skill: { props: ['name', 'icon', 'start', 'max', 'desc', 'color'], effects: [] },
     npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel', 'age', 'role', 'year', 'traits', 'interests', 'stats', 'schedule', 'schedule_break', 'relations', 'voice', 'seeks', 'gone_when', 'distant'], effects: [] },
     // `map_id:` on a plan (A1): the map shown while it lasts, a map id or a track kind (the place of your track of that kind)
-    state: { props: ['name', 'desc', 'art', 'tags', 'group', 'duration', 'hidden', 'kind', 'money', 'map_id'], effects: ['tick', 'on_add', 'on_expire', 'on_remove'] },
+    // `day:` on a plan (E2): the day's recipe while it lasts, in place of @game day_break.
+    // `deprecated: true` (E11): kept so saves still hold it, never shown and never ticking; an item's `legacy:` usually takes over.
+    state: { props: ['name', 'desc', 'art', 'tags', 'group', 'duration', 'hidden', 'kind', 'money', 'map_id', 'day', 'deprecated', 'boost'], effects: ['tick', 'on_add', 'on_expire', 'on_remove'] },
     event: { props: ['title', 'text', 'art', 'scene', 'tags', 'when', 'weight', 'trigger', 'actor', 'repeat', 'priority', 'type', 'chain', 'class', 'tone', 'variant',
       // phase 2b: where and when it happens, who is in it, what it belongs to (design §5, §6, §7, §10.6)
       // `time:` the slots it favours (M43), where `slot:` requires one
@@ -246,12 +256,17 @@
       // `per: <role>`: once / repeat count per character in that cast role (what `actor: any` did)
       'per',
       // `defer: <expr>`: while true, a pushed card waits in the queue a month at a time instead of showing (I6)
-      'defer'], effects: ['on_show'], options: true },
+      'defer',
+      // `specializes: <event>` (E1): this card (`actor: <npc>`) plays in place of that generic card whenever it is drawn
+      // for that character, and shares its once / repeat bookkeeping
+      'specializes'], effects: ['on_show'], options: true },
     ending: { props: ['title', 'text', 'art', 'scene', 'when', 'priority', 'tags', 'kind', 'slot', 'excludes'], effects: [] },
     hook: { props: ['on', 'when', 'desc', 'label'], effects: ['do'] },
     // Worldbook (design §3): data for briefs, lint and later phases. The engine doesn't play these yet.
     vocab: { props: ['values', 'desc'], effects: [] },
-    place: { props: ['name', 'region', 'map', 'kind', 'track', 'open', 'season', 'closed_when', 'discover', 'hint', 'hinted_when', 'desc', 'art', 'draws', 'always'], effects: [] },
+    // `deprecated: <place>` (E11): merged into that place. Kept so old saves load; never shown, offered or discovered, and
+    // a save's visits, discoveries and picks move to the survivor when it loads.
+    place: { props: ['name', 'region', 'map', 'kind', 'track', 'open', 'season', 'closed_when', 'discover', 'hint', 'hinted_when', 'desc', 'art', 'draws', 'always', 'deprecated'], effects: [] },
     // `intro:` the card where you first meet the track's `lead:` (playtest 2, N1): queued on enrolling or joining, instead of
     // meeting them silently.
     // `standard:` a course's rung at each level (checks.md), else @balance course_standard
@@ -271,12 +286,19 @@
     // after later. Such a clue belongs to no arc and clues(arc) never counts it.
     clue: { props: ['arc', 'thread', 'name', 'text', 'kind', 'followed'], effects: [] },
     lore: { props: ['keys', 'canon', 'text'], effects: [] },
+    // The kit (E4, world expansion 1): something you own. `slot:` wand | robe | trinket (one of each is worn). `worn:` what
+    // wearing it does in a fight, flat (`hp +3, cost brace -1, on_cast forbidden spell 2, on_defend strike 2,
+    // taken -2 from flame wildfire`); ordinary checks never read it. `tick:` a rare monthly effect of owning it.
+    // `legacy: <expr>` grants it whenever that holds (at load and each month start), so old flag- and state-giving events
+    // need no rewrite; `bound: true` also takes it away when the condition stops holding. `start: true`: owned and worn
+    // from the first month. `price:` a size tier, what the pawnbroker pays for it (none: it can't be sold).
+    item: { props: ['name', 'slot', 'art', 'desc', 'worn', 'legacy', 'bound', 'start', 'price', 'tags'], effects: ['tick'] },
     timeline: { props: ['date', 'kind', 'event', 'text'], effects: [] },
   };
   const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'gone_when', 'discover', 'hinted_when', 'unlock', 'prereq', 'defer', 'followed']);
   const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment', 'warn_below',
-    'schema', 'last_month', 'max_cards_per_day', 'level', 'rank', 'beat', 'pick', 'opens']);
-  const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'params', 'draws', 'legacy', 'excludes', 'replaces', 'time', 'spread']);
+    'schema', 'last_month', 'max_cards_per_day', 'level', 'rank', 'beat', 'pick', 'opens', 'tonic']);
+  const LIST_PROPS = new Set(['tags', 'months', 'summer_months', 'traits', 'interests', 'open', 'members', 'clues', 'key_clues', 'params', 'draws', 'legacy', 'excludes', 'replaces', 'time', 'spread', 'boost']);
   const TIERS = ['tiny', 'small', 'medium', 'large', 'huge'];
   const DIFFICULTIES = ['trivial', 'easy', 'medium', 'hard', 'heroic'];
   // The check ladder (docs/authoring/checks.md): rank words, each with a - and + rung; odds-by-nature, luck and drift words.
@@ -289,9 +311,17 @@
   const isLadderTier = (x) => RUNG_RE.test(x) || /^standard([+-]\d+)?$/.test(x);
   // Challenge kinds (design §8.3) and the skill each one tests (`using <skill>` overrides).
   // combat (playtest 2, M39): the stub until the combat minigame; its value also reads condition and spells (@balance combat).
-  const CHALLENGE_KINDS = { combat: ['arcana', 'vigor', 'guile'], duel: ['vigor', 'arcana'], negotiate: ['charm'], deceive: ['guile'], research: ['lore'], brew: ['alchemy'], enchant: ['alchemy'], exam: ['lore'], feat: ['vigor'], spell: ['arcana'] };
+  // negotiate (E8): bound to the negotiation minigame; until it arrives, a stub mixes charm, lore and guile (@balance negotiate).
+  // appeal, perform, soothe (E9): plain charm checks for a quick ask, a show, a frightened creature.
+  const CHALLENGE_KINDS = { combat: ['arcana', 'vigor', 'guile'], duel: ['vigor', 'arcana'], negotiate: ['charm', 'lore', 'guile'], deceive: ['guile'], research: ['lore'], brew: ['alchemy'], enchant: ['alchemy'], exam: ['lore'], feat: ['vigor'], spell: ['arcana'],
+    appeal: ['charm'], perform: ['charm'], soothe: ['charm'] };
+  // Kinds played as a minigame instead of rolled (M2): `fight` (src/combat.js) and `parley` (the negotiation stub for now).
+  const MINIGAME_KINDS = { combat: 'fight', duel: 'fight', negotiate: 'parley' };
   const CLASSES = ['routine', 'milestone', 'incident', 'windfall', 'story', 'crisis'];
-  const BOOL_PROPS = new Set(['romance', 'hidden']);
+  const BOOL_PROPS = new Set(['romance', 'hidden', 'bound']);
+  // Item slots and the groups a worn effect may name besides a spell id (E4).
+  const ITEM_SLOTS = ['wand', 'robe', 'trinket'];
+  const WORN_GROUPS = ['forbidden', 'hidden', 'umbral', 'creature', 'nonhuman', 'any'];
   // Structured worldbook values, parsed at compile time. Each returns the parsed value or throws a message.
   const ID_RE = /^[a-z_][a-z0-9_]*$/;
   const toNum = (x, what) => { const n = Number(x); if (!isFinite(n) || x === '') throw what + ': "' + x + '" is not a number'; return n; };
@@ -340,12 +370,14 @@
     day_term(t) { return words(t).map((x) => { const m = x.match(/^([a-z_]+)=([a-z_]+)(?::(\d+)(?:-(\d+))?)?$/); if (!m) throw 'day recipe: expected slot=source[:min-max], got "' + x + '"'; const min = m[3] != null ? +m[3] : null; return { slot: m[1], source: m[2], min, max: m[4] != null ? +m[4] : min }; }); },
     day_break(t) { return STRUCT_PROPS.day_term(t); },
     day_last(t) { return STRUCT_PROPS.day_term(t); },
+    day(t) { return STRUCT_PROPS.day_term(t); },
     // `wrapup: 11-12` (or `11, 12`): months of the final year that close the run
     wrapup(t) { const out = []; for (const x of t.split(/[\s,]+/).filter(Boolean)) { const m = x.match(/^(\d+)(?:-(\d+))?$/); if (!m) throw 'wrapup: expected months like 11-12, got "' + x + '"'; for (let i = +m[1]; i <= +(m[2] || m[1]); i++) out.push(i); } return out; },
     xp_cost(t) { const w = words(t); if (w.length !== 2) throw 'xp_cost: expected "a b" (cost of the next point = a + b × level)'; return { a: toNum(w[0], 'xp_cost'), b: toNum(w[1], 'xp_cost') }; },
     rank_xp(t) { return words(t).map((x) => toNum(x, 'rank_xp')); },
     performance(t) { return STRUCT_PROPS.weights(t); },
     combat(t) { return STRUCT_PROPS.weights(t); },
+    negotiate(t) { return STRUCT_PROPS.weights(t); },
     swing(t) { return STRUCT_PROPS.weights(t); },
     wage(t) { return STRUCT_PROPS.weights(t); },
     spark_follow(t) { return STRUCT_PROPS.weights(t); },
@@ -370,6 +402,20 @@
     coursework(t) { const w = words(t); for (const x of w) if (!TIERS.includes(x)) throw 'coursework: expected a size tier per course level (tiny … huge), got "' + x + '"'; return w; },
     spell_bonus_one(t) { const w = words(t); if (w.length !== 1 || !TIERS.includes(w[0])) throw 'spell_bonus_one: expected one size tier (tiny … huge), got "' + t + '"'; return w[0]; },
     spell_bonus(t) { const w = words(t); for (const x of w) if (!TIERS.includes(x)) throw 'spell_bonus: expected a size tier per spell level (tiny … huge), got "' + x + '"'; return w; },
+    // "hp +3, cost brace -1, on_cast forbidden spell 2, on_defend strike 2, taken -2 from flame wildfire" (E4)
+    worn(t) {
+      const o = { hp: 0, mana: 0, cost: {}, onCast: {}, onDefend: 0, taken: [] };
+      for (const part of t.split(/\s*[,;]\s*/).map((x) => x.trim()).filter(Boolean)) {
+        let m;
+        if ((m = part.match(/^(hp|mana)\s*\+\s*(\d+)$/))) o[m[1]] += +m[2];
+        else if ((m = part.match(/^cost\s+([a-z_][a-z0-9_]*)\s*-\s*(\d+)$/))) o.cost[m[1]] = (o.cost[m[1]] || 0) - +m[2];
+        else if ((m = part.match(/^on_cast\s+([a-z_][a-z0-9_]*)\s+spell\s+(\d+)$/))) o.onCast[m[1]] = (o.onCast[m[1]] || 0) + +m[2];
+        else if ((m = part.match(/^on_defend\s+strike\s+(\d+)$/))) o.onDefend += +m[1];
+        else if ((m = part.match(/^taken\s*-\s*(\d+)\s+from\s+([a-z_][a-z0-9_ ]*)$/))) o.taken.push({ n: +m[1], from: words(m[2]) });
+        else throw 'worn: expected "hp +N", "mana +N", "cost <spell|group> -N", "on_cast <spell|group> spell N", "on_defend strike N" or "taken -N from <spell|group> …", got "' + part + '"';
+      }
+      return o;
+    },
     ramp(t) { const m = t.trim().match(/^(.+?)\s+(-?\d+)\s*\.\.\s*(-?\d+)$/); if (!m || +m[3] <= +m[2]) throw 'ramp: expected "<expression> low..high", e.g. ramp: rel(npc) 18..30'; return { expr: m[1], lo: +m[2], hi: +m[3] }; },
   };
   // `locked:` a menu option whose `when` fails stays visible, disabled, with this reason (M24); others hide.
@@ -412,6 +458,9 @@
     npcRel: new RegExp('^npc_rel\\s+(' + ID + ')\\s+(' + ID + ')\\s*([+-])\\s*(\\d+|tiny|small|medium|large|huge)$'),
     learn: new RegExp('^learn\\s+(' + ID + '\\.' + ID + ')$'),
     learnSpell: new RegExp('^learn_spell\\s+(' + ID + ')(?:\\s+([123]))?$'),
+    // `give <item>` / `take <item>` (E4): into and out of your kit
+    give: new RegExp('^give\\s+(' + ID + ')$'),
+    take: new RegExp('^take\\s+(' + ID + ')$'),
     // `regrade track C` (N4): the course's latest grade becomes this one (an appeal won)
     regrade: new RegExp('^regrade\\s+(' + ID + ')\\s+([ABCF])$'),
     challenge: new RegExp('^challenge\\s+(' + ID + ')(?:\\s+using\\s+(' + ID + '))?(?:\\s+vs\\s+(' + ID + ')\\.(' + ID + '))?\\s+(trivial|easy|medium|hard|heroic)(?:\\s+(wild|steady))?\\s*:$'),
@@ -517,6 +566,8 @@
     }
     if ((m = content.match(RE.learn))) return { t: 'learn', fact: m[1], line };
     if ((m = content.match(RE.learnSpell))) return { t: 'learn_spell', spell: m[1], level: m[2] ? +m[2] : null, line };
+    if ((m = content.match(RE.give))) return { t: 'give', item: m[1], line };
+    if ((m = content.match(RE.take))) return { t: 'take', item: m[1], line };
     if ((m = content.match(RE.regrade))) return { t: 'regrade', track: m[1], grade: m[2], line };
     if ((m = content.match(RE.bond))) return { t: 'bond', npc: m[1], status: m[2], line };
     if ((m = content.match(RE.meet))) return { t: 'meet', npc: m[1], line };
@@ -682,11 +733,12 @@
       i++;
       if (L.content.startsWith('>')) {
         if (!schema.options) throw new GrimError('options (">") are only allowed in @event', file, L.line);
-        const m = L.content.match(/^>\s*([a-z_][a-z0-9_]*)(?:\[([a-z_][a-z0-9_]*)\])?\s*:\s*(.*)$/);
+        // `> up[ward]:` a spell; `> up[item:lodestone]:` an item you own (E4)
+        const m = L.content.match(/^>\s*([a-z_][a-z0-9_]*)(?:\[(item:)?([a-z_][a-z0-9_]*)\])?\s*:\s*(.*)$/);
         if (!m) throw new GrimError('bad option header "' + L.content + '" (expected "> key: Label")', file, L.line);
-        if (m[2] && m[1] !== 'up') throw new GrimError('only the "up" option takes a spell: > up[' + m[2] + ']:', file, L.line);
-        if (m[1] === 'up' && !m[2]) throw new GrimError('the "up" option needs a spell: > up[ward]: Label', file, L.line);
-        const opt = { key: m[1], spell: m[2] || null, label: m[3].trim(), when: null, hint: null, locked: null, memory: null, effects: [], line: L.line };
+        if (m[3] && m[1] !== 'up') throw new GrimError('only the "up" option takes a spell or an item: > up[' + (m[2] || '') + m[3] + ']:', file, L.line);
+        if (m[1] === 'up' && !m[3]) throw new GrimError('the "up" option needs a spell or an item: > up[ward]: Label, > up[item:lodestone]: Label', file, L.line);
+        const opt = { key: m[1], spell: m[3] && !m[2] ? m[3] : null, item: m[3] && m[2] ? m[3] : null, label: m[4].trim(), when: null, hint: null, locked: null, memory: null, effects: [], line: L.line };
         if (def.options.some((o) => o.key === opt.key)) throw new GrimError('duplicate option key "' + opt.key + '"', file, L.line);
         const sub = takeIndented().filter((x) => !x.blank);
         const eff = [];
@@ -733,7 +785,9 @@
       if (STRUCT_PROPS[key] && !(key === 'skill' && b.kind !== 'track' && b.kind !== 'spell')) {
         try { def[key] = STRUCT_PROPS[key](text); } catch (e) { throw new GrimError(typeof e === 'string' ? e : e.message, file, L.line); }
         if (key === 'ramp') def.ramp.expr = expr(def.ramp.expr, file, L.line);
-      } else if (EXPR_PROPS.has(key) || (key === 'max' && b.kind === 'resource' && !isFinite(Number(text)))) def[key] = expr(text, file, L.line);
+      } else if (EXPR_PROPS.has(key) || (key === 'max' && b.kind === 'resource' && !isFinite(Number(text))) || (key === 'legacy' && b.kind === 'item')) def[key] = expr(text, file, L.line);
+      else if (key === 'start' && b.kind === 'item') def[key] = /^(true|yes|1)$/i.test(text);
+      else if (key === 'slot' && b.kind === 'item' && !ITEM_SLOTS.includes(text.trim())) throw new GrimError('slot: an item\'s slot is ' + ITEM_SLOTS.join(', ') + ', got "' + text + '"', file, L.line);
       else if (NUM_PROPS.has(key) && !(key === 'alignment' && b.kind === 'spell') && !(key === 'start' && b.kind === 'track')) {
         const n = Number(text);
         if (!isFinite(n)) throw new GrimError('property "' + key + '" must be a number, got "' + text + '"', file, L.line);
@@ -750,8 +804,8 @@
    * ------------------------------------------------------------------ */
 
   const COLLECTION = { preset: 'presets', resource: 'resources', skill: 'skills', npc: 'npcs', state: 'states', event: 'events', ending: 'endings', hook: 'hooks',
-    vocab: 'vocab', place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline' };
-  const WORLD_COLLECTIONS = ['presets', 'vocab', 'places', 'tracks', 'spells', 'facts', 'archetypes', 'factions', 'arcs', 'clues', 'lore', 'timeline'];
+    vocab: 'vocab', place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline', item: 'items' };
+  const WORLD_COLLECTIONS = ['presets', 'vocab', 'places', 'tracks', 'spells', 'facts', 'archetypes', 'factions', 'arcs', 'clues', 'lore', 'timeline', 'items'];
 
   // sources: [{path, text}] -> {content, errors}
   function compile(sources) {
@@ -868,5 +922,5 @@
 
   // `@place always: a b|c` (feedback 2026-10-16): the place's fixed cards in order; `|` makes a group that plays one.
   const alwaysGroups = (t) => String(t || '').split(/\s+/).filter(Boolean).map((g) => g.split('|').filter(Boolean));
-  return { alwaysGroups, textTokens, parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES, CHALLENGE_KINDS, RANKS, RUNG_RE, ODDS_WORDS, SWINGS, DRIFTS, isLadderTier };
+  return { alwaysGroups, textTokens, parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES, CHALLENGE_KINDS, MINIGAME_KINDS, ITEM_SLOTS, WORN_GROUPS, RANKS, RUNG_RE, ODDS_WORDS, SWINGS, DRIFTS, isLadderTier };
 });

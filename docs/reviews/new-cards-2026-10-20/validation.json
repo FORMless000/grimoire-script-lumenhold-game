@@ -1,0 +1,158 @@
+{
+  "method": "Seed-7 controlled engine fixtures; force delivery isolates card outcomes. Mir variantHash explicitly set to 0/1 to exercise both linked variants. These are reproductions, not ordinary run-frequency measurements.",
+  "localization": {
+    "total": 2218,
+    "translated": 2218,
+    "stale": [],
+    "missing": []
+  },
+  "dupes": {
+    "threshold": 0.6,
+    "pairs": []
+  },
+  "evidence": [
+    {
+      "name": "ww_way_home/left",
+      "inputHaul": 5,
+      "deltas": {
+        "gold": 30,
+        "ww_deepest": 6,
+        "ww_depth": -6,
+        "ww_haul": -5
+      },
+      "say": "Pell looks at your empty bag and offers you a biscuit, which is worse than nothing.",
+      "remainingHaul": 0
+    },
+    {
+      "name": "ww_way_home/right",
+      "inputHaul": 5,
+      "deltas": {
+        "alchemy": 4.57,
+        "lore": 0.3299999999999983,
+        "ww_deepest": 6,
+        "ww_depth": -6,
+        "ww_haul": -5
+      },
+      "say": "There's nothing to keep but the walk, and you keep that.",
+      "remainingHaul": 0
+    },
+    {
+      "name": "ww2_waystone/empty-bag",
+      "grace": 1,
+      "haul": 0,
+      "say": "You leave the best thing in your bag. Walking on, you feel watched over, which is a nicer feeling than watched."
+    },
+    {
+      "name": "item_spoon_daughters/left",
+      "ownsSpoon": false,
+      "queue": [],
+      "say": "They take it, and the younger one cries a little, and Pell stops counting for a moment. Next week a parcel arrives: a new spoon, unworn, and a note. \"Measure twice. P.\""
+    },
+    {
+      "name": "corvin_goat_clause/left",
+      "goldDelta": -15,
+      "queue": [],
+      "say": "You sign. He pays you back in three weeks, which is a personal record, and tells you the goat story anyway, because you asked about the clause. The trolls still have it. It runs them now."
+    },
+    {
+      "name": "corvin_bad_odds/left",
+      "goldDelta": -8,
+      "queue": [],
+      "say": "You put your coin on yourself, at his long odds. Then you study like you've never studied. You pass. Corvin pays out, every coin, and says, \"Fine. I'll stop.\" He doesn't quite, but he shortens the odds."
+    },
+    {
+      "name": "tobias_plants_vote/left",
+      "deltas": {
+        "mood": 8,
+        "lore": -1
+      },
+      "say": "\"Not that, then,\" he says, and you don't, and you never find out what would have happened, which is how good advice usually works."
+    },
+    {
+      "name": "kael_frost_fern/left",
+      "deltas": {
+        "mood": 8,
+        "arcana": -2
+      },
+      "say": "You draw Professor Thorne. The frost gives him icicles for eyebrows. Kael has to sit down."
+    },
+    {
+      "name": "mir_tinkering_evenings/0/left",
+      "text": "Thursdays are tinkering evenings now. Mir works; you sit on the bench with your feet up, reading or helping or just there. Tonight it's a music box that plays backwards. The owl is asleep on a pile of bolts.",
+      "say": "You hand over each tool before they ask. By midnight you know what they need before they do. \"You're the best assistant,\" Mir says, \"and the worst distraction.\" They mean both kindly."
+    },
+    {
+      "name": "mir_tinkering_evenings/0/right",
+      "text": "Thursdays are tinkering evenings now. Mir works; you sit on the bench with your feet up, reading or helping or just there. Tonight it's a music box that plays backwards. The owl is asleep on a pile of bolts.",
+      "say": "You read them a terrible novel. They laugh at the wrong parts and burn a finger. The kettle boils, eventually, because you asked it nicely."
+    },
+    {
+      "name": "mir_tinkering_evenings/1/left",
+      "text": "Thursdays are tinkering evenings now. Mir works; you sit on the bench with your feet up, reading or helping or just there. Tonight it's a kettle that refuses to boil unless asked nicely. The owl is asleep on a pile of bolts.",
+      "say": "You fetch, hold, steady. The music box plays a waltz backwards and you dance to it, badly, among the bolts."
+    },
+    {
+      "name": "mir_tinkering_evenings/1/right",
+      "text": "Thursdays are tinkering evenings now. Mir works; you sit on the bench with your feet up, reading or helping or just there. Tonight it's a kettle that refuses to boil unless asked nicely. The owl is asleep on a pile of bolts.",
+      "say": "You read aloud. Mir works slower, listening, and doesn't seem to mind."
+    },
+    {
+      "name": "jit_long_break/home",
+      "break": true,
+      "offCampus": true,
+      "eligibleWhen": true,
+      "text": "The term is over and the castle empties. A break is your own: no lectures, and four free visits a day if you stay at the castle or go home, three if you take on paid work. Some friends leave; some stay. Letters come instead."
+    },
+    {
+      "name": "mir_padlock/reopened-workshop",
+      "mirWorkshopShutFlag": false,
+      "eligibleWhen": true
+    },
+    {
+      "name": "corvin_lucky_deck/before-vault",
+      "newCardEligible": true,
+      "vaultEligible": false,
+      "vaultSeen": 0
+    },
+    {
+      "name": "nessa_corrections_column/he",
+      "pronouns": "he",
+      "text": "Every week the Ledger's corrections column has a paragraph only you can read. This week: \"Correction: last Tuesday we reported the weather as fair. It was, in fact, lovely, for reasons the editor declines to give.\"",
+      "say": "You slip a correction under her door: \"Correction: the reader was not 'mildly pleased'. She was delighted.\" It runs the next week, verbatim, in a box with a border."
+    }
+  ],
+  "checks": {
+    "grimCheck": {
+      "command": "node tools/grim.js check",
+      "exitCode": 0,
+      "lintErrors": 0,
+      "lintWarnings": 7,
+      "lintWarningsScope": "All seven warnings are in old cards, outside this review.",
+      "simulation": {
+        "policy": "random",
+        "games": 200,
+        "crashes": 0,
+        "newCardsSeen": 225,
+        "newCardsNotSeen": 60
+      },
+      "log": "check.log"
+    },
+    "focusedTests": {
+      "command": "node --test test/expansion1.test.js test/bonds.test.js test/whisperwood.test.js",
+      "exitCode": 0,
+      "passed": 29,
+      "failed": 0,
+      "log": "tests.log"
+    },
+    "balanceQuick": {
+      "command": "node tools/grim.js balance --quick",
+      "status": "interrupted",
+      "exitCode": 130,
+      "reason": "Stopped after several minutes without output from preview enumeration; no balance result is claimed. The existing build/balance-report.json is byte-for-byte preserved."
+    },
+    "fullVerify": {
+      "status": "not run",
+      "reason": "Review-only changes; no gameplay source edits."
+    }
+  }
+}

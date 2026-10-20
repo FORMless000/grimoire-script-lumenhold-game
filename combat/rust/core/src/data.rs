@@ -35,6 +35,11 @@ struct RawSpell {
     exposes: Option<bool>,
     physical: Option<bool>,
     amounts: Option<HashMap<String, f64>>,
+    bind: Option<f64>,
+    drain: Option<f64>,
+    drain_keep: Option<bool>,
+    poison: Option<Vec<f64>>,
+    hits: Option<f64>,
 }
 
 #[derive(Deserialize)]
@@ -133,6 +138,16 @@ pub struct Spell {
     pub physical: bool,
     /// A special spell's named amounts (Wildfire's hold, self, release, perHold; Siphon's hit; Moonwell's and Lodestar's bank; Omen's hit).
     pub amounts: HashMap<String, f64>,
+    /// Creature mechanics (world expansion 1), read by property rather than by name:
+    /// bind: the target can't Shadowstep or Brace for this many exchanges from the next (Root, Web);
+    /// drain: Mana taken from the target (Filch keeps it as flux: drain_keep; Roar scatters it);
+    /// poison: [damage per exchange, exchanges] from the next exchange (Venom; Distil clears it);
+    /// hits: the damage lands as this many smaller hits, and only the first meets Guard and Brace (Swarm).
+    pub bind: Option<i32>,
+    pub drain: Option<f64>,
+    pub drain_keep: bool,
+    pub poison: Option<(f64, i32)>,
+    pub hits: i32,
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -224,6 +239,11 @@ fn load() -> Data {
             exposes: s.exposes.unwrap_or(false),
             physical: s.physical.unwrap_or(false),
             amounts: s.amounts.clone().unwrap_or_default(),
+            bind: s.bind.map(|b| b as i32),
+            drain: s.drain,
+            drain_keep: s.drain_keep.unwrap_or(false),
+            poison: s.poison.as_ref().map(|p| (p[0], p.get(1).copied().unwrap_or(3.0) as i32)),
+            hits: s.hits.map_or(1, |h| (h as i32).max(1)),
         });
     }
     let spell_index: HashMap<String, usize> = spells.iter().enumerate().map(|(i, s)| (s.id.clone(), i)).collect();

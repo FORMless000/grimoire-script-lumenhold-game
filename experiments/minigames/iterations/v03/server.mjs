@@ -1,0 +1,3 @@
+import http from 'node:http';import fs from 'node:fs';import path from 'node:path';import {fileURLToPath} from 'node:url';
+const root=path.dirname(fileURLToPath(import.meta.url)),files=new Set(['index.html','style.css','app.mjs','engine.mjs','roster.mjs','ai.mjs','ai-worker.mjs']);
+http.createServer((req,res)=>{const name=new URL(req.url,'http://localhost').pathname.slice(1)||'index.html';if(!files.has(name)){res.writeHead(404);res.end();return;}res.setHeader('Content-Type',name.endsWith('.mjs')?'text/javascript':name.endsWith('.css')?'text/css':'text/html');res.setHeader('Cache-Control','no-store');res.end(fs.readFileSync(path.join(root,name)));}).listen(0,'127.0.0.1',function(){console.log('NEGOTIATION_URL=http://127.0.0.1:'+this.address().port+'/');});

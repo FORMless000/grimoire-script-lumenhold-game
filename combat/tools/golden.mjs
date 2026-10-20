@@ -49,7 +49,7 @@ function playRandom(opts,i){
  return actions;
 }
 const ACTIONS=['strike','guard','reclaim','hold','release','frozen','cancel',...Object.keys(R.SPELLS)];
-const EFFECTS=['guard','ward','brace','foreAim','haste','shadowstep','tailwind','reflect','torment','eclipse','heartprice','compelled','lodestar'];
+const EFFECTS=['guard','ward','brace','foreAim','haste','shadowstep','tailwind','reflect','torment','eclipse','heartprice','compelled','lodestar','bound','poison'];
 // Everything the UI asks about a state, both sides.
 function queries(s){
  const out=[C.actorToMove(s)];

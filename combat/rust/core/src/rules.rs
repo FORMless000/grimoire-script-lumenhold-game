@@ -131,6 +131,7 @@ pub fn unavailable(enc: &Encounter, s: &State, side: usize, a: Act) -> Option<&'
     if let Some(sp) = spell_of(a) {
         if !enc.sides[side].learned[sp] { return Some("Not learned"); }
         if !d.spells[sp].castable { return Some("Cards/story only"); }
+        if (sp == d.ids.shadowstep || sp == d.ids.brace) && has(s, side, Eff::Bound) { return Some("Bound: no stepping aside or bracing"); }
     }
     if !blood(s, side, a) && x.res[R_MANA] + EPS < cost(enc, s, side, a) { return Some("Not enough ready Mana"); }
     if x.hp + EPS < hp_cost(enc, s, side, a) { return Some("Not enough HP"); }
@@ -172,6 +173,7 @@ fn gain(enc: &Encounter, s: &mut State, side: usize, key: usize, n: f64) -> f64 
     actual
 }
 fn heal(enc: &Encounter, s: &mut State, side: usize, n: f64) -> f64 {
+    if enc.sides[side].no_heal { return 0.0; }   // a creature never heals (world expansion 1)
     let x = &mut s.actors[side];
     let actual = 0f64.max(n.min(x.max_hp - x.hp));
     x.hp += actual;
@@ -303,6 +305,12 @@ fn hits(enc: &Encounter, s: &mut State, ctx: &mut Ctx, initial: &Hits) {
                 if n > EPS && reduction > EPS { by |= DEF_CONSTRUCT; }
                 n = 0f64.max(n - reduction);
             }
+            // The target's kit takes a flat amount off each opposing hit (world expansion 1: a ward-stitched cloak, a stag's tine).
+            if n > EPS && opposing {
+                let side_t = &enc.sides[t];
+                let off = side_t.taken_all + side_t.taken.get(h.id as usize).copied().unwrap_or(0.0);
+                if off > EPS { n = 0f64.max(n - off); }
+            }
             // Lodestar shields while it is held (F5.9c): opposing hits draw on the bank before the Release turns it on.
             if n > EPS && !h.fixed && opposing {
                 if let Some(mut c) = s.actors[t].channel { if c.spell == d.ids.lodestar && c.bank > EPS {
@@ -391,6 +399,15 @@ fn prepared(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act, 
     }
     let Some(sp) = spell_of(a) else { return; };
     let spell = &d.spells[sp];
+    // Creature mechanics by property (world expansion 1): Ward or Shadowstep keep both off, as they do Torment.
+    if let Some(b) = spell.bind { if !shielded(s, 1 - side) { put(s, 1 - side, Eff::Bound, 1.0, round + 1, Some(round + b)); } }
+    if let Some((per, n)) = spell.poison {
+        if !shielded(s, 1 - side) {
+            let v = damage_power(enc, side, sp, per);
+            put(s, 1 - side, Eff::Poison, v, round + 1, Some(round + n));
+            s.actors[1 - side].effects[Eff::Poison as usize].as_mut().unwrap().source = Some(side as u8);
+        }
+    }
     if sp == ids.mend { ctx.mend_now[side] = amount(enc, side, Some(sp), spell.healing.as_ref().unwrap()[r(sp)], true); }
     else if sp == ids.ward { put(s, side, Eff::Ward, 1.0, round, Some(round)); }
     else if sp == ids.brace { put(s, side, Eff::Brace, 1.0, round, Some(round + 3)); }
@@ -402,7 +419,7 @@ fn prepared(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act, 
     }
     else if sp == ids.seal { let blocked = shielded(s, 1 - side); let n = if blocked { 0.0 } else { s.actors[1 - side].flux }; if !blocked { s.actors[1 - side].flux = 0.0; } ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: n, blocked }); }
     else if sp == ids.omen { let power = damage_power(enc, side, sp, amt(sp, "hit")); s.actors[side].omens.push(Omen { due: round + 2, power }); }
-    else if sp == ids.purify { let n = amount(enc, side, Some(sp), PURIFY_MANA, false); let got = gain(enc, s, side, R_MANA, n); ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: got, blocked: false }); }
+    else if sp == ids.purify { delete(s, side, Eff::Poison); let n = amount(enc, side, Some(sp), PURIFY_MANA, false); let got = gain(enc, s, side, R_MANA, n); ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: got, blocked: false }); }
     else if sp == ids.tailwind { put(s, side, Eff::Tailwind, 0.0, round + 1, Some(round + 3)); }
     else if sp == ids.rime { if !s.actors[side].rime_used { s.actors[side].rime_ready = true; } }
     else if sp == ids.reflect { let n = d.spells[sp].duration.as_ref().map_or(1, |v| v[r(sp).min(v.len() - 1)] as i32); put(s, side, Eff::Reflect, 1.0, round, Some(round + n - 1)); }
@@ -576,6 +593,16 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
     for side in 0..2 { debit(&mut s.actors[1 - side], R_MANA, transfers[side]); }
     for side in 0..2 { if pair!()[side] == ids.extraction as Act { let (n, blocked) = (transfers[side], shielded(s, 1 - side)); ctx.event(|| Event::Moved { side: side as u8, id: ids.extraction as Act, amount: n, blocked }); } }
     for side in 0..2 { s.actors[side].flux += transfers[side]; }
+    // Drain (world expansion 1: Filch, Roar): Mana taken from the target; Filch keeps it as its own flux. Ward and Shadowstep stop it.
+    for side in 0..2 {
+        let Some(sp) = spell_of(pair!()[side]) else { continue; };
+        let Some(base) = d.spells[sp].drain else { continue; };
+        let blocked = shielded(s, 1 - side);
+        let n = if blocked { 0.0 } else { 0f64.max(amount(enc, side, Some(sp), base, false).min(s.actors[1 - side].res[R_MANA])) };
+        debit(&mut s.actors[1 - side], R_MANA, n);
+        if d.spells[sp].drain_keep { let room = 0f64.max(enc.sides[side].capacity - s.actors[side].res[R_MANA] - s.actors[side].flux); s.actors[side].flux += n.min(room); }
+        ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: n, blocked });
+    }
     for side in 0..2 { let id = pair!()[side]; if !special(id) { prepared(enc, s, &mut ctx, side, id, &mut attacks); } }
     for side in 0..2 {
         let id = pair!()[side];
@@ -592,8 +619,24 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
                 attacks.push(Hit { spell: false, ..hit(side, k.strike, power) });
                 if bonus != 0.0 { attacks.push(Hit { spell: false, pierce_guard: true, ..hit(side, k.strike, bonus) }); }
             } else if let Some(sp) = spell_of(part) {
-                if d.spells[sp].damage.is_some() { let p = attack_power(enc, s, side, part); attacks.push(Hit { hot: sp == ids.flame, spell: !d.spells[sp].physical, ..hit(side, part, p) }); }
+                if d.spells[sp].damage.is_some() {
+                    let p = attack_power(enc, s, side, part);
+                    let n = d.spells[sp].hits;
+                    if n > 1 {
+                        // A swarm (world expansion 1): many small hits; only the first meets Guard and Brace.
+                        let each = js_round(p / n as f64).max(1.0);
+                        for i in 0..n { attacks.push(Hit { spell: !d.spells[sp].physical, pierce_guard: i > 0, pierce_brace: i > 0, ..hit(side, part, each) }); }
+                    } else { attacks.push(Hit { hot: sp == ids.flame, spell: !d.spells[sp].physical, ..hit(side, part, p) }); }
+                }
             }
+        }
+        // The worn kit (world expansion 1): each cast of some spells also deals spell damage (blockable, wardable); a foe who
+        // guards, wards or braces against this side takes strike damage.
+        if let Some(sp) = spell_of(id) { let oc = enc.sides[side].on_cast[sp]; if oc > EPS { attacks.push(hit(side, id, oc)); } }
+        let od = enc.sides[side].on_defend;
+        if od > EPS {
+            let opp = pair!()[1 - side];
+            if !special(opp) && (k.parts[opp as usize].contains(&k.guard) || opp == ids.ward as Act || opp == ids.brace as Act) { attacks.push(Hit { spell: false, fixed: true, ..hit(side, k.strike, od) }); }
         }
         if has(s, side, Eff::Torment) && id != k.cancel && id != k.frozen && !shielded(s, side) {
             let v = s.actors[side].effects[Eff::Torment as usize].unwrap().value;
@@ -654,6 +697,18 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
         for c in expired.iter() { end_construct(enc, s, &mut ctx, side, *c); }
     }
     hits(enc, s, &mut ctx, &Hits::default());
+    if terminal(enc, s, &mut ctx) { return; }
+    // Poison (world expansion 1, Venom): its damage each exchange it lasts, past every defence, as the poisoner's hit.
+    let mut venom = Hits::default();
+    for side in 0..2 {
+        if !has(s, side, Eff::Poison) { continue; }
+        let e = s.actors[side].effects[Eff::Poison as usize].unwrap();
+        let src = e.source.unwrap_or(1 - side as u8) as usize;
+        let id = enc.sides[src].kit.iter().find(|(sp, _)| d.spells[*sp].poison.is_some()).map_or(k.strike, |(sp, _)| *sp as Act);
+        venom.push(Hit { source: src as u8, target: side as u8, id, power: e.value, spell: true, fixed: true, ..Default::default() });
+        ctx.hurt_now[side] = true;
+    }
+    hits(enc, s, &mut ctx, &venom);
     if terminal(enc, s, &mut ctx) { return; }
     for side in 0..2 { if ctx.mend_now[side] > 0.0 && !ctx.hurt_now[side] { let m = ctx.mend_now[side]; heal(enc, s, side, m); } }
     for side in 0..2 {

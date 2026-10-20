@@ -1,0 +1,443 @@
+# The intro sequence (world expansion 1, plan section 0). Every card is `class: story`, tagged `intro`: left is always
+# the quick way (a line, nothing else); right engages, with at most a line, a fact or a tiny warm-up. Never a cost.
+#   The orientation (feedback 2026-10-20): one condensed run of cards at the very start, before the registrar's list and
+#   enrolment. The Welcome asks first: left skips it, right plays along, and then each card leads straight to the next
+#   whichever side you take: tour, the wrong tower (a negotiation lesson), lunch, Vey's tea (a check lesson), the purse,
+#   your room, the safety talk (slice_ward_lesson, so you know Ward before the practice fight), the practice circle (a
+#   fight lesson) and your kit. Skipping never skips Ward: the safety talk then comes in its usual place, after enrolment.
+#   Just-in-time cards: once each, the first time a system matters; off with the title screen's "Skip the introductions"
+#   or the Settings row (flag skip_intros).
+#   The kit card (intro_kit) is Thorne's, not Mir's (the plan said Mir): it would pre-empt Mir's own first meeting.
+
+# ---------------- The orientation ----------------
+
+@event intro_welcome
+title: The Welcome
+class: story
+tone: warm
+trigger: auto
+when: turn == 1
+priority: 90
+slot: morning
+art: crown
+tags: intro story
+scene: The Great Hall full of new first-years under floating candles, a tall headmistress at the lectern.
+text: Floating candles, two hundred first-years trying not to look up. Headmistress Marrow speaks for four minutes: four years of twelve moons, a name that travels, and a castle that remembers who you were in it. "Before you choose your courses," she ends, "the prefects will show you how things work here. Those who think they know already may go straight to the registrar."
+> left: Skip the orientation
+  say: You slip out ahead of the crowd to find the registrar's list. Whatever the castle has to teach you, you'll learn it the hard way. (The safety talk is compulsory: you'll still have that.)
+> right: Stay for the orientation
+  learn isolde.mercy
+  queue intro_tour now
+  say: You stay. On her way out Marrow stops in front of you. "What do you think is just?" she asks, and listens to your answer, and writes something down. "Ask me again in four years," she says.
+
+@event intro_tour
+title: The Prefect's Tour
+class: story
+tone: light
+trigger: queued
+art: map
+tags: intro story
+scene: A prefect in a red sash leading a straggle of first-years through a castle corridor, holding up a ledger like a flag.
+text: A prefect in a red sash gathers the first-years with a ledger. "Hollis. Prefect. Tour. Each day you get a few free hours, and you spend them on the map: one place an hour. Some doors open only once you've earned them. Some never open for you. Keep up."
+> left: Skip the tour
+  queue intro_wrong_tower now
+  say: You slip away and find your own way round. You get lost twice and find the kitchens once, which is a fair trade.
+> right: Follow him round
+  queue intro_wrong_tower now
+  rel bram +tiny
+  say: Bram walks you past every door and names its rules. At a blank stretch of wall, a boy with a lockpick behind his ear winks at you, as if the wall were a joke you'd both get later.
+
+@event intro_wrong_tower
+title: The Wrong Tower
+class: story
+tone: light
+trigger: queued
+art: scales
+tags: intro story
+scene: A harassed house steward behind a desk heaped with lists, a student's trunk visible through a doorway in the wrong tower.
+text: Your trunk has gone to the wrong tower. The house steward has a list, and the list says it hasn't. "If it's on the list," she says, "it's where it should be." Behind her, through a door, you can see your trunk with your name on it.
+> left: Carry it over yourself
+  queue intro_lunch now
+  queue intro_lunch_alone now
+  say: You haul it across two bridges and up ninety stairs. The steward ticks something on the list as you pass, satisfied that it was always right.
+> right: Talk her round
+  hint: A negotiation, as a lesson: nothing to lose. Until the negotiation game arrives, charm, lore and guile decide it.
+  queue intro_lunch now
+  queue intro_lunch_alone now
+  challenge negotiate novice certain:
+    win:
+      say: You ask to see the list. Then the line. Then the tower on the line. The steward goes pink, corrects it in red ink and sends two porters. "Clerical," she says.
+    partial:
+      say: She won't change the list, but she lends you a porter "as a courtesy". The porter and the list never speak again.
+    lose:
+      say: She has an answer for everything, most of it the list. You carry the trunk yourself in the end, but you've learned how she argues, which is worth a tower.
+
+@event intro_lunch
+title: The Lunch Table
+class: story
+tone: warm
+trigger: queued
+art: meal
+tags: intro story
+cast:
+  friend: any where met(friend) and tagged(friend, peer)
+scene: Long refectory tables at noon, first-years spread along the benches, one empty place beside a familiar face.
+text: Lunch in the Great Hall, under the gallery where the refectory tables run. You can sit anywhere. At noon people find you, or you find them; either way, who you sit with tends to become who you know.
+> left: Eat with whoever's there
+  queue intro_vey_tea now
+  say: You squeeze in between two strangers who are arguing about soup. By pudding they're not strangers, quite.
+> right: Sit with {friend}
+  queue intro_vey_tea now
+  rel friend +tiny
+  say: {friend} shifts along the bench to make room. You talk about nothing much, which is how most friendships start.
+
+@event intro_lunch_alone
+title: The Lunch Table
+class: story
+tone: warm
+trigger: queued
+when: not met(lyra) and not met(tobias) and not met(seraphine) and not met(corvin) and not met(mir) and not met(kael) and not met(nessa) and not met(bram) and not met(ilse)
+art: meal
+tags: intro story
+scene: Long refectory tables at noon, first-years spread along the benches, a student with a tray looking for a place.
+text: Lunch in the Great Hall, under the gallery where the refectory tables run. You can sit anywhere, and you don't know anyone yet. At noon people find you, or you find them; either way, who you sit with tends to become who you know.
+> left: Eat with whoever's there
+  queue intro_vey_tea now
+  say: You squeeze in between two strangers who are arguing about soup. By pudding they're not strangers, quite.
+> right: Sit at the end and listen
+  queue intro_vey_tea now
+  say: You take the end of a bench and listen. By the end of the meal you know who runs the Ledger, who duels, who talks to plants, and that the girl with the floating quill will find you whether you like it or not.
+
+@event intro_vey_tea
+title: Tea That Isn't There
+class: story
+tone: light
+trigger: queued
+art: cup
+tags: intro story
+scene: A corridor alcove, a sharp-eyed professor holding out an empty hand as if it held a teacup, a student hesitating.
+text: Professor Vey stops you in a corridor and offers you a cup of tea. There is no cup. There is no tea. She waits to see what you'll do. "Every attempt has its odds," she says pleasantly. "Skill moves them. Luck moves them less. Drink up."
+> left: Decline the tea
+  queue intro_purse now
+  say: "No, thank you," you say. Vey sighs, drinks the tea that isn't there, and walks on. You feel as though you've failed something small.
+> right: Pretend to drink it
+  hint: A check, as a lesson: your guile against a novice's odds, nothing to lose.
+  queue intro_purse now
+  challenge deceive novice+ certain:
+    win:
+      learn vey.tests
+      say: You sip, wince at the heat and compliment the blend. Vey laughs, delighted, and writes something down. "Points," she says. "Nobody compliments the blend."
+    partial:
+      learn vey.tests
+      say: You drink it convincingly and then try to hand back the cup. There is no cup. Vey smiles. "Half points," she says.
+    lose:
+      learn vey.tests
+      say: You laugh halfway through the sip. Vey sighs, theatrically. "Most do," she says. "I keep score, you know. Everyone starts at nought."
+
+@event intro_purse
+title: The Purse
+class: story
+tone: light
+trigger: queued
+art: pouch
+tags: intro story money
+scene: A student counting coins out of a small purse onto a dormitory blanket, a goblin's calling card among them.
+text: Your purse is lighter than it was: the bursar has taken this month's board, as he will every month. Among the coins is a calling card in green ink. "GRISK. Loans on friendly terms. Ask at the Newt."
+> left: Pocket it
+  queue intro_room now
+  say: You put the card away with the coins and decide to be careful. It is a good decision, for now.
+> right: Read Grisk's card
+  queue intro_room now
+  learn grisk.lender
+  say: Sixty crowns today, the back says, and twelve a month for six months. The arithmetic is very friendly indeed, to Grisk.
+
+@event intro_room
+title: Your Room
+class: story
+tone: warm
+trigger: queued
+art: bed
+tags: intro story
+scene: A narrow tower room with a bed, a trunk at its foot and a window full of lake, a folded note on the pillow.
+text: Your room in the tower: a bed, a trunk, a window with half the lake in it. On the pillow, a note from the bursar, folded twice.
+> left: Unpack later
+  queue slice_ward_lesson now
+  queue intro_practice_circle now
+  say: You fall onto the bed in your robes and sleep like a dropped stone. The note is still under your cheek in the morning.
+> right: Read the bursar's note
+  queue slice_ward_lesson now
+  queue intro_practice_circle now
+  say: Board is paid each month, it says, or you go hungry. Sleep mends the body and the mood; a bad night shows. Mana comes back on its own. And please do not feed the gargoyles.
+
+@event intro_practice_circle
+title: The Practice Circle
+class: story
+tone: warm
+trigger: queued
+art: duel
+tags: intro story
+scene: A chalk circle on a scorched duelling-hall floor, a straw mannequin standing in it, a grizzled professor watching from the edge.
+text: Professor Thorne has chalked a circle and stood a straw mannequin in it. "Every first-year fights it once," he says. "It moves first, and it shows you what it means to do. Watch it. Lose to it if you must. Losing well is the only thing worth teaching."
+> left: Watch from the bench
+  queue intro_kit now
+  say: You watch three first-years go down to the mannequin, then one beat it. Thorne says the same thing to all four: "Good. Again."
+> right: Step into the circle
+  hint: A lesson: nothing to win or lose, and you may skip it at any time.
+  queue intro_kit now
+  challenge combat novice certain:
+    win:
+      learn thorne.lost
+      say: The mannequin topples in a puff of straw. Thorne nods. "Now lose one sometime," he says. "Then you'll know what you're doing."
+    partial:
+      learn thorne.lost
+      say: You trade blows until the bell. Thorne looks pleased. "A draw is a fight you both learned from," he says.
+    lose:
+      learn thorne.lost
+      say: The mannequin wins, which is humiliating and educational. Thorne helps you up. "I lost to a storm once," he says. "Badly. Losing well is the whole art."
+
+@event intro_kit
+title: What You Carry
+class: story
+tone: light
+trigger: queued
+art: wand
+tags: intro story
+scene: A grizzled professor tapping a student's battered borrowed wand, a robe and a small pouch laid out on a bench.
+text: Afterwards Thorne taps your borrowed wand with one finger. "Held together with hope," he says. "What you carry matters in a fight, and only there: a wand, a robe, one thing in your pocket. What you own opens other doors. Keep your kit in order."
+> left: Later
+  say: You nod and put the wand away. It sparks once, sideways, as if it had heard.
+> right: Show me
+  say: He shows you: what you wear only counts when you fight; what you own lets you do things on the right day, like a spell does. Your kit is on its own tab, beside the others. "And trade that wand in," he says, "when you can."
+
+# ---------------- Just in time (off with skip_intros) ----------------
+
+@event jit_after_curfew
+title: After Curfew
+class: story
+tone: eerie
+trigger: auto
+when: turn == 3 and not flag(skip_intros)
+priority: 30
+slot: night
+art: lantern
+tags: intro
+scene: A dark castle corridor after curfew, a prefect's lantern far off at one end, a student pressed into a doorway.
+text: After curfew the castle changes hands. The corridors belong to prefects and to whatever else walks them. You can stay in and sleep, or slip out at midnight to wherever is open then. Get caught often enough and people start to notice.
+> left: Stay in tonight
+  say: You listen to the castle settle and decide midnight can wait.
+> right: Watch the prefect's lantern go by
+  say: The lantern passes your door, pauses and moves on. You learn the round by heart. It feels like knowing a secret.
+
+@event jit_red_string
+title: Red String
+class: story
+tone: eerie
+trigger: auto
+when: clues(hollowstar) >= 1 and not flag(skip_intros)
+priority: 30
+art: paper
+tags: intro
+scene: A student's desk by candlelight, scraps of paper pinned to the wall above it, joined by lengths of red string.
+text: You've started keeping what you notice: a scrap of paper here, a remembered word there. Tonight you pin them to the wall above your desk and join them with red string. It doesn't make sense yet. It isn't supposed to.
+> left: Go to bed
+  say: You leave the string where it is. In the morning it looks like a constellation you don't know the name of.
+> right: Stare at it a while
+  say: The things you've found are all there in your notes now, and the leads you haven't followed. Nobody will make you follow them. That's the frightening part.
+
+@event jit_exam_nerves
+title: Exam Nerves
+class: story
+tone: tense
+trigger: auto
+when: month == 4 and term and year == 1 and not flag(skip_intros)
+priority: 95
+slot: morning
+art: hourglass
+tags: intro
+scene: A queue of pale first-years outside a closed examination hall door, one of them reciting under their breath.
+text: Exams. Outside the hall someone is reciting the stirring count under their breath. Every class you went to and every night you revised is in your head somewhere, and how much of it is there is most of what decides the paper.
+> left: Walk straight in
+  say: You walk in before the nerves can catch you. The door shuts like a held breath.
+> right: Go over your notes once more
+  say: Preparation counts more than talent here, a fourth-year once told you. You hope she was right. She usually is.
+
+@event jit_long_break
+title: The Long Break
+class: story
+tone: warm
+trigger: auto
+when: break and year == 1 and not flag(skip_intros)
+priority: 90
+slot: morning
+art: house
+tags: intro
+scene: An emptying castle courtyard, trunks being loaded onto a barge, a few students waving and a few staying behind.
+text: The term is over and the castle empties. A break is your own: no lectures, and four free visits a day if you stay at the castle or go home, three if you take on paid work. Some friends leave; some stay. Letters come instead.
+> left: Make plans later
+  say: You put your feet up for an afternoon first. The castle is very quiet, and very much yours.
+> right: Walk the empty halls
+  say: Your footsteps echo. The kitchens are open all day on a break, the cook says, and the cook is lonely.
+
+@event jit_counter
+title: Across the Counter
+place: village
+class: story
+tone: light
+when: not flag(skip_intros)
+weight: 40
+art: coin
+tags: intro shop
+scene: A village shop counter seen from a student's side, a price slate, a few goods and a shopkeeper waiting patiently.
+text: The village sells what the castle doesn't. Every shop has its counter, with its prices on the slate; some things are only offered once you've proved something, or know someone, or can pay a great deal. And the pawnbroker buys back what you're tired of.
+> left: Browse another day
+  say: You walk the square with your hands in your pockets. Everything in the windows looks expensive and possible.
+> right: Read every slate
+  say: Buns, robes, wands, tea, tonics, one at a time. You make a list of what you'd buy if you had money. It's a long list.
+
+@event jit_real_fight
+title: A Real Fight
+class: story
+tone: tense
+trigger: auto
+when: turn >= 6 and seen(intro_practice_circle) > 0 and not flag(skip_intros)
+priority: 30
+slot: evening
+art: sword
+tags: intro
+scene: A duelling hall with a real duel under way, two students circling, a third nursing a split lip on the bench.
+text: The mannequin was a lesson. Real fights aren't. Whoever you face fights to win, the way you would; Health lost below the line stays lost, and anything you'd rather not be seen casting, someone may see. You can always refuse a fight, at a price of its own.
+> left: Nod and move on
+  say: You file it away. Somewhere in the hall, someone is losing well. Thorne would be pleased.
+> right: Watch a bout to the end
+  say: You watch two third-years fight to a standstill, bow and go to supper together. It looked like the opposite of a lesson. It was the same thing.
+
+@event jit_real_negotiation
+title: A Real Negotiation
+class: story
+tone: light
+trigger: auto
+when: turn == 3 and seen(intro_wrong_tower) > 0 and not flag(skip_intros)
+priority: 30
+slot: afternoon
+art: scales
+tags: intro
+scene: A student and an official facing each other across a desk heaped with papers, both leaning forward.
+text: Not every talk is a quick word. Some are negotiations: someone across the table with reasons of their own, and something at stake. Charm, lore and guile all count, and so does how you come across today. The steward and her list were practice.
+> left: Fair enough
+  say: You resolve to argue only with people who aren't holding a ledger.
+> right: Remember how the steward folded
+  say: She folded when you asked to see the line. You make a note: always ask to see the line.
+
+@event jit_infirmary
+title: A Word From the Infirmary
+class: story
+tone: warm
+trigger: auto
+when: health <= 30 and not flag(skip_intros)
+priority: 70
+art: potion
+tags: intro
+scene: A stern healer in a white apron writing on a chart at the foot of a student's bed.
+text: Sister Amaranth catches you on the stairs, looks at you once and steers you to a bed. "Low Health," she says. "Under thirty, the body starts to lose things it doesn't get back easily. Sleep. Eat. Stop fighting things." She doesn't believe you'll listen.
+> left: Promise to rest
+  say: You promise. She writes it on your chart, which feels binding in a way promises usually don't.
+> right: Ask how low is too low
+  say: "Lower than you are," she says, "is too low." She gives you a tonic that tastes of iron and disapproval.
+
+@event jit_something_more
+title: Something More
+class: story
+tone: warm
+trigger: auto
+when: not flag(skip_intros)
+priority: 30
+art: heart
+tags: intro romance
+cast:
+  x: any where romanceable(x) and spark(x) >= 9
+scene: Two students in a crowded corridor, one of them looking back over their shoulder a moment longer than they meant to.
+text: You catch yourself looking for {x} in every room. That's new. Friendship grows on its own; this is something else, and it grows only when you let it. It can also go cold if you leave it too long.
+> left: Think about something else
+  say: You think about something else, with great determination, for almost an hour.
+> right: Admit it, to yourself at least
+  say: You admit it to your pillow, which keeps it. Tomorrow you'll be braver. Possibly.
+
+@event jit_rivals
+title: Rivals
+class: story
+tone: tense
+trigger: auto
+when: bonds(rival) >= 1 and not flag(skip_intros)
+priority: 30
+art: duel
+tags: intro
+scene: Two students passing on a staircase, neither giving way, both pretending not to notice the other.
+text: Somebody here has decided you're the one to beat. A rival watches what you do and does it better, or tries to, and you'll find yourself doing the same. Rivals can soften into something else. They can also sharpen.
+> left: Ignore it
+  say: You resolve to ignore it. You fail almost at once, which is how rivalry works.
+> right: Get better
+  say: You stay late in the library out of pure spite. It is extraordinarily motivating.
+
+@event jit_mirror
+title: The Mirror Remembers
+class: story
+tone: eerie
+trigger: auto
+when: (alignment >= 15 or alignment <= -15) and not flag(skip_intros)
+priority: 30
+art: mirror
+tags: intro
+scene: A student passing the tall sorting mirror in the entrance hall, their reflection a half-step behind them.
+text: You pass the Sorting Mirror on the way to breakfast and your reflection is a half-step slow. {alignment >= 15: It looks brighter than you feel.|It looks colder than you feel.} What you do when it costs you something is being remembered, somewhere, and it leans you one way or the other.
+> left: Walk faster
+  say: Your reflection catches up by the end of the hall. You decide not to wonder how.
+> right: Look back at it
+  say: It looks back. Then it straightens its robes, which you hadn't, and you straighten yours.
+
+@event jit_noticed
+title: Noticed
+class: story
+tone: light
+trigger: auto
+when: renown >= 30 and not flag(skip_intros)
+priority: 30
+art: crown
+tags: intro
+scene: A student walking into a crowded common room as a few heads turn, someone whispering behind a hand.
+text: Heads turn when you come into the common room. A first-year whispers your name to another. Being known opens doors and invitations; it also fades if you stop giving people something to talk about.
+> left: Pretend not to notice
+  say: You pretend not to notice. Everyone notices you pretending.
+> right: Wave
+  say: You wave. Three people wave back, and one of them has no idea who you are.
+
+@event jit_first_shift
+title: First Shift
+class: story
+tone: light
+trigger: auto
+when: member(job) and not flag(skip_intros)
+priority: 30
+art: coin
+tags: intro job
+scene: A student tying on an apron in a back room, a list of duties pinned on the wall beside them.
+text: A job is a few shifts a term, shown on the map when they're due; each one pays, and a missed one costs the boss's good opinion. Work well and you're promoted. Turn up on a break and it's just a visit.
+> left: Tie the apron and go
+  say: You tie the apron backwards. Nobody tells you for an hour.
+> right: Read the duty list twice
+  say: You read it twice. The second time, you notice the line at the bottom: "Ask if unsure." You decide to be sure instead.
+
+@event jit_applications
+title: Applications
+class: story
+tone: tense
+trigger: auto
+when: month == 7 and year == 2 and not flag(skip_intros)
+priority: 52
+art: letter
+tags: intro
+scene: A noticeboard plastered with internship notices, a student copying deadlines into a notebook.
+text: The internship notices are up. A summer's placement means a summer away doing the work, and a letter from a supervisor that follows you after. Each wants a course passed, or more, and asks once a year.
+> left: Look later
+  say: You walk past the board. The notices will still be there tomorrow, mostly.
+> right: Copy the deadlines down
+  say: You copy every deadline into your notebook in your best hand, and underline the ones you could actually meet.

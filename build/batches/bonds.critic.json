@@ -1,0 +1,10 @@
+{
+  "batch": "bonds",
+  "accept": true,
+  "summary": "Author's own review against the critic checklist (no independent critic was run). Friendship (content/events/bonds/friends.grim): about four cards per peer, each finding out a fact or paying one off, and the close milestones of Lyra (it names Wildfire, which lyra_teaches_wildfire then teaches), Bram and Ilse as their own versions of soc_become_close. Rivalry (rivals.grim): eight cards each for Lyra and Bram, two each for a soured Corvin and Ilse; migration 0040 stops the generic truce pre-empting lyra_rival_respect and bram_turns, holds Bram's generic friendship until he has softened, keeps bram_turns from downgrading a close bond and leaves Tamsin's letters to her own cards. Plot safety: Ilse's and Kael's cards read only furs, frost-craft, cold hands and the North; nothing touches the cult, the door or the man in grey. Fixed during review: discovery cards were gated on `not knows(...)`, but surface facts are known from the first meeting and others unlock by friendship each month, so the gates would never pass (cards without repeat already play once); Lumenhold has four years, so the bullies are fourth-years; Lyra's second place was at the Trials before she came, so no trophy at Lumenhold; one option was over the ±1.5 budget.",
+  "issues": [
+    { "event": "letter_from_a_friend", "problem": "The plan routed Tamsin's seven letters through letter_from_a_friend with specializes:, but a character has at most one version of a generic card.", "fix": "The generic letter no longer casts Tamsin; her own seven letters stand as they were." },
+    { "event": "lyra_become_close", "problem": "Close milestones for Lyra, Bram and Ilse are rare in simulation (the bots rarely reach rel 36 with a friend bond for them).", "fix": "Accepted: the specialization is covered by test/bonds.test.js; human playtests will judge the pacing." },
+    { "event": "bram_steps_in", "problem": "Bram's way out of rivalry needed bram_crying (turn 8+, once).", "fix": "Standing beside him sets bram_softened too, a second door to bram_turns." }
+  ]
+}

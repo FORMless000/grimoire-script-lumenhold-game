@@ -120,6 +120,19 @@ text: Word reaches Bram that you mean to empty the captain's charm. He turns up 
       queue duel_captains_notes now
     elif not flag(brace_footwork):
       queue duel_footwork_lyra now
+> up[item:duelling_coat]: Shrug it off in the coat
+  flag brace_circle
+  health -small
+  perform duelling +tiny
+  say: You button the quilted coat to the chin and plant your feet. The hexes thud into the padding like snowballs into a wall. Bram runs out first. "That's cheating," he says. "Section four doesn't mention coats," you say.
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(duel_dummy_hexes) >= 1 and flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2:
+      queue duel_brace_final now
+    elif not flag(brace_notes):
+      queue duel_captains_notes now
+    elif not flag(brace_footwork):
+      queue duel_footwork_lyra now
 
 @event duel_footwork_lyra
 title: Footwork Until Dark
@@ -693,7 +706,7 @@ tags: job
 scene: A barge-man at a tavern table with his arms spread wide, telling a story to a student taking notes on a bar napkin.
 text: The old barge-man's eel story is the most famous story at the Newt. Regulars mouth along. The landlady says if you can tell it as well as he does, the room will be half yours. He's willing to teach it, slowly, for an evening.
 > left: Learn it and tell it back
-  challenge negotiate journeyman wild:
+  challenge perform journeyman wild:
     win:
       flag rapport_eel
       charm +small
@@ -999,7 +1012,7 @@ tags: job
 scene: An old fisherman in a small boat on a grey lake waving up at a student on a broom flying low overhead.
 text: The old fisherman in the reed beds has never waved at a courier. Today, seeing the jar strapped to your broom, he waves, and beckons you down. "That jar," he says. "I flew it once. Fastest year of my life."
 > left: Land and ask him about it
-  challenge negotiate journeyman:
+  challenge appeal journeyman:
     win:
       flag tailwind_fisherman
       charm +small

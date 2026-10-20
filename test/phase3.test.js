@@ -58,7 +58,7 @@ test('dupes: a copied event is flagged, the real content has no near-duplicates'
 test('report --gaps: a row for every draw source, and usage from run histories', () => {
   const R = require('../tools/report.js');
   const rows = R.pools(content);
-  for (const p of Object.values(content.places)) if (p.kind !== 'internship') assert.ok(rows.find((r) => r.kind === 'place' && r.id === p.id), p.id);
+  for (const p of Object.values(content.places)) if (p.kind !== 'internship' && !p.deprecated) assert.ok(rows.find((r) => r.kind === 'place' && r.id === p.id), p.id);
   for (const t of Object.values(content.tracks)) if (t.kind === 'club' || t.kind === 'job') assert.ok(rows.find((r) => r.id === t.id), t.id);
   assert.ok(rows.find((r) => r.kind === 'plan' && r.id === 'castle'));
   const run = { hist: [{ t: 'pick', turn: 3, picks: ['courtyard', 'library'] }, { t: 'card', turn: 3, month: 3, id: 'x', slot: 'afternoon', place: 'courtyard' }] };

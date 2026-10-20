@@ -1,0 +1,713 @@
+# ============================================================
+#  Friendship (world expansion 1, plan §2b): about four cards per peer, each built on a fact found out
+#  (`learn`) or paid off later (`knows`), and the close milestones of Lyra, Bram and Ilse (their own
+#  versions of soc_become_close). No spark here: these are friends' cards.
+#  Plot safety: Kael's family, Ilse's upbringing and the lake are hard canon; these cards don't touch them.
+# ============================================================
+
+# ---------------- Lyra ----------------
+
+@event lyra_who_beat_her
+title: Who Beat Her
+class: routine
+tone: tense
+trigger: social
+actor: lyra
+when: rel(lyra) >= 9 and bond(lyra) != "rival" and bond(lyra) != "nemesis"
+weight: 9
+art: flame
+tags: social
+scene: A red-haired student on a window seat holding an old folded duelling programme, soft from handling, her thumb over one line.
+text: Lyra is on a window seat with an old duelling programme, soft from being folded and unfolded. The Winter Trials, the year before she came here. Second place: L. Vaneshade. "My mother wrote the week after," she says, without looking up. "Not to ask how I was. To ask who beat me."
+> left: Ask who did
+  learn lyra.second_place
+  rel lyra +small
+  mood -tiny
+  say: "A boy from a fishing town who never duelled again," she says. "He was better that day. I've thought about him every day since." She folds the programme along its old creases. "I hope he's happy. I hope he never thinks about it at all."
+> right: Ask what she wrote back
+  learn lyra.second_place
+  charm +tiny
+  rel lyra -tiny
+  say: "His name," Lyra says. "What else?" She walks away. Later you see her at the practice ring, alone, long after the torches are out.
+
+@event lyra_well_done
+title: Well Done
+class: routine
+tone: warm
+trigger: social
+actor: lyra
+when: knows(lyra.mother) and rel(lyra) >= 15 and bond(lyra) != "rival" and bond(lyra) != "nemesis"
+weight: 10
+art: flame
+tags: social
+scene: A practice ring at dusk, a red-haired duellist sitting on the edge with her wand across her knees, another student holding out a cup of water.
+text: Lyra comes second in an exhibition bout, to a fourth-year twice her size, and comes off the ring with her face set like stone. Nobody says anything to her. They know better. You know her mother has never once said the two words.
+> left: Say them
+  rel lyra +medium
+  mood -tiny
+  say: "Well done," you say. She looks at you as if you've spoken another language. Then she sits down very suddenly on the edge of the ring, and laughs, and doesn't stop for a while, and when she does her eyes are wet. "Don't," she says. "Don't you dare tell anyone."
+> right: Spar with her until she's won something
+  vigor +small
+  health -tiny
+  rel lyra +small
+  say: You don't say anything. You pick up a practice wand. She beats you four times running, harder each time, and after the fourth she's breathing easier. "Thank you," she says, which is as close as she gets.
+
+@event lyra_study_hall_truce
+title: The Study Hall Truce
+class: routine
+tone: light
+trigger: social
+actor: lyra
+when: rel(lyra) >= 9 and term and not wrapup and bond(lyra) != "rival" and bond(lyra) != "nemesis"
+repeat: 4
+weight: 9
+art: book
+tags: social study
+scene: Two students at opposite ends of a long library table, a line of books stacked down the middle like a wall, both pretending not to look over.
+text: Lyra has built a wall of books down the middle of your library table. "My side," she says. "Your side. No talking." {~Twenty minutes later she slides a note over the wall: "What did Thorne mean by the second law?"|An hour in, a biscuit appears on your side of the wall, unexplained.}
+> left: Answer over the wall
+  study +small
+  rel lyra +small
+  mood -tiny
+  say: {~You write the answer and slide it back. She writes a better one and slides that back. By closing time the wall is gone and you've both written an essay neither of you could have alone.|You pass notes over the wall all evening, half about Thorne and half not. She keeps the notes. You see them later, pinned in her book.}
+> right: Keep to your side
+  study +medium
+  rel lyra -tiny
+  say: {~You keep to your side and get more done than in a week. So does she. At closing she looks almost disappointed that you didn't break the truce.|Silence, all evening. Your notes have never been better. Lyra packs up first and doesn't say goodnight, then comes back and says it.}
+
+@event lyra_become_close
+title: Let It Run
+specializes: soc_become_close
+slot: night
+class: milestone
+tone: warm
+trigger: social
+actor: lyra
+weight: 18
+art: flame
+tags: social
+scene: Two friends on a castle battlement at 3am, one of them making a small flame dance between her fingers, lighting both their faces.
+text: It's 3am. You find Lyra on the battlements, making a small flame walk across her knuckles. "I can't sleep," she says. "I've never told anyone that. Vaneshades sleep exactly eight hours." The flame wavers. "My grandmother had a spell she only taught to people she trusted. I've never had anyone to teach it to."
+> left: Tell her she doesn't owe you anything
+  rel lyra +small
+  say: "I know," she says. "That's why I'd want to." But she lets the flame go out, and you sit there until the sky greys, and she doesn't mention the spell again, not yet.
+> right: Stay until sunrise
+  bond lyra close
+  rel lyra +medium
+  mood +medium
+  say: You talk until the sun comes up over the lake. About her grandmother, about fire that isn't for showing off, about being tired. When the light comes, she says, "Wildfire. That's the spell. When you're ready." She means it as the biggest thing she has.
+
+# ---------------- Tobias ----------------
+
+@event tobias_moonflower_vigil
+title: Every Eleven Years
+class: routine
+tone: warm
+trigger: social
+actor: tobias
+when: rel(tobias) >= 12
+time: evening night
+weight: 10
+art: leaf
+tags: social
+scene: A greenhouse at night lit by one lantern, a broad-shouldered student sitting on an upturned pot beside a bed of tightly closed pale buds.
+text: Tobias is sitting in the greenhouse at night, beside a bed of tight pale buds, with a flask and a blanket. "Moonflowers," he says. "Once every eleven years. Could be tonight. Could be next spring." He's been coming every night for a month.
+> left: Keep watch with him
+  learn tobias.moonflowers
+  health -tiny
+  rel tobias +medium
+  say: You keep watch until the lantern runs out. They don't bloom. Tobias isn't disappointed. "That's the point," he says. "You wait for them. They don't wait for you." He tucks the blanket round you both.
+> right: Bring him a proper dinner
+  learn tobias.moonflowers
+  gold -tiny
+  rel tobias +small
+  say: You bring a pie from the kitchens. He eats it with real gratitude, and tells you about his mother's moonflowers at home, which never bloomed either, and how she kept the bed weeded for twenty years anyway.
+
+@event tobias_moonflower_bloom
+title: Tonight
+class: routine
+tone: warm
+trigger: social
+actor: tobias
+when: knows(tobias.moonflowers) and rel(tobias) >= 15 and year >= 2
+time: evening night
+weight: 12
+art: leaf
+tags: social
+scene: A greenhouse at midnight full of pale open blossoms glowing faintly silver, a big student standing among them with his mouth open.
+text: Tobias bangs on your door after dark. "Tonight," he says. "They're opening. Come on. Come ON." He's already running. In the greenhouse the moonflowers are unfolding, one by one, silver at the edges, and the whole place smells like rain.
+> left: Run with him
+  mood +medium
+  rel tobias +small
+  study -small
+  say: You run. You're in time. Every bud opens while you watch, and the greenhouse glows, and Tobias doesn't say a word for an hour. At the end he says, "Eleven years," and then, "Thank you for waiting with me," as if you'd done the waiting. You'll remember it longer than anything you were meant to study tonight.
+> right: Tell him to go; you'll catch up
+  rel tobias +tiny
+  mood +small
+  say: You finish your essay first. By the time you get there, half are open and Tobias is crying, quietly, the happy way. He saves you the best one to watch. It opens just for you, he insists. You don't argue.
+
+@event tobias_plants_vote
+title: The Greenhouse Votes
+class: routine
+tone: light
+trigger: social
+actor: tobias
+when: knows(tobias.plants) and rel(tobias) >= 9
+repeat: 6
+weight: 8
+art: leaf
+tags: social
+scene: A big student in a greenhouse holding his ear close to a row of seedlings, another student watching with folded arms.
+text: You've got a decision to make, and Tobias offers to ask the greenhouse. "They're good judges," he says. "Plants don't lie. They just turn towards what's good for them." He holds a seedling up to your face. {~It leans toward you, slowly.|It leans away, very slightly, and Tobias frowns.}
+> left: Do what the seedling says
+  mood +small
+  lore -tiny
+  say: {~"Yes, then," Tobias says, satisfied. It turns out to be the right call, though you'll never be sure it was the seedling's.|"Not that, then," he says, and you don't, and you never find out what would have happened, which is how good advice usually works.}
+> right: Ask him what he thinks
+  rel tobias +small
+  say: {~"Me?" He's surprised. He thinks it through, slowly, the way he does everything. His answer is better than the seedling's. He doesn't tell the seedling.|He gives you an answer so sensible you're embarrassed you asked a plant. "Don't tell them I said that," he whispers.}
+
+@event tobias_scholarship_review
+title: The Turnip Board
+class: routine
+tone: tense
+trigger: social
+actor: tobias
+when: rel(tobias) >= 9 and term and not wrapup and year >= 2
+weight: 9
+art: book
+tags: social study
+scene: A big student at a library table with a letter on top of a pile of open textbooks, head in his hands.
+text: Tobias has a letter from the agricultural scholarship board: a review of his marks, next week, in person. "If they take it away I go home," he says. "Not that home's bad. But I'm not done here." He's opened four textbooks and read none of them.
+> left: Drill him all week
+  learn tobias.scholarship
+  study -small
+  challenge research journeyman:
+    win:
+      rel tobias +large
+      say: You drill him every night. At the review he answers everything, slowly and right, and one of the board members, a farmer herself, shakes his hand. He brings you a turnip. It's the best turnip you've ever had.
+    lose:
+      rel tobias +medium
+      say: You drill him, but the board is hard. He keeps the scholarship on probation. "Probation's fine," he says. "Probation means I'm still here." He hugs you anyway, which lifts you off the floor.
+> right: Write to the board for him
+  learn tobias.scholarship
+  rel tobias +small
+  charm +tiny
+  say: You write a letter about the boy who keeps the greenhouse alive and talks the mandrakes through exams. He never knows you sent it. The board renews him with a note about "character", and he can't think why.
+
+# ---------------- Seraphine ----------------
+
+@event seraphine_oracle_letter
+title: A Letter From Vell
+class: routine
+tone: eerie
+trigger: social
+actor: seraphine
+when: rel(seraphine) >= 15
+weight: 10
+art: letter
+tags: social
+scene: A girl in a paint-stained smock holding a letter sealed in silver wax at arm's length, as if it were warm.
+text: Seraphine has a letter with a silver seal. She hasn't opened it. "My mother," she says. "She's the Oracle of Vell. She tells kings what they want to hear and they pay her in castles. She wants me home, to learn it." She turns it over. "I already know what it says. I see it, a little, through the paper."
+> left: Ask what she wants
+  learn seraphine.oracle
+  rel seraphine +medium
+  mood -tiny
+  say: Nobody has asked her that. She thinks for a long time. "To be wrong sometimes," she says. "Here, I'm wrong about small things. It's lovely." She puts the letter in a drawer, unopened. "She'll write again. She always knows when I've stopped reading."
+> right: Offer to read it to her
+  learn seraphine.oracle
+  lore +tiny
+  rel seraphine +small
+  say: You read it out. It's exactly what she said it would be, word for word. "See," she says, quietly. "Nothing in it I didn't know. That's the worst part. Thank you for saying it in someone else's voice."
+
+@event seraphine_what_you_want_to_hear
+title: What You Want to Hear
+class: routine
+tone: light
+trigger: social
+actor: seraphine
+when: knows(seraphine.oracle) and rel(seraphine) >= 12
+repeat: 6
+weight: 9
+art: eye
+tags: social
+scene: A seer holding both of another student's hands across a table, eyes half-closed, a theatrical candle burning between them.
+text: "My mother's trick," Seraphine says, taking your hands, eyes half-closed. "Watch. I'll tell you what you want to hear." {~"You will pass every exam, be loved by everyone and find a small dog."|"Your enemies will grow warts and your friends will grow taller."} She opens one eye. "Now. Do you want the true one?"
+> left: Keep the pretty one
+  mood +small
+  say: {~"Wise," she says. "Kings always pick that one too." She blows out the candle with a flourish. You do, briefly, believe in the small dog.|"Good choice." She looks relieved. "The true one has a lot of rain in it."}
+> right: Ask for the true one
+  rel seraphine +small
+  lore +tiny
+  mood -tiny
+  say: {~"You'll be tired a lot, and it will be worth it." She lets go of your hands. "That's the only true one I'll give anyone. Nobody else asks for it."|"Something will be hard, and you'll do it anyway, and someone will be proud of you." She shrugs. "It's not much. It's true."}
+
+@event seraphine_too_loud
+title: Too Loud
+class: routine
+tone: eerie
+trigger: social
+actor: seraphine
+when: rel(seraphine) >= 9
+weight: 9
+art: candle
+tags: social
+scene: A crowded refectory at lunchtime, a girl with her hands pressed over her ears in the middle of it, everyone else oblivious.
+text: In the middle of a full refectory Seraphine puts both hands over her ears and goes white. Nobody notices but you. "Everyone's futures," she whispers, when you get to her. "All at once. It's like a hundred people shouting what they'll be."
+> left: Get her out of there
+  learn seraphine.too_loud
+  rel seraphine +medium
+  study -tiny
+  say: You walk her out into the cloister, where it's quiet. She breathes. "Yours is quiet," she says, after a while. "I've always meant to say. It's like a room with the door shut." You miss your lecture. You don't mind.
+> right: Talk to her, loudly, about nothing
+  learn seraphine.too_loud
+  charm +tiny
+  rel seraphine +small
+  say: You talk about the soup, the weather, a dog you once knew, loudly, right next to her. It works: she can hear the now over the noise. "Keep going," she says, eyes shut. You talk about soup for twenty minutes.
+
+# ---------------- Corvin ----------------
+
+@event corvin_lock_lesson
+title: Every Door
+class: routine
+tone: light
+trigger: social
+actor: corvin
+when: rel(corvin) >= 9
+time: evening night
+weight: 10
+art: key
+tags: social
+scene: A lanky student crouched at a classroom door after dark, two thin picks in the lock, another student holding the lantern.
+text: Corvin is crouched at the Alchemy store's door after dark, two picks in the lock. "Hold that lantern up," he says, as if you'd agreed. "There isn't a locked door in this castle I can't open. I'm not taking anything. I'm keeping in practice."
+> left: Ask him to teach you
+  learn corvin.locks
+  guile +small
+  alignment -tiny
+  say: He shows you how to feel the pins, one at a time. On your eleventh try the lock clicks. Corvin applauds silently. Then he locks it again, carefully, and leaves it exactly as it was. "Rule one," he says. "Always leave it how you found it."
+> right: Keep watch instead
+  learn corvin.locks
+  rel corvin +small
+  say: You keep watch. He's in and out in a minute, with nothing in his hands but a single sugared almond from the jar on the master's desk. "Tradition," he says. He splits it with you.
+
+@event corvin_takes_the_blame
+title: One More Detention
+class: routine
+tone: tense
+trigger: social
+actor: corvin
+when: knows(corvin.last_warning) and rel(corvin) >= 12 and term
+weight: 10
+art: mask
+tags: social
+scene: A stern professor in a corridor holding up a confiscated set of lock picks, two students in front of her, one of them grinning too widely.
+text: Professor Vey holds up a set of lock picks found outside the Restricted Section. "Whose?" Corvin opens his mouth to make a joke, and you remember: one more detention and he's sent home, and home is not a good place.
+> left: "They're mine."
+  gain detention
+  alignment +tiny
+  rel corvin +large
+  say: Vey looks at you for a long moment, and at Corvin, and writes your name down. Corvin doesn't speak to you all day. That night there's a note under your door. It says "I owe you" and, underneath, smaller, "I'm not joking."
+> right: Let him talk his way out
+  rel corvin -tiny
+  guile +tiny
+  chance even:
+    say: He talks. It's a masterpiece: picks, a jackdaw, a misunderstanding about a cupboard. Vey doesn't believe a word and lets him go anyway, for the performance.
+  else:
+    rel corvin -small
+    say: He talks, and it doesn't work. A detention, his last but one, they tell him. He laughs it off. His hands shake for the rest of the day.
+
+@event corvin_cartographer_hint
+title: The Club That Doesn't Exist
+class: routine
+tone: eerie
+trigger: social
+actor: corvin
+when: rel(corvin) >= 12 and not member(cartographers)
+weight: 9
+art: map
+tags: social
+scene: A folded map slipped into a book in a library, the margins full of tiny inked doors, a lanky student pretending not to have left it.
+text: There's a map in your library book that wasn't there before. Corridors you've never seen, inked in a careful hand, and in the corner, very small: "M.C. — we don't exist. Bring a lantern." Corvin, across the table, is reading upside down.
+> left: Ask him outright
+  learn corvin.cartographers
+  rel corvin +small
+  say: "Never heard of them," he says. "Terrible people. Midnight, the third gargoyle on the left. Don't bring anyone." He goes back to his upside-down book. He's grinning at it.
+> right: Follow the map alone
+  learn corvin.cartographers
+  lore +small
+  health -tiny
+  say: You follow it into a passage that smells of old candle wax, and bark your shin on a step that isn't on the map. At the end, someone has chalked "TOLD YOU" on the wall. It's in Corvin's handwriting.
+
+# ---------------- Mir ----------------
+
+@event mir_small_fire
+title: A Small Fire
+class: routine
+tone: light
+trigger: social
+actor: mir
+when: rel(mir) >= 6
+weight: 9
+art: gear
+tags: social
+scene: A workbench with a tiny cheerful fire burning in the middle of it, an artificer in goggles looking at it with professional interest rather than alarm.
+text: There's a small fire on Mir's workbench. Mir is looking at it with interest. "It's fine," they say. "It's a controlled fire. I'm controlling it by watching it." The fire grows. "I'm watching it harder."
+> left: Put it out
+  learn mir.artificer
+  health -tiny
+  rel mir +small
+  say: You smother it with a lab coat. Mir sighs, and writes "fire: yes" in a notebook, under a long column of "fire: no". "That's useful data," they say, sincerely. "Thank you for ruining it."
+> right: Ask what it was meant to be
+  learn mir.artificer
+  arcana +tiny
+  alchemy +tiny
+  rel mir -tiny
+  say: "A kettle," they say, as the fire eats the kettle. "A self-heating kettle." The bucket under the bench, it turns out, is always full for exactly this reason.
+
+@event mir_padlock
+title: The Padlock
+class: routine
+tone: tense
+trigger: social
+actor: mir
+when: knows(mir.workshop) and rel(mir) >= 12 and bond(mir) != "partner"
+weight: 10
+art: gear
+tags: social
+scene: An artificer sitting on the floor outside a padlocked door, back against it, notebooks stacked beside them, a student coming down the corridor with a box.
+text: Mir's workshop is still padlocked. They've been working in the corridor outside it, on the floor, for a week. "It's fine," they say, soldering on their knee. "It's character-building. My character is very built."
+> left: Find them a room
+  rel mir +large
+  gold -small
+  say: You find a disused storeroom above the stables and bribe the porter with the good biscuits. Mir moves in within the hour. The first thing they build there is a sign: "Workshop. Fires: probably fine."
+> right: Petition the faculty with them
+  rel mir +small
+  challenge appeal journeyman:
+    win:
+      renown +tiny
+      say: Thorne hears you out, sighs like a dying bellows, and gives Mir the key back on condition they keep a bucket within reach at all times. They keep three.
+    lose:
+      mood -tiny
+      say: The faculty says no. Mir says it's fine. It isn't. But you sit in the corridor with them that evening and hand them screws, and it's less fine with company.
+
+@event mir_family_clocks
+title: Not a Hobby
+class: routine
+tone: tense
+trigger: social
+actor: mir
+when: knows(mir.family) and rel(mir) >= 15
+weight: 9
+art: letter
+tags: social
+scene: A letter on a workbench, held down by a small brass clock, the artificer reading it with their goggles pushed up and their jaw tight.
+text: Another letter from Mir's family. They want them home this summer, at the clockworks, "doing something real". Mir reads it twice, then puts a clock on top of it so it can't get away. "Everything I've built is real," they say. "It ticks."
+> left: Help them write back
+  charm +small
+  rel mir +small
+  study -tiny
+  say: You write it together, all evening: what Mir built this year, what it does, who uses it. It's three pages of inventions and not one apology. Mir signs it with a small drawing of a gear. "They won't read it," they say. "But it's written."
+> right: Tell them to bring an invention home
+  rel mir +medium
+  mood -tiny
+  say: "Show them," you say. "Something that ticks." Mir looks at the brass owl on the shelf for a long time. That summer they take it home. The letter they send back is very short: "Dad cried. He says it's not a hobby. I said I know."
+
+# ---------------- Kael ----------------
+
+@event kael_northern_supper
+title: A Northern Supper
+class: routine
+tone: warm
+trigger: social
+actor: kael
+when: rel(kael) >= 9
+time: evening night
+weight: 9
+art: snow
+tags: social
+scene: A pale boy in a fur coat at the kitchen hearth late at night, carefully stirring a pot of dark broth, a second bowl set out without being asked for.
+text: You find Kael in the castle kitchens after hours, cooking something dark and sour-smelling over the smallest fire. "Northern," he says. "Fish, berries, and something you don't want to know. Nobody here makes it." There's already a second bowl out.
+> left: Eat it all
+  learn kael.north
+  health +tiny
+  mood -tiny
+  rel kael +medium
+  say: It's the strangest thing you've ever eaten. You finish the bowl. Kael watches you with an expression you've never seen on him: hope. "Next time," he says, "I'll tell you what was in it." You hope he doesn't.
+> right: Ask him to tell you about home
+  learn kael.north
+  lore +small
+  rel kael +small
+  say: He tells you about winter that lasts eight months and summer that lasts eight days, and singing on the ice to keep the dark back. He doesn't mention his family once. You notice. You don't ask.
+
+@event kael_gloves
+title: Gloves
+class: routine
+tone: warm
+trigger: social
+actor: kael
+when: knows(kael.cold_hands) and rel(kael) >= 12 and bond(kael) != "partner"
+weight: 9
+art: snow
+tags: social
+scene: A pair of thick knitted gloves, slightly lopsided, on a pale boy's hands as he turns them over and over, frost beginning to form on the wool.
+text: Kael's hands are so cold the ink in his pen keeps freezing in lectures. You've noticed. He's noticed you noticing. Winter's coming, and he still doesn't own a pair of gloves.
+> left: Knit him some
+  study -small
+  rel kael +large
+  say: They take a month and are lopsided. Frost forms on the wool within the hour. He wears them anyway, every day, until the thumbs wear through, and then he darns the thumbs himself, badly, rather than give them up.
+> right: Buy him some in the village
+  gold -small
+  rel kael +medium
+  say: You buy a good warm pair. He holds them as if no one had ever given him a thing just for being cold. "I don't feel it, mostly," he says. He wears them anyway.
+
+@event kael_frost_fern
+title: The Frost-Fern Trick
+class: routine
+tone: light
+trigger: social
+actor: kael
+when: rel(kael) >= 12 and season == "winter"
+repeat: 6
+weight: 8
+art: snow
+tags: social magic
+scene: A frosted window in a common room, a pale boy and another student drawing on it with their fingertips, ferns of ice spreading from each line.
+text: Kael shows you a children's trick from the North: you draw on a frosted window and the frost finishes the drawing for you. {~He draws a line; the frost turns it into a fern.|You draw a circle; the frost turns it into a snowflake the size of your hand.}
+> left: Draw something silly
+  mood +small
+  arcana -tiny
+  say: {~You draw a goat. The frost, after a moment's thought, gives it a magnificent beard. Kael makes a sound you've never heard from him. It's a laugh.|You draw Professor Thorne. The frost gives him icicles for eyebrows. Kael has to sit down.}
+> right: Ask him how it works
+  arcana +small
+  rel kael +tiny
+  say: {~"You don't make it," he says. "You let it. Frost wants to grow. You show it where." He's a better teacher than he thinks.|He explains, slowly, and then guides your hand. The frost follows your finger like a cat. "There," he says. "You're Northern now. A bit."}
+
+# ---------------- Nessa ----------------
+
+@event nessa_interview_prep
+title: Twenty Years
+class: routine
+tone: light
+trigger: social
+actor: nessa
+when: knows(nessa.interview) and rel(nessa) >= 12 and seen(nessa_headmistress_interview) == 0
+weight: 10
+art: feather
+tags: social
+scene: A girl in an untidy office with a long list of questions pinned to a wall, crossing out most of them, another student reading over her shoulder.
+text: Nessa has two hundred questions for the headmistress, pinned to her wall. "Nobody's interviewed her in twenty years," she says. "I'll get one chance. I have to pick the question that matters." She's crossed out a hundred and ninety.
+> left: Help her pick
+  lore +small
+  rel nessa +small
+  say: You go through the last ten together until midnight. The one you pick is very simple: "What do you wish students asked you?" Nessa stares at it. "That's either the best question I've ever asked or the worst," she says. "Good."
+> right: Play the headmistress for practice
+  charm +small
+  rel nessa +small
+  mood -tiny
+  say: You play the headmistress, badly, with a pencil for a wand. Nessa grills you for an hour and makes you cry with laughter twice and nearly cry the other way once. "She'll be harder," she says. "She'll be you, but calmer."
+
+@event nessa_fact_check
+title: Fact-Check
+class: routine
+tone: light
+trigger: social
+actor: nessa
+when: rel(nessa) >= 9 and term
+repeat: 4
+weight: 8
+art: paper
+tags: social study
+scene: A newspaper proof covered in red-ink circles, a girl handing it across a desk to another student with a pencil behind her ear.
+text: Nessa slaps a proof down in front of you. "Fact-check it. I don't trust my quill and I don't trust me." {~It's an article about the history of the castle's founding.|It's a profile of the Duelling Circle's captain.} There are, she warns you, at least three errors, and one of them is planted, to see if you're paying attention.
+> left: Go through it properly
+  challenge research journeyman:
+    win:
+      rel nessa +small
+      lore +small
+      say: {~You find all three, and a fourth she didn't plant. Nessa looks at you with something close to love, the editorial kind. "Staff," she says. "You're staff now."|You find the planted one first, then the others. Nessa writes "GOOD" on your hand in red ink. It takes three days to wash off.}
+    lose:
+      lore +tiny
+      say: {~You find two. The planted one gets past you. Nessa circles it, gleefully, and tells you why it was obvious. You learn more from that than from the article.|You find one, and mark a true fact as wrong. Nessa is delighted: now she has to check it again, and it's still true, and she likes being right twice.}
+> right: Hand it back: "It's fine."
+  mood +tiny
+  rel nessa -tiny
+  say: {~"Nothing's fine," Nessa says. She takes it back and finds all three in five minutes. "Lazy," she says, but she's smiling.|She looks at you over the proof. "That's what my quill says," she says. "I don't trust it either."}
+
+@event nessa_quill_loose
+title: The Quill Gets Loose
+class: routine
+tone: light
+trigger: social
+actor: nessa
+when: knows(nessa.quill) and rel(nessa) >= 9
+weight: 9
+art: feather
+tags: social
+scene: An enchanted quill flying down a castle corridor trailing a long scroll, a girl chasing it with an inkpot, students ducking.
+text: Nessa's quill has escaped. It's loose in the castle, writing news. You've seen three of its headlines on the walls already: "PROFESSOR'S CAT IS SECRETLY A PROFESSOR", "LAKE: TOO WET?", and one about you that isn't true but is, you have to admit, flattering.
+> left: Help her catch it
+  vigor +small
+  health -tiny
+  rel nessa +small
+  say: You corner it in the owlery. It writes "CAUGHT" on your sleeve as you grab it. Nessa stuffs it in her inkpot and screws the lid on. "Thank you," she says, breathless. "It was going to do a horoscope page. Again."
+> right: Leave the headline about you up
+  renown +small
+  rel nessa -tiny
+  say: You leave it up. People read it for a week. Nessa takes it down eventually, with a look. "It made it up," she says. "You know that." You do. It's still a lovely headline.
+
+# ---------------- Bram ----------------
+
+@event bram_portrait
+title: Head Boy, Forty Years Ago
+class: routine
+tone: tense
+trigger: social
+actor: bram
+when: knows(bram.father) and rel(bram) >= 6 and bond(bram) != "rival" and bond(bram) != "nemesis"
+weight: 10
+art: shield
+tags: social
+scene: A row of old portraits of head boys in a dim corridor, a big student in a prefect's sash standing in front of one, not moving.
+text: You find Bram in the corridor of head boys' portraits, in front of one in particular: a big man with Bram's jaw and none of his doubt. "He walks past this every visit," Bram says. "Stops. Looks at it. Then looks at me." He doesn't need to say the rest.
+> left: Say the portrait's a bad likeness
+  rel bram +medium
+  mood -tiny
+  say: "It is," Bram says, surprised into it. "Painter made him look kind." He laughs, short and rough, and it changes his face. "Don't tell anyone I laughed at a portrait."
+> right: Ask what he wants to be
+  rel bram +small
+  lore +tiny
+  say: He's never been asked. "Not that," he says, nodding at the portrait. Then, after a long time: "A teacher. Small school. Somewhere nobody's ever heard of my father." He walks off before you can answer. He looks lighter.
+
+@event bram_owns_up
+title: Bram Owns Up
+class: routine
+tone: tense
+trigger: social
+actor: bram
+when: knows(bram.cheating) and flag(bram_softened) and rel(bram) >= 9
+weight: 10
+art: scales
+tags: social
+scene: A big student in a prefect's sash standing in front of a professor's desk, cap in hand, another student waiting outside the door.
+text: Bram finds you. "That exam," he says. "You saw. You never said." He's holding his sash. "I'm going to tell Thorne. I wanted you to know first. In case you wanted to stop me, I suppose." He doesn't look like he wants to be stopped.
+> left: Go in with him
+  rel bram +large
+  study -tiny
+  say: You stand by the door while he tells Thorne everything. Thorne listens, takes the sash, looks at it for a while, and hands it back. "Resit in a month," he says. "Wear it like you mean it." Bram walks out shaking. "Don't," he says. "Don't make it weird." You don't.
+> right: Tell him it's past
+  rel bram +small
+  alignment -tiny
+  say: "It's done," you say. "Leave it." He hesitates, then puts the sash back on. You can see it sits differently. He doesn't cheat again; you'd bet on it. He doesn't forget, either.
+
+@event bram_become_close
+title: Not Weird
+specializes: soc_become_close
+slot: night
+class: milestone
+tone: warm
+trigger: social
+actor: bram
+weight: 18
+art: shield
+tags: social
+scene: A big student sitting on the stable fence at 3am beside another, a red sash folded in his lap, the hippogriffs asleep behind them.
+text: It's 3am and you can't sleep. Bram is on the stable fence, sash in his lap. "Night rounds," he says, which is a lie; rounds ended at midnight. "Sit if you want. Don't talk if you don't want." You sit. After a while he says, "You're the only one who didn't believe I was him."
+> left: Leave him be
+  rel bram +small
+  say: You sit a while longer and then go. He says goodnight like it's an order. In the morning your demerits for the week have been crossed out, with no explanation.
+> right: Stay until morning
+  bond bram close
+  rel bram +medium
+  mood +medium
+  say: You stay. He talks about his mother, who's kind and doesn't say much, and the dog he had as a boy, and what he's afraid of, which is everything. At sunrise he says, "This is weird." Then: "It's fine. It's fine if it's weird."
+
+# ---------------- Ilse ----------------
+
+@event ilse_frozen_coins
+title: Coins That Freeze
+class: routine
+tone: light
+trigger: social
+actor: ilse
+when: met(ilse) and rel(ilse) >= 3
+weight: 9
+art: snow
+tags: social
+scene: A teashop counter with a coin frozen to the wood, a girl in white furs glaring at it, a teashop owner holding a kettle over it hopefully.
+text: Ilse is at Mabel's counter again, glaring at a coin that has frozen to the wood. Mabel is pouring hot water on it. It isn't working. "It does this," Ilse says, through her teeth. "When I'm cross. I'm cross because it does this."
+> left: Pay, and warm the coin
+  learn ilse.furs
+  gold -tiny
+  rel ilse +small
+  say: You pay. Then you take the frozen coin and carry it in your pocket all afternoon, and give it back to her warm. She looks at it for a long time. "That's stupid," she says. She keeps it, separately from the others.
+> right: Make her laugh until it thaws
+  learn ilse.furs
+  charm +small
+  rel ilse +tiny
+  say: You do Thorne's voice. Then Bram's. On Bram, the coin cracks free of the counter with a pop, and Ilse makes a noise she clearly hadn't planned to make. "Again," she says. "No. Don't. Again."
+
+@event ilse_private_storm
+title: Her Weather
+class: routine
+tone: eerie
+trigger: social
+actor: ilse
+when: met(ilse) and rel(ilse) >= 9
+repeat: 6
+weight: 8
+art: snow
+tags: social
+scene: A girl in white furs walking through the village under a small private snowstorm that follows her, a second student stepping under it with her.
+text: Ilse's private snowstorm follows her about the village. You've learned to read it. {~Today it's thick and sideways, which means stay away.|Today it's three flakes, slow, which means something's wrong and she won't say what.}
+> left: Step under it with her
+  health -tiny
+  rel ilse +small
+  say: {~You walk beside her, inside the storm, getting snowed on. She doesn't say anything. After a street, the snow slows. After two, it stops. "Don't read it," she says. "It's rude." You read it anyway. It says: better.|You walk with her, getting snow down your collar. At the bridge she says, "My brother used to do that," and the three flakes become one, and then none.}
+> right: Wait it out at a distance
+  mood +tiny
+  rel ilse -tiny
+  say: {~You give her room. The storm passes in an hour. She nods to you later across the square, which, for Ilse, is an apology for the weather.|You let her be. Later, a single snowflake lands on your sleeve, perfectly formed, and doesn't melt until you're indoors. You think it's a thank you.}
+
+@event ilse_frost_craft_trade
+title: A Fair Trade
+class: routine
+tone: light
+trigger: social
+actor: ilse
+when: knows(ilse.frost_craft) and rel(ilse) >= 12
+weight: 9
+art: snow
+tags: social magic
+scene: A frozen village pond, a girl in white furs teaching another student to throw a ring of frost across the ice, both breathing clouds.
+text: "Teach me something," Ilse says, at the pond. "Something of yours. I taught you frost. It's your turn. Something that isn't useful." She seems to think that's the hardest kind.
+> left: Teach her a card game
+  charm +tiny
+  rel ilse +medium
+  mood -tiny
+  say: You teach her a card game from home. She's terrible, and then, suddenly, ruthless. She beats you six times running on the ice and laughs out loud, once, before she catches herself. "That's not useful," she says. "Good."
+> right: Teach her to skip stones
+  vigor +tiny
+  rel ilse +small
+  say: There's no open water, so you skip stones across the ice. Hers go further. Of course they do. She counts every bounce out loud, in Northern, and makes you count yours too.
+
+@event ilse_become_close
+title: Not a Trick
+specializes: soc_become_close
+slot: night
+class: milestone
+tone: warm
+trigger: social
+actor: ilse
+weight: 18
+art: snow
+tags: social
+scene: A girl in white furs and a student sitting on the frozen lakeshore at 3am under a sky full of stars, snow falling very gently around only the two of them.
+text: It's 3am. You walk down to the shore, and Ilse is already there, on the ice, under her own small snowfall. "You keep being kind," she says, not looking at you. "I keep waiting to find out what it's for."
+> left: Tell her it isn't for anything, and go
+  rel ilse +small
+  say: "Everything's for something," she says. But she lets you go without an argument, which is new. In the morning there's a small perfect snowflake on your windowsill that doesn't melt.
+> right: Stay, and let her wait
+  bond ilse close
+  rel ilse +medium
+  mood +medium
+  say: You stay. Neither of you says much. Around dawn the snow around her changes: it starts falling on you too, gently, the same as on her. She notices. "Oh," she says, very quietly, as if she's just learned a word. "Oh. It isn't a trick."

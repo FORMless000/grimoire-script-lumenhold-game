@@ -59,6 +59,10 @@ export const AI_PRESETS={
 export const LEARN_XP={medium:6,large:10,huge:16};
 export const cap=(x,lo,hi)=>Math.max(lo,Math.min(hi,x));
 const spell=(name,source,skills,cost,extra={})=>({name,source,skills,cost,levels:cost.length,group:cost.length===3?'course':'other',...extra});
+// A creature's own name for an existing rule (world expansion 1): `as` the spell whose rule it plays, at its own Mana cost,
+// told with its own flavour. A kit that lists it learns the base spell (generateLoadout), with the cost difference as a
+// modifier and the name as a label; the core never sees the alias.
+const alias=(name,as,cost,extra={})=>({name,source:'Creature',skills:[],cost,levels:1,group:'creature',as,...extra});
 export const SPELLS={
  flame:spell('Flame','Evocation',['arcana'],[9,8,7],{verb:'Burn',damage:[18,19,20],negotiation:'Fails the meeting.'}),
  foresight:spell('Foresight','Astromancy',['lore'],[7,6,5],{verb:'Foresee',duration:[3,4,5],negotiation:'Rolling next-request reveal for 3/4/5 turns.'}),
@@ -97,8 +101,50 @@ export const SPELLS={
  eclipse:spell('Eclipse','Forbidden pool',['arcana'],[6],{verb:'Convert',group:'forbidden',provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  heartprice:spell('Heartprice','Forbidden pool',['vigor'],[0],{verb:'Sacrifice',group:'forbidden',provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  // Creature attacks (F5.9): special foes only (SPECIAL_LOADOUTS), never a player's or a class's kit.
- gore:spell('Gore','Creature',['vigor'],[6],{verb:'Gore',damage:[15],physical:true,group:'creature',negotiation:'None.'})
+ gore:spell('Gore','Creature',['vigor'],[6],{verb:'Gore',damage:[15],physical:true,group:'creature',negotiation:'None.'}),
+ // The Whisperwood (world expansion 1). New rules by property (rust/core rules.rs): bind (no Shadowstep or Brace next
+ // exchange), drain (Mana taken; drainKeep: as the creature's own flux), poison ([per exchange, exchanges]; Distil clears
+ // it), hits (the damage lands as that many small hits; only the first meets Guard and Brace).
+ nip:spell('Nip','Creature',['guile'],[2],{verb:'Nip',damage:[6],physical:true,group:'creature',negotiation:'None.'}),
+ filch:spell('Filch','Creature',['guile'],[3],{verb:'Filch',drain:5,drainKeep:true,group:'creature',negotiation:'None.'}),
+ roar:spell('Roar','Creature',['vigor'],[4],{verb:'Roar',drain:7,group:'creature',negotiation:'None.'}),
+ swarm:spell('Swarm','Creature',['guile'],[4],{verb:'Swarm',damage:[15],hits:3,physical:true,group:'creature',negotiation:'None.'}),
+ root:spell('Root','Creature',['vigor'],[5],{verb:'Root',bind:1,group:'creature',negotiation:'None.'}),
+ web:spell('Web','Creature',['guile'],[6],{verb:'Web',bind:2,group:'creature',negotiation:'None.'}),
+ venom:spell('Venom','Creature',['alchemy'],[6],{verb:'Bite',poison:[4,3],group:'creature',negotiation:'None.'}),
+ // Aliases: an existing rule under a creature's name and cost. Channels (Starlight's) are the big telegraphed blows: the
+ // wind-up shows on the creature before it lands.
+ skitter:alias('Skitter','shadowstep',[3]),
+ burrow:alias('Burrow','brace',[4]),
+ hide:alias('Hide','ward',[4]),
+ bark:alias('Bark','ward',[3]),
+ carapace:alias('Carapace','ward',[3]),
+ maul:alias('Maul','starlight',[6],{telegraph:true}),
+ charge:alias('Charge','starlight',[6],{telegraph:true}),
+ slow_fall:alias('Slow Fall','starlight',[8],{telegraph:true}),
+ the_long_wait:alias('The Long Wait','starlight',[10],{telegraph:true}),
+ brood:alias('Brood','bramble',[8])
 };
+// Creature races (world expansion 1): HP and Mana capacity multipliers, and no healing of any kind. Humans have no race:
+// they keep 1× and may heal. A special loadout may set its own `hp` / `mana` within its race's band.
+export const RACES={critter:{hp:.5,mana:.6},beast:{hp:1,mana:1},monster:{hp:1.75,mana:.6},boss:{hp:3,mana:1.5}};
+// The spells a worn effect's group names (world expansion 1, content/world/items.grim): the core reads per-spell numbers.
+export const SPELL_GROUPS={
+ forbidden:id=>SPELLS[id].group==='forbidden',hidden:id=>SPELLS[id].group==='hidden',creature:id=>SPELLS[id].group==='creature',
+ umbral:id=>/Umbral/.test(SPELLS[id].source),any:()=>true
+};
+const groupSpells=g=>SPELLS[g]&&!SPELLS[g].as?[g]:SPELL_GROUPS[g]?Object.keys(SPELLS).filter(id=>!SPELLS[id].as&&SPELL_GROUPS[g](id)):[];
+// A kit's modifiers in the main game's form (Engine#wornMods, a foe's `mods`) → the core's per-spell table, against an opponent
+// (`nonhuman` damage reduction counts only against a creature). {hp, mana} stay for createState.
+export function expandMods(mods={},{opponentCreature=false}={}){
+ const out={hp:mods.hp||0,mana:mods.mana||0,cost:{},onCast:{},onDefend:mods.onDefend||0,taken:{},takenAll:0};
+ const add=(o,id,n)=>{o[id]=(o[id]||0)+n;};
+ for(const [g,n]of Object.entries(mods.cost||{}))for(const id of groupSpells(g))add(out.cost,id,n);
+ for(const [g,n]of Object.entries(mods.onCast||{}))for(const id of groupSpells(g))add(out.onCast,id,n);
+ for(const t of mods.taken||[])for(const g of t.from){if(g==='nonhuman'){if(opponentCreature)out.takenAll+=t.n;}else for(const id of groupSpells(g))add(out.taken,id,t.n);}
+ for(const [id,n]of Object.entries(mods.costDelta||{}))add(out.cost,id,n);   // aliases' own costs (generateLoadout)
+ return out;
+}
 for(const s of Object.values(SPELLS)){
  if(s.group==='course')s.baseline=true;
  if(s.group==='forbidden')s.alignment='forbidden';
@@ -196,6 +242,12 @@ export function generateLoadout(loadout,level,access='kit',options={}){
  if(LOADOUT_SKILLS.some(k=>!Number.isFinite(skills[k])||skills[k]<1||skills[k]>100)||Object.keys(skills).length!==6)throw Error('Six skill values in 1–100 required');
  const unlockLevels=def.kit?{...def.kit}:spellUnlocks(def,!!named,growing,year);
  const ids=access==='all'?Object.keys(SPELLS).filter(id=>SPELLS[id].group!=='creature'):Object.keys(unlockLevels).filter(id=>unlockLevels[id]<=level),r=courseRank(level);
- const spells=Object.fromEntries(ids.map(id=>[id,SPELLS[id].levels===3?Math.min(3,r+Number(def.prodigy===id)):1]));
- return {loadout,level,...(growing?{year}:{}),progression:'level-gated',unlockLevels,underground:!!def.underground,skills,spells,capacity:manaCapacity(skills),seed,draws,...(!canon&&named?{provisionalSkills:true}:{})};
+ // A creature's aliases (world expansion 1) learn their base rule, labelled with the creature's name, at the alias's cost.
+ const labels={},costDelta={};
+ const spells=Object.fromEntries(ids.map(id=>{const a=SPELLS[id].as;if(a){labels[a]=id;costDelta[a]=SPELLS[id].cost[0]-SPELLS[a].cost[0];return [a,1];}return [id,SPELLS[id].levels===3?Math.min(3,r+Number(def.prodigy===id)):1];}));
+ // A creature race scales HP and Mana and forbids healing; a special foe may carry kit modifiers (`mods`, the worn-kit form).
+ const race=def.race?{...RACES[def.race],...(def.hp?{hp:def.hp}:{}),...(def.mana?{mana:def.mana}:{})}:null;
+ const mods=def.mods||Object.keys(costDelta).length?{...(def.mods||{}),costDelta}:null;
+ return {loadout,level,...(growing?{year}:{}),progression:'level-gated',unlockLevels,underground:!!def.underground,skills,spells,capacity:Math.round(manaCapacity(skills)*(race?race.mana:1)),seed,draws,...(!canon&&named?{provisionalSkills:true}:{}),
+  ...(race?{race:def.race,hpScale:race.hp,noHeal:true}:{}),...(mods?{mods}:{}),...(Object.keys(labels).length?{labels}:{})};
 }

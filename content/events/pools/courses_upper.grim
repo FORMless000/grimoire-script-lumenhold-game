@@ -249,7 +249,7 @@ text: {Alchemy II hands out an unlabelled vial each, and an hour to say what's i
 title: The Cracked Tray
 track: alchemy
 level: 2
-lesson: infirmary
+lesson: alchemy_lab
 class: routine
 tone: warm
 repeat: 5
@@ -276,7 +276,7 @@ text: {Mend at Alchemy II. Sister Amaranth sets out a tray of cracked things, cu
 title: Lake Fever Season
 track: alchemy
 level: 3
-lesson: infirmary
+lesson: alchemy_lab
 class: routine
 tone: warm
 repeat: 5
@@ -478,7 +478,7 @@ tags: class nature
 scene: A student in a stable loft with a young owl on their arm, pointing out of a high window toward a distant tower.
 text: {Beast-speech at Beastcraft II. The young owls must learn the post routes. Brask hands you one and says, "Explain the castle to it."|A new young owl, and the same castle to explain.|Another owl. You've got a speech now, and a map scratched on a beam.} {Your owl wants to know why there are so many towers.|Your owl has strong opinions about the library.|Your owl keeps falling asleep, standing up.}
 > left: Explain it in owl
-  challenge negotiate using vigor standard:
+  challenge soothe using vigor standard:
     win:
       vigor +small
       study beastcraft +tiny
@@ -505,7 +505,7 @@ tags: class nature danger
 scene: A student crouched beside a hippogriff in a stall, a hoof trimming knife in hand, the hippogriff looking down with one sceptical eye.
 text: {Advanced Beastcraft does the work nobody else wants. Today it's hooves. A hippogriff's need trimming each month, and the hippogriff disagrees.|Hoof day. The stall is the same; the hippogriff's opinion is too.|Hooves. You go in with a bucket of apples and a plan.} {Today's hippogriff is grey and patient.|Today's is young and very sure of itself.|Today's is old and wants to tell you about it.}
 > left: Talk it into lifting a foot
-  challenge negotiate using vigor standard+1 wild:
+  challenge soothe using vigor standard+1 wild:
     win:
       vigor +small
       study beastcraft +tiny
@@ -538,7 +538,7 @@ text: {Advanced students take turns sitting up in the stables when a creature is
   mood -tiny
   say: {You don't sleep, and by dawn it's breathing easier. Brask finds you asleep in the straw and leaves you there.|You watch it all night, changing the water and the straw. In the morning it eats, and so do you, enormously.|You sit up with the hippogriff while it groans about its mistake. By dawn it's eating again, and you're asleep against its side.}
 > right: Ask it where it hurts
-  challenge negotiate using vigor standard+1:
+  challenge soothe using vigor standard+1:
     win:
       vigor +small
       say: {It tells you, in its own way, exactly where it hurts. You write it on Brask's list and both of you sleep.|It points with its whole body. You bring the right tonic and it drops off before the lantern does.|It tells you exactly what it ate, with some pride. You fetch the purge and it forgives you by morning.}

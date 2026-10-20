@@ -390,6 +390,15 @@ text: {Alchemy I is mostly stirring, and the stirring is counted aloud by the wh
       mood -small
       health -tiny
       say: {You watch the colour too closely and miss it changing. The fumes make your eyes water.|Your draught turns a colour the lecturer has never seen. It's not a good sign.|You watch the colour and miss the count changing. Your draught is right for a different recipe.}
+> up[item:measuring_spoon]: Measure twice with Pell's spoon
+  challenge brew standard-1 steady:
+    win:
+      alchemy +small
+      say: {You measure every reagent twice with the worn brass spoon. The tonic turns blue on the fortieth stir, exactly.|The spoon makes you slow, and slow makes you right. The lecturer holds your vial up to the window.|Pell's spoon has never been wrong, and today, neither are you.}
+    lose:
+      mood -tiny
+      health -tiny
+      say: {You measure twice and stir once too many. The spoon was right; you weren't.|The measures are perfect. Your stirring arm gives out at sixty.|You get every measure right and the fumes wrong, and your eyes water all afternoon.}
 
 @event alch_chopping_board
 title: Prep Work
@@ -417,7 +426,7 @@ text: {&Half of alchemy, says the lecturer, is cutting things up correctly. The 
 title: Bandage Round
 track: alchemy
 level: 1
-lesson: infirmary
+lesson: alchemy_lab
 class: routine
 tone: warm
 repeat: 5
@@ -524,7 +533,7 @@ text: {Advanced Alchemy handles reagents that react to being looked at the wrong
 title: A Remedy of Your Own
 track: alchemy
 level: 3
-lesson: infirmary
+lesson: alchemy_lab
 class: routine
 tone: warm
 repeat: 5

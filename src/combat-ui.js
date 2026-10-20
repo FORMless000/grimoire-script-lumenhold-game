@@ -12,6 +12,10 @@
  *                  turn (combat/web/analysis.mjs, in its own worker): an eval bar, each action's score, the best move outlined
  *                  and its top lines. engineShown is the toggle's last state; onEngineShown(on) when it changes.
  *                  engineBudget: its time per turn in ms (Infinity: it searches until the turn ends); onEngineBudget(ms).
+ *     kit       (world expansion 1) the worn kit, changeable before the first exchange: {slots: [{slot, worn, items: [{id, name}]}],
+ *               equip(slot, id) → the player's new modifiers}; the fight is set up again with them
+ *   A card's fight may be a lesson (EVENTS `tutorial: [keys]`: a coach mark per exchange, "Skip the lesson" settles as a
+ *   draw) or carry nothing at stake (`stakes: none`: "Walk away" settles as a loss); either way the fight changes no bar.
  *   CombatUI.autoResolve(request, content)  a fight played by two AIs at once (a safety net; never the normal path)
  * Look: src/combat.css. Text: the UI's fight.* strings (src/i18n.js); the fight's own lines come from the minigame.
  */
@@ -114,7 +118,12 @@
       return (C_.SPELL_ICONS || {})[id] || C_.ACTION_ICONS[key] || (C_.SPELLS[id] && C_.SPELLS[id].physical ? C_.ACTION_ICONS.strike : id === 'frozen' ? '<b class="glyph">❄</b>' : id === 'cancel' ? '<b class="glyph">∅</b>' : QUESTION);
     }
     const label = (id) => C().label(id);
-    const actionName = (id, side) => (['hold', 'release'].includes(id) ? label(id) + ' ' + label((game.actors[side].channel && game.actors[side].channel.id) || '') : label(id));
+    // A creature's own name for a base rule (kit.labels: {shadowstep: 'skitter'}, world expansion 1).
+    const labelsOf = (side) => (game.actors[side].kit && game.actors[side].kit.labels) || null;
+    const sideLabel = (id, side) => { const l = labelsOf(side); return label(l && l[id] ? l[id] : id); };
+    const actionName = (id, side) => (['hold', 'release'].includes(id) ? label(id) + ' ' + sideLabel((game.actors[side].channel && game.actors[side].channel.id) || '', side) : sideLabel(id, side));
+    // A telegraphed channel (a creature's maul, charge, …): its wind-up is announced while it's held.
+    const telegraphed = (side) => { const ch = game.actors[side].channel, l = labelsOf(side), al = ch && l && l[ch.id]; return !!(al && C().SPELLS[al] && C().SPELLS[al].telegraph); };
     const describe = (side, id) => { try { return C().describe(game, side, id); } catch (e) { return ''; } };
     // The skill a spell scales with (feedback 2026-10-19), under its description; nothing for an action that isn't a spell.
     const scales = (id) => {
@@ -201,10 +210,12 @@
       const C_ = C(), opponent = game.pending[1], forced = C_.isCompelled(game, 1) ? (opponent || C_.legalActions(game, 1)[0]) : null, shown = forced || opponent;
       if (busy) return '<div class="intent wait"><span class="tele-icon hidden-move">' + QUESTION + '</span><div class="it"><b>' + esc(tr('choosing', { name: nameOf(1) })) + '</b><small>' + esc(tr('choosingHint')) + '</small></div></div>';
       if (shown) {
-        const b = briefOf(1, shown), fl = forced ? C_.compelledLine(label(shown), { names, side: 1 }) : C_.flavorLine(shown, { channel: game.actors[1].channel && game.actors[1].channel.id, round: game.round, names, side: 1 });
+        const b = briefOf(1, shown), fl = forced ? C_.compelledLine(sideLabel(shown, 1), { names, side: 1 }) : C_.flavorLine(shown, { channel: game.actors[1].channel && game.actors[1].channel.id, round: game.round, names, side: 1, labels: labelsOf(1) });
         return '<div class="intent shown' + (forced ? ' forced' : '') + '" data-sheet="intent" role="button" tabindex="0" title="' + esc(tr('theirMove')) + '"><span class="tele-icon">' + actionIcon(shown, 1) + '</span><div class="it"><b>' +
           esc(forced ? tr('compelled') : tr('theyCommit')) + ' ' + esc(actionName(shown, 1)) + ' ' + effHtml(b) + '</b>' + (fl ? '<small class="flavor">' + esc(fl) + '</small>' : '') + '</div><span class="it-more">' + EYE + '</span></div>';
       }
+      // A wind-up in the open: the creature is holding a big blow, and it lands when released.
+      if (telegraphed(1)) return '<div class="intent hidden windup"><span class="tele-icon">' + actionIcon(game.actors[1].channel.id, 1) + '</span><div class="it"><b>' + esc(tr('windUp', { name: nameOf(1), move: sideLabel(game.actors[1].channel.id, 1) })) + '</b><small>' + esc(tr('windUpHint')) + '</small></div></div>';
       return '<div class="intent hidden"><span class="tele-icon hidden-move">' + QUESTION + '</span><div class="it"><b>' + esc(tr('youFirst')) + '</b><small>' + esc(tr('youFirstHint')) + '</small></div></div>';
     }
 
@@ -221,8 +232,8 @@
           rows.push({ side: on ? 1 - side : side, icon: EFFECT_ICON[k] || k, name: k === 'compelled' ? label('compel') : label(k), on: on ? side : null, from: or(e.from, or(e.born, r)), until: or(e.until, Infinity),
             note: k === 'lodestar' ? tr('shieldNote', { n: Math.round(e.value) }) : k === 'tailwind' ? '+' + Math.round(e.value) : '' });
         }
-        if (a.channel) rows.push({ side, icon: a.channel.id, name: label(a.channel.id), from: or(castAt(side, a.channel.id), r), until: Infinity, note: tr('holds', { n: a.channel.holds }) + (a.channel.bank ? ' · ' + tr('banked', { n: Math.round(a.channel.bank) }) : '') });
-        for (const c of a.constructs) rows.push({ side, icon: c.id, name: label(c.id), from: or(castAt(side, c.id), r), until: c.expires, note: tr('hpOf', { left: Math.round(Math.max(0, c.threshold - c.taken)), of: Math.round(c.threshold) }) });
+        if (a.channel) rows.push({ side, icon: a.channel.id, name: sideLabel(a.channel.id, side), from: or(castAt(side, a.channel.id), r), until: Infinity, note: tr('holds', { n: a.channel.holds }) + (a.channel.bank ? ' · ' + tr('banked', { n: Math.round(a.channel.bank) }) : '') + (telegraphed(side) ? ' · ' + tr('windUpNote') : '') });
+        for (const c of a.constructs) rows.push({ side, icon: c.id, name: sideLabel(c.id, side), from: or(castAt(side, c.id), r), until: c.expires, note: tr('hpOf', { left: Math.round(Math.max(0, c.threshold - c.taken)), of: Math.round(c.threshold) }) });
         if (game.earlyCommit[side] > 0) rows.push({ side: 1 - side, on: side, icon: 'foresight', name: label('foresight'), from: or(castAt(1 - side, 'foresight'), r - 1) + 1, until: r + game.earlyCommit[side] - 1, note: side ? tr('theyFirst') : tr('youFirst') });
         if (a.freezeUntil >= r) rows.push({ side, icon: 'frozen', name: tr('frozenName'), from: a.freezeUntil, until: a.freezeUntil, note: '' });
         if (a.rimeReady) rows.push({ side, icon: 'rime', name: tr('rimeReady'), from: or(castAt(side, 'rime'), r), until: Infinity, note: '' });
@@ -363,6 +374,8 @@
     function settingLine() {
       const C_ = C(), st = fight.setting || {}, rb = (C_.CONTEXTS && C_.CONTEXTS[st.context]) || {}, free = ((C_.COMBAT_TUNING || {}).settle || {}).healthFreeAbove;
       const pct = (x) => Math.round((x || 0) * 100);
+      // A lesson or a fight with nothing at stake (world expansion 1): nothing is lost, whatever the context's rebates.
+      if (st.tutorial || st.stakes === 'none') return '<p class="fight-setting"><span><b>' + esc(tr(st.tutorial ? 'lessonTitle' : 'freeTitle')) + '</b> · ' + esc(tr('nothingAtStake')) + '</span></p>';
       const parts = ['<b>' + esc(tr('context.' + st.context)) + '</b>'];
       if (free) parts.push(esc(tr('healthBelow', { n: free })));
       if (rb.health === rb.mana) { if (rb.health) parts.push(esc(tr('rebateBoth', { pct: pct(rb.health) }))); }
@@ -379,6 +392,45 @@
       if (p.health < full) lines.push(tr('unfitHealth', { n: Math.round(p.health), full }));
       if (p.mana < p.maxMana) lines.push(tr('unfitMana', { n: Math.round(p.mana), max: Math.round(p.maxMana) }));
       return lines.length ? '<p class="fight-note">' + esc(lines.join(' ')) + '</p>' : '';
+    }
+    // A lesson (EVENTS `tutorial`, world expansion 1): one coach mark per exchange, the last staying up.
+    function coach() {
+      const keys = (fight.setting && fight.setting.tutorial) || [];
+      if (!keys.length || game.result) return '';
+      const k = keys[Math.min(history.length, keys.length - 1)];
+      return '<div class="coach" role="note"><b>' + esc(tr('coachTitle')) + '</b> ' + esc(tr('coach.' + k)) + '</div>';
+    }
+    // A fight with nothing at stake can be left: a lesson is skipped (a draw), a bonus challenge walked away from (a loss).
+    function leaveButton() {
+      const st = fight.setting || {};
+      if (game.result || !(st.tutorial || st.stakes === 'none')) return '';
+      return '<button class="fl-leave" data-leave="' + (st.tutorial ? 'lesson' : 'walk') + '">' + esc(tr(st.tutorial ? 'skipLesson' : 'walkAway')) + '</button>';
+    }
+    function leave(kind) {
+      if (done || game.result) return;
+      C().concede(game, 0);
+      done = true;
+      const res = B().fightResult(fight);
+      if (kind === 'lesson') { res.outcome = 'draw'; res.reason = 'conceded'; }
+      close(); opts.onDone(res);
+    }
+    // The kit (world expansion 1): changeable on the opening screen, until the first exchange; then it's locked.
+    function kitPicker() {
+      const k = opts.kit;
+      const choice = k && k.slots ? k.slots.filter((x) => x.items.length > 1) : [];
+      if (!choice.length || history.length || game.result || moves) return '';
+      return '<div class="fight-kit"><b>' + esc(tr('kit')) + '</b>' + choice.map((x) => '<label><small>' + esc(opts.t('kit.slot.' + x.slot)) + '</small><select data-slot="' + esc(x.slot) + '">' +
+        x.items.map((it) => '<option value="' + esc(it.id) + '"' + (it.id === x.worn ? ' selected' : '') + '>' + esc(it.name) + '</option>').join('') + '</select></label>').join('') + '</div>';
+    }
+    function reKit(slot, id) {
+      const k = opts.kit; if (!k || moves) return;
+      const mods = k.equip(slot, id);
+      for (const x of k.slots) if (x.slot === slot) x.worn = id;
+      const req = Object.assign({}, fight.request, { player: Object.assign({}, fight.request.player, { mods }) });
+      fight = B().createFight(req, { content, difficulty: opts.difficulty || 'easy', foeName });
+      game = fight.state; names = fight.names; bars = {}; seen = {};
+      if (CombatUI.foeAI) game.config.ai[1] = Object.assign({}, game.config.ai[1], CombatUI.foeAI);
+      render(); pump();
     }
     function result() {
       const r = game.result, won = r.winner === 0, lost = r.winner === 1, res = B().fightResult(fight);
@@ -397,10 +449,10 @@
       if (closed || !game) return;
       snapshotBars();
       const sc = $('.tk-scroll'), kept = sc ? sc.scrollLeft : undefined;
-      $('.fight-wrap').innerHTML = '<section class="fight">' + settingLine() + unfitNote() + '<div class="fighters' + (engineOn ? ' with-eval' : '') + '">' + (engineOn ? '<div class="evalbar" title="' + esc(tr('evalBar')) + '"></div>' : '') + fighter(0) + fighter(1) + '</div><div class="fight-body"><div class="fight-main">' + track() +
+      $('.fight-wrap').innerHTML = '<section class="fight">' + settingLine() + unfitNote() + kitPicker() + coach() + '<div class="fighters' + (engineOn ? ' with-eval' : '') + '">' + (engineOn ? '<div class="evalbar" title="' + esc(tr('evalBar')) + '"></div>' : '') + fighter(0) + fighter(1) + '</div><div class="fight-body"><div class="fight-main">' + track() +
         (opts.engineHelp ? '<button class="eng-toggle" aria-pressed="' + engineOn + '">' + esc(tr('engine')) + '</button>' + (engineOn ? '<div class="engine"><div class="engine-top"><b class="engine-head"></b><select class="eng-budget" aria-label="' + esc(tr('engineTime')) + '">' +
           ENGINE_BUDGETS.map((ms) => '<option value="' + ms + '"' + (ms === engineBudget ? ' selected' : '') + '>' + (ms === Infinity ? '∞' : esc(tr('seconds', { n: ms / 1000 }))) + '</option>').join('') + '</select></div><div class="engine-lines"></div><p class="fine">' + esc(tr('engineNote')) + '</p></div>' : '') : '') + '</div>' +
-        '<div class="controls">' + intent() + (game.result ? result() : actions()) + '</div></div></section>';
+        '<div class="controls">' + intent() + (game.result ? result() : actions()) + leaveButton() + '</div></div></section>';
       const sc2 = $('.tk-scroll'); if (sc2) sc2.scrollLeft = focusEx !== null && kept !== undefined ? kept : sc2.scrollWidth;
       animateBars(); renderSheet();
       for (const b of layer.querySelectorAll('.fight [data-sheet]')) {
@@ -411,6 +463,8 @@
       for (const b of layer.querySelectorAll('[data-action]')) b.onclick = () => { const id = b.dataset.action; if (selected === id) commit(id); else selectAction(id); };
       const cb = $('.fl-commit'); if (cb) cb.onclick = () => commit();
       const d = $('#fightDone'); if (d) { d.onclick = finish; d.focus({ preventScroll: true }); }
+      const lv = $('[data-leave]'); if (lv) lv.onclick = () => leave(lv.dataset.leave);
+      for (const sel of layer.querySelectorAll('.fight-kit select')) sel.onchange = () => reKit(sel.dataset.slot, sel.value);
       const et = $('.eng-toggle'); if (et) et.onclick = () => setEngine(!engineOn);
       const eb = $('.eng-budget'); if (eb) eb.onchange = () => { engineBudget = Number(eb.value); if (opts.onEngineBudget) opts.onEngineBudget(engineBudget); analysisFor = -1; analysis = null; requestAnalysis(); paintEngine(); };
       requestAnalysis(); paintEngine();

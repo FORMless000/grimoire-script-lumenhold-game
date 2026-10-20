@@ -22,6 +22,13 @@ weights: health 1 mood 1 gold 0.5 renown 0.8 mana 0.4 alignment 0 xp 1.5 rel 0.6
 # +15). Entering costs mana.
 combat: arcana 1 vigor 1 guile 0.5 condition 0.2 spells 0.75
 combat_cost: small
+# The negotiation stub (E8): until the minigame, a negotiation reads charm, lore and guile (weighted; `using` doubles one),
+# plus mood and renown × their change since the run's start (as % of max). Known spells of those skills add the usual
+# spell bonus (spell_check).
+negotiate: charm 1 lore 1 guile 1 mood 0.15 renown 0.15
+# A tonic (world expansion 1, K3): what a `boost:` state adds to the plain checks it names: one rung, about 8 points of odds
+# on a normal check. Tonics share `group: tonic`, so one holds at a time; fights and negotiations never read it.
+tonic: 4
 # How far one skill point moves a check's odds (M14): `wild` checks swing whatever your skill; `steady` ones follow it.
 swing: normal 2.5 wild 1.2 steady 4
 # A shift's pay (M10): `wage` in a job's cards pays the job's `pay:` at your rank × this share.
@@ -123,6 +130,19 @@ do:
   gold +medium
   mood -small
   health -tiny
+
+@preset price_dear
+desc: A dear price (world expansion 1, K3): what a shop asks for a special piece, 90 crowns.
+do:
+  gold -huge
+  gold -large
+
+@preset price_fortune
+desc: A small fortune, 150 crowns: what the rarest pieces cost.
+do:
+  gold -huge
+  gold -huge
+  gold -large
 
 @preset splurge
 desc: Spending to feel better.

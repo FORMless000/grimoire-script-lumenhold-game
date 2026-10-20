@@ -1,0 +1,153 @@
+# check → challenge: review list (migration 0007)
+
+For each: does the kind fit the scene (the chip shows it)? Is there a middle outcome worth a `partial:`?
+**kind?** marks guesses (feat, spell, research); **dc used** marks DCs that depended on the character, flags or other state (keep that preparation: a `vs`, an `if` around tiers, or a better tier).
+
+- [ ] `winter_trials` content/events/calendar.grim:233 — `check lore 12 + year * 8` → `challenge exam medium:` (turn ~24, E 30, odds at E 56% → 50%)
+- [ ] `winter_trials` content/events/calendar.grim:242 — `check arcana 12 + year * 8` → `challenge spell medium:` (turn ~24, E 30, odds at E 56% → 50%) **kind?**
+- [ ] `midwinter_ball` content/events/calendar.grim:265 — `check charm 20 - spark(lyra) / 4` → `challenge negotiate easy:` (turn ~22, E 29, odds at E 77% → 68%) **dc used 20 - spark(lyra) / 4**
+- [ ] `spring_tournament` content/events/calendar.grim:348 — `check vigor 15 + year * 6` → `challenge feat medium:` (turn ~25, E 31, odds at E 44% → 50%) **kind?**
+- [ ] `tournament_semifinal` content/events/calendar.grim:366 — `check arcana 20 + year * 6` → `challenge spell hard:` (turn ~25, E 31, odds at E 29% → 30%) **kind?**
+- [ ] `tournament_semifinal` content/events/calendar.grim:375 — `check guile 18 + year * 6` → `challenge deceive hard:` (turn ~25, E 31, odds at E 35% → 30%)
+- [ ] `tournament_final` content/events/calendar.grim:395 — `check arcana 28 + year * 6` → `challenge spell heroic:` (turn ~25, E 31, odds at E 5% → 10%) **kind?**
+- [ ] `grand_exams` content/events/calendar.grim:427 — `check arcana 15 + year * 10` → `challenge spell hard:` (turn ~24, E 30, odds at E 35% → 30%) **kind?**
+- [ ] `grand_exams` content/events/calendar.grim:436 — `check lore 15 + year * 10` → `challenge exam hard:` (turn ~24, E 30, odds at E 35% → 30%)
+- [ ] `starfall` content/events/calendar.grim:538 — `check vigor 20` → `challenge feat trivial:` (turn ~23, E 30, odds at E 80% → 88%) **kind?**
+- [ ] `hs_founders_records` content/events/chain_hollowstar.grim:67 — `check lore 18` → `challenge research trivial:` (turn ~23, E 30, odds at E 86% → 88%) **kind?**
+- [ ] `hs_seventh_tower` content/events/chain_hollowstar.grim:151 — `check guile 18` → `challenge deceive trivial:` (turn ~35, E 43, odds at E 95% → 88%)
+- [ ] `hs_seventh_tower` content/events/chain_hollowstar.grim:160 — `check arcana 22` → `challenge spell trivial:` (turn ~35, E 43, odds at E 95% → 88%) **kind?**
+- [ ] `hs_beneath` content/events/chain_hollowstar.grim:224 — `check arcana 30 - (flag(kael_ally) * 8) - (flag(warden_trial) * 6) - (flag(star_key) * 6)` → `challenge spell easy:` (turn ~33, E 39, odds at E 77% → 68%) **kind?, dc used 30 - (flag(kael_ally) * 8) - (flag(warden_trial) * 6) - (flag(star_key) * 6)**
+- [ ] `hs_kael_sister` content/events/chain_hollowstar.grim:294 — `check charm 22` → `challenge negotiate trivial:` (turn ~39, E 45, odds at E 95% → 88%)
+- [ ] `ilse_grey_returns` content/events/chain_ilse.grim:63 — `check arcana 26` → `challenge spell trivial:` (turn ~30, E 37, odds at E 83% → 88%) **kind?**
+- [ ] `ilse_kael_reunion` content/events/chain_ilse.grim:99 — `check charm 20` → `challenge negotiate trivial:` (turn ~24, E 30, odds at E 80% → 88%)
+- [ ] `forbidden_section_1` content/events/chains_minor.grim:25 — `check guile 14` → `challenge deceive trivial:` (turn ~25, E 31, odds at E 95% → 88%)
+- [ ] `curse_cure_2` content/events/chains_minor.grim:111 — `check guile 16` → `challenge deceive trivial:` (turn ~28, E 36, odds at E 95% → 88%)
+- [ ] `curse_cure_2` content/events/chains_minor.grim:120 — `check vigor 18` → `challenge feat trivial:` (turn ~28, E 36, odds at E 95% → 88%) **kind?**
+- [ ] `grisk_favour` content/events/chains_minor.grim:164 — `check guile 18` → `challenge deceive trivial:` (turn ~30, E 37, odds at E 95% → 88%)
+- [ ] `grisk_smuggling` content/events/chains_minor.grim:188 — `check guile 16` → `challenge deceive trivial:` (turn ~39, E 45, odds at E 95% → 88%)
+- [ ] `fox_bond` content/events/chains_minor.grim:244 — `check guile 12` → `challenge deceive trivial:` (turn ~26, E 33, odds at E 95% → 88%)
+- [ ] `pyro_candle` content/events/classes.grim:18 — `check arcana 10` → `challenge spell easy:` (turn ~8, E 14, odds at E 62% → 68%) **kind?**
+- [ ] `pyro_candle` content/events/classes.grim:26 — `check arcana 18` → `challenge spell hard:` (turn ~8, E 14, odds at E 38% → 30%) **kind?**
+- [ ] `pyro_lyra_spar` content/events/classes.grim:68 — `check arcana 20` → `challenge spell easy:` (turn ~19, E 25, odds at E 65% → 68%) **kind?**
+- [ ] `tide_lake_lesson` content/events/classes.grim:90 — `check arcana 14` → `challenge spell easy:` (turn ~15, E 21, odds at E 71% → 68%) **kind?**
+- [ ] `tide_drowned_bell` content/events/classes.grim:138 — `check vigor 16` → `challenge feat medium:` (turn ~11, E 18, odds at E 56% → 50%) **kind?**
+- [ ] `illusion_professor_prank` content/events/classes.grim:179 — `check guile 15` → `challenge deceive easy:` (turn ~16, E 23, odds at E 74% → 68%)
+- [ ] `illusion_dragon` content/events/classes.grim:201 — `check arcana 18` → `challenge spell trivial:` (turn ~21, E 28, odds at E 80% → 88%) **kind?**
+- [ ] `alch_first_brew` content/events/classes.grim:226 — `check alchemy 14` → `challenge brew easy:` (turn ~15, E 21, odds at E 71% → 68%)
+- [ ] `alch_unstable_cauldron` content/events/classes.grim:246 — `check alchemy 16` → `challenge brew easy:` (turn ~14, E 20, odds at E 62% → 68%)
+- [ ] `art_mira_collab` content/events/classes.grim:376 — `check alchemy 14` → `challenge brew trivial:` (turn ~34, E 42, odds at E 95% → 88%)
+- [ ] `beast_griffon_chick` content/events/classes.grim:420 — `check vigor 12` → `challenge feat trivial:` (turn ~20, E 26, odds at E 92% → 88%) **kind?**
+- [ ] `beast_manticore` content/events/classes.grim:440 — `check charm 18` → `challenge negotiate trivial:` (turn ~25, E 31, odds at E 89% → 88%)
+- [ ] `astro_comet` content/events/classes.grim:479 — `check lore 16` → `challenge research easy:` (turn ~16, E 23, odds at E 71% → 68%) **kind?**
+- [ ] `heal_first_patient` content/events/classes.grim:537 — `check alchemy 12` → `challenge brew easy:` (turn ~13, E 19, odds at E 71% → 68%)
+- [ ] `umbral_bone_mouse` content/events/classes.grim:620 — `check arcana 20` → `challenge spell easy:` (turn ~19, E 25, odds at E 65% → 68%) **kind?**
+- [ ] `duel_practice_bout` content/events/clubs.grim:18 — `check vigor 14` → `challenge feat easy:` (turn ~13, E 19, odds at E 65% → 68%) **kind?**
+- [ ] `duel_practice_bout` content/events/clubs.grim:26 — `check arcana 14` → `challenge spell easy:` (turn ~13, E 19, odds at E 65% → 68%) **kind?**
+- [ ] `duel_bram_hazing` content/events/clubs.grim:51 — `check vigor 22` → `challenge feat medium:` (turn ~18, E 24, odds at E 56% → 50%) **kind?**
+- [ ] `choir_solo` content/events/clubs.grim:92 — `check charm 16` → `challenge negotiate trivial:` (turn ~24, E 30, odds at E 92% → 88%)
+- [ ] `sky_tryouts` content/events/clubs.grim:143 — `check vigor 12` → `challenge feat trivial:` (turn ~24, E 30, odds at E 95% → 88%) **kind?**
+- [ ] `sky_tryouts` content/events/clubs.grim:151 — `check vigor 18` → `challenge feat trivial:` (turn ~24, E 30, odds at E 86% → 88%) **kind?**
+- [ ] `sky_championship` content/events/clubs.grim:191 — `check vigor 22` → `challenge feat easy:` (turn ~24, E 30, odds at E 74% → 68%) **kind?**
+- [ ] `ledger_pie_scoop` content/events/clubs.grim:218 — `check guile 14` → `challenge deceive easy:` (turn ~16, E 23, odds at E 77% → 68%)
+- [ ] `stars_meteor_bet` content/events/clubs.grim:355 — `check lore 14` → `challenge research trivial:` (turn ~24, E 30, odds at E 95% → 88%) **kind?**
+- [ ] `carto_thursday_stairs` content/events/clubs.grim:415 — `check guile 16` → `challenge deceive trivial:` (turn ~24, E 30, odds at E 92% → 88%)
+- [ ] `crisis_probation` content/events/crisis.grim:80 — `check charm 25` → `challenge negotiate easy:` (turn ~24, E 30, odds at E 65% → 68%)
+- [ ] `grisk_collectors` content/events/crisis.grim:118 — `check vigor 22` → `challenge feat trivial:` (turn ~32, E 38, odds at E 95% → 88%) **kind?**
+- [ ] `core_flying_lesson` content/events/expansion_classes.grim:15 — `check vigor 12` → `challenge feat medium:` (turn ~3, E 10, odds at E 44% → 50%) **kind?**
+- [ ] `pyro_dragon_breath` content/events/expansion_classes.grim:36 — `check arcana 24` → `challenge spell hard:` (turn ~9, E 15, odds at E 23% → 30%) **kind?**
+- [ ] `tide_water_spirit_race` content/events/expansion_classes.grim:57 — `check vigor 18` → `challenge feat medium:` (turn ~12, E 18, odds at E 50% → 50%) **kind?**
+- [ ] `tide_water_spirit_race` content/events/expansion_classes.grim:65 — `check charm 14` → `challenge negotiate easy:` (turn ~12, E 18, odds at E 62% → 68%)
+- [ ] `illusion_mirror_maze` content/events/expansion_classes.grim:82 — `check guile 18` → `challenge deceive medium:` (turn ~13, E 19, odds at E 53% → 50%)
+- [ ] `illusion_mirror_maze` content/events/expansion_classes.grim:90 — `check arcana 18` → `challenge spell medium:` (turn ~13, E 19, odds at E 53% → 50%) **kind?**
+- [ ] `art_golem_helper` content/events/expansion_classes.grim:149 — `check lore 16` → `challenge research trivial:` (turn ~46, E 45, odds at E 95% → 88%) **kind?**
+- [ ] `beast_hippocampus` content/events/expansion_classes.grim:170 — `check vigor 14` → `challenge feat trivial:` (turn ~20, E 26, odds at E 86% → 88%) **kind?**
+- [ ] `heal_triage_drill` content/events/expansion_classes.grim:207 — `check alchemy 16` → `challenge brew easy:` (turn ~14, E 20, odds at E 62% → 68%)
+- [ ] `thorne_roses` content/events/expansion_faculty.grim:41 — `check alchemy 16` → `challenge brew easy:` (turn ~19, E 25, odds at E 77% → 68%)
+- [ ] `maud_goat` content/events/expansion_faculty.grim:80 — `check charm 12` → `challenge negotiate trivial:` (turn ~19, E 25, odds at E 89% → 88%)
+- [ ] `isolde_chess` content/events/expansion_faculty.grim:147 — `check lore 24` → `challenge research trivial:` (turn ~34, E 42, odds at E 95% → 88%) **kind?**
+- [ ] `life_timeloop_3` content/events/expansion_life.grim:54 — `check arcana 18` → `challenge spell trivial:` (turn ~24, E 30, odds at E 86% → 88%) **kind?**
+- [ ] `life_portrait_escape` content/events/expansion_life.grim:77 — `check charm 14` → `challenge negotiate trivial:` (turn ~20, E 26, odds at E 86% → 88%)
+- [ ] `life_library_cat` content/events/expansion_life.grim:95 — `check vigor 12` → `challenge feat trivial:` (turn ~27, E 34, odds at E 95% → 88%) **kind?**
+- [ ] `life_invent_spell` content/events/expansion_life.grim:115 — `check lore 22` → `challenge research trivial:` (turn ~30, E 37, odds at E 95% → 88%) **kind?**
+- [ ] `life_cursed_umbrella` content/events/expansion_life.grim:140 — `check arcana 14` → `challenge spell trivial:` (turn ~26, E 33, odds at E 95% → 88%) **kind?**
+- [ ] `life_bell_tower` content/events/expansion_life.grim:222 — `check guile 16` → `challenge deceive trivial:` (turn ~20, E 26, odds at E 80% → 88%)
+- [ ] `life_fog_maze` content/events/expansion_life.grim:243 — `check vigor 14` → `challenge feat trivial:` (turn ~30, E 37, odds at E 95% → 88%) **kind?**
+- [ ] `life_wishing_well` content/events/expansion_life.grim:271 — `check guile 14` → `challenge deceive trivial:` (turn ~25, E 31, odds at E 95% → 88%)
+- [ ] `life_borrowed_broom` content/events/expansion_life.grim:287 — `check vigor 16` → `challenge feat trivial:` (turn ~21, E 28, odds at E 86% → 88%) **kind?**
+- [ ] `life_borrowed_broom` content/events/expansion_life.grim:294 — `check charm 14` → `challenge negotiate trivial:` (turn ~21, E 28, odds at E 92% → 88%)
+- [ ] `life_double_trouble` content/events/expansion_life.grim:311 — `check guile 14` → `challenge deceive trivial:` (turn ~19, E 25, odds at E 83% → 88%)
+- [ ] `life_village_busking` content/events/expansion_life.grim:353 — `check charm 14` → `challenge negotiate trivial:` (turn ~25, E 31, odds at E 95% → 88%)
+- [ ] `life_village_busking` content/events/expansion_life.grim:362 — `check arcana 14` → `challenge spell trivial:` (turn ~25, E 31, odds at E 95% → 88%) **kind?**
+- [ ] `lyra_mother_visit` content/events/expansion_people.grim:39 — `check charm 22` → `challenge negotiate trivial:` (turn ~26, E 33, odds at E 83% → 88%)
+- [ ] `tobias_scarecrow` content/events/expansion_people.grim:84 — `check arcana 14` → `challenge spell trivial:` (turn ~31, E 37, odds at E 95% → 88%) **kind?**
+- [ ] `corvin_confiscation_vault` content/events/expansion_people.grim:210 — `check guile 18` → `challenge deceive hard:` (turn ~8, E 14, odds at E 38% → 30%)
+- [ ] `corvin_confiscation_vault` content/events/expansion_people.grim:220 — `check charm 20` → `challenge negotiate hard:` (turn ~8, E 14, odds at E 32% → 30%)
+- [ ] `corvin_brother` content/events/expansion_people.grim:237 — `check charm 18` → `challenge negotiate trivial:` (turn ~27, E 34, odds at E 95% → 88%)
+- [ ] `mira_ornithopter` content/events/expansion_people.grim:281 — `check vigor 16` → `challenge feat trivial:` (turn ~24, E 30, odds at E 92% → 88%) **kind?**
+- [ ] `mira_lab_fire` content/events/expansion_people.grim:305 — `check vigor 16` → `challenge feat trivial:` (turn ~23, E 30, odds at E 92% → 88%) **kind?**
+- [ ] `nessa_headmistress_interview` content/events/expansion_people.grim:352 — `check charm 20` → `challenge negotiate trivial:` (turn ~24, E 30, odds at E 80% → 88%)
+- [ ] `kael_fever` content/events/expansion_people.grim:434 — `check vigor 18` → `challenge feat trivial:` (turn ~26, E 33, odds at E 95% → 88%) **kind?**
+- [ ] `bram_father_visit` content/events/expansion_people.grim:483 — `check charm 18` → `challenge negotiate trivial:` (turn ~44, E 46, odds at E 95% → 88%)
+- [ ] `soc_secret_admirer` content/events/expansion_social.grim:142 — `check guile 14` → `challenge deceive trivial:` (turn ~31, E 37, odds at E 95% → 88%)
+- [ ] `sum_empty_castle` content/events/expansion_summer.grim:16 — `check guile 14` → `challenge deceive trivial:` (turn ~26, E 33, odds at E 95% → 88%)
+- [ ] `sum_home_chores` content/events/expansion_summer.grim:37 — `check arcana 16` → `challenge spell trivial:` (turn ~24, E 30, odds at E 92% → 88%) **kind?**
+- [ ] `sum_midsummer_fair` content/events/expansion_summer.grim:75 — `check vigor 14` → `challenge feat trivial:` (turn ~23, E 30, odds at E 95% → 88%) **kind?**
+- [ ] `sum_sea_serpent` content/events/expansion_summer.grim:136 — `check charm 18` → `challenge negotiate trivial:` (turn ~24, E 30, odds at E 86% → 88%)
+- [ ] `y3_interview` content/events/expansion_y3.grim:61 — `check lore 26` → `challenge research trivial:` (turn ~38, E 44, odds at E 95% → 88%) **kind?**
+- [ ] `y3_interview` content/events/expansion_y3.grim:70 — `check charm 24` → `challenge negotiate trivial:` (turn ~38, E 44, odds at E 95% → 88%)
+- [ ] `y3_thesis` content/events/expansion_y3.grim:142 — `check lore 28` → `challenge research trivial:` (turn ~43, E 46, odds at E 95% → 88%) **kind?**
+- [ ] `y3_last_duel` content/events/expansion_y3.grim:212 — `check arcana 34` → `challenge spell trivial:` (turn ~43, E 46, odds at E 86% → 88%) **kind?**
+- [ ] `tavern_brawl` content/events/jobs.grim:73 — `check vigor 16` → `challenge feat trivial:` (turn ~24, E 30, odds at E 92% → 88%) **kind?**
+- [ ] `stables_hippogriff` content/events/jobs.grim:182 — `check vigor 12` → `challenge feat trivial:` (turn ~24, E 30, odds at E 95% → 88%) **kind?**
+- [ ] `egg_hatches` content/events/jobs.grim:219 — `check guile 18` → `challenge deceive trivial:` (turn ~24, E 30, odds at E 86% → 88%)
+- [ ] `tutor_hopeless` content/events/jobs.grim:261 — `check charm 15` → `challenge negotiate trivial:` (turn ~24, E 30, odds at E 95% → 88%)
+- [ ] `courier_storm` content/events/jobs.grim:322 — `check vigor 18` → `challenge feat medium:` (turn ~13, E 19, odds at E 53% → 50%) **kind?**
+- [ ] `courier_whispering_parcel` content/events/jobs.grim:344 — `check guile 14` → `challenge deceive easy:` (turn ~14, E 20, odds at E 68% → 68%)
+- [ ] `courier_sky_pirates` content/events/jobs.grim:366 — `check vigor 20` → `challenge feat medium:` (turn ~15, E 21, odds at E 53% → 50%) **kind?**
+- [ ] `life_staircase` content/events/life.grim:24 — `check vigor 12` → `challenge feat trivial:` (turn ~18, E 24, odds at E 86% → 88%) **kind?**
+- [ ] `life_lost_wand` content/events/life.grim:63 — `check arcana 14` → `challenge spell trivial:` (turn ~23, E 30, odds at E 95% → 88%) **kind?**
+- [ ] `life_snoring_roommate` content/events/life.grim:77 — `check alchemy 12` → `challenge brew trivial:` (turn ~20, E 26, odds at E 92% → 88%)
+- [ ] `life_portrait_gossip` content/events/life.grim:97 — `check charm 12` → `challenge negotiate trivial:` (turn ~24, E 30, odds at E 95% → 88%)
+- [ ] `life_pixies` content/events/life.grim:115 — `check vigor 12` → `challenge feat trivial:` (turn ~22, E 29, odds at E 95% → 88%) **kind?**
+- [ ] `life_midnight_snack` content/events/life.grim:165 — `check guile 12` → `challenge deceive trivial:` (turn ~18, E 24, odds at E 86% → 88%)
+- [ ] `life_storm_night` content/events/life.grim:297 — `check charm 12` → `challenge negotiate trivial:` (turn ~22, E 29, odds at E 95% → 88%)
+- [ ] `life_storm_night` content/events/life.grim:305 — `check arcana 12` → `challenge spell trivial:` (turn ~22, E 29, odds at E 95% → 88%) **kind?**
+- [ ] `life_prank_war` content/events/life.grim:336 — `check guile 14` → `challenge deceive trivial:` (turn ~23, E 30, odds at E 95% → 88%)
+- [ ] `life_card_game` content/events/life.grim:458 — `check guile 16` → `challenge deceive easy:` (turn ~18, E 24, odds at E 74% → 68%)
+- [ ] `life_essay_prize` content/events/life.grim:475 — `check lore 16` → `challenge research easy:` (turn ~14, E 20, odds at E 62% → 68%) **kind?**
+- [ ] `life_injury_stairs` content/events/life.grim:599 — `check vigor 12` → `challenge feat trivial:` (turn ~19, E 25, odds at E 89% → 88%) **kind?**
+- [ ] `life_spring_cleaning` content/events/life.grim:662 — `check charm 12` → `challenge negotiate trivial:` (turn ~21, E 28, odds at E 95% → 88%)
+- [ ] `life_summer_heat` content/events/life.grim:681 — `check arcana 12` → `challenge spell trivial:` (turn ~36, E 43, odds at E 95% → 88%) **kind?**
+- [ ] `life_rival_academy` content/events/life.grim:722 — `check arcana 16` → `challenge spell trivial:` (turn ~27, E 34, odds at E 95% → 88%) **kind?**
+- [ ] `bram_sabotage` content/events/people_others.grim:122 — `check lore 18` → `challenge research easy:` (turn ~16, E 23, odds at E 65% → 68%) **kind?**
+- [ ] `bram_sabotage` content/events/people_others.grim:130 — `check guile 18` → `challenge deceive easy:` (turn ~16, E 23, odds at E 65% → 68%)
+- [ ] `bram_duel` content/events/people_others.grim:190 — `check arcana 20 + year * 4` → `challenge spell medium:` (turn ~22, E 29, odds at E 53% → 50%) **kind?**
+- [ ] `thorne_intro` content/events/people_others.grim:216 — `check lore 10` → `challenge research easy:` (turn ~7, E 13, odds at E 59% → 68%) **kind?**
+- [ ] `maud_chickens` content/events/people_others.grim:319 — `check vigor 10` → `challenge feat medium:` (turn ~4, E 12, odds at E 56% → 50%) **kind?**
+- [ ] `maud_bees` content/events/people_others.grim:381 — `check vigor 12` → `challenge feat trivial:` (turn ~27, E 34, odds at E 95% → 88%) **kind?**
+- [ ] `isolde_tea` content/events/people_others.grim:447 — `check charm 18` → `challenge negotiate trivial:` (turn ~24, E 30, odds at E 86% → 88%)
+- [ ] `isolde_warning` content/events/people_others.grim:475 — `check charm 20` → `challenge negotiate trivial:` (turn ~24, E 30, odds at E 80% → 88%)
+- [ ] `lyra_intro` content/events/people_students.grim:27 — `check charm 12` → `challenge negotiate easy:` (turn ~15, E 21, odds at E 77% → 68%)
+- [ ] `lyra_study_rivalry` content/events/people_students.grim:67 — `check lore 22` → `challenge research easy:` (turn ~23, E 30, odds at E 74% → 68%) **kind?**
+- [ ] `lyra_family_ultimatum` content/events/people_students.grim:134 — `check charm 22 - spark(lyra) / 5` → `challenge negotiate easy:` (turn ~24, E 30, odds at E 74% → 68%) **dc used 22 - spark(lyra) / 5**
+- [ ] `lyra_rival_sabotage` content/events/people_students.grim:161 — `check guile 16` → `challenge deceive trivial:` (turn ~24, E 30, odds at E 92% → 88%)
+- [ ] `tobias_bad_harvest` content/events/people_students.grim:244 — `check charm 16` → `challenge negotiate trivial:` (turn ~27, E 34, odds at E 95% → 88%)
+- [ ] `tobias_bullied` content/events/people_students.grim:308 — `check charm 18` → `challenge negotiate easy:` (turn ~18, E 24, odds at E 68% → 68%)
+- [ ] `seraphine_lake_vision` content/events/people_students.grim:413 — `check vigor 15` → `challenge feat trivial:` (turn ~32, E 38, odds at E 95% → 88%) **kind?**
+- [ ] `corvin_kitchen_raid` content/events/people_students.grim:520 — `check guile 14` → `challenge deceive trivial:` (turn ~25, E 31, odds at E 95% → 88%)
+- [ ] `corvin_framed` content/events/people_students.grim:610 — `check guile 18` → `challenge deceive trivial:` (turn ~33, E 39, odds at E 95% → 88%)
+- [ ] `mira_intro` content/events/people_students.grim:674 — `check alchemy 10` → `challenge brew trivial:` (turn ~16, E 23, odds at E 89% → 88%)
+- [ ] `mira_fair` content/events/people_students.grim:716 — `check charm 14` → `challenge negotiate trivial:` (turn ~24, E 30, odds at E 95% → 88%)
+- [ ] `mira_workshop_closed` content/events/people_students.grim:738 — `check charm 18` → `challenge negotiate trivial:` (turn ~23, E 30, odds at E 86% → 88%)
+- [ ] `mira_workshop_closed` content/events/people_students.grim:747 — `check guile 14` → `challenge deceive trivial:` (turn ~23, E 30, odds at E 95% → 88%)
+- [ ] `nessa_intro` content/events/people_students.grim:833 — `check charm 12` → `challenge negotiate easy:` (turn ~13, E 19, odds at E 71% → 68%)
+- [ ] `nessa_gossip_column` content/events/people_students.grim:855 — `check charm 15` → `challenge negotiate trivial:` (turn ~29, E 36, odds at E 95% → 88%)
+- [ ] `soc_rumour` content/events/social.grim:254 — `check charm 14` → `challenge negotiate trivial:` (turn ~23, E 30, odds at E 95% → 88%)
+- [ ] `soc_homework_help` content/events/social.grim:275 — `check lore 14` → `challenge research easy:` (turn ~15, E 21, odds at E 71% → 68%) **kind?**
+- [ ] `soc_date` content/events/social.grim:351 — `check charm 12 + (40 - spark(npc)) / 3` → `challenge negotiate easy:` (turn ~23, E 30, odds at E 64% → 68%) **dc used 12 + (40 - spark(npc)) / 3**
+- [ ] `soc_confess_generic` content/events/social.grim:375 — `check charm 10` → `challenge negotiate trivial:` (turn ~24, E 30, odds at E 95% → 88%)
+- [ ] `soc_breakup` content/events/social.grim:441 — `check charm 20` → `challenge negotiate trivial:` (turn ~24, E 30, odds at E 80% → 88%)
+- [ ] `soc_two_timing` content/events/social.grim:468 — `check charm 26` → `challenge negotiate easy:` (turn ~24, E 30, odds at E 62% → 68%)
+- [ ] `soc_ex_encounter` content/events/social.grim:500 — `check charm 14` → `challenge negotiate trivial:` (turn ~24, E 30, odds at E 95% → 88%)
+- [ ] `soc_rival_taunt` content/events/social.grim:524 — `check charm 16` → `challenge negotiate trivial:` (turn ~24, E 30, odds at E 92% → 88%)
+- [ ] `soc_rival_bet` content/events/social.grim:568 — `check arcana 16 + year * 4` → `challenge spell easy:` (turn ~30, E 37, odds at E 77% → 68%) **kind?**

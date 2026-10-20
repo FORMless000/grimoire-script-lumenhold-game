@@ -63,7 +63,9 @@ For every event, ask the questions below. Write down an issue only when you can 
 - Would the fourth showing still be welcome, or does the joke wear out? A repeatable event shouldn't hinge on a one-time surprise.
 
 **Items and recipes** (design §9.3)
-- No mechanical references to items, inventories or recipes. There is no item system, so prose may mention objects but options must not "use" or "get" them as if they were inventory.
+- Items exist as `@item` blocks (world expansion 1; `docs/grimoire-script.md`): `give` / `take`, `has_item()` / `worn()`, and an owned item's own option `> up[item:x]:`. An object the prose mentions that isn't an `@item` must not be "used" or "got" as if it were inventory.
+- An item option is that item's moment in that scene: it should feel like owning the thing paid off, without being free (it still trades), and at most one per card. Worn effects act only in fights; nothing on a card reads what you wear except `worn()` gates.
+- No recipes or ingredients (§9.3 still holds for crafting).
 
 **Gating**
 - `when`, `level:`, `rank:`, `place:` and `plan:` make sense together: a club-practice event isn't gated to a place the club doesn't use, and a level-3 class doesn't read like a first lesson.

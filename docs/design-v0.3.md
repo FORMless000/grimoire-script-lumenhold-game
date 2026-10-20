@@ -333,7 +333,7 @@ spread: social world
 
 **Run length:** 32 term months × ~11 cards + 15 break months × ~5 ≈ **425 decisions** *(checked at playtest #1)*.
 
-**The midnight turn** (playtest 2, M41; content X13): after an unsigned note in year 1 Stormbloom, a night card opens the midnight slot each on-campus month, after the night's cards (term, or a break at the castle or working on campus; not at home, on an internship, while locked out, or on the last day). "Sleep" is the night's rest (below, bedtime); "Go out" costs nothing at the door, rests nothing, and opens the midnight pick (`visit midnight`) among the places open then: the Gilded Newt, the boathouse, the refectory kitchens, the restricted section, the observatory and the gargoyle passage. Suspicion (I4): going out in term queues the suspicion card at 33% (`queue night_suspicion chance 33`), and a risky outcome queues it at its own odds (about 50%, by event); the cards never say whether you were seen, and two copies bring at most one card the next morning (about 66% for a risky night). Caught in a term's last month and off home or to an internship, the card waits until you're back on campus (`defer: off_campus`, I6). If you weren't watched, you are now; if you were, a three-month lockout and detention, with gold and mood losses, and `watched` is cleared. Day events that give `watched` never lock you out. At the Newt (feedback 2026-10-20) a purse won at the high table brings the next hand at once, each dearer and harder, three in all, with walking away always open; a company night can run into a second party (more pay, more Health and suspicion).
+**The midnight turn** (playtest 2, M41; content X13): after an unsigned note in year 1 Stormbloom, a night card opens the midnight slot each on-campus month, after the night's cards (term, or a break at the castle or working on campus; not at home, on an internship, while locked out, or on the last day). "Sleep" is the night's rest (below, bedtime); "Go out" costs nothing at the door, rests nothing, and opens the midnight pick (`visit midnight`) among the places open then: the Gilded Newt, the boathouse, the refectory kitchens, the restricted section, the observatory and the gargoyle passage, and since world expansion 1 the Whisperwood (its deep part, the Hush, keeps only midnight hours). A place is offered only if something there can play that night. Suspicion (I4): going out in term queues the suspicion card at 33% (`queue night_suspicion chance 33`), and a risky outcome queues it at its own odds (about 50%, by event); the cards never say whether you were seen, and two copies bring at most one card the next morning (about 66% for a risky night). Caught in a term's last month and off home or to an internship, the card waits until you're back on campus (`defer: off_campus`, I6). If you weren't watched, you are now; if you were, a three-month lockout and detention, with gold and mood losses, and `watched` is cleared. Day events that give `watched` never lock you out. At the Newt (feedback 2026-10-20) a purse won at the high table brings the next hand at once, each dearer and harder, three in all, with walking away always open; a company night can run into a second party (more pay, more Health and suspicion).
 
 ### 4.3 Break plans
 
@@ -980,6 +980,11 @@ challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam |
 - **Into and out of a fight** (feedback 2026-10-19; `COMBAT_TUNING` in `combat/setup/roster.mjs`): from Health 30 up you start at full HP; below 30 the start falls in a straight line to 70% at Health 0 (was 90% + 10% × Health/70 down to 30, then steeper). Afterwards, Health is lost only when the fight ends below 30 HP: the stake (40) × (30 − HP left) / 30, less the setting's rebate (was the share of HP lost × 40 at any HP).
 - **The fight says its setting** at the top, all through it: the situation (practice duel, a real fight, a public duel, a rehearsal, a ring bout) with what comes back afterwards (its Health and Mana rebate), that Health is lost only below 30 HP, whether a crowd watches (Renown at stake), and, for a fighter who knows a forbidden spell, whether anyone would report one.
 - **A forbidden cast** costs 2 alignment, on a card and in a fight (`@balance forbidden_cast: alignment 2`; a third of the `small` tier it cost before).
+- **Creatures and the kit** (world expansion 1, 2026-10-20; `combat/HANDOFF.md`):
+  - **Races** scale a creature foe only: critter (HP ×0.5, Mana ×0.6), beast (×1), monster (×1.75, ×0.6), boss (×3, ×1.5), placeholders for the simulator. Every creature is barred from healing; human foes (students, practitioners, the Outcast) never scale and may heal.
+  - **Creature moves** are mostly aliases of existing rules under the creature's own name and cost (skitter is Shadowstep, a maul a telegraphed channel). Four mechanics are new: **bind** (no step aside or brace next exchange), **drain** (takes Mana into the creature's flux), **poison** (fixed damage each exchange past every defence; Distil clears it) and **multi-hit** (only the first hit meets a guard or brace). A telegraphed channel shows as "winding up".
+  - **The worn kit** (§T2) adds flat modifiers in fights only: HP and Mana, cheaper spells, a spell hit on each cast of a group, a strike on a foe who defends, and less damage from creatures or named spells. Foes may carry the same table (the thornwitch, the Outcast). The kit can be changed on the fight's first screen, never mid-fight.
+  - **Lessons and free fights:** a card's fight may be a lesson (coach marks; "Skip the lesson" settles as a draw) or carry nothing at stake ("Walk away"); neither moves any bar.
 
 **Auto-resolve** (every other kind; it's their only mode until §T1): the odds of a check on the mapped skill(s), against `DC(tier)`, plus modifiers.
 
@@ -1004,7 +1009,7 @@ challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam |
 
 ### 9.3 Crafting policy
 
-Until §T2 exists, alchemy is a skill and appears only in prose. Validators reject any mechanical reference to recipes, ingredients or items.
+Until §T2's crafting exists, alchemy is a skill and appears only in prose. Validators reject any mechanical reference to recipes or ingredients. **Items** exist since world expansion 1 (2026-10-20; `@item`, the kit): an owned item opens its own options on cards where it fits (`up[item:x]`, at most one per card, so owning more never stacks), and what you wear (one wand, one robe, one trinket) counts only in fights, as flat numbers. Ordinary checks never read items; tonics (`group: tonic` states) are the only check bonuses you can buy.
 
 ---
 
@@ -1342,11 +1347,13 @@ These sections record the direction agreed so far. Their **only** effect on Phas
 
 **Built: fights** (2026-10-19). The combat minigame (`combat/`; its hand-over, `combat/HANDOFF.md`) plays every `combat` and `duel` challenge (§9.2). By the user's decision there is no auto-resolve for fights and no monthly limit on them. Everything else in this section stays tentative.
 
+**Bound: negotiations** (world expansion 1, E8). Every `challenge negotiate` is a real negotiation, bound to the negotiation minigame (`docs/minigame-negotiation-v03.md`) and registered with its opponent profile and room in `src/negotiation.js`; until the minigame ships, a stub decides it from charm, lore and guile (`@balance negotiate`). Trivial asks became plain checks (`appeal`, `perform`, `soothe`). **Minigames happen freely:** the "about one a month" limit below is superseded by the user's decision (2026-10-20).
+
 **Shared direction:**
 - **Short:** 30–90 seconds, 5–8 decisions, swipe or tap, no reflex tests.
 - **Stats and spells shape each one,** so progression matters.
 - **Auto-resolve stays available** at the plain check odds. A skilled player should beat it by about +10–15 points.
-- **Stakes previewed;** at most about 1 playable minigame a month; seeded and deterministic.
+- **Stakes previewed;** ~~at most about 1 playable minigame a month~~ (superseded: no limit); seeded and deterministic.
 - **One module interface:** `{skills, spells, mana, items, opponent, tier, context} → {outcome, spent, notes}`.
 
 | Minigame | Direction |
@@ -1362,6 +1369,7 @@ These sections record the direction agreed so far. Their **only** effect on Phas
 - **Alchemy:** ingredients carry element vectors; steer the brew into a recipe's region without overshooting into the volatile zone. Alchemy skill widens the target; recipes are discovered.
 - **Enchanting:** inscribe a spell into an item, making a charm with charges.
 - **This is the one planned addition to the format after the freeze** (items, `use item`, `brew`, `enchant`). Until then the crafting policy (§9.3) applies.
+- **Adopted (world expansion 1, 2026-10-20):** the items subset: `@item` with `slot`, `worn:` fight modifiers, `legacy:` (granted while a condition holds, so old flags and states become items without editing their events) and `bound:`; `give`/`take`, `has_item()`/`worn()`, `up[item:x]` options; the Kit panel. Owned items never change check numbers. Alchemy recipes and enchanting stay tentative.
 
 ## T3. Live generation *(tentative; Phase 7 if approved, last)*
 

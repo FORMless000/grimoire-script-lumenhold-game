@@ -315,7 +315,7 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
 > lyra: Ask Lyra
   when: met(lyra) and rel(lyra) >= 9
   hint: {&She has had six invitations. She hasn't said yes to any.|She has had invitations again. She is pretending not to count them.}
-  challenge negotiate vs lyra.charm +1 if spark(lyra) >= 25:
+  challenge appeal vs lyra.charm +1 if spark(lyra) >= 25:
     win:
       spark lyra +medium
       rel lyra +medium

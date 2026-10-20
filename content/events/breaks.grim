@@ -1,0 +1,454 @@
+# ============================================================
+#  Break visits (world expansion 1, plan §B): a break at the castle or at home now has four free visits a day (E2,
+#  the plan states' `day:`), so each castle place gets a card that only happens while the castle is half empty, and
+#  each place at home gets two or three more. Breaks are months 5–6 (winter: snow, Deepwinter, Thawmoon) and 11–12
+#  (summer: Goldenhaze, Starfall). The people who stay are the ones whose `schedule_break` keeps them here.
+#  Each castle card rests six months: once a break at most.
+# ============================================================
+
+# ---------------- The castle, half empty ----------------
+
+@event brk_one_long_table
+title: One Long Table
+place: great_hall
+class: routine
+tone: warm
+when: break and not off_campus
+repeat: 6
+weight: 14
+art: meal
+tags: social break
+scene: A vast empty dining hall with a single long table at one end, a handful of students and staff eating together under one chandelier.
+text: {season == "winter": The Great Hall has given up on house tables for the break. Everyone left eats at one long table by the fire: a handful of students, two professors and a cook who sits down with you, which nobody has ever seen.|Half the candles are out for the summer. The few of you left eat at one long table under the one lit chandelier, and the cook brings out whatever she likes.} {~Someone has started a game of passing the salt without asking.|A professor tells a story about the founders that is almost certainly libel.|The cook asks everyone what they'd change about her soup. Only one answer is the right one.}
+> left: Stay for the whole evening
+  mood +small
+  study -tiny
+  say: {~You stay until the fire is embers, and learn more about the staff in one evening than in a term. Your reading waits on the bench, unread.|You stay and talk until the cook throws you all out. It's the best supper of the year, and your essay notes never leave your bag.|You stay, and the table gets louder and warmer, and you forget the work you came down meaning to do.}
+> right: Eat, then go and work
+  study +tiny
+  mood -tiny
+  say: {~You eat fast and go back to your books. Through the floor, later, you can hear them laughing.|You take your bowl up to the library. The laughter follows you up the stairs, then thins.|You thank the cook, slip out, and get a good evening's work done in the quiet. It is very quiet.}
+
+@event brk_kitchen_pie
+title: The Cook's Holiday Pie
+place: great_hall
+class: routine
+tone: light
+when: break and not off_campus
+repeat: 6
+weight: 12
+art: meal
+tags: break
+scene: A steamy castle kitchen, a red-faced cook rolling out pastry the size of a tabletop, a student up to the elbows in flour.
+text: The kitchens are nearly empty for the break, and the cook has decided to make the pie she never has time for in term: a pie the size of a cartwheel, with {season == "winter": a frost-apple filling and pastry stars on top.|a summer-berry filling and a pastry lake on top, with a pastry boat.} She looks at you. "Hands," she says. "Washed."
+> left: Help with the pastry
+  health +small
+  alchemy +tiny
+  say: {~You roll and crimp and get flour in your eyebrows. The pie is enormous and lopsided, and the cook says it's the best she's made. You get the first slice.|Making pastry is just alchemy with butter, you realise. The cook agrees, and gives you a slice to prove it.|You stamp out pastry stars until your arms ache. The pie is glorious. You eat too much of it.}
+> right: Lick the bowl and run
+  mood +small
+  say: {~You take the bowl, a spoon and your leave. The cook shouts after you, without much heat.|The bowl is the best part of any pie, and you're not ashamed. The cook pretends to be furious.|You steal the bowl and eat it on the stairs. It's worth every word she says.}
+
+@event brk_courtyard_quiet
+title: The Empty Courtyard
+place: courtyard
+class: routine
+tone: warm
+when: break and not off_campus
+repeat: 6
+weight: 12
+art: tower
+tags: break
+scene: A castle courtyard with no one in it, the fountain still, a single student sitting on its rim.
+text: {season == "winter": Snow has filled the courtyard knee-deep and nobody has dug a path. The fountain is a cake of ice with a frozen fish in it, looking surprised.|The courtyard bakes in the sun with nobody to cross it. The fountain is low and warm, and a cat has claimed the rim.} You can hear the castle breathe.
+> left: Make the first tracks
+  vigor +small
+  health -tiny
+  say: {season == "winter": You wade across it on purpose, then back, then in a large figure of eight. Tomorrow someone will wonder who did it, and you'll know.|You walk every flagstone you've hurried across all term, slowly, barefoot. The stones are hot, and so are your soles.}
+> right: Sit and do nothing
+  mood +small
+  say: {season == "winter": You sit on the fountain's icy rim and watch the snow land on nothing. Your feet go numb. You don't mind.|You sit by the cat and do nothing until the shadows move. The cat permits it.}
+
+@event brk_snowball_bram
+title: Bram in the Snow
+place: courtyard
+class: routine
+tone: light
+when: break and not off_campus and season == "winter"
+repeat: 6
+weight: 12
+art: snow
+tags: social break
+cast:
+  bram: bram where around(bram) and met(bram)
+scene: A stern prefect with a red sash brushing snow off his ledger in a snowy courtyard, a snowball clearly having just hit him.
+text: Bram has stayed for the break, and he is patrolling an empty courtyard because somebody must. He is writing in his ledger. There is nobody to write down. You have a snowball in your hand, and you don't remember making it.
+> left: Throw it
+  rel bram +small
+  renown -tiny
+  say: It takes his sash clean off. For a moment his face is outraged. Then he puts down the ledger, very deliberately, and makes a snowball of his own. Twenty minutes later you're both soaked, and he's laughing, and he'll deny it by Monday.
+> right: Drop it and say hello
+  rel bram +tiny
+  say: "Prefect." "Student." He looks at the snowball melting at your feet, and at you. "Very wise," he says, and walks on, and you think, just possibly, he was disappointed.
+
+@event brk_library_alone
+title: The Library to Yourself
+place: library
+class: routine
+tone: warm
+when: break and not off_campus
+repeat: 6
+weight: 12
+art: book
+tags: study break
+scene: A huge empty library with long shafts of light, one student lying on the floor between the stacks with a book held up overhead.
+text: The library is yours. No queue for the good desk, no whispering, no one shelving loudly in the next row. Even the librarian's cat has gone off duty, and is asleep on the returns cart.
+> left: Read for the exams
+  study +tiny
+  mood -tiny
+  say: {~You work through the term's reading list in a week. It's dull, and your next exam will thank you.|You take the good desk and keep it all break, and the reading gets done.|You read until the light goes, and get further than you have all term.}
+> right: Read whatever you like
+  lore +small
+  say: {~You read a history of the castle's drains, a book of Northern poems and half a novel. None of it is on any syllabus. All of it is wonderful.|You find a shelf of old letters bound into books, and read strangers' lives all afternoon.|You read lying on the floor between the stacks, which you've wanted to do since your first week.}
+
+@event brk_kael_shore
+title: Kael at the Water
+place: lakeshore
+class: routine
+tone: warm
+when: break and not off_campus
+repeat: 6
+weight: 12
+art: wave
+tags: social break
+cast:
+  kael: kael where around(kael) and met(kael)
+scene: A pale Northern student sitting alone on a rock at a lake's edge, skimming stones, frost on the stones around him.
+text: Kael hasn't gone home for the break. He doesn't say why, and you don't ask. He's on a rock by the lake, skimming stones that leave a trail of frost across the water, and he moves up to make room without looking round.
+> left: Sit with him
+  rel kael +small
+  health -tiny
+  say: {~You sit. The rock is cold. Neither of you says much, and after a while he hands you a stone, and you skim it, badly. He almost smiles.|You sit with him until the light goes. Somewhere in the second hour, he starts talking about snow, and doesn't stop for a long time.}
+> right: Leave him his quiet
+  mood -tiny
+  say: {~You leave him to the stones. From the path you look back: his trail of frost is still going out across the lake, further than seems possible.|He's earned his quiet. You let him have it, and feel the lack of the company all evening.}
+
+@event brk_starfall_observatory
+title: Starfall, Almost Alone
+place: observatory
+class: routine
+tone: warm
+when: break and not off_campus and (month == 11 or month == 12)
+repeat: 6
+weight: 14
+art: star
+tags: social break
+cast:
+  seraphine: seraphine where around(seraphine) and met(seraphine)
+scene: An observatory dome open to a sky full of falling stars, a seer in a paint-stained smock lying on the floor looking up.
+text: Starfall, and almost nobody left to see it. Seraphine is lying on the observatory floor with the dome open, watching the stars fall. "I painted this," she says, without looking at you. "Last spring. I didn't know you'd be in it."
+> left: Lie down beside her
+  rel seraphine +small
+  mood +small
+  health -tiny
+  say: {~You lie on the cold floor beside her and count stars until you lose count, and then keep going. Somewhere around midnight she says, "That's the one," and doesn't say which.|You lie and watch. She tells you which ones she's already seen fall, last spring, in paint.}
+> right: Ask what else she painted
+  lore +tiny
+  rel seraphine -tiny
+  say: {~"Nothing you'd want to know," she says, too quickly. She goes back to the stars. So do you, but it isn't quite the same.|She shakes her head and points at the sky. "Watch. Don't ask. That's the whole trick."}
+
+@event brk_mir_project
+title: The Break Project
+place: workshop
+class: routine
+tone: light
+when: break and not off_campus
+repeat: 6
+weight: 12
+art: gear
+tags: social break
+cast:
+  mir: mir where around(mir) and met(mir)
+scene: A cluttered workshop with a half-built clockwork machine the size of a wardrobe, an artificer in goggles waving a spanner.
+text: Mir has had the workshop to themself for a week and it shows. In the middle of the floor is something the size of a wardrobe with too many gears. "It's a machine," Mir says, "for turning pages. Any book. Hands free." It's very loud. "It's not finished."
+> left: Hold the spanner
+  rel mir +small
+  arcana +tiny
+  health -tiny
+  say: {~You hold the spanner, then the lamp, then a gear that's hotter than it looks. By midnight the machine turns one page, beautifully, and then eats the book. Mir is ecstatic.|You spend the evening as Mir's assistant, which mostly means holding things and being told about them. It's the best kind of evening.}
+> right: Suggest a smaller machine
+  lore +small
+  rel mir -tiny
+  say: {~"Smaller," Mir repeats, as if you'd said "duller". But they write it down, and when you come back, the wardrobe is gone and there's a thing the size of a teacup that turns pages very politely.|Mir sulks for an hour, and then admits you're right, and then sulks about that.}
+
+@event brk_holiday_edition
+title: The Holiday Edition
+place: ledger_office
+class: routine
+tone: light
+when: break and not off_campus
+repeat: 6
+weight: 12
+art: paper
+tags: social break
+cast:
+  nessa: nessa where around(nessa) and met(nessa)
+scene: A cluttered newspaper office in an empty castle, an editor with ink on her nose surrounded by blank pages, a quill hovering.
+text: Nessa is putting out a holiday edition of the Ledger for the eleven people still in the castle. There is no news. Her quill keeps trying to invent some. "Give me a story," Nessa says. "Anything. Please. Before it writes that the lake has resigned."
+> left: Give her a real one
+  rel nessa +small
+  renown +tiny
+  say: {~You tell her about the cook's pie. She makes it the front page. It sells out, all eleven copies.|You give her the snowball fight. She runs it with a drawing. Bram buys three copies and pretends not to.}
+> right: Let the quill have its way
+  mood +small
+  rel nessa -tiny
+  say: {~The quill writes that the lake has resigned and been replaced by a smaller, more manageable pond. Nessa prints it under protest. It's the most-read edition of the year.|The quill invents a romance between two gargoyles. Nessa refuses to print it, and then prints it.}
+
+@event brk_duel_trophies
+title: Polishing the Trophies
+place: duel_hall
+class: routine
+tone: light
+when: break and not off_campus
+repeat: 6
+weight: 10
+art: trophy
+tags: break
+scene: An empty duelling hall, trophy cabinets standing open, a student polishing a silver cup with a cloth.
+text: The duelling hall is empty except for the trophy cabinets, which are open, and a bucket of polish with a note on it: "Volunteers. —Thorne". Two hundred years of cups and shields stare at you, tarnished.
+> left: Polish them all
+  vigor +tiny
+  rel thorne +tiny
+  mood -tiny
+  say: {~It takes all afternoon. Halfway through you find a cup won by a student from your own corner of the country, a hundred years ago. You polish that one twice.|By the end your arms ache and the cabinets shine. Thorne, passing, nods once at the work. It feels like an honour.}
+> right: Read the names instead
+  lore +small
+  say: {~You read every name on every cup instead. Some of them are on portraits in the halls. One of them is carved on the bench you sit on every morning.|You read the names and the years, and the losers' names scratched underneath by someone with a grudge. It's a whole history, written in spite.}
+
+@event brk_amaranth_restock
+title: Restocking the Infirmary
+place: alchemy_lab
+class: routine
+tone: warm
+when: break and not off_campus
+repeat: 6
+weight: 10
+art: potion
+tags: break
+cast:
+  amaranth: amaranth where around(amaranth)
+scene: A healer in a white apron counting jars on high shelves in an empty infirmary, a student up a ladder handing them down.
+text: With the beds empty for the break, Sister Amaranth is restocking the infirmary from the bottom shelf to the top. She hands you a list and a ladder. "Count everything," she says. "Then count it again. The second count is the true one."
+> left: Count everything twice
+  alchemy +small
+  rel amaranth +tiny
+  health -tiny
+  say: {~You count salves and tinctures until you dream in labels. The second count is different from the first in three places. Amaranth is not surprised.|By the end you know where every remedy in the castle lives. That will be useful, one day, at the worst possible time.}
+> right: Ask her about the strange jars
+  lore +small
+  say: {~She tells you what's in the black jar on the top shelf, and then why it's on the top shelf. You come down the ladder very carefully.|"That one," she says, "is for a curse we haven't had since my first year. I keep it in case." She doesn't say which curse.}
+
+@event brk_stables_round
+title: The Feeding Round
+place: stables
+class: routine
+tone: warm
+when: break and not off_campus
+repeat: 6
+weight: 10
+art: paw
+tags: nature break
+scene: A stable in winter or summer with every stall occupied, a professor and a student carrying buckets down the long aisle at dawn.
+text: Most of the stable hands have gone home, so Professor Brask does the feeding round herself, at dawn, every day. She doesn't ask for help. She hands you a bucket anyway.
+> left: Do the whole round
+  vigor +small
+  rel brask +tiny
+  health -tiny
+  say: {~You carry buckets until your shoulders burn. The hippogriffs eat out of your hand by the end. Brask says nothing, which from her is a speech.|You do the round, then the next day's round. On the third day a griffon lets you scratch its neck. Brask raises an eyebrow, impressed.}
+> right: Feed the old ones slowly
+  mood +small
+  say: {~You spend the whole round with the oldest horse, who takes a full hour to eat and is worth every minute.|You feed the elderly creatures at the end of the row by hand. Brask lets you. "They don't get visitors," she says.}
+
+@event brk_corridors_echo
+title: The Echo
+place: lecture_tower
+class: routine
+tone: light
+when: break and not off_campus
+repeat: 6
+weight: 10
+art: tower
+tags: break
+scene: An empty spiral staircase in a castle tower, a student halfway up shouting a word and listening to it come back.
+text: With nobody on the stairs, the lecture tower echoes like a well. You say "hello" on the first landing and it comes back, a moment later, from somewhere near the top, in a voice that isn't quite yours.
+> left: Run all the stairs
+  vigor +small
+  health -tiny
+  say: {~You race your own echo to the top and lose. You lie on the top landing, wheezing, while it laughs at you on the way down.|You run up and down until you can't. The echo keeps going a while without you.}
+> right: Talk to the echo
+  lore +tiny
+  mood +tiny
+  say: {~You ask the echo a question. It answers a different one. You spend an hour trying to work out which.|You tell the echo your name. It tells you someone else's, very faintly. You look it up later. A student from a hundred years ago.}
+
+@event brk_corvin_route
+title: The Holiday Route
+place: gargoyle_passage
+class: routine
+tone: light
+when: break and not off_campus
+repeat: 6
+weight: 12
+art: map
+tags: social break
+cast:
+  corvin: corvin where around(corvin) and met(corvin)
+scene: A lanky student with a lock-pick behind one ear grinning beside a narrow secret passage behind a gargoyle, holding a lantern.
+text: Corvin is in the passage behind the third gargoyle with a lantern and a grin. "Holidays," he says, "are when the castle forgets to lock things. I've found three doors this week. One of them goes to a room full of hats." He offers you the lantern.
+> left: Take the lantern
+  rel corvin +small
+  guile +tiny
+  alignment -tiny
+  say: {~The room full of hats is real. So is a second room, full of umbrellas, and a third you don't talk about. You put everything back. Mostly.|You explore until dawn. Corvin draws a map on the back of his hand and loses half of it washing.}
+> right: Keep him company, not the route
+  rel corvin +tiny
+  mood +tiny
+  say: {~You sit in the passage and talk instead. He tells you about the doors he hasn't tried, and why, and it's more interesting than the doors.|You stay with the lantern while he goes. He comes back with a hat. It suits you.}
+
+# ---------------- Home, a little more ----------------
+
+@event home_cottage_rain
+title: Rain on the Roof
+place: home_cottage
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: rain
+tags: home
+scene: A cottage kitchen in heavy rain, a family playing cards around the table, a kettle steaming.
+text: {season == "winter": Sleet on the roof all day, and nobody going anywhere.|A summer storm, sudden and loud, and the whole house shut in together.} {~Someone gets the old cards out.|Someone starts telling a story you've heard a hundred times.}
+> left: Play every hand
+  mood +small
+  gold -tiny
+  say: {~You lose three hands, win one, and lose the winnings in the next. Your family cheats outrageously. You remember why you love them.|You play until the rain stops, and then a few more, and pay your debts in coppers.}
+> right: Read by the window
+  lore +small
+  mood -tiny
+  say: {~You read by the rain-streaked window while the cards go on behind you. Every so often someone asks you to settle an argument, and you lose your page.|You get through a whole book while the storm goes over. Somebody saves you the last biscuit, and somebody else eats it.}
+
+@event home_cottage_photograph
+title: The Picture on the Mantel
+place: home_cottage
+class: routine
+tone: warm
+repeat: 4
+weight: 8
+art: mirror
+tags: home
+scene: A small framed picture on a cottage mantelpiece of a child in oversized robes, a student holding it and smiling ruefully.
+text: There's a new picture on the mantel: you, on the day you left for the academy, in robes two sizes too big. {final_year: It looks like someone else's child now.|You look terrified. You were.} Someone has polished the frame.
+> left: Tell them what it's really like
+  charm +small
+  mood -tiny
+  say: {~You tell them about the stairs that move, the professor who throws chalk, the friend who can't make toast. They laugh in the right places, and look worried in the others.|You tell them everything you can, and not the rest. They know there's a rest. They let you keep it.}
+> right: Put it back and say nothing
+  mood +tiny
+  say: {~You put it back, straighter. Later, you see someone straighten it again.|You put it back. Some things are better on a mantel than said out loud.}
+
+@event home_fields_harvest_help
+title: All Hands
+place: home_fields
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: leaf
+tags: home nature
+scene: A field at harvest or a frozen field being cleared, neighbours working in a line, a student in academy boots among them.
+text: {season == "winter": The neighbours are clearing a fallen tree from the far field before the thaw, and every pair of hands is wanted.|The neighbours are getting in a late crop before the weather turns, and every pair of hands is wanted.} You still remember how. Your back remembers more.
+> left: Work the whole day
+  vigor +small
+  health -small
+  gold +tiny
+  say: {~By sunset you're filthy and aching, the job is done, and a neighbour presses a coin on you you can't refuse.|You work till dark. Nobody mentions the academy once, and you like that more than you expected.}
+> right: Do a bit of quiet magic
+  arcana +small
+  alignment -tiny
+  say: {~A little lift here, a little warmth there. The work goes twice as fast. Nobody says anything, but an old neighbour watches your hands the whole time, and doesn't smile.|You make it easier than it should be. The neighbours thank you warily, as if you'd brought a stranger.}
+
+@event home_fields_old_friend
+title: Someone You Grew Up With
+place: home_fields
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: hand
+tags: home social
+scene: Two young people leaning on a field gate at sunset, one in work clothes, one in academy robes, talking easily.
+text: {~Someone you grew up with is leaning on the gate at the end of the lane, the way they always did. They're married now.|At the gate, the friend from before. You've both changed; the gate hasn't. They've taken over the mill, and never mean to leave.}
+> left: Talk until it's dark
+  mood +small
+  say: {~You talk until you can't see each other's faces. It's easy, the way it is with people who knew you before you were anyone.|You talk about nothing for two hours. It's the best conversation you've had in months.}
+> right: Tell them about the academy
+  charm +tiny
+  mood -tiny
+  say: {~They listen politely. Halfway through you notice they've stopped asking questions, and you stop.|You tell them everything. They say "huh" a lot. You realise you're talking about a place they'll never see.}
+
+@event home_fields_night_sky
+title: The Sky Without Towers
+place: home_fields
+class: routine
+tone: warm
+repeat: 4
+weight: 8
+art: star
+tags: home nature
+scene: A student lying on their back in a dark field at night, the sky enormous and full of stars, no buildings anywhere.
+text: At home the sky comes right down to the ground on every side. No towers, no observatory dome, just stars from one edge to the other. {month == 11 or month == 12: And Starfall, which looks different out here: closer, somehow, and less like a show.|You'd forgotten how many there are.}
+> left: Name every one you know
+  lore +small
+  health -tiny
+  say: {~You name them until the dew soaks through. You know more than you did last year. You know which ones are lying.|You name them aloud, softly. A fox somewhere across the field barks, as if correcting you.}
+> right: Just lie there
+  mood +small
+  say: {~You don't name anything. You just lie there until you're cold, and walk home feeling enormous and very small.|You lie in the grass and let the sky be a sky. It's the first time in months nothing has been a lesson.}
+
+@event home_market_stallholder
+title: The Stallholder Remembers
+place: home_market
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: coin
+tags: home money
+scene: A country market stall piled with cheeses, a cheerful stallholder pointing at a student and laughing.
+text: The cheese-seller remembers you. "The one who went to the magic school!" she tells everyone in earshot. "Do us a trick, then." The whole queue turns round to look.
+> left: Do a small trick
+  renown +tiny
+  mana -tiny
+  say: {~You make a cheese float, very slightly. The queue applauds. The cheese-seller gives you the cheese. Your family is mortified and proud in equal parts.|You light a candle with a look. A child bursts into tears of joy. You get a discount for life.}
+> right: Laugh and buy some cheese
+  gold -tiny
+  mood +tiny
+  say: {~"Next time," you say, and buy the cheese. She's disappointed and gives you a bigger piece anyway.|You buy the cheese and refuse the trick. The queue loses interest. You're oddly relieved.}
+
+@event home_market_letter_home
+title: A Letter for the Castle
+place: home_market
+class: routine
+tone: warm
+repeat: 4
+weight: 8
+art: letter
+tags: home social
+scene: A village post counter at a country market, a student writing a letter on the counter with a borrowed pen.
+text: The market has a post counter, and you find yourself writing a letter to the castle: to someone you miss already. It's strange, missing the castle from home. You didn't expect to.
+> left: Write a long one
+  mood +small
+  gold -tiny
+  say: {~You write four pages and pay for the postage twice. It'll arrive before you do, and be read aloud, probably, to people you'd rather it wasn't.|You write until the postmaster coughs. It's a good letter. You'll find out how good when you get back.}
+> right: Write two lines and go
+  mood +tiny
+  say: {~"Home is fine. Miss you. See you soon." It's enough. It's more than enough.|You write two lines, then a third, then stop before it turns into a confession.}

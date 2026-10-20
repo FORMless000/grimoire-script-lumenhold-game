@@ -1,0 +1,459 @@
+# ============================================================
+#  Romance sets (world expansion 1, plan §2a): Lyra and Tobias. Each set: spark beats before the confession (two of
+#  them repeatable from friendship 9), three partner beats (a tradition, a quarrel in their own voice, a crisis), the
+#  ex card (a specialization of soc_ex_encounter), and their versions of generic social cards (`specializes:`).
+#  Spark beats need friendship ≥ 9 and no partner or ex bond with them; the confessions themselves are unchanged.
+# ============================================================
+
+# ---------------- Lyra ----------------
+
+@event lyra_second_place
+title: Second Place, Again
+class: routine
+tone: tense
+trigger: social
+actor: lyra
+when: rel(lyra) >= 9 and bond(lyra) != "partner" and bond(lyra) != "ex" and term
+repeat: 4
+weight: 10
+art: trophy
+tags: social romance
+scene: A posted list of class rankings on a stone wall, two names at the top, a red-haired girl staring at the second one.
+text: The rankings are up. {~Your name is above hers, by one mark.|Her name is above yours, by one mark, and she's not looking at it. She's looking at you.|Your names are level. The registrar has had to put you side by side, alphabetically, and she hates it.} Lyra stands in front of the list with her arms folded. "One mark," she says. "I'll have it back by Frostcall."
+> left: "You can try."
+  rel lyra +small
+  spark lyra +small
+  study +tiny
+  say: {~Her eyes narrow, and something in them lights. "Oh, I will," she says, and walks off already planning. You find yourself studying harder too, which you suspect was the point.|"Good," she says, with relish. "I'd hate to win against someone who wasn't trying." She's almost smiling.|"Try," she repeats, as if tasting the word. She's in the library before you the next morning. So are you.}
+> right: "It's just a list."
+  mood +tiny
+  rel lyra -tiny
+  say: {~"It's never just a list," she says, and for a second she sounds about twelve. Then the Vaneshade face comes back. "But you wouldn't know that."|She looks at you as though you'd said the sun was optional. Then she walks away to study.|"Lucky you," she says, and means something you don't catch until later.}
+
+@event lyra_glove
+title: The Glove
+class: routine
+tone: tense
+trigger: social
+actor: lyra
+when: rel(lyra) >= 9 and spark(lyra) >= 8 and bond(lyra) != "partner" and bond(lyra) != "ex"
+weight: 10
+art: hand
+tags: social romance
+scene: A red-haired girl dropping a leather duelling glove at a student's feet in an empty corridor, her chin very high.
+text: Lyra drops a glove at your feet in an empty corridor. An actual glove. "Vaneshades settle things properly," she says. "You've been in my head all term. It's insufferable. Dawn, the practice circle. If I win, you stop." She doesn't say stop what. She's gone red to the ears.
+> left: Pick it up
+  rel lyra +small
+  spark lyra +medium
+  health -tiny
+  say: You meet her at dawn. Neither of you casts a single spell. You stand in the frost and talk for an hour instead, about nothing, and she forgets to win, and so do you.
+> right: Hand it back, politely
+  rel lyra +tiny
+  spark lyra -small
+  say: "You dropped this." Her face does something complicated and then goes perfectly smooth. "So I did," she says, and puts it on, and that's the end of it. Almost.
+
+@event lyra_after_hours
+title: After the Torches
+class: routine
+tone: warm
+trigger: social
+actor: lyra
+when: rel(lyra) >= 9 and bond(lyra) != "partner" and bond(lyra) != "ex" and spark(lyra) < 40
+repeat: 4
+time: evening night
+weight: 10
+art: flame
+tags: social romance
+scene: An empty practice hall at night, the torches out, a red-haired girl lighting a single flame in her palm so two people can see.
+text: {~The duelling hall's torches go out at ten. Lyra lights one flame in her palm and keeps practising.|Lyra is still in the practice hall after the torches are out, working one form over and over.|The torches are out again. Lyra's palm flame is the only light, and she's waiting, as if she knew you'd come.} "You're late," she says. You didn't say you were coming.
+> left: Spar with her
+  arcana +small
+  spark lyra +small
+  health -tiny
+  say: {~You spar until your arms shake. She says nothing nice, but she shows you, without explaining, how she shapes the turn of a flame. Then she blows it out, and you walk back in the dark, close enough to bump shoulders.|You spar in the light of her hand. She's better than you. She tells you exactly how, and stays until you've fixed it.|You fight until you're both laughing at a missed block. Lyra doesn't laugh, usually. She stops, surprised at herself.}
+> right: Make her stop
+  rel lyra +small
+  study -tiny
+  say: {~"Enough," you say, and take her wrist. The flame goes out. "You'll be useless tomorrow." She glares at you in the dark, and then lets you walk her back, which is a first.|You sit on the bench and refuse to move until she does. It takes an hour. Your own reading doesn't get done.|You make her eat something. She eats it as if it's an insult, and then eats yours.}
+
+@event lyra_partner_watch
+title: Burnout Watch
+class: routine
+tone: warm
+trigger: social
+actor: lyra
+when: bond(lyra) == "partner"
+repeat: 4
+weight: 12
+art: candle
+tags: romance
+scene: A candlelit desk buried in books, a red-haired girl asleep on her notes, someone gently taking the quill out of her hand.
+text: You've an arrangement now, the two of you: at midnight, you go and find her, wherever she is, and make her stop. Tonight it's the library. She's on chapter nine of a book with eleven. {~"Two more," she says, without looking up.|"Ten minutes," she says, which means two hours.}
+> left: Make her stop
+  spark lyra +small
+  study -tiny
+  say: {~You close the book on her fingers, gently. She lets you. On the way back she falls asleep against your shoulder, standing up, which you didn't know was possible.|You take the quill. She says something cutting. Then she says thank you, very quietly, as if it costs her a mark.}
+> right: Stay and finish it with her
+  study +tiny
+  health -tiny
+  say: {~You pull up a chair and read chapter ten aloud while she takes notes. By eleven you're both asleep on the table, and the librarian covers you with a cloak.|You stay. She finishes. She says it's the first book she's ever finished without being alone.}
+
+@event lyra_not_second
+title: Not Second to Anyone
+class: routine
+tone: tense
+trigger: social
+actor: lyra
+when: bond(lyra) == "partner"
+weight: 10
+art: flame
+tags: romance
+scene: A red-haired girl standing very straight in a corridor, eyes bright with anger, a crumpled tournament list in her fist.
+text: Lyra has found out you skipped her match for {~a study group|a club meeting|a friend's crisis}. She is very calm, which is worse than shouting. "I have been second to my mother's ambitions my whole life," she says. "I won't be second to a study group."
+> left: Talk it through, properly
+  hint: She wants to be argued with, not soothed.
+  challenge negotiate journeyman:
+    win:
+      spark lyra +medium
+      rel lyra +small
+      say: You don't apologise first; you argue. You tell her she's not second, she's the one you'd have fought for a seat beside. She listens. Then she kisses you, angrily, and says next time you'll be in the front row.
+    lose:
+      spark lyra -small
+      rel lyra -small
+      say: Everything you say sounds like an excuse, because it is. She nods, very correctly, and walks away. She's at your next lecture. She doesn't sit next to you.
+> right: Apologise, and mean it
+  spark lyra +tiny
+  mood -small
+  say: "I'm sorry." She looks at you a long time. "Vaneshades don't accept apologies," she says. "But I'm not a Vaneshade with you." It's forgiveness. It still stings, for both of you.
+
+@event lyra_empty_chair
+title: Her Mother's Empty Chair
+class: story
+tone: warm
+trigger: social
+actor: lyra
+when: bond(lyra) == "partner" and knows(lyra.mother)
+weight: 14
+art: duel
+tags: romance
+scene: A crowded duelling gallery with one empty velvet chair in the front row, a red-haired duellist glancing at it before her bout.
+text: Lyra's final bout of the year. In the front row of the gallery is a velvet chair with a card on it: "Reserved — Lady Vaneshade." It stays empty. Lyra looks at it once, just before she bows, and then at you.
+> left: Sit in the chair
+  spark lyra +medium
+  renown -tiny
+  say: You walk down to the front and sit in Lady Vaneshade's chair. People stare. Lyra sees, and something in her shoulders lets go. She wins in under a minute. Afterwards she says, "That was a terrible breach of etiquette," and doesn't let go of your hand.
+> right: Cheer louder than anyone
+  spark lyra +small
+  mood +small
+  say: You shout her name until the gallery joins in. She doesn't look at the chair again. She wins, and turns, and looks for you, only you, the way she used to look for the scoreboard.
+
+@event lyra_ex
+title: Cold Hearth
+specializes: soc_ex_encounter
+class: milestone
+tone: warm
+trigger: social
+actor: lyra
+repeat: 6
+art: flame
+tags: romance
+scene: Two people passing in a corridor, one a red-haired girl who keeps her chin high and her eyes forward.
+text: Lyra passes you in the corridor with her chin high and her eyes forward. She's perfectly polite now, which is how you know. A Vaneshade's coldest weapon is good manners.
+> left: Let her pass
+  mood -tiny
+  say: She passes. You both keep walking. Behind you, a torch on the wall flares, briefly, as if someone's temper had slipped.
+> right: Say her name
+  rel lyra +small
+  challenge appeal journeyman:
+    win:
+      bond lyra friend
+      say: She stops. Turns. "What," she says. You say you miss her as a rival, at least. She almost laughs. "Library," she says. "Thursday. I'll destroy you." It's an olive branch, the Vaneshade way.
+    lose:
+      mood -tiny
+      say: "Yes?" she says, and waits, and you don't have the words. "I thought not," she says, not unkindly, and goes.
+
+@event lyra_partner_neglect
+title: "I Don't Wait"
+specializes: soc_partner_neglect
+class: routine
+tone: tense
+trigger: social
+actor: lyra
+weight: 14
+repeat: 5
+art: hourglass
+tags: romance
+scene: A red-haired girl in a duelling coat standing in a doorway with her arms folded, two cups of cold tea on the table behind her.
+text: Lyra is in your doorway with her arms folded. "I don't wait for people," she says. "I've waited for you three times this month. I counted. I'm a Vaneshade; I count everything." She doesn't say she missed you. She doesn't need to.
+> left: "Tomorrow. Dawn. I'll be there first."
+  spark lyra +small
+  health -tiny
+  study -tiny
+  say: You're there first, at dawn, with two cups of tea that are actually hot. She takes one and says nothing, which from her is an embrace.
+> right: "You know what term's like."
+  spark lyra -medium
+  rel lyra -small
+  say: "I do," she says. "I manage." She walks away, perfectly upright. It's the most hurt you've ever seen her look.
+
+@event lyra_lends
+title: A Loan, Vaneshade Style
+specializes: soc_borrow_money
+class: routine
+tone: light
+trigger: social
+actor: lyra
+weight: 10
+repeat: 6
+art: pouch
+tags: social money
+scene: A red-haired girl holding out a heavy purse at arm's length, not looking at it, as if it were beneath her notice.
+text: Lyra would sooner die than borrow. She has noticed, though, that your purse is thin, and she is holding out hers at arm's length without looking at it. "Take what you need," she says. "Don't thank me. Don't ever mention it."
+> left: Take a little
+  gold +medium
+  rel lyra +small
+  mood -tiny
+  say: You take a few crowns. She never mentions it again. Neither do you, though you pay her back in study notes she pretends not to read.
+> right: Refuse, kindly
+  rel lyra +tiny
+  say: "I'm fine." She puts the purse away. "Of course you are," she says, and the next day there's a meal paid for at the village inn in your name.
+
+# ---------------- Tobias ----------------
+
+@event tobias_gerald_approves
+title: Gerald Approves
+class: routine
+tone: light
+trigger: social
+actor: tobias
+when: rel(tobias) >= 9 and bond(tobias) != "partner" and bond(tobias) != "ex"
+repeat: 4
+weight: 10
+art: leaf
+tags: social romance
+scene: A large gentle student holding a potted mandrake in a tiny knitted hat up to another student's face, both very solemn.
+text: Tobias holds Gerald up to your face. Gerald is wearing {~a new hat|his winter hat}. "He's deciding about you," Tobias says seriously. "He doesn't like everyone. He bit the Verdant Circle's treasurer." Gerald considers you with his small dark eyes.
+> left: Bow to Gerald
+  learn tobias.gerald
+  rel tobias +small
+  spark tobias +small
+  say: {~You bow. Gerald screams very softly, which Tobias says is approval. Tobias looks at you as if you'd done something wonderful. You think maybe you have.|You bow, and Gerald pats your nose with a leaf. Tobias goes pink. "He's never done that," he says. "Not even to me."}
+> right: Offer Gerald a finger
+  health -tiny
+  mood +small
+  say: {~Gerald bites it. Tobias is mortified and laughs so hard he has to sit down. You're both still laughing when the greenhouse bell goes.|Gerald bites it, then lets go and looks sorry. "He's shy," says Tobias. Your finger disagrees.}
+
+@event tobias_letter_aloud
+title: Read It to Me
+class: routine
+tone: warm
+trigger: social
+actor: tobias
+when: rel(tobias) >= 9 and spark(tobias) >= 5 and bond(tobias) != "partner" and bond(tobias) != "ex"
+weight: 10
+art: letter
+tags: social romance
+scene: A large student sitting on a bench handing another a letter on farm paper, his eyes red-rimmed and tired.
+text: Tobias has a letter from home and he hasn't opened it. "My eyes are tired," he says, which isn't true. "Would you read it? Out loud?" It's from his mother. She writes the way people talk on farms: weather first, goats second, love last and briefly.
+> left: Read it, voices and all
+  learn tobias.ma
+  spark tobias +small
+  rel tobias +small
+  say: You read it in his mother's voice, as near as you can guess. He laughs at the goats and goes quiet at the end. "She says she's proud," he says. "She never says that." You read that line twice, because he asks.
+> right: Read it plainly, then talk
+  rel tobias +small
+  mood -tiny
+  say: You read it plainly. Then he talks about home for an hour, the farm, the frost, his mother alone at harvest, and you listen. It's a lot to carry. You carry some of it back with you.
+
+@event tobias_umbrella
+title: One Umbrella
+class: routine
+tone: warm
+trigger: social
+actor: tobias
+when: rel(tobias) >= 9 and bond(tobias) != "partner" and bond(tobias) != "ex" and spark(tobias) < 40
+repeat: 4
+weight: 10
+art: rain
+tags: social romance
+scene: Two students walking close under one enormous patched umbrella across a rainy castle courtyard, one much bigger than the other.
+text: It's pouring, and Tobias has the biggest umbrella you've ever seen: patched, green, and older than both of you. {~"Ma's," he says. "It's seen worse."|"Room for two," he says, "or four, if they're small."}
+> left: Walk close under it
+  spark tobias +small
+  health -tiny
+  say: {~You walk back under it, very close, because the umbrella insists. He tells you a long story about a goat that fell in a well, and you don't hear the end of it, and don't mind.|Halfway across the courtyard he stops talking. So do you. The rain does the talking.}
+> right: Race him to the door
+  vigor +small
+  mood +small
+  say: {~You run. He runs after you with the umbrella and arrives soaked anyway, laughing from the belly.|You make it first, drenched. He arrives dry and very pleased with himself.}
+
+@event tobias_seed_month
+title: A Seed a Month
+class: routine
+tone: warm
+trigger: social
+actor: tobias
+when: bond(tobias) == "partner"
+repeat: 4
+weight: 12
+art: flower
+tags: romance
+scene: A large student pressing a single seed into a pot on a windowsill crowded with sprouting pots, another student watching.
+text: Tobias gives you one seed a month, every month, in a twist of paper with its name on it. Your windowsill is crowded now. {~This month's is a sunflower. "For when it's grey," he says.|This month's is a herb you've never heard of. "For your cough," he says. You don't have a cough. "Yet," he says.}
+> left: Plant it together
+  spark tobias +small
+  alchemy +tiny
+  say: {~You plant it together, his big hands over yours, pressing the soil down gently. He waters it. You'll remember this month by it.|He shows you how deep, how much water, where the light falls. The windowsill is a calendar now.}
+> right: Give him one back
+  rel tobias +small
+  gold -tiny
+  say: {~You buy a seed in the village and give it to him in a twist of paper. He holds it as if it were a jewel, and plants it that day.|You give him a seed back. He laughs from the belly and plants it in his best pot.}
+
+@event tobias_home_or_here
+title: Home or Here
+class: routine
+tone: tense
+trigger: social
+actor: tobias
+when: bond(tobias) == "partner" and year >= 2
+weight: 10
+art: house
+tags: romance
+scene: A large student sitting on a farm gate in a dream-like vision, then on a castle wall, torn between the two.
+text: Tobias has been quiet all week. Finally: "Ma wants me home after. The farm. It's always been the plan." He doesn't look at you. "I always thought I wanted that. I'm sorry. I'm sorry for saying it like this. I'm sorry."
+> left: "Then I'll come and see the goats."
+  spark tobias +medium
+  mood -tiny
+  say: He looks up so fast he nearly falls off the wall. "You'd like the goats," he says. "They'd like you." Neither of you knows what comes after. It's enough, for now, that you'd come.
+> right: "Do you still want it?"
+  rel tobias +small
+  spark tobias -tiny
+  say: He thinks for a long time, the way he thinks about seeds. "I don't know," he says at last. "I didn't know I was allowed not to know." You sit with him until he stops apologising.
+
+@event tobias_gerald_wilts
+title: Gerald Is Ill
+class: story
+tone: warm
+trigger: social
+actor: tobias
+when: bond(tobias) == "partner" and knows(tobias.gerald)
+weight: 14
+art: leaf
+tags: romance
+scene: A large student cradling a drooping potted mandrake in a knitted hat, sitting on a greenhouse floor, another student kneeling beside him.
+text: Gerald is wilting. His hat has slipped, his leaves are grey, and he hasn't screamed in two days. Tobias is sitting on the greenhouse floor holding the pot, and he isn't apologising, which is how you know it's bad.
+> left: Brew him a tonic
+  challenge brew journeyman:
+    win:
+      spark tobias +medium
+      alchemy +small
+      say: You brew all night. At dawn Gerald drinks it, shudders, and screams, loudly, furiously, beautifully. Tobias laughs and cries at once and holds you so hard your ribs creak.
+    lose:
+      spark tobias +small
+      mood -small
+      say: The tonic does nothing. But in the morning Gerald is a little greener anyway, maybe because Tobias didn't sleep and neither did you. "It's not your fault," Tobias says. "It's nobody's. You stayed."
+> right: Sit with him all night
+  spark tobias +small
+  health -small
+  say: You sit on the greenhouse floor all night, Tobias holding Gerald, you holding Tobias. At dawn Gerald stirs, and screams, very softly. It's the best sound you've ever heard.
+
+@event tobias_ex
+title: He Still Waters Your Plant
+specializes: soc_ex_encounter
+class: milestone
+tone: warm
+trigger: social
+actor: tobias
+repeat: 6
+art: flower
+tags: romance
+scene: A large student watering a single pot on a windowsill that isn't his, glancing guiltily at the door.
+text: You find Tobias at your window, watering the sunflower he gave you, months ago. He jumps. "Sorry," he says. "Sorry. It looked dry. I'll go. I'm sorry."
+> left: Let him go
+  mood -tiny
+  say: He goes. The sunflower is very well watered. You don't know whether to be grateful or sad, so you're both.
+> right: Ask him to stay a minute
+  rel tobias +small
+  challenge appeal apprentice:
+    win:
+      bond tobias friend
+      say: He stays. You talk about the sunflower, and then about goats, and it's almost easy. "Friends," he says, at the door, testing the word, "is a good word. I like it."
+    lose:
+      mood -tiny
+      say: He stays, and stands, and apologises four times, and goes. The sunflower turns toward the door after him.
+
+@event tobias_dance_specialized
+title: The Broom Waltz, Again
+specializes: date_dance_lesson
+class: routine
+tone: light
+trigger: social
+actor: tobias
+weight: 10
+repeat: 4
+art: music
+tags: romance
+scene: A large student counting steps under his breath in a moonlit greenhouse, guiding another student between rows of plants.
+text: Tobias has been practising again, he admits, with the broom. "It complained," he says. "But I'm better now. I think. Will you?" He holds out a hand the size of a spade, very carefully.
+> left: Dance with him
+  spark tobias +small
+  health -tiny
+  say: He's better. He steps on your foot only twice, and apologises five times, and between the apologies he's a wonderful dancer, slow and sure, like a tide.
+> right: Teach him a new step
+  charm +small
+  rel tobias +tiny
+  say: You teach him a step from the Midwinter Ball. He gets it on the ninth try and is so proud he dances it alone, between the tomato plants, until the gardener throws him out.
+
+@event tobias_friend_sick
+title: Too Big for the Bed
+specializes: soc_friend_sick
+class: routine
+tone: light
+trigger: social
+actor: tobias
+weight: 10
+repeat: 8
+art: rain
+tags: social
+scene: A very large student squeezed into a small infirmary bed, feet hanging off the end, a potted mandrake on the bedside table.
+text: Tobias has Lake Fever, and the infirmary bed is a foot too short for him. His feet stick out at the end under a blanket. He isn't worried about himself. "Gerald," he croaks. "Who's watering Gerald?"
+> left: Send a card, and a promise
+  rel tobias +tiny
+  say: You send a card with a drawing of Gerald in a sickbed hat. Tobias keeps it propped against the water jug and shows it to Sister Amaranth twice a day.
+> right: Water Gerald, and sit with him
+  rel tobias +medium
+  alignment +tiny
+  chance unlikely:
+    gain sick
+    say: You water Gerald, then sit with Tobias every evening until he's better. Then you're in the next bed. Tobias waters Gerald for both of you, apologising to everyone.
+  else:
+    say: {~You bring Gerald to the infirmary in his pot. Amaranth objects. Gerald screams at her. Tobias recovers mostly from laughing.|You water Gerald every morning and report on him every evening, leaf by leaf. Tobias gets better, he says, out of relief.|You read him farming almanacs aloud until he falls asleep, which takes four pages. He recovers in three days.}
+
+@event lyra_teach_spell
+title: A Trick Worth Learning
+specializes: soc_teach_spell
+class: routine
+tone: light
+trigger: social
+actor: lyra
+weight: 10
+repeat: 8
+art: wand
+tags: social magic
+scene: A duelling hall after hours, a red-haired girl correcting another student's wand arm with two fingers, a scorched practice target behind them.
+text: Lyra doesn't invent little spells. "Half-useful is useless," she says. But she'll teach you the flourish her family has used to open a duel for two hundred years, if you swear not to tell anyone she taught it to someone outside the family. She looks as if she might regret the offer.
+> left: Learn it her way
+  chance likely:
+    arcana +small
+    rel lyra +small
+    say: She corrects your wrist eleven times. On the twelfth the flourish leaves a ribbon of flame in the air, exactly where it should be. Lyra nods once. "Adequate," she says, which from her is a medal.
+  else:
+    health -tiny
+    rel lyra +small
+    say: The ribbon of flame goes where it shouldn't, which is your sleeve. Lyra puts it out with a flick and doesn't laugh, which is worse. "Again," she says. The second time it works.
+> right: Teach her to make toast
+  rel lyra +medium
+  charm +tiny
+  if knows(lyra.toast):
+    say: You hand her a slice of bread and a toasting fork. She looks at it the way she looks at a duelling opponent. Four slices are cinders. The fifth is golden. She eats it standing up, in silence, and then says, "Don't tell anyone that either."
+  else:
+    say: You offer to trade: her flourish for something useful, like toast. She goes very still. "I can incinerate a target at forty paces," she says. "I cannot make toast." By the fifth slice she can. She makes you swear about that too.

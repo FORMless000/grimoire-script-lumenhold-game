@@ -1,7 +1,7 @@
 // Who the player fights (F5.9): AI personas, the foes the main game's cards name, the pools generic foes are drawn from,
 // and the decision for every current combat card. EVENTS.md explains each choice; tools/event-coverage.mjs checks that
 // every `challenge combat` / `challenge duel` in content/ has an entry here.
-// A foe is {name, loadout | pool, persona?, context?, start?}:
+// A foe is {name, loadout | pool, persona?, context?, start?, pronouns?}:
 //   name     how the fight text names it (fighterNames); the card can override it
 //   loadout  a class (LOADOUTS), a character (NAMED_LOADOUTS) or a special foe (SPECIAL_LOADOUTS); pool: one of POOLS,
 //            picked by the encounter seed
@@ -9,6 +9,7 @@
 //   context  the fight's stakes (CONTEXTS); default from the card's kind (combat → real_conflict, duel → practice_duel)
 //   start    {hp, mana} shares the foe starts with (createState's opponentStart, no condition floors), for a foe hurt before
 //            the fight; unused so far: a card's rung and odds word already price circumstances, so don't count them twice
+//   pronouns how the fight text refers to it when it isn't a character (a creature is 'it', anyone else 'they' by default)
 import {LOADOUTS,NAMED_LOADOUTS,SPECIAL_LOADOUTS,scaleToMean} from './roster.mjs';
 
 // Personas: points added to an action's value when the AI chooses (about 4 points = 1 HP of lead), so it favours these
@@ -50,7 +51,22 @@ export const PERSONAS={
  Mabel:{ward:6,mend:6},
  Grimsby:{foresight:8},
  // Special foes
- 'Shadow stag':{gore:12,shadowstep:6,brace:6}
+ 'Shadow stag':{gore:12,shadowstep:6,brace:6},
+ // The Whisperwood (world expansion 1): a creature's aliases play their base rule, so its persona names the base
+ // (skitter = shadowstep, burrow = brace, hide/bark/carapace = ward, maul/charge/slow fall/the long wait = starlight,
+ // brood = bramble).
+ 'Practice mannequin':{nip:10},
+ 'Bramble ferret':{shadowstep:10,nip:10,filch:6,brace:4},
+ Bristleback:{starlight:12,starlight_release:6,ward:6,roar:4},
+ 'Stag beetle':{starlight:10,starlight_hold:6,ward:8,nip:4},
+ 'Grumpy oak':{root:8,starlight:10,ward:8},
+ 'Elder oak':{starlight:10,starlight_hold:8,root:8,ward:8,bramble:6},
+ 'Spiderling swarm':{swarm:12,shadowstep:8,brace:4},
+ 'The Spinner':{web:10,venom:10,starlight:8,starlight_hold:6,bramble:6,ward:6},
+ 'The Spinner, weakened':{web:10,venom:10,starlight:8,ward:6},
+ Thornwitch:{siphon:12,siphon_hold:6,torment:8,bramble:6,ward:4},
+ 'Masked circle':{compel:10,torment:8,eclipse:6,flame:6},
+ 'The Outcast':{heartprice:8,compel:10,siphon:8,eclipse:8,extraction:8,torment:6}
 };
 export const personaOf=loadout=>PERSONAS[loadout]??{};
 
@@ -91,7 +107,21 @@ export const FOES={
  peer:{loadout:'(the peer present)'},   // duel_hall_gallery: whichever peer the card cast as `here`
  // Danger
  man_in_grey:{name:'the man in grey',loadout:'The man in grey',context:'real_conflict'},
- shadow_stag:{name:'the shadow stag',loadout:'Shadow stag',context:'real_conflict'}
+ shadow_stag:{name:'the shadow stag',loadout:'Shadow stag',context:'real_conflict'},
+ // The intro's lesson (world expansion 1): a straw mannequin Thorne works with a wand. Nothing is at stake.
+ practice_mannequin:{name:'the practice mannequin',loadout:'Practice mannequin',context:'rehearsal'},
+ // The Whisperwood (world expansion 1)
+ bramble_ferret:{name:'the bramble ferret',loadout:'Bramble ferret',context:'real_conflict'},
+ bristleback:{name:'the bristleback',loadout:'Bristleback',context:'real_conflict'},
+ stag_beetle:{name:'the stag beetle',loadout:'Stag beetle',context:'real_conflict'},
+ grumpy_oak:{name:'the grumpy oak',loadout:'Grumpy oak',context:'real_conflict'},
+ elder_oak:{name:'the elder oak',loadout:'Elder oak',context:'real_conflict'},
+ spiderling_swarm:{name:'the spiderling swarm',loadout:'Spiderling swarm',context:'real_conflict'},
+ the_spinner:{name:'the Spinner',loadout:'The Spinner',context:'real_conflict',pronouns:'she'},
+ the_spinner_weak:{name:'the Spinner',loadout:'The Spinner, weakened',context:'real_conflict',pronouns:'she'},
+ thornwitch:{name:'the thornwitch',loadout:'Thornwitch',context:'real_conflict',pronouns:'she'},
+ masked_circle:{name:'the masked circle',loadout:'Masked circle',context:'real_conflict'},
+ the_outcast:{name:'the Outcast',loadout:'The Outcast',context:'practice_duel',pronouns:'he'}
 };
 
 // Every current combat card, by event/option. play: a minigame fight against `foe` (several foes: matched to the card's
@@ -118,6 +148,22 @@ export const EVENTS={
  'rival_last_match/left':{play:['tamsin','thornwick_final_year'],context:'practice_duel',setup:'Tamsin if met, else a Thornwick final-year',observers:true,witnesses:true},
  'curse_cure_2/right':{play:'shadow_stag',observers:false,witnesses:false},
  'pyro_lyra_spar/right':{play:'lyra',context:'practice_duel',observers:true,witnesses:true},
+ 'intro_practice_circle/right':{play:'practice_mannequin',context:'rehearsal',observers:false,witnesses:false,foeCommitsFirst:3,tutorial:['lead','read','ward','mana','finish']},   // world expansion 1: the intro's lesson
+ 'item_ashwood_lyra/right':{play:'lyra',context:'practice_duel',observers:true,witnesses:true},   // world expansion 1: ashwood against Vaneshade
+ // World expansion 1: the Whisperwood delve. Alone in the wood: nobody watches, nobody tells.
+ 'ww1_bramble_ferret/right':{play:'bramble_ferret',observers:false,witnesses:false},
+ 'ww1_bristleback/right':{play:'bristleback',observers:false,witnesses:false},
+ 'ww2_grumpy_oak_fight/right':{play:'grumpy_oak',observers:false,witnesses:false},
+ 'ww2_stag_beetle/right':{play:'stag_beetle',observers:false,witnesses:false},
+ 'ww2_thornwitch/up':{play:'thornwitch',observers:false,witnesses:false},
+ 'ww2_thornwitch_fight/right':{play:'thornwitch',observers:false,witnesses:false},
+ 'ww3_shadow_stag_fight/right':{play:'shadow_stag',observers:false,witnesses:false},
+ 'ww3_elder_oak_fight/right':{play:'elder_oak',observers:false,witnesses:false},
+ 'ww3_masked_circle/up':{play:'masked_circle',observers:false,witnesses:false},
+ 'ww3_spiderlings/right':{play:'spiderling_swarm',observers:false,witnesses:false},
+ 'ww_spinner_fight/right':{play:'the_spinner',observers:false,witnesses:false},
+ 'ww_spinner_fight_weak/right':{play:'the_spinner_weak',observers:false,witnesses:false},
+ 'ww_outcast_fight/right':{play:'the_outcast',context:'practice_duel',stakes:'none',observers:false,witnesses:false},   // nothing at stake: "Walk away" settles at no cost
  'duel_practice_bout/left':{play:'quick_fourth_year',firstLeader:1,setup:'Hold your ground: the fourth-year leads every exchange (firstLeader 1)',observers:false,witnesses:true},
  'duel_practice_bout/right':{play:'quick_fourth_year',firstLeader:0,setup:'Go on the attack: you lead the first exchange (firstLeader 0)',observers:false,witnesses:true},
  'duel_bram_hazing/right':{play:'bram',context:'public_duel',observers:true,witnesses:true},
@@ -126,6 +172,8 @@ export const EVENTS={
  'life_rival_academy/right':{play:'thornwick_best',observers:true,witnesses:true},
  'midnight_boathouse_ring/left':{play:'ring_opener',observers:true,witnesses:true},
  'bram_duel/right':{play:'bram',context:'public_duel',observers:true,witnesses:true},
+ 'bram_rematch/right':{play:'bram',context:'public_duel',observers:true,witnesses:true},   // world expansion 1: the rivalry sets
+ 'lyra_glove_thrown/right':{play:'lyra',context:'public_duel',observers:true,witnesses:true},
  'lyra_date_dawn_duel/left':{play:'lyra',context:'practice_duel',observers:false,witnesses:true},
  'duel_hall_gallery/left':{play:'peer',context:'practice_duel',observers:false,witnesses:true},
  'ring_on_yourself/left':{play:'ring_opener',observers:true,witnesses:true},

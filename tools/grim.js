@@ -146,6 +146,7 @@ function analyze(content) {
           else if (kind === 'event') add(A.eventsRef, a.v, where);
           else if (kind === 'track') { if (!content.tracks[a.v] && !(['member', 'applied', 'rank', 'performance'].includes(n.n) && KIND_ARGS.has(a.v)) && !(n.n === 'kind_is' && a.v === 'track')) P('error', where, n.n + '(): unknown track "' + a.v + '"'); }
           else if (kind === 'clue') { if (!content.clues[a.v]) P('error', where, 'clue(' + a.v + '): no @clue ' + a.v); }
+          else if (kind === 'item') { if (!(content.items || {})[a.v]) P('error', where, n.n + '(): no @item ' + a.v); }
           if ((n.n === 'bonds' || n.n === 'bonds_around') && !KNOWN_BONDS.has(a.v)) P('warn', where, 'unknown bond status "' + a.v + '"');
           if (n.n === 'offered' && !['courses', 'clubs', 'jobs'].includes(a.v)) P('error', where, 'offered(): takes courses, clubs or jobs, not "' + a.v + '"');
         });
@@ -256,6 +257,7 @@ function analyze(content) {
         case 'advance': if (!content.arcs[st.arc]) P('error', w, 'advance: unknown arc "' + st.arc + '"'); else if (/^content\/batches\//.test(w)) P('error', w, 'advance: only hard-canon events move an arc clock'); break;
         case 'spawn': if (!content.archetypes[st.archetype]) P('error', w, 'spawn: unknown archetype "' + st.archetype + '"'); break;
         case 'unqueue': if (!content.events[st.event]) P('error', w, 'unqueue: unknown event "' + st.event + '"'); break;
+        case 'give': case 'take': if (!(content.items || {})[st.item]) P('error', w, st.t + ': no @item ' + st.item); break;
         case 'learn_spell': {
           const sp = content.spells[st.spell];
           if (!sp) { P('error', w, 'learn_spell: unknown spell "' + st.spell + '"'); break; }
@@ -275,7 +277,7 @@ function analyze(content) {
           for (const x of st.steps || []) scanExpr(x.cond, w, hasActor);
           break;
         case 'visit': {
-          const recipeSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || [])].map((r) => r.slot));
+          const recipeSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || []), ...Object.values(content.states).flatMap((d) => d.day || [])].map((r) => r.slot));
           if (!recipeSlots.has(st.slot)) P('error', w, 'visit: "' + st.slot + '" is in no day recipe');
           else if (!Object.values(content.places).some((p) => (p.open || []).includes(st.slot))) P('warn', w, 'visit: no place is open at ' + st.slot);
           break;
@@ -315,7 +317,7 @@ function analyze(content) {
     if (e.actor === 'any') A.legacy.push({ where: w, what: '"actor: any" (use a cast: role)' });
     if (e.place && !content.places[e.place]) P('error', w, 'place: unknown place "' + e.place + '"');
     { // a slot an event needs must exist in a day recipe, and a place event's slot gate must be an open, visited slot
-      const recipeSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || [])].map((r) => r.slot));
+      const recipeSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || []), ...Object.values(content.states).flatMap((d) => d.day || [])].map((r) => r.slot));
       if (e.slot && recipeSlots.size && !recipeSlots.has(e.slot)) P('error', w, 'slot: "' + e.slot + '" is in no day recipe');
       for (const sl of e.time || []) if (recipeSlots.size && !recipeSlots.has(sl)) P('error', w, 'time: "' + sl + '" is in no day recipe');
       if (e.slot && (e.time || []).length) P('warn', w, 'time: is ignored when slot: requires one slot');
@@ -327,6 +329,19 @@ function analyze(content) {
     if (e.plan && !content.states['plan_' + e.plan]) P('error', w, 'plan: no @state plan_' + e.plan);
     if (e.replaces && !e.place) P('error', w, 'replaces: needs a place:');
     if (e.per && !(e.cast || []).some((r) => r.role === e.per)) P('error', w, 'per: "' + e.per + '" is not one of this event\'s cast roles');
+    if (e.specializes) {   // E1: one character's own version of a generic card
+      const g = content.events[e.specializes];
+      if (!g) P('error', w, 'specializes: unknown event "' + e.specializes + '"');
+      else {
+        if (!e.actor || ['any', 'npc'].includes(e.actor)) P('error', w, 'specializes: needs actor: <the character> (the card plays for them only)');
+        if (!(g.per || g.actor === 'any')) P('error', w, 'specializes: ' + g.id + ' is not drawn per character (no per: role, not actor: any)');
+        if ((g.trigger || null) !== (e.trigger || null)) P('error', w, 'specializes: trigger "' + (e.trigger || '') + '" differs from ' + g.id + '\'s "' + (g.trigger || '') + '"');
+        if (g.specializes) P('error', w, 'specializes: ' + g.id + ' is itself a specialization');
+        const twins = Object.values(content.events).filter((x) => x.specializes === g.id && x.actor === e.actor);
+        if (twins.length > 1 && twins[0] === e) P('error', w, 'specializes: ' + twins.map((x) => x.id).join(', ') + ' all specialize ' + g.id + ' for ' + e.actor + ' (one per character)');
+      }
+    }
+    if (e.place && content.places[e.place] && content.places[e.place].deprecated) P('error', w, 'place: ' + e.place + ' was merged into ' + content.places[e.place].deprecated + ' (deprecated)');
     for (const r of e.cast || []) {
       if (r.pool === 'fixed' && !content.npcs[r.npc]) P('error', w, 'cast ' + r.role + ': unknown character "' + r.npc + '"');
       if (r.pool === 'present' && r.place && r.place !== 'place' && !content.places[r.place]) P('error', w, 'cast ' + r.role + ': unknown place "' + r.place + '"');
@@ -339,6 +354,7 @@ function analyze(content) {
     for (const o of e.options) {
       const ow = e.file + ':' + o.line;
       if (o.spell && !content.spells[o.spell]) P('error', ow, 'up[' + o.spell + ']: unknown spell');
+      if (o.item && !(content.items || {})[o.item]) P('error', ow, 'up[item:' + o.item + ']: no @item ' + o.item);
       // Previews must be exact (design §8.3): no rand() in an option's effects.
       G.walkEffects(o.effects, (st) => { const ex = st.expr || st.p || st.dc || st.delay; if (ex && /\brand\(/.test(ex.src)) P('error', e.file + ':' + st.line, 'rand() in an option can\'t be previewed: use a chance or a range (a~b)'); });
       if (o.memory) {
@@ -354,7 +370,39 @@ function analyze(content) {
     ROLES = new Set(); IN_EVENT = false;
   }
   for (const s of Object.values(content.states)) ['tick', 'on_add', 'on_expire', 'on_remove'].forEach((k) => scanEffects(s[k], loc(s), false));
+  for (const s of Object.values(content.states)) {
+    if (s.day && s.kind !== 'plan') P('error', loc(s), 'day: only a plan (kind: plan) shapes a break\'s day');
+    if (s.day && !s.day.some((r) => r.slot === (content.game.day_break || [])[0]?.slot)) P('warn', loc(s), 'day: should start with the same slot as @game day_break (the plan is often picked in it)');
+    if (s.deprecated && !['true', 'yes'].includes(String(s.deprecated))) P('error', loc(s), 'deprecated: a state takes "true"');
+    for (const k of s.boost || []) {
+      if (!(G.CHALLENGE_KINDS[k] || k === 'exam')) P('error', loc(s), 'boost: unknown check kind "' + k + '" (' + Object.keys(G.CHALLENGE_KINDS).join(' ') + ')');
+      else if (G.MINIGAME_KINDS[k]) P('error', loc(s), 'boost: ' + k + ' is played as a minigame; a tonic never touches it');
+    }
+    if ((s.boost || []).length && !(content.balance && content.balance.tonic)) P('warn', loc(s), 'boost: with no @balance tonic it adds nothing');
+  }
+  // The kit (E4): a slot, worn effects that name spells or known groups, and art.
+  for (const d of Object.values(content.items || {})) {
+    if (!d.slot) P('error', loc(d), '@item needs slot: (' + G.ITEM_SLOTS.join(', ') + ')');
+    if (!d.name) P('error', loc(d), '@item needs name:');
+    if (d.art && !Art.has(d.art)) P('warn', loc(d), 'unknown art "' + d.art + '"');
+    const known = (k) => content.spells[k] || G.WORN_GROUPS.includes(k);
+    const w = d.worn || {};
+    for (const k of [...Object.keys(w.cost || {}), ...Object.keys(w.onCast || {}), ...(w.taken || []).flatMap((t) => t.from)]) if (!known(k)) P('error', loc(d), 'worn: "' + k + '" is neither a spell nor a group (' + G.WORN_GROUPS.join(' ') + ')');
+    if (d.legacy) scanExpr(d.legacy, loc(d), false);
+    if (d.bound && !d.legacy) P('error', loc(d), 'bound: needs a legacy: condition to follow');
+    if (d.price && !G.TIERS.includes(d.price)) P('error', loc(d), 'price: a size tier (tiny … huge), got "' + d.price + '"');
+    scanEffects(d.tick, loc(d), false);
+    if (d.start && Object.values(content.items).some((x) => x !== d && x.start && x.slot === d.slot)) P('error', loc(d), 'start: only one item per slot can be worn from the start');
+  }
+  for (const p of Object.values(content.places)) {
+    if (!p.deprecated) continue;
+    const to = content.places[p.deprecated];
+    if (!to) P('error', loc(p), 'deprecated: unknown place "' + p.deprecated + '" (the place it was merged into)');
+    else if (to.deprecated) P('error', loc(p), 'deprecated: ' + to.id + ' is deprecated too; name the survivor');
+    if ((p.always || '').trim()) P('error', loc(p), 'a deprecated place keeps no always: list (move it to ' + p.deprecated + ')');
+  }
   fightLint(content, P, loc);
+  parleyLint(content, P, loc);
   for (const h of Object.values(content.hooks)) { scanExpr(h.when, loc(h), false); scanEffects(h.do, loc(h), false); if (!['game_start', 'month_start', 'month_end', 'term_start', 'term_end'].includes(h.on)) P('error', loc(h), 'hook "on" must be game_start, month_start, month_end, term_start or term_end'); }
   for (const r of Object.values(content.resources)) scanEffects(r.on_zero, loc(r), false);
   for (const en of Object.values(content.endings)) {
@@ -370,7 +418,9 @@ function analyze(content) {
   analyzeWorld(content, P, scanExpr, scanText, taught);
 
   // Cross-reference results
-  for (const [f, ws] of Object.entries(A.flagsRead)) if (!A.flagsSet[f]) P('warn', ws[0], 'flag "' + f + '" is read but never set (typo?)' + (ws.length > 1 ? ' [+' + (ws.length - 1) + ' more]' : ''));
+  // Flags a player sets outside content (E7: the title screen's options and the Settings rows, via newGame's opts.flags).
+  const PLAYER_FLAGS = new Set(['skip_intros']);
+  for (const [f, ws] of Object.entries(A.flagsRead)) if (!A.flagsSet[f] && !PLAYER_FLAGS.has(f)) P('warn', ws[0], 'flag "' + f + '" is read but never set (typo?)' + (ws.length > 1 ? ' [+' + (ws.length - 1) + ' more]' : ''));
   for (const [v, ws] of Object.entries(A.varsRead)) if (!A.varsSet[v]) P('warn', ws[0], 'identifier "' + v + '" is not a resource/skill and is never assigned (typo?)');
   for (const [s, ws] of Object.entries(A.statesRef)) if (!content.states[s]) P('error', ws[0], 'unknown state "' + s + '"');
   for (const [n, ws] of Object.entries(A.npcsRef)) if (!content.npcs[n]) P('error', ws[0], 'unknown npc "' + n + '"');
@@ -404,7 +454,7 @@ function analyze(content) {
       const where = e.file + ':' + e.line;
       if (loses(e.on_show)) { P('error', where, e.id + ': loses ' + res + ' on show; only an incident may take ' + res + ' unavoidably'); continue; }
       if (e.offers) continue;   // generated menus (courses, clubs, jobs) list free choices of their own
-      const free = e.options.some((o) => !o.when && !o.spell && !loses(o.effects));
+      const free = e.options.some((o) => !o.when && !o.spell && !o.item && !loses(o.effects));
       if (!free) P('error', where, e.id + ': every always-available option costs ' + res + '; give one a way out or make the card an incident');
     }
   }
@@ -457,7 +507,7 @@ function crownCheck(e, content, P) {
 // plays it before the choice resolves), at most one on any path through that option, and the minigame must know its foe
 // (combat/setup/foes.mjs EVENTS, read from build/combat.bundle.js; without a decision a generic student is fought).
 function fightLint(content, P, loc) {
-  const isFight = (st) => st.t === 'challenge' && (st.kind === 'combat' || st.kind === 'duel');
+  const isFight = (st) => st.t === 'challenge' && G.MINIGAME_KINDS[st.kind] === 'fight';
   // The most fights any one path through these effects can meet.
   const most = (effs) => (effs || []).reduce((n, st) => {
     if (st.t === 'if') return n + Math.max(...st.branches.map((b) => most(b.body)), most(st.else));
@@ -481,6 +531,37 @@ function fightLint(content, P, loc) {
   for (const [what, list] of [['state', Object.values(content.states).flatMap((s) => ['tick', 'on_add', 'on_expire', 'on_remove'].map((k) => [s, s[k]]))], ['hook', Object.values(content.hooks).map((h) => [h, h.do])]])
     for (const [d, effs] of list) G.walkEffects(effs, (st) => { if (isFight(st)) P('error', loc(d), 'a ' + st.kind + ' challenge must be on an event\'s option, not in a ' + what); });
   if (EVENTS) for (const k of Object.keys(EVENTS)) if (!used.has(k)) P('warn', 'combat/setup/foes.mjs', 'EVENTS["' + k + '"] matches no fight in content');
+}
+// Negotiations (E8): bound to the negotiation minigame like fights to theirs. Each sits on an option, at most one on any
+// path through it, and has an entry in src/negotiation.js PARLEYS (who sits across the table, and the room).
+function parleyLint(content, P, loc) {
+  const N = require('../src/negotiation.js');
+  const isParley = (st) => st.t === 'challenge' && G.MINIGAME_KINDS[st.kind] === 'parley';
+  const most = (effs) => (effs || []).reduce((n, st) => {
+    if (st.t === 'if') return n + Math.max(...st.branches.map((b) => most(b.body)), most(st.else));
+    if (st.t === 'challenge') return n + (isParley(st) ? 1 : 0) + Math.max(most(st.win), most(st.partial), most(st.lose));
+    if (st.body) return n + Math.max(most(st.body), most(st.else));
+    return n;
+  }, 0);
+  const used = new Set();
+  for (const e of Object.values(content.events)) {
+    G.walkEffects(e.on_show, (st) => { if (isParley(st)) P('error', e.file + ':' + st.line, 'a ' + st.kind + ' challenge must be on an option (negotiations are played before the choice resolves), not in on_show'); });
+    for (const o of e.options) {
+      if (most(o.effects) > 1) P('error', e.file + ':' + o.line, 'option "' + o.key + '" can meet more than one negotiation on one path (a choice plays at most one)');
+      let n = 0; G.walkEffects(o.effects, (st) => { if (isParley(st)) n++; });
+      if (!n) continue;
+      const key = e.id + '/' + o.key; used.add(key);
+      const p = N.PARLEYS[key];
+      if (!p) P('warn', e.file + ':' + o.line, 'negotiation with no entry in src/negotiation.js PARLEYS["' + key + '"] (who sits across the table, and the room)');
+      else {
+        if (!N.PROFILES[p.profile]) P('error', e.file + ':' + o.line, 'PARLEYS["' + key + '"]: unknown profile "' + p.profile + '" (' + Object.keys(N.PROFILES).join(' ') + ')');
+        if (!N.CONTEXTS[p.context]) P('error', e.file + ':' + o.line, 'PARLEYS["' + key + '"]: unknown context "' + p.context + '" (' + Object.keys(N.CONTEXTS).join(' ') + ')');
+      }
+    }
+  }
+  for (const [what, list] of [['state', Object.values(content.states).flatMap((s) => ['tick', 'on_add', 'on_expire', 'on_remove'].map((k) => [s, s[k]]))], ['hook', Object.values(content.hooks).map((h) => [h, h.do])]])
+    for (const [d, effs] of list) G.walkEffects(effs, (st) => { if (isParley(st)) P('error', loc(d), 'a ' + st.kind + ' challenge must be on an event\'s option, not in a ' + what); });
+  for (const k of Object.keys(N.PARLEYS)) if (!used.has(k)) P('warn', 'src/negotiation.js', 'PARLEYS["' + k + '"] matches no negotiation in content');
 }
 function budgetCheck(e, content, P) {
   const bal = content.balance || {};
@@ -524,7 +605,7 @@ function budgetCheck(e, content, P) {
     for (const [k, r] of Object.entries(pv.deltas)) if (Math.max(Math.abs(r[0]), Math.abs(r[1])) >= eng.tierAmount(row(k) === 'xp' ? Object.keys(content.skills)[0] : row(k), 'large')) larges++;
     // The expected change per value, and whether the option is a gamble or leads somewhere (a state, a flag, a queue).
     const per = {}; for (const p of pv.paths) for (const [k, r] of Object.entries(p.deltas)) per[k] = (per[k] || 0) + p.p * (r[0] + r[1]) / 2;
-    rows.push({ key: o.key, exp, per, risky: atOdds || pv.paths.length > 1, follows: pv.paths.some((p) => p.follows), gated: !!o.when || !!o.spell });
+    rows.push({ key: o.key, exp, per, risky: atOdds || pv.paths.length > 1, follows: pv.paths.some((p) => p.follows), gated: !!o.when || !!o.spell || !!o.item });
   }
   // A placeholder card (I7) stands in for content still to write: listed, not judged.
   if (e.class === 'routine' && (e.tags || []).includes('placeholder')) P('info', 'placeholder card (to be replaced with real content)');
@@ -1254,6 +1335,7 @@ function runMetrics(content, eng) {
     firstPartner: (cards.find((x) => ((x.out && x.out.notes) || []).some((n) => n.kind === 'bond' && n.status === 'partner')) || {}).turn ?? null,
     distinct: new Set(cards.map((x) => x.id)).size, early,
     fights: (eng.s.fights || []).length, fightsWon: (eng.s.fights || []).filter((f) => f.outcome === 'win').length,
+    kit: Object.keys(eng.s.itemsHad || {}).filter((id) => eng.c.items && eng.c.items[id] && !eng.c.items[id].start).length,
   };
 }
 // The design's Level-2 alarms (§8.8): wide tolerances, each judged on the median run of the style it is about.
@@ -1323,6 +1405,11 @@ function designAlarms(name, runs, alarm, all) {
     const won = runs.reduce((a, r) => a + r.fightsWon, 0) / Math.max(1, runs.reduce((a, r) => a + r.fights, 0));
     if (won < 0.5) alarm('combatmaxx: wins ' + Math.round(100 * won) + '% of its fights (it takes only fights a card calls winnable; ≥ 50%)');
     if (share((r) => r.early) > 0.2) alarm('combatmaxx: ' + Math.round(100 * share((r) => r.early)) + '% of runs end early (fighting often should cost, not end the run)');
+  }
+  if (name === 'spender') {
+    const k = med(runs.map((r) => r.kit)), kb = other('balanced', (r) => r.kit);
+    if (k < 3) alarm('spender: ends with ' + k + ' pieces of kit beyond the start (median; a player with a purse should find at least 3 worth buying)');
+    if (kb != null && k <= kb) alarm('spender: no more kit than balanced (' + k + ' vs ' + kb + '); the shops sell nothing a buyer wants');
   }
   if (name === 'explorer') {
     const d = med(runs.map((r) => r.distinct)), db = other('balanced', (r) => r.distinct);

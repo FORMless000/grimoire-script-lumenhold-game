@@ -47,7 +47,12 @@
     get dayMode() { return !!(this.c.game.day_term && this.c.game.day_term.length); },
     // The last day (`@game day_last:`) resolves the run: only its pushed cards, no pools (playtest 2, M21).
     isLastDay() { return this.s.turn >= this.maxTurns && !!(this.c.game.day_last && this.c.game.day_last.length); },
-    recipe() { return (this.isLastDay() ? this.c.game.day_last : this.phaseOf() === 'break' ? this.c.game.day_break : this.c.game.day_term) || []; },
+    // On a break, the active plan's `day:` (E2) shapes the day: four visits at the castle or at home, three around a gig.
+    recipe() { return (this.isLastDay() ? this.c.game.day_last : this.phaseOf() === 'break' ? this.planDay() || this.c.game.day_break : this.c.game.day_term) || []; },
+    planDay() {
+      const k = Object.keys(this.s.states || {}).find((x) => this.c.states[x] && this.c.states[x].kind === 'plan' && this.c.states[x].day);
+      return k ? this.c.states[k].day : null;
+    },
     visitSlots() { return this.recipe().filter((r) => r.source === 'visit').map((r) => r.slot); },
 
     /* ---------------- index (built once) ---------------- */
@@ -57,7 +62,10 @@
       for (const t of Object.values(c.tracks || {})) for (const st of t.legacy || []) ix.legacyTrack[st] = t.id;
       // Events gated on a legacy state count as that track's events (compat).
       const legacyOf = (e) => { if (!e.when) return null; let hit = null; const G = this.G; G.walkAst(e.when.ast, (n) => { if (n.t === 'call' && n.n === 'has' && n.args[0] && n.args[0].t === 'sym' && ix.legacyTrack[n.args[0].v]) hit = ix.legacyTrack[n.args[0].v]; }); return hit; };
+      ix.special = {};
       for (const e of this.events) {
+        // A specialization (E1) is never drawn by itself: it plays in place of its generic card, for its character.
+        if (e.specializes) { (ix.special[e.specializes] = ix.special[e.specializes] || {})[e.actor] = e; continue; }
         if (e.trigger === 'auto' || e.trigger === 'queued') { if (e.arc) ix.arc.push(e); continue; }
         if (e.trigger === 'letter') { ix.letter.push(e); continue; }   // letters live apart from every other pool (M38)
         if (e.ramp) { ix.ramp.push(e); continue; }   // milestones are pushed on their ramp, outside the pools (M13)
@@ -118,7 +126,7 @@
       if (only) breakMap = only;
       const places = [];
       for (const p of Object.values(this.c.places || {})) {
-        if (!p.map || p.map.map !== breakMap) continue;
+        if (!p.map || p.map.map !== breakMap || p.deprecated) continue;
         const found = !!s.places[p.id];
         const hinted = !found && p.hinted_when && this.test(p.hinted_when, null);
         if (!found && !hinted) continue;
@@ -128,7 +136,7 @@
         // One visit per place a day (playtest 2, I3); an opened slot's places are different places at night.
         const visited = picking && !opened && d.picks.includes(p.id);
         const waiting = later.find((f) => f.place === p.id);
-        const open = slots.map((sl) => found && !visited && !waiting && this.placeOpen(p, sl) && (!opened || (this.directorIndex().byPlace[p.id] || []).concat(p.track ? this.directorIndex().byTrack[p.track] || [] : []).some(names)));
+        const open = slots.map((sl) => found && !visited && !waiting && this.placeOpen(p, sl) && (!opened || this.playsOpened(p, names)));
         const t = p.track && s.tracks[p.track] && s.tracks[p.track].status === 'member' ? s.tracks[p.track] : null;
         const here = found ? [...new Set(slots.flatMap((sl) => this.presentAt(p.id, sl).filter((id) => s.npcs[id] && s.npcs[id].met)))] : [];
         const ix = this.directorIndex();
@@ -151,7 +159,7 @@
     atlas() {
       const s = this.s, now = this.mapView().map, home = this.c.game.map_id || 'campus', ids = [now];
       if (!ids.includes(home)) ids.push(home);
-      for (const p of Object.values(this.c.places || {})) if (p.map && s.places[p.id] && (s.visitsTo || {})[p.id] && !ids.includes(p.map.map)) ids.push(p.map.map);
+      for (const p of Object.values(this.c.places || {})) if (p.map && !p.deprecated && s.places[p.id] && (s.visitsTo || {})[p.id] && !ids.includes(p.map.map)) ids.push(p.map.map);
       return ids.map((m) => {
         const v = this.mapView(m), mine = v.places.filter((p) => p.state !== 'hinted');
         return Object.assign(v, { now: m === now, name: m === home ? this.c.game.title || null : Object.values(this.c.places).filter((p) => p.map && p.map.map === m).length === 1 && mine[0] ? mine[0].name : null, region: mine[0] ? mine[0].region : null });
@@ -161,6 +169,20 @@
     planMap() {
       const k = Object.keys(this.s.states || {}).find((x) => this.c.states[x] && this.c.states[x].kind === 'plan' && this.c.states[x].map_id);
       return k ? this.c.states[k].map_id : null;
+    },
+    // In an opened slot (midnight, M41) a visit plays only cards that name the slot, so a place is open then only if one
+    // of them can play now: a fixed card (`always:`) whose `when` holds, or a drawable one. A card that merely names the
+    // slot isn't enough: the Whisperwood's midnight edge waits for a clue, and picking the wood before it led to an empty
+    // visit that ended the month (2026-10-20).
+    playsOpened(p, names) {
+      const ix = this.directorIndex(), used = new Set(this.s.deck.map((d) => d.id)), fixed = new Set(alwaysGroups(p.always).flat());
+      const prev = [this._place, this._slot]; this._place = p.id; this._slot = this.curSlot();
+      try {
+        const pool = [...fixed].map((id) => this.c.events[id]).filter(Boolean).concat(ix.byPlace[p.id] || [], p.track ? ix.byTrack[p.track] || [] : []);
+        return pool.some((e) => names(e) && (fixed.has(e.id)
+          ? e.slot && this.test(e.when, null)
+          : this.eligible(e, used) && this.candidates(e).length > 0));
+      } finally { [this._place, this._slot] = prev; }
     },
     // Whether a visit to this job's place will draw one of its shift cards, which pay the wage (M10).
     hasShift(id) {
@@ -265,7 +287,20 @@
       if (!pick) return null;
       if (this._plotLeft != null && this.isPlot(pick.e)) this._plotLeft--;
       used.add(pick.e.id);
-      return Object.assign({ id: pick.e.id, actor: id, cast: pick.cast || undefined }, extra || {});
+      return this.specialize(Object.assign({ id: pick.e.id, actor: id, cast: pick.cast || undefined }, extra || {}), used);
+    },
+    // E1: a generic card drawn for a character who has their own version of it plays that version instead, when its
+    // `when` holds (the generic's once / repeat already passed for them).
+    specialize(it, used) {
+      const e = this.c.events[it.id], who = e && (e.per && it.cast ? it.cast[e.per] : it.actor);
+      const sp = who && (this.directorIndex().special[e.id] || {})[who];
+      if (!sp) return it;
+      const prev = this._cast; this._cast = it.cast || null;
+      const ok = this.test(sp.when, who) && (!sp.cast || this.castHolds(sp, it.cast));
+      this._cast = prev;
+      if (!ok) return it;
+      if (used) used.add(sp.id);
+      return Object.assign(it, { id: sp.id, actor: who });
     },
     // After a card: warmth for everyone it touched (`contact`: id → sign of the rel/spark amounts applied). Choosing to
     // warm to someone (a rel or spark gain, even at the cap) draws them closer;
@@ -322,7 +357,7 @@
       if (!pick) return null;
       if (this._plotLeft != null && this.isPlot(pick.e)) this._plotLeft--;
       used.add(pick.e.id);
-      return Object.assign({ id: pick.e.id, actor: pick.actor || null, cast: pick.cast || undefined }, extra || {});
+      return this.specialize(Object.assign({ id: pick.e.id, actor: pick.actor || null, cast: pick.cast || undefined }, extra || {}), used);
     },
     // `queue any tagged <tag>` (feedback 2026-10-16): one `trigger: queued` event with the tag, drawn by the usual score
     // (`when`, cast, cooldown, novelty, weight) when it falls due; null when none is eligible. The month's plot cap
@@ -506,6 +541,11 @@
         else if (place) {
           const p = this.c.places[place];
           this._place = place;
+          // E6: a visit that attends your track here (a shift, a meeting): on_shift() is true for its cards, so a shop's
+          // counter (`when: not on_shift()`) steps aside for the worker.
+          const shiftTrack = !off && !r.opened && p.track && s.tracks[p.track] && s.tracks[p.track].status === 'member' ? p.track : null;
+          this._shift = !!shiftTrack;
+          const startAt = items.length;
           const n = r.min == null ? 1 + Math.floor(this.rand() * 2) : count;
           // An opened slot (midnight, M41) draws only events that name it; no ambient fallback.
           const names = (e) => !r.opened || e.slot === r.slot || (e.time || []).includes(r.slot);
@@ -550,7 +590,8 @@
             if (drop >= 0 && items.length > 1) used.delete(items.splice(drop, 1)[0].id);
             items.push(...cards);
           }
-          this._place = null;
+          if (shiftTrack) for (const it of items.slice(startAt)) it.shift = true;
+          this._place = null; this._shift = false;
         }
       } else if (r.source === 'social' || r.source === 'world' || r.source === 'special' || r.source === 'plan') {
         const pool = poolOf(r.source);

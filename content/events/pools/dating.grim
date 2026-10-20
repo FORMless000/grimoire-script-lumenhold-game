@@ -88,7 +88,7 @@ tags: romance social
 scene: Three students around a refectory table, two of them sizing each other up over the bread basket, one in the middle smiling too hard.
 text: {friend} and {partner} have heard a great deal about each other, all from you, and now they're at the same supper table. {friend} is being very polite. {partner} is being very polite back. You are dying.
 > left: Steer the talk to something they share
-  challenge negotiate apprentice+:
+  challenge appeal apprentice+:
     win:
       rel friend +small
       rel partner +small
@@ -107,7 +107,7 @@ trigger: social
 class: routine
 tone: warm
 cast:
-  partner: any where bond(partner) == "partner" and around(partner)
+  partner: any where bond(partner) == "partner" and around(partner) and not npc_is(tobias)
 per: partner
 repeat: 4
 weight: 10

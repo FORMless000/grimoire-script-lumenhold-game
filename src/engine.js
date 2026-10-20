@@ -41,7 +41,9 @@
   const Phi = (z) => 0.5 * (1 + erf(z / Math.SQRT2));
   const invPhi = (p) => { let lo = -8, hi = 8; for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2; if (Phi(m) < p) lo = m; else hi = m; } return (lo + hi) / 2; };
   // Which skill a challenge rolls (design §9.2); `using <skill>` overrides.
-  const CHALLENGE_SKILLS = { combat: ['arcana', 'vigor', 'guile'], duel: ['vigor', 'arcana'], negotiate: ['charm'], deceive: ['guile'], research: ['lore'], brew: ['alchemy'], enchant: ['alchemy'], exam: ['lore'], feat: ['vigor'], spell: ['arcana'] };   // = Grimoire.CHALLENGE_KINDS
+  const CHALLENGE_SKILLS = G.CHALLENGE_KINDS;
+  // Kinds played as a minigame (M2): fight (combat, duel) and parley (negotiate; the stub until its minigame).
+  const MINIGAME_KINDS = G.MINIGAME_KINDS;
   class SaveVersionError extends Error { constructor(v) { super('This save is from an older version of the game (save version ' + v + ', now ' + SAVE_VERSION + ') and can no longer be loaded.'); this.code = 'SAVE_VERSION'; this.saveVersion = v; } }
   const now = () => Date.now();
   const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -116,14 +118,21 @@
         spells: {}, facts: {}, memories: [], npcRel: {},
         tracks: {}, places: {}, arcs: {}, clues: {}, skillGain: {}, peak: {}, day: null, runsSeen: opts.runsSeen || {},
         visitsTo: {}, runsCompleted: opts.runsCompleted | 0,
+        items: {}, worn: {}, itemsHad: {},
       };
       s.hist.push({ t: 'start', at: now(), seed, name: s.name });
       for (const id of this.c.order.resources) s.vals[id] = this.c.resources[id].start ?? 50;
       for (const id of this.c.order.skills) { s.vals[id] = this.c.skills[id].start ?? 0; s.peak[id] = s.vals[id]; }
-      for (const p of Object.values(this.c.places || {})) if (!p.discover) s.places[p.id] = { found: 0 };
+      for (const p of Object.values(this.c.places || {})) if (!p.discover && !p.deprecated) s.places[p.id] = { found: 0 };
       for (const id of this.c.order.npcs) s.npcs[id] = { met: false, rel: this.c.npcs[id].start_rel || 0, spark: 0, bond: 'none', touched: 0, sparked: 0, lowSpark: 0 };
       // The origin, picked before the game (design §3, playtest 2 M32): applied before month 1's charges see it.
       if (opts.origin != null) this.applyOrigin(opts.origin);
+      // Flags chosen before the game (E7): `skip_intros` from the title screen's checkbox or Settings.
+      // A list of names, or {name: true} (E7).
+      const pre = opts.flags && !Array.isArray(opts.flags) && typeof opts.flags === 'object' ? Object.keys(opts.flags).filter((k) => opts.flags[k]) : [].concat(opts.flags || []);
+      for (const f of pre) if (f) s.flags[f] = true;
+      // The kit you arrive with (E4): `start: true` items, owned and worn.
+      for (const d of Object.values(this.c.items || {})) if (d.start) { s.items[d.id] = { since: 0 }; s.itemsHad[d.id] = 0; if (!s.worn[d.slot]) s.worn[d.slot] = d.id; }
       this.runHooks('game_start');
       return this.beginMonth();
     }
@@ -160,8 +169,106 @@
       this.s = s;
       // Spells v2: a spell content no longer has is dropped, and a level past the spell's levels is clamped (Ward 3 → 1).
       for (const [id, lv] of Object.entries(s.spells || {})) { if (!(this.c.spells || {})[id]) delete s.spells[id]; else s.spells[id] = Math.min(lv, this.spellLevels(id)); }
+      this.remapDeprecated();
+      // The kit (E4) in a save from before it: the start items, then whatever old flags and states grant.
+      if (!s.items) { s.items = {}; s.worn = {}; s.itemsHad = {}; for (const d of Object.values(this.c.items || {})) if (d.start) { s.items[d.id] = { since: 0 }; s.itemsHad[d.id] = 0; if (!s.worn[d.slot]) s.worn[d.slot] = d.id; } }
+      this.grantLegacyItems(null);
       if (this.dayMode) this.upgradeDay();   // a save from before the slot-by-slot day (M1)
       return this;
+    }
+
+    // A place merged into another (`@place x deprecated: y`, E11) resolves to its survivor; any other id to itself.
+    placeAlias(id) { let p = this.c.places && this.c.places[id], n = 0; while (p && p.deprecated && this.c.places[p.deprecated] && n++ < 8) p = this.c.places[p.deprecated]; return p ? p.id : id; }
+    // A save from before a merge (E11): its discoveries, visit counts and picks move to the survivor. Run logs keep the old
+    // ids; their viewers resolve them with placeAlias.
+    remapDeprecated() {
+      const s = this.s, A = (id) => (id ? this.placeAlias(id) : id);
+      for (const p of Object.values(this.c.places || {})) {
+        if (!p.deprecated) continue;
+        const to = A(p.id); if (to === p.id) continue;
+        if (s.places && s.places[p.id]) { if (!s.places[to]) s.places[to] = s.places[p.id]; delete s.places[p.id]; }
+        if (s.visitsTo && s.visitsTo[p.id]) { s.visitsTo[to] = (s.visitsTo[to] || 0) + s.visitsTo[p.id]; delete s.visitsTo[p.id]; }
+      }
+      const d = s.day;
+      if (d) { if (d.picks) d.picks = d.picks.map(A); if (d.nextPicks) d.nextPicks = d.nextPicks.map(A); }
+      for (const it of (s.deck || []).concat(s.cur ? [s.cur] : [])) if (it.place) it.place = A(it.place);
+    }
+
+    /* ---------------- The kit (E4, world expansion 1) ----------------
+     * s.items: what you own ({id: {since}}); s.worn: one item per slot (wand, robe, trinket); s.itemsHad: every item you
+     * have ever owned (a `legacy:` grant comes once, unless the item is `bound:`). Owned items add options to cards
+     * (`> up[item:x]:`) and, rarely, a monthly `tick:`; worn items act only in fights (fightPlayer().mods). */
+    hasItem(id) { return !!(this.s.items || {})[id]; }
+    giveItem(id, ctx) {
+      const s = this.s, d = this.c.items && this.c.items[id];
+      if (!d || s.items[id]) return false;
+      s.items[id] = { since: s.turn }; s.itemsHad[id] = s.itemsHad[id] != null ? s.itemsHad[id] : s.turn;
+      if (!s.worn[d.slot]) s.worn[d.slot] = id;
+      if (ctx) ctx.notes.push({ kind: 'item', item: id, gained: true, worn: s.worn[d.slot] === id || undefined });
+      return true;
+    }
+    takeItem(id, ctx) {
+      const s = this.s, d = this.c.items && this.c.items[id];
+      if (!d || !s.items[id]) return false;
+      delete s.items[id];
+      if (s.worn[d.slot] === id) {
+        delete s.worn[d.slot];
+        // Back to what you arrived with in that slot, if you still have it.
+        const back = Object.values(this.c.items).find((x) => x.slot === d.slot && x.start && s.items[x.id]);
+        if (back) s.worn[d.slot] = back.id;
+      }
+      if (ctx) ctx.notes.push({ kind: 'item', item: id, gained: false });
+      return true;
+    }
+    // Whatever `legacy:` grants now; a `bound:` item also goes when its condition stops holding (at load and month start).
+    grantLegacyItems(ctx) {
+      const s = this.s;
+      for (const d of Object.values(this.c.items || {})) {
+        if (!d.legacy) continue;
+        const on = this.test(d.legacy, null);
+        if (on && !s.items[d.id] && (d.bound || s.itemsHad[d.id] == null)) this.giveItem(d.id, ctx);
+        else if (!on && d.bound && s.items[d.id]) this.takeItem(d.id, ctx);
+      }
+    }
+    // Locked while a minigame is under way: from a fight's first exchange (the UI keeps it as s.fightInProgress) to its end.
+    kitLocked() { return !!(this.s && (this.s.minigame || this.s.fightInProgress)); }
+    // Wear an item you own in its slot (or `null` to clear the slot). Refused while the kit is locked.
+    equip(slot, id) {
+      const s = this.s;
+      if (this.kitLocked()) throw new Error('the kit is locked until the fight is over');
+      if (!G.ITEM_SLOTS.includes(slot)) throw new Error('no item slot "' + slot + '"');
+      if (id == null) { delete s.worn[slot]; return s.worn; }
+      const d = this.c.items[id];
+      if (!d || !s.items[id]) throw new Error('you don\'t own ' + id);
+      if (d.slot !== slot) throw new Error(id + ' is worn as a ' + d.slot + ', not a ' + slot);
+      s.worn[slot] = id;
+      return s.worn;
+    }
+    // What the worn kit does in a fight: one table, summed over the slots (flat numbers only).
+    wornMods() {
+      const m = { hp: 0, mana: 0, cost: {}, onCast: {}, onDefend: 0, taken: [], items: [] };
+      for (const id of Object.values(this.s.worn || {})) {
+        const d = this.c.items && this.c.items[id], w = d && d.worn;
+        if (!d) continue;
+        m.items.push(id);
+        if (!w) continue;
+        m.hp += w.hp || 0; m.mana += w.mana || 0; m.onDefend += w.onDefend || 0;
+        for (const [k, v] of Object.entries(w.cost || {})) m.cost[k] = (m.cost[k] || 0) + v;
+        for (const [k, v] of Object.entries(w.onCast || {})) m.onCast[k] = (m.onCast[k] || 0) + v;
+        for (const t of w.taken || []) m.taken.push({ n: t.n, from: t.from.slice() });
+      }
+      return m;
+    }
+    tickItems(summary) {
+      const s = this.s;
+      for (const id of Object.keys(s.items || {})) {
+        const d = this.c.items && this.c.items[id];
+        if (!d || !d.tick || !d.tick.length || s.items[id].since >= s.turn) continue;
+        const ctx = this.newCtx(null, d.name || id, id);
+        this.run(d.tick, ctx);
+        this.handleZeroed(ctx);
+        if (Object.keys(ctx.deltas).length || ctx.notes.length || ctx.say.length) summary.push(Object.assign(this.summaryItem(ctx, d.name || id), { src: 'item ' + id }));
+      }
     }
 
     /* ---------------- Run history ----------------
@@ -260,11 +367,14 @@
     checkValue(st) {
       const ct = this._ctxTrack && this.trackState(this._ctxTrack);
       // An exam inside a course's card tests that course's skill (design §9.2).
-      const skills = st.using ? [st.using] : (st.kind === 'exam' && ct && this.trackSkills(this._ctxTrack).length ? this.trackSkills(this._ctxTrack) : (CHALLENGE_SKILLS[st.kind] || ['lore']));
+      const parley = MINIGAME_KINDS[st.kind] === 'parley';
+      // A negotiation's stub always reads its whole mix; `using` doubles that skill's weight (E8).
+      const skills = parley ? (st.using && !CHALLENGE_SKILLS[st.kind].includes(st.using) ? [st.using].concat(CHALLENGE_SKILLS[st.kind]) : CHALLENGE_SKILLS[st.kind])
+        : st.using ? [st.using] : (st.kind === 'exam' && ct && this.trackSkills(this._ctxTrack).length ? this.trackSkills(this._ctxTrack) : (CHALLENGE_SKILLS[st.kind] || ['lore']));
       const combat = st.kind === 'combat' && !st.using;
       // A resource in `using` (renown, M15) isn't on the skill scale: 50 reads as the expected skill now, ±25 at the ends.
       const val = (k) => (this.c.resources[k] && !this.c.skills[k] ? this.expectedSkill() + ((this.s.vals[k] || 0) - 50) / 2 : this.s.vals[k] || 0);
-      let sv = combat ? this.combatValue() : skills.reduce((a, k) => a + val(k), 0) / skills.length;
+      let sv = combat ? this.combatValue() : parley ? this.parleyValue(st.using) : skills.reduce((a, k) => a + val(k), 0) / skills.length;
       // Modifiers (design §9.2): per known spell whose skill is tested (`@balance spell_check`); study points for an exam.
       // (Combat counts every spell level in its own value.)
       let sp = 0;
@@ -273,7 +383,17 @@
       sv += Math.min(spc.cap, sp);
       if (st.kind === 'exam' && ct && ct.status === 'enrolled') sv += Math.min(this.studyRule().cap, ct.study || 0);
       sv += this.advisorBonus(this._ctxTrack);
+      if (!combat && !parley) sv += this.boost(st.kind);
       return { skills, value: sv };
+    }
+    // A tonic (world expansion 1, K3): a state whose `boost:` names this check's kind adds `@balance tonic` to it. Tonics
+    // share a `group:`, so one holds at a time; two states naming the same kind still add it once. Never on a fight or a
+    // negotiation (minigames: what you drank doesn't win an argument).
+    boost(kind) {
+      const b = (this.c.balance && this.c.balance.tonic) || 0;
+      if (!b || MINIGAME_KINDS[kind]) return 0;
+      for (const id of Object.keys(this.s.states || {})) { const d = this.c.states[id]; if (d && !d.deprecated && (d.boost || []).includes(kind)) return b; }
+      return 0;
     }
     // The check ladder (docs/authoring/checks.md, design §8.6). A @balance value, or its default.
     ladder(key) { const b = this.c.balance || {}; return b[key] != null ? b[key] : LADDER_DEFAULTS[key]; }
@@ -375,6 +495,21 @@
       const levels = Object.entries(s.spells || {}).reduce((a, [id, lv]) => a + (this.c.spells[id] ? lv || 0 : 0), 0);
       return (tw ? sum / tw : 0) + (w.condition || 0) * shape + Math.min(15, (w.spells || 0) * levels);
     }
+    // The negotiation stub (E8), until the minigame: a weighted mean of charm, lore and guile, plus how you come across now:
+    // mood and renown, each counted from where it starts a run (a newcomer's renown costs nothing; fame helps, gloom hurts).
+    // `using <skill>` doubles that skill's weight. Weights in `@balance negotiate:`.
+    negotiateWeights() { return Object.assign({ charm: 1, lore: 1, guile: 1, mood: 0.15, renown: 0.15 }, (this.c.balance && this.c.balance.negotiate) || {}); }
+    parleyValue(using) {
+      const s = this.s, w = this.negotiateWeights();
+      if (using) w[using] = (w[using] || 1) * 2;
+      let sum = 0, tw = 0, cond = 0;
+      for (const [k, x] of Object.entries(w)) {
+        if (!x) continue;
+        if (this.c.skills[k]) { sum += x * (s.vals[k] || 0); tw += x; }
+        else if (this.c.resources[k]) { const r = this.c.resources[k]; cond += x * 100 * ((s.vals[k] || 0) - (r.start ?? 50)) / Math.max(1, this.resMax(r)); }
+      }
+      return (tw ? sum / tw : 0) + cond;
+    }
     // Coursework (feedback 2026-10-15): each enrolled course trains its main skill once a term month, at its level's
     // size (`@balance coursework: small small small`), like a job's wage: through the first of its cards you play that
     // month (or a `coursework` statement), else at the month's end. Returns whether it was given now.
@@ -459,12 +594,18 @@
       for (const [id, lv] of Object.entries(s.spells || {})) if (this.c.spells[id] && lv > 0) spells[id] = lv;
       const v = (k) => s.vals[k] || 0;
       return { name: s.name, pronouns: s.pronouns || 'they', skills, spells, health: v('health'), mana: v(this.spellResource), maxMana: this.resMax(this.c.resources[this.spellResource]),
-        mood: v('mood'), renown: v('renown'), gold: v('gold'), alignment: v('alignment') };
+        mood: v('mood'), renown: v('renown'), gold: v('gold'), alignment: v('alignment'),
+        // The worn kit (E4): flat modifiers the fight applies to you (hp, mana, costs, on-cast and on-defend damage, damage taken).
+        mods: this.wornMods() };
     }
     // Everything the bridge needs to set up a challenge's fight. `id` (event/option#index) ties a result to its fight.
-    fightRequest(st, ctx) {
+    fightRequest(st, ctx) { return this.minigameRequest(st, ctx, 'fight'); }
+    // A negotiation's request (E8), the same shape: for the minigame's resolver (`eng.parleys`), the registry
+    // (src/negotiation.js) keys it by event/option.
+    parleyRequest(st, ctx) { return this.minigameRequest(st, ctx, 'parley'); }
+    minigameRequest(st, ctx, mg) {
       const s = this.s, e = this.c.events[ctx.key] || {}, key = this._optKey || 'show';
-      const list = []; G.walkEffects(this._optEffects || e.on_show || [], (x) => { if (x.t === 'challenge' && (x.kind === 'combat' || x.kind === 'duel')) list.push(x); });
+      const list = []; G.walkEffects(this._optEffects || e.on_show || [], (x) => { if (x.t === 'challenge' && MINIGAME_KINDS[x.kind] === mg) list.push(x); });
       const index = Math.max(0, list.indexOf(st));
       const odds = this.challengeOdds(st, ctx.actor, ctx.key);
       let vs = null;
@@ -499,6 +640,17 @@
       }
       const was = this._fightOutcome; this._fightOutcome = true;
       try { this.run(st[result], ctx); } finally { this._fightOutcome = was; }
+    }
+    // A played negotiation (E8): the minigame's result {outcome: win|partial|lose, deltas} picks the challenge's outcome.
+    playParley(st, ctx) {
+      const req = this.parleyRequest(st, ctx);
+      const res = this._parleyQueue && this._parleyQueue.length ? this._parleyQueue.shift() : this.parleys(req);
+      if (!res || !['win', 'partial', 'lose'].includes(res.outcome)) throw new Error('negotiation ' + req.id + ': no result');
+      (ctx.parleys = ctx.parleys || []).push(res);
+      const result = res.outcome === 'partial' && !(st.partial && st.partial.length) ? 'lose' : res.outcome;
+      for (const [k, v] of Object.entries(res.deltas || {})) if (v && (this.c.resources[k] || this.c.skills[k])) this.change(k, v, ctx);
+      ctx.checks.push({ challenge: st.kind, parley: true, played: true, result, ok: result !== 'lose' });
+      this.run(st[result], ctx);
     }
     // The fight choosing `key` would start, before anything happens: the option is played on a copy of the run (same random
     // state) up to its first fight. null when the option starts none on this path.
@@ -546,7 +698,7 @@
       const have = this.s.vals[res] || 0;
       const poor = new Set(opts.filter((o) => { const p = this.priceOf(o); return p > 0 && have < p; }).map((o) => o.key));
       if (!poor.size) return poor;
-      const open = opts.some((o) => !poor.has(o.key) && !(o.when && !this.test(o.when, a)) && !(o.spell && !(this.s.spells || {})[o.spell]) && o.key !== 'up');
+      const open = opts.some((o) => !poor.has(o.key) && !(o.when && !this.test(o.when, a)) && !(o.spell && !(this.s.spells || {})[o.spell]) && !(o.item && !this.hasItem(o.item)) && o.key !== 'up');
       return open ? poor : new Set();
     }
 
@@ -705,7 +857,7 @@
     // advisor) and the chance of each grade: A at 15+ over the bar, B above it, C within 5 below, else F.
     examOdds(id, swing) {
       const s = this.s, t = this.trackState(id), sk = this.trackSkills(id);
-      const sv = sk.reduce((a, k) => a + (s.vals[k] || 0), 0) / Math.max(1, sk.length);
+      const sv = sk.reduce((a, k) => a + (s.vals[k] || 0), 0) / Math.max(1, sk.length) + this.boost('exam');
       const lv = (t && t.level) || 1, ladder = !DEFAULT_DIFFICULTY.hasOwnProperty(this.examTier(lv));
       const dc = this.examBar(id, lv) - Math.min(this.studyRule().cap, (t && t.study) || 0) - this.advisorBonus(id);
       const slope = this.swingSlope(swing), [lo, hi] = this.oddsRange(true), ex = this.examRule(), wild = swing === 'wild';
@@ -767,7 +919,7 @@
     // What an option's first roll looks like on its button: a challenge (with its swing, and combat's mana), an exam, a legacy check.
     checkView(st, actor, item) {
       // A fight (combat, duel) is played (fight: true): its p is the stub's estimate, and it charges no entry Mana.
-      if (st.t === 'challenge') { const odds = this.challengeOdds(st, actor, item && item.id), fight = st.kind === 'combat' || st.kind === 'duel'; return { skill: st.kind, using: odds.skill, p: odds.win, challenge: true, swing: st.swing || null, combat: st.kind === 'combat', fight, cost: st.kind === 'combat' && !fight ? this.combatCost() : 0 }; }
+      if (st.t === 'challenge') { const odds = this.challengeOdds(st, actor, item && item.id), fight = MINIGAME_KINDS[st.kind] === 'fight', parley = MINIGAME_KINDS[st.kind] === 'parley'; return { skill: st.kind, using: odds.skill, p: odds.win, challenge: true, swing: st.swing || null, combat: st.kind === 'combat', fight, parley: parley || undefined, cost: st.kind === 'combat' && !fight ? this.combatCost() : 0 }; }
       if (st.t === 'sit_exam') { const id = (item && item.track) || this._ctxTrack; const o = id && this.trackState(id) ? this.examOdds(id, st.swing) : null; return o ? { exam: true, skill: 'exam', using: o.skills.join('+'), p: o.pass, top: o.top, a: o.a, swing: st.swing || null } : null; }
       // Pure luck (`chance likely:`): the roll's odds and no skill (feedback 2026-10-19: drawn as a roll all the same).
       if (st.t === 'chance') return { luck: true, p: Math.round(st.word ? this.likelihoodP(st.word, st.steps, actor) : clamp(this.value(st.p, actor), 0, 100)) };
@@ -917,7 +1069,7 @@
     actOf(arcId) { const a = this.c.arcs && this.c.arcs[arcId]; if (!a || !a.acts) return 0; return a.acts.filter((x) => x.year <= this.yearOf()).length; }
     monthlyWorld(summary) {
       const s = this.s, ctx = this.newCtx(null, null);
-      for (const p of Object.values(this.c.places || {})) if (!s.places[p.id] && p.discover && this.test(p.discover, null)) { s.places[p.id] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: p.id }); }
+      for (const p of Object.values(this.c.places || {})) if (!s.places[p.id] && p.discover && !p.deprecated && this.test(p.discover, null)) { s.places[p.id] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: p.id }); }
       for (const a of Object.values(this.c.arcs || {})) {
         const st = s.arcs[a.id] = s.arcs[a.id] || { clock: (a.clock && a.clock.min) || 0 };
         for (const b of a.beats || []) if (b.year === this.yearOf() && b.month === this.monthIndex() && st.clock < b.clock) st.clock = b.clock;
@@ -996,9 +1148,10 @@
           return v == null ? 0 : v;
         },
         fn(n, a) {
+          // cast_as(role, npc) reads the role by name: resolving it first turned it into its character (fix, 2026-10-20).
+          if (n === 'cast_as') return !!cast && cast[a[0]] === R(a[1]);
           a = a.map(R);
           switch (n) {
-            case 'cast_as': return !!cast && cast[a[0]] === a[1];
             case 'has': return !!s.flags[a[0]] || !!s.states[a[0]];
             case 'flag': return !!s.flags[a[0]];
             case 'left': { const st = s.states[a[0]]; return st ? (st.left == null ? 99 : st.left) : 0; }
@@ -1025,8 +1178,11 @@
             case 'due': { const t = eng.trackState(a[0]); return t && t.status === 'member' ? Math.max(0, (t.due || 0) - (t.visits || 0)) : 0; }
             case 'visits': { const t = eng.trackState(a[0]); return t ? t.visits || 0 : 0; }
             // places, arcs, casting (design §6, §10.6, §5.4)
-            case 'discovered': return !!(s.places || {})[a[0]];
-            case 'visits_to': return (s.visitsTo || {})[a[0]] || 0;
+            case 'discovered': return !!(s.places || {})[eng.placeAlias(a[0])];
+            case 'visits_to': return (s.visitsTo || {})[eng.placeAlias(a[0])] || 0;
+            case 'on_shift': return !!eng._shift;
+            case 'has_item': return !!(s.items || {})[a[0]];
+            case 'worn': return Object.values(s.worn || {}).includes(a[0]);
             case 'present': return eng.presentAt(a[0]).length;
             case 'act': return eng.actOf(a[0]);
             case 'clock': return ((s.arcs || {})[a[0]] || {}).clock || 0;
@@ -1318,7 +1474,7 @@
             for (const id of ids) { const t = (s.tracks || {})[id]; if (!t || t.status !== 'enrolled') continue; t.study = clamp((t.study || 0) + amt, 0, this.studyRule().cap); ctx.deltas['study:' + id] = (ctx.deltas['study:' + id] || 0) + amt; }
             break;
           }
-          case 'discover': if (!s.places[st.place] && this.c.places[st.place]) { s.places[st.place] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: st.place }); } break;
+          case 'discover': { const pl = this.placeAlias(st.place); if (!s.places[pl] && this.c.places[pl]) { s.places[pl] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: pl }); } break; }
           case 'find': if (!s.clues[st.clue]) { s.clues[st.clue] = s.turn; ctx.notes.push({ kind: 'clue', clue: st.clue }); } break;
           case 'advance': { const a = s.arcs[st.arc] = s.arcs[st.arc] || { clock: 0 }; const d = this.c.arcs[st.arc]; a.clock = Math.min(d && d.clock ? d.clock.max : 99, a.clock + st.n); break; }
           case 'spawn': ctx.notes.push({ kind: 'spawn', id: st.id, archetype: st.archetype }); break;   // phase 4
@@ -1340,6 +1496,8 @@
             break;
           }
           case 'regrade': this.regrade(st, ctx); break;
+          case 'give': this.giveItem(st.item, ctx); break;
+          case 'take': this.takeItem(st.item, ctx); break;
           case 'learn_spell': {
             s.spells = s.spells || {};
             const max = this.spellLevels(st.spell), lv = Math.min(max, st.level || (s.spells[st.spell] || 0) + 1);
@@ -1357,15 +1515,17 @@
             // A fight (combat, duel) is played, never rolled (2026-10-18): a result handed to choose() (the UI played it), or
             // the resolver's (`eng.fights`: the simulated players, and the UI's safety net). Previews keep the stub's odds as
             // the expected value and, where fights are played, run the outcome as a played fight does (no Health lines).
-            const fight = st.kind === 'combat' || st.kind === 'duel', played = fight && !!(this.fights || (this._fightQueue && this._fightQueue.length));
-            if (played && !this._oracle) { this.playFight(st, ctx); break; }
+            // A negotiation (E8) is the same: played when a resolver (`eng.parleys`) or a queued result is there, else the stub rolls.
+            const mg = MINIGAME_KINDS[st.kind], fight = mg === 'fight', parley = mg === 'parley';
+            const played = fight ? !!(this.fights || (this._fightQueue && this._fightQueue.length)) : parley ? !!(this.parleys || (this._parleyQueue && this._parleyQueue.length)) : false;
+            if (played && !this._oracle) { if (fight) this.playFight(st, ctx); else this.playParley(st, ctx); break; }
             if (fight && this._oracle) this._oracle.fight = true;
             // The stub's entry cost (Mana) only where fights are still rolled: unit-test fixtures with no resolver.
             if (st.kind === 'combat' && !played) this.change(this.spellResource, -this.combatCost(), ctx);
             const o = this.challengeOdds(st, ctx.actor, ctx.key);
             const probs = [o.win, st.partial ? o.atLeastPartial - o.win : 0, 100 - o.atLeastPartial];
             const result = ['win', 'partial', 'lose'][this.pick('challenge', probs, { challenge: st.kind })];
-            ctx.checks.push({ challenge: st.kind, skill: o.skill, p: o.win, partial: st.partial ? o.atLeastPartial - o.win : null, result, ok: result !== 'lose', swing: st.swing || null });
+            ctx.checks.push(Object.assign({ challenge: st.kind, skill: o.skill, p: o.win, partial: st.partial ? o.atLeastPartial - o.win : null, result, ok: result !== 'lose', swing: st.swing || null }, parley ? { parley: true } : {}));
             const was = this._fightOutcome; if (played) this._fightOutcome = true;
             try { this.run(st[result], ctx); } finally { this._fightOutcome = was; }
             break;
@@ -1423,7 +1583,7 @@
         return;
       }
       s.states[id] = { left, since: s.turn };
-      if (!def.hidden) ctx.notes.push({ kind: 'gain', state: id, text: '+ ' + (def.name || id) });
+      if (!def.hidden && !def.deprecated) ctx.notes.push({ kind: 'gain', state: id, text: '+ ' + (def.name || id) });
       this.run(def.on_add, ctx);
     }
     removeState(id, ctx, expired) {
@@ -1431,7 +1591,7 @@
       if (!s.states[id]) return;
       delete s.states[id];
       if (def) {
-        if (!def.hidden) ctx.notes.push({ kind: 'lose', state: id, text: '− ' + (def.name || id) });
+        if (!def.hidden && !def.deprecated) ctx.notes.push({ kind: 'lose', state: id, text: '− ' + (def.name || id) });
         if (expired) this.run(def.on_expire, ctx);
         this.run(def.on_remove, ctx);
       }
@@ -1454,7 +1614,7 @@
       const s = this.s;
       for (const id of Object.keys(s.states)) {
         const def = this.c.states[id]; const st = s.states[id];
-        if (!def || !st) continue;
+        if (!def || !st || def.deprecated) continue;   // a deprecated state (E11) stays in the save, still and unseen
         const ctx = this.newCtx(null, def.name || id, id);
         if (st.since < s.turn) {
           this.run(def.tick, ctx);
@@ -1477,6 +1637,7 @@
       try {
         sh.s.turn++;
         sh.tickStates(summary);
+        sh.tickItems(summary);
         if (sh.dayMode && sh.isTermStart()) sh.runHooks('term_start', summary);
         sh.runHooks('month_start', summary);
       } catch (e) { return []; }
@@ -1488,6 +1649,8 @@
       s.cardsThisMonth = 0;
       const summary = s.pending || []; s.pending = [];
       this.tickStates(summary);
+      { const ctx = this.newCtx(null, null, null); this.grantLegacyItems(ctx); if (ctx.notes.length) summary.push(Object.assign(this.summaryItem(ctx, null), { src: 'kit' })); }
+      this.tickItems(summary);
       this.relationshipDrift(summary);
       this.unlockFacts();
       if (this.c.places && Object.keys(this.c.places).length) this.monthlyWorld(summary);
@@ -1722,9 +1885,9 @@
           if (!pick) continue;
           item.actor = pick.actor; if (pick.cast) item.cast = pick.cast;
         } else if (!item.force) {
-          this._cast = item.cast || null; this._place = item.place || null; this._slot = item.slot || null;
+          this._cast = item.cast || null; this._place = item.place || null; this._slot = item.slot || null; this._shift = !!item.shift;
           const ok = this.test(e.when, item.actor) && this.castHolds(e, item.cast);
-          this._cast = null; this._place = null; this._slot = null;
+          this._cast = null; this._place = null; this._slot = null; this._shift = false;
           if (!ok) continue;
         }
         s.cur = item;
@@ -1732,6 +1895,9 @@
         s.last[e.id] = s.turn;
         const who = e.per && item.cast ? item.cast[e.per] : item.actor;
         if (who) { s.lastBy = s.lastBy || {}; s.lastBy[e.id + '@' + who] = s.turn; }
+        // A specialization (E1) shares its generic card's once / repeat bookkeeping, for that character.
+        const gen = e.specializes && this.c.events[e.specializes];
+        if (gen) { s.seen[gen.id] = (s.seen[gen.id] || 0) + 1; s.last[gen.id] = s.turn; if (item.actor) { s.lastBy = s.lastBy || {}; s.lastBy[gen.id + '@' + item.actor] = s.turn; } }
         s.cardsThisMonth++;
         let onShow = null;
         this.withContext(item, () => { if (e.on_show) { const ctx = this.newCtx(item.actor, null, e.id); ctx.cast = item.cast; ctx.track = item.track; this.run(e.on_show, ctx); this.handleZeroed(ctx); onShow = this.outcome(ctx); } });
@@ -1768,7 +1934,7 @@
         pick: this.pickCount(e),
         // Option visibility (M24): in a menu, an option whose `when` fails is hidden unless it names its `locked:`
         // reason (a stated prerequisite); then it shows, disabled, with the reason. Cards keep both sides.
-        options: ((all) => { const poor = this.poorKeys(e, all, a); return all.map((o) => [o, poor.has(o.key)]); })(this.optionsOf(e).filter((o) => !o.spell || (this.s.spells || {})[o.spell])
+        options: ((all) => { const poor = this.poorKeys(e, all, a); return all.map((o) => [o, poor.has(o.key)]); })(this.optionsOf(e).filter((o) => (!o.spell || (this.s.spells || {})[o.spell]) && (!o.item || this.hasItem(o.item)))
           .filter((o) => e.type !== 'menu' || !o.when || o.locked || this.test(o.when, a))).map(([o, poor]) => {
           const lv = o.spell ? this.s.spells[o.spell] : 0;
           const cost = o.spell ? this.spellCost(o.spell, lv) : 0;
@@ -1779,6 +1945,7 @@
             poor: poor ? this.priceOf(o) : undefined,
             affects: o.affects,
             spell: o.spell ? { id: o.spell, level: lv, cost, short } : null,
+            item: o.item ? { id: o.item } : null,
             check: o.firstCheck ? this.checkView(o.firstCheck, a, item) : null,
             course: (o.effects[0] && o.effects[0].t === 'enrol') ? this.courseOutlook(o.effects[0].track, o.effects[0].level) : null,
             job: (o.effects[0] && o.effects[0].t === 'join') ? this.jobOutlook(o.effects[0].track) : null,
@@ -1804,6 +1971,7 @@
       ctx.cast = item.cast || null; ctx.track = item.track || null;
       this._cast = ctx.cast; this._ctxTrack = ctx.track; this._ctxPlace = item.place || null;
       this._variant = item.variant || null;
+      if (opt.item && !this.hasItem(opt.item)) throw new Error('item ' + opt.item + ' is not owned');
       if (opt.spell) {
         const lv = (s.spells || {})[opt.spell];
         if (!lv) throw new Error('spell ' + opt.spell + ' is not known');
@@ -1880,7 +2048,7 @@
       const s = this.s;
       const cost = opt.spell ? this.spellCost(opt.spell, (s.spells || {})[opt.spell] || 1) : 0;
       // `day`: a `visit <slot>` in a previewed option must not open the slot (A1: hovering "Go out" opened midnight).
-      const KEYS = ['vals', 'flags', 'states', 'npcs', 'queue', 'deck', 'ended', 'spells', 'facts', 'memories', 'npcRel', 'rng', 'cur', 'tracks', 'places', 'arcs', 'clues', 'skillGain', 'peak', 'day', 'termGrades'];
+      const KEYS = ['vals', 'flags', 'states', 'npcs', 'queue', 'deck', 'ended', 'spells', 'facts', 'memories', 'npcRel', 'rng', 'cur', 'tracks', 'places', 'arcs', 'clues', 'skillGain', 'peak', 'day', 'termGrades', 'items', 'worn', 'itemsHad'];
       const runOnce = (prefix, mode) => {
         const saved = {}; for (const k of KEYS) saved[k] = s[k];
         if (saved.day) s.day = { ...saved.day };
@@ -1888,6 +2056,7 @@
         s.npcRel = { ...(saved.npcRel || {}) }; s.memories = (saved.memories || []).slice(); s.queue = saved.queue.slice(); s.deck = saved.deck.slice();
         s.states = {}; for (const [k, v] of Object.entries(saved.states)) s.states[k] = { ...v };
         s.tracks = {}; for (const [k, v] of Object.entries(saved.tracks || {})) s.tracks[k] = { ...v, passed: { ...v.passed }, grades: (v.grades || []).slice() };
+        s.items = { ...(saved.items || {}) }; s.worn = { ...(saved.worn || {}) }; s.itemsHad = { ...(saved.itemsHad || {}) };   // the kit (E4)
         s.places = { ...(saved.places || {}) }; s.arcs = {}; for (const [k, v] of Object.entries(saved.arcs || {})) s.arcs[k] = { ...v };
         s.clues = { ...(saved.clues || {}) }; s.skillGain = { ...(saved.skillGain || {}) }; s.peak = { ...(saved.peak || {}) };
         s.termGrades = {}; for (const [k, v] of Object.entries(saved.termGrades || {})) s.termGrades[k] = v.map((x) => ({ ...x }));
@@ -2022,9 +2191,12 @@
           return { id, name: d.name, kind: d.kind, status: t.status, level: t.level || null, levelName: t.level ? levels[t.level - 1] || d.name : null, passed: this.levelPassed(id), grades: (t.grades || []).slice(), rank: ranks[t.rank] || null, perf: Math.round(t.perf || 0), due: Math.max(0, (t.due || 0) - (t.visits || 0)), progress: Math.round(t.progress || 0),
             done: d.kind === 'job' && t.status === 'member' && t.visits >= (t.due || 0), ...(d.kind === 'course' && t.status === 'enrolled' ? this.courseStanding(id) : {}) };
         }),
+        // The kit (E4): what you own, and what you wear in each slot.
+        items: Object.keys(s.items || {}).filter((id) => c.items && c.items[id]).map((id) => ({ id, ...pick(c.items[id], ['name', 'slot', 'art', 'start']), desc: this.interp(c.items[id].desc || ''), effects: c.items[id].worn || null, worn: Object.values(s.worn || {}).includes(id), since: s.items[id].since })),
+        worn: Object.assign({}, s.worn || {}),
         spells: Object.entries(s.spells || {}).filter(([id]) => c.spells && c.spells[id]).map(([id, level]) => ({ id, level, ...pick(c.spells[id], ['name', 'desc', 'art', 'skill']), cost: this.spellCost(id, level) })),
         skills: c.order.skills.map((id) => ({ id, ...pick(c.skills[id], ['name', 'icon', 'color', 'max', 'desc']), value: s.vals[id] })),
-        states: Object.keys(s.states).filter((id) => c.states[id] && !c.states[id].hidden).map((id) => ({ id, name: c.states[id].name || id, desc: this.interp(c.states[id].desc || ''), art: c.states[id].art, kind: c.states[id].kind || null, group: c.states[id].group || null, left: s.states[id].left })),
+        states: Object.keys(s.states).filter((id) => c.states[id] && !c.states[id].hidden && !c.states[id].deprecated).map((id) => ({ id, name: c.states[id].name || id, desc: this.interp(c.states[id].desc || ''), art: c.states[id].art, kind: c.states[id].kind || null, group: c.states[id].group || null, left: s.states[id].left })),
         npcs: c.order.npcs.filter((id) => s.npcs[id].met).map((id) => { const n = s.npcs[id]; return { id, ...pick(c.npcs[id], ['name', 'short', 'title', 'house', 'desc', 'color', 'romance', 'pronouns', 'look']), ...n, ...(n.sparkHid && !n.sparkAsked && n.bond !== 'partner' ? { spark: Math.max(0, (n.spark || 0) - n.sparkHid) } : {}) }; }),   // carried spark stays out of sight until asked (2026-10-20)
         log: s.log,
       };

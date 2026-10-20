@@ -11,24 +11,25 @@
 'use strict';
 const G = require('../src/grimoire.js');
 
-const BLOCKS = ['event', 'state', 'npc', 'ending', 'hook', 'resource', 'skill', 'place', 'track', 'spell', 'fact', 'archetype', 'faction', 'arc', 'clue', 'lore', 'timeline', 'vocab'];
-const STATEMENTS = ['say', 'if', 'chance', 'check', 'challenge', 'sit_exam', 'wage', 'coursework', 'flag', 'unflag', 'gain', 'lose', 'queue', 'rel', 'spark', 'npc_rel', 'cool', 'visit', 'learn', 'learn_spell', 'regrade', 'bond', 'meet', 'end', 'delta', 'assign'];
+const BLOCKS = ['event', 'state', 'npc', 'ending', 'hook', 'resource', 'skill', 'place', 'track', 'spell', 'fact', 'archetype', 'faction', 'arc', 'clue', 'lore', 'timeline', 'vocab', 'item'];
+const STATEMENTS = ['say', 'if', 'chance', 'check', 'challenge', 'sit_exam', 'wage', 'coursework', 'flag', 'unflag', 'gain', 'lose', 'queue', 'rel', 'spark', 'npc_rel', 'cool', 'visit', 'learn', 'learn_spell', 'give', 'take', 'regrade', 'bond', 'meet', 'end', 'delta', 'assign'];
 const COLLECTIONS = { event: 'events', state: 'states', npc: 'npcs', ending: 'endings', hook: 'hooks', resource: 'resources', skill: 'skills',
-  place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline', vocab: 'vocab' };
+  place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline', vocab: 'vocab', item: 'items' };
 const EFFECT_SLOTS = ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero'];
 
 // Documented per node kind (printed by `grim query --fields`).
 const FIELDS = {
   '(every row)': 'node file line block (id of the enclosing block) block_kind tags (use has(x))',
   '(statements)': 'option (key, or "" outside options) slot ("option", "on_show", "tick", "do", …) depth (0 = top level) trigger actor (of the enclosing event)',
-  event: 'id title text_len trigger type actor weight weight_src repeat priority chain when_src defer_src options class tone track level rank place plan slot per arc beat',
-  state: 'id name kind group duration hidden',
+  event: 'id title text_len trigger type actor weight weight_src repeat priority chain when_src defer_src options class tone track level rank place plan slot per arc beat specializes',
+  state: 'id name kind group duration hidden deprecated day_visits',
   npc: 'id name romance start_rel age role year voice (has(trait) also matches traits and interests)',
-  place: 'id name region map x y kind track discover_src',
+  place: 'id name region map x y kind track discover_src deprecated (the survivor, or null)',
   track: 'id name kind skill levels place lead due hidden',
   spell: 'id name skill pool levels',
   fact: 'id npc tier unlock_src text len',
   'lore': 'id canon keys (has(key) matches a key or the id) text len',
+  item: 'id name slot price start legacy_src bound worn (has worn effects)',
   'arc, faction, archetype, timeline, vocab': 'id name canon kind date event',
   ending: 'id title kind priority when_src',
   hook: 'id on when_src',
@@ -81,6 +82,7 @@ function statementFields(st) {
     case 'npc_rel': return { a: st.a, b: st.b, tier: st.tier || null };
     case 'learn': return { fact: st.fact };
     case 'learn_spell': return { spell: st.spell, level: st.level };
+    case 'give': case 'take': return { item: st.item };
     case 'regrade': return { track: st.track, grade: st.grade };
     case 'assign': return { name: st.name, op: st.op, expr_src: st.expr.src };
     case 'flag': case 'unflag': return { name: st.names[0], count: st.names.length };
@@ -97,19 +99,20 @@ function statementFields(st) {
 function blockFields(kind, d) {
   const base = { id: d.id };
   switch (kind) {
-    case 'event': return { ...base, title: d.title, text_len: (d.text || '').length, trigger: d.trigger, type: d.type, actor: d.actor || null, weight: d.weight ? constant(d.weight) : 10, weight_src: d.weight ? d.weight.src : null, repeat: d.repeat || 0, priority: d.priority == null ? null : d.priority, chain: d.chain || null, when_src: d.when ? d.when.src : null, defer_src: d.defer ? d.defer.src : null, options: d.options.length, class: d.class || null, tone: d.tone || null, track: d.track || null, level: d.level || null, rank: d.rank || null, place: d.place || null, plan: d.plan || null, slot: d.slot || null, per: d.per || null, arc: d.arc || null, beat: d.beat == null ? null : d.beat };
-    case 'state': return { ...base, name: d.name, kind: d.kind || null, group: d.group || null, duration: d.duration == null ? null : d.duration, hidden: !!d.hidden };
+    case 'event': return { ...base, title: d.title, text_len: (d.text || '').length, trigger: d.trigger, type: d.type, actor: d.actor || null, weight: d.weight ? constant(d.weight) : 10, weight_src: d.weight ? d.weight.src : null, repeat: d.repeat || 0, priority: d.priority == null ? null : d.priority, chain: d.chain || null, when_src: d.when ? d.when.src : null, defer_src: d.defer ? d.defer.src : null, options: d.options.length, class: d.class || null, tone: d.tone || null, track: d.track || null, level: d.level || null, rank: d.rank || null, place: d.place || null, plan: d.plan || null, slot: d.slot || null, per: d.per || null, arc: d.arc || null, beat: d.beat == null ? null : d.beat, specializes: d.specializes || null };
+    case 'state': return { ...base, name: d.name, kind: d.kind || null, group: d.group || null, duration: d.duration == null ? null : d.duration, hidden: !!d.hidden, deprecated: !!d.deprecated, day_visits: d.day ? d.day.filter((r) => r.source === 'visit').length : null };
     case 'npc': return { ...base, name: d.name, romance: !!d.romance, start_rel: d.start_rel || 0 };
     case 'ending': return { ...base, title: d.title, kind: d.kind || null, priority: d.priority || 0, when_src: d.when ? d.when.src : null };
     case 'hook': return { ...base, on: d.on, when_src: d.when ? d.when.src : null };
     case 'resource': return { ...base, name: d.name, min: d.min == null ? 0 : d.min, max: d.max == null ? 100 : d.max, start: d.start };
     case 'skill': return { ...base, name: d.name, start: d.start || 0, max: d.max == null ? 100 : d.max };
-    case 'place': return { ...base, name: d.name, region: d.region || null, map: d.map ? d.map.map : null, x: d.map ? d.map.x : null, y: d.map ? d.map.y : null, kind: d.kind || 'public', track: d.track || null, discover_src: d.discover ? d.discover.src : null };
+    case 'place': return { ...base, name: d.name, region: d.region || null, map: d.map ? d.map.map : null, x: d.map ? d.map.x : null, y: d.map ? d.map.y : null, kind: d.kind || 'public', track: d.track || null, discover_src: d.discover ? d.discover.src : null, deprecated: d.deprecated || null };
     case 'track': return { ...base, name: d.name, kind: d.kind, skill: [].concat(d.skill || []).join(' '), levels: d.levels || null, place: d.place || null, lead: d.lead || null, due: d.due || null, hidden: !!d.hidden };
     case 'spell': return { ...base, name: d.name, discipline: d.discipline || null, skill: [].concat(d.skill || []).join(' ') || null, verb: d.verb || null, pool: d.pool || null, levels: (d.cost || []).length, alignment: d.alignment || null };
     case 'fact': return { ...base, npc: d.npc || d.id.split('.')[0], tier: d.tier || null, unlock_src: d.unlock ? d.unlock.src : null, text: d.text, len: (d.text || '').length };
     case 'lore': return { ...base, canon: d.canon || null, keys: (d.keys || []).join(', '), text: d.text, len: (d.text || '').length };
     case 'clue': return { ...base, name: d.name || null, arc: d.arc || null, kind: d.kind || 'clue', text: d.text, len: (d.text || '').length };
+    case 'item': return { ...base, name: d.name, slot: d.slot, price: d.price || null, start: !!d.start, legacy_src: d.legacy ? d.legacy.src : null, bound: !!d.bound, worn: !!d.worn };
     case 'arc': case 'faction': case 'archetype': case 'timeline': case 'vocab': return { ...base, name: d.name || null, canon: d.canon || null, kind: d.kind || null, date: d.date || null, event: d.event || null };
   }
   return base;

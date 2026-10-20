@@ -54,7 +54,7 @@ test('the bell: odds by nature at matched skill, luck words as σ, floor and cei
   assert.equal(e.challengeOdds(one('challenge research adept steady:'), null, story).win, 98);   // the ceiling
   e.s.vals.lore = 0;
   assert.equal(e.challengeOdds(one('challenge research adept steady:'), null, story).win, 2);    // the floor
-  assert.equal(e.challengeOdds(one('challenge negotiate using lore adept steady:'), null, 'thesis_defence').win, 0);   // a milestone runs 0–100
+  assert.equal(e.challengeOdds(one('challenge appeal using lore adept steady:'), null, 'thesis_defence').win, 0);   // a milestone runs 0–100
 });
 
 test('drift pulls the DC toward the expected skill, by significance', () => {

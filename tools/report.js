@@ -24,6 +24,7 @@ function pools(content) {
   const drawsCompat = (p) => ix.ambient.filter((e) => (e.tags || []).some((t) => (p.draws || []).includes(t)));
   for (const p of Object.values(content.places || {})) {
     if (p.kind === 'internship') continue;   // internship places are counted with their track
+    if (p.deprecated) continue;              // merged into another place (E11): counted there
     const own = ix.byPlace[p.id] || [];
     const tr = p.track ? (ix.byTrack[p.track] || []) : [];
     rows.push({ kind: 'place', id: p.id, region: p.region || '', events: own.length, repeatable: own.filter(repeatable).length, track: tr.length, compat: drawsCompat(p).length, hidden: !!p.discover });
@@ -67,6 +68,8 @@ function pools(content) {
 // plan days without a plan card; cards per day.
 function usage(content, runs) {
   const places = {}, courses = {}, plans = {}, day = { term: [], break: [] };
+  // A run log from before a merge names the old place: count it with its survivor (E11).
+  const alias = (id) => { let p = content.places && content.places[id], n = 0; while (p && p.deprecated && content.places[p.deprecated] && n++ < 8) p = content.places[p.deprecated]; return p ? p.id : id; };
   let visits = 0, empty = 0;
   const visitSlots = (phase) => ((phase === 'break' ? content.game.day_break : content.game.day_term) || []).filter((r) => r.source === 'visit').map((r) => r.slot);
   const phaseOf = (month) => (content.game.calendar || [])[month - 1] || 'term';
@@ -83,11 +86,12 @@ function usage(content, runs) {
       if (pick) day[phase].push(cards.length);
       if (pick) {
         const slots = visitSlots(phase);
-        pick.picks.forEach((pl, i) => {
-          if (!pl) return;
+        pick.picks.forEach((raw, i) => {
+          if (!raw) return;
+          const pl = alias(raw);
           const u = places[pl] = places[pl] || { visits: 0, empty: 0 };
           u.visits++; visits++;
-          if (!cards.some((c) => c.slot === slots[i] && c.place === pl)) { u.empty++; empty++; }
+          if (!cards.some((c) => c.slot === slots[i] && alias(c.place) === pl)) { u.empty++; empty++; }
         });
       }
       for (const c of cards) if (c.slot === 'morning' && c.track && content.tracks[c.track] && content.tracks[c.track].kind === 'course') { const u = courses[c.track] = courses[c.track] || { cards: 0 }; u.cards++; }

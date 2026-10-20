@@ -18,7 +18,8 @@ export function fightOptions({player,opponent,context='practice_duel',observers=
  const playerCondition={health:Math.min(1,player.health/c.healthFull),mana:Math.min(1,player.mana/capacity)};
  const foe=opponent.loadout?{opponentLoadout:opponent.loadout,opponentLevel:opponent.level}:{opponentKit:{skills:opponent.skills,spells:opponent.spells,level:opponent.level}};
  const spells=Object.fromEntries(Object.entries(player.spells).filter(([id])=>inFight(id,observers)));
- return {playerKit:{skills:player.skills,spells,level:player.level},playerCondition,...foe,...(opponent.condition?{opponentCondition:opponent.condition}:{}),
+ // player.mods: the worn kit (world expansion 1; the main game's Engine#wornMods), applied by createState.
+ return {playerKit:{skills:player.skills,spells,level:player.level,...(player.mods?{mods:player.mods}:{})},playerCondition,...foe,...(opponent.condition?{opponentCondition:opponent.condition}:{}),
   playerResources:{mood:clamp(player.mood??60,0,100),renown:clamp(player.renown??0,0,100),crowns:clamp(player.gold??0,0,99999),alignment:clamp(player.alignment??0,-100,100)},
   context,observers,witnesses,firstLeader,...(encounterSeed!==undefined?{encounterSeed}:{})};
 }

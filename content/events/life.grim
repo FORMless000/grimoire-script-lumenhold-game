@@ -111,7 +111,7 @@ tags: mystery
 scene: A long gallery of gilded portraits, painted figures leaning out of their frames toward each other, whispering behind painted hands.
 text: Two portraits in the east gallery are gossiping about a student. Then one of them says your name and they both go suspiciously quiet.
 > left: Bribe them with flattery
-  challenge negotiate novice+:
+  challenge appeal novice+:
     win:
       guile +tiny
       lore +tiny
@@ -347,7 +347,7 @@ when: month >= 6 and month <= 8
 scene: A dark common room lit only by lightning, students huddled under blankets, one telling a ghost story.
 text: A storm knocks out every light-crystal in the dormitory. The common room fills with students, blankets and somebody's terrible ghost story.
 > left: Tell an even scarier story
-  challenge negotiate apprentice-:
+  challenge perform apprentice-:
     win:
       renown +small
       mood +small
@@ -782,7 +782,7 @@ when: month == 7 or month == 8
 scene: A dormitory with every window thrown open, brooms sweeping by themselves, dust swirling in sunbeams.
 text: Spring cleaning. The brooms are enchanted, but the enchantment needs supervising. Your dorm's brooms have formed a union.
 > left: Negotiate with the brooms
-  challenge negotiate novice+ wild:
+  challenge soothe novice+ wild:
     win:
       mood +small
       say: You agree to one day off a week and a polish. The dorm sparkles.

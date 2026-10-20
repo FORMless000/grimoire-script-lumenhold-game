@@ -1,0 +1,11 @@
+{
+  "batch": "romance",
+  "accept": true,
+  "summary": "Author's own review against the critic checklist (no independent critic was run). Seven romance sets (content/events/romance/): spark beats before the confession that learn or pay off a fact, partner beats (a tradition, a quarrel, a crisis), an ex card through soc_ex_encounter, and each character's own version of the generic cards they didn't fit (specializes:); migration 0039 stops the rest of those generics casting them. Plot safety: Kael's cards read only his cold hands, his mother and the North (nothing of his family's purpose or the lake); Nessa's never touch her red-string story. Fixed during review: soc_friend_sick is the friend being ill, so Tobias's version has him ill; two options were obviously best (Kael's 'Proud of You' and 'One Thing a Month' now trade spark against friendship); a capitalised phrase read as a proper noun; Nessa's spark beat explains the phrase that stops her quill without her using it, so her confession stays the first time the quill is still.",
+  "issues": [
+    { "event": "soc_confess_generic", "problem": "The plan gated every confession on having no partner; that would make soc_two_timing (two partners, a designed incident) unreachable.", "fix": "Confessions gate on not being an ex only; recorded in PROGRESS.md as a deviation." },
+    { "event": "nessa_the_one_phrase", "problem": "nessa.off_record is unlocked by the confession; learning it earlier could contradict the confession's 'first time you've seen it still'.", "fix": "She names the phrase as a definition and doesn't say it to the quill; the quill keeps writing." },
+    { "event": "kael_proud_of_you", "problem": "The plan's crisis read kael_kindness; it only exists for players who offered him bread on his first night.", "fix": "The flag picks the line, not whether the card plays." },
+    { "event": "align_saint_jibe", "problem": "The plan moved the jibe to Corvin's voice; Bram and Ilse still use it in earnest.", "fix": "Corvin joins the cast with his own fond version (corvin_saint_jibe); Bram and Ilse keep the generic." }
+  ]
+}

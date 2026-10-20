@@ -3,13 +3,15 @@
 use crate::data::{data, Act, RESOURCES, SKILLS};
 use serde_json::{json, Map, Value};
 
-pub const N_EFFECTS: usize = 13;
+pub const N_EFFECTS: usize = 15;
 pub const EFFECT_NAMES: [&str; N_EFFECTS] = [
     "guard", "ward", "brace", "foreAim", "haste", "shadowstep", "tailwind", "reflect", "torment", "eclipse", "heartprice", "compelled", "lodestar",
+    "bound", "poison",
 ];
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 /// ForeAim (Foresight's damage bonus) is no longer created since F5.3; kept so older saved states still load.
-pub enum Eff { Guard = 0, Ward, Brace, ForeAim, Haste, Shadowstep, Tailwind, Reflect, Torment, Eclipse, Heartprice, Compelled, Lodestar }
+/// Bound (Root, Web): no Shadowstep or Brace. Poison (Venom): damage each exchange; `source` is the poisoner.
+pub enum Eff { Guard = 0, Ward, Brace, ForeAim, Haste, Shadowstep, Tailwind, Reflect, Torment, Eclipse, Heartprice, Compelled, Lodestar, Bound, Poison }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Effect { pub value: f64, pub from: i32, pub until: Option<i32>, pub born: i32, pub source: Option<u8> }
@@ -94,8 +96,17 @@ pub struct Side {
     /// skillValue and skillFactor by spell index; strike at index n_spells.
     pub skill_value: Vec<f64>,
     pub factor: Vec<f64>,
-    /// Mana price at the kit's rank (×manaCostScale), by spell index.
+    /// Mana price at the kit's rank (×manaCostScale, plus the kit's `mods.cost`, never below 0), by spell index.
     pub cost: Vec<f64>,
+    /// The worn kit's flat modifiers (world expansion 1; a foe's `mods:` alike): spell damage added to each cast of a spell,
+    /// strike damage dealt to a foe who guards, wards or braces, damage taken off each opposing hit by its action (strike at
+    /// n_spells) and off every opposing hit.
+    pub on_cast: Vec<f64>,
+    pub on_defend: f64,
+    pub taken: Vec<f64>,
+    pub taken_all: f64,
+    /// A creature (world expansion 1): heals nothing, whatever it casts.
+    pub no_heal: bool,
 }
 
 pub struct Encounter {
@@ -181,8 +192,22 @@ impl Encounter {
                 skill_value[sp] = if ids.is_empty() { t.pivot } else { ids.iter().fold(0.0, |acc, &k| acc + skills[k]) / ids.len() as f64 };
                 factor[sp] = if let (true, Some(pp)) = (sp == n, t.strike_per_point) { 1.0 + pp * (skills[4] - t.pivot) } else if ids.is_empty() { 1.0 } else { ids.iter().fold(0.0, |acc, &k| acc + 1.0 + t.per_point[k] * (skills[k] - t.pivot)) / ids.len() as f64 };
             }
-            let cost = (0..n).map(|sp| d.spells[sp].cost.get((rank[sp] - 1) as usize).copied().unwrap_or(0.0) * mana_cost_scale).collect();
-            Side { level: int(&kit["level"], "level"), skills, capacity: num(&kit["capacity"], "capacity"), entry: res_map(&a["entry"]), kit: list, rank, learned, skill_value, factor, cost }
+            let mods = &kit["mods"];
+            let by_spell = |key: &str, len: usize| -> Vec<f64> {
+                let mut v = vec![0.0; len];
+                if let Some(o) = mods.get(key).and_then(|x| x.as_object()) {
+                    for (id, x) in o { let i = if id == "strike" { n } else { d.spell(id).unwrap_or_else(|| panic!("mods.{key}: unknown spell {id}")) }; if i < len { v[i] += num(x, key); } }
+                }
+                v
+            };
+            let delta = by_spell("cost", n);
+            let cost = (0..n).map(|sp| (d.spells[sp].cost.get((rank[sp] - 1) as usize).copied().unwrap_or(0.0) * mana_cost_scale + delta[sp]).max(0.0)).collect();
+            let on_cast = by_spell("onCast", n);
+            let taken = by_spell("taken", n + 1);
+            let on_defend = mods.get("onDefend").and_then(|x| x.as_f64()).unwrap_or(0.0);
+            let taken_all = mods.get("takenAll").and_then(|x| x.as_f64()).unwrap_or(0.0);
+            let no_heal = kit.get("noHeal").and_then(|x| x.as_bool()).unwrap_or(false);
+            Side { level: int(&kit["level"], "level"), skills, capacity: num(&kit["capacity"], "capacity"), entry: res_map(&a["entry"]), kit: list, rank, learned, skill_value, factor, cost, on_cast, on_defend, taken, taken_all, no_heal }
         });
         Encounter {
             sides,

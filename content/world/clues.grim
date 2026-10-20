@@ -266,3 +266,26 @@ kind: lead
 name: Wind in a jar
 text: A jar of wind sits on the courier loft's dead-letter shelf, and someone once flew with it. Find out who, race the gulls and fix the broom that pulls left, then fly a storm delivery across the lake.
 followed: spell_level(tailwind) >= 1
+
+# World expansion 1: the Whisperwood delve
+
+@clue lead_the_hush
+thread: The Hush
+kind: lead
+name: The Hush
+text: The deepest part of the Whisperwood, past the heartwood, keeps the castle's hours: it wakes only at midnight.
+followed: flag(ww_hush_seen)
+
+@clue lead_heartwood
+thread: The elder oak's gift
+kind: lead
+name: A splinter of heartwood
+text: The elder oak gave you a splinter of its heartwood. Mir, at the market stall, could carve it into a wand.
+followed: has_item(heartwood_wand)
+
+@clue lead_spinner_silk
+thread: The Spinner's silk
+kind: lead
+name: A bolt of grey silk
+text: The Spinner gave you a bolt of her silk. The village tailor could make a robe of it.
+followed: has_item(spinner_silk_robe)

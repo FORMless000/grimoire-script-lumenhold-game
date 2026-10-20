@@ -1,0 +1,647 @@
+# ============================================================
+#  Romance sets (world expansion 1, plan §2a): Seraphine, Corvin and Mir. See lyra_tobias.grim for the shape.
+# ============================================================
+
+# ---------------- Seraphine ----------------
+
+@event seraphine_stand_next
+title: Stand Next to Me
+class: routine
+tone: eerie
+trigger: social
+actor: seraphine
+when: rel(seraphine) >= 9 and bond(seraphine) != "partner" and bond(seraphine) != "ex"
+repeat: 4
+weight: 10
+art: mirror
+tags: social romance
+scene: A girl in a paint-stained smock standing before a tall mirror, pulling another student by the sleeve to stand beside her.
+text: Seraphine pulls you in front of the long mirror in the east corridor. "Stand there," she says. "No, closer." {~She stares at her own reflection, as if at a stranger.|She looks at herself, then at you, then at herself, and lets out a breath.} "Seers can't see themselves," she says. "Unless someone's standing next to them."
+> left: Stay as long as she needs
+  learn seraphine.self
+  spark seraphine +small
+  rel seraphine +small
+  say: {~You stand there until the candles gutter. She looks at herself the whole time, very seriously, and when you finally go, she says, "Thank you. I'm taller than I thought."|You stand beside her a long time. At the end she reaches out and touches the mirror where your shoulders almost meet. "There," she says. "That's what I look like."}
+> right: Ask what she sees
+  lore +small
+  rel seraphine -tiny
+  say: {~"A girl," she says. "Next to someone." She doesn't elaborate. She lets go of your sleeve.|"Half a sentence," she says, and laughs, and won't finish it.}
+
+@event seraphine_tomorrow_answer
+title: Tomorrow's Answer
+class: routine
+tone: light
+trigger: social
+actor: seraphine
+when: rel(seraphine) >= 9 and spark(seraphine) >= 5 and bond(seraphine) != "partner" and bond(seraphine) != "ex"
+weight: 10
+art: eye
+tags: social romance
+scene: A seer answering a question nobody has asked yet, in a corridor, the other student frozen mid-word.
+text: "Yes," Seraphine says, as you pass her in the corridor. You haven't said anything. "Oh," she says. "You haven't asked yet. Tomorrow, then." She looks embarrassed, which is rare. "I slip, sometimes. A day ahead. Someone has to tell me what today is."
+> left: Tell her what today is
+  learn seraphine.slips
+  spark seraphine +small
+  rel seraphine +small
+  say: You tell her: the date, the weather, what's for lunch, what she did yesterday. She listens like it's poetry. "Thursday," she says. "I like Thursday. I'll stay." You wonder what you're going to ask her tomorrow.
+> right: Ask what you'll ask
+  mood +tiny
+  rel seraphine -tiny
+  say: "If I tell you," she says, "you won't ask it, and then I'll have answered nothing." She drifts off down the corridor, a day ahead of everyone.
+
+@event seraphine_dark_room
+title: The Dark Room
+class: routine
+tone: eerie
+trigger: social
+actor: seraphine
+when: rel(seraphine) >= 9 and bond(seraphine) != "partner" and bond(seraphine) != "ex" and spark(seraphine) < 40
+repeat: 4
+time: evening night
+weight: 10
+art: candle
+tags: social romance
+scene: A storeroom with no windows, a girl sitting on the floor in the dark, a crack of light from the door falling across her face.
+text: You find Seraphine in a storeroom with no windows, sitting in the dark. "Everyone's futures are so loud today," she says, without opening her eyes. "Yours is quiet. Could you sit in here? Just so it's quieter."
+> left: Sit in the dark with her
+  spark seraphine +small
+  study -tiny
+  say: {~You sit with her in the dark for an hour. Neither of you says anything. When she finally opens the door, her face is calmer, and she says, "You're the quietest person I know." It sounds like the best compliment she has.|You sit in the dark until the bell. Your notes don't get written. She leans her head on your shoulder at some point, and doesn't explain.}
+> right: Bring her a candle
+  rel seraphine +small
+  say: {~You bring a single candle and set it by the door. "That's better," she says. "One small light. It doesn't shout."|You bring a candle. She watches it as if it were a friend, and the noise goes away, she says, a little.}
+
+@event seraphine_already_happened
+title: She Tells You the Ending
+class: routine
+tone: light
+trigger: social
+actor: seraphine
+when: bond(seraphine) == "partner"
+repeat: 4
+weight: 12
+art: book
+tags: romance
+scene: Two people curled in a window seat with one book between them, one of them covering the page with her hand.
+text: You read together now, the two of you, one book between you in the window seat. Seraphine always knows the ending. {~Today she's trying very hard not to say it.|Today she's covering the last page with her hand.} "Don't look ahead," she says. "It's better not knowing. I'm told."
+> left: Read it slowly, together
+  spark seraphine +small
+  lore +tiny
+  say: {~You read aloud, slowly, one page at a time. She doesn't say the ending. At the end she says, "I was wrong. It ends happier than I saw." It's the first time she's ever been glad to be wrong.|You read and she listens, and twice she starts to say something and stops. When you finish, she's smiling. "I didn't know," she says. "I didn't let myself."}
+> right: Ask her to tell you
+  rel seraphine +tiny
+  mood +tiny
+  say: {~She tells you the ending, delighted, in half a sentence. You finish the other half together, wrong, and laugh.|She tells you. It's terrible. You read it anyway, and she was right, and you both throw the book across the room.}
+
+@event seraphine_dont_look
+title: Don't Look Ahead
+class: routine
+tone: tense
+trigger: social
+actor: seraphine
+when: bond(seraphine) == "partner"
+weight: 10
+art: eye
+tags: romance
+scene: A seer with paint on her hands looking guilty, another student holding up a canvas that shows them both, older.
+text: You find a painting under Seraphine's bed: the two of you, older, somewhere you've never been. "I didn't mean to look," she says. "It just came. I'm sorry. I know you didn't want to know."
+> left: "Tell me about it, then."
+  spark seraphine +small
+  lore +tiny
+  say: She tells you, half a sentence at a time: a house by water, a dog with one ear up, a garden that does badly. "That's all," she says. "That's all I let myself see." You hang the painting where you'll both see it.
+> right: "Don't look again. Promise."
+  spark seraphine -tiny
+  rel seraphine +small
+  say: She promises. You can see what it costs her: it's like asking someone not to hear. But she keeps it. The painting goes back under the bed, face down.
+
+@event seraphine_vision_hurt
+title: She Won't Let You Go
+class: story
+tone: tense
+trigger: social
+actor: seraphine
+when: bond(seraphine) == "partner" and term
+weight: 14
+art: hand
+tags: romance
+scene: A girl in a paint-stained smock gripping another student's wrist in a doorway, her face white, refusing to let go.
+text: Seraphine catches your wrist in the doorway and won't let go. Her face is white. "Not today," she says. "Don't go out today. I saw it. I saw you hurt." She can't say how, or where. Her hands are shaking.
+> left: Stay in, for her
+  spark seraphine +medium
+  study -tiny
+  mood -tiny
+  say: You stay in. Nothing happens, all day. At sunset she lets go of your wrist and sits down, very suddenly, and cries, and doesn't explain whether it was because you stayed or because it was never going to happen. You'll never know. She says that's the point.
+> right: Go, and come back to prove it
+  rel seraphine +tiny
+  health -small
+  say: You go. You come back with a twisted ankle from a stair that wasn't where it should be. Seraphine looks at it and laughs, horribly relieved. "That's all?" she says. "That's all it was?" She bandages it herself, shaking.
+
+@event seraphine_ex
+title: She Painted the Ending
+specializes: soc_ex_encounter
+class: milestone
+tone: warm
+trigger: social
+actor: seraphine
+repeat: 6
+art: mirror
+tags: romance
+scene: A girl in a paint-stained smock handing a small canvas to a former lover in a corridor, both careful not to touch hands.
+text: Seraphine stops you in the corridor and gives you a small canvas. It's the two of you, walking away from each other down a long hall, both looking back. "I painted it last spring," she says. "Before. I'm sorry. I knew."
+> left: Take it, and go
+  mood -small
+  say: You take it. You don't hang it. You don't throw it away, either. Some nights you look at it, the two figures looking back.
+> right: Ask if she painted after
+  rel seraphine +small
+  challenge appeal journeyman:
+    win:
+      bond seraphine friend
+      say: "After?" She smiles, for the first time in a while. "Two people having tea. Arguing about a book. I don't know when." She tucks the painting under your arm. "Friends, I think. Yes."
+    lose:
+      mood -tiny
+      say: "I don't look after," she says. "Not with you. Not anymore." She walks away, a day ahead, already gone.
+
+@event seraphine_partner_neglect
+title: You Were in a Different Week
+specializes: soc_partner_neglect
+class: routine
+tone: tense
+trigger: social
+actor: seraphine
+weight: 14
+repeat: 5
+art: hourglass
+tags: romance
+scene: A seer waiting on a window seat with two cups of tea gone cold, looking up as another student finally arrives.
+text: Seraphine is on the window seat with two cold cups of tea. "I waited," she says. "I thought you were coming on Tuesday. Then I thought I'd slipped a day. Then I thought you'd slipped a week." She almost smiles. "It's hard to tell, with you, lately."
+> left: Sit, and stay all evening
+  spark seraphine +small
+  study -tiny
+  say: You sit with her and drink the cold tea. She tells you the date three times, to be sure. You stay until the candle's out. It's Thursday. She's sure of it now.
+> right: "I'm here now, isn't that enough?"
+  spark seraphine -medium
+  rel seraphine -small
+  say: "Now," she says, as if it were a word in a foreign language. She pours out the cold tea and goes, a day ahead of you.
+
+@event seraphine_confess_generic
+title: She Already Knew
+specializes: soc_confess_generic
+class: milestone
+tone: warm
+trigger: social
+actor: seraphine
+weight: 20
+art: heart
+tags: romance
+scene: A seer listening to a confession with a small patient smile, a sketchbook open on her knee showing the very scene.
+text: You've rehearsed this. You start to say it. Seraphine holds up her sketchbook: it's this moment, the two of you, drawn weeks ago. "I know," she says gently. "I've known since spring. I just didn't know what I'd say."
+> left: "Well? What do you say?"
+  bond seraphine partner
+  spark seraphine +large
+  mood +medium
+  say: She closes the sketchbook. "I didn't let myself look," she says. "I wanted to hear it." Then she kisses you, and for once, she's as surprised as anyone.
+> right: Let it rest, for now
+  spark seraphine -small
+  rel seraphine +small
+  say: "Then let's not," she says, with relief or disappointment, you can't tell. She tears the drawing out and gives it to you. "For later," she says. "If there's a later."
+
+# ---------------- Corvin ----------------
+
+@event corvin_lucky_deck
+title: The Lucky Deck
+class: routine
+tone: light
+trigger: social
+actor: corvin
+when: rel(corvin) >= 9 and bond(corvin) != "partner" and bond(corvin) != "ex"
+repeat: 4
+weight: 10
+art: cards
+tags: social romance
+scene: A lanky student shuffling an old, soft-cornered deck of cards with impossible speed, grinning across a dormitory table.
+text: Corvin deals you a hand from an old deck, soft at the corners and smelling of pipe smoke. {~"Grandfather's," he says. "It really is lucky. Watch."|"Cut," he says. "Any card. It'll be the queen. It's always the queen."} You win, which shouldn't be possible against Corvin.
+> left: Ask about his grandfather
+  learn corvin.grandfather
+  spark corvin +small
+  rel corvin +small
+  say: {~The jokes stop. He tells you about a man who could find a lost thing in any house, and who taught him to shuffle on rainy Sundays. "He'd have liked you, saint," he says. "He liked people who lost honestly."|He talks for an hour, and none of it is a joke. Then he deals again, and cheats outrageously, so you'll know he's fine.}
+> right: Play for real stakes
+  gold +tiny
+  guile +tiny
+  say: {~You play for coppers. You win, because the deck likes you. Corvin is delighted and furious and asks for a rematch.|You play until midnight and come out four coppers up. "Beginner's luck," he says. "It's the deck. It's cheating for you."}
+
+@event corvin_last_warning
+title: Last Warning
+class: routine
+tone: tense
+trigger: social
+actor: corvin
+when: rel(corvin) >= 9 and spark(corvin) >= 5 and bond(corvin) != "partner" and bond(corvin) != "ex"
+weight: 10
+art: lock
+tags: social romance
+scene: A lanky student sitting on a staircase holding an official letter with a red seal, no grin at all.
+text: Corvin is sitting on the stairs with a letter with a red seal. For once he isn't grinning. "Last warning," he says. "One more detention and they send me home." He folds it very small. "Home isn't a good place, saint. Don't ask."
+> left: Promise to keep him out of trouble
+  learn corvin.last_warning
+  spark corvin +small
+  rel corvin +small
+  say: "You?" he says. "Keep me out of trouble?" But he looks at you a long time, and the grin comes back, smaller and realer. "Fine. Deal. You're my conscience now. Terrible job. No pay."
+> right: Tell him to stop being stupid
+  rel corvin +tiny
+  alignment +tiny
+  say: "Wow," he says. "Thanks, saint." But he doesn't pick a single lock all month. You know, because you check.
+
+@event corvin_route_named
+title: A Route Named After You
+class: routine
+tone: warm
+trigger: social
+actor: corvin
+when: rel(corvin) >= 9 and bond(corvin) != "partner" and bond(corvin) != "ex" and spark(corvin) < 40
+repeat: 4
+time: evening night
+weight: 10
+art: map
+tags: social romance
+scene: A lanky student unrolling a hand-drawn map of the castle's hidden passages on a dormitory floor, one route inked in a different colour.
+text: Corvin unrolls a map of the castle's passages on your floor. One route is in green ink, new. {~"Found it last week," he says. "Kitchens to the roof, no stairs."|"Library to the lake," he says, "in four minutes, if you don't mind a ladder."} At the bottom, he's labelled it with your name. "Every route needs a name," he says, not looking at you.
+> left: Walk it with him tonight
+  spark corvin +small
+  guile +tiny
+  health -tiny
+  say: {~You walk it at midnight. It comes out on the roof, under more stars than you knew the castle had. Corvin doesn't say anything clever. He doesn't need to.|You walk the whole route, bumping shoulders in the narrow parts. At the end he says, "Well? Is it yours?" It is.}
+> right: Ask why your name
+  rel corvin +small
+  say: {~"Because," he says, and then nothing, which from Corvin is a whole speech. He rolls the map up very carefully.|"It's a good name for a route," he says. "Doesn't give anything away." He means the opposite.}
+
+@event corvin_goat_clause
+title: The Goat Clause
+specializes: soc_borrow_money
+class: routine
+tone: light
+trigger: social
+actor: corvin
+weight: 10
+repeat: 6
+art: pouch
+tags: social money
+scene: A grinning student holding out a scrawled contract with a drawing of a goat at the bottom, an empty purse in his other hand.
+text: Corvin needs fifteen crowns. He's drawn up a contract, very official, with a clause at the bottom: "In the event of non-payment, the lender shall receive one (1) goat." He's drawn the goat. It's a good goat.
+> left: Lend it
+  gold -medium
+  rel corvin +medium
+  learn corvin.trolls
+  say: You sign. He pays you back in three weeks, which is a personal record, and tells you the goat story anyway, because you asked about the clause. The trolls still have it. It runs them now.
+> right: Refuse, for the goat's sake
+  rel corvin -tiny
+  mood +small
+  say: "The goat deserves better," you say. He laughs so hard he has to sit down. Then he finds the fifteen crowns somewhere else, and you decide not to ask where.
+
+@event corvin_lock_left_open
+title: A Lock Left Open
+class: routine
+tone: warm
+trigger: social
+actor: corvin
+when: bond(corvin) == "partner"
+repeat: 4
+weight: 12
+art: key
+tags: romance
+scene: A door in a castle corridor standing slightly ajar at midnight, a note pinned to it in a messy hand.
+text: You've a tradition now: once a month Corvin leaves a lock open somewhere in the castle, a door that's always shut, and a note on it. {~Tonight it's the clock tower: "Up. Bring cake."|Tonight it's the music room: "Play me something bad."} You have to find it first.
+> left: Find it, follow it
+  spark corvin +small
+  guile +tiny
+  health -tiny
+  say: {~You find it at midnight. He's waiting at the top with a blanket and a cake he definitely didn't buy. You eat it watching the clock's hands move from the wrong side.|You find the door. He's inside, in the dark, playing a terrible tune on a borrowed piano, just for you.}
+> right: Leave a lock open for him
+  rel corvin +small
+  alignment -tiny
+  say: {~You pick your first lock, badly, and leave a note: "Your turn." He finds it in ten minutes and is so proud of you he can't speak.|You leave the observatory door open with a note. He finds it, and you, and says you're a terrible influence.}
+
+@event corvin_honest_once
+title: Honest for Once
+class: routine
+tone: tense
+trigger: social
+actor: corvin
+when: bond(corvin) == "partner"
+weight: 10
+art: mask
+tags: romance
+scene: A lanky student turning away from another, joking with his back turned, his shoulders tense.
+text: Corvin has been joking all evening, and it's getting thin. Something's wrong. Every time you ask, he makes another joke, quicker. "It's nothing, saint," he says. "Nothing's ever anything. That's the trick."
+> left: Make him tell you
+  hint: He deflects; get past the jokes.
+  challenge negotiate journeyman:
+    win:
+      spark corvin +medium
+      rel corvin +small
+      say: You don't let him off. Eventually the jokes run out, and he tells you: his brother wrote. Wants money. Threatened to come. You sit with him while he says it all, plainly, no jokes. "That's the first time I've said that to anyone," he says.
+    lose:
+      spark corvin -small
+      say: Every question gets a better joke. You end up laughing despite yourself, and he looks relieved and sad at once, and you know you lost.
+> right: Let him joke
+  mood +tiny
+  rel corvin +tiny
+  say: You let him joke. You laugh at the good ones. At the end of the night he says, very quietly, "Thanks for not making me." It's honest. For once.
+
+@event corvin_brother_again
+title: The Brother, Again
+class: story
+tone: grim
+trigger: social
+actor: corvin
+when: bond(corvin) == "partner" and knows(corvin.brother)
+weight: 14
+art: hand
+tags: romance
+scene: A tough older man in a worn coat looming at the castle gate, a lanky student standing in front of another student protectively.
+text: Corvin's brother is at the castle gate again. This time he isn't asking Corvin for money. He's looking at you. "So this is who you've been spending it on," he says. Corvin steps in front of you without a joke anywhere in him.
+> left: Stand beside Corvin, not behind
+  spark corvin +medium
+  rel corvin +small
+  mood -small
+  say: You step up beside him. The brother looks at the two of you a long time, then spits, and goes. Corvin shakes for an hour afterwards. "Nobody's ever done that," he says. "Stood next to me."
+> right: Pay him to go
+  gold -large
+  spark corvin +small
+  alignment -tiny
+  say: You give the brother everything in your purse. He goes. Corvin is furious with you, and grateful, and furious about being grateful. "Never again," he says. "Promise me." You promise. You'd do it again.
+
+@event corvin_ex
+title: New Locks
+specializes: soc_ex_encounter
+class: milestone
+tone: warm
+trigger: social
+actor: corvin
+repeat: 6
+art: lock
+tags: romance
+scene: A lanky student kneeling at a dormitory door fitting a new lock, looking up at his ex with a grin that doesn't reach his eyes.
+text: Corvin is changing the lock on his door. It's a very good lock. "Don't take it personally, saint," he says, with a grin that stops before his eyes. "Old habits. Somebody once had a key."
+> left: Leave him to it
+  mood -small
+  say: You leave him to it. You hear the lock click behind you, very final, and very well made.
+> right: "It's a good lock."
+  rel corvin +small
+  challenge appeal journeyman:
+    win:
+      bond corvin friend
+      say: He looks up. Then he laughs, a real one. "It's the best lock in the castle," he says. "I'll show you how it works. You'll never get in." It's an invitation, of a kind.
+    lose:
+      mood -tiny
+      say: "It is," he says. "Best I've got." He turns back to it. That's the end of the conversation.
+
+@event corvin_partner_date
+title: Supper on Someone Else's Roof
+specializes: soc_partner_date
+class: routine
+tone: light
+trigger: social
+actor: corvin
+weight: 12
+repeat: 4
+art: meal
+tags: romance
+scene: Two people sitting on a high castle roof with a stolen picnic between them, the kitchens' chimney smoking behind them.
+text: Corvin's idea of a date is supper on a roof you're not allowed on, made of food from a kitchen you're not allowed in. "It's not stealing," he says. "It's redistribution. The cook knows. She likes me."
+> left: Climb up
+  spark corvin +small
+  alignment -tiny
+  say: You eat stolen pie on the roof and watch the lake go dark. He points out every window he's ever climbed through. There are a lot.
+> right: Bring the cook along
+  rel corvin +tiny
+  mood +small
+  say: You talk the cook into joining you. She climbs the roof better than either of you and brings better pie. Corvin is thrilled and slightly outclassed.
+
+@event corvin_saint_jibe
+title: "Saint"
+specializes: align_saint_jibe
+class: routine
+tone: light
+trigger: social
+actor: corvin
+repeat: 12
+weight: 10
+art: scales
+tags: social lumen
+scene: A lanky student leaning in a doorway with one arm across it, grinning, while another student stands in front of him with an armful of books.
+text: Corvin leans across the doorway with one arm. "Here comes the saint," he says, loud enough for the corridor, and then, lower, grinning: "Does it get heavy? Being better than me? Asking for a friend. The friend is me."
+> left: "It does, actually."
+  rel corvin +small
+  mood -tiny
+  alignment +tiny
+  say: The grin goes. He looks at you properly for a second, then takes half your books without asking and carries them to the library. "There," he says. "Lighter." He doesn't call you saint again that week.
+> right: "You'd know, sinner."
+  mood +small
+  guile +tiny
+  say: He laughs so hard he has to let go of the doorway. "Sinner," he repeats, delighted, as if you've given him a title. By dinner he's signing his notes with it.
+
+# ---------------- Mir ----------------
+
+@event mir_owl_remembers
+title: The Owl Remembers
+class: routine
+tone: light
+trigger: social
+actor: mir
+when: rel(mir) >= 9 and bond(mir) != "partner" and bond(mir) != "ex"
+repeat: 4
+weight: 10
+art: owl
+tags: social romance
+scene: A clockwork owl landing on a student's shoulder and hooting a reminder, its creator running after it in goggles.
+text: Mir's clockwork owl lands on your shoulder and hoots. {~"Reminder," it says, in Mir's voice. "Birthday. Yours. In nine days. Do not tell them I remembered."|"Reminder," it says. "Lunch. With them. Wear the green coat." Mir arrives, scarlet, and grabs it.} Mir is mortified. "It's not supposed to say the part in brackets," they say. "Probably. It's a feature."
+> left: Ask what else it remembers
+  learn mir.owl
+  spark mir +small
+  rel mir +small
+  say: {~Mir tells you, very fast: deadlines, birthdays, and, slightly, grudges. "And you," the owl adds, unhelpfully. Mir puts it in a bag. The bag hoots your name.|"Everything important," says Mir, and then hears themself, and goes red to the goggles.}
+> right: Offer to oil its wings
+  arcana +tiny
+  rel mir +small
+  say: {~You oil its wings while Mir explains every gear, with exclamation marks. By the end the owl prefers you, which Mir says is a betrayal and a compliment.|You oil the wings and the owl hoots a perfect C. Mir writes it down: "they fixed the pitch!!!"}
+
+@event mir_notebooks
+title: The Notebooks
+class: routine
+tone: warm
+trigger: social
+actor: mir
+when: rel(mir) >= 9 and spark(mir) >= 5 and bond(mir) != "partner" and bond(mir) != "ex"
+weight: 10
+art: book
+tags: social romance
+scene: An artificer holding out a battered notebook bristling with paper slips, hesitating, to another student in a workshop.
+text: Mir holds out a notebook, one of a stack, battered and bristling with slips of paper. "Three years," they say. "Every idea. Some of them work. Probably. Nobody's read them. You can, if you want. Carefully. Very carefully. With clean hands."
+> left: Read it with them
+  learn mir.notebooks
+  spark mir +small
+  lore +small
+  say: You read it at the workbench with Mir hovering, explaining every page before you get to it. Halfway through there's a sketch of you, labelled "test subject (willing?)". Mir pretends it isn't there. You pretend too, badly.
+> right: Ask which idea is their favourite
+  rel mir +small
+  say: They flip to a page with a drawing of a tiny lantern that remembers who lit it. "This one," they say. "It doesn't work yet. It will." They don't let go of the notebook for the rest of the evening.
+
+@event mir_blueprints
+title: Blueprints
+class: routine
+tone: light
+trigger: social
+actor: mir
+when: rel(mir) >= 9 and bond(mir) != "partner" and bond(mir) != "ex" and spark(mir) < 40
+repeat: 4
+weight: 10
+art: gear
+tags: social romance
+scene: An artificer pinning a blueprint to a workshop wall covered in drawings, all of them labelled with another student's name.
+text: Mir has drawn a blueprint for something for you. {~"A lamp that turns itself off when you fall asleep reading," they say. "Probably."|"A pocket that's bigger inside," they say. "In theory. In practice, it eats keys."} They don't say why they keep making things for you. They hold the blueprint like a confession.
+> left: Help build it
+  spark mir +small
+  arcana +tiny
+  health -tiny
+  say: {~You build it together, Mir talking the whole time, both of you singed at the fingertips. It works. Mostly. Mir hugs it, then you, then looks horrified at themself.|You build it until midnight. It doesn't work. Mir says that's the best part: now you have to build it again, together.}
+> right: Pin it up, for later
+  rel mir +small
+  study +tiny
+  say: {~You pin it on your wall, next to your timetable. Mir sees it there the next time they visit and goes very quiet and very pleased.|"Later," you say. Mir nods fast. "Later is good. Later is a plan." They say "later" several times on the way out.}
+
+@event mir_tinkering_evenings
+title: Tinkering Evenings
+class: routine
+tone: warm
+trigger: social
+actor: mir
+when: bond(mir) == "partner"
+repeat: 4
+weight: 12
+art: gear
+tags: romance
+scene: Two people at a crowded workbench late at night, one soldering, one reading aloud, a clockwork owl asleep between them.
+text: Thursdays are tinkering evenings now. Mir works; you sit on the bench with your feet up, reading or helping or just there. {~Tonight it's a music box that plays backwards.|Tonight it's a kettle that refuses to boil unless asked nicely.} The owl is asleep on a pile of bolts.
+> left: Hand them the tools
+  spark mir +small
+  arcana +tiny
+  say: {~You hand over each tool before they ask. By midnight you know what they need before they do. "You're the best assistant," Mir says, "and the worst distraction." They mean both kindly.|You fetch, hold, steady. The music box plays a waltz backwards and you dance to it, badly, among the bolts.}
+> right: Read aloud while they work
+  rel mir +small
+  lore +tiny
+  say: {~You read them a terrible novel. They laugh at the wrong parts and burn a finger. The kettle boils, eventually, because you asked it nicely.|You read aloud. Mir works slower, listening, and doesn't seem to mind.}
+
+@event mir_not_a_hobby
+title: Not a Hobby
+class: routine
+tone: tense
+trigger: social
+actor: mir
+when: bond(mir) == "partner"
+weight: 10
+art: gear
+tags: romance
+scene: An artificer furiously packing tools into a case in a workshop, another student standing in the doorway.
+text: You said it lightly: "your hobby". Mir has gone very still. "My family calls it that," they say. "A hobby. Something to grow out of. I didn't think you would." They're packing their tools away, carefully, which is how you know they're furious.
+> left: Take it back, properly
+  spark mir +small
+  mood -small
+  say: You take it back, not with "sorry" but with every thing they've ever made, one by one, and what each one means. By the fifth they've stopped packing. By the tenth they're crying into their goggles. "It's not a hobby," they say. "It's not," you agree.
+> right: Ask them to show you what it is, then
+  rel mir +small
+  arcana +tiny
+  say: They stop packing. Then they show you, for three hours, everything, and it's not a hobby. It's a whole life. You never use the word again.
+
+@event mir_family_summons
+title: The Family Wants Them Home
+class: story
+tone: tense
+trigger: social
+actor: mir
+when: bond(mir) == "partner" and knows(mir.family)
+weight: 14
+art: letter
+tags: romance
+scene: An artificer holding a formal letter from a clockworks company, sitting on the floor of a workshop surrounded by half-finished machines.
+text: A letter from Mir's family, on company paper. They want Mir home after this year: the clockworks needs someone, and "play time" is over. Mir is sitting on the workshop floor, very small among their machines. "Probably they're right," they say. They don't sound like they believe it.
+> left: Help them write back
+  spark mir +medium
+  lore +small
+  say: You draft it together, all night: what Mir has built, what it's for, what they'll build next. It's the best thing either of you has written. Mir posts it at dawn, shaking. "Whatever they say," they tell you, "I said it."
+> right: Tell them to go and see
+  rel mir +small
+  spark mir -tiny
+  say: "Go and look," you say. "Then decide." Mir goes home for a weekend and comes back with a clockwork bird their grandfather made, and a decision they don't tell you yet, and a smile you haven't seen before.
+
+@event mir_ex
+title: The Owl Holds a Grudge
+specializes: soc_ex_encounter
+class: milestone
+tone: light
+trigger: social
+actor: mir
+repeat: 6
+art: owl
+tags: romance
+scene: A clockwork owl glaring from a high shelf at a former partner of its maker, ruffling its brass feathers.
+text: Mir's clockwork owl sees you across the courtyard, lands on a gargoyle and glares. "Grudge," it says, in Mir's voice. "Ongoing." Mir, chasing it, sees you, and stops. "It's not me," they say. "It's the owl. Probably."
+> left: Leave them to the owl
+  mood -small
+  say: You go. The owl follows you to the library, hooting "grudge" at intervals, until Mir catches it.
+> right: Offer the owl a gear
+  rel mir +small
+  challenge appeal journeyman:
+    win:
+      bond mir friend
+      say: The owl takes the gear and considers it. Then it hoots, quite differently. Mir laughs, surprised. "That's 'acquaintance, improving'," they say. "I didn't know it had that one. I didn't build it in." Maybe it built itself.
+    lose:
+      mood -tiny
+      say: The owl takes the gear and drops it on your head. "Grudge," it says. "Ongoing." Mir apologises and doesn't.
+
+@event mir_gift_given
+title: A Gift With Gears
+specializes: soc_gift_given
+class: routine
+tone: light
+trigger: social
+actor: mir
+weight: 10
+repeat: 6
+art: gear
+tags: social
+scene: An artificer turning a small gift over and over in their hands, peering at it through goggles as if checking for gears.
+text: You give Mir a gift. They turn it over three times, then hold it to their ear, then take their goggles off to look at it properly. "It doesn't do anything," they say, wondering. "It's just... for me?"
+> left: "It's just for you."
+  rel mir +medium
+  mood +tiny
+  say: They hold it very carefully for the rest of the day, as if it might break, or tick. The next morning there's a small brass gear on your pillow. It doesn't do anything either.
+> right: "It could do something, if you made it."
+  rel mir +small
+  arcana +tiny
+  say: Their eyes light. By Friday it hums, glows, and plays one note when you're nearby. It's not what you gave them. It's better.
+
+@event mir_birthday
+title: Not a Birthday
+specializes: soc_birthday
+class: routine
+tone: warm
+trigger: social
+actor: mir
+weight: 10
+repeat: 12
+art: gear
+tags: social festival
+scene: An artificer at a cluttered workbench, goggles pushed up, looking blankly at a small cake with a single candle set among the springs.
+text: You find out it's Mir's birthday, and turn up at the workshop with a cake. Mir looks at the candle, puzzled. "We don't do birthdays at home," they say. "We do name days. Nobody does mine, but that's the one we do."
+> left: Light the candle anyway
+  gold -tiny
+  rel mir +medium
+  if knows(mir.name_day):
+    say: "Two in a year," Mir says, as you light it. "That's excessive." They blow it out, very carefully, as if it might be a fuse, and then cut the cake with a pair of calipers into exactly equal slices.
+  else:
+    say: You light it anyway. Mir watches the flame for a while, then blows it out with great precision. "It's a stupid custom," they say, and eat three slices, and save the candle in a drawer of springs.
+> right: Ask when the name day is
+  rel mir +small
+  lore +tiny
+  say: They tell you, then make you write it down, then check you wrote it down correctly. "You won't remember," they say. "People don't." They say it lightly. They watch you put the note in your pocket.

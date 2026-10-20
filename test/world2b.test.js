@@ -160,8 +160,10 @@ test('spells v2: a course\'s spell is taught in the month the level starts (trac
     const { eng } = play(seed, style, (e) => e.s.turn >= 14);
     const learned = {};   // spell@level -> the month it was first known at that level
     for (const h of eng.s.hist) if (h.t === 'card') for (const n of (h.out && h.out.notes) || []) if (n.kind === 'spell') for (let l = 1; l <= n.level; l++) if (!(n.spell + '@' + l in learned)) learned[n.spell + '@' + l] = h.turn;
+    const enrolled = new Set();   // a retake (an F, then the same level again) was taught the first time round
     for (const h of eng.s.hist) if (h.t === 'card') for (const n of (h.out && h.out.notes) || []) if (n.kind === 'enrol') {
       const t = content.tracks[n.track]; const x = (t.teaches || []).find((y) => y.level === n.level); if (!x || h.turn > 13) continue;
+      if (enrolled.has(n.track + '@' + n.level)) continue; enrolled.add(n.track + '@' + n.level);
       total++;
       assert.ok(learned[x.spell + '@' + n.level] <= h.turn, style + ' ' + seed + ': ' + n.track + '@' + n.level + ' teaches ' + x.spell + ' by month ' + h.turn);
       if (n.level > 1) assert.ok(!(learned[x.spell + '@' + n.level] < h.turn), 'not taught ahead of the level: ' + n.track + '@' + n.level);
@@ -173,10 +175,12 @@ test('spells v2: a course\'s spell is taught in the month the level starts (trac
 test('obligations: a truant loses performance; a dutiful member keeps it', () => {
   // Both join the Duelling Circle and the library job on day one, then play two terms.
   const join = (eng) => { const ctx = eng.newCtx(null, null); eng.trackOp({ t: 'join', track: 'duelling' }, ctx); eng.trackOp({ t: 'join', track: 'library_assistant' }, ctx); };
-  const run = (style) => play(31, style, (e) => e.s.turn >= 8, join).eng.s.tracks;
-  const dutiful = run('balanced'), truant = run('truant');
+  // A track the truant ever left (quit at the Job Board, perhaps joining again later) has no missed term to judge.
+  const left = new Set();
+  const run = (style, track) => play(31, style, (e) => { if (track) for (const id of ['duelling', 'library_assistant']) if (e.s.tracks[id] && e.s.tracks[id].status === 'left') left.add(id); return e.s.turn >= 8; }, join).eng.s.tracks;
+  const dutiful = run('balanced'), truant = run('truant', true);
   for (const id of ['duelling', 'library_assistant']) {
-    if (truant[id].status === 'left') continue;   // quit at the Job Board: no obligations left to miss
+    if (left.has(id)) continue;
     assert.ok(truant[id].perf < dutiful[id].perf, id + ': truant ' + truant[id].perf + ' vs balanced ' + dutiful[id].perf);
     assert.ok(truant[id].perf < 50 || truant[id].status === 'dropped', id + ' truant perf ' + truant[id].perf);
   }
@@ -306,7 +310,7 @@ test('combat stub (M39, M5): reads condition and spells, costs mana to enter, pr
 test('swing (M14): wild checks flatten the odds, steady ones sharpen them', () => {
   const eng = new Engine(content); eng.newGame({ seed: 4 });
   eng.s.vals.charm = eng.expectedSkill() + 10;
-  const p = (swing) => eng.challengeOdds({ kind: 'negotiate', tier: 'medium', swing }).win;
+  const p = (swing) => eng.challengeOdds({ kind: 'appeal', tier: 'medium', swing }).win;
   assert.ok(p('wild') < p(null) && p(null) < p('steady'), p('wild') + ' < ' + p(null) + ' < ' + p('steady'));
 });
 
@@ -423,7 +427,7 @@ test('the midnight turn: going out opens a midnight pick; suspicion is the only 
   assert.ok(sawNight, 'the night card comes');
   assert.ok(midnight, 'going out opens the midnight map');
   assert.ok(midnight.places.filter((p) => p.state === 'open' && p.open[0]).every((p) => (eng.directorIndex().byPlace[p.id] || []).concat(eng.directorIndex().byTrack[content.places[p.id].track] || []).some((e) => e.slot === 'midnight')), 'only places with a midnight card are open');
-  assert.ok(eng.s.hist.some((h) => h.t === 'card' && /^midnight_/.test(h.id)), 'a midnight card at the place');
+  assert.ok(eng.s.hist.some((h) => h.t === 'card' && content.events[h.id] && content.events[h.id].slot === 'midnight'), 'a midnight card at the place');   // either door of the boathouse ring
   // the morning after being noticed: watched first, a lockout the second time
   eng.s.cur = { id: 'night_suspicion', actor: null }; quiet(() => eng.choose('right'));
   assert.ok(eng.s.states.watched && !eng.s.states.locked_out);

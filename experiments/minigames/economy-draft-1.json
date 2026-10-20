@@ -1,0 +1,339 @@
+{
+  "id": "combat-economy-draft-1",
+  "status": "proposal; not loaded by the combat engine",
+  "reference": {
+    "skill": 50,
+    "courseRank": 2,
+    "hpPerAction": 9,
+    "hpPerPermanentlySpentMana": 1.5,
+    "fluxRatio": 0.6666666666666666,
+    "castsPerReclaim": 3,
+    "healFractionTarget": 0.8
+  },
+  "scaling": {
+    "formula": "0.75 + skill / 200",
+    "damageRounding": "ceil",
+    "healingAndManaGainRounding": "floor",
+    "voluntaryHpCostRounding": "ceil",
+    "economicRatiosScale": false,
+    "countsAndDurationsScale": false,
+    "healingFormula": "floor(healingFraction * ceil(damageEquivalentBudget * scale)); reference healing amounts are display values, not inputs scaled again",
+    "flatReductionRounding": "nearest integer after skill scaling; zero remains zero",
+    "globalHpScale": "1 for the proposed final-HP catalogue; do not also apply legacy combatScale=3 or damageMultiplier=0.5"
+  },
+  "basics": {
+    "strikeDamage": 9,
+    "guardPhysicalBlockFraction": 0.6666666666666666,
+    "guardSpellBlockFraction": 0.3333333333333333,
+    "reclaim": "all available flux, after primary damage; breaks Shadowstep before attacks if recovery is possible"
+  },
+  "spells": {
+    "flame": {
+      "mana": [
+        12,
+        12,
+        12
+      ],
+      "damage": [
+        16,
+        18,
+        20
+      ]
+    },
+    "foresight": {
+      "mana": [
+        8,
+        10,
+        12
+      ],
+      "exchanges": [
+        3,
+        4,
+        5
+      ],
+      "prepSkill": 10,
+      "prep": "next damaging action through the following exchange uses +10 relevant skill, capped at 100; not +10 HP"
+    },
+    "mend": {
+      "mana": [
+        12,
+        12,
+        12
+      ],
+      "healing": [
+        12,
+        14,
+        16
+      ],
+      "damageEquivalentBudgets": [
+        16,
+        18,
+        20
+      ],
+      "healingFraction": 0.8
+    },
+    "glamour": {
+      "mana": [
+        8,
+        8,
+        8
+      ],
+      "renown": [
+        2,
+        3,
+        4
+      ],
+      "limit": "total award per fight, with observers; repeated casts do not stack"
+    },
+    "haste": {
+      "mana": [
+        12,
+        10,
+        8
+      ],
+      "hpCost": 0,
+      "basicActions": [
+        3,
+        3,
+        3
+      ]
+    },
+    "shadowstep": {
+      "mana": [
+        18,
+        18,
+        16
+      ],
+      "exchanges": [
+        1,
+        2,
+        2
+      ]
+    },
+    "ward": {
+      "mana": [
+        9
+      ],
+      "effect": "next damaging action this exchange; Starlight still passes one third"
+    },
+    "animate": {
+      "mana": [
+        16
+      ],
+      "tickDamage": 4,
+      "physical": true,
+      "reductionPerHit": 1,
+      "damageThreshold": 20,
+      "maxExchanges": 4
+    },
+    "starlight": {
+      "mana": [
+        12
+      ],
+      "holdMana": 2,
+      "releaseDamage": 26,
+      "releaseDamageAfterHold": 38
+    },
+    "seal": {
+      "mana": [
+        12
+      ],
+      "fluxErased": 12
+    },
+    "wildfire": {
+      "mana": [
+        8
+      ],
+      "holdMana": 2,
+      "holdDamage": 12,
+      "holdSelfDamage": 2,
+      "releaseDamage": 26
+    },
+    "heartwood": {
+      "mana": [
+        16
+      ],
+      "tickHealing": 3,
+      "reductionPerHit": 1,
+      "damageThreshold": 20,
+      "maxExchanges": 4,
+      "damageEquivalentHealingBudget": 4,
+      "healingFraction": 0.8
+    },
+    "omen": {
+      "mana": [
+        14
+      ],
+      "damage": 30,
+      "delayExchanges": 2
+    },
+    "sleight": {
+      "mana": [
+        6
+      ],
+      "crownsStolen": 5,
+      "alignment": "tiny; unchanged"
+    },
+    "contraption": {
+      "mana": [
+        12
+      ],
+      "tickDamage": 6,
+      "reductionPerHit": 0,
+      "damageThreshold": 14,
+      "maxExchanges": 3,
+      "burstToEach": 4
+    },
+    "hoarfrost": {
+      "mana": [
+        10
+      ],
+      "damage": 16,
+      "effect": "existing mutual cancellation against Flame and Wildfire"
+    },
+    "candour": {
+      "mana": [
+        6
+      ],
+      "combat": "none; preserve negotiation effect"
+    },
+    "brace": {
+      "mana": [
+        12
+      ],
+      "reductions": [
+        2,
+        1,
+        1
+      ],
+      "effect": "Ward now, fading reduction for three subsequent exchanges"
+    },
+    "quickquill": {
+      "mana": [
+        6
+      ],
+      "combat": "none; preserve negotiation effect"
+    },
+    "bramble": {
+      "mana": [
+        8
+      ],
+      "tickDamage": 4,
+      "physical": false,
+      "reductionPerHit": 0,
+      "damageThreshold": 12,
+      "maxExchanges": 4
+    },
+    "index": {
+      "mana": [
+        6
+      ],
+      "combat": "none; preserve negotiation effect"
+    },
+    "rapport": {
+      "mana": [
+        6
+      ],
+      "crownsPerRenown": 2,
+      "maxCrownsPerFight": 10,
+      "effect": "observers required"
+    },
+    "purify": {
+      "mana": [
+        0
+      ],
+      "hpCost": 9,
+      "manaGain": 12
+    },
+    "tailwind": {
+      "mana": [
+        8
+      ],
+      "strikeBonuses": [
+        3,
+        6,
+        9
+      ],
+      "maxExchanges": 3
+    },
+    "rime": {
+      "mana": [
+        6
+      ],
+      "reviveHp": 1,
+      "freezeExchanges": 1,
+      "maxUses": 1
+    },
+    "reflect": {
+      "mana": [
+        24
+      ],
+      "returnedFraction": 0.5,
+      "effect": "block the next damaging spell action this exchange; return half its incoming power, one bounce; physical damage is unaffected"
+    },
+    "moonwell": {
+      "mana": [
+        0
+      ],
+      "holdMana": 0,
+      "manaBankedPerHold": 6
+    },
+    "lodestar": {
+      "mana": [
+        6
+      ],
+      "holdMana": 0,
+      "initialAbsorb": 24,
+      "absorbPerHold": 9,
+      "effect": "Release creates one remaining-absorb pool consumed across hits, not discarded on the first hit; recast replaces it"
+    },
+    "toll": {
+      "mana": null,
+      "combat": "not castable; story only"
+    },
+    "torment": {
+      "mana": [
+        14
+      ],
+      "hpCostPerOpponentAction": 8,
+      "exchanges": 3
+    },
+    "extraction": {
+      "mana": [
+        8
+      ],
+      "manaTransferred": 7
+    },
+    "siphon": {
+      "mana": [
+        8
+      ],
+      "holdMana": 4,
+      "healFractionOfActualDamage": 0.6,
+      "damageOnStart": 18,
+      "damagePerHold": 9
+    },
+    "compel": {
+      "mana": [
+        20
+      ],
+      "exchanges": 2,
+      "effect": "existing current/next exchange replay of last legal public action"
+    },
+    "eclipse": {
+      "mana": [
+        8
+      ],
+      "manaPerHpDamage": 0.75,
+      "manaGainCap": 24,
+      "effect": "external actual HP damage next exchange only; ratios fixed, cap scales"
+    },
+    "heartprice": {
+      "mana": [
+        0
+      ],
+      "hpPerMana": 0.8,
+      "effect": "rest of fight; ceil HP per payment; HP payments create no flux"
+    }
+  }
+}

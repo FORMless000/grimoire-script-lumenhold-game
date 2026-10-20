@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Lumenhold · The Conversation</title><link rel="stylesheet" href="style.css"></head>
+<body data-view="setup"><main>
+<section id="setup">
+ <div class="eyebrow">Lumenhold / research prototype 03 · pressure</div><h1>The Conversation</h1><p class="intro">Confront the requests you can afford. Deflect the ones you cannot.</p>
+ <div class="presets"><button data-preset="20">Early game<b>Skill 20</b></button><button data-preset="50">Mid game<b>Skill 50</b></button><button data-preset="80">Late game<b>Skill 80</b></button></div>
+ <form id="settings"><div class="form-grid">
+ <label>Your skill level<input id="level" type="number" min="1" max="100" value="20"></label>
+ <label>Opponent level<input id="opponent-level" type="number" min="1" max="100" value="20"></label>
+ <label>Your kit<select id="archetype"><option>Balanced</option><option>Envoy</option><option>Illusionist</option><option>Seer</option><option>Restorer</option><option>Evoker</option><option>Warden</option></select></label>
+ <label>Opponent behavior<select id="opponent"></select></label>
+ <label>Encounter<select id="fixture"></select></label><label>Encounter seed<input id="seed" type="number" value="20" min="0" max="4294967295"></label>
+ <label>Entry Mood<input id="mood" type="number" min="0" max="100" value="24"></label><label>Entry Renown<input id="renown" type="number" min="0" max="100" value="3"></label>
+ <label>Entry Mana<input id="mana" type="number" min="0" value="50"></label><label>Entry crowns<input id="crowns" type="number" min="0" value="0"></label>
+ <label>Context reset<select id="context"><option value="50">Real request · 50%</option><option value="80">Practice · 80%</option><option value="public">Public debate · reputation persists</option></select></label>
+ <label>Mood rebate %<input id="rebate-mood" type="number" min="0" max="100" value="50"></label><label>Renown rebate %<input id="rebate-renown" type="number" min="0" max="100" value="50"></label><label>Mana rebate %<input id="rebate-mana" type="number" min="0" max="100" value="50"></label>
+ </div><p class="fine">Two contextual responses. All twelve spells stay available. Gold is never rebated; bribery is offered only in the broker encounter. No Mana flux.</p>
+ <button class="primary start" type="submit">Begin conversation →</button><p id="error" role="alert"></p></form>
+ <button id="resume" hidden>Return to current conversation</button>
+ <details class="help"><summary>How to play</summary><p>Earn four Agreement before eight Patience runs out. Suspicion at six ends the meeting. Confront gains one Agreement, spends one Patience and raises pressure. Deflect gains no Agreement, spends two Patience and lowers pressure by two. Each request supplies contextual response names and exact costs based on your skills.</p><p>Cast at most one spell before your response. Casting uses no Patience, pays Mana and immediately raises Suspicion. Foresight reveals the next three requests. All twelve spells remain available. The player AI searches with a 50 ms cooperative budget.</p></details>
+</section>
+<section id="play" hidden></section><section id="debug" hidden></section>
+</main><script type="module" src="app.mjs"></script></body></html>

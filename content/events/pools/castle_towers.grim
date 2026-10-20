@@ -31,6 +31,12 @@ text: {The observatory keeps a night log, and anyone may write in it.|{flag(wrot
   mood +small
   health -tiny
   say: {A winter entry from long ago says "Saw nothing. Stayed anyway. Worth it."|A love letter written across a page of moon sightings. Very bad. Very sweet.|{final_year and flag(wrote_night_log): You find your own first entry and barely know the hand.|A student from your year logged your star a week before you did, with a small drawn smile.}}
+> up[item:pocket_almanac]: Check the almanac first
+  flag wrote_night_log
+  lore +small
+  mood +tiny
+  health -tiny
+  say: {The almanac says the moon sets at eleven, so you log the faint stars after it, and get three the log has never had.|Grimsby's pencil in the margin says "watch the east at two". You do. Something small and bright crosses it, and you write it down.|You check the tides and the moon before you start, and for once the telescope and you agree on where to look.}
 
 @event observatory_one_star_each
 time: evening night

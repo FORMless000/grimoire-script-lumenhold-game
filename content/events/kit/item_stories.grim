@@ -1,0 +1,308 @@
+# Item stories (world expansion 1, K4): small cards of their own for the things you carry, so owning one is felt. All
+# plot-safe: the black-star coin's and the frost-ward's stay ambient (nothing confirmed, no clue, no clock). The items
+# found in the Whisperwood get theirs with the delve.
+
+# ---------------- The borrowed wand ----------------
+
+@event item_borrowed_initials
+title: Initials on the Handle
+place: grimsbys_books
+class: routine
+tone: warm
+when: has_item(borrowed_wand) and month >= 2
+weight: 8
+art: wand
+tags: item study
+scene: An old bookseller peering through half-moon glasses at the scratched initials on a battered student wand.
+text: Grimsby sees your borrowed wand and asks to hold it, very carefully. Someone scratched initials into the handle years ago, and he turns it to the light. "Oh," he says. "Oh, I know this hand. She used to buy maps from me. She went off to keep a lighthouse."
+> left: Ask him about her
+  lore +tiny
+  learn grimsby.lighthouses
+  rel grimsby +tiny
+  say: He talks about her for an hour, and then about lighthouses for another. You leave knowing a great deal about lamps, and that the wand once belonged to someone who wanted to see a long way.
+> right: Ask if it's worth anything
+  mood -tiny
+  say: "Worth?" He hands it back as if you'd spoken ill of the dead. "It's worth four years of somebody. Mind it." You leave a little ashamed and a little fonder of the thing.
+
+@event item_borrowed_sideways
+title: It Sparks Sideways
+track: evocation
+level: 1
+class: routine
+tone: light
+when: has_item(borrowed_wand) and worn(borrowed_wand)
+weight: 8
+art: wand
+tags: item class
+scene: A classroom full of students casting at targets, one student's spark flying off at a right angle into a hat stand.
+text: Your borrowed wand chooses today, of all days, to spark sideways. The flame you aimed at the target lands in the hat stand, which takes it personally. The class is delighted. The professor less so.
+> left: Laugh it off and try again
+  renown -tiny
+  study evocation +tiny
+  say: You laugh, the class laughs, and on the second try the spark goes where you send it. The hat stand is put outside to recover.
+> right: Blame the wand, loudly
+  mood +tiny
+  renown -tiny
+  say: "It's borrowed!" you protest. Someone at the back says "Mir trades them in at the market, you know." You file that away and the hat stand forgives no one.
+
+# ---------------- The hazelwood wand ----------------
+
+@event item_hazel_tuned
+title: Mir Tunes It
+place: workshop
+class: routine
+tone: warm
+when: has_item(hazel_wand) and met(mir)
+weight: 8
+art: gear
+tags: item
+cast:
+  mir: mir where around(mir)
+scene: A cluttered workshop bench, an artificer with a jeweller's loupe bent over a hazel wand clamped in a tiny vice.
+text: Mir spots your hazel wand and makes a noise like a kettle. "Can I? I can. Two minutes." They clamp it in a vice, screw a loupe into one eye and start talking to the wand much more kindly than they talk to people.
+> left: Let them tinker
+  rel mir +small
+  mana -tiny
+  say: Two minutes is two hours. Mir hands it back humming, and you swear it's quicker. "Tuned," they say. "Probably. Don't cast anything near a cabbage for a day."
+> right: Ask about the notebooks on the shelf
+  rel mir +tiny
+  learn mir.notebooks
+  say: Mir goes pink and pulls one down: three years of sketches, wands and owls and things with wings. "Don't spill on them," they say, and talk you through every page.
+
+@event item_hazel_water
+title: Finding Water
+place: maud_cottage
+class: routine
+tone: warm
+when: has_item(hazel_wand) and met(maud)
+weight: 8
+art: wand
+tags: item nature
+scene: An old woman in a garden holding a forked twig of hazel loosely in two hands, a student copying her with a wand.
+text: Maud sees your hazel wand and chuckles. "A hazel one, is it? My gran found three wells with a hazel twig and a bad temper. Hold it loose, dearie. Let it pull."
+> left: Learn the trick
+  vigor +tiny
+  rel maud +tiny
+  health -tiny
+  say: You walk her garden in circles for an hour with the wand held loose. Then it dips, hard, over the old pump. Maud cackles. "There. You'll never be thirsty."
+> right: Thank her and leave the trick
+  mood +tiny
+  say: "Suit yourself," says Maud, and gives you a jar of something pickled for the road. It is very good, and you never find out what it was.
+
+# ---------------- Robes ----------------
+
+@event item_robes_singed
+title: Singed
+place: duel_hall
+class: routine
+tone: light
+when: has_item(duelling_coat) or has_item(midnight_robes)
+weight: 8
+art: flame
+tags: item
+scene: A duelling hall with a scorch mark on the floor and a student patting out a smouldering sleeve.
+text: A stray hex from the next circle catches your sleeve. There's a smell of hot wool and a small, sad hole. Somewhere in the village, a tailor feels a disturbance.
+> left: Take it down to the tailor
+  gold -tiny
+  say: The tailor tuts, darns it in five minutes, and charges you for ten. "Duelling hall," she says. "It's always the duelling hall."
+> right: Wear the hole with pride
+  renown +tiny
+  mood -tiny
+  say: You wear it singed. By the end of the week two first-years have singed their own sleeves on purpose. You feel responsible, and slightly famous.
+
+@event item_robes_copied
+title: A First-Year Copies Your Robes
+place: courtyard
+class: routine
+tone: light
+when: has_item(midnight_robes) and year >= 2
+weight: 8
+art: mirror
+tags: item social
+scene: A courtyard where a first-year in brand-new midnight-blue robes is trying very hard to walk exactly like an older student.
+text: A first-year has turned up in midnight-blue robes exactly like yours, down to the silver at the hem. They have also, you notice, started walking the way you do.
+> left: Tell them they look good
+  renown +tiny
+  alignment +tiny
+  say: They go scarlet with joy. By supper the whole first-year corridor is wearing blue. The tailor sends you a thank-you note and no discount.
+> right: Walk faster
+  mood +tiny
+  say: You lose them on the east stair. They find you again at dinner, still walking like you, slightly out of breath.
+
+# ---------------- The ashwood duelling wand ----------------
+
+@event item_ashwood_lyra
+title: Lyra Notices
+place: duel_hall
+class: routine
+tone: tense
+when: has_item(ashwood_wand) and met(lyra)
+weight: 10
+art: duel
+tags: item rival
+cast:
+  lyra: lyra where around(lyra)
+scene: A duelling hall, a proud student with a pale family wand looking narrowly at the dark ashwood wand in another student's hand.
+text: Lyra's eyes go straight to the ashwood wand in your hand. "Ashwood," she says. "Duellist's wood. Mother says it's for people who can't win on talent." She draws her family's pale wand. "One bout. Ashwood against Vaneshade. Unless you're shy."
+> left: Decline, with a bow
+  rel lyra -tiny
+  mood +tiny
+  say: "Another time," you say. Lyra looks almost disappointed, then annoyed at herself for looking it. She practises alone, very loudly, for an hour.
+> right: Accept the bout
+  challenge duel vs lyra.arcana:
+    win:
+      rel lyra +small
+      renown +small
+      say: Her ward goes up and the ashwood bites straight through it. Lyra stares at the scorch on her sleeve. "Again," she says. It's the most respectful thing she's ever said to you.
+    partial:
+      rel lyra +tiny
+      say: You trade hex for hex until Thorne wanders in and sends you both to supper. Lyra says "Adequate" to your wand, not to you.
+    lose:
+      mood -small
+      say: She's faster than the ashwood, and she knows it. "Talent," she says, and walks off. The wand hums in your hand, sulking.
+
+# ---------------- Ilse's frost-ward ----------------
+
+@event item_frost_ward_cold
+title: Cold Things Think Twice
+class: routine
+tone: eerie
+slot: night
+when: has_item(ilse_frost_ward) and season == "winter"
+weight: 8
+art: snow
+tags: item
+scene: A dark castle corridor at night, frost spreading across the windows, a student walking through it untouched.
+text: The cold comes into the castle tonight like something looking for someone. Frost runs along the corridor windows ahead of you, then stops at your feet and goes round, as if it had remembered its manners. Your collar, where Ilse's ward is sewn, is warm.
+> left: Walk the long corridor anyway
+  mood +small
+  health -tiny
+  say: You walk the whole east wing in the frost and it parts for you every time. You get back to bed cold-footed and oddly proud.
+> right: Go straight to bed
+  health +tiny
+  say: You don't push your luck. In the morning the frost on your window has drawn a careful circle round your handprint.
+
+@event item_frost_ward_thread
+title: A Northern Thread
+class: routine
+tone: warm
+when: has_item(ilse_frost_ward) and met(kael)
+weight: 8
+art: snow
+tags: item
+cast:
+  kael: kael where around(kael)
+scene: A pale northern student touching the stitched collar of another student's robe, his face unreadable.
+text: Kael stops beside you in the corridor and, without asking, touches your collar where Ilse's ward is sewn. "That's my mother's stitch," he says. "Ilse learned it from her." He takes his hand back as if the thread were hot.
+> left: Ask him about his mother
+  rel kael +small
+  say: He says three sentences, which for Kael is a speech. She stitched wards into everything, even the dogs' collars. Then he goes, but he walks slower than usual.
+> right: Let it be
+  rel kael +tiny
+  mood +tiny
+  say: You say nothing, and he seems grateful. At supper he passes you the bread without being asked.
+
+# ---------------- The black-star coin ----------------
+
+@event item_star_coin_turning
+title: Turning It Over
+class: routine
+tone: eerie
+slot: night
+when: has_item(black_star_coin) and not has(star_mark)
+weight: 6
+art: coin
+tags: item mystery
+scene: A student awake in a dark dormitory, turning a black coin over and over in their fingers by the window.
+text: You've been turning the black coin over in your fingers again without noticing. It's cold enough to ache. You dreamed last night of cold, dark water, and woke with it in your fist.
+> left: Put it at the bottom of your trunk
+  mood +tiny
+  say: You bury it under your winter socks and sleep well. In the morning it's in your pocket. You don't remember putting it there.
+> right: Keep turning it
+  guile +tiny
+  mood -tiny
+  say: You turn it until dawn. It never warms. By morning you know every scratch on it, and you couldn't say why that seemed important.
+
+@event item_star_coin_kael
+title: Kael Sees It
+class: routine
+tone: eerie
+when: has_item(black_star_coin) and met(kael) and not has(star_mark)
+weight: 6
+art: coin
+tags: item mystery
+cast:
+  kael: kael where around(kael)
+scene: A northern student going very still at the sight of a black coin on a library table.
+text: The black coin slides out of your pocket onto the library table. Kael, across from you, goes completely still. He doesn't touch it. He doesn't look at you. "Put that away," he says quietly.
+> left: Put it away
+  rel kael +tiny
+  say: You put it away. After a long while he goes back to his book, but he doesn't turn a page for the rest of the hour.
+> right: Ask him what it is
+  rel kael -tiny
+  guile +tiny
+  say: "Nothing you want," he says, and closes his book, and leaves. You notice his hands were shaking. The coin is very cold in your pocket on the way back.
+
+# ---------------- The pocket almanac ----------------
+
+@event item_almanac_lighthouse
+title: The Lighthouse Page
+class: routine
+tone: warm
+when: has_item(pocket_almanac)
+weight: 8
+art: book
+tags: item study
+scene: A student reading a tiny thick almanac by candlelight, a page of pencil notes about a lighthouse open under their thumb.
+text: Page forty of the almanac is all Grimsby: the lighthouse at the point, its lamp times for every season, and in the margin, very small, "best on a clear night in Frostcall, if one goes alone".
+> left: Go down to the point one clear night
+  mood +small
+  health -tiny
+  say: You find the lighthouse where the page said, turning its long arm over the water. You stand there until your ears freeze. On the way back you understand Grimsby much better.
+> right: Copy his notes into your own book
+  lore +small
+  say: You copy all of it, the lamp times and the tides and the margin note. Some of it turns up, oddly, on your next astronomy paper.
+
+# ---------------- Pell's measuring spoon ----------------
+
+@event item_spoon_daughters
+title: The Daughters Want It Back
+place: pell_apothecary
+class: routine
+tone: light
+when: has_item(measuring_spoon) and not on_shift()
+weight: 8
+art: bottle
+tags: item
+scene: Two women behind an apothecary counter, arms folded, looking pointedly at a brass spoon in a student's hand.
+text: Pell's daughters are waiting at the counter with their arms folded. "That's our spoon," says the elder. "We learned to measure on it. Dad had no right." Behind them, Old Pell counts drops loudly and pretends not to hear.
+> left: Give the spoon back
+  take measuring_spoon
+  rel pell +small
+  alignment +tiny
+  say: They take it, and the younger one cries a little, and Pell stops counting for a moment. Next week a parcel arrives: a new spoon, unworn, and a note. "Measure twice. P."
+> right: Keep it; he gave it to you
+  rel pell -tiny
+  mood -tiny
+  say: "He gave it to me," you say. The daughters look at their father. Pell keeps counting. Later the younger one says, not unkindly, "Then measure well with it."
+
+# ---------------- The honey tin ----------------
+
+@event item_honey_bees
+title: Silver Bees Follow You
+class: routine
+tone: light
+when: has_item(honey_tin) and season != "winter"
+weight: 8
+art: flower
+tags: item nature
+scene: A student walking across a castle courtyard trailed by a small glittering cloud of silver bees.
+text: A small cloud of silver bees has followed you up from Maud's cottage and through the castle gates. They hum round your bag, where the honey tin is. A prefect looks at them, then at you, and visibly decides it isn't his problem.
+> left: Walk them back to Maud
+  rel maud +small
+  health -tiny
+  say: You walk the long way down with the bees in tow. Maud laughs until she has to sit down. "They're checking on their honey, dearie. Nosy things."
+> right: Let them come to lectures
+  renown +tiny
+  mood +small
+  say: The bees sit in a row on the windowsill through all of Astromancy. The lecturer pauses, nods to them, and carries on. Everyone talks about it for a week.

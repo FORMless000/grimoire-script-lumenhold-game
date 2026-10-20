@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';import {fileURLToPath} from 'node:url';
+import * as adapter from './iterations/v03/adapter.mjs';import {runMatch,episodeSeed} from './harness.mjs';
+const args=process.argv.slice(2),get=(key,fallback)=>{const i=args.indexOf('--'+key);return i<0?fallback:args[i+1];};
+const count=Number(get('episodes','100')),baseSeed=Number(get('seed','20261014')),levels=get('levels','20').split(',').map(Number),profiles=get('opponents','debater').split(','),policies=get('policies','search,greedy,confront,rhythm').split(','),out=path.resolve(get('out','experiments/minigames/results/v03-'+Date.now()));
+if(!Number.isInteger(count)||count<1||!Number.isInteger(baseSeed)||baseSeed<0||baseSeed>4294967295)throw Error('Choose positive episodes and an unsigned integer seed');
+fs.mkdirSync(path.dirname(out),{recursive:true});fs.mkdirSync(out);
+const root=path.dirname(fileURLToPath(import.meta.url)),hashes={};
+for(const file of ['run-v03.mjs','harness.mjs','policies.mjs',...['engine.mjs','roster.mjs','ai.mjs','adapter.mjs'].map(f=>'iterations/v03/'+f)]){const raw=fs.readFileSync(path.join(root,file));hashes[file]=crypto.createHash('sha256').update(raw).digest('hex');const target=path.join(out,'sources',file);fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,raw,{flag:'wx'});}
+const resourceOverrides=Object.fromEntries(['mood','renown','mana','crowns'].filter(k=>get(k,null)!==null).map(k=>[k,Number(get(k))]));
+const cases=[];for(const level of levels)for(const opponent of profiles)for(const policy of policies)for(let episode=0;episode<count;episode++)cases.push({config:{level,opponent,opponentLevel:Number(get('opponent-level',String(level))),archetype:get('kit','Balanced'),fixture:get('fixture','debate'),resources:resourceOverrides,...(get('target',null)?{target:Number(get('target'))}:{}),search:{budgetMs:50},...(get('nodes',null)?{search:{budgetMs:50,nodeBudget:Number(get('nodes'))}}:{})},episodeSeed:episodeSeed(baseSeed,episode),leftPolicy:policy});
+fs.writeFileSync(path.join(out,'manifest.json'),JSON.stringify({version:'negotiation-0.3-pressure',node:process.version,baseSeed,episodes:count,cases,sourceHashes:hashes,notes:'NPC streams are seeded and paired across policies. Time-budget search may choose differently across machines; commands and search stats are retained for exact replay. Gold rebates always zero.'},null,2),{flag:'wx'});
+const matches=[],groups=new Map(),timings=[],depths=[];
+for(const [caseId,c]of cases.entries()){
+ const m=runMatch(adapter,{...c,keepTrace:caseId%20===0});matches.push({caseId,...c,...m});const key=[c.config.level,c.config.opponent,c.leftPolicy].join('|'),g=groups.get(key)??{key,n:0,win:0,partial:0,lose:0,mood:0,renown:0,mana:0,rounds:0,actions:{}};g.n++;g[m.outcomes[0]]++;g.rounds+=m.rounds;for(const k of ['mood','renown','mana'])g[k]+=m.ledgers[0][k].netLoss;for(const pair of m.commands)g.actions[pair[0].id]=(g.actions[pair[0].id]??0)+1;for(const s of m.searchStats){timings.push(s.elapsedMs);depths.push(s.completedDepth);}groups.set(key,g);if(caseId%50===0)console.log(`v03: ${caseId+1}/${cases.length}`);
+}
+const q=p=>{const a=[...timings].sort((a,b)=>a-b);return a[Math.min(a.length-1,Math.ceil(p*a.length)-1)]??0;};
+const summary={matches:matches.length,groups:[...groups.values()].map(g=>({...g,winRate:g.win/g.n,meanRounds:g.rounds/g.n,mood:g.mood/g.n,renown:g.renown/g.n,mana:g.mana/g.n})),performance:{decisions:timings.length,p50Ms:q(.5),p95Ms:q(.95),p99Ms:q(.99),maxMs:Math.max(0,...timings),over50Ms:timings.filter(x=>x>50).length,meanDepth:depths.reduce((a,b)=>a+b,0)/Math.max(1,depths.length)}};
+fs.writeFileSync(path.join(out,'matches.json'),JSON.stringify(matches,null,2),{flag:'wx'});fs.writeFileSync(path.join(out,'summary.json'),JSON.stringify(summary,null,2),{flag:'wx'});console.log(JSON.stringify(summary,null,2));

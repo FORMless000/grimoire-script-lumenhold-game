@@ -1,0 +1,259 @@
+# ============================================================
+#  The Hush's heart (world expansion 1, plan §1): the Spinner, and after her the Outcast. Both wait at depth 10 of a
+#  midnight delve. The Spinner was Old Maud's hatchling once (Tuppence, her soft fact maud.tuppence); she keeps the
+#  Hush closed to worse things. The Outcast, Absalom Vrell, is a human practitioner expelled long ago: an optional
+#  bonus fight with nothing at stake (`stakes: none`), never in the way. Neither is the cult, the man in grey or the
+#  Star; their lines about the lake are eerie asides only.
+# ============================================================
+
+# ---------------- The Spinner ----------------
+
+@event ww_spinner_meet
+title: The Spinner
+trigger: queued
+class: story
+tone: eerie
+when: ww_depth >= 10 and ww_hush == 1 and not flag(ww_spinner_beaten)
+repeat: 1
+art: spider
+tags: ww nature danger
+scene: A great grey spider the size of a carriage descending on a silver thread in a moonlit forest, many eyes gleaming.
+on_show:
+  unflag ww_spinner_weak
+  unflag ww_spinner_offended
+text: Silk across the path, then silk everywhere, and then the Spinner comes down her thread: grey, vast, older than the oaks, with more eyes than you'd like and one of them milky. {knows(maud.tuppence): She lowers her head to you. "You smell of her bees," she says.|"A student," she says, in a voice like a cello. "It's been a while."} {flag(ww_spinner_angry): "You took my hippogriff."|}
+> left: Bow and back away
+  queue ww_way_home now
+  say: {~You bow, very low, and back away. She lets you go. "Another night," she says. It sounds like a promise.|You bow and retreat. Her eyes follow you a long way, all but the milky one.}
+> right: Ask for a fair fight
+  hint: {flag(ww_spinner_secret): You know her blind side.|She's proud: bargain well and she'll fight fair.}
+  if flag(ww_spinner_angry):
+    flag ww_spinner_offended
+    queue ww_spinner_fight now
+  elif flag(ww_spinner_secret):
+    flag ww_spinner_weak
+    queue ww_spinner_fight_weak now
+  else:
+    challenge negotiate expert:
+      win:
+        flag ww_spinner_weak
+        queue ww_spinner_fight_weak now
+      lose:
+        flag ww_spinner_offended
+        queue ww_spinner_fight now
+  say: {flag(ww_spinner_weak): You step to her left and speak to her like a lady. She hesitates, then laughs. "Fair, then," she says, and sends her brood away.|{flag(ww_spinner_angry): "You stole from my larder," she says. "There's no bargaining after that."|She doesn't care for your terms. Her brood comes down the threads behind her.}}
+
+@event ww_spinner_fight
+title: The Long Wait
+trigger: queued
+class: story
+tone: tense
+repeat: 1
+art: spider
+tags: nature danger
+scene: A giant grey spider rearing in a moonlit web hall, venom glistening, a student braced below with a wand raised.
+text: She comes down at you with all her brood. Venom, then web, then the long wait: she'll bind you, and then she'll strike when you can't move. ⚠ Nobody comes to catch you down here. {flag(ww_spinner_offended): She won't let you leave now.|}
+> left: Yield
+  when: not flag(ww_spinner_offended)
+  if ww_haul >= 2:
+    ww_haul -= 2
+  else:
+    ww_haul = 0
+  queue ww_way_home now
+  say: {~You lower your wand. She takes her toll from your bag and lets you go. "Another night," she says.|You yield. She considers this, and takes half your haul, and lets you walk away.}
+> right: Fight her
+  hint: She binds, then strikes: keep a way out.
+  challenge combat master-:
+    win:
+      queue ww_spinner_hoard now
+      say: {~She falls back, legs folded, and bows her head to the ground. "Well," she says. "Well. It's been a long time since anyone did that."|Her last strike misses. She stops, and lowers herself, and the web halls go still.}
+    lose:
+      queue ww_cocooned now
+      say: {~The web holds you. The long wait ends. Silk, everywhere, warm and tight, and then nothing.|She binds you and you can't answer the blow. The silk comes up over your eyes.}
+
+@event ww_spinner_fight_weak
+title: A Fair Fight
+trigger: queued
+class: story
+tone: tense
+repeat: 1
+art: spider
+tags: nature danger
+scene: A giant grey spider facing a student alone in a moonlit clearing, the student standing on her blind left side.
+text: She's sent the brood away. You stand on her left, where the milky eye can't see you, and she knows that you know. She's still the oldest thing in the wood. ⚠ Nobody comes to catch you down here.
+> left: Yield
+  if ww_haul >= 2:
+    ww_haul -= 2
+  else:
+    ww_haul = 0
+  queue ww_way_home now
+  say: {~You lower your wand. "Sensible," she says, and takes her toll from your bag, and lets you go.|You yield. She bows, a little mocking, and takes a fee from your bag.}
+> right: Fight her
+  hint: Stay on her blind side.
+  challenge combat master- likely:
+    win:
+      queue ww_spinner_hoard now
+      say: {~You stay on her blind side and she can't find you in time. At last she folds her legs and bows. "Fairly done," she says.|She turns and turns, and you're always on her left. In the end she laughs and stops.}
+    lose:
+      queue ww_cocooned now
+      say: {~Even half-blind, she's faster. The silk comes up warm and tight.|She finds you by your breathing. The web closes.}
+
+@event ww_spinner_hoard
+title: The Spinner's Hoard
+trigger: queued
+class: milestone
+tone: warm
+art: spider
+tags: nature money
+scene: A great grey spider bowing her forelegs to a student amid a hoard of glittering trinkets and bolts of silver silk.
+text: She bows her forelegs to you, the way the old courts did. Behind her, in the oldest web, is a hoard: lost coins, a christening spoon, a hundred years of things that fell out of foragers' pockets, and bolts of her own grey silk, which a tailor could make into anything. "Take what you like," she says. "You've earned the left side."
+> ok: Take silk and silver
+  flag ww_spinner_beaten
+  flag ww_spinner_silk
+  find lead_spinner_silk
+  gold +large
+  renown +small
+  ww_haul += 2
+  queue ww_way_home now
+  say: You take a bolt of silk and as much silver as you can carry. She watches you go. "Tell the girl I'm well," she says, and you don't yet know who she means. Behind you, the Hush feels emptier, and something else in it shifts, interested.
+
+@event ww_cocooned
+title: Cut Free
+trigger: queued
+class: story
+tone: grim
+repeat: 1
+art: lantern
+tags: nature danger
+scene: An old woman with a pruning knife cutting a silk cocoon open in a moonlit forest, a giant spider watching quietly above.
+on_show:
+  health -huge
+  ww_haul = 0
+  if ww_depth > ww_deepest:
+    ww_deepest = ww_depth
+  ww_depth = 0
+text: Silk, warm and tight and everywhere. Then a voice outside it: "Tuppence. Let go, dearie. That one's ours." A pruning knife slits the silk, and Old Maud's face is there, lit by a lantern, very cross. Above her the Spinner is waiting, quite still, as if she'd been told off.
+> left: Let Maud take you home
+  meet maud
+  rel maud +small
+  learn maud.tuppence
+  say: Maud walks you all the way home without a word. At the door she says, "She was the size of my hand, once. I kept her in the potting shed." Then she goes back into the dark, toward the wood.
+> right: Ask her who Tuppence is
+  meet maud
+  lore +tiny
+  learn maud.tuppence
+  say: "Mine," says Maud. "Once. She outgrew the potting shed, and I let her go." She looks back at the trees. "She keeps worse things out, you know. Don't you go thinking she's the worst thing down there."
+
+# ---------------- The Outcast (optional; nothing at stake) ----------------
+
+@event ww_outcast_meet
+title: A Lantern Left Burning
+trigger: queued
+class: story
+tone: eerie
+when: ww_depth >= 10 and ww_hush == 1 and flag(ww_spinner_beaten) and not flag(outcast_beaten)
+repeat: 1
+art: lantern
+tags: ww nature magic
+scene: A gaunt elegant old man in a frayed academy robe sitting on a tree root beside a lantern in a ring of silver trees.
+text: Where the Spinner's webs were, there's a ring of silvered trees and a lantern left burning. An old man in a frayed academy robe, decades out of date, is sitting on a root beside it. "Absalom Vrell," he says. "Expelled, before your parents were born. I've been waiting for her to fall. The lake hums at night, down here. I don't ask what about. Nobody sensible does."
+> left: Not tonight
+  queue ww_way_home now
+  say: {~"Another night, then," he says, amused, and turns the lantern down.|He waves you off without getting up. "I'll be here. I'm always here."}
+> right: Sit down with him
+  queue ww_outcast_table now
+  say: {~You sit on the other side of the lantern. He looks pleased, and then hungry, and then polite again.|You sit. He offers you tea from a flask. It's very good, and you drink it carefully.}
+
+@event ww_outcast_table
+title: Absalom Vrell
+trigger: queued
+class: story
+tone: eerie
+repeat: 1
+art: book
+tags: nature magic
+scene: An old man and a student sitting across a lantern in a moonlit forest, a black book open on his knee.
+text: "I taught the thornwitch," he says. "And those children in masks, after a fashion, though they never paid attention. I know every spell they burned me for. I'd teach you one. Or," and his eyes light, "you could try me. Nobody has in forty years. Nothing would be at stake but my pride."
+> left: Bargain for a lesson
+  hint: Forbidden spells; he drives a hard bargain.
+  challenge negotiate grandmaster-:
+    win:
+      alignment -small
+      if spell_level(torment) < 1:
+        learn_spell torment
+      elif spell_level(extraction) < 1:
+        learn_spell extraction
+      elif spell_level(eclipse) < 1:
+        learn_spell eclipse
+      elif spell_level(heartprice) < 1:
+        learn_spell heartprice
+      else:
+        lore +medium
+      queue ww_way_home now
+      say: {~He teaches you, there by the lantern, with a patience that's almost kind. It's a terrible thing, beautifully explained. You go home with it under your tongue.|"Good," he says. "You argue like we used to." He teaches you one thing, and makes you promise nothing.}
+    partial:
+      queue ww_way_home now
+      say: {~"Almost," he says, delighted. "Another night." He turns the lantern down.|He laughs and shakes his head. "Not tonight. But you're close."}
+    lose:
+      queue ww_way_home now
+      say: {~He shrugs. "Another night." He doesn't seem disappointed. He has a great many nights.|He listens to your terms, and then to the Hush, and then says no, kindly.}
+> right: Challenge him to a duel
+  hint: Nothing at stake but pride.
+  queue ww_outcast_fight now
+  say: {~He stands, and his old robe straightens itself. "Oh," he says. "Oh, lovely."|He puts down his tea. For the first time, he looks young.}
+
+@event ww_outcast_fight
+title: Every Forbidden Thing
+trigger: queued
+class: story
+tone: tense
+repeat: 1
+art: duel
+tags: nature magic
+scene: An old wizard in a frayed robe casting dark spells in a ring of silver trees, a student dodging, a lantern on the ground between them.
+text: He fights with everything they expelled him for: Heartprice and Siphon, Compel and Eclipse, all at once, at a grandmaster's speed, and he's laughing. There's nothing at stake. He promised. It doesn't feel like nothing.
+> left: Walk away
+  queue ww_outcast_loss now
+  say: {~You lower your wand. He bows. "Another night," he says. "Come back when you're bored of winning."|You step back out of the ring. He's not offended. He's already pouring more tea.}
+> right: Fight him
+  hint: A grandmaster; you lose nothing by losing.
+  challenge combat grandmaster+:
+    win:
+      queue ww_outcast_victory now
+      say: {~His last spell fizzles. He looks at his hand, then at you, and laughs until he has to sit down.|You catch him between Heartprice and Siphon, with nothing left to pay. He bows, very low.}
+    partial:
+      queue ww_outcast_loss now
+      say: {~You give him the fight of his life, nearly. He stops you, gently, a breath from winning.|You come close. He knows it. So do you.}
+    lose:
+      queue ww_outcast_loss now
+      say: {~He takes you apart with great courtesy. Then he helps you up.|You don't touch him. He doesn't hurt you either, much.}
+
+@event ww_outcast_victory
+title: The Hush Is Yours
+trigger: queued
+class: milestone
+tone: warm
+art: book
+tags: nature magic
+scene: An old wizard bowing deeply to a student in a moonlit forest, then dissolving into silver frost, a black book left on the root.
+text: Absalom Vrell bows to you as deep as his old back allows. "Forty years," he says. "Well. The Hush is yours, then. Mind the lake." He sets his black grimoire on the root, and laughs, and is gone in a breath of silver frost. The lantern goes out on its own.
+> ok: Take the grimoire
+  flag outcast_beaten
+  give outcast_grimoire
+  renown +large
+  queue ww_way_home now
+  say: You pick up the grimoire. It's cold, and some of its pages are blank, and they won't stay blank. Somewhere in the castle, someone will hear of this by breakfast. The headmistress, probably.
+
+@event ww_outcast_loss
+title: Another Night
+trigger: queued
+class: story
+tone: warm
+repeat: 1
+art: lantern
+tags: nature magic
+scene: An old wizard helping a student up off the forest floor beside a lantern, both smiling.
+text: Absalom helps you up, brushes the leaves off your shoulder, and pours you a cup of tea from his flask. "Come back when you're bored of winning," he says. "I'm not going anywhere. That's rather the point of me."
+> ok: Drink the tea, and go home
+  queue ww_way_home now
+  say: {~The tea is very good. You walk home under the moon, beaten and oddly cheerful.|You drink it, thank him, and go home. Next time, you think.}

@@ -1,5 +1,5 @@
 // Generated from content/world/cast.grim by sync-loadout-stats.mjs.
-export const CAST_STATS_HASH="5e2734b44ee213d82943025ccb730d18d982f6eeca266bdded79b6969f72376a";
+export const CAST_STATS_HASH="95e66b0ab790aba5f9485d76ef6e231967e368bd590e3b62e5b4cd3311973a87";
 export const CAST_STATS={
   "lyra": {
     "skills": {

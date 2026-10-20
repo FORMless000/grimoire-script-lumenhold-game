@@ -1,0 +1,177 @@
+# ============================================================================
+#  The kit (world expansion 1, K2): what a student can own and wear.
+#  One wand, one robe and one trinket are worn; worn effects act in fights only, as flat numbers. Owning an item
+#  adds options to cards where it fits (`> up[item:x]:`). Amounts in `price:` are what the pawnbroker pays.
+#  Format: docs/grimoire-script.md (@item). Where each comes from: the plan's K2 table and the events that give them.
+# ============================================================================
+
+# ---------------- Wands ----------------
+
+@item borrowed_wand
+name: Borrowed Wand
+slot: wand
+art: wand
+start: true
+desc: The academy's loan to every first-year: scuffed beech, a chipped tip and somebody else's initials on the handle. It works. Mostly.
+
+@item hazel_wand
+name: Hazelwood Wand
+slot: wand
+art: wand
+price: small
+worn: mana +1
+desc: Mir's work: light, springy hazel with a copper band. It warms up before you do.
+
+@item ashwood_wand
+name: Ashwood Duelling Wand
+slot: wand
+art: wand
+price: medium
+worn: on_defend strike 2
+desc: A duellist's wand, dense and unforgiving. Anything that tries to block it gets a shock for its trouble.
+
+@item heartwood_wand
+name: Heartwood Wand
+slot: wand
+art: wand
+price: medium
+worn: mana +2
+desc: Carved by Mir from a splinter the elder oak gave you. The grain moves when no one is looking.
+
+@item edmunds_silver_wand
+name: Edmund's Silver Wand
+slot: wand
+art: wand
+legacy: flag(edmunds_wand)
+worn: cost ward -2
+desc: Slender silver, sixty years old, wrapped for decades in a faded scarf. Near the lake it hums one low note.
+
+@item thorn_wand
+name: Thorn Wand
+slot: wand
+art: wand
+worn: on_cast forbidden spell 2
+desc: Blackthorn, still bristling, still faintly green at the core. It wants to be used, and it does not much care for what.
+tick:
+  alignment -tiny
+  say: {~The thorn wand pricks your palm when you pick it up, as if it were keeping count.|You dream of brambles growing over a door. The thorn wand is warm in the morning.}
+
+# ---------------- Robes ----------------
+
+@item school_robes
+name: School Robes
+slot: robe
+art: mask
+start: true
+price: tiny
+desc: Regulation black with the house trim, a size too big in the sleeves. Everyone has a pair.
+
+@item duelling_coat
+name: Quilted Duelling Coat
+slot: robe
+art: shield
+price: small
+worn: hp +3, cost brace -1
+desc: Padded, stitched in diamonds, smelling faintly of the duelling hall. Bracing in it feels like leaning on a wall.
+
+@item ward_cloak
+name: Ward-Stitched Cloak
+slot: robe
+art: shield
+price: medium
+worn: hp +2, taken -2 from flame hoarfrost starlight
+desc: Amaranth's ward thread runs through the hem in a pattern too fine to see. Fire and frost slide off it like rain.
+
+@item midnight_robes
+name: Midnight-Blue Robes
+slot: robe
+art: crown
+price: small
+worn: hp +2
+desc: Deep blue wool with silver trim and a lining like the night sky. People stand up a little straighter when you walk in.
+
+@item spinner_silk_robe
+name: Spinner-Silk Robe
+slot: robe
+art: spider
+price: large
+worn: hp +6, cost shadowstep -1, cost haste -1
+desc: Grey silk that drinks the light, sewn by the village tailor from what the Spinner left you. You move in it like a rumour.
+
+# ---------------- Trinkets ----------------
+
+@item ilse_frost_ward
+name: Ilse's Frost-Ward
+slot: trinket
+art: snow
+legacy: has(frost_ward)
+worn: taken -2 from flame wildfire
+desc: A sliver of Northern winter that Ilse sewed into your collar. Cold things think twice about you.
+tick:
+  arcana +1
+  health +1
+
+@item black_star_coin
+name: Black-Star Coin
+slot: trinket
+art: coin
+legacy: flag(star_coin)
+bound: true
+worn: cost umbral -1, cost forbidden -1
+desc: Black, cold as ice and heavier than it should be, stamped with a hollow star. You keep meaning to throw it away.
+
+@item lodestone_pendant
+name: Lodestone Pendant
+slot: trinket
+art: compass
+price: small
+desc: A dark stone on a leather cord that turns, very slowly, to face north. In the Whisperwood it is never wrong.
+
+@item stag_tine
+name: Stag's Tine
+slot: trinket
+art: paw
+price: small
+worn: taken -2 from nonhuman
+desc: A tine shed by the shadow stag, smooth as old ivory. Wild things look at it before they look at you.
+
+@item owl_quill
+name: Owl-Feather Quill
+slot: trinket
+art: feather
+price: tiny
+desc: A barn-owl feather cut to a nib. Notes taken with it are tidier than the hand that wrote them.
+
+@item moonpetal_locket
+name: Moonpetal Locket
+slot: trinket
+art: moon
+price: medium
+worn: mana +2
+desc: A plain silver locket with one pressed moonpetal inside. It opens on its own at midnight.
+
+@item pocket_almanac
+name: Pocket Almanac
+slot: trinket
+art: book
+price: tiny
+desc: Tides, moons and weather for fifty years, in print you need a lens for. Grimsby's pencil notes run down every margin.
+
+@item measuring_spoon
+name: Pell's Measuring Spoon
+slot: trinket
+art: potion
+desc: A brass spoon worn thin on one side by forty years of exact quarters. Pell's daughters say it is theirs.
+
+@item honey_tin
+name: Honey Tin
+slot: trinket
+art: flower
+desc: A dented tin of Maud's silver-bee honey. Shared, it opens doors; the bees seem to know it is yours.
+
+@item outcast_grimoire
+name: The Outcast's Grimoire
+slot: trinket
+art: book
+worn: cost forbidden -2, on_cast forbidden spell 2
+desc: A black-bound book of forbidden practice in a cramped, elegant hand. Its pages are cold, and some of them are blank until midnight.

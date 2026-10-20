@@ -1,6 +1,6 @@
 // Fight setup: config defaults and validation, kits from the roster, entry resources and max HP. Plain data in, plain state out;
 // the rules that play the fight live in the Rust core (web/core.mjs in the browser, rust/ natively).
-import {LOADOUTS,CONTEXTS,RESOURCES,COMBAT_TUNING,SPELLS,LOADOUT_SKILLS,AI_PRESETS,generateLoadout,levelRng,manaCapacity} from './roster.mjs';
+import {LOADOUTS,CONTEXTS,RESOURCES,COMBAT_TUNING,SPELLS,LOADOUT_SKILLS,AI_PRESETS,generateLoadout,levelRng,manaCapacity,expandMods} from './roster.mjs';
 import {personaOf} from './foes.mjs';
 const maps=n=>Object.fromEntries(RESOURCES.map(k=>[k,n]));
 // The tuning's skill factor: the average over keys of 1 + perPoint × (skill − pivot).
@@ -19,11 +19,12 @@ export function combatStart(condition={}){
  return c.manaAsFlux?{hp,mana:m,flux:1-m}:{hp,mana:c.manaFloor+(1-c.manaFloor)*m,flux:0};
 }
 // {skills:{arcana,…}, spells:{id:rank}, level?} → a kit like generateLoadout's (skills 1–100, ranks within the spell's levels).
-export function customKit({skills,spells,level}){
+export function customKit({skills,spells,level,mods}){
  for(const k of LOADOUT_SKILLS)if(!Number.isFinite(skills?.[k])||skills[k]<1||skills[k]>100)throw Error('Kit skill '+k+' must be 1–100');
- for(const [id,r]of Object.entries(spells??{}))if(!SPELLS[id]||SPELLS[id].castable===false||!Number.isInteger(r)||r<1||r>SPELLS[id].cost.length)throw Error('Kit spell '+id);
+ for(const [id,r]of Object.entries(spells??{}))if(!SPELLS[id]||SPELLS[id].as||SPELLS[id].castable===false||!Number.isInteger(r)||r<1||r>SPELLS[id].cost.length)throw Error('Kit spell '+id);
  const lv=level??Math.round(Math.max(...LOADOUT_SKILLS.map(k=>skills[k])));
- return {loadout:'custom',level:lv,progression:'learned',skills:{...skills},spells:{...spells},capacity:manaCapacity(skills)};
+ // mods: the worn kit (world expansion 1, the main game's Engine#wornMods), resolved against the opponent in createState.
+ return {loadout:'custom',level:lv,progression:'learned',skills:{...skills},spells:{...spells},capacity:manaCapacity(skills),...(mods?{mods:{...mods}}:{})};
 }
 // A side's AI settings: {preset} expands to AI_PRESETS[preset] (the side's own keys win); persona true takes the loadout's
 // persona (PERSONAS), an object is the persona itself; the persona joins `tilt`. Hard's persona:false drops it.
@@ -47,15 +48,19 @@ export function createState(options={}){
  if(!Number.isFinite(config.manaCostScale)||config.manaCostScale<=0||!Number.isFinite(config.combatScale)||config.combatScale<=0||!Number.isFinite(config.damageMultiplier)||config.damageMultiplier<=0)throw Error('Positive scales required');
  const rebates={...CONTEXTS[config.context],...options.rebates,crowns:0,alignment:0};
  for(const n of Object.values(rebates))if(!Number.isFinite(n)||n<0||n>1)throw Error('Rebates must be in [0,1]');
+ const kits=[];
  const actors=[0,1].map(side=>{
   // A side's own kit (the player's learned spells, setup/campaign.mjs) instead of a generated preset.
   const own=side?options.opponentKit:options.playerKit;
-  const kit=own?customKit(own):generateLoadout(side?enemy:config.playerLoadout,side?config.opponentLevel:config.playerLevel,config.spellAccess,{year:side?config.opponentYear:config.playerYear,ilseTaken:side?config.opponentIlseTaken:config.playerIlseTaken,skills:side?options.opponentSkills:options.playerSkills}),standard=config.resourceBudget==='standard';
+  const kit=kits[side]=own?customKit(own):generateLoadout(side?enemy:config.playerLoadout,side?config.opponentLevel:config.playerLevel,config.spellAccess,{year:side?config.opponentYear:config.playerYear,ilseTaken:side?config.opponentIlseTaken:config.playerIlseTaken,skills:side?options.opponentSkills:options.playerSkills}),standard=config.resourceBudget==='standard';
+  // The kit's flat modifiers (world expansion 1): Mana capacity and max HP now, the rest for the core (expandMods, below).
+  if(kit.mods?.mana)kit.capacity+=kit.mods.mana;
   let overrides=side?options.opponentResources:options.playerResources;
   if(side&&!overrides&&config.playerLoadout===enemy&&config.playerLevel===config.opponentLevel&&options.playerResources){const {crowns,...mirrored}=options.playerResources;overrides=mirrored;}
   const entry={health:standard?70:35,mood:standard?60:30,renown:standard?30:5,mana:standard?kit.capacity:Math.min(30,kit.capacity),crowns:standard?30:6,alignment:0,...overrides};
   for(const [k,n]of Object.entries(entry))if(!RESOURCES.includes(k)||!Number.isFinite(n)||n<(k==='alignment'?-100:0)||n>(k==='mana'?kit.capacity:k==='crowns'?99999:100))throw Error('Invalid entry '+k);
-  const maxHP=(config.healthModel==='offset'?entry.health+40+Math.floor((kit.skills.arcana+kit.skills.vigor)/4):Math.round(entry.health*hpFactor(kit.skills)))*(config.hpScale??1);
+  // A creature's race scales its HP (kit.hpScale, world expansion 1); the worn kit adds flat HP.
+  const maxHP=(config.healthModel==='offset'?entry.health+40+Math.floor((kit.skills.arcana+kit.skills.vigor)/4):Math.round(entry.health*hpFactor(kit.skills)))*(config.hpScale??1)*(kit.hpScale??1)+(kit.mods?.hp||0);
   if(maxHP<=0)throw Error('Positive entry HP required');
   // A worn or drained side starts below full (playerCondition / opponentCondition).
   const condition=side?options.opponentCondition:options.playerCondition,start=combatStart(condition);
@@ -67,6 +72,8 @@ export function createState(options={}){
   flux=Math.max(0,Math.min(flux,kit.capacity-entry.mana));
   return {kit,entry,resources:{...entry},spent:maps(0),restored:maps(0),hp,maxHP,startHP:hp,flux,effects:{},channel:null,constructs:[],omens:[],lastAction:null,rimeReady:false,rimeUsed:false,freezeUntil:0,pendingRenown:0,glamourDone:false,urge:0,guardRound:0};
  });
+ // Modifiers resolve against the other side: a stag's tine counts only against a creature.
+ for(const side of [0,1])if(kits[side].mods)kits[side].mods=expandMods(kits[side].mods,{opponentCreature:!!kits[1-side].race});
  config.resolvedPlayerLevel=actors[0].kit.level;config.resolvedOpponentLevel=actors[1].kit.level;
  return {config,rebates,actors,quiet:0,round:1,normalLeader:config.firstLeader,leader:config.firstLeader,earlyCommit:[0,0],pending:[null,null],lastPair:null,lastEvents:[],reports:[],bursts:[],result:null,settlement:null};
 }

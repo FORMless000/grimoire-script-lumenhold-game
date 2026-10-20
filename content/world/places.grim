@@ -36,6 +36,7 @@ always: library_revision
 desc: Seven floors of shelves that rearrange themselves when nobody is looking. Footnote the cat keeps order.
 
 @place refectory
+deprecated: great_hall
 name: The Refectory
 region: castle
 map: campus 470,278
@@ -56,14 +57,16 @@ draws: nature mystery romance
 desc: The Mirror Lake lies so still it shows the towers upside down. On some nights it shows other things.
 
 @place village
-name: The Village
+name: The Village Square
 region: village
 map: campus 720,520
 kind: public
-open: afternoon evening
+open: morning noon afternoon evening
 art: house
 draws: money home
-desc: A barge ride across the lake: crooked roofs, a market square and shopkeepers who have seen every kind of student.
+# The shop counter (world expansion 1, K3): what it sells, first on every visit.
+always: shop_square
+desc: A barge ride across the lake: crooked roofs, a market square, a bakery that has fed students for two hundred years and shopkeepers who have seen every kind of student.
 
 # ---------------- Castle ----------------
 
@@ -92,12 +95,13 @@ name: The Great Hall
 region: castle
 map: campus 455,215
 kind: public
-open: noon afternoon evening
+open: morning noon afternoon evening midnight
 art: crown
-draws: festival social
-desc: Floating candles, a vaulted ceiling that shows tomorrow's weather, and the stage where the choir rehearses and the Midwinter Ball is held.
+draws: festival social home money
+desc: Floating candles, a vaulted ceiling that shows tomorrow's weather, and the stage where the choir rehearses and the Midwinter Ball is held. Under the gallery, the refectory's long tables serve soup that tastes faintly of whatever you're homesick for.
 
 @place infirmary
+deprecated: alchemy_lab
 name: The Infirmary
 region: castle
 map: campus 530,200
@@ -108,14 +112,14 @@ draws: crisis danger
 desc: Clean white beds, a cupboard of tonics and Sister Amaranth, who has seen every kind of injury and believes none of the excuses.
 
 @place alchemy_lab
-name: The Alchemy Laboratory
+name: The Alchemy Laboratory & Infirmary
 region: castle
 map: campus 555,240
 kind: public
-open: morning afternoon evening
+open: morning noon afternoon evening night midnight
 art: cauldron
-draws: class magic
-desc: Long benches, cauldrons in every size, and a ventilation charm that has given up on the third floor.
+draws: class magic crisis danger
+desc: Long benches, cauldrons in every size and a ventilation charm that has given up on the third floor. Through the far door, clean white beds, a cupboard of tonics and Sister Amaranth, who believes none of the excuses.
 
 @place workshop
 name: Mir's Workshop
@@ -249,6 +253,7 @@ draws: nature
 desc: Glass houses that steam even in winter. The moonflowers bloom once every eleven years; the mandrakes have opinions every day.
 
 @place flight_field
+deprecated: stables
 name: The Flight Field
 region: grounds
 map: campus 850,300
@@ -259,14 +264,14 @@ draws: club
 desc: A long green field with hoops at either end and a wind that cheats. Broom lessons, races and spectacular landings.
 
 @place stables
-name: The Familiar Stables
+name: The Stables & Flight Field
 region: grounds
 map: campus 845,385
 kind: public
 open: morning afternoon evening
 art: paw
-draws: nature
-desc: Hippogriffs, a sulky griffon chick, owls in the rafters and Professor Brask, who talks to all of them more kindly than to students.
+draws: nature club
+desc: Hippogriffs, a sulky griffon chick, owls in the rafters and Professor Brask, who talks to all of them more kindly than to students. Beyond the paddock, a long green field with hoops at either end and a wind that cheats.
 
 @place boathouse
 name: The Boathouse
@@ -281,6 +286,7 @@ always: midnight_boathouse_ring|ring_on_yourself
 desc: An old wooden boathouse and a jetty out over the water. People come here to say the things they can't say indoors.
 
 @place orchard
+deprecated: maud_cottage
 name: The Orchard
 region: grounds
 map: campus 790,165
@@ -291,15 +297,15 @@ draws: nature romance
 desc: Apple and pear trees older than the towers. In spring the blossom falls like snow; once, it was snow.
 
 @place maud_cottage
-name: Old Maud's Cottage
+name: Old Maud's Cottage & Orchard
 region: grounds
 map: campus 700,330
 kind: public
 open: morning noon afternoon evening
 discover: met(maud)
 art: house
-draws: nature home
-desc: A thatched cottage with chickens on the doorstep, bees in the eaves, a goat called Bartholomew and a kettle that is always nearly boiling.
+draws: nature home romance
+desc: A thatched cottage with chickens on the doorstep, bees in the eaves, a goat called Bartholomew and a kettle that is always nearly boiling. Behind it, apple and pear trees older than the towers.
 
 @place secret_garden
 name: The Secret Garden
@@ -338,7 +344,7 @@ open: afternoon evening night midnight
 art: cup
 draws: job money social
 # A Newt night (feedback 2026-10-16): the company offer first, then the high table.
-always: newt_company newt_company_regular newt_high_table
+always: newt_company newt_company_regular newt_high_table shop_newt
 desc: The village tavern: low beams, a fire that never goes out, and a landlady who remembers every student's tab to the penny.
 
 @place mabels
@@ -349,6 +355,8 @@ kind: public
 open: morning noon afternoon evening
 art: cup
 draws: social home
+# The shop counter (world expansion 1, K3): what it sells, first on every visit.
+always: shop_mabels
 desc: Forty kinds of tea, three kinds of cake and Mabel, who reads your mood from the way you open the door.
 
 @place grimsbys_books
@@ -359,6 +367,8 @@ kind: public
 open: noon afternoon evening
 art: book
 draws: study money
+# The shop counter (world expansion 1, K3): what it sells, first on every visit.
+always: shop_grimsbys
 desc: A bookshop so crowded the shelves lean on each other for support. Mr Grimsby will find anything except what you came in for.
 
 @place pell_apothecary
@@ -370,9 +380,12 @@ track: apothecary_clerk
 open: morning afternoon evening
 art: bottle
 draws: job money
+# The shop counter (world expansion 1, K3): what it sells, first on every visit.
+always: shop_pell
 desc: An apothecary of a thousand labelled drawers. Old Pell taught three generations to count drops; his daughters taught him to smile at customers.
 
 @place bakery
+deprecated: village
 name: The Bakery
 region: village
 map: campus 640,555
@@ -395,6 +408,7 @@ hint: Fog sits on the western woods even at noon.
 hinted_when: turn >= 2
 art: tree
 draws: nature danger mystery
+always: ww_edge ww_edge_night|ww_night_first
 desc: An old forest that talks in its sleep. Moonpetal grows in its clearings; so do things that are better left there.
 
 # ---------------- Internship hosts (one map each; design §7.5) ----------------
