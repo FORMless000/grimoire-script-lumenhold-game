@@ -219,6 +219,9 @@
       'study', 'spell_check',
       // the skill XP a spell gives in its skill when learned, one tier per spell level (L-6); a one-level spell's tier
       'spell_bonus', 'spell_bonus_one',
+      // what one cast of a forbidden spell costs (feedback 2026-10-19): `alignment N`, on a card and in a fight, in place of
+      // the spell's `alignment:` tier
+      'forbidden_cast',
       // a course exam's difficulty tier at each course level (L alarms); rungs or `standard±N` use the check ladder
       'exam_tiers',
       // the check ladder (docs/authoring/checks.md, design §8.6): each rung's DC, the odds of each odds-by-nature word (%),
@@ -347,6 +350,7 @@
     odds(t) { return STRUCT_PROPS.weights(t); },
     study(t) { return STRUCT_PROPS.weights(t); },
     exam_bands(t) { return STRUCT_PROPS.weights(t); },
+    forbidden_cast(t) { return STRUCT_PROPS.weights(t); },
     npc_growth(t) { const m = t.trim().match(/^share\s+(\S+)\s+tags?\s+(.+)$/); if (!m) throw 'npc_growth: expected "share <0..1> tags <tag> <tag>…"'; return { share: toNum(m[1], 'npc_growth share'), tags: words(m[2]) }; },
     spell_check(t) { return STRUCT_PROPS.weights(t); },
     exam_tiers(t) { const w = words(t); for (const x of w) if (!DIFFICULTIES.includes(x) && !isLadderTier(x)) throw 'exam_tiers: expected a difficulty per course level (trivial … heroic, a rung, or standard±N), got "' + x + '"'; return w; },

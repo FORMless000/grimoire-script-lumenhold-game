@@ -200,7 +200,7 @@ Standard/depleted fixtures bring 30/6 Crowns per side; setup can override each. 
 
 At settlement remaining flux is collected once, earned Renown is paid, then context rebates apply only to net losses. Receipts record spending, restoration, gain, refund and final balances separately. Optional skill-offset HP remains `entry Health + 40 + floor((Arcana + Vigor)/4)`.
 
-Every forbidden cast charges alignment −small. A channel Hold/Release continues its existing cast and does not pay alignment again. With witnesses (`witnesses`, default `observers`: an audience always is one), every forbidden cast produces a recorded post-fight `forbidden_cast_report` follow-up. Observers alone decide Glamour's and Rapport's Renown. This prototype exports the follow-up payload and displays the report; an academy story event is not invented or run. Spells never award plot clues or advance arc clocks.
+Every forbidden cast charges alignment −2 (`ALIGNMENT_COST.forbidden`, a third of −small since 2026-10-19). A channel Hold/Release continues its existing cast and does not pay alignment again. With witnesses (`witnesses`, default `observers`: an audience always is one), every forbidden cast produces a recorded post-fight `forbidden_cast_report` follow-up. Observers alone decide Glamour's and Rapport's Renown. This prototype exports the follow-up payload and displays the report; an academy story event is not invented or run. Spells never award plot clues or advance arc clocks.
 
 ## Interface and random encounters
 

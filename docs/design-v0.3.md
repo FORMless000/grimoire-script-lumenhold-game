@@ -974,6 +974,9 @@ challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam |
 ```
 
 **Fights are played** (2026-10-19): every `combat` and `duel` challenge is a fight in the combat minigame (`combat/`, §T1), for the player and for the simulated players alike; none is rolled. Its result picks the branch: a win is `win`; a draw, or a loss on points, is `partial` when there is one, else `lose`; a knockout is `lose`. The fight's own Health and Mana changes are applied, and the branch runs without its `health` lines (they stay in content for compatibility). The DC below still sets the foe's level (`foeLevel`: the DC plus the odds word), and the card's odds are only the preview's estimate.
+- **Into and out of a fight** (feedback 2026-10-19; `COMBAT_TUNING` in `combat/setup/roster.mjs`): from Health 30 up you start at full HP; below 30 the start falls in a straight line to 70% at Health 0 (was 90% + 10% × Health/70 down to 30, then steeper). Afterwards, Health is lost only when the fight ends below 30 HP: the stake (40) × (30 − HP left) / 30, less the setting's rebate (was the share of HP lost × 40 at any HP).
+- **The fight says its setting** at the top, all through it: the situation (practice duel, a real fight, a public duel, a rehearsal, a ring bout) with what comes back afterwards (its Health and Mana rebate), that Health is lost only below 30 HP, whether a crowd watches (Renown at stake), and, for a fighter who knows a forbidden spell, whether anyone would report one.
+- **A forbidden cast** costs 2 alignment, on a card and in a fight (`@balance forbidden_cast: alignment 2`; a third of the `small` tier it cost before).
 
 **Auto-resolve** (every other kind; it's their only mode until §T1): the odds of a check on the mapped skill(s), against `DC(tier)`, plus modifiers.
 

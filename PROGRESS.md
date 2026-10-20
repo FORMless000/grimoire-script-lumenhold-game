@@ -13,6 +13,15 @@
 | Checks | `npm run verify` passes: build, lint, format, docs, 100+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 48 months (the last two are the wrap-up), about 630–720 cards (15 a term month, 9.4 a break month; about half pushed rather than drawn); in `grim analyze` (100 games a style, 2026-10-17), random play leaves early 30–40% of the time, social 27–30%, aggressive 18–29% and cautious 10–17%; the other 23 styles finish 98–100% |
 
+## Fights: Health in and out, the setting on screen
+
+October 20, 2026, from feedback (design §9.2):
+- **Health into a fight:** from Health 30 up you start at full HP; below 30 the start falls in a straight line to 70% at Health 0.
+- **Health out of a fight:** Health is lost only when a fight ends below 30 HP: the stake (40) × (30 − HP left) / 30, less the setting's rebate. In 24 simulated games a fight cost 4.2 Health on average (was 5.8), and 40% cost none (was 5%).
+- **The setting on screen:** the fight's top line names the situation and what comes back afterwards, that Health is lost only below 30 HP, and whether a crowd watches. For a fighter who knows a forbidden spell, it also says whether anyone would report one.
+- **Forbidden casts** cost 2 alignment, on a card and in a fight (`@balance forbidden_cast`; was 6).
+- **Build:** the fight bundle was built from a clean checkout so that the combat agent's unfinished F5.10 work stays out of it. The minigame's goldens were refreshed for the new rules.
+
 ## UI pass
 
 October 19, 2026, from feedback:

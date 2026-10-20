@@ -58,7 +58,7 @@ pub const TEXT: &[(&str, &str)] = &[
     ("d.construct.strike", "Deal {n} physical damage before defenses"),
     ("d.construct.spell", "Deal {n} spell damage before defenses"),
     ("d.construct.burst", " On ending: {n} spell damage to both sides before defenses."),
-    ("d.forbidden", "{text} Forbidden: alignment −small each cast; witnessed casts are reported."),
+    ("d.forbidden", "{text} Forbidden: alignment −2 each cast; witnessed casts are reported."),
     ("d.spellHit", "Deal {dmg} spell damage before defenses. Guard halves it; Ward stops it."),
     ("d.physicalHit", "Deal {dmg} physical damage before defenses. Guard stops it; Ward halves it."),
     ("d.foresight", "Opponent commits first for {n} subsequent exchanges."),

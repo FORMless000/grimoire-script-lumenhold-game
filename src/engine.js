@@ -516,10 +516,12 @@
     // Spells v2: a spell has one or three levels (its `cost:` values), and its skills (`skill:`, else its discipline's).
     spellLevels(id) { const d = this.c.spells && this.c.spells[id]; return d && d.cost && d.cost.length ? d.cost.length : 1; }
     spellSkills(id) { const d = this.c.spells && this.c.spells[id]; if (!d) return []; if (d.skill) return [].concat(d.skill).filter((k) => this.c.skills[k]); return d.discipline ? this.trackSkills(d.discipline) : []; }
-    // Casting a known spell from an `up[]` option: its Mana, and alignment for a spell that moves it (`alignment: small`).
+    // Casting a known spell from an `up[]` option: its Mana, and alignment for a spell that moves it (`alignment: small`);
+    // a forbidden spell's cast costs `@balance forbidden_cast: alignment N` instead, when set (feedback 2026-10-19).
     chargeCast(id, cost, ctx) {
       this.change(this.spellResource, -cost, ctx);
-      const d = this.c.spells[id], al = d && d.alignment && this.c.resources.alignment ? this.tierAmount('alignment', d.alignment) : 0;
+      const d = this.c.spells[id], fc = d && d.pool === 'forbidden' && this.c.balance && this.c.balance.forbidden_cast;
+      const al = d && d.alignment && this.c.resources.alignment ? (fc && fc.alignment != null ? fc.alignment : this.tierAmount('alignment', d.alignment)) : 0;
       if (al) this.change('alignment', -al, ctx);
     }
     spellCost(id, level) { const d = this.c.spells && this.c.spells[id]; return d && d.cost ? d.cost[clamp((level || 1) - 1, 0, d.cost.length - 1)] : 0; }

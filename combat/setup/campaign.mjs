@@ -13,8 +13,8 @@ const inFight=(id,observers)=>!COMBAT_EXCLUDED.has(id)||id==='sleight'||observer
 
 export function fightOptions({player,opponent,context='practice_duel',observers=false,witnesses=observers,firstLeader=1,encounterSeed}){
  const c=COMBAT_TUNING.condition,capacity=manaCapacity(player.skills);
- // Fit means Health at or above healthFull and Mana at or above the combat capacity. Below that: HP drops a little down to
- // Health 30 and steeply after; you keep exactly the Mana you had, and the rest of capacity starts as flux (combatStart).
+ // Fit means Health at or above healthFull (30) and Mana at or above the combat capacity. Below that: HP drops in a straight
+ // line to 70% at Health 0; you keep exactly the Mana you had, and the rest of capacity starts as flux (combatStart).
  const playerCondition={health:Math.min(1,player.health/c.healthFull),mana:Math.min(1,player.mana/capacity)};
  const foe=opponent.loadout?{opponentLoadout:opponent.loadout,opponentLevel:opponent.level}:{opponentKit:{skills:opponent.skills,spells:opponent.spells,level:opponent.level}};
  const spells=Object.fromEntries(Object.entries(player.spells).filter(([id])=>inFight(id,observers)));
@@ -23,15 +23,15 @@ export function fightOptions({player,opponent,context='practice_duel',observers=
   context,observers,witnesses,firstLeader,...(encounterSeed!==undefined?{encounterSeed}:{})};
 }
 
-// The settled fight → changes to the player's resources. Health: the share of combat HP lost × the stake, less the context's
-// rebate; never below 1 (a lost duel hurts, it doesn't collapse you). Mana: what the fight spent net of collected flux and the
+// The settled fight → changes to the player's resources. Health: only below settle.healthFreeAbove HP left, the stake ×
+// how far below (all of it at 0 HP), less the context's rebate; never below 1 (a lost duel hurts, it doesn't collapse you). Mana: what the fight spent net of collected flux and the
 // rebate, at most what the player had. Mood: the outcome. Renown, Crowns and alignment: what the fight moved.
 export function settle(state,player){
  const s=COMBAT_TUNING.settle,a=state.actors[0],st=state.settlement?.[0],r=state.result;
  if(!r||!st)throw Error('Settle a finished fight');
  const outcome=r.winner===0?'win':r.winner===1?'lose':'draw';
- const lostShare=Math.max(0,(a.startHP??a.maxHP)-a.hp)/a.maxHP;
- const health=-Math.min(Math.round(lostShare*s.healthStake*(1-state.rebates.health)),Math.max(0,(player.health??0)-1));
+ const below=Math.max(0,s.healthFreeAbove-Math.max(0,a.hp))/s.healthFreeAbove;
+ const health=-Math.min(Math.round(below*s.healthStake*(1-state.rebates.health)),Math.max(0,(player.health??0)-1))||0;
  const mana=-Math.min(Math.max(0,Math.round(st.mana.netLoss)),player.mana??0);
  const gained=k=>-Math.round(st[k].netLoss);
  return {outcome,reason:r.reason,deltas:{health,mana,mood:s.mood[outcome],renown:gained('renown'),gold:gained('crowns'),alignment:gained('alignment')},followUps:r.followUps??[]};

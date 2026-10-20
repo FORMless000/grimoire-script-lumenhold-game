@@ -25,7 +25,7 @@ The minigame replaces that roll **for the player's own fights**. The card's thre
 **Condition (F5.9c): being worn or drained shows on the board.**
 
 - **Fit:** Health ≥ 70 (the starting Health) and Mana at capacity give a full start.
-- **Health:** start HP = max × (0.9 + 0.1 × Health/70) down to Health 30 (94%), then straight down to 70% at Health 0 (`COMBAT_TUNING.condition`: `healthKnee` 30, `hpAtZero` 0.7). Light wear barely shows; a badly hurt student fights hurt.
+- **Health:** start HP = max from Health 30 up, then straight down to 70% at Health 0 (`COMBAT_TUNING.condition`: `healthFull` and `healthKnee` 30, `hpAtZero` 0.7; feedback 2026-10-19, was 0.9 + 0.1 × Health/70 down to 30). Wear above 30 doesn't show; a badly hurt student fights hurt.
 - **Mana:** you start with exactly the Mana you had, and the rest of capacity starts as flux: 10 of 43 Mana is 10 ready and 33 flux (`manaAsFlux`). One Reclaim takes the flux back, at the cost of an exchange (and your Shadowstep); the opponent's Seal can snuff it first. Settlement never returns more Mana than you brought.
 
 The player's win rate entering worn or drained, against a fresh opponent (F5.9c, depth 4, 480 fights per row; one standard error ≈ 2.4 points):
@@ -52,7 +52,7 @@ F5.4–F5.9b compressed both into a 90–100% band (no Health −15, no Mana −
 
 | Resource | Change |
 |---|---|
-| Health | the share of combat HP lost × 40 (`settle.healthStake`) × (1 − the context's rebate), never below 1 Health left |
+| Health | only when the fight ends below 30 HP (`settle.healthFreeAbove`): 40 (`settle.healthStake`) × (30 − HP left) / 30 × (1 − the context's rebate), never below 1 Health left (feedback 2026-10-19; was the share of combat HP lost × 40 at any HP) |
 | Mana | the Mana the fight actually spent, net of flux collected and the rebate, at most what the player had; never a gain |
 | Mood | win +3, loss −4, draw 0 (`settle.mood`) |
 | Renown, Crowns, alignment | what the fight moved: Glamour and Rapport (with an audience), Sleight, forbidden casts (alignment always) |

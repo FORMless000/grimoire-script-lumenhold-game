@@ -9,7 +9,8 @@ export const skillFactor=(skills,keys,perPoint,pivot=COMBAT_TUNING.skill.pivot)=
 export const hpFactor=skills=>{const h=COMBAT_TUNING.hp;return Math.max(h.min??-Infinity,skillFactor(skills,h.skills,h.perPoint,h.pivot??COMBAT_TUNING.skill.pivot));};
 // Condition on entering ({health, mana} as fractions, 1 = fit and full) → the share of max HP the fight starts with, the
 // share of Mana capacity ready, and the share that starts as flux. HP: healthFloor + (1 − healthFloor) × health down to the
-// knee (Health healthKnee), then straight down to hpAtZero at Health 0. Mana (manaAsFlux): ready = the Mana you had, flux =
+// knee (Health healthKnee), then straight down to hpAtZero at Health 0 (since 2026-10-19 the knee is healthFull, 30, and
+// healthFloor 1: full HP from Health 30, 70% at 0). Mana (manaAsFlux): ready = the Mana you had, flux =
 // the rest of capacity; without manaAsFlux, the F5.4 floor (manaFloor) and no flux.
 export function combatStart(condition={}){
  const c=COMBAT_TUNING.condition,clamp=x=>Math.min(1,Math.max(0,x??1)),h=clamp(condition.health),m=clamp(condition.mana);

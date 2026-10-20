@@ -357,10 +357,26 @@
     document.addEventListener('keydown', onKey, true);
 
     // ---- The result: what the fight did, then back to the card ----
+    // The fight's setting, always in view (feedback 2026-10-19): the situation and what comes back afterwards (the context's
+    // rebates), when Health is at stake, whether a crowd watches (Renown), and, for a fighter who knows a forbidden spell,
+    // whether anyone would report one.
+    function settingLine() {
+      const C_ = C(), st = fight.setting || {}, rb = (C_.CONTEXTS && C_.CONTEXTS[st.context]) || {}, free = ((C_.COMBAT_TUNING || {}).settle || {}).healthFreeAbove;
+      const pct = (x) => Math.round((x || 0) * 100);
+      const parts = ['<b>' + esc(tr('context.' + st.context)) + '</b>'];
+      if (free) parts.push(esc(tr('healthBelow', { n: free })));
+      if (rb.health === rb.mana) { if (rb.health) parts.push(esc(tr('rebateBoth', { pct: pct(rb.health) }))); }
+      else { if (rb.health) parts.push(esc(tr('rebateHealth', { pct: pct(rb.health) }))); if (rb.mana) parts.push(esc(tr('rebateMana', { pct: pct(rb.mana) }))); }
+      const lines = ['<span>' + parts.join(' · ') + '</span>'];
+      lines.push('<span>' + esc(st.observers ? tr('watched', { pct: pct(rb.renown) }) : tr('unwatched')) + '</span>');
+      const forbidden = Object.keys((game.actors[0].kit || {}).spells || {}).some((id) => C_.SPELLS[id] && C_.SPELLS[id].group === 'forbidden');
+      if (forbidden) lines.push('<span>' + esc(st.witnesses ? tr('witnessed') : tr('unwitnessed')) + '</span>');
+      return '<p class="fight-setting">' + lines.join('') + '</p>';
+    }
     function unfitNote() {
       if (history.length || game.result) return '';
-      const p = fight.request.player, lines = [];
-      if (p.health < 70) lines.push(tr('unfitHealth', { n: Math.round(p.health) }));
+      const p = fight.request.player, lines = [], full = ((C().COMBAT_TUNING || {}).condition || {}).healthFull || 30;
+      if (p.health < full) lines.push(tr('unfitHealth', { n: Math.round(p.health), full }));
       if (p.mana < p.maxMana) lines.push(tr('unfitMana', { n: Math.round(p.mana), max: Math.round(p.maxMana) }));
       return lines.length ? '<p class="fight-note">' + esc(lines.join(' ')) + '</p>' : '';
     }
@@ -381,7 +397,7 @@
       if (closed || !game) return;
       snapshotBars();
       const sc = $('.tk-scroll'), kept = sc ? sc.scrollLeft : undefined;
-      $('.fight-wrap').innerHTML = '<section class="fight">' + unfitNote() + '<div class="fighters' + (engineOn ? ' with-eval' : '') + '">' + (engineOn ? '<div class="evalbar" title="' + esc(tr('evalBar')) + '"></div>' : '') + fighter(0) + fighter(1) + '</div><div class="fight-body"><div class="fight-main">' + track() +
+      $('.fight-wrap').innerHTML = '<section class="fight">' + settingLine() + unfitNote() + '<div class="fighters' + (engineOn ? ' with-eval' : '') + '">' + (engineOn ? '<div class="evalbar" title="' + esc(tr('evalBar')) + '"></div>' : '') + fighter(0) + fighter(1) + '</div><div class="fight-body"><div class="fight-main">' + track() +
         (opts.engineHelp ? '<button class="eng-toggle" aria-pressed="' + engineOn + '">' + esc(tr('engine')) + '</button>' + (engineOn ? '<div class="engine"><div class="engine-top"><b class="engine-head"></b><select class="eng-budget" aria-label="' + esc(tr('engineTime')) + '">' +
           ENGINE_BUDGETS.map((ms) => '<option value="' + ms + '"' + (ms === engineBudget ? ' selected' : '') + '>' + (ms === Infinity ? '∞' : esc(tr('seconds', { n: ms / 1000 }))) + '</option>').join('') + '</select></div><div class="engine-lines"></div><p class="fine">' + esc(tr('engineNote')) + '</p></div>' : '') : '') + '</div>' +
         '<div class="controls">' + intent() + (game.result ? result() : actions()) + '</div></div></section>';

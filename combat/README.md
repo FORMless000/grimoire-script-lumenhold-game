@@ -73,7 +73,7 @@ A log has the same shape as the browser's exported log, plus structured events:
 
 **The campaign bridge** (`setup/campaign.mjs`), for the main game:
 - `fightOptions({player, opponent, context})` turns the player's skills, learned spells, Health, Mana and other resources into `createState` options;
-- `settle(state, player)` turns a finished fight into resource changes: Health (the share of combat HP lost × `settle.healthStake`, less the context's rebate, never below 1), Mana, Mood, Renown, Crowns and alignment.
+- `settle(state, player)` turns a finished fight into resource changes: Health (only below `settle.healthFreeAbove` HP left: `settle.healthStake` × how far below, less the context's rebate, never below 1), Mana, Mood, Renown, Crowns and alignment.
 
 See `INTEGRATION.md` for the design and `HANDOFF.md` for the plan to wire it into the main game.
 
