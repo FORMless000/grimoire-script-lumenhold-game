@@ -638,13 +638,13 @@ tone: warm
 actor: kael
 art: spell_rime
 tags: magic
-scene: A pale Northern student and another student standing in a snowy courtyard, frost spreading from their collars, breath steaming.
-text: Kael sees the frost at your collar and goes still. "Rime," he says. "Where did you... no. Don't tell me." He looks at the snow. "In the North we learn it as children. You don't feel the cold less. You just stop letting it decide things."
+scene: A pale Northern student and another student standing in a frost-whitened courtyard, frost spreading from their collars, breath steaming.
+text: Kael sees the frost at your collar and goes still. "Rime," he says. "Where did you... no. Don't tell me." He looks at {season == "winter": the snow|the courtyard, and frost runs out from his boots across the flagstones}. "In the North we learn it as children. You don't feel the cold less. You just stop letting it decide things."
 > left: Let him show you
   meet kael
   arcana +small
   health -tiny
-  say: He makes you stand in the snow until it hurts, and then until it doesn't, and then a while longer. When you go in, he's almost smiling. "Now it's yours," he says.
+  say: He makes you stand in {season == "winter": the snow|the cold he's laid on the flagstones} until it hurts, and then until it doesn't, and then a while longer. When you go in, he's almost smiling. "Now it's yours," he says.
 > right: Ask what else they learn as children
   meet kael
   rel kael +tiny
@@ -655,12 +655,13 @@ text: Kael sees the frost at your collar and goes still. "Rime," he says. "Where
 title: The Fern on the Sill
 trigger: auto
 when: spell_level(siphon) >= 1 and term
+slot: night
 class: routine
 tone: grim
 art: spell_siphon
 tags: magic forbidden
 scene: A student at a dormitory window at night with a hand hovering over a potted fern, the fern's leaves beginning to curl.
-text: You're tired, and you have an exam in the morning, and there's a fern on your windowsill, green and full of life it isn't using. Siphon is right there in your hands. Nobody would ever know but the fern.
+text: You're tired, and there are lectures at eight, and there's a fern on your windowsill, green and full of life it isn't using. Siphon is right there in your hands. Nobody would ever know but the fern.
 > left: Just a little
   alignment -small
   health +small
@@ -755,12 +756,13 @@ text: You burn your hand on a cauldron in the lab, badly. And Eclipse wakes up: 
 title: Paying in Yourself
 trigger: auto
 when: spell_level(heartprice) >= 1 and term
+slot: night
 class: routine
 tone: grim
 art: spell_heartprice
 tags: magic forbidden
 scene: An exhausted student at a desk late at night, a faint red glow in their chest feeding a spell, candles burnt down.
-text: It's late, your Mana is spent, and the essay isn't done. Heartprice says you don't need Mana. You have yourself. You could pay in that, for as long as you can stand it.
+text: It's late, {mana < 15: your Mana is spent|your Mana is low and tomorrow has a practical}, and the essay isn't done. Heartprice says you don't need Mana. You have yourself. You could pay in that, for as long as you can stand it.
 > left: Pay in yourself
   alignment -tiny
   study +tiny

@@ -223,43 +223,17 @@
         ui.mode = null; closeOverlay();
         eng = new Engine(content);
         buildGame();
-        step(eng.newGame({ name, pronouns: pron, seed: seed === '' ? null : seed, flags, ...seen, ...(origin ? { origin } : {}) }));
+        step(eng.newGame({ name, pronouns: pron, seed: seed === '' ? null : seed, flags, ...seen, ...(origin ? { origin } : { prologue: true }) }));
       };
-      const choices = new Engine(content).originChoices();
-      if (choices.length) showOrigins(choices, start); else start(null);
+      // The origin is picked in the mirror (feedback 2026-10-20): the game opens on a prologue, the arrival and the mirror,
+      // before month 1 begins.
+      start(null);
     };
     const c = document.getElementById('cont');
     if (c) c.onclick = () => { eng = new Engine(content).load(saved); buildGame(); step(eng.advance()); };
     document.getElementById('slotsBtn').onclick = () => openSlots();
     const ex = document.getElementById('exportRuns');
     if (ex) ex.onclick = () => exportRuns(allRuns(), 'lumenhold-runs-' + fileStamp() + '.json');
-  }
-  // The origin screen (playtest 2, M32): who you were before, and what it means for money, before the game starts.
-  function showOrigins(choices, start) {
-    ui.mode = 'origin';
-    const opts = choices.map((o, i) => '<button class="opt origin-opt' + (o.poor ? ' poor' : '') + '" data-k="' + esc(o.key) + '"><span class="num">' + (i + 1) + '</span>' +
-      '<b>' + (o.art ? Art.icon(o.art, 16) + ' ' : '') + esc(o.label) + '</b>' + (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') +
-      (o.money ? '<small class="money">' + Art.icon('coin', 13) + ' ' + esc(o.money) + '</small>' : '') +
-      (o.poor ? '<small class="warn">' + esc(t('origin.poorWarning')) + '</small>' : '') + againLine() + '</button>').join('');
-    openOverlay('<div class="modal dark origin-modal"><div class="modal-body"><h2>' + esc(t('origin.heading')) + '</h2><p class="text">' + esc(t('origin.intro')) + ' ' + esc(t('menu.prompt')) + '</p>' +
-      '<div class="opt-grid">' + opts + '</div><div class="row" style="margin-top:14px"><button class="btn ghost-btn grow" id="originBack">' + esc(t('origin.back')) + '</button>' +
-      '<button class="btn primary grow" id="originGo" disabled>' + esc(t('menu.confirmOne')) + '</button></div></div></div>');
-    // As in every menu: a click picks, a click on the pick (or Confirm, or Enter) starts.
-    let sel = null;
-    const go = () => { if (ui.mode === 'origin' && sel) start(sel); };
-    const pick = (k) => {
-      if (ui.mode !== 'origin') return;
-      const twice = sel === k;
-      sel = k;
-      document.querySelectorAll('.origin-opt').forEach((b) => { b.classList.toggle('sel', b.dataset.k === k); b.classList.toggle('last-pick', b.dataset.k === k); });
-      document.getElementById('originGo').disabled = false;
-      if (twice) go();
-    };
-    document.querySelectorAll('.origin-opt').forEach((b) => { b.onclick = () => pick(b.dataset.k); });
-    document.getElementById('originGo').onclick = go;
-    document.getElementById('originBack').onclick = () => { closeOverlay(); ui.mode = 'title'; };
-    ui.originPick = (i) => { const o = choices[i]; if (o) pick(o.key); };
-    ui.originGo = go;
   }
 
   function previewEvent(id) {
@@ -1051,16 +1025,15 @@
     const o = ui.view.options.find((x) => x.key === key);
     if (!o || o.disabled) return;
     // A click picks; a click on the pick confirms, as a spell in a fight (feedback 2026-10-19), whenever it comes. With
-    // several to pick, it is the last pick that confirms; a click on an earlier one takes it back.
+    // several to pick (electives, applications), only Confirm confirms (feedback 2026-10-20): a click on a pick takes it back.
     let twice = false;
     if (ui.multi) {
       const i = ui.multi.indexOf(key);
-      if (i >= 0 && ui.lastPick === key) twice = true;
-      else if (i >= 0) ui.multi.splice(i, 1); else if (ui.multi.length < ui.view.pick) ui.multi.push(key);
+      if (i >= 0) ui.multi.splice(i, 1); else if (ui.multi.length < ui.view.pick) ui.multi.push(key);
     } else { twice = ui.sel === key; ui.sel = key; }
     if (!twice) ui.lastPick = ui.multi && !ui.multi.includes(key) ? ui.multi[ui.multi.length - 1] || null : key;
     const picked = ui.multi || [ui.sel];
-    document.querySelectorAll('.opt').forEach((b) => { b.classList.toggle('sel', picked.includes(b.dataset.k)); b.classList.toggle('last-pick', b.dataset.k === ui.lastPick && picked.includes(ui.lastPick)); });
+    document.querySelectorAll('.opt').forEach((b) => { b.classList.toggle('sel', picked.includes(b.dataset.k)); b.classList.toggle('last-pick', !ui.multi && b.dataset.k === ui.lastPick && picked.includes(ui.lastPick)); });
     const go = document.getElementById('multiGo');
     if (go) { go.disabled = ui.multi ? !ui.multi.length : !ui.sel; go.textContent = ui.multi ? t('menu.confirm', { n: ui.multi.length, max: ui.view.pick }) : t('menu.confirmOne'); }
     if (twice) confirmMenu();
@@ -1107,7 +1080,8 @@
     document.querySelectorAll('#deck .card').forEach((c) => c.remove());
     document.getElementById('choices').innerHTML = '';
     let rows = '';
-    if (r.turn === 1 && content.game.intro) rows += '<div class="row say">' + esc(content.game.intro) + '</div>';
+    // The game's opening line, unless a prologue (the arrival and the mirror) has already told it.
+    if (r.turn === 1 && content.game.intro && !eng.s.hist.some((h) => h.t === 'card')) rows += '<div class="row say">' + esc(content.game.intro) + '</div>';
     for (const s of r.summary) {
       // Fading sparks: one line for everyone, said in words (feedback 2026-10-19); a partnership that ends, its own.
       const fading = s.src === 'spark fade', ended = s.src === 'relationship drift' && s.npc;
@@ -1183,7 +1157,6 @@
     if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
     if (e.key === 'Escape' && ui.sideOpen && document.getElementById('side')) { e.preventDefault(); setSide(false); return; }
     if ((e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey && document.getElementById('fbBar')) { e.preventDefault(); openFeedback(); return; }
-    if (ui.mode === 'origin') { if (/^[1-9]$/.test(e.key) && ui.originPick) { e.preventDefault(); ui.originPick(+e.key - 1); } else if (e.key === 'Enter' && ui.originGo) { e.preventDefault(); ui.originGo(); } else if (e.key === 'Escape') { e.preventDefault(); closeOverlay(); ui.mode = 'title'; } return; }
     if (ui.mode === 'map') { if (ui.mapCtl && ui.mapCtl.key(e)) e.preventDefault(); return; }
     if (ui.mode === 'card') {
       const v = ui.view; const story = v.type === 'story' || v.options.length === 1;

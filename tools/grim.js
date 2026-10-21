@@ -357,6 +357,8 @@ function analyze(content) {
       if (o.item && !(content.items || {})[o.item]) P('error', ow, 'up[item:' + o.item + ']: no @item ' + o.item);
       // Previews must be exact (design §8.3): no rand() in an option's effects.
       G.walkEffects(o.effects, (st) => { const ex = st.expr || st.p || st.dc || st.delay; if (ex && /\brand\(/.test(ex.src)) P('error', e.file + ':' + st.line, 'rand() in an option can\'t be previewed: use a chance or a range (a~b)'); });
+      // A skill is never a cost (docs/authoring/costs.md; critic pass 2026-10-20): rust is the engine's, not a card's.
+      G.walkEffects(o.effects, (st) => { if (st.t === 'delta' && st.sign < 0 && content.skills[st.name]) P('error', e.file + ':' + st.line, st.name + ' -' + st.tier + ': a skill is never a cost (show a cost the scene has: mood, health, study, rel…)'); });
       if (o.memory) {
         if (content.vocab.memory_kinds && !content.vocab.memory_kinds.values.includes(o.memory.kind)) P('error', ow, 'memory: "' + o.memory.kind + '" is not in @vocab memory_kinds');
         if (o.memory.who === 'npc' ? !hasActor : !content.npcs[o.memory.who]) P('error', ow, 'memory: unknown character "' + o.memory.who + '"');

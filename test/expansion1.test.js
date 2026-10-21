@@ -233,20 +233,24 @@ test('items: previewing an option that gives or takes an item changes nothing', 
   assert.equal(JSON.stringify([e.s.items, e.s.worn, e.s.itemsHad]), before);
 });
 
-test('intro cards: left is only a line; right is at most a line, a fact or a lead, a tiny warm-up or a lesson; never a cost', () => {
+test('intro cards: left is only a line; right is at most a line, a fact or a lead, a tiny warm-up or a lesson; a lesson risks only a tiny Mood', () => {
   const intro = Object.values(content.events).filter((e) => (e.tags || []).includes('intro'));
   assert.ok(intro.length >= 20, intro.length + ' intro cards');
   // (a lead is a fact the Clues panel keeps: `flag` + `find`, as Maud's Warning names the Hush; meeting someone is free)
   const allowed = new Set(['say', 'learn', 'queue', 'challenge', 'meet', 'flag', 'find']);
+  // A lesson's check (feedback 2026-10-20) wins or loses a tiny Mood, and nothing else.
+  const engages = (e, effects) => G.walkEffects(effects, (st) => {
+    if (st.t === 'rel') assert.equal(st.tier, 'tiny', e.id + ': a warm-up is tiny');
+    else if (st.t === 'delta') assert.ok(st.name === 'mood' && st.tier === 'tiny', e.id + ': only a tiny Mood, got ' + st.name + ' ' + st.tier);
+    else assert.ok(allowed.has(st.t), e.id + ' right: ' + st.t);
+  });
   for (const e of intro) {
     assert.equal(e.class, 'story', e.id + ' is a story card');
+    if (e.type === 'menu') { for (const o of e.options) engages(e, o.effects); continue; }   // Marrow's question: answers, none a cost
     const left = e.options.find((o) => o.key === 'left'), right = e.options.find((o) => o.key === 'right');
     assert.ok(left && right, e.id + ' has left and right');
     G.walkEffects(left.effects, (st) => assert.ok(st.t === 'say' || st.t === 'queue' || st.t === 'meet', e.id + ' left: ' + st.t));
-    G.walkEffects(right.effects, (st) => {
-      if (st.t === 'rel') assert.equal(st.tier, 'tiny', e.id + ': a warm-up is tiny');
-      else assert.ok(allowed.has(st.t), e.id + ' right: ' + st.t);
-    });
+    engages(e, right.effects);
   }
 });
 
@@ -285,7 +289,7 @@ test('the orientation: the Welcome skips it or plays it through before the regis
     return { ids, ward: (e.s.spells || {}).ward };
   };
   const along = play('right'), skip = play('left');
-  const seq = ['intro_welcome', 'intro_tour', 'intro_wrong_tower', /^intro_lunch/, 'intro_vey_tea', 'intro_purse', 'intro_room', 'slice_ward_lesson', 'intro_practice_circle', 'intro_kit', 'registrar_list'];
+  const seq = ['intro_welcome', 'intro_what_is_just', 'intro_tour', 'intro_wrong_tower', /^intro_lunch/, 'intro_vey_tea', 'intro_purse', 'intro_room', 'slice_ward_lesson', 'intro_practice_circle', 'intro_kit', 'registrar_list'];
   const at = along.ids.indexOf('intro_welcome');
   seq.forEach((x, k) => { const id = along.ids[at + k]; assert.ok(x instanceof RegExp ? x.test(id) : id === x, 'step ' + k + ': ' + along.ids.slice(at).join(' ')); });
   assert.equal(along.ids.filter((id) => /^intro_lunch/.test(id)).length, 1, 'one lunch card');
@@ -306,6 +310,35 @@ test('the intro\'s lunch card comes whether or not you have met anyone', () => {
   assert.deepEqual(lunch(null), ['intro_lunch_alone']);
   assert.deepEqual(lunch('tobias'), ['intro_lunch']);
   // every peer the lunch could seat is named in the alone card's condition
-  const peers = Object.keys(content.npcs).filter((id) => (content.npcs[id].tags || []).includes('peer'));
+  const peers = Object.keys(content.npcs).filter((id) => (content.npcs[id].tags || []).includes('peer') && id !== 'bram');
   for (const id of peers) assert.deepEqual(lunch(id), ['intro_lunch'], id);
+  assert.deepEqual(lunch('bram'), ['intro_lunch_alone'], 'Bram, met on the tour, is no one to sit with');
+});
+
+// Feedback 2026-10-20: Marrow's question is its own card; the tour meets Bram on sight (no warm-up), and following him
+// shows the places that matter before the wrong tower; on the eve of graduation Marrow asks again, for those who answered.
+test('the orientation: Marrow asks what is just; the tour meets Bram; following him names the places; she asks again at the end', () => {
+  const e = fresh(content), ids = [];
+  const pick = { intro_welcome: 'right', intro_what_is_just: 'fair', intro_tour: 'right' };
+  const q = console.warn; console.warn = () => {};
+  let relAtTour = null;
+  try {
+    for (let i = 0; i < 30 && e.s.turn === 1 && !ids.includes('intro_wrong_tower'); i++) {
+      const r = e.advance();
+      if (r.kind === 'map') { e.pickPlaces(null); continue; }
+      if (r.kind !== 'card') continue;
+      ids.push(r.view.id);
+      if (r.view.id === 'intro_tour') { assert.ok(e.s.npcs.bram.met, 'Bram is met as the tour shows'); relAtTour = e.s.npcs.bram.rel; }
+      e.choose(pick[r.view.id] || r.view.options.filter((o) => !o.disabled)[0].key);
+    }
+  } finally { console.warn = q; }
+  const at = ids.indexOf('intro_welcome');
+  assert.deepEqual(ids.slice(at, at + 5), ['intro_welcome', 'intro_what_is_just', 'intro_tour', 'intro_places', 'intro_wrong_tower']);
+  assert.equal(e.s.npcs.bram.rel, relAtTour, 'the tour changes nothing with Bram but meeting him');
+  assert.ok(e.s.flags.just_fair);
+  const asks = content.events.isolde_asks_again;
+  e.s.turn = e.maxTurns;
+  assert.ok(e.test(asks.when, null), 'asked again at the end');
+  delete e.s.flags.just_fair;
+  assert.ok(!e.test(asks.when, null), 'not for someone who never answered');
 });

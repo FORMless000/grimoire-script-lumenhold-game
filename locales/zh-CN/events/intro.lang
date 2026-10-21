@@ -17,14 +17,40 @@ opt.left.label [7bb86b] = 跳过入学引导
 opt.left.say.1 [c27814] = 你赶在人群前头溜出去找教务的名单。城堡要教你的东西，你打算用吃苦头的方式学。（安全课是必修的：那个你还是得上。）
 # en: Stay for the orientation
 opt.right.label [b7a0f6] = 留下参加引导
-# en: You stay. On her way out Marrow stops in front of you. "What do you think is just?" she asks, and listens to your answer, and writes something down. "Ask me again in four years," she says.
-opt.right.say.1 [99084c] = 你留了下来。马罗离场时在你面前停下。“你觉得什么是公正？”她问，听完你的回答，写下了什么。“四年后再问我一次。”她说。
+# en: You stay. The hall empties toward the prefects, and the headmistress comes down from the lectern, straight toward you.
+opt.right.say.1 [88c52b] = 你留了下来。大厅里的人朝级长们散去，院长从讲台上走下来，径直朝你走来。
+
+@event intro_what_is_just
+# en: What Is Just?
+title [ebf19a] = 何为公正？
+# en: Headmistress Marrow stops in front of you, notebook open, as if she'd been looking for you in particular. "One question before the prefects have you," she says. "I ask it of everyone. Very few remember. What do you think is just?"
+text [f37f9c] = 马罗院长在你面前停下，笔记本摊开着，好像特意在找你。“在级长们把你领走之前，问一个问题，”她说，“我问每一个人。记得的人很少。你觉得什么是公正？”
+# en: A tall headmistress with a small notebook stopping in front of one first-year in an emptying hall, candles guttering overhead.
+scene [bd9664] = 渐空的大厅里，一位高个子的院长拿着小笔记本，停在一个一年级生面前，头顶的蜡烛摇曳将熄。
+# en: "Mercy."
+opt.mercy.label [715ccb] = “仁慈。”
+# en: Giving people more than they've earned.
+opt.mercy.hint [18f8eb] = 给人超过他们应得的。
+# en: "Mercy," she repeats, and writes it down. "Expensive. Most people who say it haven't been asked to pay for it yet." She closes the notebook on her finger. "Ask me again in four years."
+opt.mercy.say.1 [87a6e2] = “仁慈，”她重复一遍，写了下来。“代价高昂。说这话的人大多还没被要求付账。”她用手指夹住笔记本合上。“四年后再问我一次。”
+# en: "Fairness."
+opt.fair.label [a659a4] = “公平。”
+# en: One rule, the same for everyone.
+opt.fair.hint [0a96a2] = 一条规矩，对谁都一样。
+# en: "Fairness," she repeats, and writes it down. "The same rule for the duke and the pickpocket. Harder than it sounds, when you know one of them." She closes the notebook on her finger. "Ask me again in four years."
+opt.fair.say.1 [73d120] = “公平，”她重复一遍，写了下来。“公爵和扒手守同一条规矩。等你认识其中一个，就知道这比听上去难。”她用手指夹住笔记本合上。“四年后再问我一次。”
+# en: "Keeping your own safe."
+opt.strong.label [ae02c4] = “护住自己人。”
+# en: Whatever it takes, for the people who are yours.
+opt.strong.hint [02410d] = 为了属于你的人，不惜一切。
+# en: "Keeping your own safe," she repeats, and writes it down. "An honest answer. Most people dress it up." She closes the notebook on her finger. "Ask me again in four years. I'd like to know who you decided was yours."
+opt.strong.say.1 [4caa6c] = “护住自己人，”她重复一遍，写了下来。“很诚实的回答。大多数人会粉饰一番。”她用手指夹住笔记本合上。“四年后再问我一次。我想知道你最后认定谁是你的人。”
 
 @event intro_tour
 # en: The Prefect's Tour
 title [5bfdbd] = 级长带你参观
-# en: A prefect in a red sash gathers the first-years with a ledger. "Hollis. Prefect. Tour. Each day you get a few free hours, and you spend them on the map: one place an hour. Some doors open only once you've earned them. Some never open for you. Keep up."
-text [e98129] = 一个系红肩带的级长拿着账本召集一年级生。“霍利斯。级长。参观。每天你有几个空闲时段，在地图上花掉它们：一个时段去一个地方。有些门要等你配得上才会开。有些门永远不会为你开。跟上。”
+# en: A burly prefect in a red sash gathers the first-years with a ledger. "Bram Hollis. Prefect. Tour. Each day you get a few free hours, and you spend them on the map: one place an hour. Some doors open only once you've earned them. Some never open for you. Keep up."
+text [d68b57] = 一个魁梧的、系红肩带的级长拿着账本召集一年级生。“布拉姆·霍利斯。级长。参观。每天你有几个空闲时段，在地图上花掉它们：一个时段去一个地方。有些门要等你配得上才会开。有些门永远不会为你开。跟上。”
 # en: A prefect in a red sash leading a straggle of first-years through a castle corridor, holding up a ledger like a flag.
 scene [99ab49] = 一个系红肩带的级长领着一串一年级生穿过城堡走廊，像举旗一样举着账本。
 # en: Skip the tour
@@ -35,6 +61,22 @@ opt.left.say.1 [d82ebc] = 你溜走了，自己摸路。迷路两次，找到厨
 opt.right.label [3e4916] = 跟着他转
 # en: Bram walks you past every door and names its rules. At a blank stretch of wall, a boy with a lockpick behind his ear winks at you, as if the wall were a joke you'd both get later.
 opt.right.say.1 [3f75b9] = 布拉姆领你走过每一扇门，说出每一扇门的规矩。在一段光秃秃的墙前，一个耳后夹着撬锁针的男孩冲你眨了眨眼，好像这堵墙是个你们俩以后都会懂的笑话。
+
+@event intro_places
+# en: Where Things Are
+title [168cb7] = 东西都在哪儿
+# en: Bram reads the castle to you off his ledger. "Job Board, by the stairs: work and wages. Library: revision tables before every exam. Infirmary, on the Alchemy floor: Sister Amaranth, for when you break something, yourself included. The village, down the hill: robes and wands on market day, tea at Mabel's, tonics at Pell's." He snaps the ledger shut. "Questions? No. Good."
+text [dceb2a] = 布拉姆照着账本把城堡念给你听。“招工告示板，在楼梯边：活儿和工钱。图书馆：每次考试前都摆好复习桌。医务室，在炼金那层：阿玛兰斯修女，摔坏了什么都找她，包括你自己。村子，在山下：集市日买长袍和魔杖，梅布尔茶馆喝茶，佩尔父女药铺买补剂。”他啪地合上账本。“有问题吗？没有。很好。”
+# en: A prefect reading from a ledger at the top of a castle stair, pointing down corridors with his quill, first-years craning to follow.
+scene [b6f58c] = 城堡楼梯顶上，一个级长照着账本念，用羽毛笔朝各条走廊指点，一年级生伸长脖子跟着看。
+# en: "No questions."
+opt.left.label [e3ca6b] = “没有问题。”
+# en: "Excellent," says Bram, and means it. He leaves you at the foot of the stairs with a map in your head and a strong sense of having been processed.
+opt.left.say.1 [90461f] = “好极了，”布拉姆说，是真心的。他把你丢在楼梯底下，脑子里多了张地图，还有一种被办完了手续的强烈感觉。
+# en: Ask what he left out
+opt.right.label [23dbe0] = 问他漏了什么
+# en: He looks pained. "The Gilded Newt, in the village, after dark: supper, cider and people you shouldn't be seen with. The Lakeshore, for thinking. That's all." He writes something in the ledger. It might be your name.
+opt.right.say.1 [bbe3ed] = 他一脸痛苦。“镀金蝾螈酒馆，在村里，天黑以后：晚饭、苹果酒，还有你不该被人看见跟他们在一起的人。湖岸，想事情用的。就这些。”他在账本上写了点什么。可能是你的名字。
 
 @event intro_wrong_tower
 # en: The Wrong Tower
@@ -49,8 +91,8 @@ opt.left.label [a8f8c6] = 自己搬过去
 opt.left.say.1 [246fa2] = 你拖着它过了两座桥，爬了九十级台阶。你经过时，舍监在名单上打了个勾，满意地认为它一直都是对的。
 # en: Talk her round
 opt.right.label [53212c] = 说服她
-# en: A negotiation, as a lesson: nothing to lose. Until the negotiation game arrives, charm, lore and guile decide it.
-opt.right.hint [e5e2c2] = 一场交涉，当作一课：没有损失。在交涉小游戏上线之前，由魅力、学识和诡计决定。
+# en: A negotiation, as a lesson: a fair chance, and nothing more than your mood at stake. Until the negotiation game arrives, charm, lore and guile decide it.
+opt.right.hint [cfeefd] = 一场交涉，当作一课：机会对半，赌上的只有你的心情。在交涉小游戏上线之前，由魅力、学识和诡计决定。
 # en: You ask to see the list. Then the line. Then the tower on the line. The steward goes pink, corrects it in red ink and sends two porters. "Clerical," she says.
 opt.right.say.1 [f54cdc] = 你要求看名单。然后看那一行。然后看那一行写的是哪座塔。舍监脸红了，用红墨水改过来，派了两个搬运工。“笔误，”她说。
 # en: She won't change the list, but she lends you a porter "as a courtesy". The porter and the list never speak again.
@@ -103,8 +145,8 @@ opt.left.label [5a06b4] = 谢绝这杯茶
 opt.left.say.1 [c1f092] = “不了，谢谢，”你说。维伊叹了口气，喝掉了那杯不存在的茶，走开了。你觉得自己好像没通过一件小事。
 # en: Pretend to drink it
 opt.right.label [603f5b] = 假装喝下去
-# en: A check, as a lesson: your guile against a novice's odds, nothing to lose.
-opt.right.hint [4d1065] = 一次检定，当作一课：你的诡计对新手的胜算，没有损失。
+# en: A check, as a lesson: your guile, a fair chance, and nothing more than your mood at stake.
+opt.right.hint [c2e062] = 一次检定，当作一课：凭你的诡计，机会对半，赌上的只有你的心情。
 # en: You sip, wince at the heat and compliment the blend. Vey laughs, delighted, and writes something down. "Points," she says. "Nobody compliments the blend."
 opt.right.say.1 [bb798d] = 你抿了一口，被烫得皱眉，夸了夸茶的配方。维伊高兴地笑了，写下了什么。“得分，”她说，“从没人夸过配方。”
 # en: You drink it convincingly and then try to hand back the cup. There is no cup. Vey smiles. "Half points," she says.
@@ -157,8 +199,8 @@ opt.left.label [ff2b65] = 在长椅上看
 opt.left.say.1 [5db4f2] = 你看着三个一年级生倒在假人面前，然后一个打赢了。索恩对四个人说的都是同一句话：“好。再来。”
 # en: Step into the circle
 opt.right.label [7ce474] = 走进圈里
-# en: A lesson: nothing to win or lose, and you may skip it at any time.
-opt.right.hint [c8811f] = 一课：没有输赢，随时可以跳过。
+# en: A lesson: Thorne talks you through every exchange, and only your mood is at stake.
+opt.right.hint [dae7e9] = 一课：每个回合索恩教授都会指点你，赌上的只有你的心情。
 # en: The mannequin topples in a puff of straw. Thorne nods. "Now lose one sometime," he says. "Then you'll know what you're doing."
 opt.right.say.1 [9491b1] = 假人扑的一声倒下，扬起一阵稻草。索恩点点头。“找时间输一场，”他说，“那你才知道自己在干什么。”
 # en: You trade blows until the bell. Thorne looks pleased. "A draw is a fight you both learned from," he says.
@@ -233,18 +275,18 @@ opt.right.say.1 [2d8c31] = 准备比天赋更重要，一个四年级生曾这�
 @event jit_long_break
 # en: The Long Break
 title [66ec9d] = 长假
-# en: The term is over and the castle empties. A break is your own: no lectures, and four free visits a day if you stay at the castle or go home, three if you take on paid work. Some friends leave; some stay. Letters come instead.
-text [89ccf1] = 学期结束了，城堡空了下来。假期是你自己的：没有课，如果留在城堡或者回家，每天有四个空闲时段；如果去打工，就是三个。有些朋友走了，有些留下。信件取而代之。
+# en: The term is over and the castle empties. {off_campus: You watch it go from the barge rail, your trunk at your feet.|} A break is your own: no lectures, and four free visits a day if you stay at the castle or go home, three if you take on paid work. Some friends leave; some stay. Letters come instead.
+text [75d834] = 学期结束了，城堡空了下来。{off_campus: 你站在驳船栏杆边看着它远去，箱子就在脚边。|}假期是你自己的：没有课，如果留在城堡或者回家，每天有四个空闲时段；如果去打工，就是三个。有些朋友走了，有些留下。信件取而代之。
 # en: An emptying castle courtyard, trunks being loaded onto a barge, a few students waving and a few staying behind.
 scene [a85881] = 渐渐空下来的城堡庭院，箱子被搬上驳船，几个学生在挥手，几个留了下来。
 # en: Make plans later
 opt.left.label [ce1835] = 以后再计划
-# en: You put your feet up for an afternoon first. The castle is very quiet, and very much yours.
-opt.left.say.1 [547a12] = 你先把脚翘起来歇了一个下午。城堡非常安静，完完全全是你的。
-# en: Walk the empty halls
-opt.right.label [e1c6ce] = 在空荡荡的大厅里走走
-# en: Your footsteps echo. The kitchens are open all day on a break, the cook says, and the cook is lonely.
-opt.right.say.1 [69df98] = 你的脚步声回荡着。厨师说，假期里厨房整天开着，而厨师很寂寞。
+# en: {off_campus: You put your feet up for an afternoon first. Home is very quiet after the castle, and nobody rings a bell at you.|You put your feet up for an afternoon first. The castle is very quiet, and very much yours.}
+opt.left.say.1 [90e8ec] = {off_campus: 你先把脚翘起来歇了一个下午。离开城堡，家里安静极了，也没有钟声冲你响。|你先把脚翘起来歇了一个下午。城堡非常安静，完完全全是你的。}
+# en: {off_campus: Walk round home|Walk the empty halls}
+opt.right.label [2cb97b] = {off_campus: 在家里转转|在空荡荡的大厅里走走}
+# en: {off_campus: Everything is smaller than you remember. Your old room is full of apples now, and someone has kept your bed made anyway.|Your footsteps echo. The kitchens are open all day on a break, the cook says, and the cook is lonely.}
+opt.right.say.1 [21cdea] = {off_campus: 一切都比你记得的要小。你原来的房间现在堆满了苹果，可还是有人把你的床铺得整整齐齐。|你的脚步声回荡着。厨师说，假期里厨房整天开着，而厨师很寂寞。}
 
 @event jit_counter
 # en: Across the Counter
@@ -289,10 +331,10 @@ scene [8e5ce0] = 一个学生和一位官员隔着堆满文件的桌子对坐，
 opt.left.label [5ceb95] = 有道理
 # en: You resolve to argue only with people who aren't holding a ledger.
 opt.left.say.1 [5a9666] = 你决定以后只跟手里没拿账本的人争论。
-# en: Remember how the steward folded
-opt.right.label [ee62b3] = 记住舍监是怎么让步的
-# en: She folded when you asked to see the line. You make a note: always ask to see the line.
-opt.right.say.1 [fe3ee8] = 你要求看那一行时，她就让步了。你记下一条：永远要求看那一行。
+# en: Remember the steward and her list
+opt.right.label [38d6d1] = 记住舍监和她的名单
+# en: However it went with the steward, the lesson was the same: the list was her whole argument. You make a note: always ask to see the line.
+opt.right.say.1 [9228ea] = 不管和舍监那次结果如何，道理都一样：那份名单就是她全部的理由。你记下一条：永远要求看那一行。
 
 @event jit_infirmary
 # en: A Word From the Infirmary

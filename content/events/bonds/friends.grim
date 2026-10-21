@@ -161,7 +161,6 @@ scene: A big student in a greenhouse holding his ear close to a row of seedlings
 text: You've got a decision to make, and Tobias offers to ask the greenhouse. "They're good judges," he says. "Plants don't lie. They just turn towards what's good for them." He holds a seedling up to your face. {~It leans toward you, slowly.|It leans away, very slightly, and Tobias frowns.}
 > left: Do what the seedling says
   mood +small
-  lore -tiny
   say: {~"Yes, then," Tobias says, satisfied. It turns out to be the right call, though you'll never be sure it was the seedling's.|"Not that, then," he says, and you don't, and you never find out what would have happened, which is how good advice usually works.}
 > right: Ask him what he thinks
   rel tobias +small
@@ -314,7 +313,7 @@ text: Professor Vey holds up a set of lock picks found outside the Restricted Se
     say: He talks. It's a masterpiece: picks, a jackdaw, a misunderstanding about a cupboard. Vey doesn't believe a word and lets him go anyway, for the performance.
   else:
     rel corvin -small
-    say: He talks, and it doesn't work. A detention, his last but one, they tell him. He laughs it off. His hands shake for the rest of the day.
+    say: He talks, and it doesn't work. Vey can't prove the picks are his, so there's no detention; she keeps them, and writes his name in a little book. He laughs it off. His hands shake for the rest of the day.
 
 @event corvin_cartographer_hint
 title: The Club That Doesn't Exist
@@ -370,25 +369,27 @@ class: routine
 tone: tense
 trigger: social
 actor: mir
-when: knows(mir.workshop) and rel(mir) >= 12 and bond(mir) != "partner"
+when: flag(mir_workshop_shut) and rel(mir) >= 12 and bond(mir) != "partner"
 weight: 10
 art: gear
 tags: social
 scene: An artificer sitting on the floor outside a padlocked door, back against it, notebooks stacked beside them, a student coming down the corridor with a box.
-text: Mir's workshop is still padlocked. They've been working in the corridor outside it, on the floor, for a week. "It's fine," they say, soldering on their knee. "It's character-building. My character is very built."
-> left: Find them a room
+text: Mir's workshop is still padlocked, and whatever they've been making do with isn't working: they've been soldering in the corridor outside the old door, on the floor, for a week. "It's fine," they say, soldering on their knee. "It's character-building. My character is very built."
+> left: Give them your desk
   rel mir +large
-  gold -small
-  say: You find a disused storeroom above the stables and bribe the porter with the good biscuits. Mir moves in within the hour. The first thing they build there is a sign: "Workshop. Fires: probably fine."
-> right: Petition the faculty with them
+  study -small
+  say: You clear the desk in your room and carry their boxes up four flights. Mir moves in within the hour. The first thing they build there is a sign: "Workshop. Fires: probably fine." You do your reading on the stairs for a month.
+> right: Ward the workshop and prove it
+  hint: Make the old room safe, and show Thorne.
   rel mir +small
-  challenge appeal journeyman:
+  challenge spell journeyman:
     win:
+      unflag mir_workshop_shut
       renown +tiny
-      say: Thorne hears you out, sighs like a dying bellows, and gives Mir the key back on condition they keep a bucket within reach at all times. They keep three.
+      say: You spend a week warding every bench. Thorne lights a match on the worst one, watches it go out on its own, sighs like a dying bellows and hands Mir the key. "Bucket within reach," he says. They keep three.
     lose:
       mood -tiny
-      say: The faculty says no. Mir says it's fine. It isn't. But you sit in the corridor with them that evening and hand them screws, and it's less fine with company.
+      say: The ward holds until it doesn't. Thorne puts out the bench with one hand and files the request with the other. But you sit in the corridor with Mir that evening and hand them screws, and it's less fine with company.
 
 @event mir_family_clocks
 title: Not a Hobby
@@ -396,21 +397,21 @@ class: routine
 tone: tense
 trigger: social
 actor: mir
-when: knows(mir.family) and rel(mir) >= 15
+when: flag(mir_family_done) and rel(mir) >= 15
 weight: 9
 art: letter
 tags: social
 scene: A letter on a workbench, held down by a small brass clock, the artificer reading it with their goggles pushed up and their jaw tight.
-text: Another letter from Mir's family. They want them home this summer, at the clockworks, "doing something real". Mir reads it twice, then puts a clock on top of it so it can't get away. "Everything I've built is real," they say. "It ticks."
-> left: Help them write back
+text: {flag(mir_family_wrote): Mir's mother has named her prize: the guild medal for young artificers, entries closing in a fortnight. Mir has three inventions half-built and no time. "Win a prize," they mutter, to a clock. "Win a prize."|A letter from Mir's father, the first he's ever written them himself: could they send something they've made, to show the men at the clockworks? Mir has started the reply four times.}
+> left: Help them write it up
   charm +small
   rel mir +small
   study -tiny
-  say: You write it together, all evening: what Mir built this year, what it does, who uses it. It's three pages of inventions and not one apology. Mir signs it with a small drawing of a gear. "They won't read it," they say. "But it's written."
-> right: Tell them to bring an invention home
+  say: {flag(mir_family_wrote): You write up the entry together, all evening: what it does, why it matters, who'll use it. It's three pages and not one apology. "Whatever the judges say," Mir says, "it's finished."|You write it together, all evening: what Mir built this year, what it does, who uses it. Three pages of inventions and not one apology. "He'll read every word," Mir says. "Twice. He reads instructions twice."}
+> right: Tell them to send the owl
   rel mir +medium
   mood -tiny
-  say: "Show them," you say. "Something that ticks." Mir looks at the brass owl on the shelf for a long time. That summer they take it home. The letter they send back is very short: "Dad cried. He says it's not a hobby. I said I know."
+  say: {flag(mir_family_wrote): They send in the brass owl. It comes second. Mir's mother writes back one line: "Second is a prize." Mir frames it.|Mir looks at the brass owl on the shelf for a long time. Then they wrap it and post it. The letter back is very short: "Dad cried. He says it's not a hobby. I said I know."} You miss the owl on the shelf.
 
 # ---------------- Kael ----------------
 
@@ -475,7 +476,6 @@ scene: A frosted window in a common room, a pale boy and another student drawing
 text: Kael shows you a children's trick from the North: you draw on a frosted window and the frost finishes the drawing for you. {~He draws a line; the frost turns it into a fern.|You draw a circle; the frost turns it into a snowflake the size of your hand.}
 > left: Draw something silly
   mood +small
-  arcana -tiny
   say: {~You draw a goat. The frost, after a moment's thought, gives it a magnificent beard. Kael makes a sound you've never heard from him. It's a laugh.|You draw Professor Thorne. The frost gives him icicles for eyebrows. Kael has to sit down.}
 > right: Ask him how it works
   arcana +small
@@ -553,6 +553,7 @@ text: Nessa's quill has escaped. It's loose in the castle, writing news. You've 
 > right: Leave the headline about you up
   renown +small
   rel nessa -tiny
+  alignment -tiny
   say: You leave it up. People read it for a week. Nessa takes it down eventually, with a look. "It made it up," she says. "You know that." You do. It's still a lovely headline.
 
 # ---------------- Bram ----------------

@@ -100,11 +100,11 @@ text: Three Thornwick students in green are laughing at the Lumenhold crest in t
 > left: Stand with her
   rel lyra +medium
   health -tiny
-  say: You stand shoulder to shoulder. The Thornwick students take one look at the two of you and remember an appointment elsewhere. Lyra doesn't thank you. She does walk with you as far as the stairs, which is unheard of.
+  say: You stand shoulder to shoulder. The Thornwick students take one look at the two of you and remember an appointment elsewhere, though the last one flicks a jinx at your ankles on the way out, and it stings for an hour. Lyra doesn't thank you. She does walk with you as far as the stairs, which is unheard of.
 > right: Let her handle it
   study +small
   rel lyra -tiny
-  say: You leave her to it. She handles it alone, magnificently, and you hear about it at dinner from four different people. "You missed it," she says, passing. She sounds as if she minds.
+  say: You leave her to it and get an hour's reading done in the library. She handles it alone, magnificently, and you hear about it at dinner from four different people. "You missed it," she says, passing. She sounds as if she minds.
 
 @event lyra_mother_watches
 title: Her Mother Watches You Win
@@ -380,8 +380,9 @@ text: Two fourth-years have a first-year backed against the boathouse wall. Befo
 > left: Stand beside him
   flag bram_softened
   health -tiny
+  alignment +tiny
   rel bram +medium
-  say: You step up next to him. The fourth-years look at the two of you and decide it isn't worth it. Bram watches them go. Then he looks at you as if you've done something he can't file. "Don't make it weird," he says. He walks the first-year back to the castle himself.
+  say: You step up next to him. One of them shoves you into the wall for form's sake, and then they decide it isn't worth it. Bram watches them go. Then he looks at you as if you've done something he can't file. "Don't make it weird," he says. He walks the first-year back to the castle himself.
 > right: Run for a professor
   alignment +tiny
   rel bram +tiny
@@ -450,12 +451,19 @@ weight: 8
 art: mask
 tags: rival
 scene: A chalked odds board in a dim corner of the common room, a student's name on it with long odds against them, a lanky bookmaker taking coins.
-text: Corvin is running a book on you: whether you'll fail your next exam. The odds aren't flattering. Half the common room has a coin on it. He catches your eye across the room and raises the chalk, as if to say: well?
+text: Corvin is running a book on you: whether you'll fail Friday's mock paper. The odds aren't flattering. Half the common room has a coin on it. He catches your eye across the room and raises the chalk, as if to say: well?
 > left: Bet on yourself
+  hint: A wager on the mock: study for it.
   gold -small
-  study +small
   rel corvin -tiny
-  say: You put your coin on yourself, at his long odds. Then you study like you've never studied. You pass. Corvin pays out, every coin, and says, "Fine. I'll stop." He doesn't quite, but he shortens the odds.
+  challenge research journeyman:
+    win:
+      gold +medium
+      study +small
+      say: You put your coin on yourself, at his long odds. Then you study like you've never studied. You pass the mock. Corvin pays out, every coin, and says, "Fine. I'll stop." He doesn't quite, but he shortens the odds.
+    lose:
+      study +tiny
+      say: You put your coin on yourself and study all week. You pass, by one mark under his line. Corvin keeps your coin and chalks the result up with a flourish. "Close," he says. "Closer than the odds."
 > right: Shrug it off
   mood -small
   rel corvin +tiny

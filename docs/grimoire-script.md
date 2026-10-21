@@ -126,7 +126,7 @@ A state's `tick:` (like a hook's `do:`) may use raw amounts: they are monthly ru
 | `name`, `desc`, `art` | Shown in the side panel. `desc` supports tokens. |
 | `kind` | Purely visual: `origin class club job buff debuff neutral`. |
 | `group` | Only one state per group: gaining one removes the others (`elective`, `club`, `job`, `origin`). |
-| `money` | An origin's money situation in one line, shown on the origin screen (`tags: poor` adds a warning). |
+| `money` | An origin's money situation in one line (the menu's own `hint:` says it to the player, in the mirror; feedback 2026-10-20). |
 | `duration` | Default length in months; omit for "until removed". `gain x 3` overrides it. |
 | `hidden: true` | Not shown in the UI (internal bookkeeping). |
 | `day:` | On a plan (`kind: plan`, E2): the break day's recipe while the plan lasts, in place of `@game day_break` (same form, `slot=source[:min-max]`). Start it with the same slot as `day_break` (the plan is often picked in it). Lumenhold: four visits at the castle or at home, three around a gig. |
@@ -532,10 +532,10 @@ day_term: morning=courses noon=social:1-2 afternoon=visit evening=visit night=wo
 day_break: morning=plan afternoon=visit evening=visit night=world:1
 day_last: morning=special:0          # the last day: no map, no pools, only pushed cards (the run's resolution)
 spread: social world                 # these sources' cards are dealt across the day's slots, not drawn in their own
-origins: choose_origin               # the origin screen before the game lists this menu's options
+origins: choose_origin               # the mirror's menu: its options are the origins
 ```
 
-**The origin** (`@game origins:`, playtest 2). The UI shows the menu's options on their own screen before the game, each with its origin state's `money:` line, and a warning when the state is tagged `poor`. `newGame({origin: key})` runs that option before the first month's hooks, so tuition and board already see it. Started without an origin (old callers, some tools), the game still queues the menu as a card.
+**The origin** (`@game origins:`, playtest 2). `newGame({origin: key})` runs that option before the first month's hooks, so tuition and board already see it (tools, tests). `newGame({prologue: true})` (the UI, feedback 2026-10-20) plays the cards `game_start` queued first, the arrival and the menu itself, as month 1 (`s.prologue`), and begins month 1 when they're done, so its hooks see the pick; choosing on the menu records `s.origin` as `applyOrigin` does. Started with neither, the menu is a card in month 1, after the month's charges.
 
 **The wrap-up** (`wrapup:`). Months of the final year listed here stay `break` months, but `wrapup` is true in them: content uses it to offer no break plan, and with no plan there is no board. The map shows the phase as "wrap-up". On the last turn, `day_last:` (if set) replaces the day's recipe and no one comes looking for you, so the month holds only pushed cards: the graduation and the endings' resolution (`turn == max_turns`).
 

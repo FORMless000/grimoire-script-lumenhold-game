@@ -35,8 +35,6 @@
     'title.seed': 'Seed (optional)',
     'title.seedPlaceholder': 'random',
     'title.begin': 'Begin your first year',
-    'origin.heading': 'Who were you before?', 'origin.intro': 'Where you come from decides what you start with, and how hard money will be.',
-    'origin.poorWarning': 'Hard mode for money: plan on working a job most terms.', 'origin.back': 'Back',
     'title.continue': 'Continue · {info}',
     'title.saveInfo': '{name} — {month}, Year {year}',
     'title.howto_html': '<b>Swipe</b> each card left or right (or press ← / →) to choose. Some moments open a <b>menu</b> with more options. Keep your <b>Health, Mood and Crowns</b> above zero for four years — 48 months — and see who you become. Glowing dots above a meter show what a choice will touch.',
@@ -278,12 +276,23 @@
     'settings.intros': 'Introductions', 'settings.introsHint': 'The cards that explain a system the first time you meet it. Off for players who know the academy. The orientation at the start is separate: the first card of a new game lets you skip it.',
     // World expansion 1: a creature's wind-up, lessons and fights with nothing at stake, the kit on the opening screen.
     'fight.windUp': '{name} is winding up: {move}', 'fight.windUpHint': 'It lands when released: step aside, brace or ward for it.', 'fight.windUpNote': 'winding up',
-    'fight.coachTitle': 'Thorne:', 'fight.skipLesson': 'Skip the lesson', 'fight.walkAway': 'Walk away', 'fight.kit': 'Your kit',
+    'fight.coachTitle': 'Thorne:', 'fight.skipLesson': 'Skip the lesson', 'fight.walkAway': 'Walk away',   // skipLesson: the combat bench's (combat/web/app.mjs) only
+    'fight.kit': 'Your kit', 'fight.idle': 'Idle',
+    // The intro's lesson (feedback 2026-10-20): one line per exchange against the mannequin's five telegraphed moves, then
+    // the first exchange you commit first, then the rest.
+    'fight.coach.idle': '"It\'s straw, and it won\'t do a thing this time. Hit it. Get its Health to nothing and you\'ve won."',
+    'fight.coach.strike': '"See what it\'s committed to? You often will. It means to swing at you. Guard."',
+    'fight.coach.spell': '"Fire, this time. A Guard takes only half a spell; a Ward stops all of it, but only half a blow. Pick your shield for the hit that\'s coming."',
+    'fight.coach.guard': '"It\'s hiding behind its guard. The Mana you spend turns to flux; Reclaim turns it back. Do it when nothing can hurt you. Like now."',
+    'fight.coach.reclaim': '"Now it\'s reclaiming, and while it does, it\'s open. Make it pay."',
+    'fight.coach.commit': '"From here you take turns. This time you commit first and it sees your move; next time you\'ll see its. Think what it will do with what it sees."',
+    'fight.coach.finish': '"That\'s a duel. Finish it."',
+    // The lesson as the committed combat bundle still sets it up (its EVENTS entry has these keys and no script): kept until
+    // the F5.11 bundle carries the new entry (combat/setup/foes.mjs), then removed.
     'fight.coach.lead': 'The mannequin moves first and shows you its move: read it before you pick yours.',
     'fight.coach.read': 'Each button shows what it does and what it costs. Strike is free; spells cost Mana.',
     'fight.coach.ward': 'A ward stops a spell and halves a blow. Raise it when something is coming.',
     'fight.coach.mana': 'Spent Mana becomes loose magic (the ↻ on your bar): Reclaim gathers it back.',
-    'fight.coach.finish': 'Now finish it. Losing a lesson costs nothing; losing well is a skill too.',
     'fight.loading': 'The fight is starting…', 'fight.engine': 'Engine analysis', 'fight.evalBar': 'The engine’s evaluation for you, in Health',
     'fight.engineHead': 'Engine · depth {depth} · {nodes}k positions · {s} s', 'fight.engineDeeper': 'searching deeper…', 'fight.engineThinking': 'Engine · thinking…',
     'fight.engineWaits': 'Engine · waits for your turn', 'fight.engineTime': 'Engine time per turn', 'fight.seconds': '{n} s',
@@ -313,7 +322,7 @@
     'fight.unfitHealth': 'You come in hurt (Health {n}, under {full}): your HP in the fight starts low.',
     'fight.context.practice_duel': 'Practice duel', 'fight.context.real_conflict': 'A real fight', 'fight.context.public_duel': 'Public duel',
     'fight.context.rehearsal': 'Rehearsal', 'fight.context.ring_bout': 'Ring bout',
-    'fight.lessonTitle': 'A lesson', 'fight.freeTitle': 'Nothing at stake', 'fight.nothingAtStake': 'win or lose, nothing is lost and nothing changes afterwards',
+    'fight.lessonTitle': 'A lesson', 'fight.lessonStakes': 'Thorne coaches every exchange; only your mood rides on it', 'fight.freeTitle': 'Nothing at stake', 'fight.nothingAtStake': 'win or lose, nothing is lost and nothing changes afterwards',
     'fight.healthBelow': 'Health is lost only if you end below {n} HP', 'fight.rebateBoth': '{pct}% of the Health and Mana lost comes back',
     'fight.rebateHealth': '{pct}% of the Health lost comes back', 'fight.rebateMana': '{pct}% of the Mana spent comes back',
     'fight.watched': 'A crowd is watching: Renown is won and lost ({pct}% of a loss comes back)', 'fight.unwatched': 'No crowd: Renown isn’t at stake',

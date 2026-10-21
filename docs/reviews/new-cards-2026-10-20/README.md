@@ -449,3 +449,60 @@ The lesson always says an exam is tomorrow morning, but it is an auto card in an
 The setup explicitly tells the player their Mana is spent, but eligibility reads only knowing Heartprice and term. A player at full Mana gets the same claim, weakening the choice's stated reason to pay in health.
 
 **Fix:** Gate the depleted-Mana version on the actual resource, or describe choosing to conserve Mana rather than falsely saying none remains.
+
+## Resolution (October 20, 2026)
+
+Each finding was checked against the source before fixing. 45 are fixed; #38 is declined. The critic's verdict above stands as written; these fixes await a re-review.
+
+**Declined: #38 `lyra_sabotage_returned`.** A prank war is not a moral choice in this game: `life_prank_war`'s Retaliate moves no alignment, and this card escalates the same donkey-smoke rivalry. Adding Hollow here would make the two disagree.
+
+**Partly taken:**
+- **#11:** the card quoted the canon fact word for word. It now reads it as the critic does: she sees herself *ahead* only beside someone.
+- **#32:** the canon half is fixed: failure gives no detention, since one more would send him home. The check stays a `chance`, because it is Corvin talking, not the player.
+
+| # | Card | Fix |
+|---|---|---|
+| 1 | `ww_way_home` | each `say` runs before the haul is emptied; regression test in `test/whisperwood.test.js` |
+| 2 | `item_spoon_daughters` | no replacement spoon promised; giving it back is the trade |
+| 3 | `corvin_goat_clause` | queues `soc_loan_repaid` with Corvin; he *promises* three weeks |
+| 4 | `corvin_bad_odds` | a self-contained wager on a mock paper: a research check pays out or keeps your coin |
+| 5 | `ww2_waystone` | an empty bag offers a coin from your purse (`gold -tiny`), with its own text |
+| 6 | `ww_spinner_meet`, `ww_spinner_fight_weak` | "queen of the Hush", "the biggest thing in the wood" |
+| 7 | `corvin_lucky_deck` | only after `corvin_confiscation_vault` |
+| 8 | `mir_padlock` | reads `flag(mir_workshop_shut)`; a later beat: give up your desk, or ward the room (a win reopens it) |
+| 9 | `mir_family_clocks`, `mir_family_summons` | clocks is the aftermath of `mir_family_business` (the prize, or the father's letter); summons is a different problem (the family wants to meet you) |
+| 10 | `seraphine_dark_room` | after `seraphine_overwhelmed`; a callback: sorting paints by feel in the dark |
+| 12 | `tobias_ex` | "the plant on your sill", no assumed gift |
+| 13 | `mir_tinkering_evenings` | outcome variants realigned: 0 is the music box, 1 the kettle |
+| 14 | `lyra_second_place` | her line follows the ranking (back / make it two / break the tie) |
+| 15 | `lyra_not_second` | complaint and loss follow the variant; the crisis isn't called an excuse |
+| 16 | `brk_holiday_edition` | break-neutral news (the cook's habit, a portrait that moved) |
+| 17 | `jit_real_negotiation` | the recap is true on every path |
+| 18 | `jit_long_break` | home and castle versions (`off_campus`) |
+| 19 | `ww3_always_midnight` | daytime descents only (`ww_hush == 0`) |
+| 20 | `ww_spinner_hoard` | names Maud when `maud.tuppence` is known |
+| 21 | `ww4_moonpetal_bloom` | no glint once the locket was found |
+| 22, 23 | `tobias_plants_vote`, `kael_frost_fern` | skill decrement removed |
+| 24 | `item_hazel_tuned` | the say shows the wand drawing on you |
+| 25 | `lyra_allies_thornwick` | a parting jinx shown; the study is shown |
+| 26 | `bram_steps_in` | a shove shown; `alignment +tiny` for standing in |
+| 27 | `mir_notebooks` | `not knows(mir.notebooks)` |
+| 28 | `item_borrowed_initials` | asking its worth sells him your old maps (`gold +small`, `rel grimsby -tiny`) |
+| 29 | `ww2_grumpy_oak`, `ww2_briar_maze`, `ww2_fog_wall` | the heartwood skips the acorn; solving the maze or fog teaches (`lore`/`arcana +tiny`), the item shortcut doesn't |
+| 30 | `nessa_corrections_column` | "The reader was delighted" |
+| 31 | `lyra_teach_spell` | `challenge spell apprentice+ likely` |
+| 33 | `nessa_argument` | `challenge appeal vs nessa.charm` |
+| 34 | `home_fields_harvest_help` | Hollow becomes `mood -tiny` (the neighbours' wariness) |
+| 35 | `item_robes_copied` | alignment removed |
+| 36 | `corvin_last_warning` | alignment removed; both sides learn the fact; the promise costs a sleepless night |
+| 37 | `nessa_quill_loose` | `alignment -tiny` for keeping the false headline |
+| 39 | `shop_grimsbys` | "like an old customer", no purchase or year |
+| 40 | `ww_spinner_fight` | "her share", matching the fixed toll |
+| 41 | `shop_newt` | "The Newt's Counter"; day or night lines by slot |
+| 42 | `lesson_rime` | winter snow, or frost he lays on the flagstones |
+| 43 | `kael_bakery_window` | snow in winter, rain otherwise |
+| 44 | `home_fields_night_sky` | `slot: evening`; you wait for dark |
+| 45 | `lesson_siphon` | "lectures at eight"; `slot: night` |
+| 46 | `lesson_heartprice` | the Mana line reads `mana`; `slot: night` |
+
+**A guard for next time.** The lint now errors on a skill lowered by an option (`tools/grim.js`; `costs.md`: a skill is never a cost). It found one older card, `tutor_hopeless`, whose contraption now costs its parts (`gold -tiny`).

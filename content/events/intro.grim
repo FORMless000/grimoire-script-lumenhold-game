@@ -2,9 +2,13 @@
 # the quick way (a line, nothing else); right engages, with at most a line, a fact or a tiny warm-up. Never a cost.
 #   The orientation (feedback 2026-10-20): one condensed run of cards at the very start, before the registrar's list and
 #   enrolment. The Welcome asks first: left skips it, right plays along, and then each card leads straight to the next
-#   whichever side you take: tour, the wrong tower (a negotiation lesson), lunch, Vey's tea (a check lesson), the purse,
-#   your room, the safety talk (slice_ward_lesson, so you know Ward before the practice fight), the practice circle (a
-#   fight lesson) and your kit. Skipping never skips Ward: the safety talk then comes in its usual place, after enrolment.
+#   whichever side you take: Marrow's question (what is just? asked again on the eve of graduation, isolde_asks_again),
+#   the tour (where you meet Bram; following him shows you the places that matter, intro_places), the wrong tower (a
+#   negotiation lesson), lunch, Vey's tea (a check lesson), the purse, your room, the safety talk (slice_ward_lesson, so
+#   you know Ward before the practice fight), the practice circle (a fight lesson, coached exchange by exchange) and your
+#   kit. Skipping never skips Ward: the safety talk then comes in its usual place, after enrolment.
+#   The lessons' checks are fair (even odds, pitched at a first-year's skill: feedback 2026-10-20), and their only
+#   consequence is a tiny change of Mood.
 #   Just-in-time cards: once each, the first time a system matters; off with the title screen's "Skip the introductions"
 #   or the Settings row (flag skip_intros).
 #   The kit card (intro_kit) is Thorne's, not Mir's (the plan said Mir): it would pre-empt Mir's own first meeting.
@@ -26,9 +30,39 @@ text: Floating candles, two hundred first-years trying not to look up. Headmistr
 > left: Skip the orientation
   say: You slip out ahead of the crowd to find the registrar's list. Whatever the castle has to teach you, you'll learn it the hard way. (The safety talk is compulsory: you'll still have that.)
 > right: Stay for the orientation
+  queue intro_what_is_just now
+  say: You stay. The hall empties toward the prefects, and the headmistress comes down from the lectern, straight toward you.
+
+# Marrow's question (feedback 2026-10-20): what you answer is remembered, and nothing else. On the eve of graduation she
+# asks again (isolde_asks_again, calendar.grim) and says whether your four years kept to it.
+@event intro_what_is_just
+title: What Is Just?
+class: story
+tone: warm
+trigger: queued
+type: menu
+art: scales
+tags: intro story
+scene: A tall headmistress with a small notebook stopping in front of one first-year in an emptying hall, candles guttering overhead.
+text: Headmistress Marrow stops in front of you, notebook open, as if she'd been looking for you in particular. "One question before the prefects have you," she says. "I ask it of everyone. Very few remember. What do you think is just?"
+> mercy: "Mercy."
+  hint: Giving people more than they've earned.
+  flag just_mercy
   learn isolde.mercy
   queue intro_tour now
-  say: You stay. On her way out Marrow stops in front of you. "What do you think is just?" she asks, and listens to your answer, and writes something down. "Ask me again in four years," she says.
+  say: "Mercy," she repeats, and writes it down. "Expensive. Most people who say it haven't been asked to pay for it yet." She closes the notebook on her finger. "Ask me again in four years."
+> fair: "Fairness."
+  hint: One rule, the same for everyone.
+  flag just_fair
+  learn isolde.mercy
+  queue intro_tour now
+  say: "Fairness," she repeats, and writes it down. "The same rule for the duke and the pickpocket. Harder than it sounds, when you know one of them." She closes the notebook on her finger. "Ask me again in four years."
+> strong: "Keeping your own safe."
+  hint: Whatever it takes, for the people who are yours.
+  flag just_strong
+  learn isolde.mercy
+  queue intro_tour now
+  say: "Keeping your own safe," she repeats, and writes it down. "An honest answer. Most people dress it up." She closes the notebook on her finger. "Ask me again in four years. I'd like to know who you decided was yours."
 
 @event intro_tour
 title: The Prefect's Tour
@@ -37,15 +71,36 @@ tone: light
 trigger: queued
 art: map
 tags: intro story
+actor: bram
+on_show:
+  meet bram
 scene: A prefect in a red sash leading a straggle of first-years through a castle corridor, holding up a ledger like a flag.
-text: A prefect in a red sash gathers the first-years with a ledger. "Hollis. Prefect. Tour. Each day you get a few free hours, and you spend them on the map: one place an hour. Some doors open only once you've earned them. Some never open for you. Keep up."
+text: A burly prefect in a red sash gathers the first-years with a ledger. "Bram Hollis. Prefect. Tour. Each day you get a few free hours, and you spend them on the map: one place an hour. Some doors open only once you've earned them. Some never open for you. Keep up."
 > left: Skip the tour
   queue intro_wrong_tower now
   say: You slip away and find your own way round. You get lost twice and find the kitchens once, which is a fair trade.
 > right: Follow him round
-  queue intro_wrong_tower now
-  rel bram +tiny
+  queue intro_places now
   say: Bram walks you past every door and names its rules. At a blank stretch of wall, a boy with a lockpick behind his ear winks at you, as if the wall were a joke you'd both get later.
+
+# The tour's second half (feedback 2026-10-20): the places with the most uses, named once, by the prefect who'd rather
+# not. Every one is open from the first day.
+@event intro_places
+title: Where Things Are
+class: story
+tone: light
+trigger: queued
+actor: bram
+art: map
+tags: intro story
+scene: A prefect reading from a ledger at the top of a castle stair, pointing down corridors with his quill, first-years craning to follow.
+text: Bram reads the castle to you off his ledger. "Job Board, by the stairs: work and wages. Library: revision tables before every exam. Infirmary, on the Alchemy floor: Sister Amaranth, for when you break something, yourself included. The village, down the hill: robes and wands on market day, tea at Mabel's, tonics at Pell's." He snaps the ledger shut. "Questions? No. Good."
+> left: "No questions."
+  queue intro_wrong_tower now
+  say: "Excellent," says Bram, and means it. He leaves you at the foot of the stairs with a map in your head and a strong sense of having been processed.
+> right: Ask what he left out
+  queue intro_wrong_tower now
+  say: He looks pained. "The Gilded Newt, in the village, after dark: supper, cider and people you shouldn't be seen with. The Lakeshore, for thinking. That's all." He writes something in the ledger. It might be your name.
 
 @event intro_wrong_tower
 title: The Wrong Tower
@@ -61,15 +116,17 @@ text: Your trunk has gone to the wrong tower. The house steward has a list, and 
   queue intro_lunch_alone now
   say: You haul it across two bridges and up ninety stairs. The steward ticks something on the list as you pass, satisfied that it was always right.
 > right: Talk her round
-  hint: A negotiation, as a lesson: nothing to lose. Until the negotiation game arrives, charm, lore and guile decide it.
+  hint: A negotiation, as a lesson: a fair chance, and nothing more than your mood at stake. Until the negotiation game arrives, charm, lore and guile decide it.
   queue intro_lunch now
   queue intro_lunch_alone now
-  challenge negotiate novice certain:
+  challenge negotiate novice+:
     win:
+      mood +tiny
       say: You ask to see the list. Then the line. Then the tower on the line. The steward goes pink, corrects it in red ink and sends two porters. "Clerical," she says.
     partial:
       say: She won't change the list, but she lends you a porter "as a courtesy". The porter and the list never speak again.
     lose:
+      mood -tiny
       say: She has an answer for everything, most of it the list. You carry the trunk yourself in the end, but you've learned how she argues, which is worth a tower.
 
 @event intro_lunch
@@ -80,7 +137,7 @@ trigger: queued
 art: meal
 tags: intro story
 cast:
-  friend: any where met(friend) and tagged(friend, peer)
+  friend: any where met(friend) and tagged(friend, peer) and not npc_is(bram)
 scene: Long refectory tables at noon, first-years spread along the benches, one empty place beside a familiar face.
 text: Lunch in the Great Hall, under the gallery where the refectory tables run. You can sit anywhere. At noon people find you, or you find them; either way, who you sit with tends to become who you know.
 > left: Eat with whoever's there
@@ -91,12 +148,15 @@ text: Lunch in the Great Hall, under the gallery where the refectory tables run.
   rel friend +tiny
   say: {friend} shifts along the bench to make room. You talk about nothing much, which is how most friendships start.
 
+# Lunch for a player who has met no fellow student yet (usual at this point): the card above needs someone to sit with,
+# and every peer has a first meeting of their own that lunch mustn't take. Both are queued; exactly one plays. Bram, met
+# on the tour, is a prefect, not a lunch companion: he counts for neither.
 @event intro_lunch_alone
 title: The Lunch Table
 class: story
 tone: warm
 trigger: queued
-when: not met(lyra) and not met(tobias) and not met(seraphine) and not met(corvin) and not met(mir) and not met(kael) and not met(nessa) and not met(bram) and not met(ilse)
+when: not met(lyra) and not met(tobias) and not met(seraphine) and not met(corvin) and not met(mir) and not met(kael) and not met(nessa) and not met(ilse)
 art: meal
 tags: intro story
 scene: Long refectory tables at noon, first-years spread along the benches, a student with a tray looking for a place.
@@ -121,17 +181,19 @@ text: Professor Vey stops you in a corridor and offers you a cup of tea. There i
   queue intro_purse now
   say: "No, thank you," you say. Vey sighs, drinks the tea that isn't there, and walks on. You feel as though you've failed something small.
 > right: Pretend to drink it
-  hint: A check, as a lesson: your guile against a novice's odds, nothing to lose.
+  hint: A check, as a lesson: your guile, a fair chance, and nothing more than your mood at stake.
   queue intro_purse now
-  challenge deceive novice+ certain:
+  challenge deceive novice-:
     win:
       learn vey.tests
+      mood +tiny
       say: You sip, wince at the heat and compliment the blend. Vey laughs, delighted, and writes something down. "Points," she says. "Nobody compliments the blend."
     partial:
       learn vey.tests
       say: You drink it convincingly and then try to hand back the cup. There is no cup. Vey smiles. "Half points," she says.
     lose:
       learn vey.tests
+      mood -tiny
       say: You laugh halfway through the sip. Vey sighs, theatrically. "Most do," she says. "I keep score, you know. Everyone starts at nought."
 
 @event intro_purse
@@ -182,17 +244,19 @@ text: Professor Thorne has chalked a circle and stood a straw mannequin in it. "
   queue intro_kit now
   say: You watch three first-years go down to the mannequin, then one beat it. Thorne says the same thing to all four: "Good. Again."
 > right: Step into the circle
-  hint: A lesson: nothing to win or lose, and you may skip it at any time.
+  hint: A lesson: Thorne talks you through every exchange, and only your mood is at stake.
   queue intro_kit now
   challenge combat novice certain:
     win:
       learn thorne.lost
+      mood +tiny
       say: The mannequin topples in a puff of straw. Thorne nods. "Now lose one sometime," he says. "Then you'll know what you're doing."
     partial:
       learn thorne.lost
       say: You trade blows until the bell. Thorne looks pleased. "A draw is a fight you both learned from," he says.
     lose:
       learn thorne.lost
+      mood -tiny
       say: The mannequin wins, which is humiliating and educational. Thorne helps you up. "I lost to a storm once," he says. "Badly. Losing well is the whole art."
 
 @event intro_kit
@@ -272,11 +336,11 @@ slot: morning
 art: house
 tags: intro
 scene: An emptying castle courtyard, trunks being loaded onto a barge, a few students waving and a few staying behind.
-text: The term is over and the castle empties. A break is your own: no lectures, and four free visits a day if you stay at the castle or go home, three if you take on paid work. Some friends leave; some stay. Letters come instead.
+text: The term is over and the castle empties. {off_campus: You watch it go from the barge rail, your trunk at your feet.|} A break is your own: no lectures, and four free visits a day if you stay at the castle or go home, three if you take on paid work. Some friends leave; some stay. Letters come instead.
 > left: Make plans later
-  say: You put your feet up for an afternoon first. The castle is very quiet, and very much yours.
-> right: Walk the empty halls
-  say: Your footsteps echo. The kitchens are open all day on a break, the cook says, and the cook is lonely.
+  say: {off_campus: You put your feet up for an afternoon first. Home is very quiet after the castle, and nobody rings a bell at you.|You put your feet up for an afternoon first. The castle is very quiet, and very much yours.}
+> right: {off_campus: Walk round home|Walk the empty halls}
+  say: {off_campus: Everything is smaller than you remember. Your old room is full of apples now, and someone has kept your bed made anyway.|Your footsteps echo. The kitchens are open all day on a break, the cook says, and the cook is lonely.}
 
 @event jit_counter
 title: Across the Counter
@@ -325,8 +389,8 @@ scene: A student and an official facing each other across a desk heaped with pap
 text: Not every talk is a quick word. Some are negotiations: someone across the table with reasons of their own, and something at stake. Charm, lore and guile all count, and so does how you come across today. The steward and her list were practice.
 > left: Fair enough
   say: You resolve to argue only with people who aren't holding a ledger.
-> right: Remember how the steward folded
-  say: She folded when you asked to see the line. You make a note: always ask to see the line.
+> right: Remember the steward and her list
+  say: However it went with the steward, the lesson was the same: the list was her whole argument. You make a note: always ask to see the line.
 
 @event jit_infirmary
 title: A Word From the Infirmary

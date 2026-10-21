@@ -72,8 +72,12 @@
     setting.context = setting.context || (C.FOES[foe.id] && C.FOES[foe.id].context) || DEFAULT_CONTEXT[req.kind] || 'practice_duel';
     if (typeof setting.observers !== 'boolean') setting.observers = false;
     if (typeof setting.witnesses !== 'boolean') setting.witnesses = true;
-    // A lesson (`tutorial: [keys]`) or a fight with nothing at stake (`stakes: none`, world expansion 1): no bar moves.
-    if (ev && at(ev.tutorial, i)) setting.tutorial = [].concat(at(ev.tutorial, i));
+    // A lesson (`tutorial: [keys]`, one coach mark per exchange) or a fight with nothing at stake (`stakes: none`, world
+    // expansion 1): no bar moves. A lesson may script the foe's first moves (`script`, feedback 2026-10-20: scriptedMove).
+    // Both are lists already, so they aren't per-challenge lists (at()) unless they nest.
+    const list = (v) => (Array.isArray(v) && Array.isArray(v[0]) ? v[i] : v);
+    if (ev && list(ev.tutorial)) setting.tutorial = [].concat(list(ev.tutorial));
+    if (ev && list(ev.script)) setting.script = [].concat(list(ev.script));
     if (ev && at(ev.stakes, i) === 'none') setting.stakes = 'none';
     const firstLeader = ev && at(ev.firstLeader, i) != null ? at(ev.firstLeader, i) : 1;
     const p = req.player;
@@ -93,6 +97,17 @@
     return { request: req, state, foe, setting, names, rules: C.RULES_VERSION };
   }
 
+  // A lesson's scripted foe (EVENTS `script`, feedback 2026-10-20): its move for this exchange as the script writes it
+  // ('idle' stands still: the core's `cancel`), when that's legal; null otherwise, and after the script, so the AI decides.
+  function scriptedMove(fight) {
+    const C = combat(), s = fight.state, sc = fight.setting && fight.setting.script;
+    if (!sc || s.result || C.actorToMove(s) !== 1) return null;
+    const want = sc[s.round - 1];
+    if (!want) return null;
+    const id = want === 'idle' ? 'cancel' : want;
+    return C.legalActions(s).includes(id) ? id : null;
+  }
+
   // The finished fight → the result the engine takes (choose(key, {fights: [result]}) or a resolver's return).
   function fightResult(fight) {
     const C = combat(), req = fight.request, p = req.player;
@@ -108,13 +123,13 @@
     try {
       for (let n = 0; !s.result && n < maxActions; n++) {
         const side = C.actorToMove(s); if (side == null) break;
-        const d = C.chooseAIAction(s, s.config.ai[side], ctx);
-        C.applyChoice(s, d.id);
+        const scripted = scriptedMove(fight);
+        C.applyChoice(s, scripted || C.chooseAIAction(s, s.config.ai[side], ctx).id);
       }
     } finally { C.freeSearchContext(ctx); }
     if (!s.result) throw new Error('fight ' + fight.request.id + ' did not finish');
     return fightResult(fight);
   }
 
-  return { createFight, fightResult, autoplay, foeOf, foeFor: (req) => foeFor(req, combat()), DEFAULT_CONTEXT, LIVE_AI, combat };
+  return { createFight, fightResult, autoplay, scriptedMove, foeOf, foeFor: (req) => foeFor(req, combat()), DEFAULT_CONTEXT, LIVE_AI, combat };
 });

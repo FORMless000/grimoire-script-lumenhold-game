@@ -25,32 +25,32 @@ text [408653] = 门厅里的“分院镜”并不会把你分到哪里去。它�
 scene [c49f90] = 门厅里一面高大的魔法镜，每一格镜面都映出观者不同的模样。
 # en: A younger child of minor nobility
 opt.noble.label [354ff7] = 小贵族家的小儿女
-# en: Charm, a known name, and a family allowance with strings attached.
-opt.noble.hint [b3c659] = 魅力、响亮的姓氏，还有附带条件的家里零花钱。
+# en: Charm and a known name. 60 crowns from home now, and an allowance each later term, with strings attached.
+opt.noble.hint [cbb0d2] = 魅力和响亮的姓氏。现在家里给 60 克朗，此后每学期还有零花钱，附带条件。
 # en: The mirror shows you a crest you have tried to outgrow. It approves, faintly.
 opt.noble.say.1 [5615e9] = 镜中出现一枚你一直想摆脱的家徽。它微微表示认可。
 # en: A provincial scholarship student
 opt.scholar.label [096b86] = 外省的奖学金学生
-# en: Lore above all. The stipend depends on last term's grades.
-opt.scholar.hint [183a1b] = 学识为先。津贴取决于上学期的成绩。
+# en: Lore above all. 30 crowns now, and a stipend each later term while your grades hold.
+opt.scholar.hint [285185] = 学识为先。现在 30 克朗，此后每学期只要成绩保得住就有津贴。
 # en: The mirror shows you a candle burning very late in a very small room.
 opt.scholar.say.1 [e182c1] = 镜中出现一间很小的屋子，一支蜡烛燃到很晚很晚。
 # en: Raised by a marsh hedge-witch
 opt.hedge.label [700715] = 由沼泽乡野女巫养大
-# en: Alchemy, some Arcana, good spirits. No money from home.
-opt.hedge.hint [cb60d3] = 炼金、一点奥术、好心情。家里不寄钱。
+# en: Alchemy, some Arcana, good spirits. 15 crowns, and no money from home: you'll need a job.
+opt.hedge.hint [3634f4] = 炼金、一点奥术、好心情。15 克朗，家里不寄钱：你得找份工作。
 # en: The mirror smells, briefly, of wet moss and woodsmoke. You feel at home.
 opt.hedge.say.1 [734ca9] = 镜子里一瞬间飘出湿苔藓和柴火烟的气味。你觉得像回到了家。
 # en: Raised on the streets of Port Calder
 opt.street.label [5f489c] = 在考尔德港的街头长大
-# en: Guile and grit. Little gold, and no one to send more.
-opt.street.hint [15f42a] = 诡计与韧劲。金币很少，也没人会再寄。
+# en: Guile and grit. 8 crowns, and no one to send more: you'll need a job.
+opt.street.hint [8778d2] = 诡计与韧劲。8 克朗，也没人会再寄：你得找份工作。
 # en: The mirror shows a pickpocket's quick hands. You check your pockets out of habit.
 opt.street.say.1 [dd71c2] = 镜中出现一双扒手的快手。你习惯性地摸了摸口袋。
 # en: The heir to a trading company
 opt.merchant.label [2fc5e4] = 一家商行的继承人
-# en: The biggest purse and a nose for bargains. The company pays when trade is good.
-opt.merchant.hint [3dffa5] = 最鼓的钱袋，对买卖嗅觉灵敏。生意好时商行会寄钱。
+# en: The biggest purse and a nose for bargains: 120 crowns now, and more from the company when trade is good.
+opt.merchant.hint [a2889b] = 最鼓的钱袋，对买卖嗅觉灵敏：现在 120 克朗，生意好时商行还会寄钱。
 # en: The mirror shows ledgers, ships and your mother's disappointed face. Still: gold.
 opt.merchant.say.1 [604ea4] = 镜中出现账簿、货船，还有你母亲失望的脸。不过：钱是真的多。
 
@@ -551,6 +551,22 @@ scene [3c61bc] = 院长向满堂的三年级生讲话，屋里的每一支蜡烛
 opt.ok.label [85c8b5] = 开始第三年
 # en: You know the castle well enough now to get lost in it on purpose. This is the last year for a summer research post, and the holiday notices by the gates pay better every year.
 opt.ok.say.1 [9f3f57] = 你对城堡已经熟到可以故意在里面迷路了。今年是申请暑期研究职位的最后一年，而校门边的假期招工告示，一年比一年给得多。
+
+@event isolde_asks_again
+# en: Ask Me Again
+title [27b3f8] = 再问我一次
+# en: Headmistress Marrow finds you in the cloister, the same small notebook under her arm, four years more worn. "I asked you what was just," she says, and reads it back: {flag(just_mercy): "Mercy."|{flag(just_fair): "Fairness."|"Keeping your own safe."}} She looks at you over the page. {(flag(just_mercy) and alignment >= 20) or (flag(just_fair) and alignment > -20 and alignment < 20) or (flag(just_strong) and alignment <= -20): "You kept to it. I watched."|"You changed your answer without telling me. Most people do."} "Well? I'm asking again."
+text [032164] = 马罗院长在回廊里找到你，胳膊底下夹着同一本小笔记本，比四年前又旧了些。“我问过你什么是公正，”她说，把它念了出来：{flag(just_mercy): “仁慈。”|{flag(just_fair): “公平。”|“护住自己人。”}}她从书页上方看着你。{(flag(just_mercy) and alignment >= 20) or (flag(just_fair) and alignment > -20 and alignment < 20) or (flag(just_strong) and alignment <= -20): “你守住了。我一直看着。”|“你改了答案，却没告诉我。大多数人都这样。”}“怎么样？我再问一次。”
+# en: A grey-haired headmistress in an evening cloister holding a small worn notebook open, a final-year in graduation robes beside her.
+scene [2eb142] = 傍晚的回廊里，一位头发花白的院长摊开一本旧了的小笔记本，身旁是一个穿着毕业袍的毕业生。
+# en: Give the same answer
+opt.left.label [416493] = 给出同样的答案
+# en: {(flag(just_mercy) and alignment >= 20) or (flag(just_fair) and alignment > -20 and alignment < 20) or (flag(just_strong) and alignment <= -20): You say it again, and this time you know what it cost. She writes it under the first, in the same hand. "Good," she says. "Some answers are worth giving twice."|You say it again, though you both know the four years said something else. She writes it down anyway. "Then go and live up to it," she says. "You've time. Not much, but some."}
+opt.left.say.1 [6928e3] = {(flag(just_mercy) and alignment >= 20) or (flag(just_fair) and alignment > -20 and alignment < 20) or (flag(just_strong) and alignment <= -20): 你又说了一遍，这回你知道它的代价了。她把它写在第一个下面，同样的笔迹。“好，”她说，“有些答案值得说两遍。”|你又说了一遍，尽管你们俩都知道这四年说的是另一回事。她还是写了下来。“那就去做到它，”她说，“你还有时间。不多，但有一些。”}
+# en: Give a new answer
+opt.right.label [36f9bd] = 给出新的答案
+# en: You tell her what four years taught you instead. She listens to all of it, writes it under the first, and closes the notebook on both. "That," she says, "is what I hoped the castle would do to you."
+opt.right.say.1 [642efd] = 你告诉她这四年教会你的东西。她全都听完，写在第一个下面，把两个一起合进笔记本。“这，”她说，“正是我希望城堡对你做的事。”
 
 @event graduation_eve
 # en: The Eve of Graduation

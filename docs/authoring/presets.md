@@ -56,11 +56,11 @@ Course standard at levels I–III: `apprentice+` · `adept+` · `master+`; a cou
 | `price_fortune` | A small fortune, 150 crowns: what the rarest pieces cost. `gold -huge; gold -huge; gold -large` |
 | `splurge` | Spending to feel better. `mood +large; gold -medium` |
 | `risk <res>` | A gamble: a large gain or a medium loss. `chance even: $res +large; else: $res -medium` |
-| `origin_noble_start` | Charm 25, Lore 12; 90 crowns in all. `charm += 27.88; lore += 5.52; gold +huge` |
-| `origin_scholar_start` | Lore 28, Arcana 12; 60 crowns in all. `lore += 34; arcana += 5.52; gold +large` |
-| `origin_hedge_start` | Alchemy 30, Arcana 15, Lore 6; 45 crowns in all. `alchemy += 40.8; arcana += 10.08; lore -= 2; gold +medium` |
-| `origin_street_start` | Guile 30, Vigor 18; 38 crowns in all. `guile += 40.8; vigor += 15; gold +small` |
-| `origin_merchant_start` | Charm 25, Guile 15; 150 crowns in all. `charm += 27.88; guile += 12.6; gold +huge; gold +huge` |
+| `origin_noble_start` | Charm 25, Lore 12; 60 crowns (90 with the 30 everyone starts with). `charm += 27.88; lore += 5.52; gold +huge` |
+| `origin_scholar_start` | Lore 28, Arcana 12; 30 crowns (60 with the 30 everyone starts with). `lore += 34; arcana += 5.52; gold +large` |
+| `origin_hedge_start` | Alchemy 30, Arcana 15, Lore 6; 15 crowns (45 with the 30 everyone starts with). `alchemy += 40.8; arcana += 10.08; lore -= 2; gold +medium` |
+| `origin_street_start` | Guile 30, Vigor 18; 8 crowns (38 with the 30 everyone starts with). `guile += 40.8; vigor += 15; gold +small` |
+| `origin_merchant_start` | Charm 25, Guile 15; 120 crowns (150 with the 30 everyone starts with). `charm += 27.88; guile += 12.6; gold +huge; gold +huge` |
 | `noble_allowance` | The family's allowance, 38 crowns, and the expectations that come with it. `gold +large; gold +small; mood -small` |
 | `noble_gift` | A family gift on top, 11 crowns (30% of terms, rolled when the letter comes). `gold +small; gold +tiny` |
 | `scholarship_stipend` | By the latest completed term's GPA: 3.5 or higher, 46 crowns (with an 8-crown merit bonus); 3.0 or higher, 38; below, nothing. `if term_gpa >= 3.5: gold +large; gold +small; gold +small; elif term_gpa >= 3.0: gold +large; gold +small` |

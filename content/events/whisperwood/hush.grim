@@ -21,7 +21,7 @@ scene: A great grey spider the size of a carriage descending on a silver thread 
 on_show:
   unflag ww_spinner_weak
   unflag ww_spinner_offended
-text: Silk across the path, then silk everywhere, and then the Spinner comes down her thread: grey, vast, older than the oaks, with more eyes than you'd like and one of them milky. {knows(maud.tuppence): She lowers her head to you. "You smell of her bees," she says.|"A student," she says, in a voice like a cello. "It's been a while."} {flag(ww_spinner_angry): "You took my hippogriff."|}
+text: Silk across the path, then silk everywhere, and then the Spinner comes down her thread: grey, vast, queen of the Hush, with more eyes than you'd like and one of them milky. {knows(maud.tuppence): She lowers her head to you. "You smell of her bees," she says.|"A student," she says, in a voice like a cello. "It's been a while."} {flag(ww_spinner_angry): "You took my hippogriff."|}
 > left: Bow and back away
   queue ww_way_home now
   say: {~You bow, very low, and back away. She lets you go. "Another night," she says. It sounds like a promise.|You bow and retreat. Her eyes follow you a long way, all but the milky one.}
@@ -60,7 +60,7 @@ text: She comes down at you with all her brood. Venom, then web, then the long w
   else:
     ww_haul = 0
   queue ww_way_home now
-  say: {~You lower your wand. She takes her toll from your bag and lets you go. "Another night," she says.|You yield. She considers this, and takes half your haul, and lets you walk away.}
+  say: {~You lower your wand. She takes her toll from your bag and lets you go. "Another night," she says.|You yield. She considers this, and takes her share of your haul, and lets you walk away.}
 > right: Fight her
   hint: She binds, then strikes: keep a way out.
   challenge combat master-:
@@ -80,7 +80,7 @@ repeat: 1
 art: spider
 tags: nature danger
 scene: A giant grey spider facing a student alone in a moonlit clearing, the student standing on her blind left side.
-text: She's sent the brood away. You stand on her left, where the milky eye can't see you, and she knows that you know. She's still the oldest thing in the wood. ⚠ Nobody comes to catch you down here.
+text: She's sent the brood away. You stand on her left, where the milky eye can't see you, and she knows that you know. She's still the biggest thing in the wood. ⚠ Nobody comes to catch you down here.
 > left: Yield
   if ww_haul >= 2:
     ww_haul -= 2
@@ -115,7 +115,7 @@ text: She bows her forelegs to you, the way the old courts did. Behind her, in t
   renown +small
   ww_haul += 2
   queue ww_way_home now
-  say: You take a bolt of silk and as much silver as you can carry. She watches you go. "Tell the girl I'm well," she says, and you don't yet know who she means. Behind you, the Hush feels emptier, and something else in it shifts, interested.
+  say: You take a bolt of silk and as much silver as you can carry. She watches you go. "Tell the girl I'm well," she says. {knows(maud.tuppence): She means Maud, who raised her in the potting shed, and you'll tell her.|You don't yet know who she means.} Behind you, the Hush feels emptier, and something else in it shifts, interested.
 
 @event ww_cocooned
 title: Cut Free

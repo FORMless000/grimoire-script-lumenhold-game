@@ -21,8 +21,9 @@ text: Grimsby sees your borrowed wand and asks to hold it, very carefully. Someo
   rel grimsby +tiny
   say: He talks about her for an hour, and then about lighthouses for another. You leave knowing a great deal about lamps, and that the wand once belonged to someone who wanted to see a long way.
 > right: Ask if it's worth anything
-  mood -tiny
-  say: "Worth?" He hands it back as if you'd spoken ill of the dead. "It's worth four years of somebody. Mind it." You leave a little ashamed and a little fonder of the thing.
+  rel grimsby -tiny
+  gold +small
+  say: "Worth?" He hands it back as if you'd spoken ill of the dead. "It's worth four years of somebody. Mind it." Then, because he can't help himself, he buys the old maps you've been using as bookmarks, at a fair price, and doesn't quite forgive you.
 
 @event item_borrowed_sideways
 title: It Sparks Sideways
@@ -63,7 +64,7 @@ text: Mir spots your hazel wand and makes a noise like a kettle. "Can I? I can. 
 > left: Let them tinker
   rel mir +small
   mana -tiny
-  say: Two minutes is two hours. Mir hands it back humming, and you swear it's quicker. "Tuned," they say. "Probably. Don't cast anything near a cabbage for a day."
+  say: Two minutes is two hours, and Mir has you hold the wand the whole time while it drinks from your hand. Mir hands it back humming, and you swear it's quicker. "Tuned," they say. "Probably. Don't cast anything near a cabbage for a day."
 > right: Ask about the notebooks on the shelf
   rel mir +tiny
   learn mir.notebooks
@@ -123,7 +124,6 @@ scene: A courtyard where a first-year in brand-new midnight-blue robes is trying
 text: A first-year has turned up in midnight-blue robes exactly like yours, down to the silver at the hem. They have also, you notice, started walking the way you do.
 > left: Tell them they look good
   renown +tiny
-  alignment +tiny
   say: They go scarlet with joy. By supper the whole first-year corridor is wearing blue. The tailor sends you a thank-you note and no discount.
 > right: Walk faster
   mood +tiny
@@ -280,7 +280,7 @@ text: Pell's daughters are waiting at the counter with their arms folded. "That'
   take measuring_spoon
   rel pell +small
   alignment +tiny
-  say: They take it, and the younger one cries a little, and Pell stops counting for a moment. Next week a parcel arrives: a new spoon, unworn, and a note. "Measure twice. P."
+  say: They take it, and the younger one cries a little, and Pell stops counting for a moment. On your way out he catches your sleeve. "Measure by eye, then," he says. "You've the eye for it."
 > right: Keep it; he gave it to you
   rel pell -tiny
   mood -tiny

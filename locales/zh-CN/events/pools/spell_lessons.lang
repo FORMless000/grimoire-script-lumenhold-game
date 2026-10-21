@@ -491,14 +491,14 @@ opt.right.say.1 [50f320] = 你接住恶咒，让它在一面镜子上弹了一�
 @event lesson_rime
 # en: Cold Enough
 title [207a71] = 够冷了
-# en: Kael sees the frost at your collar and goes still. "Rime," he says. "Where did you... no. Don't tell me." He looks at the snow. "In the North we learn it as children. You don't feel the cold less. You just stop letting it decide things."
-text [5a4d58] = 凯尔看见你衣领上的霜，一下子僵住了。“雾凇，”他说。“你从哪儿……不。别告诉我。”他看着雪。“在北方，我们小时候就学这个。你并不会觉得没那么冷。你只是不再让冷来替你做决定。”
-# en: A pale Northern student and another student standing in a snowy courtyard, frost spreading from their collars, breath steaming.
-scene [8e83a6] = 雪中的庭院里，一个苍白的北方学生和另一个学生站着，霜从他们的衣领蔓延开，呼吸冒着白气。
+# en: Kael sees the frost at your collar and goes still. "Rime," he says. "Where did you... no. Don't tell me." He looks at {season == "winter": the snow|the courtyard, and frost runs out from his boots across the flagstones}. "In the North we learn it as children. You don't feel the cold less. You just stop letting it decide things."
+text [2f332e] = 凯尔看见你衣领上的霜，一下子僵住了。“雾凇，”他说。“你从哪儿……不。别告诉我。”他看着{season == "winter": 雪|庭院，霜从他的靴底蔓延出去，铺满了石板}。“在北方，我们小时候就学这个。你并不会觉得没那么冷。你只是不再让冷来替你做决定。”
+# en: A pale Northern student and another student standing in a frost-whitened courtyard, frost spreading from their collars, breath steaming.
+scene [895b91] = 结满白霜的庭院里，一个苍白的北方学生和另一个学生站着，霜从他们的衣领蔓延开，呼吸冒着白气。
 # en: Let him show you
 opt.left.label [a35ef6] = 让他教你
-# en: He makes you stand in the snow until it hurts, and then until it doesn't, and then a while longer. When you go in, he's almost smiling. "Now it's yours," he says.
-opt.left.say.1 [70da4e] = 他让你站在雪里，一直站到疼，再站到不疼，然后再多站一会儿。你们进屋时，他几乎在笑。“现在它是你的了，”他说。
+# en: He makes you stand in {season == "winter": the snow|the cold he's laid on the flagstones} until it hurts, and then until it doesn't, and then a while longer. When you go in, he's almost smiling. "Now it's yours," he says.
+opt.left.say.1 [e6b6d8] = 他让你站在{season == "winter": 雪里|他铺在石板上的寒气里}，一直站到疼，再站到不疼，然后再多站一会儿。你们进屋时，他几乎在笑。“现在它是你的了，”他说。
 # en: Ask what else they learn as children
 opt.right.label [4921a8] = 问他们小时候还学什么
 # en: "Not to want things," he says, and then looks as if he wishes he hadn't. He leaves before you can ask anything else. The frost at your collar feels colder.
@@ -507,8 +507,8 @@ opt.right.say.1 [d5279c] = “不去想要东西，”他说，然后一副后�
 @event lesson_siphon
 # en: The Fern on the Sill
 title [82797f] = 窗台上的蕨
-# en: You're tired, and you have an exam in the morning, and there's a fern on your windowsill, green and full of life it isn't using. Siphon is right there in your hands. Nobody would ever know but the fern.
-text [77a690] = 你很累，明早还有考试，窗台上有一盆蕨，绿油油的，满是它用不上的生命。虹吸就在你手里。除了那盆蕨，没人会知道。
+# en: You're tired, and there are lectures at eight, and there's a fern on your windowsill, green and full of life it isn't using. Siphon is right there in your hands. Nobody would ever know but the fern.
+text [73569c] = 你很累，明早八点还有课，窗台上有一盆蕨，绿油油的，满是它用不上的生命。虹吸就在你手里。除了那盆蕨，没人会知道。
 # en: A student at a dormitory window at night with a hand hovering over a potted fern, the fern's leaves beginning to curl.
 scene [2f67ab] = 夜里，一个学生站在宿舍窗前，手悬在一盆蕨上方，蕨叶开始卷曲。
 # en: Just a little
@@ -587,8 +587,8 @@ opt.right.say.1 [5193c9] = 阿玛兰斯修女给你包扎好，数落你走神�
 @event lesson_heartprice
 # en: Paying in Yourself
 title [716107] = 用自己付账
-# en: It's late, your Mana is spent, and the essay isn't done. Heartprice says you don't need Mana. You have yourself. You could pay in that, for as long as you can stand it.
-text [eb963c] = 夜深了，你的魔力用光了，论文还没写完。心价说你不需要魔力。你有你自己。你可以用它来付，付到你撑不住为止。
+# en: It's late, {mana < 15: your Mana is spent|your Mana is low and tomorrow has a practical}, and the essay isn't done. Heartprice says you don't need Mana. You have yourself. You could pay in that, for as long as you can stand it.
+text [dea4cb] = 夜深了，{mana < 15: 你的魔力用光了|你的魔力所剩无几，明天还有实践课}，论文还没写完。心价说你不需要魔力。你有你自己。你可以用它来付，付到你撑不住为止。
 # en: An exhausted student at a desk late at night, a faint red glow in their chest feeding a spell, candles burnt down.
 scene [530e5f] = 深夜里，一个筋疲力尽的学生坐在桌前，胸口一点淡淡的红光在为一个咒语供能，蜡烛已经燃尽。
 # en: Pay in yourself

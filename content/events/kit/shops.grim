@@ -196,7 +196,7 @@ weight: 10
 art: book
 tags: money shop study
 scene: A bookshop crowded to the rafters, shelves leaning on each other, an old man in half-moon glasses sniffing the spine of a book.
-text: {Mr Grimsby is up a ladder, sniffing a spine. "Ah! Not that one," he says, and hands you a different one.|Grimsby greets you by the title of what you bought last year. He has no idea what you came in for today.|The shop smells of dust and pipe smoke and one shelf, somewhere, of the sea.} {A stack of exam primers leans on the counter like a tired student.|A box by the door says BOOKS BOUGHT BACK, FAIR PRICES, NO QUESTIONS (SOME QUESTIONS).|A lighthouse print hangs crooked behind the till.}
+text: {Mr Grimsby is up a ladder, sniffing a spine. "Ah! Not that one," he says, and hands you a different one.|Grimsby greets you like an old customer, by the title of a book you've never read. He has no idea what you came in for today.|The shop smells of dust and pipe smoke and one shelf, somewhere, of the sea.} {A stack of exam primers leans on the counter like a tired student.|A box by the door says BOOKS BOUGHT BACK, FAIR PRICES, NO QUESTIONS (SOME QUESTIONS).|A lighthouse print hangs crooked behind the till.}
 > pick: Let him choose you a book
   hint: Skill XP, in whatever he thinks you need.
   gold -small
@@ -252,7 +252,7 @@ text: {One of Pell's daughters is at the counter. Behind her, Old Pell counts dr
   say: {You read labels until the daughter asks if you're lost. You are, a little.|You leave with nothing but the smell of mint in your robes.|Pell glances up once, decides you're not buying, and goes back to his drops.}
 
 @event shop_newt
-title: The Newt by Day
+title: The Newt's Counter
 place: gilded_newt
 type: menu
 class: routine
@@ -262,8 +262,8 @@ weight: 10
 when: not on_shift()
 art: cup
 tags: money shop social
-scene: A low-beamed tavern in the afternoon, sunlight through small windows, a fire that never goes out and a landlady polishing glasses.
-text: {By day the Gilded Newt is quiet, just a fire, a few regulars and the landlady with a cloth over her shoulder.|The Newt in the afternoon smells of bread and last night's cider. Someone is asleep by the fire.|The landlady nods at you over the bar. "Supper's on. Cider's cold. Table's free."} {The slate says HOT SUPPER, A ROUND, CIDER.|A cat is asleep in the bread basket.|A barge crew is arguing about weather.}
+scene: A low-beamed tavern with small windows, a fire that never goes out and a landlady polishing glasses behind the bar.
+text: {{slot == "afternoon": By day the Gilded Newt is quiet, just a fire, a few regulars and the landlady with a cloth over her shoulder.|At this hour the Gilded Newt is all elbows and cider, and the landlady works the bar with a cloth over her shoulder.}|{slot == "afternoon": The Newt in the afternoon smells of bread and last night's cider. Someone is asleep by the fire.|The Newt smells of cider and wet coats tonight. Someone is singing by the fire, badly.}|The landlady nods at you over the bar. "Supper's on. Cider's cold. Table's free."} {The slate says HOT SUPPER, A ROUND, CIDER.|A cat is asleep in the bread basket.|A barge crew is arguing about weather.}
 > supper: A hot supper
   hint: Health and Mood; it ends a hungry month.
   gold -small

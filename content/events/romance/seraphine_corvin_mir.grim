@@ -16,12 +16,12 @@ weight: 10
 art: mirror
 tags: social romance
 scene: A girl in a paint-stained smock standing before a tall mirror, pulling another student by the sleeve to stand beside her.
-text: Seraphine pulls you in front of the long mirror in the east corridor. "Stand there," she says. "No, closer." {~She stares at her own reflection, as if at a stranger.|She looks at herself, then at you, then at herself, and lets out a breath.} "Seers can't see themselves," she says. "Unless someone's standing next to them."
+text: Seraphine pulls you in front of the long mirror in the east corridor. "Stand there," she says. "No, closer." {~She stares at her own reflection, as if at a stranger.|She looks at herself, then at you, then at herself, and lets out a breath.} "Seers can't see themselves," she says. "Not ahead. Not unless someone's standing next to them."
 > left: Stay as long as she needs
   learn seraphine.self
   spark seraphine +small
   rel seraphine +small
-  say: {~You stand there until the candles gutter. She looks at herself the whole time, very seriously, and when you finally go, she says, "Thank you. I'm taller than I thought."|You stand beside her a long time. At the end she reaches out and touches the mirror where your shoulders almost meet. "There," she says. "That's what I look like."}
+  say: {~You stand there until the candles gutter. She looks at herself the whole time, very seriously, and when you finally go, she says, "Thank you. I was in it. A long way on, and I was in it."|You stand beside her a long time. At the end she reaches out and touches the mirror where your shoulders almost meet. "There," she says. "That's where I'll be."}
 > right: Ask what she sees
   lore +small
   rel seraphine -tiny
@@ -55,18 +55,18 @@ class: routine
 tone: eerie
 trigger: social
 actor: seraphine
-when: rel(seraphine) >= 9 and bond(seraphine) != "partner" and bond(seraphine) != "ex" and spark(seraphine) < 40
+when: rel(seraphine) >= 9 and seen(seraphine_overwhelmed) > 0 and bond(seraphine) != "partner" and bond(seraphine) != "ex" and spark(seraphine) < 40
 repeat: 4
 time: evening night
 weight: 10
 art: candle
 tags: social romance
-scene: A storeroom with no windows, a girl sitting on the floor in the dark, a crack of light from the door falling across her face.
-text: You find Seraphine in a storeroom with no windows, sitting in the dark. "Everyone's futures are so loud today," she says, without opening her eyes. "Yours is quiet. Could you sit in here? Just so it's quieter."
-> left: Sit in the dark with her
+scene: A storeroom with no windows, a girl sitting on the floor in the dark among pots of paint, a crack of light from the door falling across her face.
+text: The storeroom is a habit now. On loud days Seraphine goes there, and lately she's moved her paints in. You find her in the dark, sorting colours by touch. "Loud again," she says. "Yours is still quiet. Help? You hand me one, I guess it."
+> left: Sort paints in the dark
   spark seraphine +small
   study -tiny
-  say: {~You sit with her in the dark for an hour. Neither of you says anything. When she finally opens the door, her face is calmer, and she says, "You're the quietest person I know." It sounds like the best compliment she has.|You sit in the dark until the bell. Your notes don't get written. She leans her head on your shoulder at some point, and doesn't explain.}
+  say: {~You hand her pots in the dark for an hour. She names each by its smell: ochre, viridian, a blue she says tastes of Tuesdays. She gets eleven of twelve. "You're the quietest person I know," she says. It sounds like the best compliment she has.|You sort paints by feel until the bell. Your notes don't get written. At some point she leans her head on your shoulder, and the pot in her hand is the right colour, and she doesn't explain.}
 > right: Bring her a candle
   rel seraphine +small
   say: {~You bring a single candle and set it by the door. "That's better," she says. "One small light. It doesn't shout."|You bring a candle. She watches it as if it were a friend, and the noise goes away, she says, a little.}
@@ -213,7 +213,7 @@ class: routine
 tone: light
 trigger: social
 actor: corvin
-when: rel(corvin) >= 9 and bond(corvin) != "partner" and bond(corvin) != "ex"
+when: rel(corvin) >= 9 and seen(corvin_confiscation_vault) > 0 and bond(corvin) != "partner" and bond(corvin) != "ex"
 repeat: 4
 weight: 10
 art: cards
@@ -246,10 +246,11 @@ text: Corvin is sitting on the stairs with a letter with a red seal. For once he
   learn corvin.last_warning
   spark corvin +small
   rel corvin +small
-  say: "You?" he says. "Keep me out of trouble?" But he looks at you a long time, and the grin comes back, smaller and realer. "Fine. Deal. You're my conscience now. Terrible job. No pay."
+  mood -tiny
+  say: "You?" he says. "Keep me out of trouble?" But he looks at you a long time, and the grin comes back, smaller and realer. "Fine. Deal. You're my conscience now. Terrible job. No pay." That night you lie awake counting his detentions.
 > right: Tell him to stop being stupid
-  rel corvin +tiny
-  alignment +tiny
+  learn corvin.last_warning
+  rel corvin +small
   say: "Wow," he says. "Thanks, saint." But he doesn't pick a single lock all month. You know, because you check.
 
 @event corvin_route_named
@@ -292,7 +293,8 @@ text: Corvin needs fifteen crowns. He's drawn up a contract, very official, with
   gold -medium
   rel corvin +medium
   learn corvin.trolls
-  say: You sign. He pays you back in three weeks, which is a personal record, and tells you the goat story anyway, because you asked about the clause. The trolls still have it. It runs them now.
+  queue soc_loan_repaid in 2 with corvin
+  say: You sign. He swears he'll pay you back in three weeks, which would be a personal record, and tells you the goat story anyway, because you asked about the clause. The trolls still have it. It runs them now.
 > right: Refuse, for the goat's sake
   rel corvin -tiny
   mood +small
@@ -472,7 +474,7 @@ class: routine
 tone: warm
 trigger: social
 actor: mir
-when: rel(mir) >= 9 and spark(mir) >= 5 and bond(mir) != "partner" and bond(mir) != "ex"
+when: rel(mir) >= 9 and spark(mir) >= 5 and not knows(mir.notebooks) and bond(mir) != "partner" and bond(mir) != "ex"
 weight: 10
 art: book
 tags: social romance
@@ -526,11 +528,11 @@ text: Thursdays are tinkering evenings now. Mir works; you sit on the bench with
 > left: Hand them the tools
   spark mir +small
   arcana +tiny
-  say: {~You hand over each tool before they ask. By midnight you know what they need before they do. "You're the best assistant," Mir says, "and the worst distraction." They mean both kindly.|You fetch, hold, steady. The music box plays a waltz backwards and you dance to it, badly, among the bolts.}
+  say: {~You fetch, hold, steady. The music box plays a waltz backwards and you dance to it, badly, among the bolts.|You hand over each tool before they ask. By midnight you know what they need before they do. "You're the best assistant," Mir says, "and the worst distraction." They mean both kindly.}
 > right: Read aloud while they work
   rel mir +small
   lore +tiny
-  say: {~You read them a terrible novel. They laugh at the wrong parts and burn a finger. The kettle boils, eventually, because you asked it nicely.|You read aloud. Mir works slower, listening, and doesn't seem to mind.}
+  say: {~You read aloud. Mir works slower, listening, and doesn't seem to mind.|You read them a terrible novel. They laugh at the wrong parts and burn a finger. The kettle boils, eventually, because you asked it nicely.}
 
 @event mir_not_a_hobby
 title: Not a Hobby
@@ -554,7 +556,7 @@ text: You said it lightly: "your hobby". Mir has gone very still. "My family cal
   say: They stop packing. Then they show you, for three hours, everything, and it's not a hobby. It's a whole life. You never use the word again.
 
 @event mir_family_summons
-title: The Family Wants Them Home
+title: The Family Wants to Meet You
 class: story
 tone: tense
 trigger: social
@@ -563,16 +565,17 @@ when: bond(mir) == "partner" and knows(mir.family)
 weight: 14
 art: letter
 tags: romance
-scene: An artificer holding a formal letter from a clockworks company, sitting on the floor of a workshop surrounded by half-finished machines.
-text: A letter from Mir's family, on company paper. They want Mir home after this year: the clockworks needs someone, and "play time" is over. Mir is sitting on the workshop floor, very small among their machines. "Probably they're right," they say. They don't sound like they believe it.
-> left: Help them write back
+scene: An artificer holding a formal letter on clockworks-company paper, sitting on the floor of a workshop among half-finished machines, looking up at someone.
+text: A letter from Mir's family, on company paper. They have heard there is someone. They would like to meet them, at the clockworks, over the next break. Mir is sitting on the workshop floor, very small among their machines. "You don't have to," they say. "They'll ask about your prospects. And your hobbies."
+> left: Go and meet them
   spark mir +medium
-  lore +small
-  say: You draft it together, all night: what Mir has built, what it's for, what they'll build next. It's the best thing either of you has written. Mir posts it at dawn, shaking. "Whatever they say," they tell you, "I said it."
-> right: Tell them to go and see
+  mood -tiny
+  say: You go. Mir's mother asks about your prospects, twice. Their father shows you every clock in the building, and you ask about every one. On the barge back Mir holds your hand the whole way. "He showed you the escapement," they say. "He never shows anyone the escapement."
+> right: Write to them first
   rel mir +small
+  charm +tiny
   spark mir -tiny
-  say: "Go and look," you say. "Then decide." Mir goes home for a weekend and comes back with a clockwork bird their grandfather made, and a decision they don't tell you yet, and a smile you haven't seen before.
+  say: "Not yet," you say. "Let me write first." You write a careful letter to two people you've never met. Mir reads it over your shoulder and doesn't correct a single thing, which, for Mir, is a declaration.
 
 @event mir_ex
 title: The Owl Holds a Grudge

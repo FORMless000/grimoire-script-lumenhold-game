@@ -67,6 +67,8 @@ test('whisperwood: a fall costs grace, health and a find; the way home pays by t
     x.s.deck = [{ id: 'ww_way_home', src: 'queued', force: true }]; x.s.cur = null; x.advance();
     const out = x.choose('left');
     assert.deepEqual([x.s.vals.ww_depth, x.s.vals.ww_haul, x.s.vals.ww_deepest], [0, 0, 6]);
+    // the outcome reads the haul before it's emptied (critic 2026-10-20: every delve ended on the empty bag)
+    assert.equal(/empty bag/.test([].concat(out.say || []).join(' ')), haul === 0, haul + ': ' + out.say);
     return (out.deltas || {}).gold || 0;
   };
   const none = pay(0), light = pay(1), heavy = pay(5), huge = pay(8);

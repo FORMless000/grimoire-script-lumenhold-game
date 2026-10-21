@@ -19,7 +19,7 @@ weight: 10
 art: trophy
 tags: social romance
 scene: A posted list of class rankings on a stone wall, two names at the top, a red-haired girl staring at the second one.
-text: The rankings are up. {~Your name is above hers, by one mark.|Her name is above yours, by one mark, and she's not looking at it. She's looking at you.|Your names are level. The registrar has had to put you side by side, alphabetically, and she hates it.} Lyra stands in front of the list with her arms folded. "One mark," she says. "I'll have it back by Frostcall."
+text: The rankings are up. {~Your name is above hers, by one mark. Lyra stands in front of the list with her arms folded. "One mark," she says. "I'll have it back by Frostcall."|Her name is above yours, by one mark, and she's not looking at it. She's looking at you. "One mark," she says. "I'll make it two by Frostcall."|Your names are level. The registrar has had to put you side by side, alphabetically, and she hates it. "A tie," she says, arms folded. "I'll break it by Frostcall."}
 > left: "You can try."
   rel lyra +small
   spark lyra +small
@@ -109,7 +109,7 @@ weight: 10
 art: flame
 tags: romance
 scene: A red-haired girl standing very straight in a corridor, eyes bright with anger, a crumpled tournament list in her fist.
-text: Lyra has found out you skipped her match for {~a study group|a club meeting|a friend's crisis}. She is very calm, which is worse than shouting. "I have been second to my mother's ambitions my whole life," she says. "I won't be second to a study group."
+text: Lyra has found out you skipped her match for {~a study group|a club meeting|a friend's crisis}. She is very calm, which is worse than shouting. "I have been second to my mother's ambitions my whole life," she says. {~"I won't be second to a study group."|"I won't be second to a club."|"I know it was a crisis. I know. I still wanted you there."}
 > left: Talk it through, properly
   hint: She wants to be argued with, not soothed.
   challenge negotiate journeyman:
@@ -120,7 +120,7 @@ text: Lyra has found out you skipped her match for {~a study group|a club meetin
     lose:
       spark lyra -small
       rel lyra -small
-      say: Everything you say sounds like an excuse, because it is. She nods, very correctly, and walks away. She's at your next lecture. She doesn't sit next to you.
+      say: {~Everything you say sounds like an excuse, because it is.|Everything you say sounds like an excuse, because it is.|You were right to go, and you both know it, and somehow that makes it harder to say.} She nods, very correctly, and walks away. She's at your next lecture. She doesn't sit next to you.
 > right: Apologise, and mean it
   spark lyra +tiny
   mood -small
@@ -367,19 +367,19 @@ repeat: 6
 art: flower
 tags: romance
 scene: A large student watering a single pot on a windowsill that isn't his, glancing guiltily at the door.
-text: You find Tobias at your window, watering the sunflower he gave you, months ago. He jumps. "Sorry," he says. "Sorry. It looked dry. I'll go. I'm sorry."
+text: You find Tobias at your window, watering the plant on your sill. He jumps. "Sorry," he says. "Sorry. It looked dry. I'll go. I'm sorry."
 > left: Let him go
   mood -tiny
-  say: He goes. The sunflower is very well watered. You don't know whether to be grateful or sad, so you're both.
+  say: He goes. The plant is very well watered. You don't know whether to be grateful or sad, so you're both.
 > right: Ask him to stay a minute
   rel tobias +small
   challenge appeal apprentice:
     win:
       bond tobias friend
-      say: He stays. You talk about the sunflower, and then about goats, and it's almost easy. "Friends," he says, at the door, testing the word, "is a good word. I like it."
+      say: He stays. You talk about the plant, and then about goats, and it's almost easy. "Friends," he says, at the door, testing the word, "is a good word. I like it."
     lose:
       mood -tiny
-      say: He stays, and stands, and apologises four times, and goes. The sunflower turns toward the door after him.
+      say: He stays, and stands, and apologises four times, and goes. The plant turns toward the door after him.
 
 @event tobias_dance_specialized
 title: The Broom Waltz, Again
@@ -442,14 +442,15 @@ tags: social magic
 scene: A duelling hall after hours, a red-haired girl correcting another student's wand arm with two fingers, a scorched practice target behind them.
 text: Lyra doesn't invent little spells. "Half-useful is useless," she says. But she'll teach you the flourish her family has used to open a duel for two hundred years, if you swear not to tell anyone she taught it to someone outside the family. She looks as if she might regret the offer.
 > left: Learn it her way
-  chance likely:
-    arcana +small
-    rel lyra +small
-    say: She corrects your wrist eleven times. On the twelfth the flourish leaves a ribbon of flame in the air, exactly where it should be. Lyra nods once. "Adequate," she says, which from her is a medal.
-  else:
-    health -tiny
-    rel lyra +small
-    say: The ribbon of flame goes where it shouldn't, which is your sleeve. Lyra puts it out with a flick and doesn't laugh, which is worse. "Again," she says. The second time it works.
+  challenge spell apprentice+ likely:
+    win:
+      arcana +small
+      rel lyra +small
+      say: She corrects your wrist eleven times. On the twelfth the flourish leaves a ribbon of flame in the air, exactly where it should be. Lyra nods once. "Adequate," she says, which from her is a medal.
+    lose:
+      health -tiny
+      rel lyra +small
+      say: The ribbon of flame goes where it shouldn't, which is your sleeve. Lyra puts it out with a flick and doesn't laugh, which is worse. "Again," she says. The second time it works.
 > right: Teach her to make toast
   rel lyra +medium
   charm +tiny

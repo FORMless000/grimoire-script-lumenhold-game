@@ -124,11 +124,11 @@ text: {ww_haul == 0: You come out of the trees with nothing but burrs and the fe
     gold +medium
   elif ww_haul >= 1:
     gold +small
+  say: {ww_haul == 0: Pell looks at your empty bag and offers you a biscuit, which is worse than nothing.|{~Pell weighs it all on the brass scale and pays without haggling, which means you should have asked for more.|Pell's daughters sort your bag in a minute and argue about it for ten. The crowns are fair.|Pell holds a cap up to the lamp, sniffs it, and pays you double for that one alone.}}
   if ww_depth > ww_deepest:
     ww_deepest = ww_depth
   ww_depth = 0
   ww_haul = 0
-  say: {ww_haul == 0: Pell looks at your empty bag and offers you a biscuit, which is worse than nothing.|{~Pell weighs it all on the brass scale and pays without haggling, which means you should have asked for more.|Pell's daughters sort your bag in a minute and argue about it for ten. The crowns are fair.|Pell holds a cap up to the lamp, sniffs it, and pays you double for that one alone.}}
 > right: Keep it for the lab
   hint: Alchemy and lore, by what you carry.
   if ww_haul >= 7:
@@ -141,11 +141,11 @@ text: {ww_haul == 0: You come out of the trees with nothing but burrs and the fe
     alchemy +medium
   elif ww_haul >= 1:
     alchemy +small
+  say: {ww_haul == 0: There's nothing to keep but the walk, and you keep that.|{~You spread it all out on a lab bench and spend the evening learning what each thing is, and what it's for, and what it does to your fingers.|You press, dry, label and brew until midnight. Half of it was worth more to Pell. The other half you'd never have understood.|You brew from the wood's own stock and the lab smells of forest for a week.}}
   if ww_depth > ww_deepest:
     ww_deepest = ww_depth
   ww_depth = 0
   ww_haul = 0
-  say: {ww_haul == 0: There's nothing to keep but the walk, and you keep that.|{~You spread it all out on a lab bench and spend the evening learning what each thing is, and what it's for, and what it does to your fingers.|You press, dry, label and brew until midnight. Half of it was worth more to Pell. The other half you'd never have understood.|You brew from the wood's own stock and the lab smells of forest for a week.}}
 
 @event ww_stumble
 title: Back on Your Feet
@@ -531,10 +531,9 @@ text: You stub your toe on a root, and say something about it. The root's oak ta
       queue ww2_grumpy_oak_fight now
       say: {~The apology goes badly. It turns out you also stood on its cousin.|The oak hears you out and then creaks something that is very clearly "no".}
 > up[item:heartwood_wand]: Show the heartwood
-  ww_haul += 1
   ww_depth += 1
   queue any tagged ww now
-  say: {~You hold up the heartwood wand. The oak's scowl softens into something almost grandfatherly, and it drops you an acorn the size of a fist.|The oak sees the heartwood and goes quiet. Then it bows, creaking, and steps aside.}
+  say: {~You hold up the heartwood wand. The oak's scowl softens into something almost grandfatherly, and it lifts a root to let you by.|The oak sees the heartwood and goes quiet. Then it bows, creaking, and steps aside.}
 
 @event ww2_grumpy_oak_fight
 title: The Oak Swings
@@ -583,9 +582,10 @@ text: The briars here have grown into walls taller than you, with corridors betw
 > right: Find the way through
   challenge research journeyman:
     win:
+      lore +tiny
       ww_depth += 1
       queue any tagged ww now
-      say: {~Left at every fork, then right at the one with the dead rose. You come out the far side scratched but triumphant.|You notice that the moss grows on the side the old gardener wanted you to see, and follow it through.}
+      say: {~Left at every fork, then right at the one with the dead rose: the old gardener's rule, and now you know it. You come out the far side scratched but triumphant.|You notice that the moss grows on the side the old gardener wanted you to see, and follow it through.}
     lose:
       if ww_grace > 0:
         queue ww_stumble now
@@ -647,9 +647,10 @@ text: The fog in front of you isn't drifting. It's standing, like a wall, and wh
 > right: Part it with a spell
   challenge spell journeyman:
     win:
+      arcana +tiny
       ww_depth += 1
       queue any tagged ww now
-      say: {~You push, and the fog parts like a curtain, sulkily, and lets you through.|You find the knot at the heart of the fog and pick it. The wall unravels into ordinary mist.}
+      say: {~You push, and the fog parts like a curtain, sulkily, and lets you through. You'll remember how it gave.|You find the knot at the heart of the fog and pick it. The wall unravels into ordinary mist.}
     lose:
       queue ww_way_home now
       say: {~The fog swallows you, turns you round three times and puts you out at the edge of the wood, exactly where you started. It wasn't unkind about it.|You walk into the fog and out of it again, a mile back toward the castle. The wood is done with you for today.}
@@ -673,13 +674,15 @@ text: A standing stone, worn smooth, with offerings heaped at its foot: hazelnut
   queue ww_way_home now
   say: {~You leave the stone and its offerings alone and turn back.|You decide the stone is a sign, and the sign says home.}
 > right: Leave an offering
-  hint: Something from your bag, for a little luck.
+  hint: {ww_haul > 0: Something from your bag, for a little luck.|Your bag is empty: a coin from your purse, then.}
+  say: {ww_haul > 0: {~You leave the best thing in your bag. Walking on, you feel watched over, which is a nicer feeling than watched.|You set down your offering with the others. A wind goes through the trees, approving.}|{~Your bag is empty, so you leave a crown from your purse. Walking on, you feel watched over, which is a nicer feeling than watched.|You set a coin down with the others, warm from your pocket. A wind goes through the trees, approving.}}
   if ww_haul > 0:
     ww_haul -= 1
+  else:
+    gold -tiny
   ww_grace += 1
   ww_depth += 1
   queue any tagged ww now
-  say: {~You leave the best thing in your bag. Walking on, you feel watched over, which is a nicer feeling than watched.|You set down your offering with the others. A wind goes through the trees, approving.}
 > up[sleight]: Palm a few offerings
   alignment -small
   ww_haul += 2
@@ -1083,7 +1086,7 @@ title: Where It's Always Midnight
 trigger: queued
 class: routine
 tone: eerie
-when: ww_depth >= 5 and ww_depth <= 6 and spell_level(moonwell) < 1
+when: ww_depth >= 5 and ww_depth <= 6 and ww_hush == 0 and spell_level(moonwell) < 1
 art: moon
 tags: ww nature magic
 scene: A forest clearing under a night sky in broad daytime, moonlight pooling in a stone basin full of still water.
@@ -1440,7 +1443,7 @@ repeat: 1
 art: flower
 tags: ww nature
 scene: A moonlit clearing carpeted with glowing silver flowers in full bloom, a student kneeling among them.
-text: A whole clearing of moonpetal, open to the moon, shining like a lake. You've only ever seen one bloom at a time. {has_item(moonpetal_locket): Your locket opens on its own.|In the middle, caught on a root, something glints.}
+text: A whole clearing of moonpetal, open to the moon, shining like a lake. You've only ever seen one bloom at a time. {has_item(moonpetal_locket): Your locket opens on its own.|{flag(ww_locket_found): You look for the root where the locket was, and can't find it.|In the middle, caught on a root, something glints.}}
 > left: Leave them be
   queue ww_way_home now
   say: {~You sit and look until the moon moves, and pick nothing, and go home.|You leave them all to bloom. You'll remember this one.}

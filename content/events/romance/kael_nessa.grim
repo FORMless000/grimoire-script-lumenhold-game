@@ -82,8 +82,8 @@ repeat: 6
 weight: 9
 art: house
 tags: social romance
-scene: A pale boy standing outside a village bakery window in the snow, looking at a tray of iced buns, hands in his pockets.
-text: You find Kael standing outside the bakery window in the village, looking at the iced buns. He's been there, by the snow on his shoulders, a while. "I'm not hungry," he says, before you ask. He doesn't move.
+scene: A pale boy standing outside a village bakery window in the cold, looking at a tray of iced buns, hands in his pockets.
+text: You find Kael standing outside the bakery window in the village, looking at the iced buns. He's been there, by the {season == "winter": snow on his shoulders|rain on his collar}, a while. "I'm not hungry," he says, before you ask. He doesn't move.
 > left: Buy him one
   gold -tiny
   spark kael +small
@@ -320,7 +320,7 @@ text: Every week the Ledger's corrections column has a paragraph only you can re
 > left: Write one back
   spark nessa +small
   charm +tiny
-  say: {~You slip a correction under her door: "Correction: the reader was not 'mildly pleased'. She was delighted." It runs the next week, verbatim, in a box with a border.|You send in a correction of the correction. She prints it with a correction of that. It goes on for a month. The rest of the school thinks the Ledger's lost its mind.}
+  say: {~You slip a correction under her door: "Correction: the reader was not 'mildly pleased'. The reader was delighted." It runs the next week, verbatim, in a box with a border.|You send in a correction of the correction. She prints it with a correction of that. It goes on for a month. The rest of the school thinks the Ledger's lost its mind.}
 > right: Read it aloud at breakfast
   rel nessa +small
   renown +tiny
@@ -428,10 +428,11 @@ text: You and Nessa are arguing about something small, and it's getting less sma
   say: "Not with that thing listening." She glares, and then, astonishingly, puts it in her pocket. The argument dies without an audience. "You're right," she says. "Don't quote me."
 > right: Argue for the record
   mood -tiny
-  chance even:
-    rel nessa -small
-    say: You argue for the record. She wins on points, and prints a column the next week about "people who say 'impossible' when they mean 'right'". You aren't named. Everyone knows.
-  else:
-    rel nessa +medium
-    charm +small
-    say: You argue it out for the record, both of you playing to the quill, until you're laughing too hard to finish. The transcript is pinned on her wall under "best interview of the year".
+  challenge appeal vs nessa.charm:
+    win:
+      rel nessa +medium
+      charm +small
+      say: You argue it out for the record, both of you playing to the quill, until you're laughing too hard to finish. The transcript is pinned on her wall under "best interview of the year".
+    lose:
+      rel nessa -small
+      say: You argue for the record. She wins on points, and prints a column the next week about "people who say 'impossible' when they mean 'right'". You aren't named. Everyone knows.

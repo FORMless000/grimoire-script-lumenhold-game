@@ -28,23 +28,23 @@ tags: story
 scene: A tall enchanted mirror in the entrance hall, showing a different version of the viewer in each pane.
 text: The Sorting Mirror in the entrance hall does not sort you into anything. It simply asks, in a voice like cold water, who you were before you came here. It waits.
 > noble: A younger child of minor nobility
-  hint: Charm, a known name, and a family allowance with strings attached.
+  hint: Charm and a known name. 60 crowns from home now, and an allowance each later term, with strings attached.
   gain origin_noble
   say: The mirror shows you a crest you have tried to outgrow. It approves, faintly.
 > scholar: A provincial scholarship student
-  hint: Lore above all. The stipend depends on last term's grades.
+  hint: Lore above all. 30 crowns now, and a stipend each later term while your grades hold.
   gain origin_scholar
   say: The mirror shows you a candle burning very late in a very small room.
 > hedge: Raised by a marsh hedge-witch
-  hint: Alchemy, some Arcana, good spirits. No money from home.
+  hint: Alchemy, some Arcana, good spirits. 15 crowns, and no money from home: you'll need a job.
   gain origin_hedge
   say: The mirror smells, briefly, of wet moss and woodsmoke. You feel at home.
 > street: Raised on the streets of Port Calder
-  hint: Guile and grit. Little gold, and no one to send more.
+  hint: Guile and grit. 8 crowns, and no one to send more: you'll need a job.
   gain origin_street
   say: The mirror shows a pickpocket's quick hands. You check your pockets out of habit.
 > merchant: The heir to a trading company
-  hint: The biggest purse and a nose for bargains. The company pays when trade is good.
+  hint: The biggest purse and a nose for bargains: 120 crowns now, and more from the company when trade is good.
   gain origin_merchant
   say: The mirror shows ledgers, ships and your mother's disappointed face. Still: gold.
 
@@ -746,6 +746,26 @@ text: "Third years," the headmistress says, "you are past the middle of your tim
   mood +tiny
   study +tiny
   say: You know the castle well enough now to get lost in it on purpose. This is the last year for a summer research post, and the holiday notices by the gates pay better every year.
+
+# Marrow asks again (feedback 2026-10-20): the answer you gave her at the Welcome (intro_what_is_just), read back on the eve
+# of graduation, and whether the four years kept to it, by where your alignment ended up: mercy is Lumen, fairness the
+# middle, keeping your own safe Hollow. It changes nothing; it only remembers.
+@event isolde_asks_again
+slot: evening
+title: Ask Me Again
+class: story
+tone: warm
+trigger: auto
+when: turn == max_turns and (flag(just_mercy) or flag(just_fair) or flag(just_strong))
+priority: 65
+art: scales
+tags: story
+scene: A grey-haired headmistress in an evening cloister holding a small worn notebook open, a final-year in graduation robes beside her.
+text: Headmistress Marrow finds you in the cloister, the same small notebook under her arm, four years more worn. "I asked you what was just," she says, and reads it back: {flag(just_mercy): "Mercy."|{flag(just_fair): "Fairness."|"Keeping your own safe."}} She looks at you over the page. {(flag(just_mercy) and alignment >= 20) or (flag(just_fair) and alignment > -20 and alignment < 20) or (flag(just_strong) and alignment <= -20): "You kept to it. I watched."|"You changed your answer without telling me. Most people do."} "Well? I'm asking again."
+> left: Give the same answer
+  say: {(flag(just_mercy) and alignment >= 20) or (flag(just_fair) and alignment > -20 and alignment < 20) or (flag(just_strong) and alignment <= -20): You say it again, and this time you know what it cost. She writes it under the first, in the same hand. "Good," she says. "Some answers are worth giving twice."|You say it again, though you both know the four years said something else. She writes it down anyway. "Then go and live up to it," she says. "You've time. Not much, but some."}
+> right: Give a new answer
+  say: You tell her what four years taught you instead. She listens to all of it, writes it under the first, and closes the notebook on both. "That," she says, "is what I hoped the castle would do to you."
 
 @event graduation_eve
 slot: night

@@ -134,6 +134,15 @@
       // The kit you arrive with (E4): `start: true` items, owned and worn.
       for (const d of Object.values(this.c.items || {})) if (d.start) { s.items[d.id] = { since: 0 }; s.itemsHad[d.id] = 0; if (!s.worn[d.slot]) s.worn[d.slot] = d.id; }
       this.runHooks('game_start');
+      // The prologue (feedback 2026-10-20): with no origin picked before the game, the cards game_start queued (the arrival,
+      // then the mirror, where you pick it) play first, and month 1 begins when they're done, so its charges and summary
+      // come after the pick. It reads as month 1 throughout (s.turn 1); advance() then starts the month for real.
+      if (opts.prologue && opts.origin == null) {
+        s.deck = s.deck.concat(s.queue.filter((q) => q.due <= s.turn).map((q) => ({ id: q.id, actor: q.actor || null, src: 'queued' })));
+        s.queue = s.queue.filter((q) => q.due > s.turn);
+        s.turn = 1; s.prologue = true;
+        return this.advance();
+      }
       return this.beginMonth();
     }
     // The origins on offer: the options of `@game origins:` (a menu event), with the origin state each one grants.
@@ -1912,6 +1921,8 @@
         });
         return { kind: 'card', view, onShow };
       }
+      // The prologue's cards are done (newGame): month 1 begins now.
+      if (s.prologue) { delete s.prologue; s.turn = 0; return this.beginMonth(); }
       return this.endMonth();
     }
 
@@ -1967,6 +1978,8 @@
       if (!opt) throw new Error('no option ' + key + ' on ' + e.id);
       if (opt.when && !this.test(opt.when, item.actor)) throw new Error('option ' + key + ' is not available');
       if (this.withContext(item, () => this.poorKeys(e, this.optionsOf(e), item.actor)).has(key)) throw new Error('option ' + key + ' costs more than you have');
+      // The origin picked in the mirror itself (the prologue) is recorded as one picked before the game (applyOrigin).
+      if (e.id === this.c.game.origins) { s.origin = key; s.hist.push({ t: 'origin', key, at: now() }); }
       const ctx = this.newCtx(item.actor, null, e.id);
       ctx.cast = item.cast || null; ctx.track = item.track || null;
       this._cast = ctx.cast; this._ctxTrack = ctx.track; this._ctxPlace = item.place || null;

@@ -198,7 +198,7 @@ text: Nessa is putting out a holiday edition of the Ledger for the eleven people
 > left: Give her a real one
   rel nessa +small
   renown +tiny
-  say: {~You tell her about the cook's pie. She makes it the front page. It sells out, all eleven copies.|You give her the snowball fight. She runs it with a drawing. Bram buys three copies and pretends not to.}
+  say: {~You tell her the cook has been baking for a full school out of habit, and feeding the surplus to the gargoyles. She makes it the front page. It sells out, all eleven copies.|You tell her a portrait on the east stair has moved two frames along while nobody was looking. She runs it with a drawing. Bram buys three copies and pretends not to.}
 > right: Let the quill have its way
   mood +small
   rel nessa -tiny
@@ -373,7 +373,7 @@ text: {season == "winter": The neighbours are clearing a fallen tree from the fa
   say: {~By sunset you're filthy and aching, the job is done, and a neighbour presses a coin on you you can't refuse.|You work till dark. Nobody mentions the academy once, and you like that more than you expected.}
 > right: Do a bit of quiet magic
   arcana +small
-  alignment -tiny
+  mood -tiny
   say: {~A little lift here, a little warmth there. The work goes twice as fast. Nobody says anything, but an old neighbour watches your hands the whole time, and doesn't smile.|You make it easier than it should be. The neighbours thank you warily, as if you'd brought a stranger.}
 
 @event home_fields_old_friend
@@ -398,6 +398,7 @@ text: {~Someone you grew up with is leaning on the gate at the end of the lane, 
 @event home_fields_night_sky
 title: The Sky Without Towers
 place: home_fields
+slot: evening
 class: routine
 tone: warm
 repeat: 4
@@ -405,7 +406,7 @@ weight: 8
 art: star
 tags: home nature
 scene: A student lying on their back in a dark field at night, the sky enormous and full of stars, no buildings anywhere.
-text: At home the sky comes right down to the ground on every side. No towers, no observatory dome, just stars from one edge to the other. {month == 11 or month == 12: And Starfall, which looks different out here: closer, somehow, and less like a show.|You'd forgotten how many there are.}
+text: You stay out in the field until the light goes. At home the sky comes right down to the ground on every side. No towers, no observatory dome, just stars from one edge to the other. {month == 11 or month == 12: And Starfall, which looks different out here: closer, somehow, and less like a show.|You'd forgotten how many there are.}
 > left: Name every one you know
   lore +small
   health -tiny

@@ -65,7 +65,14 @@ async function checkSurface(p, sel, size, what, label) {
 async function tour(p, base, lang, label, toggles) {
   await p.goto(base + '?lang=' + lang); await wait(p, 300);
   await p.click('#begin'); await wait(p, 250);
-  const o = await p.$$('.origin-opt'); await o[0].click(); await wait(p, 80); await p.click('#originGo'); await wait(p, 250);
+  // The prologue: the arrival, the mirror (the first origin), then month 1 (feedback 2026-10-20).
+  for (let i = 0; i < 20 && !(await p.$('#beginMonth')); i++) {
+    const o = await p.$$('.opt:not([disabled])');
+    if (o.length) { await o[0].click(); await wait(p, 80); await p.click('#multiGo'); }
+    else if (await p.$('#contBtn')) await p.keyboard.press('Enter');
+    else { const c = await p.$('#choices .choice:not([disabled])'); if (c) await c.click(); }
+    await wait(p, 250);
+  }
   const seen = {};
   const at = async (key, sel, size) => {
     if (seen[key] || !(await p.$(sel))) return;

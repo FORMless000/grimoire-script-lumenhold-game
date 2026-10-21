@@ -299,7 +299,7 @@ The tentative live harness will build its prompts from the same files, so the pa
 
 - **4 years.** The run ends in Starfall of year 4: **48 months**.
 - **The wrap-up** (playtest 2): year 4's last break is not a vacation. There is no break plan; the player stays on campus with free board and no obligations. Goldenhaze is a free campus month. Starfall, the last month, resolves the endings: no map and no ordinary cards, only the graduation and one resolution card per ending (X10 fills these), whose choices decide how each ending resolves.
-- **The origin** is picked on its own screen before the game (§3, playtest 2): each origin's money situation is shown, with a warning for the poor ones, and its effects apply before month 1's charges. The Sorting Mirror scene in month 1 reflects the choice.
+- **The origin** is picked in the Sorting Mirror itself (§3; feedback 2026-10-20, until then on its own screen before the game): a new game opens on a prologue, the sky-barge's arrival and then the mirror, a menu whose answers name the crowns each origin gives, and month 1 begins once it's picked, so its charges and summary follow the pick and see the origin. Tools and tests still pass the origin to `newGame`, and then the mirror only reflects it.
 - The names `final_year`, `wrapup`, `term`, `break` and `season` are available in conditions and text.
 
 ### 4.2 Day recipes

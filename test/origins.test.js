@@ -135,3 +135,28 @@ test('term_gpa: the latest completed term only, appeals included; no grades is 0
   // In the middle of a term, the latest completed term is the one before.
   eng.s.turn = 14; assert.equal(eng.termGpa(), 4);
 });
+
+// Feedback 2026-10-20: the origin is picked in the mirror itself, in a prologue before month 1, so month 1's charges and
+// summary come after the pick; and each answer's crowns are the crowns it actually gives (they used to read as the
+// purse in all, before tuition).
+test('origins: picked in the mirror in a prologue; the crowns a hint names are the crowns the origin gives', () => {
+  const ev = content.events[content.game.origins];
+  for (const o of ev.options) {
+    const bare = new Engine(content);
+    quiet(() => bare.newGame({ seed: 5, name: 'O' }));
+    bare.s.vals.gold = 0;
+    bare.applyOrigin(o.key);
+    const named = /(\d+) crowns/.exec(o.hint || '');
+    assert.ok(named, o.key + ': the hint names its crowns');
+    assert.equal(+named[1], bare.s.vals.gold, o.key + ': named ' + named[1] + ', gives ' + bare.s.vals.gold);
+  }
+  const eng = new Engine(content), ids = [];
+  let r = quiet(() => eng.newGame({ seed: 5, name: 'P', prologue: true }));
+  while (r.kind === 'card') { ids.push(r.view.id); r = quiet(() => eng.choose(r.view.id === ev.id ? 'merchant' : r.view.options[0].key)) && eng.advance(); }
+  assert.deepEqual(ids, ['intro_arrival', ev.id], 'the arrival, then the mirror');
+  assert.equal(r.kind, 'month'); assert.equal(r.turn, 1);
+  assert.equal(eng.s.origin, 'merchant'); assert.ok(eng.s.states.origin_merchant);
+  const charged = r.summary.map((x) => x.label);
+  assert.ok(charged.includes('Tuition'), 'month 1 charges come after the pick: ' + charged.join(', '));
+  assert.equal(eng.s.vals.gold, 150 - 16 - 8, 'the purse less tuition and fees');
+});

@@ -14,8 +14,9 @@
  *                  engineBudget: its time per turn in ms (Infinity: it searches until the turn ends); onEngineBudget(ms).
  *     kit       (world expansion 1) the worn kit, changeable before the first exchange: {slots: [{slot, worn, items: [{id, name}]}],
  *               equip(slot, id) → the player's new modifiers}; the fight is set up again with them
- *   A card's fight may be a lesson (EVENTS `tutorial: [keys]`: a coach mark per exchange, "Skip the lesson" settles as a
- *   draw) or carry nothing at stake (`stakes: none`: "Walk away" settles as a loss); either way the fight changes no bar.
+ *   A card's fight may be a lesson (EVENTS `tutorial: [keys]`: a coach mark per exchange; `script`: the foe's first moves,
+ *   CombatBridge.scriptedMove; no way out, as in every fight: feedback 2026-10-20) or carry nothing at stake
+ *   (`stakes: none`: "Walk away" settles as a loss); either way the fight changes no bar.
  *   CombatUI.autoResolve(request, content)  a fight played by two AIs at once (a safety net; never the normal path)
  * Look: src/combat.css. Text: the UI's fight.* strings (src/i18n.js); the fight's own lines come from the minigame.
  */
@@ -104,6 +105,9 @@
       if (side === 0 && !game.config.ai[0]) return;
       const actions = C().legalActions(game);
       if (actions.length === 1) { submit(actions[0]); pump(); return; }
+      // A lesson's scripted foe (feedback 2026-10-20): its first moves are written, not searched.
+      const scripted = side === 1 && B().scriptedMove(fight);
+      if (scripted) { submit(scripted); pump(); return; }
       busy = side === 1; render();
       const at = moves;
       ai.choose(game, game.config.ai[side]).then((d) => { if (closed || at !== moves) return; busy = false; submit(d.id); pump(); })
@@ -117,7 +121,8 @@
       const key = ['hold', 'release'].includes(id) ? channel + '_' + id : id;
       return (C_.SPELL_ICONS || {})[id] || C_.ACTION_ICONS[key] || (C_.SPELLS[id] && C_.SPELLS[id].physical ? C_.ACTION_ICONS.strike : id === 'frozen' ? '<b class="glyph">❄</b>' : id === 'cancel' ? '<b class="glyph">∅</b>' : QUESTION);
     }
-    const label = (id) => C().label(id);
+    // A lesson's foe standing still (its script's 'idle', the core's `cancel`) is idle, not a lost turn.
+    const label = (id) => (id === 'cancel' && fight && fight.setting && fight.setting.script ? tr('idle') : C().label(id));
     // A creature's own name for a base rule (kit.labels: {shadowstep: 'skitter'}, world expansion 1).
     const labelsOf = (side) => (game.actors[side].kit && game.actors[side].kit.labels) || null;
     const sideLabel = (id, side) => { const l = labelsOf(side); return label(l && l[id] ? l[id] : id); };
@@ -375,7 +380,7 @@
       const C_ = C(), st = fight.setting || {}, rb = (C_.CONTEXTS && C_.CONTEXTS[st.context]) || {}, free = ((C_.COMBAT_TUNING || {}).settle || {}).healthFreeAbove;
       const pct = (x) => Math.round((x || 0) * 100);
       // A lesson or a fight with nothing at stake (world expansion 1): nothing is lost, whatever the context's rebates.
-      if (st.tutorial || st.stakes === 'none') return '<p class="fight-setting"><span><b>' + esc(tr(st.tutorial ? 'lessonTitle' : 'freeTitle')) + '</b> · ' + esc(tr('nothingAtStake')) + '</span></p>';
+      if (st.tutorial || st.stakes === 'none') return '<p class="fight-setting"><span><b>' + esc(tr(st.tutorial ? 'lessonTitle' : 'freeTitle')) + '</b> · ' + esc(tr(st.tutorial ? 'lessonStakes' : 'nothingAtStake')) + '</span></p>';
       const parts = ['<b>' + esc(tr('context.' + st.context)) + '</b>'];
       if (free) parts.push(esc(tr('healthBelow', { n: free })));
       if (rb.health === rb.mana) { if (rb.health) parts.push(esc(tr('rebateBoth', { pct: pct(rb.health) }))); }
@@ -400,18 +405,18 @@
       const k = keys[Math.min(history.length, keys.length - 1)];
       return '<div class="coach" role="note"><b>' + esc(tr('coachTitle')) + '</b> ' + esc(tr('coach.' + k)) + '</div>';
     }
-    // A fight with nothing at stake can be left: a lesson is skipped (a draw), a bonus challenge walked away from (a loss).
+    // A bonus challenge with nothing at stake can be walked away from (a loss). A lesson can't be left, as no fight can
+    // (feedback 2026-10-20): it's a straw mannequin.
     function leaveButton() {
       const st = fight.setting || {};
-      if (game.result || !(st.tutorial || st.stakes === 'none')) return '';
-      return '<button class="fl-leave" data-leave="' + (st.tutorial ? 'lesson' : 'walk') + '">' + esc(tr(st.tutorial ? 'skipLesson' : 'walkAway')) + '</button>';
+      if (game.result || st.tutorial || st.stakes !== 'none') return '';
+      return '<button class="fl-leave" data-leave="walk">' + esc(tr('walkAway')) + '</button>';
     }
-    function leave(kind) {
+    function leave() {
       if (done || game.result) return;
       C().concede(game, 0);
       done = true;
       const res = B().fightResult(fight);
-      if (kind === 'lesson') { res.outcome = 'draw'; res.reason = 'conceded'; }
       close(); opts.onDone(res);
     }
     // The kit (world expansion 1): changeable on the opening screen, until the first exchange; then it's locked.
@@ -463,7 +468,7 @@
       for (const b of layer.querySelectorAll('[data-action]')) b.onclick = () => { const id = b.dataset.action; if (selected === id) commit(id); else selectAction(id); };
       const cb = $('.fl-commit'); if (cb) cb.onclick = () => commit();
       const d = $('#fightDone'); if (d) { d.onclick = finish; d.focus({ preventScroll: true }); }
-      const lv = $('[data-leave]'); if (lv) lv.onclick = () => leave(lv.dataset.leave);
+      const lv = $('[data-leave]'); if (lv) lv.onclick = () => leave();
       for (const sel of layer.querySelectorAll('.fight-kit select')) sel.onchange = () => reKit(sel.dataset.slot, sel.value);
       const et = $('.eng-toggle'); if (et) et.onclick = () => setEngine(!engineOn);
       const eb = $('.eng-budget'); if (eb) eb.onchange = () => { engineBudget = Number(eb.value); if (opts.onEngineBudget) opts.onEngineBudget(engineBudget); analysisFor = -1; analysis = null; requestAnalysis(); paintEngine(); };

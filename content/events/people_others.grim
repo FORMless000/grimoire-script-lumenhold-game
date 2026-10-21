@@ -79,12 +79,12 @@ title: Running in the Halls
 class: routine
 tone: tense
 actor: bram
-when: not met(bram) and turn >= 2
+when: (not met(bram) or seen(intro_tour) > 0) and turn >= 2
 weight: 30
 art: scroll
 tags: rival
 scene: A burly prefect with a red sash blocking a corridor, a demerit ledger open in one hand and a quill poised.
-text: "Running in the halls." A burly prefect with a red sash steps into your path, ledger already open. "Name?" You weren't running. You were walking briskly.
+text: "Running in the halls." {met(bram): Bram Hollis, the prefect from the tour,|A burly prefect with a red sash} steps into your path, ledger already open. "Name?" {met(bram): He knows it. |}You weren't running. You were walking briskly.
 > left: Accept the demerit
   meet bram
   mood -tiny

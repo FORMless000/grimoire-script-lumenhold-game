@@ -118,12 +118,21 @@ async function endingPortraits(p, lang) {
   return ok;
 }
 
-// The origin screen (M32): a random origin each run, so runs cover them all over time.
+// The prologue (feedback 2026-10-20): the arrival, then the mirror, where the origin is picked (a random one each run, so
+// runs cover them all over time), then month 1's screen.
 async function pickOrigin(p) {
-  const opts = await p.$$('.origin-opt');
-  if (!opts.length) throw new Error('no origin screen after Begin');
-  await opts[Math.floor(Math.random() * opts.length)].click(); await p.waitForTimeout(80);
-  await p.click('#originGo'); await p.waitForTimeout(250);   // a click picks; Confirm starts
+  for (let i = 0; i < 40; i++) {
+    if (await p.$('#beginMonth')) return;
+    // A card swaps out while it's clicked now and then: try again on the next pass.
+    try {
+      const opts = await p.$$('.opt:not([disabled])');
+      if (opts.length) { await opts[Math.floor(Math.random() * opts.length)].click({ timeout: 2000 }); await p.waitForTimeout(80); await p.click('#multiGo', { timeout: 2000 }); }
+      else if (await p.$('#contBtn')) await p.keyboard.press('Enter');
+      else { const c = await p.$('#choices .choice:not([disabled])'); if (c) await c.click({ timeout: 2000 }); }
+    } catch (e) { /* detached mid-click */ }
+    await p.waitForTimeout(250);
+  }
+  throw new Error('the prologue never reached month 1');
 }
 
 // The map screen (M1): one visit at a time; tapping an open place picks it and the button ("Go to …") goes; with no
