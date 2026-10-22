@@ -28,7 +28,7 @@ For each place events mention, add a `@place` in `content/world/places.grim`: re
 
 ## 3. Lore and timeline
 
-Write `@lore` entries in `content/world/lore/soft/<topic>.grim` with `canon: soft`: the main plot, recurring world details, institutions, families, minor figures. `keys:` are the names and phrases a brief will search for (comma-separated, proper nouns first). Dated history goes in `content/world/timeline.grim` (`kind: history`, dates as years before the first year).
+Write `@lore` entries in `content/world/lore/soft/<topic>.grim` with `canon: soft`: the main plot, recurring world details, institutions, families, minor figures. `keys:` are the names and phrases a brief will search for (comma-separated, proper nouns first). Dated history goes in `content/world/timeline.grim` (`kind: history`, dates as years before the first year). While you read, note numbers of years and ages that disagree with the timeline or with a fact ("forty years of the Ledger" against its founding). When the worldbook is right, fix the event and its translation; don't bend the worldbook to the event.
 
 ## 4. Check
 

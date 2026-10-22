@@ -41,6 +41,19 @@ Circumstance steps, `+1 if <cond>` or `-1 if <cond>` at the end of the line, mov
 - Test a resource only when it is the advantage, such as `using renown` when popularity is what helps.
 - A `vs` check reads the stat that matches the skill being tested.
 
+**Which kind.** `docs/grimoire-script.md` lists every kind and its default skill.
+
+| The action | Kind |
+|---|---|
+| A real negotiation: someone across a table with reasons of their own, and something at stake | `negotiate`, bound to the negotiation minigame. Each needs an entry in `src/negotiation.js` `PARLEYS`; the button promises a negotiation. |
+| A quick ask, small talk, a favour | `appeal` |
+| A show, a song, a story told to a room | `perform` |
+| Calming a creature (add `using vigor` when it's physical) | `soothe` |
+| Misleading someone | `deceive` |
+| A fight | `combat` or `duel`, always played in the combat minigame. The foe, its kit and the setting come from `EVENTS` in `combat/setup/foes.mjs`. |
+
+A minigame kind sits on an option, at most one on any path through a card. A trivial ask written as `negotiate` is a defect.
+
 ## Odds by nature and luck
 
 - **Most attempts are `even`.** Change it only when the nature of the attempt makes success usual or rare, whoever tries.

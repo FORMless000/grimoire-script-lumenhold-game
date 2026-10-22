@@ -13,6 +13,12 @@ Validators check the first group automatically; the critic (a separate pass, wit
 - **Choices:** no option is obviously best (`costs.md`): options trade by giving different things or by a cost or risk; every cost is one the `say:` shows (body → health, spirits → mood, purchases → crowns, skipped work → `study`/`perform`/`progress`, a person let down → `rel`, a moral side → alignment); every option has a specific `say:`.
 - **Tone:** warm, witty, slightly melancholy; humour from specifics; no gore, nothing explicit, adults only.
 - **Length:** text under 400 characters, labels under 36, `say` under 300.
+- **Continuity** (the defects the critic found most often in world expansion 1):
+  - What the text promises happens: money, an item, a payback or a later scene that a `say:` mentions is in the effects (`gold`, `give`, `queue … in N`).
+  - A `say:` that reads a counter or flag comes before the statement that changes it, because its text is filled in at that point.
+  - Time, weather and place agree with when the card can show: `slot:` or `{slot == …}`, `{season == …}`, and `{off_campus: …}` for a break spent away.
+  - A callback to an earlier scene gates on `seen(<that card>) > 0`. A `learn` that another card can teach first gates on `not knows(<fact>)`. A thing found once doesn't go on glinting after it's found.
+  - Numbers of years and ages agree with the timeline and the facts: how long the Ledger has run, how old a tree's ring is.
 - **Gating:** `when` conditions are reachable and sensible; queued events are queued by something; flags read are set somewhere (`grim reach` proves it; lint fails on an unreachable event).
 - **Plot safety:** only hard-canon story events grant key clues or move arc clocks.
 - **Leads:** a hint the player has to follow up later (a card at a place, slot or track waiting on this card's flag) leaves a side-thread lead in the Clues panel; `grim leads` shows none missing.

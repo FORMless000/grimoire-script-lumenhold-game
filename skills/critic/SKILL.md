@@ -67,6 +67,13 @@ For every event, ask the questions below. Write down an issue only when you can 
 - An item option is that item's moment in that scene: it should feel like owning the thing paid off, without being free (it still trades), and at most one per card. Worn effects act only in fights; nothing on a card reads what you wear except `worn()` gates.
 - No recipes or ingredients (§9.3 still holds for crafting).
 
+**Continuity**
+- Does everything the text promises happen? Check that money, an item, a payback or a later scene that a `say:` mentions is in the effects (`gold`, `give`, `queue … in N`).
+- Does a `say:` read a counter or flag after a statement that resets it? Its text is filled in at that point, so the reader sees the reset value.
+- Do time, weather and place fit every way the card can show? A night scene without `slot:`, snow outside winter, the castle on a break spent at home.
+- Does a callback gate on the scene it recalls (`seen(<card>) > 0`)? Does a `learn` that another card can teach first gate on `not knows(<fact>)`?
+- Do numbers of years and ages agree with `content/world/timeline.grim` and the facts?
+
 **Gating**
 - `when`, `level:`, `rank:`, `place:` and `plan:` make sense together: a club-practice event isn't gated to a place the club doesn't use, and a level-3 class doesn't read like a first lesson.
 - Flags read are set somewhere, and queued events are queued by something.
