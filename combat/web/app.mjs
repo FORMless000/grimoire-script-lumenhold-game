@@ -1,4 +1,4 @@
-import {SPELL_ICONS,ACTION_ICONS,PORTRAITS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,createState,applyChoice,actorToMove,legalActions,available,cost,describe,describeData,label,concede,hpCost,has,expandAI,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,EVENTS,FOES,POOLS,fightSetting,levelRng,generateLoadout,COMBAT_TUNING,settle,GAME_TEXT,WORN_ITEMS,GAME_NPCS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState,analyzePosition} from './engine.mjs';
+import {SPELL_ICONS,ACTION_ICONS,PORTRAITS,flavorLine,finishLines,resolvedLines,isCompelled,compelledLine,fighterNames,createState,applyChoice,actorToMove,legalActions,available,cost,describe,describeData,renderText,label,concede,hpCost,has,expandAI,RULES_VERSION,SPELLS,LOADOUTS,SPECIAL_LOADOUTS,NAMED_LOADOUTS,fixedLoadoutLevel,CONTEXTS,EVENTS,FOES,POOLS,fightSetting,levelRng,generateLoadout,COMBAT_TUNING,settle,GAME_TEXT,WORN_ITEMS,GAME_NPCS,chooseAIAction,searchAction,createSearchContext,searchPositionKey,probeSearchCache,cloneState,analyzePosition} from './engine.mjs';
 import {brief} from './brief.mjs';
 import {portrait,BLANK} from './art.mjs';
 // The same served module supplies a worker, preserving the existing localhost server.
@@ -134,8 +134,15 @@ function actionIcon(id,side=0,channel=game.actors[side].channel?.id){
 const labelsOf=side=>game.actors[side].kit?.labels??null;
 const sideLabel=(id,side)=>{const al=labelsOf(side)?.[id];return al?SPELLS[al]?.name??label(al):label(id);};
 const actionName=(id,side)=>['hold','release'].includes(id)?`${label(id)} ${sideLabel(game.actors[side].channel?.id??'',side)}`:sideLabel(id,side);
-// A telegraphed channel (a creature's maul, charge, …): its wind-up shows while it's held.
-const telegraphed=side=>{const ch=game.actors[side].channel,al=ch&&labelsOf(side)?.[ch.id];return !!(al&&SPELLS[al]?.telegraph);};
+// Blows on their way (F5.11): the foe's Omens and delayed blows (a creature's Maul, Charge, …), cast in the open. Each says
+// when it lands, how hard, and what stops it (the spell's own description), so the player can answer it in time.
+function incoming(){
+ const os=game.actors[1].omens.filter(o=>o.due>=game.round).sort((a,b)=>a.due-b.due);if(!os.length)return '';
+ return os.map(o=>{const id=o.id??'omen',now=o.due===game.round,n=Math.round(o.power),d=describeData(game,1,id),stops=d?.stops?renderText(d.stops):id==='omen'?describe(game,1,id):'';
+  const k=o.due-game.round,when=k===1?gt('fight.whenNext',{},'next exchange'):gt('fight.whenIn',{k},'in {k} exchanges');
+  const head=now?gt('fight.incomingNow',{move:label(id),n},'{move} lands this exchange: {n} damage before defences.'):gt('fight.incomingLater',{move:label(id),n,ex:o.due,when},'{move} lands {when} (exchange {ex}): {n} damage before defences.');
+  return `<div class="intent incoming${now?' now':''}"><span class="tele-icon">${actionIcon(id,1)}</span><div class="it"><b>${esc(head)}</b>${stops?`<small>${esc(stops)}</small>`:''}</div></div>`;}).join('');
+}
 const briefOf=(side,id)=>{let d=null;try{d=describeData(game,side,id);}catch{}return brief(id,d,game.actors[side].channel?.id);};
 // same: the label repeats the action's name, which the button already shows (hidden there unless the name is).
 const effHtml=(b,name)=>{const v=b.value!==''&&b.value!==null&&b.value!==undefined;return `<span class="eff k-${b.kind}${v?' has-v':''}">${v?`<b>${esc(b.value)}</b>`:''}${b.label?`<small class="lbl${name&&name.toLowerCase()===b.label.toLowerCase()?' same':''}">${esc(b.label)}</small>`:''}${b.turns?`<small class="t">${b.turns}t</small>`:''}</span>`;};
@@ -153,10 +160,10 @@ function bar(side,kind,value,max,flux=0,shield=0){
  let delta='';if(prev&&prev.v!==value&&prev.at!==moves){seen[k]={v:value,at:moves,d:value-prev.v,fresh:true};}else if(!prev)seen[k]={v:value,at:-1,d:0};
  // A change animates on the first render that shows it only: re-renders (a click on the track, a sheet) don't replay it.
  const s=seen[k],fresh=s.fresh;s.fresh=false;if(fresh&&Math.abs(s.d)>=.5)delta=`<span class="delta ${s.d<0?'neg':'pos'}">${s.d<0?'−':'+'}${fmt(Math.abs(s.d))}</span>`;
- return `<div class="bar ${kind} ${fresh&&s.d?s.d<0?'drop':'rise':''}" title="${kind==='hp'?'HP':'Mana'} ${fmt(value)} / ${fmt(max)}${kind==='mana'?` · flux ${fmt(flux)}: Reclaim restores up to ${fmt(Math.min(flux,max-value))}`:''}">
+ return `<div class="bar ${kind} ${fresh&&s.d?s.d<0?'drop':'rise':''}" title="${kind==='hp'?'HP':'Mana'} ${fmt(value)} / ${fmt(max)}${kind==='mana'?` · flux ${fmt(flux)}: Refocus restores up to ${fmt(Math.min(flux,max-value))}`:''}">
   <span class="bnum"><span class="bk">${kind==='hp'?'♥':'✦'}</span>${Math.round(value)}<small>/${Math.round(max)}</small>${delta}</span>
   <span class="btrack">${layer('trail',k+'trail',now)}${kind==='mana'?layer('flux',k+'flux',pct(fluxShown),now):''}${layer('fill',k+'fill',now)}${kind==='hp'?layer('shield',k+'shield',pct(shield),Math.max(0,Math.min(now,100-pct(shield)))):''}</span>
-  ${kind==='mana'?`<span class="bflux${flux>0?'':' none'}" title="Flux: Reclaim turns it back into Mana">↻${fmt(flux)}</span>`:`<span class="bshield${shield>0?'':' none'}" title="Shield: absorbs damage before HP">${shield>0?'◈'+Math.round(shield):''}</span>`}</div>`;
+  ${kind==='mana'?`<span class="bflux${flux>0?'':' none'}" title="Flux: Refocus turns it back into Mana">↻${fmt(flux)}</span>`:`<span class="bshield${shield>0?'':' none'}" title="Shield: absorbs damage before HP">${shield>0?'◈'+Math.round(shield):''}</span>`}</div>`;
 }
 function snapshotBars(){for(const el of document.querySelectorAll('[data-bar]')){const t=el.parentElement.clientWidth;if(!t)continue;bars[el.dataset.bar]=100*el.offsetWidth/t;if(el.dataset.left!==undefined)bars[el.dataset.bar+'@']=100*el.offsetLeft/t;}}
 function animateBars(){requestAnimationFrame(()=>requestAnimationFrame(()=>{for(const el of document.querySelectorAll('[data-bar]')){el.style.width=el.dataset.to+'%';bars[el.dataset.bar]=Number(el.dataset.to);if(el.dataset.left!==undefined){el.style.left=el.dataset.left+'%';bars[el.dataset.bar+'@']=Number(el.dataset.left);}}}));}
@@ -167,15 +174,17 @@ function fighter(i){const a=game.actors[i],purse=[game.config.observers?`★${fm
  return `<article class="fighter ${i?'opp':'you'}"${i?' data-sheet="inspect" role="button" tabindex="0" title="Inspect the opponent"':''}>
   <div class="pf${i?'':' blank'}">${portraitOf(i)}${i?`<span class="pf-eye">${EYE}</span>`:''}</div>
   <div class="fi"><div class="fname"><b>${esc(nameOf(i))}</b><small>${i&&game.actors[1].kit.loadout==='custom'?'':'Lv '+a.kit.level}${purse?' · '+purse:''}</small>${constructChips(a,i)}</div>
-  ${bar(i,'hp',a.hp,a.maxHP,0,a.effects.lodestar?.value??0)}${bar(i,'mana',a.resources.mana,a.kit.capacity,a.flux)}</div></article>`;}
+  ${bar(i,'hp',a.hp,a.maxHP,0,0)}${bar(i,'mana',a.resources.mana,a.kit.capacity,a.flux)}</div></article>`;}
 
 function intent(){
  if(game.result)return '';
+ return incoming()+move();
+}
+function move(){
  const opponent=game.pending[1],forced=isCompelled(game,1)?(opponent??legalActions(game,1)[0]):null,shown=forced??opponent;
  if(busy)return `<div class="intent wait"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>${esc(nameOf(1))} is choosing…</b><small>Their move appears when they commit.</small></div></div>`;
  if(shown){const b=briefOf(1,shown),fl=forced?compelledLine(sideLabel(shown,1),{names,side:1}):flavorLine(shown,{channel:game.actors[1].channel?.id,round:game.round,names,side:1,labels:labelsOf(1)});
   return `<div class="intent shown${forced?' forced':''}" data-sheet="intent" role="button" tabindex="0" title="What their move does"><span class="tele-icon">${actionIcon(shown,1)}</span><div class="it"><b>${forced?'Compelled: ':'They commit: '}${esc(actionName(shown,1))} ${effHtml(b)}</b>${fl?`<small class="flavor">${esc(fl)}</small>`:''}</div><span class="it-more">${EYE}</span></div>`;}
- if(telegraphed(1)){const ch=game.actors[1].channel.id;return `<div class="intent hidden windup"><span class="tele-icon">${actionIcon(ch,1)}</span><div class="it"><b>${esc(gt('fight.windUp',{name:nameOf(1),move:sideLabel(ch,1)},'{name} is winding up: {move}'))}</b><small>${esc(gt('fight.windUpHint',{},'It lands when released: step aside, brace or ward for it.'))}</small></div></div>`;}
  return `<div class="intent hidden"><span class="tele-icon hidden-move">${QUESTION}</span><div class="it"><b>You commit first</b><small title="Initiative breaks a double knockout.">Their reply stays hidden until you do.</small></div></div>`;
 }
 
@@ -187,26 +196,38 @@ const AHEAD=4,CAST_ON_FOE=new Set(['compelled','torment','bound','poison']),EFFE
 function leaderAt(c){if(!c)return game.leader;const e=game.earlyCommit.map(n=>n-c>0),normal=c%2?1-game.normalLeader:game.normalLeader;return e[0]===e[1]?normal:e[0]?0:1;}
 // The exchange a side last cast this spell: where its line starts, so a line stays put as exchanges pass.
 const castAt=(side,id)=>history.findLast(h=>h.pair[side]===id)?.round;
+// The spell behind a Bind or a poison on `side`: the caster's (or, reflected, its own) bind or poison spell cast last.
+function appliedBy(k,side){const prop=k==='bound'?'bind':'poison';let best=null,at=-Infinity;
+ for(const s of [1-side,side])for(const id of Object.keys(game.actors[s].kit.spells))if(SPELLS[id]?.[prop]){const c=castAt(s,id)??-1;if(c>at){best={id,side:s};at=c;}}
+ return best;}
 function effectRows(){
  const r=game.round,rows=[];
  game.actors.forEach((a,side)=>{
   // Every line is a spell's duration in its caster's colour: Compel, Torment and Foresight sit on the other side.
-  for(const [k,e]of Object.entries(a.effects)){if(e.until!==null&&e.until<r)continue;const on=CAST_ON_FOE.has(k);rows.push({side:on?1-side:side,icon:EFFECT_ICON[k]??k,name:k==='compelled'?label('compel'):sideLabel(k,on?1-side:side),on:on?side:null,from:e.from??e.born??r,until:e.until??Infinity,note:k==='lodestar'?Math.round(e.value)+' shield':k==='tailwind'?'+'+Math.round(e.value):''});}
-  if(a.channel)rows.push({side,icon:a.channel.id,name:sideLabel(a.channel.id,side),from:castAt(side,a.channel.id)??r,until:Infinity,note:`${a.channel.holds} hold${a.channel.holds===1?'':'s'}${a.channel.bank?' · '+Math.round(a.channel.bank)+' banked':''}${telegraphed(side)?' · '+gt('fight.windUpNote',{},'winding up'):''}`});
+  for(const [k,e]of Object.entries(a.effects)){if(e.until!==null&&e.until<r)continue;
+   // A Lodestar is forecast like a blow on its way: its icon and its heal, in green, on the exchange it matures.
+   if(k==='lodestar'){rows.push({side,icon:'lodestar',name:label('lodestar'),due:e.from,heal:true,note:'+'+Math.round(e.value),tip:`matures: all damage negated, then heals ${Math.round(e.value)}`});continue;}
+   const by=k==='bound'||k==='poison'?appliedBy(k,side):null;
+   if(by){rows.push({side:by.side,icon:by.id,name:sideLabel(by.id,by.side),on:by.side===side?null:side,from:e.from??e.born??r,until:e.until??Infinity,note:k==='bound'?'bound: Breaking Free':`${fmt(e.value)} a tick`});continue;}
+   const on=CAST_ON_FOE.has(k);rows.push({side:on?1-side:side,icon:EFFECT_ICON[k]??k,name:k==='compelled'?label('compel'):sideLabel(k,on?1-side:side),on:on?side:null,from:e.from??e.born??r,until:e.until??Infinity,note:k==='tailwind'?`chain ${Math.round(e.value)}`:k==='compelled'&&a.compelAction?sideLabel(a.compelAction,side):''});}
+  if(a.channel)rows.push({side,icon:a.channel.id,name:sideLabel(a.channel.id,side),from:castAt(side,a.channel.id)??r,until:Infinity,note:`${a.channel.holds} hold${a.channel.holds===1?'':'s'}${a.channel.bank?' · '+Math.round(a.channel.bank)+' banked':''}${a.channel.id==='wildfire'?' · next burn '+2*(a.channel.holds+2):''}`});
   for(const c of a.constructs)rows.push({side,icon:c.id,name:sideLabel(c.id,side),from:castAt(side,c.id)??r,until:c.expires,note:`${Math.round(Math.max(0,c.threshold-c.taken))} of ${Math.round(c.threshold)} HP`});
   if(game.earlyCommit[side]>0)rows.push({side:1-side,on:side,icon:'foresight',name:label('foresight'),from:(castAt(1-side,'foresight')??r-1)+1,until:r+game.earlyCommit[side]-1,note:side?'they commit first':'you commit first'});
   if(a.freezeUntil>=r)rows.push({side,icon:'frozen',name:'Frozen',from:a.freezeUntil,until:a.freezeUntil,note:''});
   if(a.rimeReady)rows.push({side,icon:'rime',name:'Rime ready',from:castAt(side,'rime')??r,until:Infinity,note:''});
-  for(const o of a.omens)rows.push({side,icon:'omen',name:'Omen',due:o.due,note:fmt(o.power)});
+  for(const o of a.omens)rows.push({side,icon:o.id??'omen',name:label(o.id??'omen'),due:o.due,note:fmt(o.power)+(o.impact?' Impact':' spell')});
  });
  return rows;
 }
 const who=i=>i?esc(nameOf(1)):'You';
-// A future slot: lost to a freeze, forced by Compel (their last move again), or open; the leader's move shows first.
+// A future slot: lost to a freeze, forced by Bind (Breaking Free) or Compel (the captured move), or open; the leader's move
+// shows first.
 function futureSlot(side,c){
- const ex=game.round+c,a=game.actors[side],lead=leaderAt(c)===side,last=history.at(-1)?.pair[side],comp=a.effects.compelled;
+ const ex=game.round+c,a=game.actors[side],lead=leaderAt(c)===side,last=a.compelAction,comp=a.effects.compelled,bound=a.effects.bound;
  if(a.freezeUntil>=ex)return `<span class="slot lost" title="Exchange ${ex}: ${who(side)} ${side?'is':'are'} frozen">${actionIcon('frozen',side)}</span>`;
- if(comp&&comp.until!==null&&comp.until>=ex&&last)return `<span class="slot forced${lead?' lead':''}" title="Exchange ${ex}: compelled to repeat ${esc(sideLabel(last,side))}">${actionIcon(last,side)}</span>`;
+ if(bound&&bound.from<=ex&&bound.until!==null&&bound.until>=ex)return `<span class="slot forced${lead?' lead':''}" title="Exchange ${ex}: ${who(side)} ${side?'is':'are'} bound: Breaking Free">${actionIcon('break_free',side)}</span>`;
+ if(comp&&comp.until!==null&&comp.until>=ex&&last){const lost=last==='cancel'||!!available(game,side,last);
+  return `<span class="slot forced${lead?' lead':''}" title="${esc(gt(lost?'fight.slotCompelledLost':'fight.slotCompelled',{n:ex,action:sideLabel(last,side)}))}">${actionIcon(lost?'cancel':last,side)}</span>`;}
  if(side)return lead?`<span class="slot shows lead" title="Exchange ${ex}: they commit first, so you see their move">${EYE}</span>`:`<span class="slot hid" title="Exchange ${ex}: you commit first; their move stays hidden">?</span>`;
  return lead?`<span class="slot lead mine" title="Exchange ${ex}: you commit first and they see your move">1st</span>`:'<span class="slot open"></span>';
 }
@@ -225,7 +246,9 @@ function track(){
  const moves=side=>`<div class="tk-row tk-act s${side}"><span class="tk-l"><span class="tk-who">${who(side)}</span></span>${pastCells((h,k)=>`<button class="mini-icon" data-ex="${k}" title="Exchange ${h.round}: ${who(side)} · ${esc(h.actionNames[side])}">${actionIcon(h.pair[side],side,h.channels?.[side])}</button>`)}${ahead(c=>c?futureSlot(side,c):nowSlot(side))}</div>`;
  // A lasting effect: a thin line from the exchange it starts, with its icon at the start; name and numbers on hover.
  const cell=(row,at)=>{const past=typeof at==='object',ex=past?at.round:r+at,c=past?-1:at,tip=esc(`${who(row.side)} · ${row.name}${row.on!=null?' on '+(row.on?nameOf(1):'you'):''}${row.note?' · '+row.note:''}`),ico=`<span class="tk-ico">${actionIcon(row.icon,row.side,row.icon)}</span>`;
-  if(row.due!==undefined)return row.due===ex?`<i class="tl-hit" title="${tip} damage, lands in exchange ${ex}">${ico}${row.note}</i>`:'';
+  // Due past the window: shown in the last column, with an arrow and its exchange.
+  if(row.due!==undefined&&!past&&c===AHEAD&&row.due>ex)return `<i class="tl-hit later${row.heal?' heal':''}" title="${esc(`${who(row.side)} · ${row.name} · ${row.heal?row.tip:row.note+' damage'}, exchange ${row.due}`)}">${ico}${row.note}<small>›${row.due}</small></i>`;
+  if(row.due!==undefined)return row.due===ex?(row.heal?`<i class="tl-hit heal" title="${esc(`${who(row.side)} · ${row.name} · ${row.tip}, exchange ${ex}`)}">${ico}${row.note}</i>`:`<i class="tl-hit" title="${tip} damage, lands in exchange ${ex}">${ico}${row.note}</i>`):'';
   if(ex<row.from||ex>row.until)return '';const first=ex===row.from,open=row.until===Infinity&&c===AHEAD;
   return `<i class="tl-on${first?' first':''}${ex===row.until||open?' last':''}${open?' open':''}" title="${tip}${row.until===Infinity?'':` · until exchange ${row.until}`}">${first?ico:''}</i>`;};
  const effects=done?'':rows.map(row=>`<div class="tk-row tk-eff s${row.side}"><span class="tk-l"></span>${pastCells(h=>cell(row,h))}${ahead(c=>cell(row,c))}</div>`).join('');
@@ -237,21 +260,34 @@ function track(){
 function exchangeFull(r){
  return `<article class="hx-full"><h4>Exchange ${r.round} <small>· ${r.leader===0?'you led':'they led'}</small></h4>${[r.leader,1-r.leader].map(i=>`<div class="hl ${i?'opp':'you'}"><span class="mini-icon">${actionIcon(r.pair[i],i,r.channels?.[i])}</span><p><b>${who(i)}</b> · ${esc(r.actionNames[i])}${r.committed[i]!==r.pair[i]?` <small>(committed ${esc(sideLabel(r.committed[i],i))})</small>`:''}${r.lines?.[i]?` <span class="flavor">${esc(r.lines[i])}</span>`:''}</p></div>`).join('')}${(r.finish??[]).map(f=>`<p class="flavor finish">${esc(f)}</p>`).join('')}</article>`;}
 
-function actionButton(id){const reason=available(game,0,id),disabled=busy||actorToMove(game)!==0||reason,name=actionName(id,0),b=briefOf(0,id);
+// A compelled turn that can't be paid is a cancel: legal, though `available` (a menu check) refuses it (as src/combat-ui.js).
+const forcedLegal=id=>(id==='cancel'||id==='break_free')&&legalActions(game,0).includes(id);
+// Their Compel, committed in the open (F5.11-plan.1): the move you pick now plays, then you must repeat it for three exchanges,
+// unless Ward or Shadowstep keeps it off (or Reflect turns it back).
+function incomingCompel(){
+ if(game.pending[1]!=='compel'||actorToMove(game)!==0)return '';
+ return gt('fight.compelSeize',{},'They cast Compel: the move you pick now you must repeat for the next three exchanges, unless Ward or Shadowstep keeps it off');
+}
+function actionButton(id){const reason=forcedLegal(id)?null:available(game,0,id),disabled=busy||actorToMove(game)!==0||reason,name=actionName(id,0),b=briefOf(0,id);
  return `<button class="act k-${b.kind}${selected===id?' selected':''}" data-action="${id}" aria-label="${esc(name+' · '+price(0,id)+(reason?' · '+reason:''))}" aria-pressed="${selected===id}" title="${esc(name+' · '+price(0,id)+(reason?' · '+reason:''))}" ${disabled?'disabled':''}><span class="a-ico" aria-hidden="true">${actionIcon(id)}</span>${id.startsWith('bundle:')?'':`<span class="a-name">${esc(['hold','release'].includes(id)?label(id):name)}</span>`}${effHtml(b,name)}${costHtml(0,id)}<em class="card-eval" data-eval="${id}"></em></button>`;}
 function preview(){if(!selected)return `<div class="preview hint">${busy||actorToMove(game)!==0?'Waiting for the opponent…':'Pick an action to see what it does. Pick it again to act.'}</div><button id="commit" class="primary" disabled>Commit</button>`;
  return `<div class="preview"><b>${esc(actionName(selected,0))}</b> <span class="price">${price(0,selected)}</span><p>${esc(describe(game,0,selected))}</p></div><button id="commit" class="primary" ${busy||actorToMove(game)!==0?'disabled':''}>${SPELLS[selected]?`<span class="control-icon" aria-hidden="true">${ACTION_ICONS.cast}</span>Cast`:'Commit'}</button>`;}
 function actions(){
- const a=game.actors[0],forced=a.channel||has(game,0,'haste')||a.freezeUntil>=game.round;
+ const a=game.actors[0],frozen=a.freezeUntil>=game.round,bound=!frozen&&has(game,0,'bound'),compelled=!frozen&&!bound&&isCompelled(game,0),forced=frozen||bound||compelled||a.channel;
  const ids=forced?legalActions(game,0):['strike','guard','reclaim',...Object.keys(a.kit.spells)];
- return `${forced?`<div class="action-state">${a.freezeUntil>=game.round?'Frozen · you thaw after this exchange':a.channel?sideLabel(a.channel.id,0)+' · Hold or Release':'Haste · one bundle of basic actions'}</div>`:''}<div class="acts${forced?' forced':''}">${ids.map(actionButton).join('')}</div><div class="commit-bar">${preview()}</div>`;
+ // Compelled: the only move is the captured one, or a lost turn when it can't be played (the core cancels it either way).
+ const prev=a.compelAction&&a.compelAction!=='cancel'?a.compelAction:null;
+ const haste=has(game,0,'haste')?gt('fight.haste',{},'Haste · a spell without damage of its own also throws an Impulse'):'';
+ const state=frozen?'Frozen · you thaw after this exchange':bound?gt('fight.bound',{},'Bound · Breaking Free is your only move'):compelled?(ids[0]!=='cancel'?gt('fight.compelledYou',{action:actionName(ids[0],0)}):prev?gt('fight.compelledLost',{action:label(prev)}):gt('fight.compelledNone'))
+  :a.channel?sideLabel(a.channel.id,0)+' · Hold or Release':incomingCompel()||haste;
+ return `${state?`<div class="action-state">${esc(state)}</div>`:''}<div class="acts${forced?' forced':''}">${ids.map(actionButton).join('')}</div><div class="commit-bar">${preview()}</div>`;
 }
-function commit(id=selected){if(!id||busy||actorToMove(game)!==0||available(game,0,id))return;try{submit(id);pump();}catch(e){$('setup-error').textContent=e.message;}}
+function commit(id=selected){if(!id||busy||actorToMove(game)!==0||(!forcedLegal(id)&&available(game,0,id)))return;try{submit(id);pump();}catch(e){$('setup-error').textContent=e.message;}}
 // Selection stays until execution or a different choice; there is no click timer.
 function selectAction(id){selected=id;for(const b of document.querySelectorAll('[data-action]')){const active=b.dataset.action===id;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(active));}document.querySelector('.commit-bar').innerHTML=preview();const now=$('tk-you-now');if(now)now.innerHTML=actionIcon(id);$('commit').onclick=()=>commit();}
 
 // ---- Sheets: inspect the opponent, their committed move, the full log ----
-function inspectSheet(){const a=game.actors[1],forced=a.channel||has(game,1,'haste')||a.freezeUntil>=game.round;
+function inspectSheet(){const a=game.actors[1],forced=a.channel||a.freezeUntil>=game.round||has(game,1,'bound')||isCompelled(game,1);
  const ids=forced?legalActions(game,1):['strike','guard','reclaim',...Object.keys(a.kit.spells)],recent=history.slice(-6).reverse();
  const sk=['arcana','lore','alchemy','charm','vigor','guile'];
  return `<header class="sh-head"><div class="pf">${portraitOf(1)}</div><div><b>${esc(nameOf(1))}</b><small>${NAMED_LOADOUTS[a.kit.loadout]?'':esc(a.kit.loadout)+' · '}Level ${a.kit.level} · HP ${fmt(a.hp)}/${fmt(a.maxHP)} · Mana ${fmt(a.resources.mana)}/${a.kit.capacity}${a.flux?` (+${fmt(a.flux)} flux)`:''}</small></div><button class="close" data-close aria-label="Close">×</button></header>
@@ -395,5 +431,5 @@ function exportLog(){{const url=URL.createObjectURL(new Blob([JSON.stringify({ru
 // Version shown in the setup panel and the tab title, straight from the engine build.
 if($('version'))$('version').textContent=RULES_VERSION;document.title='Lumenhold · Combat '+RULES_VERSION;
 render();
-const params=new URLSearchParams(location.search);if(params.has('quickstart')){const n=Number(params.get('quickstart'));if([20,50,80].includes(n)){$('player-level').value=n;setup();start();}}
+const params=new URLSearchParams(location.search);if(params.has('quickstart')){const n=Number(params.get('quickstart'));if([20,45,70].includes(n)){$('player-level').value=n;setup();start();}}
 }

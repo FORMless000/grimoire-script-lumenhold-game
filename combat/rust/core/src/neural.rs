@@ -11,7 +11,7 @@ use crate::state::*;
 pub const NF: usize = 24;
 pub const NS: usize = 4;
 const EXPECTED_HIT: f64 = 12.0;
-const BRACE_SHARE: [f64; 4] = [1.0, 0.5, 0.25, 0.25];
+fn left(s: &State, e: &Effect) -> f64 { 0.max(e.until.unwrap_or(s.round) - s.round.max(e.from) + 1) as f64 }
 
 fn construct_hp(s: &State, c: &ConstructI) -> f64 {
     let spec = &data().constructs[c.kind];
@@ -28,10 +28,8 @@ fn influence(enc: &Encounter, s: &State, side: usize, hp: f64) -> [f64; 8] {
     let mut t = [0.0; 8];
     if has(s, side, Eff::Shadowstep) { t[0] = 12.0; }
     if has(s, side, Eff::Haste) { t[1] = 10.0; }
-    if let Some(b) = a.effects[Eff::Brace as usize] {
-        let mut age = 0.max(s.round - b.from);
-        while age < 4 { t[2] += BRACE_SHARE[age as usize] * EXPECTED_HIT * hp; age += 1; }
-    }
+    // F5.11-plan.1: Brace takes its share off for its exchanges (was 100/50/25/25%; the trained weight reads the same term).
+    if let Some(b) = a.effects[Eff::Brace as usize] { t[2] = b.value * EXPECTED_HIT * hp * left(s, &b); }
     if has(s, side, Eff::Heartprice) { t[3] = 3.0; }
     if a.rime_ready && !a.rime_used { t[4] = 8.0; }
     for c in a.constructs.iter() { t[5] += construct_hp(s, c) * hp; }
@@ -66,8 +64,12 @@ pub fn features(enc: &Encounter, s: &State) -> [f64; NF] {
     f[12] = if s.leader == 0 { 10.0 } else { -10.0 };
     f[13] = lead * lead.abs() * 250.0;
     f[14] = 10.0 * ((s.early_commit[1] > 0) as i32 - (s.early_commit[0] > 0) as i32) as f64;
-    f[15] = 10.0 * (has(s, 1, Eff::Compelled) as i32 - has(s, 0, Eff::Compelled) as i32) as f64;
-    let torment = |side: usize| if has(s, side, Eff::Torment) { s.actors[side].effects[Eff::Torment as usize].unwrap().value } else { 0.0 };
+    // A forced move (F5.11-plan.1: Bound's Breaking Free beside Compel's captured move) under the trained Compel term.
+    let forced = |side: usize| (has(s, side, Eff::Compelled) || s.actors[side].effects[Eff::Bound as usize].map_or(false, |e| left(s, &e) > 0.0)) as i32;
+    f[15] = 10.0 * (forced(1) - forced(0)) as f64;
+    // The damage still to come past defences (F5.11-plan.1): Torment's toll at a typical 4 Mana a move, poison's ticks.
+    let torment = |side: usize| { let a = &s.actors[side];
+        a.effects[Eff::Torment as usize].filter(|_| has(s, side, Eff::Torment)).map_or(0.0, |e| e.value * 4.0) + a.effects[Eff::Poison as usize].map_or(0.0, |e| e.value * left(s, &e)) };
     f[16] = torment(1) - torment(0);
     f[17] = 10.0 * (has(s, 0, Eff::Reflect) as i32 - has(s, 1, Eff::Reflect) as i32) as f64;
     let lode = |side: usize| s.actors[side].effects[Eff::Lodestar as usize].map_or(0.0, |e| e.value);

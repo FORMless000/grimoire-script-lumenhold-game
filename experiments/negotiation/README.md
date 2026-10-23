@@ -1,4 +1,17 @@
-# Standalone negotiation simulator · Arguments 3
+# Standalone negotiation simulator · Arguments 8
+
+Current testplay defaults to the version 8 spell-progression model in `research/`.
+Start with `?quickstart=20`, `50`, or `80`; add `&encounter=random` for consecutive story encounters. The three engine objectives are Frugal, Prudent and All-out. Ward is castable but has no negotiation benefit; Flame burns the papers and loses the meeting.
+
+Read [the current rulebook](research/rulebook.md), [the spell-progression study](research/REPORT-gap-8.md), and [the research reproduction notes](research/README.md). The final build is served locally on port 55918; `hosting-local.json` records its frozen directory. `hosting-preview.json` records the older remote deployment, which the current Sites account could not access for this wrap-up. All code and results remain inside this experiment; there is no main-game integration or main-game commit.
+
+Skill-versus-opponent differences now change check chances by 0.65 percentage points per point, half the previous 1.3. Card difficulty spread and Agreement target scaling retain their values. See [the paired before/after comparison](research/GAP-COMPARISON-8.md).
+
+The normal presets now learn 12 / 24 / 34 spells at levels 20 / 50 / 80; late game includes every player-castable spell. Course ranks, Mana prices and capacity follow the combat snapshot in `research/combat-canon.mjs`, with no negotiation discount. Refresh that snapshot explicitly with `node experiments/negotiation/research/sync-combat.mjs --update`; keep previous result snapshots. The original `schema.mjs` remains frozen for legacy goldens.
+
+Simulation resource policies are `dumb` (no spells, compulsory affordable Health/Gold requests), `hyper-frugal` (unlimited Mana, no Health/Gold spending), and `ignorant` (neither spells nor Health/Gold). They use the same All-out response planner. The gameplay UI retains Frugal/Prudent/All-out suggestions. Read the rulebook for exact restrictions and virtual Mana accounting.
+
+The material below documents the preserved **Arguments 3 regression fixture**, available in the browser with `&legacy=1`. Its numerical rules and benchmark results do not describe the current default.
 
 This research prototype stays in `experiments/negotiation/`, separate from the main game and its commits. Read [the standalone rulebook](rulebook.md) and [the tuned AI study](ai-study-tuned-rust-20261020.md).
 

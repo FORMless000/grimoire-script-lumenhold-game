@@ -250,6 +250,12 @@ text: The founders bound something beneath the lake with seven locks, one per to
 
   It's capped at about 6k tokens by default.
 
+Experimental authoring support is separate: `grim retrieve` offers block-addressed
+evidence through custom hybrid search, QMD or LightRAG. `grim author-eval` prepares
+quarantined manual harness trials, audits traces and serves a local blind review
+page. These tools do not generate cards, change canon or replace production batch
+acceptance. See `docs/authoring/retrieval.md` and `experiments/authoring/README.md`.
+
 ### 3.5 Authoring spec (`docs/authoring/`)
 
 | File | Contents |
@@ -982,9 +988,13 @@ challenge duel vs rival hard:     # combat | duel | negotiate | deceive | exam |
 - **A forbidden cast** costs 2 alignment, on a card and in a fight (`@balance forbidden_cast: alignment 2`; a third of the `small` tier it cost before).
 - **Creatures and the kit** (world expansion 1, 2026-10-20; `combat/HANDOFF.md`):
   - **Races** scale a creature foe only: critter (HP ×0.5, Mana ×0.6), beast (×1), monster (×1.75, ×0.6), boss (×3, ×1.5), placeholders for the simulator. Every creature is barred from healing; human foes (students, practitioners, the Outcast) never scale and may heal.
-  - **Creature moves** are mostly aliases of existing rules under the creature's own name and cost (skitter is Shadowstep, a maul a telegraphed channel). Four mechanics are new: **bind** (no step aside or brace next exchange), **drain** (takes Mana into the creature's flux), **poison** (fixed damage each exchange past every defence; Distil clears it) and **multi-hit** (only the first hit meets a guard or brace). A telegraphed channel shows as "winding up".
+  - **Creature moves** are real spells of their own (F5.11): copies of an existing rule at their own numbers (Skitter is Shadowstep, Bark is Ward), delayed blows that land a few exchanges after they're cast, and four mechanics of their own. **Bind**: from the next exchange, Breaking Free is the only move. **Drain** takes Mana into the creature's flux. **Poison** ticks now and next exchange; once attached, nothing but a mature Lodestar stops it, and nothing cures it. **Multi-hit**: only the first hit meets a parry or brace.
   - **The worn kit** (§T2) adds flat modifiers in fights only: HP and Mana, cheaper spells, a spell hit on each cast of a group, a strike on a foe who defends, and less damage from creatures or named spells. Foes may carry the same table (the thornwitch, the Outcast). The kit can be changed on the fight's first screen, never mid-fight.
   - **Lessons and free fights:** a card's fight may be a lesson (coach marks; "Skip the lesson" settles as a draw) or carry nothing at stake ("Walk away"); neither moves any bar.
+- **Duel terms and the spell redesign** (F5.11-plan.1, 2026-10-21; `docs/minigame-combat-f5.11-plan.1-2026-10-21.md`, `combat/HANDOFF.md`):
+  - The basics are **Impulse**, **Parry** and **Refocus**. Physical damage is **Impact**. Haste adds an Impulse to an eligible spell instead of bundling actions.
+  - Every hostile application is blocked, landed or reflected by one rule for both sides.
+  - Generated foe kits learn club and job spells (capstones) from level 30, one club and one job, three at most; they learn hidden spells from 30, one every 10 levels.
 
 **Auto-resolve** (every other kind; it's their only mode until §T1): the odds of a check on the mapped skill(s), against `DC(tier)`, plus modifiers.
 

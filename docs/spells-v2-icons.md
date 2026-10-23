@@ -68,6 +68,33 @@ Each icon is a file in `docs/spell-icons/<id>.svg`. All of them are on one sheet
 - **Eclipse:** a black sun with its corona.
 - **Heartprice:** a heart with a dark star inside.
 
+**Creatures** (F5.11: special foes only; each is its own file, read by `combat/web/icon-source.mjs`. The sheet and the
+Markup table below predate them.)
+- **Gore:** a stag's head, antlers forward.
+- **Nip:** a small snout snapping, with speed marks.
+- **Filch:** a paw closing on a spark.
+- **Roar:** an open mouth with sound rings.
+- **Swarm:** a scatter of small bodies.
+- **Pinch:** two closing pincers.
+- **Acorns:** two acorns, falling.
+- **Root:** a root heaving out of the ground and coiling.
+- **Web:** an orb web.
+- **Threads:** loose sticky strands.
+- **Venom:** two fangs and a drop.
+- **Skitter:** a small body darting along a dashed trail.
+- **Fade:** a stag stepping into a dashed doorway, a second one fading.
+- **Burrow:** a mound over the ground line.
+- **Hide:** a quilled hump.
+- **Bark:** a shield of bark grain.
+- **Carapace:** a beetle's split shell.
+- **Maul:** a raised paw over a dashed landing line.
+- **Charge:** a charging beetle with speed lines.
+- **Bough:** a swinging branch on a dashed arc.
+- **Slow Fall:** a trunk leaning along a dashed fall.
+- **The Long Wait:** a web with a still spider at its heart.
+- **Brood:** a large spider over three small ones.
+- **Thicket:** three thorned saplings.
+
 ## Markup
 
 ### Course spells and Ward

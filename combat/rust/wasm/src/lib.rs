@@ -57,7 +57,9 @@ fn status(r: Result<String, String>) -> i32 { match r { Ok(s) => { out(s); 0 } E
 #[no_mangle] pub extern "C" fn has(side: i32, p: *const u8, n: usize) -> i32 {
     let Some(k) = EFFECT_NAMES.iter().position(|e| *e == input(p, n)) else { return 0 };
     use Eff::*;
-    let e = [Guard, Ward, Brace, ForeAim, Haste, Shadowstep, Tailwind, Reflect, Torment, Eclipse, Heartprice, Compelled, Lodestar][k];
+    // Typed by the core's effect count, so a new effect that isn't listed here fails to build (it panicked before: Bound).
+    const ALL: [Eff; combat_core::state::N_EFFECTS] = [Guard, Ward, Brace, ForeAim, Haste, Shadowstep, Tailwind, Reflect, Torment, Eclipse, Heartprice, Compelled, Lodestar, Bound, Poison];
+    let e = ALL[k];
     with(|f| rules::has(&f.s, side as usize, e) as i32)
 }
 #[no_mangle] pub extern "C" fn describe(side: i32, p: *const u8, n: usize) { let a = act(p, n); let t = with(|f| text::describe(&f.enc, &f.s, side as usize, a)); out(t); }

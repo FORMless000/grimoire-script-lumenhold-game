@@ -9,10 +9,12 @@ function readIcon(folder,asset){
  return `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${match[1]}</svg>`;
 }
 export function readSpellIcons(){
- // Creature moves (group 'creature') have no art of their own; the UI shows a physical one with Strike's icon.
- return Object.fromEntries(Object.keys(SPELLS).filter(id=>SPELLS[id].group!=='creature').map(id=>[id,readIcon('spell-icons',id==='purify'?'distil':id)]));
+ // Every spell has its own icon, creature moves included (F5.11, docs/spells-v2-icons.md); the stag beetle's Flame
+ // (F5.11-plan.1) wears Flame's.
+ const file=id=>id==='purify'?'distil':id==='beetle_flame'?'flame':id;
+ return Object.fromEntries(Object.keys(SPELLS).map(id=>[id,readIcon('spell-icons',file(id))]));
 }
 export function readActionIcons(){
- const ids=['strike','guard','reclaim','cast','concede',...Object.keys(SPELLS).filter(id=>SPELLS[id].channel).flatMap(id=>[id+'_hold',id+'_release'])];
+ const ids=['strike','guard','reclaim','break_free','cast','concede',...Object.keys(SPELLS).filter(id=>SPELLS[id].channel).flatMap(id=>[id+'_hold',id+'_release'])];
  return Object.fromEntries(ids.map(id=>[id,readIcon('action-icons',id)]));
 }

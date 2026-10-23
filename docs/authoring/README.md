@@ -52,6 +52,15 @@ node tools/grim.js dupes content/events/pools/<file>.grim                       
 node tools/economy.js --by event --freq                                          # how often cards show and what they move
 ```
 
+## Controlled retrieval experiments
+
+The optional [retrieval tools](retrieval.md) provide bounded original source blocks,
+static dependencies, hybrid search and framework adapters for coding agents.
+[Controlled experiments](../../experiments/authoring/README.md) compare them with
+the existing workflow using quarantined cards, native trace audits and blind human
+review. The experiment instructions override the retrieval step only. Production
+batch acceptance and translation still apply when a candidate is adopted.
+
 ## Balance
 
 A card's numbers are tier words; whether its options trade is `costs.md` and `classes.md` (the lint checks the routine rule; `presets.md` has the sizes, generated from `content/core/balance.grim`). Whether the game as a whole holds is measured: `grim balance` (invariants and alarms per play style), `tools/economy.js` (sources and sinks by resource, event and month), with the measured flows per style in `docs/playtest-2-flows.md`.

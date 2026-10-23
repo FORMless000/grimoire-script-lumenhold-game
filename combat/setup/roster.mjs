@@ -27,7 +27,17 @@ export const COMBAT_TUNING={
  // spring, E ≈ 20, and III from year 2 spring, E ≈ 34): the level each course slot, extra, forbidden and place spell is
  // learned, and the levels where three-level spells reach rank 2 and 3. Was courses 1/15/40/65, extras 45/70, forbidden
  // 35/80, place 25, ranks 44/68 (F5.0–F5.9), which left most of a kit unseen below level 65.
- kits:{flameBy:10,courses:[1,8,16,26],courseMin:{haste:10,shadowstep:10},place:16,extras:[20,34,46,58],ownExtrasBelow:34,forbidden:[28,58],ranks:[22,36],undergroundExtras:2},
+ kits:{flameBy:10,courses:[1,8,16,26],courseMin:{haste:10,shadowstep:10},capstones:[30,40,60],hidden:{from:30,every:10},forbidden:[28,58],ranks:[22,36],
+  // Feedback 2026-10-21: capstones (club and job spells, `capstone:` on the row) from capstones[0], one per gate: the first a
+  // loadout's best (a named character's place), the second its best of the other kind (one club, one job), a third at most;
+  // one that has no combat effect still takes its place. Hidden spells (the hidden pool and hidden courses) one per `every`
+  // levels from `from`, as many as the loadout lists. (Were one extra per gate at 20/34/46/58, the place at 16.)
+  // F5.11: a generated kit's curriculum spell levels (the three-rank course spells, Flame included; Ward and every other
+  // spell come on top), [level, total ranks] in a straight line between points: a fourth-year player near level 65 holds
+  // about 14 (feedback 2026-10-20). Each spell learned starts at rank 1; the rest of the budget goes to rank-ups in a
+  // fixed weighted-random order per loadout (curriculumRanks), still capped by `ranks`. Was every course spell at
+  // courseRank(level): 15 ranks from level 36.
+  curriculum:[[1,1],[65,14],[100,18]]},
  offsets:{jitter:.09},   // F5.9: class skill offsets are % of level (setup/loadouts.mjs); jitter ± this share of the level // generated kits learn Flame by this level at the latest (F5.6; was 25, which left some classes without an attack below 15)
  // Feedback 2026-10-19: Health 30 or more starts the fight at full HP; below 30 the start falls straight to hpAtZero at
  // Health 0 (the same 30% at most as before, over 0–30 instead of 0–70). (F5.9c: 90% + 10% × Health/70 down to Health 30,
@@ -59,81 +69,96 @@ export const AI_PRESETS={
 export const LEARN_XP={medium:6,large:10,huge:16};
 export const cap=(x,lo,hi)=>Math.max(lo,Math.min(hi,x));
 const spell=(name,source,skills,cost,extra={})=>({name,source,skills,cost,levels:cost.length,group:cost.length===3?'course':'other',...extra});
-// A creature's own name for an existing rule (world expansion 1): `as` the spell whose rule it plays, at its own Mana cost,
-// told with its own flavour. A kit that lists it learns the base spell (generateLoadout), with the cost difference as a
-// modifier and the name as a label; the core never sees the alias.
-const alias=(name,as,cost,extra={})=>({name,source:'Creature',skills:[],cost,levels:1,group:'creature',as,...extra});
 export const SPELLS={
- flame:spell('Flame','Evocation',['arcana'],[9,8,7],{verb:'Burn',damage:[18,19,20],negotiation:'Fails the meeting.'}),
+ // F5.11-plan.1 (2026-10-21): Flame 20 at every rank for 10/9/8 Mana; Mend 24/27/30 for 10/9/8; Glamour 4/6/8 Renown in
+ // tranches; Haste Countertempo for 2/3/4 exchanges; Shadowstep 1/2/3. The rules each one plays: rust/core rules.rs.
+ flame:spell('Flame','Evocation',['arcana'],[10,9,8],{verb:'Burn',damage:[20,20,20],negotiation:'Fails the meeting.'}),
  foresight:spell('Foresight','Astromancy',['lore'],[7,6,5],{verb:'Foresee',duration:[3,4,5],negotiation:'Rolling next-request reveal for 3/4/5 turns.'}),
- mend:spell('Mend','Alchemy & Healing',['alchemy'],[9,8,7],{verb:'Mend',healing:[25,26,27],negotiation:'None.'}),
- glamour:spell('Glamour','Illusion',['charm'],[9,7,5],{verb:'Dazzle',renown:[3,5,8],negotiation:'Charm/Guile responses cheaper; +2 Suspicion.'}),
- haste:spell('Haste','Beastcraft & Flight',['vigor'],[5,5,5],{verb:'Hasten',actions:[2,2,3],duration:[2,3,4],negotiation:'Response costs 1/1/2 less Patience.'}),
- shadowstep:spell('Shadowstep','Umbral Theory',['guile'],[8,10,12],{verb:'Step',duration:[1,2,2],negotiation:'Leave and settle progress.'}),
+ mend:spell('Mend','Alchemy & Healing',['alchemy'],[10,9,8],{verb:'Mend',healing:[18,20,22],negotiation:'None.'}),
+ glamour:spell('Glamour','Illusion',['charm'],[9,7,5],{verb:'Dazzle',renown:[4,6,8],negotiation:'Charm/Guile responses cheaper; +2 Suspicion.'}),
+ haste:spell('Haste','Beastcraft & Flight',['vigor'],[5,5,5],{verb:'Hasten',duration:[2,3,4],negotiation:'Response costs 1/1/2 less Patience.'}),
+ shadowstep:spell('Shadowstep','Umbral Theory',['guile'],[8,10,12],{verb:'Step',duration:[1,2,3],negotiation:'Leave and settle progress.'}),
  ward:spell('Ward','Orientation safety talk',[],[7],{verb:'Ward',baseline:true,negotiation:'None.'}),
  animate:spell('Animate','Artifice (hidden)',['alchemy','arcana'],[14],{verb:'Animate',construct:true,negotiation:'Later.'}),
  starlight:spell('Starlight','Starcalling (hidden)',['lore'],[9],{verb:'Illuminate',release:[36,64],channel:true,holdCost:2,amounts:{chargedWardPierce:1},negotiation:'+2 Patience.'}),
  seal:spell('Seal','Hollow Studies (hidden)',['guile'],[8],{verb:'Seal',negotiation:'None.'}),
- wildfire:spell('Wildfire',"Lyra's capstone",['arcana'],[8],{verb:'Burn',channel:true,holdCost:2,amounts:{ignite:8,hold:14,self:3,release:36,perHold:7},negotiation:'Fails the meeting.'}),
+ wildfire:spell('Wildfire',"Lyra's capstone",['arcana'],[8],{verb:'Burn',channel:true,holdCost:2,amounts:{hit:15,bank:15,self:2},negotiation:'Fails the meeting.'}),
  heartwood:spell('Heartwood',"Tobias's capstone",['vigor'],[14],{verb:'Root',construct:true,negotiation:'None.'}),
- omen:spell('Omen',"Seraphine's capstone",['lore'],[8],{verb:'Foretell',amounts:{hit:44,wardPierce:1,guardPierce:1,bracePierce:1},negotiation:'None.'}),
- sleight:spell('Sleight',"Corvin's capstone",['guile'],[4],{verb:'Lift',alignment:'tiny',negotiation:'Steal 5 Crowns.'}),
+ omen:spell('Omen',"Seraphine's capstone",['lore'],[8],{verb:'Foretell',amounts:{hit:20,bracePierce:1},negotiation:'None.'}),
+ sleight:spell('Sleight',"Corvin's capstone",['guile'],[4],{verb:'Lift',alignment:'tiny',amounts:{take:15},negotiation:'Steal 5 Crowns.'}),
  contraption:spell('Contraption',"Mir's capstone",['alchemy'],[10],{verb:'Build',construct:true,negotiation:'Later.'}),
- hoarfrost:spell('Hoarfrost',"Kael's capstone",['arcana'],[7],{verb:'Freeze',damage:[22],negotiation:'Fails the meeting.'}),
+ hoarfrost:spell('Hoarfrost',"Kael's capstone",['arcana'],[8],{verb:'Freeze',damage:[20],negotiation:'Fails the meeting.'}),
  candour:spell('Candour',"Nessa's capstone",['charm'],[6],{verb:'Confess',negotiation:'−3 Suspicion; following Quickquill adds Agreement/alignment/event flag.'}),
- brace:spell('Brace','Duelling Circle',['vigor'],[10],{verb:'Brace',negotiation:'None.'}),
- quickquill:spell('Quickquill','Lumen Ledger',['guile'],[4],{verb:'Scribble',negotiation:'Next Confront raises no pressure.'}),
- bramble:spell('Bramble','Verdant Circle',['alchemy'],[10],{verb:'Entangle',construct:true,negotiation:'Fails the meeting.'}),
- index:spell('Index','Library Assistant',['lore'],[4],{verb:'Recall',negotiation:'Answer current request with Lore.'}),
- rapport:spell('Rapport','Gilded Newt',['charm'],[4],{verb:'Befriend',negotiation:'Next Deflect costs no Mood and adds no Suspicion.'}),
- purify:spell('Distil','Apothecary Clerk',['alchemy'],[0],{verb:'Distil',hpCost:20,negotiation:'None.'}),
- tailwind:spell('Tailwind','Broom Courier',['vigor'],[5],{verb:'Surge',damage:[4],negotiation:'None.'}),
+ brace:spell('Brace','Duelling Circle',['vigor'],[10],{verb:'Brace',capstone:'club',duration:[2],amounts:{block:.8},negotiation:'None.'}),
+ quickquill:spell('Quickquill','Lumen Ledger',['guile'],[4],{verb:'Scribble',capstone:'club',negotiation:'Next Confront raises no pressure.'}),
+ bramble:spell('Bramble','Verdant Circle',['alchemy'],[12],{verb:'Entangle',capstone:'club',damage:[4],bind:1,negotiation:'Fails the meeting.'}),
+ index:spell('Index','Library Assistant',['lore'],[4],{verb:'Recall',capstone:'job',negotiation:'Answer current request with Lore.'}),
+ rapport:spell('Rapport','Gilded Newt',['charm'],[4],{verb:'Befriend',capstone:'job',renown:[8],amounts:{crowns:10},negotiation:'Next Deflect costs no Mood and adds no Suspicion.'}),
+ purify:spell('Distill','Apothecary Clerk',['alchemy'],[0],{verb:'Distill',capstone:'job',hpCost:20,negotiation:'None.'}),
+ tailwind:spell('Tailwind','Broom Courier',['vigor'],[5],{verb:'Surge',capstone:'job',damage:[10],physical:true,amounts:{step:15},negotiation:'None.'}),
  // Skill assignments below are provisional: the supplied pool tables omit them.
  rime:spell('Rime','Hidden pool',['arcana'],[4],{verb:'Freeze',group:'hidden',amounts:{thaw:24},provisionalSkill:true,negotiation:'None.'}),
- reflect:spell('Reflect','Hidden pool',['lore'],[8],{verb:'Reflect',duration:[2],group:'hidden',provisionalSkill:true,negotiation:'This Confront: +2 Agreement and +2 pressure.'}),
- moonwell:spell('Moonwell','Hidden pool',['alchemy'],[0],{verb:'Gather',group:'hidden',channel:true,holdCost:0,amounts:{bank:16},provisionalSkill:true,negotiation:'None.'}),
- lodestar:spell('Lodestar','Hidden pool',['lore'],[4],{verb:'Gather',group:'hidden',channel:true,holdCost:0,amounts:{bank:16},provisionalSkill:true,negotiation:'None.'}),
+ reflect:spell('Reflect','Hidden pool',['lore'],[8],{verb:'Reflect',duration:[1],group:'hidden',provisionalSkill:true,negotiation:'This Confront: +2 Agreement and +2 pressure.'}),
+ moonwell:spell('Moonwell','Hidden pool',['alchemy'],[0],{verb:'Gather',group:'hidden',channel:true,holdCost:0,amounts:{bank:10},provisionalSkill:true,negotiation:'None.'}),
+ lodestar:spell('Lodestar','Hidden pool',['lore'],[4],{verb:'Kindle',group:'hidden',amounts:{heal:20,delay:7},provisionalSkill:true,negotiation:'None.'}),
  toll:spell('Toll','Hidden pool',[],[0],{verb:'Toll',group:'hidden',castable:false,negotiation:'Cards/story only.'}),
- torment:spell('Torment','Forbidden pool',['guile'],[14],{verb:'Torment',group:'forbidden',duration:[3],provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
+ torment:spell('Torment','Forbidden pool',['guile'],[14],{verb:'Torment',group:'forbidden',duration:[3],amounts:{toll:2},provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  extraction:spell('Extraction','Forbidden pool',['arcana'],[10],{verb:'Extract',group:'forbidden',provisionalSkill:true,negotiation:'Underground mind-reading later; otherwise fails with consequences.'}),
  siphon:spell('Siphon','Forbidden pool',['alchemy'],[12],{verb:'Siphon',group:'forbidden',channel:true,holdCost:3,amounts:{hit:18},provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
- compel:spell('Compel','Forbidden pool',['guile'],[16],{verb:'Compel',group:'forbidden',duration:[1],immediate:true,provisionalSkill:true,negotiation:'Underground: 1 Agreement without Suspicion; otherwise fails with consequences.'}),
- eclipse:spell('Eclipse','Forbidden pool',['arcana'],[6],{verb:'Convert',group:'forbidden',provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
+ // Compel (F5.11-plan.1): captures the target's move of this exchange and forces it for the next three; Ward or Shadowstep
+ // blocks it, Reflect returns it; never in the first exchange. 18 Mana (F5.11, was 16).
+ compel:spell('Compel','Forbidden pool',['guile'],[18],{verb:'Compel',group:'forbidden',duration:[3],provisionalSkill:true,negotiation:'Underground: 1 Agreement without Suspicion; otherwise fails with consequences.'}),
+ eclipse:spell('Eclipse','Forbidden pool',['arcana'],[6],{verb:'Convert',group:'forbidden',duration:[3],amounts:{share:1},provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  heartprice:spell('Heartprice','Forbidden pool',['vigor'],[0],{verb:'Sacrifice',group:'forbidden',provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  // Creature attacks (F5.9): special foes only (SPECIAL_LOADOUTS), never a player's or a class's kit.
  gore:spell('Gore','Creature',['vigor'],[6],{verb:'Gore',damage:[15],physical:true,group:'creature',negotiation:'None.'}),
- // The Whisperwood (world expansion 1). New rules by property (rust/core rules.rs): bind (no Shadowstep or Brace next
- // exchange), drain (Mana taken; drainKeep: as the creature's own flux), poison ([per exchange, exchanges]; Distil clears
- // it), hits (the damage lands as that many small hits; only the first meets Guard and Brace).
+ // The Whisperwood (world expansion 1). Rules by property (rust/core rules.rs): bind (exchanges of Breaking Free from the
+ // next, F5.11-plan.1), drain (ready Mana scattered; drainKeep: taken as the creature's own flux), poison ([per tick, ticks]
+ // from this exchange, past every defence but a mature Lodestar), hits (the damage lands as that many smaller hits; only the
+ // first meets Parry and Brace), amounts.next (a second hit next exchange). physical: Impact damage (Parry stops it, Ward
+ // halves it), not spell damage.
  nip:spell('Nip','Creature',['guile'],[2],{verb:'Nip',damage:[6],physical:true,group:'creature',negotiation:'None.'}),
  filch:spell('Filch','Creature',['guile'],[3],{verb:'Filch',drain:5,drainKeep:true,group:'creature',negotiation:'None.'}),
- roar:spell('Roar','Creature',['vigor'],[4],{verb:'Roar',drain:7,group:'creature',negotiation:'None.'}),
+ roar:spell('Roar','Creature',['vigor'],[4],{verb:'Roar',damage:[8],drain:4,group:'creature',negotiation:'None.'}),
  swarm:spell('Swarm','Creature',['guile'],[4],{verb:'Swarm',damage:[15],hits:3,physical:true,group:'creature',negotiation:'None.'}),
  root:spell('Root','Creature',['vigor'],[5],{verb:'Root',bind:1,group:'creature',negotiation:'None.'}),
  web:spell('Web','Creature',['guile'],[6],{verb:'Web',bind:2,group:'creature',negotiation:'None.'}),
- venom:spell('Venom','Creature',['alchemy'],[6],{verb:'Bite',poison:[4,3],group:'creature',negotiation:'None.'}),
- // Aliases: an existing rule under a creature's name and cost. Channels (Starlight's) are the big telegraphed blows: the
- // wind-up shows on the creature before it lands.
- skitter:alias('Skitter','shadowstep',[3]),
- burrow:alias('Burrow','brace',[4]),
- hide:alias('Hide','ward',[4]),
- bark:alias('Bark','ward',[3]),
- carapace:alias('Carapace','ward',[3]),
- maul:alias('Maul','starlight',[6],{telegraph:true}),
- charge:alias('Charge','starlight',[6],{telegraph:true}),
- slow_fall:alias('Slow Fall','starlight',[8],{telegraph:true}),
- the_long_wait:alias('The Long Wait','starlight',[10],{telegraph:true}),
- brood:alias('Brood','bramble',[8])
+ threads:spell('Threads','Creature',['guile'],[3],{verb:'Snare',bind:1,group:'creature',negotiation:'None.'}),
+ venom:spell('Venom','Creature',['alchemy'],[6],{verb:'Bite',poison:[6,2],group:'creature',negotiation:'None.'}),
+ pinch:spell('Pinch','Creature',['vigor'],[3],{verb:'Pinch',damage:[10],physical:true,group:'creature',negotiation:'None.'}),
+ acorns:spell('Acorns','Creature',['lore'],[3],{verb:'Pelt',damage:[10],amounts:{next:10},group:'creature',negotiation:'None.'}),
+ // The stag beetle's weaker Flame (F5.11-plan.1): its own numbers, Flame's rule, name, icon and Hoarfrost cancellation.
+ beetle_flame:spell('Flame','Creature',['arcana'],[6],{verb:'Burn',rule:'flame',damage:[10],group:'creature',negotiation:'None.'}),
+ // F5.11: a creature's own copies of a rule (`rule`: the spell whose rule it plays, at its own numbers), in place of the
+ // world expansion's aliases. Ward's copies stop spells and halve blows; Brace's absorb; Shadowstep's step aside.
+ skitter:spell('Skitter','Creature',['guile'],[3],{verb:'Skitter',rule:'shadowstep',duration:[1],group:'creature',negotiation:'None.'}),
+ fade:spell('Fade','Creature',['guile'],[6],{verb:'Fade',rule:'shadowstep',duration:[2],group:'creature',negotiation:'None.'}),
+ burrow:spell('Burrow','Creature',['vigor'],[4],{verb:'Burrow',rule:'brace',group:'creature',negotiation:'None.'}),
+ hide:spell('Hide','Creature',['vigor'],[5],{verb:'Hunker',rule:'brace',group:'creature',negotiation:'None.'}),
+ bark:spell('Bark','Creature',[],[3],{verb:'Harden',rule:'ward',group:'creature',negotiation:'None.'}),
+ carapace:spell('Carapace','Creature',[],[3],{verb:'Shell',rule:'ward',group:'creature',negotiation:'None.'}),
+ // F5.11: the big telegraphed blows are delayed hits, like Omen: cast in the open, they land `delay` exchanges later for
+ // `hit` damage (Impact when physical; The Long Wait's `impact` lands beside its spell hit). The defences of that exchange
+ // meet it; the pierce amounts say which can't (guardPierce: Parry, bracePierce: Brace).
+ maul:spell('Maul','Creature',['vigor'],[5],{verb:'Maul',delay:1,physical:true,amounts:{hit:30},group:'creature',negotiation:'None.'}),
+ charge:spell('Charge','Creature',['vigor'],[5],{verb:'Charge',delay:1,physical:true,amounts:{hit:24,guardPierce:1},group:'creature',negotiation:'None.'}),
+ bough:spell('Bough','Creature',['vigor'],[6],{verb:'Swing',delay:2,physical:true,amounts:{hit:32},group:'creature',negotiation:'None.'}),
+ slow_fall:spell('Slow Fall','Creature',['lore'],[7],{verb:'Fell',delay:2,physical:true,amounts:{hit:40,bracePierce:1},group:'creature',negotiation:'None.'}),
+ the_long_wait:spell('The Long Wait','Creature',['lore'],[8],{verb:'Wait',delay:3,amounts:{hit:24,impact:24,guardPierce:1},group:'creature',negotiation:'None.'}),
+ // Constructs of their own (CONSTRUCTS below): the Spinner's brood bites, the elder oak's thicket lashes.
+ brood:spell('Brood','Creature',['guile'],[8],{verb:'Brood',construct:true,group:'creature',negotiation:'None.'}),
+ thicket:spell('Thicket','Creature',['lore'],[8],{verb:'Grow',construct:true,group:'creature',negotiation:'None.'})
 };
 // Creature races (world expansion 1): HP and Mana capacity multipliers, and no healing of any kind. Humans have no race:
 // they keep 1× and may heal. A special loadout may set its own `hp` / `mana` within its race's band.
-export const RACES={critter:{hp:.5,mana:.6},beast:{hp:1,mana:1},monster:{hp:1.75,mana:.6},boss:{hp:3,mana:1.5}};
+// strike: the race's Strike scale (F5.11): a monster's paw is slow and heavy, so its HP pool, not its blows, is its strength.
+export const RACES={critter:{hp:.5,mana:.6,strike:1},beast:{hp:1,mana:1,strike:1},monster:{hp:1.75,mana:.6,strike:1},boss:{hp:3,mana:1.5,strike:1}};
 // The spells a worn effect's group names (world expansion 1, content/world/items.grim): the core reads per-spell numbers.
 export const SPELL_GROUPS={
  forbidden:id=>SPELLS[id].group==='forbidden',hidden:id=>SPELLS[id].group==='hidden',creature:id=>SPELLS[id].group==='creature',
  umbral:id=>/Umbral/.test(SPELLS[id].source),any:()=>true
 };
-const groupSpells=g=>SPELLS[g]&&!SPELLS[g].as?[g]:SPELL_GROUPS[g]?Object.keys(SPELLS).filter(id=>!SPELLS[id].as&&SPELL_GROUPS[g](id)):[];
+const groupSpells=g=>SPELLS[g]?[g]:SPELL_GROUPS[g]?Object.keys(SPELLS).filter(id=>SPELL_GROUPS[g](id)):[];
 // A kit's modifiers in the main game's form (Engine#wornMods, a foe's `mods`) → the core's per-spell table, against an opponent
 // (`nonhuman` damage reduction counts only against a creature). {hp, mana} stay for createState.
 export function expandMods(mods={},{opponentCreature=false}={}){
@@ -142,7 +167,6 @@ export function expandMods(mods={},{opponentCreature=false}={}){
  for(const [g,n]of Object.entries(mods.cost||{}))for(const id of groupSpells(g))add(out.cost,id,n);
  for(const [g,n]of Object.entries(mods.onCast||{}))for(const id of groupSpells(g))add(out.onCast,id,n);
  for(const t of mods.taken||[])for(const g of t.from){if(g==='nonhuman'){if(opponentCreature)out.takenAll+=t.n;}else for(const id of groupSpells(g))add(out.taken,id,t.n);}
- for(const [id,n]of Object.entries(mods.costDelta||{}))add(out.cost,id,n);   // aliases' own costs (generateLoadout)
  return out;
 }
 for(const s of Object.values(SPELLS)){
@@ -153,8 +177,9 @@ for(const s of Object.values(SPELLS)){
 export const CONSTRUCTS={
  animate:{action:'strike',power:10,reduction:1,threshold:20,maxExchanges:4},
  heartwood:{action:'heal',power:5,reduction:3,threshold:24,maxExchanges:4},
- bramble:{action:'spell',power:6,reduction:1,threshold:20,maxExchanges:4},
- contraption:{action:'spell',power:12,reduction:0,threshold:24,burst:8,maxExchanges:3}
+ contraption:{action:'spell',power:12,reduction:0,threshold:24,burst:8,maxExchanges:3},
+ brood:{action:'strike',power:7,reduction:1,threshold:18,maxExchanges:4},     // F5.11: the Spinner's spiderlings bite (Guard stops them)
+ thicket:{action:'spell',power:6,reduction:2,threshold:22,maxExchanges:4}     // F5.11: the elder oak's brambles
 };
 export const CONTEXTS={
  practice_duel:{health:.8,mood:.8,renown:.8,mana:.8,crowns:0,alignment:0},
@@ -187,7 +212,6 @@ function spellUnlocks(def,named,growing,year){
  grant('flame',flameUnlock(def));
  for(const id of def.iconic??[])if(!COMBAT_EXCLUDED.has(id))grant(id,1);
  const g=COMBAT_TUNING.kits;
- if(def.place&&!COMBAT_EXCLUDED.has(def.place))grant(def.place,g.place);
  for(const [id,at]of def.grants??[])if(!COMBAT_EXCLUDED.has(id))grant(id,at);
  const weights=Object.fromEntries(COURSE_PICKS.map((id,i)=>[id,def.course[i]]));
  let courses=priority(weights).filter(id=>!levels[id]);
@@ -197,14 +221,14 @@ function spellUnlocks(def,named,growing,year){
   const at=growing&&year>=i+reserved+1?1:g.courses[i+reserved];
   grant(id,Math.max(at,g.courseMin[id]??1));
  }
- // One extra per gate: the class's own extras first (only those below ownExtrasBelow), then its hidden spells too.
- // Underground classes take at most undergroundExtras: their forbidden spells fill the other places.
- const extras=priority({...def.hidden,...def.extras});let waiting=0,granted=0;
- for(const gate of g.extras){
-  waiting++;
-  while(waiting&&(!def.underground||granted<(g.undergroundExtras??Infinity))){const id=extras.find(id=>!levels[id]&&(gate>=g.ownExtrasBelow||id in (def.extras??{})));if(!id)break;grant(id,gate);waiting--;granted++;}
- }
- if(growing&&year>=3&&extras.length)grant(extras[0],1);
+ // Capstones: an iconic or granted one and the place first (they keep their own level), then by weight; the second of the other kind when there is one.
+ const lists={...def.hidden,...def.extras},caps=[...new Set([...(def.iconic??[]),...(def.grants??[]).map(([id])=>id),def.place,...Object.entries(lists).filter(([,w])=>w>0).sort((a,b)=>b[1]-a[1]).map(([id])=>id)])].filter(id=>id&&SPELLS[id].capstone);
+ const chosen=caps.slice(0,1);
+ for(let i=1;i<g.capstones.length&&chosen.length<caps.length;i++)chosen.push((i===1&&caps.find(id=>!chosen.includes(id)&&SPELLS[id].capstone!==SPELLS[chosen[0]].capstone))||caps.find(id=>!chosen.includes(id)));
+ for(const [i,id]of chosen.entries())if(!COMBAT_EXCLUDED.has(id))grant(id,g.capstones[i]);
+ // Hidden spells (and a place that is a hidden course): every one listed, one per `every` levels.
+ const hidden=[...new Set([def.place,...priority(lists)])].filter(id=>id&&!SPELLS[id].capstone&&!levels[id]&&!COMBAT_EXCLUDED.has(id));
+ for(const [i,id]of hidden.entries())grant(id,g.hidden.from+i*g.hidden.every);
  if(def.underground)for(const [i,id]of priority(def.forbidden).filter(id=>!levels[id]).slice(0,g.forbidden.length).entries())grant(id,g.forbidden[i]);
  return levels;
 }
@@ -220,6 +244,50 @@ export function scaleToMean(skills,level){
   for(const k of over)fixed[k]=100;
  }
  return Object.fromEntries(keys.map(k=>[k,100]));
+}
+// A number, or its value at a level on a curve [[level, value], …] (straight between points, flat beyond the ends).
+export function curveAt(x,level){
+ if(!Array.isArray(x))return x;if(level<=x[0][0])return x[0][1];
+ for(let i=1;i<x.length;i++)if(level<=x[i][0]){const [l0,v0]=x[i-1],[l1,v1]=x[i];return v0+(v1-v0)*(level-l0)/(l1-l0);}
+ return x.at(-1)[1];
+}
+// A level's curriculum budget (COMBAT_TUNING.kits.curriculum): total ranks of three-rank course spells.
+export function curriculumBudget(level){
+ const pts=COMBAT_TUNING.kits.curriculum;if(level<=pts[0][0])return pts[0][1];
+ for(let i=1;i<pts.length;i++)if(level<=pts[i][0]){const [l0,b0]=pts[i-1],[l1,b1]=pts[i];return Math.round(b0+(b1-b0)*(level-l0)/(l1-l0));}
+ return pts.at(-1)[1];
+}
+// The order a loadout raises its course spells (F5.11): one token per rank-up (II, then III), drawn without replacement by
+// weight from the loadout's salt alone, so a kit only gains ranks as its level rises. Weight: the course weight + 1 (Flame:
+// 0.5 + 2 × flameBase), ×3 for the prodigy spell, ×2 for an iconic one.
+export function curriculumOrder(def){
+ const rng=levelRng(9001+97*def.salt),ids=['flame',...COURSE_PICKS].filter(id=>!COMBAT_EXCLUDED.has(id));
+ const w=id=>(id==='flame'?.5+2*(def.flameBase??0):1+(def.course?.[COURSE_PICKS.indexOf(id)]??0))*(def.prodigy===id?3:1)*((def.iconic??[]).includes(id)?2:1);
+ const pool=ids.flatMap(id=>[[id,2],[id,3]]),out=[];
+ while(pool.length){const open=pool.filter(([id,r])=>r===2||out.some(t=>t[0]===id&&t[1]===2)),tot=open.reduce((n,[id])=>n+w(id),0);
+  let x=rng()*tot,k=open.length-1;for(let i=0;i<open.length;i++){x-=w(open[i][0]);if(x<0){k=i;break;}}
+  const pick=open[k];out.push(pick);pool.splice(pool.indexOf(pick),1);}
+ return out;
+}
+// A generated kit's course-spell ranks at a level: each learned course spell at I, then rank-ups in curriculumOrder, each within
+// courseRank (+1 for the prodigy spell, at most III). The rank-ups are handed out level by level on the year-1 ladder (`base`,
+// its unlock levels), as many as the most budget − course spells known at any level so far, so a kit never loses a rank as its
+// level or study year rises (a spell a later year brings early starts at I).
+export function curriculumRanks(def,level,learned,base){
+ const course=learned.filter(id=>SPELLS[id].levels===3),ranks=Object.fromEntries(course.map(id=>[id,1]));
+ const order=curriculumOrder(def),applied=new Map(),courses=Object.keys(base).filter(id=>SPELLS[id].levels===3);let room=0;
+ for(let l=1;l<=level;l++){
+  const known=id=>(base[id]??101)<=l;
+  room=Math.max(room,curriculumBudget(l)-courses.filter(known).length);
+  const cap=courseRank(l);
+  for(const [id,rank]of order){
+   if(applied.size>=room)break;const key=id+rank;
+   if(applied.has(key)||!known(id)||rank>Math.min(3,cap+Number(def.prodigy===id))||rank===3&&!applied.has(id+2))continue;
+   applied.set(key,[id,rank]);
+  }
+ }
+ for(const [id,rank]of applied.values())if(id in ranks)ranks[id]=Math.max(ranks[id],rank);
+ return ranks;
 }
 export function generateLoadout(loadout,level,access='kit',options={}){
  const named=NAMED_LOADOUTS[loadout],special=SPECIAL_LOADOUTS[loadout],base=LOADOUTS[loadout]??named??special;
@@ -238,16 +306,18 @@ export function generateLoadout(loadout,level,access='kit',options={}){
  }else{
   // F5.9: offsets are percentages of the level (F5.8 and before: fixed points; ×2 converts at level 50), and so is the
   // jitter (±9%), so a class keeps its shape at every level: a level-20 Brawler is as lopsided as a level-80 one.
-  const jitter=level*(COMBAT_TUNING.offsets?.jitter??.09);skills=Object.fromEntries(LOADOUT_SKILLS.map((k,i)=>[k,cap(Math.round(level*(1+def.offsets[i]/100)+(rng()*2-1)*jitter),1,100)]));}
+  const jitter=level*(COMBAT_TUNING.offsets?.jitter??.09);skills=def.maxed?Object.fromEntries(LOADOUT_SKILLS.map(k=>[k,100])):Object.fromEntries(LOADOUT_SKILLS.map((k,i)=>[k,cap(Math.round(level*(1+def.offsets[i]/100)+(rng()*2-1)*jitter),1,100)]));}
  if(LOADOUT_SKILLS.some(k=>!Number.isFinite(skills[k])||skills[k]<1||skills[k]>100)||Object.keys(skills).length!==6)throw Error('Six skill values in 1–100 required');
  const unlockLevels=def.kit?{...def.kit}:spellUnlocks(def,!!named,growing,year);
  const ids=access==='all'?Object.keys(SPELLS).filter(id=>SPELLS[id].group!=='creature'):Object.keys(unlockLevels).filter(id=>unlockLevels[id]<=level),r=courseRank(level);
- // A creature's aliases (world expansion 1) learn their base rule, labelled with the creature's name, at the alias's cost.
- const labels={},costDelta={};
- const spells=Object.fromEntries(ids.map(id=>{const a=SPELLS[id].as;if(a){labels[a]=id;costDelta[a]=SPELLS[id].cost[0]-SPELLS[a].cost[0];return [a,1];}return [id,SPELLS[id].levels===3?Math.min(3,r+Number(def.prodigy===id)):1];}));
+ // Course-spell ranks: a fixed kit (and every-spell access) at courseRank(level); a generated one by its curriculum budget (F5.11).
+ const budgeted=access==='kit'&&!def.kit?curriculumRanks(def,level,ids,year===1?unlockLevels:spellUnlocks(def,!!named,growing,1)):null;
+ const spells=Object.fromEntries(ids.map(id=>[id,SPELLS[id].levels===3?budgeted?.[id]??Math.min(3,r+Number(def.prodigy===id)):1]));
  // A creature race scales HP and Mana and forbids healing; a special foe may carry kit modifiers (`mods`, the worn-kit form).
- const race=def.race?{...RACES[def.race],...(def.hp?{hp:def.hp}:{}),...(def.mana?{mana:def.mana}:{})}:null;
- const mods=def.mods||Object.keys(costDelta).length?{...(def.mods||{}),costDelta}:null;
+ // hp / mana: a number, or a curve [[level, ×], …] in a straight line between points (F5.11: a creature's HP grows with the
+ // fight's level as a class's kit does, so it stays as tough across its card's range).
+ const race=def.race?{...RACES[def.race],...(def.hp?{hp:curveAt(def.hp,level)}:{}),...(def.mana?{mana:curveAt(def.mana,level)}:{}),...(def.strike?{strike:def.strike}:{})}:null;
+ const mods=def.mods?{...def.mods}:null;
  return {loadout,level,...(growing?{year}:{}),progression:'level-gated',unlockLevels,underground:!!def.underground,skills,spells,capacity:Math.round(manaCapacity(skills)*(race?race.mana:1)),seed,draws,...(!canon&&named?{provisionalSkills:true}:{}),
-  ...(race?{race:def.race,hpScale:race.hp,noHeal:true}:{}),...(mods?{mods}:{}),...(Object.keys(labels).length?{labels}:{})};
+  ...(race?{race:def.race,hpScale:race.hp,noHeal:true,...(race.strike!==1?{strikeScale:race.strike}:{})}:{}),...(mods?{mods}:{}),...(def.start?{start:{...def.start}}:{}),...(def.idle?{idle:true}:{})};
 }

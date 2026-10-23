@@ -179,6 +179,9 @@
       // Spells v2: a spell content no longer has is dropped, and a level past the spell's levels is clamped (Ward 3 → 1).
       for (const [id, lv] of Object.entries(s.spells || {})) { if (!(this.c.spells || {})[id]) delete s.spells[id]; else s.spells[id] = Math.min(lv, this.spellLevels(id)); }
       this.remapDeprecated();
+      // A place without `discover:` is known from the start, so one a save never had (a merge undone, migration 0043)
+      // is added here. Its visits stay counted at the place it had been merged into.
+      for (const p of Object.values(this.c.places || {})) if (!p.discover && !p.deprecated && !s.places[p.id]) s.places[p.id] = { found: 0 };
       // The kit (E4) in a save from before it: the start items, then whatever old flags and states grant.
       if (!s.items) { s.items = {}; s.worn = {}; s.itemsHad = {}; for (const d of Object.values(this.c.items || {})) if (d.start) { s.items[d.id] = { since: 0 }; s.itemsHad[d.id] = 0; if (!s.worn[d.slot]) s.worn[d.slot] = d.id; } }
       this.grantLegacyItems(null);
@@ -761,9 +764,10 @@
           if (d.kind !== 'course' && d.kind !== 'thesis') return;
           t.status = 'enrolled'; t.level = st.level || Math.min(d.levels || 1, this.levelPassed(id) + 1); t.study = 0;
           ctx.notes.push({ kind: 'enrol', track: id, level: t.level });
+          // You meet the course's professor (design §5.5) first: their intro card goes ahead of the start card.
+          this.meetLead(id, d, ctx);
           // A course's `start:` card (spells v2: the lesson that teaches its spell) comes later the same month, in its context.
           if (d.start && this.c.events[d.start] && !s.deck.some((q) => q.id === d.start)) s.deck.push({ id: d.start, actor: null, track: id, src: 'queued' });
-          this.meetLead(id, d, ctx);   // you meet the course's professor (design §5.5)
           this.grantLegacy(id, ctx, true);
           break;
         }
@@ -990,13 +994,20 @@
       const thesis = Object.values(this.s.tracks || {}).some((t) => t.kind === 'thesis' && t.status === 'member');
       return Math.max(1, e.pick - (e.offers === 'courses' && thesis ? 1 : 0));
     }
-    // A track's lead (design §5.5): already met, they notice you; not yet, the track's `intro:` card is queued so you meet
-    // them on a card of their own (playtest 2, N1); a track without one meets them at once, as before.
+    // A track's lead (design §5.5): already met, they notice you; not yet, the track's `intro:` card is pushed so you meet
+    // them on a card of their own (playtest 2, N1); a track without one meets them at once, as before. The intro joins
+    // today's deck when its `when` holds now, so it plays before the track's start card and its routine draws (a zh-CN
+    // playtest, 2026-10-20: Vey taught two scenes before her intro); otherwise it waits in the queue as before.
     meetLead(id, d, ctx) {
       const s = this.s, n = d.lead && s.npcs[d.lead];
       if (!n) return;
-      if (!n.met && d.intro && this.c.events[d.intro]) {
-        if (!s.queue.some((q) => q.id === d.intro) && !s.deck.some((q) => q.id === d.intro)) s.queue.push({ id: d.intro, actor: d.lead, track: id, due: s.turn, src: 'queued' });
+      const intro = !n.met && d.intro && this.c.events[d.intro];
+      if (intro) {
+        if (s.deck.some((q) => q.id === d.intro)) return;
+        if (this.test(intro.when, d.lead)) {
+          s.queue = s.queue.filter((q) => q.id !== d.intro);
+          s.deck.push({ id: d.intro, actor: d.lead, track: id, src: 'queued' });
+        } else if (!s.queue.some((q) => q.id === d.intro)) s.queue.push({ id: d.intro, actor: d.lead, track: id, due: s.turn, src: 'queued' });
         return;
       }
       this.touchNpc(d.lead, ctx);

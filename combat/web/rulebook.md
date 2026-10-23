@@ -1,5 +1,32 @@
 # Combat: spell redesign v2 (F5)
 
+## F5.11-plan.1: duel terms and the spell redesign (2026-10-21)
+
+The plan is `docs/minigame-combat-f5.11-plan.1-2026-10-21.md`. Every rule change, with what the main game picks up, is
+listed in `../HANDOFF.md` ("F5.11-plan.1"). Where this file's older sections disagree, those win.
+
+- **Names:** Impulse (`strike`), Parry (`guard`), Refocus (`reclaim`), Impact damage (was physical), Distill (`purify`).
+  The new basic is Breaking Free (`break_free`), the only move while Bound.
+- **No bundles.** Haste is Countertempo: while it's up, an eligible spell adds one automatic Impulse.
+- **Resolve order:**
+  1. Payment.
+  2. Preparations.
+  3. Attacks, then Shadowstep breaks.
+  4. Hostile applications.
+  5. Inevitable tolls, then hits.
+  6. The end-of-exchange steps.
+- **Damage priority:** a mature Lodestar negates damage; attached poison and Torment's toll then skip every defence.
+- **Kits (feedback 2026-10-21):**
+  - Capstones (club and job spells) arrive at 30 / 40 / 60: one club and one job first, three at most.
+  - Hidden spells arrive one every 10 levels from 30, with no limit.
+  - Iconic spells and named grants keep their own levels.
+  - This replaces the F5.9b extras gates below.
+- **Tests:** frozen goldens are retired. `tools/parity.mjs` checks native against wasm; `setup/plan1.test.mjs` holds the
+  plan's fixtures.
+- **Balance tools:** `tools/human-study.mjs` (human round-robin by level tier, moves and the matchup matrix; `--spread`,
+  `--variant tools/variants/f511p1-human.mjs` with `TUNE`) and `tools/human-spread.mjs` (each tier's win-rate range).
+  Level tiers are 20 / 45 / 70.
+
 ## F5 rule changes (spells-v2 F5.9d · 2026-10-19; F5.1 nerfed Brace to 100/50/25/25%; F5.2 makes Shadowstep break before the hits on an exchange you attack; F5.3 removes Foresight's damage bonus and shortens it to 3/4/5 exchanges; F5.4 is the integration pass, F5.5–F5.9c its follow-ups, all below)
 
 These override anything below that disagrees.
@@ -233,4 +260,4 @@ The rules and the AI are one Rust core (`rust/core`): natively for simulations, 
 
 The AI is alpha–beta over resolved exchanges, with iterative deepening, principal-variation search, aspiration windows, a transposition table, killer and history move ordering, and an optional extension for tactical horizons. Live play is time-based: Fast 100 ms and Deep 500 ms (compute profiles `live_fast` and `live_deep`); the engine view searches for the chosen budget (1.5 s by default). Profiles `full`, `fallible` and the rest set depth and seeded bounded mistakes. Channels and bundles are ordinary commands, and every mutable counter, construct and delayed hit is part of the search state. Search runs in workers, off the UI thread.
 
-Build and test from `combat/`: `node tools/build.mjs`, `cargo test --release` in `rust/`, `node tools/golden.mjs`. See `README.md` there.
+Build and test from `combat/`: `node tools/build.mjs`, `cargo test --release` in `rust/`, `node --test setup/*.test.mjs`, `node tools/parity.mjs`. See `README.md` there.

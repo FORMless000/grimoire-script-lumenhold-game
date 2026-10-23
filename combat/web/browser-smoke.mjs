@@ -20,7 +20,7 @@ async function choose(p,id){await ready(p);const button=p.locator(`[data-action=
 async function bench(p){if(!await p.locator('.bench.open').count())await p.locator('.bench-tab').click();}
 async function log(p){if(!await p.locator('.result').count()){await bench(p);await p.locator('#leave').click();}const wait=p.waitForEvent('download');await p.locator('#export').click();const file=await wait;return JSON.parse(fs.readFileSync(await file.path()));}
 try{
- for(const level of [20,50,80]){const p=await open({level,all:false});await fit(p,'preset '+level);await choose(p,'strike');const data=await log(p);assert.equal(data.rulesVersion,RULES_VERSION);assert.equal(data.config.mode,'combat');assert(!await p.locator('[data-mode], #fixture, #approach').count());checks.push({preset:level});await p.close();}
+ for(const level of [20,45,70]){const p=await open({level,all:false});await fit(p,'preset '+level);await choose(p,'strike');const data=await log(p);assert.equal(data.rulesVersion,RULES_VERSION);assert.equal(data.config.mode,'combat');assert(!await p.locator('[data-mode], #fixture, #approach').count());checks.push({preset:level});await p.close();}
  // Every fixed cast and each channel's Hold/Release flow, with a scripted defender.
  for(const [id,spell]of Object.entries(SPELLS)){
   if(spell.castable===false||spell.group==='creature')continue;

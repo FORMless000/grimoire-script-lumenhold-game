@@ -13,7 +13,7 @@ use data::{data, Act};
 use serde_json::{json, Value};
 use state::*;
 
-pub const RULES_VERSION: &str = "spells-v2 F5.10 · persona opponents, Engine eval · 2026-10-19";
+pub const RULES_VERSION: &str = "spells-v2 F5.11-plan.1 · duel terms and spell redesign · 2026-10-21";
 
 /// A public fight: static encounter, dynamic state, and the public-only log/settlement.
 pub struct Fight { pub enc: Encounter, pub s: State, pub public: Public, template: Value }
@@ -30,6 +30,7 @@ pub fn event_json(e: &Event) -> Value {
         Event::Dealt { id, amount, target, source, reflected } => json!({"type": "dealt", "id": d.name(*id), "amount": amount, "target": target, "source": source, "reflected": reflected}),
         Event::Reclaimed { side, amount } => json!({"type": "reclaimed", "side": side, "amount": amount}),
         Event::Moved { side, id, amount, blocked } => json!({"type": "moved", "side": side, "id": d.name(*id), "amount": amount, "blocked": blocked}),
+        Event::Applied { side, id, outcome } => { const OUTCOMES: [&str; 4] = ["landed", "blocked", "reflected", "reflectedBlocked"];  json!({"type": "applied", "side": side, "id": d.name(*id), "outcome": OUTCOMES[*outcome as usize]}) },
         Event::Hit { id, raw, amount, target, source, by, reflected } => json!({"type": "hit", "id": d.name(*id), "raw": raw, "amount": amount, "target": target, "source": source, "reflected": reflected,
             "by": crate::state::DEF_NAMES.iter().filter(|(b, _)| by & b != 0).map(|(_, n)| *n).collect::<Vec<_>>()}),
     }

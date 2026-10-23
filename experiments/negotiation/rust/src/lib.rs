@@ -1,5 +1,6 @@
 //! Standalone negotiation rules and sampled expectimax. JSON is only used at
 //! the boundary; search copies compact positions and shares the immutable deck.
+mod variety;
 use serde_json::{json, Value};
 use std::{cell::RefCell, collections::HashMap};
 const RESOURCE: [&str; 6] = ["mood", "mana", "health", "gold", "renown", "alignment"];
@@ -685,7 +686,7 @@ impl Context {
     }
 }
 fn debit(s: &mut Position, i: usize, n: f64) {
-    let paid = s.resources[i].min(n.max(0.));
+    let paid = s.resources[i].max(0.).min(n.max(0.));
     s.resources[i] -= paid;
     s.spent[i] += paid;
 }
@@ -995,6 +996,9 @@ fn clock() -> f64 {
     }
 }
 pub fn execute(v: Value, schema: &Value) -> Value {
+    if v["state"]["config"]["research"].as_bool() == Some(true) {
+        return variety::execute(v, schema);
+    }
     let (c, mut s) = Context::parse(v["state"].clone(), schema);
     let op = word(&v, "op");
     match op {

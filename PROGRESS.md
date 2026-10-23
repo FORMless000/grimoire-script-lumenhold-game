@@ -13,6 +13,42 @@
 | Checks | `npm run verify` passes: build, lint, format, docs, 100+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 48 months (the last two are the wrap-up), about 630–720 cards (15 a term month, 9.4 a break month; about half pushed rather than drawn); in `grim analyze` (100 games a style, 2026-10-17), random play leaves early 30–40% of the time, social 27–30%, aggressive 18–29% and cautious 10–17%; the other 23 styles finish 98–100% |
 
+## Authoring retrieval experiments (October 21)
+
+Auxiliary `grim retrieve` tools now catalog original blocks, search with contextual
+BM25/vectors/reranking, inspect static dependencies, and export to isolated QMD or
+LightRAG adapters. `grim author-eval` prepares frozen manual harness trials,
+preserves drafts and failures, imports/audits native traces, and serves a separate
+loopback review page with blind judgments, findings, panels and reports.
+Protocol/setup: `experiments/authoring/README.md`; retrieval/configuration:
+`docs/authoring/retrieval.md`. Production content acceptance is unchanged.
+
+Validation: `grim check`, `npm run verify` (including golden games and browser
+checks), fixture tests and a real-corpus lexical smoke test. External API and
+framework protocols use mocks in tests. QMD/LightRAG dependencies and weights
+still need isolated setup and live compatibility checks before actual trials;
+no paid indexing, authoring or judging runs have been started.
+
+## Combat F5.11-plan.1 (October 21)
+
+The plan is `docs/minigame-combat-f5.11-plan.1-2026-10-21.md`, implemented in the combat core. What the main game carries
+over is in `combat/HANDOFF.md` ("F5.11-plan.1").
+- **Rules:**
+  - The basics are renamed Impulse, Parry and Refocus, plus Breaking Free; physical damage is now Impact.
+  - Haste is Countertempo: no more bundles.
+  - One hostile-application rule covers both sides.
+  - The redesigned spells are Bramble (Bind), Wildfire, Omen, Lodestar, Compel, Tailwind, Brace and the reward tranches.
+- **Kits** (feedback 2026-10-21): club and job capstones come from level 30, one club and one job, three at most. Hidden
+  spells come from 30, one every 10 levels.
+- **Tests:** the frozen goldens are retired; `combat/tools/parity.mjs` checks native against wasm.
+- **Balance, humans** (`combat/tools/human-study.mjs`, engine against engine at depth 5, tiers 20/45/70 ±4):
+  - Changes (feedback 2026-10-21): Mend heals 18/20/22, Bramble does 4 damage for 12 Mana (migration 0042), Tailwind
+    does 10 + 15 a chained cast, Moonwell banks 10, and the Showman takes Tailwind as its job.
+  - The class win-rate spread went from sd 20 to 14 (L20 27–65%, L45 16–92%, L70 19–82%).
+  - Still open: the Healer (92% at 45), the Hollow adept (82% at 70), the Scholar (16% at 45) and the Illusionist (19% at
+    70). Number changes alone haven't closed these gaps; mechanic proposals are pending the user's choice.
+  - Creatures come after the humans.
+
 ## World expansion 1 (October 20)
 
 The plan was wide-but-thin to deep (the approved plan, rev. 4; `docs/world-expansion-design.md` stays out of scope). **284 new cards** (1,100 → 1,384), 21 items, all additive to schema v1 (`schema` intact; additions recorded). zh-CN 100% (12,805 strings).
@@ -20,7 +56,7 @@ The plan was wide-but-thin to deep (the approved plan, rev. 4; `docs/world-expan
 - **Negotiations** (migration 0037): about 40 real ones are bound to the future minigame and registered by profile and room; the trivial asks are `appeal`, `perform` or `soothe`. Until the minigame ships the stub rolls on charm, lore and guile. Minigames happen freely (design §T1's one-a-month is superseded).
 - **The kit:** owned items open their own options (`up[item:x]`, one per card, so hoarding never stacks); worn items (a wand, a robe, a trinket) count only in fights, as flat modifiers. The Kit panel and the fight's kit picker. Six shop counters with special offers, tonics and selling (`content/events/kit/`); the old buying events stay flavour and the vendors take them in exchange. Old gifts became items through `legacy:` (Edmund's wand, the black-star coin, Ilse's frost-ward).
 - **Combat** (`combat/HANDOFF.md`): creature races scale HP and Mana and never heal; aliases reuse rules; new rules bind, drain, poison, multi-hit and telegraphed channels; eleven new foes; tutorial fights with "Skip the lesson"; `stakes: none`.
-- **The academy, condensed** (migration 0038): the refectory, infirmary, flight field, orchard and bakery merged into neighbours (33 campus pins → 28); old saves load (`test/fixtures/save-before-expansion1.json`).
+- **The academy, condensed** (migration 0038): the refectory, infirmary, flight field, orchard and bakery merged into neighbours (33 campus pins → 28); old saves load (`test/fixtures/save-before-expansion1.json`). **Partly undone** (migration 0043, the user's decision on 2026-10-23): the refectory, infirmary and flight field are their own places again, with their cards, the alchemy course's infirmary lessons and the schedules restored from before the merge (31 pins); the orchard stays in Maud's cottage and the bakery on the square. Saves made in between gain the three places on load; their visits stay counted at the Great Hall, the Alchemy Laboratory and the Stables.
 - **Breaks:** 21 castle and home cards for the extra visits.
 - **The intro** (`content/events/intro.grim`): a new game opens on a prologue: the arrival, then the Sorting Mirror, where the origin is picked (its answers name the crowns each origin really gives), and month 1 begins after it (feedback 2026-10-20; the origin had its own screen before the game). Then the orientation, one condensed run of cards before the registrar's list:
   - **The Welcome** asks first: left skips it, right plays it through. Skipping never skips Ward: the safety talk then comes after enrolment.

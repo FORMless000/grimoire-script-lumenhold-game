@@ -32,7 +32,8 @@ export function initCore(module){coreModule=module;instantiate();call('rules_ver
 export const coreReady=()=>!!coreModule;
 
 // An action's name: in the main game's language when it handed translations (useText: label.<id>; spells by their id).
-export const BASIC_LABELS={strike:'Strike',guard:'Guard',reclaim:'Reclaim',hold:'Hold',release:'Release',frozen:'Frozen',cancel:'Cancelled'};
+// F5.11-plan.1: the basics' names (ids unchanged): Impulse, Parry, Refocus; Breaking Free while Bound.
+export const BASIC_LABELS={strike:'Impulse',guard:'Parry',reclaim:'Refocus',hold:'Hold',release:'Release',frozen:'Frozen',cancel:'Cancelled',break_free:'Breaking Free'};
 export function label(id){
   if(typeof id!=='string')return id;
   if(textInUse()){if(id.startsWith('bundle:'))return id.slice(7).split('+').map(label).join(' + ');const t=tx('label.'+id,null);if(t)return t;}
@@ -43,14 +44,14 @@ export function formatEvent(e){
   const who=side=>side===0?'You':'Opponent';
   switch(e.type){
     case 'constructEnded':return `${label(e.id)} ended.`;
-    case 'froze':return `${who(e.side)} froze on 1 HP; thaw after next exchange.`;
+    case 'froze':return `${who(e.side)} froze instead of falling; thaw after next exchange.`;
     case 'witnessed':return `Observers witnessed forbidden ${label(e.id)}.`;
     case 'compelsCancel':return 'Opposing Compels cancel each other.';
     case 'tormentCharged':return `Torment charged ${e.value.toFixed(2)} HP for the action.`;
     case 'hoarfrostCancel':return 'Hoarfrost and opposing fire cancel.';
     case 'dealt':return `${label(e.id)} dealt ${Math.round(e.amount*100)/100} HP to ${e.target===0?'you':'opponent'}.`;
     case 'reclaimed':return `${who(e.side)} reclaimed ${e.amount.toFixed(2)} Mana.`;
-    case 'hit':case 'moved':return null;   // structured only: the fight text (resolvedLines) tells these
+    case 'hit':case 'moved':case 'applied':return null;   // structured only: the fight text (resolvedLines) tells these
   }
   throw Error('Unknown event '+e.type);
 }
@@ -59,7 +60,7 @@ export function cloneState(s){return structuredClone(s);}
 export function actorToMove(s){use(s);const side=call('actor');return side<0?null:side;}
 export function legalActions(s,side){use(s);call('legal',side??-1);return JSON.parse(read());}
 // Why an action can't be taken (rust/core/src/rules.rs unavailable), by key for translations.
-export const UNAVAILABLE={frozen:'Frozen this exchange',notAction:'Not an available action',channeling:'Hold or Release while channeling',notChanneling:'Not channeling',hasteBundle:'Haste requires one basic-action bundle',noBundle:'No Haste bundle available',notLearned:'Not learned',cardsOnly:'Cards/story only',mana:'Not enough ready Mana',hp:'Not enough HP'};
+export const UNAVAILABLE={frozen:'Frozen this exchange',notAction:'Not an available action',channeling:'Hold or Release while channeling',notChanneling:'Not channeling',notLearned:'Not learned',cardsOnly:'Cards/story only',mana:'Not enough ready Mana',hp:'Not enough HP',bound:'Bound: Breaking Free is the only action',compelled:'Compelled: only the captured move',firstExchange:'Not in the first exchange',blowOnWay:'A blow is already on its way',once:'Once a fight',paid:'Already paid',lodestar:'A Lodestar is already rising'};
 const UNAVAILABLE_KEY=Object.fromEntries(Object.entries(UNAVAILABLE).map(([k,v])=>[v,k]));
 export function available(s,side,id){use(s);call('unavailable',side,id);const r=read();return r&&textInUse()&&UNAVAILABLE_KEY[r]?tx('unavailable.'+UNAVAILABLE_KEY[r],r):r;}
 export function cost(s,side,id){use(s);return call('cost',side,id);}

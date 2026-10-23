@@ -1,15 +1,33 @@
-// The combat rules (F5). Same order of operations as the former engine.mjs so results are bit-identical.
+// The combat rules (F5; F5.11-plan.1, 2026-10-21: the duel terms and spell redesign of
+// docs/minigame-combat-f5.11-plan.1-2026-10-21.md). Internal ids stay: `strike` plays Impulse, `guard` Parry, `reclaim` Refocus,
+// a `physical` hit is Impact damage.
+//
+// An exchange resolves in this order:
+//   1. both sides pay for their moves (a move no longer affordable is lost);
+//   2. both sides' own preparations: defences (Parry, Ward, Brace, Shadowstep, Reflect, a mature Lodestar's Ward), channels,
+//      constructs, scheduled blows, Mend, rewards and the rest, so a defence raised this exchange meets the other side's
+//      hostile spells whichever side committed first;
+//   3. both sides' attacks (Impulse, damaging spells, Countertempo's Impulse, worn kit), then the Shadowstep breaks;
+//   4. hostile applications (Bind, Venom, Torment, Compel, Omen, Seal, Extraction, Filch, Roar's scatter, Sleight), each
+//      blocked, landed or Reflected onto its caster;
+//   5. Torment's tolls, Hoarfrost's cancellation, the hits; Refocus; scheduled hits and construct ticks; construct endings;
+//      poison ticks; Mend; a mature Lodestar's healing; the clocks.
+// Damage priority (plan §9): a mature Lodestar negates any damage; then poison ticks and Torment tolls land past every other
+// defence; then the ordinary ones (frozen, Shadowstep, Reflect, Parry, Ward, Brace, construct and worn reductions).
 use crate::data::{data, Act, ConstructAction, R_ALIGNMENT, R_CROWNS, R_HEALTH, R_MANA, R_RENOWN, RESOURCES};
 use crate::state::*;
 use serde_json::{json, Map, Value};
 
 pub const EPS: f64 = 1e-9;
-/// Brace blocks 100%, then 50%, 25% and 25% of opposing damage.
-pub const BRACE_BLOCK: [f64; 4] = [1.0, 0.5, 0.25, 0.25];
-/// The special spells' amounts live in the roster (`amounts`, setup/roster.mjs): Wildfire's hold, self, release and perHold
-/// (Hold deals `hold` and costs the caster `self` unscaled; the Release deals `release` + `perHold` a Hold), Siphon's hit,
-/// Moonwell's and Lodestar's bank, Omen's hit.
+/// Brace's share taken off opposing damage, and its exchanges including the cast (the roster's `block` and `duration` win).
+pub const BRACE_SHARE: f64 = 0.8;
+pub const BRACE_EXCHANGES: i32 = 2;
+/// The special spells' amounts live in the roster (`amounts`, setup/roster.mjs): Wildfire's hit, bank and self (the cast and
+/// each Hold deal `hit`, bank `hit` more for the Release and burn the caster `self`, 2× `self`, 3× …, unscaled); Siphon's hit;
+/// Moonwell's bank; Omen's hit (each of two); Lodestar's heal and delay; Torment's toll (× Mana paid); Eclipse's share;
+/// Sleight's take; Rapport's crowns; Tailwind's step; a delayed blow's hit and impact; Acorns' next.
 #[inline] fn amt(sp: usize, key: &str) -> f64 { data().amt(sp, key) }
+#[inline] fn amt_or(sp: usize, key: &str, def: f64) -> f64 { data().spells[sp].amounts.get(key).copied().unwrap_or(def) }
 pub const STRIKE_DAMAGE: f64 = 9.0;
 pub const DECISION_QUIET_EXCHANGES: i32 = 10;
 /// A fight that is never quiet (both sides hurt and heal) is called on points after this many exchanges.
@@ -17,26 +35,35 @@ pub const DECISION_MAX_EXCHANGES: i32 = 60;
 pub const STARLIGHT_RELEASE: f64 = 30.0;
 pub const STARLIGHT_CHARGED: f64 = 48.0;
 pub const PURIFY_MANA: f64 = 24.0;
-pub const TORMENT_TOLL: f64 = 8.0;
 pub const EXTRACTION_MANA: f64 = 9.0;
-pub const TAILWIND_STEP: f64 = 3.0;
-/// Tailwind's bonus per consecutive Strike: the roster's damage for Tailwind when given, else TAILWIND_STEP.
 /// Starlight's Release base damage: straight away, or after at least one Hold (the roster's `release`, else the constants).
 pub fn starlight_base(charged: bool) -> f64 { let d = data(); let r = d.spells[d.ids.starlight].release.as_ref(); if charged { r.and_then(|v| v.get(1).copied()).unwrap_or(STARLIGHT_CHARGED) } else { r.and_then(|v| v.first().copied()).unwrap_or(STARLIGHT_RELEASE) } }
-pub fn tailwind_step() -> f64 { let d = data(); d.spells[d.ids.tailwind].damage.as_ref().map_or(TAILWIND_STEP, |v| v[0]) }
+/// Brace's share and exchanges, from the roster's Brace (its copies, Burrow and Hide, play the same curve).
+pub fn brace_share() -> f64 { amt_or(data().ids.brace, "block", BRACE_SHARE) }
+pub fn brace_exchanges() -> i32 { data().spells[data().ids.brace].duration.as_ref().map_or(BRACE_EXCHANGES, |v| v[0] as i32) }
+/// Tailwind's added base per consecutive cast before this one.
+pub fn tailwind_step() -> f64 { amt_or(data().ids.tailwind, "step", 10.0) }
+/// Wildfire's self-burn on the beat after `holds` Holds (the cast is beat 0): `self` × (holds + 1).
+pub fn wildfire_self(holds: i32) -> f64 { let d = data(); amt_or(d.ids.wildfire, "self", 2.0) * (holds + 1) as f64 }
 
 /// JS Math.round: halves round toward +infinity.
 #[inline]
 pub fn js_round(x: f64) -> f64 { let f = x.floor(); if x - f >= 0.5 { f + 1.0 } else { f } }
+/// Upward rounding with a hair of tolerance (4 × 1.0000000001 is still 4).
+#[inline]
+pub fn ceil_up(x: f64) -> f64 { (x - 1e-7).ceil() }
 
 #[derive(Clone, Copy, Default)]
-/// `ward_pierce`: the share of a spell hit that gets through Ward (0: Ward stops it all); `pierce_brace`: Brace doesn't reduce it.
-pub struct Hit { pub source: u8, pub target: u8, pub id: Act, pub power: f64, pub spell: bool, pub fixed: bool, pub pierce_guard: bool, pub reflected: bool, pub hot: bool, pub ward_pierce: f64, pub pierce_brace: bool }
+/// `ward_pierce`: the share of a spell hit that gets through Ward (0: Ward stops it all); `pierce_brace`: Brace doesn't reduce it;
+/// `fixed`: a hit on its own caster (Wildfire's heat, a burst); `inevitable`: a poison tick or Torment toll, past every defence
+/// but a mature Lodestar (F5.11-plan.1).
+pub struct Hit { pub source: u8, pub target: u8, pub id: Act, pub power: f64, pub spell: bool, pub fixed: bool, pub pierce_guard: bool, pub reflected: bool, pub hot: bool, pub ward_pierce: f64, pub pierce_brace: bool, pub inevitable: bool }
 pub type Hits = Small<Hit, 40>;
 
 /// Scratch for one resolve (the former module-level hurtNow/mendNow and s.bursts).
 /// tried / dealt: whether each side aimed damage at the other this exchange, and whether any landed (the urge, F5.9d).
-struct Ctx<'p> { hurt_now: [bool; 2], mend_now: [f64; 2], bursts: Hits, public: Option<&'p mut Public>, tried: [bool; 2], dealt: [bool; 2] }
+/// paid: the ready Mana each side paid for its move this exchange (Torment's toll).
+struct Ctx<'p> { hurt_now: [bool; 2], mend_now: [f64; 2], bursts: Hits, public: Option<&'p mut Public>, tried: [bool; 2], dealt: [bool; 2], paid: [f64; 2] }
 impl Ctx<'_> {
     fn event(&mut self, e: impl FnOnce() -> Event) { if let Some(p) = self.public.as_mut() { p.events.push(e()); } }
 }
@@ -58,21 +85,27 @@ fn spell_of(a: Act) -> Option<usize> { let d = data(); if (a as usize) < d.acts.
 /// Rank index into per-rank arrays (kit rank, or 1 when not learned).
 #[inline]
 pub fn rank(enc: &Encounter, side: usize, spell: usize) -> i32 { enc.sides[side].rank[spell] }
-/// The most Renown a side can win in one fight from Glamour and Rapport together (F5.9d): 2.5 × what one Glamour of theirs earns
-/// (Glamour I's when they don't know it). Their casts stack up to it.
-pub const RENOWN_CAP_GLAMOURS: f64 = 2.5;
-pub fn renown_cap(enc: &Encounter, side: usize) -> f64 {
-    let d = data(); let g = d.ids.glamour;
-    let lv = rank(enc, side, g).max(1) as usize;
-    RENOWN_CAP_GLAMOURS * d.spells[g].renown.as_ref().map_or(0.0, |v| v[(lv - 1).min(v.len() - 1)])
+
+/// The reward tranches (F5.11-plan.1): Glamour, Rapport and Sleight each pay A = ceil(base × skill factor) on their first
+/// positive payout, ceil(A/2) on the second, nothing after. Their slot in Actor::tranches.
+pub fn tranche_slot(sp: usize) -> Option<usize> { let ids = &data().ids; if sp == ids.glamour { Some(0) } else if sp == ids.rapport { Some(1) } else if sp == ids.sleight { Some(2) } else { None } }
+/// A reward spell's full allowance A for this side.
+pub fn reward_full(enc: &Encounter, side: usize, sp: usize) -> f64 {
+    let d = data();
+    let base = if sp == d.ids.sleight { amt_or(sp, "take", 15.0) } else { let r = (rank(enc, side, sp).max(1) - 1) as usize; d.spells[sp].renown.as_ref().map_or(0.0, |v| v[r.min(v.len() - 1)]) };
+    ceil_up(amount(enc, side, Some(sp), base, false))
 }
-/// Renown still to be won this fight from Glamour and Rapport.
-pub fn renown_room(enc: &Encounter, s: &State, side: usize) -> f64 { 0f64.max(renown_cap(enc, side) - s.actors[side].pending_renown) }
+/// The allowance of this side's next cast of a reward spell: A, ceil(A/2), then 0.
+pub fn reward_next(enc: &Encounter, s: &State, side: usize, sp: usize) -> f64 {
+    let Some(slot) = tranche_slot(sp) else { return 0.0 };
+    let a = reward_full(enc, side, sp);
+    match s.actors[side].tranches[slot] { 0 => a, 1 => ceil_up(a / 2.0), _ => 0.0 }
+}
 /// The urge to deal damage (F5.9d): + URGE_STEP each exchange a side deals no damage, up to URGE_MAX; 0 when it deals some; halved
 /// when its damage is all blocked. In the AI policy's points (as a persona's tilt), × the preset's tiltScale.
 pub const URGE_STEP: f64 = 3.0;
 pub const URGE_MAX: f64 = 18.0;
-/// amount(): base × skill factor (× combat scale when physical). `spell` = None means Strike.
+/// amount(): base × skill factor (× combat scale when physical). `spell` = None means Impulse (Strike).
 #[inline]
 pub fn amount(enc: &Encounter, side: usize, spell: Option<usize>, base: f64, physical: bool) -> f64 {
     let n = data().acts.n_spells;
@@ -81,14 +114,16 @@ pub fn amount(enc: &Encounter, side: usize, spell: Option<usize>, base: f64, phy
 #[inline]
 pub fn damage_power(enc: &Encounter, side: usize, spell: usize, base: f64) -> f64 { js_round(amount(enc, side, Some(spell), base, true) * enc.damage_multiplier) }
 
-pub fn attack_power(enc: &Encounter, _s: &State, side: usize, a: Act) -> f64 {
+/// The base damage of a damaging action now: Impulse's, or a spell's at its rank (Tailwind with its chain so far).
+pub fn attack_power(enc: &Encounter, s: &State, side: usize, a: Act) -> f64 {
     let d = data();
     let (spell, base) = if a == d.acts.strike { (None, Some(d.skill.strike_damage)) } else {
         match spell_of(a) { Some(sp) => (Some(sp), d.spells[sp].damage.as_ref().and_then(|v| v.get((rank(enc, side, sp) - 1) as usize).copied())), None => (None, None) }
     };
+    let chain = if spell == Some(d.ids.tailwind) { s.actors[side].effects[Eff::Tailwind as usize].map_or(0.0, |e| e.value) * tailwind_step() } else { 0.0 };
     match base {
         None => 0.0,
-        Some(b) => js_round(amount(enc, side, spell, b, true) * enc.damage_multiplier),
+        Some(b) => js_round(amount(enc, side, spell, b + chain, true) * enc.damage_multiplier),
     }
 }
 
@@ -114,28 +149,64 @@ pub fn hp_cost(enc: &Encounter, s: &State, side: usize, a: Act) -> f64 {
     (if blood(s, side, a) { cost(enc, s, side, a) / 2.0 } else { 0.0 }) + own
 }
 
-/// available(): None when the action can be taken, else the reason shown to the player.
-pub fn unavailable(enc: &Encounter, s: &State, side: usize, a: Act) -> Option<&'static str> {
+/// Countertempo (Haste, F5.11-plan.1): a spell with no damage of its own (direct, scheduled, inevitable or by a summon) and no
+/// channel; cast while Haste is active, it adds one automatic Impulse. Basics never do.
+pub fn countertempo(sp: usize) -> bool {
+    let d = data();
+    let x = &d.spells[sp];
+    let ids = &d.ids;
+    x.castable && !x.channel && x.damage.is_none() && x.delay.is_none() && x.poison.is_none() && sp != ids.omen && sp != ids.torment
+        && !x.amounts.contains_key("next") && x.construct.map_or(true, |k| d.constructs[k].action == ConstructAction::Heal)
+}
+/// Whether this action, cast now, adds Countertempo's Impulse.
+pub fn hasted_impulse(s: &State, side: usize, a: Act) -> bool { has(s, side, Eff::Haste) && spell_of(a).map_or(false, countertempo) }
+
+/// A Lodestar cast but not yet matured (one at a time, plan §9).
+pub fn lodestar_pending(s: &State, side: usize) -> bool { s.actors[side].effects[Eff::Lodestar as usize].map_or(false, |e| e.from > s.round) }
+
+/// The menu without Compel's constraint: frozen, bound, channel, Mana and HP, the spells' own limits.
+fn base_unavailable(enc: &Encounter, s: &State, side: usize, a: Act) -> Option<&'static str> {
     let d = data();
     let k = &d.acts;
     let x = &s.actors[side];
     if x.freeze_until >= s.round { return if a == k.frozen { None } else { Some("Frozen this exchange") }; }
-    if a == k.frozen || a == k.cancel { return Some("Not an available action"); }
+    if has(s, side, Eff::Bound) { return if a == k.break_free { None } else { Some("Bound: Breaking Free is the only action") }; }
+    // Idle (F5.11): a kit that may stand still commits `cancel` from its normal menu; nobody else can.
+    let idle = a == k.cancel && enc.sides[side].idle && x.channel.is_none();
+    if a == k.frozen || a == k.break_free || (a == k.cancel && !idle) || k.is_bundle[a as usize] { return Some("Not an available action"); }
+    if idle { return None; }
     let hold_or_release = a == k.hold || a == k.release;
     if x.channel.is_some() && !hold_or_release { return Some("Hold or Release while channeling"); }
     if x.channel.is_none() && hold_or_release { return Some("Not channeling"); }
-    if x.channel.is_none() && has(s, side, Eff::Haste) {
-        let count = x.effects[Eff::Haste as usize].unwrap().value as usize;
-        if !k.bundles_by_count[count].contains(&a) { return Some("Haste requires one basic-action bundle"); }
-    } else if k.is_bundle[a as usize] { return Some("No Haste bundle available"); }
     if let Some(sp) = spell_of(a) {
+        let ids = &d.ids;
         if !enc.sides[side].learned[sp] { return Some("Not learned"); }
         if !d.spells[sp].castable { return Some("Cards/story only"); }
-        if (sp == d.ids.shadowstep || sp == d.ids.brace) && has(s, side, Eff::Bound) { return Some("Bound: no stepping aside or bracing"); }
+        // Compel (F5.11): never in the fight's first exchange.
+        if sp == ids.compel && s.round <= 1 { return Some("Not in the first exchange"); }
+        // A delayed blow (F5.11) waits for the last one to land: one blow on its way at a time.
+        if d.spells[sp].delay.is_some() && x.omens.iter().any(|o| d.spells[o.spell].delay.is_some()) { return Some("A blow is already on its way"); }
+        if sp == ids.rime && (x.rime_ready || x.rime_used) { return Some("Once a fight"); }
+        if sp == ids.heartprice && has(s, side, Eff::Heartprice) { return Some("Already paid"); }
+        if sp == ids.lodestar && x.effects[Eff::Lodestar as usize].is_some() { return Some("A Lodestar is already rising"); }
     }
     if !blood(s, side, a) && x.res[R_MANA] + EPS < cost(enc, s, side, a) { return Some("Not enough ready Mana"); }
     if x.hp + EPS < hp_cost(enc, s, side, a) { return Some("Not enough HP"); }
     None
+}
+/// Compel's forced move (F5.11-plan.1): the captured one while it is legal, else a lost turn (`cancel`).
+pub fn replay(enc: &Encounter, s: &State, side: usize) -> Act {
+    let k = &data().acts;
+    match s.actors[side].captured { Some(a) if a != k.cancel && a != k.frozen && base_unavailable(enc, s, side, a).is_none() => a, _ => k.cancel }
+}
+/// available(): None when the action can be taken, else the reason shown to the player.
+/// Control order (plan §7): frozen, then bound (Breaking Free), then compelled (the captured move), then a channel.
+pub fn unavailable(enc: &Encounter, s: &State, side: usize, a: Act) -> Option<&'static str> {
+    let x = &s.actors[side];
+    if x.freeze_until < s.round && !has(s, side, Eff::Bound) && has(s, side, Eff::Compelled) {
+        return if a == replay(enc, s, side) { None } else { Some("Compelled: only the captured move") };
+    }
+    base_unavailable(enc, s, side, a)
 }
 
 pub type Moves = Small<Act, 48>;
@@ -150,11 +221,11 @@ pub fn legal_for(enc: &Encounter, s: &State, side: usize) -> Moves {
     let x = &s.actors[side];
     let mut consider = |a: Act| if unavailable(enc, s, side, a).is_none() { out.push(a); };
     if x.freeze_until >= s.round { consider(k.frozen); }
-    // Compelled (F5.9b): the only move is the replayed one (a cancelled turn when it can't be repeated), known to both sides.
+    else if has(s, side, Eff::Bound) { consider(k.break_free); }
+    // Compelled: the only move is the captured one (a lost turn when it can't be played), known to both sides.
     else if has(s, side, Eff::Compelled) { out.push(replay(enc, s, side)); }
     else if x.channel.is_some() { consider(k.hold); consider(k.release); }
-    else if has(s, side, Eff::Haste) { for &b in &k.bundles_by_count[x.effects[Eff::Haste as usize].unwrap().value as usize] { consider(b); } }
-    else { consider(k.strike); consider(k.guard); consider(k.reclaim); for &(sp, _) in &enc.sides[side].kit { consider(sp as Act); } }
+    else { consider(k.strike); consider(k.guard); consider(k.reclaim); for &(sp, _) in &enc.sides[side].kit { consider(sp as Act); } if enc.sides[side].idle { consider(k.cancel); } }
     out
 }
 
@@ -172,8 +243,9 @@ fn gain(enc: &Encounter, s: &mut State, side: usize, key: usize, n: f64) -> f64 
     if key == R_MANA && actual > EPS { delete(s, side, Eff::Shadowstep); }
     actual
 }
+/// Healing: none for a creature, none under Heartprice (F5.11-plan.1; Rime's rescue is not healing).
 fn heal(enc: &Encounter, s: &mut State, side: usize, n: f64) -> f64 {
-    if enc.sides[side].no_heal { return 0.0; }   // a creature never heals (world expansion 1)
+    if enc.sides[side].no_heal || has(s, side, Eff::Heartprice) { return 0.0; }
     let x = &mut s.actors[side];
     let actual = 0f64.max(n.min(x.max_hp - x.hp));
     x.hp += actual;
@@ -213,12 +285,14 @@ fn reduce_hp(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, n: f64,
     }
     actual
 }
-fn pay(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act) {
+/// Pay for a move; returns the ready Mana paid (HP payments under Heartprice pay none).
+fn pay(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act) -> f64 {
     let d = data();
     let c = cost(enc, s, side, a);
     let h = hp_cost(enc, s, side, a);
+    let mut paid = 0.0;
     if blood(s, side, a) { reduce_hp(enc, s, ctx, side, h, false); } else {
-        let paid = debit(&mut s.actors[side], R_MANA, c);
+        paid = debit(&mut s.actors[side], R_MANA, c);
         let room = 0f64.max(enc.sides[side].capacity - s.actors[side].res[R_MANA] - s.actors[side].flux);
         s.actors[side].flux += (paid * d.flux_ratio).min(room);
         if h != 0.0 { reduce_hp(enc, s, ctx, side, h, false); }
@@ -231,34 +305,31 @@ fn pay(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act) {
             ctx.event(|| Event::Witnessed { spell: sp });
         }
     }
+    paid
 }
 fn summon(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, sp: usize) {
     let d = data();
-    let ids = &d.ids;
-    let x = &s.actors[side];
-    let coexist = (sp == ids.bramble && x.constructs.iter().any(|c| c.spell == ids.heartwood)) || (sp == ids.heartwood && x.constructs.iter().any(|c| c.spell == ids.bramble));
-    let before = x.constructs;
-    let mut keep: Small<ConstructI, 3> = Small::default();
-    if coexist { for c in before.iter() { if c.spell != sp { keep.push(*c); } } }
-    for (i, c) in before.iter().enumerate() {
-        let kept = coexist && c.spell != sp;
-        let _ = i;
-        if !kept { end_construct(enc, s, ctx, side, *c); }
-    }
+    // A new summon replaces the old one (Bramble's construct and its Heartwood pairing are retired, F5.11-plan.1).
+    let before = s.actors[side].constructs;
+    for c in before.iter() { end_construct(enc, s, ctx, side, *c); }
     let kind = d.spells[sp].construct.unwrap();
     let spec = &d.constructs[kind];
     let power = if spec.action == ConstructAction::Heal { amount(enc, side, Some(sp), spec.power, true) } else { damage_power(enc, side, sp, spec.power) };
     let c = ConstructI { spell: sp, kind, power, reduction: amount(enc, side, Some(sp), spec.reduction, true), threshold: amount(enc, side, Some(sp), spec.threshold, true), taken: 0.0, expires: s.round + spec.max_exchanges - 1 };
+    let mut keep: Small<ConstructI, 3> = Small::default();
     keep.push(c);
     s.actors[side].constructs = keep;
 }
-/// Ward committed this exchange or an active Shadowstep stops every opposing spell effect.
-fn shielded(s: &State, side: usize) -> bool {
-    let ward = data().ids.ward as Act;
-    s.actors[side].freeze_until < s.round && (s.last_pair.map_or(false, |p| p[side] == ward) || has(s, side, Eff::Shadowstep))
-}
+/// Shielded from a hostile spell's application: Ward this exchange (a mature Lodestar's included) or Shadowstep.
+fn shielded(s: &State, side: usize) -> bool { has(s, side, Eff::Ward) || has(s, side, Eff::Shadowstep) }
 #[inline]
 fn hit(source: usize, id: Act, power: f64) -> Hit { Hit { source: source as u8, target: 1 - source as u8, id, power, spell: true, ..Default::default() } }
+/// Schedule a hit `n` exchanges from now on the caster's list; same-date contributions of one spell (Omen's) merge.
+fn schedule(s: &mut State, side: usize, sp: usize, due: i32, power: f64, impact: bool, bounced: bool) {
+    let list = &mut s.actors[side].omens;
+    if let Some(o) = list.as_mut_slice().iter_mut().find(|o| o.spell == sp && o.due == due && o.impact == impact && o.bounced == bounced) { o.power += power; return; }
+    list.push(Omen { due, power, spell: sp, impact, bounced });
+}
 
 fn hits(enc: &Encounter, s: &mut State, ctx: &mut Ctx, initial: &Hits) {
     if initial.is_empty() && ctx.bursts.is_empty() { return; }
@@ -281,60 +352,49 @@ fn hits(enc: &Encounter, s: &mut State, ctx: &mut Ctx, initial: &Hits) {
             let (hid, raw, hsrc, htgt, hrefl) = (h.id, h.power, h.source, h.target, h.reflected);
             if n <= EPS { continue; }
             if opposing { ctx.tried[h.source as usize] = true; }
-            if s.actors[t].freeze_until >= s.round { if opposing { ctx.event(|| Event::Hit { id: hid, raw, amount: 0.0, target: htgt, source: hsrc, by: DEF_FROZEN, reflected: hrefl }); } continue; }
-            if !h.fixed && has(s, t, Eff::Shadowstep) { if opposing { ctx.event(|| Event::Hit { id: hid, raw, amount: 0.0, target: htgt, source: hsrc, by: DEF_SHADOWSTEP, reflected: hrefl }); } continue; }
-            if h.spell && h.source != h.target && has(s, t, Eff::Reflect) && !h.reflected {
-                ctx.event(|| Event::Hit { id: hid, raw, amount: 0.0, target: htgt, source: hsrc, by: DEF_REFLECT, reflected: false });
-                queue.push(Hit { source: h.target, target: h.source, reflected: true, ..*h });
-                continue;
-            }
-            if !h.fixed {
-                // Guard's value is the share of a Strike it stops: 1, or less when it repeats the last exchange's Guard (fatigue).
-                if has(s, t, Eff::Guard) && !h.pierce_guard {
-                    let g = s.actors[t].effects[Eff::Guard as usize].unwrap().value;
-                    n *= if h.spell { 1.0 / 2.0 } else { 1.0 - g };
-                    by |= DEF_GUARD | if !h.spell && g < 1.0 - EPS { DEF_GUARD_TIRED } else { 0 };
+            // 1. A mature Lodestar negates any damage, its holder's own included (plan §9).
+            if has(s, t, Eff::Lodestar) { ctx.event(|| Event::Hit { id: hid, raw, amount: 0.0, target: htgt, source: hsrc, by: DEF_LODESTAR, reflected: hrefl }); continue; }
+            if !h.inevitable {
+                if s.actors[t].freeze_until >= s.round { if opposing { ctx.event(|| Event::Hit { id: hid, raw, amount: 0.0, target: htgt, source: hsrc, by: DEF_FROZEN, reflected: hrefl }); } continue; }
+                if !h.fixed && has(s, t, Eff::Shadowstep) { if opposing { ctx.event(|| Event::Hit { id: hid, raw, amount: 0.0, target: htgt, source: hsrc, by: DEF_SHADOWSTEP, reflected: hrefl }); } continue; }
+                if h.spell && opposing && has(s, t, Eff::Reflect) && !h.reflected {
+                    ctx.event(|| Event::Hit { id: hid, raw, amount: 0.0, target: htgt, source: hsrc, by: DEF_REFLECT, reflected: false });
+                    queue.push(Hit { source: h.target, target: h.source, reflected: true, ..*h });
+                    continue;
                 }
-                if n > EPS && opposing && has(s, t, Eff::Ward) && h.ward_pierce < 1.0 - EPS { n = if h.spell { n * h.ward_pierce } else { n / 2.0 }; by |= DEF_WARD; }
-                if n > EPS && opposing && !h.pierce_brace && has(s, t, Eff::Brace) {
-                    let from = s.actors[t].effects[Eff::Brace as usize].unwrap().from;
-                    n *= 1.0 - BRACE_BLOCK[3.min((s.round - from) as usize)];
-                    by |= DEF_BRACE;
+                if !h.fixed {
+                    // Parry's value is the share of an Impact hit it stops: 1, or less when it repeats the last exchange's Parry.
+                    if has(s, t, Eff::Guard) && !h.pierce_guard {
+                        let g = s.actors[t].effects[Eff::Guard as usize].unwrap().value;
+                        n *= if h.spell { 1.0 / 2.0 } else { 1.0 - g };
+                        by |= DEF_GUARD | if !h.spell && g < 1.0 - EPS { DEF_GUARD_TIRED } else { 0 };
+                    }
+                    if n > EPS && opposing && has(s, t, Eff::Ward) && h.ward_pierce < 1.0 - EPS { n = if h.spell { n * h.ward_pierce } else { n / 2.0 }; by |= DEF_WARD; }
+                    if n > EPS && opposing && !h.pierce_brace && has(s, t, Eff::Brace) {
+                        n *= 1.0 - s.actors[t].effects[Eff::Brace as usize].unwrap().value;
+                        by |= DEF_BRACE;
+                    }
+                    let reduction = s.actors[t].constructs.iter().fold(0.0, |sum, c| sum + c.reduction);
+                    if n > EPS && reduction > EPS { by |= DEF_CONSTRUCT; }
+                    n = 0f64.max(n - reduction);
                 }
-                let reduction = s.actors[t].constructs.iter().fold(0.0, |sum, c| sum + c.reduction);
-                if n > EPS && reduction > EPS { by |= DEF_CONSTRUCT; }
-                n = 0f64.max(n - reduction);
-            }
-            // The target's kit takes a flat amount off each opposing hit (world expansion 1: a ward-stitched cloak, a stag's tine).
-            if n > EPS && opposing {
-                let side_t = &enc.sides[t];
-                let off = side_t.taken_all + side_t.taken.get(h.id as usize).copied().unwrap_or(0.0);
-                if off > EPS { n = 0f64.max(n - off); }
-            }
-            // Lodestar shields while it is held (F5.9c): opposing hits draw on the bank before the Release turns it on.
-            if n > EPS && !h.fixed && opposing {
-                if let Some(mut c) = s.actors[t].channel { if c.spell == d.ids.lodestar && c.bank > EPS {
-                    let used = n.min(c.bank); n -= used; c.bank -= used; by |= DEF_LODESTAR; s.actors[t].channel = Some(c);
-                } }
-            }
-            if n > EPS && !h.fixed {
-                if let Some(mut l) = s.actors[t].effects[Eff::Lodestar as usize] {
-                    let used = n.min(l.value);
-                    n -= used;
-                    l.value -= used;
-                    by |= DEF_LODESTAR;
-                    s.actors[t].effects[Eff::Lodestar as usize] = if l.value <= EPS { None } else { Some(l) };
+                // The target's kit takes a flat amount off each opposing hit (world expansion 1: a ward-stitched cloak, a stag's tine).
+                if n > EPS && opposing {
+                    let side_t = &enc.sides[t];
+                    let off = side_t.taken_all + side_t.taken.get(h.id as usize).copied().unwrap_or(0.0);
+                    if off > EPS { n = 0f64.max(n - off); }
                 }
             }
             let actual = reduce_hp(enc, s, ctx, t, 0f64.max((n - EPS).ceil()), true);
             if opposing { ctx.event(|| Event::Hit { id: hid, raw, amount: actual, target: htgt, source: hsrc, by, reflected: hrefl }); }
             if actual > EPS {
-                if h.source != h.target { expose[h.source as usize] = true; ctx.dealt[h.source as usize] = true; }
+                if opposing { if !h.inevitable { expose[h.source as usize] = true; } ctx.dealt[h.source as usize] = true; }
                 let src = h.source as usize;
                 if h.id as usize == d.ids.siphon {
                     if let Some(c) = s.actors[src].channel.as_mut() { if c.spell == d.ids.siphon { c.total += actual; } }
                 }
-                if has(s, t, Eff::Eclipse) { gain(enc, s, t, R_MANA, 2.0 * actual); }
+                // Eclipse (F5.11-plan.1): its share of the damage actually taken becomes ready Mana.
+                if has(s, t, Eff::Eclipse) { let share = s.actors[t].effects[Eff::Eclipse as usize].unwrap().value; gain(enc, s, t, R_MANA, share * actual); }
                 let (id, target, source, reflected) = (h.id, h.target, h.source, h.reflected);
                 ctx.event(|| Event::Dealt { id, amount: actual, target, source, reflected });
             }
@@ -343,102 +403,194 @@ fn hits(enc: &Encounter, s: &mut State, ctx: &mut Ctx, initial: &Hits) {
     }
 }
 
-/// The share of a Strike this side's Guard stops: all of it, or 1 − the tuning's repeatLeak when it also guarded within the
-/// last `lookback` exchanges (Guard fatigue).
+/// The share of an Impact hit this side's Parry stops: all of it, or 1 − the tuning's repeatLeak when it also parried within the
+/// last `lookback` exchanges (Parry fatigue).
 pub fn guard_block(s: &State, side: usize) -> f64 {
     let d = data();
     let g = s.actors[side].guard_round;
     if g > 0 && s.round - g <= d.skill.guard_lookback { 1.0 - d.skill.guard_repeat_leak } else { 1.0 }
 }
 
+/// A side's own preparations (step 2): everything but its attacks and its hostile applications.
 fn prepared(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act, attacks: &mut Hits) {
     let d = data();
     let ids = &d.ids;
     let k = &d.acts;
-    let guard = guard_block(s, side);
-    if k.is_bundle[a as usize] { if k.parts[a as usize].contains(&k.guard) { put(s, side, Eff::Guard, guard, s.round, Some(s.round)); s.actors[side].guard_round = s.round; } return; }
+    let round = s.round;
+    if a == k.guard { let g = guard_block(s, side); put(s, side, Eff::Guard, g, round, Some(round)); s.actors[side].guard_round = round; return; }
     if let Some(sp) = spell_of(a) {
         let spell = &d.spells[sp];
         if spell.construct.is_some() { summon(enc, s, ctx, side, sp); return; }
         if spell.channel {
-            let bank = if sp == ids.moonwell { amount(enc, side, Some(sp), amt(sp, "bank"), false) } else if sp == ids.lodestar { amount(enc, side, Some(sp), amt(sp, "bank"), true) } else { 0.0 };
+            let bank = if sp == ids.moonwell { amount(enc, side, Some(sp), amt(sp, "bank"), false) } else { 0.0 };
             s.actors[side].channel = Some(Channel { spell: sp, holds: 0, bank, total: 0.0 });
             if sp == ids.siphon { attacks.push(hit(side, a, damage_power(enc, side, sp, amt(sp, "hit")))); }
-            if sp == ids.wildfire && amt(sp, "ignite") > 0.0 { attacks.push(Hit { hot: true, ..hit(side, a, damage_power(enc, side, sp, amt(sp, "ignite"))) }); }
+            if sp == ids.wildfire { wildfire_beat(enc, s, side, attacks); }
             return;
         }
     }
     let r = |sp: usize| (rank(enc, side, sp) - 1) as usize;
-    let round = s.round;
-    if a == k.guard { put(s, side, Eff::Guard, guard, round, Some(round)); s.actors[side].guard_round = round; return; }
     if a == k.hold {
         let mut c = s.actors[side].channel.unwrap();
         c.holds += 1;
         if c.spell == ids.moonwell { c.bank += amount(enc, side, Some(c.spell), amt(c.spell, "bank"), false); }
-        if c.spell == ids.lodestar { c.bank += amount(enc, side, Some(c.spell), amt(c.spell, "bank"), true); }
         s.actors[side].channel = Some(c);
-        if c.spell == ids.wildfire {
-            attacks.push(Hit { hot: true, ..hit(side, c.spell as Act, damage_power(enc, side, c.spell, amt(c.spell, "hold"))) });
-            attacks.push(Hit { target: side as u8, fixed: true, hot: true, ..hit(side, c.spell as Act, amt(c.spell, "self")) });
-        }
+        if c.spell == ids.wildfire { wildfire_beat(enc, s, side, attacks); }
         if c.spell == ids.siphon { attacks.push(hit(side, c.spell as Act, damage_power(enc, side, c.spell, amt(c.spell, "hit")))); }
         return;
     }
     if a == k.release {
         let c = s.actors[side].channel.take().unwrap();
         if c.spell == ids.starlight { attacks.push(Hit { ward_pierce: if c.holds != 0 { amt(c.spell, "chargedWardPierce") } else { 0.0 }, ..hit(side, c.spell as Act, damage_power(enc, side, c.spell, starlight_base(c.holds != 0))) }); }
-        // Wildfire's Release: the base, then the embers the Holds added, which get through Guard and Ward (F5.9c).
-        if c.spell == ids.wildfire {
-            attacks.push(Hit { hot: true, ..hit(side, c.spell as Act, damage_power(enc, side, c.spell, amt(c.spell, "release"))) });
-            if c.holds > 0 { attacks.push(Hit { hot: true, pierce_guard: true, ward_pierce: 1.0, ..hit(side, c.spell as Act, damage_power(enc, side, c.spell, amt(c.spell, "perHold") * c.holds as f64)) }); }
-        }
+        // Wildfire's Release (F5.11-plan.1): one spell hit of `hit` plus the bank; half of it gets through Ward.
+        if c.spell == ids.wildfire { attacks.push(Hit { hot: true, ward_pierce: 0.5, ..hit(side, c.spell as Act, damage_power(enc, side, c.spell, amt(c.spell, "hit") + c.bank)) }); }
         if c.spell == ids.siphon { heal(enc, s, side, c.total); }
         if c.spell == ids.moonwell { gain(enc, s, side, R_MANA, c.bank); }
-        if c.spell == ids.lodestar { put(s, side, Eff::Lodestar, c.bank, round, None); }
         return;
     }
     let Some(sp) = spell_of(a) else { return; };
     let spell = &d.spells[sp];
-    // Creature mechanics by property (world expansion 1): Ward or Shadowstep keep both off, as they do Torment.
-    if let Some(b) = spell.bind { if !shielded(s, 1 - side) { put(s, 1 - side, Eff::Bound, 1.0, round + 1, Some(round + b)); } }
-    if let Some((per, n)) = spell.poison {
-        if !shielded(s, 1 - side) {
-            let v = damage_power(enc, side, sp, per);
-            put(s, 1 - side, Eff::Poison, v, round + 1, Some(round + n));
-            s.actors[1 - side].effects[Eff::Poison as usize].as_mut().unwrap().source = Some(side as u8);
-        }
-    }
+    let rule = spell.rule;
+    let dur = |sp: usize| spell_duration(enc, side, sp);
     if sp == ids.mend { ctx.mend_now[side] = amount(enc, side, Some(sp), spell.healing.as_ref().unwrap()[r(sp)], true); }
-    else if sp == ids.ward { put(s, side, Eff::Ward, 1.0, round, Some(round)); }
-    else if sp == ids.brace { put(s, side, Eff::Brace, 1.0, round, Some(round + 3)); }
-    else if sp == ids.haste { put(s, side, Eff::Haste, spell.actions.as_ref().unwrap()[r(sp)], round + 1, Some(round + spell.duration.as_ref().unwrap()[r(sp)] as i32)); }
-    else if sp == ids.shadowstep { put(s, side, Eff::Shadowstep, 1.0, round, Some(round + spell.duration.as_ref().unwrap()[r(sp)] as i32 - 1)); }
+    else if rule == ids.ward { put(s, side, Eff::Ward, 1.0, round, Some(round)); }
+    else if rule == ids.brace { put(s, side, Eff::Brace, brace_share(), round, Some(round + brace_exchanges() - 1)); }
+    // Countertempo (F5.11-plan.1): the next 2/3/4 exchanges; a recast refreshes it.
+    else if sp == ids.haste { put(s, side, Eff::Haste, 1.0, round + 1, Some(round + dur(sp))); }
+    else if rule == ids.shadowstep { put(s, side, Eff::Shadowstep, 1.0, round, Some(round + dur(sp) - 1)); }
     else if sp == ids.glamour {
-        // Casts stack (F5.9d), with Rapport's, up to renown_cap.
-        if enc.observers { let n = spell.renown.as_ref().unwrap()[r(sp)].min(renown_room(enc, s, side)); s.actors[side].pending_renown += n; s.actors[side].glamour_done = true; }
+        // A tranche only with an audience (no audience consumes none).
+        if enc.observers { let n = reward_next(enc, s, side, sp); if n > EPS { s.actors[side].pending_renown += n; s.actors[side].tranches[0] += 1; s.actors[side].glamour_done = true; } }
     }
-    else if sp == ids.seal { let blocked = shielded(s, 1 - side); let n = if blocked { 0.0 } else { s.actors[1 - side].flux }; if !blocked { s.actors[1 - side].flux = 0.0; } ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: n, blocked }); }
-    else if sp == ids.omen { let power = damage_power(enc, side, sp, amt(sp, "hit")); s.actors[side].omens.push(Omen { due: round + 2, power }); }
-    else if sp == ids.purify { delete(s, side, Eff::Poison); let n = amount(enc, side, Some(sp), PURIFY_MANA, false); let got = gain(enc, s, side, R_MANA, n); ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: got, blocked: false }); }
-    else if sp == ids.tailwind { put(s, side, Eff::Tailwind, 0.0, round + 1, Some(round + 3)); }
+    else if sp == ids.rapport {
+        // The full Crown payment for a positive payout, never Crowns for nothing.
+        let n = reward_next(enc, s, side, sp);
+        let price = amt_or(sp, "crowns", 10.0);
+        if enc.observers && n > EPS && s.actors[side].res[R_CROWNS] + EPS >= price { debit(&mut s.actors[side], R_CROWNS, price); s.actors[side].pending_renown += n; s.actors[side].tranches[1] += 1; }
+    }
+    // Distill (F5.11-plan.1): HP for Mana, no longer a cure.
+    else if sp == ids.purify { let n = amount(enc, side, Some(sp), PURIFY_MANA, false); let got = gain(enc, s, side, R_MANA, n); ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: got, blocked: false }); }
     else if sp == ids.rime { if !s.actors[side].rime_used { s.actors[side].rime_ready = true; } }
-    else if sp == ids.reflect { let n = d.spells[sp].duration.as_ref().map_or(1, |v| v[r(sp).min(v.len() - 1)] as i32); put(s, side, Eff::Reflect, 1.0, round, Some(round + n - 1)); }
-    else if sp == ids.torment {
-        if !shielded(s, 1 - side) {
-            let v = damage_power(enc, side, sp, TORMENT_TOLL);
-            put(s, 1 - side, Eff::Torment, v, round, Some(round + 2));
-            s.actors[1 - side].effects[Eff::Torment as usize].as_mut().unwrap().source = Some(side as u8);
-        }
+    else if sp == ids.reflect { put(s, side, Eff::Reflect, 1.0, round, Some(round + dur(sp) - 1)); }
+    else if sp == ids.eclipse { put(s, side, Eff::Eclipse, amt_or(sp, "share", 1.0), round, Some(round + dur(sp) - 1)); }
+    // Heartprice (F5.11-plan.1): all ready Mana becomes HP once, then healing stops and spells cost HP.
+    else if sp == ids.heartprice {
+        let x = &mut s.actors[side];
+        let mana = x.res[R_MANA];
+        x.res[R_MANA] = 0.0; x.spent[R_MANA] += mana;
+        let n = if enc.sides[side].no_heal { 0.0 } else { mana.min(0f64.max(x.max_hp - x.hp)) };
+        x.hp += n;
+        if n > 0.0 { gain(enc, s, side, R_HEALTH, n); }
+        put(s, side, Eff::Heartprice, 1.0, round, None);
     }
-    else if sp == ids.eclipse { put(s, side, Eff::Eclipse, 1.0, round, Some(round + 1)); }
-    else if sp == ids.heartprice { put(s, side, Eff::Heartprice, 1.0, round, None); }
-    // sleight, rapport and extraction resolve as simultaneous transfers before preparations.
+    // Lodestar (F5.11-plan.1): matures `delay` exchanges from now: that exchange it negates all damage, wards, then heals.
+    else if sp == ids.lodestar { let at = round + amt_or(sp, "delay", 7.0) as i32; put(s, side, Eff::Lodestar, amount(enc, side, Some(sp), amt(sp, "heal"), true), at, Some(at)); }
+    // A delayed blow (F5.11): it lands `delay` exchanges from now, in the open; The Long Wait's Impact half beside its spell hit.
+    else if let Some(n) = spell.delay {
+        let due = round + n;
+        let impact = spell.physical;
+        if amt(sp, "hit") > 0.0 { let p = damage_power(enc, side, sp, amt(sp, "hit")); schedule(s, side, sp, due, p, impact, false); }
+        if amt(sp, "impact") > 0.0 { let p = damage_power(enc, side, sp, amt(sp, "impact")); schedule(s, side, sp, due, p, true, false); }
+    }
+    // Acorns (F5.11-plan.1): a second hit next exchange, met by that exchange's defences.
+    if amt(sp, "next") > 0.0 { let p = damage_power(enc, side, sp, amt(sp, "next")); schedule(s, side, sp, round + 1, p, spell.physical, false); }
+}
+/// A spell's exchanges at this side's rank (its rule's spell's when it has none of its own).
+fn spell_duration(enc: &Encounter, side: usize, sp: usize) -> i32 {
+    let d = data();
+    let r = (rank(enc, side, sp).max(1) - 1) as usize;
+    let of = |x: usize| d.spells[x].duration.as_ref().map(|v| v[r.min(v.len() - 1)] as i32);
+    of(sp).or_else(|| of(d.spells[sp].rule)).unwrap_or(1)
+}
+/// One Wildfire beat (the cast, or a Hold): `hit` at them, `self` × beats at the caster, `hit` more in the bank.
+fn wildfire_beat(enc: &Encounter, s: &mut State, side: usize, attacks: &mut Hits) {
+    let sp = data().ids.wildfire;
+    let mut c = s.actors[side].channel.unwrap();
+    let h = amt(sp, "hit");
+    attacks.push(Hit { hot: true, ..hit(side, sp as Act, damage_power(enc, side, sp, h)) });
+    attacks.push(Hit { target: side as u8, fixed: true, hot: true, ..hit(side, sp as Act, wildfire_self(c.holds)) });
+    c.bank += amt_or(sp, "bank", h);
+    s.actors[side].channel = Some(c);
 }
 
-fn replay(enc: &Encounter, s: &State, side: usize) -> Act {
-    let k = &data().acts;
-    match s.actors[side].last_action { Some(a) if unavailable(enc, s, side, a).is_none() => a, _ => k.cancel }
+/// Where a hostile application lands (plan §8): None when blocked, else the side it lands on and whether Reflect returned it.
+/// Ward (a mature Lodestar's too) and Shadowstep block it; Breaking Free blocks a Bind; Reflect returns it onto its caster, whose
+/// own Ward or Shadowstep can still block it there (it doesn't bounce again).
+fn landing(s: &State, caster: usize, binding: bool) -> (Option<usize>, u8) {
+    let d = data();
+    let target = 1 - caster;
+    let free = |side: usize| binding && s.last_pair.map_or(false, |p| p[side] == d.acts.break_free);
+    if shielded(s, target) || free(target) { return (None, 1); }
+    if has(s, target, Eff::Reflect) { return if shielded(s, caster) || free(caster) { (None, 3) } else { (Some(caster), 2) }; }
+    (Some(target), 0)
 }
+
+/// Step 4: one side's hostile application, if its move has one.
+fn apply_hostile(enc: &Encounter, s: &mut State, ctx: &mut Ctx, side: usize, a: Act, mana_before: [f64; 2]) {
+    let d = data();
+    let ids = &d.ids;
+    let Some(sp) = spell_of(a) else { return; };
+    let spell = &d.spells[sp];
+    let round = s.round;
+    let hostile = spell.bind.is_some() || spell.poison.is_some() || spell.drain.is_some() || sp == ids.torment || sp == ids.compel || sp == ids.omen || sp == ids.seal || sp == ids.extraction || sp == ids.sleight;
+    if !hostile { return; }
+    // Sleight is not stopped by Ward or Shadowstep (as before), only returned by Reflect (plan §8).
+    let (on, outcome) = if sp == ids.sleight { if has(s, 1 - side, Eff::Reflect) { (Some(side), 2) } else { (Some(1 - side), 0) } } else { landing(s, side, spell.bind.is_some()) };
+    ctx.event(|| Event::Applied { side: side as u8, id: a, outcome });
+    let blocked = on.is_none();
+    // The side that gains from it: its caster, or the reflector when it came back.
+    let on_target = on.unwrap_or(1 - side);
+    let taker = 1 - on_target;
+    if let Some(b) = spell.bind { if let Some(t) = on { put(s, t, Eff::Bound, 1.0, round + 1, Some(round + b)); } }
+    if let Some((per, n)) = spell.poison {
+        if let Some(t) = on { put(s, t, Eff::Poison, damage_power(enc, side, sp, per), round, Some(round + n - 1)); s.actors[t].effects[Eff::Poison as usize].as_mut().unwrap().source = Some((1 - t) as u8); }
+    }
+    if sp == ids.torment {
+        if let Some(t) = on { put(s, t, Eff::Torment, amt_or(sp, "toll", 2.0), round, Some(round + spell_duration(enc, side, sp) - 1)); s.actors[t].effects[Eff::Torment as usize].as_mut().unwrap().source = Some((1 - t) as u8); }
+    }
+    if sp == ids.compel {
+        if let Some(t) = on {
+            let captured = s.last_pair.unwrap()[t];
+            put(s, t, Eff::Compelled, 1.0, round + 1, Some(round + spell_duration(enc, side, sp)));
+            s.actors[t].captured = Some(captured);
+        }
+    }
+    if sp == ids.omen {
+        if let Some(t) = on {
+            let p = damage_power(enc, side, sp, amt(sp, "hit"));
+            for due in [round + 2, round + 3] { schedule(s, 1 - t, sp, due, p, false, outcome == 2); }
+        }
+    }
+    if sp == ids.seal {
+        let n = if blocked { 0.0 } else { s.actors[on_target].flux };
+        if !blocked { s.actors[on_target].flux = 0.0; }
+        ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: n, blocked });
+    }
+    // Extraction: ready Mana into the taker's flux (Mana plus flux can't exceed capacity).
+    if sp == ids.extraction {
+        let n = if blocked { 0.0 } else { 0f64.max(amount(enc, side, Some(sp), EXTRACTION_MANA, false).min(s.actors[on_target].res[R_MANA]).min(mana_before[on_target]).min(enc.sides[taker].capacity - s.actors[taker].res[R_MANA] - s.actors[taker].flux)) };
+        debit(&mut s.actors[on_target], R_MANA, n);
+        s.actors[taker].flux += n;
+        ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: n, blocked });
+    }
+    // Drain (Filch, Roar): ready Mana taken; Filch keeps it as the taker's flux, Roar scatters it.
+    if let Some(base) = spell.drain {
+        let n = if blocked { 0.0 } else { 0f64.max(amount(enc, side, Some(sp), base, false).min(s.actors[on_target].res[R_MANA])) };
+        debit(&mut s.actors[on_target], R_MANA, n);
+        if spell.drain_keep { let room = 0f64.max(enc.sides[taker].capacity - s.actors[taker].res[R_MANA] - s.actors[taker].flux); s.actors[taker].flux += n.min(room); }
+        ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: n, blocked });
+    }
+    // Sleight: Crowns, up to this cast's tranche; a theft that takes nothing (or comes back) consumes none.
+    if sp == ids.sleight {
+        let allowance = reward_next(enc, s, side, sp);
+        let n = allowance.min(s.actors[on_target].res[R_CROWNS]).min(99999.0 - s.actors[taker].res[R_CROWNS]).max(0.0);
+        debit(&mut s.actors[on_target], R_CROWNS, n);
+        gain(enc, s, taker, R_CROWNS, n);
+        if outcome == 0 && n > EPS { s.actors[side].tranches[2] += 1; }
+        ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: n, blocked: outcome != 0 });
+    }
+}
+
 fn terminal(enc: &Encounter, s: &mut State, ctx: &mut Ctx) -> bool {
     let alive = [s.actors[0].hp > EPS, s.actors[1].hp > EPS];
     if alive[0] && alive[1] { return false; }
@@ -455,8 +607,9 @@ pub fn can_damage(enc: &Encounter, s: &State, side: usize) -> bool {
     let flat = target.constructs.iter().fold(0.0, |n, c| n + c.reduction);
     if attack_power(enc, s, side, d.acts.strike) > flat + EPS { return true; }
     if x.constructs.iter().any(|c| d.constructs[c.kind].action != ConstructAction::Heal && c.power > flat + EPS) || x.omens.iter().any(|o| o.power > flat + EPS) { return true; }
+    if has(s, 1 - side, Eff::Poison) || (has(s, 1 - side, Eff::Torment) && target.res[R_MANA] > EPS) { return true; }
     if let Some(c) = x.channel {
-        let base = if c.spell == ids.starlight { Some(48.0) } else if c.spell == ids.wildfire { Some(36.0) } else { None };
+        let base = if c.spell == ids.starlight { Some(starlight_base(true)) } else if c.spell == ids.wildfire { Some(amt(c.spell, "hit") + c.bank) } else if c.spell == ids.siphon { Some(amt(c.spell, "hit")) } else { None };
         if let Some(b) = base { if damage_power(enc, side, c.spell, b) > flat + EPS { return true; } }
     }
     let mana = x.res[R_MANA] + x.flux + match x.channel { Some(c) if c.spell == ids.moonwell => c.bank, _ => 0.0 };
@@ -467,17 +620,14 @@ pub fn can_damage(enc: &Encounter, s: &State, side: usize) -> bool {
         let a = sp as Act;
         let c = cost(enc, s, side, a);
         if !can_fund && c > mana + EPS && !(blood && x.hp + EPS >= c / 2.0) { continue; }
-        if sp == ids.torment { return true; }
-        if sp == ids.compel {
-            if let Some(last) = target.last_action {
-                if unavailable(enc, s, 1 - side, last).is_none() && hp_cost(enc, s, 1 - side, last) > 0.0 { return true; }
-            }
-        }
+        if sp == ids.torment || sp == ids.compel { return true; }
         if let Some(kind) = d.spells[sp].construct {
             let spec = &d.constructs[kind];
             if spec.action != ConstructAction::Heal && damage_power(enc, side, sp, spec.power) > flat + EPS { return true; }
         }
-        let power = if sp == ids.starlight { damage_power(enc, side, sp, 36.0) } else if sp == ids.wildfire { damage_power(enc, side, sp, 24.0) } else if sp == ids.siphon { damage_power(enc, side, sp, 12.0) } else if sp == ids.omen { damage_power(enc, side, sp, 36.0) } else { attack_power(enc, s, side, a) };
+        let power = if sp == ids.starlight { damage_power(enc, side, sp, starlight_base(true)) } else if sp == ids.wildfire { damage_power(enc, side, sp, 2.0 * amt(sp, "hit")) } else if sp == ids.siphon { damage_power(enc, side, sp, amt(sp, "hit")) }
+            else if sp == ids.omen { damage_power(enc, side, sp, amt(sp, "hit")) } else if d.spells[sp].delay.is_some() { damage_power(enc, side, sp, amt(sp, "hit").max(amt(sp, "impact"))) }
+            else if d.spells[sp].poison.is_some() { damage_power(enc, side, sp, d.spells[sp].poison.unwrap().0) } else { attack_power(enc, s, side, a) };
         if power > flat + EPS { return true; }
     }
     false
@@ -523,125 +673,87 @@ pub fn finish(enc: &Encounter, s: &mut State, public: Option<&mut Public>, outco
     });
 }
 
-fn parts_contain(a: Act, b: Act) -> bool { data().acts.parts[a as usize].contains(&b) }
-
 fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
     let d = data();
     let k = &d.acts;
     let ids = &d.ids;
-    let mut ctx = Ctx { hurt_now: [false; 2], mend_now: [0.0; 2], bursts: Hits::default(), public, tried: [false; 2], dealt: [false; 2] };
+    let mut ctx = Ctx { hurt_now: [false; 2], mend_now: [0.0; 2], bursts: Hits::default(), public, tried: [false; 2], dealt: [false; 2], paid: [0.0; 2] };
     if let Some(p) = ctx.public.as_mut() { p.events.clear(); }
     let hp_before = [s.actors[0].hp, s.actors[1].hp];
     let spent_before = [s.actors[0].spent[R_MANA], s.actors[1].spent[R_MANA]];
     s.last_pair = Some([s.pending[0].unwrap(), s.pending[1].unwrap()]);
     macro_rules! pair { () => { s.last_pair.as_mut().unwrap() } }
-    // Compel replays deterministic public history, never chooses an opponent menu.
+    // A compelled side plays its captured move (its only legal one); recomputed so a stale commitment can't slip through.
+    for side in 0..2 { if s.actors[side].freeze_until < s.round && !has(s, side, Eff::Bound) && has(s, side, Eff::Compelled) { let r = replay(enc, s, side); pair!()[side] = r; } }
+    // Countertempo is read before this exchange's casts (Haste's own first cast doesn't trigger it; a recast while active does).
+    let committed = s.last_pair.unwrap();
+    let hasted = [0, 1].map(|side| hasted_impulse(s, side, committed[side]));
+    let special = |a: Act| a == k.cancel || a == k.frozen || a == k.break_free;
+    // 1. Payment. A move no longer affordable (a forced replay) is a lost turn.
     for side in 0..2 {
-        if has(s, side, Eff::Compelled) && s.actors[side].freeze_until < s.round { let r = replay(enc, s, side); pair!()[side] = r; }
+        let id = pair!()[side];
+        if special(id) { continue; }
+        if unavailable(enc, s, side, id).is_some() { pair!()[side] = k.cancel; continue; }
+        ctx.paid[side] = pay(enc, s, &mut ctx, side, id);
     }
-    let compel = ids.compel as Act;
-    let compels = [pair!()[0] == compel, pair!()[1] == compel];
-    if compels[0] && compels[1] {
-        for side in 0..2 { pay(enc, s, &mut ctx, side, compel); }
-        pair!()[0] = k.cancel; pair!()[1] = k.cancel;
-        ctx.event(|| Event::CompelsCancel);
-    } else {
-        for side in 0..2 {
-            if !compels[side] { continue; }
-            pay(enc, s, &mut ctx, side, compel);
-            let target = 1 - side;
-            if pair!()[target] == ids.ward as Act || has(s, target, Eff::Shadowstep) { continue; }
-            // Locked for `duration` exchanges after this one (roster: Compel's duration).
-            let lock = d.spells[ids.compel].duration.as_ref().map_or(2, |v| v[0] as i32);
-            put(s, target, Eff::Compelled, 1.0, s.round + 1, Some(s.round + lock));
-            // immediate (the default): it also rewrites this exchange's action, even one already committed in the open.
-            if d.spells[ids.compel].immediate && s.actors[target].freeze_until < s.round { let r = replay(enc, s, target); pair!()[target] = r; }
-        }
-    }
+    let paid_for = s.last_pair.unwrap();
+    let hasted = [0, 1].map(|side| hasted[side] && paid_for[side] != k.cancel);
+    // 2. Own preparations, both sides, before any hostile application. A mature Lodestar wards its holder this exchange.
+    for side in 0..2 { if has(s, side, Eff::Lodestar) { let r = s.round; put(s, side, Eff::Ward, 1.0, r, Some(r)); } }
     let mut attacks = Hits::default();
-    let special = |a: Act| a == k.cancel || a == k.frozen || a == compel;
-    for side in 0..2 {
-        let id = pair!()[side];
-        if !special(id) {
-            // A replay can become unaffordable after another preparation; cancel safely.
-            if unavailable(enc, s, side, id).is_some() { pair!()[side] = k.cancel; continue; }
-            pay(enc, s, &mut ctx, side, id);
-        }
-        if has(s, side, Eff::Tailwind) && !k.parts[id as usize].iter().all(|&p| p == k.strike) { delete(s, side, Eff::Tailwind); }
-    }
-    // Own voluntary spending happens before theft.
-    if enc.observers {
-        for side in 0..2 {
-            if pair!()[side] == ids.rapport as Act {
-                let room = renown_room(enc, s, side);
-                let x = &mut s.actors[side];
-                let n = (10f64.min(x.res[R_CROWNS]).min(room * 2.0) / 2.0).floor() * 2.0;
-                debit(x, R_CROWNS, n);
-                x.pending_renown += n / 2.0;
-            }
-        }
-    }
-    let thefts: [f64; 2] = [0, 1].map(|side| if pair!()[side] == ids.sleight as Act { 8f64.min(s.actors[1 - side].res[R_CROWNS]).min(99999.0 - s.actors[side].res[R_CROWNS]) } else { 0.0 });
-    for side in 0..2 { debit(&mut s.actors[1 - side], R_CROWNS, thefts[side]); }
-    for side in 0..2 { gain(enc, s, side, R_CROWNS, thefts[side]); }
-    // Extraction lands in the caster's flux; Mana plus flux can't exceed capacity. Ward and Shadowstep stop it.
-    let transfers: [f64; 2] = [0, 1].map(|side| {
-        if pair!()[side] == ids.extraction as Act && !shielded(s, 1 - side) {
-            0f64.max(amount(enc, side, Some(ids.extraction), EXTRACTION_MANA, false).min(s.actors[1 - side].res[R_MANA]).min(enc.sides[side].capacity - s.actors[side].res[R_MANA] - s.actors[side].flux))
-        } else { 0.0 }
-    });
-    for side in 0..2 { debit(&mut s.actors[1 - side], R_MANA, transfers[side]); }
-    for side in 0..2 { if pair!()[side] == ids.extraction as Act { let (n, blocked) = (transfers[side], shielded(s, 1 - side)); ctx.event(|| Event::Moved { side: side as u8, id: ids.extraction as Act, amount: n, blocked }); } }
-    for side in 0..2 { s.actors[side].flux += transfers[side]; }
-    // Drain (world expansion 1: Filch, Roar): Mana taken from the target; Filch keeps it as its own flux. Ward and Shadowstep stop it.
-    for side in 0..2 {
-        let Some(sp) = spell_of(pair!()[side]) else { continue; };
-        let Some(base) = d.spells[sp].drain else { continue; };
-        let blocked = shielded(s, 1 - side);
-        let n = if blocked { 0.0 } else { 0f64.max(amount(enc, side, Some(sp), base, false).min(s.actors[1 - side].res[R_MANA])) };
-        debit(&mut s.actors[1 - side], R_MANA, n);
-        if d.spells[sp].drain_keep { let room = 0f64.max(enc.sides[side].capacity - s.actors[side].res[R_MANA] - s.actors[side].flux); s.actors[side].flux += n.min(room); }
-        ctx.event(|| Event::Moved { side: side as u8, id: sp as Act, amount: n, blocked });
-    }
     for side in 0..2 { let id = pair!()[side]; if !special(id) { prepared(enc, s, &mut ctx, side, id, &mut attacks); } }
+    // 3. Attacks.
     for side in 0..2 {
         let id = pair!()[side];
-        for &part in &k.parts[id as usize] {
-            if part == k.strike {
-                let mut bonus = 0.0;
-                if has(s, side, Eff::Tailwind) {
-                    let e = s.actors[side].effects[Eff::Tailwind as usize].as_mut().unwrap();
-                    e.value = 3f64.min(e.value + 1.0);
-                    let v = e.value;
-                    bonus = (amount(enc, side, Some(ids.tailwind), tailwind_step() * v, true) - EPS).ceil();
-                }
-                let power = attack_power(enc, s, side, k.strike);
-                attacks.push(Hit { spell: false, ..hit(side, k.strike, power) });
-                if bonus != 0.0 { attacks.push(Hit { spell: false, pierce_guard: true, ..hit(side, k.strike, bonus) }); }
-            } else if let Some(sp) = spell_of(part) {
-                if d.spells[sp].damage.is_some() {
-                    let p = attack_power(enc, s, side, part);
-                    let n = d.spells[sp].hits;
-                    if n > 1 {
-                        // A swarm (world expansion 1): many small hits; only the first meets Guard and Brace.
-                        let each = js_round(p / n as f64).max(1.0);
-                        for i in 0..n { attacks.push(Hit { spell: !d.spells[sp].physical, pierce_guard: i > 0, pierce_brace: i > 0, ..hit(side, part, each) }); }
-                    } else { attacks.push(Hit { hot: sp == ids.flame, spell: !d.spells[sp].physical, ..hit(side, part, p) }); }
-                }
+        if id == k.strike || hasted[side] {
+            let power = attack_power(enc, s, side, k.strike);
+            attacks.push(Hit { spell: false, ..hit(side, k.strike, power) });
+        }
+        if let Some(sp) = spell_of(id) {
+            let spell = &d.spells[sp];
+            if spell.damage.is_some() && !spell.channel {
+                let p = attack_power(enc, s, side, id);
+                let n = spell.hits;
+                if n > 1 {
+                    // A swarm (world expansion 1): many small hits; only the first meets Parry and Brace.
+                    let each = js_round(p / n as f64).max(1.0);
+                    for i in 0..n { attacks.push(Hit { spell: !spell.physical, pierce_guard: i > 0, pierce_brace: i > 0, ..hit(side, id, each) }); }
+                } else { attacks.push(Hit { hot: spell.rule == ids.flame, spell: !spell.physical, ..hit(side, id, p) }); }
             }
         }
         // The worn kit (world expansion 1): each cast of some spells also deals spell damage (blockable, wardable); a foe who
-        // guards, wards or braces against this side takes strike damage.
+        // parries, wards or braces against this side takes Impact damage.
         if let Some(sp) = spell_of(id) { let oc = enc.sides[side].on_cast[sp]; if oc > EPS { attacks.push(hit(side, id, oc)); } }
         let od = enc.sides[side].on_defend;
         if od > EPS {
             let opp = pair!()[1 - side];
-            if !special(opp) && (k.parts[opp as usize].contains(&k.guard) || opp == ids.ward as Act || opp == ids.brace as Act) { attacks.push(Hit { spell: false, fixed: true, ..hit(side, k.strike, od) }); }
+            if !special(opp) && (opp == k.guard || d.rule(opp) == ids.ward as Act || d.rule(opp) == ids.brace as Act) { attacks.push(Hit { spell: false, fixed: true, ..hit(side, k.strike, od) }); }
         }
-        if has(s, side, Eff::Torment) && id != k.cancel && id != k.frozen && !shielded(s, side) {
-            let v = s.actors[side].effects[Eff::Torment as usize].unwrap().value;
-            if v > 0.0 { ctx.hurt_now[side] = true; }
-            reduce_hp(enc, s, &mut ctx, side, v, false);
+    }
+    // Attacking breaks your own Shadowstep before this exchange's hits land (an automatic Impulse too); with breakOnCast, so does
+    // casting any other spell but Ward. Refocus that recovers Mana exposes the caster for this whole damage phase.
+    for side in 0..2 { if let Some(sp) = spell_of(pair!()[side]) { if d.spells[sp].exposes || (d.skill.shadowstep_break_on_cast && d.spells[sp].rule != ids.shadowstep && d.spells[sp].rule != ids.ward) { delete(s, side, Eff::Shadowstep); } } }
+    for side in 0..2 { if attacks.iter().any(|h| h.source as usize == side && h.target as usize != side && h.power > 0.0) { delete(s, side, Eff::Shadowstep); } }
+    for side in 0..2 {
+        if pair!()[side] == k.reclaim {
+            let x = &s.actors[side];
+            if x.flux.min(enc.sides[side].capacity - x.res[R_MANA]) > EPS { delete(s, side, Eff::Shadowstep); }
+        }
+    }
+    // 4. Hostile applications: both Compels cancel out (as before); the rest land, are blocked or come back.
+    let mana_before = [s.actors[0].res[R_MANA], s.actors[1].res[R_MANA]];
+    let compel = ids.compel as Act;
+    let both_compel = pair!()[0] == compel && pair!()[1] == compel;
+    if both_compel { ctx.event(|| Event::CompelsCancel); }
+    for side in 0..2 { let id = pair!()[side]; if !(both_compel && id == compel) { apply_hostile(enc, s, &mut ctx, side, id, mana_before); } }
+    // 5. Torment's tolls: 2 × the ready Mana its holder paid for this exchange's move, inevitable.
+    for side in 0..2 {
+        if !has(s, side, Eff::Torment) { continue; }
+        let e = s.actors[side].effects[Eff::Torment as usize].unwrap();
+        let v = e.value * ctx.paid[side];
+        if v > EPS {
+            let src = e.source.unwrap_or(1 - side as u8);
+            attacks.push(Hit { source: src, target: side as u8, id: ids.torment as Act, power: v, spell: true, inevitable: true, ..Default::default() });
             ctx.event(|| Event::TormentCharged { value: v, side: side as u8 });
         }
     }
@@ -655,20 +767,10 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
             ctx.event(|| Event::HoarfrostCancel);
         }
     }
-    // Attacking breaks your own Shadowstep before this exchange's hits land; with breakOnCast, so does casting any other spell but Ward.
-    for side in 0..2 { if let Some(sp) = spell_of(pair!()[side]) { if d.spells[sp].exposes || (d.skill.shadowstep_break_on_cast && sp != ids.shadowstep && sp != ids.ward) { delete(s, side, Eff::Shadowstep); } } }
-    for side in 0..2 { if attacks.iter().any(|h| h.source as usize == side && h.target as usize != side && h.power > 0.0) { delete(s, side, Eff::Shadowstep); } }
-    // Reclaim exposes the caster for this whole damage phase, but pays out later.
-    for side in 0..2 {
-        if parts_contain(pair!()[side], k.reclaim) {
-            let x = &s.actors[side];
-            if x.flux.min(enc.sides[side].capacity - x.res[R_MANA]) > EPS { delete(s, side, Eff::Shadowstep); }
-        }
-    }
     hits(enc, s, &mut ctx, &attacks);
     if terminal(enc, s, &mut ctx) { return; }
     for side in 0..2 {
-        if parts_contain(pair!()[side], k.reclaim) {
+        if pair!()[side] == k.reclaim {
             let flux = s.actors[side].flux;
             let n = gain(enc, s, side, R_MANA, flux);
             s.actors[side].flux = 0.0;
@@ -678,7 +780,11 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
     let mut endings = Hits::default();
     for side in 0..2 {
         let round = s.round;
-        for o in s.actors[side].omens.iter() { if o.due == round { endings.push(Hit { ward_pierce: amt(ids.omen, "wardPierce"), pierce_guard: amt(ids.omen, "guardPierce") >= 1.0, pierce_brace: amt(ids.omen, "bracePierce") >= 1.0, ..hit(side, ids.omen as Act, o.power) }); } }
+        for o in s.actors[side].omens.iter() {
+            if o.due != round { continue; }
+            let sp = o.spell;
+            endings.push(Hit { spell: !o.impact, reflected: o.bounced, ward_pierce: amt(sp, "wardPierce"), pierce_guard: amt(sp, "guardPierce") >= 1.0, pierce_brace: amt(sp, "bracePierce") >= 1.0, ..hit(side, sp as Act, o.power) });
+        }
         s.actors[side].omens.retain(|o| o.due > round);
         let cs = s.actors[side].constructs;
         for c in cs.iter() {
@@ -698,22 +804,27 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
     }
     hits(enc, s, &mut ctx, &Hits::default());
     if terminal(enc, s, &mut ctx) { return; }
-    // Poison (world expansion 1, Venom): its damage each exchange it lasts, past every defence, as the poisoner's hit.
+    // Poison (Venom): a tick this exchange and the next, inevitable, as the poisoner's hit; before Mend.
     let mut venom = Hits::default();
+    let venom_id = d.spells.iter().position(|x| x.poison.is_some()).map_or(k.strike, |i| i as Act);
     for side in 0..2 {
         if !has(s, side, Eff::Poison) { continue; }
         let e = s.actors[side].effects[Eff::Poison as usize].unwrap();
-        let src = e.source.unwrap_or(1 - side as u8) as usize;
-        let id = enc.sides[src].kit.iter().find(|(sp, _)| d.spells[*sp].poison.is_some()).map_or(k.strike, |(sp, _)| *sp as Act);
-        venom.push(Hit { source: src as u8, target: side as u8, id, power: e.value, spell: true, fixed: true, ..Default::default() });
-        ctx.hurt_now[side] = true;
+        let src = e.source.unwrap_or(1 - side as u8);
+        venom.push(Hit { source: src, target: side as u8, id: venom_id, power: e.value, spell: true, inevitable: true, ..Default::default() });
     }
     hits(enc, s, &mut ctx, &venom);
     if terminal(enc, s, &mut ctx) { return; }
     for side in 0..2 { if ctx.mend_now[side] > 0.0 && !ctx.hurt_now[side] { let m = ctx.mend_now[side]; heal(enc, s, side, m); } }
+    // A mature Lodestar heals after this exchange's damage (Heartprice and a creature's nature still forbid it).
+    for side in 0..2 { if has(s, side, Eff::Lodestar) { let v = s.actors[side].effects[Eff::Lodestar as usize].unwrap().value; heal(enc, s, side, v); } }
     for side in 0..2 {
         let id = pair!()[side];
         s.actors[side].last_action = Some(id);
+        // Tailwind's chain: one more after a Tailwind actually cast, gone after any other move.
+        if id == ids.tailwind as Act { let n = s.actors[side].effects[Eff::Tailwind as usize].map_or(0.0, |e| e.value) + 1.0; let r = s.round; put(s, side, Eff::Tailwind, n, r, None); }
+        else { delete(s, side, Eff::Tailwind); }
+        if s.actors[side].effects[Eff::Compelled as usize].map_or(true, |e| e.until.map_or(false, |u| u <= s.round)) { s.actors[side].captured = None; }
         let round = s.round;
         for e in s.actors[side].effects.iter_mut() { if let Some(x) = e { if x.until.map_or(false, |u| u <= round) { *e = None; } } }
     }
@@ -728,7 +839,9 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
         x.urge = if ctx.dealt[side] { 0.0 } else if ctx.tried[side] { x.urge / 2.0 } else { URGE_MAX.min(x.urge + URGE_STEP) };
     }
     let quiet = (0..2).all(|i| (s.actors[i].hp - hp_before[i]).abs() < 1e-9 && (s.actors[i].spent[R_MANA] - spent_before[i]).abs() < 1e-9);
-    s.quiet = if quiet { s.quiet + 1 } else { 0 };
+    // A pending Lodestar that would still heal holds the quiet count: no decision on points before it matures (plan §9).
+    let waiting = (0..2).any(|i| lodestar_pending(s, i) && s.actors[i].hp < s.actors[i].max_hp - EPS && !enc.sides[i].no_heal && !has(s, i, Eff::Heartprice));
+    s.quiet = if !quiet { 0 } else if waiting { s.quiet } else { s.quiet + 1 };
     if s.quiet >= d.skill.decision_quiet || s.round >= d.skill.decision_max {
         let f = [s.actors[0].hp / s.actors[0].max_hp, s.actors[1].hp / s.actors[1].max_hp];
         if (f[0] - f[1]).abs() < 1e-9 { finish(enc, s, ctx.public.as_deref_mut(), Outcome::Draw, Reason::Stalemate, None, false); }

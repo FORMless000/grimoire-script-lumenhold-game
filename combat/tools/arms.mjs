@@ -7,9 +7,9 @@ export const root=path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 export function armCases(arm){
  const G=Object.keys(LOADOUTS),cases=[];
  if(arm.gaps){for(const L of arm.bases??[25,50])for(const d of arm.gaps)for(const g of G)for(const hiSide of [0,1])for(const firstLeader of [0,1])cases.push({p:g,o:g,levelP:hiSide?L:L+d,levelO:hiSide?L+d:L,hiSide,gap:d,level:L,firstLeader});}
- else if(arm.pairs){for(const level of arm.levels??[20,50,80])for(let i=0;i<G.length;i++)for(let j=i+1;j<G.length;j++)for(const firstLeader of [0,1])cases.push({p:G[i],o:G[j],level,firstLeader});}
- else if(arm.named){for(const level of arm.levels??[20,50,80])for(const p of arm.named)for(const o of arm.foes??['Duellist','Prefect'])for(const foeLevel of arm.foeLevels??[level])for(const firstLeader of [0,1])cases.push({p,o,level,levelP:level,levelO:foeLevel,firstLeader});}
- else for(const level of arm.levels??[20,50,80])for(let i=0;i<G.length;i++)for(const k of arm.offsets??[1,3])for(const firstLeader of [0,1])cases.push({p:G[i],o:G[(i+k)%G.length],level,firstLeader});
+ else if(arm.pairs){for(const level of arm.levels??[20,45,70])for(let i=0;i<G.length;i++)for(let j=i+1;j<G.length;j++)for(const firstLeader of [0,1])cases.push({p:G[i],o:G[j],level,firstLeader});}
+ else if(arm.named){for(const level of arm.levels??[20,45,70])for(const p of arm.named)for(const o of arm.foes??['Duellist','Prefect'])for(const foeLevel of arm.foeLevels??[level])for(const firstLeader of [0,1])cases.push({p,o,level,levelP:level,levelO:foeLevel,firstLeader});}
+ else for(const level of arm.levels??[20,45,70])for(let i=0;i<G.length;i++)for(const k of arm.offsets??[1,3])for(const firstLeader of [0,1])cases.push({p:G[i],o:G[(i+k)%G.length],level,firstLeader});
  if(arm.fallible){const base=[...cases];cases.length=0;for(const seed of arm.seeds??[1])for(const c of base)cases.push({...c,seed});}
  return cases.map((c,idx)=>{
   const s=createState({playerLoadout:c.p,opponentLoadout:c.o,playerLevel:c.levelP??c.level,opponentLevel:c.levelO??c.level,firstLeader:c.firstLeader,...arm.config,

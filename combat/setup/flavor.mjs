@@ -8,35 +8,44 @@
 //   hold / release:  a channel's held and released exchanges (cast is its first exchange)
 //   end:     a lasting effect or construct ending (Mend: the wounds closing; `broken` when a hit spoils it)
 //   ko:      this action finishing the foe
-//   tired:   (Guard) a Guard raised again too soon, against a Strike
+//   tired:   (Parry) a Parry raised again too soon, against Impact damage
+//   beast:   (Impulse, Parry) the cast lines for a creature, which has no wand (F5.11-plan.1)
 // Names come from the fight (fighterNames below): "you" for the player, the opponent as the card names them.
-import {COMBAT_TUNING,NAMED_LOADOUTS,SPECIAL_LOADOUTS} from './roster.mjs';
+import {COMBAT_TUNING,NAMED_LOADOUTS,SPECIAL_LOADOUTS,SPELLS} from './roster.mjs';
+// The rule a spell plays (F5.11): a creature's copy (Skitter) is told by its own lines but lasts as its base's effect.
+const ruleOf=id=>SPELLS[id]?.rule??id;
 import {tx} from './text.mjs';
+// A spell's name as the fight shows it (label.<id> when translated).
+const spellName=id=>tx('label.'+id,SPELLS[id]?.name??id);
 export const FLAVOR={
- // Basics
- strike:{cast:['{name} {v:lunges|lunge} in and {v:swings|swing} at {foe}.','{name} {v:closes|close} the distance and {v:strikes|strike} at {foe}.','{name} {v:throws|throw} a quick blow at {foe}.'],ko:'{foe} {fv:goes|go} down under {name’s} blows.'},
- guard:{cast:['{name} {v:raises|raise} a guard against {foe’s} blows.','{name} {v:steps|step} back, arms up, ready for {foe}.'],tired:'{name’s} guard sags, and {foe’s} blows start to get through.'},
- reclaim:{cast:['{name} {v:draws|draw} the spent magic in the air back in.','{name} {v:gathers|gather} up the loose sparks of magic left in the air.']},
+ // Basics (F5.11-plan.1): Impulse (strike), a blunt magical punch driven through the wand; Parry (guard), a magical
+ // deflection; Refocus (reclaim), the loose light gathered back. A creature has no wand: its own lines (beast).
+ strike:{cast:['{name} {v:drives|drive} {pos} wand forward; a blunt pulse of force strikes toward {foe}.','{name} {v:thrusts|thrust} {pos} wand at {foe}, and a punch of raw force follows it.','{name} {v:snaps|snap} {pos} wand forward, throwing a hard shove of force at {foe}.'],
+  beast:['{name} {v:lunges|lunge} in and {v:strikes|strike} at {foe}.','{name} {v:closes|close} the distance and {v:strikes|strike} at {foe}.','{name} {v:throws|throw} {pos} weight at {foe}.'],ko:'{foe} {fv:yields|yield}, beaten back by {name’s} force.'},
+ guard:{cast:['{name} {v:sets|set} {pos} feet and {v:turns|turn} the force aside with a sharp motion of {pos} wand.','{name} {v:sweeps|sweep} {pos} wand across, ready to turn {foe’s} force aside.'],
+  beast:['{name} {v:hunches|hunch} low, ready to shrug off {foe’s} force.'],tired:'{name’s} parry slows, and {foe’s} force starts to get through.'},
+ reclaim:{cast:['{name} {v:turns|turn} {pos} wand inward; the loose light gathers at its tip.','{name} {v:draws|draw} the loose sparks of magic in the air back to {pos} wand.']},
+ break_free:{cast:['{name} {v:strains|strain} against the bonds, working free.','{name} {v:twists|twist} and {v:tears|tear} at the bonds.']},
  frozen:{cast:['{name} {v:is|are} frozen solid in rime and can’t move.'],end:'The rime around {name} cracks, and {name} {v:moves|move} again.'},
 
  // Course spells and Ward
- flame:{cast:['A burst of flame leaps from {name’s} hand at {foe}.','{name} {v:hurls|hurl} a ball of fire at {foe}.'],ko:'{foe} {fv:falls|fall} before {name’s} fire.'},
+ flame:{cast:['A burst of flame leaps from {name’s} wand at {foe}.','{name} {v:hurls|hurl} a ball of fire at {foe}.'],ko:'{foe} {fv:yields|yield} before {name’s} fire.'},
  foresight:{cast:['{name’s} eyes glaze over, reading {foe’s} next moves before they happen.'],end:'{name} can no longer read {foe’s} moves ahead.'},
  mend:{cast:['{name} {v:lays|lay} a glowing hand on {pos} wounds and {v:starts|start} to knit them shut.'],end:'{name’s} wounds close up.',broken:'{foe’s} attack breaks {name’s} mending before it can take hold.'},
  glamour:{cast:['{name} {v:strikes|strike} a dazzling pose for the onlookers, but it does nothing to {foe}.']},
- haste:{cast:['{name} {v:speeds|speed} up, moving twice as fast as {foe}.'],end:'{name} {v:slows|slow} back to a normal pace.'},
+ haste:{cast:['{name} {v:quickens|quicken}, ready to slip a blow in between spells.'],end:'{name} {v:slows|slow} back to a normal pace.'},
  shadowstep:{cast:['{name} {v:steps|step} into the shadows, out of {foe’s} reach.'],end:'{name} {v:steps|step} back out of the shadows.'},
  ward:{cast:['A translucent ward appears before {name}, blocking off {foe’s} spells.']},
 
  // Hidden courses
  animate:{cast:['A chair, a coat stand and a bucket lurch to life and lumber at {foe} on {name’s} command.'],end:'{name’s} animated furniture clatters apart.',ko:'{foe} {fv:goes|go} down under {name’s} animated furniture.'},
- starlight:{cast:['Starlight gathers in {name’s} open palm.'],hold:'The starlight in {name’s} palm grows brighter.',release:'A beam of starlight shoots from {name’s} palm at {foe}.',ko:'{foe} {fv:falls|fall} in a flood of {name’s} starlight.'},
+ starlight:{cast:['{name} {v:raises|raise} {pos} wand to the sky, and starlight begins to gather high above.'],hold:'The starlight gathered above {name} grows brighter.',release:'A piercing beam of starlight falls from the sky at {foe}.',ko:'{foe} {fv:yields|yield} in a flood of {name’s} starlight.'},
  seal:{cast:['{name} {v:twists|twist} a hand, snuffing out the loose magic around {foe}.']},
 
  // Peer capstones
- wildfire:{cast:['A cluster of flames sparks to life before {name} and lashes out at {foe}.'],hold:'The cluster of flames enlarges before {name}, radiating fiery sparks.',release:'The wildfire breaks loose from {name} and sweeps over {foe}.',ko:'{foe} {fv:falls|fall} before {name’s} wildfire.'},
+ wildfire:{cast:['Flames spring up before {name} and lash out at {foe}; {name} {v:flinches|flinch} from their heat.'],hold:'The wildfire grows fiercer and harder to hold, and its heat scorches {name} too.',release:'The wildfire breaks loose from {name} and sweeps at {foe}.',ko:'{foe} {fv:yields|yield} before {name’s} wildfire.'},
  heartwood:{cast:['A sapling bursts from the floor beside {name}, ready to shelter and mend.'],end:'{name’s} sapling withers back into the floor.'},
- omen:{cast:['{name} {v:speaks|speak} an omen over {foe}: it will strike in two exchanges.'],end:'The omen {name} spoke comes true and strikes {foe}.'},
+ omen:{cast:['{name} {v:speaks|speak} of two small misfortunes; the light around {foe} falters.'],end:'A misfortune {name} foretold comes due for {foe}.'},
  sleight:{cast:['{name} {v:slips|slip} a hand into {foe’s} purse in passing.']},
  contraption:{cast:['{name} {v:snaps|snap} together a whirring contraption and {v:aims|aim} it at {foe}.'],end:'{name’s} contraption bursts in a shower of sparks and cogs.'},
  hoarfrost:{cast:['A lance of frost flies from {name} at {foe}.'],ko:'{foe} {fv:falls|fall}, frozen stiff by {name’s} frost.'},
@@ -45,44 +54,51 @@ export const FLAVOR={
  // Club and job spells
  brace:{cast:['{name} {v:plants|plant} both feet, braced to take {foe’s} hits.'],end:'{name} {v:eases|ease} out of the braced stance.'},
  quickquill:{cast:['A quill flies around {name}, but it does little in this situation.']},
- bramble:{cast:['Thorny vines burst from the floor around {foe} at {name’s} call.'],end:'{name’s} brambles wither away.'},
+ bramble:{cast:['Thorny vines lash out at {foe} at {name’s} call and snatch at {fpos} ankles.']},
  index:{cast:['{name} {v:leafs|leaf} through a conjured index, but it does little here.']},
  rapport:{cast:['{name} {v:flaunts|flaunt} a handful of crowns, and the crowd cheers.']},
- purify:{cast:['{name} {v:draws|draw} some of {pos} own strength out and {v:distils|distil} it into magic.']},
+ purify:{cast:['{name} {v:draws|draw} some of {pos} own strength out and {v:distills|distill} it into magic.']},
  // Creatures (SPECIAL_LOADOUTS)
  gore:{cast:['{name} {v:lowers|lower} its antlers and {v:charges|charge} at {foe}.','{name} {v:paws|paw} the ground, then {v:drives|drive} its antlers at {foe}.'],ko:'{foe} {fv:is|are} flung down by {name’s} charge.'},
- tailwind:{cast:['A wind rises at {name’s} back, driving each blow harder.'],end:'The wind at {name’s} back dies down.'},
- // The Whisperwood (world expansion 1). An alias (skitter, maul, …) is told by its own lines; its rule is its base spell's.
+ tailwind:{cast:['A gust rises at {name’s} back and hurls {name} at {foe}.','The wind at {name’s} back gusts again, stronger, and drives {name} at {foe}.'],end:'The wind at {name’s} back dies down.',ko:'{foe} {fv:is|are} bowled over on {name’s} wind.'},
+ // The Whisperwood (world expansion 1; real spells since F5.11). A delayed blow's `cast` says it's coming, its `end` lands it.
  nip:{cast:['{name} {v:darts|dart} in and {v:nips|nip} at {foe}.','{name} {v:snaps|snap} at {foe’s} ankles and {v:darts|dart} away.'],ko:'{foe} {fv:gives|give} up, nipped one time too many by {name}.'},
- skitter:{cast:['{name} {v:skitters|skitter} into the undergrowth, out of reach.','{name} {v:whisks|whisk} behind a root, just a twitching tail.'],end:'{name} {v:pokes|poke} {pos} nose back out.'},
- burrow:{cast:['{name} {v:digs|dig} in under the leaf litter, braced.'],end:'{name} {v:wriggles|wriggle} back out of {pos} burrow.'},
+ skitter:{cast:['{name} {v:skitters|skitter} aside, out of reach.','{name} {v:whisks|whisk} out of sight.'],end:'{name} {v:edges|edge} back into view.'},
+ burrow:{cast:['{name} {v:digs|dig} in low, braced.'],end:'{name} {v:wriggles|wriggle} back up out of {pos} hollow.'},
  filch:{cast:['{name} {v:snatches|snatch} at the loose sparks around {foe} and {v:gulps|gulp} them down.']},
- hide:{cast:['{name} {v:hunches|hunch} behind {pos} thick hide.']},
+ hide:{cast:['{name} {v:hunches|hunch} down behind {pos} thick, quilled hide.'],end:'{name} {v:uncurls|uncurl}, bristling.'},
  bark:{cast:['{name’s} bark creaks and thickens, closing over like a shield.']},
  carapace:{cast:['{name} {v:draws|draw} in under {pos} carapace.']},
- roar:{cast:['{name} {v:rears|rear} up and {v:roars|roar}, and the magic in {foe} scatters like startled birds.']},
- maul:{cast:['{name} {v:rears|rear} up on {pos} hind legs, winding up a maul: it lands when {name} {v:comes|come} down.'],hold:'{name} {v:sways|sway}, still towering, waiting for an opening.',release:'{name} {v:comes|come} down on {foe} with a crushing maul.',ko:'{foe} {fv:goes|go} down under {name’s} maul.'},
- charge:{cast:['{name} {v:lowers|lower} {pos} horns and {v:scrapes|scrape} the ground: a charge is coming.'],hold:'{name} {v:scrapes|scrape} the ground again, gathering speed.',release:'{name} {v:thunders|thunder} into {foe}.',ko:'{foe} {fv:is|are} bowled over by {name’s} charge.'},
- slow_fall:{cast:['{name} {v:begins|begin}, very slowly, to lean: a bough the size of a house is coming down.'],hold:'{name’s} great bough creaks lower.',release:'{name’s} bough comes down on {foe} like the sky falling.',ko:'{foe} {fv:is|are} pinned beneath {name’s} fallen bough.'},
- the_long_wait:{cast:['{name} {v:goes|go} utterly still, and the silk around {foe} begins, very gently, to tighten.'],hold:'{name} {v:waits|wait}. The silk tightens.',release:'The silk snaps taut, and {name} {v:strikes|strike} with all eight legs.',ko:'{foe} {fv:hangs|hang} in {name’s} silk, finished.'},
+ roar:{cast:['{name} {v:rears|rear} up and {v:roars|roar}: the blast of it rolls at {foe}, and loose magic scatters like startled birds.']},
+ maul:{cast:['{name} {v:rears|rear} up on {pos} hind legs, towering over {foe}: the maul comes down next exchange.'],end:'{name} {v:comes|come} down on {foe} with a crushing maul.',ko:'{foe} {fv:goes|go} down under {name’s} maul.'},
+ charge:{cast:['{name} {v:lowers|lower} {pos} horns and {v:scrapes|scrape} the ground: the charge comes next exchange.'],end:'{name} {v:thunders|thunder} into {foe}.',ko:'{foe} {fv:is|are} bowled over by {name’s} charge.'},
+ pinch:{cast:['{name} {v:snaps|snap} {pos} great mandibles at {foe}.','{name} {v:scissors|scissor} {pos} pincers at {foe}.'],ko:'{foe} {fv:staggers|stagger} back from {name’s} mandibles and {fv:goes|go} no further.'},
+ beetle_flame:{cast:['Sparks crackle between {name’s} mandibles and leap at {foe} as a spurt of flame.'],ko:'{foe} {fv:backs|back} away from {name’s} sparking mandibles.'},
+ bough:{cast:['{name} {v:draws|draw} back a heavy bough, creaking: it swings in two exchanges.'],end:'{name’s} bough sweeps into {foe}.',ko:'{foe} {fv:is|are} swept off {fpos} feet by {name’s} bough.'},
+ acorns:{cast:['{name} {v:shakes|shake} {pos} crown: a glowing acorn flies at {foe}, and a second hangs, waiting to drop.'],end:'The second enchanted acorn drops at {foe}.'},
+ slow_fall:{cast:['{name} {v:begins|begin}, very slowly, to lean: a bough the size of a house comes down in two exchanges.'],end:'{name’s} bough comes down on {foe} like the sky falling.',ko:'{foe} {fv:is|are} pinned beneath {name’s} fallen bough.'},
+ thicket:{cast:['Saplings and brambles shoulder up out of the earth around {name}, thorns turned on {foe}.'],end:'{name’s} thicket sinks back into the ground.'},
+ the_long_wait:{cast:['{name} {v:goes|go} utterly still, and a strand of glowing silk around {foe} begins, very gently, to tighten: in three exchanges it closes.'],end:'The enchanted silk snaps taut, and {name} {v:lunges|lunge} with all eight legs behind it.',ko:'{foe} {fv:hangs|hang} in {name’s} silk, finished.'},
  brood:{cast:['A scuttle of little spiders pours out from under {name} and swarms over {foe}.'],end:'{name’s} brood scatters into the dark.'},
  root:{cast:['Roots heave out of the ground and coil around {foe’s} legs at {name’s} call.']},
- web:{cast:['{name} {v:flings|fling} a sheet of silk over {foe}: no slipping away now.']},
- venom:{cast:['{name} {v:darts|dart} in and {v:bites|bite}: the bite burns cold.']},
+ web:{cast:['{name} {v:flings|fling} a sheet of sticky silk at {foe}.']},
+ threads:{cast:['{name} {v:trails|trail} a mesh of sticky threads around {foe’s} feet.']},
+ venom:{cast:['{name} {v:darts|dart} in to bite, fangs dripping.']},
+ fade:{cast:['{name} {v:steps|step} back into the shadows and {v:is|are} gone.'],end:'{name} {v:steps|step} out of the dark again.'},
  swarm:{cast:['{name} {v:pours|pour} over {foe} in a biting, scuttling wave.'],ko:'{foe} {fv:staggers|stagger} out of {name}, beaten.'},
 
  // Hidden pool
  rime:{cast:['{name} {v:sews|sew} a sliver of rime into {pos} collar, against a fall.']},
  reflect:{cast:['A mirror-bright sheen settles over {name}, ready to throw {foe’s} spells back.'],end:'The mirror sheen around {name} fades.'},
  moonwell:{cast:['A pool of moonlight opens at {name’s} feet.'],hold:'The moonwell at {name’s} feet fills higher.',release:'{name} {v:drinks|drink} the moonwell down and {v:fills|fill} with magic.'},
- lodestar:{cast:['A small star kindles above {name}.'],hold:'The star above {name} grows heavier, pulling in loose force.',release:'The star settles around {name} as a shield.'},
+ lodestar:{cast:['A small star kindles above {name} and begins, slowly, to rise.'],end:'The star above {name} reaches its height, and its light settles over {pos} wounds.'},
  toll:{cast:['A single bell note sounds from nowhere.']},
 
  // Forbidden pool
  torment:{cast:['{name} {v:lays|lay} a curse on {foe}: every move will hurt.'],end:'{name’s} curse on {foe} wears off.'},
  extraction:{cast:['{name} {v:pulls|pull} the ready magic straight out of {foe}.']},
  siphon:{cast:['A dark thread links {name} to {foe} and starts to drink.'],hold:'The dark thread drinks more from {foe}.',release:'{name} {v:snaps|snap} the thread and {v:takes|take} in everything it drank.',ko:'{foe} {fv:sags|sag}, drained by {name’s} dark thread.'},
- compel:{cast:['{name} {v:speaks|speak} a word of command, and {foe} {fv:repeats|repeat} {fpos} last move.'],end:'{name} {v:shakes|shake} off the compulsion.',forced:'{name} {v:is|are} compelled to repeat {pos} last move: {action}.',shut:'{foe’s} defences shut out {name’s} command.'},
+ compel:{cast:['{name} {v:speaks|speak} a word of command, binding {foe} to the move {fv:is|are} making now.'],end:'{name} {v:shakes|shake} off the compulsion.',forced:'{name} {v:is|are} compelled to repeat the seized move: {action}.',shut:'{foe’s} defences shut out {name’s} command.'},
  eclipse:{cast:['A dark disc slides over {name}, turning the next blows into magic.'],end:'The eclipse over {name} passes.'},
  heartprice:{cast:['{name} {v:strikes|strike} a bargain: from now on, spells cost life instead of magic.']}
 };
@@ -103,19 +119,18 @@ export const DEFEAT={'Shadow stag':'{foe} {fv:lowers|lower} its head and {fv:ste
 export const ENDINGS={knockout:'{foe} can fight no more, and {name} {v:wins|win}.',decision:'Neither falls; {name} {v:wins|win} on points.',stalemate:'Neither {name} nor {foe} can finish it: a draw.',conceded:'{foe} {fv:yields|yield} to {name}.'};
 // Effects that end with a line, by effect key → the spell whose `end` it uses. {name} is the effect's holder, except for
 // Torment, whose effect sits on the cursed side but is told from the caster's.
-const LASTING={brace:'brace',haste:'haste',shadowstep:'shadowstep',tailwind:'tailwind',reflect:'reflect',torment:'torment',eclipse:'eclipse',compelled:'compel'};
+const LASTING={brace:'brace',haste:'haste',shadowstep:'shadowstep',tailwind:'tailwind',reflect:'reflect',torment:'torment',eclipse:'eclipse',compelled:'compel',lodestar:'lodestar'};
 const HELD_BY_FOE=new Set(['torment']);
 
 // Translations (setup/text.mjs) replace any line by its key: flavor.<action>.cast.<n> / .hold / .release / .end / .ko /
 // .tired / .broken / .forced / .shut, attack.<action>.<defence>, defended.<defence>, noun.<action>, effect.<effect>,
-// bundle.<action>, line.<name> (LINES), ending.<reason>, defeat.<foe>, grammar.<name> (GRAMMAR). flavorTable() lists them
+// line.<name> (LINES), ending.<reason>, defeat.<foe>, grammar.<name> (GRAMMAR). flavorTable() lists them
 // all with their English. A translation keeps {name} {foe} {name’s} {foe’s} {pos} {fpos} {fobj} and the {n}-style values;
 // the {v:…|…} agreement forms are English grammar and need not appear in it.
 const fl=(key,en)=>en==null?null:tx('flavor.'+key,en);
 const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'_');
 // Sentences told around the actions (resolvedLines): {n} a number, {noun} an attack's noun, {ex} a span of exchanges.
 export const LINES={
- bundle:'{name} {v:moves|move} at double speed: {parts}.',
  hits:'{name’s} {noun} hits {foe}.',
  reflectedBack:'{name} {v:takes|take} {n} damage from {pos} own {noun}.',
  noDamage:'It does no damage.',
@@ -133,9 +148,12 @@ export const LINES={
  sealNothing:'There was no loose magic to snuff out.',
  purify:'{name} {v:pays|pay} Health for {n} Mana.',
  commitFirst:'{foe} must commit first for the next {ex}.',
- repeatAgain:'{foe} must repeat it again next exchange.',
- repeatAgainAction:'{foe} must repeat it again next exchange: {action}.',
- compelledRepeat:'Compelled, {name} {v:repeats|repeat} {pos} last move.'
+ repeatAgain:'{foe} must repeat it for the next three exchanges.',
+ repeatAgainAction:'{foe} must repeat it for the next three exchanges: {action}.',
+ compelledRepeat:'Compelled, {name} {v:repeats|repeat} the seized move.',
+ applyBlocked:'{foe’s} defences keep {name’s} {spell} off.',
+ applyReflected:'{foe’s} mirror sheen turns {name’s} {spell} back on {name}.',
+ applyReflectedBlocked:'{foe’s} mirror sheen turns {name’s} {spell} back, and {name’s} own defences keep it off.'
 };
 // The grammar the lines are filled with: the player ("you"), possessives and pronouns, and spans of exchanges.
 export const GRAMMAR={you:'you',your:'your',possessive:'{n}’s',then:', then ',exchange1:'1 exchange',exchanges:'{n} exchanges',restOfFight:'the rest of the fight',two:'two',three:'three',
@@ -165,61 +183,58 @@ const fill=(line,name,foe,pn,pf)=>{if(!line)return null;
   .replace(/\{(f?)v:([^|}]*)\|([^}]*)\}/g,(_,f,third,second)=>isYou(f?foe:name)?second:third)
   .replaceAll('{name}',name).replaceAll('{foe}',foe);
  return s[0].toUpperCase()+s.slice(1);};
-// A cast line: one of the action's (a list rotates by exchange).
-const castLine=(id,round)=>{const c=FLAVOR[id]?.cast;if(!c)return null;const i=Array.isArray(c)?(round-1)%c.length:0;return fl(id+'.cast.'+i,Array.isArray(c)?c[i]:c);};
-const BUNDLE_PART={strike:'a blow',guard:'a guard',reclaim:'a breath to gather magic'};
+// A cast line: one of the action's (a list rotates by exchange); a creature's own (beast) when the action has them.
+const castLine=(id,round,beast=false)=>{const key=beast&&FLAVOR[id]?.beast?'beast':'cast',c=FLAVOR[id]?.[key];if(!c)return null;const i=Array.isArray(c)?(round-1)%c.length:0;return fl(id+'.'+key+'.'+i,Array.isArray(c)?c[i]:c);};
 
-// The line for one side's action: a channel's Hold/Release, a Haste bundle as its parts, else the cast line.
+// The line for one side's action: a channel's Hold/Release, else the cast line. A creature (pronoun "it") has no wand.
 //   names: [player, opponent]; side: who acts.
 // labels: the acting side's kit.labels (a creature's alias for a base spell: {shadowstep:'skitter'}, world expansion 1).
 export function flavorLine(id,{channel=null,round=1,names=['the player','the opponent'],side=0,labels=null}={}){
  const name=names[side],foe=names[1-side],pr=[names.pronouns?.[side],names.pronouns?.[1-side]];
  if(labels){if(labels[id])id=labels[id];if(labels[channel])channel=labels[channel];}
  if(id==='hold'||id==='release')return fill(fl(channel+'.'+id,FLAVOR[channel]?.[id]),name,foe,...pr);
- if(id?.startsWith('bundle:'))return fill(line('bundle').replace('{parts}',id.slice(7).split('+').map(p=>tx('bundle.'+p,BUNDLE_PART[p])).join(gr('then'))),name,foe,...pr);
- return fill(castLine(id,round),name,foe,...pr);
+ return fill(castLine(id,round,pr[0]==='it'),name,foe,...pr);
 }
 // What an attack looks like when a defence changed it (F5.9b), by the attack and the defence that mattered most; any attack
 // without its own line uses ATTACK_DEFENDED with its noun. {name} the attacker, {foe} the target.
-const ATTACK_NOUN={nip:'nip',maul:'maul',charge:'charge',slow_fall:'falling bough',the_long_wait:'strike',swarm:'swarm',venom:'venom',brood:'brood',strike:'blow',flame:'fireball',hoarfrost:'frost lance',gore:'charge',wildfire:'wildfire',starlight:'beam of starlight',siphon:'dark thread',bramble:'thorns',animate:'furniture',contraption:'contraption',omen:'omen',heartwood:'sapling',attack:'attack'};
+const ATTACK_NOUN={nip:'nip',maul:'maul',charge:'charge',pinch:'mandibles',beetle_flame:'spurt of flame',bough:'bough',acorns:'acorn',thicket:'thicket',slow_fall:'falling bough',the_long_wait:'silk and strike',swarm:'swarm',venom:'venom',brood:'brood',strike:'force',flame:'fireball',hoarfrost:'frost lance',gore:'charge',tailwind:'wind-driven rush',roar:'roar',wildfire:'wildfire',starlight:'beam of starlight',siphon:'dark thread',bramble:'thorns',animate:'furniture',contraption:'contraption',omen:'misfortune',torment:'curse',heartwood:'sapling',attack:'attack'};
 const noun=aid=>tx('noun.'+(ATTACK_NOUN[aid]?aid:'attack'),ATTACK_NOUN[aid]??ATTACK_NOUN.attack);
 export const ATTACK_LINES={
- strike:{evaded:'{name} {v:swings|swing} at {foe}, but {foe} {fv:is|are} in the shadows and the blow meets nothing.',guarded:'{foe} {fv:catches|catch} {name’s} blow on a raised guard.',tiredGuard:'{foe’s} tired guard gives, and part of {name’s} blow gets through.',warded:'{name’s} blow thuds into {foe’s} ward, losing half its force.',braced:'{foe} {fv:takes|take} {name’s} blow braced, barely moving.'},
- flame:{evaded:'{name’s} fireball passes through the shadows where {foe} stood.',warded:'{name’s} fireball splashes against {foe’s} ward and fizzles out.',guarded:'{foe} {fv:takes|take} {name’s} fireball on crossed arms, smothering half the burn.',braced:'{foe} {fv:plants|plant} {fpos} feet and {fv:weathers|weather} {name’s} fireball.',reflected:'{name’s} fireball bounces off {foe’s} mirror sheen and flies back at {name}.'},
- hoarfrost:{evaded:'{name’s} frost lance flies through the shadows where {foe} stood.',warded:'{name’s} frost lance shatters on {foe’s} ward.',guarded:'{foe} {fv:knocks|knock} {name’s} frost lance aside, taking half the chill.',reflected:'{name’s} frost lance glances off {foe’s} mirror sheen and turns back on {name}.'},
- gore:{evaded:'{name} {v:charges|charge} into the shadows and finds no one there.',guarded:'{foe} {fv:catches|catch} {name’s} antlers on a raised guard.',warded:'{name’s} antlers drive into {foe’s} ward, which takes half the charge.',braced:'{foe} {fv:meets|meet} {name’s} charge braced and {fv:holds|hold} firm.'},
- wildfire:{embers:'{foe’s} defences stop the heart of {name’s} wildfire, but its embers burn through.',evaded:'{name’s} wildfire sweeps through the shadows where {foe} stood.',warded:'{name’s} wildfire breaks against {foe’s} ward and burns out.',guarded:'{foe} {fv:shields|shield} {fpos} face from {name’s} wildfire, taking half of it.',reflected:'{name’s} wildfire rolls off {foe’s} mirror sheen and back over {name}.'},
- starlight:{evaded:'{name’s} beam of starlight lights up empty shadows.',warded:'{name’s} beam of starlight scatters on {foe’s} ward.',guarded:'{foe} {fv:turns|turn} {fpos} guard to {name’s} starlight, taking half of it.',reflected:'{name’s} starlight bounces off {foe’s} mirror sheen straight back at {name}.'}
+ strike:{evaded:'{name’s} force drives into the shadows, but {foe} {fv:is|are} not there.',guarded:'{foe} {fv:turns|turn} {name’s} force aside with a parry.',tiredGuard:'{foe’s} tiring parry gives, and part of {name’s} force gets through.',warded:'{name’s} force thuds into {foe’s} ward, losing half its push.',braced:'{foe} {fv:takes|take} {name’s} force braced, barely moving.'},
+ flame:{evaded:'{name’s} fireball passes through the shadows where {foe} stood.',warded:'{name’s} fireball splashes against {foe’s} ward and fizzles out.',guarded:'{foe’s} parry turns half of {name’s} fireball aside.',braced:'{foe} {fv:plants|plant} {fpos} feet and {fv:weathers|weather} {name’s} fireball.',reflected:'{name’s} fireball bounces off {foe’s} mirror sheen and flies back at {name}.'},
+ hoarfrost:{evaded:'{name’s} frost lance flies through the shadows where {foe} stood.',warded:'{name’s} frost lance shatters on {foe’s} ward.',guarded:'{foe} {fv:knocks|knock} {name’s} frost lance aside with a parry, taking half the chill.',reflected:'{name’s} frost lance glances off {foe’s} mirror sheen and turns back on {name}.'},
+ gore:{evaded:'{name} {v:charges|charge} into the shadows and finds no one there.',guarded:'{foe} {fv:turns|turn} {name’s} antlers aside with a parry.',warded:'{name’s} antlers drive into {foe’s} ward, which takes half the charge.',braced:'{foe} {fv:meets|meet} {name’s} charge braced and {fv:holds|hold} firm.'},
+ wildfire:{evaded:'{name’s} wildfire sweeps through the shadows where {foe} stood.',warded:'{name’s} wildfire breaks against {foe’s} ward, and part of it burns on through.',guarded:'{foe’s} parry turns half of {name’s} wildfire aside.',reflected:'{name’s} wildfire rolls off {foe’s} mirror sheen and back over {name}.'},
+ starlight:{evaded:'{name’s} beam of starlight lights up empty shadows.',warded:'{name’s} beam of starlight scatters on {foe’s} ward.',guarded:'{foe’s} parry turns half of {name’s} starlight aside.',reflected:'{name’s} starlight bounces off {foe’s} mirror sheen straight back at {name}.'}
 };
 const attackLine=(aid,def)=>ATTACK_LINES[aid]?.[def]==null?null:tx('attack.'+aid+'.'+def,ATTACK_LINES[aid][def]);
-const ATTACK_DEFENDED={evaded:'{foe} {fv:is|are} in the shadows: {name’s} {noun} passes straight through.',warded:'{foe’s} ward stops {name’s} {noun}.',guarded:'{foe} {fv:takes|take} {name’s} {noun} on a raised guard.',tiredGuard:'{foe’s} tired guard lets part of {name’s} {noun} through.',braced:'{foe} {fv:weathers|weather} {name’s} {noun} in a braced stance.',reflected:'{foe’s} mirror sheen throws {name’s} {noun} back at {name}.',absorbed:'{foe’s} shield soaks up part of {name’s} {noun}.',frozen:'{foe} {fv:is|are} frozen in rime, and {name’s} {noun} can’t touch {foe}.'};
+const ATTACK_DEFENDED={evaded:'{foe} {fv:is|are} in the shadows: {name’s} {noun} passes straight through.',warded:'{foe’s} ward meets {name’s} {noun}.',guarded:'{foe} {fv:parries|parry} {name’s} {noun}.',tiredGuard:'{foe’s} tiring parry lets part of {name’s} {noun} through.',braced:'{foe} {fv:weathers|weather} {name’s} {noun} in a braced stance.',reflected:'{foe’s} mirror sheen throws {name’s} {noun} back at {name}.',absorbed:'{foe’s} summoning soaks up part of {name’s} {noun}.',negated:'{foe’s} risen star swallows {name’s} {noun} whole.',frozen:'{foe} {fv:is|are} frozen in rime, and {name’s} {noun} can’t touch {foe}.'};
 // What a lasting effect does, for "for N exchanges" sentences. {n} the exchanges it lasts; {x} its value where it has one.
 const EFFECT_WORDS={
  shadowstep:'{name} can’t be hit for {n}, until {name} {v:attacks|attack} or {v:gathers|gather} Mana.',
- haste:'{name} {v:acts|act} {x} times in each of the next {n}.',
- brace:'{name} {v:blocks|block} all damage this exchange, then half, a quarter and a quarter.',
- tailwind:'{name’s} blows hit harder for {n}.',
+ haste:'For {n}, {name’s} spells without damage of their own also throw an Impulse.',
+ brace:'{name} {v:shrugs|shrug} off most of the damage for {n}.',
  reflect:'Spells cast at {name} bounce back for {n}.',
  torment:'Every move {foe} {fv:makes|make} costs {fobj} Health for {n}.',
  eclipse:'Blows that hit {name} turn into Mana for {n}.',
- compelled:'{foe} must repeat {fpos} last move next exchange.',
- heartprice:'{name’s} spells cost Health instead of Mana from now on.',
- lodestar:'A shield of {x} absorbs the next damage {name} {v:takes|take}.',
- bound:'{foe} can’t step aside or brace for {n}.',
+ compelled:'{foe} must repeat that move for {n}.',
+ heartprice:'{name’s} magic becomes Health, and {name’s} spells cost Health from now on.',
+ lodestar:'The star rises over {name}: in {n} it shields and heals.',
+ bound:'{foe} must break free for {n}.',
  poison:'The poison works in {foe} for {n}.'
 };
 const EFFECT_ON_FOE=new Set(['torment','compelled','bound','poison']);   // placed on the foe, told from the caster's side
 const ex=n=>n===1?gr('exchange1'):gr('exchanges').replace('{n}',n);
 const r0=x=>Math.round(x);
 // The most telling defence on a hit: what the defender's line should say.
-function defence(by){for(const d of ['shadowstep','reflect','frozen','ward','tiredGuard','guard','brace','construct','lodestar'])if(by.includes(d))return d==='construct'||d==='lodestar'?'absorbed':d==='shadowstep'?'evaded':d==='ward'?'warded':d==='guard'?'guarded':d==='brace'?'braced':d==='reflect'?'reflected':d;return null;}
+function defence(by){for(const d of ['lodestar','shadowstep','reflect','frozen','ward','tiredGuard','guard','brace','construct'])if(by.includes(d))return d==='construct'?'absorbed':d==='lodestar'?'negated':d==='shadowstep'?'evaded':d==='ward'?'warded':d==='guard'?'guarded':d==='brace'?'braced':d==='reflect'?'reflected':d;return null;}
 // The log line for each side's action in a resolved exchange, with its consequences in plain words: the attack and what
 // stopped or let it through ("Lyra takes 14 damage"), and what a non-attack did ("for 3 exchanges", "regains 9 Mana").
 //   before/after: plain state snapshots; r: the resolved exchange ({pair, round, channels, eventData}); names: [player, opponent].
 export function resolvedLines(before,after,r,names=['the player','the opponent']){
  const ev=r.eventData??[],out=[null,null];
  for(const side of [0,1]){
-  const id=r.pair[side],ch=r.channels?.[side],spell=id==='hold'||id==='release'?ch:id?.startsWith('bundle:')?null:id;
+  const id=r.pair[side],ch=r.channels?.[side],spell=id==='hold'||id==='release'?ch:id;
   const name=names[side],foe=names[1-side],F=line=>fill(line,name,foe,names.pronouns?.[side],names.pronouns?.[1-side]),parts=[];
   const L=(k,v={})=>F(Object.entries(v).reduce((s,[a,b])=>s.replaceAll('{'+a+'}',b),line(k)));
   const labels=after.actors[side]?.kit?.labels??null,lab=x=>labels?.[x]??x;
@@ -230,38 +245,42 @@ export function resolvedLines(before,after,r,names=['the player','the opponent']
   let usedHead=false;
   for(const [aid,hits]of Object.entries(byId)){
    const dealt=hits.reduce((n,e)=>n+e.amount,0),def=hits.map(e=>defence(e.by)).find(Boolean);
-   // Wildfire's embers (F5.9c) get through Guard and Ward, so a defended Release can still burn.
-   const special=def&&(def!=='evaded'&&def!=='reflected'&&dealt>0&&ATTACK_LINES[aid]?.embers&&hits.length>1?attackLine(aid,'embers'):attackLine(aid,def)??(def==='tiredGuard'?attackLine(aid,'guarded'):null));
+   const special=def&&(attackLine(aid,def)??(def==='tiredGuard'?attackLine(aid,'guarded'):null));
    const said=def?special??tx('defended.'+def,ATTACK_DEFENDED[def]).replaceAll('{noun}',noun(aid)):null;
-   const own=aid===lab(spell)||aid==='strike'&&id?.startsWith('bundle:');
+   const own=aid===lab(spell);
    if(said)parts.push(F(said));else if(own&&!usedHead&&head){parts.push(head);usedHead=true;}else if(!own)parts.push(L('hits',{noun:noun(aid)}));
    const back=ev.filter(e=>e.type==='hit'&&e.reflected&&e.source===1-side&&e.id===aid).reduce((n,e)=>n+e.amount,0);
    if(def==='reflected')parts.push(back>0?L('reflectedBack',{n:r0(back),noun:noun(aid)}):L('noDamage'));
    else parts.push(dealt>0?(hits.length>1?L('takesHits',{n:r0(dealt),hits:hits.length}):L('takes',{n:r0(dealt)})):L('noDamage'));
   }
-  if(!usedHead&&head&&!Object.keys(byId).includes(lab(spell))&&!(id?.startsWith('bundle:')&&byId.strike))parts.unshift(head);
+  if(!usedHead&&head&&!Object.keys(byId).includes(lab(spell)))parts.unshift(head);
   // Non-attacks: what changed for this side.
   const b=before.actors[side],a=after.actors[side];
   const reclaimed=ev.filter(e=>e.type==='reclaimed'&&e.side===side).reduce((n,e)=>n+e.amount,0);
   if(reclaimed>0)parts.push(L('regains',{n:r0(reclaimed)}));
-  else if(id==='reclaim'||id?.includes('reclaim'))parts.push(L('noLooseMagic'));
+  else if(id==='reclaim')parts.push(L('noLooseMagic'));
   if(spell==='mend'&&!after.result)parts.push(a.hp>b.hp?L('heals',{n:r0(a.hp-b.hp)}):L('mendBreaks'));
   for(const m of ev.filter(e=>e.type==='moved'&&e.side===side)){const n=r0(m.amount);
    if(m.id==='extraction')parts.push(m.blocked?L('extractionBlocked'):n>0?L('extraction',{n}):L('extractionFull'));
    if(m.id==='seal')parts.push(m.blocked?L('sealBlocked'):n>0?L('seal',{n}):L('sealNothing'));
    if(m.id==='purify')parts.push(L('purify',{n}));}
+  // A hostile spell kept off or turned back (F5.11-plan.1): told for the spells without a line of their own.
+  for(const e of ev.filter(e=>e.type==='applied'&&e.side===side&&e.outcome!=='landed'&&!['extraction','seal','compel'].includes(e.id)))
+   parts.push(L(e.outcome==='blocked'?'applyBlocked':e.outcome==='reflected'?'applyReflected':'applyReflectedBlocked',{spell:spellName(lab(e.id))}));
   if(spell==='foresight'&&after.earlyCommit?.[1-side]>0)parts.push(L('commitFirst',{ex:ex(after.earlyCommit[1-side])}));
   for(const [k,words]of Object.entries(EFFECT_WORDS)){
    const holder=EFFECT_ON_FOE.has(k)?1-side:side,e1=after.actors[holder].effects?.[k],e0=before.actors[holder].effects?.[k];
    if(!e1||(e0&&e0.until===e1.until&&e0.from===e1.from))continue;
-   if(![LASTING_SPELL[k]].flat().includes(spell))continue;
-   const n=e1.until==null?null:e1.until-Math.max(e1.from,r.round)+1,x=k==='haste'?(after.actors[side].kit?.spells?.haste===3?gr('three'):gr('two')):k==='tailwind'?`+${r0(e1.value)}`:k==='lodestar'?r0(e1.value):'';
+   if(![LASTING_SPELL[k]].flat().includes(ruleOf(spell))&&![LASTING_SPELL[k]].flat().includes(spell))continue;
+   const n=k==='lodestar'?e1.from-r.round:e1.until==null?null:e1.until-Math.max(e1.from,r.round)+1,x=k==='lodestar'?r0(e1.value):'';
    parts.push(F(tx('effect.'+k,words).replace('{n}',n==null?gr('restOfFight'):ex(n)).replace('{x}',x)));
   }
-  if(spell==='compel'&&!after.result){const took=isCompelled({...after,round:r.round+1},1-side);
-   parts.length=0;parts.push(took?F(fl('compel.cast.0',FLAVOR.compel.cast[0])):F(fl('compel.shut',FLAVOR.compel.shut)));
-   if(took)parts.push(r.actionNames?.[1-side]?L('repeatAgainAction',{action:r.actionNames[1-side]}):L('repeatAgain'));}
-  if(isCompelled({...before,round:r.round},side)||r.committed?.[side]&&r.committed[side]!==id&&r.pair[1-side]==='compel')parts.unshift(L('compelledRepeat'));
+  // Compel (F5.11-plan.1): the move it seized this exchange, kept off, or turned back by Reflect.
+  const cp=spell==='compel'&&!after.result?ev.find(e=>e.type==='applied'&&e.side===side&&e.id==='compel'):null;
+  if(cp){parts.length=0;
+   if(cp.outcome==='landed'){parts.push(F(fl('compel.cast.0',FLAVOR.compel.cast[0])));parts.push(r.actionNames?.[1-side]?L('repeatAgainAction',{action:r.actionNames[1-side]}):L('repeatAgain'));}
+   else parts.push(cp.outcome==='blocked'?F(fl('compel.shut',FLAVOR.compel.shut)):L(cp.outcome==='reflected'?'applyReflected':'applyReflectedBlocked',{spell:spellName('compel')}));}
+  if(isCompelled({...before,round:r.round},side))parts.unshift(L('compelledRepeat'));
   out[side]=parts.length?parts.join(tx('grammar.sentenceSep',' ')):null;
  }
  return out;
@@ -269,7 +288,7 @@ export function resolvedLines(before,after,r,names=['the player','the opponent']
 // A side compelled this exchange (Compel, F5.9b): its move is forced and shown in advance.
 export const isCompelled=(state,side)=>{const e=state.actors[side].effects?.compelled;return !!e&&e.from<=state.round&&(e.until==null||e.until>=state.round);};
 export const compelledLine=(action,{names=['the player','the opponent'],side=1}={})=>fill(fl('compel.forced',FLAVOR.compel.forced).replace('{action}',action),names[side],names[1-side],names.pronouns?.[side],names.pronouns?.[1-side]);
-const LASTING_SPELL={shadowstep:'shadowstep',haste:'haste',brace:'brace',tailwind:'tailwind',reflect:'reflect',torment:'torment',eclipse:'eclipse',compelled:'compel',heartprice:'heartprice',lodestar:'lodestar',bound:['root','web'],poison:'venom'};
+const LASTING_SPELL={shadowstep:'shadowstep',haste:'haste',brace:'brace',reflect:'reflect',torment:'torment',eclipse:'eclipse',compelled:'compel',heartprice:'heartprice',lodestar:'lodestar',bound:['root','web','threads','bramble'],poison:'venom'};
 // Lines for what one resolved exchange finished, from plain snapshots of the state before and after it (no rules involved):
 // a Mend heals or is broken, a tired Guard gives, lasting effects, Foresight and constructs end, a foretold Omen arrives,
 // the rime thaws, and the fight ends (the finishing action's ko line, else ENDINGS).
@@ -279,12 +298,13 @@ export function finishLines(before,after,pair,round,names=['the player','the opp
  const g=COMBAT_TUNING.guard;
  for(const side of [0,1]){
   const id=pair[side],b=before.actors[side],a=after.actors[side];
-  if(g?.repeatLeak>0&&(id==='guard'||id?.startsWith('bundle:')&&id.includes('guard'))&&b.guardRound>0&&round-b.guardRound<=(g.lookback??1)&&pair[1-side]?.includes('strike'))add(fl('guard.tired',FLAVOR.guard.tired),side);
-  const lab=x=>a.kit?.labels?.[x]&&FLAVOR[a.kit.labels[x]]?.end?a.kit.labels[x]:x;
+  if(g?.repeatLeak>0&&id==='guard'&&b.guardRound>0&&round-b.guardRound<=(g.lookback??1)&&(pair[1-side]==='strike'||SPELLS[pair[1-side]]?.physical))add(fl('guard.tired',FLAVOR.guard.tired),side);
+  // A lasting effect's end, told by the kit's own spell for it (a creature's Skitter for Shadowstep's), else the rule's.
+  const lab=x=>Object.keys(a.kit?.spells??{}).find(id=>id!==x&&ruleOf(id)===x&&!a.kit.spells[x]&&FLAVOR[id]?.end)??x;
   for(const k of Object.keys(b.effects))if(!a.effects[k]&&LASTING[k])add(end(HELD_BY_FOE.has(k)?LASTING[k]:lab(LASTING[k])),HELD_BY_FOE.has(k)?1-side:side);
   if(before.earlyCommit[side]>0&&!after.earlyCommit[side])add(end('foresight'),1-side);
   for(const c of b.constructs)if(!a.constructs.some(x=>x.id===c.id))add(end(lab(c.id)),side);
-  if(b.omens.some(o=>o.due===round))add(end('omen'),side);
+  for(const o of b.omens)if(o.due===round)add(end(o.id&&FLAVOR[o.id]?.end?o.id:'omen'),side);
   if(id==='frozen'&&a.freezeUntil<=round)add(end('frozen'),side);
  }
  const r=after.result,ending=k=>tx('ending.'+k,ENDINGS[k]);
@@ -292,7 +312,9 @@ export function finishLines(before,after,pair,round,names=['the player','the opp
   const w=r.winner;
   if(w===undefined||w===null)add(ending('stalemate'),0);
   else{
-   const id=pair[w],key0=id==='hold'||id==='release'?before.actors[w].channel?.id:id?.startsWith('bundle:')&&id.includes('strike')?'strike':id,key=after.actors[w].kit?.labels?.[key0]??key0;
+   // A delayed blow that lands this exchange finishes the fight under its own name (F5.11).
+   const landed=before.actors[w].omens?.find(o=>o.due===round&&o.id&&FLAVOR[o.id]?.ko)?.id;
+   const id=pair[w],key0=id==='hold'||id==='release'?before.actors[w].channel?.id:id,key=landed??after.actors[w].kit?.labels?.[key0]??key0;
    const foeLoadout=after.actors[1-w].kit?.loadout,defeat=DEFEAT[foeLoadout]?tx('defeat.'+slug(foeLoadout),DEFEAT[foeLoadout]):null;
    add(defeat??(r.reason==='knockout'?fl(key+'.ko',FLAVOR[key]?.ko)??ending('knockout'):ENDINGS[r.reason]?ending(r.reason):ending('knockout')),w);
   }
@@ -307,7 +329,6 @@ export function flavorTable(){
  for(const [k,v]of Object.entries(ATTACK_DEFENDED))t['defended.'+k]=v;
  for(const [k,v]of Object.entries(ATTACK_NOUN))t['noun.'+k]=v;
  for(const [k,v]of Object.entries(EFFECT_WORDS))t['effect.'+k]=v;
- for(const [k,v]of Object.entries(BUNDLE_PART))t['bundle.'+k]=v;
  for(const [k,v]of Object.entries(LINES))t['line.'+k]=v;
  for(const [k,v]of Object.entries(ENDINGS))t['ending.'+k]=v;
  for(const [k,v]of Object.entries(DEFEAT))t['defeat.'+slug(k)]=v;

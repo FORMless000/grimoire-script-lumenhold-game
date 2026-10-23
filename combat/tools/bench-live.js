@@ -5,7 +5,7 @@
   let seed = 12345; const rnd = () => (seed = (Math.imul(seed, 1103515245) + 12345) >>> 0) / 2 ** 32;
   const positions = [];
   for (let i = 0; i < 9; i++) for (const k of [0, 7, 15]) {
-    const s = E.createState({ playerLoadout: G[i % 9], opponentLoadout: G[(i * 4 + 1) % 9], playerLevel: [20, 50, 80][i % 3], opponentLevel: [20, 50, 80][i % 3], firstLeader: i % 2 });
+    const s = E.createState({ playerLoadout: G[i % 9], opponentLoadout: G[(i * 4 + 1) % 9], playerLevel: [20, 45, 70][i % 3], opponentLevel: [20, 45, 70][i % 3], firstLeader: i % 2 });
     for (let j = 0; j < k && !s.result; j++) { const l = E.legalActions(s); E.applyChoice(s, l[Math.floor(rnd() * l.length)]); }
     if (!s.result) positions.push(s);
   }

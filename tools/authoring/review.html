@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Authoring review</title>
+<style>
+:root {font:16px/1.5 system-ui; color:#e9e8e3; background:#171b20; color-scheme:dark}
+body {margin:0}
+header {padding:18px 26px; border-bottom:1px solid #39414b; display:flex; gap:16px; align-items:center; flex-wrap:wrap}
+h1 {font-size:21px; margin:0}
+a {color:#9bd5cc}
+button,select,textarea,input {font:inherit; padding:7px; border:1px solid #596270; border-radius:4px; background:#252d37; color:inherit}
+button {cursor:pointer}
+button:disabled {opacity:.5; cursor:default}
+main {display:grid; grid-template-columns:210px minmax(0,1fr); min-height:80vh}
+nav {padding:16px; border-right:1px solid #39414b}
+nav button {display:block; width:100%; margin-bottom:6px; text-align:left}
+article {padding:22px; max-width:1120px}
+pre {white-space:pre-wrap; overflow-wrap:anywhere; padding:16px; background:#11161b; border:1px solid #39414b}
+textarea {width:95%; min-height:75px}
+.ratings {display:flex; gap:16px; flex-wrap:wrap}
+label {display:block; margin:10px 0}
+fieldset {margin:20px 0; border:1px solid #596270}
+#error {color:#ffb8a5; white-space:pre-wrap}
+.pair {display:grid; grid-template-columns:1fr 1fr; gap:18px}
+@media(max-width:740px) {main {grid-template-columns:1fr} nav {display:flex; overflow:auto} nav button {min-width:120px} .pair {grid-template-columns:1fr}}
+</style>
+<header>
+  <h1>Authoring review</h1><span id="progress"></span>
+  <a href="/export.json" download="review.json">Export JSON</a>
+  <a href="/export.md" download="review.md">Export Markdown</a>
+  <button id="pairs">Paired comparisons</button>
+  <button id="lock">Lock and reveal identities</button>
+</header>
+<main>
+  <nav id="nav"></nav>
+  <article><p id="error" role="alert"></p><div id="view">Loading…</div></article>
+</main>
+<script src="/client.js"></script>
+</html>

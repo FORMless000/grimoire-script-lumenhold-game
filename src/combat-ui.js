@@ -207,7 +207,7 @@
       return '<article class="fighter ' + (i ? 'opp' : 'you') + '"' + (i ? ' data-sheet="inspect" role="button" tabindex="0" title="' + esc(tr('inspect')) + '"' : '') + '>' +
         '<div class="pf' + (i ? '' : ' blank') + '">' + portraitOf(i) + (i ? '<span class="pf-eye">' + EYE + '</span>' : '') + '</div>' +
         '<div class="fi"><div class="fname"><b>' + esc(nameOf(i)) + '</b><small>' + esc(tr('lv', { n: levelOf(i) })) + (purse ? ' · ' + purse : '') + '</small>' + constructChips(a, i) + '</div>' +
-        bar(i, 'hp', a.hp, a.maxHP, 0, (a.effects.lodestar && a.effects.lodestar.value) || 0) + bar(i, 'mana', a.resources.mana, a.kit.capacity, a.flux) + '</div></article>';
+        bar(i, 'hp', a.hp, a.maxHP) + bar(i, 'mana', a.resources.mana, a.kit.capacity, a.flux) + '</div></article>';
     }
     // Their move: committed and shown, compelled, or hidden until the player commits.
     function intent() {
@@ -227,27 +227,37 @@
     // The exchange track: the past (both moves), this exchange and the next few, with every lasting effect as a line.
     function leaderAt(c) { if (!c) return game.leader; const e = game.earlyCommit.map((n) => n - c > 0), normal = c % 2 ? 1 - game.normalLeader : game.normalLeader; return e[0] === e[1] ? normal : e[0] ? 0 : 1; }
     const castAt = (side, id) => { for (let k = history.length - 1; k >= 0; k--) if (history[k].pair[side] === id) return history[k].round; return undefined; };
+    // The spell behind a Bind or a poison on `side`: the caster's (or, reflected, its own) bind or poison spell cast last.
+    function appliedBy(k, side) {
+      const prop = k === 'bound' ? 'bind' : 'poison', S = C().SPELLS; let best = null, at = -Infinity;
+      for (const s of [1 - side, side]) for (const id of Object.keys(game.actors[s].kit.spells)) if (S[id] && S[id][prop]) { const c = or(castAt(s, id), -1); if (c > at) { best = { id, side: s }; at = c; } }
+      return best;
+    }
     const or = (a, b) => (a === undefined || a === null ? b : a);
     function effectRows() {
       const r = game.round, rows = [];
       game.actors.forEach((a, side) => {
         for (const [k, e] of Object.entries(a.effects)) {
           if (!e || (e.until !== null && e.until < r)) continue;
+          // A Lodestar is forecast like a blow on its way: its icon and its heal, in green, on the exchange it matures.
+          if (k === 'lodestar') { rows.push({ side, icon: 'lodestar', name: label('lodestar'), due: e.from, heal: true, note: '+' + Math.round(e.value), tip: tr('lodestarUp', { n: Math.round(e.value) }) }); continue; }
+          const by = k === 'bound' || k === 'poison' ? appliedBy(k, side) : null;
+          if (by) { rows.push({ side: by.side, icon: by.id, name: sideLabel(by.id, by.side), on: by.side === side ? null : side, from: or(e.from, or(e.born, r)), until: or(e.until, Infinity), note: '' }); continue; }
           const on = CAST_ON_FOE.has(k);
           rows.push({ side: on ? 1 - side : side, icon: EFFECT_ICON[k] || k, name: k === 'compelled' ? label('compel') : label(k), on: on ? side : null, from: or(e.from, or(e.born, r)), until: or(e.until, Infinity),
-            note: k === 'lodestar' ? tr('shieldNote', { n: Math.round(e.value) }) : k === 'tailwind' ? '+' + Math.round(e.value) : '' });
+            note: k === 'tailwind' ? tr('tailwindChain', { n: Math.round(e.value) }) : '' });
         }
         if (a.channel) rows.push({ side, icon: a.channel.id, name: sideLabel(a.channel.id, side), from: or(castAt(side, a.channel.id), r), until: Infinity, note: tr('holds', { n: a.channel.holds }) + (a.channel.bank ? ' · ' + tr('banked', { n: Math.round(a.channel.bank) }) : '') + (telegraphed(side) ? ' · ' + tr('windUpNote') : '') });
         for (const c of a.constructs) rows.push({ side, icon: c.id, name: sideLabel(c.id, side), from: or(castAt(side, c.id), r), until: c.expires, note: tr('hpOf', { left: Math.round(Math.max(0, c.threshold - c.taken)), of: Math.round(c.threshold) }) });
         if (game.earlyCommit[side] > 0) rows.push({ side: 1 - side, on: side, icon: 'foresight', name: label('foresight'), from: or(castAt(1 - side, 'foresight'), r - 1) + 1, until: r + game.earlyCommit[side] - 1, note: side ? tr('theyFirst') : tr('youFirst') });
         if (a.freezeUntil >= r) rows.push({ side, icon: 'frozen', name: tr('frozenName'), from: a.freezeUntil, until: a.freezeUntil, note: '' });
         if (a.rimeReady) rows.push({ side, icon: 'rime', name: tr('rimeReady'), from: or(castAt(side, 'rime'), r), until: Infinity, note: '' });
-        for (const o of a.omens) rows.push({ side, icon: 'omen', name: label('omen'), due: o.due, note: fmt(o.power) });
+        for (const o of a.omens) rows.push({ side, icon: o.id || 'omen', name: label(o.id || 'omen'), due: o.due, note: fmt(o.power) });
       });
       return rows;
     }
     function futureSlot(side, c) {
-      const ex = game.round + c, a = game.actors[side], lead = leaderAt(c) === side, last = history.length ? history[history.length - 1].pair[side] : null, comp = a.effects.compelled;
+      const ex = game.round + c, a = game.actors[side], lead = leaderAt(c) === side, last = a.compelAction || null, comp = a.effects.compelled;
       if (a.freezeUntil >= ex) return '<span class="slot lost" title="' + esc(tr('slotFrozen', { n: ex, who: side ? nameOf(1) : tr('you') })) + '">' + actionIcon('frozen', side) + '</span>';
       if (comp && comp.until !== null && comp.until >= ex && last) {
         const lost = last === 'cancel' || !!C().available(game, side, last);
@@ -277,7 +287,9 @@
         const past = typeof at === 'object', ex = past ? at.round : r + at, c = past ? -1 : at;
         const tip = esc((row.side ? nameOf(1) : tr('you')) + ' · ' + row.name + (row.on != null ? ' → ' + (row.on ? nameOf(1) : tr('you')) : '') + (row.note ? ' · ' + row.note : ''));
         const ico = '<span class="tk-ico">' + actionIcon(row.icon, row.side, row.icon) + '</span>';
-        if (row.due !== undefined) return row.due === ex ? '<i class="tl-hit" title="' + tip + '">' + ico + row.note + '</i>' : '';
+        // Due past the window: shown in the last column, with an arrow and its exchange.
+        if (row.due !== undefined && !past && c === AHEAD && row.due > ex) return '<i class="tl-hit later' + (row.heal ? ' heal' : '') + '" title="' + (row.heal ? esc((row.side ? nameOf(1) : tr('you')) + ' · ' + row.name + ' · ' + row.tip) : tip) + ' · ' + esc(tr('exchange', { n: row.due })) + '">' + ico + row.note + '<small>›' + row.due + '</small></i>';
+        if (row.due !== undefined) return row.due === ex ? '<i class="tl-hit' + (row.heal ? ' heal' : '') + '" title="' + (row.heal ? esc((row.side ? nameOf(1) : tr('you')) + ' · ' + row.name + ' · ' + row.tip) : tip) + '">' + ico + row.note + '</i>' : '';
         if (ex < row.from || ex > row.until) return '';
         const first = ex === row.from, openEnd = row.until === Infinity && c === AHEAD;
         return '<i class="tl-on' + (first ? ' first' : '') + (ex === row.until || openEnd ? ' last' : '') + (openEnd ? ' open' : '') + '" title="' + tip + (row.until === Infinity ? '' : ' · ' + esc(tr('until', { n: row.until }))) + '">' + (first ? ico : '') + '</i>';
@@ -299,12 +311,12 @@
     // Their Compel, committed in the open, rewrites the player's move this exchange (unless Ward or Shadowstep stops it):
     // the menu stays open, since Ward is an answer, but says what any other pick turns into.
     function incomingCompel(prev) {
+      // Combat F5.11-plan.1: their Compel seizes the move you pick now and forces it for three exchanges; Ward or Shadowstep keeps it off.
       if (game.pending[1] !== 'compel' || C().actorToMove(game) !== 0 || C().has(game, 0, 'shadowstep')) return '';
-      const ward = game.actors[0].kit.spells.ward ? tr('compelWard') : '';
-      return prev && !C().available(game, 0, prev) ? tr('compelIncoming', { action: label(prev) }) + ward : tr('compelIncomingLost') + ward;
+      return tr('compelSeize');
     }
     // A compelled turn that can't be paid is a cancel: legal, though `available` (a menu check) refuses it.
-    const forcedLegal = (id) => id === 'cancel' && C().legalActions(game, 0).includes('cancel');
+    const forcedLegal = (id) => (id === 'cancel' || id === 'break_free') && C().legalActions(game, 0).includes(id);
     function actionButton(id) {
       const reason = forcedLegal(id) ? null : C().available(game, 0, id), disabled = !myTurn() || reason, name = actionName(id, 0), b = briefOf(0, id), tip = esc(name + ' · ' + price(0, id) + (reason ? ' · ' + reason : ''));
       return '<button class="act k-' + b.kind + (selected === id ? ' selected' : '') + '" data-action="' + id + '" aria-label="' + tip + '" aria-pressed="' + (selected === id) + '" title="' + tip + '"' + (disabled ? ' disabled' : '') + '>' +
@@ -317,13 +329,14 @@
         '<button class="fl-commit primary"' + (myTurn() ? '' : ' disabled') + '>' + (spell ? '<span class="control-icon" aria-hidden="true">' + C().ACTION_ICONS.cast + '</span>' + esc(tr('cast')) : esc(tr('commit'))) + '</button>';
     }
     function actions() {
-      const a = game.actors[0], C_ = C(), frozen = a.freezeUntil >= game.round, compelled = !frozen && C_.isCompelled(game, 0);
-      const forced = frozen || compelled || a.channel || C_.has(game, 0, 'haste');
+      // Combat F5.11-plan.1: Bound (Breaking Free only) comes before Compelled; Haste no longer narrows the menu.
+      const a = game.actors[0], C_ = C(), frozen = a.freezeUntil >= game.round, bound = !frozen && C_.has(game, 0, 'bound'), compelled = !frozen && !bound && C_.isCompelled(game, 0);
+      const forced = frozen || bound || compelled || a.channel;
       const ids = forced ? C_.legalActions(game, 0) : ['strike', 'guard', 'reclaim'].concat(Object.keys(a.kit.spells));
       // Compelled: the only move is the repeat, or a lost turn when it can't be paid (the core cancels it either way).
-      const prev = a.lastAction && a.lastAction !== 'cancel' ? a.lastAction : null;
-      const state = frozen ? tr('frozen') : compelled ? (ids[0] !== 'cancel' ? tr('compelledYou', { action: actionName(ids[0], 0) }) : prev ? tr('compelledLost', { action: label(prev) }) : tr('compelledNone'))
-        : a.channel ? tr('channel', { spell: label(a.channel.id) }) : forced ? tr('haste') : incomingCompel(prev);
+      const prev = a.compelAction && a.compelAction !== 'cancel' ? a.compelAction : null;
+      const state = frozen ? tr('frozen') : bound ? tr('bound') : compelled ? (ids[0] !== 'cancel' ? tr('compelledYou', { action: actionName(ids[0], 0) }) : prev ? tr('compelledLost', { action: label(prev) }) : tr('compelledNone'))
+        : a.channel ? tr('channel', { spell: label(a.channel.id) }) : incomingCompel(prev) || (C_.has(game, 0, 'haste') ? tr('haste') : '');
       return (state ? '<div class="action-state">' + esc(state) + '</div>' : '') +
         '<div class="acts' + (forced ? ' forced' : '') + '">' + ids.map(actionButton).join('') + '</div><div class="commit-bar">' + preview() + '</div>';
     }
@@ -341,7 +354,7 @@
 
     // ---- Sheets: inspect the foe, their committed move ----
     function inspectSheet() {
-      const a = game.actors[1], C_ = C(), forced = a.channel || C_.has(game, 1, 'haste') || a.freezeUntil >= game.round;
+      const a = game.actors[1], C_ = C(), forced = a.channel || a.freezeUntil >= game.round || C_.has(game, 1, 'bound') || C_.isCompelled(game, 1);
       const ids = forced ? C_.legalActions(game, 1) : ['strike', 'guard', 'reclaim'].concat(Object.keys(a.kit.spells)), recent = history.slice(-6).reverse();
       const skills = Object.keys(a.kit.skills);
       return '<header class="sh-head"><div class="pf">' + portraitOf(1) + '</div><div><b>' + esc(nameOf(1)) + '</b><small>' + esc(tr('sheetLine', { level: levelOf(1), hp: fmt(a.hp), maxHp: fmt(a.maxHP), mana: fmt(a.resources.mana), maxMana: a.kit.capacity })) +

@@ -10,7 +10,10 @@ pub const EFFECT_NAMES: [&str; N_EFFECTS] = [
 ];
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 /// ForeAim (Foresight's damage bonus) is no longer created since F5.3; kept so older saved states still load.
-/// Bound (Root, Web): no Shadowstep or Brace. Poison (Venom): damage each exchange; `source` is the poisoner.
+/// F5.11-plan.1: Bound (Root, Web, Threads, Bramble): Breaking Free is the only action. Poison (Venom): an inevitable tick each
+/// exchange; `source` is the poisoner. Compelled: the captured move (Actor::captured) is the only one. Lodestar: a future-start
+/// effect, active on its maturity exchange only, `value` the healing. Tailwind: `value` the consecutive casts so far. Brace:
+/// `value` the share it takes off. Eclipse: `value` the share of damage taken that becomes Mana.
 pub enum Eff { Guard = 0, Ward, Brace, ForeAim, Haste, Shadowstep, Tailwind, Reflect, Torment, Eclipse, Heartprice, Compelled, Lodestar, Bound, Poison }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -23,7 +26,10 @@ pub struct Channel { pub spell: usize, pub holds: i32, pub bank: f64, pub total:
 pub struct ConstructI { pub spell: usize, pub kind: usize, pub power: f64, pub reduction: f64, pub threshold: f64, pub taken: f64, pub expires: i32 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
-pub struct Omen { pub due: i32, pub power: f64 }
+/// A hit on its way: Omen's, Acorns' second, or a delayed blow's (F5.11: `spell`, whose pierce amounts it lands with).
+/// F5.11-plan.1: `impact` (Impact damage, else spell damage) and `bounced` (scheduled by a Reflected application: it can't
+/// bounce again). Same-date Omen contributions merge into one entry.
+pub struct Omen { pub due: i32, pub power: f64, pub spell: usize, pub impact: bool, pub bounced: bool }
 
 /// A small fixed-capacity list (no heap, so State stays Copy).
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -63,6 +69,10 @@ pub struct Actor {
     pub urge: f64,
     /// The last exchange this side guarded (0: never), for Guard fatigue.
     pub guard_round: i32,
+    /// Compel's payload (F5.11-plan.1): the move captured from this side, forced while Compelled.
+    pub captured: Option<Act>,
+    /// The reward tranches paid out this fight (F5.11-plan.1): Glamour, Rapport, Sleight (full, then half, then none).
+    pub tranches: [u8; 3],
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -107,6 +117,8 @@ pub struct Side {
     pub taken_all: f64,
     /// A creature (world expansion 1): heals nothing, whatever it casts.
     pub no_heal: bool,
+    /// May stand idle (F5.11, the intro's practice dummy: kit `idle`): `cancel` is a legal move on its normal menu.
+    pub idle: bool,
 }
 
 pub struct Encounter {
@@ -148,8 +160,11 @@ pub enum Event {
     // Every opposing hit (F5.9b, for the fight text): its power before defences, what it dealt, and the defences that
     // touched it (DEF_* bits). A hit thrown back by Reflect is reported again as its own hit.
     Hit { id: Act, raw: f64, amount: f64, target: u8, source: u8, by: u16, reflected: bool },
-    // A spell that moves Mana or flux (F5.9b, for the fight text): Extraction's take, Seal's snuffed flux, Distil's Mana.
+    // A spell that moves Mana or flux (F5.9b, for the fight text): Extraction's take, Seal's snuffed flux, Distill's Mana.
     Moved { side: u8, id: Act, amount: f64, blocked: bool },
+    // A hostile spell's application (F5.11-plan.1): `side` cast it; outcome 0 landed, 1 blocked (Ward, Shadowstep, a mature
+    // Lodestar or Breaking Free), 2 returned by Reflect onto its caster, 3 returned and then blocked.
+    Applied { side: u8, id: Act, outcome: u8 },
     Reclaimed { side: u8, amount: f64 },
 }
 
@@ -192,6 +207,8 @@ impl Encounter {
                 skill_value[sp] = if ids.is_empty() { t.pivot } else { ids.iter().fold(0.0, |acc, &k| acc + skills[k]) / ids.len() as f64 };
                 factor[sp] = if let (true, Some(pp)) = (sp == n, t.strike_per_point) { 1.0 + pp * (skills[4] - t.pivot) } else if ids.is_empty() { 1.0 } else { ids.iter().fold(0.0, |acc, &k| acc + 1.0 + t.per_point[k] * (skills[k] - t.pivot)) / ids.len() as f64 };
             }
+            // A creature's Strike scale (F5.11, `kit.strikeScale` from its race): its blows hit harder or softer than its Vigor says.
+            factor[n] *= kit.get("strikeScale").and_then(|x| x.as_f64()).unwrap_or(1.0);
             let mods = &kit["mods"];
             let by_spell = |key: &str, len: usize| -> Vec<f64> {
                 let mut v = vec![0.0; len];
@@ -207,7 +224,8 @@ impl Encounter {
             let on_defend = mods.get("onDefend").and_then(|x| x.as_f64()).unwrap_or(0.0);
             let taken_all = mods.get("takenAll").and_then(|x| x.as_f64()).unwrap_or(0.0);
             let no_heal = kit.get("noHeal").and_then(|x| x.as_bool()).unwrap_or(false);
-            Side { level: int(&kit["level"], "level"), skills, capacity: num(&kit["capacity"], "capacity"), entry: res_map(&a["entry"]), kit: list, rank, learned, skill_value, factor, cost, on_cast, on_defend, taken, taken_all, no_heal }
+            let idle = kit.get("idle").and_then(|x| x.as_bool()).unwrap_or(false);
+            Side { level: int(&kit["level"], "level"), skills, capacity: num(&kit["capacity"], "capacity"), entry: res_map(&a["entry"]), kit: list, rank, learned, skill_value, factor, cost, on_cast, on_defend, taken, taken_all, no_heal, idle }
         });
         Encounter {
             sides,
@@ -256,7 +274,11 @@ impl State {
                 constructs.push(ConstructI { spell, kind: d.spells[spell].construct.unwrap(), power: num(&c["power"], "power"), reduction: num(&c["reduction"], "reduction"), threshold: num(&c["threshold"], "threshold"), taken: num(&c["taken"], "taken"), expires: int(&c["expires"], "expires") });
             }
             let mut omens = Small::default();
-            for o in a["omens"].as_array().unwrap() { omens.push(Omen { due: int(&o["due"], "due"), power: num(&o["power"], "power") }); }
+            for o in a["omens"].as_array().unwrap() {
+                let spell = o.get("id").and_then(|x| x.as_str()).and_then(|x| d.spell(x)).unwrap_or(d.ids.omen);
+                let impact = o.get("impact").and_then(|x| x.as_bool()).unwrap_or(d.spells[spell].physical);
+                omens.push(Omen { due: int(&o["due"], "due"), power: num(&o["power"], "power"), spell, impact, bounced: o.get("bounced").and_then(|x| x.as_bool()).unwrap_or(false) });
+            }
             Actor {
                 res: res_map(&a["resources"]), spent: res_map(&a["spent"]), restored: res_map(&a["restored"]),
                 hp: num(&a["hp"], "hp"), max_hp: num(&a["maxHP"], "maxHP"), flux: num(&a["flux"], "flux"),
@@ -268,6 +290,8 @@ impl State {
                 glamour_done: a.get("glamourDone").and_then(|v| v.as_bool()).unwrap_or(false),
                 urge: a.get("urge").and_then(|v| v.as_f64()).unwrap_or(0.0),
                 guard_round: a.get("guardRound").and_then(|v| v.as_i64()).unwrap_or(0) as i32,
+                captured: a.get("compelAction").map_or(None, act_of),
+                tranches: { let mut t = [0u8; 3]; if let Some(v) = a.get("tranches").and_then(|v| v.as_array()) { for (i, x) in v.iter().take(3).enumerate() { t[i] = x.as_u64().unwrap_or(0) as u8; } } t },
             }
         });
         let pair = |v: &Value| [act_of(&v[0]), act_of(&v[1])];
@@ -344,7 +368,7 @@ pub fn state_json(template: &Value, s: &State, public: &Public) -> Value {
         t.insert("effects".into(), Value::Object(eff));
         t.insert("channel".into(), match a.channel { Some(c) => json!({"id": d.spells[c.spell].id, "holds": c.holds, "bank": c.bank, "total": c.total}), None => Value::Null });
         t.insert("constructs".into(), Value::Array(a.constructs.iter().map(|c| json!({"id": d.spells[c.spell].id, "power": c.power, "reduction": c.reduction, "threshold": c.threshold, "taken": c.taken, "expires": c.expires})).collect()));
-        t.insert("omens".into(), Value::Array(a.omens.iter().map(|m| json!({"due": m.due, "power": m.power})).collect()));
+        t.insert("omens".into(), Value::Array(a.omens.iter().map(|m| { let mut o = json!({"due": m.due, "power": m.power, "id": d.spells[m.spell].id, "impact": m.impact}); if m.bounced { o["bounced"] = json!(true); } o }).collect()));
         t.insert("lastAction".into(), act_json(a.last_action));
         t.insert("rimeReady".into(), json!(a.rime_ready));
         t.insert("rimeUsed".into(), json!(a.rime_used));
@@ -353,6 +377,8 @@ pub fn state_json(template: &Value, s: &State, public: &Public) -> Value {
         t.insert("glamourDone".into(), json!(a.glamour_done));
         t.insert("urge".into(), json!(a.urge));
         t.insert("guardRound".into(), json!(a.guard_round));
+        t.insert("compelAction".into(), act_json(a.captured));
+        t.insert("tranches".into(), json!(a.tranches));
     }
     out
 }

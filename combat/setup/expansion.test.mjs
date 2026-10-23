@@ -1,9 +1,10 @@
-// World expansion 1 (E4, E10): races, the worn kit's modifiers, creature aliases, and the new rules: bind, drain, poison,
-// swarm hits, no healing for creatures.
+// World expansion 1 (E4, E10): races, the worn kit's modifiers, creature copies of a rule (F5.11), and the new rules: bind,
+// drain, poison, swarm hits, no healing for creatures (as F5.11-plan.1 has them).
 import test from 'node:test';import assert from 'node:assert/strict';
 import {fightOptions} from './campaign.mjs';
 import {createState} from './setup.mjs';
 import {RACES,SPELLS,expandMods,generateLoadout} from './roster.mjs';
+import {FLAVOR} from './flavor.mjs';
 import {SPECIAL_LOADOUTS} from './loadouts.mjs';
 import {FOES,PERSONAS,knownLoadout} from './foes.mjs';
 import {DEFEAT,resolvedLines,fighterNames} from './flavor.mjs';
@@ -30,14 +31,6 @@ test('a creature race scales HP and Mana and forbids healing; a human foe is 1×
  assert.equal(generateLoadout('The Outcast',level).race,undefined,'the Outcast is human: no race');
 });
 
-test('aliases learn their base rule under the creature\'s name, at the alias\'s cost',()=>{
- const k=generateLoadout('Bramble ferret',40);
- assert.ok(k.spells.shadowstep&&!k.spells.skitter);assert.equal(k.labels.shadowstep,'skitter');
- assert.equal(k.mods.costDelta.shadowstep,SPELLS.skitter.cost[0]-SPELLS.shadowstep.cost[0]);
- const s=fight('Bramble ferret');
- assert(core.legalActions(s,1).includes('shadowstep'));
-});
-
 test('worn modifiers: flat HP and Mana, cheaper spells, and nonhuman damage reduction only against creatures',()=>{
  const plain=fight('Thornwitch'),worn=fight('Thornwitch',{mods:{hp:3,mana:2,cost:{brace:-1},taken:[{n:2,from:['nonhuman']}]}});
  assert.equal(worn.actors[0].maxHP,plain.actors[0].maxHP+3);
@@ -61,36 +54,6 @@ test('on_cast: each cast of the group also deals spell damage',()=>{
  assert(b.actors[1].hp<a.actors[1].hp,'the ward also struck');
 });
 
-test('bind: rooted, you can\'t step aside or brace next exchange',()=>{
- const s=fight('Grumpy oak');
- exchange(s,'guard','root');
- const legal=core.legalActions(s,0);
- assert(!legal.includes('shadowstep')&&!legal.includes('brace'),'bound');
- assert(legal.includes('guard'));
-});
-
-test('drain: a filch takes Mana into the creature\'s flux; a roar scatters it',()=>{
- const s=fight('Bramble ferret'),mine=s.actors[0].resources.mana,flux=s.actors[1].flux;
- exchange(s,'guard','filch');
- assert(s.actors[0].resources.mana<mine);assert(s.actors[1].flux>flux);
-});
-
-test('poison: a venom bite burns each exchange, past every defence; Distil clears it',()=>{
- const s=fight('The Spinner');
- exchange(s,'guard','venom');
- assert.ok(s.actors[0].effects.poison,'poisoned');
- const before=s.actors[0].hp;exchange(s,'guard','ward');
- assert(s.actors[0].hp<before,'it burns through a guard');
- exchange(s,'purify','ward');
- assert.ok(!s.actors[0].effects.poison,'Distil clears it');
-});
-
-test('swarm: several small hits, and a guard stops only the first',()=>{
- const s=fight('Spiderling swarm'),hp=s.actors[0].hp;
- exchange(s,'guard','swarm');
- assert(s.actors[0].hp<hp,'the later bites get past the guard');
-});
-
 test('a creature never heals; a human foe may',()=>{
  const run=noHeal=>{const s=fight('Thornwitch');s.actors[1].kit.spells.mend=1;if(noHeal)s.actors[1].kit.noHeal=true;
   s.actors[1].hp=Math.round(s.actors[1].maxHP/2);const hp=s.actors[1].hp;exchange(s,'reclaim','mend');return s.actors[1].hp-hp;};
@@ -104,11 +67,101 @@ test('every new foe has a loadout, a persona, flavour for its moves, and a defea
  for(const l of Object.keys(SPECIAL_LOADOUTS).filter(l=>SPECIAL_LOADOUTS[l].creature))assert.ok(DEFEAT[l],'defeat line '+l);
 });
 
-test('the fight text tells an alias by the creature\'s own words',()=>{
- const s=fight('Bristleback'),before=structuredClone(s);
- exchange(s,'guard','starlight');
+// Exact numbers: skills 50 (every factor 1), custom kits with creature moves.
+const S50={arcana:50,lore:50,alchemy:50,charm:50,vigor:50,guile:50};
+const ORDERS=[[0,0],[0,1],[1,0],[1,1]];
+function duel(mine,theirs,{me=0,leader=0}={}){const k=me===0?[mine,theirs]:[theirs,mine];return createState({playerKit:{skills:S50,spells:k[0]},opponentKit:{skills:S50,spells:k[1]},firstLeader:leader});}
+function play(s,me,mine,theirs){for(let i=0;i<2&&!s.result;i++){const side=core.actorToMove(s);core.applyChoice(s,side===me?mine:theirs);}}
+const edit=(s,f)=>{const t=structuredClone(s);f(t);return t;};
+const DEF={ward:1,shadowstep:2,brace:1,reflect:1,flame:1,mend:1};
+
+test('a creature\'s copy (F5.11) plays its base spell\'s rule under its own name, cost, icon and words',()=>{
+ const COPIES={skitter:'shadowstep',fade:'shadowstep',burrow:'brace',hide:'brace',bark:'ward',carapace:'ward',beetle_flame:'flame'};
+ for(const [id,rule]of Object.entries(COPIES)){
+  assert.equal(SPELLS[id].rule,rule,id);assert.equal(SPELLS[id].group,'creature');assert.ok(FLAVOR[id]?.cast,id+' has its own cast line');
+  const s=duel({[id]:1,flame:1},DEF);
+  assert(core.legalActions(s,0).includes(id));assert.equal(core.cost(s,0,id),SPELLS[id].cost[0],id+' at its own cost');
+  assert.equal(core.describeData(s,0,id).k,core.describeData(duel({[rule]:1},DEF),0,rule).k,id+' described as '+rule);
+ }
+ assert.equal(core.label('beetle_flame'),'Flame','the beetle\'s Flame wears Flame\'s name');
+ // By behaviour, on both sides and in both orders.
+ for(const [me,leader]of ORDERS){
+  let s=duel({skitter:1,flame:1},{...DEF},{me,leader});play(s,me,'skitter','flame');assert.equal(s.actors[me].hp,70,'Skitter evades');
+  s=duel({bark:1,flame:1},{...DEF},{me,leader});play(s,me,'bark','flame');assert.equal(s.actors[me].hp,70,'Bark wards');
+  s=duel({bark:1,flame:1},{...DEF},{me,leader});play(s,me,'bark','strike');assert.equal(s.actors[me].hp,65,'and halves Impact');
+  s=duel({hide:1,flame:1},{...DEF},{me,leader});play(s,me,'hide','flame');play(s,me,'reclaim','flame');assert.equal(s.actors[me].hp,62,'Hide: 80% off for two exchanges');
+  s=duel({beetle_flame:1},{hoarfrost:1,...DEF},{me,leader});play(s,me,'beetle_flame','reclaim');assert.equal(s.actors[1-me].hp,60,'the beetle\'s Flame: 10');
+  s=duel({beetle_flame:1},{hoarfrost:1,...DEF},{me,leader});play(s,me,'beetle_flame','hoarfrost');assert.deepEqual([s.actors[0].hp,s.actors[1].hp],[70,70],'and Hoarfrost cancels it');
+ }
+ const k=generateLoadout('Stag beetle',40);assert.ok(k.spells.beetle_flame,'the stag beetle owns it');
+});
+
+test('bind (F5.11-plan.1): from the next exchange, Breaking Free is the only move, for each binder\'s own span',()=>{
+ for(const [me,leader]of ORDERS)for(const [id,n]of [['root',1],['threads',1],['web',2],['bramble',1]]){
+  const s=duel(DEF,{[id]:1,ward:1},{me,leader}),hp=s.actors[1-me].hp;
+  play(s,me,'strike',id);assert.equal(s.actors[1-me].hp,hp-9,id+': the casting exchange plays as committed');
+  for(let i=0;i<n;i++){assert.deepEqual(core.legalActions(s,me),['break_free'],id+' exchange '+(i+1));assert.match(core.describe(s,me,'break_free'),/only action/);play(s,me,'break_free','ward');}
+  assert(core.legalActions(s,me).length>1,id+' over after '+n);
+ }
+ // Ward, Shadowstep or Breaking Free keep it off; Parry and Brace don't; Reflect binds its caster.
+ for(const [me,leader]of ORDERS){
+  for(const [def,off]of [['ward',true],['shadowstep',true],['guard',false],['brace',false]]){const s=duel(DEF,{threads:1,ward:1},{me,leader});play(s,me,def,'threads');assert.equal(core.legalActions(s,me).includes('break_free'),!off,def);}
+  const s=duel(DEF,{threads:1,ward:1},{me,leader});play(s,me,'reflect','threads');assert.deepEqual(core.legalActions(s,1-me),['break_free'],'reflected');
+ }
+ // A channel waits while bound; frozen comes before bound.
+ let s=duel({starlight:1,ward:1},{threads:1,ward:1});
+ play(s,0,'starlight','threads');assert.deepEqual(core.legalActions(s,0),['break_free']);play(s,0,'break_free','ward');
+ assert.deepEqual(core.legalActions(s,0),['hold','release'],'the channel resumes');
+ s=duel({rime:1,ward:1},{threads:1,flame:1});
+ s=edit(s,t=>{t.actors[0].hp=15;});play(s,0,'rime','threads');play(s,0,'break_free','flame');
+ s=edit(s,t=>{t.actors[0].freezeUntil=t.round;t.actors[0].effects.bound={value:1,from:t.round,until:t.round,born:t.round};});
+ assert.deepEqual(core.legalActions(s,0),['frozen'],'frozen first');
+});
+
+test('drain: Filch takes ready Mana into the creature\'s flux; Roar hits and scatters it; Ward keeps both off; Reflect turns them back',()=>{
+ for(const [me,leader]of ORDERS){
+  let s=duel({filch:1,roar:1},DEF,{me,leader});const m=s.actors[1-me].resources.mana;
+  play(s,me,'filch','reclaim');assert.equal(s.actors[1-me].resources.mana,m-5,'5 taken');assert.equal(s.actors[me].resources.mana+s.actors[me].flux,s.actors[me].kit.capacity,'kept as flux, up to capacity');
+  s=duel({filch:1,roar:1},DEF,{me,leader});
+  play(s,me,'roar','reclaim');assert.equal(s.actors[1-me].resources.mana,m-4,'Roar scatters 4');assert.equal(s.actors[1-me].hp,62,'and deals 8');assert.equal(s.actors[1-me].flux,0,'scattered, not kept by anyone');
+  s=duel({filch:1,roar:1},DEF,{me,leader});play(s,me,'roar','ward');assert.equal(s.actors[1-me].resources.mana,m-7,'Ward: only its own cost');assert.equal(s.actors[1-me].hp,70);
+  s=duel({filch:1,roar:1},DEF,{me,leader});const mine=s.actors[me].resources.mana;play(s,me,'roar','reflect');
+  assert.equal(s.actors[me].hp,62,'the roar comes back');assert.equal(s.actors[me].resources.mana,mine-4-4,'and so does the scatter');
+ }
+});
+
+test('poison (F5.11-plan.1): a tick this exchange and the next, past every defence and a frozen rescue; no cure; a new bite starts it over',()=>{
+ for(const [me,leader]of ORDERS){
+  for(const def of ['guard','ward','brace','shadowstep','reflect']){
+   const s=duel({venom:1,ward:1},DEF,{me,leader});play(s,me,'venom','reclaim');
+   play(s,me,'reclaim',def);assert.equal(s.actors[1-me].hp,58,'second tick past '+def);
+  }
+  let s=duel({venom:1,ward:1},{...DEF,purify:1},{me,leader});play(s,me,'venom','purify');play(s,me,'reclaim','reclaim');play(s,me,'reclaim','reclaim');
+  assert.equal(s.actors[1-me].hp,70-20-12,'Distill pays 20 and cures nothing: two ticks, then none');
+  s=duel({venom:1,ward:1},DEF,{me,leader});play(s,me,'venom','reclaim');play(s,me,'venom','reclaim');play(s,me,'reclaim','reclaim');
+  assert.equal(s.actors[1-me].hp,70-6-6-6,'a recast refreshes, it doesn\'t stack');
+  s=duel({venom:1,ward:1},{...DEF,rime:1},{me,leader});s=edit(s,t=>{t.actors[1-me].hp=10;});
+  play(s,me,'strike','rime');play(s,me,'strike','reclaim');assert.equal(s.actors[1-me].freezeUntil,3,'rescued by Rime');
+  play(s,me,'venom','frozen');assert.equal(s.actors[1-me].hp,18,'poison bites through the frozen interval');
+ }
+});
+
+test('swarm: three smaller Impact hits; Parry and Brace meet only the first; the text counts the total',()=>{
+ for(const [me,leader]of ORDERS){
+  let s=duel({swarm:1},DEF,{me,leader});play(s,me,'swarm','reclaim');assert.equal(s.actors[1-me].hp,55);
+  s=duel({swarm:1},DEF,{me,leader});play(s,me,'swarm','guard');assert.equal(s.actors[1-me].hp,60,'Parry stops the first of 5 + 5 + 5');
+  s=duel({swarm:1},DEF,{me,leader});play(s,me,'swarm','ward');assert.equal(s.actors[1-me].hp,61,'Ward halves each: 3 + 3 + 3 (rounded up)');
+  assert.match(core.describe(s,me,'swarm'),/15 Impact damage as 3 hits of 5/);
+ }
+});
+
+test('the fight text tells each creature by its own words: its cast and end lines, and its blows without a wand',()=>{
  const names=fighterNames({opponentName:'the bristleback',opponentLoadout:'Bristleback'});
- const r={pair:s.lastPair,round:before.round,channels:[null,null],eventData:[]};
- const [,line]=resolvedLines(before,s,r,names);
- assert.match(line,/rears up/);
+ const said=(loadout,mine,foe)=>{const s=fight(loadout),before=structuredClone(s);exchange(s,mine,foe);
+  return resolvedLines(before,s,{pair:s.lastPair,round:before.round,channels:[null,null],eventData:[]},names)[1];};
+ assert.match(said('Bristleback','guard','hide'),/hunches down/);
+ assert.match(said('Bristleback','guard','strike'),/lunges|closes|weight/,'no wand for a creature');
+ assert.doesNotMatch(said('Bristleback','guard','strike'),/wand/);
+ assert.match(said('Stag beetle','guard','beetle_flame'),/mandibles/);
+ for(const l of Object.keys(SPECIAL_LOADOUTS).filter(l=>SPECIAL_LOADOUTS[l].creature))for(const id of Object.keys(SPECIAL_LOADOUTS[l].kit??{}))assert.ok(FLAVOR[id]?.cast,l+' '+id+' has a cast line');
 });

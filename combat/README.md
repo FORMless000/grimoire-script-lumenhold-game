@@ -9,8 +9,7 @@ The combat rules and the AI search exist once, in Rust (`rust/core`). They are c
 | `rust/sim/` | `combat-sim`: `run` (parallel fights for `tools/sim.mjs`), `step`, `search`, `fight` (line-based JSON, for tests) |
 | `rust/wasm/` | the browser build: a small C ABI over linear memory, no wasm-bindgen |
 | `web/` | the test bench UI (`app.mjs`, `index.html`, `style.css`, `server.mjs`; `brief.mjs` for the effect on each action button, `art.mjs` for portraits and placeholders), `core.mjs` (the JS face of the core: `applyChoice`, `legalActions`, `describe`, `chooseAIAction`, `searchAction`, …), `rulebook.md` |
-| `tools/` | `build.mjs`, `playtest.sh`, `suite-f5.sh`, `sim.mjs`, `arms.mjs`, `replay.mjs`, `report.mjs`, `action-report.mjs`, `golden.mjs`, `export-data.mjs`, `bench-live.js` |
-| `test/golden.json` | regression goldens (see below) |
+| `tools/` | `build.mjs`, `playtest.sh`, `suite-f5.sh`, `sim.mjs`, `arms.mjs`, `replay.mjs`, `report.mjs`, `action-report.mjs`, `parity.mjs`, `export-data.mjs`, `bench-live.js` |
 | `out/` | gitignored: the built site, suite results, and the retired JS oracle (`out/oracle/`) |
 
 ## Build and play
@@ -107,8 +106,8 @@ Tools:
 
 1. Spell numbers: edit `setup/roster.mjs`, including the special spells' named `amounts` (Wildfire, Omen, Siphon, Moonwell, Lodestar, Rime). Rule logic and the remaining rule constants (named at the top of `rust/core/src/rules.rs`): edit Rust. Action descriptions are in `rust/core/src/text.rs` and use those same constants.
 2. Run `node tools/build.mjs`.
-3. Run `cargo test --release` (in `rust/`), `node tools/golden.mjs` (about 2 minutes) and `node --test setup/loadouts.test.mjs`. These check every transition, UI query, search and AI decision, natively and in WebAssembly.
-4. If the change is meant to alter play, run `node tools/golden.mjs update` and commit the new goldens with the change. Bump `RULES_VERSION` in `rust/core/src/lib.rs`.
+3. Run `cargo test --release` (in `rust/`), `node --test setup/*.test.mjs web/*.test.mjs` (the rules' fixtures: `setup/plan1.test.mjs`, `compel.test.mjs`, `expansion.test.mjs`; the kits: `loadouts.test.mjs`) and `node tools/parity.mjs` (about 5 seconds: random fights, searches and seeded AI fights played through the native and the WebAssembly build, which must agree on every state, legal list, search result and decision).
+4. Bump `RULES_VERSION` in `rust/core/src/lib.rs` when the change alters play. (The frozen goldens of `tools/golden.mjs`, from the retired JS oracle, were dropped in F5.11-plan.1: a rule change needs new fixtures, not a refresh.)
 
 ## Speed (2026-10-17, Apple Silicon, 8 cores)
 
@@ -130,4 +129,4 @@ Before the JS rules and search were retired, the Rust core (F5.2) was checked ag
 - 50 seeded fallible-AI fights played the same actions.
 - 200 fights through the WebAssembly glue answered 3.9 M UI queries identically, including every `describe` text.
 
-The goldens froze that behaviour. They have since been refreshed for F5.3 (Foresight), F5.4 (the integration pass: skill scaling, kits, Compel, condition) F5.5 (Guard fatigue, stalemates, Starlight, Reflect, class offsets) and F5.6 (Shadowstep and Haste at rank 1, Illusionist's course). The oracle, its differential checker (`out/oracle/tools/check.mjs`) and the frozen F5.2 Rust builds it was compared with are kept in `out/oracle/`. These checks apply only to F5.2 and are not part of the ongoing pipeline.
+The goldens (`tools/golden.mjs`, dropped in F5.11-plan.1 for `tools/parity.mjs` and the rules' fixtures) froze that behaviour. They were refreshed for F5.3 (Foresight), F5.4 (the integration pass: skill scaling, kits, Compel, condition) F5.5 (Guard fatigue, stalemates, Starlight, Reflect, class offsets) and F5.6 (Shadowstep and Haste at rank 1, Illusionist's course). The oracle, its differential checker (`out/oracle/tools/check.mjs`) and the frozen F5.2 Rust builds it was compared with are kept in `out/oracle/`. These checks apply only to F5.2 and are not part of the ongoing pipeline.

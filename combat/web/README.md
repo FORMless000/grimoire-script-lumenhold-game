@@ -1,5 +1,7 @@
 # Combat test bench (spells-v2 F5)
 
+Planned redesign: [F5.11-plan.1 — 2026-10-21](../../docs/minigame-combat-f5.11-plan.1-2026-10-21.md). This is the finalized implementation handoff, not a shipped rules version or a balance report.
+
 Pick a level preset and loadouts, then begin. Select an action or spell for its details, and click it again to commit. The engine view (toggle *Engine*) streams the AI's evaluation of every move by search depth, with each side's expected replies.
 
 The rules and the AI run in WebAssembly, compiled from the Rust core in `../rust`. `core.mjs` is their JS interface. Build with `node tools/build.mjs` from `combat/`, then serve with `node out/site/server.mjs`. The rules are written up in `rulebook.md`.

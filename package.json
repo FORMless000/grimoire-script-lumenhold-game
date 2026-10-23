@@ -16,11 +16,11 @@
     "i18n": "node tools/grim.js i18n",
     "i18n:zh": "node tools/grim.js i18n zh-CN",
     "e2e": "node tools/e2e.js",
-    "test": "node --test test/",
+    "test": "node --test test/*.test.js",
     "balance": "node tools/grim.js balance",
     "snapshot": "node tools/grim.js snapshot",
     "diff": "node tools/grim.js diff",
-    "verify": "node tools/grim.js build --check && node tools/grim.js lint && node tools/grim.js fmt --check && node tools/grim.js docs --check && node --test test/ && node tools/grim.js balance --quick && node tools/grim.js diff && node tools/e2e.js --server --quick",
+    "verify": "node tools/grim.js build --check && node tools/grim.js lint && node tools/grim.js fmt --check && node tools/grim.js docs --check && node --test test/*.test.js && node tools/grim.js balance --quick && node tools/grim.js diff && node tools/e2e.js --server --quick",
     "e2e:server": "node tools/e2e.js --server"
   },
   "engines": {

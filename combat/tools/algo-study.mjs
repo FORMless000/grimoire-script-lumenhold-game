@@ -1,5 +1,5 @@
 // Arena: two AI settings head to head under a strict per-decision node budget, every class pair, seats swapped.
-//   node tools/algo-study.mjs [--a '{…}'] [--b '{…}'] [--budget 64000] [--levels 20,50,80] [--openings 1] [--plies 2] [--name x]
+//   node tools/algo-study.mjs [--a '{…}'] [--b '{…}'] [--budget 64000] [--levels 20,45,70] [--openings 1] [--plies 2] [--name x]
 // --a / --b are AI settings merged over the base {mistakeChance:0, tiltScale:0, maxDepth:30, nodeBudget:<budget>, prune:true}: iterative
 // deepening runs until the node budget stops it (strict: a search aborts at the budget and plays its last completed depth).
 // Openings: each case is also played from <openings> seeded random starts of <plies> exchanges (both sides random legal moves),
@@ -9,7 +9,7 @@ import fs from 'node:fs';import path from 'node:path';
 import {armCases,play,root} from './arms.mjs';
 import * as C from '../web/core.mjs';
 const args=process.argv.slice(2),opt=(k,d)=>{const i=args.indexOf('--'+k);return i<0?d:args[i+1];};
-const budget=Number(opt('budget',64000)),levels=opt('levels','20,50,80').split(',').map(Number);
+const budget=Number(opt('budget',64000)),levels=opt('levels','20,45,70').split(',').map(Number);
 const openings=Number(opt('openings',1)),plies=Number(opt('plies',2)),name=opt('name','arena');
 const base={mistakeChance:0,tiltScale:0,maxDepth:30,nodeBudget:budget,prune:true};   // tiltScale 0: no urge, so no second (ranking) search
 const A={...base,...JSON.parse(opt('a','{}'))},B={...base,...JSON.parse(opt('b','{}'))};

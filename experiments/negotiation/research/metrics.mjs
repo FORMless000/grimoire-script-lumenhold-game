@@ -1,0 +1,14 @@
+export const sum=(rows,fn)=>rows.reduce((n,r)=>n+fn(r),0);
+export const entropy=counts=>{const n=Object.values(counts).reduce((a,b)=>a+b,0);return n?Object.values(counts).filter(Boolean).reduce((h,x)=>h-x/n*Math.log(x/n),0):0;};
+export function summarize(rows){const actions={},spells={},objectives={},levels={};let close=0,rootDecisions=0,casts=0,responds=0,lowMargin=0;const conditioned={};
+ for(const r of rows){const s=r.state;const key=r.objective??s.config.objective;const o=objectives[key]??={games:0,wins:0,partial:0,net:{mana:0,gold:0,health:0,renown:0,mood:0}};o.games++;o.wins+=Number(s.result.outcome==='win');o.partial+=Number(s.result.outcome==='partial');for(const k of Object.keys(o.net))o.net[k]+=s.settlement.resources[k].netLoss;objectives[key]=o;
+  const l=levels[s.config.level]??={games:0,wins:0};l.games++;l.wins+=Number(s.result.outcome==='win');levels[s.config.level]=l;
+  for(const h of s.history){if(['face','deflect','withdraw'].includes(h.action)){actions[h.action]=(actions[h.action]??0)+1;responds++;}else{spells[h.action]=(spells[h.action]??0)+1;casts++;}}
+  for(const d of r.decisions??[]){if(['face','deflect'].includes(d.choice.id)){const bin=Math.floor(d.chance*10),c=conditioned[bin]??={face:0,deflect:0};c[d.choice.id]++;conditioned[bin]=c;}if(d.castUsed)continue;const scores=d.choice.scores;if(!scores?.length)continue;rootDecisions++;const picked=scores.find(s=>s.id===d.choice.id);const maxWin=Math.max(...scores.map(s=>s.winEstimate)),slack=s.config.objectives?.[key]?.slack??0;const others=scores.filter(s=>s.id!==picked.id&&s.winEstimate>=maxWin-slack-1e-12).sort((a,b)=>b.value-a.value);if(!others.length)continue;const margin=picked.value-others[0].value;if(margin>=.003&&margin<=.03)close++;if(margin<.003)lowMargin++;}
+ }
+ const sorted=Object.entries(spells).sort((a,b)=>b[1]-a[1]);return {games:rows.length,wins:rows.filter(r=>r.state.result.outcome==='win').length,winRate:rows.filter(r=>r.state.result.outcome==='win').length/Math.max(1,rows.length),objectives,levels,actions,spells,castRate:casts/Math.max(1,rows.length),deflectShare:(actions.deflect??0)/Math.max(1,responds),effectiveSpells:Math.exp(entropy(spells)),topSpellShare:(sorted[0]?.[1]??0)/Math.max(1,casts),topPairShare:sorted.slice(0,2).reduce((n,[,v])=>n+v,0)/Math.max(1,casts),closeChoiceShare:close/Math.max(1,rootDecisions),nearTies:lowMargin/Math.max(1,rootDecisions),rootDecisions,conditioned};
+}
+// Screening penalties are declared before candidate evaluation. Held-out
+// confirmation and convergence checks remain separate requirements.
+export function fitness(m){let score=0;for(const l of Object.values(m.levels)){const p=l.wins/l.games;score-=4*Math.max(0,.60-p,p-.85);}
+ score-=3*Math.max(0,.15-m.deflectShare,m.deflectShare-.45);score+=.12*Math.min(8,m.effectiveSpells);score-=2*Math.max(0,m.topSpellShare-.35);score-=2*Math.max(0,m.topPairShare-.60);score+=.5*Math.min(.5,m.closeChoiceShare);return score;}

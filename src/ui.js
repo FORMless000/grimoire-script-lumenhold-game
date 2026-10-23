@@ -1326,11 +1326,16 @@
   function openFeedback(ns) {
     if (!eng || !eng.s || !eng.s.hist) return;
     closeFeedback();
-    fbItems = ns ? ns.map((n) => eng.histEntry(n)).filter(Boolean).map((e) => ({ e, label: e.t === 'end' ? t('fb.ending') : '' })) : fbTargets();
-    const body = fbItems.length ? fbItems.map(({ e, label }) => {
-      const fb = e.fb || {};
-      return '<div class="fb-item" data-n="' + e.n + '"><div class="fb-head"><span>' + esc(label) + '</span><span>' + esc(t('fb.when', { month: eng.monthName(e.turn), year: eng.yearOf(e.turn) })) + '</span></div>' +
-        '<b class="fb-title">' + esc(e.title || e.id) + '</b>' + (e.label ? '<div class="fb-chose">' + esc(t('fb.chose', { choice: e.label })) + '</div>' : '') +
+    // Oldest first, as in the live bar, with the card's own text and outcome to quote from (a zh-CN playtest,
+    // 2026-10-20: titles alone led a note about the newest card into the previous card's box).
+    fbItems = ns ? ns.map((n) => eng.histEntry(n)).filter(Boolean).map((e) => ({ e, label: e.t === 'end' ? t('fb.ending') : '' })) : fbTargets().reverse();
+    const cur = ns ? null : fbItems.length - 1;
+    const body = fbItems.length ? fbItems.map(({ e, label }, i) => {
+      const fb = e.fb || {}, say = e.out && e.out.say;
+      const src = e.text || say ? '<details class="fb-src"' + (cur == null || i === cur ? ' open' : '') + '><summary>' + esc(t('fb.cardText')) + '</summary>' +
+        (e.text ? '<p class="fb-text">' + esc(e.text) + '</p>' : '') + (say ? '<p class="fb-text fb-out">' + esc(say) + '</p>' : '') + '</details>' : '';
+      return '<div class="fb-item' + (i === cur ? ' cur' : '') + '" data-n="' + e.n + '"><div class="fb-head"><span>' + esc(label) + '</span><span>' + esc(t('fb.when', { month: eng.monthName(e.turn), year: eng.yearOf(e.turn) })) + '</span></div>' +
+        '<b class="fb-title">' + esc(e.title || e.id) + '</b>' + (e.label ? '<div class="fb-chose">' + esc(t('fb.chose', { choice: e.label })) + '</div>' : '') + src +
         '<div class="fb-rate">' + ['up', 'down'].map((r) => '<button class="fb-r ' + r + (fb.rating === r ? ' on' : '') + '" data-r="' + r + '">' + (r === 'up' ? '👍 ' : '👎 ') + esc(t(r === 'up' ? 'fb.good' : 'fb.bad')) + '</button>').join('') + '</div>' +
         '<textarea rows="3" maxlength="2000" placeholder="' + esc(t('fb.placeholder')) + '">' + esc(fb.comment || '') + '</textarea></div>';
     }).join('') : '<p class="fb-intro">' + esc(t('fb.none')) + '</p>';
@@ -1341,11 +1346,12 @@
     fbOpen = true;
     wrap.onclick = (e) => { if (e.target === wrap) closeFeedback(); };
     wrap.querySelectorAll('.fb-rate .fb-r').forEach((b) => {
-      b.onclick = () => { const was = b.classList.contains('on'); b.parentNode.querySelectorAll('.fb-r').forEach((x) => x.classList.remove('on')); if (!was) b.classList.add('on'); };
+      // A rating stays on when clicked again (the same playtest lost two 👎 that way); the live bar's buttons clear one.
+      b.onclick = () => { b.parentNode.querySelectorAll('.fb-r').forEach((x) => x.classList.remove('on')); b.classList.add('on'); };
     });
     document.getElementById('fbCancel').onclick = closeFeedback;
     const sv = document.getElementById('fbSave'); if (sv) sv.onclick = saveFeedback;
-    const ta = wrap.querySelector('textarea'); if (ta) ta.focus({ preventScroll: true });
+    const ta = wrap.querySelector(cur == null ? 'textarea' : '.fb-item.cur textarea'); if (ta) { ta.focus({ preventScroll: true }); if (cur) ta.closest('.fb-item').scrollIntoView({ block: 'nearest' }); }
   }
   function saveFeedback() {
     const wrap = document.getElementById('fbDialog'); if (!wrap) return;

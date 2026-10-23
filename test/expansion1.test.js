@@ -181,7 +181,7 @@ test('items: an up[item:x] option shows only while you own it', () => {
   assert.ok(e.view(e.s.cur).options.some((o) => o.key === 'up'));
 });
 
-test('a save from before the expansion (merged places, no kit) loads, remaps and plays a month', () => {
+test('a save from before the expansion (no kit) loads, remaps the merged places and plays a month', () => {
   // test/fixtures/save-before-expansion1.json: a game at month 14 saved by the engine before world expansion 1 (social
   // style, seed 4242); it had visited the infirmary and the orchard and discovered the refectory, the bakery and the
   // flight field.
@@ -190,8 +190,11 @@ test('a save from before the expansion (merged places, no kit) loads, remaps and
   const before = JSON.parse(json);
   assert.ok(before.visitsTo.infirmary && before.places.refectory && !before.items, 'the fixture is pre-expansion');
   const eng = new Engine(content).load(json);
-  for (const old of ['refectory', 'infirmary', 'flight_field', 'orchard', 'bakery']) assert.ok(!eng.s.places[old] && !(eng.s.visitsTo || {})[old], old + ' remapped');
-  assert.equal(eng.s.visitsTo.alchemy_lab, (before.visitsTo.alchemy_lab || 0) + before.visitsTo.infirmary);
+  // The orchard and the bakery are still merged; the refectory, infirmary and flight field are their own places again
+  // (migration 0043), so they keep their discoveries and visits.
+  for (const old of ['orchard', 'bakery']) assert.ok(!eng.s.places[old] && !(eng.s.visitsTo || {})[old], old + ' remapped');
+  for (const back of ['refectory', 'infirmary', 'flight_field']) assert.ok(eng.s.places[back], back + ' kept');
+  assert.equal(eng.s.visitsTo.infirmary, before.visitsTo.infirmary);
   assert.equal(eng.s.visitsTo.maud_cottage, (before.visitsTo.maud_cottage || 0) + before.visitsTo.orchard);
   assert.ok(eng.s.places.great_hall && eng.s.places.village && eng.s.places.stables);
   assert.equal(eng.s.worn.wand, 'borrowed_wand'); assert.equal(eng.s.worn.robe, 'school_robes');
@@ -209,6 +212,16 @@ test('a save from before the expansion (merged places, no kit) loads, remaps and
   } finally { console.warn = quiet; }
   assert.ok(eng.s.turn > turn, 'a month played');
   assert.ok(!Object.keys(eng.s.visitsTo).some((id) => content.places[id].deprecated), 'new visits go to the survivors');
+});
+
+test('a save made while three places were merged gains them back on load', () => {
+  const e = fresh(content), s = JSON.parse(e.save());
+  for (const id of ['refectory', 'infirmary', 'flight_field']) delete s.places[id];
+  s.visitsTo = { great_hall: 4 };
+  const eng = new Engine(content).load(JSON.stringify(s));
+  for (const id of ['refectory', 'infirmary', 'flight_field']) assert.ok(eng.s.places[id], id + ' back');
+  assert.equal(eng.s.visitsTo.great_hall, 4);
+  assert.ok(eng.mapView().places.some((p) => p.id === 'refectory'), 'on the map');
 });
 
 test('a tonic makes the plain checks it names one rung easier, never a fight, a negotiation or another kind', () => {

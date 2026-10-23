@@ -51,21 +51,20 @@ export const PERSONAS={
  Mabel:{ward:6,mend:6},
  Grimsby:{foresight:8},
  // Special foes
- 'Shadow stag':{gore:12,shadowstep:6,brace:6},
- // The Whisperwood (world expansion 1): a creature's aliases play their base rule, so its persona names the base
- // (skitter = shadowstep, burrow = brace, hide/bark/carapace = ward, maul/charge/slow fall/the long wait = starlight,
- // brood = bramble).
- 'Practice mannequin':{nip:10},
- 'Bramble ferret':{shadowstep:10,nip:10,filch:6,brace:4},
- Bristleback:{starlight:12,starlight_release:6,ward:6,roar:4},
- 'Stag beetle':{starlight:10,starlight_hold:6,ward:8,nip:4},
- 'Grumpy oak':{root:8,starlight:10,ward:8},
- 'Elder oak':{starlight:10,starlight_hold:8,root:8,ward:8,bramble:6},
- 'Spiderling swarm':{swarm:12,shadowstep:8,brace:4},
- 'The Spinner':{web:10,venom:10,starlight:8,starlight_hold:6,bramble:6,ward:6},
- 'The Spinner, weakened':{web:10,venom:10,starlight:8,ward:6},
- Thornwitch:{siphon:12,siphon_hold:6,torment:8,bramble:6,ward:4},
- 'Masked circle':{compel:10,torment:8,eclipse:6,flame:6},
+ // The Whisperwood (world expansion 1; F5.11: every move is the creature's own spell). A delayed blow's Hold and Release
+ // no longer exist: its cast is the whole move.
+ 'Practice mannequin':{flame:10},
+ 'Bramble ferret':{skitter:10,nip:10,filch:8,burrow:4},
+ Bristleback:{maul:12,roar:6,hide:6,strike:4},
+ 'Stag beetle':{charge:12,pinch:8,beetle_flame:6,carapace:6},
+ 'Grumpy oak':{root:10,bough:10,acorns:6,bark:6},
+ 'Elder oak':{slow_fall:10,root:8,thicket:8,acorns:6,bark:6},
+ 'Spiderling swarm':{swarm:12,threads:8,skitter:8,burrow:4},
+ 'Shadow stag':{gore:12,fade:8,brace:6,tailwind:4},
+ 'The Spinner':{web:10,venom:10,the_long_wait:10,brood:8,carapace:6},
+ 'The Spinner, weakened':{web:10,venom:10,the_long_wait:10,brood:8,carapace:6},
+ Thornwitch:{siphon:12,siphon_hold:6,bramble:8,torment:8,ward:4},
+ 'Masked circle':{compel:10,torment:8,flame:6,shadowstep:6,eclipse:6},
  'The Outcast':{heartprice:8,compel:10,siphon:8,eclipse:8,extraction:8,torment:6}
 };
 export const personaOf=loadout=>PERSONAS[loadout]??{};
@@ -136,6 +135,8 @@ export const FOES={
 //   firstLeader      0: the player leads the first exchange, 1: the foe does (createState's firstLeader)
 //   foeCommitsFirst  n: the foe commits its move first, visibly, for n exchanges (as under the player's Foresight)
 //   nature           the odds word the foe's level uses instead of the card's (the setup already prices the circumstance)
+//   script           (a lesson) the foe's first moves, one per exchange, played as written when legal; 'idle' stands still
+//                    (src/combat.js). The lesson's tutorial keys are one coach mark per exchange, the last staying up.
 export const EVENTS={
  'spring_tournament/right':{play:'tournament_entrant',observers:true,witnesses:true},
  'spring_tournament_circle/left':{play:'tournament_entrant',observers:true,witnesses:true},
@@ -148,7 +149,7 @@ export const EVENTS={
  'rival_last_match/left':{play:['tamsin','thornwick_final_year'],context:'practice_duel',setup:'Tamsin if met, else a Thornwick final-year',observers:true,witnesses:true},
  'curse_cure_2/right':{play:'shadow_stag',observers:false,witnesses:false},
  'pyro_lyra_spar/right':{play:'lyra',context:'practice_duel',observers:true,witnesses:true},
- 'intro_practice_circle/right':{play:'practice_mannequin',context:'rehearsal',observers:false,witnesses:false,foeCommitsFirst:3,tutorial:['lead','read','ward','mana','finish']},   // world expansion 1: the intro's lesson
+ 'intro_practice_circle/right':{play:'practice_mannequin',context:'rehearsal',observers:false,witnesses:false,foeCommitsFirst:5,script:['idle','strike','flame','guard','reclaim'],tutorial:['idle','strike','spell','guard','reclaim','commit','finish']},   // the intro's lesson (feedback 2026-10-20): five telegraphed moves, then the usual alternation, Thorne coaching each exchange
  'item_ashwood_lyra/right':{play:'lyra',context:'practice_duel',observers:true,witnesses:true},   // world expansion 1: ashwood against Vaneshade
  // World expansion 1: the Whisperwood delve. Alone in the wood: nobody watches, nobody tells.
  'ww1_bramble_ferret/right':{play:'bramble_ferret',observers:false,witnesses:false},
@@ -162,7 +163,7 @@ export const EVENTS={
  'ww3_masked_circle/up':{play:'masked_circle',observers:false,witnesses:false},
  'ww3_spiderlings/right':{play:'spiderling_swarm',observers:false,witnesses:false},
  'ww_spinner_fight/right':{play:'the_spinner',observers:false,witnesses:false},
- 'ww_spinner_fight_weak/right':{play:'the_spinner_weak',observers:false,witnesses:false},
+ 'ww_spinner_fight_weak/right':{play:'the_spinner_weak',nature:['even'],observers:false,witnesses:false},   // F5.11: she's weakened by starting hurt (her loadout's start), not by a lower level
  'ww_outcast_fight/right':{play:'the_outcast',context:'practice_duel',stakes:'none',observers:false,witnesses:false},   // nothing at stake: "Walk away" settles at no cost
  'duel_practice_bout/left':{play:'quick_fourth_year',firstLeader:1,setup:'Hold your ground: the fourth-year leads every exchange (firstLeader 1)',observers:false,witnesses:true},
  'duel_practice_bout/right':{play:'quick_fourth_year',firstLeader:0,setup:'Go on the attack: you lead the first exchange (firstLeader 0)',observers:false,witnesses:true},

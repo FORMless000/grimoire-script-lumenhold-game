@@ -21,7 +21,7 @@ export function combatStart(condition={}){
 // {skills:{arcana,…}, spells:{id:rank}, level?} → a kit like generateLoadout's (skills 1–100, ranks within the spell's levels).
 export function customKit({skills,spells,level,mods}){
  for(const k of LOADOUT_SKILLS)if(!Number.isFinite(skills?.[k])||skills[k]<1||skills[k]>100)throw Error('Kit skill '+k+' must be 1–100');
- for(const [id,r]of Object.entries(spells??{}))if(!SPELLS[id]||SPELLS[id].as||SPELLS[id].castable===false||!Number.isInteger(r)||r<1||r>SPELLS[id].cost.length)throw Error('Kit spell '+id);
+ for(const [id,r]of Object.entries(spells??{}))if(!SPELLS[id]||SPELLS[id].castable===false||!Number.isInteger(r)||r<1||r>SPELLS[id].cost.length)throw Error('Kit spell '+id);
  const lv=level??Math.round(Math.max(...LOADOUT_SKILLS.map(k=>skills[k])));
  // mods: the worn kit (world expansion 1, the main game's Engine#wornMods), resolved against the opponent in createState.
  return {loadout:'custom',level:lv,progression:'learned',skills:{...skills},spells:{...spells},capacity:manaCapacity(skills),...(mods?{mods:{...mods}}:{})};
@@ -64,7 +64,8 @@ export function createState(options={}){
   if(maxHP<=0)throw Error('Positive entry HP required');
   // A worn or drained side starts below full (playerCondition / opponentCondition).
   const condition=side?options.opponentCondition:options.playerCondition,start=combatStart(condition);
-  const story=side?options.opponentStart:options.playerStart;   // the story's own handicap ({hp, mana} shares, no floors)
+  // The story's own handicap ({hp, mana} shares, no floors): the options', else the loadout's own (`start`, F5.11).
+  const story=(side?options.opponentStart:options.playerStart)??kit.start;
   let hp=condition?Math.max(1,Math.round(maxHP*start.hp)):maxHP,flux=0;
   if(condition){entry.mana=Math.min(entry.mana,Math.round(kit.capacity*start.mana));if(start.flux>0)flux=kit.capacity-entry.mana;}   // 10 of 43 Mana → 10 ready, 33 flux
   if(story?.hp!==undefined)hp=Math.max(1,Math.round(hp*story.hp));

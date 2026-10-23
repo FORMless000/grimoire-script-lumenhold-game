@@ -99,20 +99,37 @@ test('friends: `seeks: rarely` comes only once you have been coming to them', ()
   assert.ok(eng.pull('vey') > 0 && eng.pull('vey') < eng.pull('tobias') + 40 * 0.6, 'scaled down');
 });
 
-test('tracks: enrolling queues the lead\'s intro (N1), or meets an already-met lead; the lead\'s regard is the advisor modifier (±15)', () => {
+test('tracks: enrolling pushes the lead\'s intro (N1), or meets an already-met lead; the lead\'s regard is the advisor modifier (±15)', () => {
   const eng = atMap(2, []);
   eng.s.npcs.brask.met = false;
   quiet(() => eng.run([{ t: 'enrol', track: 'beastcraft' }], eng.newCtx(null, null)));
   assert.ok(!eng.s.npcs.brask.met, 'met on the intro card, not at enrolment');
-  const q = eng.s.queue.find((x) => x.id === 'brask_intro');
-  assert.ok(q && q.actor === 'brask' && q.track === 'beastcraft', 'the intro is queued with the lead, in the track\'s context');
+  const q = eng.s.deck.find((x) => x.id === 'brask_intro');
+  assert.ok(q && q.actor === 'brask' && q.track === 'beastcraft', 'the intro is pushed with the lead, in the track\'s context');
   quiet(() => eng.run([{ t: 'enrol', track: 'beastcraft' }], eng.newCtx(null, null)));
-  assert.equal(eng.s.queue.filter((x) => x.id === 'brask_intro').length, 1, 'queued once');
+  assert.equal(eng.s.deck.concat(eng.s.queue).filter((x) => x.id === 'brask_intro').length, 1, 'pushed once');
   eng.s.npcs.brask.met = true;
   eng.s.npcs.brask.rel = 50; assert.equal(eng.advisorBonus('beastcraft'), 10);
   eng.s.npcs.brask.rel = 100; assert.equal(eng.advisorBonus('beastcraft'), 15);
   eng.s.npcs.brask.rel = -40; assert.equal(eng.advisorBonus('beastcraft'), -8);
   assert.equal(eng.advisorBonus('astromancy'), 0, 'no lead');
+});
+
+// A zh-CN playtest (2026-10-20): Vey taught the start card and a routine Illusion card before her own intro.
+test('tracks: the lead\'s intro plays before the course\'s start card and its routine cards; one that can\'t play yet waits in the queue', () => {
+  const eng = atMap(2, []);
+  eng.s.npcs.vey.met = false;
+  quiet(() => eng.run([{ t: 'enrol', track: 'illusion' }], eng.newCtx(null, null)));
+  finishDay(eng);
+  const ids = eng.s.deck.map((x) => x.id), intro = ids.indexOf('vey_intro');
+  assert.ok(intro >= 0, 'the intro is in today\'s deck');
+  assert.ok(intro < ids.indexOf('illu_first_glamour'), 'before the start card: ' + ids.join(' '));
+  eng.s.deck.forEach((x, i) => { if (x.track === 'illusion' && x.id !== 'vey_intro') assert.ok(i > intro, x.id + ' comes after the intro'); });
+  // tobias_intro's `when` needs turn >= 2: joining in month 1 queues it for later instead of dropping it.
+  const early = atMap(3, []);
+  early.s.npcs.tobias.met = false; early.s.turn = 1;
+  quiet(() => early.run([{ t: 'join', track: 'verdant' }], early.newCtx(null, null)));
+  assert.ok(!early.s.deck.some((x) => x.id === 'tobias_intro') && early.s.queue.some((x) => x.id === 'tobias_intro'), 'queued');
 });
 
 test('appeals (N4): a failed course pushes @game appeal in its context; regrade turns the F into a C and teaches the level', () => {

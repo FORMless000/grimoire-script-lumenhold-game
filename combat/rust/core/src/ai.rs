@@ -1,7 +1,7 @@
 // Evaluation, move ordering, alpha-beta search (PVS, aspiration, iterative deepening, tactical extension,
 // optional LMR and no-op pruning), the transposition table, and the AI policy (profiles, seeded mistakes).
 use crate::data::{data, Act, ConstructAction, R_CROWNS, R_MANA};
-use crate::rules::{self, actor_to_move, amount, apply_known, attack_power, cost, damage_power, has, legal_actions, renown_room, Moves, EPS};
+use crate::rules::{self, actor_to_move, amount, apply_known, attack_power, cost, damage_power, has, hasted_impulse, legal_actions, reward_next, wildfire_self, Moves, EPS};
 use crate::state::*;
 use serde_json::{json, Map, Value};
 
@@ -9,7 +9,10 @@ use serde_json::{json, Map, Value};
 pub const POLICY_VERSION: &str = "persona-3";
 /// Expected opposing damage per exchange, in HP: what a construct copies onto its threshold and what Brace can stop.
 const EXPECTED_HIT: f64 = 12.0;
-const BRACE_SHARE: [f64; 4] = [1.0, 0.5, 0.25, 0.25];
+/// F5.11-plan.1: an exchange Bound (Breaking Free, nothing else) costs about this share of an expected hit.
+const BOUND_COST: f64 = 0.6;
+/// Exchanges a side's effect still covers from now (a future-start one counts from its start).
+fn left(s: &State, e: &Effect) -> f64 { 0.max(e.until.unwrap_or(s.round) - s.round.max(e.from) + 1) as f64 }
 
 fn construct_hp(s: &State, c: &ConstructI) -> f64 {
     let spec = &data().constructs[c.kind];
@@ -25,10 +28,7 @@ fn influence(enc: &Encounter, s: &State, side: usize, hp: f64) -> f64 {
     let mut value = 0.0;
     if has(s, side, Eff::Shadowstep) { value += 12.0; }
     if has(s, side, Eff::Haste) { value += 10.0; }
-    if let Some(b) = a.effects[Eff::Brace as usize] {
-        let mut age = 0.max(s.round - b.from);
-        while age < 4 { value += BRACE_SHARE[age as usize] * EXPECTED_HIT * hp; age += 1; }
-    }
+    if let Some(b) = a.effects[Eff::Brace as usize] { value += b.value * EXPECTED_HIT * hp * left(s, &b); }
     if has(s, side, Eff::Heartprice) { value += 3.0; }
     if a.rime_ready && !a.rime_used { value += 8.0; }
     for c in a.constructs.iter() { value += construct_hp(s, c) * hp; }
@@ -37,9 +37,12 @@ fn influence(enc: &Encounter, s: &State, side: usize, hp: f64) -> f64 {
         let banked = if c.spell == ids.moonwell { c.bank.min(enc.sides[side].capacity - a.res[R_MANA]) } else { c.bank.min(a.max_hp) };
         value += banked * 0.12 + c.total * 0.6 + if c.spell == ids.starlight && c.holds != 0 { 10.0 } else { 0.0 };
     }
-    // World expansion 1: poison still to come counts against its holder; being bound costs a little.
-    if let Some(p) = a.effects[Eff::Poison as usize] { let left = 0.max(p.until.unwrap_or(s.round) - s.round.max(p.from) + 1) as f64; value -= p.value * left * hp; }
-    if has(s, side, Eff::Bound) { value -= 4.0; }
+    // World expansion 1: poison still to come counts against its holder. F5.11-plan.1: each exchange Bound is a lost action; a
+    // Lodestar still rising is worth its healing and a safe exchange, past the search's horizon.
+    if let Some(p) = a.effects[Eff::Poison as usize] { value -= p.value * left(s, &p) * hp; }
+    if let Some(b) = a.effects[Eff::Bound as usize] { value -= BOUND_COST * EXPECTED_HIT * hp * left(s, &b); }
+    if let Some(l) = a.effects[Eff::Lodestar as usize] { if l.from >= s.round { value += (l.value.min(a.max_hp - a.hp) * 0.8 + EXPECTED_HIT * 0.5) * hp * 0.7; } }
+    if let Some(t) = a.effects[Eff::Tailwind as usize] { value += t.value * 3.0; }
     value
 }
 
@@ -62,58 +65,76 @@ pub fn evaluate(enc: &Encounter, s: &State) -> f64 {
 fn incoming_has(incoming: Option<Act>, f: impl Fn(Act) -> bool) -> bool { incoming.map_or(false, |i| data().acts.parts[i as usize].iter().any(|&p| f(p))) }
 
 pub fn move_value(enc: &Encounter, s: &State, side: usize, id: Act) -> f64 {
+    // Countertempo (F5.11-plan.1): an eligible spell cast under Haste also throws an Impulse.
+    let impulse = if hasted_impulse(s, side, id) { attack_power(enc, s, side, data().acts.strike) } else { 0.0 };
+    base_value(enc, s, side, id) + impulse
+}
+
+fn base_value(enc: &Encounter, s: &State, side: usize, id: Act) -> f64 {
     let d = data();
     let k = &d.acts;
     let ids = &d.ids;
     let a = &s.actors[side];
     let other = &s.actors[1 - side];
     let incoming = s.pending[1 - side];
-    if k.is_bundle[id as usize] { return k.parts[id as usize].iter().fold(0.0, |sum, &p| sum + move_value(enc, s, side, p)); }
     if id == k.strike { return attack_power(enc, s, side, id); }
     if id == k.guard { return if incoming_has(incoming, |p| p == k.strike) { 25.0 } else if incoming.is_some() { 5.0 } else { 1.0 }; }
     if id == k.reclaim { return a.flux * 0.28 - 3.0; }
-    if id == k.frozen { return 0.0; }
+    if id == k.frozen || id == k.break_free { return 0.0; }
+    if id == k.cancel { return -20.0; }   // standing idle (F5.11): last in every ordering
     if id == k.hold {
         let c = a.channel.unwrap();
-        return if c.spell == ids.moonwell { 6.0 } else if c.spell == ids.lodestar { 5.0 } else if c.spell == ids.starlight { if c.holds != 0 { 0.0 } else { 15.0 } }
-            else if c.spell == ids.wildfire { damage_power(enc, side, ids.wildfire, d.amt(ids.wildfire, "hold") + d.amt(ids.wildfire, "perHold")) - d.amt(ids.wildfire, "self") } else if c.spell == ids.siphon { damage_power(enc, side, ids.siphon, 4.0) } else { 0.0 };
+        let w = ids.wildfire;
+        return if c.spell == ids.moonwell { 6.0 } else if c.spell == ids.starlight { if c.holds != 0 { 0.0 } else { 15.0 } }
+            else if c.spell == w { damage_power(enc, side, w, d.amt(w, "hit")) + damage_power(enc, side, w, d.amt(w, "bank").max(d.amt(w, "hit"))) * 0.5 - wildfire_self(c.holds + 1) } else if c.spell == ids.siphon { damage_power(enc, side, ids.siphon, 4.0) } else { 0.0 };
     }
     if id == k.release {
         let c = a.channel.unwrap();
-        return if c.spell == ids.moonwell { c.bank.min(enc.sides[side].capacity - a.res[R_MANA]) * 0.3 } else if c.spell == ids.lodestar { c.bank * 0.5 }
+        return if c.spell == ids.moonwell { c.bank.min(enc.sides[side].capacity - a.res[R_MANA]) * 0.3 }
             else if c.spell == ids.starlight { damage_power(enc, side, ids.starlight, if c.holds != 0 { 18.0 } else { 9.0 }) }
-            else if c.spell == ids.wildfire { damage_power(enc, side, ids.wildfire, d.amt(ids.wildfire, "release") + d.amt(ids.wildfire, "perHold") * c.holds as f64) }
+            else if c.spell == ids.wildfire { damage_power(enc, side, ids.wildfire, d.amt(ids.wildfire, "hit") + c.bank) * 0.75 }
             else if c.spell == ids.siphon { c.total.min(a.max_hp - a.hp) * 0.85 } else { 0.0 };
     }
-    let attack = attack_power(enc, s, side, id);
-    if attack != 0.0 { return attack - cost(enc, s, side, id) * 0.12; }
     let sp = id as usize;
+    let spell = &d.spells[sp];
+    let attack = attack_power(enc, s, side, id);
+    if attack != 0.0 {
+        // A direct hit, with what comes with it: Bramble's Bind, Roar's scatter, Acorns' second hit.
+        let mut v = attack;
+        if spell.bind.is_some() && !has(s, 1 - side, Eff::Bound) { v += 8.0; }
+        if let Some(dr) = spell.drain { v += amount(enc, side, Some(sp), dr, false).min(other.res[R_MANA]) * 0.4; }
+        if d.amt(sp, "next") > 0.0 { v += damage_power(enc, side, sp, d.amt(sp, "next")) * 0.7; }
+        return v - cost(enc, s, side, id) * 0.12;
+    }
     if sp == ids.mend {
         return if incoming_has(incoming, |p| p == k.strike || ((p as usize) < k.n_spells && d.spells[p as usize].damage.is_some())) { -3.0 }
-            else { (a.max_hp - a.hp).min(amount(enc, side, Some(sp), d.spells[sp].healing.as_ref().unwrap()[(enc.sides[side].rank[sp] - 1) as usize], true)) * 0.9 - cost(enc, s, side, id) * 0.12 };
+            else { (a.max_hp - a.hp).min(amount(enc, side, Some(sp), spell.healing.as_ref().unwrap()[(enc.sides[side].rank[sp] - 1) as usize], true)) * 0.9 - cost(enc, s, side, id) * 0.12 };
     }
     if sp == ids.purify {
         return amount(enc, side, Some(sp), 24.0, false).min(enc.sides[side].capacity - a.res[R_MANA]) * 0.3 - amount(enc, side, Some(sp), 4.0, true) * 0.65;
     }
     // Creature mechanics by property (world expansion 1): poison by its damage over time, a bind, a drain by the Mana it takes.
-    if let Some(spl) = d.spells.get(sp).filter(|x| x.poison.is_some() || x.bind.is_some() || x.drain.is_some()) {
+    if spell.poison.is_some() || spell.bind.is_some() || spell.drain.is_some() {
         let mut v = 0.0;
-        if let Some((per, n)) = spl.poison { if !has(s, 1 - side, Eff::Poison) { v += damage_power(enc, side, sp, per) * n as f64 * 0.6; } }
-        if spl.bind.is_some() && !has(s, 1 - side, Eff::Bound) { v += 8.0; }
-        if let Some(dr) = spl.drain { v += amount(enc, side, Some(sp), dr, false).min(other.res[R_MANA]) * 0.4; }
+        if let Some((per, n)) = spell.poison { v += damage_power(enc, side, sp, per) * n as f64 * 0.8; }
+        if let Some(b) = spell.bind { if !has(s, 1 - side, Eff::Bound) { v += 8.0 * b as f64; } }
+        if let Some(dr) = spell.drain { v += amount(enc, side, Some(sp), dr, false).min(other.res[R_MANA]) * 0.4; }
         return v - cost(enc, s, side, id) * 0.12;
     }
     let inc = incoming.is_some();
-    let base = if sp == ids.ward { if inc { 25.0 } else { 3.0 } } else if sp == ids.brace { if inc { 27.0 } else { 9.0 } } else if sp == ids.shadowstep { if inc { 23.0 } else { 8.0 } }
-        else if sp == ids.foresight { 7.0 } else if sp == ids.haste { 10.0 } else if sp == ids.animate { 12.0 } else if sp == ids.heartwood { 12.0 } else if sp == ids.bramble { 11.0 }
-        else if sp == ids.contraption { 17.0 } else if sp == ids.omen { damage_power(enc, side, sp, 24.0) * 0.4 } else if sp == ids.starlight { 15.0 } else if sp == ids.wildfire { 14.0 }
-        else if sp == ids.siphon { 13.0 } else if sp == ids.moonwell { 2.0 } else if sp == ids.lodestar { 3.0 } else if sp == ids.rime { if a.hp < a.max_hp * 0.5 { 10.0 } else { 3.0 } }
+    // A delayed blow (F5.11) is worth its hit to come, discounted as Omen's is.
+    if spell.delay.is_some() { return damage_power(enc, side, sp, d.amt(sp, "hit") + d.amt(sp, "impact")) * 0.4 - cost(enc, s, side, id) * 0.12; }
+    let rule = spell.rule;
+    let base = if rule == ids.ward { if inc { 25.0 } else { 3.0 } } else if rule == ids.brace { if inc { 22.0 } else { 7.0 } } else if rule == ids.shadowstep { if inc { 23.0 } else { 8.0 } }
+        else if sp == ids.foresight { 7.0 } else if sp == ids.haste { 10.0 } else if sp == ids.animate { 12.0 } else if sp == ids.heartwood { 12.0 } else if spell.construct.is_some() && sp != ids.contraption { 11.0 }
+        else if sp == ids.contraption { 17.0 } else if sp == ids.omen { damage_power(enc, side, sp, d.amt(sp, "hit")) * 2.0 * 0.4 } else if sp == ids.starlight { 15.0 } else if sp == ids.wildfire { 14.0 }
+        else if sp == ids.siphon { 13.0 } else if sp == ids.moonwell { 2.0 } else if sp == ids.lodestar { if a.hp < a.max_hp * 0.8 { 9.0 } else { 5.0 } } else if sp == ids.rime { if a.hp < a.max_hp * 0.5 { 10.0 } else { 3.0 } }
         else if sp == ids.reflect { if inc { 21.0 } else { 1.0 } } else if sp == ids.seal { other.flux * 0.3 }
         else if sp == ids.extraction { 0f64.max(other.res[R_MANA].min(enc.sides[side].capacity - a.res[R_MANA] - a.flux)) * 0.4 }
         else if sp == ids.torment { 13.0 } else if sp == ids.compel { 10.0 } else if sp == ids.eclipse { if inc { 7.0 } else { 0.0 } }
-        else if sp == ids.heartprice { if a.res[R_MANA] < 10.0 { 6.0 } else { -3.0 } } else if sp == ids.tailwind { 8.0 }
-        else if sp == ids.glamour { if enc.observers && renown_room(enc, s, side) > EPS { 2.0 } else { -2.0 } } else if sp == ids.rapport { if enc.observers && a.res[R_CROWNS] >= 2.0 && renown_room(enc, s, side) >= 1.0 { 1.0 } else { -3.0 } }
-        else if sp == ids.sleight { if other.res[R_CROWNS] > 0.0 { 1.0 } else { -2.0 } } else { -3.0 };
+        else if sp == ids.heartprice { (a.max_hp - a.hp).min(a.res[R_MANA]) * 0.3 - 3.0 }
+        else if sp == ids.glamour || sp == ids.rapport { if enc.observers && reward_next(enc, s, side, sp) > EPS { 2.0 } else { -2.0 } }
+        else if sp == ids.sleight { if other.res[R_CROWNS] > 0.0 && reward_next(enc, s, side, sp) > EPS { 1.0 } else { -2.0 } } else { -3.0 };
     base - cost(enc, s, side, id) * 0.12
 }
 
@@ -135,13 +156,15 @@ pub fn no_op_action(enc: &Encounter, s: &State, side: usize, id: Act) -> bool {
     if id == k.reclaim { return a.flux.min(cap - a.res[R_MANA]) <= 1e-9; }
     let sp = id as usize;
     if sp >= k.n_spells { return false; }
+    // Countertempo's Impulse makes any eligible cast count, whatever its own effect (F5.11-plan.1).
+    if hasted_impulse(s, side, id) { return false; }
     if sp == ids.candour || sp == ids.quickquill || sp == ids.index || sp == ids.toll { return true; }
     if sp == ids.mend { return a.hp >= a.max_hp; }
     if sp == ids.seal { return other.flux <= 1e-9; }
     if sp == ids.extraction { return other.res[R_MANA] <= 0.0 || a.res[R_MANA] + a.flux >= cap; }
-    if sp == ids.glamour { return !enc.observers || renown_room(enc, s, side) <= EPS; }
-    if sp == ids.rapport { return !enc.observers || a.res[R_CROWNS] < 2.0 || renown_room(enc, s, side) < 1.0; }
-    if sp == ids.sleight { return other.res[R_CROWNS] <= 0.0; }
+    if sp == ids.glamour { return !enc.observers || reward_next(enc, s, side, sp) <= EPS; }
+    if sp == ids.rapport { return !enc.observers || a.res[R_CROWNS] < 10.0 || reward_next(enc, s, side, sp) <= EPS; }
+    if sp == ids.sleight { return other.res[R_CROWNS] <= 0.0 || reward_next(enc, s, side, sp) <= EPS; }
     if sp == ids.rime { return a.rime_used || a.rime_ready; }
     if sp == ids.heartprice { return has(s, side, Eff::Heartprice); }
     if sp == ids.purify { return a.res[R_MANA] >= cap; }
@@ -149,7 +172,7 @@ pub fn no_op_action(enc: &Encounter, s: &State, side: usize, id: Act) -> bool {
 }
 
 pub fn tactical_threat(s: &State) -> bool {
-    s.actors.iter().any(|a| a.channel.is_some() || a.omens.iter().any(|o| o.due == s.round) || a.constructs.iter().any(|c| c.expires == s.round))
+    s.actors.iter().any(|a| a.channel.is_some() || a.omens.iter().any(|o| o.due == s.round) || a.constructs.iter().any(|c| c.expires == s.round) || a.effects[Eff::Lodestar as usize].map_or(false, |e| e.from == s.round))
 }
 
 /// The adjacent representable score, so PVS null windows are valid for a floating-point evaluator.
@@ -231,12 +254,14 @@ pub fn position_key(s: &State) -> (u64, u64) {
         h.w(a.constructs.len() as u64);
         for c in a.constructs.iter() { h.w(c.spell as u64); h.f(c.power); h.f(c.reduction); h.f(c.threshold); h.f(c.taken); h.w(c.expires as u64); }
         h.w(a.omens.len() as u64);
-        for o in a.omens.iter() { h.w(o.due as u64); h.f(o.power); }
+        for o in a.omens.iter() { h.w(o.due as u64); h.f(o.power); h.w(o.spell as u64 | (o.impact as u64) << 16 | (o.bounced as u64) << 17); }
         h.o(a.last_action);
         h.w(a.rime_ready as u64 | (a.rime_used as u64) << 1 | (a.glamour_done as u64) << 2);
         h.w(a.freeze_until as u64);
         h.w(a.guard_round as u64);
         h.f(a.pending_renown);
+        h.o(a.captured);
+        h.w(a.tranches[0] as u64 | (a.tranches[1] as u64) << 8 | (a.tranches[2] as u64) << 16);
     }
     (h.0, h.1)
 }
@@ -517,13 +542,13 @@ pub fn plausible_mistake(enc: &Encounter, s: &State, id: Act) -> bool {
     if sp == ids.mend && a.hp >= a.max_hp { return false; }
     if sp == ids.seal && other.flux <= 1e-9 { return false; }
     if sp == ids.extraction && (other.res[R_MANA] <= 0.0 || a.res[R_MANA] + a.flux >= cap) { return false; }
-    if sp == ids.glamour && !enc.observers { return false; }
-    if sp == ids.rapport && (!enc.observers || a.res[R_CROWNS] < 2.0) { return false; }
-    if sp == ids.sleight && other.res[R_CROWNS] <= 0.0 { return false; }
+    if (sp == ids.glamour || sp == ids.rapport || sp == ids.sleight) && !hasted_impulse(s, side, id) && (reward_next(enc, s, side, sp) <= EPS || (sp != ids.sleight && !enc.observers)) { return false; }
+    if sp == ids.rapport && a.res[R_CROWNS] < 10.0 && !hasted_impulse(s, side, id) { return false; }
+    if sp == ids.sleight && other.res[R_CROWNS] <= 0.0 && !hasted_impulse(s, side, id) { return false; }
     if sp == ids.rime && (a.rime_used || a.rime_ready) { return false; }
     if sp == ids.heartprice && has(s, side, Eff::Heartprice) { return false; }
     if sp == ids.purify && (a.res[R_MANA] >= cap || a.hp <= amount(enc, side, Some(sp), 4.0, true)) { return false; }
-    if id == k.release { if let Some(c) = a.channel { if (c.spell == ids.moonwell || c.spell == ids.lodestar) && c.bank == 0.0 { return false; } } }
+    if id == k.release { if let Some(c) = a.channel { if c.spell == ids.moonwell && c.bank == 0.0 { return false; } } }
     if s.pending[1 - side].is_some() {
         let mut child = *s;
         apply_known(enc, &mut child, id, None);

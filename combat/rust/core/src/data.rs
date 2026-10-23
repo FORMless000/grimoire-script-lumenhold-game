@@ -30,7 +30,6 @@ struct RawSpell {
     castable: Option<bool>,
     group: String,
     alignment: Option<String>,
-    immediate: Option<bool>,
     release: Option<Vec<f64>>,
     exposes: Option<bool>,
     physical: Option<bool>,
@@ -40,6 +39,8 @@ struct RawSpell {
     drain_keep: Option<bool>,
     poison: Option<Vec<f64>>,
     hits: Option<f64>,
+    rule: Option<String>,
+    delay: Option<f64>,
 }
 
 #[derive(Deserialize)]
@@ -128,26 +129,30 @@ pub struct Spell {
     pub castable: bool,
     pub forbidden: bool,
     pub alignment_cost: Option<f64>,
-    /// Compel: whether it also replaces the target's action in the exchange it is cast.
-    pub immediate: bool,
     /// Starlight: base damage of a Release straight away and after a Hold.
     pub release: Option<Vec<f64>>,
     /// Casting it breaks your own Shadowstep (Mend: healing needs you still and in the open).
     pub exposes: bool,
-    /// A plain damage spell that lands like a Strike (Guard stops it, Ward halves it): creature attacks.
+    /// Impact damage (F5.11-plan.1; Parry stops it, Ward halves it), not spell damage: creature blows, Tailwind.
     pub physical: bool,
     /// A special spell's named amounts (Wildfire's hold, self, release, perHold; Siphon's hit; Moonwell's and Lodestar's bank; Omen's hit).
     pub amounts: HashMap<String, f64>,
     /// Creature mechanics (world expansion 1), read by property rather than by name:
-    /// bind: the target can't Shadowstep or Brace for this many exchanges from the next (Root, Web);
-    /// drain: Mana taken from the target (Filch keeps it as flux: drain_keep; Roar scatters it);
-    /// poison: [damage per exchange, exchanges] from the next exchange (Venom; Distil clears it);
-    /// hits: the damage lands as this many smaller hits, and only the first meets Guard and Brace (Swarm).
+    /// bind: Breaking Free is the target's only action for this many exchanges from the next (F5.11-plan.1);
+    /// drain: ready Mana taken from the target (Filch keeps it as flux: drain_keep; Roar scatters it);
+    /// poison: [damage per tick, ticks] from this exchange, inevitable (Venom, F5.11-plan.1);
+    /// hits: the damage lands as this many smaller hits, and only the first meets Parry and Brace (Swarm).
     pub bind: Option<i32>,
     pub drain: Option<f64>,
     pub drain_keep: bool,
     pub poison: Option<(f64, i32)>,
     pub hits: i32,
+    /// The rule this spell plays (F5.11): itself, or another spell whose rule it copies with its own numbers (a creature's
+    /// Skitter plays Shadowstep's, at its own cost and duration). The rules compare `rule`, never the id, where a copy counts.
+    pub rule: usize,
+    /// A delayed blow (F5.11): the cast lands its `hit` this many exchanges later, like Omen, with its own pierce amounts
+    /// (wardPierce, guardPierce, bracePierce; none by default, so Ward stops it).
+    pub delay: Option<i32>,
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -192,8 +197,10 @@ pub struct Data {
 pub type Act = u8;
 pub struct Acts {
     pub n_spells: usize,
-    pub strike: Act, pub guard: Act, pub reclaim: Act, pub hold: Act, pub release: Act, pub frozen: Act, pub cancel: Act,
+    /// break_free (F5.11-plan.1): Breaking Free, the only action while Bound.
+    pub strike: Act, pub guard: Act, pub reclaim: Act, pub hold: Act, pub release: Act, pub frozen: Act, pub cancel: Act, pub break_free: Act,
     pub names: Vec<String>,
+    /// Haste bundles are never legal since F5.11-plan.1 (Countertempo); their codes stay so old states and logs still load.
     /// For bundles: their basic parts in public order; for others: [self].
     pub parts: Vec<Vec<Act>>,
     pub is_bundle: Vec<bool>,
@@ -211,6 +218,8 @@ impl Data {
     /// A spell's named amount from the roster (`amounts`); 0 when the roster leaves it out.
     pub fn amt(&self, sp: usize, key: &str) -> f64 { self.spells[sp].amounts.get(key).copied().unwrap_or(0.0) }
     pub fn is_spell(&self, a: Act) -> bool { (a as usize) < self.acts.n_spells }
+    /// The rule an action plays (F5.11): a copy's base spell, else the action itself.
+    pub fn rule(&self, a: Act) -> Act { if self.is_spell(a) { self.spells[a as usize].rule as Act } else { a } }
 }
 
 static DATA: OnceLock<Data> = OnceLock::new();
@@ -234,7 +243,6 @@ fn load() -> Data {
             construct: if s.construct.unwrap_or(false) { Some(constructs_by_id[&s.id]) } else { None },
             castable: s.castable.unwrap_or(true), forbidden: s.group == "forbidden",
             alignment_cost: s.alignment.as_ref().map(|t| raw.alignment_cost[t]),
-            immediate: s.immediate.unwrap_or(true),
             release: s.release.clone(),
             exposes: s.exposes.unwrap_or(false),
             physical: s.physical.unwrap_or(false),
@@ -244,9 +252,14 @@ fn load() -> Data {
             drain_keep: s.drain_keep.unwrap_or(false),
             poison: s.poison.as_ref().map(|p| (p[0], p.get(1).copied().unwrap_or(3.0) as i32)),
             hits: s.hits.map_or(1, |h| (h as i32).max(1)),
+            rule: 0,
+            delay: s.delay.map(|n| (n as i32).max(1)),
         });
     }
     let spell_index: HashMap<String, usize> = spells.iter().enumerate().map(|(i, s)| (s.id.clone(), i)).collect();
+    for (i, s) in raw.spells.iter().enumerate() {
+        spells[i].rule = match &s.rule { Some(r) => *spell_index.get(r).unwrap_or_else(|| panic!("spell {}: unknown rule {r}", s.id)), None => i };
+    }
     let constructs: Vec<Construct> = raw.constructs.iter().map(|c| Construct {
         action: match c.action.as_str() { "strike" => ConstructAction::Strike, "heal" => ConstructAction::Heal, _ => ConstructAction::Spell },
         power: c.power, reduction: c.reduction, threshold: c.threshold, burst: c.burst, max_exchanges: c.max_exchanges,
@@ -277,7 +290,7 @@ fn load() -> Data {
 fn build_acts(spells: &[Spell]) -> Acts {
     let n = spells.len();
     let mut names: Vec<String> = spells.iter().map(|s| s.id.clone()).collect();
-    for b in ["strike", "guard", "reclaim", "hold", "release", "frozen", "cancel"] { names.push(b.to_string()); }
+    for b in ["strike", "guard", "reclaim", "hold", "release", "frozen", "cancel", "break_free"] { names.push(b.to_string()); }
     let (strike, guard, reclaim) = (n as Act, n as Act + 1, n as Act + 2);
     let basics = [strike, guard, reclaim];
     let basic_names = ["strike", "guard", "reclaim"];
@@ -323,5 +336,5 @@ fn build_acts(spells: &[Spell]) -> Acts {
         for c in id.chars() { h = h.wrapping_mul(31).wrapping_add(c as u32); p = p.wrapping_mul(31); }
         (p, h)
     }).collect();
-    Acts { n_spells: n, strike, guard, reclaim, hold: n as Act + 3, release: n as Act + 4, frozen: n as Act + 5, cancel: n as Act + 6, names, parts, is_bundle, bundles_by_count, tie, index }
+    Acts { n_spells: n, strike, guard, reclaim, hold: n as Act + 3, release: n as Act + 4, frozen: n as Act + 5, cancel: n as Act + 6, break_free: n as Act + 7, names, parts, is_bundle, bundles_by_count, tie, index }
 }

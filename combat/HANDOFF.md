@@ -23,7 +23,7 @@ The minigame is wired in: every `challenge combat` and `challenge duel` a player
   - A fighter's level shows as the average of their six skills.
   - The UI asks `fightAhead(key)` instead of reading `firstCheck`, so fights inside `if` branches play too.
 - **After a change here:**
-  1. Rebuild the bundle (and, after a Rust change, the wasm: `node tools/build.mjs`, with cargo on PATH; then `node tools/golden.mjs`, and `update` when the change is meant).
+  1. Rebuild the bundle (and, after a Rust change, the wasm: `node tools/build.mjs`, with cargo on PATH; then `node tools/parity.mjs` and the fixtures, `node --test setup/*.test.mjs`).
   2. Run `node --test test/combat-bridge.test.js`.
   3. Run `grim diff`: fights change the golden games. When the change is meant, refresh the baseline.
 
@@ -37,6 +37,154 @@ Creatures, the worn kit and lessons. Tests: `setup/expansion.test.mjs`; the desi
 - **Modifiers:** `kit.mods` = `{hp, mana, cost, costDelta, onCast, onDefend, taken, takenAll}`, from the player's worn items (`fightOptions({player: {mods}})`) or a foe loadout's `mods:`. Groups (`forbidden`, `umbral`, `nonhuman`…) are resolved by `expandMods` against the opponent: `taken … from nonhuman` becomes `takenAll` only against a creature.
 - **Foes:** `FOES[id].pronouns` (`she`, `he`); creatures are "it" by default.
 - **Card decisions** (`EVENTS` in `setup/foes.mjs`): `tutorial: [coach keys]` (a lesson: coach marks from `fight.coach.<key>`, "Skip the lesson" settles as a draw) and `stakes: 'none'` ("Walk away"). Either zeroes the result's deltas and follow-ups (`src/combat.js` `fightResult`).
+
+## F5.11-plan.1: duel terms and the spell redesign (2026-10-21): carry over to the main game
+
+The plan is `docs/minigame-combat-f5.11-plan.1-2026-10-21.md`. Rules version `spells-v2 F5.11-plan.1`. The rules, the AI
+and the fight text live in the core and the bundle. This list is what the main game's own code and translations pick up.
+
+- **Names** (ids unchanged): Strike → **Impulse**, Guard → **Parry**, Reclaim → **Refocus**, physical → **Impact** damage,
+  Distil → **Distill** (`purify`; content via migration 0041). There is a new basic, **Breaking Free** (`break_free`), the
+  only move while Bound. Its icon is `docs/action-icons/break_free.svg`.
+- **Resolve order** (`rust/core/src/rules.rs` header):
+  1. Payment.
+  2. Both sides' preparations.
+  3. Attacks, with Haste's Impulse, then Shadowstep breaks.
+  4. Hostile applications (`landing()`: blocked, landed or reflected, the same for both sides and both orders).
+  5. Inevitable tolls, then hits.
+  6. Then Refocus, scheduled hits, constructs, poison, Mend, the Lodestar heal and clocks.
+- **Damage priority:** a mature Lodestar negates any damage. Next come inevitable hits: attached poison and Torment's toll
+  skip every defence. Last come the ordinary defences.
+- **Spells** (numbers in `setup/roster.mjs`):
+  - Flame: 20 damage at every rank, for 10/9/8 Mana. Mend: heals 18/20/22 (the plan's 24/27/30, nerfed in balance), for
+    10/9/8.
+  - Hoarfrost: 20 damage for 8 Mana.
+  - Brace: takes 80% off for 2 exchanges; Omen and Slow Fall pierce it.
+  - Bramble: 4 damage now, then Bind 1 next exchange, for 12 Mana (the plan's 10 damage for 10, nerfed in balance); no
+    construct. Ward and Shadowstep stop both parts; Reflect returns both.
+  - Every Bind starts next exchange. Breaking Free blocks a new Bind.
+  - Tailwind: 10 Impact, +15 for each consecutive recast (10/25/40/55…; the plan's 20 + 10, changed in balance), for 5
+    Mana; any other move resets the chain.
+  - Moonwell banks 10 a gathering (was 16).
+  - Refocus gathers all the flux, and flux is 2/3 of the Mana spent, as before (`FLUX_RATIO`, now pinned by a test).
+  - Wildfire: the cast and each Hold hit for 15, burn the caster 2/4/6… and bank 15. The release is 15 plus the bank, and
+    Ward stops half of it.
+  - Omen: 20 at t+2 and 20 at t+3. Hits due on the same exchange merge.
+  - Haste, now **Countertempo**: no bundles. While it's up, an eligible spell (no damage of its own, no schedule, no
+    channel) adds one automatic Impulse.
+  - Compel: captures the target's move of that exchange and forces it for the next 3. A move that can't be played is a
+    lost turn. Ward, Shadowstep and Reflect apply as usual; two Compels cancel. Control order: frozen, then Bound, then
+    Compelled, then a channel.
+  - Lodestar: kindled now, it matures 7 exchanges later. A mature Lodestar is a Ward plus damage negation, then heals 20.
+    Only one can be pending at a time.
+  - Heartprice: turns all ready Mana into HP, once a fight; healing is locked after, except Rime's rescue.
+  - Eclipse: damage taken becomes Mana, 1:1, for 3 exchanges.
+  - Venom: ticks now and next exchange. Ticks are inevitable, and nothing cures them.
+  - Acorns: 10 now and 10 next exchange.
+  - The Long Wait: 24 spell damage and 24 Impact.
+  - Rewards: Glamour, Rapport and Sleight pay in tranches of full, then half, then nothing.
+  - New creature-only row: `beetle_flame` (10 damage, 6 Mana, `rule: 'flame'`).
+- **State fields:**
+  - `actors[i].compelAction`, the captured move.
+  - `actors[i].tranches`.
+  - The omen entries' `impact` and `bounced`.
+  - A new event, `applied` `{side, id, outcome}`.
+- **Kits** (feedback 2026-10-21, `COMBAT_TUNING.kits`):
+  - Capstones (club and job spells, `capstone:` on the row) arrive one per gate at 30 / 40 / 60. The first is the
+    loadout's best (a named character's place). The second is its best of the other kind, so a kit holds one club and one
+    job, three at most.
+  - A capstone with no combat effect (Index, Rapport, Quickquill) still takes its place.
+  - Hidden spells (the hidden pool and hidden courses) arrive one every 10 levels from 30, as many as the loadout lists.
+  - Iconic spells and named grants keep their own levels.
+  - This replaces the extras gates 20 / 34 / 46 / 58 and the place gate at 16.
+  - Every class and character foe changes below level 30 and many above it, so `grim diff` moves.
+- **Balance among humans** (feedback 2026-10-21; `tools/human-study.mjs`, engine against engine at depth 5, tiers
+  20/45/70 ±4): the numbers above, the kit gates below, and the Showman's job (Tailwind before Rapport). The spread of class
+  win rates went from sd 20 to 14; the Healer (92% at 45) and the Hollow adept (82% at 70) stay strong, and the Scholar
+  (16% at 45) and the Illusionist (19% at 70) weak.
+- **Browser build fix:** the wasm `has()` export listed only 13 effects. Asking it about `bound` or `poison` panicked,
+  and the fight screens ask about `bound` on every render. Its table is now typed by the core's effect count.
+- **Tests:** the frozen goldens are gone (`tools/golden.mjs`, `test/golden.json`, `rust/core/tests/fights.jsonl`).
+  `tools/parity.mjs` plays random fights, searches and seeded AI fights through native and wasm and needs no refresh.
+  `setup/plan1.test.mjs` holds the plan's fixtures; Compel's tests are rewritten in `setup/compel.test.mjs`.
+- **Main game, done here:**
+  - `src/combat-ui.js`:
+    - `forcedLegal` includes `break_free`.
+    - Bound forces the menu (`fight.bound`); Haste no longer does.
+    - `compelAction` drives the forced slots, and `incomingCompel` returns `fight.compelSeize`.
+    - The Lodestar no longer draws a shield on the HP bar. The track forecasts it the way it does an Omen: its icon
+      and its heal in green (`.tl-hit.heal`, title `fight.lodestarUp`) on the exchange it matures.
+    - A forecast due past the track's last column now shows in that column, with `›` and its exchange
+      (`.tl-hit.later`).
+    - Tailwind's row shows `fight.tailwindChain`.
+    - Bound and poison rows show the spell that applied them, Bramble's or Venom's icon and name (`appliedBy`), not a
+      question mark.
+    - Omen rows use the blow's own id (`o.id`).
+  - `src/i18n.js` and zh-CN `ui.lang`:
+    - the coach lines and `fight.flux` / `manaBar` use the new names;
+    - `fight.haste`, `fight.bound`, `fight.compelSeize` and `fight.compelledLost` are new or reworded;
+    - `compelIncoming`, `compelIncomingLost` and `compelWard` are gone.
+- **Main game, left:**
+  - `src/combat-ui.js` still has dead bundle code: the `bundle:` icons in `actionIcon` and the `.bundle-icons` style.
+    Nothing produces those ids now.
+  - `fight.shield` / `fight.shieldNote` are unused unless a construct shield comes back.
+
+## F5.11: Compel and the creature pass (2026-10-20): carry over to the main game
+
+The rules and the AI live in the core and reach the game through the bundle; this list is what the main game's own code
+(`src/combat-ui.js`, `src/combat.js`, `src/i18n.js`) and its translations must pick up by hand.
+
+- **Compel** (core, `rust/core/src/rules.rs`):
+  - It can't be cast in the fight's first exchange (`unavailable.firstExchange`: "Not in the first exchange").
+  - Only Ward stops it; Shadowstep no longer does.
+  - A compelled Ward plays for that exchange and ends the Compel at once: no lock follows a Compel whose rewritten move is a
+    Ward, and a side already compelled whose repeat is a Ward is free from the next exchange.
+  - 18 Mana (was 16), to counter the net buff (Shadowstep no longer stops it). Engine against engine at equal level, levels
+    20–60, classes beat the man in grey 70% under the old rules, 68% under the new at 16 Mana, and 71% at 18.
+  - **Main game:** `src/combat-ui.js` `incomingCompel` must drop its `has(game, 0, 'shadowstep')` early return (only Ward
+    blocks now). The core's `d.compel.immediate` and `d.shadowstep` texts changed: run `grim i18n zh-CN` and refill them.
+- **New reason keys** in `web/core.mjs` `UNAVAILABLE`: `bound` (Root/Web's "Bound: no stepping aside or bracing", untranslated
+  until now) and `firstExchange`. They reach `locales/<lang>/combat.lang` through `grim i18n`.
+- **Bench Compel fix** (`web/app.mjs`), ported from `src/combat-ui.js`, so the game needs nothing: a compelled player sees
+  only the forced repeat, or a lost turn ("cancel") they can commit when the repeat can't be paid (`forcedLegal`); the
+  action-state line and future slots say which.
+- **Creature spells are real spells** (`setup/roster.mjs`). The aliases are gone (`as`, `kit.labels`, `mods.costDelta`,
+  `telegraph`). In their place:
+  - **Copies** (`rule: '<spell>'`) play an existing rule at their own numbers, name and lines: Skitter and Fade
+    (Shadowstep), Burrow and Hide (Brace), Bark and Carapace (Ward). The core compares a spell's `rule` wherever a copy
+    counts (Ward's block, Bound, Compel's Ward, on_defend).
+  - **Delayed blows** (`delay: n`, `amounts.hit`, optional `guardPierce` / `bracePierce`): Maul, Charge, Bough, Slow Fall
+    and The Long Wait. They're cast in the open and land n exchanges later as an Omen does. Ward on that exchange stops
+    one. `state.actors[i].omens[j].id` names the spell (Omen's own have `id: 'omen'`).
+  - **New moves:** Pinch, Acorns (two hits), Threads (bind 1), Fade, and two constructs of their own, Brood (the Spinner)
+    and Thicket (the elder oak).
+  - **Descriptions:** Root, Web, Threads, Venom, Filch, Roar and Swarm now have core descriptions (`d.bind`, `d.poison`,
+    `d.drain`, `d.drain.keep`, `d.hits`, `d.hits.physical`), and so do delayed blows (`d.delayed`, `d.stops.*`).
+  - **Main game:**
+    - `src/combat-ui.js` `telegraphed` / the `fight.windUp*` notice reads the alias labels and never fires now. Replace it
+      with the bench's `incoming()` (`web/app.mjs`): one line per blow on its way (the foe's `omens`), saying when it lands,
+      for how much, and what stops it (`describeData(...).stops`). New `UI_EN` keys with English fallbacks in the bench:
+      `fight.incomingNow`, `fight.incomingLater`, `fight.whenNext`, `fight.whenIn`; style `.intent.incoming` (`.now` when
+      it lands this exchange).
+    - The track's omen rows should use `o.id` for icon and name.
+    - `labelsOf` / `sideLabel` can stay: they fall back to the spell's own label.
+  - **Button summaries** (`web/brief.mjs`) go by template for copies, delayed blows, constructs, bind, poison, drain and
+    multi-hit. New `brief.*` keys: `nextTurn`, `inTurns`, `bind`, `perTurn`, `hits`, `scatter`.
+  - **Flavor** (`setup/flavor.mjs`): new lines for the new spells. A delayed blow's `end` line lands it, and its `ko`
+    finishes the fight. A copy's effect lines and end lines follow its own spell.
+- **The weakened Spinner** keeps the Spinner's level (EVENTS `nature: ['even']`) and starts hurt instead: her loadout's
+  `start: {hp}` reaches `createState` as `kit.start` when no `opponentStart` is given. She keeps Brood.
+- **Forbidden practitioners** are generated like the forbidden classes. The thornwitch is a Hollow adept around Siphon with
+  Bramble and her thorn wand; the masked circle is an Underground tough's shape around Compel. The Outcast is `maxed`: every
+  skill 100 at any level, with his grimoire.
+- **The shadow stag** is a beast now (`race: 'beast'`: no healing), with Fade instead of Shadowstep.
+- **Curriculum budget** (`COMBAT_TUNING.kits.curriculum`, `curriculumRanks`): a generated kit's three-rank course spells
+  (Flame included) share a level's budget of ranks, about 14 at level 65 (feedback 2026-10-20). Ward and every other
+  spell come on top. Rank-ups follow a fixed weighted-random order per loadout (its salt), so a kit only gains ranks as it
+  levels. Fixed kits (special foes) and every-spell access keep `courseRank(level)`. This changes every class and character
+  foe in the main game: `grim diff` moves, and the combat goldens with it.
+- **Idle** (the intro's practice dummy, for the World Expansion session's lesson script): a kit with `idle: true` may commit
+  `cancel` as a normal move. It does nothing, and the dummy still takes hits.
 
 ## Where things stood (2026-10-17)
 
@@ -195,7 +343,7 @@ Port the fight screen from `web/app.mjs` and its look from `web/style.css` as an
 
 - **Minigame:**
   - `cargo test --release` (in `rust/`);
-  - `node tools/golden.mjs`;
+  - `node tools/parity.mjs` and `node --test setup/*.test.mjs web/*.test.mjs`;
   - `node --test setup/ web/` (kits, the campaign bridge, icons);
   - `node tools/event-coverage.mjs` (every combat card has a decision, a context and an audience).
 - **Main game:**
@@ -210,7 +358,7 @@ Port the fight screen from `web/app.mjs` and its look from `web/style.css` as an
 - **The loop:**
   1. Try an idea as a variant (`tools/variants/`) at depth 4, with `node tools/suite.mjs <name> --depth 4 --variant … --trace --seeds 3`.
   2. Read `tools/report.mjs`, `tools/action-report.mjs` and `tools/trace-digest.mjs`. The digest flags stalls, repetition and one-sided fights.
-  3. Bake the change in, bump `RULES_VERSION`, run `tools/build.mjs`, then `tools/golden.mjs update`.
+  3. Bake the change in, bump `RULES_VERSION`, run `tools/build.mjs`, then `tools/parity.mjs` and the fixtures.
   4. Verify with `tools/playtest.sh <name> 5`.
 - **Simulated players are crude.** Human playtests are the judge.
 
