@@ -28,8 +28,8 @@ command -v git >/dev/null && ok "git $(git --version | awk '{print $3}')" || mis
 command -v ssh >/dev/null && ok "ssh" || miss "ssh"
 if command -v node >/dev/null; then
   v="$(node -p 'process.versions.node')"
-  [ "${v%%.*}" -ge 20 ] && ok "node $v (for the tools; deploys don't need it)" || warn "node $v: the tools need 20+"
-else warn "no node: the tools need Node.js 20+ (deploys don't)"; fi
+  [ "${v%%.*}" = 24 ] && ok "node $v (for the tools; deploys don't need it)" || warn "node $v: use npm scripts to select the project's Node 24"
+else warn "no node: the tools need Node.js 24 (deploys don't)"; fi
 LIVE="$DEST:$BASE/repo.git"
 if git config --get-all remote.origin.pushurl 2>/dev/null | grep -qxF "$LIVE"; then ok "git push also deploys (origin pushes to $LIVE)"
 elif git remote get-url live >/dev/null 2>&1; then warn "deploys with: git push live main (deploy/setup.sh $DEST makes git push deploy too)"
@@ -72,7 +72,7 @@ for c in git curl tar xz sha256sum; do
 done
 
 node_ok() { local n; n="$(command -v node || true)"; [ -z "$n" ] && [ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh" && n="$(command -v node || true)"
-  [ -n "$n" ] && [ "$("$n" -p 'process.versions.node.split(".")[0]')" -ge 20 ] && echo "$n"; }
+  [ -n "$n" ] && [ "$("$n" -p 'process.versions.node.split(".")[0]')" = 24 ] && echo "$n"; }
 install_node() {
   local arch file sum dir tmp
   case "$(uname -m)" in x86_64) arch=x64 ;; aarch64|arm64) arch=arm64 ;; *) echo "no Node.js build for $(uname -m)"; return 1 ;; esac
@@ -92,7 +92,7 @@ if n="$(node_ok)"; then ok "node $("$n" -v) ($n)"
 elif [ "$FIX" = 1 ] && [ "$ADMIN" = 1 ] && command -v curl >/dev/null && command -v xz >/dev/null && install_node && n="$(node_ok)"; then ok "node $("$n" -v) (installed into /opt/node)"
 else
   have="$(command -v node >/dev/null && node -v)"
-  miss "Node.js 20+${have:+ (found $have)}$([ "$FIX" = 1 ] || echo ': --fix installs the current LTS')"
+  miss "Node.js 24${have:+ (found $have)}$([ "$FIX" = 1 ] || echo ': --fix installs Node 24')"
 fi
 
 free_mb="$(df -Pm / | awk 'NR==2{print $4}')"

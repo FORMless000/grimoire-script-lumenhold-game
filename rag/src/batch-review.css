@@ -1,0 +1,88 @@
+/* Reuse the game's palette, art, typography, cards, buttons, choices and chips. */
+body.review {overflow:auto;height:auto;min-height:100vh;color-scheme:dark}
+.review #app {height:auto;min-height:100vh}
+.review .top {position:sticky;top:0;z-index:8;flex-wrap:wrap}
+.review .brand span {display:block;font:11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.review .when {font-size:17px}.review .top-actions {flex-wrap:wrap}
+.review .top .brand {display:block}.review .top-actions #language{width:auto;max-width:115px;padding:7px;font-size:12px}
+.review .translation-warning {border:1px solid rgba(217,180,90,.5);border-radius:10px;padding:10px 12px;margin:12px 0;color:var(--gold-2);font-size:12px;line-height:1.7;background:rgba(217,180,90,.07)}
+.review a {color:var(--gold-2)}.review a.btn {text-decoration:none;font-size:12px;display:inline-flex;align-items:center}
+.review .btn {font-size:12px;padding:9px 12px}.review .btn:disabled {opacity:.4;transform:none}
+/* The game also uses .ghost for absolutely positioned cards behind its deck. */
+.review .btn.ghost {position:static;inset:auto;opacity:1;transform:none}
+.review .btn.ghost:disabled {opacity:.4}
+.notice {border-bottom:1px solid var(--line);padding:10px 22px;color:var(--muted);font-size:12px;line-height:1.6;background:rgba(22,26,53,.75)}
+.error:empty,.save-status:empty {display:none}.error {padding:10px 22px;color:var(--bad);white-space:pre-wrap}
+.save-status {padding:7px 22px;background:var(--night-2);color:var(--good);font-size:12px}
+.review-layout {display:grid;grid-template-columns:220px minmax(0,1fr);position:relative;z-index:1}
+.review-nav {border-right:1px solid var(--line);padding:16px 12px;height:calc(100vh - 130px);overflow:auto;position:sticky;top:103px}
+.review label {display:block;font-size:12px;color:var(--muted);line-height:1.6;margin:8px 0 5px}
+.review input,.review select,.review textarea {font:inherit;background:var(--night);border:1px solid var(--line);border-radius:8px;color:var(--text);padding:9px;max-width:100%;width:100%;font-size:13px}
+.review textarea {min-height:95px;resize:vertical;line-height:1.6}
+.review-nav button {display:block;width:100%;text-align:left;padding:10px;margin:6px 0;background:transparent;border:1px solid transparent;border-radius:10px}
+.review-nav button:hover,.review-nav button.on {background:var(--night-3);border-color:var(--line)}
+.review-nav button.on {border-left:3px solid var(--gold)}
+.review-nav strong {font-size:11px;display:block;color:var(--gold-2);margin-bottom:4px}.review-nav span {font:15px var(--serif);line-height:1.2}
+.review-content {display:grid;grid-template-columns:minmax(340px,.9fr) minmax(360px,1.1fr);gap:26px;padding:22px 28px;min-width:0;align-items:start}
+.story-panel,.audit-panel {min-width:0}.story-panel {max-width:620px;width:100%;margin:auto}
+.presentation-id {display:flex;align-items:center;gap:10px;margin:0 0 12px;color:var(--gold-2);font:600 18px var(--display)}
+.presentation-id .muted {font:12px var(--sans)}
+.review .deck {width:min(440px,100%);max-height:none;min-height:0;margin:0 auto;flex:none}
+.review .card {position:relative;inset:auto;cursor:auto;user-select:text;touch-action:auto;will-change:auto;min-height:440px;transition:none}
+.review .card-art {aspect-ratio:400/155;background:var(--night-3)}
+.review .card-body {overflow:visible;flex:none;min-height:235px;gap:12px;padding:20px 23px}
+.review .card-body h2 {font-size:30px;line-height:1.08}.review .card-body .text {font-size:19px;line-height:1.5}
+.review .card-body .actor-row {margin-top:5px}.review .card .scene-note {line-height:1.5}
+.review .card .chips {margin-top:5px}.review .card .chip {font-size:11px}
+.review .condition {color:var(--ink-2);font:12px/1.6 var(--sans);overflow-wrap:anywhere;padding:8px 10px;background:rgba(42,34,56,.06);border-radius:8px}
+.section-heading {display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 10px}
+.section-heading h2,.section-heading h3 {font:600 21px var(--display);margin:0;color:var(--gold-2)}
+.section-heading select {max-width:170px}.muted {color:var(--muted);font-size:12px;line-height:1.6}
+.review .choices {width:100%;flex-wrap:wrap;margin:10px 0 18px}.review .choice {min-width:140px;cursor:default;user-select:text}
+.review .choice:hover {transform:none;border-color:var(--line)}
+.review .choice {cursor:pointer;display:flex;flex-direction:column;gap:9px;align-items:stretch;text-align:left;white-space:normal;min-width:0;overflow-wrap:anywhere;font:14px/1.5 var(--sans)}
+.review .choice.selected {border-color:var(--gold);background:rgba(217,180,90,.12)}
+.choice-effects {display:flex;flex-wrap:wrap;gap:5px;font:11px/1.6 var(--sans)}
+.choice-effects .effect {display:block;background:rgba(127,209,139,.08);border:1px solid var(--line);border-radius:5px;padding:3px 6px}
+.preview-controls {margin:10px 0 18px}.variant-controls {display:flex;align-items:end;gap:8px}.variant-controls>div {flex:1;min-width:70px}.variant-controls .btn {flex-shrink:0;margin-bottom:1px}
+.option-outcome select {background:var(--parch);color:var(--ink);border-color:rgba(42,34,56,.3)}.option-outcome label {color:var(--ink-2)}
+.review .event-attributes {border:1px solid var(--line);border-radius:10px;padding:10px 13px}.event-attributes td {white-space:pre-wrap}.event-attributes th {vertical-align:top;width:30%;font-family:ui-monospace,monospace}.event-attributes h4 {color:var(--gold-2);margin:15px 0 0}
+.option-outcome {background:var(--parch);color:var(--ink);border-radius:14px;margin:12px 0;padding:17px 20px;overflow-wrap:anywhere;color-scheme:light}
+.option-outcome h4 {font:600 18px var(--display);margin:0 0 12px}.option-outcome .say {font:18px/1.5 var(--serif);margin:9px 0;white-space:pre-line}
+.option-outcome .muted {color:var(--ink-2)}.option-outcome .chip {margin:3px 3px 3px 0;font-size:11px}
+.branch {border-left:2px solid rgba(90,78,102,.28);padding-left:13px;margin:13px 0}
+.branch-title {font:600 11px/1.6 var(--sans);letter-spacing:.02em;color:var(--ink-2);overflow-wrap:anywhere}
+.review pre {white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:9px;padding:13px;max-height:520px;overflow:auto;margin:10px 0}
+.review details {margin:14px 0}.review summary {cursor:pointer;color:var(--gold-2);font-size:13px;line-height:1.6}
+.review .tabs {margin-bottom:18px;position:sticky;top:95px;background:var(--night);z-index:3}.review .tabs button {padding:12px}
+.panel-section {background:rgba(22,26,53,.7);border:1px solid var(--line);border-radius:14px;padding:17px 20px;margin:0 0 18px}
+.panel-section h2,.panel-section h3 {font:600 23px var(--display);color:var(--gold-2);margin:0 0 12px}
+.panel-section p {font-size:13px;line-height:1.65}.panel-section legend {color:var(--gold-2);font-weight:600}
+.panel-section fieldset {border:0;padding:0;margin:0}.panel-section .actions {display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.decisions {display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.decisions button {flex:1;min-width:78px;background:transparent;border:1px solid var(--line);border-radius:8px;padding:10px;font-size:12px}
+.decisions button.selected {border-color:var(--gold);background:rgba(217,180,90,.16);color:var(--gold-2)}
+.decisions button[data-value="accept"].selected {border-color:var(--good);color:var(--good);background:rgba(127,209,139,.12)}
+.decisions button[data-value="reject"].selected {border-color:var(--bad);color:var(--bad);background:rgba(255,138,128,.1)}
+.rating-grid {display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.rating-grid label {font-size:12px}
+.review .saved-initial {padding:12px 15px;border-left:2px solid var(--gold);background:rgba(217,180,90,.07);font-size:13px;line-height:1.7;white-space:pre-wrap}
+.evidence-results button {display:block;width:100%;text-align:left;margin:6px 0;border:1px solid var(--line);border-radius:8px;background:var(--night-2);padding:9px;font-size:12px}
+.evidence-results strong {display:block;color:var(--gold-2);font-weight:500;margin-bottom:3px}
+.evidence-hash {font:10px ui-monospace,monospace;color:var(--muted);overflow-wrap:anywhere;line-height:1.6}
+.citation {font-size:12px;line-height:1.6;margin:8px 0;display:flex;gap:8px;align-items:center;overflow-wrap:anywhere}
+.review .badge {display:inline-block;padding:4px 8px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);border-radius:20px;color:var(--muted)}
+.review .badge.good {color:var(--good);border-color:rgba(127,209,139,.3)}.review .badge.bad {color:var(--bad);border-color:rgba(255,138,128,.3)}
+.finding {border-top:1px solid var(--line);padding:14px 0}.finding h4 {font-size:13px;margin:0 0 6px}.finding p {font-size:12px;white-space:pre-wrap}
+.comparison-view {grid-column:1/-1;min-width:0}.comparison-grid {display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.comparison-grid>section {min-width:0}.comparison-grid .story-panel {margin:12px auto}.comparison-grid .card-body .text {font-size:17px}
+.review table {border-collapse:collapse;width:100%;font-size:12px}.review th,.review td {text-align:left;border-bottom:1px solid var(--line);padding:10px 7px;overflow-wrap:anywhere}
+.locked-report {grid-column:1/-1;overflow:auto}
+@media(min-width:1600px){.review-content{max-width:1600px;margin:0 auto;gap:40px}.review-layout{grid-template-columns:240px minmax(0,1fr)}}
+@media(max-width:1150px){.review-layout{grid-template-columns:170px minmax(0,1fr)}.review-content{grid-template-columns:minmax(0,1fr);padding:20px}.audit-panel{max-width:620px;margin:auto;width:100%}.review .tabs{top:92px}.review-nav{top:120px}.review .top-actions .btn{padding:7px}.comparison-grid{grid-template-columns:1fr}}
+@media(max-width:620px){.review-layout{display:block}.review-nav{position:relative;top:0;height:auto;max-height:220px;border-bottom:1px solid var(--line);padding:8px 12px}.review-nav #nav{display:flex;gap:7px;overflow-x:auto}.review-nav button{flex:0 0 145px;margin:3px 0}.review-nav input,.review-nav select{padding:6px}.review-nav label{margin-top:3px}.review .top{position:relative;padding:12px;gap:12px}.review .top-actions{width:100%}.review .brand{font-size:23px}.review .date{min-width:130px}.review .when{font-size:14px}.review-content{padding:16px 12px;gap:16px}.review .tabs{top:0}.notice{padding:9px 12px}.rating-grid{gap:0 10px}.panel-section{padding:15px}.review .card-body{padding:18px}.comparison-grid{gap:12px}}
+.trace-content {max-width:1450px;margin:24px auto;padding:0 24px}.trace-content>p {line-height:1.7}.trace-table {overflow-x:auto;margin:20px 0}.trace-table td {min-width:100px}.trace-table td:nth-child(2),.trace-table td:nth-child(3){min-width:190px}.trace-filters {display:grid;grid-template-columns:1fr 1fr 1fr 2fr;gap:15px}.trace-error{color:var(--bad)}
+@media(max-width:620px){.trace-content{padding:0 12px}.trace-filters{grid-template-columns:1fr 1fr}}
+.review .rating-choices button {min-width:38px;font-size:18px}.review .world-fit-choices button {min-width:80px}.review .panel-section fieldset {margin-bottom:18px}.review .panel-section legend {font-size:14px}.review .world-fit-choices button[data-value=yes].selected {color:var(--good);border-color:var(--good)}.review .world-fit-choices button[data-value=conflicted].selected {color:var(--bad);border-color:var(--bad)}
+/* Reserve autosave feedback space: a textarea blur must not move the clicked control. */
+.review .save-status {min-height:32px;line-height:18px;box-sizing:border-box}.review .save-status:empty {display:block;visibility:hidden}
+.review-group-heading {font:600 15px/1.5 var(--display);color:var(--gold-2);border-top:1px solid var(--line);padding-top:14px;margin:18px 4px 8px}.review-chain-heading {font-size:12px;color:var(--muted);margin:14px 4px 5px}.chain-position {color:var(--gold-2);font-size:13px}
+@media(max-width:620px){.review-nav #nav .review-group-heading{flex:0 0 110px;margin:3px 0;padding:9px 5px;border-top:0;border-left:1px solid var(--line)}.review-nav #nav .review-chain-heading{flex:0 0 65px;padding:8px 4px}}

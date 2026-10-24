@@ -374,18 +374,8 @@ details.adv .adv-check input { margin-top: 2px; width: auto; }
 .pv i.pos { color: var(--good); } .pv i.neg { color: var(--bad); } .pv i.more { color: var(--muted); }
 .pv .ico { width: 12px; height: 12px; }
 .pv.multi { flex-direction: column; flex-wrap: nowrap; gap: 1px; min-width: 0; }
-.pv.multi .pv-more { flex-basis: auto; }   /* the reveal goes below the outcome rows, not beside them */
-.pv .pv-more em { overflow-wrap: anywhere; }
 .pvl { display: flex; flex-wrap: wrap; gap: 2px 6px; align-items: center; }
 .pvl b { font-weight: 700; color: var(--gold-2); margin-right: 2px; }
-/* The "…" spelled out: on hover (mouse), a long-press (touch, .show-more) or a selected menu tile. */
-.pv .pv-more { display: none; flex-basis: 100%; flex-direction: column; gap: 1px; margin-top: 2px; font-size: 11.5px; font-weight: 500; color: var(--muted); letter-spacing: 0; white-space: normal; text-align: left; }
-.pv .pv-more em { font-style: normal; }
-.pv .pv-more em::before { content: '↳ '; opacity: .6; }
-.pv .pv-more em small { font-size: 10.5px; color: var(--gold-2); opacity: .8; font-weight: 600; }
-@media (hover: hover) { .choice:hover .pv-more, .opt:hover .pv-more { display: flex; } .choice:hover .pv i.more, .opt:hover .pv i.more { display: none; } }
-.show-more .pv .pv-more, .opt.sel .pv .pv-more { display: flex; }
-.show-more .pv i.more, .opt.sel .pv i.more { display: none; }
 .choice, .opt { -webkit-touch-callout: none; }
 /* How to confirm, on the tile just picked (menus and origins). */
 .opt small.again { display: none; margin-top: 4px; color: var(--gold-2); font-weight: 600; }
@@ -394,7 +384,8 @@ details.adv .adv-check input { margin-top: 2px; width: auto; }
 .choices { flex-wrap: wrap; }
 .choice.up { flex: 1 1 100%; justify-content: center; border-color: rgba(120, 170, 255, .45); background: linear-gradient(180deg, rgba(60, 90, 160, .35), rgba(30, 40, 90, .35)); }
 .choice.up:hover:not(:disabled) { border-color: #8fb8ff; }
-.chip.check-part { background: rgba(230, 184, 74, .18); color: var(--gold-2); }
+.chip.check-part { background: #f8d98a; color: #5c3b00; box-shadow: inset 0 0 0 1px rgba(150, 100, 0, .45); }
+.dark .chip.check-part { background: rgba(240, 190, 80, .2); color: #ffd77a; box-shadow: inset 0 0 0 1px rgba(255, 210, 110, .35); }
 .meter.neg .fill { background: #7a5ac8; }
 .meter.pos .fill { background: var(--gold); }
 .meter .ico-pos { display: none; }
@@ -576,3 +567,47 @@ button.state.item:hover:not([disabled]) { border-color: rgba(255, 255, 255, .15)
 button.state.item[disabled] { cursor: default; }
 button.state.item.worn { border-color: rgba(240, 200, 120, .45); background: rgba(240, 200, 120, .06); }
 button.state.item.worn .left { color: #f0c878; }
+
+/* A choice stays compact (feedback 2026-10-24): the label may wrap; every other line (the roll's kind, one line per
+   outcome) stays on one line and is cut short, in full in the option's floating window (.tip). */
+/* Left and right always share the row, a phone included (feedback 2026-10-24: the card's prose keeps the height): they
+   shrink, and their one-line rows are cut short, rather than stack. */
+.choice.left, .choice.right { flex: 1 1 0; min-width: 0; }
+.choice .arrow { flex: 0 0 auto; }
+.choice .cb { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.choice.single .cb, .choice.up .cb { flex: 0 1 auto; }
+.choice.right .cb { align-items: flex-end; }
+.choice .chk, .choice .pv, .choice .pvl { display: block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.choice .pv i { margin-right: 6px; vertical-align: middle; }
+.choice .pv i:last-child { margin-right: 0; }
+.choice .pv.multi { display: flex; flex-direction: column; }
+.choice.right .pv.multi { align-items: flex-end; }
+.pvl b.o-win { color: #9fd4ff; } .pvl b.o-part { color: #ffc85a; } .pvl b.o-lose { color: #ff9f8f; }
+
+/* The floating window by the mouse (or the finger): what a button leaves out. */
+.tip { position: fixed; left: 0; top: 0; z-index: 9000; max-width: min(340px, calc(100vw - 16px)); padding: 10px 12px; border-radius: 12px;
+  background: rgba(14, 17, 36, .97); border: 1px solid rgba(217, 180, 90, .45); box-shadow: 0 10px 30px rgba(0, 0, 0, .5); color: var(--text);
+  font-family: var(--sans); font-size: 12px; line-height: 1.4; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity .12s; }
+.tip.on { opacity: 1; visibility: visible; }
+.tip p { margin: 4px 0 0; }
+.tip .tip-title { display: block; font-size: 13px; color: var(--gold-2); }
+.tip .tip-hint { color: var(--text); opacity: .9; }
+.tip .tip-lock { color: var(--bad); }
+.tip .tip-check .chk { display: inline; font-size: 12px; color: #f0a868; font-weight: 600; }
+.tip .chk svg, .tip .pv .ico { vertical-align: -2px; }
+.tip .pv { margin-top: 6px; font-size: 12px; }
+.tip .pv i .nm { font-weight: 500; font-size: 11px; color: var(--muted); margin-left: 3px; }
+.tip .pv.multi { gap: 3px; }
+.tip .tip-more { display: flex; flex-direction: column; gap: 1px; margin-top: 6px; color: var(--muted); }
+.tip .tip-more em { font-style: normal; }
+.tip .tip-more em::before { content: '↳ '; opacity: .6; }
+.tip .tip-more em small { font-size: 10.5px; color: var(--gold-2); opacity: .85; font-weight: 600; }
+/* The title screen's way to the combat test bench (/bench/). */
+.bench-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: inherit; }
+/* The card's body pans only when its text overflows (cardShell sets .scrolls); otherwise every move is the swipe's. */
+.card-body { touch-action: none; }
+.card-body.scrolls { touch-action: pan-y; }
+/* While the card leans one way, the other buttons step aside and that way's takes the whole row. */
+.choices.lean-left .choice.right, .choices.lean-left .choice.up, .choices.lean-right .choice.left, .choices.lean-right .choice.up { display: none; }
+.choices.lean-left .choice.left, .choices.lean-right .choice.right { border-color: var(--gold); background: var(--night-3); }
+.credits .version { font-weight: 600; letter-spacing: .02em; }

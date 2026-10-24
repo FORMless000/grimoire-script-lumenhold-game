@@ -212,7 +212,7 @@ const ATTACK_DEFENDED={evaded:'{foe} {fv:is|are} in the shadows: {name’s} {nou
 // What a lasting effect does, for "for N exchanges" sentences. {n} the exchanges it lasts; {x} its value where it has one.
 const EFFECT_WORDS={
  shadowstep:'{name} can’t be hit for {n}, until {name} {v:attacks|attack} or {v:gathers|gather} Mana.',
- haste:'For {n}, {name’s} spells without damage of their own also throw an Impulse.',
+ haste:'For {n}, {name’s} spells without damage of their own also throw an Impulse, and every other action also parries.',
  brace:'{name} {v:shrugs|shrug} off most of the damage for {n}.',
  reflect:'Spells cast at {name} bounce back for {n}.',
  torment:'Every move {foe} {fv:makes|make} costs {fobj} Health for {n}.',

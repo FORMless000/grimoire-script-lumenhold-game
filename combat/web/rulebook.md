@@ -7,7 +7,9 @@ listed in `../HANDOFF.md` ("F5.11-plan.1"). Where this file's older sections dis
 
 - **Names:** Impulse (`strike`), Parry (`guard`), Refocus (`reclaim`), Impact damage (was physical), Distill (`purify`).
   The new basic is Breaking Free (`break_free`), the only move while Bound.
-- **No bundles.** Haste is Countertempo: while it's up, an eligible spell adds one automatic Impulse.
+- **No bundles.** Haste is Countertempo: while it's up, an eligible spell adds one automatic Impulse, and every other action
+  parries for free (7 Mana, 2/3/4 exchanges; feedback 2026-10-24).
+- **Tailwind** hits for an Impulse's 9, +15 a chained cast, for 4 Mana +1 a chained cast.
 - **Resolve order:**
   1. Payment.
   2. Preparations.

@@ -7,15 +7,16 @@ description: Add or revise content for the Lumenhold Academy life-sim — events
 
 Content is data, not code: you write `.grim` blocks under `content/`, then format, build, lint, simulate and translate. You should not need to touch `src/`. The rules live in **`docs/authoring/`**; this skill is the workflow.
 
+In a prepared authoring trial, the supplied common/task/workflow packet overrides
+the normal retrieval, validation, translation and critic steps below. Stop at its
+operator checkpoints and keep experimental cards quarantined.
+
 ## 0. Load context (always)
 
 1. Read `docs/authoring/README.md`, `style.md`, `checklist.md` and `checks.md` (how every check and roll is pitched). Skim `schema.md` (the block table is generated from the parser). Read `docs/grimoire-script.md` fully the first time; afterwards keep §3 (expressions), §4 (effects) and §5 (how a month is built) at hand.
-2. Read `AGENTS.md` for the principles and where things live; numbers and rules are in `docs/design-v0.3.md` and `docs/authoring/`. It carries no lore: canon is only in the worldbook (`content/world/`), read through `grim brief` / `grim lorebook` (step 3).
-3. **Get a brief** for what you're writing. It contains the cast's voice, facts, schedules and relations, the place, the track, the arc, matching lore, **every card already written at that place or track or about that cast** (by id and title), and the most similar existing cards in full (same place or track first; `--examples N` for more, `--like id,id` to include named ones, such as the chain you're extending). Samples in `docs/authoring/briefs/`:
-   ```bash
-   node tools/grim.js brief --cast lyra,kael --place library --arc hollowstar --topic "what the batch is about" --out build/brief.md
-   ```
-4. Avoid duplicates and reuse what exists: `node tools/grim.js ids event` (and `flag`, `state`), `node tools/grim.js query event --grep <word>` (or a condition: `query event 'track == "tavern"'`), `node tools/grim.js query fact 'npc == "<id>"'`. Read a card you build on with `show <id>`, and see what leads to it and what it leads to with `graph <id>`. `node tools/economy.js --by event --freq` shows how often cards show and what they move; `docs/authoring/README.md` lists these tools.
+2. Read `AGENTS.md` for the principles and where things live; numbers and rules are in `docs/design-v0.3.md` and `docs/authoring/`. It carries no lore: canon is only in the worldbook (`content/world/`).
+3. **Retrieve context before writing.** Follow [the command guide](../../rag/AUTHORING.md); a frozen experiment follows its assigned packet instead.
+4. For ordinary writing, supplement retrieval to avoid duplicates and reuse what exists: `node tools/grim.js ids event` (and `flag`, `state`), `node tools/grim.js query event --grep <word>` (or a condition: `query event 'track == "tavern"'`), `node tools/grim.js query fact 'npc == "<id>"'`. Read a card you build on with `show <id>`, and see what leads to it and what it leads to with `graph <id>`. `node tools/economy.js --by event --freq` shows how often cards show and what they move; `docs/authoring/README.md` lists these tools.
 
 ## 1. Plan before writing
 

@@ -1,0 +1,6 @@
+#!/bin/sh
+# Lumenhold version stamp (installed by `node tools/version.js --install`; `npm install` installs it too): every commit
+# carries its own version, 0.3.<commit count>, in src/version.js and package.json (tools/version.js). Only those two
+# lines are staged. An amend keeps the count: the stamp is then one ahead (and --check says so); avoid amends.
+command -v node >/dev/null 2>&1 || { echo "pre-commit: node not found; the version is not stamped" >&2; exit 0; }
+exec node tools/version.js --next --stage >/dev/null

@@ -4,7 +4,7 @@
 #   enrolment. The Welcome asks first: left skips it, right plays along, and then each card leads straight to the next
 #   whichever side you take: Marrow's question (what is just? asked again on the eve of graduation, isolde_asks_again),
 #   the tour (where you meet Bram; following him shows you the places that matter, intro_places), the wrong tower (a
-#   negotiation lesson), lunch, Vey's tea (a check lesson), the purse, your room, the safety talk (slice_ward_lesson, so
+#   negotiation lesson), lunch, Vey's tea (a check lesson), your room, the safety talk (slice_ward_lesson, so
 #   you know Ward before the practice fight), the practice circle (a fight lesson, coached exchange by exchange) and your
 #   kit. Skipping never skips Ward: the safety talk then comes in its usual place, after enrolment.
 #   The lessons' checks are fair (even odds, pitched at a first-year's skill: feedback 2026-10-20), and their only
@@ -116,7 +116,6 @@ text: Your trunk has gone to the wrong tower. The house steward has a list, and 
   queue intro_lunch_alone now
   say: You haul it across two bridges and up ninety stairs. The steward ticks something on the list as you pass, satisfied that it was always right.
 > right: Talk her round
-  hint: A negotiation, as a lesson: a fair chance, and nothing more than your mood at stake. Until the negotiation game arrives, charm, lore and guile decide it.
   queue intro_lunch now
   queue intro_lunch_alone now
   challenge negotiate novice+:
@@ -178,11 +177,10 @@ tags: intro story
 scene: A corridor alcove, a sharp-eyed professor holding out an empty hand as if it held a teacup, a student hesitating.
 text: Professor Vey stops you in a corridor and offers you a cup of tea. There is no cup. There is no tea. She waits to see what you'll do. "Every attempt has its odds," she says pleasantly. "Skill moves them. Luck moves them less. Drink up."
 > left: Decline the tea
-  queue intro_purse now
+  queue intro_room now
   say: "No, thank you," you say. Vey sighs, drinks the tea that isn't there, and walks on. You feel as though you've failed something small.
 > right: Pretend to drink it
-  hint: A check, as a lesson: your guile, a fair chance, and nothing more than your mood at stake.
-  queue intro_purse now
+  queue intro_room now
   challenge deceive novice-:
     win:
       learn vey.tests
@@ -195,23 +193,6 @@ text: Professor Vey stops you in a corridor and offers you a cup of tea. There i
       learn vey.tests
       mood -tiny
       say: You laugh halfway through the sip. Vey sighs, theatrically. "Most do," she says. "I keep score, you know. Everyone starts at nought."
-
-@event intro_purse
-title: The Purse
-class: story
-tone: light
-trigger: queued
-art: pouch
-tags: intro story money
-scene: A student counting coins out of a small purse onto a dormitory blanket, a goblin's calling card among them.
-text: Your purse is lighter than it was: the bursar has taken this month's board, as he will every month. Among the coins is a calling card in green ink. "GRISK. Loans on friendly terms. Ask at the Newt."
-> left: Pocket it
-  queue intro_room now
-  say: You put the card away with the coins and decide to be careful. It is a good decision, for now.
-> right: Read Grisk's card
-  queue intro_room now
-  learn grisk.lender
-  say: Sixty crowns today, the back says, and twelve a month for six months. The arithmetic is very friendly indeed, to Grisk.
 
 @event intro_room
 title: Your Room
@@ -244,7 +225,6 @@ text: Professor Thorne has chalked a circle and stood a straw mannequin in it. "
   queue intro_kit now
   say: You watch three first-years go down to the mannequin, then one beat it. Thorne says the same thing to all four: "Good. Again."
 > right: Step into the circle
-  hint: A lesson: Thorne talks you through every exchange, and only your mood is at stake.
   queue intro_kit now
   challenge combat novice certain:
     win:

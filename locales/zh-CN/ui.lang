@@ -625,16 +625,16 @@ check.parleyStub = 交涉小游戏上线之前，由魅力、学识和诡计决�
 title.options = 更多选项
 # en: Skip the introductions (you know the academy already)
 title.skipIntros = 跳过入门介绍（你已经熟悉学院了）
+# en: Combat bench
+title.bench = 战斗试验台
+# en: Practice fights with any loadout, foe and level, and debug the combat rules
+title.benchHint = 用任意配装、对手和等级练习战斗，并调试战斗规则
+# en: The combat bench needs the game's server: run npm start and open the game from it.
+title.benchNoServer = 战斗试验台需要游戏服务器：运行 npm start，再从服务器打开游戏。
 # en: Introductions
 settings.intros = 入门介绍
 # en: The cards that explain a system the first time you meet it. Off for players who know the academy. The orientation at the start is separate: the first card of a new game lets you skip it.
 settings.introsHint = 第一次遇到某个系统时解释它的卡牌。熟悉学院的玩家可以关掉。开局的入学引导是分开的：新游戏的第一张卡就能让你跳过它。
-# en: {name} is winding up: {move}
-fight.windUp = {name}正在蓄势：{move}
-# en: It lands when released: step aside, brace or ward for it.
-fight.windUpHint = 释放时就会命中：闪避、坚守或用护界接住它。
-# en: winding up
-fight.windUpNote = 蓄势中
 # en: Thorne:
 fight.coachTitle = 索恩教授：
 # en: Skip the lesson
@@ -749,8 +749,8 @@ fight.construct = {name}：还剩 {left} / {of} 点生命，持续到第 {until}
 fight.frozen = 冰封 · 本回合结束后解冻
 # en: {spell} · Hold or Release
 fight.channel = {spell} · 蓄持或释放
-# en: Haste · a spell without damage of its own also throws an Impulse
-fight.haste = 疾速 · 本身不造成伤害的法术也会附带一次冲击
+# en: Haste · a spell without damage of its own also throws an Impulse; any other action also parries
+fight.haste = 疾速 · 本身不造成伤害的法术也会附带一次冲击；其他行动都会同时招架
 # en: Bound · Breaking Free is your only move
 fight.bound = 被缚 · 挣脱是你唯一的行动
 # en: Compelled · you must repeat {action}
@@ -765,8 +765,22 @@ fight.compelSeize = 对方施放了强令：你现在选的这一招，接下来
 fight.frozenName = 冰封
 # en: Rime ready
 fight.rimeReady = 雾凇就绪
-# en: {n} shield
-fight.shieldNote = {n} 点护盾
+# en: next burn {n}
+fight.nextBurn = 下一次灼烧 {n}
+# en: Impact
+fight.impactNote = 冲击伤害
+# en: spell
+fight.spellNote = 法术伤害
+# en: {move} lands this exchange: {n} damage before defences.
+fight.incomingNow = {move}在本回合落下：防御前 {n} 点伤害。
+# en: {move} lands {when} (exchange {ex}): {n} damage before defences.
+fight.incomingLater = {move}将在{when}（第 {ex} 回合）落下：防御前 {n} 点伤害。
+# en: ({parts})
+fight.incomingSplit = （{parts}）
+# en: next exchange
+fight.whenNext = 下一回合
+# en: in {k} exchanges
+fight.whenIn = {k} 回合后
 # en: matures: all damage negated, then heals {n}
 fight.lodestarUp = 升至顶点：所有伤害均被化解，随后治疗 {n}
 # en: chain {n}

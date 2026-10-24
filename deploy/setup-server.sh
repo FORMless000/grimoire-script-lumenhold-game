@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # One-time setup on the server (EC2). deploy/setup.sh copies this and runs it over SSH; it can be re-run safely.
 # Creates /srv/lumenhold/{repo.git, releases, current, data, env, node}, installs the git hook, the systemd unit,
-# and a sudoers rule that lets the hook restart the service. Needs Node.js 20+ and sudo.
+# and a sudoers rule that lets the hook restart the service. Needs Node.js 24 and sudo.
 set -euo pipefail
 BASE="${LUMENHOLD_BASE:-/srv/lumenhold}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -10,8 +10,8 @@ ME="$(id -un)"
 # Node: from PATH, or from nvm when it's installed that way.
 NODE_BIN="$(command -v node || true)"
 if [ -z "$NODE_BIN" ] && [ -s "$HOME/.nvm/nvm.sh" ]; then . "$HOME/.nvm/nvm.sh"; NODE_BIN="$(command -v node || true)"; fi
-if [ -z "$NODE_BIN" ]; then echo "Node.js 20+ is required on the server. Install it (e.g. https://nodejs.org/en/download or nvm), then re-run." >&2; exit 1; fi
-if [ "$("$NODE_BIN" -p 'process.versions.node.split(".")[0]')" -lt 20 ]; then echo "Node.js 20+ is required (found $("$NODE_BIN" -v))." >&2; exit 1; fi
+if [ -z "$NODE_BIN" ]; then echo "Node.js 24 is required on the server. Install it (e.g. https://nodejs.org/en/download or nvm), then re-run." >&2; exit 1; fi
+if [ "$("$NODE_BIN" -p 'process.versions.node.split(".")[0]')" != 24 ]; then echo "Node.js 24 is required (found $("$NODE_BIN" -v))." >&2; exit 1; fi
 command -v git >/dev/null || { echo "git is required on the server (sudo dnf install git / sudo apt install git)." >&2; exit 1; }
 
 sudo mkdir -p "$BASE"; sudo chown "$ME" "$BASE"

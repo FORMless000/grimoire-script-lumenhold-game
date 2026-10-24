@@ -57,7 +57,7 @@ All three share one authoring spec, one worldbook and one set of validators. The
 
 ### 1.1 Shape
 
-- `npm start` runs a Node server: Node ≥ 20, built-in `http` and `zlib`, a small router, no framework and no runtime dependencies.
+- `npm start` runs a Node server: Node 24, built-in `http` and `zlib`, a small router, no framework and no runtime dependencies. Project npm scripts select Node 24 automatically.
 - It binds to `127.0.0.1:4173` by default; `HOST` and `PORT` override that.
 - If it binds to anything other than localhost, or `PUBLIC=1` is set (behind a reverse proxy), `/admin` and the reports need `ADMIN_TOKEN`.
 - `NODE_ENV=production` serves the committed content bundle; otherwise the bundle is compiled live from `content/` and `locales/`.
@@ -75,7 +75,7 @@ data/               # gitignored
   players/<pid>/              # player.json, saves/<slot>.json (auto, 1, 2, 3), seen.json
 ```
 
-Storage is plain files rather than SQLite, so the project keeps zero runtime dependencies on Node 20. Reports read the files; if volume ever makes that slow, `store.js` is the one place to swap in SQLite.
+Storage is plain files rather than SQLite, so the game server keeps zero runtime dependencies on Node 24. Optional authoring tools have separate dependency installations. Reports read the files; if volume ever makes that slow, `store.js` is the one place to swap in SQLite.
 
 **Players.**
 - **The code.** A player is a **player code**: 80 random bits, shown as `XXXX-XXXX-XXXX-XXXX`, minted by the server on a browser's first visit. The server keeps only its hash (the player id, `pid`).
@@ -250,11 +250,9 @@ text: The founders bound something beneath the lake with seven locks, one per to
 
   It's capped at about 6k tokens by default.
 
-Experimental authoring support is separate: `grim retrieve` offers block-addressed
-evidence through custom hybrid search, QMD or LightRAG. `grim author-eval` prepares
-quarantined manual harness trials, audits traces and serves a local blind review
-page. These tools do not generate cards, change canon or replace production batch
-acceptance. See `docs/authoring/retrieval.md` and `experiments/authoring/README.md`.
+Experimental authoring retrieval and controlled evaluation are documented in
+[`rag/README.md`](../rag/README.md) and
+[`rag/EVALUATION.md`](../rag/EVALUATION.md).
 
 ### 3.5 Authoring spec (`docs/authoring/`)
 
@@ -808,8 +806,11 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 - Queues and flags show as a small "something follows" mark.
 - **UI:** the changes on the choice button, by a setting (feedback 2026-10-15, 2026-10-15b; the gear menu, with the scene-description switch): signs by size (+ for tiny or small, ++ medium, +++ large or huge; − for losses), numbers, or icons only. Crowns and Mana always show numbers, and so does every outcome after a choice. Exam preparation for several courses at once shows as one icon. Branches as "win ++ renown / lose − mood (62%)".
 - **Previews past a cap** (feedback 2026-10-19): a preview shows the amounts as written, also where they meet a cap or a floor (a Health gain at full Health still shows); the outcome after the choice shows what changed. The preview records the keys that met one (`over`), and the property test allows those to fall short.
-- **The "…" reveal** (hover, long-press, a selected menu tile; feedback 2026-10-19) never repeats the preview: notes an outcome's label already says are dropped (an exam's grade), a spell is named without the skill bonus the icons show, what every outcome shares is listed once, and what only some do is listed once with those outcomes after it ("A, B, C"). The option carries one "…", not one per outcome.
-- **The roll on a button** (feedback 2026-10-19) says only the skill it tests ("Arcana"): not the kind of check, its odds word or its swing, which the option's own words carry, and not the chance, which the outcome lines under it give (2026-10-20). A roll of pure luck (`chance`) shows the dice alone. When an option's "…" is spelled out, it opens below the outcome lines. Fights keep their line (foe and level).
+- **A choice button stays compact** (feedback 2026-10-24): its label (the one line that may wrap), the kind of roll, and one line per outcome (at most three), each cut short rather than wrapped: two lines for a plain choice, four for a check or challenge, five with a partial. An option's description (`hint:`) is not on the button. Outcome labels take the colour of how it went (success, partial, failure).
+- **The floating window** (feedback 2026-10-24; it replaced the expansion on hover, long-press and a selected menu tile) follows the mouse over a choice or a menu tile, or opens at the finger on a long-press: the option's label, why it is locked, its description, a fight's foe and level, every outcome with each change named, and the "…" spelled out. It shows when it says more than the button or a line of the button is cut short.
+- **The "…" reveal** (in the floating window; feedback 2026-10-19) never repeats the preview: notes an outcome's label already says are dropped (an exam's grade), a spell is named without the skill bonus the icons show, what every outcome shares is listed once, and what only some do is listed once with those outcomes after it ("A, B, C"). The option carries one "…", not one per outcome.
+- **The roll on a button** (feedback 2026-10-19) says only the skill it tests ("Arcana"): not the kind of check, its odds word or its swing, which the option's own words carry, and not the chance, which the outcome lines under it give (2026-10-20). A roll of pure luck (`chance`) shows the dice alone. A fight's button says only "Fight"; its foe and level are in the floating window (2026-10-24).
+- **Spell levels** (I–III) show only for a spell with three levels; a one-level spell (Ward, the capstones, club and job spells) shows its name alone (feedback 2026-10-24).
 - **Spells** name the skill they scale with under their description (the You panel, a fight's action preview and the foe's intent; feedback 2026-10-19).
 - **Menus and the map** take the card's place in the stage, as a fight does (feedback 2026-10-19): no backdrop and no cards behind them, and the top bar and the side panel stay usable. A click picks; a click on the pick confirms, whenever it comes. With several to pick, the last pick confirms and a click on an earlier one takes it back.
 - **Scene descriptions:** a card's `scene:` line shows in italics under it (Settings → Scene descriptions hides it). Cards keep their composed icon art; no other card art is planned.

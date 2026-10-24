@@ -9,7 +9,7 @@
 .stage.fighting > .deck, .stage.fighting > .choices { display: none; }
 .fight-layer {
   --line-2: rgba(233, 214, 160, .3); --hp: #e06a6a; --mana: #5fa8e8; --flux: #8a7fd6; --you: #f0d58c; --opp: #8fc9e8;
-  --k-dmg: #ff9d90; --k-heal: #8fe39b; --k-mana: #8fc9f2; --k-guard: #e9d49c; --k-buff: #c9b9ff; --k-debuff: #f2a8d6; --k-gold: #f0d58c;
+  --k-dmg: #ff9d90; --k-spell: #d68fff; --k-heal: #8fe39b; --k-mana: #8fc9f2; --k-guard: #e9d49c; --k-buff: #c9b9ff; --k-debuff: #f2a8d6; --k-gold: #f0d58c;
   position: relative; flex: 1 1 auto; width: 100%; min-height: 0; margin-top: 8px; display: flex; flex-direction: column; align-items: center;
   overflow-x: hidden; overflow-y: auto; container: fight / inline-size;
   font: 14px/1.4 var(--sans); color: var(--text); -webkit-font-smoothing: antialiased;
@@ -30,8 +30,11 @@
 .fight-layer .fight-kit b { color: var(--gold-2); }
 .fight-layer .fight-kit label { display: flex; align-items: center; gap: 6px; }
 .fight-layer .fight-kit select { font: inherit; font-size: 12px; background: rgba(10, 12, 28, .8); color: inherit; border: 1px solid var(--line); border-radius: 6px; padding: 2px 4px; max-width: 46vw; }
-.fight-layer .intent.windup { border-color: rgba(255, 170, 110, .55); }
-.fight-layer .intent.windup b { color: #ffc28a; }
+/* A blow on its way (an Omen, a delayed blow): when it lands, for how much, what stops it. */
+.fight-layer .intent.incoming { border-color: rgba(255, 170, 110, .45); margin-bottom: 6px; }
+.fight-layer .intent.incoming b { color: #ffc28a; }
+.fight-layer .intent.incoming.now { border-color: rgba(255, 120, 90, .8); background: rgba(255, 120, 90, .08); }
+.fight-layer .intent.incoming.now b { color: #ffab8a; }
 .fight-layer .pf svg.avatar { width: 100%; height: 100%; }
 .fight-layer button,.fight-layer input,.fight-layer select{font:inherit;color:inherit}
 .fight-layer button{cursor:pointer;border:1px solid var(--line);border-radius:12px;background:var(--night-3);padding:9px 14px;font-weight:600;transition:border-color .2s,background .2s,transform .12s}
@@ -117,13 +120,12 @@
 .fight-layer .it-more svg{width:18px;height:18px}
 .fight-layer .tele-icon{flex:none;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;border:1px solid rgba(143,201,232,.45);background:var(--night-2);color:var(--opp)}
 .fight-layer .tele-icon svg{width:26px;height:26px}
-.fight-layer .tele-icon .bundle-icons{display:flex;flex-wrap:wrap;justify-content:center;max-width:32px}
-.fight-layer .tele-icon .bundle-icons svg{width:13px;height:13px}
 .fight-layer .hidden-move{color:var(--muted);border-style:dashed;border-color:var(--line-2)}
 .fight-layer .eff{display:inline-flex;align-items:baseline;gap:3px;white-space:nowrap}
 .fight-layer .eff b{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
 .fight-layer .eff small{font-size:10.5px;font-weight:500;opacity:.85}
 .fight-layer .k-dmg .eff,.fight-layer .eff.k-dmg{color:var(--k-dmg)}
+.fight-layer .k-spell .eff,.fight-layer .eff.k-spell{color:var(--k-spell)}
 .fight-layer .k-heal .eff,.fight-layer .eff.k-heal{color:var(--k-heal)}
 .fight-layer .k-mana .eff,.fight-layer .eff.k-mana{color:var(--k-mana)}
 .fight-layer .k-guard .eff,.fight-layer .eff.k-guard{color:var(--k-guard)}
@@ -150,14 +152,11 @@
 .fight-layer .s1 .tk-who{color:var(--opp)}
 .fight-layer .tk-act .past .mini-icon{width:26px;height:26px;padding:0;border:0;border-radius:7px;background:none}
 .fight-layer .tk-act .past .mini-icon svg{width:19px;height:19px}
-.fight-layer .tk-act .past .mini-icon .bundle-icons svg{width:10px;height:10px}
 .fight-layer .s0 .past .mini-icon{color:var(--you)}
 .fight-layer .s1 .past .mini-icon{color:var(--opp)}
 .fight-layer .tk-act .past .mini-icon:hover{background:var(--night-3)}
 .fight-layer .slot{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--muted);border:1px dashed var(--line-2);background:none;padding:0}
 .fight-layer .slot svg{width:18px;height:18px}
-.fight-layer .slot .bundle-icons{display:flex}
-.fight-layer .slot .bundle-icons svg{width:10px;height:10px}
 .fight-layer .slot.open{border-color:var(--line);width:8px;height:8px;border-radius:50%;border-style:solid}
 .fight-layer .slot.shows{border:1px solid rgba(143,201,232,.55);color:var(--opp);background:var(--night-2)}
 .fight-layer .slot.shows:not(button) svg{width:15px;height:15px;opacity:.85}
@@ -179,11 +178,13 @@
 .fight-layer .tk-ico{display:inline-flex;width:15px;height:15px;align-items:center;justify-content:center;color:var(--you)}
 .fight-layer .s1 .tk-ico{color:var(--opp)}
 .fight-layer .tk-ico svg{width:13px;height:13px}
-.fight-layer .tk-ico .bundle-icons svg{width:7px;height:7px}
 .fight-layer .tl-on .tk-ico{position:absolute;left:-12px;top:50%;transform:translateY(-50%)}
 .fight-layer .tl-hit{margin:auto;display:inline-flex;align-items:center;gap:1px;font-style:normal;color:var(--k-dmg);font-size:11px;font-weight:700;white-space:nowrap}
 .fight-layer .tl-hit .tk-ico{color:var(--k-dmg)}
+.fight-layer .tl-hit.spell,.fight-layer .tl-hit.spell .tk-ico{color:var(--k-spell)}
 .fight-layer .tl-hit.heal,.fight-layer .tl-hit.heal .tk-ico{color:var(--k-heal)}
+.fight-layer .split-impact{color:var(--k-dmg)}
+.fight-layer .split-spell{color:var(--k-spell)}
 .fight-layer .tl-hit.later small{font-size:9px;opacity:.75;margin-left:1px}
 .fight-layer .hfull{display:flex;flex-direction:column;gap:4px;margin-top:5px;padding:6px 2px 0;border-top:1px solid var(--line)}
 .fight-layer .hfull .link{align-self:flex-start}
@@ -201,8 +202,6 @@
 .fight-layer .flavor.finish{display:block;margin:2px 0 0 27px;font-size:14px;color:var(--gold-2)}
 .fight-layer .mini-icon{flex:none;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;color:var(--text)}
 .fight-layer .mini-icon svg{width:18px;height:18px}
-.fight-layer .mini-icon .bundle-icons{display:inline-flex}
-.fight-layer .mini-icon .bundle-icons svg{width:11px;height:11px}
 .fight-layer .glyph{font-size:13px}
 .fight-layer .action-state{font-size:12.5px;color:var(--gold-2)}
 .fight-layer .acts{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px}
@@ -211,8 +210,6 @@
 .fight-layer .act.selected{border-color:var(--gold);background:#262c58;box-shadow:0 0 0 1px var(--gold),0 0 18px rgba(217,180,90,.25)}
 .fight-layer .a-ico{position:relative;flex:1;display:flex;align-items:center;justify-content:center;min-height:0;color:var(--text)}
 .fight-layer .a-ico svg{width:30px;height:30px}
-.fight-layer .a-ico .bundle-icons{display:flex;gap:1px}
-.fight-layer .a-ico .bundle-icons svg{width:17px;height:17px}
 .fight-layer .a-name{font-size:11px;line-height:1.1;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fight-layer .eff .lbl+.t::before{content:'· '}
 .fight-layer .act .eff{line-height:1}
@@ -336,7 +333,6 @@
 .fight-layer .acts{grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:4px}
 .fight-layer .act{border-radius:10px;padding:3px 2px 3px;gap:0}
 .fight-layer .a-ico svg{width:22px;height:22px}
-.fight-layer .a-ico .bundle-icons svg{width:12px;height:12px}
 .fight-layer .a-name{display:none}
 .fight-layer .act .eff b{font-size:12.5px}
 .fight-layer .act .eff small{font-size:8.5px}
@@ -388,7 +384,6 @@ body:has(.fight-layer) #fbBar { display: none; }
 .fight-layer .ply .mini-icon svg{width:16px;height:16px}
 .fight-layer .ply.you .mini-icon{color:var(--you)}
 .fight-layer .ply.opp .mini-icon{color:var(--opp)}
-.fight-layer .ply .bundle-icons svg{width:9px;height:9px}
 .fight-layer .sep{color:var(--muted)}
 .fight-layer .engine .fine{margin:4px 0 0;font-size:10.5px}
 .fight-layer .act.best{outline:2px solid #9fe0a7;box-shadow:0 0 12px rgba(159,224,167,.45)}

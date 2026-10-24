@@ -1,7 +1,7 @@
 /* Combat bench, in the main game's look (src/style.css tokens): night panels, gold lines, parchment cards, Cormorant/Crimson/Inter. */
 :root{color-scheme:dark;--night:#0e1124;--night-2:#161a35;--night-3:#20264a;--line:rgba(233,214,160,.16);--line-2:rgba(233,214,160,.3);--gold:#d9b45a;--gold-2:#f0d58c;--parch:#f4ecd8;--ink:#2a2238;--ink-2:#5a4e66;--muted:#a49cb8;--text:#ece6f6;--good:#7fd18b;--bad:#ff8a80;
  --hp:#e06a6a;--mana:#5fa8e8;--flux:#8a7fd6;--you:#f0d58c;--opp:#8fc9e8;
- --k-dmg:#ff9d90;--k-heal:#8fe39b;--k-mana:#8fc9f2;--k-guard:#e9d49c;--k-buff:#c9b9ff;--k-debuff:#f2a8d6;--k-gold:#f0d58c;
+ --k-dmg:#ff9d90;--k-spell:#d68fff;--k-heal:#8fe39b;--k-mana:#8fc9f2;--k-guard:#e9d49c;--k-buff:#c9b9ff;--k-debuff:#f2a8d6;--k-gold:#f0d58c;
  --serif:"Crimson Pro","Iowan Old Style",Georgia,serif;--display:"Cormorant Garamond","Iowan Old Style",Georgia,serif;--sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;--radius:18px}
 *{box-sizing:border-box}html,body{margin:0;height:100%}
 body{background:var(--night);color:var(--text);font:14px/1.4 var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
@@ -90,7 +90,7 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
 
 /* Effect summaries (buttons, telegraph, inspect) */
 .eff{display:inline-flex;align-items:baseline;gap:3px;white-space:nowrap}.eff b{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}.eff small{font-size:10.5px;font-weight:500;opacity:.85}
-.k-dmg .eff,.eff.k-dmg{color:var(--k-dmg)}.k-heal .eff,.eff.k-heal{color:var(--k-heal)}.k-mana .eff,.eff.k-mana{color:var(--k-mana)}.k-guard .eff,.eff.k-guard{color:var(--k-guard)}.k-buff .eff,.eff.k-buff{color:var(--k-buff)}.k-debuff .eff,.eff.k-debuff{color:var(--k-debuff)}.k-gold .eff,.eff.k-gold{color:var(--k-gold)}
+.k-dmg .eff,.eff.k-dmg{color:var(--k-dmg)}.k-spell .eff,.eff.k-spell{color:var(--k-spell)}.k-heal .eff,.eff.k-heal{color:var(--k-heal)}.k-mana .eff,.eff.k-mana{color:var(--k-mana)}.k-guard .eff,.eff.k-guard{color:var(--k-guard)}.k-buff .eff,.eff.k-buff{color:var(--k-buff)}.k-debuff .eff,.eff.k-debuff{color:var(--k-debuff)}.k-gold .eff,.eff.k-gold{color:var(--k-gold)}
 
 /* The exchange track: every past exchange, this one and the next few on one axis (scrolls sideways into the past),
    lasting effects as thin lines along it, each with its icon at the start */
@@ -116,7 +116,7 @@ details summary{cursor:pointer;font-size:12px;color:var(--muted)}#begin,#return{
 .tl-on.open{background:linear-gradient(90deg,var(--you),transparent)}.s1 .tl-on.open{background:linear-gradient(90deg,var(--opp),transparent)}
 .tk-ico{display:inline-flex;width:15px;height:15px;align-items:center;justify-content:center;color:var(--you)}.s1 .tk-ico{color:var(--opp)}.tk-ico svg{width:13px;height:13px}.tk-ico .bundle-icons svg{width:7px;height:7px}
 .tl-on .tk-ico{position:absolute;left:-12px;top:50%;transform:translateY(-50%)}
-.tl-hit{margin:auto;display:inline-flex;align-items:center;gap:1px;font-style:normal;color:var(--k-dmg);font-size:11px;font-weight:700;white-space:nowrap}.tl-hit .tk-ico{color:var(--k-dmg)}.tl-hit.heal,.tl-hit.heal .tk-ico{color:var(--k-heal)}.tl-hit.later small{font-size:9px;opacity:.75;margin-left:1px}
+.tl-hit{margin:auto;display:inline-flex;align-items:center;gap:1px;font-style:normal;color:var(--k-dmg);font-size:11px;font-weight:700;white-space:nowrap}.tl-hit .tk-ico{color:var(--k-dmg)}.tl-hit.spell,.tl-hit.spell .tk-ico{color:var(--k-spell)}.tl-hit.heal,.tl-hit.heal .tk-ico{color:var(--k-heal)}.split-impact{color:var(--k-dmg)}.split-spell{color:var(--k-spell)}.tl-hit.later small{font-size:9px;opacity:.75;margin-left:1px}
 
 .hfull{display:flex;flex-direction:column;gap:4px;margin-top:5px;padding:6px 2px 0;border-top:1px solid var(--line)}.hfull .link{align-self:flex-start}
 .hx-full h4{margin:0 0 2px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}.hx-full h4 small{text-transform:none;font-weight:400}

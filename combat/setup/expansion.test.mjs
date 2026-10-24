@@ -97,7 +97,7 @@ test('a creature\'s copy (F5.11) plays its base spell\'s rule under its own name
 });
 
 test('bind (F5.11-plan.1): from the next exchange, Breaking Free is the only move, for each binder\'s own span',()=>{
- for(const [me,leader]of ORDERS)for(const [id,n]of [['root',1],['threads',1],['web',2],['bramble',1]]){
+ for(const [me,leader]of ORDERS)for(const [id,n]of [['root',1],['threads',1],['web',1],['bramble',1]]){
   const s=duel(DEF,{[id]:1,ward:1},{me,leader}),hp=s.actors[1-me].hp;
   play(s,me,'strike',id);assert.equal(s.actors[1-me].hp,hp-9,id+': the casting exchange plays as committed');
   for(let i=0;i<n;i++){assert.deepEqual(core.legalActions(s,me),['break_free'],id+' exchange '+(i+1));assert.match(core.describe(s,me,'break_free'),/only action/);play(s,me,'break_free','ward');}

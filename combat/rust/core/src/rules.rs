@@ -43,6 +43,8 @@ pub fn brace_share() -> f64 { amt_or(data().ids.brace, "block", BRACE_SHARE) }
 pub fn brace_exchanges() -> i32 { data().spells[data().ids.brace].duration.as_ref().map_or(BRACE_EXCHANGES, |v| v[0] as i32) }
 /// Tailwind's added base per consecutive cast before this one.
 pub fn tailwind_step() -> f64 { amt_or(data().ids.tailwind, "step", 10.0) }
+/// Tailwind's added Mana per consecutive cast before this one (feedback 2026-10-24: 4, 6, 8…).
+pub fn tailwind_cost_step() -> f64 { amt_or(data().ids.tailwind, "costStep", 0.0) }
 /// Wildfire's self-burn on the beat after `holds` Holds (the cast is beat 0): `self` × (holds + 1).
 pub fn wildfire_self(holds: i32) -> f64 { let d = data(); amt_or(d.ids.wildfire, "self", 2.0) * (holds + 1) as f64 }
 
@@ -138,7 +140,12 @@ pub fn cost(enc: &Encounter, s: &State, side: usize, a: Act) -> f64 {
     if a == d.acts.hold {
         return s.actors[side].channel.and_then(|c| d.spells[c.spell].hold_cost).unwrap_or(0.0) * enc.mana_cost_scale;
     }
-    match spell_of(a) { Some(sp) => enc.sides[side].cost[sp], None => 0.0 }
+    match spell_of(a) {
+        // Tailwind costs more for each cast already in its chain.
+        Some(sp) if sp == d.ids.tailwind => enc.sides[side].cost[sp] + s.actors[side].effects[Eff::Tailwind as usize].map_or(0.0, |e| e.value) * tailwind_cost_step() * enc.mana_cost_scale,
+        Some(sp) => enc.sides[side].cost[sp],
+        None => 0.0,
+    }
 }
 #[inline]
 fn healing(a: Act) -> bool { let ids = &data().ids; a as usize == ids.mend || a as usize == ids.heartwood }
@@ -688,6 +695,7 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
     // Countertempo is read before this exchange's casts (Haste's own first cast doesn't trigger it; a recast while active does).
     let committed = s.last_pair.unwrap();
     let hasted = [0, 1].map(|side| hasted_impulse(s, side, committed[side]));
+    let haste_on = [0, 1].map(|side| has(s, side, Eff::Haste));
     let special = |a: Act| a == k.cancel || a == k.frozen || a == k.break_free;
     // 1. Payment. A move no longer affordable (a forced replay) is a lost turn.
     for side in 0..2 {
@@ -702,6 +710,13 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
     for side in 0..2 { if has(s, side, Eff::Lodestar) { let r = s.round; put(s, side, Eff::Ward, 1.0, r, Some(r)); } }
     let mut attacks = Hits::default();
     for side in 0..2 { let id = pair!()[side]; if !special(id) { prepared(enc, s, &mut ctx, side, id, &mut attacks); } }
+    // Haste's free Parry (feedback 2026-10-24): while Haste is up, every action that doesn't throw Countertempo's Impulse
+    // (a basic, a damaging spell, a channel, Breaking Free) parries as well. Parry fatigue applies to it, but it doesn't
+    // count as a Parry for the fatigue of the next.
+    for side in 0..2 {
+        let id = pair!()[side];
+        if haste_on[side] && !hasted[side] && id != k.guard && id != k.cancel && id != k.frozen && !has(s, side, Eff::Guard) { let g = guard_block(s, side); let r = s.round; put(s, side, Eff::Guard, g, r, Some(r)); }
+    }
     // 3. Attacks.
     for side in 0..2 {
         let id = pair!()[side];

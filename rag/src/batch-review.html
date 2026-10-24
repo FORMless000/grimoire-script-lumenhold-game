@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lumenhold · Authoring review</title>
+  <link rel="stylesheet" href="/src/style.css">
+  <link rel="stylesheet" href="/review.css">
+</head>
+<body class="review">
+<div id="app" class="review-shell">
+  <header class="top">
+    <div class="brand">Lumenhold <span>Authoring review</span></div>
+    <div class="date"><div id="progress" class="when">Loading frozen cards…</div><div id="timeline" class="timeline"></div></div>
+    <div class="top-actions">
+      <select id="language" aria-label="Review language"><option value="en">English</option><option value="zh-CN">简体中文</option></select>
+      <a class="btn ghost" href="/export.json" download="authoring-review.json">JSON</a>
+      <a class="btn ghost" href="/export.md" download="authoring-review.md">Markdown</a>
+      <button class="btn primary" id="reveal">Reveal workflows</button>
+    </div>
+  </header>
+  <div class="notice" id="notice"></div>
+  <div id="error" class="error" role="alert"></div>
+  <div id="status" class="save-status" role="status" aria-live="polite"></div>
+  <main class="review-layout">
+    <aside class="review-nav">
+      <label for="filter">Find a card</label><input id="filter" type="search" placeholder="Title, place, character…">
+      <label for="review-filter">Show</label><select id="review-filter"><option value="all">All presentations</option><option value="pending">Not reviewed</option><option value="assessed">Reviewed</option></select>
+      <div id="nav"></div>
+    </aside>
+    <div id="view" class="review-content"></div>
+  </main>
+</div>
+<script src="/src/art.js"></script>
+<script src="/src/grimoire.js"></script>
+<script src="/src/director.js"></script>
+<script src="/src/engine.js"></script>
+<script src="/preview.js"></script>
+<script src="/i18n.js"></script>
+<script src="/client.js"></script>
+</body>
+</html>

@@ -39,7 +39,7 @@ Fights are played, not rolled. Every duel and brawl opens a turn-based combat mi
 
 Open **`index.html`** in a browser. Double-clicking it works, with no server or install needed. The game autosaves to your browser after every card.
 
-Or run the local server (Node 20+, no install needed): `npm start`, then open http://127.0.0.1:4173. The server keeps saves (an autosave plus 3 slots), full run logs and your card ratings in `data/`, and `/admin` shows runs and feedback by event.
+Or run the local server (Node 24, no npm install needed): `npm start`, then open http://127.0.0.1:4173. The server keeps saves (an autosave plus 3 slots), full run logs and your card ratings in `data/`, and `/admin` shows runs and feedback by event.
 
 - **Your local network:** run `./scripts/host.sh` (Linux, macOS), `scripts\host.cmd` or `scripts\host.ps1` (Windows). It prints the links. Each browser gets its own player code.
 - **Another device:** Saved games → **Play on another device** carries your saves over.
@@ -72,7 +72,13 @@ Or run the local server (Node 20+, no install needed): `npm start`, then open ht
 
 All content lives in `content/**/*.grim`. Start with **[`AGENTS.md`](AGENTS.md)**, which holds the principles and says where everything lives. The canon is the worldbook in `content/world/`, the design is [`docs/design-v0.3.md`](docs/design-v0.3.md), and the language is [`docs/grimoire-script.md`](docs/grimoire-script.md). LLM agents follow the skills in [`skills/`](skills/). To have Claude Code load one automatically, copy its folder to `.claude/skills/`.
 
-The tools need [Node.js](https://nodejs.org) 20+; the game doesn't. `node tools/grim.js` lists every command.
+The tools use [Node.js](https://nodejs.org) 24; the browser game doesn't need Node.
+On macOS install it with `brew install node@24`. The npm scripts select Node 24
+automatically, including the Homebrew installation when your shell still points
+to an older Node. `npm run grim --` lists every command. `.nvmrc` and
+`.node-version` also select major version 24 for existing version managers.
+Retrieval setup and tooling live in [`rag/`](rag/README.md); controlled authoring
+comparisons follow [`rag/EVALUATION.md`](rag/EVALUATION.md).
 
 ```bash
 npm run build                      # rebuild build/content.bundle.js — required after editing .grim files

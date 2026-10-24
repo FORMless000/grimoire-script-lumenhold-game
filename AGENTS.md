@@ -13,7 +13,7 @@ This file holds only the standing principles and where to look. It carries no lo
 | Canon (characters, places, tracks, spells, arcs, factions, lore) | the worldbook, `content/world/`, via `node tools/grim.js brief …`, `lorebook`, `query lore …` |
 | How to write a good card | `skills/write-academy-events/SKILL.md` (the workflow), built from `docs/authoring/`: style, costs (how a choice trades), checks (how a check or roll is pitched), classes, presets (generated from `balance.grim`), checklist, pools, examples; batches are reviewed with `skills/critic/SKILL.md` |
 | Existing cards to learn from or extend | `node tools/grim.js brief …` (every card already at that place or track, and the most similar ones in full; `--like` names more), `query event …`, `show <id>`, `graph <id>` (what leads to a card and what it leads to), `dupes <files>` |
-| Experimental retrieval and controlled authoring review | `docs/authoring/retrieval.md`, `experiments/authoring/README.md`; `grim retrieve` returns source evidence, `grim author-eval` prepares and audits quarantined trials; skills in `skills/authoring-retrieval/` and `skills/authoring-evaluation/` |
+| Source retrieval and controlled authoring review | `rag/AUTHORING.md` for commands; `rag/README.md` for setup; `rag/EVALUATION.md` for frozen experiments |
 | Whether a card is balanced | `docs/authoring/costs.md` and `classes.md` (the rules the lint checks); `node tools/grim.js balance` (invariants and alarms); `tools/economy.js --by event` (each card's flow and frequency) against the measured monthly flows in `docs/playtest-2-flows.md`; `tools/hs-funnel.js` for the main plot; `tools/exam-odds.js` for exam grades; `grim analyze` for how runs unfold month by month, per play style (`grim styles` says what each plays for) |
 | How to extend canon | `skills/distill-lore/SKILL.md` |
 | The language and the `.lang` format | `docs/grimoire-script.md` |
@@ -50,6 +50,9 @@ Code: `src/grimoire.js` (parser), `src/engine.js` and `src/director.js` (DOM-fre
 - `grim diff` fails when the golden games play differently. For refactors that is the point. When a change is meant to alter gameplay, confirm the diff is what you intended and refresh the baseline in the same commit (`node tools/grim.js snapshot --out test/golden/baseline.json`).
 - Simulated players are crude: `balance` catches gross errors and regressions; human playtests are the judge.
 
+**Retrieval maintenance**
+- Follow `rag/AUTHORING.md` for source discovery and inspection. After final source edits, explicitly run `npm run grim -- retrieve index` at the end of each content-writing session; synchronize mid-session when fresh retrieval is needed. Report an unbuilt index instead of rebuilding it automatically. Frozen experiments follow their assigned instructions.
+
 **Localization**
 - English in `content/` is the source of truth; never translate inside `.grim` files. After English changes, run `node tools/grim.js i18n <lang>` and fill the new or STALE lines (bulk: `locales/<lang>/_in/`). Keep `{tokens}` intact and follow the glossary. New UI strings go in `UI_EN` in `src/i18n.js`.
 
@@ -63,4 +66,5 @@ Code: `src/grimoire.js` (parser), `src/engine.js` and `src/director.js` (DOM-fre
 - `boot()` must stay at the very end of `src/ui.js` (earlier calls hit the temporal dead zone of later `const`s).
 - `{npc}` prints `short:` or the first word of `name` (split on spaces or `·`), hence the faculty's `short:` and the `·` in Chinese names.
 - Preview cards (`index.html?event=<id>&debug`) are forced past their `when`.
+- Every commit carries its version, `0.3.<commit count>` (`src/version.js` and `package.json`, shown on the title screen): the pre-commit hook (`deploy/pre-commit`, installed by `npm install` or `node tools/version.js --install`) stamps it. Never edit those lines by hand; without the hook, run `node tools/version.js --next --stage` right before committing. Amends and squashes break the count (`version.js --check`, part of `verify`, says so).
 - Every `git push` of `main` goes live on the server as well as GitHub (`docs/hosting.md`; a self-test only catches a server that won't boot): push working states only.

@@ -102,8 +102,7 @@ test('Bind: from the next exchange, Breaking Free only; it keeps a new Bind off;
   let s=duel(KIT,{web:1,threads:1,flame:1},{me,leader});
   play(s,me,'strike','web');assert.equal(hp(s,1-me),61,'the Impulse of the casting exchange lands');
   assert.deepEqual(core.legalActions(s,me),['break_free']);
-  play(s,me,'break_free','web');assert.deepEqual(core.legalActions(s,me),['break_free'],'Web 2: a second exchange');
-  play(s,me,'break_free','reclaim');assert(core.legalActions(s,me).includes('strike'),'free after two: the recast was kept off');
+  play(s,me,'break_free','web');assert(core.legalActions(s,me).includes('strike'),'Web binds one exchange (creature pass 1; was 2), and the recast while Breaking Free was kept off');
   s=duel(KIT,{web:1,threads:1},{me,leader});
   play(s,me,'ward','threads');assert(core.legalActions(s,me).includes('strike'),'Ward keeps it off');
   play(s,me,'reflect','threads');assert.deepEqual(core.legalActions(s,1-me),['break_free'],'Reflect binds its caster');
@@ -150,23 +149,42 @@ test('The Long Wait: 24 spell and 24 Impact together in three exchanges; Ward st
  }
 });
 
-test('Acorns: 10 now and 10 next exchange, each met by its own exchange\'s defences',()=>{
+test('Acorns: 8 now and 8 next exchange for 6 Mana, each met by its own exchange\'s defences',()=>{
  for(const [me,leader]of ORDERS){
   const s=duel({acorns:1},KIT,{me,leader});
-  play(s,me,'acorns','reclaim');assert.equal(hp(s,1-me),60);
-  play(s,me,'reclaim','ward');assert.equal(hp(s,1-me),60,'Ward stops the second');
+  assert.equal(core.cost(s,me,'acorns'),6);
+  play(s,me,'acorns','reclaim');assert.equal(hp(s,1-me),62);
+  play(s,me,'reclaim','ward');assert.equal(hp(s,1-me),62,'Ward stops the second');
  }
 });
 
-test('Tailwind: 10 Impact, +15 each consecutive cast; any other move starts it over',()=>{
+test('Tailwind: an Impulse\'s 9 Impact, +15 each consecutive cast, for 4 Mana +1 each; any other move starts both over',()=>{
  for(const [me,leader]of ORDERS){
   const s=duel({tailwind:1,ward:1},{...KIT,mend:1},{me,leader});
-  play(s,me,'tailwind','reclaim');assert.equal(hp(s,1-me),60,'10');
-  play(s,me,'tailwind','reclaim');assert.equal(hp(s,1-me),35,'then 25');
-  play(s,me,'tailwind','guard');assert.equal(hp(s,1-me),35,'Parry stops the 40, and the chain still grows');
-  play(s,me,'tailwind','reclaim');assert.equal(hp(s,1-me),0,'55');
+  assert.equal(core.cost(s,me,'tailwind'),4);
+  play(s,me,'tailwind','reclaim');assert.equal(hp(s,1-me),61,'9, as an Impulse');assert.equal(core.cost(s,me,'tailwind'),5);
+  play(s,me,'tailwind','reclaim');assert.equal(hp(s,1-me),37,'then 24');assert.equal(core.cost(s,me,'tailwind'),6);
+  play(s,me,'tailwind','guard');assert.equal(hp(s,1-me),37,'Parry stops the 39, and the chain still grows');assert.equal(core.cost(s,me,'tailwind'),7);
+  play(s,me,'tailwind','reclaim');assert.equal(hp(s,1-me),0,'54');
   const t=duel({tailwind:1,ward:1},{...KIT,mend:1},{me,leader});
-  play(t,me,'tailwind','reclaim');play(t,me,'ward','mend');play(t,me,'tailwind','reclaim');assert.equal(hp(t,1-me),60,'healed 18 to full, then 10 again');
+  play(t,me,'tailwind','reclaim');play(t,me,'ward','mend');assert.equal(core.cost(t,me,'tailwind'),4,'the cost starts over too');
+  play(t,me,'tailwind','reclaim');assert.equal(hp(t,1-me),61,'healed 18 to full, then 9 again');
+ }
+});
+
+test('Haste: 7 Mana, 2/3/4 exchanges; an action that throws no Impulse parries for free, under fatigue but not counted for it',()=>{
+ for(const [me,leader]of ORDERS){
+  let s=duel({haste:2,ward:1,flame:1},KIT,{me,leader});
+  assert.equal(core.cost(s,me,'haste'),7);
+  play(s,me,'haste','strike');assert.equal(hp(s,me),61,'its own first cast: no Parry yet');
+  play(s,me,'flame','strike');assert.equal(hp(s,me),61,'Flame + a free Parry: the Impulse is stopped');assert.equal(hp(s,1-me),50);
+  play(s,me,'reclaim','flame');assert.equal(hp(s,me),51,'Refocus + a free Parry halves Flame');
+  play(s,me,'ward','strike');assert.equal(hp(s,1-me),41,'Ward throws an Impulse instead, so no Parry: Ward halves the blow');assert.equal(hp(s,me),46);
+  play(s,me,'strike','strike');assert(!core.has(s,me,'haste'),'rank II: three exchanges');assert.equal(hp(s,me),37,'Haste over: no free Parry');
+  // The free Parry doesn't tire a chosen Parry next exchange; a chosen Parry tires the free one.
+  s=duel({haste:2,ward:1,flame:1},KIT,{me,leader});
+  play(s,me,'haste','reclaim');play(s,me,'flame','reclaim');play(s,me,'guard','strike');assert.equal(hp(s,me),70,'a full Parry after a free one');
+  play(s,me,'reclaim','strike');assert.equal(hp(s,me),65,'the free Parry after a chosen one leaks half');
  }
 });
 

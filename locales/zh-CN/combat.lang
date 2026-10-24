@@ -83,8 +83,8 @@ d.rapport [f52013] = 有观众时：支付 {crowns} 克朗，结算时获得 {n}
 d.sleight [85c698] = 偷取至多 {n} 克朗；立场略微偏向空洞。反照会让它落回你身上。{tranches}
 # en: nothing more this fight
 d.reward.none [0afa8b] = 本场不会再有收获
-# en: For the next {n}, each spell you cast that deals no damage of its own and isn't a channel also throws an Impulse ({dmg} Impact damage): an attack, so it breaks your Shadowstep. Basic actions don't.
-d.haste [5e8116] = 接下来 {n}，你施放的每个本身不造成伤害、也不是引导的法术，都会附带一次冲击（{dmg} 点冲击伤害）：这算攻击，因此会破除你的影步。基础行动不会触发。
+# en: For the next {n}, each spell you cast that deals no damage of its own and isn't a channel also throws an Impulse ({dmg} Impact damage): an attack, so it breaks your Shadowstep. Every other action you take also parries.
+d.haste [c9a817] = 接下来 {n}，你施放的每个本身不造成伤害、也不是引导的法术，都会附带一次冲击（{dmg} 点冲击伤害）：这算攻击，因此会破除你的影步。你的其他每个行动都会同时招架。
 # en: Evade attacks and every opposing spell effect for {n} including this one; breaks before the hits land on any exchange you attack or recover Mana.
 d.shadowstep [a8385a] = 包括本回合在内的 {n} 中，闪避攻击和对方的一切法术效果；在你攻击或回收法力的回合，影步会在攻击命中之前破除。
 # en: This exchange: stop every opposing spell (its damage, and Bind, poison, Torment, Omen, Compel, Extraction, Seal and the like) and half of each Impact hit. A charged Starlight gets through, and half of Wildfire's Release.
@@ -151,8 +151,8 @@ d.noEffect [5d3a9f] = 在战斗中没有效果。
 d.brace [e0e7dc] = 包括本回合在内的 {n} 中，削减对方全部伤害的 {pct}，预兆除外。敌对的法术效果照常生效。
 # en: Pay {hp} HP; gain up to {n} ready Mana, capped at capacity.
 d.purify [0850c9] = 支付 {hp} 点生命；获得至多 {n} 点可用法力，不超过上限。
-# en: Deal {dmg} Impact damage before defenses (Parry stops it, Ward halves it). Each Tailwind straight after a Tailwind deals {step} more; any other move starts it over.
-d.tailwind [71552f] = 在防御前造成 {dmg} 点冲击伤害（招架能挡下，护界减半）。紧接着上一次顺风再用顺风，每次多造成 {step} 点；做任何别的行动都会重新计起。
+# en: Deal {dmg} Impact damage before defenses (Parry stops it, Ward halves it). Each Tailwind straight after a Tailwind deals {step} more and costs {more} more Mana; any other move starts it over.
+d.tailwind [a7012b] = 在防御前造成 {dmg} 点冲击伤害（招架能挡下，护界减半）。紧接着上一次顺风再用顺风，每次多造成 {step} 点，也多耗 {more} 点法力；做任何别的行动都会重新计起。
 # en: Once a fight: arm a rescue. The first time you would fall, you freeze instead with {n} HP, through the next exchange: ordinary damage can't touch you then, but poison and Torment still can.
 d.rime [7d8ca0] = 每场一次：布下保命术。你第一次将要倒下时，会改为以 {n} 点生命被冻住，直到下一回合结束：期间寻常伤害伤不到你，但毒和折磨依然可以。
 # en: This exchange, return incoming hostile spells and spell damage to their source, including scheduled spell damage. Does not reflect Impact damage, poison ticks or Torment tolls. Nothing bounces twice.
@@ -321,8 +321,8 @@ brief.rescue [ff23ac] = 保命
 brief.reveal [a2a3f0] = 看穿
 # en: Haste
 brief.haste [2f6010] = 疾速
-# en: +Impulse
-brief.impulses [9a301d] = +冲击
+# en: +Impulse/Parry
+brief.impulses [6c75f0] = +冲击/招架
 # en: Snuff flux
 brief.snuffFlux [353286] = 抹去游离
 # en: Steal
@@ -771,8 +771,8 @@ noun.heartwood [c9115b] = 树苗
 noun.attack [95b8fd] = 攻击
 # en: {name} can’t be hit for {n}, until {name} {v:attacks|attack} or {v:gathers|gather} Mana.
 effect.shadowstep [e42435] = 接下来 {n} 里，{name}无法被击中，直到{name}发动攻击或回收法力。
-# en: For {n}, {name’s} spells without damage of their own also throw an Impulse.
-effect.haste [15ac7b] = 接下来 {n} 里，{name’s}本身不造成伤害的法术也会附带一次冲击。
+# en: For {n}, {name’s} spells without damage of their own also throw an Impulse, and every other action also parries.
+effect.haste [79e09c] = 接下来 {n} 里，{name’s}本身不造成伤害的法术也会附带一次冲击，其他每个行动都会同时招架。
 # en: {name} {v:shrugs|shrug} off most of the damage for {n}.
 effect.brace [3ec0e3] = 接下来 {n} 里，{name}能扛下大部分伤害。
 # en: Spells cast at {name} bounce back for {n}.

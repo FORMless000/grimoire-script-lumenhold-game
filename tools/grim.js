@@ -44,11 +44,12 @@
  *                                       a pure refactor shows "no gameplay change" (exit 1 otherwise)
  *   node tools/grim.js lorebook [--out FILE]
  *                                       export the worldbook as JSON (default build/lorebook.json)
- *   node tools/grim.js retrieve index|search|read|neighbors|brief|related [QUERY/ID] [--backend grim|qmd|lightrag]
+ *   node tools/grim.js retrieve status|index|search|read|neighbors|brief|related [QUERY/ID] [index: --dry-run|--resume|--rebuild --mode batch|sync]
  *                                       bounded authoring evidence, --profile full|lexical|no-dense|no-rerank|no-graph|no-descriptions;
- *                                       --config FILE, --cache DIR, --json (docs/authoring/retrieval.md)
- *   node tools/grim.js author-eval environment|prepare|packet|draft|validate|freeze|trace|audit|critic-packet|critic|panel-prepare|panel-import|review|lock|report
- *                                       manual harness trials and blind human review (experiments/authoring/README.md)
+ *                                       --config FILE, --cache DIR, --json (rag/README.md)
+ *   node tools/grim.js author-eval workspaces|environment|prepare|handoff|packet|draft|validate|freeze|trace|audit|critic-packet|critic|panel-prepare|panel-import|review|lock|report
+ *     workspaces import --experiment DIR --prompt FILE [--scan FILE] [--final]; workspaces review --experiment DIR
+ *                                       manual harness trials and blind human review (rag/EVALUATION.md)
  *   node tools/grim.js brief [--cast a,b] [--place P] [--track T] [--arc A] [--topic "…"] [--tier T] [--out FILE]
  *                            [--examples N] [--like id,id]
  *                                      a ~6k-token context pack for writing events (design §3.4): cast, place, track,
@@ -1696,7 +1697,7 @@ function genPresetsDoc(opts = {}) {
 const [cmd, ...rest] = process.argv.slice(2);
 const flag = (name) => { const i = rest.indexOf('--' + name); return i >= 0 ? (rest[i + 1] && !rest[i + 1].startsWith('--') ? rest[i + 1] : true) : null; };
 switch (cmd) {
-  case 'retrieve': case 'author-eval': require('./authoring/cli.js').main(ROOT, cmd, rest); break;
+  case 'retrieve': case 'author-eval': require('../rag/src/cli.js').main(ROOT, cmd, rest); break;
   case 'build': if (build({ check: !!flag('check') }) === false) process.exit(1); break;
   case 'reach': if (!reachCmd()) process.exit(1); break;
   case 'lint': lint({ verbose: !!flag('verbose'), legacy: !!flag('legacy') }); break;

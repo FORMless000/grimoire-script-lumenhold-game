@@ -18,9 +18,9 @@ import {LOADOUTS,NAMED_LOADOUTS,SPECIAL_LOADOUTS,scaleToMean} from './roster.mjs
 export const PERSONAS={
  // Classes (F5.9b: about 1.5× F5.9's)
  Duellist:{flame:9,ward:5},
- Scholar:{foresight:12,starlight:9,seal:6},
+ Scholar:{foresight:12,omen:9,starlight:6,seal:6},   // feedback 2026-10-24: Omen, its stand-in capstone; Starlight eased (was 9)
  Healer:{mend:12,bramble:6,guard:3},
- Illusionist:{shadowstep:9,reflect:9},
+ Illusionist:{shadowstep:9,reflect:9,hoarfrost:6},   // feedback 2026-10-24: Hoarfrost, its stand-in capstone
  Brawler:{strike:9,tailwind:9,haste:6},
  Prefect:{brace:9,guard:6,ward:5},
  Showman:{haste:9,tailwind:6,flame:3},

@@ -1,6 +1,6 @@
 # Authoring spec
 
-This folder is the single source for how Lumenhold content is made (design §3.5). The Claude Code skills (`skills/write-academy-events`, `skills/distill-lore`) are built from it, and the tentative live-generation harness will build its prompts from it too, so the paths can't drift apart.
+This folder is the single source for how Lumenhold content is made (design §3.5). The coding-agent skills (`skills/write-academy-events`, `skills/distill-lore`) are built from it, and the tentative live-generation harness will build its prompts from it too, so the paths can't drift apart.
 
 | File | Contents |
 |---|---|
@@ -20,14 +20,16 @@ The language reference stays `docs/grimoire-script.md`; canon lives only in the 
 
 Humans don't write events; they curate the worldbook, playtest, read dashboards and delete what doesn't belong. Content is made in three ways:
 
-1. **Batch authoring by Claude Code** (`skills/write-academy-events`): 20–40 events around one brief.
-2. **Feedback tuning by Claude Code** (a `tune-events` skill is planned; until then: `grim feedback`, `grim show <id>`, edit, `grim check`): rebalance, rewrite, re-gate or retire events using `grim feedback` / `grim report` and the run logs.
+1. **Batch authoring by coding agents** (`skills/write-academy-events`): 20–40 events around one brief.
+2. **Feedback tuning by coding agents** (a `tune-events` skill is planned; until then: `grim feedback`, `grim show <id>`, edit, `grim check`): rebalance, rewrite, re-gate or retire events using `grim feedback` / `grim report` and the run logs.
 3. **Live generation during play**: tentative (design §T3); it will follow the same spec, worldbook and validators.
 
 ## The loop for a batch
 
+Load context through [the everyday authoring procedure](../../rag/AUTHORING.md).
+Prepared experiments instead follow their assigned packet.
+
 ```bash
-node tools/grim.js brief --cast lyra,kael --place library --topic "…" --out build/brief.md   # context pack (~6k tokens)
 # write the events (content/events/*.grim), then:
 node tools/grim.js fmt
 node tools/grim.js build && node tools/grim.js lint        # 0 errors; canon lint: no unknown proper nouns
@@ -39,7 +41,7 @@ Then check the batch against `checklist.md` (a separate critic pass, without the
 
 ## Finding prior art
 
-Write next to what exists, not over it:
+Follow the [retrieval command guide](../../rag/AUTHORING.md) for source discovery and inspection. Ordinary structural tools include:
 
 ```bash
 node tools/grim.js brief --place library --track library_assistant --topic "…"   # lists every card already there, shows the most similar in full
@@ -54,12 +56,8 @@ node tools/economy.js --by event --freq                                         
 
 ## Controlled retrieval experiments
 
-The optional [retrieval tools](retrieval.md) provide bounded original source blocks,
-static dependencies, hybrid search and framework adapters for coding agents.
-[Controlled experiments](../../experiments/authoring/README.md) compare them with
-the existing workflow using quarantined cards, native trace audits and blind human
-review. The experiment instructions override the retrieval step only. Production
-batch acceptance and translation still apply when a candidate is adopted.
+See [RAG setup and retrieval](../../rag/README.md) and the
+[controlled evaluation protocol](../../rag/EVALUATION.md).
 
 ## Balance
 

@@ -17,6 +17,7 @@
 'use strict';
 const http = require('http');
 const fs = require('fs');
+const { pathToFileURL } = require('url');
 const path = require('path');
 const zlib = require('zlib');
 const { project } = require('../tools/project.js');
@@ -25,7 +26,7 @@ const { createAuth } = require('./auth.js');
 const { createApi } = require('./routes.js');
 
 const ROOT = path.resolve(__dirname, '..');
-const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.woff2': 'font/woff2', '.ico': 'image/x-icon' };
+const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.wasm': 'application/wasm', '.md': 'text/plain; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.woff2': 'font/woff2', '.ico': 'image/x-icon' };
 // Only these paths are served as static files.
 const STATIC = [/^\/index\.html$/, /^\/src\/[\w./-]+$/, /^\/build\/content\.bundle\.js$/, /^\/build\/combat\.bundle\.js$/, /^\/content\/world\/maps\/[\w.-]+\.svg$/, /^\/docs\/[\w.-]+\.(svg|png)$/, /^\/server\/admin\.html$/];
 const LOOPBACK = /^(127\.\d+\.\d+\.\d+|::1|localhost)$/;
@@ -54,6 +55,16 @@ function createServer({ root = ROOT, dataDir = path.join(root, 'data'), token = 
     return bundleCache;
   }
 
+  // The combat test bench at /bench/ (the title screen's "Combat bench"): its site built in memory from combat/
+  // (combat/tools/site.mjs) on the first visit; in development, again whenever one of its sources changed.
+  let benchCache = { key: null, files: null };
+  async function bench() {
+    const site = await import(pathToFileURL(path.join(root, 'combat', 'tools', 'site.mjs')).href);
+    const key = production ? 'prod' : site.siteSources().map((f) => f + ':' + fs.statSync(f).mtimeMs).join('|');
+    if (key !== benchCache.key || !benchCache.files) benchCache = { key, files: await site.siteFiles() };
+    return benchCache.files;
+  }
+
   const HEADERS = { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'X-Frame-Options': 'DENY' };
   // Text bodies are gzipped when the client accepts it; `gz` passes an already compressed body.
   function send(res, status, body, type = 'application/json; charset=utf-8', extra = {}, gz = null) {
@@ -80,6 +91,12 @@ function createServer({ root = ROOT, dataDir = path.join(root, 'data'), token = 
     if (p === '/admin' || p === '/admin/' || p === '/server/admin.html') {
       if (!auth.isAdmin(req, url)) throw httpError(401, 'admin token required');
       return sendFile(res, path.join(__dirname, 'admin.html'));
+    }
+    if (p === '/bench') { res.writeHead(302, { Location: '/bench/' }); return res.end(); }
+    if (p.startsWith('/bench/')) {
+      const name = p.slice('/bench/'.length) || 'index.html', files = await bench();
+      if (name === 'server.mjs' || !Object.prototype.hasOwnProperty.call(files, name)) throw httpError(404, 'not found');
+      return send(res, 200, files[name], MIME[path.extname(name)] || 'application/octet-stream');
     }
     if (p === '/build/content.bundle.js') {
       const b = bundle();

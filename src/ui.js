@@ -193,7 +193,8 @@
       '<label class="adv-check"><input type="checkbox" id="pskip"' + (settings.skipIntros ? ' checked' : '') + '> ' + esc(t('title.skipIntros')) + '</label></details>' +
       '<div class="row"><button class="btn primary grow" id="begin">' + esc(t('title.begin')) + '</button>' +
       (savedInfo ? '<button class="btn grow" id="cont">' + esc(t('title.continue', { info: '' })) + savedInfo + '</button>' : '') + '</div>' +
-      '<div class="row"><button class="btn ghost-btn grow" id="slotsBtn">' + esc(t('slots.heading')) + '</button></div>' +
+      '<div class="row"><button class="btn ghost-btn grow" id="slotsBtn">' + esc(t('slots.heading')) + '</button>' +
+      '<a class="btn ghost-btn grow bench-btn" id="benchBtn" href="bench/" target="_blank" rel="noopener" title="' + esc(t('title.benchHint')) + '">' + Art.icon('sword', 16) + ' ' + esc(t('title.bench')) + '</a></div>' +
       (ui.notice ? '<div class="notice">' + esc(ui.notice) + '</div>' : '') +
       '<div class="howto">' + t('title.howto_html') + '</div>' + runLogLine() +
       '</div>' + creditsLine() + '</div></div>';
@@ -232,6 +233,9 @@
     const c = document.getElementById('cont');
     if (c) c.onclick = () => { eng = new Engine(content).load(saved); buildGame(); step(eng.advance()); };
     document.getElementById('slotsBtn').onclick = () => openSlots();
+    // The combat test bench (combat/web), served by the game's server at /bench/: practice fights and debugging. From
+    // file:// there is no server to build it.
+    document.getElementById('benchBtn').onclick = (e) => { if (location.protocol === 'file:') { e.preventDefault(); toast(t('title.benchNoServer')); } };
     const ex = document.getElementById('exportRuns');
     if (ex) ex.onclick = () => exportRuns(allRuns(), 'lumenhold-runs-' + fileStamp() + '.json');
   }
@@ -403,7 +407,7 @@
       });
       if (snap.spells.length) {
         h += '<div class="sec-h">' + esc(t('side.spells')) + '</div>';
-        for (const sp of snap.spells) h += '<div class="state spell">' + Art.icon(sp.art || 'wand', 20) + '<div><b>' + esc(sp.name) + ' ' + ['', 'I', 'II', 'III'][sp.level] + '</b><p>' + esc(sp.desc || '') + '</p><small class="scales">' + esc(spellScales(sp.skill)) + '</small></div><span class="left">' + esc(t('side.spellCost', { n: sp.cost })) + '</span></div>';
+        for (const sp of snap.spells) h += '<div class="state spell">' + Art.icon(sp.art || 'wand', 20) + '<div><b>' + esc(tidy(sp.name + ' ' + spellLv(sp.id, sp.level))) + '</b><p>' + esc(sp.desc || '') + '</p><small class="scales">' + esc(spellScales(sp.skill)) + '</small></div><span class="left">' + esc(t('side.spellCost', { n: sp.cost })) + '</span></div>';
       }
     } else if (ui.tab === 'kit') {
       // The kit (E4): one wand, one robe and one trinket worn; tap an item you own to wear it. Worn items act only in fights.
@@ -625,6 +629,11 @@
     card.className = 'card enter ' + (extraClass || '');
     card.innerHTML = (art !== false ? '<div class="card-art">' + Art.scene(art, tags, seed) + '</div>' : '') + inner;
     deck.appendChild(card);
+    // The body is a scroll container, so its own touch-action decides a touch on it: none (the swipe gets every move) unless
+    // its text overflows, then vertical panning only. With the default, Android took the gesture a few pixels in and
+    // cancelled the swipe (feedback 2026-10-24).
+    const body = card.querySelector('.card-body');
+    if (body && body.scrollHeight > body.clientHeight + 2) body.classList.add('scrolls');
     return card;
   }
   const sceneNote = (scene, hidden) => scene ? '<p class="scene-note"' + (hidden ? ' style="display:none"' : '') + '>' + esc(scene) + '</p>' : '';
@@ -640,7 +649,8 @@
     : t('check.button', { skill: c.exam || c.challenge ? skillsOf(c.using) : skillName(c.skill) });
   // The roll on an option's button (B24, M11): combat, the future minigame, is marked apart from skill checks.
   // A negotiation (E8) is marked too: the scroll, and the word on the button.
-  const checkLine = (c, key) => (c ? '<span class="chk roll' + (c.combat || c.fight ? ' combat' : c.parley ? ' parley' : '') + '">' + Art.icon(c.combat || c.fight ? 'sword' : c.parley ? 'scroll' : c.exam ? 'paper' : 'dice', 12) + ' ' + esc(checkText(c, key)) + '</span>' : '');
+  // On a button (`short`) a fight says only that it is one; who and at what level is in the option's floating window.
+  const checkLine = (c, key, short) => (c ? '<span class="chk roll' + (c.combat || c.fight ? ' combat' : c.parley ? ' parley' : '') + '">' + Art.icon(c.combat || c.fight ? 'sword' : c.parley ? 'scroll' : c.exam ? 'paper' : 'dice', 12) + ' ' + esc(short && c.fight ? t('check.fight') : checkText(c, key)) + '</span>' : '');
   // "Fight · Lyra · level 34": who the option fights, before it starts (the same foe the fight will bring).
   function fightText(key) {
     const req = key && fightAhead(key);
@@ -653,7 +663,7 @@
 
   function showCard(v) {
     ui.mode = 'card'; ui.view = v; ui.busy = false; setSlotTint(v.slot);
-    closeOverlay();
+    closeOverlay(); hideTip();
     const story = v.type === 'story' || v.options.length === 1;
     const L = story ? v.options[0] : v.options.find((o) => o.key === 'left');
     const R = story ? v.options[0] : v.options.find((o) => o.key === 'right');
@@ -665,20 +675,24 @@
     card.querySelector('.card-art').insertAdjacentHTML('beforeend', '<span class="tagline">' + esc(cardTagline(v)) + '</span>' + (v.src === 'queued' && !(v.tags || []).includes('story') ? '<span class="src">' + esc(t('card.consequence')) + '</span>' : '') +
       (v.slot ? '<span class="slotchip">' + esc([t('slot.' + v.slot), v.place && content.places[v.place] ? content.places[v.place].name : null, v.track && content.tracks[v.track] ? content.tracks[v.track].name : null].filter(Boolean).join(' · ')) + '</span>' : ''));
     const choices = document.getElementById('choices');
-    const pv = (o) => previewHtml(v, o);
-    const chk = (o) => (o.hint ? '<span class="chk">' + esc(o.hint) + '</span>' : '') + checkLine(o.check, o.key) + pv(o);
+    // A button stays compact (feedback 2026-10-24): its label, the kind of roll, and one line per outcome; the option's
+    // description, the roll in full and what the "…" stands for are in its floating window (optionTip).
+    const parts = {};
+    for (const o of v.options) parts[o.key] = previewParts(v, o);
+    const chk = (o) => checkLine(o.check, o.key, true) + parts[o.key].html;
+    const lbl = (o) => '<span class="cb"><span class="lbl">' + esc(o.label) + '</span>';
     if (story) {
-      choices.innerHTML = '<button class="choice single" data-k="' + esc(L.key) + '"><span>' + esc(L.label) + chk(L) + '</span></button>';
+      choices.innerHTML = '<button class="choice single" data-k="' + esc(L.key) + '">' + lbl(L) + chk(L) + '</span></button>';
     } else {
       const lock = (o) => o.disabled ? ' disabled title="' + esc(o.locked || (o.poor ? t('card.cantAfford', { cost: o.poor }) : null) || o.hint || t('card.notAvailable')) + '"' : '';
       const U = v.options.find((o) => o.key === 'up');
-      choices.innerHTML = '<button class="choice left" data-k="left"' + lock(L) + '><span class="arrow">' + (L.disabled ? '🔒' : '←') + '</span><span>' + esc(L.label) + chk(L) + '</span></button>' +
-        '<button class="choice right" data-k="right"' + lock(R) + '><span>' + esc(R.label) + chk(R) + '</span><span class="arrow">' + (R.disabled ? '🔒' : '→') + '</span></button>' +
-        (U ? '<button class="choice up" data-k="up"' + (U.disabled ? ' disabled title="' + esc(t('spell.short')) + '"' : '') + '><span class="arrow">' + (U.disabled ? '🔒' : '↑') + '</span><span>' + esc(U.label) + '<span class="chk">' + (U.item ? Art.icon((content.items[U.item.id] || {}).art || 'pouch', 12) + ' ' + esc(t('item.button', { item: (content.items[U.item.id] || {}).name || U.item.id })) : esc(t('spell.button', { spell: spellName(U.spell.id), level: ['', 'I', 'II', 'III'][U.spell.level], cost: U.spell.cost }))) + '</span>' + pv(U) + '</span></button>' : '');
+      choices.innerHTML = '<button class="choice left" data-k="left"' + lock(L) + '><span class="arrow">' + (L.disabled ? '🔒' : '←') + '</span>' + lbl(L) + chk(L) + '</span></button>' +
+        '<button class="choice right" data-k="right"' + lock(R) + '>' + lbl(R) + chk(R) + '</span><span class="arrow">' + (R.disabled ? '🔒' : '→') + '</span></button>' +
+        (U ? '<button class="choice up" data-k="up"' + (U.disabled ? ' disabled title="' + esc(t('spell.short')) + '"' : '') + '><span class="arrow">' + (U.disabled ? '🔒' : '↑') + '</span>' + lbl(U) + '<span class="chk">' + (U.item ? Art.icon((content.items[U.item.id] || {}).art || 'pouch', 12) + ' ' + esc(t('item.button', { item: (content.items[U.item.id] || {}).name || U.item.id })) : esc(tidy(t('spell.button', { spell: spellName(U.spell.id), level: spellLv(U.spell.id, U.spell.level), cost: U.spell.cost })))) + '</span>' + parts.up.html + '</span></button>' : '');
     }
     choices.querySelectorAll('.choice').forEach((b) => {
       const opt = v.options.find((o) => o.key === b.dataset.k);
-      longPressReveal(b);
+      attachTip(b, () => optionTip(opt, parts[opt.key]), parts[opt.key].extra || !!opt.hint || !!(opt.check && opt.check.fight));
       b.onmouseenter = () => setPreview(opt.affects);
       b.onmouseleave = () => setPreview(null);
       b.onclick = () => commitCard(story ? 'right' : b.dataset.k);
@@ -688,6 +702,8 @@
       move(dx) {
         const side = dx < 0 ? 'left' : 'right';
         const a = Math.min(1, Math.abs(dx) / 90);
+        // While the card leans one way, that way's button takes the whole row (feedback 2026-10-24).
+        choices.classList.toggle('lean-left', !story && dx < -25); choices.classList.toggle('lean-right', !story && dx > 25);
         card.querySelector('.card-label.left').style.opacity = side === 'left' ? a : 0;
         card.querySelector('.card-label.right').style.opacity = side === 'right' ? a : 0;
         setPreview(Math.abs(dx) > 25 ? (side === 'left' ? L : R).affects : null);
@@ -722,20 +738,27 @@
   // The skill a spell scales with (feedback 2026-10-19): "Scales with Arcana", or that it doesn't.
   function spellScales(skill) { const sk = String(skill || '').split(/[,\s]+/).filter(Boolean).map(skillName); return sk.length ? t('spell.scales', { skill: sk.join(' + ') }) : t('spell.flat'); }
   function spellName(id) { return (content.spells[id] && content.spells[id].name) || id; }
-  // Exact outcome preview (design §8.3) for one option: one line of changes, or one line per outcome.
-  function previewHtml(v, o) {
+  // A spell's level as shown (I–III), and nothing for a spell with one level (Ward, the capstones, club and job spells).
+  const spellLv = (id, level) => (eng && eng.spellLevels(id) > 1 ? ['', 'I', 'II', 'III'][level] || String(level || '') : '');
+  // A line with an empty {level} keeps no doubled or trailing space.
+  const tidy = (x) => x.replace(/ {2,}/g, ' ').trim();
+  // Exact outcome preview (design §8.3) for one option, in two parts: `html`, compact for the button (one line of
+  // changes, or one line per outcome, at most three), and `tip`, in full for its floating window (every outcome, each
+  // change named, and what the "…" stands for). `extra`: the window says more than the button.
+  function previewParts(v, o) {
     let pv;
-    try { pv = eng.preview(v.id, o.key, v.actor ? v.actor.id : null); } catch (e) { return ''; }
-    const amt = (k, r, name) => {
+    try { pv = eng.preview(v.id, o.key, v.actor ? v.actor.id : null); } catch (e) { return { html: '', tip: '', extra: false }; }
+    const amt = (k, r, name, named) => {
       const d = deltaLook(k); if (!d) return '';
       const a = amountShown(k, r[0], r[1]);
-      return '<i class="' + deltaClass(r[0], r[1]) + '" title="' + esc((name || d.name) + (a.title ? ' · ' + a.title : '')) + '">' + Art.icon(d.icon, 12) + esc(a.text) + '</i>';
+      return '<i class="' + deltaClass(r[0], r[1]) + '"' + (named ? '' : ' title="' + esc((name || d.name) + (a.title ? ' · ' + a.title : '')) + '"') + '>' + Art.icon(d.icon, 12) + esc(a.text) +
+        (named ? '<span class="nm">' + esc(name || d.name) + '</span>' : '') + '</i>';
     };
     // Exam preparation for several courses at once (`study` with no track) shows once (feedback 2026-10-15b).
-    const line = (d) => {
+    const line = (d, named) => {
       const keys = Object.keys(d).filter((k) => d[k][0] || d[k][1]), studies = keys.filter((k) => k.startsWith('study:'));
       return keys.filter((k) => !k.startsWith('study:') || k === studies[0])
-        .map((k) => amt(k, d[k], studies.length > 1 && k === studies[0] ? t('chip.studyAll', { n: studies.length }) : null)).join('');
+        .map((k) => amt(k, d[k], studies.length > 1 && k === studies[0] ? t('chip.studyAll', { n: studies.length }) : null, named)).join('');
     };
     const label = (pth) => {
       const d = pth.labels[0]; if (!d) return '';
@@ -746,14 +769,36 @@
     };
     // A fight's paths are its outcomes (win, partial, lose), with no odds: the fight decides, not a roll.
     const paths = pv.paths.length <= 1 ? pv.paths : pv.fight ? pv.paths.slice().sort((a, b) => ((a.labels[0] || {}).choice || 0) - ((b.labels[0] || {}).choice || 0)) : pv.paths.slice().sort((a, b) => b.p - a.p);
-    const items = revealItems(paths, label), full = items.length ? '<span class="pv-more">' + items.map((x) => '<em>' + esc(x.text) + (x.on ? ' <small>' + esc(x.on) + '</small>' : '') + '</em>').join('') + '</span>' : '';
-    // One "…" for the whole option (it stands for what the reveal spells out), not one per outcome.
-    const more = pv.follows ? '<i class="more" title="' + esc(items.map((x) => x.text + (x.on ? ' (' + x.on + ')' : '')).join(' · ') || t('preview.follows')) + '">…</i>' : '';
-    if (paths.length <= 1) { const l = line(pv.deltas); return l || more ? '<span class="pv">' + l + more + full + '</span>' : ''; }
-    const rows = paths.slice(0, 3).map((pth) => '<b>' + esc(pth.fight ? label(pth).trim() + ' ' : label(pth) + Math.round(pth.p * 100) + '%') + '</b>' + (line(pth.deltas) || '—'));
-    if (paths.length > 3) rows.push('…');
+    const items = revealItems(paths, label);
+    const reveal = items.length ? '<span class="tip-more">' + items.map((x) => '<em>' + esc(x.text) + (x.on ? ' <small>' + esc(x.on) + '</small>' : '') + '</em>').join('') + '</span>' : '';
+    // One "…" for the whole option (its window spells it out), not one per outcome.
+    const more = pv.follows || paths.length > 3 ? '<i class="more">…</i>' : '';
+    if (paths.length <= 1) {
+      const l = line(pv.deltas);
+      return { html: l || more ? '<span class="pv">' + l + more + '</span>' : '', tip: (l ? '<span class="pv">' + line(pv.deltas, true) + '</span>' : '') + reveal, extra: !!items.length };
+    }
+    const head = (pth) => '<b class="' + outcomeClass(pth.labels[0]) + '">' + esc(pth.fight ? label(pth).trim() + ' ' : label(pth) + Math.round(pth.p * 100) + '%') + '</b>';
+    const rows = paths.slice(0, 3).map((pth) => head(pth) + (line(pth.deltas) || '—'));
     rows[rows.length - 1] += more;
-    return '<span class="pv multi">' + rows.map((r) => '<span class="pvl">' + r + '</span>').join('') + full + '</span>';
+    return {
+      html: '<span class="pv multi">' + rows.map((r) => '<span class="pvl">' + r + '</span>').join('') + '</span>',
+      tip: '<span class="pv multi">' + paths.map((pth) => '<span class="pvl">' + head(pth) + (line(pth.deltas, true) || '—') + '</span>').join('') + '</span>' + reveal,
+      extra: !!items.length || paths.length > 3,
+    };
+  }
+  // An outcome's label takes the colour of how it went: success, partial or failure (a fight or a challenge, a check, a grade).
+  function outcomeClass(d) {
+    if (!d) return '';
+    const n = d.kind === 'exam' ? (d.choice === 3 ? 2 : d.choice === 0 ? 0 : 1) : d.kind === 'check' ? (d.choice === 0 ? 0 : 2) : d.choice;
+    return ['o-win', 'o-part', 'o-lose'][n] || '';
+  }
+  // An option's floating window: its label, why it is locked, its description (`hint:`), the roll in full when the button
+  // only names its kind (a fight's foe and level), and every outcome in full.
+  function optionTip(o, parts) {
+    const lock = o.disabled ? o.locked || (o.poor ? t('card.cantAfford', { cost: o.poor }) : null) : null;
+    const fight = o.check && o.check.fight ? checkLine(o.check, o.key) : '';
+    return '<b class="tip-title">' + esc(o.label) + '</b>' + (lock ? '<p class="tip-lock">🔒 ' + esc(lock) + '</p>' : '') + (o.hint ? '<p class="tip-hint">' + esc(o.hint) + '</p>' : '') +
+      (fight ? '<p class="tip-check">' + fight + '</p>' : '') + (parts ? parts.tip : '');
   }
   // The "…" spelled out (feedback 2026-10-19: the exam's listed every grade, each with the same odds), built so that
   // nothing repeats what the preview already shows:
@@ -783,19 +828,46 @@
     // Shared items first, then the ones that depend on how it goes.
     return items.filter((x) => !x.on).concat(items.filter((x) => x.on));
   }
-  // Long-press (touch) on a choice or a menu tile spells out its "…" instead of choosing; hover does it with a mouse (CSS).
-  function longPressReveal(b) {
-    let timer = null, shown = false, x0 = 0, y0 = 0;
-    const hide = () => { b.classList.remove('show-more'); };
+  // The floating window (feedback 2026-10-24; it replaces the hover and long-press expansions): what an option's button
+  // leaves out, by the mouse while it hovers, or at the finger on a long-press (touch). `html` is built on first show.
+  // It shows when `rich` (the window says more than the button) or when a line of the button is cut short.
+  const tip = { el: null, owner: null };
+  function showTip(owner, html, x, y) {
+    if (!tip.el || !tip.el.isConnected) { tip.el = document.createElement('div'); tip.el.className = 'tip'; tip.el.setAttribute('role', 'tooltip'); document.body.appendChild(tip.el); }
+    if (tip.owner !== owner) { tip.el.innerHTML = typeof html === 'function' ? html() : html; tip.owner = owner; }
+    tip.el.classList.add('on');
+    placeTip(x, y);
+  }
+  function placeTip(x, y) {
+    const el = tip.el, m = 8, w = el.offsetWidth, h = el.offsetHeight;
+    let left = x + 16, top = y + 20;
+    if (left + w > window.innerWidth - m) left = Math.max(m, x - w - 12);
+    if (top + h > window.innerHeight - m) top = Math.max(m, y - h - 14);
+    el.style.left = left + 'px'; el.style.top = top + 'px';
+  }
+  function hideTip(owner) {
+    if (!tip.el || (owner && tip.owner !== owner)) return;
+    tip.el.classList.remove('on'); tip.owner = null;
+  }
+  function attachTip(b, html, rich) {
+    const cut = () => [...b.querySelectorAll('.chk, .pv, .pvl')].some((x) => x.scrollWidth > x.clientWidth + 1);
+    const wanted = () => rich || cut();
+    b.addEventListener('mouseenter', (e) => { if (wanted()) showTip(b, html, e.clientX, e.clientY); });
+    b.addEventListener('mousemove', (e) => { if (tip.owner === b) placeTip(e.clientX, e.clientY); });
+    b.addEventListener('mouseleave', () => hideTip(b));
+    b.addEventListener('mousedown', () => hideTip(b));
+    // Touch: a long-press shows the window instead of choosing; it stays a moment after the finger lifts.
+    let timer = null, shown = false, x0 = 0, y0 = 0, linger = null;
     b.addEventListener('touchstart', (e) => {
-      const t0 = e.touches[0]; x0 = t0.clientX; y0 = t0.clientY; shown = false;
-      timer = setTimeout(() => { if (!b.querySelector('.pv-more')) return; shown = true; b.classList.add('show-more'); setTimeout(hide, 4000); }, 450);
+      const t0 = e.touches[0]; x0 = t0.clientX; y0 = t0.clientY; shown = false; clearTimeout(linger);
+      timer = setTimeout(() => { if (!wanted()) return; shown = true; showTip(b, html, x0, y0 - 40); }, 450);
     }, { passive: true });
     b.addEventListener('touchmove', (e) => { const t1 = e.touches[0]; if (Math.hypot(t1.clientX - x0, t1.clientY - y0) > 10) clearTimeout(timer); }, { passive: true });
-    b.addEventListener('touchend', () => clearTimeout(timer), { passive: true });
-    b.addEventListener('touchcancel', () => clearTimeout(timer), { passive: true });
-    b.addEventListener('contextmenu', (e) => { if (b.querySelector('.pv-more')) e.preventDefault(); });
-    // The click a long-press ends with only reveals.
+    const lift = () => { clearTimeout(timer); if (shown) linger = setTimeout(() => hideTip(b), 2500); };
+    b.addEventListener('touchend', lift, { passive: true });
+    b.addEventListener('touchcancel', lift, { passive: true });
+    b.addEventListener('contextmenu', (e) => { if (wanted()) e.preventDefault(); });
+    // The click a long-press ends with only shows.
     b.addEventListener('click', (e) => { if (shown) { shown = false; e.stopImmediatePropagation(); e.preventDefault(); } }, true);
   }
   function commitCard(dir) {
@@ -812,7 +884,7 @@
   function resolveCardDir(dir) {
     if (ui.busy) return;
     ui.busy = true;
-    setPreview(null);
+    setPreview(null); hideTip();
     const v = ui.view;
     const story = v.type === 'story' || v.options.length === 1;
     const key = story ? v.options[0].key : dir;
@@ -865,10 +937,10 @@
     if (n.kind === 'bond') return t('note.bond', { name: shortName(n.npc), status: bondLabel(n.status) });
     if (n.kind === 'gain' || n.kind === 'lose') return t('note.' + n.kind, { state: content.states[n.state] ? content.states[n.state].name : n.state });
     if (n.kind === 'spell') {
-      const lv = ['', 'I', 'II', 'III'][n.level] || n.level;
+      const lv = spellLv(n.spell, n.level);
       // The spell's reward (L-6): the skill it trained, "+3 Arcana".
       const bonus = Object.entries(n.bonus || {}).filter(([, v]) => v > 0).map(([k, v]) => '+' + Math.round(v) + ' ' + skillName(k)).join(', ');
-      return bonus ? t('note.spellBonus', { spell: spellName(n.spell), level: lv, bonus }) : t('note.spell', { spell: spellName(n.spell), level: lv });
+      return tidy(bonus ? t('note.spellBonus', { spell: spellName(n.spell), level: lv, bonus }) : t('note.spell', { spell: spellName(n.spell), level: lv }));
     }
     const tn = (id) => (content.tracks[id] ? content.tracks[id].name : id);
     if (n.kind === 'grade') {
@@ -998,13 +1070,15 @@
     if (!led) return showMenuLead(v);
     ui.mode = 'menu'; ui.view = v; ui.busy = false; ui.multi = v.pick > 1 ? [] : null; ui.sel = null; ui.lastPick = null;
     const deck = document.getElementById('deck'); deck.querySelectorAll('.card').forEach((c) => c.remove());
-    document.getElementById('choices').innerHTML = '';
+    document.getElementById('choices').innerHTML = ''; hideTip();
+    const parts = {};
     const opts = v.options.map((o, i) => {
+      parts[o.key] = previewParts(v, o);
       if (o.poor && !o.locked) o = Object.assign({}, o, { locked: t('card.cantAfford', { cost: o.poor }) });
       const aff = o.affects.map((id) => content.resources[id] ? Art.icon(content.resources[id].icon, 14) : '').join('');
       return '<button class="opt' + (o.locked ? ' locked' : '') + '" data-k="' + esc(o.key) + '"' + (o.disabled ? ' disabled' : '') + '><span class="num">' + (i < 9 ? i + 1 : '') + '</span><b>' + (o.locked ? '🔒 ' : '') + esc(o.label) + '</b>' +
         (o.locked ? '<small class="why">' + esc(o.locked) + '</small>' : '') +
-        (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') + courseLine(o.course) + jobLine(o.job) + switchLine(o.switching) + (previewHtml(v, o) || (aff ? '<span class="aff">' + aff + '</span>' : '')) + againLine() + '</button>';
+        (o.hint ? '<small>' + esc(o.hint) + '</small>' : '') + courseLine(o.course) + jobLine(o.job) + switchLine(o.switching) + (parts[o.key].html || (aff ? '<span class="aff">' + aff + '</span>' : '')) + againLine() + '</button>';
     }).join('');
     openPanel('<div class="modal dark"><div class="modal-art">' + Art.scene(v.art, v.tags, v.id) + '</div><div class="modal-body">' + (v.actor ? actorRow(v.actor).replace('actor-row', 'actor-row" style="color:var(--text)') : '') +
       '<h2>' + esc(v.title) + '</h2><p class="text prompt">' + esc(v.pick > 1 ? t('menu.promptMany', { n: v.pick }) : t('menu.prompt')) + '</p>' +
@@ -1015,7 +1089,7 @@
       b.onmouseenter = () => setPreview(o.affects);
       b.onmouseleave = () => setPreview(null);
       b.onclick = () => pickMenu(o.key);
-      longPressReveal(b);
+      attachTip(b, () => parts[o.key].tip, parts[o.key].extra);
     });
   }
   // Said on the tile just picked (CSS shows it on .last-pick): how to confirm it.
@@ -1143,7 +1217,7 @@
     stage.classList.add('paneled'); stage.appendChild(o);
     o.scrollTop = 0;
   }
-  function closeOverlay() { const o = document.getElementById('overlay'); if (o) o.remove(); const st = document.querySelector('.stage.paneled'); if (st) st.classList.remove('paneled'); }
+  function closeOverlay() { hideTip(); const o = document.getElementById('overlay'); if (o) o.remove(); const st = document.querySelector('.stage.paneled'); if (st) st.classList.remove('paneled'); }
 
   /* ------------------------------------------------------------------ keys */
   function onKey(e) {
@@ -1185,7 +1259,7 @@
   let contentHash = null, fbOpen = false, fbItems = [];
   function runMeta() {
     if (!contentHash) contentHash = I18n.hash((window.LUMENHOLD_SOURCES || []).map((x) => x.path + '\n' + x.text).join('\n'));
-    return { game: content.game.title || 'Lumenhold', contentHash, lang: I18n.lang(), userAgent: navigator.userAgent };
+    return { game: content.game.title || 'Lumenhold', version: window.LUMENHOLD_VERSION || null, contentHash, lang: I18n.lang(), userAgent: navigator.userAgent };
   }
   function loadRuns() { try { const r = JSON.parse(store.get(RUNS_KEY) || '[]'); return Array.isArray(r) ? r : []; } catch (e) { return []; } }
   // Upsert a run into the archive (oldest first). It is also the outbox: runs not yet on the server
@@ -1477,9 +1551,10 @@
   const CREDIT = { author: 'FORMless000', year: 2026, repo: 'https://github.com/FORMless000/grimoire-script-lumenhold-game' };
   function creditsLine() {
     const a = (href, text) => '<a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(text) + '</a>';
-    return '<footer class="credits">' + ['© ' + CREDIT.year + ' ' + esc(CREDIT.author),
+    // The version (src/version.js, 0.3.<commit count>, stamped by the pre-commit hook) leads the line.
+    return '<footer class="credits">' + [(window.LUMENHOLD_VERSION ? '<b class="version">v' + esc(window.LUMENHOLD_VERSION) + '</b>' : ''), '© ' + CREDIT.year + ' ' + esc(CREDIT.author),
       a(CREDIT.repo + '/blob/main/LICENSE', t('credits.license')), a(CREDIT.repo, t('credits.source')), a(CREDIT.repo + '/issues', t('credits.issues'))]
-      .map((x) => '<span>' + x + '</span>').join('') + '</footer>';
+      .filter(Boolean).map((x) => '<span>' + x + '</span>').join('') + '</footer>';
   }
   function refreshCard() { if (ui.mode === 'card' && ui.view) showCard(ui.view); else if (ui.mode === 'menu' && ui.view) showMenu(ui.view, true); }
   function closeSlots() { const w = document.getElementById('slotDialog'); if (w) w.remove(); }

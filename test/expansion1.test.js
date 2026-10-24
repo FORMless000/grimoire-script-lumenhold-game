@@ -302,7 +302,7 @@ test('the orientation: the Welcome skips it or plays it through before the regis
     return { ids, ward: (e.s.spells || {}).ward };
   };
   const along = play('right'), skip = play('left');
-  const seq = ['intro_welcome', 'intro_what_is_just', 'intro_tour', 'intro_wrong_tower', /^intro_lunch/, 'intro_vey_tea', 'intro_purse', 'intro_room', 'slice_ward_lesson', 'intro_practice_circle', 'intro_kit', 'registrar_list'];
+  const seq = ['intro_welcome', 'intro_what_is_just', 'intro_tour', 'intro_wrong_tower', /^intro_lunch/, 'intro_vey_tea', 'intro_room', 'slice_ward_lesson', 'intro_practice_circle', 'intro_kit', 'registrar_list'];
   const at = along.ids.indexOf('intro_welcome');
   seq.forEach((x, k) => { const id = along.ids[at + k]; assert.ok(x instanceof RegExp ? x.test(id) : id === x, 'step ' + k + ': ' + along.ids.slice(at).join(' ')); });
   assert.equal(along.ids.filter((id) => /^intro_lunch/.test(id)).length, 1, 'one lunch card');

@@ -1,0 +1,116 @@
+# Five adopted cards from the LightRAG exploratory authoring batch.
+
+@event stables_hippogriff_grooming
+title: Feathers the Wrong Way
+place: stables
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: feather
+tags: nature
+scene: A student brushing the wing feathers of a lying-down hippogriff in a straw-filled stall, loose feathers drifting in a shaft of light.
+text: {A hippogriff has rolled in the mud and lies in her stall with every feather pointing the wrong way, waiting to be groomed.|The muddy hippogriff again. She lies down the moment she sees you with a brush.|The hippogriff has kept her muddiest wing for you, and holds it out like a gift.} {season == "autumn": Leaves are stuck in her feathers.|{The stable cat supervises from a beam.|The owls are watching to see if you get it wrong.|Brask is somewhere nearby, humming to a feed sack.}}
+> left: Groom her properly, feather by feather
+  charm +small
+  health -tiny
+  say: {It takes the whole afternoon and both your arms. She falls asleep with her head on your boot, which is the highest mark a hippogriff gives.|You do it the slow way, with the grain. She clicks her beak at you every time you're right, and once, gently, when you're wrong.|You know her feathers now. She lets you do the hard bit under the wing, and Brask, passing, says nothing at all.}
+> right: Read Brask's grooming notes on the wall
+  lore +small
+  rel brask -tiny
+  say: {The notes are long, opinionated and illustrated. You learn a great deal about feathers. The hippogriff stays muddy and sighs at you.|You read the notes. Brask catches you at it and says, "She doesn't need a scholar, she needs a brush."|You finish the notes, which you could recite by now, and leave the brush for someone else. The hippogriff looks away.}
+
+@event stables_tack_room
+title: The Tack Room
+place: stables
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: paw
+tags: nature
+scene: A cramped tack room hung with harnesses and saddles, a student sitting on an upturned bucket oiling a strap, a griffon chick peering in at the door.
+text: {The tack room is a mess of harnesses, and the oil pot is out. Someone has to do the straps before Beastcraft tomorrow.|The tack room again. The griffon chick has been at the buckles.|The tack room has your bucket in it now, the one you sit on.} {season == "winter": It's the warmest room in the stables, and it smells of leather and oil.|{One strap has teeth marks all along it.|A saddle is missing; nobody wants to say whose.|There is a nest in the old harness, and it is occupied.}}
+> left: Oil and mend the straps
+  vigor +small
+  mood -tiny
+  say: {You oil straps until your hands are black and the room smells like a cobbler's. Every buckle works. Nobody thanks you, which is how you know it's done.|You mend the bitten strap and replace the buckle the chick swallowed. It will reappear, Brask says darkly.|You do the straps by touch now, talking to the nest in the old harness. Its owner answers.}
+> right: Slip out before anyone hands you the pot
+  mood +small
+  rel brask -tiny
+  say: {You leave the straps for the morning. In the morning Brask hands you the pot, and a look.|You're out of the door before the oil pot is. Behind you the griffon chick starts on another buckle.|You slip away. You hear Brask say your name to the hippogriffs, in a tone.}
+
+@event courtyard_fountain_wishes
+time: afternoon
+title: Coins in the Fountain
+place: courtyard
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: sun
+tags: money
+scene: A courtyard fountain with coins glinting on the bottom, a student crouching at the rim with a sleeve rolled up, a groundskeeper's rake leaning nearby.
+text: {Students throw coins in the courtyard fountain for luck before exams. The coins are still there, glinting.|The fountain is full of exam-luck again.|You know exactly how many coins are in the fountain this week, and that is a bad sign.} {season == "winter": The water is cold enough to make your teeth ache by looking at it.|{A sign says the coins go to the infirmary fund.|A first-year is throwing in a coin with a long, whispered wish.|The fountain is freezing at one edge, as it does when it shouldn't.}}
+> left: Fish out a few coins for yourself
+  gold +small
+  alignment -tiny
+  say: {Nobody's watching. Your sleeve is soaked to the shoulder and your pocket is heavier. The sign about the infirmary fund keeps looking at you.|You fish quickly and walk away fast. A first-year's wish is in your pocket now, and the coin is warm.|You've become good at this, which is not a compliment.}
+> right: Throw one in yourself
+  gold -tiny
+  mood +small
+  say: {You throw a coin and wish for something you won't admit to. It's the best you've felt all week.|You throw your coin in after the first-year's. They grin at you, as if you're in on something together.|You throw a coin in. It lands on top of an old one of yours, which you take to mean something.}
+
+@event courtyard_lost_cat
+title: Footnote on the Wall
+place: courtyard
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: paw
+tags: social
+scene: A grey library cat sitting on top of a high courtyard wall, a small crowd of students below calling up to it, one holding out a sardine.
+text: {Footnote, the library cat, is sitting on top of the courtyard wall and refusing to come down. A small crowd has gathered.|Footnote is on the courtyard wall again, being worshipped.|Footnote is on the wall. The crowd parts for you, as the expert.} {season == "spring": Blossom is blowing over the wall onto his head.|{The library will not reopen until he is found, apparently.|Someone has a sardine. Someone else has a ladder.|A first-year is trying to bribe him with a sock.}}
+> left: Climb up after him
+  challenge feat apprentice wild:
+    win:
+      renown +small
+      health -tiny
+      say: {You climb the ivy, take the cat and come down to applause. Footnote looks as if he arranged the whole thing.|You get him on the second try. He purrs, for the crowd only.|You're up the wall before the crowd can offer the ladder. Footnote walks into your arms as if he's been waiting all afternoon.}
+    lose:
+      health -small
+      renown -tiny
+      say: {The ivy gives. You land in the flowerbed. Footnote walks down the ladder someone else brought.|You get halfway, and Footnote jumps down past you and walks off. The crowd's sympathy is mostly laughter.|You slip at the top. He watches you fall with professional interest, then comes down by himself.}
+> right: Wait him out with the crowd
+  charm +tiny
+  mood +tiny
+  say: {You stand with the crowd and trade news while Footnote ignores you all. He comes down when he's bored, which takes an hour.|You chat with the others until the cat gives up. Someone shares a pastry. Footnote takes half.|You spend the hour in good company under the wall. Footnote comes down and sits on your foot, to make a point.}
+
+@event company_card_widow
+title: The Widow's Game
+trigger: queued
+class: routine
+tone: tense
+repeat: 3
+art: cup
+tags: money company_night
+scene: A tavern's upstairs room after midnight, an elegant old woman in black dealing cards at a small table, a student in a borrowed jacket sitting opposite her.
+text: {Tonight's guest is a widow in black lace who has come up from the river towns to play cards with somebody young. She deals before you've sat down.|The widow is back, and asked for you by description: "the one who loses nicely."|The widow again. She has brought her own deck this time, and a flask she says is cough syrup.} The landlady murmurs: she tips the ones who make her laugh, and she always knows who's letting her win.
+> left: Play her honestly, and well
+  hint: She tips for a good game; she may take your purse instead.
+  challenge appeal journeyman wild:
+    win:
+      gold +large
+      mood +small
+      health -tiny
+      say: {You play your best and lose by a hair, and she laughs until she has to take her spectacles off. She tips you twice what you'd have won.|You beat her, once, and she's so pleased she tells you about her late husband's three duels. You go home at four, paid and full of stories.|You keep it close all night. When she leaves she pinches your cheek, presses a fold of notes on you, and says, "Next time, cheat a little. It's more fun."}
+    lose:
+      gold +small
+      mood -small
+      say: {She sees through you in three hands, and is bored by the fourth. A small tip and an early night.|She plays you off the table, kindly, and tips like a woman who has won. It is not much.|You try too hard to amuse her. She pats your hand. "Never mind, dear," she says, and leaves early.}
+> right: Let her win, gracefully
+  hint: Steady pay, and you know what she thinks of it.
+  gold +medium
+  alignment -tiny
+  say: {You lose with care all night. She knows, and tips you anyway, the way you'd tip a waiter for a bad soup.|You let her win. She thanks you very politely, which stings more than you expected.|You lose gracefully, as the landlady asked. The widow gives you exactly the going rate, and not a coin more.}

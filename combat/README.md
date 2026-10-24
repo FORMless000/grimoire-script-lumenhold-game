@@ -22,7 +22,7 @@ node combat/tools/build.mjs
 PORT=61096 node combat/out/site/server.mjs
 ```
 
-`build.mjs` exports the spell data to Rust, builds the native simulator and the WebAssembly core (`rustup target add wasm32-unknown-unknown` once), and writes the site to `out/site/`. Needs Rust (stable) and Node 20+.
+`build.mjs` exports the spell data to Rust, builds the native simulator and the WebAssembly core (`rustup target add wasm32-unknown-unknown` once), and writes the site to `out/site/`. Needs Rust (stable) and Node 20+. The game's server also serves the bench at `/bench/` (the title screen's Combat bench), built in memory by `tools/site.mjs` with no Rust: from `web/core.wasm` when built, else the core inlined in `build/combat.bundle.js`.
 
 ## Playtests and balance simulations
 

@@ -117,7 +117,6 @@
     // ---- Pieces ----
     function actionIcon(id, side = 0, channel) {
       const C_ = C(); if (channel === undefined) channel = game.actors[side].channel && game.actors[side].channel.id;
-      if (id.startsWith('bundle:')) return '<span class="bundle-icons">' + id.slice(7).split('+').map((p) => C_.ACTION_ICONS[p]).join('') + '</span>';
       const key = ['hold', 'release'].includes(id) ? channel + '_' + id : id;
       return (C_.SPELL_ICONS || {})[id] || C_.ACTION_ICONS[key] || (C_.SPELLS[id] && C_.SPELLS[id].physical ? C_.ACTION_ICONS.strike : id === 'frozen' ? '<b class="glyph">❄</b>' : id === 'cancel' ? '<b class="glyph">∅</b>' : QUESTION);
     }
@@ -127,8 +126,24 @@
     const labelsOf = (side) => (game.actors[side].kit && game.actors[side].kit.labels) || null;
     const sideLabel = (id, side) => { const l = labelsOf(side); return label(l && l[id] ? l[id] : id); };
     const actionName = (id, side) => (['hold', 'release'].includes(id) ? label(id) + ' ' + sideLabel((game.actors[side].channel && game.actors[side].channel.id) || '', side) : sideLabel(id, side));
-    // A telegraphed channel (a creature's maul, charge, …): its wind-up is announced while it's held.
-    const telegraphed = (side) => { const ch = game.actors[side].channel, l = labelsOf(side), al = ch && l && l[ch.id]; return !!(al && C().SPELLS[al] && C().SPELLS[al].telegraph); };
+    // Blows on their way to the player (an Omen's, a delayed blow's: the foe's omens): when each lands, for how much, and what
+    // stops it (combat/web/app.mjs incoming(), F5.11).
+    function incoming() {
+      const C_ = C(), os = [];
+      // A blow with a spell part and an Impact part (The Long Wait) queues two omens: one line, its total and its split.
+      for (const o of game.actors[1].omens.filter((x) => x.due >= game.round).sort((a, b) => a.due - b.due)) {
+        const g = os.find((x) => x.id === (o.id || 'omen') && x.due === o.due);
+        if (g) g.parts.push(o); else os.push({ id: o.id || 'omen', due: o.due, parts: [o] });
+      }
+      return os.map((o) => {
+        const id = o.id, now = o.due === game.round, k = o.due - game.round;
+        const n = Math.round(o.parts.reduce((a, p) => a + p.power, 0)), split = o.parts.length > 1 ? ' ' + tr('incomingSplit', { parts: o.parts.map((p) => '<span class="split-' + (p.impact ? 'impact' : 'spell') + '">' + Math.round(p.power) + ' ' + esc(tr(p.impact ? 'impactNote' : 'spellNote')) + '</span>').join(' + ') }) : '';
+        let stops = ''; try { const d = C_.describeData(game, 1, id); stops = d && d.stops ? C_.renderText(d.stops) : id === 'omen' ? describe(1, id) : ''; } catch (e) { /* not in its kit */ }
+        const when = k === 1 ? tr('whenNext') : tr('whenIn', { k });
+        const head = (now ? tr('incomingNow', { move: sideLabel(id, 1), n }) : tr('incomingLater', { move: sideLabel(id, 1), n, ex: o.due, when }));
+        return '<div class="intent incoming' + (now ? ' now' : '') + '"><span class="tele-icon">' + actionIcon(id, 1) + '</span><div class="it"><b>' + esc(head) + split + '</b>' + (stops ? '<small>' + esc(stops) + '</small>' : '') + '</div></div>';
+      }).join('');
+    }
     const describe = (side, id) => { try { return C().describe(game, side, id); } catch (e) { return ''; } };
     // The skill a spell scales with (feedback 2026-10-19), under its description; nothing for an action that isn't a spell.
     const scales = (id) => {
@@ -148,8 +163,9 @@
     const nameOf = (i) => (i === 0 ? tr('you') : fight.foe.name);
     // The level shown for a fighter: the average of their six skills (a player's kit.level is their best skill, a label the
     // rules never read; a generated foe's skills already average its level).
-    // A spell's level in a fighter's kit (I–III), shown on the action buttons and in the opponent's sheet.
-    const spellLevel = (side, id) => (game.actors[side].kit.spells || {})[id] || 0;
+    // A spell's level in a fighter's kit (I–III), shown on the action buttons and in the opponent's sheet; 0 (not shown)
+    // for a spell with one level.
+    const spellLevel = (side, id) => { const d = C().SPELLS[id]; return d && d.levels > 1 ? (game.actors[side].kit.spells || {})[id] || 0 : 0; };
     const lvBadge = (side, id) => (spellLevel(side, id) ? '<small class="a-lv" title="' + esc(tr('spellLevel', { n: ROMAN[spellLevel(side, id)] })) + '">' + ROMAN[spellLevel(side, id)] + '</small>' : '');
     const levelOf = (i) => { const v = Object.values(game.actors[i].kit.skills || {}).filter(Number.isFinite); return v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : game.actors[i].kit.level; };
     const who = (i) => (i ? esc(nameOf(1)) : esc(tr('you')));
@@ -209,8 +225,10 @@
         '<div class="fi"><div class="fname"><b>' + esc(nameOf(i)) + '</b><small>' + esc(tr('lv', { n: levelOf(i) })) + (purse ? ' · ' + purse : '') + '</small>' + constructChips(a, i) + '</div>' +
         bar(i, 'hp', a.hp, a.maxHP) + bar(i, 'mana', a.resources.mana, a.kit.capacity, a.flux) + '</div></article>';
     }
+    // Blows on their way first, then their move.
+    function intent() { return game.result ? '' : incoming() + theirMove(); }
     // Their move: committed and shown, compelled, or hidden until the player commits.
-    function intent() {
+    function theirMove() {
       if (game.result) return '';
       const C_ = C(), opponent = game.pending[1], forced = C_.isCompelled(game, 1) ? (opponent || C_.legalActions(game, 1)[0]) : null, shown = forced || opponent;
       if (busy) return '<div class="intent wait"><span class="tele-icon hidden-move">' + QUESTION + '</span><div class="it"><b>' + esc(tr('choosing', { name: nameOf(1) })) + '</b><small>' + esc(tr('choosingHint')) + '</small></div></div>';
@@ -219,8 +237,6 @@
         return '<div class="intent shown' + (forced ? ' forced' : '') + '" data-sheet="intent" role="button" tabindex="0" title="' + esc(tr('theirMove')) + '"><span class="tele-icon">' + actionIcon(shown, 1) + '</span><div class="it"><b>' +
           esc(forced ? tr('compelled') : tr('theyCommit')) + ' ' + esc(actionName(shown, 1)) + ' ' + effHtml(b) + '</b>' + (fl ? '<small class="flavor">' + esc(fl) + '</small>' : '') + '</div><span class="it-more">' + EYE + '</span></div>';
       }
-      // A wind-up in the open: the creature is holding a big blow, and it lands when released.
-      if (telegraphed(1)) return '<div class="intent hidden windup"><span class="tele-icon">' + actionIcon(game.actors[1].channel.id, 1) + '</span><div class="it"><b>' + esc(tr('windUp', { name: nameOf(1), move: sideLabel(game.actors[1].channel.id, 1) })) + '</b><small>' + esc(tr('windUpHint')) + '</small></div></div>';
       return '<div class="intent hidden"><span class="tele-icon hidden-move">' + QUESTION + '</span><div class="it"><b>' + esc(tr('youFirst')) + '</b><small>' + esc(tr('youFirstHint')) + '</small></div></div>';
     }
 
@@ -247,12 +263,12 @@
           rows.push({ side: on ? 1 - side : side, icon: EFFECT_ICON[k] || k, name: k === 'compelled' ? label('compel') : label(k), on: on ? side : null, from: or(e.from, or(e.born, r)), until: or(e.until, Infinity),
             note: k === 'tailwind' ? tr('tailwindChain', { n: Math.round(e.value) }) : '' });
         }
-        if (a.channel) rows.push({ side, icon: a.channel.id, name: sideLabel(a.channel.id, side), from: or(castAt(side, a.channel.id), r), until: Infinity, note: tr('holds', { n: a.channel.holds }) + (a.channel.bank ? ' · ' + tr('banked', { n: Math.round(a.channel.bank) }) : '') + (telegraphed(side) ? ' · ' + tr('windUpNote') : '') });
+        if (a.channel) rows.push({ side, icon: a.channel.id, name: sideLabel(a.channel.id, side), from: or(castAt(side, a.channel.id), r), until: Infinity, note: tr('holds', { n: a.channel.holds }) + (a.channel.bank ? ' · ' + tr('banked', { n: Math.round(a.channel.bank) }) : '') + (a.channel.id === 'wildfire' ? ' · ' + tr('nextBurn', { n: 2 * (a.channel.holds + 2) }) : '') });
         for (const c of a.constructs) rows.push({ side, icon: c.id, name: sideLabel(c.id, side), from: or(castAt(side, c.id), r), until: c.expires, note: tr('hpOf', { left: Math.round(Math.max(0, c.threshold - c.taken)), of: Math.round(c.threshold) }) });
         if (game.earlyCommit[side] > 0) rows.push({ side: 1 - side, on: side, icon: 'foresight', name: label('foresight'), from: or(castAt(1 - side, 'foresight'), r - 1) + 1, until: r + game.earlyCommit[side] - 1, note: side ? tr('theyFirst') : tr('youFirst') });
         if (a.freezeUntil >= r) rows.push({ side, icon: 'frozen', name: tr('frozenName'), from: a.freezeUntil, until: a.freezeUntil, note: '' });
         if (a.rimeReady) rows.push({ side, icon: 'rime', name: tr('rimeReady'), from: or(castAt(side, 'rime'), r), until: Infinity, note: '' });
-        for (const o of a.omens) rows.push({ side, icon: o.id || 'omen', name: label(o.id || 'omen'), due: o.due, note: fmt(o.power) });
+        for (const o of a.omens) rows.push({ side, icon: o.id || 'omen', name: label(o.id || 'omen'), due: o.due, spell: !o.impact, note: fmt(o.power) + ' ' + tr(o.impact ? 'impactNote' : 'spellNote') });
       });
       return rows;
     }
@@ -288,8 +304,8 @@
         const tip = esc((row.side ? nameOf(1) : tr('you')) + ' · ' + row.name + (row.on != null ? ' → ' + (row.on ? nameOf(1) : tr('you')) : '') + (row.note ? ' · ' + row.note : ''));
         const ico = '<span class="tk-ico">' + actionIcon(row.icon, row.side, row.icon) + '</span>';
         // Due past the window: shown in the last column, with an arrow and its exchange.
-        if (row.due !== undefined && !past && c === AHEAD && row.due > ex) return '<i class="tl-hit later' + (row.heal ? ' heal' : '') + '" title="' + (row.heal ? esc((row.side ? nameOf(1) : tr('you')) + ' · ' + row.name + ' · ' + row.tip) : tip) + ' · ' + esc(tr('exchange', { n: row.due })) + '">' + ico + row.note + '<small>›' + row.due + '</small></i>';
-        if (row.due !== undefined) return row.due === ex ? '<i class="tl-hit' + (row.heal ? ' heal' : '') + '" title="' + (row.heal ? esc((row.side ? nameOf(1) : tr('you')) + ' · ' + row.name + ' · ' + row.tip) : tip) + '">' + ico + row.note + '</i>' : '';
+        if (row.due !== undefined && !past && c === AHEAD && row.due > ex) return '<i class="tl-hit later' + (row.heal ? ' heal' : row.spell ? ' spell' : '') + '" title="' + (row.heal ? esc((row.side ? nameOf(1) : tr('you')) + ' · ' + row.name + ' · ' + row.tip) : tip) + ' · ' + esc(tr('exchange', { n: row.due })) + '">' + ico + row.note + '<small>›' + row.due + '</small></i>';
+        if (row.due !== undefined) return row.due === ex ? '<i class="tl-hit' + (row.heal ? ' heal' : row.spell ? ' spell' : '') + '" title="' + (row.heal ? esc((row.side ? nameOf(1) : tr('you')) + ' · ' + row.name + ' · ' + row.tip) : tip) + '">' + ico + row.note + '</i>' : '';
         if (ex < row.from || ex > row.until) return '';
         const first = ex === row.from, openEnd = row.until === Infinity && c === AHEAD;
         return '<i class="tl-on' + (first ? ' first' : '') + (ex === row.until || openEnd ? ' last' : '') + (openEnd ? ' open' : '') + '" title="' + tip + (row.until === Infinity ? '' : ' · ' + esc(tr('until', { n: row.until }))) + '">' + (first ? ico : '') + '</i>';
@@ -320,7 +336,7 @@
     function actionButton(id) {
       const reason = forcedLegal(id) ? null : C().available(game, 0, id), disabled = !myTurn() || reason, name = actionName(id, 0), b = briefOf(0, id), tip = esc(name + ' · ' + price(0, id) + (reason ? ' · ' + reason : ''));
       return '<button class="act k-' + b.kind + (selected === id ? ' selected' : '') + '" data-action="' + id + '" aria-label="' + tip + '" aria-pressed="' + (selected === id) + '" title="' + tip + '"' + (disabled ? ' disabled' : '') + '>' +
-        (engineOn ? '<i class="a-eval" data-eval="' + id + '"></i>' : '') + '<span class="a-ico" aria-hidden="true">' + actionIcon(id) + lvBadge(0, id) + '</span>' + (id.startsWith('bundle:') ? '' : '<span class="a-name">' + esc(['hold', 'release'].includes(id) ? label(id) : name) + '</span>') + effHtml(b, name) + costHtml(0, id) + '</button>';
+        (engineOn ? '<i class="a-eval" data-eval="' + id + '"></i>' : '') + '<span class="a-ico" aria-hidden="true">' + actionIcon(id) + lvBadge(0, id) + '</span>' + '<span class="a-name">' + esc(['hold', 'release'].includes(id) ? label(id) : name) + '</span>' + effHtml(b, name) + costHtml(0, id) + '</button>';
     }
     function preview() {
       if (!selected) return '<div class="preview hint">' + esc(myTurn() ? tr('pickHint') : tr('waiting')) + '</div><button class="fl-commit primary" disabled>' + esc(tr('commit')) + '</button>';

@@ -136,12 +136,15 @@ const sideLabel=(id,side)=>{const al=labelsOf(side)?.[id];return al?SPELLS[al]?.
 const actionName=(id,side)=>['hold','release'].includes(id)?`${label(id)} ${sideLabel(game.actors[side].channel?.id??'',side)}`:sideLabel(id,side);
 // Blows on their way (F5.11): the foe's Omens and delayed blows (a creature's Maul, Charge, …), cast in the open. Each says
 // when it lands, how hard, and what stops it (the spell's own description), so the player can answer it in time.
+// A blow with a spell part and an Impact part (The Long Wait) queues two omens: one line, its total and its split.
 function incoming(){
- const os=game.actors[1].omens.filter(o=>o.due>=game.round).sort((a,b)=>a.due-b.due);if(!os.length)return '';
- return os.map(o=>{const id=o.id??'omen',now=o.due===game.round,n=Math.round(o.power),d=describeData(game,1,id),stops=d?.stops?renderText(d.stops):id==='omen'?describe(game,1,id):'';
+ const os=[];for(const o of game.actors[1].omens.filter(o=>o.due>=game.round).sort((a,b)=>a.due-b.due)){const g=os.find(x=>x.id===(o.id??'omen')&&x.due===o.due);if(g)g.parts.push(o);else os.push({id:o.id??'omen',due:o.due,parts:[o]});}
+ if(!os.length)return '';
+ return os.map(o=>{const id=o.id,now=o.due===game.round,n=Math.round(o.parts.reduce((a,p)=>a+p.power,0)),d=describeData(game,1,id),stops=d?.stops?renderText(d.stops):id==='omen'?describe(game,1,id):'';
+  const split=o.parts.length>1?' '+gt('fight.incomingSplit',{parts:o.parts.map(p=>`<span class="split-${p.impact?'impact':'spell'}">${Math.round(p.power)} ${p.impact?'Impact':'spell'}</span>`).join(' + ')},'({parts})'):'';
   const k=o.due-game.round,when=k===1?gt('fight.whenNext',{},'next exchange'):gt('fight.whenIn',{k},'in {k} exchanges');
-  const head=now?gt('fight.incomingNow',{move:label(id),n},'{move} lands this exchange: {n} damage before defences.'):gt('fight.incomingLater',{move:label(id),n,ex:o.due,when},'{move} lands {when} (exchange {ex}): {n} damage before defences.');
-  return `<div class="intent incoming${now?' now':''}"><span class="tele-icon">${actionIcon(id,1)}</span><div class="it"><b>${esc(head)}</b>${stops?`<small>${esc(stops)}</small>`:''}</div></div>`;}).join('');
+  const head=(now?gt('fight.incomingNow',{move:label(id),n},'{move} lands this exchange: {n} damage before defences.'):gt('fight.incomingLater',{move:label(id),n,ex:o.due,when},'{move} lands {when} (exchange {ex}): {n} damage before defences.'));
+  return `<div class="intent incoming${now?' now':''}"><span class="tele-icon">${actionIcon(id,1)}</span><div class="it"><b>${esc(head)}${split}</b>${stops?`<small>${esc(stops)}</small>`:''}</div></div>`;}).join('');
 }
 const briefOf=(side,id)=>{let d=null;try{d=describeData(game,side,id);}catch{}return brief(id,d,game.actors[side].channel?.id);};
 // same: the label repeats the action's name, which the button already shows (hidden there unless the name is).
@@ -215,7 +218,7 @@ function effectRows(){
   if(game.earlyCommit[side]>0)rows.push({side:1-side,on:side,icon:'foresight',name:label('foresight'),from:(castAt(1-side,'foresight')??r-1)+1,until:r+game.earlyCommit[side]-1,note:side?'they commit first':'you commit first'});
   if(a.freezeUntil>=r)rows.push({side,icon:'frozen',name:'Frozen',from:a.freezeUntil,until:a.freezeUntil,note:''});
   if(a.rimeReady)rows.push({side,icon:'rime',name:'Rime ready',from:castAt(side,'rime')??r,until:Infinity,note:''});
-  for(const o of a.omens)rows.push({side,icon:o.id??'omen',name:label(o.id??'omen'),due:o.due,note:fmt(o.power)+(o.impact?' Impact':' spell')});
+  for(const o of a.omens)rows.push({side,icon:o.id??'omen',name:label(o.id??'omen'),due:o.due,spell:!o.impact,note:fmt(o.power)+(o.impact?' Impact':' spell')});
  });
  return rows;
 }
@@ -247,8 +250,8 @@ function track(){
  // A lasting effect: a thin line from the exchange it starts, with its icon at the start; name and numbers on hover.
  const cell=(row,at)=>{const past=typeof at==='object',ex=past?at.round:r+at,c=past?-1:at,tip=esc(`${who(row.side)} · ${row.name}${row.on!=null?' on '+(row.on?nameOf(1):'you'):''}${row.note?' · '+row.note:''}`),ico=`<span class="tk-ico">${actionIcon(row.icon,row.side,row.icon)}</span>`;
   // Due past the window: shown in the last column, with an arrow and its exchange.
-  if(row.due!==undefined&&!past&&c===AHEAD&&row.due>ex)return `<i class="tl-hit later${row.heal?' heal':''}" title="${esc(`${who(row.side)} · ${row.name} · ${row.heal?row.tip:row.note+' damage'}, exchange ${row.due}`)}">${ico}${row.note}<small>›${row.due}</small></i>`;
-  if(row.due!==undefined)return row.due===ex?(row.heal?`<i class="tl-hit heal" title="${esc(`${who(row.side)} · ${row.name} · ${row.tip}, exchange ${ex}`)}">${ico}${row.note}</i>`:`<i class="tl-hit" title="${tip} damage, lands in exchange ${ex}">${ico}${row.note}</i>`):'';
+  if(row.due!==undefined&&!past&&c===AHEAD&&row.due>ex)return `<i class="tl-hit later${row.heal?' heal':row.spell?' spell':''}" title="${esc(`${who(row.side)} · ${row.name} · ${row.heal?row.tip:row.note+' damage'}, exchange ${row.due}`)}">${ico}${row.note}<small>›${row.due}</small></i>`;
+  if(row.due!==undefined)return row.due===ex?(row.heal?`<i class="tl-hit heal" title="${esc(`${who(row.side)} · ${row.name} · ${row.tip}, exchange ${ex}`)}">${ico}${row.note}</i>`:`<i class="tl-hit${row.spell?' spell':''}" title="${tip} damage, lands in exchange ${ex}">${ico}${row.note}</i>`):'';
   if(ex<row.from||ex>row.until)return '';const first=ex===row.from,open=row.until===Infinity&&c===AHEAD;
   return `<i class="tl-on${first?' first':''}${ex===row.until||open?' last':''}${open?' open':''}" title="${tip}${row.until===Infinity?'':` · until exchange ${row.until}`}">${first?ico:''}</i>`;};
  const effects=done?'':rows.map(row=>`<div class="tk-row tk-eff s${row.side}"><span class="tk-l"></span>${pastCells(h=>cell(row,h))}${ahead(c=>cell(row,c))}</div>`).join('');
@@ -265,7 +268,7 @@ const forcedLegal=id=>(id==='cancel'||id==='break_free')&&legalActions(game,0).i
 // Their Compel, committed in the open (F5.11-plan.1): the move you pick now plays, then you must repeat it for three exchanges,
 // unless Ward or Shadowstep keeps it off (or Reflect turns it back).
 function incomingCompel(){
- if(game.pending[1]!=='compel'||actorToMove(game)!==0)return '';
+ if(game.pending[1]!=='compel'||actorToMove(game)!==0||has(game,0,'shadowstep'))return '';
  return gt('fight.compelSeize',{},'They cast Compel: the move you pick now you must repeat for the next three exchanges, unless Ward or Shadowstep keeps it off');
 }
 function actionButton(id){const reason=forcedLegal(id)?null:available(game,0,id),disabled=busy||actorToMove(game)!==0||reason,name=actionName(id,0),b=briefOf(0,id);

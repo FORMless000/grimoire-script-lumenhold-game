@@ -76,7 +76,7 @@ export const SPELLS={
  foresight:spell('Foresight','Astromancy',['lore'],[7,6,5],{verb:'Foresee',duration:[3,4,5],negotiation:'Rolling next-request reveal for 3/4/5 turns.'}),
  mend:spell('Mend','Alchemy & Healing',['alchemy'],[10,9,8],{verb:'Mend',healing:[18,20,22],negotiation:'None.'}),
  glamour:spell('Glamour','Illusion',['charm'],[9,7,5],{verb:'Dazzle',renown:[4,6,8],negotiation:'Charm/Guile responses cheaper; +2 Suspicion.'}),
- haste:spell('Haste','Beastcraft & Flight',['vigor'],[5,5,5],{verb:'Hasten',duration:[2,3,4],negotiation:'Response costs 1/1/2 less Patience.'}),
+ haste:spell('Haste','Beastcraft & Flight',['vigor'],[7,7,7],{verb:'Hasten',duration:[2,3,4],negotiation:'Response costs 1/1/2 less Patience.'}),
  shadowstep:spell('Shadowstep','Umbral Theory',['guile'],[8,10,12],{verb:'Step',duration:[1,2,3],negotiation:'Leave and settle progress.'}),
  ward:spell('Ward','Orientation safety talk',[],[7],{verb:'Ward',baseline:true,negotiation:'None.'}),
  animate:spell('Animate','Artifice (hidden)',['alchemy','arcana'],[14],{verb:'Animate',construct:true,negotiation:'Later.'}),
@@ -95,7 +95,7 @@ export const SPELLS={
  index:spell('Index','Library Assistant',['lore'],[4],{verb:'Recall',capstone:'job',negotiation:'Answer current request with Lore.'}),
  rapport:spell('Rapport','Gilded Newt',['charm'],[4],{verb:'Befriend',capstone:'job',renown:[8],amounts:{crowns:10},negotiation:'Next Deflect costs no Mood and adds no Suspicion.'}),
  purify:spell('Distill','Apothecary Clerk',['alchemy'],[0],{verb:'Distill',capstone:'job',hpCost:20,negotiation:'None.'}),
- tailwind:spell('Tailwind','Broom Courier',['vigor'],[5],{verb:'Surge',capstone:'job',damage:[10],physical:true,amounts:{step:15},negotiation:'None.'}),
+ tailwind:spell('Tailwind','Broom Courier',['vigor'],[4],{verb:'Surge',capstone:'job',damage:[9],physical:true,amounts:{step:15,costStep:1},negotiation:'None.'}),
  // Skill assignments below are provisional: the supplied pool tables omit them.
  rime:spell('Rime','Hidden pool',['arcana'],[4],{verb:'Freeze',group:'hidden',amounts:{thaw:24},provisionalSkill:true,negotiation:'None.'}),
  reflect:spell('Reflect','Hidden pool',['lore'],[8],{verb:'Reflect',duration:[1],group:'hidden',provisionalSkill:true,negotiation:'This Confront: +2 Agreement and +2 pressure.'}),
@@ -111,6 +111,9 @@ export const SPELLS={
  eclipse:spell('Eclipse','Forbidden pool',['arcana'],[6],{verb:'Convert',group:'forbidden',duration:[3],amounts:{share:1},provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  heartprice:spell('Heartprice','Forbidden pool',['vigor'],[0],{verb:'Sacrifice',group:'forbidden',provisionalSkill:true,negotiation:'Underground effect later; otherwise fails with consequences.'}),
  // Creature attacks (F5.9): special foes only (SPECIAL_LOADOUTS), never a player's or a class's kit.
+ // Creature pass 1 (feedback 2026-10-24: distinct by HP pools, but beatable): Acorns 8 + 8 for 6 (was 10 + 10 for 3), Bark and
+ // Carapace 6 (was 3, Ward is 7), Web Bind 1 for 10 (was Bind 2 for 6; the plan's Bind 2 left the Spinner at 11–15% for a
+ // decent player), The Long Wait 12 (was 8). With the oaks' and the Spinner's strike at 0.55 (setup/loadouts.mjs).
  gore:spell('Gore','Creature',['vigor'],[6],{verb:'Gore',damage:[15],physical:true,group:'creature',negotiation:'None.'}),
  // The Whisperwood (world expansion 1). Rules by property (rust/core rules.rs): bind (exchanges of Breaking Free from the
  // next, F5.11-plan.1), drain (ready Mana scattered; drainKeep: taken as the creature's own flux), poison ([per tick, ticks]
@@ -122,11 +125,11 @@ export const SPELLS={
  roar:spell('Roar','Creature',['vigor'],[4],{verb:'Roar',damage:[8],drain:4,group:'creature',negotiation:'None.'}),
  swarm:spell('Swarm','Creature',['guile'],[4],{verb:'Swarm',damage:[15],hits:3,physical:true,group:'creature',negotiation:'None.'}),
  root:spell('Root','Creature',['vigor'],[5],{verb:'Root',bind:1,group:'creature',negotiation:'None.'}),
- web:spell('Web','Creature',['guile'],[6],{verb:'Web',bind:2,group:'creature',negotiation:'None.'}),
+ web:spell('Web','Creature',['guile'],[10],{verb:'Web',bind:1,group:'creature',negotiation:'None.'}),
  threads:spell('Threads','Creature',['guile'],[3],{verb:'Snare',bind:1,group:'creature',negotiation:'None.'}),
  venom:spell('Venom','Creature',['alchemy'],[6],{verb:'Bite',poison:[6,2],group:'creature',negotiation:'None.'}),
  pinch:spell('Pinch','Creature',['vigor'],[3],{verb:'Pinch',damage:[10],physical:true,group:'creature',negotiation:'None.'}),
- acorns:spell('Acorns','Creature',['lore'],[3],{verb:'Pelt',damage:[10],amounts:{next:10},group:'creature',negotiation:'None.'}),
+ acorns:spell('Acorns','Creature',['lore'],[6],{verb:'Pelt',damage:[8],amounts:{next:8},group:'creature',negotiation:'None.'}),
  // The stag beetle's weaker Flame (F5.11-plan.1): its own numbers, Flame's rule, name, icon and Hoarfrost cancellation.
  beetle_flame:spell('Flame','Creature',['arcana'],[6],{verb:'Burn',rule:'flame',damage:[10],group:'creature',negotiation:'None.'}),
  // F5.11: a creature's own copies of a rule (`rule`: the spell whose rule it plays, at its own numbers), in place of the
@@ -135,8 +138,8 @@ export const SPELLS={
  fade:spell('Fade','Creature',['guile'],[6],{verb:'Fade',rule:'shadowstep',duration:[2],group:'creature',negotiation:'None.'}),
  burrow:spell('Burrow','Creature',['vigor'],[4],{verb:'Burrow',rule:'brace',group:'creature',negotiation:'None.'}),
  hide:spell('Hide','Creature',['vigor'],[5],{verb:'Hunker',rule:'brace',group:'creature',negotiation:'None.'}),
- bark:spell('Bark','Creature',[],[3],{verb:'Harden',rule:'ward',group:'creature',negotiation:'None.'}),
- carapace:spell('Carapace','Creature',[],[3],{verb:'Shell',rule:'ward',group:'creature',negotiation:'None.'}),
+ bark:spell('Bark','Creature',[],[6],{verb:'Harden',rule:'ward',group:'creature',negotiation:'None.'}),
+ carapace:spell('Carapace','Creature',[],[6],{verb:'Shell',rule:'ward',group:'creature',negotiation:'None.'}),
  // F5.11: the big telegraphed blows are delayed hits, like Omen: cast in the open, they land `delay` exchanges later for
  // `hit` damage (Impact when physical; The Long Wait's `impact` lands beside its spell hit). The defences of that exchange
  // meet it; the pierce amounts say which can't (guardPierce: Parry, bracePierce: Brace).
@@ -144,7 +147,7 @@ export const SPELLS={
  charge:spell('Charge','Creature',['vigor'],[5],{verb:'Charge',delay:1,physical:true,amounts:{hit:24,guardPierce:1},group:'creature',negotiation:'None.'}),
  bough:spell('Bough','Creature',['vigor'],[6],{verb:'Swing',delay:2,physical:true,amounts:{hit:32},group:'creature',negotiation:'None.'}),
  slow_fall:spell('Slow Fall','Creature',['lore'],[7],{verb:'Fell',delay:2,physical:true,amounts:{hit:40,bracePierce:1},group:'creature',negotiation:'None.'}),
- the_long_wait:spell('The Long Wait','Creature',['lore'],[8],{verb:'Wait',delay:3,amounts:{hit:24,impact:24,guardPierce:1},group:'creature',negotiation:'None.'}),
+ the_long_wait:spell('The Long Wait','Creature',['lore'],[12],{verb:'Wait',delay:3,amounts:{hit:24,impact:24,guardPierce:1},group:'creature',negotiation:'None.'}),
  // Constructs of their own (CONSTRUCTS below): the Spinner's brood bites, the elder oak's thicket lashes.
  brood:spell('Brood','Creature',['guile'],[8],{verb:'Brood',construct:true,group:'creature',negotiation:'None.'}),
  thicket:spell('Thicket','Creature',['lore'],[8],{verb:'Grow',construct:true,group:'creature',negotiation:'None.'})
@@ -225,7 +228,8 @@ function spellUnlocks(def,named,growing,year){
  const lists={...def.hidden,...def.extras},caps=[...new Set([...(def.iconic??[]),...(def.grants??[]).map(([id])=>id),def.place,...Object.entries(lists).filter(([,w])=>w>0).sort((a,b)=>b[1]-a[1]).map(([id])=>id)])].filter(id=>id&&SPELLS[id].capstone);
  const chosen=caps.slice(0,1);
  for(let i=1;i<g.capstones.length&&chosen.length<caps.length;i++)chosen.push((i===1&&caps.find(id=>!chosen.includes(id)&&SPELLS[id].capstone!==SPELLS[chosen[0]].capstone))||caps.find(id=>!chosen.includes(id)));
- for(const [i,id]of chosen.entries())if(!COMBAT_EXCLUDED.has(id))grant(id,g.capstones[i]);
+ // A capstone with no combat effect plays as the loadout's stand-in for it, if it has one (feedback 2026-10-24).
+ for(const [i,id]of chosen.entries()){const use=COMBAT_EXCLUDED.has(id)?def.standIn?.[id]:id;if(use&&!COMBAT_EXCLUDED.has(use))grant(use,g.capstones[i]);}
  // Hidden spells (and a place that is a hidden course): every one listed, one per `every` levels.
  const hidden=[...new Set([def.place,...priority(lists)])].filter(id=>id&&!SPELLS[id].capstone&&!levels[id]&&!COMBAT_EXCLUDED.has(id));
  for(const [i,id]of hidden.entries())grant(id,g.hidden.from+i*g.hidden.every);

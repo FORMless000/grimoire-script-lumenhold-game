@@ -1,6 +1,8 @@
 # Hosting Lumenhold online
 
-The game runs on a small Linux server (we use an EC2 instance) behind the reverse proxy you already have. Every `git push` of `main` updates GitHub and deploys the game. Nothing extra is installed: the server needs **Node.js 20+, git, systemd and sudo** (`deploy/doctor.sh` checks them and installs what's missing), and runs no `npm install`, because the server has no runtime dependencies.
+The game runs on a small Linux server (we use an EC2 instance) behind the reverse proxy you already have. Every `git push` of `main` updates GitHub and deploys the game. The server needs **Node.js 24, git, systemd and sudo** (`deploy/doctor.sh` checks them and installs what's missing), and runs no `npm install`, because the server has no runtime dependencies. Changing local runtime requirements does not upgrade an already-running remote server; run the doctor with `--fix` during a deliberate server maintenance session.
+
+RAG is local authoring tooling: deployment needs no Python, graph index, model weights or API key. Its code and setup scripts stay in Git, while generated installations, indexes and private run data are ignored. Authors cloning the project can [prepare or verify their local index](../rag/README.md#setup); do not run index setup on the game server.
 
 ```
 your machine ── git push ──┬──▶ GitHub

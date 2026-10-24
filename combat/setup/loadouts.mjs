@@ -2,12 +2,13 @@
 export const LOADOUT_SKILLS=['arcana','lore','alchemy','charm','vigor','guile'];
 export const COURSE_PICKS=['foresight','mend','glamour','haste','shadowstep'];
 // extras: capstone weights (club and job spells; see COMBAT_TUNING.kits.capstones); hidden: hidden-pool and hidden-course weights.
+// standIn: {capstone: spell} plays a combat spell (a hidden or a peer's) in place of a capstone with no combat effect.
 // offsets: each skill's % above or below the level, in LOADOUT_SKILLS order (F5.9; were fixed points, half these).
 export const LOADOUTS={
  Duellist:{salt:1,offsets:[12,-2,-16,-2,10,-2],flameBase:.9,course:[2,1,.5,3,2],extras:{brace:3,tailwind:1},hidden:{reflect:1,lodestar:1,starlight:.5}},
- Scholar:{salt:2,offsets:[10,14,2,-4,-8,-14],flameBase:.4,course:[4,1,1,.5,1],extras:{index:2,quickquill:1},hidden:{starlight:3,seal:1,moonwell:1}},
+ Scholar:{salt:2,offsets:[10,14,2,-4,-8,-14],flameBase:.4,course:[4,1,1,.5,1],extras:{index:2,quickquill:1},standIn:{index:'omen'},hidden:{starlight:3,seal:1,moonwell:1}},
  Healer:{salt:3,offsets:[4,4,16,4,-8,-20],flameBase:.6,course:[1,4,.5,1,.5],extras:{bramble:3,purify:1},hidden:{moonwell:1}},
- Illusionist:{salt:4,offsets:[8,-8,-6,8,-4,2],flameBase:.4,course:[1,2,4,.5,3],extras:{rapport:2,brace:1},hidden:{reflect:3,seal:1,starlight:.5}},
+ Illusionist:{salt:4,offsets:[8,-8,-6,8,-4,2],flameBase:.4,course:[1,2,4,.5,3],extras:{rapport:2,brace:1},standIn:{rapport:'hoarfrost'},hidden:{reflect:3,seal:1,starlight:.5}},
  Brawler:{salt:5,offsets:[-8,-19,-15,4,28,10],flameBase:.6,course:[.5,1,.5,4,1],extras:{tailwind:3,brace:2,purify:.5},hidden:{rime:1}},
  Prefect:{salt:6,offsets:[10,6,-8,-8,8,-8],flameBase:.7,course:[2,2,.5,1,1],extras:{brace:3,index:1},hidden:{lodestar:2,seal:1}},
  Showman:{salt:7,offsets:[6,-8,-12,20,6,-12],flameBase:.6,course:[1,.5,4,2,.5],extras:{tailwind:3,rapport:2,brace:1},hidden:{reflect:1,starlight:.5}},
@@ -18,6 +19,8 @@ export const LOADOUTS={
 // Special foes (F5.9): creatures and other fighters outside the classes. Skills from offsets like a class; the spells are a
 // fixed kit, {spell: level it is learned at}; no Flame or Ward unless listed.
 export const SPECIAL_LOADOUTS={
+ // Creature pass 1 (2026-10-24): `strike` scales a creature's Impulse (its race's otherwise; RACES in roster.mjs). The oaks
+ // and the Spinner hit at 0.55, so their HP pools, not their blows, make them hard (they won 85–100% at equal level).
  // F5.11: the stag is a beast (no healing) and fades into the shadows on its own spell.
  'Shadow stag':{salt:40,offsets:[-12,-20,-20,-20,44,28],kit:{gore:1,fade:1,brace:15,tailwind:30},creature:true,race:'beast'},
  // The Whisperwood (world expansion 1; the plan's M4). race: critter | beast | monster | boss scales HP and Mana and forbids
@@ -28,13 +31,13 @@ export const SPECIAL_LOADOUTS={
  'Bramble ferret':{salt:42,offsets:[-30,-30,-30,-20,-10,30],kit:{nip:1,skitter:1,filch:5,burrow:10},creature:true,race:'critter'},
  Bristleback:{salt:43,offsets:[-30,-30,-30,-20,40,-10],kit:{maul:1,hide:1,roar:10},creature:true,race:'monster',hp:1.75,mana:.6},
  'Stag beetle':{salt:44,offsets:[-30,-30,-30,-30,30,0],kit:{charge:1,carapace:1,pinch:1,beetle_flame:1},creature:true,race:'monster',hp:1.5,mana:.5},
- 'Grumpy oak':{salt:45,offsets:[-20,10,-10,-30,30,-30],kit:{root:1,bough:1,bark:1,acorns:10},creature:true,race:'monster',hp:2,mana:.5},
- 'Elder oak':{salt:46,offsets:[-10,30,0,-30,40,-30],kit:{root:1,slow_fall:1,bark:1,acorns:1,thicket:10},creature:true,race:'monster',hp:2.5,mana:.6},
+ 'Grumpy oak':{salt:45,offsets:[-20,10,-10,-30,30,-30],kit:{root:1,bough:1,bark:1,acorns:10},creature:true,race:'monster',hp:2,mana:.4,strike:.55},
+ 'Elder oak':{salt:46,offsets:[-10,30,0,-30,40,-30],kit:{root:1,slow_fall:1,bark:1,acorns:1,thicket:10},creature:true,race:'monster',hp:2.5,mana:.6,strike:.55},
  'Spiderling swarm':{salt:47,offsets:[-30,-30,-30,-40,-10,20],kit:{swarm:1,skitter:1,threads:1,burrow:10},creature:true,race:'critter'},
- 'The Spinner':{salt:48,offsets:[10,30,0,20,40,20],kit:{venom:1,web:1,brood:1,the_long_wait:1,carapace:1},creature:true,race:'boss'},
+ 'The Spinner':{salt:48,offsets:[10,30,0,20,40,20],kit:{venom:1,web:1,brood:1,the_long_wait:1,carapace:1},creature:true,race:'boss',strike:.55},
  // Weakened (she showed you her blind side, F5.11): the same Spinner at the same level, starting hurt (`start`: the share of
  // max HP she enters with, createState's opponentStart), rather than missing a spell.
- 'The Spinner, weakened':{salt:48,offsets:[10,30,0,20,40,20],kit:{venom:1,web:1,brood:1,the_long_wait:1,carapace:1},creature:true,race:'boss',start:{hp:.6}},
+ 'The Spinner, weakened':{salt:48,offsets:[10,30,0,20,40,20],kit:{venom:1,web:1,brood:1,the_long_wait:1,carapace:1},creature:true,race:'boss',strike:.55,start:{hp:.6}},
  // Forbidden practitioners (F5.11): human, so no race; generated like the forbidden classes (Hollow adept, Underground
  // tough), expanded with their own iconic spells, and carrying their worn kit (content/world/items.grim).
  // The thornwitch: a Hollow adept of the thicket, Siphon first, with Bramble and the thorn wand (on_cast forbidden spell 2).

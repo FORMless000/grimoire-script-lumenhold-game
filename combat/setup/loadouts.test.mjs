@@ -16,16 +16,16 @@ test('ten generic presets follow fixed level gates, course ranks, restrictions a
    if(level<g.courseMin.haste)assert(!a.spells.haste);if(level<g.courseMin.shadowstep)assert(!a.spells.shadowstep);
    // Capstones (club and job spells) and hidden spells (feedback 2026-10-21): none below level 30; capstones one a gate, three
    // at most, from the loadout's lists; every hidden spell listed, one each `every` levels.
-   const caps=Object.keys(a.spells).filter(id=>SPELLS[id].capstone),hidden=Object.keys(a.spells).filter(id=>id!=='ward'&&!SPELLS[id].capstone&&!['course','forbidden'].includes(SPELLS[id].group));
+   const stand=Object.values(def.standIn??{}),caps=Object.keys(a.spells).filter(id=>SPELLS[id].capstone||stand.includes(id)),hidden=Object.keys(a.spells).filter(id=>id!=='ward'&&!caps.includes(id)&&!['course','forbidden'].includes(SPELLS[id].group));
    const listed={...def.hidden,...def.extras},usable=id=>!COMBAT_EXCLUDED.has(id);
    if(level<30)assert.deepEqual([caps.length,hidden.length],[0,0],name+' '+level);
-   assert(caps.length<=open(g.capstones,level)&&caps.length<=3&&caps.every(id=>id in listed),name+' '+level);
+   assert(caps.length<=open(g.capstones,level)&&caps.length<=3&&caps.every(id=>id in listed||stand.includes(id)),name+' '+level);
    const nHidden=Object.keys(listed).filter(id=>!SPELLS[id].capstone&&usable(id)).length;
    assert.equal(hidden.length,level<g.hidden.from?0:Math.min(nHidden,1+Math.floor((level-g.hidden.from)/g.hidden.every)),name+' '+level+' hidden');
    for(const id of hidden)assert(id in listed&&a.unlockLevels[id]>=g.hidden.from,name+' '+id);
    const forbidden=Object.keys(a.spells).filter(id=>SPELLS[id].group==='forbidden');
    assert(def.underground?forbidden.length===Math.min(open(g.forbidden,level),Object.keys(def.forbidden).length):forbidden.length===0,name+' '+level);
-   assert(!a.spells.toll);for(const id of peerSpells)assert(!a.spells[id]);
+   assert(!a.spells.toll);for(const id of peerSpells)assert(!a.spells[id]||stand.includes(id),name+' '+id);
    for(const [i,k]of LOADOUT_SKILLS.entries()){assert(Number.isInteger(a.skills[k])&&a.skills[k]>=1&&a.skills[k]<=100);assert(Math.abs(a.skills[k]-Math.max(1,Math.min(100,level*(1+def.offsets[i]/100))))<=level*.09+.5);}
    assert.equal(a.capacity,manaCapacity(a.skills));
    // Course ranks (F5.11): within courseRank, I for everything else, and the curriculum budget at most (or one rank a course spell).
@@ -43,7 +43,10 @@ test('capstones: one club and one job first, a third at most, all from level 30;
  assert.deepEqual(at('Showman'),{tailwind:30,brace:40});                  // Rapport (no combat effect) keeps the third place
  assert.deepEqual(at('Illusionist'),{brace:40});                          // Rapport keeps the first
  assert.deepEqual(at('Prefect'),{brace:30});                              // Index is its job
- assert.deepEqual(at('Scholar'),{});                                      // Index and Quickquill: nothing in combat
+ assert.deepEqual(at('Scholar'),{});                                      // Index and Quickquill: nothing in combat…
+ assert.equal(generateLoadout('Scholar',100).unlockLevels.omen,30);       // …but Omen stands in for Index
+ assert.equal(generateLoadout('Illusionist',100).unlockLevels.hoarfrost,30); // and Hoarfrost for the Illusionist's Rapport
+ assert(!generateLoadout('Scholar',29).spells.omen&&!generateLoadout('Illusionist',29).spells.hoarfrost);
  assert.deepEqual(at('Tobias'),{bramble:30,purify:40});                   // the place first
  assert.deepEqual(at('Bram'),{brace:1});                                  // an iconic capstone keeps its level
  for(const name of Object.keys(LOADOUTS))assert(!Object.keys(generateLoadout(name,29).spells).some(id=>SPELLS[id].capstone),name);

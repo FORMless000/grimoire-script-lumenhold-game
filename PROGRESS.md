@@ -1,3 +1,27 @@
+## LightRAG graph and five-card adoption (October 24)
+
+The main LightRAG index is ready with 1,905 blocks, imported from the verified
+experiment graph and synchronized incrementally. It reuses 1,871 documents;
+changes are five adopted cards, 29 prior live-repo edits/context changes and one
+prior removal. No full re-index was run. Original experiments/reviews remain intact.
+
+Graph helper and keywords now use Gemini 3.1 Flash Lite. Qwen3 embedding 8B is
+retained; Voyage rerank-3-lite is live-tested with its exact provider alias. Billing
+and access errors open a circuit breaker rather than allowing repeated API calls.
+Unchanged synchronization makes zero model calls. Details and receipts:
+`rag/runs/card-adoption-result-2026-10-24.md` (local, ignored).
+
+Adopted source: `content/events/expansion_lightrag_2026_10.grim` and matching zh-CN
+translations. Two stables routines, two courtyard routines and one Newt encounter
+were copied; rivalry cards and the Reflect chain were excluded. Lint and translation
+coverage pass, game check has zero crashes, balance has zero invariant failures,
+and focused/offline retrieval checks pass. The expected gameplay diff from added
+cards is recorded; the existing golden checkpoint was not overwritten.
+
+## LightRAG lifecycle update (October 24)
+
+Current retrieval uses official LightRAG 1.5.7 only; setup and maintenance are in `rag/README.md` and `rag/AUTHORING.md`. Earlier backend-readiness notes below are historical. The new real-corpus graph is intentionally unbuilt; implementation validation uses offline fixtures only. Existing experiment copies and reviewer archives are preserved.
+
 # Status & roadmap
 
 **v0.3, phase 3 of 4: at the stop point, human playtest #2** (`docs/playtest-2.md`). The plan is `docs/design-v0.3.md`; how to work on the project is in `AGENTS.md`.
@@ -13,6 +37,215 @@
 | Checks | `npm run verify` passes: build, lint, format, docs, 100+ unit tests, `balance --quick`, golden diff, browser runs from file:// and the server |
 | A run | 48 months (the last two are the wrap-up), about 630–720 cards (15 a term month, 9.4 a break month; about half pushed rather than drawn); in `grim analyze` (100 games a style, 2026-10-17), random play leaves early 30–40% of the time, social 27–30%, aggressive 18–29% and cautious 10–17%; the other 23 styles finish 98–100% |
 
+## Review reading groups and story order (October 24)
+
+The author-workspace review queue now groups stables routines, courtyard routines,
+Lyra rivalry, the Newt midnight gig and library spell discovery. Standalone
+events mix across submissions within each theme using the existing recorded seed.
+Each author's connected story stays together: queue references, positive flag
+prerequisites and prior-event conditions supply a static reading order, with
+source order as a documented fallback. The four library stories each appear as
+three consecutive steps, including flag-gated scenes without queue links.
+
+English and Chinese show the same order, with category and anonymous chain/step
+headings. Consistency presentations remain after their category's primary story
+sequences. No labels, ratings, review epochs, frozen source artifacts or tool
+traces were reset or rewritten. Source-order grouping is not proof of runtime
+reachability. See `rag/WORKSPACES.md`.
+
+Validation: 58 focused tests and the bilingual autosave browser fixture passed.
+A read-only browser check verified all five real groups, four intact library
+chains, language-independent ordering, mobile layout and preserved review data.
+`grim check` also passed 200 games without crashes, with seven existing warnings.
+
+## Simple autosaving card review (October 24)
+
+The batch review now asks only for one 1–5 rating, world fit (yes / partial /
+conflicted), and optional comments. Choices save immediately; comments autosave
+after a short typing pause or on blur/navigation. Writes are serialized, pending
+edits stay in browser storage, and failures are shown explicitly. The earlier
+initial/final judgments, finding forms, manual save buttons and paired comparison
+flow are removed. Ratings remain editable after workflow identities are revealed.
+
+All three imported review versions were reset to format 2 with new review epochs;
+old judgment/comparison state and verdict-history files were cleared. There were
+no stored judgments at reset. Older tabs and browser drafts cannot reintroduce
+deleted records. Cards, agent translations, source fingerprints and tool traces
+are retained. Operator instructions are in `rag/WORKSPACES.md`.
+
+Validation: 55 focused tests passed. Browser fixtures verified rapid ordered
+autosaves, optional Chinese comments, reload persistence, failed-save recovery,
+stale-tab/reset protection, bilingual previews, blinding/reveal and mobile layout.
+A read-only check confirmed the real 44-presentation review is blank, has no Save
+buttons, and retains all four tool traces. `grim check` passed 200 games with zero
+crashes and seven existing warnings. The full gameplay verification was not
+repeated after the preceding run stalled in the style simulation; no golden
+refresh was made.
+
+## Author-workspace tool traces (October 24)
+
+`grim author-eval workspaces traces --experiment DIR` now discovers the matching
+Claude interactive sessions and compares their recorded tool calls with frozen
+RAG receipts. New immutable JSON/Markdown reports live outside author projects;
+the review server's separate `/traces` page supports Chinese/English, command and
+phase filters, full recorded outputs, source IDs, stage provenance and errors.
+Native inputs are fingerprinted; assistant reasoning is excluded and recognizable
+credentials are redacted. Blinded quality state and judgments are unchanged.
+
+Observed author calls: baseline used four briefs, five queries and one show;
+Grim completed six RAG searches and one read alongside five query sites; QMD
+completed six searches alongside three queries, two shows and one graph; LightRAG
+completed five searches and two reads alongside four queries. QMD and LightRAG
+also checked status once. Six preparation receipts per RAG project were excluded.
+All completed author RAG operations preceded the first content write; none used
+explicit retrieval neighbors or briefs. This does not imply that LightRAG's
+internal graph retrieval was disabled. All four logs identify Claude Code 2.1.299
+and `claude-opus-5-5`. Prompt formatting differs; normalized task wording matches.
+These are exploratory mixed-tool workflows, not strict byte-identical trials or
+proof that all accesses were confined to the assigned inputs.
+
+Validation: 54 focused tests and the real read-only bilingual trace browser check
+passed, including source/output hashes, setup exclusion, redaction, safe exports,
+mobile overflow and preservation of quality judgments. `grim check` passed 200
+games without crashes (seven existing warnings). Broader verification was stopped
+after about nine minutes, while `test/styles.test.js` was still running; its
+interruption is not a gameplay assertion failure. No golden refresh was made.
+
+## Compact choices, the floating window and the combat bench (October 24)
+
+- **Choices stay compact**: the label (the only line that wraps), the roll's kind, and one line per outcome (at most three),
+  cut short rather than wrapped; `hint:` text and a fight's foe and level left the button. Left and right always share the
+  row, on a phone too; while the card is dragged one way, that way's button takes the whole row.
+- **The floating window** replaced the hover / long-press / selected-tile expansion: it follows the mouse (or opens at the
+  finger on a long-press) over a choice or menu tile, with the description, lock reason, fight foe, every outcome with
+  each change named, and the "…" spelled out (design §8.3).
+- **Partial outcomes** read apart from the beige card (a saturated amber chip); outcome labels on buttons are coloured.
+- **Spell levels** show only for three-level spells (the You panel, notes, the ↑ button, the fight's action buttons).
+- **Intro**: the three lessons lost their `hint:` descriptions; the Grisk card (`intro_purse`) is gone (Vey's tea leads to
+  your room). A save made on that card exactly skips the rest of the orientation (the deck drops unknown ids).
+- **Android swipes**: `.card-body` is a scroll container, so its default `touch-action` let the browser take the gesture
+  and cancel the swipe; it is now `none`, or `pan-y` when its text overflows.
+- **Combat bench** on the title screen: the server builds the bench site in memory from `combat/` (`combat/tools/site.mjs`,
+  shared with `combat/tools/build.mjs`) and serves it at `/bench/`; no cargo needed (it uses the core in
+  `build/combat.bundle.js` when `combat/web/core.wasm` is absent). From `file://` the button says it needs the server.
+
+## Batch review translations and inspection controls (October 24)
+
+The latest frozen author-workspace import has complete agent-written zh-CN
+translations for all 40 new events (zero missing or stale fields), presented as
+44 blinded review items including consistency repeats. Older snapshots and
+judgments remain separate. The loopback review uses the game's text-variation
+renderer with synchronized alternative controls, selectable choices and outcome
+branches, and nominal stat/XP amounts from the frozen balance rules. Complete
+compiled attributes, original parsed properties, flags, queues, effect trees and
+`.grim` blocks remain inspectable. See `rag/WORKSPACES.md`.
+
+Validation: 49 focused tests and bilingual browser fixtures passed; all 44 real
+presentations passed read-only browser checks, including mobile overflow and
+unchanged verdicts. `grim check` passed (200 games, zero crashes, seven existing
+warnings). Full verification passed 288/289 tests and stopped on the previously
+observed homebody-health assertion at `test/styles.test.js:118`; its later
+balance/golden/browser stages therefore did not run. No golden refresh or
+experimental content adoption was performed.
+
+## Everyday RAG and evaluation handoffs (October 23)
+
+Normal event writing now follows `rag/AUTHORING.md` and the explicit selection in
+`rag/authoring.json`: QMD/full is the provisional everyday default, not a confirmed
+quality winner. Frozen trial assignments override it. `retrieve status` checks
+source/index integrity without model calls; the current 1,901-block QMD index and
+real hybrid search passed. External search provenance now returns a digest instead
+of the complete parent mapping: the two-hit readiness JSON shrank from 131,419 to
+4,133 characters while retaining the full mapping in the manifest.
+
+`author-eval handoff` prepares exact Codex/Claude invocations, a tool policy,
+expected-value attestation template and a manual launch script. It starts no model.
+Native JSONL, stderr, version and exit status are captured outside author inputs;
+automatic retrieval receipts supplement the native trace. Optional local-key
+copying creates only a private runtime file, outside frozen inputs. The initial
+author stops before validation so the operator can preserve the first draft;
+repairs continue only that trial's session. Audits expose a per-access ledger,
+reject wrong backends and premature validation, and leave uncertain shell source
+scope or incomplete traces unverifiable. This is observed adherence, not hard
+filesystem/tool isolation. The evaluation guide explains sole-reviewer blinding
+limits and a separately predeclared source-service/container option.
+
+Validation: 33 authoring fixtures passed, including fake native-harness capture,
+source-scope checks, default/trial separation, compact search provenance and local
+review/browser persistence. Skill and generated-doc checks passed; `grim check`
+passed 200 games without crashes. The broader `npm run verify` run reached 270/271
+passing tests and stopped at the existing homebody-health assertion in
+`test/styles.test.js:118`; downstream balance/golden/browser checks did not run.
+The final focused suite includes one additional source-scope fixture. No scored
+author/critic sessions, full paid corpus indexing, gameplay changes or golden
+refreshes were performed. Prepare new studies after these tool/instruction changes.
+
+## Live RAG smoke test (October 23)
+
+All three backends passed indexing, ranked retrieval, complete original/branch
+reads, strict budgets, bounded static neighbors and evidence briefs on nine real
+source blocks. LightRAG processed every document, built 50 entities/51 relations,
+and successfully used live reranking. QMD's full 1,901-block index was refreshed,
+and the CLI `related` operation passed against it. The paid Grim/LightRAG full
+corpus was not indexed. This is a functionality smoke test, not evidence of
+comparative authoring quality.
+
+Live responses exposed valid provider model names rejected by strict checks.
+Both adapters now compare full IDs without case differences and accept only the
+documented Fireworks reranker alias from Fireworks. The shared alias table is
+fingerprinted in indexes; no alternative models were selected. All 28 authoring
+fixtures, Python identity checks and `grim check` (200 games, no crashes) passed.
+Recorded API usage: $0.02478361 across 60 requests, including initial probes.
+Raw failures, final evidence, usage and reproduction scripts are in the ignored
+`rag/runs/smoke-2026-10-23T19-14-14-051Z/` workspace.
+
+## RAG containment (October 23)
+
+Retrieval/evaluation code, setup, dependency locks, installed QMD packages/models,
+local credentials, caches and trial inputs now live under `rag/`. Authoring docs
+and discoverable skills point there. Setup/retrieval: `rag/README.md`; the frozen
+trial and sole-reviewer protocol: `rag/EVALUATION.md`. Historical cache manifests
+retain their old paths; current QMD indexes were explicitly rebuilt.
+
+Validation: all 26 authoring fixtures pass, including snapshot isolation in Git
+and non-Git workspaces; `grim check` passed 200 games without crashes. QMD hybrid
+search and complete source reads passed after relocation; all 1,901 indexed source
+hashes match. Documentation links and credential ignores passed. Full `verify`
+also reproduced the existing homebody-health failure at `test/styles.test.js:118`;
+its newly exposed non-Git ignore-file fixture issue was fixed and the authoring
+suite rerun successfully. The checks after the full unit suite did not run.
+No paid model calls, gameplay changes or golden refreshes were made.
+
+Preparation entry points: `rag/setup.sh` and `rag/setup.ps1` prepare both frameworks
+with the same installer. Windows uses Node-based QMD/npm entry points, and Python
+discovery also accepts `python`. Validation: shell syntax/help from a different
+working directory, all 27 authoring tests (including launcher argument/exit-code
+fixtures), and `grim check` passed. PowerShell/native Windows setup was not run
+because PowerShell is unavailable here. No dependency installation was launched
+for this wrapper change; the local QMD index identity was refreshed explicitly.
+
+## Node 24 and retrieval setup (October 23)
+
+The project targets Node 24; npm scripts select it even when the parent shell
+defaults to an older runtime. QMD 2.8.3 and its three local models are installed
+through `npm run setup:authoring`, with a separate committed dependency lock.
+Live fixture indexing and hybrid search passed; the current 1,901-block corpus
+is indexed locally, and a real-corpus hybrid search passed. QMD's named-index URL suffix is now mapped back to original
+blocks. Local configuration is loaded automatically.
+`npm run setup:python` creates the optional pinned LightRAG venv, or `--all` on
+authoring setup prepares both in one execution. Python setup was exercised with
+mock commands; no live LightRAG or OpenRouter calls were made in this change.
+
+A-RAG investigation: `rag/A-RAG.md`. The recommendation is an explicit
+future interface adaptation in the existing coding-agent harness, not another
+author agent or an unannounced change to the four-workflow screening.
+
+Validation: Node 24 `grim check` passed (200 games, no crashes), and all 25
+authoring fixtures passed. `npm run verify` reached 264/265 passing tests, then
+stopped at `test/styles.test.js:118` (homebody final health). That failure was
+already reproduced on Node 20 and Node 24 before this migration. No gameplay
+baseline was refreshed and no remote deployment was performed.
+
 ## Authoring retrieval experiments (October 21)
 
 Auxiliary `grim retrieve` tools now catalog original blocks, search with contextual
@@ -20,8 +253,8 @@ BM25/vectors/reranking, inspect static dependencies, and export to isolated QMD 
 LightRAG adapters. `grim author-eval` prepares frozen manual harness trials,
 preserves drafts and failures, imports/audits native traces, and serves a separate
 loopback review page with blind judgments, findings, panels and reports.
-Protocol/setup: `experiments/authoring/README.md`; retrieval/configuration:
-`docs/authoring/retrieval.md`. Production content acceptance is unchanged.
+Protocol/setup: `rag/EVALUATION.md`; retrieval/configuration:
+`rag/README.md`. Production content acceptance is unchanged.
 
 Validation: `grim check`, `npm run verify` (including golden games and browser
 checks), fixture tests and a real-corpus lexical smoke test. External API and
@@ -47,7 +280,13 @@ over is in `combat/HANDOFF.md` ("F5.11-plan.1").
   - The class win-rate spread went from sd 20 to 14 (L20 27–65%, L45 16–92%, L70 19–82%).
   - Still open: the Healer (92% at 45), the Hollow adept (82% at 70), the Scholar (16% at 45) and the Illusionist (19% at
     70). Number changes alone haven't closed these gaps; mechanic proposals are pending the user's choice.
-  - Creatures come after the humans.
+  - Next balance pass (feedback 2026-10-24): Haste gives a free Parry to actions without its Impulse (7 Mana, 2/3/4 exchanges; migration 0044);
+    Tailwind hits 9 +15, costs 4 +1 a chained cast (migration 0043); the Scholar and Illusionist get Omen and Hoarfrost as
+    stand-ins for their combat-less capstones.
+  - Named characters (`human-study.mjs --subjects named`): Corvin, Nessa and Tamsin win under 15% in every mode; their
+    signature, club and job spells do nothing in combat (stand-ins pending the user's choice). Lyra, Kael, Seraphine and
+    Ilse are strong at 20 and fade by 70.
+  - Creatures, pass 1 (`combat/HANDOFF.md`): the oaks and the Spinner can now be beaten; the critters are still trivial.
 
 ## World expansion 1 (October 20)
 

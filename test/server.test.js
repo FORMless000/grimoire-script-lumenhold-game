@@ -161,6 +161,21 @@ test('export, gzip and production bundle', async () => {
   } finally { s.close(); }
 });
 
+test('the combat bench at /bench/: its site, with the core the bundle carries; nothing else of combat/', async () => {
+  const s = await start({ production: true });
+  try {
+    assert.equal((await fetch(s.base + '/bench', { redirect: 'manual' })).headers.get('location'), '/bench/');
+    assert.match((await s.call('GET', '/bench/')).text, /<script type="module" src="app\.mjs">/);
+    const engine = await s.call('GET', '/bench/engine.mjs');
+    assert.match(engine.headers.get('content-type'), /javascript/);
+    assert.match(engine.text, /export const GAME_NPCS=\{"/);
+    const wasm = await fetch(s.base + '/bench/core.wasm');
+    assert.equal(wasm.headers.get('content-type'), 'application/wasm');
+    assert.ok(WebAssembly.validate(new Uint8Array(await wasm.arrayBuffer())));
+    for (const p of ['/bench/server.mjs', '/bench/../package.json', '/bench/setup/roster.mjs']) assert.equal((await s.call('GET', p)).status, 404, p);
+  } finally { s.close(); }
+});
+
 test('feedback aggregation counts inherited feedback of a forked run once', () => {
   const base = [{ t: 'start' }, { t: 'card', n: 1, id: 'e1', turn: 1, fb: { rating: 'down' } }];
   const a = { runId: 'a', hist: base };

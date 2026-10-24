@@ -63,8 +63,9 @@ and the fight text live in the core and the bundle. This list is what the main g
   - Bramble: 4 damage now, then Bind 1 next exchange, for 12 Mana (the plan's 10 damage for 10, nerfed in balance); no
     construct. Ward and Shadowstep stop both parts; Reflect returns both.
   - Every Bind starts next exchange. Breaking Free blocks a new Bind.
-  - Tailwind: 10 Impact, +15 for each consecutive recast (10/25/40/55…; the plan's 20 + 10, changed in balance), for 5
-    Mana; any other move resets the chain.
+  - Tailwind: an Impulse's 9 Impact, +15 for each consecutive recast (9/24/39/54…), for 4 Mana +1 for each cast already in
+    the chain (4/5/6…; `amounts.costStep`, read by the core's `cost()`). Any other move resets both (feedback 2026-10-24;
+    was 20 + 10 for 5 in the plan).
   - Moonwell banks 10 a gathering (was 16).
   - Refocus gathers all the flux, and flux is 2/3 of the Mana spent, as before (`FLUX_RATIO`, now pinned by a test).
   - Wildfire: the cast and each Hold hit for 15, burn the caster 2/4/6… and bank 15. The release is 15 plus the bank, and
@@ -72,6 +73,12 @@ and the fight text live in the core and the bundle. This list is what the main g
   - Omen: 20 at t+2 and 20 at t+3. Hits due on the same exchange merge.
   - Haste, now **Countertempo**: no bundles. While it's up, an eligible spell (no damage of its own, no schedule, no
     channel) adds one automatic Impulse.
+  - Haste's **free Parry** (feedback 2026-10-24): while it's up, every other action parries as well. That covers a
+    basic, a damaging spell, a channel and Breaking Free; it excludes a lost turn and a frozen turn.
+    - Parry fatigue applies to it, but it doesn't count as a Parry for the next exchange's fatigue.
+    - Haste costs 7 Mana at every rank (was 5) and lasts 2/3/4 exchanges (a depth-4 trial against 3/4/5 at 5 Mana:
+      the L20 spread fell from sd 21 to 7).
+    - Its button summary reads "+Impulse/Parry".
   - Compel: captures the target's move of that exchange and forces it for the next 3. A move that can't be played is a
     lost turn. Ward, Shadowstep and Reflect apply as usual; two Compels cancel. Control order: frozen, then Bound, then
     Compelled, then a channel.
@@ -94,6 +101,8 @@ and the fight text live in the core and the bundle. This list is what the main g
     loadout's best (a named character's place). The second is its best of the other kind, so a kit holds one club and one
     job, three at most.
   - A capstone with no combat effect (Index, Rapport, Quickquill) still takes its place.
+  - A loadout's `standIn` plays a combat spell in its place (feedback 2026-10-24): the Scholar's Index plays as Omen and
+    the Illusionist's Rapport as Hoarfrost, at 30. Peer capstones can now appear in a generic kit this way.
   - Hidden spells (the hidden pool and hidden courses) arrive one every 10 levels from 30, as many as the loadout lists.
   - Iconic spells and named grants keep their own levels.
   - This replaces the extras gates 20 / 34 / 46 / 58 and the place gate at 16.
@@ -102,6 +111,21 @@ and the fight text live in the core and the bundle. This list is what the main g
   20/45/70 ±4): the numbers above, the kit gates below, and the Showman's job (Tailwind before Rapport). The spread of class
   win rates went from sd 20 to 14; the Healer (92% at 45) and the Hollow adept (82% at 70) stay strong, and the Scholar
   (16% at 45) and the Illusionist (19% at 70) weak.
+- **Creature pass 1** (feedback 2026-10-24: keep creatures distinct by HP pool, but beatable). Measured with
+  `tools/creature-study.mjs --gap 0`, engine against engine and decent against Medium.
+  - Spell changes:
+    - Acorns: 8 now and 8 next exchange, for 6 Mana (was 10 + 10 for 3).
+    - Bark and Carapace: 6 Mana (was 3).
+    - Web: Bind 1 for 10 Mana (was Bind 2 for 6). This deviates from the plan: Bind 2 left the Spinner at 11–15% for a
+      decent player.
+    - The Long Wait: 12 Mana (was 8).
+  - Strike scale: the oaks' and the Spinner's blows hit at 0.55 (`strike:` on their loadouts); Grumpy oak's Mana scale
+    is 0.4.
+  - HP pools are unchanged.
+  - Results: before, the oaks and the Spinner won 85–100% of fights; now the decent player beats Grumpy oak 23–98% and
+    Elder oak 33–72% by level, and the Spinner 20% (weakened: 33%).
+  - Still open: the ferret, the swarm and the stag lose every fight at every level, and Grumpy oak's 24 end is still
+    hard.
 - **Browser build fix:** the wasm `has()` export listed only 13 effects. Asking it about `bound` or `poison` panicked,
   and the fight screens ask about `bound` on every render. Its table is now typed by the core's effect count.
 - **Tests:** the frozen goldens are gone (`tools/golden.mjs`, `test/golden.json`, `rust/core/tests/fights.jsonl`).
@@ -125,8 +149,8 @@ and the fight text live in the core and the bundle. This list is what the main g
     - `fight.haste`, `fight.bound`, `fight.compelSeize` and `fight.compelledLost` are new or reworded;
     - `compelIncoming`, `compelIncomingLost` and `compelWard` are gone.
 - **Main game, left:**
-  - `src/combat-ui.js` still has dead bundle code: the `bundle:` icons in `actionIcon` and the `.bundle-icons` style.
-    Nothing produces those ids now.
+  - Done (2026-10-24): the dead bundle code (`bundle:` icons in `actionIcon`, the `.bundle-icons` style) is gone from the
+    game. The core still names bundle actions but never makes them legal; the bench keeps its icon fallback.
   - `fight.shield` / `fight.shieldNote` are unused unless a construct shield comes back.
 
 ## F5.11: Compel and the creature pass (2026-10-20): carry over to the main game
@@ -141,8 +165,9 @@ The rules and the AI live in the core and reach the game through the bundle; thi
     Ward, and a side already compelled whose repeat is a Ward is free from the next exchange.
   - 18 Mana (was 16), to counter the net buff (Shadowstep no longer stops it). Engine against engine at equal level, levels
     20–60, classes beat the man in grey 70% under the old rules, 68% under the new at 16 Mana, and 71% at 18.
-  - **Main game:** `src/combat-ui.js` `incomingCompel` must drop its `has(game, 0, 'shadowstep')` early return (only Ward
-    blocks now). The core's `d.compel.immediate` and `d.shadowstep` texts changed: run `grim i18n zh-CN` and refill them.
+  - **Main game:** superseded: the current rule (`d.compel`) lets Ward or stepping aside keep Compel off, so both UIs skip
+    the Compel warning while the player is stepped aside (`incomingCompel`, aligned 2026-10-24). The core's texts are
+    translated (`grim i18n zh-CN`).
 - **New reason keys** in `web/core.mjs` `UNAVAILABLE`: `bound` (Root/Web's "Bound: no stepping aside or bracing", untranslated
   until now) and `firstExchange`. They reach `locales/<lang>/combat.lang` through `grim i18n`.
 - **Bench Compel fix** (`web/app.mjs`), ported from `src/combat-ui.js`, so the game needs nothing: a compelled player sees
@@ -165,7 +190,12 @@ The rules and the AI live in the core and reach the game through the bundle; thi
       with the bench's `incoming()` (`web/app.mjs`): one line per blow on its way (the foe's `omens`), saying when it lands,
       for how much, and what stops it (`describeData(...).stops`). New `UI_EN` keys with English fallbacks in the bench:
       `fight.incomingNow`, `fight.incomingLater`, `fight.whenNext`, `fight.whenIn`; style `.intent.incoming` (`.now` when
-      it lands this exchange).
+      it lands this exchange). A blow with a spell part and an Impact part (The Long Wait) queues two omens with the same
+      `id` and `due`: show them as one line, their total, then `fight.incomingSplit` (`({parts})`, e.g. "29 spell + 29
+      Impact"). Done in both UIs (2026-10-24).
+    - Spell damage has its own colour, `--k-spell` (violet, #d68fff), apart from Impact's `--k-dmg` (coral, which also
+      keeps poison, past every defence): button summaries (`brief()` kind `spell`), the track's hit cells (`.tl-hit.spell`
+      for a spell omen) and the forecast's split (`.split-spell` / `.split-impact`). Done in both UIs (2026-10-24).
     - The track's omen rows should use `o.id` for icon and name.
     - `labelsOf` / `sideLabel` can stay: they fall back to the spell's own label.
   - **Button summaries** (`web/brief.mjs`) go by template for copies, delayed blows, constructs, bind, poison, drain and

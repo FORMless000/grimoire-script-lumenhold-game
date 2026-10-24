@@ -274,9 +274,11 @@
     'check.parleyStub': 'Settled by charm, lore and guile until the negotiation game arrives.',
     // Introductions (E7): the title screen's option and Settings.
     'title.options': 'More options', 'title.skipIntros': 'Skip the introductions (you know the academy already)',
+    'title.bench': 'Combat bench', 'title.benchHint': 'Practice fights with any loadout, foe and level, and debug the combat rules',
+    'title.benchNoServer': 'The combat bench needs the game\'s server: run npm start and open the game from it.',
     'settings.intros': 'Introductions', 'settings.introsHint': 'The cards that explain a system the first time you meet it. Off for players who know the academy. The orientation at the start is separate: the first card of a new game lets you skip it.',
     // World expansion 1: a creature's wind-up, lessons and fights with nothing at stake, the kit on the opening screen.
-    'fight.windUp': '{name} is winding up: {move}', 'fight.windUpHint': 'It lands when released: step aside, brace or ward for it.', 'fight.windUpNote': 'winding up',
+    
     'fight.coachTitle': 'Thorne:', 'fight.skipLesson': 'Skip the lesson', 'fight.walkAway': 'Walk away',   // skipLesson: the combat bench's (combat/web/app.mjs) only
     'fight.kit': 'Your kit', 'fight.idle': 'Idle',
     // The intro's lesson (feedback 2026-10-20): one line per exchange against the mannequin's five telegraphed moves, then
@@ -308,11 +310,11 @@
     'fight.hpBar': 'HP {v} / {max}', 'fight.manaBar': 'Mana {v} / {max} · flux {flux}: Refocus turns flux back into Mana',
     'fight.flux': 'Flux: Refocus turns it back into Mana', 'fight.shield': 'Shield: absorbs damage before HP',
     'fight.construct': '{name}: {left} of {of} HP left, until exchange {until}',
-    'fight.frozen': 'Frozen · you thaw after this exchange', 'fight.channel': '{spell} · Hold or Release', 'fight.haste': 'Haste · a spell without damage of its own also throws an Impulse', 'fight.bound': 'Bound · Breaking Free is your only move',
+    'fight.frozen': 'Frozen · you thaw after this exchange', 'fight.channel': '{spell} · Hold or Release', 'fight.haste': 'Haste · a spell without damage of its own also throws an Impulse; any other action also parries', 'fight.bound': 'Bound · Breaking Free is your only move',
     'fight.compelledYou': 'Compelled · you must repeat {action}', 'fight.compelledLost': 'Compelled · you can’t play {action} again, so this exchange is lost',
     'fight.compelledNone': 'Compelled · you have no move to repeat, so this exchange is lost',
     'fight.compelSeize': 'They cast Compel: the move you pick now you must repeat for the next three exchanges, unless Ward or Shadowstep keeps it off',
-    'fight.frozenName': 'Frozen', 'fight.rimeReady': 'Rime ready', 'fight.shieldNote': '{n} shield', 'fight.lodestarUp': 'matures: all damage negated, then heals {n}', 'fight.tailwindChain': 'chain {n}', 'fight.holds': 'held {n}×', 'fight.banked': '{n} banked', 'fight.hpOf': '{left} of {of} HP',
+    'fight.frozenName': 'Frozen', 'fight.rimeReady': 'Rime ready', 'fight.nextBurn': 'next burn {n}', 'fight.impactNote': 'Impact', 'fight.spellNote': 'spell', 'fight.incomingNow': '{move} lands this exchange: {n} damage before defences.', 'fight.incomingLater': '{move} lands {when} (exchange {ex}): {n} damage before defences.', 'fight.incomingSplit': '({parts})', 'fight.whenNext': 'next exchange', 'fight.whenIn': 'in {k} exchanges', 'fight.lodestarUp': 'matures: all damage negated, then heals {n}', 'fight.tailwindChain': 'chain {n}', 'fight.holds': 'held {n}×', 'fight.banked': '{n} banked', 'fight.hpOf': '{left} of {of} HP',
     'fight.exchange': 'Exchange {n}', 'fight.exchangeShow': 'Exchange {n}: show it in full', 'fight.youLed': 'you led', 'fight.theyLed': 'they led',
     'fight.youLead': 'you lead', 'fight.theyLead': 'they lead', 'fight.committed': 'committed {action}', 'fight.latest': 'Back to the latest',
     'fight.first': '1st', 'fight.yourMove': 'Your move this exchange', 'fight.until': 'until exchange {n}', 'fight.trackLabel': 'Exchanges: the past, this one and the next ones',

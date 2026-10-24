@@ -2,12 +2,14 @@
 // live game plays them (LIVE_AI: depth 5, no seeded mistakes): the classes' win rate per foe and level, the winner's HP margin,
 // fight length, and how the foe spreads its actions (its top action's share, and how many actions make up 80% of its moves).
 //   node tools/creature-study.mjs [--foes "Bristleback;Stag beetle"] [--levels 20,35,50] [--gap -10] [--player engine]
-//     [--foe medium] [--seeds 2] [--classes Duellist,Healer] [--variant tools/variants/x.mjs] [--all] [--foe-start .6]
+//     [--foe medium] [--seeds 2]   (--player/--foe: a preset or a player model, novice or decent: tools/player-models.mjs)
+//     [--classes Duellist,Healer] [--variant tools/variants/x.mjs] [--all] [--foe-start .6]
 //     [--player-skills 100] [--json out.json]
 // --gap: the class's level minus the foe's. --all: the class side knows every castable spell at its top rank (a custom kit).
 // --foe-start: the foe starts with that share of its HP (createState's opponentStart). Levels default to each foe's card range.
 import fs from 'node:fs';
 import {play,applyVariant} from './arms.mjs';
+import {PLAYER_MODELS} from './player-models.mjs';
 const args=process.argv.slice(2),opt=(k,d)=>{const i=args.indexOf('--'+k);return i<0?d:args[i+1];},flag=k=>args.includes('--'+k);
 await applyVariant(opt('variant'));
 const R=await import('../setup/roster.mjs'),{createState}=await import('../setup/setup.mjs');
@@ -29,7 +31,7 @@ for(const foe of foes)for(const L of (opt('levels')?opt('levels').split(',').map
  const s=createState({playerLoadout:p,opponentLoadout:foe,playerLevel:lp,opponentLevel:L,firstLeader,context:'real_conflict',
   ...(all?{playerKit:{skills:skills??Object.fromEntries(LOADOUT_SKILLS.map(k=>[k,lp])),spells:allSpells,level:lp}}:skills?{playerSkills:skills}:{}),
   ...(foeStart?{opponentStart:{hp:Number(foeStart)}}:{}),
-  ai:presets.map((preset,side)=>({...LIVE,preset,seed:(seed*7919+cases.length*2+side)>>>0}))});
+  ai:presets.map((preset,side)=>PLAYER_MODELS[preset]?{...PLAYER_MODELS[preset],seed:(seed*7919+cases.length*2+side)>>>0}:{...LIVE,preset,seed:(seed*7919+cases.length*2+side)>>>0})});
  const {lastEvents,...state}=s;
  cases.push({meta,state,search:{},maxRounds:80,tableLimit:16384,maxHP:[s.actors[0].maxHP,s.actors[1].maxHP]});
 }
