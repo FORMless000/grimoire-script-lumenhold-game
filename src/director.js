@@ -747,7 +747,13 @@
       }
       this._slot = null;
       d.used = [...used]; d.withToday = [...withToday]; d.plotLeft = this._plotLeft;
-      return items;
+      return this.orderLast(items);
+    },
+    // `order: last` cards go after the slot's other cards, keeping both groups' order. Only the order changes: the
+    // slot's cards were drawn already, and no random number is used.
+    orderLast(items) {
+      const last = items.filter((it) => (this.c.events[it.id] || {}).order === 'last');
+      return last.length ? items.filter((it) => !last.includes(it)).concat(last) : items;
     },
   };
 

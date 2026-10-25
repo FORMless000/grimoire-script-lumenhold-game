@@ -237,6 +237,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `specializes` | text |  |
 |  | `pool` | text |  |
 |  | `thread` | text |  |
+|  | `order` | text |  |
 | | `on_show:` | effects | `say:` lines |
 | | `> key: Label` | option (`when:`, `hint:`, effects) | label, hint, `say:` |
 | `@pool id` | `from` | text |  |

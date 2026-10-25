@@ -369,6 +369,8 @@ function analyze(content) {
     }
     if (!e.class) A.legacy.push({ where: w, what: 'no class: (routine, milestone, incident, windfall, story, crisis)' });
     if (e.tone && content.vocab.tones && !content.vocab.tones.values.includes(e.tone)) P('error', w, 'tone "' + e.tone + '" is not in @vocab tones');
+    if (e.order != null && e.order !== 'last') P('error', w, 'order: "' + e.order + '" (the only value is last)');
+    if (e.order === 'last' && e.trigger && e.trigger !== 'random' && e.trigger !== 'social') P('warn', w, 'order: last orders drawn cards; a ' + e.trigger + ' card is pushed, so it has no effect');
     if (e.class) budgetCheck(e, content, (lvl, msg) => P(lvl, w, msg));
     crownCheck(e, content, (lvl, msg) => P(lvl, w, msg));
     for (const o of e.options) {

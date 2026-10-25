@@ -294,7 +294,9 @@
       'specializes',
       // The framework (docs/grimoire-script.md §9): `pool:` the bundle(s) of properties it takes; `thread:` the storyline
       // it belongs to (the same as `chain:`, plus the thread's own properties and, from a template, its role's)
-      'pool', 'thread'], effects: ['on_show'], options: true },
+      'pool', 'thread',
+      // `order: last`: dealt after the other cards of its slot (a visit's routine cards first); what is drawn is unchanged
+      'order'], effects: ['on_show'], options: true },
     // A bundle of card properties that cards take with `pool: <id>` (their own values win; `when` is ANDed, tags come
     // first). `from:` inherits another pool. A dotted id (`quest.part`) is a role of a thread template.
     pool: { bundle: true, dotOk: true, props: ['from', 'desc'], effects: [] },
@@ -345,7 +347,7 @@
     timeline: { props: ['date', 'kind', 'event', 'text'], effects: [] },
   };
   // What a pool or a thread may give its cards (a bundle): where and when they're drawn, how often, how they look.
-  const BUNDLE_PROPS = ['trigger', 'place', 'track', 'level', 'rank', 'plan', 'slot', 'time', 'class', 'tone', 'repeat', 'weight', 'priority', 'per', 'actor', 'tags', 'when', 'defer', 'art', 'chain', 'variant', 'lesson'];
+  const BUNDLE_PROPS = ['trigger', 'place', 'track', 'level', 'rank', 'plan', 'slot', 'time', 'class', 'tone', 'repeat', 'weight', 'priority', 'per', 'actor', 'tags', 'when', 'defer', 'art', 'chain', 'variant', 'lesson', 'order'];
   const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'gone_when', 'discover', 'hinted_when', 'unlock', 'prereq', 'defer', 'followed']);
   const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment', 'warn_below',
     'schema', 'last_month', 'max_cards_per_day', 'level', 'rank', 'beat', 'pick', 'opens', 'tonic']);

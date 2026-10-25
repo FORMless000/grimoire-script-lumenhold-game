@@ -123,3 +123,16 @@ test('appointments: a month appointment deals a pool card; a visit appointment d
   assert.ok(build('@appointment bad\nat: month\ndeals: cards x\n').errors.some((e) => /deals: card/.test(e.message)));
   assert.ok(build('@appointment bad\nat: month\ndeals: own\nuse: festival\n').errors.some((e) => /not a built-in way of dealing at month/.test(e.message)));
 });
+
+test('order: last puts a slot\'s cards after its other cards, keeping both groups\' order; a pool can give it', () => {
+  const { content: c, errors } = build(['@pool starts\norder: last\n', card('start', 'pool: starts\n'), card('walk_a'), card('walk_b')].join('\n'));
+  assert.deepEqual(errors.map((e) => e.message), []);
+  assert.equal(c.events.start.order, 'last');
+  const eng = new Engine(c); quiet(() => eng.newGame({ seed: 3, name: 'T' }));
+  const ids = (items) => eng.orderLast(items.map((id) => ({ id }))).map((it) => it.id);
+  assert.deepEqual(ids(['start', 'walk_a', 'walk_b']), ['walk_a', 'walk_b', 'start']);
+  assert.deepEqual(ids(['walk_b', 'start', 'walk_a']), ['walk_b', 'walk_a', 'start']);
+  assert.deepEqual(ids(['walk_a', 'walk_b']), ['walk_a', 'walk_b']);
+  // The Whisperwood delve's start cards come after the forest's routine cards.
+  for (const id of ['ww_edge', 'ww_edge_night', 'ww_night_first']) assert.equal(content.events[id].order, 'last', id);
+});
