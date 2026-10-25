@@ -10,7 +10,7 @@ class: routine
 tone: eerie
 trigger: social
 actor: seraphine
-when: rel(seraphine) >= 9 and bond(seraphine) != "partner" and bond(seraphine) != "ex"
+when: rel(seraphine) >= 9 and courting(seraphine)
 repeat: 4
 weight: 10
 art: mirror
@@ -33,7 +33,7 @@ class: routine
 tone: light
 trigger: social
 actor: seraphine
-when: rel(seraphine) >= 9 and spark(seraphine) >= 5 and bond(seraphine) != "partner" and bond(seraphine) != "ex"
+when: rel(seraphine) >= 9 and spark(seraphine) >= 5 and courting(seraphine)
 weight: 10
 art: eye
 tags: social romance
@@ -55,7 +55,7 @@ class: routine
 tone: eerie
 trigger: social
 actor: seraphine
-when: rel(seraphine) >= 9 and seen(seraphine_overwhelmed) > 0 and bond(seraphine) != "partner" and bond(seraphine) != "ex" and spark(seraphine) < 40
+when: rel(seraphine) >= 9 and seen(seraphine_overwhelmed) > 0 and courting(seraphine) and spark(seraphine) < 40
 repeat: 4
 time: evening night
 weight: 10
@@ -213,7 +213,7 @@ class: routine
 tone: light
 trigger: social
 actor: corvin
-when: rel(corvin) >= 9 and seen(corvin_confiscation_vault) > 0 and bond(corvin) != "partner" and bond(corvin) != "ex"
+when: rel(corvin) >= 9 and seen(corvin_confiscation_vault) > 0 and courting(corvin)
 repeat: 4
 weight: 10
 art: cards
@@ -236,7 +236,7 @@ class: routine
 tone: tense
 trigger: social
 actor: corvin
-when: rel(corvin) >= 9 and spark(corvin) >= 5 and bond(corvin) != "partner" and bond(corvin) != "ex"
+when: rel(corvin) >= 9 and spark(corvin) >= 5 and courting(corvin)
 weight: 10
 art: lock
 tags: social romance
@@ -259,7 +259,7 @@ class: routine
 tone: warm
 trigger: social
 actor: corvin
-when: rel(corvin) >= 9 and bond(corvin) != "partner" and bond(corvin) != "ex" and spark(corvin) < 40
+when: rel(corvin) >= 9 and courting(corvin) and spark(corvin) < 40
 repeat: 4
 time: evening night
 weight: 10
@@ -451,7 +451,7 @@ class: routine
 tone: light
 trigger: social
 actor: mir
-when: rel(mir) >= 9 and bond(mir) != "partner" and bond(mir) != "ex"
+when: rel(mir) >= 9 and courting(mir)
 repeat: 4
 weight: 10
 art: owl
@@ -474,7 +474,7 @@ class: routine
 tone: warm
 trigger: social
 actor: mir
-when: rel(mir) >= 9 and spark(mir) >= 5 and not knows(mir.notebooks) and bond(mir) != "partner" and bond(mir) != "ex"
+when: rel(mir) >= 9 and spark(mir) >= 5 and not knows(mir.notebooks) and courting(mir)
 weight: 10
 art: book
 tags: social romance
@@ -495,7 +495,7 @@ class: routine
 tone: light
 trigger: social
 actor: mir
-when: rel(mir) >= 9 and bond(mir) != "partner" and bond(mir) != "ex" and spark(mir) < 40
+when: rel(mir) >= 9 and courting(mir) and spark(mir) < 40
 repeat: 4
 weight: 10
 art: gear

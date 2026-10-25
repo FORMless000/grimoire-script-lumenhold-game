@@ -11,7 +11,7 @@ class: routine
 tone: warm
 trigger: social
 actor: kael
-when: rel(kael) >= 9 and bond(kael) != "partner" and bond(kael) != "ex" and spark(kael) < 40
+when: rel(kael) >= 9 and courting(kael) and spark(kael) < 40
 repeat: 4
 time: evening night
 weight: 10
@@ -35,7 +35,7 @@ class: routine
 tone: warm
 trigger: social
 actor: kael
-when: rel(kael) >= 9 and spark(kael) >= 5 and bond(kael) != "partner" and bond(kael) != "ex"
+when: rel(kael) >= 9 and spark(kael) >= 5 and courting(kael)
 weight: 10
 art: snow
 tags: social romance
@@ -55,7 +55,7 @@ class: routine
 tone: warm
 trigger: social
 actor: kael
-when: rel(kael) >= 12 and spark(kael) >= 10 and bond(kael) != "partner" and bond(kael) != "ex"
+when: rel(kael) >= 12 and spark(kael) >= 10 and courting(kael)
 weight: 10
 art: star
 tags: social romance
@@ -77,7 +77,7 @@ class: routine
 tone: light
 trigger: social
 actor: kael
-when: rel(kael) >= 9 and bond(kael) != "partner" and bond(kael) != "ex" and spark(kael) < 25
+when: rel(kael) >= 9 and courting(kael) and spark(kael) < 25
 repeat: 6
 weight: 9
 art: house
@@ -215,7 +215,7 @@ class: routine
 tone: light
 trigger: social
 actor: nessa
-when: rel(nessa) >= 9 and bond(nessa) != "partner" and bond(nessa) != "ex" and spark(nessa) < 40
+when: rel(nessa) >= 9 and courting(nessa) and spark(nessa) < 40
 repeat: 4
 weight: 10
 art: feather
@@ -237,7 +237,7 @@ class: routine
 tone: light
 trigger: social
 actor: nessa
-when: rel(nessa) >= 9 and spark(nessa) >= 5 and bond(nessa) != "partner" and bond(nessa) != "ex"
+when: rel(nessa) >= 9 and spark(nessa) >= 5 and courting(nessa)
 weight: 10
 art: paper
 tags: social romance
@@ -289,7 +289,7 @@ class: routine
 tone: warm
 trigger: social
 actor: nessa
-when: rel(nessa) >= 12 and spark(nessa) >= 10 and bond(nessa) != "partner" and bond(nessa) != "ex"
+when: rel(nessa) >= 12 and spark(nessa) >= 10 and courting(nessa)
 weight: 10
 art: paper
 tags: social romance

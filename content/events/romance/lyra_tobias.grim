@@ -13,7 +13,7 @@ class: routine
 tone: tense
 trigger: social
 actor: lyra
-when: rel(lyra) >= 9 and bond(lyra) != "partner" and bond(lyra) != "ex" and term
+when: rel(lyra) >= 9 and courting(lyra) and term
 repeat: 4
 weight: 10
 art: trophy
@@ -36,7 +36,7 @@ class: routine
 tone: tense
 trigger: social
 actor: lyra
-when: rel(lyra) >= 9 and spark(lyra) >= 8 and bond(lyra) != "partner" and bond(lyra) != "ex"
+when: rel(lyra) >= 9 and spark(lyra) >= 8 and courting(lyra)
 weight: 10
 art: hand
 tags: social romance
@@ -58,7 +58,7 @@ class: routine
 tone: warm
 trigger: social
 actor: lyra
-when: rel(lyra) >= 9 and bond(lyra) != "partner" and bond(lyra) != "ex" and spark(lyra) < 40
+when: rel(lyra) >= 9 and courting(lyra) and spark(lyra) < 40
 repeat: 4
 time: evening night
 weight: 10
@@ -225,7 +225,7 @@ class: routine
 tone: light
 trigger: social
 actor: tobias
-when: rel(tobias) >= 9 and bond(tobias) != "partner" and bond(tobias) != "ex"
+when: rel(tobias) >= 9 and courting(tobias)
 repeat: 4
 weight: 10
 art: leaf
@@ -248,7 +248,7 @@ class: routine
 tone: warm
 trigger: social
 actor: tobias
-when: rel(tobias) >= 9 and spark(tobias) >= 5 and bond(tobias) != "partner" and bond(tobias) != "ex"
+when: rel(tobias) >= 9 and spark(tobias) >= 5 and courting(tobias)
 weight: 10
 art: letter
 tags: social romance
@@ -270,7 +270,7 @@ class: routine
 tone: warm
 trigger: social
 actor: tobias
-when: rel(tobias) >= 9 and bond(tobias) != "partner" and bond(tobias) != "ex" and spark(tobias) < 40
+when: rel(tobias) >= 9 and courting(tobias) and spark(tobias) < 40
 repeat: 4
 weight: 10
 art: rain

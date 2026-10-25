@@ -1,0 +1,13 @@
+# ============================================================
+#  Named conditions (docs/grimoire-script.md §9): call them in any expression, e.g. courting(lyra).
+# ============================================================
+
+@cond courting
+desc: Not together and not exes: a romance with them is still open.
+params: who
+is: bond(who) != "partner" and bond(who) != "ex"
+
+@cond partner_here
+desc: Your partner, and around to be met in person now.
+params: who
+is: bond(who) == "partner" and around(who)
