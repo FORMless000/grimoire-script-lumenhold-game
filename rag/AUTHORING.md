@@ -82,6 +82,10 @@ npm run grim -- retrieve index --resume
 ```
 Use `--resume` after an interrupted update, with the same source and build configuration; the previous revision remains active until publication.
 
+Each published sync then deletes the index data it no longer needs: older revisions, and indexes from earlier
+build configurations. `retrieve prune --dry-run` lists what would go; `index --keep-old` skips it. See
+[README.md](README.md).
+
 ```sh
 npm run grim -- retrieve index --rebuild --mode sync
 ```

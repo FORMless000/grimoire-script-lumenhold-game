@@ -85,3 +85,22 @@ test('a stale index answers from its last snapshot with a notice; unbuilt and re
  assert.equal(R.create(dir,cfg,{execute:hits}).status().state,'stale');
  assert.equal(S.fallback(dir,R.config({value:{models:{...cfg.models,extract:'other/model'}}})),null);
 });
+
+test('prune keeps the manifest, the build log and the active revision; deletes older revisions, journals and other identities',()=>{
+ const P=require('../src/prune.js'),cache=fs.mkdtempSync(path.join(os.tmpdir(),'prune-'));temporary.push(cache);
+ const base=path.join(cache,'lightrag'),active=path.join(base,R.extractionIdentity(cfg)),put=(f,t='x')=>{fs.mkdirSync(path.dirname(f),{recursive:true});fs.writeFileSync(f,t);};
+ put(path.join(active,'index.json'),JSON.stringify({storage:'revisions/new'}));put(path.join(active,'builds.jsonl'));
+ put(path.join(active,'revisions/new/vdb_chunks.json'));put(path.join(active,'revisions/old/vdb_chunks.json'));put(path.join(active,'jobs/old/request.json'));
+ put(path.join(base,'orphan/index.json'));put(path.join(base,'orphan/revisions/r/x.json'));
+ put(path.join(base,'busy/writer.lock'),JSON.stringify({pid:process.pid}));
+ const dry=P.prune(cache,cfg,{dryRun:true});
+ assert.deepEqual(dry.removed.map(x=>path.relative(base,x.path)).sort(),['orphan',path.join(path.basename(active),'jobs'),path.join(path.basename(active),'revisions/old')].sort());
+ assert.ok(fs.existsSync(path.join(active,'revisions/old')),'a dry run deletes nothing');
+ P.prune(cache,cfg);
+ assert.deepEqual(fs.readdirSync(active).sort(),['builds.jsonl','index.json','revisions']);
+ assert.deepEqual(fs.readdirSync(path.join(active,'revisions')),['new']);
+ assert.ok(!fs.existsSync(path.join(base,'orphan'))&&fs.existsSync(path.join(base,'busy')),'a live writer\'s folder is never touched');
+ // An unfinished update keeps everything in its folder.
+ put(path.join(active,'revisions/staged/x.json'));put(path.join(active,'pending.json'),'{}');
+ assert.deepEqual(P.plan(cache,cfg).map(x=>path.basename(x.path)),[]);
+});

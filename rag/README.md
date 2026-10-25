@@ -135,7 +135,14 @@ A full rebuild can take many batch waves; leave the process running or resume it
 Extraction model/preprocessing changes create a new graph lineage. Embedding
 changes rebuild native vectors without re-extraction. Keyword or reranker changes
 only affect retrieval and their own caches. Implementation changes conservatively
-invalidate extraction identity. Old revision data is retained for recovery.
+invalidate extraction identity.
+
+After every published index, `retrieve index` prunes the cache (`rag/src/prune.js`). Kept: the active identity's
+manifest (`index.json`), its build log (`builds.jsonl`) and the manifest's revision. A sync clones that revision,
+request caches included. Deleted: older revisions, finished batch journals, and the folders of other extraction
+identities (indexes orphaned by a configuration change). An unfinished update keeps its folder, and a live writer's
+folder is never touched. `retrieve index --keep-old` skips the prune; `retrieve prune --dry-run` lists what it would
+delete. Frozen experiment indexes are never pruned.
 
 ## Offline verification
 

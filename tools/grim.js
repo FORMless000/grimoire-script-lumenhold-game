@@ -48,7 +48,7 @@
  *                                       a pure refactor shows "no gameplay change" (exit 1 otherwise)
  *   node tools/grim.js lorebook [--out FILE]
  *                                       export the worldbook as JSON (default build/lorebook.json)
- *   node tools/grim.js retrieve status|index|search|read|neighbors|brief|related [QUERY/ID] [index: --dry-run|--resume|--rebuild --mode batch|sync]
+ *   node tools/grim.js retrieve status|index|prune|search|read|neighbors|brief|related [QUERY/ID] [index: --dry-run|--resume|--rebuild --mode batch|sync|--keep-old] [prune: --dry-run]
  *                                       bounded authoring evidence, --profile full|lexical|no-dense|no-rerank|no-graph|no-descriptions;
  *                                       --config FILE, --cache DIR, --json (rag/README.md)
  *   node tools/grim.js author-eval workspaces|environment|prepare|handoff|packet|draft|validate|freeze|trace|audit|critic-packet|critic|panel-prepare|panel-import|review|lock|report
