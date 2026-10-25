@@ -40,6 +40,10 @@
  *                                       fit the expected-skill curve E(turn) from the balanced play style
  *   node tools/grim.js snapshot [NAME] [--out FILE]
  *                                       play the golden seeds and save endings, choices, final values, coverage
+ *   node tools/grim.js equiv [--against REF] [--json]
+ *                                       compile-level equivalence with a git ref (default HEAD, with that ref's own
+ *                                       compiler): every block's compiled meaning must match (tools/equiv.js); a pure
+ *                                       refactor of the format or the content shows "equivalent" (exit 1 otherwise)
  *   node tools/grim.js diff [A] [B]     compare two snapshots (default: test/golden/baseline.json vs a fresh one);
  *                                       a pure refactor shows "no gameplay change" (exit 1 otherwise)
  *   node tools/grim.js lorebook [--out FILE]
@@ -240,6 +244,12 @@ function analyze(content) {
             const pool = Object.values(content.events).filter((e) => e.trigger === 'queued' && (e.tags || []).includes(st.tagged));
             if (!pool.length) P('error', w, 'queue any tagged ' + st.tagged + ': no queued event has that tag');
             for (const e of pool) add(A.queued, e.id, w);
+          } else if (st.pool) {
+            // `queue any in <pool|thread>` (the framework): every queued card of that pool or thread.
+            if (!content.pools[st.pool] && !content.threads[st.pool] && !content.arcs[st.pool]) P('error', w, 'queue any in ' + st.pool + ': no @pool or @thread with that id');
+            const pool = Object.values(content.events).filter((e) => e.trigger === 'queued' && ((e.pools || []).includes(st.pool) || e.thread === st.pool));
+            if (!pool.length) P('error', w, 'queue any in ' + st.pool + ': it has no queued cards');
+            for (const e of pool) add(A.queued, e.id, w);
           } else {
             if (!content.events[st.event]) P('error', w, 'queue: unknown event "' + st.event + '"');
             add(A.queued, st.event, w);
@@ -268,7 +278,10 @@ function analyze(content) {
         case 'find': if (!content.clues[st.clue]) P('error', w, 'find: no @clue "' + st.clue + '"');
           else if (/^content\/batches\//.test(w)) { const key = Object.values(content.arcs).some((a) => (a.key_clues || []).includes(st.clue)); if (key) P('error', w, 'find ' + st.clue + ': only hard-canon events may grant key clues'); }
           break;
-        case 'advance': if (!content.arcs[st.arc]) P('error', w, 'advance: unknown arc "' + st.arc + '"'); else if (/^content\/batches\//.test(w)) P('error', w, 'advance: only hard-canon events move an arc clock'); break;
+        case 'advance':
+          // A thread's own clock (the framework) is anyone's to move; an arc's only in hard-canon story events.
+          if (content.threads[st.arc] && !content.arcs[st.arc]) { if (!content.threads[st.arc].clock) P('error', w, 'advance ' + st.arc + ': the thread has no clock: (e.g. clock: 0..4)'); }
+          else if (!content.arcs[st.arc]) P('error', w, 'advance: unknown arc or thread "' + st.arc + '"'); else if (/^content\/batches\//.test(w)) P('error', w, 'advance: only hard-canon events move an arc clock'); break;
         case 'spawn': if (!content.archetypes[st.archetype]) P('error', w, 'spawn: unknown archetype "' + st.archetype + '"'); break;
         case 'unqueue': if (!content.events[st.event]) P('error', w, 'unqueue: unknown event "' + st.event + '"'); break;
         case 'give': case 'take': if (!(content.items || {})[st.item]) P('error', w, st.t + ': no @item ' + st.item); break;
@@ -1759,6 +1772,16 @@ switch (cmd) {
     let b = files[1];
     if (!b) { b = path.join(ROOT, 'build', 'snapshots', 'latest.json'); snapshot(b); }
     if (!snapDiff(a, b)) process.exit(1);
+    break;
+  }
+  case 'equiv': {
+    const r = require('./equiv.js').equiv(ROOT, { against: typeof flag('against') === 'string' ? flag('against') : 'HEAD' });
+    if (flag('json')) { console.log(JSON.stringify(r, null, 1)); if (r.diffs.length || r.errors.length) process.exit(1); break; }
+    for (const e of r.errors) console.log(C.r + 'error: ' + C.x + e);
+    for (const d of r.diffs.slice(0, 60)) console.log(C.y + d.block + C.x + (d.at ? ' ' + C.d + d.at + C.x : '') + '\n    before ' + String(d.before).slice(0, 300) + '\n    after  ' + String(d.after).slice(0, 300));
+    if (r.diffs.length > 60) console.log(C.d + '… ' + (r.diffs.length - 60) + ' more' + C.x);
+    console.log((r.diffs.length || r.errors.length ? C.r + 'equiv: ' + r.diffs.length + ' block(s) differ from ' + r.against : C.g + 'equiv: ' + r.compared + ' block(s) equivalent to ' + r.against) + C.x + (r.extra.length ? C.d + ' (new: ' + r.extra.join(', ') + ')' + C.x : ''));
+    if (r.diffs.length || r.errors.length) process.exit(1);
     break;
   }
   case 'lorebook': {

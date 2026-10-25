@@ -235,8 +235,26 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `per` | text |  |
 |  | `defer` | text |  |
 |  | `specializes` | text |  |
+|  | `pool` | text |  |
+|  | `thread` | text |  |
 | | `on_show:` | effects | `say:` lines |
 | | `> key: Label` | option (`when:`, `hint:`, effects) | label, hint, `say:` |
+| `@pool id` | `from` | text |  |
+|  | `desc` | text |  |
+| `@cond id` | `params` | text |  |
+|  | `is` | text |  |
+|  | `desc` | text |  |
+| `@thread id` | `from` | text |  |
+|  | `params` | text |  |
+|  | `with` | text |  |
+|  | `members` | list |  |
+|  | `roles` | text |  |
+|  | `default_role` | text |  |
+|  | `clues` | list |  |
+|  | `clock` | structured |  |
+|  | `name` | text |  |
+|  | `desc` | text |  |
+|  | `canon` | text |  |
 | `@ending id` | `title` | text | yes |
 |  | `text` | text | yes |
 |  | `art` | text |  |

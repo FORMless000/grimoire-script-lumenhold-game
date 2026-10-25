@@ -119,7 +119,7 @@ test('rename event and flag', () => {
 test('migrate: runs once, records, formats, and rolls back on failure', () => {
   const dir = tempProject();
   const mig = path.join(dir, 'migrations');
-  write(dir, 'migrations/0001-cheaper.js', `module.exports = { id: '0001-cheaper', description: 'gold -1 → -2', run(ctx) {
+  write(dir, 'migrations/0001-cheaper.js', `module.exports = { id: '0001-cheaper', description: 'gold -1 → -2', changesMeaning: true, run(ctx) {
     for (const r of ctx.query('delta', 'name == "gold" and amount == -1')) ctx.edit(r, (l) => l.replace('gold -1', 'gold   -2'));
     ctx.report('done');
   } };`);
@@ -130,6 +130,15 @@ test('migrate: runs once, records, formats, and rolls back on failure', () => {
   assert.ok(notes.some((n) => /done/.test(n)));
   assert.equal(JSON.parse(read(dir, 'content/.migrations.json')).applied[0].id, '0001-cheaper');
   assert.equal(migrate(dir, { dir: mig, log: quiet }).length, 0, 'second run is a no-op');
+
+  // A migration that doesn't say it changes the content's meaning must leave every compiled block as it was.
+  write(dir, 'migrations/0002-sneaky.js', `module.exports = { id: '0002-sneaky', run(ctx) {
+    for (const r of ctx.query('delta', 'name == "gold"')) ctx.edit(r, (l) => l.replace('gold -2', 'gold -3'));
+  } };`);
+  const kept = read(dir, 'content/events/a.grim');
+  assert.throws(() => migrate(dir, { dir: mig, log: quiet }), /changes the content's meaning/);
+  assert.equal(read(dir, 'content/events/a.grim'), kept, 'nothing written');
+  fs.unlinkSync(path.join(mig, '0002-sneaky.js'));
 
   write(dir, 'migrations/0002-broken.js', `module.exports = { id: '0002-broken', run(ctx) {
     ctx.edit({ file: 'content/events/a.grim', line: 3 }, 'actor: nobody_at_all');

@@ -32,6 +32,12 @@ class Rewriter {
     }
     return this.files.get(f);
   }
+  // A new file (the converters' content/core/templates.grim): written by apply(), refused if it already exists.
+  create(file, text) {
+    const f = this._rel(file);
+    if (this.files.has(f) || fs.existsSync(path.join(this.root, f))) throw new Error(f + ' already exists');
+    this.files.set(f, { text: '', lines: [], ops: new Map(), created: String(text) });
+  }
   lines(file) { return this.read(file).lines.slice(); }
   line(file, n) { return this.read(file).lines[n - 1]; }
   _op(file, n) {
@@ -67,12 +73,12 @@ class Rewriter {
         if (!op.remove) res.push(op.edit != null ? op.edit : line);
         res.push(...op.inserts);
       });
-      const after = res.join('\n');
-      if (after !== f.text) out.push({ file, before: f.text, after });
+      const after = f.created != null ? f.created : res.join('\n');
+      if (after !== f.text) out.push({ file, before: f.text, after, created: f.created != null });
     }
     for (const r of out) {
-      const disk = fs.readFileSync(path.join(this.root, r.file), 'utf8');
-      if (disk !== r.before) throw new Error(r.file + ' changed on disk since it was read; nothing written');
+      if (r.created) { if (fs.existsSync(path.join(this.root, r.file))) throw new Error(r.file + ' appeared on disk since it was planned; nothing written'); }
+      else if (fs.readFileSync(path.join(this.root, r.file), 'utf8') !== r.before) throw new Error(r.file + ' changed on disk since it was read; nothing written');
       if (r.file.endsWith('.grim')) {
         try { G.parseFile(r.after, r.file); } catch (e) { throw new Error('rewrite would break ' + r.file + ': ' + e.message + '; nothing written'); }
       } else if (r.file.endsWith('.lang')) {
@@ -80,11 +86,11 @@ class Rewriter {
         if (p.errors.length) throw new Error('rewrite would break ' + r.file + ': ' + p.errors[0] + '; nothing written');
       }
     }
-    if (!dryRun) for (const r of out) fs.writeFileSync(path.join(this.root, r.file), r.after);
+    if (!dryRun) for (const r of out) { fs.mkdirSync(path.dirname(path.join(this.root, r.file)), { recursive: true }); fs.writeFileSync(path.join(this.root, r.file), r.after); }
     return { files: out, diff: out.map((r) => lineDiff(r.file, r.before, r.after)).join('\n') };
   }
   // Restore files written by apply() (used when a later verification step fails).
-  static restore(root, files) { for (const r of files) fs.writeFileSync(path.join(root, r.file), r.before); }
+  static restore(root, files) { for (const r of files) { if (r.created) fs.rmSync(path.join(root, r.file), { force: true }); else fs.writeFileSync(path.join(root, r.file), r.before); } }
 }
 
 // Minimal line diff for reports: changed hunks with 1-based line numbers of the old file.

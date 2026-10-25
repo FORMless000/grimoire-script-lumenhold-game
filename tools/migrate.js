@@ -13,7 +13,7 @@
  *     },
  *   };
  *
- * ctx: query(node, where) · edit(at, textOrFn) · insertAfter(at, text) · remove(at) · report(msg)
+ * ctx: query(node, where) · edit(at, textOrFn) · insertAfter(at, text) · remove(at) · create(file, text) · report(msg)
  *      · lines(file) · content (compiled) · project (tools/project.js)
  * Migrations run in id order; applied ids are recorded in content/.migrations.json, so a second run skips
  * them. Each migration is verified before it's recorded: changed files must parse and the whole content
@@ -52,15 +52,25 @@ function migrate(root, { dryRun = false, dir = null, log = console.log } = {}) {
       edit: (x, t) => { const [file, line] = at(x); return rw.edit(file, line, t); },
       insertAfter: (x, t) => { const [file, line] = at(x); rw.insertAfter(file, line, t); },
       remove: (x) => { const [file, line] = at(x); rw.remove(file, line); },
+      create: (file, text) => rw.create(file, text),
       report: (msg) => notes.push(msg),
     };
     m.run(ctx);
     let res = rw.apply({ dryRun: true });
     // Canonical layout for changed .grim files, then verify the whole content still compiles.
     res.files.forEach((r) => { if (r.file.endsWith('.grim')) { const fr = Fmt.formatChecked(r.after, r.file); if (!fr.error) r.after = fr.text; } });
-    const next = sources.map((s) => { const r = res.files.find((x) => x.file === s.path); return r ? { path: s.path, text: r.after } : s; });
+    const next = sources.map((s) => { const r = res.files.find((x) => x.file === s.path); return r ? { path: s.path, text: r.after } : s; })
+      .concat(res.files.filter((r) => r.created && r.file.endsWith('.grim')).map((r) => ({ path: r.file, text: r.after })))
+      .sort((a, b) => (a.path.includes('/core/') ? 0 : 1) - (b.path.includes('/core/') ? 0 : 1) || path.join(P.root, a.path).localeCompare(path.join(P.root, b.path)));
     const after = G.compile(next);
     if (after.errors.length) throw new Error(m.id + ' breaks the content: ' + after.errors[0].message + ' (nothing written)');
+    // A migration keeps the content's meaning (tools/equiv.js) unless it says it changes it (`changesMeaning: true`).
+    if (!m.changesMeaning) {
+      const Eq = require('./equiv.js');
+      // presets are compared where they're used (expanded into the cards); new ones may be added
+      const d = Eq.compare(content, after.content, Eq.MEANING.filter((c) => c !== 'presets'));
+      if (d.length) throw new Error(m.id + ' changes the content\'s meaning (' + d.length + ' block(s), e.g. ' + d[0].block + ' ' + d[0].at + ': ' + String(d[0].before).slice(0, 160) + ' → ' + String(d[0].after).slice(0, 160) + '); nothing written');
+    }
     const diff = res.files.map((r) => lineDiff(r.file, r.before, r.after)).join('\n');
     log('migration ' + m.id + (m.description ? ' — ' + m.description : '') + ': ' + res.files.length + ' file(s)' + (dryRun ? ' (dry run)' : ''));
     notes.forEach((n) => log('  ' + n));

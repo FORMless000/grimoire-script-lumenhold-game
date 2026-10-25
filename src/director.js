@@ -361,8 +361,9 @@
     // `queue any tagged <tag>` (feedback 2026-10-16): one `trigger: queued` event with the tag, drawn by the usual score
     // (`when`, cast, cooldown, novelty, weight) when it falls due; null when none is eligible. The month's plot cap
     // doesn't apply: a queued follow-up is a scene already under way.
-    drawTagged(tag, used) {
-      const pool = this.events.filter((e) => e.trigger === 'queued' && (e.tags || []).includes(tag));
+    // `queue any in <pool|thread>` (the framework): the same, over the queued cards of that pool or thread.
+    drawTagged(tag, used, inPool) {
+      const pool = this.events.filter((e) => e.trigger === 'queued' && (inPool ? (e.pools || []).includes(inPool) || e.thread === inPool : (e.tags || []).includes(tag)));
       const plot = this._plotLeft; this._plotLeft = null;
       try {
         const it = this.draw(pool, used || new Set(this.s.deck.map((d) => d.id)), [], {});
@@ -387,7 +388,7 @@
         if (q.until != null && q.until > s.turn && this.rand() >= 1 / (q.until - s.turn + 1)) { keep.push(q); continue; }
         // `queue … chance N` (I4): pushed with probability N when due, else dropped; two copies give at most one card.
         if (q.chance != null && (used.has(q.id) || this.rand() * 100 >= q.chance)) continue;
-        if (q.tagged) { const id = this.drawTagged(q.tagged, used); if (!id) continue; q.id = id; }
+        if (q.tagged || q.pool) { const id = this.drawTagged(q.tagged, used, q.pool); if (!id) continue; q.id = id; }
         pushed.push({ id: q.id, actor: q.actor || null, src: 'queued', track: q.track, cast: q.cast, prio: this.c.events[q.id] && this.c.events[q.id].class === 'story' ? 'story' : q.track ? 'track' : 'pushed' });
         used.add(q.id);
       }

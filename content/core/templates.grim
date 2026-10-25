@@ -1,0 +1,68 @@
+# ============================================================
+#  Templates (docs/grimoire-script.md §9).
+#  A thread with `params:` is a template: a thread `from:` it fills the params in (`with:`), lists its cards by role
+#  (`members:`), and each member takes its role's pool (<template>.<role>) and may call the template's presets
+#  (<template>.<name>, or just <name>). Pools here that other pools build on (`from:`) hold what a kind of pool shares.
+#  Macros inside a template: $param, $this (the card), $thread, $<role> (a role's only card), a member's own values
+#  ($flag), count(<role>: expr) and `first <role> [except this] [where expr]:`.
+# ============================================================
+
+# ---------------- story: a start card, then steps that wait on what it began ----------------
+
+@thread story
+desc: A bespoke storyline. The start card begins it (it sets what $begun tests); every other card is a step and waits on $begun.
+params: begun
+roles: start step
+default_role: step
+
+@pool story.step
+when: $begun
+
+# ---------------- quest: start, preparations in any order, a final check (every club and job capstone) ----------------
+
+@thread quest
+desc: A start card offers it once ($begun not yet set); the parts come in any order, each until its $flag is set; the final needs $need parts $after month(s) after the start, or comes anyway $giveup months on. `next` (in a part's working option) deals, once a day ($beat), the final when it is ready, else the next part not done.
+params: begun need=2 after=1 giveup=4 beat=chain_beat
+roles: start part final
+
+@pool quest.start
+trigger: auto
+repeat: 3
+when: not flag($begun)
+
+@pool quest.part
+repeat: 2
+weight: 60
+when: flag($begun) and not flag($flag)
+
+@pool quest.final
+class: milestone
+repeat: 2
+weight: 40
+when: flag($begun) and since($start) >= $after and (count(part: flag($flag)) >= $need or since($start) >= $giveup)
+
+@preset quest.next
+desc: Once a day: the final if enough parts are done, else the next part not done (this one aside).
+do:
+  if $beat != turn:
+    $beat = turn
+    if since($start) >= $after and count(part: flag($flag)) >= $need:
+      queue $final now
+    else:
+      first part except this where not flag($flag):
+        queue $part now
+
+# ---------------- scene: a run of cards in one sitting ----------------
+
+@thread scene
+desc: A run of cards in one visit. Entry cards start it; each step that is got past deals the next with `next`, drawn from the scene's queued cards like any pool.
+roles: entry step
+default_role: step
+
+@pool scene.step
+trigger: queued
+
+@preset scene.next
+desc: The next card of the scene, drawn from its steps.
+do:
+  queue any in $thread now

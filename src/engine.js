@@ -1207,7 +1207,7 @@
             case 'present': return eng.presentAt(a[0]).length;
             case 'act': return eng.actOf(a[0]);
             case 'clock': return ((s.arcs || {})[a[0]] || {}).clock || 0;
-            case 'clues': { const d = eng.c.arcs && eng.c.arcs[a[0]]; return d ? (d.clues || []).filter((x) => (s.clues || {})[x]).length : 0; }   // clues of an arc found so far
+            case 'clues': { const d = (eng.c.arcs && eng.c.arcs[a[0]]) || (eng.c.threads && eng.c.threads[a[0]]); return d ? (d.clues || []).filter((x) => (s.clues || {})[x]).length : 0; }   // clues of an arc found so far
             case 'plan': return Object.keys(s.states).some((k) => eng.c.states[k] && eng.c.states[k].kind === 'plan' && k === 'plan_' + a[0]);
             case 'bond': return s.npcs[a[0]] ? s.npcs[a[0]].bond : 'none';
             case 'met': return !!(s.npcs[a[0]] && s.npcs[a[0]].met);
@@ -1431,9 +1431,11 @@
           case 'queue': {
             // `queue any tagged <tag>` (feedback 2026-10-16): `now` (or no delay) draws from the pool at once; a later
             // one is drawn when it falls due (the queue item's id stays null and `tagged` names the pool).
-            const later = !!st.tagged && !st.now && !!(st.window || st.byMonth || !st.delay || Math.round(this.value(st.delay, ctx.actor)) > 0);
-            const ev = st.tagged ? (later ? null : this.drawTagged(st.tagged)) : st.event;
-            if (st.tagged && !later && !ev) break;   // nothing in the pool is eligible
+            // `queue any in <pool|thread>` (the framework) draws the same way from that pool's or thread's queued cards.
+            const deck = !!(st.tagged || st.pool);
+            const later = deck && !st.now && !!(st.window || st.byMonth || !st.delay || Math.round(this.value(st.delay, ctx.actor)) > 0);
+            const ev = deck ? (later ? null : this.drawTagged(st.tagged, undefined, st.pool)) : st.event;
+            if (deck && !later && !ev) break;   // nothing in the pool is eligible
             if (ev && !c.events[ev]) { this.warn(new Error('queue: unknown event ' + ev), st); break; }
             const actor = st.with ? this.npcOf(st.with, ctx) : (ev && c.events[ev].actor === 'npc' ? ctx.actor : null);
             const carry = { track: ctx.track || undefined, cast: st.with && ctx.cast && ctx.cast[st.with] ? { npc: ctx.cast[st.with] } : undefined };
@@ -1446,11 +1448,11 @@
               // A window (design §5.3): the chance rises each month (1 / months left), forced on the last one.
               const to = st.window ? s.turn + st.window.to : s.turn + (((st.byMonth - this.monthIndex()) + this.months.length) % this.months.length || this.months.length);
               const from = st.window ? s.turn + st.window.from : s.turn + 1;
-              s.queue.push({ id: ev, actor, due: from, until: to, src: 'queued', ...carry, ...(st.tagged ? { tagged: st.tagged } : {}) });
+              s.queue.push({ id: ev, actor, due: from, until: to, src: 'queued', ...carry, ...(st.tagged ? { tagged: st.tagged } : {}), ...(st.pool ? { pool: st.pool } : {}) });
             } else {
               const delay = st.delay ? Math.max(0, Math.round(this.value(st.delay, ctx.actor))) : 1;
               if (delay === 0) s.deck.push({ id: ev, actor, src: 'queued' });
-              else s.queue.push({ id: ev, actor, due: s.turn + delay, ...carry, ...(st.tagged ? { tagged: st.tagged } : {}) });
+              else s.queue.push({ id: ev, actor, due: s.turn + delay, ...carry, ...(st.tagged ? { tagged: st.tagged } : {}), ...(st.pool ? { pool: st.pool } : {}) });
             }
             break;
           }
@@ -1497,7 +1499,7 @@
           }
           case 'discover': { const pl = this.placeAlias(st.place); if (!s.places[pl] && this.c.places[pl]) { s.places[pl] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: pl }); } break; }
           case 'find': if (!s.clues[st.clue]) { s.clues[st.clue] = s.turn; ctx.notes.push({ kind: 'clue', clue: st.clue }); } break;
-          case 'advance': { const a = s.arcs[st.arc] = s.arcs[st.arc] || { clock: 0 }; const d = this.c.arcs[st.arc]; a.clock = Math.min(d && d.clock ? d.clock.max : 99, a.clock + st.n); break; }
+          case 'advance': { const a = s.arcs[st.arc] = s.arcs[st.arc] || { clock: 0 }; const d = this.c.arcs[st.arc] || (this.c.threads || {})[st.arc]; a.clock = Math.min(d && d.clock ? d.clock.max : 99, a.clock + st.n); break; }
           case 'spawn': ctx.notes.push({ kind: 'spawn', id: st.id, archetype: st.archetype }); break;   // phase 4
           case 'unqueue': s.queue = s.queue.filter((q) => q.id !== st.event); s.deck = s.deck.filter((q) => q.id !== st.event); break;
           case 'learn': {
@@ -1807,7 +1809,7 @@
       const due = s.queue.filter((q) => q.due <= s.turn);
       s.queue = s.queue.filter((q) => q.due > s.turn);
       const prio = (id, src) => { const e = this.c.events[id]; return e && e.priority != null ? e.priority : DEFAULT_PRIORITY[src]; };
-      for (const q of due) { if (q.chance != null && (used.has(q.id) || this.rand() * 100 >= q.chance)) continue; if (q.tagged) { const id = this.drawTagged(q.tagged, used); if (!id) continue; q.id = id; } head.push({ id: q.id, actor: q.actor, src: 'queued', p: prio(q.id, 'queued') }); used.add(q.id); }
+      for (const q of due) { if (q.chance != null && (used.has(q.id) || this.rand() * 100 >= q.chance)) continue; if (q.tagged || q.pool) { const id = this.drawTagged(q.tagged, used, q.pool); if (!id) continue; q.id = id; } head.push({ id: q.id, actor: q.actor, src: 'queued', p: prio(q.id, 'queued') }); used.add(q.id); }
       for (const e of this.byTrigger.auto) {
         if (!this.eligible(e, used)) continue;
         const c = this.candidates(e);

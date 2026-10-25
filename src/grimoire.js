@@ -105,7 +105,14 @@
             for (;;) { args.push(expr(0)); if (peek() && peek().v === ',') { p++; continue; } break; }
           }
           expect(')');
-          if (!FUNCS.has(t.v)) err('unknown function "' + t.v + '"');
+          if (!FUNCS.has(t.v)) {
+            // A named condition (`@cond`, the framework): expanded in place, so the compiled AST is the written-out one.
+            if (CONDS.has(t.v)) return expandCond(t.v, args, file, line);
+            // Inside a content file, conds are known only once the whole content is compiled: leave a placeholder that
+            // compile() resolves or reports. Anywhere else (an expression on its own) it is an error.
+            if (!PARSING.file) err('unknown function "' + t.v + '"');
+            return { t: 'call', n: t.v, args, unresolved: true };
+          }
           if (SYMBOLIC.has(t.v)) args.forEach((a, i) => { if (a.t === 'id' && a.n !== 'npc') args[i] = { t: 'sym', v: a.n }; });
           return { t: 'call', n: t.v, args };
         }
@@ -130,6 +137,31 @@
     if (p < toks.length) err('unexpected "' + toks[p].v + '"');
     return ast;
   }
+
+  /* Named conditions (`@cond name`, `params: a b`, `is: <expression>`): a call `name(x, y)` is replaced, at parse time,
+   * by the expression with each parameter replaced by its argument. A parameter in a name position (`bond(who)`) takes
+   * the argument as a name (`courting(lyra)` -> `bond(lyra)`); `npc` and cast roles pass through as written. */
+  const CONDS = new Map();   // name -> { params, src, file, line, ast }
+  const PARSING = { file: false, stack: [] };
+  function expandCond(name, args, file, line) {
+    const c = CONDS.get(name);
+    if (args.length !== c.params.length) throw new GrimError(name + '() takes ' + c.params.length + ' argument(s) (' + c.params.join(', ') + '), got ' + args.length, file, line);
+    if (PARSING.stack.includes(name)) throw new GrimError('@cond ' + name + ' refers to itself (' + PARSING.stack.concat(name).join(' → ') + ')', c.file, c.line);
+    if (!c.ast) { PARSING.stack.push(name); try { c.ast = parseExprAst(c.src, c.file, c.line); } finally { PARSING.stack.pop(); } }
+    const sub = (n) => {
+      if ((n.t === 'id' && c.params.includes(n.n)) || (n.t === 'sym' && c.params.includes(n.v))) {
+        const a = JSON.parse(JSON.stringify(args[c.params.indexOf(n.t === 'id' ? n.n : n.v)]));
+        return n.t === 'sym' && a.t === 'id' && a.n !== 'npc' ? { t: 'sym', v: a.n } : a;
+      }
+      const o = Object.assign({}, n);
+      if (n.a) o.a = sub(n.a);
+      if (n.b) o.b = sub(n.b);
+      if (n.args) o.args = n.args.map(sub);
+      return o;
+    };
+    return sub(c.ast);
+  }
+  function unresolvedCalls(ast) { const out = []; walkAst(ast, (n) => { if (n.unresolved) out.push(n.n); }); return out; }
 
   function compileAst(n) {
     switch (n.t) {
@@ -239,7 +271,7 @@
       // a course's standard rung at each level, and the rungs a course card rises per course level above its own
       'dc_tiers', 'likelihood', 'sigma', 'drift', 'odds_step', 'bell', 'course_standard', 'course_step', 'course_drift'], effects: [] },
     // A named group of effects, used as a statement: `grind arcana`. Its body may use $params.
-    preset: { props: ['params', 'desc'], effects: [], raw: ['do'] },
+    preset: { dotOk: true, props: ['params', 'desc'], effects: [], raw: ['do'] },
     resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
     skill: { props: ['name', 'icon', 'start', 'max', 'desc', 'color'], effects: [] },
     npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel', 'age', 'role', 'year', 'traits', 'interests', 'stats', 'schedule', 'schedule_break', 'relations', 'voice', 'seeks', 'gone_when', 'distant'], effects: [] },
@@ -259,7 +291,20 @@
       'defer',
       // `specializes: <event>` (E1): this card (`actor: <npc>`) plays in place of that generic card whenever it is drawn
       // for that character, and shares its once / repeat bookkeeping
-      'specializes'], effects: ['on_show'], options: true },
+      'specializes',
+      // The framework (docs/grimoire-script.md §9): `pool:` the bundle(s) of properties it takes; `thread:` the storyline
+      // it belongs to (the same as `chain:`, plus the thread's own properties and, from a template, its role's)
+      'pool', 'thread'], effects: ['on_show'], options: true },
+    // A bundle of card properties that cards take with `pool: <id>` (their own values win; `when` is ANDed, tags come
+    // first). `from:` inherits another pool. A dotted id (`quest.part`) is a role of a thread template.
+    pool: { bundle: true, dotOk: true, props: ['from', 'desc'], effects: [] },
+    // A named condition: `params: who`, `is: bond(who) != "partner" and bond(who) != "ex"`, called as courting(lyra).
+    cond: { bundle: true, props: ['params', 'is', 'desc'], effects: [] },
+    // A storyline: a bundle its members take (`thread: <id>` on a card), the leads it owns (`clues:`), a clock (`clock:
+    // 0..N`, moved by `advance`). With `params:` it is a template; a thread `from:` a template fills it in (`with:`),
+    // assigns its cards to roles (`members:`, one `role card key=value…` per line), and its members take that role's
+    // pool (`<template>.<role>`) and may call its presets (`<template>.<name>`, or just `<name>`).
+    thread: { bundle: true, props: ['from', 'params', 'with', 'members', 'roles', 'default_role', 'clues', 'clock', 'name', 'desc', 'canon'], effects: [] },
     ending: { props: ['title', 'text', 'art', 'scene', 'when', 'priority', 'tags', 'kind', 'slot', 'excludes'], effects: [] },
     hook: { props: ['on', 'when', 'desc', 'label'], effects: ['do'] },
     // Worldbook (design §3): data for briefs, lint and later phases. The engine doesn't play these yet.
@@ -295,6 +340,8 @@
     item: { props: ['name', 'slot', 'art', 'desc', 'worn', 'legacy', 'bound', 'start', 'price', 'tags'], effects: ['tick'] },
     timeline: { props: ['date', 'kind', 'event', 'text'], effects: [] },
   };
+  // What a pool or a thread may give its cards (a bundle): where and when they're drawn, how often, how they look.
+  const BUNDLE_PROPS = ['trigger', 'place', 'track', 'level', 'rank', 'plan', 'slot', 'time', 'class', 'tone', 'repeat', 'weight', 'priority', 'per', 'actor', 'tags', 'when', 'defer', 'art', 'chain', 'variant', 'lesson'];
   const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'gone_when', 'discover', 'hinted_when', 'unlock', 'prereq', 'defer', 'followed']);
   const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment', 'warn_below',
     'schema', 'last_month', 'max_cards_per_day', 'level', 'rank', 'beat', 'pick', 'opens', 'tonic']);
@@ -440,7 +487,7 @@
     // `chance N` (playtest 2, I4): when due, the card is pushed with probability N%, else dropped.
     queue: new RegExp('^queue\\s+(' + ID + ')(?:\\s+(now|in\\s+.+?|within\\s+\\d+\\s*\\.\\.\\s*\\d+|by\\s+month\\s+\\d+))?(?:\\s+with\\s+(' + ID + '))?(?:\\s+chance\\s+(\\d+|' + ODDS_WORDS.join('|') + '))?$'),
     // `queue any tagged <tag> …` (feedback 2026-10-16): one queued event with the tag, drawn when it falls due.
-    queueAny: new RegExp('^queue\\s+any\\s+tagged\\s+(' + ID + ')(?:\\s+(now|in\\s+.+?|within\\s+\\d+\\s*\\.\\.\\s*\\d+|by\\s+month\\s+\\d+))?(?:\\s+with\\s+(' + ID + '))?(?:\\s+chance\\s+(\\d+|' + ODDS_WORDS.join('|') + '))?$'),
+queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|in\\s+.+?|within\\s+\\d+\\s*\\.\\.\\s*\\d+|by\\s+month\\s+\\d+))?(?:\\s+with\\s+(' + ID + '))?(?:\\s+chance\\s+(\\d+|' + ODDS_WORDS.join('|') + '))?$'),
     unqueue: new RegExp('^unqueue\\s+(' + ID + ')$'),
     sayAs: new RegExp('^say\\[(' + ID + ')\\]\\s*:\\s*(.*)$'),
     trackOp: new RegExp('^(enrol|join|leave|promote|apply)\\s+(' + ID + ')(?:\\s+(\\d))?$'),
@@ -468,7 +515,7 @@
     coursework: /^coursework(?:\s+([a-z_]+))?$/,
     cool: /^cool\s+([a-z_][a-z0-9_]*)$/,
     visitSlot: /^visit\s+([a-z]+)$/,
-    preset: new RegExp('^(' + ID + ')((?:\\s+' + ID + ')*)$'),
+    preset: new RegExp('^(' + ID + '(?:\\.' + ID + ')?)((?:\\s+' + ID + ')*)$'),
     bond: new RegExp('^bond\\s+(' + ID + ')\\s+(' + ID + ')$'),
     meet: new RegExp('^meet\\s+(' + ID + ')$'),
     end: new RegExp('^end\\s+(' + ID + ')$'),
@@ -526,7 +573,9 @@
     if ((m = content.match(RE.lose))) return { t: 'lose', state: m[1], line };
     if ((m = content.match(RE.queueAny)) || (m = content.match(RE.queue))) {
       const any = RE.queueAny.test(content);
-      const st = Object.assign({ t: 'queue', event: any ? null : m[1], now: false, delay: null, with: m[3] || null, line }, any ? { tagged: m[1] } : {});
+      // `queue any in <pool|thread>` (the framework): the same draw over the cards of a pool or a thread
+      const inPool = any && /^queue\s+any\s+in\s/.test(content);
+      const st = Object.assign({ t: 'queue', event: any ? null : m[1], now: false, delay: null, with: m[3] || null, line }, any ? (inPool ? { pool: m[1] } : { tagged: m[1] }) : {});
       if (m[4] != null) { if (/^\d+$/.test(m[4])) st.chance = +m[4]; else st.chanceWord = m[4]; }
       let w;
       if (m[2] === 'now') st.now = true;
@@ -665,7 +714,7 @@
     return paras.join('\n\n').trim();
   }
 
-  function parseFile(text, file) {
+  function parseFile(text, file, opts) {
     file = file || '<input>';
     const raw = String(text).replace(/\r\n?/g, '\n').split('\n');
     const lines = raw.map((l, i) => {
@@ -683,7 +732,7 @@
         if (!m) throw new GrimError('bad block header "' + L.content + '" (expected "@kind id", ids are lower_snake_case)', file, L.line);
         const kind = m[1];
         if (!SCHEMA[kind]) throw new GrimError('unknown block kind "@' + kind + '"', file, L.line);
-        if (m[2] && m[2].includes('.') && !SCHEMA[kind].dotted) throw new GrimError('ids of @' + kind + ' can\'t contain "." (only @fact ids are npc.key)', file, L.line);
+        if (m[2] && m[2].includes('.') && !SCHEMA[kind].dotted && !SCHEMA[kind].dotOk) throw new GrimError('ids of @' + kind + ' can\'t contain "." (only @fact ids are npc.key; @pool and @preset ids may be <template>.<name>)', file, L.line);
         if (SCHEMA[kind].dotted && m[2] && !m[2].includes('.')) throw new GrimError('@' + kind + ' ids are npc.key (e.g. lyra.mother)', file, L.line);
         if (!SCHEMA[kind].noId && !m[2]) throw new GrimError('@' + kind + ' needs an id', file, L.line);
         cur = { kind, id: m[2] || kind, file, line: L.line, body: [] };
@@ -693,7 +742,59 @@
       if (!cur) { if (!L.blank) throw new GrimError('content before first @block', file, L.line); continue; }
       cur.body.push(L);
     }
-    return blocks.map(parseBlock);
+    const keep = opts && opts.only ? blocks.filter((b) => opts.only.includes(b.kind)) : blocks;
+    const outer = PARSING.file; PARSING.file = true;
+    try { return keep.map((b) => (SCHEMA[b.kind].bundle ? parseBundle(b) : parseBlock(b))); } finally { PARSING.file = outer; }
+  }
+
+  // @pool, @thread, @cond: properties are kept as written (a template's may hold $params) and read when a card takes them.
+  const META_PROPS = { pool: ['from', 'desc'], thread: ['from', 'params', 'with', 'roles', 'default_role', 'clues', 'clock', 'name', 'desc', 'canon'], cond: ['params', 'is', 'desc'] };
+  function parseBundle(b) {
+    const schema = SCHEMA[b.kind], file = b.file;
+    const def = { block: b.kind, id: b.id, file, line: b.line, props: {} };
+    const allowed = new Set(schema.props.concat(b.kind === 'cond' ? [] : BUNDLE_PROPS));
+    const body = b.body; let i = 0;
+    while (i < body.length) {
+      const L = body[i];
+      if (L.blank) { i++; continue; }
+      if (L.indent > 0) throw new GrimError('unexpected indentation (properties start at column 0)', file, L.line);
+      i++;
+      const m = L.content.match(/^([a-z_][a-z0-9_]*)\s*:\s*(.*)$/);
+      if (!m) throw new GrimError('expected "key: value" in @' + b.kind + ', got "' + L.content + '"', file, L.line);
+      const key = m[1], val = m[2];
+      const sub = [];
+      while (i < body.length && (body[i].blank || body[i].indent > 0)) sub.push(body[i++]);
+      while (sub.length && sub[sub.length - 1].blank) sub.pop();
+      if (!allowed.has(key)) throw new GrimError('unknown property "' + key + '" for @' + b.kind + ' (allowed: ' + [...allowed].join(', ') + ')', file, L.line);
+      if (key in def.props || key in def) throw new GrimError('duplicate property "' + key + '"', file, L.line);
+      if (key === 'members') {
+        def.members = [val.trim()].concat(sub.filter((x) => !x.blank).map((x) => x.content)).filter(Boolean).map((t) => {
+          const w = t.split(/\s+/);
+          if (w.length < 2 || !ID_RE.test(w[0]) || !ID_RE.test(w[1])) throw new GrimError('members: one "<role> <card> [key=value …]" per line, got "' + t + '"', file, L.line);
+          const binds = {};
+          for (const kv of w.slice(2)) { const mm = kv.match(/^([a-z_][a-z0-9_]*)=(\S+)$/); if (!mm) throw new GrimError('members: expected key=value, got "' + kv + '"', file, L.line); binds[mm[1]] = mm[2]; }
+          return { role: w[0], id: w[1], binds };
+        });
+        continue;
+      }
+      const text = joinText(val, sub);
+      if ((META_PROPS[b.kind] || []).includes(key)) {
+        if (['params', 'clues', 'roles'].includes(key)) def[key] = text.split(/[\s,]+/).filter(Boolean);
+        else if (key === 'clock') { try { def.clock = STRUCT_PROPS.clock(text); } catch (e) { throw new GrimError(String(e), file, L.line); } }
+        else if (key === 'with') {
+          def.with = {};
+          for (const kv of text.split(/\s+/).filter(Boolean)) { const mm = kv.match(/^([a-z_][a-z0-9_]*)=(\S+)$/); if (!mm) throw new GrimError('with: expected key=value (no spaces in a value; name a longer condition with @cond), got "' + kv + '"', file, L.line); def.with[mm[1]] = mm[2]; }
+        } else def[key] = text;
+        continue;
+      }
+      def.props[key] = { text, line: L.line };
+    }
+    if (b.kind === 'cond') {
+      if (!def.is) throw new GrimError('@cond ' + def.id + ' needs is: <expression>', file, b.line);
+      def.params = def.params || [];
+      for (const p of def.params) if (!ID_RE.test(p) || IDENTS.includes(p)) throw new GrimError('@cond ' + def.id + ': "' + p + '" can\'t be a parameter name', file, b.line);
+    }
+    return def;
   }
 
   // cast:
@@ -778,22 +879,26 @@
       }
       if (!schema.props.includes(key)) throw new GrimError('unknown property "' + key + '" for @' + b.kind + ' (allowed: ' + schema.props.concat(schema.effects).join(', ') + ')', file, L.line);
       if (key in def && key !== 'options') throw new GrimError('duplicate property "' + key + '"', file, L.line);
-      const text = joinText(val, sub);
-      if (STRUCT_PROPS[key] && !(key === 'skill' && b.kind !== 'track' && b.kind !== 'spell')) {
-        try { def[key] = STRUCT_PROPS[key](text); } catch (e) { throw new GrimError(typeof e === 'string' ? e : e.message, file, L.line); }
-        if (key === 'ramp') def.ramp.expr = expr(def.ramp.expr, file, L.line);
-      } else if (EXPR_PROPS.has(key) || (key === 'max' && b.kind === 'resource' && !isFinite(Number(text))) || (key === 'legacy' && b.kind === 'item')) def[key] = expr(text, file, L.line);
-      else if (key === 'start' && b.kind === 'item') def[key] = /^(true|yes|1)$/i.test(text);
-      else if (key === 'slot' && b.kind === 'item' && !ITEM_SLOTS.includes(text.trim())) throw new GrimError('slot: an item\'s slot is ' + ITEM_SLOTS.join(', ') + ', got "' + text + '"', file, L.line);
-      else if (NUM_PROPS.has(key) && !(key === 'alignment' && b.kind === 'spell') && !(key === 'start' && b.kind === 'track')) {
-        const n = Number(text);
-        if (!isFinite(n)) throw new GrimError('property "' + key + '" must be a number, got "' + text + '"', file, L.line);
-        def[key] = n;
-      } else if (LIST_PROPS.has(key)) def[key] = text.split(/[\s,]+/).filter(Boolean);
-      else if (BOOL_PROPS.has(key)) def[key] = /^(true|yes|1)$/i.test(text);
-      else def[key] = text;
+      setProp(def, b.kind, key, joinText(val, sub), file, L.line);
     }
     return def;
+  }
+
+  // A property's value, typed as its block kind reads it (also used for the properties a card takes from a bundle).
+  function setProp(def, kind, key, text, file, line) {
+    if (STRUCT_PROPS[key] && !(key === 'skill' && kind !== 'track' && kind !== 'spell')) {
+      try { def[key] = STRUCT_PROPS[key](text); } catch (e) { throw new GrimError(typeof e === 'string' ? e : e.message, file, line); }
+      if (key === 'ramp') def.ramp.expr = expr(def.ramp.expr, file, line);
+    } else if (EXPR_PROPS.has(key) || (key === 'max' && kind === 'resource' && !isFinite(Number(text))) || (key === 'legacy' && kind === 'item')) def[key] = expr(text, file, line);
+    else if (key === 'start' && kind === 'item') def[key] = /^(true|yes|1)$/i.test(text);
+    else if (key === 'slot' && kind === 'item' && !ITEM_SLOTS.includes(text.trim())) throw new GrimError('slot: an item\'s slot is ' + ITEM_SLOTS.join(', ') + ', got "' + text + '"', file, line);
+    else if (NUM_PROPS.has(key) && !(key === 'alignment' && kind === 'spell') && !(key === 'start' && kind === 'track')) {
+      const n = Number(text);
+      if (!isFinite(n)) throw new GrimError('property "' + key + '" must be a number, got "' + text + '"', file, line);
+      def[key] = n;
+    } else if (LIST_PROPS.has(key)) def[key] = text.split(/[\s,]+/).filter(Boolean);
+    else if (BOOL_PROPS.has(key)) def[key] = /^(true|yes|1)$/i.test(text);
+    else def[key] = text;
   }
 
   /* ------------------------------------------------------------------ *
@@ -801,19 +906,32 @@
    * ------------------------------------------------------------------ */
 
   const COLLECTION = { preset: 'presets', resource: 'resources', skill: 'skills', npc: 'npcs', state: 'states', event: 'events', ending: 'endings', hook: 'hooks',
-    vocab: 'vocab', place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline', item: 'items' };
-  const WORLD_COLLECTIONS = ['presets', 'vocab', 'places', 'tracks', 'spells', 'facts', 'archetypes', 'factions', 'arcs', 'clues', 'lore', 'timeline', 'items'];
+    vocab: 'vocab', place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline', item: 'items',
+    pool: 'pools', cond: 'conds', thread: 'threads' };
+  const WORLD_COLLECTIONS = ['presets', 'vocab', 'places', 'tracks', 'spells', 'facts', 'archetypes', 'factions', 'arcs', 'clues', 'lore', 'timeline', 'items', 'pools', 'conds', 'threads'];
 
   // sources: [{path, text}] -> {content, errors}
   function compile(sources) {
     const content = { game: {}, resources: {}, skills: {}, npcs: {}, states: {}, events: {}, endings: {}, hooks: {}, order: { resources: [], skills: [], npcs: [] }, files: [] };
     for (const c of WORLD_COLLECTIONS) content[c] = {};
     const errors = [];
+    // Named conditions first: any expression in the content may call one.
+    CONDS.clear();
+    for (const src of sources) {
+      let defs; try { defs = parseFile(src.text, src.path, { only: ['cond'] }); } catch (e) { continue; }   // reported below
+      for (const d of defs) {
+        if (content.conds[d.id]) { errors.push(new GrimError('duplicate @cond id "' + d.id + '" (first defined in ' + content.conds[d.id].file + ':' + content.conds[d.id].line + ')', d.file, d.line)); continue; }
+        if (FUNCS.has(d.id)) { errors.push(new GrimError('@cond ' + d.id + ': a built-in function has that name', d.file, d.line)); continue; }
+        content.conds[d.id] = d;
+        CONDS.set(d.id, { params: d.params, src: d.is, file: d.file, line: d.line, ast: null });
+      }
+    }
     for (const src of sources) {
       let defs;
       try { defs = parseFile(src.text, src.path); } catch (e) { errors.push(e); continue; }
       content.files.push(src.path);
       for (const d of defs) {
+        if (d.block === 'cond') continue;   // registered above
         if (d.block === 'game') { Object.assign(content.game, d); continue; }
         if (d.block === 'balance') { content.balance = d; continue; }
         const col = content[COLLECTION[d.block]];
@@ -822,43 +940,231 @@
         if (content.order[COLLECTION[d.block]]) content.order[COLLECTION[d.block]].push(d.id);
       }
     }
-    expandPresets(content, errors);
+    const envs = applyBundles(content, errors);
+    expandPresets(content, errors, envs);
+    reportUnresolved(content, errors);
     for (const e of Object.values(content.events)) finalizeEvent(e, errors);
     if (content.game.calendar && content.game.calendar.length !== (content.game.months || []).length && content.game.months) errors.push(new GrimError('@game calendar must cover every month', 'content/core/rules.grim', 1));
     return { content, errors };
   }
 
-  // Replace every `preset arg …` statement with the preset's body ($params substituted), recursively.
-  function expandPresets(content, errors) {
-    const expand = (effects, file, depth) => {
+  /* ---------------- The framework: pools, threads, templates (docs/grimoire-script.md §9) ----------------
+   * Every card property a pool, a thread or a thread template's role gives is merged into the card here, so the compiled
+   * event is exactly the one written out by hand. A card's own value wins; `when` is the AND of every source (role,
+   * thread, pool, the card's own); tags join in that order. Two sources giving one property different values is an error.
+   */
+  // A template's $words, for one card: { vars (template params, filled in), roles: {role: [{id, binds}]}, self, binds, tpl, thread }
+  function subst(text, env, ctx, file, line) {
+    ctx = ctx || {};
+    // count(<role>: expr) -> (expr for member 1) + (expr for member 2) + … in the thread's order (0 when none)
+    let out = '', i = 0;
+    for (;;) {
+      const k = text.indexOf('count(', i);
+      if (k < 0 || (k > 0 && /[A-Za-z0-9_]/.test(text[k - 1]))) { if (k < 0) { out += text.slice(i); break; } out += text.slice(i, k + 6); i = k + 6; continue; }
+      let d = 1, j = k + 6;
+      for (; j < text.length && d; j++) { if (text[j] === '(') d++; else if (text[j] === ')') d--; }
+      const inner = text.slice(k + 6, j - 1), m = inner.match(/^\s*([a-z_][a-z0-9_]*)\s*:\s*([\s\S]+)$/);
+      if (!m) throw new GrimError('count(<role>: <expression>), got "count(' + inner + ')"', file, line);
+      const members = (env && env.roles[m[1]]) || null;
+      if (!members) throw new GrimError('count(' + m[1] + ': …): no role "' + m[1] + '" in this thread', file, line);
+      out += text.slice(i, k) + (members.length ? '(' + members.map((mb) => '(' + subst(m[2], env, { binds: mb.binds, role: m[1], member: mb.id, self: ctx.self }, file, line) + ')').join(' + ') + ')' : '0');
+      i = j;
+    }
+    return out.replace(/\$([a-z_][a-z0-9_]*)/g, (mm, k) => {
+      if (ctx.binds && k in ctx.binds) return ctx.binds[k];
+      if (ctx.role && k === ctx.role) return ctx.member;
+      if (!env) throw new GrimError('$' + k + ' outside a thread template', file, line);
+      if (k === 'this') return ctx.self || env.self;
+      if (k === 'thread') return env.thread;
+      if (env.binds && k in env.binds) return env.binds[k];
+      if (k in env.vars) return env.vars[k];
+      if (env.roles[k] && env.roles[k].length === 1) return env.roles[k][0].id;
+      throw new GrimError('$' + k + ': no such parameter, role or member value in thread ' + env.thread, file, line);
+    });
+  }
+  // `first <role> [except this] [where <cond>]:` in a template preset -> if/elif over the role's members, in order.
+  function expandFirst(lines, env, file) {
+    const out = [];
+    for (let i = 0; i < lines.length; i++) {
+      const L = lines[i], m = L.content.match(/^first\s+([a-z_][a-z0-9_]*)(\s+except\s+this)?(?:\s+where\s+(.+?))?\s*:$/);
+      if (!m) { out.push(L); continue; }
+      const body = [];
+      while (i + 1 < lines.length && lines[i + 1].indent > L.indent) body.push(lines[++i]);
+      if (!body.length) throw new GrimError('"' + L.content + '" needs an indented body', file, L.line);
+      if (!env.roles[m[1]]) throw new GrimError('first ' + m[1] + ': no role "' + m[1] + '" in thread ' + env.thread, file, L.line);
+      // without `where`, simply the first member
+      const members = env.roles[m[1]].filter((mb) => !m[2] || mb.id !== env.self).slice(0, m[3] ? undefined : 1);
+      const shift = body[0].indent - L.indent;
+      members.forEach((mb, k) => {
+        const ctx = { binds: mb.binds, role: m[1], member: mb.id };
+        if (m[3]) out.push({ indent: L.indent, line: L.line, content: (k ? 'elif ' : 'if ') + subst(m[3], env, ctx, file, L.line) + ':' });
+        for (const B of body) out.push({ indent: m[3] ? B.indent : B.indent - shift, line: B.line, content: subst(B.content, env, ctx, file, B.line) });
+      });
+    }
+    return out;
+  }
+  function applyBundles(content, errors) {
+    const envs = new Map();
+    const pools = content.pools, threads = content.threads;
+    const fail = (msg, file, line) => errors.push(new GrimError(msg, file, line));
+    // A pool and its `from:` ancestors -> { key: {text, line, file, label} }, the nearest pool winning.
+    const poolProps = (id, seen) => {
+      const p = pools[id]; if (!p) return null;
+      seen = seen || [];
+      if (seen.includes(id)) { fail('@pool ' + id + ': from: goes round in a circle (' + seen.concat(id).join(' → ') + ')', p.file, p.line); return {}; }
+      const base = p.from ? poolProps(p.from, seen.concat(id)) : {};
+      if (base === null) { fail('@pool ' + id + ': from: unknown pool "' + p.from + '"', p.file, p.line); return {}; }
+      const own = {}; for (const [k, v] of Object.entries(p.props)) own[k] = Object.assign({ file: p.file, label: 'pool:' + id }, v);
+      return Object.assign({}, base, own);
+    };
+    const poolChain = (id) => { const out = []; for (let p = pools[id]; p && !out.includes(p.id); p = pools[p.from]) out.push(p.id); return out; };
+    // Threads: the template behind an instance (its `from:`), and who plays which role.
+    const isTemplate = (t) => !!(t && (t.params || t.roles));
+    const templateOf = (t) => (t && t.from && isTemplate(threads[t.from]) ? threads[t.from] : null);
+    const rolesOf = (t) => {
+      const tpl = templateOf(t), roles = {};
+      for (const r of (tpl && tpl.roles) || []) roles[r] = [];
+      for (const mb of t.members || []) (roles[mb.role] = roles[mb.role] || []).push({ id: mb.id, binds: mb.binds });
+      if (tpl && tpl.default_role) for (const e of Object.values(content.events)) if (e.thread === t.id && !roster[e.id]) (roles[tpl.default_role] = roles[tpl.default_role] || []).push({ id: e.id, binds: {} });
+      return roles;
+    };
+    const varsCache = new Map();
+    const varsOf = (t) => {
+      if (varsCache.has(t)) return varsCache.get(t);
+      const tpl = templateOf(t), vars = {};
+      varsCache.set(t, vars);
+      if (!tpl) return vars;
+      for (const p of tpl.params || []) { const m = p.match(/^([a-z_][a-z0-9_]*)(?:=(\S+))?$/); if (!m) { fail('@thread ' + tpl.id + ': params: expected name or name=default, got "' + p + '"', tpl.file, tpl.line); continue; } if (m[2] != null) vars[m[1]] = m[2]; }
+      for (const [k, v] of Object.entries(t.with || {})) { if (!(tpl.params || []).some((p) => p.split('=')[0] === k)) fail('@thread ' + t.id + ': with: ' + k + ' is not a parameter of ' + tpl.id, t.file, t.line); vars[k] = v; }
+      for (const p of tpl.params || []) { const k = p.split('=')[0]; if (!(k in vars)) fail('@thread ' + t.id + ': with: needs ' + k + ' (a parameter of ' + tpl.id + ' with no default)', t.file, t.line); }
+      return vars;
+    };
+    const roster = {};   // card id -> {thread, role, binds}
+    for (const t of Object.values(threads)) {
+      if (t.from && !threads[t.from]) fail('@thread ' + t.id + ': from: unknown thread "' + t.from + '"', t.file, t.line);
+      const tpl = templateOf(t);
+      if (t.from && threads[t.from] && !tpl) fail('@thread ' + t.id + ': from: ' + t.from + ' is not a template (a thread with params: or roles:)', t.file, t.line);
+      if (tpl) varsOf(t);   // reports missing or unknown with: values once, members or not
+      for (const mb of t.members || []) {
+        if (tpl && tpl.roles && !tpl.roles.includes(mb.role)) fail('@thread ' + t.id + ': members: "' + mb.role + '" is not a role of ' + tpl.id + ' (' + tpl.roles.join(', ') + ')', t.file, t.line);
+        if (!content.events[mb.id]) { fail('@thread ' + t.id + ': members: unknown card "' + mb.id + '"', t.file, t.line); continue; }
+        if (roster[mb.id]) { fail('card ' + mb.id + ' is listed in two threads (' + roster[mb.id].thread + ', ' + t.id + ')', t.file, t.line); continue; }
+        roster[mb.id] = { thread: t.id, role: mb.role, binds: mb.binds };
+      }
+    }
+    const rosters = {};
+    for (const e of Object.values(content.events)) {
+      const r = roster[e.id];
+      if (r) { if (e.thread && e.thread !== r.thread) { fail('card ' + e.id + ' says thread: ' + e.thread + ' but is listed in thread ' + r.thread, e.file, e.line); continue; } e.thread = r.thread; }
+      if (e.thread && !threads[e.thread] && !content.arcs[e.thread]) { fail('thread: unknown thread or arc "' + e.thread + '"', e.file, e.line); continue; }
+      if (e.thread) { if (e.chain && e.chain !== e.thread) fail('chain: ' + e.chain + ' and thread: ' + e.thread + ' disagree (thread: is the same as chain:)', e.file, e.line); e.chain = e.thread; }
+      else if (e.chain) e.thread = e.chain;
+      const sources = [];   // [{label, props}] in merge order: role, thread, pool
+      let env = null;
+      const t = e.thread && threads[e.thread];
+      if (t) {
+        const tpl = templateOf(t);
+        if (tpl) {
+          if (!rosters[t.id]) rosters[t.id] = { roles: rolesOf(t), vars: varsOf(t) };
+          const role = (roster[e.id] && roster[e.id].role) || tpl.default_role || null;
+          env = { tpl: tpl.id, thread: t.id, vars: rosters[t.id].vars, roles: rosters[t.id].roles, self: e.id, binds: (roster[e.id] && roster[e.id].binds) || {}, role };
+          envs.set(e, env);
+          if (role && pools[tpl.id + '.' + role]) sources.push({ label: 'role:' + tpl.id + '.' + role, props: poolProps(tpl.id + '.' + role) });
+          e.role = role;
+        }
+        const tp = {};
+        for (const th of [tpl, t].filter(Boolean)) for (const [k, v] of Object.entries(th.props)) tp[k] = Object.assign({ file: th.file, label: 'thread:' + t.id }, v);
+        sources.push({ label: 'thread:' + t.id, props: tp });
+      }
+      if (e.pool) {
+        const ids = String(e.pool).split(/[\s,]+/).filter(Boolean);
+        e.pools = [];
+        for (const id of ids) {
+          const pp = poolProps(id);
+          if (!pp) { fail('pool: unknown pool "' + id + '"', e.file, e.line); continue; }
+          if (id.includes('.') && !(env && id.startsWith(env.tpl + '.'))) fail('pool: ' + id + ' is a role of thread template ' + id.split('.')[0] + '; a card takes it through its thread', e.file, e.line);
+          sources.push({ label: 'pool:' + id, props: pp });
+          e.pools.push(...poolChain(id));
+        }
+      }
+      if (!sources.length) continue;
+      const from = {}, whens = [], tags = [];
+      const keys = new Set(sources.flatMap((x) => Object.keys(x.props)));
+      try {
+        for (const key of keys) {
+          const given = sources.filter((x) => x.props[key]).map((x) => ({ label: x.props[key].label || x.label, text: subst(x.props[key].text, env, null, x.props[key].file, x.props[key].line), file: x.props[key].file, line: x.props[key].line }));
+          if (key === 'when') { whens.push(...given); continue; }
+          if (key === 'tags') { tags.push(...given); continue; }
+          if (key in e && e[key] !== undefined) continue;   // the card's own value wins
+          const distinct = [...new Set(given.map((g) => g.text.trim()))];
+          if (distinct.length > 1) { fail(e.id + ': ' + given.map((g) => g.label + ' gives ' + key + ': ' + g.text).join(', ') + ' (set it on the card to choose)', e.file, e.line); continue; }
+          setProp(e, 'event', key, given[0].text, given[0].file, given[0].line);
+          from[key] = given[0].label;
+        }
+        if (whens.length) {
+          e.own_when = e.when || null;
+          const parts = whens.map((g) => g.text).concat(e.when ? [e.when.src] : []);
+          e.when = expr(parts.length === 1 ? parts[0] : parts.map((x) => '(' + x + ')').join(' and '), e.file, e.line);
+          from.when = whens.map((g) => g.label).concat(e.own_when ? ['card'] : []).join(' + ');
+        }
+        if (tags.length) {
+          const all = tags.flatMap((g) => g.text.split(/[\s,]+/).filter(Boolean)).concat(e.tags || []);
+          e.tags = all.filter((x, i) => all.indexOf(x) === i);
+          from.tags = tags.map((g) => g.label).concat(e.tags ? ['card'] : []).join(' + ');
+        }
+      } catch (err) { errors.push(err instanceof GrimError ? err : new GrimError(err.message, e.file, e.line)); }
+      if (Object.keys(from).length) e.from = from;
+    }
+    return envs;
+  }
+  // Calls to a name that is neither a function nor a @cond.
+  function reportUnresolved(content, errors) {
+    const seen = new Set();
+    const visit = (v) => {
+      if (!v || typeof v !== 'object' || seen.has(v)) return;
+      seen.add(v);
+      if (v.ast && 'src' in v) { for (const n of unresolvedCalls(v.ast)) errors.push(new GrimError('unknown function or @cond "' + n + '"', v.file, v.line)); return; }
+      for (const k of Object.keys(v)) if (k !== 'fn') visit(v[k]);
+    };
+    for (const col of WORLD_COLLECTIONS.concat(['resources', 'skills', 'npcs', 'states', 'events', 'endings', 'hooks'])) for (const d of Object.values(content[col] || {})) visit(d);
+  }
+
+  // Replace every `preset arg …` statement with the preset's body ($params substituted), recursively. In a thread
+  // member, a template's presets (`quest.next`, or just `next`) also take the thread's $words and `first` macro.
+  function expandPresets(content, errors, envs) {
+    const expand = (effects, file, depth, env) => {
       if (!effects) return effects;
       const out = [];
       for (const st of effects) {
         if (st.t === 'preset') {
-          const p = content.presets[st.name];
+          const p = content.presets[st.name] || (env && !st.name.includes('.') && content.presets[env.tpl + '.' + st.name]);
           if (!p) { errors.push(new GrimError('unknown statement or preset "' + st.name + (st.args.length ? ' ' + st.args.join(' ') : '') + '"', file, st.line)); continue; }
+          const scoped = p.id.includes('.');
+          if (scoped && !(env && p.id.startsWith(env.tpl + '.'))) { errors.push(new GrimError('preset ' + p.id + ' belongs to thread template ' + p.id.split('.')[0] + ': only its threads\' cards can use it', file, st.line)); continue; }
           const params = p.params || [];
           if (st.args.length !== params.length) { errors.push(new GrimError('preset ' + st.name + ' takes ' + (params.length ? params.join(', ') : 'no arguments') + ', got ' + (st.args.join(' ') || 'none'), file, st.line)); continue; }
           if (depth > 5) { errors.push(new GrimError('presets nested too deeply (' + st.name + ')', file, st.line)); continue; }
-          const lines = (p.do || []).map((L) => ({ indent: L.indent, line: st.line, content: L.content.replace(/\$([a-z_][a-z0-9_]*)/g, (mm, k) => (params.includes(k) ? st.args[params.indexOf(k)] : mm)) }));
           try {
+            let lines = (p.do || []).map((L) => ({ indent: L.indent, line: st.line, content: L.content.replace(/\$([a-z_][a-z0-9_]*)/g, (mm, k) => (params.includes(k) ? st.args[params.indexOf(k)] : mm)) }));
+            if (scoped) lines = expandFirst(lines, env, file).map((L) => Object.assign({}, L, { content: subst(L.content, env, null, file, st.line), line: st.line }));
             const body = parseEffectLines(lines, file);
-            G_walk(body, (x) => { x.preset = st.name; });
-            out.push(...expand(body, file, depth + 1));
+            G_walk(body, (x) => { x.preset = p.id; });
+            out.push(...expand(body, file, depth + 1, env));
           } catch (e) { errors.push(new GrimError('preset ' + st.name + ': ' + (e.raw || e.message), file, st.line)); }
           continue;
         }
-        if (st.t === 'if') { st.branches.forEach((b) => { b.body = expand(b.body, file, depth); }); st.else = expand(st.else, file, depth); }
-        else if (st.t === 'challenge') { st.win = expand(st.win, file, depth); st.partial = expand(st.partial, file, depth); st.lose = expand(st.lose, file, depth); }
-        else if (st.body) { st.body = expand(st.body, file, depth); st.else = expand(st.else, file, depth); }
+        if (st.t === 'if') { st.branches.forEach((b) => { b.body = expand(b.body, file, depth, env); }); st.else = expand(st.else, file, depth, env); }
+        else if (st.t === 'challenge') { st.win = expand(st.win, file, depth, env); st.partial = expand(st.partial, file, depth, env); st.lose = expand(st.lose, file, depth, env); }
+        else if (st.body) { st.body = expand(st.body, file, depth, env); st.else = expand(st.else, file, depth, env); }
         out.push(st);
       }
       return out;
     };
     for (const col of ['events', 'states', 'hooks', 'resources']) {
       for (const d of Object.values(content[col])) {
-        for (const k of ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero']) if (Array.isArray(d[k])) d[k] = expand(d[k], d.file, 0);
-        for (const o of d.options || []) o.effects = expand(o.effects, d.file, 0);
+        const env = (envs && envs.get(d)) || null;
+        for (const k of ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero']) if (Array.isArray(d[k])) d[k] = expand(d[k], d.file, 0, env);
+        for (const o of d.options || []) o.effects = expand(o.effects, d.file, 0, env);
       }
     }
   }
@@ -919,5 +1225,5 @@
 
   // `@place always: a b|c` (feedback 2026-10-16): the place's fixed cards in order; `|` makes a group that plays one.
   const alwaysGroups = (t) => String(t || '').split(/\s+/).filter(Boolean).map((g) => g.split('|').filter(Boolean));
-  return { alwaysGroups, textTokens, parseFile, compile, expr, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES, CHALLENGE_KINDS, MINIGAME_KINDS, ITEM_SLOTS, WORN_GROUPS, RANKS, RUNG_RE, ODDS_WORDS, SWINGS, DRIFTS, isLadderTier };
+  return { alwaysGroups, textTokens, parseFile, compile, expr, BUNDLE_PROPS, CONDS, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES, CHALLENGE_KINDS, MINIGAME_KINDS, ITEM_SLOTS, WORN_GROUPS, RANKS, RUNG_RE, ODDS_WORDS, SWINGS, DRIFTS, isLadderTier };
 });
