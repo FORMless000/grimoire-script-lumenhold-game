@@ -567,12 +567,13 @@
     // Crossing the cooldown mark upward pushes `@game spark_cooldown` once (until spark falls back below it), so the
     // player can say whether they want this (M37). Partners aren't asked.
     sparkCheck(id, n) {
-      const ev = this.c.game.spark_cooldown, th = this.sparkFollow().cooldown;
-      if (!ev || !this.c.events[ev]) return;
+      // (the `spark cooldown` appointments: `spark_cooldown` deals the card that asks)
+      const evs = this.appointmentsAt('spark cooldown').filter((a) => !a.use && (a.deals.card || []).some((x) => this.c.events[x])), th = this.sparkFollow().cooldown;
+      if (!evs.length) return;
       if (n.spark < th) { n.coolAsked = false; return; }
       if (n.coolAsked || n.bond === 'partner') return;
       n.coolAsked = true; n.sparkAsked = true;   // from now on, spark that friendship carries along shows (2026-10-20)
-      this.s.queue.push({ id: ev, actor: id, due: this.s.turn + 1, src: 'queued' });
+      for (const a of evs) if (this.appointmentHolds(a, id)) for (const ev of a.deals.card) if (this.c.events[ev]) this.s.queue.push({ id: ev, actor: id, due: this.s.turn + 1, src: 'queued' });
     }
     // A job up front (M23): what one shift pays a new hire, read from the job's own cards (wages, tips and fines
     // averaged over their options and outcomes), and the shifts a term asks for.
@@ -769,7 +770,7 @@
           // You meet the course's professor (design §5.5) first: their intro card goes ahead of the start card.
           this.meetLead(id, d, ctx);
           // A course's `start:` card (spells v2: the lesson that teaches its spell) comes later the same month, in its context.
-          if (d.start && this.c.events[d.start] && !s.deck.some((q) => q.id === d.start)) s.deck.push({ id: d.start, actor: null, track: id, src: 'queued' });
+          if (d.start && this.c.events[d.start] && this.appointmentsAt('enrol').some((a) => a.use === 'start') && !s.deck.some((q) => q.id === d.start)) s.deck.push({ id: d.start, actor: null, track: id, src: 'queued' });
           this.grantLegacy(id, ctx, true);
           break;
         }
@@ -855,12 +856,12 @@
             // A good term with a club or job pleases whoever runs it (missed visits already cost their regard).
             if (t.perf >= 70 && d.lead && s.npcs[d.lead] && s.npcs[d.lead].met) this.run([{ t: 'rel', npc: d.lead, tier: 'small', sign: 1 }], ctx);
             t.due = t.benched && d.kind === 'job' ? Math.min(2, d.due || 0) : d.due || 0;
-            if (t.perf < 40) this.pushTrackEvent('track_warning', id);
+            if (t.perf < 40) this.notice('low marks', id);
             // Every job asks at term end: another term, or not (M33). Not after the last term.
-            if (d.kind === 'job') { let more = false; for (let k = s.turn + 1; k <= this.maxTurns && !more; k++) more = this.phaseOf(k) === 'term'; if (more) this.pushTrackEvent('job_term_review', id); }
+            if (d.kind === 'job') { let more = false; for (let k = s.turn + 1; k <= this.maxTurns && !more; k++) more = this.phaseOf(k) === 'term'; if (more) this.notice('renewal', id); }
             const need = ((this.c.balance && this.c.balance.rank_xp) || [10, 25])[t.rank];
             const ranks = (d.ranks || '').split(/\s*[,，、]\s*/).filter(Boolean).length || 1;
-            if (t.perf >= 70 && need != null && t.rankXp >= need && t.rank < ranks - 1) this.pushTrackEvent('track_promotion', id);
+            if (t.perf >= 70 && need != null && t.rankXp >= need && t.rank < ranks - 1) this.notice('promotion', id);
           }
         }
       }
@@ -905,7 +906,7 @@
       // Passing a level teaches its spells (design §9.1: `teaches: flame@1 tide@2 …`).
       if (grade !== 'F') this.teachLevel(id, t.level, ctx);
       // A failed course can be appealed (playtest 2, N4): `@game appeal` comes next, in the course's context.
-      else if (this.c.game.appeal) this.pushTrackEvent(this.c.game.appeal, id);
+      else this.notice('fail', id);
       this.grantLegacy(id, ctx, false);
     }
     // A course with a `start:` card teaches at the start of each level; passing then only makes up what the start card
@@ -1002,7 +1003,7 @@
     meetLead(id, d, ctx) {
       const s = this.s, n = d.lead && s.npcs[d.lead];
       if (!n) return;
-      const intro = !n.met && d.intro && this.c.events[d.intro];
+      const intro = !n.met && d.intro && this.appointmentsAt('meet lead').some((a) => a.use === 'intro') && this.c.events[d.intro];
       if (intro) {
         if (s.deck.some((q) => q.id === d.intro)) return;
         if (this.test(intro.when, d.lead)) {
@@ -1014,6 +1015,15 @@
       this.touchNpc(d.lead, ctx);
     }
     pushTrackEvent(eventId, track) { if (this.c.events[eventId]) this.s.queue.push({ id: eventId, actor: null, track, due: this.s.turn + 1, src: 'queued' }); }
+    // A track's notice (content/core/appointments.grim): the cards of every appointment at this occasion whose `for:`
+    // has the track's kind, while its `when` holds, next month in the track's context.
+    notice(at, track) {
+      const kind = (this.c.tracks[track] || {}).kind;
+      for (const a of this.appointmentsAt(at)) {
+        if (a.use || (a.for.length && !a.for.includes(kind)) || !this.appointmentHolds(a, null)) continue;
+        for (const id of a.deals.card || []) this.pushTrackEvent(id, track);
+      }
+    }
 
     /* ---------------- Places, arcs, skills (design §6, §10.6, §8.5) ---------------- */
     presentAt(place, slot) {
@@ -1672,8 +1682,12 @@
       if (this.c.places && Object.keys(this.c.places).length) this.monthlyWorld(summary);
       if (this.dayMode && this.isTermStart()) this.runHooks('term_start', summary);
       // Exams are cards (playtest 2, M4): in a term's last month, one `@game exam:` card per enrolled course, in its context.
-      if (this.dayMode && this.isTermEnd() && this.c.events[this.c.game.exam]) {
-        for (const [id, t] of Object.entries(s.tracks || {})) if (t.status === 'enrolled' && (this.c.tracks[id] || {}).kind === 'course') s.queue.push({ id: this.c.game.exam, actor: null, track: id, due: s.turn, src: 'queued' });
+      // (the `term end` appointments: `exam` deals the exam card for each course you're enrolled in)
+      if (this.dayMode && this.isTermEnd()) {
+        for (const a of this.appointmentsAt('term end')) {
+          if (a.use || !this.appointmentHolds(a, null)) continue;
+          for (const subj of this.subjectsOf(a)) if (subj && subj.track) for (const id of a.deals.card || []) if (this.c.events[id]) s.queue.push({ id, actor: null, track: subj.track, due: s.turn, src: 'queued' });
+        }
       }
       this.runHooks('month_start', summary);
       if (!s.ended) {

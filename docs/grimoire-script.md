@@ -20,7 +20,7 @@ title: Whispers in the Stacks
 
 | Rule | Detail |
 |---|---|
-| Header | `@kind id` — `kind` is one of `game resource skill npc state event ending hook`. `id` is `lower_snake_case` and unique per kind across **all** files. `@game` takes no id. |
+| Header | `@kind id` — `kind` is one of `game resource skill npc state event ending hook`, the worldbook's (§6b), or the wiring blocks `pool thread cond appointment` (§9). `id` is `lower_snake_case` and unique per kind across **all** files. `@game` takes no id. |
 | Properties | `key: value` at column 0. Unknown keys are an error (typos are caught). |
 | Long text | Continue a text property on following **indented** lines. A blank line inside makes a paragraph break. |
 | Options | `> key: Label` at column 0 (events only). The option's body is indented beneath it. |
@@ -83,7 +83,8 @@ text: Professor Thorne places a candle at the far end of the hall. "Light it. Fr
 | `specializes` | An event id (E1). This card (`actor: <npc>`, same `trigger:`) is one character's own version of a generic card drawn per character (`per:`): whenever the generic is drawn for them and this card's `when` holds, it plays instead, and counts as the generic for them (its once / repeat bookkeeping). It is never drawn by itself. One per character per generic card. Excluding someone from a generic card is still `not npc_is(x)` in its cast. | — |
 | `defer` | Expression (playtest 2, I6). When a pushed card is about to show and this is true, it goes back to the queue for next month instead (a failed `when` drops it). Lumenhold: `night_suspicion` waits with `defer: off_campus`. | — |
 | `type` | `card`, `story` or `menu` — inferred from the options (below). | inferred |
-| `chain` | Free-text chain name, for documentation and `stats`. | — |
+| `pool` | A `@pool` whose properties the card takes (§9). | — |
+| `thread` | The storyline it belongs to: a `@thread` or an `@arc` (§9). `chain:` is the older spelling. | — |
 | `on_show:` | Effects applied the moment the card appears. | — |
 
 **Options and type inference**
@@ -698,7 +699,9 @@ module.exports = {
 };
 ```
 
-`ctx` offers `query(node, where)` (the rows of `grim query`), `edit(at, textOrFn)`, `insertAfter(at, text)`, `remove(at)`, `lines(file)`, `report(msg)` and the compiled `content`. Lines always refer to the file as it was before the migration. A migration whose result doesn't compile writes nothing. Changed files are formatted. Afterwards, run `build`, `lint` and `diff`.
+`ctx` offers `query(node, where)` (the rows of `grim query`), `edit(at, textOrFn)`, `insertAfter(at, text)`, `remove(at)`, `create(file, text)`, `lines(file)`, `report(msg)` and the compiled `content`. Lines always refer to the file as it was before the migration. A migration whose result doesn't compile writes nothing, and neither does one that changes what the content compiles to (`grim equiv`'s comparison) unless it says `changesMeaning: true`. Changed files are formatted. Afterwards, run `build`, `lint` and `diff`. The converters behind migrations 0046–0051 (`tools/convert/`) detect structure from the compiled content and where each property is written, never the prose; their reports go to `build/convert/`.
+
+`node tools/grim.js equiv [--against REF]` compiles the content at a git ref with that ref's own compiler and compares every block's meaning with the working tree. Positions, provenance and the order of an AND chain don't count; a deck (`queue any tagged`, `queue any in`) counts as the cards it can draw.
 
 ---
 
@@ -709,3 +712,142 @@ module.exports = {
 **Tags with visual meaning** (card colour and label): study social romance danger mystery money job nature festival crisis class club home magic rival story exam. Any other tag is allowed and is useful for `stats`.
 
 **Bond statuses:** none friend close rival nemesis partner ex.
+
+---
+
+## 9. Wiring: pools, threads, templates, conditions and appointments
+
+Five block kinds say how cards are wired, apart from what they say: **`@pool`** (what a group of cards shares), **`@thread`** (a storyline; with `params:` a template), **`@cond`** (a named condition), **`@preset`** (named effects, §6a) and **`@appointment`** (when cards are dealt). They compile into the same cards a writer would have written by hand, so every tool (`graph`, `reach`, `query`, `show`, `brief`, `economy`, retrieval) sees ordinary cards. `node tools/grim.js equiv` proves a refactor compiles the same as `HEAD`; `grim migrate` refuses a migration that doesn't (unless it says `changesMeaning: true`).
+
+### `@pool` — what a group of cards shares
+
+```
+@pool course_routine                 # content/core/templates.grim: what every course pool shares
+class: routine
+repeat: 5
+weight: 10
+tags: class
+
+@pool evocation_class                # beside the cards
+from: course_routine
+track: evocation
+```
+
+A card joins with `pool: evocation_class`. It takes every property the pool (and the pools it comes `from:`) gives that it doesn't write itself; its own value wins. `when:` is ANDed (the pool's first), `tags:` come pool-first. Two sources giving one property different values is an error. A pool may hold any card property (`trigger place track level rank plan slot time class tone repeat weight priority per actor tags when defer art chain variant lesson`). A pool says nothing about when its cards are dealt: that is the cards' trigger, or an appointment. `queue any in <pool>` draws one of a pool's queued cards (as `queue any tagged` does for a tag).
+
+### `@cond` — a named condition
+
+```
+@cond courting                       # content/core/conds.grim
+params: who
+is: bond(who) != "partner" and bond(who) != "ex"
+```
+
+`when: spark(lyra) >= 25 and courting(lyra)` compiles to the written-out condition. A parameter takes a name (`lyra`, `npc`) or any expression.
+
+### `@thread` — a storyline
+
+A card joins with `thread: <id>` (the same as the older `chain:`, which still works). A thread is a bundle like a pool (its properties go to its cards: `when:`, `track:`, `actor:` …), plus `clues:` (the leads it owns, for the tools), `clock: 0..N` (moved by `advance <thread> +1`, read by `clock(<thread>)`, as an arc's) and `members:`. An `@arc` is a thread with a schedule; its cards say `thread: hollowstar`.
+
+**Templates.** A thread with `params:` (or `roles:`) is a template; a thread `from:` it fills the params in (`with: key=value …`) and lists its cards by role (`members:`, one `role card [key=value …]` per line; unlisted cards take `default_role:`). Each member takes its role's pool, `<template>.<role>`, and may call the template's presets, `<template>.<name>` or just `<name>`. Inside a template's pools and presets:
+
+| Macro | Means |
+|---|---|
+| `$x` | a param (`$begun`), the member's own value (`$flag`), `$this` (the card), `$thread`, or `$<role>` for a role with one card (`$start`, `$final`) |
+| `count(<role>: expr)` | `expr` for each member of the role, added up, in member order |
+| `first <role> [except this] [where expr]:` | an `if` / `elif` over the role's members in order: the body runs for the first that qualifies, with `$this` and its values bound to it |
+
+The library, `content/core/templates.grim`:
+
+| Template | Roles | For |
+|---|---|---|
+| `story` (`begun`) | `start`, `step` (default) | a bespoke storyline: steps wait on what the start card began |
+| `quest` (`begun need=2 after=1 giveup=4 beat=chain_beat`) | `start`, `part` (`flag=`), `final` | a capstone: a start card offers it, parts in any order, a final once enough are done; `next` deals the next part or the final, once a day |
+| `scene` | `entry`, `step` (default) | a run of cards in one sitting: each step's `next` draws the next from the scene's queued cards |
+
+Before and after (the Brace capstone, `content/events/club_spell_chains.grim`, migration 0047):
+
+```
+# before: every card spelled out its trigger, weights and gates, and every part repeated the routing
+@event duel_captains_notes
+track: duelling
+rank: 2
+class: routine
+when: flag(brace_chain) and not flag(brace_notes) and spell_level(brace) == 0
+repeat: 2
+weight: 60
+...
+  if chain_beat != turn:
+    chain_beat = turn
+    if since(duel_dummy_hexes) >= 1 and flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2:
+      queue duel_brace_final now
+    elif not flag(brace_circle):
+      queue duel_bram_barrage now
+    elif not flag(brace_footwork):
+      queue duel_footwork_lyra now
+
+# after
+@thread brace_quest
+from: quest
+with: begun=brace_chain
+when: spell_level(brace) == 0
+track: duelling
+rank: 2
+clues: lead_brace
+members:
+  start duel_dummy_hexes
+  part duel_captains_notes flag=brace_notes
+  part duel_bram_barrage flag=brace_circle
+  part duel_footwork_lyra flag=brace_footwork
+  final duel_brace_final
+
+@event duel_captains_notes
+thread: brace_quest
+class: routine
+...
+  next
+```
+
+A new capstone is a `@thread … from: quest` block and five cards of prose. A story: `@thread forbidden`, `from: story`, `with: begun=flag(forbidden_key)`, `members: start umbral_forbidden_notes`; the other cards say `thread: forbidden` and need not repeat `flag(forbidden_key)`. A scene: `@thread ww_delve`, `from: scene`; its cards say `thread: ww_delve` and end a step with `next`; whatever starts it does `queue any in ww_delve now`.
+
+### `@appointment` — when cards are dealt
+
+```
+@appointment market_day
+desc: The village market, first on a visit there on a spring month.
+at: visit
+place: village
+when: season == "spring"
+chance: likely
+deals: pool market_stalls
+```
+
+| Property | Meaning |
+|---|---|
+| `at` | the occasion: `month` (the month's start, after cards queued for it), `courses` (the course slot), `visit` (a visit: before its drawn cards; with `takes: visit`, instead of them), or a notice: `term end`, `fail`, `low marks`, `renewal`, `promotion`, `spark cooldown`; `night`, `meet lead` and `enrol` are built in only |
+| `for` | its subjects, one deal each: track kinds you're in (a `course` you're enrolled in; a `club`, `job`, `thesis` or `internship` you're a member of), `met` (everyone you've met); none: once |
+| `deals` | `card <id>[\|<id>…]`, `pool <id>` (a pool's or a thread's cards), `trigger <t>`, or `own` (the subject track's cards, up to its level and rank) |
+| `when`, `chance` | it deals only while `when` holds, and then by `chance:` (a likelihood word or `N%`) |
+| `pick` | at the month's start: `one` card per subject, by the usual draw score (the default), or `each` eligible card |
+| `slot`, `priority`, `limit` | at the month's start: the slot the card goes to; its order among pushed cards; `limit: plot` shares the month's plot-card cap |
+| `place` | at a visit: only at this place |
+| `use` | the built-in way one of the game's own appointments deals (below) |
+
+The game's own appointments are declared in `content/core/appointments.grim`, in the order they deal; content without the file gets the same ones built in. The older spellings are shorthands and keep working:
+
+| Written on the card or track | Dealt by |
+|---|---|
+| `trigger: auto` | `forced` (`at: month`, `use: auto`) |
+| an arc card's `beat:`, a card in an arc's thread | `beats` (`limit: plot`, `use: beats`) |
+| `ramp: rel(npc) 18..30` | `milestones` (`for: met`, `use: ramp`) |
+| `track:` a course or thesis | `class` (`at: courses`, `use: courses`) |
+| `replaces: visit1` with `place:` | `festivals` (`takes: visit`) |
+| `@place always:` | `fixed` (`at: visit`) |
+| `trigger: letter` | `letters` (`at: night`, off campus) |
+| `@track intro:` / `start:` | `intro` (`at: meet lead`) / `start` (`at: enrol`) |
+| `@game exam:` / `appeal:` / `off_shift:` / `spark_cooldown:` | the `deals: card` of `exam` / `appeal` / `off_shift` / `spark_cooldown` |
+| the cards `track_warning`, `job_term_review`, `track_promotion` | `warning` (`at: low marks`), `review` (`at: renewal`), `promotion` (`at: promotion`) |
+| `trigger: queued` | nothing: only `queue` deals it |
+| `trigger: random` / `social`, `place:`, `track:` (clubs, jobs), `plan:` | the day's slots (`@game day_term`, §6c) |
+
+Where a card lives, class by class, is in `docs/authoring/pools.md`.

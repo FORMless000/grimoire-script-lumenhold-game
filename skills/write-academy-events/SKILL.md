@@ -23,6 +23,7 @@ operator checkpoints and keep experimental cards quarantined.
 For each event decide:
 - **Trigger:** `random` (everyday, gated by `when`), `social` (about a character: a fixed `actor:` puts it on that character's own track as well, so it comes when you meet them where they are or when they come looking for you; give each character a ladder of personal events from `rel 0`, see `docs/authoring/pools.md`, Character pools), `auto` (forced when `when` holds: calendar beats, chain climaxes; tight `when` plus `repeat`), `queued` (only reachable by `queue`; `queue x in 2 with friend chance 30` delays it, carries a cast role and rolls odds), or `letter` (the nightly letter while you or they are away: `actor:` or a cast role with `per:`).
 - **Where it is drawn** (the director, `docs/grimoire-script.md` §6c): `place: <id>` (a map visit), `track: <id>` with `level:` (course mornings) or `rank:` (club practice, job shifts), `plan: castle|home|work|internship` (break mornings), or no place (the night's world slot). Most everyday content belongs to a place or track now.
+- **Its group** (`docs/authoring/pools.md`, "Where a card lives"; `docs/grimoire-script.md` §9): most cards join one that already says their wiring. A routine card takes the `pool:` of its place, track or plan (`grim brief` shows them), and writes only what differs. A storyline is a `@thread`: a mini-plot `from: story` (steps wait on what the start card began), a club or job capstone `from: quest` (one block and five cards of prose), cards in one sitting `from: scene` (steps end with `next`). Something on a schedule (a market day, a weekly hour) is an `@appointment`, not a card with a tricky `when`. A condition repeated across cards becomes a `@cond` (`courting(x)` exists). Never copy a group's lines onto its cards.
 - **Who:** `cast:` roles, cast by premise (`friend: any where tagged(friend, peer) and rel(friend) >= 10`; classmates `tagged(x, student) or tagged(x, prefect)`; `tagged(x, teacher)`), `here: present(place)`, `keeper: maud`), or `actor:` a fixed npc id. Don't write `actor: any` (legacy since schema v1).
 - **When:** `when` on state, flags, relationship, month, year.
 - **Class in mind** (`docs/authoring/classes.md`): routine, milestone, incident, windfall, story.
@@ -40,7 +41,7 @@ For each event decide:
 
 **Repeatable pool events** (places, class days, practice, shifts, plans) have `class: routine`, `repeat: 4`–`6` (the cooldown in months), and must read differently each time: at least 3 inline variants across text and says, all in one mode with one count (usually a sequence `{a|b|c}`, where showing *k* reads variant *k* of every field; `docs/authoring/pools.md`), plus `{season=autumn: …|winter: …|…}` or `{final_year: …|…}` lines where they fit. Don't hinge a repeatable on a one-time surprise.
 
-For a **chain**, sketch the graph first: every queued event must be queued by something, and every flag tested must be set somewhere (lint enforces both).
+For a **chain**, sketch the graph first: every queued event must be queued by something, and every flag tested must be set somewhere (lint enforces both). Give it a `@thread` (with `clues:` for the leads it leaves) and take a template from `content/core/templates.grim` when its shape is one of theirs.
 
 ## 2. Search, write, then check for duplicates
 

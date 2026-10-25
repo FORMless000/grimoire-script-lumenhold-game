@@ -393,43 +393,12 @@
         used.add(q.id);
       }
       s.queue = keep;
-      for (const e of this.byTrigger.auto) {
-        if (!this.eligible(e, used)) continue;
-        const c = this.candidates(e);
-        if (!c.length) continue;
-        const pick = this.pickWeighted(c);
-        pushed.push({ id: e.id, actor: pick.actor, cast: pick.cast, src: 'auto', prio: e.class === 'story' || e.arc ? 'story' : 'pushed', p: e.priority != null ? e.priority : 50 });
-        used.add(e.id);
-      }
-      // Arc beats (design §10.6): at most one plot card a month, except in a beat month. A plot card is an arc
-      // beat or any event whose `chain:` is an arc; queued follow-ups (a scene already under way) are not held back.
-      let plot = s.deck.concat(pushed).filter((x) => x.src !== 'queued' && this.isPlot(this.c.events[x.id])).length;
-      for (const e of ix.arc) {
-        if (e.trigger === 'queued' || used.has(e.id) || !this.eligible(e, used)) continue;
-        const a = s.arcs[e.arc] || { clock: 0 };
-        if (e.beat != null && a.clock < e.beat) continue;
-        if (plot >= this.plotCap()) break;
-        const c = this.candidates(e); if (!c.length) continue;
-        const pick = this.pickWeighted(c);
-        pushed.push({ id: e.id, actor: pick.actor, cast: pick.cast, src: 'arc', prio: 'story', slot: e.slot });
-        used.add(e.id); plot++;
-      }
-      // Milestones on a ramp (M13): each month a milestone whose value has reached its low mark is pushed with a
-      // chance rising from 40% there to certain at its high mark, for the character furthest along.
-      for (const e of ix.ramp) {
-        if (used.has(e.id) || !this.eligible(e, used)) continue;
-        const cands = e.per ? Object.keys(s.npcs).filter((id) => s.npcs[id].met).flatMap((id) => this.boundCandidates(e, id)) : this.candidates(e);
-        let best = null;
-        for (const c of cands) {
-          const prev = this._cast; this._cast = c.cast || null;
-          const ok = this.test(e.when, c.actor), v = ok ? this.value(e.ramp.expr, c.actor) : -Infinity;
-          this._cast = prev;
-          if (v < e.ramp.lo) continue;
-          const p = Math.min(1, 0.4 + 0.6 * (v - e.ramp.lo) / (e.ramp.hi - e.ramp.lo));
-          if (!best || p > best.p) best = { c, p };
-        }
-        if (best && this.rand() < best.p) { pushed.push({ id: e.id, actor: best.c.actor, cast: best.c.cast, src: 'ramp', prio: 'pushed', ramp: true }); used.add(e.id); }
-      }
+      // Then the month's appointments (content/core/appointments.grim), in order: forced cards, arc beats, milestones
+      // on their ramp, and any others. The month's plot cards are counted when the first appointment that needs it asks.
+      const st = { plot: null };
+      st.plotNow = () => (st.plot != null ? st.plot : (st.plot = s.deck.concat(pushed).filter((x) => x.src !== 'queued' && this.isPlot(this.c.events[x.id])).length));
+      for (const a of this.appointmentsAt('month')) this.dealMonth(a, pushed, used, st);
+      const plot = st.plotNow();
       pushed.sort((a, b) => (b.p || 0) - (a.p || 0));
       // Each pushed card's slot: its own `slot:`, else the first of the day (and the first when its slot isn't today).
       const friendSlot = slots.includes('noon') ? 'noon' : slots.includes('night') ? 'night' : slots[slots.length - 1];
@@ -447,6 +416,122 @@
 
       s.day = { v: 2, phase: 'slots', at: 0, stage: 0, picks: [], nextPicks: [], used: [...used], items: [], withToday: [], pushed, spread, friendSlot,
         plotLeft: this.plotCap() - plot, count: s.deck.length, done: false };
+    },
+    // The appointments at one occasion, in the content's order (built once).
+    appointmentsAt(at) {
+      if (!this._appts) { this._appts = {}; for (const a of Object.values(this.c.appointments || {})) (this._appts[a.at] = this._appts[a.at] || []).push(a); }
+      return this._appts[at] || [];
+    },
+    appointment(id) { return (this.c.appointments || {})[id] || null; },
+    // An appointment's subjects (`for:`): your tracks of those kinds that are running (a course you're enrolled in, a
+    // club, job or thesis you're a member of), and with `met`, everyone you've met; no `for:`, the game itself.
+    subjectsOf(a) {
+      if (!a.for.length) return [null];
+      const s = this.s, out = [];
+      for (const [id, t] of Object.entries(s.tracks || {})) {
+        const d = this.c.tracks[id];
+        if (d && a.for.includes(d.kind) && (d.kind === 'course' ? t.status === 'enrolled' : t.status === 'member')) out.push({ track: id });
+      }
+      if (a.for.includes('met')) for (const id of Object.keys(s.npcs)) if (s.npcs[id].met) out.push({ npc: id });
+      return out;
+    },
+    // The cards an appointment deals from, for one subject.
+    dealsFrom(a, subj) {
+      const d = a.deals, s = this.s;
+      if (d.card) return d.card.map((id) => this.c.events[id]).filter(Boolean);
+      if (d.pool) return this.events.filter((e) => (e.pools || []).includes(d.pool) || e.thread === d.pool);
+      if (d.trigger) return this.byTrigger[d.trigger] || [];
+      if (d.own && subj && subj.track) {
+        const t = s.tracks[subj.track];
+        return (this.directorIndex().byTrack[subj.track] || []).filter((e) => (!e.level || e.level <= (t.level || 1)) && (!e.rank || e.rank <= (t.rank || 0) + 1));
+      }
+      return [];
+    },
+    // Whether an appointment holds now: its `when`, then its `chance` (rolled only when it has one).
+    appointmentHolds(a, actor) {
+      if (a.when && !this.test(a.when, actor || null)) return false;
+      if (a.chance && this.rand() * 100 >= (a.chance.word ? this.likelihoodP(a.chance.word) : a.chance.p)) return false;
+      return true;
+    },
+    // One month appointment: the built-in ways (`use:`) keep their own rules; any other deals one card per subject
+    // (every eligible one with `pick: each`), drawn by the usual score, into its `slot:` or the card's.
+    dealMonth(a, pushed, used, st) {
+      const s = this.s, ix = this.directorIndex();
+      if (a.use === 'auto') {
+        for (const e of this.byTrigger.auto) {
+          if (!this.eligible(e, used)) continue;
+          const c = this.candidates(e);
+          if (!c.length) continue;
+          const pick = this.pickWeighted(c);
+          pushed.push({ id: e.id, actor: pick.actor, cast: pick.cast, src: 'auto', prio: e.class === 'story' || e.arc ? 'story' : 'pushed', p: e.priority != null ? e.priority : 50 });
+          used.add(e.id);
+        }
+        return;
+      }
+      // Arc beats (design §10.6): at most one plot card a month, except in a beat month. A plot card is an arc
+      // beat or any event whose `chain:` is an arc; queued follow-ups (a scene already under way) are not held back.
+      if (a.use === 'beats') {
+        st.plotNow();
+        for (const e of ix.arc) {
+          if (e.trigger === 'queued' || used.has(e.id) || !this.eligible(e, used)) continue;
+          const ar = s.arcs[e.arc] || { clock: 0 };
+          if (e.beat != null && ar.clock < e.beat) continue;
+          if (st.plot >= this.plotCap()) break;
+          const c = this.candidates(e); if (!c.length) continue;
+          const pick = this.pickWeighted(c);
+          pushed.push({ id: e.id, actor: pick.actor, cast: pick.cast, src: 'arc', prio: 'story', slot: e.slot });
+          used.add(e.id); st.plot++;
+        }
+        return;
+      }
+      // Milestones on a ramp (M13): each month a milestone whose value has reached its low mark is pushed with a
+      // chance rising from 40% there to certain at its high mark, for the character furthest along.
+      if (a.use === 'ramp') {
+        for (const e of ix.ramp) {
+          if (used.has(e.id) || !this.eligible(e, used)) continue;
+          const cands = e.per ? Object.keys(s.npcs).filter((id) => s.npcs[id].met).flatMap((id) => this.boundCandidates(e, id)) : this.candidates(e);
+          let best = null;
+          for (const c of cands) {
+            const prev = this._cast; this._cast = c.cast || null;
+            const ok = this.test(e.when, c.actor), v = ok ? this.value(e.ramp.expr, c.actor) : -Infinity;
+            this._cast = prev;
+            if (v < e.ramp.lo) continue;
+            const p = Math.min(1, 0.4 + 0.6 * (v - e.ramp.lo) / (e.ramp.hi - e.ramp.lo));
+            if (!best || p > best.p) best = { c, p };
+          }
+          if (best && this.rand() < best.p) { pushed.push({ id: e.id, actor: best.c.actor, cast: best.c.cast, src: 'ramp', prio: 'pushed', ramp: true }); used.add(e.id); }
+        }
+        return;
+      }
+      if (a.use) return;
+      const plotWas = this._plotLeft; this._plotLeft = null;   // the appointment keeps its own count (limit: plot)
+      try { this.dealEach(a, pushed, used, st); } finally { this._plotLeft = plotWas; }
+    },
+    dealEach(a, pushed, used, st) {
+      for (const subj of this.subjectsOf(a)) {
+        if (a.limit === 'plot' && st.plotNow() >= this.plotCap()) break;
+        if (!this.appointmentHolds(a, subj && subj.npc)) continue;
+        const from = this.dealsFrom(a, subj).filter((e) => !(a.limit === 'plot' && this.isPlot(e) && st.plot >= this.plotCap()));
+        const extra = Object.assign({ src: 'appointment' }, subj && subj.track ? { track: subj.track } : {}, a.slot ? { slot: a.slot } : {});
+        const deal = (it) => {
+          if (!it) return false;
+          const e = this.c.events[it.id];
+          pushed.push(Object.assign(it, { prio: e.class === 'story' || e.arc ? 'story' : subj && subj.track ? 'track' : 'pushed', p: a.priority != null ? a.priority : e.priority != null ? e.priority : 50 }));
+          if (a.limit === 'plot' && this.isPlot(e)) st.plot++;
+          return true;
+        };
+        if (a.pick === 'each') { for (const e of from) deal(subj && subj.npc ? this.drawWithin([e], subj.npc, used, Object.assign({}, extra)) : this.draw([e], used, [], Object.assign({}, extra))); }
+        else deal(subj && subj.npc ? this.drawWithin(from, subj.npc, used, extra) : this.draw(from, used, [], extra));
+      }
+    },
+    // One card from `pool` with a given person (an appointment `for: met`).
+    drawWithin(pool, id, used, extra) {
+      const cands = [];
+      for (const e of pool) { if (used.has(e.id) || !this.eligible(e, used)) continue; for (const c of this.boundCandidates(e, id)) cands.push({ ...c, w: c.w * this.novelty(e) }); }
+      const pick = this.pickWeighted(cands);
+      if (!pick) return null;
+      used.add(pick.e.id);
+      return this.specialize(Object.assign({ id: pick.e.id, actor: id, cast: pick.cast || undefined }, extra || {}), used);
     },
     // Old saves (one map for the whole day) resume in the new shape.
     upgradeDay() {
@@ -524,21 +609,35 @@
         : source === 'plan' ? (plan && ix.byPlan[plan.replace(/^plan_/, '')]) || ix.ambient
         : ix.ambient.concat(ix.slotBound));
       if (r.source === 'courses') {
-        for (const [id, t] of Object.entries(s.tracks || {})) {
-          const td = this.c.tracks[id];
-          if (!td || !((t.status === 'enrolled' && td.kind === 'course') || (t.status === 'member' && td.kind === 'thesis'))) continue;
-          const pool = (ix.byTrack[id] || []).filter((e) => !e.level || e.level <= (t.level || 1));
+        // The course slot's appointments (`class`: one card from each course and thesis you're in).
+        for (const a of this.appointmentsAt('courses')) for (const subj of this.subjectsOf(a)) {
+          if (!subj || !subj.track) continue;
+          const id = subj.track, t = s.tracks[id], td = this.c.tracks[id];
+          if (!a.use && !this.appointmentHolds(a, null)) continue;
+          const pool = a.use === 'courses' ? (ix.byTrack[id] || []).filter((e) => !e.level || e.level <= (t.level || 1)) : this.dealsFrom(a, subj);
           const it = this.draw(pool, used, day.concat(items), { track: id, prio: 'track' });
           if (it) items.push(it);
+          if (a.use !== 'courses') continue;
           // Track 1 in class (design §5.5): the course's lead and whoever is at its place this slot see you there.
           const crowd = new Set(td.place ? this.presentAt(td.place, r.slot) : []); if (td.lead) crowd.add(td.lead);
           for (const nid of crowd) if (s.npcs[nid] && s.npcs[nid].met) this.warm(nid, FRIENDS.presence / 2);
         }
       } else if (r.source === 'visit') {
         const place = d.picks[this.visitIndex(d.at)], off = (d.offDuty || []).includes(this.visitIndex(d.at));
-        const fest = place && this.festivals().find((f) => f.place === place && f.visit === this.visitIndex(d.at));
-        if (fest) { items.push({ id: fest.event, actor: null, place, prio: 'story', src: 'festival' }); used.add(fest.event); }
-        else if (place) {
+        // Appointments that take the visit (`takes: visit`): festivals (B3), and any other for this place.
+        let taken = false;
+        for (const a of this.appointmentsAt('visit')) {
+          if (!a.takes || !place || taken) continue;
+          if (a.use === 'festival') {
+            const fest = this.festivals().find((f) => f.place === place && f.visit === this.visitIndex(d.at));
+            if (fest) { items.push({ id: fest.event, actor: null, place, prio: 'story', src: 'festival' }); used.add(fest.event); taken = true; }
+            continue;
+          }
+          if (a.use || r.opened || (a.place && a.place !== place) || !this.appointmentHolds(a, null)) continue;
+          const it = this.draw(this.dealsFrom(a, null), used, day.concat(items), { place, prio: 'story', src: a.id });
+          if (it) { items.push(it); taken = true; }
+        }
+        if (!taken && place) {
           const p = this.c.places[place];
           this._place = place;
           // E6: a visit that attends your track here (a shift, a meeting): on_shift() is true for its cards, so a shop's
@@ -549,20 +648,31 @@
           const n = r.min == null ? 1 + Math.floor(this.rand() * 2) : count;
           // An opened slot (midnight, M41) draws only events that name it; no ambient fallback.
           const names = (e) => !r.opened || e.slot === r.slot || (e.time || []).includes(r.slot);
-          // Off shift in term (I1): @game off_shift's hint card comes first, as often as its `repeat:` allows.
-          const hint = off && !r.opened && this.phaseOf() !== 'break' && this.c.game.off_shift && this.c.events[this.c.game.off_shift];
-          if (hint && this.eligible(hint, used) && this.test(hint.when, null)) { items.push({ id: hint.id, actor: null, place, prio: 'track', src: 'hint' }); used.add(hint.id); }
-          // A place's fixed cards (`@place always:`, feedback 2026-10-15 and 2026-10-16): first on every visit, in the
-          // order listed, each while its `when` holds, whatever its cooldown; a group `a|b` plays one of its eligible
-          // events by weight. An event with `slot:` counts only in that slot (midnight included), one without only on
-          // daytime visits. One drawn card follows, so a visit always has both.
+          // The visit's first cards, appointment by appointment (content/core/appointments.grim); one drawn card follows
+          // a fixed one, so a visit always has both.
           let draws = n, fixedAny = false;
-          for (const group of alwaysGroups(p.always)) {
-            const ok = group.map((id) => this.c.events[id]).filter((e) => e && !used.has(e.id) && (e.slot ? e.slot === r.slot : !r.opened) && this.test(e.when, null));
-            const pick = ok.length > 1 ? this.pickWeighted(ok.map((e) => ({ e, w: e.weight ? this.value(e.weight, null, 10) : 10 })).filter((x) => x.w > 0)) : ok.length ? { e: ok[0] } : null;
-            if (!pick) continue;
-            // the group's other members sit this visit out, so the drawn card can't be a second one of them
-            items.push({ id: pick.e.id, actor: null, place, prio: 'track', src: 'always' }); for (const id of group) used.add(id); fixedAny = true;
+          for (const a of this.appointmentsAt('visit')) {
+            if (a.takes) continue;
+            if (a.use === 'off_shift') {
+              // Off shift in term (I1): the hint card comes first, as often as its `repeat:` allows.
+              const hint = off && !r.opened && this.phaseOf() !== 'break' && a.deals.card && a.deals.card[0] && this.c.events[a.deals.card[0]];
+              if (hint && this.eligible(hint, used) && this.test(hint.when, null)) { items.push({ id: hint.id, actor: null, place, prio: 'track', src: 'hint' }); used.add(hint.id); }
+            } else if (a.use === 'always') {
+              // A place's fixed cards (`@place always:`, feedback 2026-10-15 and 2026-10-16): first on every visit, in the
+              // order listed, each while its `when` holds, whatever its cooldown; a group `a|b` plays one of its eligible
+              // events by weight. An event with `slot:` counts only in that slot (midnight included), one without only on
+              // daytime visits.
+              for (const group of alwaysGroups(p.always)) {
+                const ok = group.map((id) => this.c.events[id]).filter((e) => e && !used.has(e.id) && (e.slot ? e.slot === r.slot : !r.opened) && this.test(e.when, null));
+                const pick = ok.length > 1 ? this.pickWeighted(ok.map((e) => ({ e, w: e.weight ? this.value(e.weight, null, 10) : 10 })).filter((x) => x.w > 0)) : ok.length ? { e: ok[0] } : null;
+                if (!pick) continue;
+                // the group's other members sit this visit out, so the drawn card can't be a second one of them
+                items.push({ id: pick.e.id, actor: null, place, prio: 'track', src: 'always' }); for (const id of group) used.add(id); fixedAny = true;
+              }
+            } else if (!a.use && !r.opened && (!a.place || a.place === place) && this.appointmentHolds(a, null)) {
+              const it = this.draw(this.dealsFrom(a, null), used, day.concat(items), { place, prio: 'track', src: a.id });
+              if (it) { items.push(it); fixedAny = true; }
+            }
           }
           if (fixedAny) draws = 1;
           for (let k = 0; k < draws; k++) {
@@ -631,7 +741,7 @@
         }
       }
       // Off campus, a letter comes each night (M38): from the letter pool, whoever it's from.
-      if (away && r.slot === 'night' && !items.some((x) => this.c.events[x.id] && this.c.events[x.id].trigger === 'letter')) {
+      if (away && r.slot === 'night' && this.appointmentsAt('night').some((a) => a.use === 'letters') && !items.some((x) => this.c.events[x.id] && this.c.events[x.id].trigger === 'letter')) {
         const it = this.draw(ix.letter, used, day.concat(items), { prio: 'pushed', src: 'letter' });
         if (it) items.push(it);
       }

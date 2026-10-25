@@ -1,3 +1,19 @@
+## Card-wiring framework (October 25)
+
+The language has five wiring blocks (`docs/grimoire-script.md` §9; schema v1 additions): `@pool` (properties a group of cards shares, `from:` to build on another), `@thread` (a storyline with members, clues and a clock; with `params:` a template), `@cond` (a named condition), `@preset` (now scoped to a template, `quest.next`), and `@appointment` (when cards are dealt). Plus `queue any in <pool|thread>` and the template macros `$x`, `count(role: expr)` and `first role … where …:`. Libraries: `content/core/templates.grim` (story, quest, scene; the course pool templates), `content/core/appointments.grim` (the game's 16 appointments, in the order they deal) and `content/core/conds.grim`. Which group a card joins is `docs/authoring/pools.md`, "Where a card lives".
+
+Conversion was by script (`tools/convert/`, reports in `build/convert/`), each migration gated by `grim equiv` (every block compiles to the same meaning as at HEAD; `grim migrate` now refuses any migration that changes it unless it says `changesMeaning`):
+- 0046 conds: `courting(x)` (29 uses), `partner_here(x)` (7).
+- 0047 quests: six club and job capstones are `from: quest` threads (the routing is `next`); bramble's later parts wait on the first, so it is a plain thread.
+- 0048 scenes: the Whisperwood delve (49 cards) and the night upstairs (9) are `from: scene` threads.
+- 0049 threads: every `chain:` is a `@thread` (forbidden and curse are stories); `chain:` lines read `thread:`; clues owned by threads. Five leads are found outside any storyline (`build/convert/threads.json`: lead_grisk_jetty, lead_sky_championship, lead_second_timetable, lead_newt_upstairs, lead_spinner_silk), left for a writer.
+- 0050 pools: 95 pools over 449 cards; course pools build on `course_routine` / `course_routine_repeat4`. About 600 lines fewer.
+- 0051 appointments: `@game exam / appeal / off_shift / spark_cooldown` are their appointments' cards (the keys still work).
+
+The director and engine read `content.appointments`: the month's pushes (forced, beats, milestones, and any new appointment `at: month`), the course slot, a visit's first cards and takes (festivals, the off-shift hint, `always:`), letters, and the notices (intro, start, exam, appeal, warning, review, promotion, spark cooldown). New appointments need no engine code at `month`, `courses`, `visit` and the notices. Golden games, the full test suite and a 780-game trace comparison over 13 styles against HEAD are unchanged.
+
+Deviations from plan v5, with reasons: the built-in appointments keep their own rules behind `use:` (their exact draws and random order); the day's slots stay the `@game day_term` / `day_break` recipe, which is already data, rather than becoming appointments (step 4 of the plan, stopped: no gain worth the risk to the slot order); `night`, `meet lead` and `enrol` have only their built-in appointment.
+
 ## LightRAG graph and five-card adoption (October 24)
 
 The main LightRAG index is ready with 1,905 blocks, imported from the verified

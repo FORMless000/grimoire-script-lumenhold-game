@@ -95,3 +95,31 @@ test('the real content compiles with the framework and nothing unresolved', () =
   assert.deepEqual(r.errors.map((e) => e.message), []);
   assert.ok(r.content.threads.quest && r.content.threads.story && r.content.threads.scene);
 });
+
+test('appointments: the library declares the built-in defaults, in their order; content without it gets them', () => {
+  const real = require('./helpers.js').content.appointments;
+  const shape = (a) => ({ id: a.id, at: a.at, for: a.for, deals: a.deals, use: a.use || null, limit: a.limit || null, takes: !!a.takes });
+  const bare = G.compile([{ path: 'content/t.grim', text: card('x') }]).content;
+  const lib = Object.values(real).map(shape), def = Object.values(bare.appointments).map(shape);
+  // the defaults deal the @game cards, which bare content lacks; compare everything else
+  const noCard = (a) => Object.assign({}, a, { deals: a.deals.card ? { card: '…' } : a.deals });
+  assert.deepEqual(lib.map(noCard), def.map(noCard));
+  assert.ok(Object.values(real).every((a) => !a.builtin), 'every one is declared in content/core/appointments.grim');
+  assert.equal(require('./helpers.js').content.game.exam, real.exam.deals.card[0], '@game exam reads the exam appointment');
+});
+
+test('appointments: a month appointment deals a pool card; a visit appointment deals first at its place; errors name the field', () => {
+  const src = ['@appointment market\nat: month\nwhen: turn >= 1\ndeals: pool stalls\nslot: noon\n', '@pool stalls\ntrigger: queued\nclass: routine\nrepeat: 1\n',
+    card('stall_a', 'pool: stalls\n'), card('stall_b', 'pool: stalls\n')].join('\n');
+  const { content: c, errors } = build(src);
+  assert.deepEqual(errors.map((e) => e.message), []);
+  assert.equal(c.appointments.market.at, 'month');
+  const eng = new Engine(c); quiet(() => eng.newGame({ seed: 3, name: 'T' }));
+  const pushed = [], used = new Set();
+  quiet(() => eng.dealMonth(c.appointments.market, pushed, used, { plot: 0, plotNow: () => 0 }));
+  assert.equal(pushed.length, 1);
+  assert.ok(['stall_a', 'stall_b'].includes(pushed[0].id) && pushed[0].slot === 'noon' && pushed[0].src === 'appointment');
+  assert.ok(build('@appointment bad\nat: sometime\ndeals: card x\n').errors.some((e) => /at: one of/.test(e.message)));
+  assert.ok(build('@appointment bad\nat: month\ndeals: cards x\n').errors.some((e) => /deals: card/.test(e.message)));
+  assert.ok(build('@appointment bad\nat: month\ndeals: own\nuse: festival\n').errors.some((e) => /not a built-in way of dealing at month/.test(e.message)));
+});

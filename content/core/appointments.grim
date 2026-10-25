@@ -1,0 +1,121 @@
+# ============================================================
+#  Appointments (docs/grimoire-script.md §9): when the game deals cards.
+#  An appointment deals at an occasion (`at:`), once for each of its subjects (`for:` track kinds you're in, `met`
+#  for everyone you've met, nothing for the game itself), the cards it `deals:` (card <id>, pool <id>, trigger <t>, or
+#  own: the subject track's cards), while its `when` holds and by its `chance:`. At the month's start a card goes to
+#  its `slot:` (else the card's own, else the day's first); at a visit it comes before the drawn cards, or instead of
+#  them with `takes: visit`; at a notice it comes next month, in the track's context.
+#  The ones below are the game's own, in the order they deal; `use:` names the built-in way each one deals. A new
+#  appointment needs no engine code: a market day, a tutoring hour, a named character's café shift.
+#  Older spellings still work and mean the same: `trigger: auto` (forced), `ramp:` (milestones), an arc's `beat:`
+#  (beats), `replaces: visitN` (festivals), `@place always:` (fixed), `trigger: letter` (letters), `@track intro:` and
+#  `start:` (intro, start), `@game exam:` / `appeal:` / `off_shift:` / `spark_cooldown:` (their appointment's card).
+# ============================================================
+
+# ---------------- the month's start (after the cards queued for it) ----------------
+
+@appointment forced
+desc: Every card with `trigger: auto` whose `when` holds, by its priority.
+at: month
+deals: trigger auto
+use: auto
+
+@appointment beats
+desc: The arcs' cards once their arc's clock reaches their `beat:`; at most one plot card a month (two in a month with a beat).
+at: month
+deals: beats
+limit: plot
+use: beats
+
+@appointment milestones
+desc: Each card with a `ramp:`, for whoever is furthest along: 40% at its low mark, certain at its high mark.
+at: month
+for: met
+deals: ramp
+use: ramp
+
+# ---------------- the day's slots ----------------
+
+@appointment class
+desc: The course slot: a card from each course you're enrolled in (up to its level) and your thesis; its professor and whoever is there see you.
+at: courses
+for: course thesis
+deals: own
+use: courses
+
+@appointment festivals
+desc: A card with `replaces: visitN` and a `place:` takes that visit when you go there.
+at: visit
+deals: replaces
+takes: visit
+use: festival
+
+@appointment off_shift
+desc: Visiting your job's place in term when you aren't working: the hint card comes first.
+at: visit
+for: job
+deals: card job_off_shift
+use: off_shift
+
+@appointment fixed
+desc: A place's `always:` cards, first on every visit, in order, while their `when` holds.
+at: visit
+deals: always
+use: always
+
+@appointment letters
+desc: Away from campus, a letter each night from the letter pool.
+at: night
+deals: trigger letter
+use: letters
+
+# ---------------- notices ----------------
+
+@appointment intro
+desc: Joining a track whose lead you haven't met: their `intro:` card, before the track's own.
+at: meet lead
+deals: intro
+use: intro
+
+@appointment start
+desc: Enrolling in a course with a `start:` card (the lesson that teaches its spell): it comes the same month.
+at: enrol
+for: course
+deals: start
+use: start
+
+@appointment exam
+desc: A term's last month: the exam card for each course you're enrolled in.
+at: term end
+for: course
+deals: card course_exam
+
+@appointment appeal
+desc: A failed course: the appeal, next month in its context.
+at: fail
+for: course
+deals: card grade_appeal
+
+@appointment warning
+desc: A club, job or thesis ending a term below 40 performance.
+at: low marks
+for: club job thesis
+deals: card track_warning
+
+@appointment review
+desc: Every job at term end, unless it was the last term: another term, or not.
+at: renewal
+for: job
+deals: card job_term_review
+
+@appointment promotion
+desc: A club, job or thesis ending a term at 70 performance with the rank's experience.
+at: promotion
+for: club job thesis
+deals: card track_promotion
+
+@appointment spark_cooldown
+desc: Spark with someone crossing the cooldown mark (not with a partner): whether you want this.
+at: spark cooldown
+for: met
+deals: card spark_cooldown

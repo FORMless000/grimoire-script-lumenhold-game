@@ -3,7 +3,7 @@ const G = require('../../src/grimoire.js');
 const { project } = require('../../tools/project.js');
 const { hash, positive } = require('./util.js');
 
-const KINDS = ['event', 'npc', 'fact', 'place', 'track', 'spell', 'faction', 'arc', 'clue', 'lore', 'timeline', 'item', 'archetype', 'vocab', 'state', 'hook'];
+const KINDS = ['event', 'npc', 'fact', 'place', 'track', 'spell', 'faction', 'arc', 'clue', 'lore', 'timeline', 'item', 'archetype', 'vocab', 'state', 'hook', 'pool', 'thread', 'cond', 'appointment'];
 const SLOTS = ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do'];
 const words = (s) => String(s || '').toLowerCase().match(/[\p{L}\p{N}_]+(?:[.'’][\p{L}\p{N}_]+)*/gu) || [];
 
@@ -45,7 +45,8 @@ function fromCompiled(content, sources) {
       for (const o of d.options || []) { prose.push(o.label); walk(o.effects, 'option:' + o.key, [expr(d.when), expr(o.when)].filter(Boolean)); }
       for (const slot of SLOTS) walk(d[slot], slot, [expr(d.when)].filter(Boolean));
       const metadata = {};
-      for (const field of ['canon', 'tier', 'actor', 'place', 'track', 'arc', 'chain', 'class', 'trigger', 'slot', 'plan', 'level', 'rank', 'specializes', 'tags', 'keys', 'voice', 'age', 'traits', 'interests', 'schedule', 'relations']) if (d[field] != null) metadata[field] = d[field];
+      for (const field of ['canon', 'tier', 'actor', 'place', 'track', 'arc', 'chain', 'class', 'trigger', 'slot', 'plan', 'level', 'rank', 'specializes', 'tags', 'keys', 'voice', 'age', 'traits', 'interests', 'schedule', 'relations', 'pool', 'pools', 'thread', 'role', 'params', 'at', 'for', 'use', 'is']) if (d[field] != null) metadata[field] = d[field];
+      if (typeof d.from === 'string') metadata.from = d.from;
       for (const field of ['when', 'unlock', 'defer', 'followed', 'discover']) if (d[field]) metadata[field] = expr(d[field]);
       if (kind === 'fact') metadata.npc = d.npc || d.id.split('.')[0];
       if (kind !== 'event') metadata.canon = d.canon || 'hard';
@@ -111,6 +112,12 @@ function fromCompiled(content, sources) {
     for (const slot of SLOTS) scanEffects(r.key, d[slot], slot, guards);
     for (const token of G.textTokens(r.prose).tokens) add(r.key, 'npc', token.split('.')[0], 'text-token', 'prose');
     // Cast role selectors contain expressions rather than fixed NPC ids.
+    // The framework (docs/grimoire-script.md §9): a card's pools and thread, what a pool or thread builds on, and the
+    // cards an appointment deals.
+    for (const id of d.pools || []) add(r.key, 'pool', id, 'in-pool', 'pool');
+    if (r.kind === 'event' && d.thread) add(r.key, content.threads[d.thread] ? 'thread' : 'arc', d.thread, 'in-thread', 'thread');
+    if ((r.kind === 'pool' || r.kind === 'thread') && typeof d.from === 'string') add(r.key, r.kind === 'pool' ? 'pool' : 'thread', d.from, 'from', 'from');
+    if (r.kind === 'appointment') { const a = content.appointments[d.id]; if (a) for (const id of G.appointmentCards(content, a)) add(r.key, 'event', id, 'deals', 'deals'); }
     if (d.cast && !Array.isArray(d.cast)) for (const role of Object.values(d.cast)) { if (role && typeof role === 'object') { scanExpr(r.key, role.where, 'cast', guards); add(r.key, 'npc', role.fixed || role.npc, 'cast', 'cast'); } }
   }
   return { version: 1, corpusHash: hash(sources.map((s) => [s.path, hash(s.text)])), records, edges, tokens };

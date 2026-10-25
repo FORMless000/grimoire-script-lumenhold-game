@@ -17,6 +17,7 @@ This file holds only the standing principles and where to look. It carries no lo
 | Whether a card is balanced | `docs/authoring/costs.md` and `classes.md` (the rules the lint checks); `node tools/grim.js balance` (invariants and alarms); `tools/economy.js --by event` (each card's flow and frequency) against the measured monthly flows in `docs/playtest-2-flows.md`; `tools/hs-funnel.js` for the main plot; `tools/exam-odds.js` for exam grades; `grim analyze` for how runs unfold month by month, per play style (`grim styles` says what each plays for) |
 | How to extend canon | `skills/distill-lore/SKILL.md` |
 | The language and the `.lang` format | `docs/grimoire-script.md` |
+| How cards are wired: pools, storylines and their templates, named conditions, when cards are dealt | `docs/grimoire-script.md` §9; which group a card joins: `docs/authoring/pools.md` ("Where a card lives"); the libraries `content/core/templates.grim`, `appointments.grim`, `conds.grim` |
 | Rules, resources, skills, hooks | `content/core/rules.grim`; tiers, presets, weights and the E(turn) curve in `content/core/balance.grim` |
 | Every tool and its options | the header of `tools/grim.js` (`node tools/grim.js` prints it); `tools/economy.js` and `tools/hs-funnel.js` for balance |
 | The combat minigame (every fight is played in it) | `combat/HANDOFF.md` (how it's wired in), `combat/README.md` (building and testing it alone); design §9.2 |
@@ -33,6 +34,7 @@ Code: `src/grimoire.js` (parser), `src/engine.js` and `src/director.js` (DOM-fre
 - Every choice trades something: no option is free or obviously best. Amounts are always tier words and presets, never raw numbers, so `@balance` stays the one place to retune.
 - Moral weight goes on `alignment` (Lumen ↔ Hollow); plot progress reads the arc (`clock(arc)`, `clues(arc)`), never a home-made counter.
 - The main plot is optional: ignoring it is a valid way to play.
+- Wiring is said once, where a group of cards shares it (a pool, a thread, a template, an appointment, a named condition), never copied onto each card. A schedule is an appointment, not engine code.
 - Never soft-lock: a menu always has an option without `when`; a card never locks both sides.
 
 **Canon and safety**
@@ -47,6 +49,7 @@ Code: `src/grimoire.js` (parser), `src/engine.js` and `src/director.js` (DOM-fre
 
 **Checks**
 - Every change passes `node tools/grim.js check`; a larger change passes `npm run verify` before you finish.
+- A refactor of content or of the format compiles to the same meaning: `grim equiv` is empty (`grim migrate` enforces it for migrations that don't declare `changesMeaning`). Converters find structure with programs (`tools/convert/`), never by reading prose.
 - `grim diff` fails when the golden games play differently. For refactors that is the point. When a change is meant to alter gameplay, confirm the diff is what you intended and refresh the baseline in the same commit (`node tools/grim.js snapshot --out test/golden/baseline.json`).
 - Simulated players are crude: `balance` catches gross errors and regressions; human playtests are the judge.
 

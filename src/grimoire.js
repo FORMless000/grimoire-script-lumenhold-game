@@ -305,6 +305,10 @@
     // assigns its cards to roles (`members:`, one `role card key=value…` per line), and its members take that role's
     // pool (`<template>.<role>`) and may call its presets (`<template>.<name>`, or just `<name>`).
     thread: { bundle: true, props: ['from', 'params', 'with', 'members', 'roles', 'default_role', 'clues', 'clock', 'name', 'desc', 'canon'], effects: [] },
+    // When cards are dealt (docs/grimoire-script.md §9): at an occasion (`at:`), for each subject (`for:`), the cards it
+    // `deals:`, while its `when` holds, by `chance:`. The library (content/core/appointments.grim) declares every
+    // occasion the game deals at; `use:` names the built-in way one of them deals (auto cards, arc beats, ramps, …).
+    appointment: { props: ['at', 'for', 'deals', 'when', 'chance', 'pick', 'slot', 'place', 'limit', 'takes', 'priority', 'use', 'desc'], effects: [] },
     ending: { props: ['title', 'text', 'art', 'scene', 'when', 'priority', 'tags', 'kind', 'slot', 'excludes'], effects: [] },
     hook: { props: ['on', 'when', 'desc', 'label'], effects: ['do'] },
     // Worldbook (design §3): data for briefs, lint and later phases. The engine doesn't play these yet.
@@ -695,6 +699,14 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
     return Object.values(content.events).filter((e) => e.trigger === 'queued' && (st.pool ? (e.pools || []).includes(st.pool) || e.thread === st.pool : (e.tags || []).includes(st.tagged)));
   }
 
+  // The cards an appointment names (`deals: card a|b`, or a pool's or thread's cards): for the tools.
+  function appointmentCards(content, a) {
+    const d = a.deals || {};
+    if (d.card) return d.card.filter((id) => content.events[id]);
+    if (d.pool) return Object.values(content.events).filter((e) => (e.pools || []).includes(d.pool) || e.thread === d.pool).map((e) => e.id);
+    return [];
+  }
+
   function walkEffects(effects, visit) {
     if (!effects) return;
     for (const st of effects) {
@@ -891,6 +903,7 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
 
   // A property's value, typed as its block kind reads it (also used for the properties a card takes from a bundle).
   function setProp(def, kind, key, text, file, line) {
+    if (kind === 'appointment' && key !== 'when') { def[key] = text.trim(); return; }   // read by finalizeAppointments
     if (STRUCT_PROPS[key] && !(key === 'skill' && kind !== 'track' && kind !== 'spell')) {
       try { def[key] = STRUCT_PROPS[key](text); } catch (e) { throw new GrimError(typeof e === 'string' ? e : e.message, file, line); }
       if (key === 'ramp') def.ramp.expr = expr(def.ramp.expr, file, line);
@@ -912,8 +925,81 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
 
   const COLLECTION = { preset: 'presets', resource: 'resources', skill: 'skills', npc: 'npcs', state: 'states', event: 'events', ending: 'endings', hook: 'hooks',
     vocab: 'vocab', place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline', item: 'items',
-    pool: 'pools', cond: 'conds', thread: 'threads' };
-  const WORLD_COLLECTIONS = ['presets', 'vocab', 'places', 'tracks', 'spells', 'facts', 'archetypes', 'factions', 'arcs', 'clues', 'lore', 'timeline', 'items', 'pools', 'conds', 'threads'];
+    pool: 'pools', cond: 'conds', thread: 'threads', appointment: 'appointments' };
+  const WORLD_COLLECTIONS = ['presets', 'vocab', 'places', 'tracks', 'spells', 'facts', 'archetypes', 'factions', 'arcs', 'clues', 'lore', 'timeline', 'items', 'pools', 'conds', 'threads', 'appointments'];
+
+  /* ---------------- appointments ---------------- */
+  // The occasions the game deals at, and who each one is for. `month`: the month's start (after queued cards);
+  // `courses`: the day's course slot; `visit`: a visit (before its drawn cards, or instead with `takes: visit`);
+  // `night`: the night slot off campus; the rest are the engine's notices, in a track's or a person's context.
+  const OCCASIONS = ['month', 'courses', 'visit', 'night', 'term end', 'fail', 'low marks', 'renewal', 'promotion', 'spark cooldown', 'meet lead', 'enrol'];
+  // Built-in ways of dealing (`use:`), and the occasion each belongs to.
+  const APPOINTMENT_USES = { auto: 'month', beats: 'month', ramp: 'month', courses: 'courses', festival: 'visit', off_shift: 'visit', always: 'visit', letters: 'night', intro: 'meet lead', start: 'enrol' };
+  // What content without a library gets: today's behaviour, in today's order (the library must match: test/framework.test.js).
+  const DEFAULT_APPOINTMENTS = [
+    ['forced', 'at: month', 'deals: trigger auto', 'use: auto'],
+    ['beats', 'at: month', 'deals: beats', 'limit: plot', 'use: beats'],
+    ['milestones', 'at: month', 'for: met', 'deals: ramp', 'use: ramp'],
+    ['class', 'at: courses', 'for: course thesis', 'deals: own', 'use: courses'],
+    ['festivals', 'at: visit', 'deals: replaces', 'takes: visit', 'use: festival'],
+    ['off_shift', 'at: visit', 'for: job', 'deals: card', 'use: off_shift'],
+    ['fixed', 'at: visit', 'deals: always', 'use: always'],
+    ['letters', 'at: night', 'deals: trigger letter', 'use: letters'],
+    ['intro', 'at: meet lead', 'deals: intro', 'use: intro'],
+    ['start', 'at: enrol', 'for: course', 'deals: start', 'use: start'],
+    ['exam', 'at: term end', 'for: course', 'deals: card'],
+    ['appeal', 'at: fail', 'for: course', 'deals: card'],
+    ['warning', 'at: low marks', 'for: club job thesis', 'deals: card track_warning'],
+    ['review', 'at: renewal', 'for: job', 'deals: card job_term_review'],
+    ['promotion', 'at: promotion', 'for: club job thesis', 'deals: card track_promotion'],
+    ['spark_cooldown', 'at: spark cooldown', 'for: met', 'deals: card'],
+  ];
+  // `@game exam: x` (schema v1) is the same as `deals: card x` on the exam appointment; likewise appeal, off_shift and
+  // spark_cooldown. Compiled content keeps both, so readers of either agree.
+  const GAME_APPOINTMENTS = ['exam', 'appeal', 'off_shift', 'spark_cooldown'];
+
+  function finalizeAppointments(content, errors) {
+    const fail = (msg, a) => errors.push(new GrimError('@appointment ' + a.id + ': ' + msg, a.file, a.line));
+    const declared = content.appointments, out = {};
+    for (const [id, ...props] of DEFAULT_APPOINTMENTS) if (!declared[id]) {
+      const d = { block: 'appointment', id, builtin: true };
+      for (const p of props) { const m = p.match(/^(\w+): (.*)$/); d[m[1]] = m[2]; }
+      declared[id] = d;
+    }
+    for (const a of Object.values(declared)) {
+      const r = { block: 'appointment', id: a.id, file: a.file, line: a.line, desc: a.desc, builtin: !!a.builtin, when: a.when || null };
+      const at = String(a.at || '').trim().replace(/\s+/g, ' ');
+      if (!OCCASIONS.includes(at)) { fail('at: one of ' + OCCASIONS.join(', ') + ', got "' + at + '"', a); continue; }
+      r.at = at;
+      r.for = String(a.for || '').split(/[\s,]+/).filter(Boolean);
+      if (a.place) r.place = a.place;
+      if (a.slot) r.slot = a.slot;
+      if (a.limit) { if (a.limit !== 'plot') fail('limit: only "plot" (the month\'s plot cards), got "' + a.limit + '"', a); r.limit = a.limit; }
+      if (a.takes) { if (a.takes !== 'visit') fail('takes: only "visit", got "' + a.takes + '"', a); r.takes = true; }
+      if (a.pick) { if (!['one', 'each'].includes(a.pick)) fail('pick: one or each, got "' + a.pick + '"', a); r.pick = a.pick; }
+      if (a.priority != null) { r.priority = Number(a.priority); if (!isFinite(r.priority)) fail('priority: a number, got "' + a.priority + '"', a); }
+      if (a.chance) {
+        const m = a.chance.match(/^(\d+)%$/);
+        if (m) r.chance = { p: Number(m[1]) }; else if (ODDS_WORDS.includes(a.chance)) r.chance = { word: a.chance }; else fail('chance: a likelihood word (' + ODDS_WORDS.join(', ') + ') or N%, got "' + a.chance + '"', a);
+      }
+      if (a.use) { if (APPOINTMENT_USES[a.use] !== at) fail('use: ' + a.use + ' is not a built-in way of dealing at ' + at + ' (' + Object.entries(APPOINTMENT_USES).filter(([, o]) => o === at).map(([k]) => k).join(', ') + ')', a); r.use = a.use; }
+      const w = String(a.deals || '').split(/[\s|]+/).filter(Boolean);
+      if (w[0] === 'card') r.deals = { card: w.slice(1) };
+      else if (w[0] === 'pool' && w.length === 2) r.deals = { pool: w[1] };
+      else if (w[0] === 'trigger' && w.length === 2) r.deals = { trigger: w[1] };
+      else if (w.length === 1 && (w[0] === 'own' || r.use)) r.deals = { [w[0]]: true };
+      else { fail('deals: card <id>[|<id>…], pool <id>, trigger <t> or own, got "' + (a.deals || '') + '"', a); continue; }
+      out[a.id] = r;
+    }
+    content.appointments = out;
+    for (const k of GAME_APPOINTMENTS) {
+      const r = out[k]; if (!r) continue;
+      const g = content.game[k];
+      if (g && r.deals.card && r.deals.card.length && !r.deals.card.includes(g)) errors.push(new GrimError('@game ' + k + ': ' + g + ' but @appointment ' + k + ' deals ' + r.deals.card.join('|') + ' (they are the same thing: keep one)', r.file || 'content/core/rules.grim', r.line || 1));
+      if (g && r.deals.card && !r.deals.card.length) r.deals.card = [g];
+      if (!g && r.deals.card && r.deals.card.length) content.game[k] = r.deals.card[0];
+    }
+  }
 
   // sources: [{path, text}] -> {content, errors}
   function compile(sources) {
@@ -949,6 +1035,7 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
     expandPresets(content, errors, envs);
     reportUnresolved(content, errors);
     for (const e of Object.values(content.events)) finalizeEvent(e, errors);
+    finalizeAppointments(content, errors);
     if (content.game.calendar && content.game.calendar.length !== (content.game.months || []).length && content.game.months) errors.push(new GrimError('@game calendar must cover every month', 'content/core/rules.grim', 1));
     return { content, errors };
   }
@@ -1230,5 +1317,5 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
 
   // `@place always: a b|c` (feedback 2026-10-16): the place's fixed cards in order; `|` makes a group that plays one.
   const alwaysGroups = (t) => String(t || '').split(/\s+/).filter(Boolean).map((g) => g.split('|').filter(Boolean));
-  return { alwaysGroups, textTokens, parseFile, compile, expr, BUNDLE_PROPS, CONDS, parseExprAst, walkAst, walkEffects, deckOf, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES, CHALLENGE_KINDS, MINIGAME_KINDS, ITEM_SLOTS, WORN_GROUPS, RANKS, RUNG_RE, ODDS_WORDS, SWINGS, DRIFTS, isLadderTier };
+  return { alwaysGroups, textTokens, parseFile, compile, expr, BUNDLE_PROPS, CONDS, parseExprAst, walkAst, walkEffects, deckOf, appointmentCards, GrimError, SCHEMA, OCCASIONS, APPOINTMENT_USES, DEFAULT_APPOINTMENTS, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES, CHALLENGE_KINDS, MINIGAME_KINDS, ITEM_SLOTS, WORN_GROUPS, RANKS, RUNG_RE, ODDS_WORDS, SWINGS, DRIFTS, isLadderTier };
 });

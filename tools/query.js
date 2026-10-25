@@ -11,10 +11,10 @@
 'use strict';
 const G = require('../src/grimoire.js');
 
-const BLOCKS = ['event', 'state', 'npc', 'ending', 'hook', 'resource', 'skill', 'place', 'track', 'spell', 'fact', 'archetype', 'faction', 'arc', 'clue', 'lore', 'timeline', 'vocab', 'item'];
+const BLOCKS = ['event', 'state', 'npc', 'ending', 'hook', 'resource', 'skill', 'place', 'track', 'spell', 'fact', 'archetype', 'faction', 'arc', 'clue', 'lore', 'timeline', 'vocab', 'item', 'pool', 'thread', 'cond', 'appointment'];
 const STATEMENTS = ['say', 'if', 'chance', 'challenge', 'sit_exam', 'wage', 'coursework', 'flag', 'unflag', 'gain', 'lose', 'queue', 'rel', 'spark', 'npc_rel', 'cool', 'visit', 'learn', 'learn_spell', 'give', 'take', 'regrade', 'bond', 'meet', 'end', 'delta', 'assign'];
 const COLLECTIONS = { event: 'events', state: 'states', npc: 'npcs', ending: 'endings', hook: 'hooks', resource: 'resources', skill: 'skills',
-  place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline', vocab: 'vocab', item: 'items' };
+  place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline', vocab: 'vocab', item: 'items', pool: 'pools', thread: 'threads', cond: 'conds', appointment: 'appointments' };
 const EFFECT_SLOTS = ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero'];
 
 // Documented per node kind (printed by `grim query --fields`).
@@ -97,7 +97,7 @@ function statementFields(st) {
 function blockFields(kind, d) {
   const base = { id: d.id };
   switch (kind) {
-    case 'event': return { ...base, title: d.title, text_len: (d.text || '').length, trigger: d.trigger, type: d.type, actor: d.actor || null, weight: d.weight ? constant(d.weight) : 10, weight_src: d.weight ? d.weight.src : null, repeat: d.repeat || 0, priority: d.priority == null ? null : d.priority, chain: d.chain || null, when_src: d.when ? d.when.src : null, defer_src: d.defer ? d.defer.src : null, options: d.options.length, class: d.class || null, tone: d.tone || null, track: d.track || null, level: d.level || null, rank: d.rank || null, place: d.place || null, plan: d.plan || null, slot: d.slot || null, per: d.per || null, arc: d.arc || null, beat: d.beat == null ? null : d.beat, specializes: d.specializes || null };
+    case 'event': return { ...base, title: d.title, text_len: (d.text || '').length, trigger: d.trigger, type: d.type, actor: d.actor || null, weight: d.weight ? constant(d.weight) : 10, weight_src: d.weight ? d.weight.src : null, repeat: d.repeat || 0, priority: d.priority == null ? null : d.priority, chain: d.chain || null, when_src: d.when ? d.when.src : null, defer_src: d.defer ? d.defer.src : null, options: d.options.length, class: d.class || null, tone: d.tone || null, track: d.track || null, level: d.level || null, rank: d.rank || null, place: d.place || null, plan: d.plan || null, slot: d.slot || null, per: d.per || null, arc: d.arc || null, beat: d.beat == null ? null : d.beat, specializes: d.specializes || null, pool: d.pool || null, pools: (d.pools || []).join(' ') || null, thread: d.thread || null, role: d.role || null };
     case 'state': return { ...base, name: d.name, kind: d.kind || null, group: d.group || null, duration: d.duration == null ? null : d.duration, hidden: !!d.hidden, deprecated: !!d.deprecated, day_visits: d.day ? d.day.filter((r) => r.source === 'visit').length : null };
     case 'npc': return { ...base, name: d.name, romance: !!d.romance, start_rel: d.start_rel || 0 };
     case 'ending': return { ...base, title: d.title, kind: d.kind || null, priority: d.priority || 0, when_src: d.when ? d.when.src : null };
@@ -111,6 +111,10 @@ function blockFields(kind, d) {
     case 'lore': return { ...base, canon: d.canon || null, keys: (d.keys || []).join(', '), text: d.text, len: (d.text || '').length };
     case 'clue': return { ...base, name: d.name || null, arc: d.arc || null, kind: d.kind || 'clue', text: d.text, len: (d.text || '').length };
     case 'item': return { ...base, name: d.name, slot: d.slot, price: d.price || null, start: !!d.start, legacy_src: d.legacy ? d.legacy.src : null, bound: !!d.bound, worn: !!d.worn };
+    case 'pool': return { ...base, from: d.from || null, gives: Object.keys(d.props || {}).join(' ') };
+    case 'thread': return { ...base, from: d.from || null, template: !!(d.params || d.roles), members: (d.members || []).length, clues: (d.clues || []).join(' ') || null, clock: !!d.clock };
+    case 'cond': return { ...base, params: (d.params || []).join(' '), is: d.is };
+    case 'appointment': return { ...base, at: d.at, for: (d.for || []).join(' ') || null, deals: Object.keys(d.deals || {})[0] || null, use: d.use || null, when_src: d.when ? d.when.src : null, builtin: !!d.builtin };
     case 'arc': case 'faction': case 'archetype': case 'timeline': case 'vocab': return { ...base, name: d.name || null, canon: d.canon || null, kind: d.kind || null, date: d.date || null, event: d.event || null };
   }
   return base;

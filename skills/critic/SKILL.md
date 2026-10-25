@@ -78,6 +78,7 @@ For every event, ask the questions below. Write down an issue only when you can 
 **Gating**
 - `when`, `level:`, `rank:`, `place:` and `plan:` make sense together: a club-practice event isn't gated to a place the club doesn't use, and a level-3 class doesn't read like a first lesson.
 - Flags read are set somewhere, and queued events are queued by something.
+- Read a card with what its group gives it: `grim show <id>` prints the compiled card and where each property came from (its `pool:`, its `thread:` and a template's role). Wiring belongs to the group (`docs/authoring/pools.md`, "Where a card lives"): a card that copies its pool's or thread's lines, a storyline wired card by card where a template fits (`story`, `quest`, `scene`), or a schedule faked with a tricky `when` instead of an `@appointment` is a fix to raise.
 
 **Duplication**
 - Was `retrieve related` run on each new card (or the skip justified), and do its top hits differ in premise, options and punchline? A repeated premise is a blocking issue. Re-run `npm run grim -- retrieve related --draft <file>` on any card you doubt (`rag/AUTHORING.md`).

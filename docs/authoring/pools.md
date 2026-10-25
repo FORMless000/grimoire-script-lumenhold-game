@@ -28,7 +28,7 @@ text: {The courtyard fountain is taking wishes again.|The fountain again. Someon
   say: {You spend the minute reading the old runes on the rim instead.|A second-year tells you the runes say "No refunds". They probably do.|You know the runes by heart now. You still don't know what the hum is.}
 ```
 
-- **Required:** `title`, `text`, `art` (see `src/art.js`), `tags`, `scene`, `class: routine`, `tone:` (light, warm, tense, grim, eerie) and `repeat:` (4–6, the cooldown in months). Then one draw field:
+- **Required:** `title`, `text`, `art` (see `src/art.js`), `tags`, `scene`, `class: routine`, `tone:` (light, warm, tense, grim, eerie) and `repeat:` (4–6, the cooldown in months), written on the card or given by its `pool:` (below, "Where a card lives"). Then one draw field:
   - `place:` for a map visit;
   - `track:` with `level:` for course mornings;
   - `track:` with `rank:` for club practice and job shifts;
@@ -41,6 +41,29 @@ text: {The courtyard fountain is taking wishes again.|The fountain again. Someon
   - a fixed npc.
 
   An event whose cast can't be filled is skipped. So **at least two of each source's events have no cast**, or the pool comes up empty.
+
+## Where a card lives
+
+Wiring is said once, where a group of cards shares it, not on every card (`docs/grimoire-script.md` §9). Before writing a card, find its group: `node tools/grim.js brief --place <id>` / `--track <id>` lists the cards there, and `grim show <id>` prints where each of a card's properties comes from. A card's own line always wins over its pool's.
+
+| The card is… | It says | Where the rest lives |
+|---|---|---|
+| a place's routine | `pool: <place>_routine` | the `@pool` beside the place's other cards (`place:`, `class: routine`, `repeat:`, `weight:`); none yet, write `place:` and the knobs on the card |
+| a course morning | `pool: <course>_class`, `level:` | the course's pool, `from: course_routine` (`content/core/templates.grim`); the `class` appointment deals it |
+| club practice, a job shift | `pool:` the track's pool, `rank:` | the track's pool; dealt when you visit the track's place |
+| a break morning | `pool:` the plan's pool | the plan's pool (`plan:`) |
+| a forced card (calendar, menus) | `trigger: auto`, a tight `when:`, `repeat:` | the `forced` appointment deals it whenever `when` holds |
+| a fixed card at a place | the place's `always:` lists it | the `fixed` appointment |
+| something on a schedule (a market day, a weekly hour) | `pool: <its pool>` | an `@appointment` (`at: month` or `at: visit`, `when:`, `chance:`, `deals: pool …`), no engine code |
+| a relationship card | `actor:` or a `cast:` with `per:`, `trigger: social` | the character's pool or the file's social pool; named conditions such as `courting(x)` in `content/core/conds.grim` |
+| a relationship milestone | `ramp: rel(npc) 18..30` | the `milestones` appointment |
+| a mini-plot (a bespoke storyline) | `thread: <id>` | `@thread <id>`, `from: story`, `with: begun=flag(<what the start card sets>)`, `members: start <card>`; steps wait on it without repeating the test |
+| a club or job capstone (start, preparations, a spell) | `thread: <spell>_quest`; a part's working option ends `next` | `@thread … from: quest` with `with: begun=<flag>`, `members:` (`start`, `part … flag=…`, `final`) |
+| a scene (cards in one sitting: a delve, a party) | `thread: <scene>`; a step ends `next` | `@thread <scene>`, `from: scene`; whatever starts it does `queue any in <scene> now` |
+| the main plot | `thread: hollowstar` (an arc) | `@arc`: its `beat:` cards are dealt by `beats`, one plot card a month |
+| a follow-up | `trigger: queued` | the card that queues it (`queue x in 2`, `queue x now`) |
+
+A new storyline of a shape that already exists takes the template: an eighth capstone is a `@thread … from: quest` block and five cards of prose. A shape that comes up three times is worth a template of its own in `templates.grim`.
 
 ## Making repeats read differently (required)
 

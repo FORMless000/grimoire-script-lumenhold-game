@@ -14,7 +14,7 @@ This folder is the single source for how Lumenhold content is made (design §3.5
 | `examples/*.grim` | annotated exemplar events |
 | `briefs/*.md` | sample briefs (`grim brief` output) |
 
-The language reference stays `docs/grimoire-script.md`; canon lives only in the worldbook, `content/world/` (AGENTS.md carries no lore).
+The language reference stays `docs/grimoire-script.md`; canon lives only in the worldbook, `content/world/` (AGENTS.md carries no lore). How cards are wired (pools, threads and their templates, named conditions, appointments) is its §9; which group a new card joins is `pools.md`, "Where a card lives". The libraries are `content/core/templates.grim` (story, quest, scene; pool templates), `content/core/appointments.grim` (when the game deals cards) and `content/core/conds.grim`.
 
 ## Who writes content
 
@@ -48,7 +48,7 @@ node tools/grim.js brief --place library --track library_assistant --topic "…"
 node tools/grim.js brief --like soc_argument,life_timeloop_2 --topic "…"         # the named cards in full (the chain you extend, a shape you copy)
 node tools/grim.js query event 'place == "library"' --fields                     # everything matching a condition
 node tools/grim.js query event --grep goat                                       # by premise
-node tools/grim.js show <id>                                                     # a block and everything that references it
+node tools/grim.js show <id>                                                     # a block, where its properties come from, and everything that references it
 node tools/grim.js graph <id>                                                    # who leads to it (queues, gates) and what it leads to
 node tools/grim.js dupes content/events/pools/<file>.grim                        # near-duplicate premises
 node tools/economy.js --by event --freq                                          # how often cards show and what they move

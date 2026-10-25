@@ -447,14 +447,19 @@ function analyze(content) {
   for (const [s, ws] of Object.entries(A.statesRef)) if (!content.states[s]) P('error', ws[0], 'unknown state "' + s + '"');
   for (const [n, ws] of Object.entries(A.npcsRef)) if (!content.npcs[n]) P('error', ws[0], 'unknown npc "' + n + '"');
   for (const [ev, ws] of Object.entries(A.eventsRef)) if (!content.events[ev]) P('error', ws[0], 'unknown event "' + ev + '"');
-  // The engine itself queues these at term end (design §6.2).
-  for (const id of ['track_warning', 'track_promotion', 'job_term_review'].concat(content.game.spark_cooldown ? [content.game.spark_cooldown] : [])) A.queued[id] = A.queued[id] || ['engine'];
-  // The exam card (`@game exam:`) is pushed by the engine for each enrolled course (M4).
-  if (content.game.exam) A.queued[content.game.exam] = A.queued[content.game.exam] || ['engine'];
-  // The off-shift hint (`@game off_shift:`, I1) is pushed by the director on a job visit after the term's last shift.
-  if (content.game.off_shift) A.queued[content.game.off_shift] = A.queued[content.game.off_shift] || ['engine'];
-  // The appeal card (`@game appeal:`, N4) after a failed course, and a track's `intro:` card when you join it (N1).
-  if (content.game.appeal) A.queued[content.game.appeal] = A.queued[content.game.appeal] || ['engine'];
+  // Appointments (content/core/appointments.grim) deal their cards: the exam, the appeal, the track notices, the
+  // off-shift hint, and any other; a track's `intro:` card when you join it (N1) and its `start:` card.
+  const kinds = new Set(Object.values(content.tracks).map((t) => t.kind).concat('met'));
+  for (const a of Object.values(content.appointments || {})) {
+    const at = a.file ? a.file + ':' + a.line : 'content/core/appointments.grim';
+    for (const id of (a.deals && a.deals.card) || []) if (!content.events[id] && !a.builtin) P('error', at, '@appointment ' + a.id + ': unknown event "' + id + '"');
+    if (a.deals && a.deals.pool && !content.pools[a.deals.pool] && !content.threads[a.deals.pool]) P('error', at, '@appointment ' + a.id + ': no @pool or @thread "' + a.deals.pool + '"');
+    if (a.deals && a.deals.pool && !G.appointmentCards(content, a).length) P('warn', at, '@appointment ' + a.id + ': pool ' + a.deals.pool + ' has no cards');
+    for (const k of a.for || []) if (!kinds.has(k)) P('error', at, '@appointment ' + a.id + ': for: unknown track kind "' + k + '" (or met)');
+    if (!a.use && ['night', 'meet lead', 'enrol'].includes(a.at)) P('error', at, '@appointment ' + a.id + ': at: ' + a.at + ' has only its built-in appointment');
+    if (a.place && !content.places[a.place]) P('error', at, '@appointment ' + a.id + ': unknown place "' + a.place + '"');
+    for (const id of G.appointmentCards(content, a)) A.queued[id] = A.queued[id] || ['appointment ' + a.id];
+  }
   for (const d of Object.values(content.tracks)) if (d.intro) A.queued[d.intro] = A.queued[d.intro] || ['track ' + d.id];
   for (const d of Object.values(content.tracks)) if (d.start) A.queued[d.start] = A.queued[d.start] || ['track ' + d.id + ' start'];
   for (const k of ['appeal', 'off_shift', 'exam', 'spark_cooldown']) if (content.game[k] && !content.events[content.game[k]]) P('error', 'content/core/rules.grim', '@game ' + k + ': unknown event "' + content.game[k] + '"');
@@ -1624,11 +1629,18 @@ function stats() {
 function show(id) {
   const { content, sources } = compileAll();
   let found = false;
-  for (const k of ['events', 'states', 'npcs', 'endings', 'hooks', 'resources', 'skills']) {
+  for (const k of ['events', 'states', 'npcs', 'endings', 'hooks', 'resources', 'skills', 'pools', 'threads', 'conds', 'appointments']) {
     const d = content[k][id]; if (!d) continue; found = true;
     const src = sources.find((s) => s.path === d.file).text.split('\n');
     let end = d.line; while (end < src.length && !src[end].startsWith('@')) end++;
     console.log(C.b + d.file + ':' + d.line + C.x + '\n' + src.slice(d.line - 1, end).join('\n').trimEnd());
+    // What the card's groups give it (docs/grimoire-script.md §9), and the appointments that deal it.
+    if (k === 'events' && (d.from || d.pools || d.thread)) {
+      const from = Object.entries(d.from || {});
+      console.log(C.b + '\nwiring:' + C.x + (d.pools ? '  pools ' + d.pools.join(' → ') : '') + (d.thread ? '  thread ' + d.thread + (d.role ? ' (' + d.role + ')' : '') : ''));
+      for (const [key, by] of from) console.log('  ' + key.padEnd(10) + (key === 'when' ? d.when.src : Array.isArray(d[key]) ? d[key].join(' ') : d[key] && d[key].src != null ? d[key].src : JSON.stringify(d[key])).padEnd(60) + ' ← ' + by);
+    }
+    if (k === 'events') for (const a of Object.values(content.appointments || {})) if (G.appointmentCards(content, a).includes(id)) console.log(C.b + '\ndealt by:' + C.x + ' appointment ' + a.id + ' (at ' + a.at + ')');
     const kind = k.slice(0, -1), v = variantsByBlock(I18n.extract(content).filter((x) => x.block === kind + ':' + id))[kind + ':' + id];
     if (v) console.log(C.b + '\nvariation:' + C.x + '\n' + Object.entries(v).map(([key, g]) => '  ' + key.padEnd(24) + g.join(', ')).join('\n'));
   }

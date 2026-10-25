@@ -255,6 +255,19 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `name` | text |  |
 |  | `desc` | text |  |
 |  | `canon` | text |  |
+| `@appointment id` | `at` | text |  |
+|  | `for` | text |  |
+|  | `deals` | text |  |
+|  | `when` | expression |  |
+|  | `chance` | text |  |
+|  | `pick` | text |  |
+|  | `slot` | text |  |
+|  | `place` | text |  |
+|  | `limit` | text |  |
+|  | `takes` | text |  |
+|  | `priority` | number |  |
+|  | `use` | text |  |
+|  | `desc` | text |  |
 | `@ending id` | `title` | text | yes |
 |  | `text` | text | yes |
 |  | `art` | text |  |

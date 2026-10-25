@@ -61,9 +61,10 @@ function build(content) {
     for (const r of reads(b, content)) (read[r.token] = read[r.token] || []).push({ to: b, ...r });
   }
   // The engine pushes these by name (@game) or by trigger.
-  const engineRefs = { exam: 'pushed for each enrolled course in a term\'s last month', off_shift: 'pushed on the first visit after a term\'s last shift', appeal: 'pushed after a failed course', spark_cooldown: 'pushed when spark crosses the cooldown mark', origins: 'the origin screen' };
-  for (const [k, why] of Object.entries(engineRefs)) if (content.game[k]) (prod['event:' + content.game[k]] = prod['event:' + content.game[k]] || []).push({ from: { kind: 'engine', id: '@game ' + k }, via: why, note: '' });
-  for (const id of ['track_warning', 'track_promotion', 'job_term_review']) (prod['event:' + id] = prod['event:' + id] || []).push({ from: { kind: 'engine', id: 'term end' }, via: 'track notice', note: '' });
+  if (content.game.origins) (prod['event:' + content.game.origins] = prod['event:' + content.game.origins] || []).push({ from: { kind: 'engine', id: '@game origins' }, via: 'the origin screen', note: '' });
+  // Appointments deal the cards they name (content/core/appointments.grim).
+  for (const a of Object.values(content.appointments || {})) for (const id of G.appointmentCards(content, a))
+    (prod['event:' + id] = prod['event:' + id] || []).push({ from: { kind: 'appointment', id: a.id }, via: 'at ' + a.at + (a.for && a.for.length ? ', for ' + a.for.join(' ') : ''), note: a.desc || '' });
   return { blocks, by, prod, read };
 }
 

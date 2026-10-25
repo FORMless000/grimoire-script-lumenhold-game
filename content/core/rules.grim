@@ -28,13 +28,8 @@ spread: social world
 # The origin is picked in the mirror (choose_origin, a menu whose options are the origins): in the game, during the
 # prologue before month 1 (newGame `prologue`); tools and tests pass it to newGame instead.
 origins: choose_origin
-# Exams are cards (playtest 2, M4): this one is pushed for each enrolled course in a term's last month.
-exam: course_exam
-# A failed course pushes this card in the course's context (playtest 2, N4): a won appeal turns the F into a C.
-appeal: grade_appeal
-spark_cooldown: spark_cooldown
-# A job is a fixed number of shifts a term (playtest 2, I1): this card is pushed on the first visit after the last one.
-off_shift: job_off_shift
+# The exam, the appeal, the off-shift hint and the spark-cooldown card are dealt by their appointments
+# (content/core/appointments.grim).
 # An option that charges crowns up front is locked when you can't pay (review fixes), unless every option would be.
 afford: gold
 # The term-time map; a break plan's `map_id:` replaces it (home, or the internship host's).
