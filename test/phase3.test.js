@@ -6,10 +6,8 @@ const G = require('../src/grimoire.js');
 const Engine = require('../src/engine.js');
 const Policies = require('../tools/policies.js');
 const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { ROOT, content, quiet } = require('./helpers.js');
 
-const { content } = project(ROOT).compileAll();
-const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
 const runLines = (eng, lines) => { const d = G.parseFile('@hook t\non: month_end\ndo:\n  ' + lines.join('\n  '), 't'); const ctx = eng.newCtx(null); eng.run(d[0].do, ctx); return ctx; };
 const expr = (src) => G.expr(src, 'test', 1);
 

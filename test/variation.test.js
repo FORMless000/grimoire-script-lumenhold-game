@@ -4,9 +4,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const Engine = require('../src/engine.js');
 const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { ROOT, content } = require('./helpers.js');
 
-const { content } = project(ROOT).compileAll();
 
 test('random groups of one card pick the same position', () => {
   const e = new Engine(content);

@@ -39,11 +39,11 @@ test('fmt: refuses files that do not parse', () => {
 
 test('query: rows, where-expressions, missing fields never match', () => {
   const { content } = project(path.join(__dirname, 'fixtures', 'mini')).compileAll();
-  const checks = Query.select(content, { node: 'check', where: null });
-  assert.equal(checks.length, 1);
-  assert.equal(checks[0].skill, 'lore');
-  assert.equal(checks[0].dc, null, 'dc depends on state');
-  assert.equal(Query.select(content, { node: 'check', where: 'dc < 100' }).length, 0, 'non-constant dc never compares true');
+  const rolls = Query.select(content, { node: 'chance', where: null });
+  assert.equal(rolls.length, 1);
+  assert.equal(rolls[0].p_src, '10 + rel(lyra) / 10');
+  assert.equal(rolls[0].p, null, 'p depends on state');
+  assert.equal(Query.select(content, { node: 'chance', where: 'p < 100' }).length, 0, 'non-constant p never compares true');
   assert.equal(Query.select(content, { node: 'delta', where: 'name == "gold" and amount < 0' }).length, 1);
   assert.equal(Query.select(content, { node: 'event', where: 'has(social)' })[0].id, 'lyra_meet');
   assert.throws(() => Query.select(content, { node: 'widget' }), /unknown node kind/);
@@ -84,7 +84,7 @@ test('rename npc: code, tokens, headers and translations; prose untouched', () =
   assert.match(ev, /"Lyra" is written/, 'prose kept');
   assert.match(ev, /Ask about lyra$/m, 'label prose kept');
   assert.match(ev, /flag lyra_seen/, 'other ids with the same prefix kept');
-  assert.match(ev, /check lore 10 \+ rel\(lyra_vane\) \/ 10:/);
+  assert.match(ev, /chance 10 \+ rel\(lyra_vane\) \/ 10:/);
   assert.match(ev, /\{lyra_vane\.their\}/);
   assert.match(ev, /if has\(lyra_seen\) and bond\(lyra_vane\) == "none":/);
   assert.match(read(dir, 'content/core/rules.grim'), /^@npc lyra_vane$/m);

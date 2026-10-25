@@ -5,10 +5,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('path');
 const Engine = require('../src/engine.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { ROOT, content, quiet } = require('./helpers.js');
 
-const { content } = project(ROOT).compileAll();
 const roster = () => import(path.join(ROOT, 'combat/setup/roster.mjs'));
 const SKILLS = ['arcana', 'lore', 'alchemy', 'charm', 'vigor', 'guile'];
 
@@ -43,7 +41,6 @@ const Bridge = require('../src/combat.js');
 const CombatSim = require('../tools/combat-sim.js');
 const Policies = require('../tools/policies.js');
 const G = require('../src/grimoire.js');
-const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
 function fresh(seed = 3) { const eng = new Engine(content); quiet(() => eng.newGame({ seed, name: 'Test' })); return eng; }
 function show(eng, id, actor) { eng.s.cur = null; eng.s.deck.unshift({ id, actor: actor || null, src: 'test', force: true }); const r = eng.advance(); assert.equal(r.kind, 'card'); assert.equal(r.view.id, id); return r.view; }
 const result = (req, outcome, reason, deltas = {}) => ({ request: req.id, outcome, reason, deltas, followUps: [], foe: { id: 'x', level: 3 }, exchanges: 4, rules: 'test' });
@@ -191,4 +188,47 @@ test('combat: zh-CN translates every fight string, and a fight told in it has no
       }
     }
   } finally { C.useText(null); }
+});
+
+// Feedback 2026-10-25: the intro's lesson. Its foe once had too little Mana for its scripted Flame (it struck instead, and
+// its Refocus took back nothing), and after the script it searched, so a seen Impulse met a Parry until the fight stalled.
+// Played as the coach says, every scripted move plays as written, its Refocus takes back flux, and its drill (EVENTS
+// `loop`) leaves openings: the fight ends in a knockout well before the quiet rule.
+test('combat: the intro lesson plays its script as written, then a drill that ends in a knockout', () => {
+  const C = Bridge.combat(); C.initSync();
+  const eng = fresh(7);
+  let req = null;
+  quiet(() => {
+    for (let i = 0; i < 80 && !req; i++) {
+      const r = eng.advance();
+      if (r.kind === 'map') { eng.pickPlaces(null); continue; }
+      if (r.kind !== 'card') continue;
+      if (r.view.id === 'intro_practice_circle') { req = eng.fightAhead('right'); break; }
+      eng.choose(r.view.options.find((o) => o.key === 'right' && !o.disabled) ? 'right' : r.view.options.filter((o) => !o.disabled)[0].key);
+    }
+  });
+  assert.ok(req, 'the lesson card comes');
+  const f = Bridge.createFight(req), s = f.state, script = f.setting.script;
+  assert.ok(script.length && f.setting.loop.length, 'a script and a drill');
+  const coached = ['strike', 'guard', 'ward', 'reclaim', 'strike'], played = [];
+  let refocused = 0;
+  for (let n = 0; !s.result && n < 200; n++) {
+    const side = C.actorToMove(s), r = s.round;
+    if (side === 1) {
+      const id = Bridge.scriptedMove(f);
+      assert.ok(id, 'the foe never searches (exchange ' + r + ')');
+      if (r <= script.length) assert.equal(id, script[r - 1] === 'idle' ? 'cancel' : script[r - 1], 'exchange ' + r + ' as scripted');
+      if (id === 'reclaim') refocused += s.actors[1].flux;
+      played.push(id);
+      C.applyChoice(s, id);
+    } else {
+      const legal = C.legalActions(s), want = coached[r - 1] || (s.pending[1] === 'flame' ? 'ward' : 'strike');
+      C.applyChoice(s, legal.includes(want) ? want : 'strike');
+    }
+  }
+  assert.equal(s.result && s.result.reason, 'knockout');
+  assert.equal(s.result.winner, 0);
+  assert.ok(s.round <= 16, 'over in ' + s.round + ' exchanges');
+  assert.ok(played.filter((id) => id === 'flame').length >= 2, 'its Flame comes again in the drill');
+  assert.ok(refocused > 0, 'its Refocus takes back flux');
 });

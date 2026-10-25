@@ -13,7 +13,17 @@ function tempProject() {
   process.on('exit', () => { try { fs.rmSync(dir, { recursive: true, force: true }); } catch (e) { /* ignore */ } });
   return dir;
 }
+// The real content, compiled once per test file on first use.
+let compiled = null;
+const compileContent = () => (compiled = compiled || require('../tools/project.js').project(ROOT).compileAll());
+// Runs fn with the engine's warnings muted (`silent` mutes console.log too).
+const mute = (keys) => (fn) => { const was = keys.map((k) => console[k]); keys.forEach((k) => { console[k] = () => {}; }); try { return fn(); } finally { keys.forEach((k, i) => { console[k] = was[i]; }); } };
+const quiet = mute(['warn']), silent = mute(['warn', 'log']);
 const read = (dir, f) => fs.readFileSync(path.join(dir, f), 'utf8');
 const write = (dir, f, text) => { fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true }); fs.writeFileSync(path.join(dir, f), text); };
 
-module.exports = { ROOT, FIXTURE, tempProject, read, write };
+module.exports = {
+  ROOT, FIXTURE, tempProject, read, write, quiet, silent, compileContent,
+  get content() { return compileContent().content; },
+  get sources() { return compileContent().sources; },
+};

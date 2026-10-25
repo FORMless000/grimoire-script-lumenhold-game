@@ -79,7 +79,7 @@
         else ix.ambient.push(e);
         // One character's own cards (design §5.5) also go on that character's track: drawn when you meet them at a place
         // or when they come looking for you, outside the shared pools' competition.
-        if (!e.place && !track && !e.plan && e.actor && e.actor !== 'any' && e.actor !== 'npc' && c.npcs[e.actor]) (ix.personal[e.actor] = ix.personal[e.actor] || []).push(e);
+        if (!e.place && !track && !e.plan && e.actor && e.actor !== 'npc' && c.npcs[e.actor]) (ix.personal[e.actor] = ix.personal[e.actor] || []).push(e);
       }
       return (this._dir = ix);
     },
@@ -264,7 +264,6 @@
     // Cards with one character: their own events, and generic social events cast with them in the `per:` role.
     boundCandidates(e, id) {
       if (e.actor === id) return this.candidates(e);
-      if (e.actor === 'any') return this.candidates(e).filter((c) => c.actor === id).map((c) => Object.assign(c, { w: e.weight ? this.value(e.weight, id, 10) : 10 }));
       if (e.cast && e.per) {
         if (!this.eligibleFor(e, id)) return [];
         const cast = this.fillCast(e, { [e.per]: id }); if (!cast) return [];
@@ -276,7 +275,7 @@
     // `letters`: only letter cards (M19): someone who reaches you while one of you is away writes instead.
     drawWith(id, used, dayItems, extra, letters) {
       const ix = this.directorIndex(), cands = [];
-      const pool = letters ? ix.letter.filter((x) => x.actor === id || (!this.distant(id) && (x.per || x.cast))) : (ix.personal[id] || []).concat(ix.social.filter((x) => x.actor === 'any' || x.per));
+      const pool = letters ? ix.letter.filter((x) => x.actor === id || (!this.distant(id) && (x.per || x.cast))) : (ix.personal[id] || []).concat(ix.social.filter((x) => x.per));
       for (const e of pool) {
         if (used.has(e.id) || !this.eligible(e, used)) continue;
         if (this._plotLeft != null && this._plotLeft <= 0 && this.isPlot(e)) continue;
@@ -418,7 +417,7 @@
       // chance rising from 40% there to certain at its high mark, for the character furthest along.
       for (const e of ix.ramp) {
         if (used.has(e.id) || !this.eligible(e, used)) continue;
-        const cands = e.per || e.actor === 'any' ? Object.keys(s.npcs).filter((id) => s.npcs[id].met).flatMap((id) => this.boundCandidates(e, id)) : this.candidates(e);
+        const cands = e.per ? Object.keys(s.npcs).filter((id) => s.npcs[id].met).flatMap((id) => this.boundCandidates(e, id)) : this.candidates(e);
         let best = null;
         for (const c of cands) {
           const prev = this._cast; this._cast = c.cast || null;

@@ -1,0 +1,230 @@
+# ============================================================
+#  Baseline pools, second pass (2026-10-24): village_more.
+#  Repeatable routine events for the village shops and the home
+#  places with thin pools: the Gilded Newt, Mabel's, Grimsby's,
+#  Pell & Daughters, the family cottage and the market town.
+#  Spec: docs/authoring/pools.md.
+# ============================================================
+
+# ---------------- The Gilded Newt ----------------
+
+@event gilded_newt_ballad
+time: evening night
+title: The Newt's Ballad
+place: gilded_newt
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: music
+tags: social
+scene: A crowded low-beamed tavern, an old regular standing on a bench by the fire with a tankard raised, singing, while the room bangs time on the tables.
+text: {An old regular is standing on a bench singing the ballad of the Newt, about the fire that never goes out. It has forty verses. He knows most of them.|The ballad again. Tonight it has forty-one verses; the new one is about a student who fell into the cellar.|The ballad has a verse about the castle now, and the regulars look at you when they reach it.} {The landlady pretends to hate it.|The whole room bangs time on the tables.|{season == "winter": Snow is coming down outside, and nobody is going anywhere.|The fire flares at the chorus, every time.}}
+> left: Stand up and add a verse
+  challenge perform apprentice wild:
+    win:
+      renown +small
+      mood +small
+      say: {You make up a verse about the landlady's slate and the room roars. She pours you a cider on the house, scowling.|You rhyme "Newt" with "absolute" and the whole tavern sings it back. You'll hear it for weeks.|Your verse about the castle gets a chorus of its own. The old regular claps you on the back and says you'll go in the ballad.}
+    lose:
+      renown -tiny
+      mood -small
+      say: {You stand up, open your mouth and forget every word in the language. The old regular finishes your verse for you, kindly, and badly.|Your rhyme for "Newt" is "Newt". The room is silent, then merciless.|You sing your verse to the wrong tune. Half the room follows you and half the right one, and it ends in a brawl of harmonies.}
+> right: Buy the singer a drink
+  gold -tiny
+  mood +small
+  say: {You buy the old regular a cider, and he tells you the verses that aren't allowed in the ballad any more. They're the best ones.|You buy him a drink between verses. He toasts you in verse forty-two, which is new.|You buy the singer his usual. He tells you which verses are true. It's fewer than you'd hoped.}
+
+# ---------------- Mabel's Tea Shop ----------------
+
+@event mabels_fourth_cake
+title: The Fourth Cake
+place: mabels
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: meal
+tags: home
+scene: A tea-shop counter with three familiar cakes under glass domes and a fourth, mysterious one on a plate beside them, a woman in an apron watching expectantly.
+text: {Mabel's has three kinds of cake. Today, on a plate beside them, there is a fourth. "Experimental," says Mabel. "Free, if you're brave, petal."|Another fourth cake. Mabel has started a little card for each one: name, date, survivors.|The fourth cake. Mabel slides it across before you've asked; you have a reputation for bravery, or greed.} {This one is blue.|This one is suspiciously plain.|{season == "winter": It smells of cloves and something like snow.|It's still warm and very slightly humming.}}
+> left: Be brave and try it
+  chance likely:
+    mood +small
+    health +tiny
+    say: {It tastes exactly like the first warm day of spring. Mabel writes "a triumph" on her card.|It tastes of your grandmother's kitchen, or a kitchen you wish had been hers. Mabel watches your face and nods, satisfied.|It tastes like good news. Mabel says this one's going on the menu, and names it after the face you made.}
+  else:
+    mood -small
+    say: {It tastes of a memory of being scolded. Mabel takes it back, apologising, and writes "no" on her card.|It tastes of nothing at all, so completely that it's alarming. Mabel looks crestfallen.|It tastes of rainy afternoons in a waiting room. You can't explain it and never want to again.}
+> right: Stick with your usual
+  gold -tiny
+  mood +small
+  say: {You order your usual. Mabel sighs, and cuts it a little larger than usual anyway, as if to make up for your cowardice.|You stick with the lemon slice. Mabel feeds the experiment to a delighted first-year, who turns briefly blue.|"Your usual, petal?" Mabel already has it on a plate. The fourth cake waits for someone braver.}
+
+@event mabels_regulars_table
+title: The Regulars' Table
+place: mabels
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: group
+tags: social home
+scene: A big round table in a tea shop crowded with elderly villagers playing dominoes and arguing, one of them waving a student over.
+text: {The big round table at Mabel's belongs to the village regulars, four old friends, a box of dominoes and fifty years of arguments. They wave you over. "Settle something for us."|The regulars wave you over again. Today's dispute is about the academy in their day, when, they say, the stairs moved twice as often.|The regulars have saved you a chair. They've started calling you "the referee".} {The dominoes are clicking.|One of them was a student at the castle sixty years ago, and won't let anyone forget it.|{season == "winter": The window behind them is fogged from the teapots.|Mabel brings them more tea without being asked.}}
+> left: Join the domino game
+  chance even:
+    gold +small
+    mood +small
+    say: {You win a whole crown off a retired miller who swears he let you. He didn't.|You win, and the old student declares that the academy has gone soft and been lucky. You'll take it.|You win, and the regulars demand a rematch next time. "The referee's been practising."}
+  else:
+    gold -small
+    mood -tiny
+    say: {The retired miller cleans you out with a smile like a closing door.|You lose to a woman of ninety who plays with her eyes shut.|You lose, and the regulars toast your generosity. Mabel brings you a consolation biscuit.}
+> right: Listen to their stories
+  lore +small
+  say: {You hear about the year a professor turned the refectory into a pond by accident, and the year someone taught the stairs to waltz. Half of it might be true.|The old student describes the castle as it was: the same stairs, different shoes. It's strange to hear your life told back sixty years early.|You referee three arguments and hear four stories. Your tea goes cold. It's worth it.}
+
+# ---------------- Grimsby's Books ----------------
+
+@event grimsbys_by_the_nose
+title: Chosen by the Nose
+place: grimsbys_books
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: book
+tags: study
+scene: An elderly bookseller holding closed books under a student's nose one at a time, eyes shut in rapture, shelves leaning overhead.
+text: {Mr Grimsby holds three books under your nose, one after another, eyes closed. "Don't look. Smell. The right book smells right."|Mr Grimsby greets you with a book already held out at nose height. "Vanilla and rain," he says. "Trust me."|Mr Grimsby hands you a book by its smell before you've closed the door. He hasn't asked what you came in for. He never does.} {One smells of pipe smoke and the sea.|One smells of cut grass and arguments.|{season == "winter": One smells of woodsmoke, and the shop is freezing.|One smells, faintly, of you.}}
+> left: Buy the one that smells right
+  gold -tiny
+  mood +small
+  say: {You buy the one that smells of the sea. It's a book of storms, beautifully written and of no use whatsoever. You love it.|Vanilla and rain is a slim book of poems about lighthouses. Mr Grimsby wraps it like a gift and takes your coin as an afterthought.|You buy the one that smells like you. It's a novel about someone your age on the night before they leave home. You read it on the barge, slowly.}
+> right: Insist on the one you came for
+  challenge appeal apprentice:
+    win:
+      lore +small
+      say: {You describe the book four times. On the fifth, Mr Grimsby lights up and produces it from under a cat-sized stack. He seems a little disappointed in you.|You stand firm. Mr Grimsby sighs, sniffs the air and goes straight to the right shelf. He could do this all along.|You've learned to describe a book by its smell. Mr Grimsby finds yours in a minute, beaming at your progress.}
+    lose:
+      mood -small
+      say: {You ask for a textbook and leave, somehow, with nothing at all, after an hour's lecture on the smell of old maps.|Mr Grimsby goes into the shelves for your book and is gone so long you leave a note.|Mr Grimsby brings you a cookbook, with great confidence, and is so hurt when you decline it that you stay an hour to make up for it.}
+
+@event grimsbys_upper_floor
+title: The Upper Floor
+place: grimsbys_books
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: book
+tags: study money
+scene: A rickety ladder rising through a hatch in a bookshop ceiling into a dim upper room where shelves lean at alarming angles.
+text: {A ladder at the back of Grimsby's climbs through a hatch to an upper floor nobody mentions. "The remainders," says Mr Grimsby vaguely. "Mind the third rung. And the fourth."|The ladder to the upper floor. Someone has tied a ribbon round the third rung, as a warning or a memorial.|The upper floor. You know its geography now: poetry slumps against history, and history has given up.} {Dust swirls in the light from the hatch.|Somewhere up there, something slides and thumps.|{season == "summer": It's stifling under the roof.|Rain drums on the roof right above your head.}}
+> left: Climb up and rummage
+  challenge feat novice+ wild:
+    win:
+      lore +small
+      gold +tiny
+      say: {You find a first edition priced at a coin, with a pressed love letter inside. Mr Grimsby buys the book back at twice the price without noticing; the letter you keep.|You dig out a box of old exam papers from the castle, decades old. Mr Grimsby gives them to you for nothing and then pays you to take the box away.|You find a book of spells nobody casts any more, wedged under a shelf to stop it falling. Mr Grimsby gives you a crown for straightening the shelf.}
+    lose:
+      health -small
+      mood -tiny
+      say: {The third rung breaks, as advertised. You land in a heap of atlases and see stars, and some constellations.|A shelf leans on you, gently, and then less gently. You climb down under a small avalanche of poetry.|The fourth rung, this time. Mr Grimsby looks up from his counter, says "Ah," and goes back to his reading.}
+> right: Browse the window display
+  mood +small
+  say: {The window display is arranged by colour, not subject. You find three books you didn't know you wanted, and want none of them enough to buy.|You browse the window, where the books have faded through thirty summers. It's a lovely, useless hour.|You browse the window and watch the village go by through the gaps between the spines.}
+
+# ---------------- Pell & Daughters ----------------
+
+@event pell_apothecary_back_door
+title: Foragers at the Back Door
+place: pell_apothecary
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: mushroom
+tags: money nature
+scene: A muddy forager with a basket of wild roots and mushrooms lingering at the back door of an apothecary, beckoning to a student in academy robes.
+text: {At Pell's back door a forager in muddy boots is waiting to sell the morning's haul from the Whisperwood. She catches your eye. "Cheaper than the counter, love. No questions."|The forager at the back door again, basket heavier, prices lower. She remembers you.|The back-door forager nods at you like an old business partner. Today's basket has something in it that's still moving.} {The basket smells of moss and rain.|There's moonpetal in it, wrapped in a dock leaf.|{season == "winter": Her fingers are blue with cold.|Old Pell can be heard counting aloud inside.}}
+> left: Buy straight from her basket
+  gold -small
+  alchemy +small
+  say: {You buy a bundle of roots for half the counter price and spend the evening sorting the useful from the merely muddy.|You buy the moonpetal, dock leaf and all. It's the real thing; you can tell by the way it doesn't wilt.|You buy the moving thing, which turns out to be a root that wriggles toward water. You learn a great deal keeping it alive.}
+> right: Ask where she found it all
+  lore +small
+  say: {She tells you about a clearing west of the stream where the moss glows. You write it down and do not go there, yet.|She tells you which mushrooms lie about being safe. It's an education, and it's free.|She tells you, lowering her voice, about a stream that runs uphill on nights of the full moon. Then she laughs and says it's probably nothing.}
+
+@event pell_apothecary_humming_drawer
+title: The Drawer That Hums
+place: pell_apothecary
+class: routine
+tone: eerie
+repeat: 5
+weight: 10
+art: bottle
+tags: money
+scene: A wall of a thousand small labelled drawers in an apothecary, one of them faintly rattling and humming, a student's hand hovering near its brass knob.
+text: {One of Pell's thousand drawers is humming, low and steady, like a kettle thinking about it. Its label has worn away.|A humming drawer again. Somebody has taped a fresh label to it: ASK FIRST.|The humming drawer has a new label in Old Pell's precise hand: NOT TODAY. It's a different drawer from last time.} {Both daughters are busy with a queue.|Old Pell is counting aloud in the back, loudly.|{season == "winter": The shop is cold, and the drawer is the only warm thing in it.|The bell over the door has just rung, and nobody has come in.}}
+> left: Open it, just a crack
+  chance even:
+    mood +small
+    alchemy +small
+    say: {Inside is a nest of dried bee-balm, humming with old summer. The smell follows you all day, and you know it now by heart.|Inside, a single seed pod is vibrating like a plucked string. You close it gently and remember its name.|Inside is a bottle of something that sings when the cork is loose. You tighten the cork and the shop goes quiet with relief.}
+  else:
+    health -tiny
+    mood -tiny
+    say: {It's sneezing powder, enchanted to share itself. You sneeze until the queue applauds.|A puff of sleep-dust comes out. You wake on the floor with a daughter fanning you and Old Pell counting your breaths, aloud.|It's itching-seed, and it's in your sleeves. A daughter hands you a jar of ointment and a look.}
+> right: Ask a daughter what it is
+  lore +small
+  say: {"Bee-balm from a summer that didn't end," says the elder daughter, not looking up. "Leave it." You look it up later. She's right, and it's fascinating.|The younger daughter tells you it's a seed pod that hums before rain, and has never been wrong. You check the sky. She's right.|The daughters argue over what's in it for ten minutes. You learn more from the argument than from either answer.}
+
+# ---------------- Home ----------------
+
+@event home_cottage_neighbour_calls
+title: A Neighbour Calls
+place: home_cottage
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: house
+tags: home
+scene: A neighbour in a muddy coat standing at a cottage kitchen door holding a stopped clock, while the family pretends not to listen from the table.
+text: {A neighbour is at the kitchen door with a stopped clock, a hopeful face and the air of someone who has been saving it for you since harvest.|Another neighbour, another hopeful face. This one has a hen that's laying eggs the wrong colour.|The neighbours have a list now, you suspect. Today, a pie that won't rise and won't explain why.} {Your family pretends not to listen.|Someone at the table says, "Go on, then," with pride.|{season == "winter": There's snow on the neighbour's hat; they've walked a long way.|The neighbour has brought a basket of plums, as payment in advance.}}
+> left: Have a go at it
+  challenge spell apprentice:
+    win:
+      arcana +small
+      mood +small
+      say: {You coax the clock's spring awake with a whisper. It chimes, a bit sheepishly. The neighbour tells the whole lane.|You charm the hen's eggs back to brown, more or less. The neighbour insists on giving you a dozen. They're mostly brown.|You find the trouble with the pie: it was sulking. A warm word and it rises. The neighbour's face rises with it.}
+    lose:
+      mood -small
+      renown -tiny
+      say: {The clock starts running backwards, cheerfully. The neighbour leaves delighted, which is somehow worse, and tells the whole lane.|The eggs come out tartan. The neighbour is polite about it, and tells everyone.|The pie rises, and keeps rising, and leaves by the chimney. The whole lane will talk about it for years.}
+> right: Say you're on holiday
+  health +small
+  say: {You smile and say magic is for term time. The neighbour goes away disappointed, and you have the afternoon to yourself by the fire.|You send them to the tinker, who will charge them, but kindly. You put your feet up.|You say no, gently. Your family exchange a look. You spend the afternoon asleep in your old chair, guilty and rested.}
+
+@event home_market_schoolmistress
+title: The Old Schoolmistress
+place: home_market
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: scroll
+tags: home social
+scene: A small elderly woman with a satchel of slates stopping a student in academy robes in the middle of a busy market street.
+text: {In the market you're stopped by the old schoolmistress who taught half the town its letters. "Come and tell my little ones about the academy," she says. "They won't believe me."|The schoolmistress again, with her satchel of slates. "They've talked of nothing else since last time. Come back."|The schoolmistress waves from across the square. The children at her heels are wearing paper wizard hats, badly folded.} {She looks smaller than she used to.|She smells of chalk, as she always did.|{season == "winter": Her breath steams; she's been out in the cold looking for you.|A market dog is following her for the biscuits in her pocket.}}
+> left: Visit the schoolroom
+  charm +small
+  mood +small
+  health -tiny
+  say: {You tell twenty children about the moving stairs and the floating candles. One asks if you've met a dragon. You lie a little. They swarm you like bees.|You show them a single small flame in your palm. Twenty faces light up. You're exhausted after an hour, the good way.|You answer questions until your voice gives out. One of them wants to go to the academy now, very badly. It's your fault, and you're glad.}
+> right: Buy her tea and listen
+  gold -tiny
+  lore +small
+  say: {You buy her a pot of tea and she tells you which of your old classmates married whom, and which ran off to sea. You'd forgotten you missed them.|She asks what you're studying and actually listens. Then she corrects your grammar, out of habit, and you let her.|You buy her tea and she tells you what you were like at seven. It's alarming how little you've changed.}

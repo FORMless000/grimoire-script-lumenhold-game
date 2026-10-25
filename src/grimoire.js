@@ -22,7 +22,7 @@
 
   // Functions whose bare-identifier arguments are names (not variables).
   // `npc` is always resolved to the bound actor's id.
-  const SYMBOLIC = new Set(['has', 'flag', 'left', 'rel', 'love', 'spark', 'bond', 'met', 'seen', 'since', 'chosen', 'bonds', 'npc_is', 'romanceable', 'tagged', 'passed', 'clue', 'spell_level', 'knows', 'npc_rel',
+  const SYMBOLIC = new Set(['has', 'flag', 'left', 'rel', 'spark', 'bond', 'met', 'seen', 'since', 'chosen', 'bonds', 'npc_is', 'romanceable', 'tagged', 'passed', 'clue', 'spell_level', 'knows', 'npc_rel',
     'enrolled', 'member', 'rank', 'performance', 'level', 'progress', 'due', 'visits', 'present', 'act', 'clock', 'discovered', 'applied', 'cast_as', 'plan', 'visits_to', 'clues',
     // `around(x)`: x is on campus and reachable in person (not away for the break, not gone); `apart(x)`: months since
     // the last card with x (999 if never). Review fixes, batch 24–40.
@@ -41,7 +41,7 @@
   const FUNCS = new Set([...SYMBOLIC, 'rand', 'min', 'max', 'abs', 'floor', 'round', 'clamp', 'known', 'chance_of', 'on_shift']);
   // Reference kinds for linting: which argument of which function refers to what.
   const FUNC_REFS = {
-    has: ['flagOrState'], flag: ['flag'], left: ['state'], rel: ['npc'], love: ['npc'], bond: ['npc'],
+    has: ['flagOrState'], flag: ['flag'], left: ['state'], rel: ['npc'], bond: ['npc'],
     met: ['npc'], seen: ['event'], since: ['event'], chosen: ['event', null], npc_is: ['npc'], bonds: [null], romanceable: ['npc'], tagged: ['npc', null],
     passed: ['track', null], clue: ['clue'], spark: ['npc'], spell_level: ['spell'], knows: ['fact'], npc_rel: ['npc', 'npc'],
     enrolled: ['track'], member: ['track'], rank: ['track'], performance: ['track'], level: ['track'], progress: ['track'], due: ['track'], visits: ['track'], applied: ['track'],
@@ -432,7 +432,6 @@
     elif: /^elif\s+(.+):$/,
     else: /^else\s*:$/,
     chance: /^chance\s+(.+?)%?\s*:$/,
-    check: new RegExp('^check\\s+(' + ID + ')\\s+(.+):$'),
     // gen.* flags are reserved for live generation (design §T3)
     flag: new RegExp('^flag\\s+((?:gen\\.)?' + ID + '(?:\\s+(?:gen\\.)?' + ID + ')*)$'),
     unflag: new RegExp('^unflag\\s+((?:gen\\.)?' + ID + '(?:\\s+(?:gen\\.)?' + ID + ')*)$'),
@@ -452,8 +451,8 @@
     find: new RegExp('^find\\s+(' + ID + ')$'),
     advanceArc: new RegExp('^advance\\s+(' + ID + ')\\s*\\+\\s*(\\d+)$'),
     spawn: new RegExp('^spawn\\s+(' + ID + ')\\s+from\\s+(' + ID + ')$'),
-    social: new RegExp('^(rel|love|spark)\\s+(' + ID + ')\\s*([+-])\\s*(\\d+)(?:\\s*~\\s*(\\d+))?$'),
-    socialTier: new RegExp('^(rel|love|spark)\\s+(' + ID + ')\\s*([+-])\\s*(tiny|small|medium|large|huge)$'),
+    social: new RegExp('^(rel|spark)\\s+(' + ID + ')\\s*([+-])\\s*(\\d+)(?:\\s*~\\s*(\\d+))?$'),
+    socialTier: new RegExp('^(rel|spark)\\s+(' + ID + ')\\s*([+-])\\s*(tiny|small|medium|large|huge)$'),
     deltaTier: new RegExp('^(' + ID + ')\\s*([+-])\\s*(tiny|small|medium|large|huge)$'),
     npcRel: new RegExp('^npc_rel\\s+(' + ID + ')\\s+(' + ID + ')\\s*([+-])\\s*(\\d+|tiny|small|medium|large|huge)$'),
     learn: new RegExp('^learn\\s+(' + ID + '\\.' + ID + ')$'),
@@ -513,7 +512,6 @@
     if ((m = content.match(RE.else))) return { t: 'else', line, block: true };
     if ((m = content.match(/^chance\s+([a-z_]+)((?:\s+[+-]\d+\s+if\s+.+?)*)\s*:$/)) && ODDS_WORDS.includes(m[1])) return { t: 'chance', word: m[1], steps: parseSteps(m[2], E), p: null, body: [], else: null, line, block: true };
     if ((m = content.match(RE.chance))) return { t: 'chance', p: E(m[1]), body: [], else: null, line, block: true };
-    if ((m = content.match(RE.check))) return { t: 'check', skill: m[1], dc: E(m[2]), body: [], else: null, line, block: true };
     if ((m = content.match(RE.challenge))) return { t: 'challenge', kind: m[1], using: m[2] || null, vs: m[3] ? { who: m[3], stat: m[4] } : null, tier: m[5], swing: m[6] || null, win: null, partial: null, lose: null, line, block: true, outcomes: true };
     if (/^challenge\s.*:$/.test(content)) return parseChallenge(content.slice(10, -1), E, file, line);
     if ((m = content.match(RE.sitExam))) return { t: 'sit_exam', swing: m[1] || null, line };
@@ -521,7 +519,7 @@
     if ((m = content.match(RE.coursework))) return { t: 'coursework', track: m[1] || null, line };
     if ((m = content.match(RE.cool))) return { t: 'cool', npc: m[1], line };
     if ((m = content.match(RE.visitSlot))) return { t: 'visit', slot: m[1], line };
-    if (content.endsWith(':')) throw new GrimError('unknown block statement "' + content + '" (expected if/elif/else/chance/check)', file, line);
+    if (content.endsWith(':')) throw new GrimError('unknown block statement "' + content + '" (expected if/elif/else/chance/challenge)', file, line);
     if ((m = content.match(RE.flag))) return { t: 'flag', names: m[1].split(/\s+/), line };
     if ((m = content.match(RE.unflag))) return { t: 'unflag', names: m[1].split(/\s+/), line };
     if ((m = content.match(RE.gain))) return { t: 'gain', state: m[1], dur: m[2] ? E(m[2]) : null, line };
@@ -553,12 +551,11 @@
     if ((m = content.match(RE.find))) return { t: 'find', clue: m[1], line };
     if ((m = content.match(RE.advanceArc))) return { t: 'advance', arc: m[1], n: +m[2], line };
     if ((m = content.match(RE.spawn))) return { t: 'spawn', id: m[1], archetype: m[2], line };
-    // `love` is the v0.2 name of spark (kept as a legacy alias until phase 3).
     if ((m = content.match(RE.social))) {
       const a = +m[4], b = m[5] != null ? +m[5] : a, s = m[3] === '-' ? -1 : 1;
-      return { t: m[1] === 'rel' ? 'rel' : 'spark', npc: m[2], min: Math.min(a, b) * s, max: Math.max(a, b) * s, line, legacy: m[1] === 'love' || undefined };
+      return { t: m[1] === 'rel' ? 'rel' : 'spark', npc: m[2], min: Math.min(a, b) * s, max: Math.max(a, b) * s, line };
     }
-    if ((m = content.match(RE.socialTier))) return { t: m[1] === 'rel' ? 'rel' : 'spark', npc: m[2], sign: m[3] === '-' ? -1 : 1, tier: m[4], line, legacy: m[1] === 'love' || undefined };
+    if ((m = content.match(RE.socialTier))) return { t: m[1] === 'rel' ? 'rel' : 'spark', npc: m[2], sign: m[3] === '-' ? -1 : 1, tier: m[4], line };
     if ((m = content.match(RE.npcRel))) {
       const st = { t: 'npc_rel', a: m[1], b: m[2], sign: m[3] === '-' ? -1 : 1, line };
       if (TIERS.includes(m[4])) st.tier = m[4]; else { st.min = st.max = +m[4] * st.sign; }
@@ -625,7 +622,7 @@
         }
         if (st.t === 'elif' || st.t === 'else') {
           const prev = out[out.length - 1];
-          if (!prev || !['if', 'chance', 'check'].includes(prev.t)) throw new GrimError(st.t + ' without matching if/chance/check', file, L.line);
+          if (!prev || !['if', 'chance'].includes(prev.t)) throw new GrimError(st.t + ' without matching if/chance', file, L.line);
           if (prev.else) throw new GrimError(st.t + ' after else', file, L.line);
           if (st.t === 'elif') {
             if (prev.t !== 'if') throw new GrimError('elif only follows if', file, L.line);
@@ -878,7 +875,7 @@
       const keys = e.options.map((o) => o.key).sort().join(',');
       if (keys !== 'left,right' && keys !== 'left,right,up') errors.push(new GrimError('card events need "> left:" and "> right:" options, and optionally "> up[spell]:" (got ' + keys + ')', e.file, e.line));
     }
-    if (!e.trigger) e.trigger = e.actor === 'any' ? 'social' : 'random';
+    if (!e.trigger) e.trigger = 'random';
     // `letter` (M38): drawn only off campus, one each night, and for anyone who reaches you while one of you is away.
     if (!['random', 'auto', 'social', 'queued', 'letter'].includes(e.trigger)) errors.push(new GrimError('trigger must be random, auto, social, queued or letter', e.file, e.line));
     if (!e.title) errors.push(new GrimError('event needs a title', e.file, e.line));

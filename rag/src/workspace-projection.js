@@ -19,6 +19,7 @@ function commonText(file, text) {
     text = text.replace(/In a prepared authoring trial,[\s\S]*?## 0\./, 'Follow the batch scope in AGENTS.md.\n\n## 0.');
     text = text.replace(/^3\. \*\*Retrieve context before writing\.[^\n]*\n/m, '3. Read the worldbook entries and existing scenes relevant to the cast, place, track and premise, using the source inspection tools below.\n');
     text = text.replace('For ordinary writing, supplement retrieval to avoid duplicates and reuse what exists:', 'Avoid duplicates and reuse what exists:');
+    text = text.replace(/^## 2\. Search, write[\s\S]*?(?=### Write the blocks)/m, '## 2. Write, then check for duplicates\n\nCheck every new card, and every edit that changes a card\'s premise, options or outcomes, for duplicate premises.\n\n1. **Check the premise before drafting.** Look for existing cards with it (`brief`, `query event --grep <word>`) and read anything close with `node tools/grim.js show <id>`. If the premise is taken, pick another, or a clearly different angle.\n2. **Write the blocks** (below).\n3. **Check each draft for duplicates** with `node tools/grim.js dupes <files>` and the cards already written at its place or track. Rework the card if its premise, options or punchline repeat an existing card.\n\n');
     text = text.replace(/Content changes alter gameplay,[\s\S]*?Browser check:/, 'Browser check:');
     return text.split('## 4. Translate')[0] + '## 4. Report\n\nReport changed files and block IDs; new flags, states, facts and proposed lore; chain links; and deterministic validation results. Leave translation, outside criticism and adoption to the operator.\n';
   }
@@ -31,7 +32,7 @@ function commonText(file, text) {
     .replace(/## Controlled retrieval experiments[\s\S]*?## Balance/, '## Balance')
     .replace(/^\| `briefs\/\*\.md`[^\n]*\n/m, '');
   if (file === 'skills/distill-lore/SKILL.md') return text.replace(/^node tools\/grim.js i18n[^\n]*\n/m, '');
-  if (file === 'docs/authoring/checklist.md') return text.replace(/^Validators check[^\n]*\n/, 'Apply these content checks during self-validation.\n').replace(/^- `i18n[^\n]*\n/m, '').replace(' (the defects the critic found most often in world expansion 1)', '');
+  if (file === 'docs/authoring/checklist.md') return text.replace(/^Validators check[^\n]*\n/, 'Apply these content checks during self-validation.\n').replace(/^- `i18n[^\n]*\n/m, '').replace(' (the defects the critic found most often in world expansion 1)', '').replace('Duplicates checked with `retrieve related`; `dupes`, `brief` and grep alone are not enough.', 'Check with `grim dupes` and `grim query event --grep <word>`.');
   return text;
 }
 function grimTool(text, name) {

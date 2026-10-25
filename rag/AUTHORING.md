@@ -5,6 +5,19 @@ model. Read the relevant canon and existing scenes before drafting; generated
 graph descriptions aid discovery and are not canon. Original sources retain
 conditional outcomes and fact unlock conditions.
 
+## Authoring loop
+
+Retrieval is a required step of event authoring (the workflow, skip rule and
+fallback are in `skills/write-academy-events/SKILL.md`):
+
+1. `search` the one-line premise before drafting; read close hits with `grim show`.
+2. Draft the card.
+3. `related --draft` on each card, one card per file; read the top 2–4 results.
+4. Rework any card whose premise, options or punchline repeat an existing card.
+5. Synchronize with `retrieve index` at the end of the session, after final edits.
+
+Frozen experiments in [EVALUATION.md](EVALUATION.md) follow their trial's own instructions instead.
+
 ## Find evidence
 
 ```sh
@@ -59,6 +72,10 @@ npm run grim -- retrieve index
 ```
 **Run incremental synchronization at the end of every content-writing session,
 after final source edits.** Synchronize explicitly mid-session when fresh retrieval is needed.
+Until then, `search`, `brief` and `related` answer from the last synchronized snapshot and
+print a notice: new blocks are not searchable yet, edited blocks rank by their synced
+text, deleted blocks are hidden. An unbuilt index, a changed build configuration and
+frozen experiments still fail closed.
 
 ```sh
 npm run grim -- retrieve index --resume
@@ -73,6 +90,12 @@ it submits paid model work and may take hours. Authors report an
 unbuilt index instead of rebuilding it automatically. Searches never index content.
 An embedding change rebuilds vectors; keyword and reranker changes do not rebuild
 the graph. No backend fallback is used.
+
+**Don't edit `rag/src/retrieve.js`, `catalog.js` or the adapter files casually**
+(`adapters/lightrag.js`, `process.js`, `credentials.js`, `model-aliases.json`,
+`lightrag_*.py`). They are hashed into the index identity: any change orphans the
+built index and forces a paid rebuild. Put fixes in modules outside that list,
+such as `cli.js` or `snapshot.js`.
 
 See [README.md](README.md) for setup, presets, cache behavior, and recovery, or
 [EVALUATION.md](EVALUATION.md) for controlled comparisons and frozen experiments.

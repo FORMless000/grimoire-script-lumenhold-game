@@ -1,0 +1,367 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/pools/castle_more.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@event library_whispering_dome
+# en: The Whispering Dome
+title [36615d] = 低语穹顶
+# en: {Under the dome on the sixth floor the echoes are wrong in a useful way. A whisper anywhere in the library arrives here, clear as a bell.|The dome is carrying voices again. Someone has chalked a small ear on the railing.|You know the dome's geography now: by the pillar you hear the front desk; by the window, the stacks.} {Two voices below are discussing a test that hasn't been set yet.|Someone below is rehearsing a proposal of marriage, badly.|{season == "winter": The radiators hiss over half of it.|A prefect is reading out demerits to himself, with relish.}}
+text [408c73] = {六楼穹顶下的回声乱得恰到好处：图书馆里任何角落的一句耳语，都会清清楚楚地传到这里，像钟声一样。|穹顶又在传声了。有人在栏杆上用粉笔画了只小耳朵。|穹顶的“地形”你已了如指掌：靠柱子能听见前台，靠窗户能听见书库。} {楼下有两个声音在讨论一场还没出题的测验。|楼下有人在排练求婚，排得很糟。|{season == "winter": 暖气片的嘶嘶声盖住了一半。|一位级长正对着自己念记过名单，念得津津有味。}}
+# en: A gallery railing under a painted dome at the top of the library, a student leaning over it with one ear cocked, seven floors of shelves below.
+scene [dc6a4d] = 图书馆顶层彩绘穹顶下的回廊栏杆，一个学生侧着耳朵趴在上面，脚下是七层书架。
+# en: Lean on the rail and listen
+opt.left.label [7f4f05] = 趴在栏杆上偷听
+# en: {You learn the third question of next week's test, probably. Eavesdroppers, it turns out, don't feel as clever as they'd hoped.|The proposal ends in a yes, and you weren't invited. You feel like a thief who has stolen a wedding.|You learn exactly what the front desk thinks of you. It's fair, which is worse.}
+opt.left.say.1 [5cd5bc] = {你听到了下周测验的第三题——大概吧。原来偷听的人并不像自己想的那么得意。|求婚以“我愿意”收场，而你并未受邀。你觉得自己像个偷了一场婚礼的贼。|你听到了前台对你的确切评价。评价很公道，这就更糟了。}
+# en: Cough loudly, and read
+opt.right.label [23bfb3] = 大声咳嗽，然后读书
+# en: {Your cough rolls down the dome like thunder. Seven floors stop whispering at once, and you read in a silence you made.|You cough. Somewhere below, the proposal stops mid-sentence. You read a whole chapter before you stop wondering how it ended.|You cough on purpose now. Below, every whisper stops, and the dome is yours, and so is the chapter.}
+opt.right.say.1 [1ec9bc] = {你的咳嗽声像雷一样滚下穹顶。七层楼的耳语戛然而止，你在自己造出来的寂静里读书。|你咳了一声。楼下的求婚断在半句。你读完一整章，才不再琢磨那句话的下文。|如今你是故意咳的。楼下的耳语全都停了，穹顶归你，这一章也归你。}
+
+@event library_after_closing
+# en: After the Closing Bell
+title [dda602] = 闭馆钟响之后
+# en: {The closing bell rings and the lamps begin to go out from the top floor down, one floor a minute. Students drift to the doors.|Closing bell. You've noticed the shelves lean together a little after hours, as if to talk.|The bell, the lamps, the drift to the doors. You know the alcove on the fourth floor where the last lamp dies.} {Footnote is doing his rounds, tail up.|Rain is loud on the high windows.|{final_year: You wonder who will hide in your alcove next year.|Somewhere a book closes itself with a snap.}}
+text [1b95f0] = {闭馆钟响了，灯从顶楼开始往下熄，一分钟熄一层。学生们慢慢走向门口。|闭馆钟。你发现闭馆后书架会微微靠拢，像要说悄悄话。|钟声、灯光、走向门口的人流。你知道四楼那个最后一盏灯熄灭的壁龛。} {脚注竖着尾巴在巡夜。|雨点重重敲着高窗。|{final_year: 你不禁想，明年会是谁躲进你的壁龛。|某处一本书啪地自己合上了。}}
+# en: A library at closing time, lamps going out floor by floor from the top down, a student half-hidden between two shelves with a book held to their chest.
+scene [ec5e6d] = 闭馆时分的图书馆，灯光从顶楼一层层往下熄灭，一个学生半藏在两排书架之间，把一本书抱在胸前。
+# en: Stay hidden past closing
+opt.left.label [b8c8f7] = 闭馆后躲着不走
+# en: {You read by a stolen candle until the small hours. The library is a different animal at night, and it lets you be.|The shelves lean together and whisper while you read. You catch one word in three, and none of them are kind about the history section.|You read in your alcove till the candle drowns. Walking back across the bridges at two, you feel like a burglar who stole only sentences.}
+opt.left.say.1 [e3f1c9] = {你借着偷来的蜡烛一直读到深夜。夜里的图书馆是另一种动物，而它容你留下。|书架靠拢过来，在你读书时窃窃私语。你三个词里听懂一个，没有一个是在夸历史区。|你在壁龛里读到蜡烛淹没在蜡油里。凌晨两点走过光之桥回去，你觉得自己像个只偷句子的贼。}
+# en: {A shelf shuffles sideways and nudges you, firmly, toward the door. A prefect on the stair watches you evicted by furniture.|The shelves close the aisle behind you like a mouth and walk you to the exit. The story is round the house by breakfast.|Footnote finds you, sits on your book and yowls until the porter comes. The porter tells everyone. Footnote is unrepentant.}
+opt.left.say.2 [2db512] = {一排书架侧身挪过来，坚定地把你往门口推。楼梯上的一位级长目睹你被家具赶了出去。|书架在你身后像一张嘴一样合拢过道，把你押送到出口。早饭前这事就传遍了学院。|脚注找到了你，一屁股坐在你的书上，叫个不停，直到门房赶来。门房告诉了所有人。脚注毫无悔意。}
+# en: Leave with the crowd
+opt.right.label [cad4b2] = 随人群离开
+# en: {You go to bed at a decent hour, which feels almost illicit.|You leave with everyone else and sleep like a shelved book.|You walk out under the dying lamps and sleep well. The alcove can wait for you.}
+opt.right.say.1 [d94182] = {你在体面的时间上床睡觉，这感觉几乎像在犯规。|你和大家一起离开，睡得像一本上了架的书。|你在渐暗的灯下走出去，睡得很好。壁龛可以等你。}
+
+@event lecture_tower_faculty_basket
+# en: The Faculty Basket
+title [64ecae] = 教职员吊篮
+# en: {Up the hollow middle of the Lecture Tower runs a wicker basket on a rope, for faculty knees. A sign says FACULTY ONLY. It's two hundred and twelve steps to the top.|The basket is waiting at the bottom again. Someone has added "AND THEIR LUGGAGE" to the sign.|The basket. You know its creak, its sway, and the exact landing where it likes to stop.} {Professor Thorne's satchel is riding up in it, alone.|It still smells faintly of Professor Vey's perfume.|{season == "summer": The stairwell is an oven by the fifth landing.|A draught howls up the stairwell like a chimney.}}
+text [bcb047] = {讲堂塔中空的塔心里吊着一只柳条篮，专为教职员的膝盖准备。牌子上写着“仅限教职员”。走到塔顶要两百一十二级台阶。|吊篮又停在底下。有人在牌子上添了一句“及其行李”。|吊篮。你熟悉它的吱呀声、它的摇晃，还有它最爱停住的那个楼梯平台。} {索恩教授的书包正独自坐着它往上升。|篮子里还残留着维伊教授的香水味。|{season == "summer": 到第五个平台，楼梯井就成了烤炉。|一股穿堂风像烟囱一样在楼梯井里呼啸。}}
+# en: A wicker basket on a rope rising up the hollow core of a spiral tower, a sign on it reading FACULTY ONLY, a student eyeing it from the foot of the stairs.
+scene [6bee7c] = 一只柳条篮沿着绳索在螺旋塔的中空塔心里上升，篮上挂着“仅限教职员”的牌子，一个学生在楼梯脚下打量着它。
+# en: Ride it up, quietly
+opt.left.label [5f422c] = 悄悄坐上去
+# en: {You ride up beside the satchel, which seems to disapprove, and step off at the top fresh as morning.|You glide past six landings and step out at the top as if you'd walked. Your knees send their thanks.|The basket stops where it likes to stop; you know the trick of the rope now, and arrive at the top unwinded and unseen.}
+opt.left.say.1 [41a80a] = {你坐在那只书包旁边升上去，书包似乎很不以为然。你到顶时神清气爽，像清晨一样。|你飘过六个平台，在塔顶迈出篮子，仿佛是走上来的。你的膝盖向你道谢。|篮子停在它想停的地方；你如今懂得拽绳的窍门，到顶时气不喘、人不见。}
+# en: {The satchel's owner is waiting at the top. Thorne looks at you, then at the sign. "Hm." You walk back down, then up.|The basket stops between floors. Professor Vey leans over the rail above. "Faculty," she says, "are generally taller." It's ten minutes before anyone winds you down.|It sticks at its favourite landing, and a whole lecture hall files past, one by one, to look at you.}
+opt.left.say.2 [8d1514] = {书包的主人在塔顶等着。索恩看看你，又看看牌子。“嗯。”你走下去，再走上来。|篮子卡在两层之间。维伊教授从上面的栏杆探出头：“教职员，”她说，“一般都要高一些。”十分钟后才有人把你摇下去。|它卡在最爱停的平台上，整整一个讲堂的学生排着队经过，一个接一个地看你。}
+# en: Climb all two hundred steps
+opt.right.label [12a788] = 爬完两百级台阶
+# en: {You arrive at the top red-faced and righteous, legs like wet bread.|You count the steps aloud. Somewhere beside you the basket creaks past, empty, smug.|You take the steps two at a time now, and only stop to breathe at the landing where the basket stops.}
+opt.right.say.1 [774da2] = {你到顶时满脸通红、理直气壮，两腿软得像泡湿的面包。|你大声数着台阶。吊篮在你身边吱吱呀呀地升过去，空着，得意洋洋。|如今你一步跨两级，只在吊篮爱停的那个平台歇口气。}
+
+@event lecture_tower_office_hours
+# en: The Office-Hours Queue
+title [7191e1] = 答疑的队伍
+# en: {{prof} keeps office hours on the landing, and the queue already reaches the stairs.|Office hours. {prof}'s queue has its etiquette now: no pushing, no crying, no essays read aloud.|The office-hours queue. You know the landing's cold step and the warm one.} At the very back a first-year is holding an essay like a shield{season == "winter": , breath fogging|}.
+text [bfa1be] = {{prof}在楼梯平台上答疑，队伍已经排到了楼梯口。|答疑时间。{prof}的队伍如今有了规矩：不许插队，不许哭，不许大声朗读论文。|答疑的队伍。你知道平台上哪级台阶冷、哪级暖。} 队尾有个一年级生把一篇论文举在身前，像举着盾牌{season == "winter": ，呵着白气|}。
+# en: A queue of students on a stone landing outside a half-open office door, one nervous first-year clutching an essay at the very back.
+scene [700a7a] = 石砌平台上，学生们在半掩的办公室门外排队，队尾一个紧张的一年级生攥着一篇论文。
+# en: Wait your turn and ask
+opt.left.label [eb3536] = 排队等着提问
+# en: {Forty minutes on the stair for four minutes of Thorne. "Hm. Wrong, but interestingly." You'll take it.|Thorne reads your question, crosses out half of it, and answers the half that's left. It was the half that mattered.|Thorne lets you in, answers you in three sentences and says "Next." You carry the three sentences around for a week.}
+opt.left.say.1 [dd6d4f] = {在楼梯上站四十分钟，换来索恩四分钟。“嗯。错了，但错得有意思。”你认了。|索恩读了你的问题，划掉一半，回答了剩下的一半。恰恰是要紧的那一半。|索恩让你进去，用三句话答完，说“下一个”。那三句话你揣了一个星期。}
+# en: {Vey answers your question with a question, and then another, until you answer it yourself. It takes an hour you didn't have.|Vey asks how you think you did. You lie. She smiles and tells you exactly how you did.|Vey listens, then asks what you actually came to ask. You hadn't known, until then.}
+opt.left.say.2 [7fb858] = {维伊用一个问题回答你的问题，接着又一个，直到你自己答了出来。这花掉了你本来没有的一个小时。|维伊问你觉得自己考得怎样。你撒了谎。她笑了笑，把你到底考得怎样一五一十告诉了你。|维伊听完，问你其实是来问什么的。在那之前，你自己都不知道。}
+# en: {Marisol answers with a poem about rivers, forgets the last line, and somehow the forgetting answers your question.|Marisol talks you through it while watering a fern on the sill. It takes an hour. It's a very good hour.|Marisol hears you out, then opens the window to let the weather in. "There. Now ask me again."}
+opt.left.say.3 [003260] = {玛丽索尔用一首关于河流的诗作答，忘了最后一句，可那遗忘本身竟回答了你的问题。|玛丽索尔一边给窗台上的蕨类浇水，一边给你讲。讲了一个小时。非常好的一个小时。|玛丽索尔听你说完，推开窗让天气进来。“好了。现在再问我一遍。”}
+# en: {The wait is long, the answer short, and worth it.|You reach the door just before it shuts and get your answer standing on the threshold.|You get your answer, and a reading list longer than the queue.}
+opt.left.say.4 [ec0a1f] = {等得很久，答得很短，值得。|你赶在门关上前到了，站在门槛上得到了答案。|你得到了答案，外加一份比队伍还长的书单。}
+# en: Give the first-year your place
+opt.right.label [b89c4f] = 把位置让给一年级生
+# en: {The first-year goes in white and comes out pink and grateful. You never do get to ask your question.|You swap places. The first-year comes out an hour later having been told their essay "has a pulse". They take it as a triumph. So do you.|You give up your place again. The first-year waves the essay at you on the way out, like a flag.}
+opt.right.say.1 [8a9503] = {一年级生进去时脸色煞白，出来时红扑扑的，满怀感激。你始终没能问出你的问题。|你们换了位置。一小时后一年级生出来，说导师评价那篇论文“还有脉搏”。TA 当成了凯旋。你也是。|你又让出了位置。一年级生出来时冲你挥着论文，像挥一面旗。}
+
+@event great_hall_house_banners
+# en: The House Banners
+title [e49f1f] = 学院旗帜
+# en: {The five house banners over the long tables move with their houses' moods. Today Duskgate's hangs upside down, and is furious about it.|Someone has been at the banners again: Brasswick's has been embroidered with a small, elegant moustache.|Another banner prank: Rootward's has been swapped for a tablecloth with a turnip painted on it. The real one is sulking in a corner.} {The tables are empty; supper is an hour off.|A ladder leans against the wall, still warm from the culprit.|{season == "winter": The banners shiver in the draught from the high windows.|Emberhall's banner is smouldering slightly, in sympathy or envy.}}
+text [82b62b] = {长桌上方的五面学院旗帜随各自学院的心情飘动。今天暮门的旗被倒挂了，气得要命。|又有人动了旗帜：铜芯的旗上被绣了一撇优雅的小胡子。|又一桩旗帜恶作剧：根庐的旗被换成了一块画着萝卜的桌布。真旗正在角落里生闷气。} {长桌空着；离晚饭还有一个钟头。|墙边靠着一架梯子，还带着肇事者的余温。|{season == "winter": 高窗漏进来的风吹得旗帜瑟瑟发抖。|烬厅的旗微微冒烟，不知是同情还是嫉妒。}}
+# en: Five long house banners hanging over the tables of an empty great hall, one of them conspicuously wrong.
+scene [9fb8b1] = 空荡荡的大礼堂里，五面长长的学院旗帜悬在长桌上方，其中一面明显不对劲。
+# en: Put it right before supper
+opt.left.label [04096b] = 赶在晚饭前摆正
+# en: {Twenty minutes up a wobbling ladder. Duskgate's banner, righted, gives a grudging flap. Your palms are rope-burned.|You unpick the moustache stitch by stitch from the top of the ladder. Brasswick's banner shudders with relief; your neck doesn't.|You haul the real banner up and the tablecloth down. Rootward's banner settles over its table like a hen on eggs. Your arms ache till morning.}
+opt.left.say.1 [cf7cc2] = {在晃晃悠悠的梯子上爬了二十分钟。被摆正的暮门旗不情不愿地扑扇了一下。你的手掌被绳子磨破了。|你站在梯子顶上把小胡子一针一针拆掉。铜芯的旗如释重负地抖了抖；你的脖子可没这么轻松。|你把真旗拉上去，把桌布取下来。根庐的旗像母鸡孵蛋一样稳稳罩住自家长桌。你的胳膊酸到第二天早上。}
+# en: Improve the prank
+opt.right.label [d0061e] = 把恶作剧升级
+# en: {You add a matching upside-down candle to the table below. At supper Duskgate laughs hardest, which is how you know it was them.|You give the moustache a monocle. Brasswick declares it an improvement and votes to keep it.|You paint a crown on the turnip. Rootward is outraged, then proud, then outraged again.}
+opt.right.say.1 [c954fc] = {你在下面的桌上配了一支倒插的蜡烛。晚饭时暮门笑得最响，于是你知道就是他们自己干的。|你给小胡子添了一副单片眼镜。铜芯宣布这是一项改进，投票决定保留。|你在萝卜上画了一顶王冠。根庐先是暴怒，然后自豪，然后又暴怒。}
+# en: {A prefect finds you on the ladder with an upside-down candle, and the whole prank is pinned on you by supper.|You're halfway through a monocle when Brasswick's entire table walks in. You are now the moustache person.|You're caught with paint on your hands and a crown half done. Rootward sends a strongly worded turnip to your table.}
+opt.right.say.2 [55af89] = {一位级长发现你拿着倒插的蜡烛站在梯子上，到晚饭时整桩恶作剧都算到了你头上。|单片眼镜画到一半，铜芯一整桌人走了进来。从此你就是“小胡子那位”。|你被当场抓住，手上沾着颜料，王冠才画了一半。根庐往你桌上送来一只措辞严厉的萝卜。}
+
+@event great_hall_stagehands
+# en: Stagehands Wanted
+title [8cdfa4] = 招募布景工
+# en: {season == "autumn": Scenery for the Harvest Feast is going up on the stage: a painted moon the size of a barn.|{season == "winter": They're building the Midwinter Ball's ice arch out of painted canvas and optimism.|{season == "spring": The Spring Tournament's banners are being hemmed on the stage, in five house colours.|They're painting the Starfall backdrop, a whole sky, star by star.}}} {A sign by the stage says STAGEHANDS WANTED, NO EXPERIENCE NECESSARY.|The sign now says SOME EXPERIENCE PREFERRED, and someone has pencilled your name under it.|They hand you a brush as you come in.} Meanwhile the kitchens are testing the feast menu on anyone who sits still.
+text [6bcbd8] = {season == "autumn": 丰收宴的布景正在舞台上搭起来：一轮谷仓那么大的彩绘月亮。|{season == "winter": 他们正用彩绘帆布和乐观精神搭仲冬舞会的冰拱门。|{season == "spring": 春季锦标赛的五色学院旗正在舞台上锁边。|他们在画星坠节的背景幕，一整片天空，一颗星一颗星地画。}}} {舞台边的牌子写着“招募布景工，无需经验”。|牌子如今写着“有经验者优先”，下面有人用铅笔写上了你的名字。|你一进门就有人塞给你一把刷子。} 与此同时，厨房正拿节庆菜单给所有坐得住的人试吃。
+# en: Students on ladders painting a huge backdrop on the great hall's stage while a cook carries in a tray of tasting plates.
+scene [a412c0] = 学生们站在梯子上给大礼堂舞台上的巨幅背景幕上色，一位厨子端着一盘试吃小碟走进来。
+# en: Paint, hammer and hold ladders
+opt.left.label [7b1f2c] = 刷漆、敲钉、扶梯子
+# en: {You paint for three hours and charm the paint to shimmer at the edges. It's the best thing on the stage. Your shoulders disagree.|You hold ladders, hammer, paint, hit your thumb twice and get paint in your hair that won't come out till the festival. Someone stands back and says "oh", the good kind.|You're trusted with the tricky bit now, the part that has to move when the candles do. It does. You get splinters, and applause.}
+opt.left.say.1 [88ae67] = {你画了三个小时，还给颜料施了咒，让边缘闪闪发亮。这是舞台上最好的一块。你的肩膀不同意。|你扶梯子、敲钉子、刷漆，还砸了两回拇指，头发里沾上的颜料要到节庆才洗得掉。有人退后一步，“哦”了一声，是好的那种。|如今最难的那块交给你了：烛光一动它就得跟着动的那部分。它动了。你扎了满手木刺，也赢得了掌声。}
+# en: Taste-test for the kitchens
+opt.right.label [0e1f68] = 替厨房试吃
+# en: {You eat seven tasting plates and give honest marks. The pear tart wins. Your revision notes stay shut.|You taste and judge and taste again. The cook writes down everything you say, and your afternoon of reading is gone.|The cook saves you the corner seat and the first spoonful. The menu is better for you; your reading pile is taller.}
+opt.right.say.1 [e16841] = {你吃了七碟试吃，诚实打分。梨挞胜出。你的复习笔记一页没翻。|你尝了评、评了尝。厨子把你说的每个字都记下来，你本打算读书的下午就这么没了。|厨子给你留了角落的座位和第一勺。菜单因你变好了，你的待读书堆却更高了。}
+
+@event infirmary_night_watch
+# en: Turning the Fever Charm
+title [093688] = 转动退烧咒
+# en: {A first-year in the end bed has a fever, and the cooling charm over the bed has to be turned by hand every hour until dawn. Sister Amaranth looks at you, then at the chair.|Another fever, another chair. The cooling charm's brass ring is worn smooth where hands turn it.|The chair by the end bed. Sister Amaranth has left a cushion on it, which is as close as she comes to asking.} {The ward is quiet except for the clock.|Rain is drumming on the infirmary roof.|{season == "winter": Frost feathers the window behind the bed.|Moths keep the lamp company.}}
+text [d708b0] = {最里面那张床上的一年级生发着烧，床上方的降温咒环得每小时用手转一次，一直转到天亮。阿玛兰斯修女看看你，又看看那把椅子。|又一场烧，又一把椅子。降温咒的黄铜环被一双双手转得溜光。|最里面那张床边的椅子。阿玛兰斯修女在上面放了个坐垫，这已是她最接近“请求”的表示。} {病房里静得只剩钟声。|雨点密密地打在医务室屋顶上。|{season == "winter": 床后的窗上结满了羽毛似的霜。|几只飞蛾陪着那盏灯。}}
+# en: A dim infirmary ward at night, one lamp lit by a bed where a sleeping student lies under a slowly turning ring of pale light.
+scene [d38816] = 夜里昏暗的医务室病房，一张床边点着一盏灯，床上熟睡的学生头顶有一圈缓缓转动的淡光。
+# en: Take the night watch
+opt.left.label [e7307c] = 守这一夜
+# en: {You turn the ring every hour and watch the fever ebb by inches. At dawn Sister Amaranth says "Keep doing that," and takes the chair.|You doze between turns and wake on the hour, every hour, as if the ring calls you. The patient wakes clear-eyed. You don't.|You know the charm's weight now and turn it half asleep. At dawn the patient asks your name. You're too tired to remember it.}
+opt.left.say.1 [ed5f04] = {你每小时转一次咒环，看着高烧一点一点退去。天亮时阿玛兰斯修女说：“保持下去。”然后接过了椅子。|你在两次转动之间打盹，每到整点就醒，仿佛咒环在叫你。病人醒来时神志清明。你可没有。|你如今熟悉咒环的分量，半睡半醒也能转。天亮时病人问你叫什么。你累得想不起来。}
+# en: Promise next time, and sleep
+opt.right.label [4e91f2] = 答应下次，去睡觉
+# en: {Sister Amaranth turns the charm herself, without comment, and that's worse than a comment.|You go to bed and lie awake a while, counting hours you're not turning.|You leave the cushion on the chair for someone else. You sleep, mostly.}
+opt.right.say.1 [138f2b] = {阿玛兰斯修女一言不发地自己转起了咒环，这比说什么都糟。|你上床躺了好一会儿，数着那些不是你在转的钟点。|你把坐垫留在椅子上给别人。你睡着了，大致上。}
+
+@event infirmary_curious_case
+# en: A Curious Case
+title [f62dc6] = 奇特的病例
+# en: {A second-year sits in bed four hiccuping soap bubbles.|In bed four today: a student whose hair has turned to feathers, and keeps trying to migrate.|Bed four has a student who can only speak in rhyme, and is running out of rhymes.} {Sister Amaranth has three books open and no patience left.|Sister Amaranth glances at you. "You. Useful or scarce. Pick."|{season == "winter": Half the ward has the sniffles, and the hiccups have gone round.|Sister Amaranth is writing a stern note to whoever did this.}}
+text [f641a6] = {四号床上有个二年级生，一打嗝就冒肥皂泡。|今天四号床：一个学生的头发变成了羽毛，还老想往南迁徙。|四号床的学生只会用押韵的话说话，而且韵脚快用完了。} {阿玛兰斯修女翻开了三本书，耐心已经用光。|阿玛兰斯修女瞥了你一眼。“你。要么帮忙，要么走人。选。”|{season == "winter": 病房里一半人在流鼻涕，打嗝也传染开了。|阿玛兰斯修女正给始作俑者写一张措辞严厉的字条。}}
+# en: A student sitting up in an infirmary bed with a strange magical symptom while a stern healer frowns at a thick reference book.
+scene [7b657d] = 一个学生坐在医务室病床上，带着奇怪的魔法症状，一位严厉的治疗师对着一本厚厚的参考书皱眉。
+# en: Help look it up
+opt.left.label [fa07db] = 帮忙查资料
+# en: {You find it on page four hundred. A soap-tongue jinx, cured by mint and silence. Sister Amaranth says "Good," without looking up.|You trace the feathers to a half-learned transformation and the cure to a bowl of warm salt water. The student moults gratefully.|You find the rhyming hex and the counter-word. The student's first plain sentence is "thank you", which is a relief to everyone.}
+opt.left.say.1 [e6faf1] = {你在第四百页找到了：皂舌咒，用薄荷和沉默治。阿玛兰斯修女头也不抬地说：“好。”|你查出羽毛来自一个没学全的变形术，解法是一碗温盐水。那学生感激地掉起了毛。|你找到了押韵咒和破解词。那学生说出的第一句不押韵的话是“谢谢”，所有人都松了口气。}
+# en: {You read for an hour and find three cures for things nobody has. Sister Amaranth solves it with a cup of tea and a look.|You recommend plucking. Everyone stares at you. Sister Amaranth sends you to fetch towels instead.|You suggest a cure that makes the rhymes worse and slightly operatic. Sister Amaranth fixes it, and you, with a glance.}
+opt.left.say.2 [8a1760] = {你读了一小时，找到三种治没人得的病的方子。阿玛兰斯修女用一杯茶和一个眼神就解决了。|你建议拔毛。所有人都盯着你。阿玛兰斯修女打发你去拿毛巾。|你提出的疗法让韵押得更狠，还带上了几分歌剧腔。阿玛兰斯修女一个眼神就把它——连同你——一起纠正了。}
+# en: Keep the patient company
+opt.right.label [39c935] = 陪病人解闷
+# en: {You see who can blow the biggest bubble. You lose, but you laugh so hard your ribs ache.|You help the student hold on to the bedframe whenever a flock goes over. Feathers get everywhere, including your lungs.|You rhyme back. You run out of rhymes together, and by then you're both crying with laughter and very sore.}
+opt.right.say.1 [ea670d] = {你们比谁吹的泡泡大。你输了，可笑得肋骨生疼。|每当一群羽毛飞过，你就帮那学生抓住床架。羽毛钻得到处都是，包括你的肺。|你也用韵脚回话。你们一起把韵用光，那时两人都笑出了眼泪，浑身酸痛。}
+
+@event alchemy_lab_crystal_sill
+# en: The Crystal on the Sill
+title [fc5a20] = 窗台上的晶簇
+# en: {On the windowsill sits somebody's abandoned crystal experiment, a jar of blue spikes labelled DO NOT FEED.|The crystal has grown out of its jar and halfway down the wall. The label now reads DO NOT FEED (WE MEAN IT).|The crystal reaches the floor now and has started on the next window. Someone has given it a name and a little hat.} {It chimes faintly when the door slams.|It has grown a new spike toward the warmest cauldron.|{season == "winter": Frost and crystal are racing each other up the glass.|In the afternoon light it throws blue all over the benches.}}
+text [602fb0] = {窗台上摆着不知谁丢下的晶体实验：一罐蓝色尖晶，标签写着“请勿喂食”。|晶体已经长出罐子，爬到半面墙了。标签改成了“请勿喂食（说真的）”。|晶体如今已经长到地板，开始往下一扇窗进军。有人给它起了名字，还戴了顶小帽子。} {门一摔，它就轻轻作响。|它朝最暖的那口坩埚长出了一根新尖。|{season == "winter": 霜和晶体在玻璃上比赛往上爬。|午后的阳光透过它，把蓝光洒满了工作台。}}
+# en: A blue crystal growth spilling out of a jar on a laboratory windowsill and creeping slowly down the wall.
+scene [a619bc] = 实验室窗台上，一簇蓝色晶体从罐子里溢出来，正慢慢爬下墙面。
+# en: Feed it a pinch of salt
+opt.left.label [67b9d2] = 喂它一撮盐
+# en: {It drinks the salt with a sound like a sigh and grows one perfect new spike. You understand, suddenly, how it's built.|A new spike unfolds slowly, like a fern. You sketch the growth, and it makes sense of a whole chapter.|It grows a spike in your exact direction, which is either affection or aim. You take notes either way.}
+opt.left.say.1 [5df698] = {它叹息般地吸进那撮盐，长出一根完美的新尖。你忽然明白了它是怎么长成的。|一根新尖像蕨叶一样慢慢舒展。你把生长过程画下来，一整章内容豁然开朗。|它朝你的方向长出一根尖，要么是喜欢你，要么是瞄准你。不管哪种，你都记了笔记。}
+# en: {It shoots out a spike the size of a finger and catches your sleeve and your wrist. The label, you concede, was right.|It grows a spike straight through your notes and into your thumb. You are not the first; there's a list.|It sneezes crystal dust all over you. You sparkle blue until bedtime and itch till morning.}
+opt.left.say.2 [04c0e9] = {它猛地刺出一根手指长的尖，扎住了你的袖子和手腕。你承认，标签说得没错。|它长出一根尖，穿透你的笔记扎进了你的拇指。你不是第一个；有张名单。|它朝你打了个喷嚏，喷了你一身晶粉。你一直闪着蓝光到睡觉，痒到第二天早上。}
+# en: Snap off a spike for Pell's
+opt.right.label [094017] = 掰一根卖给佩尔
+# en: {Pell & Daughters pays well for clean crystal, no questions asked. The jar seems to notice the gap.|You snap off a spike while it's busy growing toward the cauldron. It chimes once, sharply, as if taking your name. Pell's pays anyway.|You break off a piece from the bottom where nobody will notice and sell it in the village. The little hat tilts at you when you come back.}
+opt.right.say.1 [da7bee] = {佩尔父女药铺收干净的晶体出价不错，不问来路。罐子似乎注意到了那个缺口。|你趁它朝坩埚长的时候掰下一根尖。它尖锐地响了一声，像是记下了你的名字。佩尔家照样付了钱。|你从底部没人注意的地方掰下一块，拿到镇上卖了。你回来时，那顶小帽子朝你歪了歪。}
+
+@event alchemy_lab_good_scales
+# en: The Good Scales
+title [1a9080] = 那台好秤
+# en: {The laboratory has twelve sets of scales and one that's accurate. The queue for it reaches the door.|The queue for the good scales has rules now, chalked on the bench: one weighing each, no hovering, no charms.|The good scales. You can tell from the door how long the wait is by how many people are sighing.} {A third-year at the front is weighing powdered moonstone grain by grain.|The other scales are off by a hair, a whisker or a small mouse.|{season == "summer": It's hot, and every powder in the room is clumping.|The windows have steamed over and nobody can read their numbers.}}
+text [9f28b0] = {实验室有十二台秤，只有一台是准的。等它的队伍排到了门口。|那台好秤的队伍如今有了规矩，用粉笔写在工作台上：每人称一次，不许围观，不许施咒。|那台好秤。你在门口听叹气声有多少，就知道要等多久。} {队首一个三年级生正一粒一粒地称月长石粉。|其他秤的误差有一根头发、一根胡须，或一只小老鼠那么大。|{season == "summer": 天热，屋里每种粉末都结了块。|窗户全起了雾，谁也看不清读数。}}
+# en: A queue of students with jars and papers waiting at a single fine brass balance in a cluttered laboratory, while battered scales sit unused along the bench.
+scene [594ce4] = 杂乱的实验室里，学生们拿着罐子和纸排队等一台精致的黄铜天平，工作台上其他破旧的秤无人问津。
+# en: Charm your way to the front
+opt.left.label [1a2ccd] = 靠嘴皮子插到前面
+# en: {You admire the third-year's technique until they wave you ahead out of sheer flattered confusion.|You quote the chalked rules back at the queue in such a reasonable voice that they let you through to weigh "just one thing".|You've learned the queue's weak points. A compliment, a promise and a borrowed spatula, and you're at the scales in a minute.}
+opt.left.say.1 [760c9c] = {你夸那个三年级生手法好，夸到对方又受用又糊涂，挥手让你先称。|你用极其通情达理的语气把粉笔写的规矩念给队伍听，他们竟放你过去称“就一样东西”。|你摸清了这支队伍的软肋。一句恭维、一个承诺、一把借来的药勺，一分钟你就站到了秤前。}
+# en: {The queue turns as one and points at the back. You go to the back.|Someone reads out rule two, NO HOVERING, and looks at you while they do it. The whole queue laughs.|The queue closes ranks like a wall of elbows. You spend the wait at the back, flushed.}
+opt.left.say.2 [3d72d7] = {整支队伍齐刷刷转过身，指向队尾。你去了队尾。|有人念出第二条“不许围观”，念的时候看着你。全队都笑了。|队伍像一堵胳膊肘砌成的墙一样合拢。你在队尾等完了全程，满脸通红。}
+# en: Use the bad scales and correct
+opt.right.label [940954] = 用烂秤再校正
+# en: {You weigh everything twice on two bad scales and average the errors. Your measurements are right; your head hurts.|You work out exactly how wrong the mouse-scale is and correct for it. It's tedious, and the best arithmetic you've done all week.|You've mapped all eleven bad scales' errors on a card in your pocket. It doesn't make the work less dull.}
+opt.right.say.1 [05103c] = {你在两台烂秤上各称两遍，把误差取平均。数据是对的；你的头疼了。|你算出那台“老鼠秤”到底偏了多少，再做修正。很枯燥，却是你这周做过最好的算术。|你把十一台烂秤的误差都记在口袋里的一张卡片上了。这并没让活儿变得不无聊。}
+
+@event alchemy_lab_mind_my_cauldron
+# en: Mind My Cauldron?
+title [39a03a] = 帮我看着坩埚？
+# en: {{mate} has a six-hour brew going and a supper {they} can't miss. "Stir it widdershins when the sand runs out. Twice. I owe you."|{mate} spots you across the lab and is already holding out the spoon. "Hourglass. Twice. Widdershins. You're a lifesaver."|{mate} hands you the spoon with the air of someone who knows you'll say yes. The hourglass is half run.} {The brew smells of oranges and thunder.|The brew is the colour of a bruise, and humming.|{season == "winter": The lab windows are black and the cauldrons the only warmth.|Somebody's cauldron at the far end goes off like a cork.}}
+text [54ad4a] = {{mate}有一锅要熬六小时的药，还有一顿非去不可的晚饭。“沙漏流完就逆时针搅两下。两下。我欠你的。”|{mate}隔着实验室看见你，已经把勺子递过来了。“沙漏。两下。逆时针。你是我的救星。”|{mate}把勺子递给你，一副知道你会答应的样子。沙漏已经流了一半。} {药闻起来像橘子和雷雨。|药是瘀青的颜色，还在嗡嗡响。|{season == "winter": 实验室的窗外一片漆黑，只有坩埚是暖的。|远处有人的坩埚像拔塞子一样砰地炸了。}}
+# en: A student hurrying out of an evening laboratory, pointing back at a bubbling cauldron and an hourglass, while another student is left holding the spoon.
+scene [6fc9df] = 一个学生匆匆走出傍晚的实验室，回头指着一口冒泡的坩埚和一个沙漏，另一个学生被留下来握着勺子。
+# en: Stay and mind it
+opt.left.label [e68e54] = 留下来看着
+# en: {You miss supper and stir twice, exactly. {mate} comes back to a perfect brew, and you to a rumbling stomach.|You mind it, and pick up three of {mate}'s tricks just by watching the sand. Your own supper is cold bread.|The brew behaves for you. {mate} comes back, sniffs, and says your wrist is better than {theirs}. Your stomach disagrees with the praise.}
+opt.left.say.1 [af872b] = {你错过了晚饭，不多不少搅了两下。{mate}回来时药熬得完美，你的肚子咕咕直叫。|你看着它，光是盯着沙漏就学会了{mate}的三个窍门。你自己的晚饭是冷面包。|药在你手里很听话。{mate}回来闻了闻，说你的手腕比TA的还稳。你的肚子对这番夸奖不以为然。}
+# en: Sorry, I've plans
+opt.right.label [8918b3] = 抱歉，我有安排
+# en: {You go to supper. {mate} goes to supper late, and the brew turns slightly orange in revenge.|You make your excuses. {mate} finds someone else, and mentions it, twice.|You say no this time. {mate} looks at the spoon, then at you, and sighs the sigh of the betrayed.}
+opt.right.say.1 [fe3b89] = {你去吃晚饭了。{mate}晚饭去晚了，药为了报复微微泛了橙。|你找了借口。{mate}另找了人，还提了两次。|这次你拒绝了。{mate}看看勺子，又看看你，叹出一口被辜负者的长气。}
+
+@event workshop_after_the_bang
+# en: After the Bang
+title [2e3e78] = 爆炸之后
+# en: {You hear the bang from the corridor. Inside, the smoke is thinning, and Mir waves through it, eyebrows mostly intact. "That was the good kind of bang! Probably!"|Another bang. Mir has chalked a tally by the door: GOOD BANGS and BAD BANGS. Today's goes in a third column, MUSICAL.|You don't even flinch at the bang now. Mir hands you a broom before the smoke clears.} {Gears are still rolling across the floor.|A small cog is spinning on its edge, refusing to fall.|{season == "winter": The blast has blown the window open and snow is coming in.|The fire bucket by the door is already empty.}}
+text [e5761c] = {你在走廊上就听见了那声巨响。屋里烟雾渐散，米尔隔着烟挥手，眉毛大体还在。“那是好的那种爆炸！大概！”|又一声巨响。米尔在门边画了个计分表：“好爆炸”和“坏爆炸”。今天这声记在第三栏：“有旋律的”。|如今你听见巨响连眼都不眨。烟还没散，米尔就递给你一把扫帚。} {齿轮还在满地乱滚。|一个小齿轮立着边打转，就是不倒。|{season == "winter": 爆炸把窗户震开了，雪正往里飘。|门边的消防水桶已经空了。}}
+# en: A workshop wreathed in drifting smoke, a soot-blackened inventor waving cheerfully through it, springs and gears scattered across the floor.
+scene [2bae78] = 烟雾缭绕的工坊里，一个被熏黑的发明家隔着烟雾愉快地挥手，弹簧和齿轮散落一地。
+# en: Help sweep up and salvage
+opt.left.label [091e3f] = 帮忙清扫回收
+# en: {You sort springs from gears from bits of the ceiling. A spring bites your finger; Mir says that one's always been like that.|You salvage a box of parts and a burnt sleeve. Mir promises to name the next bang after you.|You sweep like a professional now, and pocket a cog that wouldn't fall. Mir pretends not to see. Your fingers are cut in two places.}
+opt.left.say.1 [997f7f] = {你把弹簧、齿轮和天花板碎块分门别类。一根弹簧咬了你的手指；米尔说那根一直这样。|你回收了一箱零件，烧焦了一只袖子。米尔保证下一次爆炸用你的名字命名。|你扫得像个行家，还顺手揣走了那个不肯倒的齿轮。米尔装作没看见。你的手指划破了两处。}
+# en: Read the singed blueprint
+opt.right.label [63e633] = 研究烧焦的图纸
+# en: {You find the mistake, a rune drawn backwards, and tell Mir, who is delighted, then mortified, then delighted. "Probably that's what it was!"|You study the scorched blueprint while Mir sweeps around you, and learn more from the burn marks than from the lines.|You can read Mir's blueprints now, even singed. You show them where today's bang came from. They want to do it again, on purpose.}
+opt.right.say.1 [8564ce] = {你找到了错误：一个符文画反了。你告诉米尔，TA先是大喜，然后羞愧，然后又大喜。“大概就是它！”|米尔在你身边扫地，你研究烧焦的图纸，从焦痕里学到的比从线条里还多。|如今就算烧焦了，你也看得懂米尔的图纸。你指给 TA 看今天那声巨响是从哪儿来的。TA 想故意再来一次。}
+
+@event ledger_office_crossword
+# en: The Crossword Is Late
+title [fda6e0] = 填字游戏迟了
+# en: {The Ledger's crossword setter has vanished before the deadline, leaving half a grid pinned over the desk and a pencil on a string.|The crossword is late again. The setter's note says "back soon", and has said it since Tuesday.|The crossword grid again, half done. The pencil on its string swings toward you as if it knows.} {Seven across is blank. Nine down is a rude word, crossed out.|A furious letter about last week's puzzle is pinned beside it, in a professor's hand.|{season == "winter": The ink in the pot has a skin of ice.|The press is warming up, and so is everyone's temper.}}
+text [376585] = {《流明纪事报》的填字出题人在截稿前人间蒸发，桌上方钉着半张格子，旁边一支用绳子拴着的铅笔。|填字游戏又迟了。出题人的字条写着“马上回来”，从星期二写到现在。|又是那半张填字格。绳子上的铅笔朝你荡过来，仿佛心里有数。} {横七空着。竖九是个粗话，被划掉了。|旁边钉着一封对上周谜题大发雷霆的信，是某位教授的笔迹。|{season == "winter": 墨水瓶里的墨结了一层冰皮。|印刷机正在预热，所有人的脾气也是。}}
+# en: A half-finished crossword grid pinned above a cluttered desk in a newspaper office, a pencil dangling from a string beside it.
+scene [b9e191] = 报社编辑部杂乱的桌子上方钉着一张填了一半的填字格，旁边一支铅笔用绳子吊着。
+# en: Finish setting it, properly
+opt.left.label [6d3af6] = 规规矩矩出完题
+# en: {You fill the grid with honest clues and one fiendish one. Your eyes ache; it goes to print with your pencil marks still on it.|You set it so carefully that the professor who complained will have nothing to complain about. It takes all evening.|You set the whole grid by lamplight. Nine down is no longer rude. You're a little sorry.}
+opt.left.say.1 [dfca65] = {你用老实的线索填满格子，外加一道刁钻的。你眼睛发酸；它付印时还留着你的铅笔印。|你出得如此仔细，那位抱怨的教授这回将无话可说。这花掉了一整晚。|你在灯下出完了整张格子。竖九不再是粗话了。你有点遗憾。}
+# en: Hide a message in the clues
+opt.right.label [c88709] = 在线索里藏句话
+# en: {The first letters of the across clues spell SOUP IS A CRIME. By lunch the whole refectory has solved it, and your name is going round with it.|You hide a riddle in the down clues. Half the castle spends a week on it, the professor writes in again, delighted, and somebody tells him who set it.|Your hidden message is the talk of breakfast, and the Ledger lets slip who set it.}
+opt.right.say.1 [f9c114] = {横向线索的首字连起来是“汤是一种罪”。到午饭时整个膳堂都解出来了，你的名字也跟着传开。|你在竖向线索里藏了个谜语。半个城堡花了一周去猜，那位教授又来信了，这回很高兴，还有人告诉了他出题的是谁。|你藏的话成了早餐桌上的话题，纪事报也漏出了出题人是谁。}
+# en: {Nessa reads the proof, finds SOUP IS A CRIME in the first letters and circles it in red, then circles you.|The message comes out garbled: the clues spell SOUP IS A CRIMP. Nobody understands it. Somehow that's worse.|Nessa spots it at the drying line and pulls the proof. "Clever," she says. "Not printed. Next."}
+opt.right.say.2 [d4a5ca] = {内莎读校样时发现了首字里的“汤是一种罪”，用红笔圈了出来，然后把你也圈了进去。|藏的话印出来是乱的：线索拼成了“汤是一种醉”。没人看得懂。不知怎的，这更糟。|内莎在晾稿绳边发现了它，把校样撤了下来。“聪明，”她说，“不登。下一个。”}
+
+@event headmistress_tower_window_boxes
+# en: The Window Boxes
+title [4ccf5d] = 窗台花箱
+# en: {"Would you see to the window boxes while I finish this?" {host} says, without looking up. The boxes run along the outside of the tower window, high over the lake.|The window boxes again. {host} has left the watering can on the sill, which counts as an invitation.|You reach for the watering can before {host} asks. She smiles at her letter.} {The far box is just out of reach without leaning.|One plant in the far box has opened a single silver flower.|{season == "winter": Frost has nipped the herbs; they need covering.|Bees from somewhere have found the boxes, this high up.}}
+text [99eb51] = {“我写完这封信之前，你能照看一下窗台花箱吗？”{host}头也不抬地说。花箱沿着塔窗外侧排开，高悬在湖面之上。|又是窗台花箱。{host}把洒水壶留在了窗台上，这就算邀请了。|不等{host}开口，你就伸手去拿洒水壶。她对着信纸微微一笑。} {最远的那个花箱不探身就够不着。|远处花箱里有一株开出了一朵银色的花。|{season == "winter": 霜冻伤了香草；得给它们盖上。|不知从哪来的蜜蜂，竟找到了这么高的花箱。}}
+# en: A high tower window open over a dizzying drop to the lake, a row of window boxes of night-flowering herbs along the sill, a calm woman writing at a desk behind.
+scene [7f1ed7] = 高塔的窗户敞开在通往湖面的令人目眩的高处，窗台外一排种着夜间开花香草的花箱，一位沉静的女士在身后的书桌前写信。
+# en: Lean out to the far box
+opt.left.label [3fffe1] = 探身照看最远的
+# en: {You lean out over the drop with one hand on the frame and tend the far box. When you pull back in, {host} is watching. "Steady," she says. It's praise.|You reach the far box and the silver flower opens a second bloom as you water it. You stay leaning out a moment longer than you need to, for the view.|You know the reach now: knee on the sill, hand on the frame. The far box is tended in a minute, and the lake glitters far below.}
+opt.left.say.1 [53422d] = {你一手扶着窗框，探身到深渊上方照看最远的花箱。缩回来时，{host}正看着你。“稳。”她说。这是夸奖。|你够到了最远的花箱，你浇水时那朵银花又开了一朵。你多探了一会儿，为了看风景。|你如今熟悉怎么够了：膝盖抵着窗台，手扶窗框。一分钟就照看完最远的花箱，湖面在远远的下方闪闪发光。}
+# en: {Your foot slips on the sill and the watering can drops a very long way. {host} doesn't look up. "There's another in the cupboard," she says. Your shin is skinned.|You bang your head on the frame coming back in. {host}'s quill pauses, then goes on. The silver flower doesn't get its water.|You reach, wobble, and decide against it with your heart pounding and an elbow scraped. {host} tends the far box herself afterwards, without comment.}
+opt.left.say.2 [1c2d38] = {你的脚在窗台上一滑，洒水壶掉了很长很长一段距离。{host}没抬头。“柜子里还有一个。”她说。你的小腿擦破了。|你缩回来时头撞上了窗框。{host}的羽毛笔顿了一下，又继续写。那朵银花没浇上水。|你伸手、晃了一下，心怦怦直跳，手肘也擦破了，决定还是算了。事后{host}自己照看了最远的花箱，什么也没说。}
+# en: Tend the near boxes and talk
+opt.right.label [4087b3] = 照看近处，聊聊天
+# en: {You water the near herbs while {host} tells you their names, moonmint, star-sorrel, a thyme that only opens after dark. She knows each one's story.|{host} asks what you're reading this term and listens to the answer as she writes. You leave having said more than you meant to, and learned the names of six plants.|You tend the near boxes while {host} reads you a line from her letter and asks what you'd reply. You think about it on the stairs all the way down.}
+opt.right.say.1 [c364f0] = {你给近处的香草浇水，{host}告诉你它们的名字：月薄荷、星酢浆草、一种只在天黑后开放的百里香。每一株的来历她都知道。|{host}一边写一边问你这学期在读什么，还认真听你回答。你离开时说的比你打算的多，还记住了六种植物的名字。|你照看近处的花箱，{host}给你念了信里的一句话，问你会怎么回。你在下楼的一路上都在想这件事。}
+
+@event headmistress_tower_waiting_bench
+# en: The Waiting Bench
+title [4dcd6d] = 候见长凳
+# en: {On the bench at the foot of the stair sits a first-year with a summons in one hand and doom on their face. "What's she like?" they whisper.|Another summoned first-year on the bench, another whisper: "Is it true she can read minds?"|The waiting bench has a first-year on it again; you suspect it always will. "Have you been in? What happens?"} {The stone owl watches you both.|Somewhere above, a door opens and closes.|{final_year: You remember sitting there yourself, a hundred years ago, last week.|The summons is smudged from being held so hard.}}
+text [fdb56c] = {楼梯脚下的长凳上坐着一个一年级生，一手捏着传唤单，脸上写满了末日。“她是什么样的人？”TA 小声问。|长凳上又一个被传唤的一年级生，又一句耳语：“听说她能读心，是真的吗？”|候见长凳上又坐着一个一年级生；你怀疑永远都会有。“你进去过吗？会发生什么？”} {石猫头鹰注视着你们俩。|楼上某处，一扇门开了又关。|{final_year: 你记得自己也在那儿坐过，一百年前，也就是上周。|传唤单被攥得字迹都糊了。}}
+# en: A narrow stone bench at the foot of a spiral stair, a pale first-year sitting on it clutching a summons, a stone owl watching from above.
+scene [68e729] = 螺旋楼梯脚下一条窄窄的石凳，一个脸色苍白的一年级生坐在上面攥着传唤单，一只石猫头鹰在上方看着。
+# en: Tell them the kind truth
+opt.left.label [4c08e6] = 好心地说实话
+# en: {"She'll listen," you say, "and it will be worse than shouting, and then it will be better." The first-year breathes for the first time in an hour.|"She can't read minds," you say. "She just doesn't need to." The first-year laughs, shakily, and goes up a little taller.|"She'll pour you tea," you say. "Drink it. Tell her the truth." The first-year nods and goes up the stair like someone visiting a friend.}
+opt.left.say.1 [eeb0bd] = {“她会听你说，”你说，“那比骂你还难受，然后就会好起来。”那个一年级生一小时来第一次喘了口气。|“她不会读心，”你说，“她只是用不着。”一年级生颤巍巍地笑了，挺直了一点走上楼去。|“她会给你倒茶，”你说，“喝了它。跟她说实话。”一年级生点点头，走上楼梯，像去拜访朋友。}
+# en: Tell them a horror story
+opt.right.label [184b74] = 讲个恐怖故事
+# en: {You describe the trapdoor, the pit and the crocodiles in loving detail. The first-year goes up grey. You feel wonderful, then less wonderful.|"Only on Thursdays," you say gravely. It's Thursday. The first-year's face is a work of art.|You tell them about the owl that eats liars. The owl, above you, opens one eye and looks at you for a long time.}
+opt.right.say.1 [cdebc2] = {你绘声绘色地描述了活板门、深坑和鳄鱼。一年级生面如死灰地上了楼。你感觉好极了，然后没那么好了。|“只在星期四。”你严肃地说。今天是星期四。一年级生的表情堪称艺术品。|你给 TA 讲那只专吃说谎者的猫头鹰。你头顶的猫头鹰睁开一只眼，盯着你看了很久。}
+
+@event seventh_tower_candle_landing
+# en: Other People's Candles
+title [17e4e4] = 别人的蜡烛
+# en: {Halfway up the seventh tower is a landing crowded with candle stubs, a century of them, with initials scratched in the wall above. Whoever climbed here, climbed with a light.|The candle landing. You recognise some of the initials now, the way you recognise faces in a corridor.|Back at the landing of candles. You've found your own favourite set of initials, deep and careful, and wonder who cut them.} {One stub is still faintly warm.|{season == "winter": The wax is cold as stone.|A draught from nowhere leans every wick the same way.}|One stub has been lit and blown out since your last climb.}
+text [720f78] = {第七塔半腰有个平台，挤满了蜡烛头，一个世纪攒下来的，上方墙上刻着名字的缩写。来过这里的人，都是举着灯上来的。|蜡烛平台。如今有些缩写你认得了，就像认得走廊里的面孔。|又回到蜡烛平台。你找到了自己最喜欢的一组缩写，刻得又深又仔细，不禁好奇是谁刻的。} {有一截蜡烛头还微微温热。|{season == "winter": 蜡冷得像石头。|一股不知从哪来的风把每根烛芯都吹向同一边。}|自你上次来过，有一截蜡烛头被点燃又吹灭了。}
+# en: A narrow stone landing crowded with old candle stubs of every colour, initials scratched into the wall above them, one stub still faintly warm.
+scene [f39440] = 狭窄的石砌平台上挤满了各色旧蜡烛头，上方墙上刻着名字缩写，其中一截还微微温热。
+# en: Leave a candle of your own
+opt.left.label [193834] = 留下一支自己的蜡烛
+# en: {You light the candle you bought in the village and set it among the others. For a moment the landing is bright, and the initials look almost cheerful.|You light a new candle and sit with it while it burns down. It feels like adding your name to a very long, very quiet register.|You leave a fresh candle beside the careful initials. When you look back from the stair, its flame is leaning toward them.}
+opt.left.say.1 [cfae91] = {你点燃在镇上买的蜡烛，放在其他蜡烛中间。有那么一会儿，平台亮堂起来，那些缩写看上去几乎是欢快的。|你点一支新蜡烛，陪它烧完。就像在一本很长、很安静的名册上添了你的名字。|你在那组仔细刻下的缩写旁留下一支新蜡烛。你在楼梯上回头看时，火苗正朝它们倾斜。}
+# en: Read the initials by lamplight
+opt.right.label [2a3be6] = 借灯读那些缩写
+# en: {You copy down the initials and the dates. Most of them are a century old or more; one is from last year. Nobody you ask admits to it.|You find two sets of initials cut in the same hand, forty years apart. You leave without deciding what that means.|You read the wall until your lamp gutters. All those people, climbing up here with a light, alone. It sits with you all evening.}
+opt.right.say.1 [313a4f] = {你抄下缩写和日期。大多有一个世纪甚至更久了；有一组是去年的。你问过的人都不承认。|你找到两组同一笔迹刻的缩写，相隔四十年。你没想清楚那意味着什么就离开了。|你读着墙，直到灯火摇曳将熄。那么多人，独自举着一盏灯爬上来。这念头陪了你一整晚。}
+
+@event seventh_tower_wind_song
+# en: The Wind in the Slits
+title [6b8a81] = 箭孔里的风
+# en: {The wind plays the seventh tower's arrow-slits like a flute, a different note at every window.|The tower is playing again. You'd swear the tune has more notes than there are windows.|The wind's song. You can hum the first part now; nobody else in the castle knows it.} {Today it sounds almost like a lullaby.|Today it is quick and fretful, as if late for something.|{season == "winter": It plays low and slow, like something under snow.|It plays in fits, between gusts.}}
+text [2ef009] = {风把第七塔的箭孔当长笛吹，每扇窗一个音。|塔又在吹奏了。你敢发誓，这曲子的音比窗户还多。|风之歌。如今你能哼出前半段了；城堡里没别人会。} {今天它听起来几乎像一首摇篮曲。|今天它急促不安，像是要迟到了。|{season == "winter": 它吹得又低又慢，像雪下的什么东西。|它在阵风之间断断续续地吹。}}
+# en: Thin arrow-slit windows in the curved wall of a dusty tower stair, wind whistling through them, a student with one hand pressed to the cold stone.
+scene [aca41f] = 尘封的塔楼楼梯弧墙上开着细长的箭孔，风从中呼啸而过，一个学生用一只手按着冰冷的石头。
+# en: Hum along and listen
+opt.left.label [9b8c64] = 跟着哼，静静听
+# en: {You hum back. For a moment the tower answers in harmony, and the air goes thin and bright, and you come away drained and happy, as after a long song.|You hum, and one window falls silent as if to listen. It costs you something to keep going. You keep going.|You hum the part you know and the tower plays the rest. When it's done your hands are cold to the elbow and you're smiling.}
+opt.left.say.1 [415007] = {你哼了回去。一瞬间塔以和声作答，空气变得稀薄而明亮，你离开时疲惫又快乐，像唱完一首长歌。|你一哼，有一扇窗静了下来，像在倾听。继续哼要花你些什么。你继续哼。|你哼你会的那段，塔吹完剩下的。结束时你的手冷到手肘，脸上却在笑。}
+# en: Write the tune down
+opt.right.label [469fb9] = 把曲子记下来
+# en: {You mark each window's note in your notebook. It's a scale nobody uses any more; you find it later in a very old songbook.|You write the notes down and get a different tune each time you read them back. That seems important, and you can't think why.|Your page of notes is filling up. The tune has the same shape as the stair, you realise; you climb it, more or less.}
+opt.right.say.1 [73a6c8] = {你把每扇窗的音都记进笔记本。这是一种如今没人用的音阶；后来你在一本很老的歌集里找到了它。|你把音符记下来，每次读回去都是不同的曲子。这似乎很重要，你却想不出为什么。|你那页音符快写满了。你发现这曲子和楼梯一个形状；你大致是在爬它。}
+
+@event seventh_tower_outside_ledge
+# en: The Outside Ledge
+title [69657a] = 塔外的窄沿
+# en: {From the window at the top, a ledge a foot wide runs round the outside of the tower. From the far side, they say, you can see all seven towers and every bridge at once.|The ledge. Someone has chalked a tiny arrow on the sill: THIS WAY, BRAVE ONE.|You know the ledge's handholds now: the gargoyle's ear, the iron ring, the crack shaped like a smile.} {The wind is mild.|{season == "winter": There's ice on the stone.|A crow is sitting exactly where you'd put your foot.}|The bridges below are just lighting up for evening.}
+text [d65d5b] = {从塔顶的窗口出去，有一道一尺宽的石沿绕塔外一圈。据说从另一侧能同时看见七座塔和每一座桥。|那道石沿。有人在窗台上用粉笔画了个小箭头：“勇者请走这边”。|你如今熟悉石沿上的抓手：石像鬼的耳朵、铁环、那道像笑脸的裂缝。} {风很温和。|{season == "winter": 石头上结了冰。|一只乌鸦正好站在你要落脚的地方。}|下方的桥刚刚为傍晚亮起来。}
+# en: A narrow stone ledge running round the outside of a high tower, a student edging along it with their back to the wall, six other towers and their bridges of light spread out below.
+scene [0c0e9c] = 高塔外侧绕着一道窄窄的石沿，一个学生背贴着墙一点点挪过去，下方铺展着另外六座塔和它们的光之桥。
+# en: Edge round the ledge
+opt.left.label [d3ca1e] = 沿着窄沿绕过去
+# en: {You reach the far side and there they are, seven towers, every bridge of light, the lake holding the whole castle upside down. You forget to be afraid until the way back.|You inch round past the arrow and stand, breathing, over the whole academy. Somebody far below waves. You wave back like a fool.|Ear, ring, smile. You're round in a minute and sit with your feet over the drop, the castle lit up below like a map of itself.}
+opt.left.say.1 [9ce9b4] = {你到了另一侧，它们就在那里，七座塔、每一座光之桥，湖面把整座城堡倒映过来。直到回程你才想起害怕。|你挪过那个箭头，站定喘气，脚下是整座学院。远处有人朝你挥手。你像个傻瓜一样挥了回去。|耳朵、铁环、笑脸。你一分钟就绕了过去，坐在石头上把脚悬在半空，下方灯火通明的城堡像一张自己的地图。}
+# en: {Your foot slips on the first step and you spend a long moment hugging the wall. You climb back in through the window shaking and scraped.|The wind takes your scarf and very nearly you. You crawl back inside on grazed hands and sit on the floor a while.|You misjudge the crack shaped like a smile. Your knee meets the stone hard, and you retreat, limping.}
+opt.left.say.2 [92ae33] = {你第一步就滑了脚，抱着墙僵了好一阵。你从窗口爬回来，浑身发抖，满是擦伤。|风卷走了你的围巾，差点把你也卷走。你用擦破的手爬回屋里，在地上坐了好一会儿。|你看错了那道笑脸裂缝。膝盖重重磕在石头上，你一瘸一拐地退了回来。}
+# en: Look out from the window
+opt.right.label [bf48fb] = 在窗口眺望
+# en: {You lean on the sill and look out at the three towers you can see. It's enough. It's more than enough.|You stay inside and read the chalk arrow until it stops sounding like a dare.|You stay at the window and watch the bridges light, one by one, without needing to see them all.}
+opt.right.say.1 [8475c0] = {你倚着窗台，望着看得见的三座塔。足够了。绰绰有余。|你待在屋里读那个粉笔箭头，直到它听上去不再像挑衅。|你待在窗边，看着桥一座座亮起来，不必把它们全都看见。}
+
+@event thesis_lab_tea_urn
+# en: The Tea Urn
+title [6408c5] = 茶炉
+# en: {The thesis lab runs on the tea urn, a dented copper monster that has outlived forty years of final-years. Round it, people confess things.|At the urn today someone is crying quietly into their mug about chapter three.|The urn. Someone has taped a list to it: STAGES OF THESIS GRIEF. Everyone has initialled the stage they're at.} {The urn is making the noise that means it's about to boil over.|Someone has hidden a tin of biscuits behind it, labelled NOT BISCUITS.|{season == "spring": The windows are open, and blossom keeps landing in the mugs.|The lamps are lit already, though it's barely evening.}}
+text [7c0eae] = {论文实验室靠茶炉运转：一只坑坑洼洼的铜怪物，熬走了四十届毕业生。人们围着它坦白心事。|今天茶炉边有人对着杯子小声哭第三章。|茶炉。有人在上面贴了张单子：“论文悲伤五阶段”。每个人都在自己所处的阶段签了缩写。} {茶炉正发出那种快要沸出来的声音。|有人在它后面藏了一罐饼干，标签写着“不是饼干”。|{season == "spring": 窗开着，花瓣不停落进杯子里。|天才刚傍晚，灯就已经点上了。}}
+# en: A great dented copper tea urn on a trolley at the end of a row of study carrels, final-year students clustered round it holding mugs and complaints.
+scene [50c5e3] = 一排自习隔间尽头的推车上放着一只坑坑洼洼的大铜茶炉，毕业班学生端着杯子、带着牢骚围在旁边。
+# en: Stay and listen
+opt.left.label [465e74] = 留下来听听
+# en: {You hear about an advisor who writes only in question marks, a source that turned out to be a forgery and a cat that ate a bibliography. You say almost nothing, and everyone thanks you.|You sit with the one crying about chapter three until they're laughing about chapter three.|You find your stage on the list and initial it. Then you listen to everyone else's, which is better than any advice.}
+opt.left.say.1 [cf25d2] = {你听说了一位只用问号写批注的导师、一份原来是伪造的史料，和一只吃掉参考书目的猫。你几乎没说话，大家却都谢谢你。|你陪那个为第三章哭的人坐着，直到 TA 为第三章笑起来。|你在单子上找到自己的阶段，签了名。然后听别人讲他们的，这比任何建议都管用。}
+# en: Fill your mug and get back to work
+opt.right.label [15de02] = 倒满杯子回去干活
+# en: {You fill your mug and walk away from the confessions. Your carrel is quiet and your notes go well, and you feel slightly like a deserter.|You pat the crying student's shoulder on your way past and go back to work. It's the best you can do today.|You take your tea back to your carrel. Behind you, the list of stages grows another set of initials.}
+opt.right.say.1 [ee6663] = {你倒满杯子，离开了那些坦白。你的隔间很安静，笔记写得很顺，你却有点像个逃兵。|你经过时拍拍那个哭泣的学生的肩，回去干活。今天你只能做到这样。|你端着茶回到隔间。在你身后，那张阶段单上又多了一组缩写。}
+
+@event thesis_lab_old_theses
+# en: The Shelf of Old Theses
+title [818258] = 旧论文书架
+# en: {Along the back wall run three centuries of finished theses, bound in cloth that has faded to the same brown.|The thesis shelf. You've started a list of the best titles. Today's find: a study of the emotional lives of doorknobs.|The old theses. You can find the good ones by feel now: the spines are worn where people keep taking them down.} {One near the end has a pressed flower for a bookmark.|One has a note on the flyleaf: "Passed. Barely. Worth it."|{season == "spring": Blossom drifts in through the open window and settles on the spines.|A spider has made its home between two famous ones.}}
+text [b228d3] = {后墙上排着三个世纪的论文，布面封皮都褪成了一样的棕色。|论文书架。你开始收集最好的标题了。今天的发现：一篇关于门把手情感生活的研究。|旧论文。如今你凭手感就能找到好的：书脊上被人反复取下的地方都磨旧了。} {靠近末尾的一本夹着一朵压花当书签。|有一本的扉页上写着：“过了。勉强。值得。”|{season == "spring": 花瓣从开着的窗户飘进来，落在书脊上。|一只蜘蛛在两本名作之间安了家。}}
+# en: A long shelf of bound theses in faded cloth, a student pulling one out and blowing dust off a spine with a ridiculous title.
+scene [cd4c63] = 一长排褪色布面的装订论文，一个学生抽出一本，吹掉书脊上的灰，书名荒唐可笑。
+# en: Read a famous one
+opt.left.label [e7cbd7] = 读一篇名作
+# en: {It's brilliant, and it was written by someone younger than you. You put it back very carefully and go and sit somewhere quiet.|It's the one everybody cites. Reading it in full is like seeing a mountain from the bottom.|You read the most-worn one cover to cover. It's so good it hurts, which you suppose is the point.}
+opt.left.say.1 [fae5c1] = {它才华横溢，而作者比你还年轻。你小心翼翼地把它放回去，找个安静的地方坐了一会儿。|这是人人都引用的那篇。完整读一遍，就像站在山脚下仰望一座山。|你把磨得最旧的那本从头读到尾。好到让人心疼，你猜这正是重点。}
+# en: Read a gloriously bad one
+opt.right.label [a7a3a0] = 读一篇烂得辉煌的
+# en: {It argues for forty pages that rain is a kind of apology. It passed. You feel enormously better about everything.|You read the doorknob one. It is three hundred pages long and completely serious, and you laugh until the carrels shush you.|You find one with footnotes longer than its chapters, and footnotes to the footnotes. Your own thesis suddenly seems sane.}
+opt.right.say.1 [6885f4] = {它用四十页论证雨是一种道歉。它通过了。你对一切都好受多了。|你读了门把手那篇。三百页，一本正经，你笑到隔间里的人都来嘘你。|你找到一篇脚注比正文还长、脚注还有脚注的。你自己的论文顿时显得很正常。}
+
+@event thesis_lab_mock_defence
+# en: The Mock Defence
+title [e3f5f2] = 模拟答辩
+# en: {Final-years run mock defences at the end of the lab. Three in borrowed gowns play the committee, and they play it cruel.|Mock defence day. The pretend committee has added a fourth chair and a tiny gavel.|The mock committee nods at you as you come in. They've started keeping score on the board.} {Tonight's chief examiner is doing an impression of Thorne that is unkindly accurate.|The chair has a bell, which they ring for every "um".|{season == "winter": Everyone defends in scarves; the lab's fire is out.|Someone has borrowed a skeleton from the infirmary to sit in the audience.}}
+text [635064] = {毕业班在实验室尽头举办模拟答辩。三个人披着借来的长袍扮委员会，扮得很凶。|模拟答辩日。假委员会添了第四把椅子和一把小法槌。|模拟委员会在你进门时朝你点头。他们开始在黑板上记分了。} {今晚的主考在模仿索恩，模仿得刻薄而精准。|主席有个铃铛，你每说一个“呃”就摇一下。|{season == "winter": 实验室的炉火灭了，大家裹着围巾答辩。|有人从医务室借来一副骨架，坐在观众席上。}}
+# en: A chalkboard at the end of the thesis lab, three final-year students sitting as stern pretend examiners in borrowed gowns while a fourth stands to defend.
+scene [4910d2] = 论文实验室尽头的黑板前，三个毕业生披着借来的长袍扮作严厉的考官，第四个站着答辩。
+# en: Take the hot seat
+opt.left.label [dafea3] = 坐上被告席
+# en: {You field every question, even the cruel one about your sources. The chief examiner says "Hm," in Thorne's voice, and means it.|They ring the bell for "um" only twice. That's a record, and the committee applauds with the tiny gavel.|You hold your ground for an hour. Your score on the board is the highest of the term, and people come to ask how.}
+opt.left.say.1 [4afa89] = {你接住了每个问题，连那个关于史料来源的刁钻问题也不例外。主考用索恩的腔调说了声“嗯”，而且是真心的。|他们只为“呃”摇了两次铃。这是纪录，委员会用小法槌为你鼓掌。|你顶住了一个小时。黑板上你的分数是本学期最高，有人跑来问你怎么做到的。}
+# en: {The third question undoes you. You stand at the board saying "well" while the chief examiner does Thorne's eyebrow at you.|They find the hole in your argument in four minutes, and the bell rings for every "um" after that. Better here than in front of the real thing.|You lose your thread under the gavel. The committee is merciful afterwards, which is worse.}
+opt.left.say.2 [c48a11] = {第三个问题就把你击溃了。你站在黑板前一个劲地说“那个”，主考冲你挑起索恩式的眉毛。|他们四分钟就找到了你论证里的漏洞，此后你每个“呃”都换来一声铃。在这儿露馅总比在真答辩上强。|你在法槌下丢了思路。事后委员会很宽容，这反而更糟。}
+# en: Sit on the committee
+opt.right.label [d112ba] = 坐在委员会席上
+# en: {You ask one question, quietly, and watch the defender's face as they see the hole. You feel like a cat. A kind cat.|You learn to find the weak joint in an argument by watching three of them crack. It's educational and a little shameful.|You're the committee's favourite examiner now: gentle voice, terrible questions.}
+opt.right.say.1 [3075b2] = {你只问了一个问题，轻声细语，看着答辩者发现漏洞时的脸色。你觉得自己像只猫。一只善良的猫。|看着三个论证一一崩塌，你学会了寻找论证的薄弱关节。很有教育意义，也有点可耻。|你如今是委员会最受欢迎的考官：声音温柔，问题可怕。}

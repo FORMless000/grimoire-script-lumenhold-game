@@ -50,6 +50,8 @@
   // Display name used by {npc}: the npc's `short:` if given, else the first word of `name`.
   const shortName = (def) => def.short || String(def.name).split(/[\s·]/)[0];
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  // A place merged into another (`deprecated: <survivor>`, E11) resolves to its survivor; any other id to itself.
+  const placeAlias = (c, id) => { let p = c.places && c.places[id], n = 0; while (p && p.deprecated && c.places[p.deprecated] && n++ < 8) p = c.places[p.deprecated]; return p ? p.id : id; };
 
   class Engine {
     constructor(content) {
@@ -84,7 +86,7 @@
       for (const e of this.events) for (const o of e.options) {
         const set = new Set();
         G.walkEffects(o.effects, (st) => { if ((st.t === 'delta' || st.t === 'assign') && content.resources[st.name]) set.add(st.name); });
-        o.firstCheck = o.effects.find((st) => st.t === 'check' || st.t === 'challenge' || st.t === 'sit_exam' || st.t === 'chance') || null;
+        o.firstCheck = o.effects.find((st) => st.t === 'challenge' || st.t === 'sit_exam' || st.t === 'chance') || null;
         if (o.spell) set.add(content.game.spell_resource || 'mana');
         o.affects = [...set];
       }
@@ -190,7 +192,7 @@
     }
 
     // A place merged into another (`@place x deprecated: y`, E11) resolves to its survivor; any other id to itself.
-    placeAlias(id) { let p = this.c.places && this.c.places[id], n = 0; while (p && p.deprecated && this.c.places[p.deprecated] && n++ < 8) p = this.c.places[p.deprecated]; return p ? p.id : id; }
+    placeAlias(id) { return placeAlias(this.c, id); }
     // A save from before a merge (E11): its discoveries, visit counts and picks move to the survivor. Run logs keep the old
     // ids; their viewers resolve them with placeAlias.
     remapDeprecated() {
@@ -547,7 +549,7 @@
       const s = this.s, t = s.tracks && s.tracks[id], d = this.c.tracks[id], sr = this.studyRule();
       if (!t || !d || d.kind !== 'course' || t.status !== 'enrolled' || this.phaseOf() !== 'term' || this.isTermEnd() || t.cw !== s.turn || t.cwCheck === s.turn) return;
       const extra = (sr.check || 0) - (sr.monthly || 0);
-      if (extra <= 0 || !ctx.checks.some((c) => (c.challenge ? c.result === 'win' : c.ok))) return;
+      if (extra <= 0 || !ctx.checks.some((c) => c.result === 'win')) return;
       t.cwCheck = s.turn;
       this.run([{ t: 'study', track: id, min: extra, max: extra }], ctx);
     }
@@ -929,14 +931,13 @@
       ctx.notes.push({ kind: 'regrade', track: id, level: lv, from: was, grade: st.grade });
       if (was === 'F' && st.grade !== 'F') this.teachLevel(id, lv, ctx);
     }
-    // What an option's first roll looks like on its button: a challenge (with its swing, and combat's mana), an exam, a legacy check.
+    // What an option's first roll looks like on its button: a challenge (with its swing, and combat's mana), an exam, a chance.
     checkView(st, actor, item) {
       // A fight (combat, duel) is played (fight: true): its p is the stub's estimate, and it charges no entry Mana.
       if (st.t === 'challenge') { const odds = this.challengeOdds(st, actor, item && item.id), fight = MINIGAME_KINDS[st.kind] === 'fight', parley = MINIGAME_KINDS[st.kind] === 'parley'; return { skill: st.kind, using: odds.skill, p: odds.win, challenge: true, swing: st.swing || null, combat: st.kind === 'combat', fight, parley: parley || undefined, cost: st.kind === 'combat' && !fight ? this.combatCost() : 0 }; }
       if (st.t === 'sit_exam') { const id = (item && item.track) || this._ctxTrack; const o = id && this.trackState(id) ? this.examOdds(id, st.swing) : null; return o ? { exam: true, skill: 'exam', using: o.skills.join('+'), p: o.pass, top: o.top, a: o.a, swing: st.swing || null } : null; }
       // Pure luck (`chance likely:`): the roll's odds and no skill (feedback 2026-10-19: drawn as a roll all the same).
-      if (st.t === 'chance') return { luck: true, p: Math.round(st.word ? this.likelihoodP(st.word, st.steps, actor) : clamp(this.value(st.p, actor), 0, 100)) };
-      return { skill: st.skill, p: this.checkChance(st.skill, this.value(st.dc, actor)) };
+      return { luck: true, p: Math.round(st.word ? this.likelihoodP(st.word, st.steps, actor) : clamp(this.value(st.p, actor), 0, 100)) };
     }
     // An enrolled course as it stands (playtest 2, step 5): exam preparation, the exam's odds if it were sat today,
     // and the months until it (0 = this month, the term's last).
@@ -1176,7 +1177,7 @@
             case 'flag': return !!s.flags[a[0]];
             case 'left': { const st = s.states[a[0]]; return st ? (st.left == null ? 99 : st.left) : 0; }
             case 'rel': return s.npcs[a[0]] ? s.npcs[a[0]].rel : 0;
-            case 'love': case 'spark': return s.npcs[a[0]] ? s.npcs[a[0]].spark : 0;
+            case 'spark': return s.npcs[a[0]] ? s.npcs[a[0]].spark : 0;
             case 'spell_level': return (s.spells || {})[a[0]] || 0;
             case 'knows': return !!(s.facts || {})[a[0]];
             case 'npc_rel': return eng.npcRel(a[0] === 'npc' ? actor : a[0], a[1] === 'npc' ? actor : a[1]);
@@ -1570,13 +1571,6 @@
             this.run(this.pick('chance', [p, 100 - p], { p }) === 0 ? st.body : st.else, ctx);
             break;
           }
-          case 'check': {
-            const p = this.checkChance(st.skill, this.value(st.dc, ctx.actor));
-            const ok = this.pick('check', [p, 100 - p], { skill: st.skill }) === 0;
-            ctx.checks.push({ skill: st.skill, p, ok });
-            this.run(ok ? st.body : st.else, ctx);
-            break;
-          }
         }
       }
     }
@@ -1725,13 +1719,13 @@
     // and the event as a whole rests for ANY_EVENT_REST months so it doesn't recur back-to-back.
     eligible(e, used) {
       if (used.has(e.id)) return false;
-      if (e.actor === 'any' || e.per) return this.s.last[e.id] == null || (this.s.turn - this.s.last[e.id]) >= ANY_EVENT_REST;
+      if (e.per) return this.s.last[e.id] == null || (this.s.turn - this.s.last[e.id]) >= ANY_EVENT_REST;
       const seen = this.s.seen[e.id] || 0;
       if (!e.repeat) return seen === 0;
       return seen === 0 || (this.s.turn - this.s.last[e.id]) >= e.repeat;
     }
     eligibleFor(e, actor) {
-      if (e.actor !== 'any' && !e.per) return true;
+      if (!e.per) return true;
       const last = (this.s.lastBy || {})[e.id + '@' + actor];
       if (last == null) return true;
       return !!e.repeat && (this.s.turn - last) >= e.repeat;
@@ -1793,8 +1787,7 @@
       }
       const out = [];
       let actors;
-      if (e.actor === 'any') actors = Object.keys(this.s.npcs).filter((id) => this.s.npcs[id].met && !this.distant(id));
-      else if (e.actor && e.actor !== 'npc') actors = [e.actor];
+      if (e.actor && e.actor !== 'npc') actors = [e.actor];
       else actors = [null];
       for (const a of actors) {
         if (a && e.trigger === 'social' && !(this.s.npcs[a] && this.s.npcs[a].met)) continue;
@@ -1803,13 +1796,6 @@
         if (!this.test(e.when, a)) continue;
         const w = e.weight ? this.value(e.weight, a, 10) : 10;
         if (w > 0) out.push({ e, actor: a, w });
-      }
-      // For `actor: any`, people you're closer to (or at war with) turn up more often,
-      // while the event's total weight stays what the author wrote.
-      if (e.actor === 'any' && out.length > 1) {
-        const aff = (x) => { const n = this.s.npcs[x.actor]; return 1 + Math.abs(n.rel) / 20 + n.spark / 15 + (n.bond !== 'none' ? 1 : 0); };
-        let sum = 0; out.forEach((x) => { x.aff = aff(x); sum += x.aff; });
-        out.forEach((x) => { x.w = x.w * x.aff / sum; });
       }
       return out;
     }
@@ -1891,14 +1877,14 @@
         const item = s.deck.shift();
         const e = this.c.events[item.id];
         if (!e) { this.warn(new Error('unknown event in deck: ' + item.id)); continue; }
-        if (e.actor && e.actor !== 'any' && e.actor !== 'npc') item.actor = e.actor;
+        if (e.actor && e.actor !== 'npc') item.actor = e.actor;
         // `defer:` (playtest 2, I6): while it holds, a pushed card goes back to the queue for next month instead of showing.
         if (e.defer && !item.force && this.test(e.defer, item.actor || null)) {
           s.queue.push({ id: item.id, actor: item.actor || null, due: s.turn + 1, track: item.track, cast: item.cast, src: 'queued' });
           continue;
         }
         // item.force (debug/preview) skips the `when` check
-        if ((e.actor === 'any' || e.actor === 'npc' || (e.cast && !item.cast)) && !item.actor && !item.cast) {
+        if ((e.actor === 'npc' || (e.cast && !item.cast)) && !item.actor && !item.cast) {
           this._place = item.place || null; this._slot = item.slot || null;
           const c = this.candidates(e); const pick = this.pickWeighted(c);
           this._place = null; this._slot = null;
@@ -2012,7 +1998,7 @@
       if (item.track && s.tracks && s.tracks[item.track]) {
         const t = s.tracks[item.track];
         if (t.status === 'enrolled' && this.studyRule().attend) { const sr = this.studyRule(); t.study = Math.min(sr.cap, (t.study || 0) + sr.attend); }
-        if (t.status === 'member') for (const c of ctx.checks) { const good = c.challenge ? c.result === 'win' : c.ok; const bad = c.challenge ? c.result === 'lose' : !c.ok; if (good) t.perf = Math.min(100, t.perf + 5); if (bad) t.perf = Math.max(0, t.perf - 5); }
+        if (t.status === 'member') for (const c of ctx.checks) { const good = c.result === 'win', bad = c.result === 'lose'; if (good) t.perf = Math.min(100, t.perf + 5); if (bad) t.perf = Math.max(0, t.perf - 5); }
       }
       this._cast = null; this._ctxTrack = null; this._ctxPlace = null;
       if (opt.memory) {
@@ -2231,6 +2217,7 @@
 
   if (Director) Director.install(Engine, G);
   Engine.shortName = shortName;
+  Engine.placeAlias = placeAlias;
   Engine.SAVE_VERSION = SAVE_VERSION;
   Engine.SaveVersionError = SaveVersionError;
   return Engine;

@@ -215,6 +215,10 @@ The rules and the AI live in the core and reach the game through the bundle; thi
   foe in the main game: `grim diff` moves, and the combat goldens with it.
 - **Idle** (the intro's practice dummy, for the World Expansion session's lesson script): a kit with `idle: true` may commit
   `cancel` as a normal move. It does nothing, and the dummy still takes hits.
+- **The lesson's drill** (2026-10-25, main game only; the bench plays no lessons): EVENTS `loop` repeats after `script`
+  (`src/combat.js` `scriptedMove`): Flame, Refocus, Strike, with a seen Impulse Parried in place of a Strike, an
+  unaffordable spell played as a Strike and a Refocus without flux as a Parry. The mannequin's `mana:.7` (capacity 20)
+  pays for a Flame every drill until about exchange 12. `test/combat-bridge.test.js` plays the coached line.
 
 ## Where things stood (2026-10-17)
 

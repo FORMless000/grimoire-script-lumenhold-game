@@ -1,0 +1,261 @@
+# ============================================================
+#  Baseline pools, second pass (2026-10-24): courses_more.
+#  One more repeatable class morning for every course, at the
+#  level its pool was thinnest. Spec: docs/authoring/pools.md.
+# ============================================================
+
+# ---------------- Evocation II ----------------
+
+@event evo_fog_to_the_line
+title: Fog to the Line
+track: evocation
+level: 2
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: wave
+tags: class magic
+scene: A lecture hall filling slowly with white fog from students' hands, a chalk line drawn on the wall at shoulder height, a stern old professor holding a measuring stick.
+text: {Professor Thorne chalks a line on the wall at shoulder height. "Water and fire together. Make fog. To the line, and not a hair over."|Fog day. Thorne's chalk line is lower than last time.|The fog line again. Thorne no longer explains; he just draws it and folds his arms.} {The windows have been shut.|Somebody's fog smells of burnt toast.|{season == "winter": The fog freezes on the windows in ferns.|The hall is warm, and the fog comes too easily.}}
+> left: Balance fire and water exactly
+  challenge spell standard:
+    win:
+      arcana +small
+      study evocation +tiny
+      say: {Your fog rises, thick and white, and stops at the line as if it can read. Thorne looks at it a long time. "Hm."|Your fog fills the hall to the chalk precisely. Thorne makes a small mark in his book; you'd give a crown to know what.|You hold the balance so finely that your fog comes up the wall like a tide and stops. Thorne nods, once. From him, a standing ovation.}
+    lose:
+      mood -small
+      health -tiny
+      say: {Too much fire. Your fog turns to scalding steam and the front row leaves. Thorne opens a window without comment.|Too much water. A small rain falls on your desk, and only your desk, and on your hands, which are cold for an hour. Thorne writes something down.|You overshoot the line by a head and scald your wrist doing it. Thorne measures the fog with his stick, twice, in silence.}
+> right: Hold the water; let a partner burn
+  mana -small
+  study evocation +tiny
+  say: {You call the water and your partner warms it. Half the credit, half the effort, and all the mana you had.|You hold a ball of water steady for twenty minutes while your partner fusses with the flame. Your arms shake; your fog is fine.|You're the best water-holder in the class now, which Thorne calls "a respectable specialism" in a tone that isn't sure.}
+
+# ---------------- Astromancy I ----------------
+
+@event astro_dream_diary
+title: The Dream Diary
+track: astromancy
+level: 1
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: moon
+tags: class study
+scene: A circle of yawning students under an observatory dome, each holding a small notebook, one standing to read aloud while the others try not to laugh.
+text: {Every first-year astromancer keeps a dream diary, and once a month you read an entry aloud for the class to interpret. Today it's your turn.|Dream diaries again. The lecturer reminds you that dreams are evidence; the class reminds you they're also very funny.|Your turn with the dream diary. The class leans in; your entries have a following.} {Last night you dreamed about a goat in a crown.|Last night you dreamed your teeth were made of keys.|{season == "winter": Last night you dreamed of snow falling upward.|Last night you dreamed of an exam in a language made of birds.}}
+> left: Read the real one aloud
+  study astromancy +tiny
+  lore +small
+  mood -small
+  say: {You read about the goat. The class interprets it as ambition, appetite and possibly a farm. You go pink, and learn more than they do.|You read the dream of key-teeth. The lecturer finds three meanings in it; the class finds four, one of them rude.|You read it straight. The interpretations are thoughtful and humiliating, in equal parts.}
+> right: Invent something impressive
+  challenge deceive standard:
+    win:
+      guile +small
+      mood +small
+      say: {You describe a dream of a silver hare on a staircase. The lecturer is deeply moved. You must remember to have it someday.|You invent a prophetic dream so convincing that half the class writes it down. The lecturer gives it full marks and a worried look.|Your invented dream gets a round of applause. You almost wish it were true.}
+    lose:
+      mood -small
+      renown -tiny
+      say: {You get the silver hare's symbolism backwards. The lecturer, who keeps a book of real dream symbols, notices, and says so, gently, in front of everyone.|You overdo it. Nobody dreams in footnotes. The class is delighted to say so.|Halfway through, you forget what the hare was doing. The class finishes your dream for you, badly.}
+
+# ---------------- Advanced Alchemy ----------------
+
+@event alch_antidote_race
+title: The Antidote Race
+track: alchemy
+level: 3
+class: routine
+tone: tense
+repeat: 4
+weight: 10
+art: potion
+tags: class
+scene: A laboratory bench lined with beakers of clear liquid, each pair of students racing to identify and counter a mild poison while a healer watches an hourglass.
+text: {Sister Amaranth sets a beaker of clear liquid in front of each pair. "A mild poison. Identify it. Counter it. Then drink both. Hourglass."|Antidote day. Sister Amaranth has made the poisons milder and the hourglass shorter.|The antidote race. You can smell three of Sister Amaranth's poisons from the door now; she has started using a fourth.} {The last pair to finish washes everyone's beakers.|One pair's tongues are already blue.|{season == "summer": The heat makes everything evaporate twice as fast.|Rain hammers the windows and nobody can hear the hourglass.}}
+> left: Identify it by testing
+  challenge research standard:
+    win:
+      alchemy +small
+      study alchemy +tiny
+      say: {Three reagents and one colour change say hiccup-root. You counter it with mint and pepper and drink both before the sand's half gone. "Keep doing that," says Sister Amaranth.|You name it in two tests and brew the counter nearly blindfold. Sister Amaranth watches you drink without a word, which is praise.|You identify the fourth poison, the one she thought nobody would get. She looks at you over the hourglass and adds a fifth to her list.}
+    lose:
+      health -tiny
+      mood -tiny
+      say: {You guess wrong and drink a counter to the wrong thing. Your tongue is blue until supper.|You run out of sand, drink your best guess and hiccup in iambic rhythm for an hour.|Your antidote works on everything except the poison. Sister Amaranth hands you a second one, the right one, without comment.}
+> right: Brew a broad remedy instead
+  alchemy +small
+  mana -small
+  say: {You skip the testing and brew a remedy that counters most mild poisons, expensively. It works; it takes a lot out of you.|A broad remedy, slow and draining, and very safe. Sister Amaranth notes it as "a cautious answer", which is not praise.|Your broad remedy is so reliable now that the other pairs come to borrow it. Brewing it still leaves you hollow.}
+
+# ---------------- Illusion II ----------------
+
+@event illu_turnip_market
+title: The Turnip Market
+track: illusion
+level: 2
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: mask
+tags: class magic
+scene: Students at makeshift market stalls in a lecture hall holding up dazzling jewels that flicker, now and then, into turnips, while a theatrical professor drifts between them with a purse.
+text: {Professor Vey gives everyone a turnip and a stall. "Glamour it into something I'll pay for. I have a purse of play-crowns, and no mercy."|Turnip market. Vey's purse of play-crowns is fatter this time, and so is her suspicion.|The turnip market again. Vey walks the stalls with her purse and the expression of a duchess at a bad auction.} {Your neighbour's turnip is already a very convincing tiara.|Somebody's ruby is dripping slightly.|{season == "autumn": The turnips are fresh from Old Maud's patch and smell of earth.|The hall smells overwhelmingly of turnip.}}
+> left: Make it dazzle
+  challenge spell using charm standard:
+    win:
+      charm +small
+      study illusion +tiny
+      say: {Your turnip becomes a sapphire the size of an egg. Vey turns it over, sniffs it, and pays three play-crowns. "It smells of turnip," she says. "I'll allow it."|You turn it into a golden pear. Vey bites it, which is cheating, then pays anyway, laughing.|Your turnip becomes a pocket watch that ticks. Vey listens to it and pays you double. "You made me want it," she says. "That's the whole art."}
+    lose:
+      mood -small
+      renown -tiny
+      say: {Your jewel flickers back into a turnip as Vey reaches for it. The whole hall sees. Vey pays you one play-crown, out of pity.|Your sapphire has roots. Vey points this out, delighted, to everyone.|Your watch ticks, then sprouts leaves. "Charming," says Vey, and moves on.}
+> right: Buy, and catch the fakes
+  guile +small
+  say: {You're given a few play-crowns and set loose as a customer. You catch three turnips in disguise by their smell. Vey nods. "The other half of the art."|You haggle your way down the stalls and catch the dripping ruby out. Its maker sulks.|You can tell a glamoured turnip at ten paces now. Vey makes you her assistant buyer for the rest of the hour.}
+
+# ---------------- Beastcraft I ----------------
+
+@event beast_bristle_trim
+title: The Bristle Trim
+track: beastcraft
+level: 1
+class: routine
+tone: light
+repeat: 4
+weight: 10
+art: broom
+tags: class
+scene: A row of school brooms clamped to a bench outside the stables, students with shears trimming and binding the twigs while a stern professor inspects each tail.
+text: {Professor Brask has the class trimming broom tails. "Broom's a creature. Sulky, stupid creature. Groom it, or it grooms you. Into a hedge."|Bristle day again. Brask inspects each broom tail like a hoof, muttering to the brooms more kindly than to you.|Broom trimming. Your school broom recognises you and shivers.} {A hippogriff watches from the paddock, judging.|One broom keeps flicking its twigs at whoever's trimming it.|{season == "winter": The twigs are brittle with frost and snap if you look at them.|The twigs are green and springy, and fight back.}}
+> left: Trim it twig by twig
+  study beastcraft +tiny
+  vigor +small
+  mood -small
+  say: {You bind every twig and trim the tail to a perfect curve. Brask looks it over. "Adequate. Broom thinks so too." Your fingers are numb, and the hour felt like three.|You trim for an hour, slowly, and your broom flies straighter for it. It's mindless and it isn't; your back aches.|You trim as Brask taught you, twig by twig. The broom purrs, if a broom can purr. Brask says it can. It's still the dullest hour of your week.}
+> right: Test-fly it untrimmed
+  challenge feat standard wild:
+    win:
+      vigor +small
+      mood +small
+      say: {You fly it rough and it flies well anyway, the way some ugly ponies do. Brask watches, grunts, and lets you off.|The untrimmed broom bucks once and then settles under you like an old dog. Brask, drily: "Lucky. Don't count on it."|You know your broom's moods now; you fly it shaggy and it goes like a hawk. Brask almost smiles.}
+    lose:
+      health -small
+      mood -tiny
+      say: {The shaggy tail catches the wind and you go into the hedge, as Brask predicted. She says so, to the hippogriff.|The broom sheds twigs in mid-air and spins you into the paddock. The hippogriff is unimpressed. So is Brask.|It bucks you off at head height. Brask tells the broom it did well, and tells you to get up.}
+
+# ---------------- Umbral Theory II ----------------
+
+@event umbral_shadow_witness
+title: The Shadow Witness
+track: umbral
+level: 2
+class: routine
+tone: eerie
+repeat: 4
+weight: 10
+art: eye
+tags: class mystery
+scene: A dim lecture room at the top of a tower, an empty desk with an inkpot-shaped gap in the dust, students crouching to question the long shadows in the corner.
+text: {An inkpot has been taken from the professor's desk, on purpose, for the lesson. "The shadows in this room saw who took it," the professor says. "Ask them."|Another staged theft, a quill this time. The professor turns the lamps down. "Shadows remember. They just don't like being asked."|The shadow witness lesson. You know which corner's shadow gossips and which one sulks.} {The lamps burn low and blue.|The shadow under the window is longer than it should be.|{season == "winter": It's dark by mid-afternoon, and the shadows are bold.|A moth keeps throwing huge shadows across the ceiling, confusing everyone.}}
+> left: Question the long shadow
+  challenge research using guile standard:
+    win:
+      guile +small
+      study umbral +tiny
+      say: {The long shadow leans toward the door, then toward a third-year's bag. The inkpot is in it. The professor nods. "Good. Shadows point. People lie."|You coax the shadow into showing a hand, a sleeve, a stride. You name the thief; the thief applauds.|The gossiping corner tells you everything before you've finished asking. The professor marks you down for leading the witness, and up for results.}
+    lose:
+      mood -small
+      health -tiny
+      say: {The shadow stretches toward you instead, and the cold of it settles in your hands. You name the wrong student, confidently.|The shadow shows you a thief who looks a great deal like the professor. The professor finds this very funny; you're freezing.|The sulking corner gives you nothing but chill. You spend the hour with numb fingers and no answer.}
+> right: Watch the doorway, not the dark
+  lore +small
+  say: {You ignore the shadows and work out who left the room and when. You get the right answer by the wrong method. The professor sighs, but marks it.|You reason it out from the dust on the desk. Correct, and entirely unmagical.|You solve it from the doorway again. The professor has started calling you "the magistrate", and doesn't mean it as a compliment.}
+
+# ---------------- Artifice ----------------
+
+@event art_fair_entry
+title: Something for the Fair
+track: artifice
+level: 1
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: gear
+tags: class magic
+scene: A workshop bench crowded with half-built clockwork entries for the Artificers' Fair, a student holding a tiny screwdriver over a machine that twitches.
+text: {Every Artifice student is expected to have something for the Artificers' Fair. Yours is a clockwork wren that sings a little flat.|Fair entries again. Your wren now sings on key, mostly, and has started to hop.|Your fair entry has a name, a shelf and a temperament. The class has opinions about it.} {Your neighbour's entry, a self-pouring teapot, is pouring onto the floor.|Someone's entry has escaped and is hiding under the bench.|{season == "spring": The fair is weeks away and nobody is ready.|The fire buckets have been moved closer to the benches, on the faculty's orders.}}
+> left: Tinker with your own
+  challenge enchant standard:
+    win:
+      alchemy +small
+      study artifice +tiny
+      say: {You adjust the wren's voice-reed by a hair and it sings a whole scale. The workshop goes quiet to listen.|The wren hops, sings and flutters, and nothing catches fire. That's the bar, and you've cleared it.|You get the wren to sing something nobody built into it. You don't know how. You write it down very fast.}
+    lose:
+      mood -small
+      health -tiny
+      say: {The wren sings one perfect note and then smokes. Your fingers are singed from catching it.|You fix the flat note and break the hop. The wren lurches round the bench like a drunk sparrow. You burn a thumb on the spring.|The wren sings, beautifully, and then won't stop. You have to pull a gear with smoking pliers to get some peace, and burn yourself doing it.}
+> right: Rescue the neighbour's entry
+  arcana +small
+  study artifice -tiny
+  alignment +tiny
+  say: {You stop the teapot pouring, rebind its spout-charm and dry the floor. Your own wren waits, unfinished, all hour. Your neighbour will owe you for life.|You coax the escaped entry out from under the bench and fix its leg. Your wren sulks on its shelf, untouched.|You spend the hour on someone else's machine again. Theirs works now. Yours sings flat.}
+
+# ---------------- Starcalling ----------------
+
+@event star_cloudy_appointment
+title: A Cloudy Appointment
+track: starcalling
+level: 1
+class: routine
+tone: eerie
+repeat: 4
+weight: 10
+art: star
+tags: class magic
+scene: A brass observatory dome open to a heavy, clouded night sky, a student reaching up with both hands toward a faint gleam behind the clouds.
+text: {Tonight's appointment, says this morning's note, will go ahead "whatever the sky thinks". The sky thinks clouds, wall to wall.|Another clouded appointment tonight. The note is unbothered. "Starlight comes through cloud. It simply has to want to."|Cloud again tonight. You know the dome's cold corners and which way the gaps will drift.} {Somewhere behind the murk, the star you know best will be up.|The note says a thin gap may open in the west.|{season == "winter": It will be snow-cloud, heavy and low; your breath will freeze on the rail.|It will be warm cloud, with rain coming.}}
+> left: Call through the cloud
+  challenge spell standard+1:
+    win:
+      arcana +small
+      study starcalling +tiny
+      say: {The starlight comes down through the cloud like a rope through water, slow and then all at once. Your palms glow till dawn.|You call, and the cloud thins over your hands alone, a little round window in the sky. The lecturer writes for a long time.|You call the star by name and it answers, cloud or no cloud. You walk back down the stairs with light still in your fingers.}
+    lose:
+      mana -small
+      mood -small
+      say: {You call until your hands shake. The cloud doesn't care. You go to bed drained and dark.|A thread of light comes halfway and frays in the murk. It takes something out of you as it goes.|You reach up for an hour into nothing. The lecturer says even nothing is a lesson. It doesn't feel like one.}
+> right: Chart the gaps in the cloud
+  lore +small
+  health -tiny
+  say: {You sit by the rail all night logging the gaps, when and where and which stars peeked through. Cold to the bone; good data.|You chart the drift of the cloud like a sailor and predict the next gap to the minute. It comes; you're too frozen to cheer.|Your cloud log is pages long now. You know the sky's habits even when you can't see it, and your chest aches with cold.}
+
+# ---------------- Hollow Studies ----------------
+
+@event hollow_jarred_silences
+title: Silences in Jars
+track: hollow_studies
+level: 1
+class: routine
+tone: eerie
+repeat: 4
+weight: 10
+art: lock
+tags: class mystery
+scene: A windowless room lined with black-bound books and a shelf of small stoppered jars, each holding nothing visible, a student holding one up to the lamplight.
+text: {Today the headmistress hands you an empty jar. "Seal a silence in it. Not quiet; silence. You will know the difference by the end."|Another empty jar. Behind the headmistress, a shelf of stoppered jars, all apparently empty, all labelled in faded hands.|Silence jars. You know the weight of a well-sealed one now, heavier than it looks.} {The lamp hisses.|The books on the shelves have stopped breathing, as if to help.|{final_year: She asks what silence you'd keep, if you could keep only one.|She works at her own jar, unhurried, while you work at yours.}}
+> left: Seal the room's silence
+  study hollow_studies +tiny
+  mana -small
+  say: {You draw the room's silence into the jar a breath at a time and stopper it. When you shake it, nothing happens, very heavily. She nods.|The silence fights the stopper like a cat fights a bath. You win, eventually, emptied out.|You seal a silence so clean that the lamp seems louder when you're done. The headmistress takes the jar and shelves it with the old ones.}
+> right: Unseal one of the old jars
+  lore +small
+  mood -tiny
+  say: {You unstopper a jar dated a century ago. Out comes the silence of a room just after someone laughed. It's unbearably sad, and you don't know why.|You open an old jar and the room fills with the silence of a held breath before a goodbye. You close it again quickly. She says nothing, kindly.|You open one more old jar. A silence after snow. You sit in it a long while before you can speak.}

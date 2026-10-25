@@ -53,9 +53,7 @@ const SAMPLES = [
   ['mood +small', 'delta'],
   ['gold = gold + 5', 'assign'],
   ['grind arcana', 'preset'],
-  // legacy (removable in step 8)
-  ['check arcana 12:', 'check'],
-  ['love lyra +5', 'spark'],
+  // legacy: raw amounts still parse (custom counters use them); `check` and `love` were retired on 2026-10-24
   ['mood +5', 'delta'],
 ];
 

@@ -1,55 +1,35 @@
 // The strategy play styles (tools/policies.js, 2026-10-17): players with a goal, each exercising one part of the design.
 // Each test checks that a style does what its `about` says (its signature), on a few fixed seeds, against `balanced`.
+// The two fighting styles, whose games take longest, are in styles-fights.test.js (test/style-games.js has the games).
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const Engine = require('../src/engine.js');
 const Policies = require('../tools/policies.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { ROOT, content } = require('./helpers.js');
+const { SEEDS, EXTRA, play, games, cards, mean, chose, leads, playsAndReplays } = require('./style-games.js');
 
-const { content } = project(ROOT).compileAll();
-const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
-const SEEDS = [1, 2, 3, 4, 5, 6, 7, 8];   // four were too few once spells v2 moved exam grades (2026-10-17)
-const EXTRA = [9, 10, 11, 12, 13, 14, 15, 16];
-const cache = {};
-// Plays a style on the shared seeds (strict: a soft-lock or an unfinished game throws) and keeps the games.
-const games = (style, opts = {}) => (cache[style] = cache[style] || SEEDS.map((seed) => quiet(() => Policies.play(new Engine(content), Policies.get(style), Object.assign({ seed, name: 'S', maxSteps: 9000, strict: true }, opts))).eng));
-const cards = (eng) => eng.s.hist.filter((h) => h.t === 'card');
-const mean = (style, f) => games(style).reduce((a, e) => a + f(e), 0) / SEEDS.length;
-const chose = (eng, id, key) => cards(eng).filter((h) => h.id === id && h.choice === key).length;
-const leads = (eng) => eng.threads().flatMap((t) => t.leads || []);
-
-test('styles: every strategy is listed, explained, and plays its games to the end without a soft-lock', () => {
+test('styles: every strategy is listed and explained', () => {
   assert.deepEqual(Policies.STRATEGIES, ['scholar', 'nightlife', 'sleuth', 'romantic', 'homebody', 'combatmaxx', 'spender', 'explorer']);
   for (const name of Policies.STRATEGIES) {
     assert.ok(Policies.list().includes(name), name + ' is listed');
     assert.ok(Policies.about(name).length > 60, name + ' says what it plays for');
-    for (const eng of games(name)) assert.ok(eng.s.ended, name + ' seed ' + eng.s.seed + ' finished');
   }
   for (const name of Policies.list()) assert.ok(Policies.about(name), name + ' has an about line');
   assert.ok(Policies.about('focused:arcana') && Policies.about('social:lyra'), 'parameterised styles too');
 });
 
-test('styles: strategy games are deterministic and replay through the engine', () => {
-  for (const name of Policies.STRATEGIES) {
-    const a = quiet(() => Policies.play(new Engine(content), Policies.get(name), { seed: 9, name: 'R', maxSteps: 9000, record: true }));
-    const b = quiet(() => Policies.play(new Engine(content), Policies.get(name), { seed: 9, name: 'R', maxSteps: 9000 }));
-    assert.equal(JSON.stringify(a.eng.s.vals), JSON.stringify(b.eng.s.vals), name + ': same seed, same game');
-    const again = new Engine(content);
-    quiet(() => Policies.replay(again, a.record));
-    assert.equal(JSON.stringify(again.s.vals), JSON.stringify(a.eng.s.vals), name + ': the record replays');
-  }
+test('styles: the scholar, sleuth, romantic, homebody, spender and explorer play to the end, deterministically, and replay', () => {
+  playsAndReplays(assert, ['scholar', 'sleuth', 'romantic', 'homebody', 'spender', 'explorer']);
 });
 
 test('styles: the scholar is a scholarship student who sleeps, picks its exam approach by expected grade, and out-grades balanced', () => {
   let exams = 0;
-  for (const seed of SEEDS) quiet(() => Policies.play(new Engine(content), Policies.get('scholar'), { seed, name: 'S', maxSteps: 9000, before(eng, v, key) {
+  for (const seed of SEEDS) play('scholar', seed, { strict: false, before(eng, v, key) {
     if (v.id !== content.game.exam || !eng.s.cur.track) return;
     const pts = (swing) => { const o = eng.examOdds(eng.s.cur.track, swing); return 4 * o.probs[0] + 3 * o.probs[1] + 2 * o.probs[2]; };
     assert.equal(key, pts('wild') > pts('steady') ? 'right' : 'left', 'exam ' + eng.s.cur.track + ' turn ' + eng.s.turn);
     exams++;
-  } }));
+  } });
   assert.ok(exams >= 20, 'exams checked: ' + exams);
   for (const eng of games('scholar')) {
     assert.ok(eng.s.states.origin_scholar, 'scholarship origin');
@@ -58,19 +38,6 @@ test('styles: the scholar is a scholarship student who sleeps, picks its exam ap
   const paid = mean('scholar', (e) => cards(e).filter((h) => h.id === 'scholarship_award' && h.out.deltas.gold > 0).length);
   assert.ok(paid >= 3, 'the stipend is paid in most terms: ' + paid + ' of 7');
   assert.ok(mean('scholar', (e) => e.gpa()) > mean('balanced', (e) => e.gpa()), 'a better GPA than balanced');
-});
-
-test('styles: the nightlife regular goes out every night it can, takes the company, and fights at the ring', () => {
-  for (const eng of games('nightlife')) {
-    const nights = cards(eng).filter((h) => h.id === 'night_out');
-    // per month played: the ring's fights (played since 2026-10-18) can send a run home early
-    assert.ok(nights.length >= 0.35 * eng.s.turn && nights.every((h) => h.choice === 'right'), 'out every night: ' + nights.length + ' in ' + eng.s.turn + ' months');
-    assert.equal(chose(eng, 'newt_company', 'right') + chose(eng, 'newt_company_regular', 'right'), 0, 'never refuses the company');
-    for (const h of cards(eng).filter((x) => /^ring_bout_\d$/.test(x.id))) assert.ok(['left', 'right'].includes(h.choice));
-  }
-  assert.ok(mean('nightlife', (e) => cards(e).filter((h) => /^ring_bout_\d$/.test(h.id)).length) >= 5, 'sees the ring bouts');
-  assert.ok(mean('nightlife', (e) => chose(e, 'newt_company', 'left') + chose(e, 'newt_company_regular', 'left')) >= 3, 'works the Newt\'s upstairs room');
-  assert.ok(mean('nightlife', (e) => e.s.vals.gold) > mean('balanced', (e) => e.s.vals.gold), 'the night pays');
 });
 
 test('styles: the sleuth routes itself to the story, follows more of its leads and finds more clues than balanced', () => {
@@ -83,26 +50,20 @@ test('styles: the sleuth routes itself to the story, follows more of its leads a
 
 // (Which month the first partner comes is noise on 8 seeds: both styles find one in nearly every game. Easy foes moved it
 // past balanced's, 2026-10-19; the spark the romantic grows is the steady signal.)
+
+// (Which month the first partner comes is noise on 8 seeds: both styles find one in nearly every game. Easy foes moved it
+// past balanced's, 2026-10-19; the spark the romantic grows is the steady signal.)
 test('styles: the romantic lets every spark grow, finds a partner, and grows more spark than balanced', () => {
   const partner = (e) => cards(e).some((h) => (h.out.notes || []).some((n) => n.kind === 'bond' && n.status === 'partner'));
   const spark = (e) => Object.values(e.s.npcs).reduce((a, n) => a + (n.spark || 0), 0);
   for (const eng of games('romantic')) assert.equal(chose(eng, 'spark_cooldown', 'right'), 0, 'never lets a spark cool');
   assert.ok(games('romantic').filter(partner).length >= SEEDS.length - 1, 'a partner in nearly every game');
   // (a second partner doubles a game's spark, so eight seeds swing with luck: 2026-10-20 the spark is measured on sixteen)
-  const wide = (style) => games(style).concat(EXTRA.map((seed) => quiet(() => Policies.play(new Engine(content), Policies.get(style), { seed, name: 'S', maxSteps: 9000, strict: true })).eng));
+  const wide = (style) => games(style).concat(EXTRA.map((seed) => play(style, seed).eng));
   const wideMean = (style) => { const g = wide(style); return g.reduce((a, e) => a + spark(e), 0) / g.length; };
   const r = wideMean('romantic'), b = wideMean('balanced');
   assert.ok(r > 1.2 * b, 'spark: ' + r + ' vs ' + b);
   assert.ok(mean('romantic', (e) => Math.max(...Object.values(e.s.npcs).map((n) => n.spark || 0))) >= 90, 'a spark near the top');
-});
-
-test('styles: combatmaxx fights far more than a balanced player, wins most of its fights, and trains arcana and vigor', () => {
-  const fights = (eng) => (eng.s.fights || []).length;
-  assert.ok(mean('combatmaxx', fights) >= 2 * mean('balanced', fights), 'at least twice the fights');
-  const won = games('combatmaxx').reduce((a, e) => a + (e.s.fights || []).filter((f) => f.outcome === 'win').length, 0);
-  assert.ok(won / games('combatmaxx').reduce((a, e) => a + fights(e), 0) >= 0.5, 'not too unwinnable: wins most of them');
-  const fit = (e) => e.s.vals.arcana + e.s.vals.vigor;
-  assert.ok(mean('combatmaxx', fit) > mean('balanced', fit), 'more arcana and vigor');
 });
 
 test('styles: the homebody sleeps every night, spends every break at home, and graduates healthy', () => {

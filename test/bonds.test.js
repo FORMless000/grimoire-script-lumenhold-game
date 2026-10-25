@@ -5,10 +5,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const Engine = require('../src/engine.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { content } = require('./helpers.js');
 
-const { content } = project(ROOT).compileAll();
 const fresh = () => { const e = new Engine(content); e.newGame({ seed: 7, name: 'T' }); return e; };
 const ev = (id) => content.events[id];
 // Does the generic card's first role take this character, with these relationship values?

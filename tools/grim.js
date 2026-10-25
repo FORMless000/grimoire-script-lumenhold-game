@@ -70,10 +70,13 @@
  *   node tools/grim.js canon            proper nouns in player-visible text that the worldbook doesn't know
  *   node tools/grim.js feedback [PATH…] [--event ID] [--json]
  *                                       summarise playtest feedback from exported run logs (default: feedback/)
- *   node tools/grim.js i18n [lang]      no lang: translation coverage per language.
+ *   node tools/grim.js i18n [lang] [--fill-dupes]
+ *                                       no lang: translation coverage per language.
  *                                       with lang (e.g. zh-CN): create/update locales/<lang>/*.lang — adds new
  *                                       keys (empty), stamps [hash]es, flags stale entries, moves obsolete ones
  *                                       to _obsolete.lang. Run after any content change, then translate the gaps.
+ *                                       --fill-dupes: an empty string whose English matches one already translated in its
+ *                                       file takes that translation (a say repeated in two branches)
  *   node tools/grim.js sim ... --lang zh-CN   play with a translation applied (catches broken {tokens})
  */
 'use strict';
@@ -93,9 +96,16 @@ const BUNDLE = path.join(ROOT, 'build', 'content.bundle.js');
 const LOCALES = path.join(ROOT, 'locales');
 
 const P = require('./project.js').project(ROOT);
-const { listFiles, rel, localeLangs, loadLocaleSources, loadSources, compileAll } = P;
+const { listFiles, rel, localeLangs, loadLocaleSources, liveLocaleSources, loadSources, compileAll } = P;
 
 const C = process.stdout.isTTY ? { r: '\x1b[31m', y: '\x1b[33m', g: '\x1b[32m', d: '\x1b[2m', b: '\x1b[1m', x: '\x1b[0m' } : { r: '', y: '', g: '', d: '', b: '', x: '' };
+
+// The compiled content; a compile error is printed and ends the command.
+function compiled() {
+  const r = compileAll();
+  if (r.errors.length) { r.errors.forEach((e) => console.error(e.message)); process.exit(1); }
+  return r;
+}
 
 /* ------------------------------------------------------------------ build */
 function build(opts = {}) {
@@ -213,8 +223,6 @@ function analyze(content) {
       }
       // Raw amounts are legacy in events only, and only for tiered rows (custom counters like `hollow +1` stay raw).
       if (IN_EVENT && !st.tier && !st.preset && ['delta', 'rel', 'spark'].includes(st.t) && st.min != null && (st.t !== 'delta' || content.resources[st.name] || content.skills[st.name])) A.legacy.push({ where: w, what: 'raw number (use a size tier)' });
-      if (st.legacy) A.legacy.push({ where: w, what: '"love" (now "spark")' });
-      if (st.t === 'check') A.legacy.push({ where: w, what: '"check" (use "challenge")' });
       if ((st.t === 'delta' || st.t === 'assign') && st.name === 'grades') A.legacy.push({ where: w, what: 'Standing ("grades"; GPA replaces it in phase 2b)' });
       switch (st.t) {
         case 'delta': case 'assign':
@@ -301,7 +309,6 @@ function analyze(content) {
         }
         case 'if': st.branches.forEach((b) => scanExpr(b.cond, w, hasActor)); break;
         case 'chance': if (st.p) scanExpr(st.p, w, hasActor); for (const x of st.steps || []) scanExpr(x.cond, w, hasActor); break;
-        case 'check': if (!content.skills[st.skill]) P('error', w, 'check: unknown skill "' + st.skill + '"'); scanExpr(st.dc, w, hasActor); break;
       }
     });
   }
@@ -311,7 +318,7 @@ function analyze(content) {
     const hasActor = !!e.actor || !!e.cast;
     ROLES = new Set((e.cast || []).map((r) => r.role)); IN_EVENT = true; CUR_TRACK = e.track || null;
     const w = loc(e);
-    if (e.actor && !['any', 'npc'].includes(e.actor) && !content.npcs[e.actor]) P('error', w, 'actor: unknown npc "' + e.actor + '"');
+    if (e.actor && e.actor !== 'npc' && !content.npcs[e.actor]) P('error', w, 'actor: unknown npc "' + e.actor + '"');
     if (e.trigger === 'social' && !e.actor && !e.per) P('warn', w, 'social event without actor (or per: <cast role>)');
     if (e.art && !Art.has(e.art)) P('warn', w, 'unknown art "' + e.art + '" (see src/art.js; available: ' + Art.list().join(' ') + ')');
     if (!e.art) P('info', w, 'event has no art');
@@ -320,7 +327,6 @@ function analyze(content) {
     scanText(e.title, w, hasActor); scanText(e.text, w, hasActor); scanText(e.scene, w, hasActor);
     { const n = longestRendering(e.text || ''); if (n > 480) P('warn', w, 'card text is long (' + n + ' chars at its longest; aim for < 400)'); }
     scanEffects(e.on_show, w, hasActor);
-    if (e.actor === 'any') A.legacy.push({ where: w, what: '"actor: any" (use a cast: role)' });
     if (e.place && !content.places[e.place]) P('error', w, 'place: unknown place "' + e.place + '"');
     { // a slot an event needs must exist in a day recipe, and a place event's slot gate must be an open, visited slot
       const recipeSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || []), ...Object.values(content.states).flatMap((d) => d.day || [])].map((r) => r.slot));
@@ -339,8 +345,8 @@ function analyze(content) {
       const g = content.events[e.specializes];
       if (!g) P('error', w, 'specializes: unknown event "' + e.specializes + '"');
       else {
-        if (!e.actor || ['any', 'npc'].includes(e.actor)) P('error', w, 'specializes: needs actor: <the character> (the card plays for them only)');
-        if (!(g.per || g.actor === 'any')) P('error', w, 'specializes: ' + g.id + ' is not drawn per character (no per: role, not actor: any)');
+        if (!e.actor || e.actor === 'npc') P('error', w, 'specializes: needs actor: <the character> (the card plays for them only)');
+        if (!g.per) P('error', w, 'specializes: ' + g.id + ' is not drawn per character (no per: role)');
         if ((g.trigger || null) !== (e.trigger || null)) P('error', w, 'specializes: trigger "' + (e.trigger || '') + '" differs from ' + g.id + '\'s "' + (g.trigger || '') + '"');
         if (g.specializes) P('error', w, 'specializes: ' + g.id + ' is itself a specialization');
         const twins = Object.values(content.events).filter((x) => x.specializes === g.id && x.actor === e.actor);
@@ -362,7 +368,7 @@ function analyze(content) {
       if (o.spell && !content.spells[o.spell]) P('error', ow, 'up[' + o.spell + ']: unknown spell');
       if (o.item && !(content.items || {})[o.item]) P('error', ow, 'up[item:' + o.item + ']: no @item ' + o.item);
       // Previews must be exact (design §8.3): no rand() in an option's effects.
-      G.walkEffects(o.effects, (st) => { const ex = st.expr || st.p || st.dc || st.delay; if (ex && /\brand\(/.test(ex.src)) P('error', e.file + ':' + st.line, 'rand() in an option can\'t be previewed: use a chance or a range (a~b)'); });
+      G.walkEffects(o.effects, (st) => { const ex = st.expr || st.p || st.delay; if (ex && /\brand\(/.test(ex.src)) P('error', e.file + ':' + st.line, 'rand() in an option can\'t be previewed: use a chance or a range (a~b)'); });
       // A skill is never a cost (docs/authoring/costs.md; critic pass 2026-10-20): rust is the engine's, not a card's.
       G.walkEffects(o.effects, (st) => { if (st.t === 'delta' && st.sign < 0 && content.skills[st.name]) P('error', e.file + ':' + st.line, st.name + ' -' + st.tier + ': a skill is never a cost (show a cost the scene has: mood, health, study, rel…)'); });
       if (o.memory) {
@@ -589,7 +595,7 @@ function budgetCheck(e, content, P) {
     for (const n of Object.values(x.s.npcs)) n.met = true;
     return x;
   })();
-  const actor = e.actor && !['any', 'npc'].includes(e.actor) ? e.actor : e.actor ? Object.keys(content.npcs)[0] : null;
+  const actor = e.actor && e.actor !== 'npc' ? e.actor : e.actor ? Object.keys(content.npcs)[0] : null;
   const row = (k) => (content.skills[k] ? 'xp' : k.split(':')[0]);
   const medium = (k) => eng.tierAmount(row(k) === 'xp' ? Object.keys(content.skills)[0] : row(k), 'medium') || 7;
   const weight = (k) => weights[row(k)] != null ? weights[row(k)] : 0.5;
@@ -843,7 +849,7 @@ function lintVariants(content, problems) {
     problems.push({ level: VARIANTS_LEVEL, where: d ? rel(d.file) + ':' + d.line : x.file, msg: block + ' mixes variation (one mode and one count per block): ' + Object.entries(keys).map(([k, g]) => k + ' ' + g.join(',')).join('; ') });
   }
   for (const lang of localeLangs()) {
-    const loc = I18n.loadLocale(lang, loadLocaleSources(lang).filter((x) => !x.path.endsWith('/_obsolete.lang')));
+    const loc = I18n.loadLocale(lang, liveLocaleSources(lang));
     for (const [block, keys] of Object.entries(loc.blocks)) for (const [key, e] of Object.entries(keys)) {
       const src = eng[block + ' ' + key]; if (!src || !e.text) continue;
       const a = variantGroups(src.text).sort().join(','), b = variantGroups(e.text).sort().join(',');
@@ -895,8 +901,7 @@ function badToken(content, k) {
 }
 // grim report --gaps: pools per draw source against floors and depth targets, with empty-draw rates from sim runs.
 function report(opts = {}) {
-  const { content, errors } = compileAll();
-  if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+  const { content } = compiled();
   const R = require('./report.js');
   const style = Policies.get(opts.policy);
   const runs = [];
@@ -947,7 +952,7 @@ function batch(name, opts = {}) {
   const unknown = canonCheck(content).filter((u) => u.where.some(inBatch)).map((u) => u.name);
   v.canon = { ok: !unknown.length, unknown };
   run(['i18n', 'zh-CN']);
-  const loc = I18n.loadLocale('zh-CN', loadLocaleSources('zh-CN').filter((x) => !x.path.endsWith('/_obsolete.lang')));
+  const loc = I18n.loadLocale('zh-CN', liveLocaleSources('zh-CN'));
   const strings = I18n.extract(content).filter((x) => inBatch(x.file));
   const done = strings.filter((x) => { const e = loc.blocks[x.block] && loc.blocks[x.block][x.key]; return e && e.text !== ''; }).length;
   v.i18n = { ok: done === strings.length, translated: done, total: strings.length };
@@ -1016,7 +1021,7 @@ const FIGHT_GRAMMAR = new Set(['name', 'foe', 'name’s', 'foe’s', 'pos', 'fpo
 function fightTokens(text) { return [...String(text).matchAll(/\{([^{}]+)\}/g)].map((m) => m[1]).filter((k) => !/^f?v:/.test(k)); }
 function lintLocale(content, lang, problems, opts = {}) {
   const P = (level, where, msg) => problems.push({ level, where, msg });
-  const loc = I18n.loadLocale(lang, loadLocaleSources(lang).filter((s) => !s.path.endsWith('/_obsolete.lang')));
+  const loc = I18n.loadLocale(lang, liveLocaleSources(lang));
   loc.errors.forEach((e) => P('error', e.split(': ')[0], e.split(': ').slice(1).join(': ')));
   const strings = I18n.extract(content), fight = combatStrings(content);
   const known = new Set(strings.concat(fight).map((s) => s.block + ' ' + s.key));
@@ -1056,8 +1061,7 @@ function lintLocale(content, lang, problems, opts = {}) {
 }
 
 function i18nStatus() {
-  const { content, errors } = compileAll();
-  if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+  const { content } = compiled();
   const langs = localeLangs();
   if (!langs.length) { console.log('No translations yet. Create one with: node tools/grim.js i18n <lang>   (e.g. zh-CN)'); return; }
   for (const lang of langs) {
@@ -1069,8 +1073,7 @@ function i18nStatus() {
 
 function i18nSync(lang) {
   if (!/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/.test(lang)) { console.error('bad language code "' + lang + '" (use e.g. zh-CN, fr, pt-BR)'); process.exit(1); }
-  const { content, errors } = compileAll();
-  if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+  const { content } = compiled();
   const dir = path.join(LOCALES, lang);
   const sources = loadLocaleSources(lang);
   const loc = I18n.loadLocale(lang, sources);
@@ -1128,7 +1131,7 @@ function i18nSync(lang) {
   const obs = ['# Translations whose source no longer exists. Kept for reference; not loaded by the game.', ''];
   let nObs = 0, nNew = 0;
   // Entries already in _obsolete.lang are carried over; only newly retired ones are reported as moved.
-  const prevObs = I18n.loadLocale(lang, sources.filter((x) => x.path.endsWith('/_obsolete.lang'))).blocks;
+  const prevObs = I18n.loadLocale(lang, sources.filter(P.isObsolete)).blocks;
   for (const [block, keys] of Object.entries(loc.blocks)) {
     const rows = Object.entries(keys).filter(([k, v]) => !used.has(block + ' ' + k) && v.text !== '');
     if (!rows.length) continue;
@@ -1138,10 +1141,27 @@ function i18nSync(lang) {
   const obsPath = path.join(dir, '_obsolete.lang');
   if (nObs) { fs.writeFileSync(obsPath, obs.join('\n') + '\n'); written.add(rel(obsPath)); }
   // Remove .lang files that no longer correspond to a content file
-  for (const s of sources) if (!written.has(s.path) && !s.path.endsWith('/_obsolete.lang')) { fs.unlinkSync(path.join(ROOT, s.path)); console.log(C.d + 'removed ' + s.path + C.x); }
+  for (const s of sources) if (!written.has(s.path) && !P.isObsolete(s)) { fs.unlinkSync(path.join(ROOT, s.path)); console.log(C.d + 'removed ' + s.path + C.x); }
   let T = 0, D = 0, S = 0;
   for (const [f, d, n, st] of report) { T += n; D += d; S += st; console.log((d === n ? C.g : C.y) + String(d).padStart(5) + '/' + String(n).padEnd(5) + C.x + ' ' + f + (st ? C.y + '  ' + st + ' stale' + C.x : '')); }
   console.log(C.b + lang + ': ' + D + '/' + T + ' translated (' + (100 * D / T).toFixed(1) + '%), ' + S + ' stale' + (nNew ? ', ' + nNew + ' obsolete moved to _obsolete.lang' : '') + C.x);
+}
+
+// `i18n <lang> --fill-dupes`: an empty translation whose English is word for word one already translated in the same
+// .lang file (a say written into both branches of an `if`) takes that translation.
+function fillDupes(lang) {
+  let filled = 0;
+  for (const src of liveLocaleSources(lang).filter((x) => !x.path.includes('/_in/'))) {
+    const lines = src.text.split('\n'), known = {};
+    for (let i = 1; i < lines.length; i++) { const m = lines[i].match(/^\S+(?: \[[0-9a-f]+\])? = (.+)$/); if (m && lines[i - 1].startsWith('# en: ')) known[lines[i - 1].slice(6)] = m[1]; }
+    let changed = false;
+    for (let i = 1; i < lines.length; i++) {
+      const m = lines[i].match(/^(\S+(?: \[[0-9a-f]+\])?) =\s*$/), tr = m && lines[i - 1].startsWith('# en: ') && known[lines[i - 1].slice(6)];
+      if (tr) { lines[i] = m[1] + ' = ' + tr; filled++; changed = true; }
+    }
+    if (changed) fs.writeFileSync(path.join(ROOT, src.path), lines.join('\n'));
+  }
+  console.log('filled ' + filled + ' duplicate string(s) in ' + lang);
 }
 
 /* ------------------------------------------------------------------ sim */
@@ -1156,10 +1176,9 @@ function playGame(content, { seed, style, runId, name = 'Sim', onLog = null, pre
 }
 
 function sim(n = 300, opts = {}) {
-  const { content, errors } = compileAll();
-  if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+  const { content } = compiled();
   if (opts.lang && opts.lang !== 'en') {
-    const loc = I18n.loadLocale(opts.lang, loadLocaleSources(opts.lang));
+    const loc = I18n.loadLocale(opts.lang, liveLocaleSources(opts.lang));
     const st = I18n.applyContent(content, loc);
     console.log('sim with ' + opts.lang + ' applied: ' + st.translated + '/' + st.total + ' strings translated');
   }
@@ -1222,8 +1241,7 @@ function sim(n = 300, opts = {}) {
 // Design §8.8: invariants fail the run, alarms warn. Checks for systems that don't exist yet (XP curve,
 // mana, obligations, previews) are added in the phase that builds them.
 function balance(opts = {}) {
-  const { content, errors } = compileAll();
-  if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+  const { content } = compiled();
   const games = opts.games || (opts.quick ? 30 : 100);
   const styles = opts.quick ? ['random', 'balanced', 'social', 'aggressive', 'truant', 'lumen', 'hollow'] : ['random', 'cautious', 'social', 'balanced', 'aggressive', 'moneymaxx', 'caster', 'truant', 'focused:arcana', 'focused:lore', 'focused:alchemy', 'focused:guile', 'social:lyra', 'social:corvin', 'lumen', 'hollow', 'plot'].concat(Policies.STRATEGIES);
   const report = { format: 'lumenhold-balance', v: 1, contentHash: contentHash(), createdAt: new Date().toISOString(), games, styles: {}, invariants: [], alarms: [] };
@@ -1429,8 +1447,7 @@ function designAlarms(name, runs, alarm, all) {
 // Fits the expected-skill curve E(turn) (design §8.6): the mean skill of the balanced play style at the
 // start of each turn. --write puts it in @balance curve (content/core/balance.grim).
 function curve(opts = {}) {
-  const { content, errors } = compileAll();
-  if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+  const { content } = compiled();
   const games = opts.games || 100, sums = [], counts = [];
   for (let g = 0; g < games; g++) {
     const { eng } = playGame(content, { seed: 31337 + g * 7919, style: Policies.get('balanced'), runId: 'curve' });
@@ -1458,8 +1475,7 @@ function curve(opts = {}) {
 // Golden seeds: the same games every time. A pure refactor must reproduce them exactly.
 const GOLDEN = { styles: ['random', 'social', 'cautious'], games: 40, seed: 424242 };
 function snapshot(out, opts = {}) {
-  const { content, errors } = compileAll();
-  if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+  const { content } = compiled();
   const games = opts.games || GOLDEN.games;
   const snap = { format: 'lumenhold-snapshot', v: 1, contentHash: contentHash(), createdAt: new Date().toISOString(), games: [], seen: {} };
   for (const name of GOLDEN.styles) {
@@ -1539,8 +1555,7 @@ function query(args, opts = {}) {
   if (opts.fields) { for (const [k, v] of Object.entries(Query.FIELDS)) console.log(C.b + k.padEnd(16) + C.x + v); return; }
   const [node, ...rest] = args;
   if (!node) { console.log('usage: node tools/grim.js query NODE [WHERE]   (NODE: ' + Query.BLOCKS.concat(['option'], Query.STATEMENTS, ['stmt', 'any']).join(' ') + '; --fields lists what WHERE can use)'); return; }
-  const { content, sources, errors } = compileAll();
-  if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+  const { content, sources } = compiled();
   let hits;
   try { hits = Query.select(content, { node, where: rest.join(' ').trim() || null }); } catch (e) { console.error(C.r + 'query: ' + C.x + e.message); process.exit(1); }
   const lines = {}; for (const src of sources) lines[src.path] = src.text.split('\n');
@@ -1586,8 +1601,7 @@ function feedback(paths, opts = {}) {
 
 /* ------------------------------------------------------------------ stats / show / ids */
 function stats() {
-  const { content, errors } = compileAll();
-  if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+  const { content } = compiled();
   const ev = Object.values(content.events);
   const count = (arr, f) => arr.reduce((m, x) => { [].concat(f(x)).forEach((k) => { m[k] = (m[k] || 0) + 1; }); return m; }, {});
   console.log('events: ' + ev.length);
@@ -1702,10 +1716,10 @@ switch (cmd) {
   case 'reach': if (!reachCmd()) process.exit(1); break;
   case 'lint': lint({ verbose: !!flag('verbose'), legacy: !!flag('legacy') }); break;
   case 'sim': { const ok = sim(Number(rest.find((x) => /^\d+$/.test(x))) || 300, { seed: flag('seed') != null ? Number(flag('seed')) : undefined, policy: flag('policy'), lang: flag('lang'), verbose: !!flag('verbose'), log: typeof flag('log') === 'string' ? path.resolve(flag('log')) : null }); if (!ok) process.exit(1); break; }
-  case 'i18n': if (rest[0]) i18nSync(rest[0]); else i18nStatus(); break;
+  case 'i18n': { const lang = rest.find((x) => !x.startsWith('--')); if (!lang) i18nStatus(); else { i18nSync(lang); if (flag('fill-dupes')) fillDupes(lang); } break; }
   case 'stats': stats(); break;
   case 'show': show(rest[0]); break;
-  case 'odds': { const { content, errors } = compileAll(); if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); } console.log(require('./odds.js').odds(content, rest.filter((x) => !x.startsWith('--')))); break; }
+  case 'odds': { const { content } = compiled(); console.log(require('./odds.js').odds(content, rest.filter((x) => !x.startsWith('--')))); break; }
   case 'graph': { const { content } = compileAll(); const out = require('./graph.js').describe(content, rest[0]); if (!out) { console.error('graph: no event, state or hook "' + rest[0] + '"'); process.exit(1); } console.log(out); break; }
   case 'leads': {
     const { content } = compileAll(), L = require('./leads.js');
@@ -1748,8 +1762,7 @@ switch (cmd) {
     break;
   }
   case 'lorebook': {
-    const { content, errors } = compileAll();
-    if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+    const { content } = compiled();
     const book = require('./worldbook.js').lorebook(content);
     const out = path.resolve(flag('out') || path.join(ROOT, 'build', 'lorebook.json'));
     fs.mkdirSync(path.dirname(out), { recursive: true });
@@ -1759,8 +1772,7 @@ switch (cmd) {
     break;
   }
   case 'brief': {
-    const { content, sources, errors } = compileAll();
-    if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+    const { content, sources } = compiled();
     const list = (x) => (typeof x === 'string' ? x.split(',').map((y) => y.trim()).filter(Boolean) : []);
     const rulesFile = path.join(ROOT, 'docs', 'authoring', 'checklist.md');
     let res;
@@ -1787,8 +1799,7 @@ switch (cmd) {
   case 'schema': if (!schemaCmd({ update: !!flag('update') })) process.exit(1); break;
   case 'docs': if (!genDocs({ check: !!flag('check') })) process.exit(1); break;
   case 'canon': {
-    const { content, errors } = compileAll();
-    if (errors.length) { errors.forEach((e) => console.error(e.message)); process.exit(1); }
+    const { content } = compiled();
     const u = canonCheck(content);
     u.forEach((x) => console.log(C.y + x.name + C.x + '  ' + C.d + x.where.join(' ') + C.x));
     console.log('canon: ' + u.length + ' unknown proper noun(s)');

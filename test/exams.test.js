@@ -5,16 +5,13 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const Engine = require('../src/engine.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { content, silent } = require('./helpers.js');
 
-const { content } = project(ROOT).compileAll();
-const quiet = (fn) => { const w = console.warn, l = console.log; console.warn = console.log = () => {}; try { return fn(); } finally { console.warn = w; console.log = l; } };
 const COURSE = 'evocation';
 // A new game on turn `turn` (1–3: term months before the exam; 4: the exam month), enrolled in Evocation I.
 function fresh(turn = 1) {
   const eng = new Engine(content);
-  quiet(() => eng.newGame({ seed: 7, name: 'T', origin: 'street' }));
+  silent(() => eng.newGame({ seed: 7, name: 'T', origin: 'street' }));
   eng.s.turn = turn;
   eng.s.tracks[COURSE] = { kind: 'course', status: 'enrolled', level: 1, study: 0, passed: {}, grades: [], rank: 0, perf: 50, rankXp: 0, visits: 0, due: 0, progress: 0 };
   return eng;
@@ -33,11 +30,11 @@ test('class preparation: +3 a month before the exam, once however many cards, no
 test('a check won in class makes that month +5, once a month per course', () => {
   const eng = fresh(2), ctx = eng.newCtx(null, null, null);
   eng.courseworkFor(COURSE, ctx);
-  ctx.checks.push({ ok: true });
+  ctx.checks.push({ challenge: 'research', result: 'win', ok: true });
   eng.classCheckPrep(COURSE, ctx); eng.classCheckPrep(COURSE, ctx);
   assert.equal(study(eng), 5);
   const lost = fresh(2), c2 = lost.newCtx(null, null, null);
-  lost.courseworkFor(COURSE, c2); c2.checks.push({ ok: false }); lost.classCheckPrep(COURSE, c2);
+  lost.courseworkFor(COURSE, c2); c2.checks.push({ challenge: 'research', result: 'lose', ok: false }); lost.classCheckPrep(COURSE, c2);
   assert.equal(study(lost), 3, 'a failed check keeps the guaranteed 3');
 });
 
@@ -58,7 +55,7 @@ test('two won class checks, or one library afternoon, on top of the class months
       eng.s.turn = turn;
       const ctx = eng.newCtx(null, null, null);
       eng.courseworkFor(COURSE, ctx);
-      if (turn <= wins) { ctx.checks.push({ ok: true }); eng.classCheckPrep(COURSE, ctx); }
+      if (turn <= wins) { ctx.checks.push({ challenge: 'research', result: 'win', ok: true }); eng.classCheckPrep(COURSE, ctx); }
     }
     eng.s.turn = 4; eng.s.vals.arcana = 1;
     return eng.examOdds(COURSE, 'steady').pass;

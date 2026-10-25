@@ -5,10 +5,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const G = require('../src/grimoire.js');
 const Engine = require('../src/engine.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { content } = require('./helpers.js');
 
-const { content } = project(ROOT).compileAll();
 
 // The statements of one option, parsed from source.
 function stmts(body) {

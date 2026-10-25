@@ -27,9 +27,10 @@ test('schema v1: compare() flags a removal and allows a legacy retirement', () =
   let d = M.compare(fake, cur);
   assert.ok(d.removed.includes('property event.vanished_prop'));
   assert.ok(d.removed.includes('statement vanished_stmt'));
-  const noCheck = JSON.parse(JSON.stringify(cur));
-  noCheck.statements = noCheck.statements.filter((s) => s !== 'check');
-  d = M.compare(cur, noCheck);
+  // `check` was retired (a legacy entry): a manifest that still had it may lose it.
+  const withCheck = JSON.parse(JSON.stringify(cur));
+  withCheck.statements.push('check');
+  d = M.compare(withCheck, cur);
   assert.deepStrictEqual(d.removed, []);
   assert.ok(d.retired.includes('statement check'));
 });

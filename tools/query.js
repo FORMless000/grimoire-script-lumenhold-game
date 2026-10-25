@@ -12,7 +12,7 @@
 const G = require('../src/grimoire.js');
 
 const BLOCKS = ['event', 'state', 'npc', 'ending', 'hook', 'resource', 'skill', 'place', 'track', 'spell', 'fact', 'archetype', 'faction', 'arc', 'clue', 'lore', 'timeline', 'vocab', 'item'];
-const STATEMENTS = ['say', 'if', 'chance', 'check', 'challenge', 'sit_exam', 'wage', 'coursework', 'flag', 'unflag', 'gain', 'lose', 'queue', 'rel', 'spark', 'npc_rel', 'cool', 'visit', 'learn', 'learn_spell', 'give', 'take', 'regrade', 'bond', 'meet', 'end', 'delta', 'assign'];
+const STATEMENTS = ['say', 'if', 'chance', 'challenge', 'sit_exam', 'wage', 'coursework', 'flag', 'unflag', 'gain', 'lose', 'queue', 'rel', 'spark', 'npc_rel', 'cool', 'visit', 'learn', 'learn_spell', 'give', 'take', 'regrade', 'bond', 'meet', 'end', 'delta', 'assign'];
 const COLLECTIONS = { event: 'events', state: 'states', npc: 'npcs', ending: 'endings', hook: 'hooks', resource: 'resources', skill: 'skills',
   place: 'places', track: 'tracks', spell: 'spells', fact: 'facts', archetype: 'archetypes', faction: 'factions', arc: 'arcs', clue: 'clues', lore: 'lore', timeline: 'timeline', vocab: 'vocab', item: 'items' };
 const EFFECT_SLOTS = ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero'];
@@ -35,11 +35,10 @@ const FIELDS = {
   hook: 'id on when_src',
   resource: 'id name min max start',
   skill: 'id name start max',
-  option: 'key label label_len when_src statements says checks',
-  check: 'skill dc (null unless constant) dc_src scales (dc mentions year/turn) has_else',
+  option: 'key label label_len when_src statements says checks (challenges)',
   chance: 'p (null unless constant) p_src has_else',
   if: 'branches cond_src has_else',
-  'delta, rel, spark': 'name (resource/skill, or npc for rel/spark) npc min max amount (null for tier words) tier legacy (spark written as love)',
+  'delta, rel, spark': 'name (resource/skill, or npc for rel/spark) npc min max amount (null for tier words) tier',
   challenge: 'kind tier rung standard offset odds drift steps using vs has_partial swing',
   sit_exam: 'swing',
   wage: 'size (a wage word, null for full)',
@@ -65,16 +64,15 @@ function mentions(ex, names) {
   if (ex) G.walkAst(ex.ast, (n) => { if (n.t === 'id' && names.includes(n.n)) hit = true; });
   return hit;
 }
-function countEffects(effects) { const n = { statements: 0, says: 0, checks: 0 }; G.walkEffects(effects, (st) => { n.statements++; if (st.t === 'say') n.says++; if (st.t === 'check') n.checks++; }); return n; }
+function countEffects(effects) { const n = { statements: 0, says: 0, checks: 0 }; G.walkEffects(effects, (st) => { n.statements++; if (st.t === 'say') n.says++; if (st.t === 'challenge') n.checks++; }); return n; }
 
 function statementFields(st) {
   switch (st.t) {
     case 'say': return { text: st.text, len: st.text.length };
-    case 'check': return { skill: st.skill, dc: constant(st.dc), dc_src: st.dc.src, scales: mentions(st.dc, ['year', 'turn']), has_else: !!st.else };
     case 'chance': return st.word ? { p: null, p_src: st.word, odds: st.word, steps: (st.steps || []).length, has_else: !!st.else } : { p: constant(st.p), p_src: st.p.src, has_else: !!st.else };
     case 'if': return { branches: st.branches.length, cond_src: st.branches[0].cond.src, has_else: !!st.else };
     case 'delta': return { name: st.name, min: st.min, max: st.max, amount: st.tier ? null : (st.min + st.max) / 2, tier: st.tier || null };
-    case 'rel': case 'spark': return { name: st.npc, npc: st.npc, min: st.min, max: st.max, amount: st.tier ? null : (st.min + st.max) / 2, tier: st.tier || null, legacy: !!st.legacy };
+    case 'rel': case 'spark': return { name: st.npc, npc: st.npc, min: st.min, max: st.max, amount: st.tier ? null : (st.min + st.max) / 2, tier: st.tier || null };
     case 'challenge': return { kind: st.kind, tier: st.tier, rung: st.rung || null, standard: !!st.standard, offset: st.offset || 0, odds: st.odds || null, drift: st.drift || null, steps: (st.steps || []).length, using: st.using, vs: st.vs ? st.vs.who + '.' + st.vs.stat : null, has_partial: !!st.partial, swing: st.swing || null };
     case 'sit_exam': return { swing: st.swing || null };
     case 'wage': return { size: st.size || null };
@@ -143,7 +141,7 @@ function rows(content) {
   return out;
 }
 
-// q: {node: 'check' | 'event' | … | 'stmt' (any statement) | 'any', where: 'expression' | null}
+// q: {node: 'challenge' | 'event' | … | 'stmt' (any statement) | 'any', where: 'expression' | null}
 function select(content, q) {
   const kinds = q.node === 'any' ? null : q.node === 'stmt' ? STATEMENTS : [q.node];
   if (kinds && !kinds.every((k) => BLOCKS.includes(k) || STATEMENTS.includes(k) || k === 'option')) throw new Error('unknown node kind "' + q.node + '" (one of: ' + BLOCKS.concat(['option'], STATEMENTS, ['stmt', 'any']).join(' ') + ')');

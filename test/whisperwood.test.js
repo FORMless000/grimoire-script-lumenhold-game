@@ -6,10 +6,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const G = require('../src/grimoire.js');
 const Engine = require('../src/engine.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { content, quiet } = require('./helpers.js');
 
-const { content } = project(ROOT).compileAll();
 const fresh = () => { const e = new Engine(content); e.newGame({ seed: 7, name: 'T' }); return e; };
 const delve = Object.values(content.events).filter((e) => (e.tags || []).includes('ww'));
 
@@ -108,8 +106,7 @@ const midnight = (e, place) => {
 };
 
 test('whisperwood: a first midnight visit finds the silence and can go straight down; later ones offer the descent', () => {
-  const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
-  const e = fresh(); e.s.places.whisperwood = { found: 1 };
+    const e = fresh(); e.s.places.whisperwood = { found: 1 };
   const first = quiet(() => midnight(e, 'whisperwood'));
   assert.equal(first[0], 'ww_night_first');
   assert.equal(first[1], 'ww_edge_night', 'going towards the silence offers the descent at once');
@@ -120,7 +117,6 @@ test('whisperwood: a first midnight visit finds the silence and can go straight 
 });
 
 test('whisperwood: an opened slot never offers a place with nothing to play there', () => {
-  const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
   // Without the first-midnight card the wood's only midnight card waits for the clue: the map keeps the wood shut.
   const c = Object.assign({}, content, { places: Object.assign({}, content.places, { whisperwood: Object.assign({}, content.places.whisperwood, { always: 'ww_edge ww_edge_night' }) }),
     events: Object.fromEntries(Object.entries(content.events).filter(([id]) => id !== 'ww_night_first')) });

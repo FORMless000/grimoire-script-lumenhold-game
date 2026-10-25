@@ -12,7 +12,7 @@ text: {lyra} looks up. "Lyra" is written on her book, and {=rel(lyra)} is your s
   when: met(lyra) or has(lyra_seen)
   flag lyra_seen
   queue lyra_later in 1
-  check lore 10 + rel(lyra) / 10:
+  chance 10 + rel(lyra) / 10:
     gold +5
     say: Correct. {They} smile{s}.
   else:

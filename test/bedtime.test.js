@@ -5,11 +5,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const Engine = require('../src/engine.js');
 const Policies = require('../tools/policies.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { content, quiet } = require('./helpers.js');
 
-const { content } = project(ROOT).compileAll();
-const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
 const BED = new Set(['night_out', 'night_sleep']);
 const fresh = (seed = 5, origin = 'street') => { const eng = new Engine(content); quiet(() => eng.newGame({ seed, name: 'T', origin })); return eng; };
 

@@ -244,7 +244,7 @@
     eng = new Engine(content);
     eng.newGame({ name: t('title.defaultName'), seed: 1 });
     if (!content.events[id]) return fatal(['No event with id "' + id + '"']);
-    const actor = params.get('actor') || (content.events[id].actor && !['any', 'npc'].includes(content.events[id].actor) ? content.events[id].actor : null) || (content.events[id].actor ? Object.keys(content.npcs)[0] : null);
+    const actor = params.get('actor') || (content.events[id].actor && content.events[id].actor !== 'npc' ? content.events[id].actor : null) || (content.events[id].actor ? Object.keys(content.npcs)[0] : null);
     if (actor && eng.s.npcs[actor]) eng.s.npcs[actor].met = true;
     // A cast event (`cast:` roles): `&actor=` fills its first role, so `{guest}` or `{dear}` render.
     const roles = content.events[id].cast;
@@ -646,7 +646,7 @@
     : c.parley ? t('check.parleyButton', { skill: skillsOf(c.using) })
     : c.combat ? t('check.combatButton', { p: c.p, cost: c.cost })
     : c.luck ? ''
-    : t('check.button', { skill: c.exam || c.challenge ? skillsOf(c.using) : skillName(c.skill) });
+    : t('check.button', { skill: skillsOf(c.using) });
   // The roll on an option's button (B24, M11): combat, the future minigame, is marked apart from skill checks.
   // A negotiation (E8) is marked too: the scroll, and the word on the button.
   // On a button (`short`) a fight says only that it is one; who and at what level is in the option's floating window.
@@ -762,7 +762,6 @@
     };
     const label = (pth) => {
       const d = pth.labels[0]; if (!d) return '';
-      if (d.kind === 'check') return (d.choice === 0 ? '✓ ' : '✗ ');
       if (d.kind === 'challenge') return t('challenge.' + ['win', 'partial', 'lose'][d.choice]) + ' ';
       if (d.kind === 'exam') return ['A', 'B', 'C', 'F'][d.choice] + ' ';
       return '';
@@ -786,10 +785,10 @@
       extra: !!items.length || paths.length > 3,
     };
   }
-  // An outcome's label takes the colour of how it went: success, partial or failure (a fight or a challenge, a check, a grade).
+  // An outcome's label takes the colour of how it went: success, partial or failure (a fight or a challenge, a grade).
   function outcomeClass(d) {
     if (!d) return '';
-    const n = d.kind === 'exam' ? (d.choice === 3 ? 2 : d.choice === 0 ? 0 : 1) : d.kind === 'check' ? (d.choice === 0 ? 0 : 2) : d.choice;
+    const n = d.kind === 'exam' ? (d.choice === 3 ? 2 : d.choice === 0 ? 0 : 1) : d.choice;
     return ['o-win', 'o-part', 'o-lose'][n] || '';
   }
   // An option's floating window: its label, why it is locked, its description (`hint:`), the roll in full when the button
@@ -975,11 +974,11 @@
   }
   function chipsFor(out) {
     let h = '';
+    const resultClass = (c) => (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail');
     for (const c of out.checks || []) {
-      if (c.fight) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + ' combat">' + Art.icon('sword', 14) + esc(t('check.fightChip', { result: t('fight.' + c.outcome), reason: t('fight.reason.' + c.reason) })) + '</span>';
-      else if (c.parley) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + ' parley" title="' + esc(t('check.parleyStub')) + '">' + Art.icon('scroll', 14) + esc(t('check.parleyChip', { p: c.p, result: t('challenge.' + c.result) })) + '</span>' + (c.played ? '' : '<span class="chip-note">' + esc(t('check.parleyStub')) + '</span>');
-      else if (c.challenge) h += '<span class="chip ' + (c.result === 'win' ? 'check-ok' : c.result === 'partial' ? 'check-part' : 'check-fail') + (c.challenge === 'combat' ? ' combat' : '') + '">' + Art.icon(c.challenge === 'combat' ? 'sword' : 'dice', 14) + esc(t('check.challengeChip', { kind: skillsOf(c.skill), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
-      else h += '<span class="chip ' + (c.ok ? 'check-ok' : 'check-fail') + '">' + Art.icon('dice', 14) + esc(t('check.chip', { skill: skillName(c.skill), p: c.p, result: t(c.ok ? 'check.success' : 'check.failed') })) + '</span>';
+      if (c.fight) h += '<span class="chip ' + resultClass(c) + ' combat">' + Art.icon('sword', 14) + esc(t('check.fightChip', { result: t('fight.' + c.outcome), reason: t('fight.reason.' + c.reason) })) + '</span>';
+      else if (c.parley) h += '<span class="chip ' + resultClass(c) + ' parley" title="' + esc(t('check.parleyStub')) + '">' + Art.icon('scroll', 14) + esc(t('check.parleyChip', { p: c.p, result: t('challenge.' + c.result) })) + '</span>' + (c.played ? '' : '<span class="chip-note">' + esc(t('check.parleyStub')) + '</span>');
+      else if (c.challenge) h += '<span class="chip ' + resultClass(c) + (c.challenge === 'combat' ? ' combat' : '') + '">' + Art.icon(c.challenge === 'combat' ? 'sword' : 'dice', 14) + esc(t('check.challengeChip', { kind: skillsOf(c.skill), p: c.p, result: t('challenge.' + c.result) })) + '</span>';
     }
     // A gain at the cap (M37): shown, marked as at the maximum.
     for (const [k, v] of Object.entries(out.capped || {})) {
@@ -1608,7 +1607,7 @@
       if (actor) eng.s.npcs[actor].met = true;
       if (eng.s.cur) eng.s.deck.unshift(eng.s.cur);
       eng.s.cur = null;
-      eng.s.deck.unshift({ id, actor: actor || (content.events[id].actor === 'any' ? Object.keys(content.npcs)[0] : null), src: 'debug', force: true });
+      eng.s.deck.unshift({ id, actor: actor || null, src: 'debug', force: true });
       closeOverlay(); ui.busy = false; step(eng.advance()); dump();
     };
     panel.querySelector('#dbgSkip').onclick = () => { eng.s.deck = []; eng.s.cur = null; closeOverlay(); ui.busy = false; step(eng.advance()); dump(); };

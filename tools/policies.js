@@ -69,7 +69,6 @@ function estimate(eng, opt, actor, eventId) {
           break;
         }
         case 'chance': { const p = (st.word ? eng.likelihoodP(st.word, st.steps, actor) : Math.max(0, Math.min(100, eng.value(st.p, actor)))) / 100; walk(st.body, w * p); walk(st.else, w * (1 - p)); break; }
-        case 'check': { const p = eng.checkChance(st.skill, eng.value(st.dc, actor)) / 100; walk(st.body, w * p); walk(st.else, w * (1 - p)); break; }
       }
     }
   };

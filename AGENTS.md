@@ -52,6 +52,7 @@ Code: `src/grimoire.js` (parser), `src/engine.js` and `src/director.js` (DOM-fre
 
 **Retrieval maintenance**
 - Follow `rag/AUTHORING.md` for source discovery and inspection. After final source edits, explicitly run `npm run grim -- retrieve index` at the end of each content-writing session; synchronize mid-session when fresh retrieval is needed. Report an unbuilt index instead of rebuilding it automatically. Frozen experiments follow their assigned instructions.
+- Every new or reworked card is checked for duplicate premises with retrieval before review; see `skills/write-academy-events/SKILL.md` and `rag/AUTHORING.md`.
 
 **Localization**
 - English in `content/` is the source of truth; never translate inside `.grim` files. After English changes, run `node tools/grim.js i18n <lang>` and fill the new or STALE lines (bulk: `locales/<lang>/_in/`). Keep `{tokens}` intact and follow the glossary. New UI strings go in `UI_EN` in `src/i18n.js`.

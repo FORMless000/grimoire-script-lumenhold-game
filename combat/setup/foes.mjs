@@ -137,6 +137,9 @@ export const FOES={
 //   nature           the odds word the foe's level uses instead of the card's (the setup already prices the circumstance)
 //   script           (a lesson) the foe's first moves, one per exchange, played as written when legal; 'idle' stands still
 //                    (src/combat.js). The lesson's tutorial keys are one coach mark per exchange, the last staying up.
+//   loop             (a lesson) the drill the foe repeats after its script, one move per exchange, so it never searches. It
+//                    sees a committed Impulse and Parries it in place of a drilled Strike; a drilled spell it can't afford
+//                    is a Strike, a Refocus with no flux a Parry (feedback 2026-10-25: no stalemate, Refocus that pays).
 export const EVENTS={
  'spring_tournament/right':{play:'tournament_entrant',observers:true,witnesses:true},
  'spring_tournament_circle/left':{play:'tournament_entrant',observers:true,witnesses:true},
@@ -149,7 +152,7 @@ export const EVENTS={
  'rival_last_match/left':{play:['tamsin','thornwick_final_year'],context:'practice_duel',setup:'Tamsin if met, else a Thornwick final-year',observers:true,witnesses:true},
  'curse_cure_2/right':{play:'shadow_stag',observers:false,witnesses:false},
  'pyro_lyra_spar/right':{play:'lyra',context:'practice_duel',observers:true,witnesses:true},
- 'intro_practice_circle/right':{play:'practice_mannequin',context:'rehearsal',observers:false,witnesses:false,foeCommitsFirst:5,script:['idle','strike','flame','guard','reclaim'],tutorial:['idle','strike','spell','guard','reclaim','commit','finish']},   // the intro's lesson (feedback 2026-10-20): five telegraphed moves, then the usual alternation, Thorne coaching each exchange
+ 'intro_practice_circle/right':{play:'practice_mannequin',context:'rehearsal',observers:false,witnesses:false,foeCommitsFirst:5,script:['idle','strike','flame','guard','reclaim'],loop:['flame','reclaim','strike'],tutorial:['idle','strike','spell','guard','reclaim','commit','finish']},   // the intro's lesson (feedback 2026-10-20): five telegraphed moves, then the usual alternation, Thorne coaching each exchange
  'item_ashwood_lyra/right':{play:'lyra',context:'practice_duel',observers:true,witnesses:true},   // world expansion 1: ashwood against Vaneshade
  // World expansion 1: the Whisperwood delve. Alone in the wood: nobody watches, nobody tells.
  'ww1_bramble_ferret/right':{play:'bramble_ferret',observers:false,witnesses:false},

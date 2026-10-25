@@ -4,11 +4,9 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const Engine = require('../src/engine.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { content } = require('./helpers.js');
 const LC = require('../build/combat.bundle.js');
 
-const { content } = project(ROOT).compileAll();
 test('a forbidden cast costs 2 alignment on a card and in a fight; Sleight keeps its tier', () => {
   const eng = new Engine(content);
   const w = console.log; console.log = () => {}; try { eng.newGame({ seed: 3, name: 'T', origin: 'street' }); } finally { console.log = w; }

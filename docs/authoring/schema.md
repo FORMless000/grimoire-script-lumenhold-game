@@ -36,7 +36,7 @@ text: Two to four sentences. Present tense, second person. Set up a real dilemma
 **Menus**: 3–8 options with keys other than left/right, each with a `hint:`; at least one option without `when:`.
 **Character events**: `actor: <npc>` with `when: rel(<npc>) >= N` (`trigger: social` puts it on their own track too). **Generic relationship events**: a `cast:` role cast by premise (`friend: any where tagged(friend, peer) and rel(friend) >= 10`) with `per: friend`; `{friend}`, `{friend.their}`, or `{they}` / `{them}` / `{s}` / `{are}` for the first role; `rel friend +small`, `spark friend +tiny`.
 **Chains**: `queue <event> [now | in N] [with <role>] [chance N]`; every queued event must be queued by something (`grim graph <id>` shows what leads where).
-**Legacy** (still parses; lint counts it; don't write it): `check`, `love`, `actor: any`, raw amounts in events, `grades`.
+**Legacy** (still parses; lint counts it; don't write it): raw amounts in events. (`check` and `love` no longer parse, and `actor: any` names no character: lint rejects it.)
 
 ## Worldbook blocks
 
@@ -353,5 +353,5 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 
 ### Functions in expressions
 
-`abs()` · `act()` · `apart()` · `applied()` · `around()` · `bond()` · `bonds()` · `bonds_around()` · `cast_as()` · `chance_of()` · `chosen()` · `clamp()` · `clock()` · `clue()` · `clues()` · `discovered()` · `due()` · `enrolled()` · `flag()` · `floor()` · `has()` · `has_item()` · `kind_is()` · `known()` · `knows()` · `left()` · `level()` · `love()` · `max()` · `member()` · `met()` · `min()` · `npc_is()` · `npc_rel()` · `offered()` · `on_shift()` · `passed()` · `performance()` · `plan()` · `present()` · `progress()` · `rand()` · `rank()` · `rel()` · `romanceable()` · `round()` · `seen()` · `since()` · `spark()` · `spell_level()` · `tagged()` · `visits()` · `visits_to()` · `worn()`
+`abs()` · `act()` · `apart()` · `applied()` · `around()` · `bond()` · `bonds()` · `bonds_around()` · `cast_as()` · `chance_of()` · `chosen()` · `clamp()` · `clock()` · `clue()` · `clues()` · `discovered()` · `due()` · `enrolled()` · `flag()` · `floor()` · `has()` · `has_item()` · `kind_is()` · `known()` · `knows()` · `left()` · `level()` · `max()` · `member()` · `met()` · `min()` · `npc_is()` · `npc_rel()` · `offered()` · `on_shift()` · `passed()` · `performance()` · `plan()` · `present()` · `progress()` · `rand()` · `rank()` · `rel()` · `romanceable()` · `round()` · `seen()` · `since()` · `spark()` · `spell_level()` · `tagged()` · `visits()` · `visits_to()` · `worn()`
 <!-- END GENERATED: schema -->

@@ -5,11 +5,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const Engine = require('../src/engine.js');
 const Policies = require('../tools/policies.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { content, quiet } = require('./helpers.js');
 
-const { content } = project(ROOT).compileAll();
-const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
 const ORIGINS = ['noble', 'scholar', 'hedge', 'street', 'merchant'];
 const DESIGN = {
   noble: { levels: { charm: 25, lore: 12 }, purse: 90 },

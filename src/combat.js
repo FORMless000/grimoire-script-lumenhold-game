@@ -78,6 +78,7 @@
     const list = (v) => (Array.isArray(v) && Array.isArray(v[0]) ? v[i] : v);
     if (ev && list(ev.tutorial)) setting.tutorial = [].concat(list(ev.tutorial));
     if (ev && list(ev.script)) setting.script = [].concat(list(ev.script));
+    if (ev && list(ev.loop)) setting.loop = [].concat(list(ev.loop));
     if (ev && at(ev.stakes, i) === 'none') setting.stakes = 'none';
     const firstLeader = ev && at(ev.firstLeader, i) != null ? at(ev.firstLeader, i) : 1;
     const p = req.player;
@@ -99,13 +100,20 @@
 
   // A lesson's scripted foe (EVENTS `script`, feedback 2026-10-20): its move for this exchange as the script writes it
   // ('idle' stands still: the core's `cancel`), when that's legal; null otherwise, and after the script, so the AI decides.
+  // After the script, its drill (EVENTS `loop`, feedback 2026-10-25) repeats: it Parries an Impulse it sees coming in place
+  // of a drilled Strike, a spell it can't afford is a Strike, a Refocus with no flux a Parry.
   function scriptedMove(fight) {
-    const C = combat(), s = fight.state, sc = fight.setting && fight.setting.script;
-    if (!sc || s.result || C.actorToMove(s) !== 1) return null;
-    const want = sc[s.round - 1];
-    if (!want) return null;
-    const id = want === 'idle' ? 'cancel' : want;
-    return C.legalActions(s).includes(id) ? id : null;
+    const C = combat(), s = fight.state, st = fight.setting || {}, sc = st.script || [], loop = st.loop || [];
+    if ((!sc.length && !loop.length) || s.result || C.actorToMove(s) !== 1) return null;
+    const legal = C.legalActions(s), ok = (id) => legal.includes(id);
+    const i = s.round - 1;
+    if (i < sc.length) { const id = sc[i] === 'idle' ? 'cancel' : sc[i]; return ok(id) ? id : null; }
+    if (!loop.length) return null;
+    let id = loop[(i - sc.length) % loop.length];
+    if (id === 'reclaim' && !(s.actors[1].flux > 0)) id = 'guard';
+    if (C.SPELLS[id] && !ok(id)) id = 'strike';
+    if (id === 'strike' && s.pending[0] === 'strike') id = 'guard';
+    return ok(id) ? id : null;
   }
 
   // The finished fight → the result the engine takes (choose(key, {fights: [result]}) or a resolver's return).

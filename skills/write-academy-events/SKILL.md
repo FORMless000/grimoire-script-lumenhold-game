@@ -42,7 +42,20 @@ For each event decide:
 
 For a **chain**, sketch the graph first: every queued event must be queued by something, and every flag tested must be set somewhere (lint enforces both).
 
-## 2. Write the blocks
+## 2. Search, write, then check for duplicates
+
+Retrieval is required for every new card and for every edit that changes a card's premise, options or outcomes. Commands and the index are in [the command guide](../../rag/AUTHORING.md).
+
+1. **Search the premise before drafting.** `npm run grim -- retrieve search "<one-line premise>"`. Read anything close in the top results with `node tools/grim.js show <id>`. If the premise is taken, pick another, or a clearly different angle.
+2. **Write the blocks** (below).
+3. **Check each draft for duplicates.** One card per file: `npm run grim -- retrieve related --draft <file>`. Read the top 2–4 results. The tool lists similar premises to inspect, not a duplicate verdict: you judge, but you must look. Rework the card if its premise, options or punchline repeat an existing card.
+4. **Record it.** List the queries you ran and any rework in the batch notes (`build/batches/<name>.notes.md`), so the critic can check them.
+
+Skip retrieval only when you are certain the change can't introduce or duplicate a premise: typo or wording fixes, tier or balance retunes, translations, renames, mechanical migrations. Write a one-line reason in the batch notes ("retrieval skipped: tier retune only"). When unsure, run it: doubt counts as required.
+
+If the index is unbuilt or unavailable (no key, a changed build configuration), report it and fall back to `brief` and `dupes`. Never run `retrieve index --rebuild` yourself: it is paid and can take hours. A stale index is fine: searches use the last synced snapshot and print a notice. Run `npm run grim -- retrieve index` at the end of the session, after final edits.
+
+### Write the blocks
 
 Use the shapes in `docs/authoring/schema.md` and the annotated `docs/authoring/examples/`. Stay in canon: names, places and facts from the brief and the worldbook. **A new proper noun needs a soft `@lore` entry** in `content/world/lore/soft/` (canon lint rejects unknown names otherwise). New characters go in `content/world/cast.grim` with `age` (adults only), traits and interests from `@vocab`, `voice`, and 5–8 `@fact`s in `content/world/facts/<id>.grim` (see `skills/distill-lore`).
 
@@ -74,7 +87,7 @@ If a new event never appears, its `when` is too narrow, its `weight` too low, or
 ## 5. Batch, critic, then report
 
 1. `node tools/grim.js batch <name> --files content/events/pools/<file>.grim` runs every validator on the batch (build, lint, balance --quick, dupes, canon, zh coverage) and writes `build/batches/<name>.json`.
-2. The critic (`skills/critic/SKILL.md`, ideally a separate subagent without your notes) writes `build/batches/<name>.critic.json`. Fix its issues and re-run `batch` (at most two rounds).
+2. The critic (`skills/critic/SKILL.md`, ideally a separate subagent without your reasoning; it does read the batch notes) writes `build/batches/<name>.critic.json`. Fix its issues and re-run `batch` (at most two rounds).
 3. `node tools/grim.js report --gaps` shows what the pools still lack.
 
-Then report: how many events in which files; new flags, states, characters, facts and lore; the chain graph; lint, sim and balance results (coverage, ending distribution); translation status.
+Then report: how many events in which files; the retrieval queries run, the rework they caused, and any skip with its reason; new flags, states, characters, facts and lore; the chain graph; lint, sim and balance results (coverage, ending distribution); translation status.

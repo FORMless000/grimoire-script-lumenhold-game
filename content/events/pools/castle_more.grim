@@ -1,0 +1,522 @@
+# ============================================================
+#  Baseline pools, second pass (2026-10-24): castle_more.
+#  Repeatable routine events for the castle places that had the
+#  thinnest pools: library, lecture tower, great hall, infirmary,
+#  alchemy laboratory, Mir's workshop, the Ledger office, the
+#  headmistress's tower, the seventh tower and the thesis lab.
+#  Spec: docs/authoring/pools.md.
+# ============================================================
+
+# ---------------- The Library ----------------
+
+@event library_whispering_dome
+title: The Whispering Dome
+place: library
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: book
+tags: study
+scene: A gallery railing under a painted dome at the top of the library, a student leaning over it with one ear cocked, seven floors of shelves below.
+text: {Under the dome on the sixth floor the echoes are wrong in a useful way. A whisper anywhere in the library arrives here, clear as a bell.|The dome is carrying voices again. Someone has chalked a small ear on the railing.|You know the dome's geography now: by the pillar you hear the front desk; by the window, the stacks.} {Two voices below are discussing a test that hasn't been set yet.|Someone below is rehearsing a proposal of marriage, badly.|{season == "winter": The radiators hiss over half of it.|A prefect is reading out demerits to himself, with relish.}}
+> left: Lean on the rail and listen
+  guile +small
+  alignment -tiny
+  say: {You learn the third question of next week's test, probably. Eavesdroppers, it turns out, don't feel as clever as they'd hoped.|The proposal ends in a yes, and you weren't invited. You feel like a thief who has stolen a wedding.|You learn exactly what the front desk thinks of you. It's fair, which is worse.}
+> right: Cough loudly, and read
+  lore +small
+  say: {Your cough rolls down the dome like thunder. Seven floors stop whispering at once, and you read in a silence you made.|You cough. Somewhere below, the proposal stops mid-sentence. You read a whole chapter before you stop wondering how it ended.|You cough on purpose now. Below, every whisper stops, and the dome is yours, and so is the chapter.}
+
+@event library_after_closing
+slot: evening
+title: After the Closing Bell
+place: library
+class: routine
+tone: eerie
+repeat: 5
+weight: 10
+art: lantern
+tags: study
+scene: A library at closing time, lamps going out floor by floor from the top down, a student half-hidden between two shelves with a book held to their chest.
+text: {The closing bell rings and the lamps begin to go out from the top floor down, one floor a minute. Students drift to the doors.|Closing bell. You've noticed the shelves lean together a little after hours, as if to talk.|The bell, the lamps, the drift to the doors. You know the alcove on the fourth floor where the last lamp dies.} {Footnote is doing his rounds, tail up.|Rain is loud on the high windows.|{final_year: You wonder who will hide in your alcove next year.|Somewhere a book closes itself with a snap.}}
+> left: Stay hidden past closing
+  challenge deceive apprentice:
+    win:
+      lore +small
+      health -tiny
+      say: {You read by a stolen candle until the small hours. The library is a different animal at night, and it lets you be.|The shelves lean together and whisper while you read. You catch one word in three, and none of them are kind about the history section.|You read in your alcove till the candle drowns. Walking back across the bridges at two, you feel like a burglar who stole only sentences.}
+    lose:
+      mood -small
+      renown -tiny
+      say: {A shelf shuffles sideways and nudges you, firmly, toward the door. A prefect on the stair watches you evicted by furniture.|The shelves close the aisle behind you like a mouth and walk you to the exit. The story is round the house by breakfast.|Footnote finds you, sits on your book and yowls until the porter comes. The porter tells everyone. Footnote is unrepentant.}
+> right: Leave with the crowd
+  health +small
+  say: {You go to bed at a decent hour, which feels almost illicit.|You leave with everyone else and sleep like a shelved book.|You walk out under the dying lamps and sleep well. The alcove can wait for you.}
+
+# ---------------- The Lecture Tower ----------------
+
+@event lecture_tower_faculty_basket
+title: The Faculty Basket
+place: lecture_tower
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: tower
+tags: class
+when: term
+scene: A wicker basket on a rope rising up the hollow core of a spiral tower, a sign on it reading FACULTY ONLY, a student eyeing it from the foot of the stairs.
+text: {Up the hollow middle of the Lecture Tower runs a wicker basket on a rope, for faculty knees. A sign says FACULTY ONLY. It's two hundred and twelve steps to the top.|The basket is waiting at the bottom again. Someone has added "AND THEIR LUGGAGE" to the sign.|The basket. You know its creak, its sway, and the exact landing where it likes to stop.} {Professor Thorne's satchel is riding up in it, alone.|It still smells faintly of Professor Vey's perfume.|{season == "summer": The stairwell is an oven by the fifth landing.|A draught howls up the stairwell like a chimney.}}
+> left: Ride it up, quietly
+  challenge deceive apprentice wild:
+    win:
+      mood +small
+      health +tiny
+      say: {You ride up beside the satchel, which seems to disapprove, and step off at the top fresh as morning.|You glide past six landings and step out at the top as if you'd walked. Your knees send their thanks.|The basket stops where it likes to stop; you know the trick of the rope now, and arrive at the top unwinded and unseen.}
+    lose:
+      renown -tiny
+      mood -small
+      say: {The satchel's owner is waiting at the top. Thorne looks at you, then at the sign. "Hm." You walk back down, then up.|The basket stops between floors. Professor Vey leans over the rail above. "Faculty," she says, "are generally taller." It's ten minutes before anyone winds you down.|It sticks at its favourite landing, and a whole lecture hall files past, one by one, to look at you.}
+> right: Climb all two hundred steps
+  vigor +small
+  health -tiny
+  say: {You arrive at the top red-faced and righteous, legs like wet bread.|You count the steps aloud. Somewhere beside you the basket creaks past, empty, smug.|You take the steps two at a time now, and only stop to breathe at the landing where the basket stops.}
+
+@event lecture_tower_office_hours
+title: The Office-Hours Queue
+place: lecture_tower
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: scroll
+tags: study class
+cast:
+  prof: present(place) where tagged(prof, teacher) and met(prof)
+scene: A queue of students on a stone landing outside a half-open office door, one nervous first-year clutching an essay at the very back.
+text: {{prof} keeps office hours on the landing, and the queue already reaches the stairs.|Office hours. {prof}'s queue has its etiquette now: no pushing, no crying, no essays read aloud.|The office-hours queue. You know the landing's cold step and the warm one.} At the very back a first-year is holding an essay like a shield{season == "winter": , breath fogging|}.
+> left: Wait your turn and ask
+  lore +small
+  mood -small
+  if npc_is(thorne):
+    say: {Forty minutes on the stair for four minutes of Thorne. "Hm. Wrong, but interestingly." You'll take it.|Thorne reads your question, crosses out half of it, and answers the half that's left. It was the half that mattered.|Thorne lets you in, answers you in three sentences and says "Next." You carry the three sentences around for a week.}
+  elif npc_is(vey):
+    say: {Vey answers your question with a question, and then another, until you answer it yourself. It takes an hour you didn't have.|Vey asks how you think you did. You lie. She smiles and tells you exactly how you did.|Vey listens, then asks what you actually came to ask. You hadn't known, until then.}
+  elif npc_is(marisol):
+    say: {Marisol answers with a poem about rivers, forgets the last line, and somehow the forgetting answers your question.|Marisol talks you through it while watering a fern on the sill. It takes an hour. It's a very good hour.|Marisol hears you out, then opens the window to let the weather in. "There. Now ask me again."}
+  else:
+    say: {The wait is long, the answer short, and worth it.|You reach the door just before it shuts and get your answer standing on the threshold.|You get your answer, and a reading list longer than the queue.}
+> right: Give the first-year your place
+  alignment +tiny
+  mood +small
+  say: {The first-year goes in white and comes out pink and grateful. You never do get to ask your question.|You swap places. The first-year comes out an hour later having been told their essay "has a pulse". They take it as a triumph. So do you.|You give up your place again. The first-year waves the essay at you on the way out, like a flag.}
+
+# ---------------- The Great Hall ----------------
+
+@event great_hall_house_banners
+title: The House Banners
+place: great_hall
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: crown
+tags: social
+scene: Five long house banners hanging over the tables of an empty great hall, one of them conspicuously wrong.
+text: {The five house banners over the long tables move with their houses' moods. Today Duskgate's hangs upside down, and is furious about it.|Someone has been at the banners again: Brasswick's has been embroidered with a small, elegant moustache.|Another banner prank: Rootward's has been swapped for a tablecloth with a turnip painted on it. The real one is sulking in a corner.} {The tables are empty; supper is an hour off.|A ladder leans against the wall, still warm from the culprit.|{season == "winter": The banners shiver in the draught from the high windows.|Emberhall's banner is smouldering slightly, in sympathy or envy.}}
+> left: Put it right before supper
+  vigor +small
+  health -tiny
+  say: {Twenty minutes up a wobbling ladder. Duskgate's banner, righted, gives a grudging flap. Your palms are rope-burned.|You unpick the moustache stitch by stitch from the top of the ladder. Brasswick's banner shudders with relief; your neck doesn't.|You haul the real banner up and the tablecloth down. Rootward's banner settles over its table like a hen on eggs. Your arms ache till morning.}
+> right: Improve the prank
+  challenge deceive apprentice:
+    win:
+      guile +small
+      mood +small
+      say: {You add a matching upside-down candle to the table below. At supper Duskgate laughs hardest, which is how you know it was them.|You give the moustache a monocle. Brasswick declares it an improvement and votes to keep it.|You paint a crown on the turnip. Rootward is outraged, then proud, then outraged again.}
+    lose:
+      renown -tiny
+      mood -tiny
+      say: {A prefect finds you on the ladder with an upside-down candle, and the whole prank is pinned on you by supper.|You're halfway through a monocle when Brasswick's entire table walks in. You are now the moustache person.|You're caught with paint on your hands and a crown half done. Rootward sends a strongly worded turnip to your table.}
+
+@event great_hall_stagehands
+title: Stagehands Wanted
+place: great_hall
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: music
+tags: festival social
+scene: Students on ladders painting a huge backdrop on the great hall's stage while a cook carries in a tray of tasting plates.
+text: {season == "autumn": Scenery for the Harvest Feast is going up on the stage: a painted moon the size of a barn.|{season == "winter": They're building the Midwinter Ball's ice arch out of painted canvas and optimism.|{season == "spring": The Spring Tournament's banners are being hemmed on the stage, in five house colours.|They're painting the Starfall backdrop, a whole sky, star by star.}}} {A sign by the stage says STAGEHANDS WANTED, NO EXPERIENCE NECESSARY.|The sign now says SOME EXPERIENCE PREFERRED, and someone has pencilled your name under it.|They hand you a brush as you come in.} Meanwhile the kitchens are testing the feast menu on anyone who sits still.
+> left: Paint, hammer and hold ladders
+  arcana +small
+  health -tiny
+  say: {You paint for three hours and charm the paint to shimmer at the edges. It's the best thing on the stage. Your shoulders disagree.|You hold ladders, hammer, paint, hit your thumb twice and get paint in your hair that won't come out till the festival. Someone stands back and says "oh", the good kind.|You're trusted with the tricky bit now, the part that has to move when the candles do. It does. You get splinters, and applause.}
+> right: Taste-test for the kitchens
+  health +small
+  mood +small
+  study -tiny
+  say: {You eat seven tasting plates and give honest marks. The pear tart wins. Your revision notes stay shut.|You taste and judge and taste again. The cook writes down everything you say, and your afternoon of reading is gone.|The cook saves you the corner seat and the first spoonful. The menu is better for you; your reading pile is taller.}
+
+# ---------------- The Infirmary ----------------
+
+@event infirmary_night_watch
+slot: evening
+title: Turning the Fever Charm
+place: infirmary
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: candle
+tags: social
+scene: A dim infirmary ward at night, one lamp lit by a bed where a sleeping student lies under a slowly turning ring of pale light.
+text: {A first-year in the end bed has a fever, and the cooling charm over the bed has to be turned by hand every hour until dawn. Sister Amaranth looks at you, then at the chair.|Another fever, another chair. The cooling charm's brass ring is worn smooth where hands turn it.|The chair by the end bed. Sister Amaranth has left a cushion on it, which is as close as she comes to asking.} {The ward is quiet except for the clock.|Rain is drumming on the infirmary roof.|{season == "winter": Frost feathers the window behind the bed.|Moths keep the lamp company.}}
+> left: Take the night watch
+  alchemy +small
+  health -small
+  alignment +tiny
+  say: {You turn the ring every hour and watch the fever ebb by inches. At dawn Sister Amaranth says "Keep doing that," and takes the chair.|You doze between turns and wake on the hour, every hour, as if the ring calls you. The patient wakes clear-eyed. You don't.|You know the charm's weight now and turn it half asleep. At dawn the patient asks your name. You're too tired to remember it.}
+> right: Promise next time, and sleep
+  health +tiny
+  mood -tiny
+  say: {Sister Amaranth turns the charm herself, without comment, and that's worse than a comment.|You go to bed and lie awake a while, counting hours you're not turning.|You leave the cushion on the chair for someone else. You sleep, mostly.}
+
+@event infirmary_curious_case
+title: A Curious Case
+place: infirmary
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: potion
+tags: magic
+scene: A student sitting up in an infirmary bed with a strange magical symptom while a stern healer frowns at a thick reference book.
+text: {A second-year sits in bed four hiccuping soap bubbles.|In bed four today: a student whose hair has turned to feathers, and keeps trying to migrate.|Bed four has a student who can only speak in rhyme, and is running out of rhymes.} {Sister Amaranth has three books open and no patience left.|Sister Amaranth glances at you. "You. Useful or scarce. Pick."|{season == "winter": Half the ward has the sniffles, and the hiccups have gone round.|Sister Amaranth is writing a stern note to whoever did this.}}
+> left: Help look it up
+  challenge research apprentice+:
+    win:
+      alchemy +small
+      lore +small
+      say: {You find it on page four hundred. A soap-tongue jinx, cured by mint and silence. Sister Amaranth says "Good," without looking up.|You trace the feathers to a half-learned transformation and the cure to a bowl of warm salt water. The student moults gratefully.|You find the rhyming hex and the counter-word. The student's first plain sentence is "thank you", which is a relief to everyone.}
+    lose:
+      mood -tiny
+      lore +tiny
+      say: {You read for an hour and find three cures for things nobody has. Sister Amaranth solves it with a cup of tea and a look.|You recommend plucking. Everyone stares at you. Sister Amaranth sends you to fetch towels instead.|You suggest a cure that makes the rhymes worse and slightly operatic. Sister Amaranth fixes it, and you, with a glance.}
+> right: Keep the patient company
+  charm +small
+  mood +small
+  health -tiny
+  say: {You see who can blow the biggest bubble. You lose, but you laugh so hard your ribs ache.|You help the student hold on to the bedframe whenever a flock goes over. Feathers get everywhere, including your lungs.|You rhyme back. You run out of rhymes together, and by then you're both crying with laughter and very sore.}
+
+# ---------------- The Alchemy Laboratory ----------------
+
+@event alchemy_lab_crystal_sill
+title: The Crystal on the Sill
+place: alchemy_lab
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: gem
+tags: magic
+scene: A blue crystal growth spilling out of a jar on a laboratory windowsill and creeping slowly down the wall.
+text: {On the windowsill sits somebody's abandoned crystal experiment, a jar of blue spikes labelled DO NOT FEED.|The crystal has grown out of its jar and halfway down the wall. The label now reads DO NOT FEED (WE MEAN IT).|The crystal reaches the floor now and has started on the next window. Someone has given it a name and a little hat.} {It chimes faintly when the door slams.|It has grown a new spike toward the warmest cauldron.|{season == "winter": Frost and crystal are racing each other up the glass.|In the afternoon light it throws blue all over the benches.}}
+> left: Feed it a pinch of salt
+  chance even:
+    alchemy +small
+    mood +small
+    say: {It drinks the salt with a sound like a sigh and grows one perfect new spike. You understand, suddenly, how it's built.|A new spike unfolds slowly, like a fern. You sketch the growth, and it makes sense of a whole chapter.|It grows a spike in your exact direction, which is either affection or aim. You take notes either way.}
+  else:
+    health -tiny
+    mood -tiny
+    say: {It shoots out a spike the size of a finger and catches your sleeve and your wrist. The label, you concede, was right.|It grows a spike straight through your notes and into your thumb. You are not the first; there's a list.|It sneezes crystal dust all over you. You sparkle blue until bedtime and itch till morning.}
+> right: Snap off a spike for Pell's
+  gold +small
+  alignment -tiny
+  say: {Pell & Daughters pays well for clean crystal, no questions asked. The jar seems to notice the gap.|You snap off a spike while it's busy growing toward the cauldron. It chimes once, sharply, as if taking your name. Pell's pays anyway.|You break off a piece from the bottom where nobody will notice and sell it in the village. The little hat tilts at you when you come back.}
+
+@event alchemy_lab_good_scales
+title: The Good Scales
+place: alchemy_lab
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: scales
+tags: study
+scene: A queue of students with jars and papers waiting at a single fine brass balance in a cluttered laboratory, while battered scales sit unused along the bench.
+text: {The laboratory has twelve sets of scales and one that's accurate. The queue for it reaches the door.|The queue for the good scales has rules now, chalked on the bench: one weighing each, no hovering, no charms.|The good scales. You can tell from the door how long the wait is by how many people are sighing.} {A third-year at the front is weighing powdered moonstone grain by grain.|The other scales are off by a hair, a whisker or a small mouse.|{season == "summer": It's hot, and every powder in the room is clumping.|The windows have steamed over and nobody can read their numbers.}}
+> left: Charm your way to the front
+  challenge appeal apprentice:
+    win:
+      charm +small
+      mood +tiny
+      say: {You admire the third-year's technique until they wave you ahead out of sheer flattered confusion.|You quote the chalked rules back at the queue in such a reasonable voice that they let you through to weigh "just one thing".|You've learned the queue's weak points. A compliment, a promise and a borrowed spatula, and you're at the scales in a minute.}
+    lose:
+      renown -tiny
+      mood -small
+      say: {The queue turns as one and points at the back. You go to the back.|Someone reads out rule two, NO HOVERING, and looks at you while they do it. The whole queue laughs.|The queue closes ranks like a wall of elbows. You spend the wait at the back, flushed.}
+> right: Use the bad scales and correct
+  alchemy +small
+  lore +small
+  mood -small
+  say: {You weigh everything twice on two bad scales and average the errors. Your measurements are right; your head hurts.|You work out exactly how wrong the mouse-scale is and correct for it. It's tedious, and the best arithmetic you've done all week.|You've mapped all eleven bad scales' errors on a card in your pocket. It doesn't make the work less dull.}
+
+@event alchemy_lab_mind_my_cauldron
+slot: evening
+title: Mind My Cauldron?
+place: alchemy_lab
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: cauldron
+tags: social
+cast:
+  mate: any where (tagged(mate, student) or tagged(mate, prefect)) and rel(mate) >= 0 and around(mate)
+scene: A student hurrying out of an evening laboratory, pointing back at a bubbling cauldron and an hourglass, while another student is left holding the spoon.
+text: {{mate} has a six-hour brew going and a supper {they} can't miss. "Stir it widdershins when the sand runs out. Twice. I owe you."|{mate} spots you across the lab and is already holding out the spoon. "Hourglass. Twice. Widdershins. You're a lifesaver."|{mate} hands you the spoon with the air of someone who knows you'll say yes. The hourglass is half run.} {The brew smells of oranges and thunder.|The brew is the colour of a bruise, and humming.|{season == "winter": The lab windows are black and the cauldrons the only warmth.|Somebody's cauldron at the far end goes off like a cork.}}
+> left: Stay and mind it
+  alchemy +small
+  rel mate +small
+  health -tiny
+  say: {You miss supper and stir twice, exactly. {mate} comes back to a perfect brew, and you to a rumbling stomach.|You mind it, and pick up three of {mate}'s tricks just by watching the sand. Your own supper is cold bread.|The brew behaves for you. {mate} comes back, sniffs, and says your wrist is better than {theirs}. Your stomach disagrees with the praise.}
+> right: Sorry, I've plans
+  mood +small
+  rel mate -tiny
+  say: {You go to supper. {mate} goes to supper late, and the brew turns slightly orange in revenge.|You make your excuses. {mate} finds someone else, and mentions it, twice.|You say no this time. {mate} looks at the spoon, then at you, and sighs the sigh of the betrayed.}
+
+# ---------------- Mir's Workshop ----------------
+
+@event workshop_after_the_bang
+title: After the Bang
+place: workshop
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: gear
+tags: magic
+scene: A workshop wreathed in drifting smoke, a soot-blackened inventor waving cheerfully through it, springs and gears scattered across the floor.
+text: {You hear the bang from the corridor. Inside, the smoke is thinning, and Mir waves through it, eyebrows mostly intact. "That was the good kind of bang! Probably!"|Another bang. Mir has chalked a tally by the door: GOOD BANGS and BAD BANGS. Today's goes in a third column, MUSICAL.|You don't even flinch at the bang now. Mir hands you a broom before the smoke clears.} {Gears are still rolling across the floor.|A small cog is spinning on its edge, refusing to fall.|{season == "winter": The blast has blown the window open and snow is coming in.|The fire bucket by the door is already empty.}}
+> left: Help sweep up and salvage
+  alchemy +small
+  health -tiny
+  say: {You sort springs from gears from bits of the ceiling. A spring bites your finger; Mir says that one's always been like that.|You salvage a box of parts and a burnt sleeve. Mir promises to name the next bang after you.|You sweep like a professional now, and pocket a cog that wouldn't fall. Mir pretends not to see. Your fingers are cut in two places.}
+> right: Read the singed blueprint
+  arcana +small
+  say: {You find the mistake, a rune drawn backwards, and tell Mir, who is delighted, then mortified, then delighted. "Probably that's what it was!"|You study the scorched blueprint while Mir sweeps around you, and learn more from the burn marks than from the lines.|You can read Mir's blueprints now, even singed. You show them where today's bang came from. They want to do it again, on purpose.}
+
+# ---------------- The Lumen Ledger Office ----------------
+
+@event ledger_office_crossword
+title: The Crossword Is Late
+place: ledger_office
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: paper
+tags: club
+scene: A half-finished crossword grid pinned above a cluttered desk in a newspaper office, a pencil dangling from a string beside it.
+text: {The Ledger's crossword setter has vanished before the deadline, leaving half a grid pinned over the desk and a pencil on a string.|The crossword is late again. The setter's note says "back soon", and has said it since Tuesday.|The crossword grid again, half done. The pencil on its string swings toward you as if it knows.} {Seven across is blank. Nine down is a rude word, crossed out.|A furious letter about last week's puzzle is pinned beside it, in a professor's hand.|{season == "winter": The ink in the pot has a skin of ice.|The press is warming up, and so is everyone's temper.}}
+> left: Finish setting it, properly
+  lore +small
+  mood -tiny
+  say: {You fill the grid with honest clues and one fiendish one. Your eyes ache; it goes to print with your pencil marks still on it.|You set it so carefully that the professor who complained will have nothing to complain about. It takes all evening.|You set the whole grid by lamplight. Nine down is no longer rude. You're a little sorry.}
+> right: Hide a message in the clues
+  challenge deceive apprentice:
+    win:
+      guile +small
+      renown +small
+      say: {The first letters of the across clues spell SOUP IS A CRIME. By lunch the whole refectory has solved it, and your name is going round with it.|You hide a riddle in the down clues. Half the castle spends a week on it, the professor writes in again, delighted, and somebody tells him who set it.|Your hidden message is the talk of breakfast, and the Ledger lets slip who set it.}
+    lose:
+      renown -tiny
+      mood -small
+      say: {Nessa reads the proof, finds SOUP IS A CRIME in the first letters and circles it in red, then circles you.|The message comes out garbled: the clues spell SOUP IS A CRIMP. Nobody understands it. Somehow that's worse.|Nessa spots it at the drying line and pulls the proof. "Clever," she says. "Not printed. Next."}
+
+# ---------------- The Headmistress's Tower ----------------
+
+@event headmistress_tower_window_boxes
+title: The Window Boxes
+place: headmistress_tower
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: flower
+tags: nature
+cast:
+  host: isolde
+scene: A high tower window open over a dizzying drop to the lake, a row of window boxes of night-flowering herbs along the sill, a calm woman writing at a desk behind.
+text: {"Would you see to the window boxes while I finish this?" {host} says, without looking up. The boxes run along the outside of the tower window, high over the lake.|The window boxes again. {host} has left the watering can on the sill, which counts as an invitation.|You reach for the watering can before {host} asks. She smiles at her letter.} {The far box is just out of reach without leaning.|One plant in the far box has opened a single silver flower.|{season == "winter": Frost has nipped the herbs; they need covering.|Bees from somewhere have found the boxes, this high up.}}
+> left: Lean out to the far box
+  challenge feat apprentice wild:
+    win:
+      vigor +small
+      mood +small
+      say: {You lean out over the drop with one hand on the frame and tend the far box. When you pull back in, {host} is watching. "Steady," she says. It's praise.|You reach the far box and the silver flower opens a second bloom as you water it. You stay leaning out a moment longer than you need to, for the view.|You know the reach now: knee on the sill, hand on the frame. The far box is tended in a minute, and the lake glitters far below.}
+    lose:
+      mood -small
+      health -tiny
+      say: {Your foot slips on the sill and the watering can drops a very long way. {host} doesn't look up. "There's another in the cupboard," she says. Your shin is skinned.|You bang your head on the frame coming back in. {host}'s quill pauses, then goes on. The silver flower doesn't get its water.|You reach, wobble, and decide against it with your heart pounding and an elbow scraped. {host} tends the far box herself afterwards, without comment.}
+> right: Tend the near boxes and talk
+  lore +small
+  say: {You water the near herbs while {host} tells you their names, moonmint, star-sorrel, a thyme that only opens after dark. She knows each one's story.|{host} asks what you're reading this term and listens to the answer as she writes. You leave having said more than you meant to, and learned the names of six plants.|You tend the near boxes while {host} reads you a line from her letter and asks what you'd reply. You think about it on the stairs all the way down.}
+
+@event headmistress_tower_waiting_bench
+title: The Waiting Bench
+place: headmistress_tower
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: hourglass
+tags: social
+scene: A narrow stone bench at the foot of a spiral stair, a pale first-year sitting on it clutching a summons, a stone owl watching from above.
+text: {On the bench at the foot of the stair sits a first-year with a summons in one hand and doom on their face. "What's she like?" they whisper.|Another summoned first-year on the bench, another whisper: "Is it true she can read minds?"|The waiting bench has a first-year on it again; you suspect it always will. "Have you been in? What happens?"} {The stone owl watches you both.|Somewhere above, a door opens and closes.|{final_year: You remember sitting there yourself, a hundred years ago, last week.|The summons is smudged from being held so hard.}}
+> left: Tell them the kind truth
+  charm +small
+  alignment +tiny
+  say: {"She'll listen," you say, "and it will be worse than shouting, and then it will be better." The first-year breathes for the first time in an hour.|"She can't read minds," you say. "She just doesn't need to." The first-year laughs, shakily, and goes up a little taller.|"She'll pour you tea," you say. "Drink it. Tell her the truth." The first-year nods and goes up the stair like someone visiting a friend.}
+> right: Tell them a horror story
+  guile +small
+  mood +small
+  alignment -tiny
+  say: {You describe the trapdoor, the pit and the crocodiles in loving detail. The first-year goes up grey. You feel wonderful, then less wonderful.|"Only on Thursdays," you say gravely. It's Thursday. The first-year's face is a work of art.|You tell them about the owl that eats liars. The owl, above you, opens one eye and looks at you for a long time.}
+
+# ---------------- The Seventh Tower ----------------
+
+@event seventh_tower_candle_landing
+title: Other People's Candles
+place: seventh_tower
+class: routine
+tone: eerie
+repeat: 5
+weight: 10
+art: candle
+tags: mystery
+scene: A narrow stone landing crowded with old candle stubs of every colour, initials scratched into the wall above them, one stub still faintly warm.
+text: {Halfway up the seventh tower is a landing crowded with candle stubs, a century of them, with initials scratched in the wall above. Whoever climbed here, climbed with a light.|The candle landing. You recognise some of the initials now, the way you recognise faces in a corridor.|Back at the landing of candles. You've found your own favourite set of initials, deep and careful, and wonder who cut them.} {One stub is still faintly warm.|{season == "winter": The wax is cold as stone.|A draught from nowhere leans every wick the same way.}|One stub has been lit and blown out since your last climb.}
+> left: Leave a candle of your own
+  gold -tiny
+  mood +small
+  say: {You light the candle you bought in the village and set it among the others. For a moment the landing is bright, and the initials look almost cheerful.|You light a new candle and sit with it while it burns down. It feels like adding your name to a very long, very quiet register.|You leave a fresh candle beside the careful initials. When you look back from the stair, its flame is leaning toward them.}
+> right: Read the initials by lamplight
+  lore +small
+  mood -tiny
+  say: {You copy down the initials and the dates. Most of them are a century old or more; one is from last year. Nobody you ask admits to it.|You find two sets of initials cut in the same hand, forty years apart. You leave without deciding what that means.|You read the wall until your lamp gutters. All those people, climbing up here with a light, alone. It sits with you all evening.}
+
+@event seventh_tower_wind_song
+title: The Wind in the Slits
+place: seventh_tower
+class: routine
+tone: eerie
+repeat: 5
+weight: 10
+art: music
+tags: mystery
+scene: Thin arrow-slit windows in the curved wall of a dusty tower stair, wind whistling through them, a student with one hand pressed to the cold stone.
+text: {The wind plays the seventh tower's arrow-slits like a flute, a different note at every window.|The tower is playing again. You'd swear the tune has more notes than there are windows.|The wind's song. You can hum the first part now; nobody else in the castle knows it.} {Today it sounds almost like a lullaby.|Today it is quick and fretful, as if late for something.|{season == "winter": It plays low and slow, like something under snow.|It plays in fits, between gusts.}}
+> left: Hum along and listen
+  mood +small
+  mana -small
+  say: {You hum back. For a moment the tower answers in harmony, and the air goes thin and bright, and you come away drained and happy, as after a long song.|You hum, and one window falls silent as if to listen. It costs you something to keep going. You keep going.|You hum the part you know and the tower plays the rest. When it's done your hands are cold to the elbow and you're smiling.}
+> right: Write the tune down
+  lore +small
+  say: {You mark each window's note in your notebook. It's a scale nobody uses any more; you find it later in a very old songbook.|You write the notes down and get a different tune each time you read them back. That seems important, and you can't think why.|Your page of notes is filling up. The tune has the same shape as the stair, you realise; you climb it, more or less.}
+
+@event seventh_tower_outside_ledge
+title: The Outside Ledge
+place: seventh_tower
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: tower
+tags: danger
+scene: A narrow stone ledge running round the outside of a high tower, a student edging along it with their back to the wall, six other towers and their bridges of light spread out below.
+text: {From the window at the top, a ledge a foot wide runs round the outside of the tower. From the far side, they say, you can see all seven towers and every bridge at once.|The ledge. Someone has chalked a tiny arrow on the sill: THIS WAY, BRAVE ONE.|You know the ledge's handholds now: the gargoyle's ear, the iron ring, the crack shaped like a smile.} {The wind is mild.|{season == "winter": There's ice on the stone.|A crow is sitting exactly where you'd put your foot.}|The bridges below are just lighting up for evening.}
+> left: Edge round the ledge
+  challenge feat apprentice+ wild:
+    win:
+      vigor +small
+      mood +small
+      say: {You reach the far side and there they are, seven towers, every bridge of light, the lake holding the whole castle upside down. You forget to be afraid until the way back.|You inch round past the arrow and stand, breathing, over the whole academy. Somebody far below waves. You wave back like a fool.|Ear, ring, smile. You're round in a minute and sit with your feet over the drop, the castle lit up below like a map of itself.}
+    lose:
+      health -small
+      mood -small
+      say: {Your foot slips on the first step and you spend a long moment hugging the wall. You climb back in through the window shaking and scraped.|The wind takes your scarf and very nearly you. You crawl back inside on grazed hands and sit on the floor a while.|You misjudge the crack shaped like a smile. Your knee meets the stone hard, and you retreat, limping.}
+> right: Look out from the window
+  mood +small
+  say: {You lean on the sill and look out at the three towers you can see. It's enough. It's more than enough.|You stay inside and read the chalk arrow until it stops sounding like a dare.|You stay at the window and watch the bridges light, one by one, without needing to see them all.}
+
+# ---------------- The Thesis Laboratory ----------------
+
+@event thesis_lab_tea_urn
+title: The Tea Urn
+place: thesis_lab
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: cup
+tags: social study
+scene: A great dented copper tea urn on a trolley at the end of a row of study carrels, final-year students clustered round it holding mugs and complaints.
+text: {The thesis lab runs on the tea urn, a dented copper monster that has outlived forty years of final-years. Round it, people confess things.|At the urn today someone is crying quietly into their mug about chapter three.|The urn. Someone has taped a list to it: STAGES OF THESIS GRIEF. Everyone has initialled the stage they're at.} {The urn is making the noise that means it's about to boil over.|Someone has hidden a tin of biscuits behind it, labelled NOT BISCUITS.|{season == "spring": The windows are open, and blossom keeps landing in the mugs.|The lamps are lit already, though it's barely evening.}}
+> left: Stay and listen
+  charm +small
+  mood +small
+  say: {You hear about an advisor who writes only in question marks, a source that turned out to be a forgery and a cat that ate a bibliography. You say almost nothing, and everyone thanks you.|You sit with the one crying about chapter three until they're laughing about chapter three.|You find your stage on the list and initial it. Then you listen to everyone else's, which is better than any advice.}
+> right: Fill your mug and get back to work
+  lore +small
+  say: {You fill your mug and walk away from the confessions. Your carrel is quiet and your notes go well, and you feel slightly like a deserter.|You pat the crying student's shoulder on your way past and go back to work. It's the best you can do today.|You take your tea back to your carrel. Behind you, the list of stages grows another set of initials.}
+
+@event thesis_lab_old_theses
+title: The Shelf of Old Theses
+place: thesis_lab
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: book
+tags: study
+scene: A long shelf of bound theses in faded cloth, a student pulling one out and blowing dust off a spine with a ridiculous title.
+text: {Along the back wall run three centuries of finished theses, bound in cloth that has faded to the same brown.|The thesis shelf. You've started a list of the best titles. Today's find: a study of the emotional lives of doorknobs.|The old theses. You can find the good ones by feel now: the spines are worn where people keep taking them down.} {One near the end has a pressed flower for a bookmark.|One has a note on the flyleaf: "Passed. Barely. Worth it."|{season == "spring": Blossom drifts in through the open window and settles on the spines.|A spider has made its home between two famous ones.}}
+> left: Read a famous one
+  lore +small
+  mood -small
+  say: {It's brilliant, and it was written by someone younger than you. You put it back very carefully and go and sit somewhere quiet.|It's the one everybody cites. Reading it in full is like seeing a mountain from the bottom.|You read the most-worn one cover to cover. It's so good it hurts, which you suppose is the point.}
+> right: Read a gloriously bad one
+  mood +small
+  say: {It argues for forty pages that rain is a kind of apology. It passed. You feel enormously better about everything.|You read the doorknob one. It is three hundred pages long and completely serious, and you laugh until the carrels shush you.|You find one with footnotes longer than its chapters, and footnotes to the footnotes. Your own thesis suddenly seems sane.}
+
+@event thesis_lab_mock_defence
+title: The Mock Defence
+place: thesis_lab
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: scales
+tags: study
+scene: A chalkboard at the end of the thesis lab, three final-year students sitting as stern pretend examiners in borrowed gowns while a fourth stands to defend.
+text: {Final-years run mock defences at the end of the lab. Three in borrowed gowns play the committee, and they play it cruel.|Mock defence day. The pretend committee has added a fourth chair and a tiny gavel.|The mock committee nods at you as you come in. They've started keeping score on the board.} {Tonight's chief examiner is doing an impression of Thorne that is unkindly accurate.|The chair has a bell, which they ring for every "um".|{season == "winter": Everyone defends in scarves; the lab's fire is out.|Someone has borrowed a skeleton from the infirmary to sit in the audience.}}
+> left: Take the hot seat
+  challenge research adept-:
+    win:
+      lore +small
+      renown +tiny
+      say: {You field every question, even the cruel one about your sources. The chief examiner says "Hm," in Thorne's voice, and means it.|They ring the bell for "um" only twice. That's a record, and the committee applauds with the tiny gavel.|You hold your ground for an hour. Your score on the board is the highest of the term, and people come to ask how.}
+    lose:
+      mood -small
+      lore +tiny
+      say: {The third question undoes you. You stand at the board saying "well" while the chief examiner does Thorne's eyebrow at you.|They find the hole in your argument in four minutes, and the bell rings for every "um" after that. Better here than in front of the real thing.|You lose your thread under the gavel. The committee is merciful afterwards, which is worse.}
+> right: Sit on the committee
+  guile +small
+  mood +tiny
+  say: {You ask one question, quietly, and watch the defender's face as they see the hole. You feel like a cat. A kind cat.|You learn to find the weak joint in an argument by watching three of them crack. It's educational and a little shameful.|You're the committee's favourite examiner now: gentle voice, terrible questions.}

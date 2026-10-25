@@ -73,7 +73,6 @@ function references(content) {
       case 'challenge': if (st.vs && st.vs.who !== 'npc') add('npc', st.vs.who); for (const x of st.steps || []) scanExpr(x.cond); break;
       case 'if': st.branches.forEach((b) => scanExpr(b.cond)); break;
       case 'chance': if (st.p) scanExpr(st.p); for (const x of st.steps || []) scanExpr(x.cond); break;
-      case 'check': scanExpr(st.dc); break;
     }
   });
   for (const [kind, col] of Object.entries(HEADER_KINDS)) for (const id of Object.keys(content[col])) add(kind, id);
@@ -94,7 +93,7 @@ function references(content) {
     for (const d of Object.values(content[col])) {
       for (const f of ['title', 'text', 'scene', 'desc', 'name', 'label']) if (typeof d[f] === 'string') scanText(d[f]);
       scanExpr(d.when); scanExpr(d.weight); scanExpr(d.defer); if (d.ramp) scanExpr(d.ramp.expr);
-      if (d.actor && !['any', 'npc'].includes(d.actor)) add('npc', d.actor);
+      if (d.actor && d.actor !== 'npc') add('npc', d.actor);
       for (const f of ['on_show', 'tick', 'on_add', 'on_expire', 'on_remove', 'do', 'on_zero']) scanEffects(d[f]);
       for (const o of d.options || []) {
         scanText(o.label); scanText(o.hint); scanExpr(o.when); scanEffects(o.effects);

@@ -40,7 +40,7 @@ text: {The courtyard fountain is taking wishes again.|The fountain again. Someon
   - `friend: any where tagged(friend, peer) and rel(friend) >= 10` (cast by premise: `peer` to spend time with, `(tagged(x, student) or tagged(x, prefect))` for a classmate, `tagged(x, teacher)` for a professor; never just `not tagged(x, faculty)`, which also admits shopkeepers);
   - a fixed npc.
 
-  An event whose cast can't be filled is skipped. So **at least two of each source's events have no cast**, or the pool comes up empty. Never use `actor: any`.
+  An event whose cast can't be filled is skipped. So **at least two of each source's events have no cast**, or the pool comes up empty.
 
 ## Making repeats read differently (required)
 

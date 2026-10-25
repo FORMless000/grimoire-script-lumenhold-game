@@ -69,7 +69,7 @@ function pools(content) {
 function usage(content, runs) {
   const places = {}, courses = {}, plans = {}, day = { term: [], break: [] };
   // A run log from before a merge names the old place: count it with its survivor (E11).
-  const alias = (id) => { let p = content.places && content.places[id], n = 0; while (p && p.deprecated && content.places[p.deprecated] && n++ < 8) p = content.places[p.deprecated]; return p ? p.id : id; };
+  const alias = (id) => Engine.placeAlias(content, id);
   let visits = 0, empty = 0;
   const visitSlots = (phase) => ((phase === 'break' ? content.game.day_break : content.game.day_term) || []).filter((r) => r.source === 'visit').map((r) => r.slot);
   const phaseOf = (month) => (content.game.calendar || [])[month - 1] || 'term';

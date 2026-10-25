@@ -8,11 +8,9 @@ const path = require('path');
 const G = require('../src/grimoire.js');
 const Engine = require('../src/engine.js');
 const Policies = require('../tools/policies.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { ROOT, quiet, compileContent } = require('./helpers.js');
 
-const { content, errors } = project(ROOT).compileAll();
-const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
+const { content, errors } = compileContent();
 
 // Play with a style until `stop(eng, r)` is true or the game ends. Returns { eng, r }.
 function play(seed, styleName, stop = () => false, setup = null) {
@@ -283,12 +281,6 @@ test('a full four-year game ends under every quick style', () => {
   }
 });
 
-test('the v0.2 calendar migration is recorded as applied', () => {
-  const applied = JSON.parse(fs.readFileSync(path.join(ROOT, 'content', '.migrations.json'), 'utf8'));
-  const ids = (applied.applied || applied).map((a) => (typeof a === 'string' ? a : a.id));
-  assert.ok(ids.some((id) => /^0001/.test(id)), JSON.stringify(applied));
-});
-
 test('combat stub (M39, M5): reads condition and spells, costs mana to enter, previews it', () => {
   const eng = new Engine(content); eng.newGame({ seed: 4, origin: 'noble' });
   const st = { t: 'challenge', kind: 'combat', tier: 'medium', win: [], lose: [] };
@@ -368,8 +360,8 @@ test('menus hide options gated by what you cannot see; a stated prerequisite sho
 });
 
 test('schedules: a chance per entry, decided per day without the RNG; break schedules can send someone away (M42)', () => {
-  const c2 = JSON.parse(JSON.stringify(content));
-  c2.npcs.corvin.schedule_break = { away: true, entries: [] };
+  // A shallow copy: a JSON round trip would drop the compiled expressions (gone_when) and warn on every test().
+  const c2 = Object.assign({}, content, { npcs: Object.assign({}, content.npcs, { corvin: Object.assign({}, content.npcs.corvin, { schedule_break: { away: true, entries: [] } }) }) });
   const eng = new Engine(c2);
   quiet(() => { eng.newGame({ seed: 11, name: 'T' }); });
   eng.s.npcs.corvin = Object.assign(eng.s.npcs.corvin || {}, { met: true });

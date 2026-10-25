@@ -27,7 +27,7 @@ export const SPECIAL_LOADOUTS={
  // healing (RACES in setup/roster.mjs); hp / mana set a creature's own multipliers within its race's band. Humans have no
  // race. mods: a foe's own modifiers, the worn-kit form (cost, onCast, onDefend, taken). F5.11: every move is the
  // creature's own spell (setup/roster.mjs), and the big blows are delayed hits that Ward stops.
- 'Practice mannequin':{salt:41,offsets:[-30,-40,-40,-40,-10,-30],kit:{flame:1},idle:true,creature:true,race:'critter',mana:.3},   // the intro's lesson: strike, guard, reclaim and Flame (Thorne's wand), nothing else
+ 'Practice mannequin':{salt:41,offsets:[-30,-40,-40,-40,-10,-30],kit:{flame:1},idle:true,creature:true,race:'critter',mana:.7},   // the intro's lesson: strike, guard, reclaim and Flame (Thorne's wand), nothing else; Mana for a Flame every drill until about exchange 12 (EVENTS loop)
  'Bramble ferret':{salt:42,offsets:[-30,-30,-30,-20,-10,30],kit:{nip:1,skitter:1,filch:5,burrow:10},creature:true,race:'critter'},
  Bristleback:{salt:43,offsets:[-30,-30,-30,-20,40,-10],kit:{maul:1,hide:1,roar:10},creature:true,race:'monster',hp:1.75,mana:.6},
  'Stag beetle':{salt:44,offsets:[-30,-30,-30,-30,30,0],kit:{charge:1,carapace:1,pinch:1,beetle_flame:1},creature:true,race:'monster',hp:1.5,mana:.5},

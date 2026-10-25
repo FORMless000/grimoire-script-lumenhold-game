@@ -4,7 +4,7 @@ Grimoire Script (`.grim`) is the content language of Lumenhold Academy. Every ev
 
 - Parser: `src/grimoire.js`. Engine semantics: `src/engine.js`.
 - After editing, run `node tools/grim.js build` (the page loads `build/content.bundle.js`) and `node tools/grim.js lint`.
-- **Current forms first.** Examples here use the current event format: tier words (`mood -small`), `challenge`, `spark`, `cast:` roles and a `class:` on every event. Older forms that still parse (raw amounts in events, `check`, `love`, `actor: any`, `grades`) are marked *legacy* where they appear; lint counts them, and §6a says what replaces each. Writing guidance is in `docs/authoring/` and `skills/write-academy-events/`.
+- **Current forms first.** Examples here use the current event format: tier words (`mood -small`), `challenge`, `spark`, `cast:` roles and a `class:` on every event. Raw amounts in events still parse and are marked *legacy* where they appear (lint counts them); the older `check`, `love` and `actor: any` were retired on 2026-10-24. Writing guidance is in `docs/authoring/` and `skills/write-academy-events/`.
 
 ---
 
@@ -76,11 +76,11 @@ text: Professor Thorne places a candle at the far end of the hall. "Light it. Fr
 | `tags` | Space- or comma-separated. The first known tag picks the card colour and label (see §8). | — |
 | `when` | Expression; the event can only appear while true. Checked when the deck is built **and** again just before the card is shown. | always |
 | `weight` | Expression; relative draw chance among eligible events. | 10 |
-| `trigger` | How it enters a month's deck: `random`, `auto`, `social`, `queued` or `letter` (§5, §6c). | `random` (`social` for the *legacy* `actor: any`) |
+| `trigger` | How it enters a month's deck: `random`, `auto`, `social`, `queued` or `letter` (§5, §6c). | `random` |
 | `actor` | The NPC the card is about: an npc id, `any` (engine picks one), or `npc` (inherited from the `queue … with` that scheduled it). Enables `npc` and `{npc}`. | none |
 | `repeat` | Cooldown in months. Without it, the event happens **once per game** (once per character with `per: <role>`). | once |
 | `priority` | Ordering among forced cards (higher first). | queued 60, auto 50 |
-| `specializes` | An event id (E1). This card (`actor: <npc>`, same `trigger:`) is one character's own version of a generic card drawn per character (`per:` or `actor: any`): whenever the generic is drawn for them and this card's `when` holds, it plays instead, and counts as the generic for them (its once / repeat bookkeeping). It is never drawn by itself. One per character per generic card. Excluding someone from a generic card is still `not npc_is(x)` in its cast. | — |
+| `specializes` | An event id (E1). This card (`actor: <npc>`, same `trigger:`) is one character's own version of a generic card drawn per character (`per:`): whenever the generic is drawn for them and this card's `when` holds, it plays instead, and counts as the generic for them (its once / repeat bookkeeping). It is never drawn by itself. One per character per generic card. Excluding someone from a generic card is still `not npc_is(x)` in its cast. | — |
 | `defer` | Expression (playtest 2, I6). When a pushed card is about to show and this is true, it goes back to the queue for next month instead (a failed `when` drops it). Lumenhold: `night_suspicion` waits with `defer: off_campus`. | — |
 | `type` | `card`, `story` or `menu` — inferred from the options (below). | inferred |
 | `chain` | Free-text chain name, for documentation and `stats`. | — |
@@ -199,7 +199,7 @@ Each NPC carries a relationship record:
 |---|---|---|
 | `met` | bool | `meet x`, or any `rel` / `spark` / `bond` effect |
 | `rel` | −100…100 | `rel x +small` (tier words; the `rel` row) |
-| `spark` | 0…100 | `spark x +tiny` (romanceable characters only; lint warns otherwise). `love` is its legacy name. |
+| `spark` | 0…100 | `spark x +tiny` (romanceable characters only; lint warns otherwise). |
 | `bond` | `none friend close rival nemesis partner ex` | `bond x status` |
 
 ### `@resource` and `@skill` — the player's numbers
@@ -266,7 +266,7 @@ This holds global settings, and there is exactly one (in `core/rules.grim`): `ti
 
 ## 3. Expressions
 
-Used in `when`, `weight`, `if`, `chance`, `check`, assignments and `{=…}`.
+Used in `when`, `weight`, `if`, `chance`, assignments and `{=…}`.
 
 **Operators:** `+ - * / %`, `== != < > <= >=`, `and or not` (or `&& || !`), parentheses. Use `==` to compare: a single `=` is an error. Strings use `"double"` or `'single'` quotes. `true` and `false` are allowed; booleans count as 1/0 in arithmetic (`flag(x) * 10`).
 
@@ -291,7 +291,7 @@ Used in `when`, `weight`, `if`, `chance`, `check`, assignments and `{=…}`.
 | `has(x)` | true if flag `x` is set **or** state `x` is active |
 | `flag(x)` | true if flag `x` is set |
 | `left(state)` | months left (99 if permanent, 0 if absent) |
-| `rel(n)` `spark(n)` `bond(n)` `met(n)` (`love(n)` is *legacy* for `spark`) | relationship fields (`bond` returns a string: compare with `bond(n) == "friend"`) |
+| `rel(n)` `spark(n)` `bond(n)` `met(n)` | relationship fields (`bond` returns a string: compare with `bond(n) == "friend"`) |
 | `romanceable(n)` `tagged(n, tag)` `npc_is(n)` | NPC tests (`npc_is(lyra)`: is the actor Lyra?) |
 | `bonds(status)` | how many met NPCs have that bond (`bonds(partner) > 0`) |
 | `bonds_around(status)` | the same, counting only those who are `around` now: use it to offer a scene with someone of that bond in person (`bonds_around(partner) > 0`) |
@@ -302,7 +302,7 @@ Used in `when`, `weight`, `if`, `chance`, `check`, assignments and `{=…}`.
 | `apart(n)` | months since the last card with `n` (or the last change in your standing with them); 999 if never. Per person, unlike `since(event)` |
 | `chosen(event, key)` | true if the player picked that option the last time the event was shown |
 | `rand(a, b)` | random integer a…b |
-| `chance_of(skill_or_value, dc)` | the success % a `check` would have |
+| `chance_of(skill_or_value, dc)` | the success % of a flat skill-against-DC roll: `clamp(50 + 3 × (skill − dc), @balance odds)` |
 | `min max abs floor round clamp(v,lo,hi)` | math |
 
 ---
@@ -325,14 +325,13 @@ One statement per line. Blocks end with `:` and nest by indentation.
 | `queue event … with npc` / `with lyra` | Carry an actor into the queued event (the target uses `actor: npc`). |
 | `queue any tagged <tag> …` | (Feedback 2026-10-16.) A pool instead of one event: when it falls due (at once for `now`), one `trigger: queued` event with that tag is drawn by the usual score (`when`, cast, cooldown, novelty, weight); none eligible, nothing comes. It takes the same `now` / `in N` / `within a..b` / `with` / `chance` as a named queue. Lint wants at least one queued event with the tag; those events are not orphans, and `grim reach` and `grim graph` treat the queue as reaching the whole pool. |
 | `queue event … chance unlikely` (or a % such as `chance 33`, legacy) | When it falls due, push the card with those odds by nature (`@balance likelihood`), else drop it (playtest 2, I4); `now` and `in 0` roll at once. Copies of one event due the same month give at most one card. The card shows no odds. The budget lint counts it as a risk when the queued card is an `incident` or `crisis`, and the simulated players score it as a risk weighted by its odds (I8). |
-| `rel lyra +small` · `spark lyra +tiny` · `bond lyra friend` · `meet lyra` | Relationships. Use a cast role (or `npc` for the bound actor) instead of an id. Each implies `meet`. (`love` is *legacy* for `spark`.) |
+| `rel lyra +small` · `spark lyra +tiny` · `bond lyra friend` · `meet lyra` | Relationships. Use a cast role (or `npc` for the bound actor) instead of an id. Each implies `meet`. |
 | `end ending_id` | Game over with that ending (after the outcome card). |
 | `if expr:` / `elif expr:` / `else:` | Branching. |
 | `chance likely:` … `else:` | Pure luck, at the odds of an odds-by-nature word (`@balance likelihood`), moved by circumstance steps: `chance likely +1 if spark(npc) >= 30:` (`docs/authoring/checks.md`). *Legacy:* `chance 30:` (any expression; `chance 30%:` also works). |
 | `challenge research adept- unlikely wild:` … `win:` / `lose:` | A challenge (§6a): its kind, the skill it uses, a difficulty on the ladder, odds by nature, luck, drift and circumstance steps. The first top-level challenge in an option is shown on the button with its odds. |
-| `check arcana 20:` … `else:` | *Legacy* skill check (raw DC); use `challenge`. |
 
-**Odds:** a challenge compares your skill with the expected skill at that point of the run plus its difficulty tier, with a swing (§6a, `@balance swing` and `odds`). The legacy `check` used a raw DC.
+**Odds:** a challenge compares your skill with the expected skill at that point of the run plus its difficulty tier, with a swing (§6a, `@balance swing` and `odds`).
 
 **Text tokens** (in `title`, `text`, `scene`, labels, hints, `say`):
 
@@ -365,12 +364,12 @@ Avoid contractions that break with "they" (`{they}'s`, `{they}'ve`).
 
 **Triggers in short**
 - `random` — the filler pool. Most events.
-- `social` — the relationship slot. Requires a met actor: a fixed `actor:`, or a cast role with `per:` (the *legacy* `actor: any` worked the same way).
+- `social` — the relationship slot. Requires a met actor: a fixed `actor:`, or a cast role with `per:`.
 - `auto` — forced in whenever `when` is true: calendar beats, menus, chain finales. Always give it a tight `when` and usually a `repeat`.
 - `queued` — only appears through `queue`. Lint warns about orphans.
 - `letter` — a letter (playtest 2, M38): drawn only off campus, one each night, and by anyone who reaches you while one of you is away (M19). In no other pool.
 
-**Cast selection** (and the *legacy* `actor: any`): every met NPC for whom `when` is true is a candidate. People with stronger relationships (|rel|, spark, a bond) are picked more often. The event is once **per character** (or `repeat` = per-character cooldown) and rests globally for 2 months after showing.
+**Cast selection:** every met NPC for whom `when` is true is a candidate. People with stronger relationships (|rel|, spark, a bond) are picked more often. The event is once **per character** (or `repeat` = per-character cooldown) and rests globally for 2 months after showing.
 
 ---
 
@@ -440,13 +439,13 @@ trigger: queued
 
 ## 6a. Numbers and options (schema v1, phase 2a)
 
-These constructs are the new event format. Older forms keep working through a compatibility layer and are counted as **legacy** by lint (`lint --legacy` lists them; phase 3 migrates them).
+These constructs are the event format. The one older form left, raw amounts in events, is counted as **legacy** by lint (`lint --legacy` lists it).
 
 **Size tiers.** Write amounts as tier words: `mood +medium`, `gold -small`, `rel npc +large`, `spark lyra +tiny`, `arcana +small` (skills use the `xp` row). Amounts come from `@balance sizes` in `content/core/balance.grim`: tiny, small, medium, large, huge. Raw numbers (`mood +5`) are legacy.
 
 **Presets.** Named groups of effects defined with `@preset` (`params:` and a `do:` body using `$param`), used as a statement: `grind arcana`, `rest`, `social npc`, `work`, `splurge`, `risk renown`. They expand at compile time.
 
-**Challenges** replace `check` (legacy). How to pitch one is `docs/authoring/checks.md`; the numbers are `@balance` (`presets.md`).
+**Challenges.** How to pitch one is `docs/authoring/checks.md`; the numbers are `@balance` (`presets.md`).
 
 ```grim
 challenge duel vs lyra.arcana +2 wild:  # combat | duel | negotiate | deceive | exam | research | brew | enchant | feat | spell | appeal | perform | soothe
@@ -484,7 +483,7 @@ The line is `challenge <kind> [using <skill>] <difficulty> [<odds>] [<luck>] [dr
 
 **Facts and relations.** `learn lyra.mother` reveals a fact (`@fact` `unlock:` conditions also reveal them at month start; surface facts are known on meeting); `knows(lyra.mother)` tests it. `npc_rel lyra kael ±n` (or a tier) changes how two characters feel about each other (both directions); `npc_rel(lyra, kael)` reads it, seeded from `relations:`. `<npc>.<stat>` in expressions reads a character's stat (`lyra.charm`, `npc.wealth`).
 
-**Relationships.** `spark` replaces `love` (legacy alias): it fades 15% a month without a romantic moment; a partnership ends after two months below 20. Friendship (`rel`) fades by 2 a month toward 0 after 6 months without contact.
+**Relationships.** `spark` fades 15% a month without a romantic moment; a partnership ends after two months below 20. Friendship (`rel`) fades by 2 a month toward 0 after 6 months without contact.
 
 **Event fields.** `class:` (routine, milestone, incident, windfall, story, crisis; see `docs/authoring/classes.md`) and `tone:` (from `@vocab tones`). Lint checks each class's budget with the preview engine, in medium-equivalents (`@balance weights` × change ÷ medium size): no routine option may be obviously better than another (at least as good on every value and better on one, with neither a gamble nor a follow-up; options that move alignment differently never are), and each stays within ±1.5; milestones allow 2 large changes, windfalls 1; incidents need at least two options.
 
@@ -627,7 +626,7 @@ followed: clue(knows_founders_seal)
 `node tools/grim.js lint` reports:
 
 - **Parse errors:** bad indentation, unknown property, single `=`, unknown statement, a card without both `left` and `right`.
-- **References:** unknown event, state, npc, ending or skill in `queue`, `gain`, `rel`, `end`, `check` and in function arguments; `chosen(event, key)` with a bad key.
+- **References:** unknown event, state, npc, ending or skill in `queue`, `gain`, `rel`, `end`, `challenge` and in function arguments; `chosen(event, key)` with a bad key.
 - **Actors:** `npc` / `{they}` used in a block without an actor.
 - **Typos:** a flag that is read but never set; a variable that is read but never assigned.
 - **Orphans:** queued events nobody queues.
@@ -664,12 +663,12 @@ node tools/grim.js query NODE [WHERE] [--file S] [--grep RE] [--group FIELD] [--
 node tools/grim.js query --fields        # every field, per node kind
 ```
 
-`NODE` is a block kind (`event state npc ending hook resource skill`), `option`, a statement kind (`say if chance check flag unflag gain lose queue rel love bond meet end delta assign`), `stmt` (any statement) or `any`. `WHERE` is an ordinary Grimoire expression evaluated against the row's fields. `has(x)` means "tagged x". A field that does not apply, or a DC that is not a constant, makes every comparison false. Each match prints `file:line`, the enclosing `block/option`, and the source line.
+`NODE` is a block kind (`event state npc ending hook resource skill`), `option`, a statement kind (`say if chance challenge flag unflag gain lose queue rel spark bond meet end delta assign`, …), `stmt` (any statement) or `any`. `WHERE` is an ordinary Grimoire expression evaluated against the row's fields. `has(x)` means "tagged x". A field that does not apply, or a DC that is not a constant, makes every comparison false. Each match prints `file:line`, the enclosing `block/option`, and the source line.
 
 | Question | Query |
 |---|---|
-| Easy checks that don't scale with the year | `query check 'dc < 12 and not scales'` |
-| How checks are spread across skills | `query check --group skill` |
+| Challenges at the bottom rung | `query challenge 'rung == "novice-"'` |
+| How challenges are spread across kinds | `query challenge --group kind` |
 | Large gold losses | `query delta 'name == "gold" and amount <= -30'` |
 | High-weight romance events among the character arcs | `query event 'has(romance) and weight >= 20' --file people` |
 | Options the player gets no `say:` feedback from | `query option 'says == 0'` |

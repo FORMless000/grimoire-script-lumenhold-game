@@ -304,7 +304,7 @@ The plan was wide-but-thin to deep (the approved plan, rev. 4; `docs/world-expan
   - **The lessons:**
     - The wrong tower and Vey's tea are fair checks (about even for a first-year), worth a tiny Mood either way.
     - Then the safety talk (Ward) and the practice circle.
-    - The practice circle is a fight with no way out. The mannequin plays idle, Strike, Flame, Guard and Reclaim, telegraphed, with a line of Thorne's for each; you commit first on the 6th exchange. EVENTS `script` in `combat/setup/foes.mjs`, `CombatBridge.scriptedMove`, the core's idle `cancel` for an `idle: true` kit.
+    - The practice circle is a fight with no way out. The mannequin plays idle, Strike, Flame, Guard and Reclaim, telegraphed, with a line of Thorne's for each; you commit first on the 6th exchange. EVENTS `script` in `combat/setup/foes.mjs`, `CombatBridge.scriptedMove`, the core's idle `cancel` for an `idle: true` kit. Since October 25 it has Mana for its Flame (it had 9 for a 10-Mana Flame, so it struck instead and its Refocus took back nothing), and after the script it plays a drill (EVENTS `loop`: Flame, Refocus, Strike; it Parries an Impulse it sees in place of a drilled Strike) instead of searching, which had stalled the fight in Impulse-into-Parry. Thorne's last line says how to win.
   - **The kit** card closes the orientation.
   - **The Registrar's List** hints Evocation I for fighters, Illusion I for talkers.
   - Plus 15 just-in-time cards (`jit_*`), off with *Skip the introductions*.
@@ -618,7 +618,7 @@ October 19, 2026: every `challenge combat` and `challenge duel` is a fight in th
   - `ending_beloved` is reached by no style: every romanceable character has a named partner ending that outranks it, so it's a fallback only;
   - 7 events are never seen: `choose_origin` (the origin screen, not drawn), `crisis_probation` (bots keep their GPA; N2's two probation cards, `probation_advisor` and `probation_letter`, are unseen for the same reason), Marisol's storm and trust cards, `mabel_cup` and `grimsby_mind_the_shop` (minor characters with few cards; gates lowered to rel 15), `gargoyle_passage_parapet_cards` (the place is found only by Cartographers).
 - **Deferred phase 3 steps:**
-  - removing the unused legacy syntax from the parser, and the engine's `legacy:` grants (§13 step 7);
+  - the engine's track `legacy:` grants (§13 step 7; three tracks still use them). The unused legacy syntax (`check`, `love`, `actor: any`) was removed on 2026-10-24;
   - `memory:` / `lesson:` annotations;
   - the `tune-events` skill and the `grim report` telemetry signals of §11.2 (routine picks, eligible-but-never-drawn, decision times);
   - the first path-1 batch accepted through the full loop (§13 exit).

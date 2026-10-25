@@ -144,7 +144,7 @@ function reach(content) {
       }
       if (miss) { why[e.id] = miss; continue; }
       R.add(e.id); delete why[e.id];
-      if (e.actor && !['any', 'npc'].includes(e.actor)) F.npc.add(e.actor);
+      if (e.actor && e.actor !== 'npc') F.npc.add(e.actor);
       for (const r of e.cast || []) if (r.pool === 'fixed') F.npc.add(r.npc);
       produce(e.on_show, e.id);
       reopen(e, rl);

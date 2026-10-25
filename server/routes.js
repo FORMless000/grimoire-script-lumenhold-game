@@ -47,7 +47,7 @@ function createApi({ root, store, auth, bundle, P }) {
     if (p === '/api/health') return send(res, 200, { ok: true, server: 'lumenhold', contentHash: bundle().hash, invite: auth.inviteRequired, admin: auth.isAdmin(req, url) });
     if (p === '/api/content' && req.method === 'GET') {
       const lang = url.searchParams.get('lang');
-      return send(res, 200, { contentHash: bundle().hash, sources: P.loadSources(), locale: lang && lang !== 'en' ? P.loadLocaleSources(lang).filter((s) => !s.path.endsWith('/_obsolete.lang')) : [] });
+      return send(res, 200, { contentHash: bundle().hash, sources: P.loadSources(), locale: lang && lang !== 'en' ? P.liveLocaleSources(lang) : [] });
     }
     if (p === '/api/player' && req.method === 'POST') {
       const body = await readBody(req, 4096) || {};

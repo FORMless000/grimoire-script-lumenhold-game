@@ -67,3 +67,21 @@ test('adopted inputs keep real provenance, move without re-extraction, and upgra
  fs.writeFileSync(path.join(dir,'content/world.grim'),'@npc shared\nname: Shared\nvoice: Loud.\n');
  records=R.recordsFor(C.catalog(dir),old);assert.equal(records.find(r=>r.key==='event:a').inputProvenance.format,'grim-parent-context-v2');assert.deepEqual(R.changes({records:old},records).modified.sort(),['event:a','npc:shared']);
 });
+
+test('a stale index answers from its last snapshot with a notice; unbuilt and reconfigured indexes still fail',async()=>{
+ const S=require('../src/snapshot.js'),dir=fixture();
+ fs.writeFileSync(path.join(dir,'content/a.grim'),event('a'));fs.writeFileSync(path.join(dir,'content/gone.grim'),event('gone'));
+ assert.equal(S.fallback(dir,cfg),null);
+ const hits=async(_bin,_argv,input)=>input.action==='search'?JSON.stringify({hits:[{key:'event:gone',score:2},{key:'event:a',score:1}],calls:[]}):execute()(_bin,_argv,input);
+ await R.create(dir,cfg,{execute:hits}).index({rebuild:true,mode:'sync'});
+ assert.equal(S.fallback(dir,cfg),null);
+ fs.writeFileSync(path.join(dir,'content/a.grim'),event('a','Edited'));fs.rmSync(path.join(dir,'content/gone.grim'));fs.writeFileSync(path.join(dir,'content/b.grim'),event('b'));
+ await assert.rejects(R.create(dir,cfg,{execute:hits}).search('x'),/Stale index/);
+ const snap=S.fallback(dir,cfg,{execute:hits});
+ assert.deepEqual([snap.snapshot.added,snap.snapshot.modified,snap.snapshot.deleted],[['event:b'],['event:a'],['event:gone']]);
+ assert.match(snap.notice,/last index sync.*event:b.*event:a.*1 deleted.*retrieve index/);
+ const found=await snap.service.search('x');assert.deepEqual(found.results.map(r=>r.key),['event:a']);assert.match(found.results[0].excerpt,/Edited/);
+ assert.equal((await snap.service.brief('x')).ids.includes('event:gone'),false);
+ assert.equal(R.create(dir,cfg,{execute:hits}).status().state,'stale');
+ assert.equal(S.fallback(dir,R.config({value:{models:{...cfg.models,extract:'other/model'}}})),null);
+});

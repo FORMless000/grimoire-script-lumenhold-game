@@ -6,10 +6,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const G = require('../src/grimoire.js');
 const Engine = require('../src/engine.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { content } = require('./helpers.js');
 
-const { content } = project(ROOT).compileAll();
 const fresh = (c = content, opts = {}) => { const e = new Engine(c); e.newGame(Object.assign({ seed: 7, name: 'T' }, opts)); return e; };
 const parseEvents = (src) => G.parseFile(src, 't.grim');
 

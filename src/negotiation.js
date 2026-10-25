@@ -1,7 +1,7 @@
 /*
- * Negotiations (E8, the first world-expansion plan): which meeting each `challenge negotiate` is. DOM-free; read by the
- * UI (the badge and the result line), by lint (every negotiation has an entry) and, later, by the negotiation minigame
- * (docs/minigame-negotiation-v03.md), which sets up its opponent from the entry.
+ * Negotiations (E8, the first world-expansion plan): which meeting each `challenge negotiate` is. DOM-free; read by
+ * lint (every negotiation has an entry) and, later, by the negotiation minigame (docs/minigame-negotiation-v03.md),
+ * which sets up its opponent from the entry. The page doesn't load it until then.
  *
  *   PARLEYS["<event>/<option>"] = { profile, context, tutorial?, note? }
  *

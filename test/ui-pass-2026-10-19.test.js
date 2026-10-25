@@ -4,12 +4,9 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const Engine = require('../src/engine.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { content, silent } = require('./helpers.js');
 
-const { content } = project(ROOT).compileAll();
-const quiet = (fn) => { const w = console.warn, l = console.log; console.warn = console.log = () => {}; try { return fn(); } finally { console.warn = w; console.log = l; } };
-function fresh() { const eng = new Engine(content); quiet(() => eng.newGame({ seed: 11, name: 'T', origin: 'street' })); return eng; }
+function fresh() { const eng = new Engine(content); silent(() => eng.newGame({ seed: 11, name: 'T', origin: 'street' })); return eng; }
 const opt = (id, key) => content.events[id].options.find((o) => o.key === key);
 
 test('a preview shows a gain at the cap; the outcome changes nothing and still fits it', () => {
@@ -34,8 +31,8 @@ test('the journal names the people a card was cast with', () => {
   const eng = fresh();
   eng.s.npcs.lyra.met = true; eng.s.npcs.lyra.rel = 20;
   eng.s.deck.unshift({ id: 'letter_from_a_friend', cast: { friend: 'lyra' }, src: 'debug', force: true });
-  let r = quiet(() => eng.advance());
-  for (let i = 0; i < 20 && !(r.kind === 'card' && r.view.id === 'letter_from_a_friend'); i++) { if (r.kind === 'card') eng.choose(r.view.options.find((o) => !o.disabled).key); r = quiet(() => eng.advance()); }
+  let r = silent(() => eng.advance());
+  for (let i = 0; i < 20 && !(r.kind === 'card' && r.view.id === 'letter_from_a_friend'); i++) { if (r.kind === 'card') eng.choose(r.view.options.find((o) => !o.disabled).key); r = silent(() => eng.advance()); }
   assert.equal(r.view.id, 'letter_from_a_friend');
   eng.choose(r.view.options.find((o) => !o.disabled).key);
   const l = eng.s.log[eng.s.log.length - 1];

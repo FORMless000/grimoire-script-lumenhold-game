@@ -7,11 +7,8 @@ const fs = require('fs');
 const path = require('path');
 const Engine = require('../src/engine.js');
 const Policies = require('../tools/policies.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { ROOT, content, quiet } = require('./helpers.js');
 
-const { content } = project(ROOT).compileAll();
-const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
 
 // A fresh game showing one event now (as ?event=<id> does in the browser).
 function show(id, setup) {

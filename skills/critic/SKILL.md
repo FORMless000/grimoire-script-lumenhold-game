@@ -16,6 +16,7 @@ You are the second reader. You did not write this batch, and you don't get the a
    Its "Already written here" list names every card at that place or track; check the batch against them for repeated premises (`grim show <id>`, `grim dupes <files>`).
    Read the `voice:` lines and the `@fact`s of every character who speaks.
 4. Read `build/batches/<name>.json` if it exists. Don't re-report what the validators already failed; mention it only if it changes your verdict.
+5. Read `build/batches/<name>.notes.md`: the retrieval queries the author ran, the rework they caused, and any skip with its reason.
 
 ## 1. Check each event
 
@@ -79,6 +80,7 @@ For every event, ask the questions below. Write down an issue only when you can 
 - Flags read are set somewhere, and queued events are queued by something.
 
 **Duplication**
+- Was `retrieve related` run on each new card (or the skip justified), and do its top hits differ in premise, options and punchline? A repeated premise is a blocking issue. Re-run `npm run grim -- retrieve related --draft <file>` on any card you doubt (`rag/AUTHORING.md`).
 - The premise doesn't repeat an existing event's premise, even when the words differ. Check with `node tools/grim.js query event --grep <word>`.
 - Within the batch, two events at the same place shouldn't be the same scene twice.
 
@@ -88,7 +90,7 @@ For every event, ask the questions below. Write down an issue only when you can 
 
 ## 2. Verdict
 
-- **Reject** (`accept: false`) when any issue is about canon, safety, class rules, plot safety, or a repeat that will clearly grate. Also reject when more than about 1 in 5 events has an issue.
+- **Reject** (`accept: false`) when any issue is about canon, safety, class rules, plot safety, a premise that repeats an existing card, or a repeat that will clearly grate. Also reject when more than about 1 in 5 events has an issue.
 - **Accept** when there are only small fixes (a weak `say`, a label one word too long). List them anyway, so the author can polish.
 
 Write the verdict as JSON to `build/batches/<name>.critic.json`, and give it as your final answer:

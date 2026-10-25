@@ -1,0 +1,298 @@
+# ============================================================
+#  Baseline pools, second pass (2026-10-24): grounds_more.
+#  Repeatable routine events for the grounds places with thin
+#  pools: the duelling hall, greenhouses, flight field, secret
+#  garden and courier loft. Spec: docs/authoring/pools.md.
+# ============================================================
+
+# ---------------- The Duelling Hall ----------------
+
+@event duel_hall_reading_the_floor
+title: Reading the Floor
+place: duel_hall
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: duel
+tags: magic
+scene: Scorched and scarred floorboards in an empty duelling hall, a student crouched over them tracing a burn mark with one finger.
+text: {Every famous bout in the Duelling Hall left its mark on the floor, a scorch or a frost-crack or a gouge. Old duellists say you can read a fight in the boards.|The floor again. You've learned which scorch belongs to which year's champion, from the plaques on the wall.|You can read the boards now, more or less: here someone parried late; here someone lost their nerve and their eyebrows.} {Today a fresh burn sits on top of the old ones.|The cleaners have been, and the boards shine like a map under glass.|{season == "winter": The hall is freezing and the boards creak under every step.|Dust hangs in the long light from the windows.}}
+> left: Trace an old bout through
+  arcana +small
+  mood -tiny
+  say: {You follow a duel from the first scorch to the final frost-crack, step by step, until you know where the loser went wrong. Your knees ache from crawling.|You walk a champion's footwork across the burns, slowly, like learning a dance from its footprints. It's tiring, careful work.|You read a whole tournament final in the floor and find the moment it turned, a single mark the size of a coin. You stand up stiff and certain.}
+> right: Scrub the floor for the club
+  gold +tiny
+  vigor +small
+  health -tiny
+  say: {The club pays a crown or two for scrubbing. You scrub until the boards gleam and your arms burn.|You scrub, and the old marks stay, as they always do; the dirt goes. You're paid in coins and a sore back.|You know which boards to go easy on: the famous ones. The club treasurer pays you, and adds a nod.}
+
+@event duel_hall_second_wanted
+title: A Second Wanted
+place: duel_hall
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: sword
+tags: rival social
+cast:
+  here: present(place) where tagged(here, peer) and met(here)
+scene: Two students facing each other on a scorched duelling floor, wands lowered, while a third stands at the edge holding a coat and a handkerchief.
+text: {{here} has a formal practice bout today and no second. "Hold my coat, count the paces, drop the handkerchief. You can count, I assume."|{here} is looking for a second again, and spots you at the door before you can leave.|{here} tosses you the coat as you come in, as if it's been decided.} {The opponent is an upper-year with a terrible moustache.|The opponent bows too low, which is a kind of insult.|{season == "winter": The hall is so cold the wands spark on their own.|The gallery has a dozen spectators and a bookmaker.}}
+> left: Stand as the second
+  rel here +small
+  if npc_is(lyra):
+    say: {You count, she wins, she doesn't thank you. On the way out she hands you back your scarf, which you hadn't noticed she'd picked up.|She loses on a technicality and blames the handkerchief. Then she buys you a cider, without a word.|You count; she wins in nine seconds. "Adequate," she says, which from Lyra is a medal.}
+  elif npc_is(bram):
+    say: {Bram makes you recite the rules of seconding before he lets you hold his coat. He wins, and gives you a demerit for dropping the handkerchief early, then rescinds it.|Bram loses and stands very straight. Afterwards, gruffly, "Fair count. Thanks."|Bram wins, and for a moment looks up at the gallery as if for someone who isn't there.}
+  else:
+    say: {You count the paces, drop the handkerchief and hold the coat through an hour of shouting. {here} owes you one, and knows it.|You stand on the line through a long, sweaty bout. {here} thanks you warmly afterwards.|You second with the calm of long practice. {here} wins, and claps you on the shoulder like an old comrade.}
+> right: Offer to referee instead
+  arcana +small
+  renown +tiny
+  rel here -tiny
+  say: {You referee straight down the middle and call a foul against {here}. The gallery approves. {here} does not.|You referee, fairly, and learn more watching both wands than you would holding a coat. {here} feels a little abandoned.|Your call decides the bout. It's the right call; {here} won't admit it till next week.}
+
+# ---------------- The Greenhouses ----------------
+
+@event greenhouses_gerald_is_out
+title: Gerald Is Out
+place: greenhouses
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: leaf
+tags: nature
+when: met(tobias)
+scene: A small mandrake in a lopsided knitted hat sitting in the wrong flowerpot among the seedlings, screaming very softly at a watering can.
+text: {Gerald, Tobias's mandrake, has escaped his pot again and planted himself among the seedlings. His knitted hat has come unravelled.|Gerald is out again. This time he's in a teacup, screaming softly at a watering can.|Gerald has moved into the pot of the tallest fern, with an air of permanence. His hat is half unravelled; the wool trails back to his own pot.} {Tobias is nowhere to be seen.|A note on Gerald's empty pot says "BACK SOON, DO NOT LET HIM NEAR THE TOMATOES."|{season == "winter": He's shivering, defiantly.|The seedlings around him are wilting with alarm.}}
+> left: Fix his hat and carry him home
+  charm +small
+  health -tiny
+  say: {You re-knit the hat with two pencils and great patience. Gerald lets you, then bites your thumb, which Tobias says means he loves you.|You lift him gently out of the teacup. He screams softly the whole way home and bites you once at the end, fondly.|You tie off the trailing wool and carry him home in your cupped hands. The bite is affectionate. It still stings.}
+> right: Re-pot the seedlings he trampled
+  alchemy +small
+  say: {You leave Gerald where he is and save the seedlings he kicked out. He watches you work, screaming softly with approval.|You re-pot a row of uprooted seedlings and leave the teacup alone. Mandrakes are Tobias's department.|You patch up the damage around the fern and let Gerald keep his new home. It seems kinder than arguing with a mandrake.}
+
+@event greenhouses_grafting_bench
+title: The Grafting Bench
+place: greenhouses
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: tree
+tags: nature
+scene: A potting bench crowded with small grafted saplings bound in twine and wax, one of them bearing two different kinds of fruit on two different branches.
+text: {On the grafting bench is the club's oldest experiment, a potted tree that bears pears on one branch and lemons on the other. Beside it, knives, twine, wax and an open invitation.|The grafting bench. Somebody's new graft has taken: a rose that grows on a gooseberry, looking pleased with itself.|The grafting bench. The two-fruit tree has a third branch now, and nobody will admit to it.} {The wax pot is warm and smells of honey.|A row of failed grafts stands along the back, each with a small apologetic label.|{season == "spring": Every graft on the bench is in bud.|The saplings are bare, and the twine shows.}}
+> left: Try a graft of your own
+  challenge brew apprentice+:
+    win:
+      alchemy +small
+      mood +small
+      say: {You splice a cutting of mint onto a lavender root and wax it shut. A week later it's growing; it smells like a summer evening.|Your graft takes. Someone pins a label to it with your name and a small drawn star.|You graft a cutting onto the two-fruit tree itself. It takes, and the tree now has one branch that is entirely yours.}
+    lose:
+      mood -small
+      health -tiny
+      say: {The knife slips; so does the cutting. It joins the row of failures with its own small label, and you join the infirmary queue with a cut thumb.|Your graft sulks, browns and drops off within the week. Your thumb has a nick that takes longer to heal.|The twine won't hold and the wax burns your fingers. Your cutting goes to the failures' shelf.}
+> right: Label the old grafts
+  lore +small
+  say: {You work out from the bark scars which graft went on when, and write it all down. The two-fruit tree is older than anyone thought.|You label the rose on the gooseberry, which turns out to be harder than growing it.|You map the two-fruit tree branch by branch. The third branch has no record at all. You write "unknown, but welcome".}
+
+@event greenhouses_seed_tin
+title: The Seed Tin
+place: greenhouses
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: leaf
+tags: nature
+scene: An old biscuit tin of paper seed packets on a potting bench, every packet labelled in a different hand, one of them rattling on its own.
+text: {On the potting bench is the club's seed tin. Take a packet, leave a packet, write what it is; most people write what it is.|The seed tin is fuller than last time. Someone has left a packet labelled simply "SORRY".|The seed tin. You know the regulars' handwriting now, and the one who only draws pictures.} {One packet is rattling on its own.|One packet is warm to the touch.|{season == "spring": Half the packets have started sprouting through the paper.|One packet hums a single note when you lift it.}}
+> left: Take the strangest packet
+  chance even:
+    alchemy +small
+    mood +small
+    say: {You plant it in a spare pot. By the end of the hour there's a tiny silver bell-flower that rings when you breathe on it.|You plant the warm one. It comes up in minutes, a fern that curls round your finger like a cat's tail.|You plant it and it grows into something nobody in the club can name. You get to name it. You choose well.}
+  else:
+    health -tiny
+    mood -tiny
+    say: {It sprouts at once, straight up your nose. You sneeze pollen for the rest of the day.|It grows a single angry thorn and nothing else, and the thorn finds your thumb.|It's a nettle that stings in rhymes. You'll be hearing them in your sleep.}
+> right: Sort the tin properly
+  lore +small
+  say: {You sort the packets by family, season and handwriting. The club will never know it was you, which is the nice part.|You sort the lot and label the unlabelled ones. "SORRY" turns out to be turnips, which explains a great deal.|You file the picture-packets by guessing from the drawings. You're right about most of them, you think.}
+
+# ---------------- The Flight Field ----------------
+
+@event flight_field_kite_day
+title: Kite Day
+place: flight_field
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: feather
+tags: social
+scene: Enchanted paper kites shaped like dragons and fish wheeling and diving over a windswept green field, one tangled in a hoop at the far end.
+text: {The wind is too wild for brooms, so the first-years are out with charmed kites, paper dragons and fish and one very angry swan.|Kite day again. The kites have learned to fight; a paper dragon has a fish in a headlock.|Whenever the wind is too wild for brooms, the kites come out. You know the swan by now, and the swan knows you.} One kite is stuck in the far hoop, {flapping like a trapped bird|and its first-year is close to tears|and the other kites are jeering at it}.
+> left: Climb the hoop and free it
+  challenge feat apprentice wild:
+    win:
+      vigor +small
+      renown +small
+      say: {You shin up the hoop pole and free the kite. The first-years cheer as if you'd won a race.|You climb, untangle, slide down. The first-year announces your name to the whole field.|You know the hoop pole's footholds by now. The kite goes back to its owner, who tells everyone, loudly.}
+    lose:
+      health -small
+      mood -tiny
+      say: {You get halfway up the pole and the wind takes your hat and your grip. You land in the long grass, bruised.|The kite comes free and so do you, from rather high up.|You slip on the wet pole and slide down it, slowly and painfully, to applause.}
+> right: Borrow a kite and fly it
+  arcana +small
+  mood +small
+  say: {You borrow a fish kite and steer it with a whispered charm. It bites the swan. Everyone is delighted.|You fly a paper dragon in loops until your arms ache with the pull and your face aches with grinning.|You fly your borrowed kite higher than the rest, holding the charm steady against the gusts.}
+
+@event flight_field_mowing_day
+title: Mowing Day
+place: flight_field
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: broom
+tags: nature
+scene: A row of enchanted scythes swinging themselves across a green field in neat lines while students dart between them and others rake the cut grass.
+text: {Today the enchanted scythes are mowing the Flight Field, swinging themselves in neat lines while the groundskeeper sleeps under a tree.|Mowing day. A game has sprung up among the scythes: run the line without breaking stride. The groundskeeper is asleep again.|The scythes are out. You know their rhythm now: swish, step, swish, a pause on every seventh.} {The smell of cut grass is everywhere.|Somebody's hat has already been mown in half.|{season == "summer": Heat shimmers over the stubble.|A light drizzle makes the grass shine.}}
+> left: Run the scythe line
+  challenge feat apprentice wild:
+    win:
+      vigor +small
+      mood +small
+      say: {You dart through the line and out the other side without a scratch. The watching first-years make you do it again.|Swish, step, swish. You run the whole line and arrive at the end breathless and laughing.|You run the line on the seventh-beat pause and it feels like dancing. Nobody else has timed it that well.}
+    lose:
+      health -tiny
+      mood -small
+      renown -tiny
+      say: {A scythe catches your robe and neatly removes a sleeve. You trip on the stump of it. The groundskeeper wakes, looks, and goes back to sleep.|You trip on a tussock and fall flat as the scythes pass politely overhead. The first-years cheer, the wrong way.|You mistime the seventh beat and go sprawling. Your hat joins the other hat. Your pride follows.}
+> right: Rake hay for the stables
+  vigor +small
+  health -tiny
+  gold +tiny
+  say: {You rake the cut grass into rows for the stables. The groundskeeper wakes long enough to give you a coin and a nod. Your palms blister.|You rake until the field is striped and your arms are lead. The stables send a crown, and a hippogriff's thanks.|You rake with the scythes' rhythm in your arms. The groundskeeper pays you without waking, which is a skill in itself.}
+
+# ---------------- The Secret Garden ----------------
+
+@event secret_garden_two_cups
+title: Two Cups on the Bench
+place: secret_garden
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: cup
+tags: nature
+scene: A mossy stone bench in a hidden garden, an old tartan flask and two chipped cups left on it, glowing ferns all around.
+text: {On the bench by the humming pear there's a flask and two chipped cups, and a note in Old Maud's hand. "One for you, dearie, one for whoever comes."|The flask on the bench again, still warm, still with two cups. Maud is never here when you are; the tea always is.|The flask, the cups, the note. You've started leaving the cups washed, and Maud has started leaving a biscuit.} {The silver bees are busy.|The ferns are glowing even in daylight.|{season == "winter": Frost on the bench, steam from the flask.|Blossom has settled in one of the cups.}}
+> left: Sit and drink the tea
+  health +small
+  mood +tiny
+  say: {The tea tastes of honey and something green. You sit till the cup is cold and feel mended in some small, specific way.|You drink your cup and leave the second for whoever comes. Nobody does, but the pear hums as if someone had.|You drink, eat the biscuit, and wash both cups at the spring. The garden seems to approve of good manners.}
+> right: Weed the beds for her
+  alchemy +small
+  health -tiny
+  say: {You leave the tea and weed the beds by the wall until your knees are green and your back is stiff. Maud will know, somehow.|You pull weeds that pull back, and one of them draws blood. The ferns lean away from the worst of them, gratefully.|You weed the far beds until your palms blister, and find a trowel Maud must have lost years ago. You leave it on the bench, by the cups.}
+
+@event secret_garden_remembering_moss
+title: The Moss That Remembers
+place: secret_garden
+class: routine
+tone: eerie
+repeat: 5
+weight: 10
+art: leaf
+tags: nature magic
+scene: A deep green bed of moss under the humming pear tree, holding the faint pressed shape of someone who lay there and is gone.
+text: {Under the humming pear is a bed of moss so thick it keeps the shape of whoever last lay in it. Today it holds a small curled shape, like someone napping.|The moss again. Today's shape is long and straight, arms folded, as if someone lay there watching the leaves.|You know the moss's habits now. Today it holds two shapes, side by side, close.} {The shapes fade slowly, over an hour or so.|One silver bee is asleep in the hollow of an elbow.|{season == "winter": Frost rims the shape like a chalk outline.|The moss is warm where the shape is.}}
+> left: Lie down in the moss yourself
+  health +small
+  mood +tiny
+  say: {You lie down beside the curled shape, not in it. The moss is warm and soft, and you sleep a while without dreaming.|You lie down and look up at the pear tree's leaves for an hour. When you get up, the moss keeps your shape too.|You lie down between the two shapes, careful not to spoil either. You wake rested, and a little lonely.}
+> right: Study the shapes, and wonder
+  lore +small
+  mood -tiny
+  say: {You kneel and read the shape. Small hands, knees drawn up, a hat left behind in the dent of a head. Someone came here to feel safe. It's a strange thing to know about a stranger.|You trace the long shape's folded arms. It looks like someone thinking very hard about something they couldn't say. You leave quietly.|Two shapes, close. You don't know whose, and you decide you shouldn't. It stays with you all evening.}
+
+@event secret_garden_snail_post
+title: The Snail Post
+place: secret_garden
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: letter
+tags: nature
+scene: A garden snail with a tiny folded paper note tucked under its shell, making its way slowly along a mossy wall.
+text: {A snail is crossing the garden wall with a folded scrap of paper tucked under its shell. Maud's garden, it seems, has a postal service.|The snail post again. Three snails today, each with a note, all heading in different directions.|Snail post. You know the route now, along the wall and round the pear, about a day each way.} {The note within reach says "for whoever's next".|One note has been answered in a different hand.|{season == "winter": The snails are sluggish with cold, the notes damp.|The snail nearest you is wearing a dewdrop like a hat.}}
+> left: Write a note and send it on
+  mood +small
+  charm +tiny
+  say: {You write something kind for a stranger and tuck it under a shell. The snail sets off, at snail speed, with your secret.|You answer a note left by someone you'll never meet. It feels like talking across a very slow, very gentle river.|You write back to whoever's been writing. The snail takes the note, and an age, and you don't mind.}
+> right: Read the notes on the way
+  guile +small
+  alignment -tiny
+  say: {You ease a note out from under a shell. It's a confession about a stolen apple, decades old. You put it back, a little ashamed.|You read three notes before the snails notice. One of them is about someone exactly like you.|You read the snail post like a gossip column. The snails take it personally; one refuses to move till you leave.}
+
+# ---------------- The Courier Loft ----------------
+
+@event courier_loft_record_board
+title: The Record Board
+place: courier_loft
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: broom
+tags: job
+scene: A chalkboard in a draughty loft listing delivery records to every tower and the village, some times rubbed out and rewritten, a student squinting at the fastest one.
+text: {On the loft wall is the record board, the fastest delivery ever flown to every tower and the village, in chalk. The village record is eleven minutes. It has stood for twelve years.|The record board. Someone has shaved four seconds off the observatory run and written the new time very large.|The record board. You know every time on it now, and which ones the couriers say were cheated.} {A courier is idly offering a parcel to anyone who fancies a go.|The wind outside is behind you, for once.|{season == "winter": There's ice on the landing platform.|The air is still and the lake is glass.}}
+> left: Make a run at a record
+  challenge feat apprentice+ wild:
+    win:
+      vigor +small
+      renown +small
+      say: {You fly the lecture-tower run flat out and land four seconds inside the record. A courier chalks your name on the board, grumbling.|You take the observatory run, cut the corner by the bell tower and beat the new time by a breath. The loft cheers; the old record holder sulks.|You know the shortcuts now. Your name goes up on the board for the library run, in very large chalk.}
+    lose:
+      health -small
+      mood -tiny
+      say: {You take the corner by the bell tower too fast and meet a gutter. The parcel arrives; you arrive limping.|You're on pace until a gust shoves you into a flagpole. Your time goes on the board anyway, under the heading SLOWEST.|You misjudge the landing platform and skid the length of it on your knees. The couriers award you a record for distance.}
+> right: Study the routes instead
+  lore +small
+  say: {You copy down every route on the board and the wind notes beside them. You won't break a record today, but you'll know how.|You ask the couriers how each record was flown. Three of the stories are lies; you can tell which.|You sit under the board working out a new route to the village. It might be a minute faster. Might.}
+
+@event courier_loft_pigeon_strike
+title: The Pigeons Are on Strike
+place: courier_loft
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: feather
+tags: job
+scene: A row of indignant pigeons sitting in a line on a loft rafter beside a scrap of paper listing their demands in tiny claw-marks.
+text: {The loft's message pigeons are on strike. They sit on the rafter in a row, puffed and silent, beside a list of demands scratched in claw-marks.|The pigeons have struck again. The demands have grown: better grain, a window that shuts, and the removal of a particular courier.|The pigeons are on strike. They look at you as you come in, as if you've been appointed to negotiate.} {The undelivered notes are piling up.|One pigeon is plainly the ringleader; it has a bald patch and a stare.|{season == "winter": The window that doesn't shut is letting the snow in, which seems fair.|Every courier in the loft is pretending not to be afraid of the ringleader.}}
+> left: Talk the ringleader round
+  challenge soothe apprentice wild:
+    win:
+      charm +small
+      mood +small
+      say: {You offer seed, flattery and a promise about the window. The ringleader considers, coos once, and the strike is over.|You talk to the ringleader as you'd talk to a magistrate. It accepts your terms and a raisin.|The ringleader hears you out, eye to eye. The pigeons rise in a clatter and the backlog flies.}
+    lose:
+      mood -small
+      health -tiny
+      say: {The ringleader hears your offer and pecks your knuckle, hard. Talks have broken down.|The whole rafter turns its back on you, in unison, which is very hard to recover from. One of them nips your ear on the way.|They accept the raisin and refuse the terms. One of them sits on your head, claws first, to make the point.}
+> right: Carry their notes by hand
+  vigor +small
+  health -tiny
+  say: {You run the undelivered notes round the castle yourself, all seven towers, and come back with sore legs and the pigeons' quiet contempt.|You deliver the notes on foot. The pigeons watch you go, smug as landladies. Your feet ache by the last tower.|You run the round on foot again. You're faster than a pigeon on the stairs, if not in the air, and your calves know it.}

@@ -8,6 +8,7 @@ const E = require('./experiments.js');
 const Review = require('./review.js');
 const C = require('./catalog.js');
 const Authoring = require('./authoring.js');
+const Snapshot = require('./snapshot.js');
 
 const { render } = require('./presentation.js');
 async function retrieve(root, argv) {
@@ -21,9 +22,12 @@ async function retrieve(root, argv) {
   const cfg = R.config({ ...opts, value: run?.retrievalConfig, backend: opts.backend || run?.backend || selected?.backend, profile: opts.profile || run?.profile || selected?.profile });
   if (run && (cfg.backend !== run.backend || cfg.profile !== run.profile)) throw new Error('Retrieval does not match assigned workflow');
   if (run && R.identity(cfg) !== run.indexIdentity) throw new Error('Retrieval configuration differs from the registered index identity');
-  const service = R.create(run?.sourceRoot || path.resolve(opts.root || root), cfg, { cache: opts.cache || run?.cache });
+  let service = R.create(run?.sourceRoot || path.resolve(opts.root || root), cfg, { cache: opts.cache || run?.cache });
   if (run && operation === 'index') throw new Error('Frozen evaluation indexes cannot be synchronized by authors');
   if (run && service.cat.corpusHash !== run.corpusHash) throw new Error('Frozen corpus fingerprint changed');
+  // A stale index (sources edited since the last sync) still answers everyday queries from its last snapshot.
+  const snap = !run && ['search', 'brief', 'related'].includes(operation) ? Snapshot.fallback(path.resolve(opts.root || root), cfg, { cache: opts.cache, catalog: service.cat }) : null;
+  if (snap) { service = snap.service; process.stderr.write(snap.notice + '\n'); }
   const start = Date.now(); let result;
   try {
     if (run && operation === 'brief' && U.positive(opts.budget, 24000) > run.budget.briefChars) throw new Error('Brief budget exceeds the registered limit');
@@ -40,8 +44,9 @@ async function retrieve(root, argv) {
       for (const d of defs) { parts.push(d.title, d.text); for (const o of d.options || []) { parts.push(o.label); G.walkEffects(o.effects, (st) => { if (st.t === 'say') parts.push(st.text); }); } }
       result = await service.search(parts.filter(Boolean).join(' '), { ...opts, kind: 'event' }); result.warning = 'Similar premises to inspect, not a duplicate verdict.';
     } else throw new Error('retrieve status|index|search QUERY|read ID…|neighbors ID|brief QUERY|related --draft FILE [index: --dry-run|--resume|--rebuild --mode batch|sync] [--config FILE] [--json]');
+    if (snap) { result.notice = snap.notice; result.snapshot = snap.snapshot; }
   } catch (error) {
-    U.appendJSON(run?.log || path.join(root,'rag/receipts/retrieval.jsonl'), { run: run.id, backend: cfg.backend, profile: cfg.profile, corpusHash: service.cat.corpusHash, at:new Date(start).toISOString(), argv, operation, error: error.message, stages: service.stages, calls: service.service.calls, elapsedMs: Date.now() - start });
+    U.appendJSON(run?.log || path.join(root,'rag/receipts/retrieval.jsonl'), { run: run?.id || null, backend: cfg.backend, profile: cfg.profile, corpusHash: service.cat.corpusHash, at:new Date(start).toISOString(), argv, operation, error: error.message, stages: service.stages, calls: service.service.calls, elapsedMs: Date.now() - start });
     throw error;
   }
   const output = render(result, operation, opts.json);

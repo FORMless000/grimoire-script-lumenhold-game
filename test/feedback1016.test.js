@@ -5,12 +5,9 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const G = require('../src/grimoire.js');
 const Engine = require('../src/engine.js');
-const { project } = require('../tools/project.js');
 const { reach } = require('../tools/reach.js');
-const { ROOT } = require('./helpers.js');
+const { content, sources, quiet } = require('./helpers.js');
 
-const { content, sources } = project(ROOT).compileAll();
-const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
 const fresh = (c = content, seed = 5) => { const eng = new Engine(c); quiet(() => eng.newGame({ seed, name: 'T', origin: 'street' })); return eng; };
 
 // Fills one visit slot at `place` directly (the director's own fill), as the day would after the pick.

@@ -5,12 +5,9 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const Engine = require('../src/engine.js');
-const { project } = require('../tools/project.js');
-const { ROOT } = require('./helpers.js');
+const { content, silent } = require('./helpers.js');
 
-const { content } = project(ROOT).compileAll();
-const quiet = (fn) => { const w = console.warn, l = console.log; console.warn = console.log = () => {}; try { return fn(); } finally { console.warn = w; console.log = l; } };
-function fresh() { const eng = new Engine(content); quiet(() => eng.newGame({ seed: 11, name: 'T', origin: 'street' })); return eng; }
+function fresh() { const eng = new Engine(content); silent(() => eng.newGame({ seed: 11, name: 'T', origin: 'street' })); return eng; }
 const romantic = Object.keys(content.npcs).find((id) => content.npcs[id].romance);
 const relUp = (eng, id, n) => { const ctx = eng.newCtx(null); eng.run([{ t: 'rel', npc: id, min: n, max: n }], ctx); return ctx; };
 

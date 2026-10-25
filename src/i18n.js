@@ -29,7 +29,6 @@
   // Keys ending in "_html" may contain simple markup (<b>). {name} placeholders are filled by t().
   const UI_EN = {
     'lang.name': 'English',
-    'lang.label': 'Language',
 
     'title.yourName': 'Your name',
     'title.seed': 'Seed (optional)',
@@ -91,7 +90,6 @@
     'journal.leads': 'Leads',
     'journal.followed': 'followed',
     'journal.keyClue': 'a key clue: needed beneath the lake',
-    'journal.log': 'What happened',
 
     'bond.friend': 'friend',
     'bond.close': 'close',
@@ -123,9 +121,6 @@
     'card.notAvailable': 'Not available',
     'card.cantAfford': 'Not enough crowns ({cost} needed)',
     'check.button': '{skill}',
-    'check.chip': '{skill} ({p}%) · {result}',
-    'check.success': 'success',
-    'check.failed': 'failed',
     'chip.max': 'max', 'chip.rel': '{name} {delta}',
     'chip.perf': '{track} performance {delta}',
     'chip.progress': '{track} progress {delta}',
@@ -158,7 +153,7 @@
     'challenge.lose': 'lose',
     'spell.button': '{spell} {level} · {cost} mana',
     'spell.short': 'Not enough mana',
-    'preview.follows': 'Something follows from this.', 'preview.followUp': 'More follows later', 'preview.remembered': 'This will be remembered', 'preview.ends': 'Your story ends here',
+    'preview.followUp': 'More follows later', 'preview.remembered': 'This will be remembered', 'preview.ends': 'Your story ends here',
     'title.oldSave': 'Your saved game was from an older version of the game and can no longer be loaded. Its run log was kept.',
     'slots.tooOld': 'From an older version; can’t be loaded',
     'outcome.tap': 'tap or swipe to continue',
@@ -222,7 +217,6 @@
     'slot.morning': 'Morning', 'slot.noon': 'Noon', 'slot.afternoon': 'Afternoon', 'slot.evening': 'Evening', 'slot.night': 'Night', 'slot.midnight': 'Midnight',
     'phase.term': 'Term', 'phase.break': 'Break', 'phase.wrapup': 'Wrap-up',
     'map.title': '{month} · Year {year} · {phase}',
-    'map.question1': 'Where will you spend the afternoon?',
     'map.question2': 'Where will you spend the afternoon and the evening?',
     'map.q.afternoon': 'Where will you spend the afternoon?', 'map.q.evening': 'Where will you spend the evening?', 'map.q.midnight': 'Where will you go tonight?',
     'map.visitOf': 'visit {n} of {of}', 'map.stayIn': 'Stay in', 'map.goTo': 'Go to {place}', 'map.howToPick': 'Tap a place to pick it; tap it again to go.', 'map.notReady': 'Pick a place for each part of the day first.', 'map.again': 'Tap {place} again to go there, or press the button.', 'map.festivalHere': '{event}: at {place}, this {slot}',
@@ -289,7 +283,7 @@
     'fight.coach.guard': '"It\'s hiding behind its parry. The Mana you spend turns to flux; Refocus turns it back. Do it when nothing can hurt you. Like now."',
     'fight.coach.reclaim': '"Now it\'s refocusing, and while it does, it\'s open. Make it pay."',
     'fight.coach.commit': '"From here you take turns. This time you commit first and it sees your move; next time you\'ll see its. Think what it will do with what it sees."',
-    'fight.coach.finish': '"That\'s a duel. Finish it."',
+    'fight.coach.finish': '"That\'s a duel. Ward its fire, hit it while it refocuses, and when it swings, trade blows: you can take more than it can. Finish it."',
     // The lesson as the committed combat bundle still sets it up (its EVENTS entry has these keys and no script): kept until
     // the F5.11 bundle carries the new entry (combat/setup/foes.mjs), then removed.
     'fight.coach.lead': 'The mannequin moves first and shows you its move: read it before you pick yours.',
@@ -349,7 +343,6 @@
     'note.clue': 'A clue found',
     'side.studies': 'Studies & commitments',
     'side.gpa': 'GPA {gpa}',
-    'side.enrolled': 'Enrolled this term',
     'side.prep': 'Preparation {n}/{cap}',
     'side.examIn': 'exam in {n} months',
     'side.examNext': 'exam next month',

@@ -58,7 +58,7 @@ test('names: the randomizer keeps to the chosen pronouns, mixes in the world poo
 });
 
 test('names: the zh-CN pools match the English ones, name for name, and avoid the cast\'s Chinese names', () => {
-  const loc = I18n.loadLocale('zh-CN', P.loadLocaleSources('zh-CN').filter((x) => !x.path.endsWith('/_obsolete.lang')));
+  const loc = I18n.loadLocale('zh-CN', P.liveLocaleSources('zh-CN'));
   I18n.use(null);
   const en = pools();
   I18n.use(loc);

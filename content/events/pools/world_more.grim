@@ -1,0 +1,326 @@
+# ============================================================
+#  Baseline pools, second pass (2026-10-24): world_more.
+#  Repeatable routine events with no place: the castle between
+#  visits, drawn in the day's world slots (design §5, §6c).
+#  Most older place-less cards happen once a run; these recur.
+#  Spec: docs/authoring/pools.md.
+# ============================================================
+
+@event world_stairs_ate_a_shoe
+title: The Stairs Ate a Shoe
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: tower
+tags: magic
+when: term
+scene: A great pile of odd shoes heaped in a dusty alcove beneath a castle staircase, a student in one sock digging through it.
+text: {Halfway down the east stair the steps shift, and when they settle you are one shoe lighter. Everyone knows where the stairs put shoes, in a heap under the east wing.|The stairs have taken another shoe. You suspect they like the taste of yours.|Shoe gone again. You've come to think of the heap under the east wing as a kind of shoe library.} {You have somewhere to be.|It's raining, and the castle floors are cold.|{season == "winter": Your sock is soaked through in a minute.|The stairs grind smugly behind you.}}
+> left: Go and dig through the heap
+  guile +small
+  health -tiny
+  say: {You dig through three centuries of shoes and find yours under a buckled pair that must be older than the towers. You're filthy, late and oddly triumphant.|You find your shoe, and a slipper with a name sewn into it from fifty years ago. You leave the slipper on top, in case.|You know the heap's layers now, like a geologist. Your shoe is on top, almost politely. You stub your toe on the way out anyway.}
+> right: Hop on, one shoe down
+  lore +small
+  mood -small
+  renown -tiny
+  say: {You hop to your next lecture and spend it with one foot in your bag. You take excellent notes, out of spite.|You go about your day in one shoe and one sock. People stare; you make the most of it by reading on the move.|You wear one shoe all day, as is becoming your custom. A first-year asks if it's a fashion. You say yes.}
+
+@event world_duchess_has_news
+title: The Duchess Has News
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: mirror
+tags: social
+scene: An ornate gilt frame in a castle corridor where a powdered portrait duchess has squeezed in beside a placid painted cow, leaning out to whisper.
+text: {The Duchess of Ambry, who refuses to stay in her own frame, has squeezed into a pastoral scene by your corridor and is beckoning to you with her fan.|The Duchess again, this time in a portrait of a stern admiral, who looks resigned. "Darling. News."|The Duchess has taken to waiting for you in whatever frame is nearest your door. Today she's sharing a still life with a pear.} {A painted cow is chewing at her elbow.|Her wig is slightly askew from travel.|{season == "winter": She's wearing a painted fur borrowed from a neighbouring frame.|She's fanning herself vigorously.}}
+> left: Listen to her gossip
+  guile +small
+  mood +small
+  alignment -tiny
+  say: {She tells you which professor has a secret allergy to cats and which prefect cries at the opera. You'll never look at either the same way.|She whispers who is courting whom on the third floor, in scandalous detail. You feel like a spy and enjoy it more than you should.|She hands you the castle's secrets like sweets. Some of them are about people you like. You take them anyway.}
+> right: Offer her some news instead
+  charm +small
+  renown +tiny
+  mood -tiny
+  say: {You tell her about your week, a little improved. By supper every portrait in the castle knows a much grander version, and so does half your house, not all of it flattering.|You give her a harmless story about yourself. It comes back to you three days later as a romance, a duel and a minor tragedy, and people keep asking which bit is true.|You feed her an anecdote; she gasps in all the right places. By morning it's a legend with you in it, not entirely flatteringly.}
+
+@event world_laundry_day
+title: Laundry Day
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: bottle
+tags: home
+scene: Enchanted wash-tubs churning by themselves in a steamy castle laundry, clothes flapping on lines overhead, a student holding up a robe that has turned an alarming colour.
+text: {The castle laundry has charmed tubs that wash by themselves, mostly. Your robes are due.|Laundry day. Last time the tubs returned your robes a gentle pink, and your friends haven't let you forget it.|The laundry. You know which tub shrinks things and which one sings while it spins.} {Someone's socks are trying to escape over the edge.|The steam is so thick you can barely see the lines.|{season == "winter": Everything on the lines is frozen stiff as boards.|The windows are open, and the shirts are trying to fly.}}
+> left: Charm the tub yourself
+  challenge spell apprentice wild:
+    win:
+      arcana +small
+      mood +small
+      say: {You coax the tub into a perfect wash. Your robes come out clean, warm and smelling faintly of thunderstorms.|Your robes come out their own colour, which, after last time, feels like a victory parade.|You charm the singing tub, and it sings your favourite song while it spins. Everything comes out spotless.}
+    lose:
+      mood -small
+      gold -tiny
+      say: {Your robes come out three sizes smaller. You buy a cheap replacement from the village tailor.|Your robes come out pink again. The tubs have a sense of humour. You pay for a dye to put it right.|The tub spins so hard your robes leave by the window. You find most of them. The rest cost you a crown at the tailor's.}
+> right: Wash them by hand
+  vigor +small
+  health -tiny
+  say: {You scrub everything at the sink till your knuckles are raw. Clean, at least, and still the right size.|You wash by hand, wring by hand, hang by hand. Your arms ache; your robes stay black.|You wash by hand again. It's slow and cold, and you've come to find it soothing, in a chapped sort of way.}
+
+@event world_bridge_in_a_gale
+title: The Bridge in a Gale
+class: routine
+tone: tense
+repeat: 5
+weight: 10
+art: tower
+tags: danger
+scene: A shimmering bridge of light slung between two castle towers, swaying in a howling wind, a student gripping the rail halfway across.
+text: {The wind is up, and the bridge of light between the towers is swaying like a hammock. The long way round is ten minutes and four staircases.|Gale day. The bridges of light sway and ring faintly, like glass in a cupboard.|The bridge in the wind. You know its rhythm now: the sway, the pause, the shudder.} {Two first-years are halfway across, frozen.|A prefect stands at the end shouting safety rules nobody can hear.|{season == "winter": Sleet is coming sideways off the lake.|Leaves are blowing straight through the bridge, as if it isn't there.}}
+> left: Cross it anyway
+  challenge feat apprentice wild:
+    win:
+      vigor +small
+      mood +small
+      say: {You walk the swaying bridge like a sailor on a deck and step off the far side with your heart singing.|You cross in the pauses between gusts. The bridge hums under your feet like something alive.|You cross on the rhythm, sway, pause, shudder, step, and arrive before anyone else. The wind claps you on the back.}
+    lose:
+      health -tiny
+      mood -small
+      say: {A gust drops you to your knees halfway across. You crawl the rest, which nobody who saw will ever let you forget.|You freeze in the middle like the first-years and stand there for a long, windy minute. You make it, bruised and shaken.|You misjudge the shudder and the rail catches you in the ribs. You arrive, eventually, aching.}
+> right: Take the long way round
+  lore +small
+  say: {You take the four staircases and read on the way. You arrive late and better informed.|You take the long way and find a corridor you'd never noticed, with a portrait that winks. You arrive late and curious.|The long way round has become a habit on windy days. You've read most of a book on those four staircases.}
+
+@event world_common_room_kettle
+slot: night
+title: The Common-Room Kettle
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: cup
+tags: social home
+scene: A crowded house common room late in the evening, students in dressing gowns round a fire, a battered kettle starting to whistle on the hob.
+text: {Your house common room has one kettle, older than anyone in the room, and whoever makes the tea hears everything.|The common-room kettle is whistling. Somebody shouts "Whoever's nearest!" and it's you.|The kettle. You know its temper now: two taps on the lid and it behaves.} {The fire is roaring and people are in their dressing gowns.|Someone has a letter from home and is reading it aloud.|{season == "winter": Snow has drifted against the windows.|The windows are open to the warm night.}}
+> left: Make tea for everyone
+  gold -tiny
+  charm +small
+  mood +small
+  say: {You make a pot for twelve with the last of your good leaves. In return you hear who's courting whom, who's failing what, and one secret you'll keep.|You make the tea from your own tin, and everyone moves up to make room for you by the fire. It's the warmest you've been all week.|You make it the way the room likes it now, with the good leaves you bought. Someone says "Thank you" exactly the way your family says it, and your throat goes tight.}
+> right: Take your cup up to bed
+  health +small
+  say: {You take your tea up to bed and fall asleep before it's cold. The common room laughs below you half the night.|You slip away early with your cup. You miss the best story of the term, you hear in the morning.|You go up early, as you've started to. The noise from below is a nice thing to fall asleep to.}
+
+@event world_the_mirror_asks
+title: The Mirror Asks Again
+class: routine
+tone: eerie
+repeat: 6
+weight: 10
+art: mirror
+tags: mystery
+when: seen(sorting_mirror) > 0
+scene: A tall enchanted mirror in a stone entrance hall, its surface rippling like cold water, a student pausing before it with a bag on one shoulder.
+text: {Once, on your first day, the Sorting Mirror asked who you were before you came. Today, as you cross the entrance hall, it ripples and asks the follow-up, in its voice like cold water. "And now?"|The Sorting Mirror asks its follow-up again: "And now?" It seems to expect a different answer each time.|The Mirror catches you mid-stride. "And now?" You've answered it so often that the question has started to sound like a greeting.} {year == 1: In it, you look younger than you feel.|{final_year: In it, you look like someone about to leave.|In it, your reflection waits for an answer too.}}
+> left: Answer it honestly
+  mood +small
+  say: {You tell it plainly what's changed since your first day. The surface stills, and you walk on lighter, as if you'd set something down.|You give it the same true answer as last time, with one new thing in it. The Mirror seems to notice the new thing.|You answer without stopping. It's become a small, honest habit, and it steadies you.}
+> right: Tell it a pretty lie
+  guile +small
+  mood -tiny
+  say: {You tell it you're secretly a prince in exile. The Mirror ripples, says nothing, and the silence follows you down the corridor.|You tell it something grander than the truth. Your reflection, you'd swear, rolls its eyes.|You lie to it again. It doesn't argue. It never argues. That's the worst part.}
+
+@event world_something_in_your_bag
+title: A Stowaway in Your Satchel
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: paw
+tags: nature
+scene: A student opening a satchel to find a small magical creature curled up among the books, blinking up at them.
+text: {~A hedge-sprite has moved into your bag and is lining it with your notes.|A small cave newt, glowing faintly orange, is asleep in your inkwell.|A baby owl, still mostly fluff, has climbed into your hood and refuses to leave.} {~Unregistered creatures are tolerated, so long as nobody notices them.|It looks at you as though this was your idea.|It has clearly been there since breakfast.}
+> left: Keep it quiet a while
+  guile +small
+  mood +small
+  say: {~You feed it crumbs and hide it from the prefects all day. By evening it's built a nest out of your essay, and you don't mind.|You keep it warm in your pocket all day. Nobody notices; it glows when you laugh.|You carry it about in your hood all day. It hoots once in the middle of a lecture, and you cough to cover it, heroically.}
+> right: Take it to the stables
+  lore +small
+  mood -tiny
+  say: {~You walk it down to the stables. Professor Brask tells it, very kindly, where hedge-sprites belong, and tells you, less kindly, to check your bag.|Professor Brask takes the newt in her palm and tells you three things about cave newts you'll never forget. You miss it a bit on the walk back.|Professor Brask tucks the owlet into a nest box and tells you where its mother is likely to be. You find yourself checking your hood all week.}
+
+@event world_study_group
+slot: night
+title: The Study Group
+class: routine
+tone: warm
+repeat: 4
+weight: 10
+art: candle
+tags: study social
+when: term and not wrapup
+cast:
+  friend: any where (tagged(friend, student) or tagged(friend, prefect)) and rel(friend) >= 5
+scene: A huddle of students round a table piled with books and cold mugs, one drawing diagrams in the air with a glowing wand-tip, late at night.
+text: {{friend} has a study group going in an empty classroom and a spare seat. "We're doing the hard chapter. Bring your brain, and biscuits."|{friend}'s study group is still going, and still short of biscuits. The chalkboard is a battlefield.|{friend} waves you into the study group. Someone has started a list of who brings what; you're down for biscuits.} {Someone is drawing diagrams in the air with a glowing wand-tip.|Two of them are arguing about a footnote.|{season == "winter": It's freezing; everyone's in scarves.|The window's open, and moths are attending too.}}
+> left: Join and work late
+  study +tiny
+  rel friend +small
+  health -tiny
+  say: {You work through the hard chapter together until midnight. It makes sense in the end, mostly because {friend} drew it as a sandwich. You're shattered.|You argue the footnote to a draw and finish the chapter. {friend} walks you back across the bridges, yawning, long past midnight.|You bring the biscuits and an answer. {friend} says you're the group's secret weapon. You go to bed far too late.}
+> right: Go to bed instead
+  health +small
+  rel friend -tiny
+  say: {You go to bed early. {friend} tells you at breakfast how good the group was, at length.|You turn in. Through the wall you hear the study group laughing until one, and sleep anyway.|You skip it. {friend} saves you a biscuit, which is somehow worse than a reproach.}
+
+@event world_weather_following_you
+title: Weather Following You
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: rain
+tags: magic
+scene: A student walking down a castle corridor with a small personal weather charm hovering over their head while everyone else keeps clear.
+text: {~Somebody's weather charm has escaped and attached itself to you. A small rain cloud is following you at head height, drizzling.|A runaway weather charm has found you. A tiny snow flurry is falling on you, and only you.|An escaped weather charm has chosen you. A single warm sunbeam follows you everywhere, even indoors.} {~People step politely out of your way.|A first-year is following you around to see what happens.|It seems pleased with itself.}
+> left: Try to dispel it
+  challenge spell apprentice:
+    win:
+      arcana +small
+      say: {~You unpick the charm thread by thread and the cloud pops like a soap bubble, leaving a small rainbow.|You dispel it; the last snowflake lands on your nose like a goodbye.|You unpick the sunbeam's charm and it fades, regretfully. You feel the cold at once.}
+    lose:
+      mood -small
+      health -tiny
+      say: {~Your spell makes it a thundercloud. It follows you for the rest of the day, rumbling at anyone who looks at you, and soaks you to the skin.|Your spell doubles it. You spend the day in a small private blizzard and catch a chill.|Your spell turns the sunbeam into a heatwave. You spend the afternoon sweating in a cold castle, red as a lobster.}
+> right: Let it be, and enjoy it
+  mood +small
+  renown +tiny
+  say: {~You go about your day in your own private drizzle. By evening it's a castle joke, and you're in on it.|You let it snow on you all day and catch flakes on your tongue in lectures. People talk about it.|You go about your day sunlit and warm. People keep finding reasons to stand next to you.}
+
+@event world_lamplighters_round
+slot: evening
+title: The Lamplighter's Round
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: lantern
+tags: social
+scene: An old castle porter with a long brass lighting pole lighting the corridor lamps one by one at dusk, a student walking beside him carrying a second pole.
+text: {At dusk the old porter makes his round with a long brass pole, lighting the corridor lamps one by one. He's slow these days, and the west corridor is long.|The lamplighter again, at dusk. He nods at the spare pole leaning by the door, as if it had been left there for someone.|The lamplighter's round. The spare pole has a notch carved in it now, about where your hand goes.} {He hums an old song as he goes.|His knees click on every stair.|{season == "winter": It's been dark for an hour already, and every lamp matters.|The evening is long and gold, and he's in no hurry.}}
+> left: Light the west corridor for him
+  arcana +small
+  mana -small
+  say: {You light them with a flick of fire, one after another, all the way to the end, and feel each one in your fingertips. The porter says the corridor has never looked so cheerful, and he's been doing it forty years.|You take the far end with the spare pole and a little flame. He takes the near end and tells you about the castle when he was a boy. You're drained, and lit up.|You light the west corridor in a single walk now, a flame at every lamp, and you're light-headed by the end. The porter lights his pipe off the last one.}
+> right: Walk with him and listen
+  lore +small
+  say: {He tells you which lamps never stay lit and why, and which ghost likes the dark. You walk the whole round and forget you had anywhere to be.|He tells you about a headmistress, long ago, who lit every lamp in the castle with one snap of her fingers. "Showing off," he says fondly.|He tells you a story for every lamp. You've heard some before. You don't mind.}
+
+@event world_the_warm_flue
+title: The Warm Flue
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: bed
+tags: home
+when: term
+scene: A sunny stone window niche in a castle corridor beside a warm chimney flue, a student curled up asleep in it with a book over their face.
+text: {Behind the kitchens there's a window niche where the chimney flue runs warm through the stone. It's the best nap in the castle, and it's free.|The warm niche by the flue is free again. Someone has left a cushion, and a note: "FIRST COME".|The niche by the flue. You've learned when the kitchens fire the ovens, and when it's warmest.} {The corridor is quiet.|A cat is already asleep in one corner.|{season == "winter": Frost is on the window; the stone is toasty.|The window is open, and a breeze plays over it.}}
+> left: Curl up for an hour
+  health +small
+  mood +small
+  study -tiny
+  say: {You sleep like a loaf in an oven. You wake to find you've missed the reading you meant to do, and don't regret it as much as you should.|You nap on the cushion and wake an hour later, rosy and behind on everything.|You nap through the oven-firing, the warmest hour. Your notes stay shut; your soul is restored.}
+> right: Read in it instead
+  lore +small
+  health +tiny
+  say: {You read in the warm with your back to the flue and finish a whole chapter without once nodding off. Nearly.|You read with the cushion behind you and the warmth seeping in. It's the most comfortable studying you've ever done.|You read through the warmest hour and manage not to sleep. It's an act of will, and a pleasant one.}
+
+@event world_margin_argument
+title: The Argument in the Margins
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: book
+tags: study
+when: term
+scene: An open second-hand textbook covered in handwritten margin notes in three different inks, arrows and crossings-out running between them, a student's pencil hovering.
+text: {Your second-hand textbook came with an argument in the margins. Two former owners, decades apart, have been disagreeing about chapter four in ink.|You've reached chapter six, and the margin argument has followed. A third hand has joined in, in green, mostly to tell them both to calm down.|The margins again. You know the three hands now: the furious one, the patient one, the green one who draws small owls.} {Today it's about whether a spell can be "polite".|Today one of them has written "SEE ME AFTER" to the other, forty years late.|{final_year: You wonder who'll own this book after you.|Someone has pressed a flower at the page where they finally agree.}}
+> left: Add your own note to the argument
+  lore +small
+  charm +tiny
+  say: {You write a careful note siding with the patient one and citing the page. It feels like joining a very old, very slow conversation.|You add a fourth hand, in pencil, and settle the question of polite spells for good. You're sure someone will disagree in thirty years.|You write a small note to the green one, thanking them for the owls. The book feels more yours for it.}
+> right: Ignore them and read the text
+  study +tiny
+  mood -tiny
+  say: {You cover the margins with your hand and read the actual chapter. It's duller than the argument, and you remember more of it.|You read the printed text and resolutely ignore three people shouting in ink. You lose the thread twice anyway.|You read straight through without once looking at the margins, which takes willpower. The chapter goes in; the fun stays out.}
+
+@event world_door_that_wasnt_there
+title: A Door That Wasn't There
+class: routine
+tone: eerie
+repeat: 5
+weight: 10
+art: door
+tags: mystery
+scene: A small arched wooden door set into a castle corridor wall where there was only bare stone yesterday, its brass handle faintly warm.
+text: {~In a corridor you walk every day there is a door that wasn't there yesterday, small and arched, with a brass handle worn by hands that aren't yours.|A door has appeared in the bare wall by the stairs, painted a cheerful blue, with no keyhole.|There's a new door at the end of a corridor that used to just end. Behind it, something is ticking.} {~The castle does this. It always puts them back.|Nobody else seems to notice it.|It's slightly ajar.}
+> left: Open it and look inside
+  chance even:
+    lore +small
+    mood +small
+    say: {~Behind it is a tiny library of books about doors, all open at the same page. You read for an hour, and when you come out, it's gone.|Behind it is a cupboard full of preserved pears, labelled in a hand from two centuries ago. You take one. It's delicious, and the door is gone by supper.|Behind it is a room full of clocks, every one of them right. You set your watch by them and leave, and the door seals behind you.}
+  else:
+    health -tiny
+    mood -tiny
+    say: {~Behind it is a spiral stair up to nowhere. Halfway, the steps get narrower than your foot, and you come down with a turned ankle and the door gone.|Behind it is a broom cupboard, and the brooms are not pleased to see you. You leave with bruises.|Behind it is a room full of clocks, all of them striking at once, right in your ears. You stagger out with a headache that lasts till bedtime.}
+> right: Chalk a cross on it, walk on
+  guile +small
+  say: {~You chalk a neat cross on it, like the old marks you've seen on other walls. By tomorrow the door is gone, but your cross is still there.|You mark it and keep walking. Some doors are invitations; some are tests. You don't feel like being tested today.|You leave your mark and a note of the date. You're keeping a map of where the doors appear. The castle, you suspect, is keeping one of you.}
+
+@event world_paper_bird
+title: The Paper-Bird Jam
+class: routine
+tone: light
+repeat: 5
+weight: 10
+art: letter
+tags: social
+scene: Dozens of folded paper birds crowding and flapping against a dormitory window, a student trying to catch them in both hands.
+text: {Somebody's routing charm has gone wrong, and every paper bird in your tower is turning in at your window instead of its own. There are eleven on the sill, and more coming.|The paper-bird jam again. Someone has pinned a sign to your door that says SORTING OFFICE.|The birds know your window now. They queue on the sill like regulars at a counter.} {One is pecking at the glass with real urgency.|Two of them are fighting over the latch.|{season == "winter": They're dusted with frost and shivering.|Rain has smudged half the names on their wings.}}
+> left: Sort them and send them on
+  lore +small
+  mood -tiny
+  say: {You read wings, untangle a knot of six and send every bird to its proper window. An hour gone, and your eyes ache from the handwriting.|You sort them by tower and floor on your bed and launch them in order. It's dull work, and every one of them arrives.|You sort the queue at speed now, like a postmaster. It's still an hour you meant to spend on something else.}
+> right: Open the window and shoo them
+  mood +small
+  renown -tiny
+  say: {You fling the window wide and wave your arms. The birds scatter like startled pigeons, and half of them land at the wrong doors. By supper it's been traced to you.|You shoo them out in a great flapping cloud. It's glorious. Two notes end up in the headmistress's tower, and people know whose window they came from.|You open the window and let the flock go where it likes. Wrong doors all over the tower, and a reputation as the leak.}
+
+@event world_practice_next_door
+slot: night
+title: The Practice Next Door
+class: routine
+tone: warm
+repeat: 5
+weight: 10
+art: music
+tags: social
+scene: A student at a desk with their head in their hands, a thin wall between them and an unseen musician, music drifting under the door.
+text: {Someone in the room next door is learning a piece on a charmed fiddle. They play the same eight bars over and over, and the fiddle sighs at every wrong note.|The fiddle next door has got as far as the sixteenth bar. It still sighs, but less.|The piece next door is almost a piece now. You know it as well as the player does, wrong notes included.} {You were trying to read.|It's late, and the wall is thin.|{season == "winter": The radiator carries it into your room like a second instrument.|The windows are open, and half the corridor can hear it.}}
+> left: Knock and offer to help
+  charm +small
+  health -tiny
+  say: {You knock. The player is a mortified first-year who has never had a lesson. You hum the eight bars properly until they have them, which is well past midnight.|You knock, and stay to count the beat for an hour. The sixteenth bar comes right for the first time; you both cheer, and the neighbours bang on the wall.|The door's already open when you knock. You tap out the tricky bit on the tabletop while they follow. Bed is very late.}
+> right: Pillow over your head
+  lore +small
+  mood -small
+  say: {You read with a pillow pressed to one ear. You get through the chapter; the eight bars get into your dreams.|You work through it while the fiddle sighs at the sixteenth bar every four minutes, regular as a clock. You finish your reading through gritted teeth.|You study to the sound of it, grudgingly. Annoyingly, it helps; you'll be humming it in the exam.}

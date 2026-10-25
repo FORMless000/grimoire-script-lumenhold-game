@@ -20,7 +20,7 @@ const RE_OPTION = /^>\s*([a-z_][a-z0-9_]*(?:\[(?:item:)?[a-z_][a-z0-9_]*\])?)\s*
 const RE_PROP = /^([a-z_][a-z0-9_]*)\s*:\s*(.*)$/;
 // perform/rank_xp/progress <track> ±n|tier, and study [track] ±n|tier
 const RE_TRACK_AMOUNT = new RegExp('^(perform|rank_xp|progress|study)(?:\\s+(' + ID + '))?\\s*([+-])\\s*(\\d+|tiny|small|medium|large|huge)$');
-const RE_AMOUNT = new RegExp('^(?:(rel|love)\\s+)?(' + ID + ')\\s*([+-])\\s*(\\d+)(?:\\s*~\\s*(\\d+))?$');
+const RE_AMOUNT = new RegExp('^(?:(rel|spark)\\s+)?(' + ID + ')\\s*([+-])\\s*(\\d+)(?:\\s*~\\s*(\\d+))?$');
 const isComment = (c) => c.startsWith('#') || c.startsWith('//');
 
 // One effect statement, spacing only.
