@@ -11,10 +11,10 @@ title [6678b7] = 熄灭的灯
 text [980ef1] = 最里面那张床上方的退热符已经烧成一点暗红。一个钟头前就该转了。阿玛兰斯修女每一轮巡房都亲自去，从没漏过一次。她的灯是暗的。
 # en: A dim infirmary ward at evening, a fever charm over the far bed glowing a dull red, a healer's desk lamp unlit.
 scene [6a0e30] = 黄昏时昏暗的医务室病房，最里面那张床上方的退热符泛着暗红的光，医师桌上的灯没有点。
-# en: Turn the charm and find her
-opt.left.label [347861] = 转好符，去找她
-# en: You turn the charm the way you've seen her do it, a quarter-turn and a tap. Then you go looking for the lamp.
-opt.left.say.1 [973261] = 你照她平时的样子转动那道符，转四分之一圈，再轻轻一点。然后你去找那盏灯。
+# en: Go and find her
+opt.left.label [061e72] = 去找她
+# en: The evening tray is still on the ward table, every bottle full. Her office door, at the back, is open a crack, and dark.
+opt.left.say.1 [f6c902] = 晚间的药盘还搁在病房桌上，每个瓶子都是满的。后头她办公室的门开着一条缝，里面黑着。
 # en: It isn't your ward
 opt.right.label [c6562a] = 这不是你的病房
 # en: You tell yourself she's only late. On your way out, the patient in the far bed is still awake, watching the dark.
@@ -45,56 +45,54 @@ text [a5133b] = {flag(rounds_secret): 阿玛兰斯修女还是站不起来，还
 scene [856bc9] = 黄昏的一排病床，一个挽着袖子的学生正在量药，一位医师坐在椅子上指挥。
 # en: Do every bed properly
 opt.left.label [b70095] = 每张床都照顾周全
-# en: Every bed, every spoon, every charm turned on the hour. The burned hand won't scar. "Adequate," says the chair, which from her is a medal.
-opt.left.say.1 [1330bd] = 每张床、每一勺、每道符都准点转好。烫伤不会留疤。“还行。”椅子上的人说。从她嘴里出来，这就是勋章。
-# en: You mix up beds three and five. Nobody notices but her. "Again," she says, and you do the whole row again.
-opt.left.say.2 [927a2b] = 你把三号床和五号床弄混了。除了她谁也没发现。“重来。”她说。于是你把整排重做了一遍。
+# en: Every bed, every spoon, every charm on the hour. The burned hand won't scar. At midnight the chair says, "Bed three. Well done," and then you hear her fall asleep sitting up.
+opt.left.say.1 [4e9ba5] = 每张床、每一勺、每道符都准点照料到。烫伤不会留疤。半夜，椅子上传来一句：“三号床，做得好。”接着你就听见她坐着睡着了。
+# en: You mix up beds three and five. Nobody notices but her. She makes you recite every dose on the ward back to her, with your eyes shut, before she lets you sleep.
+opt.left.say.2 [0a4e69] = 你把三号床和五号床弄混了。除了她谁都没发现。她让你闭着眼，把病房里每一剂药量都背给她听，背完才放你去睡。
 # en: Do the urgent ones, then revise
 opt.right.label [7b2a0a] = 先顾急的，再去复习
 # en: You see to the burns and the fevers and leave the rest for the morning. From the chair comes a small, disappointed silence.
 opt.right.say.1 [469acd] = 你处理好烫伤和高烧，其余的留到早上。椅子那边传来一阵小小的、失望的沉默。
 
-@event lakeshore_fever_runaway
-# en: Bed Six Goes Missing
-title [5ed052] = 六号床不见了
-# en: Bed six is empty, and the window by it is open. You find her where Sister Amaranth said you would: knee-deep in the lake at dusk, shivering, feeling along the bottom. "I lost my mother's ring," the first-year says through chattering teeth. "Swimming. Where we weren't supposed to."
-text [7a0322] = 六号床空着，旁边的窗开着。你在阿玛兰斯修女说的地方找到了她：黄昏里，她站在没膝的湖水中，浑身发抖，在湖底摸索。“我把妈妈的戒指弄丢了，”那个一年级生牙齿打着战说，“游泳的时候。在不该游的地方。”
-# en: A first-year in a hospital nightshirt standing knee-deep in a dark lake at dusk, feeling along the bottom with both hands.
-scene [4aa4c5] = 黄昏时，一个穿病号睡衣的一年级生站在没膝深的黑色湖水里，双手在湖底摸索。
-# en: Wade in and search with her
-opt.left.label [6566cf] = 下水陪她一起找
-# en: Your fingers close on it among the reeds: a thin silver band, slippery with weed. She stops shivering long enough to cry. You both walk back dripping.
-opt.left.say.1 [eb5819] = 你的手指在芦苇丛里碰到了它：一枚细细的银戒，裹着滑溜溜的水草。她停止发抖，哭了一会儿。你们俩湿淋淋地走回去。
-# en: Nothing but cold and stones. When her lips go blue you carry her back up the hill, and Sister Amaranth's face says everything her fever won't let her.
-opt.left.say.2 [c7556f] = 除了冰冷和石头什么也没有。等她嘴唇发紫，你把她背上山。阿玛兰斯修女的脸色说出了高烧不让她说的一切。
-# en: Talk her back to bed
-opt.right.label [0a087b] = 劝她回去躺着
-# en: You promise to look for it in daylight, and she lets you walk her back. Next morning you rake the shallows with a borrowed net, and find the ring on the third pass.
-opt.right.say.1 [1fc72f] = 你答应天亮了再来找，她这才让你扶她回去。第二天早上，你借了一张网耙遍浅滩，第三遍时找到了戒指。
-# en: She won't come. You wait on the shore with her until she's too cold to argue, then walk her back with your cloak round her.
-opt.right.say.2 [aac12b] = 她不肯走。你陪她在岸边等，直到她冷得没力气争辩，才用斗篷裹着她走回去。
+@event infirmary_bed_six
+# en: Bed Six's Story
+title [b331ff] = 六号床的说法
+# en: Bed six is a second-year with Lake Fever, blue to the ears, who swears she never went near the lake. "I fell asleep in the bath," she says. From her chair, Sister Amaranth raises one eyebrow and keeps it there. The fever isn't breaking. A cure for a bath is not a cure for the lake.
+text [0fe3df] = 六号床是个得了湖热病的二年级生，冻得耳朵发蓝，却发誓自己从没靠近过湖。“我是在浴缸里睡着了，”她说。阿玛兰斯修女在椅子上挑起一边眉毛，一直没放下来。烧退不下去。治浴缸的药，治不了湖。
+# en: A shivering second-year in an infirmary bed with blue-tinged ears, insisting on something, while a healer watches sceptically from a chair across the ward.
+scene [8f759c] = 医务室病床上一个瑟瑟发抖、耳朵泛蓝的二年级生正在坚持什么，病房另一头椅子上的医师满脸怀疑地看着。
+# en: Get the true story out of her
+opt.left.label [cf4525] = 套出她的实话
+# en: It comes out in a rush: the flat rock, a dare, four of them. The other three are in her dormitory, coughing into their scarves so nobody will know. You fetch them down one by one. By midnight the ward is full, and all four fevers are breaking.
+opt.left.say.1 [230782] = 实话一股脑儿涌了出来：那块平顶石，一个赌约，一共四个人。另外三个还躲在她们宿舍里，捂着围巾咳嗽，免得被人发现。你一个一个把她们领下来。到半夜病房住满了，四个人的烧都在退。
+# en: She sticks to the bath. You treat her for the lake anyway, on Sister Amaranth's say-so, and on Thursday three more second-years turn up blue to the ears.
+opt.left.say.2 [32d29b] = 她咬死了浴缸的说法。你还是照阿玛兰斯修女的吩咐按湖热病治她。到了星期四，又有三个二年级生冻得耳朵发蓝地找上门来。
+# en: Treat what she tells you
+opt.right.label [67acaa] = 照她说的治
+# en: You dose her for a chill and get an early night. The fever takes three days longer than it should, and the chair across the ward watches every one of them.
+opt.right.say.1 [e3829f] = 你按着凉给她配了药，自己早早睡下。烧比该退的晚了三天，病房那头的椅子一天不落地全看在眼里。
 
-@event infirmary_tonic_key
-# en: The Key to the Cupboard
-title [c634f9] = 药柜的钥匙
-# en: Sister Amaranth is back on her feet, doing her evening round as if nothing happened. At the end of it she stops at the tonic cupboard, unhooks a small brass key and holds it out without looking at you. {flag(ring_found): Bed six wears a silver ring on a string round her neck.|Bed six is asleep, for once.}
-text [521e2f] = 阿玛兰斯修女又站起来了，照常做她的晚间巡房，仿佛什么都没发生过。巡完后她在药柜前停下，摘下一把小小的黄铜钥匙递过来，看都不看你。{flag(ring_found): 六号床的脖子上用绳子挂着一枚银戒。|六号床难得睡着了。}
-# en: A healer on her evening round holding out a small brass key beside a glass-fronted cupboard of tonics, not looking at the student she offers it to.
-scene [6e1291] = 晚间巡房的医师站在玻璃门药柜旁，递出一把小黄铜钥匙，没有看向她递给的那个学生。
-# en: Take the key
-opt.left.label [de2dea] = 接过钥匙
-# en: "Keep doing that," she says. It's the most anyone has ever said to you in this room. The key is warm from her pocket.
-opt.left.say.1 [a4814c] = “接着这么做。”她说。在这间屋子里，这是任何人对你说过的最多的话。钥匙上还带着她口袋里的温度。
-# en: "I'd rather not be trusted with it."
-opt.right.label [1b82b9] = “我还是别担这个信任了。”
-# en: She hangs it back on its hook. "Good answer," she says. "Wrong, but good." She gives you a tonic anyway, the good one.
-opt.right.say.1 [b960d8] = 她把钥匙挂回钩子上。“回答得好，”她说，“错了，但好。”她还是给了你一瓶药，好的那种。
+@event infirmary_own_prescription
+# en: Her Own Prescription
+title [b2ec64] = 她自己的药方
+# en: Sister Amaranth is up a week too soon, grey at the edges, taking the tray out for the evening round as if nothing had happened. At bed two she sways and puts a hand on the rail. {flag(bed_six_truth): Four second-years sit up in their beds to watch.|The whole ward goes quiet.} Everyone looks at you.
+text [7ded39] = 阿玛兰斯修女早了一个星期就下了床，脸色还泛着灰，端起药盘出去做晚间巡房，好像什么都没发生过。走到二号床时她晃了一下，伸手扶住床栏。{flag(bed_six_truth): 四个二年级生在床上坐起来看着。|整个病房一下子安静了。}所有人都看向你。
+# en: A grey-faced healer in her apron holding a tray of tonics at an infirmary bedside, swaying slightly, while a student reaches to take the tray.
+scene [e6bf63] = 一位脸色发灰、系着围裙的医师端着一盘药剂站在医务室床边，身子微微摇晃，一个学生伸手去接药盘。
+# en: "Bed."
+opt.left.label [09b6cc] = “上床。”
+# en: You take the tray out of her hands and say it the way she says it to everyone else. She looks at you for a long moment. Then she goes to bed. You do the round. In the morning there's a card on the tray, in her square hand: "Bed four needs less."
+opt.left.say.1 [2d0661] = 你从她手里接过药盘，用她对别人说这话的那种口气说了出来。她盯着你看了很久，然后回去躺下了。巡房你来做。第二天早上，药盘上多了一张卡片，是她方方正正的字：“四号床减量。”
+# en: Walk the round beside her
+opt.right.label [2bda60] = 陪她一起巡房
+# en: You don't argue. You carry the tray and have each bottle ready before she reaches for it. At the last bed she sits down on the end of it, and lets you measure out her own dose. "Half a spoon," she says. "I'm not a horse."
+opt.right.say.1 [447498] = 你没有争。你端着药盘，在她伸手之前就把每个瓶子递到她手边。到最后一张床，她在床尾坐下，让你给她自己量了一剂药。“半勺，”她说，“我又不是马。”
 
 @event lecture_tower_red_ink
 # en: Two Sets of Marks
 title [8b53b5] = 两种批改
-# en: Your returned essay has two sets of marks. The marker's, in polite pencil: "Good." And another, in red ink and unsigned, savaging every paragraph and fixing three of them. The last line reads: "Again. Properly."
-text [8582d4] = 发回来的论文上有两种批改。阅卷人用的是客气的铅笔：“好。”另一种是红墨水，没有署名，把每一段都批得体无完肤，还顺手改好了三段。最后一行写着：“重写。认真点。”
+# en: Your returned essay has two sets of marks. The marker's, in polite pencil: "Good." And another, in red ink and unsigned, in a small round hand, savaging every paragraph and fixing three of them. The last line reads: "You can do better than good. Paragraph four proves it."
+text [90c611] = 你拿回来的论文上有两种批改。批改老师用的是客气的铅笔：“好。”另一种是红墨水，没有署名，字小而圆，把每一段都批得体无完肤，还顺手改好了三段。最后一行写着：“你能写得比‘好’更好。第四段就是证明。”
 # en: A student on a spiral stair reading an essay covered in neat pencil and, beneath it, furious corrections in red ink.
 scene [580e72] = 一个学生坐在螺旋楼梯上，读着一篇论文，上面是工整的铅笔批注，底下是怒气冲冲的红墨水修改。
 # en: Rewrite it properly
@@ -119,70 +117,70 @@ opt.left.label [e7dc4e] = 在页边老实作答
 opt.left.say.1 [9ace38] = 你写下三行永远不会说出口的话，把论文留在楼梯上。中午前它就不见了。你一下午都在后悔，应该只写两行。
 # en: Wait on the stair to see who takes it
 opt.right.label [0b86d8] = 守在楼梯看谁来取
-# en: You hide one flight up. A grey sleeve, scorched at the cuff, gathers the pages without a sound. You know exactly one person whose cuffs are scorched.
-opt.right.say.1 [0c1944] = 你躲在上一层。一只灰色的袖子，袖口烧焦了，悄无声息地收走了纸页。袖口烧焦的人，你只认识一个。
-# en: You fall asleep on the stair. When you wake the essay is gone, and there's a note on your chest: "Hm."
-opt.right.say.2 [568b56] = 你在楼梯上睡着了。醒来时论文已经不见，胸口放着一张字条：“嗯。”
+# en: You hide on the landing above. A first-year in robes two sizes too big gathers up the pages, reads the first line right there on the step, and makes a small, furious noise.
+opt.right.say.1 [1ab338] = 你躲在上一层的平台上。一个穿着大两号袍子的一年级生把纸页收起来，就站在台阶上读了第一行，发出一声又小又气的哼声。
+# en: You fall asleep on the stair. When you wake the essay is gone, and there's a note on your chest in red: "Paragraph six. Also, you snore."
+opt.right.say.2 [5b6506] = 你在楼梯上睡着了。醒来时论文不见了，胸口上放着一张红字纸条：“第六段。还有，你打呼噜。”
 
-@event lecture_tower_red_ink_tremble
-# en: The Reading List
-title [bc0848] = 书单
-# en: This time the red ink answers at length: four pages on your essay, and a reading list. The downstrokes waver, as if written in a moving carriage. {seen(thorne_shaking_hands) > 0: You've seen hands shake like that, gripping a lectern.|On the lower floors, Professor Thorne writes on the board very slowly these days, and very large.}
-text [e75d1a] = 这一次红墨水写了很多：四页关于你论文的意见，外加一张书单。竖笔一笔一笔地发颤，像是在颠簸的马车里写的。{seen(thorne_shaking_hands) > 0: 你见过抖成这样的手，紧紧抓着讲台。|在楼下几层，索恩教授如今在黑板上写字写得很慢，也写得很大。}
-# en: Four pages of red-ink notes spread on a desk, the downstrokes of the handwriting wavering, a long reading list pinned on top.
-scene [7615ba] = 四页红墨水笔记摊在桌上，字迹的竖笔微微发颤，一张长长的书单别在最上面。
-# en: Read the whole list
-opt.left.label [12a39f] = 把书单读完
-# en: You read every book on the list, mostly at night. One has a library card stamped forty years ago, with a single name on it: A. Thorne.
-opt.left.say.1 [1bf8cd] = 书单上的每本书你都读了，大多是在夜里。其中一本的借书卡盖着四十年前的章，上面只有一个名字：A. 索恩。
-# en: Take the notes, skip the list
-opt.right.label [b0da70] = 只看笔记，不看书单
-# en: You take the notes and leave the reading list in your satchel. It looks at you every time you open it.
-opt.right.say.1 [88b5a3] = 你收下笔记，把书单留在书包里。每次打开书包，它都在看着你。
+@event lecture_tower_red_ink_front_row
+# en: The Front Row
+title [9d64e7] = 第一排
+# en: You cut through the first-years' lecture on your way somewhere else. In the front row, alone, sits a first-year with red ink on her fingers. The lecturer asks her a question. She opens her mouth, and nothing comes out, and the hall waits until she looks at the floor. {flag(red_ink_glimpse): The robes are the ones from the stair, two sizes too big.|Her notes, you can see from the aisle, are perfect.}
+text [04a185] = 你抄近路穿过一年级生的讲堂。第一排独自坐着一个一年级生，手指上沾着红墨水。讲师向她提问。她张开嘴，却一个字也说不出来，整个讲堂就那么等着，直到她低头看着地板。{flag(red_ink_glimpse): 那件袍子就是楼梯上那件，大了两号。|从过道上你就能看见，她的笔记完美无缺。}
+# en: A lecture hall of first-years, one small student alone in the front row with red ink on her fingers, looking down at a page of perfect notes while the lecturer waits.
+scene [8bd5f5] = 一间坐满一年级生的讲堂，一个瘦小的学生独自坐在第一排，手指沾着红墨水，低头看着一页完美的笔记，讲师在等她回答。
+# en: Sit by her afterwards, and write
+opt.left.label [3d6382] = 散场后坐到她旁边，用笔说话
+# en: You sit down beside her after the hall empties and slide your last essay across, without a word. She writes on it for twenty minutes without looking up. At the bottom: "Seminar on Thursday. I have to speak. I can't."
+opt.left.say.1 [8c43b8] = 讲堂散空后，你在她旁边坐下，一言不发地把你最近的论文推过去。她低着头在上面写了二十分钟。最底下写着：“星期四有研讨课。我得发言。我做不到。”
+# en: Leave her the secret
+opt.right.label [56b4e0] = 替她守着这个秘密
+# en: You walk on, and leave your next essay on the stair as usual. It comes back with the usual red, and one line more at the bottom: "Seminar on Thursday. I have to speak. Please don't come."
+opt.right.say.1 [531188] = 你走开了，照旧把下一篇论文放在楼梯上。它回来时还是满纸红字，最底下多了一行：“星期四有研讨课。我得发言。请别来。”
 
-@event lecture_tower_red_ink_office
-# en: Improper Marking
-title [5167fa] = 不合规矩的批改
-# en: Office hours. You put the stack of red-inked essays on Thorne's desk. He looks at them a long time. "Improper," he says. "Marking essays that aren't mine. I write very few letters, you understand. I like to know who I'm writing them for."
-text [53ac38] = 答疑时间。你把那一沓红字论文放在索恩的桌上。他看了很久。“不合规矩，”他说，“批改不归我管的论文。我写的推荐信很少，你明白。我想知道我是在为谁写。”
-# en: An old professor at a cluttered office desk looking down at a stack of red-inked essays, a capped red pen in his trembling hand.
-scene [7d3878] = 一位老教授坐在杂乱的办公桌前，低头看着一沓红墨水批改过的论文，发颤的手里握着一支盖好笔帽的红笔。
-# en: "Then write one for me."
-opt.left.label [250c84] = “那就为我写一封。”
-# en: "Hm." From him, that's a yes. The letter, when it goes, is four lines long. The Conclave, you hear later, read it twice.
-opt.left.say.1 [069460] = “嗯。”从他嘴里出来，这就是答应了。那封信寄出时只有四行。后来你听说，七塔议会把它读了两遍。
-# en: "Not yet," he says. "Again. Properly." It takes you a day to understand that it was a promise.
-opt.left.say.2 [7b33c7] = “还不行，”他说，“重写。认真点。”你过了一天才明白，那是一个承诺。
-# en: "Thank you. Keep marking them."
-opt.right.label [2fd45e] = “谢谢您。请继续批。”
-# en: He nods once. The red ink keeps coming to the end of the year. It never once says "good". Once, it says "better".
-opt.right.say.1 [26c4c3] = 他点了一下头。红墨水一直来到学年结束。它一次也没写过“好”。有一次，它写了“好些了”。
+@event lecture_tower_red_ink_seminar
+# en: Thursday's Seminar
+title [ffda16] = 星期四的研讨课
+# en: Thursday. The first-year stands at the seminar lectern with her paper in both hands and no voice at all. A dozen students wait. The lecturer looks at the clock. Her eyes find you at the back of the room.
+text [111352] = 星期四。那个一年级生站在研讨课的讲台前，双手攥着讲稿，一点声音也发不出来。十几个学生在等。讲师看了看钟。她的目光在教室后排找到了你。
+# en: A small seminar room, a first-year frozen at a lectern holding her paper in both hands, a dozen students waiting, one older student at the back half out of their seat.
+scene [c9437a] = 一间小研讨室，一个一年级生僵在讲台前，双手攥着讲稿，十几个学生在等，后排一个高年级生半站起身。
+# en: Stand up and argue with her paper
+opt.left.label [785e58] = 站起来和她的论文辩论
+# en: You stand and say her fourth paragraph is wrong. It isn't, and she knows it, and she's so annoyed she forgets to be frightened. She takes your objection apart for ten minutes. The room applauds, mostly for her.
+opt.left.say.1 [593b7e] = 你站起来说她的第四段是错的。其实没错，她也知道，结果她气得忘了害怕，花了十分钟把你的反驳拆得七零八落。全场鼓掌，大半是为她。
+# en: You stand and object, and your objection is bad, and she's too polite to say so out loud. She sits down without reading. Your essay comes back that week with one line of red: "Good try. Bad argument."
+opt.left.say.2 [7d93e6] = 你站起来提出异议，可你的异议很烂，她又太客气，没当面说破。她没读就坐下了。那个星期你的论文发回来时，上面只有一行红字：“试得好。论证烂。”
+# en: Offer to read it for her
+opt.right.label [dde38f] = 提出替她念
+# en: You walk to the front and hold out your hand. She shakes her head, then gives you the first page. You read the first paragraph aloud. She takes the second page back, and reads the rest herself, quietly, all the way to the end.
+opt.right.say.1 [dbadbf] = 你走到前面，伸出手。她摇摇头，然后把第一页递给了你。你大声念完第一段。她把第二页拿了回去，自己轻声念完了剩下的，一直念到最后。
 
 @event home_market_late_bloomer
-# en: Blue Candles
-title [8f5833] = 蓝色的蜡烛
-# en: The sweet shop is the one thing in town that hasn't changed. Then the owner's daughter, a year or two older than you, drops a tray, swears, and every candle in the window flares blue. Her father looks at you, then at your castle robes. "You're the one who'd know," he says quietly.
-text [0b982b] = 糖果铺是镇上唯一没变的地方。接着，店主的女儿——比你大一两岁——打翻了托盘，骂了一句，橱窗里所有的蜡烛都蹿起了蓝火。她父亲看看你，又看看你身上的城堡学袍。“你是懂这个的人。”他低声说。
-# en: A small sweet shop window full of jars, every candle in it flaring blue, a young woman staring at her own hands beside a dropped tray.
-scene [be34a6] = 一家摆满糖罐的小糖果铺橱窗，里面每支蜡烛都蹿着蓝火，一个年轻女人站在打翻的托盘旁，盯着自己的双手。
+# en: The Cold Stove
+title [ab26e7] = 冷灶
+# en: The sweet shop is the one thing in town that hasn't changed. Then the owner's daughter, a year or two older than you, bangs down a ladle and swears, and the sugar pan on the cold stove boils over into caramel. There is no fire under it. Her father looks at you, then at your castle robes. "You're the one who'd know," he says quietly.
+text [80d1ef] = 镇上只有这家糖果铺一点没变。接着，店主的女儿——比你大一两岁——把勺子往台上一摔，骂了一句，冷灶上的糖锅就溢成了焦糖。锅底下根本没有火。她父亲看看你，又看看你身上的城堡学院袍。“你是懂这个的人，”他低声说。
+# en: The back of a small sweet shop, a copper sugar pan boiling over into dark caramel on a stove with no fire in it, a young woman staring at her own hands.
+scene [ecd843] = 一间小糖果铺的后屋，一口铜糖锅在没有生火的灶上溢出深色的焦糖，一个年轻女人盯着自己的双手。
 # en: Show her how to breathe it down
 opt.left.label [1a87b0] = 教她把它压下去
-# en: You show her the first thing anyone at the castle learns: breathe in for four, hold the heat, let it go for four. The candles settle. She looks at her hands as if they belonged to someone else.
-opt.left.say.1 [775fd7] = 你教她城堡里每个人学的第一件事：吸气数四下，把热憋住，呼气再数四下。蜡烛安静下来了。她看着自己的手，像是在看别人的手。
+# en: You show her the first thing anyone at the castle learns: breathe in for four, hold the heat, let it go for four. The pan stops seething. She looks at her hands as if they belonged to someone else.
+opt.left.say.1 [673b25] = 你教她城堡里每个人学的第一件事：吸气数四下，把热憋住，再数四下放出去。糖锅不再翻腾了。她看着自己的手，好像那是别人的手。
 # en: "It happens. It'll settle."
 opt.right.label [6cc646] = “常有的事。会过去的。”
-# en: Her father nods, glad to be told so. Behind him she relights the candles one by one, with a match, very carefully.
-opt.right.say.1 [7c1f9e] = 她父亲点点头，很高兴听到这话。在他身后，她用火柴把蜡烛一支一支重新点上，非常小心。
+# en: Her father nods, glad to be told so. Behind him she scrapes the burned sugar out of the pan, very carefully, and doesn't go near the stove again.
+opt.right.say.1 [d7c158] = 她父亲点点头，很高兴听到这句话。在他身后，她小心翼翼地把烧焦的糖刮出锅，再也没靠近灶台。
 
 @event home_fields_bloomer_lessons
-# en: Lessons on the Wall
-title [844754] = 墙头上的课
-# en: She's waiting on the low wall at the end of the long rows, a candle stub in each pocket. "Teach me something," she says. "Properly. Before you go back."
-text [e60081] = 她在长长田垄尽头的矮墙上等着，两个口袋里各揣着一截蜡烛头。“教我点东西，”她说，“认真地教。趁你还没回去。”
-# en: A young woman and a student in castle robes on a low field wall at sunset, the young woman holding a candle stub at arm's length, its flame far too tall.
-scene [22636a] = 日落时，一个年轻女人和一个穿城堡学袍的学生坐在田边矮墙上，年轻女人伸直手臂举着一截蜡烛头，火苗高得过分。
-# en: Teach her the candle drill
-opt.left.label [b8469a] = 教她蜡烛练习
+# en: Where Nothing Can Catch
+title [aa3840] = 什么都烧不着的地方
+# en: She's waiting past the last of the long rows, where the ground is all stones and nothing can catch, with a candle stub in each pocket. "Teach me something," she says. "Properly. Before you go back."
+text [e00f96] = 她等在最后一垄地的外头，那里满地石头，什么都烧不着，她两个口袋里各揣着一截蜡烛头。“教我点什么，”她说，“正经教。趁你回去之前。”
+# en: A young woman and a student in castle robes on a bare, stony patch past the last field row at sunset, the young woman holding a candle stub at arm's length, its flame far too tall.
+scene [dde514] = 日落时分，最后一垄田外一块光秃秃的石头地上，一个年轻女人和一个穿城堡学院袍的学生，年轻女人伸直手臂举着一截蜡烛头，火苗蹿得太高。
+# en: Teach her to keep a flame small
+opt.left.label [04fe90] = 教她把火苗压小
 # en: By sunset she can hold a flame the size of a fingernail for ten breaths. She counts every one of them out loud.
 opt.left.say.1 [19772d] = 到日落时，她已经能让指甲盖大小的火苗稳住十次呼吸。她每一下都大声数出来。
 # en: The candle goes off like a firework. You both lie in the grass laughing until the farmer shouts. "Next time," she says.
@@ -211,18 +209,18 @@ opt.right.say.1 [e74743] = 他的脸上掠过很复杂的神情。“你会吗�
 @event home_market_bloomer_charm
 # en: A Lid on the Pot
 title [f09a76] = 锅上的盖子
-# en: In the market you find her at the charm seller's table. He's holding up a grey glass bead on a cord. "Smothers it," he's saying. "Like a lid on a pot. No more flares, no more fuss." She's counting out her savings.
-text [3ffde8] = 你在集市上卖护身符的人的摊子前找到了她。他举着一颗系在绳上的灰色玻璃珠。“能把它闷住，”他说，“就像给锅盖上盖子。不再冒火，不再添乱。”她正在数自己攒下的钱。
+# en: In the market you find her at the charm seller's stall. He's holding up a grey glass bead on a cord. "Lumenhold-blessed," he's saying. "Smothers it, like a lid on a pot. No more flares, no more fuss." It's plain glass; you can see that from here. She's counting out her savings.
+text [7577dc] = 你在集市上卖护身符的人的摊子前找到她。他正举着一颗系着绳子的灰玻璃珠。“流明堡加持过的，”他说，“能把它闷住，就像给锅盖上盖子。再不会冒火，再不会出乱子。”那就是一颗普通玻璃珠，你站在这儿都看得出来。她正在数自己的积蓄。
 # en: A market charm seller holding up a grey glass bead on a cord to a young woman counting coins from her apron.
 scene [97e8d2] = 集市上卖护身符的人举着一颗系着绳的灰色玻璃珠，一个年轻女人正从围裙里数出硬币。
-# en: Help her pay, since she wants it
-opt.left.label [0f543f] = 她想要，就帮她付
-# en: You make up what she's short, because it's her choice. She puts the bead on. The shop's candles burn an ordinary yellow from then on. She looks lighter, and smaller.
-opt.left.say.1 [74e4f3] = 你补上她差的钱，因为这是她的选择。她戴上了珠子。从那以后，店里的蜡烛只烧出普通的黄色火苗。她看起来轻松了，也变小了。
-# en: Talk her out of it
-opt.right.label [7db2be] = 劝她别买
-# en: You tell her about the first-years who set their sleeves alight and are now the best in their year. She puts her coins back in her apron, slowly.
-opt.right.say.1 [be605f] = 你给她讲那些把袖子点着了的一年级生，如今都是年级里最出色的。她慢慢把硬币放回了围裙。
+# en: Let her believe in it
+opt.left.label [f3c641] = 让她信下去
+# en: You say nothing. She buys it and puts it on. It's only glass, but she believes in it, and the sugar pans stay cold all week. She looks lighter, and smaller.
+opt.left.say.1 [b3f436] = 你什么都没说。她买下它戴上了。那不过是玻璃，可她信它，糖锅一整个星期都是冷的。她看上去轻松了些，也小了些。
+# en: Tell her it's only glass
+opt.right.label [2d22ae] = 告诉她那只是玻璃
+# en: "It's glass," you tell her. "You did the hard part yourself, out past the fields." The charm seller gives you the look of a man revising his prices. She puts her coins back in her apron, slowly.
+opt.right.say.1 [45bba8] = “那是玻璃，”你告诉她，“最难的那部分，是你自己在田那头做到的。”卖护身符的人看你的眼神，像是在重新盘算价钱。她慢慢把硬币放回了围裙口袋。
 # en: She buys it anyway. "Easy for you," she says, not unkindly. "You get to go back."
 opt.right.say.2 [d6500c] = 她还是买了。“你说得轻巧，”她说，并没有恶意，“你还能回去。”
 
@@ -249,15 +247,15 @@ opt.right.say.2 [25f257] = 花了一个钟头、旅店的三壶热水，还造�
 @event home_cottage_bloomer_letter
 # en: A Flame That Stays
 title [62c792] = 不灭的火苗
-# en: {flag(bloomer_damped): She comes by one evening, the grey bead on its cord. "I keep it in my pocket now," she says. "Not on. Just in case." She lights a candle with her finger, small and steady, to show you.|She comes by one evening with a candle she lit at noon and has kept burning, small and steady, all day. "Look," she says. "It stays."}
-text [a4fdcf] = {flag(bloomer_damped): 一天傍晚她来了，那颗灰珠子用绳子系着。“我现在把它放在口袋里，”她说，“不戴。只是以防万一。”她用手指点亮一支蜡烛给你看，火苗小而稳。|一天傍晚她来了，带着一支中午点燃、一直烧到现在的蜡烛，火苗小而稳。“你看，”她说，“它不灭了。”}
+# en: {flag(bloomer_damped): She comes by one evening, the grey bead on its cord. "I know it's only glass," she says. "I keep it in my pocket anyway." She lights a candle with her finger, small and steady, to show you.|She comes by one evening with a candle she lit at noon and has kept burning, small and steady, all day. "Look," she says. "It stays."}
+text [de4168] = {flag(bloomer_damped): 一天傍晚她来了，那颗灰珠子系在绳上。“我知道那只是玻璃，”她说，“可我还是揣在口袋里。”她用手指点燃一支蜡烛给你看，火苗小而稳。|一天傍晚她来了，手里拿着一支中午点着、一直烧到现在的蜡烛，火苗小而稳。“你看，”她说，“它不灭。”}
 # en: A young woman at a cottage table at evening, a small steady candle flame burning on the tip of her finger.
 scene [a44cc7] = 傍晚，一个年轻女人坐在小屋的桌旁，指尖上燃着一朵小小的、稳定的烛火。
 # en: Write to the castle for her
 opt.left.label [3d556e] = 替她给城堡写信
 # en: {flag(bloomer_promise): You keep your promise to her father and write to the castle that night|You write to the castle that night}: what she can do, what she learned with no teacher but you, and that some people come late to things. You pay the postage; she walks it to the post office herself.
 opt.left.say.1 [e70f80] = {flag(bloomer_promise): 你遵守了对她父亲的承诺，当晚就给城堡写了信|当晚你给城堡写了信}：她能做什么，她在除了你之外没有老师的情况下学会了什么，还有，有些人就是来得晚一些。邮费你付了；信是她自己走去邮局寄的。
-# en: Give her your first-year book
-opt.right.label [d6667b] = 把一年级课本给她
-# en: {flag(bloomer_promise): You never did ask at the castle. Instead you leave her your battered first-year book, margins and all.|You leave her your battered first-year book, margins and all.} A week later a letter comes: "Your notes are wrong. I've fixed them."
-opt.right.say.1 [5e94e2] = {flag(bloomer_promise): 你终究没有去城堡问。你把那本破旧的一年级课本留给了她，连同页边的笔记。|你把那本破旧的一年级课本留给了她，连同页边的笔记。}一周后来了一封信：“你的笔记写错了。我改好了。”
+# en: Leave her your practice candle
+opt.right.label [e7919c] = 把你的练习蜡烛留给她
+# en: {flag(bloomer_promise): You never did ask at the castle. Instead you leave her|You leave her} the practice candle you've had since your first week, the one you learned on, burned down to a stub. A month later a letter comes with a drawing of the stub, still lit.
+opt.right.say.1 [364432] = {flag(bloomer_promise): 你到底没去城堡问。你把|你把}入学第一个星期就开始用的那支练习蜡烛留给了她，你就是用它学会的，如今只剩一截蜡烛头。一个月后来了一封信，里面画着那截蜡烛头，还亮着。

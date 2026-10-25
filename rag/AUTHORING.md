@@ -85,9 +85,10 @@ Use `--resume` after an interrupted update, with the same source and build confi
 ```sh
 npm run grim -- retrieve index --rebuild --mode sync
 ```
-An operator uses this for initial construction or changed extraction configuration;
-it submits paid model work and may take hours. Authors report an
-unbuilt index instead of rebuilding it automatically. Searches never index content.
+Use this for initial construction or changed extraction configuration;
+it submits paid model work and may take hours. An unbuilt index blocks authoring:
+rebuild it before drafting, in the background, without editing `content/` until it
+publishes (the procedure is in `skills/write-academy-events/SKILL.md` §2). Searches never index content.
 An embedding change rebuilds vectors; keyword and reranker changes do not rebuild
 the graph. No backend fallback is used.
 

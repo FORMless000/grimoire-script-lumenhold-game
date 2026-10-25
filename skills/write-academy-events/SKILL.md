@@ -54,7 +54,7 @@ Retrieval is required for every new card and for every edit that changes a card'
 
 Skip retrieval only when you are certain the change can't introduce or duplicate a premise: typo or wording fixes, tier or balance retunes, translations, renames, mechanical migrations. Write a one-line reason in the batch notes ("retrieval skipped: tier retune only"). When unsure, run it: doubt counts as required.
 
-If the index is unbuilt or unavailable (no key, a changed build configuration), report it and fall back to `brief` and `dupes`. Never run `retrieve index --rebuild` yourself: it is paid and can take hours. A stale index is fine: searches use the last synced snapshot and print a notice. Run `npm run grim -- retrieve index` at the end of the session, after final edits.
+Check `npm run grim -- retrieve status` before drafting. If the index is unbuilt (a first build, or a changed build configuration: any edit to `rag/src/catalog.js`, `retrieve.js` or the adapter files), rebuild it first with `npm run grim -- retrieve index --rebuild --mode sync`. The rebuild is paid and can take hours: run it in the background and wait. Don't edit `content/` while it runs, because a source change stops it from publishing. Don't draft cards without retrieval; `brief` and `dupes` supplement it and don't replace it. If retrieval can't run at all (no key, the provider down), report it and stop before drafting. A stale index is fine: searches use the last synced snapshot and print a notice. Run `npm run grim -- retrieve index` at the end of the session, after final edits.
 
 ### Write the blocks
 

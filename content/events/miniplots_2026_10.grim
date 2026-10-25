@@ -3,14 +3,16 @@
 #  empty (grim report --gaps: the infirmary, the lecture tower, the home town). Each is a @thread from the story
 #  template (docs/grimoire-script.md §9): its start card begins it, and every other card waits on that without saying
 #  so. Plot-safe: none of them touches the main mystery.
-#    amaranth_rounds  — the night Sister Amaranth missed her round (infirmary, lakeshore)
-#    red_ink          — someone marks your essays in red ink (lecture tower)
-#    late_bloomer     — the sweet shop's daughter and her sparks (home, across two breaks)
+#    missed_round  — the night Sister Amaranth missed her round (infirmary)
+#    red_ink       — someone marks your essays in red ink (lecture tower)
+#    late_bloomer  — the sweet shop's daughter and her late magic (home, across two breaks)
+#  Reworked after retrieval (build/batches/miniplots_2026_10.notes.md): each premise was searched and each card checked
+#  with `retrieve related --draft` against the existing cards it must not repeat.
 # ============================================================
 
 # ---------------- The missed round ----------------
 
-@thread amaranth_rounds
+@thread missed_round
 from: story
 with: begun=flag(rounds_begun)
 class: story
@@ -31,19 +33,19 @@ weight: 14
 art: lantern
 scene: A dim infirmary ward at evening, a fever charm over the far bed glowing a dull red, a healer's desk lamp unlit.
 text: The fever charm over the far bed has burned down to a red glow. It should have been turned an hour ago. Sister Amaranth does every round herself, and has never once missed one. Her lamp is dark.
-> left: Turn the charm and find her
+> left: Go and find her
   health -tiny
   flag rounds_begun
   find lead_missed_round
   queue infirmary_sister_fevered now
-  say: You turn the charm the way you've seen her do it, a quarter-turn and a tap. Then you go looking for the lamp.
+  say: The evening tray is still on the ward table, every bottle full. Her office door, at the back, is open a crack, and dark.
 > right: It isn't your ward
   mood -tiny
   say: You tell yourself she's only late. On your way out, the patient in the far bed is still awake, watching the dark.
 
 @event infirmary_sister_fevered
 title: The Healer's Own Fever
-thread: amaranth_rounds
+thread: missed_round
 trigger: queued
 tone: tense
 art: potion
@@ -64,7 +66,7 @@ text: You find her in the little office behind the ward, upright in her chair, a
 
 @event infirmary_covering_rounds
 title: Eight Beds, One of You
-thread: amaranth_rounds
+thread: missed_round
 trigger: queued
 slot: evening
 tone: tense
@@ -79,73 +81,69 @@ text: {flag(rounds_secret): Sister Amaranth still can't stand, and is still givi
       alchemy +small
       rel amaranth +small
       flag rounds_covered
-      say: Every bed, every spoon, every charm turned on the hour. The burned hand won't scar. "Adequate," says the chair, which from her is a medal.
+      say: Every bed, every spoon, every charm on the hour. The burned hand won't scar. At midnight the chair says, "Bed three. Well done," and then you hear her fall asleep sitting up.
     lose:
       health -tiny
       flag rounds_covered
-      say: You mix up beds three and five. Nobody notices but her. "Again," she says, and you do the whole row again.
-  queue lakeshore_fever_runaway now
+      say: You mix up beds three and five. Nobody notices but her. She makes you recite every dose on the ward back to her, with your eyes shut, before she lets you sleep.
+  queue infirmary_bed_six now
 > right: Do the urgent ones, then revise
   rel amaranth -tiny
   flag rounds_covered
-  queue lakeshore_fever_runaway now
+  queue infirmary_bed_six now
   say: You see to the burns and the fevers and leave the rest for the morning. From the chair comes a small, disappointed silence.
 
-@event lakeshore_fever_runaway
-title: Bed Six Goes Missing
-thread: amaranth_rounds
+@event infirmary_bed_six
+title: Bed Six's Story
+thread: missed_round
 trigger: queued
+slot: evening
 tone: tense
-when: flag(rounds_covered) and not flag(runaway_back)
-art: wave
-scene: A first-year in a hospital nightshirt standing knee-deep in a dark lake at dusk, feeling along the bottom with both hands.
-text: Bed six is empty, and the window by it is open. You find her where Sister Amaranth said you would: knee-deep in the lake at dusk, shivering, feeling along the bottom. "I lost my mother's ring," the first-year says through chattering teeth. "Swimming. Where we weren't supposed to."
-> left: Wade in and search with her
-  challenge feat apprentice wild:
-    win:
-      health -small
-      vigor +small
-      flag ring_found
-      say: Your fingers close on it among the reeds: a thin silver band, slippery with weed. She stops shivering long enough to cry. You both walk back dripping.
-    lose:
-      health -medium
-      say: Nothing but cold and stones. When her lips go blue you carry her back up the hill, and Sister Amaranth's face says everything her fever won't let her.
-  flag runaway_back
-  queue infirmary_tonic_key in 2
-> right: Talk her back to bed
+when: flag(rounds_covered) and not flag(bed_six_done)
+art: potion
+scene: A shivering second-year in an infirmary bed with blue-tinged ears, insisting on something, while a healer watches sceptically from a chair across the ward.
+text: Bed six is a second-year with Lake Fever, blue to the ears, who swears she never went near the lake. "I fell asleep in the bath," she says. From her chair, Sister Amaranth raises one eyebrow and keeps it there. The fever isn't breaking. A cure for a bath is not a cure for the lake.
+> left: Get the true story out of her
   challenge appeal apprentice:
     win:
       charm +small
-      flag ring_found
-      say: You promise to look for it in daylight, and she lets you walk her back. Next morning you rake the shallows with a borrowed net, and find the ring on the third pass.
+      flag bed_six_truth
+      say: It comes out in a rush: the flat rock, a dare, four of them. The other three are in her dormitory, coughing into their scarves so nobody will know. You fetch them down one by one. By midnight the ward is full, and all four fevers are breaking.
     lose:
       health -tiny
       mood -small
-      say: She won't come. You wait on the shore with her until she's too cold to argue, then walk her back with your cloak round her.
-  flag runaway_back
-  queue infirmary_tonic_key in 2
+      say: She sticks to the bath. You treat her for the lake anyway, on Sister Amaranth's say-so, and on Thursday three more second-years turn up blue to the ears.
+  flag bed_six_done
+  queue infirmary_own_prescription in 2
+> right: Treat what she tells you
+  health +tiny
+  rel amaranth -small
+  flag bed_six_done
+  queue infirmary_own_prescription in 2
+  say: You dose her for a chill and get an early night. The fever takes three days longer than it should, and the chair across the ward watches every one of them.
 
-@event infirmary_tonic_key
-title: The Key to the Cupboard
-thread: amaranth_rounds
+@event infirmary_own_prescription
+title: Her Own Prescription
+thread: missed_round
 trigger: queued
 slot: evening
 class: milestone
 tone: warm
-when: flag(rounds_covered) and flag(runaway_back)
-art: key
-scene: A healer on her evening round holding out a small brass key beside a glass-fronted cupboard of tonics, not looking at the student she offers it to.
-text: Sister Amaranth is back on her feet, doing her evening round as if nothing happened. At the end of it she stops at the tonic cupboard, unhooks a small brass key and holds it out without looking at you. {flag(ring_found): Bed six wears a silver ring on a string round her neck.|Bed six is asleep, for once.}
-> left: Take the key
+when: flag(rounds_covered) and flag(bed_six_done)
+art: potion
+scene: A grey-faced healer in her apron holding a tray of tonics at an infirmary bedside, swaying slightly, while a student reaches to take the tray.
+text: Sister Amaranth is up a week too soon, grey at the edges, taking the tray out for the evening round as if nothing had happened. At bed two she sways and puts a hand on the rail. {flag(bed_six_truth): Four second-years sit up in their beds to watch.|The whole ward goes quiet.} Everyone looks at you.
+> left: "Bed."
+  health -small
   rel amaranth +medium
-  flag amaranth_key
   flag rounds_finished
-  say: "Keep doing that," she says. It's the most anyone has ever said to you in this room. The key is warm from her pocket.
-> right: "I'd rather not be trusted with it."
+  say: You take the tray out of her hands and say it the way she says it to everyone else. She looks at you for a long moment. Then she goes to bed. You do the round. In the morning there's a card on the tray, in her square hand: "Bed four needs less."
+> right: Walk the round beside her
+  mood -tiny
   rel amaranth +small
-  mood +small
+  alchemy +small
   flag rounds_finished
-  say: She hangs it back on its hook. "Good answer," she says. "Wrong, but good." She gives you a tonic anyway, the good one.
+  say: You don't argue. You carry the tray and have each bottle ready before she reaches for it. At the last bed she sits down on the end of it, and lets you measure out her own dose. "Half a spoon," she says. "I'm not a horse."
 
 # ---------------- Red ink ----------------
 
@@ -164,12 +162,12 @@ title: Two Sets of Marks
 place: lecture_tower
 time: morning afternoon
 tone: light
-when: turn >= 4 and not flag(red_ink_begun)
+when: year >= 2 and not flag(red_ink_begun)
 repeat: 3
 weight: 14
 art: scroll
 scene: A student on a spiral stair reading an essay covered in neat pencil and, beneath it, furious corrections in red ink.
-text: Your returned essay has two sets of marks. The marker's, in polite pencil: "Good." And another, in red ink and unsigned, savaging every paragraph and fixing three of them. The last line reads: "Again. Properly."
+text: Your returned essay has two sets of marks. The marker's, in polite pencil: "Good." And another, in red ink and unsigned, in a small round hand, savaging every paragraph and fixing three of them. The last line reads: "You can do better than good. Paragraph four proves it."
 > left: Rewrite it properly
   mood -tiny
   lore +medium
@@ -195,69 +193,69 @@ text: The essay is back on the stair, bleeding red. Most of it is about your arg
   lore +tiny
   mood -tiny
   flag red_ink_answered
-  queue lecture_tower_red_ink_tremble in 1
+  queue lecture_tower_red_ink_front_row in 1
   say: You write three lines you'd never say aloud, and leave the essay on the stair. It's gone by noon. You spend the afternoon wishing you'd written two.
 > right: Wait on the stair to see who takes it
   challenge deceive master- likely:
     win:
       guile +small
-      say: You hide one flight up. A grey sleeve, scorched at the cuff, gathers the pages without a sound. You know exactly one person whose cuffs are scorched.
+      say: You hide on the landing above. A first-year in robes two sizes too big gathers up the pages, reads the first line right there on the step, and makes a small, furious noise.
     lose:
       health -tiny
-      say: You fall asleep on the stair. When you wake the essay is gone, and there's a note on your chest: "Hm."
+      say: You fall asleep on the stair. When you wake the essay is gone, and there's a note on your chest in red: "Paragraph six. Also, you snore."
   flag red_ink_glimpse
-  queue lecture_tower_red_ink_tremble in 1
+  queue lecture_tower_red_ink_front_row in 1
 
-@event lecture_tower_red_ink_tremble
-title: The Reading List
+@event lecture_tower_red_ink_front_row
+title: The Front Row
 thread: red_ink
 trigger: queued
+slot: morning
 tone: warm
-when: (flag(red_ink_answered) or flag(red_ink_glimpse)) and not flag(red_ink_seen_hand)
+when: (flag(red_ink_answered) or flag(red_ink_glimpse)) and not flag(red_ink_met)
 art: book
-scene: Four pages of red-ink notes spread on a desk, the downstrokes of the handwriting wavering, a long reading list pinned on top.
-text: This time the red ink answers at length: four pages on your essay, and a reading list. The downstrokes waver, as if written in a moving carriage. {seen(thorne_shaking_hands) > 0: You've seen hands shake like that, gripping a lectern.|On the lower floors, Professor Thorne writes on the board very slowly these days, and very large.}
-> left: Read the whole list
-  health -small
-  lore +medium
-  study +tiny
-  flag red_ink_seen_hand
-  queue lecture_tower_red_ink_office in 1
-  say: You read every book on the list, mostly at night. One has a library card stamped forty years ago, with a single name on it: A. Thorne.
-> right: Take the notes, skip the list
+scene: A lecture hall of first-years, one small student alone in the front row with red ink on her fingers, looking down at a page of perfect notes while the lecturer waits.
+text: You cut through the first-years' lecture on your way somewhere else. In the front row, alone, sits a first-year with red ink on her fingers. The lecturer asks her a question. She opens her mouth, and nothing comes out, and the hall waits until she looks at the floor. {flag(red_ink_glimpse): The robes are the ones from the stair, two sizes too big.|Her notes, you can see from the aisle, are perfect.}
+> left: Sit by her afterwards, and write
+  study -tiny
   lore +small
-  flag red_ink_seen_hand
-  queue lecture_tower_red_ink_office in 1
-  say: You take the notes and leave the reading list in your satchel. It looks at you every time you open it.
+  flag red_ink_met
+  queue lecture_tower_red_ink_seminar in 1
+  say: You sit down beside her after the hall empties and slide your last essay across, without a word. She writes on it for twenty minutes without looking up. At the bottom: "Seminar on Thursday. I have to speak. I can't."
+> right: Leave her the secret
+  lore +tiny
+  mood +tiny
+  flag red_ink_met
+  queue lecture_tower_red_ink_seminar in 1
+  say: You walk on, and leave your next essay on the stair as usual. It comes back with the usual red, and one line more at the bottom: "Seminar on Thursday. I have to speak. Please don't come."
 
-@event lecture_tower_red_ink_office
-title: Improper Marking
+@event lecture_tower_red_ink_seminar
+title: Thursday's Seminar
 thread: red_ink
 trigger: queued
 slot: afternoon
 class: milestone
 tone: warm
-actor: thorne
-when: flag(red_ink_seen_hand)
+when: flag(red_ink_met)
 art: scroll
-scene: An old professor at a cluttered office desk looking down at a stack of red-inked essays, a capped red pen in his trembling hand.
-text: Office hours. You put the stack of red-inked essays on Thorne's desk. He looks at them a long time. "Improper," he says. "Marking essays that aren't mine. I write very few letters, you understand. I like to know who I'm writing them for."
-> left: "Then write one for me."
-  challenge appeal master- +1 if rel(thorne) >= 15:
+scene: A small seminar room, a first-year frozen at a lectern holding her paper in both hands, a dozen students waiting, one older student at the back half out of their seat.
+text: Thursday. The first-year stands at the seminar lectern with her paper in both hands and no voice at all. A dozen students wait. The lecturer looks at the clock. Her eyes find you at the back of the room.
+> left: Stand up and argue with her paper
+  challenge research apprentice+:
     win:
-      rel thorne +medium
+      lore +small
       renown +small
-      flag thorne_letter
-      say: "Hm." From him, that's a yes. The letter, when it goes, is four lines long. The Conclave, you hear later, read it twice.
+      say: You stand and say her fourth paragraph is wrong. It isn't, and she knows it, and she's so annoyed she forgets to be frightened. She takes your objection apart for ten minutes. The room applauds, mostly for her.
     lose:
-      rel thorne +small
-      say: "Not yet," he says. "Again. Properly." It takes you a day to understand that it was a promise.
+      mood -small
+      lore +tiny
+      say: You stand and object, and your objection is bad, and she's too polite to say so out loud. She sits down without reading. Your essay comes back that week with one line of red: "Good try. Bad argument."
   flag red_ink_finished
-> right: "Thank you. Keep marking them."
-  rel thorne +medium
-  lore +small
+> right: Offer to read it for her
+  mood +small
+  renown -tiny
   flag red_ink_finished
-  say: He nods once. The red ink keeps coming to the end of the year. It never once says "good". Once, it says "better".
+  say: You walk to the front and hold out your hand. She shakes her head, then gives you the first page. You read the first paragraph aloud. She takes the second page back, and reads the rest herself, quietly, all the way to the end.
 
 # ---------------- The late bloomer ----------------
 
@@ -272,36 +270,36 @@ members:
   start home_market_late_bloomer
 
 @event home_market_late_bloomer
-title: Blue Candles
+title: The Cold Stove
 place: home_market
 tone: warm
 when: not flag(bloomer_begun)
 repeat: 4
 weight: 16
-art: candle
-scene: A small sweet shop window full of jars, every candle in it flaring blue, a young woman staring at her own hands beside a dropped tray.
-text: The sweet shop is the one thing in town that hasn't changed. Then the owner's daughter, a year or two older than you, drops a tray, swears, and every candle in the window flares blue. Her father looks at you, then at your castle robes. "You're the one who'd know," he says quietly.
+art: cauldron
+scene: The back of a small sweet shop, a copper sugar pan boiling over into dark caramel on a stove with no fire in it, a young woman staring at her own hands.
+text: The sweet shop is the one thing in town that hasn't changed. Then the owner's daughter, a year or two older than you, bangs down a ladle and swears, and the sugar pan on the cold stove boils over into caramel. There is no fire under it. Her father looks at you, then at your castle robes. "You're the one who'd know," he says quietly.
 > left: Show her how to breathe it down
   mana -small
   arcana +small
   flag bloomer_begun
   find lead_late_bloomer
-  say: You show her the first thing anyone at the castle learns: breathe in for four, hold the heat, let it go for four. The candles settle. She looks at her hands as if they belonged to someone else.
+  say: You show her the first thing anyone at the castle learns: breathe in for four, hold the heat, let it go for four. The pan stops seething. She looks at her hands as if they belonged to someone else.
 > right: "It happens. It'll settle."
   mood -tiny
-  say: Her father nods, glad to be told so. Behind him she relights the candles one by one, with a match, very carefully.
+  say: Her father nods, glad to be told so. Behind him she scrapes the burned sugar out of the pan, very carefully, and doesn't go near the stove again.
 
 @event home_fields_bloomer_lessons
-title: Lessons on the Wall
+title: Where Nothing Can Catch
 thread: late_bloomer
 place: home_fields
 tone: light
 when: not flag(bloomer_steady)
 weight: 16
 art: flame
-scene: A young woman and a student in castle robes on a low field wall at sunset, the young woman holding a candle stub at arm's length, its flame far too tall.
-text: She's waiting on the low wall at the end of the long rows, a candle stub in each pocket. "Teach me something," she says. "Properly. Before you go back."
-> left: Teach her the candle drill
+scene: A young woman and a student in castle robes on a bare, stony patch past the last field row at sunset, the young woman holding a candle stub at arm's length, its flame far too tall.
+text: She's waiting past the last of the long rows, where the ground is all stones and nothing can catch, with a candle stub in each pocket. "Teach me something," she says. "Properly. Before you go back."
+> left: Teach her to keep a flame small
   challenge spell apprentice+:
     win:
       arcana +small
@@ -350,20 +348,19 @@ when: flag(bloomer_father_seen) and not flag(bloomer_charm_done)
 defer: not has(plan_home)
 art: gem
 scene: A market charm seller holding up a grey glass bead on a cord to a young woman counting coins from her apron.
-text: In the market you find her at the charm seller's table. He's holding up a grey glass bead on a cord. "Smothers it," he's saying. "Like a lid on a pot. No more flares, no more fuss." She's counting out her savings.
-> left: Help her pay, since she wants it
-  gold -small
+text: In the market you find her at the charm seller's stall. He's holding up a grey glass bead on a cord. "Lumenhold-blessed," he's saying. "Smothers it, like a lid on a pot. No more flares, no more fuss." It's plain glass; you can see that from here. She's counting out her savings.
+> left: Let her believe in it
   mood -small
   flag bloomer_damped
   flag bloomer_charm_done
   queue home_cottage_bloomer_letter in 1
-  say: You make up what she's short, because it's her choice. She puts the bead on. The shop's candles burn an ordinary yellow from then on. She looks lighter, and smaller.
-> right: Talk her out of it
+  say: You say nothing. She buys it and puts it on. It's only glass, but she believes in it, and the sugar pans stay cold all week. She looks lighter, and smaller.
+> right: Tell her it's only glass
   challenge appeal apprentice+:
     win:
       charm +small
       queue home_market_bloomer_ice now
-      say: You tell her about the first-years who set their sleeves alight and are now the best in their year. She puts her coins back in her apron, slowly.
+      say: "It's glass," you tell her. "You did the hard part yourself, out past the fields." The charm seller gives you the look of a man revising his prices. She puts her coins back in her apron, slowly.
     lose:
       mood -small
       flag bloomer_damped
@@ -416,15 +413,15 @@ tone: warm
 when: flag(bloomer_charm_done) and (flag(bloomer_ice_done) or flag(bloomer_damped)) and not flag(bloomer_finished)
 art: candle
 scene: A young woman at a cottage table at evening, a small steady candle flame burning on the tip of her finger.
-text: {flag(bloomer_damped): She comes by one evening, the grey bead on its cord. "I keep it in my pocket now," she says. "Not on. Just in case." She lights a candle with her finger, small and steady, to show you.|She comes by one evening with a candle she lit at noon and has kept burning, small and steady, all day. "Look," she says. "It stays."}
+text: {flag(bloomer_damped): She comes by one evening, the grey bead on its cord. "I know it's only glass," she says. "I keep it in my pocket anyway." She lights a candle with her finger, small and steady, to show you.|She comes by one evening with a candle she lit at noon and has kept burning, small and steady, all day. "Look," she says. "It stays."}
 > left: Write to the castle for her
   gold -tiny
   mood +medium
   flag bloomer_letter
   flag bloomer_finished
   say: {flag(bloomer_promise): You keep your promise to her father and write to the castle that night|You write to the castle that night}: what she can do, what she learned with no teacher but you, and that some people come late to things. You pay the postage; she walks it to the post office herself.
-> right: Give her your first-year book
+> right: Leave her your practice candle
   study -tiny
   mood +medium
   flag bloomer_finished
-  say: {flag(bloomer_promise): You never did ask at the castle. Instead you leave her your battered first-year book, margins and all.|You leave her your battered first-year book, margins and all.} A week later a letter comes: "Your notes are wrong. I've fixed them."
+  say: {flag(bloomer_promise): You never did ask at the castle. Instead you leave her|You leave her} the practice candle you've had since your first week, the one you learned on, burned down to a stub. A month later a letter comes with a drawing of the stub, still lit.
