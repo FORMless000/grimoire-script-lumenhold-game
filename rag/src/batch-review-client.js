@@ -18,7 +18,7 @@ function pretty(v){return JSON.stringify(v,null,2);}
 const previewSelections=new Map();
 function effectLabel(effect,card){const s=effect,stat=ReviewPreview.stat(s,card.mechanics);if(stat)return stat.label+' '+stat.amount+(stat.xp?' XP':'')+(stat.tier?' · '+stat.tier:'');switch(s.t){
   case 'preset':return s.name+' '+(s.args||[]).join(' ');
-  case 'queue':return 'Queue '+(s.event||'tag:'+s.tagged)+(s.now?' now':s.delay?' in '+s.delay.src:s.window?' within '+s.window.from+'…'+s.window.to:'')+(s.byMonth?' by month '+s.byMonth.src:'')+(s.with?' with '+s.with:'')+(s.chanceWord?' · '+s.chanceWord:s.chance!=null?' · chance '+s.chance:'');
+  case 'queue':return 'Queue '+(s.event||(s.pool?'pool:'+s.pool:'tag:'+s.tagged))+(s.now?' now':s.delay?' in '+s.delay.src:s.window?' within '+s.window.from+'…'+s.window.to:'')+(s.byMonth?' by month '+s.byMonth.src:'')+(s.with?' with '+s.with:'')+(s.chanceWord?' · '+s.chanceWord:s.chance!=null?' · chance '+s.chance:'');
   case 'flag':case 'unflag':return t(s.t)+' '+(s.names||[]).join(' ');
   default:return Object.entries(s).filter(([k])=>!['t','line','body','else','block','legacy'].includes(k)).map(([k,v])=>k+': '+(v&&typeof v==='object'?v.src||JSON.stringify(v):v)).reduce((out,part)=>out+' · '+part,t(s.t));
 }}

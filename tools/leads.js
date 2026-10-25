@@ -70,7 +70,7 @@ const ACT_RE = /\b(meet(s|ing)?|come (to|by|and)|visit|go (to|and|back)|waiting 
 function queued(content) {
   const out = [];
   const scan = (from, kind, effects, sayText) => G.walkEffects(effects || [], (st) => {
-    if (st.t !== 'queue' || st.now || st.chance != null || st.chanceWord || st.tagged) return;
+    if (st.t !== 'queue' || st.now || st.chance != null || st.chanceWord || st.tagged || st.pool) return;
     const timed = st.window || st.byMonth || !st.delay || !(st.delay.ast && st.delay.ast.t === 'num' && st.delay.ast.v === 0);
     if (!timed) return;
     const target = content.events[st.event]; if (!target) return;

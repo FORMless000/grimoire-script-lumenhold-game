@@ -86,7 +86,7 @@ function reach(content) {
         case 'discover': F.place.add(st.place); break;
         case 'meet': case 'rel': case 'spark': case 'bond': if (st.npc && c.npcs[st.npc]) F.npc.add(st.npc); break;
         case 'queue':
-          if (st.tagged) { for (const e of Object.values(c.events)) if (e.trigger === 'queued' && (e.tags || []).includes(st.tagged)) F.queued.add(e.id); }   // a pool queue reaches the whole pool
+          if (st.tagged || st.pool) { for (const e of G.deckOf(c, st)) F.queued.add(e.id); }   // a pool queue reaches the whole pool
           else F.queued.add(st.event || st.target);
           break;
         case 'end': F.ending.add(st.ending); break;

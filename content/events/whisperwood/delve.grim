@@ -46,7 +46,7 @@ text: {ww_deepest == 0: The path through the Whisperwood is safe, everyone says.
     ww_depth = 1
   if seen(jit_maud_warning) == 0 and not flag(skip_intros):
     queue jit_maud_warning now
-  queue any tagged ww now
+  queue any in ww_delve now
   say: {flag(ww_stag_friend): A shadow moves between the trunks and waits. You follow it down past the easy places, into the heartwood.|{flag(ww_trail): You find the first little carved bee on a birch, and follow the trail straight into the thicket.|{bonds_around(partner) + bonds_around(close) > 0: You step off the path, and someone you trust steps off after you.|You step off the path. The mutter of the wood drops to a whisper.}}}
 
 @event ww_edge_night
@@ -78,7 +78,7 @@ text: {flag(ww_hush_seen): The wood at midnight, and deep in it the Hush, awake 
     ww_depth = 3
   else:
     ww_depth = 1
-  queue any tagged ww now
+  queue any in ww_delve now
   say: {flag(ww_mastery): You follow Maud's map down by moonlight, past everything that would have stopped you once.|{flag(ww_stag_friend): The shadow stag is waiting by the path, darker than the dark. It leads you down.|You step off the path. At midnight the wood is a different wood, and it knows you came.}}
 
 @event ww_night_first
@@ -167,7 +167,7 @@ text: {~You go down hard, and something spills out of your bag into the dark. Wh
   say: {~You pick up what's left and limp back toward the light.|You decide the wood has made its point.|You turn back, and the wood lets you, this time.}
 > right: Get up and go on
   hint: Deeper: the next fall may not be kind.
-  queue any tagged ww now
+  queue any in ww_delve now
   say: {~You brush off the leaves and go on, a little slower.|You get up. The wood seems surprised, and then interested.|You go on. Somewhere behind you, something stops following.}
 
 @event ww_lost
@@ -205,9 +205,12 @@ text: {ww_hush == 1: You don't remember the rest of the night. At grey dawn a la
 
 # ---------------- Band 1: the Fringe (depth 1–2, apprentice) ----------------
 
+@thread ww_delve
+from: scene
+
 @event ww1_forage
 title: The Mushroom Ring
-trigger: queued
+thread: ww_delve
 class: routine
 tone: light
 when: ww_depth >= 1 and ww_depth <= 2
@@ -225,12 +228,12 @@ text: {season == "autumn": A fairy ring in full flush, caps as big as saucers, m
   if season == "autumn":
     ww_haul += 1
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You pick from the outside, kneeling in cold moss. Your knees are soaked and your bag is heavier.|You reach in for the best cap without stepping in. Something in the ring sighs. You move on, briskly.}
 
 @event ww1_bramble_ferret
 title: Something in Your Bag
-trigger: queued
+thread: ww_delve
 class: routine
 tone: light
 when: ww_depth >= 1 and ww_depth <= 2
@@ -249,7 +252,7 @@ text: A bramble ferret has got into your bag, and is eating {ww_haul > 0: your b
     win:
       ww_haul += 1
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~It bolts, dropping what it stole and something shiny it stole earlier. You take both.|It gives up with a furious chitter and leaves behind its own hoard of nuts and one silver button.}
     lose:
       if ww_grace > 0:
@@ -259,12 +262,12 @@ text: A bramble ferret has got into your bag, and is eating {ww_haul > 0: your b
       say: {~It nips, dodges, nips, and is gone with your bag's best corner. You're bleeding from places you didn't know could.|You never land a thing on it. It leaves you in the bracken, panting and full of small holes.}
 > up[item:honey_tin]: Bribe it with honey
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You open Maud's honey tin and hold out a fingerful. The ferret forgets the bag entirely, eats the honey, and follows you a mile, hoping.|One sniff of the silver-bee honey and the ferret is your friend for life, or at least until the honey runs out.}
 
 @event ww1_bristleback
 title: The Bristleback
-trigger: queued
+thread: ww_delve
 class: routine
 tone: tense
 when: ww_depth >= 1 and ww_depth <= 2
@@ -282,7 +285,7 @@ text: A bristleback rears up out of the blackberries: a bear with a ridge of qui
     win:
       renown +tiny
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~It decides you're not worth the trouble and lumbers off with great dignity. Word gets round the foragers that you saw off a bristleback.|You weather three swings and land enough to make it think again. It goes, grumbling, and you go on, shaking.}
     lose:
       if ww_grace > 0:
@@ -292,12 +295,12 @@ text: A bristleback rears up out of the blackberries: a bear with a ridge of qui
       say: {~You see the swing coming the whole way and still don't move fast enough.|It knocks you into the blackberries, which is somehow the worst part.}
 > up[flame]: Wave fire at it
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~One flare of flame and the bristleback remembers an appointment elsewhere.|You light the air between you. It snorts at the smoke, deeply offended, and leaves.}
 
 @event ww1_bog
 title: The Sucking Bog
-trigger: queued
+thread: ww_delve
 class: routine
 tone: tense
 when: ww_depth >= 1 and ww_depth <= 2
@@ -314,7 +317,7 @@ text: The moss looks solid until you're on it. Then you're knee-deep in black wa
   challenge feat apprentice:
     win:
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You wade, haul, wade and come out the far side, black to the thighs and still going.|You find the tussocks under the water by feel, and cross like a heron. A muddy heron.}
     lose:
       if ww_grace > 0:
@@ -324,12 +327,12 @@ text: The moss looks solid until you're on it. Then you're knee-deep in black wa
       say: {~The bog takes you to the waist, then to the chest. You get out, eventually, much colder and much humbler.|You lose your footing and go under. You come up spitting moss.}
 > up[tailwind]: Skim across
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~A gust under your feet and you skim the bog like a skipped stone. The frogs are very impressed.|You call a wind and run on it. Your boots barely get damp.}
 
 @event ww1_pixie_toll
 title: The Toll Stone
-trigger: queued
+thread: ww_delve
 class: routine
 tone: light
 when: ww_depth >= 1 and ww_depth <= 2
@@ -346,7 +349,7 @@ text: Three pixies sit on a mossy stone across the path. "Toll," says the smalle
     win:
       ww_haul += 1
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You argue them down to a compliment and a button, and they're so pleased they throw in a dropped cap from the ring.|You convince them that you are the toll, coming the other way. They pay you, confused, and wave you on.}
     lose:
       if ww_grace > 0:
@@ -357,12 +360,12 @@ text: Three pixies sit on a mossy stone across the path. "Toll," says the smalle
 > up[glamour]: Pay in fairy gold
   alignment -tiny
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You pay in coins that will be leaves by morning. They bite them, nod, and let you by. You feel a little guilty, and a little proud.|You glamour a pebble into a crown. The smallest pixie looks at you for a long moment, then pockets it. Professional courtesy.}
 
 @event ww1_lost_firstyear
 title: A First-Year in the Ferns
-trigger: queued
+thread: ww_delve
 class: routine
 tone: warm
 when: ww_depth >= 1 and ww_depth <= 2
@@ -378,12 +381,12 @@ text: A first-year is sitting in the ferns, holding a library book on edible fun
 > right: Point the way and press on
   mood -tiny
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You point them back toward the path and go on. You look back once. They're walking the right way. Probably.|You draw them a map on the flyleaf of the library book and go on. It's a good map. You keep thinking about it anyway.}
 
 @event ww1_hollow_whisper
 title: The Riddling Hollow
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 1 and ww_depth <= 2
@@ -400,7 +403,7 @@ text: A hollow oak whispers as you pass. It's asking a riddle, the same one over
     win:
       lore +small
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You answer, and argue the point when it quibbles. The oak goes quiet, then tells you something about the wood that you'll understand in a fortnight.|"Close enough," it sighs, and opens a path you hadn't seen.}
     lose:
       if ww_grace > 0:
@@ -411,7 +414,7 @@ text: A hollow oak whispers as you pass. It's asking a riddle, the same one over
 
 @event ww1_quiet_path
 title: The Path Runs On
-trigger: queued
+thread: ww_delve
 class: routine
 tone: warm
 when: ww_depth >= 1 and ww_depth <= 2
@@ -425,12 +428,12 @@ text: {~A deer path, winding and quiet, with the castle bells faint behind you.|
   say: {~You turn round while the going is good, and are home before the light changes.|You take the quiet as a hint and head back.|You turn back at the stream, with dry feet and a clear head.}
 > right: Go on
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You walk on, deeper, and the birdsong thins.|You go on, deeper, and the wood stops being only a wood.|You go on. The bells behind you stop being audible somewhere around the stream.}
 
 @event ww1_maud_blaze
 title: The Little Carved Bees
-trigger: queued
+thread: ww_delve
 class: routine
 tone: warm
 when: ww_depth >= 1 and ww_depth <= 2 and not flag(ww_trail)
@@ -446,7 +449,7 @@ text: On a birch, at knee height, someone has carved a tiny bee. There's another
     win:
       flag ww_trail
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~Bee to bee, a mile in, the trail drops straight past the fringe to the thicket's edge. Next time you can start here. You know exactly whose bees these are.|You lose the trail twice and find it twice. By the end you could walk it blind.}
     lose:
       if ww_grace > 0:
@@ -457,7 +460,7 @@ text: On a birch, at knee height, someone has carved a tiny bee. There's another
 
 @event ww1_owl_feather
 title: The Barn Owl's Tree
-trigger: queued
+thread: ww_delve
 class: routine
 tone: light
 when: ww_depth >= 1 and ww_depth <= 2 and not has_item(owl_quill)
@@ -473,7 +476,7 @@ text: High in a dead oak, a single barn-owl feather is caught on a twig, white a
     win:
       give owl_quill
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You climb, reach, nearly fall, reach again. You come down with the feather and a fine view of the castle. Cut to a nib, it will make a quill worth having.|The branch breaks just as your fingers close. You land in leaves, feather intact.}
     lose:
       if ww_grace > 0:
@@ -484,7 +487,7 @@ text: High in a dead oak, a single barn-owl feather is caught on a twig, white a
 
 @event ww1_brask_bows
 title: Brask in the Bracken
-trigger: queued
+thread: ww_delve
 class: routine
 tone: warm
 when: ww_depth >= 1 and ww_depth <= 2 and not flag(ww_bowed) and term
@@ -501,14 +504,14 @@ text: Professor Brask is standing in the bracken, bowing deeply to nothing you c
   rel brask +small
   flag ww_bowed
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You bow, low, and hold it until Brask straightens. Something in the bracken moves away, satisfied. "Good," says Brask. "Do that to everything down there. Most of it's older than manners."|You bow. Brask nods once. "Now the wood knows your face," she says, and walks off, which is apparently the lesson.}
 
 # ---------------- Band 2: the Thicket (depth 3–4, journeyman) ----------------
 
 @event ww2_grumpy_oak
 title: The Oak You Kicked
-trigger: queued
+thread: ww_delve
 class: routine
 tone: light
 when: ww_depth >= 3 and ww_depth <= 4
@@ -525,14 +528,14 @@ text: You stub your toe on a root, and say something about it. The root's oak ta
     win:
       ww_haul += 1
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You apologise to the oak at length, with references. It harrumphs, drops you an acorn the size of a fist as a mark of favour, and lets you by.|Your apology is so formal that the oak is moved. It lifts its root for you, and a hoard of truffles under it.}
     lose:
       queue ww2_grumpy_oak_fight now
       say: {~The apology goes badly. It turns out you also stood on its cousin.|The oak hears you out and then creaks something that is very clearly "no".}
 > up[item:heartwood_wand]: Show the heartwood
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You hold up the heartwood wand. The oak's scowl softens into something almost grandfatherly, and it lifts a root to let you by.|The oak sees the heartwood and goes quiet. Then it bows, creaking, and steps aside.}
 
 @event ww2_grumpy_oak_fight
@@ -556,7 +559,7 @@ text: The oak's roots come up out of the path and close round your ankles, and a
   challenge combat journeyman+:
     win:
       ww_depth += 1
-      queue any tagged ww now
+      queue any in ww_delve now
       say: {~You burn, hack and dodge until the oak decides it's had enough exercise for one century, and goes back to scowling at nothing.|The bough comes down where you were. The oak stops, as if surprised that you're still here, and lets you go on.}
     lose:
       if ww_grace > 0:
@@ -567,7 +570,7 @@ text: The oak's roots come up out of the path and close round your ankles, and a
 
 @event ww2_briar_maze
 title: The Thorn Maze
-trigger: queued
+thread: ww_delve
 class: routine
 tone: tense
 when: ww_depth >= 3 and ww_depth <= 4
@@ -584,7 +587,7 @@ text: The briars here have grown into walls taller than you, with corridors betw
     win:
       lore +tiny
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~Left at every fork, then right at the one with the dead rose: the old gardener's rule, and now you know it. You come out the far side scratched but triumphant.|You notice that the moss grows on the side the old gardener wanted you to see, and follow it through.}
     lose:
       if ww_grace > 0:
@@ -594,12 +597,12 @@ text: The briars here have grown into walls taller than you, with corridors betw
       say: {~The corridors turn back on themselves until you're dizzy. You come out bleeding from a hundred tiny cuts.|You take a wrong turn into a dead end so full of thorns it has its own weather.}
 > up[item:lodestone_pendant]: Follow the lodestone
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~The lodestone turns, steady and patient, and you follow it through every fork without a scratch.|You let the pendant lead. It knows north, and north is through.}
 
 @event ww2_stag_beetle
 title: The Stag Beetle
-trigger: queued
+thread: ww_delve
 class: routine
 tone: tense
 when: ww_depth >= 3 and ww_depth <= 4
@@ -617,7 +620,7 @@ text: A stag beetle the size of a pony is guarding a fallen log. Its jaws are as
     win:
       ww_haul += 2
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~It charges, misses, charges, misses, and gives up in disgust, shedding a wing-case like polished jet. Pell will weep.|You catch it mid-charge. It retreats under its log, leaving a wing-case and some dignity behind.}
     lose:
       if ww_grace > 0:
@@ -627,12 +630,12 @@ text: A stag beetle the size of a pony is guarding a fallen log. Its jaws are as
       say: {~The second charge catches you square. You fly further than you ever have on a broom.|It charges. You dodge the wrong way. You see a great many leaves, very fast.}
 > up[shadowstep]: Step out of its way
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You step sideways into shadow just as it charges. It thunders past into a tree and stays there, thinking about it.|You blink out of its path and it charges straight through where you were. You leave while it's still confused.}
 
 @event ww2_fog_wall
 title: The Fog Wall
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 3 and ww_depth <= 4
@@ -649,19 +652,19 @@ text: The fog in front of you isn't drifting. It's standing, like a wall, and wh
     win:
       arcana +tiny
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You push, and the fog parts like a curtain, sulkily, and lets you through. You'll remember how it gave.|You find the knot at the heart of the fog and pick it. The wall unravels into ordinary mist.}
     lose:
       queue ww_way_home now
       say: {~The fog swallows you, turns you round three times and puts you out at the edge of the wood, exactly where you started. It wasn't unkind about it.|You walk into the fog and out of it again, a mile back toward the castle. The wood is done with you for today.}
 > up[item:stag_tine]: Raise the tine
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You hold up the stag's tine and the fog draws back from it as from a lantern.|The fog sees the tine and parts, politely, the way a crowd parts for a duchess.}
 
 @event ww2_waystone
 title: The Waystone
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 3 and ww_depth <= 4
@@ -682,17 +685,17 @@ text: A standing stone, worn smooth, with offerings heaped at its foot: hazelnut
     gold -tiny
   ww_grace += 1
   ww_depth += 1
-  queue any tagged ww now
+  next
 > up[sleight]: Palm a few offerings
   alignment -small
   ww_haul += 2
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~Nobody's looking. A copper, a ribbon, a handful of nuts slip into your bag. The wood goes very quiet as you walk on.|You palm the old crown. It's cold in your pocket for the rest of the day, and something keeps pace with you, just out of sight.}
 
 @event ww2_lodestone
 title: The Iron Hollow
-trigger: queued
+thread: ww_delve
 class: routine
 tone: light
 when: ww_depth >= 3 and ww_depth <= 4 and not has_item(lodestone_pendant)
@@ -708,7 +711,7 @@ text: In this hollow every fallen leaf lies pointing the same way, and your boot
     win:
       give lodestone_pendant
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You dig until your nails are black and work it free. It turns, slowly, in your palm, to face north. A bit of cord and it's a pendant.|It comes up with a sucking sound and a lot of roots. In your hand it turns, gently, like a compass waking.}
     lose:
       if ww_grace > 0:
@@ -719,7 +722,7 @@ text: In this hollow every fallen leaf lies pointing the same way, and your boot
 
 @event ww2_stone_words
 title: Words on a Stone
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 3 and ww_depth <= 4 and spell_level(lodestar) < 1
@@ -735,7 +738,7 @@ text: A flat stone, mossed over, with letters carved deep in it. When you scrape
     win:
       learn_spell lodestar
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You read it three times and the light begins to gather at your shoulders. Lodestar. It feels like being walked home.|It takes an hour on your knees in the moss. By the end, light gathers when you breathe in, and stays.}
     lose:
       if ww_grace > 0:
@@ -746,7 +749,7 @@ text: A flat stone, mossed over, with letters carved deep in it. When you scrape
 
 @event ww2_thornwitch
 title: The Woman Among the Thorns
-trigger: queued
+thread: ww_delve
 class: routine
 tone: grim
 when: ww_depth >= 3 and ww_depth <= 4
@@ -771,7 +774,7 @@ text: A thin woman in a cloak sewn with thorns has her palm on a birch, and the 
     win:
       alignment +small
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You drive her off the birch and into the thorns. She goes, cursing, and the birch puts out one green leaf. You'll tell Brask.|She runs. The birch is too far gone, but the next one won't be. Brask will want to know.}
     lose:
       queue ww_lost now
@@ -797,7 +800,7 @@ text: Brambles come up out of the ground at her gesture. She's going to try Siph
     win:
       alignment +small
       ww_depth += 1
-      queue any tagged ww now
+      queue any in ww_delve now
       say: {~You break her hold and she breaks, fleeing into the thorns. The birch behind her is grey, but you'll tell Brask, and it won't happen here again.|She goes down into the brambles and doesn't come up. When you look, she's gone, and so are the thorns.}
     lose:
       queue ww_lost now
@@ -816,7 +819,7 @@ text: "You have nerve," the thornwitch says. "I could use an apprentice with ner
 > left: Tell her to go
   alignment +small
   ww_depth += 1
-  queue any tagged ww now
+  queue any in ww_delve now
   say: {~"Go," you say, "and don't come back to this wood." She shrugs, as if you'd refused a biscuit, and walks off into the thorns. You'll tell Brask.|She looks at you for a long time. Then she goes, and the thorns go with her.}
 > right: Take the lesson
   hint: A forbidden spell, and a wand that wants using.
@@ -826,12 +829,12 @@ text: "You have nerve," the thornwitch says. "I could use an apprentice with ner
   if not has_item(thorn_wand):
     give thorn_wand
   ww_depth += 1
-  queue any tagged ww now
+  queue any in ww_delve now
   say: {~She shows you. It's easy, which is the worst part. You walk on with the thorn wand in your belt and a dead birch behind you.|You learn it on a fern, which curls and greys. "There," she says. "Now you know something they don't." The thorn wand pricks your palm.}
 
 @event ww2_embers_kin
 title: Ember's Kin
-trigger: queued
+thread: ww_delve
 class: routine
 tone: warm
 when: ww_depth >= 3 and ww_depth <= 4 and not flag(ww_fox_guide)
@@ -848,7 +851,7 @@ text: A ring of small foxes is sitting in the dark, tails glowing like banked co
     win:
       flag ww_fox_guide
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You talk, they yip, and the eldest decides you'll do. From now on, a small smouldering tail will turn up whenever you step off the path, and steer you out of the worst of it.|You trade news for news. The foxes are terrible gossips. One of them will walk with you from now on.}
     lose:
       if ww_grace > 0:
@@ -859,12 +862,12 @@ text: A ring of small foxes is sitting in the dark, tails glowing like banked co
 > up[rapport]: Meet them as equals
   flag ww_fox_guide
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You sit down in their ring as if you'd been invited, and talk to them like old friends. They're delighted. From now on, one of them walks with you whenever you step off the path.|The eldest laughs, a fox's laugh. "Manners," it says. "At last." One of them will walk with you now.}
 
 @event ww2_stag_tine
 title: The Shed Tine
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 3 and ww_depth <= 4 and flag(ww_bowed) and not has_item(stag_tine)
@@ -880,7 +883,7 @@ text: In a ring of stones lies a single tine from the shadow stag's antlers, she
     win:
       give stag_tine
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~It weighs as much as a sack of flour and as little as a feather, depending on how you hold it. You find the right way. Wild things will look at it before they look at you.|You lift it. Somewhere in the wood, something very large breathes out, satisfied.}
     lose:
       if ww_grace > 0:
@@ -891,7 +894,7 @@ text: In a ring of stones lies a single tine from the shadow stag's antlers, she
 
 @event ww2_deer_path
 title: Deeper
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 3 and ww_depth <= 4
@@ -906,14 +909,14 @@ text: {~The thicket closes overhead and the daylight goes green, then grey.|Pale
 > right: Go deeper
   ww_haul += 1
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You pick glowing caps from the trunks as you go, and your fingers glow for an hour.|You gather pale fungus from the lamp-rings, and the trees let you.|Down the flagstones, gathering what grows between them.}
 
 # ---------------- Band 3: the Heartwood (depth 5–6, adept) ----------------
 
 @event ww3_shadow_stag
 title: The Shadow Stag
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 5 and ww_depth <= 6 and not flag(ww_stag_friend)
@@ -930,13 +933,13 @@ text: The shadow stag stands across the way, a stag-shaped hole in the light wit
   if flag(ww_bowed):
     flag ww_stag_friend
     ww_depth += 1
-    queue any tagged ww now
+    next
   else:
     challenge negotiate adept:
       win:
         flag ww_stag_friend
         ww_depth += 1
-        queue any tagged ww now
+        next
       lose:
         queue ww3_shadow_stag_fight now
   say: {flag(ww_stag_friend): You bow and don't look away, and the stag lowers its great head. From now on it'll meet you at the edge and walk you down past the easy places.|You bow and hold its gaze too long. The stag lowers its antlers, not in greeting.}
@@ -960,7 +963,7 @@ text: The stag lowers its antlers. Brask would tell you to run. Brask would also
     win:
       alignment -small
       ww_depth += 1
-      queue any tagged ww now
+      queue any in ww_delve now
       say: {~It turns away at last, wounded more in its pride than its shadow. You go on, but the wood feels colder, as if you'd broken something it liked.|You drive it off. Nothing about that feels like winning.}
     lose:
       if ww_grace > 0:
@@ -971,7 +974,7 @@ text: The stag lowers its antlers. Brask would tell you to run. Brask would also
 
 @event ww3_elder_oak
 title: The Elder Oak
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 5 and ww_depth <= 6 and not flag(ww_heartwood)
@@ -989,7 +992,7 @@ text: The elder oak is so old the other trees grow round it like courtiers. Its 
       flag ww_heartwood
       find lead_heartwood
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~It considers you for so long you think it's fallen asleep. Then a splinter of heartwood, red-gold and warm, drops into your hand. Mir could carve this.|"Use it well," it creaks, "or not at all." The splinter in your palm is warm as a living thing.}
     lose:
       queue ww3_elder_oak_fight now
@@ -1014,7 +1017,7 @@ text: The elder oak doesn't hurry. It lifts one great bough, slowly, and you hav
   challenge combat adept+:
     win:
       ww_depth += 1
-      queue any tagged ww now
+      queue any in ww_delve now
       say: {~You weather every fall, and the oak stops, surprised. It doesn't give you any heartwood. It doesn't stop you going on, either.|The oak lets the last bough rest. You've won nothing but the right to pass.}
     lose:
       if ww_grace > 0:
@@ -1025,7 +1028,7 @@ text: The elder oak doesn't hurry. It lifts one great bough, slowly, and you hav
 
 @event ww3_masked_circle
 title: The Masked Circle
-trigger: queued
+thread: ww_delve
 class: routine
 tone: grim
 when: ww_depth >= 5 and ww_depth <= 6
@@ -1051,7 +1054,7 @@ text: Three figures in plain white masks stand in a chalk circle, practising on 
       renown +small
       alignment +small
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You scatter them. They run, masks askew, into the trees. The hare is gone before you can look. You'll tell the headmistress.|One loses a mask as they run. You don't see the face. You do see the chalk, and scuff it out.}
     lose:
       queue ww_lost now
@@ -1070,7 +1073,7 @@ text: Inside the circle, the masked three are friendly, which is worse. "It's ca
 > left: Let the hare go and leave
   alignment +small
   ww_depth += 1
-  queue any tagged ww now
+  queue any in ww_delve now
   say: {~You scoop up the hare on your way out of the circle, and nobody stops you, because you walk like you're allowed. Behind you they argue about who you were.|You let the hare go and walk on. They don't follow. They don't know who you are, which is the only thing they've got right.}
 > right: Learn the word
   hint: A forbidden spell.
@@ -1078,12 +1081,12 @@ text: Inside the circle, the masked three are friendly, which is worse. "It's ca
   if spell_level(compel) < 1:
     learn_spell compel
   ww_depth += 1
-  queue any tagged ww now
+  queue any in ww_delve now
   say: {~You learn it on the hare. It works the first time. You walk on with the word in your mouth like a stone.|"Again," you say, and the hare does. The masks nod. You leave before they can see your face, or you theirs.}
 
 @event ww3_always_midnight
 title: Where It's Always Midnight
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 5 and ww_depth <= 6 and ww_hush == 0 and spell_level(moonwell) < 1
@@ -1105,7 +1108,7 @@ text: You step into a clearing and it's midnight: stars overhead, though it's da
       find lead_the_hush
       ww_haul += 2
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You skim the moonlight off the water like cream, the way you'd skim a potion. It settles in you, slow and free. Moonwell. The flowers stay shut: not their hour. Midnight, they seem to say. Come back at midnight.|You drink the light, not the water. It fills you slowly, like a basin. Around you the moonpetal waits for midnight.}
     lose:
       if ww_grace > 0:
@@ -1116,7 +1119,7 @@ text: You step into a clearing and it's midnight: stars overhead, though it's da
 
 @event ww3_other_sky
 title: The Other Sky
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 5 and ww_depth <= 6 and spell_level(reflect) < 1
@@ -1132,7 +1135,7 @@ text: A pool so still it's a mirror, except that it reflects the wrong sky: anot
     win:
       learn_spell reflect
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~It's throwing back what's cast at it, all of it, from wherever it comes. You learn the trick of it with a pebble, then with a spark. Reflect.|You watch until your reflection catches up. Then you understand: it gives everything back. You take the lesson with you.}
     lose:
       if ww_grace > 0:
@@ -1145,7 +1148,7 @@ text: A pool so still it's a mirror, except that it reflects the wrong sky: anot
     win:
       learn_spell reflect
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You cast starlight at the pool and it throws it back, all of it, and you catch it. You understand Reflect now, in your hands.|The pool returns your starlight with interest. You learn its trick by being on the wrong end of it.}
     lose:
       if ww_grace > 0:
@@ -1156,7 +1159,7 @@ text: A pool so still it's a mirror, except that it reflects the wrong sky: anot
 
 @event ww3_spiderlings
 title: Spiderlings
-trigger: queued
+thread: ww_delve
 class: routine
 tone: tense
 when: ww_depth >= 5 and ww_depth <= 6
@@ -1174,7 +1177,7 @@ text: The branches overhead are thick with grey silk, and the silk is moving. Sp
     win:
       ww_haul += 1
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You fight through, wand flailing, until the silk thins and the bites stop. You come out with a bag full of silk-wrapped seed-cases Pell will pay for.|They scatter. You gather a handful of their silk, which is stronger than rope and lighter than breath.}
     lose:
       if ww_grace > 0:
@@ -1184,12 +1187,12 @@ text: The branches overhead are thick with grey silk, and the silk is moving. Sp
       say: {~They're everywhere at once. You go down in a grey storm of tiny bites.|You stop a dozen and a hundred get through.}
 > up[flame]: Burn the webs
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~The silk goes up like paper and the spiderlings flee in every direction. The path ahead is clear, and smells of burnt sugar.|You burn a road through the silk. Something deeper in the wood notices the smoke.}
 
 @event ww3_wisps
 title: Wisps
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 5 and ww_depth <= 6
@@ -1206,7 +1209,7 @@ text: Wisps: little blue lights that bob between the trees and ask riddles, and 
     win:
       ww_haul += 3
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You out-riddle the riddlers. Furious and delighted, they lead you to a hollow full of things Pell has only read about.|You argue every answer and they love it. They lead you somewhere good, and then somewhere better.}
     lose:
       if ww_grace > 0:
@@ -1217,7 +1220,7 @@ text: Wisps: little blue lights that bob between the trees and ask riddles, and 
 
 @event ww3_sinkhole
 title: The Sinkhole
-trigger: queued
+thread: ww_delve
 class: routine
 tone: tense
 when: ww_depth >= 5 and ww_depth <= 6
@@ -1234,19 +1237,19 @@ text: The ground opens. A sinkhole the size of a cottage, roots hanging down int
   challenge feat adept:
     win:
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You jump. For a moment there's nothing under you at all. Then there's moss, and you're through.|You land on the far edge as it crumbles, and run. Behind you the hole sighs.}
     lose:
       queue ww_lost now
       say: {~You don't make it. Roots catch you, and hold you, and you hang there for a long time.|The far edge gives under you.}
 > up[tailwind]: Ride a gust over
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~A gust lifts you over the hole like a leaf, and sets you down on the far side, dizzy and laughing.|You float across. Something at the bottom watches you go.}
 
 @event ww3_heartwood_hush
 title: The Heartwood
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 5 and ww_depth <= 6
@@ -1262,14 +1265,14 @@ text: {~The heartwood: trees so old their roots are walls, and the light comes d
   ww_haul += 2
   health -small
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You gather red bark and root-caps in the long light, and go on, slower.|You fill your bag with warm red bark, and go on.|You climb between the roots, gathering as you go, and come out lower and more tired.}
 
 # ---------------- Depth 7: dusk by day, the gate at midnight ----------------
 
 @event ww_dusk
 title: The Silence Ahead
-trigger: queued
+thread: ww_delve
 class: story
 tone: eerie
 when: ww_depth >= 7 and ww_hush == 0
@@ -1293,7 +1296,7 @@ text: The path runs on into a silence so thick it presses on your ears. No birds
 
 @event ww_hush_gate
 title: The Hush
-trigger: queued
+thread: ww_delve
 class: story
 tone: eerie
 when: ww_depth == 7 and ww_hush == 1
@@ -1311,14 +1314,14 @@ text: At midnight the silence has opened. Every moonpetal along the edge is wide
   flag ww_hush_seen
   ww_descents += 1
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You step in. The sound of your own boots goes away.|You walk into the Hush. It doesn't welcome you. It doesn't stop you, either.}
 
 # ---------------- Band 4: the Hush (depth 8–9, midnight only, expert-) ----------------
 
 @event ww4_silence
 title: The Silence
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 8 and ww_depth <= 9 and ww_hush == 1
@@ -1334,7 +1337,7 @@ text: The silence here is a thing. It presses, it leans, it wants you to stop: b
   challenge spell expert-:
     win:
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You hold a small spell in your mouth like a lozenge, and the silence can't get in. You walk through it humming.|You keep one spark lit inside you the whole way through. The silence presses and finds nothing to press.}
     lose:
       queue ww_lost now
@@ -1342,7 +1345,7 @@ text: The silence here is a thing. It presses, it leans, it wants you to stop: b
 
 @event ww4_rime_hollow
 title: The Rime Hollow
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 8 and ww_depth <= 9 and ww_hush == 1 and spell_level(rime) < 1
@@ -1358,7 +1361,7 @@ text: A hollow where it's always winter. Frost thick as fur on every twig, and i
     win:
       learn_spell rime
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You take it in your bare hand. It doesn't melt; it goes in. Rime. You'll never quite be warm again, and you'll never quite be felled.|The sliver goes into your collar like a needle and stays there. Rime. The hollow thaws a little, as if relieved.}
     lose:
       if ww_grace > 0:
@@ -1369,7 +1372,7 @@ text: A hollow where it's always winter. Frost thick as fur on every twig, and i
 
 @event ww4_web_halls
 title: The Web Halls
-trigger: queued
+thread: ww_delve
 class: routine
 tone: tense
 when: ww_depth >= 8 and ww_depth <= 9 and ww_hush == 1 and not flag(ww_spinner_beaten)
@@ -1389,7 +1392,7 @@ text: Webs strung between the trees like halls, silver in the moon, each thread 
       rel brask +medium
       flag ww_spinner_angry
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~You saw through the silk thread by thread and the hippogriff bolts, free, for home. Brask will find it at dawn on the stable roof. Something deeper in the Hush has noticed you took it.|It comes free all at once and kicks you, gratefully, and flies. Far off, a web shivers.}
     lose:
       if ww_grace > 0:
@@ -1402,12 +1405,12 @@ text: Webs strung between the trees like halls, silver in the moon, each thread 
   rel brask +medium
   flag ww_spinner_angry
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You burn the silk away from its wings and it bolts for home. The whole web hall shudders. Something deeper is very, very awake now.|Fire goes up the silk like a fuse. The hippogriff drops, rights itself, and flies for the castle.}
 
 @event ww4_last_witch
 title: The Last Witch of the Wood
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 8 and ww_depth <= 9 and ww_hush == 1 and not flag(ww_spinner_secret) and not flag(ww_spinner_beaten)
@@ -1424,7 +1427,7 @@ text: A ghost sits on a fallen log, knitting something that isn't there. She was
     win:
       flag ww_spinner_secret
       ww_depth += 1
-      queue any tagged ww now
+      next
       say: {~"She has a blind side," the ghost says. "The left. Something took an eye a long time ago, and she's never let anyone see. Stand on her left and talk to her like a lady, and you'll have a fair fight."|She tells you about the Spinner's left side, and laughs about it for a long time.}
     lose:
       if ww_grace > 0:
@@ -1435,7 +1438,7 @@ text: A ghost sits on a fallen log, knitting something that isn't there. She was
 
 @event ww4_moonpetal_bloom
 title: Moonpetal in Bloom
-trigger: queued
+thread: ww_delve
 class: routine
 tone: warm
 when: ww_depth >= 8 and ww_depth <= 9 and ww_hush == 1
@@ -1450,7 +1453,7 @@ text: A whole clearing of moonpetal, open to the moon, shining like a lake. You'
 > right: Gather a few
   ww_haul += 3
   ww_depth += 1
-  queue any tagged ww now
+  next
   if not has_item(moonpetal_locket) and not flag(ww_locket_found):
     give moonpetal_locket
     flag ww_locket_found
@@ -1460,7 +1463,7 @@ text: A whole clearing of moonpetal, open to the moon, shining like a lake. You'
 
 @event ww4_spinner_court
 title: An Audience
-trigger: queued
+thread: ww_delve
 class: routine
 tone: eerie
 when: ww_depth >= 8 and ww_depth <= 9 and ww_hush == 1 and flag(ww_spinner_beaten)
@@ -1476,14 +1479,14 @@ text: The Spinner receives you in her halls, on the left side as is proper. {kno
   ww_haul += 2
   lore +tiny
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: {~You sit with her and she tells you about the wood before the castle. She gives you a bolt of silk as you go, for your trouble.|She shows you her oldest webs, which are a kind of map. You leave with silk and a better sense of the Hush.}
 
 # ---------------- Depth 10: the Hush's heart ----------------
 
 @event ww_hush_heart
 title: The Heart of the Hush
-trigger: queued
+thread: ww_delve
 class: story
 tone: warm
 when: ww_depth >= 10 and ww_hush == 1 and flag(ww_spinner_beaten) and flag(outcast_beaten)

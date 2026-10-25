@@ -17,6 +17,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
+const G = require('../src/grimoire.js');
 
 const DROP = new Set(['file', 'line', 'fn', 'preset', 'src']);
 // The framework's own metadata on a compiled event (where its properties came from; its pools, thread and role).
@@ -58,10 +59,7 @@ function normAst(n) {
 
 // The cards `queue any tagged T` / `queue any in P` can draw, by the content's own definition of each.
 function candidates(content, st) {
-  const evs = Object.values(content.events || {});
-  if (st.tagged) return evs.filter((e) => e.trigger === 'queued' && (e.tags || []).includes(st.tagged)).map((e) => e.id).sort();
-  if (st.pool) return evs.filter((e) => e.trigger === 'queued' && ((e.pools || []).includes(st.pool) || e.thread === st.pool)).map((e) => e.id).sort();
-  return null;
+  return st.tagged || st.pool ? G.deckOf(content, st).map((e) => e.id).sort() : null;
 }
 
 function norm(v, content) {

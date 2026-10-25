@@ -239,16 +239,11 @@ function analyze(content) {
         case 'unflag': break;
         case 'gain': case 'lose': if (!content.states[st.state]) P('error', w, st.t + ': unknown state "' + st.state + '"'); add(A.statesRef, st.state, w); if (st.dur) scanExpr(st.dur, w, hasActor); break;
         case 'queue':
-          if (st.tagged) {
-            // `queue any tagged <tag>` (feedback 2026-10-16): the pool is every queued event with the tag.
-            const pool = Object.values(content.events).filter((e) => e.trigger === 'queued' && (e.tags || []).includes(st.tagged));
-            if (!pool.length) P('error', w, 'queue any tagged ' + st.tagged + ': no queued event has that tag');
-            for (const e of pool) add(A.queued, e.id, w);
-          } else if (st.pool) {
-            // `queue any in <pool|thread>` (the framework): every queued card of that pool or thread.
-            if (!content.pools[st.pool] && !content.threads[st.pool] && !content.arcs[st.pool]) P('error', w, 'queue any in ' + st.pool + ': no @pool or @thread with that id');
-            const pool = Object.values(content.events).filter((e) => e.trigger === 'queued' && ((e.pools || []).includes(st.pool) || e.thread === st.pool));
-            if (!pool.length) P('error', w, 'queue any in ' + st.pool + ': it has no queued cards');
+          if (st.tagged || st.pool) {
+            // `queue any tagged <tag>` (feedback 2026-10-16) / `queue any in <pool|thread>` (the framework): a deck of queued cards.
+            if (st.pool && !content.pools[st.pool] && !content.threads[st.pool] && !content.arcs[st.pool]) P('error', w, 'queue any in ' + st.pool + ': no @pool or @thread with that id');
+            const pool = G.deckOf(content, st);
+            if (!pool.length) P('error', w, st.tagged ? 'queue any tagged ' + st.tagged + ': no queued event has that tag' : 'queue any in ' + st.pool + ': it has no queued cards');
             for (const e of pool) add(A.queued, e.id, w);
           } else {
             if (!content.events[st.event]) P('error', w, 'queue: unknown event "' + st.event + '"');

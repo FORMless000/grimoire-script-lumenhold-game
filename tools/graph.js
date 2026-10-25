@@ -26,7 +26,7 @@ function produces(b, content) {
   for (const [via, effs] of b.effects) G.walkEffects(effs, (st) => {
     const add = (token, note) => out.push({ token, via, note: note || '' });
     switch (st.t) {
-      case 'queue': if (st.tagged) { for (const e of Object.values(content.events)) if (e.trigger === 'queued' && (e.tags || []).includes(st.tagged)) add('event:' + e.id, 'any tagged ' + st.tagged); break; } add('event:' + st.event, st.chanceWord ? 'chance ' + st.chanceWord : st.chance != null ? 'chance ' + st.chance + '%' : st.now ? 'now' : ''); break;
+      case 'queue': if (st.tagged || st.pool) { for (const e of G.deckOf(content, st)) add('event:' + e.id, st.pool ? 'any in ' + st.pool : 'any tagged ' + st.tagged); break; } add('event:' + st.event, st.chanceWord ? 'chance ' + st.chanceWord : st.chance != null ? 'chance ' + st.chance + '%' : st.now ? 'now' : ''); break;
       case 'flag': for (const n of st.names) add('flag:' + n); break;
       case 'gain': add('state:' + st.state); break;
       case 'find': add('clue:' + st.clue); break;

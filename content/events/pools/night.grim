@@ -23,7 +23,7 @@ text: The woman who runs the upstairs room looks you over. "The guests like good
   hint: Paid company, a different guest each night.
   flag newt_regular
   find lead_newt_upstairs
-  queue any tagged company_night now
+  queue any in company_night now
   queue company_late_hour now
   if bonds(partner) > 0:
     queue night_partner_asks chance unlikely
@@ -46,7 +46,7 @@ scene: An upstairs room at a tavern after hours, a landlady holding out a borrow
 text: {The woman who runs the upstairs room knows your face now. "There's a party tonight," she says, already holding out the jacket.|The landlady has your jacket on a peg with your name chalked above it. "Your table's waiting," she says.|"Your regulars asked after you," says the landlady, which is either flattering or a warning. Upstairs the lamps are lit.}
 > left: Work the room
   hint: Paid company; tonight's guests decide the rest.
-  queue any tagged company_night now
+  queue any in company_night now
   queue company_late_hour now
   if bonds(partner) > 0:
     queue night_partner_asks chance unlikely
@@ -168,9 +168,12 @@ text: Grisk is waiting in the library alcove with your promise between two finge
 # The pool behind `queue any tagged company_night`: each night upstairs is one party, drawn by the usual score. The
 # pay is better than any shift, and so is the price: late nights, guests who push, and the castle finding out.
 
+@thread company_night
+from: scene
+
 @event company_birthday
 title: A Merchant's Birthday
-trigger: queued
+thread: company_night
 class: routine
 tone: light
 repeat: 3
@@ -198,7 +201,7 @@ text: {A cloth merchant from the capital is sixty tonight and wants a room full 
 
 @event company_magistrate
 title: The Magistrate's Card Party
-trigger: queued
+thread: company_night
 class: routine
 tone: tense
 repeat: 3
@@ -227,7 +230,7 @@ text: {A magistrate from the county court is holding a card party, and she likes
 
 @event company_masked
 title: The Masked Night
-trigger: queued
+thread: company_night
 class: routine
 tone: eerie
 repeat: 3
@@ -256,7 +259,7 @@ text: {Tonight every guest wears a mask, and nobody says why. The landlady hands
 
 @event company_patron
 title: A Guest Who Offers Patronage
-trigger: queued
+thread: company_night
 class: routine
 tone: warm
 repeat: 3
@@ -277,7 +280,7 @@ text: {An old collector of books has asked for "the student who reads". He wants
 
 @event company_castle
 title: Someone from the Castle
-trigger: queued
+thread: company_night
 class: routine
 tone: tense
 repeat: 3
@@ -307,7 +310,7 @@ text: {Halfway up the stair you see {guest} at the corner table, out of robes, w
 
 @event company_wants_more
 title: A Guest Who Wants More
-trigger: queued
+thread: company_night
 class: routine
 tone: grim
 repeat: 3
@@ -412,7 +415,7 @@ text: {Past two, the landlady catches your sleeve on the stair. "Another party's
 > left: Stay till dawn
   hint: Another party's pay; no sleep, and a later walk home.
   health -small
-  queue any tagged company_night now
+  queue any in company_night now
   queue night_suspicion chance unlikely
   say: {You take your jacket back off the peg. The second party is louder than the first.|You splash cold water on your face and go back up. The lamps are still lit, and so are the guests.|You stay. It will be light when you get home, and the castle's early risers will see you come in.}
 > right: Go home to bed
@@ -422,7 +425,7 @@ text: {Past two, the landlady catches your sleeve on the stair. "Another party's
 
 @event company_wedding
 title: A Wedding Upstairs
-trigger: queued
+thread: company_night
 class: routine
 tone: light
 repeat: 3
@@ -449,7 +452,7 @@ text: {A miller's daughter from the next valley married this afternoon, and the 
 
 @event company_poets
 title: The Poets' Supper
-trigger: queued
+thread: company_night
 class: routine
 tone: light
 repeat: 3

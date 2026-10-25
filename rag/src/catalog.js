@@ -78,7 +78,7 @@ function fromCompiled(content, sources) {
       if (st.t === 'flag' || st.t === 'unflag') for (const n of st.names) add(from, 'flag', n, st.t, loc, guards, st.t === 'flag' ? 'write' : 'clear');
       if (st.t === 'queue') {
         const detail = { delay: st.delay?.src || st.delay, now: !!st.now, with: st.with, chance: st.chance };
-        if (st.tagged) for (const e of Object.values(content.events)) { if (e.trigger === 'queued' && (e.tags || []).includes(st.tagged)) add(from, 'event', e.id, 'queue-tag:' + st.tagged, loc, guards, 'write', detail); }
+        if (st.tagged || st.pool) for (const e of G.deckOf(content, st)) add(from, 'event', e.id, st.pool ? 'queue-pool:' + st.pool : 'queue-tag:' + st.tagged, loc, guards, 'write', detail);
         else add(from, 'event', st.event, 'queue', loc, guards, 'write', detail);
       }
       const refs = { learn: ['fact', st.fact], find: ['clue', st.clue], advance: ['arc', st.arc], gain: ['state', st.state], lose: ['state', st.state], give: ['item', st.item], take: ['item', st.item], learn_spell: ['spell', st.spell], discover: ['place', st.place], meet: ['npc', st.npc], enrol: ['track', st.track], join: ['track', st.track], apply: ['track', st.track], rel: ['npc', st.npc], spark: ['npc', st.npc], npc_rel: ['npc', st.a] };

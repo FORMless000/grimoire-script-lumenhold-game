@@ -10,7 +10,7 @@
 
 @event ww_tree_tobias
 title: The Trees Gossip
-trigger: queued
+thread: ww_delve
 class: routine
 tone: light
 when: ww_depth >= 3 and ww_depth <= 6
@@ -27,12 +27,12 @@ text: Two old trees have their crowns together, whispering. You catch your own n
   learn tobias.gerald
   queue ww_tree_tell in 1 with peer
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: Tobias, say the trees, is raising a mandrake called Gerald, who wears a knitted hat and screams softly. They approve of Gerald. They're less sure about the hat.
 
 @event ww_tree_lyra
 title: The Trees Gossip
-trigger: queued
+thread: ww_delve
 class: routine
 tone: light
 when: ww_depth >= 3 and ww_depth <= 6
@@ -49,12 +49,12 @@ text: Two old trees have their crowns together, whispering. The name that comes 
   learn lyra.toast
   queue ww_tree_tell in 1 with peer
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: Lyra Vaneshade, say the trees, can incinerate a target at forty paces and cannot make toast. She tried, out here, alone, at dawn. The scorched tree was the toast.
 
 @event ww_tree_bram
 title: The Trees Gossip
-trigger: queued
+thread: ww_delve
 class: routine
 tone: light
 when: ww_depth >= 3 and ww_depth <= 6
@@ -71,12 +71,12 @@ text: Two old trees have their crowns together, whispering, and the word you cat
   learn bram.hall_tax
   queue ww_tree_tell in 1 with peer
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: Bram, say the trees, once invented a hall tax for the east staircase, and collected it for a week before anyone checked. They think it was very enterprising. They would.
 
 @event ww_tree_mir
 title: The Trees Gossip
-trigger: queued
+thread: ww_delve
 class: routine
 tone: light
 when: ww_depth >= 3 and ww_depth <= 6
@@ -93,12 +93,12 @@ text: Two old trees have their crowns together, whispering about a bird that isn
   learn mir.owl
   queue ww_tree_tell in 1 with peer
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: Mir, say the trees, built a clockwork owl that remembers deadlines, birthdays, and grudges, slightly. The owl landed here and told an oak it was overdue. The oak is still upset.
 
 @event ww_tree_kael
 title: The Trees Gossip
-trigger: queued
+thread: ww_delve
 class: routine
 tone: warm
 when: ww_depth >= 3 and ww_depth <= 6
@@ -115,12 +115,12 @@ text: Two old trees are whispering, and one side of each trunk is frosted, as if
   learn kael.cold_hands
   queue ww_tree_tell in 1 with peer
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: His hands are always cold, the trees say. He puts them on the bark to see if anything is ever warm enough. Nothing has been, yet. The trees sound sorry about it.
 
 @event ww_tree_nessa
 title: The Trees Gossip
-trigger: queued
+thread: ww_delve
 class: routine
 tone: light
 when: ww_depth >= 3 and ww_depth <= 6
@@ -137,12 +137,12 @@ text: Two old trees are whispering about a quill. Somebody's quill was left out 
   learn nessa.quill
   queue ww_tree_tell in 1 with peer
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: Nessa's quill, say the trees, starts inventing the news if she leaves it unsupervised. The birch's headline is about the birch. It's very unflattering, and, the trees admit, mostly true.
 
 @event ww_tree_corvin
 title: The Trees Gossip
-trigger: queued
+thread: ww_delve
 class: routine
 tone: light
 when: ww_depth >= 3 and ww_depth <= 6
@@ -159,7 +159,7 @@ text: Two old trees are whispering, and laughing, in the creaking way trees laug
   learn corvin.trolls
   queue ww_tree_tell in 1 with peer
   ww_depth += 1
-  queue any tagged ww now
+  next
   say: Corvin, say the trees, once owed thirty crowns to trolls, and offered to pay them back with a goat. The trolls took the goat. The goat now runs the trolls.
 
 @event ww_tree_tell

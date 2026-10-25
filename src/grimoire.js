@@ -690,6 +690,11 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
   }
 
   // Generic visitor over effect statements (recurses into branches).
+  // The cards `queue any tagged T` / `queue any in P` can draw: the queued cards with that tag, or of that pool or thread.
+  function deckOf(content, st) {
+    return Object.values(content.events).filter((e) => e.trigger === 'queued' && (st.pool ? (e.pools || []).includes(st.pool) || e.thread === st.pool : (e.tags || []).includes(st.tagged)));
+  }
+
   function walkEffects(effects, visit) {
     if (!effects) return;
     for (const st of effects) {
@@ -1225,5 +1230,5 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
 
   // `@place always: a b|c` (feedback 2026-10-16): the place's fixed cards in order; `|` makes a group that plays one.
   const alwaysGroups = (t) => String(t || '').split(/\s+/).filter(Boolean).map((g) => g.split('|').filter(Boolean));
-  return { alwaysGroups, textTokens, parseFile, compile, expr, BUNDLE_PROPS, CONDS, parseExprAst, walkAst, walkEffects, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES, CHALLENGE_KINDS, MINIGAME_KINDS, ITEM_SLOTS, WORN_GROUPS, RANKS, RUNG_RE, ODDS_WORDS, SWINGS, DRIFTS, isLadderTier };
+  return { alwaysGroups, textTokens, parseFile, compile, expr, BUNDLE_PROPS, CONDS, parseExprAst, walkAst, walkEffects, deckOf, GrimError, SCHEMA, FUNCS, FUNC_REFS, SYMBOLIC, IDENTS, STATEMENTS: Object.keys(RE), COLLECTION, WORLD_COLLECTIONS, STRUCT_PROPS, TIERS, DIFFICULTIES, CLASSES, CHALLENGE_KINDS, MINIGAME_KINDS, ITEM_SLOTS, WORN_GROUPS, RANKS, RUNG_RE, ODDS_WORDS, SWINGS, DRIFTS, isLadderTier };
 });
