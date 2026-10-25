@@ -141,7 +141,8 @@ The engine already records every run completely (`s.hist`), and `Engine.exportRu
 | `grim snapshot` / `grim diff` | Simulates on fixed "golden" seeds and saves coverage, endings and average resources. `diff` compares two snapshots; a pure refactor must show none. |
 | **Save versioning** | `@game schema:` plus the save version. The save is at version 2 and migrates v1 (**exists**). From version 3 on, saves from an older version are refused with a friendly message (saves may break until 1.0). |
 | `grim feedback` (**exists**) | Aggregates exported or server-stored run logs per event (👍 / 👎 / comments); the seed of `grim report` (§11.2). |
-| `npm run verify` | build + lint + invariants + e2e, against the server |
+| `npm run verify` | the quick gate: build, lint, format, docs, the unit tests (slow whole-game style tests skipped) and the golden diff, in about a minute (`tools/verify.js`) |
+| `npm run verify:full` | everything: plus the slow style tests, balance invariants and the e2e against the server |
 
 ---
 

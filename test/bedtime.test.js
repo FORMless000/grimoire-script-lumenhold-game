@@ -5,7 +5,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const Engine = require('../src/engine.js');
 const Policies = require('../tools/policies.js');
-const { content, quiet } = require('./helpers.js');
+const { content, quiet, slow } = require('./helpers.js');
 
 const BED = new Set(['night_out', 'night_sleep']);
 const fresh = (seed = 5, origin = 'street') => { const eng = new Engine(content); quiet(() => eng.newGame({ seed, name: 'T', origin })); return eng; };
@@ -13,7 +13,7 @@ const fresh = (seed = 5, origin = 'street') => { const eng = new Engine(content)
 // Plays a card already set as current and returns the outcome.
 const play = (eng, id, key, extra) => { eng.s.cur = Object.assign({ id, actor: null }, extra || {}); eng.s.last[id] = eng.s.turn; return quiet(() => eng.choose(key)); };
 
-test('bedtime: exactly one bedtime card in every completed ordinary month, for every style, and none on the last day', () => {
+test('bedtime: exactly one bedtime card in every completed ordinary month, for every style, and none on the last day', slow, () => {
   const styles = ['balanced', 'random', 'social', 'nightowl', 'truant', 'cautious'];
   let months = 0, home = 0, away = 0;
   for (const style of styles) for (let seed = 41; seed < 44; seed++) {

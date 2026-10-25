@@ -22,8 +22,12 @@ const quiet = mute(['warn']), silent = mute(['warn', 'log']);
 const read = (dir, f) => fs.readFileSync(path.join(dir, f), 'utf8');
 const write = (dir, f, text) => { fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true }); fs.writeFileSync(path.join(dir, f), text); };
 
+// Tests that play whole games per play style run only in `npm run verify:full` (LUMENHOLD_FULL=1); the quick
+// `npm run verify` skips them. Pass as test(name, slow, fn).
+const slow = process.env.LUMENHOLD_FULL ? {} : { skip: 'slow: npm run verify:full runs it' };
+
 module.exports = {
-  ROOT, FIXTURE, tempProject, read, write, quiet, silent, compileContent,
+  ROOT, FIXTURE, tempProject, read, write, quiet, silent, compileContent, slow,
   get content() { return compileContent().content; },
   get sources() { return compileContent().sources; },
 };

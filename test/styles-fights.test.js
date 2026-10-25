@@ -4,12 +4,13 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { games, cards, mean, chose, playsAndReplays } = require('./style-games.js');
+const { slow } = require('./helpers.js');
 
-test('styles: the nightlife regular and combatmaxx play to the end, deterministically, and replay', () => {
+test('styles: the nightlife regular and combatmaxx play to the end, deterministically, and replay', slow, () => {
   playsAndReplays(assert, ['nightlife', 'combatmaxx']);
 });
 
-test('styles: the nightlife regular goes out every night it can, takes the company, and fights at the ring', () => {
+test('styles: the nightlife regular goes out every night it can, takes the company, and fights at the ring', slow, () => {
   for (const eng of games('nightlife')) {
     const nights = cards(eng).filter((h) => h.id === 'night_out');
     // per month played: the ring's fights (played since 2026-10-18) can send a run home early
@@ -22,7 +23,7 @@ test('styles: the nightlife regular goes out every night it can, takes the compa
   assert.ok(mean('nightlife', (e) => e.s.vals.gold) > mean('balanced', (e) => e.s.vals.gold), 'the night pays');
 });
 
-test('styles: combatmaxx fights far more than a balanced player, wins most of its fights, and trains arcana and vigor', () => {
+test('styles: combatmaxx fights far more than a balanced player, wins most of its fights, and trains arcana and vigor', slow, () => {
   const fights = (eng) => (eng.s.fights || []).length;
   assert.ok(mean('combatmaxx', fights) >= 2 * mean('balanced', fights), 'at least twice the fights');
   const won = games('combatmaxx').reduce((a, e) => a + (e.s.fights || []).filter((f) => f.outcome === 'win').length, 0);

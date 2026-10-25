@@ -1490,27 +1490,40 @@ function curve(opts = {}) {
 // Golden seeds: the same games every time. A pure refactor must reproduce them exactly.
 const GOLDEN = { styles: ['random', 'social', 'cautious'], games: 40, seed: 424242 };
 function snapshot(out, opts = {}) {
-  const { content } = compiled();
-  const games = opts.games || GOLDEN.games;
+  const games = opts.games || GOLDEN.games, styles = opts.style ? [opts.style] : GOLDEN.styles;
   const snap = { format: 'lumenhold-snapshot', v: 1, contentHash: contentHash(), createdAt: new Date().toISOString(), games: [], seen: {} };
-  for (const name of GOLDEN.styles) {
-    const style = Policies.get(name);
-    const seen = snap.seen[name] = {};
-    for (let g = 0; g < games; g++) {
-      const seed = GOLDEN.seed + g * 7919;
-      try {
-        const { eng, r } = playGame(content, { seed, style, runId: 'golden' });
-        const picks = eng.s.hist.filter((h) => h.t === 'card' && h.choice != null);
-        picks.forEach((h) => { seen[h.id] = (seen[h.id] || 0) + 1; });
-        const vals = {}; for (const [k, v] of Object.entries(eng.s.vals)) vals[k] = Math.round(v * 100) / 100;
-        snap.games.push({ style: name, seed, ending: r.id, turn: r.turn, cards: picks.length, choices: I18n.hash(picks.map((h) => h.id + ':' + h.choice).join(' ')), vals });
-      } catch (e) { snap.games.push({ style: name, seed, error: e.message }); }
-    }
-  }
+  if (styles.length > 1) {
+    // One process per style, all at once (about three times faster); merged in the same order, so the snapshot is the
+    // one a single process would write.
+    const tmp = fs.mkdtempSync(path.join(require('os').tmpdir(), 'golden-')), part = (st) => path.join(tmp, st + '.json');
+    const q = (x) => "'" + x.replace(/'/g, "'\\''") + "'";
+    const r = require('child_process').spawnSync('sh', ['-c', styles.map((st) => q(process.execPath) + ' ' + q(__filename) + ' snapshot --style ' + st + ' --out ' + q(part(st)) + (opts.games ? ' --games ' + games : '') + ' >/dev/null &').join(' ') + ' wait'], { stdio: 'inherit' });
+    try {
+      for (const st of styles) {
+        if (r.status || !fs.existsSync(part(st))) throw new Error('snapshot: the ' + st + ' games did not finish');
+        const one = JSON.parse(fs.readFileSync(part(st), 'utf8'));
+        snap.games.push(...one.games); snap.seen[st] = one.seen[st];
+      }
+    } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
+  } else goldenGames(snap, styles[0], games);
   fs.mkdirSync(path.dirname(out), { recursive: true });
   fs.writeFileSync(out, JSON.stringify(snap, null, 1) + '\n');
-  console.log('snapshot: ' + snap.games.length + ' games (' + GOLDEN.styles.join(', ') + ' × ' + games + ') → ' + rel(out));
+  console.log('snapshot: ' + snap.games.length + ' games (' + styles.join(', ') + ' × ' + games + ') → ' + rel(out));
   return snap;
+}
+// One style's golden games, added to a snapshot.
+function goldenGames(snap, name, games) {
+  const { content } = compiled(), style = Policies.get(name), seen = snap.seen[name] = {};
+  for (let g = 0; g < games; g++) {
+    const seed = GOLDEN.seed + g * 7919;
+    try {
+      const { eng, r } = playGame(content, { seed, style, runId: 'golden' });
+      const picks = eng.s.hist.filter((h) => h.t === 'card' && h.choice != null);
+      picks.forEach((h) => { seen[h.id] = (seen[h.id] || 0) + 1; });
+      const vals = {}; for (const [k, v] of Object.entries(eng.s.vals)) vals[k] = Math.round(v * 100) / 100;
+      snap.games.push({ style: name, seed, ending: r.id, turn: r.turn, cards: picks.length, choices: I18n.hash(picks.map((h) => h.id + ':' + h.choice).join(' ')), vals });
+    } catch (e) { snap.games.push({ style: name, seed, error: e.message }); }
+  }
 }
 function snapDiff(aPath, bPath) {
   const [a, b] = [aPath, bPath].map((p) => JSON.parse(fs.readFileSync(p, 'utf8')));
@@ -1774,7 +1787,7 @@ switch (cmd) {
   case 'styles': for (const n of Policies.list()) console.log(n.padEnd(16) + ' ' + Policies.about(n)); break;
   case 'curve': curve({ games: Number(flag('games')) || 100, write: !!flag('write') }); break;
   case 'balance': if (!balance({ quick: !!flag('quick'), games: Number(flag('games')) || 0 })) process.exit(1); break;
-  case 'snapshot': snapshot(path.resolve(flag('out') || path.join(ROOT, 'build', 'snapshots', (rest.find((x) => !x.startsWith('--') && rest[rest.indexOf(x) - 1] !== '--out') || 'latest') + '.json'))); break;
+  case 'snapshot': snapshot(path.resolve(flag('out') || path.join(ROOT, 'build', 'snapshots', (rest.find((x) => !x.startsWith('--') && !['--out', '--style', '--games'].includes(rest[rest.indexOf(x) - 1])) || 'latest') + '.json')), { style: flag('style') || null, games: Number(flag('games')) || 0 }); break;
   case 'diff': {
     const files = rest.filter((x) => !x.startsWith('--'));
     const a = files[0] || path.join(ROOT, 'test', 'golden', 'baseline.json');

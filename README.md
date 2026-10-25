@@ -86,7 +86,8 @@ node tools/grim.js check           # build + lint + 200 simulated games: every c
 node tools/grim.js brief --place <id>   # what a writer needs before adding cards at a place (or --track, --cast, --arc)
 node tools/grim.js balance         # simulated players: invariants and alarms
 node tools/grim.js i18n zh-CN      # refresh the Chinese .lang files after content changes
-npm run verify                     # the full pre-commit suite
+npm run verify                     # the quick gate (about a minute): static checks, unit tests, golden diff
+npm run verify:full                # everything (about ten minutes): plus slow style tests, balance, browser e2e
 ```
 
 Preview any event with `index.html?event=<id>&debug`. `?debug` alone adds a content-debug panel.

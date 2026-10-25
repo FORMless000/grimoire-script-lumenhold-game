@@ -48,7 +48,7 @@ Code: `src/grimoire.js` (parser), `src/engine.js` and `src/director.js` (DOM-fre
 - Never rename existing ids (saves, flags and translations reference them); use `grim rename` if you must. Change content in bulk through `tools/migrations/` (`grim migrate`), not by hand.
 
 **Checks**
-- Every change passes `node tools/grim.js check`; a larger change passes `npm run verify` before you finish.
+- Every change passes `node tools/grim.js check`; a larger change passes `npm run verify` before you finish (about a minute: static checks, the unit tests and the golden diff). A change to the engine, the UI or the balance passes `npm run verify:full` (about ten minutes: adds the slow whole-game style tests, `balance --quick` and the browser e2e).
 - A refactor of content or of the format compiles to the same meaning: `grim equiv` is empty (`grim migrate` enforces it for migrations that don't declare `changesMeaning`). Converters find structure with programs (`tools/convert/`), never by reading prose.
 - `grim diff` fails when the golden games play differently. For refactors that is the point. When a change is meant to alter gameplay, confirm the diff is what you intended and refresh the baseline in the same commit (`node tools/grim.js snapshot --out test/golden/baseline.json`).
 - Simulated players are crude: `balance` catches gross errors and regressions; human playtests are the judge.
