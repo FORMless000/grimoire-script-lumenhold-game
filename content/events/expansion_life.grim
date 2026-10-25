@@ -18,7 +18,7 @@ when: turn >= 5 and not flag(timeloop_started)
 weight: 6
 art: hourglass
 tags: mystery magic
-chain: timeloop
+thread: timeloop
 scene: A student at breakfast staring at a plate of eggs with intense déjà vu, a clock on the wall with its hands spinning backward.
 text: Breakfast. Eggs. Thorne trips on the third step. A first-year spills juice on a prefect. You know all of this is about to happen, because it already happened. Yesterday. Which was also Tuesday.
 > left: Ignore it, you're probably just tired
@@ -47,7 +47,7 @@ type: menu
 repeat: 10
 art: hourglass
 tags: mystery magic
-chain: timeloop
+thread: timeloop
 scene: The same breakfast scene repeated, but the student is now standing on the table, holding up a sign that reads "IT'S STILL TUESDAY".
 text: {loop_n <= 1: It's Tuesday again. Eggs, the third step, the juice, the prefect. Nobody else notices anything.|{loop_n <= 3: Tuesday. You could recite breakfast. You could recite the prefect's yelp.|{loop_n <= 5: Tuesday, again. The days are starting to feel thin, like a page read too often.|{loop_n <= 7: Tuesday. The eggs taste of nothing now. The clock in the hall ticks a beat late.|Tuesday. The edges of the morning are fraying, like a loop pulled too tight. It can't hold much longer.}}}} {loop_clues >= 3: You know where it comes from now.|{loop_clues >= 1: You have a thread to pull.|You have no idea why.}}
 > exploit: Use it: win every bet, ace the quiz
@@ -87,7 +87,7 @@ trigger: queued
 repeat: 8
 art: gear
 tags: mystery magic
-chain: timeloop
+thread: timeloop
 scene: An astronomy tower at night, a giant brass chronometer with its gears spinning in reverse, a sleeping first-year slumped beside it with a wand still in hand.
 text: In the astronomy tower, a first-year is asleep beside an enormous brass chronometer, wand still stuck in its winding key. "I just wanted one more day before my exam," says the note on his chest. {loop_clues >= 3: You know exactly which gear, and why.|You know roughly where to start.}
 > left: Wrench the clock forward

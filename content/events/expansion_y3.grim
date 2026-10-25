@@ -4,6 +4,8 @@
 #  feed two endings: ending_teacher, ending_wanderer.
 # ============================================================
 
+@thread careers
+
 @event y3_career_fair
 title: The Career Fair
 class: story
@@ -14,7 +16,7 @@ priority: 42
 type: menu
 art: scroll
 tags: study story
-chain: careers
+thread: careers
 scene: The great hall lined with recruiters' booths — a Conclave mage in silver, a librarian behind a wall of books, a circus ringmaster juggling fire.
 text: Every guild, order and institution in the kingdom has sent someone to the great hall. They are all very polite. They are all, very clearly, shopping. Where will you leave your name?
 > conclave: The Conclave of the Seven Towers
@@ -62,7 +64,7 @@ tone: light
 trigger: queued
 art: scales
 tags: study story
-chain: careers
+thread: careers
 scene: A small panelled room, a long table, three interviewers and one empty chair facing them.
 text: Three people behind a long table. One takes notes; one smiles too much; one says nothing at all, which is clearly the one who decides. "Tell us," says the smiling one, "why you."
 > left: Let your record speak
@@ -95,7 +97,7 @@ tone: tense
 trigger: queued
 art: scales
 tags: study story
-chain: careers
+thread: careers
 scene: A plain table in a panelled room set with a single task, three interviewers watching a student roll up their sleeves.
 text: The note-taker sets a task on the table. {flag(career_conclave): A ward with a flaw in it, somewhere.|{flag(career_library): A crumbling manuscript in three hands and no catalogue.|{flag(career_guild): A cauldron, a recipe with one ingredient missing, and a clock.|{flag(career_unseen): A sealed letter, and the request to read it without breaking the seal.|{flag(career_circus): An empty stage, a sceptical crowd of three, and five minutes.|A class of imaginary first-years, and a lesson to give them.}}}}} "In your own time," says the smiling one, and turns over an hourglass.
 > left: Do it properly
@@ -165,7 +167,7 @@ tone: tense
 trigger: queued
 art: scales
 tags: study story
-chain: careers
+thread: careers
 scene: A small panelled room, an interviewer who hasn't spoken leaning forward over folded hands, a student on the other side of the table very still.
 text: At last the silent one speaks. "Tell me about a time you did something you weren't proud of," they say, "and whether you'd do it again."
 > left: Tell the truth
@@ -195,7 +197,7 @@ tone: tense
 trigger: queued
 art: letter
 tags: study story
-chain: careers
+thread: careers
 scene: A student walking out of a panelled room into a bright corridor, loosening their collar, a closed door behind them.
 text: "We'll be in touch," says the smiling one, and stands, and so you stand too. In the corridor your legs feel like someone else's. {iv_score >= 3: You've never been so sure of anything.|{iv_score >= 2: You think it went well. You think.|{iv_score >= 1: It could have gone either way.|You know exactly how it went.}}}
 > ok: Wait for the letter
@@ -217,7 +219,7 @@ tone: tense
 trigger: queued
 art: letter
 tags: story
-chain: careers
+thread: careers
 scene: A thin envelope on a dormitory desk, a single page beside it, a student reading it a second time with their chin on their fist.
 text: A thin letter. You are "a strong candidate" and on "a short list", and they "hope to write again". It's not a no. It's not anything.
 > left: Write back and make your case
@@ -245,7 +247,7 @@ tone: tense
 trigger: queued
 art: letter
 tags: story
-chain: careers
+thread: careers
 scene: A crumpled letter on a windowsill, a student looking out at the lake with their arms folded.
 text: A short letter, very politely written. They were "impressed by your enthusiasm". They regret. They wish you every success.
 > left: Ask them what went wrong
@@ -264,7 +266,7 @@ trigger: queued
 when: flag(career_offered)
 art: letter
 tags: story
-chain: careers
+thread: careers
 scene: An envelope with a heavy wax seal on a dormitory desk, unopened, a hand hovering over it.
 text: A heavy envelope with a seal you recognise from the fair. Inside, a single page: an offer. A place. A future with a start date. {iv_score >= 3: There is a signing purse, too, which they call "a token".|} It needs a signature by the end of the month.
 > left: Sign it today

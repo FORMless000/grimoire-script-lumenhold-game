@@ -7,6 +7,8 @@
 #  and costs more each time (loop_exploit).
 # ============================================================
 
+@thread timeloop
+
 @event timeloop_exploit
 title: Every Bet, Every Answer
 class: story
@@ -15,7 +17,7 @@ trigger: queued
 repeat: 8
 art: coin
 tags: mystery money
-chain: timeloop
+thread: timeloop
 scene: A student at the centre of a crowd in the courtyard collecting coins from groaning classmates, a quiz paper marked full marks in their other hand.
 text: {loop_exploit == 0: You know which way every coin will fall, and what's on this afternoon's quiz.|{loop_exploit == 1: The bets again. Your classmates are starting to look at you oddly when you win.|The bets, the quiz, the same faces losing. Their groans have stopped being funny.}} {~The quiz is on the founders.|A fourth-year bets you can't name every tower.|Someone bets on which way the prefect will fall.}
 > left: Take everything you can
@@ -56,7 +58,7 @@ actor: seraphine
 repeat: 2
 art: eye
 tags: mystery social
-chain: timeloop
+thread: timeloop
 scene: A seer catching a student's sleeve in a crowded corridor, her eyes very clear, the other students blurred around them as if moving too fast.
 text: Seraphine catches your sleeve in the corridor. Her eyes are very clear. "You've done this before," she says. "Today. Many times. I can see the creases in it." She doesn't let go. "Whatever you're taking from it, it's taking from you too."
 > left: Tell her everything
@@ -87,7 +89,7 @@ trigger: queued
 repeat: 3
 art: heart
 tags: mystery romance
-chain: timeloop
+thread: timeloop
 scene: Two students in an empty corridor at dusk, one mid-sentence with their heart on their sleeve, the other's face caught between surprise and joy.
 text: {Nothing today will last. So you find the person you've never told, and you tell them.|Another Tuesday, another confession nobody will remember.|You've confessed to them three times now, three different ways.} {They look at you as if you've handed them something breakable.|They laugh, kindly, then don't.|They take a long time to answer.}
 > left: Say it all, properly
@@ -116,7 +118,7 @@ trigger: queued
 repeat: 3
 art: feather
 tags: mystery
-chain: timeloop
+thread: timeloop
 scene: A student standing on the observatory parapet with arms wide, the lake far below, the morning sky enormous.
 text: {If nothing lasts, then nothing can hurt for long. You climb the observatory parapet with the whole lake below you.|The parapet again. You know exactly how the wind feels at the top.|You've done this before. You still can't quite believe you do it.} {The lake is very blue.|Gulls wheel below you.|The bell in the tower is about to ring.}
 > left: Jump
@@ -146,7 +148,7 @@ trigger: queued
 repeat: 3
 art: sun
 tags: mystery social
-chain: timeloop
+thread: timeloop
 scene: A shy first-year in the refectory looking astonished at a slice of cake, a note and a flower appearing one after another in front of them.
 text: {There's a shy first-year who eats alone every Tuesday. Today you know everything that will go wrong for them, and you can stop all of it.|The same first-year, the same table. You know their day by heart now.|{flag(loop_perfect_day): You've made this stranger's Tuesday perfect before. You do it again anyway.|You've sat with this stranger before. Today you could do more.}} {They get the juice in the face at ten.|They fail the quiz by one mark.|Someone laughs at their hat.}
 > left: Make it perfect
@@ -177,7 +179,7 @@ trigger: queued
 repeat: 2
 art: bell
 tags: mystery study
-chain: timeloop
+thread: timeloop
 scene: A student counting chimes in a castle stairwell, one hand raised, the great clock face above them stopped between two hours.
 text: You spend this Tuesday listening. Every bell in the castle strikes on time, except the astronomy tower's, which strikes a beat late, and then a beat early, as if it's arguing with itself.
 > left: Follow the sound up the tower
@@ -209,7 +211,7 @@ trigger: queued
 repeat: 2
 art: lantern
 tags: mystery study
-chain: timeloop
+thread: timeloop
 scene: A dark astronomy tower at dawn, a single lamp burning in its highest window, a student watching from a courtyard far below.
 text: You wake before the eggs this Tuesday and look out of the window. One lamp is burning in the astronomy tower, the only light in the castle. It goes out at the exact moment the morning begins.
 > left: Be there when it goes out
@@ -239,7 +241,7 @@ trigger: queued
 repeat: 4
 art: book
 tags: mystery social
-chain: timeloop
+thread: timeloop
 scene: A small first-year hunched over a textbook at breakfast, not eating, a note in the margin reading "one more day".
 text: {There's a first-year who doesn't eat breakfast on Tuesdays. He reads the same page of a textbook over and over. In the margin he's written "one more day".|The boy again, the page again. He's in your dreams now.|You sit down opposite the boy before he can leave.} Tomorrow is his first exam.
 > left: Ask him about the exam
@@ -269,7 +271,7 @@ tone: eerie
 trigger: queued
 art: hourglass
 tags: mystery magic
-chain: timeloop
+thread: timeloop
 scene: A shattered brass chronometer in a tower room at dawn, springs and gears scattered across the floor, a first-year and a student staring at the wreck.
 text: The loop pulls tight one last time and snaps. Somewhere above, a great clock bursts its springs, and the morning comes in like a wave. It's Wednesday. You feel as if you've run every Tuesday at once.
 > left: Climb the tower to see
@@ -291,7 +293,7 @@ tone: warm
 trigger: queued
 art: hourglass
 tags: mystery
-chain: timeloop
+thread: timeloop
 scene: A student alone at a window seat on an ordinary morning, a cup of tea going cold, a clock on the wall ticking forward at last.
 text: Weeks later, the Tuesdays still visit you in dreams. {loop_exploit >= 2: People remember your winning streak, though not why, and some of them have stopped betting with you.|Nobody else remembers anything.} You remember the eggs, the bells, the same morning over and over. You could tell someone, if you wanted.
 > left: Tell one person the truth

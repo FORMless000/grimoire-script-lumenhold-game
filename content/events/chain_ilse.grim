@@ -8,17 +8,19 @@
 #      -> (ilse_taken) she is gone north
 # ============================================================
 
+@thread ilse
+actor: ilse
+
 @event ilse_village
 title: The Girl at the Bakery
 place: village
 class: story
 tone: eerie
-actor: ilse
 when: not met(ilse) and (flag(ilse_in_village) or flag(met_sister))
 weight: 20
 art: snow
 tags: mystery hollowstar
-chain: ilse
+thread: ilse
 scene: A village bakery counter, a pale girl in white furs pushing a coin that is visibly frosted across the wood, a baffled baker.
 text: In the village bakery a girl in white furs is trying to pay for a bun with a coin so cold it has frozen to the counter. The baker is losing patience. You recognise those eyes: they're Kael's. "Ilse," she says, before you ask. "Don't."
 > left: Pay for her bun
@@ -36,12 +38,11 @@ title: A Trade in Winter
 class: story
 tone: eerie
 trigger: social
-actor: ilse
 when: rel(ilse) >= 3 and not flag(ilse_taken) and not flag(ilse_went_north)
 weight: 14
 art: snow
 tags: magic hollowstar
-chain: ilse
+thread: ilse
 scene: A frozen pond at the edge of the woods, a girl in white furs drawing a perfect hexagon of frost in the air, a student copying her clumsily.
 text: Ilse finds you by the frozen pond. "My brother won't talk to me. You will. Tell me how he really is, and I'll teach you Northern frost-craft. It's better than anything your professors know."
 > left: Tell her the truth about Kael
@@ -60,12 +61,11 @@ title: The Man in Grey Comes for Ilse
 class: story
 tone: eerie
 trigger: social
-actor: ilse
 when: rel(ilse) >= 7 and turn >= 20 and not flag(ilse_saved) and not flag(ilse_taken)
 weight: 18
 art: mask
 tags: danger hollowstar
-chain: ilse
+thread: ilse
 scene: A moonlit village lane, a man in a grey coat with one hand on a girl's shoulder, frost and shadow coiling around them both.
 text: Late at night, a lane behind the bakery. The man in grey has one hand on Ilse's shoulder. "Home," he is saying softly. "Your family is waiting. The door is waiting." Ilse sees you. She doesn't call out. She just looks.
 > left: Step between them
@@ -101,12 +101,11 @@ title: Brother and Sister
 class: story
 tone: eerie
 trigger: social
-actor: ilse
 when: flag(ilse_saved) and met(kael) and not flag(dumont_reunited) and not flag(ilse_went_north)
 weight: 16
 art: snow
 tags: social hollowstar
-chain: ilse
+thread: ilse
 scene: Two pale siblings on opposite ends of a frozen jetty, a third person between them holding three cups of tea.
 text: Kael and Ilse have been in the same village for weeks and have spoken eleven words to each other. You have three cups of tea, a frozen jetty and a very bad idea.
 > left: Sit them both down
@@ -131,12 +130,11 @@ title: A Summons From the North
 class: story
 tone: eerie
 trigger: social
-actor: ilse
 when: flag(ilse_saved) and final_year and not flag(ilse_decided)
 weight: 14
 art: letter
 tags: hollowstar
-chain: ilse
+thread: ilse
 scene: A girl holding a letter sealed with a black star, standing at a window that looks north toward far white mountains.
 text: A letter with a black-star seal. The Dumont family summons Ilse home. "If I don't go, they'll send someone worse than the man in grey," she says. "If I do go, I could tell them to their faces that it's over. Or they could keep me."
 > left: "Go. Tell them it's over."
@@ -154,12 +152,11 @@ title: Snow in Blossomtide
 class: story
 tone: light
 trigger: social
-actor: ilse
 when: flag(ilse_saved) and final_year and month >= 7 and month <= 9 and not flag(ilse_goodbye) and not flag(ilse_went_north)
 weight: 14
 art: snow
 tags: social
-chain: ilse
+thread: ilse
 scene: A single snowflake falling in a spring orchard full of blossom, a girl in white furs catching it on her glove and holding it out.
 text: It's spring, the orchard is in full blossom, and it is snowing — gently, over one tree. Ilse is underneath it. "Graduation's soon," she says. "Everyone's leaving. I wanted to give you something before you forgot me."
 > left: "I won't forget you."

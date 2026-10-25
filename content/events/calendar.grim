@@ -251,7 +251,7 @@ priority: 30
 actor: kael
 art: snow
 tags: mystery hollowstar
-chain: hollowstar
+thread: hollowstar
 scene: A pale young man in a fur-lined coat standing at the door of the dining hall, frost spreading from his boots across the floor.
 text: Mid-term, the dining hall doors open and frost crawls across the floor. A boy in a fur coat walks in, takes the empty seat beside you, and says nothing at all. The headmistress introduces him as Kael Dumont, a transfer. She does not say from where.
 > left: Leave him be
@@ -395,6 +395,8 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   mood -tiny
   say: The music drifts up through the floor while you read. Somewhere, people are happy. You are productive.
 
+@thread tournament
+
 @event spring_tournament
 title: The Spring Tournament
 class: story
@@ -405,7 +407,7 @@ repeat: 12
 priority: 40
 art: duel
 tags: festival rival
-chain: tournament
+thread: tournament
 scene: A ring of white stone on the lawn, crowds in the stands, two duelists bowing as their wands spark.
 text: The Spring Tournament: dueling on the great lawn, the whole academy watching. Entry is open to anyone foolish enough.
 > left: Watch from the stands
@@ -430,7 +432,7 @@ trigger: auto
 when: month == 8 and member(duelling)
 repeat: 12
 priority: 40
-chain: tournament
+thread: tournament
 art: duel
 tags: rival
 scene: The great lawn ringed with banners, a chalk duelling circle at its centre and the Duelling Circle's names on a board.
@@ -463,7 +465,7 @@ tone: tense
 trigger: queued
 art: duel
 tags: rival
-chain: tournament
+thread: tournament
 scene: The same ring at sunset, scorch marks on the stone. Your opponent is grinning.
 text: The semifinal. Your opponent is a fourth-year who has never lost. The crowd is louder now; you can hear your own name in it.
 > left: Fight clean
@@ -496,7 +498,7 @@ tone: tense
 trigger: queued
 art: trophy
 tags: rival festival
-chain: tournament
+thread: tournament
 scene: The dueling ring under floating lanterns, a silver cup on a plinth, and across from you, a familiar face.
 text: The final. Across the ring stands {lyra}, wand raised, eyes blazing. "I was hoping it would be you," she says, and she is not being friendly.
 > left: Give everything you have
