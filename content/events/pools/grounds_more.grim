@@ -9,11 +9,8 @@
 
 @event duel_hall_reading_the_floor
 title: Reading the Floor
-place: duel_hall
-class: routine
+pool: duel_hall_routine
 tone: warm
-repeat: 5
-weight: 10
 art: duel
 tags: magic
 scene: Scorched and scarred floorboards in an empty duelling hall, a student crouched over them tracing a burn mark with one finger.
@@ -30,11 +27,8 @@ text: {Every famous bout in the Duelling Hall left its mark on the floor, a scor
 
 @event duel_hall_second_wanted
 title: A Second Wanted
-place: duel_hall
-class: routine
+pool: duel_hall_routine
 tone: light
-repeat: 5
-weight: 10
 art: sword
 tags: rival social
 cast:
@@ -57,15 +51,18 @@ text: {{here} has a formal practice bout today and no second. "Hold my coat, cou
 
 # ---------------- The Greenhouses ----------------
 
-@event greenhouses_gerald_is_out
-title: Gerald Is Out
+@pool greenhouses_routine
 place: greenhouses
 class: routine
-tone: light
 repeat: 5
 weight: 10
-art: leaf
 tags: nature
+
+@event greenhouses_gerald_is_out
+title: Gerald Is Out
+pool: greenhouses_routine
+tone: light
+art: leaf
 when: met(tobias)
 scene: A small mandrake in a lopsided knitted hat sitting in the wrong flowerpot among the seedlings, screaming very softly at a watering can.
 text: {Gerald, Tobias's mandrake, has escaped his pot again and planted himself among the seedlings. His knitted hat has come unravelled.|Gerald is out again. This time he's in a teacup, screaming softly at a watering can.|Gerald has moved into the pot of the tallest fern, with an air of permanence. His hat is half unravelled; the wool trails back to his own pot.} {Tobias is nowhere to be seen.|A note on Gerald's empty pot says "BACK SOON, DO NOT LET HIM NEAR THE TOMATOES."|{season == "winter": He's shivering, defiantly.|The seedlings around him are wilting with alarm.}}
@@ -79,13 +76,9 @@ text: {Gerald, Tobias's mandrake, has escaped his pot again and planted himself 
 
 @event greenhouses_grafting_bench
 title: The Grafting Bench
-place: greenhouses
-class: routine
+pool: greenhouses_routine
 tone: warm
-repeat: 5
-weight: 10
 art: tree
-tags: nature
 scene: A potting bench crowded with small grafted saplings bound in twine and wax, one of them bearing two different kinds of fruit on two different branches.
 text: {On the grafting bench is the club's oldest experiment, a potted tree that bears pears on one branch and lemons on the other. Beside it, knives, twine, wax and an open invitation.|The grafting bench. Somebody's new graft has taken: a rose that grows on a gooseberry, looking pleased with itself.|The grafting bench. The two-fruit tree has a third branch now, and nobody will admit to it.} {The wax pot is warm and smells of honey.|A row of failed grafts stands along the back, each with a small apologetic label.|{season == "spring": Every graft on the bench is in bud.|The saplings are bare, and the twine shows.}}
 > left: Try a graft of your own
@@ -104,13 +97,9 @@ text: {On the grafting bench is the club's oldest experiment, a potted tree that
 
 @event greenhouses_seed_tin
 title: The Seed Tin
-place: greenhouses
-class: routine
+pool: greenhouses_routine
 tone: warm
-repeat: 5
-weight: 10
 art: leaf
-tags: nature
 scene: An old biscuit tin of paper seed packets on a potting bench, every packet labelled in a different hand, one of them rattling on its own.
 text: {On the potting bench is the club's seed tin. Take a packet, leave a packet, write what it is; most people write what it is.|The seed tin is fuller than last time. Someone has left a packet labelled simply "SORRY".|The seed tin. You know the regulars' handwriting now, and the one who only draws pictures.} {One packet is rattling on its own.|One packet is warm to the touch.|{season == "spring": Half the packets have started sprouting through the paper.|One packet hums a single note when you lift it.}}
 > left: Take the strangest packet
@@ -130,11 +119,8 @@ text: {On the potting bench is the club's seed tin. Take a packet, leave a packe
 
 @event flight_field_kite_day
 title: Kite Day
-place: flight_field
-class: routine
+pool: flight_field_routine
 tone: light
-repeat: 5
-weight: 10
 art: feather
 tags: social
 scene: Enchanted paper kites shaped like dragons and fish wheeling and diving over a windswept green field, one tangled in a hoop at the far end.
@@ -156,11 +142,8 @@ text: {The wind is too wild for brooms, so the first-years are out with charmed 
 
 @event flight_field_mowing_day
 title: Mowing Day
-place: flight_field
-class: routine
+pool: flight_field_routine
 tone: light
-repeat: 5
-weight: 10
 art: broom
 tags: nature
 scene: A row of enchanted scythes swinging themselves across a green field in neat lines while students dart between them and others rake the cut grass.
@@ -184,15 +167,18 @@ text: {Today the enchanted scythes are mowing the Flight Field, swinging themsel
 
 # ---------------- The Secret Garden ----------------
 
-@event secret_garden_two_cups
-title: Two Cups on the Bench
+@pool secret_garden_routine
 place: secret_garden
 class: routine
-tone: warm
 repeat: 5
 weight: 10
-art: cup
 tags: nature
+
+@event secret_garden_two_cups
+title: Two Cups on the Bench
+pool: secret_garden_routine
+tone: warm
+art: cup
 scene: A mossy stone bench in a hidden garden, an old tartan flask and two chipped cups left on it, glowing ferns all around.
 text: {On the bench by the humming pear there's a flask and two chipped cups, and a note in Old Maud's hand. "One for you, dearie, one for whoever comes."|The flask on the bench again, still warm, still with two cups. Maud is never here when you are; the tea always is.|The flask, the cups, the note. You've started leaving the cups washed, and Maud has started leaving a biscuit.} {The silver bees are busy.|The ferns are glowing even in daylight.|{season == "winter": Frost on the bench, steam from the flask.|Blossom has settled in one of the cups.}}
 > left: Sit and drink the tea
@@ -206,13 +192,10 @@ text: {On the bench by the humming pear there's a flask and two chipped cups, an
 
 @event secret_garden_remembering_moss
 title: The Moss That Remembers
-place: secret_garden
-class: routine
+pool: secret_garden_routine
 tone: eerie
-repeat: 5
-weight: 10
 art: leaf
-tags: nature magic
+tags: magic
 scene: A deep green bed of moss under the humming pear tree, holding the faint pressed shape of someone who lay there and is gone.
 text: {Under the humming pear is a bed of moss so thick it keeps the shape of whoever last lay in it. Today it holds a small curled shape, like someone napping.|The moss again. Today's shape is long and straight, arms folded, as if someone lay there watching the leaves.|You know the moss's habits now. Today it holds two shapes, side by side, close.} {The shapes fade slowly, over an hour or so.|One silver bee is asleep in the hollow of an elbow.|{season == "winter": Frost rims the shape like a chalk outline.|The moss is warm where the shape is.}}
 > left: Lie down in the moss yourself
@@ -226,13 +209,9 @@ text: {Under the humming pear is a bed of moss so thick it keeps the shape of wh
 
 @event secret_garden_snail_post
 title: The Snail Post
-place: secret_garden
-class: routine
+pool: secret_garden_routine
 tone: warm
-repeat: 5
-weight: 10
 art: letter
-tags: nature
 scene: A garden snail with a tiny folded paper note tucked under its shell, making its way slowly along a mossy wall.
 text: {A snail is crossing the garden wall with a folded scrap of paper tucked under its shell. Maud's garden, it seems, has a postal service.|The snail post again. Three snails today, each with a note, all heading in different directions.|Snail post. You know the route now, along the wall and round the pear, about a day each way.} {The note within reach says "for whoever's next".|One note has been answered in a different hand.|{season == "winter": The snails are sluggish with cold, the notes damp.|The snail nearest you is wearing a dewdrop like a hat.}}
 > left: Write a note and send it on
@@ -248,11 +227,8 @@ text: {A snail is crossing the garden wall with a folded scrap of paper tucked u
 
 @event courier_loft_record_board
 title: The Record Board
-place: courier_loft
-class: routine
+pool: courier_loft_routine
 tone: light
-repeat: 5
-weight: 10
 art: broom
 tags: job
 scene: A chalkboard in a draughty loft listing delivery records to every tower and the village, some times rubbed out and rewritten, a student squinting at the fastest one.
@@ -273,11 +249,8 @@ text: {On the loft wall is the record board, the fastest delivery ever flown to 
 
 @event courier_loft_pigeon_strike
 title: The Pigeons Are on Strike
-place: courier_loft
-class: routine
+pool: courier_loft_routine
 tone: light
-repeat: 5
-weight: 10
 art: feather
 tags: job
 scene: A row of indignant pigeons sitting in a line on a loft rafter beside a scrap of paper listing their demands in tiny claw-marks.

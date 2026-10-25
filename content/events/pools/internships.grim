@@ -51,13 +51,16 @@ text: {The report you spent a week on is pinned up in the corridor, praised by e
   mood -medium
   say: {You say nothing and do the next one twice as well, in ink that's hard to copy. It doesn't feel like justice. It feels like work.|You let it go. You write your name on every page from then on, small, in the corner.|You take your notes home. The next piece of work never leaves your sight until it's on the supervisor's desk.}
 
-@event intern_city_evening
-title: An Evening Off
+@pool internship_routine
 plan: internship
 class: routine
-tone: warm
 repeat: 4
 weight: 10
+
+@event intern_city_evening
+title: An Evening Off
+pool: internship_routine
+tone: warm
 art: lantern
 tags: social
 scene: A lamplit street far from the academy, interns spilling out of a busy inn, one looking back at the lit window of the workplace.
@@ -74,11 +77,8 @@ text: {{member(intern_expedition) or member(intern_field_station): The other int
 
 @event intern_letter_from_campus
 title: A Letter From the Castle
-plan: internship
-class: routine
+pool: internship_routine
 tone: warm
-repeat: 4
-weight: 10
 art: letter
 tags: social
 cast:

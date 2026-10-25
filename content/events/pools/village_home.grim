@@ -5,13 +5,16 @@
 
 # ---------------- The Village ----------------
 
-@event village_barge_crossing
-title: The Barge Across
+@pool village_routine
 place: village
 class: routine
-tone: warm
 repeat: 5
 weight: 10
+
+@event village_barge_crossing
+title: The Barge Across
+pool: village_routine
+tone: warm
 art: wave
 tags: life
 scene: A flat-bottomed barge crossing a mirror-still lake, the seven towers shrinking behind it.
@@ -27,11 +30,8 @@ text: {The village barge is slower than walking, if you could walk on water.|The
 
 @event village_square_errand
 title: One Thing in the Square
-place: village
-class: routine
+pool: village_routine
 tone: light
-repeat: 5
-weight: 10
 art: coin
 tags: social
 cast:
@@ -55,12 +55,9 @@ text: {friend} has come down to the village with you "for one thing", which turn
 
 @event village_last_barge
 title: The Last Barge
-place: village
+pool: village_routine
 slot: evening
-class: routine
 tone: tense
-repeat: 5
-weight: 10
 art: lantern
 tags: life
 scene: A lamplit village quay at dusk, the last barge pulling at its rope, a student hesitating at the edge of the square.
@@ -84,13 +81,16 @@ text: {The last barge back leaves at the bell, and the bell is ringing.|The last
 
 # ---------------- The Gilded Newt ----------------
 
-@event gilded_newt_fireside
-title: By the Newt's Fire
+@pool gilded_newt_routine
 place: gilded_newt
 class: routine
-tone: warm
 repeat: 5
 weight: 10
+
+@event gilded_newt_fireside
+title: By the Newt's Fire
+pool: gilded_newt_routine
+tone: warm
 art: flame
 tags: life
 scene: A low-beamed tavern with a roaring hearth, a student tucked into the corner seat beside it with a steaming cup.
@@ -106,11 +106,8 @@ text: {The Gilded Newt's fire has never gone out, and the landlady says it never
 @event gilded_newt_card_game
 time: evening night
 title: Cards at the Newt
-place: gilded_newt
-class: routine
+pool: gilded_newt_routine
 tone: tense
-repeat: 5
-weight: 10
 art: cards
 tags: money
 scene: A smoky back room in a tavern, a card game around a scarred table and one empty chair.
@@ -135,11 +132,8 @@ text: {There's a card game in the back room of the Gilded Newt, and an empty cha
 @event gilded_newt_corner_table
 time: evening night
 title: The Corner Table
-place: gilded_newt
-class: routine
+pool: gilded_newt_routine
 tone: light
-repeat: 5
-weight: 10
 art: cup
 tags: social
 cast:
@@ -159,13 +153,16 @@ text: {here} is at the corner table with {a jug of cider and no plans to leave.|
 
 # ---------------- Mabel's Tea Shop ----------------
 
-@event mabels_the_door
-title: Mabel Reads the Door
+@pool mabels_routine
 place: mabels
 class: routine
-tone: light
 repeat: 5
 weight: 10
+
+@event mabels_the_door
+title: Mabel Reads the Door
+pool: mabels_routine
+tone: light
 art: cup
 tags: life
 scene: A tiny tea shop crammed with tins, the shop-bell over the door still swinging, a shrewd woman behind the counter already reaching for a tin.
@@ -185,11 +182,8 @@ text: {Mabel looks up as you open the door and is already reaching for a tin.|Ma
 
 @event mabels_window_seat
 title: The Window Seat
-place: mabels
-class: routine
+pool: mabels_routine
 tone: warm
-repeat: 5
-weight: 10
 art: book
 tags: study
 scene: A window seat in a tea shop looking across a still lake to seven distant towers, a teapot and open notes on the sill.
@@ -206,11 +200,8 @@ text: {Mabel's window seat looks out over the lake to the castle, and it's free.
 
 @event mabels_forty_teas
 title: Forty Kinds of Tea
-place: mabels
-class: routine
+pool: mabels_routine
 tone: warm
-repeat: 5
-weight: 10
 art: cup
 tags: social
 cast:
@@ -228,13 +219,16 @@ text: {friend} wants to try one of Mabel's forty teas, and Mabel insists on choo
 
 # ---------------- Grimsby's Books ----------------
 
-@event grimsbys_wrong_book
-title: Not the Book You Wanted
+@pool grimsbys_books_routine
 place: grimsbys_books
 class: routine
-tone: light
 repeat: 5
 weight: 10
+
+@event grimsbys_wrong_book
+title: Not the Book You Wanted
+pool: grimsbys_books_routine
+tone: light
 art: book
 tags: study
 scene: A bookshop so crowded the shelves lean together, an elderly bookseller on a ladder triumphantly holding up the wrong book.
@@ -255,11 +249,8 @@ text: {You ask Mr Grimsby for a textbook. He vanishes into the shelves and comes
 
 @event grimsbys_damp_barrow
 title: The Damp Barrow
-place: grimsbys_books
-class: routine
+pool: grimsbys_books_routine
 tone: warm
-repeat: 5
-weight: 10
 art: scroll
 tags: study
 scene: A wooden barrow of damp secondhand books outside a crooked bookshop, a student reading one in the drizzle.
@@ -275,11 +266,8 @@ text: {Outside Grimsby's there's a barrow of secondhand books, a coin apiece, sl
 
 @event grimsbys_last_copy
 title: The Last Copy
-place: grimsbys_books
-class: routine
+pool: grimsbys_books_routine
 tone: light
-repeat: 5
-weight: 10
 art: book
 tags: social
 cast:
@@ -305,13 +293,16 @@ text: There's one copy left of the book you need, and {friend} has {their} hand 
 
 # ---------------- Pell & Daughters ----------------
 
-@event pell_apothecary_drawers
-title: A Thousand Drawers
+@pool pell_apothecary_routine
 place: pell_apothecary
 class: routine
-tone: light
 repeat: 5
 weight: 10
+
+@event pell_apothecary_drawers
+title: A Thousand Drawers
+pool: pell_apothecary_routine
+tone: light
 art: bottle
 tags: study
 scene: An apothecary wall of a thousand tiny labelled drawers, brass handles gleaming, a student reading the labels on tiptoe.
@@ -326,11 +317,8 @@ text: {Pell & Daughters has a thousand drawers, each labelled in a different han
 
 @event pell_apothecary_queue
 title: Symptoms in the Queue
-place: pell_apothecary
-class: routine
+pool: pell_apothecary_routine
 tone: light
-repeat: 5
-weight: 10
 art: cross
 tags: social
 scene: A queue of villagers at an apothecary counter, all turning to a student in academy robes.
@@ -351,11 +339,8 @@ text: {The queue at Pell & Daughters notices your academy robes. A woman shows y
 
 @event pell_apothecary_tonic
 title: The Daughters' Tonic
-place: pell_apothecary
-class: routine
+pool: pell_apothecary_routine
 tone: light
-repeat: 5
-weight: 10
 art: potion
 tags: life
 scene: Two apothecary's daughters leaning over a counter, offering a student a small bottle of something that fizzes.
@@ -377,11 +362,8 @@ text: {One of Pell's daughters has a new tonic and needs someone to try it. Her 
 
 @event bakery_bun_queue
 title: The Bun Queue
-place: village
-class: routine
+pool: village_routine
 tone: warm
-repeat: 5
-weight: 10
 art: meal
 tags: life
 scene: A queue of villagers and students outside a little bakery at dawn, steam and the smell of cinnamon pouring out of the door.
@@ -396,11 +378,8 @@ text: {There's a queue outside the bakery for the afternoon batch, and it smells
 
 @event bakery_oldest_baker
 title: The Oldest Baker
-place: village
-class: routine
+pool: village_routine
 tone: warm
-repeat: 5
-weight: 10
 art: letter
 tags: social
 scene: A very old woman in a flour-dusted apron sitting by warm bread ovens, looking up hopefully as the shop door opens.
@@ -415,11 +394,8 @@ text: The oldest of the bakers sits by the ovens, too old to knead and too stubb
 
 @event bakery_cooling_rack
 title: The Cooling Rack
-place: village
-class: routine
+pool: village_routine
 tone: light
-repeat: 5
-weight: 10
 art: door
 tags: life
 scene: A tray of steaming buns cooling on the sill of an open bakery window, a crow and a student both eyeing it.
@@ -445,15 +421,18 @@ text: {Behind the bakery a window stands open, and on the sill a tray of buns is
 
 # ---------------- Home: the family cottage ----------------
 
-@event home_cottage_old_room
-title: Your Old Room
+@pool home_cottage_routine
 place: home_cottage
 class: routine
-tone: warm
 repeat: 4
 weight: 10
-art: bed
 tags: home
+
+@event home_cottage_old_room
+title: Your Old Room
+pool: home_cottage_routine
+tone: warm
+art: bed
 scene: A small childhood bedroom under the eaves, a too-short bed, a window looking out over fields.
 text: {Your old room is exactly as you left it, except smaller.|Someone has been storing apples in your old room.|Your old room has started to feel like a guest room, and you like it less for that.} {season == "winter": There's frost on the inside of the window, as always.|The window won't shut properly in the heat, as always.} Downstairs, the house is busy without you.
 > left: Nap the afternoon away
@@ -466,13 +445,9 @@ text: {Your old room is exactly as you left it, except smaller.|Someone has been
 
 @event home_cottage_list
 title: The List on the Table
-place: home_cottage
-class: routine
+pool: home_cottage_routine
 tone: light
-repeat: 4
-weight: 10
 art: paper
-tags: home
 scene: A kitchen table with a long handwritten list of chores weighted down by a teapot, a student in academy robes reading it with dismay.
 text: {&Home has remembered that you know where everything is.|A day home, and already a list.|The list. Your name, underlined.} {has(origin_noble): {&The steward wants the ledgers checked.|The steward wants the tenants' letters answered.|The steward wants you to sit in on a dispute about a fence.}|{has(origin_merchant): {&The shop's stock needs counting.|The shop sign needs repainting.|The shop's ledger has a column nobody can explain.}|{has(origin_hedge): {&Your grandmother wants herbs hung to dry.|Your grandmother wants every jar labelled.|Your grandmother wants the bees told the news.}|{&The woodpile needs splitting.|The hen house door argues.|The well rope has frayed.}}}}
 > left: Work through the whole list
@@ -496,13 +471,9 @@ text: {&Home has remembered that you know where everything is.|A day home, and a
 
 @event home_cottage_after_supper
 title: The Same Question
-place: home_cottage
-class: routine
+pool: home_cottage_routine
 tone: warm
-repeat: 4
-weight: 10
 art: candle
-tags: home
 scene: A family kitchen after supper by candlelight, dishes drying, everyone turned towards one student.
 text: After supper, when the dishes are done, someone always asks it. {"So what will you do, after?"|"Still don't know what you'll do after?" An aunt, this time.|By now you could ask it yourself, in any of their voices, and someone does.} {final_year: This time the answer is close enough to touch.|{The fire pops.|Nobody pretends not to be listening.|Someone pours more tea to give you time.}}
 > left: Tell them the truth
@@ -516,15 +487,19 @@ text: After supper, when the dishes are done, someone always asks it. {"So what 
 
 # ---------------- Home: the fields ----------------
 
-@event home_fields_long_rows
-title: The Long Rows
+@pool home_fields_routine
 place: home_fields
 class: routine
-tone: warm
 repeat: 4
 weight: 10
+tags: home
+
+@event home_fields_long_rows
+title: The Long Rows
+pool: home_fields_routine
+tone: warm
 art: leaf
-tags: home nature
+tags: nature
 scene: A student walking alone between long furrowed rows towards a low wall at the edge of the fields, the horizon wide and empty.
 text: {You walk the long rows to the field's end, where you used to imagine towers.|You've seen the towers now. The horizon at the end of the rows still pulls.|The walk to the field's end is a habit now. Your feet know it by heart.} {season == "winter": The furrows crunch with frost.|The wheat is high and loud with insects.} {A hare bolts.|A crow follows you at a respectful distance.|Smoke rises from a chimney you can't see.}
 > left: Walk the whole boundary
@@ -538,13 +513,10 @@ text: {You walk the long rows to the field's end, where you used to imagine towe
 
 @event home_fields_neighbours
 title: Neighbours' Work
-place: home_fields
-class: routine
+pool: home_fields_routine
 tone: warm
-repeat: 4
-weight: 10
 art: group
-tags: home social
+tags: social
 scene: Neighbours working together at the edge of a field, one waving a student in academy robes over to help.
 text: {season == "winter": The neighbours are hauling wood before the next snow.|The neighbours are bringing in the hay before the weather turns.} {They wave you over without asking if you're busy.|This time somebody has saved you a pair of gloves.|They've stopped waving. They just hand you the gloves.} {The neighbour's boy wants to be turned into a frog.|A farmer calls you "the scholar", mostly kindly.|Someone has brought a jug of mostly cider.}
 > left: Lend a hand
@@ -558,13 +530,10 @@ text: {season == "winter": The neighbours are hauling wood before the next snow.
 
 @event home_fields_pond
 title: The Old Pond
-place: home_fields
-class: routine
+pool: home_fields_routine
 tone: light
-repeat: 4
-weight: 10
 art: wave
-tags: home nature
+tags: nature
 scene: A pond at the bottom of a field under an old willow, local youngsters daring each other at its edge.
 text: {season == "winter": The pond at the bottom of the fields has frozen over, and the young farmhands are daring each other onto the ice.|The pond at the bottom of the fields is warm and green, and the young farmhands are daring each other off the willow.} {You used to be one of them.|This time they dare you too.|They've started daring you first.} {A dog barks at the whole business.|The blacksmith's apprentice is keeping score.|Your old initials are still carved in the willow.}
 > left: Take the dare
@@ -582,15 +551,19 @@ text: {season == "winter": The pond at the bottom of the fields has frozen over,
 
 # ---------------- Home: the market town ----------------
 
-@event home_market_inn_crowd
-title: Outside the Inn
+@pool home_market_routine
 place: home_market
 class: routine
-tone: light
 repeat: 4
 weight: 10
+tags: home
+
+@event home_market_inn_crowd
+title: Outside the Inn
+pool: home_market_routine
+tone: light
 art: cup
-tags: home social
+tags: social
 scene: A knot of young locals outside a country inn, raising their cups as a student in academy robes walks up.
 text: {The old crowd is outside the inn, exactly where you left them. "Look who it is," someone says. "The wizard."|The old crowd have been rehearsing the wizard joke. It has a second part now.|The old crowd outside the inn. Fewer of them every break: somebody married, somebody moved away.} {season == "winter": They're stamping their feet against the cold.|They're sitting on the inn steps in the long light.}
 > left: Buy a round
@@ -605,13 +578,10 @@ text: {The old crowd is outside the inn, exactly where you left them. "Look who 
 
 @event home_market_charm_seller
 title: The Charm Seller
-place: home_market
-class: routine
+pool: home_market_routine
 tone: light
-repeat: 4
-weight: 10
 art: gem
-tags: home money
+tags: money
 scene: A market stall hung with ribbons and trinkets under a hand-painted sign about academy blessings, a grandmother reaching for her purse.
 text: {A stall in the market is selling "genuine Lumenhold charms, blessed in the seven towers".|The charm seller has new charms and a bigger sign. The claims have grown to match.|The charm seller sees your robes and starts packing up, then thinks better of it.} {has(origin_merchant): You know that markup. You were raised on it.|{A grandmother is buying one for luck.|The charms are bent nails tied with ribbon.|One of them is, worryingly, glowing.}}
 > left: Call out the fakes
@@ -632,13 +602,9 @@ text: {A stall in the market is selling "genuine Lumenhold charms, blessed in th
 
 @event home_market_post_office
 title: Letters to the Castle
-place: home_market
-class: routine
+pool: home_market_routine
 tone: warm
-repeat: 4
-weight: 10
 art: letter
-tags: home
 scene: A post office the size of a cupboard, a clerk ceremoniously weighing a stack of letters addressed to a castle on a lake.
 text: {The town's post office is the size of a cupboard, and its clerk has never posted anything to a magic academy.|The clerk has started weighing your letters with ceremony.|The clerk reaches for the castle stamp before you speak.} {season == "winter": The window is fogged; it smells of sealing wax.|Flies wander in to read the notices.} {final_year: Soon you'll write to the castle from elsewhere.|You think about who at the castle you miss.}
 > left: Write to everyone

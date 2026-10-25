@@ -144,11 +144,14 @@ text: Someone left a window open and the dormitory is now full of pixies. They'r
   mood +small
   say: You lay a trail of sugar cubes out of the window. The pixies follow it, munching, and leave one sock as a tip.
 
+@pool life_windfall
+class: windfall
+weight: 5
+
 @event life_gargoyle
 title: A Talkative Gargoyle
-class: windfall
+pool: life_windfall
 tone: light
-weight: 5
 art: tower
 tags: magic
 scene: A weathered stone gargoyle on a parapet, one eye open, mouth moving, a student sitting beside it with a sandwich.
@@ -220,15 +223,18 @@ text: You can't sleep. Your brain has decided to replay every embarrassing thing
   mood +tiny
   say: Halfway through counting, the stars start counting back. Then you're asleep.
 
+@pool life_routine
+class: routine
+weight: 5
+
 @event life_morning_run
 time: morning
 title: The Dawn Run
-class: routine
+pool: life_routine
 tone: light
 art: sun
 tags: nature
 when: month <= 3 or month >= 7
-weight: 5
 scene: The lakeshore path at dawn, mist on the water, a lone runner's breath steaming, the towers catching the first gold light.
 text: A group of students runs the lakeshore every dawn. They've invited you. It's very early. It's very cold.
 > left: Sleep in
@@ -368,9 +374,8 @@ text: A storm knocks out every light-crystal in the dormitory. The common room f
 @event life_mirror_talks
 time: morning
 title: The Honest Mirror
-class: routine
+pool: life_routine
 tone: light
-weight: 5
 art: mirror
 tags: magic
 scene: A bathroom mirror with a stern painted face in its silvering, frowning at a student mid-toothbrush.
@@ -410,9 +415,8 @@ text: The dormitory across the corridor turned your door into a goat. The goat i
 
 @event life_mail_owl
 title: The Wrong Letter
-class: routine
+pool: life_routine
 tone: eerie
-weight: 5
 art: letter
 tags: mystery
 scene: A ruffled delivery owl dropping a scented pink envelope onto a breakfast plate, a student looking up in confusion.
@@ -431,12 +435,11 @@ text: A delivery owl drops a scented pink letter in your porridge. It's addresse
 
 @event life_money_from_home
 title: A Parcel From Home
-class: windfall
+pool: life_windfall
 tone: warm
 art: pouch
 tags: home money
 when: turn >= 2
-weight: 5
 scene: A brown paper parcel tied with string on a dormitory bed, a knitted scarf, a jar of jam and a small coin purse spilling out.
 text: A parcel from home: a knitted scarf, a jar of jam, a note telling you to eat vegetables, and a small purse of coins.
 > left: Save the money
@@ -639,9 +642,8 @@ text: The fish pie at dinner was a mistake. Your stomach is staging a revolution
 
 @event life_self_doubt
 title: Imposter
-class: windfall
+pool: life_windfall
 tone: warm
-weight: 5
 art: mirror
 tags: home
 scene: A student sitting alone on the edge of a fountain at night, staring at their reflection broken up by ripples.
@@ -682,9 +684,8 @@ text: You wake up on the battlements in your pyjamas, at the very edge, with no 
 @event life_quiet_afternoon
 slot: afternoon
 title: A Quiet Afternoon
-class: windfall
+pool: life_windfall
 tone: light
-weight: 5
 art: leaf
 tags: nature
 scene: A student lying in the long grass under an oak tree, a book open on their chest, clouds drifting above the towers.
@@ -721,12 +722,11 @@ text: The ninth step on the north stair is a trick step. Everyone knows. You for
 
 @event life_lake_fever
 title: Lake Fever Season
-class: routine
+pool: life_routine
 tone: grim
 art: rain
 tags: crisis
 when: month >= 3 and month <= 6
-weight: 5
 scene: A dormitory where half the beds hold sniffling students with faintly blue-glowing noses, tissues everywhere.
 text: Half your dormitory has Lake Fever. Noses are glowing blue. You feel a tickle in your throat.
 > left: Dose up on Maud's tea
@@ -869,12 +869,11 @@ text: A delegation from Thornwick Academy is visiting. Their students are smug, 
 
 @event life_lost_firstyear
 title: A Lost First-Year
-class: routine
+pool: life_routine
 tone: light
 art: compass
 tags: social
 when: month <= 3
-weight: 5
 scene: A tiny first-year in enormous robes standing in the middle of a junction of five identical corridors, clutching a timetable upside down.
 text: A tiny first-year is standing in the middle of the corridor, clutching an upside-down timetable and trying very hard not to cry.
 > left: Point the way and hurry on
@@ -927,9 +926,8 @@ text: In the village, an old fortune-teller beckons you into her tent. "Eight cr
 
 @event life_volunteer
 title: Clean-Up Duty
-class: routine
+pool: life_routine
 tone: warm
-weight: 5
 art: broom
 tags: home
 scene: Students in rolled-up sleeves raking leaves on the great lawn, a groundskeeper directing them with a pitchfork.

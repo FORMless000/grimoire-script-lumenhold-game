@@ -29,14 +29,17 @@ text: Kael sits down beside you on the cold bench outside the library. {~Frost c
   gold -tiny
   say: {~You bring him a cup of his own. It freezes at the rim. He drinks it anyway, solemnly, as if it were a ceremony.|You fetch him a cup from the kitchens. He holds it like something alive. "Nobody brings me hot things," he says. "They assume."}
 
+@pool kael_nessa_kael_social_routine
+actor: kael
+trigger: social
+class: routine
+weight: 10
+
 @event kael_frost_drawings
 title: Frost Drawings
-class: routine
+pool: kael_nessa_kael_social_routine
 tone: warm
-trigger: social
-actor: kael
 when: rel(kael) >= 9 and spark(kael) >= 5 and courting(kael)
-weight: 10
 art: snow
 tags: social romance
 scene: A tall classroom window covered in delicate frost-ferns that, looked at closely, make the shape of a face; a pale boy wiping at it with his sleeve.
@@ -51,12 +54,9 @@ text: The window by your seat in the lecture tower is frosted over, in a lecture
 
 @event kael_until_the_thaw
 title: Until the Thaw
-class: routine
+pool: kael_nessa_kael_social_routine
 tone: warm
-trigger: social
-actor: kael
 when: rel(kael) >= 12 and spark(kael) >= 10 and courting(kael)
-weight: 10
 art: star
 tags: social romance
 scene: Two students parting at the foot of a spiral staircase at night, one of them touching his forehead briefly to the other's.
@@ -116,12 +116,9 @@ text: Kael has a practice now: once a month, he tells you one thing he wants, ou
 
 @event kael_dont_protect_me
 title: Don't Protect Me
-class: routine
+pool: kael_nessa_kael_social_routine
 tone: tense
-trigger: social
-actor: kael
 when: bond(kael) == "partner"
-weight: 10
 art: bolt
 tags: romance
 scene: A corridor floor glazed with ice around another student's boots, a pale boy standing between them and his partner, frost in the air.
@@ -231,14 +228,17 @@ text: You tell Nessa something about your day and her quill writes it down. {~It
   charm +tiny
   say: {~You guess "please stop". The quill writes "PLEASE STOP" in capitals and keeps going. Nessa laughs so hard she has to sit down.|You guess "the end". The quill writes "THE END" and then, to make a point, a sequel. Nessa gives you a mark out of ten. It's a four.}
 
+@pool kael_nessa_nessa_social_routine
+actor: nessa
+trigger: social
+class: routine
+weight: 10
+
 @event nessa_quill_draft
 title: The Quill's Draft
-class: routine
+pool: kael_nessa_nessa_social_routine
 tone: light
-trigger: social
-actor: nessa
 when: rel(nessa) >= 9 and spark(nessa) >= 5 and courting(nessa)
-weight: 10
 art: paper
 tags: social romance
 scene: A sheet of newsprint on a desk with an over-written headline about two students, a mortified girl snatching for it.
@@ -285,12 +285,9 @@ text: The Ledger goes to the printer at midnight and Nessa is three columns shor
 
 @event nessa_shared_byline
 title: A Shared Byline
-class: routine
+pool: kael_nessa_nessa_social_routine
 tone: warm
-trigger: social
-actor: nessa
 when: rel(nessa) >= 12 and spark(nessa) >= 10 and courting(nessa)
-weight: 10
 art: paper
 tags: social romance
 scene: A newspaper proof with two names printed side by side under a headline, one student pointing at them, the other pretending not to care.
@@ -328,12 +325,9 @@ text: Every week the Ledger's corrections column has a paragraph only you can re
 
 @event nessa_not_a_story
 title: Not a Story
-class: routine
+pool: kael_nessa_nessa_social_routine
 tone: tense
-trigger: social
-actor: nessa
 when: bond(nessa) == "partner"
-weight: 10
 art: feather
 tags: romance
 scene: A girl holding out a typed draft to her partner across a desk, eager, the partner not taking it, the quill between them frozen mid-word.
@@ -357,12 +351,9 @@ text: Nessa has written a feature. It's beautiful. It's about you: where you cam
 
 @event nessa_press_breaks
 title: The Press Breaks
-class: routine
+pool: kael_nessa_nessa_social_routine
 tone: tense
-trigger: social
-actor: nessa
 when: bond(nessa) == "partner" and year >= 2
-weight: 10
 art: gear
 tags: romance
 scene: An old iron printing press with a cracked frame, a girl sitting on the floor beside it with her knees drawn up, ink on her hands.

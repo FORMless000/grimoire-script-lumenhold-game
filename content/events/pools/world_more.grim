@@ -6,12 +6,15 @@
 #  Spec: docs/authoring/pools.md.
 # ============================================================
 
-@event world_stairs_ate_a_shoe
-title: The Stairs Ate a Shoe
+@pool world_more_routine
 class: routine
-tone: light
 repeat: 5
 weight: 10
+
+@event world_stairs_ate_a_shoe
+title: The Stairs Ate a Shoe
+pool: world_more_routine
+tone: light
 art: tower
 tags: magic
 when: term
@@ -29,10 +32,8 @@ text: {Halfway down the east stair the steps shift, and when they settle you are
 
 @event world_duchess_has_news
 title: The Duchess Has News
-class: routine
+pool: world_more_routine
 tone: light
-repeat: 5
-weight: 10
 art: mirror
 tags: social
 scene: An ornate gilt frame in a castle corridor where a powdered portrait duchess has squeezed in beside a placid painted cow, leaning out to whisper.
@@ -50,10 +51,8 @@ text: {The Duchess of Ambry, who refuses to stay in her own frame, has squeezed 
 
 @event world_laundry_day
 title: Laundry Day
-class: routine
+pool: world_more_routine
 tone: light
-repeat: 5
-weight: 10
 art: bottle
 tags: home
 scene: Enchanted wash-tubs churning by themselves in a steamy castle laundry, clothes flapping on lines overhead, a student holding up a robe that has turned an alarming colour.
@@ -75,10 +74,8 @@ text: {The castle laundry has charmed tubs that wash by themselves, mostly. Your
 
 @event world_bridge_in_a_gale
 title: The Bridge in a Gale
-class: routine
+pool: world_more_routine
 tone: tense
-repeat: 5
-weight: 10
 art: tower
 tags: danger
 scene: A shimmering bridge of light slung between two castle towers, swaying in a howling wind, a student gripping the rail halfway across.
@@ -100,10 +97,8 @@ text: {The wind is up, and the bridge of light between the towers is swaying lik
 @event world_common_room_kettle
 slot: night
 title: The Common-Room Kettle
-class: routine
+pool: world_more_routine
 tone: warm
-repeat: 5
-weight: 10
 art: cup
 tags: social home
 scene: A crowded house common room late in the evening, students in dressing gowns round a fire, a battered kettle starting to whistle on the hob.
@@ -138,10 +133,8 @@ text: {Once, on your first day, the Sorting Mirror asked who you were before you
 
 @event world_something_in_your_bag
 title: A Stowaway in Your Satchel
-class: routine
+pool: world_more_routine
 tone: light
-repeat: 5
-weight: 10
 art: paw
 tags: nature
 scene: A student opening a satchel to find a small magical creature curled up among the books, blinking up at them.
@@ -181,10 +174,8 @@ text: {{friend} has a study group going in an empty classroom and a spare seat. 
 
 @event world_weather_following_you
 title: Weather Following You
-class: routine
+pool: world_more_routine
 tone: light
-repeat: 5
-weight: 10
 art: rain
 tags: magic
 scene: A student walking down a castle corridor with a small personal weather charm hovering over their head while everyone else keeps clear.
@@ -206,10 +197,8 @@ text: {~Somebody's weather charm has escaped and attached itself to you. A small
 @event world_lamplighters_round
 slot: evening
 title: The Lamplighter's Round
-class: routine
+pool: world_more_routine
 tone: warm
-repeat: 5
-weight: 10
 art: lantern
 tags: social
 scene: An old castle porter with a long brass lighting pole lighting the corridor lamps one by one at dusk, a student walking beside him carrying a second pole.
@@ -224,10 +213,8 @@ text: {At dusk the old porter makes his round with a long brass pole, lighting t
 
 @event world_the_warm_flue
 title: The Warm Flue
-class: routine
+pool: world_more_routine
 tone: light
-repeat: 5
-weight: 10
 art: bed
 tags: home
 when: term
@@ -245,10 +232,8 @@ text: {Behind the kitchens there's a window niche where the chimney flue runs wa
 
 @event world_margin_argument
 title: The Argument in the Margins
-class: routine
+pool: world_more_routine
 tone: warm
-repeat: 5
-weight: 10
 art: book
 tags: study
 when: term
@@ -265,10 +250,8 @@ text: {Your second-hand textbook came with an argument in the margins. Two forme
 
 @event world_door_that_wasnt_there
 title: A Door That Wasn't There
-class: routine
+pool: world_more_routine
 tone: eerie
-repeat: 5
-weight: 10
 art: door
 tags: mystery
 scene: A small arched wooden door set into a castle corridor wall where there was only bare stone yesterday, its brass handle faintly warm.
@@ -288,10 +271,8 @@ text: {~In a corridor you walk every day there is a door that wasn't there yeste
 
 @event world_paper_bird
 title: The Paper-Bird Jam
-class: routine
+pool: world_more_routine
 tone: light
-repeat: 5
-weight: 10
 art: letter
 tags: social
 scene: Dozens of folded paper birds crowding and flapping against a dormitory window, a student trying to catch them in both hands.
@@ -308,10 +289,8 @@ text: {Somebody's routing charm has gone wrong, and every paper bird in your tow
 @event world_practice_next_door
 slot: night
 title: The Practice Next Door
-class: routine
+pool: world_more_routine
 tone: warm
-repeat: 5
-weight: 10
 art: music
 tags: social
 scene: A student at a desk with their head in their hands, a thin wall between them and an unseen musician, music drifting under the door.

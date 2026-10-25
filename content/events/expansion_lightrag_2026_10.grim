@@ -2,13 +2,9 @@
 
 @event stables_hippogriff_grooming
 title: Feathers the Wrong Way
-place: stables
-class: routine
+pool: stables_routine
 tone: warm
-repeat: 5
-weight: 10
 art: feather
-tags: nature
 scene: A student brushing the wing feathers of a lying-down hippogriff in a straw-filled stall, loose feathers drifting in a shaft of light.
 text: {A hippogriff has rolled in the mud and lies in her stall with every feather pointing the wrong way, waiting to be groomed.|The muddy hippogriff again. She lies down the moment she sees you with a brush.|The hippogriff has kept her muddiest wing for you, and holds it out like a gift.} {season == "autumn": Leaves are stuck in her feathers.|{The stable cat supervises from a beam.|The owls are watching to see if you get it wrong.|Brask is somewhere nearby, humming to a feed sack.}}
 > left: Groom her properly, feather by feather
@@ -22,13 +18,9 @@ text: {A hippogriff has rolled in the mud and lies in her stall with every feath
 
 @event stables_tack_room
 title: The Tack Room
-place: stables
-class: routine
+pool: stables_routine
 tone: light
-repeat: 5
-weight: 10
 art: paw
-tags: nature
 scene: A cramped tack room hung with harnesses and saddles, a student sitting on an upturned bucket oiling a strap, a griffon chick peering in at the door.
 text: {The tack room is a mess of harnesses, and the oil pot is out. Someone has to do the straps before Beastcraft tomorrow.|The tack room again. The griffon chick has been at the buckles.|The tack room has your bucket in it now, the one you sit on.} {season == "winter": It's the warmest room in the stables, and it smells of leather and oil.|{One strap has teeth marks all along it.|A saddle is missing; nobody wants to say whose.|There is a nest in the old harness, and it is occupied.}}
 > left: Oil and mend the straps
@@ -40,14 +32,17 @@ text: {The tack room is a mess of harnesses, and the oil pot is out. Someone has
   rel brask -tiny
   say: {You leave the straps for the morning. In the morning Brask hands you the pot, and a look.|You're out of the door before the oil pot is. Behind you the griffon chick starts on another buckle.|You slip away. You hear Brask say your name to the hippogriffs, in a tone.}
 
+@pool courtyard_routine
+place: courtyard
+class: routine
+repeat: 5
+weight: 10
+
 @event courtyard_fountain_wishes
 time: afternoon
 title: Coins in the Fountain
-place: courtyard
-class: routine
+pool: courtyard_routine
 tone: light
-repeat: 5
-weight: 10
 art: sun
 tags: money
 scene: A courtyard fountain with coins glinting on the bottom, a student crouching at the rim with a sleeve rolled up, a groundskeeper's rake leaning nearby.
@@ -63,11 +58,8 @@ text: {Students throw coins in the courtyard fountain for luck before exams. The
 
 @event courtyard_lost_cat
 title: Footnote on the Wall
-place: courtyard
-class: routine
+pool: courtyard_routine
 tone: light
-repeat: 5
-weight: 10
 art: paw
 tags: social
 scene: A grey library cat sitting on top of a high courtyard wall, a small crowd of students below calling up to it, one holding out a sardine.

@@ -123,15 +123,18 @@ text: The registrar's noticeboard flaps with sign-up sheets for this term's elec
   gain class_umbral
   flag took_umbral
 
+@pool calendar_auto_story
+trigger: auto
+class: story
+repeat: 12
+priority: 40
+
 @event club_fair
 # retired in phase 2b (was "month == 2"); replaced by club_fair_v3 (offers: clubs)
 title: The Club Fair
-class: story
+pool: calendar_auto_story
 tone: light
-trigger: auto
 when: false
-repeat: 12
-priority: 40
 type: menu
 art: group
 tags: social club retired
@@ -267,12 +270,9 @@ text: Mid-term, the dining hall doors open and frost crawls across the floor. A 
 @event winter_trials
 # retired in phase 2b (was "month == 4"); replaced by term-end exams (engine, design §7.3)
 title: The Winter Trials
-class: story
+pool: calendar_auto_story
 tone: tense
-trigger: auto
 when: false
-repeat: 12
-priority: 40
 art: hourglass
 tags: study exam retired
 scene: A vast examination hall where floating quills hover over a hundred desks and the windows are thick with frost.
@@ -301,12 +301,9 @@ text: The Winter Trials. A hundred desks, a hundred floating quills, one very ol
 @event midwinter_ball
 slot: evening
 title: The Midwinter Ball
-class: story
+pool: calendar_auto_story
 tone: warm
-trigger: auto
 when: month == 4
-repeat: 12
-priority: 40
 type: menu
 art: music
 tags: festival romance social
@@ -527,12 +524,9 @@ text: The final. Across the ring stands {lyra}, wand raised, eyes blazing. "I wa
 @event grand_exams
 # retired in phase 2b (was "month == 10"); replaced by term-end exams (engine, design §7.3)
 title: Grand Examinations
-class: story
+pool: calendar_auto_story
 tone: tense
-trigger: auto
 when: false
-repeat: 12
-priority: 40
 art: scroll
 tags: study exam retired
 scene: A circular examination chamber with a domed ceiling of moving constellations; examiners in grey robes sit behind a long table.
@@ -561,12 +555,9 @@ text: Year-end examinations. Three days, five examiners and a practical in front
 @event summer_plans
 # retired in phase 2b (was "month == 11"); replaced by break_plan
 title: Summer Recess
-class: story
+pool: calendar_auto_story
 tone: warm
-trigger: auto
 when: false
-repeat: 12
-priority: 40
 type: menu
 art: sun
 tags: home retired

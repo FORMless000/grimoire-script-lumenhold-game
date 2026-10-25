@@ -9,14 +9,17 @@
 
 # ---------------- A) Forced sinks ----------------
 
+@pool incidents_incident
+class: incident
+repeat: 2
+weight: 6
+
 @event inc_fever_bill
 time: morning
 title: A Fever and a Bill
-class: incident
+pool: incidents_incident
 tone: tense
 when: turn >= 3 and gold >= 30 and seen(inc_fever_bill) < 2 and since(inc_fever_bill) >= 12
-weight: 6
-repeat: 2
 art: potion
 tags: life money
 scene: A pale student in an infirmary bed, a stern nurse holding out a small blue bottle and a folded bill.
@@ -30,13 +33,16 @@ text: You wake in the infirmary with a fever that makes the ceiling breathe. Sis
   study -small
   say: Three days of damp sheets and strange dreams about stairs. You miss a week of notes, and come back feeling like a wrung-out dishcloth.
 
+@pool incidents_incident_repeat1
+class: incident
+repeat: 1
+weight: 6
+
 @event inc_broken_wand
 title: Snapped on the Stairs
-class: incident
+pool: incidents_incident_repeat1
 tone: tense
 when: turn >= 3 and gold >= 30 and seen(inc_broken_wand) == 0
-weight: 6
-repeat: 1
 art: wand
 tags: magic money
 scene: A student kneeling on a stone staircase, holding the two halves of a wand that still fizzes faintly at the break.
@@ -56,11 +62,9 @@ text: The moving stairs shift without warning. You catch yourself; your wand doe
 
 @event inc_library_fine
 title: The Overdue Notice
-class: incident
+pool: incidents_incident
 tone: light
 when: turn >= 3 and gold >= 30 and seen(inc_library_fine) < 2 and since(inc_library_fine) >= 12
-weight: 6
-repeat: 2
 art: paper
 tags: study money
 scene: A prefect in a red sash holding out a long paper notice, a book with teeth marks on the desk between them.
@@ -81,11 +85,9 @@ text: A prefect in a red sash slides a notice across your desk. The library book
 
 @event inc_letter_home
 title: Bad Weather at Home
-class: incident
+pool: incidents_incident_repeat1
 tone: grim
 when: turn >= 3 and gold >= 30 and seen(inc_letter_home) == 0
-weight: 6
-repeat: 1
 art: letter
 tags: home money
 scene: A student at a window reading a rain-spotted letter, a small pile of coins on the sill beside them.
@@ -101,11 +103,9 @@ text: A letter from home, written in a hurry. A storm took half the roof, and th
 
 @event inc_stolen_purse
 title: Market Day Fingers
-class: incident
+pool: incidents_incident
 tone: tense
 when: turn >= 3 and gold >= 30 and seen(inc_stolen_purse) < 2 and since(inc_stolen_purse) >= 12
-weight: 6
-repeat: 2
 art: pouch
 tags: money danger
 scene: A crowded village square on market day, a figure in a grey hood slipping away between the stalls with a small purse.
@@ -129,11 +129,9 @@ text: Somewhere between the cheese stall and the man selling enchanted socks, yo
 @event inc_hiccuping_robe
 time: morning
 title: The Robe That Hiccups
-class: incident
+pool: incidents_incident_repeat1
 tone: light
 when: turn >= 3 and gold >= 20 and seen(inc_hiccuping_robe) == 0
-weight: 6
-repeat: 1
 art: cauldron
 tags: magic money
 scene: A student in potion-stained robes jolting mid-step as their robe gives a visible hiccup, classmates hiding smiles.

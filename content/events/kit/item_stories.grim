@@ -4,13 +4,16 @@
 
 # ---------------- The borrowed wand ----------------
 
-@event item_borrowed_initials
-title: Initials on the Handle
+@pool grimsbys_books_routine_weight8
 place: grimsbys_books
 class: routine
+weight: 8
+
+@event item_borrowed_initials
+title: Initials on the Handle
+pool: grimsbys_books_routine_weight8
 tone: warm
 when: has_item(borrowed_wand) and month >= 2
-weight: 8
 art: wand
 tags: item study
 scene: An old bookseller peering through half-moon glasses at the scratched initials on a battered student wand.
@@ -163,15 +166,18 @@ text: Lyra's eyes go straight to the ashwood wand in your hand. "Ashwood," she s
 
 # ---------------- Ilse's frost-ward ----------------
 
+@pool item_stories_routine
+class: routine
+weight: 8
+tags: item
+
 @event item_frost_ward_cold
 title: Cold Things Think Twice
-class: routine
+pool: item_stories_routine
 tone: eerie
 slot: night
 when: has_item(ilse_frost_ward) and season == "winter"
-weight: 8
 art: snow
-tags: item
 scene: A dark castle corridor at night, frost spreading across the windows, a student walking through it untouched.
 text: The cold comes into the castle tonight like something looking for someone. Frost runs along the corridor windows ahead of you, then stops at your feet and goes round, as if it had remembered its manners. Your collar, where Ilse's ward is sewn, is warm.
 > left: Walk the long corridor anyway
@@ -184,12 +190,10 @@ text: The cold comes into the castle tonight like something looking for someone.
 
 @event item_frost_ward_thread
 title: A Northern Thread
-class: routine
+pool: item_stories_routine
 tone: warm
 when: has_item(ilse_frost_ward) and met(kael)
-weight: 8
 art: snow
-tags: item
 cast:
   kael: kael where around(kael)
 scene: A pale northern student touching the stitched collar of another student's robe, his face unreadable.
@@ -247,12 +251,11 @@ text: The black coin slides out of your pocket onto the library table. Kael, acr
 
 @event item_almanac_lighthouse
 title: The Lighthouse Page
-class: routine
+pool: item_stories_routine
 tone: warm
 when: has_item(pocket_almanac)
-weight: 8
 art: book
-tags: item study
+tags: study
 scene: A student reading a tiny thick almanac by candlelight, a page of pencil notes about a lighthouse open under their thumb.
 text: Page forty of the almanac is all Grimsby: the lighthouse at the point, its lamp times for every season, and in the margin, very small, "best on a clear night in Frostcall, if one goes alone".
 > left: Go down to the point one clear night
@@ -290,12 +293,11 @@ text: Pell's daughters are waiting at the counter with their arms folded. "That'
 
 @event item_honey_bees
 title: Silver Bees Follow You
-class: routine
+pool: item_stories_routine
 tone: light
 when: has_item(honey_tin) and season != "winter"
-weight: 8
 art: flower
-tags: item nature
+tags: nature
 scene: A student walking across a castle courtyard trailed by a small glittering cloud of silver bees.
 text: A small cloud of silver bees has followed you up from Maud's cottage and through the castle gates. They hum round your bag, where the honey tin is. A prefect looks at them, then at you, and visibly decides it isn't his problem.
 > left: Walk them back to Maud

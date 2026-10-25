@@ -9,14 +9,17 @@
 
 # ---------------- The Observatory ----------------
 
+@pool observatory_routine
+place: observatory
+class: routine
+repeat: 5
+weight: 10
+
 @event observatory_night_log
 time: evening night
 title: The Night Log
-place: observatory
-class: routine
+pool: observatory_routine
 tone: warm
-repeat: 5
-weight: 10
 art: book
 tags: study magic
 scene: A brass observatory dome at night, one student writing in a huge logbook by lamplight while the great telescope swings round on its own.
@@ -41,11 +44,8 @@ text: {The observatory keeps a night log, and anyone may write in it.|{flag(wrot
 @event observatory_one_star_each
 time: evening night
 title: One Star Each
-place: observatory
-class: routine
+pool: observatory_routine
 tone: warm
-repeat: 5
-weight: 10
 art: star
 tags: social magic
 cast:
@@ -63,11 +63,8 @@ text: {The rule chalked on the observatory door says one star each, then pass it
 
 @event observatory_roof_ledge
 title: The Roof Ledge
-place: observatory
-class: routine
+pool: observatory_routine
 tone: tense
-repeat: 5
-weight: 10
 art: moon
 tags: life danger
 scene: A student sitting on a narrow ledge outside a brass dome, legs dangling over the castle roofs, the lake far below.
@@ -110,13 +107,16 @@ text: {In the night log's oldest volume, every entry by a student who had finish
 
 # ---------------- Mir's Workshop ----------------
 
-@event workshop_spare_bench
-title: The Spare Bench
+@pool workshop_routine
 place: workshop
 class: routine
-tone: light
 repeat: 5
 weight: 10
+
+@event workshop_spare_bench
+title: The Spare Bench
+pool: workshop_routine
+tone: light
 art: gear
 tags: magic life
 scene: A cluttered workshop bench under a hand-painted sign, a music box in pieces beside a jar of springs, fire buckets by the door.
@@ -133,11 +133,8 @@ text: {Mir keeps a spare bench for visitors, under a sign that says TOUCH THINGS
 
 @event workshop_volunteer
 title: A Volunteer With Hands
-place: workshop
-class: routine
+pool: workshop_routine
 tone: light
-repeat: 5
-weight: 10
 art: gear
 tags: social magic
 cast:
@@ -160,11 +157,8 @@ text: {"Perfect timing! I need a volunteer and you have hands!" {maker} holds up
 
 @event workshop_stirring_cauldron
 title: The Self-Stirring Cauldron
-place: workshop
-class: routine
+pool: workshop_routine
 tone: light
-repeat: 5
-weight: 10
 art: cauldron
 tags: magic danger
 scene: A small cauldron in a workshop corner stirring itself with a wooden spoon, a stern paper note pinned to its rim.
@@ -212,13 +206,16 @@ text: {At the back of the workshop is a glass cabinet that isn't Mir's, full of 
 
 # ---------------- The Lumen Ledger Office ----------------
 
-@event ledger_office_unprintable
-title: Letters We Will Not Print
+@pool ledger_office_routine
 place: ledger_office
 class: routine
-tone: light
 repeat: 5
 weight: 10
+
+@event ledger_office_unprintable
+title: Letters We Will Not Print
+pool: ledger_office_routine
+tone: light
 art: letter
 tags: life
 scene: A wicker basket overflowing with letters by the door of a cramped newspaper office, front pages papering the walls.
@@ -238,11 +235,8 @@ text: {By the Ledger's door sits a basket marked LETTERS WE WILL NOT PRINT. Visi
 
 @event ledger_office_deadline_night
 title: Deadline Night
-place: ledger_office
-class: routine
+pool: ledger_office_routine
 tone: warm
-repeat: 5
-weight: 10
 art: paper
 tags: social
 cast:
@@ -262,11 +256,8 @@ text: {The press is groaning like a dragon on deadline, and {here} eyes you like
 
 @event ledger_office_drying_line
 title: The Drying Line
-place: ledger_office
-class: routine
+pool: ledger_office_routine
 tone: tense
-repeat: 5
-weight: 10
 art: paper
 tags: life
 scene: Freshly printed pages pegged on a line across a cramped office to dry, one page hanging slightly crooked.
@@ -287,14 +278,17 @@ text: {Tomorrow's gossip column is pegged on a line to dry, and nobody is watchi
 
 # ---------------- The Headmistress's Tower ----------------
 
+@pool headmistress_tower_routine
+place: headmistress_tower
+class: routine
+repeat: 5
+weight: 10
+
 @event headmistress_tower_stone_owl
 time: evening
 title: The Stone Owl
-place: headmistress_tower
-class: routine
+pool: headmistress_tower_routine
 tone: tense
-repeat: 5
-weight: 10
 art: owl
 tags: magic
 scene: A stone owl on the newel post of a spiral stair, one eye open, a student standing very still before it.
@@ -315,11 +309,8 @@ text: {The stone owl on the stair opens one eye. "A question first," it says, in
 
 @event headmistress_tower_tea
 title: Two Cups Poured
-place: headmistress_tower
-class: routine
+pool: headmistress_tower_routine
 tone: warm
-repeat: 5
-weight: 10
 art: cup
 tags: social
 cast:
@@ -343,11 +334,8 @@ text: {The headmistress pours two cups unasked. "Sit. Tell me how your term is g
 
 @event headmistress_tower_window_seat
 title: The Window Seat
-place: headmistress_tower
-class: routine
+pool: headmistress_tower_routine
 tone: warm
-repeat: 5
-weight: 10
 art: book
 tags: study
 scene: A deep window seat high in a tower, a student reading with the lake far below, a headmistress writing letters at a desk behind.
@@ -363,13 +351,16 @@ text: {The headmistress waves you to the window seat without looking up from her
 
 # ---------------- The Restricted Section ----------------
 
-@event restricted_section_breathing_shelves
-title: The Breathing Shelves
+@pool restricted_section_routine
 place: restricted_section
 class: routine
-tone: eerie
 repeat: 5
 weight: 10
+
+@event restricted_section_breathing_shelves
+title: The Breathing Shelves
+pool: restricted_section_routine
+tone: eerie
 art: book
 tags: study mystery
 scene: Black-bound books on tall shelves in the dark, a single candle on a reading table, the spines faintly rising and falling.
@@ -385,11 +376,8 @@ text: {The black-bound books breathe in the dark, slow as sleepers. You find a c
 
 @event restricted_section_lantern
 title: Holding the Lantern
-place: restricted_section
-class: routine
+pool: restricted_section_routine
 tone: eerie
-repeat: 5
-weight: 10
 art: lantern
 tags: social mystery
 cast:
@@ -409,11 +397,8 @@ text: {{friend} came with you, for courage, and is holding the lantern in both h
 @event restricted_section_chained_book
 time: evening
 title: The Chained Book
-place: restricted_section
-class: routine
+pool: restricted_section_routine
 tone: eerie
-repeat: 5
-weight: 10
 art: chain
 tags: mystery danger
 scene: A heavy book chained to a library shelf, lying open on its own under a dim candle, the chain hanging slack.
@@ -457,13 +442,16 @@ text: {At the very back is a door with no handle and no window. On it, in chalk 
 
 # ---------------- The Third Gargoyle ----------------
 
-@event gargoyle_passage_old_marks
-title: Marks on the Wall
+@pool gargoyle_passage_routine
 place: gargoyle_passage
 class: routine
-tone: warm
 repeat: 5
 weight: 10
+
+@event gargoyle_passage_old_marks
+title: Marks on the Wall
+pool: gargoyle_passage_routine
+tone: warm
 art: map
 tags: life mystery
 scene: A narrow stone passage behind a gargoyle, its walls covered in scratched initials, dates and tiny arrows, lit by a stub of candle.
@@ -481,11 +469,8 @@ text: {The passage walls are covered in initials, dates and tiny arrows, scratch
 @event gargoyle_passage_offering_dish
 time: evening
 title: The Gargoyle's Dish
-place: gargoyle_passage
-class: routine
+pool: gargoyle_passage_routine
 tone: light
-repeat: 5
-weight: 10
 art: coin
 tags: magic life
 scene: A weathered gargoyle on a moonlit parapet with a dish worn into its stone paw, holding a button, a biscuit and a bent key.
@@ -506,12 +491,9 @@ text: {The third gargoyle has a dish worn into its paw, and in the dish are offe
 
 @event gargoyle_passage_parapet_cards
 title: Cards on the Parapet
-place: gargoyle_passage
+pool: gargoyle_passage_routine
 slot: midnight
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: cards
 tags: social
 cast:
@@ -539,11 +521,8 @@ text: {On the parapet, by lantern-light, {here} is dealing cards for buttons, an
 
 @event seventh_tower_stair_count
 title: The Stair That Changes
-place: seventh_tower
-class: routine
+pool: seventh_tower_routine
 tone: eerie
-repeat: 5
-weight: 10
 art: tower
 tags: mystery
 scene: A narrow spiral stair inside a dusty stone tower, a single candle climbing it, moonlight falling through slit windows.
@@ -561,11 +540,8 @@ text: {The seventh tower's stair never has the same number of steps twice. Schol
 @event seventh_tower_dust_room
 time: evening
 title: Dust and Moonlight
-place: seventh_tower
-class: routine
+pool: seventh_tower_routine
 tone: eerie
-repeat: 5
-weight: 10
 art: moon
 tags: mystery
 scene: A bare round room at the top of a tower, thick dust on the floor marked by footprints, moonlight slanting through one window onto a star-shaped hollow in the wall.
@@ -581,11 +557,8 @@ text: {At the top is one room of dust and moonlight, with a star-shaped hollow i
 
 @event seventh_tower_lake_window
 title: The Window Over the Lake
-place: seventh_tower
-class: routine
+pool: seventh_tower_routine
 tone: eerie
-repeat: 5
-weight: 10
 art: wave
 tags: mystery danger
 scene: A small arched window high in a tower, its latch half open, the Mirror Lake lying still and silver far below.

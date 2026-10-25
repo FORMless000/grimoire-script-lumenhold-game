@@ -255,16 +255,19 @@ text: Afterwards Thorne taps your borrowed wand with one finger. "Held together 
 
 # ---------------- Just in time (off with skip_intros) ----------------
 
+@pool intro_auto_story
+trigger: auto
+class: story
+priority: 30
+tags: intro
+
 @event jit_after_curfew
 title: After Curfew
-class: story
+pool: intro_auto_story
 tone: eerie
-trigger: auto
 when: turn == 3 and not flag(skip_intros)
-priority: 30
 slot: night
 art: lantern
-tags: intro
 scene: A dark castle corridor after curfew, a prefect's lantern far off at one end, a student pressed into a doorway.
 text: After curfew the castle changes hands. The corridors belong to prefects and to whatever else walks them. You can stay in and sleep, or slip out at midnight to wherever is open then. Get caught often enough and people start to notice.
 > left: Stay in tonight
@@ -274,13 +277,10 @@ text: After curfew the castle changes hands. The corridors belong to prefects an
 
 @event jit_red_string
 title: Red String
-class: story
+pool: intro_auto_story
 tone: eerie
-trigger: auto
 when: clues(hollowstar) >= 1 and not flag(skip_intros)
-priority: 30
 art: paper
-tags: intro
 scene: A student's desk by candlelight, scraps of paper pinned to the wall above it, joined by lengths of red string.
 text: You've started keeping what you notice: a scrap of paper here, a remembered word there. Tonight you pin them to the wall above your desk and join them with red string. It doesn't make sense yet. It isn't supposed to.
 > left: Go to bed
@@ -340,14 +340,11 @@ text: The village sells what the castle doesn't. Every shop has its counter, wit
 
 @event jit_real_fight
 title: A Real Fight
-class: story
+pool: intro_auto_story
 tone: tense
-trigger: auto
 when: turn >= 6 and seen(intro_practice_circle) > 0 and not flag(skip_intros)
-priority: 30
 slot: evening
 art: sword
-tags: intro
 scene: A duelling hall with a real duel under way, two students circling, a third nursing a split lip on the bench.
 text: The mannequin was a lesson. Real fights aren't. Whoever you face fights to win, the way you would; Health lost below the line stays lost, and anything you'd rather not be seen casting, someone may see. You can always refuse a fight, at a price of its own.
 > left: Nod and move on
@@ -357,14 +354,11 @@ text: The mannequin was a lesson. Real fights aren't. Whoever you face fights to
 
 @event jit_real_negotiation
 title: A Real Negotiation
-class: story
+pool: intro_auto_story
 tone: light
-trigger: auto
 when: turn == 3 and seen(intro_wrong_tower) > 0 and not flag(skip_intros)
-priority: 30
 slot: afternoon
 art: scales
-tags: intro
 scene: A student and an official facing each other across a desk heaped with papers, both leaning forward.
 text: Not every talk is a quick word. Some are negotiations: someone across the table with reasons of their own, and something at stake. Charm, lore and guile all count, and so does how you come across today. The steward and her list were practice.
 > left: Fair enough
@@ -390,13 +384,11 @@ text: Sister Amaranth catches you on the stairs, looks at you once and steers yo
 
 @event jit_something_more
 title: Something More
-class: story
+pool: intro_auto_story
 tone: warm
-trigger: auto
 when: not flag(skip_intros)
-priority: 30
 art: heart
-tags: intro romance
+tags: romance
 cast:
   x: any where romanceable(x) and spark(x) >= 9
 scene: Two students in a crowded corridor, one of them looking back over their shoulder a moment longer than they meant to.
@@ -408,13 +400,10 @@ text: You catch yourself looking for {x} in every room. That's new. Friendship g
 
 @event jit_rivals
 title: Rivals
-class: story
+pool: intro_auto_story
 tone: tense
-trigger: auto
 when: bonds(rival) >= 1 and not flag(skip_intros)
-priority: 30
 art: duel
-tags: intro
 scene: Two students passing on a staircase, neither giving way, both pretending not to notice the other.
 text: Somebody here has decided you're the one to beat. A rival watches what you do and does it better, or tries to, and you'll find yourself doing the same. Rivals can soften into something else. They can also sharpen.
 > left: Ignore it
@@ -424,13 +413,10 @@ text: Somebody here has decided you're the one to beat. A rival watches what you
 
 @event jit_mirror
 title: The Mirror Remembers
-class: story
+pool: intro_auto_story
 tone: eerie
-trigger: auto
 when: (alignment >= 15 or alignment <= -15) and not flag(skip_intros)
-priority: 30
 art: mirror
-tags: intro
 scene: A student passing the tall sorting mirror in the entrance hall, their reflection a half-step behind them.
 text: You pass the Sorting Mirror on the way to breakfast and your reflection is a half-step slow. {alignment >= 15: It looks brighter than you feel.|It looks colder than you feel.} What you do when it costs you something is being remembered, somewhere, and it leans you one way or the other.
 > left: Walk faster
@@ -440,13 +426,10 @@ text: You pass the Sorting Mirror on the way to breakfast and your reflection is
 
 @event jit_noticed
 title: Noticed
-class: story
+pool: intro_auto_story
 tone: light
-trigger: auto
 when: renown >= 30 and not flag(skip_intros)
-priority: 30
 art: crown
-tags: intro
 scene: A student walking into a crowded common room as a few heads turn, someone whispering behind a hand.
 text: Heads turn when you come into the common room. A first-year whispers your name to another. Being known opens doors and invitations; it also fades if you stop giving people something to talk about.
 > left: Pretend not to notice
@@ -456,13 +439,11 @@ text: Heads turn when you come into the common room. A first-year whispers your 
 
 @event jit_first_shift
 title: First Shift
-class: story
+pool: intro_auto_story
 tone: light
-trigger: auto
 when: member(job) and not flag(skip_intros)
-priority: 30
 art: coin
-tags: intro job
+tags: job
 scene: A student tying on an apron in a back room, a list of duties pinned on the wall beside them.
 text: A job is a few shifts a term, shown on the map when they're due; each one pays, and a missed one costs the boss's good opinion. Work well and you're promoted. Turn up on a break and it's just a visit.
 > left: Tie the apron and go

@@ -11,11 +11,8 @@
 @event courtyard_sundial_bench
 time: afternoon
 title: The Slow Sundial
-place: courtyard
-class: routine
+pool: courtyard_routine
 tone: warm
-repeat: 5
-weight: 10
 art: sun
 tags: study
 scene: A stone bench beside a weathered sundial in a flagstone courtyard, a student reading with their back to the dial.
@@ -32,11 +29,8 @@ text: {There's a bench by the old sundial, which runs eleven minutes slow.|Someo
 @event courtyard_saved_seat
 time: afternoon
 title: A Seat on the Rim
-place: courtyard
-class: routine
+pool: courtyard_routine
 tone: light
-repeat: 5
-weight: 10
 art: group
 tags: social
 cast:
@@ -96,13 +90,16 @@ text: {season == "winter": A snowball war between Emberhall and Stillwater has r
 
 # ---------------- The Library ----------------
 
-@event library_wandering_book
-title: The Book That Moved
+@pool library_routine
 place: library
 class: routine
-tone: light
 repeat: 5
 weight: 10
+
+@event library_wandering_book
+title: The Book That Moved
+pool: library_routine
+tone: light
 art: book
 tags: study
 scene: Tall library shelves leaning very slightly, a gap where one book should be, a student on a ladder peering into it.
@@ -117,11 +114,8 @@ text: {Yesterday your book was on the third floor. Today the third floor has nev
 
 @event library_shared_table
 title: The Last Free Chair
-place: library
-class: routine
+pool: library_routine
 tone: warm
-repeat: 5
-weight: 10
 art: candle
 tags: social study
 cast:
@@ -149,11 +143,8 @@ text: {The library is full. The only free chair is opposite {here}.|The only fre
 
 @event library_overdue
 title: Overdue
-place: library
-class: routine
+pool: library_routine
 tone: light
-repeat: 5
-weight: 10
 art: book
 tags: study money
 scene: A student holding a book behind their back near a wicker returns basket, a cat on the front desk watching them.
@@ -264,13 +255,16 @@ text: {{friend} sits down opposite you and looks at your pudding the way a cat l
 
 # ---------------- The Lecture Tower ----------------
 
-@event lecture_tower_old_board
-title: Someone Else's Lecture
+@pool lecture_tower_routine
 place: lecture_tower
 class: routine
-tone: light
 repeat: 5
 weight: 10
+
+@event lecture_tower_old_board
+title: Someone Else's Lecture
+pool: lecture_tower_routine
+tone: light
 art: scroll
 tags: study
 scene: An empty spiral lecture hall, a blackboard still dense with chalk diagrams from a class that has long gone.
@@ -289,11 +283,8 @@ text: {term: {The fourth-floor hall is empty, but someone else's lecture is stil
 
 @event lecture_tower_stair_question
 title: One Question a Flight
-place: lecture_tower
-class: routine
+pool: lecture_tower_routine
 tone: warm
-repeat: 5
-weight: 10
 art: tower
 tags: study
 cast:
@@ -317,11 +308,8 @@ text: {You meet Professor Thorne on the spiral stair. He allows one question per
 
 @event lecture_tower_scorched_room
 title: The Scorched Room
-place: lecture_tower
-class: routine
+pool: lecture_tower_routine
 tone: tense
-repeat: 5
-weight: 10
 art: flame
 tags: magic danger
 scene: A practice room on a lower floor of a stone tower, walls streaked with scorch marks, a sign by the door forbidding unsupervised casting.
@@ -341,13 +329,16 @@ text: {The practice room on the Evocation floor is empty. A sign forbids unsuper
 
 # ---------------- The Great Hall ----------------
 
-@event great_hall_tomorrow_sky
-title: Tomorrow's Weather
+@pool great_hall_routine
 place: great_hall
 class: routine
-tone: warm
 repeat: 5
 weight: 10
+
+@event great_hall_tomorrow_sky
+title: Tomorrow's Weather
+pool: great_hall_routine
+tone: warm
 art: candle
 tags: magic
 scene: An empty great hall in the evening, floating candles drifting under a vaulted ceiling that shows a different sky from the windows.
@@ -363,11 +354,8 @@ text: {The great hall is empty but for the candles. The ceiling shows tomorrow.|
 @event great_hall_choir_rehearsal
 time: evening
 title: The Choir Rehearses
-place: great_hall
-class: routine
+pool: great_hall_routine
 tone: warm
-repeat: 5
-weight: 10
 art: music
 tags: social
 scene: A choir rehearsing on the stage of a candlelit great hall, a few singers floating a foot off the boards, the benches mostly empty.
@@ -389,11 +377,8 @@ text: {The choir is rehearsing on the stage, a foot off the floor, and one voice
 
 @event great_hall_high_table_dare
 title: The High Table Dare
-place: great_hall
-class: routine
+pool: great_hall_routine
 tone: tense
-repeat: 5
-weight: 10
 art: crown
 tags: social danger
 scene: An empty high table on a dais at the end of a dark great hall, a carved chair at its centre, students daring each other from the doorway.
@@ -414,13 +399,16 @@ text: {Someone dares you to sit in the headmistress's chair at the empty high ta
 
 # ---------------- The Infirmary ----------------
 
-@event infirmary_spare_bed
-title: The Spare Bed
+@pool infirmary_routine
 place: infirmary
 class: routine
-tone: warm
 repeat: 5
 weight: 10
+
+@event infirmary_spare_bed
+title: The Spare Bed
+pool: infirmary_routine
+tone: warm
 art: bed
 tags: home
 scene: A row of white infirmary beds under a high arched window, one turned down, a stern healer pointing at it.
@@ -436,11 +424,8 @@ text: {You only came in for a plaster.|Your name is on the slate by the end bed,
 
 @event infirmary_visiting_hour
 title: Visiting Hour
-place: infirmary
-class: routine
+pool: infirmary_routine
 tone: warm
-repeat: 5
-weight: 10
 art: cross
 tags: social
 cast:
@@ -462,11 +447,8 @@ text: {Visiting hour. {friend} is in the bed by the window,|Visiting hour. Siste
 
 @event infirmary_tonic_cupboard
 title: The Tonic Cupboard
-place: infirmary
-class: routine
+pool: infirmary_routine
 tone: tense
-repeat: 5
-weight: 10
 art: potion
 tags: danger
 scene: A tall glass-fronted cupboard of coloured tonics in an empty infirmary, its door ajar, a teacup steaming on the healer's desk.
@@ -495,13 +477,16 @@ text: {The tonic cupboard is open, and Sister Amaranth is in the back having her
 
 # ---------------- The Alchemy Laboratory ----------------
 
-@event alchemy_lab_spare_cauldron
-title: A Spare Cauldron
+@pool alchemy_lab_routine
 place: alchemy_lab
 class: routine
-tone: light
 repeat: 5
 weight: 10
+
+@event alchemy_lab_spare_cauldron
+title: A Spare Cauldron
+pool: alchemy_lab_routine
+tone: light
 art: cauldron
 tags: study magic
 scene: A long laboratory bench in the afternoon light, a small cauldron free among larger ones, jars of ingredients lined up beside it.
@@ -525,11 +510,8 @@ text: {There is a spare cauldron on the second bench, unclaimed.|The spare cauld
 
 @event alchemy_lab_third_floor
 title: The Third-Floor Fumes
-place: alchemy_lab
-class: routine
+pool: alchemy_lab_routine
 tone: light
-repeat: 5
-weight: 10
 art: bottle
 tags: social magic
 scene: A crowded upper floor of an alchemy laboratory, coloured vapour hanging under the ceiling, students working with handkerchiefs tied over their faces.
@@ -545,11 +527,8 @@ text: {On the third floor the ventilation charm has given up, and the fumes have
 
 @event alchemy_lab_unlabelled_jar
 title: The Unlabelled Jar
-place: alchemy_lab
-class: routine
+pool: alchemy_lab_routine
 tone: tense
-repeat: 5
-weight: 10
 art: potion
 tags: magic danger
 scene: A dusty shelf of ingredient jars in an alchemy laboratory, one jar with no label glowing faintly, a student reaching for it.
@@ -569,13 +548,16 @@ text: {Someone has left an unlabelled jar on the shared shelf. It glows, faintly
 
 # ---------------- The Job Board ----------------
 
-@event job_board_odd_jobs
-title: Odd Jobs
+@pool job_board_routine
 place: job_board
 class: routine
-tone: light
 repeat: 4
 weight: 10
+
+@event job_board_odd_jobs
+title: Odd Jobs
+pool: job_board_routine
+tone: light
 art: paper
 tags: job money
 scene: A cork board in an entrance hall, a small notice pinned at an angle under the official job postings, a student reading it with a frown.
@@ -600,11 +582,8 @@ text: {Under the proper postings, someone has pinned an odd job.|Under the prope
 
 @event job_board_lost_familiars
 title: Lost and Found
-place: job_board
-class: routine
+pool: job_board_routine
 tone: warm
-repeat: 4
-weight: 10
 art: cat
 tags: social
 scene: The corner of a cork board crowded with hand-drawn posters of lost familiars and a ransom note for a sock.
@@ -624,14 +603,18 @@ text: {The corner of the board for lost things is busier than the jobs.|An old p
 
 # Job board stories (playtest 2, N13): small, everyday, plot-safe.
 
-@event job_board_yellow_notice
-title: The Oldest Notice
+@pool job_board_routine_2
 place: job_board
 class: routine
-tone: warm
 weight: 10
+tags: job
+
+@event job_board_yellow_notice
+title: The Oldest Notice
+pool: job_board_routine_2
+tone: warm
 art: paper
-tags: job social
+tags: social
 scene: A corner of a cork board where one notice, yellowed and curling, is pinned beneath years of newer ones.
 text: In the bottom corner of the board, under years of newer notices, is one gone yellow and soft: "Wanted, Thursdays: someone to read the newssheet aloud to the portrait on the west stair. He likes the sport and the obituaries. Small pay." Someone has renewed the pin.
 > left: Answer it, this Thursday
@@ -645,12 +628,10 @@ text: In the bottom corner of the board, under years of newer notices, is one go
 
 @event job_board_torn_notice
 title: Half a Notice
-place: job_board
-class: routine
+pool: job_board_routine_2
 tone: light
-weight: 10
 art: paper
-tags: job money
+tags: money
 scene: Two students tugging at either end of a single job notice in front of a crowded cork board, the paper starting to tear.
 text: A well-paid notice ("one evening's portering, generous rates") has drawn two students, who have both got hold of it. It tears down the middle as you arrive. One holds the half with the pay; the other holds the half with the address. Both look at you.
 > left: Settle it between them
@@ -664,12 +645,10 @@ text: A well-paid notice ("one evening's portering, generous rates") has drawn t
 
 @event job_board_monthly_letter
 title: A Letter a Month
-place: job_board
-class: routine
+pool: job_board_routine_2
 tone: warm
-weight: 10
 art: letter
-tags: job social
+tags: social
 scene: A small handwritten notice pinned beside a sealed letter on a cork board, a student reaching to unpin both.
 text: A small notice in a careful, shaky hand: "Wanted: a student to post a letter for me in the village, first of each month. A few crowns. I can't manage the hill any more." The letter is pinned beside it, sealed and addressed to someone in the village.
 > left: Take the letter down the hill
@@ -705,11 +684,8 @@ text: {A notice in a shaky hand. A student down with fever needs a fortnight of 
 
 @event job_board_message_run
 title: Messages Across the Castle
-place: job_board
-class: routine
+pool: job_board_routine
 tone: light
-repeat: 4
-weight: 10
 art: letter
 tags: job money
 scene: A student with a satchel of folded notes running across a castle bridge between towers, a staircase swinging away behind them.
@@ -725,11 +701,8 @@ text: {A professor wants a runner for the afternoon, with notes for every tower 
 
 @event job_board_market_stall
 title: Mind the Stall
-place: job_board
-class: routine
+pool: job_board_routine
 tone: warm
-repeat: 4
-weight: 10
 art: coin
 tags: job money
 scene: A village market stall heaped with jars and woollens, a student behind it with a cash tin, the owner hobbling away towards a chair in the sun.
@@ -765,11 +738,8 @@ text: {The porter wants the lost-property box sorted before it starts to smell, 
 
 @event job_board_sick_familiar
 title: A Sick Familiar
-place: job_board
-class: routine
+pool: job_board_routine
 tone: warm
-repeat: 4
-weight: 10
 art: cat
 tags: job money
 scene: A student sitting up by lamplight beside a basket where a small sick familiar is curled in a blanket, a bottle of tonic on the table.
@@ -806,11 +776,8 @@ text: {The porter needs crates carried up from the barge, a great many of them, 
 
 @event job_board_tutor_hour
 title: An Hour of Tutoring
-place: job_board
-class: routine
+pool: job_board_routine
 tone: warm
-repeat: 4
-weight: 10
 art: book
 tags: job money
 scene: An empty classroom, a nervous first-year with an essay full of crossings-out and an older student pointing at a line.
@@ -826,11 +793,8 @@ text: {A first-year's notice, written with great care, asks for an hour's help w
 
 @event job_board_greenhouse_pots
 title: Pots for Old Maud
-place: job_board
-class: routine
+pool: job_board_routine
 tone: warm
-repeat: 4
-weight: 10
 art: leaf
 tags: job money
 scene: A greenhouse doorway stacked with muddy clay pots, an old gardener on a stool directing a student with a scrubbing brush.

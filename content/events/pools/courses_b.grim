@@ -6,16 +6,17 @@
 
 # ---------------- Illusion & Glamour (track: illusion) ----------------
 
+@pool illusion_class
+from: course_routine_repeat4
+track: illusion
+
 @event illu_candle_drill
 title: The Candle Drill
-track: illusion
+pool: illusion_class
 level: 1
-class: routine
 tone: light
-repeat: 4
-weight: 10
 art: candle
-tags: class magic
+tags: magic
 scene: A row of unlit candles on a lecture bench, each crowned with a flame that casts no shadow, a professor holding her palm over one.
 text: {Illusion I opens with a row of cold candles. Make them burn, Professor Vey says, without burning.|Vey's drawer of candles is open. Every one is older than you.|The candle drill. Some mornings you could do it asleep.} {Vey passes her hand through each flame and says "cold" in the same flat voice.|Someone's flame leans in a draught only it can feel.|The student beside you has made a lovely candle and forgotten the flame.}
 > left: Hold the flame until it's right
@@ -34,14 +35,11 @@ text: {Illusion I opens with a row of cold candles. Make them burn, Professor Ve
 
 @event illu_one_small_change
 title: One Small Change
-track: illusion
+pool: illusion_class
 level: 1
-class: routine
 tone: warm
-repeat: 4
-weight: 10
 art: mirror
-tags: class magic
+tags: magic
 scene: Students bent over little hand mirrors, one changing the colour of her own eyes, another squinting at a nose that isn't quite his.
 text: {Hand mirrors all round. Glamour your own face, Vey says; change one small thing and hold it.|Out come the mirrors. A glamour you can't hold on yourself, Vey says, won't hold on anyone.|Mirror practice. You know your own face too well by now.} {Vey says people always change their eyes first.|A second-year from Rootward is giving himself a better chin, slowly.|The mirrors fog, as they do {season == "winter": in the cold|when the room warms}.}
 > left: Change something trivial
@@ -54,14 +52,11 @@ text: {Hand mirrors all round. Glamour your own face, Vey says; change one small
 
 @event illu_spot_the_coin
 title: Spot the Coin
-track: illusion
+pool: illusion_class
 level: 1
-class: routine
 tone: light
-repeat: 4
-weight: 10
 art: coin
-tags: class social
+tags: social
 cast:
   partner: any where tagged(partner, student)
 scene: Two students at a bench with three coins between them, one coin shimmering very slightly at the edge.
@@ -82,14 +77,11 @@ text: {Partner work. {partner} lays out three crowns, and one of them is an illu
 
 @event illu_bread_smell
 title: The Smell of Bread
-track: illusion
+pool: illusion_class
 level: 2
-class: routine
 tone: light
-repeat: 4
-weight: 10
 art: meal
-tags: class magic
+tags: magic
 scene: A lecture bench with an illusory loaf of bread on a board, steam rising from it, and several students sniffing it doubtfully.
 text: {Illusion II adds the other senses. Today, a loaf that looks, smells and sounds fresh when broken.|More bread. Sight is easy, Vey says; smell is where liars are caught.|The bread lesson. The floor smells of loaves that never existed.} {Somebody's loaf smells strongly of wet dog.|One loaf crackles beautifully and smells of nothing.|{gpa >= 3: Vey asks you to go first.|Vey asks you to go last, which feels pointed.}}
 > left: Get the smell right
@@ -108,14 +100,11 @@ text: {Illusion II adds the other senses. Today, a loaf that looks, smells and s
 
 @event illu_find_vey
 title: Find the Professor
-track: illusion
+pool: illusion_class
 level: 2
-class: routine
 tone: light
-repeat: 4
-weight: 10
 art: mask
-tags: class magic
+tags: magic
 scene: A lecture hall where the professor's chair is empty and everyone is looking suspiciously at everyone else, including a pigeon on the sill.
 text: {Professor Vey is rarely at the lectern in Illusion II. She is somewhere in the room, wearing someone else, and the first to name her wins.|Vey's chair is empty. Everyone eyes the porter with the mop.|The lectern is empty. You trust nothing in this room.} {There's a pigeon on the sill.|A student nobody remembers has taken the back row.|One of the portraits seems unusually attentive.}
 > left: Watch everyone, all lesson
@@ -134,14 +123,11 @@ text: {Professor Vey is rarely at the lectern in Illusion II. She is somewhere i
 
 @event illu_courtyard_hour
 title: Holding the Courtyard
-track: illusion
+pool: illusion_class
 level: 3
-class: routine
 tone: tense
-repeat: 4
-weight: 10
 art: sparkle
-tags: class magic danger
+tags: magic danger
 scene: A student standing very still in a busy courtyard, sweat on their brow, while a flock of illusory swallows circles above the crowd.
 text: {Advanced Illusion leaves the classroom. Hold an illusion over the busy courtyard for an hour, and don't let it fray.|Another courtyard hour. The porters step round you now.|The courtyard. {final_year: One of the last times you'll hold this sky.|Your hands know the weight of it.}} {A flock of swallows today.|Rain that doesn't wet anyone.|{season == "winter": Snow that never lands.|{season == "spring": Blossom that never lands.|{season == "autumn": Leaves that never land.|Thistledown that never lands.}}}}
 > left: Hold it the full hour
@@ -154,14 +140,11 @@ text: {Advanced Illusion leaves the classroom. Hold an illusion over the busy co
 
 @event illu_original_work
 title: An Illusion of Your Own
-track: illusion
+pool: illusion_class
 level: 3
-class: routine
 tone: warm
-repeat: 4
-weight: 10
 art: eye
-tags: class magic
+tags: magic
 scene: A darkened studio room, a student alone at the centre, and around them the half-formed image of a lit window at dusk.
 text: {Original work, an illusion nobody taught you. Vey asks one question of each piece. "What does it make people feel?"|More original work. Vey's question hasn't changed; your answers get longer.|Studio morning. {final_year: Next year, Vey says, she'll ask someone else.|Vey goes round the room asking her question.}} {A classmate has made a door that sighs.|Someone has made the smell of rain on hot stone.|Someone's illusion is humming.}
 > left: Make something true
@@ -181,16 +164,17 @@ text: {Original work, an illusion nobody taught you. Vey asks one question of ea
 
 # ---------------- Beastcraft & Flight (track: beastcraft) ----------------
 
+@pool beastcraft_class
+from: course_routine_repeat4
+track: beastcraft
+
 @event beast_mucking_out
 title: Mucking Out
-track: beastcraft
+pool: beastcraft_class
 level: 1
-class: routine
 tone: light
-repeat: 4
-weight: 10
 art: paw
-tags: class nature
+tags: nature
 scene: A student with a pitchfork in a straw-strewn stable, a hippogriff watching from its stall with a look of deep judgement.
 text: {Beastcraft I begins in the stables, with a pitchfork. Professor Brask says you don't touch a creature until you've cleaned up after it.|Pitchforks. Brask still hasn't said when that rule ends.|The stables, early. You know which stall to start with.} {The hippogriff in the end stall is watching you.|Owls shift in the rafters, unimpressed.|{season == "summer": The heat doubles the smell.|A cold wind finds every gap.}}
 > left: Muck out properly
@@ -209,14 +193,11 @@ text: {Beastcraft I begins in the stables, with a pitchfork. Professor Brask say
 
 @event beast_hover_line
 title: The Hover Line
-track: beastcraft
+pool: beastcraft_class
 level: 1
-class: routine
 tone: light
-repeat: 4
-weight: 10
 art: broom
-tags: class danger
+tags: danger
 scene: A line of students hovering a foot above a lawn on brooms, one broom drifting out of line, a stern professor counting slowly.
 text: {Flight is half the course. Brask lines you up on the lawn to hover a foot up and hold still while she counts.|The hover line. Brask counts slowly on purpose, you're sure.|Hover line. You and your broom have an understanding, of sorts.} {Somebody's broom keeps edging toward the lake.|An owl has landed on the end of a broom, and its rider is pretending not to notice.|Brask says, as always, that brooms are harder to reason with than griffons.}
 > left: Hold still until the count
@@ -230,14 +211,11 @@ text: {Flight is half the course. Brask lines you up on the lawn to hover a foot
 
 @event beast_feeding_round
 title: Feeding Round
-track: beastcraft
+pool: beastcraft_class
 level: 1
-class: routine
 tone: warm
-repeat: 4
-weight: 10
 art: feather
-tags: class nature
+tags: nature
 cast:
   partner: any where tagged(partner, student)
 scene: Two students carrying buckets between stalls, a sulky griffon chick in a nest of straw, owls leaning down from the rafters.
@@ -258,14 +236,11 @@ text: {Feeding round, in pairs. You and {partner} have two buckets and a list, a
 
 @event beast_hare_paddock
 title: Running with Hares
-track: beastcraft
+pool: beastcraft_class
 level: 2
-class: routine
 tone: light
-repeat: 4
-weight: 10
 art: bolt
-tags: class magic
+tags: magic
 scene: Students sprinting across a paddock alongside a scattering of brown hares, one student's feet suddenly much faster than the rest of them.
 text: {Beastcraft II teaches haste the old way. Run with the hares until their speed rubs off. "Borrow it," Brask says. "Don't steal it."|The hare paddock. The hares remember you.|Hares. You dream in sudden right angles now.} {The grass is wet and the hares don't care.|Brask times you with a crooked hourglass.|{season == "summer": It's hot and the hares are lazy.|The paddock smells of rain.}}
 > left: Run until it catches
@@ -278,14 +253,11 @@ text: {Beastcraft II teaches haste the old way. Run with the hares until their s
 
 @event beast_complaints
 title: The Complaints Hour
-track: beastcraft
+pool: beastcraft_class
 level: 2
-class: routine
 tone: light
-repeat: 4
-weight: 10
 art: owl
-tags: class nature
+tags: nature
 scene: A student sitting on an upturned bucket in a stable, surrounded by animals who all seem to be talking at once.
 text: {Beast-speech practice. You sit on a bucket in the stables and listen. Every creature has been waiting to complain, and the owls start with the draught.|Another hour on the bucket. The owls open, as always, with the draught.|The bucket, the owls, the draught. Brask calls it fieldwork.} {The hippogriff wants different hay. It is very specific.|The griffon chick has a list.|{gpa >= 3: Brask leaves you alone with them, which feels like trust.|Brask stays near the door, which feels like supervision.}}
 > left: Hear every complaint out
@@ -299,15 +271,12 @@ text: {Beast-speech practice. You sit on a bucket in the stables and listen. Eve
 
 @event beast_lake_flight
 title: Over the Lake
-track: beastcraft
+pool: beastcraft_class
 level: 3
-class: routine
 tone: tense
-repeat: 4
-weight: 10
 lesson: mirror_lake
 art: feather
-tags: class danger
+tags: danger
 scene: A student on a hippogriff's back skimming low over a mirror-still lake, their reflection racing along beneath them.
 text: {Advanced Beastcraft. A hippogriff each, over the lake, no saddle unless you ask. Brask won't think less of you for asking. She'll just remember.|The lake flight. Your hippogriff knows the way.|Over the lake. {final_year: You catch yourself memorising the view.|Your reflection keeps pace.}} {The water is perfectly still.|A barge below, its passengers waving.|{season == "summer": The air is full of midges.|The wind off the water stings.}}
 > left: Ride bareback, low over the water
@@ -326,14 +295,11 @@ text: {Advanced Beastcraft. A hippogriff each, over the lake, no saddle unless y
 
 @event beast_manticore_rounds
 title: Manticore Rounds
-track: beastcraft
+pool: beastcraft_class
 level: 3
-class: routine
 tone: tense
-repeat: 4
-weight: 10
 art: paw
-tags: class danger
+tags: danger
 scene: A manticore lying in straw with its eyes half-closed, one student gently holding its scorpion tail while another hums nearby.
 text: {Advanced students check the manticore once a month. Someone holds the tail; someone hums the lullaby. Brask lets you choose.|Manticore rounds. It knows the lullaby better than you do.|The manticore yawns at you, which is either a welcome or a threat.} {Its tail twitches in its sleep.|It has been off its food, Brask says, and is in a mood.|{final_year: You wonder who'll hold the tail after you.|Brask has brought a bucket of meat and a smaller one of patience.}}
 > left: Hold the tail
@@ -351,16 +317,17 @@ text: {Advanced students check the manticore once a month. Someone holds the tai
 
 # ---------------- Umbral Theory (track: umbral) ----------------
 
+@pool umbral_class
+from: course_routine_repeat4
+track: umbral
+
 @event umbral_dim_lamps
 title: Reading by Shadow
-track: umbral
+pool: umbral_class
 level: 1
-class: routine
 tone: eerie
-repeat: 4
-weight: 10
 art: lantern
-tags: class mystery
+tags: mystery
 scene: A dim lecture room at the top of a tower, objects hidden under cloths on a table, their shadows thrown long on the wall behind.
 text: {Umbral Theory I, top of the tower, lamps low on purpose. Name what's under each cloth by its shadow alone.|The cloths are back. The lamps are as low as ever.|Shadow reading. The dark no longer seems strange, which the professor says is the first lesson.} {One shadow is slightly larger than its object.|The professor moves the lamp an inch, and every answer changes.|{season == "summer": It's warm outside, never up here.|Rain on the windows makes the shadows shiver.}}
 > left: Read them patiently
@@ -377,14 +344,11 @@ text: {Umbral Theory I, top of the tower, lamps low on purpose. Name what's unde
 
 @event umbral_chalk_ward
 title: Pale Shells
-track: umbral
+pool: umbral_class
 level: 1
-class: routine
 tone: light
-repeat: 4
-weight: 10
 art: shield
-tags: class magic
+tags: magic
 scene: Students behind faint, pale bubbles of light as a professor flicks pieces of chalk at them from the front of a dim room.
 text: {Ward drill, in pairs. One of you raises a pale shell over the other, and the professor lets the lamp-shadows loose along the floor to find the gap.|Pairs again. The professor's shadows have learned new tricks since last time.|The paired drill. You know how the shadows like to come: low, and from behind.} {Your partner's shell keeps flickering.|Your partner is a first-year who has never held a ward for more than a minute.|{gpa >= 3: The professor pairs you with the weakest student, on purpose.|The professor pairs you with someone as nervous as you are.}}
 > left: Hold the shell over both of you
@@ -397,14 +361,11 @@ text: {Ward drill, in pairs. One of you raises a pale shell over the other, and 
 
 @event umbral_quiet_minutes
 title: The Quiet Minutes
-track: umbral
+pool: umbral_class
 level: 1
-class: routine
 tone: eerie
-repeat: 4
-weight: 10
 art: candle
-tags: class mystery
+tags: mystery
 scene: A circle of students sitting perfectly still in near darkness, a single candle in the middle, everyone listening very hard.
 text: {Each lesson opens with ten minutes of silence. "Listen to what's hidden," the professor says, and puts out every lamp but one.|The quiet minutes. You can hear the tower settle, stone by stone.|Ten minutes of silence. You look forward to it, and also not.} {Someone's stomach rumbles at the worst moment.|The candle leans toward the door, though nothing comes in.|{season == "summer": A bee is lost in the room somewhere.|The wind hums in the stairwell.}}
 > left: Listen properly
@@ -422,14 +383,11 @@ text: {Each lesson opens with ten minutes of silence. "Listen to what's hidden,"
 
 @event umbral_short_distances
 title: Short Distances
-track: umbral
+pool: umbral_class
 level: 2
-class: routine
 tone: tense
-repeat: 4
-weight: 10
 art: ghost
-tags: class magic danger
+tags: magic danger
 scene: A student stepping into the shadow under one desk and halfway out of the shadow under another, the room's lamps burning low.
 text: {Umbral Theory II brings the shadowstep, desk to desk. "The shadows in between are not friendly," the professor says, "so don't linger."|Shadowstep drill. Three desks this time, then four.|The desks. You know the way between them, and the cold that lives there.} {Someone comes out under the wrong desk.|The lamps are lower than usual.|{gpa >= 3: The professor sets you the long way round.|The professor sets you the short way, and watches.}}
 > left: Step across
@@ -447,14 +405,11 @@ text: {Umbral Theory II brings the shadowstep, desk to desk. "The shadows in bet
 
 @event umbral_hidden_object
 title: Present but Unseen
-track: umbral
+pool: umbral_class
 level: 2
-class: routine
 tone: eerie
-repeat: 4
-weight: 10
 art: key
-tags: class mystery
+tags: mystery
 scene: A dim classroom being searched by several students at once while one of them sits calmly at a desk with a small brass key in plain sight.
 text: {Hide a small key in this room, present but unseen. "Hiding is not removal," the professor says. "Removal is for amateurs."|The key, and somewhere to hide it. Your classmates are better at finding things.|The key exercise. Half the class pats their pockets out of habit.} {The key is brass today.|The key is silver and very cold.|Last time a key hid in a shadow for two days.}
 > left: Hide it, and stay calm
@@ -472,14 +427,11 @@ text: {Hide a small key in this room, present but unseen. "Hiding is not removal
 
 @event umbral_stair_wards
 title: The Old Stair Wards
-track: umbral
+pool: umbral_class
 level: 3
-class: routine
 tone: eerie
-repeat: 4
-weight: 10
 art: shield
-tags: class mystery
+tags: mystery
 scene: A student kneeling on an ancient spiral stair, hands pressed to a faint ring of light set into the stone.
 text: {Advanced students renew the small wards on the tower's old stair. Some are newer than the stone. Some, the professor says, are much older.|The stair wards. You know which step hums.|The stair. {final_year: Someone else will kneel here next year.|Your knees know every step.}} {One ward is warm, as if someone's just left.|Something beyond a ward leans back when you touch it.|The stair lamps are mostly a suggestion.}
 > left: Renew them carefully
@@ -493,14 +445,11 @@ text: {Advanced students renew the small wards on the tower's old stair. Some ar
 
 @event umbral_errand
 title: The Shadow's Errand
-track: umbral
+pool: umbral_class
 level: 3
-class: routine
 tone: eerie
-repeat: 4
-weight: 10
 art: moon
-tags: class magic mystery
+tags: magic mystery
 scene: A student standing in lamplight with no shadow at all, while across the room their shadow lifts a book from a shelf.
 text: {Original work. Send your own shadow on an errand across the room, the professor says, and have it come back. "It will want to wander. They all do."|Shadow errands. Yours picks its own route now.|Errand day. {final_year: Does your shadow know you're leaving soon?|Your shadow seems eager, which worries you.}} {Someone's shadow is still under a desk from last week.|The professor's own shadow is missing today.|The lamps are low and the shadows long.}
 > left: Send it, and trust it

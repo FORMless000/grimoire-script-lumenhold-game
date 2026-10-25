@@ -34,16 +34,19 @@ text: {~{npc} drops into the seat across from you with an armful of books. "Exam
   rel npc +small
   say: You get half as much done and remember twice as much of it. {~{npc} explains the Third Law with a biscuit diagram.|You quiz each other until the candle gutters.|{npc} makes up a rude rhyme for every date, and you will never forget a single one.}
 
+@pool social_routine
+trigger: social
+class: routine
+repeat: 6
+
 @event soc_borrow_money
 title: A Small Loan
-class: routine
+pool: social_routine
 tone: light
 cast:
   npc: any where tagged(npc, peer) and rel(npc) >= 3
 per: npc
-trigger: social
 when: gold >= 20
-repeat: 6
 art: pouch
 tags: social money
 scene: A student holding out an empty purse upside down with a sheepish grin.
@@ -129,17 +132,20 @@ text: It's 3am. You can't sleep, and you've walked to {npc}'s door before you've
   mood +medium
   say: You tell {them} things you haven't told anyone. {They} tell you things back. The sun comes up and neither of you notices.
 
+@pool social_routine_repeat8
+trigger: social
+class: routine
+repeat: 8
+tags: social
+
 @event soc_secret
 title: A Secret
-class: routine
+pool: social_routine_repeat8
 tone: light
 cast:
   npc: any where tagged(npc, peer) and rel(npc) >= 15
 per: npc
-trigger: social
-repeat: 8
 art: lock
-tags: social
 scene: Two students huddled under a staircase, one whispering into the other's ear, a finger to their lips.
 text: {~{npc} pulls you under the stairs. "I need to tell someone or I'll burst. Swear you won't tell anyone. Not even the portraits."|{npc} closes the dormitory door, checks it, and checks it again. "I have to tell someone. Swear you'll keep it."|{npc} walks you to the far end of the lake path, where nobody goes. "Can you keep something? Really keep it?"}
 > left: "I'd rather not carry it."
@@ -204,15 +210,12 @@ text: "Barge to the village? Tea at Mabel's, a wander round the bookshops, back 
 
 @event soc_friend_sick
 title: Sick Friend
-class: routine
+pool: social_routine_repeat8
 tone: light
 cast:
   npc: any where tagged(npc, peer) and (bond(npc) == "friend" or bond(npc) == "close" or bond(npc) == "partner") and not npc_is(kael)
 per: npc
-trigger: social
-repeat: 8
 art: rain
-tags: social
 scene: A student tucked into an infirmary bed under a mountain of blankets, a friend sitting beside them with a bowl of soup.
 text: {npc} has Lake Fever and is miserable in the infirmary. Sister Amaranth says visitors are allowed, but she won't be responsible.
 > left: Send a card
@@ -284,15 +287,12 @@ text: You realise you haven't really talked to {npc} in weeks. You see {them} {~
 
 @event soc_rumour
 title: Rumours About {npc}
-class: routine
+pool: social_routine_repeat8
 tone: light
 cast:
   npc: any where rel(npc) >= 9 and not tagged(npc, villager) and not npc_is(nessa)
 per: npc
-trigger: social
-repeat: 8
 art: paper
-tags: social
 scene: A cluster of students whispering behind their hands in a corridor, glancing toward someone just out of view.
 text: A nasty rumour about {npc} is going round {~the common room|the refectory|the library steps}: {~that {they} cheated on an exam|that {they} {are} leaving at the end of term in disgrace|that {they} said something cruel about a friend}. It's not true. You know it's not true. People are laughing.
 > left: Let it blow over
@@ -346,14 +346,12 @@ text: {npc} waves a half-finished {~essay|lab report|star chart} at you. "It's d
 
 @event soc_faculty_advice
 title: A Word of Advice
-class: routine
+pool: social_routine
 tone: light
 cast:
   npc: any where tagged(npc, teacher) and rel(npc) >= 6
 per: npc
-trigger: social
 when: term and not wrapup
-repeat: 6
 art: scroll
 tags: study
 scene: A professor walking with a student along a covered walkway, pointing at something in an open book.
@@ -658,14 +656,12 @@ text: {npc} finds you after class, scuffing {their} shoes. "This whole rivalry t
 
 @event soc_rival_bet
 title: The Wager
-class: routine
+pool: social_routine
 tone: tense
 cast:
   npc: any where (tagged(npc, student) or tagged(npc, prefect)) and bond(npc) == "rival"
 per: npc
-trigger: social
 when: term and not wrapup
-repeat: 6
 art: dice
 tags: rival
 scene: Two students slapping coins onto a table between them, a crowd gathering, a chalked tally on the wall.
@@ -707,19 +703,23 @@ text: Something has shifted between you and {npc}. {~They hold your gaze a momen
 
 # ---------------- Jealousy (playtest 2, N7; design §8.2): two people with a spark for you, neither your partner yet ----------------
 
+@pool social_routine_repeat2
+trigger: social
+class: routine
+repeat: 2
+weight: 20
+tags: romance
+
 @event jealousy_two_invitations
 title: Two Invitations
-class: routine
+pool: social_routine_repeat2
 tone: tense
-trigger: social
 cast:
   suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and rel(suitor) >= 0 and around(suitor)
   other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and rel(other) >= 0 and around(other)
 per: suitor
-repeat: 2
-weight: 20
 art: heart
-tags: romance social
+tags: social
 scene: A student holding two folded notes, one in each hand, in a corridor where two people wait at opposite ends.
 text: Two notes in one morning. {suitor} asks if you're free on Friday evening, in neat handwriting, crossed out once. {other} asks the same, for the same evening, in a hurry. They both know the other asked. The whole corridor seems to know.
 > left: Say yes to {suitor}
@@ -735,17 +735,14 @@ text: Two notes in one morning. {suitor} asks if you're free on Friday evening, 
 
 @event jealousy_seen_together
 title: "Who Was That?"
-class: routine
+pool: social_routine_repeat2
 tone: tense
-trigger: social
 cast:
   suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and rel(suitor) >= 0 and around(suitor)
   other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and rel(other) >= 0 and around(other)
 per: suitor
-repeat: 2
-weight: 20
 art: heartbreak
-tags: romance social
+tags: social
 scene: Two students talking by a window in a crowded common room, one of them asking a question too casually while looking at someone across the room.
 text: {suitor} saw you laughing with {other} in the courtyard yesterday, and is now asking about it too casually, in the voice people use when they've rehearsed. "You two looked… close. Not that it's any of my business."
 > left: Tell the truth: you like {other}
@@ -764,17 +761,14 @@ text: {suitor} saw you laughing with {other} in the courtyard yesterday, and is 
 
 @event jealousy_cold_supper
 title: A Quiet Supper
-class: routine
+pool: social_routine_repeat2
 tone: tense
-trigger: social
 cast:
   suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and rel(suitor) >= 0 and around(suitor)
   other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and rel(other) >= 0 and around(other)
 per: suitor
-repeat: 2
-weight: 20
 art: meal
-tags: romance social
+tags: social
 scene: A long refectory table at supper, one student eating in pointed silence beside another, a third person waving from the far end of the hall.
 text: {suitor} has gone quiet at supper, and answers in single words. From the far end of the hall, {other} is waving you over to an empty seat. You know exactly why {suitor} is quiet. So, by the look of it, does {other}.
 > left: Stay and talk it through

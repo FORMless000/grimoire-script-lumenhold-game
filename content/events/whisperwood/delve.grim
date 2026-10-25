@@ -17,14 +17,18 @@
 
 # ---------------- The edge, the way home, and falls ----------------
 
-@event ww_edge
-title: Off the Path
+@pool whisperwood_routine_repeat1
 place: whisperwood
 class: routine
-tone: eerie
 repeat: 1
+tags: nature
+
+@event ww_edge
+title: Off the Path
+pool: whisperwood_routine_repeat1
+tone: eerie
 art: tree
-tags: nature danger
+tags: danger
 scene: A narrow forest path at the edge of an old wood, fog between the trunks, a student looking off the path into the green dark.
 text: {ww_deepest == 0: The path through the Whisperwood is safe, everyone says. Off it, the wood goes down and down, and things grow there that Pell pays good money for. So do other things.|{ww_deepest >= 10: The wood knows you now. The path bends politely toward the deep places, as if to save you the trouble.|{~The path, and off it, the deep green dark you've been into before.|Fog between the trunks, and the deep wood breathing behind it.|The wood is quiet at the edge. Further in, it never is.}}} {flag(ww_stag_friend): The shadow stag will meet you halfway now.|{flag(ww_trail): You know where the bee-marked trail begins.|}}
 > left: Stay on the path
@@ -51,14 +55,12 @@ text: {ww_deepest == 0: The path through the Whisperwood is safe, everyone says.
 
 @event ww_edge_night
 title: The Hush Is Awake
-place: whisperwood
+pool: whisperwood_routine_repeat1
 slot: midnight
-class: routine
 tone: eerie
 when: flag(ww_midnight_known)
-repeat: 1
 art: moon
-tags: nature danger
+tags: danger
 scene: A forest at midnight under a pale moon, the trees silvered, a deep silence pooling between them like water.
 text: {flag(ww_hush_seen): The wood at midnight, and deep in it the Hush, awake and listening.|Midnight in the Whisperwood. You were told the deep part keeps the castle's hours. Somewhere ahead, the forest has gone quiet in a way it never is by day.} {flag(ww_mastery): Maud's old map is in your pocket.|}
 > left: Not tonight
@@ -83,14 +85,12 @@ text: {flag(ww_hush_seen): The wood at midnight, and deep in it the Hush, awake 
 
 @event ww_night_first
 title: The Wood After Midnight
-place: whisperwood
+pool: whisperwood_routine_repeat1
 slot: midnight
-class: routine
 tone: eerie
 when: not flag(ww_midnight_known)
-repeat: 1
 art: moon
-tags: nature mystery
+tags: mystery
 scene: The edge of a forest at midnight, the path pale under the moon, and beyond the first trees a darkness so still it looks solid.
 text: The Whisperwood at midnight is not the wood you know. The path is the same, pale under the moon, but past the first trees the usual mutter of leaves and small feet stops, as if someone had shut a door on it. Deep in, the silence is listening.
 > left: Go back to bed

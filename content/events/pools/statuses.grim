@@ -2,14 +2,17 @@
 
 # ---------------- Hungry ----------------
 
+@pool statuses_routine
+class: routine
+repeat: 3
+weight: 20
+
 @event hungry_leftovers
 title: The Refectory's Leftovers
-class: routine
+pool: statuses_routine
 tone: warm
 slot: night
 when: has(hungry) and term
-repeat: 3
-weight: 20
 art: meal
 tags: food money
 scene: A refectory kitchen door at closing time, a cook scraping the last of a stew into a bowl for a student waiting in the doorway.
@@ -24,11 +27,9 @@ text: {The refectory is closing, and the kitchens are scraping the pots. A cook 
 
 @event hungry_pocketed_rolls
 title: Rolls for Later
-class: routine
+pool: statuses_routine
 tone: light
 when: has(hungry) and term
-repeat: 3
-weight: 20
 art: meal
 tags: food money
 scene: A breakfast table heaped with bread rolls, a student's hand hovering near a pocket while a prefect patrols the aisle.
@@ -66,11 +67,9 @@ text: {Old Maud catches you on the path by her cottage. "You've a hungry look, d
 
 @event detention_cauldrons
 title: Cauldron Duty
-class: routine
+pool: statuses_routine
 tone: light
 when: has(detention)
-repeat: 3
-weight: 20
 art: cauldron
 tags: study
 scene: A dim potions storeroom, a student up to the elbows in a crusted cauldron while a prefect reads by a lamp at the door.
@@ -117,13 +116,16 @@ text: Detention means lines, a hundred of them, and {other} is at the next desk 
 
 # ---------------- Probation ----------------
 
-@event probation_advisor
-title: A Word With Your Advisor
+@pool statuses_routine_repeat2
 class: routine
-tone: tense
-when: has(probation) and term
 repeat: 2
 weight: 20
+
+@event probation_advisor
+title: A Word With Your Advisor
+pool: statuses_routine_repeat2
+tone: tense
+when: has(probation) and term
 art: scales
 tags: study
 scene: A cluttered faculty office with a ticking clock, an advisor and a student either side of a desk with a marks list between them.
@@ -157,11 +159,9 @@ text: A letter from the registrar, in the stiff envelope everyone dreads: Academ
 
 @event sick_in_the_infirmary
 title: A Bed by the Window
-class: routine
+pool: statuses_routine_repeat2
 tone: warm
 when: has(sick) and term
-repeat: 2
-weight: 20
 art: bed
 tags: health
 scene: A row of white infirmary beds, a student wrapped in blankets with a faintly glowing blue nose and a steaming mug beside them.
@@ -177,11 +177,9 @@ text: {Lake fever. Your nose glows faintly blue, and Sister Amaranth says "Bed,"
 
 @event injured_on_the_stairs
 title: The Moving Stairs, Limping
-class: routine
+pool: statuses_routine_repeat2
 tone: light
 when: has(injured) and term
-repeat: 2
-weight: 20
 art: door
 tags: health
 scene: A grand staircase swinging slowly between landings, a student with a bandaged ankle clinging to the banister as it moves.
@@ -221,13 +219,16 @@ text: {You tip out your purse on the bed. Three coins and a button.|The purse ag
 
 # ---------------- Familiars (N8): cards instead of a monthly tick ----------------
 
-@event ember_on_the_essay
-title: A Fox on the Essay
+@pool statuses_routine_weight12
 class: routine
-tone: light
-when: has(familiar_fox) and term
 repeat: 3
 weight: 12
+
+@event ember_on_the_essay
+title: A Fox on the Essay
+pool: statuses_routine_weight12
+tone: light
+when: has(familiar_fox) and term
 art: fox
 tags: nature study
 scene: A fox-spirit curled asleep on a student's half-written essay, her tail smouldering gently at one corner of the page.
@@ -243,12 +244,10 @@ text: {Ember has chosen your week's coursework to sleep on, and her tail is smou
 
 @event ember_night_hunt
 title: Ember Goes Hunting
-class: routine
+pool: statuses_routine_weight12
 tone: light
 slot: night
 when: has(familiar_fox)
-repeat: 3
-weight: 12
 art: fox
 tags: nature mystery
 scene: A dark castle corridor lit only by the glow of a fox's tail, a student in a nightgown following at a distance.
@@ -284,12 +283,10 @@ text: Ember trots through the refectory with a prefect's sandwich in her jaws, p
 
 @event owl_six_oclock
 title: "HOMEWORK"
-class: routine
+pool: statuses_routine_weight12
 tone: light
 slot: night
 when: has(familiar_owl) and term
-repeat: 3
-weight: 12
 art: owl
 tags: study
 scene: A brass clockwork owl on a bedpost at dawn, its amber eyes glowing, a student groaning under a pillow.

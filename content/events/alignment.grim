@@ -32,14 +32,17 @@ text: {You notice it on the east stair. As you pass, the candle flames bend away
   alignment +tiny
   say: You cup a flame back to life with your palm. It flickers, considers you, and stays. It takes longer than it should.
 
+@pool alignment_routine
+class: routine
+repeat: 12
+weight: 13
+
 @event align_whispered_answer
 title: A Voice Over Your Shoulder
-class: routine
+pool: alignment_routine
 slot: night
 tone: eerie
 when: alignment <= -30 and term
-repeat: 12
-weight: 13
 art: eye
 tags: hollow study
 scene: A student bent over a desk by candlelight, revision notes everywhere, and a cold patch of frost forming on the inkwell.
@@ -102,19 +105,23 @@ text: {friend} finds you in the cloister and sits without saying hello. "People 
   guile +tiny
   say: {friend} gets up and goes. {They} don't look back. That's what stays with you: {they} always used to look back.
 
+@pool alignment_social_routine
+trigger: social
+class: routine
+repeat: 12
+weight: 10
+tags: social
+
 @event align_ruthless_nod
 title: Finally, Someone Who Gets It
-class: routine
+pool: alignment_social_routine
 tone: tense
 cast:
   other: any where tagged(other, ruthless)
 per: other
-trigger: social
 when: alignment <= -30
-repeat: 12
-weight: 10
 art: mask
-tags: social hollow
+tags: hollow
 scene: A hard-faced student leaning on a pillar, giving another a slow, approving nod across a busy corridor.
 text: {rel(other) < 10: {other} has always looked straight through you. Today {they} nod{s} as you pass|{other} catches your eye in the corridor and nod{s} again}, slow and approving, the way people nod at someone who has finally learned the rules of a game.
 > left: Nod back
@@ -129,11 +136,9 @@ text: {rel(other) < 10: {other} has always looked straight through you. Today {t
 
 @event align_northern_parcel
 title: A Parcel for the North
-class: routine
+pool: alignment_routine
 tone: tense
 when: alignment <= -30
-repeat: 12
-weight: 13
 art: pouch
 tags: hollow money
 scene: A hooded courier in a rain-dark alley behind the village, holding out a small parcel wrapped in black oilcloth and a purse.
@@ -149,14 +154,12 @@ text: {A hooded courier stops you behind the bakery.|The hooded courier is waiti
 
 @event align_cruel_advantage
 title: Something You Could Use
-class: routine
+pool: alignment_routine
 tone: tense
 cast:
   mark: any where tagged(mark, student) and rel(mark) < 12
 per: mark
 when: alignment <= -30
-repeat: 12
-weight: 13
 art: scroll
 tags: social hollow
 scene: A crumpled letter on a library floor, a student's name on the envelope, another student bending to pick it up.
@@ -174,11 +177,9 @@ text: {mark} has dropped a letter in the library: something private, something {
 
 @event align_frost_in_the_spell
 title: The Cold That Helps
-class: routine
+pool: alignment_routine
 tone: eerie
 when: alignment <= -30 and term
-repeat: 12
-weight: 13
 art: snow
 tags: hollow study
 scene: A student in an empty practice room, a spell flaring unnaturally bright in one hand, frost creeping up the sleeve to the elbow.
@@ -218,17 +219,14 @@ text: {~A first-year hovers by your table with a torn essay and a face like a we
 
 @event align_warm_regard
 title: A Good Word
-class: routine
+pool: alignment_social_routine
 tone: warm
 cast:
   friend: any where tagged(friend, virtuous) and rel(friend) >= 3
 per: friend
-trigger: social
 when: alignment >= 30
-repeat: 12
-weight: 10
 art: heart
-tags: social lumen
+tags: lumen
 scene: Two students sharing a pot of tea in a sunny window seat, one pushing the last biscuit towards the other.
 text: {friend} pushes the last biscuit across to you. "People talk, you know. About the kind things you do when you think nobody's looking," {they} say{s}. "Don't make a face. It's good. Someone should say so."
 > left: Accept the biscuit, and the praise
@@ -243,17 +241,14 @@ text: {friend} pushes the last biscuit across to you. "People talk, you know. Ab
 
 @event align_saint_jibe
 title: "Saint"
-class: routine
+pool: alignment_social_routine
 tone: tense
 cast:
   other: any where (tagged(other, ruthless) or npc_is(corvin)) and tagged(other, peer)
 per: other
-trigger: social
 when: alignment >= 30
-repeat: 12
-weight: 10
 art: scales
-tags: social lumen
+tags: lumen
 scene: A smirking student blocking a doorway with one arm, another student standing in front of them with an armful of books.
 text: {other} blocks the doorway with one arm. "Here comes the saint," {they} say{s}, loud enough for the corridor. "Tell me, does it get heavy, being better than everyone?"
 > left: Let it go

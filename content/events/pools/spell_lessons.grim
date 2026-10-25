@@ -46,14 +46,18 @@ text: Professor Marisol teaches Tide where it lives: waist-deep in the lake at d
   rel marisol -tiny
   say: You work the spell from the dry pebbles and raise a neat little swell. Marisol looks at your dry boots with real sorrow, as if at a poem with no ending.
 
+@pool spell_lessons_auto_routine
+trigger: auto
+class: routine
+tags: magic
+
 @event lesson_foresight
 title: The Bottom of the Cup
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(foresight) >= 1 and term
-class: routine
 tone: warm
 art: eye
-tags: magic study
+tags: study
 scene: An observatory room with tea cups on every desk, a lecturer in three scarves peering into a student's cup with a magnifying glass.
 text: The astromancy lecturer, who wears three scarves in every season, sits the class at the observatory with cups of tea and no instructions. Foresight, it turns out, begins at the bottom of the cup: what you think you see, and what you want to.
 > left: Read your own cup
@@ -66,13 +70,12 @@ text: The astromancy lecturer, who wears three scarves in every season, sits the
 
 @event lesson_starlight
 title: A Jar on the Roof
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(starlight) >= 1 and term
-class: routine
 tone: warm
 slot: night
 art: star
-tags: magic study
+tags: study
 scene: A flat observatory roof at night, a student holding up a glass jar toward a sky crowded with stars, breath steaming.
 text: Starlight is practised after midnight on the observatory roof, where your Starcalling tutor hands you a glass jar and tells you to hold it up "until something falls in". The stars are very far away. The roof is very cold.
 > left: Hold the jar until it fills
@@ -126,15 +129,19 @@ text: Sister Amaranth has heard that Pell taught you to Distill. She sets a caul
   rel amaranth +small
   say: "Last term's soup," she says. You decide not to believe her, then decide you do. She shows you where to stop before it takes too much from you, and you distill half a cup, badly.
 
+@pool spell_lessons_vey_auto_routine
+actor: vey
+trigger: auto
+class: routine
+tags: magic
+
 @event lesson_glamour
 title: Pick a Card
-trigger: auto
+pool: spell_lessons_vey_auto_routine
 when: spell_level(glamour) >= 1 and term
-class: routine
 tone: light
-actor: vey
 art: cards
-tags: magic study
+tags: study
 scene: A velvet-curtained classroom, a professor in a violet coat fanning out a hand of playing cards toward a row of students.
 text: Professor Vey's glamour lesson is a card game. Each student glamours a plain card to look like the queen of stars, and Vey picks out the true queen from the pile. Nobody, she says, has ever made her pick wrong. "Fool me, and you may skip the essay."
 > left: Glamour your card
@@ -161,13 +168,11 @@ text: Professor Vey's glamour lesson is a card game. Each student glamours a pla
 @event lesson_mirror
 # retired by spells v2 (was "spell_level(mirror) >= 1 and term"): mirror is cut
 title: Gently
-trigger: auto
+pool: spell_lessons_vey_auto_routine
 when: false
-class: routine
 tone: warm
-actor: vey
 art: mirror
-tags: magic study retired
+tags: study retired
 scene: A dim classroom with the curtains drawn, a hand mirror on every desk, a professor standing well to one side of the glass.
 text: Professor Vey teaches Mirror in an empty classroom with the curtains drawn, which is not like her. "A mirror charm shows people themselves," she says. "Do it gently. Most people have not asked to see." She stands to one side of every glass in the room.
 > left: Practise on yourself first
@@ -231,12 +236,11 @@ text: Beast-speech, says Professor Brask, is mostly listening. She sits you in a
 
 @event lesson_ward
 title: Chalk
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(ward) >= 1 and term
-class: routine
 tone: light
 art: shield
-tags: magic study
+tags: study
 scene: A dim room at the top of a tower, low lamps, a lecturer mid-throw with a piece of chalk while students hold up shimmering wards.
 text: At the top of the lecture tower, where the lamps burn dim on purpose, the umbral lecturer drills first-years in their Ward by throwing chalk. Hard, and without warning. "A ward that only works when you're ready," says the lecturer, "is a decoration."
 > left: Hold the ward all hour
@@ -250,13 +254,12 @@ text: At the top of the lecture tower, where the lamps burn dim on purpose, the 
 
 @event lesson_shadowstep
 title: Where the Voice Was
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(shadowstep) >= 1 and term
-class: routine
 tone: tense
 time: night
 art: moon
-tags: magic study
+tags: study
 scene: A pitch-dark tower room with one dim lamp guttering out, the outline of a student stepping between deep shadows.
 text: Shadowstep is taught in the dark. The umbral lecturer puts out the last dim lamp and calls your name from somewhere else in the room. You have to arrive where the voice was before it moves. Somewhere, a chair is waiting for your shins.
 > left: Step into the dark
@@ -271,12 +274,11 @@ text: Shadowstep is taught in the dark. The umbral lecturer puts out the last di
 
 @event lesson_animate
 title: The Chair That Follows
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(animate) >= 1 and term
-class: routine
 tone: light
 art: spell_animate
-tags: magic study
+tags: study
 scene: A workshop corridor, a wooden chair trotting after a student like a dog, a teapot waddling behind it.
 text: The Artifice homework is to animate something and live with it for a day. You pick a chair, which follows you to every lecture. The teapot is the other option. It has opinions about being carried.
 > left: Live with the chair
@@ -290,12 +292,11 @@ text: The Artifice homework is to animate something and live with it for a day. 
 
 @event lesson_seal
 title: Only for the Addressee
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(seal) >= 1 and term
-class: routine
 tone: eerie
 art: spell_seal
-tags: magic study
+tags: study
 scene: A windowless room, a student pressing their thumb to a folded letter while a headmistress watches with her hands folded.
 text: Today's Hollow Studies exercise: seal a letter so that only the person it's addressed to can open it. The headmistress will try to open it first. "If I can," she says mildly, "you haven't."
 > left: Seal it against her
@@ -448,12 +449,11 @@ text: Nessa hands you a notebook in the refectory. "Three people, three true ans
 
 @event lesson_brace
 title: Planted
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(brace) >= 1 and term
-class: routine
 tone: light
 art: spell_brace
-tags: magic duel
+tags: duel
 scene: A duel hall's practice corner, an eyepatched dummy firing weak hexes at a student who stands planted and unmoving.
 text: The eyepatched dummy is empty now, but it still throws a hex or two out of habit. The Circle uses it to practise bracing. Today the seniors are taking bets on how long you'll stand.
 > left: Stand until it gives up
@@ -467,12 +467,11 @@ text: The eyepatched dummy is empty now, but it still throws a hex or two out of
 
 @event lesson_quickquill
 title: Lecture Notes
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(quickquill) >= 1 and term
-class: routine
 tone: light
 art: spell_quickquill
-tags: magic study
+tags: study
 scene: A lecture hall, a quill writing busily by itself in a notebook while its owner sits back with folded arms, the lecturer squinting at them.
 text: Your quill wants to take your lecture notes for you. It writes everything down, word for word, faster than the lecturer can talk. It also writes what it thinks of the lecturer, in the margins.
 > left: Let it take the notes
@@ -486,12 +485,11 @@ text: Your quill wants to take your lecture notes for you. It writes everything 
 
 @event lesson_bramble
 title: A Hedge on Demand
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(bramble) >= 1 and term
-class: routine
 tone: light
 art: spell_bramble
-tags: magic nature
+tags: nature
 scene: Old Maud's cottage garden, a groundskeeper pointing at a gap in her fence while a student coaxes a thorny hedge up out of the ground to fill it.
 text: Old Maud has heard about your hedge. "There's a gap in my fence the rabbits use, dearie," she says. "Grow me one there. Thorns on the outside, mind." The rabbits are watching from the cabbages.
 > left: Grow it thorns and all
@@ -505,12 +503,11 @@ text: Old Maud has heard about your hedge. "There's a gap in my fence the rabbit
 
 @event lesson_index
 title: The Right Page
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(index) >= 1 and term
-class: routine
 tone: light
 art: spell_index
-tags: magic study
+tags: study
 scene: A library table piled with heavy books, every one falling open at a different marked page as a student touches it, a cat watching from the top of the pile.
 text: Every book you touch falls open at the page you need, now. The trouble is the library knows it, and books are leaving their shelves to come and find you. Footnote is sitting on the biggest.
 > left: Read every page they offer
@@ -523,12 +520,11 @@ text: Every book you touch falls open at the page you need, now. The trouble is 
 
 @event lesson_rapport
 title: A Room That Was Turning
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(rapport) >= 1 and term
-class: routine
 tone: light
 art: spell_rapport
-tags: magic social
+tags: social
 scene: A refectory at supper where two tables are on the edge of an argument, a student stepping between them with a raised mug and a grin.
 text: Two tables in the refectory are on the edge of a food fight, and every head is turning. It's the Newt all over again, with worse gravy.
 > left: Step in and turn it
@@ -542,12 +538,10 @@ text: Two tables in the refectory are on the edge of a food fight, and every hea
 
 @event lesson_tailwind
 title: Never Stop
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(tailwind) >= 1 and term
-class: routine
 tone: light
 art: spell_tailwind
-tags: magic
 scene: A student on a broom skimming low over a lake at tremendous speed, a wake of spray behind them and a fisherman waving from a boat.
 text: The fisherman's rule for the wind is "never stop". You take the long way round the lake on your free afternoon to practise it, and the wind gets behind you as soon as you're off the jetty.
 > left: Never stop
@@ -609,13 +603,10 @@ text: Old Maud finds you on her garden bench at dusk, trying to make Moonwell go
 
 @event lesson_reflect
 title: Hall of Mirrors
-trigger: auto
+pool: spell_lessons_vey_auto_routine
 when: spell_level(reflect) >= 1 and term
-class: routine
 tone: light
-actor: vey
 art: spell_reflect
-tags: magic
 scene: A theatrical professor in a corridor of mirrors throwing a small spell at a student, who sends it bouncing back down the corridor.
 text: Professor Vey hears you've learned Reflect and appears in the mirror corridor with a bag of very small, very harmless hexes. "Show me," Vey says, and throws one at your head.
 > left: Send it back
@@ -653,13 +644,12 @@ text: Kael sees the frost at your collar and goes still. "Rime," he says. "Where
 
 @event lesson_siphon
 title: The Fern on the Sill
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(siphon) >= 1 and term
 slot: night
-class: routine
 tone: grim
 art: spell_siphon
-tags: magic forbidden
+tags: forbidden
 scene: A student at a dormitory window at night with a hand hovering over a potted fern, the fern's leaves beginning to curl.
 text: You're tired, and there are lectures at eight, and there's a fern on your windowsill, green and full of life it isn't using. Siphon is right there in your hands. Nobody would ever know but the fern.
 > left: Just a little
@@ -673,12 +663,11 @@ text: You're tired, and there are lectures at eight, and there's a fern on your 
 
 @event lesson_compel
 title: "Again"
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(compel) >= 1 and term
-class: routine
 tone: grim
 art: spell_compel
-tags: magic forbidden
+tags: forbidden
 scene: A student in a castle corridor watching another student drop a stack of books, a word forming on their lips.
 text: A first-year drops a stack of books in the corridor, and laughs at themselves, and you could say the word. "Again." They'd drop them again, and again, and never know why. It would be funny. That's the worst part: it would be funny.
 > left: Say it, once
@@ -715,12 +704,11 @@ text: Sparring in the duelling hall, you feel Torment rise in your hand like a r
 
 @event lesson_extraction
 title: Someone Else's Spark
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(extraction) >= 1 and term
-class: routine
 tone: grim
 art: spell_extraction
-tags: magic forbidden
+tags: forbidden
 scene: A study group around a library table at night, one student's quill glowing with magic, another student staring at it hungrily.
 text: In a study group, the student beside you is casting a little light to read by, and you can feel their magic like warmth from a stove. Extraction would take it. They'd feel tired, that's all. You've got so much to do.
 > left: Take a little
@@ -734,12 +722,11 @@ text: In a study group, the student beside you is casting a little light to read
 
 @event lesson_eclipse
 title: The Burn
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(eclipse) >= 1 and term
-class: routine
 tone: grim
 art: spell_eclipse
-tags: magic forbidden
+tags: forbidden
 scene: A student in an alchemy lab clutching a burnt hand, a faint dark glow gathering around the injury.
 text: You burn your hand on a cauldron in the lab, badly. And Eclipse wakes up: the pain could be power, it says, all of it, held and ready. You'd still feel the burn. You'd just have something to show for it.
 > left: Hold the pain
@@ -754,13 +741,12 @@ text: You burn your hand on a cauldron in the lab, badly. And Eclipse wakes up: 
 
 @event lesson_heartprice
 title: Paying in Yourself
-trigger: auto
+pool: spell_lessons_auto_routine
 when: spell_level(heartprice) >= 1 and term
 slot: night
-class: routine
 tone: grim
 art: spell_heartprice
-tags: magic forbidden
+tags: forbidden
 scene: An exhausted student at a desk late at night, a faint red glow in their chest feeding a spell, candles burnt down.
 text: It's late, {mana < 15: your Mana is spent|your Mana is low and tomorrow has a practical}, and the essay isn't done. Heartprice says you don't need Mana. You have yourself. You could pay in that, for as long as you can stand it.
 > left: Pay in yourself

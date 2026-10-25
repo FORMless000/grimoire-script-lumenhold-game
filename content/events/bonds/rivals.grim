@@ -31,16 +31,19 @@ text: The rankings are up outside the Great Hall. {~You're one place above Lyra.
   rel lyra -small
   say: {~"Second suits you." She finds it in front of the whole class, and goes the colour of her hair. The next morning there's a note on yours: "Says the person who'll be third."|You leave a single word: "Close." It drives her mad for a week. It was meant to.}
 
+@pool rivals_lyra_social_routine
+actor: lyra
+trigger: social
+class: routine
+weight: 10
+tags: rival
+
 @event lyra_sabotage_returned
 title: Pink Bubbles, Returned
-class: routine
+pool: rivals_lyra_social_routine
 tone: tense
-trigger: social
-actor: lyra
 when: bond(lyra) == "rival" and chosen(lyra_rival_sabotage, left)
-weight: 10
 art: potion
-tags: rival
 scene: A student's wand producing a cloud of blue smoke shaped like a donkey in the middle of a lecture, a red-haired student three rows away not looking.
 text: In the middle of Thorne's lecture your wand produces a cloud of blue smoke shaped like a donkey. Three rows away, Lyra is taking very careful notes. It's your move. It's always your move.
 > left: Call a ceasefire
@@ -60,14 +63,11 @@ text: In the middle of Thorne's lecture your wand produces a cloud of blue smoke
 
 @event lyra_glove_thrown
 title: The Glove Thrown
-class: routine
+pool: rivals_lyra_social_routine
 tone: tense
-trigger: social
-actor: lyra
 when: bond(lyra) == "rival" and rel(lyra) <= 0
-weight: 10
 art: duel
-tags: rival danger
+tags: danger
 scene: A white duelling glove on the flagstones of a crowded courtyard, a red-haired student standing over it with her wand drawn, a ring of watching students.
 text: Lyra drops a glove at your feet in the courtyard, in front of everyone. "The ring. Tonight. No referee but the crowd." She's been waiting for this all term. So, if you're honest, have you.
 > left: Leave the glove where it lies
@@ -108,14 +108,10 @@ text: Three Thornwick students in green are laughing at the Lumenhold crest in t
 
 @event lyra_mother_watches
 title: Her Mother Watches You Win
-class: routine
+pool: rivals_lyra_social_routine
 tone: tense
-trigger: social
-actor: lyra
 when: bond(lyra) == "rival" and year >= 2
-weight: 10
 art: duel
-tags: rival
 scene: An exhibition duelling ring with a gallery above, an elegant woman in black watching a red-haired student who is losing.
 text: An exhibition bout, and you're paired with Lyra. Up in the gallery, in black, is Lady Vaneshade. Halfway through, you're winning, clearly, and Lyra knows it, and you see her glance up once at the gallery and then not again.
 > left: Win it
@@ -229,16 +225,19 @@ text: Bram has given you a demerit for {~"walking in a smug manner".|"breathing 
       gain detention
       say: {~"Arguing with a prefect," Bram says happily, writing. "That's a detention." It is.|You argue, and he writes, and the demerit becomes a detention. "Thank you," he says. "That's my quota."}
 
+@pool rivals_bram_social_routine
+actor: bram
+trigger: social
+class: routine
+weight: 9
+tags: rival
+
 @event bram_inspection
 title: Inspection
-class: routine
+pool: rivals_bram_social_routine
 tone: tense
-trigger: social
-actor: bram
 when: bond(bram) == "rival" or bond(bram) == "nemesis"
-weight: 9
 art: shield
-tags: rival
 scene: A big prefect going through a student's dormitory trunk with exaggerated care, holding up a sock with two fingers, the owner standing in the doorway.
 text: "Room inspection," Bram announces, at your door, with a clipboard. There is no such thing as room inspection. He's already in. He's already opening your trunk.
 > left: Let him search
@@ -262,14 +261,10 @@ text: "Room inspection," Bram announces, at your door, with a clipboard. There i
 
 @event bram_rumour
 title: The Rumour He Started
-class: routine
+pool: rivals_bram_social_routine
 tone: tense
-trigger: social
-actor: bram
 when: (bond(bram) == "rival" or bond(bram) == "nemesis") and renown >= 10
-weight: 9
 art: paper
-tags: rival
 scene: Students whispering behind their hands in a corridor as one student passes, a big prefect at the far end leaning on a wall, looking innocent.
 text: There's a rumour going round that you cried at the Sorting Mirror. There's a rumour that you're afraid of owls. People are being very nice to you about the owls. You know exactly where it started.
 > left: Rise above it
@@ -284,14 +279,10 @@ text: There's a rumour going round that you cried at the Sorting Mirror. There's
 
 @event bram_hall_tax_escalated
 title: The Hall Tax, Escalated
-class: routine
+pool: rivals_bram_social_routine
 tone: tense
-trigger: social
-actor: bram
 when: knows(bram.hall_tax) and rel(bram) < 0 and not flag(bram_softened)
-weight: 9
 art: coin
-tags: rival
 scene: A big prefect standing at the foot of a second staircase with a collecting tin, a hand-lettered sign beside him reading WEST STAIRS, a queue of first-years.
 text: The hall tax has spread. There's a tin at the foot of the west stairs now, too, and a hand-lettered sign, and Bram behind it looking enormously pleased with himself. A queue of first-years are emptying their pockets.
 > left: Pay, and the first-years' too
@@ -312,15 +303,11 @@ text: The hall tax has spread. There's a tin at the foot of the west stairs now,
 
 @event bram_after_curfew
 title: Caught After Curfew
-class: routine
+pool: rivals_bram_social_routine
 tone: tense
-trigger: social
-actor: bram
 when: bond(bram) == "rival" or bond(bram) == "nemesis"
 time: night
-weight: 9
 art: candle
-tags: rival
 scene: A dark castle corridor at night, a lantern held high by a big prefect, a student caught halfway up a staircase.
 text: Bram's lantern catches you halfway up the north stairs, an hour after curfew. He smiles, slowly. He's been waiting all year for this. "Well," he says. "Well, well, well."
 > left: Take the detention
@@ -367,14 +354,10 @@ text: Bram has been practising. Everyone knows; you've heard him on the duelling
 
 @event bram_steps_in
 title: He Steps In
-class: routine
+pool: rivals_bram_social_routine
 tone: tense
-trigger: social
-actor: bram
 when: (bond(bram) == "rival" or bond(bram) == "nemesis") and not flag(bram_softened)
-weight: 9
 art: shield
-tags: rival
 scene: A big prefect standing between two older students and a frightened first-year at the boathouse, another student arriving at a run.
 text: Two fourth-years have a first-year backed against the boathouse wall. Before you can move, Bram is there, between them, sash and all. "Problem?" he says. There are two of them, and they're bigger. He doesn't step aside.
 > left: Stand beside him
@@ -390,14 +373,10 @@ text: Two fourth-years have a first-year backed against the boathouse wall. Befo
 
 @event bram_fathers_shadow
 title: His Father's Shadow
-class: routine
+pool: rivals_bram_social_routine
 tone: tense
-trigger: social
-actor: bram
 when: (bond(bram) == "rival" or bond(bram) == "nemesis") and year >= 2
-weight: 9
 art: shield
-tags: rival
 scene: A big man in an old-fashioned prefect's pin standing in the entrance hall with a student who looks smaller than usual, another student watching from the stairs.
 text: There's a big man in the entrance hall with Bram's jaw, talking to Bram in a low steady voice. Bram is standing very straight and getting smaller. Then the man sees you on the stairs. "Is that the one?" he says. "The one beating you?"
 > left: Walk on as if you didn't hear

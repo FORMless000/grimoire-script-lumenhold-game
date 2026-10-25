@@ -5,14 +5,17 @@
 #  (`on_show`), so the text matches what arrives and a reload doesn't change it. Payment needs no choice.
 # ============================================================
 
-@event noble_letter
-title: A Letter from Home
-class: story
-tone: warm
+@pool origin_funding_auto_story
 trigger: auto
-when: has(origin_noble) and (month == 6 or month == 12) and term_index <= 7
+class: story
 repeat: 6
 priority: 60
+
+@event noble_letter
+title: A Letter from Home
+pool: origin_funding_auto_story
+tone: warm
+when: has(origin_noble) and (month == 6 or month == 12) and term_index <= 7
 art: letter
 tags: home money
 scene: A heavy envelope with a wax family seal on a writing desk, a bank draft half out of it.
@@ -29,12 +32,9 @@ text: {month == 6: Before the spring term|Before the new year} a letter comes wi
 
 @event scholarship_award
 title: The Bursary List
-class: story
+pool: origin_funding_auto_story
 tone: tense
-trigger: auto
 when: has(origin_scholar) and (month == 6 or month == 12) and term_index <= 7
-repeat: 6
-priority: 60
 art: scroll
 tags: study money
 scene: A list of names pinned outside the registrar's office, a clerk's red ink beside some of them.
@@ -45,12 +45,9 @@ text: The bursary list {month == 6: for the spring term|for the new year} goes u
 
 @event trading_report
 title: The Company's Report
-class: story
+pool: origin_funding_auto_story
 tone: tense
-trigger: auto
 when: has(origin_merchant) and (month == 6 or month == 12) and term_index <= 7
-repeat: 6
-priority: 60
 art: scales
 tags: home money
 scene: A merchant company's ledger report on thick paper, columns of figures, a bank draft clipped to the first page or not.

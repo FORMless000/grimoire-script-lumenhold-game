@@ -2,17 +2,21 @@
 #  Expansion — more generic relationship events (actor: any).
 # ============================================================
 
+@pool expansion_social_routine
+trigger: social
+class: routine
+repeat: 8
+tags: social
+
 @event soc_lost_notes
 title: The Borrowed Notes
-class: routine
+pool: expansion_social_routine
 tone: light
 cast:
   npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 3 and not npc_is(lyra)
 per: npc
-trigger: social
-repeat: 8
 art: scroll
-tags: social study
+tags: study
 scene: A student holding a single soggy page of notes, the rest of the stack floating away down a stream behind them.
 text: {npc} borrowed all your lecture notes last week. {They} {are} now standing in front of you holding a single soggy page. "There was a stream," {they} say{s}. "And a duck. Mostly a duck."
 > left: Laugh it off
@@ -24,15 +28,18 @@ text: {npc} borrowed all your lecture notes last week. {They} {are} now standing
   study +tiny
   say: {npc} copies out forty pages from a friend's notes, grumbling. The new notes are neater than yours ever were.
 
+@pool expansion_social_routine_repeat12
+trigger: social
+class: routine
+repeat: 12
+
 @event soc_birthday
 title: A Birthday
-class: routine
+pool: expansion_social_routine_repeat12
 tone: light
 cast:
   npc: any where tagged(npc, peer) and rel(npc) >= 9
 per: npc
-trigger: social
-repeat: 12
 art: gem
 tags: social festival
 scene: A small cake with a single candle in a dark common room, a group of students crouched behind a sofa, a surprised face in the doorway.
@@ -49,13 +56,11 @@ text: {&You find out — by accident — that it's {npc}'s birthday. {They} have
 
 @event soc_bad_news
 title: Bad News From Home
-class: routine
+pool: expansion_social_routine_repeat12
 tone: light
 cast:
   npc: any where (tagged(npc, student) or tagged(npc, prefect)) and rel(npc) >= 12 and not npc_is(kael)
 per: npc
-trigger: social
-repeat: 12
 art: letter
 tags: social
 scene: A student sitting on a stone staircase with a crumpled letter, head bowed, a friend sitting down beside them.
@@ -71,15 +76,13 @@ text: {npc} is sitting on the stairs with a letter in {their} lap, not moving. {
 
 @event soc_stargazing
 title: Counting Stars
-class: routine
+pool: expansion_social_routine
 tone: warm
 cast:
   npc: any where romanceable(npc) and rel(npc) >= 12 and bond(npc) != "partner"
 per: npc
-trigger: social
-repeat: 8
 art: star
-tags: social romance
+tags: romance
 scene: Two students lying on their backs on a flat roof, close but not quite touching, a sky full of stars above.
 text: {&{npc} has dragged a blanket up to the roof.|{npc} is on the roof again with the blanket, and a flask this time.|{npc} has found a better spot on the roof, out of the wind, and a better blanket.} "There's a meteor shower," {they} say{s}. "Supposedly." There's room on the blanket for two, just about.
 > left: Count meteors
@@ -93,17 +96,20 @@ text: {&{npc} has dragged a blanket up to the roof.|{npc} is on the roof again w
   rel npc +small
   say: You don't see a single meteor. You talk about home and fear and what you'd do if you could do anything. When you look up, the sky's gone grey with dawn.
 
+@pool expansion_social_routine_repeat10
+trigger: social
+class: routine
+repeat: 10
+
 # retired 2026-10-20 (was "known() >= 4"): jealousy is for romance only (social.grim's jealousy_* cards)
 @event soc_jealous_friend
 title: Jealousy
-class: routine
+pool: expansion_social_routine_repeat10
 tone: light
 cast:
   npc: any where tagged(npc, peer) and (bond(npc) == "friend" or bond(npc) == "close")
 per: npc
-trigger: social
 when: false
-repeat: 10
 art: mask
 tags: social retired
 scene: A student standing alone at the edge of a laughing group, arms folded, watching someone else take what used to be their seat.
@@ -119,15 +125,13 @@ text: {~{npc} has been odd all week. Finally it comes out.|{npc} has been short 
 
 @event soc_teach_spell
 title: A Trick Worth Learning
-class: routine
+pool: expansion_social_routine
 tone: light
 cast:
   npc: any where tagged(npc, peer) and rel(npc) >= 7
 per: npc
-trigger: social
-repeat: 8
 art: wand
-tags: social magic
+tags: magic
 scene: Two students in an empty classroom, one demonstrating a wand movement, the other copying it with a tiny spark of light.
 text: {npc} has a spell {they} invented — a little thing, half-useful, half-ridiculous — and wants to teach it to someone. {&"It makes your tea exactly the right temperature," {they} say{s}. "Forever."|"It finds the page you were reading," {they} say{s}. "Any book, anywhere."|"It keeps your socks dry," {they} say{s}. "Lake, rain, puddles. Dry."}
 > left: Learn it properly
@@ -171,13 +175,11 @@ text: Folded notes keep appearing in your library books. Unsigned. They're funny
 
 @event soc_injured_friend
 title: Carried
-class: routine
+pool: expansion_social_routine_repeat10
 tone: tense
 cast:
   npc: any where tagged(npc, peer) and rel(npc) >= 6 and not npc_is(seraphine)
 per: npc
-trigger: social
-repeat: 10
 art: cross
 tags: social danger
 scene: A student carrying another piggyback across a muddy lawn, the injured one's ankle wrapped in a scarf.
@@ -194,13 +196,11 @@ text: {npc} has twisted an ankle on the far side of the grounds, a long way from
 
 @event soc_rival_decency
 title: An Unexpected Kindness
-class: routine
+pool: expansion_social_routine_repeat10
 tone: tense
 cast:
   npc: any where tagged(npc, peer) and (bond(npc) == "rival" or bond(npc) == "nemesis" or rel(npc) <= -9)
 per: npc
-trigger: social
-repeat: 10
 art: hand
 tags: rival social
 scene: A student picking up a rival's scattered books from a wet floor, the rival frozen mid-step, not sure what to say.
@@ -215,13 +215,11 @@ text: {&You drop your books in the rain, and the first person to stoop and help 
 
 @event soc_partner_anniversary
 title: An Anniversary
-class: routine
+pool: expansion_social_routine_repeat12
 tone: warm
 cast:
   npc: any where bond(npc) == "partner" and spark(npc) >= 40
 per: npc
-trigger: social
-repeat: 12
 art: ring
 tags: romance
 scene: Two people on a bench by the lake at sunset, one holding out a small wrapped box, the other's hands over their mouth.

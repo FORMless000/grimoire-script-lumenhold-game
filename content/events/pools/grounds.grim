@@ -8,13 +8,16 @@
 
 # ---------------- The Lakeshore ----------------
 
-@event lakeshore_shore_walk
-title: The Long Way Round
+@pool lakeshore_routine
 place: lakeshore
 class: routine
-tone: warm
 repeat: 5
 weight: 10
+
+@event lakeshore_shore_walk
+title: The Long Way Round
+pool: lakeshore_routine
+tone: warm
 art: moon
 tags: romance nature
 cast:
@@ -34,11 +37,8 @@ text: {You came out to walk alone. {date} finds you on the shore path and falls 
 
 @event lakeshore_cold_swim
 title: The Cold Swim
-place: lakeshore
-class: routine
+pool: lakeshore_routine
 tone: light
-repeat: 5
-weight: 10
 art: wave
 tags: nature life
 scene: Students in towels on a lakeshore, one wading in up to the knees and shrieking, the towers reflected behind them.
@@ -61,13 +61,16 @@ text: {season == "winter": Students in towels are daring each other into the lak
 
 # ---------------- The Duelling Hall ----------------
 
-@event duel_hall_dummies
-title: The Practice Dummies
+@pool duel_hall_routine
 place: duel_hall
 class: routine
-tone: light
 repeat: 5
 weight: 10
+
+@event duel_hall_dummies
+title: The Practice Dummies
+pool: duel_hall_routine
+tone: light
 art: shield
 tags: magic
 scene: An empty duelling hall with scorched floorboards and a row of battered straw practice dummies, one with a painted moustache.
@@ -87,11 +90,8 @@ text: {The near end of the hall belongs to the practice dummies, who watch you c
 
 @event duel_hall_gallery
 title: From the Gallery
-place: duel_hall
-class: routine
+pool: duel_hall_routine
 tone: tense
-repeat: 5
-weight: 10
 art: duel
 tags: magic social
 cast:
@@ -116,12 +116,9 @@ text: {From the gallery above the duelling floor you can watch whoever is practi
 @event duel_hall_humming_circle
 time: evening
 title: The Humming Circle
-place: duel_hall
+pool: duel_hall_routine
 when: slot == "evening"
-class: routine
 tone: tense
-repeat: 5
-weight: 10
 art: rune
 tags: magic
 scene: A dark duelling hall lit only by a ring of faintly glowing runes on the floor.
@@ -144,13 +141,9 @@ text: {The evening bouts are over. At the near end of the hall the warding circl
 
 @event greenhouses_warm_glass
 title: The Warm Glass
-place: greenhouses
-class: routine
+pool: greenhouses_routine
 tone: warm
-repeat: 5
-weight: 10
 art: leaf
-tags: nature
 scene: A student reading on an upturned pot among tall ferns inside a steamy glass greenhouse, snow on the panes outside.
 text: {season == "winter": Outside it's snowing. Inside, the glass runs with warm water and everything smells of earth.|{season == "summer": The greenhouses are sweltering, and everyone has retreated to the far end where the vents are.|The greenhouses steam gently. Someone is singing to the mandrakes at the far end.}} {You find a dry corner by the ferns, out of everyone's way.|Someone has left a cushion in your corner by the ferns.|The ferns lean toward you when you come in, as they do for you now.}
 > left: Do your reading in the warm
@@ -169,13 +162,10 @@ text: {season == "winter": Outside it's snowing. Inside, the glass runs with war
 
 @event greenhouses_repotting
 title: Repotting Day
-place: greenhouses
-class: routine
+pool: greenhouses_routine
 tone: warm
-repeat: 5
-weight: 10
 art: flower
-tags: nature social
+tags: social
 cast:
   here: present(place)
 scene: A student elbow-deep in compost at a greenhouse bench, handing a trowel to someone arriving.
@@ -193,13 +183,9 @@ text: {here} is up to the elbows in compost, repotting {season == "spring": seed
 
 @event greenhouses_cuttings
 title: The Cuttings Bench
-place: greenhouses
-class: routine
+pool: greenhouses_routine
 tone: tense
-repeat: 5
-weight: 10
 art: potion
-tags: nature
 scene: A greenhouse bench of labelled cuttings drying in rows, a row of snapdragons with actual teeth watching from their pots.
 text: {A row of silver-leaf cuttings is drying on the bench|A tray of night-orchid cuttings sits by the door|A bundle of moonpetal cuttings is wrapped in damp cloth}, and Pell & Daughters pays well for that sort of thing. {Nobody is watching. The snapdragons are.|The snapdragons have seen you here before. They remember.|The snapdragons snap at you on principle now.}
 > left: Pocket a cutting
@@ -219,13 +205,16 @@ text: {A row of silver-leaf cuttings is drying on the bench|A tray of night-orch
 
 # ---------------- The Flight Field ----------------
 
-@event flight_field_cheating_wind
-title: The Cheating Wind
+@pool flight_field_routine
 place: flight_field
 class: routine
-tone: light
 repeat: 5
 weight: 10
+
+@event flight_field_cheating_wind
+title: The Cheating Wind
+pool: flight_field_routine
+tone: light
 art: broom
 tags: life
 scene: A long green field with tall hoops at either end, one student wobbling on a school broom against a gusting wind.
@@ -242,11 +231,8 @@ text: {season == "winter": The flight field is white, the hoops wearing caps of 
 
 @event flight_field_pickup_race
 title: The Pick-Up Race
-place: flight_field
-class: routine
+pool: flight_field_routine
 tone: light
-repeat: 5
-weight: 10
 art: trophy
 tags: social life
 scene: Three students on brooms jostling at a crooked painted start line, a fourth holding up a scarf as a starting flag.
@@ -274,11 +260,8 @@ text: {A pick-up race is forming at the far hoops. Three brooms, two rules, no r
 
 @event flight_field_long_grass
 title: The Long Grass
-place: flight_field
-class: routine
+pool: flight_field_routine
 tone: light
-repeat: 5
-weight: 10
 art: pouch
 tags: life
 scene: The long grass at the edge of a flight field, scattered with things dropped from brooms, a student crouching to look.
@@ -299,15 +282,18 @@ text: {The long grass at the edge of the flight field catches everything that fa
 
 # ---------------- The Familiar Stables ----------------
 
-@event stables_owl_loft
-title: The Owl Loft
+@pool stables_routine
 place: stables
 class: routine
-tone: warm
 repeat: 5
 weight: 10
-art: owl
 tags: nature
+
+@event stables_owl_loft
+title: The Owl Loft
+pool: stables_routine
+tone: warm
+art: owl
 scene: A hay loft in old stables, rows of sleepy owls on the rafters above a student reading by a lantern.
 text: {Up the ladder, above the hippogriffs, is a hay loft full of owls and quiet.|The owls open one eye each, decide you're furniture, and go back to sleep.|The owls have stopped opening their eyes for you. You've been accepted.} {season == "winter": The warmth of the animals rises through the boards.|{Rain ticks on the roof.|A stray letter has fallen into the hay.|The griffon chick is complaining somewhere below.}}
 > left: Read up among the owls
@@ -319,13 +305,9 @@ text: {Up the ladder, above the hippogriffs, is a hay loft full of owls and quie
 
 @event stables_brask_rounds
 title: Brask's Rounds
-place: stables
-class: routine
+pool: stables_routine
 tone: light
-repeat: 5
-weight: 10
 art: paw
-tags: nature
 scene: A burly professor stroking a hippogriff's beak in a stable aisle, ignoring a student holding two feed buckets.
 text: {Professor Brask is on her rounds, telling each hippogriff she's a very good girl. She tells you to mind the bucket.|Brask is on her rounds. She nods at you, which is more than most get.|Brask greets you by name now, somewhere after the owls.} {season == "spring": There are new hippogriff foals, all legs and beak.|{A hippogriff is sulking about its feathers.|The feed is late and everyone is cross.|The stable cat is asleep in the oats.}}
 > left: Ask Brask a question
@@ -338,13 +320,9 @@ text: {Professor Brask is on her rounds, telling each hippogriff she's a very go
 
 @event stables_griffon_sulk
 title: The Sulking Griffon
-place: stables
-class: routine
+pool: stables_routine
 tone: tense
-repeat: 5
-weight: 10
 art: feather
-tags: nature
 scene: A griffon chick with puffed-up feathers glaring from the corner of a stall, a student holding out a morsel at arm's length.
 text: {The griffon chick is sulking in the corner stall, feathers puffed, refusing breakfast.|The griffon chick is sulking again. It's bigger this time, and so is the sulk.|The griffon is hardly a chick any more, and still sulks like one. It watches you come in.} {year == 1: The sign on the stall says not to hand-feed it, underlined twice.|{The sign on the stall now has a drawing of a bitten hand.|The sign on the stall has been underlined until the paper tore.|Someone has added "I mean it" to the sign, in Brask's hand.}}
 > left: Offer it breakfast by hand
@@ -363,13 +341,16 @@ text: {The griffon chick is sulking in the corner stall, feathers puffed, refusi
 
 # ---------------- The Boathouse ----------------
 
-@event boathouse_jetty_end
-title: The End of the Jetty
+@pool boathouse_routine
 place: boathouse
 class: routine
-tone: warm
 repeat: 5
 weight: 10
+
+@event boathouse_jetty_end
+title: The End of the Jetty
+pool: boathouse_routine
+tone: warm
 art: lantern
 tags: romance
 cast:
@@ -394,11 +375,8 @@ text: {{date} is at the end of the jetty, boots over the water. {They} move{s} o
 
 @event boathouse_green_boat
 title: The Leaky Green Boat
-place: boathouse
-class: routine
+pool: boathouse_routine
 tone: warm
-repeat: 5
-weight: 10
 art: wave
 tags: life
 scene: Inside an old wooden boathouse, an upturned green rowing boat on trestles, initials carved into every beam above.
@@ -415,11 +393,8 @@ text: {The boathouse smells of tar and old rope. Its rowing boats are mostly lea
 
 @event boathouse_overheard
 title: Things Said Outside
-place: boathouse
-class: routine
+pool: boathouse_routine
 tone: tense
-repeat: 5
-weight: 10
 art: eye
 tags: social
 scene: Two silhouettes talking quietly on a jetty at night, seen through the slats of a boathouse wall.
@@ -440,13 +415,16 @@ text: {Two voices out on the jetty, low and urgent. People come to the boathouse
 
 # ---------------- The Orchard ----------------
 
-@event orchard_under_the_trees
-title: Under the Old Trees
+@pool maud_cottage_routine
 place: maud_cottage
 class: routine
-tone: warm
 repeat: 5
 weight: 10
+
+@event orchard_under_the_trees
+title: Under the Old Trees
+pool: maud_cottage_routine
+tone: warm
 art: tree
 tags: romance nature
 cast:
@@ -465,11 +443,8 @@ text: {season == "spring": Blossom is coming down like snow, and {date} has some
 
 @event orchard_windfalls
 title: Windfalls
-place: maud_cottage
-class: routine
+pool: maud_cottage_routine
 tone: warm
-repeat: 5
-weight: 10
 art: pouch
 tags: nature life
 scene: A student gathering fallen fruit into a basket under gnarled orchard trees, older than the towers behind them.
@@ -490,11 +465,8 @@ text: {The orchard trees are older than the towers, and never tidy.|The oldest t
 
 @event orchard_cider_shed
 title: The Cider Shed
-place: maud_cottage
-class: routine
+pool: maud_cottage_routine
 tone: light
-repeat: 5
-weight: 10
 art: cup
 tags: social life
 scene: A tumbledown orchard shed with a wooden cider press inside, three students turning the screw and a fourth keeping watch at the door.
@@ -517,12 +489,9 @@ text: {In the orchard shed, a few students are running an unofficial cider press
 
 @event maud_cottage_kettle
 title: Tea at Maud's
-place: maud_cottage
+pool: maud_cottage_routine
 when: slot == "evening"
-class: routine
 tone: warm
-repeat: 5
-weight: 10
 art: cup
 tags: home
 scene: A low cottage kitchen, a kettle on the hob, an old woman pouring tea into a chipped cup, a goat's head poking through the open door.
@@ -539,11 +508,8 @@ text: {Old Maud's kettle is nearly boiling, as it always is. "Sit down, dearie,"
 
 @event maud_cottage_bartholomew
 title: Bartholomew Is Out
-place: maud_cottage
-class: routine
+pool: maud_cottage_routine
 tone: light
-repeat: 5
-weight: 10
 art: house
 tags: home
 scene: A goat standing triumphantly on the roof of a henhouse, chickens scattering, a student approaching with an apple held out.
@@ -566,11 +532,8 @@ text: {Bartholomew the goat has got out.|Bartholomew is out again, and has learn
 
 @event maud_cottage_top_shelf
 title: The Top Shelf
-place: maud_cottage
-class: routine
+pool: maud_cottage_routine
 tone: tense
-repeat: 5
-weight: 10
 art: bottle
 tags: magic home
 scene: A high cottage shelf crowded with stoppered jars and handwritten labels, one jar glowing faintly blue.
@@ -593,13 +556,10 @@ text: {{slot == "evening": Maud has stepped out to the hens.|Maud is up at the g
 
 @event secret_garden_humming_pear
 title: The Humming Pear
-place: secret_garden
-class: routine
+pool: secret_garden_routine
 tone: warm
-repeat: 5
-weight: 10
 art: tree
-tags: nature magic
+tags: magic
 scene: A student lying in the grass under a pear tree in a hidden walled garden, ferns glowing softly around them.
 text: {The pear tree in Maud's secret garden is humming to itself.|The pear tree has changed its tune since you were last here, as if it's been practising.|The pear tree hums when you come in now. You'd like to think it's for you.} {season == "winter": Its tune is low and slow, like something asleep.|{season == "spring": Its tune has gone quick and bright with blossom.|{Its tune is one you almost know.|Its tune has a sad turn in the middle.|Its tune is one you've heard Maud whistle.}}}
 > left: Hum along with it
@@ -616,13 +576,10 @@ text: {The pear tree in Maud's secret garden is humming to itself.|The pear tree
 
 @event secret_garden_silver_bees
 title: The Silver Bees
-place: secret_garden
-class: routine
+pool: secret_garden_routine
 tone: light
-repeat: 5
-weight: 10
 art: sparkle
-tags: nature magic
+tags: magic
 scene: Bees made of silver light hovering around a hive in a hollow stump, a student reaching carefully towards a dripping comb.
 text: {The silver bees are working the ferns; their hive in the old stump drips honey the colour of moonlight.|The silver bees have built a second comb, lopsided, as if in a hurry.|The silver bees know you now, more or less.} {season == "winter": Even in winter they fly, slowly, like snow going the wrong way.|{The comb is fuller than you've ever seen it.|One of them lands on your sleeve and stays.|They're dancing a direction you can't read.}}
 > left: Take a little comb
@@ -639,13 +596,10 @@ text: {The silver bees are working the ferns; their hive in the old stump drips 
 
 @event secret_garden_glowing_ferns
 title: The Glowing Ferns
-place: secret_garden
-class: routine
+pool: secret_garden_routine
 tone: eerie
-repeat: 5
-weight: 10
 art: leaf
-tags: nature magic
+tags: magic
 scene: A hidden garden at dusk, waist-high ferns glowing pale green, one student crouched with fingers near a frond.
 text: {The ferns in the secret garden glow when the light goes. One frond would light your dormitory for a week. Maud said not to pick them.|Since your last visit a new fern has unfurled by the gate, already glowing.|The ferns glow. You know exactly what a frond is worth, and what Maud said.} {One has grown over the path, right at your hand.|A broken frond lies on the ground already, still glowing.|They're brighter than you've ever seen them.}
 > left: Pick a single frond
@@ -662,13 +616,16 @@ text: {The ferns in the secret garden glow when the light goes. One frond would 
 
 # ---------------- The Courier Loft ----------------
 
-@event courier_loft_letter_home
-title: A Letter Home
+@pool courier_loft_routine
 place: courier_loft
 class: routine
-tone: warm
 repeat: 5
 weight: 10
+
+@event courier_loft_letter_home
+title: A Letter Home
+pool: courier_loft_routine
+tone: warm
 art: letter
 tags: home
 scene: A draughty loft full of pigeonholes, a student writing a letter on a parcel by the light of a high window.
@@ -684,11 +641,8 @@ text: {The courier loft will take a letter home for next to nothing. You've mean
 
 @event courier_loft_dispatch_bell
 title: The Dispatch Bell
-place: courier_loft
-class: routine
+pool: courier_loft_routine
 tone: light
-repeat: 5
-weight: 10
 art: bell
 tags: life
 scene: A chaotic loft as a dispatch bell clangs, couriers grabbing brooms and parcels, one holding a parcel out to a visitor.
@@ -705,12 +659,9 @@ text: {The dispatch bell clangs and the loft explodes into brooms. A courier sho
 
 @event courier_loft_broom_rack
 title: The Fast Broom
-place: courier_loft
+pool: courier_loft_routine
 when: not member(broom_courier)
-class: routine
 tone: tense
-repeat: 5
-weight: 10
 art: broom
 tags: life
 scene: A rack of courier brooms in a loft, one sleek black broom set apart from the others with a red tag on its handle.
@@ -732,15 +683,19 @@ text: {At the end of the rack is the courier loft's fast broom, tagged in red. C
 
 # ---------------- The Whisperwood ----------------
 
-@event whisperwood_sleeptalk
-title: The Forest Talks
+@pool whisperwood_routine
 place: whisperwood
 class: routine
-tone: eerie
 repeat: 5
 weight: 10
+tags: nature
+
+@event whisperwood_sleeptalk
+title: The Forest Talks
+pool: whisperwood_routine
+tone: eerie
 art: tree
-tags: nature mystery
+tags: mystery
 scene: A student standing very still in a misty old forest, head tilted, as if listening to the trees.
 text: {The Whisperwood is talking in its sleep. You stand very still to make out the words.|You've started to catch whole words in the forest's mumbling.|You've learned to stand still and let the forest talk.} Today it's {listing trees that were felled|arguing about the rain|saying a name, over and over, that isn't yours}. {season == "winter": Snow muffles half of it.|{season == "autumn": Leaves fall with every word.|Fog moves between the trunks.}}
 > left: Listen closely
@@ -753,13 +708,10 @@ text: {The Whisperwood is talking in its sleep. You stand very still to make out
 
 @event whisperwood_foragers
 title: Foraging Season
-place: whisperwood
-class: routine
+pool: whisperwood_routine
 tone: light
-repeat: 5
-weight: 10
 art: mushroom
-tags: nature social
+tags: social
 scene: A handful of students with baskets crouching in a forest clearing, one holding up a mushroom for the others to inspect.
 text: {season == "autumn": The Whisperwood is full of mushrooms and students with baskets.|{season == "winter": A few hardy foragers are scraping lichen off the oaks.|{season == "spring": The clearings are thick with wild garlic and foragers.|The brambles are heavy with berries, and so are the foragers.}}} {A second-year from Rootward waves you over.|The Rootward forager is back, and saves you a spot.|The foragers treat you as one of their own now.}
 > left: Forage for the apothecary
@@ -773,13 +725,10 @@ text: {season == "autumn": The Whisperwood is full of mushrooms and students wit
 
 @event whisperwood_off_path
 title: The Path That Wasn't
-place: whisperwood
-class: routine
+pool: whisperwood_routine
 tone: eerie
-repeat: 5
-weight: 10
 art: compass
-tags: nature mystery
+tags: mystery
 scene: A narrow path branching off into fog between old trees, a student pausing at the fork with a hand on a marked trunk.
 text: {A path opens to your left that wasn't there last time.|Another path that wasn't there before. The Whisperwood does this.|The wood has offered you a new path again. You're starting to think it likes you.} {It's lined with pale stones.|It smells of woodsmoke where there's no fire.|It goes downhill, which is wrong, because you're at the bottom of the hill.}
 > left: Follow it a little way

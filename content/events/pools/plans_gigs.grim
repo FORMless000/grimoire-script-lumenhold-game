@@ -66,16 +66,20 @@ text: {Holiday work notices are going up by the gates, for the grounds and the k
 
 # ---------------- The grounds (gig_grounds) ----------------
 
-@event gig_grounds_hard_ground
-title: Hard Ground
+@pool work_routine
 plan: work
-when: has(gig_grounds)
 class: routine
-tone: light
 repeat: 5
 weight: 30
+tags: job
+
+@event gig_grounds_hard_ground
+title: Hard Ground
+pool: work_routine
+when: has(gig_grounds)
+tone: light
 art: leaf
-tags: job nature money
+tags: nature money
 scene: A student and an old woman working a frozen garden bed at dawn, breath steaming, a wheelbarrow between them.
 text: {season == "winter": The ground is frozen two fingers deep and Maud wants the beds turned anyway.|The ground is baked hard and Maud wants the beds turned anyway.} "The soil doesn't take holidays," she says. {~She hands you the heavier spade.|The bees watch you from their hives with professional interest.|She is already on her third bed.}
 > left: Dig until it's done
@@ -88,16 +92,20 @@ text: {season == "winter": The ground is frozen two fingers deep and Maud wants 
   health -tiny
   say: {~Maud works slowly and never stops, and by evening you understand why. Less done, a smaller purse, an easier back.|You keep to her pace and her stories. She pays for the beds you turned, not the ones she did.|You work at her pace, and she still finishes three beds to your one. She pays for yours, and laughs about it.}
 
-@event gig_grounds_storm_damage
-title: After the Storm
+@pool work_routine_repeat4
 plan: work
-when: has(gig_grounds)
 class: routine
-tone: tense
 repeat: 4
 weight: 30
+tags: job
+
+@event gig_grounds_storm_damage
+title: After the Storm
+pool: work_routine_repeat4
+when: has(gig_grounds)
+tone: tense
 art: tree
-tags: job nature money
+tags: nature money
 scene: A fallen branch across an orchard path after a storm, a student with a saw, an old woman pointing at something higher up.
 text: {season == "winter": Last night's storm brought down half a pear tree.|A summer storm in the night has stripped the orchard.} Maud wants it cleared before the stay-behinds go walking. A cracked limb still hangs over the path.
 > left: Climb up and cut it down
@@ -114,14 +122,11 @@ text: {season == "winter": Last night's storm brought down half a pear tree.|A s
 
 @event gig_grounds_hive_check
 title: Checking the Hives
-plan: work
+pool: work_routine_repeat4
 when: has(gig_grounds)
-class: routine
 tone: warm
-repeat: 4
-weight: 30
 art: leaf
-tags: job nature
+tags: nature
 scene: A student in a veiled hat leaning over an open beehive beside an old woman, who isn't wearing one.
 text: Maud's hives sit at the end of the orchard and she checks them {season == "winter": by ear in winter, knocking and listening|by hand in summer, slow and bare-armed}. Today she wants you to do it. "Tell them who you are," she says. "They like manners."
 > left: Introduce yourself properly
@@ -141,14 +146,11 @@ text: Maud's hives sit at the end of the orchard and she checks them {season == 
 
 @event gig_kitchens_onions
 title: The Onion Sack
-plan: work
+pool: work_routine
 when: has(gig_kitchens)
-class: routine
 tone: light
-repeat: 5
-weight: 30
 art: meal
-tags: job money
+tags: money
 scene: A student at a scrubbed kitchen table behind a mountain of onions, eyes streaming, a huge cook stirring a cauldron behind them.
 text: {The holiday kitchens feed fewer mouths and work no fewer hours.|Back at the long table, back to the sack.|The head cook has started saving the worst sack for you, as a compliment.} {season == "winter": The Midwinter stock needs a hundred onions.|The summer stew needs a hundred onions.} Nobody has ever needed fewer.
 > left: Peel the whole sack
@@ -162,14 +164,11 @@ text: {The holiday kitchens feed fewer mouths and work no fewer hours.|Back at t
 
 @event gig_kitchens_burnt_pan
 title: The Burnt Pan
-plan: work
+pool: work_routine_repeat4
 when: has(gig_kitchens)
-class: routine
 tone: tense
-repeat: 4
-weight: 30
 art: meal
-tags: job money
+tags: money
 scene: A smoking pan on a range, a student holding it at arm's length, a cook turning round with a ladle raised.
 text: You turn away for a moment and the porridge for the stay-behinds catches. The smell is already halfway to the dining hall. The head cook hasn't noticed. Yet.
 > left: Own up and start again
@@ -188,14 +187,11 @@ text: You turn away for a moment and the porridge for the stay-behinds catches. 
 
 @event gig_kitchens_feast_night
 title: Feast Night
-plan: work
+pool: work_routine_repeat4
 when: has(gig_kitchens)
-class: routine
 tone: warm
-repeat: 4
-weight: 30
 art: cup
-tags: job money social
+tags: money social
 scene: A steaming kitchen on a feast night, trays going out in a stream, a student in an apron grinning through the chaos.
 text: {season == "winter": Tonight the castle keeps a small Midwinter table for those who stayed, and the kitchens will cook as if for the whole school.|Tonight the stay-behinds hold a summer supper in the courtyard, and the kitchens will cook as if for the whole school.} At breakfast the head cook chalks up the rota: somebody carries trays, somebody plates.
 > left: Volunteer to carry trays
@@ -254,14 +250,11 @@ text: {At the morning briefing the head cook announces a staff supper tonight, a
 
 @event gig_library_stocktake
 title: The Stocktake
-plan: work
+pool: work_routine
 when: has(gig_library)
-class: routine
 tone: light
-repeat: 5
-weight: 30
 art: book
-tags: job study money
+tags: study money
 scene: A deserted library in the holidays, a student on a tall ladder with a ledger, books stacked on every table, dust in the lamplight.
 text: {The library in the holidays is all yours and all to be counted.|The stocktake ledger is half full; the shelves are not half counted.|You've stopped counting books and started counting floors.} {A shelf of atlases has migrated to the poetry section.|One book is not on any list and seems pleased about it.|The lamp in the east wing keeps going out, politely.}
 > left: Count the restricted shelves too
@@ -274,16 +267,20 @@ text: {The library in the holidays is all yours and all to be counted.|The stock
   mood -tiny
   say: {Open stacks only, every book counted, the ledger perfect. The librarian pays you in full and says nothing about the shelves you left.|A long, dusty, honest day. You go to bed counting.|You count the open floors and leave the east wing to its lamp. The librarian pays in full and asks no questions.}
 
-@event gig_library_lost_shelf
-title: The Shelf That Wasn't There
+@pool work_routine_repeat4_2
 plan: work
-when: has(gig_library)
 class: routine
-tone: eerie
 repeat: 4
 weight: 24
+tags: job
+
+@event gig_library_lost_shelf
+title: The Shelf That Wasn't There
+pool: work_routine_repeat4_2
+when: has(gig_library)
+tone: eerie
 art: book
-tags: job mystery money
+tags: mystery money
 scene: A narrow library aisle that seems to go on further than the building, a student holding a lamp up to an unfamiliar shelf.
 text: {The stocktake finds a shelf that isn't in any ledger.|The extra shelf again. It has grown a book since yesterday.|The shelf is longer than the room it's in, now.} {The books on it have no titles.|One is warm.|One is labelled with the date of tomorrow.}
 > left: Catalogue it
@@ -296,16 +293,20 @@ text: {The stocktake finds a shelf that isn't in any ledger.|The extra shelf aga
   guile +tiny
   say: {You don't write it down. Some shelves don't want to be counted. The librarian, passing, nods as if you'd passed a test.|You skip it. The ledger balances. The shelf, you'd swear, looks relieved.|You don't write down the book with tomorrow's date. Tomorrow, it isn't there. The librarian thanks you, oddly sincerely.}
 
-@event gig_library_last_day
-title: The Ledger Balances
+@pool work_routine_repeat3
 plan: work
-when: has(gig_library)
 class: routine
-tone: warm
 repeat: 3
 weight: 20
+tags: job
+
+@event gig_library_last_day
+title: The Ledger Balances
+pool: work_routine_repeat3
+when: has(gig_library)
+tone: warm
 art: scroll
-tags: job money
+tags: money
 scene: A head librarian signing a thick stocktake ledger at a desk under a window, a tired student waiting with ink on every finger.
 text: {The last page of the stocktake. The librarian reads it slowly, all of it.|Another stocktake done, another ledger signed.|The librarian signs, and blots, and signs again for luck.} {"Not one missing," she says. "That has never happened."|"Three missing, and one extra. Normal."|She closes the ledger with both hands.}
 > left: Ask for a reference
@@ -320,14 +321,11 @@ text: {The last page of the stocktake. The librarian reads it slowly, all of it.
 
 @event gig_newt_rush
 title: The Holiday Rush
-plan: work
+pool: work_routine
 when: has(gig_newt)
-class: routine
 tone: tense
-repeat: 5
-weight: 30
 art: cup
-tags: job money
+tags: money
 scene: A packed village tavern at the holidays, garlands over the bar, every table full, a student manager behind the bar with three jugs in hand.
 text: {The landlady hands you the keys over breakfast. Tonight, she warns, the Newt will be full to the rafters with farmers, barge crews and families home for the season.|Another holiday night ahead, and the Newt is already promised to a full house.|By morning, half the valley has said it's coming to the Newt tonight.} {A wedding party has sent word.|The fiddler has promised a song with forty verses.|The firewood is stacked to the ceiling.}
 > left: Keep the bar open till the last song
@@ -342,14 +340,11 @@ text: {The landlady hands you the keys over breakfast. Tonight, she warns, the N
 
 @event gig_newt_brawl
 title: A Fight Over a Song
-plan: work
+pool: work_routine_repeat4_2
 when: has(gig_newt)
-class: routine
 tone: tense
-repeat: 4
-weight: 24
 art: cup
-tags: job danger money
+tags: danger money
 scene: Two barge crews squaring up in the middle of a crowded tavern, a student manager stepping between them with a tray.
 text: {Two barge crews disagree about the last verse of a song, loudly.|The barge crews again, and the song again, and the same verse.|This time it's a farmer and a fisherman, and the song is a different one.} {A chair is already in the air.|Somebody has taken their coat off.|The fiddler has stopped playing.}
 > left: Step between them
@@ -369,14 +364,11 @@ text: {Two barge crews disagree about the last verse of a song, loudly.|The barg
 
 @event gig_newt_fire
 title: The Fire Must Not Go Out
-plan: work
+pool: work_routine_repeat3
 when: has(gig_newt)
-class: routine
 tone: warm
-repeat: 3
-weight: 20
 art: candle
-tags: job money
+tags: money
 scene: The great hearth of a village tavern late at night, embers banked low, a student kneeling with tongs and a bucket of ash.
 text: {The landlady's fire has never gone out in her lifetime or her mother's. She's away tonight, and this morning the wind is already in the chimney.|The landlady is away again tonight, and the fire is already low. The wind is from the north.|The fire flickered last night as you locked up, as if to test you. Tonight it's yours again.} {The wood is damp.|There's frost on the inside of the windows.|The cat is sitting on the warmest stone, unhelpfully.}
 > left: Sit up with it all night
@@ -390,14 +382,11 @@ text: {The landlady's fire has never gone out in her lifetime or her mother's. S
 
 @event gig_pell_remedy_rush
 title: Cough Season
-plan: work
+pool: work_routine
 when: has(gig_pell)
-class: routine
 tone: light
-repeat: 5
-weight: 30
 art: bottle
-tags: job alchemy money
+tags: alchemy money
 scene: A crowded village apothecary in winter, a queue of coughing villagers, a student and an old man filling bottles as fast as they can.
 text: {The whole valley is coughing, and Pell's queue is out of the door.|Day three of the cough. Pell is humming. You are not.|The queue at Pell's has its own gossip by now.} {A carter wants the cherry one.|A farmer wants something for his cow.|A professor in disguise wants something "for a friend".}
 > left: Mix to order, carefully
@@ -412,14 +401,11 @@ text: {The whole valley is coughing, and Pell's queue is out of the door.|Day th
 
 @event gig_pell_night_knock
 title: A Knock After Closing
-plan: work
+pool: work_routine_repeat4_2
 when: has(gig_pell)
-class: routine
 tone: tense
-repeat: 4
-weight: 24
 art: bottle
-tags: job alchemy money
+tags: alchemy money
 scene: An apothecary's door at night, a lantern held up to a frightened villager in the doorway, a student in a nightcap behind the counter.
 text: {Pell asks you over breakfast to sleep above the shop tonight. There's a fever about, and the knocks come after closing.|Another night above the shop, Pell asks. The knocks keep coming after dark.|You're sleeping above the shop again tonight. You've stopped bothering to unlace your boots.} {Pell sleeps like a stone.|The fire goes out at ten.|The ledger says not to open after dark.}
 > left: Mix any remedy yourself
@@ -438,14 +424,11 @@ text: {Pell asks you over breakfast to sleep above the shop tonight. There's a f
 
 @event gig_pell_ledger
 title: Pell's Books
-plan: work
+pool: work_routine_repeat3
 when: has(gig_pell)
-class: routine
 tone: light
-repeat: 3
-weight: 20
 art: scroll
-tags: job money
+tags: money
 scene: A cluttered apothecary back room, an old man and a student bent over a ledger full of crossings-out, jars all around them.
 text: {Pell's account books have not been balanced since his daughters left home.|The account books again. Pell has found another drawer of receipts.|You're nearly at the bottom of the receipts. Pell is nearly at the bottom of his patience.} {Half the debts are owed to him.|Half the debts are owed by him.|Some debts are in a currency that no longer exists.}
 > left: Balance them properly
@@ -460,14 +443,11 @@ text: {Pell's account books have not been balanced since his daughters left home
 
 @event gig_post_storm_run
 title: The Storm Run
-plan: work
+pool: work_routine
 when: has(gig_post)
-class: routine
 tone: tense
-repeat: 5
-weight: 30
 art: feather
-tags: job danger money
+tags: danger money
 scene: A courier on a broom flying low over snowy fields in a storm, a sack of parcels strapped behind them, a farmhouse light ahead.
 text: {The holiday post doesn't wait for weather. Tonight's route crosses the ridge in a storm.|The ridge again, and the wind again.|You've flown this route so often the farm dogs know your broom.} {The sack is heavier than the broom likes.|One parcel is labelled "fragile" in four languages.|The light at the last farm is always on for you.}
 > left: Fly straight over the ridge
@@ -487,14 +467,11 @@ text: {The holiday post doesn't wait for weather. Tonight's route crosses the ri
 
 @event gig_post_wrong_parcel
 title: The Wrong Parcel
-plan: work
+pool: work_routine_repeat4_2
 when: has(gig_post)
-class: routine
 tone: light
-repeat: 4
-weight: 24
 art: letter
-tags: job money
+tags: money
 scene: A farmhouse doorway in the snow, an old woman holding up a parcel that is clearly ticking, a courier on the step looking worried.
 text: {A parcel you delivered yesterday has come back. The old woman says it isn't hers, and it's ticking.|Another wrong address. The holiday post is chaos.|The labels are getting worse. One just says "Aunt".} {The ticking is getting faster.|It smells of oranges.|It's addressed to someone who died years ago.}
 > left: Find the right house tonight
@@ -508,14 +485,11 @@ text: {A parcel you delivered yesterday has come back. The old woman says it isn
 
 @event gig_post_last_parcel
 title: The Last Parcel
-plan: work
+pool: work_routine_repeat3
 when: has(gig_post)
-class: routine
 tone: warm
-repeat: 3
-weight: 20
 art: letter
-tags: job money
+tags: money
 scene: An empty courier loft at the end of a holiday shift, one small parcel left on the shelf, addressed in shaky handwriting.
 text: {The last parcel of the day is small, and addressed in a shaky hand to a cottage on the far moor.|One parcel left again. Always one.|The last parcel, and the last daylight.} {It's light as a feather.|It's warm.|It rattles like a box of buttons.}
 > left: Fly it out now

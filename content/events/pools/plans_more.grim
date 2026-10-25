@@ -3,15 +3,18 @@
 
 # ---------------- Break: at the castle (plan: castle) ----------------
 
-@event break_castle_holiday_repairs
-title: Holiday Repairs
+@pool castle_routine
 plan: castle
 class: routine
-tone: light
 repeat: 5
 weight: 10
-art: house
 tags: home
+
+@event break_castle_holiday_repairs
+title: Holiday Repairs
+pool: castle_routine
+tone: light
+art: house
 scene: A caretaker with a long list on a clipboard in an empty castle corridor, a student trying to look busy nearby.
 text: {The caretaker has a list of jobs that can only be done when the castle is empty, and an eye for idle students.|The caretaker's list is out again. Your name is pencilled in at the bottom, provisionally.|The caretaker hands you the list and a mug of tea, in that order.} {season == "winter": Today it's snow on the battlements, heavy enough to worry the roof leads.|Today it's the dormitory mattresses, which must be carried out and beaten in the sun.}
 > left: Lend a hand
@@ -29,15 +32,18 @@ text: {The caretaker has a list of jobs that can only be done when the castle is
       vigor +tiny
       say: {The caretaker finds you behind a tapestry and hands you a shovel without comment.|You get as far as the stairs, which choose that moment to move you straight back to the caretaker.|You finish the tea and try to slip off. The caretaker taps the list, and you work down it until supper.}
 
-@event break_castle_flight_field
-title: The Field to Yourself
+@pool castle_routine_repeat4
 plan: castle
 class: routine
-tone: light
 repeat: 4
 weight: 10
-art: broom
 tags: home
+
+@event break_castle_flight_field
+title: The Field to Yourself
+pool: castle_routine_repeat4
+tone: light
+art: broom
 scene: An empty flight field in the holidays, hoops at either end, a single student on a broom high above the grass.
 text: {With the flying lessons over for the break, the flight field is empty and nobody has locked the broom shed.|The broom shed is unlocked again. You suspect it's on purpose now.|The flight field in the break. You know which broom in the shed pulls left.} {season == "winter": The hoops are rimed with frost and the wind has teeth.|The air shimmers with heat, and the wind is lazy for once.} {A crow is using the far hoop as a perch.|Somebody's lost scarf is snagged on the near hoop.|The grass is printed with a fox's tracks.}
 > left: Fly the hoops, fast
@@ -57,13 +63,9 @@ text: {With the flying lessons over for the break, the flight field is empty and
 
 @event break_castle_bored_stairs
 title: The Bored Staircases
-plan: castle
-class: routine
+pool: castle_routine
 tone: light
-repeat: 5
-weight: 10
 art: tower
-tags: home
 scene: A grand castle stairwell with several staircases swinging slowly through the air, a lone student waiting on a landing.
 text: {With nobody to carry up and down, the castle's staircases have grown restless.|The staircases are bored again, and they've noticed you.|The stairs know you're one of the few left. One swings over the moment you reach the landing.} {season == "winter": The stairwell is cold enough to see your breath.|Warm air drifts up the stairwell with the smell of cut grass.} {A flight is drifting past with a lost shoe on its top step.|Two staircases are sulking against the wall.|One flight keeps nudging the landing, like a dog with a stick.}
 > left: Ride whichever one comes
@@ -83,13 +85,9 @@ text: {With nobody to carry up and down, the castle's staircases have grown rest
 
 @event break_castle_night_rounds
 title: The Lone Prefect
-plan: castle
-class: routine
+pool: castle_routine_repeat4
 tone: tense
-repeat: 4
-weight: 10
 art: lantern
-tags: home
 scene: A single lantern bobbing along a bridge between dark towers at night, a student watching it from a window.
 text: {Only one prefect has stayed for the break, and at breakfast they sigh that seven towers are a lot to patrol tonight.|The lone prefect is pinning tonight's rounds to the noticeboard again.|You know the lone prefect's rounds by now, to the quarter-hour, and tonight's are on the noticeboard.} {season == "winter": The corridors are cold enough to frost the portraits.|The nights are warm, and every window in the castle stands open after dark.} {A staircase shifts somewhere below with a long stone sigh.|An owl has got into the east wing.|Somewhere a door bangs in a draught.}
 > left: Wander the towers tonight
@@ -109,16 +107,19 @@ text: {Only one prefect has stayed for the break, and at breakfast they sigh tha
 
 # ---------------- Break: at home (plan: home) ----------------
 
-@event break_home_family_recipe
-title: The Family Recipe
+@pool home_routine
 plan: home
-slot: morning
 class: routine
-tone: warm
 repeat: 5
 weight: 10
-art: cauldron
 tags: home
+
+@event break_home_family_recipe
+title: The Family Recipe
+pool: home_routine
+slot: morning
+tone: warm
+art: cauldron
 scene: A warm family kitchen, an older relative guiding a student's hands over a steaming pot, jars and bowls everywhere.
 text: {Someone at home has decided you're old enough for the family recipe, and ties an apron on you before breakfast.|The recipe lessons resume. You're trusted with the knife now, if not the salt.|You know the first half of the recipe by heart. The second half is still guarded like a treaty.} {season == "winter": It's the stew for the cold months, which takes all day.|It's the summer preserve, and every fruit in the house is involved.} {Nobody measures anything.|A pinch turns out to mean a handful.|The pot is older than you are.}
 > left: Write it all down
@@ -131,16 +132,19 @@ text: {Someone at home has decided you're old enough for the family recipe, and 
   health -tiny
   say: {You burn a finger and get a nod. In this kitchen, that's a diploma.|You get it wrong in a way that turns out to be how your grandmother made it. Everyone goes quiet, and then they eat it all.|Your hands learn a step of the second half before anyone means to teach it. Nobody says a word, but you're the one left stirring the old pot.}
 
-@event break_home_own_bed
-title: Your Own Bed
+@pool home_routine_repeat4
 plan: home
-slot: morning
 class: routine
-tone: warm
 repeat: 4
 weight: 10
-art: bed
 tags: home
+
+@event break_home_own_bed
+title: Your Own Bed
+pool: home_routine_repeat4
+slot: morning
+tone: warm
+art: bed
 scene: A narrow bed under a cottage window in early light, a student buried in blankets while the house bustles below.
 text: {Your own bed, after a term in the dormitory. You wake at the academy's hour anyway.|The house wakes at dawn. It always has; you'd forgotten.|You know which floorboard creaks on the way down, and that everyone else learned it first.} {season == "winter": There's frost on the window and the blankets weigh a ton.|Sunlight is coming through the curtains, and someone is already whistling in the yard.} Downstairs, {the kettle is going.|someone is calling your name.|the door bangs for the third time.}
 > left: Sleep until noon
@@ -154,13 +158,9 @@ text: {Your own bed, after a term in the dormitory. You wake at the academy's ho
 
 @event break_home_mending_chair
 title: The Mending Chair
-plan: home
-class: routine
+pool: home_routine
 tone: light
-repeat: 5
-weight: 10
 art: wand
-tags: home
 scene: A chair by a cottage door piled with broken household things, a student in academy robes eyeing them with a wand.
 text: {Word goes round the house that the scholar can fix things.|The things that need fixing have been waiting for you on a chair by the door.|The mending chair fills up between breaks, like a well.} {season == "winter": Today it's a stove door that won't stay shut.|Today it's a window that sticks in the heat.} {Also a clock that strikes thirteen.|Also a doll with a missing eye.|Also a teapot nobody admits to breaking.}
 > left: Mend it with a spell
@@ -179,13 +179,9 @@ text: {Word goes round the house that the scholar can fix things.|The things tha
 
 @event break_home_the_trunk
 title: The Trunk in the Corner
-plan: home
-class: routine
+pool: home_routine_repeat4
 tone: warm
-repeat: 4
-weight: 10
 art: house
-tags: home
 scene: An open travelling trunk in the corner of a small bedroom, overflowing with jars, socks and parcels in cloth.
 text: {Your trunk stands open in the corner, and the family keeps putting things in it.|The trunk is open again, and it's filling up again.|The trunk is a family project now.} {season == "winter": Woollen socks, a jar of something pickled, a cake wrapped in three cloths.|Dried fruit, a straw hat nobody asked for, a cake wrapped in three cloths.} {final_year: Someone says "for next term", then stops.|{The lid won't close.|Someone sits on the lid.|A note is tucked into a sock, not to be read till later.}}
 > left: Take everything
@@ -199,15 +195,18 @@ text: {Your trunk stands open in the corner, and the family keeps putting things
 
 # ---------------- Break: working full-time (plan: work) ----------------
 
-@event break_work_stocktake
-title: Stocktaking
+@pool work_routine_weight10
 plan: work
 class: routine
-tone: light
 repeat: 5
 weight: 10
-art: scales
 tags: job
+
+@event break_work_stocktake
+title: Stocktaking
+pool: work_routine_weight10
+tone: light
+art: scales
 scene: A student with a ledger and pencil counting rows of stock in a quiet workplace, the owner reading over their shoulder.
 text: {The quiet days of the break are, says whoever is in charge, the time to count everything.|Stocktaking again. You have opinions about how to count things now.|Stocktaking. You count faster than your boss, and slower than you'd like.} {has(gig_newt): At the Gilded Newt that means every tankard, keg and spoon.|{has(gig_pell): At Pell & Daughters that means a thousand drawers.|{has(gig_post): At the loft that means every parcel, pigeonhole and broom.|{has(gig_library): In the library that means books that won't hold still to be counted.|{has(gig_kitchens): In the kitchens that means every ladle, pot and sack of flour.|{has(gig_grounds): In the sheds that means every trowel, rake and seed packet.|That means everything, twice.}}}}}} The tally comes out one short.
 > left: Track down the missing one
@@ -252,13 +251,9 @@ text: {Someone has come back with a complaint and a voice built for it.|Another 
 
 @event break_work_half_hour
 title: Half an Hour Off
-plan: work
-class: routine
+pool: work_routine_weight10
 tone: warm
-repeat: 5
-weight: 10
 art: cup
-tags: job
 scene: A tired student in a work apron standing in a back doorway, looking out at the weather with a cup in hand.
 text: {Half an hour off in the middle of a long holiday shift.|Your half hour again. You know exactly how far it goes now.|Half an hour. You spend the first minute deciding.} {season == "winter": Outside, the snow is coming down sideways.|Outside, the sun is bright enough to hurt.} {The back room has one chair and one draught.|A colleague has left half a pie, possibly for sharing.|A clock somewhere strikes the wrong hour.}
 > left: Walk out into the weather
@@ -272,13 +267,10 @@ text: {Half an hour off in the middle of a long holiday shift.|Your half hour ag
 
 @event break_work_short_wages
 title: A Coin Short
-plan: work
-class: routine
+pool: work_routine_weight10
 tone: tense
-repeat: 5
-weight: 10
 art: coin
-tags: job money
+tags: money
 scene: A student counting a small pile of coins on a counter for the second time, frowning, an employer pretending not to watch.
 text: {Wages, counted out into your hand. You count them again.|Wage day. You count your coins at the counter, in front of everyone, on principle.|Wage day. Your boss counts slowly, and so do you.} {It's short by one.|It's short, and there's a button where a coin should be.|It's short by just enough to notice.} {has(gig_newt): The landlady remembers every tab to the penny, and has somehow forgotten this one.|{has(gig_pell): Old Pell counted it himself, drop by drop.|{has(gig_post): The dispatch ledger says otherwise, in smudged ink.|{has(gig_library): The pay envelope says otherwise, in very small writing.|{has(gig_kitchens): The head cook's tally is written in gravy.|{has(gig_grounds): Maud's pay book says otherwise, in pencil.|Someone's sums say otherwise.}}}}}}
 > left: Point it out

@@ -66,3 +66,19 @@ trigger: queued
 desc: The next card of the scene, drawn from its steps.
 do:
   queue any in $thread now
+
+# ---------------- pool templates: what every pool of one kind shares ----------------
+
+@pool course_routine
+desc: What every course pool shares (6 pools).
+class: routine
+repeat: 5
+weight: 10
+tags: class
+
+@pool course_routine_repeat4
+desc: What the course pools whose cards come back four times share (3 pools); the others use course_routine.
+class: routine
+repeat: 4
+weight: 10
+tags: class

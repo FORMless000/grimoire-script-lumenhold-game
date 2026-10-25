@@ -4,17 +4,21 @@
 # trades gold for friendship with a chance it never comes back; the follow-up is queued "with npc" so
 # the same person repays you two months later, with three variants of how. Amounts are tiers;
 # "fifteen crowns" in the text is what `gold medium` is in @balance (lint checks that they match).
+# Its trigger, class and repeat come from the pool it shares with the file's other social routines.
+
+@pool social_routine
+trigger: social
+class: routine
+repeat: 6
 
 @event soc_borrow_money
 title: A Small Loan
-class: routine
+pool: social_routine
 tone: light
 cast:
   npc: any where tagged(npc, peer) and rel(npc) >= 3
 per: npc
-trigger: social
 when: gold >= 20
-repeat: 6
 art: pouch
 tags: social money
 scene: A student holding out an empty purse upside down with a sheepish grin.

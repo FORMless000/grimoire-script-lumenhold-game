@@ -34,14 +34,17 @@ text: You reach for the last copy of "Foundations of Flame" and a ringed hand ge
       rel lyra -small
       say: She wins the argument in four sentences and leaves with the book. You think of the perfect comeback that night.
 
+@pool people_students_lyra_social_routine
+actor: lyra
+trigger: social
+class: routine
+weight: 12
+
 @event lyra_letter
 title: A Letter With a Black Seal
-class: routine
+pool: people_students_lyra_social_routine
 tone: light
-trigger: social
-actor: lyra
 when: rel(lyra) >= 6 and (year > 1 or month > 4)
-weight: 12
 art: letter
 tags: social
 scene: A girl sitting on a window seat in an empty corridor, crushing a letter with a black wax seal in her fist, face turned away.
@@ -88,12 +91,9 @@ text: The professors post this week's rankings, with an open paper this afternoo
 
 @event lyra_family_gala
 title: The Vaneshade Winter Gala
-class: routine
+pool: people_students_lyra_social_routine
 tone: warm
-trigger: social
-actor: lyra
 when: rel(lyra) >= 18 and month >= 3 and month <= 6
-weight: 12
 art: crown
 tags: social romance
 scene: A glittering ballroom in a noble house, candles floating in mid-air, a tall woman in crimson watching the crowd like a hawk.
@@ -182,12 +182,9 @@ text: Another black-sealed letter. Lyra reads it twice and goes white. "My mothe
 
 @event lyra_rival_sabotage
 title: Sabotage in Class
-class: routine
+pool: people_students_lyra_social_routine
 tone: tense
-trigger: social
-actor: lyra
 when: bond(lyra) == "rival" and rel(lyra) <= -4
-weight: 12
 art: potion
 tags: rival
 scene: A cauldron spitting black smoke, a crimson-haired student walking away with a tiny vial hidden in her sleeve.
@@ -846,16 +843,19 @@ text: The Artificers' Fair. Mir's entry is under a sheet and occasionally growls
       rel mir +small
       say: The bear eats your sleeve and swats you into the flour bins on its way to the judges. The crowd loves it. Third prize and a very good story.
 
+@pool people_students_mir_social_routine
+actor: mir
+trigger: social
+class: routine
+weight: 10
+tags: social
+
 @event mir_workshop_closed
 title: The Workshop Is Shut
-class: routine
+pool: people_students_mir_social_routine
 tone: light
-trigger: social
-actor: mir
 when: rel(mir) >= 12 and year >= 2
-weight: 10
 art: lock
-tags: social
 scene: A workshop door chained shut with a faculty notice nailed to it, a forlorn student sitting on a toolbox outside.
 text: After the third fire this term, the faculty has padlocked Mir's workshop. Mir is sitting on a toolbox outside it, looking like someone took their heart and filed it under "hazards".
 > left: Plead their case to Professor Thorne
@@ -884,14 +884,10 @@ text: After the third fire this term, the faculty has padlocked Mir's workshop. 
 
 @event mir_dance_machine
 title: The Dancing Machine
-class: routine
+pool: people_students_mir_social_routine
 tone: light
-trigger: social
-actor: mir
 when: rel(mir) >= 6
-weight: 10
 art: music
-tags: social
 scene: A spindly brass contraption with too many legs attempting a waltz in an empty classroom, a student dancing with it.
 text: Mir has built a machine that teaches dancing. It has six legs and opinions. "It needs a test subject," they say. "It's mostly safe. It only kicked me twice."
 > left: Make Mir test it
@@ -929,14 +925,10 @@ text: Mir unrolls a blueprint. It's a mechanical heart, labelled in tiny careful
 
 @event mir_family_business
 title: The Family Clockworks
-class: routine
+pool: people_students_mir_social_routine
 tone: light
-trigger: social
-actor: mir
 when: rel(mir) >= 15 and year >= 2 and not flag(mir_family_done)
-weight: 10
 art: gear
-tags: social
 scene: An artificer holding a stiff letter embossed with a gear crest, a train ticket tucked inside, staring at it blankly.
 text: A letter from Mir's parents: the family clockworks needs them home. A ticket is enclosed. "They think this is a hobby," Mir says. "This. Is. Not. A. Hobby."
 > left: Tell them family comes first

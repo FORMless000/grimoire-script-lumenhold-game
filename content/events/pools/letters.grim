@@ -117,14 +117,17 @@ text: A parcel from home, squashed by the post: {~a cake that has become a diffe
   health +small
   say: {~You eat it slowly, over a week, a slice a night. It tastes like your kitchen table.|You hide it under your bed and ration it. It lasts, and so does the feeling of home.|You keep the loaf for the cold nights and wear the socks to bed. Both last till the end of the month.}
 
-@event letter_wrong_address
-title: Not For You
+@pool letters_routine
 trigger: letter
 class: routine
-tone: light
 weight: 10
-art: letter
 tags: letter
+
+@event letter_wrong_address
+title: Not For You
+pool: letters_routine
+tone: light
+art: letter
 scene: A sealed envelope addressed in an unfamiliar hand to a name that isn't the reader's, lying on a windowsill beside a stamp.
 text: A letter arrives that isn't yours: the right house, the wrong name, a perfumed envelope sealed with green wax. It's addressed to someone you've never heard of. The seal is very thin.
 > left: Forward it unopened
@@ -138,12 +141,10 @@ text: A letter arrives that isn't yours: the right house, the wrong name, a perf
 
 @event letter_bookshop_bill
 title: A Bill You Don't Remember
-trigger: letter
-class: routine
+pool: letters_routine
 tone: light
-weight: 10
 art: coin
-tags: letter money
+tags: money
 scene: A crisp bill from a bookshop, an itemised list with one title circled, held up beside a student's puzzled face.
 text: A bill from the village bookshop for a book called "On Small Explosions", which you have never seen, never borrowed and never wanted. The bookseller writes that you signed for it. The signature looks a little like yours.
 > left: Pay it and be done
@@ -166,13 +167,11 @@ text: A bill from the village bookshop for a book called "On Small Explosions", 
 
 @event letter_old_friend
 title: From Before
-trigger: letter
+pool: letters_routine
 when: not has(plan_home)
-class: routine
 tone: warm
-weight: 10
 art: letter
-tags: letter home
+tags: home
 scene: A letter in a familiar childhood hand, with a small drawing of a village street in the margin.
 text: A letter from someone you grew up with, from before Lumenhold. {~They're apprenticed to a cooper now.|They're getting married in the spring.|They've moved to the city and hate it.} The letter asks what magic is like. It's a good question, and you don't know how to answer it.
 > left: Write back pages and pages
@@ -184,12 +183,10 @@ text: A letter from someone you grew up with, from before Lumenhold. {~They're a
 
 @event letter_ledger_competition
 title: The Holiday Essay Prize
-trigger: letter
-class: routine
+pool: letters_routine
 tone: light
-weight: 10
 art: paper
-tags: letter study
+tags: study
 scene: A folded copy of a student newspaper with a competition notice circled in red ink.
 text: The Lumen Ledger's holiday issue has found you: an essay prize, "What I Did Not Do This Holiday", five hundred words, the winner printed on the front page and paid in crowns.
 > left: Write an entry
@@ -207,13 +204,11 @@ text: The Lumen Ledger's holiday issue has found you: an essay prize, "What I Di
 
 @event letter_from_a_firstyear
 title: Advice, Please
-trigger: letter
+pool: letters_routine
 when: year >= 2
-class: routine
 tone: warm
-weight: 10
 art: letter
-tags: letter social
+tags: social
 scene: A short anxious letter on cheap paper, several words crossed out, a small blot where the writer pressed too hard.
 text: A first-year you once showed the way to the library has written to you over the break. They're thinking of leaving. The letter is short, crossed out in places, and ends: "Did you ever feel like this?"
 > left: Write back honestly, at length
@@ -226,12 +221,10 @@ text: A first-year you once showed the way to the library has written to you ove
 
 @event letter_registrar_forms
 title: Forms in Triplicate
-trigger: letter
-class: routine
+pool: letters_routine
 tone: light
-weight: 10
 art: scroll
-tags: letter study
+tags: study
 scene: A thick envelope of forms with the academy's seal, three identical copies of everything fanned out on a table.
 text: The registrar's office has sent forms, in triplicate, about next term: your courses, your board, your "intentions regarding extracurricular activities". There is a box marked "Other (explain)". It is very small.
 > left: Fill them in properly now

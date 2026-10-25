@@ -203,13 +203,16 @@ text: Old Maud is at the edge of the wood with a basket, and catches your sleeve
   find lead_the_hush
   say: "The Hush," she says. "Past the heartwood. It keeps the castle's hours, dearie: it wakes at midnight, when you're meant to be asleep." She looks at the wood a long moment. "Don't go down there without a friend."
 
-@event brask_deep_hours
-title: Midnight Hours
+@pool stables_routine_weight8
 place: stables
 class: routine
+weight: 8
+
+@event brask_deep_hours
+title: Midnight Hours
+pool: stables_routine_weight8
 tone: eerie
 when: met(brask) and not flag(ww_midnight_known) and visits_to(whisperwood) > 0
-weight: 8
 art: owl
 tags: nature mystery
 cast:
@@ -249,11 +252,9 @@ text: The Cartographers' oldest map of the grounds has a margin crowded with not
 
 @event grimsbys_field_guide
 title: A Field Guide
-place: grimsbys_books
-class: routine
+pool: grimsbys_books_routine_weight8
 tone: light
 when: not flag(ww_midnight_known) and visits_to(whisperwood) > 0
-weight: 8
 art: book
 tags: nature shop
 scene: A small battered green field guide open on a bookshop counter, a long footnote circled in pencil.
@@ -388,11 +389,9 @@ text: The village tailor unrolls the Spinner's silk across her table and goes ve
 
 @event item_quill_brask
 title: Brask Knows That Owl
-place: stables
-class: routine
+pool: stables_routine_weight8
 tone: warm
 when: has_item(owl_quill) and met(brask)
-weight: 8
 art: feather
 tags: item nature
 cast:
@@ -430,14 +429,18 @@ text: You leave your owl quill on Nessa's desk for one minute. When you come bac
   rel nessa -tiny
   say: You pull your quill away mid-footnote. Nessa's quill sulks for a week and invents nothing, which Nessa says is worse.
 
+@pool around_routine
+class: routine
+weight: 8
+tags: item
+
 @event item_lodestone_kael
 title: North, Always North
-class: routine
+pool: around_routine
 tone: warm
 when: has_item(lodestone_pendant) and met(kael)
-weight: 8
 art: compass
-tags: item social
+tags: social
 cast:
   kael: kael where around(kael)
 scene: A pale Northern student looking at a dark pendant turning slowly on a cord, his frosted hand held out beneath it.
@@ -474,11 +477,9 @@ text: In the deep stacks the lodestone stops pointing north and starts pointing 
 
 @event item_tine_brask
 title: Brask Bows to It
-place: stables
-class: routine
+pool: stables_routine_weight8
 tone: warm
 when: has_item(stag_tine) and met(brask)
-weight: 8
 art: paw
 tags: item nature
 cast:
@@ -517,12 +518,11 @@ text: You walk into the greenhouses with the heartwood wand, and every plant in 
 @event item_thorn_wants
 title: It Wants to Be Used
 slot: night
-class: routine
+pool: around_routine
 tone: grim
 when: has_item(thorn_wand)
-weight: 8
 art: rose
-tags: item magic
+tags: magic
 scene: A blackthorn wand lying on a dormitory desk at night, faintly green at its heart, thorns bristling toward a sleeping student.
 text: You wake at night with the thorn wand in your hand and no memory of picking it up. It's warm. It's telling you, in the way wands tell you things, how much stronger you could be by morning. There's a potted fern on the windowsill.
 > left: Put it away in a drawer
@@ -579,12 +579,11 @@ text: Alone on the ramparts, at midnight, you take out the thorn wand and look a
 @event item_locket_midnight
 title: The Locket Opens
 slot: midnight
-class: routine
+pool: around_routine
 tone: eerie
 when: has_item(moonpetal_locket)
-weight: 8
 art: moon
-tags: item nature
+tags: nature
 scene: A plain silver locket opening on its own in a student's palm at midnight, a pressed silver flower glowing inside.
 text: At the twelfth bell the moonpetal locket opens in your hand on its own. The pressed petal inside glows, very faintly, and for a moment you smell the Hush: cold stone, moonlight, silence.
 > left: Close it gently
@@ -597,12 +596,11 @@ text: At the twelfth bell the moonpetal locket opens in your hand on its own. Th
 
 @event item_silk_corvin
 title: Corvin Is Jealous
-class: routine
+pool: around_routine
 tone: light
 when: has_item(spinner_silk_robe) and met(corvin)
-weight: 8
 art: spider
-tags: item social
+tags: social
 cast:
   corvin: corvin where around(corvin)
 scene: A lanky student in a patched coat circling another student in a shimmering grey silk robe, looking deeply envious.

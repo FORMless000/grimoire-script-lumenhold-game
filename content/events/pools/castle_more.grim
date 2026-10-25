@@ -11,11 +11,8 @@
 
 @event library_whispering_dome
 title: The Whispering Dome
-place: library
-class: routine
+pool: library_routine
 tone: light
-repeat: 5
-weight: 10
 art: book
 tags: study
 scene: A gallery railing under a painted dome at the top of the library, a student leaning over it with one ear cocked, seven floors of shelves below.
@@ -31,11 +28,8 @@ text: {Under the dome on the sixth floor the echoes are wrong in a useful way. A
 @event library_after_closing
 slot: evening
 title: After the Closing Bell
-place: library
-class: routine
+pool: library_routine
 tone: eerie
-repeat: 5
-weight: 10
 art: lantern
 tags: study
 scene: A library at closing time, lamps going out floor by floor from the top down, a student half-hidden between two shelves with a book held to their chest.
@@ -58,11 +52,8 @@ text: {The closing bell rings and the lamps begin to go out from the top floor d
 
 @event lecture_tower_faculty_basket
 title: The Faculty Basket
-place: lecture_tower
-class: routine
+pool: lecture_tower_routine
 tone: light
-repeat: 5
-weight: 10
 art: tower
 tags: class
 when: term
@@ -85,11 +76,8 @@ text: {Up the hollow middle of the Lecture Tower runs a wicker basket on a rope,
 
 @event lecture_tower_office_hours
 title: The Office-Hours Queue
-place: lecture_tower
-class: routine
+pool: lecture_tower_routine
 tone: warm
-repeat: 5
-weight: 10
 art: scroll
 tags: study class
 cast:
@@ -116,11 +104,8 @@ text: {{prof} keeps office hours on the landing, and the queue already reaches t
 
 @event great_hall_house_banners
 title: The House Banners
-place: great_hall
-class: routine
+pool: great_hall_routine
 tone: light
-repeat: 5
-weight: 10
 art: crown
 tags: social
 scene: Five long house banners hanging over the tables of an empty great hall, one of them conspicuously wrong.
@@ -166,11 +151,8 @@ text: {season == "autumn": Scenery for the Harvest Feast is going up on the stag
 @event infirmary_night_watch
 slot: evening
 title: Turning the Fever Charm
-place: infirmary
-class: routine
+pool: infirmary_routine
 tone: warm
-repeat: 5
-weight: 10
 art: candle
 tags: social
 scene: A dim infirmary ward at night, one lamp lit by a bed where a sleeping student lies under a slowly turning ring of pale light.
@@ -187,11 +169,8 @@ text: {A first-year in the end bed has a fever, and the cooling charm over the b
 
 @event infirmary_curious_case
 title: A Curious Case
-place: infirmary
-class: routine
+pool: infirmary_routine
 tone: light
-repeat: 5
-weight: 10
 art: potion
 tags: magic
 scene: A student sitting up in an infirmary bed with a strange magical symptom while a stern healer frowns at a thick reference book.
@@ -216,11 +195,8 @@ text: {A second-year sits in bed four hiccuping soap bubbles.|In bed four today:
 
 @event alchemy_lab_crystal_sill
 title: The Crystal on the Sill
-place: alchemy_lab
-class: routine
+pool: alchemy_lab_routine
 tone: light
-repeat: 5
-weight: 10
 art: gem
 tags: magic
 scene: A blue crystal growth spilling out of a jar on a laboratory windowsill and creeping slowly down the wall.
@@ -241,11 +217,8 @@ text: {On the windowsill sits somebody's abandoned crystal experiment, a jar of 
 
 @event alchemy_lab_good_scales
 title: The Good Scales
-place: alchemy_lab
-class: routine
+pool: alchemy_lab_routine
 tone: light
-repeat: 5
-weight: 10
 art: scales
 tags: study
 scene: A queue of students with jars and papers waiting at a single fine brass balance in a cluttered laboratory, while battered scales sit unused along the bench.
@@ -269,11 +242,8 @@ text: {The laboratory has twelve sets of scales and one that's accurate. The que
 @event alchemy_lab_mind_my_cauldron
 slot: evening
 title: Mind My Cauldron?
-place: alchemy_lab
-class: routine
+pool: alchemy_lab_routine
 tone: warm
-repeat: 5
-weight: 10
 art: cauldron
 tags: social
 cast:
@@ -294,11 +264,8 @@ text: {{mate} has a six-hour brew going and a supper {they} can't miss. "Stir it
 
 @event workshop_after_the_bang
 title: After the Bang
-place: workshop
-class: routine
+pool: workshop_routine
 tone: light
-repeat: 5
-weight: 10
 art: gear
 tags: magic
 scene: A workshop wreathed in drifting smoke, a soot-blackened inventor waving cheerfully through it, springs and gears scattered across the floor.
@@ -315,11 +282,8 @@ text: {You hear the bang from the corridor. Inside, the smoke is thinning, and M
 
 @event ledger_office_crossword
 title: The Crossword Is Late
-place: ledger_office
-class: routine
+pool: ledger_office_routine
 tone: light
-repeat: 5
-weight: 10
 art: paper
 tags: club
 scene: A half-finished crossword grid pinned above a cluttered desk in a newspaper office, a pencil dangling from a string beside it.
@@ -343,11 +307,8 @@ text: {The Ledger's crossword setter has vanished before the deadline, leaving h
 
 @event headmistress_tower_window_boxes
 title: The Window Boxes
-place: headmistress_tower
-class: routine
+pool: headmistress_tower_routine
 tone: warm
-repeat: 5
-weight: 10
 art: flower
 tags: nature
 cast:
@@ -370,11 +331,8 @@ text: {"Would you see to the window boxes while I finish this?" {host} says, wit
 
 @event headmistress_tower_waiting_bench
 title: The Waiting Bench
-place: headmistress_tower
-class: routine
+pool: headmistress_tower_routine
 tone: light
-repeat: 5
-weight: 10
 art: hourglass
 tags: social
 scene: A narrow stone bench at the foot of a spiral stair, a pale first-year sitting on it clutching a summons, a stone owl watching from above.
@@ -391,13 +349,16 @@ text: {On the bench at the foot of the stair sits a first-year with a summons in
 
 # ---------------- The Seventh Tower ----------------
 
-@event seventh_tower_candle_landing
-title: Other People's Candles
+@pool seventh_tower_routine
 place: seventh_tower
 class: routine
-tone: eerie
 repeat: 5
 weight: 10
+
+@event seventh_tower_candle_landing
+title: Other People's Candles
+pool: seventh_tower_routine
+tone: eerie
 art: candle
 tags: mystery
 scene: A narrow stone landing crowded with old candle stubs of every colour, initials scratched into the wall above them, one stub still faintly warm.
@@ -413,11 +374,8 @@ text: {Halfway up the seventh tower is a landing crowded with candle stubs, a ce
 
 @event seventh_tower_wind_song
 title: The Wind in the Slits
-place: seventh_tower
-class: routine
+pool: seventh_tower_routine
 tone: eerie
-repeat: 5
-weight: 10
 art: music
 tags: mystery
 scene: Thin arrow-slit windows in the curved wall of a dusty tower stair, wind whistling through them, a student with one hand pressed to the cold stone.
@@ -432,11 +390,8 @@ text: {The wind plays the seventh tower's arrow-slits like a flute, a different 
 
 @event seventh_tower_outside_ledge
 title: The Outside Ledge
-place: seventh_tower
-class: routine
+pool: seventh_tower_routine
 tone: tense
-repeat: 5
-weight: 10
 art: tower
 tags: danger
 scene: A narrow stone ledge running round the outside of a high tower, a student edging along it with their back to the wall, six other towers and their bridges of light spread out below.
@@ -457,13 +412,16 @@ text: {From the window at the top, a ledge a foot wide runs round the outside of
 
 # ---------------- The Thesis Laboratory ----------------
 
-@event thesis_lab_tea_urn
-title: The Tea Urn
+@pool thesis_lab_routine
 place: thesis_lab
 class: routine
-tone: warm
 repeat: 5
 weight: 10
+
+@event thesis_lab_tea_urn
+title: The Tea Urn
+pool: thesis_lab_routine
+tone: warm
 art: cup
 tags: social study
 scene: A great dented copper tea urn on a trolley at the end of a row of study carrels, final-year students clustered round it holding mugs and complaints.
@@ -478,11 +436,8 @@ text: {The thesis lab runs on the tea urn, a dented copper monster that has outl
 
 @event thesis_lab_old_theses
 title: The Shelf of Old Theses
-place: thesis_lab
-class: routine
+pool: thesis_lab_routine
 tone: light
-repeat: 5
-weight: 10
 art: book
 tags: study
 scene: A long shelf of bound theses in faded cloth, a student pulling one out and blowing dust off a spine with a ridiculous title.
@@ -497,11 +452,8 @@ text: {Along the back wall run three centuries of finished theses, bound in clot
 
 @event thesis_lab_mock_defence
 title: The Mock Defence
-place: thesis_lab
-class: routine
+pool: thesis_lab_routine
 tone: tense
-repeat: 5
-weight: 10
 art: scales
 tags: study
 scene: A chalkboard at the end of the thesis lab, three final-year students sitting as stern pretend examiners in borrowed gowns while a fourth stands to defend.

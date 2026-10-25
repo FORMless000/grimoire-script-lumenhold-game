@@ -189,15 +189,19 @@ text: Tamsin's letter has a map on the back with two towns circled: Lumenhold an
 
 # ---------------- The yearly fixture ----------------
 
+@pool chain_thornwick_auto_story
+trigger: auto
+class: story
+tags: rival
+
 @event rival_return_visit
 title: To Thornwick
-trigger: auto
+pool: chain_thornwick_auto_story
 when: year == 2 and month == 8 and not off_campus
 type: menu
-class: story
 tone: light
 art: tower
-tags: rival social
+tags: social
 scene: A barge full of Lumenhold students arriving at a rival academy of green-roofed towers, a crowd of green-robed students waiting on the jetty.
 text: This year it's Lumenhold's turn to visit. A barge leaves for Thornwick at dawn with a delegation of students who have been told to behave. {met(tamsin): Tamsin has written three letters about it. The last one just says "COME".|Thornwick has, by all accounts, better plumbing.}
 > go: Join the delegation
@@ -221,12 +225,11 @@ text: This year it's Lumenhold's turn to visit. A barge leaves for Thornwick at 
 
 @event rival_contest
 title: The Inter-School Contest
-trigger: auto
+pool: chain_thornwick_auto_story
 when: year == 3 and month == 8 and not off_campus
-class: story
 tone: tense
 art: trophy
-tags: rival duel
+tags: duel
 scene: A packed duelling arena under banners of blue and green, two duellists facing each other in the chalk ring, a crowd on its feet.
 text: The inter-school contest, at Lumenhold this year, before both schools and half the village. You've made the team. {met(tamsin): In the final, the name opposite yours is Tamsin Reed. They wave from across the ring, apologetically, and then stop smiling.|In the final, a Thornwick illusionist faces you, smiling far too much.}{flag(thornwick_secrets): You know every trick they've planned.|}
 > left: Fight to win
@@ -261,12 +264,11 @@ text: The inter-school contest, at Lumenhold this year, before both schools and 
 
 @event rival_last_match
 title: The Last Match
-trigger: auto
+pool: chain_thornwick_auto_story
 when: year == 4 and month == 8 and not off_campus
-class: story
 tone: warm
 art: trophy
-tags: rival duel
+tags: duel
 scene: An evening exhibition match on the lawn between two academies, lanterns strung between the trees, final-year students in blue and green laughing in the ring.
 text: The last match of your year against Thornwick's: an exhibition on the lawn, lanterns in the trees, nothing at stake but four years of grudges. {met(tamsin): Tamsin has asked to be your opponent. "For the record," they say. "Ours."|Thornwick's final-years have brought cake, which feels like a trick.}
 > left: Give it everything

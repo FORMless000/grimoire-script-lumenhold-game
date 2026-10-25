@@ -9,15 +9,19 @@
 
 # ---------------- Evocation (track: evocation) ----------------
 
+@pool evocation_class_2
+track: evocation
+class: routine
+tags: class
+
 @event evo_first_spark
 title: The First Spark
-track: evocation
+pool: evocation_class_2
 level: 1
 lesson: lumenhold
-class: routine
 tone: light
 art: flame
-tags: class magic
+tags: magic
 scene: A lecture hall with scorch marks on every desk, students holding their palms up as if testing for rain.
 text: Evocation I begins with a single instruction from the lectern: "Make heat. Not fire. Heat." Half the class makes nothing. One student makes a small, apologetic fire.
 > left: Aim for heat, carefully
@@ -36,13 +40,12 @@ text: Evocation I begins with a single instruction from the lectern: "Make heat.
 
 @event evo_puddle_drill
 title: Puddle Drill
-track: evocation
+pool: evocation_class_2
 level: 1
 lesson: mirror_lake
-class: routine
 tone: light
 art: wave
-tags: class magic
+tags: magic
 scene: Students crouched over puddles in a stone courtyard, trying to make the water stand up.
 text: Tidecalling half of the course: a puddle each, and the task of making it stand up and stay up. Yours trembles, considers it, and lies back down.
 > left: Practise until it stands
@@ -74,13 +77,12 @@ text: Someone's tidecalling meets someone else's flame in the middle of the room
 
 @event evo_tide_wall
 title: The Tide Wall
-track: evocation
+pool: evocation_class_2
 level: 2
 lesson: mirror_lake
-class: routine
 tone: tense
 art: wave
-tags: class magic
+tags: magic
 scene: A student holding back a wall of lake water on the shore while classmates watch from behind them.
 text: Evocation II takes the class to the lakeshore. The exercise: raise a wall of water and hold it while a classmate walks past behind it. Your classmate looks nervous. So do you.
 > left: Hold it steady
@@ -98,13 +100,12 @@ text: Evocation II takes the class to the lakeshore. The exercise: raise a wall 
 
 @event evo_lattice
 title: The Flame Lattice
-track: evocation
+pool: evocation_class_2
 level: 2
 lesson: founders_seal
-class: routine
 tone: light
 art: flame
-tags: class study
+tags: study
 scene: Interlocking threads of fire hanging in the air of a lecture hall like a glowing net.
 text: Fire woven into a lattice, each strand holding the others up. The lecturer says the founders built wards like this. The lecturer also says you have twenty minutes.
 > left: Build it slowly
@@ -394,10 +395,13 @@ text: {gossip} has news, which is to say gossip, which is to say three different
   lore +small
   say: You ask the right question and {gossip} tells you the truth, startled: the window broke because someone sneezed during a levitation. It is the least interesting story of the four. {They} look{s} at you as if you'd cheated.
 
-@event lake_skimming
-title: Skimming Stones
+@pool lakeshore_routine_2
 place: lakeshore
 class: routine
+
+@event lake_skimming
+title: Skimming Stones
+pool: lakeshore_routine_2
 tone: warm
 art: wave
 tags: nature
@@ -422,8 +426,7 @@ text: {friend} is skimming stones on the Mirror Lake. The water is so still each
 
 @event lake_reflection_bet
 title: The Reflection Bet
-place: lakeshore
-class: routine
+pool: lakeshore_routine_2
 tone: eerie
 art: mirror
 tags: mystery
@@ -936,9 +939,8 @@ text: The old diving helmet is where you left it, on the workbench by the doors.
 
 @event bell_echo_lakeshore
 title: Rings on Still Water
-place: lakeshore
+pool: lakeshore_routine_2
 when: clue(bell_heard) and not flag(bell_silenced)
-class: routine
 tone: eerie
 art: wave
 tags: mystery

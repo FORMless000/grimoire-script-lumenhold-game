@@ -26,9 +26,11 @@ function exampleSources() {
   return out;
 }
 
-function legacyIn(e) {
+// A card's class may come from its pool (an example file's own @pool, or one in the content).
+function legacyIn(e, pools = {}) {
   const found = [];
-  if (!e.class) found.push('no class:');
+  const fromPool = (k) => { for (let p = pools[e.pool]; p; p = pools[p.from]) if (p.props && p.props[k]) return p.props[k].text; return null; };
+  if (!e.class && !(e.pool && fromPool('class'))) found.push('no class:');
   if (e.actor === 'any') found.push('actor: any');
   for (const o of e.options || []) {
     G.walkEffects(o.effects, (st) => {
@@ -44,11 +46,13 @@ function legacyIn(e) {
 
 test('docs: example events use the current format, not legacy forms', () => {
   const srcs = exampleSources();
+  const livePools = project(ROOT).compileAll().content.pools;
   assert.ok(srcs.length >= 5, 'found the examples (' + srcs.length + ')');
   let events = 0;
   for (const s of srcs) {
-    const blocks = G.parseFile(s.text, s.path).filter((b) => b.block === 'event');
-    for (const e of blocks) { events++; assert.deepEqual(legacyIn(e), [], s.path + ' @event ' + e.id); }
+    const all = G.parseFile(s.text, s.path), blocks = all.filter((b) => b.block === 'event');
+    const pools = Object.assign({}, livePools, Object.fromEntries(all.filter((b) => b.block === 'pool').map((b) => [b.id, b])));
+    for (const e of blocks) { events++; assert.deepEqual(legacyIn(e, pools), [], s.path + ' @event ' + e.id); }
   }
   assert.ok(events >= 6, 'checked ' + events + ' example events');
 });

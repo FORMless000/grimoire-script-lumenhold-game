@@ -3,16 +3,17 @@
 
 # ---------------- Evocation (track: evocation, skill arcana) ----------------
 
+@pool evocation_class
+from: course_routine
+track: evocation
+
 @event evo_snuffing_drill
 title: The Snuffing Drill
-track: evocation
+pool: evocation_class
 level: 1
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: candle
-tags: class magic
+tags: magic
 scene: A row of iron braziers burning in a scorched lecture hall, students standing before them with their hands raised as if to calm a horse.
 text: {Evocation I opens with a lesson nobody expected. "Anyone can start a fire," says the lecturer. "Stopping one is the course."|The braziers are lit before you arrive. You know which one smokes.|Your brazier goes out when you walk in now, out of habit. The lecturer relights it, unamused.} {The front row smells of singed eyebrow.|Someone's brazier has gone out from fright.|The lecturer is timing you with an egg-timer.}
 > left: Call it back slowly
@@ -32,14 +33,11 @@ text: {Evocation I opens with a lesson nobody expected. "Anyone can start a fire
 
 @event evo_bucket_duty
 title: Bucket Duty
-track: evocation
+pool: evocation_class
 level: 1
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: wave
-tags: class study
+tags: study
 scene: A student standing at the edge of a busy lecture hall beside a bucket of sand and a bucket of water, watching sparks fly.
 text: Every Evocation I lesson needs someone on the buckets: sand for the pyromancers, water for everyone else. {&Today it's your name on the board.|It's your turn again. The rota has a sense of humour.|Your name is on the board. You suspect the rota is personal.} {&The water bucket has a frog in it.|Someone has labelled the sand bucket "Hope".|The water bucket is half empty, because the tidecallers borrowed it.}
 > left: Mind the buckets, watch closely
@@ -52,15 +50,12 @@ text: Every Evocation I lesson needs someone on the buckets: sand for the pyroma
 
 @event evo_steady_cup
 title: The Steady Cup
-track: evocation
+pool: evocation_class
 level: 1
 lesson: mirror_lake
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: cup
-tags: class magic
+tags: magic
 scene: A row of students on a stone terrace holding brimming cups at arm's length while a professor reads aloud from a slim book of poems.
 text: {Professor Marisol's Tidecalling mornings begin with a full cup held at arm's length. Keep the water level by will alone while she reads poetry aloud.|Marisol has brought a new book of poems, thicker than the last.|You can hold the cup half asleep now, and often are.} {season == "winter": The water has a skin of ice, which she says is cheating.|{The poem is very long.|The poem is about the sea, and so are your sleeves.|A gull is watching your cup with intent.}}
 > left: Hold it to the last line
@@ -73,14 +68,11 @@ text: {Professor Marisol's Tidecalling mornings begin with a full cup held at ar
 
 @event evo_shaping_hour
 title: Shaping Hour
-track: evocation
+pool: evocation_class
 level: 2
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: flame
-tags: class magic
+tags: magic
 scene: A lecture hall full of small fires shaped like birds, keys and letters, one of them visibly trying to escape through a window.
 text: Evocation II is shaping: flame made into a sphere, a key, a bird. The lecturer keeps a ledger of every scorch mark in the hall and makes you sign for yours. {flag(scorched_ledger): Your page in the ledger has a few signatures on it already.|Your page in the ledger is still blank.} {&Today's shape is a bird.|Today's shape is a key that turns.|Today's shape is your own initial, which is harder than it sounds.}
 > left: A hundred plain spheres
@@ -104,15 +96,12 @@ text: Evocation II is shaping: flame made into a sphere, a key, a bird. The lect
 
 @event evo_kettle_pairs
 title: Fire Meets Water
-track: evocation
+pool: evocation_class
 level: 2
 lesson: mirror_lake
-class: routine
 tone: tense
-repeat: 5
-weight: 10
 art: cauldron
-tags: class study
+tags: study
 scene: Pairs of students on either side of copper kettles, one with a palm of flame and one with a palm of water, steam curling between them.
 text: {This is why Pyromancy and Tidecalling are taught together. One of you heats the kettle, one cools it, and it must simmer and never boil.|The kettles come out of the cupboard, every dent a story.|You know every kettle by its dents now. Two dents are yours.} {Your partner is a nervous second-year from Stillwater.|Your partner is very confident, which is worrying.|Your partner yawns hugely.}
 > left: Take the fire side
@@ -132,15 +121,12 @@ text: {This is why Pyromancy and Tidecalling are taught together. One of you hea
 
 @event evo_deep_call
 title: Calling From the Deep
-track: evocation
+pool: evocation_class
 level: 3
 lesson: mirror_lake
-class: routine
 tone: eerie
-repeat: 5
-weight: 10
 art: wave
-tags: class danger
+tags: danger
 scene: Advanced students on a jetty with their arms raised, a column of dark, old lake water rising toward them out of the depths.
 text: {Advanced Evocation calls water from the lake bed, where it is cold and old and in no hurry.|The jetty is slick at this hour.|The jetty boards know your boots by now.} The lecturer paces behind the line. The water comes up carrying things. {Today, a bottle with no message in it.|Today, a single boot, laced.|Today, nothing at all, which is somehow worse.} {season == "winter": Ice grinds at the edges of the column.|Mist sits on the water.}
 > left: Reach deeper than the rest
@@ -159,14 +145,11 @@ text: {Advanced Evocation calls water from the lake bed, where it is cold and ol
 
 @event evo_signature_flame
 title: A Fire of Your Own
-track: evocation
+pool: evocation_class
 level: 3
-class: routine
 tone: warm
-repeat: 5
-weight: 10
 art: flame
-tags: class magic
+tags: magic
 scene: A student alone at a stone bench in a dim hall, coaxing a flame of an unusual colour above their palm.
 text: Advanced Evocation asks every student for a signature flame: its own colour, its own heat, its own temper. {Yours is a sulky orange.|Yours has turned a gold that you're quietly proud of.|Yours knows you now. It leans toward you when you come in.} {Somebody's flame across the hall is green and smells of pine.|Somebody's flame is silver and hums.|The lecturer's own flame is lit on the lectern, blue and tiny, never discussed.}
 > left: Push it somewhere new
@@ -184,16 +167,17 @@ text: Advanced Evocation asks every student for a signature flame: its own colou
 
 # ---------------- Astromancy & Divination (track: astromancy, skill lore) ----------------
 
+@pool astromancy_class
+from: course_routine
+track: astromancy
+
 @event astro_tea_rota
 title: Another Pot of Tea
-track: astromancy
+pool: astromancy_class
 level: 1
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: cup
-tags: class study
+tags: study
 scene: A round classroom under a brass dome, every desk crowded with teacups, a huge brown teapot steaming on the lectern.
 text: Astromancy I has a tea-leaf morning every week, and tea leaves require tea. {The class gets through three pots before ten.|The tea rota has your name on it again.|The teapot greets you like an old colleague.} {Your cup shows something that is either a ship or a boot.|Your cup shows a shape the textbook calls the ladder. It looks like a spoon.|Your cup shows rain. Your cup always shows rain.}
 > left: Drink the pot and read
@@ -206,15 +190,12 @@ text: Astromancy I has a tea-leaf morning every week, and tea leaves require tea
 
 @event astro_star_names
 title: Naming the Stars
-track: astromancy
+pool: astromancy_class
 level: 1
 lesson: observatory
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: star
-tags: class study
+tags: study
 scene: Students craning their necks under a painted dome of constellations while a lecturer points upward with a very long pole.
 text: {Astromancy I begins with names. Three hundred stars painted on the dome, to be recited on request.|The long pole comes out. The lecturer points; you name.|You dream the star names some nights now, and wake reciting.} {Today it's the winter constellations.|Today it's the faint stars nobody can see without squinting.|Today the lecturer points at a patch of bare plaster and waits to see who invents a name.}
 > left: Recite them until perfect
@@ -234,15 +215,12 @@ text: {Astromancy I begins with names. Three hundred stars painted on the dome, 
 
 @event astro_cold_dome
 title: The Open Dome
-track: astromancy
+pool: astromancy_class
 level: 1
 lesson: observatory
-class: routine
 tone: warm
-repeat: 5
-weight: 10
 art: moon
-tags: class study
+tags: study
 scene: The observatory's brass dome cranked open to a pale dawn sky, one student at the great telescope and the rest huddled round an iron stove.
 text: {Astromancy mornings start before the sun, under a dome cranked open to the sky.|The dome creaks open. You've learned which side of the stove is warmest.|The telescope's eyepiece has the shape of your eye by now.} {season == "winter": It is bitterly cold, and the stove is the most popular student in the class.|{season == "summer": The air is soft and the sky is already going pale.|There's dew on the telescope and on you.}} Somebody has to take the telescope.
 > left: Take the telescope turn
@@ -256,14 +234,11 @@ text: {Astromancy mornings start before the sun, under a dome cranked open to th
 
 @event astro_foresight_drill
 title: Catch the Chalk
-track: astromancy
+pool: astromancy_class
 level: 2
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: hourglass
-tags: class magic
+tags: magic
 scene: A lecturer letting a stick of chalk fall from an outstretched hand while a student lunges to catch it a moment before it drops.
 text: {Foresight at Astromancy II is practised on chalk. The lecturer drops a stick without warning; you catch it before it falls, by seeing it a heartbeat early.|The lecturer has opened a new box of chalk, which is a threat.|The lecturer's drops have got sneakier, and so have your hands.} {The floor is white with failures.|A student from Stillwater has caught four in a row and is unbearable about it.|The lecturer is dropping two at once today.}
 > left: Catch it before it falls
@@ -285,15 +260,12 @@ text: {Foresight at Astromancy II is practised on chalk. The lecturer drops a st
 
 @event astro_starlight_jars
 title: Bottling Starlight
-track: astromancy
+pool: astromancy_class
 level: 2
 lesson: observatory
-class: routine
 tone: warm
-repeat: 5
-weight: 10
 art: bottle
-tags: class magic
+tags: magic
 scene: Students on the observatory roof before dawn, holding glass jars up to the sky, each jar glowing faintly with captured light.
 text: {Starlight is gathered before dawn, one star at a time, in glass jars on the observatory roof.|The roof is slippery with frost or dew, depending.|The starlight jars. Yours has a chip in the rim you've grown fond of.} {Most of the class is aiming for the brightest stars.|The lecturer says faint light keeps longer.|There's a slip of cloud coming in from the lake.}
 > left: Wait for the faint stars
@@ -312,14 +284,11 @@ text: {Starlight is gathered before dawn, one star at a time, in glass jars on t
 
 @event astro_moving_charts
 title: The Charts Move
-track: astromancy
+pool: astromancy_class
 level: 3
-class: routine
 tone: eerie
-repeat: 5
-weight: 10
 art: map
-tags: class study
+tags: study
 scene: A long table covered in star charts whose inked constellations are visibly sliding across the parchment, students pinning corners down.
 text: {Advanced Astromancy uses charts that move. The inked stars drift to where they will be, not where they are.|The charts are livelier this morning, and one has crept off the table.|You've stopped flinching when the stars move. You still check twice.} {Your chart keeps rearranging itself into a shape like a doorway.|Your chart is sulking in one corner.|Your chart is going faster than the others.} Pin it and read it, or read it as it goes.
 > left: Pin it and trace the drift
@@ -338,14 +307,11 @@ text: {Advanced Astromancy uses charts that move. The inked stars drift to where
 
 @event astro_far_glimpse
 title: Looking Too Far
-track: astromancy
+pool: astromancy_class
 level: 3
-class: routine
 tone: tense
-repeat: 5
-weight: 10
 art: eye
-tags: class magic
+tags: magic
 scene: A student staring into a dark mirror at the centre of a curtained room, a lecturer standing close with an hourglass.
 text: {At this level Foresight reaches a season ahead. The lecturer allows one glimpse each, timed by an hourglass. People who look longer come back strange.|The dark mirror waits behind its curtain.|The hourglass is turned before you sit down. The lecturer knows your pace.} {final_year: This is your last year of looking ahead from this room, which makes the mirror harder to look at.|{The curtains are drawn against the morning.|Someone before you came out very quiet.|The mirror is very clean today, which is somehow worse.}}
 > left: Look a season ahead
@@ -365,16 +331,17 @@ text: {At this level Foresight reaches a season ahead. The lecturer allows one g
 
 # ---------------- Alchemy & Healing (track: alchemy, skill alchemy) ----------------
 
+@pool alchemy_class
+from: course_routine
+track: alchemy
+
 @event alch_stir_count
 title: Clockwise
-track: alchemy
+pool: alchemy_class
 level: 1
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: cauldron
-tags: class study
+tags: study
 scene: A laboratory of identical cauldrons, a whole class stirring in unison while the lecturer counts aloud from the front.
 text: {Alchemy I is mostly stirring, and the stirring is counted aloud by the whole class, in unison, like a choir with spoons.|The chorus is getting good. Someone has started harmonising.|You count stirs in your sleep now, and sometimes on the stairs.} {Today's draught is a simple tonic.|Today's draught is meant to turn blue at forty.|Today the lecturer keeps changing the count to see who's listening.}
 > left: Count every stir aloud
@@ -402,15 +369,12 @@ text: {Alchemy I is mostly stirring, and the stirring is counted aloud by the wh
 
 @event alch_chopping_board
 title: Prep Work
-track: alchemy
+pool: alchemy_class
 level: 1
 lesson: pell_and_daughters
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: leaf
-tags: class study
+tags: study
 scene: A long scrubbed bench heaped with roots, berries and dried beetles, students bent over chopping boards with small sharp knives.
 text: {&Half of alchemy, says the lecturer, is cutting things up correctly. The ingredients come from Pell & Daughters in the village, packed in straw, every one labelled in a careful hand.|The crate from the village is heavier today.|Your knife knows the way, and your thumb knows where not to be.} {&Today it's roots, to be sliced paper-thin.|Today it's beetles, to be crushed and not thought about.|Today it's berries, which stain everything.}
 > left: Prep for the whole bench
@@ -424,15 +388,12 @@ text: {&Half of alchemy, says the lecturer, is cutting things up correctly. The 
 
 @event alch_bandage_round
 title: Bandage Round
-track: alchemy
+pool: alchemy_class
 level: 1
 lesson: infirmary
-class: routine
 tone: warm
-repeat: 5
-weight: 10
 art: cross
-tags: class study
+tags: study
 scene: A sunny infirmary ward where students roll bandages at a long table while a nun in a starched apron checks their work.
 text: {&The healing half of Alchemy I is taught in the infirmary, where Sister Amaranth has the class roll bandages and watch her work.|Sister Amaranth inspects every roll, and unrolls one of yours.|Sister Amaranth hands you a roll without looking up.} {&A third-year is in with a burnt hand from Evocation.|A first-year is in with a scraped knee and a great deal to say about it.|A second-year is in with a sprained wrist from the flight field.}
 > left: Roll bandages and watch
@@ -449,15 +410,12 @@ text: {&The healing half of Alchemy I is taught in the infirmary, where Sister A
 
 @event alch_purify_samples
 title: Lake Water Samples
-track: alchemy
+pool: alchemy_class
 level: 2
 lesson: mirror_lake
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: bottle
-tags: class magic
+tags: magic
 scene: A bench lined with jars of murky lake water, a lecturer at the end raising one now-clear jar to drink it.
 text: {Alchemy II hands out jars of murky lake water, to be made fit to drink. The lecturer has a habit of drinking the results.|The lecturer looks thirsty, which is never a good sign.|The lecturer has brought a favourite cup for this, chipped at the rim.} {Your jar has a small weed in it.|Your jar is suspiciously green.|Your jar has a tiny snail in it, which you set free.}
 > left: Purify it thoroughly
@@ -478,14 +436,11 @@ text: {Alchemy II hands out jars of murky lake water, to be made fit to drink. T
 
 @event alch_long_simmer
 title: The Long Simmer
-track: alchemy
+pool: alchemy_class
 level: 2
-class: routine
 tone: tense
-repeat: 5
-weight: 10
 art: hourglass
-tags: class study
+tags: study
 scene: A bubbling cauldron in an empty laboratory, a single student slumped on a stool beside it with an hourglass and a book.
 text: {Some potions simmer for hours and must be watched. Whoever is on watch when the colour turns gets the credit, or the blame.|The class takes turns at the cauldron, and the rota has come round.|Your turn at the simmer. You've brought a cushion this time.} {The rest of the class has gone to lunch.|The potion is making a noise like a contented cat.|The lecturer has left a note that says "Do not leave it."}
 > left: Sit the whole watch
@@ -505,14 +460,11 @@ text: {Some potions simmer for hours and must be watched. Whoever is on watch wh
 
 @event alch_volatile_reagents
 title: Volatile Reagents
-track: alchemy
+pool: alchemy_class
 level: 3
-class: routine
 tone: tense
-repeat: 5
-weight: 10
 art: potion
-tags: class danger
+tags: danger
 scene: A hushed laboratory, a student holding a glass vial of glowing liquid at arm's length, everyone else very still behind a screen.
 text: {Advanced Alchemy handles reagents that react to being looked at the wrong way. The lecturer has one rule. One person speaks at a time, and that person is the one holding the vial.|Nobody is speaking. Somebody is breathing too loudly.|You've stopped holding your breath, mostly.} {Today's vial is pale yellow and fizzing.|Today's vial is dark red and perfectly still, which is worse.|Today's vial is labelled in the lecturer's hand: "Gently."}
 > left: Handle it yourself
@@ -531,15 +483,12 @@ text: {Advanced Alchemy handles reagents that react to being looked at the wrong
 
 @event alch_original_remedy
 title: A Remedy of Your Own
-track: alchemy
+pool: alchemy_class
 level: 3
 lesson: infirmary
-class: routine
 tone: warm
-repeat: 5
-weight: 10
 art: potion
-tags: class study
+tags: study
 scene: A student at a cluttered bench writing a recipe in a notebook, a small flask of their own remedy steaming beside it.
 text: {Advanced Alchemy asks for an original remedy, invented, written up, and tested under Sister Amaranth's eye.|Another revision. The notebook has more crossings-out than words.|Your remedy is nearly finished. It has been nearly finished for weeks.} {This version is for headaches.|This version is for the common cold, which has resisted remedies for centuries.|This version is for exam nerves, which you need.}
 > left: Test it on yourself

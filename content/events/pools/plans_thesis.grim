@@ -5,13 +5,9 @@
 
 @event break_castle_one_fire
 title: The One Lit Fire
-plan: castle
-class: routine
+pool: castle_routine_repeat4
 tone: warm
-repeat: 4
-weight: 10
 art: flame
-tags: home
 scene: A cavernous common room in the holidays, a handful of students in blankets crowded around {season == "winter": one roaring hearth|one open window}.
 text: {With the houses empty, the stewards light one common room and let the rest go dark.|Someone has brought a kettle, and now there's a rota for it.|The break common room. You know everyone's blanket by now.} {season == "winter": The best armchair is right by the fire.|The best armchair is by the only breeze.} {A first-year from Stillwater is asleep in it.|Footnote is in it. Footnote moves for no one.|The steward's dog is in it, and the steward is on the dog's side.}
 > left: Talk my way into the armchair
@@ -30,13 +26,9 @@ text: {With the houses empty, the stewards light one common room and let the res
 
 @event break_castle_kitchen_rota
 title: The Holiday Kitchen
-plan: castle
-class: routine
+pool: castle_routine
 tone: light
-repeat: 5
-weight: 10
 art: meal
-tags: home
 scene: A steaming castle kitchen with half its ovens cold, the cook handing aprons to two reluctant students.
 text: {Half the kitchen staff have gone home for the break, and the cook has started drafting whoever wanders past.|The cook spots you in the corridor and holds up an apron.|The cook holds out an apron without a word. It has your name stitched on it now.} {season == "winter": There are puddings to steam for the few who stayed, and a goose that refuses to fit the oven.|The orchard has dropped everything at once, and every pan in the kitchen is full of jam.}
 > left: Roll up your sleeves
@@ -52,13 +44,10 @@ text: {Half the kitchen staff have gone home for the break, and the cook has sta
 
 @event break_castle_empty_library
 title: The Library on Holiday
-plan: castle
-class: routine
+pool: castle_routine_repeat4
 tone: warm
-repeat: 4
-weight: 10
 art: book
-tags: home study
+tags: study
 scene: A great library with no one at the desks, a cat asleep on the reference desk and a single student choosing a book.
 text: {The librarians have gone home, and the library has been left to you and the cat.|Footnote has moved from the reference desk to your chair, and opens one eye.|Your break-morning library. One window seat is yours now.} {season == "winter": Frost has drawn ferns on the tall windows.|Dust turns slowly in the long summer light.} {Every desk is free.|Someone has left half an essay on the theory of hiccups.|The reshelving cart is full, and nobody is coming for it.}
 > left: Read whatever I like
@@ -73,13 +62,9 @@ text: {The librarians have gone home, and the library has been left to you and t
 
 @event break_castle_post_day
 title: Post for the Stay-Behinds
-plan: castle
-class: routine
+pool: castle_routine
 tone: warm
-repeat: 5
-weight: 10
 art: letter
-tags: home
 scene: A porter sorting a thin pile of letters on a long empty table, a few students waiting hopefully.
 text: {Post day. The porter lays the letters out on one table in the Great Hall.|The porter now sorts the stay-behinds' letters into a pile of their own.|The porter nods to you. He keeps your letters on top now.} {season == "winter": {Most of it is Midwinter cards for people who went home.|One parcel is exactly the shape of a scarf.|One envelope has your name on it, in handwriting you know.}|{Most of it is postcards from people's travels.|A postcard says "Wish you were here", and nobody knows whose it is.|One envelope has your name on it and smells of the sea.}}
 > left: Write a long letter home
@@ -95,14 +80,11 @@ text: {Post day. The porter lays the letters out on one table in the Great Hall.
 
 @event break_home_kitchen_table
 title: Homework at the Kitchen Table
-plan: home
+pool: home_routine_repeat4
 slot: morning
-class: routine
 tone: warm
-repeat: 4
-weight: 10
 art: house
-tags: home study
+tags: study
 scene: A family kitchen in the morning, a student's books spread among the breakfast plates, someone reaching across them for the butter.
 text: {You spread your books across the kitchen table, where you did your sums as a child.|Your books have been moved for the bread, and one is being used as a trivet.|The family works around your books now. Mostly.} {season == "winter": The stove is the only warm place, so everyone is in the kitchen.|The door is open, and everyone passing asks what the book is about.} {A cousin has drawn a dragon in your margin.|The kettle boils every quarter-hour, on principle.|Someone has put a book of yours under a wobbly table leg, and it works.}
 > left: Study through the noise
@@ -115,13 +97,9 @@ text: {You spread your books across the kitchen table, where you did your sums a
 
 @event break_home_the_box
 title: The Box Under the Bed
-plan: home
-class: routine
+pool: home_routine
 tone: warm
-repeat: 5
-weight: 10
 art: key
-tags: home
 scene: A narrow childhood bedroom with a bed far too short for its occupant, an old box of keepsakes pulled out onto the floor.
 text: {Your old room is smaller than you remember. Under the bed is the box where you kept everything that mattered when you were nine.|Someone has dusted the box since last time and pretended not to look inside.|You've almost reached the bottom of the box.} {This time it's a wand you made from a stick and a lot of string.|This time it's the letter you wrote to the academy at age ten, asking to be let in early.|This time it's a drawing of seven towers, each with a little flag.}
 > left: Pack it in your trunk
@@ -134,14 +112,10 @@ text: {Your old room is smaller than you remember. Under the bed is the box wher
 
 @event break_home_family_debate
 title: The Family Debate
-plan: home
+pool: home_routine
 slot: morning
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: meal
-tags: home
 scene: A breakfast table mid-argument, several relatives pointing at a student as if they were the deciding vote.
 text: {At breakfast the family is arguing, and someone says, "Ask the scholar."|The argument has started without you. Everyone turns as you come down the stairs.|"The scholar is up," someone announces. They've saved today's argument for you.} {season == "winter": {Is it colder than the year of the big snow?|Can you freeze a pond by thinking at it?|Can a wizard make the hens lay in winter?}|{Do swallows sleep at the bottom of rivers?|Will it rain on the fair, and can you stop it?|Is the old well really haunted, and should it be?}}
 > left: Settle it with what I've learned
@@ -159,14 +133,10 @@ text: {At breakfast the family is arguing, and someone says, "Ask the scholar."|
 
 @event break_home_village_children
 title: The Wizard Is Home
-plan: home
+pool: home_routine_repeat4
 slot: morning
-class: routine
 tone: light
-repeat: 4
-weight: 10
 art: sparkle
-tags: home
 scene: A gaggle of villagers at a cottage gate in the morning, staring hopefully at a student in academy robes.
 text: {Word has spread that you're home from the wizard school. Half the village has found a reason to pass the gate.|The neighbours are back at the gate, with a cousin from the next village to show you off to.|The gate committee is in session. They've drawn up a list.} {season == "winter": They want more snow for the sledging.|They want it to stop being so hot.} {The baker has brought a jar, in case you make something worth keeping.|The miller's wife asks if you've ever met a dragon.|The blacksmith has a stick that might be a wand.}
 > left: Show them some sparks
@@ -204,14 +174,10 @@ text: {The holidays bring the crowds.|This time you've learned to eat breakfast 
 
 @event break_work_opening_up
 title: Opening Up
-plan: work
+pool: work_routine_weight10
 when: has(gig_newt) or has(gig_pell)
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: key
-tags: job
 scene: A student unlocking a shop door in the half-light of early morning, breath steaming, the street empty behind them.
 text: {In the holidays you're trusted with the keys. You open up at dawn, alone.|You've learned to lift the door as you turn the key.|You could open up in your sleep, and once you nearly did.} {season == "winter": It's still dark, and the stove has gone out.|The sun is up and the street smells of warm stone.} {There's a note under the door from someone who wanted to come in at midnight.|A cat waits on the step as if it has an appointment.|The place is yours for half an hour.}
 > left: Do it all by the book
@@ -230,14 +196,10 @@ text: {In the holidays you're trusted with the keys. You open up at dawn, alone.
 
 @event break_work_regular
 title: The Holiday Regular
-plan: work
+pool: work_routine_weight10
 when: has(gig_newt) or has(gig_pell)
-class: routine
 tone: warm
-repeat: 5
-weight: 10
 art: cup
-tags: job
 scene: An elderly customer settling in for a long chat at a counter, a student behind it glancing at the queue.
 text: {Every holiday has its regular. This one comes every morning and wants to talk.|The regular is back. They wave to you as if you were old friends.|The regular has started calling you by your first name.} {Today it's about their late husband's beard.|Today it's about a dragon they swear they saw as a girl.|Today it's about the year the lake froze, which may or may not have happened.} The queue behind them is getting longer.
 > left: Let them finish the story
@@ -251,14 +213,10 @@ text: {Every holiday has its regular. This one comes every morning and wants to 
 
 @event break_work_new_hire
 title: The Holiday Hire
-plan: work
+pool: work_routine_weight10
 when: not has(gig_grounds) and not has(gig_post)
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: hand
-tags: job
 scene: A nervous new worker holding a tray at the wrong angle, a student leaning over to correct them.
 text: {The boss has taken on a holiday hire and put them next to you.|Another holiday hire, another nervous face. You're the old hand now.|This break's new hire looks at you the way you once looked at everyone.} {They've already dropped something.|They ask whether the job is always like this. You don't answer.|They're very keen and very fast, and very nearly right.}
 > left: Show them the ropes
@@ -272,14 +230,17 @@ text: {The boss has taken on a holiday hire and put them next to you.|Another ho
 
 # ---------------- Break: internship (plan: internship) ----------------
 
-@event break_internship_lodgings
-title: Breakfast at the Lodgings
+@pool internship_routine_repeat5
 plan: internship
-slot: morning
 class: routine
-tone: warm
 repeat: 5
 weight: 10
+
+@event break_internship_lodgings
+title: Breakfast at the Lodgings
+pool: internship_routine_repeat5
+slot: morning
+tone: warm
 art: bed
 tags: home
 scene: A borrowed bed at dawn, boots by the door, a bowl of breakfast waiting and a notebook open on the blanket.
@@ -296,12 +257,9 @@ text: {{member(intern_expedition): Your lodging for the placement is a tent that
 
 @event break_internship_briefing
 title: The Morning Briefing
-plan: internship
+pool: internship_routine_repeat5
 slot: morning
-class: routine
 tone: tense
-repeat: 5
-weight: 10
 art: scroll
 tags: study
 scene: A supervisor reading a list of tasks aloud to a row of interns, one of whom has stopped writing.
@@ -322,12 +280,9 @@ text: {Your supervisor reads the day's tasks aloud, once, very fast.|You bring t
 
 @event break_internship_other_interns
 title: The Other Interns
-plan: internship
+pool: internship_routine_repeat5
 slot: evening
-class: routine
 tone: light
-repeat: 5
-weight: 10
 art: group
 tags: study
 scene: A small group of interns eating supper together, one sitting slightly apart with a notebook.
@@ -344,11 +299,8 @@ text: {There are other interns here, and they've already formed a supper table.|
 
 @event break_internship_stipend
 title: Stipend Day
-plan: internship
-class: routine
+pool: internship_routine
 tone: warm
-repeat: 4
-weight: 10
 art: pouch
 tags: money
 scene: A small envelope of coins on a desk, a student looking at it with the expression of someone doing sums.
@@ -464,11 +416,8 @@ text: {There's an empty carrel at the end of the row, with a candle stub and nob
 
 @event thesis_lab_footnote_war
 title: The Footnote War
-place: thesis_lab
-class: routine
+pool: thesis_lab_routine
 tone: light
-repeat: 5
-weight: 10
 art: scroll
 tags: study
 scene: Two advisors arguing across a row of carrels, final-year students peering over the partitions to watch.
@@ -490,11 +439,8 @@ text: {Two advisors are arguing about a footnote across three carrels, and every
 @event thesis_lab_borrowed_candle
 time: evening
 title: Borrowing a Candle
-place: thesis_lab
-class: routine
+pool: thesis_lab_routine
 tone: tense
-repeat: 5
-weight: 10
 art: candle
 tags: study
 scene: A dark carrel lit by one dying candle, a full box of candles on the empty desk next door.

@@ -169,11 +169,14 @@ text: In the astronomy tower, a first-year is asleep beside an enormous brass ch
 
 # ---------------- Around the castle ----------------
 
+@pool expansion_life_routine_weight10
+class: routine
+weight: 10
+
 @event life_portrait_escape
 title: The Escaped Portrait
-class: routine
+pool: expansion_life_routine_weight10
 tone: eerie
-weight: 10
 art: mirror
 tags: magic mystery
 scene: An empty gilded picture frame on a gallery wall, and further down the corridor a painted duchess hiding inside a landscape of a picnic.
@@ -193,9 +196,8 @@ text: An empty frame in the long gallery. The Duchess of Ambry has escaped her p
 @event life_library_cat
 title: The Library Cat
 when: term and not wrapup
-class: routine
+pool: expansion_life_routine_weight10
 tone: warm
-weight: 10
 art: cat
 tags: home
 scene: An enormous fluffy cat asleep on the exact book a student needs, on a high library shelf, one eye half-open.
@@ -216,10 +218,9 @@ text: The library cat — a vast, ancient beast called Footnote — is asleep on
 @event life_invent_spell
 time: night
 title: A Spell of Your Own
-class: routine
+pool: expansion_life_routine_weight10
 tone: light
 when: arcana >= 18
-weight: 10
 art: sparkle
 tags: magic study
 scene: A student at a desk covered in crossed-out incantations, a tiny spiral of light hovering over the page, an expression of dawning triumph.
@@ -242,12 +243,15 @@ text: Late at night you realise there's a gap — a spell nobody has written yet
     health -small
     say: Your eyebrows survive. Your desk does not.
 
+@pool expansion_life_routine
+class: routine
+weight: 8
+
 @event life_cursed_umbrella
 title: The Cursed Umbrella
-class: routine
+pool: expansion_life_routine
 tone: light
 when: month >= 3 and month <= 7
-weight: 8
 art: rain
 tags: magic
 scene: A student holding a black umbrella under which a tiny private rainstorm is pouring, while the sky outside is perfectly clear.
@@ -270,10 +274,9 @@ text: You borrowed an umbrella from lost property. It's black, elegant and curse
 @event life_exam_dream
 time: night
 title: The Exam Dream
-class: routine
+pool: expansion_life_routine_weight10
 tone: warm
 when: month == 3 or month == 4 or month == 9 or month == 10
-weight: 10
 art: bed
 tags: home
 scene: A dream-image: a student in an exam hall in their pyjamas, the exam paper written in a language that keeps changing, a clock with no hands.
@@ -328,9 +331,8 @@ text: A letter arrives from a stranger at Thornwick Academy, the rival school. "
 
 @event life_three_headed_puppy
 title: A Very Lost Puppy
-class: routine
+pool: expansion_life_routine
 tone: tense
-weight: 8
 art: paw
 tags: nature danger
 scene: A puppy with three heads sitting in a corridor, one head chewing a shoe, one licking a wall, one howling mournfully.
@@ -346,10 +348,9 @@ text: There is a puppy in the dormitory corridor. It has three heads. One is eat
 @event life_bell_tower
 time: night
 title: The Midnight Bell
-class: routine
+pool: expansion_life_routine
 tone: tense
 when: turn >= 4
-weight: 8
 art: bell
 tags: danger social
 scene: A dark bell tower interior, ropes hanging down, a group of students at the bottom daring one of their number to climb.
@@ -370,10 +371,9 @@ text: Tradition: once in your time at Lumenhold, you must ring the old bell at m
 
 @event life_fog_maze
 title: The Fog Maze
-class: routine
+pool: expansion_life_routine
 tone: eerie
 when: month == 3 or month == 4
-weight: 8
 art: compass
 tags: nature mystery
 scene: The academy grounds swallowed by thick white fog, hedges looming like walls, a lantern glowing faintly ahead.
@@ -395,9 +395,8 @@ text: Fog has come up off the lake so thick you can't see your own feet. The pat
 
 @event life_wishing_well
 title: The Wishing Well
-class: routine
+pool: expansion_life_routine
 tone: light
-weight: 8
 art: coin
 tags: magic money
 scene: An old stone well in the corner of a cloister, coins glinting at the bottom, a carved inscription half-worn away.
@@ -424,9 +423,8 @@ text: In the old cloister there's a wishing well. The inscription says: "ONE COI
 
 @event life_borrowed_broom
 title: The Borrowed Broom
-class: routine
+pool: expansion_life_routine
 tone: tense
-weight: 8
 art: broom
 tags: danger
 scene: A student clinging to a bucking broom high above the castle, its bristles on fire, a smaller student on the ground waving frantically.
@@ -475,10 +473,9 @@ text: An illusion of you — one you thought you'd dismissed — is still wander
 
 @event life_auction
 title: The Lost-Property Auction
-class: routine
+pool: expansion_life_routine
 tone: light
 when: gold >= 10
-weight: 8
 art: dice
 tags: money
 scene: A crowded hall, a caretaker with a gavel at a lectern, tables piled with lost scarves, wands, boots and one suspiciously humming box.
@@ -497,10 +494,9 @@ text: Once a year the caretaker auctions off unclaimed lost property. There's a 
 
 @event life_village_busking
 title: Busking in the Village
-class: routine
+pool: expansion_life_routine
 tone: light
 when: visits_to(great_hall) >= 3 or charm >= 16
-weight: 8
 art: music
 tags: money social
 scene: A cobbled village square, a student singing beside a fountain with an upturned hat at their feet, villagers pausing to listen.
