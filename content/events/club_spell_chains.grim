@@ -16,19 +16,33 @@
 #  `now`, and a preparation's working option queues, once a visit (`chain_beat`), the final when it is ready or else
 #  the next preparation not done. Measured over 90 games: learned 60% of chains started (was 43%), median 6 months
 #  from start to spell (was 8).
+#  Each chain is a @thread from the quest template (content/core/templates.grim, migration 0047): the template's
+#  pools give each role its trigger, weights and gates, and `next` is the routing above. Bramble's later
+#  preparations wait on the first, so its thread is plain and its cards keep their own wiring.
 # ============================================================
 
 # ---------------- Duelling Circle → Brace (vigor) ----------------
 
-@event duel_dummy_hexes
-title: The Dummy Hits Back
+@thread brace_quest
+from: quest
+with: begun=brace_chain
+when: spell_level(brace) == 0
 track: duelling
 rank: 2
+clues: lead_brace
+members:
+  start duel_dummy_hexes
+  part duel_captains_notes flag=brace_notes
+  part duel_bram_barrage flag=brace_circle
+  part duel_footwork_lyra flag=brace_footwork
+  final duel_brace_final
+
+@event duel_dummy_hexes
+title: The Dummy Hits Back
+thread: brace_quest
 class: routine
 tone: light
-trigger: auto
-when: rank(duelling) >= 2 and spell_level(brace) == 0 and not flag(brace_chain) and turn <= 44
-repeat: 3
+when: rank(duelling) >= 2 and turn <= 44
 art: shield
 tags: club duel
 scene: A duel hall's practice corner, an eyepatched straw dummy flinging a crackling hex back at a startled student, stuffing spilling from a split seam.
@@ -46,13 +60,9 @@ text: The eyepatched dummy has started throwing hexes back. Lyra splits its seam
 
 @event duel_captains_notes
 title: The Captain's Notes
-track: duelling
-rank: 2
+thread: brace_quest
 class: routine
 tone: light
-when: flag(brace_chain) and not flag(brace_notes) and spell_level(brace) == 0
-repeat: 2
-weight: 60
 art: scroll
 tags: club study
 scene: A dusty cupboard in the duel hall, a student reading a cracked leather notebook by the light of a single lamp.
@@ -66,27 +76,16 @@ text: The captain who made the charm left notes, in a cupboard under the trophy 
     lose:
       mood -tiny
       say: You read until the lamp gutters and learn a great deal about a student called Pim, who could not parry. The trick is in there somewhere. You'll have to come back for it.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(duel_dummy_hexes) >= 1 and flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2:
-      queue duel_brace_final now
-    elif not flag(brace_circle):
-      queue duel_bram_barrage now
-    elif not flag(brace_footwork):
-      queue duel_footwork_lyra now
+  next
 > right: Spar instead tonight
   perform duelling +small
   say: You leave the notes for another evening and take a bout instead. You win it, which is the other kind of useful.
 
 @event duel_bram_barrage
 title: Inside the Chalk Circle
-track: duelling
-rank: 2
+thread: brace_quest
 class: routine
 tone: tense
-when: flag(brace_chain) and not flag(brace_circle) and spell_level(brace) == 0
-repeat: 2
-weight: 60
 art: bolt
 tags: club duel
 scene: A student standing in a chalk circle on a scorched floor while a broad prefect hurls a stream of stinging hexes from the edge.
@@ -100,49 +99,24 @@ text: Word reaches Bram that you mean to empty the captain's charm. He turns up 
     lose:
       health -small
       say: The ninth hex knocks you clean out of the circle. Bram notes it in his book. "Section four, failed," he says. "Again next week."
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(duel_dummy_hexes) >= 1 and flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2:
-      queue duel_brace_final now
-    elif not flag(brace_notes):
-      queue duel_captains_notes now
-    elif not flag(brace_footwork):
-      queue duel_footwork_lyra now
+  next
 > right: Take it all on your shield arm
   flag brace_circle
   health -medium
   say: You don't try to be clever. You just stand there and take it, every hex, on your arm, until Bram runs out. Your arm is purple for a week. Bram looks almost impressed.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(duel_dummy_hexes) >= 1 and flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2:
-      queue duel_brace_final now
-    elif not flag(brace_notes):
-      queue duel_captains_notes now
-    elif not flag(brace_footwork):
-      queue duel_footwork_lyra now
+  next
 > up[item:duelling_coat]: Shrug it off in the coat
   flag brace_circle
   health -small
   perform duelling +tiny
   say: You button the quilted coat to the chin and plant your feet. The hexes thud into the padding like snowballs into a wall. Bram runs out first. "That's cheating," he says. "Section four doesn't mention coats," you say.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(duel_dummy_hexes) >= 1 and flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2:
-      queue duel_brace_final now
-    elif not flag(brace_notes):
-      queue duel_captains_notes now
-    elif not flag(brace_footwork):
-      queue duel_footwork_lyra now
+  next
 
 @event duel_footwork_lyra
 title: Footwork Until Dark
-track: duelling
-rank: 2
+thread: brace_quest
 class: routine
 tone: light
-when: flag(brace_chain) and not flag(brace_footwork) and spell_level(brace) == 0
-repeat: 2
-weight: 60
 art: wand
 tags: club duel
 scene: An empty duel hall at dusk, two students drilling footwork across chalk marks, one of them pointing sharply at the other's feet.
@@ -152,14 +126,7 @@ text: Lyra finds you after practice. "The captain's notes say the stance is ever
   mood -small
   rel lyra +tiny
   say: She is merciless and exact. By dark you can set your feet without thinking, and you never want to see a chalk mark again. "Better," she says, which from Lyra is a sonnet.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(duel_dummy_hexes) >= 1 and flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2:
-      queue duel_brace_final now
-    elif not flag(brace_notes):
-      queue duel_captains_notes now
-    elif not flag(brace_circle):
-      queue duel_bram_barrage now
+  next
 > right: "Tomorrow. I have an essay."
   study +tiny
   rel lyra -tiny
@@ -167,13 +134,8 @@ text: Lyra finds you after practice. "The captain's notes say the stance is ever
 
 @event duel_brace_final
 title: Hold Firm
-track: duelling
-rank: 2
-class: milestone
+thread: brace_quest
 tone: tense
-when: flag(brace_chain) and spell_level(brace) == 0 and since(duel_dummy_hexes) >= 1 and (flag(brace_notes) + flag(brace_circle) + flag(brace_footwork) >= 2 or since(duel_dummy_hexes) >= 4)
-repeat: 2
-weight: 40
 art: spell_brace
 tags: club duel magic
 scene: A student standing firm in a chalk circle in a crowded duel hall as an eyepatched dummy fires hex after hex, the club watching from the benches.
@@ -200,15 +162,26 @@ text: The club gathers on the benches. You step into the chalk circle, and the e
 
 # ---------------- The Lumen Ledger → Quickquill (guile) ----------------
 
-@event ledger_spare_quill
-title: The Spare Quill
+@thread quickquill_quest
+from: quest
+with: begun=quickquill_chain
+when: spell_level(quickquill) == 0
 track: lumen_ledger
 rank: 2
+clues: lead_quickquill
+members:
+  start ledger_spare_quill
+  part ledger_soup_complaint flag=quickquill_soup
+  part ledger_proper_ink flag=quickquill_ink
+  part ledger_deadline_night flag=quickquill_deadline
+  final ledger_quill_interview
+
+@event ledger_spare_quill
+title: The Spare Quill
+thread: quickquill_quest
 class: routine
 tone: light
-trigger: auto
-when: rank(lumen_ledger) >= 2 and spell_level(quickquill) == 0 and not flag(quickquill_chain) and turn <= 44
-repeat: 3
+when: rank(lumen_ledger) >= 2 and turn <= 44
 art: paper
 tags: club
 scene: A newspaper office with proofs pegged on a drying line, a lone quill hanging among them scribbling on a proof by itself.
@@ -226,13 +199,9 @@ text: A spare quill on the drying line has been finishing your sentences. Today 
 
 @event ledger_soup_complaint
 title: The Soup Complaint
-track: lumen_ledger
-rank: 2
+thread: quickquill_quest
 class: routine
 tone: light
-when: flag(quickquill_chain) and not flag(quickquill_soup) and spell_level(quickquill) == 0
-repeat: 2
-weight: 60
 art: letter
 tags: club
 scene: A desk buried in angry letters about soup, a student dictating firmly to a quill that keeps trying to add flourishes.
@@ -246,27 +215,16 @@ text: Forty furious letters about the refectory soup have arrived. Nessa wants o
     lose:
       mood -small
       say: You blink and the quill has written that the soup contains a mild curse. It prints. You spend Thursday apologising to the cooks.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(ledger_spare_quill) >= 1 and flag(quickquill_soup) + flag(quickquill_ink) + flag(quickquill_deadline) >= 2:
-      queue ledger_quill_interview now
-    elif not flag(quickquill_ink):
-      queue ledger_proper_ink now
-    elif not flag(quickquill_deadline):
-      queue ledger_deadline_night now
+  next
 > right: Write the reply by hand
   perform lumen_ledger +tiny
   say: You write it yourself, slowly. It's a good reply. The quill watches from the inkwell, offended at being left out.
 
 @event ledger_proper_ink
 title: Proper Ink
-track: lumen_ledger
-rank: 2
+thread: quickquill_quest
 class: routine
 tone: light
-when: flag(quickquill_chain) and not flag(quickquill_ink) and spell_level(quickquill) == 0
-repeat: 2
-weight: 60
 art: coin
 tags: club
 scene: A stationer's counter in the village, a student holding a small dark bottle of ink up to the light while a quill pokes out of their pocket.
@@ -275,27 +233,16 @@ text: The quill refuses the school ink. It blots, it sulks, it writes "no" in la
   gold -small
   flag quickquill_ink
   say: The quill drinks the new ink and writes a whole page of your notes, neatly, in a better hand than yours. It underlines the bits you'll need. You feel slightly managed.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(ledger_spare_quill) >= 1 and flag(quickquill_soup) + flag(quickquill_ink) + flag(quickquill_deadline) >= 2:
-      queue ledger_quill_interview now
-    elif not flag(quickquill_soup):
-      queue ledger_soup_complaint now
-    elif not flag(quickquill_deadline):
-      queue ledger_deadline_night now
+  next
 > right: Make it use the school ink
   mood -tiny
   say: It uses the school ink under protest and blots every third word, including, pointedly, your name.
 
 @event ledger_deadline_night
 title: Deadline Night
-track: lumen_ledger
-rank: 2
+thread: quickquill_quest
 class: routine
 tone: tense
-when: flag(quickquill_chain) and not flag(quickquill_deadline) and spell_level(quickquill) == 0
-repeat: 2
-weight: 60
 art: candle
 tags: club
 scene: A newspaper office after midnight, cold tea and candle stubs everywhere, a student and a quill working side by side while an editor paces.
@@ -305,27 +252,15 @@ text: Deadline night. The front page fell through at nine and Nessa is pacing. "
   perform lumen_ledger +small
   mood -medium
   say: You and the quill write until four. By the end it finishes your sentences only when you want it to. You are both too tired to argue. Nessa puts your name on the page, small.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(ledger_spare_quill) >= 1 and flag(quickquill_soup) + flag(quickquill_ink) + flag(quickquill_deadline) >= 2:
-      queue ledger_quill_interview now
-    elif not flag(quickquill_soup):
-      queue ledger_soup_complaint now
-    elif not flag(quickquill_ink):
-      queue ledger_proper_ink now
+  next
 > right: Go to bed
   health +tiny
   say: You sleep. In the morning the front page is late and Nessa is hoarse, and the quill has written a bitter little poem about you on the pillowcase.
 
 @event ledger_quill_interview
 title: Deny Everything
-track: lumen_ledger
-rank: 2
-class: milestone
+thread: quickquill_quest
 tone: tense
-when: flag(quickquill_chain) and spell_level(quickquill) == 0 and since(ledger_spare_quill) >= 1 and (flag(quickquill_soup) + flag(quickquill_ink) + flag(quickquill_deadline) >= 2 or since(ledger_spare_quill) >= 4)
-repeat: 2
-weight: 40
 art: spell_quickquill
 tags: club magic
 scene: A stuffy committee room, a smooth official smiling across a table at a student whose quill writes furiously on its own.
@@ -352,8 +287,12 @@ text: Nessa sends you to interview the chair of the refectory committee, who wil
 
 # ---------------- Verdant Circle → Bramble (alchemy) ----------------
 
+@thread bramble_quest
+clues: lead_bramble
+
 @event verdant_far_bed
 title: The Far Bed Answers
+thread: bramble_quest
 track: verdant
 rank: 2
 class: routine
@@ -378,6 +317,7 @@ text: The far bed answers back today: every vine in it turns to follow you. On t
 
 @event verdant_plant_seed
 title: Somewhere to Grow
+thread: bramble_quest
 track: verdant
 rank: 2
 class: routine
@@ -417,6 +357,7 @@ text: The seed has outgrown your pocket. It needs a bed. Tobias offers the corne
 @event verdant_cold_snap
 time: night
 title: The Cold Snap
+thread: bramble_quest
 track: verdant
 rank: 2
 class: routine
@@ -446,6 +387,7 @@ text: A hard frost is coming tonight, the first of the season. Your seedling is 
 
 @event verdant_mandrake_choir
 title: The Mandrake Choir
+thread: bramble_quest
 track: verdant
 rank: 2
 class: routine
@@ -481,6 +423,7 @@ text: The mandrakes in the next bed have taken against your seedling and scream 
 @event verdant_bramble_bolts
 time: night
 title: The Night It Bolts
+thread: bramble_quest
 track: verdant
 rank: 2
 class: milestone
@@ -514,15 +457,26 @@ text: Tobias wakes you at midnight. Your plant has bolted: a hedge of thorns is 
 
 # ---------------- Library Assistant → Index (lore) ----------------
 
-@event library_footnote_drawer
-title: Footnote's Drawer
+@thread index_quest
+from: quest
+with: begun=index_chain
+when: spell_level(index) == 0
 track: library_assistant
 rank: 2
+clues: lead_index
+members:
+  start library_footnote_drawer
+  part library_fish_footnote flag=index_fish
+  part library_hush_lamp flag=index_hush
+  part library_wandering_section flag=index_string
+  final library_overdue_book
+
+@event library_footnote_drawer
+title: Footnote's Drawer
+thread: index_quest
 class: routine
 tone: light
-trigger: auto
-when: rank(library_assistant) >= 2 and spell_level(index) == 0 and not flag(index_chain) and turn <= 44
-repeat: 3
+when: rank(library_assistant) >= 2 and turn <= 44
 art: cat
 tags: job study
 scene: A long library catalogue cabinet, a large cat sitting immovably on one drawer, a student crouching to read its label.
@@ -540,13 +494,9 @@ text: Footnote has sat on one catalogue drawer for a week and hisses at anyone w
 
 @event library_fish_footnote
 title: Bribing the Cat
-track: library_assistant
-rank: 2
+thread: index_quest
 class: routine
 tone: light
-when: flag(index_chain) and not flag(index_fish) and spell_level(index) == 0
-repeat: 2
-weight: 60
 art: cat
 tags: job
 scene: A student offering a small paper parcel of fish to a large, unimpressed cat on a library cabinet.
@@ -555,14 +505,7 @@ text: Footnote won't move from the drawer for less than fish. Good fish, from th
   gold -small
   flag index_fish
   say: Footnote eats the herring slowly, looking at you the whole time, then steps off the drawer and onto your lap. The card is yours. So, apparently, is the cat.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(library_footnote_drawer) >= 1 and flag(index_fish) + flag(index_hush) + flag(index_string) >= 2:
-      queue library_overdue_book now
-    elif not flag(index_hush):
-      queue library_hush_lamp now
-    elif not flag(index_string):
-      queue library_wandering_section now
+  next
 > right: Wait him out
   mood -tiny
   say: You wait. Footnote waits better. At closing he yawns, stretches, and lies back down on the drawer.
@@ -570,13 +513,9 @@ text: Footnote won't move from the drawer for less than fish. Good fish, from th
 @event library_hush_lamp
 time: evening
 title: The Night Hush
-track: library_assistant
-rank: 2
+thread: index_quest
 class: routine
 tone: eerie
-when: flag(index_chain) and not flag(index_hush) and spell_level(index) == 0
-repeat: 2
-weight: 60
 art: lantern
 tags: job study
 scene: A dark library reading room at night, a student walking the shelves with a lamp held high while the books seem to lean toward the light.
@@ -590,27 +529,16 @@ text: The overdue book will only be on the shelves the night hush sends it to. T
     lose:
       mood -small
       say: Every shelf goes quiet at once, which is either very helpful or a joke at your expense. You walk until midnight and mark nothing.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(library_footnote_drawer) >= 1 and flag(index_fish) + flag(index_hush) + flag(index_string) >= 2:
-      queue library_overdue_book now
-    elif not flag(index_fish):
-      queue library_fish_footnote now
-    elif not flag(index_string):
-      queue library_wandering_section now
+  next
 > right: Ask the head librarian outright
   perform library_assistant -tiny
   say: "If I told you," she says, "you wouldn't have found it." She gives you extra shelving for asking.
 
 @event library_wandering_section
 title: The Wandering Section
-track: library_assistant
-rank: 2
+thread: index_quest
 class: routine
 tone: light
-when: flag(index_chain) and not flag(index_string) and spell_level(index) == 0
-repeat: 2
-weight: 60
 art: book
 tags: job
 scene: A student trailing a long ball of string through a maze of library shelves that have visibly rearranged themselves behind them.
@@ -619,27 +547,15 @@ text: The section the book belongs to wanders. It was by the stairs on Monday an
   flag index_string
   mood -small
   say: You follow it for six hours, through rooms you didn't know the library had. At the end you know its route by heart and never want to see a ball of string again.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(library_footnote_drawer) >= 1 and flag(index_fish) + flag(index_hush) + flag(index_string) >= 2:
-      queue library_overdue_book now
-    elif not flag(index_fish):
-      queue library_fish_footnote now
-    elif not flag(index_hush):
-      queue library_hush_lamp now
+  next
 > right: Wait for it to come back
   lore +tiny
   say: You read at the desk until the section wanders past again, a day later. You learn nothing about its route, and a little about medieval ward-lattices.
 
 @event library_overdue_book
 title: Eleven Years Overdue
-track: library_assistant
-rank: 2
-class: milestone
+thread: index_quest
 tone: eerie
-when: flag(index_chain) and spell_level(index) == 0 and since(library_footnote_drawer) >= 1 and (flag(index_fish) + flag(index_hush) + flag(index_string) >= 2 or since(library_footnote_drawer) >= 4)
-repeat: 2
-weight: 40
 art: spell_index
 tags: job study magic
 scene: A student high on a rolling ladder in a library where the shelves are visibly moving, a cat on their shoulder, one dusty book glowing faintly.
@@ -666,16 +582,27 @@ text: Tonight the shelves are moving. Somewhere in the wandering section is the 
 
 # ---------------- The Gilded Newt → Rapport (charm) ----------------
 
+@thread rapport_quest
+from: quest
+with: begun=rapport_chain
+when: spell_level(rapport) == 0
+track: tavern
+rank: 2
+clues: lead_rapport
+members:
+  start tavern_two_taps
+  part tavern_eel_story flag=rapport_eel
+  part tavern_regulars_round flag=rapport_round
+  part tavern_double_shift flag=rapport_shift
+  final tavern_festival_room
+
 @event tavern_two_taps
 time: evening
 title: Two Taps on the Bar
-track: tavern
-rank: 2
+thread: rapport_quest
 class: routine
 tone: light
-trigger: auto
-when: rank(tavern) >= 2 and spell_level(rapport) == 0 and not flag(rapport_chain) and turn <= 44
-repeat: 3
+when: rank(tavern) >= 2 and turn <= 44
 art: cup
 tags: job
 scene: A crowded tavern on the edge of a brawl, a landlady tapping the bar twice and the whole room suddenly laughing instead.
@@ -694,13 +621,9 @@ text: Two barge-men are halfway out of their chairs when the landlady taps the b
 @event tavern_eel_story
 time: evening
 title: The Eel Story
-track: tavern
-rank: 2
+thread: rapport_quest
 class: routine
 tone: light
-when: flag(rapport_chain) and not flag(rapport_eel) and spell_level(rapport) == 0
-repeat: 2
-weight: 60
 art: wave
 tags: job
 scene: A barge-man at a tavern table with his arms spread wide, telling a story to a student taking notes on a bar napkin.
@@ -714,14 +637,7 @@ text: The old barge-man's eel story is the most famous story at the Newt. Regula
     lose:
       mood -small
       say: You get the eel's name wrong and the ending backwards. The regulars are very kind about it, which is worse.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(tavern_two_taps) >= 1 and flag(rapport_eel) + flag(rapport_round) + flag(rapport_shift) >= 2:
-      queue tavern_festival_room now
-    elif not flag(rapport_round):
-      queue tavern_regulars_round now
-    elif not flag(rapport_shift):
-      queue tavern_double_shift now
+  next
 > right: Just enjoy the story
   mood +small
   say: You sit and listen to the eel story twice through, and laugh both times. You couldn't tell it, but you've rarely had a better evening.
@@ -729,13 +645,9 @@ text: The old barge-man's eel story is the most famous story at the Newt. Regula
 @event tavern_regulars_round
 time: evening
 title: The Regulars' Corner
-track: tavern
-rank: 2
+thread: rapport_quest
 class: routine
 tone: light
-when: flag(rapport_chain) and not flag(rapport_round) and spell_level(rapport) == 0
-repeat: 2
-weight: 60
 art: coin
 tags: job
 scene: A student setting down a tray of mugs at a crowded corner table in a tavern, the regulars raising them in a toast.
@@ -744,27 +656,16 @@ text: The regulars' corner has never had a round bought by staff. The landlady s
   gold -small
   flag rapport_round
   say: The corner raises the mugs to you, by name, which you didn't know they knew. For the rest of the night they call you over to settle every argument.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(tavern_two_taps) >= 1 and flag(rapport_eel) + flag(rapport_round) + flag(rapport_shift) >= 2:
-      queue tavern_festival_room now
-    elif not flag(rapport_eel):
-      queue tavern_eel_story now
-    elif not flag(rapport_shift):
-      queue tavern_double_shift now
+  next
 > right: Keep your tips
   gold +tiny
   say: You pocket your tips. The corner doesn't notice either way, which is rather the point.
 
 @event tavern_double_shift
 title: The Double Shift
-track: tavern
-rank: 2
+thread: rapport_quest
 class: routine
 tone: tense
-when: flag(rapport_chain) and not flag(rapport_shift) and spell_level(rapport) == 0
-repeat: 2
-weight: 60
 art: cup
 tags: job
 scene: A tired student wiping down a bar at closing time after a very long day, the landlady counting the till beside them.
@@ -774,14 +675,7 @@ text: Two servers are down with Lake Fever, and the landlady needs a double shif
   flag rapport_shift
   health -small
   say: Fourteen hours on your feet. By closing you can tell who wants to talk and who wants to be left alone from across the room. Your feet are a separate, angrier person.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(tavern_two_taps) >= 1 and flag(rapport_eel) + flag(rapport_round) + flag(rapport_shift) >= 2:
-      queue tavern_festival_room now
-    elif not flag(rapport_eel):
-      queue tavern_eel_story now
-    elif not flag(rapport_round):
-      queue tavern_regulars_round now
+  next
 > right: Turn it down
   perform tavern -tiny
   say: You say you can't. The landlady works it herself, and is short with you for a week.
@@ -789,13 +683,8 @@ text: Two servers are down with Lake Fever, and the landlady needs a double shif
 @event tavern_festival_room
 time: evening
 title: The Room Is Yours
-track: tavern
-rank: 2
-class: milestone
+thread: rapport_quest
 tone: tense
-when: flag(rapport_chain) and spell_level(rapport) == 0 and since(tavern_two_taps) >= 1 and (flag(rapport_eel) + flag(rapport_round) + flag(rapport_shift) >= 2 or since(tavern_two_taps) >= 4)
-repeat: 2
-weight: 40
 art: spell_rapport
 tags: job magic
 scene: A packed tavern on a festival night, a student standing on a chair telling a story while the crowd hangs on every word.
@@ -822,15 +711,26 @@ text: The landlady is away for the night and the Newt is packed to the rafters, 
 
 # ---------------- Apothecary Clerk → Distill (alchemy) ----------------
 
-@event pell_oldest_drawer
-title: The Oldest Drawer
+@thread distil_quest
+from: quest
+with: begun=distil_chain
+when: spell_level(purify) == 0
 track: apothecary_clerk
 rank: 2
+clues: lead_distil
+members:
+  start pell_oldest_drawer
+  part pell_counting_drops flag=distil_drops
+  part pell_buy_moonwort flag=distil_moonwort
+  part pell_daughters_shortcut flag=distil_shortcut
+  final pell_draught
+
+@event pell_oldest_drawer
+title: The Oldest Drawer
+thread: distil_quest
 class: routine
 tone: eerie
-trigger: auto
-when: rank(apothecary_clerk) >= 2 and spell_level(purify) == 0 and not flag(distil_chain) and turn <= 44
-repeat: 3
+when: rank(apothecary_clerk) >= 2 and turn <= 44
 art: potion
 tags: job
 scene: An old apothecary's wall of tiny drawers, one at the very bottom pulled open to reveal a yellowed recipe card, a gruff old man watching from the counter.
@@ -849,13 +749,9 @@ text: Restocking, you open the oldest drawer at the bottom of Pell's wall. Insid
 @event pell_counting_drops
 time: night
 title: Counting Drops
-track: apothecary_clerk
-rank: 2
+thread: distil_quest
 class: routine
 tone: light
-when: flag(distil_chain) and not flag(distil_drops) and spell_level(purify) == 0
-repeat: 2
-weight: 60
 art: potion
 tags: job
 scene: A dim apothecary at night, an old man and a student bent over a slowly dripping still, both counting under their breath.
@@ -869,27 +765,16 @@ text: Pell distills by the drop, all night, counting aloud. "If you mean to try 
     lose:
       mood -small
       say: You lose count at three hundred and something. Pell starts again without comment. So do you. You lose it again.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(pell_oldest_drawer) >= 1 and flag(distil_drops) + flag(distil_moonwort) + flag(distil_shortcut) >= 2:
-      queue pell_draught now
-    elif not flag(distil_moonwort):
-      queue pell_buy_moonwort now
-    elif not flag(distil_shortcut):
-      queue pell_daughters_shortcut now
+  next
 > right: Go home and sleep
   health +tiny
   say: You go home. Pell counts on alone, steadily, through the night. In the morning the bottle is full and labelled, and he says nothing about it.
 
 @event pell_buy_moonwort
 title: Moonwort
-track: apothecary_clerk
-rank: 2
+thread: distil_quest
 class: routine
 tone: light
-when: flag(distil_chain) and not flag(distil_moonwort) and spell_level(purify) == 0
-repeat: 2
-weight: 60
 art: leaf
 tags: job
 scene: An apothecary counter with a small jar labelled "Moonwort. Do not hum near.", a student counting out coins beside it.
@@ -898,27 +783,16 @@ text: The old draught needs moonwort, and the only good moonwort in the village 
   gold -small
   flag distil_moonwort
   say: Pell weighs it twice and wraps it in waxed paper. You carry it home without humming, which is harder than it sounds.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(pell_oldest_drawer) >= 1 and flag(distil_drops) + flag(distil_moonwort) + flag(distil_shortcut) >= 2:
-      queue pell_draught now
-    elif not flag(distil_drops):
-      queue pell_counting_drops now
-    elif not flag(distil_shortcut):
-      queue pell_daughters_shortcut now
+  next
 > right: Try the cheap substitute
   mood -tiny
   say: The substitute smells wrong the moment you open it. Pell takes it from you without a word and puts it in the bin.
 
 @event pell_daughters_shortcut
 title: The Daughters' Shortcut
-track: apothecary_clerk
-rank: 2
+thread: distil_quest
 class: routine
 tone: tense
-when: flag(distil_chain) and not flag(distil_shortcut) and spell_level(purify) == 0
-repeat: 2
-weight: 60
 art: potion
 tags: job
 scene: The back room of an apothecary, a student drinking a small cup of something dark while two women watch with professional interest.
@@ -927,27 +801,15 @@ text: Pell's daughters say there's a shortcut: learn what the draught takes out 
   flag distil_shortcut
   health -small
   say: It takes the strength out of your knees and then, slowly, gives it back. You spend a day in bed. When you get up, you know exactly where the draught will pull from.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(pell_oldest_drawer) >= 1 and flag(distil_drops) + flag(distil_moonwort) + flag(distil_shortcut) >= 2:
-      queue pell_draught now
-    elif not flag(distil_drops):
-      queue pell_counting_drops now
-    elif not flag(distil_moonwort):
-      queue pell_buy_moonwort now
+  next
 > right: Do it Pell's way
   rel pell +tiny
   say: You decline. The daughters shrug. Pell, who was listening, corrects a label more firmly than it needed.
 
 @event pell_draught
 title: Of Your Own Strength
-track: apothecary_clerk
-rank: 2
-class: milestone
+thread: distil_quest
 tone: eerie
-when: flag(distil_chain) and spell_level(purify) == 0 and since(pell_oldest_drawer) >= 1 and (flag(distil_drops) + flag(distil_moonwort) + flag(distil_shortcut) >= 2 or since(pell_oldest_drawer) >= 4)
-repeat: 2
-weight: 40
 art: spell_distil
 tags: job magic
 scene: An apothecary's still at night, a student drawing a single shining drop out of a dark mixture while an old man holds the lamp.
@@ -974,15 +836,26 @@ text: Pell closes the shop early, sets the old still on the bench and holds the 
 
 # ---------------- Broom Courier → Tailwind (vigor) ----------------
 
-@event courier_wind_jar
-title: Wind in a Jar
+@thread tailwind_quest
+from: quest
+with: begun=tailwind_chain
+when: spell_level(tailwind) == 0
 track: broom_courier
 rank: 2
+clues: lead_tailwind
+members:
+  start courier_wind_jar
+  part courier_fisherman_waves flag=tailwind_fisherman
+  part courier_race_gulls flag=tailwind_gulls
+  part courier_fix_broom flag=tailwind_broom
+  final courier_storm_delivery
+
+@event courier_wind_jar
+title: Wind in a Jar
+thread: tailwind_quest
 class: routine
 tone: light
-trigger: auto
-when: rank(broom_courier) >= 2 and spell_level(tailwind) == 0 and not flag(tailwind_chain) and turn <= 44
-repeat: 3
+when: rank(broom_courier) >= 2 and turn <= 44
 art: broom
 tags: job
 scene: A courier loft with a dusty shelf of unclaimed letters, a student holding up a stoppered jar in which a small wind is visibly whirling.
@@ -1000,13 +873,9 @@ text: On the dead-letter shelf, behind a parcel addressed to nobody, is a stoppe
 
 @event courier_fisherman_waves
 title: The Fisherman Waves
-track: broom_courier
-rank: 2
+thread: tailwind_quest
 class: routine
 tone: warm
-when: flag(tailwind_chain) and not flag(tailwind_fisherman) and spell_level(tailwind) == 0
-repeat: 2
-weight: 60
 art: wave
 tags: job
 scene: An old fisherman in a small boat on a grey lake waving up at a student on a broom flying low overhead.
@@ -1020,27 +889,16 @@ text: The old fisherman in the reed beds has never waved at a courier. Today, se
     lose:
       mood -tiny
       say: He talks about fish for an hour, then says the light's going, and rows off. You'll have to come back.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(courier_wind_jar) >= 1 and flag(tailwind_fisherman) + flag(tailwind_gulls) + flag(tailwind_broom) >= 2:
-      queue courier_storm_delivery now
-    elif not flag(tailwind_gulls):
-      queue courier_race_gulls now
-    elif not flag(tailwind_broom):
-      queue courier_fix_broom now
+  next
 > right: Wave back and fly on
   perform broom_courier +small
   say: You wave and fly on with your round, on time. He watches you go, and doesn't wave again.
 
 @event courier_race_gulls
 title: Racing the Gulls
-track: broom_courier
-rank: 2
+thread: tailwind_quest
 class: routine
 tone: light
-when: flag(tailwind_chain) and not flag(tailwind_gulls) and spell_level(tailwind) == 0
-repeat: 2
-weight: 60
 art: broom
 tags: job
 scene: A student on a broom flying flat out over a lake in a cloud of wheeling gulls, letters fluttering in a satchel.
@@ -1054,27 +912,16 @@ text: The gulls over the lake race couriers for fun. The fisherman says the jar'
     lose:
       health -small
       say: You clip a wave at full speed and skip across the lake like a stone. The gulls are delighted. You are wet to the bone.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(courier_wind_jar) >= 1 and flag(tailwind_fisherman) + flag(tailwind_gulls) + flag(tailwind_broom) >= 2:
-      queue courier_storm_delivery now
-    elif not flag(tailwind_fisherman):
-      queue courier_fisherman_waves now
-    elif not flag(tailwind_broom):
-      queue courier_fix_broom now
+  next
 > right: Fly your round steady
   perform broom_courier +tiny
   say: You fly the round steady and deliver everything dry. The gulls lose interest. So does the jar.
 
 @event courier_fix_broom
 title: The Broom That Pulls Left
-track: broom_courier
-rank: 2
+thread: tailwind_quest
 class: routine
 tone: light
-when: flag(tailwind_chain) and not flag(tailwind_broom) and spell_level(tailwind) == 0
-repeat: 2
-weight: 60
 art: broom
 tags: job
 scene: A broom-maker's bench in the village, a craftsman sighting along a broom handle while a student waits with their satchel.
@@ -1083,27 +930,15 @@ text: Your loft broom pulls left, always has. With the jar's wind behind it, it 
   gold -small
   flag tailwind_broom
   say: The broom-maker sights along it, tuts, and spends an afternoon on it. It flies straight for the first time in living memory. You miss the pull, a little.
-  if chain_beat != turn:
-    chain_beat = turn
-    if since(courier_wind_jar) >= 1 and flag(tailwind_fisherman) + flag(tailwind_gulls) + flag(tailwind_broom) >= 2:
-      queue courier_storm_delivery now
-    elif not flag(tailwind_fisherman):
-      queue courier_fisherman_waves now
-    elif not flag(tailwind_gulls):
-      queue courier_race_gulls now
+  next
 > right: Learn to fly it crooked
   mood -tiny
   say: You learn to lean right all the time. Your back complains, and the broom keeps pulling left out of habit.
 
 @event courier_storm_delivery
 title: The Storm Run
-track: broom_courier
-rank: 2
-class: milestone
+thread: tailwind_quest
 tone: tense
-when: flag(tailwind_chain) and spell_level(tailwind) == 0 and since(courier_wind_jar) >= 1 and (flag(tailwind_fisherman) + flag(tailwind_gulls) + flag(tailwind_broom) >= 2 or since(courier_wind_jar) >= 4)
-repeat: 2
-weight: 40
 art: spell_tailwind
 tags: job magic
 scene: A student on a broom flying through a storm over a dark lake, a jar of wind unstoppered at their belt, lightning behind them.

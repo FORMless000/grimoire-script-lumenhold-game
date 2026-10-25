@@ -36,12 +36,12 @@ test('two sources giving one property different values is an error', () => {
 });
 
 test('a @cond expands in place: the compiled condition is the written-out one', () => {
-  const { content: c, errors } = build(['@cond courting\nparams: who\nis: bond(who) != "partner" and bond(who) != "ex"\n', card('a', 'when: rel(lyra) >= 9 and courting(lyra)\n')].join('\n'));
+  const { content: c, errors } = build(['@cond wooing\nparams: who\nis: bond(who) != "partner" and bond(who) != "ex"\n', card('a', 'when: rel(lyra) >= 9 and wooing(lyra)\n')].join('\n'));
   assert.deepEqual(errors, []);
   const by = G.parseExprAst('rel(lyra) >= 9 and (bond(lyra) != "partner" and bond(lyra) != "ex")');
   assert.deepEqual(c.events.a.when.ast, by);
-  assert.equal(c.events.a.when.src, 'rel(lyra) >= 9 and courting(lyra)', 'the source keeps the name');
-  const npc = build(['@cond courting\nparams: who\nis: bond(who) != "ex"\n', card('a', 'actor: lyra\nwhen: courting(npc)\n')].join('\n'));
+  assert.equal(c.events.a.when.src, 'rel(lyra) >= 9 and wooing(lyra)', 'the source keeps the name');
+  const npc = build(['@cond wooing\nparams: who\nis: bond(who) != "ex"\n', card('a', 'actor: lyra\nwhen: wooing(npc)\n')].join('\n'));
   assert.deepEqual(npc.content.events.a.when.ast, G.parseExprAst('bond(npc) != "ex"'));
   assert.ok(build(card('a', 'when: nosuch(lyra)\n')).errors.some((e) => /unknown function or @cond "nosuch"/.test(e.message)));
   assert.ok(build(['@cond c1\nparams: x y\nis: x > y\n', card('a', 'when: c1(1)\n')].join('\n')).errors.some((e) => /takes 2 argument/.test(e.message)));
