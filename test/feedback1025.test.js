@@ -168,3 +168,29 @@ test('6.7 the anniversary comes on the day: a whole number of years together', (
   assert.match(where, /bond_months\(npc\) % 12 == 0/);
   assert.equal(content.events.soc_partner_anniversary.trigger, 'auto');
 });
+
+// ---- 5. The ring: wizards, no report, and now and then someone you know steps in
+test('5 every ring fight reports nothing, and every ring foe is a caster', async () => {
+  const { EVENTS, FOES, POOLS } = await import('../combat/setup/foes.mjs');
+  const ring = Object.keys(EVENTS).filter((k) => /^(midnight_boathouse_ring|ring_)/.test(k));
+  assert.ok(ring.length >= 10);
+  for (const k of ring) assert.equal(EVENTS[k].witnesses, false, k + ' is unwitnessed');
+  const brawlers = new Set(['Sailor']);
+  for (const id of ring.flatMap((k) => [EVENTS[k].play].flat())) if (FOES[id] && FOES[id].loadout) assert.ok(!brawlers.has(FOES[id].loadout), id);
+  assert.ok(!POOLS.ring.includes('Sailor'));
+  assert.ok(ring.some((k) => [EVENTS[k].play].flat().some((id) => FOES[id] && /Underground tough|Hollow adept/.test(FOES[id].loadout))), 'a rogue caster among them');
+});
+
+test('5 a cameo comes only for a fitting character met and around, and losing it ends the night', () => {
+  const eng = fresh();
+  const cameo = () => { eng.s.deck = []; run(eng, [{ t: 'queue', pool: 'ring_cameo', now: true }]); return eng.s.deck.map((d) => d.id); };
+  for (const id of ['corvin', 'lyra', 'bram', 'ilse']) eng.s.npcs[id].met = 0;
+  assert.deepEqual(cameo(), [], 'nobody met: no cameo');
+  eng.s.npcs.corvin.met = 1;
+  eng.isAway = () => false;
+  assert.deepEqual(cameo(), ['ring_cameo_corvin']);
+  for (const e of Object.values(content.events)) if ((e.pools || []).includes('ring_cameo')) assert.ok(['corvin', 'lyra', 'bram', 'ilse'].includes(e.actor), e.id);
+  // The bout after a lost cameo isn't fought.
+  eng.s.flags.ring_down = true;
+  for (const id of ['ring_bout_2', 'ring_bout_3', 'ring_bout_4']) assert.equal(eng.test(content.events[id].when, null), false, id);
+});

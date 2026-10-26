@@ -39,7 +39,10 @@ test('a witnessed forbidden cast is reported without an audience; an unseen one 
   core.applyChoice(s,core.actorToMove(s)===0?'extraction':'guard');core.applyChoice(s,core.actorToMove(s)===0?'extraction':'guard');
   assert.equal(s.reports.length,reports);assert.equal(s.actors[0].resources.alignment,-ALIGNMENT_COST.forbidden,'one forbidden cast: −2 (2026-10-19)');
  }
- assert.throws(()=>createState({observers:true,witnesses:false}),/Invalid combat setup/);
+ // A crowd that won't report (the boathouse ring, 2026-10-25): an audience, and an explicit witnesses:false.
+ const ring=createState(fightOptions({player:{...player},opponent:{loadout:'Duellist',level:50},observers:true,witnesses:false}));
+ core.applyChoice(ring,core.actorToMove(ring)===0?'extraction':'guard');core.applyChoice(ring,core.actorToMove(ring)===0?'extraction':'guard');
+ assert.equal(ring.reports.length,0,'nobody in the ring reports');assert.equal(ring.actors[0].resources.alignment,-ALIGNMENT_COST.forbidden,'the cast still costs alignment');
 });
 test('every played card resolves a context and states its audience',()=>{
  for(const [key,e]of Object.entries(EVENTS))if(e.play)for(const i of [0,1])for(const foe of [e.play].flat()){

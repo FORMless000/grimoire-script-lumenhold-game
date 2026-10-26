@@ -74,7 +74,7 @@ export const POOLS={
  student:['Duellist','Prefect','Brawler','Scholar','Showman','Healer','Illusionist'],   // academy duellists: tournament, Circle, practice
  thornwick:['Illusionist','Showman','Duellist'],                                         // the rival school (its lore: content/world/lore/soft/places.grim)
  champion:['Duellist','Prefect','Scholar','Illusionist','Hollow adept'],                 // visiting champions, expert opposition
- ring:['Brawler','Underground tough','Sailor','Showman']                                 // the boathouse ring's first bout
+ ring:['Duellist','Showman','Illusionist','Brawler','Underground tough']                  // the boathouse ring's first bout: wizards all (2026-10-25)
 };
 
 export const FOES={
@@ -90,17 +90,18 @@ export const FOES={
  thornwick_illusionist:{name:'the Thornwick illusionist',loadout:'Illusionist',context:'public_duel'},
  thornwick_sketcher:{name:'the boy with the sketchbook',loadout:'Illusionist',persona:{shadowstep:12,reflect:6},context:'practice_duel'},
  thornwick_final_year:{name:'the Thornwick final-year',pool:'thornwick',context:'practice_duel'},
- // The boathouse ring
+ // The boathouse ring (feedback 2026-10-25): every opponent a wizard, about one a bout a rogue caster whose kit holds
+ // forbidden spells (Underground tough, Hollow adept). Each bout's three are in its card's text-variant order.
  ring_opener:{name:'your opponent',pool:'ring',context:'ring_bout'},
- ring_rower:{name:'the rower',loadout:'Brawler',persona:{strike:9,guard:6},context:'ring_bout'},
- ring_villager:{name:'the villager',loadout:'Underground tough',persona:{strike:9,extraction:6},context:'ring_bout'},
- ring_scarf:{name:'the student in the scarf',loadout:'Illusionist',context:'ring_bout'},
- ring_duellist:{name:'the club duellist',loadout:'Duellist',context:'ring_bout'},
- ring_farrier:{name:'the farrier’s apprentice',loadout:'Brawler',persona:{strike:12,brace:9},context:'ring_bout'},
- ring_hood:{name:'the hooded fighter',loadout:'Hollow adept',context:'ring_bout'},
- ring_champion:{name:'the ring’s champion',loadout:'Prefect',persona:{brace:9,guard:9},context:'ring_bout'},
- ring_bookmaker:{name:'the bookmaker',loadout:'Underground tough',persona:{extraction:9,torment:9},context:'ring_bout'},
- ring_sailor:{name:'the sailor',loadout:'Sailor',context:'ring_bout'},
+ ring_dropout:{name:'the dropout',loadout:'Duellist',persona:{flame:9,haste:6},context:'ring_bout'},
+ ring_conjurer:{name:'the fairground conjurer',loadout:'Showman',persona:{haste:9,flame:6},context:'ring_bout'},
+ ring_hexer:{name:'the hedge-hexer',loadout:'Underground tough',persona:{torment:9,extraction:6},context:'ring_bout',pronouns:'she'},
+ ring_clerk:{name:'the Conclave clerk',loadout:'Scholar',persona:{foresight:12,seal:9},context:'ring_bout',pronouns:'he'},
+ ring_prefect:{name:'the disgraced prefect',loadout:'Prefect',persona:{brace:9,guard:6,flame:3},context:'ring_bout'},
+ ring_hooded:{name:'the hooded caster',loadout:'Hollow adept',context:'ring_bout'},
+ ring_champion:{name:'the ring’s champion',loadout:'Duellist',persona:{flame:9,ward:6,reflect:6},context:'ring_bout'},
+ ring_bookmaker:{name:'the bookmaker',loadout:'Underground tough',persona:{extraction:9,torment:9},context:'ring_bout',pronouns:'he'},
+ ring_thornwick:{name:'the Thornwick runaway',loadout:'Illusionist',persona:{shadowstep:9,reflect:9},context:'ring_bout',pronouns:'she'},
  // Characters: the main game names them (a character's short name); their skills from namedFoeSkills below.
  lyra:{loadout:'Lyra'},bram:{loadout:'Bram'},kael:{loadout:'Kael'},tamsin:{loadout:'Tamsin'},
  peer:{loadout:'(the peer present)'},   // duel_hall_gallery: whichever peer the card cast as `here`
@@ -175,17 +176,22 @@ export const EVENTS={
  'y3_last_duel/left':{play:'lyra',context:'practice_duel',observers:false,witnesses:true},
  'xchg_farewell/right':{play:'thornwick_sketcher',observers:false,witnesses:true},
  'life_rival_academy/right':{play:'thornwick_best',observers:true,witnesses:true},
- 'midnight_boathouse_ring/left':{play:'ring_opener',observers:true,witnesses:true},
+ 'midnight_boathouse_ring/left':{play:'ring_opener',observers:true,witnesses:false},   // the ring reports nothing (2026-10-25); a forbidden cast still costs alignment
  'bram_duel/right':{play:'bram',context:'public_duel',observers:true,witnesses:true},
  'bram_rematch/right':{play:'bram',context:'public_duel',observers:true,witnesses:true},   // world expansion 1: the rivalry sets
  'lyra_glove_thrown/right':{play:'lyra',context:'public_duel',observers:true,witnesses:true},
  'lyra_date_dawn_duel/left':{play:'lyra',context:'practice_duel',observers:false,witnesses:true},
  'duel_hall_gallery/left':{play:'peer',context:'practice_duel',observers:false,witnesses:true},
- 'ring_on_yourself/left':{play:'ring_opener',observers:true,witnesses:true},
- 'ring_on_yourself/right':{play:'ring_opener',observers:true,witnesses:true},
- 'ring_bout_2/left':{play:['ring_rower','ring_villager','ring_scarf'],observers:true,witnesses:true},
- 'ring_bout_3/left':{play:['ring_duellist','ring_farrier','ring_hood'],observers:true,witnesses:true},
- 'ring_bout_4/left':{play:['ring_champion','ring_bookmaker','ring_sailor'],observers:true,witnesses:true},
+ 'ring_on_yourself/left':{play:'ring_opener',observers:true,witnesses:false},
+ 'ring_on_yourself/right':{play:'ring_opener',observers:true,witnesses:false},
+ 'ring_bout_2/left':{play:['ring_dropout','ring_conjurer','ring_hexer'],observers:true,witnesses:false},
+ 'ring_bout_3/left':{play:['ring_clerk','ring_prefect','ring_hooded'],observers:true,witnesses:false},
+ 'ring_bout_4/left':{play:['ring_champion','ring_bookmaker','ring_thornwick'],observers:true,witnesses:false},
+ // A character steps into the ring out of turn (ring_cameo, 2026-10-25): their own kit, at their own skill (peer).
+ 'ring_cameo_corvin/left':{play:'peer',context:'ring_bout',observers:true,witnesses:false},
+ 'ring_cameo_lyra/left':{play:'peer',context:'ring_bout',observers:true,witnesses:false},
+ 'ring_cameo_bram/left':{play:'peer',context:'ring_bout',observers:true,witnesses:false},
+ 'ring_cameo_ilse/left':{play:'peer',context:'ring_bout',observers:true,witnesses:false},
  'duelling_captain_challenge/left':{play:'visiting_champion',observers:true,witnesses:true},
  'slice_candle_flame/right':{play:'lyra',context:'practice_duel',observers:false,witnesses:true},
  'slice_frost_duel/left':{play:'kael',context:'practice_duel',observers:true,witnesses:true},

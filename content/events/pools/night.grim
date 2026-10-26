@@ -492,12 +492,12 @@ repeat: 4
 weight: 9
 art: sword
 tags: danger money
-scene: A lantern-lit cellar under a boathouse, a chalk ring on wet flagstones, a bookmaker holding up a slate of odds, a crowd in scarves.
+scene: A lantern-lit cellar under a boathouse, a scorched chalk ring on wet flagstones, a bookmaker holding up a slate of odds, a crowd in scarves.
 on_show:
-  unflag ring_last_standing
+  unflag ring_last_standing ring_down
   chance unlikely:
     flag ring_last_standing
-text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yourself?" he says. "Put your money where your fists are."|The bookmaker knows your name and your odds, and they've shortened.|Your name is on the slate tonight before you've said you'll fight.} {flag(ring_last_standing): Across the top of his slate he has chalked LAST STANDING: step in tonight and you fight until you drop or have beaten four.|Win, and the next bout pays more.}
+text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yourself?" he says. "Put your money where your wand is. Cast what you like. Nobody down here tells."|The bookmaker knows your name and your odds, and they've shortened.|Your name is on the slate tonight before you've said you'll fight.} {flag(ring_last_standing): Across the top of his slate he has chalked LAST STANDING: step in tonight and you fight until you drop or have beaten four.|Win, and the next bout pays more.}
 > left: Bet your purse on yourself
   alignment -tiny
   gold -medium
@@ -507,13 +507,14 @@ text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yo
       gold +medium
       renown +tiny
       health -small
+      queue any in ring_cameo now chance unlikely
       queue ring_bout_2 now
-      say: {You win, bloodied and grinning, and the bookmaker pays out through his teeth.|The crowd roars. You collect your bet and your opponent's grudging handshake.|Your name was on the slate before you agreed, and the crowd is bigger for it. You win, and the bookmaker pays you in front of all of them.}
+      say: {You win, singed and grinning, and the bookmaker pays out through his teeth.|The crowd roars. You collect your bet and your opponent's grudging handshake.|Your name was on the slate before you agreed, and the crowd is bigger for it. You win, and the bookmaker pays you in front of all of them.}
     lose:
       unflag ring_last_standing
       health -medium
       queue night_suspicion chance even
-      say: {You go down in the third exchange, and your purse goes with you. On the way home a light is on in the prefects' corridor.|A bad loss: the bet, a tooth's worth of pride and most of your skin.|The bigger crowd came to see you lose, it turns out. You oblige, and your purse goes with your pride.}
+      say: {You go down in the third exchange, and your purse goes with you. On the way home a light is on in the prefects' corridor.|A bad loss: the bet, your pride and both eyebrows.|The bigger crowd came to see you lose, it turns out. You oblige, and your purse goes with your pride.}
   if met(lyra):
     queue lyra_ring_word chance unlikely
 > right: Fight for the purse only
@@ -521,6 +522,7 @@ text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yo
     win:
       gold +small
       health -small
+      queue any in ring_cameo now chance unlikely
       queue ring_bout_2 now
       say: {A clean win for a small purse. The money-holder asks if you'll go again.|You win and bow to your opponent. The bookmaker is already chalking your name for the next bout.|You win the purse in front of the biggest crowd yet. The bookmaker sighs at the money he didn't make on you.}
     lose:
@@ -531,7 +533,7 @@ text: {The ring under the boathouse has a bookmaker now, with a slate. "Fancy yo
   hint: Watch, and bet if you like.
   unflag ring_last_standing
   queue ring_side_bets now
-  say: {The bookmaker shrugs and rubs your name off the slate.|"Your loss," says the bookmaker. "Or someone else's gain. Care to back one?"|You leave your name on the slate and your fists in your pockets.}
+  say: {The bookmaker shrugs and rubs your name off the slate.|"Your loss," says the bookmaker. "Or someone else's gain. Care to back one?"|You leave your name on the slate and your wand in your pocket.}
 
 @event ring_bout_2
 title: The Second Bout
@@ -540,26 +542,27 @@ class: routine
 tone: tense
 art: sword
 tags: danger money
-scene: A chalk ring under a boathouse, a fresh opponent rolling their shoulders, a crowd pressing in with coins in their fists.
-text: The money-holder points at the chalk again. {~A broad second-year from the rowing crew steps in, cracking her knuckles.|A wiry villager with a boxer's nose steps in, and the crowd knows him.|A quiet student in a scarf steps in and doesn't take the scarf off.} {flag(ring_last_standing): Last standing: there's no stepping out now.|The purse has doubled. Or you can take what you've won and go.}
+scene: A chalk ring under a boathouse, a fresh opponent twirling a wand, a crowd pressing in with coins in their fists.
+when: not flag(ring_down)
+text: The money-holder points at the chalk again. {~A lanky girl steps in who quit the academy last spring. She kept the wand, and the duelling stance.|A fairground conjurer steps in, still in spangles, rolling a spark across his knuckles. The crowd knows him.|A hedge-hexer from past the village steps in, a cord of knotted charms at her wrist. Some of those knots aren't legal anywhere.} {flag(ring_last_standing): Last standing: there's no stepping out now.|The purse has doubled. Or you can take what you've won and go.}
 > left: Fight on
   hint: A harder bout, a bigger purse.
   challenge combat adept:
     win:
       gold +large
       queue ring_bout_3 now
-      say: {~The rower is strong and slow. You make her chase you until she's tired, and the crowd loves it.|You take two of his punches to give one, and the one is enough. The purse is heavier.|The scarf comes off in the second exchange, and so does your opponent's footing.}
+      say: {~She duels by the book she walked out on. You've read the later chapters. Her wand ends up in the crowd, and the purse ends up heavier.|The conjurer's sparks are all show. You aim at the hand that isn't waving, and he sits down in a shower of spangles.|You cut her charm-cord with your first spell. Whatever the knots were for, it doesn't happen, and she spits and yields.}
     lose:
       unflag ring_last_standing
       health -medium
       mood -small
       queue night_suspicion chance even
-      say: {~The rower puts you on the flagstones and helps you up, which is worse.|He knows every trick you know, and three more. You limp up the steps with the night's winnings and a split lip.|The quiet one is quick. You never see the move that ends it.}
+      say: {~She was the best in her year before she left, and she still is. She helps you up off the flagstones, which is worse.|He palms a spark, and while you watch it, the other hand ends the bout. You limp up the steps with the night's winnings and singed sleeves.|One knot comes undone, and something cold walks through your head. You come round outside, with your purse, and a headache that lasts a day.}
 > right: Take the purse and go
   hint: Keep what you've won.
   when: not flag(ring_last_standing)
   mood +tiny
-  say: {~You bow out with the purse in your fist. The rower shrugs and finds someone else.|You leave him to the next fool, and count your winnings on the walk home.|The scarf nods to you as you go, as if to say: some other night.}
+  say: {~You bow out with the purse in your fist. The dropout shrugs and finds someone else.|You leave the conjurer to the next fool, and count your winnings on the walk home.|The hexer laughs as you go, and ties another knot.}
 
 @event ring_bout_3
 title: The Third Bout
@@ -568,8 +571,9 @@ class: routine
 tone: tense
 art: sword
 tags: danger money
-scene: A packed boathouse cellar roaring at a chalk ring, a hulking fighter with taped hands stepping in, lantern light swinging.
-text: Two down. The cellar is packed now and the betting is loud. {~The house sends in a champion: a fourth-year duellist with a name on the club's board.|The house sends in a farrier's apprentice who lifts horses for a living.|The house sends in someone in a hood who won't give a name.} {flag(ring_last_standing): Last standing: the chalk is the only way out.|One more win and the purse is the biggest yet. Or walk away a winner.}
+scene: A packed boathouse cellar roaring at a chalk ring, a wizard in a long coat stepping in, lantern light swinging.
+when: not flag(ring_down)
+text: Two down. The cellar is packed now and the betting is loud. {~The house sends in a Conclave clerk in ink-stained cuffs, moonlighting for the purse. He reads your stance like a form.|The house sends in a prefect who lost the sash last year, and has been angry about it ever since.|The house sends in someone in a hood whose wand hand is grey to the wrist. The steps go quiet.} {flag(ring_last_standing): Last standing: the chalk is the only way out.|One more win and the purse is the biggest yet. Or walk away a winner.}
 > left: Fight on
   hint: Harder still, and worth it.
   challenge combat adept+:
@@ -578,17 +582,17 @@ text: Two down. The cellar is packed now and the betting is loud. {~The house se
       gold +small
       renown +small
       queue ring_bout_4 now
-      say: {~You beat a name off the duelling board, and the cellar shakes with it.|You use the farrier's weight against him and he goes down like a felled tree. The purse is fat.|The hood comes off as they fall: nobody you know. The crowd chants your name instead.}
+      say: {~He foresees every spell you planned. So you stop planning. The clerk goes down muttering about irregular procedure, and the cellar shakes.|The ex-prefect fights like a rulebook with a grudge. You break a rule he didn't know, and the purse is fat.|The hood falls back as they go down: nobody you know, and a face older than the hands. The crowd chants your name to drown the quiet.}
     lose:
       unflag ring_last_standing
       health -large
       queue night_suspicion chance even
-      say: {~The duellist dismantles you, politely. You wake on the steps with the purse still in your pocket and a ringing ear.|The farrier's apprentice lifts you like a foal and sets you down hard. Your ribs remember it all week.|The hooded fighter is something else. You go down and stay down, and someone carries you to the door.}
+      say: {~The clerk dismantles you, politely, by the numbers. You wake on the steps with the purse still in your pocket and a ringing ear.|The ex-prefect's ward doesn't move, and neither, after a while, do you. Your ribs remember it all week.|The hooded caster drinks something out of you that isn't blood. You go down and stay down, and someone carries you to the door.}
 > right: Take the purse and go
   hint: Leave a winner.
   when: not flag(ring_last_standing)
   mood +small
-  say: {~You leave the duellist waiting in the chalk. The crowd boos, and your purse doesn't care.|Nobody calls you a coward to your face; you're holding too much money.|You bow to the hood and climb the steps. Some fights are better not known.}
+  say: {~You leave the clerk waiting in the chalk with his forms. The crowd boos, and your purse doesn't care.|The ex-prefect calls you a coward. Nobody else does; you're holding too much money.|You bow to the hood and climb the steps. Some fights are better not known.}
 
 @event ring_bout_4
 title: The Last Bout
@@ -597,8 +601,9 @@ class: routine
 tone: tense
 art: trophy
 tags: danger money
-scene: A boathouse cellar gone silent around a chalk ring, the night's champion stepping in, every lantern turned toward the fighters.
-text: Three down, and the cellar has gone quiet. {~The ring's own champion steps in: a silent graduate who has not lost in a year.|The bookmaker himself takes off his coat. Nobody knew he could fight.|A tall stranger in sailor's oilskins steps in, and the old hands start betting against you.} {flag(ring_last_standing): Last standing: win this and the night is yours.|Win, and the cellar will talk about you for a term. Or go while you can still walk.}
+scene: A boathouse cellar gone silent around a chalk ring, the night's champion stepping in, wand raised, every lantern turned toward the fighters.
+when: not flag(ring_down)
+text: Three down, and the cellar has gone quiet. {~The ring's own champion steps in: a duellist the academy expelled, who hasn't lost down here in a year.|The bookmaker himself takes off his coat. His wand was in it all along, and the old hands step back from the chalk.|A girl in a borrowed cloak steps in, a runaway from Thornwick. Her shadow moves a moment after she does, and the old hands start betting against you.} {flag(ring_last_standing): Last standing: win this and the night is yours.|Win, and the cellar will talk about you for a term. Or go while you can still walk.}
 > left: Fight the last bout
   hint: Expert opposition; the night's whole purse.
   challenge combat expert-:
@@ -610,17 +615,17 @@ text: Three down, and the cellar has gone quiet. {~The ring's own champion steps
         gold +large
         renown +small
       unflag ring_last_standing
-      say: {~The champion falls, and the cellar stamps until dust comes down from the boathouse floor. You go home with a purse you can barely lift.|The bookmaker goes down laughing and pays you from his own coat. Your name will be on the slate for a year.|The stranger yields, grinning, and buys you a drink you can't hold. You walk home sore and rich and famous in one cellar.}
+      say: {~The champion's ward breaks at last, and the cellar stamps until dust comes down from the boathouse floor. You go home with a purse you can barely lift.|He reads your next spell out of your head every time, so you cast the one you hadn't thought of. He goes down laughing and pays you from his own coat.|You hit the shadow, not the girl, and she yields, grinning, and buys you a drink you can't hold. You walk home sore and rich and famous in one cellar.}
     lose:
       unflag ring_last_standing
       health -large
       queue night_suspicion chance likely
-      say: {~The champion ends it in one move, and you understand why nobody has beaten them. You wake on the steps with your night's winnings and a long walk.|The bookmaker fights dirty and wins clean. You crawl up the steps holding your purse and your ribs.|The stranger fights like the sea, and you go under. The crowd is so loud the prefects must hear it.}
+      say: {~The champion ends it in one spell, and you understand why the academy wanted them gone. You wake on the steps with your night's winnings and a long walk.|The bookmaker casts things the library keeps chained, and wins clean. You crawl up the steps holding your purse and your ribs.|You can't tell the girl from her shadow, and the wrong one hits you. The crowd is so loud the prefects must hear it.}
 > right: Take the purse and go
   hint: Three wins is a fine night.
   when: not flag(ring_last_standing)
   mood +small
-  say: {~You bow out with three wins and a heavy purse. The champion nods: next time.|You don't fight the man who sets the odds. You take your winnings before he can change his mind.|You look at the stranger's hands and decide three is plenty.}
+  say: {~You bow out with three wins and a heavy purse. The champion nods: next time.|You don't fight the man who sets the odds, and knows your thoughts. You take your winnings before he can change his mind.|You look at the runaway's shadow and decide three is plenty.}
 
 @event ring_side_bets
 title: Side Bets
@@ -631,16 +636,16 @@ tone: tense
 art: dice
 tags: money danger
 scene: Students on the steps of a boathouse cellar passing coins to a bookmaker while two fighters circle in a chalk ring below.
-text: {You find a place on the cellar steps. The bookmaker works his way along them, slate in hand.|From the steps you can see the fighters' feet, which tell you more than their faces. The bookmaker is coming round.|You know the regulars on the steps now, and who bets with their heart. The bookmaker holds out his slate.}
+text: {You find a place on the cellar steps. The bookmaker works his way along them, slate in hand.|From the steps you can see the fighters' wand hands, which tell you more than their faces. The bookmaker is coming round.|You know the regulars on the steps now, and who bets with their heart. The bookmaker holds out his slate.}
 > left: Back the favourite
   hint: A small stake on the likely winner.
   gold -small
   challenge research using guile journeyman luck:
     win:
       gold +medium
-      say: {Your fighter wins. You collect quietly and leave before anyone remembers your face.|You read the footwork right. The bookmaker pays you as if it hurt.|The favourite wins, as favourites do. You pocket a small, sensible profit.}
+      say: {Your fighter wins. You collect quietly and leave before anyone remembers your face.|You read the wand hands right. The bookmaker pays you as if it hurt.|The favourite wins, as favourites do. You pocket a small, sensible profit.}
     lose:
-      say: {Your fighter goes down in the first exchange. So does your stake.|You picked the footwork, not the fighter. The bookmaker smiles.|The favourite slips on the wet stone, and your crowns slip with them.}
+      say: {Your fighter goes down in the first exchange. So does your stake.|You picked the wand hand, not the wizard. The bookmaker smiles.|The favourite slips on the wet stone, and your crowns slip with them.}
 > under: Back the underdog
   hint: A bigger stake against the odds.
   gold -medium
@@ -648,11 +653,139 @@ text: {You find a place on the cellar steps. The bookmaker works his way along t
     win:
       gold +large
       gold +medium
-      say: {The underdog wins, and you're the only one on the steps who backed them. The bookmaker counts it out very slowly.|Your long shot lands one punch, and it's enough. The steps turn round to look at you.|You saw what nobody else did, the limp in the favourite's step. You walk home heavy with silver.}
+      say: {The underdog wins, and you're the only one on the steps who backed them. The bookmaker counts it out very slowly.|Your long shot lands one spell, and it's enough. The steps turn round to look at you.|You saw what nobody else did, the limp in the favourite's step. You walk home heavy with silver.}
     lose:
       say: {The underdog is an underdog for a reason. Your stake is gone in a minute.|A brave fight, a long fall, and your crowns go with it.|You backed your heart. Your purse pays for it.}
 > home: Go home
   say: {You watch one bout and go home with your purse unopened.|You leave before the bookmaker reaches you.|You climb the steps into the cold and leave the ring to its noise.}
+
+# A character who would fight in an illegal ring steps into the chalk out of turn (feedback 2026-10-25): drawn by chance
+# after a won first or second bout (`queue any in ring_cameo now chance unlikely`), before the next one, never the last.
+# Only those whose cast fits a cellar ring have a card here: reckless Corvin, proud Lyra, Bram out of his sash, fierce
+# Ilse. Losing (or walking out) ends the night: the next bout's `when` reads ring_down.
+@pool ring_cameo
+desc: Someone you know steps into the boathouse ring out of turn, between bouts.
+trigger: queued
+class: routine
+tone: tense
+repeat: 12
+art: duel
+tags: danger money
+
+@event ring_cameo_corvin
+title: A Familiar Grin
+pool: ring_cameo
+actor: corvin
+when: met(corvin) and around(corvin)
+scene: A grinning young man vaulting a rope into a chalk ring in a lantern-lit cellar, sleeves rolled, a wand spinning in his fingers.
+text: Before the next bout someone vaults the rope into the chalk: Corvin, sleeves rolled, wand spinning. He sees you and his grin slips. "Saint. Of course it's you." Then, low: "I owe three people money, and one of them has started describing what happens next. The house pays double for a grudge match. So hate me. Loudly."
+> left: Fight him for real
+  hint: He fights dirty, and fast.
+  challenge combat vs corvin.guile:
+    win:
+      gold +medium
+      renown +tiny
+      rel corvin -tiny
+      say: You knock his wand into the crowd on the fifth exchange. "Rude," he says from the flagstones, and laughs, but his eyes go to the bookmaker's slate and stay there a moment too long.
+    lose:
+      flag ring_down
+      unflag ring_last_standing
+      health -small
+      rel corvin +tiny
+      say: He was never where your spell landed. He hauls you up by the collar, collects his purse, and presses a few coins of it into your hand. "Your cut, for the hating. You were very convincing."
+> right: Put on a show, and let him win
+  hint: Your night ends; his debt doesn't.
+  when: not flag(ring_last_standing)
+  flag ring_down
+  alignment -tiny
+  rel corvin +medium
+  say: You shout, he shouts, sparks fly everywhere but at each other, and you go down with a groan the back row will talk about all week. The bettors who backed you never know. Corvin does. "I owe you," he says on the steps. "Add it to the list."
+
+@event ring_cameo_lyra
+title: Someone Worth Losing To
+pool: ring_cameo
+actor: lyra
+when: met(lyra) and around(lyra)
+scene: A proud red-haired student in a chalk ring, gloves off, hair tied back, a ribbon of flame curling from her wand, a cellar crowd roaring.
+text: The crowd parts. Lyra Vaneshade is in the chalk, gloves off, hair tied back. "So it's true." Her voice carries over the whole cellar. "You're throwing your talent away down here, in front of drunks. Fine. Then you'll lose it to someone worth losing to." Somebody is already shouting odds on House Vaneshade.
+> left: Fight her
+  hint: In front of everyone.
+  challenge combat vs lyra.arcana:
+    win:
+      gold +medium
+      renown +small
+      rel lyra +small
+      say: Her flame breaks on your last spell and she goes down on one knee in the chalk, in front of all of them. She stands, white to the lips. "Again," she says. "In the hall. Where it counts." The crowd will be talking about it for a term.
+    lose:
+      flag ring_down
+      unflag ring_last_standing
+      health -small
+      rel lyra +tiny
+      say: She takes you apart in four exchanges, beautifully. Then she walks you up the steps herself, holding your elbow. "Now you know," she says, "where you belong. It isn't here."
+> right: Walk out with her
+  hint: The crowd won't like it.
+  when: not flag(ring_last_standing)
+  flag ring_down
+  renown -tiny
+  rel lyra +medium
+  say: You step out of the chalk and offer her your arm. The cellar boos you both up the steps. Outside, in the cold, Lyra lets go of your arm and doesn't say thank you. She does walk you all the way back.
+
+@event ring_cameo_bram
+title: Out of Uniform
+pool: ring_cameo
+actor: bram
+when: met(bram) and around(bram)
+scene: A broad young man pulling back a hood in a chalk ring, no prefect's sash, wand gripped tight, staring at someone he didn't expect.
+text: The next challenger steps in hooded, and drops the hood: Bram Hollis, without his red sash. He sees you and goes the colour of it. "You didn't see me," he says, fast and low. "I didn't see you. Nobody down here writes anything down. That's the point." Then, loud, for the crowd: "Well? Get in the chalk!"
+> left: Fight him
+  hint: He hits like a wall.
+  challenge combat vs bram.vigor:
+    win:
+      gold +medium
+      renown +tiny
+      rel bram +small
+      say: His ward finally gives, and he sits down hard in the chalk. Then something odd happens: he laughs, a real one, out loud. "Nobody's ever beaten me where my father couldn't hear about it," he says. He offers you his hand.
+    lose:
+      flag ring_down
+      unflag ring_last_standing
+      health -small
+      rel bram +tiny
+      say: He walks through your spells like rain and puts you on the flagstones. On the steps he stops. "Not a word," he says. "And not a demerit either. We were never here."
+> right: Let him have the bout
+  hint: Leave him his secret, and the purse.
+  when: not flag(ring_last_standing)
+  flag ring_down
+  rel bram +medium
+  say: You step back out of the chalk and bow to him. He stares at you as if it were a trick. On the stairs to the dormitory next morning, your name isn't in his ledger, and he looks away first.
+
+@event ring_cameo_ilse
+title: Frost in the Chalk
+pool: ring_cameo
+actor: ilse
+when: met(ilse) and around(ilse)
+scene: A girl in white furs in a chalk ring, frost creeping from her boots across the flagstones, lantern flames shrinking, a crowd stepping back.
+text: The cellar goes cold. The lanterns shrink. A girl in white furs steps into the chalk and frost creeps out from her boots across the flagstones: Ilse Dumont. "They said the academy's best come down here," she says. She looks you over. "They lied. But you'll do."
+> left: Fight her
+  hint: She was raised to fight.
+  challenge combat vs ilse.arcana:
+    win:
+      gold +medium
+      renown +small
+      rel ilse +small
+      say: She slips on her own ice and your spell catches her before she's up. She stays down a moment, then laughs, a short Northern sound. "Again," she says. "Not tonight. But again." She takes her purse and leaves the cellar colder.
+    lose:
+      flag ring_down
+      unflag ring_last_standing
+      health -small
+      rel ilse +tiny
+      say: Rime closes over your wand hand and you can't feel it to cast. She stands over you, unimpressed. "You fight like someone taught you," she says. "Find someone who didn't." Your fingers ache till morning.
+> right: Ask her why she's down here
+  hint: Talk, and give up the night's next bout.
+  when: not flag(ring_last_standing)
+  flag ring_down
+  rel ilse +small
+  lore +tiny
+  say: She doesn't answer. Instead she tells you your stance is wrong, then fixes it, roughly, with her boot. "Southerners," she says, as if that explained everything. The crowd boos you both, and she doesn't seem to hear.
 
 @event lyra_ring_word
 title: Lyra Has Heard
@@ -664,7 +797,7 @@ actor: lyra
 art: sword
 tags: social
 scene: A proud red-haired student blocking a corridor with folded arms, a duelling glove tucked in her belt.
-text: Lyra blocks the corridor. "The ring under the boathouse." She says it as if it were a smell. "Brawling for coins in a cellar, in front of drunks. You can actually duel. I've seen you. This is beneath you." A pause. "I'd hate to lose to someone who does it."
+text: Lyra blocks the corridor. "The ring under the boathouse." She says it as if it were a smell. "Duelling for coins in a cellar, in front of drunks, with spells nobody will report. You can actually duel. I've seen you. This is beneath you." A pause. "I'd hate to lose to someone who does it."
 > left: "Then spar with me instead."
   rel lyra +small
   health -tiny

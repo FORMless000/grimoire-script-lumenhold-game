@@ -39,12 +39,13 @@ export function expandAI(ai,loadout){
 export function createState(options={}){
  const config={mode:'combat',playerLoadout:'Duellist',opponentLoadout:options.playerLoadout??'Duellist',playerYear:1,opponentYear:options.playerYear??1,playerIlseTaken:false,opponentIlseTaken:options.playerIlseTaken??false,playerLevel:50,opponentLevel:options.playerLevel??50,
   spellAccess:'kit',resourceBudget:'standard',manaCostScale:1,combatScale:1,damageMultiplier:1,encounterSeed:options.opponentLevel??options.playerLevel??50,firstLeader:1,healthModel:'direct',context:'practice_duel',observers:false,...options};
- // witnesses (optional): someone who would report a forbidden cast; the core defaults it to observers (an audience always is one).
+ // witnesses (optional): someone who would report a forbidden cast; the core defaults it to observers (an audience usually is
+ // one). An explicit false beside observers is a crowd that won't report (the boathouse ring, 2026-10-25).
  if(!Number.isInteger(config.encounterSeed)||config.encounterSeed<0||config.encounterSeed>0xffffffff)throw Error('Encounter seed must be an integer from 0 to 4294967295');
  const enemy=config.opponentLoadout==='random'?Object.keys(LOADOUTS)[Math.floor(levelRng(config.encounterSeed)()*Object.keys(LOADOUTS).length)]:config.opponentLoadout;
  config.resolvedOpponentLoadout=enemy;
  if(Array.isArray(config.ai))config.ai=config.ai.map((a,side)=>expandAI(a,side?enemy:config.playerLoadout));
- if(config.mode!=='combat'||!['direct','offset'].includes(config.healthModel)||!['standard','depleted'].includes(config.resourceBudget)||![0,1].includes(config.firstLeader)||!CONTEXTS[config.context]||typeof config.observers!=='boolean'||config.witnesses!==undefined&&(typeof config.witnesses!=='boolean'||config.observers&&!config.witnesses))throw Error('Invalid combat setup');
+ if(config.mode!=='combat'||!['direct','offset'].includes(config.healthModel)||!['standard','depleted'].includes(config.resourceBudget)||![0,1].includes(config.firstLeader)||!CONTEXTS[config.context]||typeof config.observers!=='boolean'||config.witnesses!==undefined&&typeof config.witnesses!=='boolean')throw Error('Invalid combat setup');
  if(!Number.isFinite(config.manaCostScale)||config.manaCostScale<=0||!Number.isFinite(config.combatScale)||config.combatScale<=0||!Number.isFinite(config.damageMultiplier)||config.damageMultiplier<=0)throw Error('Positive scales required');
  const rebates={...CONTEXTS[config.context],...options.rebates,crowns:0,alignment:0};
  for(const n of Object.values(rebates))if(!Number.isFinite(n)||n<0||n>1)throw Error('Rebates must be in [0,1]');

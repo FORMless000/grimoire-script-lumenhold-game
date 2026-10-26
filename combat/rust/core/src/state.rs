@@ -245,7 +245,8 @@ impl Encounter {
             sides,
             assists,
             observers: config.get("observers").and_then(|v| v.as_bool()).unwrap_or(false),
-            witnesses: config.get("witnesses").and_then(|v| v.as_bool()).unwrap_or(false) || config.get("observers").and_then(|v| v.as_bool()).unwrap_or(false),
+            // Defaults to observers (an audience usually reports); an explicit false is a crowd that won't (the ring, 2026-10-25).
+            witnesses: config.get("witnesses").and_then(|v| v.as_bool()).unwrap_or_else(|| config.get("observers").and_then(|v| v.as_bool()).unwrap_or(false)),
             combat_scale: f("combatScale", 1.0),
             damage_multiplier: f("damageMultiplier", 1.0),
             mana_cost_scale,

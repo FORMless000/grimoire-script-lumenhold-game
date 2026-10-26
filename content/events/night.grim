@@ -145,30 +145,33 @@ tone: tense
 # The ring (feedback 2026-10-16): one of the two entry cards opens every boathouse night (`@place always:`). A win
 # leads to the next bout (ring_bout_2 … 4), each harder and better paid. Some nights the house runs last-standing
 # rules, rolled when the card is drawn and said before you choose: once you step in, you fight until you lose or
-# have won four. Declining sends you to the side bets.
+# have won four. Declining sends you to the side bets. Every opponent is a wizard (feedback 2026-10-25); nobody down
+# here reports a forbidden cast (the fights' witnesses: false), but its alignment cost stands, and the text says both.
+# After a won bout a character who'd fight here may step in out of turn (ring_cameo, content/events/pools/night.grim).
 repeat: 2
 weight: 10
 art: sword
 tags: danger money
-scene: A cellar under a boathouse, lanterns hung from the beams, students in a ring around two duellists, coins changing hands.
+scene: A cellar under a boathouse, lanterns hung from the beams, a crowd around two wizards in a chalk ring, sparks in the air, coins changing hands.
 on_show:
-  unflag ring_last_standing
+  unflag ring_last_standing ring_down
   chance unlikely:
     flag ring_last_standing
-text: {Under the boathouse, by lantern light, someone has chalked a ring on the flagstones. Purses go to whoever is still standing.|The chalk ring under the boathouse again, freshly drawn. The student holding the money knows your face.|The ring is busier than ever, and the money-holder nods to you like a regular.} {flag(ring_last_standing): Tonight a slate by the steps reads LAST STANDING: whoever steps in fights until they drop or have beaten four.|"Next," says the student holding the money, looking at you. Win, and you can fight on for a bigger purse.}
+text: {Under the boathouse someone has chalked a ring on the flagstones. Inside it, wands out, anything goes, and nobody here reports a forbidden spell. What it does to you is your own affair.|The chalk ring under the boathouse again, scorched from last time. The student holding the money knows your face.|The ring is busier than ever, the air sharp with spent spells, and the money-holder nods to you like a regular.} {flag(ring_last_standing): Tonight a slate by the steps reads LAST STANDING: whoever steps in fights until they drop or have beaten four.|"Next," says the student holding the money, looking at you. Win, and you can fight on for a bigger purse.}
 > left: Step into the ring
-  hint: Four bouts at most, each harder and richer.
+  hint: Four bouts at most, each harder and richer. Nothing cast here is reported.
   challenge combat adept-:
     win:
       gold +medium
       renown +tiny
+      queue any in ring_cameo now chance unlikely
       queue ring_bout_2 now
-      say: {You win the first bout and the ring's respect, which is worth less and lasts longer.|Your opponent yields. Somebody whistles, and the money-holder looks at you: another?|You put your opponent down in the first exchange, and the crowd starts calling your name.}
+      say: {Your opponent's wand skitters out of the chalk, and the ring's respect comes your way, which is worth less and lasts longer.|Your opponent yields, smoking at the cuffs. Somebody whistles, and the money-holder looks at you: another?|You put your opponent down in the first exchange, and the crowd starts calling your name.}
     lose:
       unflag ring_last_standing
       health -medium
       queue night_suspicion chance even
-      say: {You lose, and limp home past a window where a light is still burning.|A bruising loss, and a lantern somewhere on the path home. Maybe it saw you; maybe not.|You go down to a first-year with long arms. The crowd enjoys it more than you do.}
+      say: {You lose, and limp home singed past a window where a light is still burning.|A bruising loss, and a lantern somewhere on the path home. Maybe it saw you; maybe not.|You go down to a first-year with a very fast wand. The crowd enjoys it more than you do.}
 > right: Not tonight
   hint: Watch, and bet if you like.
   unflag ring_last_standing

@@ -166,7 +166,7 @@ Personas alone are cheap: a fighter with habits loses only a few points.
 | `student` | Duellist, Prefect, Brawler, Scholar, Showman, Healer, Illusionist | tournament rounds, club sparring |
 | `thornwick` | Illusionist, Showman, Duellist | the rival school's duellists |
 | `champion` | Duellist, Prefect, Scholar, Illusionist, Hollow adept | visiting champions (expert rungs) |
-| `ring` | Brawler, Underground tough, Sailor, Showman | the boathouse ring's opener |
+| `ring` | Duellist, Showman, Illusionist, Brawler, Underground tough | the boathouse ring's opener (wizards all, 2026-10-25) |
 
 - **Picking from a pool:** the foe's class is drawn by the encounter seed.
 - **Named archetypes** fix the class and override the persona: the rower, the farrier's apprentice, the bookmaker (`FOES`).
@@ -268,9 +268,9 @@ From `node tools/event-levels.mjs`:
 | duel_hall_gallery/left | vs here.arcana | high | any | 12–62 | **12–59** | 19–63 / 33–80 | (the peer present) |
 | ring_on_yourself/left | adept- | high | any | 12–62 | **24–49** | 19–63 / 33–80 | your opponent |
 | ring_on_yourself/right | adept- | high | any | 12–62 | **24–49** | 19–63 / 33–80 | your opponent |
-| ring_bout_2/left | adept | high | any | 12–62 | **26–51** | 19–63 / 33–80 | the rower / the villager / the student in the scarf |
-| ring_bout_3/left | adept+ | high | any | 12–62 | **28–53** | 19–63 / 33–80 | the club duellist / the farrier’s apprentice / the hooded fighter |
-| ring_bout_4/left | expert- | high | any | 12–62 | **30–55** | 19–63 / 33–80 | the ring’s champion / the bookmaker / the sailor |
+| ring_bout_2/left | adept | high | any | 12–62 | **26–51** | 19–63 / 33–80 | the dropout / the fairground conjurer / the hedge-hexer |
+| ring_bout_3/left | adept+ | high | any | 12–62 | **28–53** | 19–63 / 33–80 | the Conclave clerk / the disgraced prefect / the hooded caster |
+| ring_bout_4/left | expert- | high | any | 12–62 | **30–55** | 19–63 / 33–80 | the ring’s champion / the bookmaker / the Thornwick runaway |
 | duelling_captain_challenge/left | expert drift mid | mid | any | 12–62 | **40–55** | 19–63 / 33–80 | the visiting champion |
 | slice_candle_flame/right | vs lyra.arcana | low | 4–48 | 16–62 | **33–57** | 20–63 / 34–80 | Lyra |
 | slice_frost_duel/left | vs kael.arcana +1 | low | 8–48 | 21–62 | **40–60** | 23–63 / 37–80 | Kael |
@@ -420,9 +420,9 @@ Card edits apply when the minigame plays the card.
 | 28 | newt_high_table / health | combat adept- wild | **convert** | — | — | — | `challenge feat adept- wild`: the bone-dice knife game is steadiness, not a fight. The hint "Win or bleed" stays. |
 | 29 | ring_on_yourself / left | combat adept- | play | `ring_opener` | ring | audience | Drop health. |
 | 30 | ring_on_yourself / right | combat adept- | play | `ring_opener` | ring | audience | Drop health. |
-| 31 | ring_bout_2 / left | combat adept | play | by text variant: `ring_rower` (Brawler), `ring_villager` (Underground tough), `ring_scarf` (Illusionist) | ring | audience | Drop health. Needs the variant index (§7). |
-| 32 | ring_bout_3 / left | combat adept+ | play | `ring_duellist`, `ring_farrier` (Brawler, Strike / Brace), `ring_hood` (Hollow adept) | ring | audience | Drop health. |
-| 33 | ring_bout_4 / left | combat expert- | play | `ring_champion` (Prefect, Brace / Guard), `ring_bookmaker` (Underground tough, dirty), `ring_sailor` (Sailor) | ring | audience | Drop health; the ring's last-standing bonus stays. |
+| 31 | ring_bout_2 / left | combat adept | play | by text variant: `ring_dropout` (Duellist), `ring_conjurer` (Showman), `ring_hexer` (Underground tough, forbidden kit) | ring | audience, unwitnessed (2026-10-25) | Drop health. Needs the variant index (§7). |
+| 32 | ring_bout_3 / left | combat adept+ | play | `ring_clerk` (Scholar, Foresight / Seal), `ring_prefect` (Prefect, Brace / Guard), `ring_hooded` (Hollow adept) | ring | audience, unwitnessed | Drop health. |
+| 33 | ring_bout_4 / left | combat expert- | play | `ring_champion` (Duellist, Flame / Ward), `ring_bookmaker` (Underground tough, dirty), `ring_thornwick` (Illusionist, Shadowstep / Reflect) | ring | audience, unwitnessed | Drop health; the ring's last-standing bonus stays. |
 | 34 | gig_newt_brawl / left | combat apprentice+ | **convert** | — | — | — | `challenge feat apprentice+`: defusing a fight between two crews while on duty. Text unchanged. |
 | 35 | duelling_captain_challenge / left | combat expert drift mid | play | `visiting_champion` (champion pool) | public | audience | Drop health (both outcomes). |
 | 36 | slice_candle_flame / right | duel vs lyra.arcana | play | Lyra, named | practice | witnesses | Drop health (partial and lose). Partial = draw or loss on points. |
