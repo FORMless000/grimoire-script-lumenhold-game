@@ -31,32 +31,124 @@ opt.ok.say.1 [a8c0d4] = {gpa >= 3.0: 出去的路上，几乎不认识的人都�
 @event last_career
 # en: What Comes Next
 title [4fbe37] = 接下来
-# en: {flag(career_accepted): A letter about your start date. {flag(career_conclave): The Conclave expects you at the Seven Towers in autumn, in grey.|{flag(career_library): The Royal Library has a desk for you, and a key to a room nobody else may enter.|{flag(career_guild): The Guild of Alchemists sends a list of the protective clothing you must buy yourself.|{flag(career_unseen): The Office of Unseen Affairs sends no letter at all, which is how you know you're expected.|{flag(career_circus): The circus wagons will pass the village in a week, and they'll slow down, but they won't stop.|The faculty barge leaves in autumn, and you'll be on it, on the wrong side of the lectern.}}}}}|{flag(career_offered): The offer is still on your desk, unsigned. Today is the last day it stands.|No letter, no start date. Everyone else seems to know where they're going, or says so.}}
-text [3e8f77] = {flag(career_accepted): 一封关于入职日期的信。{flag(career_conclave): 七塔议会等你秋天穿着灰袍去七塔报到。|{flag(career_library): 皇家图书馆给你留了一张桌子，还有一把通往一间别人不得进入的房间的钥匙。|{flag(career_guild): 炼金师公会寄来一张清单，列着你得自己购买的防护服。|{flag(career_unseen): 王室隐秘事务署根本没有来信，你就是这样知道他们在等你。|{flag(career_circus): 马戏团的马车一周后会经过村子，它们会放慢速度，但不会停下。|教职员的驳船秋天出发，你会在船上，站在讲台的另一边。}}}}}|{flag(career_offered): 那份录用书还放在你桌上，没签字。今天是它有效的最后一天。|没有信，没有入职日期。其他人似乎都知道自己要去哪儿，或者说自己知道。}}
-# en: A letter with a heavy seal open on a packed trunk, a student sitting on the trunk lid reading it by the window.
-scene [564759] = 一封盖着厚重封蜡的信摊开在收拾好的箱子上，一个学生坐在箱盖上，就着窗边的光读着。
-# en: Sign the offer after all
-opt.sign.label [411b94] = 最后还是签下录用书
-# en: You sign it on the trunk lid and run it to the owl tower before you can change your mind. {iv_score >= 3: The signing purse lapsed with their deadline; the place, it turns out, did not. |} Your handwriting looks like a grown-up's.
-opt.sign.say.1 [04765d] = 你在箱盖上签了字，趁自己还没改主意，一路跑去了猫头鹰塔。{iv_score >= 3: 签约金随着他们的期限一起作废了；位置倒是还在。|}你的笔迹看起来像个大人的。
-# en: Write back that you'll be there
-opt.reply.label [db9603] = 回信说你会去
-# en: You write it in your best hand and seal it with the academy's wax for the last time. Then you sit for a while with your hands in your lap, getting used to being expected somewhere.
-opt.reply.say.1 [dbc595] = 你用最好的字迹写好回信，最后一次用学院的蜡封上。然后你双手放在膝上坐了一会儿，慢慢习惯被某个地方期待着的感觉。
-# en: Leave it all open
-opt.road.label [5cbfd6] = 一切都先不定
-# en: {flag(career_accepted): The letter can wait a day. Today is still yours, the last one that is.|You decide not to decide, not today. The world is very large, and it's been waiting four years. It can wait one more day.}
-opt.road.say.1 [6f0c03] = {flag(career_accepted): 那封信可以等一天。今天还是你的，最后一个属于你的日子。|你决定不做决定，至少今天不做。世界很大，它已经等了四年。再多等一天也无妨。}
-# en: Write home about what's next
-opt.home.label [5c1adf] = 给家里写信说说以后
-# en: You write home, and tell them the truth about what comes next, or what doesn't yet. It's the longest letter you've ever sent, and the easiest.
-opt.home.say.1 [466235] = 你给家里写信，如实说了接下来的打算，或者还没有打算。这是你寄过的最长的一封信，也是最轻松的一封。
+# en: {has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems to know where they're going, or says so. The registrar's list is still pinned by her window, but you didn't put your name to it.}
+text [5c5668] = {has_offer(): 你这一年收到的每一封信都摊在箱盖上。明天你就毕业了，今天它们每一封都要你答复。你可以签一份。如果你够勇敢或者够傻，也可以一份都不签。|没有信，没有入职日期。别人似乎都知道自己要去哪儿，或者嘴上这么说。教务员的清单还钉在她的窗边，但你没在上面写下名字。}
+# en: Letters with heavy seals spread across the lid of a packed trunk, a student sitting cross-legged among them with a pen.
+scene [873f9e] = 几封封蜡厚重的信摊在打包好的箱盖上，一个学生盘腿坐在信中间，手里拿着笔。
+# en: Sign with the Conclave
+opt.conclave.label [6e5f2a] = 与七塔议会签约
+# en: An apprentice at the Seven Towers.
+opt.conclave.hint [87cf0c] = 七塔的一名学徒。
+# en: You sign the Conclave's contract with the silver-sealed pen they sent. In the autumn you climb the Seven Towers in grey, an apprentice with seven years of wards ahead of you.
+opt.conclave.say.1 [087327] = 你用他们寄来的银封笔签下七塔议会的合同。秋天，你会穿着灰袍登上七塔，前面是七年的护界功课。
+# en: Sign with the Royal Library
+opt.royal_library.label [479883] = 与皇家图书馆签约
+# en: A cataloguer in the old archives.
+opt.royal_library.hint [8c80bd] = 老档案馆里的编目员。
+# en: You sign for the cold room at the Royal Library Archives and the folios that object to being opened. You'll need gloves. You've bought two pairs already.
+opt.royal_library.say.1 [33a055] = 你签下了皇家图书馆档案馆的那间冷房间，和那些不愿被翻开的对开本。你会需要手套。你已经买了两副。
+# en: Take the Spire fellowship
+opt.fellowship.label [acdb67] = 接下尖塔的研究员职位
+# en: A junior fellow among books that bite.
+opt.fellowship.hint [e854c7] = 会咬人的书中间的初级研究员。
+# en: You chalk your name properly over the carrel at the Spire Library. A junior fellow, from the autumn: a life among books that bite, and secrets that wait.
+opt.fellowship.say.1 [ddad84] = 你在尖塔图书馆的隔间上方，正式用粉笔写下自己的名字。从秋天起你就是初级研究员：一生与会咬人的书和静静等待的秘密为伴。
+# en: Sign with the Guild's works
+opt.guild.label [ca66c0] = 与公会工坊签约
+# en: A journeyman's bench, two explosions a month.
+opt.guild.hint [08cd47] = 熟练工的工作台，每月炸两回。
+# en: You sign for the journeyman's bench at the Guild of Alchemists' works, and order the protective clothing on the same day.
+opt.guild.say.1 [222898] = 你签下了炼金师公会工坊的熟练工工作台，当天就订好了防护服。
+# en: Sign the harbour lease
+opt.shop.label [2fd82e] = 签下港口的租约
+# en: A crooked shop and a still of your own.
+opt.shop.hint [277347] = 一间歪铺子，一口自己的蒸馏器。
+# en: You sign the lease on the crooked little shop by the harbour and hang the brass key back round your neck. In the autumn, the sign will read your name.
+opt.shop.say.1 [fd1d2b] = 你签下港口边那间歪歪扭扭的小铺子的租约，把那把铜钥匙重新挂回脖子上。秋天，招牌上会写着你的名字。
+# en: Answer the Office of Unseen Affairs
+opt.unseen.label [2d4e0d] = 答复隐秘事务署
+# en: A desk at an address that doesn't exist.
+opt.unseen.hint [366d0b] = 一张设在不存在地址的书桌。
+# en: You write one word on a slip of paper and leave it under your pillow. In the morning it's gone. In the autumn, a desk at the Office of Unseen Affairs will be waiting.
+opt.unseen.say.1 [7751c4] = 你在一张纸条上写下一个词，压在枕头底下。早上它不见了。秋天，隐秘事务署会有一张书桌等着你。
+# en: Take the shipping house's desk
+opt.trading.label [44c85c] = 接下航运商行的书桌
+# en: A partner's share of a harbour ledger.
+opt.trading.hint [8cc31d] = 港口一本账簿里合伙人的份额。
+# en: You sign for the old partner's desk and his share of the ledger. The shipping house's anchor is pressed into the wax beside your name.
+opt.trading.say.1 [b305ed] = 你签下了老合伙人的书桌和他在账簿里的份额。航运商行的船锚印在你名字旁边的封蜡里。
+# en: Stay at Lumenhold to teach
+opt.teaching.label [0f1b87] = 留在流明堡教书
+# en: The faculty barge, on the wrong side of the lectern.
+opt.teaching.hint [9dbc90] = 教职员的渡船，讲台的另一边。
+# en: You sign the faculty's contract in the staff room, at a desk with somebody else's initials carved in it. In the autumn you'll be on the faculty barge.
+opt.teaching.say.1 [ef32c7] = 你在教员休息室签下教职合同，桌上刻着别人名字的缩写。秋天，你会坐上教职员的渡船。
+# en: Join the Circus of Wonders
+opt.circus.label [9011fa] = 加入奇迹马戏团
+# en: Wagons, crowds and illusions.
+opt.circus.hint [04818f] = 篷车、人群和幻术。
+# en: You sign the ringmaster's contract. In a week the circus wagons pass the village, and they'll slow down for you, and this time they'll stop.
+opt.circus.say.1 [84f0e1] = 你签下马戏团团长的合同。一周后，马戏团的篷车会经过村子，它们会为你放慢，而这一次，会停下。
+# en: Go back to the plateau
+opt.observatory.label [8dfc6a] = 回到高原去
+# en: Salaried chartmaker for the Observatory Expedition.
+opt.observatory.hint [e6ff79] = 观星远征的受薪绘图员。
+# en: You sign for a salaried place with the Observatory Expedition and pack the frostbite remedies first. The plateau, and its nights, are yours from the autumn.
+opt.observatory.say.1 [7fb370] = 你签下观星远征的受薪职位，第一件打包的就是冻疮药。从秋天起，高原和它的夜晚都是你的。
+# en: Take the keeper's cottage
+opt.field_station.label [a8d7b6] = 接下看守小屋
+# en: The Beastcraft Field Station, on the moors.
+opt.field_station.hint [54337f] = 荒原上的驭兽术野外站。
+# en: You sign for the keeper's post at the Beastcraft Field Station: a cottage, a lamp and more creatures than anyone could count.
+opt.field_station.say.1 [ae945c] = 你签下驭兽术野外站的看守职位：一间小屋、一盏灯，还有谁也数不清的生灵。
+# en: Cross the hills to Thornwick
+opt.thornwick.label [5bb0a2] = 翻山去荆木学院
+# en: A researcher's bench at the rival academy.
+opt.thornwick.hint [539ab0] = 对手学院里一张研究员工作台。
+# en: You sign Thornwick's contract in green ink. In the autumn you'll cross the hills, and Lumenhold will say something cutting, and you'll go anyway.
+opt.thornwick.say.1 [f9ecd9] = 你用绿墨水签下荆木学院的合同。秋天你会翻过山去，流明堡会说些尖刻话，而你还是会去。
+# en: Stay on in the Spire's stacks
+opt.spire.label [f58a33] = 留在尖塔的书库
+# en: A keeper of the stacks, full time.
+opt.spire.hint [065fd9] = 全职的书库看守人。
+# en: You leave your signature under the bell on the reference desk. In the autumn you'll be back behind it, with a longer ladder.
+opt.spire.say.1 [d56103] = 你把签名压在咨询台的铃铛底下。秋天，你会回到那张台子后面，带着一架更长的梯子。
+# en: Stay on at the Gilded Newt
+opt.newt.label [e8b560] = 留在镀金蝾螈酒馆
+# en: Behind the bar, then in charge of it.
+opt.newt.hint [270c77] = 先站吧台，再管整个店。
+# en: You shake on it over the bar with the landlady, properly this time. Full time from the autumn, and in charge in a year or two.
+opt.newt.say.1 [c656ef] = 你隔着吧台和老板娘握了手，这次是正式的。秋天起全职，过一两年就由你管。
+# en: Stay on at Pell & Daughters
+opt.pell.label [818d9e] = 留在佩尔父女药铺
+# en: The counter, and one day the drawers.
+opt.pell.hint [9e0e1c] = 柜台，以及将来的那些抽屉。
+# en: You sign Pell's ledger under his daughters' names. Old Pell stops counting long enough to watch you do it, then starts again from one.
+opt.pell.say.1 [1773aa] = 你在佩尔的账簿上签名，签在他女儿们的名字下面。老佩尔停下数数，看你签完，又从一开始数。
+# en: Keep your courier's satchel
+opt.courier.label [1311d0] = 留着你的信使挎包
+# en: Flying the lake in all weathers.
+opt.courier.hint [b8a70d] = 风雨无阻地飞越湖面。
+# en: You hang the satchel with your name on it back on its peg, where it will be in the autumn, and the autumn after that.
+opt.courier.say.1 [9ab9b1] = 你把绣着自己名字的挎包挂回挂钩上。秋天它会在那里，再下一个秋天也是。
+# en: Take the registrar's clerk's desk
+opt.clerk.label [64cce4] = 接下教务处的书记员桌
+# en: Stamps, ledgers and a window on a wall.
+opt.clerk.hint [467957] = 印章、账簿，和一扇对墙的窗。
+# en: You sign for the clerk's desk at the registrar's window. It pays the rent. It is a start date. Today that is enough.
+opt.clerk.say.1 [19fc4e] = 你在教务员的窗口签下书记员的桌子。它付得起房租。它是一个入职日期。今天，这就够了。
+# en: {has_offer(): Sign none of them, and keep looking|Keep looking}
+opt.look.label [50ef1e] = {has_offer(): 一份都不签，继续找|继续找}
+# en: {gpa >= 2.5 or renown >= 30: Your grades and your name will open doors, in time.|Without a post, it's home for a while.}
+opt.look.hint [96ac02] = {gpa >= 2.5 or renown >= 30: 你的成绩和名声，迟早会打开门。|没有职位，先回家待一阵。}
+# en: {gpa >= 2.5 or renown >= 30: You put the pen down. Your grades are good and people know your name; the world can make you a better offer in its own time. You'll rent a room and write letters.|You put the pen down, and the letter you'll write home is the hardest you've ever had to write. There's a room there, and a bed that's too short, and time.}
+opt.look.say.1 [8d6180] = {gpa >= 2.5 or renown >= 30: 你放下笔。你成绩不错，也有人知道你的名字；这个世界可以在它自己的时候给你开个更好的价。你会租个房间，写信。|你放下笔，接下来要写回家的那封信，是你写过最难的一封。那里有一个房间，一张太短的床，还有时间。}
 
 @event last_lake
 # en: The Lake, One Last Time
 title [3fc408] = 最后一次看湖
-# en: You walk down to the lake before breakfast, the way you did your first morning. {flag(hollow_sealed): It's clearer than you've ever seen it, clear all the way down, and nothing looks back. You did that. Almost nobody knows.|{flag(hollow_freed): It has been different since the spring it froze, warmer somehow, and the candles along the shore lean toward you as you pass. You did that too.|{flag(hollow_bargain): The water is still. The mark on your palm is not. It hums as you come near, like something greeting something.|{flag(hollow_fled): The water looks ordinary. It isn't. Somewhere under it a door stands ajar, because you ran, and the headmistress's hair has been white since that night.|{flag(hollow_failed): It's calm this morning. You know what lies beneath it, and who paid to keep it closed. You stand on the jetty a long time.|{clues(hollowstar) >= 1: There were stories about this lake, and you followed some of them a little way. You never learned what they meant, or whether they meant anything. The lake isn't telling.|It's flat and blue and ordinary, and the towers stand upside down in it. Four years, and it never once did anything strange. That you saw.}}}}}}
-text [aee919] = 你在早饭前走到湖边，就像你来的第一个早晨那样。{flag(hollow_sealed): 它比你见过的任何时候都清澈，一直清到湖底，没有什么在回望你。这是你做到的。几乎没人知道。|{flag(hollow_freed): 自从那年春天它结冰之后，它就变了，不知怎么暖了些，你经过时，岸边的蜡烛都朝你倾斜。这也是你做到的。|{flag(hollow_bargain): 湖水很静。你掌心的印记却不静。你走近时它嗡嗡作响，像是某样东西在问候另一样东西。|{flag(hollow_fled): 湖水看上去很普通。其实不然。它底下某处有一扇门半开着，因为你跑了，而院长的头发从那一夜起就白了。|{flag(hollow_failed): 今天早上它很平静。你知道它底下是什么，也知道是谁付出代价让它保持关闭。你在码头上站了很久。|{clues(hollowstar) >= 1: 关于这座湖有过一些传说，你顺着其中几个走了一小段。你始终没弄明白它们是什么意思，或者是否有什么意思。湖不会告诉你。|它平坦、湛蓝、普普通通，塔楼倒映在水里。四年了，它从没做过一件奇怪的事。至少你没看见。}}}}}}
+# en: You walk down to the lake before breakfast, the way you did your first morning. {flag(hollow_sealed): It's clearer than you've ever seen it, clear all the way down, and nothing looks back. You did that. Almost nobody knows.|{flag(hollow_freed): It has been different since the spring it froze, warmer somehow, and the candles along the shore lean toward you as you pass. You did that too.|{flag(hollow_bargain): The water is still. The mark on your palm is not. It hums as you come near, like something greeting something.|{flag(hollow_fled): The water looks ordinary. It isn't. Somewhere under it a door stands ajar, because you ran, and the headmistress's hair has been white since that night.|{flag(hollow_held_line): The first-years you held the tower for are skimming stones off the jetty. One of them waves at you. Whatever happened under the ice that night, it happened without you, and they are alive.|{flag(hollow_failed): It's calm this morning. You know what lies beneath it, and who paid to keep it closed. You stand on the jetty a long time.|{clues(hollowstar) >= 1: There were stories about this lake, and you followed some of them a little way. You never learned what they meant, or whether they meant anything. The lake isn't telling.|It's flat and blue and ordinary, and the towers stand upside down in it. Four years, and it never once did anything strange. That you saw.}}}}}}}
+text [3ea458] = 你像第一个早晨那样，早饭前走到湖边。{flag(hollow_sealed): 湖水清得前所未见，一直清到底，什么也没有回望你。这是你做到的。几乎没人知道。|{flag(hollow_freed): 自从它结冰的那个春天，湖就不一样了，像是暖了些；你走过时，岸边的蜡烛都朝你倾斜。这也是你做到的。|{flag(hollow_bargain): 湖水静止。你掌心的印记却没有。你一走近它就嗡嗡作响，像是某种东西在问候另一种东西。|{flag(hollow_fled): 湖水看起来很平常。它不是。在水下某处，一扇门虚掩着，因为你逃了；院长的头发从那一夜起就白了。|{flag(hollow_held_line): 你那一夜守护过的一年级生正在栈桥上打水漂。有一个朝你挥手。那夜冰下发生了什么，都与你无关地发生了，而他们都活着。|{flag(hollow_failed): 今早湖面很平静。你知道它底下是什么，也知道是谁付了代价让它关着。你在栈桥上站了很久。|{clues(hollowstar) >= 1: 关于这片湖有些传说，你追着其中几个走了一小段。你从没弄明白它们的意思，或者它们到底有没有意思。湖什么也不说。|湖面平坦湛蓝，平平常常，塔楼倒映在里面。四年了，它从没做过一件怪事。至少你没看见。}}}}}}}
 # en: A student standing alone at the end of a wooden jetty at dawn, the Mirror Lake perfectly still, the towers reflected upside down in it.
 scene [0a0e22] = 黎明时分，一个学生独自站在木码头的尽头，镜湖一片静止，塔楼倒映在水中。
 # en: Say goodbye to the lake
@@ -67,34 +159,42 @@ opt.ok.say.1 [3cf7b9] = {~你打了一个水漂。跳了七下，是你的纪录
 @event last_friends
 # en: The Last Ordinary Morning
 title [090df6] = 最后一个寻常的早晨
-# en: {friend} finds you in the courtyard with two mugs of tea and no particular reason. "Last ordinary morning," {they} say{s}. "I thought it should be spent properly." You sit on the rim of the fountain and don't talk about tomorrow.
-text [f8ed5f] = {friend} 端着两杯茶在庭院里找到你，没什么特别的理由。“最后一个寻常的早晨，”{they} 说。“我觉得应该好好过。”你们坐在喷泉边上，不谈明天。
+# en: {friend} finds you in the courtyard with two mugs of tea and no particular reason. "Last ordinary morning," {they} say{s}. "I thought it should be spent properly." {bonds(friend) + bonds(close) >= 3: The others drift over one by one, the friends who stayed, until the fountain's rim is full.|You sit on the rim of the fountain and don't talk about tomorrow.}
+text [e8e8ac] = {friend}端着两杯茶在庭院里找到你，没什么特别的理由。“最后一个寻常的早晨，”{they}说，“我觉得应该好好过。”{bonds(friend) + bonds(close) >= 3: 其他人一个接一个地晃过来，那些一直留在你身边的朋友，直到喷泉边坐满了人。|你们坐在喷泉边上，不谈明天。}
 # en: Two students sitting on the rim of a courtyard fountain with mugs of tea, packed trunks stacked by the doors behind them.
 scene [d79b2e] = 两个学生端着茶杯坐在庭院的喷泉边上，身后的门边堆着收拾好的箱子。
 # en: Promise to visit, and mean it
 opt.left.label [c31f13] = 约好去看对方，说到做到
-# en: You set a date, a real one, with a place and a time, and write it in both your notebooks. {friend} underlines it twice. You both know which of you will be late.
-opt.left.say.1 [a5332c] = 你们定了一个日子，一个真正的日子，有地点也有时间，写在两个人的笔记本上。{friend} 在下面划了两道线。你们都知道到时候谁会迟到。
-# en: Give {them} something of yours
-opt.right.label [e3fb07] = 把你的一样东西送给 {them}
-# en: You give {friend} the thing on your desk you'd most miss: a cracked mug, a dog-eared book, the stone from the lake. {They} turn{s} it over and over and say{s} nothing, which says enough.
-opt.right.say.1 [b34494] = 你把桌上你最舍不得的东西给了 {friend}：一只裂了的杯子、一本卷了角的书、一块湖边的石头。{They} 把它翻来覆去地看，什么也没说，这已经说明了一切。
+# en: {bonds(friend) + bonds(close) >= 3: The yearbook will remember the ones who stayed.|A date, a place and a time.}
+opt.left.hint [46ded0] = {bonds(friend) + bonds(close) >= 3: 毕业纪念册会记住一直留下的人。|一个日子、一个地点、一个时间。}
+# en: You set a date, a real one, with a place and a time, and write it in every notebook round the fountain. {friend} underlines it twice. You all know which of you will be late.
+opt.left.say.1 [29eb37] = 你们定了一个日子，真的日子，有地点有时间，写进喷泉边每个人的笔记本里。{friend}在下面画了两道线。你们都知道谁会迟到。
+# en: Say goodbye properly, here
+opt.right.label [d5f9ee] = 就在这里好好道别
+# en: A clean farewell, and no promises to break.
+opt.right.hint [8c6a83] = 干脆的告别，没有要违背的承诺。
+# en: You give {friend} the thing on your desk you'd most miss: a cracked mug, a dog-eared book, the stone from the lake. No promises; you've both seen what happens to promises. {They} turn{s} it over and over and say{s} nothing, which says enough.
+opt.right.say.1 [7ea96d] = 你把桌上最舍不得的东西送给{friend}：一只裂了的杯子、一本卷了角的书、湖边捡的那块石头。不许诺；你们都见过承诺的下场。{they}把它翻来覆去地看，一句话也不说，这就够了。
 
 @event last_partner
 # en: After Tomorrow
 title [2d7d5c] = 明天之后
-# en: {partner} has a map, an apple and the whole afternoon. "Tomorrow we're not students," {they} say{s}. "So I thought we'd better have a plan. Or decide not to." The map is spread on the battlement between you, weighted at one corner with the apple.
-text [67a061] = {partner} 带着一张地图、一个苹果和一整个下午。“明天我们就不是学生了，”{they} 说。“所以我觉得我们最好有个计划。或者决定不要计划。”地图摊在你们之间的城垛上，一角压着那个苹果。
+# en: {partner} has a map, an apple and the whole afternoon. "Tomorrow we're not students," {they} say{s}. {flag(after_together): "We said we'd go together. I still mean it. Do you?"|"So I thought we'd better have a plan. Or decide that we don't have one."} The map is spread on the battlement between you, weighted at one corner with the apple.
+text [9126e2] = {partner}带着一张地图、一个苹果和一整个下午。“明天我们就不是学生了，”{they}说。{flag(after_together): “我们说过要一起走。我现在还是这么想。你呢？”|“所以我觉得我们最好有个计划。或者干脆决定不要。”}地图摊在你们之间的城垛上，一角压着那个苹果。
 # en: Two students sitting on a castle battlement at noon, legs dangling over the edge, a map of the realm spread between them, weighted with an apple.
 scene [c72168] = 正午时分，两个学生坐在城堡的城垛上，双腿悬在外面，王国的地图摊在两人之间，用一个苹果压着。
 # en: Plan the first year together
 opt.left.label [ed42fa] = 一起规划第一年
+# en: Whatever comes, together.
+opt.left.hint [143f72] = 不管来的是什么，一起。
 # en: You plan it badly and in detail: a town on the map, a room above a shop, whose turn it is to cook. {partner} draws a circle round the town in ink, so it can't be rubbed out.
 opt.left.say.1 [345a32] = 你们规划得很糟又很细：地图上的一座小镇、一间店铺楼上的屋子、轮到谁做饭。{partner} 用墨水把那座小镇圈了起来，这样就擦不掉了。
-# en: Fold the map, and just have today
-opt.right.label [6d2d59] = 收起地图，只过好今天
-# en: You fold the map and put it away. "Whatever comes," you say, and {partner} takes your hand, and for an afternoon there's nothing on the other side of tomorrow at all.
-opt.right.say.1 [fc8f32] = 你把地图折起来收好。“不管以后怎样，”你说，{partner} 握住了你的手，整整一个下午，明天的另一边什么都没有。
+# en: Part at the gate tomorrow
+opt.right.label [17f610] = 明天在大门口分开
+# en: Kindly, and for good.
+opt.right.hint [3593d7] = 温柔地，永远地。
+# en: You tell {partner} the truth: that tomorrow you'll walk out of the gates in different directions, and that it's right. {They} fold{s} the map very carefully and give{s} you the apple. Neither of you eats it.
+opt.right.say.1 [eb154d] = 你对{partner}说了实话：明天你们会走出大门，走向不同的方向，而这是对的。{they}非常小心地把地图叠好，把苹果递给你。你们谁也没吃。
 
 @event last_rival
 # en: One Last Word
@@ -129,3 +229,85 @@ opt.left.say.2 [83ff36] = 你扑过去，没接住，一屁股坐下，整个屋
 opt.right.label [41957d] = 和大家一起躺下
 # en: You lie in a row with your year, shoulder to shoulder, and count the stars aloud until the counting falls apart. Somebody starts to cry, and then everybody is laughing.
 opt.right.say.1 [d8e7fe] = 你和同年级的人肩并肩躺成一排，大声数着星星，直到数乱了。有人开始哭，然后所有人都笑了起来。
+
+@event last_dumonts
+# en: Two Pale Heads
+title [a1309c] = 两个淡色的脑袋
+# en: {flag(dumont_reunited): The photographer is herding the year onto the great hall steps. At the end of a row, two pale heads lean together, Kael and Ilse, who was raised to open the door he refused. Kael sees you and moves up, which leaves a space between them and the edge.|The photographer is herding the year onto the great hall steps. At the end of a row Kael stands beside a space nobody is allowed to fill. Ilse should be in it. The man in grey took her north, and no letter has come.}
+text [d5ee08] = {flag(dumont_reunited): 摄影师正把这一届赶上大礼堂的台阶。一排的尽头，两个淡色头发的脑袋靠在一起：凯尔，和被养大来打开他拒绝打开那扇门的伊尔泽。凯尔看见你，往里挪了挪，在他们和边上之间留出一个空位。|摄影师正把这一届赶上大礼堂的台阶。一排的尽头，凯尔站在一个谁都不许填的空位旁边。伊尔泽本该站在那里。灰衣人把她带去了北方，至今没有来信。}
+# en: A photographer's tripod on the great hall steps, graduates jostling into rows, a pale young man at the end of a row beside an empty space.
+scene [8f4e4f] = 大礼堂台阶上立着摄影师的三脚架，毕业生们挤着排成一排排，一排尽头有个脸色苍白的年轻人站在空位旁。
+# en: {flag(dumont_reunited): Squeeze into the photograph with them|Leave the space empty with him}
+opt.left.label [a8ad08] = {flag(dumont_reunited): 挤进他们的合影里|和他一起留着空位}
+# en: The yearbook will keep this.
+opt.left.hint [90f8eb] = 毕业纪念册会留下这一幕。
+# en: You squeeze in beside them, and Ilse elbows you, and Kael, for once, laughs out loud just as the shutter goes. It's the only photograph of the three of you, and it hangs in two houses for the rest of your lives.
+opt.left.say.1 [6b2556] = 你挤到他们旁边，伊尔泽用胳膊肘捅你，而快门按下的那一刻，凯尔难得地大声笑了出来。这是你们三人唯一的合影，此后一生都挂在两户人家里。
+# en: You stand at the edge of the space, so it stays a space, and Kael's hand finds your shoulder for a moment. In the photograph there's a gap in the row the size of a girl in white furs.
+opt.left.say.2 [a0722a] = 你站在空位边上，让它一直空着，凯尔的手在你肩上停了一会儿。照片里，那一排有一个空缺，正好是一个穿白裘的女孩那么大。
+# en: {flag(dumont_reunited): Take the photograph yourself|Talk Kael into closing the gap}
+opt.right.label [1f7e9a] = {flag(dumont_reunited): 你来给他们拍|劝凯尔把空位补上}
+# en: Today, and not the yearbook.
+opt.right.hint [5717c7] = 留给今天，不留给纪念册。
+# en: You take the camera from the photographer and make them stand still for once. Two Dumonts, squinting at the sun, in nobody's photograph but yours.
+opt.right.say.1 [6c112b] = 你从摄影师手里接过相机，难得让他们站着别动。两个杜蒙，眯着眼睛看太阳，只在你的照片里。
+# en: "She'd hate being a gap," you tell him, and he almost smiles, and moves up. In the photograph the row closes. Neither of you forgets why it was open.
+opt.right.say.2 [3ac096] = “她会讨厌当个空缺的，”你对他说，他差点笑了，往里挪了挪。照片里，那一排合上了。你们谁都没忘记它为什么曾经空着。
+
+@event last_tamsin
+# en: A Page for Thornwick
+title [2862d3] = 给荆木的一页
+# en: There's a space in the corner of your yearbook page where a friend's message should go, and a green-sealed letter on your desk that came this morning: "Four years of rivalry, four hundred letters. Leave me the corner. Insufferable to the end, T."
+text [a9cac3] = 你的毕业纪念册那一页角落里有块空白，本该写朋友的留言；桌上还有一封今早寄到的绿封蜡信：“四年的较劲，四百封信。把那个角留给我。讨人嫌到底的，T。”
+# en: A yearbook page and a sheet of green-sealed paper side by side on a desk, a student holding a pen over both.
+scene [6b262f] = 一页毕业纪念册和一张绿封蜡的信纸并排放在桌上，一个学生握笔悬在两者之上。
+# en: Leave Tamsin the corner
+opt.left.label [d02ef0] = 把角落留给塔姆辛
+# en: The yearbook will keep this.
+opt.left.hint [90f8eb] = 毕业纪念册会留下这一笔。
+# en: You send the page over the hills by the evening owl. It comes back by morning, a green seal pressed into the corner, which is not allowed, and two lines you'll know by heart for the rest of your life.
+opt.left.say.1 [06778c] = 你让傍晚的猫头鹰把那一页送过山去。第二天早上它回来了，角落里压着一枚绿色封蜡，这是不允许的，还有两行字，你此后一生都会背得出来。
+# en: Save it for the spring meeting
+opt.right.label [ec0477] = 留到春天见面时再写
+# en: Biscuits, halfway between, every spring.
+opt.right.hint [20589f] = 每年春天，在中间那座镇上，带上饼干。
+# en: You write back that the corner can wait: you'll fill it in person, at the town halfway between, in the spring, with biscuits. Tamsin's reply says "Coward" and "Yes" in the same line.
+opt.right.say.1 [29c7ef] = 你回信说那个角可以等：你会在春天、在两地中间的小镇上、带着饼干，当面把它填上。塔姆辛的回信在同一行里写着“胆小鬼”和“好”。
+
+@event last_remembered
+# en: What the Yearbook Keeps
+title [da80e6] = 纪念册留下什么
+# en: The yearbook committee has your page in proof, with the lines they mean to print under your portrait. You may let them stand or strike them out. "Two at most," says the editor, a second-year with ink on her nose. "We're short of room."
+text [c1a7fb] = 毕业纪念册编委会把你那一页的校样拿来了，你的肖像下面印着他们打算登的几行字。你可以让它们留着，也可以划掉。“最多两行，”编辑说，她是个二年级生，鼻子上沾着墨，“版面不够了。”
+# en: A yearbook committee's table in the library, proofs of portrait pages spread out, a student reading their own page upside down.
+scene [06c77d] = 图书馆里纪念册编委会的桌子，肖像页的校样摊开着，一个学生倒着读自己的那一页。
+# en: Let them print your fame
+opt.renown.label [37aacd] = 让他们登你的名气
+# en: The most talked-about student in a generation.
+opt.renown.hint [42c06f] = 一代人里最受议论的学生。
+# en: You leave the line about the Ledger's special edition. The editor looks relieved; it was her favourite.
+opt.renown.say.1 [655a07] = 你留下了那行关于《流明纪事报》特刊的字。编辑松了口气；那是她最喜欢的一行。
+# en: Let them print the line about you
+opt.lumen.label [670a28] = 让他们登那句写你的话
+# en: "The one you went to when it mattered."
+opt.lumen.hint [7eb53f] = “要紧的时候，大家会去找的那个人。”
+# en: Someone has written "The one you went to when it mattered." You don't know who. You leave it.
+opt.lumen.say.1 [66f3e3] = 有人写了一句：“要紧的时候，大家会去找的那个人。”你不知道是谁写的。你把它留下了。
+# en: Let the shadow stand
+opt.hollow.label [b25ab3] = 让那片阴影留着
+# en: The candles behind your portrait went out.
+opt.hollow.hint [3a627c] = 你肖像后面的蜡烛熄了。
+# en: In the proof, the candles behind your portrait have gone out. The editor offers to retouch it. You tell her to leave it as it is.
+opt.hollow.say.1 [2a31c9] = 校样上，你肖像后面的蜡烛都熄了。编辑提出要修一修。你告诉她就这样留着。
+# en: Keep the line about your thesis
+opt.thesis.label [acdc53] = 留下关于论文的那行
+# en: The thesis they locked away.
+opt.thesis.hint [0b0954] = 被锁起来的那篇论文。
+# en: The line about your thesis on the founders' seal has been half struck through already, in the headmistress's hand. You un-strike it.
+opt.thesis.say.1 [083da3] = 关于你那篇创始者封印的论文，那行字已经被划掉一半，是院长的笔迹。你把它恢复了。
+# en: Strike them all
+opt.plain.label [c706f8] = 全部划掉
+# en: Just your name, and the year.
+opt.plain.hint [914e4c] = 只留名字和年份。
+# en: You strike out every line. The editor sighs and prints your name and the year, and nothing else. It suits you, somehow.
+opt.plain.say.1 [98960c] = 你把每一行都划掉了。编辑叹了口气，只印上你的名字和年份，别的什么都没有。不知怎的，这很像你。

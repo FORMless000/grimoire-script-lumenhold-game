@@ -62,6 +62,8 @@ test('yearbook: headline, mystery, relationships and personal lines; the Hollow 
   const eng = new Engine(content); eng.newGame({ seed: 3, name: 'T' });
   const s = eng.s;
   s.flags.hollow_sealed = 1; s.vals.alignment = 75; s.vals.alchemy = 80; s.vals.mood = 80;
+  // the headline is the career signed on the last day, and a personal line one the yearbook kept (feedback 2026-10-25)
+  s.flags.took_shop = 1; s.flags.remember_lumen = 1;
   s.npcs.lyra.met = true; s.npcs.lyra.bond = 'partner';
   const book = eng.yearbook();
   const by = (slot) => book.filter((x) => x.slot === slot).map((x) => x.id);

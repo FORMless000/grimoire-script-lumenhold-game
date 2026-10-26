@@ -70,6 +70,11 @@ priority: 70
 art: tower
 tags: story
 scene: An emptying castle in late summer light, trunks stacked in a corridor, a notice pinned to the great hall door.
+on_show:
+  if flag(career_offered) or flag(career_accepted):
+    fair_offer
+  if flag(thornwick_offer):
+    flag offer_thornwick
 text: A notice on the great hall door: classes are over, duties are done, and final-years may stay on until graduation, board on the house. The castle is yours for one last summer.
 > ok: Make the most of it
   mood +small

@@ -3,11 +3,17 @@
 #  and stay exclusive (game over).
 #  Graduation builds a yearbook (design §10.5) from `slot:`s, each
 #  checked in descending `priority`:
-#    headline (default)  1: career / academic; `ending_graduate`
-#                           (no `when`) is the fallback
+#    headline (default)  1: the career you signed on the last day
+#                           (`took_<career>`, last_career); none
+#                           signed: still looking or back home;
+#                           `ending_graduate` (no `when`) is the
+#                           fallback
 #    mystery             0-1: the Hollow Star outcome
-#    relationships       0-3: bonds
-#    personal            0-2: alignment, renown
+#    relationships       0-3: bonds kept on the last day
+#    personal            0-2: academic standing, and the lines you
+#                           let the yearbook keep (last_remembered)
+#  Every line is told, and chosen where there is a choice, by a
+#  card on the last day (last_day.grim, feedback 2026-10-25).
 #  `excludes:` drops other endings once this one is picked.
 # ============================================================
 
@@ -81,22 +87,22 @@ text: The academy will never fully know what you did beneath the lake. The headm
 priority: 80
 title: The Archmage's Path
 art: wand
-when: arcana >= 80 and gpa >= 2.5
-text: Graduating with highest honours and a power that makes the candles lean toward you, you are offered an apprenticeship with the Conclave of the Seven Towers. Professor Thorne shakes your hand and says, gruffly, "Don't waste it." You won't.
+when: flag(took_conclave)
+text: In the autumn you climb the steps of the Seven Towers in a new grey robe, an apprentice of the Conclave, with seven years of wards and failures ahead and a desk that faces a wall of locked books. Professor Thorne shakes your hand at the gate and says, gruffly, "Don't waste it." You won't.
 
 @ending ending_scholar
 priority: 75
 title: Scholar of the Spire
 art: book
-when: (lore >= 98 or (flag(thesis_distinction) and lore >= 85)) and gpa >= 2.5
-text: Your thesis is shelved in the Spire Library, in the section students whisper about. The faculty offers you a junior fellowship. You will spend your life among books that bite and secrets that wait — and you could not be happier.
+when: flag(took_fellowship)
+text: Your thesis is shelved in the Spire Library, in the section students whisper about, and you take the junior fellowship that came with it. You will spend your life among books that bite and secrets that wait — and you could not be happier.
 
 @ending ending_beloved
 slot: relationships
 priority: 70
 title: Hand in Hand
 art: heart
-when: bonds(partner) > 0 and mood >= 60
+when: bonds(partner) > 0
 text: Graduation is a blur of robes and cheers, but what you remember is a hand finding yours as the hats go up. Whatever comes next, you won't face it alone. Lumenhold taught you magic; it also taught you this.
 
 # A partner ending names them (playtest 2, B31); each replaces the generic one above.
@@ -106,7 +112,7 @@ slot: relationships
 priority: 72
 title: The Second Flame
 art: heart
-when: bond(lyra) == "partner" and mood >= 60
+when: bond(lyra) == "partner"
 excludes: ending_beloved
 text: When the hats go up, {lyra} catches yours before it lands and hands it back without a word. Later, in front of her whole family, she takes your hand and doesn't let go. For House Vaneshade, that is a declaration. For her it is simpler: she has finally found someone she doesn't need to beat.
 
@@ -115,7 +121,7 @@ slot: relationships
 priority: 72
 title: Home, Wherever
 art: heart
-when: bond(tobias) == "partner" and mood >= 60
+when: bond(tobias) == "partner"
 excludes: ending_beloved
 text: {tobias} cries through the whole ceremony and blames the pollen. Afterwards he lifts you off your feet in front of everyone, then shows you a drawing of a farmhouse with two chairs on the porch. "No pressure," he says. "The goats have already voted."
 
@@ -124,7 +130,7 @@ slot: relationships
 priority: 72
 title: Already Foreseen
 art: heart
-when: bond(seraphine) == "partner" and mood >= 60
+when: bond(seraphine) == "partner"
 excludes: ending_beloved
 text: "I saw this," {seraphine} says as the hats go up. "Years ago. You were holding my hand." You are. For once she smiles at the present, as if it has finally caught up with her, and asks whether you'd like to know what happens next. You tell her you'd rather find out together.
 
@@ -133,7 +139,7 @@ slot: relationships
 priority: 72
 title: No More Jokes
 art: heart
-when: bond(corvin) == "partner" and mood >= 60
+when: bond(corvin) == "partner"
 excludes: ending_beloved
 text: {corvin} slips a key into your palm during the speeches. It opens nothing at Lumenhold; he has checked. "It's for wherever we end up," he says, and for once he doesn't make a joke of it. Then he does, of course. But his hand stays in yours.
 
@@ -142,7 +148,7 @@ slot: relationships
 priority: 72
 title: Built to Last
 art: heart
-when: bond(mir) == "partner" and mood >= 60
+when: bond(mir) == "partner"
 excludes: ending_beloved
 text: {mir} has rigged the hats to fly back down. Most of them do. In the cheerful chaos they press a small brass ring into your hand; it ticks faintly, like a second heart. "It'll run for fifty years," they say. "Probably. We should check."
 
@@ -151,7 +157,7 @@ slot: relationships
 priority: 72
 title: Thaw
 art: heart
-when: bond(kael) == "partner" and mood >= 60
+when: bond(kael) == "partner"
 excludes: ending_beloved
 text: {kael} doesn't throw his hat. He stands beside you in the crowd, and when the cheering is loudest he says, very quietly, "Come north with me. Or I stay. Either." It is the longest sentence about feelings he has ever spoken. His hand, in yours, is warm.
 
@@ -160,7 +166,7 @@ slot: relationships
 priority: 72
 title: Front Page
 art: heart
-when: bond(nessa) == "partner" and mood >= 60
+when: bond(nessa) == "partner"
 excludes: ending_beloved
 text: The Ledger's graduation issue runs a small notice at the bottom of page six, set in {nessa}'s own type: two names, one line, no comment. All of Lumenhold reads it before breakfast. {nessa} pretends not to watch them read it, and holds your hand under the table the whole time.
 
@@ -168,41 +174,42 @@ text: The Ledger's graduation issue runs a small notice at the bottom of page si
 priority: 65
 title: Master of the Crucible
 art: cauldron
-when: alchemy >= 72
-text: Your potions are already sold under the counter in three cities. On graduation day you sign the lease on a crooked little shop by the harbour. The sign reads your name, and underneath: NO REFUNDS FOR TRANSFORMATIONS.
+when: flag(took_shop)
+text: Your potions are already sold under the counter in three cities. On graduation day you sign the lease on the crooked little shop by the harbour. The sign reads your name, and underneath: NO REFUNDS FOR TRANSFORMATIONS.
 
 @ending ending_celebrity
 slot: personal
 priority: 60
 title: The Name on Every Lip
 art: star
-when: renown >= 45
+when: renown >= 45 and flag(remember_renown)
 text: The Lumen Ledger runs a special edition about you. First-years queue for your autograph. You graduate as the most talked-about student in a generation, and the world beyond the gates is already waiting to hear what you'll do next.
 
 @ending ending_merchant
 priority: 55
 title: Gold in the Vaults
 art: coin
-when: gold >= 180
-text: You leave Lumenhold with a diploma and a fortune. Magic, you've decided, is good, but compound interest is better. Within five years your trading house has offices in every port — and an enchanted ledger that never loses a coin.
+when: flag(took_trading)
+text: You leave Lumenhold with a diploma, a fortune and an old partner's desk in a harbour shipping house. Magic, you've decided, is good, but compound interest is better. Within five years the house has offices in every port — and an enchanted ledger that never loses a coin.
 
 @ending ending_shadow
 priority: 50
 title: The Quiet Hand
 art: mask
-when: guile >= 75
-text: No one quite knows how you graduated with those grades. No one quite remembers the favours you called in. A discreet letter offers you a position with the Crown's Office of Unseen Affairs. You accept, of course. You'd already read it before it was sent.
+when: flag(took_unseen)
+text: No one quite knows how you graduated with those grades. No one quite remembers the favours you called in. In the autumn you take a desk at the Crown's Office of Unseen Affairs, in a building with no sign and no address. You'd found it, of course, long before they told you where it was.
 
 @ending ending_beloved_friends
 slot: relationships
 priority: 45
 title: The Ones Who Stayed
 art: group
-when: bonds(friend) + bonds(close) >= 3
+when: bonds(friend) + bonds(close) >= 3 and flag(kept_friends)
 text: You may not leave as the brightest or the richest, but you leave surrounded. Your friends throw their hats higher than anyone's, and the photograph from that day — all of you squinting into the sun — will hang in every home you ever have.
 
 @ending ending_barely
-priority: 40
+slot: personal
+priority: 65
 title: By the Skin of Your Teeth
 art: hourglass
 when: (turn > 4 and gpa < 2.0) or flag(thesis_resubmit)
@@ -213,7 +220,7 @@ slot: mystery
 priority: 20
 title: Someone Else's Lantern
 art: lantern
-when: not (flag(hollow_sealed) or flag(hollow_bargain) or flag(hollow_freed) or flag(hollow_failed))
+when: not (flag(hollow_sealed) or flag(hollow_bargain) or flag(hollow_freed) or flag(hollow_failed) or flag(hollow_fled) or flag(hollow_held_line))
 text: There was a spring frost, the year you graduated, and a night when the bell under the lake would not stop ringing. You were somewhere else: asleep, or studying, or holding a door shut for the first-years. Someone else went down with the lantern. You never learn their whole story, but every spring, when the lake thaws, you find yourself grateful to them.
 
 @ending ending_graduate
@@ -226,14 +233,14 @@ text: Robes, hats, a speech that runs long. You walk out of the gates of Lumenho
 priority: 72
 title: The Teacher's Desk
 art: feather
-when: flag(career_teaching) and flag(career_accepted)
+when: flag(took_teaching)
 text: In the autumn you return to Lumenhold — not on the student barge, but on the faculty one. Your classroom has a window over the lake and a desk with somebody else's initials carved in it. On the first day a terrified first-year asks a question you once asked. You know exactly what to say.
 
 @ending ending_wanderer
 priority: 58
 title: The Road of Wonders
 art: tent
-when: flag(career_circus) and flag(career_accepted)
+when: flag(took_circus)
 text: You join the Travelling Circus of Wonders as its youngest illusionist. For years you cross the kingdoms in a painted wagon, making dragons out of moonlight for children who have never seen magic. Every winter, a letter arrives from Lumenhold. You always write back.
 
 # ---------------- Relationship lines: Ilse Dumont's chain ----------------
@@ -243,7 +250,7 @@ slot: relationships
 priority: 40
 title: A Friend Across the Hills
 art: letter
-when: flag(tamsin_friends) and rel(tamsin) >= 15
+when: flag(tamsin_friends) and rel(tamsin) >= 15 and flag(kept_tamsin)
 text: Your yearbook entry has a green seal pressed into the corner, which is not allowed. Tamsin Reed of Thornwick sent it, with a note: "Four years of rivalry, four hundred letters, one friend. Insufferable to the end." Every spring, at a town halfway between, there are biscuits.
 
 @ending ending_dumonts_reunited
@@ -251,7 +258,7 @@ slot: relationships
 priority: 50
 title: Two Dumonts in the Photograph
 art: snow
-when: flag(dumont_reunited)
+when: flag(dumont_reunited) and flag(kept_dumonts)
 text: In the graduation photograph, at the edge of the crowd, two pale heads lean together: Kael, and the sister who was raised to open the door he refused. Neither of them is smiling at the camera. They are smiling at each other, which is rarer, and which you helped to happen.
 
 @ending ending_ilse_taken
@@ -259,7 +266,7 @@ slot: relationships
 priority: 45
 title: A Chair Left Empty
 art: rain
-when: flag(ilse_taken) and not flag(dumont_reunited)
+when: flag(ilse_taken) and not flag(dumont_reunited) and flag(kept_ilse_chair)
 text: The man in grey took Ilse north, and no letter has come. At graduation Kael keeps the seat beside him empty without saying why. You know why. Some evenings, when the lake goes very still, you still look for a girl in white furs on the far shore.
 
 # ---------------- Personal lines (yearbook) ----------------
@@ -269,7 +276,7 @@ slot: personal
 priority: 35
 title: The Thesis They Locked Away
 art: book
-when: flag(thesis_hollowstar)
+when: flag(thesis_hollowstar) and flag(remember_thesis)
 text: Your thesis on the founders' seal earned a distinction and then disappeared into the headmistress's tower. Its catalogue card in the Spire Library reads only "Restricted", in her handwriting. Three people in the world have read it. One of them still writes to you with questions.
 
 @ending ending_lumen
@@ -277,7 +284,7 @@ slot: personal
 priority: 30
 title: A Lantern for Others
 art: lantern
-when: alignment >= 60
+when: alignment >= 60 and flag(remember_lumen)
 text: In the yearbook, under your portrait, someone has written: "The one you went to when it mattered." First-years you barely remember will name their own lanterns after you. Lumenhold has a word for people like that. It is the same word as its name.
 
 @ending ending_hollow_touched
@@ -285,5 +292,109 @@ slot: personal
 priority: 30
 title: The Shadow at Your Heel
 art: mask
-when: alignment <= -60
+when: alignment <= -60 and flag(remember_hollow)
 text: Your portrait in the yearbook is the only one where the candles behind you seem to have gone out. People step aside when you pass, not quite knowing why. The Hollow has learned your name, and you find, more and more often, that you answer to it.
+
+# ---------------- The Night's other outcomes (mystery; feedback 2026-10-25) ----------------
+
+@ending ending_hollow_fled
+slot: mystery
+priority: 85
+title: The Door Left Ajar
+art: door
+when: flag(hollow_fled)
+text: You went down beneath the frozen lake, saw the door, and ran. Nobody blames you to your face; the headmistress, whose hair went white that night, never mentions it at all. Somewhere under the water the door still stands ajar. Every spring, when the ice goes out, you dream of the dark between the gap and the frame.
+
+@ending ending_held_the_line
+slot: mystery
+priority: 80
+title: The Night Above the Ice
+art: shield
+when: flag(hollow_held_line)
+text: The night the lake froze, you didn't go down. You held the doors of the first-year tower against frost and whispers until dawn, and every child in it lived. Someone else went beneath the lake, or no one did; the first-years never cared which. They carved your initials over that door, and nobody has dared paint them out.
+
+# ---------------- Careers you signed on the last day (headline; feedback 2026-10-25) ----------------
+
+@ending ending_royal_archivist
+priority: 70
+title: Keeper of the Folios
+art: book
+when: flag(took_royal_library)
+text: You take the cold room at the Royal Library Archives, the one with the folios that object to being opened. Within a year you have catalogued a shelf nobody had dared touch in a century, and the keeper has stopped checking your gloves. On the staff list, under "Cataloguer", your name is in copperplate.
+
+@ending ending_guild
+priority: 64
+title: A Bench at the Works
+art: cauldron
+when: flag(took_guild)
+text: You join the Guild of Alchemists' great works as its newest journeyman, in protective clothing you paid for yourself. There are two explosions a month and none of them yours. By the second winter the foreman sends the hardest batches to your bench, and pretends he doesn't.
+
+@ending ending_observatory
+priority: 63
+title: Charting the Night
+art: star
+when: flag(took_observatory)
+text: You go back up to the plateau with the Observatory Expedition, salaried now, frostbite remedies in your pack. The nights are long and very cold and you stay awake through every one of them. Two years on, a star on the new charts carries your initials, in very small letters.
+
+@ending ending_field_station
+priority: 62
+title: Out on the Moors
+art: paw
+when: flag(took_field_station)
+text: You take the keeper's cottage at the Beastcraft Field Station: a lamp, a kettle, and more creatures than any sane person would count. The winters are long, wet and lonely. You count the creatures anyway, every one, and the foal from your summer grows up following you about like a dog.
+
+@ending ending_thornwick
+priority: 61
+title: Across the Hills
+art: mirror
+when: flag(took_thornwick)
+text: You cross the hills to Thornwick's illusion laboratory, where they think glamour is a science and are mostly right. Lumenhold says something cutting about it, as predicted. Within three years it offers to hire you back at twice the salary, as predicted. You haven't answered yet.
+
+@ending ending_librarian
+priority: 57
+title: The Stacks Kept You
+art: book
+when: flag(took_spire)
+text: You never quite leave. In the autumn you are back behind the Spire Library's reference desk, a keeper of the stacks now, with a longer ladder and a key to the shelves nobody else may reach. Footnote has not bitten you in months. Students ask you for books, and you find them every time.
+
+@ending ending_newt
+priority: 54
+title: Behind the Bar
+art: cup
+when: flag(took_newt)
+text: You stay on at the Gilded Newt, full time, behind the bar and then in charge of it. You remember who ordered the spiced cider, and who's owed a favour, and which of the card games upstairs to look away from. Students who were first-years when you graduated come in to tell you their troubles. You pour, and listen.
+
+@ending ending_pell
+priority: 53
+title: Counting Drops
+art: cauldron
+when: flag(took_pell)
+text: You stay on at Pell & Daughters, at the counter by day and among the thousand drawers by night, counting drops while Old Pell counts aloud behind you. In ten years, if you're still careful, they'll show you the drawers that never open. You are still careful.
+
+@ending ending_courier
+priority: 52
+title: Over the Lake in All Weathers
+art: broom
+when: flag(took_courier)
+text: You keep the satchel with your name on the flap and fly the lake in all weathers, letters and parcels and the occasional live delivery. The broom still pulls left. You don't. On winter nights the first-years watch your lamp crossing the ice and make wishes on it, as if you were a star.
+
+@ending ending_clerk
+priority: 45
+title: A Desk and a Stamp
+art: scroll
+when: flag(took_clerk)
+text: You take the clerk's desk from the registrar's list: stamps, ledgers and a window that looks at a wall. It isn't a dream. It pays the rent, and in the evenings you are free, and one day, quietly, you notice that the wall has a crack in it shaped exactly like a door.
+
+@ending ending_still_searching
+priority: 10
+title: Still Looking
+art: map
+when: flag(took_none) and (gpa >= 2.5 or renown >= 30)
+text: You graduate without a post, and on purpose, or near enough. Your grades will open doors and your name has been heard; the world, you've decided, can make you a better offer in its own time. You spend the autumn writing letters from a rented room above a bakery. Some of them get answers.
+
+@ending ending_back_home
+priority: 9
+title: Back in Your Old Room
+art: rain
+when: flag(took_none) and not (gpa >= 2.5 or renown >= 30)
+text: You go home with a diploma and no letter. Your old room is smaller than you remember, and the bed is too short, and for a while you lie in it until noon and let the days rot quietly by. Then, one morning, you sit up, and write to the registrar about her list. It was still there, as she said it would be.

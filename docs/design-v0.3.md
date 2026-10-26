@@ -303,7 +303,9 @@ The tentative live harness will build its prompts from the same files, so the pa
 | 12 | Starfall | Aug | summer | break | Starfall festival (the meteor showers); *year 4: graduation, the endings resolved, end of run* |
 
 - **4 years.** The run ends in Starfall of year 4: **48 months**.
-- **The wrap-up** (playtest 2): year 4's last break is not a vacation. There is no break plan; the player stays on campus with free board and no obligations. Goldenhaze is a free campus month. Starfall, the last month, resolves the endings: no map and no ordinary cards, only the graduation and one resolution card per ending (X10 fills these), whose choices decide how each ending resolves.
+- **The wrap-up** (playtest 2): year 4's last break is not a vacation. There is no break plan; the player stays on campus with free board and no obligations. Goldenhaze is a free campus month; with no job offer by then it brings the last call (§7.7). Starfall, the last month, resolves the endings: no map and no ordinary cards, only the graduation and one resolution card per ending (X10 fills these), whose choices decide how each ending resolves (feedback 2026-10-25):
+  - **Every line of the yearbook is told on a card that day**, in the ending's own terms: the career you sign (§7.7), the lake's outcome, each partner (stay together, or part at the gate), the friends who stayed (keep in touch, or say goodbye), the Dumonts' photograph, the corner for Tamsin, and which personal lines the yearbook keeps (up to two of those you qualify for). Academic standing is told by the final lists and isn't a choice.
+  - **The replay guarantee:** replaying month 48 from one save reaches every ending the run has earned by choosing differently; `grim finale` checks it (and a slow test, on simulated runs).
 - **The origin** is picked in the Sorting Mirror itself (§3; feedback 2026-10-20, until then on its own screen before the game): a new game opens on a prologue, the sky-barge's arrival and then the mirror, a menu whose answers name the crowns each origin gives, and month 1 begins once it's picked, so its charges and summary follow the pick and see the origin. Tools and tests still pass the origin to `newGame`, and then the mirror only reflects it.
 - The names `final_year`, `wrapup`, `term`, `break` and `season` are available in conditions and text.
 
@@ -695,7 +697,7 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
   - Beastcraft field station (vigor)
   - Thornwick exchange lab (charm)
   - Office of Unseen Affairs (guile; by invitation)
-- **When:** the summer of year 2 and year 3, one summer per offer (M16). A strong summer (performance ≥ 80) brings a letter asking you back; otherwise the post ends, and next year needs a new application.
+- **When:** the summer of year 2 and year 3, one summer per offer (M16). A strong summer (performance ≥ 80) brings a letter asking you back; otherwise the post ends, and next year needs a new application. A strong summer is also remembered in the final year: the host writes with a post after graduation (a return offer, §7.7).
 - **Away:** an internship draws no campus pools; the day's social and world cards come from the internship's own events, and nobody from campus comes calling.
 - **Play:** a break day on the host's map: morning assignment card, two visits, night.
   - A supervisor NPC (authored, or a spawned archetype once Phase 4 exists).
@@ -739,6 +741,20 @@ lead: lyra                       # NPC whose relationship absence affects (or a 
 **Result:** distinction, pass, or fail and resubmit (graduate late). It feeds GPA, the yearbook headline, the Career Fair and renown. An ambitious, plot-bound thesis adds a line to the ending's *mystery* slot.
 
 ---
+
+### 7.7 Careers and offers (year 4; feedback 2026-10-25)
+
+A job comes only through a card, so it is always foreshadowed. An **offer** is a flag (`offer_<career>`); on the last day the player signs one of the offers held (`took_<career>`), and that is the yearbook's headline.
+
+**Where offers come from:**
+- **The Career Fair** (Emberwane, year 4): leave your name with one employer (Conclave, Royal Library, Guild of Alchemists, Office of Unseen Affairs, the Circus of Wonders, or teaching at Lumenhold with a faculty member's trust), then an interview; a good one is an offer. "Not yet" brings the fair's second week the month after, and then it's gone.
+- **Return offers:** a strong internship (performance ≥ 80, §7.5) brings a letter from its host in the final year (the Royal Library's archives, the Conclave Laboratory, the Guild's works, the Observatory Expedition, the Beastcraft Field Station, Thornwick's laboratory, the Office of Unseen Affairs); a part-time job going well (performance ≥ 60 or its second rank) asks you to stay on full time (the Spire's stacks, the Gilded Newt, Pell & Daughters, the courier loft).
+- **Head-hunting:** what you're known for brings a letter: arcana ≥ 80 with GPA ≥ 2.5 (the Conclave), the scholar's lore (a Spire fellowship), alchemy ≥ 72 (a shop lease), guile ≥ 75 (the Unseen Office), 180 crowns (a shipping house's partnership).
+- Letters arrive one a month at most, from Stormbloom of year 4 to Goldenhaze.
+
+**The last call** (Goldenhaze, year 4, with no offer held): the registrar's window, a menu that always holds a sure post (a clerk's desk), a friendly interview where you once worked or interned, a long shot in your best subject, or waiting until after graduation.
+
+**The last day** (`last_career`): one option per offer held, plus keeping looking. Signing none, or holding none, ends on one of two lines by performance: *Still Looking* (GPA ≥ 2.5 or renown ≥ 30) or *Back in Your Old Room*.
 
 ## 8. Economy, preview and balance (Phase 2a; tuned in Phase 3)
 
@@ -1063,13 +1079,14 @@ Until §T2's crafting exists, alchemy is a skill and appears only in prose. Vali
 
 | Slot | Picks |
 |---|---|
-| headline | 1 (career / academic; highest priority whose `when` holds) |
+| headline | 1 (the career signed on the last day, §7.7; none signed: still looking or back home) |
 | mystery | 0–1 (the main-plot outcome, §10.6) |
 | relationships | 0–3 (best bonds: partner > close > friend; one line each) |
-| personal | 0–2 (alignment, renown, notable flags) |
+| personal | 0–2 (academic standing when it's poor; then the lines the yearbook keeps: alignment, renown, notable flags) |
 
 - Endings declare `slot:` and `excludes:`. Game-over endings stay exclusive.
 - Phase 3 annotates the existing 19 endings with slots (ignored until Phase 4).
+- **Chosen on the last day** (feedback 2026-10-25, §4.1): each relationship and personal line reads a choice made on a month-48 card (kept with a partner, the friends who stayed, the Dumonts' photograph, Tamsin's corner, the lines the yearbook keeps), and the headline reads the career signed there (§7.7).
 
 ### 10.6 Arcs and the main plot (mechanics 2b · restructure 3 · journal UI 4)
 

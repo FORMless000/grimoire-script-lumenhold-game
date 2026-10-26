@@ -1,7 +1,7 @@
 # ============================================================
 #  Expansion — Final year: careers, last times, farewells.
-#  career_* flags (set by the Career Fair) + career_accepted
-#  feed two endings: ending_teacher, ending_wanderer.
+#  The Career Fair sets career_<employer> and its interview an
+#  offer (fair_offer, careers.grim); the last day signs one.
 # ============================================================
 
 @thread careers
@@ -11,14 +11,14 @@ title: The Career Fair
 class: story
 tone: light
 trigger: auto
-when: final_year and month == 2
+when: final_year and (month == 2 or (month == 3 and flag(fair_later)))
 priority: 42
 type: menu
 art: scroll
 tags: study story
 thread: careers
 scene: The great hall lined with recruiters' booths — a Conclave mage in silver, a librarian behind a wall of books, a circus ringmaster juggling fire.
-text: Every guild, order and institution in the kingdom has sent someone to the great hall. They are all very polite. They are all, very clearly, shopping. Where will you leave your name?
+text: {month == 3: The fair's second week, and the great hall is half packed: the booths that are left have stopped being polite and started being keen. This is the last chance to leave your name.|Every guild, order and institution in the kingdom has sent someone to the great hall. They are all very polite. They are all, very clearly, shopping. Where will you leave your name?}
 > conclave: The Conclave of the Seven Towers
   hint: Apprentice archmages. The interview tests your Arcana.
   flag career_conclave
@@ -53,9 +53,9 @@ text: Every guild, order and institution in the kingdom has sent someone to the 
   say: Your old professor puts your name forward to the faculty, with a few words you don't hear. The interview is set.
 > none: Not yet — you'd rather not decide
   mood +tiny
-  if month < 4:
-    queue y3_career_fair in 1
-  say: You collect a tote bag, three pamphlets and a free quill. {month < 4: The future can wait one more month; the fair is back next month.|The fair packs up for good. The future will have to come and find you.}
+  if month == 2:
+    flag fair_later
+  say: You collect a tote bag, three pamphlets and a free quill. {month == 2: The future can wait one more month; the fair's second week is next month.|The fair packs up for good. The future will have to come and find you, by letter or at the registrar's window.}
 
 @event y3_interview
 title: The Interview
@@ -203,6 +203,7 @@ text: "We'll be in touch," says the smiling one, and stands, and so you stand to
 > ok: Wait for the letter
   if iv_score >= 2:
     flag career_offered
+    fair_offer
     queue y3_offer_letter in 2
     say: You go back to your room and lie on the bed and don't move for an hour. Somewhere, three people are deciding.
   elif iv_score >= 1:
@@ -226,6 +227,7 @@ text: A thin letter. You are "a strong candidate" and on "a short list", and the
   challenge appeal journeyman+ drift low:
     win:
       flag career_offered
+      fair_offer
       queue y3_offer_letter in 1
       say: Two pages, plain and sure: why you, why them, why now. A fortnight later, a heavier envelope.
     lose:
@@ -235,6 +237,7 @@ text: A thin letter. You are "a strong candidate" and on "a short list", and the
   mood -tiny
   chance unlikely:
     flag career_offered
+    fair_offer
     queue y3_offer_letter in 2
     say: You let it lie. Two months later, when you'd almost stopped looking, the heavier envelope comes after all.
   else:
@@ -268,17 +271,17 @@ art: letter
 tags: story
 thread: careers
 scene: An envelope with a heavy wax seal on a dormitory desk, unopened, a hand hovering over it.
-text: A heavy envelope with a seal you recognise from the fair. Inside, a single page: an offer. A place. A future with a start date. {iv_score >= 3: There is a signing purse, too, which they call "a token".|} It needs a signature by the end of the month.
-> left: Sign it today
+text: A heavy envelope with a seal you recognise from the fair. Inside, a single page: an offer. A place. A future with a start date. {iv_score >= 3: There is a signing purse, too, which they call "a token".|} The contract itself is signed on the last day, with any other you've had.
+> left: Say yes today
   flag career_accepted
   mood +medium
   if iv_score >= 3:
     gold +medium
-  say: Your signature looks strange on the page — like a grown-up's. You pin the letter above your bed and look at it every night.
+  say: You write "yes" so hard the nib goes through. The contract will wait for the last day, they write back, but the place is held for you. You pin the letter above your bed and look at it every night.
 > right: Ask them to wait
   mood -tiny
   lore +tiny
-  say: You write back asking for time. They grant it, coolly. The future, it turns out, does not like waiting, but it will.
+  say: You write back asking for time. They grant it, coolly: the offer stands until the last day, and not an hour after.
 
 @event y3_first_year_mentee
 title: Your First-Year

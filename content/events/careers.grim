@@ -1,0 +1,414 @@
+# ============================================================
+#  Careers and offers (design §7.7; feedback 2026-10-25). A job
+#  comes only through a card: an offer is a flag `offer_<career>`
+#  that a letter, an interview or a return offer leaves, and on
+#  the last day (`last_career`, last_day.grim) you sign one of
+#  them (`took_<career>`), which is the yearbook's headline. No
+#  offer by the wrap-up brings the last call (month 47), which
+#  always holds one sure post. The career fair is in
+#  expansion_y3.grim.
+# ============================================================
+
+# Any offer still open (the last call comes only without one).
+@cond has_offer
+is: flag(offer_conclave) or flag(offer_royal_library) or flag(offer_fellowship) or flag(offer_guild) or flag(offer_shop) or flag(offer_unseen) or flag(offer_trading) or flag(offer_teaching) or flag(offer_circus) or flag(offer_observatory) or flag(offer_field_station) or flag(offer_thornwick) or flag(offer_spire) or flag(offer_newt) or flag(offer_pell) or flag(offer_courier) or flag(offer_clerk)
+
+# The career fair's employer, once an interview there ends in an offer (expansion_y3.grim).
+@preset fair_offer
+desc: Turns the career fair's choice into an offer.
+do:
+  if flag(career_conclave):
+    flag offer_conclave
+  elif flag(career_library):
+    flag offer_royal_library
+  elif flag(career_guild):
+    flag offer_guild
+  elif flag(career_unseen):
+    flag offer_unseen
+  elif flag(career_circus):
+    flag offer_circus
+  elif flag(career_teaching):
+    flag offer_teaching
+
+# Letters in the final year: at most one a month (career_letter_turn), each once.
+@pool career_letter
+desc: A letter with a post in it, in the final year: one a month at most.
+trigger: auto
+class: milestone
+tone: warm
+art: letter
+tags: job story
+chain: careers
+priority: 40
+when: final_year and month >= 3 and month <= 11 and career_letter_turn < turn
+
+# ---------------- Head-hunted: what you're known for brings a letter ----------------
+
+@event career_letter_conclave
+title: A Letter From the Seven Towers
+pool: career_letter
+when: arcana >= 80 and gpa >= 2.5 and not flag(offer_conclave)
+scene: A letter sealed in silver wax on a dormitory desk, seven small towers pressed into the seal.
+text: Silver wax, seven little towers in it. The Conclave writes that Professor Thorne has mentioned your name, "more than once and without being asked", and offers you an apprenticeship at the Seven Towers after graduation. Your answer is due on the last day.
+on_show:
+  career_letter_turn = turn
+> left: Write back that you're interested
+  flag offer_conclave
+  mood +small
+  say: You write three drafts and send the shortest. Thorne passes you in the corridor the next day and says "Hm," which from him is a parade.
+> right: Ask what an apprentice actually does
+  flag offer_conclave
+  lore +tiny
+  mood -tiny
+  say: The answer comes by return: long hours, a grey robe, and seven years before anyone lets you near a real ward. It is less glamorous on paper. The offer stands.
+
+@event career_letter_fellowship
+title: A Fellowship at the Spire
+pool: career_letter
+when: (lore >= 98 or (flag(thesis_distinction) and lore >= 85)) and gpa >= 2.5 and not flag(offer_fellowship)
+scene: A folded note tucked inside a returned library book, written in tiny, careful faculty handwriting.
+text: The note is inside a book you returned last week, which is how the Spire Library's fellows do things. They have a junior fellowship free, a carrel with your name already chalked on it, and a question: would you like to spend your life among books that bite? Answer by the last day.
+on_show:
+  career_letter_turn = turn
+> left: Chalk "yes" under your name
+  flag offer_fellowship
+  mood +small
+  say: You go down to the carrel that evening and chalk a small "yes" under your name. In the morning someone has underlined it.
+> right: Ask how many fellows the books have eaten
+  flag offer_fellowship
+  lore +tiny
+  mood -tiny
+  say: "Three," the reply says, "in two hundred years, and all of them were careless." You are not entirely reassured. The carrel waits.
+
+@event career_letter_shop
+title: A Lease by the Harbour
+pool: career_letter
+when: alchemy >= 72 and not flag(offer_shop)
+scene: A rolled lease tied with string on a dormitory desk, a small brass key on top of it.
+text: The lease comes with a brass key and a letter from a harbour landlord whose wife swears by your hair tonic. A crooked little shop, two rooms and a still, yours from the autumn if you sign on the last day. Nobody has ever offered you a door of your own before.
+on_show:
+  career_letter_turn = turn
+> left: Keep the key on a string round your neck
+  flag offer_shop
+  mood +small
+  say: You wear the key under your robes for the rest of the year. It's warm when you touch it, which is probably the hair tonic's doing.
+> right: Write back about the drains
+  flag offer_shop
+  alchemy +tiny
+  mood -tiny
+  say: The landlord's reply is two pages about the drains, which you read twice. An alchemist's shop lives or dies by its drains. This one, apparently, will live.
+
+@event career_letter_unseen
+title: A Letter That Wasn't Posted
+pool: career_letter
+when: guile >= 75 and not flag(offer_unseen)
+scene: A plain envelope with no stamp and no seal lying on a pillow that was empty a moment ago.
+text: The envelope is on your pillow, though the door was locked and the window shut. Inside, a single line: the Crown's Office of Unseen Affairs has a desk for you, if you want it, from the autumn. There is no address to reply to. They'll know your answer on the last day.
+on_show:
+  career_letter_turn = turn
+> left: Leave a "yes" on the pillow
+  flag offer_unseen
+  mood +small
+  say: You leave one word on the pillow and go to supper. When you come back, the paper is gone and the bed has been made. You did not make it.
+> right: Find out how they got in
+  flag offer_unseen
+  guile +tiny
+  mood -tiny
+  say: You spend a week on it and find the scratch on the window catch, the loose tile, the borrowed key. It's very good work. That's the trouble.
+
+@event career_letter_trading
+title: A Partnership Offered
+pool: career_letter
+when: gold >= 180 and not flag(offer_trading)
+scene: A thick letter on cream paper, stamped with a shipping line's anchor, a tally of figures down its margin.
+text: A shipping house in the harbour has heard about your purse, or rather about how you filled it. Its old partner wants to retire, and offers you his desk and his share of the ledger from the autumn. "Bring your crowns," he writes. "Bring your nerve. Answer on the last day."
+on_show:
+  career_letter_turn = turn
+> left: Write back that you're interested
+  flag offer_trading
+  mood +small
+  say: You reply on the cream paper's own back, which seems businesslike. By return comes a ledger page with a column already headed with your name.
+> right: Ask to see the books first
+  flag offer_trading
+  guile +tiny
+  mood -tiny
+  say: He sends them, all of them, and you find the hole in the third year that he hoped you'd find. "Good," says his next letter. "The last partner didn't."
+
+# ---------------- Asked back: a strong internship's return offer ----------------
+
+@event career_return_royal_library
+title: The Archives Write Again
+pool: career_letter
+when: flag(return_royal_library) and not flag(offer_royal_library)
+scene: A letter in archivist's copperplate, a pressed slip of catalogue card tucked into the fold.
+text: The Royal Library Archives remember your summer. The keeper writes that a cataloguer's post is free from the autumn, "for someone who reads the footnotes", and that your name was the only one proposed. Answer by the last day.
+on_show:
+  career_letter_turn = turn
+> left: Write back in your best copperplate
+  flag offer_royal_library
+  mood +small
+  say: It takes an evening and four nibs. The keeper replies with a catalogue card made out in your name, under "Staff".
+> right: Ask which room you'd be given
+  flag offer_royal_library
+  lore +tiny
+  mood -tiny
+  say: "The cold one," the keeper writes, "with the folios that object to being opened." You will need gloves. You will also, you suspect, love it.
+
+@event career_return_conclave
+title: The Laboratory Writes Again
+pool: career_letter
+when: flag(return_conclave) and not flag(offer_conclave)
+scene: A letter on laboratory paper, slightly singed at one corner, sealed with seven small towers.
+text: The Conclave Laboratory remembers your summer, and especially the ward that held. Your old supervisor writes that a place as a junior researcher is yours from the autumn if you'll take it. "Don't make me ask twice," she adds. Answer by the last day.
+on_show:
+  career_letter_turn = turn
+> left: Write back yes, in principle
+  flag offer_conclave
+  mood +small
+  say: You write back the same night. Her reply is one line: "Good. Bring your own gloves."
+> right: Ask what you'd be testing
+  flag offer_conclave
+  arcana +tiny
+  mood -tiny
+  say: Wards that are meant to fail, she writes, so that the ones on the city gates don't. You'd be standing very close to a great many explosions.
+
+@event career_return_guild
+title: The Works Write Again
+pool: career_letter
+when: flag(return_guild) and not flag(offer_guild)
+scene: A grubby letter with a chemical stain on the envelope, stamped with the Guild of Alchemists' retort.
+text: The Guild of Alchemists' works remember your summer and the batch you saved. The foreman writes, in a hand that has clearly been burned more than once, that a journeyman's bench is yours from the autumn. Answer by the last day.
+on_show:
+  career_letter_turn = turn
+> left: Write back yes, in principle
+  flag offer_guild
+  mood +small
+  say: You write back yes. The foreman's reply is a list of protective clothing you will need to buy yourself, which you take as a welcome.
+> right: Ask about the explosions
+  flag offer_guild
+  alchemy +tiny
+  mood -tiny
+  say: "Two a month," he writes, "and none fatal since my father's day." You read it three times. The bench is still yours.
+
+@event career_return_observatory
+title: The Expedition Writes Again
+pool: career_letter
+when: flag(return_observatory) and not flag(offer_observatory)
+scene: A letter with a star chart sketched on the back, the paper creased from a long journey off a plateau.
+text: The Observatory Expedition remembers your summer on the plateau. Its leader writes that next year's survey needs a chartmaker who can stay awake till dawn, and a salaried place is yours from the autumn. Answer by the last day.
+on_show:
+  career_letter_turn = turn
+> left: Write back yes, in principle
+  flag offer_observatory
+  mood +small
+  say: You write back under the star chart, adding one they'd missed. The leader's reply circles it twice.
+> right: Ask how cold the plateau gets
+  flag offer_observatory
+  lore +tiny
+  mood -tiny
+  say: Very, is the answer, with a list of the frostbite remedies they carry. The stars, the letter adds, are worth it. You remember that they are.
+
+@event career_return_field_station
+title: The Field Station Writes Again
+pool: career_letter
+when: flag(return_field_station) and not flag(offer_field_station)
+scene: A muddy letter with a feather pressed in it and a paw print smudged across the address.
+text: The Beastcraft Field Station remembers your summer on the moors. The warden writes that a keeper's post is yours from the autumn, with a cottage, a lamp and more creatures than any sane person would count. Answer by the last day.
+on_show:
+  career_letter_turn = turn
+> left: Write back yes, in principle
+  flag offer_field_station
+  mood +small
+  say: You write back yes. The next letter has a second paw print on it, which the warden says is the foal's way of agreeing.
+> right: Ask about the winters
+  flag offer_field_station
+  vigor +tiny
+  mood -tiny
+  say: Long, wet and lonely, the warden writes, honestly, and the best work there is. You believe the second half.
+
+@event career_return_thornwick
+title: Thornwick Writes Again
+pool: career_letter
+when: (flag(return_thornwick) or flag(thornwick_offer)) and not flag(offer_thornwick)
+scene: A green-sealed letter on lacquered paper, from the rival academy over the hills.
+text: Thornwick's illusion laboratory remembers your summer{flag(thornwick_offer): and the offer you kept sealed in your trunk|}. The dean writes that a researcher's bench is yours from the autumn, across the hills, among people who think glamour is a science. Answer by the last day.
+on_show:
+  career_letter_turn = turn
+> left: Write back yes, in principle
+  flag offer_thornwick
+  mood +small
+  say: You write back yes, in green ink, to annoy someone. The dean's reply says the ink was noticed and admired.
+> right: Ask what Lumenhold would say
+  flag offer_thornwick
+  charm +tiny
+  mood -tiny
+  say: "Something cutting," the dean writes, "and then they'd hire you back at twice the salary." You suspect she's right about both.
+
+@event career_return_unseen
+title: The Office Writes Again
+pool: career_letter
+when: flag(return_unseen) and not flag(offer_unseen)
+scene: A blank sheet of paper on a desk that, held to a candle, shows writing in brown ink.
+text: A blank page, until you hold it to the candle. The Office of Unseen Affairs remembers your summer, and the file you didn't open. A desk is yours from the autumn. No reply is needed; they will know your answer on the last day.
+on_show:
+  career_letter_turn = turn
+> left: Burn it, as they'd want
+  flag offer_unseen
+  mood +small
+  say: You burn it over the candle and grind the ash into the grate. It feels like the first day of something.
+> right: Keep it, and read it again
+  flag offer_unseen
+  guile +tiny
+  mood -tiny
+  say: You keep it, which they'll know, and read it by candle every few nights. There's a second line you missed the first time: "We'd have kept it too."
+
+# ---------------- Kept on: a part-time job that goes well ----------------
+
+@event career_job_spire
+title: The Stacks Want You Back
+pool: career_letter
+when: member(library_assistant) and (performance(library_assistant) >= 60 or rank(library_assistant) >= 2) and not flag(offer_spire)
+scene: The library's reference desk after hours, a note left under the bell in the head librarian's careful hand.
+text: A note under the bell on the reference desk, after your shift. The head librarian wants to keep you on after graduation, full time, as a keeper of the stacks. "Footnote has stopped biting you," it says. "That is a qualification." Answer by the last day.
+on_show:
+  career_letter_turn = turn
+> left: Leave a note under the bell: yes
+  flag offer_spire
+  mood +small
+  say: You leave your answer under the bell. In the morning there's a second note: "Good. Bring a longer ladder."
+> right: Ask about the restricted shelves
+  flag offer_spire
+  lore +tiny
+  mood -tiny
+  say: "In time," says the next note, "and only with gloves." It is not a no, and you find you're counting the years.
+
+@event career_job_newt
+title: The Landlady's Offer
+pool: career_letter
+when: member(tavern) and (performance(tavern) >= 60 or rank(tavern) >= 2) and not flag(offer_newt)
+scene: The Gilded Newt after closing, chairs up on the tables, the landlady counting the till with a cloth over her shoulder.
+text: After closing, the landlady counts the till, then counts you in. She wants to keep you on after graduation, full time, behind the bar and, in a year or two, in charge of it. "You remember who ordered the spiced cider," she says. "That's rarer than magic." Answer by the last day.
+on_show:
+  career_letter_turn = turn
+> left: Shake on it, in principle
+  flag offer_newt
+  mood +small
+  say: You shake on it over the bar. She pours you a cider on the house, which has never happened to anyone before.
+> right: Ask about the card games upstairs
+  flag offer_newt
+  guile +tiny
+  mood -tiny
+  say: "You'd look the other way," she says, "and so would I." The offer stands. So does the question of what you'd be looking away from.
+
+@event career_job_pell
+title: The Counter at Pell's
+pool: career_letter
+when: member(apothecary_clerk) and (performance(apothecary_clerk) >= 60 or rank(apothecary_clerk) >= 2) and not flag(offer_pell)
+scene: A narrow apothecary counter, a thousand labelled drawers behind it, an old man counting drops aloud at the back.
+text: Pell's daughters ask you into the back, where Old Pell is counting drops. They want to keep you on after graduation, full time, at the counter and, one day, at the drawers that nobody else may open. "Father says you count well," says the eldest. Answer by the last day.
+on_show:
+  career_letter_turn = turn
+> left: Say yes, in principle
+  flag offer_pell
+  mood +small
+  say: Old Pell stops counting long enough to nod at you, then starts again from one. His daughters say that's the highest praise there is.
+> right: Ask about the drawers that never open
+  flag offer_pell
+  alchemy +tiny
+  mood -tiny
+  say: "In ten years," says the eldest, "if you're still careful." You realise you'd like to still be careful in ten years.
+
+@event career_job_courier
+title: A Satchel of Your Own
+pool: career_letter
+when: member(broom_courier) and (performance(broom_courier) >= 60 or rank(broom_courier) >= 2) and not flag(offer_courier)
+scene: A courier loft at dusk, brooms racked along the wall, a satchel with a newly stitched name hanging on a peg.
+text: There's a new satchel on your peg at the loft, with your name stitched on the flap. The chief wants to keep you on after graduation, full time, flying the lake in all weathers. "The broom still pulls left," she says. "You don't." Answer by the last day.
+on_show:
+  career_letter_turn = turn
+> left: Sling the satchel over your shoulder
+  flag offer_courier
+  mood +small
+  say: It fits. You fly a lap of the lake that evening for no reason at all, and the loft cheers you down.
+> right: Ask about the winter routes
+  flag offer_courier
+  vigor +tiny
+  mood -tiny
+  say: The chief shows you the map of the winter routes, with the crosses where couriers came down. There are not many. There are some.
+
+# ---------------- The last call (month 47): one sure post, always ----------------
+
+@event career_last_call
+title: The Last Call
+class: story
+tone: tense
+trigger: auto
+when: wrapup and month == 11 and not has_offer()
+priority: 68
+type: menu
+art: scroll
+tags: job story
+thread: careers
+scene: The registrar's window in the entrance hall at closing time, a short typed list of posts pinned beside it, one student left in the queue.
+text: Everyone else seems to have a letter. The registrar, who has seen this a hundred times, pins a short list beside her window: posts still open for this year's graduates. "Some people find their work late," she says. "Some people find it here. Some people find it in a fortnight's time, in their mother's kitchen. Choose."
+> back: Go back to where you worked
+  hint: The people who know your work. A friendly interview.
+  when: performance(intern_royal_library) > 0 or performance(intern_conclave) > 0 or performance(intern_alchemists) > 0 or performance(intern_expedition) > 0 or performance(intern_field_station) > 0 or performance(intern_thornwick) > 0 or performance(intern_unseen_office) > 0 or performance(library_assistant) > 0 or performance(tavern) > 0 or performance(apothecary_clerk) > 0 or performance(broom_courier) > 0
+  challenge appeal apprentice likely drift none:
+    win:
+      mood +small
+      if performance(intern_conclave) > 0:
+        flag offer_conclave
+      elif performance(intern_royal_library) > 0:
+        flag offer_royal_library
+      elif performance(intern_alchemists) > 0:
+        flag offer_guild
+      elif performance(intern_unseen_office) > 0:
+        flag offer_unseen
+      elif performance(intern_expedition) > 0:
+        flag offer_observatory
+      elif performance(intern_field_station) > 0:
+        flag offer_field_station
+      elif performance(intern_thornwick) > 0:
+        flag offer_thornwick
+      elif performance(library_assistant) > 0:
+        flag offer_spire
+      elif performance(apothecary_clerk) > 0:
+        flag offer_pell
+      elif performance(broom_courier) > 0:
+        flag offer_courier
+      else:
+        flag offer_newt
+      say: You knock on a door you know. The person behind it remembers you, and remembers your work better than you do. "We'd been wondering when you'd ask," they say, and write your name on a list that matters.
+    lose:
+      mood -small
+      say: You knock on a door you know. They remember you warmly, and they've filled the post, last week, with someone who asked first. They wish you luck and mean it.
+> registrar: Take the registrar's list
+  hint: A clerk's post, here or in the village. Yours if you want it.
+  flag offer_clerk
+  mood -tiny
+  say: You put your name to the first post on the list: a junior clerk's desk, stamps and ledgers, a window that looks at a wall. It isn't a dream. It is a start date, and today that feels like a great deal.
+> reach: Write to the post you really want
+  hint: A long shot, in your best subject.
+  challenge appeal expert unlikely drift none:
+    win:
+      mood +medium
+      if arcana >= lore and arcana >= alchemy and arcana >= guile and arcana >= charm and arcana >= vigor:
+        flag offer_conclave
+      elif lore >= alchemy and lore >= guile and lore >= charm and lore >= vigor:
+        flag offer_royal_library
+      elif alchemy >= guile and alchemy >= charm and alchemy >= vigor:
+        flag offer_guild
+      elif guile >= charm and guile >= vigor:
+        flag offer_unseen
+      elif charm >= vigor:
+        flag offer_circus
+      else:
+        flag offer_field_station
+      say: You write the letter you'd been too proud to write at the fair, and send it before you can tear it up. A reply comes by the next owl: come and see us. You go. They say yes.
+    lose:
+      mood -small
+      say: You write the letter you'd been too proud to write at the fair. The reply is kind and short, and the post went in the autumn to someone who wrote then.
+> wait: Leave it until after graduation
+  mood +tiny
+  say: You thank the registrar and walk away from the window. The world will still be there in a fortnight. So, she says to your back, will her list.

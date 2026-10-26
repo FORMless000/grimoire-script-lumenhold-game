@@ -93,3 +93,54 @@ test('2 an ally beside you throws their spell in on scheduled exchanges, and the
   assert.ok(seen >= 1, 'Kael cast at least once');
   assert.ok(told >= 1, 'the fight text names Kael');
 });
+
+// ---- 3. Careers and the last day
+const { slow } = require('./helpers.js');
+const show = (eng, id, actor) => { eng.s.cur = null; eng.s.day = null; eng.s.deck.unshift({ id, actor: actor || null, src: 'test' }); return quiet(() => eng.advance()); };
+const atTurn = (eng, turn) => { eng.s.turn = turn; };
+
+test('3.1 "not yet" at the career fair brings its second week the next month', () => {
+  const eng = fresh(content, 9);
+  atTurn(eng, 38);   // final year, month 2
+  assert.ok(eng.test(content.events.y3_career_fair.when, null), 'the fair in month 2');
+  run(eng, content.events.y3_career_fair.options.find((o) => o.key === 'none').effects);
+  atTurn(eng, 39);
+  assert.ok(eng.test(content.events.y3_career_fair.when, null), 'its second week in month 3');
+  atTurn(eng, 40);
+  assert.ok(!eng.test(content.events.y3_career_fair.when, null), 'and not after');
+});
+
+test('3.3 with no offer by the wrap-up, the last call comes and always holds a sure post', () => {
+  const eng = fresh(content, 9);
+  atTurn(eng, 47);
+  const e = content.events.career_last_call;
+  assert.ok(eng.test(e.when, null), 'no offer: the last call comes');
+  const r = show(eng, 'career_last_call');
+  assert.equal(r.kind, 'card');
+  const reg = r.view.options.find((o) => o.key === 'registrar');
+  assert.ok(reg && !reg.disabled, 'the registrar\'s list is always open');
+  eng.s.flags.offer_newt = true;
+  assert.ok(!eng.test(e.when, null), 'an offer held: no last call');
+});
+
+test('3.4 the last day signs one held offer, or none', () => {
+  const eng = fresh(content, 9);
+  atTurn(eng, 48);
+  eng.s.flags.offer_conclave = true; eng.s.flags.offer_newt = true;
+  const r = show(eng, 'last_career');
+  const open = r.view.options.filter((o) => !o.disabled).map((o) => o.key).sort();
+  assert.deepEqual(open, ['conclave', 'look', 'newt'], 'one option per offer, and keep looking');
+});
+
+test('3.5 every earned yearbook line is reachable on the last day (two simulated runs)', slow, () => {
+  const F = require('../tools/finale.js');
+  const Policies = require('../tools/policies.js');
+  for (const [style, seed] of [['social', 7], ['balanced', 3]]) {
+    const eng = new Engine(content);
+    const { r } = quiet(() => Policies.play(eng, Policies.get(style), { seed, name: 'F', maxSteps: 9000, stop: (e, x) => e.s.turn >= e.maxTurns && x.kind === 'card' }));
+    if (r.kind === 'ending') continue;   // ended early: no last day
+    const res = F.explore(eng);
+    assert.ok(res.leaves > 1, style + ': the last day has choices');
+    assert.deepEqual(res.missing, [], style + ': every earned line is reachable');
+  }
+});

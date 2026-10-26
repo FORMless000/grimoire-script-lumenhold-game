@@ -517,6 +517,23 @@ tone: tense
 art: paper
 tags: study job
 scene: A supervisor's desk on the last day of a placement, a written report face down under a pen.
+# A strong placement (80+) is remembered in the final year: the host writes with a post (careers.grim, 2026-10-25).
+on_show:
+  if performance(internship) >= 80:
+    if member(intern_royal_library):
+      flag return_royal_library
+    elif member(intern_conclave):
+      flag return_conclave
+    elif member(intern_alchemists):
+      flag return_guild
+    elif member(intern_expedition):
+      flag return_observatory
+    elif member(intern_field_station):
+      flag return_field_station
+    elif member(intern_thornwick):
+      flag return_thornwick
+    else:
+      flag return_unseen
 text: Your last day at {member(intern_royal_library): the Royal Library Archives|{member(intern_conclave): the Conclave Laboratory|{member(intern_alchemists): the Guild of Alchemists' Works|{member(intern_expedition): the Observatory Expedition|{member(intern_field_station): the Beastcraft Field Station|{member(intern_thornwick): the Thornwick Exchange|the office with no name}}}}}}. Your supervisor turns the report over. {performance(internship) >= 80: "Exceptional," it says at the top, underlined, and the rest is better.|{performance(internship) >= 60: "Reliable and capable." A few notes in the margin, all of them fair.|{performance(internship) >= 40: "Adequate." The word sits on the page by itself.|"Did not meet expectations." Your supervisor doesn't quite look at you.}}}
 > left: Ask for a letter of reference
   if performance(internship) >= 60:

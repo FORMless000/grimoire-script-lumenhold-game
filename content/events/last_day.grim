@@ -3,8 +3,13 @@
 #  Starfall of the final year and holds only pushed cards, in
 #  priority order: the morning, the results, the career, the
 #  lake, the people, the speech (expansion_y3.grim), the last
-#  Starfall, and the eve of graduation (calendar.grim). Each card
-#  looks back on what the run was; the endings follow.
+#  Starfall, what the yearbook keeps, and the eve of graduation
+#  (calendar.grim). Every line of the yearbook is told here, and
+#  where it is a choice the card makes it (feedback 2026-10-25):
+#  the career you sign (took_<career>), whether you stay with a
+#  partner, keep your friends, stand in the Dumonts' photograph,
+#  write to Tamsin, and which personal lines the yearbook keeps.
+#  Replaying this month alone reaches every ending the run can.
 # ============================================================
 
 @event last_morning
@@ -46,25 +51,117 @@ when: turn == max_turns
 priority: 85
 type: menu
 art: letter
-tags: story
+tags: story job
 thread: careers
-scene: A letter with a heavy seal open on a packed trunk, a student sitting on the trunk lid reading it by the window.
-text: {flag(career_accepted): A letter about your start date. {flag(career_conclave): The Conclave expects you at the Seven Towers in autumn, in grey.|{flag(career_library): The Royal Library has a desk for you, and a key to a room nobody else may enter.|{flag(career_guild): The Guild of Alchemists sends a list of the protective clothing you must buy yourself.|{flag(career_unseen): The Office of Unseen Affairs sends no letter at all, which is how you know you're expected.|{flag(career_circus): The circus wagons will pass the village in a week, and they'll slow down, but they won't stop.|The faculty barge leaves in autumn, and you'll be on it, on the wrong side of the lectern.}}}}}|{flag(career_offered): The offer is still on your desk, unsigned. Today is the last day it stands.|No letter, no start date. Everyone else seems to know where they're going, or says so.}}
-> sign: Sign the offer after all
-  when: flag(career_offered) and not flag(career_accepted)
-  flag career_accepted
+scene: Letters with heavy seals spread across the lid of a packed trunk, a student sitting cross-legged among them with a pen.
+text: {has_offer(): Every letter you've had this year is spread across the lid of your trunk. Tomorrow you graduate, and today each of them wants its answer. You can sign one. You can, if you're brave or foolish, sign none.|No letter, no start date. Everyone else seems to know where they're going, or says so. The registrar's list is still pinned by her window, but you didn't put your name to it.}
+> conclave: Sign with the Conclave
+  hint: An apprentice at the Seven Towers.
+  when: flag(offer_conclave)
+  flag took_conclave
   mood +small
-  say: You sign it on the trunk lid and run it to the owl tower before you can change your mind. {iv_score >= 3: The signing purse lapsed with their deadline; the place, it turns out, did not. |} Your handwriting looks like a grown-up's.
-> reply: Write back that you'll be there
-  when: flag(career_accepted)
+  say: You sign the Conclave's contract with the silver-sealed pen they sent. In the autumn you climb the Seven Towers in grey, an apprentice with seven years of wards ahead of you.
+> royal_library: Sign with the Royal Library
+  hint: A cataloguer in the old archives.
+  when: flag(offer_royal_library)
+  flag took_royal_library
   mood +small
-  say: You write it in your best hand and seal it with the academy's wax for the last time. Then you sit for a while with your hands in your lap, getting used to being expected somewhere.
-> road: Leave it all open
+  say: You sign for the cold room at the Royal Library Archives and the folios that object to being opened. You'll need gloves. You've bought two pairs already.
+> fellowship: Take the Spire fellowship
+  hint: A junior fellow among books that bite.
+  when: flag(offer_fellowship)
+  flag took_fellowship
+  mood +small
+  say: You chalk your name properly over the carrel at the Spire Library. A junior fellow, from the autumn: a life among books that bite, and secrets that wait.
+> guild: Sign with the Guild's works
+  hint: A journeyman's bench, two explosions a month.
+  when: flag(offer_guild)
+  flag took_guild
+  mood +small
+  say: You sign for the journeyman's bench at the Guild of Alchemists' works, and order the protective clothing on the same day.
+> shop: Sign the harbour lease
+  hint: A crooked shop and a still of your own.
+  when: flag(offer_shop)
+  flag took_shop
+  mood +small
+  say: You sign the lease on the crooked little shop by the harbour and hang the brass key back round your neck. In the autumn, the sign will read your name.
+> unseen: Answer the Office of Unseen Affairs
+  hint: A desk at an address that doesn't exist.
+  when: flag(offer_unseen)
+  flag took_unseen
+  mood +small
+  say: You write one word on a slip of paper and leave it under your pillow. In the morning it's gone. In the autumn, a desk at the Office of Unseen Affairs will be waiting.
+> trading: Take the shipping house's desk
+  hint: A partner's share of a harbour ledger.
+  when: flag(offer_trading)
+  flag took_trading
+  mood +small
+  say: You sign for the old partner's desk and his share of the ledger. The shipping house's anchor is pressed into the wax beside your name.
+> teaching: Stay at Lumenhold to teach
+  hint: The faculty barge, on the wrong side of the lectern.
+  when: flag(offer_teaching)
+  flag took_teaching
+  mood +small
+  say: You sign the faculty's contract in the staff room, at a desk with somebody else's initials carved in it. In the autumn you'll be on the faculty barge.
+> circus: Join the Circus of Wonders
+  hint: Wagons, crowds and illusions.
+  when: flag(offer_circus)
+  flag took_circus
+  mood +small
+  say: You sign the ringmaster's contract. In a week the circus wagons pass the village, and they'll slow down for you, and this time they'll stop.
+> observatory: Go back to the plateau
+  hint: Salaried chartmaker for the Observatory Expedition.
+  when: flag(offer_observatory)
+  flag took_observatory
+  mood +small
+  say: You sign for a salaried place with the Observatory Expedition and pack the frostbite remedies first. The plateau, and its nights, are yours from the autumn.
+> field_station: Take the keeper's cottage
+  hint: The Beastcraft Field Station, on the moors.
+  when: flag(offer_field_station)
+  flag took_field_station
+  mood +small
+  say: You sign for the keeper's post at the Beastcraft Field Station: a cottage, a lamp and more creatures than anyone could count.
+> thornwick: Cross the hills to Thornwick
+  hint: A researcher's bench at the rival academy.
+  when: flag(offer_thornwick)
+  flag took_thornwick
+  mood +small
+  say: You sign Thornwick's contract in green ink. In the autumn you'll cross the hills, and Lumenhold will say something cutting, and you'll go anyway.
+> spire: Stay on in the Spire's stacks
+  hint: A keeper of the stacks, full time.
+  when: flag(offer_spire)
+  flag took_spire
+  mood +small
+  say: You leave your signature under the bell on the reference desk. In the autumn you'll be back behind it, with a longer ladder.
+> newt: Stay on at the Gilded Newt
+  hint: Behind the bar, then in charge of it.
+  when: flag(offer_newt)
+  flag took_newt
+  mood +small
+  say: You shake on it over the bar with the landlady, properly this time. Full time from the autumn, and in charge in a year or two.
+> pell: Stay on at Pell & Daughters
+  hint: The counter, and one day the drawers.
+  when: flag(offer_pell)
+  flag took_pell
+  mood +small
+  say: You sign Pell's ledger under his daughters' names. Old Pell stops counting long enough to watch you do it, then starts again from one.
+> courier: Keep your courier's satchel
+  hint: Flying the lake in all weathers.
+  when: flag(offer_courier)
+  flag took_courier
+  mood +small
+  say: You hang the satchel with your name on it back on its peg, where it will be in the autumn, and the autumn after that.
+> clerk: Take the registrar's clerk's desk
+  hint: Stamps, ledgers and a window on a wall.
+  when: flag(offer_clerk)
+  flag took_clerk
   mood +tiny
-  say: {flag(career_accepted): The letter can wait a day. Today is still yours, the last one that is.|You decide not to decide, not today. The world is very large, and it's been waiting four years. It can wait one more day.}
-> home: Write home about what's next
-  mood +small
-  say: You write home, and tell them the truth about what comes next, or what doesn't yet. It's the longest letter you've ever sent, and the easiest.
+  say: You sign for the clerk's desk at the registrar's window. It pays the rent. It is a start date. Today that is enough.
+> look: {has_offer(): Sign none of them, and keep looking|Keep looking}
+  hint: {gpa >= 2.5 or renown >= 30: Your grades and your name will open doors, in time.|Without a post, it's home for a while.}
+  flag took_none
+  mood -tiny
+  say: {gpa >= 2.5 or renown >= 30: You put the pen down. Your grades are good and people know your name; the world can make you a better offer in its own time. You'll rent a room and write letters.|You put the pen down, and the letter you'll write home is the hardest you've ever had to write. There's a room there, and a bed that's too short, and time.}
 
 @event last_lake
 title: The Lake, One Last Time
@@ -76,7 +173,7 @@ priority: 80
 art: wave
 tags: story mystery
 scene: A student standing alone at the end of a wooden jetty at dawn, the Mirror Lake perfectly still, the towers reflected upside down in it.
-text: You walk down to the lake before breakfast, the way you did your first morning. {flag(hollow_sealed): It's clearer than you've ever seen it, clear all the way down, and nothing looks back. You did that. Almost nobody knows.|{flag(hollow_freed): It has been different since the spring it froze, warmer somehow, and the candles along the shore lean toward you as you pass. You did that too.|{flag(hollow_bargain): The water is still. The mark on your palm is not. It hums as you come near, like something greeting something.|{flag(hollow_fled): The water looks ordinary. It isn't. Somewhere under it a door stands ajar, because you ran, and the headmistress's hair has been white since that night.|{flag(hollow_failed): It's calm this morning. You know what lies beneath it, and who paid to keep it closed. You stand on the jetty a long time.|{clues(hollowstar) >= 1: There were stories about this lake, and you followed some of them a little way. You never learned what they meant, or whether they meant anything. The lake isn't telling.|It's flat and blue and ordinary, and the towers stand upside down in it. Four years, and it never once did anything strange. That you saw.}}}}}}
+text: You walk down to the lake before breakfast, the way you did your first morning. {flag(hollow_sealed): It's clearer than you've ever seen it, clear all the way down, and nothing looks back. You did that. Almost nobody knows.|{flag(hollow_freed): It has been different since the spring it froze, warmer somehow, and the candles along the shore lean toward you as you pass. You did that too.|{flag(hollow_bargain): The water is still. The mark on your palm is not. It hums as you come near, like something greeting something.|{flag(hollow_fled): The water looks ordinary. It isn't. Somewhere under it a door stands ajar, because you ran, and the headmistress's hair has been white since that night.|{flag(hollow_held_line): The first-years you held the tower for are skimming stones off the jetty. One of them waves at you. Whatever happened under the ice that night, it happened without you, and they are alive.|{flag(hollow_failed): It's calm this morning. You know what lies beneath it, and who paid to keep it closed. You stand on the jetty a long time.|{clues(hollowstar) >= 1: There were stories about this lake, and you followed some of them a little way. You never learned what they meant, or whether they meant anything. The lake isn't telling.|It's flat and blue and ordinary, and the towers stand upside down in it. Four years, and it never once did anything strange. That you saw.}}}}}}}
 > ok: Say goodbye to the lake
   mood +tiny
   say: {~You skim one stone. It skips seven times, which is your record, and nobody saw.|You crouch and put your hand in the water. It's cold, the way it always was.} Then you walk back up to the castle without looking round.
@@ -93,15 +190,18 @@ cast:
 art: cup
 tags: story social
 scene: Two students sitting on the rim of a courtyard fountain with mugs of tea, packed trunks stacked by the doors behind them.
-text: {friend} finds you in the courtyard with two mugs of tea and no particular reason. "Last ordinary morning," {they} say{s}. "I thought it should be spent properly." You sit on the rim of the fountain and don't talk about tomorrow.
+text: {friend} finds you in the courtyard with two mugs of tea and no particular reason. "Last ordinary morning," {they} say{s}. "I thought it should be spent properly." {bonds(friend) + bonds(close) >= 3: The others drift over one by one, the friends who stayed, until the fountain's rim is full.|You sit on the rim of the fountain and don't talk about tomorrow.}
 > left: Promise to visit, and mean it
+  hint: {bonds(friend) + bonds(close) >= 3: The yearbook will remember the ones who stayed.|A date, a place and a time.}
+  flag kept_friends
   rel friend +small
   mood +small
-  say: You set a date, a real one, with a place and a time, and write it in both your notebooks. {friend} underlines it twice. You both know which of you will be late.
-> right: Give {them} something of yours
+  say: You set a date, a real one, with a place and a time, and write it in every notebook round the fountain. {friend} underlines it twice. You all know which of you will be late.
+> right: Say goodbye properly, here
+  hint: A clean farewell, and no promises to break.
   rel friend +medium
   mood -tiny
-  say: You give {friend} the thing on your desk you'd most miss: a cracked mug, a dog-eared book, the stone from the lake. {They} turn{s} it over and over and say{s} nothing, which says enough.
+  say: You give {friend} the thing on your desk you'd most miss: a cracked mug, a dog-eared book, the stone from the lake. No promises; you've both seen what happens to promises. {They} turn{s} it over and over and say{s} nothing, which says enough.
 
 @event last_partner
 title: After Tomorrow
@@ -112,18 +212,24 @@ when: turn == max_turns
 priority: 72
 cast:
   partner: any where bond(partner) == "partner"
+per: partner
 art: heart
 tags: story romance
 scene: Two students sitting on a castle battlement at noon, legs dangling over the edge, a map of the realm spread between them, weighted with an apple.
-text: {partner} has a map, an apple and the whole afternoon. "Tomorrow we're not students," {they} say{s}. "So I thought we'd better have a plan. Or decide not to." The map is spread on the battlement between you, weighted at one corner with the apple.
+text: {partner} has a map, an apple and the whole afternoon. "Tomorrow we're not students," {they} say{s}. {flag(after_together): "We said we'd go together. I still mean it. Do you?"|"So I thought we'd better have a plan. Or decide that we don't have one."} The map is spread on the battlement between you, weighted at one corner with the apple.
 > left: Plan the first year together
+  hint: Whatever comes, together.
   spark partner +small
   mood +small
+  queue last_partner now
   say: You plan it badly and in detail: a town on the map, a room above a shop, whose turn it is to cook. {partner} draws a circle round the town in ink, so it can't be rubbed out.
-> right: Fold the map, and just have today
-  spark partner +medium
-  mood -tiny
-  say: You fold the map and put it away. "Whatever comes," you say, and {partner} takes your hand, and for an afternoon there's nothing on the other side of tomorrow at all.
+> right: Part at the gate tomorrow
+  hint: Kindly, and for good.
+  bond partner ex
+  mood -medium
+  alignment +tiny
+  queue last_partner now
+  say: You tell {partner} the truth: that tomorrow you'll walk out of the gates in different directions, and that it's right. {They} fold{s} the map very carefully and give{s} you the apple. Neither of you eats it.
 
 @event last_rival
 title: One Last Word
@@ -170,3 +276,91 @@ text: Tonight is Starfall, and by tradition the final-years have the observatory
 > right: Lie back with everyone
   mood +medium
   say: You lie in a row with your year, shoulder to shoulder, and count the stars aloud until the counting falls apart. Somebody starts to cry, and then everybody is laughing.
+
+@event last_dumonts
+title: Two Pale Heads
+class: story
+tone: warm
+trigger: auto
+when: turn == max_turns and met(kael) and (flag(dumont_reunited) or flag(ilse_taken))
+priority: 71
+art: snow
+tags: story social
+scene: A photographer's tripod on the great hall steps, graduates jostling into rows, a pale young man at the end of a row beside an empty space.
+text: {flag(dumont_reunited): The photographer is herding the year onto the great hall steps. At the end of a row, two pale heads lean together, Kael and Ilse, who was raised to open the door he refused. Kael sees you and moves up, which leaves a space between them and the edge.|The photographer is herding the year onto the great hall steps. At the end of a row Kael stands beside a space nobody is allowed to fill. Ilse should be in it. The man in grey took her north, and no letter has come.}
+> left: {flag(dumont_reunited): Squeeze into the photograph with them|Leave the space empty with him}
+  hint: The yearbook will keep this.
+  rel kael +small
+  if flag(dumont_reunited):
+    flag kept_dumonts
+    say: You squeeze in beside them, and Ilse elbows you, and Kael, for once, laughs out loud just as the shutter goes. It's the only photograph of the three of you, and it hangs in two houses for the rest of your lives.
+  else:
+    flag kept_ilse_chair
+    say: You stand at the edge of the space, so it stays a space, and Kael's hand finds your shoulder for a moment. In the photograph there's a gap in the row the size of a girl in white furs.
+> right: {flag(dumont_reunited): Take the photograph yourself|Talk Kael into closing the gap}
+  hint: Today, and not the yearbook.
+  mood +small
+  if flag(dumont_reunited):
+    say: You take the camera from the photographer and make them stand still for once. Two Dumonts, squinting at the sun, in nobody's photograph but yours.
+  else:
+    rel kael +small
+    say: "She'd hate being a gap," you tell him, and he almost smiles, and moves up. In the photograph the row closes. Neither of you forgets why it was open.
+
+@event last_tamsin
+title: A Page for Thornwick
+class: story
+tone: warm
+trigger: auto
+when: turn == max_turns and flag(tamsin_friends) and rel(tamsin) >= 15
+priority: 69
+art: letter
+tags: story letter
+scene: A yearbook page and a sheet of green-sealed paper side by side on a desk, a student holding a pen over both.
+text: There's a space in the corner of your yearbook page where a friend's message should go, and a green-sealed letter on your desk that came this morning: "Four years of rivalry, four hundred letters. Leave me the corner. Insufferable to the end, T."
+> left: Leave Tamsin the corner
+  hint: The yearbook will keep this.
+  flag kept_tamsin
+  rel tamsin +small
+  say: You send the page over the hills by the evening owl. It comes back by morning, a green seal pressed into the corner, which is not allowed, and two lines you'll know by heart for the rest of your life.
+> right: Save it for the spring meeting
+  hint: Biscuits, halfway between, every spring.
+  mood +small
+  say: You write back that the corner can wait: you'll fill it in person, at the town halfway between, in the spring, with biscuits. Tamsin's reply says "Coward" and "Yes" in the same line.
+
+@event last_remembered
+title: What the Yearbook Keeps
+class: story
+tone: warm
+trigger: auto
+when: turn == max_turns and ((renown >= 45) or (alignment >= 60) or (alignment <= -60) or flag(thesis_hollowstar))
+priority: 61
+type: menu
+pick: 2
+art: book
+tags: story
+scene: A yearbook committee's table in the library, proofs of portrait pages spread out, a student reading their own page upside down.
+text: The yearbook committee has your page in proof, with the lines they mean to print under your portrait. You may let them stand or strike them out. "Two at most," says the editor, a second-year with ink on her nose. "We're short of room."
+> renown: Let them print your fame
+  hint: The most talked-about student in a generation.
+  when: renown >= 45
+  flag remember_renown
+  say: You leave the line about the Ledger's special edition. The editor looks relieved; it was her favourite.
+> lumen: Let them print the line about you
+  hint: "The one you went to when it mattered."
+  when: alignment >= 60
+  flag remember_lumen
+  say: Someone has written "The one you went to when it mattered." You don't know who. You leave it.
+> hollow: Let the shadow stand
+  hint: The candles behind your portrait went out.
+  when: alignment <= -60
+  flag remember_hollow
+  say: In the proof, the candles behind your portrait have gone out. The editor offers to retouch it. You tell her to leave it as it is.
+> thesis: Keep the line about your thesis
+  hint: The thesis they locked away.
+  when: flag(thesis_hollowstar)
+  flag remember_thesis
+  say: The line about your thesis on the founders' seal has been half struck through already, in the headmistress's hand. You un-strike it.
+> plain: Strike them all
+  hint: Just your name, and the year.
+  mood +tiny
+  say: You strike out every line. The editor sighs and prints your name and the year, and nothing else. It suits you, somehow.

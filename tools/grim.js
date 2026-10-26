@@ -72,6 +72,10 @@
  *                                       check the format against the frozen manifest (test/golden/schema-v1.json):
  *                                       removals fail, additions are listed (--update records them)
  *   node tools/grim.js canon            proper nouns in player-visible text that the worldbook doesn't know
+ *   node tools/grim.js finale [SAVE] [--seed S] [--style NAME] [--json]
+ *                                       the last day's every choice, from month 48 of a save (data/saves/*.json or a
+ *                                       raw engine state) or of a simulated game: the yearbooks it can end in, and any
+ *                                       earned line no choice reaches (feedback 2026-10-25; exit 1 when one is missing)
  *   node tools/grim.js feedback [PATH…] [--event ID] [--json]
  *                                       summarise playtest feedback from exported run logs (default: feedback/)
  *   node tools/grim.js i18n [lang] [--fill-dupes]
@@ -1617,6 +1621,40 @@ function query(args, opts = {}) {
   console.log(C.d + hits.length + ' match(es)' + C.x);
 }
 
+/* ------------------------------------------------------------------ finale */
+// The last day's replay guarantee (tools/finale.js): from month 48, every choice tried.
+function finaleCmd(file, opts = {}) {
+  const { content } = compiled(), F = require('./finale.js');
+  const eng = new Engine(content);
+  eng.fights = require('./combat-sim.js').resolver({ content });
+  const atLastDay = (e, r) => e.s.turn >= e.maxTurns && r.kind === 'card';
+  const quiet = (fn) => { const w = console.warn; console.warn = () => {}; try { return fn(); } finally { console.warn = w; } };
+  if (file) {
+    const j = JSON.parse(fs.readFileSync(path.resolve(file), 'utf8'));
+    eng.load(j.data || j);
+    // A save before the last day plays on to it, as the style would.
+    const style = Policies.get(opts.style || 'balanced');
+    let r = quiet(() => eng.advance());
+    for (let n = 0; n < 6000 && !atLastDay(eng, r) && r.kind !== 'ending'; n++) {
+      if (r.kind === 'month') r = eng.advance();
+      else if (r.kind === 'map') { eng.pickPlaces((style.pickPlaces || Policies.pickPlaces)(eng, r.view)); r = quiet(() => eng.advance()); }
+      else { quiet(() => eng.choose(Policies.choiceFor(eng, style, r.view))); r = quiet(() => eng.advance()); }
+    }
+    if (r.kind === 'ending') { console.log('finale: the run ended before the last day (' + r.view.id + ')'); return 1; }
+  } else {
+    const { r } = quiet(() => Policies.play(eng, Policies.get(opts.style || 'balanced'), { seed: Number(opts.seed) || 1, name: 'Finale', maxSteps: 9000, stop: atLastDay }));
+    if (r.kind === 'ending') { console.log('finale: the run ended before the last day (' + r.view.id + ')'); return 1; }
+  }
+  const res = F.explore(eng);
+  if (opts.json) { console.log(JSON.stringify({ leaves: res.leaves, truncated: res.truncated, expected: res.expected, missing: res.missing, reachable: Object.fromEntries(Object.entries(res.reachable).map(([k, v]) => [k, [...v]])) }, null, 2)); return res.missing.length ? 1 : 0; }
+  console.log(C.b + 'finale: ' + res.leaves + ' way(s) through the last day' + (res.truncated ? ' (stopped early)' : '') + C.x);
+  for (const slot of ['headline', 'mystery', 'relationships', 'personal']) console.log('  ' + slot.padEnd(14) + [...(res.reachable[slot] || [])].sort().join(' '));
+  console.log('  earned:       ' + res.expected.join(' '));
+  if (res.missing.length) console.log(C.r + '  not reachable: ' + res.missing.join(' ') + C.x);
+  else console.log('  every earned line is reachable');
+  return res.missing.length ? 1 : 0;
+}
+
 /* ------------------------------------------------------------------ feedback */
 // Same fingerprint the browser stamps on exported runs (src/ui.js runMeta), so logs from older content stand out.
 const contentHash = () => P.contentHash();
@@ -1870,6 +1908,7 @@ switch (cmd) {
   }
   case 'fmt': if (!fmt(rest.filter((x) => !x.startsWith('--')), { check: !!flag('check') })) process.exit(1); break;
   case 'query': { const valued = ['file', 'grep', 'group']; query(rest.filter((x, i) => !x.startsWith('--') && !valued.includes((rest[i - 1] || '').slice(2))), { json: !!flag('json'), fields: !!flag('fields'), file: flag('file'), grep: flag('grep'), group: flag('group') }); break; }
+  case 'finale': process.exitCode = finaleCmd(rest.find((x, i) => !x.startsWith('--') && !['--seed', '--style'].includes(rest[i - 1])) || null, { seed: flag('seed'), style: flag('style'), json: !!flag('json') }); break;
   case 'feedback': feedback(rest.filter((x, i) => !x.startsWith('--') && rest[i - 1] !== '--event'), { event: flag('event'), json: !!flag('json') }); break;
   case 'check': { build(); const ok = lint({ noExit: true }); fmt([], { check: true, quiet: true }); const ok2 = sim(200, {}); process.exit(ok && ok2 ? 0 : 1); break; }
   default: console.log(fs.readFileSync(__filename, 'utf8').split(' */')[0].split('\n').slice(2).map((l) => l.replace(/^ \*\s?/, '')).join('\n'));
