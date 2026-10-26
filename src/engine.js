@@ -1217,6 +1217,8 @@
             case 'present': return eng.presentAt(a[0]).length;
             case 'act': return eng.actOf(a[0]);
             case 'clock': return ((s.arcs || {})[a[0]] || {}).clock || 0;
+            case 'closed': return ((s.arcs || {})[a[0]] || {}).closed != null;
+            case 'bond_months': { const n = s.npcs[a[0]]; return n && n.bond !== 'none' && n.bondAt != null ? s.turn - n.bondAt : -1; }
             case 'clues': { const d = (eng.c.arcs && eng.c.arcs[a[0]]) || (eng.c.threads && eng.c.threads[a[0]]); return d ? (d.clues || []).filter((x) => (s.clues || {})[x]).length : 0; }   // clues of an arc found so far
             case 'plan': return Object.keys(s.states).some((k) => eng.c.states[k] && eng.c.states[k].kind === 'plan' && k === 'plan_' + a[0]);
             case 'bond': return s.npcs[a[0]] ? s.npcs[a[0]].bond : 'none';
@@ -1508,8 +1510,9 @@
             break;
           }
           case 'discover': { const pl = this.placeAlias(st.place); if (!s.places[pl] && this.c.places[pl]) { s.places[pl] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: pl }); } break; }
-          case 'find': if (!s.clues[st.clue]) { s.clues[st.clue] = s.turn; ctx.notes.push({ kind: 'clue', clue: st.clue }); } break;
+          case 'find': if (this.clueClosed(st.clue)) break; if (!s.clues[st.clue]) { s.clues[st.clue] = s.turn; ctx.notes.push({ kind: 'clue', clue: st.clue }); } break;
           case 'advance': { const a = s.arcs[st.arc] = s.arcs[st.arc] || { clock: 0 }; const d = this.c.arcs[st.arc] || (this.c.threads || {})[st.arc]; a.clock = Math.min(d && d.clock ? d.clock.max : 99, a.clock + st.n); break; }
+          case 'close': { const a = s.arcs[st.arc] = s.arcs[st.arc] || { clock: 0 }; if (a.closed == null) a.closed = s.turn; break; }   // the arc is over (2026-10-25)
           case 'spawn': ctx.notes.push({ kind: 'spawn', id: st.id, archetype: st.archetype }); break;   // phase 4
           case 'unqueue': s.queue = s.queue.filter((q) => q.id !== st.event); s.deck = s.deck.filter((q) => q.id !== st.event); break;
           case 'learn': {
@@ -1568,7 +1571,7 @@
           case 'bond': {
             const id = this.npcOf(st.npc, ctx); const n = this.touchNpc(id, ctx);
             if (!n || n.bond === st.status) break;
-            n.bond = st.status;
+            n.bond = st.status; n.bondAt = s.turn;
             ctx.notes.push({ kind: 'bond', npc: id, status: st.status, text: shortName(this.c.npcs[id]) + ': ' + st.status });
             break;
           }
@@ -1737,10 +1740,21 @@
     // and the event as a whole rests for ANY_EVENT_REST months so it doesn't recur back-to-back.
     eligible(e, used) {
       if (used.has(e.id)) return false;
+      if (this.arcClosed(e)) return false;
       if (e.per) return this.s.last[e.id] == null || (this.s.turn - this.s.last[e.id]) >= ANY_EVENT_REST;
       const seen = this.s.seen[e.id] || 0;
       if (!e.repeat) return seen === 0;
       return seen === 0 || (this.s.turn - this.s.last[e.id]) >= e.repeat;
+    }
+    // An arc's cards (`arc:`, or a `thread:` that is the arc) are over once the arc is closed (`close <arc>`, 2026-10-25),
+    // and none of its clues can be found after that.
+    arcClosed(e) {
+      const id = e.arc || (e.chain && this.c.arcs && this.c.arcs[e.chain] ? e.chain : null);
+      return !!id && ((this.s.arcs || {})[id] || {}).closed != null;
+    }
+    clueClosed(clue) {
+      const d = (this.c.clues || {})[clue], arc = d && (d.arc || (d.thread && this.c.arcs && this.c.arcs[d.thread] ? d.thread : null));
+      return !!arc && ((this.s.arcs || {})[arc] || {}).closed != null;
     }
     eligibleFor(e, actor) {
       if (!e.per) return true;
@@ -1901,6 +1915,8 @@
           s.queue.push({ id: item.id, actor: item.actor || null, due: s.turn + 1, track: item.track, cast: item.cast, src: 'queued' });
           continue;
         }
+        // A pushed card of a closed arc never shows (a queued follow-up included).
+        if (!item.force && this.arcClosed(e)) continue;
         // item.force (debug/preview) skips the `when` check
         if ((e.actor === 'npc' || (e.cast && !item.cast)) && !item.actor && !item.cast) {
           this._place = item.place || null; this._slot = item.slot || null;

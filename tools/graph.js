@@ -7,7 +7,7 @@ const G = require('../src/grimoire.js');
 
 // Symbol arguments by function: which kind of thing a read names.
 const READS = {
-  flag: 'flag', has: 'flagOrState', left: 'state', clue: 'clue', clock: 'arc', clues: 'arc', act: 'arc',
+  flag: 'flag', has: 'flagOrState', left: 'state', clue: 'clue', clock: 'arc', clues: 'arc', act: 'arc', closed: 'arc',
   member: 'track', enrolled: 'track', applied: 'track', passed: 'track', level: 'track', rank: 'track', performance: 'track', progress: 'track', due: 'track', visits: 'track',
   seen: 'event', since: 'event', chosen: 'event', discovered: 'place', visits_to: 'place', met: 'npc', spell_level: 'spell', knows: 'fact',
 };
@@ -17,6 +17,8 @@ function blocksOf(content) {
   for (const e of Object.values(content.events)) out.push({ kind: 'event', id: e.id, def: e, effects: [['on_show', e.on_show || []], ...e.options.map((o) => ['option ' + o.key, o.effects])], exprs: [['when', e.when], ['defer', e.defer], ...e.options.map((o) => ['option ' + o.key + ' when', o.when])] });
   for (const s of Object.values(content.states)) out.push({ kind: 'state', id: s.id, def: s, effects: ['tick', 'on_add', 'on_expire', 'on_remove'].map((k) => [k, s[k] || []]), exprs: [] });
   for (const h of Object.values(content.hooks)) out.push({ kind: 'hook', id: h.id, def: h, effects: [['do', h.do || []]], exprs: [['when', h.when]] });
+  // Endings read flags too (their `when`), so a flag only an ending reads is not "read by nothing" (2026-10-25).
+  for (const d of Object.values(content.endings || {})) out.push({ kind: 'ending', id: d.id, def: d, effects: [], exprs: [['when', d.when]] });
   return out;
 }
 
@@ -31,6 +33,7 @@ function produces(b, content) {
       case 'gain': add('state:' + st.state); break;
       case 'find': add('clue:' + st.clue); break;
       case 'advance': add('arc:' + st.arc, '+' + st.n); break;
+      case 'close': add('arc:' + st.arc, 'closed'); break;
       case 'enrol': case 'join': case 'apply': add('track:' + st.track, st.t); break;
       case 'discover': add('place:' + st.place); break;
       case 'meet': add('npc:' + st.npc); break;

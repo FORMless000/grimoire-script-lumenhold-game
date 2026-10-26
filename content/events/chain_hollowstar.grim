@@ -472,6 +472,7 @@ text: In the middle of spring, the lake freezes in a single breath. Cracks glow 
   queue hs_tunnel now
   say: You run for the boathouse. Behind you, someone is shouting your name. You don't stop.
 > right: Stay above and protect the students
+  close hollowstar
   alignment +small
   health -large
   renown +large
@@ -744,6 +745,7 @@ text: Beyond the wall, the round door. It stands open a crack. Through it, the H
   hint: Power beyond measure. A voice in your head forever. Only for those it has already tempted.
   when: alignment <= -30 or flag(hollow_tempted)
   flag hollow_bargain
+  close hollowstar
   alignment -large
   arcana +huge
   gain star_mark
@@ -760,6 +762,7 @@ text: Beyond the wall, the round door. It stands open a crack. Through it, the H
   when: alignment <= -60 or flag(hollow_tempted)
   if alignment <= -60:
     flag hollow_freed
+    close hollowstar
     alignment -large
     arcana +large
     gain star_mark
@@ -769,6 +772,7 @@ text: Beyond the wall, the round door. It stands open a crack. Through it, the H
   else:
     end ending_hollow_claimed
 > flee: Run
+  close hollowstar
   health -large
   mood -large
   flag hollow_fled
@@ -783,6 +787,8 @@ art: sun
 tags: hollowstar story
 thread: hollowstar
 scene: The lake glittering in spring sunshine, students skimming stones, a bandaged figure sitting on the jetty.
+on_show:
+  close hollowstar
 text: The lake glitters as if nothing happened. Most of the academy believes there was a strange spring frost. The headmistress knows better. So does Kael, who finds you on the jetty with two cups of tea.
 > left: Sit with him in silence
   rel kael +large
@@ -809,6 +815,8 @@ art: door
 tags: hollowstar story
 thread: hollowstar
 scene: An infirmary bed by a window, the lake thawed outside, a tall woman with newly white hair sitting beside it without her silver ring.
+on_show:
+  close hollowstar
 text: You wake in the infirmary. The lake has thawed, and the door is shut: the headmistress came down after you and closed it with her own hands. She is sitting by your bed. Her hair has gone white overnight, and her silver ring is gone.
 > left: "I'm sorry."
   meet isolde

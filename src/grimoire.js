@@ -34,7 +34,10 @@
     // `kind_is(track, club)`: the track (in a track notice, `track` is the one that triggered it) is of that kind (2026-10-20)
     'kind_is',
     // `has_item(x)`: you own the item; `worn(x)`: you wear it (E4, the kit)
-    'has_item', 'worn']);
+    'has_item', 'worn',
+    // `closed(arc)`: the arc is over (`close <arc>`; feedback 2026-10-25); `bond_months(x)`: months since your bond with x
+    // was set (-1 when unknown, e.g. a bond set before the engine recorded it).
+    'closed', 'bond_months']);
   // Built-in identifiers the engine answers (env.ident); content can read but never assign them.
   const IDENTS = ['npc', 'turn', 'month', 'year', 'turns_left', 'max_turns', 'cards_this_month', 'term', 'break', 'season', 'final_year', 'slot', 'term_index', 'gpa', 'runs_completed', 'wrapup', 'off_campus', 'term_gpa'];
   // `on_shift()` (E6): this visit attends your track at its place (a job's shift, a club's meeting), so a shop's counter steps aside.
@@ -46,7 +49,7 @@
     passed: ['track', null], clue: ['clue'], spark: ['npc'], spell_level: ['spell'], knows: ['fact'], npc_rel: ['npc', 'npc'],
     enrolled: ['track'], member: ['track'], rank: ['track'], performance: ['track'], level: ['track'], progress: ['track'], due: ['track'], visits: ['track'], applied: ['track'],
     present: ['place'], act: ['arc'], clock: ['arc'], discovered: ['place'], cast_as: [null, 'npc'], plan: [null], visits_to: ['place'], clues: ['arc'], offered: [null], kind_is: ['track', null], around: ['npc'], apart: ['npc'], bonds_around: [null],
-    has_item: ['item'], worn: ['item'],
+    has_item: ['item'], worn: ['item'], closed: ['arc'], bond_months: ['npc'],
   };
 
   function tokenize(s, file, line) {
@@ -347,7 +350,7 @@
     timeline: { props: ['date', 'kind', 'event', 'text'], effects: [] },
   };
   // What a pool or a thread may give its cards (a bundle): where and when they're drawn, how often, how they look.
-  const BUNDLE_PROPS = ['trigger', 'place', 'track', 'level', 'rank', 'plan', 'slot', 'time', 'class', 'tone', 'repeat', 'weight', 'priority', 'per', 'actor', 'tags', 'when', 'defer', 'art', 'chain', 'variant', 'lesson', 'order'];
+  const BUNDLE_PROPS = ['trigger', 'place', 'track', 'level', 'rank', 'plan', 'slot', 'time', 'class', 'tone', 'repeat', 'weight', 'priority', 'per', 'actor', 'tags', 'when', 'defer', 'art', 'chain', 'variant', 'lesson', 'order', 'arc'];
   const EXPR_PROPS = new Set(['when', 'weight', 'closed_when', 'gone_when', 'discover', 'hinted_when', 'unlock', 'prereq', 'defer', 'followed']);
   const NUM_PROPS = new Set(['years', 'cards_per_month', 'max_cards_per_month', 'social_per_month', 'min_random_per_month', 'min', 'max', 'start', 'duration', 'repeat', 'priority', 'start_rel', 'year', 'levels', 'due', 'alignment', 'warn_below',
     'schema', 'last_month', 'max_cards_per_day', 'level', 'rank', 'beat', 'pick', 'opens', 'tonic']);
@@ -503,6 +506,8 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
     discover: new RegExp('^discover\\s+(' + ID + ')$'),
     find: new RegExp('^find\\s+(' + ID + ')$'),
     advanceArc: new RegExp('^advance\\s+(' + ID + ')\\s*\\+\\s*(\\d+)$'),
+    // `close <arc>` (feedback 2026-10-25): the arc is over; none of its cards is dealt again, and no clue of it found.
+    closeArc: new RegExp('^close\\s+(' + ID + ')$'),
     spawn: new RegExp('^spawn\\s+(' + ID + ')\\s+from\\s+(' + ID + ')$'),
     social: new RegExp('^(rel|spark)\\s+(' + ID + ')\\s*([+-])\\s*(\\d+)(?:\\s*~\\s*(\\d+))?$'),
     socialTier: new RegExp('^(rel|spark)\\s+(' + ID + ')\\s*([+-])\\s*(tiny|small|medium|large|huge)$'),
@@ -605,6 +610,7 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
     if ((m = content.match(RE.discover))) return { t: 'discover', place: m[1], line };
     if ((m = content.match(RE.find))) return { t: 'find', clue: m[1], line };
     if ((m = content.match(RE.advanceArc))) return { t: 'advance', arc: m[1], n: +m[2], line };
+    if ((m = content.match(RE.closeArc))) return { t: 'close', arc: m[1], line };
     if ((m = content.match(RE.spawn))) return { t: 'spawn', id: m[1], archetype: m[2], line };
     if ((m = content.match(RE.social))) {
       const a = +m[4], b = m[5] != null ? +m[5] : a, s = m[3] === '-' ? -1 : 1;

@@ -109,7 +109,7 @@ class: story
 tone: eerie
 place: restricted_section
 time: evening midnight
-when: flag(forbidden_inside) and not flag(forbidden_read) and since(forbidden_section_1) >= 1
+when: flag(forbidden_inside) and not flag(forbidden_read) and since(forbidden_section_1) >= 1 and not closed(hollowstar)
 repeat: 2
 weight: 16
 art: book
@@ -161,7 +161,7 @@ class: story
 tone: eerie
 place: restricted_section
 time: evening midnight
-when: flag(forbidden_read) and since(forbidden_section_2) >= 1
+when: flag(forbidden_read) and since(forbidden_section_2) >= 1 and not closed(hollowstar)
 weight: 16
 actor: isolde
 art: lock

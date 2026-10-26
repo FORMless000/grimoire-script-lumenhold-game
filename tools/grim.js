@@ -277,6 +277,7 @@ function analyze(content) {
           // A thread's own clock (the framework) is anyone's to move; an arc's only in hard-canon story events.
           if (content.threads[st.arc] && !content.arcs[st.arc]) { if (!content.threads[st.arc].clock) P('error', w, 'advance ' + st.arc + ': the thread has no clock: (e.g. clock: 0..4)'); }
           else if (!content.arcs[st.arc]) P('error', w, 'advance: unknown arc or thread "' + st.arc + '"'); else if (/^content\/batches\//.test(w)) P('error', w, 'advance: only hard-canon events move an arc clock'); break;
+        case 'close': if (!content.arcs[st.arc]) P('error', w, 'close: unknown arc "' + st.arc + '"'); else if (/^content\/batches\//.test(w)) P('error', w, 'close: only hard-canon events end an arc'); break;
         case 'spawn': if (!content.archetypes[st.archetype]) P('error', w, 'spawn: unknown archetype "' + st.archetype + '"'); break;
         case 'unqueue': if (!content.events[st.event]) P('error', w, 'unqueue: unknown event "' + st.event + '"'); break;
         case 'give': case 'take': if (!(content.items || {})[st.item]) P('error', w, st.t + ': no @item ' + st.item); break;
@@ -391,6 +392,18 @@ function analyze(content) {
       lintChecks(e, o);
     }
     if (e.options.length > 1 && e.options.every((o) => o.when)) P('warn', w, 'every option has a "when" — the card can soft-lock if none are available');
+    { // A clue of an arc is found on the arc's own cards, or under a `closed(<arc>)` guard (feedback 2026-10-25), so
+      // nothing hands one out after the arc is over.
+      const own = e.arc || (e.chain && content.arcs[e.chain] ? e.chain : null);
+      const guarded = (x) => !!x && /\bclosed\(/.test(x.src || '');
+      const check = (effects, ow) => G.walkEffects(effects || [], (st) => {
+        if (st.t !== 'find') return;
+        const c = content.clues[st.clue], a = c && (c.arc || (c.thread && content.arcs[c.thread] ? c.thread : null));
+        if (!a || a === own || guarded(e.when) || guarded(ow)) return;
+        P('error', e.file + ':' + st.line, 'find ' + st.clue + ': a clue of ' + a + ' on a card outside the arc; give the card arc: ' + a + ', or guard the card or option with not closed(' + a + ')');
+      });
+      check(e.on_show, null); for (const o of e.options) check(o.effects, o.when);
+    }
     ROLES = new Set(); IN_EVENT = false;
   }
   for (const s of Object.values(content.states)) ['tick', 'on_add', 'on_expire', 'on_remove'].forEach((k) => scanEffects(s[k], loc(s), false));

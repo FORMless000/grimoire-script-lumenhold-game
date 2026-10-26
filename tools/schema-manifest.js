@@ -41,6 +41,7 @@ const SAMPLES = [
   ['discover boathouse', 'discover'],
   ['find bell_key', 'find'],
   ['advance hollowstar +1', 'advance'],
+  ['close hollowstar', 'close'],
   ['spawn pim from mentee', 'spawn'],
   ['rel lyra +small', 'rel'],
   ['spark lyra +tiny', 'spark'],
