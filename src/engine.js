@@ -1557,6 +1557,8 @@
             if (st.kind === 'combat' && !played) this.change(this.spellResource, -this.combatCost(), ctx);
             const o = this.challengeOdds(st, ctx.actor, ctx.key);
             const probs = [o.win, st.partial ? o.atLeastPartial - o.win : 0, 100 - o.atLeastPartial];
+            // A played fight can end any way the card allows, whatever the stub's estimate: the preview keeps each outcome.
+            if (played) for (let i = 0; i < 3; i++) if ((i !== 1 || st.partial) && probs[i] <= 0) { probs[i] = 1; probs[probs.indexOf(Math.max(...probs))]--; }
             const result = ['win', 'partial', 'lose'][this.pick('challenge', probs, { challenge: st.kind })];
             ctx.checks.push(Object.assign({ challenge: st.kind, skill: o.skill, p: o.win, partial: st.partial ? o.atLeastPartial - o.win : null, result, ok: result !== 'lose', swing: st.swing || null }, parley ? { parley: true } : {}));
             const was = this._fightOutcome; if (played) this._fightOutcome = true;

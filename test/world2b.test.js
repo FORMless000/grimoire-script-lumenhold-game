@@ -682,3 +682,13 @@ test('bonds_around() counts only partners who are around', () => {
   eng.s.flags.tobias_went_home = true; eng.s.last.tobias_bad_harvest = eng.s.turn; eng.s.seen.tobias_bad_harvest = 1;
   assert.equal(ex('bonds(partner) == 1 and bonds_around(partner) == 0'), true, 'a partner who has gone home is not');
 });
+
+test('a played fight\'s preview keeps every outcome, even one the estimate puts at nothing', () => {
+  const eng = new Engine(content); eng.newGame({ seed: 4 });
+  eng.fights = () => { throw new Error('a preview plays no fight'); };
+  for (const k of Object.keys(eng.s.vals)) eng.s.vals[k] = 100;
+  eng.s.spells = { flame: 3, ward: 3, haste: 3, shadowstep: 3 };
+  const pv = eng.preview('duel_fixture', 'left', null);
+  assert.equal(pv.paths.length, 3, 'win, draw and loss');
+  assert.ok(pv.paths.some((p) => p.deltas.mood && p.deltas.mood[0] < 0), 'the loss is there (a played fight settles Health itself)');
+});

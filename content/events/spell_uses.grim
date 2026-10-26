@@ -1,0 +1,611 @@
+# ============================================================
+#  Everyday uses of the basic curriculum spells (2026-10-25): three routine cards for each of the six first-year
+#  course spells and Ward, at places across the campus. Every card resolves without the spell; once you know it,
+#  its `up[spell]` option opens, the card is drawn more often (its pool's weight), and now and then a visit to its
+#  place opens on it (its spell's `@appointment`, rolled only at a place that has one of its cards).
+#  Wiring (docs/grimoire-script.md §9): `spell_known(s)` in conds.grim; `spell_use` is what every card here shares;
+#  each spell's pool comes from it and adds the weight; each spell's appointment deals from its pool.
+# ============================================================
+
+@pool spell_use
+desc: What every everyday spell-use card shares.
+class: routine
+repeat: 5
+tags: magic
+
+# ---------------- Flame ----------------
+
+@pool flame_uses
+from: spell_use
+weight: 10 + spell_known(flame) * 15
+
+@appointment flame_in_use
+desc: Once you know Flame, a visit now and then opens on one of its everyday uses.
+at: visit
+when: spell_known(flame)
+chance: unlikely
+deals: pool flame_uses
+
+@event mabels_cold_range
+title: The Cold Range
+pool: flame_uses
+place: mabels
+time: morning noon afternoon
+tone: light
+art: cup
+scene: A village tea shop on a cold day, its iron range out, a queue of students in scarves, a woman on her knees at the grate.
+text: {No steam on Mabel's windows, and no smell of toast. The range behind the counter has gone out, and a queue of students in scarves is stamping its feet. "No tea till it's lit, petal," says Mabel, rattling the grate.|The range is out again: the flue sulks in a north wind. Mabel looks at the queue, then at you, then at the coal bucket.|Mabel's range, cold again, and Mabel in front of it with a twist of paper. "It knows you now," she says. "Talk to it."}
+> left: Fetch coal from the yard
+  health -tiny
+  mood +small
+  say: {You haul two buckets in from the frozen yard. When the kettle finally sings, Mabel pours yours first and waves your coins away.|Two buckets, one dropped on your foot. The range catches on the third try, and Mabel puts a scone by your cup, "for the foot".|You fetch the coal without being asked. Mabel tells the queue you're "staff, near enough", and makes you carry the milk.}
+> right: Read in the cold till it's lit
+  health -tiny
+  lore +tiny
+  say: {You read a chapter in your coat while the queue grumbles. By the time the tea comes your fingers can't turn the page.|You read by the cold window. The chapter is good; the draught under the door is better at its job.|Coat on, book open, breath fogging. You learn a great deal and feel your toes rather less.}
+> up[flame]: Light it with a finger
+  mood +small
+  renown +tiny
+  say: {You lean over the counter and touch the coals. The range roars, the queue cheers, and Mabel calls you "a useful sort of petal" for the rest of the term.|A flick, and the flue draws like a chimney in a storybook. Mabel pours your cup first and doesn't charge, "for services to tea".|{spell_level(flame) >= 2: You light the range and the lamps and the kettle's underside, one, two, three. Mabel applauds with the tea towel.|You light it before Mabel has finished asking. She gives you a look that's half thanks, half "show-off".}}
+
+@event boathouse_damp_stove
+title: The Damp Stove
+pool: flame_uses
+place: boathouse
+time: evening night
+tone: light
+art: flame
+scene: A wooden boathouse at dusk, a rowing crew dripping and shivering around a cold iron stove, wet kindling steaming in a basket.
+text: {A rowing crew comes in off the lake soaked to the skin, laughing through chattering teeth. The boathouse stove is cold, and the kindling basket is wet through.|The crew again, wetter than last time: someone caught a crab and took the boat over. The kindling has been left out in the rain, as usual.|Another soaking. The crew have started looking at you when they come in, and then at the stove.}
+> left: Run to the boatman's loft for dry wood
+  health -tiny
+  vigor +tiny
+  say: {You run up to the loft and back with an armful of dry wood. By the time the stove's going you're as wet as they are, from the sweat.|The loft ladder, in the dark, with an armful of wood. You make it. The crew make room for you on the bench.|The loft ladder is the worst part. The crew cheer you down it like a returning hero.}
+> right: Lend your scarf and leave them to it
+  mood -tiny
+  charm +tiny
+  say: {You give your scarf to the one with blue lips and walk back up to the castle with a cold neck. You'll get the scarf back. Probably.|You hand round your scarf and your sympathy and leave them to it. The scarf comes back a week later, smelling of lake.|Scarf, a joke, and goodnight. They wave you off, still shivering, still laughing.}
+> up[flame]: Dry the kindling with a flame
+  mood +small
+  charm +tiny
+  say: {You hold a flame under the wet kindling until it steams, then catches. The crew crowd the stove and somebody's lake-cold hand finds your shoulder in thanks.|A flame, coaxed small and patient, and the kindling catches in a fizz of steam. The crew name the stove after you. It's not a compliment, exactly.|You dry the whole basket in one long breath of fire. The crew offer you a seat in the boat next week. You decline, warmly.}
+
+@event secret_garden_late_frost
+title: A Hard Frost
+pool: flame_uses
+place: secret_garden
+time: evening
+tone: warm
+when: season != "summer"
+art: flower
+scene: A hidden garden on a clear, freezing evening, the humming pear tree, a row of unlit clay pots and an old woman with a tinderbox.
+text: {A hard frost is coming down out of a clear sky. Old Maud is going along the row of clay smudge pots under the humming pear with a tinderbox that won't strike. "Every one, dearie," she says, "or the old pear sulks for a month."|Frost again. The pear has gone quiet, which Maud says is how it shivers.|The smudge pots are set out before you arrive. Maud has left a second tinderbox on the wall, for you.}
+> left: Light the pots with a tinderbox
+  health -small
+  mood +small
+  say: {Forty pots, a tinderbox and numb fingers. The last one catches as the frost comes down, and the pear starts humming again, low and grateful.|You light pot after pot on your knees in the frost. Maud brings you something hot in a chipped cup and doesn't say what it is.|You light your half of the row before Maud lights hers, and she pretends to be cross about it.}
+> right: Wrap the low branches in sacking
+  vigor +tiny
+  health -tiny
+  say: {You climb into the lower branches and wrap what you can reach. It isn't all of it. Maud says some is a lot more than none.|Sacking, string and a ladder that leans the wrong way. You save the low branches; the top will have to take its chances.|You wrap the branches like presents. Maud says the pear will remember, and she says it as if pears do.}
+> up[flame]: Light every pot at once
+  mood +small
+  rel maud +small
+  say: {You hold out your hand and every pot in the row blooms at once, a line of small suns in the frost. Maud laughs, which you've never heard her do so loudly.|One breath, forty flames. The pear hums so loudly the bees come out to see. "Well," says Maud. "Aren't you handy."|{spell_level(flame) >= 3: You light the pots and hold the warmth over the whole tree like a hand. Not one bud browns. Maud says she'll name a pear after you, and does.|You light the row in two breaths. Maud says it took her forty years to learn to do it with a tinderbox, and she isn't sure which of you to be proud of.}}
+
+# ---------------- Foresight ----------------
+
+@pool foresight_uses
+from: spell_use
+weight: 10 + spell_known(foresight) * 15
+
+@appointment foresight_in_use
+desc: Once you know Foresight, a visit now and then opens on one of its everyday uses.
+at: visit
+when: spell_known(foresight)
+chance: unlikely
+deals: pool foresight_uses
+
+@event refectory_tipping_tray
+title: The Tipping Tray
+pool: foresight_uses
+place: refectory
+time: noon evening
+tone: light
+art: meal
+scene: A crowded dining hall, a first-year carrying a towering tray of soup bowls between long benches, one bench leg sticking out into the aisle.
+text: {A first-year is coming down the aisle with a tray of eight soup bowls stacked like a tower, and a bench leg is sticking out right where they'll step.|The same first-year, a bigger tray, a different bench leg. Some people never learn; some benches don't either.|The tray, the first-year, the bench. You can almost hear the crash before it happens.}
+> left: Lunge for the tray
+  challenge feat apprentice wild:
+    win:
+      vigor +small
+      say: {You catch the tray an inch from disaster with soup up to your wrists. The first-year looks at you as if you'd stopped the sun.|You get a hand under it and one bowl of eight goes over. The first-year counts it as a miracle.|Tray, bowls, first-year, all upright, and not a drop on your sleeve. The table nearest applauds with spoons.}
+    lose:
+      health -tiny
+      mood -tiny
+      say: {You get there just in time to wear the soup. All eight bowls. It's leek.|You catch the first-year and miss the tray. The crash is heard in the kitchens; the cook comes out to see.|You lunge, the bench catches you too, and you both go down in a lake of soup.}
+> right: Move your own bowl out of range
+  mood -tiny
+  say: {You lift your bowl to safety and watch it happen. The leg, the trip, the crash. Nobody blames you. You blame you, a little.|You move your bowl. The first-year doesn't move theirs. Somebody else catches the tray, and the first-year thanks them with shining eyes.|Out of range, and dry. The crash is spectacular. You help pick up the bowls afterwards, which is something.}
+> up[foresight]: Kick the bench leg in first
+  mood +small
+  charm +tiny
+  say: {You see it a heartbeat early, the leg and the step and the tray, and nudge the bench in with your heel. The first-year sails past and never knows.|A glimpse ahead and a small shove. The tray arrives whole. The first-year doesn't notice; you do, and it's lovely.|You move the bench before the first-year has even turned into the aisle. The cook, watching from the hatch, raises her ladle at you like a salute.}
+
+@event library_crumbs
+title: Crumbs
+pool: foresight_uses
+place: library
+time: afternoon evening night
+tone: light
+art: book
+scene: A quiet library stack three floors up, a student hunched over notes with a paper bag of biscuits, a grey cat watching, a lamp moving somewhere among the shelves.
+text: {You're three floors up in the library with a paper bag of ginger biscuits from the village, which is against every rule painted on the stairs. Somewhere in the stacks the head librarian is doing her rounds, and her rounds make no sound at all.|Biscuits again, and the head librarian again, somewhere in the shelves. Footnote has smelt the ginger and is watching you from the next desk with enormous patience.|The bag rustles. Two stacks away, a floorboard doesn't.}
+> left: Put the bag away and work hungry
+  health -tiny
+  lore +tiny
+  say: {You fold the bag into your satchel and work on an empty stomach. You get a great deal done, all of it about food.|The bag goes away. Your stomach complains loudly enough to echo down the stacks.|You work hungry. When the head librarian passes, she nods at your empty desk, as if she knows exactly what's in the satchel.}
+> right: Eat them and risk it
+  chance even:
+    mood +small
+    say: {You eat the whole bag a crumb at a time. Nobody comes. It's the best chapter you've ever read.|You and Footnote share the bag, one for you, one for the cat. The rounds pass two stacks away and keep going.|You eat them all and brush the crumbs into your sleeve. Nobody ever knows except the cat, who is not telling.}
+  else:
+    renown -tiny
+    mood -tiny
+    say: {The head librarian is behind you, holding out her hand for the bag. She takes it without a word. You hear her eating them, later, at the desk.|A crunch, and the lamp is suddenly at the end of your row. Your name goes in a book with a black cover.|Footnote knocks the bag off the desk at the worst possible moment. The head librarian arrives as the biscuits finish rolling.}
+> up[foresight]: See her coming
+  mood +small
+  guile +tiny
+  say: {You glimpse the lamp turning into your row a breath before it does, and when it arrives there is nothing on your desk but notes and a very innocent face.|A moment ahead, every time. The bag goes under the book, the book comes out of the bag, and the head librarian passes and never knows.|You see her coming, and seeing her coming, offer her a biscuit. She looks at you for a long time. Then she takes one.}
+
+@event gilded_newt_knucklebones
+title: Knucklebones
+pool: foresight_uses
+place: gilded_newt
+time: evening night
+tone: light
+art: dice
+scene: A low-beamed village tavern, regulars round a table throwing knucklebones for copper stakes by the fire.
+text: {At the fireside table the regulars are throwing knucklebones for coppers. There's a space on the bench, and a copper on the table with your name on it, if you want it.|Knucklebones again. The old carter who always wins is winning. He pats the bench beside him.|The regulars wave you over before you've shut the door. The landlady says the game's been dull without you, and charges you for it.}
+> left: Play it straight
+  chance even:
+    gold +small
+    mood +small
+    say: {The bones fall your way three throws running. The carter says it's beginner's luck, then that it's been going on too long for that.|You win the pot, a handful of coppers and a lot of goodwill. The landlady takes a cut for the fire.|You play badly and win anyway. The table says that's the worst kind of player.}
+  else:
+    gold -small
+    say: {The bones roll every way but yours. The carter buys you a cider out of your own losses, with great ceremony.|You lose, cheerfully and steadily. The regulars like you better for it.|Down a few coppers by the end. The carter says you've got the hands for it, just not the luck.}
+> right: Buy the round and just watch
+  gold -small
+  charm +small
+  say: {You buy the round and watch. By the end you know everyone's name and the carter's whole family tree.|A round for the table, and a seat by the fire with no stakes at all. It's the best evening you've had all month.|You buy the round. The landlady writes it on your tab, to the penny, and the table drinks your health.}
+> up[foresight]: See how the bones will fall
+  gold +small
+  alignment -tiny
+  say: {You glimpse each throw before it leaves the hand and bet on what you've seen. You win, and win, and the carter starts to look at you with great interest.|A moment ahead every time. You win the pot and buy the next round with it, which helps your conscience a little.|You see the bones fall before they're thrown. You take the pot, and leave before the carter works out how, which he is getting close to.}
+
+# ---------------- Mend ----------------
+
+@pool mend_uses
+from: spell_use
+weight: 10 + spell_known(mend) * 15
+
+@appointment mend_in_use
+desc: Once you know Mend, a visit now and then opens on one of its everyday uses.
+at: visit
+when: spell_known(mend)
+chance: unlikely
+deals: pool mend_uses
+
+@event workshop_cracked_lens
+title: The Cracked Lens
+pool: mend_uses
+place: workshop
+time: afternoon evening
+tone: light
+art: gear
+scene: A cluttered workshop, an artificer holding up a large glass lens with a crack running across it, a half-built machine waiting on the bench.
+text: {Mir is holding their best lens up to the window, and there's a crack across it like a hair. "Demonstration's tomorrow," they say. "For the faculty. It's probably fine. It's not fine."|Another lens, another crack. Mir has started keeping the good ones in a sock.|Mir doesn't say anything; they just hold up the lens. The crack is worse than last time.}
+> left: Grind a spare by hand
+  health -tiny
+  alchemy +small
+  say: {You grind a spare lens with Mir until midnight. It's slightly wrong in a way only Mir can see, and they say it's the best wrong lens they've ever had.|Two hours of grit and polish. The new lens works. Mir writes your name on its rim in tiny letters.|Mir grinds one side, you the other. The lens is done by ten; Mir makes tea that tastes of solder.}
+> right: Tape it and hope
+  rel mir -tiny
+  mood +tiny
+  say: {You tape the crack and tell Mir it'll hold. It holds for the demonstration and splits in half at the applause, which Mir calls "dramatic timing".|Tape, and a promise to come back. Mir says "probably" four times in a row, which is a lot even for Mir.|You tape it. Mir looks at the tape for a long time, then at you, then says it's fine in a voice that means it isn't.}
+> up[mend]: Mend it, seamless
+  rel mir +small
+  mood +small
+  say: {You close the crack with a breath of Mend, and the glass runs together like water. Mir holds it to the light and can't find where it was. "Probably magic," they say, and hug you.|The lens mends clear as the day it was poured. Mir tests it on a moth, which is now the best-studied moth in the castle.|{spell_level(mend) >= 2: You mend the lens and the hairline crack in its brass ring. Mir makes you promise to come to the demonstration, "in case".|You mend it on the second try. Mir says the first try was "very educational", and keeps the slightly wobbly result for a different machine.}}
+
+@event lakeshore_torn_net
+title: The Torn Net
+pool: mend_uses
+place: lakeshore
+time: morning noon afternoon
+tone: warm
+art: wave
+scene: An old fisher sitting on an upturned boat on a still lakeshore, a long net across their knees with a ragged hole torn through it.
+text: {An old fisher is sitting on an upturned boat, mending a net with a hole in it the size of a door. "The old pike," they say, not looking up. "Bigger every year."|The fisher again, the net again, a different hole. "Same pike," they say.|The fisher has kept a space on the boat for you, and the net has kept a hole.}
+> left: Help knot the net
+  health -tiny
+  mood +small
+  say: {You knot until your fingers go white in the cold. The fisher tells you about every fish they ever lost, and none they caught.|An hour of knots, badly, then less badly. The fisher gives you a fish wrapped in a dock leaf, still flapping.|The knot comes to your fingers more easily than you expected. The fisher says you'd have made a fisher, in a tone that means it's the highest thing they can say.}
+> right: Buy a fish and leave them to it
+  gold -tiny
+  health +tiny
+  say: {You buy the best of the morning's catch. The fisher wraps it in yesterday's Ledger and doesn't look up from the net.|A fish, a nod, a coin. You eat it grilled on the shore, and the net doesn't get any smaller.|You buy a fish. The fisher throws in a second, small and ugly, "for luck". It's the tastier of the two.}
+> up[mend]: Mend the whole net
+  mood +small
+  health +tiny
+  say: {You lay a hand on the net and the hole knits shut, knot by knot, from the edges in. The fisher stares at it, then at you, then gives you their lunch.|The net mends in one breath. The fisher says nothing for a long time, then tells you about the pike, which by the end of the story is the length of a rowing boat.|You mend the net and two old patches you hadn't noticed. The fisher says the pike will be furious, and grins with three teeth.}
+
+@event great_hall_cracked_sky
+title: A Crack in Tomorrow
+pool: mend_uses
+place: great_hall
+time: noon afternoon evening
+tone: light
+art: rain
+scene: A vaulted hall whose ceiling shows tomorrow's weather, a thin crack across the painted sky, rain dripping through it onto the end of a long table.
+text: {The great hall's ceiling shows tomorrow, and tomorrow, it seems, is wet. There's a crack across the sky above the end of the long table, and tomorrow's rain is dripping through it into somebody's soup.|The crack is back, over a different table. Tomorrow is sleet.|A crack again, and a first-year holding a bowl under it with the air of someone who's been there a while.}
+> left: Fetch buckets from the kitchens
+  health -tiny
+  mood +tiny
+  say: {You fetch two buckets and a mop. By supper there are buckets all down the table, and the hall sounds like a clock shop.|You set out buckets under the drips. They ring all through supper in different notes, and somebody starts conducting.|Buckets, and the mop, and the first-year freed from duty. They follow you about for a week.}
+> right: Move to a dry bench and eat
+  mood -tiny
+  say: {You move up the table and eat with tomorrow dripping steadily behind you. Someone else will fix it. Nobody does until Thursday.|You move. The first-year with the bowl watches you go with the look of a soldier left at the gate.|A dry bench, and supper. The drip keeps time with your spoon all evening, which is somehow worse.}
+> up[mend]: Mend the sky
+  mood +small
+  renown +tiny
+  say: {You reach up with Mend and the crack in tomorrow knits shut, cloud to cloud. The drip stops mid-fall. Half the hall claps; the other half didn't notice, which is the better compliment.|The crack draws together from both ends and meets in the middle with a small click. Tomorrow's rain will have to wait for tomorrow, as it should.|You mend the sky over the long table. The first-year with the bowl pours it, solemnly, into a plant pot.}
+
+# ---------------- Glamour ----------------
+
+@pool glamour_uses
+from: spell_use
+weight: 10 + spell_known(glamour) * 15
+
+@appointment glamour_in_use
+desc: Once you know Glamour, a visit now and then opens on one of its everyday uses.
+at: visit
+when: spell_known(glamour)
+chance: unlikely
+deals: pool glamour_uses
+
+@event boathouse_good_boat
+title: The Good Boat
+pool: glamour_uses
+place: boathouse
+time: afternoon evening
+tone: light
+art: wave
+scene: A boathouse jetty, a row of patched rowing boats and one sound blue one, a weathered boatman sitting on it with his arms folded.
+text: {The boathouse has six boats that leak and one, the blue one, that doesn't. The boatman keeps it for himself and sits on it to make the point.|The blue boat, the boatman, the folded arms. You've started to think of them as one animal.|The boatman sees you coming and settles more firmly onto the blue boat. "No," he says, before you've asked.}
+> left: Pay his price for an hour
+  gold -small
+  mood +small
+  say: {He takes your crowns, counts them twice and lets you have the blue boat for exactly an hour. It's the stillest hour you've spent all term.|An hour on the lake in a boat that doesn't sink. You row out to the middle and lie back and watch the towers upside down.|You pay. He watches you the whole hour, from the jetty, as if you'd borrowed his dog.}
+> right: Take the green one, bailing
+  health -tiny
+  mood +tiny
+  say: {You take the green boat and a bailer. You row half the time and bail the other half. It's still the lake, and still lovely.|The green boat, which takes on water like a sponge. You come back with wet boots and a better opinion of yourself.|You bail all the way out and all the way back. The boatman says you've got a rower's arms now, and charges you nothing for the joke.}
+> up[glamour]: Charm him off the blue boat
+  mood +small
+  charm +tiny
+  say: {You turn on a little more charm than you have, and he finds himself telling you about his late wife, and then lending you the blue boat, and then wondering why.|A smile with Glamour in it. The boatman gets up, holds the boat steady for you, and calls you "young sir or madam" like a courtier.|He remembers liking you and not quite why. You get the blue boat for the rest of the day and a cup of his terrible tea after.}
+
+@event courtyard_prefects_notebook
+title: The Prefect's Notebook
+pool: glamour_uses
+place: courtyard
+time: morning noon afternoon evening
+tone: light
+art: paper
+scene: A sunny castle courtyard, a red-sashed prefect with a notebook open and pencil poised, a student standing on a forbidden patch of lawn.
+text: {You have, it turns out, been walking on the lawn, which is for looking at. Bram Hollis has his notebook open and his pencil licked. "Rule nine," he says. "Demerit."|Bram again, and the notebook again, and the lawn again. "Rule nine," he says, with real joy.|Bram's pencil is already moving when you look up. He has a page with your name at the top now.}
+> left: Argue the rule
+  challenge appeal vs bram.charm:
+    win:
+      mood +small
+      say: {You point out that rule nine was repealed in a year when the lawn caught fire. Bram checks. It was. He closes the notebook with great dignity.|You argue that you were looking at the lawn, very closely. Bram can't find the rule against that. He'll have one by Thursday.|You quote rule nine back at him, with the bit he left out. Bram goes pink and lets you off "this once, as a courtesy".}
+    lose:
+      renown -tiny
+      mood -tiny
+      say: {Bram reads rule nine out loud to the whole courtyard, twice, and writes your name in capitals.|You argue; Bram quotes rule ten, which is about arguing. Two demerits.|Bram listens to your whole case, then writes it down as a separate offence.}
+> right: Take the demerit and move on
+  renown -tiny
+  say: {You take it. Bram writes slowly, so everyone can see. "Next time," he says, and means it kindly, in his way.|Demerit. You walk off the lawn with your hands in your pockets. A first-year on a bench gives you a sympathetic look.|You take the demerit with a bow. Bram doesn't know what to do with a bow, and writes that down too.}
+> up[glamour]: Remind him he likes you
+  mood +small
+  rel bram +tiny
+  say: {You say his name the way people say a friend's, with a little Glamour in it. Bram's pencil stops. He forgets, quite visibly, what he was writing.|A smile with a spell behind it. Bram closes the notebook, tells you to "watch the edges", and walks off frowning at himself.|Bram remembers liking you and not why. He lets you off, then follows you to the cloister to explain rule nine properly, which is its own punishment.}
+
+@event grimsbys_book_behind_counter
+title: The Book Behind the Counter
+pool: glamour_uses
+place: grimsbys_books
+time: noon afternoon evening
+tone: warm
+art: book
+scene: A cramped bookshop, an elderly bookseller behind his counter with one wrapped book kept apart from the rest, a student leaning in hopefully.
+text: {Behind Mr Grimsby's counter there's a book wrapped in brown paper, kept apart. "For someone who'll need it," he says vaguely. "Not you. Or not yet."|The wrapped book is still there. Mr Grimsby moves it a little further from you when you come in.|The brown-paper book has a name pencilled on it now, but he keeps his thumb over the name.}
+> left: Wait to be the someone
+  lore +tiny
+  mood -tiny
+  say: {You browse for an hour in plain sight, being the sort of person who'd need a book. Mr Grimsby sells you a history of lighthouses instead.|You come back twice in the week. On the second visit he lets you hold it, then takes it back. "Soon," he says.|You don't ask. Mr Grimsby notices you not asking, and approves, and doesn't give you the book.}
+> right: Buy what he recommends instead
+  gold -tiny
+  lore +small
+  say: {He hands you something about tides that smells of seaweed. Chapter two is exactly what your essay needed, as usual, annoyingly.|You buy his recommendation without arguing. He looks almost disappointed you didn't fight for the other one.|A slim book on candle-making, for reasons he won't explain. You'll need it on Thursday.}
+> up[glamour]: Charm the parcel out of him
+  lore +small
+  mood +small
+  say: {You smile at him with a little more charm than you own, and he finds himself handing you the parcel. "Ah," he says, puzzled. "It was you all along. Was it?"|Glamour, and a compliment about his shelving. He unwraps the book for you himself. It's the one you came in for last month and couldn't find.|He beams, decides you've been a customer for years, and wraps the parcel again for you, more nicely, with string.}
+
+# ---------------- Haste ----------------
+
+@pool haste_uses
+from: spell_use
+weight: 10 + spell_known(haste) * 15
+
+@appointment haste_in_use
+desc: Once you know Haste, a visit now and then opens on one of its everyday uses.
+at: visit
+when: spell_known(haste)
+chance: unlikely
+deals: pool haste_uses
+
+@event lecture_tower_far_bell
+title: The Far Bell
+pool: haste_uses
+place: lecture_tower
+time: morning noon afternoon
+tone: light
+art: bell
+scene: A bridge of light between two towers, a student running across it with an armful of books while a bell rings on the far side.
+text: {The bell for your lecture is ringing in the other tower, and you are on the wrong side of the bridge with all your books.|The bell again, and you on the wrong end of the bridge again. You're starting to suspect the bridge.|You can hear the bell before you see the bridge. Seven strokes; it's on the third.}
+> left: Run for it
+  challenge feat apprentice:
+    win:
+      vigor +small
+      say: {You slide into your seat on the last stroke with your books in a heap. The lecturer looks at the clock, then at you, then lets it go.|You make it, red-faced and triumphant. Your neighbour pushes a quill at you without a word.|You know the run now: left foot on the second plank, duck the lamp. In with a stroke to spare.}
+    lose:
+      study -tiny
+      say: {You drop your books halfway across the bridge and arrive five minutes late with half of them.|You arrive as the door closes, and spend the hour listening through it. It's not the same.|You trip on the top step and the whole lecture turns to watch you pick up your inkwell.}
+> right: Arrive late, quietly
+  study -tiny
+  mood -tiny
+  say: {You walk, and slip in at the back ten minutes late. You miss the one thing that'll be on the exam.|You arrive late and sit on the end of the back row, where the notes from the front arrive late too.|Late, and calm, and behind for the rest of the hour. Someone lends you their notes afterwards, in a hand you can't read.}
+> up[haste]: Borrow a hare's legs
+  mood +small
+  say: {You cross the bridge in four strides with the wind whistling, and sit down before the bell has finished. Your books arrive a moment later, in your arms.|Haste, and the bridge goes by in a blur of light. You're in your seat, notes open, looking as if you've been there an hour.|{spell_level(haste) >= 2: You're early. You've time to sharpen a quill and help a first-year find the room.|You arrive breathless but on the stroke. The lecturer says "Prompt," which from them is warm.}}
+
+@event courtyard_loose_pages
+title: Loose Pages
+pool: haste_uses
+place: courtyard
+time: afternoon evening
+tone: light
+art: paper
+scene: A castle courtyard on a windy day, a first-year clutching an empty folder while the pages of an essay blow across the flagstones toward a fountain.
+text: {A gust comes over the wall and takes a first-year's essay out of their hands, every page of it, and scatters it across the courtyard towards the fountain. They stand there holding the empty folder.|Wind, a folder, a first-year, and pages everywhere. The fountain looks hungry.|The pages are already in the air when you come through the arch. You know exactly where the fountain is.}
+> left: Chase them down
+  challenge feat apprentice wild:
+    win:
+      vigor +small
+      say: {You run them down one by one, off the flagstones, out of a hedge, one off a prefect's back. Every page, and only one of them damp.|You stamp on three, catch two and dive for the last at the fountain's rim. The first-year hugs the folder like a lost dog.|You read the wind and get to the fountain before the pages do, and catch them as they come.}
+    lose:
+      health -tiny
+      mood -tiny
+      say: {You get most of them. The last three go into the fountain, and you go in after the last one, and it's a long cold walk to the dormitory.|You trip on the fountain step and the pages sail on without you. The first-year helps you up, which isn't how it was meant to go.|The wind wins. You bring back half an essay and a leaf.}
+> right: Lend them your own notes to start again
+  study -tiny
+  charm +small
+  say: {You sit with them on the cloister step while they work it up again from your notes. It comes out shorter and, honestly, better.|You lend them your notes and your afternoon. It takes all of it, and they tell their whole year you did.|You lend them your quill and your evening, and they hand it in on time.}
+> up[haste]: Gather every page before it lands
+  mood +small
+  renown +tiny
+  say: {Haste, and the courtyard slows around you. You pluck every page out of the air before the gust has finished, and hand back the folder neatly stacked.|You go round the courtyard like a whirl of wind yourself, and come back with the essay in order. The first-year counts the pages twice, then stares at you.|{spell_level(haste) >= 2: You catch the pages and the first-year's hat, which they hadn't noticed had gone.|You get every page but one, and that one you snatch off the fountain's surface, barely wet.}}
+
+@event refectory_supper_hatch
+title: The Supper Hatch
+pool: haste_uses
+place: refectory
+time: evening
+tone: light
+art: meal
+scene: A long dining hall at evening, the kitchen hatch at the far end with its shutter starting to come down, a student at the wrong end of the hall.
+text: {The kitchen hatch shuts at the bell, and the bell is going, and you are at the wrong end of the longest hall in the castle.|The hatch is coming down again. The cook leaves it open an inch less for you every week, on principle.|You hear the hatch rattle before you're through the door. Stew night, too.}
+> left: Run the length of the hall
+  challenge feat apprentice:
+    win:
+      health +small
+      say: {You get a bowl under the hatch as it comes down. The cook gives you the last of the stew and a look of grudging respect.|You make it with a slide that would win prizes. The hatch stops for you. The cook looks almost impressed.|In under the shutter by a hand's breadth. The cook says, "You again," and adds a dumpling, as a prize.}
+    lose:
+      mood -tiny
+      say: {The hatch closes in your face, gently, with finality. Bread and cheese it is.|You slip on the flagstones halfway and arrive on your back. The cook leans over the hatch to check you're alive, and closes it.|Too slow. You hear the stew being scraped into a bucket for the pigs, which is a sound that stays with you.}
+> right: Take bread and cheese from the board
+  mood -tiny
+  health +tiny
+  say: {You take bread and cheese from the board by the door and eat them on the steps. It's fine. It isn't stew.|Bread, cheese and an apple, eaten walking. You catch the smell of the stew all the way upstairs.|You take the board's bread and somebody's abandoned pudding. You're not proud. You're full.}
+> up[haste]: Cross the hall in a heartbeat
+  health +small
+  mood +tiny
+  say: {You're at the hatch before the bell's first echo. The cook stares at the door, then at you, then ladles. "Well," she says. "Somebody's hungry."|Haste down the long aisle, between the benches, round a prefect, and your bowl is under the hatch with time to spare.|You arrive so fast you have to wait for the hatch to finish opening. The cook gives you seconds out of sheer surprise.}
+
+# ---------------- Shadowstep ----------------
+
+@pool shadowstep_uses
+from: spell_use
+weight: 10 + spell_known(shadowstep) * 15
+
+@appointment shadowstep_in_use
+desc: Once you know Shadowstep, a visit now and then opens on one of its everyday uses.
+at: visit
+when: spell_known(shadowstep)
+chance: unlikely
+deals: pool shadowstep_uses
+
+@event lecture_tower_volunteer
+title: A Volunteer
+pool: shadowstep_uses
+place: lecture_tower
+time: morning noon afternoon
+tone: light
+art: wand
+scene: A tiered lecture hall, a lecturer at the front with a crackling demonstration charm, scanning the back row for a volunteer.
+text: {"I need a volunteer," says the lecturer, holding up a charm that crackles, "for a hex that is only mildly unpleasant." Their eyes are travelling along the back row towards you.|The volunteer again. The back row has learned to look at its shoes; the lecturer has learned to look at the back row.|"Volunteer," says the lecturer, and you can feel the word coming for you like weather.}
+> left: Put your hand up
+  arcana +small
+  health -tiny
+  renown +tiny
+  say: {You volunteer. The hex is exactly as mildly unpleasant as promised, and your hair stays upright until supper. You learn more than anyone else in the room.|You go down and take it on the chin, literally. The class applauds; your chin doesn't.|You volunteer before they ask. The lecturer, delighted, gives you the slightly worse hex, "as a treat".}
+> right: Sink into your seat
+  mood -tiny
+  say: {You sink. The lecturer picks the student beside you, who gives you a look you'll be paying for until the end of term.|You become very interested in your notes. It works; the person in front is less lucky and less interested in theirs.|You sink until you're more desk than student. The lecturer says, "I can see you," and picks someone else anyway.}
+> up[shadowstep]: Step into the pillar's shadow
+  mood +small
+  guile +tiny
+  say: {You step into the shadow of the pillar and out of the shadow by the door, and spend the demonstration watching from the corridor, very innocently.|A step into the dark under your desk and out under the window. When the lecturer's eyes reach your seat, your seat is empty, and they look puzzled for the rest of the hour.|You're gone before the word "volunteer" lands. From the doorway you watch someone else's hair stand on end, and feel only slightly guilty.}
+
+@event observatory_shutter_rope
+title: The Shutter Rope
+pool: shadowstep_uses
+place: observatory
+time: evening night
+tone: light
+art: star
+scene: A brass observatory dome at dusk, its shutter still closed, a crank rope dangling out of reach up in the dark of the dome's ribs, students with star charts waiting below.
+text: {The stars are coming out, and the dome is still shut. The crank rope has jumped its pulley and is hanging up in the dark of the ribs, well out of anyone's reach. A dozen students with star charts look up at it.|The shutter rope has jumped its pulley again. The caretaker says it does it on clear nights only, out of spite.|Up in the ribs of the dome, in the dark, the rope again. Somebody has chalked an arrow on the floor pointing at it.}
+> left: Climb the brass ribs
+  challenge feat apprentice+ wild:
+    win:
+      vigor +small
+      say: {You climb the ribs like a ladder and hook the rope with one foot. The shutter grinds open on a sky full of stars, and the room cheers.|Up the ribs, out along the curve, a grab. The rope comes free and the dome opens with a groan like a waking giant.|The handholds are just where you'd hope. Up, grab, down, and the sky is open before the charts are unrolled.}
+    lose:
+      health -tiny
+      mood -tiny
+      say: {Halfway up a rib turns slippery with dew and you come down a lot faster than you went up. The rope stays where it is.|You get a hand to the rope and the pulley bites your fingers. You let go of both.|You climb, reach, miss and hang there by your elbows while someone runs for the caretaker.}
+> right: Read the charts by lamplight instead
+  lore +tiny
+  mood -tiny
+  say: {The caretaker comes up an hour later with a hook on a pole. By then you've learned the charts by heart, and the best of the sky has gone behind the hill.|You spread the charts on the floor and plot tonight's route across them instead. It isn't the same; it's not nothing.|You read by lamplight under the shut dome. When it finally opens, the moon is up and drowning half of what you came for.}
+> up[shadowstep]: Step into the dark under the dome
+  mood +small
+  renown +tiny
+  say: {You step into the shadow by the door and out of the shadow in the ribs, grab the rope, and step back down. The dome opens. A dozen star charts lower slowly as their owners stare at you.|Shadow to shadow, up into the dark of the dome and back. The rope slots onto its pulley with a clunk. Someone asks if you can do that for the bell tower.|You don't even put your charts down. A step into the dark, a tug, and the shutter rolls back on the whole sky.}
+
+@event infirmary_slip_out
+title: One More Night
+pool: shadowstep_uses
+place: infirmary
+time: evening night
+tone: light
+art: bed
+scene: An infirmary ward at night, a student sitting up in a white bed fully dressed, a healer's lamp moving between beds at the far end.
+text: {Sister Amaranth wants you in for "one more night, for observation". You feel completely fine and have three things due tomorrow.|One more night again. Sister Amaranth has started leaving your boots on the far side of the ward.|The bed by the window has your name on the slate in ink. "One more night," says Sister Amaranth, not as a question.}
+> left: Stay the night
+  health +small
+  study -tiny
+  say: {You stay. You sleep through two bells and the breakfast trolley and wake up much better than "completely fine" turned out to be. Your three things are now late.|You stay. She was right, irritatingly; you sleep like a dropped stone. Your essay, unwritten, waits.|You stay without arguing. Sister Amaranth notices, and gives you the good tonic, and a look that might be respect.}
+> right: Argue your case
+  challenge appeal vs amaranth.charm +1:
+    win:
+      say: {You make a short, true, convincing case. She looks at you over her spectacles. "Go," she says. "Come back if it swells. Don't come back if it doesn't."|You tell her the true version of how fine you are, with the limp left in. She respects that and lets you go.|She lets you go with a tonic in your pocket and instructions you'll follow later, when you understand them.}
+    lose:
+      health +tiny
+      mood -small
+      say: {She listens to every word, then points at the bed. You lie down. You don't remember falling asleep.|"No," says Sister Amaranth, which was always going to be the answer, and she says it while doing something else.|She lets you argue to the end, then writes "argued" on your slate, under your name.}
+> up[shadowstep]: Step out through the dark
+  study +tiny
+  rel amaranth -tiny
+  say: {When her lamp turns, you step into the shadow behind the screen and out of the shadow by the door. In the morning there's a note on your desk in square handwriting. It says "Next time, ask."|You step out of the ward and into your own room's corner in one breath. You get your three things done. Sister Amaranth, of course, knows.|Shadow to shadow, past the beds, out. Your essay is finished by midnight. At breakfast Sister Amaranth puts a tonic by your plate without a word.}
+
+# ---------------- Ward ----------------
+
+@pool ward_uses
+from: spell_use
+weight: 10 + spell_known(ward) * 15
+
+@appointment ward_in_use
+desc: Once you know Ward, a visit now and then opens on one of its everyday uses.
+at: visit
+when: spell_known(ward)
+chance: unlikely
+deals: pool ward_uses
+
+@event alchemy_lab_do_not_drop
+title: Do Not Drop
+pool: ward_uses
+place: alchemy_lab
+time: morning afternoon evening
+tone: tense
+art: bottle
+scene: A laboratory with tall shelves, a first-year on a ladder reaching for a bottle labelled DO NOT DROP, the bottle tilting off their fingertips over a crowded bench.
+text: {A first-year at the top of the shelf ladder is reaching for a bottle labelled, in large letters, DO NOT DROP. It's sliding off their fingertips, over a bench crowded with people.|The same shelf, a different first-year, the same bottle. Someone has added AGAIN to the label.|The bottle is tilting before you've put your bag down. You'd swear it waits for you.}
+> left: Dive and catch it
+  challenge feat apprentice+ wild:
+    win:
+      alchemy +small
+      say: {You catch it an inch above the bench. Everyone breathes out at once. The first-year comes down the ladder very carefully and shakes your hand for a long time.|Caught, with both hands, against your chest. You put it back on the shelf yourself, at the bottom.|You catch it one-handed without looking, which surprises you more than anyone. Somebody starts a sweepstake on next time.}
+    lose:
+      health -tiny
+      mood -tiny
+      say: {You touch it and it skips off your fingers and bursts on the floor. Everyone's eyebrows go blue, yours most.|You get a hand to it and slow it down. It still breaks, but only on your boots, which smoke politely for an hour.|You catch the first-year instead of the bottle. Both of you are blue until Thursday.}
+> right: Shout everyone back from the bench
+  charm +tiny
+  mood -tiny
+  say: {"Back!" Everyone backs. The bottle hits the bench and the cloud goes up blue and harmless and smelling of pear drops. The bench is ruined; nobody is.|You clear the bench in a word. The bottle breaks; the first-year cries; the lecturer says it was the right call, in a voice that says it was an expensive one.|You shout before it's fallen. The bench clears; the bottle, perversely, lands upright.}
+> up[ward]: Throw a ward over the bench
+  mood +small
+  renown +tiny
+  say: {The bottle bursts on a pale shell an arm's length above everyone's heads. The cloud rolls off the ward like rain off a window. The first-year, still on the ladder, starts to clap.|A ward, flat over the bench like a tabletop. The bottle breaks on it and the cloud slides off into the sink. The lecturer writes your name down, in the good column.|{spell_level(ward) >= 2: You ward the bench and the first-year at once. Nothing touches anyone. Somebody asks you to teach them; you do, after.|You ward the bench, a little late; the cloud catches your sleeve. Your sleeve is blue. Nobody else is.}}
+
+@event courtyard_hail
+title: Hail in the Courtyard
+pool: ward_uses
+place: courtyard
+time: morning noon afternoon evening
+tone: light
+art: snow
+scene: A castle courtyard in a sudden hailstorm, first-years caught in the open with their arms over their heads, white stones bouncing off the flagstones.
+text: {Hail comes out of a clear sky, stones the size of peas, then the size of marbles. A knot of first-years is caught in the middle of the courtyard with their books over their heads.|Hail again, the courtyard's speciality. The first-years know to run now; they just don't know where.|The sky goes white and the hail comes down like a dropped tray of beads. {season == "summer": In summer, which is insulting.|The fountain rings with it.}}
+> left: Herd them into the cloister
+  health -tiny
+  alignment +tiny
+  say: {You wave them into the cloister and take the last of the hail on your own back. One of them gives you a sugar mouse from their pocket, warm and slightly squashed.|You get them all in and count them twice. Your ears ring for an hour from the stones.|You herd them like ducks into the cloister, the stones bouncing off your shoulders. One of them says thank you in a very small voice.}
+> right: Run for cover yourself
+  mood -tiny
+  say: {You make the cloister in six strides and watch them work it out for themselves. They do, eventually, damply.|You run. A prefect gets them in. You feel you were quicker than you should have been.|Cover first. From the cloister you shout directions, which helps a little and makes you feel better a lot.}
+> up[ward]: Raise a ward over them
+  mood +small
+  renown +tiny
+  say: {You throw up a ward like a roof and the hail bounces off it in a white roar. The first-years stand under it, dry, looking up at you as if you'd hung the sky.|A pale shell over the knot of them. The hail drums on it like rain on a tent. Somebody under it starts to sing.|You walk them across the courtyard under a ward, slowly, like a procession. Half the castle is watching from the windows. You don't hurry.}
+
+@event lakeshore_swan
+title: The Swan
+pool: ward_uses
+place: lakeshore
+time: morning noon afternoon evening
+tone: tense
+art: feather
+scene: A reedy lakeshore, a huge white swan with wings raised and neck lowered, hissing at a first-year who has wandered too close to its nest.
+text: {A first-year has wandered into the reeds too close to the swans' nest. The cob is coming out of the water with his wings up, hissing like a kettle.|The swans are nesting again. The cob has grown, or your memory of him has, and there's a first-year in the reeds.|The cob sees you from across the lake and starts hissing in advance.}
+> left: Step between them
+  challenge soothe using vigor apprentice+ wild:
+    win:
+      vigor +small
+      say: {You step between them with your arms out wide and hiss back. The cob considers this, and decides you are the bigger swan. The first-year runs.|You stand your ground, slowly, talking nonsense in a low voice. He lowers his wings an inch, then another, then goes back to the nest.|He knows you by now, and you know him. You both posture, politely, until the first-year is clear.}
+    lose:
+      health -small
+      say: {He hits you with a wing like a flung door. The first-year gets away; you get a bruise the size of a plate.|You step in and the cob takes it personally. You retreat across the reeds at speed, honked at.|You take one wing and then a bite on the ankle. The first-year helps you limp home, which seems backwards.}
+> right: Shout for them to run
+  mood -tiny
+  say: {"Run!" The first-year runs, the cob chases them twenty yards, and everyone ends up in the lake except you.|You shout, they run, the cob gets a mouthful of their scarf. They don't get the scarf back.|You shout from a safe distance. It works, mostly. The first-year limps into the infirmary with a story they'll tell for years.}
+> up[ward]: Put a ward between them
+  mood +small
+  alignment +tiny
+  say: {A pale shell springs up between the cob and the first-year. He beats his wings on it twice, offended, then sails back to his nest with enormous dignity.|You ward the first-year and walk them out of the reeds inside it. The cob hisses at the ward all the way, and the ward doesn't mind.|A ward, and a slow walk, and the swans left in peace. The cob watches you go, and you'd swear he nods.}

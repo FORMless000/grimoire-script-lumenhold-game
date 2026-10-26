@@ -97,7 +97,8 @@ test('the real content compiles with the framework and nothing unresolved', () =
 });
 
 test('appointments: the library declares the built-in defaults, in their order; content without it gets them', () => {
-  const real = require('./helpers.js').content.appointments;
+  // The library's own appointments; content may declare more (spell_uses.grim).
+  const real = Object.fromEntries(Object.entries(require('./helpers.js').content.appointments).filter(([, a]) => a.file === 'content/core/appointments.grim'));
   const shape = (a) => ({ id: a.id, at: a.at, for: a.for, deals: a.deals, use: a.use || null, limit: a.limit || null, takes: !!a.takes });
   const bare = G.compile([{ path: 'content/t.grim', text: card('x') }]).content;
   const lib = Object.values(real).map(shape), def = Object.values(bare.appointments).map(shape);
@@ -135,4 +136,25 @@ test('order: last puts a slot\'s cards after its other cards, keeping both group
   assert.deepEqual(ids(['walk_a', 'walk_b']), ['walk_a', 'walk_b']);
   // The Whisperwood delve's start cards come after the forest's routine cards.
   for (const id of ['ww_edge', 'ww_edge_night', 'ww_night_first']) assert.equal(content.events[id].order, 'last', id);
+});
+
+test('a visit appointment deals only cards for the visited place, and only once its spell is known (spell_uses.grim)', () => {
+  const visit = (eng, place) => {
+    const rec = eng.recipe(), at = rec.findIndex((r) => r.source === 'visit');
+    eng.s.day = { v: 2, phase: 'slots', at, stage: 1, picks: [], nextPicks: [], used: [], items: [], withToday: [], pushed: [], spread: {}, count: 0 };
+    eng.s.day.picks = Array(eng.visitIndex(at)).fill(null).concat([place]);
+    return quiet(() => eng.fillSlot(rec[at]));
+  };
+  const dealt = (ward, place) => {
+    const eng = new Engine(content); quiet(() => eng.newGame({ seed: 5, name: 'T', origin: 'street' }));
+    eng.s.spells.ward = ward; eng.rand = () => 0;   // every chance passes
+    return visit(eng, place).filter((it) => it.src === 'ward_in_use').map((it) => it.id);
+  };
+  assert.deepEqual(dealt(1, 'alchemy_lab'), ['alchemy_lab_do_not_drop'], 'known: opens the visit at a place with one of its cards');
+  assert.deepEqual(dealt(1, 'library'), [], 'no ward card at the library: nothing dealt there');
+  assert.deepEqual(dealt(0, 'alchemy_lab'), [], 'not known: never dealt');
+  const eng = new Engine(content); quiet(() => eng.newGame({ seed: 5, name: 'T', origin: 'street' }));
+  const w = () => eng.value(content.events.alchemy_lab_do_not_drop.weight, null, 10);
+  eng.s.spells.ward = 0; assert.equal(w(), 10);
+  eng.s.spells.ward = 2; assert.equal(w(), 25, 'drawn more often once known');
 });

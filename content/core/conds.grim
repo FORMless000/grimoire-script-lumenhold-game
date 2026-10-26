@@ -11,3 +11,8 @@ is: bond(who) != "partner" and bond(who) != "ex"
 desc: Your partner, and around to be met in person now.
 params: who
 is: bond(who) == "partner" and around(who)
+
+@cond spell_known
+desc: You have learnt this spell (any level).
+params: s
+is: spell_level(s) >= 1

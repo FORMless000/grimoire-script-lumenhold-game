@@ -1,3 +1,9 @@
+## Everyday spell uses (October 25)
+
+Twenty-one repeatable routine cards in `content/events/spell_uses.grim`, three for each first-year course spell and Ward, at places across the campus and the village; zh-CN complete. Each resolves without the spell, and has an `up[spell]` option once you know it. A known spell's cards are drawn more often (each spell's pool: `weight: 10 + spell_known(<spell>) * 15`, `@cond spell_known` in `conds.grim`), and a visit appointment per spell (`<spell>_in_use`, `chance: unlikely`) now and then opens a visit on one of them. Engine: a visit appointment now deals only cards for the place being visited, and rolls its chance only when it has one (no built-in appointment is affected; they all have `use:`).
+
+Measured (80 games a style, the same seeds with the boost off): once a spell is known, its cards come about 2.2 times as often (balanced: 0.2–0.7 → 0.5–1.25 a year per spell), about 60% of them through the appointment; windfalls stay at a median of 1 a year. Retrieval replaced one duplicate premise (tomorrow's Ledger page, `ledger_office_drying_line`) and reworded lines echoing eight existing cards. Two cards at places simulated players almost never visit (the Gargoyle Passage, the Headmistress's Tower) were moved to new premises at the library and the courtyard; the queries and rework are in `build/batches/spell_uses_2026_10.notes.md`. Found and fixed while gating: a fight's preview dropped an outcome the estimate put at 0%, though the played fight can still end that way (`balance` reported a preview miss on `duel_fixture`); a played fight's preview now keeps every outcome the card has.
+
 ## Mini-plots, batch 1 (October 25)
 
 Three plot-safe storylines in `content/events/miniplots_2026_10.grim`, each a `@thread … from: story` with a side lead (`content/world/clues.grim`) and zh-CN complete. Each starts at a place whose term visits often came up empty, then pushes its next beats, so a started storyline finishes:

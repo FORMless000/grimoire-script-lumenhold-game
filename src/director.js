@@ -633,8 +633,10 @@
             if (fest) { items.push({ id: fest.event, actor: null, place, prio: 'story', src: 'festival' }); used.add(fest.event); taken = true; }
             continue;
           }
-          if (a.use || r.opened || (a.place && a.place !== place) || !this.appointmentHolds(a, null)) continue;
-          const it = this.draw(this.dealsFrom(a, null), used, day.concat(items), { place, prio: 'story', src: a.id });
+          if (a.use || r.opened || (a.place && a.place !== place)) continue;
+          const here = this.dealsFrom(a, null).filter((e) => !e.place || e.place === place);
+          if (!here.length || !this.appointmentHolds(a, null)) continue;
+          const it = this.draw(here, used, day.concat(items), { place, prio: 'story', src: a.id });
           if (it) { items.push(it); taken = true; }
         }
         if (!taken && place) {
@@ -669,8 +671,11 @@
                 // the group's other members sit this visit out, so the drawn card can't be a second one of them
                 items.push({ id: pick.e.id, actor: null, place, prio: 'track', src: 'always' }); for (const id of group) used.add(id); fixedAny = true;
               }
-            } else if (!a.use && !r.opened && (!a.place || a.place === place) && this.appointmentHolds(a, null)) {
-              const it = this.draw(this.dealsFrom(a, null), used, day.concat(items), { place, prio: 'track', src: a.id });
+            } else if (!a.use && !r.opened && (!a.place || a.place === place)) {
+              // A visit deals only cards that belong here: a card with a `place:` comes only at that place, and the
+              // appointment's chance is rolled only when the place has one of its cards.
+              const here = this.dealsFrom(a, null).filter((e) => !e.place || e.place === place);
+              const it = here.length && this.appointmentHolds(a, null) && this.draw(here, used, day.concat(items), { place, prio: 'track', src: a.id });
               if (it) { items.push(it); fixedAny = true; }
             }
           }

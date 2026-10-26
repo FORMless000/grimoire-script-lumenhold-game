@@ -831,7 +831,7 @@ deals: pool market_stalls
 | `when`, `chance` | it deals only while `when` holds, and then by `chance:` (a likelihood word or `N%`) |
 | `pick` | at the month's start: `one` card per subject, by the usual draw score (the default), or `each` eligible card |
 | `slot`, `priority`, `limit` | at the month's start: the slot the card goes to; its order among pushed cards; `limit: plot` shares the month's plot-card cap |
-| `place` | at a visit: only at this place |
+| `place` | at a visit: only at this place. Whatever its `place`, a visit appointment deals only cards for the place being visited (a card with a `place:` there, or one with none), and rolls its `chance` only when there is one |
 | `use` | the built-in way one of the game's own appointments deals (below) |
 
 The game's own appointments are declared in `content/core/appointments.grim`, in the order they deal; content without the file gets the same ones built in. The older spellings are shorthands and keep working:
