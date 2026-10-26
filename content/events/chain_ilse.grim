@@ -58,42 +58,67 @@ text: Ilse finds you by the frozen pond. "My brother won't talk to me. You will.
 @event ilse_grey_returns
 time: night
 title: The Man in Grey Comes for Ilse
+type: menu
 class: story
-tone: eerie
+tone: tense
 trigger: social
 when: rel(ilse) >= 7 and turn >= 20 and not flag(ilse_saved) and not flag(ilse_taken) and not closed(hollowstar)
 weight: 18
 art: mask
 tags: danger hollowstar
 thread: ilse
-scene: A moonlit village lane, a man in a grey coat with one hand on a girl's shoulder, frost and shadow coiling around them both.
-text: Late at night, a lane behind the bakery. The man in grey has one hand on Ilse's shoulder. "Home," he is saying softly. "Your family is waiting. The door is waiting." Ilse sees you. She doesn't call out. She just looks.
+# Feedback 2026-10-25: his fight was a fixed level 23 (journeyman, no drift); now expert with drift mid, so he keeps up
+# with you. v2: three ways to stand between them, one of them a fight; losing any of them, he takes her (and the
+# Night gives you one more chance, hs_night_ilse).
+scene: A moonlit village lane with every window frosted over, a man in a grey coat with one hand on a girl's shoulder, frost and shadow coiling around them both.
+text: A lane behind the bakery, after dark, every window on it frosted over. The man in grey has a hand on Ilse's shoulder and is talking to her softly: "Home. Your mother is waiting. The door is waiting." Ilse's jaw is set and her eyes are wet. She sees you over his shoulder and doesn't call out. She just looks.
 > left: Step between them
-  challenge combat journeyman likely:
+  hint: Combat. He fights like winter. Lose, and he takes her.
+  challenge combat expert drift mid:
     win:
       flag ilse_saved
       rel ilse +large
       renown +small
       alignment +small
       find ilse_truth
-      say: Your spell breaks his grip. He looks at his frosted hand with mild surprise, bows, and walks into the dark. Ilse is shaking. "Nobody's ever — " she says, and stops.
+      hs_investigation_progress
+      say: Your spell breaks his grip. He looks at his frosted glove with mild surprise, bows, and walks into the dark. Ilse is shaking. "Nobody's ever..." she says, and stops, and shouts after him in Northern instead, every word of it a door slammed.
     lose:
       flag ilse_taken
-      health -large
       alignment +small
       find ilse_truth
+      hs_investigation_progress
       say: He swats your spell aside like a moth. When you get up, the lane is empty except for a single white glove in the snow.
+> talk: "She's not yours to take."
+  hint: Charm. Better if you know what she was raised for.
+  challenge negotiate expert +1 if clue(ilse_truth) +1 if rel(ilse) >= 15:
+    win:
+      flag ilse_saved
+      rel ilse +large
+      alignment +small
+      find ilse_truth
+      hs_investigation_progress
+      say: You tell him, out loud, in the street, what they raised her for and what she's chosen instead. Ilse says "Yes," very clearly, and steps out from under his hand. He looks at the two of you for a long moment, then bows and walks into the dark.
+    lose:
+      flag ilse_taken
+      mood -medium
+      find ilse_truth
+      hs_investigation_progress
+      say: He agrees with every word, gently, and Ilse's shoulders drop as he talks. When he turns her toward the road, she goes. At the corner she looks back once. In the snow there's a single white glove.
 > right: Run for Kael
+  hint: Sure, if Kael is here to fetch.
   if met(kael):
     flag ilse_saved
     rel kael +large
     rel ilse +medium
     find ilse_truth
-    say: Kael arrives like a blizzard. The man in grey takes one look at him and leaves without a word. Brother and sister stand in the snow, not touching, not speaking.
+    hs_investigation_progress
+    say: Kael arrives like a blizzard, shouting her name. The man in grey takes one look at him and leaves without a word. Brother and sister stand in the snow, not touching, not speaking, until Ilse punches him in the arm and the snow stops.
   else:
     flag ilse_taken
     mood -medium
     find ilse_truth
+    hs_investigation_progress
     say: By the time you're back with help, the lane is empty. There's frost on the cobbles in the shape of a closed door.
 
 @event ilse_kael_reunion

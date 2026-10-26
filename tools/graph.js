@@ -32,7 +32,7 @@ function produces(b, content) {
       case 'flag': for (const n of st.names) add('flag:' + n); break;
       case 'gain': add('state:' + st.state); break;
       case 'find': add('clue:' + st.clue); break;
-      case 'advance': add('arc:' + st.arc, '+' + st.n); break;
+      case 'advance': add('arc:' + st.arc, st.to != null ? 'to ' + st.to : '+' + st.n); break;
       case 'close': add('arc:' + st.arc, 'closed'); break;
       case 'enrol': case 'join': case 'apply': add('track:' + st.track, st.t); break;
       case 'discover': add('place:' + st.place); break;

@@ -505,7 +505,8 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
     study: new RegExp('^study(?:\\s+(' + ID + '))?\\s*([+-])\\s*(\\d+|tiny|small|medium|large|huge)$'),
     discover: new RegExp('^discover\\s+(' + ID + ')$'),
     find: new RegExp('^find\\s+(' + ID + ')$'),
-    advanceArc: new RegExp('^advance\\s+(' + ID + ')\\s*\\+\\s*(\\d+)$'),
+    // `advance <arc> to N` (2026-10-26): raise the clock to N, never lower it (an act opened by the player).
+    advanceArc: new RegExp('^advance\\s+(' + ID + ')\\s*(?:\\+\\s*(\\d+)|to\\s+(\\d+))$'),
     // `close <arc>` (feedback 2026-10-25): the arc is over; none of its cards is dealt again, and no clue of it found.
     closeArc: new RegExp('^close\\s+(' + ID + ')$'),
     spawn: new RegExp('^spawn\\s+(' + ID + ')\\s+from\\s+(' + ID + ')$'),
@@ -611,7 +612,7 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
     }
     if ((m = content.match(RE.discover))) return { t: 'discover', place: m[1], line };
     if ((m = content.match(RE.find))) return { t: 'find', clue: m[1], line };
-    if ((m = content.match(RE.advanceArc))) return { t: 'advance', arc: m[1], n: +m[2], line };
+    if ((m = content.match(RE.advanceArc))) return m[3] != null ? { t: 'advance', arc: m[1], to: +m[3], line } : { t: 'advance', arc: m[1], n: +m[2], line };
     if ((m = content.match(RE.closeArc))) return { t: 'close', arc: m[1], line };
     if ((m = content.match(RE.spawn))) return { t: 'spawn', id: m[1], archetype: m[2], line };
     if ((m = content.match(RE.social))) {

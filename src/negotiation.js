@@ -102,6 +102,11 @@
     'ww_outcast_table/left': { profile: 'debater', context: 'formal', note: 'Absalom Vrell, for a forbidden lesson' },
     // The plot.
     'hs_tunnel/talk': { profile: 'skeptic', context: 'formal', note: 'the man in grey' },
+    // The Hollow Star, v2 (2026-10-26)
+    'ilse_grey_returns/talk': { profile: 'skeptic', context: 'public', note: 'the man in grey, in the street' },
+    'hs_key_recover/family': { profile: 'skeptic', context: 'workshop', note: 'a Dumont who knows where the families hide things' },
+    'hs_night_cult/family': { profile: 'debater', context: 'public', note: 'Madame Dumont, before her circle' },
+    'hs_night_ilse/reach': { profile: 'skeptic', context: 'formal', note: 'Ilse, under the man in grey\'s compulsion' },
   };
   const lookup = (event, option) => PARLEYS[event + '/' + option] || null;
   return { PROFILES, CONTEXTS, PARLEYS, lookup };

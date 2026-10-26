@@ -222,7 +222,7 @@ function analyze(content) {
     });
   }
   const hasChallenge = (effects) => { let f = false; G.walkEffects(effects || [], (x) => { if (x.t === 'challenge') f = true; }); return f; };
-  function scanEffects(effects, where, hasActor) {
+  function scanEffects(effects, where, hasActor, carried) {
     G.walkEffects(effects, (st) => {
       const w = where.replace(/:\d+$/, '') + ':' + st.line;
       if (st.tier && !st.preset && ['delta', 'rel', 'spark', 'npc_rel'].includes(st.t)) {
@@ -253,7 +253,8 @@ function analyze(content) {
             if (!content.events[st.event]) P('error', w, 'queue: unknown event "' + st.event + '"');
             add(A.queued, st.event, w);
           }
-          if (st.with === 'npc' && !hasActor) P('error', w, 'queue ... with npc: block has no actor');
+          // A queued card may pass on whoever its own queue carried (`with npc`; none is fine: it carries no one).
+          if (st.with === 'npc' && !hasActor && !carried) P('error', w, 'queue ... with npc: block has no actor');
           else if (st.with && st.with !== 'npc' && !content.npcs[st.with] && !ROLES.has(st.with)) P('error', w, 'queue ... with: unknown npc "' + st.with + '"');
           if (st.delay) scanExpr(st.delay, w, hasActor);
           if (st.chance != null && (st.chance < 1 || st.chance > 99)) P('error', w, 'queue ... chance: must be 1–99 (got ' + st.chance + ')');
@@ -280,7 +281,9 @@ function analyze(content) {
         case 'advance':
           // A thread's own clock (the framework) is anyone's to move; an arc's only in hard-canon story events.
           if (content.threads[st.arc] && !content.arcs[st.arc]) { if (!content.threads[st.arc].clock) P('error', w, 'advance ' + st.arc + ': the thread has no clock: (e.g. clock: 0..4)'); }
-          else if (!content.arcs[st.arc]) P('error', w, 'advance: unknown arc or thread "' + st.arc + '"'); else if (/^content\/batches\//.test(w)) P('error', w, 'advance: only hard-canon events move an arc clock'); break;
+          else if (!content.arcs[st.arc]) P('error', w, 'advance: unknown arc or thread "' + st.arc + '"'); else if (/^content\/batches\//.test(w)) P('error', w, 'advance: only hard-canon events move an arc clock');
+          { const d = content.arcs[st.arc] || content.threads[st.arc]; if (st.to != null && d && d.clock && st.to > d.clock.max) P('error', w, 'advance ' + st.arc + ' to ' + st.to + ': past the clock\'s end (' + d.clock.max + ')'); }
+          break;
         case 'close': if (!content.arcs[st.arc]) P('error', w, 'close: unknown arc "' + st.arc + '"'); else if (/^content\/batches\//.test(w)) P('error', w, 'close: only hard-canon events end an arc'); break;
         case 'spawn': if (!content.archetypes[st.archetype]) P('error', w, 'spawn: unknown archetype "' + st.archetype + '"'); break;
         case 'unqueue': if (!content.events[st.event]) P('error', w, 'unqueue: unknown event "' + st.event + '"'); break;
@@ -303,7 +306,7 @@ function analyze(content) {
           }
           if (st.ally) {   // `with <who>` (2026-10-25): an ally in a played fight
             if (G.MINIGAME_KINDS[st.kind] !== 'fight') P('error', w, 'challenge with: only a fight (combat, duel) has someone beside you');
-            if (st.ally === 'npc' ? !hasActor : !content.npcs[st.ally] && !ROLES.has(st.ally)) P('error', w, 'challenge with: unknown character or cast role "' + st.ally + '"');
+            if (st.ally === 'npc' ? !hasActor && !carried : !content.npcs[st.ally] && !ROLES.has(st.ally)) P('error', w, 'challenge with: unknown character or cast role "' + st.ally + '"');
           }
           for (const x of st.steps || []) scanExpr(x.cond, w, hasActor);
           break;
@@ -343,7 +346,7 @@ function analyze(content) {
     if (e.ramp) { scanExpr(e.ramp.expr, w, hasActor); if (e.trigger === 'queued' || e.trigger === 'auto') P('warn', w, 'ramp: a queued or auto event is pushed already; the ramp is ignored'); }
     scanText(e.title, w, hasActor); scanText(e.text, w, hasActor); scanText(e.scene, w, hasActor);
     { const n = longestRendering(e.text || ''); if (n > 480) P('warn', w, 'card text is long (' + n + ' chars at its longest; aim for < 400)'); }
-    scanEffects(e.on_show, w, hasActor);
+    scanEffects(e.on_show, w, hasActor, e.trigger === 'queued');
     if (e.place && !content.places[e.place]) P('error', w, 'place: unknown place "' + e.place + '"');
     { // a slot an event needs must exist in a day recipe, and a place event's slot gate must be an open, visited slot
       const recipeSlots = new Set([...(content.game.day_term || []), ...(content.game.day_break || []), ...Object.values(content.states).flatMap((d) => d.day || [])].map((r) => r.slot));
@@ -396,7 +399,7 @@ function analyze(content) {
       }
       scanText(o.label, ow, hasActor); scanText(o.hint, ow, hasActor); scanExpr(o.when, ow, hasActor);
       { const n = longestRendering(o.label); if (n > 42) P('warn', ow, 'option label is long (' + n + ' chars; aim for < 36)'); }
-      scanEffects(o.effects, ow, hasActor);
+      scanEffects(o.effects, ow, hasActor, e.trigger === 'queued');
       lintChecks(e, o);
     }
     if (e.options.length > 1 && e.options.every((o) => o.when)) P('warn', w, 'every option has a "when" — the card can soft-lock if none are available');

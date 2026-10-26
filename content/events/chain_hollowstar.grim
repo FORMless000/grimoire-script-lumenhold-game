@@ -1,23 +1,16 @@
 # ============================================================
-#  MAIN CHAIN: The Hollow Star
+#  MAIN CHAIN: The Hollow Star (v2, docs/plots/hollowstar-v2.md)
 #
-#  Something sleeps beneath the lake, sealed by Lumenhold's
-#  founders. Kael Dumont's family serve it. Progress follows the
-#  arc (content/world/arcs.grim): the clock advances on schedule,
-#  beats leave leads, and the clues you followed them to are
-#  counted by clues(hollowstar) (X11; the beats are in
-#  chain_hollowstar_acts.grim, the clues in world/clues.grim).
-#    leads          the archive or the Restricted Section, the boathouse,
-#                   Maud, Kael, Seraphine, the seventh tower
-#    clues >= 2     grey visitors
-#    clues >= 3     the headmistress
-#  Alignment (Lumen + / Hollow -) is the moral axis: the Star's
-#  gifts pull toward the Hollow; refusing them, toward the Lumen.
-#  Finale (final year, Blossomtide): hs_the_night -> hs_tunnel ->
-#  hs_threshold -> hs_beneath (menu); the seal can fail (hollow_failed),
-#  for those who engaged (or whom the Star has claimed, alignment <= -60).
-#  Outcomes fill the yearbook's mystery line: sealed / bargained /
-#  freed (alignment <= -60) / failed / claimed (game over) / bystander.
+#  Something sleeps beneath the lake, sealed by Lumenhold's founders. Kael Dumont's family serve it. The wiring is in
+#  content/events/hollowstar/threads.grim: four acts, each a story thread whose climax raises the arc's clock to the
+#  next act's opener (the arc's beats are deadlines), and the Night, a scene in one sitting. The acts' openers and
+#  confrontations are in chain_hollowstar_acts.grim, the newer cards in content/events/hollowstar/.
+#  Here: Act I's finds (the dream, the ledger, the bell) and its climax (hs_grey_stranger); Kael's secret and the man
+#  in grey's offers (Act II); the seventh tower and its key (Act III); the headmistress's summons (Act IV); and the
+#  Night's tunnel, wall and door with their aftermaths.
+#  Alignment (Lumen + / Hollow -) is the moral axis: the Star's gifts pull toward the Hollow; refusing them, toward the
+#  Lumen. Outcomes fill the yearbook's mystery line: sealed / bargained / freed / failed / fled / held the line /
+#  claimed (game over) / bystander.
 # ============================================================
 
 @event hs_dreams_begin
@@ -25,23 +18,25 @@ time: morning
 title: The Black Star Dream
 class: story
 tone: eerie
-when: turn >= 5 and clock(hollowstar) >= 1 and not has(hollow_dreams)
+when: turn >= 5 and not has(hollow_dreams)
 weight: 14
 art: moon
 tags: mystery hollowstar
-thread: hollowstar
+thread: hs_omens
 scene: A dreamscape: a frozen lake seen from beneath, a round door glowing at the bottom, and above it a star that is a hole in the sky.
 text: You dream of the lake from underneath. There is a round door at the bottom, and above the water a star that is not a light but an absence. A voice says your name like it is tasting it. You wake with frost on your pillow.
 > left: Write the dream down
   lore +small
   find lead_black_star_dream
   gain hollow_dreams
+  hs_omens_progress
   say: Your notes fill four pages. In the morning you don't remember writing the last line: "It is not asleep. It is waiting."
 > right: Ask Seraphine what it means
   meet seraphine
   rel seraphine +small
   find lead_black_star_dream
   gain hollow_dreams
+  hs_omens_progress
   say: Seraphine listens, then hands you a sprig of lavender. "It won't stop the dreams," she says. "But it'll make them smell nicer."
 
 @event hs_grey_stranger
@@ -50,24 +45,27 @@ arc: hollowstar
 beat: 2
 slot: night
 class: story
-tone: eerie
+tone: tense
 when: met(kael)
 art: snow
-tags: mystery hollowstar
-thread: hollowstar
-scene: A frozen fountain in a moonlit courtyard; a tall man in a grey coat facing a younger man, frost spreading from both.
-text: Late at night in the courtyard, Kael is arguing with a tall man in a grey coat. The fountain between them has frozen mid-splash. "The door under the lake will be opened," the man says calmly. "By you, or by your sister. Your mother doesn't mind which."
-> left: Try to slip away unseen
+tags: mystery hollowstar danger
+thread: hs_omens
+# Act I's climax (v2): two of the act's finds bring it early (hs_omens_progress), the deadline otherwise; it opens Act II.
+scene: A frozen fountain in a moonlit courtyard; a tall man in a grey coat facing a pale young man who is shouting, frost spreading from both.
+on_show:
+  advance hollowstar to 4
+text: The courtyard fountain freezes mid-splash with a crack like a whip. Kael, who never raises his voice, is shouting at a tall man in a grey coat: "Tell her no. I did." The man smiles. "The door under the lake will be opened, by you or by your sister. Your mother doesn't mind which." Then he turns his head and says your name, which nobody told him.
+> left: Back into the shadows
   guile +tiny
   mood -tiny
   find lead_man_in_grey
-  say: You back into the shadows. The man in grey turns his head and looks straight at where you're hiding, then smiles and walks away. You don't sleep much.
-> right: Step out and interrupt
+  say: You back away. He looks at the exact spot where you're hiding, smiles, and walks out through the gate with frost blooming in his footprints. You don't sleep. Neither, you suspect, does Kael.
+> right: Step out beside Kael
   rel kael +large
   health -tiny
   find lead_man_in_grey
   flag confronted_grey
-  say: "Everything all right?" The man in grey studies you, nods politely and leaves; the cold he leaves behind bites through your sleeves. Kael's hands are shaking. "You shouldn't have done that," he says. "...Thank you."
+  say: "He said no." It comes out louder than you meant. The man in grey studies you, inclines his head and leaves; the cold he leaves behind bites through your sleeves. Kael's hands are shaking. "You shouldn't have done that," he says. "...Thank you."
 
 @event hs_founders_records
 title: The Founders' Ledger
@@ -79,7 +77,7 @@ when: clue(lead_founders_archive) and not clue(founders_ledger)
 weight: 14
 art: book
 tags: mystery hollowstar study
-thread: hollowstar
+thread: hs_omens
 scene: A dusty archive vault, a giant ledger open on a lectern, one page carefully razored out.
 text: In the archive vault you find the Founders' Ledger, three hundred years old. The entry for the academy's founding year has been cut out with a razor. But the page beneath still holds the impression of the pen.
 > left: Leave it — this feels dangerous
@@ -92,6 +90,7 @@ text: In the archive vault you find the Founders' Ledger, three hundred years ol
       find knows_founders_seal
       find founders_ledger
       lore +small
+      hs_omens_progress
       say: Ghostly letters emerge: "Seven towers, seven locks. The Star sleeps beneath the water. The key is a star that holds no light." The founders built the academy as a seal.
     lose:
       lore +tiny
@@ -107,7 +106,7 @@ when: clue(lead_founders_archive) and not clue(founders_ledger)
 weight: 16
 art: lock
 tags: mystery hollowstar study
-thread: hollowstar
+thread: hs_omens
 scene: A dark aisle of the Restricted Section at midnight, a bundle of yellowed drafts chained to a shelf, the chain faintly glowing.
 text: The archive's ledger has its founding page cut out. The Restricted Section keeps the founders' own drafts, chained to a shelf at the very back, and the chain is warm to the touch. Somewhere behind you, a book turns its own page.
 > left: Work the chain loose
@@ -117,6 +116,7 @@ text: The archive's ledger has its founding page cut out. The Restricted Section
       find founders_ledger
       find knows_founders_seal
       health -tiny
+      hs_omens_progress
       say: The links give one by one, and burn your fingers doing it. The drafts say it plainly, in three hands: "Seven towers, seven locks. The Star sleeps beneath the water. The key is a star that holds no light." Lumenhold is a seal.
     lose:
       gain detention
@@ -138,7 +138,7 @@ when: clue(lead_lake_breathed) and not clue(lake_bell)
 weight: 16
 art: bell
 tags: mystery hollowstar
-thread: hollowstar
+thread: hs_omens
 scene: The inside of an old wooden boathouse at night, a square hatch open in the floorboards, stone steps leading down into dark water.
 text: Under a coil of rotten rope in the boathouse there's a hatch, and under the hatch, stone steps going down into the lake. The air coming up smells of cold bronze. From somewhere below, very faint, a bell is tolling under the water.
 > left: Go down the steps
@@ -147,14 +147,17 @@ text: Under a coil of rotten rope in the boathouse there's a hatch, and under th
       flag found_lake_tunnel
       find lake_bell
       health -tiny
+      hs_omens_progress
       say: The steps become a tunnel under the lakebed, dry and ice-cold, running toward the sound. You follow it until you can see the bell's green rim in the dark ahead. Then you turn back, frozen to the bone, and remember every turning.
     lose:
       find lake_bell
       health -small
+      hs_omens_progress
       say: The third step is ice. You go into the water to the chest and come up gasping, but you've seen it: a tunnel under the lake, running toward the bell. You walk home soaked.
 > right: Listen at the waterline
   find lake_bell
   mood -small
+  hs_omens_progress
   say: You lie on the boards with your ear to the gap. The bell tolls seven times, slow, and between the strokes you hear a draught moving under the lake, the way air moves in a corridor. Something down there is a door. You don't sleep well.
 
 @event hs_seraphine_shadow
@@ -164,53 +167,58 @@ slot: evening
 class: story
 tone: eerie
 actor: seraphine
-when: clue(lead_black_star_dream) and met(seraphine) and not clue(second_shadow)
+when: met(seraphine) and not clue(second_shadow) and (clue(lead_black_star_dream) or seen(hs_shadow_late) > 0)
 weight: 16
 art: star
 tags: mystery hollowstar
-thread: hollowstar
+thread: hs_escalation
 scene: An observatory at night, the great telescope tilted down toward the window and the lake below, a seer pointing at the reflection of the stars in the water.
 text: Seraphine has turned the great telescope down, not at the sky but at the lake, where the stars are reflected. "Look," she says. "In the water. There's one star too many, and it's dark." She counts under her breath. "It wasn't there in my dream. It was in yours."
 > left: Chart it with her
   meet seraphine
   find second_shadow
   lore +small
+  hs_escalation_progress
   health -tiny
   say: You chart it till dawn on the cold floor: a small dark shape in the reflection that has no star above it, sitting exactly over the middle of the lake. Your knees never quite forgive you.
 > right: Tell her about your dream
   meet seraphine
   find second_shadow
   rel seraphine +medium
+  hs_escalation_progress
   mood -small
   say: She finishes your sentences, three of them, before you've started them. Then she shows you the dark star in the water, right over the middle of the lake. You both stop talking for a long time.
 
 @event hs_kael_truth
 title: What Kael Is Running From
 class: story
-tone: eerie
+tone: tense
 when: (clue(lead_man_in_grey) or clues(hollowstar) >= 1) and rel(kael) >= 15 and not flag(kael_told)
 actor: kael
 weight: 16
 art: snow
 tags: mystery hollowstar social
-thread: hollowstar
-scene: Two students sitting on the edge of the frozen boathouse jetty at night, one with frost in his hair, both looking down at the black water.
-text: Kael sits with you on the boathouse jetty. "My family serve something under this lake," he says at last. "They sent me here to open its door. I came to stop them. Some nights I'm not sure which I'll actually do."
+thread: hs_investigation
+# v2: a confrontation on the page; you corner him, and it comes out shouted.
+scene: Two students on an observatory roof at night, one shouting with frost racing out from his boots across the leads, the other standing their ground.
+text: It comes to a head on the observatory roof, past midnight. You've had a year of his silences and you tell him so, loudly. He shouts back, for the first time ever: "My family serve the thing under this lake! They sent me here to open its door!" Frost races out from his boots across the roof. Then, quieter: "I came to stop them. Some nights I'm not sure which I'll do."
 > left: "Then we stop them together."
   flag kael_told kael_ally
   rel kael +large
   spark kael +tiny
   alignment +small
   find kael_family
+  hs_investigation_progress
   if bond(kael) == "none":
     bond kael friend
-  say: He looks at you for a long moment, and the frost on the jetty melts a little. "Together," he repeats, as if trying out a word from another language.
+  say: He looks at you for a long moment, and the frost on the roof melts a little. "Together," he repeats, as if trying out a word from another language.
 > right: Tell the headmistress
   flag kael_told reported_kael
   rel kael -huge
   rel isolde +medium
   alignment +tiny
   find kael_family
+  hs_investigation_progress
   say: The headmistress thanks you gravely. The next day Kael is moved to a room in the headmistress's tower. He doesn't look at you anymore.
 
 @event hs_star_mark
@@ -244,9 +252,9 @@ when: turn >= 18 and (clues(hollowstar) >= 2 or alignment <= -30) and not flag(g
 weight: 12
 art: mask
 tags: mystery hollowstar danger
-thread: hollowstar
-scene: A grey-coated man sitting uninvited at a library table, a black velvet box open in front of him, the candles around him burning blue.
-text: The man in grey is waiting at your library table. "You've been asking questions about the Star," he says pleasantly. "It's noticed you. It could make you extraordinary. All it wants is for someone to open a door."
+thread: hs_investigation
+scene: A grey-coated man sitting uninvited at a library table, a black velvet box open in front of him, every candle around him burning blue.
+text: Every candle in the library goes blue at once. The man in grey is sitting at your table, uninvited, a black velvet box open in front of him. "You've been asking about the Star," he says. "It has started asking about you. It could make you extraordinary. All it wants is a door opened." He turns the box toward you. Inside it you see yourself, burning.
 > left: "Get out."
   hint: He leaves. He remembers.
   alignment +small
@@ -254,7 +262,8 @@ text: The man in grey is waiting at your library table. "You've been asking ques
   mood +tiny
   gain grey_watching
   queue hs_grey_return within 2..4
-  say: He inclines his head and leaves. The candles return to yellow. You realise your hands are trembling, and that he looked at you on the way out the way a man looks at a lock.
+  hs_investigation_progress
+  say: He inclines his head and leaves. The candles go back to yellow. You realise your hands are trembling, and that he looked at you on the way out the way a man looks at a lock.
 > right: "...What would it give me?"
   hint: Everything, a little. The nights turn cold.
   flag grey_offer_seen hollow_tempted
@@ -267,6 +276,7 @@ text: The man in grey is waiting at your library table. "You've been asking ques
   alignment -medium
   gain star_taste
   queue hs_grey_return within 2..4
+  hs_investigation_progress
   say: He shows you, just for a moment. Power, endless and cold, in everything you can do at once. When he's gone you can still taste it, and that night you dream of water closing over your head.
 
 @event hs_grey_return
@@ -277,7 +287,7 @@ class: story
 tone: eerie
 art: mask
 tags: mystery hollowstar danger
-thread: hollowstar
+thread: hs_investigation
 # hs_grey_offer's follow-up (feedback 2026-10-16): the man in grey comes back with a first, small ask.
 scene: A grey-coated man on a frozen garden bench, a sealed letter held out between two gloved fingers, the fountain beside him iced over.
 text: {flag(hollow_tempted): The man in grey is on a bench in the winter garden, and the fountain beside him has frozen mid-splash. "You liked what you tasted," he says. "Here is how it continues." He holds out a sealed letter. "Leave this under the third plank of the boathouse jetty. Nothing more."|The man in grey is on a bench in the winter garden, and the fountain beside him has frozen mid-splash. "You told me to get out," he says, pleasantly. "I did. Now a small thing, and I'll stay out." He holds out a sealed letter. "The third plank of the boathouse jetty. Nothing more."}
@@ -372,19 +382,20 @@ place: seventh_tower
 slot: evening
 class: story
 tone: eerie
-when: clue(lead_seventh_tower) and not flag(star_key) and not flag(gave_star_key)
+when: clue(lead_seventh_tower) and not flag(star_key) and not flag(gave_star_key) and not flag(key_taken)
 weight: 16
 art: tower
 tags: mystery hollowstar
-thread: hollowstar
+thread: hs_escalation
 scene: The top of a narrow, abandoned tower, cobwebbed and moonlit, with a wall bearing a star-shaped recess.
-text: The seventh tower has been locked for a century. You find a way in. At the very top, a single room: dust, moonlight, and a star-shaped hollow in the wall, holding something that does not reflect any light.
+text: The seventh tower has been locked for a century, and its wards start shrieking the moment you touch the door. You go up anyway, two steps at a time, while lights come on all over the academy. At the very top, a single room: dust, moonlight, and a star-shaped hollow in the wall, holding something that does not reflect any light.
 > left: Take it quietly
   challenge deceive journeyman:
     win:
       flag star_key
       find star_key
       mood -small
+      hs_escalation_progress
       queue hs_key_breakfast in 1
       say: A key shaped like a star, black as a hole in the world. As you lift it, every candle in the academy goes out for one breath. You walk back in the dark with it cold against your ribs, and you don't sleep.
     lose:
@@ -397,6 +408,7 @@ text: The seventh tower has been locked for a century. You find a way in. At the
       flag star_key
       find star_key
       mana -small
+      hs_escalation_progress
       queue hs_key_breakfast in 1
       say: You tear through the ward with brute force, and it drains you to the bone. The key comes free. Every candle in the academy goes out for one breath, and somewhere below, a door hears it.
     lose:
@@ -433,19 +445,21 @@ title: The Headmistress Knows
 class: story
 tone: eerie
 trigger: auto
-when: final_year and month >= 3 and month <= 7 and (clues(hollowstar) >= 3 or flag(kael_ally) or flag(wardens_noticed) or flag(sided_wardens) or flag(sided_dumonts) or flag(sided_self))
+when: final_year and month <= 8 and not flag(hs_early) and (clues(hollowstar) >= 3 or flag(kael_ally) or flag(wardens_noticed) or flag(sided_wardens) or flag(sided_dumonts) or flag(sided_self))
 priority: 45
 actor: isolde
 art: crown
 tags: mystery hollowstar story
-thread: hollowstar
-scene: A circular study at the top of a tower, walls lined with sleeping portraits, the headmistress standing by a window that looks down on the lake.
-text: The headmistress summons you to her tower. "You have been following the same thread I have," she says. "On the night of the Blossom moon, the seal will weaken. I need people I can trust beneath the lake. Or you can walk away. No one would blame you."
+thread: hs_convergence
+# v2: no longer pinned to months 3-7; it waits on Act IV. If the man in grey took the key, the Wardens fetch it back
+# here (one of the ways back that isn't a fight, decision 2026-10-26).
+scene: A circular study at the top of a tower, walls lined with sleeping portraits, the headmistress standing by a window over the lake, Thorne and Maud beside her, a black-sealed letter on the desk.
+text: The headmistress summons you to her tower. Thorne is there, and Maud, and on the desk between them is a letter with a black-star seal, opened. "The Dumonts' mother is coming south for the Blossom moon," Isolde says. "She means to open the door herself. I need people I trust beneath the lake. Or you may walk away, and no one in this room will blame you."
 > left: Walk away
   meet isolde
   flag hollow_out
   mood +small
-  say: "Wise," she says, and you can't tell if she means it. "Then stay above, and keep the first-years indoors."
+  say: "Wise," she says, and you can't tell if she means it. Maud looks at her tea. "Then stay above," says the headmistress, "and keep the first-years indoors."
 > right: "I'll be there."
   alignment +small
   meet isolde
@@ -454,31 +468,36 @@ text: The headmistress summons you to her tower. "You have been following the sa
   rel isolde +large
   arcana +small
   mood -small
-  say: She presses a silver ward-ring into your hand. "{flag(star_key): The founders' key is with you. Keep it close.|{flag(gave_star_key): The founders' key is in my desk.|The founders' key is kept at the top of the seventh tower.}} On the night, it comes down with us. Learn quickly. You have until Blossomtide." You lose a little sleep over that every night.
+  if flag(key_taken):
+    unflag key_taken
+    flag gave_star_key
+  say: She presses a silver ward-ring into your hand. "{flag(star_key): The founders' key is with you. Keep it close.|{flag(gave_star_key): The founders' key is in my desk; the Wardens saw to that.|The founders' key is kept at the top of the seventh tower.}} On the night, it comes down with us. Learn quickly. You have until Blossomtide."
 
 @event hs_the_night
 title: The Night the Lake Froze
 class: story
 tone: eerie
 trigger: auto
-when: final_year and month == 9 and (not flag(hollow_out) or flag(hollow_tempted) or flag(hollow_courted)) and (clues(hollowstar) >= 3 or flag(warden_trial) or flag(kael_ally) or flag(sided_wardens) or flag(sided_dumonts) or flag(sided_self) or flag(wardens_noticed) or flag(hollow_courted) or alignment <= -60)
+when: final_year and clock(hollowstar) >= 12 and hs_called()
 priority: 70
 art: snow
 tags: mystery hollowstar danger
-thread: hollowstar
-scene: The whole lake frozen white in the middle of spring, cracks glowing from beneath, students crowding the towers' windows.
-text: In the middle of spring, the lake freezes in a single breath. Cracks glow beneath the ice. The bell under the water is tolling, and every candle in the academy leans toward the shore.
+thread: hs_night
+# The Night's entry (v2): at the deadline (the clock reaches 12 at y4m9), or at once from hs_go_down_early.
+scene: The whole lake frozen white in the middle of spring, cracks glowing from beneath, a ring of lanterns out on the ice, students crowding the towers' windows.
+text: {flag(hs_early): The lake freezes behind you in a single breath, from shore to shore.|In the middle of spring, the lake freezes in a single breath, from shore to shore.} Cracks glow beneath the ice. Every candle in the academy leans toward the water. Out on the ice, lanterns are moving in a ring: someone is already there. Under it all the bell is tolling, {clue(lake_bell): the note you followed once|a note you've never heard and somehow know}.
 > left: Go down beneath the lake
-  queue hs_tunnel now
+  find lake_bell
+  queue hs_night_company now
   say: You run for the boathouse. Behind you, someone is shouting your name. You don't stop.
 > right: Stay above and protect the students
   close hollowstar
   alignment +small
-  health -large
+  health -medium
   renown +large
   rel isolde +small
   flag hollow_held_line
-  say: You hold the doors of the first-year tower all night against things made of frost and whispers. By dawn the lake thaws. Something below is still asleep — for now.
+  say: You hold the doors of the first-year tower all night against things made of frost and whispers. By dawn the lake thaws. Something below is still asleep, for now, and forty children are alive who might not have been.
 
 @event hs_tunnel
 title: The Man in the Tunnel
@@ -489,72 +508,54 @@ type: menu
 priority: 95
 art: mask
 tags: mystery hollowstar danger
-thread: hollowstar
+thread: hs_night
+# v2: whoever came down with you rides along (`with npc`: Kael's or Ilse's Hoarfrost in the fight). The talk pays off
+# ilse_truth and kael_family; slipping past, lake_bell. Then Ilse (if she was taken), then your shadow.
 scene: A slick stone tunnel under the ice, lit blue from above, a tall man in a grey coat standing in the middle of it with his hands folded.
-text: The tunnel from the boathouse runs down under the ice, slick and glowing blue. Halfway down, the man in grey is waiting{=flag(ilse_taken) and ", and Ilse stands beside him with her eyes on nothing" or ", alone, as if he has all night"}. "Go back up," he says pleasantly. "This isn't your door."
+text: The tunnel runs down under the ice, slick and glowing blue. Halfway down, the man in grey is waiting, alone, as if he has all night. {flag(night_kael): "Kael. Your mother is disappointed." "She always is," says Kael, and the walls frost over.|{flag(night_ilse): "Ilse. You were meant to open it." "I know what I was meant for," she says.|"Go back up," he says pleasantly. "This isn't your door."}}
 > fight: Break through him
-  hint: Combat. Kael's frost joins in if he's with you.
-  queue hs_threshold now
-  if flag(kael_ally) or flag(winter_kael):
-    challenge combat master- unlikely with kael:
-      win:
-        flag hs_tunnel_clear
-        health -small
-        say: Kael's frost and your spell hit him together. He slides back along the ice, bows, and is simply not there any more. You go on with bruised ribs and a clear road.
-      lose:
-        health -large
-        say: He swats the two of you aside like moths, then steps back to let you pass, smiling. "Go on, then." You go down bleeding, and late.
+  hint: Combat. Whoever came down with you fights beside you.
+  if flag(ilse_taken) and not flag(ilse_went_north):
+    queue hs_night_ilse now with npc
   else:
-    challenge combat master- unlikely:
-      win:
-        flag hs_tunnel_clear
-        health -small
-        say: Your spell catches him square, and he slides back along the ice, surprised for the first time. He bows and is gone. You go on with bruised ribs and a clear road.
-      lose:
-        health -large
-        say: He swats your spell aside, then steps back to let you pass, smiling. "Go on, then." You go down bleeding, and late.
+    queue hs_night_shadow now with npc
+  challenge combat master- unlikely with npc:
+    win:
+      flag hs_tunnel_clear
+      say: You hit him {flag(night_kael): with Kael's frost at the same moment|square}, and he slides back along the ice, surprised for the first time in four years. He bows, and is simply not there any more. The road down is clear.
+    lose:
+      night_hurt += 1
+      say: He swats your spells aside like moths, then steps back to let you pass, smiling. "Go on, then. She's waiting." You go down bruised, and late.
 > talk: Talk your way past
-  hint: Charm. Easier if Ilse is safe, or you know what she was raised for.
-  queue hs_threshold now
-  if flag(ilse_saved) or flag(winter_ilse) or clue(ilse_truth):
-    challenge negotiate master-:
-      win:
-        flag hs_tunnel_clear
-        mood -small
-        say: You tell him the Dumont children have chosen, both of them, and that you know exactly what they were raised for. For a moment he looks old. Then he steps aside. It costs you something to see that look.
-      lose:
-        mood -medium
-        say: He listens courteously, agrees with every word, and lets you pass only once you've heard every word of his. You arrive shaken, and late.
+  hint: Charm. What the Dumonts were raised for is your best argument.
+  if flag(ilse_taken) and not flag(ilse_went_north):
+    queue hs_night_ilse now with npc
   else:
-    challenge negotiate master- unlikely:
-      win:
-        flag hs_tunnel_clear
-        mood -small
-        say: You talk fast and well, and somewhere in it he decides you're more trouble than you're worth. He steps aside with a little bow. Your hands don't stop shaking for a while.
-      lose:
-        mood -medium
-        say: He listens courteously, agrees with every word, and lets you pass only once you've heard every word of his. You arrive shaken, and late.
+    queue hs_night_shadow now with npc
+  challenge negotiate master- unlikely +1 if clue(ilse_truth) +1 if flag(ilse_saved) +1 if flag(mother_answered):
+    win:
+      flag hs_tunnel_clear
+      find ilse_truth
+      find kael_family
+      say: You tell him the Dumont children have chosen, both of them, and that you know exactly what they were raised for and what it cost them. For a moment he looks old. Then he steps aside. It costs you something, seeing that look.
+    lose:
+      night_hurt += 1
+      find ilse_truth
+      find kael_family
+      say: He listens courteously, then tells you, kindly, everything the Dumonts did to their children and why. It takes a long time. He lets you pass only once you've heard every word. You arrive shaken, and late.
 > slip: Find another way down
-  hint: Guile. Easier if you know the old tunnels.
-  queue hs_threshold now
-  if flag(found_lake_tunnel) or clue(lake_bell):
-    challenge deceive master- likely:
-      win:
-        flag hs_tunnel_clear
-        health -small
-        say: You know a side passage he doesn't, the one the bell's rope once ran through. You come out below him, breathless and spent, and he never sees you go.
-      lose:
-        health -medium
-        say: The side passage is half flooded. You come out soaked and freezing, below him, but late, and he calls a polite good evening after you.
+  hint: Guile. Easier if you know the old tunnels, or the bell's note.
+  if flag(ilse_taken) and not flag(ilse_went_north):
+    queue hs_night_ilse now with npc
   else:
-    challenge deceive master- unlikely:
-      win:
-        flag hs_tunnel_clear
-        mana -small
-        say: You fold yourself into the dark and go round him along the wall, a breath at a time. It drains you, but he never turns his head.
-      lose:
-        health -medium
-        say: He turns his head the moment you move. "Good evening." He lets you pass anyway, and the cold he leaves in your bones comes with you.
+    queue hs_night_shadow now with npc
+  challenge deceive master- unlikely +1 if flag(found_lake_tunnel) +1 if clue(lake_bell):
+    win:
+      flag hs_tunnel_clear
+      say: You follow the bell's note into a side passage he doesn't know, the one its rope once ran through. You come out below him, breathless, and he never sees you go.
+    lose:
+      night_hurt += 1
+      say: The side passage is half flooded. You come out soaked and freezing below him, and late, and he calls a polite good evening after you down the tunnel.
 
 @event hs_threshold
 title: The Founders' Words
@@ -565,63 +566,37 @@ type: menu
 priority: 95
 art: book
 tags: mystery hollowstar danger
-thread: hollowstar
-scene: A wall of black stone at the end of a tunnel, carved with lines of script that drift when not looked at, a faint bell-tone hanging in the air.
-text: The tunnel ends at a wall of black stone carved with the founders' words, in a script that drifts when you look away. Behind it the bell is tolling. The wall will open for someone who can read it, or someone who can make it.
+thread: hs_night
+# v2: every clue about the seal opens a lock here (seven_locks, the ledger, the founders' seal, Edmund's wand), and the
+# wall pays them off for anyone who never found them.
+scene: A wall of black stone at the end of a tunnel, carved with lines of script that drift when not looked at, seven round locks set in it, a faint bell-tone hanging in the air.
+text: The tunnel ends at a wall of black stone, carved with the founders' words in a script that drifts when you look away, and set with seven round locks, one for each tower. {clue(seven_locks): You know them. Maud told you.|You count them twice.} Behind it the bell is tolling. {flag(night_maud): Maud lays a hand on the stone and says, "Hello again."|}
 > read: Read the founders' words
-  hint: Lore. The founders' seal and the seven locks make it easier.
-  queue hs_beneath now
-  if clue(knows_founders_seal) and clue(seven_locks):
-    challenge research master- likely:
-      win:
-        flag hs_threshold_read
-        mood -tiny
-        say: You've read these words before, in pieces, and you know where the locks fall. Said whole, they open the wall like a door, and the strain of it sits behind your eyes.
-      lose:
-        health -small
-        mood -small
-        say: You stumble on the last line, and the wall opens only a crack. You squeeze through it; it scrapes skin off your shoulder on the way.
-  elif clue(knows_founders_seal) or clue(seven_locks) or flag(winter_isolde):
-    challenge research master-:
-      win:
-        flag hs_threshold_read
-        mood -tiny
-        say: You know enough to guess the rest. The wall listens, and slides aside, and the strain of it sits behind your eyes.
-      lose:
-        health -small
-        mood -small
-        say: You stumble on the last line, and the wall opens only a crack. You squeeze through it; it scrapes skin off your shoulder on the way.
-  else:
-    challenge research master- unlikely:
-      win:
-        flag hs_threshold_read
-        mood -tiny
-        say: You don't know the words, but you know how words like these are built. Line by line, the wall gives way, and the strain of it sits behind your eyes.
-      lose:
-        health -small
-        mood -small
-        say: The script slides away from you. In the end the wall opens a crack on its own, as if amused. You squeeze through; it takes skin with it.
-> force: Force the stone open
-  hint: Arcana, and it hurts. Easier if Maud taught you her wards.
-  queue hs_beneath now
-  if flag(winter_maud):
-    challenge spell master-:
-      win:
-        flag hs_threshold_read
-        health -small
-        say: You trace Maud's wards backwards into the stone, the way she showed you. The wall cracks down the middle and opens, and your hands ache to the elbow.
-      lose:
-        health -medium
-        say: The stone fights back. You get through in the end, but your hands are raw and shaking.
-  else:
-    challenge spell master- unlikely:
-      win:
-        flag hs_threshold_read
-        health -small
-        say: You put everything you have into the stone, and it cracks down the middle. Your hands ache to the elbow.
-      lose:
-        health -medium
-        say: The stone fights back. You get through in the end, but your hands are raw and shaking.
+  hint: Lore. Everything you learned about the seal makes it easier.
+  queue hs_beneath now with npc
+  challenge research master- unlikely +1 if clue(knows_founders_seal) +1 if clue(seven_locks) +1 if clue(founders_ledger) +1 if flag(winter_isolde) +1 if flag(night_isolde):
+    win:
+      flag hs_threshold_read
+      find seven_locks
+      find knows_founders_seal
+      say: You've read these words before, in pieces: the razored page, the chained drafts, Maud's tea. Said whole, they turn the seven locks one after another, and the wall opens like a door. "Seven towers, seven locks," you hear yourself say. "The key is a star that holds no light."
+    lose:
+      night_hurt += 1
+      find seven_locks
+      find knows_founders_seal
+      say: You stumble on the last line, and only six of the locks turn. The wall opens a crack. You squeeze through it, and it takes skin off your shoulder on the way, and the words follow you down the dark like a rhyme.
+> force: Force the locks
+  hint: Arcana, and it hurts. Maud's wards and Edmund's wand help.
+  queue hs_beneath now with npc
+  challenge spell master- unlikely +1 if flag(winter_maud) +1 if flag(edmunds_wand) +1 if flag(night_maud):
+    win:
+      flag hs_threshold_read
+      find seven_locks
+      say: {flag(edmunds_wand): Edmund's wand hums the bell's note against the stone, and the locks turn to it one by one.|You trace the old wards backwards into the stone, the way Maud showed you, and the locks turn one by one.} The wall cracks down the middle and opens. Your hands ache to the elbow.
+    lose:
+      night_hurt += 1
+      find seven_locks
+      say: The stone fights back. Six locks give; the seventh you break, and it breaks something in your hands too. You get through in the end, raw and shaking.
 
 @event hs_beneath
 title: The Door Beneath the Lake
@@ -632,131 +607,57 @@ type: menu
 priority: 95
 art: door
 tags: mystery hollowstar danger
-thread: hollowstar
+thread: hs_night
+# v2: the seal's odds add up the whole plot and the whole Night (one check, a step per threshold of hs_seal). Each
+# outcome closes the arc and is told in its own aftermath card (which belongs to no arc, so it still comes).
 scene: A vast domed cavern under the lake, a round door of black stone standing open a crack, and through it a star that is pure absence.
-text: Beyond the wall, the round door. It stands open a crack. Through it, the Hollow Star looks at you — and it is beautiful, and it is hungry, and it knows your name.{=flag(kael_ally) and " Kael is beside you, wand raised, frost spreading from his feet." or ""}
+text: Beyond the wall, the round door, open a crack, and through the crack the Hollow Star looks at you. It is beautiful, and it is hungry, and it speaks in your own voice: "You came all this way. Open me. Or take what I'm offering. Or run." {flag(night_kael): Kael is beside you, frost spreading from his feet.|{flag(night_ilse): Ilse is beside you, breathing steady for once.|{flag(night_maud): Maud has Edmund's wand up, humming the bell's note.|{flag(night_isolde): The headmistress stands beside you, her ring lit like a lamp.|You are alone.}}}}
 > seal: Seal the door
-  hint: Needs the star key, the founders' secret or a ward-ring. Arcana; preparation and the way down make it easier. It can fail.
+  hint: Needs the star key, the founders' secret or a ward-ring. Arcana; everything you did tonight counts. It can fail.
   when: flag(star_key) or flag(knows_founders_seal) or flag(warden_trial) or flag(gave_star_key)
   alignment +small
   hs_prep = clue(seven_locks) + clue(star_key) + clue(ilse_truth) + (rel(kael) >= 18) + (rel(ilse) >= 18) + (rel(maud) >= 18) + (rel(isolde) >= 18) + 2 * (flag(sided_wardens) or flag(sided_dumonts)) + flag(sided_self) + (alignment >= 30) + (alignment >= 60) + (spell_level(starlight) >= 1) + (spell_level(ward) >= 1) + flag(wardens_noticed)
-  hs_seal = hs_prep + 2 * flag(hs_tunnel_clear) + 2 * flag(hs_threshold_read)
-  if hs_seal >= 13:
-    challenge spell master sure:
-      win:
-        flag hollow_sealed
-        renown +huge
-        mood +large
-        lose star_mark
-        lose hollow_dreams
-        queue hs_aftermath in 1
-        say: {flag(knows_founders_seal): You speak the founders' words|You set the seal with everything you have}, and the door grinds shut. The Star screams without sound. Above, the ice cracks and the lake breathes again.
-      lose:
-        flag hollow_failed
-        health -huge
-        lose hollow_dreams
-        queue hs_aftermath_lost in 1
-        if flag(kael_ally) or flag(winter_kael):
-          rel kael +large
-          say: Your seal falters. Kael throws every ounce of frost in him into it, and it still isn't enough: the door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
-        else:
-          say: Your seal falters and breaks, and takes most of you with it. The door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
-  elif hs_seal >= 9:
-    challenge spell master likely:
-      win:
-        flag hollow_sealed
-        renown +huge
-        mood +large
-        lose star_mark
-        lose hollow_dreams
-        queue hs_aftermath in 1
-        say: {flag(knows_founders_seal): You speak the founders' words|You set the seal with everything you have}, and the door grinds shut. The Star screams without sound. Above, the ice cracks and the lake breathes again.
-      lose:
-        flag hollow_failed
-        health -huge
-        lose hollow_dreams
-        queue hs_aftermath_lost in 1
-        if flag(kael_ally) or flag(winter_kael):
-          rel kael +large
-          say: Your seal falters. Kael throws every ounce of frost in him into it, and it still isn't enough: the door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
-        else:
-          say: Your seal falters and breaks, and takes most of you with it. The door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
-  elif hs_seal >= 5:
-    challenge spell master:
-      win:
-        flag hollow_sealed
-        renown +huge
-        mood +large
-        lose star_mark
-        lose hollow_dreams
-        queue hs_aftermath in 1
-        say: {flag(knows_founders_seal): You speak the founders' words|You set the seal with everything you have}, and the door grinds shut. The Star screams without sound. Above, the ice cracks and the lake breathes again.
-      lose:
-        flag hollow_failed
-        health -huge
-        lose hollow_dreams
-        queue hs_aftermath_lost in 1
-        if flag(kael_ally) or flag(winter_kael):
-          rel kael +large
-          say: Your seal falters. Kael throws every ounce of frost in him into it, and it still isn't enough: the door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
-        else:
-          say: Your seal falters and breaks, and takes most of you with it. The door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
-  elif hs_seal >= 2:
-    challenge spell master unlikely:
-      win:
-        flag hollow_sealed
-        renown +huge
-        mood +large
-        lose star_mark
-        lose hollow_dreams
-        queue hs_aftermath in 1
-        say: {flag(knows_founders_seal): You speak the founders' words|You set the seal with everything you have}, and the door grinds shut. The Star screams without sound. Above, the ice cracks and the lake breathes again.
-      lose:
-        flag hollow_failed
-        health -huge
-        lose hollow_dreams
-        queue hs_aftermath_lost in 1
-        if flag(kael_ally) or flag(winter_kael):
-          rel kael +large
-          say: Your seal falters. Kael throws every ounce of frost in him into it, and it still isn't enough: the door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
-        else:
-          say: Your seal falters and breaks, and takes most of you with it. The door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
-  else:
-    challenge spell master slim:
-      win:
-        flag hollow_sealed
-        renown +huge
-        mood +large
-        lose star_mark
-        lose hollow_dreams
-        queue hs_aftermath in 1
-        say: {flag(knows_founders_seal): You speak the founders' words|You set the seal with everything you have}, and the door grinds shut. The Star screams without sound. Above, the ice cracks and the lake breathes again.
-      lose:
-        flag hollow_failed
-        health -huge
-        lose hollow_dreams
-        queue hs_aftermath_lost in 1
-        if flag(kael_ally) or flag(winter_kael):
-          rel kael +large
-          say: Your seal falters. Kael throws every ounce of frost in him into it, and it still isn't enough: the door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
-        else:
-          say: Your seal falters and breaks, and takes most of you with it. The door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
+  hs_seal = hs_prep + 2 * flag(hs_tunnel_clear) + 2 * flag(hs_threshold_read) + 2 * flag(cult_broken) + 2 * flag(shadow_beaten) + 2 * (flag(star_key) or flag(gave_star_key)) + 2 * flag(night_isolde) + flag(night_maud) - night_hurt
+  challenge spell master slim +1 if hs_seal >= 4 +1 if hs_seal >= 8 +1 if hs_seal >= 12 +1 if hs_seal >= 16:
+    win:
+      flag hollow_sealed
+      close hollowstar
+      renown +huge
+      mood +large
+      lose star_mark
+      lose hollow_dreams
+      queue hs_aftermath in 1
+      say: {flag(star_key): The star key turns in the round door, and you|You} speak the founders' words with everything you have, and the door grinds shut. The Star screams without sound. Above you, the ice cracks from shore to shore, and the lake breathes again.
+    lose:
+      flag hollow_failed
+      close hollowstar
+      lose hollow_dreams
+      queue hs_aftermath_lost in 1
+      if flag(night_kael):
+        rel kael +large
+        say: Your seal falters. Kael throws every ounce of frost in him into it, and it still isn't enough: the door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
+      else:
+        say: Your seal falters and breaks, and takes most of you with it. The door stays ajar. The last thing you see is the headmistress's lantern coming down the tunnel.
 > bargain: Accept the Star's bargain
-  hint: Power beyond measure. A voice in your head forever. Only for those it has already tempted.
+  hint: Its power, now, and a voice in your head forever. Only for those it has already tempted.
   when: alignment <= -30 or flag(hollow_tempted)
   flag hollow_bargain
   close hollowstar
   alignment -large
-  arcana +huge
-  gain star_mark
-  health -large
+  gold +huge
+  mana +large
+  learn_spell eclipse
+  if not has(star_mark):
+    gain star_mark
+  gain star_crowned
   lose hollow_dreams
+  queue hs_aftermath_bargain in 1
   if alignment <= -30:
     mood +medium
-    say: You take what it offers, and it feels like coming home. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap. The price comes out of your body: you climb the tunnel grey-lipped, and for days every stair leaves you breathless.
+    say: You take what it offers, and it feels like coming home. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap, and pours itself into your hands.
   else:
     mood -large
-    say: You take what it offers. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap. You climb the tunnel grey-lipped, and for a week you lie awake, too weak for stairs.
+    say: You take what it offers. The door closes on its own, for now. The Star settles into the back of your mind like a cat finding a warm lap, and pours itself into your hands, and you can't stop shaking.
 > open: Open the door
   hint: It wants out. Only one already deep in the Hollow could walk through beside it.
   when: alignment <= -60 or flag(hollow_tempted)
@@ -768,15 +669,16 @@ text: Beyond the wall, the round door. It stands open a crack. Through it, the H
     gain star_mark
     lose hollow_dreams
     renown -medium
-    say: You set your palm on the black stone and push. The door swings wide. The Star rises past you like a breath held for three hundred years, and on its way out it touches your shoulder, the way a lord touches a sword. Above, every candle in Lumenhold goes out, and does not come back on until dawn.
+    queue hs_aftermath_freed in 1
+    say: You set your palm on the black stone and push. The door swings wide. The Star rises past you like a breath held for three hundred years, and on its way out it touches your shoulder, the way a lord touches a sword. Above, every candle in Lumenhold goes out at once.
   else:
     end ending_hollow_claimed
 > flee: Run
   close hollowstar
-  health -large
   mood -large
   flag hollow_fled
-  say: You run until the tunnel spits you out onto the shore. Behind you, the door is still ajar. In the morning, the headmistress's hair has gone white.
+  queue hs_aftermath_fled in 1
+  say: You run. You run until the tunnel spits you out onto the shore, and you don't look back once. Behind you, under the ice, the door is still ajar.
 
 @event hs_aftermath
 title: After the Thaw
@@ -785,10 +687,14 @@ tone: eerie
 trigger: queued
 art: sun
 tags: hollowstar story
-thread: hollowstar
+# No arc (v2): it comes after the arc is closed.
 scene: The lake glittering in spring sunshine, students skimming stones, a bandaged figure sitting on the jetty.
 on_show:
   close hollowstar
+  if night_hurt >= 2:
+    health -medium
+  elif night_hurt >= 1:
+    health -small
 text: The lake glitters as if nothing happened. Most of the academy believes there was a strange spring frost. The headmistress knows better. So does Kael, who finds you on the jetty with two cups of tea.
 > left: Sit with him in silence
   rel kael +large
@@ -813,10 +719,11 @@ trigger: queued
 actor: isolde
 art: door
 tags: hollowstar story
-thread: hollowstar
+# No arc (v2): it comes after the arc is closed. The seal's cost is paid here.
 scene: An infirmary bed by a window, the lake thawed outside, a tall woman with newly white hair sitting beside it without her silver ring.
 on_show:
   close hollowstar
+  health -large
 text: You wake in the infirmary. The lake has thawed, and the door is shut: the headmistress came down after you and closed it with her own hands. She is sitting by your bed. Her hair has gone white overnight, and her silver ring is gone.
 > left: "I'm sorry."
   meet isolde
@@ -837,13 +744,14 @@ when: flag(kael_ally) and turn >= 22 and not flag(met_sister)
 weight: 10
 art: snow
 tags: mystery hollowstar
-thread: hollowstar
+thread: hs_investigation
 scene: A girl in white furs standing at the academy gates in a snowstorm that is falling only on her.
 text: A girl in white furs is waiting at the gates in a private snowstorm. Kael's younger sister, Ilse. "If my brother won't open it," she says, "I will. Unless you can give me a reason not to."
 > left: Convince her
   flag met_sister
   find lead_white_furs
   find ilse_truth
+  hs_investigation_progress
   challenge negotiate journeyman:
     win:
       rel kael +large
@@ -856,5 +764,6 @@ text: A girl in white furs is waiting at the gates in a private snowstorm. Kael'
   find lead_white_furs
   find ilse_truth
   rel isolde +small
+  hs_investigation_progress
   rel kael -small
   say: Ilse is escorted from the grounds. Kael understands. He says he understands. He's quiet for a long time.

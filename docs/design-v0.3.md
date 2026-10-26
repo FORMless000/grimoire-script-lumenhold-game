@@ -365,7 +365,7 @@ v0.3 ships castle, home, work on campus and internships. Travel and internship m
 ### 4.5 Re-pacing existing content
 
 - `year == 3` → `final_year` (17 places).
-- Hollow Star clues spread across years 1–3, finale in year 4's Blossomtide (§10.6).
+- Hollow Star clues spread across years 1–3, finale in year 4 by Blossomtide, or earlier that spring by the player's choice (§10.6).
 - Year-gated arcs (Lyra's ultimatum, the confessions, Ilse) shift by a year or gain a middle beat.
 - Careers move to year 4. Year 3 gets internships and the exchange students.
 - Today's summer events become break-plan pools.
@@ -1103,16 +1103,19 @@ key_clues: seven_locks star_key ilse_truth
 ```
 
 - **Events:** `arc:` (for director relevance), `clue(x)` in conditions, `find x` grants a clue (hard canon only), `act(hollowstar) >= 3`.
-- **Clock beats** fire `story` events on schedule, whatever the player does.
+- **Clock beats are deadlines** (v2, 2026-10-26): the clock advances on schedule whatever the player does, and an act's climax raises it to the next act's opener (`advance hollowstar to N`), so pushing the investigation opens the next act early. Each act's cards are a story thread whose steps wait on the act being open, not on a month; the Night is a scene thread played in one sitting (`content/events/hollowstar/threads.grim`, `docs/plots/hollowstar-v2.md`).
+- **The arc closes** (`close hollowstar`) with the Night's outcome, or with the Night seen from above for a player it never called: no card of the arc, and no clue, comes after.
 
 **The Hollow Star in 4 acts:**
 
 | Act | When | Without you (clock beats) | What you can do |
 |---|---|---|---|
-| I · Omens | year 1 | rumours, lake anomalies, the drowned bell rings once, Kael arrives | notice; early clues are cheap and optional |
-| II · Investigation | year 2 | the Wardens stir; the man in grey; Ilse arrives | restricted section, founders' ledger, Maud's memories, research; trust or distrust the Dumonts |
-| III · Escalation | year 3 | an incident (the lake partly freezes, a tower goes dark); the factions recruit | pick a side (Wardens / Dumonts / your own way); internship leads; key clues |
-| IV · Convergence | year 4, Blossomtide | the Night: the lake freezes; the door opens | the finale: a sequence of challenges (duel, negotiate, research), whose options and odds come from your preparation |
+| I · Omens | year 1 (clock 1, climax by y1m9) | the lake breathes; the man in grey confronts Kael in the courtyard | the bell, the founders' seal, the black-star dream: two of them bring the climax early |
+| II · Investigation | year 2 (clock 4, climax by y2m9) | Ilse arrives and the Dumonts clash in the open; things of frost come ashore | Kael's secret, what Ilse was raised for, the Codex, the man in grey's offer; save Ilse (a fight, a negotiation or a run for Kael) |
+| III · Escalation | year 3 (clock 7, climax by y3m7) | the cult burns a black star on the Great Hall door; Isolde and Kael draw wands on the ice; the man in grey strikes in daylight | pick a side; the seven locks, the star key, your second shadow; lose the key and win it back (four ways, three without a fight) |
+| IV · Convergence | year 4 (clock 10; the Night by Blossomtide) | the last winter; the Dumonts' mother writes; the Night | who trains with you; go down early with the key (the cult half-formed, only the promised come), or at the Blossom moon |
+
+**The Night** (a scene, one sitting): who comes down with you (one companion: Kael or Ilse fight beside you, Maud or the headmistress help at the wall and the door); the cult's circle on the ice, led by the Dumonts' mother; the man in grey in the tunnel; Ilse, if she was taken; your own shadow; the founders' wall; the door. Every clue pays off there, found or not (at worse odds if not). Every fight sits beside a way that isn't one, and losing costs odds at the door, never the story (decision 2026-10-26). Each outcome has its aftermath card.
 
 **Rules:**
 - **The world moves without you.** Ignoring the plot gives the *bystander* result, not a game over.
@@ -1124,7 +1127,7 @@ key_clues: seven_locks star_key ilse_truth
   - spells known.
 - **Pacing:** at most 1 plot card a month, except in each act's climax month.
 - **Batch content** may read the act for flavour and point toward clue *sources*. Only hard-canon events can grant key clues or move the clock.
-- **The outcome** fills the yearbook *mystery* slot: sealed, bargained, freed, claimed, or bystander.
+- **The outcome** fills the yearbook *mystery* slot: sealed, bargained, freed, failed, fled, held the line, claimed, or bystander.
 - **Character arcs** (Lyra, Ilse, Kael, …) use the same construct, at a smaller scope.
 - **Phase 4:** a Journal tab shows clues found and the current act (as rumours, not spoilers).
 

@@ -26,10 +26,9 @@ for(const [k,f]of Object.entries(FOES))if(f.pool&&!POOLS[f.pool])problems.push(`
 for(const f of found){const e=EVENTS[f.key];if(!e?.play)continue;const i=found.filter(g=>g.key===f.key).indexOf(f);
  for(const foe of [e.play].flat()){const st=fightSetting(f.key,i,foe);
   if(!CONTEXTS[st.context])problems.push(`${f.key} #${i+1} (${foe}): no context`);
-  if(typeof st.observers!=='boolean'||typeof st.witnesses!=='boolean')problems.push(`${f.key} #${i+1}: observers and witnesses must both be stated`);
-  else if(st.observers&&!st.witnesses)problems.push(`${f.key} #${i+1}: an audience is always a witness`);}}
+  if(typeof st.observers!=='boolean'||typeof st.witnesses!=='boolean')problems.push(`${f.key} #${i+1}: observers and witnesses must both be stated`);}}
 for(const l of new Set(foeLoadouts()))if(!knownLoadout(l))problems.push(`unknown loadout ${l}`);
-if(process.argv.includes('--list'))for(const f of found){const d=EVENTS[f.key]??{};{const i=found.filter(g=>g.key===f.key).indexOf(f),st=d.play?fightSetting(f.key,i):null;console.log(`${f.key.padEnd(34)} ${f.kind.padEnd(6)} ${f.rest.padEnd(36)} ${d.convert?'convert → '+d.convert:'play '+[d.play].flat().join(' / ')+` · ${st.context} · ${st.observers?'audience':st.witnesses?'witnessed':'unseen'}`}`);}}
+if(process.argv.includes('--list'))for(const f of found){const d=EVENTS[f.key]??{};{const i=found.filter(g=>g.key===f.key).indexOf(f),st=d.play?fightSetting(f.key,i):null;console.log(`${f.key.padEnd(34)} ${f.kind.padEnd(6)} ${f.rest.padEnd(36)} ${d.convert?'convert → '+d.convert:'play '+[d.play].flat().join(' / ')+` · ${st.context} · ${st.observers?(st.witnesses?'audience':'audience, unreported'):st.witnesses?'witnessed':'unseen'}`}`);}}
 const played=found.filter(f=>EVENTS[f.key]?.play).length;
 console.log(`${found.length} combat challenges on ${new Set(found.map(f=>f.key.split('/')[0])).size} cards: ${played} played, ${found.length-played} converted.`);
 if(problems.length){console.log(problems.join('\n'));process.exit(1);}

@@ -431,6 +431,18 @@ Card edits apply when the minigame plays the card.
 | 39 | duel_fixture / left | combat adept- | play | `thornwick_duellist` (Thornwick pool) | public | audience | Drop health (lose). |
 | 40 | lake_skimming / left | duel apprentice wild | **convert** | — | — | — | `challenge feat apprentice wild`: skimming stones with a friend. Text unchanged. |
 
+**The Hollow Star, v2** (2026-10-26, `docs/plots/hollowstar-v2.md`): the plot's fights below supersede rows 6–8. Every one sits beside a way past that isn't a fight, and losing one never closes the story. Fights on the Night are `with npc`: whoever came down with you throws Hoarfrost now and then (`assist`).
+
+| Card / option | Challenge | Foe | Context | Audience |
+|---|---|---|---|---|
+| hs_frost_ring / fight | combat adept+ drift mid, with Kael if allied (Act II's climax) | `frost_wraith` (special) | real | witnesses |
+| hs_grey_daylight / fight | combat expert drift mid, with Kael if allied | the man in grey | real | audience |
+| ilse_grey_returns / left | combat expert drift mid | the man in grey | real | witnesses |
+| hs_night_cult / fight | combat master- unlikely, with your company (+1 going down early) | `hollow_matriarch`: Madame Dumont | real | nobody |
+| hs_tunnel / fight | combat master- unlikely, with your company | the man in grey | real | witnesses |
+| hs_night_ilse / fight | combat vs ilse.arcana, with your company | Ilse, named | real | nobody |
+| hs_night_shadow / fight | combat master- unlikely, with your company (+1 forewarned by the second shadow) | `your_shadow` (special) | real | nobody |
+
 **Converted cards** keep their rung, odds and text; only the challenge kind changes. A `feat` tests Vigor by default, like the stub's `duel using vigor`. The texts already describe a contest of nerve or body, not a duel.
 
 ## 7. Proposed format addition: `foe`

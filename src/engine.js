@@ -1514,7 +1514,7 @@
           }
           case 'discover': { const pl = this.placeAlias(st.place); if (!s.places[pl] && this.c.places[pl]) { s.places[pl] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: pl }); } break; }
           case 'find': if (this.clueClosed(st.clue)) break; if (!s.clues[st.clue]) { s.clues[st.clue] = s.turn; ctx.notes.push({ kind: 'clue', clue: st.clue }); } break;
-          case 'advance': { const a = s.arcs[st.arc] = s.arcs[st.arc] || { clock: 0 }; const d = this.c.arcs[st.arc] || (this.c.threads || {})[st.arc]; a.clock = Math.min(d && d.clock ? d.clock.max : 99, a.clock + st.n); break; }
+          case 'advance': { const a = s.arcs[st.arc] = s.arcs[st.arc] || { clock: 0 }; const d = this.c.arcs[st.arc] || (this.c.threads || {})[st.arc]; a.clock = Math.min(d && d.clock ? d.clock.max : 99, st.to != null ? Math.max(a.clock, st.to) : a.clock + st.n); break; }   // `to N` never lowers it (2026-10-26)
           case 'close': { const a = s.arcs[st.arc] = s.arcs[st.arc] || { clock: 0 }; if (a.closed == null) a.closed = s.turn; break; }   // the arc is over (2026-10-25)
           case 'spawn': ctx.notes.push({ kind: 'spawn', id: st.id, archetype: st.archetype }); break;   // phase 4
           case 'unqueue': s.queue = s.queue.filter((q) => q.id !== st.event); s.deck = s.deck.filter((q) => q.id !== st.event); break;

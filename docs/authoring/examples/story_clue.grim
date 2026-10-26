@@ -5,6 +5,9 @@
 # and this card waits at the place the lead names (`place: library`), so the player chooses to dig.
 # Its gate reads leads and clues, never a home-made counter. Only hard-canon events may grant key
 # clues (`find`) or move the arc clock; moral weight goes on `alignment`, never on plot progress.
+# Act threads: the card is a step of its act's story thread (`thread: hs_omens`), and a find calls the act's
+# progress preset, which raises the clock toward the act's climax once enough is found (named once, in
+# content/events/hollowstar/threads.grim).
 
 @event hs_founders_records
 title: The Founders' Ledger
@@ -16,7 +19,7 @@ when: clue(lead_founders_archive) and not clue(founders_ledger)
 weight: 14
 art: book
 tags: mystery hollowstar study
-thread: hollowstar
+thread: hs_omens
 scene: A dusty archive vault, a giant ledger open on a lectern, one page carefully razored out.
 text: In the archive vault you find the Founders' Ledger, three hundred years old. The entry for the academy's founding year has been cut out with a razor. But the page beneath still holds the impression of the pen.
 > left: Leave it — this feels dangerous
@@ -29,7 +32,9 @@ text: In the archive vault you find the Founders' Ledger, three hundred years ol
       find knows_founders_seal
       find founders_ledger
       lore +small
+      hs_omens_progress
       say: Ghostly letters emerge: "Seven towers, seven locks. The Star sleeps beneath the water. The key is a star that holds no light." The founders built the academy as a seal.
     lose:
       lore +tiny
       say: The impression is too faint. You make out only three words: "...beneath the water..."
+

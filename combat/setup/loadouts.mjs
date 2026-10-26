@@ -46,7 +46,14 @@ export const SPECIAL_LOADOUTS={
  'Masked circle':{salt:51,offsets:[20,10,0,10,0,30],flameBase:.7,course:[1,1,.5,1,3],iconic:['compel'],extras:{tailwind:1},hidden:{seal:1,rime:1},underground:true,forbidden:{torment:3,eclipse:2,extraction:1}},
  // The Outcast: a grandmaster of every forbidden spell with his grimoire (cost forbidden −2, on_cast forbidden spell 2).
  // `maxed`: every skill 100 at any level (F5.11); only his kit is tuned.
- 'The Outcast':{salt:52,offsets:[0,0,0,0,0,0],maxed:true,kit:{torment:1,extraction:1,siphon:1,compel:1,eclipse:1,heartprice:1,ward:1,shadowstep:1,flame:1},mods:{cost:{forbidden:-2},onCast:{forbidden:2}}}
+ 'The Outcast':{salt:52,offsets:[0,0,0,0,0,0],maxed:true,kit:{torment:1,extraction:1,siphon:1,compel:1,eclipse:1,heartprice:1,ward:1,shadowstep:1,flame:1},mods:{cost:{forbidden:-2},onCast:{forbidden:2}}},
+ // The Hollow Star's Night (v2, 2026-10-26; docs/plots/hollowstar-v2.md). Madame Dumont, who leads the cult's circle:
+ // the man in grey's frost and Compel, with the families' forbidden craft.
+ 'Madame Dumont':{salt:53,offsets:[22,12,-10,0,-6,22],flameBase:0,course:[2,0,0,0,2],iconic:['rime','compel'],extras:{ward:2},hidden:{seal:1},underground:true,forbidden:{eclipse:3,siphon:2,heartprice:1}},
+ // A thing of frost and whispers come ashore from the lake (Act II's climax): Hoarfrost and Rime, and it feeds.
+ 'Frost wraith':{salt:54,offsets:[16,-12,-12,-20,18,10],flameBase:0,course:[2,0,0,1,1],iconic:['hoarfrost'],extras:{tailwind:1},hidden:{rime:2},underground:true,forbidden:{siphon:2,eclipse:1}},
+ // Your own shadow as the Star's champion (the Night): it steps a beat behind you, and takes what you give it.
+ 'Your shadow':{salt:55,offsets:[10,4,0,0,0,10],flameBase:.6,course:[1,1,1,1,1],iconic:['shadowstep','eclipse'],extras:{reflect:2},hidden:{seal:1},underground:true,forbidden:{eclipse:2,siphon:1}}
 };
 // Stable salts 10–31 follow the document's named-character order. Faculty Rest
 // lists have no numerical weights: their listed choices use equal weight 1.

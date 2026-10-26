@@ -48,5 +48,5 @@ test('every played card resolves a context and states its audience',()=>{
  for(const [key,e]of Object.entries(EVENTS))if(e.play)for(const i of [0,1])for(const foe of [e.play].flat()){
   const st=fightSetting(key,i,foe);assert(CONTEXTS[st.context],key);assert.equal(typeof st.observers,'boolean',key);assert.equal(typeof st.witnesses,'boolean',key);
  }
- assert.deepEqual([0,1].map(i=>fightSetting('hs_tunnel/fight',i).witnesses),[true,false]);
+ assert.equal(fightSetting('hs_tunnel/fight',0).witnesses,true);   // v2: one challenge, with whoever came down with you
 });

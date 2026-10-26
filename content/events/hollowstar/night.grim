@@ -1,0 +1,332 @@
+# ============================================================
+#  THE HOLLOW STAR, v2: the Night (docs/plots/hollowstar-v2.md), played in one sitting.
+#    hs_the_night (chain_hollowstar.grim) -> hs_night_company -> hs_night_cult -> hs_tunnel -> [hs_night_ilse]
+#      -> hs_night_shadow -> hs_threshold -> hs_beneath -> one aftermath per outcome
+#  Whoever comes down with you rides along as each card's actor (`queue … with kael`); a fight `with npc` has them
+#  throw their Hoarfrost in now and then (combat/HANDOFF.md, "Allies"). Every fight sits beside a way that isn't one.
+#  A clue you never found is still paid off here, at worse odds. Losses that aren't fights add to night_hurt, which
+#  the aftermath settles in Health, so nothing interrupts the Night. The outcome closes the arc; the aftermaths
+#  belong to no arc, so they still come after it is closed.
+#  A player the Night never called gets hs_the_night_above: the lake freezes without them.
+# ============================================================
+
+@event hs_the_night_above
+title: Someone Else's Night
+class: story
+tone: eerie
+trigger: auto
+arc: hollowstar
+when: final_year and clock(hollowstar) >= 12 and not hs_called()
+priority: 70
+art: lantern
+tags: mystery hollowstar
+scene: A dormitory window at night, a lake frozen white below, lanterns moving out on the ice, a student watching from behind the glass.
+text: You wake in the night to the bell under the lake, tolling and tolling. From your window the whole lake is white, and out on the ice there are lanterns moving in a ring, and figures you can't make out. Somebody runs past your door. Nobody knocks on it.
+> left: Keep the first-years in their beds
+  close hollowstar
+  renown +tiny
+  mood -tiny
+  say: You sit on the stairs of the first-year tower until dawn with a lamp, saying "go back to bed" forty times. By morning the lake has thawed. Someone else went down with a lantern. You never learn the whole of it.
+> right: Watch from the window
+  close hollowstar
+  lore +tiny
+  mood -small
+  say: You watch until the lanterns go out, one by one, and then something under the ice glows and goes dark. By morning the lake is blue. At breakfast the headmistress's hair is a shade whiter, and she smiles at nobody.
+
+@event hs_night_company
+title: Who Comes Down With You
+thread: hs_night
+type: menu
+class: story
+tone: tense
+priority: 95
+art: lantern
+tags: mystery hollowstar danger
+scene: The boathouse at night, its hatch open on stone steps going down into blue light, a student at the top with a lantern and figures hurrying in behind.
+text: The boathouse hatch is open, and the steps go down into blue light. {flag(hs_early): You came without telling anyone, and only the ones who promised have followed you down the shore.|Behind you, people are running across the frozen lawn: the ones who said they'd stand with you, and meant it.} The tunnel down is narrow. There's room for two of you, and no more. Who comes?
+> kael: Kael
+  hint: Hoarfrost beside you in every fight. His mother is on the ice.
+  when: night_kael()
+  flag night_kael
+  queue hs_night_cult now with kael
+  say: Kael takes the lantern out of your hand without asking. "My family," he says. "My door." Frost runs down the steps ahead of you, so you don't slip.
+> ilse: Ilse
+  hint: Her frost beside you in every fight. Her mother is on the ice.
+  when: night_ilse()
+  flag night_ilse
+  queue hs_night_cult now with ilse
+  say: Ilse is already on the top step, white furs and a wand like an icicle. "I was raised for this door," she says. "I'd like to see their faces when I close it."
+> maud: Old Maud, with Edmund's wand
+  hint: No help in a fight. The founders' wall knows her.
+  when: night_maud()
+  flag night_maud
+  queue hs_night_cult now
+  say: Maud comes down the lawn at a pace that should be impossible at eighty-one, Edmund's wand in her fist. "Sixty years," she says. "I'm not missing it twice, dearie."
+> isolde: The headmistress
+  hint: No help in a fight. Her seal beside yours at the door.
+  when: night_isolde()
+  flag night_isolde
+  queue hs_night_cult now
+  say: The headmistress walks into the boathouse as if into her own study, her ring lit like a lamp. "After you," she says. "I've read about this door all my life."
+> alone: No one. Keep them safe above.
+  hint: Every fight is yours alone. Nobody you love goes under the lake.
+  alignment +tiny
+  queue hs_night_cult now
+  say: You tell them to guard the towers, and close the hatch on their protests. The steps are slick and the dark is very quiet, and it's the bravest and loneliest thing you've ever done.
+
+@event hs_night_cult
+title: The Circle on the Ice
+thread: hs_night
+type: menu
+class: story
+tone: tense
+priority: 95
+art: moon
+tags: mystery hollowstar danger
+# The Dumonts' mother leads the cult's circle (decision 2026-10-26): the family's conflict, out loud on the ice. It pays
+# off kael_family (said to your face) and codex_names (the names, spoken or read off the furs).
+scene: A ring of figures in black furs with lanterns on a frozen lake at night, and at its centre a tall woman in white furs with a pale, proud face, her wand raised.
+text: The tunnel comes up through the ice inside a ring of lanterns: twelve figures in black furs, chanting{flag(hs_early): , and half the lanterns not yet lit|}. At the centre stands a tall woman in white with Kael's face, thirty years on. Madame Dumont. {flag(night_kael): "My son. You came after all." Kael's frost hits the ice like a shout.|{flag(night_ilse): "Ilse," she says, the way you'd call a dog. Ilse goes white to the lips.|"Kael's little friend," she says. "Step aside."}}
+> fight: Break the circle by force
+  hint: Combat against her{flag(hs_early): . Half her circle isn't here.|.}
+  queue hs_tunnel now with npc
+  challenge combat master- unlikely with npc +1 if flag(hs_early):
+    win:
+      flag cult_broken
+      find kael_family
+      say: Her ward breaks and she goes down on one knee on the ice, and the chant stops dead. She looks up at you with Kael's eyes. "So this is what he chose," she says. The circle scatters into the dark, carrying her.
+    lose:
+      night_hurt += 1
+      find kael_family
+      say: She doesn't even look at you as she throws you across the ice. "Go down, then," she says. "The door will have you either way." The chant goes on, louder, and the glow under the ring grows.
+> names: Speak the names from the Codex
+  hint: Lore. {clue(codex_names): You've read them.|You'll have to read them off their furs.}
+  queue hs_tunnel now with npc
+  if clue(codex_names):
+    challenge research expert likely +1 if flag(hs_early):
+      win:
+        flag cult_broken
+        find kael_family
+        say: You say their names aloud, the ones from the Codex's first page, one for each of them. Each name you say stops a mouth. When you reach "Dumont", the woman in white stops chanting, and the ring of lanterns goes out.
+      lose:
+        night_hurt += 1
+        find kael_family
+        say: You lose your place halfway down the list, and the ones you haven't named say yours back. Your fingertips go grey with cold. The circle closes again behind you as you run for the tunnel.
+  else:
+    challenge research master- unlikely +1 if flag(hs_early):
+      win:
+        flag cult_broken
+        find codex_names
+        find kael_family
+        say: Their names are stitched into the hems of their furs, the way the Codex lists them. You read them off one by one as they turn, and each name you say stops a mouth. At "Dumont", the woman in white falls silent.
+      lose:
+        night_hurt += 1
+        find codex_names
+        find kael_family
+        say: You can read the names stitched in their furs, but not fast enough. Half of them say yours back, and your fingertips go grey with cold. You run for the tunnel with the chant at your back.
+> family: Let them answer their mother
+  hint: Charm. Say what she sent them for, and what they chose.
+  when: flag(night_kael) or flag(night_ilse)
+  queue hs_tunnel now with npc
+  challenge negotiate master- unlikely +1 if clue(kael_family) +1 if clue(ilse_truth) +1 if flag(hs_early):
+    win:
+      flag cult_broken mother_answered
+      if flag(night_kael):
+        rel kael +large
+      else:
+        rel ilse +large
+      find kael_family
+      say: You start it, and then you stop, because {flag(night_kael): Kael|Ilse} is shouting, at last, everything twenty years kept in: the door, the cold house, "well done", never once. The circle wavers. The chant breaks. Madame Dumont lowers her wand and says nothing at all.
+    lose:
+      night_hurt += 1
+      find kael_family
+      say: She lets them shout, and then says, quite gently, "Are you finished?" {flag(night_kael): Kael|Ilse} is shaking. The circle goes on chanting as if nobody had spoken, and you drag your friend down the tunnel before the ice opens.
+> round: Go round the circle
+  hint: Guile. You'll get past. They'll still be chanting.
+  queue hs_tunnel now with npc
+  challenge deceive master- +1 if flag(hs_early):
+    win:
+      find kael_family
+      say: You go round the outside of the ring, low, in the dark between the lanterns, and nobody turns. At the tunnel mouth you look back. She is looking straight at you, and she smiles, and doesn't stop chanting.
+    lose:
+      night_hurt += 1
+      find kael_family
+      say: A lantern swings your way, and the woman in white says a word, and the ice bucks under your feet. You reach the tunnel on your hands and knees, with the cold all the way into your chest.
+
+@event hs_night_ilse
+title: Ilse in the Dark
+thread: hs_night
+type: menu
+class: story
+tone: tense
+priority: 95
+art: snow
+tags: mystery hollowstar danger
+# Ilse taken (ilse_grey_returns, v2): she stands in the way under the man in grey's compulsion. Reach her, or break it
+# in a fight, and she is saved on screen (with Kael there, the Dumonts are reunited).
+scene: A young woman in white furs standing in a dark tunnel under ice, eyes empty, frost falling from her hands like flour.
+text: Where the tunnel opens into the dark, Ilse is standing in the way. Her eyes are on nothing, and frost is falling from her hands like flour. "Go back," she says, in the man in grey's pleasant voice, not her own. "This is my door. I was raised for it." {flag(night_kael): Kael says her name. Then he shouts it, and it echoes all the way down.|}
+> reach: Reach her
+  hint: Charm. What she was raised for, and who she is, are your words.
+  queue hs_night_shadow now with npc
+  challenge negotiate master- unlikely +1 if clue(ilse_truth) +1 if flag(night_kael) +1 if rel(ilse) >= 15:
+    win:
+      unflag ilse_taken
+      flag ilse_saved
+      if flag(night_kael):
+        flag dumont_reunited
+      rel ilse +large
+      alignment +small
+      find ilse_truth
+      say: You tell her what she told you once in the snow: that nobody asked her. Her eyes find yours. Then she's crying, furiously, and the frost stops falling. "I can hear him," she says. "I can't hear him any more." {flag(night_kael): Kael gets to her first.|}
+    lose:
+      night_hurt += 1
+      find ilse_truth
+      say: She listens to every word with the man in grey's polite face, and steps aside to let you pass. When you look back, she is walking up the tunnel toward her mother's circle, and doesn't turn round.
+> fight: Break his hold on her
+  hint: Combat, against her. Win, and the compulsion breaks.
+  queue hs_night_shadow now with npc
+  challenge combat vs ilse.arcana with npc:
+    win:
+      unflag ilse_taken
+      flag ilse_saved
+      if flag(night_kael):
+        flag dumont_reunited
+      rel ilse +small
+      find ilse_truth
+      say: Your last spell hits the frost in her hands, not her, and it shatters, and so does whatever was holding her. She sits down hard on the tunnel floor. "That hurt," she says, in her own voice, and then, "Thank you," and then she gets up.
+    lose:
+      night_hurt += 1
+      find ilse_truth
+      say: She fights like what she was raised to be. When you get up, she's gone, up the tunnel toward the ice, and there's a single white glove on the stone.
+> past: Go past her
+  hint: She won't stop you. She won't come with you.
+  queue hs_night_shadow now with npc
+  mood -medium
+  find ilse_truth
+  say: You step round her. She doesn't stop you; she doesn't see you. {flag(night_kael): Kael stands with her a moment longer, then comes after you with his jaw set and doesn't speak again until the wall.|You don't look back. You'll think about not looking back for a long time.}
+
+@event hs_night_shadow
+title: Your Own Shadow
+thread: hs_night
+type: menu
+class: story
+tone: eerie
+priority: 95
+art: mirror
+tags: mystery hollowstar danger
+# The second shadow (v2): the Star's champion is you. Forewarned (second_shadow), the odds are better; letting it in
+# opens the bargain and the door.
+scene: A black stone wall at the end of a tunnel, a student's shadow standing out from the wall on its own, with the student's face and eyes like holes.
+text: At the founders' wall your lantern throws your shadow onto the black stone, and it stays there when you stop. Then it turns round. It has your face, and the Star's eyes. {clue(second_shadow): Seraphine painted this. You knew it was coming.|Nobody warned you. Nobody could have.} "Let me in," it says, in your voice. "We'd be so much stronger."
+> fight: Fight it
+  hint: Combat, against everything you know.
+  queue hs_threshold now with npc
+  challenge combat master- unlikely with npc +1 if clue(second_shadow):
+    win:
+      flag shadow_beaten
+      find second_shadow
+      say: It fights with your spells, in your order, and it is a beat late, every time, the way it was on the stairs. You use the beat. It breaks against the wall like water, and your own shadow lies down on the floor where it belongs.
+    lose:
+      night_hurt += 1
+      find second_shadow
+      say: It knows every spell you're going to cast, because you do. It puts you on the floor, then sinks back into the wall and waits there, smiling with your mouth.
+> light: Hold up a star's light
+  hint: Arcana. Light the Star can't swallow; Starlight helps.
+  queue hs_threshold now with npc
+  challenge spell master- unlikely +1 if spell_level(starlight) >= 1 +1 if clue(second_shadow):
+    win:
+      flag shadow_beaten
+      find second_shadow
+      mana -small
+      say: You call down the light of a named star into your hand, and the shadow has nowhere to stand. It shrinks back into your outline on the floor with a sound like a sigh, and stays there.
+    lose:
+      night_hurt += 1
+      find second_shadow
+      mana -small
+      say: The light comes, and wavers, and the shadow simply steps into the dark behind it. It is still there on the wall when you go on, a moment late behind you, all the way to the door.
+> let: Let it back in
+  hint: It fits. That's the trouble.
+  queue hs_threshold now with npc
+  flag hollow_tempted
+  alignment -medium
+  mood +small
+  find second_shadow
+  say: You open your arms and it steps into you, and it fits, it fits so well. You've never felt so strong, or so certain, or so cold. {flag(night_kael): Kael takes a step back from you, and doesn't know he's done it.|}
+
+# ---------------- After the Night: one card per outcome (sealed and failed in chain_hollowstar.grim) ----------------
+
+@event hs_aftermath_bargain
+title: The Star's Gift
+class: story
+tone: eerie
+trigger: queued
+art: star
+tags: hollowstar story
+# The bargain pays at once (feedback 2026-10-25): what it gave is said here, and none of it sits at a cap.
+scene: A student at a dormitory mirror at dawn, a crowned black star glowing on their palm, a purse spilling coins on the bed behind them.
+on_show:
+  if night_hurt >= 2:
+    health -medium
+  else:
+    health -small
+text: You wake with the Star's gift already in you. Eclipse, a spell you never studied, sits in your hands like an old habit. There's a purse on your pillow heavy with coins nobody gave you. The mark on your palm has grown a crown of points, and a voice at the back of your mind says, pleasantly, "Good morning."
+> left: Use it
+  hint: The Star likes to be used.
+  alignment -small
+  mood +small
+  say: You light every candle in your room with a look, and then put them all out with another. It's easy. It's so easy. Somewhere under the lake, something settles in to wait for what it's owed.
+> right: Hide the mark
+  hint: Gloves, in spring. People will ask.
+  guile +small
+  mood -small
+  say: You wear gloves from that day on. People ask, and you say it's a burn, and it is, in a way. At night the crown on your palm glows through the leather, and you lie awake watching it.
+
+@event hs_aftermath_freed
+title: Every Candle Out
+class: story
+tone: eerie
+trigger: queued
+art: moon
+tags: hollowstar story
+scene: An academy at dawn with every window dark, students on the lawns staring at an empty sky, a black-sealed letter in one student's hand.
+on_show:
+  if night_hurt >= 2:
+    health -medium
+text: Every candle in Lumenhold went out at midnight and didn't come back until dawn. The lake is blue and empty and very deep. On your pillow there's a letter with a black-star seal: "The families thank you. Your seat at our table is waiting." Across the hall at breakfast, the headmistress looks at you once, and then never again.
+> left: Answer the letter
+  hint: They'd be glad of you.
+  alignment -small
+  gold +medium
+  say: You write back, and a purse comes by the next barge, and after that a letter every month in that beautiful hand. They call you "herald". You find, a little more each time, that you answer to it.
+> right: Burn it
+  hint: What's done stays done.
+  alignment +small
+  mood -small
+  say: The letter burns blue. It doesn't change anything, and you knew it wouldn't, and you burn the next one too, and the one after that. They keep coming.
+
+@event hs_aftermath_fled
+title: The Door Left Ajar
+class: story
+tone: grim
+trigger: queued
+actor: isolde
+art: door
+tags: hollowstar story
+scene: A tall woman with newly white hair standing at a window above a lake, a student in the doorway behind her, neither speaking.
+on_show:
+  if night_hurt >= 2:
+    health -medium
+  else:
+    health -small
+text: The headmistress went down after you ran, and came back up at dawn with her hair gone white. The door is still ajar, she says, but it will hold, for now, with the Wardens sitting up beside it in shifts. She doesn't ask why you ran. That's worse.
+> left: "I'm sorry."
+  meet isolde
+  rel isolde +small
+  mood -medium
+  say: "Everyone runs, the first time," she says. "Most don't come back down. You may yet." She gives you a silver ring without a word, and a rota with your name on it, and you take both.
+> right: Say nothing
+  meet isolde
+  mood -small
+  lore +tiny
+  say: You stand in her doorway until she turns back to the window. Every night after that, you dream of the gap between the door and the frame, and the dark looking out of it, and what you'd say to it if you went back.

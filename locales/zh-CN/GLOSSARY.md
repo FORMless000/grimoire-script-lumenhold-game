@@ -97,7 +97,7 @@ Career Fair 职业招聘会 · Midsummer Fair 仲夏集市 · Winter Trials 冬�
 
 ## 主线
 
-The Hollow Star 空洞之星 · the door beneath the lake 湖底之门 · the founders 创始者 · Wardens 守望者 · star key 星钥 · Star-Mark 星痕 · the Codex of Hollow Names 《空洞名录》
+The Hollow Star 空洞之星 · the door beneath the lake 湖底之门 · the founders 创始者 · Wardens 守望者 · star key 星钥 · Star-Mark 星痕 · the Codex of Hollow Names 《空洞名录》 · Madame Dumont (the Dumonts' mother) 杜蒙夫人 · the Blossom moon 花潮之月 · the Night (the lake freezes) 那一夜 · things of frost and whispers 由霜与低语构成的东西 (one: 霜之物) · the Star's Crown 星之冠 · herald 使者
 
 ## 关系
 

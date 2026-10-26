@@ -65,7 +65,11 @@ export const PERSONAS={
  'The Spinner, weakened':{web:10,venom:10,the_long_wait:10,brood:8,carapace:6},
  Thornwitch:{siphon:12,siphon_hold:6,bramble:8,torment:8,ward:4},
  'Masked circle':{compel:10,torment:8,flame:6,shadowstep:6,eclipse:6},
- 'The Outcast':{heartprice:8,compel:10,siphon:8,eclipse:8,extraction:8,torment:6}
+ 'The Outcast':{heartprice:8,compel:10,siphon:8,eclipse:8,extraction:8,torment:6},
+ // The Hollow Star's Night (v2)
+ 'Madame Dumont':{compel:14,rime:12,eclipse:9},
+ 'Frost wraith':{hoarfrost:12,rime:9,siphon:6},
+ 'Your shadow':{shadowstep:12,eclipse:9,reflect:6}
 };
 export const personaOf=loadout=>PERSONAS[loadout]??{};
 
@@ -107,6 +111,10 @@ export const FOES={
  peer:{loadout:'(the peer present)'},   // duel_hall_gallery: whichever peer the card cast as `here`
  // Danger
  man_in_grey:{name:'the man in grey',loadout:'The man in grey',context:'real_conflict'},
+ // The Hollow Star, v2 (2026-10-26)
+ frost_wraith:{name:'the thing of frost',loadout:'Frost wraith',context:'real_conflict',pronouns:'it'},
+ hollow_matriarch:{name:'Madame Dumont',loadout:'Madame Dumont',context:'real_conflict',pronouns:'she'},
+ your_shadow:{name:'your shadow',loadout:'Your shadow',context:'real_conflict',pronouns:'it'},
  shadow_stag:{name:'the shadow stag',loadout:'Shadow stag',context:'real_conflict'},
  // The intro's lesson (world expansion 1): a straw mannequin Thorne works with a wand. Nothing is at stake.
  practice_mannequin:{name:'the practice mannequin',loadout:'Practice mannequin',context:'rehearsal'},
@@ -147,8 +155,15 @@ export const EVENTS={
  'spring_tournament_circle/right':{play:'tournament_entrant',observers:true,witnesses:true},
  'tournament_semifinal/left':{play:'tournament_unbeaten',observers:true,witnesses:true},
  'tournament_final/left':{play:'lyra',context:'public_duel',observers:true,witnesses:true},
- 'hs_tunnel/fight':{play:'man_in_grey',setup:'two challenges at master- unlikely: with Kael (`with kael`: his Hoarfrost every few exchanges, 2026-10-25) and alone',observers:false,witnesses:[true,false]},
- 'ilse_grey_returns/left':{play:'man_in_grey',setup:'his hand on Ilse is in the rung (journeyman likely): no extra handicap',observers:false,witnesses:true},
+ 'hs_tunnel/fight':{play:'man_in_grey',setup:'master- unlikely, with whoever came down with you (`with npc`: Kael or Ilse throws Hoarfrost every few exchanges; v2)',observers:false,witnesses:true,assist:{spell:'hoarfrost'}},
+ // The Hollow Star, v2 (2026-10-26): the act climaxes and the Night. Under the lake nobody reports a forbidden cast; an
+ // ally beside you (Kael, Ilse) throws Hoarfrost.
+ 'hs_frost_ring/fight':{play:'frost_wraith',observers:false,witnesses:true},
+ 'hs_grey_daylight/fight':{play:'man_in_grey',context:'real_conflict',observers:true,witnesses:true},
+ 'hs_night_cult/fight':{play:'hollow_matriarch',observers:false,witnesses:false,assist:{spell:'hoarfrost'}},
+ 'hs_night_ilse/fight':{play:'peer',context:'real_conflict',observers:false,witnesses:false,assist:{spell:'hoarfrost'}},
+ 'hs_night_shadow/fight':{play:'your_shadow',observers:false,witnesses:false,assist:{spell:'hoarfrost'}},
+ 'ilse_grey_returns/left':{play:'man_in_grey',setup:'expert, drift mid (feedback 2026-10-25: was a fixed level 23); his hand on Ilse is no handicap',observers:false,witnesses:true},
  'rival_contest/left':{play:['tamsin','thornwick_illusionist'],foeCommitsFirst:[3,0],nature:['even',null],setup:'Tamsin if met, else the Thornwick illusionist. With thornwick_secrets (adept likely): the foe commits first for 3 exchanges (as if under your Foresight) at the even level, instead of the likely −3 levels',context:'public_duel',observers:true,witnesses:true},
  'rival_last_match/left':{play:['tamsin','thornwick_final_year'],context:'practice_duel',setup:'Tamsin if met, else a Thornwick final-year',observers:true,witnesses:true},
  'curse_cure_2/right':{play:'shadow_stag',observers:false,witnesses:false},

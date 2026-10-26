@@ -1,0 +1,101 @@
+# ============================================================
+#  THE HOLLOW STAR, v2 (docs/plots/hollowstar-v2.md): how the plot is wired.
+#
+#  The arc's clock (content/world/arcs.grim) still runs on its schedule, but the beats are deadlines: an act's
+#  climax raises the clock to the next act's opener (`advance hollowstar to N`), so a player who pushes the
+#  investigation opens the next act early; one who doesn't is reached by the deadline anyway.
+#    Act I    omens          opener clock 1  hs_lake_breathes   climax hs_grey_stranger (beat 2)  -> 4
+#    Act II   investigation  opener clock 4  hs_ilse_arrives    climax hs_frost_ring (beat 5)     -> 7
+#    Act III  escalation     opener clock 7  hs_dark_tower      climax hs_grey_daylight (beat 8)  -> 10
+#    Act IV   convergence    opener clock 10 hs_last_winter     the Night at 12 (y4m9), or earlier by hs_go_down_early
+#  Each act's cards are a story thread (its steps wait on the act being open, not on a month); the Night is a
+#  scene, played in one sitting, and its outcome cards close the arc.
+#  Every fight in the plot sits beside at least one way that isn't a fight, and losing one never closes the
+#  story off (2026-10-26).
+# ============================================================
+
+@cond hs_act
+desc: The Hollow Star's act n (1 omens … 4 convergence) has opened: the clock has reached its opener.
+params: n
+is: clock(hollowstar) >= 3 * n - 2
+
+@thread hs_omens
+desc: Act I: the lake breathes; the bell, the founders' ledger and the black-star dream, in any order.
+from: story
+with: begun=hs_act(1)
+arc: hollowstar
+members:
+  start hs_lake_breathes
+
+@thread hs_investigation
+desc: Act II: Ilse arrives; Kael's secret, Ilse's, and the man in grey's offer.
+from: story
+with: begun=hs_act(2)
+arc: hollowstar
+members:
+  start hs_ilse_arrives
+
+@thread hs_escalation
+desc: Act III: the cult strikes; sides are taken; the locks, the key and your shadow.
+from: story
+with: begun=hs_act(3)
+arc: hollowstar
+members:
+  start hs_dark_tower
+
+@thread hs_convergence
+desc: Act IV: the last winter; who stands with you; going down early.
+from: story
+with: begun=hs_act(4)
+arc: hollowstar
+members:
+  start hs_last_winter
+
+@thread hs_night
+desc: The Night the lake froze, in one sitting: who comes down with you, the cult on the ice, the man in grey, Ilse, your shadow, the founders' wall and the door.
+from: scene
+arc: hollowstar
+members:
+  entry hs_the_night
+
+# ---------------- Progress: each act's finds raise the clock toward its climax ----------------
+
+@preset hs_omens_progress
+desc: Two of Act I's three finds (the bell; the founders' seal, from the ledger or from Maud; the black-star dream) bring its climax (the clock to 2).
+do:
+  if clue(lake_bell) + clue(knows_founders_seal) + has(hollow_dreams) >= 2:
+    advance hollowstar to 2
+
+@preset hs_investigation_progress
+desc: Two of Act II's truths (Kael's family, what Ilse was raised for, the Codex's names, the man in grey's offer) bring its climax (the clock to 5).
+do:
+  if clue(kael_family) + clue(ilse_truth) + clue(codex_names) + flag(grey_offer_seen) >= 2:
+    advance hollowstar to 5
+
+@preset hs_escalation_progress
+desc: Two of Act III's (the seven locks, the star key, your second shadow, a side taken) bring its climax (the clock to 8).
+do:
+  if clue(seven_locks) + clue(star_key) + clue(second_shadow) + (flag(sided_wardens) or flag(sided_dumonts) or flag(sided_self)) >= 2:
+    advance hollowstar to 8
+
+# ---------------- The Night: who is called, and who comes ----------------
+
+@cond hs_called
+desc: The Night calls you down: you followed the plot far enough, or the Star counts you as its own, and you didn't walk away.
+is: (not flag(hollow_out) or flag(hollow_tempted) or flag(hollow_courted)) and (clues(hollowstar) >= 3 or flag(warden_trial) or flag(kael_ally) or flag(sided_wardens) or flag(sided_dumonts) or flag(sided_self) or flag(wardens_noticed) or flag(hollow_courted) or alignment <= -60)
+
+@cond night_kael
+desc: Kael would come down with you: an ally, or he trained with you; if you go early, only if he promised.
+is: met(kael) and (flag(winter_kael) or (flag(kael_ally) and not flag(hs_early)))
+
+@cond night_ilse
+desc: Ilse would come down with you: saved, still here, and (if you go early) promised.
+is: met(ilse) and flag(ilse_saved) and not flag(ilse_went_north) and (flag(winter_ilse) or (rel(ilse) >= 15 and not flag(hs_early)))
+
+@cond night_maud
+desc: Maud would come down with you, Edmund's wand in hand.
+is: met(maud) and (flag(winter_maud) or (flag(edmunds_wand) and not flag(hs_early)))
+
+@cond night_isolde
+desc: The headmistress would come down with you, her Wardens behind.
+is: met(isolde) and (flag(winter_isolde) or ((flag(warden_trial) or flag(sided_wardens)) and not flag(hs_early)))
