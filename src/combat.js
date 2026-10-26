@@ -45,6 +45,23 @@
     return { id, loadout, npc, persona: f.persona || null, special: !!sp, creature: !!(sp && sp.creature), pronouns: f.pronouns || null, defaultName: f.name || null, decided: !!ids.length };
   }
 
+  // Allies beside the player (the card's `with <who>`, 2026-10-25): each throws in a spell now and then, for free. The spell
+  // is EVENTS `assist.spell`, else the first damaging spell the ally's named loadout is known for (Kael: Hoarfrost); the
+  // exchanges are drawn from the fight's seed, every `assist.every` ([min, max], default 3–4) from the second or third on.
+  function assistsFor(req, C, ev, i) {
+    const out = [], spec = (ev && at(ev.assist, i)) || {};
+    (req.allies || []).forEach((npc, k) => {
+      const lo = loadoutOfNpc(C, npc), named = lo && C.NAMED_LOADOUTS[lo];
+      const damaging = (id) => C.SPELLS[id] && Array.isArray(C.SPELLS[id].damage) && C.SPELLS[id].damage[0] > 0;
+      const spell = spec.spell || ((named && named.iconic) || []).find(damaging) || null;
+      if (!spell || !damaging(spell)) return;
+      const [lo2, hi] = spec.every || [3, 4], rng = C.levelRng(u32(req.seed + 101 + k)), draw = (a, b) => a + Math.floor(rng() * (b - a + 1));
+      const rounds = []; for (let r = draw(2, 3); r <= 60; r += draw(lo2, hi)) rounds.push(r);
+      out.push({ npc, spell, share: spec.share || 0.5, rounds });
+    });
+    return out;
+  }
+
   // createFight(request, opts) → {state, foe, setting, names, request}
   //   opts.difficulty  the AI preset for the foe: easy | medium | hard | engine (a player setting, default easy)
   //   opts.content     the game's content (localized): a character's short name and pronouns
@@ -87,6 +104,10 @@
       opponent: { loadout: foe.loadout, level: foe.level },
       context: setting.context, observers: setting.observers, witnesses: setting.witnesses, firstLeader, encounterSeed: u32(req.seed),
     });
+    const assists = assistsFor(req, C, ev, i);
+    if (assists.length) base.assists = assists.map((a) => ({ side: 0, spell: a.spell, share: a.share, rounds: a.rounds }));
+    const allyName = (npc) => { const d = opts.content && opts.content.npcs[npc]; return d ? d.short || String(d.name).split(/[\s·]+/)[0] : npc; };
+    if (assists.length) setting.allies = assists.map((a) => ({ npc: a.npc, name: allyName(a.npc), spell: a.spell }));
     const ai = opts.ai || {};
     const foeAI = Object.assign({}, LIVE_AI, ai.foe || {}, { seed: u32(req.seed + 1), preset: opts.difficulty || 'easy' }, foe.persona ? { persona: foe.persona } : {});
     const playerAI = ai.player ? Object.assign({}, LIVE_AI, ai.player, { seed: u32(req.seed + 2) }) : null;
@@ -95,6 +116,7 @@
     const early = ev && at(ev.foeCommitsFirst, i);
     if (early > 0) { state.earlyCommit[1] = early; state.leader = 1; }
     const names = C.fighterNames({ opponentName: foe.name, opponentLoadout: foe.loadout, opponentPronouns: foe.pronouns });
+    if (assists.length) names.allies = assists.map((a) => allyName(a.npc));
     return { request: req, state, foe, setting, names, rules: C.RULES_VERSION };
   }
 

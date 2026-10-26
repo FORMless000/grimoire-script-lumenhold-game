@@ -121,8 +121,14 @@ pub struct Side {
     pub idle: bool,
 }
 
+/// An ally's assist (2026-10-25): someone fighting beside `side` throws `spell` at the other side on the listed exchanges,
+/// for free (no Mana, no action): a hit of the spell's base damage × `share`, scaled as the helped side's own cast would be.
+#[derive(Clone, Debug)]
+pub struct Assist { pub side: u8, pub spell: usize, pub share: f64, pub rounds: Vec<i32> }
+
 pub struct Encounter {
     pub sides: [Side; 2],
+    pub assists: Vec<Assist>,
     pub observers: bool,
     /// Someone who would report a forbidden cast (F5.9c): defaults to `observers`; an audience is always a witness.
     pub witnesses: bool,
@@ -166,6 +172,8 @@ pub enum Event {
     // Lodestar or Breaking Free), 2 returned by Reflect onto its caster, 3 returned and then blocked.
     Applied { side: u8, id: Act, outcome: u8 },
     Reclaimed { side: u8, amount: f64 },
+    // An ally's assist (2026-10-25): the `index`th assist of the encounter casts `id` beside `side`.
+    Assist { side: u8, id: Act, index: u8 },
 }
 
 fn num(v: &Value, what: &str) -> f64 { v.as_f64().unwrap_or_else(|| panic!("expected number for {what}, got {v}")) }
@@ -227,8 +235,15 @@ impl Encounter {
             let idle = kit.get("idle").and_then(|x| x.as_bool()).unwrap_or(false);
             Side { level: int(&kit["level"], "level"), skills, capacity: num(&kit["capacity"], "capacity"), entry: res_map(&a["entry"]), kit: list, rank, learned, skill_value, factor, cost, on_cast, on_defend, taken, taken_all, no_heal, idle }
         });
+        let assists = config.get("assists").and_then(|v| v.as_array()).map(|list| list.iter().map(|a| Assist {
+            side: int(&a["side"], "assist side") as u8,
+            spell: d.spells.iter().position(|x| Some(x.id.as_str()) == a["spell"].as_str()).unwrap_or_else(|| panic!("assist: unknown spell {}", a["spell"])),
+            share: a.get("share").and_then(|x| x.as_f64()).unwrap_or(0.5),
+            rounds: a["rounds"].as_array().map(|r| r.iter().map(|x| int(x, "assist round")).collect()).unwrap_or_default(),
+        }).collect()).unwrap_or_default();
         Encounter {
             sides,
+            assists,
             observers: config.get("observers").and_then(|v| v.as_bool()).unwrap_or(false),
             witnesses: config.get("witnesses").and_then(|v| v.as_bool()).unwrap_or(false) || config.get("observers").and_then(|v| v.as_bool()).unwrap_or(false),
             combat_scale: f("combatScale", 1.0),

@@ -493,10 +493,10 @@ thread: hollowstar
 scene: A slick stone tunnel under the ice, lit blue from above, a tall man in a grey coat standing in the middle of it with his hands folded.
 text: The tunnel from the boathouse runs down under the ice, slick and glowing blue. Halfway down, the man in grey is waiting{=flag(ilse_taken) and ", and Ilse stands beside him with her eyes on nothing" or ", alone, as if he has all night"}. "Go back up," he says pleasantly. "This isn't your door."
 > fight: Break through him
-  hint: Combat. Easier with Kael at your side.
+  hint: Combat. Kael's frost joins in if he's with you.
   queue hs_threshold now
   if flag(kael_ally) or flag(winter_kael):
-    challenge combat master-:
+    challenge combat master- unlikely with kael:
       win:
         flag hs_tunnel_clear
         health -small

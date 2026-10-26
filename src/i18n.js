@@ -323,7 +323,7 @@
     'fight.healthBelow': 'Health is lost only if you end below {n} HP', 'fight.rebateBoth': '{pct}% of the Health and Mana lost comes back',
     'fight.rebateHealth': '{pct}% of the Health lost comes back', 'fight.rebateMana': '{pct}% of the Mana spent comes back',
     'fight.watched': 'A crowd is watching: Renown is won and lost ({pct}% of a loss comes back)', 'fight.unwatched': 'No crowd: Renown isn’t at stake',
-    'fight.witnessed': 'Someone here would report a forbidden spell', 'fight.unwitnessed': 'No one here would report a forbidden spell', 'fight.unfitMana': 'Your Mana isn\'t full ({n} of {max}): the rest starts as flux, which takes a Reclaim.',
+    'fight.witnessed': 'Someone here would report a forbidden spell', 'fight.unwitnessed': 'No one here would report a forbidden spell', 'fight.allyBeside': '{name} fights beside you and throws in {spell} now and then', 'fight.unfitMana': 'Your Mana isn\'t full ({n} of {max}): the rest starts as flux, which takes a Reclaim.',
     'fight.win': 'Victory', 'fight.lose': 'Defeat', 'fight.draw': 'Draw', 'fight.continue': 'Continue',
     'fight.reason.knockout': 'by knockout', 'fight.reason.decision': 'on points', 'fight.reason.stalemate': 'neither can finish it', 'fight.reason.conceded': 'by concession',
     'size.tiny': 'tiny', 'size.small': 'small', 'size.medium': 'medium', 'size.large': 'large', 'size.huge': 'huge',

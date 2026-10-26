@@ -418,6 +418,8 @@
       lines.push('<span>' + esc(st.observers ? tr('watched', { pct: pct(rb.renown) }) : tr('unwatched')) + '</span>');
       const forbidden = Object.keys((game.actors[0].kit || {}).spells || {}).some((id) => C_.SPELLS[id] && C_.SPELLS[id].group === 'forbidden');
       if (forbidden) lines.push('<span>' + esc(st.witnesses ? tr('witnessed') : tr('unwitnessed')) + '</span>');
+      // Someone beside you (the card's `with <who>`, 2026-10-25): they throw in a spell now and then.
+      for (const a of st.allies || []) lines.push('<span>' + esc(tr('allyBeside', { name: a.name, spell: C_.label(a.spell) })) + '</span>');
       return '<p class="fight-setting">' + lines.join('') + '</p>';
     }
     function unfitNote() {

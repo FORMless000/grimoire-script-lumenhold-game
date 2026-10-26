@@ -39,7 +39,7 @@ const FIELDS = {
   chance: 'p (null unless constant) p_src has_else',
   if: 'branches cond_src has_else',
   'delta, rel, spark': 'name (resource/skill, or npc for rel/spark) npc min max amount (null for tier words) tier',
-  challenge: 'kind tier rung standard offset odds drift steps using vs has_partial swing',
+  challenge: 'kind tier rung standard offset odds drift steps using vs has_partial swing ally',
   sit_exam: 'swing',
   wage: 'size (a wage word, null for full)',
   regrade: 'track grade',
@@ -73,7 +73,7 @@ function statementFields(st) {
     case 'if': return { branches: st.branches.length, cond_src: st.branches[0].cond.src, has_else: !!st.else };
     case 'delta': return { name: st.name, min: st.min, max: st.max, amount: st.tier ? null : (st.min + st.max) / 2, tier: st.tier || null };
     case 'rel': case 'spark': return { name: st.npc, npc: st.npc, min: st.min, max: st.max, amount: st.tier ? null : (st.min + st.max) / 2, tier: st.tier || null };
-    case 'challenge': return { kind: st.kind, tier: st.tier, rung: st.rung || null, standard: !!st.standard, offset: st.offset || 0, odds: st.odds || null, drift: st.drift || null, steps: (st.steps || []).length, using: st.using, vs: st.vs ? st.vs.who + '.' + st.vs.stat : null, has_partial: !!st.partial, swing: st.swing || null };
+    case 'challenge': return { kind: st.kind, tier: st.tier, rung: st.rung || null, standard: !!st.standard, offset: st.offset || 0, odds: st.odds || null, drift: st.drift || null, steps: (st.steps || []).length, using: st.using, vs: st.vs ? st.vs.who + '.' + st.vs.stat : null, has_partial: !!st.partial, swing: st.swing || null, ally: st.ally || null };
     case 'sit_exam': return { swing: st.swing || null };
     case 'wage': return { size: st.size || null };
     case 'coursework': return { track: st.track || null };

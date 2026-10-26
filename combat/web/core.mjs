@@ -51,7 +51,7 @@ export function formatEvent(e){
     case 'hoarfrostCancel':return 'Hoarfrost and opposing fire cancel.';
     case 'dealt':return `${label(e.id)} dealt ${Math.round(e.amount*100)/100} HP to ${e.target===0?'you':'opponent'}.`;
     case 'reclaimed':return `${who(e.side)} reclaimed ${e.amount.toFixed(2)} Mana.`;
-    case 'hit':case 'moved':case 'applied':return null;   // structured only: the fight text (resolvedLines) tells these
+    case 'hit':case 'moved':case 'applied':case 'assist':return null;   // structured only: the fight text (resolvedLines) tells these
   }
   throw Error('Unknown event '+e.type);
 }

@@ -539,7 +539,7 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
     return String(text || '').split(/\s+(?=[+-]\d+\s+if\s)/).map((x) => x.trim()).filter(Boolean).map((x) => { const m = x.match(/^([+-]\d+)\s+if\s+(.+)$/); return { n: +m[1], cond: E(m[2]) }; });
   }
   // A ladder challenge (docs/authoring/checks.md): challenge <kind> [using <skill>] <rung | standard±N | vs <who>.<stat> [±N]>
-  // [<odds>] [<luck>] [drift <word>] [±N if <cond>]…  (the legacy form, with trivial … heroic, is matched first by RE.challenge)
+  // [<odds>] [<luck>] [drift <word>] [with <who>] [±N if <cond>]…  (the legacy form, with trivial … heroic, is matched first by RE.challenge)
   function parseChallenge(body, E, file, line) {
     const bad = (msg) => { throw new GrimError('challenge: ' + msg + ' in "challenge ' + body + ':"', file, line); };
     const cut = body.search(/\s[+-]\d+\s+if\s/);
@@ -556,6 +556,8 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
     if (ODDS_WORDS.includes(tok[0])) st.odds = tok.shift();
     if (SWINGS.includes(tok[0])) { const w = tok.shift(); st.swing = w === 'normal' ? null : w; }
     if (tok[0] === 'drift') { tok.shift(); st.drift = tok.shift(); if (!DRIFTS.includes(st.drift)) bad('expected ' + DRIFTS.join('/') + ' after drift'); }
+    // `with <who>` (2026-10-25): someone fights beside you; in the minigame they throw a spell in now and then (an assist).
+    if (tok[0] === 'with') { tok.shift(); st.ally = tok.shift(); if (!ID_RE.test(st.ally || '')) bad('expected a character or cast role after with'); }
     if (tok.length) bad('unexpected "' + tok.join(' ') + '"');
     return st;
   }

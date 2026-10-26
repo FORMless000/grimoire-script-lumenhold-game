@@ -10,7 +10,7 @@
 //   3. both sides' attacks (Impulse, damaging spells, Countertempo's Impulse, worn kit), then the Shadowstep breaks;
 //   4. hostile applications (Bind, Venom, Torment, Compel, Omen, Seal, Extraction, Filch, Roar's scatter, Sleight), each
 //      blocked, landed or Reflected onto its caster;
-//   5. Torment's tolls, Hoarfrost's cancellation, the hits; Refocus; scheduled hits and construct ticks; construct endings;
+//   5. Torment's tolls, Hoarfrost's cancellation, the hits; Refocus; scheduled hits, construct ticks and allies' assists; construct endings;
 //      poison ticks; Mend; a mature Lodestar's healing; the clocks.
 // Damage priority (plan §9): a mature Lodestar negates any damage; then poison ticks and Torment tolls land past every other
 // defence; then the ordinary ones (frozen, Shadowstep, Reflect, Parry, Ward, Brace, construct and worn reductions).
@@ -807,6 +807,16 @@ fn resolve(enc: &Encounter, s: &mut State, public: Option<&mut Public>) {
             if spec.action == ConstructAction::Heal { heal(enc, s, side, c.power); }
             else { endings.push(Hit { spell: spec.action != ConstructAction::Strike, ..hit(side, c.spell as Act, c.power) }); }
         }
+    }
+    // An ally's assist (2026-10-25): on its exchanges, a free hit of its spell beside the side it helps.
+    for (i, a) in enc.assists.iter().enumerate() {
+        if !a.rounds.contains(&s.round) { continue; }
+        let (side, sp) = (a.side as usize, a.spell);
+        let base = d.spells[sp].damage.as_ref().and_then(|v| v.first().copied()).unwrap_or(0.0);
+        let power = js_round(amount(enc, side, Some(sp), base * a.share, true) * enc.damage_multiplier);
+        if power <= EPS { continue; }
+        ctx.event(|| Event::Assist { side: side as u8, id: sp as Act, index: i as u8 });
+        endings.push(hit(side, sp as Act, power));
     }
     hits(enc, s, &mut ctx, &endings);
     // A construct gets its final public tick before lifetime expiry and its burst.

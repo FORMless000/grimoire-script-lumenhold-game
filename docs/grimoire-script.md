@@ -460,12 +460,13 @@ challenge duel vs lyra.arcana +2 wild:  # combat | duel | negotiate | deceive | 
     health -medium
 ```
 
-The line is `challenge <kind> [using <skill>] <difficulty> [<odds>] [<luck>] [drift <word>] [±N if <cond>]…:`.
+The line is `challenge <kind> [using <skill>] <difficulty> [<odds>] [<luck>] [drift <word>] [with <who>] [±N if <cond>]…:`.
 
 - **The skill** is mapped from the kind (duel: (vigor + arcana) / 2; negotiate: the negotiation stub, below; appeal, perform and soothe: charm (a quick ask or small talk; a show, a song, a story; calming a creature); deceive: guile; research and exam: lore; brew and enchant: alchemy; feat: vigor; spell: arcana), or set with `using <skill>`. `using` may also name a resource such as `renown`; a resource isn't on the skill scale, so it reads as E(turn) + (value − 50) / 2.
 - **Difficulty** is the DC: a rung of the ladder (`novice-` … `archmage+`, `@balance dc_tiers`); `standard` / `standard±N` on a course card (the course's `standard:` at the card's `level:`, else `@balance course_standard`); or `vs <who>.<stat> [±N]` (that character's stat, ± N rungs; a character with a tag in `@balance npc_growth: share 0.9 tags peer thornwick` has every skill stat scaled up with E(turn), so their best skill ends at `share` of the final E). A course card shown in a course level above its own `level:` rises `course_step` rungs per level; the hard variant adds 2.
 - **Odds by nature** (`certain sure likely even unlikely slim long_shot freak`, default `even`) is the chance when your skill matches the DC (`@balance likelihood`). **Circumstance steps** (`+1 if renown >= 60`) move it by `odds_step` in z.
 - **Luck** (`steady normal wild luck`, default `normal`) is the bell's σ (`@balance sigma`).
+- **With** (`with kael`, `with ally`: a character, a cast role or `npc`; fights only, 2026-10-25) puts someone beside you. In the minigame they throw a spell in every few exchanges for free (an assist: their named loadout's damaging iconic spell, or EVENTS `assist: {spell, every, share}`), at half its base damage scaled as your own cast; the fight's setting line names them, and so does the fight text. Price their help with the assist, not with the odds word.
 - **Drift** (`none low mid high`) pulls the DC toward the expected skill E(turn) (the `@balance curve`): DC = d + k × (E − d). Default: `story` none; `milestone` and `crisis` low; a course card's `standard` check inside its course `@balance course_drift` (low); anything else high.
 - **Odds** = floor + (ceil − floor) × Φ(z(odds) + steps + (skill − DC) / σ), with `@balance bell: floor 2 ceil 98`; a check on a `class: milestone` card runs 0–100. Rounded to a whole percent.
 - **Modifiers** on the skill: a known spell adds `@balance spell_check: per 2 cap 6` to checks of its skill (`@spell skill:`, else its discipline's); in a course card an `exam` adds study (up to the cap); the advisor's regard.

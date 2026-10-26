@@ -625,11 +625,14 @@
       const odds = this.challengeOdds(st, ctx.actor, ctx.key);
       let vs = null;
       if (st.vs) { const who = (this._cast && this._cast[st.vs.who]) || (st.vs.who === 'npc' ? ctx.actor : st.vs.who); if (who && this.c.npcs[who]) vs = { npc: who, stat: st.vs.stat }; }
+      // `with <who>` (2026-10-25): an ally beside you, when it names a character (a cast role, the actor or an id).
+      let allies = [];
+      if (st.ally) { const who = (this._cast && this._cast[st.ally]) || (st.ally === 'npc' ? ctx.actor : st.ally); if (who && this.c.npcs[who]) allies = [who]; }
       let h = 2166136261; const str = s.seed + ':' + s.turn + ':' + e.id + ':' + key + ':' + index;
       for (let k = 0; k < str.length; k++) { h ^= str.charCodeAt(k); h = Math.imul(h, 16777619); }
       return { id: e.id + '/' + key + '#' + index, event: e.id, option: key, index, kind: st.kind, cls: e.class || null, line: st.line || null,
         dc: Math.round(odds.dc * 100) / 100, odds: st.odds || 'even', swing: st.swing || null, vs, partial: !!(st.partial && st.partial.length),
-        actor: ctx.actor || null, cast: this._cast || null, variantHash: this.variantHash(e.id), seed: h >>> 0,
+        actor: ctx.actor || null, cast: this._cast || null, allies, variantHash: this.variantHash(e.id), seed: h >>> 0,
         turn: s.turn, year: this.yearOf(), met: Object.keys(s.npcs).filter((id) => s.npcs[id].met), player: this.fightPlayer() };
     }
     // A played fight: its result picks the challenge's outcome; the fight's own costs are applied, and the outcome runs without

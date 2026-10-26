@@ -53,3 +53,43 @@ test('1.2 bond_months counts from the month the bond was set', () => {
   delete eng.s.npcs.mir.bondAt;   // an old save
   assert.equal(months(), -1);
 });
+
+// ---- 2. Allies in fights: `challenge combat … with <who>` → the ally throws in a spell now and then (an assist)
+const G = require('../src/grimoire.js');
+const Bridge = require('../src/combat.js');
+const CombatSim = require('../tools/combat-sim.js');
+
+test('2 `with <who>` parses on a fight, and the request names the ally', () => {
+  const st = G.parseFile('@event t_ally\ntitle: T\ntext: T\n> left: Go\n  challenge combat adept with kael:\n    win:\n      mood +tiny\n    lose:\n      mood -tiny\n', 't.grim')[0].options[0].effects[0];
+  assert.equal(st.ally, 'kael');
+  assert.throws(() => G.parseFile('@event t_b\ntitle: T\ntext: T\n> left: Go\n  challenge combat adept with:\n    win:\n      mood +tiny\n    lose:\n      mood -tiny\n', 't.grim'));
+});
+
+test('2 an ally beside you throws their spell in on scheduled exchanges, and the fight text says so', () => {
+  CombatSim.resolver();   // starts the core
+  const C = Bridge.combat();
+  const eng = fresh(content, 7); eng.s.turn = 40; eng.s.npcs.kael.met = 1;
+  const base = { id: 'hs_tunnel/fight#0', event: 'hs_tunnel', option: 'fight', index: 0, kind: 'combat', dc: 60, odds: 'even', vs: null, variantHash: 1, seed: 4242, met: ['kael'], player: eng.fightPlayer() };
+  const alone = Bridge.createFight(base, { content }), beside = Bridge.createFight(Object.assign({}, base, { allies: ['kael'] }), { content });
+  assert.ok(!alone.setting.allies, 'no ally without `with`');
+  assert.deepEqual(beside.setting.allies.map((a) => [a.npc, a.spell]), [['kael', 'hoarfrost']], 'Kael throws Hoarfrost, his iconic spell');
+  assert.ok(beside.state.config.assists[0].rounds.length > 5, 'every few exchanges');
+  // Play both sides by AI and look for the assist in the log.
+  const s = beside.state, ctx = C.createSearchContext(); let seen = 0, told = 0;
+  try {
+    for (let n = 0; !s.result && n < 400; n++) {
+      const side = C.actorToMove(s); if (side == null) break;
+      const before = C.cloneState(s), r = C.applyChoice(s, C.chooseAIAction(s, Object.assign({}, s.config.ai[1], { preset: 'easy' }), ctx).id);
+      if (!r.resolved) continue;
+      const ev = r.eventData || [];
+      if (ev.some((e) => e.type === 'assist')) {
+        seen++;
+        assert.ok(ev.some((e) => e.type === 'hit' && e.source === 0 && e.id === 'hoarfrost'), 'the assist lands as the player side\'s Hoarfrost');
+        const lines = C.resolvedLines(before, s, Object.assign({}, r, { channels: [null, null] }), beside.names);
+        if ((lines[0] || '').includes('Kael')) told++;
+      }
+    }
+  } finally { C.freeSearchContext(ctx); }
+  assert.ok(seen >= 1, 'Kael cast at least once');
+  assert.ok(told >= 1, 'the fight text names Kael');
+});

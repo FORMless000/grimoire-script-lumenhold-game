@@ -297,6 +297,10 @@ function analyze(content) {
             if (st.vs.who === 'npc' ? !hasActor : !content.npcs[st.vs.who] && !ROLES.has(st.vs.who)) P('error', w, 'challenge vs: unknown character or cast role "' + st.vs.who + '"');
             if (!content.skills[st.vs.stat] && !['wealth', 'rel', 'spark'].includes(st.vs.stat)) P('error', w, 'challenge vs: "' + st.vs.stat + '" is not a skill, wealth, rel or spark');
           }
+          if (st.ally) {   // `with <who>` (2026-10-25): an ally in a played fight
+            if (G.MINIGAME_KINDS[st.kind] !== 'fight') P('error', w, 'challenge with: only a fight (combat, duel) has someone beside you');
+            if (st.ally === 'npc' ? !hasActor : !content.npcs[st.ally] && !ROLES.has(st.ally)) P('error', w, 'challenge with: unknown character or cast role "' + st.ally + '"');
+          }
           for (const x of st.steps || []) scanExpr(x.cond, w, hasActor);
           break;
         case 'visit': {

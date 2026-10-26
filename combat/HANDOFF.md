@@ -26,6 +26,13 @@ The minigame is wired in: every `challenge combat` and `challenge duel` a player
   1. Rebuild the bundle (and, after a Rust change, the wasm: `node tools/build.mjs`, with cargo on PATH; then `node tools/parity.mjs` and the fixtures, `node --test setup/*.test.mjs`).
   2. Run `node --test test/combat-bridge.test.js`.
   3. Run `grim diff`: fights change the golden games. When the change is meant, refresh the baseline.
+- **Allies** (2026-10-25): a card's `challenge combat … with <who>` puts someone beside the player. The request carries
+  `allies`; the bridge (`assistsFor` in `src/combat.js`) turns each into an assist, `{side: 0, spell, share, rounds}` in the
+  config's `assists`: the ally's named loadout's first damaging iconic spell (EVENTS `assist: {spell, every, share}`
+  overrides), cast free on exchanges drawn from the fight's seed (from the 2nd or 3rd, then every 3–4). The core resolves
+  each with the scheduled hits (rules step 5) at `share` (0.5) of the spell's base damage, scaled as the helped side's own
+  cast, and reports `{type: 'assist', side, id, index}`; `resolvedLines` tells it as the ally's (`names.allies`, line
+  `line.assist`), and the setting line names them (`fight.allyBeside`). The bench doesn't offer allies yet.
 
 ## World expansion 1 (2026-10-20)
 

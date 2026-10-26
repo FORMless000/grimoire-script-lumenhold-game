@@ -132,6 +132,7 @@ const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'_');
 // Sentences told around the actions (resolvedLines): {n} a number, {noun} an attack's noun, {ex} a span of exchanges.
 export const LINES={
  hits:'{name’s} {noun} hits {foe}.',
+ assist:'{ally} throws {noun} at {foe} beside {name}.',
  reflectedBack:'{name} {v:takes|take} {n} damage from {pos} own {noun}.',
  noDamage:'It does no damage.',
  takes:'{foe} {fv:takes|take} {n} damage.',
@@ -156,7 +157,7 @@ export const LINES={
  applyReflectedBlocked:'{foe’s} mirror sheen turns {name’s} {spell} back, and {name’s} own defences keep it off.'
 };
 // The grammar the lines are filled with: the player ("you"), possessives and pronouns, and spans of exchanges.
-export const GRAMMAR={you:'you',your:'your',possessive:'{n}’s',then:', then ',exchange1:'1 exchange',exchanges:'{n} exchanges',restOfFight:'the rest of the fight',two:'two',three:'three',
+export const GRAMMAR={you:'you',your:'your',possessive:'{n}’s',then:', then ',exchange1:'1 exchange',exchanges:'{n} exchanges',restOfFight:'the rest of the fight',two:'two',three:'three',anAlly:'An ally',
  'you.pos':'your','you.obj':'you','they.pos':'their','they.obj':'them','she.pos':'her','she.obj':'her','he.pos':'his','he.obj':'him','it.pos':'its','it.obj':'it'};
 const gr=k=>tx('grammar.'+k,GRAMMAR[k]);
 const line=k=>tx('line.'+k,LINES[k]);
@@ -248,7 +249,10 @@ export function resolvedLines(before,after,r,names=['the player','the opponent']
    const special=def&&(attackLine(aid,def)??(def==='tiredGuard'?attackLine(aid,'guarded'):null));
    const said=def?special??tx('defended.'+def,ATTACK_DEFENDED[def]).replaceAll('{noun}',noun(aid)):null;
    const own=aid===lab(spell);
-   if(said)parts.push(F(said));else if(own&&!usedHead&&head){parts.push(head);usedHead=true;}else if(!own)parts.push(L('hits',{noun:noun(aid)}));
+   // An ally's assist (2026-10-25) is told as the ally's, not this side's, whoever it is.
+   const assist=!own&&ev.find(e=>e.type==='assist'&&e.side===side&&lab(e.id)===aid);
+   if(assist&&!said)parts.push(L('assist',{noun:noun(aid),ally:names.allies?.[assist.index]??gr('anAlly')}));
+   else if(said)parts.push(F(said));else if(own&&!usedHead&&head){parts.push(head);usedHead=true;}else if(!own)parts.push(L('hits',{noun:noun(aid)}));
    const back=ev.filter(e=>e.type==='hit'&&e.reflected&&e.source===1-side&&e.id===aid).reduce((n,e)=>n+e.amount,0);
    if(def==='reflected')parts.push(back>0?L('reflectedBack',{n:r0(back),noun:noun(aid)}):L('noDamage'));
    else parts.push(dealt>0?(hits.length>1?L('takesHits',{n:r0(dealt),hits:hits.length}):L('takes',{n:r0(dealt)})):L('noDamage'));

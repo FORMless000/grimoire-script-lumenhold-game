@@ -146,7 +146,7 @@ export const EVENTS={
  'spring_tournament_circle/right':{play:'tournament_entrant',observers:true,witnesses:true},
  'tournament_semifinal/left':{play:'tournament_unbeaten',observers:true,witnesses:true},
  'tournament_final/left':{play:'lyra',context:'public_duel',observers:true,witnesses:true},
- 'hs_tunnel/fight':{play:'man_in_grey',setup:'two challenges: with Kael (master-) and alone (master- unlikely, +3 levels); the odds word already prices Kael’s help, so no extra handicap',observers:false,witnesses:[true,false]},
+ 'hs_tunnel/fight':{play:'man_in_grey',setup:'two challenges at master- unlikely: with Kael (`with kael`: his Hoarfrost every few exchanges, 2026-10-25) and alone',observers:false,witnesses:[true,false]},
  'ilse_grey_returns/left':{play:'man_in_grey',setup:'his hand on Ilse is in the rung (journeyman likely): no extra handicap',observers:false,witnesses:true},
  'rival_contest/left':{play:['tamsin','thornwick_illusionist'],foeCommitsFirst:[3,0],nature:['even',null],setup:'Tamsin if met, else the Thornwick illusionist. With thornwick_secrets (adept likely): the foe commits first for 3 exchanges (as if under your Foresight) at the even level, instead of the likely −3 levels',context:'public_duel',observers:true,witnesses:true},
  'rival_last_match/left':{play:['tamsin','thornwick_final_year'],context:'practice_duel',setup:'Tamsin if met, else a Thornwick final-year',observers:true,witnesses:true},
