@@ -24,7 +24,7 @@ text: On the stairs by lamplight you wave to a friend and drop your hand, and yo
   say: She opens her door before you knock, already in her coat. "Yours too," she says. "I painted it last winter. I didn't know whose it was." She won't show you the painting. She does walk you back to your room and makes you leave the lamp lit.
 > right: Blow the lamp out
   mood -tiny
-  alignment -tiny
+  health -tiny
   say: In the dark there are no shadows, and you go up to bed without looking at the walls. You sleep badly. In the morning the frost on your window has melted in the shape of a hand, on the inside of the glass.
 
 @event hs_grey_daylight
@@ -50,39 +50,46 @@ text: Noon, the courtyard full, and the man in grey walks in through the gate as
   if flag(kael_ally):
     challenge combat expert drift mid with kael:
       win:
+        flag grey_beaten
         renown +medium
         alignment +tiny
-        hs_escalation_progress
         say: Kael's frost and your spell hit him together, and the man in grey goes skidding back across the ice he made. For the first time he looks surprised. He straightens his coat, bows to the whole courtyard, and walks out of the gate. Then the cheering starts.
       lose:
         if flag(star_key):
           unflag star_key
           flag key_taken
+        else:
+          gain grey_watching
         renown -tiny
-        say: He swats the two of you aside like moths, in front of everyone. {flag(key_taken): When you get up, the key is gone from your pocket, and so is he.|When you get up he is gone, and Kael is bleeding from a cut over his eye that frosts over as you watch.}
+        say: It goes on for a long minute, in front of everyone, and then your last spell is still in the air when the flagstones come up to meet you both. {flag(key_taken): When you get up, the key is gone from your pocket, and so is he.|When you get up he is gone, and Kael is bleeding from a cut over his eye that frosts over as you watch.}
   else:
     challenge combat expert drift mid:
       win:
+        flag grey_beaten
         renown +medium
         alignment +tiny
-        hs_escalation_progress
         say: Your spell catches him square and he goes skidding back across the ice he made. For the first time he looks surprised. He straightens his coat, bows to the whole courtyard, and walks out of the gate. Then the cheering starts.
       lose:
         if flag(star_key):
           unflag star_key
           flag key_taken
+        else:
+          gain grey_watching
         renown -tiny
-        say: He swats your spell aside like a moth, in front of everyone. {flag(key_taken): When you get up, the key is gone from your pocket, and so is he.|When you get up he is gone, and the frost on the flagstones spells out a name: Kael's.}
+        say: You trade spells with him across the frozen fountain for longer than anyone thought you could, and then the flagstones come up to meet you. {flag(key_taken): When you get up, the key is gone from your pocket, and so is he.|When you get up he is gone, and the frost on the flagstones spells out a name: Kael's.}
 > hide: Run, and take what he wants with you
-  hint: Guile. Half the school is between you and the gate.
-  challenge deceive expert:
+  hint: Guile. Half the school is between you and the gate{flag(confronted_grey): , and he knows your face|}.
+  challenge deceive expert -1 if flag(confronted_grey):
     win:
-      hs_escalation_progress
+      guile +small
       say: You duck into the crowd and the crowd closes behind you; a dozen first-years suddenly need to cross the courtyard all at once. By the time he has walked through them, you're three corridors away {flag(star_key): with the key|with Kael}, and the bell for lessons is ringing.
     lose:
       if flag(star_key):
         unflag star_key
         flag key_taken
+      else:
+        gain grey_watching
+      health -small
       mood -small
       say: He doesn't chase you. He simply arrives, at the end of the corridor, ahead of you. {flag(key_taken): He holds out his hand, and the key leaves your pocket on its own and goes to him.|"Tell him she's coming," he says, and leaves you shaking.}
 > call: Shout for the headmistress
@@ -109,7 +116,7 @@ weight: 18
 art: key
 tags: mystery hollowstar
 # The star key taken (hs_grey_daylight): four ways back, three of them without a fight or a hard check, and "not yet",
-# which brings this card back two months on (decision 2026-10-26: losing the key is harsh but never final).
+# which brings this card back after its two-month cooldown (repeat: 2) (decision 2026-10-26: losing the key is harsh but never final).
 scene: A narrow upstairs corridor of a village inn at night, a door with frost on its handle, a student with a candle hesitating outside it.
 text: The man in grey has the star key, and by now the whole academy knows it. He has taken the top room at the Gilded Newt, and the landlord says he never seems to sleep. The headmistress has said nothing to you. Kael hasn't stopped saying things. There are ways to get it back, and none of them involve asking him nicely.
 > isolde: Go to the headmistress
@@ -131,7 +138,7 @@ text: The man in grey has the star key, and by now the whole academy knows it. H
     lose:
       health -small
       mood -small
-      say: The landing creaks. He says "Good evening" through the closed door, and the cold comes under it like water. You run, and slip on the stairs, and arrive home with a sprained wrist and nothing else.
+      say: The landing creaks. He says "Good evening" through the closed door, and the cold comes under it like water. You run, and slip on the stairs, and get back to the castle with a sprained wrist and nothing else.
 > family: Ask a Dumont where he'd keep it
   hint: Charm. Kael or Ilse know how the families hide things.
   when: flag(kael_ally) or flag(ilse_saved)
@@ -146,7 +153,7 @@ text: The man in grey has the star key, and by now the whole academy knows it. H
       say: "I don't know," {flag(ilse_saved): Ilse|Kael} says, too quickly, and won't look at you. Whatever the families do with what they take, it isn't something they want to tell you. Not yet.
 > wand: Let Edmund's wand find it
   hint: Arcana. The wand hums near anything the founders made.
-  when: flag(edmunds_wand)
+  when: has_item(edmunds_silver_wand)
   challenge spell adept likely:
     win:
       unflag key_taken

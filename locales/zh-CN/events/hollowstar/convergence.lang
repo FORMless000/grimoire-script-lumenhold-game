@@ -7,8 +7,8 @@
 @event hs_dumont_letter
 # en: A Letter From the North
 title [586de4] = 来自北境的信
-# en: Kael finds you in the library and puts a letter on the table between you without a word. Black-star seal, broken. One line, in a beautiful hand: "I will be at the lake for the Blossom moon. Be there, my son, and bring your friend." It's signed "Mother".{seen(kael_letter_home) > 0: It's her answer to the one he rewrote eleven times.|} His hands are shaking. "She has never come south," he says. "She has never once called me that."
-text [527864] = 凯尔在图书馆找到你，一言不发地把一封信放在你们之间的桌上。黑星封蜡，已经拆开。只有一行字，笔迹很美：“花潮之月，我会在湖边。到场吧，我的儿子，带上你的朋友。”署名是“母亲”。{seen(kael_letter_home) > 0: 这是她对那封他改写了十一遍的信的回复。|}他的手在发抖。“她从来没到过南方，”他说，“她从来没这样叫过我。”
+# en: Kael finds you and puts a letter on the table between you without a word. Black-star seal, broken. One line, in a beautiful hand: "I will be at the lake for the Blossom moon. Be there, my son, and bring your friend." It's signed "Mother". {seen(kael_letter_home) > 0: It's her answer to the one he rewrote eleven times. |}His hands are shaking. "She has never come south," he says. "She has never once called me that."
+text [9dc1d3] = 凯尔找到你，一言不发地把一封信放在你们之间的桌上。黑星封蜡，已经拆开。只有一行字，笔迹很美：“花潮之月，我会在湖边。到场吧，我的儿子，带上你的朋友。”署名是“母亲”。{seen(kael_letter_home) > 0: 这是她对那封他改写了十一遍的信的回复。|}他的手在发抖。“她从来没到过南方，”他说，“她从来没这样叫过我。”
 # en: A pale young man holding a letter sealed with a black star at arm's length, as if it might bite, frost creeping up the paper from his fingers.
 scene [8ef001] = 一个苍白的年轻人把一封黑星封蜡的信远远拿开，好像它会咬人，霜从他的指尖沿着信纸往上爬。
 # en: Burn it together
@@ -27,16 +27,16 @@ opt.right.say.1 [f292cb] = 你把它折好夹进笔记里。凯尔看着你这�
 @event hs_go_down_early
 # en: Before They're Ready
 title [6f3947] = 趁他们还没准备好
-# en: The lake is freezing in circles tonight, and the key in your pocket is so cold it burns. The Dumonts' mother is coming for the Blossom moon. Her circle isn't ready yet, and neither is the headmistress's. If you went down tonight you'd catch them all unready, and you'd have only the ones who promised you beside you.
-text [c7fd4b] = 今晚湖面一圈一圈地冻结，你口袋里的钥匙冷得发烫。杜蒙夫人会在花潮之月到来。她的圈子还没准备好，院长的也还没有。如果你今晚下去，就能趁所有人都没准备好时抓住他们，而你身边只会有那些向你许过诺的人。
+# en: The lake is freezing in circles tonight, and the key in your pocket is so cold it burns. {seen(hs_dumont_letter) > 0 or seen(hs_isolde_summons) > 0: The Dumonts' mother is coming for the Blossom moon.|Someone is coming for the Blossom moon; the lake knows it.} Her circle isn't ready yet, and neither is the headmistress's. If you went down tonight you'd catch them all unready, and you'd have only the ones who promised you beside you.
+text [cb40e2] = 今晚湖面一圈一圈地冻结，你口袋里的钥匙冷得发烫。{seen(hs_dumont_letter) > 0 or seen(hs_isolde_summons) > 0: 杜蒙夫人会在花潮之月到来。|有人会在花潮之月到来；湖知道。}她的圈子还没准备好，院长的也还没有。如果你今晚下去，就能趁所有人都没准备好时抓住他们，而你身边只会有那些向你许过诺的人。
 # en: A frozen lakeshore at night, a student holding a black star-shaped key up against the moon, a boathouse door ajar behind them.
 scene [a4e8ee] = 夜晚结冰的湖岸，一个学生把一把星形的黑钥匙举向月亮，身后船屋的门半开着。
 # en: Go down tonight
 opt.left.label [7e7ce0] = 今晚就下去
 # en: The Night, now. Only the allies who promised come.
 opt.left.hint [8490b2] = 那一夜，就是现在。只有许过诺的同伴会来。
-# en: You walk down to the boathouse without telling anyone. As you lift the latch, the whole lake behind you goes white in one breath, from shore to shore, and somewhere under it a bell begins to toll.
-opt.left.say.1 [e3ef7f] = 你没告诉任何人，独自走向船屋。你抬起门闩时，身后的整片湖在一口气间变白，从这岸到那岸，冰下某处，一口钟开始鸣响。
+# en: You walk down to the boathouse without telling anyone. As you lift the latch, the whole lake behind you goes white in one breath, from shore to shore, and somewhere under it the bell begins to toll.
+opt.left.say.1 [709f1f] = 你没告诉任何人，独自走向船屋。你抬起门闩时，身后的整片湖在一口气间变白，从这岸到那岸，冰下某处，那口钟开始鸣响。
 # en: Wait for the Blossom moon
 opt.right.label [4f1efa] = 等到花潮之月
 # en: Everyone who'd stand with you will be there. So will everyone against you.

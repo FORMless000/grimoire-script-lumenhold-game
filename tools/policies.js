@@ -275,7 +275,8 @@ function route(eng, view, choose, opts) {
   });
 }
 // A place's waiting story (sleuth): eligible cards there now that are story, plot or mystery, for this slot.
-function storyAt(eng, place, slot) {
+// `timed`: only cards meant for the slot (an evening card can show at midnight, but rarely: director timeFit).
+function storyAt(eng, place, slot, timed = false) {
   const ix = eng.directorIndex(), pool = ix.byPlace[place] || [];
   const prev = [eng._place, eng._slot]; eng._place = place; eng._slot = slot;
   let n = 0;
@@ -283,7 +284,8 @@ function storyAt(eng, place, slot) {
     for (const e of pool) {
       const story = eng.isPlot(e) || e.class === 'story';
       if (!story && !(e.tags || []).includes('mystery')) continue;
-      if (!eng.eligible(e, new Set()) || !eng.timeFit(e)) continue;
+      const fit = eng.timeFit(e);
+      if (!fit || (timed && fit < 1) || !eng.eligible(e, new Set())) continue;
       if (eng.candidates(e).length) n += story ? 3 : 1;
     }
   } finally { [eng._place, eng._slot] = prev; }
@@ -362,11 +364,11 @@ const STRATEGIES = {
   },
   // The detective: goes where the story is. Leads and plot cards wait at places; this player goes to them.
   sleuth: {
-    about: 'A plot player who routes itself: each visit goes to the open place with the most eligible story, plot or mystery cards waiting (story cards count triple), and it goes out at night only when a story card (not just an eerie one) waits at a midnight place it has found. Values clues, leads and follow-ups (find 20, queue 10, flag 2) on top of a balanced player.',
+    about: 'A plot player who routes itself: each visit goes to the open place with the most eligible story, plot or mystery cards waiting (story cards count triple), and it goes out at night only when a story card (not just an eerie one) meant for the night waits at a midnight place it has found. Values clues, leads and follow-ups (find 20, queue 10, flag 2) on top of a balanced player.',
     make() {
       const base = scorer('sleuth', { health: 1, mood: 1, gold: 0.4, renown: 0.3, skill: 1.2, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5, find: 20, queue: 10, flag: 2 });
       return withRules(base, 'sleuth', (eng, v) => {
-        if (v.id === 'night_out') return nightPlaces(eng).some((p) => storyAt(eng, p.id, 'midnight') >= 3) ? 'right' : 'left';
+        if (v.id === 'night_out') return nightPlaces(eng).some((p) => storyAt(eng, p.id, 'midnight', true) >= 3) ? 'right' : 'left';
         return null;
       }, {
         pickPlaces: (eng, view) => route(eng, view, (openPl, sl) => {

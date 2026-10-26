@@ -1,0 +1,253 @@
+{
+  "name": "hollowstar_v2",
+  "at": 1792999139162,
+  "files": [
+    "content/events/chain_hollowstar_acts.grim",
+    "content/events/chain_hollowstar.grim",
+    "content/events/chain_ilse.grim",
+    "content/events/hollowstar/convergence.grim",
+    "content/events/hollowstar/escalation.grim",
+    "content/events/hollowstar/night.grim",
+    "content/events/hollowstar/threads.grim"
+  ],
+  "events": [
+    "hs_lake_breathes",
+    "hs_silver_rings",
+    "hs_seraphine_towers",
+    "hs_ilse_arrives",
+    "hs_frost_ring",
+    "hs_dark_tower",
+    "hs_maud_locks",
+    "hs_two_shadows",
+    "hs_choosing_sides",
+    "hs_last_winter",
+    "hs_ilse_door",
+    "hs_dreams_begin",
+    "hs_grey_stranger",
+    "hs_founders_records",
+    "hs_restricted_founders",
+    "hs_boathouse_bell",
+    "hs_seraphine_shadow",
+    "hs_kael_truth",
+    "hs_star_mark",
+    "hs_grey_offer",
+    "hs_grey_return",
+    "hs_grey_invitation",
+    "hs_grey_tests",
+    "hs_wardens_notice",
+    "hs_seventh_tower",
+    "hs_key_breakfast",
+    "hs_isolde_summons",
+    "hs_the_night",
+    "hs_tunnel",
+    "hs_threshold",
+    "hs_beneath",
+    "hs_aftermath",
+    "hs_aftermath_lost",
+    "hs_kael_sister",
+    "ilse_village",
+    "ilse_frost_lessons",
+    "ilse_grey_returns",
+    "ilse_kael_reunion",
+    "ilse_northern_letter",
+    "ilse_farewell",
+    "hs_dumont_letter",
+    "hs_go_down_early",
+    "hs_shadow_late",
+    "hs_grey_daylight",
+    "hs_key_recover",
+    "hs_the_night_above",
+    "hs_night_company",
+    "hs_night_cult",
+    "hs_night_ilse",
+    "hs_night_shadow",
+    "hs_aftermath_bargain",
+    "hs_aftermath_quiet",
+    "hs_aftermath_freed",
+    "hs_aftermath_fled"
+  ],
+  "contentHash": "35bbf3",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 523,
+      "total": 523
+    }
+  },
+  "critic": {
+    "batch": "hollowstar_v2",
+    "accept": false,
+    "summary": "A strong rewrite. The confrontations happen on the page, the Night reads as one escalating sitting, every fight has a way round it that isn't a fight, and lengths and labels are within limits. It is rejected for one blocking repeat: hs_kael_sister still deals a second 'Ilse arrives at the gates in a private snowstorm' after hs_ilse_arrives. There is also a canon/voice slip in hs_two_shadows, and too many continuity holes across the Night and the early descent: who carries Edmund's wand, the man in grey's 'first' surprise, ungated callbacks, 'spring' when the descent can come in autumn, and Ilse's fate left unresolved.",
+    "issues": [
+      {
+        "event": "hs_kael_sister",
+        "problem": "Repeated premise (blocking). hs_ilse_arrives now introduces Ilse walking in through the gate in a private snowstorm. hs_kael_sister (when: kael_ally, turn >= 22, not met_sister) is still live, and nothing in hs_ilse_arrives or ilse_village sets met_sister. So a Kael ally who already met her at the bakery later gets 'A girl in white furs is waiting at the gates in a private snowstorm. Kael's younger sister, Ilse.' all over again, with a second reunion ('Kael is holding her, and the snow stops').",
+        "fix": "Retire it (`when: false`, keeping the block for saves), as the plan does for replaced cards. Or gate it on `not met(ilse) and not flag(ilse_in_village)` so it stays only as the meeting for a player who never saw the opener."
+      },
+      {
+        "event": "hs_two_shadows",
+        "problem": "Canon and voice. (1) Isolde's voice line says she 'never raises her voice; never needs to', but here her line is shouted across the lake ('the argument carries all the way to the towers: \"Your way gets students killed!\"'). (2) Kael's 'Yours already has!' says students died under Isolde. No canon supports it: the only death is Edmund, sixty years ago, before the 57-year-old headmistress could have been in charge (lore `edmund`). (3) 'She studies you over her spectacles' gives Isolde a physical trait no canon or other card gives her.",
+        "fix": "Let Kael do the shouting and give Isolde a quiet line that carries anyway, e.g. 'Your way gets students killed.' said so softly the whole lake hears it. Change Kael's retort to something canon supports, e.g. \"Yours lost one sixty years ago!\" (Edmund). Or drop the accusation and keep 'Your way gets students killed!' 'Then I'll be the only one!'. Cut 'over her spectacles' (e.g. 'She studies you as if you were a chess problem')."
+      },
+      {
+        "event": "hs_night_cult",
+        "problem": "Conflict and climax: the family confrontation isn't fully on the page. In the text, Madame Dumont speaks but Kael answers only with frost ('Kael's frost hits the ice like a shout') and Ilse only goes white, so the child gets no line only they would say. The family-option win reports the shouting ('Kael is shouting... everything twenty years kept in') rather than quoting it, and 'twenty years' is wrong for Ilse, who is 18. With the headmistress or Maud beside you, the cult leader calls you 'Kael's little friend' and ignores them, though the plan has Isolde and the Dumonts face off here.",
+        "fix": "Give the child one line back in the text, e.g. Kael: \"You never came for me. You came for the door.\" and Ilse: \"I'm not yours to call.\". Quote one line in the family win (e.g. \"You never once said well done. Not once.\") and change 'twenty years' to 'a whole life'. Add `{flag(night_isolde): \"Marrow,\" she says. \"Still guarding a hole in the ground.\"|…}` (and a Maud variant) before the 'Kael's little friend' fallback."
+      },
+      {
+        "event": "hs_go_down_early",
+        "problem": "The early descent contradicts the timeline and every 'spring' line. The card runs `final_year and month <= 8`, i.e. Harvestmoon to Greenrise (autumn and winter included). Timeline `the_night` says 'or earlier that spring', and these all say spring: hs_aftermath ('a strange spring frost'; scene 'spring sunshine'), hs_aftermath_bargain's hint ('Gloves, in spring'), hs_last_winter ('In spring the seal will be at its weakest') and last_day ('since the spring it froze'). A Harvestmoon descent makes them all wrong.",
+        "fix": "Gate the early descent to spring: `month >= 7 and month <= 8` (Stormbloom and Greenrise; Act IV opens by Frostcall anyway). Otherwise, change every 'spring' above to 'the night the lake froze' and update the timeline, as the plan's soft-lore section promised."
+      },
+      {
+        "event": "hs_go_down_early",
+        "problem": "The text assumes knowledge the player may not have: 'The Dumonts' mother is coming for the Blossom moon.' The only cards that say so are hs_dumont_letter (needs rel(kael) >= 5 and is a weighted draw) and hs_isolde_summons (auto, may not have shown yet). A player who saw neither is told it as a known fact.",
+        "fix": "`{seen(hs_dumont_letter) > 0 or seen(hs_isolde_summons) > 0: The Dumonts' mother is coming for the Blossom moon.|Someone is coming for the Blossom moon; the lake knows it.}`"
+      },
+      {
+        "event": "hs_night_cult",
+        "problem": "Soft-canon clash on the early descent. `dumont_mother` says she 'has never come south, until the Blossom moon', and hs_go_down_early promises to 'catch them all unready'. Yet after an early descent she is standing at the centre of the circle exactly as at the deadline. Only 'half the lanterns not yet lit' changes.",
+        "fix": "Add an early variant to the text: `{flag(hs_early): She is still in her travelling furs, snow from the North on her shoulders: she came early too.|…}`. Or soften the lore entry to 'comes south in the spring the seal is weakest'."
+      },
+      {
+        "event": "hs_the_night",
+        "problem": "Continuity after an early descent. hs_go_down_early's say already ends with you lifting the boathouse latch as the lake goes white 'in one breath, from shore to shore'. hs_the_night then repeats the freeze ('The lake freezes behind you in a single breath, from shore to shore'). Its left say has you 'run for the boathouse' with 'someone shouting your name' behind you, though you're at the latch and told no one. The right option offers to go back up and hold the first-years' tower you just walked away from.",
+        "fix": "Vary the left say: `{flag(hs_early): You lift the hatch. Nobody knows you're here.|You run for the boathouse…}`. Change the early text to something new ('The ice under the boathouse floor glows. Out on the lake, lanterns are hurrying into a ring'). Or have hs_go_down_early `find lake_bell` and queue hs_night_company directly, skipping hs_the_night when hs_early."
+      },
+      {
+        "event": "hs_night_company",
+        "problem": "The text claims company that may not exist. When no night_* condition holds (always possible early, since only one winter_* can be set, or none), only 'alone' is offered. The text still says 'only the ones who promised have followed you down the shore' or 'people are running across the frozen lawn: the ones who said they'd stand with you'.",
+        "fix": "Gate the line: `{night_kael() or night_ilse() or night_maud() or night_isolde(): …existing line…|Nobody has followed you. The shore behind you is empty.}`, and keep 'There's room for two of you' only in the first branch."
+      },
+      {
+        "event": "hs_night_company",
+        "problem": "Edmund's wand is in two hands. night_maud admits Maud when the player took the wand (`flag(edmunds_wand)` is set by maud_old_wand's 'Accept it'), and then the label and say have Maud arrive 'Edmund's wand in her fist'. hs_beneath repeats it ('Maud has Edmund's wand up'). The wand is an @item (`edmunds_silver_wand`, legacy flag), yet hs_key_recover's wand option, hs_threshold's `force` and night_maud all read the legacy flag rather than the item. Maud's 'I'm not missing it twice' contradicts lore `edmund` (she went down sixty years ago and lost him), and 'at eighty-one' is her age at the start of the run, not in year 4.",
+        "fix": "Read `has_item(edmunds_silver_wand)` in hs_key_recover, hs_threshold and night_maud. In the Maud say and in hs_beneath: `{has_item(edmunds_silver_wand): \"You've got his wand, dearie. I've got his scarf.\"|Edmund's wand in her fist}`, and relabel 'Old Maud'. Change her line to \"I lost him to that door. I'm not losing you, dearie.\" and 'at eighty-one' to 'at her age'."
+      },
+      {
+        "event": "hs_beneath",
+        "problem": "The seal can be unreachable, against decision 4 ('without the key, the seal is harder but still possible'). The seal option's `when` reads `flag(knows_founders_seal)`, but hs_threshold only `find`s knows_founders_seal (a clue; it never sets the flag), and its `force` route finds only seven_locks. A Hollow-tempted player who walked away from Isolde, lost the key and never read the ledger reaches the door with only bargain, open (a run ending) or flee.",
+        "fix": "Make the seal's `when` read `clue(knows_founders_seal)` (or `flag(...) or clue(...)`), and have hs_threshold's `force` win and lose also `find knows_founders_seal`. Or drop the `when` and let hs_seal's low odds carry the cost."
+      },
+      {
+        "event": "hs_threshold",
+        "problem": "Ungated callbacks. The read win says 'You've read these words before, in pieces: the razored page, the chained drafts, Maud's tea', even for a player who found none of them (the wall exists to pay them off for those who didn't). The text's `{clue(seven_locks): You know them. Maud told you.}` is wrong when seven_locks came from the Umbral lecture (expansion_classes.grim). The force win says 'the way Maud showed you' with no test that Maud showed you anything.",
+        "fix": "`{clue(knows_founders_seal): You've read these words before, in pieces…|You've never read them, but they read themselves to you, line by line.}`. `{seen(hs_maud_locks) > 0: Maud told you.|You know them.}`. `{flag(winter_maud) or seen(hs_maud_locks) > 0: the way Maud showed you|the way the stone seems to want}`."
+      },
+      {
+        "event": "hs_tunnel",
+        "problem": "(1) The fight win says he is 'surprised for the first time in four years', but hs_grey_daylight's win ('For the first time he looks surprised') and ilse_grey_returns' win ('with mild surprise') may already have surprised him. No flag records those wins. (2) The talk win: 'You tell him the Dumont children have chosen, both of them', but when Ilse is still taken (hs_night_ilse comes next) she hasn't chosen. (3) With the headmistress beside you, his only line is 'This isn't your door', which ignores her.",
+        "fix": "Set `flag grey_beaten` on the wins of hs_grey_daylight and ilse_grey_returns, and write `{flag(grey_beaten): and this time he isn't surprised; he's angry|surprised for the first time in four years}`. Gate the talk line: `{flag(ilse_taken): that Kael has chosen, and Ilse will|that the Dumont children have chosen, both of them}`. Add a `{flag(night_isolde): \"Headmistress. You're late by sixty years.\"|…}` variant to the text."
+      },
+      {
+        "event": "hs_grey_daylight",
+        "problem": "These losses don't fit a minigame fight, and the man in grey doesn't escalate in them. The loss lines describe one-move brush-offs after what may have been a long, close minigame fight. 'He swats … aside like moths' appears here twice and again in hs_tunnel and ilse_grey_returns, and hs_night_cult has 'She doesn't even look at you as she throws you'. The same line on every return also flattens 'each return bolder than the last'.",
+        "fix": "Write each loss as the last exchange of a real fight, different on each card. For example, here: 'Your last spell is still in the air when the flagstones come up to meet you'. hs_tunnel: 'He takes your last spell on his own hand and closes his fist on it'. ilse_grey_returns: 'He's breathing hard when it ends, which is somehow worse'. hs_night_cult: 'Her last word lands, and the ice throws you down'."
+      },
+      {
+        "event": "hs_grey_daylight",
+        "problem": "A loss without the key costs almost nothing, against 'losing costs something real' and the plan ('he takes one thing: the key or a clue'). The fight loss without the key is `renown -tiny`, and Kael 'bleeding from a cut over his eye' has no effect. Neither loss charges the player's own body though both show a fall ('When you get up'). The wins' `hs_escalation_progress` does nothing, because on_show has already advanced the clock to 10.",
+        "fix": "Add `health -small` to every fight and hide loss. Without the key, have him take something visible: `gain grey_watching`, plus `rel kael -tiny` with the say showing Kael hurt in your place, or a lasting debuff. Drop the dead `hs_escalation_progress` lines."
+      },
+      {
+        "event": "ilse_grey_returns",
+        "problem": "Run for Kael is obviously best. Kael has always been met by turn 20, so it is a sure save with no cost and gives rel kael +large and rel ilse +medium, while the fight and the talk risk losing Ilse for little more. The rework also dropped the fight loss's health cost, though the say still shows the fall ('When you get up').",
+        "fix": "Give fetching Kael a price or a risk. Make it a `chance likely`, with the miss as the existing empty-lane loss. Or keep it sure and show what it costs: Ilse's pride (`rel ilse -small`, 'You went for my brother'), or the man in grey marking you (`gain grey_watching`). Restore `health -small` on the fight loss."
+      },
+      {
+        "event": "hs_night_ilse",
+        "problem": "(1) The reach win recalls 'what she told you once in the snow: that nobody asked her'. That is hs_ilse_door's left option, but ilse_truth also comes from ilse_grey_returns, so many players never heard it. (2) The reach loss sends her 'walking up the tunnel toward her mother's circle' even when the circle was broken and scattered (cult_broken).",
+        "fix": "Set a flag on hs_ilse_door's left option (e.g. `flag ilse_confided`) and write `{flag(ilse_confided): what she told you once in the snow: that nobody asked her|that nobody ever asked her what she wanted}`. Gate the loss: `{flag(cult_broken): toward the empty ice where her mother's circle was|toward her mother's circle}`."
+      },
+      {
+        "event": "hs_aftermath",
+        "problem": "The ending doesn't say what changed for everyone the Night touched. The sealed aftermath always has Kael bring tea on the jetty, even if Ilse, Maud or the headmistress came down with you, or you reported him (rel -huge). Ilse's fate after 'Go past her' or a lost reach or fight on hs_night_ilse (still `ilse_taken`) is never resolved in any aftermath. That breaks 'nothing planted is left unexplained' and the plan's 'ilse_taken / dumont_reunited resolve on screen'.",
+        "fix": "Add a line to each aftermath (hs_aftermath, _lost, _fled, _bargain, _freed): `{flag(ilse_taken): Ilse went north with the man in grey before dawn; Kael has stopped saying her name.|{flag(dumont_reunited): Kael and Ilse are on the jetty together, arguing in Northern.|}}`. In hs_aftermath, name whoever came down (`{flag(night_kael): Kael…|{flag(night_ilse): Ilse…|…}}`) and keep the Kael tea scene only when `rel(kael) >= 0`."
+      },
+      {
+        "event": "hs_aftermath_fled",
+        "problem": "'The headmistress went down after you ran' is wrong when she came down with you (night_isolde): she was already there.",
+        "fix": "`{flag(night_isolde): The headmistress stayed at the door when you ran|The headmistress went down after you ran}, and came back up at dawn with her hair gone white.`"
+      },
+      {
+        "event": "hs_dumont_letter",
+        "problem": "(1) Spacing: the engine strips the space after the colon, so `\"Mother\".{seen(kael_letter_home) > 0: It's her answer…|}` renders '\"Mother\".It's her answer'. (2) In that variant the text is 401 characters (limit 400). (3) 'Kael finds you in the library' on a card with no place. (4) 'Keep it. Know your enemy.' plants a letter that nothing on the Night pays off.",
+        "fix": "Move the space inside the true branch: `\"Mother\". {seen(kael_letter_home) > 0: It's her answer to the one he rewrote eleven times. |}His hands are shaking.`. Drop 'in the library' (this fixes both the place and the length). Set `flag kept_dumont_letter` on the right option and pay it off in hs_night_cult (e.g. `+1 if flag(kept_dumont_letter)` on the family or names option, with a line: 'You know her hand. You know how sure of herself she is')."
+      },
+      {
+        "event": "hs_ilse_arrives",
+        "problem": "Times and places the text names aren't gated. hs_ilse_arrives opens 'At noon' with no `slot:`. hs_kael_truth is 'on the observatory roof, past midnight' with no `slot:`. hs_grey_offer says 'Every candle in the library goes blue' with no `place:` (the plan says 'anywhere').",
+        "fix": "hs_ilse_arrives: `slot: noon`. hs_kael_truth: `slot: night midnight` (or drop 'past midnight'). hs_grey_offer: `place: library`, or reword to wherever you are ('Every candle in the room goes blue at once')."
+      },
+      {
+        "event": "hs_frost_ring",
+        "problem": "Season continuity now that acts open early. 'A warm night' can show in Frostcall or Deepwinter when Act II's truths bring the climax early. hs_dark_tower's 'half the lake has frozen weeks before any frost' and hs_maud_locks's 'The lake doesn't freeze this time of year' are wrong if Act III opens in winter. hs_frost_ring's fight loss also shows a body cost ('you can't breathe for a long moment') that isn't in its effects.",
+        "fix": "`{season == \"winter\": A still, starless night|A warm night}`. In hs_dark_tower: `{season == \"winter\": frozen black and glassy, harder than any winter ice|frozen weeks before any frost}`. In hs_maud_locks: `{season == \"winter\": doesn't freeze like that, dearie, not even in winter|doesn't freeze this time of year, dearie}`. Add `health -small` to both fight losses."
+      },
+      {
+        "event": "hs_dark_tower",
+        "problem": "Wrong kind for the action. 'Go after the figure on the ice' is a chase across thin ice (the hint says 'The ice is thinner than it looks', and the loss is the ice cracking under you), but it is a `research` (lore) check.",
+        "fix": "`challenge feat expert` (vigor: crossing the ice) or `challenge sneak expert` (following unseen), with a matching hint. Keep the lore reward on the win, since you read what's under the ice."
+      },
+      {
+        "event": "hs_grey_stranger",
+        "problem": "'Step out beside Kael' is obviously best: rel kael +large for health -tiny, against guile +tiny and mood -tiny. Its `flag confronted_grey` is read nowhere, so the risk of facing the man in grey never comes due.",
+        "fix": "Make stepping out carry the risk the scene shows: `gain grey_watching` (he remembers you). Or pay `confronted_grey` off in hs_grey_daylight ('\"You again,\" he says, almost fondly') with a real cost, such as a `-1 if flag(confronted_grey)` on the hide option because he watches you."
+      },
+      {
+        "event": "hs_shadow_late",
+        "problem": "Blowing out a lamp to avoid seeing your shadow carries `alignment -tiny`, but it has no moral weight (costs.md: ordinary prudence doesn't move alignment). The say shows bad sleep instead.",
+        "fix": "Replace `alignment -tiny` with `health -tiny` ('You sleep badly'). Optionally give the option its own small gain for not involving anyone (e.g. `guile +tiny`)."
+      },
+      {
+        "event": "hs_isolde_summons",
+        "problem": "For a Warden who never climbed the tower, Isolde says the key 'is kept at the top of the seventh tower… On the night, it comes down with us', but nothing sets `gave_star_key`. hs_beneath's +2 for the key and its 'The star key turns in the round door' line then never apply, so the plan's 'a second source of star_key for a Warden who never climbed' doesn't hold.",
+        "fix": "In the 'I'll be there' option add `if not flag(star_key) and not flag(gave_star_key): flag gave_star_key`. In hs_beneath's seal win, read `{flag(star_key) or (flag(gave_star_key) and flag(night_isolde)): The star key turns in the round door, and you|You}`."
+      },
+      {
+        "event": "hs_night_shadow",
+        "problem": "Geography repeats. The shadow scene already happens 'At the founders' wall', and then hs_threshold arrives at the wall afresh: 'The tunnel ends at a wall of black stone…'.",
+        "fix": "Shadow card: 'Where the tunnel narrows, your lantern throws your shadow on the wet stone…'. Or threshold text: 'The wall your shadow came out of is carved with the founders' words…'."
+      },
+      {
+        "event": "hs_key_recover",
+        "problem": "Small slips. The steal loss has you 'arrive home with a sprained wrist', though you live at the academy. The comment says 'Not yet' brings the card back two months on, but only `repeat: 2` is set, so there's no spacing.",
+        "fix": "'and get back to the castle with a sprained wrist and nothing else'. If the card should wait, queue it (`queue hs_key_recover in 2`) from 'Not yet' instead of relying on repeat. Otherwise fix the comment."
+      },
+      {
+        "event": "hs_maud_locks",
+        "problem": "The plan's 'Maud refuses Isolde to her face' is reported after the fact ('I told her no, and I told her why'), which style.md's Conflict and climax section asks to put on the page. Maud's 'Last time it did, I lost a friend' repeats her exact line from hs_lake_breathes.",
+        "fix": "Open on the refusal itself: 'At Maud's gate the headmistress says, quite pleasantly, \"Keep them out of it, Maud.\" \"No,\" says Maud, \"and you know why.\"'. Give Maud a fresh line about Edmund (e.g. 'Sixty years ago it froze like that, and three of us went down')."
+      }
+    ]
+  },
+  "spotCheck": [
+    "hs_seventh_tower",
+    "hs_seraphine_shadow",
+    "hs_seraphine_towers",
+    "hs_star_mark",
+    "hs_wardens_notice",
+    "hs_maud_locks"
+  ],
+  "accepted": false
+}

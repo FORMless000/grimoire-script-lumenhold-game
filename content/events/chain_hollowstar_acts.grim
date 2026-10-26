@@ -92,6 +92,7 @@ text: Seraphine is on the observatory balcony, counting towers on her fingers. "
 title: A Storm at the Gate
 arc: hollowstar
 beat: 4
+slot: noon
 when: met(kael)
 class: story
 tone: tense
@@ -132,7 +133,7 @@ thread: hs_investigation
 scene: The Mirror Lake on a warm night, a perfect white ring of frost on the water, figures of frost and whispers climbing onto the shore, a tall woman with a lantern facing them.
 on_show:
   advance hollowstar to 7
-text: A warm night, and a ring of frost as wide as the Great Hall has formed in the middle of the lake. Far below, the bell tolls, and tolls. Then things climb out of the ring onto the shore: shapes of frost and whispers, walking like people who have forgotten how. The headmistress stands alone at the waterline with a lantern, talking to the lake.
+text: {season == "winter": A still, starless night|A warm night}, and a ring of frost as wide as the Great Hall has formed in the middle of the lake. Far below, the bell tolls, and tolls. Then things climb out of the ring onto the shore: shapes of frost and whispers, walking like people who have forgotten how. The headmistress stands alone at the waterline with a lantern, talking to the lake.
 > fight: Meet them on the shore
   hint: Combat. Kael fights beside you, if he's your ally.
   if flag(kael_ally):
@@ -187,10 +188,10 @@ tags: mystery hollowstar danger
 thread: hs_escalation
 # Act III's opener (v2): the cult strikes, in the open.
 scene: An academy tower standing black against the night sky among its lit neighbours, a black star burned into a great wooden door, and below them a lake half-covered in ice.
-text: Mid-lecture, every lamp in the Lecture Tower goes out at once, and none of them will light again. In the morning there's a black star burned into the door of the Great Hall, still smoking, and half the lake has frozen weeks before any frost, in a sheet that ends in a clean edge, as if cut. Out on it, at dawn, someone in black furs is walking away.
+text: Mid-lecture, every lamp in the Lecture Tower goes out at once, and none of them will light again. In the morning there's a black star burned into the door of the Great Hall, still smoking, and half the lake has frozen {season == "winter": black and glassy, harder than any winter ice|weeks before any frost}, in a sheet that ends in a clean edge, as if cut. Out on it, at dawn, someone in black furs is walking away.
 > left: Go after the figure on the ice
-  hint: Lore. The ice is thinner than it looks.
-  challenge research expert:
+  hint: Nerve. The ice is thinner than it looks.
+  challenge feat expert:
     win:
       lore +medium
       health -small
@@ -214,7 +215,7 @@ art: cup
 tags: mystery hollowstar
 thread: hs_escalation
 scene: An old woman wrapped in a shawl on her cottage step, two mugs steaming beside her, a tall woman in dark robes walking stiffly away down the path, a half-frozen lake beyond.
-text: The headmistress is walking away from Maud's cottage, very straight. Maud is on her step with two mugs of tea. "She wants me to keep you young ones out of it," she says. "I told her no, and I told her why, and she liked neither." She pushes a mug at you. "The lake doesn't freeze this time of year, dearie. Last time it did, I lost a friend. Sit. Or ask."
+text: At Maud's gate the headmistress is saying, quite pleasantly, "Keep the young ones out of it, Maud." "No," says Maud, "and you know why." The headmistress walks away very straight. Maud pushes a mug of tea at you. "{season == "winter": It doesn't freeze like that, dearie, not even in winter|The lake doesn't freeze this time of year, dearie}. Sixty years ago it did, and three of us went down. Sit. Or ask."
 > left: Sit with her
   rel maud +medium
   mood -tiny
@@ -237,7 +238,7 @@ tags: mystery hollowstar
 thread: hs_escalation
 # v2: a confrontation on the page (style.md, "Conflict and climax"); it brings the invitations (hs_choosing_sides).
 scene: Dusk on a half-frozen lake, two figures facing each other in the middle of the ice with wands raised, one holding a lantern, the dark tower behind them.
-text: At dusk the headmistress and Kael walk out onto the frozen half of the lake from opposite shores. They meet in the middle, and the argument carries all the way to the towers: "Your way gets students killed!" "Yours already has!" Both wands come up. For a long moment nobody moves. Then she lowers hers first, and they part without a word.
+text: At dusk the headmistress and Kael walk out onto the frozen half of the lake from opposite shores and meet in the middle. Kael's voice carries all the way to the towers: "You'll seal it with students standing in the door!" Hers never rises, and carries anyway: "Better than your mother's way." Both wands come up. For a long moment nobody moves. Then she lowers hers first, and they part in silence.
 > left: Ask Kael what they said
   rel kael +small
   mood -tiny
@@ -248,7 +249,7 @@ text: At dusk the headmistress and Kael walk out onto the frozen half of the lak
   rel isolde +small
   rel kael -tiny
   queue hs_choosing_sides in 1
-  say: "We disagree about method," she says, "and agree about the door." She studies you over her spectacles. "Expect an invitation. Possibly two. Choose with your eyes open." Kael, across the hall, sees you leave her tower.
+  say: "We disagree about method," she says, "and agree about the door." She studies you as if you were a chess problem. "Expect an invitation. Possibly two. Choose with your eyes open." Kael, across the hall, sees you leave her tower.
 
 @event hs_choosing_sides
 title: Two Invitations
@@ -355,6 +356,7 @@ thread: hs_investigation
 scene: A young woman in white furs drawing a round door in the snow with the tip of a wand, a frozen lake behind her.
 text: Ilse draws a circle in the snow with her wand, then a smaller one inside it. "This is the door," she says. "I have drawn it every day since I was six. I have never seen it." She doesn't look up. "Ask me what they taught me to do. Or don't. I don't care which."
 > left: "What did they teach you?"
+  flag ilse_confided
   find ilse_truth
   rel ilse +small
   hs_investigation_progress

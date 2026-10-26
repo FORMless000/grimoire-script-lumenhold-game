@@ -133,7 +133,7 @@ An untouched plot still opens each act by its deadline. A player who never quali
 ## Decisions (2026-10-26)
 
 1. **The Dumonts' mother leads the cult's circle on the Night.** It makes the main conflict a family's: Kael and Ilse against the mother who sent them, with you between. She needs no backstory beyond the canon (she sent Kael, raised Ilse to open the door, never said she was proud). One soft `@lore dumont_mother` entry; she is "Madame Dumont" on the page.
-2. **The early descent stays, as a trade:** go down before the deadline and the cult's circle is half-formed (easier), but only the allies who have already promised (`winter_*`) come with you; at the deadline everyone who would stand with you is there, and so is the whole circle.
+2. **The early descent stays, as a trade:** go down before the deadline, in spring (Stormbloom or Greenrise, so every "the spring the lake froze" stays true) and the cult's circle is half-formed (easier), but only the allies who have already promised (`winter_*`) come with you; at the deadline everyone who would stand with you is there, and so is the whole circle.
 3. **Losing the star key is possible, and so is winning it back without a fight:**
    - through Isolde's summons, if the Wardens trust you;
    - by stealing it back from the man in grey's room at the Newt (a deceive check);

@@ -1,0 +1,38 @@
+{
+  "batch": "hollowstar_v2",
+  "accept": true,
+  "round": 2,
+  "summary": "Round 2: every blocking issue is fixed. hs_kael_sister no longer re-introduces Ilse, hs_two_shadows keeps Isolde's voice and claims no deaths, the early descent is spring-only and skips the repeated freeze, Edmund's wand is the item everywhere, the seal is always reachable, and Ilse's fate is said in each aftermath. I checked every nested {cond: …} in the changed cards and they parse right (the colon is found at depth 0, the leading space is stripped as intended), every text and say is within its limit in every variant, and `grim check` passes. In hs_threshold the say before its finds is the documented pattern. What remains is polish: two weak `seen()` gates, the sealed aftermath ignoring who came down, a few one-line continuity slips, and dead health lines in fight branches (my round-1 suggestion; the engine ignores them there).",
+  "issues": [
+    {
+      "event": "hs_threshold",
+      "problem": "`seen(hs_maud_locks) > 0` is too weak a gate. A player who picked 'Sit with her' on hs_maud_locks heard nothing about locks, yet the text tells them 'You know them. Maud told you.' The force win's 'the way Maud showed you' accepts the same seen() test, though only hs_last_winter's Maud option has her trace wards with you. The read win also lists 'the razored page, the chained drafts, Maud's tea' for anyone holding knows_founders_seal, including a player who learned it only from the Umbral lecture.",
+      "fix": "Text: `{chosen(hs_maud_locks, right): You know them. Maud told you.|{clue(seven_locks): You know them.|You count them twice.}}`. Force win: gate on `flag(winter_maud)` alone. Read win: drop the list ('You've read these words before, in pieces.') or gate each piece."
+    },
+    {
+      "event": "hs_beneath",
+      "problem": "The sealed outcome is routed by Kael's regard, not by who came down. Kael is always met and rel(kael) >= 0 is the usual state, so a player who went down with Ilse, Maud or the headmistress almost always gets Kael's jetty-and-tea scene (hs_aftermath). hs_aftermath_quiet, which has the right beats for those companions, shows only to players who turned Kael against them.",
+      "fix": "Route on the companion first: `if flag(night_kael) or (not flag(night_ilse) and not flag(night_maud) and not flag(night_isolde) and rel(kael) >= 0): queue hs_aftermath in 1`, else `queue hs_aftermath_quiet in 1`."
+    },
+    {
+      "event": "hs_aftermath",
+      "problem": "`{flag(dumont_reunited): Ilse is further down the jetty…}` also shows when Ilse went north after the reunion (ilse_northern_letter sets ilse_went_north; ilse_kael_reunion can come before it).",
+      "fix": "`{flag(dumont_reunited) and not flag(ilse_went_north): Ilse is further down the jetty, pretending not to watch.|}`"
+    },
+    {
+      "event": "hs_aftermath_freed",
+      "problem": "'Ilse's place is empty' at the academy breakfast, but Ilse is an outsider living above the village bakery, with no place at the tables.",
+      "fix": "`{flag(ilse_taken): The room above the bakery is empty; Ilse went north before dawn.|}`"
+    },
+    {
+      "event": "hs_night_cult",
+      "problem": "The headmistress's exchange is unattributed: `\"Headmistress. Still guarding a hole in the ground.\" \"Still trying to open one, Madame.\"`. The other variants name each speaker, and here the reader has to guess who says which line.",
+      "fix": "`\"Headmistress,\" she says. \"Still guarding a hole in the ground.\" \"Still trying to open one, Madame,\" says the headmistress.` (check the 400-character limit; the variant is at about 370)."
+    },
+    {
+      "event": "hs_grey_daylight",
+      "problem": "Several fight branches carry dead lines, and the round-1 critic suggested them: the `health -small` added to the fight losses here, in ilse_grey_returns (left) and in hs_frost_ring. A played fight's branch runs without its `health` lines (docs/grimoire-script.md: the minigame's own Health change applies). They are harmless but mislead a reader. The non-fight hide loss's `health -small` does apply, as intended. The real added costs are already in place: grey_watching, renown and mood.",
+      "fix": "Remove `health -small` from the `challenge combat` lose branches in hs_grey_daylight, ilse_grey_returns and hs_frost_ring (keep the one on hide)."
+    }
+  ]
+}

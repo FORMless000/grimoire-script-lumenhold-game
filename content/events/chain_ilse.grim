@@ -76,7 +76,7 @@ text: A lane behind the bakery, after dark, every window on it frosted over. The
   hint: Combat. He fights like winter. Lose, and he takes her.
   challenge combat expert drift mid:
     win:
-      flag ilse_saved
+      flag ilse_saved grey_beaten
       rel ilse +large
       renown +small
       alignment +small
@@ -88,7 +88,7 @@ text: A lane behind the bakery, after dark, every window on it frosted over. The
       alignment +small
       find ilse_truth
       hs_investigation_progress
-      say: He swats your spell aside like a moth. When you get up, the lane is empty except for a single white glove in the snow.
+      say: He's breathing hard when it ends, which is somehow worse. When you get up, the lane is empty except for a single white glove in the snow.
 > talk: "She's not yours to take."
   hint: Charm. Better if you know what she was raised for.
   challenge negotiate expert +1 if clue(ilse_truth) +1 if rel(ilse) >= 15:
@@ -106,14 +106,14 @@ text: A lane behind the bakery, after dark, every window on it frosted over. The
       hs_investigation_progress
       say: He agrees with every word, gently, and Ilse's shoulders drop as he talks. When he turns her toward the road, she goes. At the corner she looks back once. In the snow there's a single white glove.
 > right: Run for Kael
-  hint: Sure, if Kael is here to fetch.
+  hint: Sure, if Kael is here to fetch. She'll know who you went for.
   if met(kael):
     flag ilse_saved
     rel kael +large
-    rel ilse +medium
+    rel ilse -small
     find ilse_truth
     hs_investigation_progress
-    say: Kael arrives like a blizzard, shouting her name. The man in grey takes one look at him and leaves without a word. Brother and sister stand in the snow, not touching, not speaking, until Ilse punches him in the arm and the snow stops.
+    say: Kael arrives like a blizzard, shouting her name. The man in grey takes one look at him and leaves without a word. Brother and sister stand in the snow, not touching, not speaking, until Ilse punches him in the arm and the snow stops. "You went for him," she tells you later. "Not for me."
   else:
     flag ilse_taken
     mood -medium

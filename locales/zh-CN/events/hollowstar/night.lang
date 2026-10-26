@@ -23,8 +23,8 @@ opt.right.say.1 [7c3b54] = 你一直看到提灯一盏接一盏熄灭，然后�
 @event hs_night_company
 # en: Who Comes Down With You
 title [be20d9] = 谁陪你下去
-# en: The boathouse hatch is open, and the steps go down into blue light. {flag(hs_early): You came without telling anyone, and only the ones who promised have followed you down the shore.|Behind you, people are running across the frozen lawn: the ones who said they'd stand with you, and meant it.} The tunnel down is narrow. There's room for two of you, and no more. Who comes?
-text [baa8d6] = 船屋的活板门开着，台阶一路向下，没入蓝光之中。{flag(hs_early): 你没告诉任何人就来了，只有那些许过诺的人沿着湖岸跟了过来。|你身后，有人正跑过结冰的草坪：那些说过会与你并肩、并且是认真的人。}往下的隧道很窄。只容得下你们两个人，不能再多了。谁来？
+# en: The boathouse hatch is open, and the steps go down into blue light. {night_kael() or night_ilse() or night_maud() or night_isolde(): {flag(hs_early): You came without telling anyone, and only the ones who promised have followed you down the shore.|Behind you, people are running across the frozen lawn: the ones who said they'd stand with you, and meant it.} The tunnel down is narrow. There's room for two of you, and no more. Who comes?|Nobody has followed you down the shore. The tunnel is narrow, and the dark at the bottom is very quiet.}
+text [274147] = 船屋的活板门开着，台阶一路向下，没入蓝光之中。{night_kael() or night_ilse() or night_maud() or night_isolde(): {flag(hs_early): 你没告诉任何人就来了，只有那些许过诺的人沿着湖岸跟了过来。|你身后，有人正跑过结冰的草坪：那些说过会与你并肩、并且是认真的人。}往下的隧道很窄。只容得下你们两个人，不能再多了。谁来？|没有人沿着湖岸跟来。隧道很窄，底下的黑暗非常安静。}
 # en: The boathouse at night, its hatch open on stone steps going down into blue light, a student at the top with a lantern and figures hurrying in behind.
 scene [c81373] = 夜里的船屋，活板门开着，石阶通向下方的蓝光，一个学生提着灯站在顶上，身后有人匆匆赶进来。
 # en: Kael
@@ -39,12 +39,12 @@ opt.ilse.label [a098fc] = 伊尔泽
 opt.ilse.hint [984c7c] = 每场战斗她的霜都在你身边。她母亲就在冰上。
 # en: Ilse is already on the top step, white furs and a wand like an icicle. "I was raised for this door," she says. "I'd like to see their faces when I close it."
 opt.ilse.say.1 [07512f] = 伊尔泽已经站在最上面一级台阶上，一身白裘，魔杖像一根冰柱。“我就是为这扇门被养大的，”她说，“我想看看我关上它的时候，他们是什么表情。”
-# en: Old Maud, with Edmund's wand
-opt.maud.label [57a7be] = 老莫德，带着埃德蒙的魔杖
+# en: Old Maud
+opt.maud.label [9c77f5] = 老莫德
 # en: No help in a fight. The founders' wall knows her.
 opt.maud.hint [9ebd04] = 战斗中帮不上忙。创始者之墙认得她。
-# en: Maud comes down the lawn at a pace that should be impossible at eighty-one, Edmund's wand in her fist. "Sixty years," she says. "I'm not missing it twice, dearie."
-opt.maud.say.1 [68f710] = 莫德沿着草坪走下来，速度快得不像八十一岁的人，手里攥着埃德蒙的魔杖。“六十年了，”她说，“我可不能再错过一次，亲爱的。”
+# en: Maud comes down the lawn at a pace that should be impossible at her age. "I lost him to that door," she says. "I'm not losing you, dearie." {has_item(edmunds_silver_wand): She taps the wand in your hand. "Keep his wand up. It knows the way."|}
+opt.maud.say.1 [12b3d5] = 莫德沿着草坪走下来，速度快得不像她这个年纪的人。“我把他输给了那扇门，”她说，“我可不会再把你输掉，亲爱的。”{has_item(edmunds_silver_wand): 她敲了敲你手里的魔杖。“把他的魔杖举好。它认得路。”|}
 # en: The headmistress
 opt.isolde.label [fc1c54] = 院长
 # en: No help in a fight. Her seal beside yours at the door.
@@ -61,8 +61,8 @@ opt.alone.say.1 [895e06] = 你让他们去守塔，不顾他们的抗议关上�
 @event hs_night_cult
 # en: The Circle on the Ice
 title [e57069] = 冰上的圆圈
-# en: The tunnel comes up through the ice inside a ring of lanterns: twelve figures in black furs, chanting{flag(hs_early): , and half the lanterns not yet lit|}. At the centre stands a tall woman in white with Kael's face, thirty years on. Madame Dumont. {flag(night_kael): "My son. You came after all." Kael's frost hits the ice like a shout.|{flag(night_ilse): "Ilse," she says, the way you'd call a dog. Ilse goes white to the lips.|"Kael's little friend," she says. "Step aside."}}
-text [3a8db6] = 隧道从一圈提灯中间穿出冰面：十二个穿黑裘的人影在吟诵{flag(hs_early): ，一半的提灯还没点亮|}。正中站着一个穿白衣的高个子女人，长着凯尔的脸，只是老了三十岁。杜蒙夫人。{flag(night_kael): “我的儿子。你到底还是来了。”凯尔的霜像一声怒吼砸在冰上。|{flag(night_ilse): “伊尔泽。”她说，像在唤一条狗。伊尔泽的嘴唇都白了。|“凯尔的小朋友，”她说，“让开。”}}
+# en: The tunnel comes up through the ice inside a ring of lanterns: twelve figures in black furs, chanting{flag(hs_early): , half the lanterns not yet lit|}. At the centre stands a tall woman in white with Kael's face, thirty years on{flag(hs_early): , snow from the North still on her shoulders|}. Madame Dumont. {flag(night_kael): "My son. You came after all." "You never came for me," Kael shouts. "You came for the door!"|{flag(night_ilse): "Ilse," she says, the way you'd call a dog. "I'm not yours to call," says Ilse, white to the lips.|{flag(night_isolde): "Headmistress," she says. "Still guarding a hole in the ground." "Still trying to open one, Madame," says the headmistress.|"Kael's little friend," she says. "Step aside."}}}
+text [e63c30] = 隧道从一圈提灯中间穿出冰面：十二个穿黑裘的人影在吟诵{flag(hs_early): ，一半的提灯还没点亮|}。正中站着一个穿白衣的高个子女人，长着凯尔的脸，只是老了三十岁{flag(hs_early): ，肩上还落着北方的雪|}。杜蒙夫人。{flag(night_kael): “我的儿子。你到底还是来了。”“你从来不是为我而来，”凯尔吼道，“你是为那扇门来的！”|{flag(night_ilse): “伊尔泽。”她说，像在唤一条狗。“你没资格这样叫我。”伊尔泽说，嘴唇都白了。|{flag(night_isolde): “院长，”她说，“还在守着地上的一个洞。”“夫人还在想着打开它。”院长说。|“凯尔的小朋友，”她说，“让开。”}}}
 # en: A ring of figures in black furs with lanterns on a frozen lake at night, and at its centre a tall woman in white furs with a pale, proud face, her wand raised.
 scene [3ccb55] = 夜里结冰的湖面上，一圈穿黑裘、提着灯的人影，正中一个穿白裘的高个子女人，面容苍白而骄傲，举着魔杖。
 # en: Break the circle by force
@@ -71,8 +71,8 @@ opt.fight.label [2d477d] = 用武力打破圆圈
 opt.fight.hint [3b6088] = 与她战斗{flag(hs_early): 。她的圆圈有一半人还没来。|。}
 # en: Her ward breaks and she goes down on one knee on the ice, and the chant stops dead. She looks up at you with Kael's eyes. "So this is what he chose," she says. The circle scatters into the dark, carrying her.
 opt.fight.say.1 [6398c9] = 她的护界碎了，她单膝跪在冰上，吟诵戛然而止。她用凯尔的眼睛抬头看着你。“原来他选的是这个。”她说。圆圈四散进黑暗，把她也带走了。
-# en: She doesn't even look at you as she throws you across the ice. "Go down, then," she says. "The door will have you either way." The chant goes on, louder, and the glow under the ring grows.
-opt.fight.say.2 [595829] = 她连看都没看你，就把你扔过了冰面。“那就下去吧，”她说，“不管怎样，那扇门都会要你。”吟诵继续，越来越响，圆圈下的光越来越亮。
+# en: Her last word lands before your last spell does, and the ice throws you down. "Go down, then," she says. "The door will have you either way." The chant goes on, louder, and the glow under the ring grows.
+opt.fight.say.2 [fa5cb6] = 她最后一个字抢在你最后一道咒语之前落下，冰面把你掀翻在地。“那就下去吧，”她说，“不管怎样，那扇门都会要你。”吟诵继续，越来越响，圆圈下的光越来越亮。
 # en: Speak the names from the Codex
 opt.names.label [997c36] = 念出《空洞名录》上的名字
 # en: Lore. {clue(codex_names): You've read them.|You'll have to read them off their furs.}
@@ -89,8 +89,8 @@ opt.names.say.4 [b5d586] = 你读得出他们毛皮上绣的名字，可是不�
 opt.family.label [43e939] = 让他们回答自己的母亲
 # en: Charm. Say what she sent them for, and what they chose.
 opt.family.hint [b47c8d] = 魅力。说出她送他们来是为了什么，以及他们选择了什么。
-# en: You start it, and then you stop, because {flag(night_kael): Kael|Ilse} is shouting, at last, everything twenty years kept in: the door, the cold house, "well done", never once. The circle wavers. The chant breaks. Madame Dumont lowers her wand and says nothing at all.
-opt.family.say.1 [f0a744] = 你开了个头，然后停下了，因为{flag(night_kael): 凯尔|伊尔泽}终于喊了出来，二十年憋在心里的一切：那扇门，那座冰冷的房子，“做得好”，一次都没有。圆圈动摇了。吟诵断了。杜蒙夫人放下魔杖，一句话也没说。
+# en: You start it, and then you stop, because {flag(night_kael): Kael|Ilse} is shouting, at last, everything a whole life kept in: "You never once said well done. Not once!" The circle wavers. The chant breaks. Madame Dumont lowers her wand and says nothing at all.
+opt.family.say.1 [6cedc6] = 你开了个头，然后停下了，因为{flag(night_kael): 凯尔|伊尔泽}终于喊了出来，一辈子憋在心里的一切：“你从来没说过一句做得好。一次都没有！”圆圈动摇了。吟诵断了。杜蒙夫人放下魔杖，一句话也没说。
 # en: She lets them shout, and then says, quite gently, "Are you finished?" {flag(night_kael): Kael|Ilse} is shaking. The circle goes on chanting as if nobody had spoken, and you drag your friend down the tunnel before the ice opens.
 opt.family.say.2 [2d20a0] = 她任由他们喊，然后非常温和地说：“说完了吗？”{flag(night_kael): 凯尔|伊尔泽}在发抖。圆圈继续吟诵，好像谁也没说过话，你在冰面裂开之前把你的朋友拖进了隧道。
 # en: Go round the circle
@@ -113,10 +113,10 @@ scene [872d27] = 冰下黑暗的隧道里站着一个穿白裘的年轻女人，
 opt.reach.label [0ea9b7] = 唤回她
 # en: Charm. What she was raised for, and who she is, are your words.
 opt.reach.hint [b945ff] = 魅力。她是为什么被养大的，她是谁，就是你要说的话。
-# en: You tell her what she told you once in the snow: that nobody asked her. Her eyes find yours. Then she's crying, furiously, and the frost stops falling. "I can hear him," she says. "I can't hear him any more." {flag(night_kael): Kael gets to her first.|}
-opt.reach.say.1 [716271] = 你把她曾在雪地里对你说的话告诉她：从来没人问过她。她的目光找到了你。然后她哭了，哭得很凶，霜不再落下。“我能听见他，”她说，“我听不见他了。”{flag(night_kael): 凯尔先冲到了她身边。|}
-# en: She listens to every word with the man in grey's polite face, and steps aside to let you pass. When you look back, she is walking up the tunnel toward her mother's circle, and doesn't turn round.
-opt.reach.say.2 [83f591] = 她顶着灰衣人那张客气的脸听完了每一个字，然后让到一边让你过去。你回头看时，她正沿着隧道往上走，走向她母亲的圆圈，没有回头。
+# en: You tell her {flag(ilse_confided): what she told you once in the snow: that nobody asked her|that nobody ever asked her what she wanted}. Her eyes find yours. Then she's crying, furiously, and the frost stops falling. "I can hear him," she says. "I can't hear him any more." {flag(night_kael): Kael gets to her first.|}
+opt.reach.say.1 [822194] = 你告诉她{flag(ilse_confided): 她曾在雪地里对你说的话：从来没人问过她|从来没人问过她想要什么}。她的目光找到了你。然后她哭了，哭得很凶，霜不再落下。“我能听见他，”她说，“我听不见他了。”{flag(night_kael): 凯尔先冲到了她身边。|}
+# en: She listens to every word with the man in grey's polite face, and steps aside to let you pass. When you look back, she is walking up the tunnel toward {flag(cult_broken): the empty ice where her mother's circle was|her mother's circle}, and doesn't turn round.
+opt.reach.say.2 [147e31] = 她顶着灰衣人那张客气的脸听完了每一个字，然后让到一边让你过去。你回头看时，她正沿着隧道往上走，走向{flag(cult_broken): 她母亲的圆圈曾经所在的那片空冰|她母亲的圆圈}，没有回头。
 # en: Break his hold on her
 opt.fight.label [704415] = 打破他对她的控制
 # en: Combat, against her. Win, and the compulsion breaks.
@@ -135,10 +135,10 @@ opt.past.say.1 [d9f80e] = 你从她身边绕过去。她没有拦你；她看不
 @event hs_night_shadow
 # en: Your Own Shadow
 title [39a1da] = 你自己的影子
-# en: At the founders' wall your lantern throws your shadow onto the black stone, and it stays there when you stop. Then it turns round. It has your face, and the Star's eyes. {clue(second_shadow): Seraphine painted this. You knew it was coming.|Nobody warned you. Nobody could have.} "Let me in," it says, in your voice. "We'd be so much stronger."
-text [d98f1f] = 在创始者之墙前，你的提灯把你的影子投在黑石上，你停下时它没有跟着停下。然后它转过身来。它长着你的脸，和星的眼睛。{clue(second_shadow): 瑟拉芬画过这一幕。你知道它会来。|没有人警告过你。也没有人能警告你。}“让我进去，”它用你的声音说，“我们会强大得多。”
-# en: A black stone wall at the end of a tunnel, a student's shadow standing out from the wall on its own, with the student's face and eyes like holes.
-scene [323bd5] = 隧道尽头的一面黑石墙，一个学生的影子独自从墙上站出来，长着那个学生的脸，眼睛像两个洞。
+# en: Where the tunnel narrows, your lantern throws your shadow onto the wet stone, and it stays there when you stop. Then it turns round. It has your face, and the Star's eyes. {clue(second_shadow): Seraphine painted this. You knew it was coming.|Nobody warned you. Nobody could have.} "Let me in," it says, in your voice. "We'd be so much stronger."
+text [ca0245] = 隧道变窄的地方，你的提灯把你的影子投在湿漉漉的石壁上，你停下时它没有跟着停下。然后它转过身来。它长着你的脸，和星的眼睛。{clue(second_shadow): 瑟拉芬画过这一幕。你知道它会来。|没有人警告过你。也没有人能警告你。}“让我进去，”它用你的声音说，“我们会强大得多。”
+# en: A narrow stone tunnel under the ice, a student's shadow standing out from the wet wall on its own, with the student's face and eyes like holes.
+scene [ede0f2] = 冰下一条狭窄的石头隧道，一个学生的影子独自从湿墙上站出来，长着那个学生的脸，眼睛像两个洞。
 # en: Fight it
 opt.fight.label [533b96] = 和它战斗
 # en: Combat, against everything you know.
@@ -165,8 +165,8 @@ opt.let.say.1 [d83953] = 你张开双臂，它走进了你，那么合适，合�
 @event hs_aftermath_bargain
 # en: The Star's Gift
 title [75e568] = 星的馈赠
-# en: You wake with the Star's gift already in you. Eclipse, a spell you never studied, sits in your hands like an old habit. There's a purse on your pillow heavy with coins nobody gave you. The mark on your palm has grown a crown of points, and a voice at the back of your mind says, pleasantly, "Good morning."
-text [665cc7] = 你醒来时，星的馈赠已经在你身上了。蚀，一道你从没学过的咒语，像老习惯一样待在你手里。你枕头上放着一个钱袋，沉甸甸的，装着没人给过你的硬币。你掌心的印记长出了一圈冠冕般的尖角，脑海深处有个声音和气地说：“早上好。”
+# en: You wake with the Star's gift already in you. Eclipse, a spell you never studied, sits in your hands like an old habit. There's a purse on your pillow heavy with coins nobody gave you. The mark on your palm has grown a crown of points, and a voice at the back of your mind says, pleasantly, "Good morning." {flag(ilse_taken): Ilse went north before dawn, with the man in grey.|}
+text [0f6da3] = 你醒来时，星的馈赠已经在你身上了。蚀，一道你从没学过的咒语，像老习惯一样待在你手里。你枕头上放着一个钱袋，沉甸甸的，装着没人给过你的硬币。你掌心的印记长出了一圈冠冕般的尖角，脑海深处有个声音和气地说：“早上好。”{flag(ilse_taken): 黎明前，伊尔泽跟着灰衣人去了北方。|}
 # en: A student at a dormitory mirror at dawn, a crowned black star glowing on their palm, a purse spilling coins on the bed behind them.
 scene [c5bba3] = 黎明时分，一个学生站在宿舍镜前，掌心一颗戴冠的黑星在发光，身后床上的钱袋里撒出了硬币。
 # en: Use it
@@ -182,11 +182,27 @@ opt.right.hint [b0fe59] = 春天戴手套。会有人问的。
 # en: You wear gloves from that day on. People ask, and you say it's a burn, and it is, in a way. At night the crown on your palm glows through the leather, and you lie awake watching it.
 opt.right.say.1 [f929a7] = 从那天起你一直戴着手套。有人问，你就说是烫伤，某种意义上也确实是。夜里你掌心的冠冕透过皮革发着光，你躺着睁眼看它。
 
+@event hs_aftermath_quiet
+# en: Only Water Now
+title [ec28f8] = 如今只是湖水
+# en: The lake glitters as if nothing happened. Most of the academy believes there was a strange spring frost. {flag(night_ilse): Ilse is at the end of the jetty, boots off, feet in water that is only water now.|{flag(night_maud): Maud waves from her step, two mugs of tea beside her.|{flag(night_isolde): Across the courtyard, the headmistress inclines her head to you, once.|Nobody knows where you were last night. Nobody thanks you.}}} {flag(ilse_taken): Ilse went north before dawn, with the man in grey.|}
+text [af55e9] = 湖面波光粼粼，仿佛什么都没发生过。学院里大多数人以为那只是一场奇怪的春霜。{flag(night_ilse): 伊尔泽坐在栈桥尽头，脱了靴子，把脚伸进如今只是湖水的水里。|{flag(night_maud): 莫德在门阶上朝你招手，身边放着两杯茶。|{flag(night_isolde): 隔着庭院，院长朝你微微点了一下头。|没人知道你昨晚在哪儿。也没人谢你。}}}{flag(ilse_taken): 黎明前，伊尔泽跟着灰衣人去了北方。|}
+# en: The lake glittering in spring sunshine, students skimming stones off the jetty, one student sitting a little apart on the shore.
+scene [3fe5a5] = 春日阳光下波光粼粼的湖，学生们在栈桥上打水漂，一个学生独自坐在稍远的岸边。
+# en: Go and sit with someone
+opt.left.label [5ba2e6] = 去陪陪谁
+# en: {flag(night_ilse): You put your feet in beside hers. It's freezing. She laughs, properly, for the first time you've ever heard.|{flag(night_maud): She pours you a cup without asking. "Edmund would have liked you," she says, and that's all she says about it.|{flag(night_isolde): She beats you at chess that evening in nine moves, and lets you see her smile.|You find friends who never knew, and let them talk about nothing all afternoon. It's the best afternoon of the year.}}}
+opt.left.say.1 [7db3b7] = {flag(night_ilse): 你把脚伸进她旁边的水里。冷得要命。她笑了，真正地笑了，你第一次听见她这样笑。|{flag(night_maud): 她不问就给你倒了一杯。“埃德蒙会喜欢你的。”她说，关于这件事她就只说了这一句。|{flag(night_isolde): 那天晚上她九步就在棋盘上赢了你，还让你看见了她的笑。|你去找那些什么都不知道的朋友，听他们聊了一下午无关紧要的事。这是一年里最好的一个下午。}}}
+# en: Write it all down
+opt.right.label [c13862] = 全都写下来
+# en: You walk the shore alone and write down every word of the founders' wall before it fades. Nobody will ever read it. You need it to have happened somewhere.
+opt.right.say.1 [443a8a] = 你独自沿着湖岸走，趁创始者之墙上的每一个字还没褪去，把它们全写了下来。永远不会有人读它。你只是需要它在某处发生过。
+
 @event hs_aftermath_freed
 # en: Every Candle Out
 title [e4b25d] = 烛火尽灭
-# en: Every candle in Lumenhold went out at midnight and didn't come back until dawn. The lake is blue and empty and very deep. On your pillow there's a letter with a black-star seal: "The families thank you. Your seat at our table is waiting." Across the hall at breakfast, the headmistress looks at you once, and then never again.
-text [951287] = 午夜时分，流明堡的每一支蜡烛都熄灭了，直到黎明才重新亮起。湖是蓝的，空的，深不见底。你枕头上有一封黑星封蜡的信：“诸家族感谢你。我们席上为你留着座位。”早餐时，院长隔着大厅看了你一眼，此后再也没看过你。
+# en: Every candle in Lumenhold went out at midnight and didn't come back until dawn. The lake is blue and empty and very deep. On your pillow there's a letter with a black-star seal: "The families thank you. Your seat at our table is waiting." At breakfast the headmistress looks at you once, and then never again. {flag(ilse_taken): The room above the bakery is empty; Ilse went north before dawn.|}
+text [f213f3] = 午夜时分，流明堡的每一支蜡烛都熄灭了，直到黎明才重新亮起。湖是蓝的，空的，深不见底。你枕头上有一封黑星封蜡的信：“诸家族感谢你。我们席上为你留着座位。”早餐时，院长看了你一眼，此后再也没看过你。{flag(ilse_taken): 面包房楼上的房间空了；黎明前伊尔泽去了北方。|}
 # en: An academy at dawn with every window dark, students on the lawns staring at an empty sky, a black-sealed letter in one student's hand.
 scene [4fbffd] = 黎明时分的学院，每扇窗都是黑的，学生们站在草坪上望着空荡荡的天空，一个学生手里拿着一封黑色封蜡的信。
 # en: Answer the letter
@@ -205,8 +221,8 @@ opt.right.say.1 [86a907] = 信烧成了蓝色。这改变不了什么，你也�
 @event hs_aftermath_fled
 # en: The Door Left Ajar
 title [8b2193] = 虚掩的门
-# en: The headmistress went down after you ran, and came back up at dawn with her hair gone white. The door is still ajar, she says, but it will hold, for now, with the Wardens sitting up beside it in shifts. She doesn't ask why you ran. That's worse.
-text [390b09] = 你跑了之后，院长下去了，黎明时上来，头发全白了。她说那扇门还虚掩着，但暂时撑得住，守望者们轮班坐在它旁边守着。她没有问你为什么跑。这更糟。
+# en: The headmistress {flag(night_isolde): stayed at the door when you ran|went down after you ran}, and came back up at dawn with her hair gone white. The door is still ajar, she says, but it will hold, for now, with the Wardens sitting up beside it in shifts. She doesn't ask why you ran. That's worse. {flag(ilse_taken): Ilse went north before dawn.|}
+text [45975e] = 院长{flag(night_isolde): 在你逃走时留在了门边|在你逃走后下去了}，黎明时上来，头发全白了。她说那扇门还虚掩着，但暂时撑得住，守望者们轮班坐在它旁边守着。她没有问你为什么跑。这更糟。{flag(ilse_taken): 黎明前，伊尔泽去了北方。|}
 # en: A tall woman with newly white hair standing at a window above a lake, a student in the doorway behind her, neither speaking.
 scene [cd8f2f] = 一个头发刚刚变白的高个子女人站在湖上方的窗前，一个学生站在她身后的门口，两人都不说话。
 # en: "I'm sorry."

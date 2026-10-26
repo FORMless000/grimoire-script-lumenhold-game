@@ -50,7 +50,7 @@ test('the act threads carry the arc, so closing it ends them all', () => {
     for (const e of members) assert.equal(e.arc, 'hollowstar', e.id);
   }
   // The aftermaths belong to no arc: they come after it is closed.
-  for (const id of ['hs_aftermath', 'hs_aftermath_lost', 'hs_aftermath_bargain', 'hs_aftermath_freed', 'hs_aftermath_fled']) assert.ok(!content.events[id].arc, id);
+  for (const id of ['hs_aftermath', 'hs_aftermath_quiet', 'hs_aftermath_lost', 'hs_aftermath_bargain', 'hs_aftermath_freed', 'hs_aftermath_fled']) assert.ok(!content.events[id].arc, id);
 });
 
 test('the Night can be played to a sealed door without a single fight, and closes the arc', () => {
@@ -86,12 +86,16 @@ test('the early descent: a player holding the key goes down before the deadline,
   Object.assign(eng.s.flags, { star_key: true, kael_ally: true, winter_kael: false, ilse_saved: true, warden_trial: true });
   eng.s.clues.seven_locks = 20;
   eng.s.arcs.hollowstar.clock = 10;
-  eng.s.turn = 43;   // year 4, month 7
+  eng.s.turn = 43;   // year 4, month 7 (spring)
   assert.equal(quiet(() => eng.test(eng.c.events.hs_go_down_early.when, null)), true, 'it is offered');
+  eng.s.turn = 39;   // month 3: autumn, before the seal is weak enough
+  assert.equal(quiet(() => eng.test(eng.c.events.hs_go_down_early.when, null)), false, 'only in spring');
+  eng.s.turn = 43;
   at(eng, 43, ['hs_go_down_early']);
   let company = null;
-  const shown = playOn(eng, (v) => { if (v.id === 'hs_night_company') company = v; return v.id === 'hs_go_down_early' || v.id === 'hs_the_night' ? 'left' : v.options.find((o) => !o.disabled).key; }, 3);
-  assert.deepEqual(shown, ['hs_go_down_early', 'hs_the_night', 'hs_night_company']);
+  const shown = playOn(eng, (v) => { if (v.id === 'hs_night_company') company = v; return v.id === 'hs_go_down_early' ? 'left' : v.options.find((o) => !o.disabled).key; }, 2);
+  // Going down freezes the lake itself, so the Night starts at its second card.
+  assert.deepEqual(shown, ['hs_go_down_early', 'hs_night_company']);
   assert.equal(eng.s.arcs.hollowstar.clock, 12);
   // Going early, only the allies who promised come: Kael was an ally but never trained with you, Ilse never promised.
   const open = company.options.filter((o) => !o.disabled).map((o) => o.key);

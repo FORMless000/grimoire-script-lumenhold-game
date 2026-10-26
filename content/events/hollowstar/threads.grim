@@ -93,8 +93,8 @@ desc: Ilse would come down with you: saved, still here, and (if you go early) pr
 is: met(ilse) and flag(ilse_saved) and not flag(ilse_went_north) and (flag(winter_ilse) or (rel(ilse) >= 15 and not flag(hs_early)))
 
 @cond night_maud
-desc: Maud would come down with you, Edmund's wand in hand.
-is: met(maud) and (flag(winter_maud) or (flag(edmunds_wand) and not flag(hs_early)))
+desc: Maud would come down with you: she mended wards with you, or gave you Edmund's wand.
+is: met(maud) and (flag(winter_maud) or (has_item(edmunds_silver_wand) and not flag(hs_early)))
 
 @cond night_isolde
 desc: The headmistress would come down with you, her Wardens behind.
