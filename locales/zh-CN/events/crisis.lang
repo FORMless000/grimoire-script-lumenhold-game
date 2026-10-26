@@ -7,14 +7,18 @@
 @event crisis_collapse
 # en: Collapse
 title [59ccfe] = 倒下
-# en: The world tilts. When it rights itself you are in the infirmary, and Sister Amaranth is looking at you over her spectacles. "You have been running your body like a borrowed broom," she says.
-text [f87609] = 世界倾斜了。等它恢复正常时，你已经躺在医务室里，阿玛兰斯修女正从眼镜上方看着你。“你对待自己的身体，就像对待一把借来的飞帚。”她说。
+# en: {collapse_cures == 0: The world tilts. When it rights itself you are in the infirmary, and Sister Amaranth is looking at you over her spectacles. "You have been running your body like a borrowed broom," she says.|{collapse_cures == 1: The world tilts again, harder. You wake in the infirmary bed you know too well, and Sister Amaranth isn't looking over her spectacles this time; she's taken them off. "Twice," she says. "The body keeps count, even when you don't. The cure's dearer now, because you are worse."|You come round in the infirmary with no memory of falling. Sister Amaranth is already mixing the black tonic, the one she keeps on the top shelf. "Again," she says, flatly. "Each time it takes more to bring you back, and costs more. One of these times it won't."}}
+text [73070a] = {collapse_cures == 0: 世界倾斜了。等它恢复正常时，你已经躺在医务室里，阿玛兰斯修女正从眼镜上方看着你。“你对待自己的身体，就像对待一把借来的飞帚。”她说。|{collapse_cures == 1: 世界又一次倾斜，这回更猛。你在那张再熟悉不过的病床上醒来，阿玛兰斯修女这次没有从眼镜上方看你——她把眼镜摘了。“第二次了，”她说，“你不记账，身体会记。药更贵了，因为你更糟了。”|你在医务室里醒来，完全不记得自己是怎么倒下的。阿玛兰斯修女已经在调那瓶黑色的药剂，就是她放在最高一层架子上的那种。“又来了，”她平平地说，“每一次，要把你拉回来都得花更多力气，也更花钱。总有一次会拉不回来。”}}
 # en: A narrow infirmary bed under a high arched window, a healer's lamp floating beside it.
 scene [27d146] = 高高的拱窗下一张窄窄的病床，旁边悬浮着一盏治疗师的灯。
-# en: Pay for the full cure (30 gold)
-opt.left.label [97a3e9] = 付钱彻底治好（30 金币）
+# en: {collapse_cures == 0: Pay for the full cure (30 crowns)|{collapse_cures == 1: Pay for the dearer cure (60 crowns)|Pay for the black tonic (120 crowns)}}
+opt.left.label [8b06af] = {collapse_cures == 0: 付钱彻底治好（30 金币）|{collapse_cures == 1: 付钱买更贵的药（60 金币）|付钱买黑色药剂（120 金币）}}
 # en: Three foul tonics and two days' sleep later, you feel almost human.
 opt.left.say.1 [ecd52f] = 三剂难喝的药和两天的睡眠之后，你感觉差不多像个人了。
+# en: Six foul tonics and four days' sleep later, you feel almost human, and you can still taste the third one.
+opt.left.say.2 [f2524e] = 六剂难喝的药和四天的睡眠之后，你感觉差不多像个人了，第三剂的味道到现在还留在嘴里。
+# en: The black tonic tastes of tar and lightning. It takes a week to work and you remember none of it, but your body comes back to you, sullenly, like a dog that's been kicked.
+opt.left.say.3 [043ef6] = 黑色药剂尝起来像柏油和闪电。它花了一周才起效，你什么也不记得，但你的身体回来了，不情不愿的，像一条挨过踢的狗。
 # en: Ask to rest instead
 opt.right.label [8eabcd] = 请求静养
 # en: A long, dull fortnight in bed. Sister Amaranth warns you: "Next time, I write to your family."

@@ -53,6 +53,7 @@ Course standard at levels I–III: `apprentice+` · `adept+` · `master+`; a cou
 | `social <who>` | Time with someone. `rel $who +small; mood +small; gold -tiny` |
 | `work` | Paid work. `gold +medium; mood -small; health -tiny` |
 | `price_dear` | A dear price (world expansion 1, K3): what a shop asks for a special piece, 90 crowns. `gold -huge; gold -large` |
+| `cure_dire` | The infirmary's full cure once you've needed it twice already (feedback 2026-10-25): 120 crowns. `gold -huge; gold -huge` |
 | `price_fortune` | A small fortune, 150 crowns: what the rarest pieces cost. `gold -huge; gold -huge; gold -large` |
 | `splurge` | Spending to feel better. `mood +large; gold -medium` |
 | `risk <res>` | A gamble: a large gain or a medium loss. `chance even: $res +large; else: $res -medium` |

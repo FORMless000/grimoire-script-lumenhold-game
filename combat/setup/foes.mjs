@@ -171,6 +171,7 @@ export const EVENTS={
  'duel_practice_bout/left':{play:'quick_fourth_year',firstLeader:1,setup:'Hold your ground: the fourth-year leads every exchange (firstLeader 1)',observers:false,witnesses:true},
  'duel_practice_bout/right':{play:'quick_fourth_year',firstLeader:0,setup:'Go on the attack: you lead the first exchange (firstLeader 0)',observers:false,witnesses:true},
  'duel_bram_hazing/right':{play:'bram',context:'public_duel',observers:true,witnesses:true},
+ 'duel_bram_barrage/left':{play:'bram',context:'practice_duel',observers:false,witnesses:true},   // the chalk circle (feedback 2026-10-25: a fight against Bram)
  'y3_last_duel/left':{play:'lyra',context:'practice_duel',observers:false,witnesses:true},
  'xchg_farewell/right':{play:'thornwick_sketcher',observers:false,witnesses:true},
  'life_rival_academy/right':{play:'thornwick_best',observers:true,witnesses:true},

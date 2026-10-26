@@ -91,13 +91,12 @@ tags: club duel
 scene: A student standing in a chalk circle on a scorched floor while a broad prefect hurls a stream of stinging hexes from the edge.
 text: Word reaches Bram that you mean to empty the captain's charm. He turns up with his sleeves rolled. "Regulation hazing," he announces, "section four. You stand in the circle. I throw. You don't step out. Ready?"
 > left: Hold the circle against him
-  challenge feat vs bram.vigor:
+  challenge duel vs bram.vigor:
     win:
       flag brace_circle
       vigor +small
       say: You don't step out. By the twentieth hex Bram is red in the face and you are still in the circle, scorched and planted. "Adequate," he says, gruffly, and doesn't put you on report.
     lose:
-      health -small
       say: The ninth hex knocks you clean out of the circle. Bram notes it in his book. "Section four, failed," he says. "Again next week."
   next
 > right: Take it all on your shield arm

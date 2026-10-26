@@ -13,11 +13,19 @@ priority: 90
 art: cross
 tags: crisis
 scene: A narrow infirmary bed under a high arched window, a healer's lamp floating beside it.
-text: The world tilts. When it rights itself you are in the infirmary, and Sister Amaranth is looking at you over her spectacles. "You have been running your body like a borrowed broom," she says.
-> left: Pay for the full cure (30 gold)
-  gold -large
+text: {collapse_cures == 0: The world tilts. When it rights itself you are in the infirmary, and Sister Amaranth is looking at you over her spectacles. "You have been running your body like a borrowed broom," she says.|{collapse_cures == 1: The world tilts again, harder. You wake in the infirmary bed you know too well, and Sister Amaranth isn't looking over her spectacles this time; she's taken them off. "Twice," she says. "The body keeps count, even when you don't. The cure's dearer now, because you are worse."|You come round in the infirmary with no memory of falling. Sister Amaranth is already mixing the black tonic, the one she keeps on the top shelf. "Again," she says, flatly. "Each time it takes more to bring you back, and costs more. One of these times it won't."}}
+> left: {collapse_cures == 0: Pay for the full cure (30 crowns)|{collapse_cures == 1: Pay for the dearer cure (60 crowns)|Pay for the black tonic (120 crowns)}}
+  if collapse_cures == 0:
+    gold -large
+    say: Three foul tonics and two days' sleep later, you feel almost human.
+  elif collapse_cures == 1:
+    gold -huge
+    say: Six foul tonics and four days' sleep later, you feel almost human, and you can still taste the third one.
+  else:
+    cure_dire
+    say: The black tonic tastes of tar and lightning. It takes a week to work and you remember none of it, but your body comes back to you, sullenly, like a dog that's been kicked.
+  collapse_cures += 1
   health +huge
-  say: Three foul tonics and two days' sleep later, you feel almost human.
 > right: Ask to rest instead
   if collapses >= 1:
     end ending_sent_home

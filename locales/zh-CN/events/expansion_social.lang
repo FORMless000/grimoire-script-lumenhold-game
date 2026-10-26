@@ -61,12 +61,14 @@ text [e2e98e] = {&{npc}把一条毯子拖上了屋顶。|{npc}又带着毯子上
 scene [6f5d93] = 两名学生仰面躺在平屋顶上，挨得很近却又没碰到，头顶是满天繁星。
 # en: Count meteors
 opt.left.label [b22e25] = 数流星
-# en: You count thirty-one. {npc} counts thirty-four and accuses you of not looking properly. You weren't, entirely. You stay until the cold drives you in at dawn.
-opt.left.say.1 [352d0b] = 你数到三十一颗。{npc}数到三十四颗，指责你没认真看。你确实没完全在看。你们一直待到黎明，直到寒气把你们赶回屋里。
-# en: Talk about everything else
-opt.right.label [a3c084] = 聊些别的一切
+# en: You count thirty-one. {npc} counts thirty-four and accuses you of not looking properly. You weren't, entirely. You go in when the shower's over, warm under the blanket all the way down the stairs.
+opt.left.say.1 [bc27d2] = 你数到三十一颗。{npc}数到三十四颗，指责你没认真看。你确实没完全在看。流星雨一停你们就回屋了，一路下楼都裹在毯子里，暖暖的。
+# en: Talk about everything else, till dawn
+opt.right.label [8e7b47] = 聊些别的一切，直到天亮
 # en: You don't see a single meteor. You talk about home and fear and what you'd do if you could do anything. When you look up, the sky's gone grey with dawn.
 opt.right.say.1 [88b087] = 你一颗流星也没看到。你们聊家乡、聊恐惧、聊如果什么都能做会去做什么。等你抬起头，天已经泛起了黎明的灰白。
+# en: The roof's cold has got into your bones. You sneeze for a week, and {npc} sends you a scarf with no note.
+opt.right.say.2 [06c336] = 屋顶的寒气钻进了你的骨头。你打了一周的喷嚏，{npc}送来一条围巾，没附字条。
 
 @event soc_jealous_friend
 # en: Jealousy
@@ -155,8 +157,8 @@ opt.right.say.1 [1b0327] = 你检查有没有恶咒。没有。{npc}看见你在
 @event soc_partner_anniversary
 # en: An Anniversary
 title [a63670] = 纪念日
-# en: It's been a while now — long enough that {npc} has started calling things "ours". Today {they} hand{s} you a small wrapped box and won't meet your eyes.
-text [7539ef] = 已经有一阵子了——久到{npc}开始把东西叫作“我们的”。今天{they}递给你一个包好的小盒子，不敢看你的眼睛。
+# en: {bond_months(npc) >= 36: Three years|{bond_months(npc) >= 24: Two years|A year}} to the month since you and {npc} stopped pretending — long enough that {npc} calls things "ours" now. Today {they} hand{s} you a small wrapped box and won't meet your eyes.
+text [193ccd] = {bond_months(npc) >= 36: 三年|{bond_months(npc) >= 24: 两年|一年}}了，从你和{npc}不再假装的那个月算起——久到{npc}如今把东西都叫作“我们的”。今天{they}递给你一个包好的小盒子，不敢看你的眼睛。
 # en: Two people on a bench by the lake at sunset, one holding out a small wrapped box, the other's hands over their mouth.
 scene [3c4e6d] = 日落时分，两个人坐在湖边的长椅上，一个递出一个包好的小盒子，另一个双手捂着嘴。
 # en: Open it now

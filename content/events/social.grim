@@ -710,13 +710,19 @@ repeat: 2
 weight: 20
 tags: romance
 
+# Someone you've a spark with but aren't with, on campus: the two sides of jealousy's cards. An ex isn't one
+# (feedback 2026-10-25: Lyra as an ex walked in on you).
+@cond suitor
+params: who
+is: romanceable(who) and spark(who) >= 30 and courting(who) and rel(who) >= 0 and around(who)
+
 @event jealousy_two_invitations
 title: Two Invitations
 pool: social_routine_repeat2
 tone: tense
 cast:
-  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and rel(suitor) >= 0 and around(suitor)
-  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and rel(other) >= 0 and around(other)
+  suitor: any where suitor(suitor)
+  other: any where suitor(other)
 per: suitor
 art: heart
 tags: social
@@ -738,8 +744,8 @@ title: "Who Was That?"
 pool: social_routine_repeat2
 tone: tense
 cast:
-  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and rel(suitor) >= 0 and around(suitor)
-  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and rel(other) >= 0 and around(other)
+  suitor: any where suitor(suitor)
+  other: any where suitor(other)
 per: suitor
 art: heartbreak
 tags: social
@@ -764,8 +770,8 @@ title: A Quiet Supper
 pool: social_routine_repeat2
 tone: tense
 cast:
-  suitor: any where romanceable(suitor) and spark(suitor) >= 30 and bond(suitor) != "partner" and rel(suitor) >= 0 and around(suitor)
-  other: any where romanceable(other) and spark(other) >= 30 and bond(other) != "partner" and rel(other) >= 0 and around(other)
+  suitor: any where suitor(suitor)
+  other: any where suitor(other)
 per: suitor
 art: meal
 tags: social

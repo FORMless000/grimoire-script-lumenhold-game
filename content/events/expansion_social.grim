@@ -79,22 +79,23 @@ title: Counting Stars
 pool: expansion_social_routine
 tone: warm
 cast:
-  npc: any where romanceable(npc) and rel(npc) >= 12 and bond(npc) != "partner"
+  npc: any where romanceable(npc) and rel(npc) >= 12 and courting(npc)
 per: npc
 art: star
 tags: romance
 scene: Two students lying on their backs on a flat roof, close but not quite touching, a sky full of stars above.
 text: {&{npc} has dragged a blanket up to the roof.|{npc} is on the roof again with the blanket, and a flask this time.|{npc} has found a better spot on the roof, out of the wind, and a better blanket.} "There's a meteor shower," {they} say{s}. "Supposedly." There's room on the blanket for two, just about.
 > left: Count meteors
-  health -tiny
   rel npc +medium
   mood +small
-  say: You count thirty-one. {npc} counts thirty-four and accuses you of not looking properly. You weren't, entirely. You stay until the cold drives you in at dawn.
-> right: Talk about everything else
-  health -tiny
+  say: You count thirty-one. {npc} counts thirty-four and accuses you of not looking properly. You weren't, entirely. You go in when the shower's over, warm under the blanket all the way down the stairs.
+> right: Talk about everything else, till dawn
   spark npc +small
   rel npc +small
   say: You don't see a single meteor. You talk about home and fear and what you'd do if you could do anything. When you look up, the sky's gone grey with dawn.
+  chance unlikely:
+    health -tiny
+    say: The roof's cold has got into your bones. You sneeze for a week, and {npc} sends you a scarf with no note.
 
 @pool expansion_social_routine_repeat10
 trigger: social
@@ -216,14 +217,16 @@ text: {&You drop your books in the rain, and the first person to stoop and help 
 @event soc_partner_anniversary
 title: An Anniversary
 pool: expansion_social_routine_repeat12
+# On the day itself (feedback 2026-10-25: "make it a real anniversary"): a whole number of years since you got together.
+trigger: auto
 tone: warm
 cast:
-  npc: any where bond(npc) == "partner" and spark(npc) >= 40
+  npc: any where bond(npc) == "partner" and bond_months(npc) >= 12 and bond_months(npc) % 12 == 0 and spark(npc) >= 40
 per: npc
 art: ring
 tags: romance
 scene: Two people on a bench by the lake at sunset, one holding out a small wrapped box, the other's hands over their mouth.
-text: It's been a while now — long enough that {npc} has started calling things "ours". Today {they} hand{s} you a small wrapped box and won't meet your eyes.
+text: {bond_months(npc) >= 36: Three years|{bond_months(npc) >= 24: Two years|A year}} to the month since you and {npc} stopped pretending — long enough that {npc} calls things "ours" now. Today {they} hand{s} you a small wrapped box and won't meet your eyes.
 > left: Open it now
   spark npc +small
   mood +medium

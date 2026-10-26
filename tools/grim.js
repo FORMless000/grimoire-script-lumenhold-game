@@ -540,13 +540,19 @@ function crownCheck(e, content, P) {
   if (e.when && e.when.src === 'false') return;
   const row = (content.balance && content.balance.sizes && content.balance.sizes.gold) || [3, 8, 15, 30, 60];
   const TI = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4 };
-  const moved = new Set(), texts = [e.title, e.text];
+  const moved = new Set(), texts = [e.title, e.text], bundled = {};
   const walk = (effs) => G.walkEffects(effs || [], (st) => {
-    if (st.t === 'delta' && st.name === 'gold') { if (st.tier) moved.add(row[TI[st.tier]]); for (const k of ['min', 'max', 'amount']) if (typeof st[k] === 'number') moved.add(Math.abs(st[k])); }
+    if (st.t === 'delta' && st.name === 'gold') {
+      if (st.tier) moved.add(row[TI[st.tier]]);
+      for (const k of ['min', 'max', 'amount']) if (typeof st[k] === 'number') moved.add(Math.abs(st[k]));
+      // A preset's gold lines (price_dear, cure_dire) move their sum too.
+      if (st.preset && st.tier) { const k = st.preset + '@' + st.line; bundled[k] = (bundled[k] || 0) + row[TI[st.tier]]; }
+    }
     if (st.t === 'say') texts.push(st.text);
   });
   walk(e.on_show);
   for (const o of e.options) { texts.push(o.label, o.hint); walk(o.effects); }
+  for (const v of Object.values(bundled)) moved.add(v);
   if (!moved.size) return;
   for (const t of texts) for (const m of String(t || '').matchAll(CROWN_RE)) {
     const v = CROWN_WORDS[m[1].toLowerCase()] != null ? CROWN_WORDS[m[1].toLowerCase()] : +m[1];

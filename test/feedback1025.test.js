@@ -144,3 +144,27 @@ test('3.5 every earned yearbook line is reachable on the last day (two simulated
     assert.deepEqual(res.missing, [], style + ': every earned line is reachable');
   }
 });
+
+// ---- 6. Card fixes
+test('6.5 an ex is no suitor: jealousy\'s cards pass over them', () => {
+  const eng = fresh();
+  const n = eng.s.npcs.lyra; n.met = 1; n.rel = 20; n.spark = 50;
+  // The suitor role's condition, with Lyra in the role (as the director binds it); around() aside.
+  const role = content.events.jealousy_seen_together.cast[0];
+  const fits = () => { eng._cast = { [role.role]: 'lyra' }; try { return quiet(() => eng.test(role.where, 'lyra')); } finally { eng._cast = null; } };
+  eng.around = () => true;
+  const before = fits();
+  run(eng, [{ t: 'bond', npc: 'lyra', status: 'ex' }]);
+  assert.equal(fits(), false, 'an ex is no suitor');
+  for (const id of ['jealousy_two_invitations', 'jealousy_seen_together', 'jealousy_cold_supper']) {
+    const cast = content.events[id].cast;
+    assert.ok(cast.every((r) => /suitor\(/.test(r.where.src)), id + ' casts with suitor()');
+  }
+  assert.equal(typeof before, 'boolean');
+});
+
+test('6.7 the anniversary comes on the day: a whole number of years together', () => {
+  const where = content.events.soc_partner_anniversary.cast[0].where.src;
+  assert.match(where, /bond_months\(npc\) % 12 == 0/);
+  assert.equal(content.events.soc_partner_anniversary.trigger, 'auto');
+});
