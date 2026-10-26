@@ -41,6 +41,8 @@ For each event decide:
 
 **Repeatable pool events** (places, class days, practice, shifts, plans) have `class: routine`, `repeat: 4`–`6` (the cooldown in months), and must read differently each time: at least 3 inline variants across text and says, all in one mode with one count (usually a sequence `{a|b|c}`, where showing *k* reads variant *k* of every field; `docs/authoring/pools.md`), plus `{season=autumn: …|winter: …|…}` or `{final_year: …|…}` lines where they fit. Don't hinge a repeatable on a one-time surprise.
 
+For a **plot, an arc or any storyline where characters clash**, write it to `style.md`'s "Conflict and climax": confrontations on the page, an opposition that acts, a way past every fight that isn't one, a climax as a scene thread that pays off what was planted.
+
 For a **chain**, sketch the graph first: every queued event must be queued by something, and every flag tested must be set somewhere (lint enforces both). Give it a `@thread` (with `clues:` for the leads it leaves) and take a template from `content/core/templates.grim` when its shape is one of theirs.
 
 ## 2. Search, write, then check for duplicates

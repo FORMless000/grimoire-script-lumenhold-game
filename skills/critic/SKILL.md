@@ -50,6 +50,12 @@ For every event, ask the questions below. Write down an issue only when you can 
 - Every option has its own specific `say:`, never "You gain 5 mood." Prose never mentions numbers or mechanics.
 - Labels are under about 36 characters, imperative or first person.
 
+**Conflict and climax** (plot and arc cards, and any card where characters clash; `style.md`, "Conflict and climax")
+- Does the confrontation happen on the page, out loud, with each side saying something only they would say? A clash reported afterwards or left to a hint is a fix to raise.
+- Does the opposition act, and is each return bolder than the last?
+- Does every fight sit beside a way that isn't a fight? Does a loss cost something real and leave a way back?
+- In a climax: does one card name the companions once, does each planted clue or item pay off (and the beat still happen when it was missed), and does the reward show at once?
+
 **Checks** (`checks.md`)
 - Is the difficulty what the player is actually up against (the opponent or the obstacle), not who is on the card or when it shows?
 - Is any reason counted twice: a strong foe written as `slim`, a coin toss written as a high rung? Is a gamble on `luck`?
