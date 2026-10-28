@@ -46,7 +46,7 @@ All three share one authoring spec, one worldbook and one set of validators. The
 | 2a | Groundwork: numbers and options | committed · done |
 | 2b | Groundwork: the world loop, then **freeze schema v1** | committed · done (playtest #1 skipped by decision) |
 | 3 | One-pass migration, balance, then **content production opens** | committed · in progress: playtest #2 next (see `PROGRESS.md`) |
-| 4 | Narrative systems | committed · in progress (2026-10-27, `docs/phase4-plan.md`): the Journal, facts in the People panel, inter-NPC cards, renown spotlights; yearbook endings and alignment reactions were pulled into phase 3 |
+| 4 | Narrative systems | committed · in progress (`docs/phase4-plan.md`): the Journal, facts in the People panel, inter-NPC cards and renown spotlights are built, written (210 cards) and balanced (2026-10-28), with a playtest next; archetypes, spawned characters and memory recall wait; yearbook endings and alignment reactions were pulled into phase 3 |
 | 5 | Minigames | tentative (§T1) |
 | 6 | Inventory and crafting | tentative (§T2) |
 | 7 | Live generation | tentative (§T3) |

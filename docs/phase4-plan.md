@@ -472,8 +472,30 @@ the end (the user, 2026-10-28).
 - **Rare by design or by casting:** `sell_a_secret` (Known, a known secret and a friend at once) shows in 0–2 of 60 games; Ilse's cards are rare in every style (her own `ilse_frost_lessons` 5–11 of 60), so `know_ilse_frost` is too.
 - **The index sync** ended with ENOTEMPTY while removing the old revision (2026-10-28): retrieval queries run during the sync log into the active revision's folder. The new revision was already in place (`retrieve status` ready, no changes); `retrieve prune` removed the old one. Don't query while a sync is finishing; an automatic `--resume` after a transport error in `rag/src/cli.js` waits for the other agent's edits there.
 
+## Balance pass (2026-10-28)
+
+Full `balance` (100 games a style), current tree against P4-01's (7b072c3, both with the combat bridge's skill clamp):
+0 invariant failures either side; 16 alarms either side, all of them alarms from before phase 4. Of what moved:
+- nightlife's merchant ending, 37% → 51%: the night's pay (its own alarm, ~1,100 crowns at the end) wins the
+  headline.
+- balanced's windfalls, 1.0 → 0.8 a year: noise at the design's floor (3.9 and 4.3 a game in a 20-game recount).
+- social's "still searching" alarm cleared; `ending_clerk` (2 of 2,500 games before) and `ending_hollow_freed` trade
+  places among the unreached.
+- The phase 4 cards no style sees are rare by design: `picture_*` for five people (every fact known),
+  `between_suitors_compare` and the jealousy pair (two suitors at once), `spot_witness_promise` (Legend, with two
+  close friends), `nudge_red_ink` (a story the sims never stall).
+- The crash the first run hit ("Kit skill vigor must be 1–100": rust's floor, then injuries, took vigor under 1) was
+  older than phase 4: the combat bridge now clamps the skills it hands the minigame (54e5a5b).
+
+The final run on the committed content (095abc, `build/balance-report.json`) has 0 invariant failures and 19 alarms:
+the 16 from 7b072c3, plus three just past their lines (balanced's windfalls at 0.8 a year against 1; homebody's and
+spender's archmage headline at 37% and 36% against 35%, 34% and 35% in the run before). Every Legend card is seen
+again; of the phase 4 cards, only `spot_witness_promise` is not.
+
+The Legend rate stays as it is (see Deviations). `verify:full` passed without the browser e2e (skipped by standing
+instruction): the slow tests, and the full balance above in place of `balance --quick`.
+
 ## Next up
 
-Every batch is written and accepted (P4-01..14, 210 cards). Next: the full balance pass (`grim analyze` and
-`balance` per play style; the renown-chaser's Legend rate first, then the endings and early exits the golden diff
-moved), then `verify:full`, and the records (`PROGRESS.md`, design §0.3).
+Phase 4's four systems are built, balanced and recorded (`PROGRESS.md`, design §0.3). Next: a human playtest of
+them (`docs/playtest-2.md`). Still deferred: archetypes, spawned characters, memory recall.

@@ -7,6 +7,12 @@ The plan, budgets (about 228 new cards in 14 batches), decisions, ledger and "Ne
   - **The People panel** lists the facts you know by tier, newest first, with a gold dot until you open the row. The unknown ones show as their `hint:` or one count line per tier. Whom each person gets on with and can't stand appears once an `npc_rel` effect has moved the pair; "friends since" shows too. Facts unlocked at a month's start are announced.
   - **Renown** shows its tier (`tiers: 30 Known, 60 Famous, 85 Legend`), with a notice on reaching a higher one.
   - Schema v1 additions: `@thread premise/journal/status`, `@arc act_rumours/epilogue/act_clock`, `@fact hint`, `@resource tiers`. Tests: `test/phase4.test.js`. The golden games are unchanged.
+- **Steps 2–4, content (done, October 27–28):**
+  - **Journal lines** for 20 threads and the 5 arcs; renown fades by tier (a fifth below Known, 15% while Known, 12% from Famous).
+  - **210 new cards in 14 batches** (P4-01..14): people among themselves, renown spotlights by tier, scandals and the fall, the Season (`the_season`), facts that matter (27 new facts, `knows()` cards and 28 `if knows(...)` branches in older cards), the Journal's year recaps and nudges. zh-CN is complete.
+  - **Review:** the critic accepted every batch (P4-01 and P4-10 on round two). On the new retrieval backend every card was rechecked against the others; five overlaps across batches were reworked (`build/batches/P4-recheck.notes.md`).
+- **Balance pass (done, October 28):** 0 invariant failures. Of the 19 alarms, 16 are the ones from before phase 4's cards; the other three sit just past their lines (balanced's windfalls at 0.8 a year against a floor of 1, and homebody's and spender's archmage headline at 37% and 36% against 35%). The cards no style sees are rare by design. Legend's fade stays at 12%: a month begins at Legend only from 97 before the fade, so the renown-chaser holds it a month or three, after winning the Spring Tournament while Famous. A skill rusted or injured below 1 no longer crashes a fight (the combat bridge clamps to 1–100). Details and the deviations: `docs/phase4-plan.md`. `verify:full` passed except the browser e2e, which was skipped.
+- **Next:** a human playtest of the four systems. Still deferred: archetypes, spawned characters, memory recall.
 
 ## Feedback round: careers, the last day, the Hollow Star, the ring (October 25–26)
 
