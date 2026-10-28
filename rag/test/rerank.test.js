@@ -29,6 +29,21 @@ test('a busy reranker is retried once, then the next fallback is used and record
   assert.deepEqual(h.opened, ['a', 'a', 'b']);
   assert.equal(result.reranker.model, 'b'); assert.deepEqual(result.reranker.attempts.map((x) => x.httpStatus), [503, 429]);
 });
+test('the HTTP status is read from the call record, not the bridge summary after it', async () => {
+  const opened = [];
+  const open = (cfg) => { const service = { model: cfg.models.reranker, service: { calls: [] } }; opened.push(service.model); return service; };
+  let n = 0;
+  const run = async (service) => {
+    if (service.model === 'a' && n++ < 1) {
+      service.service.calls.push({ stage: 'rerank', status: 'failed', httpStatus: 429, error: 'OpenRouterHTTPError', detail: 'HTTP 429: TPM' });
+      service.service.calls.push({ stage: 'rerank', status: 'failed', error: 'OpenRouterHTTPError' });
+      throw new Error('LightRAG bridge failed');
+    }
+    return { hits: [service.model] };
+  };
+  const { result } = await reranked(cfg, open, run, quiet);
+  assert.deepEqual(opened, ['a', 'a']); assert.equal(result.reranker.attempts[0].httpStatus, 429); assert.equal(result.reranker.attempts[0].detail, 'HTTP 429: TPM');
+});
 test('a non-transient failure (model substitution) switches at once', async () => {
   const h = harness({ a: [null] });
   await reranked(cfg, h.open, h.run, quiet);

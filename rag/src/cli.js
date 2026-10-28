@@ -16,7 +16,8 @@ const { render } = require('./presentation.js');
 // then replaced by the next one in models.json's rerankerFallbacks (announced on stderr and in the receipt).
 const TRANSIENT = new Set([408, 425, 429, 500, 502, 503, 504]);
 const sleep = (ms) => new Promise((ok) => setTimeout(ok, ms));
-function rerankFailure(service) { return [...(service.service.calls || [])].reverse().find((x) => x.stage === 'rerank' && x.status === 'failed') || null; }
+// The bridge logs a failed rerank twice: the HTTP call (with its status) and its own summary (without): prefer the first.
+function rerankFailure(service) { const f = (service.service.calls || []).filter((x) => x.stage === 'rerank' && x.status === 'failed'); return f.find((x) => x.httpStatus) || f[f.length - 1] || null; }
 async function reranked(cfg, open, ask, { first = null, log = (line) => process.stderr.write(line + '\n'), wait = 8000 } = {}) {
   const models = [cfg.models.reranker, ...(cfg.models.rerankerFallbacks || []).filter((m) => m !== cfg.models.reranker)], attempts = [];
   for (let i = 0; i < models.length; i++) {
@@ -26,7 +27,7 @@ async function reranked(cfg, open, ask, { first = null, log = (line) => process.
       catch (error) {
         const failed = rerankFailure(service);
         if (!failed) throw error;
-        attempts.push({ model: models[i], httpStatus: failed.httpStatus || null, error: failed.error });
+        attempts.push({ model: models[i], httpStatus: failed.httpStatus || null, error: failed.error, detail: failed.detail || null });
         if (TRANSIENT.has(failed.httpStatus) && tries < 2) { log('reranker ' + models[i] + ' busy (HTTP ' + failed.httpStatus + '); retrying'); await sleep(wait); continue; }
         if (i + 1 >= models.length) { error.service = service; error.message += ' (every reranker failed: ' + attempts.map((a) => a.model + ' ' + (a.httpStatus || a.error)).join(', ') + ')'; throw error; }
         log('reranker ' + models[i] + ' failed (' + (failed.httpStatus || failed.error) + '); switching to ' + models[i + 1]);
