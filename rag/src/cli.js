@@ -12,6 +12,29 @@ const Snapshot = require('./snapshot.js');
 const Prune = require('./prune.js');
 
 const { render } = require('./presentation.js');
+// Reranking is query-only: it never touches the built graph, so a busy or rate-limited reranker is retried,
+// then replaced by the next one in models.json's rerankerFallbacks (announced on stderr and in the receipt).
+const TRANSIENT = new Set([408, 425, 429, 500, 502, 503, 504]);
+const sleep = (ms) => new Promise((ok) => setTimeout(ok, ms));
+function rerankFailure(service) { return [...(service.service.calls || [])].reverse().find((x) => x.stage === 'rerank' && x.status === 'failed') || null; }
+async function reranked(cfg, open, ask, { first = null, log = (line) => process.stderr.write(line + '\n'), wait = 8000 } = {}) {
+  const models = [cfg.models.reranker, ...(cfg.models.rerankerFallbacks || []).filter((m) => m !== cfg.models.reranker)], attempts = [];
+  for (let i = 0; i < models.length; i++) {
+    for (let tries = 1; ; tries++) {
+      const service = i === 0 && first ? first : open({ ...cfg, models: { ...cfg.models, reranker: models[i] } });
+      try { const result = await ask(service); if (i || tries > 1) result.reranker = { model: models[i], attempts }; return { service, result }; }
+      catch (error) {
+        const failed = rerankFailure(service);
+        if (!failed) throw error;
+        attempts.push({ model: models[i], httpStatus: failed.httpStatus || null, error: failed.error });
+        if (TRANSIENT.has(failed.httpStatus) && tries < 2) { log('reranker ' + models[i] + ' busy (HTTP ' + failed.httpStatus + '); retrying'); await sleep(wait); continue; }
+        if (i + 1 >= models.length) { error.service = service; error.message += ' (every reranker failed: ' + attempts.map((a) => a.model + ' ' + (a.httpStatus || a.error)).join(', ') + ')'; throw error; }
+        log('reranker ' + models[i] + ' failed (' + (failed.httpStatus || failed.error) + '); switching to ' + models[i + 1]);
+        break;
+      }
+    }
+  }
+}
 async function retrieve(root, argv) {
   const { opts, positional } = U.args(argv), [operation, ...rest] = positional;
   const allowed=new Set(['run','backend','profile','config','root','cache','log','out','json','limit','budget','kind','place','cast','track','arc','required','draft','dry-run','resume','rebuild','mode','keep-old']);
@@ -23,14 +46,16 @@ async function retrieve(root, argv) {
   const cfg = R.config({ ...opts, value: run?.retrievalConfig, backend: opts.backend || run?.backend || selected?.backend, profile: opts.profile || run?.profile || selected?.profile });
   if (run && (cfg.backend !== run.backend || cfg.profile !== run.profile)) throw new Error('Retrieval does not match assigned workflow');
   if (run && R.identity(cfg) !== run.indexIdentity) throw new Error('Retrieval configuration differs from the registered index identity');
-  let service = R.create(run?.sourceRoot || path.resolve(opts.root || root), cfg, { cache: opts.cache || run?.cache });
+  const query = ['search', 'brief', 'related'].includes(operation), base = run?.sourceRoot || path.resolve(opts.root || root);
+  // A stale index (sources edited since the last sync) still answers everyday queries from its last snapshot.
+  let snap = null;
+  const open = (c) => { const s = R.create(base, c, { cache: opts.cache || run?.cache }); if (run || !query) return s; snap = Snapshot.fallback(path.resolve(opts.root || root), c, { cache: opts.cache, catalog: s.cat }); return snap ? snap.service : s; };
+  let service = open(cfg);
   if (run && (operation === 'index' || operation === 'prune')) throw new Error('Frozen evaluation indexes cannot be synchronized or pruned by authors');
   const cache = path.resolve(opts.cache || path.join(path.resolve(opts.root || root), 'rag/cache'));
   const summary = (p) => ({ dryRun: p.dryRun, removed: p.removed.map((x) => ({ path: path.relative(root, x.path), why: x.why, bytes: x.bytes })), bytes: p.bytes });
   if (run && service.cat.corpusHash !== run.corpusHash) throw new Error('Frozen corpus fingerprint changed');
-  // A stale index (sources edited since the last sync) still answers everyday queries from its last snapshot.
-  const snap = !run && ['search', 'brief', 'related'].includes(operation) ? Snapshot.fallback(path.resolve(opts.root || root), cfg, { cache: opts.cache, catalog: service.cat }) : null;
-  if (snap) { service = snap.service; process.stderr.write(snap.notice + '\n'); }
+  if (snap) process.stderr.write(snap.notice + '\n');
   const start = Date.now(); let result;
   try {
     if (run && operation === 'brief' && U.positive(opts.budget, 24000) > run.budget.briefChars) throw new Error('Brief budget exceeds the registered limit');
@@ -40,16 +65,22 @@ async function retrieve(root, argv) {
       // A fresh index is out: delete what it no longer needs (rag/src/prune.js), unless --keep-old.
       if (!opts['dry-run'] && !opts['keep-old']) result.pruned = summary(Prune.prune(cache, cfg));
     } else if (operation === 'prune') result = summary(Prune.prune(cache, cfg, { dryRun: !!opts['dry-run'] }));
-    else if (operation === 'search') result = await service.search(rest.join(' '), opts);
     else if (operation === 'read') result = service.read(rest.join(',').split(',').filter(Boolean), opts.budget);
     else if (operation === 'neighbors') result = service.neighbors(rest[0], U.positive(opts.limit, 20));
-    else if (operation === 'brief') result = await service.brief(rest.join(' '), opts);
-    else if (operation === 'related') {
-      if (!opts.draft) throw new Error('related requires --draft FILE');
-      const G = require('../../src/grimoire.js'), text = fs.readFileSync(path.resolve(root, opts.draft), 'utf8');
-      const defs = G.parseFile(text, opts.draft), parts = [];
-      for (const d of defs) { parts.push(d.title, d.text); for (const o of d.options || []) { parts.push(o.label); G.walkEffects(o.effects, (st) => { if (st.t === 'say') parts.push(st.text); }); } }
-      result = await service.search(parts.filter(Boolean).join(' '), { ...opts, kind: 'event' }); result.warning = 'Similar premises to inspect, not a duplicate verdict.';
+    else if (query) {
+      let ask;
+      if (operation === 'search') ask = (s) => s.search(rest.join(' '), opts);
+      else if (operation === 'brief') ask = (s) => s.brief(rest.join(' '), opts);
+      else {
+        if (!opts.draft) throw new Error('related requires --draft FILE');
+        const G = require('../../src/grimoire.js'), text = fs.readFileSync(path.resolve(root, opts.draft), 'utf8');
+        const defs = G.parseFile(text, opts.draft), parts = [];
+        for (const d of defs) { parts.push(d.title, d.text); for (const o of d.options || []) { parts.push(o.label); G.walkEffects(o.effects, (st) => { if (st.t === 'say') parts.push(st.text); }); } }
+        ask = async (s) => { const r = await s.search(parts.filter(Boolean).join(' '), { ...opts, kind: 'event' }); r.warning = 'Similar premises to inspect, not a duplicate verdict.'; return r; };
+      }
+      // Frozen trials keep their registered reranker.
+      if (run) result = await ask(service);
+      else try { ({ service, result } = await reranked(cfg, open, ask, { first: service })); } catch (error) { if (error.service) service = error.service; throw error; }
     } else throw new Error('retrieve status|index|prune|search QUERY|read ID…|neighbors ID|brief QUERY|related --draft FILE [index: --dry-run|--resume|--rebuild --mode batch|sync|--keep-old] [prune: --dry-run] [--config FILE] [--json]');
     if (snap) { result.notice = snap.notice; result.snapshot = snap.snapshot; }
   } catch (error) {
@@ -137,4 +168,4 @@ async function evaluation(root, argv) {
   return result;
 }
 async function main(root, command, argv) { try { return command === 'retrieve' ? await retrieve(root, argv) : await evaluation(root, argv); } catch (error) { console.error(command + ': ' + error.message); process.exitCode = 1; } }
-module.exports = { main, retrieve, evaluation, render };
+module.exports = { main, retrieve, evaluation, render, reranked };

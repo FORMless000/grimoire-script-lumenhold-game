@@ -94,7 +94,9 @@ it submits paid model work and may take hours. An unbuilt index blocks authoring
 rebuild it before drafting, in the background, without editing `content/` until it
 publishes (the procedure is in `skills/write-academy-events/SKILL.md` §2). Searches never index content.
 An embedding change rebuilds vectors; keyword and reranker changes do not rebuild
-the graph. No backend fallback is used.
+the graph. No backend fallback is used; a busy reranker falls back to the next in
+`rag/src/models.json` (announced), and new reranker aliases are registered without a
+rebuild by `rag/src/rebind.js` (`rag/README.md`).
 
 **Don't edit `rag/src/retrieve.js`, `catalog.js` or the adapter files casually**
 (`adapters/lightrag.js`, `process.js`, `credentials.js`, `model-aliases.json`,

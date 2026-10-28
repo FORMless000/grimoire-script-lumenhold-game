@@ -88,10 +88,16 @@ set `"preset": "qwen"` in `rag/envs/retrieval.json`. Explicit `models.extract`,
 | Extraction and merge summaries | `google/gemini-3.1-flash-lite`, temperature 0 / default reasoning | `qwen/qwen3.8-flash`, reasoning disabled |
 | Query keywords | Same as extraction | Same as extraction |
 | Embeddings | `qwen/qwen3-embedding-8b` | Same |
-| Reranking | `voyageai/rerank-3-lite` | Same |
+| Reranking | `voyageai/rerank-2.5`, then the `rerankerFallbacks` in `rag/src/models.json` | Same |
 
-The existing OpenRouter key serves every role. Missing models, unexpected model
-substitution and failed reranking are errors. Provider routing may be configured
+The existing OpenRouter key serves every role. Missing models and unexpected model
+substitution are errors. Reranking is query-only, so a busy reranker (HTTP 429/5xx) is
+retried once and a failing one is replaced by the next in `rerankerFallbacks`; the switch
+is printed and recorded in the receipt (`rag/src/cli.js`). A reranker that reports a bare
+model name needs an entry in `rag/src/model-aliases.json`; that file is hashed into the
+index identity, so after adding aliases run `node rag/src/rebind.js proof <file>` before
+the edit and `apply <file>` after it, which moves the built index to the new identity
+with no model calls. Provider routing may be configured
 explicitly with `provider`; receipts preserve actual model/provider and reported
 usage/cost, including provider cache details when returned. Local request caches
 include endpoint, model, provider and request contents. Gemini stable system
