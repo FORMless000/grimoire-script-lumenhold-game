@@ -1,0 +1,417 @@
+# ============================================================
+#  Between people, one of them someone you know well (phase 4, docs/phase4-plan.md, batch P4-03): one named
+#  character and one classmate, and how that character treats them. Each card turns on its character's own voice
+#  or facts, so it couldn't be dealt to anyone else. Uses the pools of between.grim (`between`, `between_once`).
+# ============================================================
+
+# ---------------- Lyra ----------------
+
+@event lyra_between_drills
+title: Again
+pool: between
+tone: tense
+cast:
+  lyra: lyra where met(lyra) and around(lyra)
+  o: any where classmate_here(o) and rel(o) >= 6
+per: lyra
+when: term and not wrapup
+art: flame
+scene: An empty duelling floor at dusk, one student lying flat on their back, another standing over them with a wand, saying something short.
+text: {~{o} asked Lyra to help {o.them} with {o.their} duelling. Lyra said yes. That was a week ago. {o} now flinches at the word "again".|{o} limps into supper with singed cuffs and the look of someone who has been told "again" two hundred times.|You find {o} asleep on the library steps, wand still in hand. "Lyra," {o} says, without opening {o.their} eyes, as if that explains it.} "She won't stop," {o} tells you. "And I can't ask her to. You know what she's like."
+> left: Talk to Lyra
+  challenge appeal apprentice+:
+    win:
+      npc_rel lyra o +small
+      rel o +small
+      rel lyra -tiny
+      say: {~"Too hard?" Lyra looks genuinely baffled. "I'm not being hard. I'm being thorough." The next morning there's a flask of tea by the duelling ring, and nobody says who brought it.|Lyra listens with her arms folded. "Fine," she says. That afternoon she lets {o} rest for a full minute, and then, without being asked, shows {o.them} how to fall.|"{o} said that?" Lyra is silent for a while. "{o} should have said so." She doesn't apologise. She does turn up with new cuffs.}
+    lose:
+      rel lyra -small
+      say: {~"If {o} wanted it gentle, {o} should have asked someone gentle." Lyra turns back to the ring. "Again."|Lyra hears you out and says, "No." Then, after a moment: "Tell {o} the footwork is improving." You're not sure that helps.|"Do I tell you how to study?" says Lyra, who tells you how to study weekly. The drills continue.}
+> right: Tell {o} to stick with it
+  rel lyra +tiny
+  rel o -tiny
+  npc_rel lyra o +tiny
+  say: {~{o} sticks with it. A month later {o} disarms a third-year in practice and looks so astonished that Lyra almost smiles.|{o} groans, and goes back. Lyra doesn't say "well done". She says "acceptable", which, you explain to {o}, is the same thing.|{o} goes back to the ring with the face of someone going to the gallows. It does get easier. It never gets easy.}
+
+@event lyra_between_furniture
+title: You Sit Next to Her
+pool: between_once
+tone: light
+cast:
+  lyra: lyra where met(lyra) and around(lyra) and rel(lyra) >= 8
+  o: any where classmate_here(o) and rel(o) >= 4 and npc_rel(lyra, o) < 10
+per: lyra
+when: term and not wrapup and seen(lyra_between_furniture) == 0
+art: book
+scene: A lecture bench, a proud student looking straight ahead, the classmate beside her waving a hand slowly in front of her face.
+text: {o} has sat next to Lyra in lectures since the first week. Today Lyra turns to you, across {o}, and asks, "Who is this?" {o} is right there. {o} has lent her ink. Twice.
+> left: Introduce them properly
+  npc_rel lyra o +small
+  rel o +small
+  rel lyra -tiny
+  say: "This is {o}, who sits next to you, and lends you ink." Lyra looks at {o} as if {o} had just appeared out of the air, then nods, very formally. The next morning, there's a new bottle of ink on {o}'s desk. Expensive ink.
+> right: Laugh it off
+  rel lyra +tiny
+  rel o -small
+  say: You laugh, and Lyra doesn't see the joke, and {o} laughs too, a beat late. {o} moves two seats along the next week. Lyra doesn't notice that either.
+
+@event lyra_between_beaten
+title: How Did They Do It
+pool: between_once
+tone: tense
+cast:
+  lyra: lyra where met(lyra) and around(lyra) and rel(lyra) >= 10
+  o: any where classmate_here(o) and rel(o) >= 4
+per: lyra
+when: term and not wrapup and seen(lyra_between_beaten) == 0
+art: duel
+scene: A practice ring after a bout, a winner being clapped on the back, a proud student standing alone at the edge, very still.
+text: {o} beat Lyra in practice today. Only a practice bout, only a point, and the whole hall saw. Lyra finds you afterwards. She doesn't say please; she has never said please first. "You were watching. How did {o} do it?"
+> left: Tell her what you saw
+  rel lyra +small
+  rel o -tiny
+  npc_rel lyra o -tiny
+  arcana +tiny
+  say: You walk her through it: {o}'s feint, the half-step back, the moment she overreached. Lyra listens without blinking. "Again," she says to herself, and goes to the ring, and doesn't come to supper.
+> right: "Ask {o}."
+  challenge appeal journeyman:
+    win:
+      npc_rel lyra o +medium
+      rel lyra +tiny
+      say: Lyra looks at you as if you've suggested she eat soup with a fork. Then she goes and asks. You watch {o}, startled, show her the feint, and Lyra, stiffly, shows {o} something back.
+    lose:
+      rel lyra -small
+      say: "I don't ask," Lyra says, and leaves. She doesn't come to supper, and the next morning the practice dummies have scorch marks that weren't there before.
+
+# ---------------- Kael ----------------
+
+@event kael_between_kindness
+title: He Keeps Leaving
+pool: between
+tone: warm
+cast:
+  kael: kael where met(kael) and around(kael) and rel(kael) >= 8
+  o: any where classmate_here(o) and rel(o) >= 6 and not at_odds(kael, o)
+per: kael
+art: snow
+scene: A student holding out a mug of something hot towards a boy with frost on his sleeves, who is already half turned away.
+text: {~{o} has been trying to make friends with Kael for weeks. Every time {o} sits down, Kael finds somewhere else to be.|{o} saved Kael a seat at supper. Kael looked at it as if it might be a trap, and ate standing up.|{o} gave Kael a scarf. Kael said "why?" and meant it, and {o} didn't know what to say.} "What am I doing wrong?" {o} asks you.
+> left: Tell {o} to give him time
+  rel o +tiny
+  npc_rel kael o +small
+  say: {~"He isn't used to it," you say. "Keep sitting down." {o} does. In the third week, Kael stays.|"Kindness makes him nervous," you say. {o} looks at you oddly, and then keeps being kind, quietly, until it doesn't.|"Don't ask why," you say. "Just do it again." The scarf turns up round Kael's neck a month later. Nobody mentions it.}
+> right: Bring them both to the boathouse
+  rel kael +small
+  rel o +small
+  npc_rel kael o +small
+  mood -tiny
+  say: {~You bring {o} down to the boathouse, where Kael goes in the evenings. Nobody talks much. {o} learns that this is how Kael says yes.|You take the three of you down to the water. Kael shows {o} how to skip a stone, without a word. That is apparently a friendship now.|At the boathouse, Kael is all elbows and silence for an hour. Then he tells {o} the name for snow that falls upward. It is the most you've ever heard him say.}
+
+@event kael_between_steps_in
+title: Frost on the Floor
+pool: between_once
+tone: tense
+cast:
+  kael: kael where met(kael) and around(kael)
+  o: any where classmate_here(o) and rel(o) >= 4
+per: kael
+when: seen(kael_between_steps_in) == 0
+art: snow
+scene: A corridor with frost feathering up the walls around one still student, a group of others backing away from a cornered classmate.
+text: Some older students have {o} pinned against the corridor wall over something about a borrowed book, and it is turning ugly. Before you can move, the air goes cold enough to sting. Kael is standing at the end of the corridor, very still, and frost is feathering up the walls around him.
+> left: Back him up
+  rel kael +small
+  rel o +small
+  npc_rel kael o +small
+  health -tiny
+  say: You step up beside him. The older students look at the walls, at Kael's face, at you, and decide the book wasn't worth it. Kael walks {o} to the infirmary without a word. Later, he asks you, very seriously, whether he did it right.
+> right: Fetch a prefect instead
+  rel o +tiny
+  alignment +tiny
+  rel kael -tiny
+  say: You run for a prefect. By the time you're back the corridor is empty and the walls are dripping, and Kael is gone. {o} tells you he didn't do anything; he just stood there until they left. He doesn't speak of it. He avoids you, a little, for a few days.
+
+# ---------------- Bram ----------------
+
+@event bram_between_writes_up
+title: Name in the Ledger
+pool: between
+tone: tense
+cast:
+  bram: bram where met(bram) and around(bram)
+  o: any where classmate_here(o) and rel(o) >= 10
+per: bram
+art: scroll
+scene: A prefect with a red sash writing in a ledger while a student argues, a third student hurrying over.
+text: {~Bram has {o} by the sleeve for "loitering with intent", which turns out to mean waiting for you.|Bram is writing {o} up for "an insolent hat". {o}'s hat is a perfectly ordinary hat.|Bram has caught {o} running on the stairs, and is reading out the rule number with relish.} {o} looks at you over Bram's shoulder: help.
+> left: Plead {o}'s case
+  challenge appeal apprentice+:
+    win:
+      rel o +small
+      rel bram -tiny
+      say: {~"Rule fourteen is about loitering with intent," you say. "{o} had no intent. Look at {o.them}." Bram looks. He crosses it out, with ill grace.|You argue that a hat cannot be insolent. Bram argues that it can. You win on a technicality he invented himself last term. He hates that.|You remind Bram that he ran on the same stairs on Tuesday. He goes red, says "prefect's business", and lets {o} go.}
+    lose:
+      rel bram -small
+      rel o +tiny
+      say: {~"And a demerit for you, for obstruction." Bram writes it with a flourish. {o} mouths "sorry" at you.|Bram writes up {o}, then you, then {o} again for laughing. It's a productive afternoon for the ledger.|"Noted," says Bram, and writes up {o} anyway, and adds a little note in the margin about you.}
+> right: Take the demerit for {o}
+  mood -small
+  rel o +medium
+  rel bram +tiny
+  say: {~"Write me up instead. It was my fault." Bram looks at you for a long moment and writes your name. Afterwards, gruffly, he says, "That was decent." Then he walks off before you can answer.|You say {o} was waiting for you, so it's your demerit. Bram, baffled, agrees. {o} buys you a cake.|You take it. Bram writes it slowly. You catch him, much later, crossing it out when he thinks nobody's looking.}
+
+@event bram_between_prank
+title: The Sash
+pool: between_once
+tone: light
+cast:
+  bram: bram where met(bram) and around(bram)
+  o: any where classmate_here(o) and rel(o) >= 6 and at_odds(bram, o)
+per: bram
+when: seen(bram_between_prank) == 0
+art: mask
+scene: Two students crouched behind a pillar with a pot of dye, a prefect's red sash hanging on a peg nearby.
+text: {o} has a pot of dye, a plan and a grudge. Bram's prefect sash hangs on its peg outside the bathhouse every evening at eight. "Pink," says {o}, glowing. "Just for one day. Are you in?"
+> left: Be the lookout
+  challenge deceive apprentice:
+    win:
+      rel o +small
+      rel bram -small
+      renown +tiny
+      alignment -tiny
+      say: Bram wears a pink sash to breakfast before he notices. The refectory goes very quiet, and then very loud. He knows it was {o}. He suspects you. He never proves it.
+    lose:
+      rel bram -small
+      rel o -tiny
+      mood -small
+      say: Bram comes out of the bathhouse early, and finds you standing very innocently next to his sash and a pot of pink dye. The demerits take him most of a page.
+> right: Talk {o} out of it
+  rel o -small
+  rel bram +tiny
+  say: "It's his whole world, that sash," you say. "It wouldn't be funny to him. It would be the end of the world." {o} looks at you oddly, and puts the dye away. Bram never finds out how close it was.
+
+@event bram_between_coaching
+title: Prefect's Business
+pool: between_once
+tone: warm
+cast:
+  bram: bram where met(bram) and around(bram) and rel(bram) >= 0
+  o: any where classmate_here(o) and rel(o) >= 4 and not at_odds(bram, o)
+per: bram
+when: seen(bram_between_coaching) == 0
+art: duel
+scene: A duelling floor late at night, a prefect patiently correcting a younger student's stance, both freezing as a third student opens the door.
+text: You go into the duelling hall late and find Bram there, without his sash, patiently correcting {o}'s footwork. {o} is terrible. Bram is being kind about it. They both freeze when they see you. "Prefect's business," says Bram, too quickly.
+> left: Tease him about it
+  rel o +tiny
+  rel bram -small
+  mood +tiny
+  say: "Prefect's business," you repeat, delighted. Bram goes the colour of his sash. He's short with you for a week, and keeps coaching {o} anyway, which you suspect was never in question.
+> right: Say you never saw a thing
+  rel bram +small
+  npc_rel bram o +small
+  say: You back out of the door. The next morning Bram passes you in the corridor and says, without looking at you, "Don't make it weird." You don't. {o} wins a practice bout the following week, and Bram claps once, loudly, then stops.
+
+# ---------------- Corvin ----------------
+
+@event corvin_between_odds
+title: Corvin Makes a Book
+pool: between_once
+tone: light
+cast:
+  corvin: corvin where met(corvin) and around(corvin)
+  o: any where classmate_here(o) and rel(o) >= 4
+  p: any where classmate_here(p) and at_odds(o, p)
+per: corvin
+when: seen(corvin_between_odds) == 0
+art: coin
+scene: A student with a deck of cards tucked behind one ear writing odds in chalk on the back of a door, a small crowd pressing coins into his hand.
+text: {o} and {p} are going to settle it with wands in the courtyard at sunset, and Corvin is making a book. "Seven to four on {o}, saint," he says, chalking it on the back of a door. "Want in? It's practically charity. I'm charity."
+> left: Put a crown on {o}
+  gold -small
+  alignment -tiny
+  chance even:
+    gold +medium
+    rel corvin +tiny
+    say: {o} wins in a flash of green sparks, and Corvin pays you out with a flourish and a wince. "Beginner's luck. I'll get it back. I always get it back."
+  else:
+    rel corvin +tiny
+    say: {p} wins, with a hex nobody saw coming. Corvin pockets your crown with real sympathy. "Should've asked me," he says. "I'd have told you. For a fee."
+> right: Tip off a prefect
+  alignment +small
+  rel corvin -medium
+  npc_rel o p +tiny
+  say: The prefects break it up before the first spell, and confiscate the chalk. Corvin is one detention from being sent home, and he knows exactly who told. He doesn't say anything. That's worse than if he had.
+
+@event corvin_between_debt
+title: Corvin Owes {o}
+pool: between_once
+tone: light
+cast:
+  corvin: corvin where met(corvin) and around(corvin) and rel(corvin) >= 6
+  o: any where classmate_here(o) and rel(o) >= 6
+per: corvin
+when: seen(corvin_between_debt) == 0
+art: pouch
+scene: A student waving a scrap of paper at another, who is shrugging with both hands empty and grinning.
+text: Corvin owes {o} eight crowns, and has owed it since the leaves turned. {o} has an IOU in Corvin's handwriting, with a small drawing of a goat on it. {o} would like you, as Corvin's friend, to collect.
+> left: Pay it yourself
+  gold -small
+  rel o +small
+  rel corvin +small
+  say: You pay {o} and tell Corvin he owes you now. "Saint," he says, appalled and touched in equal measure. "Who does that?" He pays you back three weeks later, in coins and a very good story about where he got them.
+> right: Get Corvin to pay
+  challenge appeal apprentice+:
+    win:
+      npc_rel corvin o +small
+      rel o +small
+      say: You corner Corvin and refuse to laugh at any of his jokes until he pays. It takes four jokes. He pays {o}, all eight, and draws {o} a better goat as interest.
+    lose:
+      rel o -small
+      rel corvin -tiny
+      say: Corvin turns it into a joke, then a card trick, then a story about trolls, and by the end you've somehow agreed it's {o}'s fault for lending. {o} doesn't find that funny.
+
+@event corvin_between_witness
+title: Where Corvin Was
+pool: between_once
+tone: tense
+cast:
+  corvin: corvin where met(corvin) and around(corvin) and rel(corvin) >= 12
+  o: any where classmate_here(o) and rel(o) >= 4 and not at_odds(corvin, o)
+per: corvin
+when: term and not wrapup and seen(corvin_between_witness) == 0
+art: key
+scene: A student in a dark stairwell holding up an unlocked padlock, another student beside him shaking their head urgently.
+text: {o} is up before the headmistress: a silver inkstand gone from the library, and {o} was seen near it. Corvin knows {o} didn't take it; he saw who did, at two in the morning. To say so, he'd have to say where he was at two in the morning. "One more detention, saint," he says quietly. "You know what that means."
+> left: Tell him to speak up
+  challenge appeal journeyman:
+    win:
+      rel corvin +small
+      rel o +small
+      npc_rel corvin o +medium
+      alignment +small
+      say: Corvin goes in, and tells it straight, without a single joke. The headmistress gives him a long look and a warning, not a detention, "in view of the circumstances". {o} doesn't know what to say. Corvin says it for both of them: "Don't make a habit of being innocent near me."
+    lose:
+      rel corvin -small
+      say: Corvin shakes his head. "I can't, saint. I can't go home." You don't push. {o} gets the detention, and the real thief is never named, and Corvin can't look at {o} for weeks.
+> right: Find another way to clear {o}
+  challenge research apprentice+:
+    win:
+      rel o +small
+      rel corvin +small
+      study -tiny
+      say: You go through the library ledger until midnight and find that the inkstand was booked out for cleaning to someone else entirely. {o} is cleared. Corvin buys you a drink and doesn't say why.
+    lose:
+      rel o -tiny
+      study -tiny
+      say: You turn the library inside out and find nothing anyone will believe. {o} serves the detention. Corvin sits with {o} at supper every night of it.
+
+# ---------------- Nessa ----------------
+
+@event nessa_between_story
+title: The Human Angle
+pool: between_once
+tone: tense
+cast:
+  nessa: nessa where met(nessa) and around(nessa)
+  o: any where classmate_here(o) and rel(o) >= 8 and not npc_is(bram)
+per: nessa
+when: seen(nessa_between_story) == 0
+art: paper
+scene: A newspaper office cluttered with proofs, an editor holding up a draft headline while a student in the doorway begs her not to run it.
+text: {o} failed a practical exam badly enough that the lecturer wrote home, and somehow Nessa has heard. "It's a story about pressure," she says, in headline voice. "The human angle. I'd change the name. Mostly." {o} has found out, and caught you in the corridor first. "Please. She'll listen to you."
+> left: Talk Nessa out of it
+  challenge appeal apprentice+:
+    win:
+      rel o +medium
+      rel nessa -tiny
+      npc_rel nessa o +tiny
+      say: You put it to her plainly: it's not a story about pressure, it's a story about {o}. Nessa goes very quiet, the way she does off the record. Then she spikes it. "You're right. I hate that you're right."
+    lose:
+      rel nessa -small
+      rel o -tiny
+      say: "Everyone's a story," Nessa says. "Some just aren't finished." She runs it, with the name changed. Everyone knows who it is. {o} doesn't speak to either of you for a fortnight.
+> right: Offer her a better story
+  renown -tiny
+  rel nessa +small
+  rel o +small
+  say: You give Nessa something of your own instead: a long, unflattering account of your worst week this term. She takes it, delighted. {o}'s story never runs. Yours does, on page two, and people are very kind about it for a week.
+
+@event nessa_between_match
+title: Match of the Month
+pool: between_once
+tone: light
+cast:
+  nessa: nessa where met(nessa) and around(nessa) and rel(nessa) >= 6
+  o: any where classmate_here(o) and rel(o) >= 4 and fancy_free(o) and not npc_is(nessa)
+per: nessa
+when: term and not wrapup and seen(nessa_between_match) == 0
+art: heart
+scene: An editor at a cluttered desk holding out a quill and a blank form titled "Match of the Month", grinning.
+text: The Lumen Ledger is launching "Match of the Month", anonymous and entirely scientific, and Nessa needs a first nomination by the printers' deadline. She has heard you know {o}. "Who's {o} sweet on? You don't have to say. Just write it down. That's not saying."
+> left: Nominate {o}
+  renown +tiny
+  rel nessa +small
+  rel o -small
+  say: You write a name down. On Friday the whole castle reads that "a certain student in the year" is pining for "a certain other student", with details. {o} recognises every detail. So does the other student, it turns out, and the next week they're seen at the Gilded Newt together. {o} is still furious with you.
+> right: Tell Nessa it's not yours to print
+  rel nessa -tiny
+  rel o +small
+  say: "Off the record?" says Nessa. "It's off the record that I'm not telling you," you say. She laughs, and nominates herself instead, which sells out the issue.
+
+# ---------------- Mir ----------------
+
+@event mir_between_owl
+title: The Owl Has Opinions
+pool: between_once
+tone: light
+cast:
+  mir: mir where met(mir) and around(mir) and seen(mir_owl_gift) > 0
+  o: any where classmate_here(o) and rel(o) >= 4
+per: mir
+when: seen(mir_between_owl) == 0
+art: gear
+scene: A clockwork owl perched on a workshop lamp, glaring with brass eyes at a student who is ducking, while its maker apologises with both hands.
+text: Mir's clockwork owl, which remembers deadlines, birthdays and, slightly, grudges, has taken against {o}. It hoots when {o} comes in. It drops screws on {o} from the rafters. "It's not personal!" says Mir. "Probably. It might be personal. I didn't build it to be personal."
+> left: Help Mir find out why
+  challenge research apprentice:
+    win:
+      npc_rel mir o +small
+      rel mir +small
+      rel o +tiny
+      say: You go through the owl's memory spool with Mir, half the night, and find it: {o} once moved a teacup off the owl's favourite shelf, in the first week. Mir has a long, gentle talk with the owl. The screws stop. Mostly.
+    lose:
+      rel mir +tiny
+      study -tiny
+      say: You and Mir take the owl apart and put it back together and it is still furious with {o}. "It's a feature now," Mir decides. {o} starts wearing a hat.
+> right: Tell {o} to apologise to it
+  rel o +small
+  npc_rel mir o +tiny
+  say: You suggest {o} apologise. {o} stands under the rafters and apologises to the owl, formally, for whatever it was. The owl considers this for a whole minute, then hoots once, and from then on drops screws on {o} only on Tuesdays. Mir is moved almost to tears.
+
+@event mir_between_blunt
+title: Probably Fine
+pool: between
+tone: warm
+cast:
+  mir: mir where met(mir) and around(mir)
+  o: any where classmate_here(o) and rel(o) >= 6 and not at_odds(mir, o)
+per: mir
+art: gear
+scene: A workshop bench strewn with gears, an artificer talking excitedly to a half-built machine while a classmate stands to one side, looking hurt.
+text: {~{o} asked to help Mir in the workshop. Mir said, cheerfully, "No, you'll touch things," and then talked to a gearbox for ten minutes.|{o} showed Mir a design. Mir said, "That'll explode," with total delight, and went back to the lathe.|{o} has been holding the same lamp for Mir for an hour. Mir has thanked the lamp twice and {o} not once.} {o} finds you afterwards. "Do they even like me?"
+> left: Translate for Mir
+  rel o +small
+  npc_rel mir o +small
+  study -tiny
+  say: {~You explain that "you'll touch things" is high praise from Mir; it means you'd be interested. {o} goes back. Mir gives {o} a screwdriver of {o.their} very own, which is practically a ring.|"It'll explode" means "I'd want to watch," you tell {o}. {o} brings the design back, and Mir spends three hours making it explode properly.|You tell {o} that Mir thanks lamps because lamps can't be hurt. {o} laughs. The next time, Mir, prompted by you, thanks {o}, and then the lamp, in that order.}
+> right: Tell Mir directly
+  challenge appeal apprentice:
+    win:
+      rel mir +tiny
+      npc_rel mir o +small
+      say: {~"Oh!" says Mir, stricken. "Oh no. Probably I should say things to people." They go and say several things to {o}, all at once, most of them about gears. It works.|Mir listens, goggles pushed up, and then goes and apologises to {o} with a small clockwork frog. The frog says sorry. Mir says it too.|Mir takes it very seriously and writes "SAY THANK YOU TO {o}" on the workshop wall in chalk, where it stays for a year.}
+    lose:
+      rel mir -tiny
+      say: {~Mir doesn't really hear it; they're halfway into a gearbox. "Hm? Yes. Probably," they say. {o} gives up on the workshop.|"But I do like {o}," says Mir, baffled, "I let {o} hold the lamp." You don't get further than that.|Mir nods along and then forgets, which is very Mir. {o} decides the workshop isn't for {o.them}.}

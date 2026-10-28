@@ -1,0 +1,386 @@
+# ============================================================
+#  The spotlight, Famous (phase 4, docs/phase4-plan.md, batch P4-07; design §8.2): renown 60 or more, when the
+#  academy watches what you do. The pools and appointments are in spotlight.grim. A bold choice here pays big, and
+#  carries a scandal whose odds grow with renown (`chance slim +1 if renown >= 75 +1 if renown >= 85`: about 15%,
+#  25%, 37%, the design's (renown − 50)%).
+# ============================================================
+
+@event spot_endorsement
+title: Your Face on a Candle
+pool: spotlight_famous
+tone: light
+art: candle
+scene: A village chandler's shop window full of candles, each with a little painted label of a student's face, the chandler beaming in the doorway.
+text: The village chandler wants to sell "{player}'s study candles: they burn all night, like genius". Your face on every label, a crown or two from every box. He's already had the labels painted. They look almost like you.
+> left: Lend your name
+  chance slim +1 if renown >= 75 +1 if renown >= 85:
+    renown -medium
+    gold +small
+    mood -small
+    say: The candles burn all night, as promised, and give off a smell like a wet dog. Half the dormitory sleeps with the windows open. Someone writes "GENIUS" under your painted face, with an arrow, in soot.
+  else:
+    gold +medium
+    renown +small
+    queue scandal_candle_smoke within 3..6 chance unlikely
+    say: The candles sell out twice. They're perfectly ordinary candles, but people study by them with great seriousness, and the chandler sends a box up to you every month, with your own face looking back from the label.
+> right: Turn him down
+  mood +tiny
+  alignment +tiny
+  say: You tell him, kindly, that your face isn't for sale. He sighs and paints over the labels. The next week they say "a famous student's study candles", and sell almost as well.
+
+@event spot_memoir
+title: As Told To
+pool: spotlight_famous
+tone: light
+art: book
+scene: A smart stranger in a travelling coat at a refectory table, a contract and a quill laid out in front of a student.
+text: A man from a city publisher has come all the way up the hill to offer you a sum for your memoir. You won't have to write a word: "Our writer does all that. You just tell her a few stories, and sign." He has a draft title already. It has an exclamation mark.
+> left: Sign
+  chance slim +1 if renown >= 75 +1 if renown >= 85:
+    gold +medium
+    renown -medium
+    say: The first chapter is printed in the Ledger as a teaser. In it you wrestle a lake serpent, win a duel blindfold and kiss three people on one page. You have done none of these things. The whole castle reads it aloud at breakfast, in voices.
+  else:
+    gold +medium
+    renown +small
+    queue scandal_memoir_book within 2..5 chance even
+    say: The book is short and breathless and only slightly made up. It sells in the city, and copies come back up the hill, where first-years read it under the desks. You sign one, once, and then hide.
+> right: Decline
+  study +tiny
+  mood +tiny
+  say: You tell him you're still in the middle of it, and you'd like to find out how it ends first. He laughs, leaves his card, and takes the long way down the hill.
+
+@event spot_impostor
+title: The Other {player}
+pool: spotlight_famous
+tone: tense
+art: mask
+scene: A village bakery counter, a slip of paper pinned up reading "on account", a hooded figure in academy-coloured scarf ducking out of the back door.
+text: The baker asks, very politely, when you're going to settle your account. You haven't got one. It turns out somebody in an academy scarf has been eating very well in the village for a month and signing your name, with a flourish, at the bakery, the tearoom and the Newt.
+> left: Catch them in the act
+  chance slim +1 if renown >= 75 +1 if renown >= 85:
+    renown -medium
+    alignment -tiny
+    say: You catch the impostor at the bakery on market day, in front of a crowd. The impostor is a thin first-year who hadn't eaten properly in weeks. The crowd looks at you as if you'd kicked a puppy. You pay the account. It doesn't help much.
+  else:
+    renown +small
+    gold +tiny
+    say: You catch the impostor in the act at the Newt: a grinning fourth-year who's done it for a bet. The landlady makes them pay every crown back, and you get a free supper and a story that does the rounds for weeks.
+> right: Pay the bills, and leave a note
+  gold -small
+  alignment +small
+  say: You pay what's owed and leave a note with the baker: "If they come back, feed them, and tell them to come and see me." A week later, a thin first-year turns up at your door, and you find them a job at the Newt.
+
+@event spot_fan_circle
+title: The {player} Society
+pool: spotlight_famous
+tone: light
+art: group
+scene: A disused classroom with a hand-painted banner, a dozen younger students in matching ribbons sitting in a circle, a portrait of one student propped on a chair.
+text: There is a society. It meets on Tuesdays in the disused classroom at the top of the lecture tower. It has a banner, ribbons, minutes and a portrait of you, done in crayon. Its president has written asking whether you would honour them with a visit.
+> left: Visit, and make a fuss of them
+  chance slim +1 if renown >= 75 +1 if renown >= 85:
+    renown -medium
+    mood -tiny
+    say: The society is thrilled, and sets out to honour you properly. The next morning your name is written across the observatory dome in luminous paint, misspelled. The headmistress asks to see you. So does the observatory.
+  else:
+    renown +medium
+    mood +small
+    queue scandal_society_dare within 2..5 chance unlikely
+    say: You visit, sign the minutes, admire the portrait, and answer their questions for an hour. The society is beside itself. You have, from then on, a dozen first-years who would walk into the lake for you, and who very kindly don't.
+> right: Ask them to do something useful
+  renown -tiny
+  alignment +small
+  say: You visit, and suggest that a society in your name might run a study table for first-years who are struggling. They look crestfallen, and then very determined. By spring, the study table is the best thing about Tuesdays.
+
+@event spot_thornwick_challenge
+title: A Challenge From Across the Hills
+pool: spotlight_famous
+tone: tense
+art: duel
+scene: A pinned notice on the courtyard board with a red Thornwick seal, a crowd of students reading it and turning to look at one student.
+text: A Thornwick student has sent a challenge, very publicly, by way of a notice in a red seal on the courtyard board: "We hear Lumenhold's famous {player} is the best you've got. A contest of spells at the boundary stones, at the month's end. Bring a crowd." Half the castle has already promised to come.
+> left: Accept
+  challenge spell adept:
+    win:
+      renown +large
+      mood +small
+      queue scandal_thornwick_cheat within 1..3 chance unlikely
+      say: The contest at the boundary stones lasts four minutes. You win it on the last spell, with the whole of Lumenhold roaring behind you. The Thornwick student shakes your hand, says "next year", and means it.
+    lose:
+      renown -medium
+      mood -small
+      say: You lose, fairly and very publicly, to a Thornwick student who is simply better on the day. The walk back up the hill is long and quiet. Thornwick's paper prints the result in very large letters.
+> right: Answer with a letter
+  renown -tiny
+  mood +tiny
+  say: You pin a reply under the challenge: "Lumenhold doesn't perform on request. Do come for the Spring Tournament." The castle is a little disappointed, and a little proud. Thornwick's reply, if there is one, never arrives.
+
+@event spot_settle_dispute
+title: Your Word on It
+pool: spotlight_famous
+tone: tense
+art: scales
+scene: Two groups of students in different club colours glaring at each other across a courtyard, one student standing between them with a hand raised.
+text: The Duelling Circle and the Skyrace Squad have both booked the flight field for the same Saturday, and it has come close to blows. Somebody suggests they let you decide, since everybody listens to you. Both captains agree. Both are glaring at you, and both are certain you'll pick them.
+> left: Decide it, there and then
+  chance slim +1 if renown >= 75 +1 if renown >= 85:
+    renown -small
+    mood -small
+    say: You give the field to the Squad, who had booked first. By supper the Circle is telling everyone you were bought, and someone remembers you once had a drink with the Squad's captain. It's nonsense. It sticks for a month.
+  else:
+    renown +medium
+    say: You give the field to the Squad, who had booked first, and the Circle the Sunday, with the good side of the hall for practice. Both captains grumble, and both shake on it. People start bringing you their arguments.
+> right: Make them settle it themselves
+  challenge appeal adept-:
+    win:
+      renown +small
+      alignment +tiny
+      say: You sit both captains down with a pot of tea and refuse to leave until they've worked it out. It takes three hours and the whole pot. They share the field, half the day each, and claim it was their idea.
+    lose:
+      renown -small
+      say: You sit them down, and they argue for three hours, and in the end neither gets the field, because the groundskeeper has booked it for mowing. Both clubs blame you, slightly, forever.
+
+@event spot_charity_auction
+title: An Afternoon With {player}
+pool: spotlight_famous
+tone: warm
+art: coin
+scene: The Great Hall set out for an auction, a student on a stage holding up a card, a forest of raised hands, an auctioneer with a gavel.
+text: The infirmary fund is holding an auction, and the top lot, the committee tells you, has to be "an afternoon with {player}": tea, a walk, whatever the winner likes. They think it will raise more than everything else put together. They are probably right.
+> left: Agree to be auctioned
+  chance slim +1 if renown >= 75 +1 if renown >= 85:
+    alignment +small
+    renown -small
+    mood -small
+    say: It raises a fortune. The winner turns out to be the Ledger's worst gossip, who spends the afternoon asking about your love life and prints every word. The infirmary gets new beds. You get a column you'd rather not have read.
+  else:
+    alignment +small
+    renown +small
+    mood +small
+    say: It raises a fortune. The winner is an old bookbinder from the village, who has saved for a year and only wants to walk round the lake with somebody famous and tell them about his garden. It's one of the best afternoons you have.
+> right: Give the fund a donation instead
+  gold -small
+  alignment +tiny
+  mood +tiny
+  say: You give the committee what you can, and ask them to auction something more useful than you. They auction the headmistress's old hat, which raises almost as much and is far less trouble.
+
+@event spot_newt_drink
+title: The {player}
+pool: spotlight_famous
+tone: light
+art: cup
+scene: A tavern bar with a chalkboard menu, a new name chalked at the top in big letters, a landlady polishing a tall glass with a sparkler in it.
+text: The landlady of the Gilded Newt has put a new drink on the board, and it's called "The {player}". It's tall, it's blue, it has a small sparkler in it, and it costs twice as much as anything else. "You don't mind, do you, love?" she says. "You'll get a cut." The whole bar is watching your face.
+> left: Raise a glass to it
+  chance slim +1 if renown >= 75 +1 if renown >= 85:
+    renown -small
+    gold +tiny
+    mood -small
+    say: It's very popular, especially with first-years, three of whom drink one each on Lantern Night and are sick on the headmistress's shoes. The drink is withdrawn. Your name is not forgotten.
+  else:
+    gold +small
+    renown +small
+    say: You raise a glass of it to the bar, and the bar cheers. It is far too sweet. It sells for a whole term, and every few weeks the landlady presses a small purse of coppers into your hand.
+> right: Ask her to call it something else
+  renown -tiny
+  mood +small
+  say: You ask her, nicely, to name it after the Newt instead. She grumbles, wipes it off and chalks up the Newt's own name instead. It's exactly the same drink. Nobody can say your name with a straight face for a week anyway.
+
+@event spot_lecture_crowds
+title: Standing Room Only
+pool: spotlight_famous
+tone: tense
+art: scroll
+scene: A lecture hall crammed with students sitting in the aisles and on the windowsills, a lecturer at the front glaring over spectacles at one student in the third row.
+text: Your lectures have filled up. Not with people who take the course: with people who want to sit near you. They sit in the aisles. They sit on the windowsills. After class, the lecturer asks you to stay behind, and says, without warmth, "This is a lecture, not a menagerie. Do something about it."
+> left: Hold a question time after class
+  chance slim +1 if renown >= 75 +1 if renown >= 85:
+    renown -small
+    study -small
+    say: You offer a half-hour of questions after class, for anyone. The first question is about your love life. The second is about your hair. The lecturer comes back for a book, sees the circus, and gives you an essay to write on decorum.
+  else:
+    renown +small
+    study +small
+    say: You offer a half-hour of questions after class, and to your surprise most of them are about the lecture. By the end of the month you know the course better than ever, and the aisles are clear: people come to your half-hour instead.
+> right: Sit at the back, in a hood
+  study +small
+  renown -small
+  say: You sit at the back with your hood up, take careful notes and leave by the side door. The crowds drift away to look at something else. The lecturer gives you, at the end of term, the very smallest nod.
+
+@event spot_luck_sleeve
+title: For Luck
+pool: spotlight_famous
+tone: light
+when: month == 3 or month == 4 or month == 9 or month == 10
+art: hand
+scene: A corridor outside an exam hall, a nervous queue of students each reaching out to touch one student's sleeve as they pass.
+text: Somebody has decided that touching your sleeve before an exam brings luck. The queue outside the exam hall reaches out as you pass, one after another, very solemnly. A first-year asks if you'd mind breathing on their quill.
+> left: Bless them all, grandly
+  chance slim +1 if renown >= 75 +1 if renown >= 85:
+    renown -small
+    alignment -tiny
+    say: You bless every quill and sleeve with great ceremony. When the results come out, a first-year who failed writes to the Ledger to say that your luck "is a fraud, and so are you". The letter is printed. Several people agree with it loudly.
+  else:
+    renown +small
+    mood +small
+    say: You bless every quill with great ceremony, and the queue goes in laughing, which is better for them than any luck. Afterwards three of them find you to say they passed. You don't point out that most people do.
+> right: Tell them to trust their work
+  alignment +small
+  renown -tiny
+  say: You tell the queue, kindly, that your sleeve has never passed an exam, and that they've done the work. Some of them look let down. One of them, a first-year with very cold hands, says thank you and goes in steadier.
+
+@event spot_routine_known
+title: Where to Find {player}
+pool: spotlight_famous
+tone: tense
+art: paper
+scene: A gossip sheet pinned to a board with a timetable printed on it, a crowd gathering on the library steps, a student watching from a corner with books held to their chest.
+text: Someone has printed your whole week in a gossip sheet: which mornings you're in the library, where you sit for lunch, which way you walk back. By Tuesday there's a crowd on the library steps at nine o'clock, waiting, and the librarians are not pleased.
+> left: Hold court on the steps
+  chance slim +1 if renown >= 75 +1 if renown >= 85:
+    study -medium
+    renown -small
+    say: You stop on the steps and chat, and the crowd grows, and grows, until it blocks the library door. The librarians ban you, very politely, for a week. The crowd moves on to the Newt. You fall behind on everything.
+  else:
+    renown +medium
+    study -small
+    say: You stop on the steps each morning for ten minutes, answer whatever people ask, and then go inside. The crowd shrinks to a friendly handful who bring you tea. The librarians decide they can live with it.
+> right: Change everything
+  study +tiny
+  mood -small
+  renown -small
+  say: You change your mornings, your lunch table, your way back. It takes a week to get it right and you keep getting lost. But you find a window seat in a disused stair where nobody comes, and you work better there than you have all year.
+
+@event spot_guest_flyer
+title: A Guest Lap
+pool: spotlight_famous
+tone: tense
+art: broom
+scene: A flight field ringed by a packed crowd, banners snapping, one student on a borrowed broom at the starting line, the lake glittering beyond.
+text: The Skyrace Squad wants you to fly a guest lap at the season's opening race: just once round the course, before the real race starts, for the crowd. "It'll double the gate," the captain says. "Nobody's going to watch you race. They'll just watch you fly." The course goes out over the lake.
+> left: Fly it
+  challenge feat adept-:
+    win:
+      renown +large
+      mood +small
+      say: You fly the lap clean and a little faster than you should, and the crowd stands up to roar as you come round the last marker. The Squad captain is grinning. For the rest of the season, small children run about the field with brooms, being you.
+    lose:
+      renown -medium
+      health -small
+      say: You fly it beautifully, right up to the last marker over the lake, where you misjudge the wind and go into the water in front of the whole academy. The crowd's gasp is louder than any cheer. Your own laughter, when you surface, saves a little of it.
+> right: Present the trophy instead
+  renown +tiny
+  mood -tiny
+  say: You stay on the ground and present the trophy at the end, which takes a speech and no risk at all. The crowd is perfectly happy. The captain looks at your boots, and then the sky, and doesn't say anything.
+
+@event spot_petition
+title: Your Name at the Top
+pool: spotlight_famous
+tone: light
+art: paper
+scene: A student holding out a long scroll petition with dozens of signatures, a quill in the other hand, the top line left blank.
+text: A petition is going round to keep the library open all night in exam weeks. It has a hundred and twelve names and a blank line at the top, which the second-year carrying it would like you to fill. "If your name's on it, they'll have to listen." The scroll goes on for quite a long way below the main request.
+> left: Sign at the top
+  chance slim +1 if renown >= 75 +1 if renown >= 85:
+    renown -small
+    mood -small
+    say: The headmistress reads it out at supper, all of it, including clause nine (puddings twice a day) and clause twelve (the abolition of Thursdays), "proposed by {player}". The hall laughs for a full minute. The library stays shut.
+  else:
+    renown +small
+    study +small
+    say: The library stays open all night in exam weeks. The petition is framed and hung by the door, with your name at the top, and in the small hours there are students at every desk, and someone always brings you a cup of tea.
+> right: Read it all first
+  study -tiny
+  alignment +tiny
+  renown -tiny
+  say: You read it all, which takes a while. Clause nine asks for puddings twice a day. Clause twelve abolishes Thursdays. You hand it back with a note on how to make it shorter. The second-year looks very let down, and then, the next week, comes back with one clause, which you sign.
+
+@event spot_party_host
+title: The Party, If You Come
+pool: spotlight_famous
+tone: tense
+art: music
+scene: A student at a dormitory door holding out a handwritten invitation, behind them a room strung with lanterns and stacked with crates.
+text: A second-year is throwing a party in the old music room on Saturday, and says frankly that it'll either be the party of the term or a sad evening with twelve people and a fiddle, depending entirely on whether you come. Everybody knows already that you've been asked. Everybody is waiting to see.
+> left: Go
+  chance slim +1 if renown >= 75 +1 if renown >= 85:
+    renown -small
+    health -small
+    mood -tiny
+    say: Everyone comes. Everyone. At one o'clock the prefects come too, and the report that goes to the headmistress names one guest by name, at the top. You spend a week of evenings in detention polishing the trophy cabinet, and the castle talks about it for a month.
+  else:
+    renown +small
+    mood +medium
+    health -small
+    say: It's the party of the term. You dance badly, talk to everyone, and leave before it gets out of hand. On Monday a dozen people you'd never met say hello to you in the corridors, and the second-year is a legend.
+> right: Stay in, and wish them well
+  study +small
+  mood -tiny
+  renown -tiny
+  say: You send a note saying you can't, and a cake. The party is small and very nice, and the twelve people and the fiddle have a lovely time. The second-year sends back a slice.
+
+@event spot_ball_opening
+title: The First Dance
+pool: spotlight_famous
+tone: warm
+when: month == 4
+art: music
+scene: The Great Hall turned to ice and starlight, an empty dance floor ringed by the whole school, one couple stepping out alone into the middle.
+text: The Midwinter Ball committee has asked you to open the Ball: the first dance, alone on the floor, in front of the whole school, before anybody else may step out. {bonds(partner) > 0: Your partner has gone very pale and is pretending not to have heard.|You'd need to choose someone, and everyone knows it.}
+> left: Open the Ball
+  challenge perform adept-:
+    win:
+      renown +large
+      mood +small
+      say: The music starts and, for once, your feet know what to do. You turn once round the whole floor under the floating candles, and when the music ends, the hall applauds before it remembers to dance. People talk about it till spring.
+    lose:
+      renown -medium
+      mood -small
+      say: You start well. Then the ice-floor, the candles and the whole school watching all happen at once, and you go down in a heap at the exact centre of the hall. You get up and finish the dance. The hall cheers more for that than it would have for the steps.
+> right: Let someone else open it
+  renown -small
+  mood +small
+  say: You thank the committee and suggest the two first-years who've been practising for weeks in the boathouse. They open the Ball, nervously and beautifully. You dance later, in the crowd, where nobody's watching, and enjoy every minute.
+
+@event spot_stable_name
+title: A Name for the Foal
+pool: spotlight_famous
+tone: light
+art: paw
+scene: A stable stall with a gangly winged foal tottering on long legs, a professor in a leather apron holding out a slate and chalk to a student.
+text: A winged foal was born at the Familiar Stables last night, and Professor Brask, who claims to have no opinion on the matter, says the first-years will only stop arguing about its name if you choose it. She hands you a slate. The foal looks at you and sneezes.
+> left: Give it a grand name
+  renown +small
+  mood -tiny
+  say: You chalk up something grand and ancient and very hard to spell. The first-years approve. The foal grows into it slowly, and in the meantime everybody calls it something else, behind Brask's back, that you suspect is ruder.
+> right: Let the first-years vote
+  mood +small
+  renown -tiny
+  alignment +tiny
+  say: You hand the slate back and say the first-years should vote. They vote for "Biscuit". Brask writes it in the stable book with the face of a woman enduring something, and the foal, as it turns out, loves it.
+
+@event spot_friend_strain
+title: Just {player}'s Friend
+pool: spotlight_famous
+tone: tense
+cast:
+  f: any where classmate_here(f) and rel(f) >= 40
+per: f
+art: heart
+scene: Two students sitting on a cold stone step outside the castle at dusk, one with their hands in their pockets, the other turned toward them.
+text: {f} sits down beside you on the step and says, without looking at you, "Someone called me '{player}'s friend' today. Not my name. Just that. It's the fourth time this week." {They} laugh{s}, but not much. "I don't mind. I just wanted you to know."
+> left: Make time for {f}, away from it all
+  rel f +medium
+  renown -small
+  study -tiny
+  say: You start taking {f} to the places no one goes: the boathouse at dusk, the end of the orchard. You let the invitations wait. One evening {f} says something so funny you fall off a jetty, and nobody else is there to see it, and that's the point.
+> right: Bring {f} into the spotlight with you
+  chance even +1 if rel(f) >= 60:
+    rel f +small
+    renown +tiny
+    say: You start bringing {f} everywhere with you, and making sure people hear {f.their} name. After a month, people in corridors start saying "{f} and {player}", in that order. {f} pretends not to notice, and is pleased.
+  else:
+    rel f -small
+    renown +tiny
+    say: You bring {f} everywhere, and introduce {f.them} to everyone, and {f} goes quieter and quieter. "I didn't want to be famous," {f} says at last. "I wanted you to notice." It takes a while to put right.

@@ -77,6 +77,9 @@ text: {Officers referee, so tonight you hold the whistle while Lyra duels a seco
   perform duelling +small
   rank_xp duelling +small
   say: {"Noted," Lyra says, in a voice that could chill wine. Next day her feet are perfect.|Lyra stares at you, then shakes her opponent's hand. Later a cup of tea appears on your bench.|The hall goes silent. Lyra bows to the second-year, very correctly, and to you, slightly less.}
+  if knows(lyra.rival):
+    rel lyra +tiny
+    say: She would never have forgiven you for letting it stand, and you both know why: you're the one person here who makes her better.
 > right: Let it stand
   rel lyra +tiny
   alignment -tiny

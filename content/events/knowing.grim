@@ -1,0 +1,551 @@
+# ============================================================
+#  Use what you know (phase 4, docs/phase4-plan.md, batch P4-12): scenes where a fact you've learned about someone
+#  (content/world/facts/, the People panel) opens a better way through: an option that waits, locked, until you
+#  know it (`when: knows(...)`), or an outcome that turns on it (`if knows(...)`). Then second-hand facts (one person
+#  tells you about another) and a secret you could sell. Nothing here touches the main plot's facts.
+# ============================================================
+
+@pool knowing
+desc: What every use-what-you-know card shares: once, a routine moment where knowing someone matters.
+class: routine
+repeat: 1
+tags: people facts
+
+@pool second_hand
+desc: One person tells you something about another: you learn the fact whatever you choose. Once each.
+trigger: social
+class: routine
+repeat: 1
+tags: people facts
+
+# ---------------- use what you know ----------------
+
+@event know_kael_thaw
+title: Before the Break
+pool: knowing
+trigger: social
+actor: kael
+tone: warm
+when: met(kael) and rel(kael) >= 12 and month == 4
+art: snow
+scene: A barge landing in the snow at the end of term, students with trunks waiting to leave, two of them standing face to face at the edge of the jetty.
+text: The last barge before the winter break is loading, and Kael is at the landing with his trunk, not quite looking at you. He's been strange all week. Back home, he told you once, saying goodbye is bad luck. The barge horn sounds. He's waiting, as if there were something you might say.
+> left: Shake his hand
+  rel kael +tiny
+  mood -tiny
+  say: You shake his hand, and wish him a good break. He says "and you", and climbs aboard, and doesn't look back. You realise, as the barge rounds the bend, that he was waiting for something else.
+> right: "Until the thaw."
+  when: knows(kael.thaw)
+  rel kael +medium
+  mood +small
+  say: "Until the thaw," you say, and touch your forehead to his. He goes very still. Then he laughs, a short surprised breath, and says it back, so the cold knows you're coming back. He waves from the barge all the way round the bend.
+
+@event know_ilse_useless
+title: Ilse, Losing
+pool: knowing
+trigger: social
+actor: ilse
+tone: light
+when: met(ilse) and rel(ilse) >= 8
+art: snow
+scene: A frozen pond at dusk, a girl in white furs sitting alone on the ice with a ruined frost-sculpture beside her, snow falling only on her.
+text: Ilse's frost-work has gone wrong for the first time anyone has seen. She's sitting on the frozen pond beside a sculpture that has cracked down the middle, and the private snowstorm over her head has turned to sleet. "Go away," she says. "Or teach me something. I don't care which."
+> left: Help her mend the sculpture
+  challenge spell adept-:
+    win:
+      rel ilse +small
+      say: You hold the crack while she seals it, and it takes, and the sculpture stands. She looks at it critically. "Useful," she says, as if that were an insult. The sleet eases, a little.
+    lose:
+      rel ilse -tiny
+      mood -small
+      say: You make it worse. The sculpture falls in two. Ilse looks at the pieces, then at you. "Well," she says. "Now we're both bad at it." It isn't quite a joke.
+> right: Teach her to skim stones across the ice
+  when: knows(ilse.useless)
+  rel ilse +medium
+  mood +small
+  say: You teach her something completely useless: skimming stones across the ice, as far as they'll go. She counts every bounce out loud, in Northern. The sleet turns back to snow. When you leave, she's still at it, alone, counting, and very nearly smiling.
+
+@event know_ilse_stitch
+title: A Torn Ward
+pool: knowing
+tone: warm
+place: courtyard
+when: met(ilse) and met(kael) and rel(ilse) >= 10
+art: snow
+scene: A courtyard bench in winter, a torn white frost-ward charm lying in a student's hands, a needle and silver thread beside it.
+text: You find a frost-ward charm in the snow by the courtyard fountain, torn half through, the kind Ilse makes. Without it, whoever lost it will feel the cold all winter. The stitching is unusual, a looping Northern pattern. You have a needle and some silver thread.
+> left: Take it to the lost-property box
+  mood -tiny
+  say: You hand it in. Somebody claims it the next day: a second-year who has been shivering for a week. Ilse, you hear later, made her a new one, without being asked, and without saying anything.
+> right: Mend it with her mother's stitch
+  when: knows(ilse.stitch)
+  rel ilse +small
+  rel kael +small
+  study -tiny
+  say: You mend it slowly, in the looping stitch, the one that was her mother's. When you hand it to Ilse, she turns it over, finds the mend, and goes very quiet. Kael, beside her, touches it once. "Mother's," he says. Neither of them says anything else, for a long time.
+
+@event know_isolde_chess
+title: Called to the Tower
+pool: knowing
+tone: tense
+trigger: social
+actor: isolde
+when: met(isolde) and term
+art: tower
+scene: A tall tower study, a chessboard of crystal towers by the window mid-game, a headmistress behind a desk with a letter of complaint open in front of her.
+text: You've been sent to the headmistress over a complaint from a lecturer: a broken window, a misunderstanding, a lot of shouting. Headmistress Marrow reads the letter, then looks at you over it. Behind her, the tower chess game by the window is half finished, and one of her towers is in trouble.
+> left: Explain, very carefully
+  challenge appeal adept:
+    win:
+      rel isolde +tiny
+      say: You explain, carefully and truthfully, and she listens without interrupting. At the end she folds the letter. "Pay for the glass," she says. "And apologise properly." It could have gone a great deal worse.
+    lose:
+      mood -small
+      gold -small
+      say: You explain, and it comes out sounding like an excuse even to you. She hears you out, and fines you for the window, and makes you write the apology twice.
+> right: Offer to finish her game
+  when: knows(isolde.chess)
+  rel isolde +small
+  mood +small
+  say: "Your tower's in trouble," you say. She looks at you, and then at the board, and says "Is it?" You play it out together. She loses, and laughs, short and delighted. Then she folds the letter. "Pay for the glass," she says. "Come back and lose to me properly, sometime."
+
+@event know_nessa_off_record
+title: Asking About a Friend
+pool: knowing
+tone: tense
+place: ledger_office
+when: met(nessa) and rel(nessa) >= 6
+art: paper
+scene: A newspaper office, an editor at her desk, a self-writing quill poised over a notebook, a student in the visitor's chair with arms folded.
+text: Nessa wants to ask you about a friend of yours, who's in trouble with the prefects and who you'd rather nobody wrote about. "I'll print it either way," she says. "I'd rather print it right." Her quill is already moving, taking down everything you say, including your sighs.
+> left: Give her the friendly version
+  rel nessa -tiny
+  alignment +tiny
+  say: You give her the kindest true version you can, and the quill takes it down. The piece runs, fair and short. Your friend is grateful, mostly. The quill added an adjective you didn't say.
+> right: "This is off the record."
+  when: knows(nessa.off_record)
+  rel nessa +small
+  alignment +small
+  say: "Off the record," you say, and the quill stops mid-word and lies down on the desk. Nessa looks at it, and at you, and something in her face changes. You tell her the whole of it. She never prints a line, and the next week she helps your friend with the prefects instead.
+
+@event know_nessa_planted
+title: The Proofs
+pool: knowing
+tone: light
+place: ledger_office
+when: met(nessa) and rel(nessa) >= 4
+art: paper
+scene: A cluttered newspaper office at night, galley proofs spread over a desk under a lamp, an editor watching a student from across the room.
+text: Nessa drops a stack of proofs on the desk in front of you and goes to make tea, very casually. "Errors," she says from the doorway. "Find them before the printers come. There might be one." There are, you can see already, at least four.
+> left: Fix everything you can find
+  study +small
+  rel nessa +tiny
+  say: You find four errors and fix them, and a fifth that turns out to be the editor's style. Nessa reads your corrections, nods, and points to a sixth, in the headline, that you missed. "Close," she says.
+> right: Find hers first
+  if knows(nessa.planted):
+    rel nessa +medium
+    renown +tiny
+    say: You find the planted one first: a date that couldn't be true, set in the middle of the page like a trap. You circle it, and only then fix the others. Nessa comes back with the tea, sees the circle, and laughs out loud. "Nobody's ever gone for that one first," she says. "You're hired. Unpaid, obviously."
+  else:
+    rel nessa -tiny
+    mood +small
+    say: You hunt for whichever error she meant, and can't tell which it is, and run out of time before the printers come. Nessa takes the proofs back with a small, satisfied smile. "There's always one," she says, and doesn't say which. The hunt, you have to admit, was fun.
+
+@event know_seraphine_too_loud
+title: Lost at Lantern Night
+pool: knowing
+tone: tense
+when: met(seraphine) and rel(seraphine) >= 10 and month == 2
+art: lantern
+scene: A crowded lakeshore at night strung with floating lanterns, a press of students and villagers, one dark boathouse at the edge with its door ajar.
+text: Lantern Night, and the whole academy and half the village are on the lakeshore, laughing, singing, all their futures at once. Somebody says Seraphine was here a minute ago and now she isn't. Her friends are searching the crowd, calling her name over the music.
+> left: Search the crowd with them
+  health -tiny
+  rel seraphine +tiny
+  say: You push through the crowd for an hour, calling her name. Someone finds her in the end, sitting very still in the dark of the boathouse, and she says she's fine, and isn't, and goes back to bed early.
+> right: Look for her somewhere dark
+  when: knows(seraphine.too_loud)
+  rel seraphine +medium
+  mood -tiny
+  say: You don't look in the crowd. You walk away from it, to the dark boathouse at the end, and she's there on an upturned boat with her eyes shut. You sit down beside her without a word. After a while she says, "Quiet." Then: "Yours." You stay till the lanterns are all out.
+
+@event know_thorne_hands
+title: The Demonstration
+pool: knowing
+tone: tense
+place: lecture_tower
+when: met(thorne) and term
+art: wand
+scene: A lecture hall, an old professor at the front with his wand raised for a demonstration, its tip trembling very slightly, a student in the front row rising from their seat.
+text: Thorne is demonstrating a duelling stance to the whole year, wand raised, and halfway through the demonstration his wand hand begins to shake. It's small. Most of the hall hasn't noticed yet. He has. You can see him deciding whether to stop.
+> left: Look away, and let him finish
+  rel thorne +tiny
+  say: You look down at your notes, and so, after a moment, does the rest of the front row. Thorne finishes the demonstration with his other hand, briskly, and dismisses the class early. You're fairly sure that was the right thing.
+> right: Ask to be his demonstration partner
+  when: knows(thorne.hands)
+  rel thorne +medium
+  renown +tiny
+  say: "Could you show it on someone, sir?" you ask, and step up before he can answer. He takes your wrist instead of his wand, and shows the stance with your arm, steady, the whole year watching. Afterwards he says, "Hm." It's the warmest thing he's ever said to you.
+
+@event know_tamsin_failed
+title: Exam Nerves, by Post
+pool: knowing
+trigger: letter
+tone: warm
+when: met(tamsin) and rel(tamsin) >= 6 and year >= 2
+art: letter
+scene: A letter on a dormitory desk, its handwriting cramped and blotted, a student holding a quill over a blank reply.
+text: Tamsin's letter is short again. They're sitting their advanced illusion examination next week, and they can't sleep, and every insult in the letter is half-hearted, which is how you know. "Say something," the postscript says. "Anything. I'm not asking. Obviously."
+> left: Send them luck and a sketch
+  rel tamsin +tiny
+  mood +small
+  say: You send a sketch of a goat in a mortarboard, labelled "your examiner", and a great deal of luck. Their reply comes a fortnight later: "Passed. The goat helped. Insufferable of you."
+> right: Remind them of the last time
+  if knows(tamsin.failed):
+    rel tamsin +medium
+    mood +small
+    say: You write about the last time: the failed exam, the sold theatre, the retake, and how they passed it anyway with everything gone. "You've done harder," you write. Their reply comes the day after the exam, one line: "You remembered. Top marks. I cried in the refectory again."
+  else:
+    rel tamsin +small
+    say: You write that they'll be fine, and that you're sure they've done harder things. Their reply is cheerful and vague. They passed, but they don't say much else, and you have the feeling you missed something.
+
+@event know_grimsby_nose
+title: The Night Before the Essay
+pool: knowing
+tone: light
+place: grimsbys_books
+when: met(grimsby) and term
+art: book
+scene: A village bookshop at closing time, a student at the counter out of breath, the bookseller holding a lamp up to a wall of shelves.
+text: Your essay is due tomorrow, and the one book you need isn't in the library. You reach Grimsby's as he's turning the sign to "closed". He lets you in, holds up the lamp to a wall of a thousand spines, and says, "Well? What does it look like?"
+> left: Describe the title and the author
+  study -tiny
+  mood -small
+  say: You tell him the title and the author. He brightens and goes off into the shelves, and comes back an hour later with a book about lighthouses, and then, at last, the right one, as the clock in the square strikes ten.
+> right: Describe how it smells
+  when: knows(grimsby.nose)
+  study +small
+  rel grimsby +small
+  say: "Old paper and rain," you say, "and something like cloves." Grimsby's face lights up. He closes his eyes, takes three steps, and pulls it off the shelf without looking. "Nobody ever asks properly," he says, and won't take your money.
+
+@event know_pell_counting
+title: The Good Stock
+pool: knowing
+tone: light
+place: pell_apothecary
+when: met(pell) and term
+art: potion
+scene: An apothecary's counter lined with brass scales and a wall of tiny drawers, an old man in spectacles measuring drops into a vial while a student watches.
+text: You need a strong remedy for a friend with a fever, and Pell has the good stock, in a dark bottle on the top shelf he sells only to people he trusts. Everyone else gets the shop's ordinary tincture. Pell looks at you over his spectacles and starts to measure out the ordinary one.
+> left: Go to the infirmary instead
+  mood -tiny
+  say: You thank him and take your friend to the infirmary instead, where Sister Amaranth's ordinary tonic works, slowly. Your friend is up in a week, and grateful, and you wonder whether the dark bottle would have done it in a day.
+> right: Count the drops aloud with him
+  when: knows(pell.counting)
+  gold -small
+  rel pell +small
+  alignment +tiny
+  say: You count the drops aloud as he measures, quietly, one to nine. Pell stops at four and looks at you. Then he puts the ordinary bottle away and reaches for the top shelf. "Measure twice," he says, counting with you. Your friend is up the next morning.
+
+@event know_amaranth_truth
+title: Patched Up
+pool: knowing
+tone: tense
+place: infirmary
+when: met(amaranth) and health < 70
+art: potion
+scene: An infirmary bench, a student holding a bruised arm, a healer in a grey apron turning it to the light from the window.
+text: You come into the infirmary with an arm that's swelling fast, from something you'd rather not explain. Sister Amaranth turns it to the light and asks, as she always does, how it happened. Behind you there's a queue. Your story is ready: a fall on the stairs.
+> left: Tell her about the stairs
+  health +small
+  mood -tiny
+  say: You tell her about the stairs. She listens, and waits, and treats it, slowly, with a salve that stings. "Come back in two days," she says. "Bring the truth with you next time. It heals faster."
+> right: Tell her the true version, first
+  when: knows(amaranth.truth)
+  health +medium
+  rel amaranth +small
+  say: You skip the stairs and tell her exactly what happened, embarrassing as it is. She nods once. "Better," she says, and reaches for a bottle that isn't a salve. The swelling's gone before you reach the door.
+
+@event know_marisol_spirits
+title: The Storm Crossing
+pool: knowing
+tone: tense
+place: lakeshore
+when: met(marisol) and term and season != "winter"
+art: wave
+scene: A small boat on a choppy grey lake under a storm sky, a student at the oars, shapes like galloping horses moving in the waves around the boat.
+text: You're halfway across the lake in a borrowed boat when the storm comes in, fast and black. The waves are full of shapes like galloping horses: the water spirits, racing the boat and, by the look of it, enjoying themselves. The shore is a long way off.
+> left: Row for it
+  challenge feat adept-:
+    win:
+      health -small
+      say: You row until your hands are raw, and the spirits race you all the way, and lose, just. You land on the shingle soaked to the skin, and lie there laughing at the sky.
+    lose:
+      health -medium
+      mood -small
+      say: The spirits win. They tip the boat over, cheerfully, ten yards from shore, and you swim the rest in the cold. You arrive half drowned, and they gallop off, delighted with themselves.
+> right: Ask them nicely not to cheat
+  when: knows(marisol.spirits)
+  mood +small
+  rel marisol +tiny
+  say: You ship the oars, lean over the side and ask the spirits, very politely, not to cheat. There's a pause. Then they gather under the boat like a raft and carry you to shore at a gallop. Marisol, on the steps with her book, laughs so hard she drops it.
+
+@event know_vey_smell
+title: The Feast That Wasn't
+pool: knowing
+tone: light
+place: refectory
+when: met(vey) and term
+art: meal
+scene: A refectory table laden with a glorious feast, students reaching hungrily for it, one student pausing with a fork in mid-air and sniffing.
+text: Some third-years have laid on a feast at the end of the long table: roast fowl, pies, a cake with candles. The whole table is reaching for it. It's beautiful. It's a little too beautiful. Somewhere at the far end, the third-years are trying very hard not to laugh.
+> left: Dig in with everyone
+  mood -small
+  renown -tiny
+  say: You reach for the pie with everyone else, and your fork goes through it and into the table, and the whole feast dissolves into air and a few crumbs of real bread. The third-years cheer. Everyone laughs, you included, eventually.
+> right: Smell it first
+  when: knows(vey.smell)
+  mood +small
+  renown +tiny
+  say: You lean in and sniff. Nothing: not roast, not pastry, not a crumb. "It doesn't smell of anything," you say, loudly. The table stops. The third-years groan. Somewhere, you feel, Professor Vey would be proud, and would never say so.
+
+@event know_brask_asking
+title: Out of Your Depth
+pool: knowing
+tone: tense
+place: stables
+when: met(brask) and term
+art: paw
+scene: A stable yard, a large and irritable griffin pulling against a rope held by a nervous student, a professor in a leather apron watching from the fence.
+text: Brask has handed you a lead rope and a griffin with opinions, and walked away to the fence. The griffin has decided it would like to be somewhere else, and it's bigger than you. Everyone else in the class seems to be managing. Brask is watching, arms folded, saying nothing.
+> left: Manage it yourself
+  challenge soothe using vigor adept-:
+    win:
+      rel brask +tiny
+      say: You dig your heels in and talk to it in a low voice, the way Brask talks to everything but students, and slowly the griffin comes round. Brask nods, once. From her that's a medal.
+    lose:
+      health -small
+      mood -small
+      say: The griffin wins. It drags you halfway across the yard and into a water trough before Brask takes the rope from your hand with two fingers. "Hm," she says. "Again tomorrow."
+> right: Ask Brask for help
+  when: knows(brask.asking)
+  rel brask +small
+  study +small
+  say: "I can't," you say. "Show me." Brask comes over from the fence, takes your hands and puts them on the rope the right way, and the griffin goes quiet as a cat. "Good," she says. "Most never ask." You realise she's remembering it.
+
+# ---------------- second-hand: one person about another ----------------
+
+@event heard_bram_corvin
+title: Bram on Corvin
+pool: second_hand
+actor: bram
+tone: tense
+when: met(bram) and met(corvin) and rel(bram) >= 6 and rel(corvin) >= 4 and not knows(corvin.last_warning)
+art: shield
+scene: A courtyard at noon, a prefect in a red sash speaking low to a student, glancing across at another student lounging by the fountain.
+text: Bram takes you aside, which he never does. "You're friendly with Corvin," he says, not quite a question. "Then you should know. He's on his last warning. One more detention and they send him home." He looks at the fountain, where Corvin is laughing at something. "I shouldn't have told you. I'm telling you anyway."
+> left: Thank Bram, and keep it quiet
+  learn corvin.last_warning
+  rel bram +small
+  alignment +tiny
+  say: You thank him, and don't tell anyone. Over the next month you notice yourself steering Corvin away from trouble, without saying why. Bram notices too, and pretends not to.
+> right: Ask Bram why he cares
+  learn corvin.last_warning
+  rel bram +tiny
+  rel corvin +tiny
+  say: "Why do you care?" you ask. Bram goes red. "Somebody has to," he says, and walks off. You don't tell Corvin what Bram said. You do sit with him at lunch more, and he notices, and makes a joke of it.
+
+@event heard_corvin_bram
+title: Corvin on Bram
+pool: second_hand
+actor: corvin
+tone: tense
+when: met(bram) and met(corvin) and rel(corvin) >= 8 and not knows(bram.father)
+art: cards
+scene: A gargoyle passage at night, a student shuffling cards on a parapet, telling a story to another in a low voice.
+text: Corvin is shuffling his deck on the parapet. "You know why Bram's like he is?" he says. "His father was head boy. Tells him every holiday he'll never amount to anything. I heard it myself, on the stairs, one parents' day." He deals a card and looks at it. "Don't tell him I told you. He'd hate that more than anything I've ever done to him."
+> left: Keep it to yourself
+  learn bram.father
+  rel corvin +small
+  alignment +tiny
+  say: You keep it to yourself. But the next time Bram gives you a demerit, you hear his father's voice under it, and you take it a little more gently than before. Bram notices, and doesn't know why.
+> right: Ask Corvin why he told you
+  learn bram.father
+  rel corvin +tiny
+  say: "Why tell me?" you ask. Corvin shuffles. "So someone's kind to him," he says, "and it isn't me." Then he deals you a hand, and talks about something else very fast.
+
+@event heard_maud_thorne
+title: Maud on Thorne
+pool: second_hand
+actor: maud
+tone: warm
+when: met(maud) and met(thorne) and rel(maud) >= 8 and not knows(thorne.roses)
+art: rose
+scene: A cottage garden at dusk, an old woman pruning a hedge with shears, nodding toward the dark shape of an observatory on the hill.
+text: Maud is cutting back the hedge. "You know old Thorne?" she says. "Every dawn, dearie, he's up behind the observatory in that little walled garden of his, talking to his roses. Thinks nobody knows. I've known for thirty years." She snips. "He's kinder to them than to any of you. Don't tell him I said."
+> left: Promise not to tell
+  learn thorne.roses
+  rel maud +small
+  say: You promise. You don't tell. But the next time Thorne is terrible to you in a lecture, you imagine him at dawn, talking to a rose, and it helps more than you'd have thought.
+> right: Ask whether she'd show you
+  learn thorne.roses
+  rel maud +tiny
+  rel thorne -tiny
+  say: "Show you? Certainly not," says Maud, delighted. She does anyway, from behind the hedge one dawn, both of you crouching. Thorne is pruning and murmuring. He looks up, just once, at the hedge. You both hold your breath.
+
+@event heard_mabel_grimsby
+title: Mabel on Grimsby
+pool: second_hand
+trigger: random
+place: mabels
+weight: 25
+actor: mabel
+tone: warm
+when: met(mabel) and seen(mabel_intro) > 0 and not knows(grimsby.lighthouses)
+art: cup
+scene: A village tea shop, a woman behind the counter wiping cups, nodding through the window at a bookshop across the lane with its sign turned to closed.
+text: "Shut again," says Mabel, nodding at Grimsby's across the lane. "You know where he goes, petal? Lighthouses. Walks out to look at one, any one, whenever the shop gets too much. Forty years I've watched him go." She pours your tea. "He thinks it's a secret. Everyone in the village knows."
+> left: Keep his secret, such as it is
+  learn grimsby.lighthouses
+  rel mabel +small
+  say: You keep it, such as it is. Next time you're in the shop, you notice the little brass lighthouse on his counter for the first time, and the picture of one above the till, and you don't say anything.
+> right: Ask which lighthouse he likes best
+  learn grimsby.lighthouses
+  rel mabel +tiny
+  mood +small
+  say: "The one at the point," says Mabel at once. "It's the ugliest. He says it tries the hardest." She thinks about it. "That's the nicest thing anyone's ever said about anything round here, and he said it about a lighthouse."
+
+@event heard_marisol_vey
+title: Marisol on Vey
+pool: second_hand
+actor: marisol
+tone: tense
+when: met(marisol) and met(vey) and rel(marisol) >= 6 and not knows(vey.mirror)
+art: mirror
+scene: A rainy lakeshore, a professor reading under a dry patch of air on the steps, talking quietly to a student beside her.
+text: Marisol closes her book of poems. "Has Vey shown you the mirror trick yet?" she asks. "She won't, in public. Once, years ago, her reflection didn't come back for a week. Walked around the castle as her. Taught two of her classes." She looks at the rain. "Vey still won't talk about it. I think she was frightened. I think she still is."
+> left: Promise never to mention it to Vey
+  learn vey.mirror
+  rel marisol +small
+  say: You promise. You never mention it. But the next time Vey lets her reflection step out of a mirror for the class, you see her hand tighten on the frame, just once, and you understand.
+> right: Ask who noticed it wasn't her
+  learn vey.mirror
+  rel marisol +tiny
+  study +tiny
+  say: "Nobody," says Marisol. "That's what frightened her. Nobody noticed for a week." She opens her book again. "The poem I can't remember the end of is about that. I've just realised."
+
+@event heard_nessa_isolde
+title: Nessa on the Headmistress
+pool: second_hand
+actor: nessa
+tone: light
+when: met(nessa) and met(isolde) and rel(nessa) >= 8 and not knows(isolde.chess)
+art: tower
+scene: A newspaper office, an editor pointing at a sketch of a tower window pinned to a cluttered wall, a student leaning in to look.
+text: Nessa taps a sketch on her wall: the headmistress's tower, one window circled. "Tower chess," she says. "Every evening. She plays both sides, and when she loses to herself she laughs out loud. I've heard it from the courtyard." She lowers her voice. "That's my way in, one day. Nobody interviews a woman who's winning."
+> left: Wish her luck with the interview
+  learn isolde.chess
+  rel nessa +small
+  say: You wish her luck. She says she doesn't need luck, she needs a chessboard, and spends the evening learning tower chess from a library book with a great deal of muttering. She's terrible at it.
+> right: Ask her not to use it as a trick
+  learn isolde.chess
+  rel nessa -tiny
+  alignment +small
+  say: "Don't make it a trick," you say. Nessa looks at you for a long moment. "It isn't a trick," she says. "It's a door." But she takes the sketch down off the wall, and puts it in a drawer.
+
+@event heard_tobias_mir
+title: Tobias on Mir
+pool: second_hand
+actor: tobias
+tone: warm
+when: met(tobias) and met(mir) and rel(tobias) >= 6 and not knows(mir.family)
+art: gear
+scene: A greenhouse in the afternoon, a broad farm boy repotting seedlings and talking over his shoulder to a student holding a watering can.
+text: "Mir's family," Tobias says, repotting, "run a clockworks. Big one. And they think all of it, the inventing, is a hobby." He presses the soil down very gently. "Mir told me that like it was nothing. It wasn't nothing. On the farm we'd say a calf that isn't let run never learns its legs."
+> left: Say you'll keep it between you
+  learn mir.family
+  rel tobias +small
+  say: "Between us," you say. Tobias nods, relieved. Later you notice that every time someone calls one of Mir's machines "a nice little toy", Tobias, very politely, changes the subject.
+> right: Say Mir should hear that saying
+  learn mir.family
+  rel tobias +tiny
+  rel mir +tiny
+  say: "Tell Mir that," you say. Tobias goes pink. He does, a week later, at supper, and gets it slightly wrong, and Mir laughs, and then goes quiet, and then says it back to him, correctly, as if writing it down.
+
+@event heard_grimsby_mabel
+title: Grimsby on Mabel
+pool: second_hand
+trigger: random
+place: grimsbys_books
+weight: 25
+actor: grimsby
+tone: warm
+when: met(grimsby) and seen(grimsby_intro) > 0 and not knows(mabel.cups)
+art: book
+scene: A bookshop window, an old bookseller pointing across the lane at a tea shop with cups hanging on hooks behind its counter.
+text: Grimsby nods across the lane at Mabel's. "Those cups behind her counter," he says. "Every one belongs to a regular. Living or dead. She never takes one down." He turns a page without reading it. "Mine's the blue one, third from the left. She hung it my first winter in the village, when I knew nobody. I've never told her I know why."
+> left: Keep it between you and him
+  learn mabel.cups
+  rel grimsby +small
+  say: You keep it. The next time you're at Mabel's, you look for the blue cup, third from the left, and find it, and say nothing. Mabel sees you looking, and smiles, and pours your tea.
+> right: Ask whether he'll tell her
+  learn mabel.cups
+  rel grimsby +tiny
+  mood -tiny
+  say: "Will you tell her?" you ask. Grimsby considers it, then shakes his head. "She knows I know," he says. "That's the whole arrangement." He sells you a book about lighthouses you didn't ask for. You buy it.
+
+# ---------------- a secret you could sell ----------------
+
+@event sell_a_secret
+title: What's It Worth?
+pool: knowing
+tone: tense
+place: village
+cast:
+  x: any where tagged(x, peer) and met(x) and rel(x) >= 15 and ((npc_is(bram) and knows(bram.cheating)) or (npc_is(tobias) and knows(tobias.blight)) or (npc_is(lyra) and knows(lyra.burnout)) or (npc_is(corvin) and knows(corvin.brother)))
+per: x
+when: renown_known() and term
+art: coin
+scene: A village lane, a sly man in a printer's apron leaning in a doorway, holding up a purse, a student stopped in front of him.
+text: The man who prints the gossip sheets in the village stops you in the lane. He's heard you're close to {x}, he says, and that you know something about {x.them} nobody else does. "Whatever it is," he says, weighing a purse, "from someone like you, it would sell out by noon. Your name on it, if you like. Or not."
+> left: Sell it
+  gold +medium
+  renown +medium
+  alignment -medium
+  rel x -large
+  queue scandal_secret_out within 2..4 with x chance likely
+  say: You tell him. The sheet sells out by noon. {x} comes to breakfast, reads it, puts down {x.their} fork, and looks across the hall at you, and doesn't say anything at all. That's the worst part.
+> right: Say you know nothing
+  alignment +small
+  rel x +tiny
+  say: "Never heard of it," you say, and walk on. The man shrugs and pockets his purse. That evening {x} sits down beside you at supper for no reason {x.they} could name, and stays longer than usual.
+
+@event scandal_secret_out
+title: Who Sold It
+pool: scandal
+actor: npc
+when: renown_known()
+art: paper
+scene: A refectory at breakfast, a gossip sheet passed hand to hand, a whole table turning to look at one student, another student sitting very straight at the next table.
+text: It's out: everyone knows who sold the gossip sheet the story about {npc}. The printer told the Newt, and the Newt told the castle. People who never cared for {npc} are disgusted with you anyway: nobody likes someone who sells a friend. {npc} hasn't said a word. Everyone is waiting to see what you'll do.
+> own: Apologise to {npc}, in front of everyone
+  renown -medium
+  alignment +small
+  rel npc +small
+  say: You stand up at breakfast, cross the hall and apologise to {npc}, out loud, with everyone watching. {They} look{s} at you for a long time, and then nod{s}, once. It doesn't mend it. It's a start.
+> deny: Say the printer is lying
+  challenge deceive adept:
+    win:
+      renown -tiny
+      rel npc -tiny
+      say: You say the printer is a liar who'd sell his own mother, which is true. People decide to believe you, more or less. {npc} doesn't. {They} don't say so. {They} don't need to.
+    lose:
+      renown -large
+      alignment -small
+      rel npc -small
+      say: You say the printer is lying, and the printer produces the receipt with your initial on it. The castle has its verdict. {npc} walks past you in the corridor as if you were a draught.
+> spin: Say it was true, and someone had to
+  alignment -medium
+  rel npc -large
+  renown +tiny
+  say: You say, coolly, that it was true, and someone had to say it. Some people agree with you. {npc} hears it. {They} stop{s} coming to meals for a week, and the castle forgets who started it, and you never will.

@@ -1,0 +1,374 @@
+# ============================================================
+#  High society and fame among friends (phase 4, docs/phase4-plan.md, batch P4-10; design §8.2). The Season: once
+#  the patrons have noticed you (a patron's dinner, or being Famous), a round of suppers, Lady Vaneshade, a rival and
+#  a ball, as a `story` thread with Journal lines; built on existing canon (renown_patron_dinner, the Vaneshades).
+#  Then cross-system cards: what your fame does to the people around you (pool `fame_between`).
+# ============================================================
+
+# ---------------- The Season ----------------
+
+@thread the_season
+from: story
+with: begun=flag(season_begun)
+class: story
+repeat: 1
+tags: story renown society
+name: The Season
+premise: The patrons had noticed you. Their round of suppers and their ball had a place laid for you, if you wanted it.
+journal:
+  flag(season_begun): An invitation came with a crest on it: the patrons' Season had a place laid for you.
+  flag(season_charmed): At the first supper you were the talk of the table.
+  flag(season_plain): At the first supper you were plainly yourself, and some of the table liked it.
+  flag(season_sponsored): Lady Vaneshade offered to sponsor you, and you let her.
+  flag(season_unsponsored): Lady Vaneshade offered to sponsor you, and you thanked her and said no.
+  flag(season_ball_star): At the patrons' ball, you outshone the Season's other darling.
+  flag(season_ball_shared): At the patrons' ball, you shared the floor with the Season's other darling.
+  flag(season_price_paid): A patron asked a favour in return, and you did it.
+  flag(season_price_refused): A patron asked a favour in return, and you refused.
+  flag(season_in): The Season ended with a standing invitation. You belong among them now, a little.
+  flag(season_out): The Season ended, and you went back up the hill and didn't look back.
+status:
+  resolved: flag(season_in) or flag(season_out)
+members:
+  start season_invitation
+
+@event season_invitation
+title: A Card With a Crest
+trigger: auto
+tone: warm
+when: term and not wrapup and month <= 3 and (renown_famous() or (renown_known() and seen(renown_patron_dinner) > 0)) and not flag(season_begun) and seen(season_invitation) == 0
+priority: 40
+art: letter
+scene: A heavy cream card with a gilt crest lying on a dormitory bed beside a pile of textbooks, a student holding it up to the light.
+text: The card is heavy, cream and gilt-edged, and it has your name on it in a hand that has written a great many names. The patrons of the academy, it says, would be delighted to see you at the Season: a round of suppers in the town houses below the hill, and a ball at the end of it. People who go to the Season come back different. People say so as if it were a warning.
+> left: Accept
+  flag season_begun
+  gold -small
+  renown +small
+  queue season_first_supper in 1
+  say: You write back in your best hand and spend more than you meant on a decent coat. Word gets round the castle that you're going. Your friends are impressed and a little wary. "Don't come back talking about wine," one of them says.
+> right: Send your regrets
+  mood +tiny
+  say: You send a polite note saying you're afraid your studies won't allow it. It's half true. The card goes in a drawer, and now and then you take it out and look at the crest.
+
+@event season_first_supper
+title: The First Supper
+thread: the_season
+trigger: queued
+tone: tense
+defer: off_campus
+art: meal
+scene: A long candlelit table in a townhouse dining room, silver and crystal everywhere, a student in a new coat seated between two elderly patrons in jewels.
+text: The first supper is twelve courses in a town house with a ceiling painted with clouds. You're seated between a retired magistrate and a woman who owns half the orchards in the valley. Both of them have read about you. Both of them want to see whether you're as interesting as the Ledger said.
+> left: Be the talk of the table
+  challenge appeal adept-:
+    win:
+      flag season_charmed
+      renown +small
+      queue season_lady_vaneshade in 1
+      say: You tell the story about the lake, and the one about the stairs, and get the magistrate laughing so hard he has to put down his fork. By the ninth course the whole table is listening. Someone at the far end asks your name twice, to remember it.
+    lose:
+      flag season_plain
+      mood -small
+      queue season_lady_vaneshade in 1
+      say: You try to be dazzling and get the story about the lake backwards. The orchard woman corrects you, kindly, which is worse. You spend the last three courses very interested in your soup.
+> right: Just be yourself
+  flag season_plain
+  mood +tiny
+  queue season_lady_vaneshade in 1
+  say: You don't try to dazzle. You ask the orchard woman about her orchards, and she talks for an hour, delighted, about apple blight. The table thinks you're a little dull. She thinks you're the best guest she's had in years.
+
+@event season_lady_vaneshade
+title: Lady Vaneshade's Offer
+thread: the_season
+trigger: queued
+tone: tense
+defer: off_campus
+art: crown
+scene: A tall woman in crimson and black in a drawing room by a fire, holding a glass she isn't drinking from, a student standing very straight before her.
+text: At the second supper, Lady Vaneshade{met(lyra): , Lyra's mother,|} takes you aside into a drawing room. "You'll want a sponsor," she says. "Someone to tell you which fork, and which people. I could be that. In return, you'll be mine: seen with my family, and not with anyone I'd rather you weren't." She doesn't say who that is. She doesn't have to.
+> left: Accept her sponsorship
+  flag season_sponsored
+  gold +medium
+  renown +small
+  alignment -tiny
+  queue season_rival in 1
+  say: "Good," she says, and from then on doors open before you reach them. She tells you which forks. She also tells you, once, very quietly, who not to be seen with, and you find that you've done as she says before you've thought about it.
+> right: Thank her, and say no
+  flag season_unsponsored
+  alignment +tiny
+  mood -tiny
+  queue season_rival in 1
+  say: "I'd rather find my own forks," you say. Lady Vaneshade looks at you for a long moment, then smiles, not warmly. "Most people do," she says. "Most people find the wrong ones." The doors stay shut a little longer after that.
+
+@event season_rival
+title: The Season's Other Darling
+thread: the_season
+trigger: queued
+tone: tense
+defer: off_campus
+art: duel
+scene: A crowded salon, a dashing young duelling champion holding court by the piano, a ring of admirers, a student watching from the doorway.
+text: The Season always has a darling, and this one had one before you came: a young duelling champion from the city, handsome, charming and very used to being the most interesting person in the room. At the third supper they find you by the piano. "So you're the student," they say. "Shall we find out which of us they'll remember?"
+> left: Take them on
+  challenge perform adept:
+    win:
+      flag season_ball_star
+      renown +medium
+      queue season_ball in 1
+      say: You don't compete. You just tell the room a better story than they do, and the room turns, slowly, like a ship. The champion laughs, and bows, and says, "Well. Until the ball, then." The whole Season hears about it by morning.
+    lose:
+      flag season_ball_shared
+      mood -small
+      queue season_ball in 1
+      say: You try, and the champion is better at this than you, much better, and the room stays with them. Afterwards they find you on the terrace. "You were good," they say. "I've just had more practice." It's oddly comforting.
+> right: Make a friend of them
+  flag season_ball_shared
+  mood +small
+  renown -tiny
+  queue season_ball in 1
+  say: "Why don't we not?" you say, and the champion looks surprised, then delighted. You spend the rest of the evening on the terrace, laughing at everyone else. The Season is a little disappointed. You've never had a better supper.
+
+@event season_ball
+title: The Patrons' Ball
+thread: the_season
+trigger: queued
+tone: warm
+defer: off_campus
+art: music
+scene: A grand townhouse ballroom, chandeliers blazing, couples whirling, a student pausing at the top of a staircase as the room turns to look.
+text: The Season ends with the patrons' ball. {flag(season_ball_star): Everyone knows by now that you're the one to watch, and the room turns when you come down the stairs.|You and the champion come down the stairs together, by arrangement, and the room can't decide which of you to look at.} The patrons are watching who you dance with, who you talk to, and how long you stay.
+> left: Stay till dawn, and dance with everyone
+  renown +medium
+  health -small
+  gold -small
+  queue season_friends in 1
+  say: You dance with the magistrate, the orchard woman, the champion and a very old duke who treads on your feet with great dignity. You leave at dawn with your shoes in your hand. By noon every patron in the valley knows your name.
+> right: Leave at midnight, while it's still lovely
+  mood +small
+  renown +tiny
+  queue season_friends in 1
+  say: You dance three dances, eat one perfect pastry and slip out at midnight into the cold. Walking up the hill under the stars, you think it was the loveliest night of your life, and you're glad you didn't stay long enough to spoil it.
+
+@event season_friends
+title: Back Up the Hill
+thread: the_season
+trigger: queued
+tone: tense
+defer: off_campus
+cast:
+  f: any where classmate_here(f) and rel(f) >= 25
+art: group
+scene: A common room on an ordinary evening, a group of friends around a table mid-laugh, one student standing in the doorway still in a good coat.
+text: You come back to the common room after the Season, still in the good coat, and {f} and the others are in the middle of a joke you don't understand, about something that happened while you were away. {f} looks up. "Oh," {they} say{s}. "You're back. How were the patrons?" It's not unkind. It's not quite warm either.
+> left: Tell them everything
+  renown +tiny
+  rel f -small
+  queue season_price in 1
+  say: You tell them about the ceiling with the clouds and the duke who trod on your feet. They listen, politely. Somewhere in the middle, you notice {f} looking at the coat. Later, you hear the joke you missed. It was very good. You weren't there.
+> right: Take off the coat and sit down
+  rel f +small
+  renown -tiny
+  queue season_price in 1
+  say: You hang the coat on the back of the door and sit down and ask what the joke was. It takes three people to explain it and by the end you're all crying with laughter. {f} passes you the last of the biscuits, as if you'd never gone.
+
+@event season_price
+title: One Word From You
+thread: the_season
+trigger: queued
+tone: tense
+defer: off_campus
+art: scales
+scene: A letter with a crest open on a desk beside a quill and an inkpot, a student sitting back with arms crossed, frowning at it.
+text: A letter from one of the patrons, very warm, very grateful for your company at the Season. And a small favour, between friends: the patron's grandson is applying to the Duelling Circle, and a word from you would settle it. You've seen the grandson duel. He's dreadful, and someone better will lose the place.
+> left: Write the word
+  flag season_price_paid
+  alignment -small
+  gold +small
+  renown +tiny
+  queue season_end now
+  say: You write two warm sentences and seal them. The grandson gets his place. A purse arrives with the patron's thanks. A second-year who should have had the place stops you in the corridor to ask if you know why they didn't. You say no.
+> right: Refuse, politely
+  flag season_price_refused
+  alignment +small
+  renown -tiny
+  queue season_end now
+  say: You write back that the Circle chooses its own, and you wouldn't presume. The patron's reply is short and cool. The second-year gets the place, and never knows you had anything to do with it. That seems right.
+
+@event season_end
+title: The Season Ends
+thread: the_season
+trigger: queued
+tone: warm
+defer: off_campus
+art: letter
+scene: A student at a window with a heavy cream card in one hand, looking down at the lights of the town houses below the hill.
+text: Another card with a crest: the patrons hope you'll come again next Season, and the one after. {flag(season_sponsored): Lady Vaneshade has added a line in her own hand: "You did well. Do better."|flag(season_price_refused): One patron's name, you notice, is missing from the bottom.|It is signed by every patron in the valley.} You could have a place among them, if you wanted one, for good.
+> left: Take your place among them
+  flag season_in
+  renown +small
+  gold +small
+  mood -tiny
+  say: You write back that you'd be honoured. It's a door you can walk through now whenever you like, and you suspect you'll walk through it for the rest of your life. You're not sure, some evenings, whether that's a good thing.
+> right: Let the Season go
+  flag season_out
+  mood +small
+  renown -small
+  say: You write back, kindly, that you've loved it and won't come again. Then you put the card in the drawer with the first one, and go down to the common room, where somebody has saved you a seat by the fire.
+
+# ---------------- fame among friends ----------------
+
+@pool fame_between
+desc: What your fame does to the people around you: dealt with the other spotlight cards while you're Known.
+from: spotlight
+when: renown_known()
+weight: 8
+
+@event fame_rivals_for_you
+title: Both Want You Tonight
+pool: fame_between
+tone: tense
+cast:
+  a: any where classmate_here(a) and rel(a) >= 15
+  b: any where classmate_here(b) and rel(b) >= 15 and at_odds(a, b)
+per: a
+art: cup
+scene: A courtyard at dusk, two students on either side of another, each holding an invitation and pointedly not looking at the other.
+text: {a} and {b} can't stand each other, and both of them have asked you to the Newt tonight, separately, each making very sure the other heard. It isn't really about the Newt. It's about who gets to be seen walking in with you. They're both waiting for your answer, in front of half the courtyard.
+> left: Go with {a}
+  rel a +small
+  rel b -small
+  npc_rel a b -tiny
+  renown +tiny
+  say: You go with {a}. {a} walks into the Newt a little taller than usual. {b} hears about it by breakfast, and greets you all week with a small, bright, terrible smile.
+> right: Turn both down, kindly
+  rel a -tiny
+  rel b -tiny
+  mood -tiny
+  alignment +tiny
+  say: You tell them both you're staying in, and do, and read in the common room till late. Each of them assumes you've gone with the other. By the time they work out you haven't, they've both forgiven you.
+
+@event fame_wedge
+title: Using You
+pool: fame_between
+tone: tense
+cast:
+  a: any where classmate_here(a) and rel(a) >= 25
+  b: any where classmate_here(b) and rel(b) >= 15 and get_along(a, b)
+per: a
+art: mask
+scene: Two friends arguing in low voices in an alcove of a corridor, one of them gesturing back the way they came, where another student is waiting.
+text: {a} takes you aside. "I don't like how {b} is with you lately," {they} say{s}. "{b} never sat with us before you were famous. Now {b}'s everywhere you are, telling people you're close." {a} and {b} have been friends for years. You can see it costing {a} to say it.
+> left: Tell {a} {b} is a friend
+  rel a -small
+  rel b +small
+  npc_rel a b -tiny
+  say: "{b}'s always been kind to me," you say. {a} looks at you for a moment, then nods, stiffly. A week later you see {a} and {b} at opposite ends of the refectory. You're fairly sure that was you.
+> right: Thank {a}, and watch
+  rel a +small
+  npc_rel a b +tiny
+  study -tiny
+  say: You thank {a}, and say you'll keep an eye out, and you do. {b} is, you notice, a lot more interested in where you're going than in you. You start sitting with {a} again. {a} doesn't say "I told you so", which is generous.
+
+@event fame_lend_your_name
+title: Your Name on It
+pool: fame_between
+tone: light
+cast:
+  f: any where classmate_here(f) and rel(f) >= 20
+per: f
+art: paper
+scene: A student holding a hand-painted sign for a stall at a fair, a pot of paint and a brush ready, looking hopefully at a friend.
+text: {f} is running a stall at the next fair, selling enchanted bookmarks for the infirmary fund, and has had an idea: what if the sign said "as used by {player}"? You have, in fact, used one. Once. "It'd sell out in an hour," {f} says. "Go on. It's for the beds."
+> left: Lend your name
+  chance even +1 if renown >= 60:
+    rel f +small
+    renown +small
+    alignment +tiny
+    say: The stall sells out in forty minutes, and the infirmary gets two new beds. {f} is giddy all evening. You're asked to sign three bookmarks, and you do, and one of them ends up in the library, where it marks a page for years.
+  else:
+    rel f +tiny
+    renown -small
+    say: The sign draws a crowd, and then the bookmarks start marking the wrong pages, all of them, at once. People bring them back in handfuls, saying your name in a tone you don't like. {f} is mortified. You help pack up the stall.
+> right: Help at the stall instead
+  rel f +small
+  study -small
+  say: You say your name stays off the sign, but you'll spend the afternoon behind the stall. You sell twenty bookmarks, badly, and {f} sells two hundred, very well. It's one of the nicest afternoons of the term.
+
+@event fame_best_friend_claims
+title: Your Best Friend, Twice
+pool: fame_between
+tone: light
+cast:
+  a: any where classmate_here(a) and rel(a) >= 10
+  b: any where classmate_here(b) and rel(b) >= 10 and at_odds(a, b)
+per: a
+art: paper
+scene: A gossip column on a corridor board with two paragraphs circled in different inks, two students on opposite sides of the corridor, arms folded.
+text: The gossip column this week has two letters. In one, {a} writes that {a} is "{player}'s closest friend, as everyone knows". In the other, {b} writes exactly the same thing about {b}. They can't stand each other. Everyone has read both. Everyone is waiting to see which one you'll sit with at lunch.
+> left: Sit with both of them
+  challenge appeal adept-:
+    win:
+      npc_rel a b +small
+      rel a +tiny
+      rel b +tiny
+      say: You sit down between them at lunch, and are so cheerful about it that neither can leave without looking petty. By the pudding they're arguing about the gossip column instead of each other. It's almost friendly.
+    lose:
+      rel a -tiny
+      rel b -tiny
+      mood -small
+      say: You sit between them, and they talk across you, about you, for the whole of lunch, in very polite voices. You leave with indigestion. The column next week is about lunch.
+> right: Sit with neither
+  rel a -tiny
+  rel b -tiny
+  mood +tiny
+  say: You sit with neither, at the far end, with a book. The column decides that your closest friend must be someone else entirely, and spends a fortnight guessing who. {a} and {b}, united at last, both think it's very unfair.
+
+@event fame_feud_table
+title: Sit With Me
+pool: fame_between
+tone: tense
+cast:
+  a: any where classmate_here(a) and rel(a) >= 15
+  b: any where classmate_here(b) and rel(b) >= 15 and at_odds(a, b)
+per: a
+art: meal
+scene: A refectory at supper, a student standing at a long table with an empty bench on each side, two other students at different tables watching warily.
+text: {a} and {b} have been at war all term, and half the year has taken sides. You've noticed that where you sit, people follow. If you asked {a} and {b} to supper at the same table, in front of everyone, the castle would see it, and might follow that too. Or it might all blow up over the soup.
+> left: Ask them both to your table
+  challenge appeal adept:
+    win:
+      npc_rel a b +medium
+      renown +small
+      rel a +tiny
+      rel b +tiny
+      say: They both come, warily, because it's you. You keep the talk on safe ground until, somewhere after the pudding, {a} makes a joke and {b} laughs before remembering not to. By the end of the week, half the year has stopped taking sides.
+    lose:
+      npc_rel a b -small
+      renown -small
+      say: They both come, and it lasts until the soup, when {a} says something about {b}'s family and {b} leaves with the bread. Everybody saw it. The war is worse, and now your table is part of it.
+> right: Stay out of it
+  mood -tiny
+  study +tiny
+  say: You stay out of it and sit where you always sit. The war goes on, at its own pace. Sometimes you catch {a} or {b} glancing at your table, as if they'd hoped you might do something. You don't.
+
+@event fame_after_you
+title: What They Found Instead
+pool: fallen
+tone: warm
+cast:
+  a: any where classmate_here(a) and rel(a) >= 10
+  b: any where classmate_here(b) and rel(b) >= 10 and npc_rel(a, b) >= 20
+per: a
+art: heart
+scene: A quiet lakeshore path in the evening, two students walking close together ahead, laughing, a third student watching them from a bench.
+text: When you were famous, {a} and {b} used to argue over who got to walk with you. Now nobody fights over you, and you see the two of them on the lakeshore path in the evening, walking together, very close, laughing at something. They haven't noticed you on the bench. They don't need to.
+> left: Call out to them
+  rel a +small
+  rel b +small
+  mood -tiny
+  say: You call out, and they turn, and wave, and come over, and the three of you sit on the bench until it's dark. They're kind. You can see, though, that they'd have been just as happy walking on.
+> right: Let them walk on
+  mood +small
+  npc_rel a b +tiny
+  say: You let them walk on, and watch them go round the curve of the shore until you can't see them. It's a strange feeling, being the reason two people met, and not being needed any more. Mostly it's a good one.

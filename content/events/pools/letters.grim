@@ -342,6 +342,9 @@ text: An envelope from Seraphine with a single tarot card inside, the Wheel, and
 > right: Write and ask her to finish it
   rel seraphine +small
   say: Her reply comes ten days later, and finishes the sentence: "…long way round. Or do. It's lovely either way." It is, when you take it.
+  if knows(seraphine.slips):
+    rel seraphine +tiny
+    say: You date your letter clearly at the top and underline it, the way she needs. Her reply begins: "Thank you for the today."
 
 @event letter_seraphine_painting
 title: A Painting of You
@@ -485,6 +488,9 @@ text: Kael has sent a star chart, inked by hand, with one cluster circled in pen
 > right: Thank him plainly
   spark kael +small
   say: You write that it's the kindest thing anyone has sent you. His reply says "You are welcome." Below that, smaller, as if added later: "Very."
+  if knows(kael.thaw):
+    rel kael +tiny
+    say: You sign it "until the thaw". His next letter is the first he signs the same way.
 
 @event letter_nessa_deadline
 title: URGENT

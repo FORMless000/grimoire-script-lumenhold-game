@@ -857,6 +857,9 @@ text: A delegation from Thornwick Academy is visiting. Their students are smug, 
     say: Tamsin finds you before you find them, and is exactly like their letters, only faster. You show them the observatory. They admit, grudgingly, that it's better than theirs.
   else:
     say: You show them the observatory. One of them admits, grudgingly, that it's better than theirs.
+  if knows(tamsin.sketches):
+    rel tamsin +tiny
+    say: You recognise their illusion professor at once, from a hundred goats in a hundred margins, and have to look at the floor. Tamsin is no help at all.
 > right: Defend Lumenhold's honour
   challenge combat apprentice+:
     win:

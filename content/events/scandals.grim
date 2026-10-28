@@ -1,0 +1,433 @@
+# ============================================================
+#  Scandals (phase 4, docs/phase4-plan.md, batch P4-09; design §8.2): the crash that fame risks. Each is a menu with
+#  three ways out: own it (renown falls, a step toward Lumen, people keep faith), fight it (a check: the story dies, or
+#  it gets much worse) or spin it (the story moves onto someone else: a step toward Hollow, and it costs). Half are
+#  callbacks, queued by a choice on a spotlight card; the rest come at random while you're Famous, by the two
+#  appointments below (slim, and slim again once you're a Legend: about the design's (renown − 50)%).
+# ============================================================
+
+@pool scandal
+desc: What every scandal shares: an incident, a menu of three ways out (own, deny, spin), never drawn at random.
+trigger: queued
+class: incident
+tone: tense
+repeat: 1
+tags: renown scandal
+
+@pool scandal_any
+desc: The scandals that can find any Famous student, dealt by the scandal appointments.
+from: scandal
+when: renown_famous()
+
+@appointment scandal
+desc: While you're Famous, now and then a month brings a scandal.
+at: month
+when: renown_famous() and term and not wrapup
+chance: slim
+deals: pool scandal_any
+
+@appointment scandal_legend
+desc: A Legend has twice the chance: a second roll each month.
+at: month
+when: renown_legend() and term and not wrapup
+chance: slim
+deals: pool scandal_any
+
+# ---------------- callbacks: what an earlier choice brings home ----------------
+
+@event scandal_ledger_lie
+title: The Dragon, Checked
+pool: scandal
+when: renown_known()
+art: paper
+scene: A newspaper spread out on a refectory table, a small boxed headline circled in red ink, a ring of students reading over each other's shoulders.
+text: Somebody has checked the Ledger's profile of you, the one with the better version of yourself in it. A boxed item on page two lists, very politely, the four things in it that never happened, with dates. The refectory has read it. Everybody is waiting to see what you'll say.
+> own: Own every word of it
+  renown -medium
+  alignment +small
+  rel nessa +tiny
+  say: You write to the Ledger: yes, you embellished; yes, it was vanity; no, there was no dragon. Nessa prints it in full. People are unkind about it for a week, and then, slowly, they start to trust what you say again.
+> deny: Insist it was all true
+  challenge deceive adept:
+    win:
+      renown -tiny
+      say: You insist, calmly and in detail, that every word was true, and you tell it so well that the boxed item starts to look petty. By Friday people have decided the checker had a grudge. You don't feel as good about it as you'd hoped.
+    lose:
+      renown -large
+      alignment -small
+      rel nessa -small
+      say: You insist it was all true, and the checker produces a fifth thing, the one you'd forgotten. It's in the next issue, with your denial printed beside it. Nessa doesn't speak to you for a fortnight.
+> spin: Say Nessa twisted your words
+  alignment -medium
+  rel nessa -medium
+  renown -tiny
+  say: You tell people the Ledger must have muddled your interview. It works, mostly: the story becomes one about sloppy journalism. Nessa reads it in silence, folds the paper very small, and doesn't ask you for another interview.
+
+@event scandal_candle_smoke
+title: The Study Candle Fire
+pool: scandal
+when: renown_known()
+art: candle
+scene: A dormitory window with a scorched curtain, a smoking candle stub on the sill with a little painted label of a student's face, a prefect writing in a notebook.
+text: One of the candles with your face on it set a dormitory curtain smouldering last night. Nobody was hurt, but the whole tower was woken and stood in the courtyard in their nightclothes for an hour. By breakfast the castle is calling them "the {player} candles", and it isn't meant kindly.
+> own: Pay for the damage and stop the sales
+  gold -medium
+  renown -small
+  alignment +small
+  say: You go to the chandler and tell him to stop selling them, and you pay for the curtain out of your own cut. It costs you most of what you made. The tower grumbles, then forgives you, and someone leaves a fire bucket outside your door as a joke.
+> deny: Prove the candle wasn't the cause
+  challenge research adept-:
+    win:
+      renown -tiny
+      say: You take the stub to the alchemy laboratory and prove, with a great deal of smoke, that it was knocked over by a cat, not faulty. The cat belongs to a prefect. The story changes very fast.
+    lose:
+      renown -medium
+      mood -small
+      say: You set out to prove the candle wasn't to blame, and your test sets a second curtain alight, in the laboratory, in front of the lecturer. The story is now much better than it was. You are not in it as the hero.
+> spin: Blame the chandler's wicks
+  alignment -small
+  renown -tiny
+  say: You say, loudly and often, that the chandler must have changed his wicks without telling you. The castle turns on the chandler, who loses his academy trade for a term. You keep your name. You don't buy candles in the village for a long while.
+
+@event scandal_memoir_book
+title: Chapter Nine
+pool: scandal
+when: renown_known()
+art: book
+scene: A thin, glossy book lying open on a library table, one page heavily underlined, a group of students crowded around it whispering.
+text: The memoir has come out in full, and chapter nine, which you never read, says that you once copied a whole essay from a friend in your first year. It isn't true. It's very well written. Half the castle has a copy, and the other half is borrowing one.
+> own: Own that you never read it
+  renown -medium
+  alignment +small
+  say: You admit, publicly, that you signed a book you never read, and that chapter nine is invented. People laugh at you for it, and then believe you. The publisher's next printing quietly leaves the chapter out.
+> deny: Make the publisher retract it
+  challenge appeal adept:
+    win:
+      renown -tiny
+      gold +tiny
+      say: You write to the publisher, then go to the city and sit in his office until he agrees to print a correction and pay you for the trouble. The correction is small. The money is not. The castle decides you were wronged.
+    lose:
+      renown -medium
+      gold -small
+      say: The publisher points to the contract you signed, the clause about "creative licence", and offers you a free copy. You pay for the journey home yourself. The chapter stays in.
+> spin: Hint that someone else copied
+  alignment -medium
+  renown -tiny
+  say: You say, with a sad look, that it must have been confused with somebody else's story. Within a day, the castle has decided whose. It wasn't them either. They don't speak to you again.
+
+@event scandal_flourish_hurt
+title: The {player}, Done Badly
+pool: scandal
+when: renown_known()
+art: wand
+scene: An infirmary bed with a first-year sitting up, both eyebrows missing and one sleeve singed, a matron frowning, a crowd of first-years peering round the door.
+text: A first-year doing "the {player}", the flourish that does nothing, did it so hard that the spell went off sideways. Nobody is badly hurt: the first-year has lost both eyebrows and is enjoying the attention. But a professor has written to the headmistress, and the word going round is "reckless".
+> own: Visit them and teach the real one
+  renown -small
+  alignment +small
+  study -small
+  say: You go to the infirmary and sit with the first-year, then teach the whole yard the real flourish, the one that steadies a cast, slowly, for a week. The eyebrows grow back. The professor's letter, you hear, ends with "and the student took it in hand."
+> deny: Say it was never your flourish
+  challenge appeal adept-:
+    win:
+      renown -tiny
+      say: You point out, reasonably, that you have never once done the flourish and that it isn't yours to teach or stop. People see the sense in it. The first-year, eyebrowless, agrees cheerfully that it was "more of a tribute".
+    lose:
+      renown -medium
+      alignment -tiny
+      say: You say it was never your flourish, and somebody produces a sketch of you doing it, solemnly, in the yard, on the day the whole yard cheered. You had forgotten that. Nobody else has.
+> spin: Blame the lecturer who never stopped it
+  alignment -small
+  renown -tiny
+  say: You ask, in the right ears, why the practice-yard lecturer let a dangerous flourish go on for a month. The lecturer is spoken to. The flourish is banned. You were never mentioned, and you never quite look the lecturer in the eye again.
+
+@event scandal_wrong_notes
+title: The {player} Method, Failed
+pool: scandal
+when: renown_known()
+art: scroll
+scene: A results list pinned to a board, a first-year in tears beside it clutching a sheaf of copied notes, older students reading the notes and shaking their heads.
+text: The copies of your notes that were sold in the common room had a mistake in them, in a page you never corrected, and a first-year who learned it word for word has failed a paper on it. The first-year's friends are telling everyone that "the {player} method" is a fraud, and that you took money for it.
+> own: Refund it and tutor the first-year
+  gold -small
+  renown -small
+  alignment +small
+  study -small
+  say: You give back every crown you made, and spend three evenings with the first-year going over the paper properly. They pass the resit. The first-year's friends, grudgingly, stop telling the story, and start telling a different one.
+> deny: Point out the page wasn't yours
+  challenge research apprentice+:
+    win:
+      renown -tiny
+      say: You find the original and show, page by page, that the mistake was added by the copyist. It's true, and it's convincing. The seller has to refund everyone. You still feel bad about the first-year.
+    lose:
+      renown -medium
+      say: You go looking for your original, and find the mistake in your own hand. There's no arguing with it. The story gets worse for the week you spent pretending it wasn't there.
+> spin: Blame the seller
+  alignment -small
+  renown -tiny
+  say: You tell everyone the third-year with the cash tin had been altering the notes for profit. The third-year is hauled in front of a prefect and loses their place in two clubs. It isn't quite true. It's close enough that you sleep, most nights.
+
+@event scandal_thornwick_cheat
+title: Thornwick Cries Foul
+pool: scandal
+when: renown_known()
+art: duel
+scene: A rival school's newspaper held up in a courtyard, its front page showing a cartoon of a student cheating at a stone circle, a crowd jeering and laughing.
+text: Thornwick's student paper says you cheated at the boundary stones: that the last spell, the one that won it, used a ward Thornwick rules forbid. It's half true. Lumenhold's rules allow it; Thornwick's don't, and nobody agreed whose rules it was. The cartoon on their front page is very good.
+> own: Offer them a rematch, their rules
+  challenge spell adept:
+    win:
+      renown +small
+      alignment +small
+      say: You write and offer a rematch under Thornwick rules, and win that too, by a hair. Thornwick's paper prints a short, sour correction. The cartoon goes up on the Lumenhold common-room wall, framed, with a new caption.
+    lose:
+      renown -medium
+      alignment +small
+      say: You offer a rematch under Thornwick rules, and lose it, fairly. It hurts. But the story Thornwick tells now is about a Lumenhold student who came back to lose properly, and it isn't an unkind one.
+> deny: Say the rules were always Lumenhold's
+  renown -small
+  mood -small
+  say: You say flatly that the contest was at Lumenhold's boundary and under Lumenhold's rules. It's a fair point. It makes no difference to anybody at Thornwick, and it makes you sound, even to yourself, like someone who won on a technicality.
+> spin: Leak a Thornwick scandal of your own
+  alignment -medium
+  renown +tiny
+  say: You find out something unflattering about the Thornwick student who sent the challenge, and make sure it reaches their paper's rival. Within a week, nobody at Thornwick is talking about the boundary stones. You won. It doesn't taste of much.
+
+@event scandal_society_dare
+title: In Your Name
+pool: scandal
+when: renown_known()
+art: group
+scene: A castle rooftop at dawn, a small first-year clinging to a gargoyle, a crowd of prefects and a professor staring up from the courtyard below.
+text: The {player} Society, the club of first-years with ribbons, held an initiation last night, and the dare was to climb to the third gargoyle "like {player} would". One of them got stuck there till dawn. The castle is saying the society is dangerous, and that you never told them to stop.
+> own: Take responsibility for the society
+  renown -small
+  alignment +small
+  say: You go to the headmistress yourself and say it was your name, so it's your society, and you should have been paying attention. You write the society some rules. They are thrilled to have rules. Nobody climbs anything again.
+> deny: Say you never asked for a society
+  challenge appeal adept-:
+    win:
+      renown -tiny
+      say: You point out, gently, that you never asked for a society and have been to exactly one meeting. People agree that that's fair. The first-years are mortified. The first-year from the gargoyle sends you a note: "SORRY. Still worth it."
+    lose:
+      renown -medium
+      mood -small
+      say: You say you had nothing to do with it, and a first-year, very upset, shows everyone the minutes from the meeting you attended, with your signature. "We thought you'd want us to be brave," the minutes say. It's in the Ledger by Friday.
+> spin: Blame the society's president
+  alignment -small
+  renown -tiny
+  say: You let it be known that the president had been running the society badly for months. The president resigns in tears. The society carries on without them. You don't go to the next meeting, or any of them.
+
+# ---------------- any Famous student ----------------
+
+@event scandal_leaked_letter
+title: Private Correspondence
+pool: scandal_any
+art: letter
+scene: A gossip sheet with a letter printed across its centre, a student snatching a copy from a crowd, another reading it aloud on a bench.
+text: A private letter of yours, a long, frank one written to someone back home, has been printed in a gossip sheet. It isn't the Ledger: it's one of those single pages that appear on the boards overnight. In it you say what you really think of several people. They have all read it.
+> own: Apologise to each of them, in person
+  renown -small
+  alignment +small
+  mood -small
+  say: You go round, one by one, and apologise, and say the letter was unkind and you were tired and homesick when you wrote it. Most of them accept it. One of them says you were right about their singing. It takes a week, and it's the worst week of the term.
+> deny: Find out who stole it
+  challenge research adept-:
+    win:
+      renown +tiny
+      say: You trace the paper and the ink back to a second-year with a grudge and a key to the post room. Once it's known the letter was stolen, the story becomes the thief's. People forgive you faster than you expected.
+    lose:
+      renown -medium
+      say: You spend a week hunting the thief and find nothing, and meanwhile three more pages of the letter appear. Everybody has noticed that you never said it wasn't true.
+> spin: Say it was forged
+  alignment -medium
+  renown -tiny
+  say: You tell everyone the letter was forged, by someone who hates you, and you have a guess who. It works. Somebody else is now the most disliked student in the castle. You can't quite meet the eyes of the people in the letter.
+
+@event scandal_cheating_rumour
+title: Nobody Gets Marks Like That
+pool: scandal_any
+when: gpa >= 3.0
+art: scroll
+scene: A corridor outside an examiners' office, students muttering behind their hands as one student passes with a results slip.
+text: Somebody has started saying that nobody gets marks like yours honestly, and that someone famous could easily get hold of the papers. It's nonsense. But the examiners have heard it, and you've been asked, very politely, to come and answer some questions on Thursday.
+> own: Ask them to examine you again
+  renown -small
+  study +small
+  alignment +small
+  say: You ask the examiners to set you a fresh paper, there and then, with a proctor. They do. You sit it in a cold room with an hourglass and a lecturer watching, and you do well. The rumour dies in a week, and nobody apologises.
+> deny: Answer their questions, and theirs alone
+  challenge appeal adept:
+    win:
+      renown -tiny
+      say: You answer every question on Thursday plainly and well, and the examiners thank you for your time. One of them says, at the door, that they'd never really doubted it. By the next week the rumour has moved on.
+    lose:
+      renown -medium
+      mood -small
+      say: You get flustered on Thursday, and the examiners, who had only half believed the story, start to believe it a little more. Nothing comes of it in the end. But it takes the whole term to come to nothing.
+> spin: Say who really had the papers
+  alignment -medium
+  renown -tiny
+  say: You let slip a name, someone you once saw near the examiners' office. The rumour moves on to them at once. They are questioned for a week and cleared. They know where it came from. So do you.
+
+@event scandal_ex_tells_all
+title: Their Side of It
+pool: scandal_any
+cast:
+  x: any where met(x) and bond(x) == "ex"
+per: x
+art: heartbreak
+scene: A crowded common room, a student holding court with a cup in hand, telling a story to a rapt circle, another student frozen in the doorway.
+text: {x} has been telling the story of the two of you to anyone who'll listen: the way it started, the way it ended, and a great many things in between that you'd thought were private. The common room goes quiet when you come in. Somebody coughs.
+> own: Tell your own side, kindly
+  renown -small
+  alignment +small
+  rel x +small
+  say: You don't argue. You say that it ended badly and you're sorry for your part in it, and that {x} isn't wrong about everything. It takes the air out of the story. A week later {x} stops you in a corridor and says, stiffly, that {they} had gone too far.
+> deny: Say it's all made up
+  challenge deceive adept-:
+    win:
+      renown -tiny
+      rel x -small
+      say: You laugh it off and say {x} always did have an imagination. People decide to believe you, mostly. {x} hears about it and goes very quiet, and the story stops, and so does anything else between you.
+    lose:
+      renown -medium
+      rel x -medium
+      say: You say it's all made up, and {x} produces your letters. All of them. The common room reads them aloud, with feeling. You have to leave by the window.
+> spin: Tell a worse story about {x}
+  alignment -medium
+  rel x -large
+  renown +tiny
+  say: You tell a story about {x}, a worse one, and some of it is true. The common room switches sides by supper. {x} doesn't come down to meals for a week. You win, in the sense that nobody's talking about you.
+
+@event scandal_curfew_column
+title: Seen Where You Shouldn't Be
+pool: scandal_any
+art: moon
+scene: A gossip column pinned to a noticeboard with one paragraph circled, a sketch beside it of a student creeping past a lantern at night.
+text: The gossip column has a paragraph about a "certain famous student" seen creeping back past the night porter at two in the morning, "from the direction of the boathouse". Nobody needs to guess who. A prefect has torn it down twice. It keeps going back up.
+> own: Own up to the prefects
+  renown -small
+  alignment +small
+  say: You go to the prefects' room and say yes, it was you, and you were out walking because you couldn't sleep. They give you a week of detention polishing the trophy cabinet. It's dull. The column moves on, because there's nothing left to whisper.
+> deny: Prove you were somewhere else
+  challenge deceive adept-:
+    win:
+      renown -tiny
+      say: You produce three friends who swear you were playing cards in the common room till one. The column prints a short, sniffy correction. Your friends make you buy them supper for a month.
+    lose:
+      renown -medium
+      say: Your alibi lasts until somebody points out that the common room was locked at midnight. The next column runs the whole story, with the bit about the alibi. The prefects are not amused.
+> spin: Hint it was someone in a borrowed coat
+  alignment -small
+  renown -tiny
+  say: You let it be known you'd lent your coat that night to a friend. It's half true. The column hunts for the friend, who doesn't thank you for it, and the story slowly turns into one about the coat.
+
+@event scandal_snubbed
+title: The Snub
+pool: scandal_any
+art: mask
+scene: A first-year sitting alone on a stone bench, face in hands, a group of first-years glaring across a courtyard at an older student walking away.
+text: The story is that a first-year waited two hours in the rain outside your lecture to ask you something, and you walked straight past without a word. You don't remember it. You might have been thinking about something else. The first-year cried, apparently, and the first-years have decided you're a monster.
+> own: Find the first-year and apologise
+  renown -small
+  alignment +small
+  mood +tiny
+  say: You find the first-year and apologise, properly, and ask what they'd wanted to ask. It was about the library. You take them there. By the end of the week, the first-years' monster has become the first-years' favourite again, mostly.
+> deny: Say you were never there that day
+  challenge deceive apprentice+:
+    win:
+      renown -tiny
+      say: You point out that you were in the infirmary that afternoon with a cold, and the matron, when asked, agrees. It's true, as it happens. The first-year must have mistaken somebody else for you.
+    lose:
+      renown -medium
+      alignment -tiny
+      say: You say you were never there, and three first-years say they saw you. The first-years are now sure you're a monster and a liar. It takes the rest of the term.
+> spin: Say the first-year has been stalking you
+  alignment -medium
+  renown -tiny
+  say: You tell people, sadly, that the first-year has been following you everywhere, and you didn't know what to do. People are sympathetic. The first-year stops coming to meals for a while. You never find out what they'd wanted to ask.
+
+@event scandal_thornwick_defection
+title: Off to Thornwick?
+pool: scandal_any
+art: paper
+scene: A newspaper from a rival school pinned up in a courtyard, the headline in large red letters, Lumenhold students tearing it down while others stare.
+text: Thornwick's student paper has run a story that you're leaving Lumenhold for Thornwick next year, with a quote, apparently from you, about Lumenhold's "draughty towers and draughtier lecturers". You've never said it. Half the castle believes it, and the other half is hurt that you'd joke about it.
+> own: Say you'd never leave
+  renown -tiny
+  alignment +small
+  mood -tiny
+  say: You stand up at supper and say, plainly, that you've never been asked and you'd never go, and that the towers are draughty but they're yours. The Great Hall bangs the tables. It's embarrassing. It works.
+> deny: Prove the quote is fake
+  challenge research adept-:
+    win:
+      renown +small
+      say: You find that the "quote" is lifted, word for word, from a Thornwick student's own letter home, which their paper printed last year. Lumenhold reprints both side by side. Thornwick's paper is very quiet for a month.
+    lose:
+      renown -medium
+      say: You try to prove the quote was invented, and can't, and the more you protest, the more people suspect you did say it, once, in a bad mood, somewhere. You probably did. You can't remember.
+> spin: Hint you've had a better offer
+  alignment -small
+  renown +small
+  mood -tiny
+  say: You let it be known you've had offers from all sorts of places, and Thornwick isn't the best of them. People are impressed. They are also, now, a little bit wary of you, and stop telling you things.
+
+@event scandal_forged_love_letter
+title: A Letter You Didn't Write
+pool: scandal_any
+cast:
+  y: any where classmate_here(y) and rel(y) >= 0
+per: y
+art: letter
+scene: A pink letter being passed hand to hand along a library table, a student at one end turning bright red, another at the far end staring in horror.
+text: A love letter is going round the library, in what looks exactly like your handwriting, addressed to {y}. It is very passionate and very badly spelled. You didn't write it. {y} has read it, and is now going very carefully out of every room you come into.
+> own: Go and talk to {y} first
+  rel y +small
+  renown -small
+  say: You find {y} before anybody else can, and say you didn't write it and you're sorry {they} had to read it. {y} laughs, from relief. "I did wonder about the spelling." The story fizzles, and you and {y} are, oddly, closer for it.
+> deny: Find the forger
+  challenge research adept-:
+    win:
+      renown +tiny
+      rel y +tiny
+      say: You compare the hand with every exercise book in your year, and find the forger: a second-year who thought it was the funniest thing ever done. The library agrees, a little. The second-year apologises, mostly to {y}.
+    lose:
+      renown -medium
+      rel y -small
+      say: You can't find the forger, and the longer you look, the more people think you're covering for yourself. {y} starts taking the long way round the library. It's a month before you can laugh about it.
+> spin: Say it was meant for someone else
+  alignment -small
+  rel y -small
+  renown -tiny
+  say: You say, with a wink, that it was meant for somebody else entirely, and wasn't it obvious? The castle spends a week guessing who. {y} is relieved, and then, for some reason, hurt, and you never quite work out why.
+
+@event scandal_credit_taken
+title: Whose Idea Was It?
+pool: scandal_any
+cast:
+  f: any where classmate_here(f) and rel(f) >= 15
+per: f
+art: book
+scene: A lecture hall with a diagram on the board, a professor pointing to one student, another student in the row behind sitting with arms folded and jaw set.
+text: The idea everyone's praising you for, the one the lecturer called "the best thing this year", started as something {f} said to you over supper. You'd forgotten. {f} hadn't. Now {f}'s friends are telling everyone that the famous {player} steals ideas from people who aren't famous.
+> own: Give {f} the credit, out loud
+  rel f +medium
+  renown -small
+  alignment +small
+  say: You go to the lecturer, with {f}, and say whose idea it was first. The lecturer puts both names on the board. {f} goes red and says it wasn't much of an idea, really. It was. People notice that you said so.
+> deny: Say you'd had it too
+  challenge deceive adept-:
+    win:
+      renown -tiny
+      rel f -small
+      say: You say you'd been thinking along the same lines for weeks, and you have notes to prove it, nearly. People accept it. {f} doesn't, and things between you are cool for a long while.
+    lose:
+      renown -medium
+      rel f -medium
+      say: You say you'd had the idea too, and {f} produces the napkin from supper with the idea sketched on it, and the date. The story is now much worse, and it has a napkin in it.
+> spin: Say {f} is jealous
+  alignment -medium
+  rel f -large
+  renown +tiny
+  say: You say, sorrowfully, that {f} has always been a little jealous of you. People believe it, because you're famous and {f} isn't. {f} stops sitting with you at supper, and you start to wonder whose ideas you're going to have now.

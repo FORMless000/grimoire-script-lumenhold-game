@@ -1,0 +1,325 @@
+# Use what you know, part 2 (phase 4, P4-13): moments where knowing someone, or what someone is like, changes
+# what you can do. Wiring is the `knowing` pool's (knowing.grim). Each card has an option that shows locked until
+# you know the fact it names.
+
+@event know_grisk_collectors
+title: Running Late
+pool: knowing
+tone: tense
+cast:
+  x: any where classmate_here(x) and rel(x) >= 10
+per: x
+when: met(grisk) and term
+art: coin
+scene: A common room at night, a student counting a few coins on a table and coming up short, a friend watching from the doorway.
+text: {x} is counting coins on the common-room table, and coming up short. {They} borrowed from Grisk in the village to get through the month, and the payment was due on Friday. "He was so nice about it," {x} says. "He called me his friend. He'll give me another week, surely."
+> left: "Ask him for more time, then."
+  rel x -tiny
+  mood -tiny
+  say: {x} goes down to the village to ask. The next evening there are two large, polite visitors at the castle gate asking for {x} by name, and {x} spends a fortnight's supper money making them go away. {They} don't call Grisk a friend after that.
+> right: "Pay him tonight. Trust me."
+  when: knows(grisk.collectors)
+  gold -small
+  rel x +small
+  say: You tell {x} about the waistcoats, and the trolls inside them, and how polite and thorough they are. {x} goes pale, and you lend {x.them} the rest. Grisk takes the coins at the Newt that night with real regret. "Such a pity," he says. "They were looking forward to it."
+
+@event know_grisk_newt
+title: Paid in Advance
+pool: knowing
+tone: light
+place: village
+when: met(grisk) and term
+art: coin
+scene: A village lane, a long queue of students outside a small shop with a hand-painted sign in the window offering half price.
+text: A stationer's in the village is selling a whole term of ink, paper and candles at half price, paid in advance. Half the castle is queuing down the lane. It's a real bargain, as long as the shop is still there at the end of term.
+> buy: Buy a term's worth
+  gold -small
+  chance even:
+    mood -small
+    say: Three weeks later the shutters are down and there's a notice on the door about creditors. Half the castle stands in the lane reading it. So do you.
+  else:
+    gold +medium
+    say: The shop lasts the term, just. You don't buy ink again until spring, and feel very clever every time you don't.
+> pass: Walk past the queue
+  mood -tiny
+  say: You walk past. You'll never know whether it was a bargain. That bothers you more than it should.
+> ask: Ask Grisk at the Newt first
+  when: knows(grisk.newt_table)
+  gold -tiny
+  rel grisk +tiny
+  say: You buy Grisk a drink at his corner table and mention the shop. He sighs at the ceiling like a man discussing rain. "Three weeks," he says. "Four, if the landlord is sentimental." It's gone in three, and you were not in the queue.
+
+@event know_grisk_favours
+title: Just a Small Favour
+pool: knowing
+tone: tense
+cast:
+  x: any where classmate_here(x) and rel(x) >= 10
+per: x
+when: met(grisk) and term
+art: pouch
+scene: A castle stairwell, a relieved-looking student holding a small parcel wrapped in oilcloth, a friend frowning at it.
+text: {x} looks relieved, which worries you. Grisk has offered to forget {x.their} whole debt for one small favour: carrying a parcel across the village after dark, for a client he didn't name. "It's nothing," {x} says. "It's a parcel. What's in a parcel?"
+> left: "A parcel's a parcel."
+  rel x +tiny
+  mood -tiny
+  say: {x} carries the parcel, and the debt is gone, just like that. {They} won't tell you where {they} took it, and for the rest of term {they} won't go down to the village alone.
+> right: "Pay in coin. I'll help."
+  when: knows(grisk.favours)
+  gold -small
+  rel x +small
+  alignment +tiny
+  say: You know about Grisk's favours, and the clients he never names. You and {x} scrape the coins together between you instead. Grisk takes them with a little bow. "Prudent," he says, and sounds almost disappointed.
+
+@event know_amaranth_book
+title: Peppermint and a Charm
+pool: knowing
+tone: warm
+cast:
+  x: any where classmate_here(x) and rel(x) >= 8
+per: x
+when: met(amaranth) and season == "winter"
+art: potion
+scene: A dormitory window seat in winter, a student holding a steaming mug of something green, a friend sniffing it doubtfully.
+text: {x} has had a cold for a week and has cured it, {they} say{s}, with a remedy of {x.their} own: peppermint, honey, a pinch of something from the alchemy lab and a charm {they} won't explain. It works. {They} {are} too embarrassed to show anyone. "Amaranth would laugh," {they} say{s}.
+> left: Ask for a cup yourself
+  mood +small
+  rel x +tiny
+  say: {x} makes you a cup. It's dreadful, and it works. {They} make{s} you promise to tell no one, and you never do, which seems a pity.
+> right: "She keeps a book of these."
+  when: knows(amaranth.book)
+  rel x +small
+  rel amaranth +tiny
+  study -tiny
+  say: You tell {x} about Sister Amaranth's book of her students' remedies. It takes a week of persuading. When {x} finally shows her, Amaranth tries it, says nothing at all, and copies it out on a fresh page in her square hand. {x} doesn't stop smiling for a day.
+
+@event know_amaranth_rounds
+title: Who Comes at Night
+pool: knowing
+tone: warm
+place: infirmary
+cast:
+  x: any where classmate_here(x) and rel(x) >= 10
+per: x
+when: met(amaranth) and seen(infirmary_missed_round) == 0
+art: bed
+scene: An infirmary ward at dusk, a feverish student in a bed by the window, a friend on the chair beside it, the lamps being lit.
+text: {x} is in the infirmary overnight with a fever, and frightened, the way people are when they're ill and it's getting dark. "What if something happens," {they} say{s}, "and nobody comes?" Visiting hours are nearly over.
+> left: Stay until they send you out
+  rel x +small
+  health -tiny
+  say: You stay, talking about nothing, until you're sent out with a scolding. {x} is asleep by then. You aren't, for hours.
+> right: "She does every round herself."
+  when: knows(amaranth.rounds)
+  rel x +small
+  mood +tiny
+  say: You tell {x} about the rounds: every bed, every night, by Amaranth herself, and never once missed. {x} doesn't quite believe you. In the morning {they} tell{s} you {they} woke at two, and there she was with her lamp. "She nodded at me," {they} say{s}, amazed.
+
+@event know_pell_not_yet
+title: Not Yet
+pool: knowing
+tone: warm
+place: pell_apothecary
+when: met(pell) and rel(pell) >= 10 and year >= 3 and seen(pell_draught) == 0
+art: bottle
+scene: An apothecary's wall of a thousand small drawers, one very old drawer open near the floor, an old man kneeling beside it with a yellowed card.
+text: Pell is restocking the bottom of the wall when you come in, and his oldest drawer is open beside him, the one with the yellowed card in it. He looks at you over the drawer for longer than usual, as if measuring something twice.
+> left: Wait for him to finish
+  mood +tiny
+  say: He finishes, shuts the drawer and serves you as if nothing happened, counting aloud, as always. On your way out you notice he's watching you go.
+> right: Ask about the card
+  when: knows(pell.oldest_drawer)
+  rel pell +small
+  mood +small
+  say: You ask about the card, the draught "of your own strength". Pell takes it out, reads it, and looks at you again. Then he puts it back, and under "Not yet." he adds one word in his precise hand: "Nearly." He doesn't explain. He doesn't need to.
+
+@event know_vey_own_face
+title: It Slides Off
+pool: knowing
+tone: light
+cast:
+  x: any where classmate_here(x) and rel(x) >= 8
+per: x
+when: met(vey) and term
+art: mirror
+scene: A dormitory mirror, a frustrated student pointing a wand at a roommate's hair, which is flickering between two colours.
+text: {x} has been trying all week to glamour {x.their} roommate's hair green, for a dare, and it won't hold: it slides off within the hour, every time. {They} {are} about ready to give up on illusion altogether.
+> left: Practise with {x.them} all evening
+  rel x +tiny
+  health -tiny
+  say: You practise all evening. By midnight the green holds for two whole hours. {x} says that's progress, and goes to bed looking like someone who doesn't believe it.
+> right: "Try it on your own face first."
+  when: knows(vey.own_face)
+  rel x +small
+  rel vey +tiny
+  say: You tell {x} what Vey says: a glamour you can't hold on yourself won't hold on anyone. {x} tries it on {x.their} own nose, swears at the mirror for an hour, and then it holds. The roommate is green for a week. Vey hears of it, awards nobody any points, and smiles.
+
+@event know_marisol_margins
+title: The Book in the Margins
+pool: knowing
+tone: warm
+place: library
+cast:
+  x: any where classmate_here(x) and rel(x) >= 8
+per: x
+when: met(marisol) and term
+art: book
+scene: A library table, a student staring at the same open page of a tidecalling textbook, a friend sitting down across from them.
+text: {x} has the tidecalling textbook open at the same page {they} had last week, and the week before. "It makes sense when I read it," {they} say{s}, "and no sense at all in the lake." The exam is close. {They} {are} starting to talk about dropping the course.
+> left: Drill {x.them} at dawn
+  study -small
+  rel x +small
+  say: You spend three cold dawns at the lake with {x}, going through it line by line. It helps, a little. {x} passes narrowly, and is grateful, and still hates the book.
+> right: "Ask Marisol about her poems."
+  when: knows(marisol.margins)
+  rel x +small
+  rel marisol +tiny
+  say: You tell {x} about the book of poems Marisol wrote her own tidecalling into as a student. {x} asks her, mortified. Marisol lends it on the spot, dripping. The margins make sense of everything. {x} passes well, and says the poems were awful but the margins were wonderful.
+
+@event know_mabel_tins
+title: A Tin on the Barge
+pool: knowing
+tone: warm
+cast:
+  x: any where classmate_here(x) and rel(x) >= 10
+per: x
+when: met(mabel) and term
+art: cup
+scene: A refectory table at supper, a quiet student with an unopened letter beside the plate, a friend sliding onto the bench next to them.
+text: {x} has gone quiet this month. {They} {are} homesick, though {they} would never say so. A letter from home came on Tuesday, and it's still unopened beside {x.their} plate.
+> left: Sit with {x.them} at supper
+  rel x +small
+  study -tiny
+  say: You sit with {x} at supper every night that week and talk about nothing much. It doesn't fix anything. On Sunday {they} open{s} the letter, with you there.
+> right: Write to Mabel
+  when: knows(mabel.tins)
+  rel x +small
+  rel mabel +tiny
+  say: You send a note down to Mabel in the village. Two days later a tin comes up on the barge, addressed to {x} in round handwriting: tea, a slab of cake, and no note. {x} never finds out who sent it, and keeps the tin on {x.their} windowsill all year.
+
+@event know_mabel_fourth_cake
+title: A Cake With a Name
+pool: knowing
+tone: light
+place: mabels
+cast:
+  x: any where classmate_here(x) and rel(x) >= 15
+per: x
+when: met(mabel)
+weight: 20
+art: meal
+scene: A village tea shop, three cakes under glass domes on the counter, two students leaning over them, a woman in an apron watching.
+text: It's {x}'s birthday, and you've brought {x.them} to Mabel's, because there's nowhere better. {x} looks at the three cakes on the counter as if choosing between them were the hardest decision of the year.
+> left: Let {x.them} choose
+  rel x +tiny
+  mood +small
+  say: {x} chooses the lemon after ten minutes, and says it was the right choice, and then eats half of yours.
+> right: Ask Mabel for a fourth cake
+  when: knows(mabel.fourth_cake)
+  rel x +small
+  rel mabel +tiny
+  health -tiny
+  say: You ask, quietly, whether there's a fourth. Mabel looks at {x}, vanishes into the back and comes out with something pink and alarming. She writes its card while you watch: {x}'s name, and the date. {x} eats it, survives, and is very proud to be on the card.
+
+@event know_isolde_mercy
+title: A Witness to Character
+pool: knowing
+tone: tense
+cast:
+  x: any where classmate_here(x) and rel(x) >= 10
+per: x
+when: met(isolde) and term
+art: scales
+scene: A tall tower study, a headmistress behind her desk with her hands folded, two students standing before it, one of them very pale.
+text: {x} has been sent to the headmistress over a prank that went further than {they} meant, and has asked you along as a witness to {x.their} good character. Headmistress Marrow hears all of it without a word. Then she turns to you.
+> left: Vouch for {x.them}, warmly
+  rel x +small
+  mood -tiny
+  say: You vouch for {x}, warmly and at length. The headmistress thanks you, and gives {x} a month of detentions anyway. "Character," she says, "is what one has left after the detention."
+> right: Wait for her question
+  when: knows(isolde.mercy)
+  rel isolde +small
+  rel x +tiny
+  alignment +tiny
+  say: You say nothing, and wait. Sure enough, she asks what you think would be just. You tell her honestly: not nothing, but less than a month, and the damage put right by {x}'s own hands. She considers it, and, to {x}'s astonishment, she listens.
+
+@event know_grimsby_upper_floor
+title: Out of Print
+pool: knowing
+tone: light
+place: grimsbys_books
+when: met(grimsby) and year >= 2
+weight: 20
+art: book
+scene: A crowded bookshop, an old bookseller holding out a book about lighthouses, a student behind the counter's ladder looking upward.
+text: You need a book for an essay: the one every reading list cites and nobody has seen in thirty years. The library's copy went missing before you arrived. Grimsby, asked, gives you a book about lighthouses instead and says it's the next best thing. He may even be right.
+> left: Take the lighthouse book
+  lore +tiny
+  mood -tiny
+  say: You read the lighthouse book. There's a chapter on lenses that turns out, absurdly, to help with your essay. It's still not the book, and Grimsby is unbearable about it.
+> right: Climb to the upper floor
+  when: knows(grimsby.upper_floor)
+  lore +small
+  gold -tiny
+  health -tiny
+  say: You climb the ladder behind the shop, skipping the third and fourth rungs, and spend an hour in the dust among the remainders. The book is there, under a stack of almanacs. Grimsby, below, says he had no idea, and charges you half price for knowing about the ladder.
+
+@event know_grimsby_parcels
+title: On Credit
+pool: knowing
+tone: warm
+cast:
+  x: any where classmate_here(x) and rel(x) >= 8
+per: x
+when: met(grimsby)
+art: book
+scene: A castle corridor window looking down toward the village, a student turning away from it, a friend catching their sleeve.
+text: {x} has been avoiding the village for a month. It comes out eventually: Grimsby posted {x.them} three books on credit, exactly the right ones, and {they} can't pay, and {they} {are} too ashamed to walk past the shop. "He'll have my name on a list," {they} say{s}.
+> left: Help {x.them} save up
+  rel x +tiny
+  mood -tiny
+  say: You help {x} put coins aside, week by week. It takes the rest of term. When {x} finally goes in to pay, Grimsby looks puzzled: he'd forgotten. {x} hadn't, for a single day.
+> right: "He's never chased a debt."
+  when: knows(grimsby.parcels)
+  rel x +small
+  rel grimsby +tiny
+  say: You tell {x} that Grimsby posts books on credit and has never chased a debt in his life. {x} goes down that afternoon to say sorry, and comes back with a fourth book and a cup of tea inside {x.them}. "He said to pay when I can," {they} say{s}, "and to stop being silly."
+
+@event know_ilse_frost
+title: Frost on the Inside
+pool: knowing
+tone: light
+cast:
+  ilse: ilse where around(ilse) and met(ilse) and rel(ilse) >= 3
+when: season == "winter" and not off_campus and not flag(ilse_taken) and not flag(ilse_went_north)
+art: snow
+scene: A dormitory corridor in deep winter, windows frosted over on the inside, students in coats and hats, a girl in white furs looking unimpressed at a cracked ward.
+text: Winter has got into the dormitories. The windows frost over on the inside every night, and the warming ward the professors put up keeps cracking. Everyone is sleeping in their coats, and the porters say it will be mended next week, as they said last week.
+> left: Patch the ward with the others
+  study -small
+  health +tiny
+  say: You and half the corridor patch it, badly, out of a textbook. It holds most nights. You get very good at sleeping in a hat.
+> right: Ask Ilse
+  when: knows(ilse.frost_craft)
+  rel ilse +small
+  health +small
+  say: You go to Ilse, who knows Northern frost-craft better than anything the professors teach. She looks at the ward for less than a minute, says something rude about it in Northern, and reworks it with two fingers. The windows are clear by morning. She refuses all thanks, and accepts a scarf.
+
+@event know_tamsin_backdrop
+title: A Forest by Post
+pool: knowing
+tone: light
+when: met(tamsin) and term and (month == 4 or month == 10)
+art: letter
+scene: A hall stage after supper, a huge blank canvas propped against the wall, a student with a bucket of grey paint and a letter full of sketches.
+text: The first-years' end-of-term play needs a backdrop, a forest at night, and you, somehow, have been volunteered to paint it. You have a week, a bucket of grey and no idea at all.
+> left: Paint the best forest you can
+  study -small
+  mood +tiny
+  say: You paint a forest. It looks like a forest from the back of the hall, if the lamps are low. The first-years are very kind about it.
+> right: Write to Tamsin for help
+  when: knows(tamsin.theatre)
+  rel tamsin +small
+  mood +small
+  study -tiny
+  say: You write to Tamsin, who learned illusion painting their grandmother's backdrops. The reply is six pages of sketches and insults about your brushwork. You follow it to the letter. On the night, the forest stirs in a wind that isn't there, and the hall gasps. You send Tamsin the programme.

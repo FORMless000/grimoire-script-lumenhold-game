@@ -1,0 +1,176 @@
+# ============================================================
+#  The whole picture (phase 4, docs/phase4-plan.md, batch P4-11): when you know every fact about someone close
+#  (content/world/facts/<id>.grim, the People panel), a quiet milestone in which they notice. One for each main
+#  character whose facts don't wait on the main plot (Kael's and Nessa's do, so they have none; nor the headmistress
+#  or Ilse). A card's `when` lists that character's facts: add a fact to their file, add it here.
+# ============================================================
+
+@pool full_picture
+desc: What every whole-picture milestone shares: once, when you know someone completely and they're near.
+trigger: auto
+class: milestone
+tone: warm
+repeat: 1
+tags: people facts
+
+@event picture_lyra
+title: Unbearable
+pool: full_picture
+cast:
+  lyra: lyra where around(lyra) and rel(lyra) >= 30
+when: knows(lyra.prodigy) and knows(lyra.toast) and knows(lyra.mother) and knows(lyra.second_place) and knows(lyra.burnout) and knows(lyra.rival) and knows(lyra.inheritance) and knows(lyra.wildfire) and knows(lyra.flourish)
+art: flame
+scene: A duelling hall after dark, one student sitting on the floor against the wall, another handing her a plate of slightly burnt toast.
+text: You bring Lyra toast after practice, because she can't make it, and set it down without a word, because she won't ask. She looks at it, and at you. "You know about the toast," she says. "And my mother. And the Trials, and the letter, and the flourish." A pause. "You know everything. It's unbearable." She takes a slice anyway.
+> left: "I'd like to know more."
+  rel lyra +medium
+  mood +small
+  say: "There isn't any more," she says, and then, after a long time, tells you one more thing: the name of her grandmother's horse. It doesn't matter at all. It's the first thing she has ever told you that she didn't have to.
+> right: "I'll forget half of it, if you like."
+  rel lyra +small
+  mood +small
+  say: "Don't you dare," she says, too quickly, and then goes red. She eats the toast. It's burnt. She says it's adequate, which from Lyra is a bouquet, and doesn't let you leave until it's finished.
+
+@event picture_corvin
+title: No Jokes
+pool: full_picture
+cast:
+  corvin: corvin where around(corvin) and rel(corvin) >= 30
+when: knows(corvin.locks) and knows(corvin.last_warning) and knows(corvin.brother) and knows(corvin.grandfather) and knows(corvin.cartographers) and knows(corvin.trolls) and knows(corvin.sundays)
+art: cards
+scene: A gargoyle passage at night, two students sitting on the parapet, one shuffling a worn old deck of cards very slowly.
+text: Up on the parapet, Corvin shuffles his grandfather's deck and doesn't deal. "You know about the trolls," he says. "And my brother. And the warning. And the Sundays." He laughs, but only a little. "Nobody knows all of it, saint. I don't usually let anyone have more than two." The jokes have stopped. So has he.
+> left: Tell him something of yours
+  rel corvin +medium
+  mood -tiny
+  say: You tell him the thing you don't tell anyone. He listens, the way his grandfather probably did, and then deals you a hand. "Now we're even," he says. "Don't you dare tell anyone I said something nice." You don't.
+> right: Let him deal, and say nothing
+  rel corvin +small
+  mood +small
+  say: You don't say anything, which turns out to be right. He deals. You play badly, and he lets you win once, which you both pretend not to notice. Somewhere around midnight he starts joking again, and it sounds different.
+
+@event picture_tobias
+title: A Saying for It
+pool: full_picture
+cast:
+  tobias: tobias where around(tobias) and rel(tobias) >= 30
+when: knows(tobias.scholarship) and knows(tobias.plants) and knows(tobias.ma) and knows(tobias.gerald) and knows(tobias.moonflowers) and knows(tobias.blight) and knows(tobias.dancing) and knows(tobias.after)
+art: leaf
+scene: A greenhouse in the evening, two students repotting seedlings side by side, a small mandrake in a knitted hat watching from a shelf.
+text: Repotting seedlings, Tobias goes quiet for so long that Gerald, on his shelf, stops screaming to look. "You know about my ma, and the blight, and the broom," he says. "And about after. I haven't told anyone about after." He wipes his hands on his apron. "Back home there's a saying for someone who knows you like that. I'll get it wrong."
+> left: Ask him to say it anyway
+  rel tobias +medium
+  mood +small
+  say: He says it, and gets it wrong, and then tells you the long version, which is about a goat. By the end you're both laughing so hard you knock over a tray of seedlings. They don't seem to mind. Gerald does.
+> right: Promise to help, whatever he decides
+  rel tobias +small
+  alignment +tiny
+  say: He looks at you for a long moment, and then laughs from the belly, the way he does, and apologises for laughing, the way he does. "That's the saying," he says. "Near enough." He gives you the best seedling to keep.
+
+@event picture_seraphine
+title: Forty-One Todays
+pool: full_picture
+cast:
+  seraphine: seraphine where around(seraphine) and rel(seraphine) >= 30
+when: knows(seraphine.seer) and knows(seraphine.slips) and knows(seraphine.oracle) and knows(seraphine.self) and knows(seraphine.lake) and knows(seraphine.too_loud) and knows(seraphine.paintings)
+art: eye
+scene: A seer at the lakeshore in the afternoon holding out a small hand-stitched calendar, dozens of its days marked with the same tiny drawn star.
+text: Seraphine gives you a little calendar she has stitched herself. Forty-one of its days have a tiny star on them. "The days you told me what today was," she says. "I slip, and you always know. And you know the rest: my mother, the lake, what gets too loud." She frowns, the way she does at a future. "Nobody's ever kept me in today before. I wanted you to have the count."
+> left: Promise to keep counting
+  rel seraphine +medium
+  mood +small
+  say: "Forty-two," you say, because it's today and she's here. She laughs, a real one, finished. For the rest of the afternoon she doesn't slip once, and when you part she says "see you tomorrow", and means tomorrow.
+> right: Teach her a trick to find today herself
+  rel seraphine +small
+  study +small
+  say: You teach her to count the bells: the castle rings the day in a pattern, if you listen. She practises all afternoon, half a sentence at a time. The next week she slips, and finds her own way back, and comes to tell you, exact and pleased.
+
+@event picture_mir
+title: Documented
+pool: full_picture
+cast:
+  mir: mir where around(mir) and rel(mir) >= 30
+when: knows(mir.artificer) and knows(mir.owl) and knows(mir.notebooks) and knows(mir.family) and knows(mir.name_day) and knows(mir.workshop) and knows(mir.corridor)
+art: gear
+scene: A cluttered workshop at night, an artificer holding out a battered notebook open at a page with someone's name at the top.
+text: Mir holds out a notebook, the newest one, open at a page with your name at the top. "I've been documenting you," they say. "Fair's fair. You know about the owl and the family and the name day and the fires. Probably all the fires. So I've been writing down what I know about you, to see if it's even." They look worried. "It isn't even. You're winning."
+> left: Help them fill in the page
+  rel mir +medium
+  study -small
+  say: You sit on the bench and answer every question, fast, the way they ask them, with exclamation marks. It takes until midnight. When it's done they read it through twice and say "huh", which from Mir means something has been mended. They file it with the precious ones.
+> right: Tell them it doesn't have to be even
+  rel mir +small
+  mood +small
+  say: "It doesn't have to be even," you say. Mir thinks about it, visibly, like a machine running a sum. "That's very inefficient," they say. "I like it." They close the notebook. The owl on the shelf blinks twice, which is how it says "noted".
+
+@event picture_bram
+title: Don't Make It Weird
+pool: full_picture
+cast:
+  bram: bram where around(bram) and rel(bram) >= 30
+when: knows(bram.prefect) and knows(bram.father) and knows(bram.hall_tax) and knows(bram.cheating) and knows(bram.ally) and knows(bram.portrait) and knows(bram.rematch)
+art: shield
+scene: A corridor of old portraits of head boys, a prefect in a red sash standing in front of one of them with a student beside him.
+text: You find Bram in the corridor of head boys, in front of his father's portrait. He doesn't move when you come up. "You know all of it," he says, to the portrait. "The exam. The hall tax. Him. Every rematch." He clears his throat. "Most people know the sash. You know the rest, and you never once used it." He's very red. "Don't make it weird."
+> left: Make it a little weird
+  rel bram +medium
+  mood +small
+  say: You put your arm round his shoulders and tell the portrait, firmly, that its son is going to be a better prefect than it ever was. Bram makes a noise like a kettle. Then he laughs, really laughs, and gives you a demerit for "insolence to a painting".
+> right: Stand there with him, and don't
+  rel bram +small
+  alignment +tiny
+  say: You stand there with him and say nothing at all, which is the kindest thing you've ever done for him. After a while he says "right" and walks off, briskly. The next day there's a note in your bag in block capitals: THANK YOU. DON'T.
+
+@event picture_maud
+title: Over Tea, Dearie
+pool: full_picture
+cast:
+  maud: maud where around(maud) and rel(maud) >= 30
+when: knows(maud.groundskeeper) and knows(maud.student) and knows(maud.edmund) and knows(maud.soup) and knows(maud.garden) and knows(maud.age) and knows(maud.tuppence) and knows(maud.blazes)
+art: cup
+scene: A cottage kitchen, a pot of soup on the stove, an old woman pouring two cups of tea at a scrubbed table, a goat looking in at the window.
+text: Maud pours two cups and doesn't sit. "You know about Edmund," she says. "And the garden, and Tuppence, and my knees, and the soup. You've heard all my sad stories, dearie, and you've never once looked sorry for me." She sits, finally. "Sixty years since anyone knew me all the way through. I'd forgotten what it was like."
+> left: Ask her to teach you the soup
+  rel maud +medium
+  mood +small
+  say: "You're not allowed to write it down," she says, and teaches you anyway, slowly, with her hands over yours on the spoon. You understand, two weeks later, that she wasn't teaching you the soup at all.
+> right: Tell her a sad story of yours
+  rel maud +small
+  mood +tiny
+  say: You tell her one, as if it were a recipe. She listens, and nods, and at the end says, "Needs salt." It's exactly right. Bartholomew bleats at the window. She gives him a biscuit, and you another.
+
+@event picture_thorne
+title: Hm
+pool: full_picture
+cast:
+  thorne: thorne where around(thorne) and rel(thorne) >= 30
+when: knows(thorne.storm) and knows(thorne.lost) and knows(thorne.roses) and knows(thorne.hands) and knows(thorne.rival) and knows(thorne.letters) and knows(thorne.accusation)
+art: rose
+scene: A tiny walled rose garden behind an observatory at dawn, an old professor with secateurs, his hands not quite steady, a student holding the basket.
+text: You hold the basket while Thorne cuts roses at dawn, and his hands shake, and he lets you see them shake. "You know about the storm," he says. "The real version. And the roses. And these." He holds up his hands. "And the old fool in purple." A long pause. "Hm." From Thorne, it's a speech.
+> left: Ask him to tell you about the storm again
+  rel thorne +medium
+  study +small
+  say: He tells you, the whole of it, the way he never tells it in lectures: how badly he lost, and how. At the end he hands you the secateurs. "Your turn," he says, meaning the roses, meaning more than the roses. "Badly is fine. Badly is the point."
+> right: Say nothing, and cut the next rose for him
+  rel thorne +small
+  mood +small
+  say: You take the secateurs and cut the next rose, carefully, and the one after that. He watches, and doesn't correct you, which has never happened. "Adequate," he says at the end. You'll be proud of that word for years.
+
+@event picture_brask
+title: Half a Sentence More
+pool: full_picture
+cast:
+  brask: brask where around(brask) and rel(brask) >= 30
+when: knows(brask.beasts) and knows(brask.stories) and knows(brask.owl) and knows(brask.courtesies) and knows(brask.feather) and knows(brask.blackthorn) and knows(brask.asking)
+art: owl
+scene: A stable loft at dusk, an old barn owl on a beam, a professor in a leather apron sitting on a hay bale beside a student.
+text: In the loft, Brask feeds the old owl and, for once, talks to you in a whole sentence. "You know about the owl, and the feather, and the woman with the blackthorn, and that I bow to the wood." She feeds the owl another mouse. "Students don't usually stay long enough to learn that much. The owl's noticed. So have I."
+> left: Ask her which loss hurt most
+  rel brask +medium
+  mood -tiny
+  say: She's quiet for a long time. Then she tells you, in a whole sentence, then another, and you understand why she never would before. At the end the owl hoots once, softly, as if it had been waiting. "There," she says. "That's the moral."
+> right: Ask the owl instead
+  rel brask +small
+  mood +small
+  say: You turn to the owl and ask it, very politely, what it thinks of you. The owl regards you with contempt. Brask laughs, loudly, the once-a-term laugh, a month early. "It likes you," she says. "That's its liking face."

@@ -230,6 +230,9 @@ text: Professor Vey is producing the faculty revue, in which professors make foo
       mood -small
       rel vey +small
       say: You forget your lines, invent new ones and are, by general agreement, the best thing in it for the wrong reasons. Vey keeps the paper crown on her desk.
+  if knows(vey.tests):
+    rel vey +tiny
+    say: At the curtain call you hand her a cup of tea that isn't there. She drinks it without blinking, and gives you full marks.
 > right: Hide in the wings
   rel vey -tiny
   say: You run the curtain. The revue goes ahead without a king, which Vey says was the point all along.
@@ -335,6 +338,9 @@ text: There's a knock at your window during the worst storm of the year. Profess
   rel marisol -tiny
   mood -tiny
   say: She shrugs, cheerful, and runs off into the rain. You lie awake listening to the lake and wondering what you missed.
+  if knows(marisol.poems):
+    rel marisol +tiny
+    say: In the morning there's a poem about rain under your door, in ink that's still wet. It has no last line.
 > up[heartwood]: Root yourselves a shelter
   arcana +small
   rel marisol +medium

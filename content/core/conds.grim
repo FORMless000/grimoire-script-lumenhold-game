@@ -30,6 +30,10 @@ is: renown >= 60
 desc: You are the academy's own story: renown 85 or more.
 is: renown >= 85
 
+@cond fallen_star
+desc: Yesterday's news: you were Famous once (the flag is set on crossing into it) and are back under 30.
+is: flag(was_famous) and renown < 30
+
 # Between people (phase 4, content/events/between.grim): two characters, as each other's friend or foe.
 @cond at_odds
 desc: These two can't stand each other.
@@ -45,3 +49,8 @@ is: npc_rel(a, b) >= 5
 desc: A fellow student you've met, around to be met in person now (not an outsider).
 params: x
 is: tagged(x, peer) and not tagged(x, outsider) and met(x) and around(x)
+
+@cond fancy_free
+desc: Free to fall for someone else: not your partner or your ex, and not sweet on you.
+params: x
+is: bond(x) != "partner" and bond(x) != "ex" and spark(x) < 30

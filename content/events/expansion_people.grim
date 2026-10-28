@@ -317,6 +317,9 @@ text: "Rule one: never cheat," says Corvin, shuffling so fast the cards blur. "R
     lore +tiny
     rel corvin +small
     say: He teaches you odds and nerve instead. That weekend the odds take three crowns off you. "Also a lesson," says Corvin.
+  if knows(corvin.sundays):
+    rel corvin +tiny
+    say: Near the end he shuffles the slow way, the rainy-Sunday way, and you say you know whose shuffle it is. He doesn't answer. He deals you in anyway, for good.
 
 # ---------------- Mir ----------------
 
@@ -375,6 +378,9 @@ text: The workshop is on fire. Properly this time. Mir is in the doorway, coughi
   rel mir +medium
   health -tiny
   say: You haul Mir back from the door. The notebooks burn. Mir is silent for a week. Then they start a new notebook. The first page just says: "Thank you."
+  if knows(mir.corridor):
+    rel mir +tiny
+    say: The next morning you find them soldering on the corridor floor outside the burnt door, and bring them a cushion, and tea.
 > up[hoarfrost]: Freeze the fire out
   alignment +tiny
   rel mir +large
@@ -449,6 +455,9 @@ text: The Ledger has gone to print. In the profile of Professor Thorne, a single
   health -tiny
   rel nessa +medium
   say: You correct five hundred copies with a scraping charm and a lot of tea. At dawn, Nessa falls asleep on the press. Thorne never knows.
+  if knows(nessa.planted):
+    rel nessa +tiny
+    say: At dawn you ask whether this was one of her planted errors. "No," she says, horrified, and then laughs until she cries.
 > right: Tell her to run a correction and own it
   mood -tiny
   rel nessa +small
@@ -528,6 +537,9 @@ text: Kael has a fever — and for someone made of frost, a fever is dangerous. 
       health -large
       rel kael +medium
       say: The mountain wins. You come back half-frozen and empty-handed. Kael recovers anyway, slowly — and visits you in the next bed.
+  if knows(kael.cold_hands):
+    rel kael +tiny
+    say: Later you remember that his hands were warm when you left, for the first time since you've known him, and how much that frightened you.
 > right: Send word to Ilse
   if met(ilse) and not flag(ilse_taken) and not flag(ilse_went_north):
     rel kael +medium
@@ -585,6 +597,9 @@ text: A tall man in an old head-boy's sash is speaking to Bram in the entrance h
   mood -tiny
   rel bram +medium
   say: He's behind the stables, again. You sit on the bucket next to his. You don't talk. After a while he says, "Same time next year, probably," and almost laughs.
+  if knows(bram.portrait):
+    rel bram +tiny
+    say: On the way back you take him the long way round, so you don't pass the corridor of head boys. He notices, and says nothing, which from Bram is thanks.
 
 @event bram_cheating
 title: Bram Cheats

@@ -403,26 +403,28 @@ Each step is committed on its own once `grim check` passes. Push only working st
 
 ## Budget ledger
 
+Accepted waits for the critic, which is deferred until every batch is in (the user, 2026-10-28).
+
 | Area | Budget | Written | Accepted | Cut |
 |---|---|---|---|---|
-| Journal cards | 9 | 0 | 0 | |
-| New facts | 34 | 0 | 0 | |
-| Use what you know | 30 | 0 | 0 | |
-| `knows()` branches | 30 | 0 | 0 | |
-| Complete the picture | 9 | 0 | 0 | |
-| Second-hand facts | 8 | 0 | 0 | |
-| Inter-NPC generic | 38 | 15 | 15 | |
-| Inter-NPC one side specific | 30 | 0 | 0 | |
-| Inter-NPC storylines | 14 | 0 | 0 | |
-| Renown tier entries | 3 | 0 | 0 | |
-| Renown Known | 19 | 0 | 0 | |
-| Renown Famous | 19 | 0 | 0 | |
-| Renown Legend | 11 | 0 | 0 | |
-| Scandals | 15 | 0 | 0 | |
-| Fall and comeback | 6 | 0 | 0 | |
-| High society | 8 | 0 | 0 | |
-| Cross-system | 9 | 0 | 0 | |
-| **Cards** | **228** | **15** | **15** | |
+| Journal cards | 9 | 9 (P4-14: 3 year recaps, 6 nudges) | — | |
+| New facts | 34 | 27 (P4-11) | — | 7 |
+| Use what you know | 30 | 30 (P4-12 15, P4-13 15) | — | |
+| `knows()` branches | 30 | 28 (P4-13) | — | 2 |
+| Complete the picture | 9 | 9 (P4-11) | — | |
+| Second-hand facts | 8 | 8 (P4-12) | — | |
+| Inter-NPC generic | 38 | 32 (P4-01 15, P4-02 17) | 15 | 6 |
+| Inter-NPC one side specific | 30 | 27 (P4-03 15, P4-04 12) | — | 3 |
+| Inter-NPC storylines | 14 | 12 (P4-05) | — | 2 |
+| Renown tier entries | 3 | 2 (Famous, Legend; Known has none: P4-06) | — | 1 |
+| Renown Known | 19 | 17 (P4-06) | — | 2 |
+| Renown Famous | 19 | 17 (P4-07) | — | 2 |
+| Renown Legend | 11 | 11 (P4-08) | — | |
+| Scandals | 15 | 15 (P4-09) | — | |
+| Fall and comeback | 6 | 6 (P4-08, with its entry) | — | |
+| High society | 8 | 8 (P4-10, `the_season`) | — | |
+| Cross-system | 9 | 8 (P4-10 6, P4-12 2) | — | 1 |
+| **Cards** | **228** | **211** | **15** | |
 
 ## Batch log
 
@@ -432,6 +434,24 @@ Each step is committed on its own once `grim check` passes. Push only working st
 | Step 3 (renown balance) | `content/core/rules.grim` (`fame_fades`), `content/core/conds.grim`, `tools/policies.js` + `tools/analyze.js` (`celebrity` style) | 0 cards | n/a | n/a | refreshed: renown moves, so the sims' choices drift (110/120 games; random's early exits 47% → 43%) | n/a | |
 | P4-01 | `content/events/between.grim` (15 cards; `@pool between`, `between_once`), `content/core/conds.grim` (`at_odds`, `get_along`, `classmate_here`), the `npc_rel` lint accepts cast roles | 15 | rejected, then accepted (2) | done | refreshed: every game shifts with 15 new social cards; per style, random's early exits 18 → 21 of 40 (seeds diverge), social and cautious unchanged | yes | |
 | Fact hints (part of P4-11) | `content/world/facts/*.grim` | 97 hints, every personal and secret fact; lint warns on a missing one | retrieval skipped at the time; checked afterwards (2026-10-28): searched as "<NPC>: <hint>", 88 of the 89 hints whose fact a card teaches retrieve that card (or the fact) in the top 6; the miss, `tobias.moonflowers`, pointed at the wrong scene and now reads "Look in the greenhouse at night." The other 8 (unlocked by a relationship, a flag or a bond) were read against their condition | done | unchanged | not needed | |
+| P4-02 | `content/events/between_hearts.grim` (matchmaking, jealousy, gossip), `@cond fancy_free` | 17 | deferred | done | refreshed once for P4-02..14 (see below) | at the end | |
+| P4-03 | `content/events/between_known.grim` (one side specific, part 1) | 15 | deferred | done | 〃 | 〃 | |
+| P4-04 | `content/events/between_known_2.grim` (one side specific, part 2) | 12 | deferred | done | 〃 | 〃 | |
+| P4-05 | `content/events/between_stories.grim` (3 threads: the feud, the match, the Thursday Circle) | 12 | deferred | done | 〃 | 〃 | |
+| P4-06 | `content/events/spotlight.grim` (`@pool spotlight` and its tiers, `@appointment spotlight` / `fallen`, 2 tier entries, 17 Known) | 19 | deferred | done | 〃 | 〃 | |
+| P4-07 | `content/events/spotlight_famous.grim` (Famous; scandal branches by renown) | 17 | deferred | done | 〃 | 〃 | |
+| P4-08 | `content/events/spotlight_legend.grim` (11 Legend, the fall and 5 after it), `@cond fallen_star` | 17 | deferred | done | 〃 | 〃 | |
+| P4-09 | `content/events/scandals.grim` (own / deny / spin menus; 7 callbacks, 8 generic; 2 appointments) | 15 | deferred | done | 〃 | 〃 | |
+| P4-10 | `content/events/society.grim` (the thread `the_season`, 8; `fame_between`, 6), soft `@lore the_season` | 14 | deferred | done | 〃 | 〃 | |
+| P4-11 | 27 `@fact`s in 15 `content/world/facts/*.grim`; `content/events/full_picture.grim` (9) | 9 + 27 facts | deferred | done | 〃 | 〃 | |
+| P4-12 | `content/events/knowing.grim` (15 use what you know, 8 second-hand, a sold secret and its scandal) | 25 | deferred | done | 〃 | 〃 | |
+| P4-13 | `content/events/knowing_2.grim` (15); 28 `if knows(…)` branches appended to options in 15 existing files | 15 + 28 branches | deferred | done | 〃 | 〃 | |
+| P4-14 | `content/events/journal_cards.grim` (3 year recaps, 6 nudges about side leads) | 9 | deferred | done | 〃 | 〃 | |
+
+Golden diff for P4-02..14 together (120 of 120 games change, refreshed): random's early exits 20 → 13 of 40
+(quiet departure 9 → 6, sent home 11 → 7); still searching: social 9 → 14, cautious 18 → 13, random 8 → 9; the
+rest of the endings spread out. Measured flows per card are in each batch's notes; the full balance pass waits for
+the end (the user, 2026-10-28).
 
 ## Deviations and open questions
 
@@ -444,7 +464,16 @@ Each step is committed on its own once `grim check` passes. Push only working st
 - **Leads:** the Journal lists an open lead once, under "Leads to follow", for the arcs and for stories with a journal. A side thread with no journal still shows its own leads, as the Clues panel did.
 - **Locked facts** are one line per tier ("· still to learn: 6 ·"); a fact with a `hint:` shows the hint in its place.
 - **The Hollow Star's act threads** (`hs_omens` … `hs_night`) get no journal: the arc's own block (act, rumour, clues) is the main story's entry. `company_night` (a pool of night guests) isn't a storyline.
+- **No head of house** (P4-03..05): the worldbook has houses, but "Faculty belong to none" (`@lore houses`), so cards that called for one say "the headmistress".
+- **The inter-NPC storylines use canon pairs** (P4-05): a queued step carries one cast role (`queue … with`), so a generic pair can't be followed through a thread. The feud and the match use pairs whose feelings the cast already sets; the Thursday Circle casts whoever joins at each step.
+- **Lint gap: `queue X in N..M`** parses as an expression with no error (the delay meant is `within N..M`). Found in P4-05; a lint rule is a later tooling fix.
+- **Legend for the renown-chaser** (P4-07/08): `celebrity` reaches Legend in 75% of runs with the spotlights, and 65% without them (average final renown 86 on HEAD), against the plan's "Legend only with luck". Left for the balance pass.
+- **Rare by design or by casting:** `sell_a_secret` (Known, a known secret and a friend at once) shows in 0–2 of 60 games; Ilse's cards are rare in every style (her own `ilse_frost_lessons` 5–11 of 60), so `know_ilse_frost` is too.
+- **The index sync** ended with ENOTEMPTY while removing the old revision (2026-10-28): retrieval queries run during the sync log into the active revision's folder. The new revision was already in place (`retrieve status` ready, no changes); `retrieve prune` removed the old one. Don't query while a sync is finishing; an automatic `--resume` after a transport error in `rag/src/cli.js` waits for the other agent's edits there.
 
 ## Next up
 
-P4-02 (matchmaking, jealousy and gossip, generic; ~21 cards). Retrieval works again (`voyageai/rerank-2.5`, fallbacks in `rag/src/models.json`); sync the index first if it's stale (`npm run grim -- retrieve index`), then search every premise and run `related --draft` per card (`rag/AUTHORING.md`). The once-per-game rule for social one-offs: `seen(<own id>) == 0` (P4-01 notes).
+Every batch is written (P4-01..14, 211 cards). Next, with the user's go-ahead: the critic over P4-02..14
+(`skills/critic/SKILL.md`; one round per batch, fixes in place), then the full balance pass (`grim analyze` and
+`balance` per play style, the renown-chaser's Legend rate first), then `verify:full`, and the records
+(`PROGRESS.md`, design §0.3).

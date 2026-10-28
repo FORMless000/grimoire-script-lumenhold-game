@@ -210,6 +210,9 @@ text: Professor Brask teaches Haste on the flight field, with a stopwatch and a 
   meet brask
   lore +small
   say: You hold the stopwatch and watch the fast ones. They aren't running harder; they start the spell a step before they need it. Brask sees you notice, and hands you the next race.
+  if knows(brask.asking):
+    rel brask +tiny
+    say: Afterwards you ask her how to start the spell a step early yourself. She shows you, and remembers that you asked.
 
 @event lesson_beast_speech
 # retired by spells v2 (was "spell_level(beast_speech) >= 1 and term"): beast_speech is cut
@@ -696,6 +699,9 @@ text: Sparring in the duelling hall, you feel Torment rise in your hand like a r
   rel thorne +tiny
   mood -small
   say: You tell him. He listens without a word, then says, "Then you know what it costs. Most people learn that afterwards." He gives you extra drills for a month, which you suspect is kindness.
+  if knows(thorne.lost):
+    rel thorne +tiny
+    say: As you leave he adds that he lost to the storm because he didn't stop in time. You knew already. You've never heard him say it like that.
 > right: Say it was nothing
   meet thorne
   guile +tiny

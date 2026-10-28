@@ -1,0 +1,358 @@
+# ============================================================
+#  The spotlight, Legend, and the fall (phase 4, docs/phase4-plan.md, batch P4-08; design §8.2). Legend (renown 85
+#  or more): the academy tells stories about you. The fall: you were Famous (`flag was_famous`, set when you cross
+#  into it) and are back under 30 (`fallen_star` in conds.grim). The pools and appointments are in spotlight.grim.
+# ============================================================
+
+# ---------------- Legend: the academy's own story ----------------
+
+@event spot_tavern_song
+title: The Ballad of {player}
+pool: spotlight_legend
+tone: light
+art: music
+scene: A packed tavern, a fiddler standing on a bench, the whole room singing along with raised mugs, one student by the door with their face in their hands.
+text: The Newt has a new song, and it's about you. It has nine verses and a chorus everybody knows. In verse three you fight a frost giant on the lake. In verse six you marry a mermaid. The fiddler sees you in the doorway, bows, and starts again from the top, louder.
+> left: Teach them the true verses
+  alignment +small
+  renown -small
+  mood +small
+  say: You climb on a bench and sing them what really happened, which rhymes much worse. The room listens politely, then goes back to the mermaid. But the fiddler keeps one of your verses, the true one about the night you got lost, and it's the one that makes people quiet.
+> right: Let the legend grow
+  chance slim +1 if renown >= 90:
+    renown -small
+    mood -small
+    say: By the next week the song has a tenth verse, in which you are cruel to a friend, by name. It isn't true. It is very catchy. The friend hears it at breakfast, and you spend a long evening putting it right.
+  else:
+    renown +small
+    mood +tiny
+    say: You buy the fiddler a drink and let it grow. By spring there are fourteen verses, two dances and a version for children. You have never fought a frost giant. Half the village is sure you did.
+
+@event spot_witness_promise
+title: Stand Witness
+pool: spotlight_legend
+tone: warm
+cast:
+  a: any where classmate_here(a) and rel(a) >= 20
+  b: any where classmate_here(b) and rel(b) >= 20 and npc_rel(a, b) >= 40
+per: a
+art: heart
+scene: A lakeshore at dawn, two students holding hands on the shingle, a third student standing before them holding a lantern, mist on the water.
+text: {a} and {b} find you together, very nervous, holding hands. They've decided to make each other a promise, a proper one, at the lakeshore at dawn, the old way. They'd like a witness. "It has to be you," {a} says. "If you saw it, everyone will know it happened."
+> left: Make it a ceremony
+  challenge perform adept-:
+    win:
+      rel a +small
+      rel b +small
+      npc_rel a b +small
+      renown +tiny
+      say: You find the right words, short and true, and say them over the water as the sun comes up. {a} cries. {b} pretends not to. By breakfast the whole castle knows, and it's the happiest thing anyone has talked about all term.
+    lose:
+      rel a +tiny
+      rel b +tiny
+      mood -small
+      say: You'd prepared a speech, and halfway through it you lose your place, and a duck lands in the shallows and starts shouting. {a} and {b} laugh so hard they have to hold each other up. It's perfect, they tell you. It is not what you planned.
+> right: Keep it quiet and simple
+  rel a +small
+  rel b +small
+  mood +small
+  renown -tiny
+  say: "Just us, then," you say, and it is: three people and a lantern on the shingle, and the promise said plainly. Nobody else knows for a week. When it comes out, {a} and {b} only smile, because it was theirs first.
+
+@event spot_flourish_named
+title: The {player}
+pool: spotlight_legend
+tone: light
+art: wand
+scene: A practice yard full of students all flicking their wands in the same showy twist, one older student watching with arms folded.
+text: There's a wand flourish going round the practice yards, a sort of showy twist before the cast, and everybody calls it "the {player}". You've never done it in your life. It does nothing at all for the spell. Every first-year in the castle is doing it.
+> left: Teach them a flourish that helps
+  study -small
+  alignment +small
+  renown -tiny
+  say: You spend three afternoons in the practice yard showing them a real one, a small turn of the wrist that steadies the cast. It's much less showy. The first-years are disappointed, and then their spells start landing, and they call that one "the {player}" instead.
+> right: Let them have it
+  chance slim +1 if renown >= 90:
+    renown -small
+    say: A first-year doing "the {player}" too enthusiastically puts the twist through the greenhouse glass. Professor Thorne asks, in a voice like frost, whose name it is. Everybody looks at you.
+  else:
+    renown +small
+    mood +tiny
+    queue scandal_flourish_hurt within 2..4 chance unlikely
+    say: You let them have it. It's harmless, and it makes the practice yards look like a dance. Once, passing, you do it yourself, very solemnly, and the whole yard cheers.
+
+@event spot_named_child
+title: A Baby Called {player}
+pool: spotlight_legend
+tone: warm
+art: heart
+scene: A cottage doorway in the village, a young couple holding a swaddled baby, an academy student on the step holding a small wrapped gift.
+text: A letter from the village: the blacksmith's daughter has had a baby, and they've named it after you, and would you, if it's not too much, come to the naming? There'll be cake. The letter is spelled very carefully, as if it was copied out three times.
+> left: Go to the naming
+  mood +medium
+  study -small
+  renown +tiny
+  say: You go down the hill with a silver spoon you can't really afford. The baby is red and furious and has your name. You hold it for the whole naming and it falls asleep on you, which the village takes as a very good sign.
+> right: Send a gift and a letter
+  gold -small
+  alignment +tiny
+  say: You can't get away, so you send a silver spoon and a long letter, to be read to the child when it's older, about the hill and the lake and the castle. The blacksmith's daughter writes back to say it's in a drawer, waiting.
+
+@event spot_disguise_day
+title: An Ordinary Afternoon
+pool: spotlight_legend
+tone: light
+art: mask
+scene: A student in a borrowed hat and a scarf pulled up to the nose walking through a busy village market, glancing sideways at the stalls.
+text: You haven't bought a loaf of bread in a month without someone asking you to sign it. Today you borrow a hat, a scarf and somebody's terrible coat, pull them all up, and walk down to the village to see if you can have one ordinary afternoon.
+> left: Try it
+  challenge deceive adept-:
+    win:
+      mood +large
+      say: Nobody looks twice. You buy bread, argue with a stallholder over apples, sit on the quay and eat them, and walk back up the hill unrecognised, humming. It's the best afternoon you've had in a year.
+    lose:
+      mood -small
+      renown -tiny
+      say: You get as far as the bakery, where a small child points and says, very loudly, "That's {player} in a silly hat." The whole street turns. You sign eleven loaves. The coat, for some reason, becomes fashionable.
+> right: Stay in the castle
+  study +small
+  mood -small
+  say: You stay in, and read, and look out of the window at the village, very small and far away. Somebody brings you bread from it, which is kind of them. It isn't the same.
+
+@event spot_higher_bar
+title: Because It's You
+pool: spotlight_legend
+tone: tense
+art: scroll
+scene: A returned essay on a desk covered in red ink, a lecturer's note at the bottom, a student staring at it in disbelief beside a classmate's cleaner page.
+text: Your essay comes back covered in red, with a mark lower than your neighbour's, though your neighbour's essay was, honestly, not as good. At the bottom the lecturer has written: "From anyone else, excellent. From you, I expect more. Everybody is watching what you do."
+> left: Rise to it
+  study +small
+  mood -small
+  say: You rewrite it from the first line, then rewrite the next one before it's due. It is the hardest you've worked all year. The lecturer's next note is one word, "Better", and you find you care about it more than any cheer in the Great Hall.
+> right: Ask to be marked like anyone else
+  challenge appeal adept-:
+    win:
+      mood +small
+      alignment +tiny
+      say: You go to the lecturer's office and say, politely, that you'd like to be marked like everyone else. The lecturer looks at you over the spectacles, and then laughs, and changes the mark. "Fair," the lecturer says. "But I'll still be reading closely."
+    lose:
+      mood -small
+      renown -tiny
+      say: You make your case. The lecturer hears you out and says that's exactly what a famous student would say. The mark stands. Worse, the story gets out, and for a week people call you "the one who argued about the mark".
+
+@event spot_history_essay
+title: A Living Figure
+pool: spotlight_legend
+tone: light
+art: scroll
+scene: A corridor outside a lecture hall, a queue of students holding notebooks and quills, one student at the front of it looking trapped.
+text: A lecturer has set the second-years an essay on "a living figure in the academy's history", and forty of them have chosen you. They want interviews. There is a queue outside your door, with notebooks, and one of them has brought a list of a hundred questions.
+> left: Answer them all
+  study -small
+  renown +small
+  mood -tiny
+  say: It takes a week of evenings. You answer every question, including the one about your favourite pudding and the one about whether you're afraid of dying. The essays are pinned up in the corridor. Two of them are better than anything you've written.
+> right: "I'm not history yet"
+  mood +small
+  renown -tiny
+  say: You tell them, cheerfully, that you're not history yet and might still do something stupid, and send them to the library to write about someone safely dead. Most of them laugh. The one with the hundred questions writes about you anyway.
+
+@event spot_villain_play
+title: The Villain of Thornwick
+pool: spotlight_legend
+tone: light
+art: mask
+scene: A makeshift stage in a village hall, a student actor in a black cape and a cardboard crown hissing at the audience, another student in the back row laughing into a scarf.
+text: Some visiting Thornwick students are putting on a play in the village hall, and it's about you. In their version you are the villain: you cheat at duels, steal Thornwick's glory and have a moustache. The actor playing you hisses very well. A Lumenhold crowd has come along to boo.
+> left: Go, and laugh loudest
+  chance slim +1 if renown >= 90:
+    renown -small
+    mood -small
+    say: You laugh loudest, and the actor, spotting you, improvises a whole scene about your real lost duels, which turns out to be well researched. The village laughs at you, not with you. Thornwick's paper prints the best lines.
+  else:
+    renown +small
+    mood +small
+    say: You sit in the front row and laugh loudest, and at the curtain the actor bows to you, and you bow back, and the hall cheers both of you. Afterwards you buy the cast supper. The moustache, you admit, is a fair cop.
+> right: Stay away
+  mood -tiny
+  study +tiny
+  say: You stay away, which turns out to be the right thing, because the play without you is merely silly. Your friends come back with a programme and a very good impression of your hiss, which you have never once made.
+
+@event spot_rival_lucky
+title: Just Lucky
+pool: spotlight_legend
+tone: tense
+cast:
+  r: any where classmate_here(r) and rel(r) <= 0
+per: r
+art: duel
+scene: A quiet corridor late in the day, two students facing each other, one leaning against the wall with arms folded, the other holding a stack of books.
+text: {r} stops you in the corridor. "Everyone says you're a legend," {they} say{s}. "I think you're lucky. You were in the right place, at the right time, a lot. Someone should say it to your face." {r} doesn't look angry. {They} look{s} as if {they} had been waiting a long time to say it.
+> left: Agree that a lot of it was luck
+  rel r +medium
+  renown -tiny
+  say: "A lot of it was," you say. {r} blinks. You tell {r.them} which bits, honestly. By the end {r} is half laughing. "That's worse," {they} say{s}. "That's so much worse." It's the start of something like respect, on both sides.
+> right: Tell {r} to try being lucky
+  renown +tiny
+  rel r -small
+  say: "Try it," you say. "See how lucky it feels." {r} looks at you for a long moment and walks off. You win the argument. It doesn't feel like it, for the rest of the day.
+
+@event spot_guest_lecture
+title: Take the Class
+pool: spotlight_legend
+tone: tense
+art: book
+scene: A lecture hall full of first-years in rows, an older student at the lectern holding chalk, a professor sitting in the back row with a notebook.
+text: A lecturer has asked you to take the first-years' class for an hour: "They listen to you. They certainly don't listen to me." Sixty first-years, the chalk, the lectern. The lecturer will be in the back row, taking notes on you.
+> left: Teach it properly
+  challenge perform adept-:
+    win:
+      renown +small
+      study +small
+      say: You teach them the thing you found hardest, the way you wish someone had taught you, and they get it. All sixty. The lecturer comes down at the end, looks at the board for a long time, and copies it into the notebook.
+    lose:
+      renown -small
+      mood -small
+      say: You start well, and lose them at the second diagram, and never get them back. By the end the first-years are passing notes about your hair. The lecturer takes the last ten minutes and says, kindly, that teaching is harder than it looks.
+> right: Tell stories instead
+  renown +small
+  study -tiny
+  say: You put the chalk down and tell them stories: the lake, the stairs, the first time a spell went right. They hang on every word. They learn almost nothing about the syllabus. A few of them, you suspect, will stay up late tonight practising.
+
+@event spot_legend_burden
+title: A Legend Can't Miss
+pool: spotlight_legend
+tone: tense
+art: wand
+scene: A practice room, a student's spell fizzling into smoke, a whole class turned to stare in shocked silence.
+text: In practice, in front of the class, an easy spell goes wrong in your hands. It just fizzles, the way spells do for everyone, now and then. But the whole room gasps as if the sky had fallen, and you can feel them all waiting to see what you'll do.
+> left: Laugh, and try again
+  mood +small
+  renown -small
+  alignment +tiny
+  say: You laugh, say "well, that's a relief", and try again, and get it. The room laughs with you. Afterwards a first-year says it was the best thing they'd seen all year: that even you miss. You decide that's worth something.
+> right: Practise until it never happens again
+  study +small
+  mood -small
+  renown +tiny
+  say: You stay behind and cast it a hundred times, until your arm aches and it couldn't fail if it tried. It never happens again, in front of anyone. Sometimes you wish it would, so you could stop being so careful.
+
+# ---------------- the fall: yesterday's news ----------------
+
+@event renown_fallen_entry
+title: Yesterday's News
+trigger: auto
+class: milestone
+tone: tense
+when: fallen_star() and seen(renown_fallen_entry) == 0
+art: paper
+scene: A student walking through a busy corridor that doesn't part for them, a crumpled old copy of the Ledger with their face on it lying in a bin.
+text: You notice it on a Tuesday. You walk the length of the long corridor and nobody turns. In the common room, a copy of the Ledger with your face on the front is being used to light the fire. Not long ago you couldn't buy bread without signing it. Now you're just somebody who used to be somebody.
+> left: Enjoy the quiet
+  mood +small
+  study +small
+  renown -tiny
+  say: It's wonderful, mostly. You eat your lunch where you like. You walk to the lake without an escort. Now and then somebody squints at you and says "weren't you...?", and you say "no", and they believe you.
+> right: Plan the comeback
+  renown +small
+  mood -small
+  say: You sit down with a sheet of paper and write a list of everything that made people talk. Some of it you'd do again. Some of it you can't believe you did. You fold the paper very small and keep it in your pocket, just in case.
+
+@event fallen_old_fan
+title: The Fan Who Stayed
+pool: fallen
+tone: warm
+art: pouch
+scene: A first-year holding a frayed charm on a ribbon, standing a little awkwardly in front of an older student in a quiet courtyard.
+text: Most of the first-years who used to queue for you have found somebody else. But one of them, older now, stops you in the courtyard and says, a bit shyly, "I still think you were the best one. For what it's worth." {seen(spot_fan_charm) > 0: You recognise the blue thread on their wrist.|They've still got your name written inside the cover of a book.}
+> left: Ask how they're getting on
+  mood +small
+  alignment +tiny
+  say: You ask about their lectures, their friends, the spell they couldn't get. They tell you everything. It turns out they've been doing very well, and nobody has asked. You walk them to supper and they talk the whole way.
+> right: Thank them, and keep walking
+  mood -tiny
+  study +tiny
+  say: "That's very kind," you say, and mean it, and keep walking, because you're late. It's only later that you realise they'd wanted to say more. The next time you look for them, they're with a crowd of their own.
+
+@event fallen_where_now
+title: Where Are They Now?
+pool: fallen
+tone: tense
+when: met(nessa)
+art: paper
+scene: A newspaper office at dusk, an editor with a quill leaning across a desk toward a student who has their arms folded.
+text: Nessa wants to run a piece: "Where Are They Now?", a look back at the academy's brightest stars, starring you. "It's not unkind," she says. "It's nostalgic. People love a comeback. Or a cautionary tale. You can choose which."
+> left: Give her the comeback
+  challenge perform adept-:
+    win:
+      renown +medium
+      rel nessa +small
+      say: You give her a new plan and an old smile, and the piece runs on the front page: "{player}: not done yet". By the end of the week people are turning in corridors again, cautiously, as if they'd forgotten how.
+    lose:
+      renown -tiny
+      mood -small
+      say: You try to sound like someone with a plan. It comes out sounding like someone with a list. The piece runs on page six, between the weather and the crossword, under the heading "fading gracefully?"
+> right: Ask her to leave you out
+  rel nessa +tiny
+  mood +small
+  renown -tiny
+  say: "Leave me out of it," you say. "I like it here, out of the paper." Nessa looks at you for a long moment and puts her quill down. "That," she says, "is the most interesting thing you've ever told me. Fine."
+
+@event fallen_unrecognised
+title: Just Another Student
+pool: fallen
+tone: light
+art: meal
+scene: A village bakery counter, a baker handing a loaf to a student without a second glance, a short queue behind.
+text: In the village, the baker who used to lean out of the window and shout your name sells you a loaf, gives you your change and says "next, please" without looking up. Outside, the children who used to follow you are following somebody else, over by the fountain.
+> left: Laugh about it
+  mood +small
+  renown -tiny
+  say: You laugh, out loud, in the street, and a dog barks at you. You eat the end of the loaf on the quay and watch the boats, and nobody comes to ask you anything at all, and it's lovely.
+> right: Remind the baker who you are
+  renown +tiny
+  mood -small
+  alignment -tiny
+  say: "It's me," you say. "From the Ledger." The baker squints, says "oh, yes", and gives you a bun, out of pity. You eat it on the way back up the hill, slowly. It tastes of nothing much.
+
+@event fallen_mocked
+title: Weren't You Somebody?
+pool: fallen
+tone: tense
+art: mask
+scene: A crowded refectory, a student at the next table pointing with a fork, a ripple of laughter, one student sitting very straight with their tray.
+text: At lunch, someone at the next table says, just loud enough, "Weren't you somebody once?" The table laughs. A couple of people at your own table laugh too, then look as if they wish they hadn't. Everyone waits to see whether you'll answer.
+> left: Answer with a joke
+  challenge perform apprentice+:
+    win:
+      renown +small
+      mood +small
+      say: "I was," you say. "Then I got hungry." You hold up your pudding. The whole refectory laughs, at the right person this time, and somebody at the next table actually applauds.
+    lose:
+      mood -small
+      say: Your joke comes out a beat too late and a little too sharp. Nobody laughs. The next table goes back to its lunch, satisfied. You eat yours very quickly.
+> right: Say nothing, and eat your lunch
+  mood -tiny
+  alignment +tiny
+  say: You say nothing and eat your lunch, and in a minute they've moved on to something else. A friend at your table kicks you gently under it and passes you their pudding. You take it.
+
+@event fallen_friends
+title: The Ones Who Stayed
+pool: fallen
+tone: warm
+cast:
+  f: any where classmate_here(f) and rel(f) >= 40
+per: f
+art: group
+scene: A small group of students around a table in a quiet corner of a common room late at night, cards scattered, cups of cocoa, one chair pulled out for someone arriving.
+text: The invitations have stopped. The crowd has gone. But on Thursday night, as always, {f} has pulled out the chair in the corner of the common room, and the cards are dealt, and the cocoa is going cold. "You're late," {f} says. "We waited."
+> left: Sit down and stay late
+  rel f +medium
+  study -small
+  say: You sit down and stay until the fire goes out. Nobody asks you about anything you did. They ask what you think, about everything, and you realise you'd almost forgotten anybody wanted to know.
+> right: Say you've been a poor friend
+  rel f +small
+  alignment +small
+  mood -tiny
+  say: "I've been a poor friend," you say. {f} shrugs. "You were busy being a legend." Then, more quietly: "You're back now." {f} deals you in, and you lose, as usual, and it's the best evening in months.

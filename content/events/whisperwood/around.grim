@@ -229,6 +229,9 @@ text: Professor Brask is feeding the old barn owl in the loft. "You've been in t
   rel brask +small
   health -tiny
   say: You hold the bucket and the owl regards you with deep contempt. Brask says nothing more about the wood, and you leave with a peck on the thumb and her good opinion.
+  if knows(brask.owl):
+    rel brask +tiny
+    say: You don't ask which colleague the owl outlived last. She tells you anyway, in four words, and that's all.
 
 @event carto_hush_margin
 title: A Note in the Margin

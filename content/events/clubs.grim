@@ -95,6 +95,9 @@ text: Lyra finds you after practice. "The tournament is in two months. You're th
   gain training
   rel lyra +medium
   say: She's a merciless coach. Somewhere around the third week, you notice she's started bringing two cups of tea.
+  if knows(lyra.toast):
+    rel lyra +tiny
+    say: Since she can't make toast, you bring it. She eats it at the edge of the training ground and calls it adequate, which is the warmest word she owns.
 > up[wildfire]: Train at her fire, not her side
   arcana +small
   rel lyra +small
@@ -336,6 +339,9 @@ text: The press runs at dawn and half the paper is blank. Nessa is chewing her q
   study -tiny
   rel nessa +medium
   say: You write three articles and a horoscope. At dawn Nessa falls asleep on your shoulder, ink on her nose.
+  if knows(nessa.quill):
+    rel nessa +tiny
+    say: You keep an eye on her quill all night, too, and twice catch it inventing a fire in the east wing. The paper is, for once, entirely true.
 
 # ---------------- Verdant Circle ----------------
 

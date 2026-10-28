@@ -163,6 +163,9 @@ text: The last rankings you'll ever see at Lumenhold. You and Lyra are tied. Exa
   rel lyra +large
   renown -tiny
   say: "Joint," you say. She looks at you, and then holds out her hand. You shake. "It was never going to be anyone else," she says. "I'm glad it was you I didn't beat."
+  if knows(lyra.mother):
+    rel lyra +tiny
+    say: Then you say "well done", because somebody should, once. She doesn't answer. She holds on to your hand a moment longer.
 > right: Ask Thorne for a decider
   challenge research expert-:
     win:
@@ -215,6 +218,9 @@ text: Bram has given you a demerit for {~"walking in a smug manner".|"breathing 
   mood -small
   alignment +tiny
   say: {~You thank him for his diligence. He has no idea what to do with that. He writes "THANKED ME" in the margin, puzzled.|You nod gravely and walk on. He follows you for a corridor, waiting for you to crack. You don't.}
+  if knows(bram.hall_tax):
+    rel bram +tiny
+    say: As you go, you add that at least it isn't a hall tax. He goes red to the ears.
 > right: Appeal it to his face
   challenge appeal journeyman:
     win:

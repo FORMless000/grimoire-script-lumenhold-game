@@ -1,0 +1,302 @@
+# ============================================================
+#  Between people, one of them someone you know well, part 2 (phase 4, docs/phase4-plan.md, batch P4-04):
+#  Seraphine, Tobias, and three of the staff (Maud, Thorne, the Headmistress) with a classmate. Each card turns on
+#  its character's own voice or surface facts. Uses the pools of between.grim (`between`, `between_once`).
+# ============================================================
+
+# ---------------- Seraphine ----------------
+
+@event seraphine_between_warning
+title: Not the North Stair
+pool: between_once
+tone: light
+cast:
+  seraphine: seraphine where met(seraphine) and around(seraphine)
+  o: any where classmate_here(o) and rel(o) >= 4
+per: seraphine
+when: seen(seraphine_between_warning) == 0
+art: eye
+scene: A dreamy student touching another's sleeve on a staircase landing, saying something quiet, while the other laughs.
+text: Seraphine stops {o} on the landing, puts a hand on {o.their} sleeve, and says, quite exactly, "Not the north stair tomorrow. The south one. Before the bell." Then she drifts off. {o} laughs, and then stops laughing, and asks you, "She's joking. Isn't she?"
+> left: "Take the south stair."
+  rel seraphine +small
+  npc_rel seraphine o +small
+  mood -tiny
+  say: {o} takes the south stair, feeling silly. Nothing happens on the north stair, as far as anyone can tell. But that evening {o} sits beside Seraphine at supper, and she finishes {o.their} sentence for {o.them}, and {o} doesn't mind.
+> right: "Nobody knows what she means."
+  rel o +small
+  rel seraphine -tiny
+  say: {o} takes the north stair out of principle, and meets a prefect with a notebook coming the other way, and a demerit for running. Seraphine looks faintly apologetic, a day early.
+
+@event seraphine_between_sentences
+title: The Other Half
+pool: between
+tone: light
+cast:
+  seraphine: seraphine where met(seraphine) and around(seraphine)
+  o: any where classmate_here(o) and rel(o) >= 6 and not at_odds(seraphine, o)
+per: seraphine
+art: star
+scene: Two students side by side on a window seat, one talking, the other gazing out of the window and quietly saying the end of the sentence a moment before it comes.
+text: {~{o} has started a sentence three times today, and Seraphine has finished it three times, correctly, half a second early.|Seraphine answered a question {o} hadn't asked yet. {o} asked it anyway, to be sure. It was the right answer.|{o} told a joke at supper, and Seraphine laughed at the punchline before {o} got to it.} "It's not that I mind," {o} tells you. "It's that I can't tell if I'm still talking to her, or to next week."
+> left: Tell {o} it's how she listens
+  npc_rel seraphine o +small
+  rel o +small
+  say: {~"She only does it to people she likes," you say, which you aren't sure is true, and then find is. {o} starts leaving gaps in sentences, on purpose. Seraphine fills them, delighted.|"It means she's already enjoying the conversation," you say. {o} thinks about that for a whole afternoon and decides it's a compliment.|"Let her," you say. "She's usually right about the ending." {o} lets her. They get on, after that, in a way that skips the middle.}
+> right: Ask Seraphine to stay in today
+  rel seraphine +small
+  rel o -tiny
+  mood -tiny
+  say: {~You tell Seraphine, gently, that {o} likes to say {o.their} own endings. "Oh," she says, "{o} will. On Thursday." She says nothing else all evening, and looks pleased about it.|Seraphine listens to you, nods, and then, very carefully, lets {o} finish every sentence for a week. It's somehow more unnerving.|"Today," Seraphine repeats, as if it were a foreign word. "I'll try." She manages most of a lunch.}
+
+# ---------------- Tobias ----------------
+
+@event tobias_between_sayings
+title: Where I'm From
+pool: between_once
+tone: tense
+cast:
+  tobias: tobias where met(tobias) and around(tobias)
+  o: any where classmate_here(o) and rel(o) >= 0 and not get_along(tobias, o)
+per: tobias
+when: seen(tobias_between_sayings) == 0
+art: leaf
+scene: A refectory table, a big broad-shouldered student laughing along a little too hard while a classmate across from him does an impression with a pretend pitchfork.
+text: Tobias said, at supper, that the soup "wanted more rain on it", which is what his mother says. {o} has been saying it all week, in a farmer's voice, with a pretend pitchfork. Tobias laughs from the belly every time. He's the only one who doesn't look like he's laughing.
+> left: Tell {o} to drop it
+  rel tobias +small
+  rel o -small
+  npc_rel tobias o -tiny
+  alignment +tiny
+  say: "That's his mum you're doing," you say. {o} goes red and stops. Tobias tells you, later, that he didn't mind, really, and apologises for you having to say anything, and then thanks you three times.
+> right: Ask Tobias for the rest of the sayings
+  challenge appeal apprentice:
+    win:
+      npc_rel tobias o +small
+      rel tobias +small
+      say: You ask Tobias what else his mother says. He tells you, for an hour, with goats. By the end, {o} is laughing with him instead of at him, and asking what "a frost in the cream" means.
+    lose:
+      rel tobias -tiny
+      say: Tobias tries, and {o} does the voice again, and the table laughs again. Tobias laughs too. He eats the rest of his supper very fast and goes to the greenhouses.
+
+@event tobias_between_supper
+title: Proper Food
+pool: between
+tone: warm
+cast:
+  tobias: tobias where met(tobias) and around(tobias) and rel(tobias) >= 6
+  o: any where classmate_here(o) and rel(o) >= 4 and not at_odds(tobias, o)
+per: tobias
+time: evening
+art: meal
+scene: A greenhouse corner at night with a little stove, a big student stirring a pot, a homesick classmate wrapped in a blanket holding a bowl.
+text: {~{o} has been homesick all week and not saying so. Tobias noticed. He has borrowed a stove and is cooking, in the corner of the greenhouses, "proper food".|Tobias heard {o} say the refectory's bread tastes of nothing. There is now a loaf proving under a cloche in the greenhouse, and an invitation.|{o} missed a letter from home this month. Tobias is making a stew "big enough for a barn", and wants you to come and help eat it.} He asks if you'll come.
+> left: Bring something to the table
+  gold -tiny
+  rel tobias +small
+  rel o +small
+  npc_rel tobias o +small
+  say: {~You bring cheese from the village. Tobias treats it like a holy relic. {o} eats three bowls and tells you about home, all of it, and it's a good evening.|You bring a jar of honey. Tobias's bread, it turns out, was waiting for exactly that. {o} laughs for the first time all week.|You bring the cider. Tobias tells the story of the goat that ate a hat. {o} tells one back. It's past midnight when you leave the greenhouse.}
+> right: Leave them to it
+  study +tiny
+  npc_rel tobias o +small
+  say: {~You plead an essay. In the morning {o} looks better than you've seen {o.them} in weeks, and there's a heel of bread wrapped in a cloth on your desk.|You stay in. You can smell the stew from the dormitory. Tobias saves you a bowl, and apologises that it's cold.|You leave them to it. Somebody plays a fiddle badly in the greenhouses until late, and somebody else sings along.}
+
+@event tobias_between_sulking
+title: The Ferns Are Sulking
+pool: between_once
+tone: light
+cast:
+  tobias: tobias where met(tobias) and around(tobias)
+  o: any where classmate_here(o) and rel(o) >= 4 and not at_odds(tobias, o)
+per: tobias
+when: term and not wrapup and seen(tobias_between_sulking) == 0
+art: leaf
+scene: A greenhouse bench of ferns all leaning pointedly away from one embarrassed student, a big student crouching to talk to them.
+text: {o} knocked over a tray of seedlings in the greenhouse last week, and swore at them. Now every plant on {o}'s bench leans away from {o.them}, and the ferns curl up when {o} comes in. Tobias, very gravely, says they're sulking. "They'll come round. But somebody's got to say sorry, and it'd better be {o}."
+> left: Help {o} say sorry to the ferns
+  mood -tiny
+  rel tobias +small
+  rel o +small
+  npc_rel tobias o +small
+  say: {o} kneels by the bench, mortified, while you hold the watering can and Tobias coaches in a whisper: "Lower. They like it lower." By the end of the lesson one fern has uncurled. Tobias claps {o} on the back hard enough to rattle the glass.
+> right: Tell {o} it's only plants
+  rel o +small
+  rel tobias -small
+  say: {o} laughs, relieved, and goes back to the bench. The ferns go on leaning away from {o} for the rest of term, and {o} quietly moves benches in the spring. Tobias doesn't say anything, which, for Tobias, is saying a great deal.
+
+# ---------------- Old Maud ----------------
+
+@event maud_between_soup
+title: Carry This, Dearie
+pool: between_once
+tone: warm
+cast:
+  maud: maud where met(maud) and around(maud)
+  o: any where classmate_here(o) and rel(o) >= 4
+per: maud
+when: seen(maud_between_soup) == 0
+art: cup
+scene: An old woman in a garden apron handing a covered pot to a student at her cottage door, the lamp lit behind her.
+text: Old Maud catches you on the path with a covered pot. "{o}'s abed with a chill, dearie, and too proud to say so. Take this up. Hot, mind. And sit with {o.them} till it's eaten. That's the important bit, the sitting. Soup's just the excuse."
+> left: Carry it, and sit with {o}
+  study -small
+  rel o +medium
+  rel maud +small
+  say: You carry the pot up three flights without spilling, and sit on the end of {o}'s bed while {o} eats it. {o} talks, eventually, about being ill and far from home. The soup does what Maud's soup does. So, you think, does the sitting.
+> right: Leave it at {o}'s door
+  rel o +tiny
+  rel maud -tiny
+  say: You knock, leave the pot on the step, and hurry off to your essay. The pot comes back to Maud empty. Maud looks at you over her spectacles. "Soup's only half of it, dearie," she says, and you understand what she meant a fortnight later.
+
+@event maud_between_beans
+title: The Bean Rows
+pool: between_once
+tone: light
+cast:
+  maud: maud where met(maud) and around(maud)
+  o: any where classmate_here(o) and rel(o) >= 4
+per: maud
+when: seen(maud_between_beans) == 0
+art: leaf
+scene: A trampled row of runner beans beside a cottage garden, a goat looking innocent, an old woman with her hands on her hips.
+text: Someone cut through Maud's garden in the dark and took out a whole row of runner beans. You know it was {o}, chasing a runaway hat. {o} knows you know. Maud is standing at the end of the row with her hands on her hips, saying, to nobody in particular, "Only, I'd like to know, that's all."
+> left: Get {o} to own up
+  challenge appeal apprentice:
+    win:
+      rel maud +small
+      npc_rel maud o +small
+      rel o -tiny
+      say: {o} goes and owns up, scarlet. Maud listens, nods, and hands {o} a trowel. By evening the beans are re-staked and {o} has been given soup, a lecture on beans, and a standing invitation to Sunday weeding.
+    lose:
+      rel o -small
+      say: {o} won't. "She'll tell the headmistress." She wouldn't, you know she wouldn't, but {o} won't hear it. Maud re-stakes the beans herself, slowly, and you feel every pole.
+> right: Re-stake them yourself
+  vigor +tiny
+  study -tiny
+  rel maud +small
+  rel o +small
+  say: You come back at dawn and re-stake the row before Maud's up. She finds you at it. "Funny," she says, "how a person's bean rows mend themselves." She doesn't ask. She gives you a jar of honey, and another one "for your friend".
+
+@event maud_between_advice
+title: Two Weeks Later
+pool: between_once
+tone: light
+cast:
+  maud: maud where met(maud) and around(maud)
+  o: any where classmate_here(o) and rel(o) >= 6
+per: maud
+when: seen(maud_between_advice) == 0
+art: flower
+scene: Two students on a garden bench puzzling over something, an old woman with a watering can walking away from them, smiling to herself.
+text: {o} went to Old Maud about a friend who'd stopped speaking to {o.them}, and came back with this: "Water the roots, dearie, not the leaves." {o} has been turning it over for days. "Is it about plants? It's not about plants. Is it?"
+> left: Puzzle it out together
+  lore +small
+  rel o +small
+  health -tiny
+  say: You sit up half the night on it. Somewhere around midnight you both get it at once: stop arguing about the thing, and go and see the person. {o} does, the next day. It works. Maud, told, says "did I say that, dearie?", which you choose to take as modesty.
+> right: "Give it two weeks."
+  rel o +tiny
+  npc_rel maud o +tiny
+  say: "Maud's advice takes two weeks," you say. {o} rolls {o.their} eyes. A fortnight later {o} stops you in a corridor, shining: "The roots! It was the roots!" You still don't know what {o} worked out. You decide not to ask.
+
+# ---------------- Professor Thorne ----------------
+
+@event thorne_between_hard
+title: Hm.
+pool: between_once
+tone: tense
+cast:
+  thorne: thorne where met(thorne) and around(thorne)
+  o: any where classmate_here(o) and rel(o) >= 6
+per: thorne
+when: term and not wrapup and seen(thorne_between_hard) == 0
+art: scroll
+scene: A severe old professor handing back an essay covered in red ink, a student staring at it, a third student at the next desk.
+text: Thorne has handed {o}'s essay back for the third week running, more red ink than black. "Hm," he said, which is all he said. {o} is close to tears in the corridor. "He hates me. He doesn't do this to anyone else. Will you talk to him? He listens to you."
+> left: Talk to Thorne
+  challenge appeal journeyman:
+    win:
+      rel thorne +tiny
+      npc_rel thorne o +small
+      rel o +small
+      say: Thorne hears you out, unmoved, and then says, "The student in question is the only one in that class worth correcting." He doesn't change a word of the red ink. But the next essay comes back with one line at the bottom, in black: "Better." {o} frames it.
+    lose:
+      rel thorne -tiny
+      say: "Flattery on another's behalf is still flattery," says Thorne, and turns back to his marking. You leave, having made it, possibly, slightly worse.
+> right: Read the red ink with {o}
+  study -tiny
+  rel o +small
+  arcana +tiny
+  say: You go through it line by line with {o}. Half of it, you point out, is Thorne arguing with {o}'s ideas, which he only does with ideas he thinks are worth it. {o} looks at the essay differently after that. So, for a moment, do you.
+
+@event thorne_between_flattery
+title: Allergic
+pool: between_once
+tone: light
+cast:
+  thorne: thorne where met(thorne) and around(thorne)
+  o: any where classmate_here(o) and rel(o) >= 4
+per: thorne
+when: term and not wrapup and seen(thorne_between_flattery) == 0
+art: hourglass
+scene: A student bowing slightly too low to a severe old professor in a corridor, holding out a single rose, while a friend behind them winces.
+text: {o} has a plan for the next practical mark: to be nice to Professor Thorne. Very nice. There's a speech about his "legendary career", and a rose. {o} is heading for his office now. You know, as everyone who has met Thorne knows, that he is allergic to flattery, possibly literally.
+> left: Head {o} off
+  rel o +small
+  say: You catch {o} on the stair and explain, quickly, about Thorne. {o} goes pale and gives you the rose. You keep it on your desk. It's a perfectly nice rose; it's just in no danger of reaching Thorne.
+> right: Let {o} find out
+  mood +small
+  rel o -small
+  npc_rel thorne o -tiny
+  say: You hear about it at supper, from four people. Thorne listened to the speech in silence, took the rose, and set {o} an additional essay on "the uses of sincerity". {o} doesn't speak to you for a day, and then laughs about it for a month.
+
+# ---------------- The Headmistress ----------------
+
+@event isolde_between_remembers
+title: The Second Week
+pool: between_once
+tone: light
+cast:
+  isolde: isolde where met(isolde) and around(isolde)
+  o: any where classmate_here(o) and rel(o) >= 4
+per: isolde
+when: seen(isolde_between_remembers) == 0
+art: eye
+scene: A tall pale headmistress pausing in the Great Hall beside a student, smiling pleasantly, while the student turns slowly crimson.
+text: The Headmistress stops beside {o} in the Great Hall, pleasant and unhurried. "{o}. How is the potion that turned the stairs blue? The second week, I believe. Nobody's ever managed that shade since." She moves on. {o} wants the floor to swallow {o.them}. "She remembers. She remembers everything."
+> left: "She remembered your name."
+  rel o +small
+  npc_rel isolde o +tiny
+  say: "She remembered your name, and the shade of blue," you say. "That's a compliment, from her." {o} doesn't believe you. But {o} walks a little taller past the Headmistress's tower for the rest of the term.
+> right: Confess your own first week
+  mood -tiny
+  rel o +medium
+  say: You confess your own first-week disaster, and that you live in fear of the day she mentions it. {o} laughs until {o} has to sit down. You feel it was worth it, nearly.
+
+@event isolde_between_complaint
+title: An Appointment
+pool: between_once
+tone: tense
+cast:
+  isolde: isolde where met(isolde) and around(isolde)
+  o: any where classmate_here(o) and rel(o) >= 8
+per: isolde
+when: term and not wrapup and seen(isolde_between_complaint) == 0
+art: tower
+scene: The door of a tall tower office ajar, a student hesitating on the threshold with a folded letter, a friend at their shoulder.
+text: {o} has written a complaint about a lecturer who marks unfairly, and has an appointment with the Headmistress to deliver it in person. {o} has rewritten it eleven times. "Come with me," {o} says. "Just stand there. I can't do it alone."
+> left: Go in with {o}
+  challenge appeal journeyman:
+    win:
+      rel o +medium
+      npc_rel isolde o +small
+      say: The Headmistress reads the letter slowly, asks {o} two questions, each placed like a chess piece, and then says, "Thank you. That was not easy." The marks are reviewed by the end of the month. {o} doesn't stop shaking until supper.
+    lose:
+      rel o +tiny
+      mood -small
+      say: The Headmistress listens pleasantly and says she will "look into it". {o} can't tell, afterwards, whether that means yes or no. Neither can you. Nothing seems to change for a month, and then, quietly, something does.
+> right: Help {o} rewrite it once more
+  study -tiny
+  rel o +small
+  say: You sit with {o} and cut the letter down to six lines, all of them true. {o} goes in alone, in the end, and comes out ten minutes later, astonished. "She read every line. Then she asked about the third one."

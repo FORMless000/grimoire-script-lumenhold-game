@@ -1,0 +1,168 @@
+# The Journal's own cards (phase 4, P4-14): at the end of each of the first three years, a look back through it; and
+# gentle nudges about a lead left unfollowed for half a year. Nudges stay with side threads (everyday leads), never
+# the main mystery's.
+
+@pool year_recap
+desc: At the end of a year, you read it back in your journal. Once each, and only the year it is for.
+trigger: auto
+class: milestone
+tone: warm
+repeat: 1
+priority: 40
+art: book
+tags: journal
+
+@pool nudge
+desc: Someone asks about a lead you found half a year ago and haven't followed. Once each, while it still can be followed.
+class: routine
+tone: light
+repeat: 1
+tags: journal
+
+# ---------------- the year in your journal ----------------
+
+@event recap_year_one
+title: The First Year, Read Back
+pool: year_recap
+when: turn == 12
+scene: A journal open on a windowsill in summer light, its pages crowded with a year of small handwriting, a pressed leaf between two of them.
+text: Before the summer swallows it, you read your first year back in your journal. You can't believe how lost you were in the autumn. {bonds(friend) + bonds(close) >= 3: By spring there are more friends in it than fit at one table.|{bonds(friend) + bonds(close) >= 1: By spring there's a friend in it, or two, who would notice if you went missing.|By spring there are still more meals alone in it than you'd like.}} {gpa >= 3: Your marks were better than you feared.|Your marks were what they were.} {clues(hollowstar) >= 1: And on the last page there's a question you can't put down.|}
+> left: Read it all again, slowly
+  mood +small
+  study -tiny
+  say: You read it twice, the second time for the parts you skimmed: the wrong tower, the first spell, the first person who saved you a seat. Then you buy a second journal, because this one is full.
+> right: Write down what you want next year
+  study +small
+  mood -tiny
+  say: You turn to a clean page and write a list for next year, honest and slightly embarrassing. You read it again before term, and cross one thing off already.
+
+@event recap_year_two
+title: The Second Year, Read Back
+pool: year_recap
+when: turn == 24
+scene: Two worn journals side by side on a summer desk, the newer one thicker, a quill resting across them.
+text: The second journal is fuller than the first. You read the year back over a long summer evening. {bonds(partner) > 0: There's a name in it that wasn't there last summer, written more often than any other.|{bonds(friend) + bonds(close) >= 3: The same names come up on nearly every page now, which is what having friends looks like, written down.|There are new names in it, and some old ones have gone quiet.}} {renown_known(): Somewhere in the spring, people you've never met started to know your face.|Hardly anyone outside your year knows your name yet, which has its uses.} {clues(hollowstar) >= 2: The question at the back has grown pages of its own.|}
+> left: Mark the pages worth keeping
+  mood +small
+  study -tiny
+  say: You go through with a ribbon and mark the pages you'd save from a fire. There are more of them than you expected, and fewer of them are about exams than you'd have guessed a year ago.
+> right: Count what's left to do
+  study +small
+  mood -tiny
+  say: Two years left. You count the courses, the doors you haven't opened and the people you haven't thanked, and make a list for each. The third list is the longest.
+
+@event recap_year_three
+title: The Third Year, Read Back
+pool: year_recap
+when: turn == 36
+scene: A stack of three journals on a summer windowsill, the top one open, a student sitting with their knees up reading it, the towers far off through the glass.
+text: Three journals now. Next year is the last, and the castle will want everything. Before it does, you read the third year back. {bonds(friend) + bonds(close) + bonds(partner) >= 3: The people in it would walk into the lake for you, and you're fairly sure you'd do the same.|{bonds(friend) + bonds(close) + bonds(partner) >= 1: There are one or two people in it you'll write to for the rest of your life.|It's a quieter book than you'd once hoped, and some of the quiet you chose.}} {renown_famous(): Half the castle knows your name now, and some of what they say is even true.|{renown_known(): People know your face in the corridors, and nod.|You've stayed mostly unnoticed, and done a great deal there.}}
+> left: Read the first one again
+  mood +small
+  study -tiny
+  say: You go back to the first journal, the one from the autumn you were lost in. You laugh at most of it. One page, about the first person who saved you a seat, you read three times.
+> right: Start the fourth one today
+  study +small
+  mood -tiny
+  say: You open a fresh journal and write the date, and under it the one thing you most want from the last year. You don't show it to anyone. You'll know in a year whether you kept it.
+
+# ---------------- nudges about old leads ----------------
+
+@event nudge_quickquill
+title: How's My Quill?
+pool: nudge
+track: lumen_ledger
+actor: nessa
+when: clue(lead_quickquill) and spell_level(quickquill) == 0 and since(ledger_spare_quill) >= 6 and member(lumen_ledger) and turn <= 44
+art: feather
+scene: A newspaper office, an editor leaning over a student's shoulder, a quill on the desk writing something rude in the margin all by itself.
+text: "How's my quill?" says Nessa, reading over your shoulder. On Tuesday the spare quill announced the engagement of two of the gargoyles and slipped it into a proof. "You took it home half a year ago. Have you tamed it yet, or has it tamed you?"
+> left: "I'm working on it."
+  rel nessa +tiny
+  study -tiny
+  say: She gives you the good ink from her own drawer. "Proper ink first," she says, "then sit a deadline night with it. That's where quills learn manners. Mine did."
+> right: "It's a lost cause."
+  rel nessa -tiny
+  mood +tiny
+  say: "Nothing's a lost cause," says Nessa, "except the gargoyles." She doesn't take the quill back. She tells you to give it until the end of term, and goes off to cut the engagement.
+
+@event nudge_footnote
+title: Still Guarding It
+pool: nudge
+track: library_assistant
+when: clue(lead_index) and spell_level(index) == 0 and since(library_footnote_drawer) >= 6 and member(library_assistant) and turn <= 44
+art: cat
+scene: A library catalogue cabinet, a large grey cat sitting on one drawer, glaring at a student with an armful of books.
+text: Footnote is still on the overdue drawer, eleven years and half a year now, and the head librarian has started leaving his saucer there. When you pass, he stops washing and stares at you, as if you'd promised him something and he has been very patient about it.
+> left: Go looking for the book again
+  study -small
+  lore +tiny
+  say: You spend the evening on the shelves that wander, with the card in your hand. They move twice while you're in them. You don't find the book, but you find where it was last week, which Footnote seems to accept as a start.
+> right: Tell him you're still looking
+  mood +tiny
+  say: You tell Footnote, solemnly, that you're still looking. He considers this for a long time, then goes back to washing, which seems to mean he'll allow it for now.
+
+@event nudge_two_taps
+title: How Far Have You Got?
+pool: nudge
+track: tavern
+when: clue(lead_rapport) and spell_level(rapport) == 0 and since(tavern_two_taps) >= 6 and member(tavern) and turn <= 44
+art: cup
+scene: A crowded tavern at night, a landlady behind the bar polishing a glass, tapping the counter twice with one finger, looking across at a student.
+text: The landlady catches your eye across the Newt and taps the bar twice, gently, like a question. It's half a year since she said you could earn it. "Learn the room, buy the room, work the room," she says, polishing a glass. "How far have you got?"
+> left: Ask where to start
+  study -tiny
+  mood +tiny
+  say: "The corner table," she says. "He's told everyone his story but you. Then the round, then a double shift. In that order, or the room knows." She taps the bar twice at you, and you catch half the sentence.
+> right: Say you'd rather just pour
+  gold +tiny
+  say: "Pouring's honest," she says, and leaves it there. The tips are good that night. She doesn't tap the bar at you again that term.
+
+@event nudge_brace
+title: Your Name on the Board
+pool: nudge
+track: duelling
+actor: lyra
+when: met(lyra) and clue(lead_brace) and spell_level(brace) == 0 and since(duel_dummy_hexes) >= 6 and member(duelling) and turn <= 44
+art: duel
+scene: A duelling hall doorway, a chalk board on the wall with a name under a drawing of a practice dummy and two drawings of stretchers, a student with folded arms beside it.
+text: Lyra stops you outside the duelling hall. "Your name's been under that dummy for half a year," she says. "Someone's drawn a second stretcher." She folds her arms. "Either try properly, or let me rub it out. I'm not having it look like you're scared."
+> left: "Leave it. I'll try."
+  rel lyra +tiny
+  health -tiny
+  say: "Good," says Lyra, and rubs out the second stretcher herself. "Read the old captain's notes first. Nobody does. Then come and stand my barrage, and Bram's, and stop flinching."
+> right: "Rub it out."
+  rel lyra -tiny
+  mood +tiny
+  say: She rubs it out, slowly, so that you have to watch. The dummy goes on hexing whoever passes. Lyra says nothing more about it, which is worse.
+
+@event nudge_red_ink
+title: Still Waiting
+pool: nudge
+when: clue(lead_red_ink) and not flag(red_ink_finished) and since(lecture_tower_red_ink) >= 6 and term
+art: paper
+scene: A narrow stone stair in a lecture tower, a folded note in red ink tucked into a crack in the wall at eye level.
+text: There's a note in red ink tucked into the crack in the lecture tower stair, in the small round hand you know. It says only: "Still waiting for the next draft. Paragraph four is still the best thing you've written. Don't make it the last."
+> left: Write the next draft tonight
+  study -small
+  lore +small
+  say: You write it that night and leave it on the stair in the morning. By evening it's gone, and someone has drawn a single small red tick on the step where it lay.
+> right: Put the note in a drawer
+  mood +tiny
+  say: You put the note in a drawer, under the other pages. It doesn't get any easier to forget, and the stair is on your way to everything.
+
+@event nudge_wind_jar
+title: The Jar Is Bored
+pool: nudge
+track: broom_courier
+when: clue(lead_tailwind) and spell_level(tailwind) == 0 and since(courier_wind_jar) >= 6 and member(broom_courier) and turn <= 44
+art: broom
+scene: A courier loft full of brooms on pegs, all leaning the same way, toward a stoppered glass jar with a small wind going round inside it.
+text: The jar of wind has moved. It was on the dead-letter shelf; this morning it's on your peg, going round and round, and every broom in the loft is leaning toward it. The loft master doesn't look up from her ledger. "It does that," she says, "when it's bored of waiting."
+> left: Ask who flew with it
+  study -tiny
+  lore +tiny
+  say: "Before my time," she says, "but the old logbooks are in the trunk." You read them until dark. The faded name on the jar's label turns up three times, always on the worst weather days.
+> right: Put it back on the shelf
+  mood +tiny
+  say: You put it back on the dead-letter shelf. In the morning it's on your peg again, and the brooms look at you reproachfully.

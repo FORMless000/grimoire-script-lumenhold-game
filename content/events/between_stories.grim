@@ -1,0 +1,381 @@
+# ============================================================
+#  Between people, as stories (phase 4, docs/phase4-plan.md, batch P4-05): three small storylines about how
+#  others get on, each a `story` thread (content/core/templates.grim) with Journal lines. Two follow canon pairs
+#  whose feelings are already set in the cast (Bram and Corvin's feud; Tobias and Mir), so every step knows who it
+#  is about; the study circle grows by whoever joins it. How a pair ends reads their own feelings (`npc_rel`).
+# ============================================================
+
+# ---------------- The Ledger War (Bram and Corvin) ----------------
+
+@thread bram_corvin_feud
+from: story
+with: begun=flag(feud_begun)
+class: story
+repeat: 1
+tags: story between
+name: The Ledger War
+premise: Bram had written Corvin up eleven times in one term. Corvin had started writing back.
+journal:
+  flag(feud_begun): Bram and Corvin went to war over the demerit ledger, and you stepped into the middle of it.
+  flag(feud_ledger_back): Bram's ledger vanished. You found it in Corvin's coat and put it back before anyone knew.
+  flag(feud_ledger_gone): Bram's ledger vanished, and you let it stay vanished. The castle held its breath for a week.
+  flag(feud_locked_in): The headmistress set them to clear the confiscation vault together. You locked the door on them for an hour.
+  flag(feud_by_the_rules): The headmistress set them to clear the confiscation vault together, and you watched them by the rules.
+  flag(feud_truce): Bram and Corvin shook hands in the vault doorway. Neither will say who offered first.
+  flag(feud_cold): Bram and Corvin came out of the vault still enemies, if quieter ones.
+status:
+  resolved: flag(feud_truce) or flag(feud_cold)
+members:
+  start feud_ledger_war
+
+@event feud_ledger_war
+title: Say Please
+trigger: social
+actor: corvin
+tone: light
+when: met(bram) and met(corvin) and around(bram) and around(corvin) and term and turn >= 4 and not flag(feud_begun)
+repeat: 3
+weight: 12
+art: scroll
+scene: A courtyard fountain, a prefect shouting at a locked ledger in his hands, a grinning student leaning on the fountain rim with a deck of cards.
+text: Bram has written Corvin up for the eleventh time this term ("existing in a corridor"), and Corvin has answered by charming the lock on Bram's demerit ledger so that it opens only for the word "please". Bram has been saying "OPEN" at it for ten minutes. Half the courtyard is watching. Both of them see you at the same moment.
+> left: Step in between them
+  flag feud_begun
+  npc_rel bram corvin -small
+  rel corvin +tiny
+  rel bram -tiny
+  queue feud_ledger_gone in 1
+  say: "Just say it, Bram." Bram says it, through his teeth. The ledger opens. Corvin laughs so hard he has to hold on to the fountain, and Bram writes your name on a fresh page, very neatly, and underlines it.
+> right: Keep walking
+  mood -tiny
+  say: You keep walking. Behind you, the courtyard counts along with Bram: "OPEN. OPEN." It's still going when you reach the library.
+
+@event feud_ledger_gone
+title: The Missing Ledger
+thread: bram_corvin_feud
+trigger: queued
+tone: tense
+art: key
+scene: A coat hanging on a dormitory peg with the corner of a red leather ledger sticking out of its pocket.
+text: Bram's ledger has gone. Not locked: gone. Bram is white with fury and quoting rules at the walls. Corvin is very helpful about looking for it. Then you borrow Corvin's coat on a cold evening, and find the ledger in its inside pocket. Corvin is one detention from being sent home. If Bram finds it there, that's the end of him.
+> left: Put it back quietly
+  flag feud_ledger_back
+  alignment +small
+  rel corvin -tiny
+  npc_rel bram corvin +tiny
+  queue feud_vault within 1..2
+  say: You leave it on Bram's desk in the prefects' room, open at today's page. Bram never knows how. Corvin knows exactly how. "Saint," he says, and for once it isn't quite a joke.
+> right: Leave it where it is
+  flag feud_ledger_gone
+  alignment -small
+  rel corvin +small
+  npc_rel bram corvin -small
+  queue feud_vault within 1..2
+  say: You hang the coat back up. For a week nobody in the castle gets a demerit, and Bram stalks the corridors like a man who has lost a hand. Corvin buys everyone cider.
+
+@event feud_vault
+title: A Week in the Vault
+thread: bram_corvin_feud
+trigger: queued
+tone: light
+defer: not (around(bram) and around(corvin))
+art: key
+scene: A cluttered vault of confiscated oddities, two students glaring at each other over a crate, a third leaning in the doorway with a lantern.
+text: The headmistress has had enough of both of them. Bram and Corvin will clear out the confiscation vault together, every evening for a week, and you, having been seen in the middle of all of it, are to watch them. Twenty minutes in, Bram is labelling things. Corvin is unlabelling them.
+> left: Lock them in for an hour
+  challenge deceive apprentice+:
+    win:
+      flag feud_locked_in
+      npc_rel bram corvin +medium
+      rel corvin +tiny
+      queue feud_end in 1
+      say: You step out "for a lantern" and turn the key. When you open the door an hour later they're sitting on the same crate, arguing about a confiscated board game, and Bram is winning, and Corvin is letting him.
+    lose:
+      flag feud_locked_in
+      rel bram -small
+      rel corvin -tiny
+      queue feud_end in 1
+      say: Corvin hears the key turn and has the lock open before you've let go of it. "Nice try, saint." Bram writes you up for "obstruction of a punishment", which isn't a rule, until he invents it.
+> right: Watch them by the rules
+  flag feud_by_the_rules
+  study +tiny
+  npc_rel bram corvin -tiny
+  queue feud_end in 1
+  say: You sit in the doorway and revise while they snipe. By the end of the week the vault is spotless and they've stopped speaking altogether, which is, the headmistress says, an improvement.
+
+@event feud_end
+title: The Vault Door
+thread: bram_corvin_feud
+trigger: queued
+tone: warm
+art: hourglass
+scene: Two students in a vault doorway at the end of a long week, one in a prefect's sash, one with cards behind his ear, a third watching.
+text: The last evening in the vault. {npc_rel(bram, corvin) > -20: Something has changed this week. Bram has stopped quoting rules at Corvin. Corvin has stopped quoting Bram back.|Nothing much has changed. They've cleared the vault by working at opposite ends of it.} At the door, Bram stops, and looks at Corvin, and then at you.
+> left: Say something to both of them
+  rel bram +small
+  rel corvin +small
+  if npc_rel(bram, corvin) > -20:
+    flag feud_truce
+    npc_rel bram corvin +small
+    say: You say they make a better team than either would admit. Bram goes red. Corvin grins. Then Bram, stiffly, holds out a hand, and Corvin shakes it, and immediately palms the prefect's pencil. Bram lets him keep it.
+  else:
+    flag feud_cold
+    say: You try. Bram says "noted". Corvin says "saint". They leave by different stairs. But the ledger, after that, has Corvin's name in it a little less often.
+> right: Leave them to it
+  mood +tiny
+  if npc_rel(bram, corvin) > -20:
+    flag feud_truce
+    say: You go ahead up the stairs. Behind you, a long silence, and then Corvin's laugh, and then, astonishingly, Bram's. At breakfast they nod to each other. Nobody knows what to make of it.
+  else:
+    flag feud_cold
+    say: You leave them to it. Neither of them says goodbye to the other. The war is over, more or less, because both of them are tired of it.
+
+# ---------------- The Watering Engine (Tobias and Mir) ----------------
+
+@thread tobias_mir
+from: story
+with: begun=flag(tm_begun)
+class: story
+repeat: 1
+tags: story between
+name: The Watering Engine
+premise: Mir built Tobias a machine to water the greenhouse. Then neither of them could stop talking about it.
+journal:
+  flag(tm_begun): Mir built Tobias a watering engine, and you noticed how long they spent explaining it to each other.
+  flag(tm_planned): Tobias asked how to invite Mir to the orchard "without it being a thing". You helped him plan the thing.
+  flag(tm_just_ask): Tobias asked how to invite Mir somewhere. You told him to just ask.
+  flag(tm_told): Mir wondered if Tobias only liked the engine. You told Mir otherwise.
+  flag(tm_ask_yourself): Mir wondered if Tobias only liked the engine. You told Mir to ask him.
+  flag(tm_together): Tobias and Mir turned up at the orchard together. Whatever it is, it's their business, and it's going well.
+  flag(tm_friends): Tobias and Mir are the best of friends, and the greenhouse is the best-watered in the country.
+status:
+  resolved: flag(tm_together) or flag(tm_friends)
+members:
+  start tm_watering_engine
+
+@event tm_watering_engine
+title: The Watering Engine
+trigger: social
+actor: tobias
+tone: light
+when: met(tobias) and met(mir) and around(tobias) and around(mir) and fancy_free(tobias) and fancy_free(mir) and turn >= 5 and not flag(tm_begun)
+repeat: 3
+weight: 12
+art: gear
+scene: A greenhouse with a brass contraption trundling along the benches watering seedlings, a big student and a goggled artificer crouched beside it, deep in talk.
+text: There's a brass contraption trundling along the greenhouse benches, watering seedlings with a little copper spout. Mir built it. Tobias is explaining to it, gently, which plants like it lower. Mir is listening to Tobias the way Mir usually listens only to machines. Neither of them has noticed you.
+> left: Ask them how it works
+  flag tm_begun
+  npc_rel tobias mir +small
+  rel tobias +tiny
+  rel mir +tiny
+  queue tm_invitation within 1..2
+  say: They tell you at the same time, in different directions: Mir about gears, Tobias about ferns. They keep interrupting each other to agree. You leave an hour later. They don't notice that either.
+> right: Leave them to it
+  study +tiny
+  say: You take your notes to the far end of the greenhouse. The engine squeaks past you twice, followed by two people arguing happily about tomatoes.
+
+@event tm_invitation
+title: Not a Thing
+thread: tobias_mir
+trigger: queued
+tone: warm
+when: fancy_free(tobias) and fancy_free(mir)
+art: flower
+scene: A big student sitting on an upturned flowerpot, turning his cap round and round in his hands, asking a friend for advice.
+text: Tobias corners you by the potting benches, turning his cap round and round in his big hands. "I'd like to ask Mir to the orchard on Sunday," he says. "To see the bees. Only, without it being a thing. Unless it's a thing. How do you do that?"
+> left: Help him plan it
+  flag tm_planned
+  study -tiny
+  npc_rel tobias mir +small
+  rel tobias +small
+  queue tm_misread within 1..2
+  say: You spend an evening on it: a picnic, a jar of honey, a spare pair of goggles in case of bees. Tobias writes it all down on a seed packet. He apologises for the trouble four times and thanks you seven.
+> right: Tell him to just ask
+  flag tm_just_ask
+  rel tobias +tiny
+  chance likely:
+    npc_rel tobias mir +small
+    queue tm_misread within 1..2
+    say: "Just ask," you say. Tobias takes a breath that lifts his whole frame, and goes and asks. You hear Mir say "probably!" from across the greenhouse, which from Mir is a yes.
+  else:
+    queue tm_misread within 1..2
+    say: Tobias goes to ask, and comes back having talked about the engine for twenty minutes instead. "I'll ask tomorrow," he says. He does, in the end. It takes a week.
+
+@event tm_misread
+title: Only the Engine?
+thread: tobias_mir
+trigger: queued
+tone: tense
+art: gear
+scene: A workshop at night, an artificer sitting on a bench with goggles pushed up, staring at a half-built engine, a friend in the doorway.
+text: Mir finds you, goggles pushed up, unusually quiet. "Tobias wants to go to the orchard. To see the bees." A long pause. "Is that about the engine? Probably it's about the engine. It's a very good engine. It's fine if it's about the engine."
+> left: Tell Mir it isn't
+  flag tm_told
+  rel mir +small
+  npc_rel tobias mir +medium
+  queue tm_end within 1..2
+  say: "It isn't about the engine," you say. Mir looks at you for a long moment, and then goes slowly pink from the collar up. "Oh," says Mir. "Oh. Probably I should bring something. Not the engine." You suggest honey.
+> right: "Ask him yourself."
+  flag tm_ask_yourself
+  challenge appeal apprentice:
+    win:
+      npc_rel tobias mir +small
+      rel mir +tiny
+      queue tm_end within 1..2
+      say: Mir marches into the greenhouse and asks him, straight out, in front of a bench of seedlings. You don't hear the answer. You see Mir's face, after. That's enough.
+    lose:
+      rel mir -tiny
+      queue tm_end within 1..2
+      say: Mir doesn't ask. Mir builds Tobias a second engine instead, a smaller one, for the windowsill. It's a kind of asking. You're not sure Tobias reads it.
+
+@event tm_end
+title: The Orchard
+thread: tobias_mir
+trigger: queued
+tone: warm
+art: flower
+scene: An orchard on a sunny afternoon, two friends on a blanket among beehives, one in goggles, one with a jar of honey, laughing.
+text: Sunday, the orchard, the bees. {npc_rel(tobias, mir) >= 30: Tobias and Mir arrive together, carrying a picnic between them and arguing happily about bees.|Tobias and Mir arrive separately, and spend the afternoon talking about the engine.} They've saved you a corner of the blanket, though you weren't sure you were invited.
+> left: Stay for the picnic
+  mood +small
+  rel tobias +small
+  rel mir +small
+  if npc_rel(tobias, mir) >= 30:
+    flag tm_together
+    say: You stay an hour, and then slip away, and neither of them notices you go. Whatever it is, it's their business. It looks like it's going well.
+  else:
+    flag tm_friends
+    say: It's a lovely afternoon. Whatever it might have been, it's a friendship, and a good one: the greenhouse gets watered on time for the rest of the year.
+> right: Leave them the blanket
+  study +tiny
+  rel tobias +tiny
+  rel mir +tiny
+  if npc_rel(tobias, mir) >= 30:
+    flag tm_together
+    say: You say you've an essay, which is true. From the orchard gate you look back once. They're sharing the honey. You don't look back again.
+  else:
+    flag tm_friends
+    say: You leave them to the bees. At supper, they're still talking about the engine. Best friends, then. It's not nothing.
+
+# ---------------- The Thursday Circle (a study circle) ----------------
+
+@thread study_circle
+from: story
+with: begun=flag(circle_begun)
+class: story
+repeat: 1
+tags: story between
+name: The Thursday Circle
+premise: A study circle that started with two chairs and a borrowed lamp.
+journal:
+  flag(circle_begun): You and a friend started meeting in the library on Thursdays, with one lamp between you.
+  flag(circle_open): Someone nobody much liked asked to join. You said yes, and the circle got bigger.
+  flag(circle_closed): Someone nobody much liked asked to join. The circle said no, and stayed cosy.
+  flag(circle_held): The night before exams, the circle nearly came apart. You held it together.
+  flag(circle_split): The night before exams, the circle came apart, and put itself back together after.
+  flag(circle_done): The Thursday Circle has its own table now, and a name carved under it.
+status:
+  resolved: flag(circle_done)
+members:
+  start circle_founded
+
+@event circle_founded
+title: Thursdays
+place: library
+time: evening
+tone: warm
+cast:
+  o: any where classmate_here(o) and rel(o) >= 10
+when: term and not wrapup and turn >= 3 and not flag(circle_begun)
+repeat: 3
+weight: 10
+art: lantern
+scene: A library alcove in the evening, two students sharing a single lamp over open books, an empty third chair pulled up.
+text: {o} drops into the chair across from you in the library with a stack of books and a borrowed lamp. "I can't revise alone. I just read the same page. What if we did this every week? Thursdays. You and me, and whoever else."
+> left: "Thursdays, then."
+  flag circle_begun
+  study +small
+  rel o +small
+  queue circle_newcomer within 1..2
+  say: You shake on it over the lamp. The first Thursday you get through a chapter each and an argument about it. The second Thursday someone else asks if the third chair is taken.
+> right: "I work better alone."
+  lore +small
+  rel o -tiny
+  say: {o} nods, and takes the lamp to another alcove. You get a great deal done. Every Thursday after that you see the lamp lit in the far alcove, and sometimes two heads under it.
+
+@event circle_newcomer
+title: The Fourth Chair
+thread: study_circle
+trigger: queued
+tone: tense
+cast:
+  n: any where classmate_here(n) and rel(n) <= 5
+when: term
+art: book
+scene: A library table with three students around a lamp, a fourth standing a little way off with books clutched to their chest.
+text: The circle is four now, sometimes five. Tonight {n} is hovering at the end of the table with an armful of books: {n}, whom nobody in the circle much likes, and who has, it turns out, failed the last two practicals. "Could I sit in?" {n} asks. The others look at you.
+> left: "Pull up a chair."
+  flag circle_open
+  rel n +medium
+  mood -tiny
+  queue circle_exam_night within 1..2
+  say: {n} sits down. It's stiff for a week. Then {n} explains, better than any of you, the one thing all of you had wrong, and the circle shifts round to make room.
+> right: "We're full, sorry."
+  flag circle_closed
+  rel n -small
+  study +small
+  queue circle_exam_night within 1..2
+  say: {n} says "of course" and goes. The circle stays as it was, cosy and quick. You see {n} revising alone the next Thursday, at the far end of the room.
+
+@event circle_exam_night
+title: The Night Before
+thread: study_circle
+trigger: queued
+tone: tense
+cast:
+  w: any where classmate_here(w) and rel(w) >= 4
+when: term
+defer: not (month == 4 or month == 10)
+art: candle
+scene: A library table late at night strewn with notes and cold tea, students glaring at each other across it, one of them on their feet.
+text: The night before exams the circle sits till the lamps are trimmed, and it goes wrong. {w} hasn't done the notes {w.they} promised, and somebody says so, loudly, and {w} says some things back. Half the table is on its feet.
+> left: Hold it together
+  challenge appeal journeyman:
+    win:
+      flag circle_held
+      study +small
+      rel w +small
+      queue circle_last within 2..4
+      say: You split {w}'s chapter four ways and start reading it aloud before anyone can leave. By midnight it's done, and {w} brings everyone breakfast the next morning without being asked.
+    lose:
+      flag circle_split
+      study -tiny
+      mood -small
+      queue circle_last within 2..4
+      say: You try, but it's too late and too tired. The circle breaks up at the door. You revise alone till two. It comes back together after the exams, a little shy of itself.
+> right: Take {w}'s chapter yourself
+  flag circle_held
+  study -small
+  health -tiny
+  rel w +medium
+  queue circle_last within 2..4
+  say: "I'll do it," you say, and the table goes quiet. You're up till three. {w} sits up with you, not saying much, and makes the tea.
+
+@event circle_last
+title: The Carved Table
+thread: study_circle
+trigger: queued
+tone: warm
+art: book
+scene: A library table in the evening, a group of students round a lamp, one of them carving something small into the underside of the table with a penknife.
+text: The Thursday Circle has outlasted the term. It has its own table now, and its own lamp, which the librarian pretends not to know about. Someone has brought a penknife and suggests, in a whisper, that the table should have a name on it. Underneath, where nobody will see.
+> left: Carve it
+  mood +small
+  flag circle_done
+  alignment -tiny
+  say: You carve "THURSDAYS" on the underside of the table, very small, while the others keep lookout. Years from now somebody will find it and wonder. You hope they start a circle.
+> right: Leave the table be
+  study +tiny
+  flag circle_done
+  say: You talk them out of the penknife. Somebody writes "Thursdays" on the inside cover of a library book instead, in pencil, and puts it back on the shelf where it'll be found by the right person.

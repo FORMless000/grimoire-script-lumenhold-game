@@ -516,6 +516,9 @@ text: "I saw you old," Seraphine says suddenly. "Last night. You were happy. Rea
   mood -tiny
   rel seraphine +medium
   say: She smiles like you've given her a present. "That's the right answer. Nobody ever gives the right answer." Not knowing nags at you for days.
+  if knows(seraphine.self):
+    rel seraphine +tiny
+    say: Later you wonder whether she could see the someone only because you were standing next to her when she looked. You don't ask. She goes pink anyway, as if you had.
 
 @event seraphine_overwhelmed
 title: Too Many Tomorrows
@@ -601,6 +604,9 @@ text: "Midnight," Corvin whispers. "The cooks have made forty treacle tarts for 
 > left: Not tonight
   rel corvin -tiny
   say: He goes alone. The next morning there's a treacle tart on your pillow. You decide not to ask.
+  if knows(corvin.last_warning):
+    rel corvin +tiny
+    say: He only took the one, he tells you later, because you'd reminded him about his last warning. It's the closest he comes to saying thank you.
 > right: Lead the raid
   alignment -tiny
   challenge deceive apprentice:
@@ -830,6 +836,9 @@ text: The Artificers' Fair. Mir's entry is under a sheet and occasionally growls
   mood +tiny
   rel mir +tiny
   say: The machine turns out to be a mechanical bear that bakes bread. It wins second place. Mir is ecstatic and flour-covered.
+  if knows(mir.family):
+    rel mir +tiny
+    say: You tell Mir, while they're still covered in flour, that nobody wins second prize at a hobby. They stop in the middle of a sentence.
 > right: Be the confident assistant
   challenge perform apprentice wild:
     win:

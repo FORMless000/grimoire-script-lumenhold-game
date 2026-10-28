@@ -25,6 +25,9 @@ text: It's snowing in the courtyard. Only in a small circle, around Kael, who is
   mood +small
   vigor +tiny
   say: Your snowball hits him in the ear. He stares. Then he laughs — a real laugh, startled out of him — and the snow triples.
+  if knows(kael.cold_hands):
+    rel kael +tiny
+    say: Afterwards you take his hands to warm them, out of habit, and for once he doesn't tell you they're always cold. He just lets you.
 
 @event kael_cold_hands
 time: evening night
@@ -314,6 +317,9 @@ text: Thorne calls you to his office and slides an envelope across the desk. "Th
   rel thorne +tiny
   mood +tiny
   say: "Go away," he says gruffly. "I have marking." You see him smile at the window as you leave.
+  if knows(thorne.roses):
+    rel thorne +tiny
+    say: On your way out you leave a single rose on the corner of his desk, from the village, not from his garden. He pretends not to see it. The next day it's in a glass of water.
 > right: Ask why you
   mood -tiny
   flag thorne_letter
@@ -497,6 +503,9 @@ text: Maud's chickens are running wild, unfed. You find her in bed, grey-faced a
   study -small
   gain blessed
   say: You feed chickens, brew teas, read her the newspaper. When she's well, she gives you a sprig of rosemary. "You'll do," she says. "You'll do."
+  if knows(maud.soup):
+    rel maud +tiny
+    say: On the third day you make her own soup, from memory, since you're not allowed to write it down. She tastes it, narrows her eyes and says it wants more pepper. It doesn't.
 
 # ================= HEADMISTRESS ISOLDE MARROW =================
 

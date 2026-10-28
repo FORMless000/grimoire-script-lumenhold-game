@@ -70,6 +70,9 @@ text: Lyra has built a wall of books down the middle of your library table. "My 
   rel lyra +small
   mood -tiny
   say: {~You write the answer and slide it back. She writes a better one and slides that back. By closing time the wall is gone and you've both written an essay neither of you could have alone.|You pass notes over the wall all evening, half about Thorne and half not. She keeps the notes. You see them later, pinned in her book.}
+  if knows(lyra.burnout):
+    rel lyra +tiny
+    say: Near midnight you slide one more note over the wall: "Bed." She reads it twice, glares at you, and, for once, goes.
 > right: Keep to your side
   study +medium
   rel lyra -tiny
@@ -193,6 +196,9 @@ text: Tobias has a letter from the agricultural scholarship board: a review of h
   rel tobias +small
   charm +tiny
   say: You write a letter about the boy who keeps the greenhouse alive and talks the mandrakes through exams. He never knows you sent it. The board renews him with a note about "character", and he can't think why.
+  if knows(tobias.moonflowers):
+    mood +tiny
+    say: You put in the moonflowers, and the storm, and how he held the greenhouse door shut with his whole body. The board, it turns out, has farmers on it.
 
 # ---------------- Seraphine ----------------
 

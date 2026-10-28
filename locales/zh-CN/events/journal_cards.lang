@@ -1,0 +1,149 @@
+# Lumenhold Academy — 简体中文 (zh-CN) translation of content/events/journal_cards.grim
+# Maintained by `node tools/grim.js i18n zh-CN`. Translate the text after "="; keep {tokens}.
+# "# en:" shows the English source. [hash] marks the English version a line was translated from;
+# lines marked STALE need updating — after fixing the text, delete the [hash] and re-run the tool.
+
+
+@event recap_year_one
+# en: The First Year, Read Back
+title [cefe2e] = 重读第一年
+# en: Before the summer swallows it, you read your first year back in your journal. You can't believe how lost you were in the autumn. {bonds(friend) + bonds(close) >= 3: By spring there are more friends in it than fit at one table.|{bonds(friend) + bonds(close) >= 1: By spring there's a friend in it, or two, who would notice if you went missing.|By spring there are still more meals alone in it than you'd like.}} {gpa >= 3: Your marks were better than you feared.|Your marks were what they were.} {clues(hollowstar) >= 1: And on the last page there's a question you can't put down.|}
+text [d21606] = 趁夏天还没把它吞掉，你在日记里把第一年重读了一遍。你简直不敢相信，秋天时自己有多迷茫。{bonds(friend) + bonds(close) >= 3: 到了春天，日记里的朋友已经多得一张桌子坐不下了。|{bonds(friend) + bonds(close) >= 1: 到了春天，日记里有了一两个朋友，你要是不见了，他们会发现的。|到了春天，日记里一个人吃饭的日子还是比你希望的多。}} {gpa >= 3: 你的成绩比你担心的要好。|你的成绩就是那样了。} {clues(hollowstar) >= 1: 而在最后一页，有一个你放不下的问题。|}
+# en: A journal open on a windowsill in summer light, its pages crowded with a year of small handwriting, a pressed leaf between two of them.
+scene [f5200a] = 夏日阳光下窗台上摊开的一本日记，书页上挤满了一整年的小字，两页之间夹着一片压平的叶子。
+# en: Read it all again, slowly
+opt.left.label [65ee53] = 慢慢地再读一遍
+# en: You read it twice, the second time for the parts you skimmed: the wrong tower, the first spell, the first person who saved you a seat. Then you buy a second journal, because this one is full.
+opt.left.say.1 [6c65a1] = 你读了两遍，第二遍专读那些跳过的地方：走错的塔，第一道咒语，第一个给你留座位的人。然后你买了第二本日记，因为这本已经写满了。
+# en: Write down what you want next year
+opt.right.label [223177] = 写下明年想要什么
+# en: You turn to a clean page and write a list for next year, honest and slightly embarrassing. You read it again before term, and cross one thing off already.
+opt.right.say.1 [6483c4] = 你翻到空白的一页，给明年列了一张清单，坦白得有点难为情。开学前你又读了一遍，已经划掉了一项。
+
+@event recap_year_two
+# en: The Second Year, Read Back
+title [8f7460] = 重读第二年
+# en: The second journal is fuller than the first. You read the year back over a long summer evening. {bonds(partner) > 0: There's a name in it that wasn't there last summer, written more often than any other.|{bonds(friend) + bonds(close) >= 3: The same names come up on nearly every page now, which is what having friends looks like, written down.|There are new names in it, and some old ones have gone quiet.}} {renown_known(): Somewhere in the spring, people you've never met started to know your face.|Hardly anyone outside your year knows your name yet, which has its uses.} {clues(hollowstar) >= 2: The question at the back has grown pages of its own.|}
+text [05583d] = 第二本日记比第一本写得更满。你花了一个漫长的夏夜把这一年重读了一遍。{bonds(partner) > 0: 里面有一个去年夏天还没有的名字，出现得比哪个都多。|{bonds(friend) + bonds(close) >= 3: 如今几乎每一页都有同样几个名字，有了朋友，写下来就是这个样子。|里面多了些新名字，也有些老名字沉寂了。}} {renown_known(): 春天的某个时候，素不相识的人开始认得你的脸了。|你们年级以外几乎还没人知道你的名字，这自有它的好处。} {clues(hollowstar) >= 2: 日记最后那个问题，已经自己长出了好几页。|}
+# en: Two worn journals side by side on a summer desk, the newer one thicker, a quill resting across them.
+scene [8632c7] = 夏日书桌上并排放着两本磨旧的日记，新的那本更厚，一支羽毛笔横搁在上面。
+# en: Mark the pages worth keeping
+opt.left.label [f6819c] = 标出值得留下的几页
+# en: You go through with a ribbon and mark the pages you'd save from a fire. There are more of them than you expected, and fewer of them are about exams than you'd have guessed a year ago.
+opt.left.say.1 [e5a301] = 你拿一根丝带翻了一遍，标出那些着火时你会抢出来的页。比你预想的多，而且关于考试的，比一年前的你猜的要少。
+# en: Count what's left to do
+opt.right.label [039797] = 数数还剩什么要做
+# en: Two years left. You count the courses, the doors you haven't opened and the people you haven't thanked, and make a list for each. The third list is the longest.
+opt.right.say.1 [27c7d7] = 还剩两年。你数了数要上的课、还没打开的门、还没道谢的人，各列了一张清单。第三张最长。
+
+@event recap_year_three
+# en: The Third Year, Read Back
+title [c6ea79] = 重读第三年
+# en: Three journals now. Next year is the last, and the castle will want everything. Before it does, you read the third year back. {bonds(friend) + bonds(close) + bonds(partner) >= 3: The people in it would walk into the lake for you, and you're fairly sure you'd do the same.|{bonds(friend) + bonds(close) + bonds(partner) >= 1: There are one or two people in it you'll write to for the rest of your life.|It's a quieter book than you'd once hoped, and some of the quiet you chose.}} {renown_famous(): Half the castle knows your name now, and some of what they say is even true.|{renown_known(): People know your face in the corridors, and nod.|You've stayed mostly unnoticed, and done a great deal there.}}
+text [104a26] = 现在已经有三本日记了。明年是最后一年，城堡会要走你的一切。趁它还没开口，你把第三年重读了一遍。{bonds(friend) + bonds(close) + bonds(partner) >= 3: 日记里的那些人会为你走进湖里，而你几乎可以肯定，你也会为他们这么做。|{bonds(friend) + bonds(close) + bonds(partner) >= 1: 里面有一两个人，你这辈子都会给他们写信。|这是一本比你曾经希望的更安静的书，而其中有些安静是你自己选的。}} {renown_famous(): 如今半个城堡都知道你的名字，他们说的有些甚至是真的。|{renown_known(): 走廊里的人认得你的脸，会冲你点头。|你大体上没被人注意，却在那里做了很多事。}}
+# en: A stack of three journals on a summer windowsill, the top one open, a student sitting with their knees up reading it, the towers far off through the glass.
+scene [0b7c7f] = 夏日窗台上叠着三本日记，最上面那本摊开着，一个学生抱膝坐着读它，玻璃外远处是那几座塔。
+# en: Read the first one again
+opt.left.label [fd8564] = 重读第一本
+# en: You go back to the first journal, the one from the autumn you were lost in. You laugh at most of it. One page, about the first person who saved you a seat, you read three times.
+opt.left.say.1 [2224ce] = 你翻回第一本日记，就是你迷路的那个秋天写的。大部分内容让你发笑。有一页写的是第一个给你留座位的人，你读了三遍。
+# en: Start the fourth one today
+opt.right.label [55f459] = 今天就开始第四本
+# en: You open a fresh journal and write the date, and under it the one thing you most want from the last year. You don't show it to anyone. You'll know in a year whether you kept it.
+opt.right.say.1 [109405] = 你翻开一本新日记，写下日期，在下面写下你最想从最后一年得到的那一件事。你没给任何人看。一年后你就会知道，自己有没有做到。
+
+@event nudge_quickquill
+# en: How's My Quill?
+title [fb930f] = 我的羽毛笔怎么样了？
+# en: "How's my quill?" says Nessa, reading over your shoulder. On Tuesday the spare quill announced the engagement of two of the gargoyles and slipped it into a proof. "You took it home half a year ago. Have you tamed it yet, or has it tamed you?"
+text [14d1a4] = “我的羽毛笔怎么样了？”内莎越过你的肩膀看着说。星期二，那支备用羽毛笔宣布了两座石像鬼订婚的消息，还偷偷塞进了校样。“你半年前把它带回家的。是你驯服了它，还是它驯服了你？”
+# en: A newspaper office, an editor leaning over a student's shoulder, a quill on the desk writing something rude in the margin all by itself.
+scene [a9911b] = 报社编辑部里，一位编辑俯身越过一个学生的肩膀，桌上一支羽毛笔正自己在页边写着什么不礼貌的话。
+# en: "I'm working on it."
+opt.left.label [c61049] = “我正在努力。”
+# en: She gives you the good ink from her own drawer. "Proper ink first," she says, "then sit a deadline night with it. That's where quills learn manners. Mine did."
+opt.left.say.1 [69db53] = 她从自己的抽屉里拿出好墨水给你。“先换上像样的墨水，”她说，“然后陪它熬一个截稿夜。羽毛笔就是在那儿学规矩的。我的就是。”
+# en: "It's a lost cause."
+opt.right.label [cdd6be] = “它没救了。”
+# en: "Nothing's a lost cause," says Nessa, "except the gargoyles." She doesn't take the quill back. She tells you to give it until the end of term, and goes off to cut the engagement.
+opt.right.say.1 [0030f1] = “没有什么是没救的，”内莎说，“除了那两座石像鬼。”她没有把羽毛笔收回去，叫你再给它一个学期，然后走去删掉那条订婚消息。
+
+@event nudge_footnote
+# en: Still Guarding It
+title [6c8c65] = 还守着它
+# en: Footnote is still on the overdue drawer, eleven years and half a year now, and the head librarian has started leaving his saucer there. When you pass, he stops washing and stares at you, as if you'd promised him something and he has been very patient about it.
+text [3277a6] = 脚注还坐在那个逾期的抽屉上，如今已经十一年零半年了，馆长开始把它的小碟子直接放在那儿。你经过时，它停下舔毛，盯着你，好像你答应过它什么，而它一直很有耐心。
+# en: A library catalogue cabinet, a large grey cat sitting on one drawer, glaring at a student with an armful of books.
+scene [14ebc5] = 图书馆的目录柜，一只大灰猫坐在其中一个抽屉上，瞪着一个抱着一摞书的学生。
+# en: Go looking for the book again
+opt.left.label [bb05cf] = 再去找那本书
+# en: You spend the evening on the shelves that wander, with the card in your hand. They move twice while you're in them. You don't find the book, but you find where it was last week, which Footnote seems to accept as a start.
+opt.left.say.1 [7aef27] = 你拿着那张卡片，在那些会游走的书架间待了一晚上。你在里面时，它们挪了两次。你没找到那本书，但找到了它上星期待过的地方，脚注似乎认为这算是个开始。
+# en: Tell him you're still looking
+opt.right.label [c6e55a] = 告诉它你还在找
+# en: You tell Footnote, solemnly, that you're still looking. He considers this for a long time, then goes back to washing, which seems to mean he'll allow it for now.
+opt.right.say.1 [64ba8c] = 你郑重地告诉脚注，你还在找。它考虑了很久，然后继续舔毛，这似乎是说它暂且允许了。
+
+@event nudge_two_taps
+# en: How Far Have You Got?
+title [929fa8] = 你进展到哪儿了？
+# en: The landlady catches your eye across the Newt and taps the bar twice, gently, like a question. It's half a year since she said you could earn it. "Learn the room, buy the room, work the room," she says, polishing a glass. "How far have you got?"
+text [48e316] = 老板娘隔着蝾螈酒馆对上你的目光，轻轻敲了两下吧台，像在提问。她说你可以自己挣来这一手，已经是半年前的事了。“摸清这屋子，请这屋子喝一轮，再在这屋子里干活，”她擦着杯子说，“你进展到哪儿了？”
+# en: A crowded tavern at night, a landlady behind the bar polishing a glass, tapping the counter twice with one finger, looking across at a student.
+scene [cf2e67] = 夜里拥挤的酒馆，老板娘在吧台后擦着杯子，用一根手指在台面上敲了两下，看向一个学生。
+# en: Ask where to start
+opt.left.label [c651c6] = 问该从哪儿开始
+# en: "The corner table," she says. "He's told everyone his story but you. Then the round, then a double shift. In that order, or the room knows." She taps the bar twice at you, and you catch half the sentence.
+opt.left.say.1 [37dd21] = “角落那张桌子，”她说，“他的故事讲给了所有人，就差你。然后请一轮，再上一个双班。按这个顺序来，不然这屋子会知道。”她冲你敲了两下吧台，这一次你听清了半句。
+# en: Say you'd rather just pour
+opt.right.label [cd7c6a] = 说你宁愿只管倒酒
+# en: "Pouring's honest," she says, and leaves it there. The tips are good that night. She doesn't tap the bar at you again that term.
+opt.right.say.1 [692fc7] = “倒酒是老实活儿，”她说，就此作罢。那晚的小费不错。那个学期她再没冲你敲过吧台。
+
+@event nudge_brace
+# en: Your Name on the Board
+title [984715] = 板上你的名字
+# en: Lyra stops you outside the duelling hall. "Your name's been under that dummy for half a year," she says. "Someone's drawn a second stretcher." She folds her arms. "Either try properly, or let me rub it out. I'm not having it look like you're scared."
+text [f16dc8] = 莱拉在决斗厅外拦住你。“你的名字在那个假人底下挂了半年了，”她说，“有人又画了第二副担架。”她抱起胳膊。“要么认真试一次，要么让我擦掉。我可不想让人觉得你怕了。”
+# en: A duelling hall doorway, a chalk board on the wall with a name under a drawing of a practice dummy and two drawings of stretchers, a student with folded arms beside it.
+scene [a86d20] = 决斗厅门口，墙上一块黑板，一个名字写在练习假人的画下面，旁边画着两副担架，一个学生抱着胳膊站在一旁。
+# en: "Leave it. I'll try."
+opt.left.label [459542] = “别擦。我会试的。”
+# en: "Good," says Lyra, and rubs out the second stretcher herself. "Read the old captain's notes first. Nobody does. Then come and stand my barrage, and Bram's, and stop flinching."
+opt.left.say.1 [54f66c] = “很好，”莱拉说，亲手擦掉了第二副担架。“先读那位老队长的笔记。没人读。然后来扛我的连击，还有布拉姆的，别再缩了。”
+# en: "Rub it out."
+opt.right.label [743a7b] = “擦掉吧。”
+# en: She rubs it out, slowly, so that you have to watch. The dummy goes on hexing whoever passes. Lyra says nothing more about it, which is worse.
+opt.right.say.1 [39b95d] = 她慢慢地擦，让你不得不看着。那个假人继续向每个路过的人甩恶咒。莱拉再没提过这件事，这更糟。
+
+@event nudge_red_ink
+# en: Still Waiting
+title [d19fa6] = 还在等
+# en: There's a note in red ink tucked into the crack in the lecture tower stair, in the small round hand you know. It says only: "Still waiting for the next draft. Paragraph four is still the best thing you've written. Don't make it the last."
+text [e43562] = 讲堂塔楼梯的墙缝里塞着一张红墨水字条，是你认得的那手小而圆的字。上面只写着：“还在等你的下一稿。第四段仍然是你写过最好的东西。别让它成为最后一段。”
+# en: A narrow stone stair in a lecture tower, a folded note in red ink tucked into a crack in the wall at eye level.
+scene [e72c72] = 讲堂塔里一段狭窄的石阶，一张红墨水写的折好的字条塞在与视线齐平的墙缝里。
+# en: Write the next draft tonight
+opt.left.label [a94276] = 今晚就写下一稿
+# en: You write it that night and leave it on the stair in the morning. By evening it's gone, and someone has drawn a single small red tick on the step where it lay.
+opt.left.say.1 [71b8a1] = 你当晚就写好了，第二天早上放在楼梯上。到傍晚它不见了，放过它的那级台阶上，有人画了一个小小的红勾。
+# en: Put the note in a drawer
+opt.right.label [d9085e] = 把字条放进抽屉
+# en: You put the note in a drawer, under the other pages. It doesn't get any easier to forget, and the stair is on your way to everything.
+opt.right.say.1 [2a2ace] = 你把字条放进抽屉，压在其他几页下面。它并没有因此更容易忘掉，何况那段楼梯是你去哪儿都要经过的。
+
+@event nudge_wind_jar
+# en: The Jar Is Bored
+title [ae51ad] = 罐子等烦了
+# en: The jar of wind has moved. It was on the dead-letter shelf; this morning it's on your peg, going round and round, and every broom in the loft is leaning toward it. The loft master doesn't look up from her ledger. "It does that," she says, "when it's bored of waiting."
+text [72ae19] = 那罐风挪了地方。它原本在死信架上；今天早上却到了你的挂钩上，转啊转的，阁楼里每一把扫帚都朝它倾斜。阁楼主管头也不抬地看着账本。“它会这样的，”她说，“等烦了的时候。”
+# en: A courier loft full of brooms on pegs, all leaning the same way, toward a stoppered glass jar with a small wind going round inside it.
+scene [97ccef] = 信使阁楼里挂满了扫帚，全都朝同一个方向倾斜，朝着一只塞着塞子的玻璃罐，罐里有一小股风在打转。
+# en: Ask who flew with it
+opt.left.label [9c8a01] = 问是谁带着它飞过
+# en: "Before my time," she says, "but the old logbooks are in the trunk." You read them until dark. The faded name on the jar's label turns up three times, always on the worst weather days.
+opt.left.say.1 [2f31e4] = “在我之前的事了，”她说，“不过旧航行日志在箱子里。”你一直读到天黑。罐子标签上那个褪色的名字出现了三次，每次都是天气最坏的日子。
+# en: Put it back on the shelf
+opt.right.label [bf3750] = 把它放回架子上
+# en: You put it back on the dead-letter shelf. In the morning it's on your peg again, and the brooms look at you reproachfully.
+opt.right.say.1 [0f3628] = 你把它放回死信架。第二天早上，它又出现在你的挂钩上，扫帚们责备地看着你。

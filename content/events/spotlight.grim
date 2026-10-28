@@ -1,0 +1,415 @@
+# ============================================================
+#  The spotlight (phase 4, docs/phase4-plan.md, batches P4-06 to P4-08; design §8.2): what being known is like. Each
+#  renown tier (`renown_known`, `renown_famous`, `renown_legend` in conds.grim) has its own pool of spotlight cards;
+#  they are never drawn at random (`trigger: queued`), only dealt by the appointment below at the month's start, at
+#  most one a month, from the highest tier you've reached more often than the ones below (each tier's `weight:`).
+#  Crossing a tier is a milestone: Known's is `jit_noticed` (content/events/intro.grim); Famous and Legend have
+#  theirs here.
+# ============================================================
+
+@pool spotlight
+desc: What every spotlight card shares: a routine moment of being known, dealt only by the spotlight appointment.
+trigger: queued
+class: routine
+repeat: 2
+tags: renown spotlight
+
+@pool spotlight_known
+desc: Spotlight cards for the Known tier (renown 30 or more).
+from: spotlight
+when: renown_known()
+
+@pool spotlight_famous
+desc: Spotlight cards for the Famous tier (renown 60 or more): bigger stakes, and a scandal that grows likelier with renown.
+from: spotlight
+when: renown_famous()
+weight: 20
+
+@pool spotlight_legend
+desc: Spotlight cards for the Legend tier (renown 85 or more): the academy telling stories about you.
+from: spotlight
+when: renown_legend()
+weight: 30
+
+@pool fallen
+desc: Yesterday's news: you were Famous and are back under Known. Dealt only by the `fallen` appointment.
+trigger: queued
+class: routine
+repeat: 1
+tags: renown fallen
+when: fallen_star()
+
+@appointment spotlight
+desc: While you're Known, now and then a month opens on being recognised: a card from any tier you've reached.
+at: month
+when: renown_known() and term and not wrapup
+chance: even
+deals: pool spotlight
+
+@appointment fallen
+desc: After a fall from Famous, now and then a month brings it home.
+at: month
+when: fallen_star() and term and not wrapup
+chance: even
+deals: pool fallen
+
+# ---------------- crossing a tier ----------------
+
+@event renown_famous_entry
+title: Your Name in Every Mouth
+trigger: auto
+class: milestone
+tone: warm
+when: renown_famous() and seen(renown_famous_entry) == 0
+art: star
+scene: A crowded corridor parting around a student, heads turning in a wave, a first-year pointing and being shushed.
+text: Somewhere this month it stopped being "have you heard of {player}" and became just "{player}". Corridors go quiet and then loud as you pass. The Ledger has stopped explaining who you are. You are, it seems, famous: the academy watches what you do now, and remembers.
+> left: Enjoy it
+  mood +small
+  renown +tiny
+  flag was_famous
+  say: You let yourself enjoy it, for a week. The seats are better. The queues are shorter. Someone gives you the last slice of pudding without being asked. It is, you admit, very nice.
+> right: Keep your head down
+  mood -tiny
+  study +small
+  flag was_famous
+  say: You keep to the library and the back row. It doesn't make much difference: people find you anyway. But you get a great deal of reading done, and they come away saying you're modest, which only makes it worse.
+
+@event renown_legend_entry
+title: The Academy's Own Story
+trigger: auto
+class: milestone
+tone: warm
+when: renown_legend() and seen(renown_legend_entry) == 0
+art: star
+scene: A great hall at supper, every head at every table turned toward one student coming in through the doors, as if a story had walked in.
+text: First-years tell stories about you that you don't recognise. A third-year swears you once did something you have never done, and the version where you did it is better. When you come into the Great Hall, it isn't quiet and it isn't loud: it simply watches. You've become part of what Lumenhold says about itself.
+> left: Live up to it
+  renown +small
+  health -tiny
+  say: You start getting up earlier, working later, being kinder in corridors, because people are watching and you'd like the story to be true. It mostly is. It's exhausting. It's worth it.
+> right: Correct the stories
+  alignment +small
+  renown -tiny
+  say: You start telling people, cheerfully, which bits never happened. It makes no difference whatever to the stories. It makes a great deal of difference to the people who hear you say it.
+
+# ---------------- Known: people start to know your face ----------------
+
+@event spot_ledger_profile
+title: A Profile in the Ledger
+pool: spotlight_known
+tone: light
+when: met(nessa) and seen(spot_ledger_profile) == 0
+art: paper
+scene: A cluttered newspaper office, an editor with a self-writing quill hovering over a notebook, a student in the visitor's chair looking uneasy.
+text: Nessa wants you for the Ledger: a whole column, "Who Is {player}?", with an interview. Her quill is already hovering. "Tell me everything," she says. "Or tell me something better than everything. Readers can't tell the difference. I can."
+> left: Be candid
+  renown +small
+  rel nessa +small
+  mood -tiny
+  say: You tell her the truth, including the dull parts and one embarrassing one. The column is warm and true and a little bit unflattering. People like you more for it. You wish they'd stop quoting the embarrassing part.
+> right: Polish the story
+  challenge deceive apprentice+:
+    win:
+      renown +medium
+      rel nessa -tiny
+      alignment -tiny
+      flag ledger_embellished
+      queue scandal_ledger_lie within 3..6
+      say: You give her a better version of yourself: braver, wittier, slightly taller. Nessa writes it all down with a look you can't read. The column is a sensation. Some of it is even true.
+    lose:
+      renown -tiny
+      rel nessa -small
+      say: Nessa stops writing halfway through the story about the dragon. "There was no dragon," she says. The column runs anyway, short and faintly amused. "We checked," it says, twice.
+
+@event spot_judge_exhibition
+title: A Judge for the First-Years
+pool: spotlight_known
+tone: light
+art: duel
+scene: A duelling floor ringed by nervous first-years in practice robes, a student at a small table with a scorecard and a bell.
+text: The first-years' duelling exhibition needs a judge, and they've asked for you by name. Twelve bouts, a scorecard, a little brass bell. Every first-year in the hall wants to impress you. Every one of their friends is in the gallery.
+> left: Judge it strictly
+  arcana +small
+  renown -tiny
+  say: You score every bout to the rules, including the one where the favourite lost on a foot fault. The gallery boos. The first-year who won on the foot fault looks at you as if you'd hung the moon.
+> right: Play to the crowd
+  renown +small
+  alignment -tiny
+  say: You ring the bell with a flourish, give a speech between bouts, and somehow every first-year comes away with a prize for something. The hall loves it. Two of the duellists who deserved to win know they were robbed.
+
+@event spot_village_recognised
+title: Is It You?
+pool: spotlight_known
+tone: light
+art: meal
+scene: A village square, a baker leaning out of a shop window with a tray of buns, children gathering round a student in academy robes.
+text: In the village, a baker leans out of the window and says, "It's you, isn't it? From the Ledger?" By the time you've said yes, there are children, a dog, and an old man who wants to tell you what the academy was like in his day.
+> left: Stay and talk
+  renown +small
+  mood +small
+  study -small
+  say: You stay the afternoon. You eat a free bun, admire the dog, and hear three versions of the old man's story. You walk back up the hill much later than you meant to, with flour on your sleeve.
+> right: Smile and slip away
+  mood -tiny
+  study +tiny
+  say: You thank the baker, buy a bun like anyone else, and slip away before the crowd thickens. Behind you, the old man is telling the story to the dog.
+
+@event spot_fan_charm
+title: A Charm From a Stranger
+pool: spotlight_known
+tone: warm
+art: pouch
+scene: A first-year holding out a small knotted charm on a ribbon at arm's length, looking at the floor, an older student bending to take it.
+text: A first-year you've never spoken to waits outside your lecture to give you a charm: a little knot of blue thread on a ribbon, clearly made by hand, clearly not very well. "For luck," the first-year says, to the floor. "I made it. You don't have to wear it."
+> left: Wear it where people can see
+  renown +small
+  mood +tiny
+  say: You tie it to your bag strap. Within a week every first-year in the castle is knotting blue thread, and the one who made yours walks past you every morning, very straight, very proud.
+> right: Thank them, and keep it in a pocket
+  alignment +tiny
+  mood +small
+  say: "I'll keep it close," you say, and you do, in the inside pocket nobody sees. The first-year goes pink and runs. It's still there at the end of the year, a little frayed.
+
+@event spot_signature
+title: Sign This?
+pool: spotlight_known
+tone: light
+art: book
+scene: A library corridor, a younger student holding out an open textbook and a quill, an older student hesitating over the page.
+text: A first-year has their warding textbook open at the chapter on circles, and a quill held out. "Could you sign it? Next to the diagram. Everyone says you got it in your first week."
+> left: Sign it with a flourish
+  renown +small
+  alignment -tiny
+  say: You sign it, with a little drawn circle for good measure. The textbook goes round the first-year dormitory by supper. By the end of the week three more appear, and a library book, which you decline.
+> right: Show them the rune instead
+  study -tiny
+  alignment +small
+  say: You don't sign it. You take the quill and draw the circle properly in the margin, slowly, and make the first-year draw it back. "There. Now it's yours." The first-year looks disappointed, and then, by the third try, astonished.
+
+@event spot_house_speech
+title: A Few Words
+pool: spotlight_known
+tone: tense
+art: candle
+scene: A long table at supper, candles lit, a student halfway to their feet with a cup in hand, every face along the table turned their way.
+text: At the end-of-term supper, a final-year at the top of your table taps a glass and says that {player}, who has done the table such credit this term, will now say a few words. Nobody told you about the few words. The whole table turns.
+> left: Make a speech
+  challenge perform apprentice+:
+    win:
+      renown +small
+      mood +small
+      say: You say something short and true about the people at this table, and sit down before you can spoil it. They bang the table for you. A third-year you barely know shakes your hand after, hard.
+    lose:
+      renown -tiny
+      mood -small
+      say: You start well and lose the thread somewhere around "and in conclusion". Your table cheers anyway, loyally and a bit too loudly. You eat your pudding very fast.
+> right: Raise your cup and sit
+  renown -tiny
+  mood +tiny
+  say: You raise your cup, say "to all of you", and sit down. It turns out that's all anybody wanted. The table drinks, and goes back to arguing about the pudding.
+
+@event spot_resentful
+title: All Anyone Talks About
+pool: spotlight_known
+tone: tense
+cast:
+  o: any where classmate_here(o) and rel(o) >= 4
+per: o
+art: mask
+scene: A common room, a student sitting stiffly apart with a book they're not reading, glancing at a crowd gathered around someone else.
+text: {o} has been short with you all week. Tonight, when the common room gathers round you for the third time to hear about something you did, {o} shuts {o.their} book hard and says, to nobody, "Some of us did things this term too."
+> left: Turn the room to {o}
+  renown -tiny
+  rel o +medium
+  say: "{o} did, actually," you say, and tell them about it, the thing {o} did that nobody noticed. The room turns. {o} goes red, and then, slowly, starts telling it properly. Later {o} says thank you, gruffly.
+> right: Let it pass
+  rel o -small
+  mood -tiny
+  say: You let it pass, and the room moves on, back to you. {o} goes up to bed early. It sits between you for a while, like a coat on a chair nobody will move.
+
+@event spot_letters_page
+title: Letters to the Editor
+pool: spotlight_known
+tone: light
+art: letter
+scene: A newspaper's letters page pinned to a corridor board, students crowding round to read it, one of them laughing behind their hand.
+text: The Ledger's letters page is about you this week. "Sir, I write to complain about {player}'s conduct in the library," says one. "Sir, I write to defend {player}, who is a credit to us all," says another, in what is very clearly the same handwriting. Half the castle is reading it.
+> left: Write in yourself
+  challenge perform apprentice:
+    win:
+      renown +small
+      mood +small
+      say: You write a short, grave letter apologising for your conduct in the library, which you say was "a sneeze of uncommon violence". It runs on the front page. The library gives you a round of applause.
+    lose:
+      renown -tiny
+      say: Your letter tries to be funny and comes out pompous. The next issue has three letters about your letter. You resolve never to write to a newspaper again.
+> right: Ignore it entirely
+  mood -tiny
+  study +tiny
+  say: You don't read it, which is harder than it sounds when everyone keeps reading it to you. By the next week there's a new scandal: someone has been taking two puddings. You are forgotten, gratefully.
+
+@event spot_saved_seats
+title: The Seat Problem
+pool: spotlight_known
+repeat: 3
+tone: light
+art: meal
+scene: A refectory at lunch, three different tables each with a student waving at an empty seat, a fourth student standing in the middle with a tray.
+text: {~Three different tables have saved you a seat at lunch, and all three are waving.|You can't sit down in the refectory any more without someone having saved the spot "for you", whether you wanted it or not.|Somebody you have never met has saved you a seat, and is offended you haven't taken it.} Your own friends are at the corner table, where they always are, watching to see where you'll go.
+> left: Sit with your friends
+  renown -tiny
+  mood +small
+  say: {~You walk past all three waving tables to the corner. Your friends make a great show of not caring, and then shift up to make room.|You sit where you always sit. One table looks hurt. Your friends look smug.|You sit down at the corner. "Oh, we're good enough for you, are we?" says someone, delighted.}
+> right: Take a saved seat
+  renown +small
+  mood -tiny
+  say: {~You sit at the nearest table and are asked forty questions. It's flattering. At the corner table, your friends are laughing at something without you.|You take the saved seat, and the table is very kind, and you can't remember any of their names afterwards.|You sit with the stranger, who is thrilled, and tells you about their aunt. Your friends wave from across the hall.}
+
+@event spot_shop_window
+title: The Window Table
+pool: spotlight_known
+tone: light
+art: cup
+scene: A village tearoom window with a reserved card on its best table, a shopkeeper beckoning a student in from the street.
+text: A tearoom in the village has noticed that when you sit in its window, people come in. The owner makes you an offer: your tea is free, for the rest of the term, so long as you drink it in the window, where it can be seen.
+> left: Take the window
+  gold +small
+  renown +tiny
+  mood -tiny
+  say: You drink a great deal of free tea in the window, smiling at strangers who press their noses to the glass. The tearoom is full every afternoon. You can never quite read your book.
+> right: Pay for your tea
+  gold -tiny
+  mood +small
+  alignment +tiny
+  say: You thank the owner and pay, and sit at the back, where nobody sees you. You read four chapters in peace. The owner, a little put out, brings you extra biscuits anyway.
+
+@event spot_impression
+title: Somebody Doing You
+pool: spotlight_known
+tone: light
+art: mask
+scene: An end-of-term skit in a common room, a student on a chair doing an exaggerated impression, the room in stitches, one student in the audience watching their own walk being copied.
+text: At the end-of-term skits in the common room, a second-year gets up on a chair and does you. The walk, the face you make in lectures, the thing you say when you lose at cards. It is very, very accurate. The whole room is looking at you to see how you'll take it.
+> left: Get up and do them back
+  challenge perform apprentice:
+    win:
+      renown +small
+      mood +small
+      say: You climb up on the next chair and do them doing you. The room goes wild. The second-year laughs so hard they fall off the chair. It becomes, for a term, a double act.
+    lose:
+      mood -small
+      renown -tiny
+      say: You climb up, and freeze, and the second-year does you freezing, which gets the biggest laugh of the night. You laugh too, eventually. It takes a while.
+> right: Laugh along
+  renown +tiny
+  mood -tiny
+  say: You laugh, properly, because it is funny. The second-year bows to you at the end. You notice, for the rest of the week, that you've stopped making the face in lectures.
+
+@event spot_name_dropped
+title: A Friend of {player}'s
+pool: spotlight_known
+tone: tense
+cast:
+  o: any where classmate_here(o) and rel(o) >= 4 and rel(o) < 20
+per: o
+art: group
+scene: A student talking grandly to a group of younger students in a corridor, an arm flung out, the person they're talking about rounding the corner behind them.
+text: You come round a corner and hear {o} telling a little crowd of second-years that {o.they} and {player} are "very close, actually", and that you "always ask {o.their} advice". You've spoken to {o} perhaps four times. {o} turns, and sees you.
+> left: Play along
+  rel o +small
+  alignment -tiny
+  renown +tiny
+  say: "We are," you say. "Terrible advice, mostly." The second-years laugh. {o} looks at you with such gratitude that you find, over the next month, that you do start asking {o.their} advice. Some of it is quite good.
+> right: Set it straight, kindly
+  rel o -small
+  alignment +tiny
+  say: "We've met," you say pleasantly, "a few times." {o} goes scarlet. The second-years drift away. {o} avoids you for a while, and then, one day, sits down and talks to you properly, about nothing much.
+
+@event spot_professor_example
+title: As {player} Showed Us
+pool: spotlight_known
+tone: tense
+art: scroll
+scene: A lecture hall, a professor gesturing toward one student in the third row, the rest of the class turning to look.
+text: In the middle of a lecture, the lecturer says, "As {player} showed us last week," and describes something you did, slightly wrong, as the right way to do it. Forty heads turn. You know, and you're fairly sure the lecturer doesn't, that it only worked by accident.
+> left: Say it was an accident
+  alignment +small
+  renown -tiny
+  study +tiny
+  say: You put your hand up and say it was mostly luck. The lecturer looks at you for a long moment, then laughs, and makes the class work out why it shouldn't have worked. It's the best lecture of the term.
+> right: Let it stand
+  renown +small
+  alignment -tiny
+  say: You say nothing. The class writes it down. For the rest of the term people ask you to show them how, and you have to work out, in secret and in a hurry, how you did it.
+
+@event spot_three_invitations
+title: Three Invitations, One Evening
+pool: spotlight_known
+tone: light
+art: letter
+scene: A student at a desk with three different invitation cards fanned out in one hand, a calendar with one evening circled three times.
+text: Three invitations for the same evening: a supper at the Gilded Newt with people who matter, a stargazing party on the observatory roof, and your oldest friend here, who just wants to play cards in the common room like you used to.
+> left: Go where you'll be seen
+  renown +small
+  gold -tiny
+  mood -tiny
+  say: The Newt supper is loud and full of people who know your name. You make three useful acquaintances and laugh a great deal. Walking back, you think of the card game, and wonder who won.
+> right: Play cards with your friend
+  mood +small
+  renown -tiny
+  say: You send two polite notes and go down to the common room. Your friend looks up, surprised, and deals you in without a word. You lose every hand. It's the best evening of the month.
+
+@event spot_family_tour
+title: Show Them Round
+pool: spotlight_known
+tone: light
+art: tower
+scene: A student leading a nervous family through a castle courtyard, a small child staring up at the towers, a parent clutching a prospectus.
+text: A note comes down from the Headmistress's Tower: a family is visiting, their eldest starts next autumn, and they've asked, having read about you, whether you might show them round. The eldest is pale with nerves. The parents have a list of questions. The youngest wants to see a dragon.
+> left: Show them the polished academy
+  renown +small
+  alignment -tiny
+  say: You take them the long way: the Great Hall at its brightest, the library from the good end, the observatory with the sun on it. You skip the draughty stairs and the lecture with the smell. The parents are dazzled. The eldest looks more frightened than ever.
+> right: Show them the real one
+  alignment +small
+  mood +tiny
+  renown -tiny
+  say: You show them the draughty stairs, the bench where everyone cries before exams, and the kitchen door where the kind cook leaves buns. The parents look a little doubtful. The eldest, for the first time, smiles. "So people get lost here too?" Constantly, you tell them.
+
+@event spot_owl_mail
+title: Letters From Strangers
+pool: spotlight_known
+repeat: 3
+tone: warm
+art: letter
+scene: A dormitory windowsill heaped with letters, a tired delivery owl sitting on the pile, a student reading one with a candle.
+text: {~The owls have started bringing you letters from people you've never met: a farmer's child who wants to come to Lumenhold, a retired professor with opinions, someone who wants to know if you're single.|There are eleven letters on your windowsill this morning, and an owl asleep on top of them, looking put-upon.|Another heap of letters from strangers. One has a pressed flower in it. One is just a drawing of you, with very large hands.}
+> left: Answer every one
+  mood +small
+  study -small
+  renown +tiny
+  say: {~You spend the evening writing back, one after another, until your hand aches. The farmer's child writes again within a week, in very careful capitals.|You answer every letter, even the one with the drawing, and thank its artist for the hands.|It takes two evenings. You sleep badly and dream of owls. Somewhere out there, eleven people are very pleased.}
+> right: Keep them, answer none
+  study +tiny
+  mood -tiny
+  say: {~You put them in a box under the bed and get on with your reading. Now and then you take one out and read it again. You never quite manage to write back.|The box under the bed is getting full. The owl gives you a long, reproachful look on its way out.|You read them all, at least. The pressed flower goes in a book. You mean to answer that one. You don't.}
+
+@event spot_notes_for_sale
+title: Your Notes, For Sale
+pool: spotlight_known
+tone: tense
+art: scroll
+scene: A common room table covered in copied pages, a student with a cash tin selling sheaves of notes, a queue of younger students waiting.
+text: Somebody has been copying your lecture notes and selling them in the common room as "the {player} method", a few coppers a copy, and there's a queue. The seller, a cheerful third-year with a cash tin, sees you and doesn't even look guilty. "You could have a cut," they offer.
+> left: Take a cut
+  gold +small
+  alignment -small
+  renown +tiny
+  queue scandal_wrong_notes within 2..4 chance even
+  say: You take your cut and correct a few pages so the copies are at least right. The money is very welcome. A first-year thanks you, earnestly, for the notes they paid for. It sits a little wrong with you all week.
+> right: Give them away free
+  gold -tiny
+  renown +small
+  alignment +tiny
+  say: You buy the last copy yourself and pin it to the common-room board, free to anyone. The seller sighs and closes the tin. By supper there's a queue at the board instead, and someone has added a note at the bottom: "thank you".
