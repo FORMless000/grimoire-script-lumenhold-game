@@ -37,7 +37,7 @@ const ROOT = path.join(__dirname, '..');
 const QUICK = ['random', 'cautious', 'social', 'balanced', 'aggressive', 'truant', 'scholar', 'nightlife', 'sleuth', 'romantic', 'homebody', 'explorer'];
 const ALL = ['random', 'cautious', 'social', 'balanced', 'aggressive', 'moneymaxx', 'caster', 'truant', 'nojob', 'nightowl',
   'focused:arcana', 'focused:lore', 'focused:alchemy', 'focused:charm', 'focused:vigor', 'focused:guile', 'social:lyra', 'social:corvin',
-  'lumen', 'hollow', 'plot', 'scholar', 'nightlife', 'sleuth', 'romantic', 'homebody', 'explorer'];
+  'lumen', 'hollow', 'plot', 'scholar', 'nightlife', 'sleuth', 'romantic', 'homebody', 'explorer', 'celebrity'];
 const PCT = [10, 25, 50, 75, 90];
 const MILESTONES = ['meet', 'join', 'job', 'spell', 'clue', 'lead', 'friend', 'partner', 'rival', 'night_out', 'promote', 'skill50', 'skill75', 'gold100'];
 const FLOW_KEYS = ['gold', 'health', 'mood'];

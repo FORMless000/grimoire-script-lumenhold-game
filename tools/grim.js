@@ -766,6 +766,7 @@ function analyzeWorld(content, P, scanExpr, scanText, taught = new Set()) {
     const npc = d.id.split('.')[0];
     if (!content.npcs[npc]) P('error', loc(d), '@fact ' + d.id + ': unknown npc "' + npc + '"');
     if (d.npc && d.npc !== npc) P('error', loc(d), 'npc: ' + d.npc + ' doesn\'t match the id ' + d.id);
+    if (d.tier && d.tier !== 'surface' && !d.hint) P('warn', loc(d), '@fact ' + d.id + ': a ' + d.tier + ' fact needs a hint: (what the People panel shows until it is known; phase 4)');
     if (!['surface', 'personal', 'secret'].includes(d.tier)) P('error', loc(d), 'tier must be surface, personal or secret');
     if (!d.text) P('error', loc(d), '@fact needs text');
     scanExpr(d.unlock, loc(d), false); scanText(d.text, loc(d), false);

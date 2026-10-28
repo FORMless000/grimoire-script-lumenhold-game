@@ -16,3 +16,16 @@ is: bond(who) == "partner" and around(who)
 desc: You have learnt this spell (any level).
 params: s
 is: spell_level(s) >= 1
+
+# Renown's tiers (design §8.2; the numbers match `tiers:` on @resource renown): the spotlight cards read these.
+@cond renown_known
+desc: The academy knows your face: renown 30 or more.
+is: renown >= 30
+
+@cond renown_famous
+desc: The academy watches you: renown 60 or more.
+is: renown >= 60
+
+@cond renown_legend
+desc: You are the academy's own story: renown 85 or more.
+is: renown >= 85

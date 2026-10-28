@@ -259,8 +259,15 @@ do:
 on: month_start
 label: Fading gossip
 when: turn > 1 and renown >= 5
+# Fame holds better the more of it there is (phase 4, docs/phase4-plan.md): a fifth a month below Known, less while
+# Known, less again once Famous, so the spotlight tiers can be reached and kept, and lost by going quiet.
 do:
-  renown -= floor(renown * 0.2)
+  if renown >= 60:
+    renown -= floor(renown * 0.12)
+  elif renown >= 30:
+    renown -= floor(renown * 0.15)
+  else:
+    renown -= floor(renown * 0.2)
   say: {~The corridors find something else to talk about.|Yesterday's gossip goes the way of yesterday's bread.|Fewer heads turn when you pass. It's restful.}
 
 @hook mana_regen

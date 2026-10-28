@@ -204,6 +204,8 @@ const STYLES = {
   lumen: () => scorer('lumen', { health: 1, mood: 1, gold: 0.4, renown: 0.3, skill: 1.2, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5, alignment: 2, find: 8, queue: 8, flag: 1 }),
   hollow: () => scorer('hollow', { health: 1, mood: 1, gold: 0.4, renown: 0.3, skill: 1.2, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5, alignment: -2, find: 8, queue: 8, flag: 1 }),
   plot: () => scorer('plot', { health: 1, mood: 1, gold: 0.4, renown: 0.3, skill: 1.2, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5, find: 20, queue: 10, flag: 2 }),
+  // Phase 4: the player who wants to be talked about (renown 3), the one the spotlight tiers are tuned for.
+  celebrity: () => scorer('celebrity', { health: 1, mood: 1, gold: 0.4, renown: 3, skill: 1, 'rel:': 0.3, 'spark:': 0.2, 'bond:': 0.1, 'gain:': 5 }),
   social: (npc) => scorer('social:' + npc, { health: 0.6, mood: 0.6, gold: 0.3, renown: 0.2, skill: 0.3, 'rel:': (k) => (k === 'rel:' + npc ? 5 : 0.2), 'spark:': (k) => (k === 'spark:' + npc ? 4 : 0), 'bond:': (k) => (k === 'bond:' + npc ? 1 : 0), 'gain:': 3 }),
 };
 
@@ -518,6 +520,7 @@ const ABOUT = Object.assign({
   'social:<npc>': 'Courts one character: their friendship 5, spark 4, and goes where they are.',
   nightowl: 'A balanced player who always goes out at night (default places).',
   nojob: 'A balanced player who never takes a job.',
+  celebrity: 'A balanced player who wants to be talked about: renown weighs 3 a point. The one the renown tiers are tuned for.',
 }, Object.fromEntries(Object.entries(STRATEGIES).map(([k, v]) => [k, v.about])));
 function about(name) { const base = String(name).split(':')[0]; return ABOUT[name] || ABOUT[base] || ABOUT[base + ':<skill>'] || ABOUT[base + ':<npc>'] || ''; }
 
@@ -540,7 +543,7 @@ function get(name) {
   if (STYLES[base]) return STYLES[base](arg);
   throw new Error('unknown play style "' + name + '" (' + list().join(', ') + ')');
 }
-function list() { return ['random', 'cautious', 'social', 'balanced', 'focused:<skill>', 'aggressive', 'moneymaxx', 'caster', 'truant', 'lumen', 'hollow', 'plot', 'social:<npc>', 'nightowl', 'nojob'].concat(Object.keys(STRATEGIES)); }
+function list() { return ['random', 'cautious', 'social', 'balanced', 'focused:<skill>', 'aggressive', 'moneymaxx', 'caster', 'truant', 'lumen', 'hollow', 'plot', 'social:<npc>', 'nightowl', 'nojob', 'celebrity'].concat(Object.keys(STRATEGIES)); }
 
 // The origin screen (playtest 2, M32): a sim picks its origin up front, spread evenly over seeds (no RNG used),
 // so origin effects apply before month 1's charges, as in play.

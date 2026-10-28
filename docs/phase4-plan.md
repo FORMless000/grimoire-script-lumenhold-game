@@ -429,8 +429,13 @@ Each step is committed on its own once `grim check` passes. Push only working st
 | Batch | Files | Cards | Critic (rounds) | zh-CN | Golden diff | Index synced | Commit |
 |---|---|---|---|---|---|---|---|
 | Step 2 (journal) | 20 `@thread`s (miniplots, chains, club quests, careers, tournament, Whisperwood), 5 `@arc`s | 0 cards; 125 journal lines, 20 names and premises, 15 act rumours, 1 epilogue | retrieval skipped: mechanical additions retelling existing cards, no new premise | done | unchanged | not needed | |
+| Step 3 (renown balance) | `content/core/rules.grim` (`fame_fades`), `content/core/conds.grim`, `tools/policies.js` + `tools/analyze.js` (`celebrity` style) | 0 cards | n/a | n/a | refreshed: renown moves, so the sims' choices drift (110/120 games; random's early exits 47% → 43%) | n/a | |
+| Fact hints (part of P4-11) | `content/world/facts/*.grim` | 97 hints, every personal and secret fact; lint warns on a missing one | retrieval skipped: hints point at existing cards, no new premise | done | unchanged | not needed | |
 
 ## Deviations and open questions
+
+- **Renown fading by tier** (step 3): a fifth a month below 30, 15% while Known, 12% from Famous (the plan's 10% let a renown-chaser drift to Legend unaided). Measured with `grim analyze` over 12 games: `celebrity` (renown weighs 3) has a median of about 45 at the end of Y2 and 71 at the end of Y3 (p90 83 at the end); `balanced` about 20–30; nobody reaches Legend without spotlights. Tier conditions are `renown_known`, `renown_famous` and `renown_legend` (`known` is a built-in function's name).
+- **The spotlight appointment** waits for P4-06: it needs the tier-entry cards to deal.
 
 - **`premise:` on `@thread`** (2026-10-27): the plan had a thread's `desc:` as its player-facing premise, but every existing `desc:` is an author's note. `desc:` stays for authors; `premise:` is the line players read.
 - **Traits and interests aren't shown** in the People panel: they are `@vocab` ids, not translated text.
@@ -440,4 +445,4 @@ Each step is committed on its own once `grim check` passes. Push only working st
 
 ## Next up
 
-Step 3: renown balance (tiered fading in the `fame_fades` hook, `@cond known/famous/legend`, the spotlight appointment), checked with `grim analyze` and `balance` per style. Then P4-01 once retrieval works (2026-10-27: the reranker returned HTTP 429, its per-minute token quota exhausted; no cards are drafted without retrieval).
+P4-01 (inter-NPC friction, feuds and cliques), once retrieval works: 2026-10-27, the reranker (voyageai/rerank-3-lite through OpenRouter) returned HTTP 429 for over half an hour, its per-minute token quota used up by something else on the same project. No cards are drafted without retrieval (`rag/AUTHORING.md`). Check with `npm run grim -- retrieve search "<premise>"`.
