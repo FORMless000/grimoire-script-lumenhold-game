@@ -275,7 +275,8 @@
       'dc_tiers', 'likelihood', 'sigma', 'drift', 'odds_step', 'bell', 'course_standard', 'course_step', 'course_drift'], effects: [] },
     // A named group of effects, used as a statement: `grind arcana`. Its body may use $params.
     preset: { dotOk: true, props: ['params', 'desc'], effects: [], raw: ['do'] },
-    resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag'], effects: ['on_zero'] },
+    // `tiers:` named steps of a number resource, as players read them (`30 Known, 60 Famous, 85 Legend`; phase 4)
+    resource: { props: ['name', 'icon', 'min', 'max', 'start', 'color', 'desc', 'display', 'warn_below', 'drag', 'tiers'], effects: ['on_zero'] },
     skill: { props: ['name', 'icon', 'start', 'max', 'desc', 'color'], effects: [] },
     npc: { props: ['name', 'short', 'title', 'pronouns', 'house', 'desc', 'color', 'romance', 'tags', 'look', 'start_rel', 'age', 'role', 'year', 'traits', 'interests', 'stats', 'schedule', 'schedule_break', 'relations', 'voice', 'seeks', 'gone_when', 'distant'], effects: [] },
     // `map_id:` on a plan (A1): the map shown while it lasts, a map id or a track kind (the place of your track of that kind)
@@ -309,7 +310,10 @@
     // 0..N`, moved by `advance`). With `params:` it is a template; a thread `from:` a template fills it in (`with:`),
     // assigns its cards to roles (`members:`, one `role card key=value…` per line), and its members take that role's
     // pool (`<template>.<role>`) and may call its presets (`<template>.<name>`, or just `<name>`).
-    thread: { bundle: true, props: ['from', 'params', 'with', 'members', 'roles', 'default_role', 'clues', 'clock', 'name', 'desc', 'canon'], effects: [] },
+    // The Journal (phase 4): `name:` and `premise:` as players read them (`desc:` is for authors); `journal:` one
+    // `<condition>: <text>` per line, each shown from the turn its condition first holds; `status:` one
+    // `resolved|let_go|missed: <condition>` per line.
+    thread: { bundle: true, props: ['from', 'params', 'with', 'members', 'roles', 'default_role', 'clues', 'clock', 'name', 'desc', 'canon', 'premise', 'journal', 'status'], effects: [] },
     // When cards are dealt (docs/grimoire-script.md §9): at an occasion (`at:`), for each subject (`for:`), the cards it
     // `deals:`, while its `when` holds, by `chance:`. The library (content/core/appointments.grim) declares every
     // occasion the game deals at; `use:` names the built-in way one of them deals (auto cards, arc beats, ramps, …).
@@ -329,11 +333,14 @@
     // three levels), `verb:` the one verb its cards use, `pool: hidden | forbidden` (no source yet), `alignment:` a tier
     // a cast moves alignment by (down: casting it is wrong); `discipline:` and `power:` are optional.
     spell: { props: ['name', 'discipline', 'cost', 'power', 'desc', 'art', 'skill', 'verb', 'pool', 'alignment'], effects: [] },
-    fact: { dotted: true, props: ['npc', 'tier', 'unlock', 'text'], effects: [] },
+    // `hint:` what the People panel shows in a fact's place until it is known (phase 4)
+    fact: { dotted: true, props: ['npc', 'tier', 'unlock', 'text', 'hint'], effects: [] },
     archetype: { props: ['names', 'age', 'traits', 'pronouns', 'house', 'role', 'desc'], effects: [] },
     faction: { props: ['name', 'desc', 'members', 'alignment', 'stance'], effects: [] },
     // `act_names:` the acts' names as players read them, comma-separated in `acts:` order (playtest 2, X11)
-    arc: { props: ['name', 'canon', 'acts', 'act_names', 'clock', 'beats', 'clues', 'key_clues', 'cast', 'desc'], effects: [] },
+    // The Journal (phase 4): `act_rumours:` one line per act, what people are saying while it runs; `epilogue:` once
+    // the arc is closed; `act_clock:` the clock each act opens at (else an act opens with its year)
+    arc: { props: ['name', 'canon', 'acts', 'act_names', 'clock', 'beats', 'clues', 'key_clues', 'cast', 'desc', 'act_rumours', 'epilogue', 'act_clock'], effects: [] },
     // A clue or a lead as the Journal shows it (X11): `kind: clue` (the default) is one of its arc's `clues:`, counted by
     // clues(arc); `kind: lead` points somewhere to look and is never counted; `followed: <expr>` strikes a lead through.
     // A clue may instead name a side `thread:` (feedback 2026-10-15): anything hinted now that the player has to go
@@ -776,7 +783,18 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
   }
 
   // @pool, @thread, @cond: properties are kept as written (a template's may hold $params) and read when a card takes them.
-  const META_PROPS = { pool: ['from', 'desc'], thread: ['from', 'params', 'with', 'roles', 'default_role', 'clues', 'clock', 'name', 'desc', 'canon'], cond: ['params', 'is', 'desc'] };
+  const META_PROPS = { pool: ['from', 'desc'], thread: ['from', 'params', 'with', 'roles', 'default_role', 'clues', 'clock', 'name', 'desc', 'canon', 'premise', 'journal', 'status'], cond: ['params', 'is', 'desc'] };
+  // The first `:` outside parentheses and quotes (a journal line's condition may hold `count(role: …)`), or -1.
+  function topColon(t) {
+    let d = 0, q = null;
+    for (let i = 0; i < t.length; i++) {
+      const ch = t[i];
+      if (q) { if (ch === q) q = null; continue; }
+      if (ch === '"' || ch === "'") q = ch; else if (ch === '(') d++; else if (ch === ')') d--; else if (ch === ':' && d === 0) return i;
+    }
+    return -1;
+  }
+  const THREAD_STATUS = ['resolved', 'let_go', 'missed'];
   function parseBundle(b) {
     const schema = SCHEMA[b.kind], file = b.file;
     const def = { block: b.kind, id: b.id, file, line: b.line, props: {} };
@@ -803,6 +821,18 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
           for (const kv of w.slice(2)) { const mm = kv.match(/^([a-z_][a-z0-9_]*)=(\S+)$/); if (!mm) throw new GrimError('members: expected key=value, got "' + kv + '"', file, L.line); binds[mm[1]] = mm[2]; }
           return { role: w[0], id: w[1], binds };
         });
+        continue;
+      }
+      if (b.kind === 'thread' && (key === 'journal' || key === 'status')) {
+        def[key] = key === 'journal' ? [] : {};
+        for (const x of (val.trim() ? [{ content: val.trim(), line: L.line }] : []).concat(sub.filter((y) => !y.blank))) {
+          const k = topColon(x.content);
+          if (k < 0) throw new GrimError(key + ': one "' + (key === 'journal' ? '<condition>: <text>' : 'resolved|let_go|missed: <condition>') + '" per line, got "' + x.content + '"', file, x.line);
+          const head = x.content.slice(0, k).trim(), tail = x.content.slice(k + 1).trim();
+          if (key === 'journal') def.journal.push({ when: expr(head, file, x.line), text: tail, line: x.line });
+          else if (!THREAD_STATUS.includes(head)) throw new GrimError('status: expected ' + THREAD_STATUS.join(', ') + ', got "' + head + '"', file, x.line);
+          else def.status[head] = expr(tail, file, x.line);
+        }
         continue;
       }
       const text = joinText(val, sub);
@@ -892,6 +922,8 @@ queueAny: new RegExp('^queue\\s+any\\s+(?:tagged|in)\\s+(' + ID + ')(?:\\s+(now|
       const sub = takeIndented();
       if (key === 'cast' && b.kind === 'event') { def.cast = parseCast(val, sub.filter((x) => !x.blank), file, L.line); continue; }
       if (key === 'cast' && b.kind === 'arc') { def.cast = words(joinText(val, sub)); continue; }
+      if (key === 'act_rumours' && b.kind === 'arc') { def.act_rumours = [val.trim()].concat(sub.filter((x) => !x.blank).map((x) => x.content.trim())).filter(Boolean); continue; }
+      if (key === 'act_clock' && b.kind === 'arc') { def.act_clock = words(joinText(val, sub)).map(Number); if (def.act_clock.some((n) => !Number.isInteger(n))) throw new GrimError('act_clock: one whole number per act', file, L.line); continue; }
       if (schema.raw && schema.raw.includes(key)) {
         // Kept as lines; parsed when the preset is used, after $params are substituted.
         def[key] = (val.trim() ? [{ indent: 1000, content: val.trim(), line: L.line }] : []).concat(sub.filter((x) => !x.blank));

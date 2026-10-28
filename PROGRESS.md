@@ -1,3 +1,13 @@
+## Phase 4 started: the Journal, facts, NPCs among themselves, renown (October 27)
+
+The plan, budgets (about 228 new cards in 14 batches), decisions, ledger and "Next up" live in `docs/phase4-plan.md`; archetypes, spawned characters and memory recall are deferred.
+
+- **Step 1, engine and UI (done):**
+  - **The Journal tab** takes in the Clues tab. Its sections are the main story (each arc's act, opened by `act_clock:`, with that act's `act_rumours:` line; an `epilogue:` once closed), Stories (a `@thread`'s `name:`, `premise:` and `journal:` lines, each stamped the turn its condition first holds, and a `status:`), Leads to follow, and the Diary (the choice log, collapsed; the ending screen opens it).
+  - **The People panel** lists the facts you know by tier, newest first, with a gold dot until you open the row. The unknown ones show as their `hint:` or one count line per tier. Whom each person gets on with and can't stand appears once an `npc_rel` effect has moved the pair; "friends since" shows too. Facts unlocked at a month's start are announced.
+  - **Renown** shows its tier (`tiers: 30 Known, 60 Famous, 85 Legend`), with a notice on reaching a higher one.
+  - Schema v1 additions: `@thread premise/journal/status`, `@arc act_rumours/epilogue/act_clock`, `@fact hint`, `@resource tiers`. Tests: `test/phase4.test.js`. The golden games are unchanged.
+
 ## Feedback round: careers, the last day, the Hollow Star, the ring (October 25–26)
 
 The 13 open notes of the longest run's playtest (turns 35–46) and five requests that came with them: `docs/feedback-2026-10-25-plan.md` (what each note became), `docs/plots/hollowstar-v2.md` (the plot's outline and decisions). zh-CN complete.

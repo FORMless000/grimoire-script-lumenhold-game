@@ -1100,7 +1100,99 @@
       }
       return out;
     }
-    actOf(arcId) { const a = this.c.arcs && this.c.arcs[arcId]; if (!a || !a.acts) return 0; return a.acts.filter((x) => x.year <= this.yearOf()).length; }
+    actOf(arcId) {
+      const a = this.c.arcs && this.c.arcs[arcId]; if (!a || !a.acts) return 0;
+      const byYear = a.acts.filter((x) => x.year <= this.yearOf()).length;
+      if (!a.act_clock) return byYear;
+      // `act_clock:` (phase 4): an act opens when the clock reaches it, so a player who pushes opens it early.
+      const clock = (this.s.arcs[arcId] || {}).clock || 0;
+      return Math.max(byYear, a.act_clock.filter((n) => clock >= n).length);
+    }
+    // The Journal (phase 4): the main plot's arcs, the stories you've lived (a @thread's `journal:` lines, each shown
+    // from the turn it first held), and the open leads. Side clues with no @thread that owns them (`clues:`) keep their
+    // `@clue thread:` name, as the Clues panel showed them.
+    journal() {
+      const s = this.s, c = this.c, stamps = s.journal || {};
+      const leadRow = (d) => ({ id: d.id, name: d.name, text: d.text, turn: s.clues[d.id], followed: !!(d.followed && this.test(d.followed, null)) });
+      const arcs = [];
+      for (const id of Object.keys(c.arcs || {})) {
+        const j = this.journalOf(id); if (!j || (!j.clues.length && !j.leads.length && !j.act)) continue;
+        if (!j.clues.length && !j.leads.length && c.arcs[id].canon !== 'hard') continue;
+        const a = c.arcs[id], closed = (s.arcs[id] || {}).closed != null;
+        arcs.push(Object.assign(j, { hard: a.canon === 'hard', closed, rumour: closed ? null : (a.act_rumours || [])[j.act - 1] || null, epilogue: closed ? a.epilogue || null : null }));
+      }
+      arcs.sort((x, y) => y.hard - x.hard);
+      const owner = {};
+      for (const t of Object.values(c.threads || {})) if (t.journal && t.journal.length) for (const cl of t.clues || []) owner[cl] = t.id;
+      const stories = [], side = {};
+      for (const t of Object.values(c.threads || {})) {
+        if (!t.journal || !t.journal.length) continue;
+        const entries = t.journal.map((x, i) => ({ text: x.text, turn: stamps[t.id + '#' + i] })).filter((x) => x.turn != null).sort((x, y) => x.turn - y.turn);
+        if (!entries.length) continue;
+        const st = t.status || {};
+        const leads = (t.clues || []).map((id) => c.clues && c.clues[id]).filter((d) => d && s.clues[d.id] != null).map(leadRow);
+        const status = st.resolved && this.test(st.resolved, null) ? 'resolved' : st.missed && this.test(st.missed, null) ? 'missed' : st.let_go && this.test(st.let_go, null) ? 'let_go'
+          : !st.resolved && leads.length && leads.every((x) => x.followed) ? 'resolved' : 'ongoing';
+        stories.push({ id: t.id, name: t.name || t.id, premise: t.premise || null, entries, leads, status, first: entries[0].turn, last: entries[entries.length - 1].turn });
+      }
+      for (const d of Object.values(c.clues || {})) {
+        if (d.arc || !d.thread || owner[d.id] || s.clues[d.id] == null) continue;
+        const th = side[d.thread] = side[d.thread] || { id: 'thread:' + d.thread, name: d.thread, premise: null, entries: [], leads: [], clues: [], first: 999, last: 0 };
+        const row = d.kind === 'lead' ? leadRow(d) : { id: d.id, name: d.name, text: d.text, turn: s.clues[d.id] };
+        th.first = Math.min(th.first, row.turn); th.last = Math.max(th.last, row.turn);
+        (d.kind === 'lead' ? th.leads : th.clues).push(row);
+      }
+      for (const th of Object.values(side)) {
+        th.leads.sort((x, y) => x.turn - y.turn); th.clues.sort((x, y) => x.turn - y.turn);
+        th.status = th.leads.length && th.leads.every((x) => x.followed) ? 'resolved' : 'ongoing';
+        stories.push(th);
+      }
+      // Ongoing first, the latest news on top; then the rest, most recent first.
+      stories.sort((x, y) => (x.status !== 'ongoing') - (y.status !== 'ongoing') || y.last - x.last);
+      const leads = [];
+      for (const a of arcs) for (const l of a.leads) if (!l.followed) leads.push(Object.assign({ story: a.name }, l));
+      // A side thread with no journal keeps its open leads in its own entry, as the Clues panel showed them.
+      for (const t of stories) if (t.entries.length) for (const l of t.leads) if (!l.followed && t.status === 'ongoing') leads.push(Object.assign({ story: t.name }, l));
+      leads.sort((x, y) => y.turn - x.turn);
+      return { arcs, stories, leads };
+    }
+    // Stamps each `journal:` line the first turn its condition holds (after every card and every month's start).
+    stampJournal() {
+      const s = this.s; let next = null;
+      for (const t of Object.values(this.c.threads || {})) {
+        (t.journal || []).forEach((x, i) => {
+          const k = t.id + '#' + i;
+          if ((s.journal || {})[k] != null || (next && next[k] != null) || !this.test(x.when, null)) return;
+          next = next || Object.assign({}, s.journal || {}); next[k] = s.turn;
+        });
+      }
+      if (next) s.journal = next;   // replaced, never changed in place (preview() restores the old object)
+    }
+    // The facts you know about each person, newest first, and the ones still to learn by tier (phase 4).
+    factsOf(npc) {
+      const s = this.s, known = [], locked = [];
+      for (const f of Object.values(this.c.facts || {})) {
+        if (f.id.split('.')[0] !== npc) continue;
+        if ((s.facts || {})[f.id] != null) known.push({ id: f.id, tier: f.tier || 'personal', text: this.interp(f.text || ''), turn: s.facts[f.id] });
+        else locked.push({ tier: f.tier || 'personal', hint: f.hint ? this.interp(f.hint) : null });
+      }
+      known.sort((x, y) => y.turn - x.turn);
+      const seen = (s.factsSeen || {})[npc] || 0;
+      return { known, locked, fresh: Math.max(0, known.length - seen) };
+    }
+    markFactsSeen(npc) { const s = this.s; s.factsSeen = Object.assign({}, s.factsSeen || {}, { [npc]: this.factsOf(npc).known.length }); }
+    // Who each person gets on with and can't stand, among the people you've met, once a card has shown it (phase 4).
+    relationsOf(npc) {
+      const s = this.s, out = { likes: null, dislikes: null };
+      for (const k of Object.keys(s.relSeen || {})) {
+        const [a, b] = k.split('|'); const other = a === npc ? b : b === npc ? a : null;
+        if (!other || !(s.npcs[other] || {}).met) continue;
+        const v = this.npcRel(npc, other);
+        if (v >= 15 && (!out.likes || v > out.likes.v)) out.likes = { id: other, v };
+        if (v <= -10 && (!out.dislikes || v < out.dislikes.v)) out.dislikes = { id: other, v };
+      }
+      return out;
+    }
     monthlyWorld(summary) {
       const s = this.s, ctx = this.newCtx(null, null);
       for (const p of Object.values(this.c.places || {})) if (!s.places[p.id] && p.discover && !p.deprecated && this.test(p.discover, null)) { s.places[p.id] = { found: s.turn }; ctx.notes.push({ kind: 'discover', place: p.id }); }
@@ -1501,6 +1593,7 @@
             const amt = st.tier ? st.sign * this.tierAmount('rel', st.tier) : st.min;
             s.npcRel = s.npcRel || {};
             for (const [x, y] of [[a, b], [b, a]]) s.npcRel[x + '>' + y] = clamp(this.npcRel(x, y) + amt, -100, 100);
+            s.relSeen = Object.assign({}, s.relSeen || {}, { [[a, b].sort().join('|')]: s.turn });   // the People panel may show it now
             break;
           }
           case 'enrol': case 'join': case 'leave': case 'promote': case 'apply': case 'perform': case 'rank_xp': case 'progress': this.trackOp(st, ctx); break;
@@ -1686,8 +1779,9 @@
       { const ctx = this.newCtx(null, null, null); this.grantLegacyItems(ctx); if (ctx.notes.length) summary.push(Object.assign(this.summaryItem(ctx, null), { src: 'kit' })); }
       this.tickItems(summary);
       this.relationshipDrift(summary);
-      this.unlockFacts();
+      this.unlockFacts(summary);
       if (this.c.places && Object.keys(this.c.places).length) this.monthlyWorld(summary);
+      this.stampJournal();
       if (this.dayMode && this.isTermStart()) this.runHooks('term_start', summary);
       // Exams are cards (playtest 2, M4): in a term's last month, one `@game exam:` card per enrolled course, in its context.
       // (the `term end` appointments: `exam` deals the exam card for each course you're enrolled in)
@@ -1728,14 +1822,16 @@
       }
       if (Object.keys(fade.deltas).length) summary.push(fade);
     }
-    unlockFacts() {
-      const s = this.s;
+    unlockFacts(summary) {
+      const s = this.s, notes = [];
       s.facts = s.facts || {};
       for (const f of Object.values(this.c.facts || {})) {
         if (s.facts[f.id] || !f.unlock) continue;
         const npc = s.npcs[f.id.split('.')[0]];
-        if (npc && npc.met && this.test(f.unlock, null)) s.facts[f.id] = s.turn;
+        if (npc && npc.met && this.test(f.unlock, null)) { s.facts[f.id] = s.turn; notes.push({ kind: 'fact', fact: f.id }); }
       }
+      // Shown since phase 4: the People panel lists what you know.
+      if (notes.length && summary) summary.push({ label: null, deltas: {}, notes, say: [], src: 'facts' });
     }
 
     // once / repeat bookkeeping. For `actor: any` events it is per person:
@@ -2053,6 +2149,7 @@
       if (h) Object.assign(h, { choice: key, label: said(opt.label), out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() }, ctx.fights ? { fights: ctx.fights } : {});
       s.log.push({ n: item.n, turn: s.turn, id: e.id, key, title: said(e.title), choice: said(opt.label), say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null, seen: s.seen[e.id] || 0, ...this.logContext(item) });
       if (s.log.length > 400) s.log.shift();
+      this.stampJournal();
       return out;
     }
     // A `pick: N` menu: several options at once (design §7.3 enrolment).
@@ -2078,6 +2175,7 @@
       const h = item.n != null ? this.histEntry(item.n) : null;
       if (h) Object.assign(h, { choice: keys.join('+'), label, out: { say: out.say, deltas: out.deltas, notes: out.notes, checks: out.checks }, vals: { ...s.vals }, chosenAt: now() });
       s.log.push({ n: item.n, turn: s.turn, id: e.id, key: keys.join('+'), title: said(e.title), choice: label, say: out.say, sayIds: ctx.sayIds.slice(), actor: item.actor || null, seen: s.seen[e.id] || 0, ...this.logContext(item) });
+      this.stampJournal();
       return out;
     }
 
@@ -2095,7 +2193,7 @@
       const s = this.s;
       const cost = opt.spell ? this.spellCost(opt.spell, (s.spells || {})[opt.spell] || 1) : 0;
       // `day`: a `visit <slot>` in a previewed option must not open the slot (A1: hovering "Go out" opened midnight).
-      const KEYS = ['vals', 'flags', 'states', 'npcs', 'queue', 'deck', 'ended', 'spells', 'facts', 'memories', 'npcRel', 'rng', 'cur', 'tracks', 'places', 'arcs', 'clues', 'skillGain', 'peak', 'day', 'termGrades', 'items', 'worn', 'itemsHad'];
+      const KEYS = ['vals', 'flags', 'states', 'npcs', 'queue', 'deck', 'ended', 'spells', 'facts', 'memories', 'npcRel', 'rng', 'cur', 'tracks', 'places', 'arcs', 'clues', 'skillGain', 'peak', 'day', 'termGrades', 'items', 'worn', 'itemsHad', 'journal', 'relSeen', 'factsSeen'];
       const runOnce = (prefix, mode) => {
         const saved = {}; for (const k of KEYS) saved[k] = s[k];
         if (saved.day) s.day = { ...saved.day };
@@ -2225,13 +2323,21 @@
       return { kind: 'ending', n: s.seq, id, title: this.interp(d.title), text: this.interp(d.text), art: d.art || 'star', scene: d.scene || null, turn: this.s.turn, early: this.s.turn < this.maxTurns, yearbook: book };
     }
 
+    // A number resource's named step (`tiers: 30 Known, 60 Famous, 85 Legend`, phase 4): {tier, tierAt, nextTier}.
+    tierOf(id) {
+      const r = this.c.resources[id]; if (!r || !r.tiers) return {};
+      const v = this.s.vals[id], steps = String(r.tiers).split(/\s*[,，、]\s*/).map((x) => x.match(/^(\d+)\s+(.+)$/)).filter(Boolean).map((m) => ({ at: +m[1], name: m[2].trim() })).sort((a, b) => a.at - b.at);
+      const on = steps.filter((x) => v >= x.at).pop(), next = steps.find((x) => v < x.at);
+      return { tier: on ? on.name : null, tierAt: on ? on.at : null, nextTier: next ? next.at : null };
+    }
+
     /* ---------------- Snapshot for UI ---------------- */
     snapshot() {
       const s = this.s, c = this.c;
       return {
         name: s.name, turn: s.turn, maxTurns: this.maxTurns, month: this.monthName(), monthIndex: this.monthIndex(), year: this.yearOf(), years: this.years,
         deckLeft: s.deck.length, cardsThisMonth: s.cardsThisMonth,
-        resources: c.order.resources.map((id) => ({ id, ...pick(c.resources[id], ['name', 'icon', 'color', 'min', 'desc', 'display', 'warn_below']), maxNow: this.resMax(c.resources[id]), value: s.vals[id] })),
+        resources: c.order.resources.map((id) => ({ id, ...pick(c.resources[id], ['name', 'icon', 'color', 'min', 'desc', 'display', 'warn_below']), ...this.tierOf(id), maxNow: this.resMax(c.resources[id]), value: s.vals[id] })),
         gpa: this.gpa(), phase: this.isWrapUp() ? 'wrapup' : this.phaseOf(), season: this.seasonOf(),
         tracks: Object.entries(s.tracks || {}).filter(([id, t]) => c.tracks[id] && ['enrolled', 'member', 'done', 'failed', 'applied'].includes(t.status)).map(([id, t]) => {
           const d = c.tracks[id], ranks = (d.ranks || '').split(/\s*[,，、]\s*/).filter(Boolean), levels = (d.level_names || d.name).split(/\s*[,，、]\s*/);
@@ -2244,7 +2350,7 @@
         spells: Object.entries(s.spells || {}).filter(([id]) => c.spells && c.spells[id]).map(([id, level]) => ({ id, level, ...pick(c.spells[id], ['name', 'desc', 'art', 'skill']), cost: this.spellCost(id, level) })),
         skills: c.order.skills.map((id) => ({ id, ...pick(c.skills[id], ['name', 'icon', 'color', 'max', 'desc']), value: s.vals[id] })),
         states: Object.keys(s.states).filter((id) => c.states[id] && !c.states[id].hidden && !c.states[id].deprecated).map((id) => ({ id, name: c.states[id].name || id, desc: this.interp(c.states[id].desc || ''), art: c.states[id].art, kind: c.states[id].kind || null, group: c.states[id].group || null, left: s.states[id].left })),
-        npcs: c.order.npcs.filter((id) => s.npcs[id].met).map((id) => { const n = s.npcs[id]; return { id, ...pick(c.npcs[id], ['name', 'short', 'title', 'house', 'desc', 'color', 'romance', 'pronouns', 'look']), ...n, ...(n.sparkHid && !n.sparkAsked && n.bond !== 'partner' ? { spark: Math.max(0, (n.spark || 0) - n.sparkHid) } : {}) }; }),   // carried spark stays out of sight until asked (2026-10-20)
+        npcs: c.order.npcs.filter((id) => s.npcs[id].met).map((id) => { const n = s.npcs[id]; return { id, ...pick(c.npcs[id], ['name', 'short', 'title', 'house', 'desc', 'color', 'romance', 'pronouns', 'look']), ...n, facts: this.factsOf(id), relations: this.relationsOf(id), ...(n.sparkHid && !n.sparkAsked && n.bond !== 'partner' ? { spark: Math.max(0, (n.spark || 0) - n.sparkHid) } : {}) }; }),   // carried spark stays out of sight until asked (2026-10-20)
         log: s.log,
       };
     }

@@ -485,13 +485,13 @@ The line is `challenge <kind> [using <skill>] <difficulty> [<odds>] [<luck>] [dr
 
 **Option properties.** `memory: <kind> <who>` (kind from `@vocab memory_kinds`; who is `npc` or a character id) records a memory when the option is chosen (recall arrives in phase 4).
 
-**Facts and relations.** `learn lyra.mother` reveals a fact (`@fact` `unlock:` conditions also reveal them at month start; surface facts are known on meeting); `knows(lyra.mother)` tests it. `npc_rel lyra kael ±n` (or a tier) changes how two characters feel about each other (both directions); `npc_rel(lyra, kael)` reads it, seeded from `relations:`. `<npc>.<stat>` in expressions reads a character's stat (`lyra.charm`, `npc.wealth`).
+**Facts and relations.** `learn lyra.mother` reveals a fact (`@fact` `unlock:` conditions also reveal them at month start; surface facts are known on meeting); `knows(lyra.mother)` tests it. `npc_rel lyra kael ±n` (or a tier) changes how two characters feel about each other (both directions); `npc_rel(lyra, kael)` reads it, seeded from `relations:`. The People panel (phase 4) lists the facts you know about each person by tier, newest first, with the unknown ones as their `hint:` or a placeholder; once an `npc_rel` effect has moved a pair, it also names whom each gets on with (15+) and can't stand (−10 or less). `<npc>.<stat>` in expressions reads a character's stat (`lyra.charm`, `npc.wealth`).
 
 **Relationships.** `spark` fades 15% a month without a romantic moment; a partnership ends after two months below 20. Friendship (`rel`) fades by 2 a month toward 0 after 6 months without contact.
 
 **Event fields.** `class:` (routine, milestone, incident, windfall, story, crisis; see `docs/authoring/classes.md`) and `tone:` (from `@vocab tones`). Lint checks each class's budget with the preview engine, in medium-equivalents (`@balance weights` × change ÷ medium size): no routine option may be obviously better than another (at least as good on every value and better on one, with neither a gamble nor a follow-up; options that move alignment differently never are), and each stays within ±1.5; milestones allow 2 large changes, windfalls 1; incidents need at least two options.
 
-**Resources.** `max:` may be an expression (`max: 40 + arcana / 2`); `display: panel` moves a resource from the top bars to the You panel, and `display: number` shows it in the middle of the top row as a plain number instead of a bar; `warn_below: N` marks it low; `drag: -50 0.5` halves increases while below −50.
+**Resources.** `max:` may be an expression (`max: 40 + arcana / 2`); `display: panel` moves a resource from the top bars to the You panel, and `display: number` shows it in the middle of the top row as a plain number instead of a bar (with `tiers: 30 Known, 60 Famous, 85 Legend`, the step it's on is named beside it, and reaching a higher one says so); `warn_below: N` marks it low; `drag: -50 0.5` halves increases while below −50.
 
 **Inline text variation** (Ink-style; in any text, including `say:`): `{~a|b|c}` one of them (deterministic per seed, turn and event), `{&a|b}` cycles each time the event is seen, `{a|b|c}` runs through them and stays on the last, `{cond: a|b}` picks by a condition (`{gold > 20: rich|poor}`); a colon inside `{~…}` or `{&…}` is plain text. `cast_as(role, npc)` tests who filled a role (`{cast_as(here, maud): …|…}`). Alternatives may contain other tokens. Translations keep the same structure.
 
@@ -508,16 +508,16 @@ Worldbook blocks are **data**: canon for authors, briefs and lint. Until phase 2
 | Block | What it is | Structured values |
 |---|---|---|
 | `@npc` (extended) | `age` (required; romance needs 18+), `role`, `year`, `traits` / `interests` (from `@vocab`), `voice` | `stats: arcana 34 lore 22 wealth 5` · `schedule: place@slot,slot … place@slot:30` (a number: there that share of days, decided per month without the RNG; M42) · `schedule_break: …` (the schedule on breaks, or `away`: gone for the break, reachable only by letter) · `gone_when: <condition>` (review fixes: while it holds the character is nowhere on the map, fills no cast role and is drawn for no card except letters, e.g. `flag(ilse_taken)` or `flag(tobias_went_home) and since(tobias_bad_harvest) < 2`; scenes queued for them still play) · `distant: true` (feedback 2026-10-15: a pen pal; never on the map or `around()`, fills no cast role and no `actor: any`, letters included, and reaches you only through their own `actor:` cards, which are `trigger: letter`, at a steady rate of their own; auto and queued scenes with them still play) · `relations: npc:value …` |
-| `@fact npc.key` | what can be learned about a character: `tier` surface / personal / secret, `unlock` (expression), `text` | |
+| `@fact npc.key` | what can be learned about a character: `tier` surface / personal / secret, `unlock` (expression), `text`, `hint` (phase 4: shown in the People panel in the fact's place until it's known, e.g. "Ask about her summers"; without one, a placeholder for its tier) | |
 | `@place` | `region`, `kind` (public, club, job, thesis, internship, plan), `track`, `always: <event> …` (feedback 2026-10-15 and 2026-10-16: the listed events of the place come first on every visit, in order, each while its `when` holds, whatever its cooldown, followed by one drawn card; a group `a|b` plays one of its eligible events by weight, and the others aren't drawn on that visit; an event with `slot:` counts only in that slot, midnight included, one without only on daytime visits), `open` slots, `discover` / `closed_when` / `hinted_when` (expressions), `hint`, `desc` | `map: campus x,y` |
 | `@track` | `kind` (course, club, job, internship, thesis), `skill`, `levels` + `level_names`, `place`, `hidden`, `prereq`, `ranks`, `due`, `lead`, `standard` (a course's rung per level, for `standard` checks), `start` (a course's start card, pushed when you enrol) | `teaches: spell@level …` · `pay: 8, 12, 18` |
 | `@spell` | `skill` (one or two skills; none for a spell with no skill), `verb` (the one verb its cards use), `pool` (`hidden` or `forbidden`: no source yet), `alignment` (a tier per cast), `discipline` (a course track; optional) | `cost: 10, 9, 7` (one value per level: one or three levels) · `power:` optional, one per level |
-| `@arc` | `canon`, `clues`, `key_clues`, `cast`, `act_names` (the acts as players read them, comma-separated) | `acts: name@yN …` · `clock: 0..12` · `beats: clock@yNmM …` |
+| `@arc` | `canon`, `clues`, `key_clues`, `cast`, `act_names` (the acts as players read them, comma-separated), `epilogue` (phase 4: the Journal's last word once the arc is closed) | `acts: name@yN …` · `clock: 0..12` · `beats: clock@yNmM …` · `act_clock: 1 4 7 10` (phase 4: the clock each act opens at, so a pushed act opens before its year) · `act_rumours:` one line per act, indented (what people say while it runs: hints, never the secret) |
 | `@clue` | `arc` or `thread`, `name`, `text`, `kind: clue \| lead`, `followed: <expr>` (a lead only) | the Clues panel's entry for a clue or a lead |
 | `@lore` | `keys` (comma-separated), `canon` hard / soft, `text` (not translated) | |
 | `@faction`, `@archetype`, `@timeline`, `@vocab` | members and stance; spawn templates (`age: 18..22`); dated history and calendar beats; controlled vocabularies (`values:`) | |
 
-Translated worldbook fields: place name, desc and hint; track name, level names, ranks and desc; spell name and desc; fact text; faction and arc name and desc. Lists that are shown to players (`level_names`, `ranks`) are kept as text; in Chinese, separate them with 、.
+Translated worldbook fields: place name, desc and hint; track name, level names, ranks and desc; spell name and desc; fact text and hint; faction and arc name and desc, an arc's epilogue and each act rumour; a thread's name, premise and each journal line. Lists that are shown to players (`level_names`, `ranks`) are kept as text; in Chinese, separate them with 、.
 
 ---
 
@@ -751,6 +751,22 @@ is: bond(who) != "partner" and bond(who) != "ex"
 ### `@thread` — a storyline
 
 A card joins with `thread: <id>` (the same as the older `chain:`, which still works). A thread is a bundle like a pool (its properties go to its cards: `when:`, `track:`, `actor:` …), plus `clues:` (the leads it owns, for the tools), `clock: 0..N` (moved by `advance <thread> +1`, read by `clock(<thread>)`, as an arc's) and `members:`. An `@arc` is a thread with a schedule; its cards say `thread: hollowstar`.
+
+**The Journal** (phase 4). A storyline says once how the Journal tells it; no card changes:
+
+```
+@thread missed_round
+name: The Missed Round                       # as players read it (desc: stays for authors)
+premise: A healer who never misses a round missed one.
+journal:                                     # one <condition>: <text> per line, in story order
+  flag(rounds_begun): You went looking for Sister Amaranth when her lamp stayed dark.
+  flag(rounds_reported): You told the matron.
+  flag(rounds_finished): It's done. You still check the door.
+status:                                      # optional: resolved | let_go | missed, each a condition
+  resolved: flag(rounds_finished)
+```
+
+Each line shows from the turn its condition first holds (stamped after every card and at each month's start) and stays. The story is *ongoing* until a `status:` condition holds; with no `status:`, it is resolved once every lead it owns (`clues:`) is followed. A thread with a journal takes over its leads in the Journal; without one, a side lead is still grouped under its `@clue thread:` title. Journal lines are written as the player's diary: second person, past tense, one beat each, nothing the player hasn't seen.
 
 **Templates.** A thread with `params:` (or `roles:`) is a template; a thread `from:` it fills the params in (`with: key=value …`) and lists its cards by role (`members:`, one `role card [key=value …]` per line; unlisted cards take `default_role:`). Each member takes its role's pool, `<template>.<role>`, and may call the template's presets, `<template>.<name>` or just `<name>`. Inside a template's pools and presets:
 

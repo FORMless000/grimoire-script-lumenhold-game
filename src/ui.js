@@ -284,7 +284,7 @@
       // On a narrow screen the panel slides over the page: a close button and a scrim behind it (tap outside, or Escape).
       '<div class="side-scrim" id="sideScrim"></div>' +
       '<aside class="side" id="side"><div class="side-top"><div class="tabs" id="tabs">' +
-      '<button data-tab="you">' + esc(t('tab.you')) + '</button><button data-tab="kit">' + esc(t('tab.kit')) + '</button><button data-tab="people">' + esc(t('tab.people')) + '</button><button data-tab="clues">' + esc(t('tab.clues')) + '</button><button data-tab="journal">' + esc(t('tab.journal')) + '</button></div>' +
+      '<button data-tab="you">' + esc(t('tab.you')) + '</button><button data-tab="kit">' + esc(t('tab.kit')) + '</button><button data-tab="people">' + esc(t('tab.people')) + '</button><button data-tab="journal">' + esc(t('tab.journal')) + '</button></div>' +
       '<button class="icon-btn side-close" id="sideClose" title="' + esc(t('side.close')) + '" aria-label="' + esc(t('side.close')) + '">&times;</button></div>' +
       '<div class="tab-body" id="tabBody"></div></aside>' +
       '</div>';
@@ -306,7 +306,7 @@
     const numIds = content.order.resources.filter((id) => content.resources[id].display === 'number').sort((a, b) => (b === 'gold') - (a === 'gold'));
     const numberMeter = (id) => { const r = content.resources[id]; return '<div class="meter number" id="m-' + id + '" style="--c:' + esc(r.color || '#888') + '" title="' + esc(r.name + ' — ' + (r.desc || '')) + '"><span class="dot"></span><div class="num">' + Art.icon(r.icon || 'coin', 16) + '<span class="val"></span></div><div class="due"></div><div class="lbl">' + esc(r.name || id) + '</div></div>'; };
     meters.innerHTML = '<div class="meter-group">' + orbIds.map(orbMeter).join('') + '</div><div class="meter-group numbers">' + numIds.map(numberMeter).join('') + '</div>';
-    ui.dueKey = null;
+    ui.dueKey = null; ui.tiers = null; ui.openPerson = null;
     function orbMeter(id) {
       const r = content.resources[id];
       return '<div class="meter" id="m-' + id + '" style="--c:' + esc(r.color || '#888') + '" title="' + esc(r.name + ' — ' + (r.desc || '')) + '">' +
@@ -338,6 +338,13 @@
       } else fill.style.height = Math.max(0, Math.min(100, ((r.value - min) / (max - min)) * 100)) + '%';
       el.querySelector('.val').textContent = Math.round(r.value);
       el.classList.toggle('low', r.warn_below != null && r.value <= r.warn_below);
+      // A named step (`tiers:`, phase 4): shown by the name; reaching a higher one says so once.
+      if (r.tiers || r.tier !== undefined) {
+        const lbl = el.querySelector('.lbl'); if (lbl) lbl.textContent = r.tier ? r.name + ' · ' + r.tier : r.name;
+        ui.tiers = ui.tiers || {};
+        if (ui.tiers[r.id] !== undefined && r.tier && (r.tierAt || 0) > (ui.tiers[r.id] || 0)) toast(t('note.tier', { name: r.name, tier: r.tier }));
+        ui.tiers[r.id] = r.tierAt || 0;
+      }
     }
     renderDue();
     // No count of the day's cards (M3): the day isn't planned ahead any more.
@@ -362,6 +369,50 @@
   }
   const bondLabel = (b) => t('bond.' + b);
   const shortName = (npcOrId) => { const d = typeof npcOrId === 'string' ? content.npcs[npcOrId] : npcOrId; return d ? Engine.shortName(d) : String(npcOrId); };
+
+  // The People panel's facts (phase 4): what you know, newest first, by tier; what you don't, as a placeholder or its hint.
+  function personFacts(f) {
+    if (!f.known.length && !f.locked.length) return '';
+    let x = '';
+    for (const tier of ['surface', 'personal', 'secret']) {
+      const known = f.known.filter((k) => k.tier === tier), locked = f.locked.filter((k) => k.tier === tier);
+      if (!known.length && !locked.length) continue;
+      x += '<div class="fact-h">' + esc(t('facts.' + tier)) + '</div>';
+      x += known.map((k, i) => '<div class="fact' + (f.known.indexOf(k) < f.fresh ? ' new' : '') + '">' + esc(k.text) + '</div>').join('');
+      // A hint is shown in its fact's place; the rest of a tier is one line, how many are still to learn.
+      x += locked.filter((k) => k.hint).map((k) => '<div class="fact locked">' + esc(k.hint) + '</div>').join('');
+      const rest = locked.filter((k) => !k.hint).length;
+      if (rest) x += '<div class="fact locked">' + esc(t('facts.locked.' + tier, { n: rest })) + '</div>';
+    }
+    return '<div class="facts">' + x + '</div>';
+  }
+  function personRelations(n) {
+    const r = n.relations || {}, parts = [];
+    if (r.likes) parts.push(t('people.likes', { name: shortName(r.likes.id) }));
+    if (r.dislikes) parts.push(t('people.dislikes', { name: shortName(r.dislikes.id) }));
+    return parts.length ? '<div class="rels">' + esc(parts.join(' · ')) + '</div>' : '';
+  }
+  // The Journal's blocks (phase 4): an arc with its act, the rumour of that act, its clues and leads; a story's lines.
+  function arcBlock(j) {
+    let x = '<div class="thread' + (j.closed ? ' done' : '') + '"><div class="th-head"><b>' + esc(j.name) + '</b>' + (j.closed ? '<span class="th-act">' + esc(t('journal.status.closed')) + '</span>' : j.actName ? '<span class="th-act">' + esc(t('journal.act', { n: j.act, of: j.acts, name: j.actName })) + '</span>' : '') + '</div>';
+    if (j.rumour) x += '<div class="th-rumour">' + esc(j.rumour) + '</div>';
+    if (j.epilogue) x += '<div class="th-rumour">' + esc(j.epilogue) + '</div>';
+    if (j.clues.length) x += '<div class="th-sub">' + esc(t('journal.clues')) + '</div>' + j.clues.map((c) => '<div class="th-row clue' + (c.key ? ' key' : '') + '"' + (c.key ? ' title="' + esc(t('journal.keyClue')) + '"' : '') + '><b>' + esc(c.name) + '</b> ' + esc(c.text) + '</div>').join('');
+    // Open leads are listed once, under Leads; the ones followed stay here as part of the story.
+    const followed = j.leads.filter((c) => c.followed);
+    if (followed.length) x += '<div class="th-sub">' + esc(t('journal.leads')) + '</div>' + followed.map(leadRow).join('');
+    return x + '</div>';
+  }
+  function leadRow(c) { return '<div class="th-row lead' + (c.followed ? ' done' : '') + '"><b>' + esc(c.name) + '</b> ' + esc(c.text) + (c.followed ? ' <i>(' + esc(t('journal.followed')) + ')</i>' : '') + '</div>'; }
+  function storyBlock(j) {
+    const done = j.status !== 'ongoing';
+    let x = '<div class="thread story' + (done ? ' done' : '') + '"><div class="th-head"><b>' + esc(j.name) + '</b><span class="th-act">' + esc(t('journal.status.' + j.status)) + '</span></div>';
+    if (j.premise) x += '<div class="th-rumour">' + esc(j.premise) + '</div>';
+    x += j.entries.map((e) => '<div class="th-row entry"><small>' + esc(t('journal.when', { month: eng.monthName(e.turn), year: eng.yearOf(e.turn) })) + '</small> ' + esc(e.text) + '</div>').join('');
+    if (j.clues && j.clues.length) x += j.clues.map((c) => '<div class="th-row clue"><b>' + esc(c.name) + '</b> ' + esc(c.text) + '</div>').join('');
+    x += j.leads.filter((c) => c.followed || !j.entries.length).map(leadRow).join('');
+    return x + '</div>';
+  }
 
   function renderSide(snap) {
     snap = snap || eng.snapshot();
@@ -432,41 +483,47 @@
         const rel = n.rel, w = Math.min(100, rel < 0 ? Math.abs(rel) * 2 : rel);   // a rival's bar is full at −50
         const mix = (a, b, f) => '#' + [0, 2, 4].map((i) => Math.round(parseInt(a.substr(i, 2), 16) * (1 - f) + parseInt(b.substr(i, 2), 16) * f).toString(16).padStart(2, '0')).join('');
         const col = rel < 0 ? '#ff8a80' : mix('7fd18b', 'e0708a', n.romance ? Math.min(1, (n.spark || 0) / 60) : 0);
-        h += '<div class="person" data-id="' + esc(n.id) + '">' + Art.avatar(n, 44) + '<div class="info"><div class="nm">' + esc(n.name) + (n.bond !== 'none' ? '<span class="bond-badge bond-' + esc(n.bond) + '">' + esc(bondLabel(n.bond)) + '</span>' : '') + '</div>' +
+        const f = n.facts || { known: [], locked: [], fresh: 0 }, all = f.known.length + f.locked.length;
+        const open = ui.openPerson === n.id;
+        h += '<div class="person' + (open ? ' open' : '') + '" data-id="' + esc(n.id) + '">' + Art.avatar(n, 44) + '<div class="info"><div class="nm">' + esc(n.name) + (f.fresh ? '<span class="fresh" title="' + esc(t('facts.new', { n: f.fresh })) + '"></span>' : '') + (all ? '<span class="fact-count" title="' + esc(t('facts.countTip')) + '">' + esc(t('facts.count', { n: f.known.length, of: all })) + '</span>' : '') + (n.bond !== 'none' ? '<span class="bond-badge bond-' + esc(n.bond) + '">' + esc(bondLabel(n.bond)) + '</span>' : '') + '</div>' +
           '<div class="ttl">' + esc(n.title || '') + '</div>' +
           '<div class="relbar' + (rel < 0 ? ' neg' : '') + '" title="' + esc(t('side.relationship', { n: rel }) + (n.romance ? ' · ' + t('side.romance', { n: n.spark }) : '')) + '"><b style="width:' + w + '%;background:' + col + '"></b>' + (n.romance && n.spark > 0 ? '<i style="left:' + Math.min(100, n.spark) + '%"></i>' : '') + '</div>' +
-          '<div class="desc">' + esc(n.desc || '') + '<br><br>' + esc(t('side.relationship', { n: rel })) + (n.romance ? ' · ' + esc(t('side.romance', { n: n.spark })) : '') + '</div></div></div>';
+          '<div class="desc">' + esc(n.desc || '') + '<br><br>' + esc(t('side.relationship', { n: rel })) + (n.romance ? ' · ' + esc(t('side.romance', { n: n.spark })) : '') +
+          (n.bond !== 'none' && n.bondAt != null ? ' · ' + esc(t('people.since', { bond: bondLabel(n.bond), month: eng.monthName(n.bondAt), year: eng.yearOf(n.bondAt) })) : '') +
+          personRelations(n) + personFacts(f) + '</div></div></div>';
       }
-    } else if (ui.tab === 'clues') {
-      // The Clues panel (feedback 2026-10-15): the main plot's acts, clues and leads, then every side thread, open ones
-      // first and finished ones (all leads followed) last.
-      const all = eng.threads(), open = all.filter((j) => !j.done), done = all.filter((j) => j.done);
-      if (!all.length) h += '<div class="empty">' + esc(t('side.noClues')) + '</div>';
-      const thread = (j) => {
-        let x = '<div class="thread' + (j.done ? ' done' : '') + '"><div class="th-head"><b>' + esc(j.name) + '</b>' + (j.actName ? '<span class="th-act">' + esc(t('journal.act', { n: j.act, of: j.acts, name: j.actName })) + '</span>' : '') + '</div>';
-        if (j.clues.length) x += '<div class="th-sub">' + esc(t('journal.clues')) + '</div>' + j.clues.map((c) => '<div class="th-row clue' + (c.key ? ' key' : '') + '"' + (c.key ? ' title="' + esc(t('journal.keyClue')) + '"' : '') + '><b>' + esc(c.name) + '</b> ' + esc(c.text) + '</div>').join('');
-        if (j.leads.length) x += '<div class="th-sub">' + esc(t('journal.leads')) + '</div>' + j.leads.map((c) => '<div class="th-row lead' + (c.followed ? ' done' : '') + '"><b>' + esc(c.name) + '</b> ' + esc(c.text) + (c.followed ? ' <i>(' + esc(t('journal.followed')) + ')</i>' : '') + '</div>').join('');
-        return x + '</div>';
-      };
-      h += open.map(thread).join('');
-      if (done.length) h += '<div class="th-sub log-head">' + esc(t('journal.finished')) + '</div>' + done.map(thread).join('');
     } else {
+      // The Journal (phase 4): the main plot, the stories you've lived, the leads still open, and the diary of choices.
+      const j = eng.journal();
+      if (!j.arcs.length && !j.stories.length) h += '<div class="empty">' + esc(t('side.noClues')) + '</div>';
+      if (j.arcs.length) h += '<div class="sec-h">' + esc(t('journal.main')) + '</div>' + j.arcs.map(arcBlock).join('');
+      if (j.stories.length) h += '<div class="sec-h">' + esc(t('journal.stories')) + '</div>' + j.stories.map(storyBlock).join('');
+      if (j.leads.length) h += '<div class="sec-h">' + esc(t('journal.openLeads')) + '</div>' + j.leads.map((l) => '<div class="th-row lead"><b>' + esc(l.name) + '</b> ' + esc(l.text) + ' <small class="lead-of">' + esc(l.story) + '</small></div>').join('');
       const log = snap.log.slice().reverse();
-      if (!log.length) h += '<div class="empty">' + esc(t('side.emptyJournal')) + '</div>';
-      for (const l of log.slice(0, 120)) {
-        // Re-render title and choice in the current language when possible.
-        const ev = content.events[l.id];
-        // An entry from before logs kept their card's cast can't name everyone again: then the words it was saved with.
-        const kept = (x, saved) => (saved && /\{[^{}]+\}/.test(x) && !/\{[^{}]+\}/.test(saved) ? saved : x);
-        const title = ev ? kept(eng.interpLogged(ev.title, l), l.title) : l.title;
-        const opt = ev && l.key ? ev.options.find((o) => o.key === l.key) : null;
-        const choice = opt ? kept(eng.interpLogged(opt.label, l), l.choice) : l.choice;
-        const say = l.sayIds && l.sayIds.length && l.sayIds.every((id) => eng.sayIndex[id]) ? kept(l.sayIds.map((id) => eng.interpLogged(eng.sayIndex[id].text, l)).join(' '), l.say) : l.say;
-        h += '<div class="log-item"><div class="when">' + esc(t('journal.when', { month: eng.monthName(l.turn), year: eng.yearOf(l.turn) })) + '</div><b>' + esc(title) + '</b> — <span class="ch">' + esc(choice) + '</span>' + (say ? '<div class="say">' + esc(say) + '</div>' : '') + (l.n != null ? journalFeedback(l.n) : '') + '</div>';
+      h += '<button class="sec-h diary-toggle" id="diaryToggle" aria-expanded="' + !!ui.diaryOpen + '">' + esc(t('journal.diary')) + ' <span>' + (ui.diaryOpen ? '▾' : '▸') + '</span></button>';
+      if (ui.diaryOpen) {
+        if (!log.length) h += '<div class="empty">' + esc(t('side.emptyJournal')) + '</div>';
+        for (const l of log.slice(0, 120)) {
+          // Re-render title and choice in the current language when possible.
+          const ev = content.events[l.id];
+          // An entry from before logs kept their card's cast can't name everyone again: then the words it was saved with.
+          const kept = (x, saved) => (saved && /\{[^{}]+\}/.test(x) && !/\{[^{}]+\}/.test(saved) ? saved : x);
+          const title = ev ? kept(eng.interpLogged(ev.title, l), l.title) : l.title;
+          const opt = ev && l.key ? ev.options.find((o) => o.key === l.key) : null;
+          const choice = opt ? kept(eng.interpLogged(opt.label, l), l.choice) : l.choice;
+          const say = l.sayIds && l.sayIds.length && l.sayIds.every((id) => eng.sayIndex[id]) ? kept(l.sayIds.map((id) => eng.interpLogged(eng.sayIndex[id].text, l)).join(' '), l.say) : l.say;
+          h += '<div class="log-item"><div class="when">' + esc(t('journal.when', { month: eng.monthName(l.turn), year: eng.yearOf(l.turn) })) + '</div><b>' + esc(title) + '</b> — <span class="ch">' + esc(choice) + '</span>' + (say ? '<div class="say">' + esc(say) + '</div>' : '') + (l.n != null ? journalFeedback(l.n) : '') + '</div>';
+        }
       }
     }
     body.innerHTML = h;
-    body.querySelectorAll('.person').forEach((p) => { p.onclick = () => p.classList.toggle('open'); });
+    body.querySelectorAll('.person').forEach((p) => { p.onclick = () => {
+      // Opening someone marks what you know of them as read (the gold dot goes).
+      ui.openPerson = ui.openPerson === p.dataset.id ? null : p.dataset.id;
+      if (ui.openPerson) { eng.markFactsSeen(p.dataset.id); save(); }
+      renderSide();
+    }; });
+    { const d = document.getElementById('diaryToggle'); if (d) d.onclick = () => { ui.diaryOpen = !ui.diaryOpen; renderSide(); }; }
     body.querySelectorAll('.state.item[data-item]').forEach((b) => { b.onclick = () => { try { eng.equip(b.dataset.slot, b.dataset.item); save(); } catch (e) { console.warn(e); } renderSide(); }; });
     body.querySelectorAll('.fb-mini button').forEach((b) => {
       const n = Number(b.parentNode.dataset.n);
@@ -1195,7 +1252,7 @@
       '</div></div>');
     document.getElementById('exportRun').onclick = () => exportRuns([eng.exportRun(runMeta())], 'lumenhold-run-' + fileStamp() + '.json');
     document.getElementById('again').onclick = () => { eng = null; titleScreen(); };
-    document.getElementById('journal').onclick = () => { closeOverlay(); ui.tab = 'journal'; ui.sideOpen = true; document.getElementById('side').classList.add('open'); renderSide(); document.getElementById('choices').innerHTML = '<button class="choice single" id="backEnd">' + esc(t('ending.back')) + '</button>'; document.getElementById('backEnd').onclick = () => { showEnding(r); renderFeedbackBar(); }; renderFeedbackBar(); };
+    document.getElementById('journal').onclick = () => { closeOverlay(); ui.tab = 'journal'; ui.diaryOpen = true; ui.sideOpen = true; document.getElementById('side').classList.add('open'); renderSide(); document.getElementById('choices').innerHTML = '<button class="choice single" id="backEnd">' + esc(t('ending.back')) + '</button>'; document.getElementById('backEnd').onclick = () => { showEnding(r); renderFeedbackBar(); }; renderFeedbackBar(); };
   }
 
   /* ------------------------------------------------------------------ overlay */

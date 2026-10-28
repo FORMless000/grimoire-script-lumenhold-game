@@ -71,7 +71,7 @@
     'item.button': 'Use · {item}',
     'note.itemGained': 'New in your kit: {item}', 'note.itemWorn': 'New in your kit, and worn: {item}', 'note.itemLost': 'Gone from your kit: {item}',
     'tab.people': 'People',
-    'tab.clues': 'Clues', 'side.noClues': 'Nothing to follow yet. Odd things you notice, and where they point, gather here.', 'journal.finished': 'Followed up',
+    'tab.clues': 'Clues', 'side.noClues': 'Nothing to tell yet. The stories you live, and the odd things you notice, gather here.', 'journal.finished': 'Followed up',
     'tab.journal': 'Journal',
 
     'side.conditions': 'Conditions & circumstances',
@@ -90,6 +90,15 @@
     'journal.leads': 'Leads',
     'journal.followed': 'followed',
     'journal.keyClue': 'a key clue: needed beneath the lake',
+    // The Journal (phase 4)
+    'journal.main': 'The main story', 'journal.stories': 'Stories', 'journal.openLeads': 'Leads to follow', 'journal.diary': 'Diary',
+    'journal.status.ongoing': 'ongoing', 'journal.status.resolved': 'resolved', 'journal.status.let_go': 'let go', 'journal.status.missed': 'missed', 'journal.status.closed': 'over',
+    // Facts in the People panel (phase 4)
+    'facts.surface': 'Known to all', 'facts.personal': 'Between you', 'facts.secret': 'Secrets',
+    'facts.locked.surface': '· still to hear: {n} ·', 'facts.locked.personal': '· still to learn: {n} ·', 'facts.locked.secret': '· still hidden: {n} ·',
+    'facts.count': '{n}/{of}', 'facts.countTip': 'What you know of them', 'facts.new': 'Something new you know about them',
+    'people.likes': 'Gets on with {name}', 'people.dislikes': "Can't stand {name}", 'people.since': '{bond} since {month}, Y{year}',
+    'note.tier': '{name}: {tier}',
 
     'bond.friend': 'friend',
     'bond.close': 'close',
@@ -443,7 +452,7 @@
   // Calls cb(blockKey, fieldKey, text, set, def) for every translatable string, in source order.
   const FIELDS = {
     game: ['title', 'subtitle', 'intro'],
-    resource: ['name', 'desc'],
+    resource: ['name', 'desc', 'tiers'],
     skill: ['name', 'desc'],
     npc: ['name', 'short', 'title', 'house', 'desc'],
     state: ['name', 'desc', 'money'],
@@ -454,10 +463,12 @@
     place: ['name', 'desc', 'hint'],
     track: ['name', 'level_names', 'ranks', 'desc', 'picked'],
     spell: ['name', 'desc'],
-    fact: ['text'],
+    fact: ['text', 'hint'],
     faction: ['name', 'desc'],
-    arc: ['name', 'act_names', 'desc'],
+    arc: ['name', 'act_names', 'desc', 'epilogue'],
     clue: ['thread', 'name', 'text'],
+    // The Journal (phase 4): a storyline's name and premise as players read them (its `desc:` is for authors).
+    thread: ['name', 'premise'],
     item: ['name', 'desc'],
   };
   const EFFECT_FIELDS = { resource: ['on_zero'], state: ['on_add', 'tick', 'on_expire', 'on_remove'], hook: ['do'], event: ['on_show'], item: ['tick'] };
@@ -476,13 +487,16 @@
     const defs = [];
     const g = content.game || {};
     defs.push(g.block ? g : Object.assign({ block: 'game', id: 'game' }, g));
-    for (const col of ['resources', 'skills', 'npcs', 'states', 'events', 'endings', 'hooks', 'places', 'tracks', 'spells', 'facts', 'factions', 'arcs', 'clues', 'items']) defs.push(...Object.values(content[col] || {}));
+    for (const col of ['resources', 'skills', 'npcs', 'states', 'events', 'endings', 'hooks', 'places', 'tracks', 'spells', 'facts', 'factions', 'arcs', 'clues', 'items', 'threads']) defs.push(...Object.values(content[col] || {}));
     defs.sort((a, b) => (a.file || '').localeCompare(b.file || '') || (a.line || 0) - (b.line || 0));
     for (const d of defs) {
       const kind = d.block || 'game';
       const bkey = kind === 'game' ? 'game' : kind + ':' + d.id;
       for (const f of FIELDS[kind] || []) if (typeof d[f] === 'string' && d[f]) cb(bkey, f, d[f], (v) => { d[f] = v; }, d);
       if (kind === 'game' && Array.isArray(d.months)) d.months.forEach((m, i) => cb(bkey, 'month.' + (i + 1), m, (v) => { d.months[i] = v; }, d));
+      // The Journal's lines (phase 4): an arc's rumour for each act, a thread's journal lines, in source order.
+      if (kind === 'arc' && Array.isArray(d.act_rumours)) d.act_rumours.forEach((x, i) => cb(bkey, 'act_rumours.' + (i + 1), x, (v) => { d.act_rumours[i] = v; }, d));
+      if (kind === 'thread' && Array.isArray(d.journal)) d.journal.forEach((x, i) => cb(bkey, 'journal.' + (i + 1), x.text, (v) => { x.text = v; }, d));
       // A say and its say[npc] overrides: the override's key is the say's key plus @npc.
       const says = (prefix, effects) => { let n = 0; walkSays(effects, (st) => {
         n++; const k = prefix + '.say.' + n;

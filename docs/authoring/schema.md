@@ -152,6 +152,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `display` | text |  |
 |  | `warn_below` | text |  |
 |  | `drag` | structured |  |
+|  | `tiers` | text | yes |
 | | `on_zero:` | effects | `say:` lines |
 | `@skill id` | `name` | text | yes |
 |  | `icon` | text |  |
@@ -253,9 +254,12 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `default_role` | text |  |
 |  | `clues` | list |  |
 |  | `clock` | structured |  |
-|  | `name` | text |  |
+|  | `name` | text | yes |
 |  | `desc` | text |  |
 |  | `canon` | text |  |
+|  | `premise` | text | yes |
+|  | `journal` | text |  |
+|  | `status` | text |  |
 | `@appointment id` | `at` | text |  |
 |  | `for` | text |  |
 |  | `deals` | text |  |
@@ -336,6 +340,7 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `tier` | text |  |
 |  | `unlock` | expression |  |
 |  | `text` | text | yes |
+|  | `hint` | text | yes |
 | `@archetype id` | `names` | text |  |
 |  | `age` | structured |  |
 |  | `traits` | list |  |
@@ -358,6 +363,9 @@ Also `@track`, `@spell`, `@arc`, `@faction`, `@archetype`, `@timeline` and `@voc
 |  | `key_clues` | list |  |
 |  | `cast` | list |  |
 |  | `desc` | text | yes |
+|  | `act_rumours` | text |  |
+|  | `epilogue` | text | yes |
+|  | `act_clock` | text |  |
 | `@clue id` | `arc` | text |  |
 |  | `thread` | text | yes |
 |  | `name` | text | yes |

@@ -248,6 +248,24 @@ details.adv .adv-check input { margin-top: 2px; width: auto; }
 .th-row.lead::before { content: '→'; color: var(--muted); }
 .th-row.lead.done { opacity: .55; }
 .th-row.lead.done b { text-decoration: line-through; }
+/* The Journal (phase 4): a rumour or premise under a story's name, its dated lines, the open leads, the diary toggle */
+.th-rumour { margin: 4px 0 2px; font-family: var(--serif); font-style: italic; font-size: 13.5px; color: var(--muted); line-height: 1.4; }
+.th-row.entry { padding-left: 0; }
+.th-row.entry small { display: block; font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.thread.story { border-color: rgba(176, 160, 232, .22); background: rgba(176, 160, 232, .05); }
+.lead-of { color: var(--muted); font-size: 11px; }
+.diary-toggle { display: flex; width: 100%; justify-content: space-between; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; color: inherit; text-align: left; }
+/* Facts in the People panel (phase 4) */
+.person .fresh { width: 7px; height: 7px; border-radius: 50%; background: #ffd76a; box-shadow: 0 0 6px #ffd76a; flex: 0 0 auto; }
+.person .fact-count { font-size: 10.5px; font-weight: 400; color: var(--muted); }
+.person .rels { margin-top: 6px; font-size: 12px; }
+.person .facts { margin-top: 8px; }
+.fact-h { margin: 8px 0 2px; font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.fact { position: relative; padding: 2px 0 2px 14px; font-size: 12.5px; color: var(--text); line-height: 1.45; }
+.fact::before { content: '·'; position: absolute; left: 3px; color: #e8c878; }
+.fact.new::before { content: '✦'; left: 0; color: #ffd76a; }
+.fact.locked { color: var(--muted); font-style: italic; opacity: .7; }
+.fact.locked::before { content: none; }
 .log-item { padding: 9px 0; border-bottom: 1px solid rgba(255, 255, 255, .05); font-size: 13px; line-height: 1.45; }
 .log-item .when { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
 .log-item b { font-weight: 600; }
