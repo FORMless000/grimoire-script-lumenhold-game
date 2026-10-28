@@ -5,19 +5,22 @@
 #  Each card moves how the pair feel about each other (`npc_rel`), so the People panel learns it too.
 # ============================================================
 
+# Two classmates and you are the seasoning, not the meal: a run's people come one at a time. Weight 1 against the
+# single-character social cards' 10-12 keeps these to about one every four to six months (phase 4 tracker,
+# "Between-people cards are rare"); fresh cards keep full novelty, so their share is set here, not by their count.
 @pool between
-desc: A card about two classmates and you: social, routine, a long rest per character.
+desc: A card about two classmates and you: social, routine, rare, a long rest per character.
 trigger: social
 class: routine
 repeat: 8
-weight: 7
+weight: 1
 tags: social between
 
 @pool between_once
-desc: A one-off between two classmates; a social card's once is per character, so each card adds `seen(<its id>) == 0`.
+desc: A one-off between two classmates, rare; a social card's once is per character, so each card adds `seen(<its id>) == 0`.
 trigger: social
 class: routine
-weight: 6
+weight: 1
 tags: social between
 
 # ---------------- Friction and feuds ----------------
