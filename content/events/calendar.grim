@@ -398,6 +398,14 @@ text: The great hall has been turned to ice and starlight for the Midwinter Ball
   say: The music drifts up through the floor while you read. Somewhere, people are happy. You are productive.
 
 @thread tournament
+name: The Spring Tournament
+premise: Duelling on the great lawn, the whole academy watching.
+journal:
+  seen(tournament_semifinal) > 0: You fought your way to the semifinal of the Spring Tournament.
+  seen(tournament_final) > 0: In the final, Lyra was waiting. "I was hoping it would be you."
+  flag(tournament_champion): You won the Spring Tournament, and the lawn erupted.
+status:
+  resolved: seen(tournament_final) > 0
 
 @event spring_tournament
 title: The Spring Tournament

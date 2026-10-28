@@ -210,7 +210,23 @@ text: {ww_hush == 1: You don't remember the rest of the night. At grey dawn a la
 
 @thread ww_delve
 from: scene
-clues: lead_heartwood
+# The wood's leads join its Journal story (phase 4).
+clues: lead_heartwood lead_the_hush lead_spinner_silk
+name: The Whisperwood
+premise: The wood past the village goes deeper every time you go in.
+journal:
+  flag(ww_trail): You followed little carved bees a mile into the Whisperwood. You know whose bees they are.
+  flag(ww_bowed): You bowed in the bracken beside Professor Brask. Now the wood knows your face.
+  flag(ww_fox_guide): Ember's kin decided you'd do. A small smouldering tail walks with you off the path now.
+  flag(ww_stag_friend): The Shadow Stag lowered its great head to you.
+  flag(ww_heartwood): You asked the Elder Oak for its heartwood.
+  flag(ww_midnight_known): Deep in the wood there's a clearing where it's always midnight, its moonpetal waiting.
+  flag(ww_hush_seen): At midnight the silence opened, and you saw the Hush.
+  flag(ww_spinner_beaten): You fought the Spinner, queen of the Hush, and won.
+  flag(outcast_beaten): You faced Absalom Vrell by his lantern, and walked away.
+  seen(ww_hush_heart) > 0: You reached the heart of the Hush. The wood is yours, as much as a wood is ever anyone's.
+status:
+  resolved: seen(ww_hush_heart) > 0
 
 @event ww1_forage
 title: The Mushroom Ring

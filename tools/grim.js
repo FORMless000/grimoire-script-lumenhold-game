@@ -752,6 +752,16 @@ function analyzeWorld(content, P, scanExpr, scanText, taught = new Set()) {
     if (d.alignment && !G.TIERS.includes(d.alignment)) P('error', loc(d), 'alignment: a size tier (tiny … huge), charged per cast');
   }
   for (const d of Object.values(content.spells)) if (!d.pool && !taught.has(d.id)) P('info', loc(d), 'spell ' + d.id + ' has no source (no teaches:, no learn_spell) and no pool:');
+  // The Journal (phase 4): a storyline tells itself with `journal:` lines; one without them never shows under Stories.
+  for (const t of Object.values(content.threads || {})) {
+    if (t.params || t.roles || (t.props && t.props.arc)) continue;   // a template, or one of an arc's acts
+    const cards = Object.values(content.events).filter((e) => e.thread === t.id);
+    if (cards.length >= 2 && !(t.journal || []).length) P('info', loc(t), '@thread ' + t.id + ' has no journal: lines (the Journal\'s Stories won\'t show it)');
+    if ((t.journal || []).length && !t.name) P('warn', loc(t), '@thread ' + t.id + ': a thread with a journal needs a name: (as players read it)');
+    for (const x of t.journal || []) if (x.text.length > 160) P('warn', t.file + ':' + x.line, 'journal: one beat per line, under about 160 characters');
+  }
+  for (const a of Object.values(content.arcs || {})) if (a.act_rumours && a.acts && a.act_rumours.length !== a.acts.length) P('warn', loc(a), 'act_rumours: one line per act (' + a.acts.length + ')');
+  for (const a of Object.values(content.arcs || {})) if (a.act_clock && a.acts && a.act_clock.length !== a.acts.length) P('error', loc(a), 'act_clock: one clock value per act (' + a.acts.length + ')');
   for (const d of Object.values(content.facts)) {
     const npc = d.id.split('.')[0];
     if (!content.npcs[npc]) P('error', loc(d), '@fact ' + d.id + ': unknown npc "' + npc + '"');

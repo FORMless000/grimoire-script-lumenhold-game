@@ -71,7 +71,7 @@ test('a side clue owned by a @thread joins that story; others keep their thread 
   eng.s.clues[owned.clues[0]] = eng.s.turn;
   const j = eng.journal();
   const story = j.stories.find((x) => x.id === 'thread:' + content.clues[owned.clues[0]].thread);
-  if (owned.journal && owned.journal.length) assert.ok(!story, 'a thread with a journal owns its lead');
+  if (owned.journal && owned.journal.length) assert.ok(!story && j.stories.some((x) => x.id === owned.id), 'a thread with a journal owns its lead, before any line holds too');
   else assert.ok(story, 'without a journal the lead keeps its @clue thread: name');
   const listed = j.leads.some((l) => l.id === owned.clues[0]) || j.stories.some((x) => x.leads.some((l) => l.id === owned.clues[0]));
   assert.ok(listed, 'an open lead is shown');

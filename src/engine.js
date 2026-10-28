@@ -1128,12 +1128,13 @@
       for (const t of Object.values(c.threads || {})) {
         if (!t.journal || !t.journal.length) continue;
         const entries = t.journal.map((x, i) => ({ text: x.text, turn: stamps[t.id + '#' + i] })).filter((x) => x.turn != null).sort((x, y) => x.turn - y.turn);
-        if (!entries.length) continue;
-        const st = t.status || {};
         const leads = (t.clues || []).map((id) => c.clues && c.clues[id]).filter((d) => d && s.clues[d.id] != null).map(leadRow);
+        if (!entries.length && !leads.length) continue;   // a lead found before any line holds still shows, in its story
+        const st = t.status || {};
+        const turns = entries.map((x) => x.turn).concat(leads.map((x) => x.turn));
         const status = st.resolved && this.test(st.resolved, null) ? 'resolved' : st.missed && this.test(st.missed, null) ? 'missed' : st.let_go && this.test(st.let_go, null) ? 'let_go'
           : !st.resolved && leads.length && leads.every((x) => x.followed) ? 'resolved' : 'ongoing';
-        stories.push({ id: t.id, name: t.name || t.id, premise: t.premise || null, entries, leads, status, first: entries[0].turn, last: entries[entries.length - 1].turn });
+        stories.push({ id: t.id, name: t.name || t.id, premise: t.premise || null, entries, leads, status, first: Math.min(...turns), last: Math.max(...turns) });
       }
       for (const d of Object.values(c.clues || {})) {
         if (d.arc || !d.thread || owner[d.id] || s.clues[d.id] == null) continue;

@@ -10,6 +10,20 @@
 
 @thread ilse
 actor: ilse
+name: Ilse's winter
+premise: Kael's sister, in white furs, in a village that has never seen anyone like her.
+journal:
+  seen(ilse_village) > 0: In the village bakery a girl in white furs froze her coin to the counter. She has Kael's eyes. Her name is Ilse.
+  seen(ilse_frost_lessons) > 0: Ilse traded you Northern frost-craft for news of her brother.
+  flag(ilse_taken) and seen(ilse_grey_returns) > 0: When the man in grey came for her in the lane, Ilse went with him.
+  flag(ilse_saved): When the man in grey came for her, she stepped out from under his hand. You were there.
+  flag(dumont_reunited): Kael and Ilse talked at last: a careful arm's length apart, then less.
+  flag(ilse_went_north): Ilse took the dawn barge north, to tell her family it's over.
+  flag(ilse_decided) and not flag(ilse_went_north): Ilse stayed, and sewed a sliver of winter into your collar in case they come.
+  flag(ilse_goodbye): Under one snowing tree in blossom, Ilse said goodbye.
+status:
+  resolved: flag(ilse_goodbye) or flag(ilse_went_north) or flag(dumont_reunited)
+  missed: flag(ilse_taken) and not flag(ilse_saved)
 
 @event ilse_village
 title: The Girl at the Bakery

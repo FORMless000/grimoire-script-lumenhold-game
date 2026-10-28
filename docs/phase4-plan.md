@@ -396,7 +396,7 @@ Each step is committed on its own once `grim check` passes. Push only working st
 | Renown `tiers:` label and tier-crossing toast | done (`30 Known, 60 Famous, 85 Legend`) | |
 | Monthly fact unlocks announced (a summary note) | done | |
 | Clique casting (opt-in, weighted) | deferred until a batch needs it | |
-| Lint, format, query; `docs/grimoire-script.md`; `schema --update` | done (no new lint yet: a storyline without a journal is listed after step 2) | |
+| Lint, format, query; `docs/grimoire-script.md`; `schema --update` | done; lint (step 2): a storyline with no `journal:` is an info, a journal line over ~160 characters or a journal without `name:` a warning, `act_rumours`/`act_clock` one per act | |
 | UI strings, en + zh-CN | done | |
 | Tests: `test/phase4.test.js` | done | |
 | `verify:full` | passed except the browser e2e, skipped by the user's call (2026-10-27); golden games unchanged | |
@@ -428,6 +428,7 @@ Each step is committed on its own once `grim check` passes. Push only working st
 
 | Batch | Files | Cards | Critic (rounds) | zh-CN | Golden diff | Index synced | Commit |
 |---|---|---|---|---|---|---|---|
+| Step 2 (journal) | 20 `@thread`s (miniplots, chains, club quests, careers, tournament, Whisperwood), 5 `@arc`s | 0 cards; 125 journal lines, 20 names and premises, 15 act rumours, 1 epilogue | retrieval skipped: mechanical additions retelling existing cards, no new premise | done | unchanged | not needed | |
 
 ## Deviations and open questions
 
@@ -439,4 +440,4 @@ Each step is committed on its own once `grim check` passes. Push only working st
 
 ## Next up
 
-Step 2: journal lines for the 20 storylines and the 5 arcs' act rumours (drafts: the session's scratch `journals.py` / `journals_zh.py`, to be re-derived if lost). Then step 3 (renown balance), then P4-01 once retrieval works (2026-10-27: the reranker returned HTTP 429, its per-minute token quota exhausted; no cards are drafted without retrieval).
+Step 3: renown balance (tiered fading in the `fame_fades` hook, `@cond known/famous/legend`, the spotlight appointment), checked with `grim analyze` and `balance` per style. Then P4-01 once retrieval works (2026-10-27: the reranker returned HTTP 429, its per-minute token quota exhausted; no cards are drafted without retrieval).

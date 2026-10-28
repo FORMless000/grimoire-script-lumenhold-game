@@ -5,6 +5,18 @@
 # ============================================================
 
 @thread careers
+name: What comes next
+premise: The final year, and the question everyone asks at supper.
+journal:
+  seen(y3_career_fair) > 0: You walked the career fair and left your name at the stalls that mattered.
+  seen(y3_interview) > 0: You sat an interview, and waited for the letter.
+  flag(career_offered): They wrote back: they'd have you.
+  seen(y3_rejection) > 0: A polite letter said no.
+  has_offer(): An offer waits on your desk with your name on it. The answer is due on the last day.
+  seen(last_career) > 0 and not flag(took_none): On the last day, you said yes to what comes next.
+  flag(took_none): On the last day you said yes to nothing yet, and that was an answer too.
+status:
+  resolved: seen(last_career) > 0
 
 @event y3_career_fair
 title: The Career Fair

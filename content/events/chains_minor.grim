@@ -15,6 +15,20 @@
 from: story
 with: begun=flag(forbidden_key)
 clues: lead_codex_open lead_restricted_shelves lead_silver_key
+name: The silver key
+premise: A graduating fourth-year's notebook, in three colours of ink, and a key to the Restricted Section.
+journal:
+  flag(forbidden_key): Odile Varn left you her notebook, and a silver key to the Restricted Section.
+  flag(forbidden_rounds): You learned the prefects' rounds from Odile's green ink.
+  flag(forbidden_shelfmarks): Odile's red ink, underlined twice: never with bare hands.
+  flag(forbidden_abandoned): You locked the door again and hung the key in your wardrobe. Some nights it rattles.
+  flag(forbidden_inside): You slipped into the Restricted Section after hours and read by candle-stub.
+  flag(forbidden_warned): Odile's last advice: if a book falls open at your feet, don't let it choose you.
+  flag(forbidden_read): A book fell open at your feet, and you read it until dawn.
+  seen(forbidden_section_3) > 0: The headmistress herself caught you with that book in your hands.
+status:
+  resolved: seen(forbidden_section_3) > 0
+  let_go: flag(forbidden_abandoned)
 members:
   start umbral_forbidden_notes
 
@@ -192,6 +206,15 @@ from: story
 with: begun=flag(moonpetal_sought)
 when: has(umbral_curse)
 clues: lead_moonpetal
+name: The cold that won't leave
+premise: A cold sits under your skin, and Sister Amaranth's tonics do nothing for it.
+journal:
+  seen(curse_cure_1) > 0: The cold under your skin isn't an illness, Sister Amaranth said. It's a hunger.
+  flag(moonpetal_sought): Old Maud told you the cure: moonpetal from the Whisperwood, picked with your own hand, after dark.
+  seen(curse_cure_2) > 0: In the Whisperwood after dark, a stag made of shadow stood between you and the flower.
+  flag(moonpetal_sought) and not has(umbral_curse): Maud's brew drove the cold out. It tasted of moonlight and burnt sugar.
+status:
+  resolved: flag(moonpetal_sought) and not has(umbral_curse)
 members:
   start curse_cure_1
 
@@ -254,6 +277,18 @@ text: The Whisperwood after dark. Things move between the trees. In a clearing, 
 # ---------------- Grisk the Moneylender ----------------
 
 @thread debt
+name: Mister Grisk's ledger
+premise: A goblin in a velvet waistcoat: friend to the temporarily embarrassed.
+journal:
+  chosen(grisk_offer, right) or chosen(grisk_board_debt, left): Grisk wrote your name in his ledger, with a flourish that had teeth in it.
+  chosen(grisk_board_debt, right): You begged the bursar for time instead, and got a month's grace and a long look over spectacles.
+  seen(grisk_reminder) > 0: A note on your door: Mister Grisk charges interest on his patience.
+  seen(grisk_collectors) > 0: Two trolls in waistcoats came to say that Mister Grisk was disappointed.
+  flag(grisk_favour): You cut a page from the Founders' Ledger for Grisk's client. It had a black star on it.
+  flag(grisk_contact): Grisk told you how his parcels travel: the jetty at midnight, oilcloth, a cobbler's back door.
+  flag(grisk_gone): You told Grisk you were done with him. You never saw him again.
+status:
+  resolved: flag(grisk_gone) or (flag(grisk_done) and not has(in_debt) and not flag(grisk_contact))
 
 @event grisk_offer
 title: A Helpful Goblin
@@ -359,6 +394,14 @@ text: Grisk again. "You were so good last time. I have parcels that need carryin
 # ---------------- Ember the Fox-Spirit ----------------
 
 @thread familiar
+name: Ember
+premise: A fox with a smouldering tail, caught in a snare at the forest's edge.
+journal:
+  flag(fox_met): You freed a fox from a snare at the forest's edge. She bit you, and let you bandage her paw.
+  seen(fox_returns) > 0: Two months later she was on your windowsill, with a dusty ruby at her feet.
+  has(familiar_fox): She has decided she's yours. Her name is Ember.
+status:
+  resolved: has(familiar_fox)
 
 @event fox_injured
 title: Smoke in the Woods
@@ -451,6 +494,15 @@ text: {~Ember drags you, by the sleeve, through three corridors and a hedge. She
 # ---------------- The Haunted Dormitory ----------------
 
 @thread ghost
+name: Prudence
+premise: Somebody has been rearranging your socks.
+journal:
+  flag(ghost_met): Your socks spelled out HELP. You stayed up, and at three in the morning the drawer opened by itself.
+  seen(ghost_reveal) > 0: The ghost is Prudence Ashworth: very polite, and two hundred years late with a letter.
+  chosen(ghost_reveal, left): You spoke the banishing rite. She faded with a small, hurt look.
+  chosen(ghost_reveal, right): You promised to deliver her letter to the bakery. She clapped her translucent hands.
+status:
+  resolved: seen(ghost_reveal) > 0
 
 @event ghost_socks
 time: morning

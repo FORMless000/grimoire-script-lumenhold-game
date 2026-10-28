@@ -19,6 +19,18 @@ class: story
 repeat: 1
 tags: story
 clues: lead_missed_round
+name: The missed round
+premise: Sister Amaranth never misses a round. One night her lamp stayed dark.
+journal:
+  flag(rounds_begun): You went looking for Sister Amaranth when her lamp stayed dark, and found her grey with Lake Fever.
+  flag(rounds_reported): You fetched the headmistress. Sister Amaranth didn't speak to you for a week, then told you to run faster next time.
+  flag(rounds_secret): You kept her secret and did the rounds she called out from her chair.
+  flag(rounds_covered): You covered eight beds on your own, one remedy at a time.
+  flag(bed_six_truth): Bed six owned up: a flat rock, a dare, and three friends coughing in secret. You brought them all down.
+  flag(bed_six_done) and not flag(bed_six_truth): You treated bed six for the chill she claimed, and her fever took its time.
+  flag(rounds_finished): Sister Amaranth came back a week too soon. You did the round with her, and she let you.
+status:
+  resolved: flag(rounds_finished)
 members:
   start infirmary_missed_round
 
@@ -154,6 +166,16 @@ class: story
 repeat: 1
 tags: study
 clues: lead_red_ink
+name: Red ink
+premise: Someone unsigned keeps marking your essays in red, and they're right.
+journal:
+  flag(red_ink_begun): Someone marked your essay in red ink, unsigned, and was right. You rewrote it and left it on the stair.
+  flag(red_ink_answered): The ink asked why you want to be good at this. You answered in the margin.
+  flag(red_ink_glimpse): You hid on the landing and saw who took the essay: a first-year in robes two sizes too big.
+  flag(red_ink_met): The red ink is hers: a first-year who can't say a word in front of a room. She has a seminar on Thursday.
+  flag(red_ink_finished): On Thursday she spoke, all the way to the end.
+status:
+  resolved: flag(red_ink_finished)
 members:
   start lecture_tower_red_ink
 
@@ -266,6 +288,20 @@ class: story
 repeat: 1
 tags: magic
 clues: lead_late_bloomer
+name: The sweet shop's daughter
+premise: At home, the sweet-shop daughter has fire in her hands and nobody to teach her.
+journal:
+  flag(bloomer_begun): The sweet-shop daughter's sugar pan boiled on a cold stove. You taught her to breathe the heat down.
+  flag(bloomer_steady): Out past the fields, she learned to hold a flame the size of a fingernail.
+  flag(bloomer_promise): You promised her father you'd ask at the castle.
+  flag(bloomer_father_seen) and not flag(bloomer_promise): Her father asked what all that fire was for. You told him you didn't know.
+  flag(bloomer_damped): She bought the charm seller's grey glass bead, and the pans stayed cold.
+  flag(bloomer_charm_done) and not flag(bloomer_damped): You told her the charm was only glass. She kept her coins.
+  flag(bloomer_ice_done): Frost ran from her feet across the square and caught a carter's arm in the trough. You got him out.
+  flag(bloomer_letter): You wrote to the castle about her.
+  flag(bloomer_finished) and not flag(bloomer_letter): You left her your first practice candle, burned down to a stub.
+status:
+  resolved: flag(bloomer_finished)
 members:
   start home_market_late_bloomer
 

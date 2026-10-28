@@ -30,6 +30,17 @@ when: spell_level(brace) == 0
 track: duelling
 rank: 2
 clues: lead_brace
+name: The captain's charm
+premise: An old captain's charm in the duelling dummy empties only if someone holds firm while it fires.
+journal:
+  flag(brace_chain): You said you'd try to empty the old captain's charm. Someone drew a stretcher under your name.
+  flag(brace_notes): The captain's notes: don't stop the first blow, let it land on something that isn't you.
+  flag(brace_circle): Bram threw hexes at you in the chalk circle until he ran out.
+  flag(brace_footwork): Lyra drilled your stance until dark. "Better," she said.
+  seen(duel_brace_final) > 0 and spell_level(brace) < 1: The first time, the charm lifted you clean out of the circle.
+  flag(brace_chain) and spell_level(brace) >= 1: You held the circle until the charm sputtered out. Lyra nodded, once.
+status:
+  resolved: flag(brace_chain) and spell_level(brace) >= 1
 members:
   start duel_dummy_hexes
   part duel_captains_notes flag=brace_notes
@@ -168,6 +179,17 @@ when: spell_level(quickquill) == 0
 track: lumen_ledger
 rank: 2
 clues: lead_quickquill
+name: The quill that talks back
+premise: A spare quill at the Ledger has started inventing your sentences.
+journal:
+  flag(quickquill_chain): You took the Ledger's runaway quill home in a handkerchief. It wrote "kidnapped" on it.
+  flag(quickquill_soup): You kept the quill to the facts on forty letters about the soup.
+  flag(quickquill_ink): You bought it proper ink, black as a well. It underlines the bits you'll need.
+  flag(quickquill_deadline): You and the quill wrote until four on deadline night. Nessa put your name on the page.
+  seen(ledger_quill_interview) > 0 and spell_level(quickquill) < 1: The first interview got away from you, and from the quill.
+  flag(quickquill_chain) and spell_level(quickquill) >= 1: The chair denied everything, word for word. "Front page," said Nessa.
+status:
+  resolved: flag(quickquill_chain) and spell_level(quickquill) >= 1
 members:
   start ledger_spare_quill
   part ledger_soup_complaint flag=quickquill_soup
@@ -288,6 +310,17 @@ text: Nessa sends you to interview the chair of the refectory committee, who wil
 
 @thread bramble_quest
 clues: lead_bramble
+name: The seed in your pocket
+premise: A hedge-seed that chose you, and has already put out a shoot.
+journal:
+  flag(bramble_chain): "That's a hedge-seed," Tobias said. "They choose people." This one chose you.
+  flag(bramble_planted): You found your seedling a bed of its own.
+  flag(bramble_fed): You sat up with it through the first frost, feeding it warmth. It grew a thorn.
+  flag(bramble_choir): You quieted the mandrake choir, and your seedling put out a vine.
+  seen(verdant_bramble_bolts) > 0 and spell_level(bramble) < 1: The night it bolted, the hedge didn't know you yet.
+  flag(bramble_chain) and spell_level(bramble) >= 1: The night it bolted across the greenhouse, it stopped for you.
+status:
+  resolved: flag(bramble_chain) and spell_level(bramble) >= 1
 
 @event verdant_far_bed
 title: The Far Bed Answers
@@ -463,6 +496,17 @@ when: spell_level(index) == 0
 track: library_assistant
 rank: 2
 clues: lead_index
+name: Footnote's drawer
+premise: The library cat guards a card for a book eleven years overdue.
+journal:
+  flag(index_chain): Footnote was guarding the card of a book on wards, borrowed by Professor Thorne eleven years ago.
+  flag(index_fish): A proper herring bought you the card, and apparently the cat.
+  flag(index_hush): You walked the night hush with the old lamp and marked which shelf went quiet last.
+  flag(index_string): You followed the wandering section on a string for six hours.
+  seen(library_overdue_book) > 0 and spell_level(index) < 1: The first night the shelves moved, the book stayed lost.
+  flag(index_chain) and spell_level(index) >= 1: You found the book, eleven years overdue. Every book falls open at the right page for you now.
+status:
+  resolved: flag(index_chain) and spell_level(index) >= 1
 members:
   start library_footnote_drawer
   part library_fish_footnote flag=index_fish
@@ -588,6 +632,17 @@ when: spell_level(rapport) == 0
 track: tavern
 rank: 2
 clues: lead_rapport
+name: Two taps on the bar
+premise: The Newt's landlady stops fights with two taps and one sentence.
+journal:
+  flag(rapport_chain): "Can't teach it," the landlady said. "You earn it. Learn the room, buy the room, work the room."
+  flag(rapport_eel): You learned the old barge-man's eel story and told it back.
+  flag(rapport_round): You stood the regulars' corner a round. They know your name now.
+  flag(rapport_shift): Fourteen hours on your feet: now you can read the room from across it.
+  seen(tavern_festival_room) > 0 and spell_level(rapport) < 1: The first night the room was yours, it got away from you.
+  flag(rapport_chain) and spell_level(rapport) >= 1: You held the Newt on a packed night. The landlady knew at once, and nodded.
+status:
+  resolved: flag(rapport_chain) and spell_level(rapport) >= 1
 members:
   start tavern_two_taps
   part tavern_eel_story flag=rapport_eel
@@ -717,6 +772,17 @@ when: spell_level(purify) == 0
 track: apothecary_clerk
 rank: 2
 clues: lead_distil
+name: Pell's oldest drawer
+premise: A yellowed card in Pell's oldest drawer: a draught "of your own strength".
+journal:
+  flag(distil_chain): You copied out the old draught's recipe. Pell corrected one of your measures, which is permission.
+  flag(distil_drops): You counted four hundred and twelve drops with Pell and didn't lose count. "Fair," he said.
+  flag(distil_moonwort): You bought the good moonwort and carried it home without humming.
+  flag(distil_shortcut): You tasted the draught first, the daughters' way, and spent a day in bed learning where it pulls from.
+  seen(pell_draught) > 0 and spell_level(purify) < 1: The first brew boiled over and took more out of you than it should.
+  flag(distil_chain) and spell_level(purify) >= 1: The draught came down to one shining drop. Pell stopped counting. "Fair."
+status:
+  resolved: flag(distil_chain) and spell_level(purify) >= 1
 members:
   start pell_oldest_drawer
   part pell_counting_drops flag=distil_drops
@@ -842,6 +908,17 @@ when: spell_level(tailwind) == 0
 track: broom_courier
 rank: 2
 clues: lead_tailwind
+name: The jar of wind
+premise: A stoppered jar on the dead-letter shelf: FOR WHOEVER IS FAST ENOUGH.
+journal:
+  flag(tailwind_chain): You took the wind jar down. The loft master wrote your name under one too faded to read.
+  flag(tailwind_fisherman): The old fisherman flew the jar once. Never stop, he said. Stopping's what kills it.
+  flag(tailwind_gulls): You beat the gulls from the jetty to the far bank, and the wind in the jar turned over once.
+  flag(tailwind_broom): You had your broom trued. It flies straight for the first time in living memory.
+  seen(courier_storm_delivery) > 0 and spell_level(tailwind) < 1: The first storm run, a gust took you into the shallows.
+  flag(tailwind_chain) and spell_level(tailwind) >= 1: You crossed the lake in a storm with the wind behind you. It stays when you call it.
+status:
+  resolved: flag(tailwind_chain) and spell_level(tailwind) >= 1
 members:
   start courier_wind_jar
   part courier_fisherman_waves flag=tailwind_fisherman

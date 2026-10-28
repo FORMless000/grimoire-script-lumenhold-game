@@ -8,6 +8,19 @@
 # ============================================================
 
 @thread timeloop
+name: Tuesday
+premise: It's Tuesday. It was Tuesday yesterday, too.
+journal:
+  flag(timeloop_started): You woke to eggs, and Thorne tripping on the third step, and it was Tuesday again.
+  seen(timeloop_noticed) > 0: Seraphine saw the creases in the day. Tomorrow she won't remember saying so.
+  seen(timeloop_clue_bells) > 0: Every bell in the castle strikes on time except the astronomy tower's.
+  seen(timeloop_clue_light) > 0: One lamp burns in the astronomy tower before dawn, and goes out the moment the morning begins.
+  seen(timeloop_clue_firstyear) > 0: A first-year who dreads Wednesday has written "one more day" in his margin.
+  flag(loop_perfect_day): You gave a lonely stranger one perfect Tuesday. Only you remember it.
+  flag(timeloop_done): The great clock in the astronomy tower burst its springs, and it was Wednesday.
+  seen(timeloop_after) > 0: Weeks later, the Tuesdays still visit you in dreams.
+status:
+  resolved: flag(timeloop_done)
 
 @event timeloop_exploit
 title: Every Bet, Every Answer
