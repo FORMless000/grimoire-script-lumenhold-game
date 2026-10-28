@@ -411,7 +411,7 @@ Each step is committed on its own once `grim check` passes. Push only working st
 | `knows()` branches | 30 | 0 | 0 | |
 | Complete the picture | 9 | 0 | 0 | |
 | Second-hand facts | 8 | 0 | 0 | |
-| Inter-NPC generic | 38 | 0 | 0 | |
+| Inter-NPC generic | 38 | 15 | 15 | |
 | Inter-NPC one side specific | 30 | 0 | 0 | |
 | Inter-NPC storylines | 14 | 0 | 0 | |
 | Renown tier entries | 3 | 0 | 0 | |
@@ -422,20 +422,22 @@ Each step is committed on its own once `grim check` passes. Push only working st
 | Fall and comeback | 6 | 0 | 0 | |
 | High society | 8 | 0 | 0 | |
 | Cross-system | 9 | 0 | 0 | |
-| **Cards** | **228** | **0** | **0** | |
+| **Cards** | **228** | **15** | **15** | |
 
 ## Batch log
 
 | Batch | Files | Cards | Critic (rounds) | zh-CN | Golden diff | Index synced | Commit |
 |---|---|---|---|---|---|---|---|
-| Step 2 (journal) | 20 `@thread`s (miniplots, chains, club quests, careers, tournament, Whisperwood), 5 `@arc`s | 0 cards; 125 journal lines, 20 names and premises, 15 act rumours, 1 epilogue | retrieval skipped: mechanical additions retelling existing cards, no new premise | done | unchanged | not needed | |
+| Step 2 (journal) | 20 `@thread`s (miniplots, chains, club quests, careers, tournament, Whisperwood), 5 `@arc`s | 0 cards; 125 journal lines, 20 names and premises, 15 act rumours, 1 epilogue | retrieval skipped at the time (mechanical additions retelling existing cards); checked afterwards (2026-10-28): each of the 15 act rumours, the epilogue and the 20 premises, searched, retrieves its own arc's or thread's cards first, and none surfaces another story's | done | unchanged | not needed | |
 | Step 3 (renown balance) | `content/core/rules.grim` (`fame_fades`), `content/core/conds.grim`, `tools/policies.js` + `tools/analyze.js` (`celebrity` style) | 0 cards | n/a | n/a | refreshed: renown moves, so the sims' choices drift (110/120 games; random's early exits 47% → 43%) | n/a | |
-| Fact hints (part of P4-11) | `content/world/facts/*.grim` | 97 hints, every personal and secret fact; lint warns on a missing one | retrieval skipped: hints point at existing cards, no new premise | done | unchanged | not needed | |
+| P4-01 | `content/events/between.grim` (15 cards; `@pool between`, `between_once`), `content/core/conds.grim` (`at_odds`, `get_along`, `classmate_here`), the `npc_rel` lint accepts cast roles | 15 | rejected, then accepted (2) | done | refreshed: every game shifts with 15 new social cards; per style, random's early exits 18 → 21 of 40 (seeds diverge), social and cautious unchanged | yes | |
+| Fact hints (part of P4-11) | `content/world/facts/*.grim` | 97 hints, every personal and secret fact; lint warns on a missing one | retrieval skipped at the time; checked afterwards (2026-10-28): searched as "<NPC>: <hint>", 88 of the 89 hints whose fact a card teaches retrieve that card (or the fact) in the top 6; the miss, `tobias.moonflowers`, pointed at the wrong scene and now reads "Look in the greenhouse at night." The other 8 (unlocked by a relationship, a flag or a bond) were read against their condition | done | unchanged | not needed | |
 
 ## Deviations and open questions
 
 - **Renown fading by tier** (step 3): a fifth a month below 30, 15% while Known, 12% from Famous (the plan's 10% let a renown-chaser drift to Legend unaided). Measured with `grim analyze` over 12 games: `celebrity` (renown weighs 3) has a median of about 45 at the end of Y2 and 71 at the end of Y3 (p90 83 at the end); `balanced` about 20–30; nobody reaches Legend without spotlights. Tier conditions are `renown_known`, `renown_famous` and `renown_legend` (`known` is a built-in function's name).
 - **The spotlight appointment** waits for P4-06: it needs the tier-entry cards to deal.
+- **The reranker** (2026-10-28): `voyageai/rerank-3-lite` ran out of its per-minute quota and `qwen/qwen3-reranker-8b` was overloaded, so retrieval stalled. Probed five rerankers on three queries with known answers; `voyageai/rerank-2.5` is now the default, with an announced fallback chain (`rag/src/models.json`, retry and switch in `rag/src/cli.js`). New reranker aliases are registered without rebuilding the index (`rag/src/rebind.js`).
 
 - **`premise:` on `@thread`** (2026-10-27): the plan had a thread's `desc:` as its player-facing premise, but every existing `desc:` is an author's note. `desc:` stays for authors; `premise:` is the line players read.
 - **Traits and interests aren't shown** in the People panel: they are `@vocab` ids, not translated text.
@@ -445,4 +447,4 @@ Each step is committed on its own once `grim check` passes. Push only working st
 
 ## Next up
 
-P4-01 (inter-NPC friction, feuds and cliques), once retrieval works: 2026-10-27, the reranker (voyageai/rerank-3-lite through OpenRouter) returned HTTP 429 for over half an hour, its per-minute token quota used up by something else on the same project. No cards are drafted without retrieval (`rag/AUTHORING.md`). Check with `npm run grim -- retrieve search "<premise>"`.
+P4-02 (matchmaking, jealousy and gossip, generic; ~21 cards). Retrieval works again (`voyageai/rerank-2.5`, fallbacks in `rag/src/models.json`); sync the index first if it's stale (`npm run grim -- retrieve index`), then search every premise and run `related --draft` per card (`rag/AUTHORING.md`). The once-per-game rule for social one-offs: `seen(<own id>) == 0` (P4-01 notes).

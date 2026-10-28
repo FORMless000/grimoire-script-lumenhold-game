@@ -1,0 +1,412 @@
+# ============================================================
+#  Between people (phase 4, docs/phase4-plan.md, batch P4-01): two people you know, and how they treat each
+#  other. Friction and feuds between classmates who can't stand each other (`at_odds`), and the circles that
+#  form between those who get on (`get_along`). Both roles are generic; the first (`a`) carries the cooldown.
+#  Each card moves how the pair feel about each other (`npc_rel`), so the People panel learns it too.
+# ============================================================
+
+@pool between
+desc: A card about two classmates and you: social, routine, a long rest per character.
+trigger: social
+class: routine
+repeat: 8
+weight: 7
+tags: social between
+
+@pool between_once
+desc: A one-off between two classmates; a social card's once is per character, so each card adds `seen(<its id>) == 0`.
+trigger: social
+class: routine
+weight: 6
+tags: social between
+
+# ---------------- Friction and feuds ----------------
+
+@event between_two_seats
+title: Two Saved Seats
+pool: between
+tone: light
+cast:
+  a: any where classmate_here(a) and rel(a) >= 8
+  b: any where classmate_here(b) and rel(b) >= 8 and at_odds(a, b)
+per: a
+time: noon evening
+art: meal
+scene: A long refectory table at mealtime, two students at opposite ends, each with a hand on an empty stretch of bench.
+text: {~{a} has put a bag on the bench beside {them}, and at the far end {b} has put a book on the bench too. Both are for you.|{a} waves you over to a saved place. So, from the other end of the table, does {b}. They have not looked at each other once.|There are two places kept for you in the refectory, one at each end of the table, and the people keeping them would rather eat soup through a straw than sit together.}
+> left: Sit with {a}
+  rel a +small
+  rel b -small
+  say: {~{a} moves the bag. Down the table, {b} moves the book back onto the bench, slowly, so you see.|{a} has saved you the crust. {b} eats facing the window.|You sit with {a}. {b} leaves before pudding, loudly.}
+> right: Pull them to one table
+  challenge appeal apprentice+:
+    win:
+      npc_rel a b +small
+      rel a +tiny
+      rel b +tiny
+      say: {~You carry your tray to the middle and wave them both in. They come, sulking, and argue about the gravy, which is at least talking.|You sit dead centre and start a story that needs both of them to finish it. By the end they're correcting each other instead of glaring.|You make them pass you things. Salt, bread, the jug. By the end they're passing each other things, which is how it starts.}
+    lose:
+      npc_rel a b -tiny
+      mood -small
+      say: {~You sit in the middle and they both stay where they are. You eat alone between two empty places, like a referee nobody asked for.|You try. {a} takes {their} tray to the window, {b} takes {b.theirs} to the door, and you're left with three puddings.|Neither of them moves. The whole table watches you eat. It's the longest meal of the term.}
+
+@event between_messenger
+title: Pass It On
+pool: between
+tone: light
+cast:
+  a: any where classmate_here(a) and rel(a) >= 6
+  b: any where classmate_here(b) and rel(b) >= 6 and at_odds(a, b)
+per: a
+art: letter
+scene: A student in a corridor holding a folded note out at arm's length, another student turned pointedly away at the far end.
+text: {~{a} and {b} aren't speaking, and you've become the post. "Tell {b} the common-room lamp is NOT {b.theirs}," says {a}.|{a} hands you a folded note for {b}. It isn't sealed. The first word is underlined three times.|"Would you let {b} know," says {a}, very politely, "that some of us have to sleep."}
+> left: Pass it on word for word
+  rel a +tiny
+  npc_rel a b -tiny
+  mood -tiny
+  say: {~You deliver it exactly. {b} sends one back, worse. By supper you've carried six, and you're tired in a way that has nothing to do with stairs.|You hand it over unread. {b} reads it, writes "NO" under it, and hands it back to you to carry.|You say it word for word. {b} says something word for word back. You're not paid enough for this, and you're not paid.}
+> right: Soften it on the way
+  challenge deceive apprentice+:
+    win:
+      npc_rel a b +small
+      alignment -tiny
+      say: {~By the time it reaches {b} it's a polite question about the lamp. {b} answers politely. {a} is baffled, and a little disarmed.|You lose the underlining somewhere on the stairs. {b} reads a reasonable note and writes a reasonable answer. Nobody knows why it worked.|"Would you mind" becomes "would you mind, please". It's enough. They nod at each other at breakfast.}
+    lose:
+      rel a -small
+      rel b -small
+      say: {~They compare notes, literally. Neither recognises what you delivered. For once they agree on something: you.|{b} asks {a} where the underlining went. Both of them turn to look at you.|It comes out at supper. They're united, briefly, in being annoyed with the post.}
+
+@event between_whose_idea
+title: Whose Idea Was It
+pool: between_once
+tone: tense
+cast:
+  a: any where classmate_here(a) and rel(a) >= 5
+  b: any where classmate_here(b) and rel(b) >= 5 and not get_along(a, b)
+per: a
+when: term and not wrapup and seen(between_whose_idea) == 0
+art: scroll
+scene: Two students in front of a lecturer's desk, both pointing at the same page of notes, a third student standing just behind them.
+text: The lecturer praises the trick that made last week's practical work, and asks whose it was. {a} says "mine", and so does {b}, at the same moment. You were there when {a} thought of it, on the back of an envelope. Both of them look at you.
+> left: "It was {a}'s."
+  rel a +small
+  rel b -small
+  npc_rel a b -small
+  alignment +tiny
+  say: {b} goes red to the ears. {a} gets the praise and, later, buys you a cake. {b} doesn't speak to either of you until the end of the week, and is extremely polite when {b.their} silence ends.
+> right: "We worked it out together."
+  rel a -tiny
+  npc_rel a b +tiny
+  alignment -tiny
+  say: The lecturer gives the three of you the credit and moves on. {b} looks relieved. {a} looks at you for a long moment, and doesn't mention the envelope again.
+
+@event between_boot_hex
+title: Dancing Boots
+pool: between
+tone: light
+cast:
+  a: any where classmate_here(a) and rel(a) >= 4
+  b: any where classmate_here(b) and rel(b) >= 4 and at_odds(a, b)
+per: a
+art: sparkle
+scene: A corridor where one student's boots are jigging along the flagstones on their own, the student in them furious, another student by a pillar looking innocent.
+text: {~{b}'s boots have started to dance, on their own, in the middle of the corridor.|{b}'s boots squelch at every step, though it hasn't rained for a week.|{b}'s laces have tied themselves together, in a bow, very neatly.} You saw {a} flick a wand at them. So did nobody else. "Who did this?" {b} demands, of the corridor, and then of you.
+> left: Tell {b} the truth
+  rel b +small
+  rel a -small
+  npc_rel a b -small
+  alignment +tiny
+  say: {~{b} stalks off to find {a}, still jigging. You hear about the rematch at supper.|{b} squelches off towards {a}. You don't stay to watch.|{b} hops away in search of {a}, still tied. There's a prefect involved by lunchtime.}
+> right: "I didn't see a thing."
+  rel a +tiny
+  mood -tiny
+  alignment -tiny
+  say: {~{b} dances off to the infirmary. {a} winks at you across the corridor, and you find you don't like being winked at.|{b} squelches away, sure it was someone else. {a} grins. It sits badly at lunch.|{b} sits on the floor and unpicks the bow with dignity. {a} owes you, and you'd rather {they} didn't.}
+
+@event between_not_them
+title: Not Them Again
+pool: between_once
+tone: tense
+cast:
+  a: any where classmate_here(a) and rel(a) >= 10
+  b: any where classmate_here(b) and rel(b) >= 4 and at_odds(a, b)
+per: a
+when: seen(between_not_them) == 0
+art: door
+scene: Two students talking low in a common-room doorway, one glancing over the other's shoulder at a third by the fire.
+text: {a} catches you at the common-room door. "Every time you sit with me, {b} comes too," {they} say{s}. "I'm not asking you to choose. I'm just asking you to stop bringing {b}." Over by the fire, {b} looks up, and smiles at you.
+> left: Keep bringing {b}
+  rel a -small
+  rel b +small
+  alignment +tiny
+  say: "Then I'll sit somewhere else," says {a}, and does, for a week. {b} never knows it was about {b.them}. You do.
+> right: Quietly leave {b} out
+  rel a +small
+  rel b -small
+  alignment -small
+  say: You start meeting {a} in the library, where {b} never goes. It works. {b} asks once, cheerfully, where you've been. You say "around", which is true and isn't.
+
+@event between_peace_offering
+title: A Peace Offering
+pool: between_once
+tone: warm
+cast:
+  a: any where classmate_here(a) and rel(a) >= 8
+  b: any where classmate_here(b) and at_odds(a, b)
+per: a
+when: seen(between_peace_offering) == 0
+art: cup
+scene: A student holding out a small wrapped parcel and a folded letter, looking anywhere but at the person they're handing it to.
+text: {a} has a parcel in one hand and a letter in the other, and the look of someone who's been carrying both for days. "It's for {b}. I was out of order. I said something I can't take back." {They} hold{s} them out. "Would you give {b.them} these? I can't face it."
+> left: Make {a} do it in person
+  challenge appeal apprentice+:
+    win:
+      npc_rel a b +medium
+      rel a +small
+      say: You walk {a} there yourself, all the way to the door. It takes {them} two goes to say it. {b} takes the parcel, and then, after a long moment, takes {a}'s hand as well. You leave them to it.
+    lose:
+      npc_rel a b -tiny
+      rel a -small
+      say: {a} gets as far as the door, then turns round and walks straight back past you. "I said I couldn't," {they} say{s}. The parcel goes back in a drawer.
+> right: Carry it for {a}
+  npc_rel a b +small
+  rel a +small
+  study -tiny
+  say: You spend the evening you meant for revising finding {b}, who reads the letter twice and says "Tell {a} I'll think about it." That's not nothing. You say so.
+
+@event between_seconds
+title: Seconds
+pool: between_once
+tone: tense
+cast:
+  a: any where classmate_here(a) and rel(a) >= 10
+  b: any where classmate_here(b) and at_odds(a, b) and npc_rel(a, b) <= -15
+per: a
+when: seen(between_seconds) == 0
+art: duel
+scene: Dawn on a dew-wet lawn, two students with wands squared off, a third standing at one of their shoulders in the mist.
+text: What started between {a} and {b} over a library book has become a matter of honour: a formal challenge, dawn, the far lawn. Neither will back down in front of the other, and {a} has asked you, of all people, to stand at {their} shoulder. "You only have to be there. And if I lose, don't let me hear about it."
+> left: Stand as {a}'s second
+  rel a +medium
+  rel b -small
+  renown +tiny
+  health -tiny
+  npc_rel a b -small
+  say: You stand at {a}'s shoulder {season == "winter": with your teeth chattering|in the wet grass}. The duel is short, loud and inconclusive; a stray hex singes your sleeve. {a} shakes your hand afterwards like a general. Half the dormitory heard about it by breakfast.
+> right: Talk them out of it at dawn
+  challenge appeal journeyman:
+    win:
+      npc_rel a b +small
+      rel a +tiny
+      rel b +small
+      say: You stand between them on the {season == "winter": frosted|wet} grass and talk until the sun is up and both of them are too {season == "winter": cold|hungry} to want anything but toast. Nobody wins. Nobody has to.
+    lose:
+      rel a -small
+      health -tiny
+      say: They duel anyway, around you. You're not a very good wall. {a} says you embarrassed {them}, and {b} doesn't say anything, which is worse.
+
+@event between_dorm_vote
+title: The Common-Room Vote
+pool: between
+tone: light
+cast:
+  a: any where classmate_here(a) and rel(a) >= 4
+  b: any where classmate_here(b) and rel(b) >= 4 and at_odds(a, b)
+per: a
+time: evening night
+art: group
+scene: A crowded common room, two students standing on chairs at opposite ends making speeches, everyone else holding up hands.
+text: {~The common room is voting on whether the window stays open at night. {a} is leading the cold side, {b} the warm one.|Today's vote: who gets the good armchair by the fire on exam weeks. {a} has a rota. {b} has a counter-rota.|The common room votes on the portrait over the fire, which snores: turned to the wall at night, or not. {a} says turn it. {b} would sooner die than agree with {a}.} It's tied. Your hand will decide it.
+> left: Vote with {a}
+  rel a +small
+  rel b -small
+  npc_rel a b -tiny
+  say: {~The window stays open. {b} sleeps in two jumpers and a grievance.|The rota stands. {b} reads in the cold chair for a month and makes a point of it.|The portrait goes to the wall. {b} turns it back every night, on principle, and apologises to it.}
+> right: Propose a middle way
+  mood -tiny
+  npc_rel a b +tiny
+  say: {~You say the window should be open on even nights, and suddenly that's what everyone wants. Nobody's happy. Everyone's slightly warmer.|You say the chair should go to whoever's actually revising. They both look at you as if you've cheated.|You say the portrait can face the wall on exam weeks only. It's a coward's answer. It passes unanimously, and the portrait sulks.}
+
+@event between_lab_partners
+title: A Bench for Three
+pool: between
+tone: light
+cast:
+  a: any where classmate_here(a) and rel(a) >= 2
+  b: any where classmate_here(b) and at_odds(a, b)
+per: a
+when: term and not wrapup and enrolled(alchemy)
+art: cauldron
+scene: A practical-class workbench, three students around one bubbling cauldron, two of them very carefully not passing each other anything.
+text: {~The alchemy practical comes in threes, and the lecturer has put you at a bench with {a} and {b}.|A bench for three, a cauldron for one, and {a} and {b} have taken the two stools furthest from each other.|You're paired again: you, {a}, {b}, and one set of scales.} By the second step they're working two separate halves of the recipe and arguing through you.
+> left: Do the work yourself
+  study alchemy +small
+  mood -small
+  npc_rel a b -tiny
+  say: {~You do the whole thing while they sulk at the ends of the bench. It comes out right, and you're the only one who knows how.|You make the brew. They each claim the other ruined it. It's perfectly fine.|You weigh, stir and bottle it alone. The mark is good. The afternoon was not.}
+> right: Make them work it together
+  challenge appeal apprentice:
+    win:
+      npc_rel a b +small
+      study alchemy +tiny
+      say: {~You give {a} the stirring and {b} the timing, and make them call it out to each other. It works. The cauldron doesn't explode, and neither do they.|You hand each of them one half of the recipe. They have to read it out to each other. By the end {b} is laughing at {a}'s pronunciation, and {a} lets {b.them}.|You stand back with your arms folded until they talk. Eventually, they do. The brew is late, and passable.}
+    lose:
+      study alchemy -tiny
+      mood -tiny
+      say: {~They won't. The brew curdles while they argue about whose fault the curdling is.|The cauldron boils over while {a} and {b} each wait for the other to move it.|You try to referee and the brew goes grey. All three of you get the same bad mark, which is, at least, fair.}
+
+# ---------------- Friends together ----------------
+
+@event between_cipher
+title: The Cipher
+pool: between_once
+tone: warm
+cast:
+  a: any where classmate_here(a) and rel(a) >= 10 and not npc_is(kael)
+  b: any where classmate_here(b) and rel(b) >= 10 and get_along(a, b) and not npc_is(kael)
+per: a
+when: term and not wrapup and seen(between_cipher) == 0
+art: rune
+scene: Two students passing a scrap of paper covered in little drawn symbols under a lecture-hall desk, a third leaning in to see.
+text: {a} and {b} have been passing notes all term in a cipher of their own: little drawings that stand for words, a fish for "boring", a tower for "Thorne". You've watched them laugh at blank-looking scraps for weeks. Today {b} slides one to you. It's the key, and it's a test.
+> left: Learn the cipher
+  lore +tiny
+  rel a +small
+  rel b +small
+  npc_rel a b +tiny
+  study -tiny
+  say: You spend a lecture you should have spent listening learning forty little drawings instead. By the end of it you can read "this lecture is a fish" from three rows away, and the three of you have a language nobody else in the castle speaks.
+> right: Hand the key back
+  rel b -tiny
+  mood -tiny
+  say: "I'd only get you both caught," you whisper, and slide it back. {b} shrugs and tucks it away. The notes go on passing in front of you, and you find you'd quite like to know what the fish means.
+
+@event between_inside_joke
+title: The Joke You Missed
+pool: between
+tone: light
+cast:
+  a: any where classmate_here(a) and rel(a) >= 8 and not npc_is(kael)
+  b: any where classmate_here(b) and rel(b) >= 4 and get_along(a, b) and not npc_is(kael)
+per: a
+art: group
+scene: Two students doubled over with laughter on a staircase, a third standing a step below them, smiling politely.
+text: {~{b} says "the goose" and {a} has to sit down on the stairs.|{a} hums four notes and {b} snorts tea out of {b.their} nose.|{b} only has to raise one eyebrow and {a} is gone, helpless, crying with laughter.} You have no idea why. They look at you, still laughing, and wait to see what you'll do.
+> left: Laugh along anyway
+  mood +tiny
+  rel a -tiny
+  say: {~You laugh. {a} can tell you've no idea, and it's somehow worse than not laughing.|You laugh along, too late and a bit too loud. {b} pats your shoulder, kindly.|You laugh. They stop. "You don't know, do you," says {a}, delighted.}
+> right: "All right. What's the joke?"
+  rel a +small
+  rel b +tiny
+  mood -tiny
+  say: {~It takes ten minutes to explain, involves a professor and a pond, and is about half as funny told. But now it's yours too, and the next time someone says "the goose" you're the one on the stairs.|They explain. It's about you, a little, from your first week. You laugh anyway. It is quite funny.|"You had to be there," says {b}. Then they make you be there, re-enacting the whole thing on the landing. You're in it now.}
+
+@event between_cover_roll
+title: Answering for Two
+pool: between_once
+tone: tense
+cast:
+  a: any where classmate_here(a) and rel(a) >= 10
+  b: any where tagged(b, peer) and not tagged(b, outsider) and met(b) and rel(b) >= 6 and get_along(a, b)
+per: a
+time: morning noon afternoon
+when: term and not wrapup and seen(between_cover_roll) == 0
+art: paper
+scene: A lecture hall at the start of class, a lecturer reading names from a register, two students whispering in the third row beside an empty seat.
+text: Roll call. {b}'s seat is empty, and {a} leans over. "{b}'s not ill, {b}'s just not here. One more absence and it's a letter home. Answer for {b.them}? I can't, the lecturer knows my voice." The lecturer is three names away.
+> left: "Present."
+  challenge deceive apprentice:
+    win:
+      rel a +small
+      rel b +small
+      alignment -tiny
+      say: You say it in a voice you hope is {b}'s. The lecturer ticks the register without looking up. {b} buys you both breakfast for a week and never tells you where {b.they} went.
+    lose:
+      rel a +tiny
+      rel b +tiny
+      mood -small
+      alignment -tiny
+      say: The lecturer looks up. "Remarkable, how {b} has your face." It's a detention for you and the letter home for {b} anyway. {b} is grateful, which almost makes it worse.
+> right: Stay quiet
+  rel a -small
+  alignment +tiny
+  say: The name hangs in the air and goes down as absent. {a} doesn't look at you for the rest of the lecture. {b} gets the letter home, and turns up the next day, and never asks who didn't answer.
+
+@event between_closed_table
+title: Saved, Sorry
+pool: between_once
+tone: tense
+cast:
+  a: any where classmate_here(a) and rel(a) >= 10
+  b: any where classmate_here(b) and rel(b) >= 8 and get_along(a, b)
+per: a
+time: noon evening
+when: term and not wrapup and seen(between_closed_table) == 0
+art: meal
+scene: A corner table in a busy refectory, three friends crowded round it, a first-year with a full tray hovering at the end.
+text: You, {a} and {b} have had the corner table for a term now. A first-year with a full tray and nowhere to sit asks if the fourth place is free. {a} and {b} exchange a look you know very well. It means "no".
+> left: Make room
+  alignment +small
+  rel a -tiny
+  rel b -tiny
+  mood +tiny
+  say: You shove your bag along and the first-year sits down, pink with relief. {a} is cool for the length of the meal. By the end of the week the first-year is the one who saves the table, and {b} has adopted them.
+> right: "Sorry, it's saved."
+  rel a +small
+  rel b +tiny
+  alignment -small
+  say: The first-year says "oh, of course," and walks away very straight. The corner stays yours. {a} relaxes. You find you can't remember what the fourth place was ever saved for.
+
+@event between_night_roof
+title: The Roof at Night
+pool: between
+tone: warm
+cast:
+  a: any where classmate_here(a) and rel(a) >= 12 and not npc_is(bram)
+  b: any where classmate_here(b) and rel(b) >= 8 and get_along(a, b) and not npc_is(bram)
+per: a
+slot: night
+art: moon
+scene: Two students halfway out of a dormitory window onto a moonlit roof, one of them holding a hand back in for a third.
+text: {~After lights out, {a} and {b} are halfway out of the window with a blanket and a stolen jar of honey.|{a} taps on your door after lights out. {b} is behind {them}, holding the roof-ladder.|It's a clear night, and {a} and {b} are already on the roof. A hand appears at your window.} "Come on," whispers {a}. "The stars are out and the prefects aren't."
+> left: Climb out with them
+  rel a +small
+  rel b +small
+  npc_rel a b +tiny
+  health -tiny
+  say: {~You sit on the slates until the honey's gone and you've named three constellations wrongly. Tomorrow will be long. You don't mind yet.|Up on the roof the three of you say the kind of things you only say at that height. You're tired all the next day, and it was worth it.|The slates are freezing and the view is everything. You get in at three, and nobody catches you, this time.}
+> right: Stay in bed
+  health +tiny
+  rel a -tiny
+  say: {~You hear them laughing above your ceiling until late. You sleep well. You're not sure that was the point.|"Your loss," whispers {b}, and the window clicks shut. In the morning they share a look you aren't in.|You stay warm. At breakfast they're yawning and pleased with themselves, and talk about something called "the honey incident".}
+
+@event between_falling_out
+title: Both Sides
+pool: between_once
+tone: tense
+cast:
+  a: any where classmate_here(a) and rel(a) >= 10
+  b: any where classmate_here(b) and rel(b) >= 10 and get_along(a, b)
+per: a
+when: seen(between_falling_out) == 0
+art: heartbreak
+scene: Two students on opposite sides of a cloister garden, arms folded, each with their back to the other, a third student on the path between them.
+text: {a} and {b} have fallen out, properly, over something neither will name. Each has told you their side by lunchtime, and the sides don't match. "You'll tell {b} I'm right," says {a}. An hour later, {b} says exactly the same about {a}.
+> left: Get them in one room
+  challenge appeal journeyman:
+    win:
+      npc_rel a b +medium
+      rel a +small
+      rel b +small
+      say: You book the window seat in the library and send each of them a note that says the other one is sorry. Neither was. By the time they've worked that out, they're arguing about you instead, and it's over.
+    lose:
+      npc_rel a b -small
+      rel a -tiny
+      rel b -tiny
+      say: They come, see each other, and leave by different doors. Each of them thinks you took the other's side. For a while you have two friends who don't talk to each other, and both talk to you about it.
+> right: Stay out of it
+  npc_rel a b -small
+  mood -tiny
+  say: You listen to both, agree with neither, and keep your head down. It takes them a month to start speaking again, and they never quite sit together the way they did. You wonder sometimes if a word from you would have done it.

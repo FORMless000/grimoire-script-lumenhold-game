@@ -29,3 +29,19 @@ is: renown >= 60
 @cond renown_legend
 desc: You are the academy's own story: renown 85 or more.
 is: renown >= 85
+
+# Between people (phase 4, content/events/between.grim): two characters, as each other's friend or foe.
+@cond at_odds
+desc: These two can't stand each other.
+params: a b
+is: npc_rel(a, b) <= -5
+
+@cond get_along
+desc: These two get on.
+params: a b
+is: npc_rel(a, b) >= 5
+
+@cond classmate_here
+desc: A fellow student you've met, around to be met in person now (not an outsider).
+params: x
+is: tagged(x, peer) and not tagged(x, outsider) and met(x) and around(x)

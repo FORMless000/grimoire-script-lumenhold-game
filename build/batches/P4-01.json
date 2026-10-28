@@ -1,0 +1,81 @@
+{
+  "name": "P4-01",
+  "at": 1793163625384,
+  "files": [
+    "content/events/between.grim",
+    "content/core/conds.grim"
+  ],
+  "events": [
+    "between_two_seats",
+    "between_messenger",
+    "between_whose_idea",
+    "between_boot_hex",
+    "between_not_them",
+    "between_peace_offering",
+    "between_seconds",
+    "between_dorm_vote",
+    "between_lab_partners",
+    "between_cipher",
+    "between_inside_joke",
+    "between_cover_roll",
+    "between_closed_table",
+    "between_night_roof",
+    "between_falling_out"
+  ],
+  "contentHash": "685ec6",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "alarms": [
+        "truant: ending_archmage is 40% of headlines (> 35%)",
+        "balanced: 3.3 incidents a year (design: 1–3)",
+        "aggressive: mood lasts the run, health the run (design: breaks down by 5 / 9)",
+        "100 event(s) never seen by any play style: lyra_become_close, bram_become_close, ilse_become_close, corvin_locked_out, corvin_bad_odds, ilse_frost_door, ilse_contempt, choose_origin, hs_kael_sister, timeloop_noticed, crisis_probation, marisol_trust, mabel_cup, grimsby_mind_the_shop, pell_daughters, hs_go_down_early, hs_key_recover, hs_aftermath_quiet, hs_aftermath_freed, donate_greenhouse_glass, xchg_ink_cuffs, xchg_farewell, intro_lunch, item_hazel_tuned, item_hazel_water, item_ashwood_lyra, item_frost_ward_cold, item_star_coin_turning, item_spoon_daughters, midnight_newt_cards, midnight_restricted_stacks, midnight_passage_mapping, corvin_runaway, cartographers_lantern_patrol, letter_writing_home, headmistress_tower_quiet_hour, gig_library_stocktake, gig_library_lost_shelf, gig_library_last_day, gig_newt_rush, gig_newt_brawl, gig_newt_fire, gig_pell_remedy_rush, gig_pell_night_knock, gig_pell_ledger, gig_post_storm_run, gig_post_wrong_parcel, gig_post_last_parcel, break_work_opening_up, break_work_regular, intern_expedition_thin_air, lesson_moonwell, lesson_rime, lesson_torment, lesson_extraction, lesson_heartprice, probation_advisor, probation_letter, lumen_ledger_editor_threat, tavern_manager_grisk_offer, courier_chief_urgent_crossing, village_errand_third_thing, seraphine_ex, seraphine_confess_generic, evo_final_practical, soc_ex_encounter, soc_make_peace, jealousy_two_invitations, jealousy_seen_together, maud_worse_out, ww_mastery_map, offer_heartwood_wand, offer_spinner_silk_robe, item_lodestone_kael, item_lodestone_stacks, item_tine_brask, item_heartwood_tobias, item_thorn_wants, item_thorn_brask, item_locket_midnight, item_silk_corvin, item_grimoire_isolde, ww_hush_gate, ww4_silence, ww4_rime_hollow, ww4_web_halls, ww4_last_witch, ww4_moonpetal_bloom, ww4_spinner_court, ww_hush_heart, ww_spinner_meet, ww_spinner_fight, ww_spinner_fight_weak, ww_spinner_hoard, ww_cocooned, ww_outcast_meet, ww_outcast_table, ww_outcast_fight, ww_outcast_victory, ww_outcast_loss"
+      ]
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 112,
+      "total": 112
+    }
+  },
+  "critic": {
+    "batch": "P4-01",
+    "accept": true,
+    "round": 2,
+    "summary": "Every round-1 issue is fixed, and a fresh 60-game social sim confirms the fixes. Each once card now plays at most once a game. falling_out casts only pairs who get on. night_roof plays only at night. whose_idea and cover_roll never show on a break. lab_partners is alchemy-only. Seconds only has frost in winter. The mismatched labels and variants and the pronouns are corrected, and Kael and Bram are kept out of the roles that clashed with their voices. Two optional polish points remain.",
+    "issues": [
+      {
+        "event": "between_closed_table",
+        "problem": "The card has no term gate. In the sim it played 5 times in break months, but its text assumes term life: 'the corner table for a term now', a busy refectory, a first-year with nowhere to sit.",
+        "fix": "Add `term and not wrapup` to its `when:`, as whose_idea and cover_roll have."
+      },
+      {
+        "event": "between_cipher",
+        "problem": "`flag between_cipher` is no longer needed: the card now gates on `seen(between_cipher) == 0`, and no other card reads the flag.",
+        "fix": "Drop the flag, or leave it if a later P4 card is meant to call back to the cipher. In that case, gate that card on `flag(between_cipher)`."
+      }
+    ]
+  },
+  "spotCheck": [
+    "between_falling_out",
+    "between_lab_partners"
+  ],
+  "accepted": true
+}

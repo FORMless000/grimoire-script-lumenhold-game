@@ -296,7 +296,7 @@ function analyze(content) {
           break;
         }
         case 'regrade': if (st.track !== 'track' && !(content.tracks[st.track] && content.tracks[st.track].kind === 'course')) P('error', w, 'regrade: "' + st.track + '" is not a course'); break;
-        case 'npc_rel': for (const x of [st.a, st.b]) { if (x === 'npc') { if (!hasActor) P('error', w, 'npc_rel npc: block has no actor'); } else if (!content.npcs[x]) P('error', w, 'npc_rel: unknown npc "' + x + '"'); } break;
+        case 'npc_rel': for (const x of [st.a, st.b]) { if (ROLES.has(x)) continue; if (x === 'npc') { if (!hasActor) P('error', w, 'npc_rel npc: block has no actor'); } else if (!content.npcs[x]) P('error', w, 'npc_rel: unknown npc "' + x + '"'); } break;
         case 'challenge':
           if (!G.CHALLENGE_KINDS[st.kind]) P('error', w, 'challenge: unknown kind "' + st.kind + '" (' + Object.keys(G.CHALLENGE_KINDS).join(' ') + ')');
           if (st.using && !content.skills[st.using] && !content.resources[st.using]) P('error', w, 'challenge using: unknown skill or resource "' + st.using + '"');

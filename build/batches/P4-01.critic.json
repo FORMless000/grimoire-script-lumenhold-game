@@ -1,0 +1,18 @@
+{
+  "batch": "P4-01",
+  "accept": true,
+  "round": 2,
+  "summary": "Every round-1 issue is fixed, and a fresh 60-game social sim confirms the fixes. Each once card now plays at most once a game. falling_out casts only pairs who get on. night_roof plays only at night. whose_idea and cover_roll never show on a break. lab_partners is alchemy-only. Seconds only has frost in winter. The mismatched labels and variants and the pronouns are corrected, and Kael and Bram are kept out of the roles that clashed with their voices. Two optional polish points remain.",
+  "issues": [
+    {
+      "event": "between_closed_table",
+      "problem": "The card has no term gate. In the sim it played 5 times in break months, but its text assumes term life: 'the corner table for a term now', a busy refectory, a first-year with nowhere to sit.",
+      "fix": "Add `term and not wrapup` to its `when:`, as whose_idea and cover_roll have."
+    },
+    {
+      "event": "between_cipher",
+      "problem": "`flag between_cipher` is no longer needed: the card now gates on `seen(between_cipher) == 0`, and no other card reads the flag.",
+      "fix": "Drop the flag, or leave it if a later P4 card is meant to call back to the cipher. In that case, gate that card on `flag(between_cipher)`."
+    }
+  ]
+}
