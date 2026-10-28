@@ -135,6 +135,16 @@ test('combat: a bot fight is deterministic and its result is the engine\'s shape
   assert.ok(['win', 'lose', 'draw'].includes(a.outcome) && a.deltas && typeof a.exchanges === 'number');
 });
 
+test('combat: a skill rusted or injured below 1 still fights (the minigame takes 1–100)', () => {
+  const eng = fresh();
+  eng.s.vals.vigor = 0.8; eng.s.vals.guile = 0;
+  show(eng, 'duel_fixture');
+  const req = eng.fightAhead('left');
+  assert.equal(req.player.skills.vigor, 0.8, 'the request carries the game\'s own value');
+  const a = CombatSim.resolver({ style: 'balanced', content })(req);
+  assert.ok(['win', 'lose', 'draw'].includes(a.outcome));
+});
+
 // ---- The fight in the game's language (combat/setup/text.mjs, locales/<lang>/combat.lang)
 const I18n = require('../src/i18n.js');
 const fs = require('fs');

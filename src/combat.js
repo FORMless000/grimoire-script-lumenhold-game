@@ -17,6 +17,8 @@
   const LIVE_AI = { maxDepth: 5, nodeBudget: 3e6, mistakeChance: 0 };   // the live opponent (combat/web/app.mjs)
   const at = (v, i) => (Array.isArray(v) ? v[i] : v);
   const u32 = (n) => (n >>> 0) % 4294967295;
+  // The minigame takes skills 1–100; the game's run 0–100 (rust and injuries can take one under 1).
+  const kitSkills = (sk) => Object.fromEntries(Object.entries(sk || {}).map(([k, v]) => [k, Math.min(100, Math.max(1, v))]));
 
   // The character a named loadout stands for, and the named loadout of a character.
   function npcOfLoadout(C, loadout) { const d = C.NAMED_LOADOUTS[loadout]; return d && d.npc ? d.npc : null; }
@@ -98,9 +100,9 @@
     if (ev && list(ev.loop)) setting.loop = [].concat(list(ev.loop));
     if (ev && at(ev.stakes, i) === 'none') setting.stakes = 'none';
     const firstLeader = ev && at(ev.firstLeader, i) != null ? at(ev.firstLeader, i) : 1;
-    const p = req.player;
+    const p = req.player, skills = kitSkills(p.skills);
     const base = C.fightOptions({
-      player: { skills: p.skills, spells: p.spells, health: p.health, mana: Math.min(p.mana, C.manaCapacity(p.skills)), mood: p.mood, renown: p.renown, gold: p.gold, alignment: p.alignment, mods: p.mods || null },
+      player: { skills, spells: p.spells, health: p.health, mana: Math.min(p.mana, C.manaCapacity(skills)), mood: p.mood, renown: p.renown, gold: p.gold, alignment: p.alignment, mods: p.mods || null },
       opponent: { loadout: foe.loadout, level: foe.level },
       context: setting.context, observers: setting.observers, witnesses: setting.witnesses, firstLeader, encounterSeed: u32(req.seed),
     });
@@ -141,7 +143,7 @@
   // The finished fight → the result the engine takes (choose(key, {fights: [result]}) or a resolver's return).
   function fightResult(fight) {
     const C = combat(), req = fight.request, p = req.player;
-    const st = C.settle(fight.state, { health: p.health, mana: Math.min(p.mana, C.manaCapacity(p.skills)) });
+    const st = C.settle(fight.state, { health: p.health, mana: Math.min(p.mana, C.manaCapacity(kitSkills(p.skills))) });
     const free = fight.setting && (fight.setting.tutorial || fight.setting.stakes === 'none');
     return { request: req.id, outcome: st.outcome, reason: st.reason, deltas: free ? {} : st.deltas, followUps: free ? [] : st.followUps,
       foe: { id: fight.foe.id, loadout: fight.foe.loadout, name: fight.foe.name, level: fight.foe.level }, exchanges: fight.state.round, rules: C.RULES_VERSION };
