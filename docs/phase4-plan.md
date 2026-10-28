@@ -403,28 +403,28 @@ Each step is committed on its own once `grim check` passes. Push only working st
 
 ## Budget ledger
 
-Accepted waits for the critic, which is deferred until every batch is in (the user, 2026-10-28).
+The critic ran over P4-02..14 once everything was in (2026-10-28): every batch accepted, P4-10 on the second round.
 
 | Area | Budget | Written | Accepted | Cut |
 |---|---|---|---|---|
-| Journal cards | 9 | 9 (P4-14: 3 year recaps, 6 nudges) | — | |
-| New facts | 34 | 27 (P4-11) | — | 7 |
-| Use what you know | 30 | 30 (P4-12 15, P4-13 15) | — | |
-| `knows()` branches | 30 | 28 (P4-13) | — | 2 |
-| Complete the picture | 9 | 9 (P4-11) | — | |
-| Second-hand facts | 8 | 8 (P4-12) | — | |
-| Inter-NPC generic | 38 | 32 (P4-01 15, P4-02 17) | 15 | 6 |
-| Inter-NPC one side specific | 30 | 27 (P4-03 15, P4-04 12) | — | 3 |
-| Inter-NPC storylines | 14 | 12 (P4-05) | — | 2 |
-| Renown tier entries | 3 | 2 (Famous, Legend; Known has none: P4-06) | — | 1 |
-| Renown Known | 19 | 17 (P4-06) | — | 2 |
-| Renown Famous | 19 | 17 (P4-07) | — | 2 |
-| Renown Legend | 11 | 11 (P4-08) | — | |
-| Scandals | 15 | 15 (P4-09) | — | |
-| Fall and comeback | 6 | 6 (P4-08, with its entry) | — | |
-| High society | 8 | 8 (P4-10, `the_season`) | — | |
-| Cross-system | 9 | 8 (P4-10 6, P4-12 2) | — | 1 |
-| **Cards** | **228** | **211** | **15** | |
+| Journal cards | 9 | 9 (P4-14: 3 year recaps, 6 nudges) | 9 | |
+| New facts | 34 | 27 (P4-11) | 27 | 7 |
+| Use what you know | 30 | 30 (P4-12 15, P4-13 15) | 30 | |
+| `knows()` branches | 30 | 28 (P4-13) | 28 | 2 |
+| Complete the picture | 9 | 9 (P4-11) | 9 | |
+| Second-hand facts | 8 | 8 (P4-12) | 8 | |
+| Inter-NPC generic | 38 | 32 (P4-01 15, P4-02 17) | 32 | 6 |
+| Inter-NPC one side specific | 30 | 27 (P4-03 15, P4-04 12) | 27 | 3 |
+| Inter-NPC storylines | 14 | 12 (P4-05) | 12 | 2 |
+| Renown tier entries | 3 | 2 (Famous, Legend; Known's is `jit_noticed`: P4-06) | 2 | 1 |
+| Renown Known | 19 | 17 (P4-06) | 17 | 2 |
+| Renown Famous | 19 | 17 (P4-07) | 17 | 2 |
+| Renown Legend | 11 | 11 (P4-08) | 11 | |
+| Scandals | 15 | 15 (P4-09) | 15 | |
+| Fall and comeback | 6 | 6 (P4-08, with its entry) | 6 | |
+| High society | 8 | 8 (P4-10, `the_season`) | 8 | |
+| Cross-system | 9 | 8 (P4-10 6, P4-12 2); 1 cut by the critic | 7 | 2 (one a duplicate of `between_two_seats`) |
+| **Cards** | **228** | **211** | **210** | |
 
 ## Batch log
 
@@ -434,19 +434,19 @@ Accepted waits for the critic, which is deferred until every batch is in (the us
 | Step 3 (renown balance) | `content/core/rules.grim` (`fame_fades`), `content/core/conds.grim`, `tools/policies.js` + `tools/analyze.js` (`celebrity` style) | 0 cards | n/a | n/a | refreshed: renown moves, so the sims' choices drift (110/120 games; random's early exits 47% → 43%) | n/a | |
 | P4-01 | `content/events/between.grim` (15 cards; `@pool between`, `between_once`), `content/core/conds.grim` (`at_odds`, `get_along`, `classmate_here`), the `npc_rel` lint accepts cast roles | 15 | rejected, then accepted (2) | done | refreshed: every game shifts with 15 new social cards; per style, random's early exits 18 → 21 of 40 (seeds diverge), social and cautious unchanged | yes | |
 | Fact hints (part of P4-11) | `content/world/facts/*.grim` | 97 hints, every personal and secret fact; lint warns on a missing one | retrieval skipped at the time; checked afterwards (2026-10-28): searched as "<NPC>: <hint>", 88 of the 89 hints whose fact a card teaches retrieve that card (or the fact) in the top 6; the miss, `tobias.moonflowers`, pointed at the wrong scene and now reads "Look in the greenhouse at night." The other 8 (unlocked by a relationship, a flag or a bond) were read against their condition | done | unchanged | not needed | |
-| P4-02 | `content/events/between_hearts.grim` (matchmaking, jealousy, gossip), `@cond fancy_free` | 17 | deferred | done | refreshed once for P4-02..14 (see below) | at the end | |
-| P4-03 | `content/events/between_known.grim` (one side specific, part 1) | 15 | deferred | done | 〃 | 〃 | |
-| P4-04 | `content/events/between_known_2.grim` (one side specific, part 2) | 12 | deferred | done | 〃 | 〃 | |
-| P4-05 | `content/events/between_stories.grim` (3 threads: the feud, the match, the Thursday Circle) | 12 | deferred | done | 〃 | 〃 | |
-| P4-06 | `content/events/spotlight.grim` (`@pool spotlight` and its tiers, `@appointment spotlight` / `fallen`, 2 tier entries, 17 Known) | 19 | deferred | done | 〃 | 〃 | |
-| P4-07 | `content/events/spotlight_famous.grim` (Famous; scandal branches by renown) | 17 | deferred | done | 〃 | 〃 | |
-| P4-08 | `content/events/spotlight_legend.grim` (11 Legend, the fall and 5 after it), `@cond fallen_star` | 17 | deferred | done | 〃 | 〃 | |
-| P4-09 | `content/events/scandals.grim` (own / deny / spin menus; 7 callbacks, 8 generic; 2 appointments) | 15 | deferred | done | 〃 | 〃 | |
-| P4-10 | `content/events/society.grim` (the thread `the_season`, 8; `fame_between`, 6), soft `@lore the_season` | 14 | deferred | done | 〃 | 〃 | |
-| P4-11 | 27 `@fact`s in 15 `content/world/facts/*.grim`; `content/events/full_picture.grim` (9) | 9 + 27 facts | deferred | done | 〃 | 〃 | |
-| P4-12 | `content/events/knowing.grim` (15 use what you know, 8 second-hand, a sold secret and its scandal) | 25 | deferred | done | 〃 | 〃 | |
-| P4-13 | `content/events/knowing_2.grim` (15); 28 `if knows(…)` branches appended to options in 15 existing files | 15 + 28 branches | deferred | done | 〃 | 〃 | |
-| P4-14 | `content/events/journal_cards.grim` (3 year recaps, 6 nudges about side leads) | 9 | deferred | done | 〃 | 〃 | |
+| P4-02 | `content/events/between_hearts.grim` (matchmaking, jealousy, gossip), `@cond fancy_free` | 17 | accepted (1) | done | refreshed once for P4-02..14 (see below) | at the end | |
+| P4-03 | `content/events/between_known.grim` (one side specific, part 1) | 15 | accepted (1) | done | 〃 | 〃 | |
+| P4-04 | `content/events/between_known_2.grim` (one side specific, part 2) | 12 | accepted (1) | done | 〃 | 〃 | |
+| P4-05 | `content/events/between_stories.grim` (3 threads: the feud, the match, the Thursday Circle) | 12 | accepted (1) | done | 〃 | 〃 | |
+| P4-06 | `content/events/spotlight.grim` (`@pool spotlight` and its tiers, `@appointment spotlight` / `fallen`, 2 tier entries, 17 Known) | 19 | accepted (1) | done | 〃 | 〃 | |
+| P4-07 | `content/events/spotlight_famous.grim` (Famous; scandal branches by renown) | 17 | accepted (1) | done | 〃 | 〃 | |
+| P4-08 | `content/events/spotlight_legend.grim` (11 Legend, the fall and 5 after it), `@cond fallen_star` | 17 | accepted (1) | done | 〃 | 〃 | |
+| P4-09 | `content/events/scandals.grim` (own / deny / spin menus; 7 callbacks, 8 generic; 2 appointments) | 15 | accepted (1) | done | 〃 | 〃 | |
+| P4-10 | `content/events/society.grim` (the thread `the_season`, 8; `fame_between`, 5), soft `@lore the_season` | 13 (14 written, 1 cut by the critic) | rejected, then accepted (2) | done | 〃 | 〃 | |
+| P4-11 | 27 `@fact`s in 15 `content/world/facts/*.grim`; `content/events/full_picture.grim` (9) | 9 + 27 facts | accepted (1) | done | 〃 | 〃 | |
+| P4-12 | `content/events/knowing.grim` (15 use what you know, 8 second-hand, a sold secret and its scandal) | 25 | accepted (1) | done | 〃 | 〃 | |
+| P4-13 | `content/events/knowing_2.grim` (15); 28 `if knows(…)` branches appended to options in 15 existing files | 15 + 28 branches | accepted (1) | done | 〃 | 〃 | |
+| P4-14 | `content/events/journal_cards.grim` (3 year recaps, 6 nudges about side leads) | 9 | accepted (1) | done | 〃 | 〃 | |
 
 Golden diff for P4-02..14 together (120 of 120 games change, refreshed): random's early exits 20 → 13 of 40
 (quiet departure 9 → 6, sent home 11 → 7); still searching: social 9 → 14, cautious 18 → 13, random 8 → 9; the
@@ -473,7 +473,6 @@ the end (the user, 2026-10-28).
 
 ## Next up
 
-Every batch is written (P4-01..14, 211 cards). Next, with the user's go-ahead: the critic over P4-02..14
-(`skills/critic/SKILL.md`; one round per batch, fixes in place), then the full balance pass (`grim analyze` and
-`balance` per play style, the renown-chaser's Legend rate first), then `verify:full`, and the records
-(`PROGRESS.md`, design §0.3).
+Every batch is written and accepted (P4-01..14, 210 cards). Next: the full balance pass (`grim analyze` and
+`balance` per play style; the renown-chaser's Legend rate first, then the endings and early exits the golden diff
+moved), then `verify:full`, and the records (`PROGRESS.md`, design §0.3).

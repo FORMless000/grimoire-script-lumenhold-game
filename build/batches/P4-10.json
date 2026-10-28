@@ -1,6 +1,6 @@
 {
   "name": "P4-10",
-  "at": 1793185293377,
+  "at": 1793186692409,
   "files": [
     "content/events/society.grim",
     "content/world/lore/soft/academy.grim"
@@ -18,10 +18,9 @@
     "fame_wedge",
     "fame_lend_your_name",
     "fame_best_friend_claims",
-    "fame_feud_table",
     "fame_after_you"
   ],
-  "contentHash": "e9fb8f",
+  "contentHash": "ec9eba",
   "validators": {
     "build": {
       "ok": true
@@ -45,14 +44,30 @@
     },
     "i18n": {
       "ok": true,
-      "translated": 116,
-      "total": 116
+      "translated": 108,
+      "total": 108
     }
   },
-  "critic": null,
+  "critic": {
+    "batch": "P4-10",
+    "accept": true,
+    "summary": "Round 1 rejected: fame_feud_table repeated between_two_seats (P4-01), two people at odds pulled to one supper table, and fame_best_friend_claims ended on the same seating choice. Round 2 accepts: the duplicate is cut (cross-system 7 of 9) and the other card's choice is now an answer to the column. The Season follows its soft lore and canon (Lady Vaneshade, the patron's dinner), with a Journal line for every flag.",
+    "issues": [
+      {
+        "event": "fame_feud_table",
+        "problem": "Same premise as between_two_seats: a pair at odds, and you bring them to one table at supper.",
+        "fix": "Cut (blocking duplicate; record the shortfall rather than pad)."
+      },
+      {
+        "event": "fame_best_friend_claims",
+        "problem": "A distinct premise (two rival claims in the gossip column) that ends on the seating choice of between_two_seats.",
+        "fix": "Answer the column (a perform check: name both, and let them compare notes) or say nothing."
+      }
+    ]
+  },
   "spotCheck": [
     "fame_rivals_for_you",
     "season_invitation"
   ],
-  "accepted": false
+  "accepted": true
 }

@@ -57,7 +57,7 @@ trigger: queued
 tone: tense
 art: key
 scene: A coat hanging on a dormitory peg with the corner of a red leather ledger sticking out of its pocket.
-text: Bram's ledger has gone. Not locked: gone. Bram is white with fury and quoting rules at the walls. Corvin is very helpful about looking for it. Then you borrow Corvin's coat on a cold evening, and find the ledger in its inside pocket. Corvin is one detention from being sent home. If Bram finds it there, that's the end of him.
+text: Bram's ledger has gone. Not locked: gone. Bram is white with fury and quoting rules at the walls. Corvin is very helpful about looking for it. Then you borrow Corvin's coat on a cold evening, and find the ledger in its inside pocket. {knows(corvin.last_warning): Corvin is one detention from being sent home. If Bram finds it there, that's the end of him.|If Bram finds it there, Corvin is finished.}
 > left: Put it back quietly
   flag feud_ledger_back
   alignment +small
@@ -181,6 +181,7 @@ thread: tobias_mir
 trigger: queued
 tone: warm
 when: fancy_free(tobias) and fancy_free(mir)
+defer: season == "winter"
 art: flower
 scene: A big student sitting on an upturned flowerpot, turning his cap round and round in his hands, asking a friend for advice.
 text: Tobias corners you by the potting benches, turning his cap round and round in his big hands. "I'd like to ask Mir to the orchard on Sunday," he says. "To see the bees. Only, without it being a thing. Unless it's a thing. How do you do that?"
@@ -234,6 +235,7 @@ title: The Orchard
 thread: tobias_mir
 trigger: queued
 tone: warm
+defer: season == "winter" or not (around(tobias) and around(mir))
 art: flower
 scene: An orchard on a sunny afternoon, two friends on a blanket among beehives, one in goggles, one with a jar of honey, laughing.
 text: Sunday, the orchard, the bees. {npc_rel(tobias, mir) >= 30: Tobias and Mir arrive together, carrying a picnic between them and arguing happily about bees.|Tobias and Mir arrive separately, and spend the afternoon talking about the engine.} They've saved you a corner of the blanket, though you weren't sure you were invited.

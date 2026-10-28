@@ -1,6 +1,6 @@
 {
   "name": "P4-13",
-  "at": 1793185300832,
+  "at": 1793186699108,
   "files": [
     "content/events/knowing_2.grim"
   ],
@@ -21,7 +21,7 @@
     "know_ilse_frost",
     "know_tamsin_backdrop"
   ],
-  "contentHash": "e9fb8f",
+  "contentHash": "ec9eba",
   "validators": {
     "build": {
       "ok": true
@@ -49,10 +49,36 @@
       "total": 108
     }
   },
-  "critic": null,
+  "critic": {
+    "batch": "P4-13",
+    "accept": true,
+    "summary": "Fifteen use-what-you-know cards for the people who had few or none, and 28 knows() branches appended to existing options without moving their translation keys; every fact is learned elsewhere and none is main-plot. The locked option is the payoff by design (the plan: an option or a better outcome only when you know). Fixes made: a verb agreement, a branch that assumed someone the card doesn't show, and two echoes across batches.",
+    "issues": [
+      {
+        "event": "know_grisk_collectors",
+        "problem": "\"{They} don't call Grisk a friend\" reads 'He don't' for he/she characters.",
+        "fix": "\"Nobody hears {x} call Grisk a friend after that.\""
+      },
+      {
+        "event": "life_rival_academy (branch)",
+        "problem": "The tamsin.sketches branch recognises 'their illusion professor', who the card never says came.",
+        "fix": "\"Their illusion professor has come with them, and you recognise him at once…\""
+      },
+      {
+        "event": "duel_lyra_training (branch)",
+        "problem": "Toast called 'adequate' repeats picture_lyra's punchline (P4-11).",
+        "fix": "She eats it without a word, and the next morning two slices are waiting for you."
+      },
+      {
+        "event": "know_amaranth_rounds",
+        "problem": "\"Never once missed a round\" contradicts the missed-round mini-plot once it has happened.",
+        "fix": "Gate on seen(infirmary_missed_round) == 0 (made before assembly)."
+      }
+    ]
+  },
   "spotCheck": [
     "know_marisol_margins",
     "know_amaranth_rounds"
   ],
-  "accepted": false
+  "accepted": true
 }

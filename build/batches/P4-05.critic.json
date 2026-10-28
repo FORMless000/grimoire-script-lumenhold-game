@@ -1,0 +1,9 @@
+{
+  "batch": "P4-05",
+  "accept": true,
+  "summary": "Three storylines with the clash on the page, endings that read the pair's own feelings, and a Journal line for every flag; using canon pairs is the right call, since a queue carries one role. Two continuity fixes, both made.",
+  "issues": [
+    { "event": "feud_ledger_gone", "problem": "The text states Corvin's last warning (a personal fact) whether or not the player knows it.", "fix": "{knows(corvin.last_warning): … | If Bram finds it there, Corvin is finished.}" },
+    { "event": "tm_end", "problem": "A sunny Sunday in the orchard with the bees can be pushed in winter, or with Tobias or Mir away; tm_invitation's 'Sunday, to see the bees' likewise.", "fix": "defer: season == \"winter\" on both, and on tm_end also until both are around." }
+  ]
+}

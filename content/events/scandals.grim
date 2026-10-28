@@ -120,7 +120,7 @@ title: The {player}, Done Badly
 pool: scandal
 when: renown_known()
 art: wand
-scene: An infirmary bed with a first-year sitting up, both eyebrows missing and one sleeve singed, a matron frowning, a crowd of first-years peering round the door.
+scene: An infirmary bed with a first-year sitting up, both eyebrows missing and one sleeve singed, a healer in a grey apron frowning, a crowd of first-years peering round the door.
 text: A first-year doing "the {player}", the flourish that does nothing, did it so hard that the spell went off sideways. Nobody is badly hurt: the first-year has lost both eyebrows and is enjoying the attention. But a professor has written to the headmistress, and the word going round is "reckless".
 > own: Visit them and teach the real one
   renown -small
@@ -128,7 +128,7 @@ text: A first-year doing "the {player}", the flourish that does nothing, did it 
   study -small
   say: You go to the infirmary and sit with the first-year, then teach the whole yard the real flourish, the one that steadies a cast, slowly, for a week. The eyebrows grow back. The professor's letter, you hear, ends with "and the student took it in hand."
 > deny: Say it was never your flourish
-  challenge appeal adept-:
+  challenge deceive adept-:
     win:
       renown -tiny
       say: You point out, reasonably, that you have never once done the flourish and that it isn't yours to teach or stop. People see the sense in it. The first-year, eyebrowless, agrees cheerfully that it was "more of a tribute".
@@ -274,7 +274,7 @@ text: Somebody has started saying that nobody gets marks like yours honestly, an
 title: Their Side of It
 pool: scandal_any
 cast:
-  x: any where met(x) and bond(x) == "ex"
+  x: any where met(x) and around(x) and bond(x) == "ex"
 per: x
 art: heartbreak
 scene: A crowded common room, a student holding court with a cup in hand, telling a story to a rapt circle, another student frozen in the doorway.
@@ -338,7 +338,7 @@ text: The story is that a first-year waited two hours in the rain outside your l
   challenge deceive apprentice+:
     win:
       renown -tiny
-      say: You point out that you were in the infirmary that afternoon with a cold, and the matron, when asked, agrees. It's true, as it happens. The first-year must have mistaken somebody else for you.
+      say: You say you were in the infirmary that afternoon with a cold, and Sister Amaranth, when asked, can't say you weren't. Neither can you, quite. The story decides the first-year must have mistaken somebody else for you.
     lose:
       renown -medium
       alignment -tiny

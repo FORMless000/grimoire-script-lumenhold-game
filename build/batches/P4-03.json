@@ -1,6 +1,6 @@
 {
   "name": "P4-03",
-  "at": 1793185276240,
+  "at": 1793186676049,
   "files": [
     "content/events/between_known.grim"
   ],
@@ -21,7 +21,7 @@
     "mir_between_owl",
     "mir_between_blunt"
   ],
-  "contentHash": "e9fb8f",
+  "contentHash": "ec9eba",
   "validators": {
     "build": {
       "ok": true
@@ -49,10 +49,26 @@
       "total": 116
     }
   },
-  "critic": null,
+  "critic": {
+    "batch": "P4-03",
+    "accept": true,
+    "summary": "Each card turns on its character's voice or facts and couldn't be dealt to anyone else; schedules agree (Kael at the boathouse in the evening). Two continuity fixes about Corvin's last warning, both made.",
+    "issues": [
+      {
+        "event": "corvin_between_odds",
+        "problem": "The narration states that Corvin is one detention from being sent home, a personal fact the player may not know yet.",
+        "fix": "Show that clause only {knows(corvin.last_warning): …}; his name going in the book stands on its own."
+      },
+      {
+        "event": "corvin_between_witness",
+        "problem": "\"You know what that means\" assumes the player knows his last warning.",
+        "fix": "Corvin says it outright (\"and they send me home\"), and every outcome learns corvin.last_warning."
+      }
+    ]
+  },
   "spotCheck": [
     "nessa_between_match",
     "nessa_between_story"
   ],
-  "accepted": false
+  "accepted": true
 }

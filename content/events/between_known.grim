@@ -242,7 +242,7 @@ text: {o} and {p} are going to settle it with wands in the courtyard at sunset, 
   alignment +small
   rel corvin -medium
   npc_rel o p +tiny
-  say: The prefects break it up before the first spell, and confiscate the chalk. Corvin is one detention from being sent home, and he knows exactly who told. He doesn't say anything. That's worse than if he had.
+  say: The prefects break it up before the first spell, and confiscate the chalk, and Corvin's name goes in the book.{knows(corvin.last_warning):  He is one detention from being sent home.|} He knows exactly who told. He doesn't say anything. That's worse than if he had.
 
 @event corvin_between_debt
 title: Corvin Owes {o}
@@ -283,7 +283,7 @@ per: corvin
 when: term and not wrapup and seen(corvin_between_witness) == 0
 art: key
 scene: A student in a dark stairwell holding up an unlocked padlock, another student beside him shaking their head urgently.
-text: {o} is up before the headmistress: a silver inkstand gone from the library, and {o} was seen near it. Corvin knows {o} didn't take it; he saw who did, at two in the morning. To say so, he'd have to say where he was at two in the morning. "One more detention, saint," he says quietly. "You know what that means."
+text: {o} is up before the headmistress: a silver inkstand gone from the library, and {o} was seen near it. Corvin knows {o} didn't take it; he saw who did, at two in the morning. To say so, he'd have to say where he was at two in the morning. "One more detention, saint," he says quietly, "and they send me home."
 > left: Tell him to speak up
   challenge appeal journeyman:
     win:
@@ -291,11 +291,14 @@ text: {o} is up before the headmistress: a silver inkstand gone from the library
       rel o +small
       npc_rel corvin o +medium
       alignment +small
+      learn corvin.last_warning
       say: Corvin goes in, and tells it straight, without a single joke. The headmistress gives him a long look and a warning, not a detention, "in view of the circumstances". {o} doesn't know what to say. Corvin says it for both of them: "Don't make a habit of being innocent near me."
     lose:
       rel corvin -small
+      learn corvin.last_warning
       say: Corvin shakes his head. "I can't, saint. I can't go home." You don't push. {o} gets the detention, and the real thief is never named, and Corvin can't look at {o} for weeks.
 > right: Find another way to clear {o}
+  learn corvin.last_warning
   challenge research apprentice+:
     win:
       rel o +small

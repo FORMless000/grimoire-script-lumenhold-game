@@ -1,6 +1,6 @@
 {
   "name": "P4-08",
-  "at": 1793185288449,
+  "at": 1793186687817,
   "files": [
     "content/events/spotlight_legend.grim"
   ],
@@ -23,7 +23,7 @@
     "fallen_mocked",
     "fallen_friends"
   ],
-  "contentHash": "e9fb8f",
+  "contentHash": "ec9eba",
   "validators": {
     "build": {
       "ok": true
@@ -51,10 +51,26 @@
       "total": 128
     }
   },
-  "critic": null,
+  "critic": {
+    "batch": "P4-08",
+    "accept": true,
+    "summary": "Legend cards are the academy telling stories about you, and each turns on what you do with the story; the fall is handled with warmth rather than punishment. Two small continuity fixes, both made.",
+    "issues": [
+      {
+        "event": "fallen_old_fan",
+        "problem": "Recognising 'the blue thread on their wrist' gates on seen(spot_fan_charm), but the blue-thread fad only happens if you wore the charm.",
+        "fix": "chosen(spot_fan_charm, left)."
+      },
+      {
+        "event": "fallen_friends",
+        "problem": "\"You were busy being a legend\": the fall only needs you to have been Famous.",
+        "fix": "\"busy being famous\"."
+      }
+    ]
+  },
   "spotCheck": [
     "fallen_unrecognised",
     "spot_higher_bar"
   ],
-  "accepted": false
+  "accepted": true
 }

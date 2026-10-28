@@ -305,52 +305,24 @@ cast:
 per: a
 art: paper
 scene: A gossip column on a corridor board with two paragraphs circled in different inks, two students on opposite sides of the corridor, arms folded.
-text: The gossip column this week has two letters. In one, {a} writes that {a} is "{player}'s closest friend, as everyone knows". In the other, {b} writes exactly the same thing about {b}. They can't stand each other. Everyone has read both. Everyone is waiting to see which one you'll sit with at lunch.
-> left: Sit with both of them
-  challenge appeal adept-:
+text: The gossip column this week has two letters. In one, {a} writes that {a} is "{player}'s closest friend, as everyone knows". In the other, {b} writes exactly the same thing about {b}. They can't stand each other. Everyone has read both, and everyone is waiting to see what you'll say.
+> left: Write to the column yourself
+  challenge perform adept-:
     win:
       npc_rel a b +small
       rel a +tiny
       rel b +tiny
-      say: You sit down between them at lunch, and are so cheerful about it that neither can leave without looking petty. By the pudding they're arguing about the gossip column instead of each other. It's almost friendly.
+      say: You write one line: that your closest friends are the two people who wrote in, and that they should compare notes, since they have so much in common. The column prints it. {a} and {b} are furious with you, together, which is a start.
     lose:
       rel a -tiny
       rel b -tiny
       mood -small
-      say: You sit between them, and they talk across you, about you, for the whole of lunch, in very polite voices. You leave with indigestion. The column next week is about lunch.
-> right: Sit with neither
+      say: Your letter is meant to be funny and reads as if you were choosing. Each of them decides you meant the other. The column runs a follow-up, with diagrams.
+> right: Say nothing at all
   rel a -tiny
   rel b -tiny
   mood +tiny
-  say: You sit with neither, at the far end, with a book. The column decides that your closest friend must be someone else entirely, and spends a fortnight guessing who. {a} and {b}, united at last, both think it's very unfair.
-
-@event fame_feud_table
-title: Sit With Me
-pool: fame_between
-tone: tense
-cast:
-  a: any where classmate_here(a) and rel(a) >= 15
-  b: any where classmate_here(b) and rel(b) >= 15 and at_odds(a, b)
-per: a
-art: meal
-scene: A refectory at supper, a student standing at a long table with an empty bench on each side, two other students at different tables watching warily.
-text: {a} and {b} have been at war all term, and half the year has taken sides. You've noticed that where you sit, people follow. If you asked {a} and {b} to supper at the same table, in front of everyone, the castle would see it, and might follow that too. Or it might all blow up over the soup.
-> left: Ask them both to your table
-  challenge appeal adept:
-    win:
-      npc_rel a b +medium
-      renown +small
-      rel a +tiny
-      rel b +tiny
-      say: They both come, warily, because it's you. You keep the talk on safe ground until, somewhere after the pudding, {a} makes a joke and {b} laughs before remembering not to. By the end of the week, half the year has stopped taking sides.
-    lose:
-      npc_rel a b -small
-      renown -small
-      say: They both come, and it lasts until the soup, when {a} says something about {b}'s family and {b} leaves with the bread. Everybody saw it. The war is worse, and now your table is part of it.
-> right: Stay out of it
-  mood -tiny
-  study +tiny
-  say: You stay out of it and sit where you always sit. The war goes on, at its own pace. Sometimes you catch {a} or {b} glancing at your table, as if they'd hoped you might do something. You don't.
+  say: You say nothing, to anyone. The column decides your closest friend must be someone else entirely, and spends a fortnight guessing who. {a} and {b}, united at last, both think it's very unfair.
 
 @event fame_after_you
 title: What They Found Instead
