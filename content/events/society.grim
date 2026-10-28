@@ -59,24 +59,24 @@ tone: tense
 defer: off_campus
 art: meal
 scene: A long candlelit table in a townhouse dining room, silver and crystal everywhere, a student in a new coat seated between two elderly patrons in jewels.
-text: The first supper is twelve courses in a town house with a ceiling painted with clouds. You're seated between a retired magistrate and a woman who owns half the orchards in the valley. Both of them have read about you. Both of them want to see whether you're as interesting as the Ledger said.
-> left: Be the talk of the table
+text: The first supper is twelve courses in a town house with a ceiling painted with clouds. You're seated between a retired magistrate and a woman who owns half the orchards in the valley. Both of them have read about you. Both of them want to see whether you're as interesting as the Ledger said. The magistrate has an opinion on every course, and is plainly waiting for somebody to disagree with him.
+> left: Argue with the magistrate
   challenge appeal adept-:
     win:
       flag season_charmed
       renown +small
       queue season_lady_vaneshade in 1
-      say: You tell the story about the lake, and the one about the stairs, and get the magistrate laughing so hard he has to put down his fork. By the ninth course the whole table is listening. Someone at the far end asks your name twice, to remember it.
+      say: You tell the magistrate he's wrong about the soup, and then about a famous old trial, and he's delighted: nobody has disagreed with him since he retired. By the ninth course the whole table is listening to the two of you. Someone at the far end asks your name twice, to remember it.
     lose:
       flag season_plain
       mood -small
       queue season_lady_vaneshade in 1
-      say: You try to be dazzling and get the story about the lake backwards. The orchard woman corrects you, kindly, which is worse. You spend the last three courses very interested in your soup.
-> right: Just be yourself
+      say: You take the magistrate on over an old case, and turn out to have the facts backwards, in front of the man who heard it. The orchard woman changes the subject, kindly, which is worse. You spend the last three courses very interested in your soup.
+> right: Ask about her orchards
   flag season_plain
   mood +tiny
   queue season_lady_vaneshade in 1
-  say: You don't try to dazzle. You ask the orchard woman about her orchards, and she talks for an hour, delighted, about apple blight. The table thinks you're a little dull. She thinks you're the best guest she's had in years.
+  say: You leave the magistrate to the soup. You ask the orchard woman about her orchards, and she talks for an hour, delighted, about apple blight. The table thinks you're a little dull. She thinks you're the best guest she's had in years.
 
 @event season_lady_vaneshade
 title: Lady Vaneshade's Offer
@@ -279,13 +279,12 @@ cast:
 per: f
 art: paper
 scene: A student holding a hand-painted sign for a stall at a fair, a pot of paint and a brush ready, looking hopefully at a friend.
-text: {f} is running a stall at the next fair, selling enchanted bookmarks for the infirmary fund, and has had an idea: what if the sign said "as used by {player}"? You have, in fact, used one. Once. "It'd sell out in an hour," {f} says. "Go on. It's for the beds."
-> left: Lend your name
+text: {f} is running a stall at the next fair, selling enchanted bookmarks to pay for next year's books, and has had an idea: what if the sign said "as used by {player}"? You have, in fact, used one. Once. "It'd sell out in an hour," {f} says. "Go on. I can't afford the set texts otherwise."
+> left: Let {f} use your name
   chance even +1 if renown >= 60:
     rel f +small
     renown +small
-    alignment +tiny
-    say: The stall sells out in forty minutes, and the infirmary gets two new beds. {f} is giddy all evening. You're asked to sign three bookmarks, and you do, and one of them ends up in the library, where it marks a page for years.
+    say: The stall sells out in forty minutes, and {f} can buy every book on next year's list, with enough over for a new quill. {f} is giddy all evening. You're asked to sign three bookmarks, and you do, and one of them ends up in the library, where it marks a page for years.
   else:
     rel f +tiny
     renown -small

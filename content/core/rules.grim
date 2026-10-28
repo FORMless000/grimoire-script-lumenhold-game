@@ -260,7 +260,8 @@ on: month_start
 label: Fading gossip
 when: turn > 1 and renown >= 5
 # Fame holds better the more of it there is (phase 4, docs/phase4-plan.md): a fifth a month below Known, less while
-# Known, less again once Famous, so the spotlight tiers can be reached and kept, and lost by going quiet.
+# Known, less again once Famous, so the spotlight tiers can be reached and kept, and lost by going quiet. Legend
+# keeps Famous's rate: a month begins at Legend only from 97 or more before the fade, so it lasts a month or three.
 do:
   if renown >= 60:
     renown -= floor(renown * 0.12)

@@ -166,26 +166,26 @@ text: The infirmary fund is holding an auction, and the top lot, the committee t
   say: You give the committee what you can, and ask them to auction something more useful than you. They auction the headmistress's old hat, which raises almost as much and is far less trouble.
 
 @event spot_newt_drink
-title: The {player}
+title: Whatever You're Having
 pool: spotlight_famous
 tone: light
 art: cup
-scene: A tavern bar with a chalkboard menu, a new name chalked at the top in big letters, a landlady polishing a tall glass with a sparkler in it.
-text: The landlady of the Gilded Newt has put a new drink on the board, and it's called "The {player}". It's tall, it's blue, it has a small sparkler in it, and it costs twice as much as anything else. "You don't mind, do you, love?" she says. "You'll get a cut." The whole bar is watching your face.
-> left: Raise a glass to it
+scene: A tavern bar, a landlady leaning over the counter with a dusty bottle of pale fizz, the whole room turned to watch one student order.
+text: Whatever you order at the Gilded Newt, half the bar orders next, and the landlady has noticed. She leans over the counter. "Do me a favour, love. Order the elderflower fizz. I've forty bottles of it in the cellar and nobody's touched one since midsummer. There's a cut in it for you." The whole bar is waiting to see what you'll have.
+> left: "One elderflower fizz, please."
   chance slim +1 if renown >= 75 +1 if renown >= 85:
     renown -small
     gold +tiny
     mood -small
-    say: It's very popular, especially with first-years, three of whom drink one each on Lantern Night and are sick on the headmistress's shoes. The drink is withdrawn. Your name is not forgotten.
+    say: The fizz has been in the cellar since midsummer for a reason. Half the bar orders one after you, and half the bar spends the rest of the evening outside. The landlady gives you your cut anyway. By morning everyone knows whose idea it was.
   else:
     gold +small
     renown +small
-    say: You raise a glass of it to the bar, and the bar cheers. It is far too sweet. It sells for a whole term, and every few weeks the landlady presses a small purse of coppers into your hand.
-> right: Ask her to call it something else
+    say: You raise a glass of fizz to the bar, and the bar raises forty back. It is far too sweet. For the rest of the term it's what people drink at the Newt, and every few weeks the landlady presses a small purse of coppers into your hand.
+> right: Order what you always have
   renown -tiny
   mood +small
-  say: You ask her, nicely, to name it after the Newt instead. She grumbles, wipes it off and chalks up the Newt's own name instead. It's exactly the same drink. Nobody can say your name with a straight face for a week anyway.
+  say: You order your usual. So does half the bar. The landlady sighs, says "Traitor" quite fondly, and goes down to the cellar for more of it. The fizz stays where it is.
 
 @event spot_lecture_crowds
 title: Standing Room Only

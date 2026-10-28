@@ -61,16 +61,17 @@ text: {a} presses a folded note into your hand, sealed with candle wax and, by t
   else:
     npc_rel a b -tiny
     say: {b} reads it in the library and goes quiet. "Tell {a} it's very kind," {b.they} say{b.s}, which is the worst thing anyone can say. You carry it back as gently as you can.
-> right: Tell {a} to say it in person
+> right: Help {a} write it better
+  study -tiny
   challenge appeal apprentice:
     win:
       npc_rel a b +medium
       rel a +small
       queue between_match_made in 3 with a
-      say: {a} goes white, then red, then marches off to do it. You find out how it went at breakfast, from the way they arrive together.
+      say: You sit up with {a} over four drafts, crossing out the poetry. What's left is three plain lines, the best thing {a} has ever written, and {b} answers them the same evening. You find out how it went at breakfast, from the way they arrive together.
     lose:
       rel a -small
-      say: "Easy for you to say," says {a}, and takes the note back. It stays in {their} pocket for the rest of the term. You can see the corner of it.
+      say: By the fourth draft it's a sonnet, and a bad one, and {a} has gone off the whole idea. "I'll just tell {b.them}. One day." The note stays in {their} pocket for the rest of the term. You can see the corner of it.
 
 @event between_find_out
 title: Asking for a Friend
