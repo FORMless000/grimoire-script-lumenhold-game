@@ -1,0 +1,88 @@
+# ============================================================
+#  Contraband (threads 1, docs/threads-1-plan.md): two banned elixirs (lore brightwater, owls_ink).
+#  - A bottle waits in your trunk (`*_bottle`, one of each at most) until you drink, pour or sell it
+#    (content/events/contraband.grim); every dose risks a search at dawn.
+#  - A dose lasts two months. When it wears off the craving may take hold (`*_want`), more likely with each dose
+#    taken: four months of a little lost each month and an occasional bad day (the withdrawal pools), ended early by
+#    another dose or by Sister Amaranth's remedy.
+#  - Owl's Ink is the illicit exam help: a large boost to exams (`@balance boost_sizes`), well past a tonic's rung.
+# ============================================================
+
+@state brightwater_bottle
+name: A Bottle of Brightwater
+kind: neutral
+art: bottle
+desc: Hidden in your trunk, wrapped in a sock: one dose of a banned elixir, cloudy gold.
+
+@state owls_ink_bottle
+name: A Bottle of Owl's Ink
+kind: neutral
+art: bottle
+desc: Hidden in your trunk, wrapped in a sock: one dose of a banned elixir, black and bitter.
+
+@state brightwater
+name: Brightwater
+kind: buff
+art: bottle
+duration: 2
+desc: You sleep like a stone and wake like a bell. It's lovely. It's banned.
+on_add:
+  lose brightwater_want
+  brightwater_doses += 1
+tick:
+  health +4
+  mood +4
+on_expire:
+  if brightwater_doses >= 3:
+    chance likely:
+      gain brightwater_want
+  elif brightwater_doses == 2:
+    chance even:
+      gain brightwater_want
+  else:
+    chance unlikely:
+      gain brightwater_want
+
+@state owls_ink
+name: Owl's Ink
+kind: buff
+art: bottle
+duration: 2
+boost: exam:large
+desc: Your mind is a new nib and your magic a full well. Exams look small from up here.
+on_add:
+  lose owls_ink_want
+  owls_ink_doses += 1
+  mana +10
+tick:
+  mana +6
+on_expire:
+  if owls_ink_doses >= 3:
+    chance likely:
+      gain owls_ink_want
+  elif owls_ink_doses == 2:
+    chance even:
+      gain owls_ink_want
+  else:
+    chance unlikely:
+      gain owls_ink_want
+
+@state brightwater_want
+name: Wanting Brightwater
+kind: debuff
+art: rain
+duration: 4
+desc: The world has gone a shade greyer since the Brightwater wore off, and you know exactly what would fix it. Sister Amaranth, they say, has seen this before.
+tick:
+  mood -2
+  queue any in withdrawal_brightwater in 0 chance unlikely
+
+@state owls_ink_want
+name: Wanting Owl's Ink
+kind: debuff
+art: rain
+duration: 4
+desc: Since the ink wore off your magic comes slow and the page swims, and you know exactly what would fix it. Sister Amaranth, they say, has seen this before.
+tick:
+  mana -3
+  queue any in withdrawal_owls_ink in 0 chance unlikely

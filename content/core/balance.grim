@@ -29,6 +29,9 @@ negotiate: charm 1 lore 1 guile 1 mood 0.15 renown 0.15
 # A tonic (world expansion 1, K3): what a `boost:` state adds to the plain checks it names: one rung, about 8 points of odds
 # on a normal check. Tonics share `group: tonic`, so one holds at a time; fights and negotiations never read it.
 tonic: 4
+# A sized boost (threads 1): `boost: kind:size` adds its size here instead of a tonic's rung, and the largest boost held
+# counts. Owl's Ink, the illicit exam help, is `exam:large`: about a full grade (tools/exam-odds.js).
+boost_sizes: small 4 medium 8 large 12
 # How far one skill point moves a check's odds (M14): `wild` checks swing whatever your skill; `steady` ones follow it.
 swing: normal 2.5 wild 1.2 steady 4
 # A shift's pay (M10): `wage` in a job's cards pays the job's `pay:` at your rank × this share.

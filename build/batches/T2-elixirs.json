@@ -1,0 +1,88 @@
+{
+  "name": "T2-elixirs",
+  "at": 1793289059633,
+  "files": [
+    "content/events/contraband.grim",
+    "content/states/contraband.grim"
+  ],
+  "events": [
+    "elixir_trunk",
+    "elixir_offered_bright",
+    "elixir_borrowed_bag",
+    "elixir_first_year",
+    "elixir_finals_spare",
+    "elixir_finals_buyers",
+    "grisk_elixir_offer",
+    "grisk_elixir_favour",
+    "contraband_caught",
+    "contraband_friend_notices",
+    "wd_bright_grey",
+    "wd_bright_shakes",
+    "wd_bright_grisk",
+    "wd_ink_blank",
+    "wd_ink_empty_well",
+    "wd_ink_dreams",
+    "amaranth_quit"
+  ],
+  "contentHash": "368d34",
+  "validators": {
+    "build": {
+      "ok": true
+    },
+    "lint": {
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    "balance": {
+      "ok": true,
+      "skipped": true
+    },
+    "dupes": {
+      "ok": true,
+      "pairs": []
+    },
+    "canon": {
+      "ok": true,
+      "unknown": []
+    },
+    "i18n": {
+      "ok": true,
+      "translated": 160,
+      "total": 160
+    }
+  },
+  "critic": {
+    "batch": "T2-elixirs",
+    "accept": true,
+    "round": 2,
+    "summary": "All twelve round-1 issues are properly fixed. The new finals card is its own premise, Grisk is met where his schedule puts him and no longer touches the parcel line, the search confiscates only a held bottle, and the withdrawal cards keep to term time and their proper slots. Four small fixes remain: a lead the jetty hint should leave, a verb that breaks with a 'they' classmate, a repeat card with no variation, and a say that answers a line it can be paired against wrongly. None of them blocks acceptance.",
+    "issues": [
+      {
+        "event": "grisk_elixir_offer",
+        "problem": "Grisk now names the place the player must follow up ('The boathouse jetty, any midnight'), and grisk_elixir_favour waits there on `grisk_supply`. Nothing records this in the Clues panel. `grim leads` lists the pair (grisk_elixir_offer → grisk_elixir_favour [grisk_supply; place boathouse]) as having no lead. A player who shakes hands at the Newt and forgets the line has no reminder of where his supply is.",
+        "fix": "Add a side-thread lead beside lead_grisk_jetty in content/world/clues.grim, e.g. `@clue lead_grisk_bottles`, kind: lead, name 'Bottles at the jetty', text 'Grisk's arrangement: a bottle for a favour, at the boathouse jetty at midnight.', `followed: seen(grisk_elixir_favour) > 0 or flag(grisk_gone) or not flag(grisk_supply)`. Then `find lead_grisk_bottles` in the left option, as the parcel cards do with lead_grisk_jetty."
+      },
+      {
+        "event": "elixir_finals_spare",
+        "problem": "(1) Verb agreement breaks for a classmate who is 'they'. The text reads '{they} bought two bottles … and has come to {their} senses', which renders as 'they bought … and has come'. (2) It is a repeat card (`repeat: 4`, dealt every finals window) with no variation at all, so a second or third showing reads word for word the same with another classmate in the same panic.",
+        "fix": "(1) Recast the clause with a token that agrees, e.g. '…bought two bottles of Owl's Ink from someone behind the refectory, and now want{s} rid of the second.' (2) Add matched `{~…|…|…}` sets across the text and both says, for example: where they bought them (behind the refectory / from a cousin in the village / off a fifth-year at the Newt), how they hold it out, and what the purchase or the refusal gets you."
+      },
+      {
+        "event": "contraband_friend_notices",
+        "problem": "In random mode every group picks the same position. When the player is dosed rather than craving, position 1 of the text is 'You've been too bright for weeks' (no wrist is touched), but position 1 of the right say is '{friend} lets go of your wrist slowly'.",
+        "fix": "Make the say not depend on the wrist ('{friend} lets the subject go, slowly, and doesn't believe you'). Or split that say line on the same craving condition as the text."
+      },
+      {
+        "event": "contraband_caught",
+        "problem": "On a clean trunk the text says 'you know what has been through your hands this month'. But the search is queued for the next month at the earliest, and `defer: off_campus` can push it across a break, so the dose or sale is often not 'this month'.",
+        "fix": "Say 'lately' or 'these past weeks' instead of 'this month'."
+      }
+    ]
+  },
+  "spotCheck": [
+    "grisk_elixir_favour",
+    "elixir_trunk"
+  ],
+  "accepted": true
+}

@@ -1,0 +1,511 @@
+# ============================================================
+#  Contraband (threads 1, docs/threads-1-plan.md): two banned elixirs (lore brightwater, owls_ink). A bottle waits in
+#  your trunk (`*_bottle`, one of each at most) until you drink, pour or sell it; a dose lasts two months; when it wears
+#  off the craving may take hold (`*_want`, content/states/contraband.grim), more likely with each dose. Every dose risks a
+#  search at dawn. Sources: a classmate's offer, a bag, a first-year's tonic, a classmate's spare before finals, and
+#  Grisk (met at the Newt, then a bottle for a favour at the boathouse at midnight); later the confiscation vault (the
+#  Restricted heist). `elixir_kept` marks a player who has kept or bought a bottle; only they hear Grisk's offer.
+# ============================================================
+
+# ---------------- The bottle in your trunk ----------------
+
+@event elixir_trunk
+title: The Bottle in Your Trunk
+trigger: auto
+type: menu
+class: routine
+tone: tense
+when: (has(brightwater_bottle) and not has(brightwater)) or (has(owls_ink_bottle) and not has(owls_ink))
+repeat: 1
+art: bottle
+tags: danger
+scene: A student kneeling at an open school trunk at night, a small stoppered bottle in a sock in one hand, a candle on the floor beside them.
+text: {has(brightwater_bottle) and has(owls_ink_bottle): Under your spare robes, wrapped in two socks, the bottles wait, one gold and one black.|{Under your spare robes, wrapped in a sock, the bottle waits.|The bottle is still in your trunk. You have checked on it more often than on your homework.|You know exactly where the bottle is without looking.}} {has(brightwater_want) or has(owls_ink_want): Since the last dose wore off, it has been very easy to think about.|{before_finals(): Finals are close.|Nobody knows it's there, you're nearly sure.}}
+> bright: Drink the Brightwater
+  hint: Two good months. After that, maybe not.
+  when: has(brightwater_bottle) and not has(brightwater)
+  lose brightwater_bottle
+  gain brightwater
+  alignment -tiny
+  queue contraband_caught chance slim
+  say: {It tastes of honey and pennies. Within the hour you're warm to your fingertips, and the day ahead looks easy.|You drink it at the window. The tiredness lifts like a lid. You know it's borrowed, and you don't mind yet.|One swallow, and everything that ached stops. You hide the empty bottle at the bottom of the trunk.}
+> ink: Drink the Owl's Ink
+  hint: Two sharp months, exams included. After that, maybe not.
+  when: has(owls_ink_bottle) and not has(owls_ink)
+  lose owls_ink_bottle
+  gain owls_ink
+  alignment -tiny
+  queue contraband_caught chance slim
+  say: {It's bitter as a burnt quill. By morning your head is a lamp-lit room, every shelf in order, and magic hums in your fingers.|You drink it standing up. The words on your desk sharpen, line by line, like a page coming into focus.|Black, bitter, and then clear. You read three chapters before breakfast and remember every word of them.}
+> pour_bright: Pour the Brightwater away
+  when: has(brightwater_bottle)
+  lose brightwater_bottle
+  alignment +tiny
+  mood -small
+  say: {You tip the gold out of the window into the ivy. The ivy, next morning, is a remarkable colour.|You pour the gold down the washbasin and run the tap for a long time afterwards. You feel lighter, and worse.|Out of the window, every gold drop. You watch it go and want it back the whole time.}
+> pour_ink: Pour the Owl's Ink away
+  when: has(owls_ink_bottle)
+  lose owls_ink_bottle
+  alignment +tiny
+  mood -small
+  say: {You tip the black out of the window into the ivy. By morning the leaves it touched have curled up tight.|You pour the black down the washbasin, and it stains the porcelain grey. You scrub until it's gone.|Out of the window, every black drop. Finals will be exactly as hard as they are.}
+> wait: Not yet
+  say: {You wrap it up again and close the lid.|Not tonight. You put the trunk back under the bed and lie awake knowing where it is.|You leave it where it is, for now. For a better reason, later.}
+
+# ---------------- Where bottles come from ----------------
+
+@event elixir_offered_bright
+title: Something for the Grey Days
+class: routine
+tone: tense
+when: turn >= 4 and not flag(elixir_known) and not off_campus
+weight: 8
+cast:
+  other: any where met(other) and tagged(other, student)
+art: bottle
+tags: danger social
+scene: A school corridor, one student pressing a small cloudy-gold bottle into another student's hand, glancing down the corridor for prefects.
+text: {other} has been glowing for a week: sleeping well, laughing loudly, top of every drill. In the corridor {they} put{s} a small cloudy-gold bottle in your hand. "Brightwater. From the village. It's only banned because it works."
+> left: Keep it, for a grey day
+  flag elixir_known elixir_kept
+  gain brightwater_bottle
+  alignment -tiny
+  say: You wrap it in a sock and bury it in your trunk. It feels heavier there than it did in your hand.
+> right: Give it back
+  flag elixir_known
+  rel other -tiny
+  say: "Suit yourself," says {other}, and pockets it, a little stung. For a day or two {they} look{s} at you as if you'd said something unkind.
+
+@event elixir_borrowed_bag
+title: Not Your Bottle
+class: routine
+tone: tense
+when: turn >= 6 and not off_campus
+weight: 6
+cast:
+  other: any where met(other) and tagged(other, student)
+art: bottle
+tags: danger social
+scene: A student kneeling over a borrowed satchel, holding up a small black bottle wrapped in a sock, with an uneasy face.
+text: You borrow {other}'s satchel to carry your books to a lecture, and at the bottom of it, wrapped in a sock, is a small black bottle with a village label. Owl's Ink. Everyone knows what it is, and that it's banned.
+> left: Keep it
+  flag elixir_known elixir_kept
+  gain owls_ink_bottle
+  alignment -small
+  say: You slip it into your own pocket and give the satchel back with a smile. {other} doesn't say a word. Neither, it turns out, do you, for a week.
+> right: Give it back, and say why
+  flag elixir_known
+  rel other +small
+  mood -tiny
+  say: You hand it back in private. {other} goes red, then quiet, then thanks you, which is the hardest part to listen to.
+
+@event elixir_first_year
+title: A Tonic from Home
+class: routine
+tone: warm
+when: turn >= 8 and not off_campus
+weight: 6
+art: bottle
+tags: danger social
+scene: A first-year's dormitory windowsill with a cloudy-gold bottle on it, the first-year asleep on top of the covers at midday.
+text: A first-year on your corridor has been dancing on the stairs at midnight and sleeping through breakfast. On their windowsill is their "tonic from home": cloudy gold, a village label. You know exactly what it is, and so, by the look of the stairs, does everyone else.
+> left: Buy it off them, quietly
+  flag elixir_known elixir_kept
+  gold -small
+  gain brightwater_bottle
+  alignment -tiny
+  say: You pay a fair price and tell them where it really comes from. They look relieved to be rid of it. Now it's in your trunk instead of theirs.
+> right: Walk them to the infirmary
+  flag elixir_known
+  meet amaranth
+  rel amaranth +small
+  alignment +tiny
+  mood -tiny
+  say: Sister Amaranth takes the bottle in one hand and the first-year in the other. "Good. Next time, come sooner," she tells you. You spend the evening on a hard bench, worrying, until you hear they're all right.
+
+@event elixir_finals_spare
+title: Two Bottles Too Many
+class: routine
+tone: tense
+when: before_finals() and not has(owls_ink_bottle) and not off_campus
+repeat: 4
+weight: 6
+cast:
+  other: any where met(other) and tagged(other, student)
+art: bottle
+tags: danger study money
+scene: A student in a dormitory doorway holding out a small black bottle in an open palm, a second identical bottle in the other hand, looking embarrassed.
+text: {~{other} catches you on the dormitory stairs, pale and sheepish. In a panic about finals {they} bought two bottles of Owl's Ink from someone behind the refectory, and now want{s} rid of the second. "At cost," {they} say{s}. "Please. I can't have both in my trunk."|{other} sits down next to you in the library and slides a black bottle across the desk behind a book. A cousin in the village sent two. "I only need one to pass," {they} whisper{s}. "At cost. Please."|{other} finds you after supper with a black bottle in each coat pocket, bought off a fifth-year at the Newt at a terrible price. "I panicked," {they} say{s}. "Take one off me at cost? Please?"}
+> left: Take it off {their} hands
+  flag elixir_known elixir_kept
+  gold -small
+  gain owls_ink_bottle
+  alignment -tiny
+  say: {~The coins go one way and the bottle the other, on the stairs, both of you looking at your shoes. {other} looks lighter for it. You don't.|You slip the bottle inside your book and the coins under {other}'s. Neither of you reads another word that evening.|You take the bottle from {other}'s pocket yourself, so nobody sees it change hands. The price was terrible; you pay it anyway.}
+> right: Tell {them} to pour them both away
+  flag elixir_known
+  rel other -tiny
+  alignment +tiny
+  say: {~"Both?" says {other}, as if you'd asked {them} to pour away a term's work. {other} goes off to think about it, and won't quite meet your eye for a week.|{other} puts the bottle back behind the book without a word, and spends the rest of the evening reading the same page.|"At that price?" says {other}, appalled, and goes off with a bottle in each pocket, and looks at you sideways at breakfast.}
+
+@event elixir_finals_buyers
+title: Customers Before Finals
+class: routine
+tone: tense
+when: before_finals() and has(owls_ink_bottle) and not off_campus
+repeat: 3
+weight: 10
+cast:
+  buyer: any where met(buyer) and tagged(buyer, student)
+art: coin
+tags: danger money
+scene: A student cornered on a stair landing by a desperate classmate holding out a purse.
+text: {Word has got round that you have a bottle of Owl's Ink. {buyer} corners you on the stairs, purse already open. "Name your price. I'm going to fail otherwise."|{buyer} has heard about your bottle too, and doesn't haggle.|Finals, and {buyer} on the stairs, purse in hand. Somehow they always know.}
+> left: Sell it
+  lose owls_ink_bottle
+  gold +medium
+  alignment -small
+  queue contraband_caught chance slim
+  say: {You sell it. {buyer} holds the bottle like a holy relic and runs. You count the coins twice and don't feel richer.|The bottle changes hands on the landing. Your purse is heavy, and so, for a day or two, is something else.|You sell, and {buyer} thanks you as if you'd done something kind. You haven't.}
+> right: Keep it for your own exams
+  rel buyer -tiny
+  say: {"It's spoken for," you say. {buyer}'s face falls, and stays fallen for a week.|You keep it. {buyer} calls you something on the way down the stairs, not quite quietly enough.|No sale. {buyer} doesn't believe you need it more, and says so.}
+
+# ---------------- Grisk's supply: met at the Newt, then the boathouse at midnight ----------------
+
+@event grisk_elixir_offer
+title: Grisk's Better Bottles
+place: gilded_newt
+slot: evening
+class: routine
+tone: tense
+actor: grisk
+when: flag(elixir_kept) and not flag(grisk_supply) and not flag(grisk_gone)
+repeat: 4
+weight: 12
+art: bottle
+tags: money danger
+scene: A goblin in a velvet waistcoat at a corner table of a candlelit tavern, a gold bottle and a black one standing on the table beside his ledger.
+text: {Grisk beckons you to his corner table, where a gold bottle and a black one stand beside his ledger. "I hear you've a taste for the village's better remedies," he purrs. "I can keep you in them. Not only for money. Between friends, favours keep better. The boathouse jetty, any midnight."|Grisk's corner table, and the two bottles again. "The offer keeps," he says, "like the bottles."|The corner table, the bottles, the little bow from his chair. "Still a friend in need of friends?" he asks.}
+> left: Shake his hand
+  meet grisk
+  flag grisk_supply
+  find lead_grisk_bottles
+  alignment -small
+  gain brightwater_bottle
+  say: {His hand is dry and very warm. He slides the gold bottle across the table. "A sample," he says. "Between friends, the first is a gift. The rest, at the jetty."|You shake. Grisk writes something in his ledger with a flourish, and hands you the gold bottle "for goodwill". "Midnight, the jetty," he says. "I keep."|You shake on it. He tucks the black bottle away and gives you the gold one. "The black costs a favour," he says. "Come down to the jetty when you want one."}
+> right: Not interested
+  meet grisk
+  say: {"The offer keeps," says Grisk, unoffended, and turns back to his ledger.|He bows you away from the table without getting up. "Another night, then. I'm a patient friend."|"Of course," says Grisk. He doesn't believe you, and he lets you see it.}
+
+@event grisk_elixir_favour
+title: A Bottle for a Favour
+place: boathouse
+slot: midnight
+type: menu
+class: routine
+tone: tense
+actor: grisk
+when: flag(grisk_supply) and not flag(grisk_gone)
+repeat: 2
+weight: 12
+art: bottle
+tags: money danger
+scene: A goblin in a velvet waistcoat on a midnight jetty holding up a small bottle between two fingers, a ledger open on a crate beside him.
+text: Grisk has a bottle and a favour, and they come as a pair. {&"Watch the jetty for an hour, and see nothing."|"Keep a crate under your bed till Thursday."|"A kind word to a prefect, about a friend of mine."} {before_finals() or has(brightwater_want) or has(owls_ink_want): "And a few crowns on delivery," he adds. "{before_finals(): Ink is dear this close to finals.|You look like someone who needs a friend, and friends are dear.}"|He smiles. "Small things."}
+> ink: Owl's Ink, for the favour
+  hint: A few crowns more before finals, and when he knows you need it.
+  when: not has(owls_ink_bottle)
+  meet grisk
+  alignment -tiny
+  challenge deceive apprentice:
+    win:
+      gain owls_ink_bottle
+      if before_finals() or has(brightwater_want) or has(owls_ink_want):
+        gold -small
+      say: {&You stand on the jetty for an hour and see nothing, very carefully. At dawn there's a black bottle on your windowsill, with a note that says "Friends."|The crate sits under your bed till Thursday, humming faintly. Then it's gone, and a black bottle is where it stood.|You put in Grisk's word with a prefect, and it lands. The black bottle arrives in your shoe, which you don't like thinking about.}
+    lose:
+      gain watched
+      mood -small
+      say: {&A prefect's lantern comes down the lawn while you're watching the jetty. You're in their notebook before you've thought of a reason. No bottle; Grisk doesn't pay for failures.|A prefect doing rounds finds the crate under your bed and asks what's in it. You don't know, which is the worst answer. The crate goes, and no bottle comes.|The prefect hears you out, then asks who put you up to it. You don't say, and your name goes in the notebook anyway. Grisk sends only his regrets.}
+> bright: Brightwater, for the favour
+  hint: A few crowns more before finals, and when he knows you need it.
+  when: not has(brightwater_bottle)
+  meet grisk
+  alignment -tiny
+  challenge deceive apprentice:
+    win:
+      gain brightwater_bottle
+      if before_finals() or has(brightwater_want) or has(owls_ink_want):
+        gold -small
+      say: {&You stand on the jetty for an hour and see nothing, very carefully. At dawn there's a gold bottle on your windowsill, with a note that says "Friends."|The crate sits under your bed till Thursday, humming faintly. Then it's gone, and a gold bottle is where it stood.|You put in Grisk's word with a prefect, and it lands. The gold bottle arrives in your shoe, which you don't like thinking about.}
+    lose:
+      gain watched
+      mood -small
+      say: {&A prefect's lantern comes down the lawn while you're watching the jetty. You're in their notebook before you've thought of a reason. No bottle; Grisk doesn't pay for failures.|A prefect doing rounds finds the crate under your bed and asks what's in it. You don't know, which is the worst answer. The crate goes, and no bottle comes.|The prefect hears you out, then asks who put you up to it. You don't say, and your name goes in the notebook anyway. Grisk sends only his regrets.}
+> done: Tell him you're done
+  meet grisk
+  unflag grisk_supply
+  mood -small
+  alignment +tiny
+  say: {&"Everyone is, eventually," says Grisk pleasantly, and closes his ledger. "Until they aren't." You walk back up the lawn without a bottle, and it's the longest walk you've had.|Grisk shrugs. "My door doesn't lock," he says. You go back to bed shaking, and proud of it.|"Done," you say. Grisk bows, as if you'd paid him a compliment, and turns the lamp down.}
+> none: Not this month
+  say: {&Grisk tucks the bottle away. "Next month, then."|You shake your head. Grisk makes a small note in his ledger, as if you'd ordered something.|"Of course," says Grisk. "I keep."}
+
+# ---------------- Caught, and noticed ----------------
+
+@event contraband_caught
+title: A Search at Dawn
+trigger: queued
+slot: morning
+defer: off_campus
+repeat: 1
+class: incident
+tone: tense
+art: eye
+tags: crisis
+scene: A dormitory corridor at dawn, two prefects in red sashes going through an open school trunk, students in nightclothes watching from their doors.
+text: The prefects are going down your corridor at dawn, trunk by trunk, sniffing bottles. {has(brightwater_bottle) or has(owls_ink_bottle): There is a bottle in yours.|Your trunk is clean, nearly, but you know what has been through your hands lately, and the prefect sniffing at the lid looks as if they know it too.}
+> left: Bluff it out
+  challenge deceive journeyman:
+    win:
+      guile +tiny
+      say: You're half asleep and mildly offended, and they believe both. The prefects move on to the next trunk. You sit on the end of your bed until your heart slows down.
+    lose:
+      gain watched
+      mood -small
+      if has(brightwater_bottle) or has(owls_ink_bottle):
+        flag elixir_confiscated
+        gain detention
+        say: They find it in under a minute. The bottle goes into a bag labelled for the confiscation vault, your name goes into a notebook, and the whole corridor watches you go red.
+      else:
+        say: There's nothing in the trunk to find, but your face gives you away. You get a warning, a line in the prefect's notebook, and a long look from the whole corridor.
+      lose brightwater_bottle
+      lose owls_ink_bottle
+> right: Own up before they look
+  alignment +tiny
+  mood -small
+  if has(brightwater_bottle) or has(owls_ink_bottle):
+    flag elixir_confiscated
+    say: You hand it over before they reach your trunk. The prefect bags it for the confiscation vault, looks at you for a long moment, and writes only a warning. It still stings.
+  else:
+    say: You tell them before they ask. With nothing to confiscate, the prefect writes only a warning, and gives you a long look. It still stings.
+  lose brightwater_bottle
+  lose owls_ink_bottle
+
+@event contraband_friend_notices
+title: You Don't Look Right
+trigger: social
+class: routine
+tone: tense
+when: has(brightwater) or has(owls_ink) or has(brightwater_want) or has(owls_ink_want)
+repeat: 4
+cast:
+  friend: any where met(friend) and rel(friend) >= 15 and tagged(friend, student)
+per: friend
+art: eye
+tags: social danger
+scene: Two students on a stone bench in an empty corridor, one holding the other's hand and looking hard at their face.
+text: {has(brightwater_want) or has(owls_ink_want): {~{friend} catches your wrist at supper and turns your hand over. "You're shaking," {they} say{s}. "What is it?"|{friend} sits down beside you without a word and looks at your hands until you put them in your lap. "What is it?"}|{~"You've been too bright for weeks," {friend} says at supper. "Nobody's that well. What is it?"|{friend} watches you finish a week's reading in an evening and says, quietly, "That isn't you. What is it?"}}
+> left: Tell {them} the truth
+  rel friend +small
+  mood -small
+  say: {~You tell {friend} about the bottle. {they} listen{s} without interrupting, and at the end only say{s}, "All right. Now I know. Sister Amaranth sees this every year, you know."|You tell {them} all of it. {friend} doesn't lecture, and doesn't leave, and mentions the infirmary only once.}
+> right: Laugh it off
+  rel friend -small
+  alignment -tiny
+  say: {~"Exams," you say, and laugh. {friend} lets the subject go, slowly, and doesn't believe you.|"I'm fine." {friend} looks at you for a long moment. "All right," {they} say{s}. It isn't.}
+
+# ---------------- Withdrawal: the occasional bad day (queued by the craving states; never on a break or away) ----------------
+
+@pool withdrawal_brightwater
+trigger: queued
+class: incident
+when: has(brightwater_want)
+defer: off_campus or break
+repeat: 2
+
+@pool withdrawal_owls_ink
+trigger: queued
+class: incident
+when: has(owls_ink_want)
+defer: off_campus or break
+repeat: 2
+
+@event wd_bright_grey
+title: The First Thought
+pool: withdrawal_brightwater
+type: menu
+tone: grim
+art: rain
+tags: danger
+scene: A student lying awake in bed at dawn, eyes on the school trunk at the foot of the bed, one hand already reaching for the lid.
+text: Your first thought on waking is the gold bottle, and so is your second. The Brightwater wore off weeks ago. Everything since has needed a little more pushing than it should.
+> rise: Get up anyway
+  mood -small
+  study +tiny
+  say: You get up, dress, and go to every lecture, thinking about the trunk the whole way. It counts. It doesn't feel like it counts.
+> bed: Stay in bed
+  health +small
+  study -small
+  say: You sleep through the morning and most of the afternoon. You miss two lectures and feel no better for it, only rested.
+> dose: Drink the bottle in your trunk
+  when: has(brightwater_bottle)
+  lose brightwater_bottle
+  gain brightwater
+  alignment -tiny
+  queue contraband_caught chance slim
+  say: One swallow, and the pushing stops. Everything is easy again at once. You hate how easy that was.
+
+@event wd_bright_shakes
+title: Hands That Won't Hold Still
+pool: withdrawal_brightwater
+type: menu
+tone: tense
+art: hand
+tags: danger study
+scene: A student at a laboratory bench, their hand trembling so that the liquid in a glass vial shivers.
+text: In the practical your hands won't hold still. The vial shivers; the measure goes over the line, twice. The student at the next bench pretends not to see.
+> push: Push through it
+  health -small
+  study +tiny
+  say: You grip your wrist with your other hand and finish the measure, badly. Afterwards you sit in the corridor until the shaking stops.
+> sit: Ask to sit it out
+  mood -small
+  study -tiny
+  say: You ask to sit out. The lecturer looks at your hands, then at your face, and says yes too quickly.
+> dose: Drink the bottle in your trunk
+  when: has(brightwater_bottle)
+  lose brightwater_bottle
+  gain brightwater
+  alignment -tiny
+  queue contraband_caught chance slim
+  say: You leave the practical "for some air" and drink it in the washroom. Your hands go still. Your face in the mirror doesn't look like a winner's.
+
+@event wd_bright_grisk
+title: Grisk Knows
+pool: withdrawal_brightwater
+slot: night
+type: menu
+tone: grim
+actor: grisk
+when: met(grisk) and not flag(grisk_gone) and not has(brightwater_bottle)
+art: bottle
+tags: danger money
+scene: A goblin in a velvet waistcoat sitting uninvited on a student's bed at night, a gold bottle held up to the candle.
+text: Grisk is sitting on your bed. You didn't leave the window open. He holds a gold bottle up to the candle and turns it. "You look peaky," he says kindly. "I have just the thing." {flag(grisk_supply): "The price has gone up, of course. Everything has."|"Not a friend's price, I'm afraid. You never did come to see me."}
+> buy: Pay what he asks
+  meet grisk
+  gold -medium
+  gain brightwater_bottle
+  alignment -tiny
+  say: You pay. He counts it twice, sets the bottle on your pillow like a mint, and leaves by the window.
+> no: Show him the window
+  meet grisk
+  mood -small
+  say: "Another night," says Grisk, quite unbothered, and goes out the way he came. You don't sleep, but you didn't buy it.
+
+@event wd_ink_blank
+title: A Blank Page
+pool: withdrawal_owls_ink
+type: menu
+tone: grim
+art: paper
+tags: danger study
+scene: A student in a lecture hall staring at a completely blank page, quill hovering, the lecturer's words filling the board.
+text: In the lecture, the words go past you like carriages. Two months ago you could have recited them back. Now your page is blank, and the lecturer is already on the next board.
+> stare: Sit it out, blank
+  study -small
+  say: You sit through the hour writing nothing. At the end you have the date at the top of the page, and that's all.
+> ask: Admit you can't follow
+  mood -small
+  study -tiny
+  say: You put your hand up and say you've lost the thread. The lecturer is kind about it, which is worse, and goes back over it slowly, for you.
+> dose: Drink the bottle in your trunk
+  when: has(owls_ink_bottle)
+  lose owls_ink_bottle
+  gain owls_ink
+  alignment -tiny
+  queue contraband_caught chance slim
+  say: You drink it behind the lecture hall and go back in. The board snaps into focus mid-sentence. You copy it all, and your hand doesn't feel like yours.
+
+@event wd_ink_empty_well
+title: The Well Runs Dry
+pool: withdrawal_owls_ink
+type: menu
+tone: grim
+art: spell_moonwell
+tags: danger magic
+scene: A student in a practice room, hand outstretched, a spell fizzling out into a few weak sparks.
+text: You reach for your magic in the practice room, and there's nothing there: not empty, exactly, but dry, like a well at the end of a long summer. It used to be so easy, on the ink.
+> force: Force it
+  mana -medium
+  health -tiny
+  say: You wring the spell out of yourself. It comes, thin and late. You sit down on the floor afterwards without meaning to.
+> wait: Leave it for today
+  study -small
+  say: You put your hands in your pockets and leave the practice for another day. The day after, it's still dry.
+> dose: Drink the bottle in your trunk
+  when: has(owls_ink_bottle)
+  lose owls_ink_bottle
+  gain owls_ink
+  alignment -tiny
+  queue contraband_caught chance slim
+  say: One dose and the well is full again, brimming, easy. You stand there with sparks on your fingers, ashamed of how good it feels.
+
+@event wd_ink_dreams
+title: Ink in Your Sleep
+pool: withdrawal_owls_ink
+slot: night
+type: menu
+tone: eerie
+art: moon
+tags: danger
+scene: A student sitting up in bed in the dark, sheets tangled, staring at their hands as if expecting ink on them.
+text: You dream of black ink rising in a well, over your feet, your knees, your mouth, and you wake with the taste of a burnt quill. The candle has burned down, and the castle is very quiet.
+> lie: Lie awake till dawn
+  health -small
+  say: You lie and watch the window go from black to grey. By breakfast you feel scraped thin.
+> walk: Walk the corridors till it passes
+  mood +tiny
+  health -tiny
+  queue night_suspicion chance slim
+  say: You walk the dark corridors in your socks until your head clears. A lantern turns a far corner; you don't wait to see whose.
+> dose: Drink the bottle in your trunk
+  when: has(owls_ink_bottle)
+  lose owls_ink_bottle
+  gain owls_ink
+  alignment -tiny
+  queue contraband_caught chance slim
+  say: You drink it in the dark. The dream doesn't come back. In the morning you can't decide whether that was rescue or surrender.
+
+# ---------------- The way back (signposted in the craving states' desc and by a friend) ----------------
+
+@event amaranth_quit
+title: Sister Amaranth's Remedy
+place: infirmary
+class: incident
+tone: warm
+actor: amaranth
+when: has(brightwater_want) or has(owls_ink_want)
+repeat: 3
+weight: 20
+art: cup
+tags: danger
+scene: A stern healer in an infirmary looking at a student over a rolled bandage, a bitter-looking cup of medicine on the table between them.
+text: Sister Amaranth looks at you once, the way she looks at a fever chart. "Sit," she says, still rolling a bandage. "I've seen that face before. Brightwater, or the ink? Don't answer. Drink this every morning for a week. It's foul. It works."
+> left: Take the remedy
+  meet amaranth
+  rel amaranth +small
+  lose brightwater_want
+  lose owls_ink_want
+  lose brightwater_bottle
+  lose owls_ink_bottle
+  health -small
+  mood -small
+  alignment +tiny
+  say: A week of bitter mornings, and her hand held out each time for any bottle you still have. On the eighth day the world comes back in colour. "Drink it all," she says, "and don't come back for the same thing."
+> right: "It's just a cold, Sister."
+  meet amaranth
+  rel amaranth -tiny
+  say: "Hm," says Sister Amaranth, and goes back to her bandage. "The door's open. It always is."

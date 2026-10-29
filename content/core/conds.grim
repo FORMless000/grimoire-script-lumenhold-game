@@ -54,3 +54,7 @@ is: tagged(x, peer) and not tagged(x, outsider) and met(x) and around(x)
 desc: Free to fall for someone else: not your partner or your ex, and not sweet on you.
 params: x
 is: bond(x) != "partner" and bond(x) != "ex" and spark(x) < 30
+
+@cond before_finals
+desc: The two term months that lead up to each term's finals (3–4, 9–10), when exam help sells.
+is: term and (month == 3 or month == 4 or month == 9 or month == 10)

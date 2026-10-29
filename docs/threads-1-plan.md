@@ -5,14 +5,14 @@ step. Status lives here, not in AGENTS.md.
 
 ## Next up
 
-T2 (elixirs): move the draft into content, then zh-CN, the batch report and the critic. The engine additions (6cd4273) and T1 are done.
+T3 (cartographers): draft in progress. Engine, T1 and T2 are pushed.
 
 ## Budget ledger
 
 | Batch | Planned | Written | Critic | zh-CN |
 |---|---:|---:|---|---|
 | T1 detention | 12 | 8 new + 2 moved | accepted (round 2) | 100% |
-| T2 elixirs | 26 | | | |
+| T2 elixirs | 26 | 17 | accepted (round 2; 4 polish fixes applied) | 100% |
 | T3 cartographers | 14 | | | |
 | T4 Restricted Stacks + shared heist | 20 | | | |
 | T5 seventh tower | 16 | | | |
@@ -22,10 +22,13 @@ T2 (elixirs): move the draft into content, then zh-CN, the batch report and the 
 
 - **Engine** (6cd4273): a state's day in term, a pool as a recipe source, a sized boost; `test/threads1.test.js`.
 - **T1 detention:** 8 new cards in `content/events/detention.grim`, plus `detention_cauldrons` and `detention_lines` moved into `@pool detention`; `night_suspicion`'s second catch gives one month and keeps the lockout. Detention months a game: cautious 1.1, balanced 2.0, nightlife 4.4. Critic: rejected in round 1 (9 issues), accepted in round 2 with 2 polish fixes, both applied. Notes: `build/batches/T1-detention.notes.md`.
+- **T2 elixirs:** 17 cards in `content/events/contraband.grim` and 6 states in `content/states/contraband.grim`, plus the Brightwater and Owl's Ink lore, `@cond before_finals`, `boost_sizes` and the clue `lead_grisk_bottles`. Critic: round 1 rejected (12 issues), round 2 accepted with 4 polish fixes, all applied. Reach over 30 games a style: a craving in 12 of 30 nightlife games and 9 of 30 balanced. `amaranth_quit` and `elixir_finals_buyers` stay rare with bots; look again in the balance step. Notes: `build/batches/T2-elixirs.notes.md`.
 
 ## Deviations and open questions
 
+- T2 dropped three planned sources (a dare at the Newt, a night-market pedlar, Bram smelling it). The trunk, the search and the friend carry those beats, and fewer cards keep the thread rare.
 - Detention has 8 new cards, not about 10: the retrieval pass dropped 16 ideas as too close to existing cards (see the T1 notes).
+- **Seventh tower (found while planning T3):** the day card `seventh_tower_dust_room` already enters the top room and sees the star-shaped hollow. So the wards are on the hollow, not on the tower or room door. T6 rewords `hs_seventh_tower` to say so ("the moment you reach for it"). The T5 heist may reach the top room but never touches the hollow.
 - Owl's Ink's `exam:large` is 12 (`boost_sizes: small 4 medium 8 large 12`). On balanced bots at turn 10 it moves A grades from 81% to 96%. Re-check it on weaker styles in the balance step.
 
 ---
